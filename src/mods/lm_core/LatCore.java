@@ -1,0 +1,154 @@
+package mods.lm_core;
+import java.io.*;
+import java.util.*;
+import mods.lm_core.mod.*;
+import net.minecraft.block.*;
+import net.minecraft.creativetab.*;
+import net.minecraft.entity.*;
+import net.minecraft.item.*;
+import net.minecraft.item.crafting.*;
+import net.minecraft.tileentity.*;
+import net.minecraftforge.common.*;
+import net.minecraftforge.oredict.*;
+import cpw.mods.fml.common.*;
+import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.network.*;
+import cpw.mods.fml.common.registry.*;
+
+public class LatCore
+{
+	public static boolean enableOreRecipes = true;
+	public static final int ANY = OreDictionary.WILDCARD_VALUE;
+	public static boolean debug = false;
+	
+	public static final Configuration loadConfig(FMLPreInitializationEvent e, String s)
+	{ return new Configuration(new File(e.getModConfigurationDirectory(), s)); }
+	
+	public static final CreativeTabs createTab(final String s, final ItemStack icon)
+	{
+		CreativeTabs tab = new CreativeTabs(s)
+		{
+			public ItemStack getIconItemStack()
+			{ return icon; }
+		};
+		
+		return tab;
+	}
+	
+	/** Prints message to chat (doesn't translate it) */
+	public static final void printChat(String s) { LC.proxy.printChat(s); }
+	
+	public static final double[] getMidPoint(double[] pos1, double[] pos2, float p)
+	{
+		double x = pos2[0] - pos1[0];
+		double y = pos2[1] - pos1[1];
+		double z = pos2[2] - pos1[2];
+		double d = Math.sqrt(x * x + y * y + z * z);
+		return new double[] { pos1[0] + (x / d) * (d * p), pos1[1] + (y / d) * (d * p), pos1[2] + (z / d) * (d * p) };
+	}
+	
+	public static int percent(int i, int max)
+	{
+		if(i == 0) return 0;
+		if(i == max) return 100;
+		return (int)((float)i * 100F / (float)max);
+	}
+	
+	// Registry methods //
+	
+	public static final void addItem(Item i, String name, String modid)
+	{ GameRegistry.registerItem(i, modid + "_" + name, modid); }
+	
+	public static final void addBlock(Block b, Class<? extends ItemBlock> c, String name, String modid)
+	{ GameRegistry.registerBlock(b, c, modid + "_" + name, modid); }
+	
+	public static final void addBlock(Block b, String name, String modid)
+	{ addBlock(b, ItemBlock.class, name, modid); }
+	
+	public static final void addTileEntity(Class<? extends TileEntity> c, String s)
+	{ GameRegistry.registerTileEntity(c, s); }
+	
+	public static final void addEntity(Class<? extends Entity> c, String s, int id, Object mod)
+	{ EntityRegistry.registerModEntity(c, s, id, mod, 50, 1, true); }
+	
+	public static final int getNewEntityID()
+	{ return EntityRegistry.findGlobalUniqueEntityId(); }
+
+	public static void addSmeltingRecipe(ItemStack out, ItemStack in, float xp)
+	{ FurnaceRecipes.smelting().addSmelting(in.itemID, in.getItemDamage(), out, xp); }
+	
+	@SuppressWarnings("all")
+	public static IRecipe addRecipe(IRecipe r)
+	{ CraftingManager.getInstance().getRecipeList().add(r); return r; }
+	
+	
+	public static IRecipe addRecipe(ItemStack out, Object... in)
+	{
+		if(!enableOreRecipes) return GameRegistry.addShapedRecipe(out, in);
+		else return addRecipe(new ShapedOreRecipe(out, in));
+	}
+	
+	public static IRecipe addShapelessRecipe(ItemStack out, Object... in)
+	{
+		if(!enableOreRecipes)
+		{
+			ArrayList<ItemStack> al = new ArrayList<ItemStack>();
+			int i = in.length;
+			
+			for (int j = 0; j < i; ++j)
+			{
+				Object o = in[j];
+				
+				if (o instanceof ItemStack)
+				al.add(((ItemStack)o).copy());
+				
+				else if (o instanceof Item)
+				al.add(new ItemStack((Item)o));
+				
+				else
+				{
+					if (!(o instanceof Block))
+					throw new RuntimeException("Invalid shapeless recipy!");
+					al.add(new ItemStack((Block)o));
+				}
+			}
+			
+			return addRecipe(new ShapelessRecipes(out, al));
+		}
+		else return addRecipe(new ShapelessOreRecipe(out, in));
+	}
+	
+	public static void addOreDictionary(String name, ItemStack is)
+	{
+		ItemStack is1 = InvUtils.single(is);
+		if(!OreDictionary.getOres(name).contains(is1))
+		OreDictionary.registerOre(name, is1);
+	}
+	
+	public static ArrayList<ItemStack> getOreDictionary(String name)
+	{ return OreDictionary.getOres(name); }
+	
+	public static void addWorldGenerator(IWorldGenerator i)
+	{ GameRegistry.registerWorldGenerator(i); }
+	
+	public static void addGuiHandler(Object mod, IGuiHandler i)
+	{ NetworkRegistry.instance().registerGuiHandler(mod, i); }
+	
+	public static void addPacketHandler(IPacketHandler i, String channel)
+	{ NetworkRegistry.instance().registerChannel(i, channel); }
+	
+	public static void addTool(Item tool, String customClass, int level)
+	{ MinecraftForge.setToolClass(tool, customClass, level); }
+	
+	public static void addTool(Item tool, EnumToolClass e, int level)
+	{ addTool(tool, e.toolClass, level); }
+	
+	public static void addHarvestLevel(ItemStack block, String customClass, int level)
+	{ MinecraftForge.setBlockHarvestLevel(Block.blocksList[block.itemID], block.getItemDamage(), customClass, level); }
+	
+	public static void addHarvestLevel(ItemStack block, EnumToolClass e, int level)
+	{ addHarvestLevel(block, e.toolClass, level); }
+	
+	public static boolean canUpdate()
+	{ return (!(FMLCommonHandler.instance().getEffectiveSide().isClient())); }
+}

@@ -1,5 +1,4 @@
 package mods.lm_core.mod;
-import mods.lm_core.*;
 import net.minecraft.command.*;
 import net.minecraft.util.*;
 
@@ -18,7 +17,7 @@ public class CmdPlayerID extends CommandBase
 		name = s[0];
 		else name = ics.getCommandSenderName();
 		int id = -1;
-		if(name != null && name.length() > 0) id = LCWorldData.getData(ics.getEntityWorld()).getPlayerID(name);
+		if(name != null && name.length() > 0) id = PlayerID.inst.get(name, false);
 		if(id > 0) ics.sendChatToPlayer(ChatMessageComponent.createFromText("Player '" + name + "' ID is " + id));
 		else ics.sendChatToPlayer(ChatMessageComponent.createFromText("Player '" + name + "' ID hasn't registred yet!"));
 	}

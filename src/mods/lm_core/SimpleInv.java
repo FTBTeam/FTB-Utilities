@@ -1,9 +1,7 @@
 package mods.lm_core;
-import net.minecraft.entity.item.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.*;
 import net.minecraft.item.*;
-import net.minecraft.world.*;
 
 public class SimpleInv implements IInventory
 {

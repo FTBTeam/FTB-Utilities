@@ -1,8 +1,12 @@
 package mods.lm_core.mod;
+import cpw.mods.fml.common.network.*;
+import mods.lm_core.*;
 import net.minecraft.entity.player.*;
+import net.minecraft.tileentity.*;
 import net.minecraft.util.*;
+import net.minecraft.world.*;
 
-public class LCCommon // LCClient
+public class LCCommon implements IGuiHandler // LCClient
 {
 	public void preInit() { }
 	public void init() { }
@@ -23,4 +27,18 @@ public class LCCommon // LCClient
 		Vec3 vec = pos.addVector(look.xCoord * d, look.yCoord * d, look.zCoord * d);
         return ep.worldObj.clip(pos, vec);
 	}
+	
+	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	{
+		TileEntity te = world.getBlockTileEntity(x, y, z);
+		if(te != null && te instanceof IGuiTile)
+		{
+			if(te instanceof ISecureTile && !((ISecureTile)te).getSecurity().canPlayerInteract(player))
+			return null; return ((IGuiTile)te).getContainer(player, ID);
+		}
+		return null;
+	}
+	
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	{ return null; }
 }

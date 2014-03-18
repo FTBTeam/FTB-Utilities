@@ -1,10 +1,12 @@
 package mods.lm_core;
 import java.io.*;
 import java.util.*;
+
 import mods.lm_core.mod.*;
 import net.minecraft.block.*;
 import net.minecraft.creativetab.*;
 import net.minecraft.entity.*;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.*;
 import net.minecraft.tileentity.*;
@@ -151,4 +153,8 @@ public class LatCore
 	
 	public static boolean canUpdate()
 	{ return (!(FMLCommonHandler.instance().getEffectiveSide().isClient())); }
+	
+	public static void openGui(IGuiTile t, int ID, EntityPlayer ep)
+	{ TileEntity te = (TileEntity)t;
+	ep.openGui(LC.inst, ID, te.worldObj, te.xCoord, te.yCoord, te.zCoord); }
 }

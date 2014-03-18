@@ -1,7 +1,7 @@
 package mods.lm_core;
+import mods.lm_core.mod.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.*;
-import net.minecraft.world.*;
 
 public class LMSecurity
 {
@@ -16,8 +16,8 @@ public class LMSecurity
 	public LMSecurity(int ownerID)
 	{ owner = ownerID; }
 	
-	public LMSecurity(World w, EntityPlayer ep)
-	{ this(LCWorldData.getData(w).getPlayerID(ep)); }
+	public LMSecurity(EntityPlayer ep)
+	{ this(PlayerID.inst.get(ep)); }
 	
 	public void readFromNBT(NBTTagList tag)
 	{
@@ -55,6 +55,6 @@ public class LMSecurity
 		return false;
 	}
 	
-	public boolean canPlayerInteract(World w, EntityPlayer ep)
-	{ return canPlayerInteract(LCWorldData.getData(w).getPlayerID(ep)); }
+	public boolean canPlayerInteract(EntityPlayer ep)
+	{ return canPlayerInteract(PlayerID.inst.get(ep)); }
 }

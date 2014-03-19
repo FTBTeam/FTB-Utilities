@@ -1,4 +1,5 @@
 package mods.lm_core;
+import java.util.*;
 import mods.lm_core.mod.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.*;
@@ -11,7 +12,7 @@ public class LMSecurity
 	
 	public String owner = null;
 	public int level = PUBLIC;
-	public String[] friends = new String[0];
+	public ArrayList<String> friends = new ArrayList<String>();
 	
 	public LMSecurity(String s)
 	{ owner = s; }
@@ -23,14 +24,13 @@ public class LMSecurity
 	{
 		owner = tag.getString("Owner");
 		level = tag.getByte("Level");
-		friends = new String[0];
+		friends.clear();
 		
 		if(tag.hasKey("Friends"))
 		{
 			NBTTagList list = tag.getTagList("Friends");
-			friends = new String[list.tagCount()];
-			for(int i = 0; i < friends.length; i++)
-			friends[i] = ((NBTTagString)list.tagAt(i)).data;
+			for(int i = 0; i < list.tagCount(); i++)
+			friends.add(((NBTTagString)list.tagAt(i)).data);
 		}
 	}
 	
@@ -39,11 +39,11 @@ public class LMSecurity
 		tag.setString("Owner", owner);
 		tag.setByte("Level", (byte)level);
 		
-		if(friends.length > 0)
+		if(!friends.isEmpty())
 		{
 			NBTTagList list = new NBTTagList();
-			for(int i = 0; i < friends.length; i++)
-			list.appendTag(new NBTTagString(friends[i]));
+			for(String s : friends)
+			list.appendTag(new NBTTagString(null, s));
 			tag.setTag("Friends", list);
 		}
 	}
@@ -53,13 +53,8 @@ public class LMSecurity
 		if(level == PUBLIC) return true;
 		if(name == null || name.length() == 0) return false;
 		if(owner.equals(name)) return true;
-		
 		if(level == RESTRICTED)
-		{
-			for(int i = 0; i < friends.length; i++)
-			if(friends[i].equals(name)) return true;
-		}
-		
+		if(friends.contains(name)) return true;
 		return false;
 	}
 	

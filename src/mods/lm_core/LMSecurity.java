@@ -7,54 +7,62 @@ public class LMSecurity
 {
 	public static final int PUBLIC = 0;
 	public static final int PRIVATE = 1;
-	public static final int RESTRICED = 2;
+	public static final int RESTRICTED = 2;
 	
-	public int owner = 0;
+	public String owner = null;
 	public int level = PUBLIC;
-	public int[] friends = new int[0];
+	public String[] friends = new String[0];
 	
-	public LMSecurity(int ownerID)
-	{ owner = ownerID; }
+	public LMSecurity(String s)
+	{ owner = s; }
 	
 	public LMSecurity(EntityPlayer ep)
-	{ this(PlayerID.inst.get(ep)); }
+	{ this(ep == null ? null : ep.username); }
 	
-	public void readFromNBT(NBTTagList tag)
+	public void readFromNBT(NBTTagCompound tag)
 	{
-		if(tag == null || tag.tagCount() < 2)
-		{ level = PUBLIC; friends = new int[0]; }
+		owner = tag.getString("Owner");
+		level = tag.getByte("Level");
+		friends = new String[0];
 		
-		owner = getShort(tag, 0);
-		level = getShort(tag, 1);
-		friends = new int[tag.tagCount() - 2];
-		
-		for(int i = 0; i < friends.length; i++)
-		friends[i] = getShort(tag, i + 2);
+		if(tag.hasKey("Friends"))
+		{
+			NBTTagList list = tag.getTagList("Friends");
+			friends = new String[list.tagCount()];
+			for(int i = 0; i < friends.length; i++)
+			friends[i] = ((NBTTagString)list.tagAt(i)).data;
+		}
 	}
 	
-	public void writeToNBT(NBTTagList tag)
+	public void writeToNBT(NBTTagCompound tag)
 	{
-		addShort(tag, owner);
-		addShort(tag, level);
-		for(int i = 0; i < friends.length; i++)
-		addShort(tag, friends[i]);
+		tag.setString("Owner", owner);
+		tag.setByte("Level", (byte)level);
+		
+		if(friends.length > 0)
+		{
+			NBTTagList list = new NBTTagList();
+			for(int i = 0; i < friends.length; i++)
+			list.appendTag(new NBTTagString(friends[i]));
+			tag.setTag("Friends", list);
+		}
 	}
 	
-	private int getShort(NBTTagList tag, int i)
-	{ return ((NBTTagShort)tag.tagAt(i)).data; }
-	
-	private void addShort(NBTTagList tag, int i)
-	{ tag.appendTag(new NBTTagShort(null, (short)i)); }
-	
-	public boolean canPlayerInteract(int eid)
+	public boolean canPlayerInteract(String name)
 	{
-		if(level == 0) return true;
-		if(eid == owner) return true;
-		for(int i = 0; i < friends.length; i++)
-		if(eid == friends[i]) return true;
+		if(level == PUBLIC) return true;
+		if(name == null || name.length() == 0) return false;
+		if(owner.equals(name)) return true;
+		
+		if(level == RESTRICTED)
+		{
+			for(int i = 0; i < friends.length; i++)
+			if(friends[i].equals(name)) return true;
+		}
+		
 		return false;
 	}
 	
 	public boolean canPlayerInteract(EntityPlayer ep)
-	{ return canPlayerInteract(PlayerID.inst.get(ep)); }
+	{ return canPlayerInteract(ep == null ? null : ep.username); }
 }

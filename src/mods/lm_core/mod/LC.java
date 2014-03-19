@@ -11,8 +11,6 @@ import cpw.mods.fml.common.registry.GameRegistry;
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class LC
 {
-	public LC() { PlayerID.inst = new PlayerID(); }
-	
 	@Mod.Instance(LCFinals.MODID)
 	public static LC inst;
 	
@@ -40,20 +38,11 @@ public class LC
 	{
 		proxy.postInit();
 		new LC_TooltipHandler();
-		GameRegistry.registerPlayerTracker(new LCHandlers());
 	}
 	
 	@Mod.EventHandler
 	public void serverStarting(FMLServerStartingEvent e)
 	{
-		PlayerID.inst.onStarted();
-		e.registerServerCommand(new CmdPlayerID());
 		e.registerServerCommand(new CmdDebug());
-	}
-	
-	@Mod.EventHandler
-	public void serverStopped(FMLServerStoppedEvent e)
-	{
-		PlayerID.inst.onStopped();
 	}
 }

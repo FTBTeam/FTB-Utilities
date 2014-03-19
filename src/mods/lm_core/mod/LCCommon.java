@@ -33,9 +33,12 @@ public class LCCommon implements IGuiHandler // LCClient
 		TileEntity te = world.getBlockTileEntity(x, y, z);
 		if(te != null && te instanceof IGuiTile)
 		{
-			if(te instanceof ISecureTile && !((ISecureTile)te).getSecurity().canPlayerInteract(player))
-			return null; return ((IGuiTile)te).getContainer(player, ID);
+			if(te instanceof ISecureTile && !((ISecureTile)te).getSecurity().canPlayerInteract(player)) return null;
+			Object c = ((IGuiTile)te).getContainer(player, ID);
+			//System.out.println("Opening gui " + c);
+			return c;
 		}
+		
 		return null;
 	}
 	

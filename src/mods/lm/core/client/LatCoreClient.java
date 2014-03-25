@@ -1,4 +1,4 @@
-package mods.lm_core.client;
+package mods.lm.core.client;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.tileentity.*;
 import net.minecraft.entity.*;

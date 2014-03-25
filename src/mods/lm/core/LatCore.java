@@ -1,8 +1,8 @@
-package mods.lm_core;
+package mods.lm.core;
 import java.io.*;
 import java.util.*;
 
-import mods.lm_core.mod.*;
+import mods.lm.core.mod.*;
 import net.minecraft.block.*;
 import net.minecraft.creativetab.*;
 import net.minecraft.entity.*;
@@ -11,6 +11,8 @@ import net.minecraft.item.*;
 import net.minecraft.item.crafting.*;
 import net.minecraft.tileentity.*;
 import net.minecraftforge.common.*;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.*;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
@@ -150,6 +152,14 @@ public class LatCore
 	
 	public static void addHarvestLevel(ItemStack block, EnumToolClass e, int level)
 	{ addHarvestLevel(block, e.toolClass, level); }
+	
+	public static Fluid addFluid(Fluid f)
+	{
+		Fluid f1 = FluidRegistry.getFluid(f.getName());
+		if(f1 != null) return f1;
+		FluidRegistry.registerFluid(f);
+		return f;
+	}
 	
 	public static boolean canUpdate()
 	{ return (!(FMLCommonHandler.instance().getEffectiveSide().isClient())); }

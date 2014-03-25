@@ -1,6 +1,5 @@
-package mods.lm_core;
+package mods.lm.core;
 import java.util.*;
-import mods.lm_core.mod.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.*;
 

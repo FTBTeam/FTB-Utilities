@@ -1,6 +1,6 @@
-package mods.lm_core.mod;
+package mods.lm.core.mod;
 import cpw.mods.fml.common.network.*;
-import mods.lm_core.*;
+import mods.lm.core.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.tileentity.*;
 import net.minecraft.util.*;

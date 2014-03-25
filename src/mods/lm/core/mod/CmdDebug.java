@@ -1,5 +1,5 @@
-package mods.lm_core.mod;
-import mods.lm_core.*;
+package mods.lm.core.mod;
+import mods.lm.core.*;
 import net.minecraft.command.*;
 import net.minecraft.util.*;
 

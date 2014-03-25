@@ -1,4 +1,4 @@
-package mods.lm_core.client;
+package mods.lm.core.client;
 import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.*;
 import net.minecraft.block.Block;

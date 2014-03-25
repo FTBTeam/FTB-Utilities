@@ -1,4 +1,4 @@
-package mods.lm_core;
+package mods.lm.core;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.*;
 import net.minecraft.item.*;

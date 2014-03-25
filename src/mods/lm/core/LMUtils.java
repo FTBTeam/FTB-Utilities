@@ -1,4 +1,4 @@
-package mods.lm_core;
+package mods.lm.core;
 
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.EntityLivingBase;

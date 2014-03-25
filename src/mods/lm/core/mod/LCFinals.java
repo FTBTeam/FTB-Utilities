@@ -1,4 +1,4 @@
-package mods.lm_core.mod;
+package mods.lm.core.mod;
 
 public class LCFinals
 {

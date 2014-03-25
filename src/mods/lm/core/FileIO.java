@@ -1,4 +1,4 @@
-package mods.lm_core;
+package mods.lm.core;
 import java.io.*;
 import java.util.*;
 

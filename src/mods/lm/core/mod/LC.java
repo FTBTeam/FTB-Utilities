@@ -1,11 +1,9 @@
-package mods.lm_core.mod;
+package mods.lm.core.mod;
 import java.util.logging.*;
-
-import mods.lm_core.LatCore;
+import mods.lm.core.LatCore;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.*;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 @Mod(modid = LCFinals.MODID, name = LCFinals.MODNAME, version = LCFinals.VERSION)
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)

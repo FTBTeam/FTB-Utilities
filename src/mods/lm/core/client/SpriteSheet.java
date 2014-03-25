@@ -1,8 +1,10 @@
-package mods.lm_core.client;
+package mods.lm.core.client;
 import java.awt.image.*;
 import java.io.*;
+
 import javax.imageio.*;
-import mods.lm_core.*;
+
+import mods.lm.core.*;
 import net.minecraft.client.renderer.texture.*;
 import net.minecraft.client.resources.*;
 import net.minecraft.util.*;

@@ -1,4 +1,4 @@
-package mods.lm_core;
+package mods.lm.core;
 import net.minecraftforge.common.ForgeDirection;
 import static net.minecraftforge.common.ForgeDirection.*;
 

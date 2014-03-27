@@ -223,6 +223,7 @@ public class InvUtils
 				ei.motionX = w.rand.nextGaussian() * 0.07F;
 				ei.motionY = w.rand.nextFloat() * 0.05F;
 				ei.motionZ = w.rand.nextGaussian() * 0.07F;
+				ei.delayBeforeCanPickup = 10;
 				w.spawnEntityInWorld(ei);
 			}
 			

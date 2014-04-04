@@ -1,12 +1,10 @@
 package mods.lm.core.mod;
-import java.util.logging.*;
 import mods.lm.core.LatCore;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.*;
 
 @Mod(modid = LCFinals.MODID, name = LCFinals.MODNAME, version = LCFinals.VERSION)
-@NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class LC
 {
 	@Mod.Instance(LCFinals.MODID)
@@ -15,12 +13,9 @@ public class LC
 	@SidedProxy(clientSide = LCFinals.SIDE_CLIENT, serverSide = LCFinals.SIDE_SERVER)
 	public static LCCommon proxy;
 	
-	public static Logger logger = Logger.getLogger("LatCore");
-	
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
-		logger.setParent(FMLLog.getLogger());
 		LatCore.addGuiHandler(this, proxy);
 		proxy.preInit();
 	}
@@ -41,6 +36,6 @@ public class LC
 	@Mod.EventHandler
 	public void serverStarting(FMLServerStartingEvent e)
 	{
-		e.registerServerCommand(new CmdDebug());
+		//e.registerServerCommand(new CmdDebug());
 	}
 }

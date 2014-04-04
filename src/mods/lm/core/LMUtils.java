@@ -1,14 +1,11 @@
 package mods.lm.core;
-
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ConfigCategory;
-import net.minecraftforge.common.Configuration;
-import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.common.Property;
+import net.minecraftforge.common.config.*;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class LMUtils
 {
@@ -71,5 +68,21 @@ public class LMUtils
 			{ s += comment[i]; if(i < comment.length - 1) s += '\n'; }
 			prop.comment = s;
 		}
+	}
+	
+	public static final double[] getMidPoint(double[] pos1, double[] pos2, float p)
+	{
+		double x = pos2[0] - pos1[0];
+		double y = pos2[1] - pos1[1];
+		double z = pos2[2] - pos1[2];
+		double d = Math.sqrt(x * x + y * y + z * z);
+		return new double[] { pos1[0] + (x / d) * (d * p), pos1[1] + (y / d) * (d * p), pos1[2] + (z / d) * (d * p) };
+	}
+	
+	public static int percent(int i, int max)
+	{
+		if(i == 0) return 0;
+		if(i == max) return 100;
+		return (int)((float)i * 100F / (float)max);
 	}
 }

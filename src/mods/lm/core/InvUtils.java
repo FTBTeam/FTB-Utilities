@@ -6,6 +6,7 @@ import net.minecraft.nbt.*;
 import net.minecraft.tileentity.*;
 import net.minecraft.world.*;
 import net.minecraftforge.common.*;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class InvUtils
 {
@@ -20,8 +21,8 @@ public class InvUtils
 	
 	public static IInventory getInvAt(World w, double x, double y, double z, boolean entities)
 	{
-		if(entities) return TileEntityHopper.getInventoryAtLocation(w, x, y, z);
-		TileEntity te = w.getBlockTileEntity((int)x, (int)y, (int)z);
+		if(entities) return TileEntityHopper.func_145893_b(w, x, y, z);
+		TileEntity te = w.getTileEntity((int)x, (int)y, (int)z);
 		return (te != null && te instanceof IInventory) ? (IInventory)te : null;
 	}
 	
@@ -34,14 +35,14 @@ public class InvUtils
 		int z = te.zCoord + side.offsetZ;
 		
 		//TODO: Make more specific when Tile == Chest
-		TileEntity te1 = te.worldObj.getBlockTileEntity(x, y, z);
+		TileEntity te1 = te.getWorldObj().getTileEntity(x, y, z);
 		if(te1 != null && te1 instanceof IInventory) return (IInventory)te1;
 		
 		return null;
 	}
 	
-	public static boolean itemsEquals(ItemStack is1, ItemStack is2, boolean size)
-	{ return is1.itemID == is2.itemID && is1.getItemDamage() == is2.getItemDamage() && ItemStack.areItemStackTagsEqual(is1, is2) && (size ? (is1.stackSize == is2.stackSize) : true); }
+	public static boolean itemsEquals(ItemStack is1, ItemStack is2, boolean size, boolean nbt)
+	{ return is1.getItem() == is2.getItem() && is1.getItemDamage() == is2.getItemDamage() && (nbt ? ItemStack.areItemStackTagsEqual(is1, is2) : true) && (size ? (is1.stackSize == is2.stackSize) : true); }
 	
 	public static int[] getAllSlots(IInventory inv, ForgeDirection side)
 	{
@@ -68,7 +69,7 @@ public class InvUtils
 			if(is1 != null && is1.stackSize < is1.getMaxStackSize())
 			{
 				if(filter == null) return i;
-				else if(itemsEquals(filter, is1, false) && (is1.stackSize + filter.stackSize <= filter.getMaxStackSize())) return i;
+				else if(itemsEquals(filter, is1, false, true) && (is1.stackSize + filter.stackSize <= filter.getMaxStackSize())) return i;
 			}
 		}
 		
@@ -86,7 +87,7 @@ public class InvUtils
 			if(is1 != null)
 			{
 				if(filter == null) return i;
-				else if(itemsEquals(filter, is1, false)) return i;
+				else if(itemsEquals(filter, is1, false, true)) return i;
 			}
 		}
 		
@@ -117,7 +118,7 @@ public class InvUtils
 			is.stackSize--;
 			if(is.stackSize <= 0) is = null;
 			inv.setInventorySlotContents(i, is);
-			inv.onInventoryChanged();
+			inv.markDirty();
 		}
 
 		return false;
@@ -147,10 +148,10 @@ public class InvUtils
 				if(sidedInv != null && !sidedInv.canInsertItem(slots[i], is, side.ordinal())) return false;
 				
 				inv.setInventorySlotContents(slots[i], is);
-				inv.onInventoryChanged();
+				inv.markDirty();
 				return true;
 			}
-			else if(itemsEquals(is, is1, false))
+			else if(itemsEquals(is, is1, false, true))
 			{
 				if(is1.stackSize + 1 <= is1.getMaxStackSize())
 				{
@@ -158,7 +159,7 @@ public class InvUtils
 					
 					is1.stackSize++;
 					inv.setInventorySlotContents(slots[i], is1);
-					inv.onInventoryChanged();
+					inv.markDirty();
 					return true;
 				}
 			}
@@ -198,11 +199,11 @@ public class InvUtils
 		
 		if(tag.hasKey(s))
 		{
-			NBTTagList list = tag.getTagList(s);
+			NBTTagList list = tag.getTagList(s, 0);
 			
 			for(int i = 0; i < list.tagCount(); i++)
 			{
-				NBTTagCompound tag1 = (NBTTagCompound)list.tagAt(i);
+				NBTTagCompound tag1 = list.getCompoundTagAt(i);
 				int slot = tag1.getShort("Slot");
 				stacks[slot] = ItemStack.loadItemStackFromNBT(tag1);
 			}

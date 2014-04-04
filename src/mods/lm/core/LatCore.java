@@ -9,21 +9,30 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.*;
+import net.minecraft.network.INetHandler;
 import net.minecraft.tileentity.*;
 import net.minecraftforge.common.*;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.oredict.*;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.*;
 import cpw.mods.fml.common.registry.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class LatCore
 {
 	public static boolean enableOreRecipes = true;
 	public static final int ANY = OreDictionary.WILDCARD_VALUE;
 	public static boolean debug = false;
+	
+	public static final int NBT_INT = 3;
+	public static final int NBT_STRING = 8;
+	public static final int NBT_LIST = 9;
+	public static final int NBT_MAP = 10;
+	public static final int NBT_INT_ARRAY = 11;
 	
 	public static final Configuration loadConfig(FMLPreInitializationEvent e, String s)
 	{ return new Configuration(new File(e.getModConfigurationDirectory(), s)); }
@@ -32,8 +41,13 @@ public class LatCore
 	{
 		CreativeTabs tab = new CreativeTabs(s)
 		{
+			@SideOnly(Side.CLIENT)
 			public ItemStack getIconItemStack()
 			{ return icon; }
+			
+			@SideOnly(Side.CLIENT)
+			public Item getTabIconItem()
+			{ return icon.getItem(); }
 		};
 		
 		return tab;
@@ -41,22 +55,6 @@ public class LatCore
 	
 	/** Prints message to chat (doesn't translate it) */
 	public static final void printChat(String s) { LC.proxy.printChat(s); }
-	
-	public static final double[] getMidPoint(double[] pos1, double[] pos2, float p)
-	{
-		double x = pos2[0] - pos1[0];
-		double y = pos2[1] - pos1[1];
-		double z = pos2[2] - pos1[2];
-		double d = Math.sqrt(x * x + y * y + z * z);
-		return new double[] { pos1[0] + (x / d) * (d * p), pos1[1] + (y / d) * (d * p), pos1[2] + (z / d) * (d * p) };
-	}
-	
-	public static int percent(int i, int max)
-	{
-		if(i == 0) return 0;
-		if(i == max) return 100;
-		return (int)((float)i * 100F / (float)max);
-	}
 	
 	// Registry methods //
 	
@@ -79,7 +77,7 @@ public class LatCore
 	{ return EntityRegistry.findGlobalUniqueEntityId(); }
 
 	public static void addSmeltingRecipe(ItemStack out, ItemStack in, float xp)
-	{ FurnaceRecipes.smelting().addSmelting(in.itemID, in.getItemDamage(), out, xp); }
+	{ FurnaceRecipes.smelting().func_151394_a(in, out, xp); }
 	
 	@SuppressWarnings("all")
 	public static IRecipe addRecipe(IRecipe r)
@@ -133,22 +131,25 @@ public class LatCore
 	{ return OreDictionary.getOres(name); }
 	
 	public static void addWorldGenerator(IWorldGenerator i)
-	{ GameRegistry.registerWorldGenerator(i); }
+	{ GameRegistry.registerWorldGenerator(i, 5); }
 	
 	public static void addGuiHandler(Object mod, IGuiHandler i)
-	{ NetworkRegistry.instance().registerGuiHandler(mod, i); }
+	{ NetworkRegistry.INSTANCE.registerGuiHandler(mod, i); }
 	
-	public static void addPacketHandler(IPacketHandler i, String channel)
-	{ NetworkRegistry.instance().registerChannel(i, channel); }
+	public static void addPacketHandler(INetHandler i, String channel)
+	//FIXME: { NetworkRegistry.INSTANCE.re(i, channel); }
+	{ }
 	
 	public static void addTool(Item tool, String customClass, int level)
-	{ MinecraftForge.setToolClass(tool, customClass, level); }
+	//FIXME: { MinecraftForge.setToolClass(tool, customClass, level); }
+	{  }
 	
 	public static void addTool(Item tool, EnumToolClass e, int level)
 	{ addTool(tool, e.toolClass, level); }
 	
 	public static void addHarvestLevel(ItemStack block, String customClass, int level)
-	{ MinecraftForge.setBlockHarvestLevel(Block.blocksList[block.itemID], block.getItemDamage(), customClass, level); }
+	//FIXME: { MinecraftForge.setBlockHarvestLevel(Block.blocksList[block.itemID], block.getItemDamage(), customClass, level); }
+	{ }
 	
 	public static void addHarvestLevel(ItemStack block, EnumToolClass e, int level)
 	{ addHarvestLevel(block, e.toolClass, level); }
@@ -166,5 +167,5 @@ public class LatCore
 	
 	public static void openGui(IGuiTile t, int ID, EntityPlayer ep)
 	{ TileEntity te = (TileEntity)t;
-	ep.openGui(LC.inst, ID, te.worldObj, te.xCoord, te.yCoord, te.zCoord); }
+	ep.openGui(LC.inst, ID, te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord); }
 }

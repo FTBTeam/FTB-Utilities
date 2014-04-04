@@ -6,6 +6,7 @@ import mods.lm.core.ISecureTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.*;
@@ -18,8 +19,8 @@ public class LCClient extends LCCommon
 	public void postInit() { }
 	
 	public void printChat(String s)
-	{
-		try { Minecraft.getMinecraft().thePlayer.addChatMessage(s); }
+	{//CommandBase
+		try { Minecraft.getMinecraft().thePlayer.addChatComponentMessage(IChatComponent.Serializer.func_150699_a("")); }
 		catch(Exception e) { System.out.println(s); }
 	}
 	
@@ -31,7 +32,7 @@ public class LCClient extends LCCommon
 	
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te != null && te instanceof IGuiTile)
 		{
 			if(te instanceof ISecureTile && !((ISecureTile)te).getSecurity().canPlayerInteract(player)) return null;

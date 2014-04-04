@@ -25,12 +25,13 @@ public class LCCommon implements IGuiHandler // LCClient
 		Vec3 pos = ep.worldObj.getWorldVec3Pool().getVecFromPool(ep.posX, ep.posY, ep.posZ);
 		Vec3 look = ep.getLook(1F);
 		Vec3 vec = pos.addVector(look.xCoord * d, look.yCoord * d, look.zCoord * d);
-        return ep.worldObj.clip(pos, vec);
+        //return ep.worldObj.clip(pos, vec);
+		return ep.worldObj.rayTraceBlocks(pos, vec);
 	}
 	
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(x, y, z);
 		if(te != null && te instanceof IGuiTile)
 		{
 			if(te instanceof ISecureTile && !((ISecureTile)te).getSecurity().canPlayerInteract(player)) return null;

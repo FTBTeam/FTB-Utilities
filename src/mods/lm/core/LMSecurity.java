@@ -17,7 +17,7 @@ public class LMSecurity
 	{ owner = s; }
 	
 	public LMSecurity(EntityPlayer ep)
-	{ this(ep == null ? null : ep.username); }
+	{ this(ep == null ? null : ep.getCommandSenderName()); }
 	
 	public void readFromNBT(NBTTagCompound tag)
 	{
@@ -27,9 +27,9 @@ public class LMSecurity
 		
 		if(tag.hasKey("Friends"))
 		{
-			NBTTagList list = tag.getTagList("Friends");
+			NBTTagList list = tag.getTagList("Friends", 0);
 			for(int i = 0; i < list.tagCount(); i++)
-			friends.add(((NBTTagString)list.tagAt(i)).data);
+			friends.add(list.getStringTagAt(i));
 		}
 	}
 	
@@ -42,7 +42,7 @@ public class LMSecurity
 		{
 			NBTTagList list = new NBTTagList();
 			for(String s : friends)
-			list.appendTag(new NBTTagString(null, s));
+			list.appendTag(new NBTTagString(s));
 			tag.setTag("Friends", list);
 		}
 	}
@@ -58,5 +58,5 @@ public class LMSecurity
 	}
 	
 	public boolean canPlayerInteract(EntityPlayer ep)
-	{ return canPlayerInteract(ep == null ? null : ep.username); }
+	{ return canPlayerInteract(ep == null ? null : ep.getCommandSenderName()); }
 }

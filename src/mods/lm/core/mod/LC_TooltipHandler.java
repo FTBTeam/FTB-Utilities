@@ -1,4 +1,5 @@
 package mods.lm.core.mod;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.common.*;
 import net.minecraftforge.event.*;
 import net.minecraftforge.event.entity.player.*;
@@ -10,7 +11,7 @@ public class LC_TooltipHandler
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
-	@ForgeSubscribe
+	@SubscribeEvent
 	public void onTooltip(ItemTooltipEvent e)
 	{
 		if(e.showAdvancedItemTooltips)

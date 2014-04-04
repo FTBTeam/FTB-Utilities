@@ -2,6 +2,7 @@ package mods.lm.core.client;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.tileentity.*;
 import net.minecraft.entity.*;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.*;
 import net.minecraftforge.client.*;
 import cpw.mods.fml.client.registry.*;
@@ -14,7 +15,7 @@ public class LatCoreClient
 	{ RenderingRegistry.registerEntityRenderingHandler(c, r); }
 	
 	public static final void addTileRenderer(Class<? extends TileEntity> c, TileEntitySpecialRenderer r)
-	{ r.setTileEntityRenderer(TileEntityRenderer.instance); ClientRegistry.bindTileEntitySpecialRenderer(c, r); }
+	{ r.func_147497_a(TileEntityRendererDispatcher.instance); ClientRegistry.bindTileEntitySpecialRenderer(c, r); }
 	
 	public static final int getNewArmorID(String s)
 	{ return RenderingRegistry.addNewArmourRendererPrefix(s); }
@@ -25,6 +26,6 @@ public class LatCoreClient
 	public static final void addBlockRenderer(int i, ISimpleBlockRenderingHandler r)
 	{ RenderingRegistry.registerBlockHandler(i, r); }
 
-	public static final void addItemRenderer(int itemID, IItemRenderer i)
-	{ MinecraftForgeClient.registerItemRenderer(itemID, i); }
+	public static final void addItemRenderer(Item item, IItemRenderer i)
+	{ MinecraftForgeClient.registerItemRenderer(item, i); }
 }

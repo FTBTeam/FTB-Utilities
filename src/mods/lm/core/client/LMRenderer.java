@@ -1,8 +1,10 @@
 package mods.lm.core.client;
 import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.relauncher.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.*;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.*;
 
 @SideOnly(Side.CLIENT)
@@ -22,13 +24,13 @@ public class LMRenderer
 	public static final void recolor()
 	{ GL11.glColor4f(1F, 1F, 1F, 1F); }
 	
-	public static final void renderStandardBlockIcons(RenderBlocks r, Icon[] icons)
+	public static final void renderStandardBlockIcons(RenderBlocks r, IIcon[] icons)
 	{
 		Tessellator tessellator = Tessellator.instance;
 		GL11.glRotatef(90F, 0F, 1F, 0F);
 		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-		Block.glass.setBlockBoundsForItemRender();
-		r.setRenderBoundsFromBlock(Block.glass);
+		Blocks.glass.setBlockBoundsForItemRender();
+		r.setRenderBoundsFromBlock(Blocks.glass);
 		
 		if(icons[0] != null)
 		{

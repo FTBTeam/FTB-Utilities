@@ -33,28 +33,23 @@ public class SimpleInv implements IInventory
 	{ return items[i]; }
 	
 	@Override
-	public ItemStack decrStackSize(int i, int j)
+    public ItemStack decrStackSize(int slot, int amt)
 	{
-		if (items[i] != null)
-		{
-			if (items[i].stackSize <= j)
-			{
-				ItemStack is = items[i];
-				items[i] = null;
-				onInventoryChanged();
-				return is;
-			}
-			else
-			{
-				ItemStack is = items[i].splitStack(j);
-				if (items[i].stackSize == 0) items[i] = null;
-				onInventoryChanged();
-				return is;
-			}
-		}
-		
-		return null;
-	}
+	    ItemStack stack = getStackInSlot(slot);
+	    if (stack != null)
+	    {
+		    if (stack.stackSize <= amt)
+		    setInventorySlotContents(slot, null);
+		    else
+		    {
+			    stack = stack.splitStack(amt);
+			    if (stack.stackSize == 0)
+			    setInventorySlotContents(slot, null);
+		    }
+	    }
+	    
+	    return stack;
+    }
 
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i)
@@ -64,15 +59,19 @@ public class SimpleInv implements IInventory
 	}
 
 	@Override
-	public void setInventorySlotContents(int i, ItemStack is)
-	{ items[i] = is; }
-
+	public void setInventorySlotContents(int i, ItemStack stack)
+	{
+		items[i] = stack;
+		if (stack != null && stack.stackSize > getInventoryStackLimit())
+		stack.stackSize = getInventoryStackLimit();
+	}
+	
 	@Override
-	public String getInvName()
-	{ return isInvNameLocalized() ? customName : invName; }
-
+	public String getInventoryName()
+	{ return hasCustomInventoryName() ? customName : invName; }
+	
 	@Override
-	public boolean isInvNameLocalized()
+	public boolean hasCustomInventoryName()
 	{ return customName != null; }
 
 	@Override
@@ -80,8 +79,8 @@ public class SimpleInv implements IInventory
 	{ return maxStackSize; }
 
 	@Override
-	public void onInventoryChanged()
-	{ if(owner != null) owner.onInventoryChanged(); }
+	public void markDirty()
+	{ if(owner != null) owner.markDirty(); }
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer ep)
@@ -92,12 +91,12 @@ public class SimpleInv implements IInventory
 	{ return owner.isItemValidForSlot(i, is); }
 	
 	@Override
-	public void openChest()
+	public void openInventory()
 	{
 	}
-
+	
 	@Override
-	public void closeChest()
+	public void closeInventory()
 	{
 	}
 	

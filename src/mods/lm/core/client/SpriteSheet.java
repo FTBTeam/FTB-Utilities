@@ -102,7 +102,7 @@ public class SpriteSheet
 		public void updateAnimation() { ++tickCounter; }
 		
 		@SuppressWarnings("all")
-		public boolean load(ResourceManager manager, ResourceLocation location) throws IOException
+		public boolean load(IResourceManager manager, ResourceLocation location)
 		{
 			int x = posX * parent.scaleX;
 			int y = posY * parent.scaleY;

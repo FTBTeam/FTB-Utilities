@@ -1,4 +1,4 @@
-package mods.lm.core;
+package latmod.core;
 import java.io.*;
 import java.util.*;
 

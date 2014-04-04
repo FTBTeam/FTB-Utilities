@@ -1,4 +1,4 @@
-package mods.lm.core.client;
+package latmod.core.client;
 import cpw.mods.fml.relauncher.*;
 
 public class TextureCoords

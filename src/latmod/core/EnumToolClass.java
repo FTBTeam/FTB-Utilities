@@ -1,4 +1,4 @@
-package mods.lm.core;
+package latmod.core;
 
 public enum EnumToolClass
 {

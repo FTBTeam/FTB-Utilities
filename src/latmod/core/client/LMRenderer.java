@@ -1,4 +1,4 @@
-package mods.lm.core.client;
+package latmod.core.client;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;

@@ -1,8 +1,8 @@
-package mods.lm.core.mod;
+package latmod.core.mod;
 import org.lwjgl.input.*;
 
-import mods.lm.core.IGuiTile;
-import mods.lm.core.ISecureTile;
+import latmod.core.IGuiTile;
+import latmod.core.ISecureTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;

@@ -1,4 +1,4 @@
-package mods.lm.core;
+package latmod.core;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
 

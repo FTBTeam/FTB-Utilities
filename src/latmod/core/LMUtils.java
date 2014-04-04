@@ -1,4 +1,4 @@
-package mods.lm.core;
+package latmod.core;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;

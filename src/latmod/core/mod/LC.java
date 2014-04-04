@@ -1,5 +1,5 @@
-package mods.lm.core.mod;
-import mods.lm.core.LatCore;
+package latmod.core.mod;
+import latmod.core.LatCore;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.*;

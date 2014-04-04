@@ -1,8 +1,8 @@
-package mods.lm.core;
+package latmod.core;
 import java.io.*;
 import java.util.*;
 
-import mods.lm.core.mod.*;
+import latmod.core.mod.*;
 import net.minecraft.block.*;
 import net.minecraft.creativetab.*;
 import net.minecraft.entity.*;

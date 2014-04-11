@@ -59,10 +59,10 @@ public class LatCore
 	// Registry methods //
 	
 	public static final void addItem(Item i, String name, String modid)
-	{ GameRegistry.registerItem(i, modid + "_" + name, modid); }
+	{ GameRegistry.registerItem(i, name, modid); }
 	
 	public static final void addBlock(Block b, Class<? extends ItemBlock> c, String name, String modid)
-	{ GameRegistry.registerBlock(b, c, modid + "_" + name, modid); }
+	{ GameRegistry.registerBlock(b, c, name, modid); }
 	
 	public static final void addBlock(Block b, String name, String modid)
 	{ addBlock(b, ItemBlock.class, name, modid); }

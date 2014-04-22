@@ -36,6 +36,5 @@ public class LC
 	@Mod.EventHandler
 	public void serverStarting(FMLServerStartingEvent e)
 	{
-		//e.registerServerCommand(new CmdDebug());
 	}
 }

@@ -1,0 +1,20 @@
+[
+{
+  "modid": "latcore",
+  "name": "LatCore",
+  "description": "Core mod for LatvianModder's mods",
+  "version": "${version}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": [
+    "LatvianModder"
+  ],
+  "credits": "MCP Team & Forge team for making modding possible",
+  "logoFile": "",
+  "screenshots": [
+  ],
+  "parent":"",
+  "dependencies": [
+  ]
+}
+]

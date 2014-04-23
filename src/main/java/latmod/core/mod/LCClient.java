@@ -27,8 +27,8 @@ public class LCClient extends LCCommon
 	public int getKeyID(String s) { return Keyboard.getKeyIndex(s); }
 	public boolean isKeyDown(int id) { return Keyboard.isKeyDown(id); }
 	
-	public MovingObjectPosition rayTrace(EntityPlayer ep, double d)
-	{ return ep.rayTrace(d, 1F); }
+	//public MovingObjectPosition rayTrace(EntityPlayer ep, double d)
+	//{ return ep.rayTrace(d, 1F); }
 	
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{

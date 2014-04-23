@@ -22,10 +22,9 @@ public class LCCommon implements IGuiHandler // LCClient
 	
 	public MovingObjectPosition rayTrace(EntityPlayer ep, double d)
 	{
-		Vec3 pos = ep.worldObj.getWorldVec3Pool().getVecFromPool(ep.posX, ep.posY, ep.posZ);
+		Vec3 pos = ep.worldObj.getWorldVec3Pool().getVecFromPool(ep.posX, ep.posY + 1.62D, ep.posZ);
 		Vec3 look = ep.getLook(1F);
 		Vec3 vec = pos.addVector(look.xCoord * d, look.yCoord * d, look.zCoord * d);
-        //return ep.worldObj.clip(pos, vec);
 		return ep.worldObj.rayTraceBlocks(pos, vec);
 	}
 	
@@ -36,7 +35,6 @@ public class LCCommon implements IGuiHandler // LCClient
 		{
 			if(te instanceof ISecureTile && !((ISecureTile)te).getSecurity().canPlayerInteract(player)) return null;
 			Object c = ((IGuiTile)te).getContainer(player, ID);
-			//System.out.println("Opening gui " + c);
 			return c;
 		}
 		

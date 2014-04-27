@@ -56,6 +56,24 @@ public class LMUtils
 		if(j != i.length - 1) s.append(", "); }
 		return s.toString();
 	}
+	
+	public static String stripeD(double... i)
+	{
+		StringBuilder s = new StringBuilder();
+		for(int j = 0; j < i.length; j++)
+		{ s.append(((long)(i[j] * 100D)) / 100D);
+		if(j != i.length - 1) s.append(", "); }
+		return s.toString();
+	}
+	
+	public static String stripeF(float... i)
+	{
+		StringBuilder s = new StringBuilder();
+		for(int j = 0; j < i.length; j++)
+		{ s.append(((int)(i[j] * 100F)) / 100F);
+		if(j != i.length - 1) s.append(", "); }
+		return s.toString();
+	}
 
 	public static void setPropertyComment(Configuration config, String category, String property, String... comment)
 	{

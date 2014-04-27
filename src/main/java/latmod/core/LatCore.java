@@ -4,6 +4,7 @@ import java.util.*;
 
 import latmod.core.mod.*;
 import net.minecraft.block.*;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.creativetab.*;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,6 +12,7 @@ import net.minecraft.item.*;
 import net.minecraft.item.crafting.*;
 import net.minecraft.network.INetHandler;
 import net.minecraft.tileentity.*;
+import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.*;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.*;
@@ -54,7 +56,11 @@ public class LatCore
 	}
 	
 	/** Prints message to chat (doesn't translate it) */
-	public static final void printChat(String s) { LC.proxy.printChat(s); }
+	public static final void printChat(ICommandSender ep, String s)
+	{
+		if(ep == null) System.out.println(s);
+		else ep.addChatMessage(new ChatComponentText(s));
+	}
 	
 	// Registry methods //
 	

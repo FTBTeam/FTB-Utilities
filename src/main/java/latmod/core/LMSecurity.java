@@ -11,7 +11,7 @@ public class LMSecurity
 	
 	public String owner = null;
 	public int level = PUBLIC;
-	public ArrayList<String> friends = new ArrayList<String>();
+	public FastList<String> friends = new FastList<String>();
 	
 	public LMSecurity(String s)
 	{ owner = s; }
@@ -27,7 +27,7 @@ public class LMSecurity
 		
 		if(tag.hasKey("Friends"))
 		{
-			NBTTagList list = tag.getTagList("Friends", 0);
+			NBTTagList list = tag.getTagList("Friends", LatCore.NBT_STRING);
 			for(int i = 0; i < list.tagCount(); i++)
 			friends.add(list.getStringTagAt(i));
 		}

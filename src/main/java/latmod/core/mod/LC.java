@@ -1,5 +1,6 @@
 package latmod.core.mod;
 import latmod.core.LatCore;
+import latmod.core.OreHelper;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.*;
@@ -30,6 +31,7 @@ public class LC
 	public void postInit(FMLPostInitializationEvent e)
 	{
 		proxy.postInit();
+		OreHelper.load();
 		new LC_TooltipHandler();
 	}
 	

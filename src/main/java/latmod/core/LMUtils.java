@@ -74,7 +74,7 @@ public class LMUtils
 		if(j != i.length - 1) s.append(", "); }
 		return s.toString();
 	}
-
+	
 	public static void setPropertyComment(Configuration config, String category, String property, String... comment)
 	{
 		ConfigCategory cat = config.getCategory(category);

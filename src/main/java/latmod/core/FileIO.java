@@ -4,7 +4,7 @@ import java.util.*;
 
 public class FileIO
 {
-	public final ArrayList<String> text = new ArrayList<String>();
+	public final FastList<String> text = new FastList<String>();
 	public final File file;
 	private boolean sort = false;
 	private StringBuilder currentText = new StringBuilder();

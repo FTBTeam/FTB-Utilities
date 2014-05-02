@@ -4,12 +4,26 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
+import net.minecraft.world.World;
 
 @SideOnly(Side.CLIENT)
 public class LMRenderer
 {
+	public static RenderItem itemRenderer = new RenderItem()
+	{
+		public boolean shouldBob()
+		{ return false; }
+		
+		public boolean shouldSpreadItems()
+		{ return false; }
+	};
+	
 	public static final void colorize(int c, int a)
 	{
 		float r = ((c >> 16) & 255) / 255F;
@@ -81,5 +95,21 @@ public class LMRenderer
 		}
 		
 		GL11.glTranslatef(0.5F, 0.5F, 0.5F);
+	}
+	
+	public void renderItem(World w, ItemStack is, boolean fancy, boolean frame)
+	{
+		boolean isFancy = RenderManager.instance.options.fancyGraphics;
+		RenderManager.instance.options.fancyGraphics = true;
+		RenderItem.renderInFrame = frame;
+		
+		EntityItem ei = new EntityItem(w);
+		ei.hoverStart = 0F;
+		ei.setEntityItemStack(is);
+		itemRenderer.setRenderManager(RenderManager.instance);
+		itemRenderer.doRender(ei, 0D, 0D, 0D, 0F, 0F);
+		
+		RenderManager.instance.options.fancyGraphics = isFancy;
+		RenderItem.renderInFrame = false;
 	}
 }

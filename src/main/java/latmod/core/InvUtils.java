@@ -212,6 +212,37 @@ public class InvUtils
 		return stacks;
 	}
 	
+	public static ItemStack decrStackSize(IInventory inv, int slot, int amt)
+	{
+	    ItemStack stack = inv.getStackInSlot(slot);
+	    if (stack != null)
+	    {
+		    if (stack.stackSize <= amt)
+		    inv.setInventorySlotContents(slot, null);
+		    else
+		    {
+			    stack = stack.splitStack(amt);
+			    if (stack.stackSize == 0)
+			    inv.setInventorySlotContents(slot, null);
+		    }
+	    }
+	    
+	    return stack;
+    }
+	
+	public static ItemStack getStackInSlotOnClosing(IInventory inv, int i)
+	{
+		ItemStack is = inv.getStackInSlot(i);
+		
+		if(is != null)
+		{
+			inv.setInventorySlotContents(i, null);
+			return is;
+		}
+		
+		return null;
+	}
+	
 	public static void dropAllItems(World w, double x, double y, double z, ItemStack[] items)
 	{
 		if(w.isRemote) return;

@@ -199,7 +199,7 @@ public class InvUtils
 		
 		if(tag.hasKey(s))
 		{
-			NBTTagList list = tag.getTagList(s, 0);
+			NBTTagList list = tag.getTagList(s, LatCore.NBT_MAP);
 			
 			for(int i = 0; i < list.tagCount(); i++)
 			{
@@ -258,8 +258,6 @@ public class InvUtils
 				ei.delayBeforeCanPickup = 10;
 				w.spawnEntityInWorld(ei);
 			}
-			
-			items[i] = null;
 		}
 	}
 }

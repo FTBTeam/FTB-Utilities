@@ -53,7 +53,7 @@ public class LMSecurity
 		if(name == null || name.length() == 0) return false;
 		if(owner.equals(name)) return true;
 		if(level == RESTRICTED)
-		if(friends.contains(name)) return true;
+		return friends.contains(name);
 		return false;
 	}
 	

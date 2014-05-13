@@ -1,4 +1,6 @@
-package latmod.core;
+package latmod.core.tile;
+
+import latmod.core.LMSecurity;
 
 public interface ISecureTile extends ITileInterface
 {

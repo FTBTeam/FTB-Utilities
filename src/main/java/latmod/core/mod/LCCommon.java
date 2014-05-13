@@ -1,6 +1,7 @@
 package latmod.core.mod;
 import cpw.mods.fml.common.network.*;
 import latmod.core.*;
+import latmod.core.tile.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.tileentity.*;
 import net.minecraft.util.*;
@@ -27,14 +28,15 @@ public class LCCommon implements IGuiHandler // LCClient
 		return ep.worldObj.rayTraceBlocks(pos, vec);
 	}
 	
-	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	public Object getServerGuiElement(int ID, EntityPlayer ep, World world, int x, int y, int z)
 	{
+		if(LC.inst.ignoredGuiIDs.contains(ID)) return null;
+		
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te != null && te instanceof IGuiTile)
 		{
-			if(te instanceof ISecureTile && !((ISecureTile)te).getSecurity().canPlayerInteract(player)) return null;
-			Object c = ((IGuiTile)te).getContainer(player, ID);
-			return c;
+			if(te instanceof ISecureTile && !((ISecureTile)te).getSecurity().canPlayerInteract(ep)) return null;
+			return ((IGuiTile)te).getContainer(ep, ID);
 		}
 		
 		return null;

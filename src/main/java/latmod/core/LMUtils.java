@@ -1,10 +1,16 @@
 package latmod.core;
 import net.minecraft.block.BlockPistonBase;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.config.*;
+import net.minecraftforge.common.config.Property.Type;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class LMUtils
@@ -79,6 +85,7 @@ public class LMUtils
 	{
 		ConfigCategory cat = config.getCategory(category);
 		Property prop = cat.get(property);
+		
 		if(prop != null)
 		{
 			String s = "";
@@ -102,5 +109,36 @@ public class LMUtils
 		if(i == 0) return 0;
 		if(i == max) return 100;
 		return (int)((float)i * 100F / (float)max);
+	}
+	
+	//TODO: Still need to fix this
+	public static void teleportEntity(Entity e, int dim)
+	{
+		if ((e.worldObj.isRemote) || (e.isDead) || e.dimension == dim) return;
+		
+		LatCore.printChat(null, "Teleporting to dimension " + dim);
+		
+		e.worldObj.theProfiler.startSection("changeDimension");
+		MinecraftServer minecraftserver = MinecraftServer.getServer();
+		int j = e.dimension;
+		WorldServer worldserver = minecraftserver.worldServerForDimension(j);
+		WorldServer worldserver1 = minecraftserver.worldServerForDimension(dim);
+		e.dimension = dim;
+		e.worldObj.removeEntity(e);
+		e.isDead = false;
+		e.worldObj.theProfiler.startSection("reposition");
+		minecraftserver.getConfigurationManager().transferEntityToWorld(e, j, worldserver, worldserver1);
+		e.worldObj.theProfiler.endStartSection("reloading");
+		Entity entity = EntityList.createEntityByName(EntityList.getEntityString(e), worldserver1);
+		if (entity != null)
+		{
+			entity.copyDataFrom(e, true);
+			worldserver1.spawnEntityInWorld(entity);
+		}
+		e.isDead = true;
+		e.worldObj.theProfiler.endSection();
+		worldserver.resetUpdateEntityTick();
+		worldserver1.resetUpdateEntityTick();
+		e.worldObj.theProfiler.endSection();
 	}
 }

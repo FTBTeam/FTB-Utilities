@@ -1,4 +1,4 @@
-package latmod.core;
+package latmod.core.tile;
 import cpw.mods.fml.relauncher.*;
 import net.minecraft.client.gui.inventory.*;
 import net.minecraft.entity.player.*;

@@ -3,6 +3,7 @@ import java.io.*;
 import java.util.*;
 
 import latmod.core.mod.*;
+import latmod.core.tile.IGuiTile;
 import net.minecraft.block.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.creativetab.*;
@@ -142,23 +143,12 @@ public class LatCore
 	public static void addGuiHandler(Object mod, IGuiHandler i)
 	{ NetworkRegistry.INSTANCE.registerGuiHandler(mod, i); }
 	
-	public static void addPacketHandler(INetHandler i, String channel)
-	//FIXME: { NetworkRegistry.INSTANCE.re(i, channel); }
-	{ }
-	
 	public static void addTool(Item tool, String customClass, int level)
 	//FIXME: { MinecraftForge.setToolClass(tool, customClass, level); }
 	{  }
 	
 	public static void addTool(Item tool, EnumToolClass e, int level)
 	{ addTool(tool, e.toolClass, level); }
-	
-	public static void addHarvestLevel(ItemStack block, String customClass, int level)
-	//FIXME: { MinecraftForge.setBlockHarvestLevel(Block.blocksList[block.itemID], block.getItemDamage(), customClass, level); }
-	{ }
-	
-	public static void addHarvestLevel(ItemStack block, EnumToolClass e, int level)
-	{ addHarvestLevel(block, e.toolClass, level); }
 	
 	public static Fluid addFluid(Fluid f)
 	{

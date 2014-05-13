@@ -1,4 +1,4 @@
-package latmod.core;
+package latmod.core.tile;
 import net.minecraft.tileentity.TileEntity;
 
 public interface ITileInterface

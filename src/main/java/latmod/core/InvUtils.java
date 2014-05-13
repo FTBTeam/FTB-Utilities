@@ -245,7 +245,7 @@ public class InvUtils
 	
 	public static void dropAllItems(World w, double x, double y, double z, ItemStack[] items)
 	{
-		if(w.isRemote) return;
+		if(w.isRemote || items == null || items.length == 0) return;
 		
 		for(int i = 0; i < items.length; i++)
 		{

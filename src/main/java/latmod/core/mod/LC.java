@@ -1,6 +1,7 @@
 package latmod.core.mod;
-import latmod.core.LatCore;
-import latmod.core.OreHelper;
+import net.minecraft.tileentity.TileEntity;
+import latmod.core.*;
+import latmod.core.tile.*;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.*;
@@ -14,10 +15,12 @@ public class LC
 	@SidedProxy(clientSide = LCFinals.SIDE_CLIENT, serverSide = LCFinals.SIDE_SERVER)
 	public static LCCommon proxy;
 	
+	public FastList<Integer> ignoredGuiIDs = new FastList<Integer>();
+	
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
-		LatCore.addGuiHandler(this, proxy);
+		LatCore.addGuiHandler(inst, proxy);
 		proxy.preInit();
 	}
 	
@@ -33,10 +36,5 @@ public class LC
 		proxy.postInit();
 		OreHelper.load();
 		new LC_TooltipHandler();
-	}
-	
-	@Mod.EventHandler
-	public void serverStarting(FMLServerStartingEvent e)
-	{
 	}
 }

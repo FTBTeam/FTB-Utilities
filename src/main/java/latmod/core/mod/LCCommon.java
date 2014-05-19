@@ -30,7 +30,7 @@ public class LCCommon implements IGuiHandler // LCClient
 	
 	public Object getServerGuiElement(int ID, EntityPlayer ep, World world, int x, int y, int z)
 	{
-		if(LC.inst.ignoredGuiIDs.contains(ID)) return null;
+		//if(LC.inst.ignoredGuiIDs.contains(ID)) return null;
 		
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te != null && te instanceof IGuiTile)

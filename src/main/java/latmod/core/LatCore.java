@@ -129,7 +129,7 @@ public class LatCore
 	
 	public static void addOreDictionary(String name, ItemStack is)
 	{
-		ItemStack is1 = InvUtils.single(is);
+		ItemStack is1 = InvUtils.singleCopy(is);
 		if(!OreDictionary.getOres(name).contains(is1))
 		OreDictionary.registerOre(name, is1);
 	}

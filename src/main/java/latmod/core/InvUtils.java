@@ -10,7 +10,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class InvUtils
 {
-	public static ItemStack single(ItemStack is)
+	public static ItemStack singleCopy(ItemStack is)
 	{
 		if(is == null || is.stackSize <= 0) return null;
 		ItemStack is1 = is.copy(); is1.stackSize = 1; return is1;
@@ -259,5 +259,12 @@ public class InvUtils
 				w.spawnEntityInWorld(ei);
 			}
 		}
+	}
+
+	public static boolean canStack(ItemStack is1, ItemStack is2)
+	{
+		if(is1 == null || is2 == null) return false;
+		return (is1.stackSize + is2.stackSize <= is1.getMaxStackSize()
+		&& is1.stackSize + is2.stackSize <= is2.getMaxStackSize());
 	}
 }

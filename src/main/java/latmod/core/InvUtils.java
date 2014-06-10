@@ -6,7 +6,7 @@ import net.minecraft.nbt.*;
 import net.minecraft.tileentity.*;
 import net.minecraft.world.*;
 import net.minecraftforge.common.*;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.common.ForgeDirection;
 
 public class InvUtils
 {
@@ -21,8 +21,8 @@ public class InvUtils
 	
 	public static IInventory getInvAt(World w, double x, double y, double z, boolean entities)
 	{
-		if(entities) return TileEntityHopper.func_145893_b(w, x, y, z);
-		TileEntity te = w.getTileEntity((int)x, (int)y, (int)z);
+		if(entities) return TileEntityHopper.getInventoryAtLocation(w, x, y, z);
+		TileEntity te = w.getBlockTileEntity((int)x, (int)y, (int)z);
 		return (te != null && te instanceof IInventory) ? (IInventory)te : null;
 	}
 	
@@ -35,7 +35,7 @@ public class InvUtils
 		int z = te.zCoord + side.offsetZ;
 		
 		//TODO: Make more specific when Tile == Chest
-		TileEntity te1 = te.getWorldObj().getTileEntity(x, y, z);
+		TileEntity te1 = te.getWorldObj().getBlockTileEntity(x, y, z);
 		if(te1 != null && te1 instanceof IInventory) return (IInventory)te1;
 		
 		return null;
@@ -118,7 +118,7 @@ public class InvUtils
 			is.stackSize--;
 			if(is.stackSize <= 0) is = null;
 			inv.setInventorySlotContents(i, is);
-			inv.markDirty();
+			inv.onInventoryChanged();
 		}
 
 		return false;
@@ -148,7 +148,7 @@ public class InvUtils
 				if(sidedInv != null && !sidedInv.canInsertItem(slots[i], is, side.ordinal())) return false;
 				
 				inv.setInventorySlotContents(slots[i], is);
-				inv.markDirty();
+				inv.onInventoryChanged();
 				return true;
 			}
 			else if(itemsEquals(is, is1, false, true))
@@ -159,7 +159,7 @@ public class InvUtils
 					
 					is1.stackSize++;
 					inv.setInventorySlotContents(slots[i], is1);
-					inv.markDirty();
+					inv.onInventoryChanged();
 					return true;
 				}
 			}
@@ -199,11 +199,11 @@ public class InvUtils
 		
 		if(tag.hasKey(s))
 		{
-			NBTTagList list = tag.getTagList(s, LatCore.NBT_MAP);
+			NBTTagList list = tag.getTagList(s);
 			
 			for(int i = 0; i < list.tagCount(); i++)
 			{
-				NBTTagCompound tag1 = list.getCompoundTagAt(i);
+				NBTTagCompound tag1 = (NBTTagCompound)list.tagAt(i);
 				int slot = tag1.getShort("Slot");
 				stacks[slot] = ItemStack.loadItemStackFromNBT(tag1);
 			}

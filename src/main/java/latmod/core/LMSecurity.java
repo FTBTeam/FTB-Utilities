@@ -27,9 +27,9 @@ public class LMSecurity
 		
 		if(tag.hasKey("Friends"))
 		{
-			NBTTagList list = tag.getTagList("Friends", LatCore.NBT_STRING);
+			NBTTagList list = tag.getTagList("Friends");
 			for(int i = 0; i < list.tagCount(); i++)
-			friends.add(list.getStringTagAt(i));
+			friends.add(((NBTTagString)list.tagAt(i)).data);
 		}
 	}
 	
@@ -42,7 +42,7 @@ public class LMSecurity
 		{
 			NBTTagList list = new NBTTagList();
 			for(String s : friends)
-			list.appendTag(new NBTTagString(s));
+			list.appendTag(new NBTTagString(null, s));
 			tag.setTag("Friends", list);
 		}
 	}

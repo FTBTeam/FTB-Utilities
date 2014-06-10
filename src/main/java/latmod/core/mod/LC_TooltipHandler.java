@@ -1,11 +1,8 @@
 package latmod.core.mod;
 import java.util.*;
-
 import latmod.core.LatCore;
 import latmod.core.OreHelper;
 import latmod.core.OreHelper.StackEntry;
-import cpw.mods.fml.common.eventhandler.*;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.*;
 import net.minecraftforge.common.*;
 import net.minecraftforge.event.*;
@@ -19,17 +16,15 @@ public class LC_TooltipHandler
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
-	@SubscribeEvent
+	@ForgeSubscribe
 	public void onTooltip(ItemTooltipEvent e)
 	{
 		if(e.showAdvancedItemTooltips && e.itemStack != null)
 		{
 			Item i = e.itemStack.getItem();
 			
-			String s = Item.itemRegistry.getNameForObject(i);
-			
 			e.toolTip.add("Unlocalized name:");
-			e.toolTip.add(s.startsWith("minecraft:") ? s.substring(10) : s);
+			e.itemStack.getUnlocalizedName();
 			
 			ArrayList<String> ores = OreHelper.getOreNames(e.itemStack);
 			

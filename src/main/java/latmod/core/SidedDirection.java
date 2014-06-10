@@ -1,6 +1,6 @@
 package latmod.core;
-import net.minecraftforge.common.util.ForgeDirection;
-import static net.minecraftforge.common.util.ForgeDirection.*;
+import net.minecraftforge.common.ForgeDirection;
+import static net.minecraftforge.common.ForgeDirection.*;
 
 /** Still WIP */
 public enum SidedDirection

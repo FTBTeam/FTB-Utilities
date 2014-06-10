@@ -27,7 +27,7 @@ public class OreHelper
 		}
 
 		public int compareTo(StackEntry se)
-		{ return Item.itemRegistry.getNameForObject(item).compareTo(Item.itemRegistry.getNameForObject(item)); }
+		{ return Integer.compare(item.itemID, se.item.itemID); }
 	}
 	
 	public static final FastMap<StackEntry, ArrayList<String>> oreNames = new FastMap<StackEntry, ArrayList<String>>();

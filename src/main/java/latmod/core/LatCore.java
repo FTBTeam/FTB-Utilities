@@ -1,7 +1,6 @@
 package latmod.core;
 import java.io.*;
 import java.util.*;
-
 import latmod.core.mod.*;
 import latmod.core.tile.IGuiTile;
 import net.minecraft.block.*;
@@ -11,11 +10,9 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.*;
-import net.minecraft.network.INetHandler;
 import net.minecraft.tileentity.*;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.*;
 import net.minecraftforge.common.*;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.oredict.*;
 import cpw.mods.fml.common.*;
@@ -60,7 +57,7 @@ public class LatCore
 	public static final void printChat(ICommandSender ep, String s)
 	{
 		if(ep == null) System.out.println(s);
-		else ep.addChatMessage(new ChatComponentText(s));
+		else ep.sendChatToPlayer(new ChatMessageComponent().addText(s));
 	}
 	
 	// Registry methods //
@@ -84,7 +81,7 @@ public class LatCore
 	{ return EntityRegistry.findGlobalUniqueEntityId(); }
 
 	public static void addSmeltingRecipe(ItemStack out, ItemStack in, float xp)
-	{ FurnaceRecipes.smelting().func_151394_a(in, out, xp); }
+	{ FurnaceRecipes.smelting().addSmelting(in.itemID, in.getItemDamage(), out, xp); }
 	
 	@SuppressWarnings("all")
 	public static IRecipe addRecipe(IRecipe r)
@@ -138,14 +135,13 @@ public class LatCore
 	{ return OreDictionary.getOres(name); }
 	
 	public static void addWorldGenerator(IWorldGenerator i)
-	{ GameRegistry.registerWorldGenerator(i, 5); }
+	{ GameRegistry.registerWorldGenerator(i); }
 	
 	public static void addGuiHandler(Object mod, IGuiHandler i)
-	{ NetworkRegistry.INSTANCE.registerGuiHandler(mod, i); }
+	{ NetworkRegistry.instance().registerGuiHandler(mod, i); }
 	
 	public static void addTool(Item tool, String customClass, int level)
-	//FIXME: { MinecraftForge.setToolClass(tool, customClass, level); }
-	{  }
+	{ MinecraftForge.setToolClass(tool, customClass, level); }
 	
 	public static void addTool(Item tool, EnumToolClass e, int level)
 	{ addTool(tool, e.toolClass, level); }

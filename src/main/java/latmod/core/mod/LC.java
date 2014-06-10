@@ -7,6 +7,7 @@ import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.*;
 
 @Mod(modid = LCFinals.MODID, name = LCFinals.MODNAME, version = LCFinals.VERSION)
+@NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class LC
 {
 	@Mod.Instance(LCFinals.MODID)

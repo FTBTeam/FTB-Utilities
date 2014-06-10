@@ -30,7 +30,7 @@ public class OreHelper
 		{ return Integer.compare(item.itemID, se.item.itemID); }
 	}
 	
-	public static final FastMap<StackEntry, ArrayList<String>> oreNames = new FastMap<StackEntry, ArrayList<String>>();
+	public static final FastMap<StackEntry, FastList<String>> oreNames = new FastMap<StackEntry, FastList<String>>();
 	
 	public static void load()
 	{
@@ -47,8 +47,8 @@ public class OreHelper
 			if(al != null && al.size() > 0) for(ItemStack is : al)
 			{
 				StackEntry se = new StackEntry(is, ore);
-				ArrayList<String> al1 = oreNames.get(se);
-				if(al1 == null) al1 = new ArrayList<String>();
+				FastList<String> al1 = oreNames.get(se);
+				if(al1 == null) al1 = new FastList<String>();
 				al1.add(ore);
 				oreNames.put(se, al1);
 				
@@ -59,6 +59,6 @@ public class OreHelper
 		System.out.println("[LatCore] Loaded " + oresLoaded + " ores");
 	}
 	
-	public static ArrayList<String> getOreNames(ItemStack is)
+	public static FastList<String> getOreNames(ItemStack is)
 	{ return oreNames.get(new StackEntry(is, null)); }
 }

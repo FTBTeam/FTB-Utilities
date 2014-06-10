@@ -35,7 +35,15 @@ public class LCCommon implements IGuiHandler // LCClient
 		TileEntity te = world.getBlockTileEntity(x, y, z);
 		if(te != null && te instanceof IGuiTile)
 		{
-			if(te instanceof ISecureTile && !((ISecureTile)te).getSecurity().canPlayerInteract(ep)) return null;
+			boolean canOpen = true;
+			
+			if(te instanceof ISecureTile)
+			{
+				ISecureTile st = (ISecureTile)te;
+				if(st.enableSecurity() && st.getSecurity() != null && st.getSecurity().canPlayerInteract(ep))
+					canOpen = false;
+			}
+			
 			return ((IGuiTile)te).getContainer(ep, ID);
 		}
 		

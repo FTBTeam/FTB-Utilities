@@ -124,9 +124,9 @@ public class InvUtils
 		return false;
 	}
 	
-	public static boolean addItemToInv(IInventory inv, ItemStack is, ForgeDirection side)
+	public static boolean addSingleItemToInv(IInventory inv, ItemStack is, ForgeDirection side, boolean doAdd)
 	{
-		if(inv == null || is == null || is.stackSize != 1 || side == null || side == ForgeDirection.UNKNOWN) return false;
+		if(inv == null || is == null || side == null || side == ForgeDirection.UNKNOWN) return false;
 		int[] slots = null;
 		
 		ISidedInventory sidedInv = (inv instanceof ISidedInventory) ? (ISidedInventory)inv : null;
@@ -143,28 +143,39 @@ public class InvUtils
 		for(int i = 0; i < slots.length; i++)
 		{
 			ItemStack is1 = inv.getStackInSlot(slots[i]);
-			if(is1 == null || is1.stackSize == 0)
-			{
-				if(sidedInv != null && !sidedInv.canInsertItem(slots[i], is, side.ordinal())) return false;
-				
-				inv.setInventorySlotContents(slots[i], is);
-				inv.onInventoryChanged();
-				return true;
-			}
-			else if(itemsEquals(is, is1, false, true))
+			if(is1 != null && is1.stackSize > 0 && itemsEquals(is, is1, false, true))
 			{
 				if(is1.stackSize + 1 <= is1.getMaxStackSize())
 				{
-					if(sidedInv != null && !sidedInv.canInsertItem(slots[i], is, side.ordinal())) return false;
-					
-					is1.stackSize++;
-					inv.setInventorySlotContents(slots[i], is1);
-					inv.onInventoryChanged();
+					if(sidedInv == null || sidedInv.canInsertItem(slots[i], is, side.ordinal()))
+					{
+						if(doAdd)
+						{
+							is1.stackSize++;
+							inv.setInventorySlotContents(slots[i], is1);
+							inv.onInventoryChanged();
+						}
+						return true;
+					}
+				}
+			}
+		}
+		
+		for(int i = 0; i < slots.length; i++)
+		{
+			ItemStack is1 = inv.getStackInSlot(slots[i]);
+			if(is1 == null || is1.stackSize == 0)
+			{
+				if(sidedInv == null || sidedInv.canInsertItem(slots[i], is, side.ordinal()))
+				{
+					if(doAdd)
+						inv.setInventorySlotContents(slots[i], singleCopy(is));
+						
 					return true;
 				}
 			}
 		}
-
+		
 		return false;
 	}
 	

@@ -21,6 +21,9 @@ public class LC_TooltipHandler
 		{
 			Item i = e.itemStack.getItem();
 			
+			e.toolTip.add("Unlocalized name:");
+			e.toolTip.add(e.itemStack.getUnlocalizedName());
+			
 			FastList<String> ores = OreHelper.getOreNames(e.itemStack);
 			
 			if(ores != null)

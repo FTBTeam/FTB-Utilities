@@ -40,11 +40,11 @@ public class LCCommon implements IGuiHandler // LCClient
 			if(te instanceof ISecureTile)
 			{
 				ISecureTile st = (ISecureTile)te;
-				if(st.enableSecurity() && st.getSecurity() != null && st.getSecurity().canPlayerInteract(ep))
+				if(st.enableSecurity() && st.getSecurity() != null && !st.getSecurity().canPlayerInteract(ep))
 					canOpen = false;
 			}
 			
-			return ((IGuiTile)te).getContainer(ep, ID);
+			if(canOpen) return ((IGuiTile)te).getContainer(ep, ID);
 		}
 		
 		return null;

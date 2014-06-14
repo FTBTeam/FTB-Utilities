@@ -26,7 +26,7 @@ public class LCClient extends LCCommon
 	public void preTexturesLoaded(TextureStitchEvent.Pre e)
 	{
 		if(e.map.getTextureType() == 0)
-			LatCoreClient.blockNullIcon = e.map.registerIcon(LCFinals.ASSETS + "nullIcon");
+			LatCoreClient.blockNullIcon = e.map.registerIcon(LC.finals.assets + "nullIcon");
 	}
 	
 	public int getKeyID(String s) { return Keyboard.getKeyIndex(s); }

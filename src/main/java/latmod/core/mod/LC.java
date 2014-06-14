@@ -1,6 +1,7 @@
 package latmod.core.mod;
 import net.minecraft.tileentity.TileEntity;
 import latmod.core.*;
+import latmod.core.base.*;
 import latmod.core.tile.*;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
@@ -15,9 +16,13 @@ public class LC
 	@SidedProxy(clientSide = LCFinals.SIDE_CLIENT, serverSide = LCFinals.SIDE_SERVER)
 	public static LCCommon proxy;
 	
+	public static BasicFinals finals;
+	
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
+		finals = new LCFinals();
+		
 		LatCore.addGuiHandler(inst, proxy);
 		proxy.preInit();
 	}

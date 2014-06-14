@@ -3,7 +3,7 @@ import latmod.core.*;
 import net.minecraftforge.common.config.*;
 import cpw.mods.fml.common.event.*;
 
-public class BasicConfig
+public class LMConfig
 {
 	public class Category
 	{
@@ -47,7 +47,7 @@ public class BasicConfig
 	public Configuration config;
 	public FastMap<String, Category> categories;
 	
-	public BasicConfig(FMLPreInitializationEvent e, String s)
+	public LMConfig(FMLPreInitializationEvent e, String s)
 	{
 		config = LatCore.loadConfig(e, s);
 		categories = new FastMap<String, Category>();

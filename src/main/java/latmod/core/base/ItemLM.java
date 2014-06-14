@@ -11,14 +11,14 @@ public abstract class ItemLM extends Item
 {
 	public final String itemName;
 	public ArrayList<ItemStack> itemsAdded = new ArrayList<ItemStack>();
-	public final BasicFinals finals;
+	public final LMMod mod;
 
-	public ItemLM(BasicFinals f, String s)
+	public ItemLM(LMMod m, String s)
 	{
 		super();
-		finals = f;
+		mod = m;
 		itemName = s;
-		setUnlocalizedName(finals.getItemName(s));
+		setUnlocalizedName(mod.getItemName(s));
 	}
 	
 	public void onPostLoaded()
@@ -39,7 +39,7 @@ public abstract class ItemLM extends Item
 	}
 
 	public String getUnlocalizedName(ItemStack is)
-	{ return finals.getItemName(itemName); }
+	{ return mod.getItemName(itemName); }
 
 	public void addAllDamages(int until)
 	{
@@ -58,7 +58,7 @@ public abstract class ItemLM extends Item
 
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister ir)
-	{ itemIcon = ir.registerIcon(finals.assets + itemName); }
+	{ itemIcon = ir.registerIcon(mod.assets + itemName); }
 
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconFromDamageForRenderPass(int i, int r)

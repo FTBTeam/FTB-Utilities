@@ -1,7 +1,7 @@
 package latmod.core.mod;
 import latmod.core.base.*;
 
-public class LCFinals extends BasicFinals
+public class LCFinals extends LMMod
 {
 	public static final String MODID = "latcore";
 	public static final String MODNAME = "LatCore";

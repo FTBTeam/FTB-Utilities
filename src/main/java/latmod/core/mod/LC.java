@@ -16,7 +16,7 @@ public class LC
 	@SidedProxy(clientSide = LCFinals.SIDE_CLIENT, serverSide = LCFinals.SIDE_SERVER)
 	public static LCCommon proxy;
 	
-	public static BasicFinals finals;
+	public static LMMod finals;
 	
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)

@@ -18,14 +18,14 @@ public abstract class BlockLM extends BlockContainer
 {
 	public final String blockName;
 	public ArrayList<ItemStack> blocksAdded = new ArrayList<ItemStack>();
-	public final BasicFinals finals;
+	public final LMMod mod;
 	
-	public BlockLM(BasicFinals f, String s, Material m)
+	public BlockLM(LMMod bm, String s, Material m)
 	{
 		super(m);
-		finals = f;
+		mod = bm;
 		blockName = s;
-		setBlockName(finals.getBlockName(s));
+		setBlockName(mod.getBlockName(s));
 		setHardness(1.8F);
 		setResistance(3F);
 		isBlockContainer = false;
@@ -47,7 +47,7 @@ public abstract class BlockLM extends BlockContainer
 	{ return isBlockContainer; }
 	
 	public String getUnlocalizedName(int m)
-	{ return finals.getBlockName(blockName); }
+	{ return mod.getBlockName(blockName); }
 	
 	public void addAllDamages(int until)
 	{
@@ -132,7 +132,7 @@ public abstract class BlockLM extends BlockContainer
 	
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ir)
-	{ blockIcon = ir.registerIcon(finals.assets + blockName); }
+	{ blockIcon = ir.registerIcon(mod.assets + blockName); }
 
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int s, int m)

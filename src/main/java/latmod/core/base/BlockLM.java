@@ -84,6 +84,13 @@ public abstract class BlockLM extends BlockContainer
 		return super.getPlayerRelativeBlockHardness(ep, w, x, y, z);
 	}
 	
+	public float getBlockHardness(World w, int x, int y, int z)
+	{
+		TileLM tile = (TileLM) w.getTileEntity(x, y, z);
+		if(tile != null && tile.isIndestructible(null)) return -1F;
+		return super.getBlockHardness(w, x, y, z);
+	}
+	
 	public float getExplosionResistance(Entity e, World w, int x, int y, int z, double ex, double ey, double ez)
 	{
 		TileLM tile = (TileLM) w.getTileEntity(x, y, z);
@@ -96,16 +103,6 @@ public abstract class BlockLM extends BlockContainer
 
 	public ArrayList<ItemStack> getDrops(World w, int x, int y, int z, int m, int f)
 	{
-		/*if(!isBlockContainer || !dropSpecialBlock()) return super.getDrops(w, x, y, z, m, f);
-		TileLME tile = (TileLME) w.getTileEntity(x, y, z);
-		if(tile != null)
-		{
-			ArrayList<ItemStack> al = new ArrayList<ItemStack>();
-			tile.addDropItems(al, this, w.getBlockMetadata(x, y, z));
-			return al;
-		}
-		*/
-
 		return super.getDrops(w, x, y, z, m, f);
 	}
 	

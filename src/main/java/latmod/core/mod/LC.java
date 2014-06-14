@@ -7,13 +7,17 @@ import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.*;
 
-@Mod(modid = LCFinals.MODID, name = LCFinals.MODNAME, version = LCFinals.VERSION)
+@Mod(modid = LC.MODID, name = LC.MODNAME, version = LC.VERSION)
 public class LC
 {
-	@Mod.Instance(LCFinals.MODID)
+	public static final String MODID = "latcore";
+	public static final String MODNAME = "LatCore";
+	public static final String VERSION = "1.1.4";
+	
+	@Mod.Instance(LC.MODID)
 	public static LC inst;
 	
-	@SidedProxy(clientSide = LCFinals.SIDE_CLIENT, serverSide = LCFinals.SIDE_SERVER)
+	@SidedProxy(clientSide = "latmod.core.mod.LCClient", serverSide = "latmod.core.mod.LCCommon")
 	public static LCCommon proxy;
 	
 	public static LMMod finals;
@@ -21,7 +25,7 @@ public class LC
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
-		finals = new LCFinals();
+		finals = new LMMod(MODID);
 		
 		LatCore.addGuiHandler(inst, proxy);
 		proxy.preInit();

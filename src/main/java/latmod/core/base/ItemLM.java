@@ -21,9 +21,12 @@ public abstract class ItemLM extends Item
 		setUnlocalizedName(mod.getItemName(s));
 	}
 	
+	@SideOnly(Side.CLIENT)
+	public abstract CreativeTabs getCreativeTab();
+	
 	public void onPostLoaded()
 	{ itemsAdded.add(new ItemStack(this)); }
-
+	
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item j, CreativeTabs c, List l)
 	{

@@ -27,7 +27,6 @@ public class LMConfig
 		public int getInt(String s, int def, int min, int max, String... comment)
 		{
 			int i = getInt(s, def);
-			int j = i;
 			if(i < min) i = min;
 			if(i > max) i = max;
 			if(comment.length > 0) setComment(s, comment);
@@ -40,8 +39,19 @@ public class LMConfig
 			if(comment.length > 0) setComment(s, comment); return d1;
 		}
 		
-		public void setComment(String s, String... s1)
-		{ LMUtils.setPropertyComment(config, cat, s, s1); }
+		public void setComment(String property, String... comment)
+		{
+			ConfigCategory cat1 = config.getCategory(cat);
+			Property prop = cat1.get(property);
+			
+			if(prop != null)
+			{
+				String s = "";
+				for(int i = 0; i < comment.length; i++)
+				{ s += comment[i]; if(i < comment.length - 1) s += '\n'; }
+				prop.comment = s;
+			}
+		}
 	}
 	
 	public Configuration config;

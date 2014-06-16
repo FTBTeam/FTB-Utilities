@@ -1,11 +1,9 @@
 package latmod.core;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.*;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
 import net.minecraft.tileentity.*;
 import net.minecraft.world.*;
-import net.minecraftforge.common.*;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class InvUtils
@@ -250,14 +248,7 @@ public class InvUtils
 		for(int i = 0; i < items.length; i++)
 		{
 			if(items[i] != null && items[i].stackSize > 0)
-			{
-				EntityItem ei = new EntityItem(w, x, y, z, items[i]);
-				ei.motionX = w.rand.nextGaussian() * 0.07F;
-				ei.motionY = w.rand.nextFloat() * 0.05F;
-				ei.motionZ = w.rand.nextGaussian() * 0.07F;
-				ei.delayBeforeCanPickup = 10;
-				w.spawnEntityInWorld(ei);
-			}
+				LMUtils.dropItem(w, x, y, z, items[i], 10);
 		}
 	}
 

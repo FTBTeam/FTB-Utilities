@@ -1,6 +1,4 @@
 package latmod.core.base;
-import java.util.*;
-import net.minecraft.block.Block;
 import net.minecraft.entity.item.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.IInventory;

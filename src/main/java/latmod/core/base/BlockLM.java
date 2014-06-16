@@ -1,5 +1,6 @@
 package latmod.core.base;
 import java.util.*;
+
 import cpw.mods.fml.relauncher.*;
 import net.minecraft.block.*;
 import net.minecraft.block.material.*;
@@ -8,8 +9,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.*;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.*;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -55,6 +54,7 @@ public abstract class BlockLM extends BlockContainer
 		blocksAdded.add(new ItemStack(this, 1, i));
 	}
 	
+	@SuppressWarnings("all")
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item j, CreativeTabs c, List l)
 	{ l.addAll(blocksAdded); }

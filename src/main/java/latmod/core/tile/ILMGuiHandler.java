@@ -4,7 +4,6 @@ import net.minecraft.client.gui.inventory.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.*;
 import net.minecraft.tileentity.*;
-import net.minecraft.world.*;
 
 public interface ILMGuiHandler
 {

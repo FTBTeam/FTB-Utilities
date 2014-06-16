@@ -1,5 +1,6 @@
 package latmod.core.base;
 import java.util.List;
+
 import cpw.mods.fml.relauncher.*;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -22,7 +23,8 @@ public class ItemBlockLM extends ItemBlock
 
 	public String getUnlocalizedName(ItemStack is)
 	{ return blockLM.getUnlocalizedName(is.getItemDamage()); }
-
+	
+	@SuppressWarnings("all")
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item j, CreativeTabs c, List l)
 	{ blockLM.getSubBlocks(j, c, l); }

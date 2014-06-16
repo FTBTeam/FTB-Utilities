@@ -1,6 +1,5 @@
 package latmod.core.mod;
 import cpw.mods.fml.common.network.*;
-import latmod.core.*;
 import latmod.core.tile.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.tileentity.*;

@@ -21,6 +21,7 @@ public class LMRecipes
 	public ItemStack size(ItemStack is, int s)
 	{ ItemStack is1 = is.copy(); is1.stackSize = s; return is1; }
 	
+	@SuppressWarnings("all")
 	public void clearRecipes()
 	{
 		CraftingManager.getInstance().getRecipeList().removeAll(craftingRecipes);

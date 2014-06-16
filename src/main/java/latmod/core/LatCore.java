@@ -1,7 +1,6 @@
 package latmod.core;
 import java.io.*;
 import java.util.*;
-
 import latmod.core.mod.*;
 import latmod.core.tile.IGuiTile;
 import net.minecraft.block.*;
@@ -11,10 +10,8 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.*;
-import net.minecraft.network.INetHandler;
 import net.minecraft.tileentity.*;
 import net.minecraft.util.ChatComponentText;
-import net.minecraftforge.common.*;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.oredict.*;
@@ -65,14 +62,14 @@ public class LatCore
 	
 	// Registry methods //
 	
-	public static final void addItem(Item i, String name, String modid)
-	{ GameRegistry.registerItem(i, name, modid); }
+	public static final void addItem(Item i, String name)
+	{ GameRegistry.registerItem(i, name); }
 	
-	public static final void addBlock(Block b, Class<? extends ItemBlock> c, String name, String modid)
-	{ GameRegistry.registerBlock(b, c, name, modid); }
+	public static final void addBlock(Block b, Class<? extends ItemBlock> c, String name)
+	{ GameRegistry.registerBlock(b, c, name); }
 	
-	public static final void addBlock(Block b, String name, String modid)
-	{ addBlock(b, ItemBlock.class, name, modid); }
+	public static final void addBlock(Block b, String name)
+	{ addBlock(b, ItemBlock.class, name); }
 	
 	public static final void addTileEntity(Class<? extends TileEntity> c, String s)
 	{ GameRegistry.registerTileEntity(c, s); }

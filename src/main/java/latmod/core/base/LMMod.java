@@ -33,10 +33,10 @@ public class LMMod
 	else return StatCollector.translateToLocalFormatted(assets + s, args); }
 	
 	public void addItem(ItemLM i)
-	{ LatCore.addItem(i, i.itemName, modID); items.add(i); }
+	{ LatCore.addItem(i, i.itemName); items.add(i); }
 
 	public void addBlock(BlockLM b, Class<? extends ItemBlockLM> c)
-	{ LatCore.addBlock(b, c, b.blockName, modID); blocks.add(b); }
+	{ LatCore.addBlock(b, c, b.blockName); blocks.add(b); }
 
 	public void addBlock(BlockLM b)
 	{ addBlock(b, ItemBlockLM.class); }

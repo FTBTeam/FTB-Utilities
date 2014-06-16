@@ -1,16 +1,10 @@
 package latmod.core.mod;
 import java.util.*;
-
-import latmod.core.LatCore;
 import latmod.core.OreHelper;
-import latmod.core.OreHelper.StackEntry;
 import cpw.mods.fml.common.eventhandler.*;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.*;
 import net.minecraftforge.common.*;
-import net.minecraftforge.event.*;
 import net.minecraftforge.event.entity.player.*;
-import net.minecraftforge.oredict.*;
 
 public class LC_TooltipHandler
 {

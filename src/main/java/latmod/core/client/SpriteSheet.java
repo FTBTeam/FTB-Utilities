@@ -1,9 +1,6 @@
 package latmod.core.client;
 import java.awt.image.*;
-import java.io.*;
-
 import javax.imageio.*;
-
 import latmod.core.*;
 import net.minecraft.client.renderer.texture.*;
 import net.minecraft.client.resources.*;

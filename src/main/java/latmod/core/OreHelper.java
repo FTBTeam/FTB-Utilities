@@ -1,7 +1,5 @@
 package latmod.core;
 import java.util.*;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.*;
 import net.minecraftforge.oredict.OreDictionary;
 

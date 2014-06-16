@@ -1,11 +1,8 @@
 package latmod.core.mod;
-import net.minecraft.tileentity.TileEntity;
 import latmod.core.*;
 import latmod.core.base.*;
-import latmod.core.tile.*;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
-import cpw.mods.fml.common.network.*;
 
 @Mod(modid = LC.MODID, name = LC.MODNAME, version = LC.VERSION)
 public class LC

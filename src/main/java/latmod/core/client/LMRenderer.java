@@ -1,8 +1,6 @@
 package latmod.core.client;
 import org.lwjgl.opengl.GL11;
-
 import cpw.mods.fml.relauncher.*;
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;

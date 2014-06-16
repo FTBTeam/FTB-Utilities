@@ -1,16 +1,11 @@
 package latmod.core;
 import net.minecraft.block.BlockPistonBase;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.*;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.config.*;
-import net.minecraftforge.common.config.Property.Type;
+import net.minecraft.util.*;
+import net.minecraft.world.*;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class LMUtils
@@ -81,20 +76,6 @@ public class LMUtils
 		return s.toString();
 	}
 	
-	public static void setPropertyComment(Configuration config, String category, String property, String... comment)
-	{
-		ConfigCategory cat = config.getCategory(category);
-		Property prop = cat.get(property);
-		
-		if(prop != null)
-		{
-			String s = "";
-			for(int i = 0; i < comment.length; i++)
-			{ s += comment[i]; if(i < comment.length - 1) s += '\n'; }
-			prop.comment = s;
-		}
-	}
-	
 	public static final double[] getMidPoint(double[] pos1, double[] pos2, float p)
 	{
 		double x = pos2[0] - pos1[0];
@@ -112,6 +93,7 @@ public class LMUtils
 	}
 	
 	//TODO: Still need to fix this
+	@Deprecated
 	public static void teleportEntity(Entity e, int dim)
 	{
 		if ((e.worldObj.isRemote) || (e.isDead) || e.dimension == dim) return;
@@ -141,4 +123,17 @@ public class LMUtils
 		worldserver1.resetUpdateEntityTick();
 		e.worldObj.theProfiler.endSection();
 	}
+
+	public static void dropItem(World w, double x, double y, double z, ItemStack is, int delay)
+	{
+		EntityItem ei = new EntityItem(w, x, y, z, is);
+		ei.motionX = w.rand.nextGaussian() * 0.07F;
+		ei.motionY = w.rand.nextFloat() * 0.05F;
+		ei.motionZ = w.rand.nextGaussian() * 0.07F;
+		ei.delayBeforeCanPickup = delay;
+		w.spawnEntityInWorld(ei);
+	}
+	
+	public static void dropItem(Entity e, ItemStack is)
+	{ dropItem(e.worldObj, e.posX, e.posY, e.posZ, is, 0); }
 }

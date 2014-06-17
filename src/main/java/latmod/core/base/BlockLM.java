@@ -18,6 +18,8 @@ public abstract class BlockLM extends BlockContainer
 	public final String blockName;
 	public ArrayList<ItemStack> blocksAdded = new ArrayList<ItemStack>();
 	public final LMMod mod;
+	public float defaultHardness;
+	public float defaultExplosionResistance;
 	
 	public BlockLM(LMMod bm, String s, Material m)
 	{
@@ -29,15 +31,24 @@ public abstract class BlockLM extends BlockContainer
 		setResistance(3F);
 		isBlockContainer = false;
 	}
+	
+	@SideOnly(Side.CLIENT)
+	public abstract CreativeTabs getCreativeTabToDisplayOn();
 
 	public void onPostLoaded()
 	{ blocksAdded.add(new ItemStack(this)); }
 
 	public Block setHardness(float f)
-	{ return super.setHardness(f); }
-
-	@SideOnly(Side.CLIENT)
-	public abstract CreativeTabs getCreativeTabToDisplayOn();
+	{
+		defaultHardness = f;
+		return super.setHardness(f);
+	}
+	
+	public Block setResistance(float f)
+	{
+		defaultExplosionResistance = f;
+		return super.setResistance(f);
+	}
 
 	public int damageDropped(int i)
 	{ return i; }
@@ -67,48 +78,54 @@ public abstract class BlockLM extends BlockContainer
 			if(tile != null) tile.onPlacedBy((EntityPlayer)el, is);
 		}
 	}
-
+	
 	public void onPostBlockPlaced(World w, int x, int y, int z, int s)
 	{
 		if(isBlockContainer)
 		{
-			//TileLME tile = (TileLME) w.getTileEntity(x, y, z);
+			//TileLM tile = (TileLME) w.getTileEntity(x, y, z);
 			//if(tile != null) tile.onPostPlaced(s);
 		}
 	}
 	
 	public float getPlayerRelativeBlockHardness(EntityPlayer ep, World w, int x, int y, int z)
 	{
-		TileLM tile = (TileLM) w.getTileEntity(x, y, z);
-		if(tile != null && tile.isIndestructible(ep)) return -1F;
+		if(isBlockContainer)
+		{
+			TileLM tile = (TileLM) w.getTileEntity(x, y, z);
+			if(tile != null) return tile.getHardness(ep);
+		}
 		return super.getPlayerRelativeBlockHardness(ep, w, x, y, z);
 	}
 	
 	public float getBlockHardness(World w, int x, int y, int z)
 	{
-		TileLM tile = (TileLM) w.getTileEntity(x, y, z);
-		if(tile != null && tile.isIndestructible(null)) return -1F;
+		if(isBlockContainer)
+		{
+			TileLM tile = (TileLM) w.getTileEntity(x, y, z);
+			if(tile != null) return tile.getHardness(null);
+		}
 		return super.getBlockHardness(w, x, y, z);
 	}
 	
 	public float getExplosionResistance(Entity e, World w, int x, int y, int z, double ex, double ey, double ez)
 	{
-		TileLM tile = (TileLM) w.getTileEntity(x, y, z);
-		if(tile != null && tile.isIndestructible(null)) return 1000000F;
+		if(isBlockContainer)
+		{
+			TileLM tile = (TileLM) w.getTileEntity(x, y, z);
+			if(tile != null) return tile.getExplosionResistance();
+		}
 		return super.getExplosionResistance(e, w, x, y, z, ex, ey, ez);
 	}
-
+	
 	public int getMobilityFlag()
-	{ return 2; }
+	{ return isBlockContainer ? 2 : 0; }
 
 	public ArrayList<ItemStack> getDrops(World w, int x, int y, int z, int m, int f)
 	{
 		return super.getDrops(w, x, y, z, m, f);
 	}
 	
-	public boolean dropSpecialBlock()
-	{ return false; }
-
 	public void breakBlock(World w, int x, int y, int z, Block b, int m)
 	{
 		if(!w.isRemote && isBlockContainer)
@@ -123,9 +140,6 @@ public abstract class BlockLM extends BlockContainer
 		TileLM tile = (TileLM) w.getTileEntity(x, y, z);
 		return (tile != null) ? tile.onRightClick(ep, ep.getCurrentEquippedItem(), s, x1, y1, z1) : false;
 	}
-
-	public final ItemStack create(Object... args)
-	{ return new ItemStack(this); }
 	
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ir)
@@ -139,25 +153,29 @@ public abstract class BlockLM extends BlockContainer
 	public IIcon getIcon(IBlockAccess iba, int x, int y, int z, int s)
 	{ return getIcon(s, iba.getBlockMetadata(x, y, z)); }
 
-	public boolean rotateBlock(World w, int x, int y, int z, ForgeDirection side)
-	{
-		return false;
-	}
-
 	public ForgeDirection[] getValidRotations(World worldObj, int x, int y, int z)
-	{ return ForgeDirection.VALID_DIRECTIONS; }
+	{ return null; }
+	
+	public boolean rotateBlock(World w, int x, int y, int z, ForgeDirection side)
+	{ return false; }
 
 	public boolean onBlockEventReceived(World w, int x, int y, int z, int eventID, int param)
 	{
-		TileLM t = (TileLM) w.getTileEntity(x, y, z);
-		if(t != null) return t.receiveClientEvent(eventID, param);
+		if(isBlockContainer)
+		{
+			TileLM t = (TileLM) w.getTileEntity(x, y, z);
+			if(t != null) return t.receiveClientEvent(eventID, param);
+		}
 		return false;
 	}
 
 	public boolean recolourBlock(World w, int x, int y, int z, ForgeDirection side, int col)
 	{
-		TileLM t = (TileLM) w.getTileEntity(x, y, z);
-		if(t != null) return t.colorBlock(side, col);
+		if(isBlockContainer)
+		{
+			TileLM t = (TileLM) w.getTileEntity(x, y, z);
+			if(t != null) return t.recolourBlock(side, col);
+		}
 		return false;
 	}
 	

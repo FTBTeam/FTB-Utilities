@@ -157,12 +157,15 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	public float getWrenchDropRate()
 	{ return 1F; }
 	
-	public boolean colorBlock(ForgeDirection side, int col)
+	public boolean recolourBlock(ForgeDirection side, int col)
 	{ return false; }
 	
 	/** Player may be null */
-	public boolean isIndestructible(EntityPlayer ep)
-	{ return ep != null && !security.canPlayerInteract(ep); }
+	public float getHardness(EntityPlayer ep)
+	{ return (ep != null && !security.canPlayerInteract(ep)) ? -1F : ((BlockLM)blockType).defaultHardness; }
+	
+	public float getExplosionResistance()
+	{ return security.canInteract(null) ? ((BlockLM)blockType).defaultExplosionResistance : 1000000F; }
 	
 	// Inventory stuff //
 	

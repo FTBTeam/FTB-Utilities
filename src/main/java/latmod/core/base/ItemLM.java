@@ -1,9 +1,11 @@
 package latmod.core.base;
 import java.util.*;
+
 import latmod.core.*;
 import cpw.mods.fml.relauncher.*;
 import net.minecraft.client.renderer.texture.*;
 import net.minecraft.creativetab.*;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
 import net.minecraft.util.*;
 
@@ -62,6 +64,11 @@ public abstract class ItemLM extends Item
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(ItemStack is, int r)
 	{ return getIconFromDamageForRenderPass(is.getItemDamage(), r); }
+	
+	@SuppressWarnings("all") @SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack is, EntityPlayer ep, List l, boolean b)
+	{
+	}
 
 	public void loadRecipes()
 	{

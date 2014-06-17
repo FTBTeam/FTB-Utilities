@@ -46,7 +46,7 @@ public class LMSecurity
 		}
 	}
 	
-	public boolean canPlayerInteract(String name)
+	public boolean canInteract(String name)
 	{
 		if(level == PUBLIC) return true;
 		if(name == null || name.length() == 0) return false;
@@ -57,5 +57,5 @@ public class LMSecurity
 	}
 	
 	public boolean canPlayerInteract(EntityPlayer ep)
-	{ return canPlayerInteract(ep == null ? null : ep.getCommandSenderName()); }
+	{ return canInteract(ep == null ? null : ep.getCommandSenderName()); }
 }

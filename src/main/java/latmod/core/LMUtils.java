@@ -1,4 +1,9 @@
 package latmod.core;
+import java.io.*;
+import java.lang.reflect.Type;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonWriter;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
@@ -136,4 +141,27 @@ public class LMUtils
 	
 	public static void dropItem(Entity e, ItemStack is)
 	{ dropItem(e.worldObj, e.posX, e.posY, e.posZ, is, 0); }
+	
+	public static <T> T getJson(String s, Type t)
+	{
+		if(s == null || s.length() < 2) s = "{}";
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		return gson.fromJson(s, t);
+	}
+	
+	public static String toJson(Object o, boolean asTree)
+	{
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		
+		if(asTree)
+		{
+			StringWriter sw = new StringWriter();
+			JsonWriter jw = new JsonWriter(sw);
+			jw.setIndent("\t");
+			gson.toJson(o, o.getClass(), jw);
+			return sw.toString();
+		}
+		
+		return gson.toJson(o);
+	}
 }

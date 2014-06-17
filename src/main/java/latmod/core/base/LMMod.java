@@ -1,5 +1,6 @@
 package latmod.core.base;
 import latmod.core.*;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.*;
 
 public class LMMod
@@ -43,6 +44,9 @@ public class LMMod
 
 	public void addTile(Class<? extends TileLM> c, String s)
 	{ LatCore.addTileEntity(c, modID + '.' + s); }
+	
+	public void addEntity(Class<? extends Entity> c, String s, int id)
+	{ LatCore.addEntity(c, s, id, modID); }
 	
 	public void onPostLoaded()
 	{

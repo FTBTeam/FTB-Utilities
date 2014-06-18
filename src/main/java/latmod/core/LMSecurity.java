@@ -21,6 +21,8 @@ public class LMSecurity
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		owner = tag.getString("Owner");
+		if(owner.length() == 0) owner = null;
+		
 		level = tag.getByte("Level");
 		friends.clear();
 		
@@ -34,7 +36,7 @@ public class LMSecurity
 	
 	public void writeToNBT(NBTTagCompound tag)
 	{
-		tag.setString("Owner", owner);
+		tag.setString("Owner", (owner == null) ? "" : owner);
 		tag.setByte("Level", (byte)level);
 		
 		if(!friends.isEmpty())
@@ -50,7 +52,7 @@ public class LMSecurity
 	{
 		if(level == PUBLIC) return true;
 		if(name == null || name.length() == 0) return false;
-		if(owner.equals(name)) return true;
+		if(owner == null || owner.equals(name)) return true;
 		if(level == RESTRICTED)
 		return friends.contains(name);
 		return false;

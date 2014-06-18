@@ -1,6 +1,7 @@
 package latmod.core.base;
 import java.util.*;
 
+import latmod.core.FastList;
 import cpw.mods.fml.relauncher.*;
 import net.minecraft.block.*;
 import net.minecraft.block.material.*;
@@ -18,8 +19,6 @@ public abstract class BlockLM extends BlockContainer
 	public final String blockName;
 	public ArrayList<ItemStack> blocksAdded = new ArrayList<ItemStack>();
 	public final LMMod mod;
-	public float defaultHardness;
-	public float defaultExplosionResistance;
 	
 	public BlockLM(LMMod bm, String s, Material m)
 	{
@@ -34,25 +33,13 @@ public abstract class BlockLM extends BlockContainer
 	
 	@SideOnly(Side.CLIENT)
 	public abstract CreativeTabs getCreativeTabToDisplayOn();
-
+	
 	public void onPostLoaded()
 	{ blocksAdded.add(new ItemStack(this)); }
-
-	public Block setHardness(float f)
-	{
-		defaultHardness = f;
-		return super.setHardness(f);
-	}
 	
-	public Block setResistance(float f)
-	{
-		defaultExplosionResistance = f;
-		return super.setResistance(f);
-	}
-
 	public int damageDropped(int i)
 	{ return i; }
-
+	
 	public boolean hasTileEntity(int m)
 	{ return isBlockContainer; }
 	
@@ -79,22 +66,14 @@ public abstract class BlockLM extends BlockContainer
 		}
 	}
 	
-	public void onPostBlockPlaced(World w, int x, int y, int z, int s)
-	{
-		if(isBlockContainer)
-		{
-			//TileLM tile = (TileLME) w.getTileEntity(x, y, z);
-			//if(tile != null) tile.onPostPlaced(s);
-		}
-	}
-	
 	public float getPlayerRelativeBlockHardness(EntityPlayer ep, World w, int x, int y, int z)
 	{
 		if(isBlockContainer)
 		{
 			TileLM tile = (TileLM) w.getTileEntity(x, y, z);
-			if(tile != null) return tile.getHardness(ep);
+			if(tile != null && !tile.isMinable(ep)) return -1F;
 		}
+		
 		return super.getPlayerRelativeBlockHardness(ep, w, x, y, z);
 	}
 	
@@ -103,8 +82,9 @@ public abstract class BlockLM extends BlockContainer
 		if(isBlockContainer)
 		{
 			TileLM tile = (TileLM) w.getTileEntity(x, y, z);
-			if(tile != null) return tile.getHardness(null);
+			if(tile != null && !tile.isMinable(null)) return -1F;
 		}
+		
 		return super.getBlockHardness(w, x, y, z);
 	}
 	
@@ -113,8 +93,9 @@ public abstract class BlockLM extends BlockContainer
 		if(isBlockContainer)
 		{
 			TileLM tile = (TileLM) w.getTileEntity(x, y, z);
-			if(tile != null) return tile.getExplosionResistance();
+			if(tile != null && tile.isExplosionResistant()) return 1000000F;
 		}
+		
 		return super.getExplosionResistance(e, w, x, y, z, ex, ey, ez);
 	}
 	
@@ -180,6 +161,11 @@ public abstract class BlockLM extends BlockContainer
 	}
 	
 	public void loadRecipes()
+	{
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void addInfo(ItemStack is, EntityPlayer ep, FastList<String> l)
 	{
 	}
 }

@@ -14,6 +14,8 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class LatCoreClient
 {
+	public static final int FRONT = 3;
+	
 	public static IIcon blockNullIcon = null;
 	
 	public static final void addEntityRenderer(Class<? extends Entity> c, Render r)

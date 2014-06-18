@@ -19,7 +19,6 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	public static final int DOWN = ForgeDirection.DOWN.ordinal();
 	public static final int[] NO_SLOTS = new int[0];
 	
-	public boolean haveToRefresh = false;
 	public String customName = null;
 	public boolean dropItems = true;
 	private boolean isDirty = true;
@@ -160,12 +159,12 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	public boolean recolourBlock(ForgeDirection side, int col)
 	{ return false; }
 	
-	/** Player may be null */
-	public float getHardness(EntityPlayer ep)
-	{ return (ep != null && !security.canPlayerInteract(ep)) ? -1F : ((BlockLM)blockType).defaultHardness; }
+	/** Player can be null */
+	public boolean isMinable(EntityPlayer ep)
+	{ return ep == null || security.canPlayerInteract(ep); }
 	
-	public float getExplosionResistance()
-	{ return security.canInteract(null) ? ((BlockLM)blockType).defaultExplosionResistance : 1000000F; }
+	public boolean isExplosionResistant()
+	{ return !security.canInteract(null); }
 	
 	// Inventory stuff //
 	

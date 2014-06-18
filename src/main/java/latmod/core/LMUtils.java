@@ -1,9 +1,11 @@
 package latmod.core;
 import java.io.*;
 import java.lang.reflect.Type;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonWriter;
+
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
@@ -163,5 +165,11 @@ public class LMUtils
 		}
 		
 		return gson.toJson(o);
+	}
+
+	public static String[] split(String s, String regex)
+	{
+		String s1[] = s.split(regex);
+		return (s1 == null || s1.length == 0) ? new String[] { s } : s1;
 	}
 }

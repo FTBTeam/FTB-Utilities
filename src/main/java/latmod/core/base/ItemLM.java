@@ -65,8 +65,18 @@ public abstract class ItemLM extends Item
 	public IIcon getIcon(ItemStack is, int r)
 	{ return getIconFromDamageForRenderPass(is.getItemDamage(), r); }
 	
+	private FastList<String> infoList = new FastList<String>();
+	
 	@SuppressWarnings("all") @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack is, EntityPlayer ep, List l, boolean b)
+    public final void addInformation(ItemStack is, EntityPlayer ep, List l, boolean b)
+	{
+		infoList.clear();
+		addInfo(is, ep, infoList);
+		l.addAll(infoList);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void addInfo(ItemStack is, EntityPlayer ep, FastList<String> l)
 	{
 	}
 

@@ -110,4 +110,10 @@ public class LMRenderer
 		RenderManager.instance.options.fancyGraphics = isFancy;
 		RenderItem.renderInFrame = false;
 	}
+
+	public static void enableTexture()
+	{ GL11.glEnable(GL11.GL_TEXTURE_2D); }
+	
+	public static void disableTexture()
+	{ GL11.glDisable(GL11.GL_TEXTURE_2D); }
 }

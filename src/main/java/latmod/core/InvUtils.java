@@ -74,6 +74,19 @@ public class InvUtils
 		return getFirstEmptyIndex(inv, side);
 	}
 	
+	public static int getFirstIndexWithItem(IInventory inv, ItemStack filter, ForgeDirection side, boolean size, boolean nbt)
+	{
+		if(inv == null || filter == null) return -1;
+		int slots[] = getAllSlots(inv, side);
+		for(int i = 0; i < slots.length; i++)
+		{
+			ItemStack is1 = inv.getStackInSlot(slots[i]);
+			if(is1 != null && itemsEquals(filter, is1, size, nbt)) return i;
+		}
+		
+		return -1;
+	}
+	
 	public static int getFirstFilledIndex(IInventory inv, ItemStack filter, ForgeDirection side)
 	{
 		if(inv == null) return -1;

@@ -46,4 +46,7 @@ public class GuiLM extends GuiContainer
 		t.addVertexWithUV(x + 0, y + 0, zLevel, minU, minV);
 		t.draw();
 	}
+	
+	public void playSound(String s, float pitch)
+	{ }
 }

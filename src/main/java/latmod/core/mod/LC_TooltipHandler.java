@@ -1,5 +1,5 @@
 package latmod.core.mod;
-import java.util.*;
+import latmod.core.FastList;
 import latmod.core.OreHelper;
 import cpw.mods.fml.common.eventhandler.*;
 import net.minecraft.item.*;
@@ -25,9 +25,9 @@ public class LC_TooltipHandler
 			e.toolTip.add("Unlocalized name:");
 			e.toolTip.add(s.startsWith("minecraft:") ? s.substring(10) : s);
 			
-			ArrayList<String> ores = OreHelper.getOreNames(e.itemStack);
+			FastList<String> ores = OreHelper.getOreNames(e.itemStack);
 			
-			if(ores != null)
+			if(ores != null && !ores.isEmpty())
 			{
 				e.toolTip.add("Ore Dictionary names:");
 				for(String or : ores)

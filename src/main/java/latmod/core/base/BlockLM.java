@@ -119,7 +119,7 @@ public abstract class BlockLM extends BlockContainer
 	{
 		if(!isBlockContainer) return false;
 		TileLM tile = (TileLM) w.getTileEntity(x, y, z);
-		return (tile != null) ? tile.onRightClick(ep, ep.getCurrentEquippedItem(), s, x1, y1, z1) : false;
+		return (tile != null) ? tile.onRightClick(ep, ep.getHeldItem(), s, x1, y1, z1) : false;
 	}
 	
 	@SideOnly(Side.CLIENT)

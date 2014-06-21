@@ -181,6 +181,10 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	{ for(Object o : c) if(!contains(o))
 	return false; return true; }
 	
+	public boolean containsAny(Collection<?> c)
+	{ for(Object o : c) if(contains(o))
+	return true; return false; }
+	
 	public boolean addAll(Collection<? extends E> l)
 	{ if(l != null && l.size() > 0) addAll(l.toArray()); return true; }
 	

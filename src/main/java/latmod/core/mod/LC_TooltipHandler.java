@@ -1,8 +1,6 @@
 package latmod.core.mod;
-import latmod.core.FastList;
-import latmod.core.OreHelper;
+import latmod.core.*;
 import cpw.mods.fml.common.eventhandler.*;
-import net.minecraft.item.*;
 import net.minecraftforge.common.*;
 import net.minecraftforge.event.entity.player.*;
 
@@ -18,12 +16,11 @@ public class LC_TooltipHandler
 	{
 		if(e.showAdvancedItemTooltips && e.itemStack != null)
 		{
-			Item i = e.itemStack.getItem();
-			
-			String s = Item.itemRegistry.getNameForObject(i);
-			
-			e.toolTip.add("Unlocalized name:");
-			e.toolTip.add(s.startsWith("minecraft:") ? s.substring(10) : s);
+			if(LC.proxy.isShiftDown())
+			{
+				e.toolTip.add("Registry name:");
+				e.toolTip.add("> " + LMUtils.getRegistryName(e.itemStack.getItem(), true));
+			}
 			
 			FastList<String> ores = OreHelper.getOreNames(e.itemStack);
 			

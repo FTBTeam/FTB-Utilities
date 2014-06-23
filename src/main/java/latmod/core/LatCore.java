@@ -157,7 +157,10 @@ public class LatCore
 	}
 	
 	public static boolean canUpdate()
-	{ return (!(FMLCommonHandler.instance().getEffectiveSide().isClient())); }
+	{ return (!(getEffectiveSide().isClient())); }
+	
+	public static Side getEffectiveSide()
+	{ return FMLCommonHandler.instance().getEffectiveSide(); }
 	
 	public static void openGui(IGuiTile t, int ID, EntityPlayer ep)
 	{ TileEntity te = (TileEntity)t;

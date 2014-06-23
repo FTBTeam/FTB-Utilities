@@ -3,7 +3,6 @@ import cpw.mods.fml.common.network.*;
 import latmod.core.tile.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.tileentity.*;
-import net.minecraft.util.*;
 import net.minecraft.world.*;
 
 public class LCCommon implements IGuiHandler // LCClient
@@ -18,14 +17,6 @@ public class LCCommon implements IGuiHandler // LCClient
 	public boolean isCtrlDown() { return false; }
 	
 	public boolean isKeyDown(String id) { return isKeyDown(getKeyID(id)); }
-	
-	public MovingObjectPosition rayTrace(EntityPlayer ep, double d)
-	{
-		Vec3 pos = ep.worldObj.getWorldVec3Pool().getVecFromPool(ep.posX, ep.posY + 1.62D, ep.posZ);
-		Vec3 look = ep.getLook(1F);
-		Vec3 vec = pos.addVector(look.xCoord * d, look.yCoord * d, look.zCoord * d);
-		return ep.worldObj.rayTraceBlocks(pos, vec);
-	}
 	
 	public Object getServerGuiElement(int ID, EntityPlayer ep, World world, int x, int y, int z)
 	{

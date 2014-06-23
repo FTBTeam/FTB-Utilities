@@ -9,6 +9,8 @@ import com.google.gson.stream.JsonWriter;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
@@ -173,5 +175,30 @@ public class LMUtils
 	{
 		String s1[] = s.split(regex);
 		return (s1 == null || s1.length == 0) ? new String[] { s } : s1;
+	}
+	
+	public static String getRegistryName(Item i, boolean noMcDomain)
+	{
+		String s = Item.itemRegistry.getNameForObject(i);
+		return (noMcDomain && s.startsWith("minecraft:")) ? s.substring(10) : s;
+	}
+	
+	public static MovingObjectPosition rayTrace(EntityPlayer ep, double d)
+	{
+		Vec3 pos = ep.worldObj.getWorldVec3Pool().getVecFromPool(ep.posX, ep.posY + (ep.getEyeHeight() - ep.getDefaultEyeHeight()), ep.posZ);
+		Vec3 look = ep.getLook(1F);
+		Vec3 vec = pos.addVector(look.xCoord * d, look.yCoord * d, look.zCoord * d);
+		return ep.worldObj.rayTraceBlocks(pos, vec);
+	}
+	
+	public static MovingObjectPosition rayTraceNoNull(EntityPlayer ep, double d)
+	{
+		Vec3 pos = ep.worldObj.getWorldVec3Pool().getVecFromPool(ep.posX, ep.posY + (ep.getEyeHeight() - ep.getDefaultEyeHeight()), ep.posZ);
+		Vec3 look = ep.getLook(1F);
+		Vec3 vec = pos.addVector(look.xCoord * d, look.yCoord * d, look.zCoord * d);
+		MovingObjectPosition mop = ep.worldObj.rayTraceBlocks(pos, vec);
+		if(mop != null) return mop;
+		//return new MovingObjectPosition();
+		return null;
 	}
 }

@@ -1,11 +1,17 @@
 package latmod.core.client.model;
 import java.io.*;
+
 import net.minecraft.util.*;
+
 import org.lwjgl.util.vector.*;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import latmod.core.*;
 import latmod.core.client.*;
 
 /** Made by LatvianModder */
+@SideOnly(Side.CLIENT)
 public class OBJModel
 {
 	public FastList<Face> totalFaces;

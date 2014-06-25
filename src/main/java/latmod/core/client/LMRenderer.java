@@ -1,6 +1,8 @@
 package latmod.core.client;
 import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.relauncher.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.entity.item.EntityItem;
@@ -115,4 +117,7 @@ public class LMRenderer
 	
 	public static void disableTexture()
 	{ GL11.glDisable(GL11.GL_TEXTURE_2D); }
+	
+	public static void setTexture(ResourceLocation rl)
+	{ Minecraft.getMinecraft().getTextureManager().bindTexture(rl); }
 }

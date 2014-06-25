@@ -128,12 +128,16 @@ public class LatCore
 	public static void addOreDictionary(String name, ItemStack is)
 	{
 		ItemStack is1 = InvUtils.singleCopy(is);
-		if(!OreDictionary.getOres(name).contains(is1))
+		if(!getOreDictionary(name).contains(is1))
 		OreDictionary.registerOre(name, is1);
 	}
 	
-	public static ArrayList<ItemStack> getOreDictionary(String name)
-	{ return OreDictionary.getOres(name); }
+	public static FastList<ItemStack> getOreDictionary(String name)
+	{
+		FastList<ItemStack> l = new FastList<ItemStack>();
+		l.addAll(OreDictionary.getOres(name));
+		return l;
+	}
 	
 	public static void addWorldGenerator(IWorldGenerator i)
 	{ GameRegistry.registerWorldGenerator(i, 5); }

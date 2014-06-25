@@ -1,8 +1,13 @@
 package latmod.core.client.model;
 import latmod.core.*;
+
 import org.lwjgl.opengl.*;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 /** Made by LatvianModder */
+@SideOnly(Side.CLIENT)
 public class Face
 {
 	public int[] verticies = null;

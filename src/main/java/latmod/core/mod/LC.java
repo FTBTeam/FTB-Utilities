@@ -7,9 +7,9 @@ import cpw.mods.fml.common.event.*;
 @Mod(modid = LC.MODID, name = LC.MODNAME, version = LC.VERSION)
 public class LC
 {
-	public static final String MODID = "latcore";
-	public static final String MODNAME = "LatCore";
-	public static final String VERSION = "1.1.4";
+	protected static final String MODID = "latcore";
+	protected static final String MODNAME = "LatCore";
+	protected static final String VERSION = "1.2.0";
 	
 	@Mod.Instance(LC.MODID)
 	public static LC inst;

@@ -168,4 +168,7 @@ public abstract class BlockLM extends BlockContainer
 	public void addInfo(ItemStack is, EntityPlayer ep, FastList<String> l)
 	{
 	}
+	
+	public final Item getItem()
+	{ return Item.getItemFromBlock(this); }
 }

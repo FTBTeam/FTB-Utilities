@@ -1,10 +1,9 @@
 package latmod.core.client;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.*;
+import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.tileentity.*;
 import net.minecraft.entity.*;
-import net.minecraft.item.Item;
 import net.minecraft.tileentity.*;
 import net.minecraft.util.*;
 import net.minecraftforge.client.*;
@@ -14,6 +13,8 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class LatCoreClient
 {
+	public static final int FRONT = 3;
+	
 	public static Icon blockNullIcon = null;
 	
 	public static final void addEntityRenderer(Class<? extends Entity> c, Render r)
@@ -31,9 +32,12 @@ public class LatCoreClient
 	public static final void addBlockRenderer(int i, ISimpleBlockRenderingHandler r)
 	{ RenderingRegistry.registerBlockHandler(i, r); }
 
-	public static final void addItemRenderer(Item item, IItemRenderer i)
-	{ MinecraftForgeClient.registerItemRenderer(item.itemID, i); }
+	public static final void addItemRenderer(int item, IItemRenderer i)
+	{ MinecraftForgeClient.registerItemRenderer(item, i); }
 	
 	public static void spawnPart(EntityFX e)
 	{ Minecraft.getMinecraft().effectRenderer.addEffect(e); }
+
+	//public static KeyBinding addKeyBinding(String name, int key)
+	//{ KeyBinding k = new KeyBinding(name, key); return k; }
 }

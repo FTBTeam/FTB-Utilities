@@ -1,5 +1,4 @@
 package latmod.core;
-import java.util.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.*;
 
@@ -7,11 +6,12 @@ public class LMSecurity
 {
 	public static final int PUBLIC = 0;
 	public static final int PRIVATE = 1;
-	public static final int RESTRICTED = 2;
+	public static final int WHITELIST = 2;
+	public static final int BLACKLIST = 3;
 	
 	public String owner = null;
 	public int level = PUBLIC;
-	public FastList<String> friends = new FastList<String>();
+	public FastList<String> restricted = new FastList<String>();
 	
 	public LMSecurity(String s)
 	{ owner = s; }
@@ -22,41 +22,48 @@ public class LMSecurity
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		owner = tag.getString("Owner");
-		level = tag.getByte("Level");
-		friends.clear();
+		if(owner.length() == 0) owner = null;
 		
-		if(tag.hasKey("Friends"))
+		level = tag.getByte("Level");
+		restricted.clear();
+		
+		if(tag.hasKey("Restricted"))
 		{
-			NBTTagList list = tag.getTagList("Friends");
+			NBTTagList list = tag.getTagList("Restricted");
 			for(int i = 0; i < list.tagCount(); i++)
-			friends.add(((NBTTagString)list.tagAt(i)).data);
+			restricted.add(((NBTTagString)list.tagAt(i)).data);
 		}
 	}
 	
 	public void writeToNBT(NBTTagCompound tag)
 	{
-		tag.setString("Owner", owner);
+		tag.setString("Owner", (owner == null) ? "" : owner);
 		tag.setByte("Level", (byte)level);
 		
-		if(!friends.isEmpty())
+		if(!restricted.isEmpty())
 		{
 			NBTTagList list = new NBTTagList();
-			for(String s : friends)
+			for(String s : restricted)
 			list.appendTag(new NBTTagString(null, s));
-			tag.setTag("Friends", list);
+			tag.setTag("Restricted", list);
 		}
 	}
 	
-	public boolean canPlayerInteract(String name)
+	public boolean canInteract(String name)
 	{
 		if(level == PUBLIC) return true;
 		if(name == null || name.length() == 0) return false;
-		if(owner.equals(name)) return true;
-		if(level == RESTRICTED)
-		return friends.contains(name);
+		if(owner == null || owner.equals(name)) return true;
+		
+		if(level == WHITELIST)
+		return restricted.contains(name);
+		
+		if(level == BLACKLIST)
+		return !restricted.contains(name);
+		
 		return false;
 	}
 	
 	public boolean canPlayerInteract(EntityPlayer ep)
-	{ return canPlayerInteract(ep == null ? null : ep.getCommandSenderName()); }
+	{ return canInteract(ep == null ? null : ep.getCommandSenderName()); }
 }

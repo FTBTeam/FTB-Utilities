@@ -1,20 +1,22 @@
 package latmod.core;
 import java.util.*;
 
-import net.minecraft.client.Minecraft;
+import latmod.core.base.recipes.StackEntry;
 import net.minecraft.item.*;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class OreHelper
 {
-	public static final class StackEntry implements Comparable<StackEntry>
+	public static final class OreStackEntry
 	{
+		protected final ItemStack itemStack;
 		public final Item item;
 		public final int damage;
 		public final String oreName;
 		
-		public StackEntry(ItemStack is, String o)
+		public OreStackEntry(ItemStack is, String o)
 		{
+			itemStack = is;
 			item = is.getItem();
 			damage = is.getItemDamage();
 			oreName = o;
@@ -22,15 +24,12 @@ public class OreHelper
 		
 		public boolean equals(Object o)
 		{
-			StackEntry e = (StackEntry)o;
-			return item == e.item && ((e.damage == LatCore.ANY || damage == LatCore.ANY) ? true : damage == e.damage);
+			ItemStack is = (o == null) ? null : ((o instanceof OreStackEntry) ? ((OreStackEntry)o).itemStack : (ItemStack)o);
+			return StackEntry.itemsEquals(itemStack, is);
 		}
-
-		public int compareTo(StackEntry se)
-		{ return Integer.compare(item.itemID, se.item.itemID); }
 	}
 	
-	public static final FastMap<StackEntry, FastList<String>> oreNames = new FastMap<StackEntry, FastList<String>>();
+	public static final FastMap<OreStackEntry, FastList<String>> oreNames = new FastMap<OreStackEntry, FastList<String>>();
 	
 	public static void load()
 	{
@@ -46,7 +45,7 @@ public class OreHelper
 			
 			if(al != null && al.size() > 0) for(ItemStack is : al)
 			{
-				StackEntry se = new StackEntry(is, ore);
+				OreStackEntry se = new OreStackEntry(is, ore);
 				FastList<String> al1 = oreNames.get(se);
 				if(al1 == null) al1 = new FastList<String>();
 				al1.add(ore);
@@ -60,5 +59,5 @@ public class OreHelper
 	}
 	
 	public static FastList<String> getOreNames(ItemStack is)
-	{ return oreNames.get(new StackEntry(is, null)); }
+	{ return oreNames.get(is); }
 }

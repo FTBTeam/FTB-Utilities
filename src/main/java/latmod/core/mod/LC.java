@@ -1,25 +1,29 @@
 package latmod.core.mod;
-import net.minecraft.tileentity.TileEntity;
 import latmod.core.*;
-import latmod.core.tile.*;
+import latmod.core.base.*;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
-import cpw.mods.fml.common.network.*;
 
-@Mod(modid = LCFinals.MODID, name = LCFinals.MODNAME, version = LCFinals.VERSION)
-@NetworkMod(clientSideRequired = true, serverSideRequired = false)
+@Mod(modid = LC.MODID, name = LC.MODNAME, version = LC.VERSION)
 public class LC
 {
-	@Mod.Instance(LCFinals.MODID)
+	protected static final String MODID = "latcore";
+	protected static final String MODNAME = "LatCore";
+	protected static final String VERSION = "1.2.0";
+	
+	@Mod.Instance(LC.MODID)
 	public static LC inst;
 	
-	@SidedProxy(clientSide = LCFinals.SIDE_CLIENT, serverSide = LCFinals.SIDE_SERVER)
+	@SidedProxy(clientSide = "latmod.core.mod.LCClient", serverSide = "latmod.core.mod.LCCommon")
 	public static LCCommon proxy;
+	
+	public static LMMod finals;
 	
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
-		LatCore.addGuiHandler(inst, proxy);
+		finals = new LMMod(MODID);
+		
 		proxy.preInit();
 	}
 	

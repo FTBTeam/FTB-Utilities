@@ -1,10 +1,18 @@
 package latmod.core;
+import java.io.*;
+import java.lang.reflect.Type;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonWriter;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.*;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import net.minecraft.world.*;
-import net.minecraftforge.common.*;
+import net.minecraftforge.common.ForgeDirection;
 
 public class LMUtils
 {
@@ -74,20 +82,6 @@ public class LMUtils
 		return s.toString();
 	}
 	
-	public static void setPropertyComment(Configuration config, String category, String property, String... comment)
-	{
-		ConfigCategory cat = config.getCategory(category);
-		Property prop = cat.get(property);
-		
-		if(prop != null)
-		{
-			String s = "";
-			for(int i = 0; i < comment.length; i++)
-			{ s += comment[i]; if(i < comment.length - 1) s += '\n'; }
-			prop.comment = s;
-		}
-	}
-	
 	public static final double[] getMidPoint(double[] pos1, double[] pos2, float p)
 	{
 		double x = pos2[0] - pos1[0];
@@ -105,6 +99,7 @@ public class LMUtils
 	}
 	
 	//TODO: Still need to fix this
+	@Deprecated
 	public static void teleportEntity(Entity e, int dim)
 	{
 		if ((e.worldObj.isRemote) || (e.isDead) || e.dimension == dim) return;
@@ -133,5 +128,58 @@ public class LMUtils
 		worldserver.resetUpdateEntityTick();
 		worldserver1.resetUpdateEntityTick();
 		e.worldObj.theProfiler.endSection();
+	}
+
+	public static void dropItem(World w, double x, double y, double z, ItemStack is, int delay)
+	{
+		if(w == null || is == null || is.stackSize == 0) return;
+		
+		EntityItem ei = new EntityItem(w, x, y, z, is.copy());
+		ei.motionX = w.rand.nextGaussian() * 0.07F;
+		ei.motionY = w.rand.nextFloat() * 0.05F;
+		ei.motionZ = w.rand.nextGaussian() * 0.07F;
+		ei.delayBeforeCanPickup = delay;
+		w.spawnEntityInWorld(ei);
+	}
+	
+	public static void dropItem(Entity e, ItemStack is)
+	{ dropItem(e.worldObj, e.posX, e.posY, e.posZ, is, 0); }
+	
+	public static <T> T getJson(String s, Type t)
+	{
+		if(s == null || s.length() < 2) s = "{}";
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		return gson.fromJson(s, t);
+	}
+	
+	public static String toJson(Object o, boolean asTree)
+	{
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		
+		if(asTree)
+		{
+			StringWriter sw = new StringWriter();
+			JsonWriter jw = new JsonWriter(sw);
+			jw.setIndent("\t");
+			gson.toJson(o, o.getClass(), jw);
+			return sw.toString();
+		}
+		
+		return gson.toJson(o);
+	}
+
+	public static String[] split(String s, String regex)
+	{
+		String s1[] = s.split(regex);
+		return (s1 == null || s1.length == 0) ? new String[] { s } : s1;
+	}
+	
+	public static MovingObjectPosition rayTrace(EntityPlayer ep, double d)
+	{
+		double oy = 1.62D;// ep.getEyeHeight() - ep.getDefaultEyeHeight();
+		Vec3 pos = ep.worldObj.getWorldVec3Pool().getVecFromPool(ep.posX, ep.posY + oy, ep.posZ);
+		Vec3 look = ep.getLook(1F);
+		Vec3 vec = pos.addVector(look.xCoord * d, look.yCoord * d, look.zCoord * d);
+		return ep.worldObj.rayTraceBlocks_do_do(pos, vec, false, true);
 	}
 }

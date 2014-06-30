@@ -25,6 +25,12 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	public FastList()
 	{ this(10); }
 	
+	public FastList(Object[] o)
+	{
+		this((o == null) ? 0 : o.length);
+		objects = (o == null) ? new Object[initSize] : o;
+	}
+	
 	private void expand()
 	{
 		Object[] o = new Object[objects.length + incr];
@@ -101,7 +107,7 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 		return (E[]) Arrays.copyOf(objects, size, a.getClass());
 		System.arraycopy(objects, 0, a, 0, size);
 		if(a.length > size) a[size] = null;
-		return null;
+		return a;
 	}
 	
 	public boolean removeAll(Collection<?> list)
@@ -178,13 +184,11 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	{ return size <= 0; }
 
 	public boolean containsAll(Collection<?> c)
-	{ if(c.isEmpty()) return false;
-	for(Object o : c) if(!contains(o))
+	{ for(Object o : c) if(!contains(o))
 	return false; return true; }
 	
 	public boolean containsAny(Collection<?> c)
-	{ if(c.isEmpty()) return false;
-	for(Object o : c) if(contains(o))
+	{ for(Object o : c) if(contains(o))
 	return true; return false; }
 	
 	public boolean addAll(Collection<? extends E> l)

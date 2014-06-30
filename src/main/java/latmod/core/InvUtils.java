@@ -1,11 +1,9 @@
 package latmod.core;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.*;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
 import net.minecraft.tileentity.*;
 import net.minecraft.world.*;
-import net.minecraftforge.common.*;
 import net.minecraftforge.common.ForgeDirection;
 
 public class InvUtils
@@ -42,10 +40,7 @@ public class InvUtils
 	}
 	
 	public static boolean itemsEquals(ItemStack is1, ItemStack is2, boolean size, boolean nbt)
-	{
-		if(is1 == null || is2 == null) return false;
-		return is1.itemID == is2.itemID && is1.getItemDamage() == is2.getItemDamage() && (nbt ? ItemStack.areItemStackTagsEqual(is1, is2) : true) && (size ? (is1.stackSize == is2.stackSize) : true);
-	}
+	{ return is1.getItem() == is2.getItem() && is1.getItemDamage() == is2.getItemDamage() && (nbt ? ItemStack.areItemStackTagsEqual(is1, is2) : true) && (size ? (is1.stackSize == is2.stackSize) : true); }
 	
 	public static int[] getAllSlots(IInventory inv, ForgeDirection side)
 	{
@@ -77,6 +72,19 @@ public class InvUtils
 		}
 		
 		return getFirstEmptyIndex(inv, side);
+	}
+	
+	public static int getFirstIndexWithItem(IInventory inv, ItemStack filter, ForgeDirection side, boolean size, boolean nbt)
+	{
+		if(inv == null || filter == null) return -1;
+		int slots[] = getAllSlots(inv, side);
+		for(int i = 0; i < slots.length; i++)
+		{
+			ItemStack is1 = inv.getStackInSlot(slots[i]);
+			if(is1 != null && itemsEquals(filter, is1, size, nbt)) return i;
+		}
+		
+		return -1;
 	}
 	
 	public static int getFirstFilledIndex(IInventory inv, ItemStack filter, ForgeDirection side)
@@ -127,9 +135,9 @@ public class InvUtils
 		return false;
 	}
 	
-	public static boolean addSingleItemToInv(IInventory inv, ItemStack is, ForgeDirection side, boolean doAdd)
+	public static boolean addItemToInv(IInventory inv, ItemStack is, ForgeDirection side)
 	{
-		if(inv == null || is == null || side == null || side == ForgeDirection.UNKNOWN) return false;
+		if(inv == null || is == null || is.stackSize != 1 || side == null || side == ForgeDirection.UNKNOWN) return false;
 		int[] slots = null;
 		
 		ISidedInventory sidedInv = (inv instanceof ISidedInventory) ? (ISidedInventory)inv : null;
@@ -146,39 +154,28 @@ public class InvUtils
 		for(int i = 0; i < slots.length; i++)
 		{
 			ItemStack is1 = inv.getStackInSlot(slots[i]);
-			if(is1 != null && is1.stackSize > 0 && itemsEquals(is, is1, false, true))
+			if(is1 == null || is1.stackSize == 0)
+			{
+				if(sidedInv != null && !sidedInv.canInsertItem(slots[i], is, side.ordinal())) return false;
+				
+				inv.setInventorySlotContents(slots[i], is);
+				inv.onInventoryChanged();
+				return true;
+			}
+			else if(itemsEquals(is, is1, false, true))
 			{
 				if(is1.stackSize + 1 <= is1.getMaxStackSize())
 				{
-					if(sidedInv == null || sidedInv.canInsertItem(slots[i], is, side.ordinal()))
-					{
-						if(doAdd)
-						{
-							is1.stackSize++;
-							inv.setInventorySlotContents(slots[i], is1);
-							inv.onInventoryChanged();
-						}
-						return true;
-					}
-				}
-			}
-		}
-		
-		for(int i = 0; i < slots.length; i++)
-		{
-			ItemStack is1 = inv.getStackInSlot(slots[i]);
-			if(is1 == null || is1.stackSize == 0)
-			{
-				if(sidedInv == null || sidedInv.canInsertItem(slots[i], is, side.ordinal()))
-				{
-					if(doAdd)
-						inv.setInventorySlotContents(slots[i], singleCopy(is));
-						
+					if(sidedInv != null && !sidedInv.canInsertItem(slots[i], is, side.ordinal())) return false;
+					
+					is1.stackSize++;
+					inv.setInventorySlotContents(slots[i], is1);
+					inv.onInventoryChanged();
 					return true;
 				}
 			}
 		}
-		
+
 		return false;
 	}
 	
@@ -264,14 +261,7 @@ public class InvUtils
 		for(int i = 0; i < items.length; i++)
 		{
 			if(items[i] != null && items[i].stackSize > 0)
-			{
-				EntityItem ei = new EntityItem(w, x, y, z, items[i]);
-				ei.motionX = w.rand.nextGaussian() * 0.07F;
-				ei.motionY = w.rand.nextFloat() * 0.05F;
-				ei.motionZ = w.rand.nextGaussian() * 0.07F;
-				ei.delayBeforeCanPickup = 10;
-				w.spawnEntityInWorld(ei);
-			}
+				LMUtils.dropItem(w, x, y, z, items[i], 10);
 		}
 	}
 
@@ -280,5 +270,15 @@ public class InvUtils
 		if(is1 == null || is2 == null) return false;
 		return (is1.stackSize + is2.stackSize <= is1.getMaxStackSize()
 		&& is1.stackSize + is2.stackSize <= is2.getMaxStackSize());
+	}
+
+	public static ItemStack[] getAllItems(IInventory inv)
+	{
+		if(inv == null) return null;
+		ItemStack[] ai = new ItemStack[inv.getSizeInventory()];
+		if(ai.length == 0) return ai;
+		for(int i = 0; i < ai.length; i++)
+			ai[i] = inv.getStackInSlot(i);
+		return ai;
 	}
 }

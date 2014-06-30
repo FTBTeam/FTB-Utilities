@@ -1,11 +1,8 @@
 package latmod.core.mod;
-import java.util.*;
 import latmod.core.*;
-import net.minecraft.item.*;
 import net.minecraftforge.common.*;
-import net.minecraftforge.event.*;
+import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.*;
-import net.minecraftforge.oredict.*;
 
 public class LC_TooltipHandler
 {
@@ -19,14 +16,15 @@ public class LC_TooltipHandler
 	{
 		if(e.showAdvancedItemTooltips && e.itemStack != null)
 		{
-			Item i = e.itemStack.getItem();
-			
-			e.toolTip.add("Unlocalized name:");
-			e.toolTip.add(e.itemStack.getUnlocalizedName());
+			if(LC.proxy.isShiftDown())
+			{
+				e.toolTip.add("Unlocalized name:");
+				e.toolTip.add("> " + e.itemStack.getUnlocalizedName());
+			}
 			
 			FastList<String> ores = OreHelper.getOreNames(e.itemStack);
 			
-			if(ores != null)
+			if(ores != null && !ores.isEmpty())
 			{
 				e.toolTip.add("Ore Dictionary names:");
 				for(String or : ores)

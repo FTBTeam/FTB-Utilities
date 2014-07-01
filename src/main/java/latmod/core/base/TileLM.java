@@ -104,13 +104,17 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 		if(isDirty)
 		{
 			isDirty = false;
-			//super.markDirty();
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			sendDirtyUpdate();
 		}
 		tick++;
 	}
 	
 	public void onUpdate() { }
+	
+	public void sendDirtyUpdate()
+	{
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	}
 	
 	public void onPlaced()
 	{ blockType = Block.blocksList[worldObj.getBlockId(xCoord, yCoord, zCoord)]; }
@@ -165,6 +169,9 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	
 	@Override
 	public void onInventoryChanged()
+	{ markDirty(); }
+	
+	public final void markDirty()
 	{ isDirty = true; }
 	
 	@Override

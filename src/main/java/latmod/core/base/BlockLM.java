@@ -54,7 +54,7 @@ public abstract class BlockLM extends BlockContainer
 	
 	@SuppressWarnings("all")
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item j, CreativeTabs c, List l)
+	public void getSubBlocks(int j, CreativeTabs c, List l)
 	{ l.addAll(blocksAdded); }
 
 	public void onBlockPlacedBy(World w, int x, int y, int z, EntityLivingBase el, ItemStack is)

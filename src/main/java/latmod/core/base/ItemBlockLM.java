@@ -28,7 +28,7 @@ public class ItemBlockLM extends ItemBlock
 	
 	@SuppressWarnings("all")
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item j, CreativeTabs c, List l)
+	public void getSubItems(int j, CreativeTabs c, List l)
 	{ getBlock().getSubBlocks(j, c, l); }
 	
 	private FastList<String> infoList = new FastList<String>();

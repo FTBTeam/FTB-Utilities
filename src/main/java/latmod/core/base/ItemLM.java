@@ -32,8 +32,11 @@ public abstract class ItemLM extends Item
 	
 	@SuppressWarnings("all")
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item j, CreativeTabs c, List l)
-	{ l.addAll(itemsAdded); }
+	public void getSubItems(int j, CreativeTabs c, List l)
+	{
+		for(ItemStack is : itemsAdded)
+		if(isVisible(is)) l.add(is);
+	}
 	
 	public String getUnlocalizedName(ItemStack is)
 	{ return mod.getItemName(itemName); }
@@ -83,4 +86,7 @@ public abstract class ItemLM extends Item
 	public void loadRecipes()
 	{
 	}
+	
+	public boolean isVisible(ItemStack is)
+	{ return true; }
 }

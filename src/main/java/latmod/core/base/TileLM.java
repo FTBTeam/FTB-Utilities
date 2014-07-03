@@ -63,9 +63,14 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 		isLoaded = false;
 	}
 	
+	protected boolean customNBT()
+	{ return false; }
+	
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
+		
+		if(customNBT()) return;
 		
 		if(tag.hasKey("Security"))
 		security.readFromNBT(tag.getCompoundTag("Security"));
@@ -82,6 +87,8 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	public void writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
+		
+		if(customNBT()) return;
 		
 		NBTTagCompound securityTag = new NBTTagCompound();
 		security.writeToNBT(securityTag);

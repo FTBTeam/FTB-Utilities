@@ -233,4 +233,20 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 		System.arraycopy(objects, fromIndex, al.objects, 0, fromIndex + toIndex);
 		return al;
 	}
+
+	public boolean trim(int t)
+	{
+		if(size > t)
+		{
+			FastList<E> newRes = new FastList<E>();
+			for(int i = 0; i < t; i++)
+				newRes.add(get(i));
+			clear();
+			addAll(newRes);
+			
+			return true;
+		}
+		
+		return false;
+	}
 }

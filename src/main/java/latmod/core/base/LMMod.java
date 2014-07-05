@@ -9,7 +9,7 @@ public class LMMod
 	public final String assets;
 	
 	public FastList<BlockLM> blocks;
-	public FastList<ItemLM> items;
+	public FastList<IItemLM> items;
 	
 	public LMMod(String s)
 	{
@@ -17,7 +17,7 @@ public class LMMod
 		assets = s.toLowerCase() + ":";
 		
 		blocks = new FastList<BlockLM>();
-		items = new FastList<ItemLM>();
+		items = new FastList<IItemLM>();
 	}
 	
 	public final ResourceLocation getLocation(String s)
@@ -33,8 +33,8 @@ public class LMMod
 	{ if(args == null || args.length == 0) return StatCollector.translateToLocal(assets + s);
 	else return StatCollector.translateToLocalFormatted(assets + s, args); }
 	
-	public void addItem(ItemLM i)
-	{ LatCore.addItem(i, i.itemName, modID); items.add(i); }
+	public void addItem(IItemLM i)
+	{ LatCore.addItem(i.getItem(), i.getItemID(), modID); items.add(i); }
 
 	public void addBlock(BlockLM b, Class<? extends ItemBlockLM> c)
 	{ LatCore.addBlock(b, c, b.blockName, modID); blocks.add(b); }

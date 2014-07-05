@@ -1,4 +1,5 @@
-package latmod.core.base;
+package latmod.core.base.gui;
+import latmod.core.base.TileLM;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;

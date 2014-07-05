@@ -9,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
 import net.minecraft.util.*;
 
-public abstract class ItemLM extends Item
+public abstract class ItemLM extends Item implements IItemLM
 {
 	public final String itemName;
 	public final FastList<ItemStack> itemsAdded;
@@ -24,11 +24,21 @@ public abstract class ItemLM extends Item
 		itemsAdded = new FastList<ItemStack>();
 	}
 	
+	public final Item getItem()
+	{ return this; }
+
+	public final String getItemID()
+	{ return itemName; }
+	
 	@SideOnly(Side.CLIENT)
 	public abstract CreativeTabs getCreativeTab();
 	
 	public void onPostLoaded()
 	{ itemsAdded.add(new ItemStack(this)); }
+	
+	public void loadRecipes()
+	{
+	}
 	
 	@SuppressWarnings("all")
 	@SideOnly(Side.CLIENT)
@@ -80,10 +90,6 @@ public abstract class ItemLM extends Item
 	
 	@SideOnly(Side.CLIENT)
 	public void addInfo(ItemStack is, EntityPlayer ep, FastList<String> l)
-	{
-	}
-
-	public void loadRecipes()
 	{
 	}
 	

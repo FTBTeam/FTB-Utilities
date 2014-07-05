@@ -53,17 +53,35 @@ public class LMSecurity
 	{
 		if(level == PUBLIC) return true;
 		if(name == null || name.length() == 0) return false;
-		if(owner == null || owner.equals(name)) return true;
+		if(isOwner(name)) return true;
+		if(level == PRIVATE) return false;
 		
-		if(level == WHITELIST)
-		return restricted.contains(name);
+		else if(level == WHITELIST)
+		for(String s : restricted)
+		{
+			if(s.equalsIgnoreCase(name))
+			return true;
+		}
 		
-		if(level == BLACKLIST)
-		return !restricted.contains(name);
+		else if(level == BLACKLIST)
+		for(String s : restricted)
+		{
+			if(s.equalsIgnoreCase(name))
+			return false;
+		}
 		
-		return false;
+		return true;
 	}
 	
 	public boolean canPlayerInteract(EntityPlayer ep)
 	{ return canInteract(ep == null ? null : ep.getCommandSenderName()); }
+	
+	public boolean isOwner(String name)
+	{ return owner == null || (name != null && owner.equalsIgnoreCase(name)); }
+	
+	public boolean isPlayerOwner(EntityPlayer ep)
+	{ return isOwner(ep == null ? null : ep.username); }
+	
+	public boolean isLevelRestricted()
+	{ return level == WHITELIST || level == BLACKLIST; }
 }

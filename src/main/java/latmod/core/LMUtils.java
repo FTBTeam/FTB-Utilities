@@ -1,13 +1,16 @@
 package latmod.core;
 import java.io.*;
 import java.lang.reflect.Type;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonWriter;
+
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
@@ -16,7 +19,7 @@ import net.minecraftforge.common.ForgeDirection;
 
 public class LMUtils
 {
-	public static boolean anyEquals(Object o, Object... o1)
+	public static boolean anyEquals(Object o, Object[] o1)
 	{
 		for(int i = 0; i < o1.length; i++)
 		{
@@ -28,7 +31,7 @@ public class LMUtils
 		return false;
 	}
 	
-	public static boolean allEquals(Object o, Object... o1)
+	public static boolean allEquals(Object o, Object[] o1)
 	{
 		for(int i = 0; i < o1.length; i++)
 		{
@@ -152,6 +155,19 @@ public class LMUtils
 		return gson.fromJson(s, t);
 	}
 	
+	public static <T> T getJsonFromFile(File f, Type t)
+	{
+		try
+		{
+			FileInputStream fis = new FileInputStream(f);
+			byte[] b = new byte[fis.available()];
+			fis.read(b); fis.close();
+			return getJson(new String(b), t);
+		}
+		catch(Exception e)
+		{ e.printStackTrace(); return null; }
+	}
+	
 	public static String toJson(Object o, boolean asTree)
 	{
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
@@ -167,6 +183,26 @@ public class LMUtils
 		
 		return gson.toJson(o);
 	}
+	
+	public static void toJsonFile(File f, Object o)
+	{
+		String s = toJson(o, true);
+		
+		try
+		{
+			if(!f.exists())
+			{
+				File f0 = f.getParentFile();
+				if(!f0.exists()) f0.mkdirs();
+				f.createNewFile();
+			}
+			
+			FileOutputStream fos = new FileOutputStream(f);
+			fos.write(s.getBytes()); fos.close();
+		}
+		catch(Exception e)
+		{ e.printStackTrace(); }
+	}
 
 	public static String[] split(String s, String regex)
 	{
@@ -181,5 +217,26 @@ public class LMUtils
 		Vec3 look = ep.getLook(1F);
 		Vec3 vec = pos.addVector(look.xCoord * d, look.yCoord * d, look.zCoord * d);
 		return ep.worldObj.rayTraceBlocks_do_do(pos, vec, false, true);
+	}
+	
+	public static ItemStack getStackFromUnlocazliedName(String uname, int dmg, boolean stack)
+	{
+		try
+		{
+			for(Item i : Item.itemsList)
+			{
+				if(i != null)
+				{
+					ItemStack is = new ItemStack(i, 1, dmg);
+					
+					if(stack ? is.getUnlocalizedName().equals(uname) : i.getUnlocalizedName().equals(uname))
+						return is;
+				}
+			}
+		}
+		catch(Exception e)
+		{ e.printStackTrace(); }
+		
+		return null;
 	}
 }

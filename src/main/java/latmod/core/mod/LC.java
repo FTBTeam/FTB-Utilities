@@ -1,5 +1,5 @@
 package latmod.core.mod;
-import latmod.core.*;
+import net.minecraftforge.common.MinecraftForge;
 import latmod.core.base.*;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
@@ -19,6 +19,11 @@ public class LC
 	
 	public static LMMod finals;
 	
+	public LC()
+	{
+		MinecraftForge.EVENT_BUS.register(new LCEventHandler());	
+	}
+	
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
@@ -37,7 +42,5 @@ public class LC
 	public void postInit(FMLPostInitializationEvent e)
 	{
 		proxy.postInit();
-		OreHelper.load();
-		new LC_TooltipHandler();
 	}
 }

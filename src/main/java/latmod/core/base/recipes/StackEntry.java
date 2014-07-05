@@ -110,7 +110,7 @@ public class StackEntry implements IStackArray
 		{
 			int dmg1 = is1.getItemDamage();
 			int dmg2 = is1.getItemDamage();
-			return dmg1 == dmg2 || dmg1 == LatCore.ANY || dmg2 == LatCore.ANY;
+			return dmg1 == dmg2 || dmg2 == LatCore.ANY;// || dmg1 == LatCore.ANY;
 		}
 				
 		return false;

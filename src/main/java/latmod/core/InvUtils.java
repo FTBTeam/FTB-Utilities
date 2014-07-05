@@ -1,4 +1,5 @@
 package latmod.core;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
@@ -8,15 +9,6 @@ import net.minecraftforge.common.ForgeDirection;
 
 public class InvUtils
 {
-	public static final int[] PLAYER_SLOTS;
-	
-	static
-	{
-		PLAYER_SLOTS = new int[36];
-		for(int i = 0; i < PLAYER_SLOTS.length; i++)
-			PLAYER_SLOTS[i] = i;
-	}
-
 	public static ItemStack singleCopy(ItemStack is)
 	{
 		if(is == null || is.stackSize <= 0) return null;
@@ -135,9 +127,10 @@ public class InvUtils
 		return false;
 	}
 	
-	public static boolean addSingleItemToInv(ItemStack is, IInventory inv, int[] slots, boolean doAdd)
+	public static boolean addSingleItemToInv(ItemStack is, IInventory inv, int[] slots, int side, boolean doAdd)
 	{
 		if(is == null) return false;
+		ItemStack single = singleCopy(is);
 		
 		for(int i = 0; i < slots.length; i++)
 		{
@@ -146,14 +139,17 @@ public class InvUtils
 			{
 				if(is1.stackSize + 1 <= is1.getMaxStackSize())
 				{
-					if(doAdd)
+					if(side == -1 || !(inv instanceof ISidedInventory) || ((ISidedInventory)inv).canInsertItem(i, single, side))
 					{
-						is1.stackSize++;
-						inv.setInventorySlotContents(slots[i], is1);
-						inv.onInventoryChanged();
+						if(doAdd)
+						{
+							is1.stackSize++;
+							inv.setInventorySlotContents(slots[i], is1);
+							inv.onInventoryChanged();
+						}
+						
+						return true;
 					}
-					
-					return true;
 				}
 			}
 		}
@@ -163,14 +159,16 @@ public class InvUtils
 			ItemStack is1 = inv.getStackInSlot(slots[i]);
 			if(is1 == null || is1.stackSize == 0)
 			{
-				if(doAdd)
+				if(side == -1 || !(inv instanceof ISidedInventory) || ((ISidedInventory)inv).canInsertItem(i, single, side))
 				{
-					is1 = InvUtils.singleCopy(is);
-					inv.setInventorySlotContents(slots[i], is1);
-					inv.onInventoryChanged();
+					if(doAdd)
+					{
+						inv.setInventorySlotContents(slots[i], single);
+						inv.onInventoryChanged();
+					}
+					
+					return true;
 				}
-				
-				return true;
 			}
 		}
 		
@@ -281,4 +279,7 @@ public class InvUtils
 			ai[i] = inv.getStackInSlot(i);
 		return ai;
 	}
+	
+	public static int[] getPlayerSlots(EntityPlayer ep)
+	{ return getAllSlots(ep.inventory, null); }
 }

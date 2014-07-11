@@ -281,5 +281,8 @@ public class InvUtils
 	}
 	
 	public static int[] getPlayerSlots(EntityPlayer ep)
-	{ return getAllSlots(ep.inventory, null); }
+	{
+		int[] ai = new int[ep.inventory.mainInventory.length];
+		for(int i = 0; i < ai.length; i++) ai[i] = i; return ai;
+	}
 }

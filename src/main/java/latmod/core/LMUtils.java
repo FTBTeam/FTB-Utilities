@@ -2,16 +2,15 @@ package latmod.core;
 import java.io.*;
 import java.lang.reflect.Type;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
 
 import net.minecraft.block.BlockPistonBase;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import net.minecraft.world.*;
@@ -94,13 +93,6 @@ public class LMUtils
 		return new double[] { pos1[0] + (x / d) * (d * p), pos1[1] + (y / d) * (d * p), pos1[2] + (z / d) * (d * p) };
 	}
 	
-	public static int percent(int i, int max)
-	{
-		if(i == 0) return 0;
-		if(i == max) return 100;
-		return (int)((float)i * 100F / (float)max);
-	}
-	
 	//TODO: Still need to fix this
 	@Deprecated
 	public static void teleportEntity(Entity e, int dim)
@@ -132,7 +124,7 @@ public class LMUtils
 		worldserver1.resetUpdateEntityTick();
 		e.worldObj.theProfiler.endSection();
 	}
-
+	
 	public static void dropItem(World w, double x, double y, double z, ItemStack is, int delay)
 	{
 		if(w == null || is == null || is.stackSize == 0) return;
@@ -148,21 +140,21 @@ public class LMUtils
 	public static void dropItem(Entity e, ItemStack is)
 	{ dropItem(e.worldObj, e.posX, e.posY, e.posZ, is, 0); }
 	
-	public static <T> T getJson(String s, Type t)
+	public static <T> T fromJson(String s, Type t)
 	{
 		if(s == null || s.length() < 2) s = "{}";
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		return gson.fromJson(s, t);
 	}
 	
-	public static <T> T getJsonFromFile(File f, Type t)
+	public static <T> T fromJsonFromFile(File f, Type t)
 	{
 		try
 		{
 			FileInputStream fis = new FileInputStream(f);
 			byte[] b = new byte[fis.available()];
 			fis.read(b); fis.close();
-			return getJson(new String(b), t);
+			return fromJson(new String(b), t);
 		}
 		catch(Exception e)
 		{ e.printStackTrace(); return null; }
@@ -219,23 +211,35 @@ public class LMUtils
 		return ep.worldObj.rayTraceBlocks_do_do(pos, vec, false, true);
 	}
 	
-	public static ItemStack getStackFromUnlocazliedName(String uname, int dmg, boolean stack)
+	public static ItemStack getStackFromUnlocazliedName(String name, int dmg)
 	{
-		try
+		if(name == null) return null;
+		
+		FastList<ItemStack> temp = new FastList<ItemStack>();
+		
+		for(int i = 0; i < Item.itemsList.length; i++)
 		{
-			for(Item i : Item.itemsList)
+			if(Item.itemsList[i] != null)
 			{
-				if(i != null)
+				temp.clear();
+				Item.itemsList[i].getSubItems(Item.itemsList[i].itemID, CreativeTabs.tabAllSearch, temp);
+				
+				if(!temp.isEmpty())
+				for(ItemStack is : temp)
 				{
-					ItemStack is = new ItemStack(i, 1, dmg);
-					
-					if(stack ? is.getUnlocalizedName().equals(uname) : i.getUnlocalizedName().equals(uname))
-						return is;
+					if(is != null)
+					{
+						String s = is.getUnlocalizedName();
+						
+						if(s != null && s.equals(name))
+						{
+							if(dmg == LatCore.ANY || dmg == is.getItemDamage())
+								return is;
+						}
+					}
 				}
 			}
 		}
-		catch(Exception e)
-		{ e.printStackTrace(); }
 		
 		return null;
 	}

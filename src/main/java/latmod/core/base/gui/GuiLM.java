@@ -1,26 +1,22 @@
 package latmod.core.base.gui;
 import cpw.mods.fml.relauncher.*;
 import latmod.core.FastList;
-import latmod.core.base.TileLM;
 import latmod.core.client.LMRenderer;
 import net.minecraft.client.gui.inventory.*;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.player.*;
 import net.minecraft.util.*;
 
 @SideOnly(Side.CLIENT)
 public class GuiLM extends GuiContainer
 {
-	public EntityPlayer player;
-	public TileLM tile;
+	public ContainerLM container;
 	public ResourceLocation texture;
 	public FastList<WidgetLM> widgets;
 	
 	public GuiLM(ContainerLM c)
 	{
 		super(c);
-		player = c.player;
-		tile = c.tile;
+		container = c;
 		texture = c.getTexture();
 		widgets = new FastList<WidgetLM>();
 	}

@@ -86,7 +86,8 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	
 	public void clear()
 	{
-		objects = new Object[initSize];
+		for(int i = 0; i < size; i++)
+		objects[i] = null;
 		size = 0;
 	}
 	

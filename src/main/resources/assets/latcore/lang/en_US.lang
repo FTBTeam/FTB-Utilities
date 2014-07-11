@@ -1,0 +1,16 @@
+latcore:security=Security
+latcore:security.public=Public
+latcore:security.private=Private
+latcore:security.whitelist=Whitelist
+latcore:security.blacklist=Blacklist
+
+latcore:redstonemode=Redstone Mode
+latcore:redstonemode.disabled=Disabled
+latcore:redstonemode.high=Active High
+latcore:redstonemode.low=Active Low
+
+latcore:invmode=Automation
+latcore:invmode.enabled=Enabled
+latcore:invmode.onlyin=Insert Only
+latcore:invmode.onlyout=Extract Only
+latcore:invmode.disabled=Disabled

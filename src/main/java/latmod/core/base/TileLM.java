@@ -34,7 +34,7 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	
 	public Packet getDescriptionPacket()
 	{ NBTTagCompound tag = new NBTTagCompound(); writeToNBT(tag);
-	return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag); }
+	return new Packet132TileEntityData(xCoord, yCoord, zCoord, 0, tag); }
 	
 	public void onDataPacket(INetworkManager m, Packet132TileEntityData p)
 	{ readFromNBT(p.data); }

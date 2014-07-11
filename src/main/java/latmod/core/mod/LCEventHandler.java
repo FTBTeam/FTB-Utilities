@@ -54,14 +54,8 @@ public class LCEventHandler
 			
 			if(LC.proxy.isShiftDown())
 			{
-				e.toolTip.add("Sub-Unlocalized name:");
-				e.toolTip.add("> " + e.itemStack.getUnlocalizedName());
-			}
-			
-			if(LC.proxy.isCtrlDown())
-			{
 				e.toolTip.add("Unlocalized name:");
-				e.toolTip.add("> " + e.itemStack.getItem().getUnlocalizedName());
+				e.toolTip.add("> " + e.itemStack.getUnlocalizedName());
 			}
 		}
 	}

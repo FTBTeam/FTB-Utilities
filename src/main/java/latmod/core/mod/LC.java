@@ -1,5 +1,6 @@
 package latmod.core.mod;
 import net.minecraftforge.common.MinecraftForge;
+import latmod.core.ODItems;
 import latmod.core.base.*;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
@@ -17,7 +18,7 @@ public class LC
 	@SidedProxy(clientSide = "latmod.core.mod.LCClient", serverSide = "latmod.core.mod.LCCommon")
 	public static LCCommon proxy;
 	
-	public static LMMod finals;
+	public static LMMod mod;
 	
 	public LC()
 	{
@@ -27,14 +28,14 @@ public class LC
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
-		finals = new LMMod(MODID);
-		
+		mod = new LMMod(MODID);
 		proxy.preInit();
 	}
 	
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent e)
 	{
+		ODItems.register();
 		proxy.init();
 	}
 	

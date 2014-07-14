@@ -1,6 +1,7 @@
 package latmod.core;
 import java.io.*;
 import java.util.*;
+import latmod.core.util.FastList;
 import net.minecraft.block.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.creativetab.*;

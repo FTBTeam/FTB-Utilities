@@ -1,7 +1,6 @@
 package latmod.core.base;
 import java.util.*;
-
-import latmod.core.*;
+import latmod.core.util.*;
 import cpw.mods.fml.relauncher.*;
 import net.minecraft.client.renderer.texture.*;
 import net.minecraft.creativetab.*;

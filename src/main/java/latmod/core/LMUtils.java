@@ -1,12 +1,9 @@
 package latmod.core;
 import java.io.*;
 import java.lang.reflect.Type;
-
 import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
-
 import net.minecraft.block.BlockPistonBase;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,29 +15,6 @@ import net.minecraftforge.common.ForgeDirection;
 
 public class LMUtils
 {
-	public static boolean anyEquals(Object o, Object[] o1)
-	{
-		for(int i = 0; i < o1.length; i++)
-		{
-			if(o == null && o1[i] == null) return true;
-			if(o != null && o1[i] != null)
-			{ if(o == o1[i] || o.equals(o1[i])) return true; }
-		}
-		
-		return false;
-	}
-	
-	public static boolean allEquals(Object o, Object[] o1)
-	{
-		for(int i = 0; i < o1.length; i++)
-		{
-			if((o == null && o1[i] != null) || (o != null && o1[i] == null)) return false;
-			if(o != o1[i]) { if(!o.equals(o1[i])) return false; }
-		}
-		
-		return true;
-	}
-	
 	public static ForgeDirection get2DRotation(EntityLivingBase el)
 	{
 		int i = MathHelper.floor_float(el.rotationYaw * 4F / 360F + 0.5F) & 3;
@@ -56,33 +30,6 @@ public class LMUtils
 	
 	public static String getPath(ResourceLocation res)
 	{ return "/assets/" + res.getResourceDomain() + "/" + res.getResourcePath(); }
-	
-	public static String stripe(Object... i)
-	{
-		StringBuilder s = new StringBuilder();
-		for(int j = 0; j < i.length; j++)
-		{ s.append(i[j]);
-		if(j != i.length - 1) s.append(", "); }
-		return s.toString();
-	}
-	
-	public static String stripeD(double... i)
-	{
-		StringBuilder s = new StringBuilder();
-		for(int j = 0; j < i.length; j++)
-		{ s.append(((long)(i[j] * 100D)) / 100D);
-		if(j != i.length - 1) s.append(", "); }
-		return s.toString();
-	}
-	
-	public static String stripeF(float... i)
-	{
-		StringBuilder s = new StringBuilder();
-		for(int j = 0; j < i.length; j++)
-		{ s.append(((int)(i[j] * 100F)) / 100F);
-		if(j != i.length - 1) s.append(", "); }
-		return s.toString();
-	}
 	
 	public static final double[] getMidPoint(double[] pos1, double[] pos2, float p)
 	{
@@ -196,12 +143,6 @@ public class LMUtils
 		{ e.printStackTrace(); }
 	}
 
-	public static String[] split(String s, String regex)
-	{
-		String s1[] = s.split(regex);
-		return (s1 == null || s1.length == 0) ? new String[] { s } : s1;
-	}
-	
 	public static MovingObjectPosition rayTrace(EntityPlayer ep, double d)
 	{
 		double oy = 1.62D;// ep.getEyeHeight() - ep.getDefaultEyeHeight();
@@ -215,29 +156,17 @@ public class LMUtils
 	{
 		if(name == null) return null;
 		
-		FastList<ItemStack> temp = new FastList<ItemStack>();
-		
 		for(int i = 0; i < Item.itemsList.length; i++)
 		{
 			if(Item.itemsList[i] != null)
 			{
-				temp.clear();
-				Item.itemsList[i].getSubItems(Item.itemsList[i].itemID, CreativeTabs.tabAllSearch, temp);
-				
-				if(!temp.isEmpty())
-				for(ItemStack is : temp)
+				try
 				{
-					if(is != null)
-					{
-						String s = is.getUnlocalizedName();
-						
-						if(s != null && s.equals(name))
-						{
-							if(dmg == LatCore.ANY || dmg == is.getItemDamage())
-								return is;
-						}
-					}
+					ItemStack is = new ItemStack(Item.itemsList[i], 1, dmg);
+					String s = is.getUnlocalizedName();
+					if(s != null && s.equals(name)) return is;
 				}
+				catch(Exception e) { }
 			}
 		}
 		

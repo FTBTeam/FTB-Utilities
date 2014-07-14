@@ -1,5 +1,6 @@
 package latmod.core.base;
 import latmod.core.*;
+import latmod.core.util.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.*;
 

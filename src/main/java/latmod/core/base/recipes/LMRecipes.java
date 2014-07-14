@@ -1,6 +1,7 @@
 package latmod.core.base.recipes;
 import java.util.Map;
 import latmod.core.*;
+import latmod.core.util.*;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.*;
 

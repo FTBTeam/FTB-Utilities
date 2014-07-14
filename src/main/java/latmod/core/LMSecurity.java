@@ -1,5 +1,6 @@
 package latmod.core;
 import latmod.core.mod.LC;
+import latmod.core.util.FastList;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.*;
 

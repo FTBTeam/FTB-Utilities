@@ -1,7 +1,6 @@
 package latmod.core.base;
 import java.util.*;
-
-import latmod.core.FastList;
+import latmod.core.util.FastList;
 import cpw.mods.fml.relauncher.*;
 import net.minecraft.block.*;
 import net.minecraft.block.material.*;

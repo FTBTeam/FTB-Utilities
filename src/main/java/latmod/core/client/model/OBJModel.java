@@ -1,14 +1,11 @@
 package latmod.core.client.model;
 import java.io.*;
-
 import net.minecraft.util.*;
-
 import org.lwjgl.util.vector.*;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import cpw.mods.fml.relauncher.*;
 import latmod.core.*;
 import latmod.core.client.*;
+import latmod.core.util.*;
 
 /** Made by LatvianModder */
 @SideOnly(Side.CLIENT)
@@ -57,7 +54,7 @@ public class OBJModel
 			{
 				if(s.length() > 0 && s.charAt(0) != '#')
 				{
-					String[] s3 = LMUtils.split(s, " ");
+					String[] s3 = LMCommon.split(s, " ");
 					
 					if(s3[0].equals("o"))
 					{

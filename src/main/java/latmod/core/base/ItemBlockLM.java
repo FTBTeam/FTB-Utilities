@@ -1,7 +1,6 @@
 package latmod.core.base;
 import java.util.List;
-
-import latmod.core.FastList;
+import latmod.core.util.FastList;
 import cpw.mods.fml.relauncher.*;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -31,11 +30,13 @@ public class ItemBlockLM extends ItemBlock
 	public void getSubItems(int j, CreativeTabs c, List l)
 	{ getBlock().getSubBlocks(j, c, l); }
 	
-	private FastList<String> infoList = new FastList<String>();
+	@SideOnly(Side.CLIENT)
+	private FastList<String> infoList;
 	
 	@SuppressWarnings("all") @SideOnly(Side.CLIENT)
     public final void addInformation(ItemStack is, EntityPlayer ep, List l, boolean b)
 	{
+		if(infoList == null) infoList = new FastList<String>();
 		infoList.clear();
 		getBlock().addInfo(is, ep, infoList);
 		l.addAll(infoList);

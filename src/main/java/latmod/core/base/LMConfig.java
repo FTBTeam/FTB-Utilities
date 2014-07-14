@@ -1,5 +1,6 @@
 package latmod.core.base;
 import latmod.core.*;
+import latmod.core.util.FastMap;
 import net.minecraftforge.common.*;
 import cpw.mods.fml.common.event.*;
 

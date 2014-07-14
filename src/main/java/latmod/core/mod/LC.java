@@ -10,7 +10,7 @@ public class LC
 {
 	public static final String MODID = "latcore";
 	public static final String MODNAME = "LatCore";
-	public static final String VERSION = "1.3.0";
+	public static final String VERSION = "1.3.1";
 	
 	@Mod.Instance(LC.MODID)
 	public static LC inst;

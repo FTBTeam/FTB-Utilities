@@ -1,6 +1,6 @@
 package latmod.core.base.gui;
 import cpw.mods.fml.relauncher.*;
-import latmod.core.FastList;
+import latmod.core.util.*;
 import latmod.core.client.LMRenderer;
 import net.minecraft.client.gui.inventory.*;
 import net.minecraft.client.renderer.Tessellator;

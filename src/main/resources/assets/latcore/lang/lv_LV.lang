@@ -11,6 +11,6 @@ latcore:redstonemode.low=Aktīvs kad Izslēgts
 
 latcore:invmode=Automatizācijas Režīms
 latcore:invmode.enabled=Ieslēgts
-latcore.invmode.inonly=Tikai Iekšā
-latcore.invmode.outonly=Tikai Ārā
-latcore.invmode.disabled=Izslēgts
+latcore:invmode.onlyin=Tikai Iekšā
+latcore:invmode.onlyout=Tikai Ārā
+latcore:invmode.disabled=Izslēgts

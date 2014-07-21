@@ -1,4 +1,5 @@
 package latmod.core;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
@@ -24,19 +25,10 @@ public class InvUtils
 		return (te != null && te instanceof IInventory) ? (IInventory)te : null;
 	}
 	
-	public static IInventory getInvAt(TileEntity te, ForgeDirection side)
+	public static IInventory getInvAt(TileEntity te, ForgeDirection side, boolean entities)
 	{
 		if(side == null || side == ForgeDirection.UNKNOWN) return null;
-		
-		int x = te.xCoord + side.offsetX;
-		int y = te.yCoord + side.offsetY;
-		int z = te.zCoord + side.offsetZ;
-		
-		//TODO: Make more specific when Tile == Chest
-		TileEntity te1 = te.getWorldObj().getTileEntity(x, y, z);
-		if(te1 != null && te1 instanceof IInventory) return (IInventory)te1;
-		
-		return null;
+		return getInvAt(te.getWorldObj(), te.xCoord + side.offsetX + 0.5D, te.yCoord + side.offsetY + 0.5D, te.zCoord + side.offsetZ + 0.5D, entities);
 	}
 	
 	public static boolean itemsEquals(ItemStack is1, ItemStack is2, boolean size, boolean nbt)
@@ -135,20 +127,31 @@ public class InvUtils
 		return false;
 	}
 	
-	public static boolean addItemToInv(IInventory inv, ItemStack is, ForgeDirection side)
+	public static boolean addSingleItemToInv(ItemStack is, IInventory inv, int[] slots, int side, boolean doAdd)
 	{
-		if(inv == null || is == null || is.stackSize != 1 || side == null || side == ForgeDirection.UNKNOWN) return false;
-		int[] slots = null;
+		if(is == null) return false;
+		ItemStack single = singleCopy(is);
 		
-		ISidedInventory sidedInv = (inv instanceof ISidedInventory) ? (ISidedInventory)inv : null;
-		
-		if(sidedInv != null)
-			slots = sidedInv.getAccessibleSlotsFromSide(side.ordinal());
-		else
+		for(int i = 0; i < slots.length; i++)
 		{
-			slots = new int[inv.getSizeInventory()];
-			for(int i = 0; i < slots.length; i++)
-				slots[i] = i;
+			ItemStack is1 = inv.getStackInSlot(slots[i]);
+			if(is1 != null && is1.stackSize > 0 && InvUtils.itemsEquals(is, is1, false, true))
+			{
+				if(is1.stackSize + 1 <= is1.getMaxStackSize())
+				{
+					if(side == -1 || !(inv instanceof ISidedInventory) || ((ISidedInventory)inv).canInsertItem(i, single, side))
+					{
+						if(doAdd)
+						{
+							is1.stackSize++;
+							inv.setInventorySlotContents(slots[i], is1);
+							inv.markDirty();
+						}
+						
+						return true;
+					}
+				}
+			}
 		}
 		
 		for(int i = 0; i < slots.length; i++)
@@ -156,26 +159,19 @@ public class InvUtils
 			ItemStack is1 = inv.getStackInSlot(slots[i]);
 			if(is1 == null || is1.stackSize == 0)
 			{
-				if(sidedInv != null && !sidedInv.canInsertItem(slots[i], is, side.ordinal())) return false;
-				
-				inv.setInventorySlotContents(slots[i], is);
-				inv.markDirty();
-				return true;
-			}
-			else if(itemsEquals(is, is1, false, true))
-			{
-				if(is1.stackSize + 1 <= is1.getMaxStackSize())
+				if(side == -1 || !(inv instanceof ISidedInventory) || ((ISidedInventory)inv).canInsertItem(i, single, side))
 				{
-					if(sidedInv != null && !sidedInv.canInsertItem(slots[i], is, side.ordinal())) return false;
+					if(doAdd)
+					{
+						inv.setInventorySlotContents(slots[i], single);
+						inv.markDirty();
+					}
 					
-					is1.stackSize++;
-					inv.setInventorySlotContents(slots[i], is1);
-					inv.markDirty();
 					return true;
 				}
 			}
 		}
-
+		
 		return false;
 	}
 	
@@ -217,6 +213,8 @@ public class InvUtils
 				NBTTagCompound tag1 = list.getCompoundTagAt(i);
 				int slot = tag1.getShort("Slot");
 				stacks[slot] = ItemStack.loadItemStackFromNBT(tag1);
+				
+				if(i >= invSize) break;
 			}
 		}
 		
@@ -270,5 +268,21 @@ public class InvUtils
 		if(is1 == null || is2 == null) return false;
 		return (is1.stackSize + is2.stackSize <= is1.getMaxStackSize()
 		&& is1.stackSize + is2.stackSize <= is2.getMaxStackSize());
+	}
+
+	public static ItemStack[] getAllItems(IInventory inv)
+	{
+		if(inv == null) return null;
+		ItemStack[] ai = new ItemStack[inv.getSizeInventory()];
+		if(ai.length == 0) return ai;
+		for(int i = 0; i < ai.length; i++)
+			ai[i] = inv.getStackInSlot(i);
+		return ai;
+	}
+	
+	public static int[] getPlayerSlots(EntityPlayer ep)
+	{
+		int[] ai = new int[ep.inventory.mainInventory.length];
+		for(int i = 0; i < ai.length; i++) ai[i] = i; return ai;
 	}
 }

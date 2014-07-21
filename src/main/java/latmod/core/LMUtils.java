@@ -2,16 +2,14 @@ package latmod.core;
 import java.io.*;
 import java.lang.reflect.Type;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
 
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import net.minecraft.world.*;
@@ -19,29 +17,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class LMUtils
 {
-	public static boolean anyEquals(Object o, Object... o1)
-	{
-		for(int i = 0; i < o1.length; i++)
-		{
-			if(o == null && o1[i] == null) return true;
-			if(o != null && o1[i] != null)
-			{ if(o == o1[i] || o.equals(o1[i])) return true; }
-		}
-		
-		return false;
-	}
-	
-	public static boolean allEquals(Object o, Object... o1)
-	{
-		for(int i = 0; i < o1.length; i++)
-		{
-			if((o == null && o1[i] != null) || (o != null && o1[i] == null)) return false;
-			if(o != o1[i]) { if(!o.equals(o1[i])) return false; }
-		}
-		
-		return true;
-	}
-	
 	public static ForgeDirection get2DRotation(EntityLivingBase el)
 	{
 		int i = MathHelper.floor_float(el.rotationYaw * 4F / 360F + 0.5F) & 3;
@@ -58,33 +33,6 @@ public class LMUtils
 	public static String getPath(ResourceLocation res)
 	{ return "/assets/" + res.getResourceDomain() + "/" + res.getResourcePath(); }
 	
-	public static String stripe(Object... i)
-	{
-		StringBuilder s = new StringBuilder();
-		for(int j = 0; j < i.length; j++)
-		{ s.append(i[j]);
-		if(j != i.length - 1) s.append(", "); }
-		return s.toString();
-	}
-	
-	public static String stripeD(double... i)
-	{
-		StringBuilder s = new StringBuilder();
-		for(int j = 0; j < i.length; j++)
-		{ s.append(((long)(i[j] * 100D)) / 100D);
-		if(j != i.length - 1) s.append(", "); }
-		return s.toString();
-	}
-	
-	public static String stripeF(float... i)
-	{
-		StringBuilder s = new StringBuilder();
-		for(int j = 0; j < i.length; j++)
-		{ s.append(((int)(i[j] * 100F)) / 100F);
-		if(j != i.length - 1) s.append(", "); }
-		return s.toString();
-	}
-	
 	public static final double[] getMidPoint(double[] pos1, double[] pos2, float p)
 	{
 		double x = pos2[0] - pos1[0];
@@ -92,13 +40,6 @@ public class LMUtils
 		double z = pos2[2] - pos1[2];
 		double d = Math.sqrt(x * x + y * y + z * z);
 		return new double[] { pos1[0] + (x / d) * (d * p), pos1[1] + (y / d) * (d * p), pos1[2] + (z / d) * (d * p) };
-	}
-	
-	public static int percent(int i, int max)
-	{
-		if(i == 0) return 0;
-		if(i == max) return 100;
-		return (int)((float)i * 100F / (float)max);
 	}
 	
 	//TODO: Still need to fix this
@@ -132,7 +73,7 @@ public class LMUtils
 		worldserver1.resetUpdateEntityTick();
 		e.worldObj.theProfiler.endSection();
 	}
-
+	
 	public static void dropItem(World w, double x, double y, double z, ItemStack is, int delay)
 	{
 		if(w == null || is == null || is.stackSize == 0) return;
@@ -148,11 +89,24 @@ public class LMUtils
 	public static void dropItem(Entity e, ItemStack is)
 	{ dropItem(e.worldObj, e.posX, e.posY, e.posZ, is, 0); }
 	
-	public static <T> T getJson(String s, Type t)
+	public static <T> T fromJson(String s, Type t)
 	{
 		if(s == null || s.length() < 2) s = "{}";
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		return gson.fromJson(s, t);
+	}
+	
+	public static <T> T fromJsonFromFile(File f, Type t)
+	{
+		try
+		{
+			FileInputStream fis = new FileInputStream(f);
+			byte[] b = new byte[fis.available()];
+			fis.read(b); fis.close();
+			return fromJson(new String(b), t);
+		}
+		catch(Exception e)
+		{ e.printStackTrace(); return null; }
 	}
 	
 	public static String toJson(Object o, boolean asTree)
@@ -170,35 +124,50 @@ public class LMUtils
 		
 		return gson.toJson(o);
 	}
+	
+	public static void toJsonFile(File f, Object o)
+	{
+		String s = toJson(o, true);
+		
+		try
+		{
+			if(!f.exists())
+			{
+				File f0 = f.getParentFile();
+				if(!f0.exists()) f0.mkdirs();
+				f.createNewFile();
+			}
+			
+			FileOutputStream fos = new FileOutputStream(f);
+			fos.write(s.getBytes()); fos.close();
+		}
+		catch(Exception e)
+		{ e.printStackTrace(); }
+	}
 
-	public static String[] split(String s, String regex)
-	{
-		String s1[] = s.split(regex);
-		return (s1 == null || s1.length == 0) ? new String[] { s } : s1;
-	}
-	
-	public static String getRegistryName(Item i, boolean noMcDomain)
-	{
-		String s = Item.itemRegistry.getNameForObject(i);
-		return (noMcDomain && s.startsWith("minecraft:")) ? s.substring(10) : s;
-	}
-	
 	public static MovingObjectPosition rayTrace(EntityPlayer ep, double d)
 	{
-		Vec3 pos = ep.worldObj.getWorldVec3Pool().getVecFromPool(ep.posX, ep.posY + (ep.getEyeHeight() - ep.getDefaultEyeHeight()), ep.posZ);
+		Vec3 pos = Vec3.createVectorHelper(ep.posX, ep.posY + ep.yOffset, ep.posZ);
 		Vec3 look = ep.getLook(1F);
 		Vec3 vec = pos.addVector(look.xCoord * d, look.yCoord * d, look.zCoord * d);
-		return ep.worldObj.rayTraceBlocks(pos, vec);
+		//return ep.worldObj.rayTraceBlocks_do_do(pos, vec, false, true);
+		return ep.worldObj.func_147447_a(pos, vec, false, true, false);
 	}
 	
-	public static MovingObjectPosition rayTraceNoNull(EntityPlayer ep, double d)
+	public static Item getItemFromRegName(String s)
+	{ return (Item)Item.itemRegistry.getObject(s); }
+	
+	public static ItemStack getStackFromRegName(String s, int dmg)
 	{
-		Vec3 pos = ep.worldObj.getWorldVec3Pool().getVecFromPool(ep.posX, ep.posY + (ep.getEyeHeight() - ep.getDefaultEyeHeight()), ep.posZ);
-		Vec3 look = ep.getLook(1F);
-		Vec3 vec = pos.addVector(look.xCoord * d, look.yCoord * d, look.zCoord * d);
-		MovingObjectPosition mop = ep.worldObj.rayTraceBlocks(pos, vec);
-		if(mop != null) return mop;
-		//return new MovingObjectPosition();
+		Item i = getItemFromRegName(s);
+		if(i != null) return new ItemStack(i, dmg);
 		return null;
+	}
+
+	public static String getRegName(Item item, boolean removeMCDomain)
+	{
+		String s = Item.itemRegistry.getNameForObject(item);
+		if(s != null && removeMCDomain && s.startsWith("minecraft:"))
+			s = s.substring(10); return s;
 	}
 }

@@ -1,31 +1,30 @@
 package latmod.core.base.recipes;
-import java.util.Comparator;
-
 import latmod.core.*;
 import net.minecraft.block.*;
+import net.minecraft.inventory.*;
 import net.minecraft.item.*;
 
-public class StackEntry implements Comparable<StackEntry>, IStackArray
+public class StackEntry implements IStackArray
 {
 	public final Object item;
-	private ItemStack[] items;
 	
-	private String toString;
+	private String oreName;
+	private ItemStack[] items;
 	private int hashCode;
 	
 	public StackEntry(Object o)
 	{
 		item = o;
 		items = getItems(o);
-		
-		if(o instanceof String) toString = "ore@" + o;
-		else toString = "item@" + items[0].getUnlocalizedName() + "@" + items[0].getItemDamage();
-		
-		hashCode = toString.hashCode();
+		hashCode = toString().hashCode();
 	}
 	
 	public String toString()
-	{ return toString; }
+	{
+		String s = "ore@" + oreName; if(oreName == null)
+		s = "item@" + items[0].getUnlocalizedName() + "@" + items[0].getItemDamage();
+		return s;
+	}
 	
 	public int hashCode()
 	{ return hashCode; }
@@ -57,12 +56,32 @@ public class StackEntry implements Comparable<StackEntry>, IStackArray
 		return false;
 	}
 	
-	public static StackEntry[] convert(Object... o)
+	//public static StackEntry[] convertInv(ISidedInventory inv, ForgeDirection dir)
+	//{
+	//}
+	
+	public static StackEntry[] convert(ItemStack... o)
 	{
+		if(o == null) return null;
 		StackEntry[] se = new StackEntry[o.length];
 		for(int i = 0; i < o.length; i++)
 			se[i] = (o[i] == null) ? null : new StackEntry(o[i]);
 		return se;
+	}
+	
+	public static StackEntry[] convert(Object... o)
+	{
+		if(o == null) return null;
+		StackEntry[] se = new StackEntry[o.length];
+		for(int i = 0; i < o.length; i++)
+			se[i] = (o[i] == null) ? null : new StackEntry(o[i]);
+		return se;
+	}
+	
+	public static StackEntry[] convertInv(IInventory inv)
+	{
+		if(inv == null) return null;
+		return convert(InvUtils.getAllItems(inv));
 	}
 	
 	public static ItemStack[] getItems(Object o)
@@ -91,27 +110,15 @@ public class StackEntry implements Comparable<StackEntry>, IStackArray
 		{
 			int dmg1 = is1.getItemDamage();
 			int dmg2 = is1.getItemDamage();
-			return dmg1 == dmg2 || dmg1 == LatCore.ANY || dmg2 == LatCore.ANY;
+			return dmg1 == dmg2 || dmg2 == LatCore.ANY;// || dmg1 == LatCore.ANY;
 		}
 				
 		return false;
 	}
 	
-	public boolean equalsArray(StackEntry... se)
-	{ return se != null && se.length == 1 && equals(se[0]); }
+	public boolean equalsArray(ItemStack[] ai)
+	{ return ai != null && ai.length == 1 && equalsItem(ai[0]); }
 	
 	public StackEntry[] getItems()
 	{ return new StackEntry[] { this }; }
-	
-	public int compareTo(StackEntry se)
-	{ return StackComparator.compareStacks(this, se); }
-	
-	public static class StackComparator implements Comparator<StackEntry>
-	{
-		public int compare(StackEntry se1, StackEntry se2)
-		{ return compareStacks(se1, se2); }
-		
-		public static int compareStacks(StackEntry se1, StackEntry se2)
-		{ return se1.toString().compareTo(se2.toString()); }
-	}
 }

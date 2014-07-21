@@ -1,0 +1,33 @@
+latcore:security=Security
+latcore:security.public=Public
+latcore:security.private=Private
+latcore:security.whitelist=Whitelist
+latcore:security.blacklist=Blacklist
+
+latcore:redstonemode=Redstone Mode
+latcore:redstonemode.disabled=Disabled
+latcore:redstonemode.high=Active High
+latcore:redstonemode.low=Active Low
+
+latcore:invmode=Automation
+latcore:invmode.enabled=Enabled
+latcore:invmode.onlyin=Insert Only
+latcore:invmode.onlyout=Extract Only
+latcore:invmode.disabled=Disabled
+
+latcore:color.black=Black
+latcore:color.red=Red
+latcore:color.green=Green
+latcore:color.brown=Brown
+latcore:color.blue=Blue
+latcore:color.purple=Purple
+latcore:color.cyan=Cyan
+latcore:color.silver=Light Gray
+latcore:color.gray=Dark Gray
+latcore:color.pink=Pink
+latcore:color.lime=Lime
+latcore:color.yellow=Yellow
+latcore:color.light_blue=Light Blue
+latcore:color.magenta=Magenta
+latcore:color.orange=Orange
+latcore:color.white=White

@@ -1,4 +1,4 @@
-package latmod.core.base;
+package latmod.core.base.gui;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
@@ -7,12 +7,12 @@ import net.minecraft.util.*;
 public abstract class ContainerLM extends Container
 {
 	public EntityPlayer player;
-	public TileLM tile;
+	public IInventory inv;
 	
-	public ContainerLM(EntityPlayer ep, TileLM t)
+	public ContainerLM(EntityPlayer ep, IInventory i)
 	{
 		player = ep;
-		tile = t;
+		inv = i;
 	}
 	
 	public ItemStack transferStackInSlot(EntityPlayer ep, int i)

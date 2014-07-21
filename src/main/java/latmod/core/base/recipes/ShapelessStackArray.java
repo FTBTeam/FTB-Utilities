@@ -1,16 +1,14 @@
 package latmod.core.base.recipes;
-import java.util.Arrays;
+import net.minecraft.item.ItemStack;
+import latmod.core.util.*;
 
 public class ShapelessStackArray implements IStackArray
 {
 	public StackEntry[] items;
-	public StackEntry[] itemsSorted;
 	
 	public ShapelessStackArray(StackEntry... se)
 	{
 		items = se;
-		itemsSorted = items.clone();
-		Arrays.sort(itemsSorted, 0, itemsSorted.length, new StackEntry.StackComparator());
 	}
 	
 	public ShapelessStackArray(Object... o)
@@ -18,28 +16,25 @@ public class ShapelessStackArray implements IStackArray
 	
 	public boolean equals(Object o)
 	{
-		if(o == null || !(o instanceof StackEntry[])) return false;
-		if(this == o) return true;
-		return equalsArray((StackEntry[])o);
+		//if(o == null || !(o instanceof StackEntry[])) return false;
+		//if(this == o) return true;
+		//return equalsArray((StackEntry[])o);
+		return super.equals(o);
 	}
 	
-	public boolean equalsArray(StackEntry... se)
+	public boolean equalsArray(ItemStack[] ai)
 	{
-		if(items == null || se == null) return false;
-		if(items.length != se.length) return false;
+		if(items == null || ai == null) return false;
+		if(items.length != ai.length) return false;
 		
-		StackEntry[] se1 = se.clone();
-		Arrays.sort(se1, 0, se1.length, new StackEntry.StackComparator());
+		FastList<StackEntry> itemsList = new FastList<StackEntry>(items);
 		
-		for(int i = 0; i < itemsSorted.length; i++)
-		{
-			if(!itemsSorted[i].equals(se1[i].item))
-				return false;
-		}
+		for(int i = 0; i < ai.length; i++)
+			itemsList.remove(ai[i]);
 		
-		return true;
+		return itemsList.isEmpty();
 	}
-
+	
 	public StackEntry[] getItems()
 	{ return items; }
 }

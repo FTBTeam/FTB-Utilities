@@ -3,19 +3,19 @@ import net.minecraft.client.*;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.tileentity.*;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.*;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.*;
 import net.minecraft.util.*;
 import net.minecraftforge.client.*;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.client.registry.*;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class LatCoreClient
 {
-	public static final int FRONT = 3;
+	public static final int FRONT = ForgeDirection.SOUTH.ordinal();
 	
 	public static IIcon blockNullIcon = null;
 	
@@ -40,7 +40,6 @@ public class LatCoreClient
 	public static void spawnPart(EntityFX e)
 	{ Minecraft.getMinecraft().effectRenderer.addEffect(e); }
 
-	public static KeyBinding addKeyBinding(String name, int key, String cat)
-	{ KeyBinding k = new KeyBinding(name, key, cat);
-	ClientRegistry.registerKeyBinding(k); return k; }
+	//public static KeyBinding addKeyBinding(String name, int key)
+	//{ KeyBinding k = new KeyBinding(name, key); return k; }
 }

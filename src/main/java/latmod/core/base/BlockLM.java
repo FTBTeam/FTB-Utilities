@@ -1,7 +1,7 @@
 package latmod.core.base;
 import java.util.*;
 
-import latmod.core.FastList;
+import latmod.core.util.FastList;
 import cpw.mods.fml.relauncher.*;
 import net.minecraft.block.*;
 import net.minecraft.block.material.*;
@@ -10,6 +10,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.*;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -33,6 +34,7 @@ public abstract class BlockLM extends BlockContainer
 	
 	@SideOnly(Side.CLIENT)
 	public abstract CreativeTabs getCreativeTabToDisplayOn();
+	public abstract TileLM createNewTileEntity(World w, int m);
 	
 	public void onPostLoaded()
 	{ blocksAdded.add(new ItemStack(this)); }
@@ -101,11 +103,6 @@ public abstract class BlockLM extends BlockContainer
 	
 	public int getMobilityFlag()
 	{ return isBlockContainer ? 2 : 0; }
-
-	public ArrayList<ItemStack> getDrops(World w, int x, int y, int z, int m, int f)
-	{
-		return super.getDrops(w, x, y, z, m, f);
-	}
 	
 	public void breakBlock(World w, int x, int y, int z, Block b, int m)
 	{
@@ -171,4 +168,7 @@ public abstract class BlockLM extends BlockContainer
 	
 	public final Item getItem()
 	{ return Item.getItemFromBlock(this); }
+	
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World w, int x, int y, int z)
+	{ setBlockBoundsBasedOnState(w, x, y, z); return super.getCollisionBoundingBoxFromPool(w, x, y, z); }
 }

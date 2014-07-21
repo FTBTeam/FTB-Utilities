@@ -9,8 +9,6 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.*;
 import net.minecraftforge.common.util.ForgeDirection;
 import latmod.core.*;
-import latmod.core.mod.LC;
-import latmod.core.tile.IGuiTile;
 import latmod.core.tile.ITileInterface;
 
 public class TileLM extends TileEntity implements ITileInterface, IInventory
@@ -34,7 +32,7 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	
 	public Packet getDescriptionPacket()
 	{ NBTTagCompound tag = new NBTTagCompound(); writeToNBT(tag);
-	return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag); }
+	return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, tag); }
 	
 	public void onDataPacket(NetworkManager m, S35PacketUpdateTileEntity p)
 	{ readFromNBT(p.func_148857_g()); }
@@ -63,9 +61,14 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 		isLoaded = false;
 	}
 	
+	protected boolean customNBT()
+	{ return false; }
+	
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
+		
+		if(customNBT()) return;
 		
 		if(tag.hasKey("Security"))
 		security.readFromNBT(tag.getCompoundTag("Security"));
@@ -82,6 +85,8 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	public void writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
+		
+		if(customNBT()) return;
 		
 		NBTTagCompound securityTag = new NBTTagCompound();
 		security.writeToNBT(securityTag);
@@ -104,13 +109,17 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 		if(isDirty)
 		{
 			isDirty = false;
-			//super.markDirty();
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			sendDirtyUpdate();
 		}
 		tick++;
 	}
 	
 	public void onUpdate() { }
+	
+	public void sendDirtyUpdate()
+	{
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	}
 	
 	public void onPlaced()
 	{ blockType = worldObj.getBlock(xCoord, yCoord, zCoord); }
@@ -129,13 +138,8 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	
 	public boolean onRightClick(EntityPlayer ep, ItemStack is, int side, float x, float y, float z)
 	{
-		if(this instanceof IGuiTile)
-		{ if(!worldObj.isRemote) openGui(ep, 0);
-		return true; } return false;
+		return true;
 	}
-	
-	public void openGui(EntityPlayer ep, int ID)
-	{ if(this instanceof IGuiTile) ep.openGui(LC.inst, ID, worldObj, xCoord, yCoord, zCoord); }
 	
 	public void dropItem(ItemStack is, double ox, double oy, double oz)
 	{ EntityItem ei = new EntityItem(worldObj, xCoord + 0.5D + ox, yCoord + 0.5D + oy, zCoord + 0.5D + oz, is);
@@ -175,14 +179,14 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	@Override
 	public String getInventoryName()
 	{ return hasCustomInventoryName() ? customName : "Inventory"; }
-	
+
 	@Override
 	public boolean hasCustomInventoryName()
 	{ return customName != null; }
-	
+
 	@Override
 	public void openInventory() { }
-	
+
 	@Override
 	public void closeInventory() { }
 	

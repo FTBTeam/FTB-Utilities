@@ -1,7 +1,6 @@
 package latmod.core.base;
 import java.util.*;
-
-import latmod.core.*;
+import latmod.core.util.*;
 import cpw.mods.fml.relauncher.*;
 import net.minecraft.client.renderer.texture.*;
 import net.minecraft.creativetab.*;
@@ -9,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
 import net.minecraft.util.*;
 
-public abstract class ItemLM extends Item
+public abstract class ItemLM extends Item implements IItemLM
 {
 	public final String itemName;
 	public final FastList<ItemStack> itemsAdded;
@@ -24,16 +23,29 @@ public abstract class ItemLM extends Item
 		itemsAdded = new FastList<ItemStack>();
 	}
 	
+	public final Item getItem()
+	{ return this; }
+
+	public final String getItemID()
+	{ return itemName; }
+	
 	@SideOnly(Side.CLIENT)
 	public abstract CreativeTabs getCreativeTab();
 	
 	public void onPostLoaded()
 	{ itemsAdded.add(new ItemStack(this)); }
 	
+	public void loadRecipes()
+	{
+	}
+	
 	@SuppressWarnings("all")
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item j, CreativeTabs c, List l)
-	{ l.addAll(itemsAdded); }
+	{
+		for(ItemStack is : itemsAdded)
+		if(isVisible(is)) l.add(is);
+	}
 	
 	public String getUnlocalizedName(ItemStack is)
 	{ return mod.getItemName(itemName); }
@@ -79,8 +91,7 @@ public abstract class ItemLM extends Item
 	public void addInfo(ItemStack is, EntityPlayer ep, FastList<String> l)
 	{
 	}
-
-	public void loadRecipes()
-	{
-	}
+	
+	public boolean isVisible(ItemStack is)
+	{ return true; }
 }

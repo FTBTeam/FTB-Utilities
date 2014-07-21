@@ -1,10 +1,7 @@
 package latmod.core.client.model;
-import latmod.core.*;
-
+import latmod.core.util.LMCommon;
 import org.lwjgl.opengl.*;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import cpw.mods.fml.relauncher.*;
 
 /** Made by LatvianModder */
 @SideOnly(Side.CLIENT)
@@ -93,7 +90,7 @@ public class Face
 	{
 		if(!line.contains("/") || !line.contains(" ")) return false;
 		
-		String[] s = LMUtils.split(line, " ");
+		String[] s = LMCommon.split(line, " ");
 		if(s != null && s.length > 1)
 		{
 			String[] s1 = s[1].split("/");
@@ -108,7 +105,7 @@ public class Face
 	{
 		if(!line.contains("/") || !line.contains(" ")) return false;
 		
-		String[] s = LMUtils.split(line, " ");
+		String[] s = LMCommon.split(line, " ");
 		if(s != null && s.length > 1)
 		{
 			String[] s1 = s[1].split("/");

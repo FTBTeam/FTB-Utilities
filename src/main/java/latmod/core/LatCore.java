@@ -1,17 +1,15 @@
 package latmod.core;
 import java.io.*;
 import java.util.*;
-import latmod.core.mod.*;
-import latmod.core.tile.IGuiTile;
+import latmod.core.util.FastList;
 import net.minecraft.block.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.creativetab.*;
 import net.minecraft.entity.*;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.*;
 import net.minecraft.tileentity.*;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.*;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.oredict.*;
@@ -139,18 +137,11 @@ public class LatCore
 		return l;
 	}
 	
-	public static void addWorldGenerator(IWorldGenerator i)
-	{ GameRegistry.registerWorldGenerator(i, 5); }
+	public static void addWorldGenerator(IWorldGenerator i, int w)
+	{ GameRegistry.registerWorldGenerator(i, w); }
 	
 	public static void addGuiHandler(Object mod, IGuiHandler i)
 	{ NetworkRegistry.INSTANCE.registerGuiHandler(mod, i); }
-	
-	public static void addTool(Item tool, String customClass, int level)
-	//FIXME: { MinecraftForge.setToolClass(tool, customClass, level); }
-	{  }
-	
-	public static void addTool(Item tool, EnumToolClass e, int level)
-	{ addTool(tool, e.toolClass, level); }
 	
 	public static Fluid addFluid(Fluid f)
 	{
@@ -165,8 +156,4 @@ public class LatCore
 	
 	public static Side getEffectiveSide()
 	{ return FMLCommonHandler.instance().getEffectiveSide(); }
-	
-	public static void openGui(IGuiTile t, int ID, EntityPlayer ep)
-	{ TileEntity te = (TileEntity)t;
-	ep.openGui(LC.inst, ID, te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord); }
 }

@@ -1,4 +1,5 @@
 package latmod.core.base.recipes;
+import net.minecraft.item.*;
 
 public class ShapedStackArray implements IStackArray
 {
@@ -14,20 +15,21 @@ public class ShapedStackArray implements IStackArray
 	
 	public boolean equals(Object o)
 	{
-		if(o == null || !(o instanceof StackEntry[])) return false;
-		if(this == o) return true;
-		return equalsArray((StackEntry[])o);
+		//if(o == null || !(o instanceof StackEntry[])) return false;
+		//if(this == o) return true;
+		//return equalsArray((StackEntry[])o);
+		return super.equals(o);
 	}
 	
-	public boolean equalsArray(StackEntry... se)
+	public boolean equalsArray(ItemStack[] ai)
 	{
-		if(items == null || se == null) return false;
+		if(items == null || ai == null) return false;
 		
-		if(items.length != se.length) return false;
+		if(items.length != ai.length) return false;
 		
 		for(int i = 0; i < items.length; i++)
 		{
-			if(!items[i].equals(se[i].item))
+			if(!items[i].equalsItem(ai[i]))
 				return false;
 		}
 		

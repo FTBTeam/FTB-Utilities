@@ -1,6 +1,7 @@
 package latmod.core.base.recipes;
 import java.util.Map;
 import latmod.core.*;
+import latmod.core.util.*;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.*;
 
@@ -41,6 +42,10 @@ public class LMRecipes
 
 	public void addRecipe(ItemStack out, Object... in)
 	{
+		for(int i = 0; i < in.length; i++)
+			if(in[i] instanceof Character)
+				in[i] = Character.valueOf((Character)in[i]);
+		
 		IRecipe r = LatCore.addRecipe(out, in);
 		if(storeRecipes) craftingRecipes.add(r);
 	}

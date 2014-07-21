@@ -1,5 +1,5 @@
 package latmod.core.base.recipes;
-import latmod.core.*;
+import latmod.core.util.*;
 
 public class CustomRecipes<Output>
 {

@@ -1,0 +1,16 @@
+latcore:security=Drošība
+latcore:security.public=Publisks
+latcore:security.private=Privāts
+latcore:security.whitelist=Baltais Saraksts
+latcore:security.blacklist=Melnais Saraksts
+
+latcore:redstonemode=Sarkanakments Režīms
+latcore:redstonemode.disabled=Atslēgts
+latcore:redstonemode.high=Aktīvs kad Ieslēgts
+latcore:redstonemode.low=Aktīvs kad Izslēgts
+
+latcore:invmode=Automatizācijas Režīms
+latcore:invmode.enabled=Ieslēgts
+latcore:invmode.onlyin=Tikai Iekšā
+latcore:invmode.onlyout=Tikai Ārā
+latcore:invmode.disabled=Izslēgts

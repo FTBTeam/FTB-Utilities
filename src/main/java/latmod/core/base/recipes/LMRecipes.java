@@ -42,10 +42,6 @@ public class LMRecipes
 
 	public void addRecipe(ItemStack out, Object... in)
 	{
-		for(int i = 0; i < in.length; i++)
-			if(in[i] instanceof Character)
-				in[i] = Character.valueOf((Character)in[i]);
-		
 		IRecipe r = LatCore.addRecipe(out, in);
 		if(storeRecipes) craftingRecipes.add(r);
 	}

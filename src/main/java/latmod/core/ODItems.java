@@ -11,6 +11,7 @@ public class ODItems
 	public static final String SLIMEBALL = "slimeball";
 	public static final String MEAT_RAW = "meatCooked";
 	public static final String MEAT_COOKED = "meatCooked";
+	public static final String REDSTONE = "dustRedstone";
 	
 	public static final String IRON = "ingotIron";
 	public static final String GOLD = "ingotGold";

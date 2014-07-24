@@ -8,6 +8,7 @@ public class LMMod
 {
 	public final String modID;
 	public final String assets;
+	public final String resPath;
 	
 	public FastList<BlockLM> blocks;
 	public FastList<IItemLM> items;
@@ -15,14 +16,16 @@ public class LMMod
 	public LMMod(String s)
 	{
 		modID = s;
-		assets = s.toLowerCase() + ":";
+		
+		resPath = s.toLowerCase();
+		assets = resPath + ":";
 		
 		blocks = new FastList<BlockLM>();
 		items = new FastList<IItemLM>();
 	}
 	
 	public final ResourceLocation getLocation(String s)
-	{ return new ResourceLocation(modID, s); }
+	{ return new ResourceLocation(resPath, s); }
 	
 	public final String getBlockName(String s)
 	{ return assets + "tile." + s; }

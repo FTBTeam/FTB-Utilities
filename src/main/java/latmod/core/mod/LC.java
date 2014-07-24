@@ -5,12 +5,15 @@ import latmod.core.base.*;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 
-@Mod(modid = LC.MODID, name = LC.MODNAME, version = LC.VERSION)
+@Mod(modid = LC.MODID, name = LC.MODNAME, version = LC.MODVERSION)
 public class LC
 {
-	public static final String MODID = "latcore";
-	public static final String MODNAME = "LatCore";
-	public static final String VERSION = "1.3.1";
+	protected static final String MODID = "LatCore";
+	protected static final String MODNAME = "LatCore";
+	protected static final String MODVERSION = "1.3.1";
+	
+	public static final String getModID()
+	{ return MODID; }
 	
 	@Mod.Instance(LC.MODID)
 	public static LC inst;
@@ -29,13 +32,13 @@ public class LC
 	public void preInit(FMLPreInitializationEvent e)
 	{
 		mod = new LMMod(MODID);
+		ODItems.preInit();
 		proxy.preInit();
 	}
 	
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent e)
 	{
-		ODItems.register();
 		proxy.init();
 	}
 	

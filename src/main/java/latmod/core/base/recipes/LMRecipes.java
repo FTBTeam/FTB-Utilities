@@ -54,9 +54,13 @@ public class LMRecipes
 	
 	public void addItemBlockRecipe(ItemStack item, ItemStack block, boolean back)
 	{
-		ItemStack out9 = item.copy(); out9.stackSize = 9;
-		addShapelessRecipe(out9, block);
-		if(back) addRecipe(block, "EEE", "EEE", "EEE", Character.valueOf('E'), item);
+		addRecipe(block, "EEE", "EEE", "EEE", Character.valueOf('E'), item);
+		if(back)
+		{
+			ItemStack out9 = item.copy();
+			out9.stackSize = 9;
+			addShapelessRecipe(out9, block);
+		}
 	}
 	
 	public void addOre(String s, ItemStack is)

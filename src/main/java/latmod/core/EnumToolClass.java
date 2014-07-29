@@ -15,6 +15,6 @@ public enum EnumToolClass
 	public static final int IRON = 2;
 	public static final int DIAMOND = 3;
 	
-	/** Actually not emerald, just something better than diamond */
-	public static final int EMERALD = 4;
+	/** Material 4th tier, can mine Ardite & Cobalt */
+	public static final int ALUMITE = 4;
 }

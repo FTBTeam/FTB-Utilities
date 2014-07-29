@@ -13,15 +13,7 @@ public class ShapedStackArray implements IStackArray
 	public ShapedStackArray(Object... o)
 	{ this(StackEntry.convert(o)); }
 	
-	public boolean equals(Object o)
-	{
-		//if(o == null || !(o instanceof StackEntry[])) return false;
-		//if(this == o) return true;
-		//return equalsArray((StackEntry[])o);
-		return super.equals(o);
-	}
-	
-	public boolean equalsArray(ItemStack[] ai)
+	public boolean matches(ItemStack[] ai)
 	{
 		if(items == null || ai == null) return false;
 		

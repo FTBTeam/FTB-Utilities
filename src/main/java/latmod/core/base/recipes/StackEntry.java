@@ -3,6 +3,7 @@ import latmod.core.*;
 import net.minecraft.block.*;
 import net.minecraft.inventory.*;
 import net.minecraft.item.*;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class StackEntry implements IStackArray
 {
@@ -12,11 +13,15 @@ public class StackEntry implements IStackArray
 	private ItemStack[] items;
 	private int hashCode;
 	
+	private StackEntry[] array;
+	
 	public StackEntry(Object o)
 	{
 		item = o;
 		items = getItems(o);
 		hashCode = toString().hashCode();
+		
+		array = new StackEntry[] { this };
 	}
 	
 	public String toString()
@@ -56,10 +61,6 @@ public class StackEntry implements IStackArray
 		return false;
 	}
 	
-	//public static StackEntry[] convertInv(ISidedInventory inv, ForgeDirection dir)
-	//{
-	//}
-	
 	public static StackEntry[] convert(ItemStack... o)
 	{
 		if(o == null) return null;
@@ -78,10 +79,10 @@ public class StackEntry implements IStackArray
 		return se;
 	}
 	
-	public static StackEntry[] convertInv(IInventory inv)
+	public static StackEntry[] convertInv(IInventory inv, ForgeDirection side)
 	{
-		if(inv == null) return null;
-		return convert(InvUtils.getAllItems(inv));
+		if(inv == null || side == null) return null;
+		return convert(InvUtils.getAllItems(inv, side));
 	}
 	
 	public static ItemStack[] getItems(Object o)
@@ -90,6 +91,7 @@ public class StackEntry implements IStackArray
 		
 		if(o == null) return nullStacks;
 		else if(o instanceof ItemStack) return new ItemStack[] { (ItemStack)o };
+		else if(o instanceof ItemStack[]) return (ItemStack[])o;
 		else if(o instanceof Item) return new ItemStack[] { new ItemStack((Item)o) };
 		else if(o instanceof Block) return new ItemStack[] { new ItemStack((Block)o) };
 		else if(o instanceof String)
@@ -116,9 +118,9 @@ public class StackEntry implements IStackArray
 		return false;
 	}
 	
-	public boolean equalsArray(ItemStack[] ai)
+	public boolean matches(ItemStack[] ai)
 	{ return ai != null && ai.length == 1 && equalsItem(ai[0]); }
 	
 	public StackEntry[] getItems()
-	{ return new StackEntry[] { this }; }
+	{ return array; }
 }

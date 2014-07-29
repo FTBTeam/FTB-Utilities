@@ -15,9 +15,6 @@ public class InvUtils
 		ItemStack is1 = is.copy(); is1.stackSize = 1; return is1;
 	}
 	
-	public static ItemStack loadFromSubtag(NBTTagCompound tag, String s)
-	{ return ItemStack.loadItemStackFromNBT(tag.getCompoundTag(s)); }
-	
 	public static IInventory getInvAt(World w, double x, double y, double z, boolean entities)
 	{
 		if(entities) return TileEntityHopper.func_145893_b(w, x, y, z);
@@ -270,13 +267,14 @@ public class InvUtils
 		&& is1.stackSize + is2.stackSize <= is2.getMaxStackSize());
 	}
 
-	public static ItemStack[] getAllItems(IInventory inv)
+	public static ItemStack[] getAllItems(IInventory inv, ForgeDirection side)
 	{
 		if(inv == null) return null;
-		ItemStack[] ai = new ItemStack[inv.getSizeInventory()];
+		int[] slots = InvUtils.getAllSlots(inv, side);
+		ItemStack[] ai = new ItemStack[slots.length];
 		if(ai.length == 0) return ai;
 		for(int i = 0; i < ai.length; i++)
-			ai[i] = inv.getStackInSlot(i);
+			ai[i] = inv.getStackInSlot(slots[i]);
 		return ai;
 	}
 	
@@ -284,5 +282,13 @@ public class InvUtils
 	{
 		int[] ai = new int[ep.inventory.mainInventory.length];
 		for(int i = 0; i < ai.length; i++) ai[i] = i; return ai;
+	}
+	
+	public static ItemStack reduceItem(ItemStack is)
+	{
+		if(is == null || is.getItem() == null) return null;
+		is.stackSize--; if(is.stackSize <= 0)
+			is = is.getItem().getContainerItem(is);
+		return is;
 	}
 }

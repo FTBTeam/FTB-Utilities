@@ -1,4 +1,5 @@
 package latmod.core.base.recipes;
+import net.minecraft.item.*;
 import latmod.core.util.*;
 
 public class CustomRecipes<Output>
@@ -18,6 +19,16 @@ public class CustomRecipes<Output>
 	public void addRecipe(Output out, IStackArray in)
 	{ recipes.put(in, out); }
 	
-	public Output getResult(IStackArray is)
-	{ return recipes.get(is); }
+	public Output getResult(ItemStack[] ai)
+	{
+		if(ai == null || ai.length == 0) return null;
+		
+		for(int i = 0; i < recipes.size(); i++)
+		{
+			if(recipes.keys.get(i).matches(ai))
+				return recipes.values.get(i);
+		}
+		
+		return null;
+	}
 }

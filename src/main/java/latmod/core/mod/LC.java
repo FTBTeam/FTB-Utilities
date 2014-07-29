@@ -5,7 +5,7 @@ import latmod.core.base.*;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 
-@Mod(modid = LC.MODID, name = LC.MODNAME, version = LC.MODVERSION)
+@Mod(modid = LC.MODID, name = LC.MODNAME, version = LC.MODVERSION, dependencies = "required-after:Waila")
 public class LC
 {
 	protected static final String MODID = "LatCore";

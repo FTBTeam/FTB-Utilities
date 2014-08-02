@@ -64,7 +64,10 @@ public abstract class ItemLM extends Item implements IItemLM
 	
 	public final boolean requiresMultipleRenderPasses()
 	{ return true; }
-
+	
+	public int getRenderPasses(int m)
+	{ return 1; }
+	
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister ir)
 	{ itemIcon = ir.registerIcon(mod.assets + itemName); }

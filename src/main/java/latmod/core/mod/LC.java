@@ -8,8 +8,8 @@ import cpw.mods.fml.common.event.*;
 @Mod(modid = LC.MODID, name = LC.MODNAME, version = LC.MODVERSION, dependencies = "required-after:Waila")
 public class LC
 {
-	protected static final String MODID = "LatCore";
-	protected static final String MODNAME = "LatCore";
+	protected static final String MODID = "LatCoreMC";
+	protected static final String MODNAME = "LatCoreMC";
 	protected static final String MODVERSION = "1.3.1";
 	
 	public static final String getModID()

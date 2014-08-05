@@ -7,7 +7,7 @@ import net.minecraftforge.oredict.*;
 public class ODItems
 {
 	public static final String WOOD = "logWood";
-	public static final String PLANKS = "planksWood";
+	public static final String PLANKS = "plankWood";
 	public static final String STICK = "stickWood";
 	public static final String GLASS = "blockGlassColorless";
 	public static final String GLASS_ANY = "blockGlass";

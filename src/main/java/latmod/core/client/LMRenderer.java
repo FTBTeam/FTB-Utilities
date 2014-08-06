@@ -43,7 +43,6 @@ public class LMRenderer
 		
 		Tessellator tessellator = Tessellator.instance;
 		//GL11.glRotatef(90F, 0F, 1F, 0F);
-		r.setRenderBoundsFromBlock(b);
 		
 		float f = 0.5F;
 		float f1 = 1.0F;

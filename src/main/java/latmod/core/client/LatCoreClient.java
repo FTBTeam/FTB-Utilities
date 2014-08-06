@@ -23,7 +23,7 @@ public class LatCoreClient
 	{ RenderingRegistry.registerEntityRenderingHandler(c, r); }
 	
 	public static final void addTileRenderer(Class<? extends TileEntity> c, TileEntitySpecialRenderer r)
-	{ r.func_147497_a(TileEntityRendererDispatcher.instance); ClientRegistry.bindTileEntitySpecialRenderer(c, r); }
+	{ ClientRegistry.bindTileEntitySpecialRenderer(c, r); }
 	
 	public static final int getNewArmorID(String s)
 	{ return RenderingRegistry.addNewArmourRendererPrefix(s); }

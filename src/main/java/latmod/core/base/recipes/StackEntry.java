@@ -11,7 +11,7 @@ public class StackEntry implements IStackArray
 {
 	public final Object item;
 	
-	private FastList<ItemStack> items;
+	public final FastList<ItemStack> items;
 	private int hashCode;
 	
 	private StackEntry[] array;

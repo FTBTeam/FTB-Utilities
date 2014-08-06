@@ -1,16 +1,17 @@
 package latmod.core.base.recipes;
 import latmod.core.*;
+import latmod.core.util.*;
 import net.minecraft.block.*;
 import net.minecraft.inventory.*;
 import net.minecraft.item.*;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.common.util.*;
+import net.minecraftforge.fluids.*;
 
 public class StackEntry implements IStackArray
 {
 	public final Object item;
 	
-	private String oreName;
-	private ItemStack[] items;
+	private FastList<ItemStack> items;
 	private int hashCode;
 	
 	private StackEntry[] array;
@@ -25,11 +26,7 @@ public class StackEntry implements IStackArray
 	}
 	
 	public String toString()
-	{
-		String s = "ore@" + oreName; if(oreName == null)
-		s = "item@" + items[0].getUnlocalizedName() + "@" + items[0].getItemDamage();
-		return s;
-	}
+	{ return "StackEntry: " + items.toString(); }
 	
 	public int hashCode()
 	{ return hashCode; }
@@ -38,13 +35,13 @@ public class StackEntry implements IStackArray
 	{
 		if(o == null) return false;
 		if(o == this) return true;
-		ItemStack[] items1 = null;
+		FastList<ItemStack> items1 = null;
 		
 		if(o instanceof StackEntry) items1 = ((StackEntry)o).items;
 		else items1 = getItems(o);
 		
-		if(items1 != null) for(int i = 0; i < items1.length; i++)
-		{ if(equalsItem(items1[i])) return true; }
+		if(items1 != null) for(int i = 0; i < items1.size(); i++)
+		{ if(equalsItem(items1.get(i))) return true; }
 		return false;
 	}
 	
@@ -52,9 +49,9 @@ public class StackEntry implements IStackArray
 	{
 		if(is == null) return false;
 		
-		for(int i = 0; i < items.length; i++)
+		for(int i = 0; i < items.size(); i++)
 		{
-			if(itemsEquals(items[i], is))
+			if(itemsEquals(items.get(i), is))
 				return true;
 		}
 		
@@ -85,22 +82,31 @@ public class StackEntry implements IStackArray
 		return convert(InvUtils.getAllItems(inv, side));
 	}
 	
-	public static ItemStack[] getItems(Object o)
+	public static FastList<ItemStack> getItems(Object o)
 	{
-		ItemStack[] nullStacks = new ItemStack[0];
+		FastList<ItemStack> list = new FastList<ItemStack>();
 		
-		if(o == null) return nullStacks;
-		else if(o instanceof ItemStack) return new ItemStack[] { (ItemStack)o };
-		else if(o instanceof ItemStack[]) return (ItemStack[])o;
-		else if(o instanceof Item) return new ItemStack[] { new ItemStack((Item)o) };
-		else if(o instanceof Block) return new ItemStack[] { new ItemStack((Block)o) };
-		else if(o instanceof String)
+		if(o == null) return list;
+		else if(o instanceof ItemStack) list.add((ItemStack)o);
+		else if(o instanceof ItemStack[]) list.addAll((ItemStack[])o);
+		else if(o instanceof Item) list.add(new ItemStack((Item)o));
+		else if(o instanceof Block) list.add(new ItemStack((Block)o));
+		else if(o instanceof String) list = LatCore.getOreDictionary((String)o).clone();
+		else if(o instanceof FluidStack)
 		{
-			ItemStack[] is = LatCore.getOreDictionary((String)o).toArray(nullStacks);
-			if(is != null) return is; else return nullStacks;
+			FluidStack fs = (FluidStack)o;
+			FluidContainerRegistry.FluidContainerData[] fd = FluidContainerRegistry.getRegisteredFluidContainerData();
+			
+			if(fd != null && fd.length > 0)
+			for(FluidContainerRegistry.FluidContainerData f : fd)
+			{
+				if(f.fluid.getFluid() == fs.getFluid() && f.fluid.amount >= fs.amount && f.filledContainer != null)
+					list.add(f.filledContainer.copy());
+			}
 		}
+		else if(o instanceof Fluid) return getItems(new FluidStack((Fluid)o, 1000));
 		
-		return nullStacks;
+		return list;
 	}
 	
 	public static boolean itemsEquals(ItemStack is1, ItemStack is2)

@@ -1,11 +1,12 @@
 package latmod.core.client;
 import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.relauncher.*;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
@@ -36,66 +37,38 @@ public class LMRenderer
 	public static final void recolor()
 	{ GL11.glColor4f(1F, 1F, 1F, 1F); }
 	
-	public static final void renderStandardBlockIcons(RenderBlocks r, IIcon[] icons)
+	public static final void renderStandardBlockIcons(Block b, RenderBlocks r, int x, int y, int z, IIcon[] icons)
 	{
+		if(icons == null || icons.length != 6) return;
+		
 		Tessellator tessellator = Tessellator.instance;
-		GL11.glRotatef(90F, 0F, 1F, 0F);
-		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-		Blocks.glass.setBlockBoundsForItemRender();
-		r.setRenderBoundsFromBlock(Blocks.glass);
+		//GL11.glRotatef(90F, 0F, 1F, 0F);
+		r.setRenderBoundsFromBlock(b);
 		
-		if(icons[0] != null)
-		{
-			tessellator.startDrawingQuads();
-			tessellator.setNormal(0F, -1F, 0F);
-			r.renderFaceYNeg(null, 0D, 0D, 0D, icons[0]);
-			tessellator.draw();
-		}
+		float f = 0.5F;
+		float f1 = 1.0F;
+		float f2 = 0.8F;
+		float f3 = 0.6F;
 		
-		if(icons[1] != null)
-		{
-			tessellator.startDrawingQuads();
-			tessellator.setNormal(0F, 1F, 0F);
-			r.renderFaceYPos(null, 0D, 0D, 0D, icons[1]);
-			tessellator.draw();
-		}
-		
-		if(icons[2] != null)
-		{
-			tessellator.startDrawingQuads();
-			tessellator.setNormal(0F, 0F, -1F);
-			r.renderFaceZNeg(null, 0D, 0D, 0D, icons[2]);
-			tessellator.draw();
-		}
-		
-		if(icons[3] != null)
-		{
-			tessellator.startDrawingQuads();
-			tessellator.setNormal(0F, 0F, 1F);
-			r.renderFaceZPos(null, 0D, 0D, 0D, icons[3]);
-			tessellator.draw();
-		}
-		
-		if(icons[4] != null)
-		{
-			tessellator.startDrawingQuads();
-			tessellator.setNormal(-1F, 0F, 0F);
-			r.renderFaceXNeg(null, 0D, 0D, 0D, icons[4]);
-			tessellator.draw();
-		}
-		
-		if(icons[5] != null)
-		{
-			tessellator.startDrawingQuads();
-			tessellator.setNormal(1F, 0F, 0F);
-			r.renderFaceXPos(null, 0D, 0D, 0D, icons[5]);
-			tessellator.draw();
-		}
-		
-		GL11.glTranslatef(0.5F, 0.5F, 0.5F);
+		tessellator.startDrawingQuads();
+		tessellator.setBrightness(b.getMixedBrightnessForBlock(r.blockAccess, x, y, z));
+		tessellator.setColorOpaque_F(f, f, f);
+		double off = -0.5D;
+		r.renderFaceYNeg(b, off, off, off, icons[0]);
+		tessellator.setColorOpaque_F(f1, f1, f1);
+		r.renderFaceYPos(b, off, off, off, icons[1]);
+		tessellator.setColorOpaque_F(f2, f2, f2);
+		r.renderFaceZNeg(b, off, off, off, icons[2]);
+		tessellator.setColorOpaque_F(f2, f2, f2);
+		r.renderFaceZPos(b, off, off, off, icons[3]);
+		tessellator.setColorOpaque_F(f3, f3, f3);
+		r.renderFaceXNeg(b, off, off, off, icons[4]);
+		tessellator.setColorOpaque_F(f3, f3, f3);
+		r.renderFaceXPos(b, off, off, off, icons[5]);
+		tessellator.draw();
 	}
 	
-	public void renderItem(World w, ItemStack is, boolean fancy, boolean frame)
+	public static void renderItem(World w, ItemStack is, boolean fancy, boolean frame)
 	{
 		boolean isFancy = RenderManager.instance.options.fancyGraphics;
 		RenderManager.instance.options.fancyGraphics = true;

@@ -138,7 +138,7 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	
 	public boolean onRightClick(EntityPlayer ep, ItemStack is, int side, float x, float y, float z)
 	{
-		return true;
+		return false;
 	}
 	
 	public void dropItem(ItemStack is, double ox, double oy, double oz)

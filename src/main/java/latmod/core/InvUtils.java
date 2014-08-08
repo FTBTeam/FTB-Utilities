@@ -172,6 +172,9 @@ public class InvUtils
 		return false;
 	}
 	
+	public static boolean addSingleItemToInv(ItemStack is, IInventory inv, int side, boolean doAdd)
+	{ return addSingleItemToInv(is, inv, getAllSlots(inv, ForgeDirection.VALID_DIRECTIONS[side]), side, doAdd); }
+	
 	public static NBTTagCompound removeTags(NBTTagCompound tag, String... tags)
 	{
 		if(tag == null || tag.hasNoTags()) return null;

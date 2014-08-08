@@ -157,9 +157,6 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 		return worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 	}
 	
-	public float getWrenchDropRate()
-	{ return 1F; }
-	
 	public boolean recolourBlock(ForgeDirection side, int col)
 	{ return false; }
 	

@@ -91,4 +91,36 @@ public class LMRenderer
 	
 	public static void setTexture(ResourceLocation rl)
 	{ Minecraft.getMinecraft().getTextureManager().bindTexture(rl); }
+
+	public static void renderBlockAsItem(Block block, int metadata, RenderBlocks renderer)
+	{
+		Tessellator tessellator = Tessellator.instance;
+        GL11.glRotatef(90F, 0F, 1F, 0F);
+        GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(0F, -1F, 0F);
+        renderer.renderFaceYNeg(block, 0D, 0D, 0D, renderer.getBlockIconFromSideAndMetadata(block, 0, metadata));
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(0F, 1F, 0F);
+        renderer.renderFaceYPos(block, 0D, 0D, 0D, renderer.getBlockIconFromSideAndMetadata(block, 1, metadata));
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(0F, 0F, -1F);
+        renderer.renderFaceZNeg(block, 0D, 0D, 0D, renderer.getBlockIconFromSideAndMetadata(block, 2, metadata));
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(0F, 0F, 1F);
+        renderer.renderFaceZPos(block, 0D, 0D, 0D, renderer.getBlockIconFromSideAndMetadata(block, 3, metadata));
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(-1F, 0F, 0F);
+        renderer.renderFaceXNeg(block, 0D, 0D, 0D, renderer.getBlockIconFromSideAndMetadata(block, 4, metadata));
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(1F, 0F, 0F);
+        renderer.renderFaceXPos(block, 0D, 0D, 0D, renderer.getBlockIconFromSideAndMetadata(block, 5, metadata));
+        tessellator.draw();
+        GL11.glTranslatef(0.5F, 0.5F, 0.5F);
+	}
 }

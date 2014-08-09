@@ -5,6 +5,7 @@ import latmod.core.client.LMRenderer;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.inventory.*;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 
 @SideOnly(Side.CLIENT)
@@ -21,6 +22,9 @@ public class GuiLM extends GuiContainer
 		texture = c.getTexture();
 		widgets = new FastList<WidgetLM>();
 	}
+	
+	public ItemStack getHeldItem()
+	{ return container.player.inventory.getItemStack(); }
 	
 	public int getPosX()
 	{ return guiLeft; }

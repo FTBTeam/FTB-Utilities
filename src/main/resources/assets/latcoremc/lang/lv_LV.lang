@@ -1,16 +1,33 @@
-latcore:security=Drošība
-latcore:security.public=Publisks
-latcore:security.private=Privāts
-latcore:security.whitelist=Baltais Saraksts
-latcore:security.blacklist=Melnais Saraksts
+latcoremc:security=Drošība
+latcoremc:security.public=Publisks
+latcoremc:security.private=Privāts
+latcoremc:security.whitelist=Baltais Saraksts
+latcoremc:security.blacklist=Melnais Saraksts
 
-latcore:redstonemode=Sarkanakments Režīms
-latcore:redstonemode.disabled=Atslēgts
-latcore:redstonemode.high=Aktīvs kad Ieslēgts
-latcore:redstonemode.low=Aktīvs kad Izslēgts
+latcoremc:redstonemode=Sarkanakments Režīms
+latcoremc:redstonemode.disabled=Atslēgts
+latcoremc:redstonemode.high=Aktīvs kad Ieslēgts
+latcoremc:redstonemode.low=Aktīvs kad Izslēgts
 
-latcore:invmode=Automatizācijas Režīms
-latcore:invmode.enabled=Ieslēgts
-latcore:invmode.onlyin=Tikai Iekšā
-latcore:invmode.onlyout=Tikai Ārā
-latcore:invmode.disabled=Izslēgts
+latcoremc:invmode=Automatizācijas Režīms
+latcoremc:invmode.enabled=Ieslēgts
+latcoremc:invmode.onlyin=Tikai Iekšā
+latcoremc:invmode.onlyout=Tikai Ārā
+latcoremc:invmode.disabled=Izslēgts
+
+latcoremc:color.black=Melns
+latcoremc:color.red=Sarkans
+latcoremc:color.green=Zaļš
+latcoremc:color.brown=Brūns
+latcoremc:color.blue=Zils
+latcoremc:color.purple=Purpura
+latcoremc:color.cyan=Ciānzils
+latcoremc:color.silver=Gaiši Pelēks
+latcoremc:color.gray=Tumši pelēks
+latcoremc:color.pink=Rozā
+latcoremc:color.lime=Laima
+latcoremc:color.yellow=Dzeltens
+latcoremc:color.light_blue=Gaiši Zils
+latcoremc:color.magenta=Violets
+latcoremc:color.orange=Oranžs
+latcoremc:color.white=Balts

@@ -1,6 +1,7 @@
 package latmod.core;
 import java.io.*;
 import java.util.*;
+
 import latmod.core.util.FastList;
 import net.minecraft.block.*;
 import net.minecraft.command.ICommandSender;
@@ -11,6 +12,7 @@ import net.minecraft.item.crafting.*;
 import net.minecraft.tileentity.*;
 import net.minecraft.util.*;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.util.*;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.oredict.*;
 import cpw.mods.fml.common.*;
@@ -24,6 +26,9 @@ public class LatCore
 {
 	public static boolean enableOreRecipes = true;
 	public static final int ANY = OreDictionary.WILDCARD_VALUE;
+	public static final int TOP = ForgeDirection.UP.ordinal();
+	public static final int BOTTOM = ForgeDirection.DOWN.ordinal();
+	
 	public static boolean debug = false;
 	
 	public static final int NBT_INT = 3;

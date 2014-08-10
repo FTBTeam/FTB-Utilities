@@ -13,8 +13,6 @@ import latmod.core.tile.ITileInterface;
 
 public class TileLM extends TileEntity implements ITileInterface, IInventory
 {
-	public static final int UP = ForgeDirection.UP.ordinal();
-	public static final int DOWN = ForgeDirection.DOWN.ordinal();
 	public static final int[] NO_SLOTS = new int[0];
 	
 	public String customName = null;
@@ -30,12 +28,62 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	public final TileEntity getTile()
 	{ return this; }
 	
-	public Packet getDescriptionPacket()
-	{ NBTTagCompound tag = new NBTTagCompound(); writeToNBT(tag);
+	public final void readFromNBT(NBTTagCompound tag)
+	{
+		super.readFromNBT(tag);
+		readTileData(tag);
+		readTileServerData(tag);
+	}
+	
+	public final void writeToNBT(NBTTagCompound tag)
+	{
+		super.writeToNBT(tag);
+		writeTileData(tag);
+		writeTileServerData(tag);
+	}
+	
+	public final Packet getDescriptionPacket()
+	{ NBTTagCompound tag = new NBTTagCompound(); writeTileData(tag);
 	return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, tag); }
 	
-	public void onDataPacket(NetworkManager m, S35PacketUpdateTileEntity p)
-	{ readFromNBT(p.func_148857_g()); }
+	public final void onDataPacket(NetworkManager m, S35PacketUpdateTileEntity p)
+	{ readTileData(p.func_148857_g()); }
+	
+	public void readTileData(NBTTagCompound tag)
+	{
+		if(tag.hasKey("Security"))
+		security.readFromNBT(tag.getCompoundTag("Security"));
+		
+		if(items != null)
+		items = InvUtils.readItemsFromNBT(items.length, tag, "Items");
+		
+		customName = null;
+		if(tag.hasKey("CustomName")) customName = tag.getString("CustomName");
+		tick = tag.getLong("Tick");
+		if(tick < 0L) tick = 0L;
+	}
+	
+	public void readTileServerData(NBTTagCompound tag)
+	{
+	}
+
+	public void writeTileData(NBTTagCompound tag)
+	{
+		NBTTagCompound securityTag = new NBTTagCompound();
+		security.writeToNBT(securityTag);
+		tag.setTag("Security", securityTag);
+		
+		if(items != null)
+		InvUtils.writeItemsToNBT(items, tag, "Items");
+		
+		if(customName != null) tag.setString("CustomName", customName);
+		if(tick < 0L) tick = 0L;
+		tag.setLong("Tick", tick);
+	}
+	
+	public void writeTileServerData(NBTTagCompound tag)
+	{
+	}
 	
 	public void invalidate()
 	{
@@ -59,45 +107,6 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	public void onUnloaded()
 	{
 		isLoaded = false;
-	}
-	
-	protected boolean customNBT()
-	{ return false; }
-	
-	public void readFromNBT(NBTTagCompound tag)
-	{
-		super.readFromNBT(tag);
-		
-		if(customNBT()) return;
-		
-		if(tag.hasKey("Security"))
-		security.readFromNBT(tag.getCompoundTag("Security"));
-		
-		if(items != null)
-		items = InvUtils.readItemsFromNBT(items.length, tag, "Items");
-		
-		customName = null;
-		if(tag.hasKey("CustomName")) customName = tag.getString("CustomName");
-		tick = tag.getLong("Tick");
-		if(tick < 0L) tick = 0L;
-	}
-	
-	public void writeToNBT(NBTTagCompound tag)
-	{
-		super.writeToNBT(tag);
-		
-		if(customNBT()) return;
-		
-		NBTTagCompound securityTag = new NBTTagCompound();
-		security.writeToNBT(securityTag);
-		tag.setTag("Security", securityTag);
-		
-		if(items != null)
-		InvUtils.writeItemsToNBT(items, tag, "Items");
-		
-		if(customName != null) tag.setString("CustomName", customName);
-		if(tick < 0L) tick = 0L;
-		tag.setLong("Tick", tick);
 	}
 	
 	public final void updateEntity()

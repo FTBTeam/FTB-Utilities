@@ -21,11 +21,12 @@ public class LCEventHandler
 				e.toolTip.add("> " + or);
 			}
 			
+			/* Now InvTweaks adds that
 			if(LC.proxy.isShiftDown())
 			{
 				e.toolTip.add("Registry name:");
 				e.toolTip.add("> " + LMUtils.getRegName(e.itemStack.getItem(), true));
-			}
+			}*/
 		}
 	}
 	

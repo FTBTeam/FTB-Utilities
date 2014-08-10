@@ -1,3 +1,9 @@
+# Temp Waila fix #
+screen.button.yes=Yes
+screen.button.no=No
+screen.button.modules=Modules
+screen.button.back=Back
+
 latcoremc:security=Security
 latcoremc:security.public=Public
 latcoremc:security.private=Private

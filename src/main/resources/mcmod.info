@@ -1,8 +1,8 @@
 [
 {
-  "modid": "latcore",
-  "name": "LatCore",
-  "description": "Core mod for LatvianModder's mods",
+  "modid": "LatCoreMC",
+  "name": "LatCoreMC",
+  "description": "Core mod for all LatvianModder's mods",
   "version": "${version}",
   "url": "",
   "updateUrl": "",

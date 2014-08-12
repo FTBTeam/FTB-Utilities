@@ -1,6 +1,7 @@
 package latmod.core;
 import java.io.*;
 import java.lang.reflect.Type;
+import java.util.UUID;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
@@ -10,6 +11,7 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import net.minecraft.world.*;
@@ -147,7 +149,8 @@ public class LMUtils
 
 	public static MovingObjectPosition rayTrace(EntityPlayer ep, double d)
 	{
-		Vec3 pos = Vec3.createVectorHelper(ep.posX, ep.posY + ep.yOffset, ep.posZ);
+		//ep.yOffset
+		Vec3 pos = Vec3.createVectorHelper(ep.posX, ep.posY + 1.62D, ep.posZ);
 		Vec3 look = ep.getLook(1F);
 		Vec3 vec = pos.addVector(look.xCoord * d, look.yCoord * d, look.zCoord * d);
 		//return ep.worldObj.rayTraceBlocks_do_do(pos, vec, false, true);
@@ -169,5 +172,21 @@ public class LMUtils
 		String s = Item.itemRegistry.getNameForObject(item);
 		if(s != null && removeMCDomain && s.startsWith("minecraft:"))
 			s = s.substring(10); return s;
+	}
+	
+	public static EntityPlayer getPlayer(World w, UUID id)
+	{ return w.func_152378_a(id); }
+	
+	public static void setUUID(NBTTagCompound tag, String s, UUID id)
+	{
+		tag.setLong(s + "_Least", id.getLeastSignificantBits());
+		tag.setLong(s + "_Most", id.getMostSignificantBits());
+	}
+	
+	public static UUID getUUID(NBTTagCompound tag, String s)
+	{
+		long least = tag.getLong(s + "_Least");
+		long most = tag.getLong(s + "_Most");
+		return new UUID(least, most);
 	}
 }

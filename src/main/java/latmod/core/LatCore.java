@@ -1,26 +1,25 @@
 package latmod.core;
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.ArrayList;
 
 import latmod.core.util.FastList;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.creativetab.*;
-import net.minecraft.entity.*;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.*;
-import net.minecraft.tileentity.*;
-import net.minecraft.util.*;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.util.*;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.oredict.*;
 import cpw.mods.fml.common.*;
-import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.*;
 import cpw.mods.fml.common.registry.*;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import cpw.mods.fml.relauncher.*;
 
 public class LatCore
 {

@@ -1,9 +1,8 @@
 package latmod.core.mod;
+import latmod.core.ODItems;
+import latmod.core.util.FastList;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import latmod.core.*;
-import latmod.core.util.*;
-import net.minecraftforge.event.entity.player.*;
-import net.minecraftforge.oredict.*;
 
 public class LCEventHandler
 {
@@ -20,17 +19,12 @@ public class LCEventHandler
 				for(String or : ores)
 				e.toolTip.add("> " + or);
 			}
-			
-			/* Now InvTweaks adds that
-			if(LC.proxy.isShiftDown())
-			{
-				e.toolTip.add("Registry name:");
-				e.toolTip.add("> " + LMUtils.getRegName(e.itemStack.getItem(), true));
-			}*/
 		}
 	}
 	
 	@SubscribeEvent
-	public void oreAdded(OreDictionary.OreRegisterEvent e)
-	{ ODItems.addOreName(e.Ore, e.Name); }
+	public void playerJoined(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e)
+	{
+		LC.logger.info("Player '" + e.player.getCommandSenderName() + "' joined with UUID " + e.player.getUniqueID());
+	}
 }

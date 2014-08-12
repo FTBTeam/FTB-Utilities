@@ -10,6 +10,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 @SideOnly(Side.CLIENT)
 public class LMRenderer
@@ -37,10 +38,17 @@ public class LMRenderer
 	public static final void recolor()
 	{ GL11.glColor4f(1F, 1F, 1F, 1F); }
 	
-	public static final void renderStandardBlockIcons(Block b, RenderBlocks r, int x, int y, int z, IIcon[] icons)
+	public static void enableTexture()
+	{ GL11.glEnable(GL11.GL_TEXTURE_2D); }
+	
+	public static void disableTexture()
+	{ GL11.glDisable(GL11.GL_TEXTURE_2D); }
+	
+	public static void setTexture(ResourceLocation rl)
+	{ Minecraft.getMinecraft().getTextureManager().bindTexture(rl); }
+	
+	public static final void renderStandardBlockIcons(Block b, RenderBlocks r, int x, int y, int z, IIcon[] icons, boolean tess)
 	{
-		if(icons == null || icons.length != 6) return;
-		
 		Tessellator tessellator = Tessellator.instance;
 		//GL11.glRotatef(90F, 0F, 1F, 0F);
 		
@@ -49,22 +57,24 @@ public class LMRenderer
 		float f2 = 0.8F;
 		float f3 = 0.6F;
 		
-		tessellator.startDrawingQuads();
-		tessellator.setBrightness(b.getMixedBrightnessForBlock(r.blockAccess, x, y, z));
-		tessellator.setColorOpaque_F(f, f, f);
+		float[] cols = { f, f1, f2, f2, f3, f3 };
+		cols = new float[] { 1F, 1F, 1F, 1F, 1F, 1F };
+		
+		if(tess)
+		{
+			tessellator.startDrawingQuads();
+			tessellator.setBrightness(b.getMixedBrightnessForBlock(r.blockAccess, x, y, z));
+		}
+		
 		double off = -0.5D;
-		r.renderFaceYNeg(b, off, off, off, icons[0]);
-		tessellator.setColorOpaque_F(f1, f1, f1);
-		r.renderFaceYPos(b, off, off, off, icons[1]);
-		tessellator.setColorOpaque_F(f2, f2, f2);
-		r.renderFaceZNeg(b, off, off, off, icons[2]);
-		tessellator.setColorOpaque_F(f2, f2, f2);
-		r.renderFaceZPos(b, off, off, off, icons[3]);
-		tessellator.setColorOpaque_F(f3, f3, f3);
-		r.renderFaceXNeg(b, off, off, off, icons[4]);
-		tessellator.setColorOpaque_F(f3, f3, f3);
-		r.renderFaceXPos(b, off, off, off, icons[5]);
-		tessellator.draw();
+		
+		for(int i = 0; i < 6; i++)
+		{
+			tessellator.setColorOpaque_F(cols[i], cols[i], cols[i]);
+			renderFace(r, b, i, off, off, off, (icons == null || icons.length != 6) ? b.getIcon(r.blockAccess, x, y, z, i) : icons[i]);
+		}
+		
+		if(tess) tessellator.draw();
 	}
 	
 	public static void renderItem(World w, ItemStack is, boolean fancy, boolean frame)
@@ -83,44 +93,36 @@ public class LMRenderer
 		RenderItem.renderInFrame = false;
 	}
 
-	public static void enableTexture()
-	{ GL11.glEnable(GL11.GL_TEXTURE_2D); }
-	
-	public static void disableTexture()
-	{ GL11.glDisable(GL11.GL_TEXTURE_2D); }
-	
-	public static void setTexture(ResourceLocation rl)
-	{ Minecraft.getMinecraft().getTextureManager().bindTexture(rl); }
-
 	public static void renderBlockAsItem(Block block, int metadata, RenderBlocks renderer)
 	{
 		Tessellator tessellator = Tessellator.instance;
-        GL11.glRotatef(90F, 0F, 1F, 0F);
-        GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-        tessellator.startDrawingQuads();
-        tessellator.setNormal(0F, -1F, 0F);
-        renderer.renderFaceYNeg(block, 0D, 0D, 0D, renderer.getBlockIconFromSideAndMetadata(block, 0, metadata));
-        tessellator.draw();
-        tessellator.startDrawingQuads();
-        tessellator.setNormal(0F, 1F, 0F);
-        renderer.renderFaceYPos(block, 0D, 0D, 0D, renderer.getBlockIconFromSideAndMetadata(block, 1, metadata));
-        tessellator.draw();
-        tessellator.startDrawingQuads();
-        tessellator.setNormal(0F, 0F, -1F);
-        renderer.renderFaceZNeg(block, 0D, 0D, 0D, renderer.getBlockIconFromSideAndMetadata(block, 2, metadata));
-        tessellator.draw();
-        tessellator.startDrawingQuads();
-        tessellator.setNormal(0F, 0F, 1F);
-        renderer.renderFaceZPos(block, 0D, 0D, 0D, renderer.getBlockIconFromSideAndMetadata(block, 3, metadata));
-        tessellator.draw();
-        tessellator.startDrawingQuads();
-        tessellator.setNormal(-1F, 0F, 0F);
-        renderer.renderFaceXNeg(block, 0D, 0D, 0D, renderer.getBlockIconFromSideAndMetadata(block, 4, metadata));
-        tessellator.draw();
-        tessellator.startDrawingQuads();
-        tessellator.setNormal(1F, 0F, 0F);
-        renderer.renderFaceXPos(block, 0D, 0D, 0D, renderer.getBlockIconFromSideAndMetadata(block, 5, metadata));
-        tessellator.draw();
-        GL11.glTranslatef(0.5F, 0.5F, 0.5F);
+		
+		GL11.glRotatef(90F, 0F, 1F, 0F);
+		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
+		
+		tessellator.setColorOpaque_F(1F, 1F, 1F);
+		tessellator.setBrightness(0);
+		GL11.glColor4f(1F, 1F, 1F, 1F);
+		
+		for(int i = 0; i < 6; i++)
+		{
+			ForgeDirection fd = ForgeDirection.VALID_DIRECTIONS[i];
+			tessellator.startDrawingQuads();
+			tessellator.setNormal(fd.offsetX, fd.offsetY, fd.offsetZ);
+			renderFace(renderer, block, i, 0D, 0D, 0D, renderer.getBlockIconFromSideAndMetadata(block, i, metadata));
+			tessellator.draw();
+		}
+		
+		GL11.glTranslatef(0.5F, 0.5F, 0.5F);
+	}
+	
+	public static void renderFace(RenderBlocks r, Block b, int f, double x, double y, double z, IIcon icon)
+	{
+		if(f == 0) r.renderFaceYNeg(b, x, y, z, icon);
+		else if(f == 1) r.renderFaceYPos(b, x, y, z, icon);
+		else if(f == 2) r.renderFaceZNeg(b, x, y, z, icon);
+		else if(f == 3) r.renderFaceZPos(b, x, y, z, icon);
+		else if(f == 4) r.renderFaceXNeg(b, x, y, z, icon);
+		else if(f == 5) r.renderFaceXPos(b, x, y, z, icon);
 	}
 }

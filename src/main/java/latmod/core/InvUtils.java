@@ -183,6 +183,9 @@ public class InvUtils
 		if(tag.hasNoTags()) tag = null; return tag;
 	}
 	
+	public static ItemStack removeTags(ItemStack is, String... tags)
+	{ if(is == null) return null; is.setTagCompound(removeTags(is.stackTagCompound, tags)); return is; }
+	
 	public static void writeItemsToNBT(ItemStack[] stacks, NBTTagCompound tag, String s)
 	{
 		NBTTagList list = new NBTTagList();

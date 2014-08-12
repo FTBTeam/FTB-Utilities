@@ -1,3 +1,14 @@
+### Blocks ###
+
+latcoremc:tile.storageUnit.name=Maza Glabāšanas Vienība
+
+### Items ###
+
+latcoremc:item.linkCard.name=Savienošanas Karte
+latcoremc:item.securityCard.name=Drošības Karte
+
+### Lang ###
+
 latcoremc:security=Drošība
 latcoremc:security.public=Publisks
 latcoremc:security.private=Privāts

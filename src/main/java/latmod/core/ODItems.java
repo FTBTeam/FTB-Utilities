@@ -39,8 +39,6 @@ public class ODItems
 	public static final String SAPPHIRE = "gemSapphire";
 	public static final String PERIDOT = "gemPeridot";
 	
-	//private static final FastMap<OreStackEntry, FastList<String>> oreNames = new FastMap<OreStackEntry, FastList<String>>();
-	
 	public static final class OreStackEntry
 	{
 		public final ItemStack itemStack;
@@ -70,36 +68,10 @@ public class ODItems
 		LatCore.addOreDictionary(MEAT_COOKED, new ItemStack(Items.cooked_beef));
 		LatCore.addOreDictionary(MEAT_COOKED, new ItemStack(Items.cooked_porkchop));
 		LatCore.addOreDictionary(MEAT_COOKED, new ItemStack(Items.cooked_chicken));
-		
-		/*
-		String[] allOres = OreDictionary.getOreNames();
-		
-		for(String s : allOres)
-		{
-			for(ItemStack is : OreDictionary.getOres(s))
-				addOreName(is, s);
-		}
-		*/
-	}
-	
-	public static void addOreName(ItemStack is, String s)
-	{
-		/*FastList<String> al = getOreNames(is);
-		
-		if(al == null)
-		{
-			al = new FastList<String>();
-			oreNames.put(new OreStackEntry(is, s), al);
-		}
-		
-		if(!al.contains(s)) al.add(s);
-		*/
 	}
 	
 	public static FastList<String> getOreNames(ItemStack is)
 	{
-		//return oreNames.get(is);
-		
 		int[] ai = OreDictionary.getOreIDs(is);
 		if(ai == null || ai.length == 0) return null;
 		FastList<String> l = new FastList<String>();

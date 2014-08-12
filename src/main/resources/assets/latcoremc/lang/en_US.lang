@@ -4,6 +4,19 @@ screen.button.no=No
 screen.button.modules=Modules
 screen.button.back=Back
 
+itemGroup.latcoremc:tab=LatCore
+
+### Blocks ###
+
+latcoremc:tile.storageUnit.name=Small Storage Unit
+
+### Items ###
+
+latcoremc:item.linkCard.name=Linking Card
+latcoremc:item.securityCard.name=Security Card
+
+### Lang ###
+
 latcoremc:security=Security
 latcoremc:security.public=Public
 latcoremc:security.private=Private

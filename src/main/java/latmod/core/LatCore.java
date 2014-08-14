@@ -156,7 +156,7 @@ public class LatCore
 	}
 	
 	public static boolean canUpdate()
-	{ return (!(getEffectiveSide().isClient())); }
+	{ return getEffectiveSide().isServer(); }
 	
 	public static Side getEffectiveSide()
 	{ return FMLCommonHandler.instance().getEffectiveSide(); }

@@ -91,4 +91,36 @@ public class GuiLM extends GuiContainer
 	
 	public void playClickSound()
 	{ playSoundFX("gui.button.press", 1F); }
+
+	public void drawPlayerHead(String playerName, double x, double y, double w, double h)
+	{
+		setTexture(texture);
+		
+		double z = getZLevel();
+		Tessellator tessellator = Tessellator.instance;
+		
+		double minU = 1D / 8D;
+		double minV = 1D / 4D;
+		double maxU = 2D / 8D;
+		double maxV = 2D / 4D;
+		
+		tessellator.startDrawingQuads();
+		tessellator.addVertexWithUV(x + 0, y + h, z, minU, maxV);
+		tessellator.addVertexWithUV(x + w, y + h, z, maxU, maxV);
+		tessellator.addVertexWithUV(x + w, y + 0, z, maxU, minV);
+		tessellator.addVertexWithUV(x + 0, y + 0, z, minU, minV);
+		tessellator.draw();
+		
+		double minU2 = 5D / 8D;
+		double minV2 = 1D / 4D;
+		double maxU2 = 6D / 8D;
+		double maxV2 = 2D / 4D;
+		
+		tessellator.startDrawingQuads();
+		tessellator.addVertexWithUV(x + 0, y + h, z, minU2, maxV2);
+		tessellator.addVertexWithUV(x + w, y + h, z, maxU2, maxV2);
+		tessellator.addVertexWithUV(x + w, y + 0, z, maxU2, minV2);
+		tessellator.addVertexWithUV(x + 0, y + 0, z, minU2, minV2);
+		tessellator.draw();
+	}
 }

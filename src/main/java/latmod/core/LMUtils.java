@@ -1,21 +1,21 @@
 package latmod.core;
 import java.io.*;
 import java.lang.reflect.Type;
-import java.util.UUID;
-
-import com.google.gson.*;
-import com.google.gson.stream.JsonWriter;
+import java.util.*;
 
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import net.minecraft.world.*;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonWriter;
 
 public class LMUtils
 {
@@ -177,16 +177,9 @@ public class LMUtils
 	public static EntityPlayer getPlayer(World w, UUID id)
 	{ return w.func_152378_a(id); }
 	
-	public static void setUUID(NBTTagCompound tag, String s, UUID id)
-	{
-		tag.setLong(s + "_Least", id.getLeastSignificantBits());
-		tag.setLong(s + "_Most", id.getMostSignificantBits());
-	}
+	public static <K, V> Type getMapType(Type K, Type V)
+	{ return new TypeToken<Map<K, V>>() {}.getType(); }
 	
-	public static UUID getUUID(NBTTagCompound tag, String s)
-	{
-		long least = tag.getLong(s + "_Least");
-		long most = tag.getLong(s + "_Most");
-		return new UUID(least, most);
-	}
+	public static <E> Type getListType(Type E)
+	{ return new TypeToken<List<E>>() {}.getType(); }
 }

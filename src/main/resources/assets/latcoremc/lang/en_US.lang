@@ -8,12 +8,9 @@ itemGroup.latcoremc:tab=LatCore
 
 ### Blocks ###
 
-latcoremc:tile.storageUnit.name=Small Storage Unit
-
 ### Items ###
 
 latcoremc:item.linkCard.name=Linking Card
-latcoremc:item.securityCard.name=Security Card
 
 ### Lang ###
 

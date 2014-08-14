@@ -19,10 +19,6 @@ public class LCCommon implements IGuiHandler // LCClient
 	
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
-		if(ID == LCGuis.SECURITY)
-		{
-		}
-		
 		return null;
 	}
 	

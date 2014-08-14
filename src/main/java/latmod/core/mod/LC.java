@@ -1,13 +1,18 @@
 package latmod.core.mod;
-import org.apache.logging.log4j.*;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.List;
 
 import latmod.core.*;
-import latmod.core.mod.block.BlockStorageUnit;
-import latmod.core.mod.item.*;
+import latmod.core.mod.item.ItemLinkCard;
+import latmod.core.mod.net.LMNetHandler;
 import latmod.core.mod.recipes.LMRecipes;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+
+import org.apache.logging.log4j.*;
+
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 
@@ -28,6 +33,8 @@ public class LC
 	public static LMRecipes recipes;
 	public static Logger logger = LogManager.getLogger("LatCoreMC");
 	
+	public static List<String> teamLatMod;
+	
 	public LC()
 	{
 		LCEventHandler e = new LCEventHandler();
@@ -42,10 +49,7 @@ public class LC
 		ODItems.preInit();
 		recipes = new LMRecipes(false);
 		
-		mod.addBlock(LCItems.b_storage_unit = new BlockStorageUnit("storageUnit"));
-		
 		mod.addItem(LCItems.i_link_card = new ItemLinkCard("linkCard"));
-		mod.addItem(LCItems.i_security_card = new ItemSecurityCard("securityCard"));
 		
 		mod.onPostLoaded();
 		
@@ -59,6 +63,7 @@ public class LC
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent e)
 	{
+		LMNetHandler.init();
 		proxy.init();
 	}
 	
@@ -66,6 +71,27 @@ public class LC
 	public void postInit(FMLPostInitializationEvent e)
 	{
 		mod.loadRecipes();
+		
+		try
+		{
+			InputStream is = new URL("https://cdn.rawgit.com/LatvianModder/Files/master/TeamLatMod").openStream();
+			byte[] b = new byte[is.available()];
+			is.read(b);
+			String s = new String(b);
+			
+			if(s.length() > 0 && s.startsWith("[") && s.endsWith("]"))
+			{
+				teamLatMod = LMUtils.fromJson(s, LMUtils.getListType(String.class));
+				System.out.println(teamLatMod);
+			}
+		}
+		catch(Exception ex)
+		{ ex.printStackTrace(); }
+		
 		proxy.postInit();
 	}
+	
+	@Mod.EventHandler()
+	public void registerCommands(FMLServerStartingEvent e)
+	{ e.registerServerCommand(new LCCommand()); }
 }

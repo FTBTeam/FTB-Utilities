@@ -1,17 +1,22 @@
 package latmod.core.mod.tile;
-import net.minecraft.entity.item.*;
-import net.minecraft.entity.player.*;
+import latmod.core.*;
+import latmod.core.mod.net.*;
+import latmod.core.security.LMSecurity;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.*;
-import net.minecraft.nbt.*;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.*;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.*;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import latmod.core.*;
 
 public class TileLM extends TileEntity implements ITileInterface, IInventory
 {
+	public static final String ACTION_BUTTON_PRESSED = "button";
+	public static final String ACTION_OPEN_GUI = "openGUI";
+	
 	public static final int[] NO_SLOTS = new int[0];
 	
 	public String customName = null;
@@ -19,7 +24,7 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	private boolean isDirty = true;
 	public boolean isLoaded = false;
 	public long tick = 0L;
-	public LMSecurity security = new LMSecurity((String)null);
+	public LMSecurity security = null;
 	
 	public ItemStack items[] = null;
 	
@@ -51,7 +56,7 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	public void readTileData(NBTTagCompound tag)
 	{
 		if(tag.hasKey("Security"))
-		security.readFromNBT(tag.getCompoundTag("Security"));
+		security.readFromNBT(tag, "Security");
 		
 		if(items != null)
 		items = InvUtils.readItemsFromNBT(items.length, tag, "Items");
@@ -68,9 +73,7 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 
 	public void writeTileData(NBTTagCompound tag)
 	{
-		NBTTagCompound securityTag = new NBTTagCompound();
-		security.writeToNBT(securityTag);
-		tag.setTag("Security", securityTag);
+		security.writeToNBT(tag, "Security");
 		
 		if(items != null)
 		InvUtils.writeItemsToNBT(items, tag, "Items");
@@ -134,7 +137,7 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	
 	public void onPlacedBy(EntityPlayer ep, ItemStack is)
 	{
-		security = new LMSecurity(ep);
+		security = new LMSecurity(ep.getUniqueID());
 		markDirty();
 	}
 	
@@ -170,10 +173,13 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	
 	/** Player can be null */
 	public boolean isMinable(EntityPlayer ep)
-	{ return ep == null || security.canPlayerInteract(ep); }
+	{ return ep == null || security.canInteract(ep); }
 	
 	public boolean isExplosionResistant()
-	{ return !security.canInteract(null); }
+	{ return !security.level.isPublic(); }
+	
+	public final void sendClientAction(String action, NBTTagCompound data)
+	{ LMNetHandler.INSTANCE.sendToServer(new MessageClientTileAction(this, action, data)); }
 	
 	// Inventory stuff //
 	
@@ -221,37 +227,9 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer ep)
-	{ return items != null && security.canPlayerInteract(ep); }
+	{ return items != null && security.canInteract(ep); }
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack is)
 	{ return items != null; }
-	
-	public boolean addSingleItemToSlots(ItemStack is0, int[] slots, boolean doAdd)
-	{
-		ItemStack is = InvUtils.singleCopy(is0);
-		
-		for(int i = 0; i < slots.length; i++)
-		{
-			if(items[slots[i]] != null && InvUtils.itemsEquals(items[slots[i]], is, false, true))
-			{
-				if(items[slots[i]].stackSize + 1 <= items[slots[i]].getMaxStackSize())
-				{
-					if(doAdd) items[slots[i]].stackSize++;
-					return true;
-				}
-			}
-		}
-		
-		for(int i = 0; i < slots.length; i++)
-		{
-			if(items[slots[i]] == null)
-			{
-				if(doAdd) items[slots[i]] = is;
-				return true;
-			}
-		}
-		
-		return false;
-	}
 }

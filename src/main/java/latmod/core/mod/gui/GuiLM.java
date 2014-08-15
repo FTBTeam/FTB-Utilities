@@ -1,41 +1,89 @@
 package latmod.core.mod.gui;
-import cpw.mods.fml.relauncher.*;
-import latmod.core.util.*;
+import java.util.Map;
+
 import latmod.core.client.LMRenderer;
+import latmod.core.mod.LC;
+import latmod.core.util.FastList;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.inventory.*;
+import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+
+import cpw.mods.fml.relauncher.*;
+
 @SideOnly(Side.CLIENT)
-public class GuiLM extends GuiContainer
+public abstract class GuiLM extends GuiContainer
 {
-	public ContainerLM container;
-	public ResourceLocation texture;
-	public FastList<WidgetLM> widgets;
+	public static final ResourceLocation icons_lm = LC.mod.getLocation("textures/gui/icons_lm.png");
+	private static final int BS = 19;
+	public static final TextureCoords
 	
-	public GuiLM(ContainerLM c)
+	button_basic = new TextureCoords(icons_lm, BS * 0, BS * 0),
+	button_pressed = new TextureCoords(icons_lm, BS * 0, BS * 1),
+	button_inner = new TextureCoords(icons_lm, BS * 1, BS * 0),
+	button_inner_pressed = new TextureCoords(icons_lm, BS * 1, BS * 1),
+	button_back = new TextureCoords(icons_lm, BS * 2, BS * 0),
+	button_help = new TextureCoords(icons_lm, BS * 2, BS * 1),
+	
+	button_security_public = new TextureCoords(icons_lm, BS * 3, BS * 0),
+	button_security_private = new TextureCoords(icons_lm, BS * 3, BS * 1),
+	button_security_whitelist = new TextureCoords(icons_lm, BS * 4, BS * 0),
+	button_security_blacklist = new TextureCoords(icons_lm, BS * 4, BS * 1),
+	
+	button_inv_both = new TextureCoords(icons_lm, BS * 5, BS * 0),
+	button_inv_in = new TextureCoords(icons_lm, BS * 6, BS * 0),
+	button_inv_out = new TextureCoords(icons_lm, BS * 5, BS * 1),
+	button_inv_none = new TextureCoords(icons_lm, BS * 6, BS * 1),
+	
+	button_redstone_none = new TextureCoords(icons_lm, BS * 7, BS * 0),
+	button_redstone_high = new TextureCoords(icons_lm, BS * 8, BS * 0),
+	button_redstone_low = new TextureCoords(icons_lm, BS * 8, BS * 1),
+	button_redstone_pulse = new TextureCoords(icons_lm, BS * 7, BS * 1);
+	
+	public static final TextureCoords[] button_security =
+	{ button_security_public, button_security_private, button_security_whitelist, button_security_blacklist };
+	
+	public static final TextureCoords[] button_inv =
+	{ button_inv_both, button_inv_in, button_inv_out, button_inv_none };
+	
+	public static final TextureCoords[] button_redstone =
+	{ button_redstone_none, button_redstone_high, button_redstone_low };
+	
+	public static final TextureCoords[] button_redstone_wp =
+	{ button_redstone_none, button_redstone_high, button_redstone_low, button_redstone_pulse };
+	
+	public final ContainerLM container;
+	public final ResourceLocation texture;
+	public final FastList<WidgetLM> widgets;
+	
+	public GuiLM(ContainerLM c, ResourceLocation tex)
 	{
 		super(c);
 		container = c;
-		texture = c.getTexture();
+		texture = tex;
 		widgets = new FastList<WidgetLM>();
 	}
 	
 	public ItemStack getHeldItem()
 	{ return container.player.inventory.getItemStack(); }
 	
-	public int getPosX()
+	public final int getPosX()
 	{ return guiLeft; }
 	
-	public int getPosY()
+	public final int getPosY()
 	{ return guiTop; }
 	
-	public double getZLevel()
+	public final double getZLevel()
 	{ return zLevel; }
 	
-	public void setTexture(ResourceLocation tex)
+	public final void setTexture(ResourceLocation tex)
 	{ mc.getTextureManager().bindTexture(tex); }
 	
 	protected void mouseClicked(int mx, int my, int b)
@@ -63,7 +111,7 @@ public class GuiLM extends GuiContainer
 		super.keyTyped(keyChar, key);
 	}
 	
-	public void drawGuiContainerBackgroundLayer(float f, int mouseX, int mouseY)
+	public void drawGuiContainerBackgroundLayer(float f, int mx, int my)
 	{
 		LMRenderer.recolor();
 		setTexture(texture);
@@ -91,10 +139,26 @@ public class GuiLM extends GuiContainer
 	
 	public void playClickSound()
 	{ playSoundFX("gui.button.press", 1F); }
-
-	public void drawPlayerHead(String playerName, double x, double y, double w, double h)
+	
+	public FontRenderer getFontRenderer()
+	{ return fontRendererObj; }
+	
+	public void drawPlayerHead(GameProfile profile, double x, double y, double w, double h)
 	{
-		setTexture(texture);
+		ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
+		
+		if (profile != null)
+		{
+			Minecraft minecraft = Minecraft.getMinecraft();
+			
+			@SuppressWarnings("rawtypes")
+			Map map = minecraft.func_152342_ad().func_152788_a(profile);
+			
+			if (map.containsKey(MinecraftProfileTexture.Type.SKIN))
+				resourcelocation = minecraft.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
+		}
+		
+		setTexture(resourcelocation);
 		
 		double z = getZLevel();
 		Tessellator tessellator = Tessellator.instance;

@@ -1,12 +1,13 @@
 package latmod.core.mod;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.List;
+import java.util.*;
 
 import latmod.core.*;
 import latmod.core.mod.item.ItemLinkCard;
 import latmod.core.mod.net.LMNetHandler;
 import latmod.core.mod.recipes.LMRecipes;
+import latmod.core.util.FastList;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -33,7 +34,8 @@ public class LC
 	public static LMRecipes recipes;
 	public static Logger logger = LogManager.getLogger("LatCoreMC");
 	
-	public static List<String> teamLatMod;
+	public static FastList<String> teamLatModNames;
+	public static FastList<UUID> teamLatModUUIDs;
 	
 	public LC()
 	{
@@ -72,18 +74,33 @@ public class LC
 	{
 		mod.loadRecipes();
 		
+		teamLatModNames = new FastList<String>();
+		teamLatModUUIDs = new FastList<UUID>();
+		
+		LC.logger.info("Loading TeamLatMod.json...");
+		
 		try
 		{
-			InputStream is = new URL("https://cdn.rawgit.com/LatvianModder/Files/master/TeamLatMod").openStream();
+			InputStream is = new URL("http://pastebin.com/raw.php?i=ihHF9uta").openStream();
 			byte[] b = new byte[is.available()];
 			is.read(b);
 			String s = new String(b);
 			
 			if(s.length() > 0 && s.startsWith("[") && s.endsWith("]"))
 			{
-				teamLatMod = LMUtils.fromJson(s, LMUtils.getListType(String.class));
-				System.out.println(teamLatMod);
+				List<String> list = LMUtils.fromJson(s, LMUtils.getListType(String.class));
+				
+				if(list.size() >= 2 && list.size() % 2 == 0)
+				for(int i = 0; i < list.size(); i += 2)
+				{
+					teamLatModNames.add(list.get(i));
+					teamLatModUUIDs.add(UUID.fromString(list.get(i + 1)));
+				}
+				else logger.info("Invalid LatMod Team file");
+				
+				logger.info("LatMod Team loaded");
 			}
+			else logger.info("LatMod Team failed to load");
 		}
 		catch(Exception ex)
 		{ ex.printStackTrace(); }

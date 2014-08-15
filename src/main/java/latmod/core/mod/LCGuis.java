@@ -10,8 +10,8 @@ public class LCGuis
 	
 	public static class Buttons
 	{
-		private static int nextButtonID = 0;
-		public static final int nextButtonID()
-		{ return ++nextButtonID; }
+		public static final String SECURITY = "security";
+		public static final String REDSTONE = "redstone";
+		public static final String INV_MODE = "inv_mode";
 	}
 }

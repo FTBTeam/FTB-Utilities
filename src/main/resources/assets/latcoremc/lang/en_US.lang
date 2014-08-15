@@ -14,6 +14,10 @@ latcoremc:item.linkCard.name=Linking Card
 
 ### Lang ###
 
+latcoremc:owner=Owner: %s
+latcoremc:settings=Settings
+latcoremc:back=Back
+
 latcoremc:security=Security
 latcoremc:security.public=Public
 latcoremc:security.private=Private

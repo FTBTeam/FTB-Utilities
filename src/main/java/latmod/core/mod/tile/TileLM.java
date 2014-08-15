@@ -1,5 +1,6 @@
 package latmod.core.mod.tile;
 import latmod.core.*;
+import latmod.core.mod.LC;
 import latmod.core.mod.net.*;
 import latmod.core.security.LMSecurity;
 import net.minecraft.entity.item.EntityItem;
@@ -12,10 +13,11 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileLM extends TileEntity implements ITileInterface, IInventory
+public class TileLM extends TileEntity implements ITileInterface, IInventory, IClientActionTile
 {
 	public static final String ACTION_BUTTON_PRESSED = "button";
 	public static final String ACTION_OPEN_GUI = "openGUI";
+	public static final String ACTION_CUSTOM_NAME = "customName";
 	
 	public static final int[] NO_SLOTS = new int[0];
 	
@@ -24,7 +26,7 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	private boolean isDirty = true;
 	public boolean isLoaded = false;
 	public long tick = 0L;
-	public LMSecurity security = null;
+	public final LMSecurity security = new LMSecurity(null);
 	
 	public ItemStack items[] = null;
 	
@@ -55,7 +57,6 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	
 	public void readTileData(NBTTagCompound tag)
 	{
-		if(tag.hasKey("Security"))
 		security.readFromNBT(tag, "Security");
 		
 		if(items != null)
@@ -137,7 +138,7 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	
 	public void onPlacedBy(EntityPlayer ep, ItemStack is)
 	{
-		security = new LMSecurity(ep.getUniqueID());
+		security.owner = ep.getUniqueID();
 		markDirty();
 	}
 	
@@ -151,6 +152,9 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	{
 		return false;
 	}
+	
+	public final void printOwner(EntityPlayer ep)
+	{ LatCore.printChat(ep, LC.mod.translate("owner", security.owner)); }
 	
 	public void dropItem(ItemStack is, double ox, double oy, double oz)
 	{ EntityItem ei = new EntityItem(worldObj, xCoord + 0.5D + ox, yCoord + 0.5D + oy, zCoord + 0.5D + oz, is);
@@ -180,6 +184,58 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory
 	
 	public final void sendClientAction(String action, NBTTagCompound data)
 	{ LMNetHandler.INSTANCE.sendToServer(new MessageClientTileAction(this, action, data)); }
+	
+	public void clientPressButton(String button, int mouseButton)
+	{
+		NBTTagCompound data = new NBTTagCompound();
+		data.setString("ID", button);
+		data.setByte("MB", (byte)mouseButton);
+		sendClientAction(ACTION_BUTTON_PRESSED, data);
+	}
+	
+	public void clientOpenGui(int guiID)
+	{
+		NBTTagCompound data = new NBTTagCompound();
+		data.setByte("ID", (byte)guiID);
+		sendClientAction(ACTION_OPEN_GUI, data);
+	}
+	
+	public void clientCustomName(String name)
+	{
+		NBTTagCompound data = new NBTTagCompound();
+		data.setString("Name", name);
+		sendClientAction(ACTION_CUSTOM_NAME, data);
+	}
+	
+	public void onClientAction(EntityPlayer ep, String action, NBTTagCompound data)
+	{
+		if(action.equals(ACTION_BUTTON_PRESSED))
+		{
+			String button = data.getString("ID");
+			int mouseButton = data.getByte("MB");
+			handleButton(button, mouseButton, ep);
+			markDirty();
+		}
+		else if(action.equals(ACTION_OPEN_GUI))
+		{
+			int guiID = data.getByte("ID");
+			openGui(guiID, ep);
+		}
+		else if(action.equals(ACTION_CUSTOM_NAME))
+		{
+			String name = data.getString("Name");
+			customName = (name.length() == 0) ? null : name;
+			markDirty();
+		}
+	}
+	
+	public void handleButton(String button, int mouseButton, EntityPlayer ep)
+	{
+	}
+	
+	public void openGui(int guiID, EntityPlayer ep)
+	{
+	}
 	
 	// Inventory stuff //
 	

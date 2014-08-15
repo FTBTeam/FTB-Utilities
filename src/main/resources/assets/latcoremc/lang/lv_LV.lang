@@ -6,6 +6,10 @@ latcoremc:tile.storageUnit.name=Maza Glabāšanas Vienība
 
 ### Lang ###
 
+latcoremc:owner=Īpašnieks: %s
+latcoremc:settings=Uzstādījumi
+latcoremc:back=Atpakaļ
+
 latcoremc:security=Drošība
 latcoremc:security.public=Publisks
 latcoremc:security.private=Privāts

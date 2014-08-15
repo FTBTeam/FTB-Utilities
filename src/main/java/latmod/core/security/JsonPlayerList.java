@@ -1,10 +1,10 @@
 package latmod.core.security;
 
-import java.util.List;
+import latmod.core.util.FastList;
 
 import com.google.gson.annotations.Expose;
 
 public class JsonPlayerList
 {
-	@Expose public List<JsonPlayer> players;
+	@Expose public FastList<JsonPlayer> players;
 }

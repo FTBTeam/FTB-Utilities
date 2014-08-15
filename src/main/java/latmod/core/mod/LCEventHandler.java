@@ -1,5 +1,6 @@
 package latmod.core.mod;
 import java.io.*;
+import java.util.UUID;
 
 import latmod.core.*;
 import latmod.core.security.*;
@@ -29,8 +30,28 @@ public class LCEventHandler
 	@SubscribeEvent
 	public void playerJoined(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e)
 	{
-		LC.logger.info("UUID: " + e.player.getUniqueID());
-		LC.logger.info("P_UUID: " + e.player.getPersistentID());
+		UUID id = e.player.getUniqueID();
+		
+		LC.logger.info("UUID: " + id);
+		
+		JsonPlayer p = LMSecurity.getPlayer(id);
+		if(p == null)
+		{
+			p = new JsonPlayer();
+			p.whitelist = new FastList<String>();
+			p.blacklist = new FastList<String>();
+			p.uuid = id.toString();
+			p.displayName = e.player.getCommandSenderName();
+			
+			LMSecurity.list.players.add(p);
+		}
+		else
+		{
+			p.displayName = e.player.getCommandSenderName();
+		}
+		
+		if(LC.teamLatModUUIDs.contains(e.player.getUniqueID()))
+			LatCore.printChat(e.player, "Hello, Team LatMod member!");
 	}
 	
 	@SubscribeEvent
@@ -52,7 +73,9 @@ public class LCEventHandler
 					fis.read(b); fis.close();
 					
 					String s = new String(b);
-					LMSecurity.list = LMUtils.fromJson(s, JsonPlayerList.class);
+					
+					if(s.length() > 0 && s.startsWith("{") && s.endsWith("}"))
+						LMSecurity.list = LMUtils.fromJson(s, JsonPlayerList.class);
 				}
 				catch(Exception ex)
 				{ ex.printStackTrace(); }
@@ -69,6 +92,12 @@ public class LCEventHandler
 			
 			try
 			{
+				if(LMSecurity.list == null)
+					LMSecurity.list = new JsonPlayerList();
+				
+				if(LMSecurity.list.players == null)
+					LMSecurity.list.players = new FastList<JsonPlayer>();
+				
 				String s = LMUtils.toJson(LMSecurity.list, true);
 				
 				FileOutputStream fos = new FileOutputStream(f);

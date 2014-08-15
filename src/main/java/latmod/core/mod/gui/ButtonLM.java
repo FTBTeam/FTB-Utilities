@@ -1,5 +1,4 @@
 package latmod.core.mod.gui;
-import latmod.core.mod.gui.GuiLM;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)

@@ -14,6 +14,8 @@ public class LMSecurity
 	public LMSecurity(UUID id)
 	{
 		owner = id;
+		if(owner == null)
+			owner = UUID.randomUUID();
 		level = Level.PUBLIC;
 	}
 	
@@ -91,26 +93,10 @@ public class LMSecurity
 	
 	public static JsonPlayerList list;
 	
-	public static JsonPlayer getPlayer(UUID id)
+	public static JsonPlayer getPlayer(Object o)
 	{
-		for(int i = 0; i < list.players.size(); i++)
-		{
-			JsonPlayer p = list.players.get(i);
-			if(p.uuid.equals(id)) return p;
-		}
-		
-		return null;
-	}
-	
-	public static JsonPlayer getPlayer(String displayName)
-	{
-		for(int i = 0; i < list.players.size(); i++)
-		{
-			JsonPlayer p = list.players.get(i);
-			if(p.displayName.equalsIgnoreCase(displayName)) return p;
-		}
-		
-		return null;
+		if(list == null || list.players == null) return null;
+		return list.players.getObj(o);
 	}
 	
 	// Level enum //

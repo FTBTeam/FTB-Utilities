@@ -1,8 +1,7 @@
 package latmod.core.mod.gui;
-import net.minecraft.entity.player.*;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
 
 public abstract class ContainerLM extends Container
 {
@@ -31,6 +30,4 @@ public abstract class ContainerLM extends Container
 	
 	public boolean canInteractWith(EntityPlayer ep)
 	{ return true; }
-	
-	public abstract ResourceLocation getTexture();
 }

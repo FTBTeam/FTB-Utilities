@@ -1,7 +1,11 @@
 package latmod.core.mod.gui;
-import org.lwjgl.input.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.ChatAllowedCharacters;
+
+import org.lwjgl.input.Keyboard;
+
 import cpw.mods.fml.relauncher.*;
-import net.minecraft.util.*;
 
 @SideOnly(Side.CLIENT)
 public class TextBoxLM extends WidgetLM
@@ -20,6 +24,14 @@ public class TextBoxLM extends WidgetLM
 		if(mouseOver(mx, my))
 		{
 			isSelected = true;
+			Keyboard.enableRepeatEvents(true);
+			
+			if(b == 1 && text.length() > 0)
+			{
+				text = "";
+				textChanged();
+			}
+			
 			return true;
 		}
 		
@@ -31,6 +43,7 @@ public class TextBoxLM extends WidgetLM
 	
 	public void voidMousePressed(int mx, int my, int b)
 	{
+		Keyboard.enableRepeatEvents(false);
 		isSelected = false;
 	}
 	
@@ -41,7 +54,16 @@ public class TextBoxLM extends WidgetLM
 			if(key == Keyboard.KEY_BACK)
 			{
 				if(text.length() > 0)
-					text = text.substring(0, text.length() - 1);
+				{
+					if(GuiScreen.isCtrlKeyDown()) text = ""; else
+						text = text.substring(0, text.length() - 1);
+					
+					textChanged();
+				}
+			}
+			else if(key == Keyboard.KEY_ESCAPE)
+			{
+				isSelected = false;
 			}
 			else if(key == Keyboard.KEY_TAB)
 			{
@@ -57,7 +79,11 @@ public class TextBoxLM extends WidgetLM
 			{
 				if(ChatAllowedCharacters.isAllowedCharacter(keyChar))
 				{
-					if(canAddChar()) text += keyChar;
+					if(canAddChar())
+					{
+						text += keyChar;
+						textChanged();
+					}
 				}
 			}
 			
@@ -65,6 +91,10 @@ public class TextBoxLM extends WidgetLM
 		}
 		
 		return false;
+	}
+	
+	public void textChanged()
+	{
 	}
 	
 	public void tabPressed()
@@ -78,5 +108,16 @@ public class TextBoxLM extends WidgetLM
 	public void clear()
 	{
 		text = "";
+	}
+	
+	public void render(int x, int y, int col)
+	{
+		String s = text + "";
+		
+		if(isSelected && canAddChar() && Minecraft.getSystemTime() % 1000L > 500L)
+			s += '_';
+		
+		if(s.length() > 0)
+			gui.getFontRenderer().drawString(s, gui.getPosX() + x, gui.getPosY() + y, col);
 	}
 }

@@ -38,7 +38,7 @@ public class ItemLinkCard extends ItemLC
 		return is;
 	}
 	
-	public boolean onItemUseFirst(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
+	public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
 	{
 		if(is.hasTagCompound() && is.stackTagCompound.hasKey(NBT_KEY))
 		{
@@ -60,7 +60,12 @@ public class ItemLinkCard extends ItemLC
 				
 				if(((ILinkable)te).onLinked(ep, tilePos, linkPos))
 				{
-					is = InvUtils.removeTags(is, NBT_KEY);
+					if(!w.isRemote)
+					{
+						is = InvUtils.removeTags(is, NBT_KEY);
+						ep.inventory.markDirty();
+					}
+					
 					return true;
 				}
 			}

@@ -1,4 +1,5 @@
 package latmod.core.mod;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -28,4 +29,7 @@ public class LCClient extends LCCommon
 	{
 		return null;
 	}
+	
+	public EntityPlayer getClientPlayer()
+	{ return Minecraft.getMinecraft().thePlayer; }
 }

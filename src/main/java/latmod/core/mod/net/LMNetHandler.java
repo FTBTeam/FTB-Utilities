@@ -16,12 +16,14 @@ public class LMNetHandler
 	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(LC.mod.modID);
 	private static int nextPacketID = -1; public static int nextPacketID() { return ++nextPacketID; }
 	
-	public static FastMap<String, ICustomClientActionHandler> customHandlers = new FastMap<String, ICustomClientActionHandler>();
+	public static FastMap<String, ICustomActionHandler> customHandlers = new FastMap<String, ICustomActionHandler>();
 	
 	public static void init()
 	{
 		INSTANCE.registerMessage(MessageClientTileAction.class, MessageClientTileAction.class, nextPacketID(), Side.SERVER);
 		INSTANCE.registerMessage(MessageClientItemAction.class, MessageClientItemAction.class, nextPacketID(), Side.SERVER);
+		INSTANCE.registerMessage(MessageCustomClientAction.class, MessageCustomClientAction.class, nextPacketID(), Side.SERVER);
+		INSTANCE.registerMessage(MessageCustomServerAction.class, MessageCustomServerAction.class, nextPacketID(), Side.CLIENT);
 	}
 	
 	// Helper methods //

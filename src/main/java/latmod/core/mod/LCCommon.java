@@ -26,4 +26,7 @@ public class LCCommon implements IGuiHandler // LCClient
 	{
 		return null;
 	}
+	
+	public EntityPlayer getClientPlayer()
+	{ return null; }
 }

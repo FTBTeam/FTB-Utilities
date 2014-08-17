@@ -1,18 +1,20 @@
 package latmod.core.mod.net;
 import io.netty.buffer.ByteBuf;
+import latmod.core.mod.LC;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.simpleimpl.*;
+import cpw.mods.fml.relauncher.Side;
 
-public class MessageClientCustomAction implements IMessage, IMessageHandler<MessageClientCustomAction, IMessage>
+public class MessageCustomServerAction implements IMessage, IMessageHandler<MessageCustomServerAction, IMessage>
 {
 	public String channel;
 	public String action;
 	public NBTTagCompound extraData;
 	
-	public MessageClientCustomAction() { }
+	public MessageCustomServerAction() { }
 	
-	public MessageClientCustomAction(String c, String s, NBTTagCompound tag)
+	public MessageCustomServerAction(String c, String s, NBTTagCompound tag)
 	{
 		channel = c;
 		action = s;
@@ -33,14 +35,11 @@ public class MessageClientCustomAction implements IMessage, IMessageHandler<Mess
 		LMNetHandler.writeNBTTagCompound(data, extraData);
 	}
 	
-	public IMessage onMessage(MessageClientCustomAction message, MessageContext ctx)
+	public IMessage onMessage(MessageCustomServerAction message, MessageContext ctx)
 	{
-		EntityPlayer ep = ctx.getServerHandler().playerEntity;
-		
-		ICustomClientActionHandler h = LMNetHandler.customHandlers.get(message.channel);
-		
-		if(h != null) h.onClientAction(ep, message.channel, message.action, message.extraData);
-		
+		EntityPlayer ep = LC.proxy.getClientPlayer();
+		ICustomActionHandler h = LMNetHandler.customHandlers.get(message.channel);
+		if(h != null) h.onAction(ep, message.channel, message.action, message.extraData, Side.CLIENT);
 		return null;
 	}
 }

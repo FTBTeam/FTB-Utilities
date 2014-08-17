@@ -56,11 +56,10 @@ public class LatCore
 	}
 	
 	/** Prints message to chat (doesn't translate it) */
-	public static final void printChat(ICommandSender ep, Object... o)
+	public static final void printChat(ICommandSender ep, Object o)
 	{
-		String s = ""; for(Object o1 : o) s += o1;
-		if(ep == null) System.out.println(s);
-		else ep.addChatMessage(new ChatComponentText(s));
+		if(ep == null) System.out.println(o);
+		else ep.addChatMessage(new ChatComponentText("" + o));
 	}
 	
 	// Registry methods //

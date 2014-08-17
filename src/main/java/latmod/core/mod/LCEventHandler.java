@@ -5,6 +5,7 @@ import java.util.*;
 import latmod.core.*;
 import latmod.core.security.*;
 import latmod.core.util.*;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -70,12 +71,24 @@ public class LCEventHandler
 				String mod_id = LC.versionsToCheck.keys.get(i);
 				String mod_version = LC.versionsToCheck.values.get(i);
 				
-				String version1 = LC.latmodVersions.get(mod_id);
+				Map<String, String> m = LC.versionsFile.get(mod_id);
 				
-				if(version1 != null && !version1.equals(mod_version))
+				if(m != null && m.size() > 0)
 				{
-					if(toPrint.isEmpty()) toPrint.add("These LatvianModder's mods has updates:");
-					toPrint.add(mod_id + " [ " + version1 + " ]");
+					String[] versions = m.keySet().toArray(new String[0]);
+					
+					if(versions.length > 0)
+					{
+						Arrays.sort(versions);
+						
+						String lver = versions[versions.length - 1];
+						
+						if(!lver.equals(mod_version))
+						{
+							if(toPrint.isEmpty()) toPrint.add("These LatvianModder's mods has updates:");
+							toPrint.add(mod_id + EnumChatFormatting.GOLD + " [ " + lver + " ]: " + EnumChatFormatting.GRAY + m.get(lver));
+						}
+					}
 				}
 			}
 			

@@ -1,5 +1,5 @@
 package latmod.core.mod;
-import java.util.UUID;
+import java.util.*;
 
 import latmod.core.*;
 import latmod.core.mod.item.ItemLinkCard;
@@ -19,7 +19,7 @@ import cpw.mods.fml.common.event.*;
 public class LC
 {
 	protected static final String MODID = "LatCoreMC";
-	protected static final String MODVERSION = "1.3.3";
+	protected static final String MODVERSION = "1.3.4";
 	
 	@Mod.Instance(LC.MODID)
 	public static LC inst;
@@ -33,9 +33,8 @@ public class LC
 	public static LCConfig config;
 	public static Logger logger = LogManager.getLogger("LatCoreMC");
 	
-	public static FastMap<String, String> latmodVersions;
+	public static Map<String, Map<String, String>> versionsFile;
 	public static FastMap<String, String> versionsToCheck;
-	public static boolean hasDisplayedUpdates = false;
 	
 	public static FastList<String> teamLatModNames;
 	public static FastList<UUID> teamLatModUUIDs;
@@ -63,7 +62,7 @@ public class LC
 		
 		LatCore.addGuiHandler(this, proxy);
 		
-		latmodVersions = new FastMap<String, String>();
+		versionsFile = new HashMap<String, Map<String, String>>();
 		versionsToCheck = new FastMap<String, String>();
 		
 		teamLatModNames = new FastList<String>();
@@ -98,12 +97,4 @@ public class LC
 	@Mod.EventHandler()
 	public void registerCommands(FMLServerStartingEvent e)
 	{ e.registerServerCommand(new LCCommand()); }
-	
-	public static boolean isUpdated(String modID, String version)
-	{
-		String s = latmodVersions.get(modID);
-		if(s == null || s.length() == 0) return true;
-		
-		return false;
-	}
 }

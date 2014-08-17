@@ -1,8 +1,10 @@
 package latmod.core.mod.item;
 
-import latmod.core.InvUtils;
+import latmod.core.*;
+import latmod.core.mod.LC;
 import latmod.core.mod.tile.ILinkable;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -18,6 +20,15 @@ public class ItemLinkCard extends ItemLC
 	{
 		super(s);
 		setMaxStackSize(1);
+	}
+	
+	public void loadRecipes()
+	{
+		LC.recipes.addRecipe(new ItemStack(this), "RGR", "PEP", "RGR",
+				'R', ODItems.REDSTONE,
+				'G', ODItems.NUGGET_GOLD,
+				'P', Items.paper,
+				'E', Items.ender_pearl);
 	}
 	
 	public ItemStack onItemRightClick(ItemStack is, World w, EntityPlayer ep)
@@ -49,7 +60,7 @@ public class ItemLinkCard extends ItemLC
 				
 				if(((ILinkable)te).onLinked(ep, tilePos, linkPos))
 				{
-					if(!w.isRemote) is = InvUtils.removeTags(is, NBT_KEY);
+					is = InvUtils.removeTags(is, NBT_KEY);
 					return true;
 				}
 			}

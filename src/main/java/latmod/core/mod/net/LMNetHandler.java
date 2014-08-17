@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import java.util.UUID;
 
 import latmod.core.mod.LC;
+import latmod.core.util.FastMap;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -14,6 +15,8 @@ public class LMNetHandler
 {
 	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(LC.mod.modID);
 	private static int nextPacketID = -1; public static int nextPacketID() { return ++nextPacketID; }
+	
+	public static FastMap<String, ICustomClientActionHandler> customHandlers = new FastMap<String, ICustomClientActionHandler>();
 	
 	public static void init()
 	{

@@ -1,13 +1,11 @@
 package latmod.core.mod;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.*;
+import java.util.UUID;
 
 import latmod.core.*;
 import latmod.core.mod.item.ItemLinkCard;
 import latmod.core.mod.net.LMNetHandler;
 import latmod.core.mod.recipes.LMRecipes;
-import latmod.core.util.FastList;
+import latmod.core.util.*;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -21,7 +19,7 @@ import cpw.mods.fml.common.event.*;
 public class LC
 {
 	protected static final String MODID = "LatCoreMC";
-	protected static final String MODVERSION = "1.3.2";
+	protected static final String MODVERSION = "1.3.3";
 	
 	@Mod.Instance(LC.MODID)
 	public static LC inst;
@@ -32,7 +30,12 @@ public class LC
 	public static LMMod mod;
 	public static CreativeTabs tab;
 	public static LMRecipes recipes;
+	public static LCConfig config;
 	public static Logger logger = LogManager.getLogger("LatCoreMC");
+	
+	public static FastMap<String, String> latmodVersions;
+	public static FastMap<String, String> versionsToCheck;
+	public static boolean hasDisplayedUpdates = false;
 	
 	public static FastList<String> teamLatModNames;
 	public static FastList<UUID> teamLatModUUIDs;
@@ -50,6 +53,7 @@ public class LC
 		mod = new LMMod(MODID);
 		ODItems.preInit();
 		recipes = new LMRecipes(false);
+		config = new LCConfig(e);
 		
 		mod.addItem(LCItems.i_link_card = new ItemLinkCard("linkCard"));
 		
@@ -59,12 +63,26 @@ public class LC
 		
 		LatCore.addGuiHandler(this, proxy);
 		
+		latmodVersions = new FastMap<String, String>();
+		versionsToCheck = new FastMap<String, String>();
+		
+		teamLatModNames = new FastList<String>();
+		teamLatModUUIDs = new FastList<UUID>();
+		
+		if(config.general.checkUpdates)
+			ThreadCheckVersions.init();
+		
+		if(config.general.checkTeamLatMod)
+			ThreadCheckTeamLatMod.init();
+		
 		proxy.preInit();
+		config.save();
 	}
 	
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent e)
 	{
+		versionsToCheck.put(MODID, MODVERSION);
 		LMNetHandler.init();
 		proxy.init();
 	}
@@ -74,41 +92,18 @@ public class LC
 	{
 		mod.loadRecipes();
 		
-		teamLatModNames = new FastList<String>();
-		teamLatModUUIDs = new FastList<UUID>();
-		
-		LC.logger.info("Loading TeamLatMod.json...");
-		
-		try
-		{
-			InputStream is = new URL("http://pastebin.com/raw.php?i=ihHF9uta").openStream();
-			byte[] b = new byte[is.available()];
-			is.read(b);
-			String s = new String(b);
-			
-			if(s.length() > 0 && s.startsWith("[") && s.endsWith("]"))
-			{
-				List<String> list = LMUtils.fromJson(s, LMUtils.getListType(String.class));
-				
-				if(list.size() >= 2 && list.size() % 2 == 0)
-				for(int i = 0; i < list.size(); i += 2)
-				{
-					teamLatModNames.add(list.get(i));
-					teamLatModUUIDs.add(UUID.fromString(list.get(i + 1)));
-				}
-				else logger.info("Invalid LatMod Team file");
-				
-				logger.info("LatMod Team loaded");
-			}
-			else logger.info("LatMod Team failed to load");
-		}
-		catch(Exception ex)
-		{ ex.printStackTrace(); }
-		
 		proxy.postInit();
 	}
 	
 	@Mod.EventHandler()
 	public void registerCommands(FMLServerStartingEvent e)
 	{ e.registerServerCommand(new LCCommand()); }
+	
+	public static boolean isUpdated(String modID, String version)
+	{
+		String s = latmodVersions.get(modID);
+		if(s == null || s.length() == 0) return true;
+		
+		return false;
+	}
 }

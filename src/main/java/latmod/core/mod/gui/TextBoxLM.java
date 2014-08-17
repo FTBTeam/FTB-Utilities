@@ -114,7 +114,7 @@ public class TextBoxLM extends WidgetLM
 	{
 		String s = text + "";
 		
-		if(isSelected && canAddChar() && Minecraft.getSystemTime() % 1000L > 500L)
+		if(isSelected && Minecraft.getSystemTime() % 1000L > 500L)
 			s += '_';
 		
 		if(s.length() > 0)

@@ -1,6 +1,6 @@
 package latmod.core.security;
 
-import java.util.*;
+import java.util.UUID;
 
 import latmod.core.mod.LC;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,7 +21,10 @@ public class LMSecurity
 	
 	public void readFromNBT(NBTTagCompound tag, String s)
 	{
-		owner = UUID.fromString(tag.getString("Sec_" + s + "_Owner"));
+		String ow = tag.getString("Sec_" + s + "_Owner");
+		if(ow != null && ow.length() > 0) owner = UUID.fromString(ow);
+		else owner = null;
+		
 		level = Level.VALUES[tag.getByte("Sec_" + s + "_Level")];
 	}
 	
@@ -44,43 +47,17 @@ public class LMSecurity
 		if(isOwner(id)) return true;
 		if(level == Level.PRIVATE) return false;
 		
-		JsonPlayer player = getPlayer(id);
+		JsonPlayer player = getPlayer(owner);
 		
 		if(player != null)
 		{
 			String idS = id.toString();
 			
 			if(level == Level.WHITELIST)
-			{
-				List<String> l = player.whitelist;
-				
-				if(l != null && l.size() > 0)
-				{
-					for(int i = 0; i < l.size(); i++)
-					{
-						if(l.equals(idS))
-							return true;
-					}
-					
-					return false;
-				}
-			}
+				return player.whitelist.contains(idS);
 			
 			if(level == Level.BLACKLIST)
-			{
-				List<String> l = player.blacklist;
-				
-				if(l != null && l.size() > 0)
-				{
-					for(int i = 0; i < l.size(); i++)
-					{
-						if(l.equals(idS))
-							return false;
-					}
-					
-					return true;
-				}
-			}
+				return !player.blacklist.contains(idS);
 		}
 		
 		return false;

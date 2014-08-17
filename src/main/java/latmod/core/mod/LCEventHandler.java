@@ -1,6 +1,6 @@
 package latmod.core.mod;
 import java.io.*;
-import java.util.UUID;
+import java.util.*;
 
 import latmod.core.*;
 import latmod.core.security.*;
@@ -14,15 +14,24 @@ public class LCEventHandler
 	@SubscribeEvent
 	public void onTooltip(ItemTooltipEvent e)
 	{
-		if(e.showAdvancedItemTooltips && e.itemStack != null)
+		if(e.showAdvancedItemTooltips && e.itemStack != null && e.itemStack.getItem() != null)
 		{
-			FastList<String> ores = ODItems.getOreNames(e.itemStack);
-			
-			if(ores != null && !ores.isEmpty())
+			if(LC.config.general.addOreNames)
 			{
-				e.toolTip.add("Ore Dictionary names:");
-				for(String or : ores)
-				e.toolTip.add("> " + or);
+				FastList<String> ores = ODItems.getOreNames(e.itemStack);
+				
+				if(ores != null && !ores.isEmpty())
+				{
+					e.toolTip.add("Ore Dictionary names:");
+					for(String or : ores)
+					e.toolTip.add("> " + or);
+				}
+			}
+			
+			if(LC.config.general.addRegistryNames)
+			{
+				e.toolTip.add("Registry name:");
+				e.toolTip.add(LMUtils.getRegName(e.itemStack.getItem(), true));
 			}
 		}
 	}
@@ -31,15 +40,14 @@ public class LCEventHandler
 	public void playerJoined(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e)
 	{
 		UUID id = e.player.getUniqueID();
-		
 		LC.logger.info("UUID: " + id);
 		
 		JsonPlayer p = LMSecurity.getPlayer(id);
 		if(p == null)
 		{
 			p = new JsonPlayer();
-			p.whitelist = new FastList<String>();
-			p.blacklist = new FastList<String>();
+			p.whitelist = new ArrayList<String>();
+			p.blacklist = new ArrayList<String>();
 			p.uuid = id.toString();
 			p.displayName = e.player.getCommandSenderName();
 			
@@ -50,8 +58,30 @@ public class LCEventHandler
 			p.displayName = e.player.getCommandSenderName();
 		}
 		
-		if(LC.teamLatModUUIDs.contains(e.player.getUniqueID()))
+		if(LC.config.general.notifyTeamLatMod && LC.teamLatModUUIDs.contains(e.player.getUniqueID()))
 			LatCore.printChat(e.player, "Hello, Team LatMod member!");
+		
+		if(LC.config.general.notifyUpdates)
+		{
+			FastList<String> toPrint = new FastList<String>();
+			
+			for(int i = 0; i < LC.versionsToCheck.size(); i++)
+			{
+				String mod_id = LC.versionsToCheck.keys.get(i);
+				String mod_version = LC.versionsToCheck.values.get(i);
+				
+				String version1 = LC.latmodVersions.get(mod_id);
+				
+				if(version1 != null && !version1.equals(mod_version))
+				{
+					if(toPrint.isEmpty()) toPrint.add("These LatvianModder's mods has updates:");
+					toPrint.add(mod_id + " [ " + version1 + " ]");
+				}
+			}
+			
+			if(!toPrint.isEmpty()) for(String s : toPrint)
+				LatCore.printChat(e.player, s);
+		}
 	}
 	
 	@SubscribeEvent

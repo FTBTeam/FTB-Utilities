@@ -1,10 +1,10 @@
 package latmod.core;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
-import net.minecraft.item.*;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.tileentity.*;
-import net.minecraft.world.*;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class InvUtils
@@ -122,6 +122,27 @@ public class InvUtils
 		}
 
 		return false;
+	}
+	
+	public static void reduceItemInInv(IInventory inv, int[] slots, ItemStack is, int size)
+	{
+		for(int i = 0; i < slots.length; i++)
+		{
+			ItemStack is1 = inv.getStackInSlot(slots[i]);
+			
+			if(is1 != null && itemsEquals(is1, is, false, true))
+			{
+				int s = Math.min(is1.stackSize, size);
+				
+				size -= s;
+				is1.stackSize -= s;
+				if(is1.stackSize <= 0)
+					inv.setInventorySlotContents(i, null);
+				if(size <= 0) return;
+			}
+		}
+		
+		inv.markDirty();
 	}
 	
 	public static boolean addSingleItemToInv(ItemStack is, IInventory inv, int[] slots, int side, boolean doAdd)

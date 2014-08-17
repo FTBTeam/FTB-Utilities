@@ -16,7 +16,29 @@ public abstract class ContainerLM extends Container
 	
 	public ItemStack transferStackInSlot(EntityPlayer ep, int i)
 	{
-		return null;
+		ItemStack is = null;
+		Slot slot = (Slot)inventorySlots.get(i);
+
+		if (slot != null && slot.getHasStack())
+		{
+			ItemStack is1 = slot.getStack();
+			is = is1.copy();
+
+			if (i < inv.getSizeInventory())
+			{
+				if (!mergeItemStack(is1, inv.getSizeInventory(), inventorySlots.size(), true))
+					return null;
+			}
+			else if (!mergeItemStack(is1, 0, inv.getSizeInventory(), false))
+				return null;
+
+			if (is1.stackSize == 0)
+				slot.putStack((ItemStack)null);
+			else
+				slot.onSlotChanged();
+		}
+
+		return is;
 	}
 	
 	public void addPlayerSlots(int posY)

@@ -39,6 +39,12 @@ public class ODItems
 	public static final String SAPPHIRE = "gemSapphire";
 	public static final String PERIDOT = "gemPeridot";
 	
+	public static final String NUGGET_GOLD = "nuggetGold";
+	public static final String NUGGET_TIN = "nuggetTin";
+	public static final String NUGGET_COPPER = "nuggetCopper";
+	public static final String NUGGET_LEAD = "nuggetLead";
+	public static final String NUGGET_SILVER = "nuggetSilver";
+	
 	public static final class OreStackEntry
 	{
 		public final ItemStack itemStack;

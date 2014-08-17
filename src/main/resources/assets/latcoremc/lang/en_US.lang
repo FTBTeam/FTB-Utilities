@@ -1,8 +1,9 @@
-# Temp Waila fix #
+# Temp Waila & NEI fix #
 screen.button.yes=Yes
 screen.button.no=No
 screen.button.modules=Modules
 screen.button.back=Back
+nei.load=Load
 
 itemGroup.latcoremc:tab=LatCore
 
@@ -17,6 +18,9 @@ latcoremc:item.linkCard.name=Linking Card
 latcoremc:owner=Owner: %s
 latcoremc:settings=Settings
 latcoremc:back=Back
+
+latcoremc:command.team=LatMod Team: %s
+latcoremc:command.uuid=%0 's UUID: %1
 
 latcoremc:security=Security
 latcoremc:security.public=Public

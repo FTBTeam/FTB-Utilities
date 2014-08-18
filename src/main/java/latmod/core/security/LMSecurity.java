@@ -30,7 +30,7 @@ public class LMSecurity
 	
 	public void writeToNBT(NBTTagCompound tag, String s)
 	{
-		tag.setString("Sec_" + s + "_Owner", owner.toString());
+		if(owner != null) tag.setString("Sec_" + s + "_Owner", owner.toString());
 		tag.setByte("Sec_" + s + "_Level", (byte)level.ID);
 	}
 	
@@ -47,7 +47,7 @@ public class LMSecurity
 		if(isOwner(id)) return true;
 		if(level == Level.PRIVATE) return false;
 		
-		JsonPlayer player = getPlayer(owner);
+		JsonPlayer player = JsonPlayer.getPlayer(owner);
 		
 		if(player != null)
 		{
@@ -65,16 +65,6 @@ public class LMSecurity
 	
 	public boolean canInteract(EntityPlayer ep)
 	{ return canInteract((ep == null) ? null : ep.getUniqueID()); }
-	
-	// Static methods //
-	
-	public static JsonPlayerList list;
-	
-	public static JsonPlayer getPlayer(Object o)
-	{
-		if(list == null || list.players == null) return null;
-		return list.players.getObj(o);
-	}
 	
 	// Level enum //
 	

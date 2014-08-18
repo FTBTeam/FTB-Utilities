@@ -20,7 +20,6 @@ public class LCConfig extends LMConfig
 		public boolean checkTeamLatMod;
 		public boolean checkUpdates;
 		public boolean notifyUpdates;
-		public boolean notifyTeamLatMod;
 		
 		public General()
 		{
@@ -31,7 +30,6 @@ public class LCConfig extends LMConfig
 			checkTeamLatMod = getBool("checkTeamLatMod", true);
 			checkUpdates = getBool("checkUpdates", true);
 			notifyUpdates = getBool("notifyUpdates", true);
-			notifyTeamLatMod = getBool("notifyTeamLatMod", true);
 		}
 	}
 }

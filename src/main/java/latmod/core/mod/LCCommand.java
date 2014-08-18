@@ -35,10 +35,10 @@ public class LCCommand extends CommandBase
 			{
 				EntityPlayer ep = getCommandSenderAsPlayer(ics);
 				
-				JsonPlayer jp = LMSecurity.getPlayer(ep.getUniqueID());
+				JsonPlayer jp = JsonPlayer.getPlayer(ep.getUniqueID());
 				
 				if(args.length >= 2)
-					jp = LMSecurity.getPlayer(args[1]);
+					jp = JsonPlayer.getPlayer(args[1]);
 				
 				if(jp == null) throw new PlayerNotFoundException();
 				
@@ -46,11 +46,25 @@ public class LCCommand extends CommandBase
 			}
 			else if(args[0].equalsIgnoreCase("whitelist") || args[0].equals("wl"))
 			{
+				if(args.length == 1)
+				{
+					LatCore.printChat(ics, "/latcore whitelist add|remove <player name>");
+					LatCore.printChat(ics, "/latcore whitelist addUUID|remUUID <player UUID>");
+					LatCore.printChat(ics, "/latcore whitelist list|clear");
+					return;
+				}
+				
 				EntityPlayer ep = getCommandSenderAsPlayer(ics);
 				
-				if(args.length >= 2 && ep != null)
+				if(ep == null)
 				{
-					JsonPlayer epP = LMSecurity.getPlayer(ep.getUniqueID());
+					LatCore.printChat(ics, "Player can't be null!");
+					return;
+				}
+				
+				if(args.length >= 2)
+				{
+					JsonPlayer epP = JsonPlayer.getPlayer(ep.getUniqueID());
 					
 					if(args[1].equals("list"))
 					{
@@ -61,7 +75,7 @@ public class LCCommand extends CommandBase
 						for(int i = 0; i < epP.whitelist.size(); i++)
 						{
 							String uuidS = epP.whitelist.get(i);
-							JsonPlayer jp = LMSecurity.getPlayer(UUID.fromString(uuidS));
+							JsonPlayer jp = JsonPlayer.getPlayer(UUID.fromString(uuidS));
 							
 							if(jp != null)
 							{
@@ -78,12 +92,13 @@ public class LCCommand extends CommandBase
 					else if(args[1].equals("clear"))
 					{
 						epP.whitelist.clear();
+						LatCore.printChat(ics, "Whitelist cleared");
 					}
 					else if(args.length >= 3)
 					{
-						if(args[1].equals("add"))
+						if(args[1].equals("add") || args[1].equals("addUUID"))
 						{
-							JsonPlayer jp = LMSecurity.getPlayer(args[2]);
+							JsonPlayer jp = JsonPlayer.getPlayer(args[1].equals("add") ? args[2] : UUID.fromString(args[2]));
 							
 							if(jp == null) throw new PlayerNotFoundException();
 							
@@ -92,10 +107,11 @@ public class LCCommand extends CommandBase
 								epP.whitelist.add(jp.uuid);
 								LatCore.printChat(ics, "Added " + jp.displayName + " to whitelist");
 							}
+							else LatCore.printChat(ics, jp.displayName + " already added to whitelist!");
 						}
-						else if(args[1].equals("remove"))
+						if(args[1].equals("rem") || args[1].equals("remUUID"))
 						{
-							JsonPlayer jp = LMSecurity.getPlayer(args[2]);
+							JsonPlayer jp = JsonPlayer.getPlayer(args[1].equals("rem") ? args[2] : UUID.fromString(args[2]));
 							
 							if(jp == null) throw new PlayerNotFoundException();
 							
@@ -104,17 +120,32 @@ public class LCCommand extends CommandBase
 								epP.whitelist.remove(jp.uuid);
 								LatCore.printChat(ics, "Removed " + jp.displayName + " from whitelist");
 							}
+							else LatCore.printChat(ics, jp.displayName + " is not added to whitelist!");
 						}
 					}
 				}
 			}
 			else if(args[0].equalsIgnoreCase("blacklist") || args[0].equals("bl"))
 			{
+				if(args.length == 1)
+				{
+					LatCore.printChat(ics, "/latcore blacklist add|rem <player name>");
+					LatCore.printChat(ics, "/latcore blacklist addUUID|remUUID <player UUID>");
+					LatCore.printChat(ics, "/latcore blacklist list|clear");
+					return;
+				}
+				
 				EntityPlayer ep = getCommandSenderAsPlayer(ics);
 				
-				if(args.length >= 2 && ep != null)
+				if(ep == null)
 				{
-					JsonPlayer epP = LMSecurity.getPlayer(ep.getUniqueID());
+					LatCore.printChat(ics, "Player can't be null!");
+					return;
+				}
+				
+				if(args.length >= 2)
+				{
+					JsonPlayer epP = JsonPlayer.getPlayer(ep.getUniqueID());
 					
 					if(args[1].equals("list"))
 					{
@@ -125,12 +156,12 @@ public class LCCommand extends CommandBase
 						for(int i = 0; i < epP.blacklist.size(); i++)
 						{
 							String uuidS = epP.blacklist.get(i);
-							JsonPlayer jp = LMSecurity.getPlayer(UUID.fromString(uuidS));
+							JsonPlayer jp = JsonPlayer.getPlayer(UUID.fromString(uuidS));
 							
 							if(jp != null)
 							{
 								s += jp.displayName;
-								if(i != epP.whitelist.size() - 1)
+								if(i != epP.blacklist.size() - 1)
 									s += ", ";
 							}
 						}
@@ -142,12 +173,13 @@ public class LCCommand extends CommandBase
 					else if(args[1].equals("clear"))
 					{
 						epP.blacklist.clear();
+						LatCore.printChat(ics, "Blacklist cleared");
 					}
 					else if(args.length >= 3)
 					{
-						if(args[1].equals("add"))
+						if(args[1].equals("add") || args[1].equals("addUUID"))
 						{
-							JsonPlayer jp = LMSecurity.getPlayer(args[2]);
+							JsonPlayer jp = JsonPlayer.getPlayer(args[1].equals("add") ? args[2] : UUID.fromString(args[2]));
 							
 							if(jp == null) throw new PlayerNotFoundException();
 							
@@ -156,10 +188,11 @@ public class LCCommand extends CommandBase
 								epP.blacklist.add(jp.uuid);
 								LatCore.printChat(ics, "Added " + jp.displayName + " to blacklist");
 							}
+							else LatCore.printChat(ics, jp.displayName + " already added to blacklist!");
 						}
-						else if(args[1].equals("remove"))
+						if(args[1].equals("rem") || args[1].equals("remUUID"))
 						{
-							JsonPlayer jp = LMSecurity.getPlayer(args[2]);
+							JsonPlayer jp = JsonPlayer.getPlayer(args[1].equals("rem") ? args[2] : UUID.fromString(args[2]));
 							
 							if(jp == null) throw new PlayerNotFoundException();
 							
@@ -168,26 +201,33 @@ public class LCCommand extends CommandBase
 								epP.blacklist.remove(jp.uuid);
 								LatCore.printChat(ics, "Removed " + jp.displayName + " from blacklist");
 							}
+							else LatCore.printChat(ics, jp.displayName + " is not added to blacklist!");
 						}
 					}
 				}
 			}
 			else if(args[0].equalsIgnoreCase("team"))
 			{
-				LatCore.printChat(ics, "LatMod Team:");
-				
-				String s = "";
-				
-				for(int i = 0 ; i < LC.teamLatModNames.size(); i++)
+				if(args.length >= 2)
 				{
-					s += LC.teamLatModNames.get(i);
+					EnumLatModTeam e = EnumLatModTeam.get(args[1]);
 					
-					if(i != LC.teamLatModNames.size() - 1)
-						s += ", ";
+					LatCore.printChat(ics, "LatMod Team:");
+					
+					String s = "";
+					
+					for(int i = 0 ; i < e.names.size(); i++)
+					{
+						s += e.names.get(i);
+						
+						if(i != e.names.size() - 1)
+							s += ", ";
+					}
+					
+					if(s.length() > 0) LatCore.printChat(ics, s);
+					else LatCore.printChat(ics, "Team list is empty? Hm. Weird. Oh well...");
 				}
-				
-				if(s.length() > 0) LatCore.printChat(ics, s);
-				else LatCore.printChat(ics, "Team list is empty? Hm. Weird");
+				else LatCore.printChat(ics, "/latcore team <name>");
 			}
 			else processCommand(ics, null);
 		}

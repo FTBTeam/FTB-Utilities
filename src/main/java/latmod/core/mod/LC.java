@@ -15,13 +15,13 @@ import org.apache.logging.log4j.*;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 
-@Mod(modid = LC.MODID, name = "LatCoreMC", version = LC.MODVERSION) //dependencies = "required-after:Waila"
+@Mod(modid = LC.MOD_ID, name = "LatCoreMC", version = LC.MOD_VERSION) //dependencies = "required-after:Waila"
 public class LC
 {
-	protected static final String MODID = "LatCoreMC";
-	protected static final String MODVERSION = "1.3.4";
+	public static final String MOD_ID = "LatCoreMC";
+	public static final String MOD_VERSION = "1.3.4";
 	
-	@Mod.Instance(LC.MODID)
+	@Mod.Instance(LC.MOD_ID)
 	public static LC inst;
 	
 	@SidedProxy(clientSide = "latmod.core.mod.LCClient", serverSide = "latmod.core.mod.LCCommon")
@@ -36,9 +36,6 @@ public class LC
 	public static Map<String, Map<String, String>> versionsFile;
 	public static FastMap<String, String> versionsToCheck;
 	
-	public static FastList<String> teamLatModNames;
-	public static FastList<UUID> teamLatModUUIDs;
-	
 	public LC()
 	{
 		LCEventHandler e = new LCEventHandler();
@@ -49,7 +46,7 @@ public class LC
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
-		mod = new LMMod(MODID);
+		mod = new LMMod(MOD_ID);
 		ODItems.preInit();
 		recipes = new LMRecipes(false);
 		config = new LCConfig(e);
@@ -65,9 +62,6 @@ public class LC
 		versionsFile = new HashMap<String, Map<String, String>>();
 		versionsToCheck = new FastMap<String, String>();
 		
-		teamLatModNames = new FastList<String>();
-		teamLatModUUIDs = new FastList<UUID>();
-		
 		if(config.general.checkUpdates)
 			ThreadCheckVersions.init();
 		
@@ -81,7 +75,7 @@ public class LC
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent e)
 	{
-		versionsToCheck.put(MODID, MODVERSION);
+		versionsToCheck.put(MOD_ID, MOD_VERSION);
 		LMNetHandler.init();
 		proxy.init();
 	}

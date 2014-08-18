@@ -28,19 +28,35 @@ public class ThreadCheckTeamLatMod implements Runnable
 			is.read(b);
 			String s = new String(b);
 			
-			if(s.length() > 0 && s.startsWith("[") && s.endsWith("]"))
+			if(s.length() > 0 && s.startsWith("{") && s.endsWith("}"))
 			{
-				List<String> list = LMUtils.fromJson(s, LMUtils.getListType(String.class));
+				Map<String, List<String>> map = LMUtils.fromJson(s, LMUtils.getMapType(String.class, LMUtils.getListType(String.class)));
 				
-				if(list.size() >= 2 && list.size() % 2 == 0)
-				for(int i = 0; i < list.size(); i += 2)
+				if(map != null && map.size() > 0)
 				{
-					LC.teamLatModUUIDs.add(UUID.fromString(list.get(i)));
-					LC.teamLatModNames.add(list.get(i + 1));
+					Iterator<String> keys = map.keySet().iterator();
+					Iterator<List<String>> values = map.values().iterator();
+					
+					while(keys.hasNext())
+					{
+						String k = keys.next();
+						List<String> v = values.next();
+						
+						EnumLatModTeam e = EnumLatModTeam.get(k);
+						
+						if(e != null && v != null && v.size() >= 2 && v.size() % 2 == 0)
+						{
+							for(int i = 0; i < v.size(); i += 2)
+							{
+								e.uuids.add(UUID.fromString(v.get(i)));
+								e.names.add(v.get(i + 1));
+							}
+						}
+					}
+					
+					LC.logger.info("LatMod Team loaded");
 				}
 				else LC.logger.info("Invalid LatMod Team file");
-				
-				LC.logger.info("LatMod Team loaded");
 			}
 			else LC.logger.info("LatMod Team failed to load");
 		}

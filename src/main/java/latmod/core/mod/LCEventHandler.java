@@ -6,7 +6,7 @@ import latmod.core.*;
 import latmod.core.security.*;
 import latmod.core.util.*;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
@@ -43,7 +43,7 @@ public class LCEventHandler
 		UUID id = e.player.getUniqueID();
 		LC.logger.info("UUID: " + id);
 		
-		JsonPlayer p = LMSecurity.getPlayer(id);
+		JsonPlayer p = JsonPlayer.getPlayer(id);
 		if(p == null)
 		{
 			p = new JsonPlayer();
@@ -52,14 +52,14 @@ public class LCEventHandler
 			p.uuid = id.toString();
 			p.displayName = e.player.getCommandSenderName();
 			
-			LMSecurity.list.players.add(p);
+			JsonPlayer.list.players.add(p);
 		}
 		else
 		{
 			p.displayName = e.player.getCommandSenderName();
 		}
 		
-		if(LC.config.general.notifyTeamLatMod && LC.teamLatModUUIDs.contains(e.player.getUniqueID()))
+		if(EnumLatModTeam.TEAM.uuids.contains(e.player.getUniqueID()))
 			LatCore.printChat(e.player, "Hello, Team LatMod member!");
 		
 		if(LC.config.general.notifyUpdates)
@@ -79,9 +79,9 @@ public class LCEventHandler
 					
 					if(versions.length > 0)
 					{
-						Arrays.sort(versions);
+						if(versions.length > 1) Arrays.sort(versions, ThreadCheckVersions.comparator);
 						
-						String lver = versions[versions.length - 1];
+						String lver = versions[0];
 						
 						if(!lver.equals(mod_version))
 						{
@@ -102,10 +102,10 @@ public class LCEventHandler
 	{
 		if(LatCore.canUpdate() && e.world.provider.dimensionId == 0)
 		{
-			File f = LMCommon.newFile(new File(e.world.getSaveHandler().getWorldDirectory(), "LatCoreMC.dat"));
+			File f = LMCommon.newFile(new File(e.world.getSaveHandler().getWorldDirectory(), "LatCoreMC.json"));
 			
-			LMSecurity.list = new JsonPlayerList();
-			LMSecurity.list.players = new FastList<JsonPlayer>();
+			JsonPlayer.list = new JsonPlayerList();
+			JsonPlayer.list.players = new FastList<JsonPlayer>();
 			
 			if(f.exists())
 			{
@@ -118,7 +118,7 @@ public class LCEventHandler
 					String s = new String(b);
 					
 					if(s.length() > 0 && s.startsWith("{") && s.endsWith("}"))
-						LMSecurity.list = LMUtils.fromJson(s, JsonPlayerList.class);
+						JsonPlayer.list = LMUtils.fromJson(s, JsonPlayerList.class);
 				}
 				catch(Exception ex)
 				{ ex.printStackTrace(); }
@@ -131,17 +131,17 @@ public class LCEventHandler
 	{
 		if(LatCore.canUpdate() && e.world.provider.dimensionId == 0)
 		{
-			File f = LMCommon.newFile(new File(e.world.getSaveHandler().getWorldDirectory(), "LatCoreMC.dat"));
+			File f = LMCommon.newFile(new File(e.world.getSaveHandler().getWorldDirectory(), "LatCoreMC.json"));
 			
 			try
 			{
-				if(LMSecurity.list == null)
-					LMSecurity.list = new JsonPlayerList();
+				if(JsonPlayer.list == null)
+					JsonPlayer.list = new JsonPlayerList();
 				
-				if(LMSecurity.list.players == null)
-					LMSecurity.list.players = new FastList<JsonPlayer>();
+				if(JsonPlayer.list.players == null)
+					JsonPlayer.list.players = new FastList<JsonPlayer>();
 				
-				String s = LMUtils.toJson(LMSecurity.list, true);
+				String s = LMUtils.toJson(JsonPlayer.list, true);
 				
 				FileOutputStream fos = new FileOutputStream(f);
 				fos.write(s.getBytes());
@@ -149,6 +149,17 @@ public class LCEventHandler
 			}
 			catch(Exception ex)
 			{ ex.printStackTrace(); }
+		}
+	}
+	
+	@SubscribeEvent
+	public void playerName(PlayerEvent.NameFormat e)
+	{
+		JsonPlayer jp = JsonPlayer.getPlayer(e.entityPlayer);
+		if(jp != null && jp.customName != null && jp.customName.length() > 0)
+		{
+			String s = jp.customName + "";
+			e.displayname = s.trim().replace("&", "\u00a7").replace("%name%", jp.displayName);
 		}
 	}
 }

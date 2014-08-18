@@ -10,7 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.*;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.*;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
@@ -159,4 +159,7 @@ public class LatCore
 	
 	public static Side getEffectiveSide()
 	{ return FMLCommonHandler.instance().getEffectiveSide(); }
+	
+	public static ResourceLocation getLocation(String id, String s)
+	{ return new ResourceLocation(id.toLowerCase(), s); }
 }

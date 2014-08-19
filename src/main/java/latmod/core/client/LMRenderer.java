@@ -35,6 +35,14 @@ public class LMRenderer
 	public static final void colorize(int c)
 	{ colorize(c, (c >> 24) & 255); }
 	
+	public static final int getColor(int c, int a)
+	{
+		int r = (c >> 16) & 255;
+		int g = (c >> 8) & 255;
+		int b = (c >> 0) & 255;
+		return (a << 24) | (r << 16) | (g << 8) | b;
+	}
+	
 	public static final void recolor()
 	{ GL11.glColor4f(1F, 1F, 1F, 1F); }
 	

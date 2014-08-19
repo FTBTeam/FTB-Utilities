@@ -5,13 +5,16 @@ screen.button.modules=Modules
 screen.button.back=Back
 nei.load=Load
 
-itemGroup.latcoremc:tab=LatCore
+itemGroup.latcoremc:tab=LatCoreMC
 
 ### Blocks ###
+
+latcoremc:tile.paintable.name=Paintable Block
 
 ### Items ###
 
 latcoremc:item.linkCard.name=Linking Card
+latcoremc:item.blockPainter.name=Block Painter
 
 ### Lang ###
 

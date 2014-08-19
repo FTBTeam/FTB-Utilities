@@ -2,10 +2,11 @@ package latmod.core.mod;
 import java.util.*;
 
 import latmod.core.*;
-import latmod.core.mod.item.ItemLinkCard;
+import latmod.core.mod.block.BlockPaintable;
+import latmod.core.mod.item.*;
 import latmod.core.mod.net.LMNetHandler;
 import latmod.core.mod.recipes.LMRecipes;
-import latmod.core.util.*;
+import latmod.core.util.FastMap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -19,7 +20,7 @@ import cpw.mods.fml.common.event.*;
 public class LC
 {
 	public static final String MOD_ID = "LatCoreMC";
-	public static final String MOD_VERSION = "1.3.4";
+	public static final String MOD_VERSION = "1.3.5";
 	
 	@Mod.Instance(LC.MOD_ID)
 	public static LC inst;
@@ -51,7 +52,10 @@ public class LC
 		recipes = new LMRecipes(false);
 		config = new LCConfig(e);
 		
+		mod.addBlock(LCItems.b_paintable = new BlockPaintable("paintable"));
+		
 		mod.addItem(LCItems.i_link_card = new ItemLinkCard("linkCard"));
+		mod.addItem(LCItems.i_painter = new ItemBlockPainter("blockPainter"));
 		
 		mod.onPostLoaded();
 		
@@ -61,9 +65,6 @@ public class LC
 		
 		versionsFile = new HashMap<String, Map<String, String>>();
 		versionsToCheck = new FastMap<String, String>();
-		
-		if(config.general.checkUpdates)
-			ThreadCheckVersions.init();
 		
 		if(config.general.checkTeamLatMod)
 			ThreadCheckTeamLatMod.init();

@@ -4,37 +4,117 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 
-import latmod.core.LMUtils;
+import latmod.core.*;
+import latmod.core.util.FastList;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.event.*;
+import net.minecraft.event.ClickEvent.Action;
+import net.minecraft.util.*;
 
 public class ThreadCheckVersions implements Runnable
 {
-	private Thread thread;
+	public ICommandSender output;
+	public boolean chatCommand;
 	
-	public static void init()
+	public Thread thread;
+	
+	public static void init(ICommandSender ics, boolean b)
 	{
 		ThreadCheckVersions t = new ThreadCheckVersions();
+		t.output = ics;
+		t.chatCommand = b;
+		
 		t.thread = new Thread(t, "LatMod_CheckVersions");
 		t.thread.start();
 	}
 	
 	public void run()
 	{
+		int failed = 0;
+		
 		try
 		{
+			failed = 1;
+			
 			InputStream is = new URL("http://pastebin.com/raw.php?i=N8gUpQj8").openStream();
 			byte[] b = new byte[is.available()];
 			is.read(b);
 			String s = new String(b);
 			
+			failed = 2;
+			
 			if(s.length() > 0 && s.startsWith("{") && s.endsWith("}"))
 			{
 				LC.versionsFile = LMUtils.fromJson(s, LMUtils.getMapType(String.class, LMUtils.getMapType(String.class, String.class)));
-				LC.logger.info("Versions file loaded");
+				failed = 0;
 			}
-			else LC.logger.info("Failed to check versions");
 		}
 		catch(Exception ex)
-		{ ex.printStackTrace(); LC.versionsFile = new HashMap<String, Map<String, String>>(); }
+		{ LC.versionsFile = new HashMap<String, Map<String, String>>(); }
+		
+		if(output != null)
+		{
+			if(failed == 1)
+			{
+				if(chatCommand) LatCore.printChat(output, "Failed to check versions!");
+			}
+			else if(failed == 2)
+			{
+				if(chatCommand) LatCore.printChat(output, "Invalid version file!");	
+			}
+			else
+			{
+				FastList<IChatComponent> toPrint = new FastList<IChatComponent>();
+				
+				for(int i = 0; i < LC.versionsToCheck.size(); i++)
+				{
+					String mod_id = LC.versionsToCheck.keys.get(i);
+					String mod_version = LC.versionsToCheck.values.get(i);
+					
+					Map<String, String> m = LC.versionsFile.get(mod_id);
+					
+					if(m != null && m.size() > 0)
+					{
+						String[] versions = m.keySet().toArray(new String[0]);
+						
+						if(versions.length > 0)
+						{
+							if(versions.length > 1) Arrays.sort(versions, comparator);
+							
+							String lver = versions[0];
+							
+							if(!lver.equals(mod_version))
+							{
+								if(toPrint.isEmpty())
+									toPrint.add(new ChatComponentText("These LatvianModder's mods has updates:"));
+								
+								IChatComponent ic1 = new ChatComponentText(mod_id + EnumChatFormatting.GOLD + " ");
+								
+								IChatComponent ic2 = new ChatComponentText("[ " + lver + " ]");
+								
+								ic2.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Download " + mod_id)));
+								ic2.getChatStyle().setChatClickEvent(new ClickEvent(Action.OPEN_URL, "https://github.com/LatvianModder/Files/tree/Mods/" + mod_id + "/1.7.10"));
+								ic2.getChatStyle().setColor(EnumChatFormatting.GOLD);
+								
+								ic1.appendSibling(ic2);
+					            
+					            ic1.appendText(": " + EnumChatFormatting.GRAY + m.get(lver));
+								
+								toPrint.add(ic1);
+								
+								//mod_id + EnumChatFormatting.GOLD + " [ " + lver + " ])
+							}
+						}
+					}
+				}
+				
+				if(!toPrint.isEmpty()) for(IChatComponent s : toPrint)
+					//LatCore.printChat(output, s);
+					output.addChatMessage(s);
+				else if(chatCommand)
+					LatCore.printChat(output, "Everyting is up to date");
+			}
+		}
 		
 		thread = null;
 	}

@@ -1,28 +1,27 @@
 package latmod.core;
-import latmod.core.mod.*;
-import latmod.core.util.LMCommon;
+import latmod.core.mod.LC;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;
 import net.minecraft.util.StatCollector;
 
 public enum EnumDyeColor // ItemDye
 {
-	BLACK,
-	RED,
-	GREEN,
-	BROWN,
-	BLUE,
-	PURPLE,
-	CYAN,
-	LIGHT_GRAY,
-	GRAY,
-	PINK,
-	LIME,
-	YELLOW,
-	LIGHT_BLUE,
-	MAGENTA,
-	ORANGE,
-	WHITE;
+	BLACK("Black"),
+	RED("Red"),
+	GREEN("Green"),
+	BROWN("Brown"),
+	BLUE("Blue"),
+	PURPLE("Purple"),
+	CYAN("Cyan"),
+	LIGHT_GRAY("LightGray"),
+	GRAY("Gray"),
+	PINK("Pink"),
+	LIME("Lime"),
+	YELLOW("Yellow"),
+	LIGHT_BLUE("LightBlue"),
+	MAGENTA("Magenta"),
+	ORANGE("Orange"),
+	WHITE("White");
 	
 	public static final EnumDyeColor[] VALUES = values();
 	
@@ -30,15 +29,20 @@ public enum EnumDyeColor // ItemDye
 	public final String name;
 	public final String lang;
 	public final int color;
-	public final String oreName;
+	public final String dyeName;
+	public final String glassName;
+	public final String paneName;
 
-	EnumDyeColor()
+	EnumDyeColor(String s)
 	{
 		ID = ordinal();
 		name = ItemDye.field_150921_b[ID];
 		lang = LC.mod.assets + "color." + name;
 		color = ItemDye.field_150922_c[ID];
-		oreName = "dye" + LMCommon.firstUppercase(ItemDye.field_150923_a[ID]);
+		
+		dyeName = "dye" + s;
+		glassName = "blockGlass" + s;
+		paneName = "paneGlass" + s;
 	}
 
 	public String toString()

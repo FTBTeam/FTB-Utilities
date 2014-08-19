@@ -19,7 +19,6 @@ public class LCConfig extends LMConfig
 		public boolean addRegistryNames;
 		public boolean checkTeamLatMod;
 		public boolean checkUpdates;
-		public boolean notifyUpdates;
 		
 		public General()
 		{
@@ -29,7 +28,6 @@ public class LCConfig extends LMConfig
 			addRegistryNames = getBool("addRegistryNames", true);
 			checkTeamLatMod = getBool("checkTeamLatMod", true);
 			checkUpdates = getBool("checkUpdates", true);
-			notifyUpdates = getBool("notifyUpdates", true);
 		}
 	}
 }

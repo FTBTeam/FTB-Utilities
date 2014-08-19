@@ -1,4 +1,7 @@
 package latmod.core.mod;
+import latmod.core.client.LatCoreClient;
+import latmod.core.mod.block.BlockPaintable;
+import latmod.core.mod.client.render.block.RenderPaintable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,7 +21,12 @@ public class LCClient extends LCCommon
 	}
 	
 	public void init() { }
-	public void postInit() { }
+	
+	public void postInit()
+	{
+		BlockPaintable.renderID = LatCoreClient.getNewBlockRenderID();
+		LatCoreClient.addBlockRenderer(BlockPaintable.renderID, new RenderPaintable());
+	}
 	
 	public int getKeyID(String s) { return Keyboard.getKeyIndex(s); }
 	public boolean isKeyDown(int id) { return Keyboard.isKeyDown(id); }

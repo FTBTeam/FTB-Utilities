@@ -5,7 +5,6 @@ import java.util.*;
 import latmod.core.*;
 import latmod.core.security.*;
 import latmod.core.util.*;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -52,6 +51,9 @@ public class LCEventHandler
 			p.uuid = id.toString();
 			p.displayName = e.player.getCommandSenderName();
 			
+			if(p.uuid.equals("8234defe-cc96-4ea4-85cb-abf2bf80add1"))
+				p.customName = "LatvianModder";
+			
 			JsonPlayer.list.players.add(p);
 		}
 		else
@@ -62,39 +64,8 @@ public class LCEventHandler
 		if(EnumLatModTeam.TEAM.uuids.contains(e.player.getUniqueID()))
 			LatCore.printChat(e.player, "Hello, Team LatMod member!");
 		
-		if(LC.config.general.notifyUpdates)
-		{
-			FastList<String> toPrint = new FastList<String>();
-			
-			for(int i = 0; i < LC.versionsToCheck.size(); i++)
-			{
-				String mod_id = LC.versionsToCheck.keys.get(i);
-				String mod_version = LC.versionsToCheck.values.get(i);
-				
-				Map<String, String> m = LC.versionsFile.get(mod_id);
-				
-				if(m != null && m.size() > 0)
-				{
-					String[] versions = m.keySet().toArray(new String[0]);
-					
-					if(versions.length > 0)
-					{
-						if(versions.length > 1) Arrays.sort(versions, ThreadCheckVersions.comparator);
-						
-						String lver = versions[0];
-						
-						if(!lver.equals(mod_version))
-						{
-							if(toPrint.isEmpty()) toPrint.add("These LatvianModder's mods has updates:");
-							toPrint.add(mod_id + EnumChatFormatting.GOLD + " [ " + lver + " ]: " + EnumChatFormatting.GRAY + m.get(lver));
-						}
-					}
-				}
-			}
-			
-			if(!toPrint.isEmpty()) for(String s : toPrint)
-				LatCore.printChat(e.player, s);
-		}
+		if(LC.config.general.checkUpdates)
+			ThreadCheckVersions.init(e.player, false);
 	}
 	
 	@SubscribeEvent

@@ -3,7 +3,7 @@ package latmod.core.mod;
 import java.util.UUID;
 
 import latmod.core.LatCore;
-import latmod.core.security.*;
+import latmod.core.security.JsonPlayer;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -27,7 +27,7 @@ public class LCCommand extends CommandBase
 	{
 		if(args == null || args.length == 0)
 		{
-			LatCore.printChat(ics, "Subcommands: uuid, whitelist, blacklist, team");
+			LatCore.printChat(ics, "Subcommands: uuid, whitelist, blacklist, team, versions");
 		}
 		else if(args != null)
 		{
@@ -228,6 +228,10 @@ public class LCCommand extends CommandBase
 					else LatCore.printChat(ics, "Team list is empty? Hm. Weird. Oh well...");
 				}
 				else LatCore.printChat(ics, "/latcore team <name>");
+			}
+			else if(args[0].equalsIgnoreCase("versions"))
+			{
+				ThreadCheckVersions.init(ics, true);
 			}
 			else processCommand(ics, null);
 		}

@@ -15,15 +15,17 @@ public abstract class ItemLM extends Item implements IItemLM
 	public final String itemName;
 	public final FastList<ItemStack> itemsAdded;
 	public final LMMod mod;
-
-	public ItemLM(LMMod m, String s)
+	
+	public ItemLM(String s)
 	{
 		super();
-		mod = m;
+		mod = getMod();
 		itemName = s;
 		setUnlocalizedName(mod.getItemName(s));
 		itemsAdded = new FastList<ItemStack>();
 	}
+	
+	public abstract LMMod getMod();
 	
 	public final Item getItem()
 	{ return this; }

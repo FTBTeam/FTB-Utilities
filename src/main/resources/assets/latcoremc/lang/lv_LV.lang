@@ -1,8 +1,11 @@
 ### Blocks ###
 
-latcoremc:tile.storageUnit.name=Maza Glabāšanas Vienība
+latcoremc:tile.paintable.name=Krāsojams Bloks
 
 ### Items ###
+
+latcoremc:item.linkCard.name=Savienošanas Karte
+latcoremc:item.blockPainter.name=Bloku Krāsotājs
 
 ### Lang ###
 

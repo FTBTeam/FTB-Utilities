@@ -88,6 +88,11 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory, IC
 	{
 	}
 	
+	public boolean onRightClick(EntityPlayer ep, ItemStack is, int side, float x, float y, float z)
+	{
+		return false;
+	}
+	
 	public void invalidate()
 	{
 		if(isLoaded) onUnloaded();
@@ -148,13 +153,8 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory, IC
 		markDirty();
 	}
 	
-	public boolean onRightClick(EntityPlayer ep, ItemStack is, int side, float x, float y, float z)
-	{
-		return false;
-	}
-	
 	public final void printOwner(EntityPlayer ep)
-	{ LatCore.printChat(ep, LC.mod.translate("owner", JsonPlayer.getPlayer(security.owner).displayName)); }
+	{ LatCoreMC.printChat(ep, LC.mod.translate("owner", JsonPlayer.getPlayer(security.owner).displayName)); }
 	
 	public void dropItem(ItemStack is, double ox, double oy, double oz)
 	{ EntityItem ei = new EntityItem(worldObj, xCoord + 0.5D + ox, yCoord + 0.5D + oy, zCoord + 0.5D + oz, is);
@@ -235,6 +235,24 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory, IC
 	
 	public void openGui(int guiID, EntityPlayer ep)
 	{
+	}
+	
+	public final boolean isServer()
+	{ return !worldObj.isRemote; }
+	
+	public void notifyNeighbors()
+	{ worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, blockType); }
+	
+	public boolean equals(Object o)
+	{
+		if(o instanceof TileLM)
+		{
+			TileLM t = (TileLM)o;
+			return t.worldObj.provider.dimensionId == worldObj.provider.dimensionId &&
+				t.xCoord == xCoord && t.yCoord == yCoord && t.zCoord == zCoord;
+		}
+
+		return false;
 	}
 	
 	// Inventory stuff //

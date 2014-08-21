@@ -42,13 +42,13 @@ public class LMRecipes
 
 	public void addRecipe(ItemStack out, Object... in)
 	{
-		IRecipe r = LatCore.addRecipe(out, in);
+		IRecipe r = LatCoreMC.addRecipe(out, in);
 		if(storeRecipes) craftingRecipes.add(r);
 	}
 	
 	public void addShapelessRecipe(ItemStack out, Object... in)
 	{
-		IRecipe r = LatCore.addShapelessRecipe(out, in);
+		IRecipe r = LatCoreMC.addShapelessRecipe(out, in);
 		if(storeRecipes) craftingRecipes.add(r);
 	}
 	
@@ -64,12 +64,12 @@ public class LMRecipes
 	}
 	
 	public void addOre(String s, ItemStack is)
-	{ LatCore.addOreDictionary(s, is); }
+	{ LatCoreMC.addOreDictionary(s, is); }
 	
 	public void addSmelting(ItemStack in, ItemStack out, float xp)
 	{
 		if(storeRecipes) furnaceRecipes.put(in, out);
-		LatCore.addSmeltingRecipe(out, in, xp);
+		LatCoreMC.addSmeltingRecipe(out, in, xp);
 	}
 	
 	public void addSmelting(ItemStack in, ItemStack out)

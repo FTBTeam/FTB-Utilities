@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 
-import latmod.core.*;
+import latmod.core.LatCoreMC;
 import latmod.core.util.FastList;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.event.*;
@@ -45,7 +45,7 @@ public class ThreadCheckVersions implements Runnable
 			
 			if(s.length() > 0 && s.startsWith("{") && s.endsWith("}"))
 			{
-				LC.versionsFile = LMUtils.fromJson(s, LMUtils.getMapType(String.class, LMUtils.getMapType(String.class, String.class)));
+				LC.versionsFile = LatCoreMC.fromJson(s, LatCoreMC.getMapType(String.class, LatCoreMC.getMapType(String.class, String.class)));
 				failed = 0;
 			}
 		}
@@ -56,11 +56,11 @@ public class ThreadCheckVersions implements Runnable
 		{
 			if(failed == 1)
 			{
-				if(chatCommand) LatCore.printChat(output, "Failed to check versions!");
+				if(chatCommand) LatCoreMC.printChat(output, "Failed to check versions!");
 			}
 			else if(failed == 2)
 			{
-				if(chatCommand) LatCore.printChat(output, "Invalid version file!");	
+				if(chatCommand) LatCoreMC.printChat(output, "Invalid version file!");	
 			}
 			else
 			{
@@ -112,7 +112,7 @@ public class ThreadCheckVersions implements Runnable
 					//LatCore.printChat(output, s);
 					output.addChatMessage(s);
 				else if(chatCommand)
-					LatCore.printChat(output, "Everyting is up to date");
+					LatCoreMC.printChat(output, "Everyting is up to date");
 			}
 		}
 		

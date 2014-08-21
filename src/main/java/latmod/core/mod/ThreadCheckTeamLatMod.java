@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 
-import latmod.core.LMUtils;
+import latmod.core.LatCoreMC;
 
 public class ThreadCheckTeamLatMod implements Runnable
 {
@@ -30,7 +30,7 @@ public class ThreadCheckTeamLatMod implements Runnable
 			
 			if(s.length() > 0 && s.startsWith("{") && s.endsWith("}"))
 			{
-				Map<String, List<String>> map = LMUtils.fromJson(s, LMUtils.getMapType(String.class, LMUtils.getListType(String.class)));
+				Map<String, List<String>> map = LatCoreMC.fromJson(s, LatCoreMC.getMapType(String.class, LatCoreMC.getListType(String.class)));
 				
 				if(map != null && map.size() > 0)
 				{

@@ -33,7 +33,7 @@ public class OBJModel
 	
 	public static OBJModel load(ResourceLocation rl)
 	{
-		try { return OBJModel.load(OBJModel.class.getResourceAsStream(LMUtils.getPath(rl))); }
+		try { return OBJModel.load(OBJModel.class.getResourceAsStream(LatCoreMC.getPath(rl))); }
 		catch(Exception e) { e.printStackTrace(); } return null;
 	}
 	
@@ -54,7 +54,7 @@ public class OBJModel
 			{
 				if(s.length() > 0 && s.charAt(0) != '#')
 				{
-					String[] s3 = LMCommon.split(s, " ");
+					String[] s3 = LatCore.split(s, " ");
 					
 					if(s3[0].equals("o"))
 					{

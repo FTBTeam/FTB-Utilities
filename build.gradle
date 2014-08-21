@@ -1,0 +1,76 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+    }
+}
+
+apply plugin: 'forge'
+
+ext.configFile = file "build.props"
+
+configFile.withReader {
+    def prop = new Properties()
+    prop.load(it)
+    project.ext.config = new ConfigSlurper().parse prop
+}
+
+version = config.version_mc + "-" + config.version_latcoremc
+group = "latmod.core"
+archivesBaseName = config.name_latcoremc
+
+minecraft {
+    version = config.version_mc + "-" + config.version_forge
+    runDir = "eclipse/assets"
+}
+
+dependencies {
+	compile files("sources/LatCore/src")
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir "sources/" + config.name_latcoremc + "/src/main/java"
+			srcDir "sources/" + config.name_latcoremc + "/src/main/api"
+        }
+        resources {
+            srcDir "sources/" + config.name_latcoremc + "/src/main/resources"
+        }
+    }
+}
+
+tasks.withType(Jar)
+{
+    destinationDir = file("$rootDir/sources/Files/" + config.name_latcoremc + "/" + config.version_mc)
+}
+
+processResources
+{
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+                
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+        
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}

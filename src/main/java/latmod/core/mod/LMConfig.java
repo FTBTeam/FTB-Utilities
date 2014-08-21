@@ -60,7 +60,7 @@ public class LMConfig
 	
 	public LMConfig(FMLPreInitializationEvent e, String s)
 	{
-		config = LatCore.loadConfig(e, s);
+		config = LatCoreMC.loadConfig(e, s);
 		categories = new FastMap<String, Category>();
 	}
 	

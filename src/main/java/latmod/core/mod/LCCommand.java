@@ -2,7 +2,7 @@ package latmod.core.mod;
 
 import java.util.UUID;
 
-import latmod.core.LatCore;
+import latmod.core.LatCoreMC;
 import latmod.core.security.JsonPlayer;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,7 +27,7 @@ public class LCCommand extends CommandBase
 	{
 		if(args == null || args.length == 0)
 		{
-			LatCore.printChat(ics, "Subcommands: uuid, whitelist, blacklist, team, versions");
+			LatCoreMC.printChat(ics, "Subcommands: uuid, whitelist, blacklist, team, versions");
 		}
 		else if(args != null)
 		{
@@ -42,15 +42,15 @@ public class LCCommand extends CommandBase
 				
 				if(jp == null) throw new PlayerNotFoundException();
 				
-				LatCore.printChat(ics, jp.displayName + "'s UUID: " + jp.uuid);
+				LatCoreMC.printChat(ics, jp.displayName + "'s UUID: " + jp.uuid);
 			}
 			else if(args[0].equalsIgnoreCase("whitelist") || args[0].equals("wl"))
 			{
 				if(args.length == 1)
 				{
-					LatCore.printChat(ics, "/latcore whitelist add|remove <player name>");
-					LatCore.printChat(ics, "/latcore whitelist addUUID|remUUID <player UUID>");
-					LatCore.printChat(ics, "/latcore whitelist list|clear");
+					LatCoreMC.printChat(ics, "/latcore whitelist add|remove <player name>");
+					LatCoreMC.printChat(ics, "/latcore whitelist addUUID|remUUID <player UUID>");
+					LatCoreMC.printChat(ics, "/latcore whitelist list|clear");
 					return;
 				}
 				
@@ -58,7 +58,7 @@ public class LCCommand extends CommandBase
 				
 				if(ep == null)
 				{
-					LatCore.printChat(ics, "Player can't be null!");
+					LatCoreMC.printChat(ics, "Player can't be null!");
 					return;
 				}
 				
@@ -86,13 +86,13 @@ public class LCCommand extends CommandBase
 						}
 						
 						if(s.length() > 0)
-							LatCore.printChat(ics, s);
-						else LatCore.printChat(ics, "Whitelist is empty");
+							LatCoreMC.printChat(ics, s);
+						else LatCoreMC.printChat(ics, "Whitelist is empty");
 					}
 					else if(args[1].equals("clear"))
 					{
 						epP.whitelist.clear();
-						LatCore.printChat(ics, "Whitelist cleared");
+						LatCoreMC.printChat(ics, "Whitelist cleared");
 					}
 					else if(args.length >= 3)
 					{
@@ -105,9 +105,9 @@ public class LCCommand extends CommandBase
 							if(!epP.whitelist.contains(jp.uuid))
 							{
 								epP.whitelist.add(jp.uuid);
-								LatCore.printChat(ics, "Added " + jp.displayName + " to whitelist");
+								LatCoreMC.printChat(ics, "Added " + jp.displayName + " to whitelist");
 							}
-							else LatCore.printChat(ics, jp.displayName + " already added to whitelist!");
+							else LatCoreMC.printChat(ics, jp.displayName + " already added to whitelist!");
 						}
 						if(args[1].equals("rem") || args[1].equals("remUUID"))
 						{
@@ -118,9 +118,9 @@ public class LCCommand extends CommandBase
 							if(epP.whitelist.contains(jp.uuid))
 							{
 								epP.whitelist.remove(jp.uuid);
-								LatCore.printChat(ics, "Removed " + jp.displayName + " from whitelist");
+								LatCoreMC.printChat(ics, "Removed " + jp.displayName + " from whitelist");
 							}
-							else LatCore.printChat(ics, jp.displayName + " is not added to whitelist!");
+							else LatCoreMC.printChat(ics, jp.displayName + " is not added to whitelist!");
 						}
 					}
 				}
@@ -129,9 +129,9 @@ public class LCCommand extends CommandBase
 			{
 				if(args.length == 1)
 				{
-					LatCore.printChat(ics, "/latcore blacklist add|rem <player name>");
-					LatCore.printChat(ics, "/latcore blacklist addUUID|remUUID <player UUID>");
-					LatCore.printChat(ics, "/latcore blacklist list|clear");
+					LatCoreMC.printChat(ics, "/latcore blacklist add|rem <player name>");
+					LatCoreMC.printChat(ics, "/latcore blacklist addUUID|remUUID <player UUID>");
+					LatCoreMC.printChat(ics, "/latcore blacklist list|clear");
 					return;
 				}
 				
@@ -139,7 +139,7 @@ public class LCCommand extends CommandBase
 				
 				if(ep == null)
 				{
-					LatCore.printChat(ics, "Player can't be null!");
+					LatCoreMC.printChat(ics, "Player can't be null!");
 					return;
 				}
 				
@@ -167,13 +167,13 @@ public class LCCommand extends CommandBase
 						}
 						
 						if(s.length() > 0)
-							LatCore.printChat(ics, s);
-						else LatCore.printChat(ics, "Blacklist is empty");
+							LatCoreMC.printChat(ics, s);
+						else LatCoreMC.printChat(ics, "Blacklist is empty");
 					}
 					else if(args[1].equals("clear"))
 					{
 						epP.blacklist.clear();
-						LatCore.printChat(ics, "Blacklist cleared");
+						LatCoreMC.printChat(ics, "Blacklist cleared");
 					}
 					else if(args.length >= 3)
 					{
@@ -186,9 +186,9 @@ public class LCCommand extends CommandBase
 							if(!epP.blacklist.contains(jp.uuid))
 							{
 								epP.blacklist.add(jp.uuid);
-								LatCore.printChat(ics, "Added " + jp.displayName + " to blacklist");
+								LatCoreMC.printChat(ics, "Added " + jp.displayName + " to blacklist");
 							}
-							else LatCore.printChat(ics, jp.displayName + " already added to blacklist!");
+							else LatCoreMC.printChat(ics, jp.displayName + " already added to blacklist!");
 						}
 						if(args[1].equals("rem") || args[1].equals("remUUID"))
 						{
@@ -199,9 +199,9 @@ public class LCCommand extends CommandBase
 							if(epP.blacklist.contains(jp.uuid))
 							{
 								epP.blacklist.remove(jp.uuid);
-								LatCore.printChat(ics, "Removed " + jp.displayName + " from blacklist");
+								LatCoreMC.printChat(ics, "Removed " + jp.displayName + " from blacklist");
 							}
-							else LatCore.printChat(ics, jp.displayName + " is not added to blacklist!");
+							else LatCoreMC.printChat(ics, jp.displayName + " is not added to blacklist!");
 						}
 					}
 				}
@@ -212,7 +212,7 @@ public class LCCommand extends CommandBase
 				{
 					EnumLatModTeam e = EnumLatModTeam.get(args[1]);
 					
-					LatCore.printChat(ics, "LatMod Team:");
+					LatCoreMC.printChat(ics, "LatMod Team:");
 					
 					String s = "";
 					
@@ -224,10 +224,10 @@ public class LCCommand extends CommandBase
 							s += ", ";
 					}
 					
-					if(s.length() > 0) LatCore.printChat(ics, s);
-					else LatCore.printChat(ics, "Team list is empty? Hm. Weird. Oh well...");
+					if(s.length() > 0) LatCoreMC.printChat(ics, s);
+					else LatCoreMC.printChat(ics, "Team list is empty? Hm. Weird. Oh well...");
 				}
-				else LatCore.printChat(ics, "/latcore team <name>");
+				else LatCoreMC.printChat(ics, "/latcore team <name>");
 			}
 			else if(args[0].equalsIgnoreCase("versions"))
 			{

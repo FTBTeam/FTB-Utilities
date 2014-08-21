@@ -1,5 +1,5 @@
 package latmod.core.client.model;
-import latmod.core.util.LMCommon;
+import latmod.core.util.LatCore;
 import org.lwjgl.opengl.*;
 import cpw.mods.fml.relauncher.*;
 
@@ -90,7 +90,7 @@ public class Face
 	{
 		if(!line.contains("/") || !line.contains(" ")) return false;
 		
-		String[] s = LMCommon.split(line, " ");
+		String[] s = LatCore.split(line, " ");
 		if(s != null && s.length > 1)
 		{
 			String[] s1 = s[1].split("/");
@@ -105,7 +105,7 @@ public class Face
 	{
 		if(!line.contains("/") || !line.contains(" ")) return false;
 		
-		String[] s = LMCommon.split(line, " ");
+		String[] s = LatCore.split(line, " ");
 		if(s != null && s.length > 1)
 		{
 			String[] s1 = s[1].split("/");

@@ -37,19 +37,19 @@ public class LMMod
 	else return StatCollector.translateToLocalFormatted(assets + s, args); }
 	
 	public void addItem(IItemLM i)
-	{ LatCore.addItem(i.getItem(), i.getItemID()); items.add(i); }
+	{ LatCoreMC.addItem(i.getItem(), i.getItemID()); items.add(i); }
 
 	public void addBlock(BlockLM b, Class<? extends ItemBlockLM> c)
-	{ LatCore.addBlock(b, c, b.blockName); blocks.add(b); }
+	{ LatCoreMC.addBlock(b, c, b.blockName); blocks.add(b); }
 
 	public void addBlock(BlockLM b)
 	{ addBlock(b, ItemBlockLM.class); }
 
 	public void addTile(Class<? extends TileLM> c, String s)
-	{ LatCore.addTileEntity(c, modID + '.' + s); }
+	{ LatCoreMC.addTileEntity(c, modID + '.' + s); }
 	
 	public void addEntity(Class<? extends Entity> c, String s, int id)
-	{ LatCore.addEntity(c, s, id, modID); }
+	{ LatCoreMC.addEntity(c, s, id, modID); }
 	
 	public void onPostLoaded()
 	{

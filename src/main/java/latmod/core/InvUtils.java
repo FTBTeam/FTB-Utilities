@@ -1,4 +1,6 @@
 package latmod.core;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
@@ -230,7 +232,7 @@ public class InvUtils
 		
 		if(tag.hasKey(s))
 		{
-			NBTTagList list = tag.getTagList(s, LatCore.NBT_MAP);
+			NBTTagList list = tag.getTagList(s, LatCoreMC.NBT_MAP);
 			
 			for(int i = 0; i < list.tagCount(); i++)
 			{
@@ -276,6 +278,21 @@ public class InvUtils
 		return null;
 	}
 	
+	public static void dropItem(World w, double x, double y, double z, ItemStack is, int delay)
+	{
+		if(w == null || is == null || is.stackSize == 0) return;
+		
+		EntityItem ei = new EntityItem(w, x, y, z, is.copy());
+		ei.motionX = w.rand.nextGaussian() * 0.07F;
+		ei.motionY = w.rand.nextFloat() * 0.05F;
+		ei.motionZ = w.rand.nextGaussian() * 0.07F;
+		ei.delayBeforeCanPickup = delay;
+		w.spawnEntityInWorld(ei);
+	}
+	
+	public static void dropItem(Entity e, ItemStack is)
+	{ dropItem(e.worldObj, e.posX, e.posY, e.posZ, is, 0); }
+	
 	public static void dropAllItems(World w, double x, double y, double z, ItemStack[] items)
 	{
 		if(w.isRemote || items == null || items.length == 0) return;
@@ -283,7 +300,7 @@ public class InvUtils
 		for(int i = 0; i < items.length; i++)
 		{
 			if(items[i] != null && items[i].stackSize > 0)
-				LMUtils.dropItem(w, x, y, z, items[i], 10);
+				dropItem(w, x, y, z, items[i], 10);
 		}
 	}
 

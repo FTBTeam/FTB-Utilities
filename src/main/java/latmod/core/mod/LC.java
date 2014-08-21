@@ -20,7 +20,7 @@ import cpw.mods.fml.common.event.*;
 public class LC
 {
 	public static final String MOD_ID = "LatCoreMC";
-	public static final String MOD_VERSION = "1.3.5";
+	public static final String MOD_VERSION = "1.3.6";
 	
 	@Mod.Instance(LC.MOD_ID)
 	public static LC inst;
@@ -59,9 +59,9 @@ public class LC
 		
 		mod.onPostLoaded();
 		
-		tab = LatCore.createTab(mod.assets + "tab", new ItemStack(LCItems.i_link_card));
+		tab = LatCoreMC.createTab(mod.assets + "tab", new ItemStack(LCItems.i_link_card));
 		
-		LatCore.addGuiHandler(this, proxy);
+		LatCoreMC.addGuiHandler(this, proxy);
 		
 		versionsFile = new HashMap<String, Map<String, String>>();
 		versionsToCheck = new FastMap<String, String>();

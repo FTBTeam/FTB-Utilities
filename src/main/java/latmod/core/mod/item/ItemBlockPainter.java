@@ -49,7 +49,7 @@ public class ItemBlockPainter extends ItemLC
 		if(!w.isRemote && ep.isSneaking() && is.hasTagCompound() && is.stackTagCompound.hasKey("Paint"))
 		{
 			is = InvUtils.removeTags(is, "Paint");
-			LatCore.printChat(ep, "Paint texture cleared");
+			LatCoreMC.printChat(ep, "Paint texture cleared");
 		}
 		
 		return is;
@@ -89,7 +89,7 @@ public class ItemBlockPainter extends ItemLC
 					paint.writeToNBT(paintTag);
 					is.stackTagCompound.setTag("Paint", paintTag);
 					
-					LatCore.printChat(ep, "Paint texture set to " + paint.getDisplayName());
+					LatCoreMC.printChat(ep, "Paint texture set to " + paint.getDisplayName());
 				}
 			}
 		}

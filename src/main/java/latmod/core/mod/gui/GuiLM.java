@@ -1,7 +1,7 @@
 package latmod.core.mod.gui;
 import java.util.Map;
 
-import latmod.core.LatCore;
+import latmod.core.LatCoreMC;
 import latmod.core.client.LMRenderer;
 import latmod.core.mod.LC;
 import latmod.core.util.FastList;
@@ -22,7 +22,7 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public abstract class GuiLM extends GuiContainer
 {
-	public static final ResourceLocation icons_lm = LatCore.getLocation(LC.MOD_ID, "textures/gui/icons_lm.png");
+	public static final ResourceLocation icons_lm = LatCoreMC.getLocation(LC.MOD_ID, "textures/gui/icons_lm.png");
 	private static final int BS = 19;
 	public static final TextureCoords
 	
@@ -63,6 +63,8 @@ public abstract class GuiLM extends GuiContainer
 	public final ContainerLM container;
 	public final ResourceLocation texture;
 	public final FastList<WidgetLM> widgets;
+	public int textureWidth = 256;
+	public int textureHeight = 256;
 	
 	public GuiLM(ContainerLM c, ResourceLocation tex)
 	{
@@ -133,6 +135,32 @@ public abstract class GuiLM extends GuiContainer
 		t.addVertexWithUV(x + w, y + 0, zLevel, maxU, minV);
 		t.addVertexWithUV(x + 0, y + 0, zLevel, minU, minV);
 		t.draw();
+	}
+	
+	public void drawTexturedModalRect(int x, int y, int u, int v, int w, int h)
+	{
+		double scX = 1D / (double)textureWidth;
+		double scY = 1D / (double)textureHeight;
+		Tessellator tessellator = Tessellator.instance;
+		tessellator.startDrawingQuads();
+		tessellator.addVertexWithUV(x + 0, y + h, zLevel, (u + 0) * scX, (v + h) * scY);
+		tessellator.addVertexWithUV(x + w, y + h, zLevel, (u + w) * scX, (v + h) * scY);
+		tessellator.addVertexWithUV(x + w, y + 0, zLevel, (u + w) * scX, (v + 0) * scY);
+		tessellator.addVertexWithUV(x + 0, y + 0, zLevel, (u + 0) * scX, (v + 0) * scY);
+		tessellator.draw();
+	}
+	
+	public void drawTexturedModalRectD(double x, double y, double u, double v, double w, double h)
+	{
+		double scX = 1D / (double)textureWidth;
+		double scY = 1D / (double)textureHeight;
+		Tessellator tessellator = Tessellator.instance;
+		tessellator.startDrawingQuads();
+		tessellator.addVertexWithUV(x + 0, y + h, zLevel, (u + 0) * scX, (v + h) * scY);
+		tessellator.addVertexWithUV(x + w, y + h, zLevel, (u + w) * scX, (v + h) * scY);
+		tessellator.addVertexWithUV(x + w, y + 0, zLevel, (u + w) * scX, (v + 0) * scY);
+		tessellator.addVertexWithUV(x + 0, y + 0, zLevel, (u + 0) * scX, (v + 0) * scY);
+		tessellator.draw();
 	}
 	
 	public void playSoundFX(String s, float pitch)

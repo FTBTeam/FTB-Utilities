@@ -31,7 +31,7 @@ public class LCEventHandler
 			if(LC.config.general.addRegistryNames)
 			{
 				e.toolTip.add("Registry name:");
-				e.toolTip.add(LMUtils.getRegName(e.itemStack.getItem(), true));
+				e.toolTip.add(LatCoreMC.getRegName(e.itemStack.getItem(), true));
 			}
 		}
 	}
@@ -62,7 +62,7 @@ public class LCEventHandler
 		}
 		
 		if(EnumLatModTeam.TEAM.uuids.contains(e.player.getUniqueID()))
-			LatCore.printChat(e.player, "Hello, Team LatMod member!");
+			LatCoreMC.printChat(e.player, "Hello, Team LatMod member!");
 		
 		if(LC.config.general.checkUpdates)
 			ThreadCheckVersions.init(e.player, false);
@@ -71,9 +71,9 @@ public class LCEventHandler
 	@SubscribeEvent
 	public void worldLoaded(WorldEvent.Load e)
 	{
-		if(LatCore.canUpdate() && e.world.provider.dimensionId == 0)
+		if(LatCoreMC.canUpdate() && e.world.provider.dimensionId == 0)
 		{
-			File f = LMCommon.newFile(new File(e.world.getSaveHandler().getWorldDirectory(), "LatCoreMC.json"));
+			File f = LatCore.newFile(new File(e.world.getSaveHandler().getWorldDirectory(), "LatCoreMC.json"));
 			
 			JsonPlayer.list = new JsonPlayerList();
 			JsonPlayer.list.players = new FastList<JsonPlayer>();
@@ -89,7 +89,7 @@ public class LCEventHandler
 					String s = new String(b);
 					
 					if(s.length() > 0 && s.startsWith("{") && s.endsWith("}"))
-						JsonPlayer.list = LMUtils.fromJson(s, JsonPlayerList.class);
+						JsonPlayer.list = LatCoreMC.fromJson(s, JsonPlayerList.class);
 				}
 				catch(Exception ex)
 				{ ex.printStackTrace(); }
@@ -100,9 +100,9 @@ public class LCEventHandler
 	@SubscribeEvent
 	public void worldSaved(WorldEvent.Save e)
 	{
-		if(LatCore.canUpdate() && e.world.provider.dimensionId == 0)
+		if(LatCoreMC.canUpdate() && e.world.provider.dimensionId == 0)
 		{
-			File f = LMCommon.newFile(new File(e.world.getSaveHandler().getWorldDirectory(), "LatCoreMC.json"));
+			File f = LatCore.newFile(new File(e.world.getSaveHandler().getWorldDirectory(), "LatCoreMC.json"));
 			
 			try
 			{
@@ -112,7 +112,7 @@ public class LCEventHandler
 				if(JsonPlayer.list.players == null)
 					JsonPlayer.list.players = new FastList<JsonPlayer>();
 				
-				String s = LMUtils.toJson(JsonPlayer.list, true);
+				String s = LatCoreMC.toJson(JsonPlayer.list, true);
 				
 				FileOutputStream fos = new FileOutputStream(f);
 				fos.write(s.getBytes());

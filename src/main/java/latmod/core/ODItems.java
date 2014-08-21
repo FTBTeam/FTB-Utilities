@@ -20,6 +20,7 @@ public class ODItems
 	public static final String SLIMEBALL = "slimeball";
 	public static final String MEAT_RAW = "meatCooked";
 	public static final String MEAT_COOKED = "meatCooked";
+	public static final String RUBBER = "itemRubber";
 	
 	public static final String REDSTONE = "dustRedstone";
 	public static final String GLOWSTONE = "dustGlowstone";
@@ -59,7 +60,7 @@ public class ODItems
 		public boolean equals(Object o)
 		{
 			ItemStack is = (o == null) ? null : ((o instanceof OreStackEntry) ? ((OreStackEntry)o).itemStack : (ItemStack)o);
-			return is.getItem() == itemStack.getItem() && (is.getItemDamage() == itemStack.getItemDamage() || itemStack.getItemDamage() == LatCore.ANY);
+			return is.getItem() == itemStack.getItem() && (is.getItemDamage() == itemStack.getItemDamage() || itemStack.getItemDamage() == LatCoreMC.ANY);
 		}
 	}
 	
@@ -67,13 +68,13 @@ public class ODItems
 	{
 		OBSIDIAN = new ItemStack(Blocks.obsidian);
 		
-		LatCore.addOreDictionary(MEAT_RAW, new ItemStack(Items.beef));
-		LatCore.addOreDictionary(MEAT_RAW, new ItemStack(Items.porkchop));
-		LatCore.addOreDictionary(MEAT_RAW, new ItemStack(Items.chicken));
+		LatCoreMC.addOreDictionary(MEAT_RAW, new ItemStack(Items.beef));
+		LatCoreMC.addOreDictionary(MEAT_RAW, new ItemStack(Items.porkchop));
+		LatCoreMC.addOreDictionary(MEAT_RAW, new ItemStack(Items.chicken));
 		
-		LatCore.addOreDictionary(MEAT_COOKED, new ItemStack(Items.cooked_beef));
-		LatCore.addOreDictionary(MEAT_COOKED, new ItemStack(Items.cooked_porkchop));
-		LatCore.addOreDictionary(MEAT_COOKED, new ItemStack(Items.cooked_chicken));
+		LatCoreMC.addOreDictionary(MEAT_COOKED, new ItemStack(Items.cooked_beef));
+		LatCoreMC.addOreDictionary(MEAT_COOKED, new ItemStack(Items.cooked_porkchop));
+		LatCoreMC.addOreDictionary(MEAT_COOKED, new ItemStack(Items.cooked_chicken));
 	}
 	
 	public static FastList<String> getOreNames(ItemStack is)

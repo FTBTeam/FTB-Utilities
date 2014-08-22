@@ -167,6 +167,15 @@ public abstract class BlockLM extends BlockContainer
 	{
 	}
 	
+	public void onNeighborBlockChange(World w, int x, int y, int z, Block b)
+	{
+		if(isBlockContainer)
+		{
+			TileLM t = (TileLM) w.getTileEntity(x, y, z);
+			if(t != null) t.onNeighborBlockChange();
+		}
+	}
+	
 	public final Item getItem()
 	{ return Item.getItemFromBlock(this); }
 	

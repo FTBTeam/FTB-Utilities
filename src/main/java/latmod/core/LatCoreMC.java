@@ -2,6 +2,7 @@ package latmod.core;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import latmod.core.util.FastList;
 import net.minecraft.block.*;
@@ -32,18 +33,20 @@ import cpw.mods.fml.relauncher.*;
 
 public class LatCoreMC
 {
+	public static final String MC_VERSION = "1.7.10";
+	
 	public static boolean enableOreRecipes = true;
 	public static final int ANY = OreDictionary.WILDCARD_VALUE;
 	public static final int TOP = ForgeDirection.UP.ordinal();
 	public static final int BOTTOM = ForgeDirection.DOWN.ordinal();
-	
-	public static boolean debug = false;
 	
 	public static final int NBT_INT = 3;
 	public static final int NBT_STRING = 8;
 	public static final int NBT_LIST = 9;
 	public static final int NBT_MAP = 10;
 	public static final int NBT_INT_ARRAY = 11;
+	
+	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + String.valueOf('\u00a7') + "[0-9A-FK-OR]");
 	
 	public static final Configuration loadConfig(FMLPreInitializationEvent e, String s)
 	{ return new Configuration(new File(e.getModConfigurationDirectory(), s)); }
@@ -311,4 +314,7 @@ public class LatCoreMC
 	
 	public static <E> Type getListType(Type E)
 	{ return new TypeToken<List<E>>() {}.getType(); }
+	
+	public static String removeFormatting(String s)
+	{ return textFormattingPattern.matcher(s).replaceAll(""); }
 }

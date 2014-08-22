@@ -10,24 +10,26 @@ import net.minecraft.entity.player.EntityPlayer;
 public class LCCommand extends CommandBase
 {
 	public String getCommandName()
-	{
-		return "latcore";
-	}
+	{ return "latcore"; }
 	
 	public int getRequiredPermissionLevel()
 	{ return 0; }
 	
 	public boolean canCommandSenderUseCommand(ICommandSender ics)
 	{ return true; }
-
+	
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/latcore <subcommand>"; }
-
+	
 	public void processCommand(ICommandSender ics, String[] args)
 	{
 		if(args == null || args.length == 0)
 		{
-			LatCoreMC.printChat(ics, "Subcommands: uuid, whitelist, blacklist, team, versions");
+			LatCoreMC.printChat(ics, "Subcommands: versions, uuid, whitelist, blacklist");
+		}
+		else if(args[0].equalsIgnoreCase("versions"))
+		{
+			ThreadCheckVersions.init(ics, true);
 		}
 		else if(args != null)
 		{
@@ -205,33 +207,6 @@ public class LCCommand extends CommandBase
 						}
 					}
 				}
-			}
-			else if(args[0].equalsIgnoreCase("team"))
-			{
-				if(args.length >= 2)
-				{
-					EnumLatModTeam e = EnumLatModTeam.get(args[1]);
-					
-					LatCoreMC.printChat(ics, "LatMod Team:");
-					
-					String s = "";
-					
-					for(int i = 0 ; i < e.names.size(); i++)
-					{
-						s += e.names.get(i);
-						
-						if(i != e.names.size() - 1)
-							s += ", ";
-					}
-					
-					if(s.length() > 0) LatCoreMC.printChat(ics, s);
-					else LatCoreMC.printChat(ics, "Team list is empty? Hm. Weird. Oh well...");
-				}
-				else LatCoreMC.printChat(ics, "/latcore team <name>");
-			}
-			else if(args[0].equalsIgnoreCase("versions"))
-			{
-				ThreadCheckVersions.init(ics, true);
 			}
 			else processCommand(ics, null);
 		}

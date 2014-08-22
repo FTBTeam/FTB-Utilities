@@ -2,9 +2,9 @@
 {
   "modid": "LatCoreMC",
   "name": "LatCoreMC",
-  "description": "Core mod for all LatvianModder's mods",
+  "description": "Core Mod for all LatvianModder's mods",
   "version": "${version}",
-  "url": "",
+  "url": "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2104626",
   "updateUrl": "",
   "authorList": [
     "LatvianModder"

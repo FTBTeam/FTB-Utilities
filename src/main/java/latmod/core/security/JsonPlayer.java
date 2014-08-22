@@ -1,8 +1,8 @@
 package latmod.core.security;
 
 import java.util.*;
-import java.util.regex.Pattern;
 
+import latmod.core.LatCoreMC;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
@@ -10,8 +10,6 @@ import com.google.gson.annotations.Expose;
 
 public class JsonPlayer implements Comparable<JsonPlayer>
 {
-	private static final Pattern formattingCodePattern = Pattern.compile("(?i)" + String.valueOf('\u00a7') + "[0-9A-FK-OR]");
-	
 	@Expose public String displayName;
 	@Expose public String uuid;
 	@Expose public List<String> whitelist;
@@ -28,7 +26,7 @@ public class JsonPlayer implements Comparable<JsonPlayer>
 	}
 	
 	public EntityPlayer getPlayer(World w)
-	{ return w.func_152378_a(getUUID()); }
+	{ return LatCoreMC.getPlayer(w, getUUID()); }
 
 	public int compareTo(JsonPlayer o)
 	{
@@ -45,7 +43,7 @@ public class JsonPlayer implements Comparable<JsonPlayer>
 		if(o instanceof String)
 		{
 			if(customName != null)
-				return ((String)o).equalsIgnoreCase(formattingCodePattern.matcher(customName).replaceAll(""));
+				return ((String)o).equalsIgnoreCase(LatCoreMC.removeFormatting(customName));
 			return ((String)o).equalsIgnoreCase(displayName);
 		}
 		if(o instanceof UUID) return ((UUID)o).equals(getUUID());

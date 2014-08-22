@@ -27,6 +27,7 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory, IC
 	public boolean isLoaded = false;
 	public long tick = 0L;
 	public final LMSecurity security = new LMSecurity(null);
+	public boolean redstonePowered = false;
 	
 	public ItemStack items[] = null;
 	
@@ -53,7 +54,7 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory, IC
 	return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, tag); }
 	
 	public final void onDataPacket(NetworkManager m, S35PacketUpdateTileEntity p)
-	{ readTileData(p.func_148857_g()); }
+	{ readTileData(p.func_148857_g()); onUpdatePacket(); }
 	
 	public void readTileData(NBTTagCompound tag)
 	{
@@ -85,6 +86,10 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory, IC
 	}
 	
 	public void writeTileServerData(NBTTagCompound tag)
+	{
+	}
+	
+	public void onUpdatePacket()
 	{
 	}
 	
@@ -165,12 +170,6 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory, IC
 	
 	public void getMeta()
 	{ blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); }
-	
-	public boolean isPowered(boolean direct)
-	{
-		if(direct) return isPowered(false);
-		return worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
-	}
 	
 	public boolean recolourBlock(ForgeDirection side, int col)
 	{ return false; }
@@ -264,11 +263,11 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory, IC
 	@Override
 	public String getInventoryName()
 	{ return hasCustomInventoryName() ? customName : "Inventory"; }
-
+	
 	@Override
 	public boolean hasCustomInventoryName()
 	{ return customName != null; }
-
+	
 	@Override
 	public void openInventory() { }
 
@@ -302,8 +301,11 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory, IC
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer ep)
 	{ return items != null && security.canInteract(ep); }
-
+	
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack is)
 	{ return items != null; }
+	
+	public void onNeighborBlockChange()
+	{ redstonePowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord); }
 }

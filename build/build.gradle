@@ -25,7 +25,7 @@ configFile.withReader {
     project.ext.config = new ConfigSlurper().parse prop
 }
 
-version = config.version_mc + "-" + config.version_latcoremc
+version = config.version_mc + "-" + config.version_mods
 group = "latmod.core"
 archivesBaseName = config.name_latcoremc
 
@@ -33,7 +33,7 @@ minecraft {
     version = config.version_mc + "-" + config.version_forge
     runDir = "eclipse/assets"
     
-    replace "@VERSION@", config.version_latcoremc
+    replace "@VERSION@", config.version_mods
     replaceIn "LC.java"
 }
 
@@ -77,3 +77,10 @@ processResources
         exclude 'mcmod.info'
     }
 }
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'dev'
+}
+
+build.dependsOn deobfJar

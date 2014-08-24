@@ -34,6 +34,8 @@ public class ThreadCheckVersions implements Runnable
 	{
 		int failed = 0;
 		
+		if(LC.MOD_VERSION.equals("@VERSION@")) failed = 3;
+		
 		VersionsFile file = null;
 		
 		try
@@ -69,15 +71,13 @@ public class ThreadCheckVersions implements Runnable
 			{
 				if(chatCommand) LatCoreMC.printChat(output, "Invalid versions file!");	
 			}
+			else if(failed == 3)
+			{
+				if(chatCommand) LatCoreMC.printChat(output, "You are in a development environment!");
+			}
 			else
 			{
-				if(LC.BUILD.equals("@BUILD@") || LC.MOD_VERSION.equals("@VERSION@"))
-				{
-					if(chatCommand) LatCoreMC.printChat(output, "You are in a development environment!");
-					return;
-				}
-				
-				int thisBuild = Integer.parseInt(LC.BUILD);
+				int thisBuild = Integer.parseInt(LC.MOD_VERSION);
 				
 				if(thisBuild != file.latestVersion)
 				{
@@ -93,14 +93,19 @@ public class ThreadCheckVersions implements Runnable
 							
 							if(LC.modsToCheck.contains(mod_id))
 							{
-								if(toPrint.isEmpty()) toPrint.add(new ChatComponentText("These LatvianModder's mods has updates:"));
+								if(toPrint.isEmpty()) toPrint.add(new ChatComponentText("These LatvianModder's mods has updates: [#" + file.latestVersion + "]"));
 								
 								IChatComponent link = new ChatComponentText(mod_id);
-								link.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Build #")));
+								link.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Download")));
 								link.getChatStyle().setChatClickEvent(new ClickEvent(Action.OPEN_URL, "https://github.com/LatvianModder/Files/tree/Mods/" + mod_id + "/" + LatCoreMC.MC_VERSION));
 								link.getChatStyle().setColor(EnumChatFormatting.GOLD);
 								
-								link.appendSibling(new ChatComponentText(": " + map.values.get(i)));
+								String changes = map.values.get(i);
+								
+								if(!changes.equals("-"))
+									link.appendSibling(new ChatComponentText(": " + changes));
+								
+								toPrint.add(link);
 							}
 						}
 						

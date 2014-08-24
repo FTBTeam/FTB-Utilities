@@ -17,7 +17,6 @@ public class LC
 {
 	public static final String MOD_ID = "LatCoreMC";
 	public static final String MOD_VERSION = "@VERSION@";
-	public static final String BUILD = "@BUILD@";
 	
 	@Mod.Instance(LC.MOD_ID)
 	public static LC inst;
@@ -43,7 +42,7 @@ public class LC
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
-		logger.info("Loading LatCoreMC, Build " + BUILD);
+		logger.info("Loading LatCoreMC, Build #" + MOD_VERSION);
 		
 		mod = new LMMod(MOD_ID);
 		ODItems.preInit();

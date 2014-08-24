@@ -3,7 +3,7 @@
   "modid": "LatCoreMC",
   "name": "LatCoreMC",
   "description": "Core Mod for all LatvianModder's mods",
-  "version": "${version}",
+  "version": "@VERSION@",
   "url": "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2104626",
   "updateUrl": "",
   "authorList": [

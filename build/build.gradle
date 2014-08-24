@@ -32,6 +32,9 @@ archivesBaseName = config.name_latcoremc
 minecraft {
     version = config.version_mc + "-" + config.version_forge
     runDir = "eclipse/assets"
+    
+    replace "@VERSION@", config.version_latcoremc
+    replaceIn "LC.java"
 }
 
 dependencies {

@@ -33,39 +33,39 @@ public class InvUtils
 	public static boolean itemsEquals(ItemStack is1, ItemStack is2, boolean size, boolean nbt)
 	{ return is1.getItem() == is2.getItem() && is1.getItemDamage() == is2.getItemDamage() && (nbt ? ItemStack.areItemStackTagsEqual(is1, is2) : true) && (size ? (is1.stackSize == is2.stackSize) : true); }
 	
-	public static int[] getAllSlots(IInventory inv, ForgeDirection side)
+	public static int[] getAllSlots(IInventory inv, int side)
 	{
-		int ai[] = null;
+		if(inv instanceof ISidedInventory)
+			return ((ISidedInventory)inv).getAccessibleSlotsFromSide(side);
 		
-		if(side != null && side != ForgeDirection.UNKNOWN && inv instanceof ISidedInventory)
-		ai = ((ISidedInventory)inv).getAccessibleSlotsFromSide(side.ordinal());
-		
-		else { ai = new int[inv.getSizeInventory()];
-		for(int i = 0; i < ai.length; i++) ai[i] = i; }
-		
-		if(ai == null) ai = new int[0];
+		int[] ai = new int[inv.getSizeInventory()];
+		for(int i = 0; i < ai.length; i++) ai[i] = i;
 		return ai;
 	}
 	
-	public static int getFirstIndexWhereFits(IInventory inv, ItemStack filter, ForgeDirection side)
+	public static int getFirstIndexWhereFits(IInventory inv, ItemStack filter, int side)
 	{
 		if(inv == null) return -1;
-		int slots[] = getAllSlots(inv, side);
-		for(int i = 0; i < slots.length; i++)
+		
+		if(filter != null)
 		{
-			ItemStack is1 = inv.getStackInSlot(slots[i]);
-			
-			if(is1 != null && is1.stackSize < is1.getMaxStackSize())
+			int slots[] = getAllSlots(inv, side);
+			for(int i = 0; i < slots.length; i++)
 			{
-				if(filter == null) return i;
-				else if(itemsEquals(filter, is1, false, true) && (is1.stackSize + filter.stackSize <= filter.getMaxStackSize())) return i;
+				ItemStack is1 = inv.getStackInSlot(slots[i]);
+				
+				if(is1 != null && is1.stackSize < is1.getMaxStackSize())
+				{
+					if(filter == null) return i;
+					else if(itemsEquals(filter, is1, false, true) && is1.stackSize < is1.getMaxStackSize()) return i;
+				}
 			}
 		}
 		
 		return getFirstEmptyIndex(inv, side);
 	}
 	
-	public static int getFirstIndexWithItem(IInventory inv, ItemStack filter, ForgeDirection side, boolean size, boolean nbt)
+	public static int getFirstIndexWithItem(IInventory inv, ItemStack filter, int side, boolean size, boolean nbt)
 	{
 		if(inv == null || filter == null) return -1;
 		int slots[] = getAllSlots(inv, side);
@@ -78,7 +78,7 @@ public class InvUtils
 		return -1;
 	}
 	
-	public static int getFirstFilledIndex(IInventory inv, ItemStack filter, ForgeDirection side)
+	public static int getFirstFilledIndex(IInventory inv, ItemStack filter, int side)
 	{
 		if(inv == null) return -1;
 		int slots[] = getAllSlots(inv, side);
@@ -96,7 +96,7 @@ public class InvUtils
 		return -1;
 	}
 	
-	public static int getFirstEmptyIndex(IInventory inv, ForgeDirection side)
+	public static int getFirstEmptyIndex(IInventory inv, int side)
 	{
 		if(inv == null) return -1;
 		
@@ -196,7 +196,7 @@ public class InvUtils
 	}
 	
 	public static boolean addSingleItemToInv(ItemStack is, IInventory inv, int side, boolean doAdd)
-	{ return addSingleItemToInv(is, inv, getAllSlots(inv, ForgeDirection.VALID_DIRECTIONS[side]), side, doAdd); }
+	{ return addSingleItemToInv(is, inv, getAllSlots(inv, side), side, doAdd); }
 	
 	public static NBTTagCompound removeTags(NBTTagCompound tag, String... tags)
 	{
@@ -311,7 +311,7 @@ public class InvUtils
 		&& is1.stackSize + is2.stackSize <= is2.getMaxStackSize());
 	}
 
-	public static ItemStack[] getAllItems(IInventory inv, ForgeDirection side)
+	public static ItemStack[] getAllItems(IInventory inv, int side)
 	{
 		if(inv == null) return null;
 		int[] slots = InvUtils.getAllSlots(inv, side);

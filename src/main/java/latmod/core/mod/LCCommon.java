@@ -1,6 +1,6 @@
 package latmod.core.mod;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.*;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
 
@@ -29,4 +29,11 @@ public class LCCommon implements IGuiHandler // LCClient
 	
 	public EntityPlayer getClientPlayer()
 	{ return null; }
+	
+	public double getReachDist(EntityPlayer ep)
+	{
+		if(ep instanceof EntityPlayerMP)
+			return ((EntityPlayerMP)ep).theItemInWorldManager.getBlockReachDistance();
+		return 0F;
+	}
 }

@@ -26,39 +26,39 @@ public abstract class GuiLM extends GuiContainer
 	private static final int BS = 19;
 	public static final TextureCoords
 	
-	button_basic = new TextureCoords(icons_lm, BS * 0, BS * 0),
-	button_pressed = new TextureCoords(icons_lm, BS * 0, BS * 1),
-	button_inner = new TextureCoords(icons_lm, BS * 1, BS * 0),
-	button_inner_pressed = new TextureCoords(icons_lm, BS * 1, BS * 1),
-	button_back = new TextureCoords(icons_lm, BS * 2, BS * 0),
-	button_help = new TextureCoords(icons_lm, BS * 2, BS * 1),
+	button_basic =			new TextureCoords(icons_lm, BS * 0, BS * 0),
+	button_pressed =		new TextureCoords(icons_lm, BS * 0, BS * 1),
+	button_over =			new TextureCoords(icons_lm, BS * 0, BS * 2),
+	button_inner =			new TextureCoords(icons_lm, BS * 0, BS * 3),
+	button_inner_pressed =	new TextureCoords(icons_lm, BS * 0, BS * 4),
 	
-	button_security_public = new TextureCoords(icons_lm, BS * 3, BS * 0),
-	button_security_private = new TextureCoords(icons_lm, BS * 3, BS * 1),
-	button_security_whitelist = new TextureCoords(icons_lm, BS * 4, BS * 0),
-	button_security_blacklist = new TextureCoords(icons_lm, BS * 4, BS * 1),
-	
-	button_inv_both = new TextureCoords(icons_lm, BS * 5, BS * 0),
-	button_inv_in = new TextureCoords(icons_lm, BS * 6, BS * 0),
-	button_inv_out = new TextureCoords(icons_lm, BS * 5, BS * 1),
-	button_inv_none = new TextureCoords(icons_lm, BS * 6, BS * 1),
-	
-	button_redstone_none = new TextureCoords(icons_lm, BS * 7, BS * 0),
-	button_redstone_high = new TextureCoords(icons_lm, BS * 8, BS * 0),
-	button_redstone_low = new TextureCoords(icons_lm, BS * 8, BS * 1),
-	button_redstone_pulse = new TextureCoords(icons_lm, BS * 7, BS * 1);
+	button_back =			new TextureCoords(icons_lm, BS * 1, BS * 0),
+	button_help =			new TextureCoords(icons_lm, BS * 1, BS * 1),
+	button_settings =		new TextureCoords(icons_lm, BS * 1, BS * 2);
 	
 	public static final TextureCoords[] button_security =
-	{ button_security_public, button_security_private, button_security_whitelist, button_security_blacklist };
+	{
+		new TextureCoords(icons_lm, BS * 2, BS * 0),
+		new TextureCoords(icons_lm, BS * 2, BS * 1),
+		new TextureCoords(icons_lm, BS * 2, BS * 2),
+		new TextureCoords(icons_lm, BS * 2, BS * 3),
+	};
 	
 	public static final TextureCoords[] button_inv =
-	{ button_inv_both, button_inv_in, button_inv_out, button_inv_none };
+	{
+		new TextureCoords(icons_lm, BS * 3, BS * 0),
+		new TextureCoords(icons_lm, BS * 3, BS * 1),
+		new TextureCoords(icons_lm, BS * 3, BS * 2),
+		new TextureCoords(icons_lm, BS * 3, BS * 3),
+	};
 	
 	public static final TextureCoords[] button_redstone =
-	{ button_redstone_none, button_redstone_high, button_redstone_low };
-	
-	public static final TextureCoords[] button_redstone_wp =
-	{ button_redstone_none, button_redstone_high, button_redstone_low, button_redstone_pulse };
+	{
+		new TextureCoords(icons_lm, BS * 4, BS * 0),
+		new TextureCoords(icons_lm, BS * 4, BS * 1),
+		new TextureCoords(icons_lm, BS * 4, BS * 2),
+		new TextureCoords(icons_lm, BS * 4, BS * 3),
+	};
 	
 	public final ContainerLM container;
 	public final ResourceLocation texture;

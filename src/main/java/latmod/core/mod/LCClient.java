@@ -40,4 +40,7 @@ public class LCClient extends LCCommon
 	
 	public EntityPlayer getClientPlayer()
 	{ return Minecraft.getMinecraft().thePlayer; }
+	
+	public double getReachDist(EntityPlayer ep)
+	{ return Minecraft.getMinecraft().playerController.getBlockReachDistance(); }
 }

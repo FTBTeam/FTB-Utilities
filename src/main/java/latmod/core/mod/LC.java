@@ -1,12 +1,8 @@
 package latmod.core.mod;
-import java.util.*;
-
 import latmod.core.*;
-import latmod.core.mod.block.BlockPaintable;
-import latmod.core.mod.item.*;
 import latmod.core.mod.net.LMNetHandler;
 import latmod.core.mod.recipes.LMRecipes;
-import latmod.core.util.FastMap;
+import latmod.core.util.FastList;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -20,7 +16,8 @@ import cpw.mods.fml.common.event.*;
 public class LC
 {
 	public static final String MOD_ID = "LatCoreMC";
-	public static final String MOD_VERSION = "1.3.6";
+	public static final String MOD_VERSION = "@VERSION@";
+	public static final String BUILD = "@BUILD@";
 	
 	@Mod.Instance(LC.MOD_ID)
 	public static LC inst;
@@ -34,8 +31,7 @@ public class LC
 	public static LCConfig config;
 	public static Logger logger = LogManager.getLogger("LatCoreMC");
 	
-	public static Map<String, Map<String, String>> versionsFile;
-	public static FastMap<String, String> versionsToCheck;
+	public static FastList<String> modsToCheck;
 	
 	public LC()
 	{
@@ -47,24 +43,21 @@ public class LC
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
+		logger.info("Loading LatCoreMC, Build " + BUILD);
+		
 		mod = new LMMod(MOD_ID);
 		ODItems.preInit();
 		recipes = new LMRecipes(false);
 		config = new LCConfig(e);
 		
-		mod.addBlock(LCItems.b_paintable = new BlockPaintable("paintable"));
-		
-		mod.addItem(LCItems.i_link_card = new ItemLinkCard("linkCard"));
-		mod.addItem(LCItems.i_painter = new ItemBlockPainter("blockPainter"));
-		
+		LCItems.init(mod);
 		mod.onPostLoaded();
 		
 		tab = LatCoreMC.createTab(mod.assets + "tab", new ItemStack(LCItems.i_link_card));
 		
 		LatCoreMC.addGuiHandler(this, proxy);
 		
-		versionsFile = new HashMap<String, Map<String, String>>();
-		versionsToCheck = new FastMap<String, String>();
+		modsToCheck = new FastList<String>();
 		
 		if(config.general.checkTeamLatMod)
 			ThreadCheckTeamLatMod.init();
@@ -76,7 +69,7 @@ public class LC
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent e)
 	{
-		versionsToCheck.put(MOD_ID, MOD_VERSION);
+		modsToCheck.add(MOD_ID);
 		LMNetHandler.init();
 		proxy.init();
 	}

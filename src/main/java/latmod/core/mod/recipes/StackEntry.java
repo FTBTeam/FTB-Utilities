@@ -1,10 +1,9 @@
 package latmod.core.mod.recipes;
 import latmod.core.*;
-import latmod.core.util.*;
-import net.minecraft.block.*;
-import net.minecraft.inventory.*;
+import latmod.core.util.FastList;
+import net.minecraft.block.Block;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
-import net.minecraftforge.common.util.*;
 import net.minecraftforge.fluids.*;
 
 public class StackEntry implements IStackArray
@@ -76,9 +75,9 @@ public class StackEntry implements IStackArray
 		return se;
 	}
 	
-	public static StackEntry[] convertInv(IInventory inv, ForgeDirection side)
+	public static StackEntry[] convertInv(IInventory inv, int side)
 	{
-		if(inv == null || side == null) return null;
+		if(inv == null) return null;
 		return convert(InvUtils.getAllItems(inv, side));
 	}
 	

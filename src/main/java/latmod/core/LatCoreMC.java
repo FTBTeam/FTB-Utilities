@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import latmod.core.mod.LC;
 import latmod.core.util.FastList;
 import net.minecraft.block.*;
 import net.minecraft.command.ICommandSender;
@@ -309,6 +310,9 @@ public class LatCoreMC
 		return ep.worldObj.func_147447_a(pos, vec, false, true, false);
 	}
 	
+	public static MovingObjectPosition rayTrace(EntityPlayer ep)
+	{ return rayTrace(ep, LC.proxy.getReachDist(ep)); }
+	
 	public static <K, V> Type getMapType(Type K, Type V)
 	{ return new TypeToken<Map<K, V>>() {}.getType(); }
 	
@@ -317,4 +321,67 @@ public class LatCoreMC
 	
 	public static String removeFormatting(String s)
 	{ return textFormattingPattern.matcher(s).replaceAll(""); }
+	
+	public static MovingObjectPosition collisionRayTrace(World w, int x, int y, int z, Vec3 start, Vec3 end, FastList<AxisAlignedBB> boxes)
+	{
+		if(boxes == null || boxes.isEmpty()) return null;
+		
+		for(int i = 0; i < boxes.size(); i++)
+		{
+			MovingObjectPosition mop = collisionRayTrace(w, x, y, z, start, end, boxes.get(i));
+			if(mop != null) return mop;
+		}
+		
+		return null;
+	}
+	
+	public static MovingObjectPosition collisionRayTrace(World w, int x, int y, int z, Vec3 start, Vec3 end, AxisAlignedBB aabb)
+	{
+		Vec3 pos = start.addVector(-x, -y, -z);
+		Vec3 rot = end.addVector(-x, -y, -z);
+		
+		Vec3 xmin = pos.getIntermediateWithXValue(rot, aabb.minX);
+		Vec3 xmax = pos.getIntermediateWithXValue(rot, aabb.maxX);
+		Vec3 ymin = pos.getIntermediateWithYValue(rot, aabb.minY);
+		Vec3 ymax = pos.getIntermediateWithYValue(rot, aabb.maxY);
+		Vec3 zmin = pos.getIntermediateWithZValue(rot, aabb.minZ);
+		Vec3 zmax = pos.getIntermediateWithZValue(rot, aabb.maxZ);
+		
+		if (!isVecInsideYZBounds(xmin, aabb)) xmin = null;
+		if (!isVecInsideYZBounds(xmax, aabb)) xmax = null;
+		if (!isVecInsideXZBounds(ymin, aabb)) ymin = null;
+		if (!isVecInsideXZBounds(ymax, aabb)) ymax = null;
+		if (!isVecInsideXYBounds(zmin, aabb)) zmin = null;
+		if (!isVecInsideXYBounds(zmax, aabb)) zmax = null;
+		Vec3 v = null;
+		
+		if (xmin != null && (v == null || pos.squareDistanceTo(xmin) < pos.squareDistanceTo(v))) v = xmin;
+		if (xmax != null && (v == null || pos.squareDistanceTo(xmax) < pos.squareDistanceTo(v))) v = xmax;
+		if (ymin != null && (v == null || pos.squareDistanceTo(ymin) < pos.squareDistanceTo(v))) v = ymin;
+		if (ymax != null && (v == null || pos.squareDistanceTo(ymax) < pos.squareDistanceTo(v))) v = ymax;
+		if (zmin != null && (v == null || pos.squareDistanceTo(zmin) < pos.squareDistanceTo(v))) v = zmin;
+		if (zmax != null && (v == null || pos.squareDistanceTo(zmax) < pos.squareDistanceTo(v))) v = zmax;
+		if (v == null) return null; else
+		{
+			int side = -1;
+
+			if (v == xmin) side = 4;
+			if (v == xmax) side = 5;
+			if (v == ymin) side = 0;
+			if (v == ymax) side = 1;
+			if (v == zmin) side = 2;
+			if (v == zmax) side = 3;
+			
+			return new MovingObjectPosition(x, y, z, side, v.addVector(x, y, z));
+		}
+	}
+	
+	private static boolean isVecInsideYZBounds(Vec3 v, AxisAlignedBB aabb)
+	{ return v == null ? false : v.yCoord >= aabb.minY && v.yCoord <= aabb.maxY && v.zCoord >= aabb.minZ && v.zCoord <= aabb.maxZ; }
+	
+	private static boolean isVecInsideXZBounds(Vec3 v, AxisAlignedBB aabb)
+	{ return v == null ? false : v.xCoord >= aabb.minX && v.xCoord <= aabb.maxX && v.zCoord >= aabb.minZ && v.zCoord <= aabb.maxZ; }
+	
+	private static boolean isVecInsideXYBounds(Vec3 v, AxisAlignedBB aabb)
+	{ return v == null ? false : v.xCoord >= aabb.minX && v.xCoord <= aabb.maxX && v.yCoord >= aabb.minY && v.yCoord <= aabb.maxY; }
 }

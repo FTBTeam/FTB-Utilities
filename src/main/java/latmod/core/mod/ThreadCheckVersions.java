@@ -49,7 +49,7 @@ public class ThreadCheckVersions implements Runnable
 			
 			failed = 2;
 			
-			if(s.length() > 2 && s.startsWith("{") && s.endsWith("}"))
+			if(s.length() > 0)
 			{
 				file = LatCoreMC.fromJson(s, LatCoreMC.getMapType(String.class, LatCoreMC.getMapType(String.class, String.class)));
 				failed = 0;

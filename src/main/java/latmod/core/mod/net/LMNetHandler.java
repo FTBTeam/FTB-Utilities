@@ -24,6 +24,7 @@ public class LMNetHandler
 		INSTANCE.registerMessage(MessageClientItemAction.class, MessageClientItemAction.class, nextPacketID(), Side.SERVER);
 		INSTANCE.registerMessage(MessageCustomClientAction.class, MessageCustomClientAction.class, nextPacketID(), Side.SERVER);
 		INSTANCE.registerMessage(MessageCustomServerAction.class, MessageCustomServerAction.class, nextPacketID(), Side.CLIENT);
+		INSTANCE.registerMessage(MessageRerenderBlock.class, MessageRerenderBlock.class, nextPacketID(), Side.CLIENT);
 	}
 	
 	// Helper methods //

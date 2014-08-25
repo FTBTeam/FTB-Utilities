@@ -17,6 +17,7 @@ public class LCConfig extends LMConfig
 	{
 		public boolean addOreNames;
 		public boolean addRegistryNames;
+		public boolean addFluidContainerNames;
 		public boolean checkTeamLatMod;
 		public boolean checkUpdates;
 		
@@ -26,6 +27,7 @@ public class LCConfig extends LMConfig
 			
 			addOreNames = getBool("addOreNames", true);
 			addRegistryNames = getBool("addRegistryNames", true);
+			addFluidContainerNames = getBool("addFluidContainerNames", true);
 			checkTeamLatMod = getBool("checkTeamLatMod", true);
 			checkUpdates = getBool("checkUpdates", true);
 		}

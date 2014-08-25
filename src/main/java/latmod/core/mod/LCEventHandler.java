@@ -7,6 +7,7 @@ import latmod.core.security.*;
 import latmod.core.util.*;
 import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fluids.*;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class LCEventHandler
@@ -32,6 +33,20 @@ public class LCEventHandler
 			{
 				e.toolTip.add("Registry name:");
 				e.toolTip.add(LatCoreMC.getRegName(e.itemStack.getItem(), true));
+			}
+			
+			if(LC.config.general.addFluidContainerNames)
+			{
+				if(e.itemStack.getItem() instanceof IFluidContainerItem)
+				{
+					FluidStack fs = ((IFluidContainerItem)e.itemStack.getItem()).getFluid(e.itemStack);
+					
+					if(fs != null && fs.amount > 0)
+					{
+						e.toolTip.add("Stored FluidID:");
+						e.toolTip.add(FluidRegistry.getFluidName(fs.fluidID));
+					}
+				}
 			}
 		}
 	}

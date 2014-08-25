@@ -43,4 +43,7 @@ public class LCClient extends LCCommon
 	
 	public double getReachDist(EntityPlayer ep)
 	{ return Minecraft.getMinecraft().playerController.getBlockReachDistance(); }
+	
+	public void rerenderBlock(int posX, int posY, int posZ)
+	{ Minecraft.getMinecraft().theWorld.func_147479_m(posX, posY, posZ); }
 }

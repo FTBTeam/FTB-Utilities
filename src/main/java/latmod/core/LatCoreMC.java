@@ -47,6 +47,8 @@ public class LatCoreMC
 	public static final int NBT_MAP = 10;
 	public static final int NBT_INT_ARRAY = 11;
 	
+	public static final boolean isDevEnv = LC.MOD_VERSION.equals("@VERSION@");
+	
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + String.valueOf('\u00a7') + "[0-9A-FK-OR]");
 	
 	public static final Configuration loadConfig(FMLPreInitializationEvent e, String s)

@@ -2,7 +2,6 @@ package latmod.core.mod;
 import latmod.core.*;
 import latmod.core.mod.net.LMNetHandler;
 import latmod.core.mod.recipes.LMRecipes;
-import latmod.core.util.FastList;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -30,8 +29,6 @@ public class LC
 	public static LCConfig config;
 	public static Logger logger = LogManager.getLogger("LatCoreMC");
 	
-	public static FastList<String> modsToCheck;
-	
 	public LC()
 	{
 		LCEventHandler e = new LCEventHandler();
@@ -56,8 +53,6 @@ public class LC
 		
 		LatCoreMC.addGuiHandler(this, proxy);
 		
-		modsToCheck = new FastList<String>();
-		
 		if(config.general.checkTeamLatMod)
 			ThreadCheckTeamLatMod.init();
 		
@@ -68,7 +63,6 @@ public class LC
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent e)
 	{
-		modsToCheck.add(MOD_ID);
 		LMNetHandler.init();
 		proxy.init();
 	}

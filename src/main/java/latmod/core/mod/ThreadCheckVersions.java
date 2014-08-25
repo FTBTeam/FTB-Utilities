@@ -34,8 +34,6 @@ public class ThreadCheckVersions implements Runnable
 	{
 		int failed = 0;
 		
-		if(LC.MOD_VERSION.equals("@VERSION@")) failed = 3;
-		
 		VersionsFile file = null;
 		
 		try
@@ -51,15 +49,14 @@ public class ThreadCheckVersions implements Runnable
 			
 			if(s.length() > 0)
 			{
-				file = LatCoreMC.fromJson(s, LatCoreMC.getMapType(String.class, LatCoreMC.getMapType(String.class, String.class)));
+				file = LatCoreMC.fromJson(s, VersionsFile.class);
 				failed = 0;
 				
 				if(file.latestVersion == null || file.latestChanges == null)
 					failed = 2;
 			}
 		}
-		catch(Exception ex)
-		{ file = null; }
+		catch(Exception ex) { file = null; if(LatCoreMC.isDevEnv) ex.printStackTrace(); }
 		
 		if(output != null)
 		{
@@ -71,50 +68,32 @@ public class ThreadCheckVersions implements Runnable
 			{
 				if(chatCommand) LatCoreMC.printChat(output, "Invalid versions file!");	
 			}
-			else if(failed == 3)
-			{
-				if(chatCommand) LatCoreMC.printChat(output, "You are in a development environment!");
-			}
 			else
 			{
-				int thisBuild = Integer.parseInt(LC.MOD_VERSION);
+				int thisBuild = LatCoreMC.isDevEnv ? -1 : Integer.parseInt(LC.MOD_VERSION);
 				
 				if(thisBuild != file.latestVersion)
 				{
-					if(!LC.modsToCheck.isEmpty() && !file.latestChanges.isEmpty())
-					{
-						FastList<IChatComponent> toPrint = new FastList<IChatComponent>();
-						
-						FastMap<String, String> map = new FastMap<String, String>();
-						
-						for(int i = 0; i < map.size(); i++)
-						{
-							String mod_id = map.keys.get(i);
-							
-							if(LC.modsToCheck.contains(mod_id))
-							{
-								if(toPrint.isEmpty()) toPrint.add(new ChatComponentText("These LatvianModder's mods has updates: [#" + file.latestVersion + "]"));
-								
-								IChatComponent link = new ChatComponentText(mod_id);
-								link.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Download")));
-								link.getChatStyle().setChatClickEvent(new ClickEvent(Action.OPEN_URL, "https://github.com/LatvianModder/Files/tree/Mods/" + mod_id + "/" + LatCoreMC.MC_VERSION));
-								link.getChatStyle().setColor(EnumChatFormatting.GOLD);
-								
-								String changes = map.values.get(i);
-								
-								if(!changes.equals("-"))
-									link.appendSibling(new ChatComponentText(": " + changes));
-								
-								toPrint.add(link);
-							}
-						}
-						
-						if(!toPrint.isEmpty()) for(IChatComponent s : toPrint)
-							output.addChatMessage(s);
-					}
+					FastList<IChatComponent> toPrint = new FastList<IChatComponent>();
+					
+					if(LatCoreMC.isDevEnv)
+						toPrint.add(new ChatComponentText("You are in a development environment!"));
+					IChatComponent txt = new ChatComponentText("LatvianModder's mods updated ");
+					
+					IChatComponent dlink = new ChatComponentText("[Download #" + file.latestVersion + "]");
+					dlink.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Download")));
+					dlink.getChatStyle().setChatClickEvent(new ClickEvent(Action.OPEN_URL, "https://github.com/LatvianModder/Files/tree/Mods/" + LatCoreMC.MC_VERSION));
+					dlink.getChatStyle().setColor(EnumChatFormatting.GOLD);
+					
+					toPrint.add(txt.appendSibling(dlink));
+					
+					if(!file.latestChanges.isEmpty()) for(String s : file.latestChanges)
+						toPrint.add(new ChatComponentText(s));
+					
+					if(!toPrint.isEmpty()) for(IChatComponent s : toPrint)
+						output.addChatMessage(s);
 				}
-				else if(chatCommand)
-					LatCoreMC.printChat(output, "Everyting is up to date");
+				else if(chatCommand) LatCoreMC.printChat(output, "Everyting is up to date");
 			}
 		}
 		
@@ -124,6 +103,6 @@ public class ThreadCheckVersions implements Runnable
 	public static class VersionsFile
 	{
 		@Expose public Integer latestVersion;
-		@Expose public Map<String, String> latestChanges;
+		@Expose public List<String> latestChanges;
 	}
 }

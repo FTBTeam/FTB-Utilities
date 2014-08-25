@@ -91,8 +91,12 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory, IC
 	
 	public void onUpdatePacket()
 	{
-		worldObj.func_147479_m(xCoord, yCoord, zCoord);
+		if(rerenderBlock())
+			worldObj.func_147479_m(xCoord, yCoord, zCoord);
 	}
+	
+	public boolean rerenderBlock()
+	{ return false; }
 	
 	public boolean onRightClick(EntityPlayer ep, ItemStack is, int side, float x, float y, float z)
 	{

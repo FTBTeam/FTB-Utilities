@@ -181,4 +181,7 @@ public abstract class BlockLM extends BlockContainer
 	
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World w, int x, int y, int z)
 	{ setBlockBoundsBasedOnState(w, x, y, z); return super.getCollisionBoundingBoxFromPool(w, x, y, z); }
+	
+	@SideOnly(Side.CLIENT)
+	public IIcon getBlockIcon() { return blockIcon; }
 }

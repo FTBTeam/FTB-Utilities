@@ -36,8 +36,4 @@ public class LCCommon implements IGuiHandler // LCClient
 			return ((EntityPlayerMP)ep).theItemInWorldManager.getBlockReachDistance();
 		return 0F;
 	}
-	
-	public void rerenderBlock(int x, int y, int z, int dim)
-	{
-	}
 }

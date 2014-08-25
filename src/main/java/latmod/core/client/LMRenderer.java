@@ -13,26 +13,21 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class LMRenderer
 {
-	public static RenderItem itemRenderer = new RenderItem()
-	{
-		public boolean shouldBob()
-		{ return false; }
-		
-		public boolean shouldSpreadItems()
-		{ return false; }
-	};
+	private static EntityItem entityItem;
 	
 	public static void renderItem(World w, ItemStack is, boolean fancy, boolean frame)
 	{
+		if(entityItem == null) entityItem = new EntityItem(w);
+		
+		entityItem.worldObj = w;
+		entityItem.hoverStart = 0F;
+		entityItem.setEntityItemStack(is);
+		
 		boolean isFancy = RenderManager.instance.options.fancyGraphics;
 		RenderManager.instance.options.fancyGraphics = true;
 		RenderItem.renderInFrame = frame;
 		
-		EntityItem ei = new EntityItem(w);
-		ei.hoverStart = 0F;
-		ei.setEntityItemStack(is);
-		itemRenderer.setRenderManager(RenderManager.instance);
-		itemRenderer.doRender(ei, 0D, 0D, 0D, 0F, 0F);
+		RenderManager.instance.renderEntityWithPosYaw(entityItem, 0D, 0D, 0D, 0F, 0F);
 		
 		RenderManager.instance.options.fancyGraphics = isFancy;
 		RenderItem.renderInFrame = false;

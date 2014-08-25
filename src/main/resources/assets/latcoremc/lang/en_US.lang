@@ -10,6 +10,7 @@ itemGroup.latcoremc:tab=LatCoreMC
 ### Blocks ###
 
 latcoremc:tile.paintable.name=Paintable Block
+latcoremc:tile.scriptBlock.name=[WIP] Script Block
 
 ### Items ###
 

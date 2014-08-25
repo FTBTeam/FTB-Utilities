@@ -51,6 +51,22 @@ public class LatCoreMC
 	
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + String.valueOf('\u00a7') + "[0-9A-FK-OR]");
 	
+	public static final int getRotYaw(int rot)
+	{
+		if(rot == 2) return 180;
+		else if(rot == 3) return 0;
+		else if(rot == 4) return 90;
+		else if(rot == 5) return -90;
+		return 0;
+	}
+	
+	public static final int getRotPitch(int rot)
+	{
+		if(rot == 0) return 90;
+		else if(rot == 1) return -90;
+		return 0;
+	}
+	
 	public static final Configuration loadConfig(FMLPreInitializationEvent e, String s)
 	{ return new Configuration(new File(e.getModConfigurationDirectory(), s)); }
 	

@@ -1,12 +1,10 @@
 package latmod.core.mod;
-import latmod.core.client.LatCoreClient;
+import latmod.core.client.LatCoreMCClient;
 import latmod.core.mod.block.BlockPaintable;
 import latmod.core.mod.client.render.block.RenderPaintable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -26,8 +24,8 @@ public class LCClient extends LCCommon
 	
 	public void postInit()
 	{
-		BlockPaintable.renderID = LatCoreClient.getNewBlockRenderID();
-		LatCoreClient.addBlockRenderer(BlockPaintable.renderID, new RenderPaintable());
+		BlockPaintable.renderID = LatCoreMCClient.getNewBlockRenderID();
+		LatCoreMCClient.addBlockRenderer(BlockPaintable.renderID, new RenderPaintable());
 	}
 	
 	public int getKeyID(String s) { return Keyboard.getKeyIndex(s); }
@@ -45,11 +43,4 @@ public class LCClient extends LCCommon
 	
 	public double getReachDist(EntityPlayer ep)
 	{ return Minecraft.getMinecraft().playerController.getBlockReachDistance(); }
-	
-	public void rerenderBlock(int x, int y, int z, int dim)
-	{
-		//FIXME: Rerendering block
-		MinecraftServer.getServer().worldServers[dim].markBlockForUpdate(x, y, z);
-		MinecraftServer.getServer().worldServers[dim].notifyBlockOfNeighborChange(x, y, z, Blocks.air);
-	}
 }

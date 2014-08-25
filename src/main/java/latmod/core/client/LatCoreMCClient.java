@@ -13,7 +13,7 @@ import cpw.mods.fml.client.registry.*;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
-public class LatCoreClient
+public class LatCoreMCClient
 {
 	public static final int FRONT = ForgeDirection.SOUTH.ordinal();
 	

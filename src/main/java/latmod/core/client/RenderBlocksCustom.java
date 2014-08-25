@@ -14,14 +14,14 @@ import cpw.mods.fml.relauncher.*;
 public class RenderBlocksCustom extends RenderBlocks
 {
 	public Integer customMetadata = null;
-	private Float customColRed = null;
-	private Float customColGreen = null;
-	private Float customColBlue = null;
+	private float customColRed = 1F;
+	private float customColGreen = 1F;
+	private float customColBlue = 1F;
 	public Integer customBrightness = null;
 	
 	public void setCustomColor(Integer col)
 	{
-		if(col == null) customColRed = customColGreen = customColBlue = null;
+		if(col == null) customColRed = customColGreen = customColBlue = 1F;
 		else
 		{
 			customColRed = ((col >> 16) & 0xFF) / 255F;
@@ -48,12 +48,7 @@ public class RenderBlocksCustom extends RenderBlocks
 	{ return getBlockIconFromSide(b, 1); }
 	
 	public boolean renderStandardBlock(Block b, int x, int y, int z)
-	{
-		if(customColRed == null || customColGreen == null || customColBlue == null)
-			return super.renderStandardBlock(b, x, y, z);
-		else
-			return super.renderStandardBlockWithColorMultiplier(b, x, y, z, customColRed, customColGreen, customColBlue);
-	}
+	{ return renderStandardBlockWithColorMultiplier(b, x, y, z, customColRed, customColGreen, customColBlue); }
 	
 	public void renderBlockSandFalling(Block b, World w, int x, int y, int z, int m)
 	{

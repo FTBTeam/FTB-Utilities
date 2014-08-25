@@ -14,17 +14,15 @@ import cpw.mods.fml.relauncher.Side;
 public class LMNetHandler
 {
 	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(LC.mod.modID);
-	private static int nextPacketID = -1; public static int nextPacketID() { return ++nextPacketID; }
 	
 	public static FastMap<String, ICustomActionHandler> customHandlers = new FastMap<String, ICustomActionHandler>();
 	
 	public static void init()
 	{
-		INSTANCE.registerMessage(MessageClientTileAction.class, MessageClientTileAction.class, nextPacketID(), Side.SERVER);
-		INSTANCE.registerMessage(MessageClientItemAction.class, MessageClientItemAction.class, nextPacketID(), Side.SERVER);
-		INSTANCE.registerMessage(MessageCustomClientAction.class, MessageCustomClientAction.class, nextPacketID(), Side.SERVER);
-		INSTANCE.registerMessage(MessageCustomServerAction.class, MessageCustomServerAction.class, nextPacketID(), Side.CLIENT);
-		INSTANCE.registerMessage(MessageRerenderBlock.class, MessageRerenderBlock.class, nextPacketID(), Side.CLIENT);
+		INSTANCE.registerMessage(MessageClientTileAction.class, MessageClientTileAction.class, 1, Side.SERVER);
+		INSTANCE.registerMessage(MessageClientItemAction.class, MessageClientItemAction.class, 2, Side.SERVER);
+		INSTANCE.registerMessage(MessageCustomClientAction.class, MessageCustomClientAction.class, 3, Side.SERVER);
+		INSTANCE.registerMessage(MessageCustomServerAction.class, MessageCustomServerAction.class, 4, Side.CLIENT);
 	}
 	
 	// Helper methods //

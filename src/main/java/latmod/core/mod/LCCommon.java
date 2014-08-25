@@ -37,7 +37,7 @@ public class LCCommon implements IGuiHandler // LCClient
 		return 0F;
 	}
 	
-	public void rerenderBlock(int posX, int posY, int posZ)
+	public void rerenderBlock(int x, int y, int z, int dim)
 	{
 	}
 }

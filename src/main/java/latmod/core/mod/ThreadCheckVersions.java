@@ -72,7 +72,7 @@ public class ThreadCheckVersions implements Runnable
 			{
 				int thisBuild = LatCoreMC.isDevEnv ? -1 : Integer.parseInt(LC.MOD_VERSION);
 				
-				if(thisBuild != file.latestVersion)
+				if(thisBuild < file.latestVersion)
 				{
 					FastList<IChatComponent> toPrint = new FastList<IChatComponent>();
 					

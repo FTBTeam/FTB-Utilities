@@ -5,6 +5,8 @@ import latmod.core.mod.client.render.block.RenderPaintable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -44,6 +46,10 @@ public class LCClient extends LCCommon
 	public double getReachDist(EntityPlayer ep)
 	{ return Minecraft.getMinecraft().playerController.getBlockReachDistance(); }
 	
-	public void rerenderBlock(int posX, int posY, int posZ)
-	{ Minecraft.getMinecraft().theWorld.func_147479_m(posX, posY, posZ); }
+	public void rerenderBlock(int x, int y, int z, int dim)
+	{
+		//FIXME: Rerendering block
+		MinecraftServer.getServer().worldServers[dim].markBlockForUpdate(x, y, z);
+		MinecraftServer.getServer().worldServers[dim].notifyBlockOfNeighborChange(x, y, z, Blocks.air);
+	}
 }

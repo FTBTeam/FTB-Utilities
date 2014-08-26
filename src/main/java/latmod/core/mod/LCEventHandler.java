@@ -31,8 +31,7 @@ public class LCEventHandler
 			
 			if(LC.config.general.addRegistryNames)
 			{
-				e.toolTip.add("Registry name:");
-				e.toolTip.add(LatCoreMC.getRegName(e.itemStack.getItem(), true));
+				e.toolTip.add(LatCoreMC.getRegName(e.itemStack.getItem(), false));
 			}
 			
 			if(LC.config.general.addFluidContainerNames)

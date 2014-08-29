@@ -120,6 +120,7 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory, IC
 		isLoaded = true;
 		blockType = getBlockType();
 		getMeta();
+		onNeighborBlockChange();
 	}
 	
 	public void onUnloaded()

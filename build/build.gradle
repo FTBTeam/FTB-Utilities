@@ -38,7 +38,7 @@ minecraft {
 }
 
 dependencies {
-	compile files("sources/LatCore/src")
+	//compile files("sources/LatCore/src")
 }
 
 sourceSets {

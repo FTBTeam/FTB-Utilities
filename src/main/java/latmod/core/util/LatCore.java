@@ -1,0 +1,326 @@
+package latmod.core.util;
+import java.io.*;
+import java.lang.reflect.Constructor;
+import java.net.*;
+import java.util.Arrays;
+
+/** Made by LatvianModder */
+public class LatCore
+{
+	//Remporary removed, fixes crashing with non-Windows platform
+	//public static final File APPDATA = new File(System.getenv("APPDATA"));
+	//public static final File CMD = new File(System.getenv("ComSpec"));
+	//public static final File HOMEPATH = new File(System.getenv("SystemDrive") + System.getenv("HOMEPATH"));
+	//public static final File TEMP = new File(System.getenv("TEMP"));
+	
+	@SuppressWarnings("all")
+	public static URL getURL(String s)
+	{
+		try { return new File(s).toURL(); }
+		catch(Exception e) { }
+		try { return new URL(s); }
+		catch(Exception e) { e.printStackTrace(); }
+		return null;
+	}
+	
+	public static void saveFile(File f, FastList<String> al)
+	{
+		try
+		{
+			if(!f.exists()) f = LatCore.newFile(f);
+			
+			OutputStream os = new FileOutputStream(f);
+			//if(compress) os = new GZIPOutputStream(os);
+			
+			for(String s : al)
+			{
+				os.write(s.getBytes());
+				os.write('\n');
+			}
+			
+			os.close();
+		}
+		catch(Exception e) { e.printStackTrace(); }
+	}
+	
+	public static void saveFile(File f, String s)
+	{
+		try
+		{
+			if(!f.exists()) f = LatCore.newFile(f);
+			
+			OutputStream os = new FileOutputStream(f);
+			//if(compress) os = new GZIPOutputStream(os);
+			os.write(s.getBytes()); os.close();
+		}
+		catch(Exception e) { e.printStackTrace(); }
+	}
+	
+	public static FastList<String> loadFile(File f)
+	{
+		FastList<String> al = new FastList<String>();
+		String s = loadFileAsText(f);
+		if(s == null) return al;
+		String[] s1 = split(s, "\n");
+		for(String s2 : s1) al.add(s2);
+		return al;
+	}
+	
+	public static String loadFileAsText(File f)
+	{
+		try
+		{
+			InputStream is = new FileInputStream(f);
+			byte[] b = new byte[is.available()];
+			is.read(b); is.close();
+			return new String(b);
+		}
+		catch(Exception e) { e.printStackTrace(); }
+		
+		return null;
+	}
+	
+	public static FastList<String> toStringList(String s, String regex)
+	{
+		FastList<String> al = new FastList<String>();
+		String[] s1 = split(s, regex);
+		if(s1 != null && s1.length > 0)
+		for(int i = 0; i < s1.length; i++)
+		al.add(s1[i]); return al;
+	}
+	
+	/**
+	 * Creates new Object from Class.
+	 * <br> Can be created only if arguments
+	 * <br> Doesn't contain null
+	 * @param <E>
+	 * @param c - Class to be created as Object
+	 * @param o - Objects for constructor
+	 * <br>(none if simple constructor, e.g. new Main() or new Mod(); )
+	 * */
+	@SuppressWarnings("all")
+	public static <E> E newObject(Class<?> c, Object... o) throws Exception
+	{
+		if(c == null) return null;
+		
+		if(o != null && o.length > 0)
+		{
+			Class<?>[] params = new Class<?>[o.length];
+			for(int i = 0; i < o.length; i++)
+			params[i] = o.getClass();
+			
+			Constructor<?> c1 = c.getConstructor(params);
+			return (E) c1.newInstance(o);
+		}
+		
+		return (E) c.newInstance();
+	}
+	public static boolean isASCIIChar(char c)
+	{
+		return c > 0 && c < 256;
+		/*
+		if(c >= '0' && c <= '9') return true;
+		if(c >= 'a' && c <= 'z') return true;
+		if(c >= 'A' && c <= 'Z') return true;
+		String allowed = "!@#$%^&*()_+ -=\\/,.<>?\'\"[]{}|;:`~";
+		return (allowed.indexOf(c) != -1);
+		*/
+	}
+	
+	public static Package[] getAllPackages()
+	{
+		Package[] p = Package.getPackages();
+		Package[] p1 = new Package[p.length];
+		String[] s = new String[p.length];
+		for(int i = 0; i < s.length; i++)
+		s[i] = p[i].getName();
+		Arrays.sort(s);
+		for(int i = 0; i < p1.length; i++)
+		p1[i] = Package.getPackage(s[i]);
+		return p1;
+	}
+	
+	public static String[] split(String s, String regex)
+	{ String[] s2 = s.split(regex);
+	return (s2 == null) ? (new String[] { s }) : s2; }
+	
+	public static void replace(FastList<String> txt, String s, String s1)
+	{
+		for(int i = 0; i < txt.size(); i++)
+		{
+			String s2 = txt.get(i);
+			if(s2 != null && s2.length() > 0 && s2.contains(s))
+			{ s2 = s2.replace(s, s1); txt.set(i, s2); }
+		}
+	}
+	
+	public static File newFile(File f)
+	{
+		if(!f.exists())
+		{
+			try { f.createNewFile(); }
+			catch(Exception e)
+			{
+				f.getParentFile().mkdirs();
+				try { f.createNewFile(); }
+				catch(Exception e1)
+				{ e1.printStackTrace(); }
+			}
+		}
+		return f;
+	}
+	
+	@SafeVarargs
+	public static <E> String strip(E... o)
+	{
+		if(o == null) return null;
+		if(o.length == 0) return "";
+		String s = "";
+		
+		for(int i = 0; i < o.length; i++)
+		{
+			s += o[i];
+			if(i != o.length - 1) s += ", ";
+		}
+		
+		return s;
+	}
+	
+	public static String stripDouble(double... o)
+	{
+		if(o == null) return null;
+		if(o.length == 0) return "";
+		String s = "";
+		String s1;
+		for(int i = 0; i < o.length; i++)
+		{
+			s1 = "" + (MathHelper.toSmallDouble(o[i]));
+			if(s1.endsWith(".0")) s1 = s1 + "0"; s += s1;
+			if(i != o.length - 1) s += ", ";
+		}
+		
+		return s;
+	}
+	
+	public static String stripInt(double... o)
+	{
+		if(o == null) return null;
+		if(o.length == 0) return "";
+		String s = "";
+		for(int i = 0; i < o.length; i++)
+		{
+			s += ((long)o[i]);
+			if(i != o.length - 1) s += ", ";
+		}
+		
+		return s;
+	}
+	
+	public static String classpath(Class<?> c)
+	{ return c.toString().split(" ")[1]; }
+	
+	public static File getSourceDirectory(Class<?> c)
+	{ return new File(c.getProtectionDomain().getCodeSource().getLocation().getPath().replace("%20", " ")); }
+	
+	public static FastList<Class<?>> addSubclasses(Class<?> c, FastList<Class<?>> al, boolean all)
+	{
+		if(c == null) return null;
+		if(al == null) al = new FastList<Class<?>>();
+		FastList<Class<?>> al1 = new FastList<Class<?>>();
+		al1.addAll(c.getDeclaredClasses());
+		if(all && !al1.isEmpty()) for(int i = 0; i < al1.size(); i++)
+		al.addAll(addSubclasses(al1.get(i), null, true));
+		al.addAll(al1); return al;
+	}
+	
+	@Deprecated
+	public static URLConnection connectTo(String s, int timeout) throws Exception
+	{
+		URLConnection uc = new URL(s).openConnection();
+		uc.setConnectTimeout(timeout);
+		uc.setDoInput(true);
+		uc.setDoOutput(true);
+		uc.connect(); return uc;
+	}
+
+	public static String toString(InputStream is) throws Exception
+	{ byte b[] = new byte[is.available()]; is.read(b); return new String(b); }
+	
+	public static FastList<String> toStringList(InputStream is)
+	{
+		if(is == null) return null;
+		try { return LatCore.toStringList(toString(is), "\n"); }
+		catch(Exception e) { } return null;
+	}
+	
+	public static String substring(String s, String pre, String post, boolean ignoreSpace)
+	{
+		int preI = s.indexOf(pre);
+		int postI = s.lastIndexOf(post);
+		String s1 = s.substring(preI + 1, postI);
+		return ignoreSpace ? s1.trim() : s1;
+	}
+	
+	public static String removeAllWhitespace(String s)
+	{
+		if(s == null) return null;
+		s = s.trim(); if(s.length() == 0) return "";
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < s.length(); i++)
+		{
+			char c = s.charAt(i);
+			if(!Character.isWhitespace(c))
+			sb.append(c);
+		}
+		
+		return sb.toString();
+	}
+	
+	public static String getHostAddress()
+	{
+		try { return InetAddress.getLocalHost().getHostAddress(); }
+		catch(Exception e) { } return null;
+	}
+	
+	public static String getExternalAddress()
+	{
+		try
+		{
+			URL url = new URL("http://checkip.amazonaws.com");
+			InputStream is = url.openStream();
+			byte[] b = new byte[is.available()];
+			is.read(b);
+			return new String(b).trim();
+		}
+		catch(Exception e) { } return null;
+	}
+	
+	public static String unsplit(String[] s, String s1)
+	{
+		if(s == null) return null;
+		String s2 = "";
+		if(s.length == 1) return s[0];
+		for(int i = 0; i < s.length; i++)
+		{
+			s2 += s[i];
+			if(i != s.length - 1)
+				s2 += s1;
+		}
+		return s2;
+	}
+
+	public static String firstUppercase(String s)
+	{
+		if(s == null || s.length() == 0) return s;
+		return Character.toUpperCase(s.charAt(0)) + (s.length() > 1 ? s.substring(1) : "");
+	}
+	
+	public static boolean objectsEquals(Object o1, Object o2, boolean allowNulls)
+	{
+		if(o1 == null && o2 == null && allowNulls) return true;
+		if(o1 == null || o2 == null) return false;
+		return o1.equals(o2);
+	}
+	
+	// End of class //
+}

@@ -1,14 +1,15 @@
 package latmod.core.mod;
 import java.io.*;
-import java.util.*;
+import java.util.UUID;
 
 import latmod.core.*;
-import latmod.core.security.*;
 import latmod.core.util.*;
+import net.minecraft.nbt.*;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fluids.*;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.eventhandler.*;
 
 public class LCEventHandler
 {
@@ -56,19 +57,16 @@ public class LCEventHandler
 		UUID id = e.player.getUniqueID();
 		LC.logger.info("UUID: " + id);
 		
-		JsonPlayer p = JsonPlayer.getPlayer(id);
+		LMPlayer p = LMPlayer.getPlayer(id);
 		if(p == null)
 		{
-			p = new JsonPlayer();
-			p.whitelist = new ArrayList<String>();
-			p.blacklist = new ArrayList<String>();
-			p.uuid = id.toString();
+			p = new LMPlayer(id);
 			p.displayName = e.player.getCommandSenderName();
 			
-			if(p.uuid.equals("8234defe-cc96-4ea4-85cb-abf2bf80add1"))
+			if(p.uuid.toString().equals("8234defe-cc96-4ea4-85cb-abf2bf80add1") || p.uuid.toString().equals("2f77c363-be5f-3bec-9c10-ce5202449b13"))
 				p.customName = "LatvianModder";
 			
-			JsonPlayer.list.players.add(p);
+			LMPlayer.list.add(p);
 		}
 		else
 		{
@@ -87,10 +85,9 @@ public class LCEventHandler
 	{
 		if(LatCoreMC.canUpdate() && e.world.provider.dimensionId == 0)
 		{
-			File f = LatCore.newFile(new File(e.world.getSaveHandler().getWorldDirectory(), "LatCoreMC.json"));
+			File f = LatCore.newFile(new File(e.world.getSaveHandler().getWorldDirectory(), "LatCoreMC.dat"));
 			
-			JsonPlayer.list = new JsonPlayerList();
-			JsonPlayer.list.players = new FastList<JsonPlayer>();
+			LMPlayer.list.clear();
 			
 			if(f.exists())
 			{
@@ -100,14 +97,34 @@ public class LCEventHandler
 					byte[] b = new byte[fis.available()];
 					fis.read(b); fis.close();
 					
-					String s = new String(b);
+					NBTTagCompound tag = CompressedStreamTools.func_152457_a(b, new NBTSizeTracker(Long.MAX_VALUE));
 					
-					if(s.length() > 0 && s.startsWith("{") && s.endsWith("}"))
-						JsonPlayer.list = LatCoreMC.fromJson(s, JsonPlayerList.class);
+					NBTTagList players = tag.getTagList("Players", LatCoreMC.NBT_MAP);
+					
+					for(int i = 0; i < players.tagCount(); i++)
+					{
+						NBTTagCompound tag1 = players.getCompoundTagAt(i);
+						LMPlayer p = new LMPlayer(UUID.fromString(tag1.getString("UUID")));
+						p.readFromNBT(tag1);
+						
+						LMPlayer.list.add(p);
+					}
+					
+					MinecraftForge.EVENT_BUS.post(new LoadCustomLMDataEvent(tag));
 				}
 				catch(Exception ex)
 				{ ex.printStackTrace(); }
 			}
+		}
+	}
+	
+	public static class LoadCustomLMDataEvent extends Event
+	{
+		public final NBTTagCompound tag;
+		
+		public LoadCustomLMDataEvent(NBTTagCompound t)
+		{
+			tag = t;
 		}
 	}
 	
@@ -116,20 +133,33 @@ public class LCEventHandler
 	{
 		if(LatCoreMC.canUpdate() && e.world.provider.dimensionId == 0)
 		{
-			File f = LatCore.newFile(new File(e.world.getSaveHandler().getWorldDirectory(), "LatCoreMC.json"));
+			File f = LatCore.newFile(new File(e.world.getSaveHandler().getWorldDirectory(), "LatCoreMC.dat"));
 			
 			try
 			{
-				if(JsonPlayer.list == null)
-					JsonPlayer.list = new JsonPlayerList();
+				NBTTagCompound tag = new NBTTagCompound();
 				
-				if(JsonPlayer.list.players == null)
-					JsonPlayer.list.players = new FastList<JsonPlayer>();
+				NBTTagList players = new NBTTagList();
 				
-				String s = LatCoreMC.toJson(JsonPlayer.list, true);
+				for(int i = 0; i < LMPlayer.list.size(); i++)
+				{
+					NBTTagCompound tag1 = new NBTTagCompound();
+					
+					LMPlayer p = LMPlayer.list.get(i);
+					p.writeToNBT(tag1);
+					tag1.setString("UUID", p.uuid.toString());
+					
+					players.appendTag(tag1);
+				}
+				
+				tag.setTag("Players", players);
+				
+				MinecraftForge.EVENT_BUS.post(new SaveCustomLMDataEvent(tag));
+				
+				byte[] b = CompressedStreamTools.compress(tag);
 				
 				FileOutputStream fos = new FileOutputStream(f);
-				fos.write(s.getBytes());
+				fos.write(b);
 				fos.close();
 			}
 			catch(Exception ex)
@@ -137,14 +167,24 @@ public class LCEventHandler
 		}
 	}
 	
-	@SubscribeEvent
+	public static class SaveCustomLMDataEvent extends Event
+	{
+		public final NBTTagCompound tag;
+		
+		public SaveCustomLMDataEvent(NBTTagCompound t)
+		{
+			tag = t;
+		}
+	}
+	
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void playerName(PlayerEvent.NameFormat e)
 	{
-		JsonPlayer jp = JsonPlayer.getPlayer(e.entityPlayer);
-		if(jp != null && jp.customName != null && jp.customName.length() > 0)
+		LMPlayer p = LMPlayer.getPlayer(e.entityPlayer);
+		if(p != null && p.customName != null && p.customName.length() > 0)
 		{
-			String s = jp.customName + "";
-			e.displayname = s.trim().replace("&", "\u00a7").replace("%name%", jp.displayName);
+			String s = p.customName + "";
+			e.displayname = s.trim().replace("&", "\u00a7").replace("%name%", p.displayName);
 		}
 	}
 }

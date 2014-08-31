@@ -1,16 +1,8 @@
-# Temp Waila & NEI fix #
-screen.button.yes=Yes
-screen.button.no=No
-screen.button.modules=Modules
-screen.button.back=Back
-nei.load=Load
-
-itemGroup.latcoremc:tab=LatCoreMC
-
 ### Blocks ###
 
 latcoremc:tile.paintable.name=Paintable Block
 latcoremc:tile.scriptBlock.name=[WIP] Script Block
+latcoremc:tile.facade.name=Paintable Facade
 
 ### Items ###
 
@@ -23,7 +15,6 @@ latcoremc:owner=Owner: %s
 latcoremc:settings=Settings
 latcoremc:back=Back
 
-latcoremc:command.team=LatMod Team: %s
 latcoremc:command.uuid=%0 's UUID: %1
 
 latcoremc:security=Security
@@ -59,3 +50,12 @@ latcoremc:color.light_blue=Light Blue
 latcoremc:color.magenta=Magenta
 latcoremc:color.orange=Orange
 latcoremc:color.white=White
+
+# Temp Waila & NEI fix #
+screen.button.yes=Yes
+screen.button.no=No
+screen.button.modules=Modules
+screen.button.back=Back
+nei.load=Load
+
+itemGroup.latcoremc:tab=LatCoreMC

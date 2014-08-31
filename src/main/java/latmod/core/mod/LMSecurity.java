@@ -1,8 +1,7 @@
-package latmod.core.security;
+package latmod.core.mod;
 
 import java.util.UUID;
 
-import latmod.core.mod.LC;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -47,7 +46,7 @@ public class LMSecurity
 		if(isOwner(id)) return true;
 		if(level == Level.PRIVATE) return false;
 		
-		JsonPlayer player = JsonPlayer.getPlayer(owner);
+		LMPlayer player = LMPlayer.getPlayer(owner);
 		
 		if(player != null)
 		{

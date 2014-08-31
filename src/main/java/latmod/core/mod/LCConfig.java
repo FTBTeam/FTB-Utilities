@@ -5,12 +5,14 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 public class LCConfig extends LMConfig
 {
 	public General general;
+	public Commands commands;
 	
 	public LCConfig(FMLPreInitializationEvent e)
 	{
 		super(e, "/LatMod/LatCoreMC.cfg");
 		
 		add(general = new General());
+		add(commands = new Commands());
 	}
 	
 	public class General extends Category
@@ -30,6 +32,28 @@ public class LCConfig extends LMConfig
 			addFluidContainerNames = getBool("addFluidContainerNames", true);
 			checkTeamLatMod = getBool("checkTeamLatMod", true);
 			checkUpdates = getBool("checkUpdates", true);
+		}
+	}
+	
+	public class Commands extends Category
+	{
+		public int latcore;
+		public int setnick;
+		public int setskin;
+		public int setcape;
+		
+		public Commands()
+		{
+			super("commands");
+			setCategoryDesc(
+					"0 - Command is disabled",
+					"1 - Command can be used by anyone",
+					"2 - Command can only be used by OPs");
+			
+			latcore = getInt("latcore", 1, 0, 2);
+			setnick = getInt("setnick", 2, 0, 2);
+			setskin = getInt("setskin", 2, 0, 2);
+			setcape = getInt("setcape", 2, 0, 2);
 		}
 	}
 }

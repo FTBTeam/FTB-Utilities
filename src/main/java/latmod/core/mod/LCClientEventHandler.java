@@ -8,23 +8,10 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class LCClientEventHandler
 {
-	public LCClientEventHandler()
-	{
-	}
-	
 	@SubscribeEvent
 	public void preTexturesLoaded(TextureStitchEvent.Pre e)
 	{
 		if(e.map.getTextureType() == 0)
 			LatCoreMCClient.blockNullIcon = e.map.registerIcon(LC.mod.assets + "nullIcon");
 	}
-	
-	/*
-	@SubscribeEvent
-	public void renderPlayer(RenderPlayerEvent.Post e)
-	{
-		GL11.glPushMatrix();
-		
-		GL11.glPopMatrix();
-	}*/
 }

@@ -1,8 +1,7 @@
 package latmod.core.mod.tile;
 import latmod.core.*;
-import latmod.core.mod.LC;
+import latmod.core.mod.*;
 import latmod.core.mod.net.*;
-import latmod.core.security.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -165,7 +164,7 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory, IC
 	}
 	
 	public final void printOwner(EntityPlayer ep)
-	{ LatCoreMC.printChat(ep, LC.mod.translate("owner", JsonPlayer.getPlayer(security.owner).displayName)); }
+	{ LatCoreMC.printChat(ep, LC.mod.translate("owner", LMPlayer.getPlayer(security.owner).displayName)); }
 	
 	public void dropItem(ItemStack is, double ox, double oy, double oz)
 	{ EntityItem ei = new EntityItem(worldObj, xCoord + 0.5D + ox, yCoord + 0.5D + oy, zCoord + 0.5D + oz, is);

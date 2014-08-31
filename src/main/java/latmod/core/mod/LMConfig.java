@@ -1,6 +1,6 @@
 package latmod.core.mod;
 import latmod.core.*;
-import latmod.core.util.FastMap;
+import latmod.core.util.*;
 import net.minecraftforge.common.config.*;
 import cpw.mods.fml.common.event.*;
 
@@ -53,6 +53,9 @@ public class LMConfig
 				prop.comment = s;
 			}
 		}
+		
+		public void setCategoryDesc(String... desc)
+		{ config.setCategoryComment(cat, LatCore.unsplit(desc, "\n")); }
 	}
 	
 	public Configuration config;

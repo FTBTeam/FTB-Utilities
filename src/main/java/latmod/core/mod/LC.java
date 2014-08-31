@@ -1,5 +1,6 @@
 package latmod.core.mod;
 import latmod.core.*;
+import latmod.core.mod.cmd.CommandBaseLC;
 import latmod.core.mod.net.LMNetHandler;
 import latmod.core.mod.recipes.LMRecipes;
 import net.minecraft.creativetab.CreativeTabs;
@@ -75,7 +76,7 @@ public class LC
 		proxy.postInit();
 	}
 	
-	@Mod.EventHandler()
+	@Mod.EventHandler
 	public void registerCommands(FMLServerStartingEvent e)
-	{ e.registerServerCommand(new LCCommand()); }
+	{ CommandBaseLC.registerCommands(e); }
 }

@@ -3,6 +3,7 @@ import io.netty.buffer.ByteBuf;
 import latmod.core.mod.LC;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.Side;
 
@@ -38,8 +39,7 @@ public class MessageCustomServerAction implements IMessage, IMessageHandler<Mess
 	public IMessage onMessage(MessageCustomServerAction message, MessageContext ctx)
 	{
 		EntityPlayer ep = LC.proxy.getClientPlayer();
-		ICustomActionHandler h = LMNetHandler.customHandlers.get(message.channel);
-		if(h != null) h.onAction(ep, message.channel, message.action, message.extraData, Side.CLIENT);
+		MinecraftForge.EVENT_BUS.post(new CustomActionEvent(ep, message.channel, message.action, message.extraData, Side.CLIENT));
 		return null;
 	}
 }

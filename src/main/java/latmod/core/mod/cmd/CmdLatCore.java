@@ -1,22 +1,19 @@
-package latmod.core.mod;
+package latmod.core.mod.cmd;
 
 import java.util.UUID;
 
 import latmod.core.LatCoreMC;
-import latmod.core.security.JsonPlayer;
+import latmod.core.mod.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class LCCommand extends CommandBase
+public class CmdLatCore extends CommandBaseLC
 {
-	public String getCommandName()
+	public CmdLatCore(int e)
+	{ super(e); }
+	
+	public String getCommandName() 
 	{ return "latcore"; }
-	
-	public int getRequiredPermissionLevel()
-	{ return 0; }
-	
-	public boolean canCommandSenderUseCommand(ICommandSender ics)
-	{ return true; }
 	
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/latcore <subcommand>"; }
@@ -37,10 +34,10 @@ public class LCCommand extends CommandBase
 			{
 				EntityPlayer ep = getCommandSenderAsPlayer(ics);
 				
-				JsonPlayer jp = JsonPlayer.getPlayer(ep.getUniqueID());
+				LMPlayer jp = LMPlayer.getPlayer(ep.getUniqueID());
 				
 				if(args.length >= 2)
-					jp = JsonPlayer.getPlayer(args[1]);
+					jp = LMPlayer.getPlayer(args[1]);
 				
 				if(jp == null) throw new PlayerNotFoundException();
 				
@@ -66,7 +63,7 @@ public class LCCommand extends CommandBase
 				
 				if(args.length >= 2)
 				{
-					JsonPlayer epP = JsonPlayer.getPlayer(ep.getUniqueID());
+					LMPlayer epP = LMPlayer.getPlayer(ep.getUniqueID());
 					
 					if(args[1].equals("list"))
 					{
@@ -76,8 +73,7 @@ public class LCCommand extends CommandBase
 						
 						for(int i = 0; i < epP.whitelist.size(); i++)
 						{
-							String uuidS = epP.whitelist.get(i);
-							JsonPlayer jp = JsonPlayer.getPlayer(UUID.fromString(uuidS));
+							LMPlayer jp = LMPlayer.getPlayer(epP.whitelist.get(i));
 							
 							if(jp != null)
 							{
@@ -100,7 +96,7 @@ public class LCCommand extends CommandBase
 					{
 						if(args[1].equals("add") || args[1].equals("addUUID"))
 						{
-							JsonPlayer jp = JsonPlayer.getPlayer(args[1].equals("add") ? args[2] : UUID.fromString(args[2]));
+							LMPlayer jp = LMPlayer.getPlayer(args[1].equals("add") ? args[2] : UUID.fromString(args[2]));
 							
 							if(jp == null) throw new PlayerNotFoundException();
 							
@@ -113,7 +109,7 @@ public class LCCommand extends CommandBase
 						}
 						if(args[1].equals("rem") || args[1].equals("remUUID"))
 						{
-							JsonPlayer jp = JsonPlayer.getPlayer(args[1].equals("rem") ? args[2] : UUID.fromString(args[2]));
+							LMPlayer jp = LMPlayer.getPlayer(args[1].equals("rem") ? args[2] : UUID.fromString(args[2]));
 							
 							if(jp == null) throw new PlayerNotFoundException();
 							
@@ -147,7 +143,7 @@ public class LCCommand extends CommandBase
 				
 				if(args.length >= 2)
 				{
-					JsonPlayer epP = JsonPlayer.getPlayer(ep.getUniqueID());
+					LMPlayer epP = LMPlayer.getPlayer(ep.getUniqueID());
 					
 					if(args[1].equals("list"))
 					{
@@ -157,8 +153,7 @@ public class LCCommand extends CommandBase
 						
 						for(int i = 0; i < epP.blacklist.size(); i++)
 						{
-							String uuidS = epP.blacklist.get(i);
-							JsonPlayer jp = JsonPlayer.getPlayer(UUID.fromString(uuidS));
+							LMPlayer jp = LMPlayer.getPlayer(epP.blacklist.get(i));
 							
 							if(jp != null)
 							{
@@ -181,7 +176,7 @@ public class LCCommand extends CommandBase
 					{
 						if(args[1].equals("add") || args[1].equals("addUUID"))
 						{
-							JsonPlayer jp = JsonPlayer.getPlayer(args[1].equals("add") ? args[2] : UUID.fromString(args[2]));
+							LMPlayer jp = LMPlayer.getPlayer(args[1].equals("add") ? args[2] : UUID.fromString(args[2]));
 							
 							if(jp == null) throw new PlayerNotFoundException();
 							
@@ -194,7 +189,7 @@ public class LCCommand extends CommandBase
 						}
 						if(args[1].equals("rem") || args[1].equals("remUUID"))
 						{
-							JsonPlayer jp = JsonPlayer.getPlayer(args[1].equals("rem") ? args[2] : UUID.fromString(args[2]));
+							LMPlayer jp = LMPlayer.getPlayer(args[1].equals("rem") ? args[2] : UUID.fromString(args[2]));
 							
 							if(jp == null) throw new PlayerNotFoundException();
 							

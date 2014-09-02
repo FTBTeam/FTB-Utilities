@@ -1,16 +1,20 @@
 package latmod.core.mod;
-import latmod.core.*;
+import cpw.mods.fml.relauncher.*;
+import latmod.core.LatCoreMC;
 import latmod.core.mod.block.BlockLM;
 import latmod.core.mod.item.IItemLM;
 import latmod.core.mod.item.block.ItemBlockLM;
 import latmod.core.mod.tile.TileLM;
-import latmod.core.util.*;
+import latmod.core.util.FastList;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.*;
 import net.minecraft.util.*;
 
 public class LMMod
 {
 	public final String modID;
+	public final String lowerCaseModID;
 	public final String assets;
 	
 	public FastList<BlockLM> blocks;
@@ -20,10 +24,33 @@ public class LMMod
 	{
 		modID = s;
 		
-		assets = s.toLowerCase() + ":";
+		lowerCaseModID = s.toLowerCase();
+		assets = lowerCaseModID + ":";
 		
 		blocks = new FastList<BlockLM>();
 		items = new FastList<IItemLM>();
+	}
+	
+	public ResourceLocation getLocation(String s)
+	{
+		if(s.startsWith("/")) s = s.substring(1);
+		return new ResourceLocation(lowerCaseModID, s);
+	}
+	
+	public CreativeTabs createTab(final String s, final ItemStack icon)
+	{
+		CreativeTabs tab = new CreativeTabs(assets + s)
+		{
+			@SideOnly(Side.CLIENT)
+			public ItemStack getIconItemStack()
+			{ return icon; }
+			
+			@SideOnly(Side.CLIENT)
+			public Item getTabIconItem()
+			{ return getIconItemStack().getItem(); }
+		};
+		
+		return tab;
 	}
 	
 	public final String getBlockName(String s)

@@ -70,7 +70,7 @@ public class ThreadCheckVersions implements Runnable
 			}
 			else
 			{
-				int thisBuild = LatCoreMC.isDevEnv ? -1 : Integer.parseInt(LC.MOD_VERSION);
+				int thisBuild = LatCoreMC.isDevEnv ? -1 : Integer.parseInt(LC.VERSION);
 				
 				if(thisBuild < file.latestVersion)
 				{

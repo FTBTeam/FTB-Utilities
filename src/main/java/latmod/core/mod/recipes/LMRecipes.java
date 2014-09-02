@@ -1,12 +1,18 @@
 package latmod.core.mod.recipes;
 import java.util.Map;
-import latmod.core.*;
+
+import latmod.core.LatCoreMC;
 import latmod.core.util.*;
+import net.minecraft.block.Block;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.*;
+import net.minecraftforge.oredict.*;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class LMRecipes
 {
+	public boolean enableOreRecipes = true;
+	
 	public final boolean storeRecipes;
 	public FastList<IRecipe> craftingRecipes;
 	public FastMap<ItemStack, ItemStack> furnaceRecipes;
@@ -39,17 +45,58 @@ public class LMRecipes
 		for(CustomRecipes<?> c : customRecipes)
 		c.clearMap();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public IRecipe addRecipe(IRecipe r)
+	{ CraftingManager.getInstance().getRecipeList().add(r); return r; }
 
-	public void addRecipe(ItemStack out, Object... in)
+	public IRecipe addRecipe(ItemStack out, Object... in)
 	{
-		IRecipe r = LatCoreMC.addRecipe(out, in);
+		IRecipe r;
+		
+		if(!enableOreRecipes) r = GameRegistry.addShapedRecipe(out, in);
+		else r = addRecipe(new ShapedOreRecipe(out, in));
+		
 		if(storeRecipes) craftingRecipes.add(r);
+		
+		return r;
 	}
 	
-	public void addShapelessRecipe(ItemStack out, Object... in)
+	public IRecipe addShapelessRecipe(ItemStack out, Object... in)
 	{
-		IRecipe r = LatCoreMC.addShapelessRecipe(out, in);
+		IRecipe r;
+		
+		if(!enableOreRecipes)
+		{
+			FastList<ItemStack> al = new FastList<ItemStack>();
+			
+			int i = in.length;
+			
+			for (int j = 0; j < i; ++j)
+			{
+				Object o = in[j];
+				
+				if (o instanceof ItemStack)
+				al.add(((ItemStack)o).copy());
+				
+				else if (o instanceof Item)
+				al.add(new ItemStack((Item)o));
+				
+				else
+				{
+					if (!(o instanceof Block))
+					throw new RuntimeException("Invalid shapeless recipy!");
+					al.add(new ItemStack((Block)o));
+				}
+			}
+			
+			r = addRecipe(new ShapelessRecipes(out, al));
+		}
+		else r = addRecipe(new ShapelessOreRecipe(out, in));
+		
 		if(storeRecipes) craftingRecipes.add(r);
+		
+		return r;
 	}
 	
 	public void addItemBlockRecipe(ItemStack item, ItemStack block, boolean back)
@@ -69,7 +116,7 @@ public class LMRecipes
 	public void addSmelting(ItemStack in, ItemStack out, float xp)
 	{
 		if(storeRecipes) furnaceRecipes.put(in, out);
-		LatCoreMC.addSmeltingRecipe(out, in, xp);
+		FurnaceRecipes.smelting().func_151394_a(in, out, xp);
 	}
 	
 	public void addSmelting(ItemStack in, ItemStack out)

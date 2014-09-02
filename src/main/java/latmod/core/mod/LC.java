@@ -12,11 +12,11 @@ import org.apache.logging.log4j.*;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 
-@Mod(modid = LC.MOD_ID, name = "LatCoreMC", version = LC.MOD_VERSION) //dependencies = "required-after:Waila"
+@Mod(modid = LC.MOD_ID, name = "LatCoreMC", version = LC.VERSION, dependencies = "required-after:Forge@[10.13.0.1208,)")
 public class LC
 {
-	public static final String MOD_ID = "LatCoreMC";
-	public static final String MOD_VERSION = "@VERSION@";
+	protected static final String MOD_ID = "LatCoreMC";
+	public static final String VERSION = "@VERSION@";
 	
 	@Mod.Instance(LC.MOD_ID)
 	public static LC inst;
@@ -40,7 +40,10 @@ public class LC
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
-		logger.info("Loading LatCoreMC, Build #" + MOD_VERSION);
+		if(LatCoreMC.isDevEnv)
+			logger.info("Loading LatCoreMC, Dev Build");
+		else
+			logger.info("Loading LatCoreMC, Build #" + VERSION);
 		
 		mod = new LMMod(MOD_ID);
 		ODItems.preInit();
@@ -50,7 +53,7 @@ public class LC
 		LCItems.init(mod);
 		mod.onPostLoaded();
 		
-		tab = LatCoreMC.createTab(mod.assets + "tab", new ItemStack(LCItems.i_link_card));
+		tab = mod.createTab("tab", new ItemStack(LCItems.i_link_card));
 		
 		LatCoreMC.addGuiHandler(this, proxy);
 		

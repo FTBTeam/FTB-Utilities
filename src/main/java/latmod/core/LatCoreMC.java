@@ -8,11 +8,9 @@ import latmod.core.mod.LC;
 import latmod.core.util.FastList;
 import net.minecraft.block.*;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
-import net.minecraft.item.crafting.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -20,7 +18,7 @@ import net.minecraft.world.*;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
-import net.minecraftforge.oredict.*;
+import net.minecraftforge.oredict.OreDictionary;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
@@ -30,13 +28,12 @@ import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.*;
 import cpw.mods.fml.common.registry.*;
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.relauncher.Side;
 
 public class LatCoreMC
 {
 	public static final String MC_VERSION = "1.7.10";
 	
-	public static boolean enableOreRecipes = true;
 	public static final int ANY = OreDictionary.WILDCARD_VALUE;
 	public static final int TOP = ForgeDirection.UP.ordinal();
 	public static final int BOTTOM = ForgeDirection.DOWN.ordinal();
@@ -47,7 +44,7 @@ public class LatCoreMC
 	public static final int NBT_MAP = 10;
 	public static final int NBT_INT_ARRAY = 11;
 	
-	public static final boolean isDevEnv = LC.MOD_VERSION.equals("@VERSION@");
+	public static final boolean isDevEnv = LC.VERSION.equals("@VERSION@");
 	
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + String.valueOf('\u00a7') + "[0-9A-FK-OR]");
 	
@@ -69,22 +66,6 @@ public class LatCoreMC
 	
 	public static final Configuration loadConfig(FMLPreInitializationEvent e, String s)
 	{ return new Configuration(new File(e.getModConfigurationDirectory(), s)); }
-	
-	public static final CreativeTabs createTab(final String s, final ItemStack icon)
-	{
-		CreativeTabs tab = new CreativeTabs(s)
-		{
-			@SideOnly(Side.CLIENT)
-			public ItemStack getIconItemStack()
-			{ return icon; }
-			
-			@SideOnly(Side.CLIENT)
-			public Item getTabIconItem()
-			{ return icon.getItem(); }
-		};
-		
-		return tab;
-	}
 	
 	/** Prints message to chat (doesn't translate it) */
 	public static final void printChat(ICommandSender ep, Object o)
@@ -112,50 +93,6 @@ public class LatCoreMC
 	
 	public static final int getNewEntityID()
 	{ return EntityRegistry.findGlobalUniqueEntityId(); }
-
-	public static void addSmeltingRecipe(ItemStack out, ItemStack in, float xp)
-	{ FurnaceRecipes.smelting().func_151394_a(in, out, xp); }
-	
-	@SuppressWarnings("all")
-	public static IRecipe addRecipe(IRecipe r)
-	{ CraftingManager.getInstance().getRecipeList().add(r); return r; }
-	
-	
-	public static IRecipe addRecipe(ItemStack out, Object... in)
-	{
-		if(!enableOreRecipes) return GameRegistry.addShapedRecipe(out, in);
-		else return addRecipe(new ShapedOreRecipe(out, in));
-	}
-	
-	public static IRecipe addShapelessRecipe(ItemStack out, Object... in)
-	{
-		if(!enableOreRecipes)
-		{
-			ArrayList<ItemStack> al = new ArrayList<ItemStack>();
-			int i = in.length;
-			
-			for (int j = 0; j < i; ++j)
-			{
-				Object o = in[j];
-				
-				if (o instanceof ItemStack)
-				al.add(((ItemStack)o).copy());
-				
-				else if (o instanceof Item)
-				al.add(new ItemStack((Item)o));
-				
-				else
-				{
-					if (!(o instanceof Block))
-					throw new RuntimeException("Invalid shapeless recipy!");
-					al.add(new ItemStack((Block)o));
-				}
-			}
-			
-			return addRecipe(new ShapelessRecipes(out, al));
-		}
-		else return addRecipe(new ShapelessOreRecipe(out, in));
-	}
 	
 	public static void addOreDictionary(String name, ItemStack is)
 	{
@@ -190,9 +127,6 @@ public class LatCoreMC
 	
 	public static Side getEffectiveSide()
 	{ return FMLCommonHandler.instance().getEffectiveSide(); }
-	
-	public static ResourceLocation getLocation(String id, String s)
-	{ return new ResourceLocation(id.toLowerCase(), s); }
 	
 	public static String getPath(ResourceLocation res)
 	{ return "/assets/" + res.getResourceDomain() + "/" + res.getResourcePath(); }
@@ -317,7 +251,7 @@ public class LatCoreMC
 		catch(Exception e)
 		{ e.printStackTrace(); }
 	}
-
+	
 	public static MovingObjectPosition rayTrace(EntityPlayer ep, double d)
 	{
 		//ep.yOffset

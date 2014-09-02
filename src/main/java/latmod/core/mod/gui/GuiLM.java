@@ -1,7 +1,6 @@
 package latmod.core.mod.gui;
 import java.util.Map;
 
-import latmod.core.LatCoreMC;
 import latmod.core.client.LMRenderer;
 import latmod.core.mod.LC;
 import latmod.core.util.FastList;
@@ -22,7 +21,7 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public abstract class GuiLM extends GuiContainer
 {
-	public static final ResourceLocation icons_lm = LatCoreMC.getLocation(LC.MOD_ID, "textures/gui/icons_lm.png");
+	public static final ResourceLocation icons_lm = LC.mod.getLocation("textures/gui/icons_lm.png");
 	private static final int BS = 19;
 	public static final TextureCoords
 	

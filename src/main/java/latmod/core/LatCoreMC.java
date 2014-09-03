@@ -25,7 +25,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonWriter;
 
 import cpw.mods.fml.common.*;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.*;
 import cpw.mods.fml.common.registry.*;
 import cpw.mods.fml.relauncher.Side;
@@ -163,6 +163,12 @@ public class LatCoreMC
 	
 	public static EntityPlayer getPlayer(World w, UUID id)
 	{ return w.func_152378_a(id); }
+	
+	public static void addGamerule(FMLServerStartingEvent e, String s, String s1)
+	{
+		if(!e.getServer().worldServers[0].getGameRules().hasRule(s))
+			e.getServer().worldServers[0].getGameRules().addGameRule(s, s1);
+	}
 	
 	//TODO: Still need to fix this
 	@Deprecated

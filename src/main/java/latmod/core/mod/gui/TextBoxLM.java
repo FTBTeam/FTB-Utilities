@@ -38,7 +38,7 @@ public class TextBoxLM extends WidgetLM
 		return false;
 	}
 	
-	public boolean canAddChar()
+	public boolean canAddChar(char c)
 	{ return charLimit == -1 || text.length() + 1 <= charLimit; }
 	
 	public void voidMousePressed(int mx, int my, int b)
@@ -79,7 +79,7 @@ public class TextBoxLM extends WidgetLM
 			{
 				if(ChatAllowedCharacters.isAllowedCharacter(keyChar))
 				{
-					if(canAddChar())
+					if(canAddChar(keyChar))
 					{
 						text += keyChar;
 						textChanged();

@@ -120,7 +120,12 @@ public class Converter
 	public static Integer decode(String s)
 	{
 		try { Integer i = Integer.decode(s); return i; }
-		catch(Exception e)
-		{ } return null;
+		catch(Exception e) { } return null;
+	}
+	
+	public static Integer parseInt(String s)
+	{
+		try { Integer i = Integer.parseInt(s); return i; }
+		catch(Exception e) { } return null;
 	}
 }

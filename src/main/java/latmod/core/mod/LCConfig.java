@@ -39,6 +39,7 @@ public class LCConfig extends LMConfig
 	{
 		public int latcore;
 		public int setnick;
+		public int realnick;
 		public int setskin;
 		public int setcape;
 		
@@ -52,6 +53,7 @@ public class LCConfig extends LMConfig
 			
 			latcore = getInt("latcore", 1, 0, 2);
 			setnick = getInt("setnick", 2, 0, 2);
+			realnick = getInt("realnick", 2, 0, 2);
 			setskin = getInt("setskin", 2, 0, 2);
 			setcape = getInt("setcape", 2, 0, 2);
 		}

@@ -10,8 +10,9 @@ public abstract class CommandBaseLC extends CommandBase
 	{
 		regCmd(e, new CmdLatCore(LC.mod.config().commands.latcore));
 		regCmd(e, new CmdSetNick(LC.mod.config().commands.setnick));
-		//regCmd(e, new CmdSetSkin(LC.config.commands.setskin));
-		//regCmd(e, new CmdSetCape(LC.config.commands.setcape));
+		regCmd(e, new CmdRealNick(LC.mod.config().commands.setnick));
+		regCmd(e, new CmdSetSkin(LC.mod.config().commands.setskin));
+		regCmd(e, new CmdSetCape(LC.mod.config().commands.setcape));
 	}
 	
 	private static void regCmd(FMLServerStartingEvent e, CommandBaseLC c)

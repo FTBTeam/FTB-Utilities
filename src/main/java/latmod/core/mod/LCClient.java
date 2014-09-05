@@ -6,7 +6,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.input.Keyboard;
 
@@ -17,7 +16,6 @@ public class LCClient extends LCCommon
 {
 	public void preInit()
 	{
-		MinecraftForge.EVENT_BUS.register(new LCClientEventHandler());
 	}
 	
 	public void init() { }

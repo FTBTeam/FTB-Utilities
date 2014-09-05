@@ -15,8 +15,8 @@ import cpw.mods.fml.relauncher.Side;
 public class LMPlayer implements Comparable<LMPlayer>
 {
 	public final UUID uuid;
-	public String displayName;
-	public String customName;
+	public String username;
+	private String customName;
 	public String customSkin;
 	public String customCape;
 	public final FastList<UUID> whitelist;
@@ -37,9 +37,44 @@ public class LMPlayer implements Comparable<LMPlayer>
 		return customData;
 	}
 	
+	public void setCustomName(String s)
+	{
+		if(s != null && s.length() > 0)
+		{
+			s = s.trim().replace("&k", "").replace("&", "\u00a7");
+			if(s.length() == 0 || s.equals("null")) s = null;
+		}
+		
+		customName = s;
+	}
+	
+	public String getDisplayName()
+	{
+		if(customName != null && customName.length() > 0)
+			return customName;
+		return username;
+	}
+
+	public boolean hasCustomName()
+	{ return customName != null; }
+	
+	public EntityPlayer getPlayer(World w)
+	{ return LatCoreMC.getPlayer(w, uuid); }
+	
+	public void sendUpdate(String channel)
+	{
+		if(LatCoreMC.canUpdate())
+		{
+			new DataChangedEvent(this, Side.SERVER, channel).post();
+			LMNetHandler.INSTANCE.sendToAll(new MessageUpdatePlayerData(this, channel));
+		}
+	}
+	
+	// NBT reading / writing
+	
 	public void readFromNBT(NBTTagCompound tag)
 	{
-		displayName = tag.getString("Name");
+		username = tag.getString("Name");
 		
 		customName = tag.getString("CustomName");
 		if(customName.trim().length() == 0) customName = null;
@@ -69,7 +104,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 	
 	public void writeToNBT(NBTTagCompound tag)
 	{
-		tag.setString("Name", displayName);
+		tag.setString("Name", username);
 		
 		if(customName != null && customName.trim().length() > 0)
 			tag.setString("CustomName", customName);
@@ -106,38 +141,21 @@ public class LMPlayer implements Comparable<LMPlayer>
 			tag.setTag("CustomData", customData);
 	}
 	
-	public EntityPlayer getPlayer(World w)
-	{ return LatCoreMC.getPlayer(w, uuid); }
-	
 	public int compareTo(LMPlayer o)
 	{
-		if(displayName == null || o.displayName == null)
+		if(username == null || o.username == null)
 			return 0;
-		return displayName.compareTo(o.displayName);
+		return username.compareTo(o.username);
 	}
 	
 	public boolean equals(Object o)
 	{
 		if(o == null) return false;
 		if(o == this) return true;
-		if(o instanceof String)
-		{
-			if(customName != null)
-				return ((String)o).equalsIgnoreCase(LatCoreMC.removeFormatting(customName));
-			return ((String)o).equalsIgnoreCase(displayName);
-		}
+		if(o instanceof String) return ((String)o).equalsIgnoreCase(LatCoreMC.removeFormatting(getDisplayName()));
 		if(o instanceof UUID) return ((UUID)o).equals(uuid);
 		if(o instanceof EntityPlayer) return ((EntityPlayer)o).getUniqueID().equals(uuid);
 		return false;
-	}
-	
-	public void sendUpdate(String channel)
-	{
-		if(LatCoreMC.canUpdate())
-		{
-			MinecraftForge.EVENT_BUS.post(new DataChangedEvent(this, Side.SERVER, channel));
-			LMNetHandler.INSTANCE.sendToAll(new MessageUpdatePlayerData(this, channel));
-		}
 	}
 	
 	// Static //
@@ -158,5 +176,8 @@ public class LMPlayer implements Comparable<LMPlayer>
 		
 		public boolean isChannel(String s)
 		{ return channel != null && channel.equals(s); }
+		
+		public void post()
+		{ MinecraftForge.EVENT_BUS.post(this); }
 	}
 }

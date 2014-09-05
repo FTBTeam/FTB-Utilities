@@ -3,16 +3,23 @@ import java.io.*;
 import java.util.UUID;
 
 import latmod.core.*;
+import latmod.core.client.LatCoreMCClient;
+import latmod.core.mod.net.*;
 import latmod.core.util.*;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.*;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fluids.*;
 import cpw.mods.fml.common.eventhandler.*;
+import cpw.mods.fml.relauncher.*;
 
 public class LCEventHandler
 {
+	public static final String ACTION_PLAYER_JOINED = "PlayerJoined";
+	
 	@SubscribeEvent
 	public void onTooltip(ItemTooltipEvent e)
 	{
@@ -61,16 +68,19 @@ public class LCEventHandler
 		if(p == null)
 		{
 			p = new LMPlayer(id);
-			p.displayName = e.player.getCommandSenderName();
+			p.username = e.player.getCommandSenderName();
 			
 			if(p.uuid.toString().equals("8234defe-cc96-4ea4-85cb-abf2bf80add1") || p.uuid.toString().equals("2f77c363-be5f-3bec-9c10-ce5202449b13"))
-				p.customName = "LatvianModder";
+			{
+				p.setCustomName("LatvianModder");
+				e.player.refreshDisplayName();
+			}
 			
 			LMPlayer.list.add(p);
 		}
 		else
 		{
-			p.displayName = e.player.getCommandSenderName();
+			p.username = e.player.getCommandSenderName();
 		}
 		
 		if(EnumLatModTeam.TEAM.uuids.contains(e.player.getUniqueID()))
@@ -78,6 +88,14 @@ public class LCEventHandler
 		
 		if(LC.mod.config().general.checkUpdates)
 			ThreadCheckVersions.init(e.player, false);
+		
+		LC.mod.logger.info("Joined: " + e.player + ", " + LatCoreMC.getEffectiveSide());
+		
+		{
+			NBTTagCompound data = new NBTTagCompound();
+			data.setString("UUID", e.player.getUniqueID().toString());
+			LMNetHandler.INSTANCE.sendToServer(new MessageCustomClientAction(ACTION_PLAYER_JOINED, data));
+		}
 	}
 	
 	@SubscribeEvent
@@ -110,7 +128,7 @@ public class LCEventHandler
 						LMPlayer.list.add(p);
 					}
 					
-					MinecraftForge.EVENT_BUS.post(new LoadCustomLMDataEvent(tag));
+					new LoadCustomLMDataEvent(tag).post();
 				}
 				catch(Exception ex)
 				{ ex.printStackTrace(); }
@@ -126,6 +144,9 @@ public class LCEventHandler
 		{
 			tag = t;
 		}
+		
+		public void post()
+		{ MinecraftForge.EVENT_BUS.post(this); }
 	}
 	
 	@SubscribeEvent
@@ -154,7 +175,7 @@ public class LCEventHandler
 				
 				tag.setTag("Players", players);
 				
-				MinecraftForge.EVENT_BUS.post(new SaveCustomLMDataEvent(tag));
+				new SaveCustomLMDataEvent(tag).post();
 				
 				byte[] b = CompressedStreamTools.compress(tag);
 				
@@ -175,16 +196,36 @@ public class LCEventHandler
 		{
 			tag = t;
 		}
+		
+		public void post()
+		{ MinecraftForge.EVENT_BUS.post(this); }
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void playerName(PlayerEvent.NameFormat e)
 	{
 		LMPlayer p = LMPlayer.getPlayer(e.entityPlayer);
-		if(p != null && p.customName != null && p.customName.length() > 0)
+		if(p != null && p.hasCustomName())
+			e.displayname = p.getDisplayName();
+	}
+	
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void preTexturesLoaded(TextureStitchEvent.Pre e)
+	{
+		if(e.map.getTextureType() == 0)
+			LatCoreMCClient.blockNullIcon = e.map.registerIcon(LC.mod.assets + "nullIcon");
+	}
+	
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void playerJoinedClient(CustomActionEvent e)
+	{
+		if(e.action.equals(ACTION_PLAYER_JOINED))
 		{
-			String s = p.customName + "";
-			e.displayname = s.trim().replace("&", "\u00a7").replace("%name%", p.displayName);
+			UUID id = UUID.fromString(e.extraData.getString("UUID"));
+			EntityPlayer ep = LatCoreMC.getPlayer(e.player.worldObj, id);
+			LC.mod.logger.info("Joined: " + ep + ", " + LatCoreMC.getEffectiveSide());
 		}
 	}
 }

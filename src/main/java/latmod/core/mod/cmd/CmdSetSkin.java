@@ -4,16 +4,16 @@ import latmod.core.LatCoreMC;
 import latmod.core.mod.LMPlayer;
 import net.minecraft.command.*;
 
-public class CmdSetNick extends CommandBaseLC
+public class CmdSetSkin extends CommandBaseLC
 {
-	public CmdSetNick(int e)
+	public CmdSetSkin(int e)
 	{ super(e); }
 	
 	public String getCommandName() 
-	{ return "setnick"; }
+	{ return "setskin"; }
 	
 	public String getCommandUsage(ICommandSender ics)
-	{ return "/setnick <nick | null>"; }
+	{ return "/setskin <url | null>"; }
 	
 	public void processCommand(ICommandSender ics, String[] args)
 	{
@@ -27,11 +27,13 @@ public class CmdSetNick extends CommandBaseLC
 			
 			if(p == null) throw new PlayerNotFoundException();
 			
-			p.setCustomName(args[0].trim());
-			p.getPlayer(ics.getEntityWorld()).refreshDisplayName();
-			p.sendUpdate("CustomName");
+			p.customSkin = args[0].trim();
+			if(p.customSkin.length() == 0 || p.customSkin.equals("null"))
+				p.customSkin = null;
 			
-			LatCoreMC.printChat(ics, "Custom nickname changed to " + p.getDisplayName());
+			p.sendUpdate("CustomSkin");
+			
+			LatCoreMC.printChat(ics, "Custom skin changed to " + p.customSkin);
 		}
 		else LatCoreMC.printChat(ics, getCommandUsage(ics));
 	}

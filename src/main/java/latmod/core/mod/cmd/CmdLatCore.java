@@ -41,7 +41,7 @@ public class CmdLatCore extends CommandBaseLC
 				
 				if(jp == null) throw new PlayerNotFoundException();
 				
-				LatCoreMC.printChat(ics, jp.displayName + "'s UUID: " + jp.uuid);
+				LatCoreMC.printChat(ics, jp.username + "'s UUID: " + jp.uuid);
 			}
 			else if(args[0].equalsIgnoreCase("whitelist") || args[0].equals("wl"))
 			{
@@ -77,7 +77,7 @@ public class CmdLatCore extends CommandBaseLC
 							
 							if(jp != null)
 							{
-								s += jp.displayName;
+								s += jp.username;
 								if(i != epP.whitelist.size() - 1)
 									s += ", ";
 							}
@@ -103,9 +103,9 @@ public class CmdLatCore extends CommandBaseLC
 							if(!epP.whitelist.contains(jp.uuid))
 							{
 								epP.whitelist.add(jp.uuid);
-								LatCoreMC.printChat(ics, "Added " + jp.displayName + " to whitelist");
+								LatCoreMC.printChat(ics, "Added " + jp.username + " to whitelist");
 							}
-							else LatCoreMC.printChat(ics, jp.displayName + " already added to whitelist!");
+							else LatCoreMC.printChat(ics, jp.username + " already added to whitelist!");
 						}
 						if(args[1].equals("rem") || args[1].equals("remUUID"))
 						{
@@ -116,9 +116,9 @@ public class CmdLatCore extends CommandBaseLC
 							if(epP.whitelist.contains(jp.uuid))
 							{
 								epP.whitelist.remove(jp.uuid);
-								LatCoreMC.printChat(ics, "Removed " + jp.displayName + " from whitelist");
+								LatCoreMC.printChat(ics, "Removed " + jp.username + " from whitelist");
 							}
-							else LatCoreMC.printChat(ics, jp.displayName + " is not added to whitelist!");
+							else LatCoreMC.printChat(ics, jp.username + " is not added to whitelist!");
 						}
 					}
 				}
@@ -157,7 +157,7 @@ public class CmdLatCore extends CommandBaseLC
 							
 							if(jp != null)
 							{
-								s += jp.displayName;
+								s += jp.username;
 								if(i != epP.blacklist.size() - 1)
 									s += ", ";
 							}
@@ -183,9 +183,9 @@ public class CmdLatCore extends CommandBaseLC
 							if(!epP.blacklist.contains(jp.uuid))
 							{
 								epP.blacklist.add(jp.uuid);
-								LatCoreMC.printChat(ics, "Added " + jp.displayName + " to blacklist");
+								LatCoreMC.printChat(ics, "Added " + jp.username + " to blacklist");
 							}
-							else LatCoreMC.printChat(ics, jp.displayName + " already added to blacklist!");
+							else LatCoreMC.printChat(ics, jp.username + " already added to blacklist!");
 						}
 						if(args[1].equals("rem") || args[1].equals("remUUID"))
 						{
@@ -196,9 +196,9 @@ public class CmdLatCore extends CommandBaseLC
 							if(epP.blacklist.contains(jp.uuid))
 							{
 								epP.blacklist.remove(jp.uuid);
-								LatCoreMC.printChat(ics, "Removed " + jp.displayName + " from blacklist");
+								LatCoreMC.printChat(ics, "Removed " + jp.username + " from blacklist");
 							}
-							else LatCoreMC.printChat(ics, jp.displayName + " is not added to blacklist!");
+							else LatCoreMC.printChat(ics, jp.username + " is not added to blacklist!");
 						}
 					}
 				}

@@ -1,20 +1,21 @@
 package latmod.core.mod.item;
-import java.util.*;
+import java.util.List;
 
-import latmod.core.mod.LMMod;
-import latmod.core.util.*;
-import cpw.mods.fml.relauncher.*;
-import net.minecraft.client.renderer.texture.*;
-import net.minecraft.creativetab.*;
+import latmod.core.mod.*;
+import latmod.core.mod.recipes.LMRecipes;
+import latmod.core.util.FastList;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
-import net.minecraft.util.*;
+import net.minecraft.util.IIcon;
+import cpw.mods.fml.relauncher.*;
 
 public abstract class ItemLM extends Item implements IItemLM
 {
 	public final String itemName;
 	public final FastList<ItemStack> itemsAdded;
-	public final LMMod mod;
+	public final LMMod<? extends LMConfig, ? extends LMRecipes> mod;
 	
 	public ItemLM(String s)
 	{
@@ -25,7 +26,10 @@ public abstract class ItemLM extends Item implements IItemLM
 		itemsAdded = new FastList<ItemStack>();
 	}
 	
-	public abstract LMMod getMod();
+	public abstract LMMod<? extends LMConfig, ? extends LMRecipes> getMod();
+	
+	public void addRecipe(ItemStack out, Object... in)
+	{ mod.recipes().addRecipe(out, in); }
 	
 	public final Item getItem()
 	{ return this; }

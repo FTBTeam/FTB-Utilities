@@ -1,7 +1,6 @@
 package latmod.core.mod.item;
 
 import latmod.core.*;
-import latmod.core.mod.LC;
 import latmod.core.mod.tile.ILinkable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -24,7 +23,7 @@ public class ItemLinkCard extends ItemLC
 	
 	public void loadRecipes()
 	{
-		LC.recipes.addRecipe(new ItemStack(this), "RGR", "PEP", "RGR",
+		addRecipe(new ItemStack(this), "RGR", "PEP", "RGR",
 				'R', ODItems.REDSTONE,
 				'G', ODItems.NUGGET_GOLD,
 				'P', Items.paper,

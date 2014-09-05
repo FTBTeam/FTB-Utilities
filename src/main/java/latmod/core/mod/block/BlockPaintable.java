@@ -25,7 +25,7 @@ public class BlockPaintable extends BlockLC
 	
 	public void loadRecipes()
 	{
-		LC.recipes.addRecipe(new ItemStack(this, 16), "WWW", "WPW", "WWW",
+		LC.mod.recipes().addRecipe(new ItemStack(this, 16), "WWW", "WPW", "WWW",
 				'W', new ItemStack(Blocks.wool, 1, 0),
 				'P', ODItems.PLANKS);
 	}

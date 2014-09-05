@@ -7,16 +7,18 @@ public class LCItems
 {
 	public static BlockPaintable b_paintable;
 	public static BlockScript b_script;
+	public static BlockFacade b_facade;
 	
 	public static ItemLinkCard i_link_card;
 	public static ItemBlockPainter i_painter;
 	
-	public static void init(LMMod mod)
+	public static void init()
 	{
-		mod.addBlock(LCItems.b_paintable = new BlockPaintable("paintable"));
-		mod.addBlock(LCItems.b_script = new BlockScript("scriptBlock"));
+		LC.mod.addBlock(LCItems.b_paintable = new BlockPaintable("paintable"));
+		LC.mod.addBlock(LCItems.b_script = new BlockScript("scriptBlock"));
+		LC.mod.addBlock(LCItems.b_facade = new BlockFacade("facade"));
 		
-		mod.addItem(LCItems.i_link_card = new ItemLinkCard("linkCard"));
-		mod.addItem(LCItems.i_painter = new ItemBlockPainter("blockPainter"));
+		LC.mod.addItem(LCItems.i_link_card = new ItemLinkCard("linkCard"));
+		LC.mod.addItem(LCItems.i_painter = new ItemBlockPainter("blockPainter"));
 	}
 }

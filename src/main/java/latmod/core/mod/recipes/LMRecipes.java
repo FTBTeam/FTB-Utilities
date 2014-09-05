@@ -29,7 +29,7 @@ public class LMRecipes
 	public void addCustomRecipes(CustomRecipes<?> c)
 	{ customRecipes.add(c); }
 	
-	public ItemStack size(ItemStack is, int s)
+	public static ItemStack size(ItemStack is, int s)
 	{ ItemStack is1 = is.copy(); is1.stackSize = s; return is1; }
 	
 	@SuppressWarnings("all")
@@ -47,7 +47,7 @@ public class LMRecipes
 	}
 	
 	@SuppressWarnings("unchecked")
-	public IRecipe addRecipe(IRecipe r)
+	public IRecipe addIRecipe(IRecipe r)
 	{ CraftingManager.getInstance().getRecipeList().add(r); return r; }
 
 	public IRecipe addRecipe(ItemStack out, Object... in)
@@ -55,7 +55,7 @@ public class LMRecipes
 		IRecipe r;
 		
 		if(!enableOreRecipes) r = GameRegistry.addShapedRecipe(out, in);
-		else r = addRecipe(new ShapedOreRecipe(out, in));
+		else r = addIRecipe(new ShapedOreRecipe(out, in));
 		
 		if(storeRecipes) craftingRecipes.add(r);
 		
@@ -90,9 +90,9 @@ public class LMRecipes
 				}
 			}
 			
-			r = addRecipe(new ShapelessRecipes(out, al));
+			r = addIRecipe(new ShapelessRecipes(out, al));
 		}
-		else r = addRecipe(new ShapelessOreRecipe(out, in));
+		else r = addIRecipe(new ShapelessOreRecipe(out, in));
 		
 		if(storeRecipes) craftingRecipes.add(r);
 		

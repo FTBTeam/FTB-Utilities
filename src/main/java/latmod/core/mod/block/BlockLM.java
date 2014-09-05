@@ -1,7 +1,8 @@
 package latmod.core.mod.block;
 import java.util.*;
 
-import latmod.core.mod.LMMod;
+import latmod.core.mod.*;
+import latmod.core.mod.recipes.LMRecipes;
 import latmod.core.mod.tile.TileLM;
 import latmod.core.util.FastList;
 import net.minecraft.block.*;
@@ -20,12 +21,12 @@ public abstract class BlockLM extends BlockContainer
 {
 	public final String blockName;
 	public ArrayList<ItemStack> blocksAdded = new ArrayList<ItemStack>();
-	public final LMMod mod;
+	public final LMMod<? extends LMConfig, ? extends LMRecipes> mod;
 	
-	public BlockLM(LMMod bm, String s, Material m)
+	public BlockLM(String s, Material m)
 	{
 		super(m);
-		mod = bm;
+		mod = getMod();
 		blockName = s;
 		setBlockName(mod.getBlockName(s));
 		setHardness(1.8F);
@@ -33,6 +34,10 @@ public abstract class BlockLM extends BlockContainer
 		isBlockContainer = false;
 	}
 	
+	public void addRecipe(ItemStack out, Object... in)
+	{ mod.recipes().addRecipe(out, in); }
+	
+	public abstract LMMod<? extends LMConfig, ? extends LMRecipes> getMod();
 	@SideOnly(Side.CLIENT)
 	public abstract CreativeTabs getCreativeTabToDisplayOn();
 	public abstract TileLM createNewTileEntity(World w, int m);

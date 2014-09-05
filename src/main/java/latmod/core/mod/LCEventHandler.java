@@ -18,7 +18,7 @@ public class LCEventHandler
 	{
 		if(e.showAdvancedItemTooltips && e.itemStack != null && e.itemStack.getItem() != null)
 		{
-			if(LC.config.general.addOreNames)
+			if(LC.mod.config().general.addOreNames)
 			{
 				FastList<String> ores = ODItems.getOreNames(e.itemStack);
 				
@@ -30,12 +30,12 @@ public class LCEventHandler
 				}
 			}
 			
-			if(LC.config.general.addRegistryNames)
+			if(LC.mod.config().general.addRegistryNames)
 			{
-				e.toolTip.add(LatCoreMC.getRegName(e.itemStack.getItem(), false));
+				e.toolTip.add(LatCoreMC.getRegName(e.itemStack));
 			}
 			
-			if(LC.config.general.addFluidContainerNames)
+			if(LC.mod.config().general.addFluidContainerNames)
 			{
 				if(e.itemStack.getItem() instanceof IFluidContainerItem)
 				{
@@ -76,7 +76,7 @@ public class LCEventHandler
 		if(EnumLatModTeam.TEAM.uuids.contains(e.player.getUniqueID()))
 			LatCoreMC.printChat(e.player, "Hello, Team LatMod member!");
 		
-		if(LC.config.general.checkUpdates)
+		if(LC.mod.config().general.checkUpdates)
 			ThreadCheckVersions.init(e.player, false);
 	}
 	

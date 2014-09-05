@@ -9,7 +9,7 @@ public class ItemLC extends ItemLM
 	public ItemLC(String s)
 	{ super(s); }
 	
-	public LMMod getMod()
+	public LMMod<?, ?> getMod()
 	{ return LC.mod; }
 	
 	@SideOnly(Side.CLIENT)

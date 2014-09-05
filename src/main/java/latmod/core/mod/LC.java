@@ -24,10 +24,8 @@ public class LC
 	@SidedProxy(clientSide = "latmod.core.mod.LCClient", serverSide = "latmod.core.mod.LCCommon")
 	public static LCCommon proxy;
 	
-	public static LMMod mod;
+	public static LMMod<LCConfig, LMRecipes> mod;
 	public static CreativeTabs tab;
-	public static LMRecipes recipes;
-	public static LCConfig config;
 	public static Logger logger = LogManager.getLogger("LatCoreMC");
 	
 	public LC()
@@ -45,23 +43,21 @@ public class LC
 		else
 			logger.info("Loading LatCoreMC, Build #" + VERSION);
 		
-		mod = new LMMod(MOD_ID);
+		mod = new LMMod<LCConfig, LMRecipes>(MOD_ID, new LCConfig(e), new LMRecipes(false));
 		ODItems.preInit();
-		recipes = new LMRecipes(false);
-		config = new LCConfig(e);
 		
-		LCItems.init(mod);
+		LCItems.init();
 		mod.onPostLoaded();
 		
 		tab = mod.createTab("tab", new ItemStack(LCItems.i_link_card));
 		
 		LatCoreMC.addGuiHandler(this, proxy);
 		
-		if(config.general.checkTeamLatMod)
+		if(mod.config().general.checkTeamLatMod)
 			ThreadCheckTeamLatMod.init();
 		
 		proxy.preInit();
-		config.save();
+		mod.config().save();
 	}
 	
 	@Mod.EventHandler

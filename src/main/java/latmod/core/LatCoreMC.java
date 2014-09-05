@@ -154,12 +154,18 @@ public class LatCoreMC
 		return null;
 	}
 
-	public static String getRegName(Item item, boolean removeMCDomain)
+	/*public static String getRegName(Item item, boolean removeMCDomain)
 	{
 		String s = Item.itemRegistry.getNameForObject(item);
 		if(s != null && removeMCDomain && s.startsWith("minecraft:"))
 			s = s.substring(10); return s;
-	}
+	}*/
+	
+	public static String getRegName(Item item)
+	{ return Item.itemRegistry.getNameForObject(item); }
+	
+	public static String getRegName(ItemStack is)
+	{ return (is != null && is.getItem() != null) ? getRegName(is.getItem()) : null; }
 	
 	public static EntityPlayer getPlayer(World w, UUID id)
 	{ return w.func_152378_a(id); }

@@ -26,7 +26,7 @@ public class ItemBlockPainter extends ItemLC
 	
 	public void loadRecipes()
 	{
-		LC.recipes.addRecipe(new ItemStack(this), "SCS", "SPS", " P ",
+		addRecipe(new ItemStack(this), "SCS", "SPS", " P ",
 				'S', ODItems.STICK,
 				'C', LCItems.b_paintable,
 				'P', ODItems.IRON);

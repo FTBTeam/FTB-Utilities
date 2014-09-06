@@ -41,14 +41,17 @@ public abstract class ContainerLM extends Container
 		return is;
 	}
 	
-	public void addPlayerSlots(int posY)
+	public void addPlayerSlots(int posX, int posY)
 	{
 		for(int y = 0; y < 3; y++) for(int x = 0; x < 9; x++)
-		addSlotToContainer(new Slot(player.inventory, x + y * 9 + 9, 8 + x * 18, posY + y * 18));
+		addSlotToContainer(new Slot(player.inventory, x + y * 9 + 9, posX + x * 18, posY + y * 18));
 		
 		for(int x = 0; x < 9; x++)
-		addSlotToContainer(new Slot(player.inventory, x, 8 + x * 18, posY + 58));
+		addSlotToContainer(new Slot(player.inventory, x, posX + x * 18, posY + 58));
 	}
+	
+	public void addPlayerSlots(int posY)
+	{ addPlayerSlots(8, posY); }
 	
 	public boolean canInteractWith(EntityPlayer ep)
 	{ return true; }

@@ -54,7 +54,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 			return customName;
 		return username;
 	}
-
+	
 	public boolean hasCustomName()
 	{ return customName != null; }
 	

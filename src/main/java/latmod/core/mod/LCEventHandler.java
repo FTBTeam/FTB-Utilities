@@ -89,12 +89,10 @@ public class LCEventHandler
 		if(LC.mod.config().general.checkUpdates)
 			ThreadCheckVersions.init(e.player, false);
 		
-		LC.mod.logger.info("Joined: " + e.player + ", " + LatCoreMC.getEffectiveSide());
-		
 		{
 			NBTTagCompound data = new NBTTagCompound();
 			data.setString("UUID", e.player.getUniqueID().toString());
-			LMNetHandler.INSTANCE.sendToServer(new MessageCustomClientAction(ACTION_PLAYER_JOINED, data));
+			LMNetHandler.INSTANCE.sendToAll(new MessageCustomClientAction(ACTION_PLAYER_JOINED, data));
 		}
 	}
 	
@@ -141,9 +139,7 @@ public class LCEventHandler
 		public final NBTTagCompound tag;
 		
 		public LoadCustomLMDataEvent(NBTTagCompound t)
-		{
-			tag = t;
-		}
+		{ tag = t; }
 		
 		public void post()
 		{ MinecraftForge.EVENT_BUS.post(this); }
@@ -193,9 +189,7 @@ public class LCEventHandler
 		public final NBTTagCompound tag;
 		
 		public SaveCustomLMDataEvent(NBTTagCompound t)
-		{
-			tag = t;
-		}
+		{ tag = t; }
 		
 		public void post()
 		{ MinecraftForge.EVENT_BUS.post(this); }

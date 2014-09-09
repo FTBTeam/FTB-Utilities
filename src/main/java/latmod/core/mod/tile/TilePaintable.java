@@ -1,41 +1,63 @@
 package latmod.core.mod.tile;
 
+import scala.actors.threadpool.Arrays;
+import latmod.core.LatCoreMC;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.*;
 
 public class TilePaintable extends TileLM implements IPaintable
 {
-	private ItemStack paintItem;
+	private ItemStack[] paintItems = new ItemStack[6];
+	
+	public boolean rerenderBlock()
+	{ return true; }
 	
 	public void readTileData(NBTTagCompound tag)
 	{
 		super.readTileData(tag);
 		
-		if(!tag.hasKey("Paint")) paintItem = null;
-		else paintItem = ItemStack.loadItemStackFromNBT(tag.getCompoundTag("Paint"));
+		NBTTagList list = tag.getTagList("Textures", LatCoreMC.NBT_MAP);
+		
+		Arrays.fill(paintItems, null);
+		
+		for(int i = 0; i < list.tagCount(); i++)
+		{
+			NBTTagCompound tag1 = list.getCompoundTagAt(i);
+			
+			int s = tag1.getByte("Side");
+			paintItems[s] = ItemStack.loadItemStackFromNBT(tag1);
+		}
 	}
 	
 	public void writeTileData(NBTTagCompound tag)
 	{
 		super.writeTileData(tag);
 		
-		if(paintItem != null)
+		NBTTagList list = new NBTTagList();
+		
+		for(int i = 0; i < 6; i++)
 		{
-			NBTTagCompound tag1 = new NBTTagCompound();
-			paintItem.writeToNBT(tag1);
-			tag.setTag("Paint", tag1);
+			if(paintItems[i] != null)
+			{
+				NBTTagCompound tag1 = new NBTTagCompound();
+				paintItems[i].writeToNBT(tag1);
+				tag1.setByte("Side", (byte)i);
+				list.appendTag(tag1);
+			}
 		}
+		
+		if(list.tagCount() > 0) tag.setTag("Textures", list);
 	}
 	
-	public final ItemStack getPaint()
-	{ return paintItem; }
+	public ItemStack getPaint(int s)
+	{ return paintItems[s]; }
 	
-	public boolean setPaint(ItemStack is, EntityPlayer ep)
+	public boolean setPaint(ItemStack is, EntityPlayer ep, int s)
 	{
-		if(paintItem == null || is == null || !paintItem.isItemEqual(is))
+		if(paintItems[s] == null || is == null || !paintItems[s].isItemEqual(is))
 		{
-			paintItem = is;
+			paintItems[s] = is;
 			markDirty();
 			return true;
 		}

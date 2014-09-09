@@ -65,7 +65,7 @@ public class ItemBlockPainter extends ItemLC
 		{
 			ItemStack paint = getPaintItem(is);
 			
-			if((ep.capabilities.isCreativeMode || canPaintBlock(is)) && ((IPaintable)te).setPaint(paint, ep))
+			if((ep.capabilities.isCreativeMode || canPaintBlock(is)) && ((IPaintable)te).setPaint(paint, ep, s))
 			{
 				if(!ep.capabilities.isCreativeMode)
 					damagePainter(is, ep);
@@ -82,14 +82,25 @@ public class ItemBlockPainter extends ItemLC
 				{
 					ItemStack paint = new ItemStack(b, 1, ep.worldObj.getBlockMetadata(x, y, z));
 					
-					if(!is.hasTagCompound())
-						is.stackTagCompound = new NBTTagCompound();
-					
-					NBTTagCompound paintTag = new NBTTagCompound();
-					paint.writeToNBT(paintTag);
-					is.stackTagCompound.setTag("Paint", paintTag);
-					
-					LatCoreMC.printChat(ep, "Paint texture set to " + paint.getDisplayName());
+					try
+					{
+						paint.getDisplayName();
+						
+						ItemStack paint0 = getPaintItem(is);
+						
+						if(paint0 == null || !ItemStack.areItemStacksEqual(paint0, paint))
+						{
+							if(!is.hasTagCompound())
+								is.stackTagCompound = new NBTTagCompound();
+							
+							NBTTagCompound paintTag = new NBTTagCompound();
+							paint.writeToNBT(paintTag);
+							is.stackTagCompound.setTag("Paint", paintTag);
+							
+							LatCoreMC.printChat(ep, "Paint texture set to " + paint.getDisplayName());
+						}
+					}
+					catch(Exception e) { }
 				}
 			}
 		}

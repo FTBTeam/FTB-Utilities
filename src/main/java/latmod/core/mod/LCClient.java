@@ -3,6 +3,7 @@ import latmod.core.client.LatCoreMCClient;
 import latmod.core.mod.block.BlockPaintable;
 import latmod.core.mod.client.render.block.RenderPaintable;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -41,4 +42,24 @@ public class LCClient extends LCCommon
 	
 	public double getReachDist(EntityPlayer ep)
 	{ return Minecraft.getMinecraft().playerController.getBlockReachDistance(); }
+	
+	public void setSkinAndCape(EntityPlayer ep)
+	{
+		if(ep instanceof AbstractClientPlayer)
+		{
+			/* FIXME
+			AbstractClientPlayer p = (AbstractClientPlayer)ep;
+			
+			if(p.getUniqueID().equals(Minecraft.getMinecraft().thePlayer.getUniqueID()))
+			{
+				p = Minecraft.getMinecraft().thePlayer;
+			}
+			
+			ResourceLocation customSkinLocation = LC.mod.getLocation("custom/skin/" + p.getUniqueID() + ".png");
+			p.func_152121_a(MinecraftProfileTexture.Type.SKIN, customSkinLocation);
+			LatCoreMC.printChat(ep, "Set skint to " + p.getLocationSkin());
+			AbstractClientPlayer.getDownloadImageSkin(p.getLocationSkin(), "http://i.imgur.com/yFSexm0.png");
+			*/
+		}
+	}
 }

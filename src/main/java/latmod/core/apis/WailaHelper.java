@@ -26,6 +26,12 @@ public class WailaHelper
 			System.out.println("[LatCore] Waila not installed!");
 			isInstalled = false;
 		}
+		
+		try
+		{
+		}
+		catch(Exception e)
+		{ e.printStackTrace(); }
 	}
 	
 	public static boolean isInstalled()

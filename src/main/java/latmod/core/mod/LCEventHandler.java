@@ -92,7 +92,7 @@ public class LCEventHandler
 		{
 			NBTTagCompound data = new NBTTagCompound();
 			data.setString("UUID", e.player.getUniqueID().toString());
-			LMNetHandler.INSTANCE.sendToAll(new MessageCustomClientAction(ACTION_PLAYER_JOINED, data));
+			LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(ACTION_PLAYER_JOINED, data));
 		}
 	}
 	
@@ -219,7 +219,7 @@ public class LCEventHandler
 		{
 			UUID id = UUID.fromString(e.extraData.getString("UUID"));
 			EntityPlayer ep = LatCoreMC.getPlayer(e.player.worldObj, id);
-			LC.mod.logger.info("Joined: " + ep + ", " + LatCoreMC.getEffectiveSide());
+			LC.proxy.setSkinAndCape(ep);
 		}
 	}
 }

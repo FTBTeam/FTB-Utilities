@@ -36,4 +36,8 @@ public class LCCommon implements IGuiHandler // LCClient
 			return ((EntityPlayerMP)ep).theItemInWorldManager.getBlockReachDistance();
 		return 0F;
 	}
+	
+	public void setSkinAndCape(EntityPlayer ep)
+	{
+	}
 }

@@ -13,6 +13,12 @@ public class LMConfig
 		public Category(String s)
 		{ cat = s; }
 		
+		public String getString(String s, String def, String... comment)
+		{
+			String s1 = config.get(cat, s, def).getString();
+			if(comment.length > 0) setComment(s, comment); return s1;
+		}
+		
 		public boolean getBool(String s, boolean def, String... comment)
 		{
 			boolean b1 = config.get(cat, s, def).getBoolean(def);

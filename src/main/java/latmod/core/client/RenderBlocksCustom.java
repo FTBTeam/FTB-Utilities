@@ -122,4 +122,7 @@ public class RenderBlocksCustom extends RenderBlocks
 
 	public void renderBlockAsItemByRenderType(Block b, int metadata)
 	{ super.renderBlockAsItem(b, metadata, 1F); }
+	
+	public void updateColor()
+	{ Tessellator.instance.setColorOpaque_F(customColRed, customColGreen, customColBlue);; }
 }

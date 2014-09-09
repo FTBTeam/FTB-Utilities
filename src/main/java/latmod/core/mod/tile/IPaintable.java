@@ -4,6 +4,6 @@ import net.minecraft.item.ItemStack;
 
 public interface IPaintable extends ITileInterface
 {
-	public ItemStack getPaint();
-	public boolean setPaint(ItemStack is, EntityPlayer ep);
+	public ItemStack getPaint(int side);
+	public boolean setPaint(ItemStack is, EntityPlayer ep, int side);
 }

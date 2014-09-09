@@ -12,13 +12,20 @@ public class BlockFacade extends BlockLC
 		super(s, Material.rock);
 		setHardness(0.3F);
 		isBlockContainer = false;
-		setBlockBounds(0F, 0F, 0F, 1F / 8F, 1F, 1F);
+		
+		setBlockBounds(0.5F - 1F / 16F, 0F, 0F, 0.5F + 1F / 16F, 1F, 1F);
 	}
 	
 	public boolean canPlaceBlockAt(World w, int x, int y, int z)
 	{ return false; }
 	
 	public boolean canPlaceBlockOnSide(World w, int x, int y, int z, int side)
+	{ return false; }
+	
+	public boolean isOpaqueCube()
+	{ return false; }
+	
+	public boolean renderAsNormalBlock()
 	{ return false; }
 	
 	public void loadRecipes()

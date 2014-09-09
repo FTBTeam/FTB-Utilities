@@ -21,14 +21,19 @@ public class MessageCustomServerAction implements IMessage, IMessageHandler<Mess
 	
 	public void fromBytes(ByteBuf data)
 	{
-		action = LMNetHandler.readString(data);
-		extraData = LMNetHandler.readNBTTagCompound(data);
+		NBTTagCompound tag = LMNetHandler.readNBTTagCompound(data);
+		
+		action = tag.getString("Action");
+		extraData = (NBTTagCompound)tag.getTag("Data");
 	}
 	
 	public void toBytes(ByteBuf data)
 	{
-		LMNetHandler.writeString(data, action);
-		LMNetHandler.writeNBTTagCompound(data, extraData);
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setString("Action", action);
+		if(extraData != null) tag.setTag("Data", extraData);
+		
+		LMNetHandler.writeNBTTagCompound(data, tag);
 	}
 	
 	public IMessage onMessage(MessageCustomServerAction message, MessageContext ctx)

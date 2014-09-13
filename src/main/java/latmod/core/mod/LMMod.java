@@ -111,5 +111,7 @@ public class LMMod<C extends LMConfig, R extends LMRecipes>
 		
 		for(int i = 0; i < blocks.size(); i++)
 			blocks.get(i).loadRecipes();
+		
+		if(recipes != null) recipes.loadRecipes();
 	}
 }

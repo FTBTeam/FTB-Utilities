@@ -14,7 +14,4 @@ public enum EnumToolClass
 	public static final int LEVEL_STONE = 1;
 	public static final int LEVEL_IRON = 2;
 	public static final int LEVEL_DIAMOND = 3;
-	
-	/** Material 4th tier, can mine Ardite & Cobalt */
-	public static final int ALUMITE = 4;
 }

@@ -2,6 +2,7 @@ package latmod.core.mod.block;
 import java.util.*;
 
 import latmod.core.mod.*;
+import latmod.core.mod.item.block.ItemBlockLM;
 import latmod.core.mod.recipes.LMRecipes;
 import latmod.core.mod.tile.TileLM;
 import latmod.core.util.FastList;
@@ -41,6 +42,10 @@ public abstract class BlockLM extends BlockContainer
 	@SideOnly(Side.CLIENT)
 	public abstract CreativeTabs getCreativeTabToDisplayOn();
 	public abstract TileLM createNewTileEntity(World w, int m);
+	
+	@SuppressWarnings("unchecked")
+	public final <E> E register(Class<? extends ItemBlockLM> c) { mod.addBlock(this, c); return (E)this; }
+	public final <E> E register() { return register(ItemBlockLM.class); }
 	
 	public void onPostLoaded()
 	{ blocksAdded.add(new ItemStack(this)); }

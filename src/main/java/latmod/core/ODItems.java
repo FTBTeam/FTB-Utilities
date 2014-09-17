@@ -30,6 +30,8 @@ public class ODItems
 	public static final String IRON = "ingotIron";
 	public static final String GOLD = "ingotGold";
 	public static final String DIAMOND = "gemDiamond";
+	public static final String EMERALD = "gemEmerald";
+	
 	public static final String TIN = "ingotTin";
 	public static final String COPPER = "ingotCopper";
 	public static final String LEAD = "ingotLead";

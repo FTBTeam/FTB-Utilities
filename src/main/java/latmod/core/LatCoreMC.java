@@ -290,13 +290,31 @@ public class LatCoreMC
 	{
 		if(boxes == null || boxes.isEmpty()) return null;
 		
+		MovingObjectPosition current = null;
+		double dist = Double.POSITIVE_INFINITY;
+		
 		for(int i = 0; i < boxes.size(); i++)
 		{
-			MovingObjectPosition mop = collisionRayTrace(w, x, y, z, start, end, boxes.get(i));
-			if(mop != null) return mop;
+			AxisAlignedBB aabb = boxes.get(i);
+			
+			if(aabb != null)
+			{
+				MovingObjectPosition mop = collisionRayTrace(w, x, y, z, start, end, aabb);
+				
+				if(mop != null)
+				{
+					double d1 = mop.hitVec.squareDistanceTo(start);
+					if(current == null || d1 < dist)
+					{
+						current = mop;
+						current.subHit = i;
+						dist = d1;
+					}
+				}
+			}
 		}
 		
-		return null;
+		return current;
 	}
 	
 	public static MovingObjectPosition collisionRayTrace(World w, int x, int y, int z, Vec3 start, Vec3 end, AxisAlignedBB aabb)

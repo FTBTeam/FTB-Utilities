@@ -1,6 +1,6 @@
 package latmod.core;
 import java.io.*;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -366,4 +366,52 @@ public class LatCoreMC
 	
 	private static boolean isVecInsideXYBounds(Vec3 v, AxisAlignedBB aabb)
 	{ return v == null ? false : v.xCoord >= aabb.minX && v.xCoord <= aabb.maxX && v.yCoord >= aabb.minY && v.yCoord <= aabb.maxY; }
+	
+	private static Field addedTileEntityList = null;
+	
+	@SuppressWarnings("all")
+	public static FastList<TileEntity> getAllTiles(World w, Class<? extends TileEntity> filter)
+	{
+		if(addedTileEntityList == null)
+		{
+			try { addedTileEntityList = World.class.getDeclaredField("addedTileEntityList"); }
+			catch(Exception e) { e.printStackTrace(); }
+		}
+		
+		FastList<TileEntity> al = new FastList<TileEntity>();
+
+		if(addedTileEntityList != null)
+		{
+			try
+			{
+				List<TileEntity> l = (List<TileEntity>)addedTileEntityList.get(w);
+				
+				if(l.size() > 0) for(TileEntity te : l)
+				{
+					if(te != null && !te.isInvalid() && (filter == null || filter.isAssignableFrom(te.getClass())))
+						al.add(te);
+				}
+			}
+			catch(Exception e)
+			{ e.printStackTrace(); }
+		}
+		
+		return al;
+	}
+	
+	public static FastList<TileEntity> getAllTilesInAABB(World w, Class<? extends TileEntity> filter, AxisAlignedBB aabb)
+	{
+		FastList<TileEntity> al = getAllTiles(w, filter);
+		FastList<TileEntity> al1 = new FastList<TileEntity>();
+		
+		for(int i = 0; i < al.size(); i++)
+		{
+			TileEntity t = al.get(i);
+			if(t.xCoord >= aabb.minX && t.yCoord >= aabb.minY && t.zCoord >= aabb.minZ
+			&& t.xCoord <= aabb.maxX && t.yCoord <= aabb.maxY && t.zCoord <= aabb.maxZ)
+				al1.add(t);
+		}
+		
+		return al1;
+	}
 }

@@ -1,9 +1,9 @@
 package latmod.core.mod.tile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.MovingObjectPosition;
 
 public interface IPaintable extends ITileInterface
 {
-	public ItemStack getPaint(int side);
-	public boolean setPaint(ItemStack is, EntityPlayer ep, int side);
+	public boolean setPaint(EntityPlayer ep, MovingObjectPosition mop, ItemStack paint);
 }

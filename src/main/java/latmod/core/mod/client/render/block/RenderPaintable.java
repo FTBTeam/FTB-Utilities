@@ -1,15 +1,16 @@
 package latmod.core.mod.client.render.block;
-import org.lwjgl.opengl.GL11;
-
 import latmod.core.client.RenderBlocksCustom;
 import latmod.core.mod.LCItems;
 import latmod.core.mod.block.BlockPaintable;
-import latmod.core.mod.tile.IPaintable;
+import latmod.core.mod.tile.TilePaintable;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.relauncher.*;
 
@@ -34,22 +35,47 @@ public class RenderPaintable implements ISimpleBlockRenderingHandler
 	{
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		renderBlocks.blockAccess = iba;
-		renderBlocks.setCustomColor(null);
 		renderBlocks.setRenderBounds(0D, 0D, 0D, 1D, 1D, 1D);
+		renderBlocks.setCustomColor(null);
 		
-		IPaintable t = (IPaintable)iba.getTileEntity(x, y, z);
+		TilePaintable t = (TilePaintable)iba.getTileEntity(x, y, z);
+		
+		renderBlocks.setRenderBounds(0D, 0D, 0D, 1D, 0D, 1D);
+		renderBlocks.setOverrideBlockTexture(t.getIcon(ForgeDirection.DOWN));
+		renderBlocks.renderStandardBlock(Blocks.stone, x, y, z);
+		
+		renderBlocks.setRenderBounds(0D, 1D, 0D, 1D, 1D, 1D);
+		renderBlocks.setOverrideBlockTexture(t.getIcon(ForgeDirection.UP));
+		renderBlocks.renderStandardBlock(Blocks.stone, x, y, z);
+		
+		renderBlocks.setRenderBounds(0D, 0D, 0D, 1D, 1D, 0D);
+		renderBlocks.setOverrideBlockTexture(t.getIcon(ForgeDirection.NORTH));
+		renderBlocks.renderStandardBlock(Blocks.stone, x, y, z);
+		
+		renderBlocks.setRenderBounds(0D, 0D, 1D, 1D, 1D, 1D);
+		renderBlocks.setOverrideBlockTexture(t.getIcon(ForgeDirection.SOUTH));
+		renderBlocks.renderStandardBlock(Blocks.stone, x, y, z);
+		
+		renderBlocks.setRenderBounds(0D, 0D, 0D, 0D, 1D, 1D);
+		renderBlocks.setOverrideBlockTexture(t.getIcon(ForgeDirection.WEST));
+		renderBlocks.renderStandardBlock(Blocks.stone, x, y, z);
+		
+		renderBlocks.setRenderBounds(1D, 0D, 0D, 1D, 1D, 1D);
+		renderBlocks.setOverrideBlockTexture(t.getIcon(ForgeDirection.EAST));
+		renderBlocks.renderStandardBlock(Blocks.stone, x, y, z);
+		
+		/*
+		
 		
 		for(int s = 0; s < 6; s++)
 		{
 			Block bl = LCItems.b_paintable;
 			renderBlocks.customMetadata = 0;
 			
-			ItemStack is = t.getPaint(s);
-			
-			if(is != null)
+			if(t.paintItems[s] != null)
 			{
-				bl = Block.getBlockFromItem(is.getItem());
-				renderBlocks.customMetadata = is.getItemDamage();
+				bl = Block.getBlockFromItem(t.paintItems[s].getItem());
+				renderBlocks.customMetadata = t.paintItems[s].getItemDamage();
 				
 				renderBlocks.setCustomColor(bl.getRenderColor(renderBlocks.customMetadata));
 			}
@@ -61,7 +87,7 @@ public class RenderPaintable implements ISimpleBlockRenderingHandler
 			
 			//renderBlocks.setRenderBounds(0D, 0D, 0D, 1D, 1D, 1D);
 			//renderBlocks.renderStandardBlock(Blocks.stone, x, y, z);
-		}
+		}*/
 		
 		return true;
 	}

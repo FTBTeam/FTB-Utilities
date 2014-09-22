@@ -1,14 +1,19 @@
 package latmod.core.mod.tile;
 
-import scala.actors.threadpool.Arrays;
 import latmod.core.LatCoreMC;
+import latmod.core.mod.LCItems;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
+import net.minecraft.util.*;
+import net.minecraftforge.common.util.ForgeDirection;
+import scala.actors.threadpool.Arrays;
+import cpw.mods.fml.relauncher.*;
 
 public class TilePaintable extends TileLM implements IPaintable
 {
-	private ItemStack[] paintItems = new ItemStack[6];
+	public ItemStack[] paintItems = new ItemStack[6];
 	
 	public boolean rerenderBlock()
 	{ return true; }
@@ -50,18 +55,25 @@ public class TilePaintable extends TileLM implements IPaintable
 		if(list.tagCount() > 0) tag.setTag("Textures", list);
 	}
 	
-	public ItemStack getPaint(int s)
-	{ return paintItems[s]; }
-	
-	public boolean setPaint(ItemStack is, EntityPlayer ep, int s)
+	public boolean setPaint(EntityPlayer ep, MovingObjectPosition mop, ItemStack paint)
 	{
-		if(paintItems[s] == null || is == null || !paintItems[s].isItemEqual(is))
+		if(paintItems[mop.sideHit] == null || paint == null || !paintItems[mop.sideHit].isItemEqual(paint))
 		{
-			paintItems[s] = is;
+			paintItems[mop.sideHit] = paint;
 			markDirty();
 			return true;
 		}
 		
 		return false;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public IIcon getIcon(ForgeDirection f)
+	{
+		int id = f.ordinal();
+		
+		if(paintItems[id] != null)
+			return Block.getBlockFromItem(paintItems[id].getItem()).getIcon(id, paintItems[id].getItemDamage());
+		return LCItems.b_paintable.getBlockIcon();
 	}
 }

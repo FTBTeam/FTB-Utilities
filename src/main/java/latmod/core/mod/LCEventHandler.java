@@ -4,9 +4,11 @@ import java.util.UUID;
 
 import latmod.core.*;
 import latmod.core.client.LatCoreMCClient;
+import latmod.core.mod.item.PainterHelper;
 import latmod.core.mod.net.*;
 import latmod.core.util.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.*;
 import net.minecraft.nbt.*;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -23,6 +25,10 @@ public class LCEventHandler
 	@SubscribeEvent
 	public void onTooltip(ItemTooltipEvent e)
 	{
+		if(e.itemStack == null || e.itemStack.getItem() == null) return;
+		
+		Item item = e.itemStack.getItem();
+		
 		if(e.showAdvancedItemTooltips && e.itemStack != null && e.itemStack.getItem() != null)
 		{
 			if(LC.mod.config().general.addOreNames)
@@ -44,9 +50,9 @@ public class LCEventHandler
 			
 			if(LC.mod.config().general.addFluidContainerNames)
 			{
-				if(e.itemStack.getItem() instanceof IFluidContainerItem)
+				if(item instanceof IFluidContainerItem)
 				{
-					FluidStack fs = ((IFluidContainerItem)e.itemStack.getItem()).getFluid(e.itemStack);
+					FluidStack fs = ((IFluidContainerItem)item).getFluid(e.itemStack);
 					
 					if(fs != null && fs.amount > 0)
 					{
@@ -55,6 +61,12 @@ public class LCEventHandler
 					}
 				}
 			}
+		}
+		
+		if(item instanceof PainterHelper.IPainterItem)
+		{
+			ItemStack paint = ((PainterHelper.IPainterItem)item).getPaintItem(e.itemStack);
+			if(paint != null) e.toolTip.add("Paint: " + paint.getDisplayName());
 		}
 	}
 	

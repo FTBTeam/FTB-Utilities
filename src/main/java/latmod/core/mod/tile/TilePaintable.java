@@ -4,7 +4,7 @@ import latmod.core.LatCoreMC;
 import latmod.core.mod.LCItems;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.nbt.*;
 import net.minecraft.util.*;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -13,7 +13,8 @@ import cpw.mods.fml.relauncher.*;
 
 public class TilePaintable extends TileLM implements IPaintable
 {
-	public ItemStack[] paintItems = new ItemStack[6];
+	public Block[] paintBlocks = new Block[6];
+	public int[] paintMetas = new int[6];
 	
 	public boolean rerenderBlock()
 	{ return true; }
@@ -24,14 +25,16 @@ public class TilePaintable extends TileLM implements IPaintable
 		
 		NBTTagList list = tag.getTagList("Textures", LatCoreMC.NBT_MAP);
 		
-		Arrays.fill(paintItems, null);
+		Arrays.fill(paintBlocks, null);
 		
 		for(int i = 0; i < list.tagCount(); i++)
 		{
 			NBTTagCompound tag1 = list.getCompoundTagAt(i);
 			
 			int s = tag1.getByte("Side");
-			paintItems[s] = ItemStack.loadItemStackFromNBT(tag1);
+			ItemStack is = ItemStack.loadItemStackFromNBT(tag1);
+			paintBlocks[s] = Block.getBlockFromItem(is.getItem());
+			paintMetas[s] = is.getItemDamage();
 		}
 	}
 	
@@ -43,10 +46,10 @@ public class TilePaintable extends TileLM implements IPaintable
 		
 		for(int i = 0; i < 6; i++)
 		{
-			if(paintItems[i] != null)
+			if(paintBlocks[i] != null)
 			{
 				NBTTagCompound tag1 = new NBTTagCompound();
-				paintItems[i].writeToNBT(tag1);
+				(new ItemStack(paintBlocks[i], 1, paintMetas[i])).writeToNBT(tag1);
 				tag1.setByte("Side", (byte)i);
 				list.appendTag(tag1);
 			}
@@ -57,9 +60,10 @@ public class TilePaintable extends TileLM implements IPaintable
 	
 	public boolean setPaint(EntityPlayer ep, MovingObjectPosition mop, ItemStack paint)
 	{
-		if(paintItems[mop.sideHit] == null || paint == null || !paintItems[mop.sideHit].isItemEqual(paint))
+		if(paintBlocks[mop.sideHit] == null || paint == null || Item.getItemFromBlock(paintBlocks[mop.sideHit]) != paint.getItem())
 		{
-			paintItems[mop.sideHit] = paint;
+			paintBlocks[mop.sideHit] = Block.getBlockFromItem(paint.getItem());
+			paintMetas[mop.sideHit] = paint.getItemDamage();
 			markDirty();
 			return true;
 		}
@@ -72,8 +76,18 @@ public class TilePaintable extends TileLM implements IPaintable
 	{
 		int id = f.ordinal();
 		
-		if(paintItems[id] != null)
-			return Block.getBlockFromItem(paintItems[id].getItem()).getIcon(id, paintItems[id].getItemDamage());
+		if(paintBlocks[id] != null)
+			return paintBlocks[id].getIcon(id, paintMetas[id]);
 		return LCItems.b_paintable.getBlockIcon();
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public int getColor(ForgeDirection f)
+	{
+		int id = f.ordinal();
+		
+		if(paintBlocks[id] != null)
+			return paintBlocks[id].getRenderColor(paintMetas[id]);
+		return 0xFFFFFFFF;
 	}
 }

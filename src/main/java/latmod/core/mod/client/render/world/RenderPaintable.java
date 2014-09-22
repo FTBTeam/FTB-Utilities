@@ -1,4 +1,4 @@
-package latmod.core.mod.client.render.block;
+package latmod.core.mod.client.render.world;
 import latmod.core.client.RenderBlocksCustom;
 import latmod.core.mod.LCItems;
 import latmod.core.mod.block.BlockPaintable;

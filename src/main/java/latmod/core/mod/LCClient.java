@@ -1,7 +1,7 @@
 package latmod.core.mod;
 import latmod.core.client.LatCoreMCClient;
 import latmod.core.mod.block.BlockPaintable;
-import latmod.core.mod.client.render.block.RenderPaintable;
+import latmod.core.mod.client.render.world.RenderPaintable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;

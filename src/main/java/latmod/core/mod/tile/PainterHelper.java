@@ -1,15 +1,15 @@
-package latmod.core.mod.item;
+package latmod.core.mod.tile;
 
 import latmod.core.*;
-import latmod.core.mod.tile.IPaintable;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.*;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import scala.actors.threadpool.Arrays;
 
 public class PainterHelper
 {
@@ -18,6 +18,83 @@ public class PainterHelper
 		public ItemStack getPaintItem(ItemStack is);
 		public boolean canPaintBlock(ItemStack is);
 		public void damagePainter(ItemStack is, EntityPlayer ep);
+	}
+	
+	public static interface IPaintable extends ITileInterface
+	{
+		public boolean setPaint(PaintData p);
+	}
+	
+	public static class Paint
+	{
+		public final Block block;
+		public final int meta;
+		
+		public Paint(Block b, int m)
+		{
+			block = b;
+			meta = m;
+		}
+		
+		public static void readFromNBT(NBTTagCompound tag, String s, Paint[] paint)
+		{
+			Arrays.fill(paint, null);
+			
+			NBTTagList l = (NBTTagList)tag.getTag(s);
+			
+			if(l != null) for(int i = 0; i < l.tagCount(); i++)
+			{
+				NBTTagCompound tag1 = l.getCompoundTagAt(i);
+				
+				int id = tag1.getByte("ID");
+				paint[id] = new Paint(Block.getBlockById(tag1.getInteger("BlockID")), tag1.getInteger("Metadata"));
+			}
+		}
+		
+		public static void writeToNBT(NBTTagCompound tag, String s, Paint[] paint)
+		{
+			NBTTagList l = new NBTTagList();
+			
+			for(int i = 0; i < paint.length; i++) if(paint[i] != null)
+			{
+				NBTTagCompound tag1 = new NBTTagCompound();
+				tag1.setByte("ID", (byte)i);
+				tag1.setInteger("BlockID", Block.getIdFromBlock(paint[i].block));
+				tag1.setInteger("Metadata", paint[i].meta);
+				l.appendTag(tag1);
+			}
+			
+			if(l.tagCount() > 0) tag.setTag(s, l);
+		}
+	}
+	
+	public static class PaintData
+	{
+		public final EntityPlayer player;
+		
+		public final int posX;
+		public final int posY;
+		public final int posZ;
+		
+		public final float hitX;
+		public final float hitY;
+		public final float hitZ;
+		
+		public final int side;
+		public final int subHit;
+		
+		public final Paint paint;
+		
+		public PaintData(EntityPlayer ep, Paint p, int x, int y, int z, float hx, float hy, float hz, int s, int sh)
+		{
+			player = ep; paint = p;
+			posX = x; posY = y; posZ = z;
+			hitX = hx; hitY = hx; hitZ = hx;
+			side = s; subHit = sh;
+		}
+		
+		public boolean canReplace(Paint p)
+		{ return p == null || p.block != paint.block || (p.block == paint.block && p.meta != paint.meta); }
 	}
 	
 	public static ItemStack getPaintItem(ItemStack is)
@@ -46,13 +123,14 @@ public class PainterHelper
 		if(te != null && te instanceof IPaintable)
 		{
 			ItemStack paint = getPaintItem(is);
+			Block b = Block.getBlockFromItem(paint.getItem());
 			
-			if(ep.capabilities.isCreativeMode || i.canPaintBlock(is))
+			if(b != Blocks.air && (ep.capabilities.isCreativeMode || i.canPaintBlock(is)))
 			{
 				//MovingObjectPosition mop = new MovingObjectPosition(x, y, z, s, Vec3.createVectorHelper(x1, y1, z1));
 				MovingObjectPosition mop = LatCoreMC.rayTrace(ep);
 				
-				if(((IPaintable)te).setPaint(ep, mop, paint))
+				if(mop != null && ((IPaintable)te).setPaint(new PaintData(ep, new Paint(b, paint.getItemDamage()), x, y, z, x1, y1, z1, s, mop.subHit)))
 				{
 					if(!ep.capabilities.isCreativeMode)
 						i.damagePainter(is, ep);

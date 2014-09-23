@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import latmod.core.*;
 import latmod.core.client.LatCoreMCClient;
-import latmod.core.mod.item.PainterHelper;
 import latmod.core.mod.net.*;
+import latmod.core.mod.tile.PainterHelper;
 import latmod.core.util.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;

@@ -267,8 +267,9 @@ public class LatCoreMC
 	public static MovingObjectPosition rayTrace(EntityPlayer ep, double d)
 	{
 		//ep.yOffset
-		Vec3 pos = Vec3.createVectorHelper(ep.posX, ep.posY + 1.62D, ep.posZ);
-		Vec3 look = ep.getLook(1F);
+		//Vec3 pos = Vec3.createVectorHelper(ep.posX, ep.posY + 1.62D, ep.posZ);
+		Vec3 pos = Vec3.createVectorHelper(ep.posX, ep.posY + (ep.getEyeHeight() - ep.getDefaultEyeHeight()), ep.posZ);
+		Vec3 look = ep.getLookVec();
 		Vec3 vec = pos.addVector(look.xCoord * d, look.yCoord * d, look.zCoord * d);
 		//return ep.worldObj.rayTraceBlocks_do_do(pos, vec, false, true);
 		return ep.worldObj.func_147447_a(pos, vec, false, true, false);

@@ -1,6 +1,7 @@
 package latmod.core.mod.item;
 import latmod.core.ODItems;
 import latmod.core.mod.LCItems;
+import latmod.core.mod.tile.PainterHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;

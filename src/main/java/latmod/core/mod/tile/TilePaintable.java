@@ -1,7 +1,6 @@
 package latmod.core.mod.tile;
 
-import latmod.core.client.RenderBlocksCustom;
-import latmod.core.mod.LCItems;
+import latmod.core.client.*;
 import latmod.core.mod.tile.PainterHelper.IPaintable;
 import latmod.core.mod.tile.PainterHelper.Paint;
 import latmod.core.mod.tile.PainterHelper.PaintData;
@@ -53,8 +52,11 @@ public class TilePaintable extends TileLM implements IPaintable
 		}
 		else
 		{
-			renderBlocks.setOverrideBlockTexture(LCItems.b_paintable.getBlockIcon());
 			renderBlocks.setCustomColor(null);
+			
+			if(worldObj.getBlock(xCoord, yCoord, zCoord) == getBlockType())
+				renderBlocks.setOverrideBlockTexture(LatCoreMCClient.blockNullIcon);
+			else renderBlocks.setOverrideBlockTexture(getBlockType().getIcon(0, 0));
 		}
 		
 		renderBlocks.renderStandardBlock(Blocks.stone, xCoord, yCoord, zCoord);

@@ -8,8 +8,6 @@ import net.minecraft.world.World;
 
 public class ItemBlockPainter extends ItemLC implements PainterHelper.IPainterItem
 {
-	public static final String ACTION_PAINT = "paint";
-	
 	public ItemBlockPainter(String s)
 	{
 		super(s);

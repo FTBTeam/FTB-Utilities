@@ -1,6 +1,7 @@
 ### Blocks ###
 
 latcoremc:tile.paintable.name=Paintable Block
+latcoremc:tile.paintableRS.name=Dual Paintable Block
 latcoremc:tile.scriptBlock.name=[WIP] Script Block
 latcoremc:tile.facade.name=Paintable Facade
 
@@ -8,6 +9,7 @@ latcoremc:tile.facade.name=Paintable Facade
 
 latcoremc:item.linkCard.name=Linking Card
 latcoremc:item.blockPainter.name=Block Painter
+latcoremc:item.blockPainterDmd.name=Diamond Block Painter
 
 ### Lang ###
 

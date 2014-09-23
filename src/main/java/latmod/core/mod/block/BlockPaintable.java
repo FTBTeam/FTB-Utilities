@@ -6,7 +6,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockPaintable extends BlockLC
 {
@@ -17,7 +18,7 @@ public class BlockPaintable extends BlockLC
 		super(s, Material.rock);
 		setHardness(0.3F);
 		isBlockContainer = true;
-		LC.mod.addTile(TilePaintable.class, s);
+		LC.mod.addTile(createNewTileEntity(null, 0).getClass(), s);
 	}
 	
 	public boolean canHarvestBlock(EntityPlayer ep, int meta)
@@ -35,4 +36,16 @@ public class BlockPaintable extends BlockLC
 	
 	public int getRenderType()
 	{ return renderID; }
+	
+	public boolean isOpaqueCube()
+	{ return false; }
+	
+	public boolean renderAsNormalBlock()
+	{ return false; }
+	
+	public boolean isSideSolid(IBlockAccess iba, int x, int y, int z, ForgeDirection side)
+	{ return true; }
+	
+	public boolean canConnectRedstone(IBlockAccess iba, int x, int y, int z, int side)
+	{ return true; }
 }

@@ -1,6 +1,5 @@
 package latmod.core.mod.client.render.world;
 import latmod.core.client.RenderBlocksCustom;
-import latmod.core.mod.LCItems;
 import latmod.core.mod.block.BlockPaintable;
 import latmod.core.mod.tile.TilePaintable;
 import net.minecraft.block.Block;
@@ -25,35 +24,38 @@ public class RenderPaintable implements ISimpleBlockRenderingHandler
 		renderBlocks.setRenderBounds(0D, 0D, 0D, 1D, 1D, 1D);
 		renderBlocks.setCustomColor(null);
 		renderBlocks.customMetadata = 0;
-		renderBlocks.setOverrideBlockTexture(LCItems.b_paintable.getBlockIcon());
+		renderBlocks.setOverrideBlockTexture(b.getIcon(0, 0));
 		renderBlocks.renderBlockAsItem(Blocks.stone, 0, 1F);
 	}
 	
 	public boolean renderWorldBlock(IBlockAccess iba, int x, int y, int z, Block b, int renderID, RenderBlocks renderer0)
 	{
-		//renderBlocks.renderAllFaces = true;
+		renderBlocks.renderAllFaces = true;
 		renderBlocks.blockAccess = iba;
 		renderBlocks.setRenderBounds(0D, 0D, 0D, 1D, 1D, 1D);
 		renderBlocks.setCustomColor(null);
 		
 		TilePaintable t = (TilePaintable)iba.getTileEntity(x, y, z);
 		
-		renderBlocks.setRenderBounds(0D, 0D, 0D, 1D, 0D, 1D);
+		double d0 = 0D;
+		double d1 = 1D - d0;
+		
+		renderBlocks.setRenderBounds(0D, d0, 0D, 1D, d0, 1D);
 		t.renderFace(renderBlocks, ForgeDirection.DOWN);
 		
-		renderBlocks.setRenderBounds(0D, 1D, 0D, 1D, 1D, 1D);
+		renderBlocks.setRenderBounds(0D, d1, 0D, 1D, d1, 1D);
 		t.renderFace(renderBlocks, ForgeDirection.UP);
 		
-		renderBlocks.setRenderBounds(0D, 0D, 0D, 1D, 1D, 0D);
+		renderBlocks.setRenderBounds(0D, 0D, d0, 1D, 1D, d0);
 		t.renderFace(renderBlocks, ForgeDirection.NORTH);
 		
-		renderBlocks.setRenderBounds(0D, 0D, 1D, 1D, 1D, 1D);
+		renderBlocks.setRenderBounds(0D, 0D, d1, 1D, 1D, d1);
 		t.renderFace(renderBlocks, ForgeDirection.SOUTH);
 		
-		renderBlocks.setRenderBounds(0D, 0D, 0D, 0D, 1D, 1D);
+		renderBlocks.setRenderBounds(d0, 0D, 0D, d0, 1D, 1D);
 		t.renderFace(renderBlocks, ForgeDirection.WEST);
 		
-		renderBlocks.setRenderBounds(1D, 0D, 0D, 1D, 1D, 1D);
+		renderBlocks.setRenderBounds(d1, 0D, 0D, d1, 1D, 1D);
 		t.renderFace(renderBlocks, ForgeDirection.EAST);
 		
 		return true;

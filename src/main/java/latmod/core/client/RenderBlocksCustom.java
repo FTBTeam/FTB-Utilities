@@ -2,7 +2,7 @@ package latmod.core.client;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.*;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.*;
 import net.minecraft.world.*;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -124,5 +124,8 @@ public class RenderBlocksCustom extends RenderBlocks
 	{ super.renderBlockAsItem(b, metadata, 1F); }
 	
 	public void updateColor()
-	{ Tessellator.instance.setColorOpaque_F(customColRed, customColGreen, customColBlue);; }
+	{ Tessellator.instance.setColorOpaque_F(customColRed, customColGreen, customColBlue); }
+	
+	public void setRenderBounds(AxisAlignedBB aabb)
+	{ if(aabb != null) super.setRenderBounds(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ); }
 }

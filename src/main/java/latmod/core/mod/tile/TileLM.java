@@ -1,4 +1,6 @@
 package latmod.core.mod.tile;
+import java.util.Arrays;
+
 import latmod.core.*;
 import latmod.core.mod.*;
 import latmod.core.mod.net.*;
@@ -136,7 +138,9 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory, IC
 		if(isDirty)
 		{
 			isDirty = false;
-			sendDirtyUpdate();
+			
+			if(isServer())
+				sendDirtyUpdate();
 		}
 		tick++;
 	}
@@ -159,7 +163,12 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory, IC
 	
 	public void onBroken()
 	{
-		if(dropItems) InvUtils.dropAllItems(worldObj, xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, items);
+		if(isServer() && dropItems && items != null && items.length > 0)
+		{
+			InvUtils.dropAllItems(worldObj, xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, items);
+			Arrays.fill(items, null);
+		}
+		
 		markDirty();
 	}
 	

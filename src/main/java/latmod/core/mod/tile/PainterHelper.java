@@ -94,7 +94,12 @@ public class PainterHelper
 		}
 		
 		public boolean canReplace(Paint p)
-		{ return p == null || p.block != paint.block || (p.block == paint.block && p.meta != paint.meta); }
+		{
+			if(p == null && paint == null) return false;
+			if(p == null && paint != null) return true;
+			if(p != null && paint == null) return true;
+			return p.block != paint.block || (p.block == paint.block && p.meta != paint.meta);
+		}
 	}
 	
 	public static ItemStack getPaintItem(ItemStack is)
@@ -123,14 +128,21 @@ public class PainterHelper
 		if(te != null && te instanceof IPaintable)
 		{
 			ItemStack paint = getPaintItem(is);
-			Block b = Block.getBlockFromItem(paint.getItem());
 			
-			if(b != Blocks.air && (ep.capabilities.isCreativeMode || i.canPaintBlock(is)))
+			if(ep.capabilities.isCreativeMode || i.canPaintBlock(is))
 			{
-				//MovingObjectPosition mop = new MovingObjectPosition(x, y, z, s, Vec3.createVectorHelper(x1, y1, z1));
 				MovingObjectPosition mop = LatCoreMC.rayTrace(ep);
 				
-				if(mop != null && ((IPaintable)te).setPaint(new PaintData(ep, new Paint(b, paint.getItemDamage()), x, y, z, x1, y1, z1, s, mop.subHit)))
+				Paint p = null;
+				if(paint != null && paint.getItem() != null)
+				{
+					Block b = Block.getBlockFromItem(paint.getItem());
+					
+					if(b != Blocks.air)
+						p = new Paint(b, paint.getItemDamage());
+				}
+				
+				if(mop != null && ((IPaintable)te).setPaint(new PaintData(ep, p, x, y, z, x1, y1, z1, s, mop.subHit)))
 				{
 					if(!ep.capabilities.isCreativeMode)
 						i.damagePainter(is, ep);

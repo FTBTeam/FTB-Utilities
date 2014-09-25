@@ -412,4 +412,11 @@ public class LatCoreMC
 		
 		return al1;
 	}
+
+	public static final ForgeDirection getDir(int s)
+	{
+		if(s >= 0 && s < ForgeDirection.VALID_DIRECTIONS.length)
+			return ForgeDirection.VALID_DIRECTIONS[s];
+		return ForgeDirection.UNKNOWN;
+	}
 }

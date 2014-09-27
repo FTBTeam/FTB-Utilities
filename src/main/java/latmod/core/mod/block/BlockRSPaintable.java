@@ -17,6 +17,9 @@ public class BlockRSPaintable extends BlockPaintable
 		LC.mod.recipes().addRecipe(new ItemStack(this, 8), "PPP", "PRP", "PPP",
 				'P', LCItems.b_paintable,
 				'R', ODItems.REDSTONE);
+		
+		LC.mod.recipes().addRecipe(new ItemStack(LCItems.b_paintable), "F",
+				'F', LCItems.b_rs_paintable);
 	}
 	
 	public TileLM createNewTileEntity(World w, int m)

@@ -1,4 +1,5 @@
 package latmod.core;
+import latmod.core.util.FastMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,7 +36,7 @@ public class InvUtils
 	
 	public static int[] getAllSlots(IInventory inv, int side)
 	{
-		if(inv instanceof ISidedInventory)
+		if(side != -1 && inv instanceof ISidedInventory)
 			return ((ISidedInventory)inv).getAccessibleSlotsFromSide(side);
 		
 		int[] ai = new int[inv.getSizeInventory()];
@@ -159,7 +160,7 @@ public class InvUtils
 			{
 				if(is1.stackSize + 1 <= is1.getMaxStackSize())
 				{
-					if(side == -1 || !(inv instanceof ISidedInventory) || ((ISidedInventory)inv).canInsertItem(i, single, side))
+					if(side == -1 || canInsert(inv, single, i, side))
 					{
 						if(doAdd)
 						{
@@ -179,7 +180,7 @@ public class InvUtils
 			ItemStack is1 = inv.getStackInSlot(slots[i]);
 			if(is1 == null || is1.stackSize == 0)
 			{
-				if(side == -1 || !(inv instanceof ISidedInventory) || ((ISidedInventory)inv).canInsertItem(i, single, side))
+				if(side == -1 || canInsert(inv, single, i, side))
 				{
 					if(doAdd)
 					{
@@ -320,6 +321,22 @@ public class InvUtils
 		for(int i = 0; i < ai.length; i++)
 			ai[i] = inv.getStackInSlot(slots[i]);
 		return ai;
+	}
+	
+	public static boolean canExtract(IInventory inv, ItemStack is, int slot, int side)
+	{ return !(inv instanceof ISidedInventory) || ((ISidedInventory)inv).canExtractItem(slot, is, side); }
+	
+	public static boolean canInsert(IInventory inv, ItemStack is, int slot, int side)
+	{ return !(inv instanceof ISidedInventory) || ((ISidedInventory)inv).canInsertItem(slot, is, side); }
+	
+	public static FastMap<Integer, ItemStack> getAllItemsMap(IInventory inv, int side)
+	{
+		ItemStack[] is = getAllItems(inv, side);
+		if(is == null) return null;
+		FastMap<Integer, ItemStack> map = new FastMap<Integer, ItemStack>();
+		for(int i = 0; i < is.length; i++)
+		if(is[i] != null) map.put(i, is[i]);
+		return map;
 	}
 	
 	public static int[] getPlayerSlots(EntityPlayer ep)

@@ -13,6 +13,8 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class RenderBlocksCustom extends RenderBlocks
 {
+	public static final AxisAlignedBB FULL_BLOCK = AxisAlignedBB.getBoundingBox(0D, 0D, 0D, 1D, 1D, 1D);
+	
 	public Integer customMetadata = null;
 	private float customColRed = 1F;
 	private float customColGreen = 1F;
@@ -127,5 +129,8 @@ public class RenderBlocksCustom extends RenderBlocks
 	{ Tessellator.instance.setColorOpaque_F(customColRed, customColGreen, customColBlue); }
 	
 	public void setRenderBounds(AxisAlignedBB aabb)
-	{ if(aabb != null) super.setRenderBounds(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ); }
+	{ setRenderBounds(aabb, 0D); }
+	
+	public void setRenderBounds(AxisAlignedBB aabb, double exp)
+	{ if(aabb != null) super.setRenderBounds(aabb.minX - exp, aabb.minY - exp, aabb.minZ - exp, aabb.maxX + exp, aabb.maxY + exp, aabb.maxZ + exp); }
 }

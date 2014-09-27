@@ -62,7 +62,7 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory, IC
 		security.readFromNBT(tag, "Security");
 		
 		if(items != null)
-		items = InvUtils.readItemsFromNBT(items.length, tag, "Items");
+		InvUtils.readItemsFromNBT(items, tag, "Items");
 		
 		customName = null;
 		if(tag.hasKey("CustomName")) customName = tag.getString("CustomName");

@@ -1,4 +1,5 @@
 package latmod.core;
+import scala.actors.threadpool.Arrays;
 import latmod.core.util.FastMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -227,9 +228,9 @@ public class InvUtils
 		tag.setTag(s, list);
 	}
 	
-	public static ItemStack[] readItemsFromNBT(int invSize, NBTTagCompound tag, String s)
+	public static void readItemsFromNBT(ItemStack[] stacks, NBTTagCompound tag, String s)
 	{
-		ItemStack[] stacks = new ItemStack[invSize];
+		Arrays.fill(stacks, null);
 		
 		if(tag.hasKey(s))
 		{
@@ -241,11 +242,9 @@ public class InvUtils
 				int slot = tag1.getShort("Slot");
 				stacks[slot] = ItemStack.loadItemStackFromNBT(tag1);
 				
-				if(i >= invSize) break;
+				if(i >= stacks.length) break;
 			}
 		}
-		
-		return stacks;
 	}
 	
 	public static ItemStack decrStackSize(IInventory inv, int slot, int amt)

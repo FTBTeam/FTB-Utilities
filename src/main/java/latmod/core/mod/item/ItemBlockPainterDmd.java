@@ -14,7 +14,7 @@ public class ItemBlockPainterDmd extends ItemBlockPainter
 	
 	public void loadRecipes()
 	{
-		addRecipe(new ItemStack(this), "DDD", " P ",
+		addRecipe(new ItemStack(this), "DDD", "DPD", "DDD",
 				'P', LCItems.i_painter,
 				'D', ODItems.DIAMOND);
 	}

@@ -30,6 +30,16 @@ public class TilePaintable extends TileLM implements IPaintable
 	
 	public boolean setPaint(PaintData p)
 	{
+		if(p.paint != null && !p.paint.block.renderAsNormalBlock()) return false;
+		
+		if(p.player.isSneaking())
+		{
+			for(int i = 0; i < 6; i++)
+				paint[i] = p.paint;
+			markDirty();
+			return true;
+		}
+		
 		if(p.canReplace(paint[p.side]))
 		{
 			paint[p.side] = p.paint;
@@ -54,11 +64,11 @@ public class TilePaintable extends TileLM implements IPaintable
 		{
 			renderBlocks.setCustomColor(null);
 			
-			if(worldObj.getBlock(xCoord, yCoord, zCoord) == getBlockType())
-				renderBlocks.setOverrideBlockTexture(LatCoreMCClient.blockNullIcon);
-			else renderBlocks.setOverrideBlockTexture(getBlockType().getIcon(0, 0));
+			//if(worldObj.getBlock(xCoord + face.offsetX, yCoord + face.offsetY, zCoord + face.offsetZ) == getBlockType())
+			//	renderBlocks.setOverrideBlockTexture(LatCoreMCClient.blockNullIcon); else
+				renderBlocks.setOverrideBlockTexture(getBlockType().getIcon(0, 0));
 		}
 		
-		renderBlocks.renderStandardBlock(Blocks.stone, xCoord, yCoord, zCoord);
+		renderBlocks.renderStandardBlock(Blocks.glass, xCoord, yCoord, zCoord);
 	}
 }

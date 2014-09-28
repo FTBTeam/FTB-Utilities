@@ -43,6 +43,14 @@ public class TileRSPaintable extends TilePaintable
 	{
 		Paint[] paint1 = redstonePowered ? paint_on : paint;
 		
+		if(p.player.isSneaking())
+		{
+			for(int i = 0; i < 6; i++)
+				paint1[i] = p.paint;
+			markDirty();
+			return true;
+		}
+		
 		if(p.canReplace(paint1[p.side]))
 		{
 			paint1[p.side] = p.paint;

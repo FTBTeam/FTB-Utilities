@@ -12,7 +12,7 @@ import org.apache.logging.log4j.*;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 
-@Mod(modid = LC.MOD_ID, name = "LatCoreMC", version = LC.VERSION, dependencies = "required-after:Forge@[10.13.0.1208,)")
+@Mod(modid = LC.MOD_ID, name = "LatCoreMC", version = LC.VERSION, dependencies = "required-after:Forge@[10.13.0.1207,)")
 public class LC
 {
 	protected static final String MOD_ID = "LatCoreMC";

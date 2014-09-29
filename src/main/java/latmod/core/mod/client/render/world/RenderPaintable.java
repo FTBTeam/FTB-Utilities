@@ -6,7 +6,6 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.relauncher.*;
 
@@ -36,27 +35,7 @@ public class RenderPaintable implements ISimpleBlockRenderingHandler
 		renderBlocks.setCustomColor(null);
 		
 		TilePaintable t = (TilePaintable)iba.getTileEntity(x, y, z);
-		
-		double d0 = 0D;
-		double d1 = 1D - d0;
-		
-		renderBlocks.setRenderBounds(0D, d0, 0D, 1D, d0, 1D);
-		t.renderFace(renderBlocks, ForgeDirection.DOWN);
-		
-		renderBlocks.setRenderBounds(0D, d1, 0D, 1D, d1, 1D);
-		t.renderFace(renderBlocks, ForgeDirection.UP);
-		
-		renderBlocks.setRenderBounds(0D, 0D, d0, 1D, 1D, d0);
-		t.renderFace(renderBlocks, ForgeDirection.NORTH);
-		
-		renderBlocks.setRenderBounds(0D, 0D, d1, 1D, 1D, d1);
-		t.renderFace(renderBlocks, ForgeDirection.SOUTH);
-		
-		renderBlocks.setRenderBounds(d0, 0D, 0D, d0, 1D, 1D);
-		t.renderFace(renderBlocks, ForgeDirection.WEST);
-		
-		renderBlocks.setRenderBounds(d1, 0D, 0D, d1, 1D, 1D);
-		t.renderFace(renderBlocks, ForgeDirection.EAST);
+		TilePaintable.renderBlock(renderBlocks, t.currentPaint(), b.getIcon(0, 0), x, y, z);
 		
 		return true;
 	}

@@ -1,5 +1,6 @@
 package latmod.core;
-import scala.actors.threadpool.Arrays;
+import java.util.Arrays;
+
 import latmod.core.util.FastMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;

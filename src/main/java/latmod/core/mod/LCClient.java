@@ -2,10 +2,12 @@ package latmod.core.mod;
 import latmod.core.client.LatCoreMCClient;
 import latmod.core.mod.block.BlockPaintable;
 import latmod.core.mod.client.render.world.RenderPaintable;
+import latmod.core.mod.tile.IGuiTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import org.lwjgl.input.Keyboard;
@@ -34,6 +36,9 @@ public class LCClient extends LCCommon
 	
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
+		TileEntity te = world.getTileEntity(x, y, z);
+		if(te instanceof IGuiTile)
+			return ((IGuiTile)te).getGui(player);
 		return null;
 	}
 	

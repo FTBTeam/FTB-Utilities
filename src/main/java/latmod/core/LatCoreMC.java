@@ -4,7 +4,8 @@ import java.lang.reflect.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import latmod.core.mod.LC;
+import latmod.core.mod.*;
+import latmod.core.mod.tile.*;
 import latmod.core.util.FastList;
 import net.minecraft.block.*;
 import net.minecraft.command.ICommandSender;
@@ -266,7 +267,9 @@ public class LatCoreMC
 	
 	public static MovingObjectPosition rayTrace(EntityPlayer ep, double d)
 	{
-		Vec3 pos = Vec3.createVectorHelper(ep.posX, ep.posY + ep.getDefaultEyeHeight(), ep.posZ);
+		double y = ep.posY + ep.getDefaultEyeHeight();
+		if(ep.worldObj.isRemote) y -= ep.getEyeHeight();
+		Vec3 pos = Vec3.createVectorHelper(ep.posX, y, ep.posZ);
 		Vec3 look = ep.getLookVec();
 		Vec3 vec = pos.addVector(look.xCoord * d, look.yCoord * d, look.zCoord * d);
 		return ep.worldObj.func_147447_a(pos, vec, false, true, false);
@@ -418,5 +421,11 @@ public class LatCoreMC
 		if(s >= 0 && s < ForgeDirection.VALID_DIRECTIONS.length)
 			return ForgeDirection.VALID_DIRECTIONS[s];
 		return ForgeDirection.UNKNOWN;
+	}
+	
+	public static void openGui(EntityPlayer ep, IGuiTile i)
+	{
+		TileEntity te = i.getTile();
+		ep.openGui(LC.inst, 0, te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord);
 	}
 }

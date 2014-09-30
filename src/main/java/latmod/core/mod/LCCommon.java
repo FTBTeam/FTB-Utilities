@@ -1,6 +1,8 @@
 package latmod.core.mod;
 
+import latmod.core.mod.tile.IGuiTile;
 import net.minecraft.entity.player.*;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
 
@@ -19,6 +21,9 @@ public class LCCommon implements IGuiHandler // LCClient
 	
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
+		TileEntity te = world.getTileEntity(x, y, z);
+		if(te instanceof IGuiTile)
+			return ((IGuiTile)te).getContainer(player);
 		return null;
 	}
 	

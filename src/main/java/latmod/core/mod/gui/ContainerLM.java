@@ -5,8 +5,8 @@ import net.minecraft.item.ItemStack;
 
 public abstract class ContainerLM extends Container
 {
-	public EntityPlayer player;
-	public IInventory inv;
+	public final EntityPlayer player;
+	public final IInventory inv;
 	
 	public ContainerLM(EntityPlayer ep, IInventory i)
 	{

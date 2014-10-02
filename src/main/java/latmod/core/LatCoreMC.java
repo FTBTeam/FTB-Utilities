@@ -423,9 +423,12 @@ public class LatCoreMC
 		return ForgeDirection.UNKNOWN;
 	}
 	
-	public static void openGui(EntityPlayer ep, IGuiTile i)
+	public static void openGui(EntityPlayer ep, IGuiTile i, int ID)
 	{
 		TileEntity te = i.getTile();
-		ep.openGui(LC.inst, 0, te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord);
+		ep.openGui(LC.inst, ID, te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord);
 	}
+	
+	public static boolean isWrench(ItemStack is)
+	{ return is != null && is.getItem() != null && is.getItem().getHarvestLevel(is, "wrench") != -1; }
 }

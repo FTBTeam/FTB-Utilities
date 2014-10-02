@@ -38,7 +38,7 @@ public class LCClient extends LCCommon
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof IGuiTile)
-			return ((IGuiTile)te).getGui(player);
+			return ((IGuiTile)te).getGui(player, ID);
 		return null;
 	}
 	

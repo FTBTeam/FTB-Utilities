@@ -82,8 +82,11 @@ public abstract class GuiLM extends GuiContainer
 	public final int getPosY()
 	{ return guiTop; }
 	
-	public final double getZLevel()
+	public final float getZLevel()
 	{ return zLevel; }
+	
+	public final void setZLevel(float z)
+	{ zLevel = z; }
 	
 	public final void setTexture(ResourceLocation tex)
 	{ mc.getTextureManager().bindTexture(tex); }

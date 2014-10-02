@@ -23,7 +23,7 @@ public class LCCommon implements IGuiHandler // LCClient
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
 		if(te instanceof IGuiTile)
-			return ((IGuiTile)te).getContainer(player);
+			return ((IGuiTile)te).getContainer(player, ID);
 		return null;
 	}
 	

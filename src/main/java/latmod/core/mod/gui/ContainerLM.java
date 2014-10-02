@@ -16,6 +16,8 @@ public abstract class ContainerLM extends Container
 	
 	public ItemStack transferStackInSlot(EntityPlayer ep, int i)
 	{
+		if(inv == null) return null;
+		
 		ItemStack is = null;
 		Slot slot = (Slot)inventorySlots.get(i);
 

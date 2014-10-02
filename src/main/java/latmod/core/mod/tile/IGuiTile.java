@@ -7,8 +7,8 @@ import cpw.mods.fml.relauncher.*;
 
 public interface IGuiTile extends ITileInterface
 {
-	public Container getContainer(EntityPlayer ep);
+	public Container getContainer(EntityPlayer ep, int ID);
 	
 	@SideOnly(Side.CLIENT)
-	public GuiScreen getGui(EntityPlayer ep);
+	public GuiScreen getGui(EntityPlayer ep, int ID);
 }

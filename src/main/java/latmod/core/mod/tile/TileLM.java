@@ -230,10 +230,7 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory, IC
 			markDirty();
 		}
 		else if(action.equals(ACTION_OPEN_GUI))
-		{
-			int guiID = data.getByte("ID");
-			openGui(guiID, ep);
-		}
+			openGui(ep, (data == null) ? 0 : data.getByte("ID"));
 		else if(action.equals(ACTION_CUSTOM_NAME))
 		{
 			String name = data.getString("Name");
@@ -242,11 +239,13 @@ public class TileLM extends TileEntity implements ITileInterface, IInventory, IC
 		}
 	}
 	
-	public void handleButton(String button, int mouseButton, EntityPlayer ep)
+	public void openGui(EntityPlayer ep, int ID)
 	{
+		if(this instanceof IGuiTile)
+			LatCoreMC.openGui(ep, (IGuiTile)this, ID);
 	}
 	
-	public void openGui(int guiID, EntityPlayer ep)
+	public void handleButton(String button, int mouseButton, EntityPlayer ep)
 	{
 	}
 	

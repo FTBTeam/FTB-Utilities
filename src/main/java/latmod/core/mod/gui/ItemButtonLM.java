@@ -20,21 +20,21 @@ public abstract class ItemButtonLM extends ButtonLM
 	public ItemButtonLM(GuiLM g, int x, int y, int w, int h)
 	{ super(g, x, y, w, h); }
 	
-	public void setItem(ItemStack is)
-	{ item = is; }
+	public ItemButtonLM setItem(ItemStack is)
+	{ item = is; return this; }
 	
-	public void render(TextureCoords c, double rw, double rh)
+	public ItemButtonLM setBackground(TextureCoords bg)
+	{ background = bg; return this; }
+	
+	public void render()
 	{
-		rw = rh = 1D;
-		
 		if(background != null)
-			super.render(background, rw, rh);
+			super.render(background, 1D, 1D);
 		
 		if(item != null)
 		{
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0F, 0F, 32F);
-			GL11.glScaled(rw, rh, 0D);
 			GL11.glEnable(GL11.GL_LIGHTING);
 			RenderHelper.enableGUIStandardItemLighting();
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
@@ -45,8 +45,8 @@ public abstract class ItemButtonLM extends ButtonLM
 			FontRenderer font = item.getItem().getFontRenderer(item);
 			if (font == null) font = gui.getFontRenderer();
 			
-			int x = gui.getPosX() + c.posX;
-			int y = gui.getPosY() + c.posY;
+			int x = gui.getPosX() + posX;
+			int y = gui.getPosY() + posY;
 			
 			itemRender.renderItemAndEffectIntoGUI(font, Minecraft.getMinecraft().getTextureManager(), item, x, y);
 			//itemRender.renderItemOverlayIntoGUI(font, Minecraft.getMinecraft().getTextureManager(), item, x, y, "Test");

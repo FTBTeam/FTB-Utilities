@@ -5,7 +5,7 @@ import cpw.mods.fml.relauncher.*;
 public class WidgetLM
 {
 	public final GuiLM gui;
-	public final int posX, posY, width, height;
+	public int posX, posY, width, height;
 	
 	public WidgetLM(GuiLM g, int x, int y, int w, int h)
 	{
@@ -23,10 +23,7 @@ public class WidgetLM
 	{ return isAt(mx - gui.getPosX(), my - gui.getPosY()); }
 	
 	public void render(TextureCoords c, double rw, double rh)
-	{
-		gui.setTexture(c.texture);
-		gui.drawTexturedModalRect(gui.getPosX() + posX, gui.getPosY() + posY, c.posX, c.posY, (int)(width * rw), (int)(height * rh));
-	}
+	{ c.render(gui, posX, posY, (int)(width * rw), (int)(height * rh)); }
 	
 	public void render(TextureCoords c)
 	{ render(c, 1D, 1D); }

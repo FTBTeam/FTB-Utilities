@@ -13,4 +13,10 @@ public class TextureCoords
 		posX = x;
 		posY = y;
 	}
+	
+	public void render(GuiLM gui, int x, int y, int w, int h)
+	{
+		gui.setTexture(texture);
+		gui.drawTexturedModalRect(gui.getPosX() + x, gui.getPosY() + y, posX, posY, w, h);
+	}
 }

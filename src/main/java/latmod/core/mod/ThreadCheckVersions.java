@@ -70,9 +70,9 @@ public class ThreadCheckVersions implements Runnable
 			}
 			else
 			{
-				int thisBuild = LatCoreMC.isDevEnv ? -1 : Integer.parseInt(LC.VERSION);
+				String thisBuild = "" + (LatCoreMC.isDevEnv ? "Dev" : Integer.parseInt(LC.VERSION));
 				
-				if(thisBuild < file.latestVersion)
+				if(!thisBuild.equals(file.latestVersion))
 				{
 					FastList<IChatComponent> toPrint = new FastList<IChatComponent>();
 					
@@ -86,6 +86,7 @@ public class ThreadCheckVersions implements Runnable
 					dlink.getChatStyle().setColor(EnumChatFormatting.GOLD);
 					
 					toPrint.add(txt.appendSibling(dlink));
+					toPrint.add(new ChatComponentText("Current version: " + thisBuild));
 					
 					if(!file.latestChanges.isEmpty()) for(String s : file.latestChanges)
 						toPrint.add(new ChatComponentText(s));
@@ -102,7 +103,7 @@ public class ThreadCheckVersions implements Runnable
 	
 	public static class VersionsFile
 	{
-		@Expose public Integer latestVersion;
+		@Expose public String latestVersion;
 		@Expose public List<String> latestChanges;
 	}
 }

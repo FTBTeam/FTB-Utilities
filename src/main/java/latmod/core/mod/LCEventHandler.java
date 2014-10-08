@@ -70,7 +70,7 @@ public class LCEventHandler
 		}
 	}
 	
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void playerJoined(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e)
 	{
 		UUID id = e.player.getUniqueID();
@@ -216,7 +216,7 @@ public class LCEventHandler
 	}
 	
 	@SideOnly(Side.CLIENT)
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void preTexturesLoaded(TextureStitchEvent.Pre e)
 	{
 		if(e.map.getTextureType() == 0)

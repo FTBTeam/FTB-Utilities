@@ -1,5 +1,7 @@
 package latmod.core.mod.tile;
 
+import java.util.Arrays;
+
 import latmod.core.*;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,7 +11,6 @@ import net.minecraft.nbt.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import scala.actors.threadpool.Arrays;
 
 public class PainterHelper
 {

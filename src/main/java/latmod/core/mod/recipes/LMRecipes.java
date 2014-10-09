@@ -26,6 +26,9 @@ public class LMRecipes
 		customRecipes = new FastList<CustomRecipes<?>>();
 	}
 	
+	public LMRecipes()
+	{ this(false); }
+	
 	public void addCustomRecipes(CustomRecipes<?> c)
 	{ customRecipes.add(c); }
 	

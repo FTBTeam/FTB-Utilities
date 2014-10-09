@@ -11,8 +11,10 @@ public class LCConfig extends LMConfig
 	{
 		super(e, "/LatMod/LatCoreMC.cfg");
 		
-		add(general = new General());
-		add(commands = new Commands());
+		general = new General();
+		commands = new Commands();
+		
+		save();
 	}
 	
 	public class General extends Category

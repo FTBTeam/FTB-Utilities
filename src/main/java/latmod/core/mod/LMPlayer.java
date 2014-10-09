@@ -37,6 +37,9 @@ public class LMPlayer implements Comparable<LMPlayer>
 		return customData;
 	}
 	
+	public boolean hasCustomData()
+	{ return customData != null; }
+	
 	public void setCustomName(String s)
 	{
 		if(s != null && s.length() > 0)
@@ -61,11 +64,11 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public EntityPlayer getPlayer(World w)
 	{ return LatCoreMC.getPlayer(w, uuid); }
 	
-	public void sendUpdate(String channel)
+	public void sendUpdate(World w, String channel)
 	{
 		if(LatCoreMC.canUpdate())
 		{
-			new DataChangedEvent(this, Side.SERVER, channel).post();
+			new DataChangedEvent(this, Side.SERVER, channel, w).post();
 			LMNetHandler.INSTANCE.sendToAll(new MessageUpdatePlayerData(this, channel));
 		}
 	}
@@ -170,9 +173,10 @@ public class LMPlayer implements Comparable<LMPlayer>
 		public final LMPlayer player;
 		public final Side side;
 		public final String channel;
+		public final World world;
 		
-		public DataChangedEvent(LMPlayer p, Side s, String c)
-		{ player = p; side = s; channel = c; }
+		public DataChangedEvent(LMPlayer p, Side s, String c, World w)
+		{ player = p; side = s; channel = c; world = w; }
 		
 		public boolean isChannel(String s)
 		{ return channel != null && channel.equals(s); }

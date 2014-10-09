@@ -31,7 +31,7 @@ public class CmdSetSkin extends CommandBaseLC
 			if(p.customSkin.length() == 0 || p.customSkin.equals("null"))
 				p.customSkin = null;
 			
-			p.sendUpdate("CustomSkin");
+			p.sendUpdate(ics.getEntityWorld(), "CustomSkin");
 			
 			LatCoreMC.printChat(ics, "Custom skin changed to " + p.customSkin);
 		}

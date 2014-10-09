@@ -29,7 +29,7 @@ public class CmdSetNick extends CommandBaseLC
 			
 			p.setCustomName(args[0].trim());
 			p.getPlayer(ics.getEntityWorld()).refreshDisplayName();
-			p.sendUpdate("CustomName");
+			p.sendUpdate(ics.getEntityWorld(), "CustomName");
 			
 			LatCoreMC.printChat(ics, "Custom nickname changed to " + p.getDisplayName());
 		}

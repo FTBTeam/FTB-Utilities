@@ -1,8 +1,9 @@
 package latmod.core.mod;
-import latmod.core.*;
+import java.io.File;
+
 import latmod.core.util.*;
 import net.minecraftforge.common.config.*;
-import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 public class LMConfig
 {
@@ -65,16 +66,14 @@ public class LMConfig
 	}
 	
 	public Configuration config;
-	public FastMap<String, Category> categories;
 	
-	public LMConfig(FMLPreInitializationEvent e, String s)
+	public LMConfig(File f)
 	{
-		config = LatCoreMC.loadConfig(e, s);
-		categories = new FastMap<String, Category>();
+		config = new Configuration(f);
 	}
 	
-	public void add(Category c)
-	{ categories.put(c.cat, c); }
+	public LMConfig(FMLPreInitializationEvent e, String s)
+	{ this(new File(e.getModConfigurationDirectory(), s)); }
 	
 	public void save()
 	{

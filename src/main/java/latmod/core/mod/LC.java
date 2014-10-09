@@ -57,7 +57,6 @@ public class LC
 			ThreadCheckTeamLatMod.init();
 		
 		proxy.preInit();
-		mod.config().save();
 	}
 	
 	@Mod.EventHandler

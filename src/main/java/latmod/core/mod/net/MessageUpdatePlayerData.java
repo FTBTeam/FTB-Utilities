@@ -2,7 +2,7 @@ package latmod.core.mod.net;
 import java.util.UUID;
 
 import io.netty.buffer.ByteBuf;
-import latmod.core.mod.LMPlayer;
+import latmod.core.mod.*;
 import latmod.core.mod.LMPlayer.DataChangedEvent;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
@@ -51,7 +51,7 @@ public class MessageUpdatePlayerData implements IMessage, IMessageHandler<Messag
 		}
 		
 		p.readFromNBT(message.data);
-		MinecraftForge.EVENT_BUS.post(new DataChangedEvent(p, Side.CLIENT, message.channel));
+		MinecraftForge.EVENT_BUS.post(new DataChangedEvent(p, Side.CLIENT, message.channel, LC.proxy.getClientWorld()));
 		
 		return null;
 	}

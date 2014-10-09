@@ -31,7 +31,7 @@ public class CmdSetCape extends CommandBaseLC
 			if(p.customCape.length() == 0 || p.customCape.equals("null"))
 				p.customCape = null;
 			
-			p.sendUpdate("CustomCape");
+			p.sendUpdate(ics.getEntityWorld(), "CustomCape");
 			
 			LatCoreMC.printChat(ics, "Custom cape changed to " + p.customCape);
 		}

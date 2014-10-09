@@ -31,7 +31,7 @@ public class TilePaintable extends TileLM implements IPaintable
 	
 	public boolean setPaint(PaintData p)
 	{
-		if(p.paint != null && !p.paint.block.renderAsNormalBlock()) return false;
+		if(p.paint != null) return false;
 		
 		Paint[] paint1 = currentPaint();
 		

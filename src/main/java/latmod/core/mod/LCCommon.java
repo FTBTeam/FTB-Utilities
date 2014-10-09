@@ -35,6 +35,9 @@ public class LCCommon implements IGuiHandler // LCClient
 	public EntityPlayer getClientPlayer()
 	{ return null; }
 	
+	public World getClientWorld()
+	{ return null; }
+	
 	public double getReachDist(EntityPlayer ep)
 	{
 		if(ep instanceof EntityPlayerMP)

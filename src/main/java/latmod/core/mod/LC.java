@@ -1,8 +1,10 @@
 package latmod.core.mod;
 import latmod.core.*;
+import latmod.core.apis.WailaHelper;
 import latmod.core.mod.cmd.CommandBaseLC;
 import latmod.core.mod.net.LMNetHandler;
 import latmod.core.mod.recipes.LMRecipes;
+import latmod.core.mod.tile.*;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -72,6 +74,10 @@ public class LC
 		mod.loadRecipes();
 		
 		proxy.postInit();
+		
+		try
+		{ WailaHelper.registerDataProvider(IWailaTile.class, new WailaLMTile()); }
+		catch(Exception ex) { ex.printStackTrace(); }
 	}
 	
 	@Mod.EventHandler

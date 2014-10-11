@@ -1,16 +1,20 @@
 package latmod.core.mod.tile;
 
+import java.util.List;
+
 import latmod.core.client.RenderBlocksCustom;
 import latmod.core.mod.tile.PainterHelper.IPaintable;
 import latmod.core.mod.tile.PainterHelper.Paint;
 import latmod.core.mod.tile.PainterHelper.PaintData;
+import mcp.mobius.waila.api.*;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.*;
 
-public class TilePaintable extends TileLM implements IPaintable
+public class TilePaintable extends TileLM implements IPaintable, IWailaTile.Stack, IWailaTile.Head
 {
 	public final Paint[] paint = new Paint[6];
 	
@@ -31,21 +35,17 @@ public class TilePaintable extends TileLM implements IPaintable
 	
 	public boolean setPaint(PaintData p)
 	{
-		if(p.paint != null) return false;
-		
-		Paint[] paint1 = currentPaint();
-		
 		if(p.player.isSneaking())
 		{
 			for(int i = 0; i < 6; i++)
-				paint1[i] = p.paint;
+				currentPaint()[i] = p.paint;
 			markDirty();
 			return true;
 		}
 		
-		if(p.canReplace(paint1[p.side]))
+		if(p.canReplace(currentPaint()[p.side]))
 		{
-			paint1[p.side] = p.paint;
+			currentPaint()[p.side] = p.paint;
 			markDirty();
 			return true;
 		}
@@ -102,5 +102,21 @@ public class TilePaintable extends TileLM implements IPaintable
 		
 		rb.setRenderBounds(d1, 0D, 0D, d1, 1D, 1D);
 		renderFace(rb, ForgeDirection.EAST, p, defIcon, x, y, z);
+	}
+
+	public ItemStack getWailaStack(IWailaDataAccessor data, IWailaConfigHandler config)
+	{
+		Paint p = currentPaint()[data.getSide().ordinal()];
+		return (p == null) ? null : new ItemStack(p.block, 1, p.meta);
+	}
+	
+	public void addWailaHead(IWailaDataAccessor data, IWailaConfigHandler config, List<String> info)
+	{
+		Paint p = currentPaint()[data.getSide().ordinal()];
+		if(p != null)
+		{
+			info.clear();
+			info.add(SpecialChars.WHITE + new ItemStack(p.block, 1, p.meta).getDisplayName());
+		}
 	}
 }

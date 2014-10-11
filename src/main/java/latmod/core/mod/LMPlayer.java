@@ -7,6 +7,7 @@ import latmod.core.mod.net.*;
 import latmod.core.util.FastList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.*;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.eventhandler.Event;
@@ -54,7 +55,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public String getDisplayName()
 	{
 		if(customName != null && customName.length() > 0)
-			return customName;
+			return customName + EnumChatFormatting.RESET;
 		return username;
 	}
 	
@@ -155,7 +156,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 	{
 		if(o == null) return false;
 		if(o == this) return true;
-		if(o instanceof String) return ((String)o).equalsIgnoreCase(LatCoreMC.removeFormatting(getDisplayName()));
+		if(o instanceof String) return ((String)o).equalsIgnoreCase(LatCoreMC.removeFormatting(getDisplayName())) || o.equals(username);
 		if(o instanceof UUID) return ((UUID)o).equals(uuid);
 		if(o instanceof EntityPlayer) return ((EntityPlayer)o).getUniqueID().equals(uuid);
 		return false;
@@ -183,5 +184,8 @@ public class LMPlayer implements Comparable<LMPlayer>
 		
 		public void post()
 		{ MinecraftForge.EVENT_BUS.post(this); }
+		
+		public EntityPlayer getPlayer()
+		{ return player.getPlayer(world); }
 	}
 }

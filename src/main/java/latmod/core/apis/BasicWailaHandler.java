@@ -6,15 +6,13 @@ import mcp.mobius.waila.api.*;
 
 public abstract class BasicWailaHandler implements IWailaDataProvider
 {
-	public final boolean registerHead;
-	public final boolean registerBody;
-	public final boolean registerTail;
+	public boolean registerStack = false;
+	public boolean registerHead = false;
+	public boolean registerBody = false;
+	public boolean registerTail = false;
 	
-	public BasicWailaHandler(boolean head, boolean body, boolean tail) throws Exception
+	public BasicWailaHandler() throws Exception
 	{
-		registerHead = head;
-		registerBody = body;
-		registerTail = tail;
 	}
 	
 	public ItemStack getWailaStack(IWailaDataAccessor data, IWailaConfigHandler config)

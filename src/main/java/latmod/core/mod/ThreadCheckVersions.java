@@ -2,13 +2,12 @@ package latmod.core.mod;
 
 import java.io.InputStream;
 import java.net.URL;
-import java.util.*;
+import java.util.List;
 
 import latmod.core.LatCoreMC;
-import latmod.core.util.*;
+import latmod.core.util.FastList;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.event.*;
-import net.minecraft.event.ClickEvent.Action;
 import net.minecraft.util.*;
 
 import com.google.gson.annotations.Expose;
@@ -70,25 +69,24 @@ public class ThreadCheckVersions implements Runnable
 			}
 			else
 			{
-				String thisBuild = "" + (LatCoreMC.isDevEnv ? "Dev" : Integer.parseInt(LC.VERSION));
+				String thisBuild = "" + (LatCoreMC.isDevEnv ? "Development" : Integer.parseInt(LC.VERSION));
 				
 				if(!thisBuild.equals(file.latestVersion))
 				{
 					FastList<IChatComponent> toPrint = new FastList<IChatComponent>();
 					
-					if(LatCoreMC.isDevEnv)
-						toPrint.add(new ChatComponentText("You are in a development environment!"));
 					IChatComponent txt = new ChatComponentText("LatvianModder's mods updated ");
 					
 					IChatComponent dlink = new ChatComponentText("[Download #" + file.latestVersion + "]");
 					dlink.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Download")));
-					dlink.getChatStyle().setChatClickEvent(new ClickEvent(Action.OPEN_URL, "https://github.com/LatvianModder/Files/tree/Mods/" + LatCoreMC.MC_VERSION));
+					dlink.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/LatvianModder/Files/tree/Mods/" + LatCoreMC.MC_VERSION));
 					dlink.getChatStyle().setColor(EnumChatFormatting.GOLD);
 					
 					toPrint.add(txt.appendSibling(dlink));
 					toPrint.add(new ChatComponentText("Current version: " + thisBuild));
 					
-					if(!file.latestChanges.isEmpty()) for(String s : file.latestChanges)
+					
+					if(!LatCoreMC.isDevEnv && !file.latestChanges.isEmpty()) for(String s : file.latestChanges)
 						toPrint.add(new ChatComponentText(s));
 					
 					if(!toPrint.isEmpty()) for(IChatComponent s : toPrint)

@@ -150,7 +150,7 @@ public class PainterHelper
 				}
 			}
 		}
-		else if(te == null && ep.isSneaking())
+		else if(ep.isSneaking())
 		{
 			Block b = ep.worldObj.getBlock(x, y, z);
 			
@@ -183,9 +183,6 @@ public class PainterHelper
 				}
 			}
 		}
-		
-		//	LMNetHandler.INSTANCE.sendToServer(new MessageClientItemAction(is, ACTION_PAINT, data));
-		//else onClientAction(is, ep, ACTION_PAINT, data);
 		
 		return true;
 	}

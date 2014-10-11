@@ -6,6 +6,8 @@ import latmod.core.LatCoreMC;
 import latmod.core.mod.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.event.*;
+import net.minecraft.util.*;
 
 public class CmdLatCore extends CommandBaseLC
 {
@@ -41,7 +43,13 @@ public class CmdLatCore extends CommandBaseLC
 				
 				if(jp == null) throw new PlayerNotFoundException();
 				
-				LatCoreMC.printChat(ics, jp.username + "'s UUID: " + jp.uuid);
+				IChatComponent toPrint = new ChatComponentText(jp.getDisplayName() + "'s UUID: ");
+				IChatComponent uuid = new ChatComponentText(jp.uuid.toString());
+				uuid.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Copy to chat")));
+				uuid.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, jp.uuid.toString()));
+				uuid.getChatStyle().setColor(EnumChatFormatting.GOLD);
+				toPrint.appendSibling(uuid);
+				ics.addChatMessage(uuid);
 			}
 			else if(args[0].equalsIgnoreCase("whitelist") || args[0].equals("wl"))
 			{

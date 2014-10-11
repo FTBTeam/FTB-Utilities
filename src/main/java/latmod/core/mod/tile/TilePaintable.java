@@ -83,7 +83,7 @@ public class TilePaintable extends TileLM implements IPaintable, IWailaTile.Stac
 	public static void renderBlock(RenderBlocksCustom rb, Paint[] p, IIcon defIcon, int x, int y, int z)
 	{
 		double d0 = 0D;
-		double d1 = 1D - d0;
+		double d1 = 1D - d0 + 0.001D;
 		
 		rb.setRenderBounds(0D, d0, 0D, 1D, d0, 1D);
 		renderFace(rb, ForgeDirection.DOWN, p, defIcon, x, y, z);

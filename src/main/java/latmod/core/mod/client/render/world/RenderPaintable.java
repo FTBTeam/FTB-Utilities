@@ -20,7 +20,7 @@ public class RenderPaintable implements ISimpleBlockRenderingHandler
 	public void renderInventoryBlock(Block b, int paramInt1, int paramInt2, RenderBlocks renderer)
 	{
 		renderBlocks.renderAllFaces = false;
-		renderBlocks.setRenderBounds(0D, 0D, 0D, 1D, 1D, 1D);
+		renderBlocks.setRenderBounds(RenderBlocksCustom.FULL_BLOCK);
 		renderBlocks.setCustomColor(null);
 		renderBlocks.customMetadata = 0;
 		renderBlocks.setOverrideBlockTexture(b.getIcon(0, 0));
@@ -31,7 +31,7 @@ public class RenderPaintable implements ISimpleBlockRenderingHandler
 	{
 		renderBlocks.renderAllFaces = true;
 		renderBlocks.blockAccess = iba;
-		renderBlocks.setRenderBounds(0D, 0D, 0D, 1D, 1D, 1D);
+		renderBlocks.setRenderBounds(RenderBlocksCustom.FULL_BLOCK);
 		renderBlocks.setCustomColor(null);
 		
 		TilePaintable t = (TilePaintable)iba.getTileEntity(x, y, z);

@@ -47,7 +47,8 @@ public class LatCoreMC
 	
 	public static final boolean isDevEnv = LC.VERSION.equals("@VERSION@");
 	
-	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + String.valueOf('\u00a7') + "[0-9A-FK-OR]");
+	public static final String FORMATTING = "\u00a7";
+	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
 	
 	public static final int getRotYaw(int rot)
 	{

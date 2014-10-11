@@ -47,6 +47,12 @@ public class LMConfig
 			if(comment.length > 0) setComment(s, comment); return d1;
 		}
 		
+		public String[] getStringArray(String s, String[] def, String... comment)
+		{
+			String[] s1 = config.get(cat, s, def).getStringList();
+			if(comment.length > 0) setComment(s, comment); return s1;
+		}
+		
 		public void setComment(String property, String... comment)
 		{
 			ConfigCategory cat1 = config.getCategory(cat);

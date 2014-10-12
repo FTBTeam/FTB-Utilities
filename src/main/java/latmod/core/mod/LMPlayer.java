@@ -91,15 +91,15 @@ public class LMPlayer implements Comparable<LMPlayer>
 		
 		{
 			whitelist.clear();
-			NBTTagList l = tag.getTagList("Whitelist", LatCoreMC.NBT_STRING);
-			for(int i = 0; i < l.tagCount(); i++)
+			NBTTagList l = (NBTTagList)tag.getTag("Whitelist");
+			if(l != null) for(int i = 0; i < l.tagCount(); i++)
 				whitelist.add(UUID.fromString(l.getStringTagAt(i)));
 		}
 		
 		{
 			blacklist.clear();
-			NBTTagList l = tag.getTagList("Blacklist", LatCoreMC.NBT_STRING);
-			for(int i = 0; i < l.tagCount(); i++)
+			NBTTagList l = (NBTTagList)tag.getTag("Blacklist");
+			if(l != null) for(int i = 0; i < l.tagCount(); i++)
 				blacklist.add(UUID.fromString(l.getStringTagAt(i)));
 		}
 		
@@ -169,23 +169,42 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public static LMPlayer getPlayer(Object o)
 	{ return list.getObj(o); }
 	
-	public static class DataChangedEvent extends Event
+	private static class LMPlayerDataEvent extends Event
 	{
 		public final LMPlayer player;
-		public final Side side;
-		public final String channel;
 		public final World world;
 		
-		public DataChangedEvent(LMPlayer p, Side s, String c, World w)
-		{ player = p; side = s; channel = c; world = w; }
-		
-		public boolean isChannel(String s)
-		{ return channel != null && channel.equals(s); }
+		public LMPlayerDataEvent(LMPlayer p, World w)
+		{ player = p; world = w; }
 		
 		public void post()
 		{ MinecraftForge.EVENT_BUS.post(this); }
 		
 		public EntityPlayer getPlayer()
 		{ return player.getPlayer(world); }
+	}
+	
+	public static class DataChangedEvent extends LMPlayerDataEvent
+	{
+		public final Side side;
+		public final String channel;
+		
+		public DataChangedEvent(LMPlayer p, Side s, String c, World w)
+		{ super(p, w); side = s; channel = c; }
+		
+		public boolean isChannel(String s)
+		{ return channel != null && channel.equals(s); }
+	}
+	
+	public static class DataLoadedEvent extends LMPlayerDataEvent
+	{
+		public DataLoadedEvent(LMPlayer p, World w)
+		{ super(p, w); }
+	}
+	
+	public static class DataSavedEvent extends LMPlayerDataEvent
+	{
+		public DataSavedEvent(LMPlayer p, World w)
+		{ super(p, w); }
 	}
 }

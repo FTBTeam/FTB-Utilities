@@ -127,6 +127,8 @@ public class LCEventHandler
 					
 					NBTTagCompound tag = CompressedStreamTools.func_152457_a(b, new NBTSizeTracker(Long.MAX_VALUE));
 					
+					new LoadCustomLMDataEvent(tag).post();
+					
 					NBTTagList players = tag.getTagList("Players", LatCoreMC.NBT_MAP);
 					
 					for(int i = 0; i < players.tagCount(); i++)
@@ -135,10 +137,10 @@ public class LCEventHandler
 						LMPlayer p = new LMPlayer(UUID.fromString(tag1.getString("UUID")));
 						p.readFromNBT(tag1);
 						
+						new LMPlayer.DataLoadedEvent(p, e.world).post();
+						
 						LMPlayer.list.add(p);
 					}
-					
-					new LoadCustomLMDataEvent(tag).post();
 				}
 				catch(Exception ex)
 				{ ex.printStackTrace(); }
@@ -176,6 +178,9 @@ public class LCEventHandler
 					
 					LMPlayer p = LMPlayer.list.get(i);
 					p.writeToNBT(tag1);
+					
+					new LMPlayer.DataSavedEvent(p, e.world).post();
+					
 					tag1.setString("UUID", p.uuid.toString());
 					
 					players.appendTag(tag1);

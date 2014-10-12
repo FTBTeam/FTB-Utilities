@@ -45,6 +45,10 @@ public class WailaHelper
 	
 	public static void registerDataProvider(Class<?> block, BasicWailaHandler i) throws Exception
 	{
+		if(i.registerStack) invokeRegistryMethod("registerStackProvider",
+				new Class<?>[] { IWailaDataProvider.class, Class.class },
+				new Object[] { i, block });
+		
 		if(i.registerHead) invokeRegistryMethod("registerHeadProvider",
 				new Class<?>[] { IWailaDataProvider.class, Class.class },
 				new Object[] { i, block });

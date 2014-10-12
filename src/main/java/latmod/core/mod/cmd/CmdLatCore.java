@@ -24,7 +24,7 @@ public class CmdLatCore extends CommandBaseLC
 	{
 		if(args == null || args.length == 0)
 		{
-			LatCoreMC.printChat(ics, "Subcommands: versions, uuid, whitelist, blacklist");
+			LatCoreMC.printChat(ics, "Subcommands: versions, uuid, friend, enemy");
 		}
 		else if(args[0].equalsIgnoreCase("versions"))
 		{
@@ -34,12 +34,12 @@ public class CmdLatCore extends CommandBaseLC
 		{
 			if(args[0].equalsIgnoreCase("uuid"))
 			{
-				EntityPlayer ep = getCommandSenderAsPlayer(ics);
-				
-				LMPlayer jp = LMPlayer.getPlayer(ep.getUniqueID());
+				LMPlayer jp;
 				
 				if(args.length >= 2)
 					jp = LMPlayer.getPlayer(args[1]);
+				else
+					jp = LMPlayer.getPlayer(getCommandSenderAsPlayer(ics).getUniqueID());
 				
 				if(jp == null) throw new PlayerNotFoundException();
 				
@@ -51,23 +51,17 @@ public class CmdLatCore extends CommandBaseLC
 				toPrint.appendSibling(uuid);
 				ics.addChatMessage(uuid);
 			}
-			else if(args[0].equalsIgnoreCase("whitelist") || args[0].equals("wl"))
+			else if(args[0].equalsIgnoreCase("friend"))
 			{
 				if(args.length == 1)
 				{
-					LatCoreMC.printChat(ics, "/latcore whitelist add|remove <player name>");
-					LatCoreMC.printChat(ics, "/latcore whitelist addUUID|remUUID <player UUID>");
-					LatCoreMC.printChat(ics, "/latcore whitelist list|clear");
+					LatCoreMC.printChat(ics, "/latcore friend add|remove <name>");
+					LatCoreMC.printChat(ics, "/latcore friend addUUID|remUUID <UUID>");
+					LatCoreMC.printChat(ics, "/latcore friend list|clear");
 					return;
 				}
 				
 				EntityPlayer ep = getCommandSenderAsPlayer(ics);
-				
-				if(ep == null)
-				{
-					LatCoreMC.printChat(ics, "Player can't be null!");
-					return;
-				}
 				
 				if(args.length >= 2)
 				{
@@ -93,61 +87,79 @@ public class CmdLatCore extends CommandBaseLC
 						
 						if(s.length() > 0)
 							LatCoreMC.printChat(ics, s);
-						else LatCoreMC.printChat(ics, "Whitelist is empty");
+						else LatCoreMC.printChat(ics, "Friend list is empty");
 					}
 					else if(args[1].equals("clear"))
 					{
 						epP.whitelist.clear();
-						LatCoreMC.printChat(ics, "Whitelist cleared");
+						LatCoreMC.printChat(ics, "Friend list cleared");
 					}
 					else if(args.length >= 3)
 					{
 						if(args[1].equals("add") || args[1].equals("addUUID"))
 						{
-							LMPlayer jp = LMPlayer.getPlayer(args[1].equals("add") ? args[2] : UUID.fromString(args[2]));
+							UUID id;
+							String name;
 							
-							if(jp == null) throw new PlayerNotFoundException();
-							
-							if(!epP.whitelist.contains(jp.uuid))
+							if(args[1].equals("add"))
 							{
-								epP.whitelist.add(jp.uuid);
-								LatCoreMC.printChat(ics, "Added " + jp.username + " to whitelist");
+								LMPlayer jp = LMPlayer.getPlayer(args[2]);
+								if(jp == null) throw new PlayerNotFoundException();
+								id = jp.uuid;
+								name = jp.getDisplayName();
 							}
-							else LatCoreMC.printChat(ics, jp.username + " already added to whitelist!");
+							else
+							{
+								id = UUID.fromString(args[2]);
+								name = id.toString();
+							}
+							
+							if(!epP.whitelist.contains(id))
+							{
+								epP.whitelist.add(id);
+								LatCoreMC.printChat(ics, "Added " + name + " to your friend list");
+							}
+							else LatCoreMC.printChat(ics, name + " already added to your friend list!");
 						}
 						if(args[1].equals("rem") || args[1].equals("remUUID"))
 						{
-							LMPlayer jp = LMPlayer.getPlayer(args[1].equals("rem") ? args[2] : UUID.fromString(args[2]));
+							UUID id;
+							String name;
 							
-							if(jp == null) throw new PlayerNotFoundException();
-							
-							if(epP.whitelist.contains(jp.uuid))
+							if(args[1].equals("rem"))
 							{
-								epP.whitelist.remove(jp.uuid);
-								LatCoreMC.printChat(ics, "Removed " + jp.username + " from whitelist");
+								LMPlayer jp = LMPlayer.getPlayer(args[2]);
+								if(jp == null) throw new PlayerNotFoundException();
+								id = jp.uuid;
+								name = jp.getDisplayName();
 							}
-							else LatCoreMC.printChat(ics, jp.username + " is not added to whitelist!");
+							else
+							{
+								id = UUID.fromString(args[2]);
+								name = id.toString();
+							}
+							
+							if(epP.whitelist.contains(id))
+							{
+								epP.whitelist.remove(id);
+								LatCoreMC.printChat(ics, "Removed " + name + " from your friend list");
+							}
+							else LatCoreMC.printChat(ics, name + " is not added to your friend list!");
 						}
 					}
 				}
 			}
-			else if(args[0].equalsIgnoreCase("blacklist") || args[0].equals("bl"))
+			else if(args[0].equalsIgnoreCase("enemy"))
 			{
 				if(args.length == 1)
 				{
-					LatCoreMC.printChat(ics, "/latcore blacklist add|rem <player name>");
-					LatCoreMC.printChat(ics, "/latcore blacklist addUUID|remUUID <player UUID>");
-					LatCoreMC.printChat(ics, "/latcore blacklist list|clear");
+					LatCoreMC.printChat(ics, "/latcore enemy add|rem <name>");
+					LatCoreMC.printChat(ics, "/latcore enemy addUUID|remUUID <UUID>");
+					LatCoreMC.printChat(ics, "/latcore enemy list|clear");
 					return;
 				}
 				
 				EntityPlayer ep = getCommandSenderAsPlayer(ics);
-				
-				if(ep == null)
-				{
-					LatCoreMC.printChat(ics, "Player can't be null!");
-					return;
-				}
 				
 				if(args.length >= 2)
 				{
@@ -173,40 +185,64 @@ public class CmdLatCore extends CommandBaseLC
 						
 						if(s.length() > 0)
 							LatCoreMC.printChat(ics, s);
-						else LatCoreMC.printChat(ics, "Blacklist is empty");
+						else LatCoreMC.printChat(ics, "Enemy list is empty");
 					}
 					else if(args[1].equals("clear"))
 					{
 						epP.blacklist.clear();
-						LatCoreMC.printChat(ics, "Blacklist cleared");
+						LatCoreMC.printChat(ics, "Enemy list cleared");
 					}
 					else if(args.length >= 3)
 					{
 						if(args[1].equals("add") || args[1].equals("addUUID"))
 						{
-							LMPlayer jp = LMPlayer.getPlayer(args[1].equals("add") ? args[2] : UUID.fromString(args[2]));
+							UUID id;
+							String name;
 							
-							if(jp == null) throw new PlayerNotFoundException();
-							
-							if(!epP.blacklist.contains(jp.uuid))
+							if(args[1].equals("add"))
 							{
-								epP.blacklist.add(jp.uuid);
-								LatCoreMC.printChat(ics, "Added " + jp.username + " to blacklist");
+								LMPlayer jp = LMPlayer.getPlayer(args[2]);
+								if(jp == null) throw new PlayerNotFoundException();
+								id = jp.uuid;
+								name = jp.getDisplayName();
 							}
-							else LatCoreMC.printChat(ics, jp.username + " already added to blacklist!");
+							else
+							{
+								id = UUID.fromString(args[2]);
+								name = id.toString();
+							}
+							
+							if(!epP.blacklist.contains(id))
+							{
+								epP.blacklist.add(id);
+								LatCoreMC.printChat(ics, "Added " + name + " to your enemy list");
+							}
+							else LatCoreMC.printChat(ics, name + " already added to your enemy list!");
 						}
 						if(args[1].equals("rem") || args[1].equals("remUUID"))
 						{
-							LMPlayer jp = LMPlayer.getPlayer(args[1].equals("rem") ? args[2] : UUID.fromString(args[2]));
+							UUID id;
+							String name;
 							
-							if(jp == null) throw new PlayerNotFoundException();
-							
-							if(epP.blacklist.contains(jp.uuid))
+							if(args[1].equals("rem"))
 							{
-								epP.blacklist.remove(jp.uuid);
-								LatCoreMC.printChat(ics, "Removed " + jp.username + " from blacklist");
+								LMPlayer jp = LMPlayer.getPlayer(args[2]);
+								if(jp == null) throw new PlayerNotFoundException();
+								id = jp.uuid;
+								name = jp.getDisplayName();
 							}
-							else LatCoreMC.printChat(ics, jp.username + " is not added to blacklist!");
+							else
+							{
+								id = UUID.fromString(args[2]);
+								name = id.toString();
+							}
+							
+							if(epP.blacklist.contains(id))
+							{
+								epP.blacklist.remove(id);
+								LatCoreMC.printChat(ics, "Removed " + name + " from your enemy list");
+							}
+							else LatCoreMC.printChat(ics, name + " is not added to your nemy list!");
 						}
 					}
 				}

@@ -1,4 +1,5 @@
 package latmod.core.mod.block;
+import cpw.mods.fml.relauncher.*;
 import latmod.core.ODItems;
 import latmod.core.mod.LC;
 import latmod.core.mod.tile.*;
@@ -48,4 +49,8 @@ public class BlockPaintable extends BlockLC
 	
 	public boolean canConnectRedstone(IBlockAccess iba, int x, int y, int z, int side)
 	{ return true; }
+	
+	@SideOnly(Side.CLIENT)
+	public int getRenderBlockPass()
+	{ return 0; }
 }

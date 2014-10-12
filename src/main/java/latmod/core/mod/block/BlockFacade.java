@@ -12,7 +12,7 @@ public class BlockFacade extends BlockLC
 		super(s, Material.rock);
 		setHardness(0.3F);
 		isBlockContainer = false;
-		
+		setBlockTextureName("paintable");
 		setBlockBounds(0.5F - 1F / 16F, 0F, 0F, 0.5F + 1F / 16F, 1F, 1F);
 	}
 	

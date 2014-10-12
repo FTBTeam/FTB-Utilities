@@ -21,13 +21,11 @@ public class TilePaintable extends TileLM implements IPaintable, IWailaTile.Stac
 	
 	public void readTileData(NBTTagCompound tag)
 	{
-		super.readTileData(tag);
 		Paint.readFromNBT(tag, "Textures", paint);
 	}
 	
 	public void writeTileData(NBTTagCompound tag)
 	{
-		super.writeTileData(tag);
 		Paint.writeToNBT(tag, "Textures", paint);
 	}
 	
@@ -74,7 +72,7 @@ public class TilePaintable extends TileLM implements IPaintable, IWailaTile.Stac
 			rb.setOverrideBlockTexture(defIcon);
 		}
 		
-		rb.renderStandardBlock(Blocks.glass, x, y, z);
+		rb.renderStandardBlock(Blocks.stained_glass, x, y, z);
 	}
 	
 	@SideOnly(Side.CLIENT)

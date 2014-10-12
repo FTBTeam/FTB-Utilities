@@ -18,6 +18,7 @@ public class BlockPaintable extends BlockLC
 	{
 		super(s, Material.rock);
 		setHardness(0.3F);
+		setBlockTextureName("paintable");
 		isBlockContainer = true;
 		LC.mod.addTile(createNewTileEntity(null, 0).getClass(), s);
 	}

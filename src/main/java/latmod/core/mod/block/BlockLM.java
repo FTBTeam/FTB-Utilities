@@ -30,6 +30,7 @@ public abstract class BlockLM extends BlockContainer
 		mod = getMod();
 		blockName = s;
 		setBlockName(mod.getBlockName(s));
+		setBlockTextureName(s);
 		setHardness(1.8F);
 		setResistance(3F);
 		isBlockContainer = false;
@@ -132,7 +133,7 @@ public abstract class BlockLM extends BlockContainer
 	
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ir)
-	{ blockIcon = ir.registerIcon(mod.assets + blockName); }
+	{ blockIcon = ir.registerIcon(mod.assets + getTextureName()); }
 
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int s, int m)

@@ -7,17 +7,14 @@ import net.minecraft.command.*;
 public class CmdSetNick extends CommandBaseLC
 {
 	public CmdSetNick(int e)
-	{ super(e); }
-	
-	public String getCommandName() 
-	{ return "setnick"; }
+	{ super("setskin", e); }
 	
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/setnick <nick | null>"; }
 	
-	public void processCommand(ICommandSender ics, String[] args)
+	public void onCommand(ICommandSender ics, String[] args)
 	{
-		if(args != null && args.length > 0)
+		if(args.length > 0)
 		{
 			LMPlayer p;
 			
@@ -28,7 +25,7 @@ public class CmdSetNick extends CommandBaseLC
 			if(p == null) throw new PlayerNotFoundException();
 			
 			p.setCustomName(args[0].trim());
-			p.getPlayer(ics.getEntityWorld()).refreshDisplayName();
+			p.getPlayer().refreshDisplayName();
 			p.sendUpdate(ics.getEntityWorld(), "CustomName");
 			
 			LatCoreMC.printChat(ics, "Custom nickname changed to " + p.getDisplayName());

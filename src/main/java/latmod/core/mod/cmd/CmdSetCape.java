@@ -7,17 +7,14 @@ import net.minecraft.command.*;
 public class CmdSetCape extends CommandBaseLC
 {
 	public CmdSetCape(int e)
-	{ super(e); }
-	
-	public String getCommandName() 
-	{ return "setcape"; }
+	{ super("setcape", e); }
 	
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/setcape <url | null>"; }
 	
-	public void processCommand(ICommandSender ics, String[] args)
+	public void onCommand(ICommandSender ics, String[] args)
 	{
-		if(args != null && args.length > 0)
+		if(args.length > 0)
 		{
 			LMPlayer p;
 			

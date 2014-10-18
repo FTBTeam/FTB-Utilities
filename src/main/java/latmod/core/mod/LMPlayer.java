@@ -5,8 +5,9 @@ import java.util.UUID;
 import latmod.core.LatCoreMC;
 import latmod.core.mod.net.*;
 import latmod.core.util.FastList;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.*;
 import net.minecraft.nbt.*;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -62,8 +63,19 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public boolean hasCustomName()
 	{ return customName != null; }
 	
-	public EntityPlayer getPlayer(World w)
-	{ return LatCoreMC.getPlayer(w, uuid); }
+	public EntityPlayerMP getPlayer()
+	{
+		for(int i = 0; i < MinecraftServer.getServer().getConfigurationManager().playerEntityList.size(); i++)
+		{
+			EntityPlayerMP ep = (EntityPlayerMP)MinecraftServer.getServer().getConfigurationManager().playerEntityList.get(i);
+			if(ep.getUniqueID().equals(uuid)) return ep;
+		}
+		
+		return null;
+	}
+	
+	public boolean isOnline()
+	{ return getPlayer() != null; }
 	
 	public void sendUpdate(World w, String channel)
 	{
@@ -169,22 +181,19 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public static LMPlayer getPlayer(Object o)
 	{ return list.getObj(o); }
 	
-	private static class LMPlayerDataEvent extends Event
+	private static class LMPlayerEvent extends Event
 	{
 		public final LMPlayer player;
 		public final World world;
 		
-		public LMPlayerDataEvent(LMPlayer p, World w)
+		public LMPlayerEvent(LMPlayer p, World w)
 		{ player = p; world = w; }
 		
 		public void post()
 		{ MinecraftForge.EVENT_BUS.post(this); }
-		
-		public EntityPlayer getPlayer()
-		{ return player.getPlayer(world); }
 	}
 	
-	public static class DataChangedEvent extends LMPlayerDataEvent
+	public static class DataChangedEvent extends LMPlayerEvent
 	{
 		public final Side side;
 		public final String channel;
@@ -196,15 +205,50 @@ public class LMPlayer implements Comparable<LMPlayer>
 		{ return channel != null && channel.equals(s); }
 	}
 	
-	public static class DataLoadedEvent extends LMPlayerDataEvent
+	public static class DataLoadedEvent extends LMPlayerEvent
 	{
 		public DataLoadedEvent(LMPlayer p, World w)
 		{ super(p, w); }
 	}
 	
-	public static class DataSavedEvent extends LMPlayerDataEvent
+	public static class DataSavedEvent extends LMPlayerEvent
 	{
 		public DataSavedEvent(LMPlayer p, World w)
 		{ super(p, w); }
+	}
+	
+	public static class LMPlayerLoggedInEvent extends LMPlayerEvent
+	{
+		public final EntityPlayer entityPlayer;
+		public final boolean firstTime;
+		
+		public LMPlayerLoggedInEvent(LMPlayer p, World w, EntityPlayer ep, boolean b)
+		{ super(p, w); entityPlayer = ep; firstTime = b; }
+	}
+	
+	public static String[] getAllDisplayNames(boolean online)
+	{
+		FastList<String> allOn = new FastList<String>();
+		FastList<String> allOff = new FastList<String>();
+		
+		for(int i = 0; i < list.size(); i++)
+		{
+			LMPlayer p = list.get(i);
+			
+			String s = LatCoreMC.removeFormatting(p.getDisplayName());
+			
+			if(p.isOnline())
+				allOn.add(s);
+			else if(!online)
+				allOff.add(s);
+		}
+		
+		if(!online)
+		{
+			allOn.addAll(allOff);
+			return allOn.toArray(new String[0]);
+		}
+		
+		return allOn.toArray(new String[0]);
 	}
 }

@@ -4,7 +4,7 @@ import latmod.core.mod.LC;
 import net.minecraft.command.*;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
-public abstract class CommandBaseLC extends CommandBase
+public abstract class CommandBaseLC extends CommandLM
 {
 	public static void registerCommands(FMLServerStartingEvent e)
 	{
@@ -20,8 +20,8 @@ public abstract class CommandBaseLC extends CommandBase
 	
 	public final int enabled;
 	
-	public CommandBaseLC(int e)
-	{ enabled = e; }
+	public CommandBaseLC(String s, int e)
+	{ super(s); enabled = e; }
 	
 	public final int getRequiredPermissionLevel()
 	{ return (enabled == 2) ? 2 : ((enabled == 1) ? 0 : 5); }

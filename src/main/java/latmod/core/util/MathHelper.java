@@ -48,23 +48,23 @@ public class MathHelper // Converter
 	public static int power(int f, int n)
 	{ int j = 1; for(int i = 0; i < n; i++) j *= f; return j; }
 
-	public static double dist(double x1, double y1, double z1, double x2, double y2, double z2)
-	{ return sqrt3sq(x2 - x1, y2 - y1, z2 - z1); }
-	
 	public static double distSq(double x1, double y1, double z1, double x2, double y2, double z2)
 	{ return (sq(x2 - x1) + sq(y2 - y1) + sq(z2 - z1)); }
 	
-	public static double dist(double x1, double y1, double x2, double y2)
-	{ return sqrt2sq(x2 - x1, y2 - y1); }
+	public static double dist(double x1, double y1, double z1, double x2, double y2, double z2)
+	{ return sqrt(distSq(x1, y1, z1, x2, y2, z2)); }
 	
 	public static double distSq(double x1, double y1, double x2, double y2)
 	{ return sq(x2 - x1) + sq(y2 - y1); }
 	
-	public static double dist(Vertex i1, Vertex i2)
-	{ return dist(i1.x, i1.y, i1.z, i2.x, i2.y, i2.z); }
+	public static double dist(double x1, double y1, double x2, double y2)
+	{ return sqrt(distSq(x1, y1, x2, y2)); }
 	
-	public static double distSq(Vertex i1, Vertex i2)
-	{ return distSq(i1.x, i1.y, i1.z, i2.x, i2.y, i2.z); }
+	public static double distSq(Vertex v1, Vertex v2)
+	{ return distSq(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z); }
+	
+	public static double dist(Vertex v1, Vertex v2)
+	{ return sqrt(dist(v1, v2)); }
 	
 	public static Vertex getLook(Vertex v, double yaw, double pitch, double dist)
 	{

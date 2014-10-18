@@ -12,17 +12,14 @@ import net.minecraft.util.*;
 public class CmdLatCore extends CommandBaseLC
 {
 	public CmdLatCore(int e)
-	{ super(e); }
-	
-	public String getCommandName() 
-	{ return "latcore"; }
+	{ super("latcore", e); }
 	
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/latcore <subcommand>"; }
 	
-	public void processCommand(ICommandSender ics, String[] args)
+	public void onCommand(ICommandSender ics, String[] args)
 	{
-		if(args == null || args.length == 0)
+		if(args.length == 0)
 		{
 			LatCoreMC.printChat(ics, "Subcommands: versions, uuid, friend, enemy");
 		}

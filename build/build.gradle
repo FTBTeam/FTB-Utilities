@@ -54,7 +54,7 @@ sourceSets {
 
 tasks.withType(Jar)
 {
-    destinationDir = file("$rootDir/sources/Files/" + config.version_mc + "/" + config.name_latcoremc)
+    destinationDir = file("$rootDir/sources/Exported")
 }
 
 processResources

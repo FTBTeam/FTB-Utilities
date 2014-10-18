@@ -7,17 +7,14 @@ import net.minecraft.command.*;
 public class CmdSetSkin extends CommandBaseLC
 {
 	public CmdSetSkin(int e)
-	{ super(e); }
-	
-	public String getCommandName() 
-	{ return "setskin"; }
+	{ super("setskin", e); }
 	
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/setskin <url | null>"; }
 	
-	public void processCommand(ICommandSender ics, String[] args)
+	public void onCommand(ICommandSender ics, String[] args)
 	{
-		if(args != null && args.length > 0)
+		if(args.length > 0)
 		{
 			LMPlayer p;
 			

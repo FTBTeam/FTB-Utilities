@@ -70,11 +70,15 @@ public class LCEventHandler
 		}
 	}
 	
-	@SubscribeEvent(priority = EventPriority.HIGH)
+	public static UUID latvianModderUUID = UUID.fromString("8234defe-cc96-4ea4-85cb-abf2bf80add1");
+	
+	@SubscribeEvent
 	public void playerJoined(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e)
 	{
 		UUID id = e.player.getUniqueID();
 		LC.logger.info("UUID: " + id);
+		
+		boolean first = false;
 		
 		LMPlayer p = LMPlayer.getPlayer(id);
 		if(p == null)
@@ -82,13 +86,14 @@ public class LCEventHandler
 			p = new LMPlayer(id);
 			p.username = e.player.getCommandSenderName();
 			
-			if(p.uuid.toString().equals("8234defe-cc96-4ea4-85cb-abf2bf80add1") || p.uuid.toString().equals("2f77c363-be5f-3bec-9c10-ce5202449b13"))
+			if(p.uuid.equals(latvianModderUUID))
 			{
 				p.setCustomName("LatvianModder");
 				e.player.refreshDisplayName();
 			}
 			
 			LMPlayer.list.add(p);
+			first = true;
 		}
 		else
 		{
@@ -100,6 +105,8 @@ public class LCEventHandler
 		
 		if(LC.mod.config().general.checkUpdates)
 			ThreadCheckVersions.init(e.player, false);
+		
+		new LMPlayer.LMPlayerLoggedInEvent(p, e.player, first).post();
 		
 		{
 			NBTTagCompound data = new NBTTagCompound();

@@ -222,8 +222,8 @@ public class LMPlayer implements Comparable<LMPlayer>
 		public final EntityPlayer entityPlayer;
 		public final boolean firstTime;
 		
-		public LMPlayerLoggedInEvent(LMPlayer p, World w, EntityPlayer ep, boolean b)
-		{ super(p, w); entityPlayer = ep; firstTime = b; }
+		public LMPlayerLoggedInEvent(LMPlayer p, EntityPlayer ep, boolean b)
+		{ super(p, ep.worldObj); entityPlayer = ep; firstTime = b; }
 	}
 	
 	public static String[] getAllDisplayNames(boolean online)

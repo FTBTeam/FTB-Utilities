@@ -243,10 +243,17 @@ public class LMPlayer implements Comparable<LMPlayer>
 				allOff.add(s);
 		}
 		
+		allOn.sort();
+		
 		if(!online)
 		{
-			allOn.addAll(allOff);
-			return allOn.toArray(new String[0]);
+			allOff.sort();
+			
+			for(int i = 0; i < allOff.size(); i++)
+			{
+				String s = allOff.get(i);
+				if(!allOn.contains(s)) allOn.add(s);
+			}
 		}
 		
 		return allOn.toArray(new String[0]);

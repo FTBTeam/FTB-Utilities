@@ -17,6 +17,20 @@ public class CmdLatCore extends CommandBaseLC
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/latcore <subcommand>"; }
 	
+	public String[] getTabStrings(ICommandSender ics, String args[], int i)
+	{
+		if(i == 0) return new String[] { "versions", "uuid", "friend", "enemy" };
+		if(i == 1 && (isArg(args, 0, "friend") || isArg(args, 0, "enemy"))) return new String[] { "add", "rem", "list", "clear" };
+		return super.getTabStrings(ics, args, i);
+	}
+	
+	public Boolean isUsername(String[] args, int i)
+	{
+		if(i == 1 && isArg(args, 0, "uuid")) return false;
+		if(i == 2 && (isArg(args, 0, "friend") || isArg(args, 0, "enemy")) && (isArg(args, 1, "add") || isArg(args, 1, "rem"))) return true;
+		return null;
+	}
+	
 	public void onCommand(ICommandSender ics, String[] args)
 	{
 		if(args.length == 0)
@@ -52,8 +66,7 @@ public class CmdLatCore extends CommandBaseLC
 			{
 				if(args.length == 1)
 				{
-					LatCoreMC.printChat(ics, "/latcore friend add|remove <name>");
-					LatCoreMC.printChat(ics, "/latcore friend addUUID|remUUID <UUID>");
+					LatCoreMC.printChat(ics, "/latcore friend add|rem <name>");
 					LatCoreMC.printChat(ics, "/latcore friend list|clear");
 					return;
 				}
@@ -93,23 +106,12 @@ public class CmdLatCore extends CommandBaseLC
 					}
 					else if(args.length >= 3)
 					{
-						if(args[1].equals("add") || args[1].equals("addUUID"))
+						if(args[1].equals("add"))
 						{
-							UUID id;
-							String name;
-							
-							if(args[1].equals("add"))
-							{
-								LMPlayer jp = LMPlayer.getPlayer(args[2]);
-								if(jp == null) throw new PlayerNotFoundException();
-								id = jp.uuid;
-								name = jp.getDisplayName();
-							}
-							else
-							{
-								id = UUID.fromString(args[2]);
-								name = id.toString();
-							}
+							LMPlayer jp = LMPlayer.getPlayer(args[2]);
+							if(jp == null) throw new PlayerNotFoundException();
+							UUID id = jp.uuid;
+							String name = jp.getDisplayName();
 							
 							if(!epP.whitelist.contains(id))
 							{
@@ -118,23 +120,12 @@ public class CmdLatCore extends CommandBaseLC
 							}
 							else LatCoreMC.printChat(ics, name + " already added to your friend list!");
 						}
-						if(args[1].equals("rem") || args[1].equals("remUUID"))
+						if(args[1].equals("rem"))
 						{
-							UUID id;
-							String name;
-							
-							if(args[1].equals("rem"))
-							{
-								LMPlayer jp = LMPlayer.getPlayer(args[2]);
-								if(jp == null) throw new PlayerNotFoundException();
-								id = jp.uuid;
-								name = jp.getDisplayName();
-							}
-							else
-							{
-								id = UUID.fromString(args[2]);
-								name = id.toString();
-							}
+							LMPlayer jp = LMPlayer.getPlayer(args[2]);
+							if(jp == null) throw new PlayerNotFoundException();
+							UUID id = jp.uuid;
+							String name = jp.getDisplayName();
 							
 							if(epP.whitelist.contains(id))
 							{
@@ -151,7 +142,6 @@ public class CmdLatCore extends CommandBaseLC
 				if(args.length == 1)
 				{
 					LatCoreMC.printChat(ics, "/latcore enemy add|rem <name>");
-					LatCoreMC.printChat(ics, "/latcore enemy addUUID|remUUID <UUID>");
 					LatCoreMC.printChat(ics, "/latcore enemy list|clear");
 					return;
 				}
@@ -191,23 +181,12 @@ public class CmdLatCore extends CommandBaseLC
 					}
 					else if(args.length >= 3)
 					{
-						if(args[1].equals("add") || args[1].equals("addUUID"))
+						if(args[1].equals("add"))
 						{
-							UUID id;
-							String name;
-							
-							if(args[1].equals("add"))
-							{
-								LMPlayer jp = LMPlayer.getPlayer(args[2]);
-								if(jp == null) throw new PlayerNotFoundException();
-								id = jp.uuid;
-								name = jp.getDisplayName();
-							}
-							else
-							{
-								id = UUID.fromString(args[2]);
-								name = id.toString();
-							}
+							LMPlayer jp = LMPlayer.getPlayer(args[2]);
+							if(jp == null) throw new PlayerNotFoundException();
+							UUID id = jp.uuid;
+							String name = jp.getDisplayName();
 							
 							if(!epP.blacklist.contains(id))
 							{
@@ -216,23 +195,12 @@ public class CmdLatCore extends CommandBaseLC
 							}
 							else LatCoreMC.printChat(ics, name + " already added to your enemy list!");
 						}
-						if(args[1].equals("rem") || args[1].equals("remUUID"))
+						if(args[1].equals("rem"))
 						{
-							UUID id;
-							String name;
-							
-							if(args[1].equals("rem"))
-							{
-								LMPlayer jp = LMPlayer.getPlayer(args[2]);
-								if(jp == null) throw new PlayerNotFoundException();
-								id = jp.uuid;
-								name = jp.getDisplayName();
-							}
-							else
-							{
-								id = UUID.fromString(args[2]);
-								name = id.toString();
-							}
+							LMPlayer jp = LMPlayer.getPlayer(args[2]);
+							if(jp == null) throw new PlayerNotFoundException();
+							UUID id = jp.uuid;
+							String name = jp.getDisplayName();
 							
 							if(epP.blacklist.contains(id))
 							{

@@ -21,7 +21,10 @@ public class CmdRealNick extends CommandBaseLC
 			
 			if(p == null) throw new PlayerNotFoundException();
 			
-			LatCoreMC.printChat(ics, p.getDisplayName() + EnumChatFormatting.RESET + "'s real username is " + p.username);
+			LatCoreMC.printChat(ics, p.getDisplayName() + EnumChatFormatting.RESET + " is " + p.username);
 		}
 	}
+	
+	public Boolean isUsername(String[] args, int i)
+	{ return (i == 0) ? false : null; }
 }

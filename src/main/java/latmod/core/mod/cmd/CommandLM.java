@@ -31,22 +31,31 @@ public abstract class CommandLM extends CommandBase
 	public abstract void onCommand(ICommandSender ics, String[] args);
 	
 	@SuppressWarnings("all")
-	public List addTabCompletionOptions(ICommandSender ics, String[] args)
+	public final List addTabCompletionOptions(ICommandSender ics, String[] args)
 	{
-		int un = isUsername(args.length - 1);
-		
-		if(un == 1)
-			return getListOfStringsMatchingLastWord(args, LMPlayer.getAllDisplayNames(true));
-		if(un == 2)
-			return getListOfStringsMatchingLastWord(args, LMPlayer.getAllDisplayNames(false));
-		
+		String[] s = getTabStrings(ics, args, args.length - 1);
+		if(s != null && s.length > 0)
+			return getListOfStringsMatchingLastWord(args, s);
 		return null;
 	}
 	
-	/**
-	 * 0 - none
-	 * 1 - online
-	 * 2 - all */
-	public int isUsername(int i)
+	public final int isUsername(int i)
 	{ return 0; }
+	
+	/**
+	 * null - none
+	 * true - online
+	 * false - all */
+	public Boolean isUsername(String[] args, int i)
+	{ return null; }
+	
+	public boolean isArg(String[] args, int i, String s)
+	{ return args != null && i >= 0 && i < args.length && args[i].equals(s); }
+	
+	public String[] getTabStrings(ICommandSender ics, String args[], int i)
+	{
+		Boolean un = isUsername(args, i);
+		if(un == null) return null;
+		return LMPlayer.getAllDisplayNames(un);
+	}
 }

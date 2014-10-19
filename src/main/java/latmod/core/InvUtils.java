@@ -282,7 +282,6 @@ public class InvUtils
 	public static void dropItem(World w, double x, double y, double z, ItemStack is, int delay)
 	{
 		if(w == null || is == null || is.stackSize == 0) return;
-		
 		EntityItem ei = new EntityItem(w, x, y, z, is.copy());
 		ei.motionX = w.rand.nextGaussian() * 0.07F;
 		ei.motionY = w.rand.nextFloat() * 0.05F;
@@ -291,8 +290,26 @@ public class InvUtils
 		w.spawnEntityInWorld(ei);
 	}
 	
-	public static void dropItem(Entity e, ItemStack is)
-	{ dropItem(e.worldObj, e.posX, e.posY, e.posZ, is, 0); }
+	public static void dropItem(Entity e, ItemStack item)
+	{
+		if(e == null || item == null || item.stackSize <= 0) return;
+		dropItem(e.worldObj, e.posX, e.posY, e.posZ, item, 0);
+	}
+	
+	public static void giveItem(EntityPlayer ep, ItemStack item)
+	{
+		if(ep == null || item == null || item.stackSize <= 0) return;
+		ItemStack is = item.copy();
+		
+		int size = is.stackSize;
+		for(int i = 0; i < size; i++)
+		{
+			if(InvUtils.addSingleItemToInv(is, ep.inventory, InvUtils.getPlayerSlots(ep), -1, true))
+			{ is.stackSize--; ep.inventory.markDirty(); }
+		}
+		
+		if(is.stackSize > 0) dropItem(ep, is);
+	}
 	
 	public static void dropAllItems(World w, double x, double y, double z, ItemStack[] items)
 	{

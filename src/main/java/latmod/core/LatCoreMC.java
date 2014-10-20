@@ -10,7 +10,7 @@ import latmod.core.util.FastList;
 import net.minecraft.block.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.*;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.*;
 import net.minecraft.item.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
@@ -70,11 +70,24 @@ public class LatCoreMC
 	{ return new Configuration(new File(e.getModConfigurationDirectory(), s)); }
 	
 	/** Prints message to chat (doesn't translate it) */
-	public static final void printChat(ICommandSender ep, Object o)
+	public static final void printChat(ICommandSender ep, Object o, boolean broadcast)
 	{
-		if(ep == null) System.out.println(o);
-		else ep.addChatMessage(new ChatComponentText("" + o));
+		if(ep != null)
+		{
+			IChatComponent msg = new ChatComponentText("" + o);
+			ep.addChatMessage(msg);
+			
+			if(broadcast && ep instanceof MinecraftServer)
+			{
+				for(EntityPlayerMP ep1 : getAllOnlinePlayers())
+					ep1.addChatMessage(msg);
+			}
+		}
+		else System.out.println(o);
 	}
+	
+	public static final void printChat(ICommandSender ep, Object o)
+	{ printChat(ep, o, false); }
 	
 	// Registry methods //
 	
@@ -432,4 +445,12 @@ public class LatCoreMC
 	
 	public static boolean isWrench(ItemStack is)
 	{ return is != null && is.getItem() != null && is.getItem().getHarvestLevel(is, "wrench") != -1; }
+
+	@SuppressWarnings("unchecked")
+	public static FastList<EntityPlayerMP> getAllOnlinePlayers()
+	{
+		FastList<EntityPlayerMP> al = new FastList<EntityPlayerMP>();
+		al.addAll(MinecraftServer.getServer().getConfigurationManager().playerEntityList);
+		return al;
+	}
 }

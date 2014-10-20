@@ -69,7 +69,7 @@ public class ThreadCheckVersions implements Runnable
 			}
 			else
 			{
-				String thisBuild = "" + (LatCoreMC.isDevEnv ? "Development" : Integer.parseInt(LC.VERSION));
+				String thisBuild = "" + (LatCoreMC.isDevEnv ? "Development" : LC.VERSION);
 				
 				if(!thisBuild.equals(file.latestVersion))
 				{

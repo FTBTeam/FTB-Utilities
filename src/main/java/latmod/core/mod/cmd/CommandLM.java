@@ -5,6 +5,7 @@ import java.util.List;
 import latmod.core.LatCoreMC;
 import latmod.core.mod.LMPlayer;
 import net.minecraft.command.*;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 public abstract class CommandLM extends CommandBase
 {
@@ -49,13 +50,35 @@ public abstract class CommandLM extends CommandBase
 	public Boolean isUsername(String[] args, int i)
 	{ return null; }
 	
-	public boolean isArg(String[] args, int i, String s)
-	{ return args != null && i >= 0 && i < args.length && args[i].equals(s); }
+	public boolean isArg(String[] args, int i, String... s)
+	{
+		if(args != null && i >= 0 && i < args.length)
+		{
+			for(int j = 0; j < s.length; j++)
+				if(args[i].equals(s[j])) return true;
+		}
+		
+		return false;
+	}
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
 		Boolean un = isUsername(args, i);
 		if(un == null) return null;
 		return LMPlayer.getAllDisplayNames(un);
+	}
+	
+	public static EntityPlayerMP getPlayer(ICommandSender ics, String s)
+	{
+		EntityPlayerMP ep = getLMPlayer(s).getPlayer();
+		if(ep != null) return ep;
+		throw new PlayerNotFoundException();
+	}
+	
+	public static LMPlayer getLMPlayer(String s)
+	{
+		LMPlayer p = LMPlayer.getPlayer(s);
+		if(p == null) throw new PlayerNotFoundException();
+		return p;
 	}
 }

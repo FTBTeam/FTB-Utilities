@@ -170,7 +170,8 @@ public class LMPlayer implements Comparable<LMPlayer>
 		if(o == this) return true;
 		if(o instanceof String) return ((String)o).equalsIgnoreCase(LatCoreMC.removeFormatting(getDisplayName())) || o.equals(username);
 		if(o instanceof UUID) return ((UUID)o).equals(uuid);
-		if(o instanceof EntityPlayer) return ((EntityPlayer)o).getUniqueID().equals(uuid);
+		if(o instanceof EntityPlayer) return equals(((EntityPlayer)o).getUniqueID());
+		if(o instanceof LMPlayer) return equals(((LMPlayer)o).uuid);
 		return false;
 	}
 	
@@ -179,7 +180,11 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public static final FastList<LMPlayer> list = new FastList<LMPlayer>();
 	
 	public static LMPlayer getPlayer(Object o)
-	{ return list.getObj(o); }
+	{
+		if(o instanceof LMPlayer)
+			return (LMPlayer)o;
+		return list.getObj(o);
+	}
 	
 	private static class LMPlayerEvent extends Event
 	{

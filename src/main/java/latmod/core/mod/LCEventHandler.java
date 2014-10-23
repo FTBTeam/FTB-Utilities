@@ -50,15 +50,25 @@ public class LCEventHandler
 			
 			if(LC.mod.config().general.addFluidContainerNames)
 			{
+				FluidStack fs = null;
+				
 				if(item instanceof IFluidContainerItem)
 				{
-					FluidStack fs = ((IFluidContainerItem)item).getFluid(e.itemStack);
+					fs = ((IFluidContainerItem)item).getFluid(e.itemStack);
 					
 					if(fs != null && fs.amount > 0)
 					{
 						e.toolTip.add("Stored FluidID:");
 						e.toolTip.add(FluidRegistry.getFluidName(fs.fluidID));
 					}
+				}
+				
+				if(fs == null) fs = FluidContainerRegistry.getFluidForFilledItem(e.itemStack);
+				
+				if(fs != null && fs.amount > 0)
+				{
+					e.toolTip.add("Stored FluidID:");
+					e.toolTip.add(FluidRegistry.getFluidName(fs.fluidID));
 				}
 			}
 		}
@@ -70,8 +80,6 @@ public class LCEventHandler
 		}
 	}
 	
-	public static UUID latvianModderUUID = UUID.fromString("8234defe-cc96-4ea4-85cb-abf2bf80add1");
-	
 	@SubscribeEvent
 	public void playerJoined(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e)
 	{
@@ -81,23 +89,26 @@ public class LCEventHandler
 		boolean first = false;
 		
 		LMPlayer p = LMPlayer.getPlayer(id);
+		
 		if(p == null)
 		{
 			p = new LMPlayer(id);
-			p.username = e.player.getCommandSenderName();
+			LMPlayer.list.add(p);
+		}
+		
+		p.username = e.player.getCommandSenderName();
+		
+		if(!p.customData().hasKey("IsOld"))
+		{
+			p.customData().setBoolean("IsOld", true);
 			
-			if(p.uuid.equals(latvianModderUUID))
+			if(p.uuid.equals(LatCoreMC.latvianModderUUID))
 			{
 				p.setCustomName("LatvianModder");
 				e.player.refreshDisplayName();
 			}
 			
-			LMPlayer.list.add(p);
 			first = true;
-		}
-		else
-		{
-			p.username = e.player.getCommandSenderName();
 		}
 		
 		if(EnumLatModTeam.TEAM.uuids.contains(e.player.getUniqueID()))
@@ -219,7 +230,7 @@ public class LCEventHandler
 		{ MinecraftForge.EVENT_BUS.post(this); }
 	}
 	
-	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	@SubscribeEvent(priority = EventPriority.LOW)
 	public void playerName(PlayerEvent.NameFormat e)
 	{
 		LMPlayer p = LMPlayer.getPlayer(e.entityPlayer);

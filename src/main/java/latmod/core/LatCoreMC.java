@@ -50,6 +50,8 @@ public class LatCoreMC
 	public static final String FORMATTING = "\u00a7";
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
 	
+	public static final UUID latvianModderUUID = UUID.fromString("8234defe-cc96-4ea4-85cb-abf2bf80add1");
+	
 	public static final int getRotYaw(int rot)
 	{
 		if(rot == 2) return 180;

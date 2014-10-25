@@ -24,7 +24,6 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonWriter;
 
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
@@ -248,8 +247,11 @@ public class LatCoreMC
 	
 	public static String toJson(Object o, boolean asTree)
 	{
-		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		GsonBuilder gb = new GsonBuilder().excludeFieldsWithoutExposeAnnotation();
+		if(asTree) gb.setPrettyPrinting();
+		Gson gson = gb.create();
 		
+		/*
 		if(asTree)
 		{
 			StringWriter sw = new StringWriter();
@@ -258,6 +260,7 @@ public class LatCoreMC
 			gson.toJson(o, o.getClass(), jw);
 			return sw.toString();
 		}
+		*/
 		
 		return gson.toJson(o);
 	}

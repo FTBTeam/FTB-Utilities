@@ -45,8 +45,6 @@ public class LMMod<C extends LMConfig, R extends LMRecipes>
 	
 	@SuppressWarnings("unchecked") public C config() { return (C)config; }
 	@SuppressWarnings("unchecked") public R recipes() { return (R)recipes; }
-	public void setConfig(LMConfig c) { config = c; }
-	public void setRecipes(LMRecipes r) { recipes = r; }
 	
 	public ResourceLocation getLocation(String s)
 	{ return new ResourceLocation(assets + s); }

@@ -71,12 +71,11 @@ public class LMConfig
 		{ config.setCategoryComment(cat, LatCore.unsplit(desc, "\n")); }
 	}
 	
+	public final File loadedFrom;
 	public Configuration config;
 	
 	public LMConfig(File f)
-	{
-		config = new Configuration(f);
-	}
+	{ loadedFrom = f; reload(); }
 	
 	public LMConfig(FMLPreInitializationEvent e, String s)
 	{ this(new File(e.getModConfigurationDirectory(), s)); }
@@ -86,4 +85,7 @@ public class LMConfig
 		if(config.hasChanged())
 			config.save();
 	}
+	
+	public void reload()
+	{ config = new Configuration(loadedFrom); }
 }

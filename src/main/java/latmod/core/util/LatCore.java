@@ -170,8 +170,7 @@ public class LatCore
 		return f;
 	}
 	
-	@SafeVarargs
-	public static <E> String strip(E... o)
+	public static String strip(Object... o)
 	{
 		if(o == null) return null;
 		if(o.length == 0) return "";

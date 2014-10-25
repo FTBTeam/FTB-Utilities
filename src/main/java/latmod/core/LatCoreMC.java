@@ -4,9 +4,9 @@ import java.lang.reflect.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import latmod.core.mod.*;
-import latmod.core.mod.tile.*;
-import latmod.core.util.FastList;
+import latmod.core.mod.LC;
+import latmod.core.mod.tile.IGuiTile;
+import latmod.core.util.*;
 import net.minecraft.block.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.*;
@@ -15,6 +15,7 @@ import net.minecraft.item.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.*;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -455,4 +456,7 @@ public class LatCoreMC
 		al.addAll(MinecraftServer.getServer().getConfigurationManager().playerEntityList);
 		return al;
 	}
+	
+	public static Vertex getSpawnPoint(World w)
+	{ ChunkCoordinates c = w.getSpawnPoint(); return new Vertex(c.posX + 0.5D, c.posY + 0.5D, c.posZ + 0.5D); }
 }

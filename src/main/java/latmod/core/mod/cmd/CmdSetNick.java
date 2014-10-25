@@ -7,7 +7,7 @@ import net.minecraft.command.*;
 public class CmdSetNick extends CommandBaseLC
 {
 	public CmdSetNick(int e)
-	{ super("setskin", e); }
+	{ super("setnick", e); }
 	
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/setnick <nick | null>"; }

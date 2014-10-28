@@ -5,8 +5,6 @@ import latmod.core.mod.cmd.CommandBaseLC;
 import latmod.core.mod.net.LMNetHandler;
 import latmod.core.mod.recipes.LMRecipes;
 import latmod.core.mod.tile.*;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 
 import org.apache.logging.log4j.*;
@@ -27,7 +25,6 @@ public class LC
 	public static LCCommon proxy;
 	
 	public static LMMod<LCConfig, LMRecipes> mod;
-	public static CreativeTabs tab;
 	public static Logger logger = LogManager.getLogger("LatCoreMC");
 	
 	public LC()
@@ -48,10 +45,7 @@ public class LC
 		mod = new LMMod<LCConfig, LMRecipes>(MOD_ID, new LCConfig(e), new LMRecipes(false));
 		ODItems.preInit();
 		
-		LCItems.init();
 		mod.onPostLoaded();
-		
-		tab = mod.createTab("tab", new ItemStack(LCItems.i_link_card));
 		
 		LatCoreMC.addGuiHandler(this, proxy);
 		

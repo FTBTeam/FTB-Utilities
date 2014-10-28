@@ -11,13 +11,22 @@ public class MathHelper // Converter
 	public static final double HALF_PI = Math.PI / 2D;
 	
 	public static double sin(double d)
-	{ return Math.sin(d); }
+	{ return net.minecraft.util.MathHelper.sin((float)d); }
 	
 	public static double cos(double d)
-	{ return Math.cos(d); }
+	{ return net.minecraft.util.MathHelper.cos((float)d); }
 	
 	public static double tan(double d)
-	{ return Math.tan(d); }
+	{ return sin(d) / cos(d); }
+	
+	public static double sinFromDeg(double f)
+	{ return sin(f * RAD); }
+	
+	public static double cosFromDeg(double f)
+	{ return cos(f * RAD); }
+	
+	public static double tanFromDeg(double f)
+	{ return tan(f * RAD); }
 	
 	/** atan2 using Vertex */
 	public static double atan2(Vertex pos, Vertex tar)
@@ -78,10 +87,13 @@ public class MathHelper // Converter
 	}
 	
 	public static int floor(double d)
-	{ return (int) Math.floor(d); }
+	{ return net.minecraft.util.MathHelper.floor_double(d); }
+	
+	public static int chunk(double d)
+	{ return floor(d) >> 4; }
 	
 	public static int ceil(double d)
-	{ return (int) Math.ceil(d); }
+	{ return net.minecraft.util.MathHelper.ceiling_double_int(d); }
 	
 	public static int randomInt(Random r, int min, int max)
 	{ return min + r.nextInt(max - min + 1); }
@@ -91,12 +103,6 @@ public class MathHelper // Converter
 
 	public static boolean isRound(double d)
 	{ return Math.round(d) == d; }
-	
-	public static void fill(double[][] af, int size1, int size2, double f)
-	{ for(int i = 0; i < size1; i++) for(int j = 0; j < size2; j++) af[i][j] = f; }
-	
-	public static void fill(int[][] ai, int size1, int size2, int i)
-	{ for(int k = 0; k < size1; k++) for(int j = 0; j < size2; j++) ai[k][j] = i; }
 	
 	public static int lerpInt(int i1, int i2, double f)
 	{ return i1 + (int)((i2 - i1) * f); }
@@ -146,15 +152,6 @@ public class MathHelper // Converter
 	public static int mapInt(int val, int min1, int max1, int min2, int max2)
 	{ return min2 + (max2 - min2) * ((val - min1) / (max1 - min1)); }
 	
-	public static double sinFromDeg(double f)
-	{ return sin(f * RAD); }
-	
-	public static double cosFromDeg(double f)
-	{ return cos(f * RAD); }
-	
-	public static double tanFromDeg(double f)
-	{ return tan(f * RAD); }
-	
 	public static final Vertex getMidPoint(double x1, double y1, double z1, double x2, double y2, double z2, double p)
 	{ double x = x2 - x1; double y = y2 - y1; double z = z2 - z1; double d = Math.sqrt(x * x + y * y + z * z);
 	return new Vertex(x1 + (x / d) * (d * p), y1 + (y / d) * (d * p), z1 + (z / d) * (d * p)); }
@@ -164,4 +161,7 @@ public class MathHelper // Converter
 	
 	public static boolean isPlural(int i) { String s = "" + i;
 	return !(s.endsWith("1") && !s.endsWith("11")); }
+	
+	public static String getPluralWord(int i, String a, String b)
+	{ return isPlural(i) ? a : b; }
 }

@@ -1,6 +1,7 @@
 package latmod.core;
 import java.io.*;
 import java.lang.reflect.*;
+import java.net.URI;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -12,6 +13,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.*;
+import net.minecraft.nbt.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -462,4 +464,33 @@ public class LatCoreMC
 	
 	public static Vertex getSpawnPoint(World w)
 	{ ChunkCoordinates c = w.getSpawnPoint(); return new Vertex(c.posX + 0.5D, c.posY + 0.5D, c.posZ + 0.5D); }
+	
+	@SuppressWarnings("unchecked")
+	public static FastList<String> getMapKeys(NBTTagCompound tag)
+	{
+		FastList<String> list = new FastList<String>();
+		list.addAll(tag.func_150296_c()); return list;
+	}
+	
+	public static FastMap<String, NBTBase> toFastMap(NBTTagCompound tag)
+	{
+		FastMap<String, NBTBase> map = new FastMap<String, NBTBase>();
+		FastList<String> keys = getMapKeys(tag);
+		for(int i = 0; i < keys.size(); i++)
+		{ String s = keys.get(i); map.put(s, tag.getTag(s)); }
+		return map;
+	}
+	
+	public static boolean openURL(String url)
+	{
+		try
+		{
+			Class<?> oclass = Class.forName("java.awt.Desktop");
+			Object object = oclass.getMethod("getDesktop", new Class[0]).invoke((Object)null, new Object[0]);
+			oclass.getMethod("browse", new Class[] { URI.class }).invoke(object, new Object[] { new URI(url) });
+			return true;
+		}
+		catch (Exception e) { e.printStackTrace(); }
+		return false;
+	}
 }

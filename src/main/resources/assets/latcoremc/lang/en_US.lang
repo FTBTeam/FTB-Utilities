@@ -1,18 +1,3 @@
-### Blocks ###
-
-latcoremc:tile.paintable.name=Paintable Block
-latcoremc:tile.paintableRS.name=Dual Paintable Block
-latcoremc:tile.scriptBlock.name=[WIP] Script Block
-latcoremc:tile.facade.name=Paintable Facade
-
-### Items ###
-
-latcoremc:item.linkCard.name=Linking Card
-latcoremc:item.blockPainter.name=Block Painter
-latcoremc:item.blockPainterDmd.name=Diamond Block Painter
-
-### Lang ###
-
 latcoremc:owner=Owner: %s
 latcoremc:settings=Settings
 latcoremc:back=Back
@@ -52,12 +37,3 @@ latcoremc:color.light_blue=Light Blue
 latcoremc:color.magenta=Magenta
 latcoremc:color.orange=Orange
 latcoremc:color.white=White
-
-# Temp Waila & NEI fix #
-screen.button.yes=Yes
-screen.button.no=No
-screen.button.modules=Modules
-screen.button.back=Back
-nei.load=Load
-
-itemGroup.latcoremc:tab=LatCoreMC

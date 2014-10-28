@@ -1,7 +1,4 @@
 package latmod.core.mod;
-import latmod.core.client.LatCoreMCClient;
-import latmod.core.mod.block.BlockPaintable;
-import latmod.core.mod.client.render.world.RenderPaintable;
 import latmod.core.mod.tile.IGuiTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -17,17 +14,9 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class LCClient extends LCCommon
 {
-	public void preInit()
-	{
-	}
-	
+	public void preInit() { }
 	public void init() { }
-	
-	public void postInit()
-	{
-		BlockPaintable.renderID = LatCoreMCClient.getNewBlockRenderID();
-		LatCoreMCClient.addBlockRenderer(BlockPaintable.renderID, new RenderPaintable());
-	}
+	public void postInit() { }
 	
 	public int getKeyID(String s) { return Keyboard.getKeyIndex(s); }
 	public boolean isKeyDown(int id) { return Keyboard.isKeyDown(id); }

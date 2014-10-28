@@ -48,6 +48,10 @@ public class ODItems
 	public static final String NUGGET_LEAD = "nuggetLead";
 	public static final String NUGGET_SILVER = "nuggetSilver";
 	
+	public static final String ITEM_PAINTER = "toolPainter";
+	public static final String BLOCK_PAINTABLE = "blockPaintable";
+	public static final String FACADE_PAINTABLE = "facadePaintable";
+	
 	public static final class OreStackEntry
 	{
 		public final ItemStack itemStack;

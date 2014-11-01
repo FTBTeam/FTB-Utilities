@@ -242,4 +242,7 @@ public class FastList<E> implements Iterable<E>, List<E>, Set<E> //ArrayList
 		for(int i = size - 1; i >= 0; i--)
 		al1.add(get(i)); return al1;
 	}
+	
+	public static <T> FastList<T> asList(T... a)
+	{ return new FastList<T>(a); }
 }

@@ -1,8 +1,11 @@
 package latmod.core.util;
 import java.io.*;
-import java.lang.reflect.Constructor;
+import java.lang.reflect.*;
 import java.net.*;
-import java.util.Arrays;
+import java.util.*;
+
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 
 /** Made by LatvianModder */
 public class LatCore
@@ -319,6 +322,85 @@ public class LatCore
 		if(o1 == null && o2 == null && allowNulls) return true;
 		if(o1 == null || o2 == null) return false;
 		return o1.equals(o2);
+	}
+	
+	public static <T> T fromJson(String s, Type t)
+	{
+		if(s == null || s.length() < 2) s = "{}";
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		return gson.fromJson(s, t);
+	}
+	
+	public static <T> T fromJsonFromFile(File f, Type t)
+	{
+		try
+		{
+			FileInputStream fis = new FileInputStream(f);
+			byte[] b = new byte[fis.available()];
+			fis.read(b); fis.close();
+			return fromJson(new String(b), t);
+		}
+		catch(Exception e)
+		{ e.printStackTrace(); return null; }
+	}
+	
+	public static String toJson(Object o, boolean asTree)
+	{
+		GsonBuilder gb = new GsonBuilder().excludeFieldsWithoutExposeAnnotation();
+		if(asTree) gb.setPrettyPrinting();
+		Gson gson = gb.create();
+		
+		/*
+		if(asTree)
+		{
+			StringWriter sw = new StringWriter();
+			JsonWriter jw = new JsonWriter(sw);
+			jw.setIndent("\t");
+			gson.toJson(o, o.getClass(), jw);
+			return sw.toString();
+		}
+		*/
+		
+		return gson.toJson(o);
+	}
+	
+	public static void toJsonFile(File f, Object o)
+	{
+		String s = toJson(o, true);
+		
+		try
+		{
+			if(!f.exists())
+			{
+				File f0 = f.getParentFile();
+				if(!f0.exists()) f0.mkdirs();
+				f.createNewFile();
+			}
+			
+			FileOutputStream fos = new FileOutputStream(f);
+			fos.write(s.getBytes()); fos.close();
+		}
+		catch(Exception e)
+		{ e.printStackTrace(); }
+	}
+	
+	public static <K, V> Type getMapType(Type K, Type V)
+	{ return new TypeToken<Map<K, V>>() {}.getType(); }
+	
+	public static <E> Type getListType(Type E)
+	{ return new TypeToken<List<E>>() {}.getType(); }
+	
+	public static boolean openURL(String url)
+	{
+		try
+		{
+			Class<?> oclass = Class.forName("java.awt.Desktop");
+			Object object = oclass.getMethod("getDesktop", new Class[0]).invoke((Object)null, new Object[0]);
+			oclass.getMethod("browse", new Class[] { URI.class }).invoke(object, new Object[] { new URI(url) });
+			return true;
+		}
+		catch (Exception e) { e.printStackTrace(); }
+		return false;
 	}
 	
 	// End of class //

@@ -1,13 +1,13 @@
 package latmod.core;
-import java.io.*;
-import java.lang.reflect.*;
-import java.net.URI;
+import java.io.File;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import latmod.core.mod.LC;
-import latmod.core.mod.tile.IGuiTile;
+import latmod.core.net.*;
+import latmod.core.tile.IGuiTile;
 import latmod.core.util.*;
+import latmod.latcore.*;
 import net.minecraft.block.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.*;
@@ -23,11 +23,8 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.oredict.OreDictionary;
-
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
-
 import cpw.mods.fml.common.*;
+import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.*;
 import cpw.mods.fml.common.registry.*;
@@ -52,7 +49,7 @@ public class LatCoreMC
 	public static final String FORMATTING = "\u00a7";
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
 	
-	public static final UUID latvianModderUUID = UUID.fromString("8234defe-cc96-4ea4-85cb-abf2bf80add1");
+	public static final UUID latvianModderUUID = UUID.fromString("5afb9a5b-207d-480e-8879-67bc848f9a8f");
 	
 	public static final int getRotYaw(int rot)
 	{
@@ -186,9 +183,6 @@ public class LatCoreMC
 	public static String getRegName(ItemStack is)
 	{ return (is != null && is.getItem() != null) ? getRegName(is.getItem()) : null; }
 	
-	public static EntityPlayer getPlayer(World w, UUID id)
-	{ return w.func_152378_a(id); }
-	
 	public static void addGamerule(FMLServerStartingEvent e, String s, String s1)
 	{
 		if(!e.getServer().worldServers[0].getGameRules().hasRule(s))
@@ -227,66 +221,6 @@ public class LatCoreMC
 		e.worldObj.theProfiler.endSection();
 	}
 	
-	public static <T> T fromJson(String s, Type t)
-	{
-		if(s == null || s.length() < 2) s = "{}";
-		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-		return gson.fromJson(s, t);
-	}
-	
-	public static <T> T fromJsonFromFile(File f, Type t)
-	{
-		try
-		{
-			FileInputStream fis = new FileInputStream(f);
-			byte[] b = new byte[fis.available()];
-			fis.read(b); fis.close();
-			return fromJson(new String(b), t);
-		}
-		catch(Exception e)
-		{ e.printStackTrace(); return null; }
-	}
-	
-	public static String toJson(Object o, boolean asTree)
-	{
-		GsonBuilder gb = new GsonBuilder().excludeFieldsWithoutExposeAnnotation();
-		if(asTree) gb.setPrettyPrinting();
-		Gson gson = gb.create();
-		
-		/*
-		if(asTree)
-		{
-			StringWriter sw = new StringWriter();
-			JsonWriter jw = new JsonWriter(sw);
-			jw.setIndent("\t");
-			gson.toJson(o, o.getClass(), jw);
-			return sw.toString();
-		}
-		*/
-		
-		return gson.toJson(o);
-	}
-	
-	public static void toJsonFile(File f, Object o)
-	{
-		String s = toJson(o, true);
-		
-		try
-		{
-			if(!f.exists())
-			{
-				File f0 = f.getParentFile();
-				if(!f0.exists()) f0.mkdirs();
-				f.createNewFile();
-			}
-			
-			FileOutputStream fos = new FileOutputStream(f);
-			fos.write(s.getBytes()); fos.close();
-		}
-		catch(Exception e)
-		{ e.printStackTrace(); }
-	}
-	
 	public static MovingObjectPosition rayTrace(EntityPlayer ep, double d)
 	{
 		double y = ep.posY + ep.getDefaultEyeHeight();
@@ -299,12 +233,6 @@ public class LatCoreMC
 	
 	public static MovingObjectPosition rayTrace(EntityPlayer ep)
 	{ return rayTrace(ep, LC.proxy.getReachDist(ep)); }
-	
-	public static <K, V> Type getMapType(Type K, Type V)
-	{ return new TypeToken<Map<K, V>>() {}.getType(); }
-	
-	public static <E> Type getListType(Type E)
-	{ return new TypeToken<List<E>>() {}.getType(); }
 	
 	public static String removeFormatting(String s)
 	{ return textFormattingPattern.matcher(s).replaceAll(""); }
@@ -481,16 +409,16 @@ public class LatCoreMC
 		return map;
 	}
 	
-	public static boolean openURL(String url)
+	public static void openURL(EntityPlayerMP ep, String url)
 	{
-		try
-		{
-			Class<?> oclass = Class.forName("java.awt.Desktop");
-			Object object = oclass.getMethod("getDesktop", new Class[0]).invoke((Object)null, new Object[0]);
-			oclass.getMethod("browse", new Class[] { URI.class }).invoke(object, new Object[] { new URI(url) });
-			return true;
-		}
-		catch (Exception e) { e.printStackTrace(); }
-		return false;
+		NBTTagCompound data = new NBTTagCompound(); data.setString("URL", url);
+		LMNetHandler.INSTANCE.sendTo(new MessageCustomServerAction(LCEventHandler.ACTION_OPEN_URL, data), ep);
 	}
+	
+	public static void remap(MissingMapping m, String id, Item i)
+	{ if(m.type == GameRegistry.Type.ITEM && id.equals(m.name)) m.remap(i); }
+	
+	public static void remap(MissingMapping m, String id, Block b)
+	{ if(id.equals(m.name)) { if(m.type == GameRegistry.Type.BLOCK) m.remap(b);
+	else if(m.type == GameRegistry.Type.ITEM) m.remap(Item.getItemFromBlock(b)); } }
 }

@@ -1,8 +1,0 @@
-package latmod.core.mod.recipes;
-import net.minecraft.item.*;
-
-public interface IStackArray
-{
-	public boolean matches(ItemStack[] ai);
-	public StackEntry[] getItems();
-}

@@ -6,8 +6,10 @@ import latmod.core.*;
 import latmod.core.client.LatCoreMCClient;
 import latmod.core.event.CustomActionEvent;
 import latmod.core.net.*;
-import latmod.core.tile.IPaintable;
+import latmod.core.tile.*;
 import latmod.core.util.*;
+import latmod.core.waila.*;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -22,6 +24,10 @@ public class LCEventHandler
 {
 	public static final String ACTION_PLAYER_JOINED = "PlayerJoined";
 	public static final String ACTION_OPEN_URL = "OpenURL";
+	
+	public static final String WAILA_INV = "latcoremc.inv";
+	public static final String WAILA_TANK = "latcoremc.tank";
+	public static final String WAILA_OWNER = "latcoremc.owner";
 	
 	@SubscribeEvent
 	public void onTooltip(ItemTooltipEvent e)
@@ -85,7 +91,7 @@ public class LCEventHandler
 	public void playerJoined(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e)
 	{
 		UUID id = e.player.getUniqueID();
-		LC.logger.info("UUID: " + id);
+		LatCoreMC.logger.info("UUID: " + id);
 		
 		boolean first = false;
 		
@@ -229,6 +235,21 @@ public class LCEventHandler
 		
 		public void post()
 		{ MinecraftForge.EVENT_BUS.post(this); }
+	}
+	
+	@SubscribeEvent
+	public void registerWailaHandlers(WailaHelper.RegisterHandlersEvent e)
+	{
+		e.addConfig("LatCoreMC", WAILA_INV);
+		e.addConfig("LatCoreMC", WAILA_TANK);
+		e.addConfig("LatCoreMC", WAILA_OWNER);
+		
+		e.addHandler(IWailaTile.Stack.class, new WailaLMTile(e, true, false, false, false));
+		e.addHandler(IWailaTile.Head.class, new WailaLMTile(e, false, true, false, false));
+		e.addHandler(IWailaTile.Body.class, new WailaLMTile(e, false, false, true, false));
+		e.addHandler(IWailaTile.Tail.class, new WailaLMTile(e, false, false, false, true));
+		e.addHandler(IInventory.class, new WailaInvHandler(e));
+		e.addHandler(IFluidHandler.class, new WailaTankHandler(e));
 	}
 	
 	@SubscribeEvent(priority = EventPriority.LOW)

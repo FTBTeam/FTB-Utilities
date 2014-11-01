@@ -11,7 +11,7 @@ public abstract class BasicWailaHandler implements IWailaDataProvider
 	public boolean registerBody = false;
 	public boolean registerTail = false;
 	
-	public BasicWailaHandler() throws Exception
+	public BasicWailaHandler(WailaHelper.RegisterHandlersEvent e)
 	{
 	}
 	
@@ -33,13 +33,5 @@ public abstract class BasicWailaHandler implements IWailaDataProvider
 	public List<String> getWailaTail(ItemStack is, List<String> l, IWailaDataAccessor data, IWailaConfigHandler config)
 	{
 		return l;
-	}
-	
-	public String formatDouble(double d)
-	{
-		String s = "" + d;
-		if(s.endsWith(".0"))
-			s = s.substring(0, s.length() - 2);
-		return s;
 	}
 }

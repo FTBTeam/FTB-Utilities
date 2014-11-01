@@ -2,13 +2,8 @@ package latmod.latcore;
 import latmod.core.*;
 import latmod.core.net.LMNetHandler;
 import latmod.core.recipes.LMRecipes;
-import latmod.core.tile.IWailaTile;
-import latmod.core.waila.*;
 import latmod.latcore.cmd.CommandBaseLC;
 import net.minecraftforge.common.MinecraftForge;
-
-import org.apache.logging.log4j.*;
-
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 
@@ -21,11 +16,10 @@ public class LC
 	@Mod.Instance(LC.MOD_ID)
 	public static LC inst;
 	
-	@SidedProxy(clientSide = "latmod.core.mod.LCClient", serverSide = "latmod.core.mod.LCCommon")
+	@SidedProxy(clientSide = "latmod.latcore.LCClient", serverSide = "latmod.latcore.LCCommon")
 	public static LCCommon proxy;
 	
 	public static LMMod<LCConfig, LMRecipes> mod;
-	public static Logger logger = LogManager.getLogger("LatCoreMC");
 	
 	public LC()
 	{
@@ -38,9 +32,9 @@ public class LC
 	public void preInit(FMLPreInitializationEvent e)
 	{
 		if(LatCoreMC.isDevEnv)
-			logger.info("Loading LatCoreMC, Dev Build");
+			LatCoreMC.logger.info("Loading LatCoreMC, Dev Build");
 		else
-			logger.info("Loading LatCoreMC, Build #" + VERSION);
+			LatCoreMC.logger.info("Loading LatCoreMC, Build #" + VERSION);
 		
 		mod = new LMMod<LCConfig, LMRecipes>(MOD_ID, new LCConfig(e), new LMRecipes(false));
 		ODItems.preInit();
@@ -60,18 +54,15 @@ public class LC
 	{
 		LMNetHandler.init();
 		proxy.init(e);
+		
+		FMLInterModComms.sendMessage("Waila", "register", "latmod.core.waila.WailaHelper.registerHandlers");
 	}
 	
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent e)
 	{
 		mod.loadRecipes();
-		
 		proxy.postInit(e);
-		
-		try
-		{ WailaHelper.registerDataProvider(IWailaTile.class, new WailaLMTile()); }
-		catch(Exception ex) { ex.printStackTrace(); }
 	}
 	
 	@Mod.EventHandler

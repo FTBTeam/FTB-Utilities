@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import org.apache.logging.log4j.*;
+
 import latmod.core.net.*;
 import latmod.core.tile.IGuiTile;
 import latmod.core.util.*;
@@ -33,6 +35,8 @@ import cpw.mods.fml.relauncher.Side;
 public class LatCoreMC
 {
 	public static final String MC_VERSION = "1.7.10";
+	
+	public static final Logger logger = LogManager.getLogger("LatCoreMC");
 	
 	public static final int ANY = OreDictionary.WILDCARD_VALUE;
 	public static final int TOP = ForgeDirection.UP.ordinal();
@@ -421,4 +425,7 @@ public class LatCoreMC
 	public static void remap(MissingMapping m, String id, Block b)
 	{ if(id.equals(m.name)) { if(m.type == GameRegistry.Type.BLOCK) m.remap(b);
 	else if(m.type == GameRegistry.Type.ITEM) m.remap(Item.getItemFromBlock(b)); } }
+	
+	public static boolean isModInstalled(String s)
+	{ return Loader.isModLoaded(s); }
 }

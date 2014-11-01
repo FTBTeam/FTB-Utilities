@@ -164,4 +164,12 @@ public class MathHelper // Converter
 	
 	public static String getPluralWord(int i, String a, String b)
 	{ return isPlural(i) ? a : b; }
+	
+	public static String formatDouble(double d)
+	{
+		String s = "" + d;
+		if(s.endsWith(".0"))
+			s = s.substring(0, s.length() - 2);
+		return s;
+	}
 }

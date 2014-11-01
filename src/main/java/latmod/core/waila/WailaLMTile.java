@@ -9,13 +9,13 @@ import net.minecraft.tileentity.TileEntity;
 
 public class WailaLMTile extends BasicWailaHandler
 {
-	public WailaLMTile() throws Exception
+	public WailaLMTile(WailaHelper.RegisterHandlersEvent e, boolean stack, boolean head, boolean body, boolean tail)
 	{
-		super();
-		registerStack = true;
-		registerHead = true;
-		registerBody = true;
-		registerTail = true;
+		super(e);
+		registerStack = stack;
+		registerHead = head;
+		registerBody = body;
+		registerTail = tail;
 	}
 	
 	public ItemStack getWailaStack(IWailaDataAccessor data, IWailaConfigHandler config)

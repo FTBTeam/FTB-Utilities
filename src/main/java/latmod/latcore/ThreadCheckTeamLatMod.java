@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 
+import latmod.core.LatCoreMC;
 import latmod.core.util.LatCore;
 
 public class ThreadCheckTeamLatMod implements Runnable
@@ -19,7 +20,7 @@ public class ThreadCheckTeamLatMod implements Runnable
 	
 	public void run()
 	{
-		LC.logger.info("Loading TeamLatMod.json...");
+		LatCoreMC.logger.info("Loading TeamLatMod.json...");
 		
 		try
 		{
@@ -54,11 +55,11 @@ public class ThreadCheckTeamLatMod implements Runnable
 						}
 					}
 					
-					LC.logger.info("LatMod Team loaded");
+					LatCoreMC.logger.info("LatMod Team loaded");
 				}
-				else LC.logger.info("Invalid LatMod Team file");
+				else LatCoreMC.logger.info("Invalid LatMod Team file");
 			}
-			else LC.logger.info("LatMod Team failed to load");
+			else LatCoreMC.logger.info("LatMod Team failed to load");
 		}
 		catch(Exception ex)
 		{ ex.printStackTrace(); }

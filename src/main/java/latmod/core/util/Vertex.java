@@ -1,6 +1,9 @@
 package latmod.core.util;
 import java.util.Random;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.util.ChunkCoordinates;
+
 /** Made by LatvianModder */
 public final class Vertex implements Cloneable
 {
@@ -8,10 +11,28 @@ public final class Vertex implements Cloneable
 	public double y;
 	public double z;
 	
+	public Vertex() { }
+	
 	public Vertex(double nx, double ny, double nz)
 	{ x = nx; y = ny; z = nz; }
 	
-	public Vertex() { }
+	public Vertex(Entity e, boolean y)
+	{ this(e.posX, y ? e.posY : 0D, e.posZ); }
+	
+	public Vertex(Entity e)
+	{ this(e, true); }
+	
+	public Vertex(ChunkCoordinates c, boolean y)
+	{ this(c.posX  + 0.5D, (y ? c.posY : 0D) + 0.5D, c.posZ + 0.5D); }
+	
+	public Vertex(ChunkCoordinates c)
+	{ this(c, true); }
+	
+	public Vertex(Random r, boolean sin)
+	{
+		this(r.nextDouble(), r.nextDouble(), r.nextDouble());
+		if(sin) { scale(2D); add(-1D, -1D, -1D); }
+	}
 	
 	public void set(double nx, double ny, double nz)
 	{ x = nx; y = ny; z = nz; }
@@ -48,10 +69,4 @@ public final class Vertex implements Cloneable
 	
 	public Vertex clone()
 	{ return new Vertex(x, y, z); }
-	
-	public static final Vertex random(Random r)
-	{ return new Vertex(r.nextDouble(), r.nextDouble(), r.nextDouble()); }
-	
-	public static final Vertex randomSin(Random r)
-	{ Vertex v = random(r); v.scale(2D); v.add(-1D, -1D, -1D); return v; }
 }

@@ -131,6 +131,8 @@ public class LCEventHandler
 			data.setString("UUID", e.player.getUniqueID().toString());
 			LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(ACTION_PLAYER_JOINED, data));
 		}
+		
+		e.player.refreshDisplayName();
 	}
 	
 	@SubscribeEvent

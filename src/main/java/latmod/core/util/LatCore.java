@@ -2,6 +2,7 @@ package latmod.core.util;
 import java.io.*;
 import java.lang.reflect.*;
 import java.net.*;
+import java.nio.channels.*;
 import java.util.*;
 
 import com.google.gson.*;
@@ -403,5 +404,18 @@ public class LatCore
 		return false;
 	}
 	
-	// End of class //
+	public static boolean downloadFile(String url, File out)
+	{
+		try
+		{
+			URL website = new URL(url);
+			ReadableByteChannel rbc = Channels.newChannel(website.openStream());
+			FileOutputStream fos = new FileOutputStream(out);
+			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+			fos.close();
+			return true;
+		}
+		catch(Exception e) { }
+		return false;
+	}
 }

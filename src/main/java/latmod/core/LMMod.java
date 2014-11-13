@@ -1,5 +1,5 @@
 package latmod.core;
-import latmod.core.block.BlockLM;
+import latmod.core.block.*;
 import latmod.core.item.*;
 import latmod.core.recipes.LMRecipes;
 import latmod.core.tile.TileLM;
@@ -18,7 +18,7 @@ public class LMMod<C extends LMConfig, R extends LMRecipes>
 	public final String modID;
 	public final String assets;
 	
-	public final FastList<BlockLM> blocks;
+	public final FastList<IBlockLM> blocks;
 	public final FastList<IItemLM> items;
 	
 	public final Logger logger;
@@ -31,7 +31,7 @@ public class LMMod<C extends LMConfig, R extends LMRecipes>
 		
 		assets = s.toLowerCase() + ":";
 		
-		blocks = new FastList<BlockLM>();
+		blocks = new FastList<IBlockLM>();
 		items = new FastList<IItemLM>();
 		
 		logger = LogManager.getLogger(modID);
@@ -76,10 +76,10 @@ public class LMMod<C extends LMConfig, R extends LMRecipes>
 	public void addItem(IItemLM i)
 	{ LatCoreMC.addItem(i.getItem(), i.getItemID()); items.add(i); }
 
-	public void addBlock(BlockLM b, Class<? extends ItemBlockLM> c)
-	{ LatCoreMC.addBlock(b, c, b.blockName); blocks.add(b); }
+	public void addBlock(IBlockLM b, Class<? extends ItemBlockLM> c)
+	{ LatCoreMC.addBlock(b.getBlock(), c, b.getBlockID()); blocks.add(b); }
 
-	public void addBlock(BlockLM b)
+	public void addBlock(IBlockLM b)
 	{ addBlock(b, ItemBlockLM.class); }
 
 	public void addTile(Class<? extends TileLM> c, String s, String... alt)

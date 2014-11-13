@@ -18,7 +18,7 @@ import net.minecraft.world.*;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.*;
 
-public abstract class BlockLM extends BlockContainer
+public abstract class BlockLM extends BlockContainer implements IBlockLM
 {
 	public final String blockName;
 	public ArrayList<ItemStack> blocksAdded = new ArrayList<ItemStack>();
@@ -36,6 +36,9 @@ public abstract class BlockLM extends BlockContainer
 		isBlockContainer = false;
 	}
 	
+	public final Block getBlock()
+	{ return this; }
+	
 	public void addRecipe(ItemStack out, Object... in)
 	{ mod.recipes().addRecipe(out, in); }
 	
@@ -47,6 +50,9 @@ public abstract class BlockLM extends BlockContainer
 	@SuppressWarnings("unchecked")
 	public final <E> E register(Class<? extends ItemBlockLM> c) { mod.addBlock(this, c); return (E)this; }
 	public final <E> E register() { return register(ItemBlockLM.class); }
+	
+	public final String getBlockID()
+	{ return blockName; }
 	
 	public void onPostLoaded()
 	{ blocksAdded.add(new ItemStack(this)); }

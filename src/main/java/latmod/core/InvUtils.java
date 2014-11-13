@@ -297,6 +297,9 @@ public class InvUtils
 	}
 	
 	public static void giveItem(EntityPlayer ep, ItemStack item)
+	{ giveItem(ep, item, -1); }
+	
+	public static void giveItem(EntityPlayer ep, ItemStack item, int optionalSlot)
 	{
 		if(ep == null || item == null || item.stackSize <= 0) return;
 		ItemStack is = item.copy();

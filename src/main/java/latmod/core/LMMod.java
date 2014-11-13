@@ -82,8 +82,8 @@ public class LMMod<C extends LMConfig, R extends LMRecipes>
 	public void addBlock(BlockLM b)
 	{ addBlock(b, ItemBlockLM.class); }
 
-	public void addTile(Class<? extends TileLM> c, String s)
-	{ LatCoreMC.addTileEntity(c, modID + '.' + s); }
+	public void addTile(Class<? extends TileLM> c, String s, String... alt)
+	{ LatCoreMC.addTileEntity(c, modID + '.' + s, alt); }
 	
 	public void addEntity(Class<? extends Entity> c, String s, int id)
 	{ LatCoreMC.addEntity(c, s, id, modID); }

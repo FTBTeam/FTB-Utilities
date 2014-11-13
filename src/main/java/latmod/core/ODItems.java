@@ -1,7 +1,7 @@
 package latmod.core;
 import latmod.core.util.FastList;
 import net.minecraft.init.*;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class ODItems
@@ -48,10 +48,13 @@ public class ODItems
 	public static final String NUGGET_LEAD = "nuggetLead";
 	public static final String NUGGET_SILVER = "nuggetSilver";
 	
-	public static final String ITEM_PAINTER = "toolPainter";
-	public static final String BLOCK_PAINTABLE = "blockPaintable";
-	public static final String FACADE_PAINTABLE = "facadePaintable";
 	public static final String TOOL_SAW = "toolSaw";
+	public static final String TOOL_PAINTER = "toolPainter";
+	public static final String TOOL_PAINTER_ANY = "toolPainterAny";
+	public static final String BLOCK_PAINTABLE = "blockPaintable";
+	public static final String BLOCK_PAINTABLE_ANY = "blockPaintableAny";
+	public static final String FACADE_PAINTABLE = "facadePaintable";
+	public static final String FACADE_PAINTABLE_ANY = "facadePaintableAny";
 	
 	public static final class OreStackEntry
 	{
@@ -86,7 +89,15 @@ public class ODItems
 	
 	public static void postInit()
 	{
-		
+		addOreName("ForgeMicroblock:sawStone", LatCoreMC.ANY, TOOL_SAW);
+		addOreName("ForgeMicroblock:sawIron", LatCoreMC.ANY, TOOL_SAW);
+		addOreName("ForgeMicroblock:sawDiamond", LatCoreMC.ANY, TOOL_SAW);
+	}
+	
+	private static void addOreName(String item, int damage, String name)
+	{
+		Item i = LatCoreMC.getItemFromRegName(item);
+		if(i != null) LatCoreMC.addOreDictionary(name, new ItemStack(i, 1, damage));
 	}
 	
 	public static FastList<String> getOreNames(ItemStack is)

@@ -57,20 +57,7 @@ public class LCEventHandler
 			
 			if(LC.mod.config().general.addFluidContainerNames)
 			{
-				FluidStack fs = null;
-				
-				if(item instanceof IFluidContainerItem)
-				{
-					fs = ((IFluidContainerItem)item).getFluid(e.itemStack);
-					
-					if(fs != null && fs.amount > 0)
-					{
-						e.toolTip.add("Stored FluidID:");
-						e.toolTip.add(FluidRegistry.getFluidName(fs.fluidID));
-					}
-				}
-				
-				if(fs == null) fs = FluidContainerRegistry.getFluidForFilledItem(e.itemStack);
+				FluidStack fs = LatCoreMC.getFluid(e.itemStack);
 				
 				if(fs != null && fs.amount > 0)
 				{

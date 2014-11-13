@@ -252,6 +252,9 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 	public final boolean isServer()
 	{ return !worldObj.isRemote; }
 	
+	public final boolean isValid()
+	{ return !isInvalid(); }
+	
 	public void notifyNeighbors()
 	{ worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, blockType); }
 	

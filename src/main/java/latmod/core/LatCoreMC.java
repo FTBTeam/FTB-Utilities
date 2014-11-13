@@ -105,8 +105,11 @@ public class LatCoreMC
 	public static final void addBlock(Block b, String name)
 	{ addBlock(b, ItemBlock.class, name); }
 	
-	public static final void addTileEntity(Class<? extends TileEntity> c, String s)
-	{ GameRegistry.registerTileEntity(c, s); }
+	public static final void addTileEntity(Class<? extends TileEntity> c, String s, String... alt)
+	{
+		if(alt.length == 0) GameRegistry.registerTileEntity(c, s);
+		else GameRegistry.registerTileEntityWithAlternatives(c, s, alt);
+	}
 	
 	public static final void addEntity(Class<? extends Entity> c, String s, int id, Object mod)
 	{ EntityRegistry.registerModEntity(c, s, id, mod, 50, 1, true); }
@@ -428,4 +431,20 @@ public class LatCoreMC
 	
 	public static boolean isModInstalled(String s)
 	{ return Loader.isModLoaded(s); }
+	
+	public static FluidStack getFluid(ItemStack is)
+	{
+		if(is == null || is.getItem() == null) return null;
+		
+		if(is.getItem() instanceof IFluidContainerItem)
+		{
+			FluidStack fs = ((IFluidContainerItem)is.getItem()).getFluid(is);
+			if(fs != null) return fs;
+		}
+		
+		return FluidContainerRegistry.getFluidForFilledItem(is);
+	}
+	
+	public static boolean isBucket(ItemStack is)
+	{ return FluidContainerRegistry.isBucket(is); }
 }

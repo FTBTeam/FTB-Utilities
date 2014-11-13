@@ -7,7 +7,7 @@ import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 
-@Mod(modid = LC.MOD_ID, name = "LatCoreMC", version = LC.VERSION, dependencies = "required-after:Forge@[10.13.2.1232,)")
+@Mod(modid = LC.MOD_ID, name = "LatCoreMC", version = LC.VERSION, dependencies = "required-after:Forge@[10.13.2.1231,)")
 public class LC
 {
 	protected static final String MOD_ID = "LatCoreMC";
@@ -61,6 +61,7 @@ public class LC
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent e)
 	{
+		ODItems.postInit();
 		mod.loadRecipes();
 		proxy.postInit(e);
 	}

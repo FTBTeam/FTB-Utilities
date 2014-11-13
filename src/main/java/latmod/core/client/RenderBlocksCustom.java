@@ -13,7 +13,7 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class RenderBlocksCustom extends RenderBlocks
 {
-	public static final AxisAlignedBB FULL_BLOCK = AxisAlignedBB.getBoundingBox(0D, 0D, 0D, 1D, 1D, 1D);
+	public AxisAlignedBB fullBlock = AxisAlignedBB.getBoundingBox(0D, 0D, 0D, 1D, 1D, 1D);
 	
 	public Integer customMetadata = null;
 	private float customColRed = 1F;

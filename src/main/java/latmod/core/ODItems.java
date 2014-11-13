@@ -18,7 +18,7 @@ public class ODItems
 	public static ItemStack OBSIDIAN;
 	
 	public static final String SLIMEBALL = "slimeball";
-	public static final String MEAT_RAW = "meatCooked";
+	public static final String MEAT_RAW = "meatRaw";
 	public static final String MEAT_COOKED = "meatCooked";
 	public static final String RUBBER = "itemRubber";
 	
@@ -51,6 +51,7 @@ public class ODItems
 	public static final String ITEM_PAINTER = "toolPainter";
 	public static final String BLOCK_PAINTABLE = "blockPaintable";
 	public static final String FACADE_PAINTABLE = "facadePaintable";
+	public static final String TOOL_SAW = "toolSaw";
 	
 	public static final class OreStackEntry
 	{
@@ -81,6 +82,11 @@ public class ODItems
 		LatCoreMC.addOreDictionary(MEAT_COOKED, new ItemStack(Items.cooked_beef));
 		LatCoreMC.addOreDictionary(MEAT_COOKED, new ItemStack(Items.cooked_porkchop));
 		LatCoreMC.addOreDictionary(MEAT_COOKED, new ItemStack(Items.cooked_chicken));
+	}
+	
+	public static void postInit()
+	{
+		
 	}
 	
 	public static FastList<String> getOreNames(ItemStack is)

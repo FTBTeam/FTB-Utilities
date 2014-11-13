@@ -76,14 +76,17 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public boolean isOnline()
 	{ return getPlayer() != null; }
 	
-	public void sendUpdate(World w, String channel)
+	public void sendUpdate(World w, String channel, boolean clientUpdate)
 	{
 		if(LatCoreMC.canUpdate())
 		{
 			new DataChangedEvent(this, Side.SERVER, channel, w).post();
-			LMNetHandler.INSTANCE.sendToAll(new MessageUpdatePlayerData(this, channel));
+			if(clientUpdate) LMNetHandler.INSTANCE.sendToAll(new MessageUpdatePlayerData(this, channel));
 		}
 	}
+	
+	public void sendUpdate(World w, String channel)
+	{ sendUpdate(w, channel, true); }
 	
 	// NBT reading / writing
 	

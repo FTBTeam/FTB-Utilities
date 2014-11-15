@@ -2,7 +2,7 @@ package latmod.core.client.model;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.*;
 import cpw.mods.fml.relauncher.*;
-import latmod.core.client.LMRenderer;
+import latmod.core.client.LMRenderHelper;
 import latmod.core.util.FastList;
 
 /** Made by LatvianModder */
@@ -29,8 +29,8 @@ public class Group
 	{
 		if(listID == -1)
 		{
-			if(parent.texVertices == null) LMRenderer.disableTexture();
-			else LMRenderer.enableTexture();
+			if(parent.texVertices == null) LMRenderHelper.disableTexture();
+			else LMRenderHelper.enableTexture();
 			
 			GL11.glColor4f(1F, 1F, 1F, 1F);
 			

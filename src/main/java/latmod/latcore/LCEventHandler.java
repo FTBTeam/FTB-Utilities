@@ -25,10 +25,6 @@ public class LCEventHandler
 	public static final String ACTION_PLAYER_JOINED = "PlayerJoined";
 	public static final String ACTION_OPEN_URL = "OpenURL";
 	
-	public static final String WAILA_INV = "latcoremc.inv";
-	public static final String WAILA_TANK = "latcoremc.tank";
-	public static final String WAILA_OWNER = "latcoremc.owner";
-	
 	@SubscribeEvent
 	public void onTooltip(ItemTooltipEvent e)
 	{
@@ -120,6 +116,18 @@ public class LCEventHandler
 		}
 		
 		e.player.refreshDisplayName();
+	}
+	
+	@SubscribeEvent
+	public void registerWaila(RegisterWailaEvent e)
+	{
+		e.register(IWailaTile.Stack.class, new WailaLMTile(e, WailaType.STACK));
+		e.register(IWailaTile.Head.class, new WailaLMTile(e, WailaType.HEAD));
+		e.register(IWailaTile.Body.class, new WailaLMTile(e, WailaType.BODY));
+		e.register(IWailaTile.Tail.class, new WailaLMTile(e, WailaType.TAIL));
+		
+		e.register(IInventory.class, new WailaInvHandler(e));
+		e.register(IFluidHandler.class, new WailaTankHandler(e));
 	}
 	
 	@SubscribeEvent
@@ -224,21 +232,6 @@ public class LCEventHandler
 		
 		public void post()
 		{ MinecraftForge.EVENT_BUS.post(this); }
-	}
-	
-	@SubscribeEvent
-	public void registerWailaHandlers(WailaHelper.RegisterHandlersEvent e)
-	{
-		e.addConfig("LatCoreMC", WAILA_INV);
-		e.addConfig("LatCoreMC", WAILA_TANK);
-		e.addConfig("LatCoreMC", WAILA_OWNER);
-		
-		e.addHandler(IWailaTile.Stack.class, new WailaLMTile(e, true, false, false, false));
-		e.addHandler(IWailaTile.Head.class, new WailaLMTile(e, false, true, false, false));
-		e.addHandler(IWailaTile.Body.class, new WailaLMTile(e, false, false, true, false));
-		e.addHandler(IWailaTile.Tail.class, new WailaLMTile(e, false, false, false, true));
-		e.addHandler(IInventory.class, new WailaInvHandler(e));
-		e.addHandler(IFluidHandler.class, new WailaTankHandler(e));
 	}
 	
 	@SubscribeEvent(priority = EventPriority.LOW)

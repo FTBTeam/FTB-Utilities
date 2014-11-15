@@ -1,7 +1,7 @@
 package latmod.core.gui;
 import java.util.Map;
 
-import latmod.core.client.LMRenderer;
+import latmod.core.client.LMRenderHelper;
 import latmod.core.util.FastList;
 import latmod.latcore.LC;
 import net.minecraft.client.Minecraft;
@@ -118,7 +118,7 @@ public abstract class GuiLM extends GuiContainer
 	
 	public void drawGuiContainerBackgroundLayer(float f, int mx, int my)
 	{
-		LMRenderer.recolor();
+		LMRenderHelper.recolor();
 		setTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 	}

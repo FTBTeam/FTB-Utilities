@@ -9,15 +9,13 @@ import net.minecraft.tileentity.TileEntity;
 
 public class WailaLMTile extends BasicWailaHandler
 {
-	public WailaLMTile(WailaHelper.RegisterHandlersEvent e, boolean stack, boolean head, boolean body, boolean tail)
-	{
-		super(e);
-		registerStack = stack;
-		registerHead = head;
-		registerBody = body;
-		registerTail = tail;
-	}
+	public static final String CONFIG_OWNER = "latcoremc.owner";
 	
+	public WailaLMTile(RegisterWailaEvent e, WailaType t)
+	{
+		super(e, t);
+	}
+
 	public ItemStack getWailaStack(IWailaDataAccessor data, IWailaConfigHandler config)
 	{
 		TileEntity te = data.getTileEntity();

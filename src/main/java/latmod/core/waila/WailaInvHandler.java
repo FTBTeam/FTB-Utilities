@@ -2,7 +2,7 @@ package latmod.core.waila;
 
 import java.util.List;
 
-import latmod.latcore.LCEventHandler;
+import latmod.latcore.LC;
 import mcp.mobius.waila.api.*;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
@@ -10,17 +10,19 @@ import net.minecraft.tileentity.TileEntityChest;
 
 public class WailaInvHandler extends BasicWailaHandler
 {
-	public WailaInvHandler(WailaHelper.RegisterHandlersEvent e)
+	public static final String CONFIG_INV = "latcoremc.inv";
+	
+	public WailaInvHandler(RegisterWailaEvent e)
 	{
-		super(e);
-		registerBody = true;
+		super(e, WailaType.BODY);
+		e.registry.addConfig(LC.mod.modID, CONFIG_INV);
 	}
 	
 	public List<String> getWailaBody(ItemStack is, List<String> l, IWailaDataAccessor data, IWailaConfigHandler config)
 	{
 		IInventory inv = (IInventory)data.getTileEntity();
 		
-		if(!(inv.getClass().equals(TileEntityChest.class)) && !(inv instanceof ISidedInventory) && config.getConfig(LCEventHandler.WAILA_INV))
+		if(!(inv.getClass().equals(TileEntityChest.class)) && !(inv instanceof ISidedInventory) && config.getConfig(CONFIG_INV))
 		{
 			int size = inv.getSizeInventory();
 			

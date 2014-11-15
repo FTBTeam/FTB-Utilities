@@ -2,7 +2,7 @@ package latmod.latcore;
 import latmod.core.*;
 import latmod.core.net.LMNetHandler;
 import latmod.core.recipes.LMRecipes;
-import latmod.latcore.cmd.CommandBaseLC;
+import latmod.latcore.cmd.*;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
@@ -55,7 +55,7 @@ public class LC
 		LMNetHandler.init();
 		proxy.init(e);
 		
-		FMLInterModComms.sendMessage("Waila", "register", "latmod.core.waila.WailaHelper.registerHandlers");
+		FMLInterModComms.sendMessage("Waila", "register", "latmod.core.waila.RegisterWailaEvent.registerHandlers");
 	}
 	
 	@Mod.EventHandler
@@ -68,5 +68,9 @@ public class LC
 	
 	@Mod.EventHandler
 	public void registerCommands(FMLServerStartingEvent e)
-	{ CommandBaseLC.registerCommands(e); }
+	{
+		CommandBaseLC.registerCommands(e);
+		e.registerServerCommand(new CmdListOverride());
+		e.registerServerCommand(new CmdTpOverride());
+	}
 }

@@ -127,8 +127,8 @@ public class OBJModel
 		}
 		
 		if(m != null && m.texVertices != null)
-			LMRenderer.enableTexture();
-		else LMRenderer.disableTexture();
+			LMRenderHelper.enableTexture();
+		else LMRenderHelper.disableTexture();
 		
 		m.renderAll();
 		
@@ -227,8 +227,8 @@ public class OBJModel
 		m.sizeV = sizeV;
 		
 		if(m != null && m.texVertices != null)
-			LMRenderer.enableTexture();
-		else LMRenderer.disableTexture();
+			LMRenderHelper.enableTexture();
+		else LMRenderHelper.disableTexture();
 		
 		m.renderAll();
 		

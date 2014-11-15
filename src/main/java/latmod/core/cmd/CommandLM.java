@@ -1,10 +1,11 @@
 package latmod.core.cmd;
 
-import java.util.List;
+import java.util.*;
 
 import latmod.core.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 
 public abstract class CommandLM extends CommandBase
 {
@@ -80,4 +81,7 @@ public abstract class CommandLM extends CommandBase
 		if(p == null) throw new PlayerNotFoundException();
 		return p;
 	}
+	
+	public static boolean isOP(UUID id)
+	{ return MinecraftServer.getServer().func_152358_ax().func_152652_a(id) != null; }
 }

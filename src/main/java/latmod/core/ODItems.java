@@ -51,10 +51,10 @@ public class ODItems
 	public static final String TOOL_SAW = "toolSaw";
 	public static final String TOOL_PAINTER = "toolPainter";
 	public static final String TOOL_PAINTER_ANY = "toolPainterAny";
-	public static final String BLOCK_PAINTABLE = "blockPaintable";
-	public static final String BLOCK_PAINTABLE_ANY = "blockPaintableAny";
-	public static final String FACADE_PAINTABLE = "facadePaintable";
-	public static final String FACADE_PAINTABLE_ANY = "facadePaintableAny";
+	public static final String PAINTABLE_BLOCK = "blockPaintable";
+	public static final String PAINTABLE_BLOCK_ANY = "blockPaintableAny";
+	public static final String PAINTABLE_COVER = "coverPaintable";
+	public static final String PAINTABLE_COVER_ANY = "coverPaintableAny";
 	
 	public static final class OreStackEntry
 	{

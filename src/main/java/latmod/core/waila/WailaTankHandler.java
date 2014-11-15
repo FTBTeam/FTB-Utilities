@@ -2,7 +2,7 @@ package latmod.core.waila;
 
 import java.util.List;
 
-import latmod.latcore.LCEventHandler;
+import latmod.latcore.LC;
 import mcp.mobius.waila.api.*;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -10,15 +10,17 @@ import net.minecraftforge.fluids.*;
 
 public class WailaTankHandler extends BasicWailaHandler
 {
-	public WailaTankHandler(WailaHelper.RegisterHandlersEvent e)
+	public static final String CONFIG_TANK = "latcoremc.tank";
+	
+	public WailaTankHandler(RegisterWailaEvent e)
 	{
 		super(e);
-		registerBody = true;
+		e.registry.addConfig(LC.mod.modID, CONFIG_TANK, false);
 	}
 	
 	public List<String> getWailaBody(ItemStack is, List<String> l, IWailaDataAccessor data, IWailaConfigHandler config)
 	{
-		if(config.getConfig(LCEventHandler.WAILA_TANK, false))
+		if(config.getConfig(CONFIG_TANK, false))
 		{
 			FluidTankInfo[] info = ((IFluidHandler)data.getTileEntity()).getTankInfo(ForgeDirection.UNKNOWN);
 			

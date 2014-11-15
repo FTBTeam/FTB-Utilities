@@ -1,19 +1,16 @@
 package latmod.core.waila;
-import java.util.*;
+import java.util.List;
 
-import net.minecraft.item.*;
+import latmod.core.util.FastList;
 import mcp.mobius.waila.api.*;
+import net.minecraft.item.ItemStack;
 
 public abstract class BasicWailaHandler implements IWailaDataProvider
 {
-	public boolean registerStack = false;
-	public boolean registerHead = false;
-	public boolean registerBody = false;
-	public boolean registerTail = false;
+	public final FastList<WailaType> types;
 	
-	public BasicWailaHandler(WailaHelper.RegisterHandlersEvent e)
-	{
-	}
+	public BasicWailaHandler(RegisterWailaEvent e, WailaType... t)
+	{ types = FastList.asList(t); }
 	
 	public ItemStack getWailaStack(IWailaDataAccessor data, IWailaConfigHandler config)
 	{

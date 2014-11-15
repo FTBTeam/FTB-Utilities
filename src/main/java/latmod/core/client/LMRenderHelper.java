@@ -3,7 +3,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
-public class LMRenderer
+public class LMRenderHelper
 {
 	private static EntityItem entityItem;
 	
@@ -63,4 +63,34 @@ public class LMRenderer
 	
 	public static void setTexture(ResourceLocation rl)
 	{ Minecraft.getMinecraft().getTextureManager().bindTexture(rl); }
+	
+	public static void drawOutlinedBoundingBoxGL(AxisAlignedBB bb)
+	{
+		GL11.glBegin(GL11.GL_LINE_STRIP);
+		GL11.glVertex3d(bb.minX, bb.minY, bb.minZ);
+		GL11.glVertex3d(bb.maxX, bb.minY, bb.minZ);
+		GL11.glVertex3d(bb.maxX, bb.minY, bb.maxZ);
+		GL11.glVertex3d(bb.minX, bb.minY, bb.maxZ);
+		GL11.glVertex3d(bb.minX, bb.minY, bb.minZ);
+		GL11.glEnd();
+		
+		GL11.glBegin(GL11.GL_LINE_STRIP);
+		GL11.glVertex3d(bb.minX, bb.maxY, bb.minZ);
+		GL11.glVertex3d(bb.maxX, bb.maxY, bb.minZ);
+		GL11.glVertex3d(bb.maxX, bb.maxY, bb.maxZ);
+		GL11.glVertex3d(bb.minX, bb.maxY, bb.maxZ);
+		GL11.glVertex3d(bb.minX, bb.maxY, bb.minZ);
+		GL11.glEnd();
+		
+		GL11.glBegin(GL11.GL_LINES);
+		GL11.glVertex3d(bb.minX, bb.minY, bb.minZ);
+		GL11.glVertex3d(bb.minX, bb.maxY, bb.minZ);
+		GL11.glVertex3d(bb.maxX, bb.minY, bb.minZ);
+		GL11.glVertex3d(bb.maxX, bb.maxY, bb.minZ);
+		GL11.glVertex3d(bb.maxX, bb.minY, bb.maxZ);
+		GL11.glVertex3d(bb.maxX, bb.maxY, bb.maxZ);
+		GL11.glVertex3d(bb.minX, bb.minY, bb.maxZ);
+		GL11.glVertex3d(bb.minX, bb.maxY, bb.maxZ);
+		GL11.glEnd();
+	}
 }

@@ -1,7 +1,6 @@
 package latmod.latcore;
 
 import latmod.core.LMConfig;
-import latmod.core.util.FastList;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 public class LCConfig extends LMConfig
@@ -26,18 +25,16 @@ public class LCConfig extends LMConfig
 		public boolean addFluidContainerNames;
 		public boolean checkTeamLatMod;
 		public boolean checkUpdates;
-		public FastList<String> forcedMods;
 		
 		public General()
 		{
 			super("general");
 			
-			addOreNames = getBool("addOreNames", true);
-			addRegistryNames = getBool("addRegistryNames", true);
-			addFluidContainerNames = getBool("addFluidContainerNames", true);
+			addOreNames = getBool("addOreNames", false);
+			addRegistryNames = getBool("addRegistryNames", false);
+			addFluidContainerNames = getBool("addFluidContainerNames", false);
 			checkTeamLatMod = getBool("checkTeamLatMod", true);
 			checkUpdates = getBool("checkUpdates", true);
-			forcedMods = getStringArray("forcedMods", new String[0], "Do not use, if you don't know what it does!");
 		}
 	}
 	

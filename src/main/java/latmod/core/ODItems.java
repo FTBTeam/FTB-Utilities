@@ -52,9 +52,11 @@ public class ODItems
 	public static final String TOOL_PAINTER = "toolPainter";
 	public static final String TOOL_PAINTER_ANY = "toolPainterAny";
 	public static final String PAINTABLE_BLOCK = "blockPaintable";
-	public static final String PAINTABLE_BLOCK_ANY = "blockPaintableAny";
 	public static final String PAINTABLE_COVER = "coverPaintable";
-	public static final String PAINTABLE_COVER_ANY = "coverPaintableAny";
+	
+	public static ItemStack paintableBlock = new ItemStack(Blocks.wool, 1, 0);
+	
+	private static boolean hasFMP = false;
 	
 	public static final class OreStackEntry
 	{
@@ -89,15 +91,23 @@ public class ODItems
 	
 	public static void postInit()
 	{
-		addOreName("ForgeMicroblock:sawStone", LatCoreMC.ANY, TOOL_SAW);
-		addOreName("ForgeMicroblock:sawIron", LatCoreMC.ANY, TOOL_SAW);
-		addOreName("ForgeMicroblock:sawDiamond", LatCoreMC.ANY, TOOL_SAW);
+		hasFMP = false;
+		hasFMP |= addOreName("ForgeMicroblock:sawStone", LatCoreMC.ANY, TOOL_SAW);
+		hasFMP |= addOreName("ForgeMicroblock:sawIron", LatCoreMC.ANY, TOOL_SAW);
+		hasFMP |= addOreName("ForgeMicroblock:sawDiamond", LatCoreMC.ANY, TOOL_SAW);
+		
+		Item wrench = LatCoreMC.getItemFromRegName("ThermalExpansion:wrench");
+		if(wrench != null) wrench.setHarvestLevel("wrench", 0);
 	}
 	
-	private static void addOreName(String item, int damage, String name)
+	public static boolean hasFMP()
+	{ return hasFMP; }
+	
+	private static boolean addOreName(String item, int damage, String name)
 	{
 		Item i = LatCoreMC.getItemFromRegName(item);
 		if(i != null) LatCoreMC.addOreDictionary(name, new ItemStack(i, 1, damage));
+		return i != null;
 	}
 	
 	public static FastList<String> getOreNames(ItemStack is)

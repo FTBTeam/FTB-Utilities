@@ -37,6 +37,8 @@ public class LC
 			LatCoreMC.logger.info("Loading LatCoreMC, Build #" + VERSION);
 		
 		mod = new LMMod<LCConfig, LMRecipes>(MOD_ID, new LCConfig(e), new LMRecipes(false));
+		mod.logger = LatCoreMC.logger;
+		
 		ODItems.preInit();
 		
 		mod.onPostLoaded();

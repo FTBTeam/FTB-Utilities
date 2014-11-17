@@ -21,7 +21,7 @@ public class LMMod<C extends LMConfig, R extends LMRecipes>
 	public final FastList<IBlockLM> blocks;
 	public final FastList<IItemLM> items;
 	
-	public final Logger logger;
+	public Logger logger;
 	private LMConfig config;
 	private LMRecipes recipes;
 	
@@ -81,7 +81,7 @@ public class LMMod<C extends LMConfig, R extends LMRecipes>
 
 	public void addBlock(IBlockLM b)
 	{ addBlock(b, ItemBlockLM.class); }
-
+	
 	public void addTile(Class<? extends TileLM> c, String s, String... alt)
 	{ LatCoreMC.addTileEntity(c, modID + '.' + s, alt); }
 	

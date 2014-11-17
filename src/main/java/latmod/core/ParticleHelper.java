@@ -1,9 +1,9 @@
 package latmod.core;
 import java.util.Random;
 
+import latmod.core.util.MathHelper;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 public class ParticleHelper
@@ -14,12 +14,12 @@ public class ParticleHelper
 	{
 		double d3 = Math.min(0.2D + (double)c / 15D, 10D);
 		if (d3 > 2.5D) d3 = 2.5D;
-		int l1 = (int)(150.0D * d3);
+		int l1 = (int)(150D * d3);
 		for (int i2 = 0; i2 < l1; ++i2)
 		{
-			float f3 = MathHelper.clamp_float(rand.nextFloat(), 0F, ((float)Math.PI * 2F));
-			double d5 = (double)MathHelper.clamp_float(rand.nextFloat(), 0.75F, 1.0F);
-			double d6 = 0.20000000298023224D + d3 / 100.0D;
+			double f3 = MathHelper.limit(rand.nextFloat(), 0D, MathHelper.TWO_PI);
+			double d5 = MathHelper.limit(rand.nextFloat(), 0.75D, 1D);
+			double d6 = 0.20000000298023224D + d3 / 100D;
 			double d7 = (double)(MathHelper.cos(f3) * 0.2F) * d5 * d5 * (d3 + 0.2D);
 			double d8 = (double)(MathHelper.sin(f3) * 0.2F) * d5 * d5 * (d3 + 0.2D);
 			w.spawnParticle("blockdust_" + Item.getIdFromItem(Item.getItemFromBlock(b)) + "_" + m, x, y, z, d7, d6, d8);

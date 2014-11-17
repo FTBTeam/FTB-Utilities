@@ -47,7 +47,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	public abstract CreativeTabs getCreativeTabToDisplayOn();
 	public abstract TileLM createNewTileEntity(World w, int m);
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("all")
 	public final <E> E register(Class<? extends ItemBlockLM> c) { mod.addBlock(this, c); return (E)this; }
 	public final <E> E register() { return register(ItemBlockLM.class); }
 	
@@ -201,4 +201,11 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	
 	@SideOnly(Side.CLIENT)
 	public IIcon getBlockIcon() { return blockIcon; }
+	
+	@Deprecated
+	public final int onBlockPlaced(World w, int x, int y, int z, int s, float hitX, float hitY, float hitZ, int m)
+	{ return m; }
+	
+	public int onBlockPlaced(World w, EntityPlayer ep, MovingObjectPosition mop, int m)
+	{ return m; }
 }

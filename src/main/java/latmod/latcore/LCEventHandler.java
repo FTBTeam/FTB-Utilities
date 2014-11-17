@@ -163,6 +163,10 @@ public class LCEventHandler
 						
 						LMPlayer.list.add(p);
 					}
+					
+					LMGamerules.readFromNBT(tag, "Gamerules");
+					
+					LatCoreMC.logger.info("LatCoreMC.dat loaded");
 				}
 				catch(Exception ex)
 				{ ex.printStackTrace(); }
@@ -209,6 +213,8 @@ public class LCEventHandler
 				}
 				
 				tag.setTag("Players", players);
+				
+				LMGamerules.writeToNBT(tag, "Gamerules");
 				
 				new SaveCustomLMDataEvent(tag).post();
 				

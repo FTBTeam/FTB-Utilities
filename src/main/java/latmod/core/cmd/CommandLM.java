@@ -6,9 +6,12 @@ import latmod.core.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.EnumChatFormatting;
 
 public abstract class CommandLM extends CommandBase
 {
+	protected static final String FINE = EnumChatFormatting.WHITE + "";
+	
 	public final String commandName;
 	
 	public CommandLM(String s)
@@ -23,20 +26,27 @@ public abstract class CommandLM extends CommandBase
 	public final void processCommand(ICommandSender ics, String[] args)
 	{
 		if(args == null) args = new String[0];
-		onCommand(ics, args);
+		String s = onCommand(ics, args);
+		if(s != null) LatCoreMC.printChat(ics, EnumChatFormatting.RED + s);
+		onPostCommand(ics, args);
 	}
 	
 	public void printHelp(ICommandSender ics)
 	{ LatCoreMC.printChat(ics, getCommandUsage(ics)); }
 	
-	public abstract void onCommand(ICommandSender ics, String[] args);
+	public abstract String onCommand(ICommandSender ics, String[] args);
+	
+	public void onPostCommand(ICommandSender ics, String[] args) {}
 	
 	@SuppressWarnings("all")
 	public final List addTabCompletionOptions(ICommandSender ics, String[] args)
 	{
 		String[] s = getTabStrings(ics, args, args.length - 1);
 		if(s != null && s.length > 0)
+		{
+			if(sortStrings(ics, args, args.length - 1)) Arrays.sort(s);
 			return getListOfStringsMatchingLastWord(args, s);
+		}
 		return null;
 	}
 	
@@ -67,6 +77,9 @@ public abstract class CommandLM extends CommandBase
 		if(un == null) return null;
 		return LMPlayer.getAllDisplayNames(un);
 	}
+	
+	public boolean sortStrings(ICommandSender ics, String args[], int i)
+	{ return isUsername(args, i) == null; }
 	
 	public static EntityPlayerMP getPlayer(ICommandSender ics, String s)
 	{

@@ -145,7 +145,7 @@ public class LatCoreMC
 		return f;
 	}
 	
-	public static boolean canUpdate()
+	public static boolean isServer()
 	{ return getEffectiveSide().isServer(); }
 	
 	public static Side getEffectiveSide()

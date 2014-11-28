@@ -14,7 +14,7 @@ public class FastList<E> implements Iterable<E>, List<E>, Set<E> //ArrayList
 	public FastList(int init, int inc)
 	{
 		initSize = init;
-		incr = MathHelper.limitInt(inc, 1, 100);
+		incr = MathHelper.clampInt(inc, 1, 100);
 		objects = new Object[initSize];
 	}
 	
@@ -123,15 +123,18 @@ public class FastList<E> implements Iterable<E>, List<E>, Set<E> //ArrayList
 		return l;
 	}
 	
-	public void sort()
-	{ if(size > 0) Arrays.sort(objects, 0, size); }
-	
 	@SuppressWarnings("all")
 	public void sort(Comparator<E> c)
-	{ if(size > 0) Arrays.sort((E[])objects, 0, size, c); }
+	{
+		if(size > 0)
+		{
+			if(c == null) Arrays.sort(objects, 0, size);
+			else Arrays.sort((E[])objects, 0, size, c);
+		}
+	}
 	
 	public String toString()
-	{ return LatCore.strip(toArray()); }
+	{ return LatCore.strip(LatCore.toStrings(toArray())); }
 	
 	private class FastIterator implements ListIterator<E>
 	{

@@ -45,8 +45,7 @@ public class LC
 		
 		LatCoreMC.addGuiHandler(this, proxy);
 		
-		if(mod.config().general.checkTeamLatMod)
-			ThreadCheckTeamLatMod.init();
+		ThreadCheckTeamLatMod.init();
 		
 		proxy.preInit(e);
 	}
@@ -71,8 +70,16 @@ public class LC
 	@Mod.EventHandler
 	public void registerCommands(FMLServerStartingEvent e)
 	{
-		CommandBaseLC.registerCommands(e);
-		e.registerServerCommand(new CmdListOverride());
-		e.registerServerCommand(new CmdTpOverride());
+		regCmd(e, new CmdLatCore(LC.mod.config().commands.latcore));
+		regCmd(e, new CmdLatCoreAdmin(LC.mod.config().commands.latcoreadmin));
+		regCmd(e, new CmdSetNick(LC.mod.config().commands.setnick));
+		regCmd(e, new CmdRealNick(LC.mod.config().commands.setnick));
+		regCmd(e, new CmdSetSkin(LC.mod.config().commands.setskin));
+		regCmd(e, new CmdSetCape(LC.mod.config().commands.setcape));
+		regCmd(e, new CmdTpOverride(LC.mod.config().commands.teleport));
+		regCmd(e, new CmdListOverride(LC.mod.config().commands.list));
 	}
+	
+	private static void regCmd(FMLServerStartingEvent e, CommandBaseLC c)
+	{ if(c.enabled > 0) e.registerServerCommand(c); }
 }

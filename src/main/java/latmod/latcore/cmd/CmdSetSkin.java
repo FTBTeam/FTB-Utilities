@@ -11,7 +11,7 @@ public class CmdSetSkin extends CommandBaseLC
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/setskin <url | null>"; }
 	
-	public void onCommand(ICommandSender ics, String[] args)
+	public String onCommand(ICommandSender ics, String[] args)
 	{
 		if(args.length > 0)
 		{
@@ -31,6 +31,7 @@ public class CmdSetSkin extends CommandBaseLC
 			
 			LatCoreMC.printChat(ics, "Custom skin changed to " + p.customSkin);
 		}
-		else LatCoreMC.printChat(ics, getCommandUsage(ics));
+		
+		return getCommandUsage(ics);
 	}
 }

@@ -39,9 +39,6 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	public final Block getBlock()
 	{ return this; }
 	
-	public void addRecipe(ItemStack out, Object... in)
-	{ mod.recipes().addRecipe(out, in); }
-	
 	public abstract LMMod<? extends LMConfig, ? extends LMRecipes> getMod();
 	@SideOnly(Side.CLIENT)
 	public abstract CreativeTabs getCreativeTabToDisplayOn();

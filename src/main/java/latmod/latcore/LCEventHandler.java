@@ -9,6 +9,7 @@ import latmod.core.net.*;
 import latmod.core.tile.*;
 import latmod.core.util.*;
 import latmod.core.waila.*;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
@@ -111,7 +112,7 @@ public class LCEventHandler
 		
 		{
 			NBTTagCompound data = new NBTTagCompound();
-			data.setString("UUID", e.player.getUniqueID().toString());
+			data.setString("UUID", p.uuid.toString());
 			LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(ACTION_PLAYER_JOINED, data));
 		}
 		
@@ -133,7 +134,7 @@ public class LCEventHandler
 	@SubscribeEvent
 	public void worldLoaded(WorldEvent.Load e)
 	{
-		if(LatCoreMC.canUpdate() && e.world.provider.dimensionId == 0)
+		if(LatCoreMC.isServer() && e.world.provider.dimensionId == 0)
 		{
 			File f = LatCore.newFile(new File(e.world.getSaveHandler().getWorldDirectory(), "LatCoreMC.dat"));
 			
@@ -188,7 +189,7 @@ public class LCEventHandler
 	@SubscribeEvent
 	public void worldSaved(WorldEvent.Save e)
 	{
-		if(LatCoreMC.canUpdate() && e.world.provider.dimensionId == 0)
+		if(LatCoreMC.isServer() && e.world.provider.dimensionId == 0)
 		{
 			File f = LatCore.newFile(new File(e.world.getSaveHandler().getWorldDirectory(), "LatCoreMC.dat"));
 			
@@ -225,7 +226,9 @@ public class LCEventHandler
 				fos.close();
 			}
 			catch(Exception ex)
-			{ ex.printStackTrace(); }
+			{
+				LatCoreMC.logger.warn("Error occured while saving LatCoreMC.dat!");
+			}
 		}
 	}
 	
@@ -262,8 +265,13 @@ public class LCEventHandler
 	{
 		if(e.action.equals(ACTION_PLAYER_JOINED))
 		{
-			UUID id = UUID.fromString(e.extraData.getString("UUID"));
-			LC.proxy.setSkinAndCape(e.player.worldObj.func_152378_a(id));
+			LMPlayer p = LMPlayer.getPlayer(UUID.fromString(e.extraData.getString("UUID")));
+			if(p != null)
+			{
+				LatCoreMC.printChat(e.player, "Test");
+				EntityPlayer ep = p.getPlayer();
+				if(ep != null) LC.proxy.setSkinAndCape(ep);
+			}
 		}
 		else if(e.action.equals(ACTION_OPEN_URL))
 		{

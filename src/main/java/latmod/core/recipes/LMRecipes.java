@@ -1,7 +1,6 @@
 package latmod.core.recipes;
 import java.util.Map;
 
-import latmod.core.LatCoreMC;
 import latmod.core.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.*;
@@ -112,9 +111,6 @@ public class LMRecipes
 			addShapelessRecipe(out9, block);
 		}
 	}
-	
-	public void addOre(String s, ItemStack is)
-	{ LatCoreMC.addOreDictionary(s, is); }
 	
 	public void addSmelting(ItemStack in, ItemStack out, float xp)
 	{

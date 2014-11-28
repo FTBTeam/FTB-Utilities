@@ -6,16 +6,10 @@ import latmod.core.util.LatCore;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-public class CmdTpOverride extends CommandLM // CommandTeleport
+public class CmdTpOverride extends CommandBaseLC // CommandTeleport
 {
-	public CmdTpOverride()
-	{ super("tp"); }
-	
-	public int getRequiredPermissionLevel()
-	{ return 0; }
-	
-	public boolean canCommandSenderUseCommand(ICommandSender ics)
-	{ return true; }
+	public CmdTpOverride(int e)
+	{ super("tp", e); }
 	
 	public Boolean isUsername(String[] args, int i)
 	{ return (i == 0 || i == 1) ? true : null; }
@@ -27,10 +21,10 @@ public class CmdTpOverride extends CommandLM // CommandTeleport
 		LatCoreMC.printChat(ics, "/tp [who] <x> <y> <z>");
 	}
 	
-	public void onCommand(ICommandSender ics, String[] args)
+	public String onCommand(ICommandSender ics, String[] args)
 	{
 		if(args.length == 0 || args.length > 4)
-		{ printHelp(ics); return; }
+		{ printHelp(ics); return null; }
 		
 		EntityPlayerMP who = null;
 		double x = 0D, y = 0D, z = 0D;
@@ -47,7 +41,7 @@ public class CmdTpOverride extends CommandLM // CommandTeleport
 					args1[0] = players[i];
 					onCommand(ics, args1);
 				}
-				return;
+				return null;
 			}
 			else
 			who = CommandLM.getPlayer(ics, args[0]);
@@ -80,7 +74,8 @@ public class CmdTpOverride extends CommandLM // CommandTeleport
 		else printHelp(ics);
 		
 		if(who.worldObj.provider.dimensionId != dim)
-			LatCoreMC.printChat(ics, "Can't teleport to another dimension!");
+			return "Can't teleport to another dimension!";
 		else who.playerNetServerHandler.setPlayerLocation(x, y, z, who.rotationYaw, who.rotationPitch);
+		return null;
 	}
 }

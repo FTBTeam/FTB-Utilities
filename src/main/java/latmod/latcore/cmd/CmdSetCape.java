@@ -11,7 +11,7 @@ public class CmdSetCape extends CommandBaseLC
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/setcape <url | null>"; }
 	
-	public void onCommand(ICommandSender ics, String[] args)
+	public String onCommand(ICommandSender ics, String[] args)
 	{
 		if(args.length > 0)
 		{
@@ -31,6 +31,7 @@ public class CmdSetCape extends CommandBaseLC
 			
 			LatCoreMC.printChat(ics, "Custom cape changed to " + p.customCape);
 		}
-		else LatCoreMC.printChat(ics, getCommandUsage(ics));
+		
+		return getCommandUsage(ics);
 	}
 }

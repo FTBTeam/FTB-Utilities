@@ -174,7 +174,15 @@ public class LatCore
 		return f;
 	}
 	
-	public static String strip(Object... o)
+	public static String[] toStrings(Object... o)
+	{
+		String[] s = new String[o.length];
+		for(int i = 0; i < o.length; i++)
+			s[i] = "" + o[i];
+		return s;
+	}
+	
+	public static String strip(String... o)
 	{
 		if(o == null) return null;
 		if(o.length == 0) return "";

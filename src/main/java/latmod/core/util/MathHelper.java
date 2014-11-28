@@ -38,8 +38,12 @@ public class MathHelper // Converter
 	{ if(pos == null || tar == null) return -1F;
 	return Math.atan(pos.y - tar.y); }
 	
-	public static double sqrt(double f)
-	{ return Math.sqrt(f); }
+	public static double sqrt(double d)
+	{
+		if(d == 0D) return 0D;
+		else if(d == 1D) return 1D;
+		else return Math.sqrt(d);
+	}
 	
 	public static double sqrt2sq(double x, double y)
 	{ return sqrt(sq(x) + sq(y)); }
@@ -62,18 +66,6 @@ public class MathHelper // Converter
 	
 	public static double dist(double x1, double y1, double z1, double x2, double y2, double z2)
 	{ return sqrt(distSq(x1, y1, z1, x2, y2, z2)); }
-	
-	public static double distSq(double x1, double y1, double x2, double y2)
-	{ return sq(x2 - x1) + sq(y2 - y1); }
-	
-	public static double dist(double x1, double y1, double x2, double y2)
-	{ return sqrt(distSq(x1, y1, x2, y2)); }
-	
-	public static double distSq(Vertex v1, Vertex v2)
-	{ return distSq(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z); }
-	
-	public static double dist(Vertex v1, Vertex v2)
-	{ return sqrt(dist(v1, v2)); }
 	
 	public static Vertex getLook(Vertex v, double yaw, double pitch, double dist)
 	{
@@ -110,17 +102,17 @@ public class MathHelper // Converter
 	public static double lerp(double f1, double f2, double f)
 	{ return f1 + (f2 - f1) * f; }
 	
-	public static double limit(double f, double min, double max)
-	{ if(f == -0F) f = 0F; if(f < min) f = min; if(f > max) f = max; return f; }
+	public static double clamp(double d, double min, double max)
+	{ if(d < min) d = min; if(d > max) d = max; return d; }
 	
-	public static int limitInt(int i, int min, int max)
-	{ if(i == -0) i = 0; if(i < min) i = min; if(i > max) i = max; return i; }
+	public static int clampInt(int i, int min, int max)
+	{ if(i < min) i = min; if(i > max) i = max; return i; }
 	
-	public static double[] limit(double[] f, double min, double max)
-	{ for(int i = 0; i < f.length; i++) f[i] = limit(f[i], min, max); return f; }
+	public static double[] clamp(double[] d, double min, double max)
+	{ for(int i = 0; i < d.length; i++) d[i] = clamp(d[i], min, max); return d; }
 	
-	public static int[] limitInt(int[] i, int min, int max)
-	{ for(int j = 0; j < i.length; j++) i[j] = limitInt(i[j], min, max); return i; }
+	public static int[] clampInt(int[] i, int min, int max)
+	{ for(int j = 0; j < i.length; j++) i[j] = clampInt(i[j], min, max); return i; }
 	
 	public static int toIntDecoded(String s)
 	{ return Integer.decode(s); }

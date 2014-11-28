@@ -12,7 +12,7 @@ public class CmdRealNick extends CommandBaseLC
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/realnick <player>"; }
 	
-	public void onCommand(ICommandSender ics, String[] args)
+	public String onCommand(ICommandSender ics, String[] args)
 	{
 		if(args.length > 0)
 		{
@@ -22,6 +22,8 @@ public class CmdRealNick extends CommandBaseLC
 			
 			LatCoreMC.printChat(ics, p.getDisplayName() + EnumChatFormatting.RESET + " is " + p.username);
 		}
+		
+		return null;
 	}
 	
 	public Boolean isUsername(String[] args, int i)

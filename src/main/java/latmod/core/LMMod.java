@@ -22,8 +22,8 @@ public class LMMod<C extends LMConfig, R extends LMRecipes>
 	public final FastList<IItemLM> items;
 	
 	public Logger logger;
+	public LMRecipes recipes;
 	private LMConfig config;
-	private LMRecipes recipes;
 	
 	public LMMod(String s, C c, R r)
 	{
@@ -41,8 +41,11 @@ public class LMMod<C extends LMConfig, R extends LMRecipes>
 		recipes = r;
 	}
 	
-	@SuppressWarnings("unchecked") public C config() { return (C)config; }
-	@SuppressWarnings("unchecked") public R recipes() { return (R)recipes; }
+	@SuppressWarnings("unchecked")
+	public R recipes() { return (R) recipes; }
+	
+	@SuppressWarnings("unchecked")
+	public C config() { return (C) config; }
 	
 	public ResourceLocation getLocation(String s)
 	{ return new ResourceLocation(assets + s); }

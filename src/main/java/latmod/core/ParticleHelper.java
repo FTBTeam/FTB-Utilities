@@ -17,8 +17,8 @@ public class ParticleHelper
 		int l1 = (int)(150D * d3);
 		for (int i2 = 0; i2 < l1; ++i2)
 		{
-			double f3 = MathHelper.limit(rand.nextFloat(), 0D, MathHelper.TWO_PI);
-			double d5 = MathHelper.limit(rand.nextFloat(), 0.75D, 1D);
+			double f3 = MathHelper.clamp(rand.nextFloat(), 0D, MathHelper.TWO_PI);
+			double d5 = MathHelper.clamp(rand.nextFloat(), 0.75D, 1D);
 			double d6 = 0.20000000298023224D + d3 / 100D;
 			double d7 = (double)(MathHelper.cos(f3) * 0.2F) * d5 * d5 * (d3 + 0.2D);
 			double d8 = (double)(MathHelper.sin(f3) * 0.2F) * d5 * d5 * (d3 + 0.2D);

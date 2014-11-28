@@ -1,94 +1,130 @@
 package latmod.core;
 
-import latmod.core.util.FastMap;
+import latmod.core.util.*;
 import net.minecraft.nbt.*;
 
 public class LMGamerules
 {
-	public static final FastMap<String, FastMap<String, String>> rules = new FastMap<String, FastMap<String, String>>();
+	private static final FastMap<RuleID, Rule> registredRules = new FastMap<RuleID, Rule>();
+	public static final FastMap<RuleID, Rule> rules = new FastMap<RuleID, Rule>();
+	
+	public static class RuleID
+	{
+		public final String group;
+		public final String key;
+		
+		public RuleID(String g, String k)
+		{
+			group = g;
+			key = k;
+		}
+		
+		public String toString()
+		{ return group + ":" + key; }
+		
+		public int hashCode()
+		{ return key.hashCode(); }
+		
+		public boolean equals(Object o)
+		{
+			if(o == null) return false;
+			else if(o == this) return true;
+			else return o.toString().equals(toString());
+		}
+	}
+	
+	public static class Rule
+	{
+		public final RuleID id;
+		public String value;
+		
+		public Rule(RuleID i, String v)
+		{
+			id = i;
+			value = v;
+		}
+		
+		public boolean getBool()
+		{ return Boolean.parseBoolean(value); }
+		
+		public Number getNum()
+		{ return new Double(Double.parseDouble(value)); }
+		
+		public Number getNum(double min, double max)
+		{
+			Number n = getNum();
+			if(n.doubleValue() < min) n = min;
+			if(n.doubleValue() > max) n = max;
+			return n;
+		}
+		
+		public String toString()
+		{ return id.toString() + ":" + value; }
+	}
 	
 	public static void readFromNBT(NBTTagCompound tag, String s)
 	{
 		rules.clear();
 		
-		FastMap<String, NBTBase> tags = LatCoreMC.toFastMap(tag.getCompoundTag(s));
+		NBTTagList list = (NBTTagList)tag.getTag(s);
 		
-		for(int i = 0; i < tags.size(); i++)
+		if(list != null) for(int i = 0; i < list.tagCount(); i++)
 		{
-			FastMap<String, String> map1 = new FastMap<String, String>();
+			NBTTagCompound tag1 = list.getCompoundTagAt(i);
+			String g = tag1.getString("G");
+			String k = tag1.getString("K");
+			String v = tag1.getString("V");
 			
-			NBTTagCompound tag1 = (NBTTagCompound)tags.values.get(i);
-			
-			FastMap<String, NBTBase> tags1 = LatCoreMC.toFastMap(tag1);
-			
-			for(int j = 0; j < tags1.size(); j++)
-			{
-				String key1 = tags1.getKey(j);
-				map1.put(key1, tag1.getString(key1));
-			}
-			
-			rules.put(tags.keys.get(i), map1);
+			RuleID id = new RuleID(g, k);
+			rules.put(id, new Rule(id, v));
 		}
 		
-		LatCoreMC.logger.info("Loaded LMGamerules: " + rules);
+		for(int i = 0; i < registredRules.size(); i++)
+		{
+			RuleID id = registredRules.keys.get(i);
+			
+			if(!rules.keys.contains(id))
+				rules.put(id, registredRules.values.get(i));
+		}
+		
+		LatCoreMC.logger.info("Loaded LMGamerules: " + rules.values);
 	}
 	
 	public static void writeToNBT(NBTTagCompound tag, String s)
 	{
-		NBTTagCompound tag1 = new NBTTagCompound();
+		NBTTagList list = new NBTTagList();
 		
 		for(int i = 0; i < rules.size(); i++)
 		{
-			NBTTagCompound tag2 = new NBTTagCompound();
+			Rule r = rules.values.get(i);
 			
-			FastMap<String, String> map1 = rules.values.get(i);
-			
-			for(int j = 0; j < map1.size(); j++)
-				tag2.setString(map1.keys.get(j), map1.values.get(j));
-			
-			tag1.setTag(rules.keys.get(i), tag2);
+			NBTTagCompound tag1 = new NBTTagCompound();
+			tag1.setString("G", r.id.group);
+			tag1.setString("K", r.id.key);
+			tag1.setString("V", r.value);
+			list.appendTag(tag1);
 		}
 		
-		tag.setTag(s, tag1);
+		tag.setTag(s, list);
 	}
 	
-	public static void add(String group, String key, String val)
-	{ if(get(group, key) == null) set(group, key, val); }
+	public static void register(RuleID id, Object val)
+	{ registredRules.put(id, new Rule(id, val + "")); }
 	
-	public static void set(String group, String key, String val)
+	public static Rule set(RuleID id, String val)
 	{
-		FastMap<String, String> map = rules.get(group);
+		Rule r = rules.get(id);
 		
-		if(map == null)
+		if(r == null)
 		{
-			map = new FastMap<String, String>();
-			rules.put(group, map);
+			r = new Rule(id, val);
+			rules.put(id, r);
 		}
 		
-		map.put(key, val);
+		r.value = val;
+		return r;
 	}
 	
-	public static String get(String group, String key)
-	{
-		FastMap<String, String> map = rules.get(group);
-		return (map == null) ? null : map.get(key);
-	}
-	
-	public static String get(String group, String key, String def)
-	{
-		String s = get(group, key);
-		return (s == null) ? def : s;
-	}
-	
-	public static Boolean get(String group, String key, Boolean def)
-	{
-		String s = get(group, key);
-		return (s == null) ? def : (key.equals("true"));
-	}
-	
-	public static Number get(String group, String key, Number def)
-	{
-		String s = get(group, key);
-		return (s == null) ? def : (Double.parseDouble(s));
-	}
+	public static Rule get(RuleID id)
+	{ return rules.get(id); }
 }

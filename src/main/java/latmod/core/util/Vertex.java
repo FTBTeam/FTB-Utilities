@@ -69,4 +69,16 @@ public final class Vertex implements Cloneable
 	
 	public Vertex clone()
 	{ return new Vertex(x, y, z); }
+	
+	public double distSq(double x1, double y1, double z1)
+	{ return MathHelper.sq(x1 - x) + MathHelper.sq(y1 - y) + MathHelper.sq(z1 - z); }
+	
+	public double dist(double x1, double y1, double z1)
+	{ return MathHelper.sqrt(distSq(x1, y1, z1)); }
+	
+	public double distSq(Vertex v)
+	{ return distSq(v.x, v.y, v.z); }
+	
+	public double dist(Vertex v)
+	{ return MathHelper.sqrt(dist(v)); }
 }

@@ -1,7 +1,6 @@
 package latmod.latcore;
 import latmod.core.tile.IGuiTile;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -38,21 +37,32 @@ public class LCClient extends LCCommon
 	
 	public void setSkinAndCape(EntityPlayer ep)
 	{
+		/*
+		LatCoreMC.printChat(ep, "Looking for custom skin...");
+		
 		if(ep instanceof AbstractClientPlayer)
 		{
-			/* FIXME
 			AbstractClientPlayer p = (AbstractClientPlayer)ep;
 			
-			if(p.getUniqueID().equals(Minecraft.getMinecraft().thePlayer.getUniqueID()))
-			{
-				p = Minecraft.getMinecraft().thePlayer;
-			}
+			//if(p.getUniqueID().equals(Minecraft.getMinecraft().thePlayer.getUniqueID()))
+			//	p = Minecraft.getMinecraft().thePlayer;
 			
 			ResourceLocation customSkinLocation = LC.mod.getLocation("custom/skin/" + p.getUniqueID() + ".png");
+			
+			TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
+	        Object object = texturemanager.getTexture(customSkinLocation);
+
+	        if (object == null)
+	        {
+	            object = new ThreadDownloadImageData((File)null, "http://i.imgur.com/yFSexm0.png", AbstractClientPlayer.locationStevePng, new ImageBufferDownload());
+	            texturemanager.loadTexture(customSkinLocation, (ITextureObject)object);
+	        }
+	        
+			//AbstractClientPlayer.getDownloadImageSkin(customSkinLocation, "");
 			p.func_152121_a(MinecraftProfileTexture.Type.SKIN, customSkinLocation);
-			LatCoreMC.printChat(ep, "Set skint to " + p.getLocationSkin());
-			AbstractClientPlayer.getDownloadImageSkin(p.getLocationSkin(), "http://i.imgur.com/yFSexm0.png");
-			*/
+			LatCoreMC.printChat(ep, "Set skin to " + p.getLocationSkin());
 		}
+		
+		*/
 	}
 }

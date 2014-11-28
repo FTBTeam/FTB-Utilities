@@ -3,6 +3,7 @@ package latmod.latcore.cmd;
 import java.util.UUID;
 
 import latmod.core.*;
+import latmod.core.util.LatCore;
 import latmod.latcore.ThreadCheckVersions;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,17 +29,15 @@ public class CmdLatCore extends CommandBaseLC
 		return null;
 	}
 	
-	public void onCommand(ICommandSender ics, String[] args)
+	public String onCommand(ICommandSender ics, String[] args)
 	{
 		if(args == null || args.length == 0)
-		{
-			LatCoreMC.printChat(ics, "Subcommands: versions, friend, enemy");
-			return;
-		}
+			return "Subcommands: " + LatCore.strip(getTabStrings(ics, args, 0));
 		
 		if(args[0].equals("versions"))
 		{
 			ThreadCheckVersions.init(ics, true);
+			return null;
 		}
 		
 		if(args[0].equals("friend"))
@@ -47,7 +46,7 @@ public class CmdLatCore extends CommandBaseLC
 			{
 				LatCoreMC.printChat(ics, "/latcore friend add|rem <name>");
 				LatCoreMC.printChat(ics, "/latcore friend list|clear");
-				return;
+				return null;
 			}
 			
 			EntityPlayer ep = getCommandSenderAsPlayer(ics);
@@ -122,7 +121,7 @@ public class CmdLatCore extends CommandBaseLC
 			{
 				LatCoreMC.printChat(ics, "/latcore enemy add|rem <name>");
 				LatCoreMC.printChat(ics, "/latcore enemy list|clear");
-				return;
+				return null;
 			}
 			
 			EntityPlayer ep = getCommandSenderAsPlayer(ics);
@@ -191,5 +190,7 @@ public class CmdLatCore extends CommandBaseLC
 				}
 			}
 		}
+		
+		return onCommand(ics, null);
 	}
 }

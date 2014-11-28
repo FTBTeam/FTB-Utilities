@@ -7,51 +7,47 @@ public class Noise
 {
 	public static final Noise def = new Noise();
 	
-	private double perlin_cosTable[] = null;
-	private double perlin[] = null;
+	private static final double perlin_cosTable[] = new double[720];
+	
+	static
+	{
+		for(int i = 0; i < perlin_cosTable.length; i++)
+			perlin_cosTable[i] = Math.cos(i * 0.5D * MathHelper.RAD);
+	}
+	
+	private final Random perlinRandom;
+	private final double perlin[] = new double[4096];
 	private int perlin_PI;
 	private int perlin_TWOPI;
-	private Random perlinRandom = null;
 	
 	public Noise(Random r)
-	{ perlinRandom = r; perlin = null; }
+	{
+		perlinRandom = (r == null ? new Random() : r);
+		
+		for (int i = 0; i < perlin.length; i++)
+			perlin[i] = perlinRandom.nextDouble();
+		perlin_TWOPI = (perlin_PI = 720);
+		perlin_PI >>= 1;
+	}
 	
 	public Noise()
-	{ this(new Random()); }
+	{ this(null); }
 	
-	public double get0(double x, double y, double z)
+	public double get(double... pos)
+	{ return get0(pos[0], (pos.length >= 2) ? pos[1] : 0D, (pos.length >= 3) ? pos[2] : 0D); }
+	
+	private double get0(double x, double y, double z)
 	{
-		if(perlinRandom == null) perlinRandom = new Random();
-		if(perlin_cosTable == null)
-		{
-			perlin_cosTable = new double[720];
-			for (int i = 0; i < 720; i++)
-			perlin_cosTable[i] = (float)Math.cos(i * 0.01745329F * 0.5F);
-		}
-		if (perlin == null)
-		{
-			if (perlinRandom == null) perlinRandom = new Random();
-			perlin = new double[4096];
-			for (int i = 0; i < perlin.length; i++)
-				perlin[i] = perlinRandom.nextFloat();
-			perlin_TWOPI = (perlin_PI = 720);
-			perlin_PI >>= 1;
-		}
-		
-		if (x < 0D) x = -x;
-		if (y < 0D) y = -y;
-		if (z < 0D) z = -z;
-		
-		int i = (int)x;
-		int j = (int)y;
-		int k = (int)z;
+		int i = (int) Math.abs(x);
+		int j = (int) Math.abs(y);
+		int k = (int) Math.abs(z);
 		
 		double f1 = x - i;
 		double f2 = y - j;
 		double f3 = z - k;
 		
-		float f6 = 0.0F;
-		float f7 = 0.5F;
+		double f6 = 0D;
+		double f7 = 0.5D;
 		
 		for (int m = 0; m < 4; m++)
 		{
@@ -78,35 +74,14 @@ public class Noise
 			f6 += f8 * f7;
 			
 			f7 *= 0.5F;
-			i <<= 1;
-		  	f1 *= 2.0F;
-		  	j <<= 1;
-		  	f2 *= 2.0F;
-		  	k <<= 1;
-		  	f3 *= 2.0F;
 		  	
-		  	if (f1 >= 1.0F)
-		  	{
-		  		i++;
-		  		f1 -= 1.0F;
-		  	}
-		  	
-		  	if (f2 >= 1.0F)
-		  	{
-		  		j++;
-		  		f2 -= 1.0F;
-		  	}
-		  	
-		  	if (f3 < 1.0F) continue;
-		  	k++;
-		  	f3 -= 1.0F;
+		  	i <<= 1; f1 *= 2D; if (f1 >= 1D) { i++; f1 -= 1D; }
+		  	j <<= 1; f2 *= 2D; if (f2 >= 1D) { j++; f2 -= 1D; }
+		  	k <<= 1; f3 *= 2D; if (f3 >= 1D) { k++; f3 -= 1D; }
 		}
 		
 		return f6;
 	}
-	
-	public double get(double... pos)
-	{ return get0(pos[0], (pos.length >= 2) ? pos[1] : 0D, (pos.length >= 3) ? pos[2] : 0D); }
 	
 	private double noise_fsc(double f)
 	{ return 0.5D * (1D - perlin_cosTable[((int)(f * perlin_PI) % perlin_TWOPI)]); }

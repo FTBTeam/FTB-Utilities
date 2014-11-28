@@ -78,7 +78,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 	
 	public void sendUpdate(World w, String channel, boolean clientUpdate)
 	{
-		if(LatCoreMC.canUpdate())
+		if(LatCoreMC.isServer())
 		{
 			new DataChangedEvent(this, Side.SERVER, channel, w).post();
 			if(clientUpdate) LMNetHandler.INSTANCE.sendToAll(new MessageUpdatePlayerData(this, channel));
@@ -250,11 +250,11 @@ public class LMPlayer implements Comparable<LMPlayer>
 				allOff.add(s);
 		}
 		
-		allOn.sort();
+		allOn.sort(null);
 		
 		if(!online)
 		{
-			allOff.sort();
+			allOff.sort(null);
 			
 			for(int i = 0; i < allOff.size(); i++)
 			{

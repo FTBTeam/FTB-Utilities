@@ -11,7 +11,7 @@ public class CmdSetNick extends CommandBaseLC
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/setnick <nick | null>"; }
 	
-	public void onCommand(ICommandSender ics, String[] args)
+	public String onCommand(ICommandSender ics, String[] args)
 	{
 		if(args.length > 0)
 		{
@@ -29,6 +29,7 @@ public class CmdSetNick extends CommandBaseLC
 			
 			LatCoreMC.printChat(ics, "Custom nickname changed to " + p.getDisplayName());
 		}
-		else LatCoreMC.printChat(ics, getCommandUsage(ics));
+		
+		return getCommandUsage(ics);
 	}
 }

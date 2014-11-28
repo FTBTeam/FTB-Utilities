@@ -3,14 +3,18 @@ package latmod.core.tile;
 import java.util.Arrays;
 
 import latmod.core.*;
-import net.minecraft.block.Block;
+import latmod.core.client.RenderBlocksCustom;
+import net.minecraft.block.*;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+import cpw.mods.fml.relauncher.*;
 
 public interface IPaintable extends ITileInterface
 {
@@ -184,6 +188,75 @@ public interface IPaintable extends ITileInterface
 			}
 			
 			return true;
+		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static class Renderer
+	{
+		public static IIcon[] to6(IIcon p)
+		{ return new IIcon[] { p, p, p, p, p, p }; }
+		
+		public static Paint[] to6(Paint p)
+		{ return new Paint[] { p, p, p, p, p, p }; }
+		
+		public static void setFaceBounds(RenderBlocksCustom rb, AxisAlignedBB aabb, int side)
+		{
+			if(side == 0) rb.setRenderBounds(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.minY, aabb.maxZ);
+			if(side == 1) rb.setRenderBounds(aabb.minX, aabb.maxY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ);
+			if(side == 2) rb.setRenderBounds(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.minZ);
+			if(side == 3) rb.setRenderBounds(aabb.minX, aabb.minY, aabb.maxZ, aabb.maxX, aabb.maxY, aabb.maxZ);
+			if(side == 4) rb.setRenderBounds(aabb.minX, aabb.minY, aabb.minZ, aabb.minX, aabb.maxY, aabb.maxZ);
+			if(side == 5) rb.setRenderBounds(aabb.maxX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ);
+		}
+		
+		public static void renderCube(RenderBlocksCustom rb, Paint[] p, IIcon[] defIcon, int x, int y, int z, AxisAlignedBB aabb)
+		{
+			for(int i = 0; i < 6; i++)
+			{
+				setFaceBounds(rb, aabb, i);
+				renderFace(rb, i, p[i], defIcon[i], x, y, z);
+			}
+		}
+		
+		public static void renderFace(RenderBlocksCustom rb, int side, Paint p, IIcon defIcon, int x, int y, int z)
+		{
+			if(rb.blockAccess != null)
+			{
+				ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[side];
+				Block b = rb.blockAccess.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
+				
+				if(b.getMaterial() != Material.air)
+				{
+					double d = -0.001D;
+					if(side == 0) { rb.renderMaxY -= d; rb.renderMinY -= d; }
+					if(side == 1) { rb.renderMinY += d; rb.renderMaxY += d; }
+					if(side == 2) { rb.renderMaxZ -= d; rb.renderMinZ -= d; }
+					if(side == 3) { rb.renderMinZ += d; rb.renderMaxZ += d; }
+					if(side == 4) { rb.renderMaxX -= d; rb.renderMinX -= d; }
+					if(side == 5) { rb.renderMinX += d; rb.renderMaxX += d; }
+				}
+			}
+			
+			boolean b = rb.renderAllFaces;
+			rb.renderAllFaces = true;
+			rb.setCustomColor(null);
+			rb.customMetadata = null;
+			
+			if(p != null)
+			{
+				//renderBlocks.setOverrideBlockTexture(p[id].block.getIcon(renderBlocks.blockAccess, x, y, z, id));
+				rb.setOverrideBlockTexture(p.block.getIcon(side, p.meta));
+				
+				if(side == 1 || !(p.block != null && p.block instanceof BlockGrass))
+					rb.setCustomColor(p.block.getRenderColor(p.meta));
+				rb.customMetadata = p.meta;
+			}
+			else rb.setOverrideBlockTexture(defIcon);
+			
+			rb.renderStandardBlock(Blocks.stained_glass, x, y, z);
+			
+			rb.renderAllFaces = b;
 		}
 	}
 }

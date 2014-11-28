@@ -31,9 +31,6 @@ public abstract class ItemLM extends Item implements IItemLM
 	@SuppressWarnings("unchecked")
 	public final <E> E register() { mod.addItem(this); return (E)this; }
 	
-	public void addRecipe(ItemStack out, Object... in)
-	{ mod.recipes().addRecipe(out, in); }
-	
 	public final Item getItem()
 	{ return this; }
 

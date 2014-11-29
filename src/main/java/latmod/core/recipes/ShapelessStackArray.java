@@ -1,6 +1,6 @@
 package latmod.core.recipes;
+import latmod.core.util.FastList;
 import net.minecraft.item.ItemStack;
-import latmod.core.util.*;
 
 public class ShapelessStackArray implements IStackArray
 {

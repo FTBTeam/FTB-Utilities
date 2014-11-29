@@ -3,7 +3,7 @@ import java.util.Arrays;
 
 import latmod.core.*;
 import latmod.core.net.*;
-import latmod.latcore.*;
+import latmod.latcore.LC;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

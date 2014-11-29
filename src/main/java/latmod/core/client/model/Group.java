@@ -1,9 +1,11 @@
 package latmod.core.client.model;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.*;
-import cpw.mods.fml.relauncher.*;
 import latmod.core.client.LMRenderHelper;
 import latmod.core.util.FastList;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
+
+import cpw.mods.fml.relauncher.*;
 
 /** Made by LatvianModder */
 @SideOnly(Side.CLIENT)

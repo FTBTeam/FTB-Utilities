@@ -1,5 +1,5 @@
 package latmod.core.recipes;
-import net.minecraft.item.*;
+import net.minecraft.item.ItemStack;
 
 public interface IStackArray
 {

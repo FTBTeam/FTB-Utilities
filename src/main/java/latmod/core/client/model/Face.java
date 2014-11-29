@@ -1,6 +1,8 @@
 package latmod.core.client.model;
 import latmod.core.util.LatCore;
-import org.lwjgl.opengl.*;
+
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.relauncher.*;
 
 /** Made by LatvianModder */

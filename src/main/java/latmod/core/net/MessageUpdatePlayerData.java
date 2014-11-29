@@ -1,10 +1,11 @@
 package latmod.core.net;
+import io.netty.buffer.ByteBuf;
+
 import java.util.UUID;
 
-import io.netty.buffer.ByteBuf;
-import latmod.core.LMPlayer;
+import latmod.core.*;
 import latmod.core.LMPlayer.DataChangedEvent;
-import latmod.latcore.*;
+import latmod.latcore.LC;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.network.simpleimpl.*;

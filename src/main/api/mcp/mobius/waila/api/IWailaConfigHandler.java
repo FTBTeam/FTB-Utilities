@@ -1,7 +1,6 @@
 package mcp.mobius.waila.api;
 
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 
 public interface IWailaConfigHandler {
 	/* Returns a set of all the currently loaded modules in the config handler */

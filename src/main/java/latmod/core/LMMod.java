@@ -1,5 +1,5 @@
 package latmod.core;
-import latmod.core.block.*;
+import latmod.core.block.IBlockLM;
 import latmod.core.item.*;
 import latmod.core.recipes.LMRecipes;
 import latmod.core.tile.TileLM;

@@ -42,7 +42,7 @@ public class LCCommon extends LMProxy implements IGuiHandler // LCClient
 		return 0F;
 	}
 	
-	public void setSkinAndCape(EntityPlayer ep)
+	public void onClientPlayerJoined(EntityPlayer ep)
 	{
 	}
 }

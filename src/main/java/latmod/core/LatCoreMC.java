@@ -196,29 +196,40 @@ public class LatCoreMC
 	{
 		if ((e.worldObj.isRemote) || (e.isDead) || e.dimension == dim) return;
 		
-		LatCoreMC.printChat(null, "Teleporting to dimension " + dim);
+		if(e instanceof EntityPlayer) { e.travelToDimension(dim); return; }
 		
 		e.worldObj.theProfiler.startSection("changeDimension");
-		MinecraftServer minecraftserver = MinecraftServer.getServer();
+		MinecraftServer ms = MinecraftServer.getServer();
 		int j = e.dimension;
-		WorldServer worldserver = minecraftserver.worldServerForDimension(j);
-		WorldServer worldserver1 = minecraftserver.worldServerForDimension(dim);
+		WorldServer ws0 = ms.worldServerForDimension(j);
+		WorldServer ws1 = ms.worldServerForDimension(dim);
 		e.dimension = dim;
+		
 		e.worldObj.removeEntity(e);
 		e.isDead = false;
 		e.worldObj.theProfiler.startSection("reposition");
-		minecraftserver.getConfigurationManager().transferEntityToWorld(e, j, worldserver, worldserver1);
+		ms.getConfigurationManager().transferEntityToWorld(e, j, ws0, ws1);
 		e.worldObj.theProfiler.endStartSection("reloading");
-		Entity entity = EntityList.createEntityByName(EntityList.getEntityString(e), worldserver1);
+		Entity entity = EntityList.createEntityByName(EntityList.getEntityString(e), ws1);
+		
 		if (entity != null)
 		{
 			entity.copyDataFrom(e, true);
-			worldserver1.spawnEntityInWorld(entity);
+			
+			/*if(dim == 1)
+			{
+				ChunkCoordinates chunkcoordinates = worldserver1.getSpawnPoint();
+				chunkcoordinates.posY = e.worldObj.getTopSolidOrLiquidBlock(chunkcoordinates.posX, chunkcoordinates.posZ);
+				entity.setLocationAndAngles((double)chunkcoordinates.posX, (double)chunkcoordinates.posY, (double)chunkcoordinates.posZ, entity.rotationYaw, entity.rotationPitch);
+			}*/
+
+			ws1.spawnEntityInWorld(entity);
 		}
+		
 		e.isDead = true;
 		e.worldObj.theProfiler.endSection();
-		worldserver.resetUpdateEntityTick();
-		worldserver1.resetUpdateEntityTick();
+		ws0.resetUpdateEntityTick();
+		ws1.resetUpdateEntityTick();
 		e.worldObj.theProfiler.endSection();
 	}
 	

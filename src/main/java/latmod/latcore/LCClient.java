@@ -35,7 +35,7 @@ public class LCClient extends LCCommon
 	public double getReachDist(EntityPlayer ep)
 	{ return Minecraft.getMinecraft().playerController.getBlockReachDistance(); }
 	
-	public void setSkinAndCape(EntityPlayer ep)
+	public void onClientPlayerJoined(EntityPlayer ep)
 	{
 		/*
 		LatCoreMC.printChat(ep, "Looking for custom skin...");

@@ -268,9 +268,8 @@ public class LCEventHandler
 			LMPlayer p = LMPlayer.getPlayer(UUID.fromString(e.extraData.getString("UUID")));
 			if(p != null)
 			{
-				LatCoreMC.printChat(e.player, "Test");
 				EntityPlayer ep = p.getPlayer();
-				if(ep != null) LC.proxy.setSkinAndCape(ep);
+				if(ep != null) LC.proxy.onClientPlayerJoined(ep);
 			}
 		}
 		else if(e.action.equals(ACTION_OPEN_URL))

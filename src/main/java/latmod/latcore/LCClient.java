@@ -65,4 +65,7 @@ public class LCClient extends LCCommon
 		
 		*/
 	}
+	
+	public void openClientGui(EntityPlayer ep, IGuiTile i, int ID)
+	{ Minecraft.getMinecraft().displayGuiScreen(i.getGui(ep, ID)); }
 }

@@ -45,4 +45,8 @@ public class LCCommon extends LMProxy implements IGuiHandler // LCClient
 	public void onClientPlayerJoined(EntityPlayer ep)
 	{
 	}
+	
+	public void openClientGui(EntityPlayer ep, IGuiTile i, int ID)
+	{
+	}
 }

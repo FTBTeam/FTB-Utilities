@@ -190,8 +190,6 @@ public class LatCoreMC
 	public static String getRegName(ItemStack is)
 	{ return (is != null && is.getItem() != null) ? getRegName(is.getItem()) : null; }
 	
-	//TODO: Still need to fix this
-	@Deprecated
 	public static void teleportEntity(Entity e, int dim)
 	{
 		if ((e.worldObj.isRemote) || (e.isDead) || e.dimension == dim) return;
@@ -345,6 +343,9 @@ public class LatCoreMC
 		TileEntity te = i.getTile();
 		ep.openGui(LC.inst, ID, te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord);
 	}
+	
+	public static void openClientGui(EntityPlayer ep, IGuiTile i, int ID)
+	{ LC.proxy.openClientGui(ep, i, ID); }
 	
 	public static boolean isWrench(ItemStack is)
 	{ return is != null && is.getItem() != null && is.getItem().getHarvestLevel(is, "wrench") != -1; }

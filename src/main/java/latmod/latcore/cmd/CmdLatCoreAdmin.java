@@ -1,7 +1,6 @@
 package latmod.latcore.cmd;
 
 import latmod.core.*;
-import latmod.core.LMGamerules.Rule;
 import latmod.core.LMGamerules.RuleID;
 import latmod.core.util.*;
 import net.minecraft.command.*;
@@ -21,8 +20,8 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 	{
 		if(i == 0) return new String[] { "killblock", "gamerule", "player" };
 		
-		if(i == 1 && isArg(args, 0, "player"))
-			return new String[] { "uuid", "delete", "saveinv", "loadinv" };
+		if(i == 2 && isArg(args, 0, "player"))
+			return new String[] { "uuid", "delete", "saveinv", "loadinv", "nick", "skin", "cape" };
 		
 		if(isArg(args, 0, "gamerule"))
 		{
@@ -45,8 +44,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 	
 	public Boolean isUsername(String[] args, int i)
 	{
-		if(i == 1 && isArg(args, 0, "uuid")) return false;
-		if(i == 2 && isArg(args, 0, "player")) return false;
+		if(i == 1 && isArg(args, 0, "player")) return false;
 		return null;
 	}
 	
@@ -57,46 +55,73 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 		
 		if(args[0].equals("player"))
 		{
-			if(args.length >= 2)
+			if(args.length < 2) return "Missing arguments!";
+			
+			LMPlayer p = LMPlayer.getPlayer(args[1]);
+			
+			if(p == null) throw new PlayerNotFoundException();
+			
+			if(args[2].equals("uuid"))
 			{
-				LMPlayer jp;
+				IChatComponent toPrint = new ChatComponentText(p.getDisplayName() + "'s UUID: ");
+				IChatComponent uuid = new ChatComponentText(p.uuid.toString());
+				uuid.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Copy to chat")));
+				uuid.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, p.uuid.toString()));
+				uuid.getChatStyle().setColor(EnumChatFormatting.GOLD);
+				toPrint.appendSibling(uuid);
+				ics.addChatMessage(uuid);
+				return null;
+			}
+			else if(args[2].equals("delete"))
+			{
+				if(p.isOnline()) return "The player must be offline!";
 				
-				if(args.length >= 3)
-					jp = LMPlayer.getPlayer(args[2]);
-				else
-					jp = LMPlayer.getPlayer(getCommandSenderAsPlayer(ics).getUniqueID());
+				return null;
+			}
+			else if(args[2].equals("saveinv"))
+			{
+				if(!p.isOnline()) return "The player must be online!";
 				
-				if(jp == null) throw new PlayerNotFoundException();
+				return null;
+			}
+			else if(args[2].equals("loadinv"))
+			{
+				if(!p.isOnline()) return "The player must be online!";
 				
-				if(args[1].equals("uuid"))
-				{
-					IChatComponent toPrint = new ChatComponentText(jp.getDisplayName() + "'s UUID: ");
-					IChatComponent uuid = new ChatComponentText(jp.uuid.toString());
-					uuid.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Copy to chat")));
-					uuid.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, jp.uuid.toString()));
-					uuid.getChatStyle().setColor(EnumChatFormatting.GOLD);
-					toPrint.appendSibling(uuid);
-					ics.addChatMessage(uuid);
-					return null;
-				}
-				else if(args[1].equals("delete"))
-				{
-					if(jp.isOnline()) return "The player must be offline!";
-					
-					return null;
-				}
-				else if(args[1].equals("saveinv"))
-				{
-					if(!jp.isOnline()) return "The player must be online!";
-					
-					return null;
-				}
-				else if(args[1].equals("loadinv"))
-				{
-					if(!jp.isOnline()) return "The player must be online!";
-					
-					return null;
-				}
+				return null;
+			}
+			else if(args[2].equals("nick"))
+			{
+				if(args.length != 4) return "/" + commandName + " ";
+				
+				p.setCustomName(args[3].trim());
+				p.sendUpdate("CustomName");
+				
+				return FINE + "Custom nickname changed to " + p.getDisplayName() + " for " + p.username;
+			}
+			else if(args[2].equals("skin"))
+			{
+				if(args.length != 4) return "Missing arguments!";
+				
+				p.customSkin = args[3].trim();
+				if(p.customSkin.length() == 0 || p.customSkin.equals("null"))
+					p.customSkin = null;
+				
+				p.sendUpdate("CustomSkin");
+				
+				return FINE + "Custom skin changed to " + p.customSkin + " for " + p.username;
+			}
+			else if(args[2].equals("cape"))
+			{
+				if(args.length != 4) return "Missing arguments!";
+				
+				p.customCape = args[3].trim();
+				if(p.customCape.length() == 0 || p.customCape.equals("null"))
+					p.customCape = null;
+				
+				p.sendUpdate("CustomCape");
+				
+				return FINE + "Custom cape changed to " + p.customCape + " for " + p.username;
 			}
 		}
 		else if(args[0].equals("killblock"))
@@ -110,7 +135,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				//ep.worldObj.setTileEntity(mop.blockX, mop.blockY, mop.blockZ, null);
 				ep.worldObj.setBlockToAir(mop.blockX, mop.blockY, mop.blockZ);
 				
-				return null;
+				return FINE + "Block destroyed";
 			}
 			catch(Exception e)
 			{ return "Failed to destroy the block!"; }
@@ -121,12 +146,15 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			{
 				RuleID id = new RuleID(args[1], args[2]);
 				
-				Rule r = LMGamerules.get(id);
-				
-				if(r != null)
+				if(args.length >= 4)
 				{
+					LMGamerules.set(id, args[3]);
+					return FINE + "LMGamerule '" + id + "' set to " + args[3];
 				}
-				else LatCoreMC.printChat(ics, "");
+				else
+				{
+					return FINE + "LMGamrule '" + id + "' is '" + LMGamerules.get(id) + "'";
+				}
 			}
 		}
 		

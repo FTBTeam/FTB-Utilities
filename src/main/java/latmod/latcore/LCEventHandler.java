@@ -160,7 +160,7 @@ public class LCEventHandler
 						LMPlayer p = new LMPlayer(UUID.fromString(tag1.getString("UUID")));
 						p.readFromNBT(tag1);
 						
-						new LMPlayer.DataLoadedEvent(p, e.world).post();
+						new LMPlayer.DataLoadedEvent(p).post();
 						
 						LMPlayer.list.add(p);
 					}
@@ -206,7 +206,7 @@ public class LCEventHandler
 					LMPlayer p = LMPlayer.list.get(i);
 					p.writeToNBT(tag1);
 					
-					new LMPlayer.DataSavedEvent(p, e.world).post();
+					new LMPlayer.DataSavedEvent(p).post();
 					
 					tag1.setString("UUID", p.uuid.toString());
 					

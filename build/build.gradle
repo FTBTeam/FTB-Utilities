@@ -1,3 +1,7 @@
+def mod_name = "LatCoreMC";
+def mod_group = "latmod.core";
+def mod_class = "LC.java";
+
 buildscript {
     repositories {
         mavenCentral()
@@ -15,24 +19,7 @@ buildscript {
     }
 }
 
-apply plugin: 'java'
 apply plugin: 'forge'
-apply plugin: 'maven'
-
-repositories {
-    maven { // The repo from which to get waila
-        name "Mobius Repo"
-        url "http://mobiusstrip.eu/maven"
-    }
-    maven { // the repo from which to get NEI and stuff
-        name 'CB Repo'
-        url "http://chickenbones.net/maven/"
-    }
-}
-
-dependencies {
-    compile "mcp.mobius.waila:Waila:1.5.6_dev1_1.7.10"
-}
 
 ext.configFile = file "build.props"
 
@@ -42,36 +29,29 @@ configFile.withReader {
     project.ext.config = new ConfigSlurper().parse prop
 }
 
-ext.configModFile = file "build.props_mod"
-
-configModFile.withReader {
-    def prop = new Properties()
-    prop.load(it)
-    project.ext.config_mod = new ConfigSlurper().parse prop
-}
-
 version = config.version_mc + "-" + config.version_mods
-group = "latmod.core"
-archivesBaseName = config_mod.name
+group = mod_group
+archivesBaseName = mod_name
 
 minecraft {
     version = config.version_mc + "-" + config.version_forge
     runDir = "eclipse/assets"
     
     replace "@VERSION@", config.version_mods
-    replaceIn "LC.java"
+    replaceIn mod_class
+}
+
+dependencies {
 }
 
 sourceSets {
     main {
         java {
-            if(config_mod.hasApi)
-                srcDir "sources/" + config_mod.name + "/src/main/java"
-			
-			srcDir "sources/" + config_mod.name + "/src/main/api"
+            srcDir "\\\\LATMODPC\\ProjMCP/LatCoreMC/src/main/java"
+			srcDir "\\\\LATMODPC\\ProjMCP/LatCoreMC/src/main/api"
         }
         resources {
-            srcDir "sources/" + config_mod.name + "/src/main/resources"
+            srcDir "\\\\LATMODPC\\ProjMCP/LatCoreMC/src/main/resources"
         }
     }
 }

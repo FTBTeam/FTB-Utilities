@@ -59,6 +59,9 @@ public class LMGamerules
 		}
 		
 		public String toString()
+		{ return value + ""; }
+		
+		public String toStringID()
 		{ return id.toString() + ":" + value; }
 	}
 	

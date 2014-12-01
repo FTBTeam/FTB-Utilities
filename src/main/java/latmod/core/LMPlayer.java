@@ -8,7 +8,6 @@ import net.minecraft.entity.player.*;
 import net.minecraft.nbt.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.relauncher.Side;
@@ -50,6 +49,9 @@ public class LMPlayer implements Comparable<LMPlayer>
 		}
 		
 		customName = s;
+		
+		EntityPlayer ep = getPlayer();
+		if(ep != null) ep.refreshDisplayName();
 	}
 	
 	public String getDisplayName()
@@ -76,17 +78,17 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public boolean isOnline()
 	{ return getPlayer() != null; }
 	
-	public void sendUpdate(World w, String channel, boolean clientUpdate)
+	public void sendUpdate(String channel, boolean clientUpdate)
 	{
 		if(LatCoreMC.isServer())
 		{
-			new DataChangedEvent(this, Side.SERVER, channel, w).post();
+			new DataChangedEvent(this, Side.SERVER, channel).post();
 			if(clientUpdate) LMNetHandler.INSTANCE.sendToAll(new MessageUpdatePlayerData(this, channel));
 		}
 	}
 	
-	public void sendUpdate(World w, String channel)
-	{ sendUpdate(w, channel, true); }
+	public void sendUpdate(String channel)
+	{ sendUpdate(channel, true); }
 	
 	// NBT reading / writing
 	
@@ -191,10 +193,9 @@ public class LMPlayer implements Comparable<LMPlayer>
 	private static class LMPlayerEvent extends Event
 	{
 		public final LMPlayer player;
-		public final World world;
 		
-		public LMPlayerEvent(LMPlayer p, World w)
-		{ player = p; world = w; }
+		public LMPlayerEvent(LMPlayer p)
+		{ player = p; }
 		
 		public void post()
 		{ MinecraftForge.EVENT_BUS.post(this); }
@@ -205,8 +206,8 @@ public class LMPlayer implements Comparable<LMPlayer>
 		public final Side side;
 		public final String channel;
 		
-		public DataChangedEvent(LMPlayer p, Side s, String c, World w)
-		{ super(p, w); side = s; channel = c; }
+		public DataChangedEvent(LMPlayer p, Side s, String c)
+		{ super(p); side = s; channel = c; }
 		
 		public boolean isChannel(String s)
 		{ return channel != null && channel.equals(s); }
@@ -214,14 +215,14 @@ public class LMPlayer implements Comparable<LMPlayer>
 	
 	public static class DataLoadedEvent extends LMPlayerEvent
 	{
-		public DataLoadedEvent(LMPlayer p, World w)
-		{ super(p, w); }
+		public DataLoadedEvent(LMPlayer p)
+		{ super(p); }
 	}
 	
 	public static class DataSavedEvent extends LMPlayerEvent
 	{
-		public DataSavedEvent(LMPlayer p, World w)
-		{ super(p, w); }
+		public DataSavedEvent(LMPlayer p)
+		{ super(p); }
 	}
 	
 	public static class LMPlayerLoggedInEvent extends LMPlayerEvent
@@ -230,7 +231,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 		public final boolean firstTime;
 		
 		public LMPlayerLoggedInEvent(LMPlayer p, EntityPlayer ep, boolean b)
-		{ super(p, ep.worldObj); entityPlayer = ep; firstTime = b; }
+		{ super(p); entityPlayer = ep; firstTime = b; }
 	}
 	
 	public static String[] getAllDisplayNames(boolean online)

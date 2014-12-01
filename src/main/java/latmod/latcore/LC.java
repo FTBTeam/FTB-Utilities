@@ -72,10 +72,7 @@ public class LC
 	{
 		regCmd(e, new CmdLatCore(LC.mod.config().commands.latcore));
 		regCmd(e, new CmdLatCoreAdmin(LC.mod.config().commands.latcoreadmin));
-		regCmd(e, new CmdSetNick(LC.mod.config().commands.setnick));
-		regCmd(e, new CmdRealNick(LC.mod.config().commands.setnick));
-		regCmd(e, new CmdSetSkin(LC.mod.config().commands.setskin));
-		regCmd(e, new CmdSetCape(LC.mod.config().commands.setcape));
+		regCmd(e, new CmdRealNick(LC.mod.config().commands.realnick));
 		regCmd(e, new CmdTpOverride(LC.mod.config().commands.teleport));
 		regCmd(e, new CmdListOverride(LC.mod.config().commands.list));
 	}

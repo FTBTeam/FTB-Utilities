@@ -16,16 +16,15 @@ public class LC
 	@Mod.Instance(LC.MOD_ID)
 	public static LC inst;
 	
-	@SidedProxy(clientSide = "latmod.latcore.LCClient", serverSide = "latmod.latcore.LCCommon")
+	@SidedProxy(clientSide = "latmod.latcore.client.LCClient", serverSide = "latmod.latcore.LCCommon")
 	public static LCCommon proxy;
 	
 	public static LMMod<LCConfig, LMRecipes> mod;
 	
 	public LC()
 	{
-		LCEventHandler e = new LCEventHandler();
-		MinecraftForge.EVENT_BUS.register(e);
-		FMLCommonHandler.instance().bus().register(e);
+		MinecraftForge.EVENT_BUS.register(LCEventHandler.instance);
+		FMLCommonHandler.instance().bus().register(LCEventHandler.instance);
 	}
 	
 	@Mod.EventHandler
@@ -44,8 +43,6 @@ public class LC
 		mod.onPostLoaded();
 		
 		LatCoreMC.addGuiHandler(this, proxy);
-		
-		ThreadCheckTeamLatMod.init();
 		
 		proxy.preInit(e);
 	}

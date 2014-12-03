@@ -3,6 +3,7 @@ package latmod.core.cmd;
 import java.util.*;
 
 import latmod.core.*;
+import latmod.core.util.LatCore;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
@@ -26,15 +27,25 @@ public abstract class CommandLM extends CommandBase
 	public final void processCommand(ICommandSender ics, String[] args)
 	{
 		if(args == null) args = new String[0];
+		
+		String[] scmds = getSubcommands(ics);
+		if(scmds != null && args.length == 0)
+		{ LatCoreMC.printChat(ics, "Subcommands: " + LatCore.strip(scmds)); return; }
+		
 		String s = onCommand(ics, args);
 		if(s != null) LatCoreMC.printChat(ics, EnumChatFormatting.RED + s);
 		onPostCommand(ics, args);
 	}
 	
-	public void printHelp(ICommandSender ics)
-	{ LatCoreMC.printChat(ics, getCommandUsage(ics)); }
-	
+	public abstract String[] getSubcommands(ICommandSender ics);
+	public abstract void printHelp(ICommandSender ics);
 	public abstract String onCommand(ICommandSender ics, String[] args);
+	
+	public String retHelp(ICommandSender ics, String cmd)
+	{ return "Invalid command syntax!"; }
+	
+	public final void printHelpLine(ICommandSender ics, String args)
+	{ LatCoreMC.printChat(ics, "/" + commandName + (args != null && args.length() > 0 ? args : "")); }
 	
 	public void onPostCommand(ICommandSender ics, String[] args) {}
 	

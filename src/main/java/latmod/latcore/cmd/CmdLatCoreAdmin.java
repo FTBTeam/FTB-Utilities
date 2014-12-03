@@ -13,12 +13,16 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 	public CmdLatCoreAdmin(int e)
 	{ super("latcoreadmin", e); }
 	
-	public String getCommandUsage(ICommandSender ics)
-	{ return "/latcoreadmin <subcommand>"; }
+	public void printHelp(ICommandSender ics)
+	{
+	}
+	
+	public String[] getSubcommands(ICommandSender ics)
+	{ return new String[] { "killblock", "gamerule", "player" }; }
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
-		if(i == 0) return new String[] { "killblock", "gamerule", "player" };
+		if(i == 0) return getSubcommands(ics);
 		
 		if(i == 2 && isArg(args, 0, "player"))
 			return new String[] { "uuid", "delete", "saveinv", "loadinv", "nick", "skin", "cape" };

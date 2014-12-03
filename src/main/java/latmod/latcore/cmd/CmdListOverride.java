@@ -10,6 +10,14 @@ public class CmdListOverride extends CommandBaseLC
 	public CmdListOverride(int e)
 	{ super("list", e); }
 	
+	public String[] getSubcommands(ICommandSender ics)
+	{ return null; }
+	
+	public void printHelp(ICommandSender ics)
+	{
+		printHelpLine(ics, "[uuid]");
+	}
+	
 	public String onCommand(ICommandSender ics, String[] args)
 	{
 		LatCoreMC.printChat(ics, "Players currently online: [ " + MinecraftServer.getServer().getConfigurationManager().playerEntityList.size() + " ]");

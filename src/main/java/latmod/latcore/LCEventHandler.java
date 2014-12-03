@@ -3,73 +3,26 @@ import java.io.*;
 import java.util.UUID;
 
 import latmod.core.*;
-import latmod.core.client.LatCoreMCClient;
-import latmod.core.event.CustomActionEvent;
 import latmod.core.net.*;
-import latmod.core.tile.*;
-import latmod.core.util.*;
+import latmod.core.tile.IWailaTile;
+import latmod.core.util.LatCore;
 import latmod.core.waila.*;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.*;
 import net.minecraft.nbt.*;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.*;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.IFluidHandler;
 import cpw.mods.fml.common.eventhandler.*;
-import cpw.mods.fml.relauncher.*;
 
 public class LCEventHandler
 {
 	public static final String ACTION_PLAYER_JOINED = "PlayerJoined";
 	public static final String ACTION_OPEN_URL = "OpenURL";
 	
-	@SubscribeEvent
-	public void onTooltip(ItemTooltipEvent e)
-	{
-		if(e.itemStack == null || e.itemStack.getItem() == null) return;
-		
-		Item item = e.itemStack.getItem();
-		
-		if(e.showAdvancedItemTooltips && e.itemStack != null && e.itemStack.getItem() != null)
-		{
-			if(LC.mod.config().general.addOreNames)
-			{
-				FastList<String> ores = ODItems.getOreNames(e.itemStack);
-				
-				if(ores != null && !ores.isEmpty())
-				{
-					e.toolTip.add("Ore Dictionary names:");
-					for(String or : ores)
-					e.toolTip.add("> " + or);
-				}
-			}
-			
-			if(LC.mod.config().general.addRegistryNames)
-			{
-				e.toolTip.add(LatCoreMC.getRegName(e.itemStack));
-			}
-			
-			if(LC.mod.config().general.addFluidContainerNames)
-			{
-				FluidStack fs = LatCoreMC.getFluid(e.itemStack);
-				
-				if(fs != null && fs.amount > 0)
-				{
-					e.toolTip.add("Stored FluidID:");
-					e.toolTip.add(FluidRegistry.getFluidName(fs.fluidID));
-				}
-			}
-		}
-		
-		if(item instanceof IPaintable.IPainterItem)
-		{
-			ItemStack paint = ((IPaintable.IPainterItem)item).getPaintItem(e.itemStack);
-			if(paint != null) e.toolTip.add("Paint: " + paint.getDisplayName());
-		}
-	}
+	public static final LCEventHandler instance = new LCEventHandler();
+	
+	public static final UUID UUID_LatvianModder = UUID.fromString("5afb9a5b-207d-480e-8879-67bc848f9a8f");
 	
 	@SubscribeEvent
 	public void playerJoined(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e)
@@ -93,17 +46,11 @@ public class LCEventHandler
 		{
 			p.customData().setBoolean("IsOld", true);
 			
-			if(p.uuid.equals(LatCoreMC.latvianModderUUID))
-			{
+			if(p.uuid.equals(UUID_LatvianModder))
 				p.setCustomName("LatvianModder");
-				e.player.refreshDisplayName();
-			}
 			
 			first = true;
 		}
-		
-		if(EnumLatModTeam.TEAM.uuids.contains(e.player.getUniqueID()))
-			LatCoreMC.printChat(e.player, "Hello, Team LatMod member!");
 		
 		if(LC.mod.config().general.checkUpdates)
 			ThreadCheckVersions.init(e.player, false);
@@ -249,32 +196,5 @@ public class LCEventHandler
 		LMPlayer p = LMPlayer.getPlayer(e.entityPlayer);
 		if(p != null && p.hasCustomName())
 			e.displayname = p.getDisplayName();
-	}
-	
-	@SideOnly(Side.CLIENT)
-	@SubscribeEvent(priority = EventPriority.HIGH)
-	public void preTexturesLoaded(TextureStitchEvent.Pre e)
-	{
-		if(e.map.getTextureType() == 0)
-			LatCoreMCClient.blockNullIcon = e.map.registerIcon(LC.mod.assets + "nullIcon");
-	}
-	
-	@SideOnly(Side.CLIENT)
-	@SubscribeEvent
-	public void playerJoinedClient(CustomActionEvent e)
-	{
-		if(e.action.equals(ACTION_PLAYER_JOINED))
-		{
-			LMPlayer p = LMPlayer.getPlayer(UUID.fromString(e.extraData.getString("UUID")));
-			if(p != null)
-			{
-				EntityPlayer ep = p.getPlayer();
-				if(ep != null) LC.proxy.onClientPlayerJoined(ep);
-			}
-		}
-		else if(e.action.equals(ACTION_OPEN_URL))
-		{
-			LatCore.openURL(e.extraData.getString("URL"));
-		}
 	}
 }

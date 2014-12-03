@@ -13,12 +13,19 @@ public class CmdLatCore extends CommandBaseLC
 	public CmdLatCore(int e)
 	{ super("latcore", e); }
 	
-	public String getCommandUsage(ICommandSender ics)
-	{ return "/latcore <subcommand>"; }
+	public void printHelp(ICommandSender ics)
+	{
+		printHelpLine(ics, "<versions>");
+		printHelpLine(ics, "<friend | enemy> <add | rem> <player>");
+		printHelpLine(ics, "<friend | enemy> <list | clear>");
+	}
+	
+	public String[] getSubcommands(ICommandSender ics)
+	{ return new String[] { "versions", "friend", "enemy" }; }
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
-		if(i == 0) return new String[] { "versions", "friend", "enemy" };
+		if(i == 0) return getSubcommands(ics);
 		if(i == 1 && (isArg(args, 0, "friend") || isArg(args, 0, "enemy"))) return new String[] { "add", "rem", "list", "clear" };
 		return super.getTabStrings(ics, args, i);
 	}

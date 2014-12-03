@@ -14,11 +14,13 @@ public class CmdTpOverride extends CommandBaseLC // CommandTeleport
 	public Boolean isUsername(String[] args, int i)
 	{ return (i == 0 || i == 1) ? true : null; }
 	
+	public String[] getSubcommands(ICommandSender ics)
+	{ return null; }
+	
 	public void printHelp(ICommandSender ics)
 	{
-		//LatCoreMC.printChat(ics, "/tp [who] <dim>");
-		LatCoreMC.printChat(ics, "/tp [who] <to>");
-		LatCoreMC.printChat(ics, "/tp [who] <x> <y> <z>");
+		printHelpLine(ics, "[who] <to>");
+		printHelpLine(ics, "[who] <x> <y> <z>");
 	}
 	
 	public String onCommand(ICommandSender ics, String[] args)

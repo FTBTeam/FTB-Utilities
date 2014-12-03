@@ -172,7 +172,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 	{
 		if(o == null) return false;
 		if(o == this) return true;
-		if(o instanceof String) return ((String)o).equalsIgnoreCase(LatCoreMC.removeFormatting(getDisplayName())) || o.equals(username);
+		if(o instanceof String) return o.equals(username) || ((String)o).equalsIgnoreCase(LatCoreMC.removeFormatting(getDisplayName()));
 		if(o instanceof UUID) return ((UUID)o).equals(uuid);
 		if(o instanceof EntityPlayer) return equals(((EntityPlayer)o).getUniqueID());
 		if(o instanceof LMPlayer) return equals(((LMPlayer)o).uuid);

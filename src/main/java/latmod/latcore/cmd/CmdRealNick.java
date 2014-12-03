@@ -9,8 +9,13 @@ public class CmdRealNick extends CommandBaseLC
 	public CmdRealNick(int e)
 	{ super("realnick", e); }
 	
-	public String getCommandUsage(ICommandSender ics)
-	{ return "/realnick <player>"; }
+	public String[] getSubcommands(ICommandSender ics)
+	{ return null; }
+	
+	public void printHelp(ICommandSender ics)
+	{
+		printHelpLine(ics, "<player>");
+	}
 	
 	public String onCommand(ICommandSender ics, String[] args)
 	{

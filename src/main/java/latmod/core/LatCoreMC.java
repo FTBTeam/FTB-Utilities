@@ -1,6 +1,5 @@
 package latmod.core;
 import java.io.File;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 import latmod.core.net.*;
@@ -52,8 +51,6 @@ public class LatCoreMC
 	
 	public static final String FORMATTING = "\u00a7";
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
-	
-	public static final UUID latvianModderUUID = UUID.fromString("5afb9a5b-207d-480e-8879-67bc848f9a8f");
 	
 	public static final int getRotYaw(int rot)
 	{

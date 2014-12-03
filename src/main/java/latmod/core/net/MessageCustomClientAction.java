@@ -1,6 +1,5 @@
 package latmod.core.net;
 import io.netty.buffer.ByteBuf;
-import latmod.core.event.CustomActionEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.simpleimpl.*;

@@ -43,6 +43,8 @@ public class LCConfig extends LMConfig
 		public int realnick;
 		public int teleport;
 		public int list;
+		public int gamemode;
+		public int gamerule;
 		
 		public Commands()
 		{
@@ -57,6 +59,8 @@ public class LCConfig extends LMConfig
 			realnick = getInt("realnick", 1, 0, 2);
 			teleport = getInt("teleport", 2, 0, 2);
 			list = getInt("list", 1, 0, 2);
+			gamemode = getInt("gamemode", 2, 0, 2);
+			gamerule = getInt("gamerule", 2, 0, 2);
 		}
 	}
 }

@@ -1,6 +1,8 @@
 package latmod.core.util;
 import java.util.Random;
 
+import net.minecraft.util.AxisAlignedBB;
+
 /** Made by LatvianModder */
 public class MathHelper // Converter
 {
@@ -164,4 +166,7 @@ public class MathHelper // Converter
 			s = s.substring(0, s.length() - 2);
 		return s;
 	}
+	
+	public static AxisAlignedBB getBox(double cx, double y0, double cz, double w, double y1, double d)
+	{ return AxisAlignedBB.getBoundingBox(cx - w / 2D, y0, cz - d / 2D, cx + w / 2D, y1, cz + d / 2D); }
 }

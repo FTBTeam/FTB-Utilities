@@ -72,6 +72,8 @@ public class LC
 		regCmd(e, new CmdRealNick(LC.mod.config().commands.realnick));
 		regCmd(e, new CmdTpOverride(LC.mod.config().commands.teleport));
 		regCmd(e, new CmdListOverride(LC.mod.config().commands.list));
+		e.registerServerCommand(new CmdGamemodeOverride(LC.mod.config().commands.gamemode));
+		e.registerServerCommand(new CmdGameruleOverride(LC.mod.config().commands.gamerule));
 	}
 	
 	private static void regCmd(FMLServerStartingEvent e, CommandBaseLC c)

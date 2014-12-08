@@ -2,7 +2,7 @@ package latmod.core.waila;
 
 import java.util.List;
 
-import latmod.latcore.LC;
+import latmod.latcore.*;
 import mcp.mobius.waila.api.*;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
@@ -20,30 +20,33 @@ public class WailaInvHandler extends BasicWailaHandler
 	
 	public List<String> getWailaBody(ItemStack is, List<String> l, IWailaDataAccessor data, IWailaConfigHandler config)
 	{
-		IInventory inv = (IInventory)data.getTileEntity();
-		
-		if(!(inv.getClass().equals(TileEntityChest.class)) && !(inv instanceof ISidedInventory) && config.getConfig(CONFIG_INV))
+		if(LCConfig.General.addWailaInv && config.getConfig(CONFIG_INV))
 		{
-			int size = inv.getSizeInventory();
+			IInventory inv = (IInventory)data.getTileEntity();
 			
-			if(size > 0)
+			if(!(inv.getClass().equals(TileEntityChest.class)) && !(inv instanceof ISidedInventory))
 			{
-				int items = 0;
-				int slots = 0;
+				int size = inv.getSizeInventory();
 				
-				for(int i = 0; i < size; i++)
+				if(size > 0)
 				{
-					ItemStack item = inv.getStackInSlot(i);
+					int items = 0;
+					int slots = 0;
 					
-					if(item != null && item.stackSize > 0)
+					for(int i = 0; i < size; i++)
 					{
-						slots++;
-						items += item.stackSize;
+						ItemStack item = inv.getStackInSlot(i);
+						
+						if(item != null && item.stackSize > 0)
+						{
+							slots++;
+							items += item.stackSize;
+						}
 					}
+					
+					l.add("Items Stored: " + items + " / " + (size * inv.getInventoryStackLimit()));
+					l.add("Slots Used: " + slots + " / " + size);
 				}
-				
-				l.add("Items Stored: " + items + " / " + (size * inv.getInventoryStackLimit()));
-				l.add("Slots Used: " + slots + " / " + size);
 			}
 		}
 		

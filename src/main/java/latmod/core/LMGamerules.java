@@ -90,7 +90,7 @@ public class LMGamerules
 				rules.put(id, registredRules.values.get(i));
 		}
 		
-		LatCoreMC.logger.info("Loaded LMGamerules: " + rules.values);
+		if(LatCoreMC.isDevEnv) LatCoreMC.logger.info("LMGamerules: " + rules.values);
 	}
 	
 	public static void writeToNBT(NBTTagCompound tag, String s)

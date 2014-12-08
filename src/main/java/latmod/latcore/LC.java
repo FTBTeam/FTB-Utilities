@@ -60,6 +60,7 @@ public class LC
 	{
 		ODItems.postInit();
 		mod.loadRecipes();
+		LCConfig.Recipes.loadRecipes();
 		proxy.postInit(e);
 	}
 	

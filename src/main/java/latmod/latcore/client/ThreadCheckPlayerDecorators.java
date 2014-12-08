@@ -38,26 +38,23 @@ public class ThreadCheckPlayerDecorators implements Runnable
 				
 				for(int i = 0; i < al.size(); i++)
 				{
-					String line = al.get(i);
-					
-					if(!line.startsWith("#"))
+					String[] s = al.get(i).split(": ");
+					if(s != null && s.length == 2)
 					{
-						String[] s = line.split(": ");
-						if(s != null && s.length == 2)
+						FastList<PlayerDecorator> al1 = new FastList<PlayerDecorator>();
+						String[] s1 = LatCore.split(s[1], ", ");
+						
+						for(int j = 0; j < s1.length; j++)
 						{
-							FastList<PlayerDecorator> al1 = new FastList<PlayerDecorator>();
-							String[] s1 = LatCore.split(s[1], ", ");
-							
-							for(int j = 0; j < s1.length; j++)
-							{
-								PlayerDecorator p = PlayerDecorator.map.get(s1[j]);
-								if(p != null) al1.add(p);
-							}
-							
-							if(al1.size() > 0) LCClientEventHandler.instance.playerDecorators.put(s[0], al1);
+							PlayerDecorator p = PlayerDecorator.map.get(s1[j]);
+							if(p != null) al1.add(p);
 						}
+						
+						if(al1.size() > 0) LCClientEventHandler.instance.playerDecorators.put(s[0], al1);
 					}
 				}
+				
+				if(LatCoreMC.isDevEnv) LatCoreMC.logger.info("Player Decorators: " + LCClientEventHandler.instance.playerDecorators + " from file " + raw);
 			}
 			else LatCoreMC.logger.warn("Player Decorators failed to load!");
 		}

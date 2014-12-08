@@ -11,7 +11,7 @@ public abstract class PlayerDecorator
 	
 	public static void init()
 	{
-		register(new PlayerDecorator("latmod"){});
+		register(new PDLatMod());
 	}
 	
 	private static void register(PlayerDecorator p)
@@ -30,7 +30,5 @@ public abstract class PlayerDecorator
 	public String toString()
 	{ return ID; }
 
-	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
-	{
-	}
+	public abstract void onPlayerRender(RenderPlayerEvent.Specials.Post e);
 }

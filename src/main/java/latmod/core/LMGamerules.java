@@ -59,10 +59,10 @@ public class LMGamerules
 		}
 		
 		public String toString()
-		{ return value + ""; }
+		{ return id.toString() + ":" + value; }
 		
 		public String toStringID()
-		{ return id.toString() + ":" + value; }
+		{ return value + ""; }
 	}
 	
 	public static void readFromNBT(NBTTagCompound tag, String s)

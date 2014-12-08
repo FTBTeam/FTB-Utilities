@@ -30,7 +30,7 @@ public class LCClientEventHandler
 		
 		if(e.showAdvancedItemTooltips && e.itemStack != null && e.itemStack.getItem() != null)
 		{
-			if(LC.mod.config().general.addOreNames)
+			if(LCConfig.Client.addOreNames)
 			{
 				FastList<String> ores = ODItems.getOreNames(e.itemStack);
 				
@@ -42,12 +42,12 @@ public class LCClientEventHandler
 				}
 			}
 			
-			if(LC.mod.config().general.addRegistryNames)
+			if(LCConfig.Client.addRegistryNames)
 			{
 				e.toolTip.add(LatCoreMC.getRegName(e.itemStack));
 			}
 			
-			if(LC.mod.config().general.addFluidContainerNames)
+			if(LCConfig.Client.addFluidContainerNames)
 			{
 				FluidStack fs = LatCoreMC.getFluid(e.itemStack);
 				

@@ -13,7 +13,7 @@ import org.apache.logging.log4j.*;
 
 import cpw.mods.fml.relauncher.*;
 
-public class LMMod<C extends LMConfig, R extends LMRecipes>
+public class LMMod
 {
 	public final String modID;
 	public final String assets;
@@ -23,9 +23,8 @@ public class LMMod<C extends LMConfig, R extends LMRecipes>
 	
 	public Logger logger;
 	public LMRecipes recipes;
-	private LMConfig config;
 	
-	public LMMod(String s, C c, R r)
+	public LMMod(String s, LMConfig c, LMRecipes r)
 	{
 		modID = s;
 		
@@ -37,15 +36,8 @@ public class LMMod<C extends LMConfig, R extends LMRecipes>
 		logger = LogManager.getLogger(modID);
 		logger.info("Loading mod: " + modID);
 		
-		config = c;
-		recipes = r;
+		recipes = (r == null) ? new LMRecipes() : r;
 	}
-	
-	@SuppressWarnings("unchecked")
-	public R recipes() { return (R) recipes; }
-	
-	@SuppressWarnings("unchecked")
-	public C config() { return (C) config; }
 	
 	public ResourceLocation getLocation(String s)
 	{ return new ResourceLocation(assets + s); }

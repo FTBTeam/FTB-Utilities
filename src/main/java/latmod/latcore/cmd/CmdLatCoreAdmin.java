@@ -157,7 +157,9 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				}
 				else
 				{
-					return FINE + "LMGamrule '" + id + "' is '" + LMGamerules.get(id) + "'";
+					LMGamerules.Rule r = LMGamerules.get(id);
+					if(r == null) return FINE + "LMGamerule '" + id + "' does not exist";
+					return FINE + "LMGamrule '" + id + "' is '" + r.value + "'";
 				}
 			}
 		}

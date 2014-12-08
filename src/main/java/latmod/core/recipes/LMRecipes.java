@@ -1,7 +1,5 @@
 package latmod.core.recipes;
-import java.util.Map;
-
-import latmod.core.util.*;
+import latmod.core.util.FastList;
 import net.minecraft.block.Block;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.*;
@@ -12,41 +10,17 @@ public class LMRecipes
 {
 	public boolean enableOreRecipes = true;
 	
-	public final boolean storeRecipes;
-	public FastList<IRecipe> craftingRecipes;
-	public FastMap<ItemStack, ItemStack> furnaceRecipes;
 	public FastList<CustomRecipes<?>> customRecipes;
 	
-	public LMRecipes(boolean b)
-	{
-		storeRecipes = b;
-		craftingRecipes = new FastList<IRecipe>();
-		furnaceRecipes = new FastMap<ItemStack, ItemStack>();
-		customRecipes = new FastList<CustomRecipes<?>>();
-	}
-	
 	public LMRecipes()
-	{ this(false); }
+	{
+	}
 	
 	public void addCustomRecipes(CustomRecipes<?> c)
 	{ customRecipes.add(c); }
 	
 	public static ItemStack size(ItemStack is, int s)
 	{ ItemStack is1 = is.copy(); is1.stackSize = s; return is1; }
-	
-	@SuppressWarnings("all")
-	public void clearRecipes()
-	{
-		CraftingManager.getInstance().getRecipeList().removeAll(craftingRecipes);
-		craftingRecipes.clear();
-		
-		Map m = FurnaceRecipes.smelting().getSmeltingList();
-		for(ItemStack is : furnaceRecipes.keys) m.remove(is);
-		furnaceRecipes.clear();
-		
-		for(CustomRecipes<?> c : customRecipes)
-		c.clearMap();
-	}
 	
 	@SuppressWarnings("unchecked")
 	public IRecipe addIRecipe(IRecipe r)
@@ -58,8 +32,6 @@ public class LMRecipes
 		
 		if(!enableOreRecipes) r = GameRegistry.addShapedRecipe(out, in);
 		else r = addIRecipe(new ShapedOreRecipe(out, in));
-		
-		if(storeRecipes) craftingRecipes.add(r);
 		
 		return r;
 	}
@@ -96,8 +68,6 @@ public class LMRecipes
 		}
 		else r = addIRecipe(new ShapelessOreRecipe(out, in));
 		
-		if(storeRecipes) craftingRecipes.add(r);
-		
 		return r;
 	}
 	
@@ -113,10 +83,7 @@ public class LMRecipes
 	}
 	
 	public void addSmelting(ItemStack in, ItemStack out, float xp)
-	{
-		if(storeRecipes) furnaceRecipes.put(in, out);
-		FurnaceRecipes.smelting().func_151394_a(in, out, xp);
-	}
+	{ FurnaceRecipes.smelting().func_151394_a(in, out, xp); }
 	
 	public void addSmelting(ItemStack in, ItemStack out)
 	{ addSmelting(in, out, 0F); }

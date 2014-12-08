@@ -1,7 +1,6 @@
 package latmod.latcore;
 import latmod.core.*;
 import latmod.core.net.LMNetHandler;
-import latmod.core.recipes.LMRecipes;
 import latmod.latcore.cmd.*;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.*;
@@ -19,7 +18,7 @@ public class LC
 	@SidedProxy(clientSide = "latmod.latcore.client.LCClient", serverSide = "latmod.latcore.LCCommon")
 	public static LCCommon proxy;
 	
-	public static LMMod<LCConfig, LMRecipes> mod;
+	public static LMMod mod;
 	
 	public LC()
 	{
@@ -35,7 +34,7 @@ public class LC
 		else
 			LatCoreMC.logger.info("Loading LatCoreMC, Build #" + VERSION);
 		
-		mod = new LMMod<LCConfig, LMRecipes>(MOD_ID, new LCConfig(e), new LMRecipes(false));
+		mod = new LMMod(MOD_ID, new LCConfig(e), null);
 		mod.logger = LatCoreMC.logger;
 		
 		ODItems.preInit();
@@ -67,13 +66,13 @@ public class LC
 	@Mod.EventHandler
 	public void registerCommands(FMLServerStartingEvent e)
 	{
-		regCmd(e, new CmdLatCore(LC.mod.config().commands.latcore));
-		regCmd(e, new CmdLatCoreAdmin(LC.mod.config().commands.latcoreadmin));
-		regCmd(e, new CmdRealNick(LC.mod.config().commands.realnick));
-		regCmd(e, new CmdTpOverride(LC.mod.config().commands.teleport));
-		regCmd(e, new CmdListOverride(LC.mod.config().commands.list));
-		e.registerServerCommand(new CmdGamemodeOverride(LC.mod.config().commands.gamemode));
-		e.registerServerCommand(new CmdGameruleOverride(LC.mod.config().commands.gamerule));
+		regCmd(e, new CmdLatCore(LCConfig.Commands.latcore));
+		regCmd(e, new CmdLatCoreAdmin(LCConfig.Commands.latcoreadmin));
+		regCmd(e, new CmdRealNick(LCConfig.Commands.realnick));
+		regCmd(e, new CmdTpOverride(LCConfig.Commands.teleport));
+		regCmd(e, new CmdListOverride(LCConfig.Commands.list));
+		e.registerServerCommand(new CmdGamemodeOverride(LCConfig.Commands.gamemode));
+		e.registerServerCommand(new CmdGameruleOverride(LCConfig.Commands.gamerule));
 	}
 	
 	private static void regCmd(FMLServerStartingEvent e, CommandBaseLC c)

@@ -52,7 +52,7 @@ public class LCEventHandler
 			first = true;
 		}
 		
-		if(LC.mod.config().general.checkUpdates)
+		if(LCConfig.General.checkUpdates)
 			ThreadCheckVersions.init(e.player, false);
 		
 		new LMPlayer.LMPlayerLoggedInEvent(p, e.player, first).post();

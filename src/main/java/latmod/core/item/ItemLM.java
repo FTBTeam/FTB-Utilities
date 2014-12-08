@@ -1,8 +1,7 @@
 package latmod.core.item;
 import java.util.List;
 
-import latmod.core.*;
-import latmod.core.recipes.LMRecipes;
+import latmod.core.LMMod;
 import latmod.core.util.FastList;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -15,7 +14,7 @@ public abstract class ItemLM extends Item implements IItemLM
 {
 	public final String itemName;
 	public final FastList<ItemStack> itemsAdded;
-	public final LMMod<? extends LMConfig, ? extends LMRecipes> mod;
+	public final LMMod mod;
 	
 	public ItemLM(String s)
 	{
@@ -26,7 +25,7 @@ public abstract class ItemLM extends Item implements IItemLM
 		itemsAdded = new FastList<ItemStack>();
 	}
 	
-	public abstract LMMod<? extends LMConfig, ? extends LMRecipes> getMod();
+	public abstract LMMod getMod();
 	
 	@SuppressWarnings("unchecked")
 	public final <E> E register() { mod.addItem(this); return (E)this; }

@@ -1,5 +1,6 @@
 package latmod.core;
 import latmod.core.util.FastList;
+import latmod.latcore.*;
 import net.minecraft.init.*;
 import net.minecraft.item.*;
 import net.minecraftforge.oredict.OreDictionary;
@@ -98,6 +99,17 @@ public class ODItems
 		
 		Item wrench = LatCoreMC.getItemFromRegName("ThermalExpansion:wrench");
 		if(wrench != null) wrench.setHarvestLevel("wrench", 0);
+		
+		if(LCConfig.Recipes.smeltFleshToLeather)
+			LC.mod.recipes.addSmelting(new ItemStack(Items.rotten_flesh), new ItemStack(Items.leather));
+		
+		if(LCConfig.Recipes.craftWoolWithDye)
+		{
+			for(int i = 0; i < 16; i++)
+				LC.mod.recipes.addRecipe(new ItemStack(Blocks.wool, 1, i), "WWW", "WDW", "WWW",
+						'W', new ItemStack(Blocks.wool, 1, LatCoreMC.ANY),
+						'D', EnumDyeColor.VALUES[i].dyeName);
+		}
 	}
 	
 	public static boolean hasFMP()

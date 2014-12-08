@@ -5,62 +5,78 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 public class LCConfig extends LMConfig
 {
-	public General general;
-	public Commands commands;
-	
 	public LCConfig(FMLPreInitializationEvent e)
 	{
 		super(e, "/LatMod/LatCoreMC.cfg");
 		
-		general = new General();
-		commands = new Commands();
+		General.load(get("general"));
+		Client.load(get("client"));
+		Commands.load(get("commands"));
+		Recipes.load(get("recipes"));
 		
 		save();
 	}
 	
-	public class General extends Category
+	public static class General
 	{
-		public boolean addOreNames;
-		public boolean addRegistryNames;
-		public boolean addFluidContainerNames;
-		public boolean checkUpdates;
+		public static boolean checkUpdates;
 		
-		public General()
+		public static void load(Category c)
 		{
-			super("general");
-			
-			addOreNames = getBool("addOreNames", false);
-			addRegistryNames = getBool("addRegistryNames", false);
-			addFluidContainerNames = getBool("addFluidContainerNames", false);
-			checkUpdates = getBool("checkUpdates", true);
+			checkUpdates = c.getBool("checkUpdates", true);
 		}
 	}
 	
-	public class Commands extends Category
+	public static class Client
 	{
-		public int latcore;
-		public int latcoreadmin;
-		public int realnick;
-		public int teleport;
-		public int list;
-		public int gamemode;
-		public int gamerule;
+		public static boolean addOreNames;
+		public static boolean addRegistryNames;
+		public static boolean addFluidContainerNames;
 		
-		public Commands()
+		public static void load(Category c)
 		{
-			super("commands");
-			setCategoryDesc(
+			addOreNames = c.getBool("addOreNames", false);
+			addRegistryNames = c.getBool("addRegistryNames", false);
+			addFluidContainerNames = c.getBool("addFluidContainerNames", false);
+		}
+	}
+	
+	public static class Commands
+	{
+		public static int latcore;
+		public static int latcoreadmin;
+		public static int realnick;
+		public static int teleport;
+		public static int list;
+		public static int gamemode;
+		public static int gamerule;
+		
+		public static void load(Category c)
+		{
+			c.setCategoryDesc(
 					"0 - Command is disabled",
 					"1 - Command can be used by anyone",
 					"2 - Command can only be used by OPs");
 			
-			latcore = getInt("latcore", 1, 0, 2);
-			latcoreadmin = getInt("latcoreadmin", 2, 0, 2);
-			realnick = getInt("realnick", 1, 0, 2);
-			teleport = getInt("teleport", 2, 0, 2);
-			list = getInt("list", 1, 0, 2);
-			gamemode = getInt("gamemode", 2, 0, 2);
-			gamerule = getInt("gamerule", 2, 0, 2);
+			latcore = c.getInt("latcore", 1, 0, 2);
+			latcoreadmin = c.getInt("latcoreadmin", 2, 0, 2);
+			realnick = c.getInt("realnick", 1, 0, 2);
+			teleport = c.getInt("teleport", 2, 0, 2);
+			list = c.getInt("list", 1, 0, 2);
+			gamemode = c.getInt("gamemode", 2, 0, 2);
+			gamerule = c.getInt("gamerule", 2, 0, 2);
+		}
+	}
+	
+	public static class Recipes
+	{
+		public static boolean smeltFleshToLeather;
+		public static boolean craftWoolWithDye;
+		
+		public static void load(Category c)
+		{
+			smeltFleshToLeather = c.getBool("smeltFleshToLeather", true);
+			craftWoolWithDye = c.getBool("craftWoolWithDye", true);
 		}
 	}
 }

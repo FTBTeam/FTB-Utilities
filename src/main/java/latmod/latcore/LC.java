@@ -6,7 +6,7 @@ import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 
-@Mod(modid = LC.MOD_ID, name = "LatCoreMC", version = LC.VERSION, dependencies = "required-after:Forge@[10.13.2.1231,)")
+@Mod(modid = LC.MOD_ID, name = "LatCoreMC", version = LC.VERSION, dependencies = "required-after:Forge@[10.13.2.1231,)", guiFactory = "latmod.latcore.client.LCGuiFactory")
 public class LC
 {
 	protected static final String MOD_ID = "LatCoreMC";

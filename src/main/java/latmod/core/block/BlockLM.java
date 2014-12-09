@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.*;
 import net.minecraft.util.*;
 import net.minecraft.world.*;
@@ -205,4 +206,19 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	
 	public int onBlockPlaced(World w, EntityPlayer ep, MovingObjectPosition mop, int m)
 	{ return m; }
+
+	public boolean canPlace(World w, int x, int y, int z, int s, ItemStack is)
+	{
+		Block b = w.getBlock(x, y, z);
+		
+        if (b == Blocks.snow_layer && (w.getBlockMetadata(x, y, z) & 7) < 1) s = 1;
+        else if (b != Blocks.vine && b != Blocks.tallgrass && b != Blocks.deadbush && !b.isReplaceable(w, x, y, z))
+        {
+        	x += ForgeDirection.VALID_DIRECTIONS[s].offsetX;
+			y += ForgeDirection.VALID_DIRECTIONS[s].offsetY;
+			z += ForgeDirection.VALID_DIRECTIONS[s].offsetZ;
+        }
+        
+		return b.getMaterial() != Material.air && w.canPlaceEntityOnSide(b, x, y, z, false, s, null, is.copy());
+	}
 }

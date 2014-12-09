@@ -23,6 +23,7 @@ public class LMMod
 	
 	public Logger logger;
 	public LMRecipes recipes;
+	public LMConfig config;
 	
 	public LMMod(String s, LMConfig c, LMRecipes r)
 	{
@@ -36,6 +37,7 @@ public class LMMod
 		logger = LogManager.getLogger(modID);
 		logger.info("Loading mod: " + modID);
 		
+		config = c;
 		recipes = (r == null) ? new LMRecipes() : r;
 	}
 	

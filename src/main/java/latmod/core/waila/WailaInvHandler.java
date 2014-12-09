@@ -20,7 +20,7 @@ public class WailaInvHandler extends BasicWailaHandler
 	
 	public List<String> getWailaBody(ItemStack is, List<String> l, IWailaDataAccessor data, IWailaConfigHandler config)
 	{
-		if(LCConfig.General.addWailaInv && config.getConfig(CONFIG_INV))
+		if(config.getConfig(CONFIG_INV))
 		{
 			IInventory inv = (IInventory)data.getTileEntity();
 			

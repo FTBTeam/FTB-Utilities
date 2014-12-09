@@ -13,6 +13,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fluids.IFluidHandler;
+import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.*;
 
 public class LCEventHandler
@@ -74,8 +75,8 @@ public class LCEventHandler
 		e.register(IWailaTile.Body.class, new WailaLMTile(e, WailaType.BODY));
 		e.register(IWailaTile.Tail.class, new WailaLMTile(e, WailaType.TAIL));
 		
-		e.register(IInventory.class, new WailaInvHandler(e));
-		e.register(IFluidHandler.class, new WailaTankHandler(e));
+		if(LCConfig.General.addWailaInv) e.register(IInventory.class, new WailaInvHandler(e));
+		if(LCConfig.General.addWailaTanks) e.register(IFluidHandler.class, new WailaTankHandler(e));
 	}
 	
 	@SubscribeEvent
@@ -197,4 +198,8 @@ public class LCEventHandler
 		if(p != null && p.hasCustomName())
 			e.displayname = p.getDisplayName();
 	}
+	
+	@SubscribeEvent
+    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent e)
+    { if(e.modID.equalsIgnoreCase(LC.MOD_ID)) LCConfig.instance.load(); }
 }

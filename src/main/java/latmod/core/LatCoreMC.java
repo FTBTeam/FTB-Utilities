@@ -85,7 +85,7 @@ public class LatCoreMC
 					ep1.addChatMessage(msg);
 			}
 		}
-		else System.out.println(o);
+		else LatCoreMC.logger.info(o);
 	}
 	
 	public static final void printChat(ICommandSender ep, Object o)

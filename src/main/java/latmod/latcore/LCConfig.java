@@ -1,15 +1,23 @@
 package latmod.latcore;
 
+import latmod.core.*;
 import net.minecraft.init.*;
 import net.minecraft.item.ItemStack;
-import latmod.core.*;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 public class LCConfig extends LMConfig
 {
+	public static LCConfig instance;
+	
 	public LCConfig(FMLPreInitializationEvent e)
 	{
 		super(e, "/LatMod/LatCoreMC.cfg");
+		instance = this;
+		load();
+	}
+	
+	public void load()
+	{
 		General.load(get("general"));
 		Client.load(get("client"));
 		Commands.load(get("commands"));
@@ -36,14 +44,16 @@ public class LCConfig extends LMConfig
 		public static boolean addOreNames;
 		public static boolean addRegistryNames;
 		public static boolean addFluidContainerNames;
-		//public static boolean enablePlayerDecorators;
+		public static boolean enablePlayerDecorators;
+		public static boolean onlyAdvanced;
 		
 		public static void load(Category c)
 		{
-			addOreNames = c.getBool("addOreNames", false);
-			addRegistryNames = c.getBool("addRegistryNames", false);
-			addFluidContainerNames = c.getBool("addFluidContainerNames", false);
-			//enablePlayerDecorators = c.getBool("enablePlayerDecorators", true);
+			addOreNames = c.getBool("addOreNames", false); c.setName("addOreNames", "Add OreDictionary names");
+			addRegistryNames = c.getBool("addRegistryNames", false); c.setName("addRegistryNames", "Add Registry names");
+			addFluidContainerNames = c.getBool("addFluidContainerNames", false); c.setName("addFluidContainerNames", "Add Fluid names");
+			enablePlayerDecorators = c.getBool("enablePlayerDecorators", true); c.setName("enablePlayerDecorators", "Enable Player Decorators");
+			onlyAdvanced = c.getBool("onlyAdvanced", false); c.setName("onlyAdvanced", "Only advanced tool tips");
 		}
 	}
 	

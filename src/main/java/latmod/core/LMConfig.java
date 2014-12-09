@@ -5,7 +5,7 @@ import latmod.core.util.*;
 import net.minecraftforge.common.config.*;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-public class LMConfig
+public abstract class LMConfig
 {
 	public static final class Category
 	{
@@ -70,13 +70,20 @@ public class LMConfig
 		
 		public void setCategoryDesc(String... desc)
 		{ config.config.setCategoryComment(cat, LatCore.unsplit(desc, "\n")); }
+
+		public void setName(String property, String name)
+		{
+			ConfigCategory cat1 = config.config.getCategory(cat);
+			Property prop = cat1.get(property);
+			if(prop != null) prop.setName(name);
+		}
 	}
 	
 	public final File loadedFrom;
 	public final Configuration config;
 	
 	public LMConfig(File f)
-	{ loadedFrom = f; config = new Configuration(loadedFrom); }
+	{ loadedFrom = f; config = new Configuration(loadedFrom); load(); save(); }
 	
 	public LMConfig(FMLPreInitializationEvent e, String s)
 	{ this(new File(e.getModConfigurationDirectory(), s)); }
@@ -86,4 +93,6 @@ public class LMConfig
 	
 	public Category get(String s)
 	{ return new Category(this, s); }
+	
+	public abstract void load();
 }

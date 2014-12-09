@@ -28,7 +28,7 @@ public class LCClientEventHandler
 		
 		Item item = e.itemStack.getItem();
 		
-		if(e.showAdvancedItemTooltips && e.itemStack != null && e.itemStack.getItem() != null)
+		if(!LCConfig.Client.onlyAdvanced || e.showAdvancedItemTooltips)
 		{
 			if(LCConfig.Client.addOreNames)
 			{
@@ -132,12 +132,15 @@ public class LCClientEventHandler
 	@SubscribeEvent
 	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
 	{
-		FastList<PlayerDecorator> l = playerDecorators.get(e.entityPlayer.getCommandSenderName());
-		
-		if(l != null && l.size() > 0)
+		if(LCConfig.Client.enablePlayerDecorators)
 		{
-			for(int i = 0; i < l.size(); i++)
-				l.get(i).onPlayerRender(e);
+			FastList<PlayerDecorator> l = playerDecorators.get(e.entityPlayer.getCommandSenderName());
+			
+			if(l != null && l.size() > 0)
+			{
+				for(int i = 0; i < l.size(); i++)
+					l.get(i).onPlayerRender(e);
+			}
 		}
 	}
 }

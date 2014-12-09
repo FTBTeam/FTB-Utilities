@@ -34,11 +34,13 @@ public class ThreadCheckPlayerDecorators implements Runnable
 			
 			if(raw != null && raw.length() > 0)
 			{
-				FastList<String> al = FastList.asList(raw.split("\n"));
+				String[] rawA = LatCore.split(raw.trim(), "\n");
 				
-				for(int i = 0; i < al.size(); i++)
+				for(int i = 0; i < rawA.length; i++)
 				{
-					String[] s = al.get(i).split(": ");
+					rawA[i] = rawA[i].trim();
+					String[] s = rawA[i].split(": ");
+					
 					if(s != null && s.length == 2)
 					{
 						FastList<PlayerDecorator> al1 = new FastList<PlayerDecorator>();
@@ -47,14 +49,15 @@ public class ThreadCheckPlayerDecorators implements Runnable
 						for(int j = 0; j < s1.length; j++)
 						{
 							PlayerDecorator p = PlayerDecorator.map.get(s1[j]);
-							if(p != null) al1.add(p);
+							if(p != null) al1.add(p); else LatCoreMC.logger.warn("Unknown PlayerDecorator: " + s1[j]);
 						}
 						
 						if(al1.size() > 0) LCClientEventHandler.instance.playerDecorators.put(s[0], al1);
 					}
+					else LatCoreMC.logger.warn("Invalid line: " + LatCore.strip(s));
 				}
 				
-				if(LatCoreMC.isDevEnv) LatCoreMC.logger.info("Player Decorators: " + LCClientEventHandler.instance.playerDecorators + " from file " + raw);
+				if(LatCoreMC.isDevEnv) LatCoreMC.logger.info("Player Decorators: " + LCClientEventHandler.instance.playerDecorators + " [ " + PlayerDecorator.map.keys + " ] " + " from file " + LatCore.strip(rawA));
 			}
 			else LatCoreMC.logger.warn("Player Decorators failed to load!");
 		}

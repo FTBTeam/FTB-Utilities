@@ -20,7 +20,7 @@ public class WailaTankHandler extends BasicWailaHandler
 	
 	public List<String> getWailaBody(ItemStack is, List<String> l, IWailaDataAccessor data, IWailaConfigHandler config)
 	{
-		if(LCConfig.General.addWailaTanks && config.getConfig(CONFIG_TANK, false))
+		if(config.getConfig(CONFIG_TANK, false))
 		{
 			FluidTankInfo[] info = ((IFluidHandler)data.getTileEntity()).getTankInfo(ForgeDirection.UNKNOWN);
 			

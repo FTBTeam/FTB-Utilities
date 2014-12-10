@@ -21,7 +21,7 @@ public class ThreadCheckPlayerDecorators implements Runnable
 	
 	public void run()
 	{
-		LatCoreMC.logger.info("Loading PlayerDecorators.json...");
+		LatCoreMC.logger.info("Loading PlayerDecorators...");
 		
 		LCClientEventHandler.instance.playerDecorators.clear();
 		
@@ -39,12 +39,12 @@ public class ThreadCheckPlayerDecorators implements Runnable
 				for(int i = 0; i < rawA.length; i++)
 				{
 					rawA[i] = rawA[i].trim();
-					String[] s = rawA[i].split(": ");
+					String[] s = rawA[i].split(":");
 					
 					if(s != null && s.length == 2)
 					{
 						FastList<PlayerDecorator> al1 = new FastList<PlayerDecorator>();
-						String[] s1 = LatCore.split(s[1], ", ");
+						String[] s1 = LatCore.split(s[1], ",");
 						
 						for(int j = 0; j < s1.length; j++)
 						{

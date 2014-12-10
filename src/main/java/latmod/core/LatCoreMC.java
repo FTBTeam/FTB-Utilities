@@ -52,6 +52,8 @@ public class LatCoreMC
 	public static final String FORMATTING = "\u00a7";
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
 	
+	public static File latmodFolder = null;
+	
 	public static final int getRotYaw(int rot)
 	{
 		if(rot == 2) return 180;

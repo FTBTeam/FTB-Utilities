@@ -1,4 +1,6 @@
 package latmod.latcore;
+import java.io.File;
+
 import latmod.core.*;
 import latmod.core.net.LMNetHandler;
 import latmod.latcore.cmd.*;
@@ -33,6 +35,9 @@ public class LC
 			LatCoreMC.logger.info("Loading LatCoreMC, Dev Build");
 		else
 			LatCoreMC.logger.info("Loading LatCoreMC, Build #" + VERSION);
+		
+		LatCoreMC.latmodFolder = new File(e.getModConfigurationDirectory().getParentFile(), "LatMod/");
+		if(!LatCoreMC.latmodFolder.exists()) LatCoreMC.latmodFolder.mkdirs();
 		
 		mod = new LMMod(MOD_ID, new LCConfig(e), null);
 		mod.logger = LatCoreMC.logger;

@@ -201,5 +201,11 @@ public class LCEventHandler
 	
 	@SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent e)
-    { if(e.modID.equalsIgnoreCase(LC.MOD_ID)) LCConfig.instance.load(); }
+    {
+		if(e.modID.equalsIgnoreCase(LC.MOD_ID))
+		{
+			LCConfig.instance.save();
+			LCConfig.instance.load();
+		}
+	}
 }

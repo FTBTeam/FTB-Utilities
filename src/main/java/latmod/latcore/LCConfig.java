@@ -41,19 +41,25 @@ public class LCConfig extends LMConfig
 	
 	public static class Client
 	{
+		public static boolean enablePlayerDecorators;
+		public static boolean rotateBlocks;
+		public static boolean renderHighlights;
+		
+		public static boolean onlyAdvanced;
 		public static boolean addOreNames;
 		public static boolean addRegistryNames;
 		public static boolean addFluidContainerNames;
-		public static boolean enablePlayerDecorators;
-		public static boolean onlyAdvanced;
 		
 		public static void load(Category c)
 		{
+			enablePlayerDecorators = c.getBool("enablePlayerDecorators", true); c.setName("enablePlayerDecorators", "Enable Player Decorators");
+			rotateBlocks = c.getBool("rotateBlocks", true); c.setName("rotateBlocks", "Rotate custom blocks");
+			renderHighlights = c.getBool("renderHighlights", true); c.setName("renderHighlights", "Render custom block highlights");
+			
+			onlyAdvanced = c.getBool("onlyAdvanced", false); c.setName("onlyAdvanced", "Only advanced tool tips");
 			addOreNames = c.getBool("addOreNames", false); c.setName("addOreNames", "Add OreDictionary names");
 			addRegistryNames = c.getBool("addRegistryNames", false); c.setName("addRegistryNames", "Add Registry names");
 			addFluidContainerNames = c.getBool("addFluidContainerNames", false); c.setName("addFluidContainerNames", "Add Fluid names");
-			enablePlayerDecorators = c.getBool("enablePlayerDecorators", true); c.setName("enablePlayerDecorators", "Enable Player Decorators");
-			onlyAdvanced = c.getBool("onlyAdvanced", false); c.setName("onlyAdvanced", "Only advanced tool tips");
 		}
 	}
 	

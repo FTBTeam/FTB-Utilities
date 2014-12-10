@@ -9,7 +9,7 @@ public abstract class PlayerDecorator
 {
 	public static final FastMap<String, PlayerDecorator> map = new FastMap<String, PlayerDecorator>();
 	
-	public static void init()
+	static
 	{
 		map.put("latmod", new PDLatMod());
 	}

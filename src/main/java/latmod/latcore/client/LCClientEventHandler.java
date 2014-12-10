@@ -22,14 +22,20 @@ public class LCClientEventHandler
 	
 	public final FastMap<String, FastList<PlayerDecorator>> playerDecorators = new FastMap<String, FastList<PlayerDecorator>>();
 	
+	@SubscribeEvent
 	public void onTooltip(ItemTooltipEvent e)
 	{
 		if(e.itemStack == null || e.itemStack.getItem() == null) return;
 		
 		Item item = e.itemStack.getItem();
 		
-		if(!LCConfig.Client.onlyAdvanced || e.showAdvancedItemTooltips)
+		if(e.showAdvancedItemTooltips || !LCConfig.Client.onlyAdvanced)
 		{
+			if(LCConfig.Client.addRegistryNames)
+			{
+				e.toolTip.add(LatCoreMC.getRegName(e.itemStack));
+			}
+			
 			if(LCConfig.Client.addOreNames)
 			{
 				FastList<String> ores = ODItems.getOreNames(e.itemStack);
@@ -40,11 +46,6 @@ public class LCClientEventHandler
 					for(String or : ores)
 					e.toolTip.add("> " + or);
 				}
-			}
-			
-			if(LCConfig.Client.addRegistryNames)
-			{
-				e.toolTip.add(LatCoreMC.getRegName(e.itemStack));
 			}
 			
 			if(LCConfig.Client.addFluidContainerNames)

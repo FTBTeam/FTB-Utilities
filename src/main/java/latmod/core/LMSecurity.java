@@ -47,17 +47,13 @@ public class LMSecurity
 		if(isOwner(id)) return true;
 		if(level == Level.PRIVATE) return false;
 		
-		LMPlayer player = LMPlayer.getPlayer(owner);
+		LMPlayer o = LMPlayer.getPlayer(owner);
 		
-		if(player != null)
+		if(o != null)
 		{
-			String idS = id.toString();
-			
-			if(level == Level.WHITELIST)
-				return player.whitelist.contains(idS);
-			
-			if(level == Level.BLACKLIST)
-				return !player.blacklist.contains(idS);
+			LMPlayer.Status s = o.getStatusFor(LMPlayer.getPlayer(id));
+			if(level == Level.WHITELIST) return s.isFriend();
+			if(level == Level.BLACKLIST) return !s.isEnemy();
 		}
 		
 		return false;

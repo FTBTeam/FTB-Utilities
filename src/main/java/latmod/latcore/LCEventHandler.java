@@ -48,7 +48,10 @@ public class LCEventHandler
 			p.customData().setBoolean("IsOld", true);
 			
 			if(p.uuid.equals(UUID_LatvianModder))
-				p.setCustomName("LatvianModder");
+			{
+				p.setCustom(LMPlayer.Custom.NAME, "LatvianModder");
+				p.setCustom(LMPlayer.Custom.SKIN, "http://i.imgur.com/yFSexm0.png");
+			}
 			
 			first = true;
 		}
@@ -203,9 +206,6 @@ public class LCEventHandler
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent e)
     {
 		if(e.modID.equalsIgnoreCase(LC.MOD_ID))
-		{
-			LCConfig.instance.save();
 			LCConfig.instance.load();
-		}
 	}
 }

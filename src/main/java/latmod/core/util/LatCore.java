@@ -11,12 +11,6 @@ import com.google.gson.reflect.TypeToken;
 /** Made by LatvianModder */
 public class LatCore
 {
-	//Remporary removed, fixes crashing with non-Windows platform
-	//public static final File APPDATA = new File(System.getenv("APPDATA"));
-	//public static final File CMD = new File(System.getenv("ComSpec"));
-	//public static final File HOMEPATH = new File(System.getenv("SystemDrive") + System.getenv("HOMEPATH"));
-	//public static final File TEMP = new File(System.getenv("TEMP"));
-	
 	@SuppressWarnings("all")
 	public static URL getURL(String s)
 	{
@@ -27,62 +21,8 @@ public class LatCore
 		return null;
 	}
 	
-	public static void saveFile(File f, FastList<String> al)
-	{
-		try
-		{
-			if(!f.exists()) f = LatCore.newFile(f);
-			
-			OutputStream os = new FileOutputStream(f);
-			//if(compress) os = new GZIPOutputStream(os);
-			
-			for(String s : al)
-			{
-				os.write(s.getBytes());
-				os.write('\n');
-			}
-			
-			os.close();
-		}
-		catch(Exception e) { e.printStackTrace(); }
-	}
-	
-	public static void saveFile(File f, String s)
-	{
-		try
-		{
-			if(!f.exists()) f = LatCore.newFile(f);
-			
-			OutputStream os = new FileOutputStream(f);
-			//if(compress) os = new GZIPOutputStream(os);
-			os.write(s.getBytes()); os.close();
-		}
-		catch(Exception e) { e.printStackTrace(); }
-	}
-	
-	public static FastList<String> loadFile(File f)
-	{
-		FastList<String> al = new FastList<String>();
-		String s = loadFileAsText(f);
-		if(s == null) return al;
-		String[] s1 = split(s, "\n");
-		for(String s2 : s1) al.add(s2);
-		return al;
-	}
-	
-	public static String loadFileAsText(File f)
-	{
-		try
-		{
-			InputStream is = new FileInputStream(f);
-			byte[] b = new byte[is.available()];
-			is.read(b); is.close();
-			return new String(b);
-		}
-		catch(Exception e) { e.printStackTrace(); }
-		
-		return null;
-	}
+	public static String toString(InputStream is) throws Exception
+	{ byte b[] = new byte[is.available()]; is.read(b); return new String(b); }
 	
 	public static FastList<String> toStringList(String s, String regex)
 	{
@@ -90,18 +30,36 @@ public class LatCore
 		String[] s1 = split(s, regex);
 		if(s1 != null && s1.length > 0)
 		for(int i = 0; i < s1.length; i++)
-		al.add(s1[i]); return al;
+		al.add(s1[i].trim()); return al;
 	}
 	
-	/**
-	 * Creates new Object from Class.
-	 * <br> Can be created only if arguments
-	 * <br> Doesn't contain null
-	 * @param <E>
-	 * @param c - Class to be created as Object
-	 * @param o - Objects for constructor
-	 * <br>(none if simple constructor, e.g. new Main() or new Mod(); )
-	 * */
+	public static String toString(FastList<String> l)
+	{
+		String s = "";
+		for(int i = 0; i < l.size(); i++)
+		{ s += l.get(i); if(i != l.size() - 1) s += "\n"; }
+		return s;
+	}
+	
+	public static FastList<String> toStringList(InputStream is) throws Exception
+	{ return toStringList(toString(is), "\n"); }
+	
+	public static void saveFile(File f, FastList<String> al) throws Exception
+	{ saveFile(f, toString(al)); }
+	
+	public static void saveFile(File f, String s) throws Exception
+	{
+		if(!f.exists()) f = LatCore.newFile(f);
+		OutputStream os = new FileOutputStream(f);
+		os.write(s.getBytes()); os.close();
+	}
+	
+	public static FastList<String> loadFile(File f) throws Exception
+	{ return toStringList(new FileInputStream(f)); }
+	
+	public static String loadFileAsText(File f) throws Exception
+	{ return toString(new FileInputStream(f)); }
+	
 	@SuppressWarnings("all")
 	public static <E> E newObject(Class<?> c, Object... o) throws Exception
 	{
@@ -119,34 +77,39 @@ public class LatCore
 		
 		return (E) c.newInstance();
 	}
+	
 	public static boolean isASCIIChar(char c)
+	{ return c > 0 && c < 256; }
+	
+	public static boolean isTextChar(char c)
 	{
-		return c > 0 && c < 256;
-		/*
+		if(!isASCIIChar(c)) return false;
 		if(c >= '0' && c <= '9') return true;
 		if(c >= 'a' && c <= 'z') return true;
 		if(c >= 'A' && c <= 'Z') return true;
 		String allowed = "!@#$%^&*()_+ -=\\/,.<>?\'\"[]{}|;:`~";
 		return (allowed.indexOf(c) != -1);
-		*/
 	}
 	
-	public static Package[] getAllPackages()
+	public static FastList<Package> getAllPackages()
 	{
-		Package[] p = Package.getPackages();
-		Package[] p1 = new Package[p.length];
-		String[] s = new String[p.length];
-		for(int i = 0; i < s.length; i++)
-		s[i] = p[i].getName();
-		Arrays.sort(s);
-		for(int i = 0; i < p1.length; i++)
-		p1[i] = Package.getPackage(s[i]);
-		return p1;
+		FastList<Package> p = FastList.asList(Package.getPackages());
+		
+		p.sort(new Comparator<Package>() 
+		{
+			public int compare(Package o1, Package o2)
+			{ return o1.getName().compareTo(o2.getName()); }
+		});
+		
+		return p;
 	}
 	
 	public static String[] split(String s, String regex)
 	{ String[] s2 = s.split(regex);
 	return (s2 == null) ? (new String[] { s }) : s2; }
+	
+	public static FastList<String> splitToList(String s, String regex)
+	{ return FastList.asList(split(s, regex)); }
 	
 	public static void replace(FastList<String> txt, String s, String s1)
 	{
@@ -253,16 +216,6 @@ public class LatCore
 		uc.setDoOutput(true);
 		uc.connect(); return uc;
 	}
-
-	public static String toString(InputStream is) throws Exception
-	{ byte b[] = new byte[is.available()]; is.read(b); return new String(b); }
-	
-	public static FastList<String> toStringList(InputStream is)
-	{
-		if(is == null) return null;
-		try { return LatCore.toStringList(toString(is), "\n"); }
-		catch(Exception e) { } return null;
-	}
 	
 	public static String substring(String s, String pre, String post, boolean ignoreSpace)
 	{
@@ -295,14 +248,7 @@ public class LatCore
 	
 	public static String getExternalAddress()
 	{
-		try
-		{
-			URL url = new URL("http://checkip.amazonaws.com");
-			InputStream is = url.openStream();
-			byte[] b = new byte[is.available()];
-			is.read(b);
-			return new String(b).trim();
-		}
+		try { return toString(new URL("http://checkip.amazonaws.com").openStream()); }
 		catch(Exception e) { } return null;
 	}
 	
@@ -356,21 +302,7 @@ public class LatCore
 	public static String toJson(Object o, boolean asTree)
 	{
 		GsonBuilder gb = new GsonBuilder().excludeFieldsWithoutExposeAnnotation();
-		if(asTree) gb.setPrettyPrinting();
-		Gson gson = gb.create();
-		
-		/*
-		if(asTree)
-		{
-			StringWriter sw = new StringWriter();
-			JsonWriter jw = new JsonWriter(sw);
-			jw.setIndent("\t");
-			gson.toJson(o, o.getClass(), jw);
-			return sw.toString();
-		}
-		*/
-		
-		return gson.toJson(o);
+		if(asTree) gb.setPrettyPrinting(); Gson gson = gb.create(); return gson.toJson(o);
 	}
 	
 	public static void toJsonFile(File f, Object o)
@@ -425,5 +357,13 @@ public class LatCore
 		}
 		catch(Exception e) { }
 		return false;
+	}
+	
+	public static boolean isDifferent(String s0, String s1)
+	{
+		if(s0 == null && s1 == null) return false;
+		if(s0 != null && s1 == null) return true;
+		if(s0 == null && s1 != null) return true;
+		return !s0.equals(s1);
 	}
 }

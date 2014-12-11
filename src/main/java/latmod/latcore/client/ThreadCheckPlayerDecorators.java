@@ -1,6 +1,5 @@
 package latmod.latcore.client;
 
-import java.io.InputStream;
 import java.net.URL;
 
 import latmod.core.LatCoreMC;
@@ -27,19 +26,13 @@ public class ThreadCheckPlayerDecorators implements Runnable
 		
 		try
 		{
-			InputStream is = new URL("http://pastebin.com/raw.php?i=ihHF9uta").openStream();
-			byte[] b = new byte[is.available()];
-			is.read(b);
-			String raw = new String(b);
+			FastList<String> al = LatCore.toStringList(new URL("http://pastebin.com/raw.php?i=ihHF9uta").openStream());
 			
-			if(raw != null && raw.length() > 0)
+			if(al != null && al.size() > 0)
 			{
-				String[] rawA = LatCore.split(raw.trim(), "\n");
-				
-				for(int i = 0; i < rawA.length; i++)
+				for(int i = 0; i < al.size(); i++)
 				{
-					rawA[i] = rawA[i].trim();
-					String[] s = rawA[i].split(":");
+					String[] s = al.get(i).split(":");
 					
 					if(s != null && s.length == 2)
 					{
@@ -57,7 +50,7 @@ public class ThreadCheckPlayerDecorators implements Runnable
 					else LatCoreMC.logger.warn("Invalid line: " + LatCore.strip(s));
 				}
 				
-				if(LatCoreMC.isDevEnv) LatCoreMC.logger.info("Player Decorators: " + LCClientEventHandler.instance.playerDecorators + " [ " + PlayerDecorator.map.keys + " ] " + " from file " + LatCore.strip(rawA));
+				if(LatCoreMC.isDevEnv) LatCoreMC.logger.info("Player Decorators: " + LCClientEventHandler.instance.playerDecorators + " [ " + PlayerDecorator.map.keys + " ] from file " + al);
 			}
 			else LatCoreMC.logger.warn("Player Decorators failed to load!");
 		}

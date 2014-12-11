@@ -14,5 +14,9 @@ public abstract class PlayerDecorator
 		map.put("latmod", new PDLatMod());
 	}
 	
+	private String name = null;
+	public String toString()
+	{ if(name == null) name = map.getKey(this); return name; }
+	
 	public abstract void onPlayerRender(RenderPlayerEvent.Specials.Post e);
 }

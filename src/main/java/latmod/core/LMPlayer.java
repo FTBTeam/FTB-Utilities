@@ -3,7 +3,7 @@ package latmod.core;
 import java.util.UUID;
 
 import latmod.core.net.*;
-import latmod.core.util.FastList;
+import latmod.core.util.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.*;
 import net.minecraft.server.MinecraftServer;
@@ -14,20 +14,56 @@ import cpw.mods.fml.relauncher.Side;
 
 public class LMPlayer implements Comparable<LMPlayer>
 {
+	public static enum Custom
+	{
+		NAME("CustomName"),
+		SKIN("CustomSkin"),
+		CAPE("CustomCape");
+		
+		public final int ID;
+		public final String key;
+		
+		Custom(String s)
+		{
+			ID = ordinal();
+			key = s;
+		}
+	}
+	
+	public static enum Status
+	{
+		NONE,
+		SELF,
+		FRIEND,
+		ENEMY;
+		
+		Status() { }
+		
+		public boolean isFriend()
+		{ return this == FRIEND || this == SELF; }
+		
+		public boolean isEnemy()
+		{ return this == ENEMY; }
+		
+		public static Status to3(Status s)
+		{
+			if(s == null || s == NONE || s == SELF)
+				return NONE;
+			if(s.isFriend()) return FRIEND;
+			if(s.isEnemy()) return ENEMY;
+			return NONE;
+		}
+	}
+	
 	public final UUID uuid;
 	public String username;
-	private String customName;
-	public String customSkin;
-	public String customCape;
-	public final FastList<UUID> whitelist;
-	public final FastList<UUID> blacklist;
+	private final String[] custom = new String[Custom.values().length];
+	public final FastMap<UUID, Status> friends = new FastMap<UUID, Status>();
 	private NBTTagCompound customData = null;
 	
 	public LMPlayer(UUID id)
 	{
 		uuid = id;
-		whitelist = new FastList<UUID>();
-		blacklist = new FastList<UUID>();
 	}
 	
 	public NBTTagCompound customData()
@@ -40,29 +76,43 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public boolean hasCustomData()
 	{ return customData != null; }
 	
-	public void setCustomName(String s)
+	public void setCustom(Custom c, String s)
 	{
+		String s0 = custom[c.ID];
+		
 		if(s != null && s.length() > 0)
 		{
-			s = s.trim().replace("&k", "").replace("&", "\u00a7");
-			if(s.length() == 0 || s.equals("null")) s = null;
+			custom[c.ID] = s.trim().replace("&k", "").replace("&", LatCoreMC.FORMATTING);
+			if(custom[c.ID].length() == 0 || custom[c.ID].equals("null")) custom[c.ID] = null;
 		}
+		else custom[c.ID] = null;
 		
-		customName = s;
-		
-		EntityPlayer ep = getPlayer();
-		if(ep != null) ep.refreshDisplayName();
+		if(LatCore.isDifferent(s0, custom[c.ID]))
+		{
+			sendUpdate(c.key);
+			
+			EntityPlayer ep = getPlayer();
+			
+			if(ep != null)
+			{
+				if(c == Custom.NAME)
+					ep.refreshDisplayName();
+			}
+		}
 	}
+	
+	public String getCustom(Custom c)
+	{ return custom[c.ID]; }
 	
 	public String getDisplayName()
 	{
-		if(customName != null && customName.length() > 0)
-			return customName + EnumChatFormatting.RESET;
+		if(hasCustomName())
+			return getCustom(Custom.NAME) + EnumChatFormatting.RESET;
 		return username;
 	}
 	
 	public boolean hasCustomName()
-	{ return customName != null; }
+	{ return getCustom(Custom.NAME) != null && getCustom(Custom.NAME).length() > 0; }
 	
 	public EntityPlayerMP getPlayer()
 	{
@@ -90,33 +140,99 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public void sendUpdate(String channel)
 	{ sendUpdate(channel, true); }
 	
+	public Status getRawStatusFor(UUID id)
+	{
+		if(id == null) return Status.NONE;
+		Status s = friends.get(id);
+		if(Status.to3(s) == Status.NONE)
+			return Status.NONE; return s;
+	}
+	
+	public Status getStatusFor(LMPlayer p)
+	{
+		if(p == null) return Status.NONE;
+		if(p.uuid.equals(uuid)) return Status.SELF;
+		
+		Status s = getRawStatusFor(p.uuid);
+		Status s1 = p.getRawStatusFor(uuid);
+		
+		if(s == Status.ENEMY || s1 == Status.ENEMY)
+			return Status.ENEMY;
+		
+		if(s == Status.FRIEND && s1 == Status.FRIEND)
+			return Status.FRIEND;
+		
+		return Status.NONE;
+	}
+	
+	public void setStatusFor(UUID id, Status s)
+	{
+		if(Status.to3(s) == Status.NONE)
+			friends.remove(id);
+		else
+			friends.put(id, s);
+	}
+	
+	public void clearFriends(Status s)
+	{
+		Status s1 = Status.to3(s);
+		
+		if(s1 == Status.NONE) friends.clear();
+		else if(s1 == Status.FRIEND) for(int i = 0; i < friends.size(); i++)
+		{
+			if(friends.values.get(i).isFriend())
+				friends.remove(friends.keys.get(i));
+		}
+		else if(s1 == Status.ENEMY) for(int i = 0; i < friends.size(); i++)
+		{
+			if(!friends.values.get(i).isFriend())
+				friends.remove(friends.keys.get(i));
+		}
+	}
+	
+	public FastList<LMPlayer> getFriends(Status s)
+	{
+		FastList<LMPlayer> l = new FastList<LMPlayer>();
+		
+		Status s1 = Status.to3(s);
+		
+		for(int i = 0; i < friends.size(); i++)
+		{
+			boolean add = s1 == Status.NONE;
+			if(s1 == Status.FRIEND && !friends.values.get(i).isFriend()) add = false;
+			else if(s1 == Status.ENEMY && friends.values.get(i).isFriend()) add = false;
+			
+			if(add)
+			{
+				LMPlayer p = LMPlayer.getPlayer(friends.keys.get(i));
+				if(p != null) l.add(p);
+			}
+		}
+		
+		return l;
+	}
+	
 	// NBT reading / writing
 	
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		username = tag.getString("Name");
 		
-		customName = tag.getString("CustomName");
-		if(customName.trim().length() == 0) customName = null;
-		
-		customSkin = tag.getString("CustomSkin");
-		if(customSkin.trim().length() == 0) customSkin = null;
-		
-		customCape = tag.getString("CustomCape");
-		if(customCape.trim().length() == 0) customCape = null;
-		
+		for(int i = 0; i < custom.length; i++)
 		{
-			whitelist.clear();
-			NBTTagList l = (NBTTagList)tag.getTag("Whitelist");
-			if(l != null) for(int i = 0; i < l.tagCount(); i++)
-				whitelist.add(UUID.fromString(l.getStringTagAt(i)));
+			custom[i] = tag.getString(Custom.values()[i].key).trim();
+			if(custom[i].length() == 0) custom[i] = null;
 		}
 		
+		friends.clear();
+		NBTTagCompound map = tag.getCompoundTag("Friends");
+		FastList<String> al = LatCoreMC.getMapKeys(map);
+		
+		for(int i = 0; i < al.size(); i++)
 		{
-			blacklist.clear();
-			NBTTagList l = (NBTTagList)tag.getTag("Blacklist");
-			if(l != null) for(int i = 0; i < l.tagCount(); i++)
-				blacklist.add(UUID.fromString(l.getStringTagAt(i)));
+			String s = al.get(i);
+			boolean b = map.getBoolean(s);
+			friends.put(UUID.fromString(s), b ? Status.FRIEND : Status.ENEMY);
 		}
 		
 		customData = (NBTTagCompound) tag.getTag("CustomData");
@@ -126,35 +242,18 @@ public class LMPlayer implements Comparable<LMPlayer>
 	{
 		tag.setString("Name", username);
 		
-		if(customName != null && customName.trim().length() > 0)
-			tag.setString("CustomName", customName);
-		
-		if(customSkin != null && customSkin.trim().length() > 0)
-			tag.setString("CustomSkin", customSkin);
-		
-		if(customCape != null && customCape.trim().length() > 0)
-			tag.setString("CustomCape", customCape);
-		
-		if(whitelist.size() > 0)
+		for(int i = 0; i < custom.length; i++)
 		{
-			NBTTagList l = new NBTTagList();
-			
-			for(int i = 0; i < whitelist.size(); i++)
-				l.appendTag(new NBTTagString(whitelist.get(i).toString()));
-			
-			if(l.tagCount() > 0)
-				tag.setTag("Whitelist", l);
+			if(custom[i] != null && custom[i].length() > 0)
+				tag.setString(Custom.values()[i].key, custom[i]);
 		}
 		
-		if(blacklist.size() > 0)
+		if(friends.size() > 0)
 		{
-			NBTTagList l = new NBTTagList();
-			
-			for(int i = 0; i < blacklist.size(); i++)
-				l.appendTag(new NBTTagString(blacklist.get(i).toString()));
-			
-			if(l.tagCount() > 0)
-				tag.setTag("Blacklist", l);
+			NBTTagCompound tag1 = new NBTTagCompound();
+			for(int i = 0; i < friends.size(); i++)
+				tag1.setBoolean(friends.keys.get(i).toString(), friends.values.get(i).isFriend());
+			tag.setTag("Friends", tag1);
 		}
 		
 		if(customData != null)
@@ -171,11 +270,16 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public boolean equals(Object o)
 	{
 		if(o == null) return false;
-		if(o == this) return true;
-		if(o instanceof String) return o.equals(username) || ((String)o).equalsIgnoreCase(LatCoreMC.removeFormatting(getDisplayName()));
-		if(o instanceof UUID) return ((UUID)o).equals(uuid);
-		if(o instanceof EntityPlayer) return equals(((EntityPlayer)o).getUniqueID());
-		if(o instanceof LMPlayer) return equals(((LMPlayer)o).uuid);
+		else if(o == this) return true;
+		else if(o instanceof UUID) return ((UUID)o).equals(uuid);
+		else if(o instanceof EntityPlayer) return equals(((EntityPlayer)o).getUniqueID());
+		else if(o instanceof LMPlayer) return equals(((LMPlayer)o).uuid);
+		else if(o instanceof String) return o.equals(username) || ((String)o).equalsIgnoreCase(LatCoreMC.removeFormatting(getDisplayName()));
+		else return false;
+	}
+	
+	public boolean isOP()
+	{
 		return false;
 	}
 	

@@ -11,8 +11,8 @@ public class CmdTpOverride extends CommandBaseLC // CommandTeleport
 	public CmdTpOverride(int e)
 	{ super("tp", e); }
 	
-	public Boolean isUsername(String[] args, int i)
-	{ return (i == 0 || i == 1) ? true : null; }
+	public NameType getUsername(String[] args, int i)
+	{ return (i == 0 || i == 1) ? NameType.LM_ON : NameType.NONE; }
 	
 	public String[] getSubcommands(ICommandSender ics)
 	{ return null; }

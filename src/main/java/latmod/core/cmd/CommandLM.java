@@ -11,6 +11,14 @@ import net.minecraft.util.EnumChatFormatting;
 
 public abstract class CommandLM extends CommandBase
 {
+	public static enum NameType
+	{
+		NONE,
+		LM_ON,
+		LM_OFF,
+		MC;
+	}
+	
 	protected static final String FINE = EnumChatFormatting.WHITE + "";
 	
 	public final String commandName;
@@ -64,12 +72,10 @@ public abstract class CommandLM extends CommandBase
 	public final int isUsername(int i)
 	{ return 0; }
 	
-	/**
-	 * null - none
-	 * true - online
-	 * false - all */
-	public Boolean isUsername(String[] args, int i)
-	{ return null; }
+	public NameType getUsername(String[] args, int i)
+	{
+		return NameType.NONE;
+	}
 	
 	public boolean isArg(String[] args, int i, String... s)
 	{
@@ -84,13 +90,14 @@ public abstract class CommandLM extends CommandBase
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
-		Boolean un = isUsername(args, i);
-		if(un == null) return null;
-		return LMPlayer.getAllDisplayNames(un);
+		NameType un = getUsername(args, i);
+		if(un == null || un == NameType.NONE) return null;
+		if(un == NameType.MC) return MinecraftServer.getServer().getAllUsernames();
+		return LMPlayer.getAllDisplayNames(un == NameType.LM_ON);
 	}
 	
 	public boolean sortStrings(ICommandSender ics, String args[], int i)
-	{ return isUsername(args, i) == null; }
+	{ return getUsername(args, i) == NameType.NONE; }
 	
 	public static EntityPlayerMP getPlayer(ICommandSender ics, String s)
 	{
@@ -99,9 +106,9 @@ public abstract class CommandLM extends CommandBase
 		throw new PlayerNotFoundException();
 	}
 	
-	public static LMPlayer getLMPlayer(String s)
+	public static LMPlayer getLMPlayer(Object o)
 	{
-		LMPlayer p = LMPlayer.getPlayer(s);
+		LMPlayer p = LMPlayer.getPlayer(o);
 		if(p == null) throw new PlayerNotFoundException();
 		return p;
 	}

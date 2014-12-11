@@ -31,6 +31,6 @@ public class CmdRealNick extends CommandBaseLC
 		return null;
 	}
 	
-	public Boolean isUsername(String[] args, int i)
-	{ return (i == 0) ? false : null; }
+	public NameType getUsername(String[] args, int i)
+	{ return (i == 0) ? NameType.LM_OFF : NameType.NONE; }
 }

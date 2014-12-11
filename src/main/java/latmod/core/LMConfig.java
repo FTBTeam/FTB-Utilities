@@ -1,9 +1,13 @@
 package latmod.core;
 import java.io.File;
+import java.util.regex.Pattern;
 
 import latmod.core.util.*;
+import latmod.latcore.LC;
 import net.minecraftforge.common.config.*;
+import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.relauncher.*;
 
 public abstract class LMConfig
 {
@@ -15,48 +19,44 @@ public abstract class LMConfig
 		private Category(LMConfig c, String s)
 		{ config = c; cat = s; }
 		
-		public String getString(String s, String def, String... comment)
-		{
-			String s1 = config.config.get(cat, s, def).getString();
-			if(comment.length > 0) setComment(s, comment); return s1;
-		}
+		public String getString(String s, String def, String lang)
+		{ return getString(s, def, (Pattern)null, lang); }
 		
-		public boolean getBool(String s, boolean def, String... comment)
-		{
-			boolean b1 = config.config.get(cat, s, def).getBoolean(def);
-			if(comment.length > 0) setComment(s, comment); return b1;
-		}
+		public String getString(String s, String def, String[] valid, String lang)
+		{ return config.config.getString(s, cat, def, "", valid, lang); }
 		
-		public int getInt(String s, int def, String... comment)
-		{
-			int i1 = config.config.get(cat, s, def).getInt();
-			if(comment.length > 0) setComment(s, comment); return i1;
-		}
+		public String getString(String s, String def, Pattern p, String lang)
+		{ return config.config.getString(s, cat, def, "", lang, p); }
 		
-		public int getInt(String s, int def, int min, int max, String... comment)
-		{
-			int i = getInt(s, def);
-			if(i < min) i = min;
-			if(i > max) i = max;
-			if(comment.length > 0) setComment(s, comment);
-			return i;
-		}
+		public boolean getBool(String s, boolean def, String lang)
+		{ return config.config.getBoolean(s, cat, def, "", lang); }
 		
-		public double getDouble(String s, double def, String... comment)
-		{
-			double d1 = config.config.get(cat, s, def).getDouble(def);
-			if(comment.length > 0) setComment(s, comment); return d1;
-		}
+		public int getInt(String s, int def, int min, int max, String lang)
+		{ return config.config.getInt(s, cat, def, min, max, "", lang); }
 		
-		public FastList<String> getStringArray(String s, String[] def, String... comment)
-		{
-			String[] s1 = config.config.get(cat, s, def).getStringList();
-			if(comment.length > 0) setComment(s, comment); return new FastList<String>(s1);
-		}
+		public int getInt(String s, int def, String lang)
+		{ return getInt(s, def, -1, Integer.MAX_VALUE, lang); }
+		
+		public float getFloat(String s, float def, float min, float max, String lang)
+		{ return config.config.getFloat(s, cat, def, min, max, "", lang); }
+		
+		public float getFloat(String s, float def, String lang)
+		{ return getFloat(s, def, -1F, Float.MAX_VALUE, lang); }
+		
+		public FastList<String> getStringArray(String s, String[] def, String[] valid, String lang)
+		{ return FastList.asList(config.config.getStringList(s, cat, def, "", valid, lang)); }
+		
+		public FastList<String> getStringArray(String s, String[] def, String lang)
+		{ return getStringArray(s, def, new String[0], lang); }
+		
+		public ConfigCategory getCategory()
+		{ return config.config.getCategory(cat); }
 		
 		public void setComment(String property, String... comment)
 		{
-			ConfigCategory cat1 = config.config.getCategory(cat);
+			if(comment == null || comment.length == 0) return;
+			
+			ConfigCategory cat1 = getCategory();
 			Property prop = cat1.get(property);
 			
 			if(prop != null)
@@ -68,12 +68,13 @@ public abstract class LMConfig
 			}
 		}
 		
-		public void setCategoryDesc(String... desc)
-		{ config.config.setCategoryComment(cat, LatCore.unsplit(desc, "\n")); }
-
+		public void setCategoryComment(String... comment)
+		{ config.config.setCategoryComment(cat, LatCore.unsplit(comment, "\n")); }
+		
+		@Deprecated
 		public void setName(String property, String name)
 		{
-			ConfigCategory cat1 = config.config.getCategory(cat);
+			ConfigCategory cat1 = getCategory();
 			Property prop = cat1.get(property);
 			if(prop != null) prop.setName(name);
 		}
@@ -93,6 +94,13 @@ public abstract class LMConfig
 	
 	public Category get(String s)
 	{ return new Category(this, s); }
+	
+	public ConfigCategory getCategory(String s)
+	{ return config.getCategory(s); }
+	
+	@SideOnly(Side.CLIENT)
+	public String getAbridgedPath()
+	{ return GuiConfig.getAbridgedConfigPath(LC.mod.config.config.toString()); }
 	
 	public abstract void load();
 }

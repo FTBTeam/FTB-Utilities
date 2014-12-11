@@ -46,10 +46,10 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 		return super.getTabStrings(ics, args, i);
 	}
 	
-	public Boolean isUsername(String[] args, int i)
+	public NameType getUsername(String[] args, int i)
 	{
-		if(i == 1 && isArg(args, 0, "player")) return false;
-		return null;
+		if(i == 1 && isArg(args, 0, "player")) return NameType.LM_OFF;
+		return NameType.NONE;
 	}
 	
 	public String onCommand(ICommandSender ics, String[] args)
@@ -61,9 +61,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 		{
 			if(args.length < 2) return "Missing arguments!";
 			
-			LMPlayer p = LMPlayer.getPlayer(args[1]);
-			
-			if(p == null) throw new PlayerNotFoundException();
+			LMPlayer p = getLMPlayer(args[1]);
 			
 			if(args[2].equals("uuid"))
 			{
@@ -97,35 +95,20 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			else if(args[2].equals("nick"))
 			{
 				if(args.length != 4) return "/" + commandName + " ";
-				
-				p.setCustomName(args[3].trim());
-				p.sendUpdate("CustomName");
-				
+				p.setCustom(LMPlayer.Custom.NAME, args[3].trim());
 				return FINE + "Custom nickname changed to " + p.getDisplayName() + " for " + p.username;
 			}
 			else if(args[2].equals("skin"))
 			{
 				if(args.length != 4) return "Missing arguments!";
-				
-				p.customSkin = args[3].trim();
-				if(p.customSkin.length() == 0 || p.customSkin.equals("null"))
-					p.customSkin = null;
-				
-				p.sendUpdate("CustomSkin");
-				
-				return FINE + "Custom skin changed to " + p.customSkin + " for " + p.username;
+				p.setCustom(LMPlayer.Custom.SKIN, args[3].trim());
+				return FINE + "Custom skin changed to " + p.getCustom(LMPlayer.Custom.SKIN) + " for " + p.username;
 			}
 			else if(args[2].equals("cape"))
 			{
 				if(args.length != 4) return "Missing arguments!";
-				
-				p.customCape = args[3].trim();
-				if(p.customCape.length() == 0 || p.customCape.equals("null"))
-					p.customCape = null;
-				
-				p.sendUpdate("CustomCape");
-				
-				return FINE + "Custom cape changed to " + p.customCape + " for " + p.username;
+				p.setCustom(LMPlayer.Custom.CAPE, args[3].trim());
+				return FINE + "Custom cape changed to " + p.getCustom(LMPlayer.Custom.CAPE) + " for " + p.username;
 			}
 		}
 		else if(args[0].equals("killblock"))

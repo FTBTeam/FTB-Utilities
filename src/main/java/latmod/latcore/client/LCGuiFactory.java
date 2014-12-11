@@ -30,6 +30,6 @@ public class LCGuiFactory implements IModGuiFactory
 	{
 		@SuppressWarnings("all")
 		public ModGuiConfig(GuiScreen s)
-		{ super(s, new ConfigElement(LC.mod.config.config.getCategory("client")).getChildElements(), LC.mod.modID, false, false, GuiConfig.getAbridgedConfigPath(LC.mod.config.config.toString())); }
+		{ super(s, new ConfigElement(LC.mod.config.getCategory("client")).getChildElements(), LC.mod.modID, false, false, LC.mod.config.getAbridgedPath()); }
 	}
 }

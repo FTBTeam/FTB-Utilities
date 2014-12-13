@@ -1,6 +1,6 @@
 package latmod.latcore.client;
 import latmod.core.tile.IGuiTile;
-import latmod.latcore.*;
+import latmod.latcore.LCCommon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,7 +11,7 @@ import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)

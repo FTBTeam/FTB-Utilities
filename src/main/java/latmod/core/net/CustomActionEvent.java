@@ -3,7 +3,7 @@ package latmod.core.net;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.common.eventhandler.*;
+import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.relauncher.Side;
 
 public class CustomActionEvent extends Event

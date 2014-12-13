@@ -2,7 +2,7 @@ package latmod.core.waila;
 
 import java.util.List;
 
-import latmod.latcore.*;
+import latmod.latcore.LC;
 import mcp.mobius.waila.api.*;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;

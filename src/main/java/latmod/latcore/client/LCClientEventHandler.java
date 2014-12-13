@@ -6,11 +6,18 @@ import latmod.core.client.LatCoreMCClient;
 import latmod.core.net.CustomActionEvent;
 import latmod.core.tile.IPaintable;
 import latmod.latcore.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
+import net.minecraft.util.*;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fluids.*;
+
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+
 import cpw.mods.fml.common.eventhandler.*;
 import cpw.mods.fml.relauncher.*;
 
@@ -79,6 +86,7 @@ public class LCClientEventHandler
 		if(e.action.equals(LCEventHandler.ACTION_PLAYER_JOINED))
 		{
 			LMPlayer p = LMPlayer.getPlayer(UUID.fromString(e.extraData.getString("UUID")));
+			
 			if(p != null)
 			{
 				EntityPlayer ep = p.getPlayer();
@@ -87,39 +95,13 @@ public class LCClientEventHandler
 				{
 					FastList<PlayerDecorator> l = playerDecorators.get(ep.getCommandSenderName());
 					
-					if(l != null && l.size() > 0)
+					if(l != null) for(int i = 0; i < l.size(); i++)
 					{
-						if(l.contains("latmod"))
-							LatCoreMC.printChat(ep, "Hello, LatMod member!");
+						if(l.get(i) instanceof PDLatMod)
+							LatCoreMC.printChat(ep, EnumChatFormatting.BLUE + "Hello, LatMod member!");
 					}
 					
-					/*
-					LatCoreMC.printChat(ep, "Looking for custom skin...");
-					
-					if(ep instanceof AbstractClientPlayer)
-					{
-						AbstractClientPlayer p = (AbstractClientPlayer)ep;
-						
-						//if(p.getUniqueID().equals(Minecraft.getMinecraft().thePlayer.getUniqueID()))
-						//	p = Minecraft.getMinecraft().thePlayer;
-						
-						ResourceLocation customSkinLocation = LC.mod.getLocation("custom/skin/" + p.getUniqueID() + ".png");
-						
-						TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
-				        Object object = texturemanager.getTexture(customSkinLocation);
-
-				        if (object == null)
-				        {
-				            object = new ThreadDownloadImageData((File)null, "http://i.imgur.com/yFSexm0.png", AbstractClientPlayer.locationStevePng, new ImageBufferDownload());
-				            texturemanager.loadTexture(customSkinLocation, (ITextureObject)object);
-				        }
-				        
-						//AbstractClientPlayer.getDownloadImageSkin(customSkinLocation, "");
-						p.func_152121_a(MinecraftProfileTexture.Type.SKIN, customSkinLocation);
-						LatCoreMC.printChat(ep, "Set skin to " + p.getLocationSkin());
-					}
-					
-					*/
+					updateSkin(ep);
 				}
 			}
 		}
@@ -127,12 +109,25 @@ public class LCClientEventHandler
 			LatCore.openURL(e.extraData.getString("URL"));
 		else if(e.action.equals(LCEventHandler.ACTION_RELOAD_PD))
 			ThreadCheckPlayerDecorators.init();
+		else if(e.action.equals(LMPlayer.Custom.SKIN.key))
+			updateSkin(e.player);
+	}
+	
+	public void updateSkin(EntityPlayer ep)
+	{
+		if(ep == null || !(ep instanceof AbstractClientPlayer)) return;
+		
+		String s = LMPlayer.getPlayer(ep).getCustom(LMPlayer.Custom.SKIN);
+		
+		ResourceLocation loc = LC.mod.getLocation("custom_skin_" + ep.getUniqueID() + ".png");
+		Minecraft.getMinecraft().getTextureManager().loadTexture(loc, new ThreadDownloadImageData(null, s, AbstractClientPlayer.locationStevePng, new CustomSkinBufferDownload()));
+		((AbstractClientPlayer)ep).func_152121_a(MinecraftProfileTexture.Type.SKIN, loc);
 	}
 	
 	@SubscribeEvent
 	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
 	{
-		if(LCConfig.Client.enablePlayerDecorators)
+		if(LCConfig.Client.enablePlayerDecorators && !e.entityPlayer.isInvisible())
 		{
 			FastList<PlayerDecorator> l = playerDecorators.get(e.entityPlayer.getCommandSenderName());
 			

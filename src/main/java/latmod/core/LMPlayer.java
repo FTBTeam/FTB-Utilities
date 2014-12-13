@@ -16,8 +16,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public static enum Custom
 	{
 		NAME("CustomName"),
-		SKIN("CustomSkin"),
-		CAPE("CustomCape");
+		SKIN("CustomSkin");
 		
 		public final int ID;
 		public final String key;
@@ -96,6 +95,8 @@ public class LMPlayer implements Comparable<LMPlayer>
 			{
 				if(c == Custom.NAME)
 					ep.refreshDisplayName();
+				
+				LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(c.key, null));
 			}
 		}
 	}

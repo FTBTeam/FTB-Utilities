@@ -19,8 +19,8 @@ public class LMNetHandler
 		INSTANCE.registerMessage(MessageClientTileAction.class, MessageClientTileAction.class, 1, Side.SERVER);
 		INSTANCE.registerMessage(MessageClientItemAction.class, MessageClientItemAction.class, 2, Side.SERVER);
 		INSTANCE.registerMessage(MessageCustomClientAction.class, MessageCustomClientAction.class, 3, Side.SERVER);
-		INSTANCE.registerMessage(MessageCustomServerAction.class, MessageCustomServerAction.class, 4, Side.CLIENT);
-		INSTANCE.registerMessage(MessageUpdatePlayerData.class, MessageUpdatePlayerData.class, 5, Side.CLIENT);
+		INSTANCE.registerMessage(MessageCustomServerAction.class, MessageCustomServerAction.class, 3, Side.CLIENT);
+		INSTANCE.registerMessage(MessageUpdatePlayerData.class, MessageUpdatePlayerData.class, 4, Side.CLIENT);
 	}
 	
 	// Helper methods //

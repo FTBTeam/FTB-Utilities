@@ -2,7 +2,9 @@ package latmod.latcore.cmd;
 
 import latmod.core.*;
 import latmod.core.LMGamerules.RuleID;
+import latmod.core.net.*;
 import latmod.core.MathHelper;
+import latmod.latcore.LCEventHandler;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.event.*;
@@ -18,14 +20,14 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 	}
 	
 	public String[] getSubcommands(ICommandSender ics)
-	{ return new String[] { "killblock", "gamerule", "player" }; }
+	{ return new String[] { "killblock", "gamerule", "player", "reloadPD" }; }
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
 		if(i == 0) return getSubcommands(ics);
 		
 		if(i == 2 && isArg(args, 0, "player"))
-			return new String[] { "uuid", "delete", "saveinv", "loadinv", "nick", "skin", "cape" };
+			return new String[] { "uuid", "delete", "saveinv", "loadinv", "nick", "skin" };
 		
 		if(isArg(args, 0, "gamerule"))
 		{
@@ -49,11 +51,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 	public NameType getUsername(String[] args, int i)
 	{
 		if(i == 1 && isArg(args, 0, "player"))
-		{
-			if(isArg(args, 2, "nick", "skin", "cape"))
-				return NameType.MC;
-			return NameType.LM_OFF;
-		}
+			return NameType.MC;
 		return NameType.NONE;
 	}
 	
@@ -109,12 +107,6 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				p.setCustom(LMPlayer.Custom.SKIN, args[3].trim());
 				return FINE + "Custom skin changed to " + p.getCustom(LMPlayer.Custom.SKIN) + " for " + p.username;
 			}
-			else if(args[2].equals("cape"))
-			{
-				if(args.length != 4) return "Missing arguments!";
-				p.setCustom(LMPlayer.Custom.CAPE, args[3].trim());
-				return FINE + "Custom cape changed to " + p.getCustom(LMPlayer.Custom.CAPE) + " for " + p.username;
-			}
 		}
 		else if(args[0].equals("killblock"))
 		{
@@ -150,6 +142,11 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 					return FINE + "LMGamrule '" + id + "' is '" + r.value + "'";
 				}
 			}
+		}
+		else if(args[0].equals("reloadPD"))
+		{
+			LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(LCEventHandler.ACTION_RELOAD_PD, null));
+			return FINE + "Reloaded Player Decorators";
 		}
 		
 		return onCommand(ics, null);

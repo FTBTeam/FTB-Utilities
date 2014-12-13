@@ -1,8 +1,8 @@
 package latmod.core.gui;
 import java.util.Map;
 
+import latmod.core.FastList;
 import latmod.core.client.LMRenderHelper;
-import latmod.core.util.FastList;
 import latmod.latcore.LC;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;

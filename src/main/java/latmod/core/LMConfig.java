@@ -2,7 +2,6 @@ package latmod.core;
 import java.io.File;
 import java.util.regex.Pattern;
 
-import latmod.core.util.*;
 import latmod.latcore.LC;
 import net.minecraftforge.common.config.*;
 import cpw.mods.fml.client.config.GuiConfig;

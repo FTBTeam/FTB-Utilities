@@ -1,4 +1,4 @@
-package latmod.core.util;
+package latmod.core;
 import java.util.*;
 
 public class FastMap<K, V> implements Iterable<V>

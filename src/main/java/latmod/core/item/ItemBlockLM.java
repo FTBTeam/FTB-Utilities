@@ -1,9 +1,8 @@
 package latmod.core.item;
 import java.util.List;
 
-import latmod.core.LatCoreMC;
+import latmod.core.*;
 import latmod.core.block.BlockLM;
-import latmod.core.util.FastList;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -77,7 +76,7 @@ public class ItemBlockLM extends ItemBlock
 		else if (y == 255 && blockLM.getMaterial().isSolid()) return false;
 		else if (w.canPlaceEntityOnSide(blockLM, x, y, z, false, s, null, is.copy()))
 		{
-			int j1 = blockLM.onBlockPlaced(w, ep, LatCoreMC.getMOPFrom(x, y, z, s, hitX, hitY, hitZ), getMetadata(is.getItemDamage()));
+			int j1 = blockLM.onBlockPlaced(w, ep, MathHelper.getMOPFrom(x, y, z, s, hitX, hitY, hitZ), getMetadata(is.getItemDamage()));
 			if (placeBlockAt(is, ep, w, x, y, z, s, hitX, hitY, hitZ, j1))
 			{
 				w.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, blockLM.stepSound.func_150496_b(), (blockLM.stepSound.getVolume() + 1F) / 2F, blockLM.stepSound.getPitch() * 0.8F);

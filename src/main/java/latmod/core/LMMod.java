@@ -3,7 +3,6 @@ import latmod.core.block.IBlockLM;
 import latmod.core.item.*;
 import latmod.core.recipes.LMRecipes;
 import latmod.core.tile.TileLM;
-import latmod.core.util.FastList;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.*;

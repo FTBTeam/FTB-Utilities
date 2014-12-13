@@ -1,7 +1,6 @@
 package latmod.latcore.cmd;
 
-import latmod.core.LMPlayer;
-import latmod.core.util.*;
+import latmod.core.*;
 import latmod.latcore.ThreadCheckVersions;
 import net.minecraft.command.*;
 

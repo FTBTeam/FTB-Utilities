@@ -1,7 +1,13 @@
-package latmod.core.util;
+package latmod.core;
 import java.util.Random;
 
-import net.minecraft.util.AxisAlignedBB;
+import latmod.latcore.LC;
+import net.minecraft.block.BlockPistonBase;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.*;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /** Made by LatvianModder */
 public class MathHelper // Converter
@@ -169,4 +175,141 @@ public class MathHelper // Converter
 	
 	public static AxisAlignedBB getBox(double cx, double y0, double cz, double w, double y1, double d)
 	{ return AxisAlignedBB.getBoundingBox(cx - w / 2D, y0, cz - d / 2D, cx + w / 2D, y1, cz + d / 2D); }
+	
+	public static final int getRotations(double yaw, int max)
+	{ return floor((yaw * max / 360D) + 0.5D) & (max - 1); }
+	
+	public static ForgeDirection get2DRotation(EntityLivingBase el)
+	{
+		//int i = floor(el.rotationYaw * 4D / 360D + 0.5D) & 3;
+		int i = getRotations(el.rotationYaw, 4);
+		if(i == 0) return ForgeDirection.NORTH;
+		else if(i == 1) return ForgeDirection.EAST;
+		else if(i == 2) return ForgeDirection.SOUTH;
+		else if(i == 3) return ForgeDirection.WEST;
+		return ForgeDirection.UNKNOWN;
+	}
+	
+	public static ForgeDirection get3DRotation(World w, int x, int y, int z, EntityLivingBase el)
+	{ return ForgeDirection.values()[BlockPistonBase.determineOrientation(w, x, y, z, el)]; }
+	
+	public static final int getRotYaw(int rot)
+	{
+		if(rot == 2) return 180;
+		else if(rot == 3) return 0;
+		else if(rot == 4) return 90;
+		else if(rot == 5) return -90;
+		return 0;
+	}
+	
+	public static final int getRotPitch(int rot)
+	{
+		if(rot == 0) return 90;
+		else if(rot == 1) return -90;
+		return 0;
+	}
+	
+	public static MovingObjectPosition rayTrace(EntityPlayer ep, double d)
+	{
+		double y = ep.posY + ep.getDefaultEyeHeight();
+		if(ep.worldObj.isRemote) y -= ep.getEyeHeight();
+		Vec3 pos = Vec3.createVectorHelper(ep.posX, y, ep.posZ);
+		Vec3 look = ep.getLookVec();
+		Vec3 vec = pos.addVector(look.xCoord * d, look.yCoord * d, look.zCoord * d);
+		return ep.worldObj.func_147447_a(pos, vec, false, true, false);
+	}
+	
+	public static MovingObjectPosition rayTrace(EntityPlayer ep)
+	{ return rayTrace(ep, LC.proxy.getReachDist(ep)); }
+	
+	public static MovingObjectPosition collisionRayTrace(World w, int x, int y, int z, Vec3 start, Vec3 end, FastList<AxisAlignedBB> boxes)
+	{
+		if(boxes == null || boxes.isEmpty()) return null;
+		
+		MovingObjectPosition current = null;
+		double dist = Double.POSITIVE_INFINITY;
+		
+		for(int i = 0; i < boxes.size(); i++)
+		{
+			AxisAlignedBB aabb = boxes.get(i);
+			
+			if(aabb != null)
+			{
+				MovingObjectPosition mop = collisionRayTrace(w, x, y, z, start, end, aabb);
+				
+				if(mop != null)
+				{
+					double d1 = mop.hitVec.squareDistanceTo(start);
+					if(current == null || d1 < dist)
+					{
+						current = mop;
+						current.subHit = i;
+						dist = d1;
+					}
+				}
+			}
+		}
+		
+		return current;
+	}
+	
+	public static MovingObjectPosition collisionRayTrace(World w, int x, int y, int z, Vec3 start, Vec3 end, AxisAlignedBB aabb)
+	{
+		Vec3 pos = start.addVector(-x, -y, -z);
+		Vec3 rot = end.addVector(-x, -y, -z);
+		
+		Vec3 xmin = pos.getIntermediateWithXValue(rot, aabb.minX);
+		Vec3 xmax = pos.getIntermediateWithXValue(rot, aabb.maxX);
+		Vec3 ymin = pos.getIntermediateWithYValue(rot, aabb.minY);
+		Vec3 ymax = pos.getIntermediateWithYValue(rot, aabb.maxY);
+		Vec3 zmin = pos.getIntermediateWithZValue(rot, aabb.minZ);
+		Vec3 zmax = pos.getIntermediateWithZValue(rot, aabb.maxZ);
+		
+		if (!isVecInsideYZBounds(xmin, aabb)) xmin = null;
+		if (!isVecInsideYZBounds(xmax, aabb)) xmax = null;
+		if (!isVecInsideXZBounds(ymin, aabb)) ymin = null;
+		if (!isVecInsideXZBounds(ymax, aabb)) ymax = null;
+		if (!isVecInsideXYBounds(zmin, aabb)) zmin = null;
+		if (!isVecInsideXYBounds(zmax, aabb)) zmax = null;
+		Vec3 v = null;
+		
+		if (xmin != null && (v == null || pos.squareDistanceTo(xmin) < pos.squareDistanceTo(v))) v = xmin;
+		if (xmax != null && (v == null || pos.squareDistanceTo(xmax) < pos.squareDistanceTo(v))) v = xmax;
+		if (ymin != null && (v == null || pos.squareDistanceTo(ymin) < pos.squareDistanceTo(v))) v = ymin;
+		if (ymax != null && (v == null || pos.squareDistanceTo(ymax) < pos.squareDistanceTo(v))) v = ymax;
+		if (zmin != null && (v == null || pos.squareDistanceTo(zmin) < pos.squareDistanceTo(v))) v = zmin;
+		if (zmax != null && (v == null || pos.squareDistanceTo(zmax) < pos.squareDistanceTo(v))) v = zmax;
+		if (v == null) return null; else
+		{
+			int side = -1;
+
+			if (v == xmin) side = 4;
+			if (v == xmax) side = 5;
+			if (v == ymin) side = 0;
+			if (v == ymax) side = 1;
+			if (v == zmin) side = 2;
+			if (v == zmax) side = 3;
+			
+			return new MovingObjectPosition(x, y, z, side, v.addVector(x, y, z));
+		}
+	}
+	
+	private static boolean isVecInsideYZBounds(Vec3 v, AxisAlignedBB aabb)
+	{ return v == null ? false : v.yCoord >= aabb.minY && v.yCoord <= aabb.maxY && v.zCoord >= aabb.minZ && v.zCoord <= aabb.maxZ; }
+	
+	private static boolean isVecInsideXZBounds(Vec3 v, AxisAlignedBB aabb)
+	{ return v == null ? false : v.xCoord >= aabb.minX && v.xCoord <= aabb.maxX && v.zCoord >= aabb.minZ && v.zCoord <= aabb.maxZ; }
+	
+	private static boolean isVecInsideXYBounds(Vec3 v, AxisAlignedBB aabb)
+	{ return v == null ? false : v.xCoord >= aabb.minX && v.xCoord <= aabb.maxX && v.yCoord >= aabb.minY && v.yCoord <= aabb.maxY; }
+	
+	public static MovingObjectPosition getMOPFrom(int x, int y, int z, int s, float hitX, float hitY, float hitZ)
+	{ return new MovingObjectPosition(x, y, z, s, Vec3.createVectorHelper(x + hitX, y + hitY, z + hitZ)); }
+	
+	public static final ForgeDirection getDir(int s)
+	{
+		if(s >= 0 && s < ForgeDirection.VALID_DIRECTIONS.length)
+			return ForgeDirection.VALID_DIRECTIONS[s];
+		return ForgeDirection.UNKNOWN;
+	}
 }

@@ -1,4 +1,4 @@
-package latmod.core.util;
+package latmod.core;
 import java.util.Random;
 
 /** Originally made by Progressing.org

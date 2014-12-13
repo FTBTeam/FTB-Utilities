@@ -3,9 +3,8 @@ package latmod.core;
 import java.util.UUID;
 
 import latmod.core.net.*;
-import latmod.core.util.*;
 import net.minecraft.entity.player.*;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
@@ -226,7 +225,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 		
 		friends.clear();
 		NBTTagCompound map = tag.getCompoundTag("Friends");
-		FastList<String> al = LatCoreMC.getMapKeys(map);
+		FastList<String> al = NBTHelper.getMapKeys(map);
 		
 		for(int i = 0; i < al.size(); i++)
 		{

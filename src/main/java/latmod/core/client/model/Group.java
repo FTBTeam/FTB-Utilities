@@ -1,6 +1,6 @@
 package latmod.core.client.model;
+import latmod.core.FastList;
 import latmod.core.client.LMRenderHelper;
-import latmod.core.util.FastList;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;

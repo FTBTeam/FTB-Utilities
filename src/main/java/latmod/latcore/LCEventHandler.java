@@ -5,7 +5,6 @@ import java.util.UUID;
 import latmod.core.*;
 import latmod.core.net.*;
 import latmod.core.tile.IWailaTile;
-import latmod.core.util.LatCore;
 import latmod.core.waila.*;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.*;
@@ -20,6 +19,7 @@ public class LCEventHandler
 {
 	public static final String ACTION_PLAYER_JOINED = "PlayerJoined";
 	public static final String ACTION_OPEN_URL = "OpenURL";
+	public static final String ACTION_RELOAD_PD = "ReloadPD";
 	
 	public static final LCEventHandler instance = new LCEventHandler();
 	
@@ -95,15 +95,11 @@ public class LCEventHandler
 			{
 				try
 				{
-					FileInputStream fis = new FileInputStream(f);
-					byte[] b = new byte[fis.available()];
-					fis.read(b); fis.close();
-					
-					NBTTagCompound tag = CompressedStreamTools.func_152457_a(b, new NBTSizeTracker(Long.MAX_VALUE));
+					NBTTagCompound tag = NBTHelper.readMap(new FileInputStream(f));
 					
 					new LoadCustomLMDataEvent(tag).post();
 					
-					NBTTagList players = tag.getTagList("Players", LatCoreMC.NBT_MAP);
+					NBTTagList players = tag.getTagList("Players", NBTHelper.MAP);
 					
 					for(int i = 0; i < players.tagCount(); i++)
 					{
@@ -170,11 +166,7 @@ public class LCEventHandler
 				
 				new SaveCustomLMDataEvent(tag).post();
 				
-				byte[] b = CompressedStreamTools.compress(tag);
-				
-				FileOutputStream fos = new FileOutputStream(f);
-				fos.write(b);
-				fos.close();
+				NBTHelper.writeMap(new FileOutputStream(f), tag);
 			}
 			catch(Exception ex)
 			{

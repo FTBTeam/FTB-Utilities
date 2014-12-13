@@ -2,8 +2,8 @@ package latmod.latcore.cmd;
 
 import latmod.core.*;
 import latmod.core.LMGamerules.RuleID;
-import latmod.core.util.*;
-import net.minecraft.command.*;
+import latmod.core.MathHelper;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.event.*;
 import net.minecraft.util.*;
@@ -48,7 +48,12 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 	
 	public NameType getUsername(String[] args, int i)
 	{
-		if(i == 1 && isArg(args, 0, "player")) return NameType.LM_OFF;
+		if(i == 1 && isArg(args, 0, "player"))
+		{
+			if(isArg(args, 2, "nick", "skin", "cape"))
+				return NameType.MC;
+			return NameType.LM_OFF;
+		}
 		return NameType.NONE;
 	}
 	
@@ -117,7 +122,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			
 			try
 			{
-				MovingObjectPosition mop = LatCoreMC.rayTrace(ep);
+				MovingObjectPosition mop = MathHelper.rayTrace(ep);
 				
 				//ep.worldObj.setTileEntity(mop.blockX, mop.blockY, mop.blockZ, null);
 				ep.worldObj.setBlockToAir(mop.blockX, mop.blockY, mop.blockZ);

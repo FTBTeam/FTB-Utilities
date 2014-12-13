@@ -1,6 +1,5 @@
 package latmod.core;
 
-import latmod.core.util.FastMap;
 import net.minecraft.nbt.*;
 
 public class LMGamerules

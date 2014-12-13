@@ -48,7 +48,6 @@ sourceSets {
     main {
         java {
             srcDir "\\\\LATMODPC\\ProjMCP/LatCoreMC/src/main/java"
-			srcDir "\\\\LATMODPC\\ProjMCP/LatCoreMC/src/main/api"
         }
         resources {
             srcDir "\\\\LATMODPC\\ProjMCP/LatCoreMC/src/main/resources"

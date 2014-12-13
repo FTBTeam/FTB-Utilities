@@ -3,6 +3,7 @@ package latmod.core.tile;
 import java.util.Arrays;
 
 import latmod.core.*;
+import latmod.core.MathHelper;
 import latmod.core.client.RenderBlocksCustom;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -68,6 +69,30 @@ public interface IPaintable extends ITileInterface
 			
 			if(l.tagCount() > 0) tag.setTag(s, l);
 		}
+		
+		@SideOnly(Side.CLIENT)
+		public static IIcon getIcon(Paint p, int side, IIcon def)
+		{
+			if(p == null) return def;
+			
+			if(p.block instanceof ICustomPaintBlock)
+			{
+				IIcon i = ((ICustomPaintBlock)p.block).getCustomPaint(side, p.meta);
+				return (i == null) ? def : i;
+			}
+			
+			return p.block.getIcon(side, p.meta);
+		}
+		
+		@SideOnly(Side.CLIENT)
+		public static IIcon[] getIcons(Paint[] p, IIcon def)
+		{
+			IIcon[] ai = new IIcon[6];
+			if(p == null || !(p.length == 1 || p.length == 6)) return ai;
+			if(p.length == 1) p = new Paint[]{ p[0], p[0], p[0], p[0], p[0], p[0] };
+			for(int i = 0; i < ai.length; i++) ai[i] = getIcon(p[i], i, def);
+			return ai;
+		}
 	}
 	
 	public static class PaintData
@@ -104,6 +129,12 @@ public interface IPaintable extends ITileInterface
 		}
 	}
 	
+	public static interface ICustomPaintBlock
+	{
+		@SideOnly(Side.CLIENT)
+		public IIcon getCustomPaint(int side, int meta);
+	}
+	
 	public static class Helper
 	{
 		public static ItemStack getPaintItem(ItemStack is)
@@ -135,7 +166,7 @@ public interface IPaintable extends ITileInterface
 				
 				if(ep.capabilities.isCreativeMode || i.canPaintBlock(is))
 				{
-					MovingObjectPosition mop = LatCoreMC.rayTrace(ep);
+					MovingObjectPosition mop = MathHelper.rayTrace(ep);
 					
 					Paint p = null;
 					if(paint != null && paint.getItem() != null)
@@ -200,21 +231,11 @@ public interface IPaintable extends ITileInterface
 		public static Paint[] to6(Paint p)
 		{ return new Paint[] { p, p, p, p, p, p }; }
 		
-		public static void setFaceBounds(RenderBlocksCustom rb, AxisAlignedBB aabb, int side)
-		{
-			if(side == 0) rb.setRenderBounds(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.minY, aabb.maxZ);
-			if(side == 1) rb.setRenderBounds(aabb.minX, aabb.maxY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ);
-			if(side == 2) rb.setRenderBounds(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.minZ);
-			if(side == 3) rb.setRenderBounds(aabb.minX, aabb.minY, aabb.maxZ, aabb.maxX, aabb.maxY, aabb.maxZ);
-			if(side == 4) rb.setRenderBounds(aabb.minX, aabb.minY, aabb.minZ, aabb.minX, aabb.maxY, aabb.maxZ);
-			if(side == 5) rb.setRenderBounds(aabb.maxX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ);
-		}
-		
 		public static void renderCube(RenderBlocksCustom rb, Paint[] p, IIcon[] defIcon, int x, int y, int z, AxisAlignedBB aabb)
 		{
 			for(int i = 0; i < 6; i++)
 			{
-				setFaceBounds(rb, aabb, i);
+				rb.setFaceBounds(aabb, i);
 				renderFace(rb, i, p[i], defIcon[i], x, y, z);
 			}
 		}

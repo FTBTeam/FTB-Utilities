@@ -1,4 +1,4 @@
-package latmod.core.util;
+package latmod.core;
 import java.util.*;
 
 /** <b>Made by LatvianModder</b>

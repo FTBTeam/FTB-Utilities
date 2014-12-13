@@ -2,7 +2,6 @@ package latmod.latcore.cmd;
 
 import latmod.core.*;
 import latmod.core.cmd.CommandLM;
-import latmod.core.util.LatCore;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 

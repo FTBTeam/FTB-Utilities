@@ -1,4 +1,4 @@
-package latmod.core.util;
+package latmod.core;
 
 public class TwoObjects<A, B>
 {

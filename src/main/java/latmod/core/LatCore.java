@@ -1,4 +1,4 @@
-package latmod.core.util;
+package latmod.core;
 import java.io.*;
 import java.lang.reflect.*;
 import java.net.*;

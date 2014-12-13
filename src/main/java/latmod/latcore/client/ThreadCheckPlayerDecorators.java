@@ -2,8 +2,7 @@ package latmod.latcore.client;
 
 import java.net.URL;
 
-import latmod.core.LatCoreMC;
-import latmod.core.util.*;
+import latmod.core.*;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)

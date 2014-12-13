@@ -133,4 +133,14 @@ public class RenderBlocksCustom extends RenderBlocks
 	
 	public void setRenderBounds(AxisAlignedBB aabb, double exp)
 	{ if(aabb != null) super.setRenderBounds(aabb.minX - exp, aabb.minY - exp, aabb.minZ - exp, aabb.maxX + exp, aabb.maxY + exp, aabb.maxZ + exp); }
+	
+	public void setFaceBounds(AxisAlignedBB aabb, int side)
+	{
+		if(side == 0) setRenderBounds(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.minY, aabb.maxZ);
+		if(side == 1) setRenderBounds(aabb.minX, aabb.maxY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ);
+		if(side == 2) setRenderBounds(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.minZ);
+		if(side == 3) setRenderBounds(aabb.minX, aabb.minY, aabb.maxZ, aabb.maxX, aabb.maxY, aabb.maxZ);
+		if(side == 4) setRenderBounds(aabb.minX, aabb.minY, aabb.minZ, aabb.minX, aabb.maxY, aabb.maxZ);
+		if(side == 5) setRenderBounds(aabb.maxX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ);
+	}
 }

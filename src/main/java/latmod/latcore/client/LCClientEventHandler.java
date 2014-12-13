@@ -5,7 +5,6 @@ import latmod.core.*;
 import latmod.core.client.LatCoreMCClient;
 import latmod.core.net.CustomActionEvent;
 import latmod.core.tile.IPaintable;
-import latmod.core.util.*;
 import latmod.latcore.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
@@ -125,9 +124,9 @@ public class LCClientEventHandler
 			}
 		}
 		else if(e.action.equals(LCEventHandler.ACTION_OPEN_URL))
-		{
 			LatCore.openURL(e.extraData.getString("URL"));
-		}
+		else if(e.action.equals(LCEventHandler.ACTION_RELOAD_PD))
+			ThreadCheckPlayerDecorators.init();
 	}
 	
 	@SubscribeEvent

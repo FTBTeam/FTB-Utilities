@@ -1,7 +1,6 @@
 package latmod.core;
 import java.util.Arrays;
 
-import latmod.core.util.FastMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -235,7 +234,7 @@ public class InvUtils
 		
 		if(tag.hasKey(s))
 		{
-			NBTTagList list = tag.getTagList(s, LatCoreMC.NBT_MAP);
+			NBTTagList list = tag.getTagList(s, NBTHelper.MAP);
 			
 			for(int i = 0; i < list.tagCount(); i++)
 			{

@@ -1,5 +1,5 @@
 package latmod.core.client.model;
-import latmod.core.util.LatCore;
+import latmod.core.LatCore;
 
 import org.lwjgl.opengl.GL11;
 

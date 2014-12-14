@@ -1,14 +1,20 @@
 package latmod.latcore.cmd;
 
+import java.io.*;
+
 import latmod.core.*;
 import latmod.core.LMGamerules.RuleID;
-import latmod.core.net.*;
 import latmod.core.MathHelper;
+import latmod.core.net.*;
 import latmod.latcore.LCEventHandler;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.*;
 import net.minecraft.event.*;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
+import baubles.api.BaublesApi;
 
 public class CmdLatCoreAdmin extends CommandBaseLC
 {
@@ -87,13 +93,77 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			{
 				if(!p.isOnline()) return "The player must be online!";
 				
-				return null;
+				try
+				{
+					EntityPlayer ep = p.getPlayer();
+					NBTTagCompound tag = new NBTTagCompound();
+					
+					ItemStack[] invStacks = new ItemStack[ep.inventory.getSizeInventory()];
+					
+					for(int i = 0; i < invStacks.length; i++)
+						invStacks[i] = ep.inventory.getStackInSlot(i);
+					
+					InvUtils.writeItemsToNBT(invStacks, tag, "Inventory");
+					
+					if(LatCoreMC.isModInstalled("Baubles"))
+					{
+						IInventory inv = BaublesApi.getBaubles(ep);
+						
+						ItemStack[] baublesStacks = new ItemStack[inv.getSizeInventory()];
+						
+						for(int i = 0; i < baublesStacks.length; i++)
+							baublesStacks[i] = inv.getStackInSlot(i);
+						
+						InvUtils.writeItemsToNBT(baublesStacks, tag, "Baubles");
+					}
+					
+					NBTHelper.writeMap(new FileOutputStream(LatCore.newFile(new File(LatCoreMC.latmodFolder, "playerinvs/" + ep.getCommandSenderName() + ".dat"))), tag);
+				}
+				catch(Exception e)
+				{
+					if(LatCoreMC.isDevEnv) e.printStackTrace();
+					return "Failed to save inventory!";
+				}
+				
+				return FINE + "Inventory saved!";
 			}
 			else if(args[2].equals("loadinv"))
 			{
 				if(!p.isOnline()) return "The player must be online!";
 				
-				return null;
+				try
+				{
+					EntityPlayer ep = p.getPlayer();
+					NBTTagCompound tag = NBTHelper.readMap(new FileInputStream(new File(LatCoreMC.latmodFolder, "playerinvs/" + ep.getCommandSenderName() + ".dat")));
+					
+					ItemStack[] invStacks = new ItemStack[ep.inventory.getSizeInventory()];
+					InvUtils.readItemsFromNBT(invStacks, tag, "Inventory");
+					
+					for(int i = 0; i < invStacks.length; i++)
+						ep.inventory.setInventorySlotContents(i, invStacks[i]);
+					
+					ep.inventory.markDirty();
+					
+					if(LatCoreMC.isModInstalled("Baubles"))
+					{
+						IInventory inv = BaublesApi.getBaubles(ep);
+						
+						ItemStack[] baublesStacks = new ItemStack[inv.getSizeInventory()];
+						InvUtils.readItemsFromNBT(baublesStacks, tag, "Baubles");
+						
+						for(int i = 0; i < baublesStacks.length; i++)
+							inv.setInventorySlotContents(i, baublesStacks[i]);
+						
+						inv.markDirty();
+					}
+				}
+				catch(Exception e)
+				{
+					if(LatCoreMC.isDevEnv) e.printStackTrace();
+					return "Failed to load inventory!";
+				}
+				
+				return FINE + "Inventory loaded!";
 			}
 			else if(args[2].equals("nick"))
 			{

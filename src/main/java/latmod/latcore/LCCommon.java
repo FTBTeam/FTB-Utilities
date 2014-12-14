@@ -45,4 +45,7 @@ public class LCCommon extends LMProxy implements IGuiHandler // LCClient
 	public void openClientGui(EntityPlayer ep, IGuiTile i, int ID)
 	{
 	}
+	
+	public boolean inGameHasFocus()
+	{ return true; }
 }

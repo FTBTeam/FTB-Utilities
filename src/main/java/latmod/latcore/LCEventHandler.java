@@ -6,7 +6,6 @@ import latmod.core.*;
 import latmod.core.net.*;
 import latmod.core.tile.IWailaTile;
 import latmod.core.waila.*;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -78,7 +77,6 @@ public class LCEventHandler
 		e.register(IWailaTile.Body.class, new WailaLMTile(e, WailaType.BODY));
 		e.register(IWailaTile.Tail.class, new WailaLMTile(e, WailaType.TAIL));
 		
-		if(LCConfig.General.addWailaInv) e.register(IInventory.class, new WailaInvHandler(e));
 		if(LCConfig.General.addWailaTanks) e.register(IFluidHandler.class, new WailaTankHandler(e));
 	}
 	

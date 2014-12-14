@@ -36,7 +36,7 @@ public class LMMod
 		logger = LogManager.getLogger(modID);
 		logger.info("Loading mod: " + modID);
 		
-		config = c;
+		config = c; if(config != null) config.setMod(this);
 		recipes = (r == null) ? new LMRecipes() : r;
 	}
 	

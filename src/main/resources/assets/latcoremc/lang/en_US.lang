@@ -1,3 +1,11 @@
+latcoremc.config.enablePlayerDecorators=Enable Player Decorators
+latcoremc.config.rotateBlocks=Rotate custom blocks
+latcoremc.config.renderHighlights=Render custom block highlights
+latcoremc.config.onlyAdvanced=Only advanced tool tips
+latcoremc.config.addOreNames=Add OreDictionary names
+latcoremc.config.addRegistryNames=Add Registry names
+latcoremc.config.addFluidContainerNames=Add Fluid names
+
 latcoremc:owner=Owner: %s
 latcoremc:settings=Settings
 latcoremc:back=Back

@@ -35,7 +35,7 @@ public class CmdTpOverride extends CommandBaseLC // CommandTeleport
 		{
 			if(args[0].equals("@a"))
 			{
-				String[] players = LMPlayer.getAllDisplayNames(true);
+				String[] players = LMPlayer.getAllNames(true, true);
 				for(int i = 0; i < players.length; i++)
 				{
 					String[] args1 = args.clone();

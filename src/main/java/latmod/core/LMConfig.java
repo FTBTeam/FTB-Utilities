@@ -18,35 +18,35 @@ public abstract class LMConfig
 		private Category(LMConfig c, String s)
 		{ config = c; cat = s; }
 		
-		public String getString(String s, String def, String lang)
-		{ return getString(s, def, (Pattern)null, lang); }
+		public String getString(String s, String def)
+		{ return getString(s, def, (Pattern)null); }
 		
-		public String getString(String s, String def, String[] valid, String lang)
-		{ return config.config.getString(s, cat, def, "", valid, lang); }
+		public String getString(String s, String def, String[] valid)
+		{ return config.config.getString(s, cat, def, "", valid, config.getLang(s)); }
 		
-		public String getString(String s, String def, Pattern p, String lang)
-		{ return config.config.getString(s, cat, def, "", lang, p); }
+		public String getString(String s, String def, Pattern p)
+		{ return config.config.getString(s, cat, def, "", config.getLang(s), p); }
 		
-		public boolean getBool(String s, boolean def, String lang)
-		{ return config.config.getBoolean(s, cat, def, "", lang); }
+		public boolean getBool(String s, boolean def)
+		{ return config.config.getBoolean(s, cat, def, "", config.getLang(s)); }
 		
-		public int getInt(String s, int def, int min, int max, String lang)
-		{ return config.config.getInt(s, cat, def, min, max, "", lang); }
+		public int getInt(String s, int def, int min, int max)
+		{ return config.config.getInt(s, cat, def, min, max, "", config.getLang(s)); }
 		
-		public int getInt(String s, int def, String lang)
-		{ return getInt(s, def, -1, Integer.MAX_VALUE, lang); }
+		public int getInt(String s, int def)
+		{ return getInt(s, def, -1, Integer.MAX_VALUE); }
 		
-		public float getFloat(String s, float def, float min, float max, String lang)
-		{ return config.config.getFloat(s, cat, def, min, max, "", lang); }
+		public float getFloat(String s, float def, float min, float max)
+		{ return config.config.getFloat(s, cat, def, min, max, "", config.getLang(s)); }
 		
-		public float getFloat(String s, float def, String lang)
-		{ return getFloat(s, def, -1F, Float.MAX_VALUE, lang); }
+		public float getFloat(String s, float def)
+		{ return getFloat(s, def, -1F, Float.MAX_VALUE); }
 		
-		public FastList<String> getStringArray(String s, String[] def, String[] valid, String lang)
-		{ return FastList.asList(config.config.getStringList(s, cat, def, "", valid, lang)); }
+		public FastList<String> getStringArray(String s, String[] def, String[] valid)
+		{ return FastList.asList(config.config.getStringList(s, cat, def, "", valid, config.getLang(s))); }
 		
-		public FastList<String> getStringArray(String s, String[] def, String lang)
-		{ return getStringArray(s, def, new String[0], lang); }
+		public FastList<String> getStringArray(String s, String[] def)
+		{ return getStringArray(s, def, new String[0]); }
 		
 		public ConfigCategory getCategory()
 		{ return config.config.getCategory(cat); }
@@ -70,23 +70,26 @@ public abstract class LMConfig
 		public void setCategoryComment(String... comment)
 		{ config.config.setCategoryComment(cat, LatCore.unsplit(comment, "\n")); }
 		
-		@Deprecated
-		public void setName(String property, String name)
+		public void setLang(String property, String langKey)
 		{
 			ConfigCategory cat1 = getCategory();
 			Property prop = cat1.get(property);
-			if(prop != null) prop.setName(name);
+			if(prop != null) prop.setLanguageKey(langKey);
 		}
 	}
 	
 	public final File loadedFrom;
 	public final Configuration config;
+	public LMMod mod = null;
 	
 	public LMConfig(File f)
 	{ loadedFrom = f; config = new Configuration(loadedFrom); load(); save(); }
 	
 	public LMConfig(FMLPreInitializationEvent e, String s)
 	{ this(new File(e.getModConfigurationDirectory(), s)); }
+	
+	public void setMod(LMMod m)
+	{ mod = m; }
 	
 	public void save()
 	{ if(config.hasChanged()) config.save(); }
@@ -100,6 +103,9 @@ public abstract class LMConfig
 	@SideOnly(Side.CLIENT)
 	public String getAbridgedPath()
 	{ return GuiConfig.getAbridgedConfigPath(LC.mod.config.config.toString()); }
+	
+	public String getLang(String s)
+	{ return (mod == null ? "" : mod.assets.replace(':', '.')) + "config." + s; }
 	
 	public abstract void load();
 }

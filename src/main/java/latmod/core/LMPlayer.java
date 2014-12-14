@@ -338,7 +338,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 		{ super(p); entityPlayer = ep; firstTime = b; }
 	}
 	
-	public static String[] getAllDisplayNames(boolean online)
+	public static String[] getAllNames(boolean online, boolean display)
 	{
 		FastList<String> allOn = new FastList<String>();
 		FastList<String> allOff = new FastList<String>();
@@ -347,7 +347,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 		{
 			LMPlayer p = list.get(i);
 			
-			String s = LatCoreMC.removeFormatting(p.getDisplayName());
+			String s = LatCoreMC.removeFormatting(display ? p.getDisplayName() : p.username);
 			
 			if(p.isOnline())
 				allOn.add(s);

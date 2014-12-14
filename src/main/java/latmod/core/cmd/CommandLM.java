@@ -15,7 +15,17 @@ public abstract class CommandLM extends CommandBase
 		NONE,
 		LM_ON,
 		LM_OFF,
-		MC;
+		MC,
+		MC_OFF;
+		
+		public boolean isOnline()
+		{ return this == LM_ON || this == MC; }
+		
+		public boolean isDisplay()
+		{ return this == LM_ON || this == LM_OFF; }
+
+		public String[] getUsernames()
+		{ return (this == NONE) ? null : LMPlayer.getAllNames(isOnline(), isDisplay()); }
 	}
 	
 	protected static final String FINE = EnumChatFormatting.WHITE + "";
@@ -88,12 +98,7 @@ public abstract class CommandLM extends CommandBase
 	}
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
-	{
-		NameType un = getUsername(args, i);
-		if(un == null || un == NameType.NONE) return null;
-		if(un == NameType.MC) return MinecraftServer.getServer().getAllUsernames();
-		return LMPlayer.getAllDisplayNames(un == NameType.LM_ON);
-	}
+	{ return getUsername(args, i).getUsernames(); }
 	
 	public boolean sortStrings(ICommandSender ics, String args[], int i)
 	{ return getUsername(args, i) == NameType.NONE; }

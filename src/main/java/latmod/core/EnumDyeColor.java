@@ -1,5 +1,5 @@
 package latmod.core;
-import latmod.latcore.LC;
+import latmod.core.mod.LC;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;
 import net.minecraft.util.StatCollector;

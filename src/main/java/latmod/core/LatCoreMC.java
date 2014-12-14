@@ -2,9 +2,9 @@ package latmod.core;
 import java.io.File;
 import java.util.regex.Pattern;
 
+import latmod.core.mod.*;
 import latmod.core.net.*;
 import latmod.core.tile.IGuiTile;
-import latmod.latcore.*;
 import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.*;

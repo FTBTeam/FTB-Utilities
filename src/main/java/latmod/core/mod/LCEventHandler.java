@@ -1,4 +1,4 @@
-package latmod.latcore;
+package latmod.core.mod;
 import java.io.*;
 import java.util.UUID;
 

@@ -1,6 +1,6 @@
 package latmod.core.net;
 import io.netty.buffer.ByteBuf;
-import latmod.latcore.LC;
+import latmod.core.mod.LC;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.Side;

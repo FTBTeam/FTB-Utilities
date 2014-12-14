@@ -1,12 +1,12 @@
-package latmod.latcore.cmd;
+package latmod.core.cmd.mod;
 
 import net.minecraft.command.*;
 
-public class CmdGamemodeOverride extends CommandGameMode
+public class CmdGameruleOverride extends CommandGameRule
 {
 	public final int enabled;
 	
-	public CmdGamemodeOverride(int e)
+	public CmdGameruleOverride(int e)
 	{ enabled = e; }
 	
 	public final int getRequiredPermissionLevel()

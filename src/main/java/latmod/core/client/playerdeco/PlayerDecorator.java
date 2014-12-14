@@ -1,4 +1,4 @@
-package latmod.latcore.client;
+package latmod.core.client.playerdeco;
 
 import latmod.core.FastMap;
 import net.minecraft.entity.Entity;

@@ -1,8 +1,8 @@
-package latmod.latcore.client;
+package latmod.core.mod.client;
 
 import java.util.Set;
 
-import latmod.latcore.LC;
+import latmod.core.mod.LC;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;

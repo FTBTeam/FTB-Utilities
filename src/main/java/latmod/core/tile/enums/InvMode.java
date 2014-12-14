@@ -1,5 +1,5 @@
 package latmod.core.tile.enums;
-import latmod.latcore.LC;
+import latmod.core.mod.LC;
 
 public enum InvMode
 {

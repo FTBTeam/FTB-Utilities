@@ -1,7 +1,7 @@
-package latmod.latcore.cmd;
+package latmod.core.cmd.mod;
 
 import latmod.core.*;
-import latmod.latcore.ThreadCheckVersions;
+import latmod.core.mod.ThreadCheckVersions;
 import net.minecraft.command.*;
 
 public class CmdLatCore extends CommandBaseLC

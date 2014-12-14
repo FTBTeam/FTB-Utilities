@@ -1,4 +1,4 @@
-package latmod.latcore;
+package latmod.core.mod;
 
 import latmod.core.LMProxy;
 import latmod.core.tile.IGuiTile;

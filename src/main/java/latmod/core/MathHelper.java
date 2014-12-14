@@ -1,7 +1,7 @@
 package latmod.core;
 import java.util.Random;
 
-import latmod.latcore.LC;
+import latmod.core.mod.LC;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

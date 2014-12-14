@@ -3,7 +3,7 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.UUID;
 
-import latmod.latcore.LC;
+import latmod.core.mod.LC;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
 import cpw.mods.fml.common.network.NetworkRegistry;

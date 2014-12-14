@@ -1,8 +1,9 @@
-package latmod.latcore.client;
+package latmod.core.mod.client;
 
 import java.net.URL;
 
 import latmod.core.*;
+import latmod.core.client.playerdeco.PlayerDecorator;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)

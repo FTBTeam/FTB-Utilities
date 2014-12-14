@@ -2,8 +2,8 @@ package latmod.core.tile;
 import java.util.Arrays;
 
 import latmod.core.*;
+import latmod.core.mod.LC;
 import latmod.core.net.*;
-import latmod.latcore.LC;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

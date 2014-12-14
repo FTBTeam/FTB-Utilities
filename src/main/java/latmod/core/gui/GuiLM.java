@@ -3,7 +3,7 @@ import java.util.Map;
 
 import latmod.core.FastList;
 import latmod.core.client.LMRenderHelper;
-import latmod.latcore.LC;
+import latmod.core.mod.LC;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.AbstractClientPlayer;

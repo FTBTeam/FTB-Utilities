@@ -1,4 +1,4 @@
-package latmod.latcore.cmd;
+package latmod.core.cmd.mod;
 
 import latmod.core.*;
 import net.minecraft.command.ICommandSender;

@@ -1,4 +1,4 @@
-package latmod.latcore;
+package latmod.core.mod;
 
 import java.io.InputStream;
 import java.net.URL;

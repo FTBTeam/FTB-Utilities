@@ -1,18 +1,18 @@
-package latmod.latcore.cmd;
+package latmod.core.cmd.mod;
 
 import java.io.*;
 
 import latmod.core.*;
 import latmod.core.LMGamerules.RuleID;
 import latmod.core.MathHelper;
+import latmod.core.mod.LCEventHandler;
 import latmod.core.net.*;
-import latmod.latcore.LCEventHandler;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.*;
 import net.minecraft.event.*;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.item.*;
+import net.minecraft.nbt.*;
 import net.minecraft.util.*;
 import baubles.api.BaublesApi;
 
@@ -97,24 +97,12 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				{
 					EntityPlayer ep = p.getPlayer();
 					NBTTagCompound tag = new NBTTagCompound();
-					
-					ItemStack[] invStacks = new ItemStack[ep.inventory.getSizeInventory()];
-					
-					for(int i = 0; i < invStacks.length; i++)
-						invStacks[i] = ep.inventory.getStackInSlot(i);
-					
-					InvUtils.writeItemsToNBT(invStacks, tag, "Inventory");
+					writeItemsToNBT(ep.inventory, tag, "Inventory");
 					
 					if(LatCoreMC.isModInstalled("Baubles"))
 					{
 						IInventory inv = BaublesApi.getBaubles(ep);
-						
-						ItemStack[] baublesStacks = new ItemStack[inv.getSizeInventory()];
-						
-						for(int i = 0; i < baublesStacks.length; i++)
-							baublesStacks[i] = inv.getStackInSlot(i);
-						
-						InvUtils.writeItemsToNBT(baublesStacks, tag, "Baubles");
+						if(inv != null) writeItemsToNBT(inv, tag, "Baubles");
 					}
 					
 					NBTHelper.writeMap(new FileOutputStream(LatCore.newFile(new File(LatCoreMC.latmodFolder, "playerinvs/" + ep.getCommandSenderName() + ".dat"))), tag);
@@ -136,25 +124,12 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 					EntityPlayer ep = p.getPlayer();
 					NBTTagCompound tag = NBTHelper.readMap(new FileInputStream(new File(LatCoreMC.latmodFolder, "playerinvs/" + ep.getCommandSenderName() + ".dat")));
 					
-					ItemStack[] invStacks = new ItemStack[ep.inventory.getSizeInventory()];
-					InvUtils.readItemsFromNBT(invStacks, tag, "Inventory");
-					
-					for(int i = 0; i < invStacks.length; i++)
-						ep.inventory.setInventorySlotContents(i, invStacks[i]);
-					
-					ep.inventory.markDirty();
+					readItemsFromNBT(ep.inventory, tag, "Inventory");
 					
 					if(LatCoreMC.isModInstalled("Baubles"))
 					{
 						IInventory inv = BaublesApi.getBaubles(ep);
-						
-						ItemStack[] baublesStacks = new ItemStack[inv.getSizeInventory()];
-						InvUtils.readItemsFromNBT(baublesStacks, tag, "Baubles");
-						
-						for(int i = 0; i < baublesStacks.length; i++)
-							inv.setInventorySlotContents(i, baublesStacks[i]);
-						
-						inv.markDirty();
+						if(inv != null) readItemsFromNBT(inv, tag, "Baubles");
 					}
 				}
 				catch(Exception e)
@@ -167,7 +142,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			}
 			else if(args[2].equals("nick"))
 			{
-				if(args.length != 4) return "/" + commandName + " ";
+				if(args.length != 4) return "Missing arguments!";
 				p.setCustom(LMPlayer.Custom.NAME, args[3].trim());
 				return FINE + "Custom nickname changed to " + p.getDisplayName() + " for " + p.username;
 			}
@@ -189,7 +164,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				//ep.worldObj.setTileEntity(mop.blockX, mop.blockY, mop.blockZ, null);
 				ep.worldObj.setBlockToAir(mop.blockX, mop.blockY, mop.blockZ);
 				
-				return FINE + "Block destroyed";
+				return FINE + "Block destroyed!";
 			}
 			catch(Exception e)
 			{ return "Failed to destroy the block!"; }
@@ -220,5 +195,60 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 		}
 		
 		return onCommand(ics, null);
+	}
+	
+	private static void writeItemsToNBT(IInventory inv, NBTTagCompound tag, String s)
+	{
+		NBTTagList list = new NBTTagList();
+		
+		for(int i = 0; i < inv.getSizeInventory(); i++)
+		{
+			ItemStack is = inv.getStackInSlot(i);
+			
+			if(is != null)
+			{
+				NBTTagCompound tag1 = new NBTTagCompound();
+				tag1.setShort("S", (short)i);
+				tag1.setString("ID", LatCoreMC.getRegName(is.getItem()));
+		        tag1.setByte("C", (byte)is.stackSize);
+		        tag1.setShort("D", (short)is.getItemDamage());
+		        if (is.stackTagCompound != null) tag1.setTag("T", is.stackTagCompound);
+				list.appendTag(tag1);
+			}
+			
+		}
+		
+		if(list.tagCount() > 0) tag.setTag(s, list);
+	}
+	
+	private static void readItemsFromNBT(IInventory inv, NBTTagCompound tag, String s)
+	{
+		for(int i = 0; i < inv.getSizeInventory(); i++)
+			inv.setInventorySlotContents(i, null);
+		
+		if(tag.hasKey(s))
+		{
+			NBTTagList list = tag.getTagList(s, NBTHelper.MAP);
+			
+			for(int i = 0; i < list.tagCount(); i++)
+			{
+				NBTTagCompound tag1 = list.getCompoundTagAt(i);
+				Item item = LatCoreMC.getItemFromRegName(tag1.getString("ID"));
+		        
+		        if(item != null)
+		        {
+		        	int slot = tag1.getShort("S");
+		        	int size = tag1.getByte("C");
+		        	int dmg = Math.max(0, tag1.getShort("D"));
+		        	ItemStack is = new ItemStack(item, size, dmg);
+		        	if(tag1.hasKey("T", 10)) is.setTagCompound(tag1.getCompoundTag("T"));
+		        	inv.setInventorySlotContents(slot, is);
+		        }
+		        
+				if(i >= inv.getSizeInventory()) break;
+			}
+		}
+		
+		inv.markDirty();
 	}
 }

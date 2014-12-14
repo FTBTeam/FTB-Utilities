@@ -1,6 +1,6 @@
-package latmod.latcore.client;
+package latmod.core.mod.client;
+import latmod.core.mod.LCCommon;
 import latmod.core.tile.IGuiTile;
-import latmod.latcore.LCCommon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;

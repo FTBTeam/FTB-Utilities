@@ -1,4 +1,4 @@
-package latmod.latcore.client;
+package latmod.core.mod.client;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;

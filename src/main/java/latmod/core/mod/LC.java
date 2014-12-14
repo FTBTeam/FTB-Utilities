@@ -1,9 +1,9 @@
-package latmod.latcore;
+package latmod.core.mod;
 import java.io.File;
 
 import latmod.core.*;
+import latmod.core.cmd.mod.*;
 import latmod.core.net.LMNetHandler;
-import latmod.latcore.cmd.*;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
@@ -17,7 +17,7 @@ public class LC
 	@Mod.Instance(LC.MOD_ID)
 	public static LC inst;
 	
-	@SidedProxy(clientSide = "latmod.latcore.client.LCClient", serverSide = "latmod.latcore.LCCommon")
+	@SidedProxy(clientSide = "latmod.core.mod.client.LCClient", serverSide = "latmod.core.mod.LCCommon")
 	public static LCCommon proxy;
 	
 	public static LMMod mod;
@@ -36,7 +36,7 @@ public class LC
 		else
 			LatCoreMC.logger.info("Loading LatCoreMC, Build #" + VERSION);
 		
-		LatCoreMC.latmodFolder = new File(e.getModConfigurationDirectory().getParentFile(), "LatMod/");
+		LatCoreMC.latmodFolder = new File(e.getModConfigurationDirectory().getParentFile(), "latmod/");
 		if(!LatCoreMC.latmodFolder.exists()) LatCoreMC.latmodFolder.mkdirs();
 		
 		mod = new LMMod(MOD_ID, new LCConfig(e), null);

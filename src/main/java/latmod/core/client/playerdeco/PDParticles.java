@@ -1,4 +1,4 @@
-package latmod.latcore.client;
+package latmod.core.client.playerdeco;
 
 import latmod.core.*;
 import net.minecraftforge.client.event.RenderPlayerEvent;

@@ -7,22 +7,52 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class PDParticles extends PlayerDecorator
 {
-	public final String part;
+	public String part = null;
+	public int rarity_still;
+	public int rarity_moving;
+	public int quantity_still;
+	public int quantity_moving;
 	
-	public PDParticles(String s)
+	public double parA = 0D, parB = 0D, parC = 0D;
+	
+	public void onDataLoaded(FastMap<String, String> data)
 	{
-		part = s;
+		part = getS(data, "id", null);
+		
+		if(part != null)
+		{
+			rarity_still = getN(data, "rs", 10).intValue();
+			rarity_moving = getN(data, "rm", 3).intValue();
+			quantity_still = getN(data, "qs", 1).intValue();
+			quantity_moving = getN(data, "qm", 1).intValue();
+			
+			parA = getN(data, "pA", 0D).doubleValue();
+			parB = getN(data, "pB", 0D).doubleValue();
+			parC = getN(data, "pC", 0D).doubleValue();
+		}
 	}
 	
 	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
 	{
-		if(hasMoved(e.entity) ? (ParticleHelper.rand.nextInt(3) == 0) : (ParticleHelper.rand.nextInt(10) == 0))
+		if(part != null)
 		{
-			double w = e.entity.width / 2D;
-			double x = MathHelper.randomDouble(ParticleHelper.rand, e.entity.posX - w, e.entity.posX + w);
-			double y = MathHelper.randomDouble(ParticleHelper.rand, e.entity.posY - e.entity.getYOffset(), e.entity.posY);
-			double z = MathHelper.randomDouble(ParticleHelper.rand, e.entity.posZ - w, e.entity.posZ + w);
-			ParticleHelper.spawnPart(e.entity.worldObj, part, x, y, z);
+			boolean hasMoved = hasMoved(e.entity);
+			boolean spawnPart = false;
+			
+			if(hasMoved && rarity_moving > 0 && quantity_moving > 0) spawnPart = rarity_moving == 1 || ParticleHelper.rand.nextInt(rarity_moving) == 0;
+			if(!hasMoved && rarity_still > 0 && quantity_still > 0) spawnPart = rarity_still == 1 || ParticleHelper.rand.nextInt(rarity_still) == 0;
+			
+			if(spawnPart)
+			{
+				for(int i = 0; i < (hasMoved ? quantity_moving : quantity_still); i++)
+				{
+					double w = e.entity.width / 2D;
+					double x = MathHelper.randomDouble(ParticleHelper.rand, e.entity.posX - w, e.entity.posX + w);
+					double y = MathHelper.randomDouble(ParticleHelper.rand, e.entity.posY - e.entity.getYOffset(), e.entity.posY);
+					double z = MathHelper.randomDouble(ParticleHelper.rand, e.entity.posZ - w, e.entity.posZ + w);
+					ParticleHelper.spawnPart(e.entity.worldObj, part, x, y, z, parA, parB, parC);
+				}
+			}
 		}
 	}
 }

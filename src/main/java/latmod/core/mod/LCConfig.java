@@ -1,6 +1,7 @@
 package latmod.core.mod;
 
 import latmod.core.*;
+import latmod.core.cmd.CommandLevel;
 import net.minecraft.init.*;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -20,7 +21,7 @@ public class LCConfig extends LMConfig
 	{
 		General.load(get("general"));
 		Client.load(get("client"));
-		Commands.load(get("commands"));
+		Commands.load(get("cmds"));
 		Recipes.load(get("recipes"));
 		save();
 	}
@@ -63,29 +64,29 @@ public class LCConfig extends LMConfig
 	
 	public static class Commands
 	{
-		public static int latcore;
-		public static int latcoreadmin;
-		public static int realnick;
-		public static int teleport;
-		public static int list;
-		public static int gamemode;
-		public static int gamerule;
+		public static CommandLevel latcore;
+		public static CommandLevel latcoreadmin;
+		public static CommandLevel realnick;
+		public static CommandLevel teleport;
+		public static CommandLevel list;
+		public static CommandLevel gamemode;
+		public static CommandLevel gamerule;
 		
 		public static void load(Category c)
 		{
-			c.setCategoryComment(
-					"0 - Command is disabled",
-					"1 - Command can be used by anyone",
-					"2 - Command can only be used by OPs");
+			c.setCategoryComment("Valid values: NONE, ALL, OP");
 			
-			latcore = c.getInt("latcore", 1, 0, 2);
-			latcoreadmin = c.getInt("latcoreadmin", 2, 0, 2);
-			realnick = c.getInt("realnick", 1, 0, 2);
-			teleport = c.getInt("teleport", 2, 0, 2);
-			list = c.getInt("list", 1, 0, 2);
-			gamemode = c.getInt("gamemode", 2, 0, 2);
-			gamerule = c.getInt("gamerule", 2, 0, 2);
+			latcore = get(c, "latcore", CommandLevel.ALL);
+			latcoreadmin = get(c, "latcoreadmin", CommandLevel.OP);
+			realnick = get(c, "realnick", CommandLevel.ALL);
+			teleport = get(c, "teleport", CommandLevel.OP);
+			list = get(c, "list", CommandLevel.ALL);
+			gamemode = get(c, "gamemode", CommandLevel.OP);
+			gamerule = get(c, "gamerule", CommandLevel.OP);
 		}
+		
+		private static CommandLevel get(Category c, String s, CommandLevel def)
+		{ return CommandLevel.get(c.getString(s, def.toString(), CommandLevel.LEVEL_STRINGS)); }
 	}
 	
 	public static class Recipes

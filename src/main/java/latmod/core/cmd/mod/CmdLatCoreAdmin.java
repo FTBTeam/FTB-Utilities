@@ -5,6 +5,7 @@ import java.io.*;
 import latmod.core.*;
 import latmod.core.LMGamerules.RuleID;
 import latmod.core.MathHelper;
+import latmod.core.cmd.CommandLevel;
 import latmod.core.mod.LCEventHandler;
 import latmod.core.net.*;
 import net.minecraft.command.ICommandSender;
@@ -18,15 +19,15 @@ import baubles.api.BaublesApi;
 
 public class CmdLatCoreAdmin extends CommandBaseLC
 {
-	public CmdLatCoreAdmin(int e)
-	{ super("latcoreadmin", e); }
+	public CmdLatCoreAdmin(CommandLevel l)
+	{ super("latcoreadmin", l); }
 	
 	public void printHelp(ICommandSender ics)
 	{
 	}
 	
 	public String[] getSubcommands(ICommandSender ics)
-	{ return new String[] { "killblock", "gamerule", "player", "reloadPD" }; }
+	{ return new String[] { "killblock", "gamerule", "player", "reloadPD", "updateSkins" }; }
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
@@ -192,6 +193,17 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 		{
 			LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(LCEventHandler.ACTION_RELOAD_PD, null));
 			return FINE + "Reloaded Player Decorators";
+		}
+		else if(args[0].equals("updateSkins"))
+		{
+			for(EntityPlayer ep : LatCoreMC.getAllOnlinePlayers())
+			{
+				NBTTagCompound data1 = new NBTTagCompound();
+				data1.setString("UUID", ep.getUniqueID().toString());
+				LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(LMPlayer.Custom.SKIN.key, data1));
+			}
+			
+			return FINE + "Skins updated";
 		}
 		
 		return onCommand(ics, null);

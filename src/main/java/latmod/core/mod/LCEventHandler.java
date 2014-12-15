@@ -64,6 +64,9 @@ public class LCEventHandler
 			NBTTagCompound data = new NBTTagCompound();
 			data.setString("UUID", p.uuid.toString());
 			LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(ACTION_PLAYER_JOINED, data));
+			NBTTagCompound data1 = new NBTTagCompound();
+			data1.setString("UUID", p.uuid.toString());
+			LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(LMPlayer.Custom.SKIN.key, data1));
 		}
 		
 		e.player.refreshDisplayName();

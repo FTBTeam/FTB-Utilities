@@ -101,8 +101,6 @@ public class LCClientEventHandler
 						if(l.get(i) instanceof PDLatMod)
 							LatCoreMC.printChat(ep, EnumChatFormatting.BLUE + "Hello, LatMod member!");
 					}
-					
-					updateSkin(ep);
 				}
 			}
 		}
@@ -111,14 +109,16 @@ public class LCClientEventHandler
 		else if(e.action.equals(LCEventHandler.ACTION_RELOAD_PD))
 			ThreadCheckPlayerDecorators.init();
 		else if(e.action.equals(LMPlayer.Custom.SKIN.key))
-			updateSkin(e.player);
+			updateSkin(UUID.fromString(e.extraData.getString("UUID")));
 	}
 	
-	public void updateSkin(EntityPlayer ep)
+	public void updateSkin(UUID id)
 	{
+		EntityPlayer ep = Minecraft.getMinecraft().theWorld.func_152378_a(id);
 		if(ep == null || !(ep instanceof AbstractClientPlayer)) return;
 		
 		String s = LMPlayer.getPlayer(ep).getCustom(LMPlayer.Custom.SKIN);
+		if(s == null) s = "http://skins.minecraft.net/MinecraftSkins/" + ep.getCommandSenderName() + ".png";
 		
 		ResourceLocation loc = LC.mod.getLocation("custom_skin_" + ep.getUniqueID() + ".png");
 		Minecraft.getMinecraft().getTextureManager().loadTexture(loc, new ThreadDownloadImageData(null, s, AbstractClientPlayer.locationStevePng, new CustomSkinBufferDownload()));

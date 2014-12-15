@@ -1,14 +1,14 @@
 package latmod.core.cmd.mod;
 
 import latmod.core.*;
-import latmod.core.cmd.CommandLM;
+import latmod.core.cmd.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class CmdTpOverride extends CommandBaseLC // CommandTeleport
 {
-	public CmdTpOverride(int e)
-	{ super("tp", e); }
+	public CmdTpOverride(CommandLevel l)
+	{ super("tp", l); }
 	
 	public NameType getUsername(String[] args, int i)
 	{ return (i == 0 || i == 1) ? NameType.LM_ON : NameType.NONE; }

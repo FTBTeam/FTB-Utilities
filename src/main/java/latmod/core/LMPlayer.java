@@ -96,7 +96,9 @@ public class LMPlayer implements Comparable<LMPlayer>
 				if(c == Custom.NAME)
 					ep.refreshDisplayName();
 				
-				LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(c.key, null));
+				NBTTagCompound data = new NBTTagCompound();
+				data.setString("UUID", uuid.toString());
+				LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(c.key, data));
 			}
 		}
 	}

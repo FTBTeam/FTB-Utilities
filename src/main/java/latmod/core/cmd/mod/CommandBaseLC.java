@@ -1,18 +1,18 @@
 package latmod.core.cmd.mod;
 
-import latmod.core.cmd.CommandLM;
+import latmod.core.cmd.*;
 import net.minecraft.command.ICommandSender;
 
 public abstract class CommandBaseLC extends CommandLM
 {
-	public final int enabled;
+	public final CommandLevel level;
 	
-	public CommandBaseLC(String s, int e)
-	{ super(s); enabled = e; }
+	public CommandBaseLC(String s, CommandLevel l)
+	{ super(s); level = l; }
 	
 	public final int getRequiredPermissionLevel()
-	{ return (enabled == 2) ? 2 : ((enabled == 1) ? 0 : 5); }
+	{ return level.isOP() ? 2 : (level.isEnabled() ? 0 : 5); }
 	
 	public final boolean canCommandSenderUseCommand(ICommandSender ics)
-	{ return enabled > 0; }
+	{ return level.isEnabled(); }
 }

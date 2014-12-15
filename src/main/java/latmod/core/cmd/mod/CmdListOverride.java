@@ -1,14 +1,15 @@
 package latmod.core.cmd.mod;
 
 import latmod.core.*;
+import latmod.core.cmd.CommandLevel;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 
 public class CmdListOverride extends CommandBaseLC
 {
-	public CmdListOverride(int e)
-	{ super("list", e); }
+	public CmdListOverride(CommandLevel l)
+	{ super("list", l); }
 	
 	public String[] getSubcommands(ICommandSender ics)
 	{ return null; }

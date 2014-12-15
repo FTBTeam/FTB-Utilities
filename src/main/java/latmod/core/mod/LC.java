@@ -8,7 +8,7 @@ import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 
-@Mod(modid = LC.MOD_ID, name = "LatCoreMC", version = LC.VERSION, dependencies = "required-after:Forge@[10.13.2.1231,)", guiFactory = "latmod.latcore.client.LCGuiFactory")
+@Mod(modid = LC.MOD_ID, name = "LatCoreMC", version = LC.VERSION, dependencies = "required-after:Forge@[10.13.2.1231,)", guiFactory = "latmod.core.mod.client.LCGuiFactory")
 public class LC
 {
 	protected static final String MOD_ID = "LatCoreMC";
@@ -82,5 +82,5 @@ public class LC
 	}
 	
 	private static void regCmd(FMLServerStartingEvent e, CommandBaseLC c)
-	{ if(c.enabled > 0) e.registerServerCommand(c); }
+	{ if(c.level.isEnabled()) e.registerServerCommand(c); }
 }

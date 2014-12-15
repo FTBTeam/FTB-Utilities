@@ -1,13 +1,14 @@
 package latmod.core.cmd.mod;
 
 import latmod.core.*;
+import latmod.core.cmd.CommandLevel;
 import net.minecraft.command.*;
 import net.minecraft.util.EnumChatFormatting;
 
 public class CmdRealNick extends CommandBaseLC
 {
-	public CmdRealNick(int e)
-	{ super("realnick", e); }
+	public CmdRealNick(CommandLevel l)
+	{ super("realnick", l); }
 	
 	public String[] getSubcommands(ICommandSender ics)
 	{ return null; }

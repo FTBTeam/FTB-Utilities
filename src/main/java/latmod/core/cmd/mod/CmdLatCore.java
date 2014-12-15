@@ -1,13 +1,14 @@
 package latmod.core.cmd.mod;
 
 import latmod.core.*;
+import latmod.core.cmd.CommandLevel;
 import latmod.core.mod.ThreadCheckVersions;
 import net.minecraft.command.*;
 
 public class CmdLatCore extends CommandBaseLC
 {
-	public CmdLatCore(int e)
-	{ super("latcore", e); }
+	public CmdLatCore(CommandLevel l)
+	{ super("latcore", l); }
 	
 	public void printHelp(ICommandSender ics)
 	{

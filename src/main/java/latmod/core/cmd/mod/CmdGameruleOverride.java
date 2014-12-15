@@ -1,17 +1,18 @@
 package latmod.core.cmd.mod;
 
+import latmod.core.cmd.CommandLevel;
 import net.minecraft.command.*;
 
 public class CmdGameruleOverride extends CommandGameRule
 {
-	public final int enabled;
+public final CommandLevel level;
 	
-	public CmdGameruleOverride(int e)
-	{ enabled = e; }
+	public CmdGameruleOverride(CommandLevel l)
+	{ level = l; }
 	
 	public final int getRequiredPermissionLevel()
-	{ return (enabled == 2) ? 2 : ((enabled == 1) ? 0 : 5); }
+	{ return level.isOP() ? 2 : (level.isEnabled() ? 0 : 5); }
 	
 	public final boolean canCommandSenderUseCommand(ICommandSender ics)
-	{ return enabled > 0; }
+	{ return level.isEnabled(); }
 }

@@ -6,16 +6,17 @@ import latmod.core.*;
 import latmod.core.LMGamerules.RuleID;
 import latmod.core.MathHelper;
 import latmod.core.cmd.CommandLevel;
-import latmod.core.mod.LCEventHandler;
+import latmod.core.event.ReloadEvent;
 import latmod.core.net.*;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.*;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.event.*;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
 import net.minecraft.util.*;
 import baubles.api.BaublesApi;
+import cpw.mods.fml.relauncher.Side;
 
 public class CmdLatCoreAdmin extends CommandBaseLC
 {
@@ -27,7 +28,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 	}
 	
 	public String[] getSubcommands(ICommandSender ics)
-	{ return new String[] { "killblock", "gamerule", "player", "reloadPD", "updateSkins" }; }
+	{ return new String[] { "killblock", "gamerule", "player", "reload" }; }
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
@@ -51,6 +52,9 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				return l.toArray(new String[0]);
 			}
 		}
+		
+		if(i == 1 && isArg(args, 0, "reload"))
+			return new String[] { "all", "self", "none" };
 		
 		return super.getTabStrings(ics, args, i);
 	}
@@ -96,7 +100,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				
 				try
 				{
-					EntityPlayer ep = p.getPlayer();
+					EntityPlayerMP ep = p.getPlayer();
 					NBTTagCompound tag = new NBTTagCompound();
 					writeItemsToNBT(ep.inventory, tag, "Inventory");
 					
@@ -122,7 +126,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				
 				try
 				{
-					EntityPlayer ep = p.getPlayer();
+					EntityPlayerMP ep = p.getPlayer();
 					NBTTagCompound tag = NBTHelper.readMap(new FileInputStream(new File(LatCoreMC.latmodFolder, "playerinvs/" + ep.getCommandSenderName() + ".dat")));
 					
 					readItemsFromNBT(ep.inventory, tag, "Inventory");
@@ -189,18 +193,32 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				}
 			}
 		}
-		else if(args[0].equals("reloadPD"))
+		else if(args[0].equals("reload"))
 		{
-			LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(LCEventHandler.ACTION_RELOAD_PD, null));
-			return FINE + "Reloaded Player Decorators";
+			String s = "none";
+			if(args.length >= 2) s = args[1];
+			
+			new ReloadEvent(Side.SERVER).post();
+			
+			if(s.equals("self"))
+			{
+				EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
+				LMNetHandler.INSTANCE.sendTo(new MessageCustomServerAction(ReloadEvent.ACTION, null), ep);
+			}
+			else if(s.equals("all")) LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(ReloadEvent.ACTION, null));
+			
+			return FINE + "LatMods Reloaded";
 		}
 		else if(args[0].equals("updateSkins"))
 		{
-			for(EntityPlayer ep : LatCoreMC.getAllOnlinePlayers())
+			if(LatCoreMC.hasOnlinePlayers()) for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers())
 			{
-				NBTTagCompound data1 = new NBTTagCompound();
-				data1.setString("UUID", ep.getUniqueID().toString());
-				LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(LMPlayer.Custom.SKIN.key, data1));
+				if(ep != null)
+				{
+					NBTTagCompound data1 = new NBTTagCompound();
+					data1.setString("UUID", ep.getUniqueID().toString());
+					LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(LMPlayer.Custom.SKIN.key, data1));
+				}
 			}
 			
 			return FINE + "Skins updated";

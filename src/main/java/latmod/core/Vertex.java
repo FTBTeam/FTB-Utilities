@@ -80,5 +80,5 @@ public final class Vertex implements Cloneable
 	{ return distSq(v.x, v.y, v.z); }
 	
 	public double dist(Vertex v)
-	{ return MathHelper.sqrt(dist(v)); }
+	{ return MathHelper.sqrt(distSq(v)); }
 }

@@ -3,11 +3,11 @@ import java.io.*;
 import java.util.UUID;
 
 import latmod.core.*;
+import latmod.core.event.*;
 import latmod.core.net.*;
 import latmod.core.tile.IWailaTile;
 import latmod.core.waila.*;
 import net.minecraft.nbt.*;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fluids.IFluidHandler;
@@ -18,33 +18,31 @@ public class LCEventHandler
 {
 	public static final String ACTION_PLAYER_JOINED = "PlayerJoined";
 	public static final String ACTION_OPEN_URL = "OpenURL";
-	public static final String ACTION_RELOAD_PD = "ReloadPD";
 	
 	public static final LCEventHandler instance = new LCEventHandler();
 	
-	public static final UUID UUID_LatvianModder = UUID.fromString("5afb9a5b-207d-480e-8879-67bc848f9a8f");
+	public static final UUID UUID_LatvianModder  = UUID.fromString("5afb9a5b-207d-480e-8879-67bc848f9a8f");
 	
 	@SubscribeEvent
-	public void playerJoined(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e)
+	public void playerLoggedIn(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e)
 	{
-		UUID id = e.player.getUniqueID();
-		LatCoreMC.logger.info("UUID: " + id);
+		//LatCoreMC.logger.info("UUID: " + id);
 		
 		boolean first = false;
 		
-		LMPlayer p = LMPlayer.getPlayer(id);
+		LMPlayer p = LMPlayer.getPlayer(e.player);
 		
 		if(p == null)
 		{
-			p = new LMPlayer(id);
+			p = new LMPlayer(e.player.getUniqueID());
 			LMPlayer.list.add(p);
 		}
 		
 		p.username = e.player.getCommandSenderName();
 		
-		if(!p.customData().hasKey("IsOld"))
+		if(!p.customData.hasKey("IsOld"))
 		{
-			p.customData().setBoolean("IsOld", true);
+			p.customData.setBoolean("IsOld", true);
 			
 			if(p.uuid.equals(UUID_LatvianModder))
 			{
@@ -58,7 +56,7 @@ public class LCEventHandler
 		if(LCConfig.General.checkUpdates)
 			ThreadCheckVersions.init(e.player, false);
 		
-		new LMPlayer.LMPlayerLoggedInEvent(p, e.player, first).post();
+		new LMPlayerEvent.LoggedIn(p, e.player, first).post();
 		
 		{
 			NBTTagCompound data = new NBTTagCompound();
@@ -70,6 +68,13 @@ public class LCEventHandler
 		}
 		
 		e.player.refreshDisplayName();
+	}
+	
+	@SubscribeEvent
+	public void playerLoggedOut(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent e)
+	{
+		LMPlayer p = LMPlayer.getPlayer(e.player);
+		if(p != null) new LMPlayerEvent.LoggedOut(p, e.player).post();
 	}
 	
 	@SubscribeEvent
@@ -108,7 +113,7 @@ public class LCEventHandler
 						LMPlayer p = new LMPlayer(UUID.fromString(tag1.getString("UUID")));
 						p.readFromNBT(tag1);
 						
-						new LMPlayer.DataLoadedEvent(p).post();
+						new LMPlayerEvent.DataLoaded(p).post();
 						
 						LMPlayer.list.add(p);
 					}
@@ -121,17 +126,6 @@ public class LCEventHandler
 				{ ex.printStackTrace(); }
 			}
 		}
-	}
-	
-	public static class LoadCustomLMDataEvent extends Event
-	{
-		public final NBTTagCompound tag;
-		
-		public LoadCustomLMDataEvent(NBTTagCompound t)
-		{ tag = t; }
-		
-		public void post()
-		{ MinecraftForge.EVENT_BUS.post(this); }
 	}
 	
 	@SubscribeEvent
@@ -154,7 +148,7 @@ public class LCEventHandler
 					LMPlayer p = LMPlayer.list.get(i);
 					p.writeToNBT(tag1);
 					
-					new LMPlayer.DataSavedEvent(p).post();
+					new LMPlayerEvent.DataSaved(p).post();
 					
 					tag1.setString("UUID", p.uuid.toString());
 					
@@ -174,17 +168,6 @@ public class LCEventHandler
 				LatCoreMC.logger.warn("Error occured while saving LatCoreMC.dat!");
 			}
 		}
-	}
-	
-	public static class SaveCustomLMDataEvent extends Event
-	{
-		public final NBTTagCompound tag;
-		
-		public SaveCustomLMDataEvent(NBTTagCompound t)
-		{ tag = t; }
-		
-		public void post()
-		{ MinecraftForge.EVENT_BUS.post(this); }
 	}
 	
 	@SubscribeEvent(priority = EventPriority.LOW)

@@ -4,7 +4,6 @@ import java.io.File;
 import latmod.core.*;
 import latmod.core.cmd.mod.*;
 import latmod.core.net.LMNetHandler;
-import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 
@@ -22,11 +21,7 @@ public class LC
 	
 	public static LMMod mod;
 	
-	public LC()
-	{
-		MinecraftForge.EVENT_BUS.register(LCEventHandler.instance);
-		FMLCommonHandler.instance().bus().register(LCEventHandler.instance);
-	}
+	public LC() { LatCoreMC.addEventHandler(LCEventHandler.instance, true, true, true); }
 	
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)

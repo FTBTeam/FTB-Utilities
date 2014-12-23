@@ -2,6 +2,7 @@ package latmod.core.waila;
 
 import java.util.List;
 
+import latmod.core.event.RegisterWailaEvent;
 import latmod.core.tile.IWailaTile;
 import mcp.mobius.waila.api.*;
 import net.minecraft.item.ItemStack;

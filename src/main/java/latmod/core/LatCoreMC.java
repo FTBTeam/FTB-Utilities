@@ -15,6 +15,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.*;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
@@ -25,6 +26,7 @@ import org.apache.logging.log4j.*;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
 import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.eventhandler.EventBus;
 import cpw.mods.fml.common.network.*;
 import cpw.mods.fml.common.registry.*;
 import cpw.mods.fml.relauncher.Side;
@@ -34,6 +36,7 @@ public class LatCoreMC
 	public static final String MC_VERSION = "1.7.10";
 	
 	public static final Logger logger = LogManager.getLogger("LatCoreMC");
+	public static final EventBus EVENT_BUS = new EventBus();
 	
 	public static final int ANY = OreDictionary.WILDCARD_VALUE;
 	public static final int TOP = ForgeDirection.UP.ordinal();
@@ -63,7 +66,7 @@ public class LatCoreMC
 					ep1.addChatMessage(msg);
 			}
 		}
-		else LatCoreMC.logger.info(o);
+		else logger.info(o);
 	}
 	
 	public static final void printChat(ICommandSender ep, Object o)
@@ -112,6 +115,13 @@ public class LatCoreMC
 	public static void addGuiHandler(Object mod, IGuiHandler i)
 	{ NetworkRegistry.INSTANCE.registerGuiHandler(mod, i); }
 	
+	public static void addEventHandler(Object o, boolean forge, boolean cpw, boolean lm)
+	{
+		if(forge) MinecraftForge.EVENT_BUS.register(o);
+		if(cpw) FMLCommonHandler.instance().bus().register(o);
+		if(lm) EVENT_BUS.register(o);
+	}
+	
 	public static Fluid addFluid(Fluid f)
 	{
 		Fluid f1 = FluidRegistry.getFluid(f.getName());
@@ -138,13 +148,6 @@ public class LatCoreMC
 		if(i != null) return new ItemStack(i, dmg);
 		return null;
 	}
-
-	/*public static String getRegName(Item item, boolean removeMCDomain)
-	{
-		String s = Item.itemRegistry.getNameForObject(item);
-		if(s != null && removeMCDomain && s.startsWith("minecraft:"))
-			s = s.substring(10); return s;
-	}*/
 	
 	public static String getRegName(Item item)
 	{ return Item.itemRegistry.getNameForObject(item); }
@@ -156,19 +159,24 @@ public class LatCoreMC
 	{
 		if ((e.worldObj.isRemote) || (e.isDead) || e.dimension == dim) return;
 		
-		if(e instanceof EntityPlayer) { e.travelToDimension(dim); return; }
+		if(e instanceof EntityPlayerMP)
+		{
+			e.travelToDimension(dim);
+			MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP)e, dim);
+			return;
+		}
 		
 		e.worldObj.theProfiler.startSection("changeDimension");
 		MinecraftServer ms = MinecraftServer.getServer();
-		int j = e.dimension;
-		WorldServer ws0 = ms.worldServerForDimension(j);
+		int dim0 = e.dimension;
+		WorldServer ws0 = ms.worldServerForDimension(dim0);
 		WorldServer ws1 = ms.worldServerForDimension(dim);
 		e.dimension = dim;
 		
 		e.worldObj.removeEntity(e);
 		e.isDead = false;
 		e.worldObj.theProfiler.startSection("reposition");
-		ms.getConfigurationManager().transferEntityToWorld(e, j, ws0, ws1);
+		ms.getConfigurationManager().transferEntityToWorld(e, dim0, ws0, ws1);
 		e.worldObj.theProfiler.endStartSection("reloading");
 		Entity entity = EntityList.createEntityByName(EntityList.getEntityString(e), ws1);
 		
@@ -204,7 +212,10 @@ public class LatCoreMC
 	
 	public static boolean isWrench(ItemStack is)
 	{ return is != null && is.getItem() != null && is.getItem().getHarvestLevel(is, "wrench") != -1; }
-
+	
+	public static boolean hasOnlinePlayers()
+	{ return !MinecraftServer.getServer().getConfigurationManager().playerEntityList.isEmpty(); }
+	
 	@SuppressWarnings("unchecked")
 	public static FastList<EntityPlayerMP> getAllOnlinePlayers()
 	{
@@ -250,4 +261,13 @@ public class LatCoreMC
 	
 	public static String removeFormatting(String s)
 	{ return textFormattingPattern.matcher(s).replaceAll(""); }
+	
+	public static MinecraftServer getServer()
+	{ return FMLCommonHandler.instance().getMinecraftServerInstance(); }
+	
+	public static Exception executeCommand(ICommandSender ics, String cmd, String... args)
+	{
+		try { getServer().getCommandManager().executeCommand(ics, (cmd + " " + LatCore.unsplit(args, " ")).trim()); }
+		catch(Exception e) { return e; } return null;
+	}
 }

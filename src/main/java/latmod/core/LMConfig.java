@@ -108,4 +108,7 @@ public abstract class LMConfig
 	{ return (mod == null ? "" : mod.assets.replace(':', '.')) + "config." + s; }
 	
 	public abstract void load();
+	
+	public void reload()
+	{ config.load(); load(); }
 }

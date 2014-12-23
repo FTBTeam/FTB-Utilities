@@ -366,4 +366,17 @@ public class LatCore
 		if(s0 == null && s1 != null) return true;
 		return !s0.equals(s1);
 	}
+	
+	public static String formatTime(long secs)
+	{
+		long h = (secs / 3600) % 24;
+		long m = (secs / 60) % 60;
+		long s = secs % 60;
+		
+		String hs = "" + h; if(hs.length() == 1) hs = "0" + hs;
+		String ms = "" + m; if(ms.length() == 1) ms = "0" + ms;
+		String ss = "" + s; if(ss.length() == 1) ss = "0" + ss;
+		
+		return hs + ":" + ms + ":" + ss;
+	}
 }

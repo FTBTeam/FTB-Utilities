@@ -1,9 +1,9 @@
 package latmod.core.net;
+
 import io.netty.buffer.ByteBuf;
 
 import java.util.UUID;
 
-import latmod.core.mod.LC;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -12,15 +12,15 @@ import cpw.mods.fml.relauncher.Side;
 
 public class LMNetHandler
 {
-	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(LC.mod.modID);
+	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel("LatCoreMC");
 	
 	public static void init()
 	{
 		INSTANCE.registerMessage(MessageClientTileAction.class, MessageClientTileAction.class, 1, Side.SERVER);
 		INSTANCE.registerMessage(MessageClientItemAction.class, MessageClientItemAction.class, 2, Side.SERVER);
 		INSTANCE.registerMessage(MessageCustomClientAction.class, MessageCustomClientAction.class, 3, Side.SERVER);
-		INSTANCE.registerMessage(MessageCustomServerAction.class, MessageCustomServerAction.class, 3, Side.CLIENT);
-		INSTANCE.registerMessage(MessageUpdatePlayerData.class, MessageUpdatePlayerData.class, 4, Side.CLIENT);
+		INSTANCE.registerMessage(MessageCustomServerAction.class, MessageCustomServerAction.class, 4, Side.CLIENT);
+		INSTANCE.registerMessage(MessageUpdatePlayerData.class, MessageUpdatePlayerData.class, 5, Side.CLIENT);
 	}
 	
 	// Helper methods //

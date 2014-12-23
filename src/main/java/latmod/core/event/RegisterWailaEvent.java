@@ -1,10 +1,9 @@
-package latmod.core.waila;
+package latmod.core.event;
 
+import latmod.core.waila.*;
 import mcp.mobius.waila.api.IWailaRegistrar;
-import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.common.eventhandler.Event;
 
-public class RegisterWailaEvent extends Event
+public class RegisterWailaEvent extends EventLM
 {
 	public final IWailaRegistrar registry;
 	
@@ -18,9 +17,6 @@ public class RegisterWailaEvent extends Event
 		if(h.types.contains(WailaType.BODY)) registry.registerBodyProvider(h, block);
 		if(h.types.contains(WailaType.TAIL)) registry.registerTailProvider(h, block);
 	}
-	
-	public void post()
-	{ MinecraftForge.EVENT_BUS.post(this); }
 	
 	public static void registerHandlers(IWailaRegistrar i)
 	{ new RegisterWailaEvent(i).post(); }

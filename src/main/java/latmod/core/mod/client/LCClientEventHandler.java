@@ -4,6 +4,7 @@ import java.util.UUID;
 import latmod.core.*;
 import latmod.core.client.LatCoreMCClient;
 import latmod.core.client.playerdeco.*;
+import latmod.core.event.ReloadEvent;
 import latmod.core.mod.*;
 import latmod.core.net.CustomActionEvent;
 import latmod.core.tile.IPaintable;
@@ -106,10 +107,10 @@ public class LCClientEventHandler
 		}
 		else if(e.action.equals(LCEventHandler.ACTION_OPEN_URL))
 			LatCore.openURL(e.extraData.getString("URL"));
-		else if(e.action.equals(LCEventHandler.ACTION_RELOAD_PD))
-			ThreadCheckPlayerDecorators.init();
 		else if(e.action.equals(LMPlayer.Custom.SKIN.key))
 			updateSkin(UUID.fromString(e.extraData.getString("UUID")));
+		else if(e.action.equals(ReloadEvent.ACTION))
+			new ReloadEvent(Side.CLIENT).post();
 	}
 	
 	public void updateSkin(UUID id)
@@ -137,6 +138,15 @@ public class LCClientEventHandler
 				for(int i = 0; i < l.size(); i++)
 					l.get(i).onPlayerRender(e);
 			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onReload(ReloadEvent r)
+	{
+		if(r.side.isClient())
+		{
+			ThreadCheckPlayerDecorators.init();
 		}
 	}
 }

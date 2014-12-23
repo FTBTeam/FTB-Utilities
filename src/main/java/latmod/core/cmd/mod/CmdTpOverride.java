@@ -56,7 +56,7 @@ public class CmdTpOverride extends CommandBaseLC // CommandTeleport
 			x = to.posX;
 			y = to.posY;
 			z = to.posZ;
-			dim = to.worldObj.provider.dimensionId;
+			dim = to.dimension;
 			
 			LatCoreMC.printChat(who, "Teleported to " + LMPlayer.getPlayer(to).getDisplayName());
 			if(who != ics) LatCoreMC.printChat(ics, "Teleported " + LMPlayer.getPlayer(who).getDisplayName() + " to " + LMPlayer.getPlayer(to).getDisplayName());
@@ -67,16 +67,20 @@ public class CmdTpOverride extends CommandBaseLC // CommandTeleport
 			x = func_110666_a(ics, who.posX, args[++ai]);
 			y = func_110666_a(ics, who.posY, args[++ai]);
 			z = func_110666_a(ics, who.posZ, args[++ai]);
-			dim = who.worldObj.provider.dimensionId;
+			dim = who.dimension;
 			
 			LatCoreMC.printChat(who, "Teleported to " + LatCore.stripInt(x, y, z));
 			if(who != ics) LatCoreMC.printChat(who, "Teleported " + LMPlayer.getPlayer(who).getDisplayName() + " to " + LatCore.stripInt(x, y, z));
 		}
 		else printHelp(ics);
 		
-		if(who.worldObj.provider.dimensionId != dim)
-			return "Can't teleport to another dimension!";
-		else who.playerNetServerHandler.setPlayerLocation(x, y, z, who.rotationYaw, who.rotationPitch);
+		if(who.dimension != dim)
+		{
+			LatCoreMC.teleportEntity(who, dim);
+			//return "Can't teleport to another dimension!";
+		}
+		
+		who.playerNetServerHandler.setPlayerLocation(x, y, z, who.rotationYaw, who.rotationPitch);
 		return null;
 	}
 }

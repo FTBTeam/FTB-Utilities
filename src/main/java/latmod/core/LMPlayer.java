@@ -2,13 +2,13 @@ package latmod.core;
 
 import java.util.UUID;
 
+import latmod.core.event.LMPlayerEvent;
 import latmod.core.net.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.common.eventhandler.Event;
+import net.minecraftforge.common.util.FakePlayer;
 import cpw.mods.fml.relauncher.Side;
 
 public class LMPlayer implements Comparable<LMPlayer>
@@ -57,22 +57,12 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public String username;
 	private final String[] custom = new String[Custom.values().length];
 	public final FastMap<UUID, Status> friends = new FastMap<UUID, Status>();
-	private NBTTagCompound customData = null;
+	public NBTTagCompound customData = new NBTTagCompound();
 	
 	public LMPlayer(UUID id)
 	{
 		uuid = id;
 	}
-	
-	public NBTTagCompound customData()
-	{
-		if(customData == null)
-			customData = new NBTTagCompound();
-		return customData;
-	}
-	
-	public boolean hasCustomData()
-	{ return customData != null; }
 	
 	public void setCustom(Custom c, String s)
 	{
@@ -134,7 +124,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 	{
 		if(LatCoreMC.isServer())
 		{
-			new DataChangedEvent(this, Side.SERVER, channel).post();
+			new LMPlayerEvent.DataChanged(this, Side.SERVER, channel).post();
 			if(clientUpdate) LMNetHandler.INSTANCE.sendToAll(new MessageUpdatePlayerData(this, channel));
 		}
 	}
@@ -291,53 +281,10 @@ public class LMPlayer implements Comparable<LMPlayer>
 	
 	public static LMPlayer getPlayer(Object o)
 	{
-		if(o instanceof LMPlayer)
-			return (LMPlayer)o;
+		if(o == null) return null;
+		if(o instanceof FakePlayer) return null;
+		if(o instanceof LMPlayer) return (LMPlayer)o;
 		return list.getObj(o);
-	}
-	
-	private static class LMPlayerEvent extends Event
-	{
-		public final LMPlayer player;
-		
-		public LMPlayerEvent(LMPlayer p)
-		{ player = p; }
-		
-		public void post()
-		{ MinecraftForge.EVENT_BUS.post(this); }
-	}
-	
-	public static class DataChangedEvent extends LMPlayerEvent
-	{
-		public final Side side;
-		public final String channel;
-		
-		public DataChangedEvent(LMPlayer p, Side s, String c)
-		{ super(p); side = s; channel = c; }
-		
-		public boolean isChannel(String s)
-		{ return channel != null && channel.equals(s); }
-	}
-	
-	public static class DataLoadedEvent extends LMPlayerEvent
-	{
-		public DataLoadedEvent(LMPlayer p)
-		{ super(p); }
-	}
-	
-	public static class DataSavedEvent extends LMPlayerEvent
-	{
-		public DataSavedEvent(LMPlayer p)
-		{ super(p); }
-	}
-	
-	public static class LMPlayerLoggedInEvent extends LMPlayerEvent
-	{
-		public final EntityPlayer entityPlayer;
-		public final boolean firstTime;
-		
-		public LMPlayerLoggedInEvent(LMPlayer p, EntityPlayer ep, boolean b)
-		{ super(p); entityPlayer = ep; firstTime = b; }
 	}
 	
 	public static String[] getAllNames(boolean online, boolean display)

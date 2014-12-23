@@ -1,5 +1,6 @@
 package latmod.core.net;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.Side;
@@ -35,5 +36,9 @@ public class MessageCustomClientAction implements IMessage, IMessageHandler<Mess
 	}
 	
 	public IMessage onMessage(MessageCustomClientAction message, MessageContext ctx)
-	{ new CustomActionEvent(ctx.getServerHandler().playerEntity, message.action, message.extraData, Side.SERVER).post(); return null; }
+	{
+		EntityPlayer ep = ctx.getServerHandler().playerEntity;
+		new CustomActionEvent(ep, message.action, message.extraData, Side.SERVER).post();
+		return null;
+	}
 }

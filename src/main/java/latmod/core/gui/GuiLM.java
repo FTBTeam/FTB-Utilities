@@ -1,21 +1,14 @@
 package latmod.core.gui;
-import java.util.Map;
-
 import latmod.core.FastList;
 import latmod.core.client.LMRenderHelper;
 import latmod.core.mod.LC;
-import net.minecraft.client.Minecraft;
+import latmod.core.mod.client.LCClient;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
-
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
@@ -62,8 +55,6 @@ public abstract class GuiLM extends GuiContainer
 	public final ContainerLM container;
 	public final ResourceLocation texture;
 	public final FastList<WidgetLM> widgets;
-	public int textureWidth = 256;
-	public int textureHeight = 256;
 	
 	public GuiLM(ContainerLM c, ResourceLocation tex)
 	{
@@ -140,22 +131,12 @@ public abstract class GuiLM extends GuiContainer
 	}
 	
 	public void drawTexturedModalRect(int x, int y, int u, int v, int w, int h)
-	{
-		double scX = 1D / (double)textureWidth;
-		double scY = 1D / (double)textureHeight;
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(x + 0, y + h, zLevel, (u + 0) * scX, (v + h) * scY);
-		tessellator.addVertexWithUV(x + w, y + h, zLevel, (u + w) * scX, (v + h) * scY);
-		tessellator.addVertexWithUV(x + w, y + 0, zLevel, (u + w) * scX, (v + 0) * scY);
-		tessellator.addVertexWithUV(x + 0, y + 0, zLevel, (u + 0) * scX, (v + 0) * scY);
-		tessellator.draw();
-	}
+	{ drawTexturedModalRectD(x, y, u, v, w, h); }
 	
 	public void drawTexturedModalRectD(double x, double y, double u, double v, double w, double h)
 	{
-		double scX = 1D / (double)textureWidth;
-		double scY = 1D / (double)textureHeight;
+		double scX = 1D / 256D;
+		double scY = 1D / 256D;
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
 		tessellator.addVertexWithUV(x + 0, y + h, zLevel, (u + 0) * scX, (v + h) * scY);
@@ -174,24 +155,10 @@ public abstract class GuiLM extends GuiContainer
 	public FontRenderer getFontRenderer()
 	{ return fontRendererObj; }
 	
-	public void drawPlayerHead(GameProfile profile, double x, double y, double w, double h)
+	public void drawPlayerHead(String username, double x, double y, double w, double h)
 	{
-		ResourceLocation resourcelocation = AbstractClientPlayer.locationStevePng;
+		setTexture(LCClient.getSkinTexture(username));
 		
-		if (profile != null)
-		{
-			Minecraft minecraft = Minecraft.getMinecraft();
-			
-			@SuppressWarnings("rawtypes")
-			Map map = minecraft.func_152342_ad().func_152788_a(profile);
-			
-			if (map.containsKey(MinecraftProfileTexture.Type.SKIN))
-				resourcelocation = minecraft.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);
-		}
-		
-		setTexture(resourcelocation);
-		
-		double z = getZLevel();
 		Tessellator tessellator = Tessellator.instance;
 		
 		double minU = 1D / 8D;
@@ -200,10 +167,10 @@ public abstract class GuiLM extends GuiContainer
 		double maxV = 2D / 4D;
 		
 		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(x + 0, y + h, z, minU, maxV);
-		tessellator.addVertexWithUV(x + w, y + h, z, maxU, maxV);
-		tessellator.addVertexWithUV(x + w, y + 0, z, maxU, minV);
-		tessellator.addVertexWithUV(x + 0, y + 0, z, minU, minV);
+		tessellator.addVertexWithUV(x + 0, y + h, zLevel, minU, maxV);
+		tessellator.addVertexWithUV(x + w, y + h, zLevel, maxU, maxV);
+		tessellator.addVertexWithUV(x + w, y + 0, zLevel, maxU, minV);
+		tessellator.addVertexWithUV(x + 0, y + 0, zLevel, minU, minV);
 		tessellator.draw();
 		
 		double minU2 = 5D / 8D;
@@ -212,10 +179,10 @@ public abstract class GuiLM extends GuiContainer
 		double maxV2 = 2D / 4D;
 		
 		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(x + 0, y + h, z, minU2, maxV2);
-		tessellator.addVertexWithUV(x + w, y + h, z, maxU2, maxV2);
-		tessellator.addVertexWithUV(x + w, y + 0, z, maxU2, minV2);
-		tessellator.addVertexWithUV(x + 0, y + 0, z, minU2, minV2);
+		tessellator.addVertexWithUV(x + 0, y + h, zLevel, minU2, maxV2);
+		tessellator.addVertexWithUV(x + w, y + h, zLevel, maxU2, maxV2);
+		tessellator.addVertexWithUV(x + w, y + 0, zLevel, maxU2, minV2);
+		tessellator.addVertexWithUV(x + 0, y + 0, zLevel, minU2, minV2);
 		tessellator.draw();
 	}
 }

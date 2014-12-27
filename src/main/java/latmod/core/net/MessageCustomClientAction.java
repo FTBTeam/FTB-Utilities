@@ -1,44 +1,25 @@
 package latmod.core.net;
-import io.netty.buffer.ByteBuf;
+import latmod.core.event.CustomActionEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.Side;
 
-public class MessageCustomClientAction implements IMessage, IMessageHandler<MessageCustomClientAction, IMessage>
+public class MessageCustomClientAction extends MessageLM implements IMessageHandler<MessageCustomClientAction, IMessage>
 {
-	public String action;
-	public NBTTagCompound extraData;
-	
 	public MessageCustomClientAction() { }
 	
-	public MessageCustomClientAction(String s, NBTTagCompound tag)
+	public MessageCustomClientAction(String action, NBTTagCompound extraData)
 	{
-		action = s;
-		extraData = tag;
+		data = new NBTTagCompound();
+		data.setString("A", action);
+		if(extraData != null) data.setTag("D", extraData);
 	}
 	
-	public void fromBytes(ByteBuf data)
-	{
-		NBTTagCompound tag = LMNetHandler.readNBTTagCompound(data);
-		
-		action = tag.getString("Action");
-		extraData = (NBTTagCompound)tag.getTag("Data");
-	}
-	
-	public void toBytes(ByteBuf data)
-	{
-		NBTTagCompound tag = new NBTTagCompound();
-		tag.setString("Action", action);
-		if(extraData != null) tag.setTag("Data", extraData);
-		
-		LMNetHandler.writeNBTTagCompound(data, tag);
-	}
-	
-	public IMessage onMessage(MessageCustomClientAction message, MessageContext ctx)
+	public IMessage onMessage(MessageCustomClientAction m, MessageContext ctx)
 	{
 		EntityPlayer ep = ctx.getServerHandler().playerEntity;
-		new CustomActionEvent(ep, message.action, message.extraData, Side.SERVER).post();
+		new CustomActionEvent(ep, m.data.getString("A"), (NBTTagCompound)m.data.getTag("D"), Side.SERVER).post();
 		return null;
 	}
 }

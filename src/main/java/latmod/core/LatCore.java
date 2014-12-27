@@ -11,6 +11,8 @@ import com.google.gson.reflect.TypeToken;
 /** Made by LatvianModder */
 public class LatCore
 {
+	public static final int DAY24 = 24 * 60 * 60;
+	
 	@SuppressWarnings("all")
 	public static URL getURL(String s)
 	{
@@ -367,11 +369,17 @@ public class LatCore
 		return !s0.equals(s1);
 	}
 	
-	public static String formatTime(long secs)
+	public static String formatTime(long secs, boolean wrap)
 	{
-		long h = (secs / 3600) % 24;
-		long m = (secs / 60) % 60;
-		long s = secs % 60;
+		long secs1 = secs;
+		if(secs < 0L) secs1 = -secs1;
+		if(wrap) secs1 %= DAY24;
+		
+		long h = (secs1 / 3600L);
+		if(wrap) h %= 24L;
+		
+		long m = (secs1 / 60L) % 60L;
+		long s = secs1 % 60L;
 		
 		String hs = "" + h; if(hs.length() == 1) hs = "0" + hs;
 		String ms = "" + m; if(ms.length() == 1) ms = "0" + ms;

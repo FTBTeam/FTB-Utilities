@@ -10,6 +10,7 @@ public class LMSecurity
 {
 	public UUID owner;
 	public Level level;
+	private TwoObjects<String, Boolean> group = null;
 	
 	public LMSecurity(UUID id)
 	{
@@ -17,6 +18,7 @@ public class LMSecurity
 		if(owner == null)
 			owner = UUID.randomUUID();
 		level = Level.PUBLIC;
+		group = null;
 	}
 	
 	public void readFromNBT(NBTTagCompound tag, String s)
@@ -48,12 +50,16 @@ public class LMSecurity
 		if(level == Level.PRIVATE) return false;
 		
 		LMPlayer o = LMPlayer.getPlayer(owner);
+		LMPlayer p = LMPlayer.getPlayer(id);
 		
-		if(o != null)
+		if(o != null && p != null)
 		{
-			LMPlayer.Status s = o.getStatusFor(LMPlayer.getPlayer(id));
-			if(level == Level.WHITELIST) return s.isFriend();
-			if(level == Level.BLACKLIST) return !s.isEnemy();
+			if(level == Level.FRIENDS) return o.isFriend(p);
+			if(level == Level.CUSTOM && group != null)
+			{
+				boolean has = o.getGroupsFor(p.uuid).contains(group.object1);
+				return (has && group.object2) || (!has && !group.object2);
+			}
 		}
 		
 		return false;
@@ -62,14 +68,20 @@ public class LMSecurity
 	public boolean canInteract(EntityPlayer ep)
 	{ return canInteract((ep == null) ? null : ep.getUniqueID()); }
 	
+	public void setGroup(String s, boolean b)
+	{
+		if(s == null || s.isEmpty()) group = null;
+		else group = new TwoObjects<String, Boolean>(s, b);
+	}
+	
 	// Level enum //
 	
 	public static enum Level
 	{
 		PUBLIC("public"),
 		PRIVATE("private"),
-		WHITELIST("whitelist"),
-		BLACKLIST("blacklist");
+		FRIENDS("friends"),
+		CUSTOM("custom");
 		
 		public static final Level[] VALUES = values();
 		
@@ -86,7 +98,7 @@ public class LMSecurity
 		{ return this == PUBLIC; }
 		
 		public boolean isRestricted()
-		{ return this == WHITELIST || this == BLACKLIST; }
+		{ return this == FRIENDS || this == CUSTOM; }
 		
 		public Level next()
 		{ return VALUES[(ID + 1) % VALUES.length]; }

@@ -1,4 +1,4 @@
-package latmod.core.net;
+package latmod.core.event;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;

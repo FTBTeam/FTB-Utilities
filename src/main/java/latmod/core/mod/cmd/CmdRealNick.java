@@ -1,4 +1,4 @@
-package latmod.core.cmd.mod;
+package latmod.core.mod.cmd;
 
 import latmod.core.*;
 import latmod.core.cmd.CommandLevel;

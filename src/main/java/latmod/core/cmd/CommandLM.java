@@ -5,7 +5,6 @@ import java.util.*;
 import latmod.core.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 
 public abstract class CommandLM extends CommandBase
@@ -15,11 +14,11 @@ public abstract class CommandLM extends CommandBase
 		NONE,
 		LM_ON,
 		LM_OFF,
-		MC,
+		MC_ON,
 		MC_OFF;
 		
 		public boolean isOnline()
-		{ return this == LM_ON || this == MC; }
+		{ return this == LM_ON || this == MC_ON; }
 		
 		public boolean isDisplay()
 		{ return this == LM_ON || this == LM_OFF; }
@@ -62,7 +61,7 @@ public abstract class CommandLM extends CommandBase
 	{ return "Invalid command syntax!"; }
 	
 	public final void printHelpLine(ICommandSender ics, String args)
-	{ LatCoreMC.printChat(ics, "/" + commandName + (args != null && args.length() > 0 ? args : "")); }
+	{ LatCoreMC.printChat(ics, "/" + commandName + (args != null && args.length() > 0 ? (" " + args) : "")); }
 	
 	public void onPostCommand(ICommandSender ics, String[] args) {}
 	
@@ -82,9 +81,7 @@ public abstract class CommandLM extends CommandBase
 	{ return 0; }
 	
 	public NameType getUsername(String[] args, int i)
-	{
-		return NameType.NONE;
-	}
+	{ return NameType.NONE; }
 	
 	public boolean isArg(String[] args, int i, String... s)
 	{
@@ -116,7 +113,4 @@ public abstract class CommandLM extends CommandBase
 		if(p == null) throw new PlayerNotFoundException();
 		return p;
 	}
-	
-	public static boolean isOP(UUID id)
-	{ return MinecraftServer.getServer().func_152358_ax().func_152652_a(id) != null; }
 }

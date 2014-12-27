@@ -7,6 +7,7 @@ import latmod.core.event.*;
 import latmod.core.net.*;
 import latmod.core.tile.IWailaTile;
 import latmod.core.waila.*;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -18,6 +19,7 @@ public class LCEventHandler
 {
 	public static final String ACTION_PLAYER_JOINED = "PlayerJoined";
 	public static final String ACTION_OPEN_URL = "OpenURL";
+	public static final String ACTION_OPEN_FRIENDS_GUI = "OpenFriendsGUI";
 	
 	public static final LCEventHandler instance = new LCEventHandler();
 	
@@ -34,11 +36,9 @@ public class LCEventHandler
 		
 		if(p == null)
 		{
-			p = new LMPlayer(e.player.getUniqueID());
+			p = new LMPlayer(e.player.getUniqueID(), e.player.getCommandSenderName());
 			LMPlayer.list.add(p);
 		}
-		
-		p.username = e.player.getCommandSenderName();
 		
 		if(!p.customData.hasKey("IsOld"))
 		{
@@ -46,8 +46,7 @@ public class LCEventHandler
 			
 			if(p.uuid.equals(UUID_LatvianModder))
 			{
-				p.setCustom(LMPlayer.Custom.NAME, "LatvianModder");
-				p.setCustom(LMPlayer.Custom.SKIN, "http://i.imgur.com/yFSexm0.png");
+				p.setCustomName("LatvianModder");
 			}
 			
 			first = true;
@@ -62,9 +61,6 @@ public class LCEventHandler
 			NBTTagCompound data = new NBTTagCompound();
 			data.setString("UUID", p.uuid.toString());
 			LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(ACTION_PLAYER_JOINED, data));
-			NBTTagCompound data1 = new NBTTagCompound();
-			data1.setString("UUID", p.uuid.toString());
-			LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(LMPlayer.Custom.SKIN.key, data1));
 		}
 		
 		e.player.refreshDisplayName();
@@ -110,12 +106,10 @@ public class LCEventHandler
 					for(int i = 0; i < players.tagCount(); i++)
 					{
 						NBTTagCompound tag1 = players.getCompoundTagAt(i);
-						LMPlayer p = new LMPlayer(UUID.fromString(tag1.getString("UUID")));
-						p.readFromNBT(tag1);
+						LMPlayer p = new LMPlayer(UUID.fromString(tag1.getString("UUID")), tag1.getString("Name"));
+						LMPlayer.list.add(p);
 						
 						new LMPlayerEvent.DataLoaded(p).post();
-						
-						LMPlayer.list.add(p);
 					}
 					
 					LMGamerules.readFromNBT(tag, "Gamerules");
@@ -123,9 +117,18 @@ public class LCEventHandler
 					LatCoreMC.logger.info("LatCoreMC.dat loaded");
 				}
 				catch(Exception ex)
-				{ ex.printStackTrace(); }
+				{
+					LatCoreMC.logger.warn("Error occured while loading LatCoreMC.dat!");
+					ex.printStackTrace();
+				}
 			}
 		}
+	}
+	
+	@SubscribeEvent
+	public void playerLoaded(PlayerEvent.LoadFromFile e)
+	{
+		LatCoreMC.logger.info(e.entityPlayer.getCommandSenderName() + ".dat loaded");
 	}
 	
 	@SubscribeEvent
@@ -151,6 +154,7 @@ public class LCEventHandler
 					new LMPlayerEvent.DataSaved(p).post();
 					
 					tag1.setString("UUID", p.uuid.toString());
+					tag1.setString("Name", p.username);
 					
 					players.appendTag(tag1);
 				}
@@ -166,8 +170,15 @@ public class LCEventHandler
 			catch(Exception ex)
 			{
 				LatCoreMC.logger.warn("Error occured while saving LatCoreMC.dat!");
+				ex.printStackTrace();
 			}
 		}
+	}
+	
+	@SubscribeEvent
+	public void playerLoaded(PlayerEvent.SaveToFile e)
+	{
+		LatCoreMC.logger.info(e.entityPlayer.getCommandSenderName() + ".dat saved");
 	}
 	
 	@SubscribeEvent(priority = EventPriority.LOW)
@@ -183,5 +194,16 @@ public class LCEventHandler
     {
 		if(e.modID.equalsIgnoreCase(LC.MOD_ID))
 			LCConfig.instance.load();
+	}
+	
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	public void onLMKeyEvent(LMKeyEvent e)
+	{
+		if(e.ctrlDown)
+		{
+			if(e.side.isServer() && e.player instanceof EntityPlayerMP)
+				LMNetHandler.INSTANCE.sendTo(new MessageCustomServerAction(LCEventHandler.ACTION_OPEN_FRIENDS_GUI, null), (EntityPlayerMP)e.player);
+			e.setCanceled(true);
+		}
 	}
 }

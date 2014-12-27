@@ -1,28 +1,34 @@
 package latmod.core.mod.client;
+import latmod.core.LatCoreMC;
+import latmod.core.client.LatCoreMCClient;
 import latmod.core.mod.LCCommon;
 import latmod.core.tile.IGuiTile;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.input.Keyboard;
 
-import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class LCClient extends LCCommon
 {
+	public static KeyBinding key;
+	
 	public void preInit(FMLPreInitializationEvent e)
 	{
 		super.preInit(e);
-		MinecraftForge.EVENT_BUS.register(LCClientEventHandler.instance);
-		FMLCommonHandler.instance().bus().register(LCClientEventHandler.instance);
+		LatCoreMC.addEventHandler(LCClientEventHandler.instance, true, true, true);
 		ThreadCheckPlayerDecorators.init();
+		key = LatCoreMCClient.addKeyBinding("key.latcoremc", Keyboard.KEY_P, "key.categories.gameplay");
 	}
 	
 	public int getKeyID(String s) { return Keyboard.getKeyIndex(s); }
@@ -39,10 +45,10 @@ public class LCClient extends LCCommon
 	}
 	
 	public EntityPlayer getClientPlayer()
-	{ return Minecraft.getMinecraft().thePlayer; }
+	{ return FMLClientHandler.instance().getClientPlayerEntity(); }
 	
 	public World getClientWorld()
-	{ return Minecraft.getMinecraft().theWorld; }
+	{ return FMLClientHandler.instance().getWorldClient(); }
 	
 	public double getReachDist(EntityPlayer ep)
 	{ return Minecraft.getMinecraft().playerController.getBlockReachDistance(); }
@@ -52,4 +58,11 @@ public class LCClient extends LCCommon
 	
 	public boolean inGameHasFocus()
 	{ return Minecraft.getMinecraft().inGameHasFocus; }
+	
+	public static ResourceLocation getSkinTexture(String username)
+	{
+		ResourceLocation r = AbstractClientPlayer.getLocationSkin(username);
+		AbstractClientPlayer.getDownloadImageSkin(r, username);
+		return r;
+	}
 }

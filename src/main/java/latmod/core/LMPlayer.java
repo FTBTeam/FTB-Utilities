@@ -5,7 +5,7 @@ import java.util.UUID;
 import latmod.core.event.LMPlayerEvent;
 import latmod.core.net.*;
 import net.minecraft.entity.player.*;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.FakePlayer;
@@ -13,98 +13,71 @@ import cpw.mods.fml.relauncher.Side;
 
 public class LMPlayer implements Comparable<LMPlayer>
 {
-	public static enum Custom
-	{
-		NAME("CustomName"),
-		SKIN("CustomSkin");
-		
-		public final int ID;
-		public final String key;
-		
-		Custom(String s)
-		{
-			ID = ordinal();
-			key = s;
-		}
-	}
+	public static final String TAG_CUSTOM_NAME = "CustomName";
 	
-	public static enum Status
+	public static class Group
 	{
-		NONE,
-		SELF,
-		FRIEND,
-		ENEMY;
+		public final LMPlayer owner;
+		public final String name;
+		public final FastList<LMPlayer> members;
 		
-		Status() { }
-		
-		public boolean isFriend()
-		{ return this == FRIEND || this == SELF; }
-		
-		public boolean isEnemy()
-		{ return this == ENEMY; }
-		
-		public static Status to3(Status s)
+		public Group(LMPlayer p, String s)
 		{
-			if(s == null || s == NONE || s == SELF)
-				return NONE;
-			if(s.isFriend()) return FRIEND;
-			if(s.isEnemy()) return ENEMY;
-			return NONE;
+			owner = p;
+			name = s;
+			members = new FastList<LMPlayer>();
 		}
 	}
 	
 	public final UUID uuid;
-	public String username;
-	private final String[] custom = new String[Custom.values().length];
-	public final FastMap<UUID, Status> friends = new FastMap<UUID, Status>();
+	public final String username;
+	public String customName;
+	public final FastList<LMPlayer> friends = new FastList<LMPlayer>();
+	public final FastList<Group> groups = new FastList<Group>();
 	public NBTTagCompound customData = new NBTTagCompound();
 	
-	public LMPlayer(UUID id)
+	public LMPlayer(UUID id, String s)
 	{
 		uuid = id;
+		username = s;
 	}
 	
-	public void setCustom(Custom c, String s)
+	public void setCustomName(String s)
 	{
-		String s0 = custom[c.ID];
+		String s0 = customName + "";
 		
 		if(s != null && s.length() > 0)
 		{
-			custom[c.ID] = s.trim().replace("&k", "").replace("&", LatCoreMC.FORMATTING);
-			if(custom[c.ID].length() == 0 || custom[c.ID].equals("null")) custom[c.ID] = null;
+			customName = s.trim().replace("&k", "").replace("&", LatCoreMC.FORMATTING);
+			if(customName.length() == 0 || customName.equals("null")) customName = null;
 		}
-		else custom[c.ID] = null;
+		else customName = null;
 		
-		if(LatCore.isDifferent(s0, custom[c.ID]))
+		if(LatCore.isDifferent(s0, customName))
 		{
-			sendUpdate(c.key);
+			sendUpdate(TAG_CUSTOM_NAME);
 			
 			EntityPlayer ep = getPlayer();
 			
 			if(ep != null)
 			{
-				if(c == Custom.NAME)
-					ep.refreshDisplayName();
+				ep.refreshDisplayName();
 				
 				NBTTagCompound data = new NBTTagCompound();
 				data.setString("UUID", uuid.toString());
-				LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(c.key, data));
+				LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(TAG_CUSTOM_NAME, data));
 			}
 		}
 	}
 	
-	public String getCustom(Custom c)
-	{ return custom[c.ID]; }
+	public String getCustomNick()
+	{ return customName; }
 	
 	public String getDisplayName()
-	{
-		if(hasCustomName())
-			return getCustom(Custom.NAME) + EnumChatFormatting.RESET;
-		return username;
-	}
+	{ if(hasCustomName()) return customName + EnumChatFormatting.RESET; return username + ""; }
 	
 	public boolean hasCustomName()
-	{ return getCustom(Custom.NAME) != null && getCustom(Custom.NAME).length() > 0; }
+	{ return customName != null && !customName.isEmpty(); }
 	
 	public EntityPlayerMP getPlayer()
 	{
@@ -129,102 +102,55 @@ public class LMPlayer implements Comparable<LMPlayer>
 		}
 	}
 	
+	public boolean isFriend(LMPlayer p)
+	{ return p != null && (uuid.equals(p.uuid) || (friends.contains(p.uuid) && p.friends.contains(uuid))); }
+	
 	public void sendUpdate(String channel)
 	{ sendUpdate(channel, true); }
 	
-	public Status getRawStatusFor(UUID id)
+	public FastList<Group> getGroupsFor(UUID id)
 	{
-		if(id == null) return Status.NONE;
-		Status s = friends.get(id);
-		if(Status.to3(s) == Status.NONE)
-			return Status.NONE; return s;
-	}
-	
-	public Status getStatusFor(LMPlayer p)
-	{
-		if(p == null) return Status.NONE;
-		if(p.uuid.equals(uuid)) return Status.SELF;
-		
-		Status s = getRawStatusFor(p.uuid);
-		Status s1 = p.getRawStatusFor(uuid);
-		
-		if(s == Status.ENEMY || s1 == Status.ENEMY)
-			return Status.ENEMY;
-		
-		if(s == Status.FRIEND && s1 == Status.FRIEND)
-			return Status.FRIEND;
-		
-		return Status.NONE;
-	}
-	
-	public void setStatusFor(UUID id, Status s)
-	{
-		if(Status.to3(s) == Status.NONE)
-			friends.remove(id);
-		else
-			friends.put(id, s);
-	}
-	
-	public void clearFriends(Status s)
-	{
-		Status s1 = Status.to3(s);
-		
-		if(s1 == Status.NONE) friends.clear();
-		else if(s1 == Status.FRIEND) for(int i = 0; i < friends.size(); i++)
-		{
-			if(friends.values.get(i).isFriend())
-				friends.remove(friends.keys.get(i));
-		}
-		else if(s1 == Status.ENEMY) for(int i = 0; i < friends.size(); i++)
-		{
-			if(!friends.values.get(i).isFriend())
-				friends.remove(friends.keys.get(i));
-		}
-	}
-	
-	public FastList<LMPlayer> getFriends(Status s)
-	{
-		FastList<LMPlayer> l = new FastList<LMPlayer>();
-		
-		Status s1 = Status.to3(s);
-		
-		for(int i = 0; i < friends.size(); i++)
-		{
-			boolean add = s1 == Status.NONE;
-			if(s1 == Status.FRIEND && !friends.values.get(i).isFriend()) add = false;
-			else if(s1 == Status.ENEMY && friends.values.get(i).isFriend()) add = false;
-			
-			if(add)
-			{
-				LMPlayer p = LMPlayer.getPlayer(friends.keys.get(i));
-				if(p != null) l.add(p);
-			}
-		}
-		
-		return l;
+		FastList<Group> al = new FastList<Group>();
+		return al;
 	}
 	
 	// NBT reading / writing
 	
 	public void readFromNBT(NBTTagCompound tag)
 	{
-		username = tag.getString("Name");
-		
-		for(int i = 0; i < custom.length; i++)
-		{
-			custom[i] = tag.getString(Custom.values()[i].key).trim();
-			if(custom[i].length() == 0) custom[i] = null;
-		}
+		customName = tag.getString(TAG_CUSTOM_NAME).trim();
+		if(customName.isEmpty()) customName = null;
 		
 		friends.clear();
-		NBTTagCompound map = tag.getCompoundTag("Friends");
-		FastList<String> al = NBTHelper.getMapKeys(map);
+		groups.clear();
 		
-		for(int i = 0; i < al.size(); i++)
+		if(tag.hasKey("Friends"))
 		{
-			String s = al.get(i);
-			boolean b = map.getBoolean(s);
-			friends.put(UUID.fromString(s), b ? Status.FRIEND : Status.ENEMY);
+			NBTTagCompound map = tag.getCompoundTag("Friends");
+			FastList<String> al = NBTHelper.getMapKeys(map);
+			
+			for(int i = 0; i < al.size(); i++)
+			{
+				String s = al.get(i);
+				boolean b = map.getBoolean(s);
+				if(b)
+				{
+					LMPlayer p = LMPlayer.getPlayer(s);
+					if(p != null) friends.add(p);
+				}
+			}
+			
+			tag.removeTag("Friends");
+		}
+		else
+		{
+			NBTTagCompound tag1 = tag.getCompoundTag("Groups");
+			
+			FastMap<String, NBTTagList> lists = NBTHelper.toFastMapWithType(tag1);
+			
+			for(int i = 0; i < lists.size(); i++)
+			{
+			}
 		}
 		
 		customData = (NBTTagCompound) tag.getTag("CustomData");
@@ -232,20 +158,28 @@ public class LMPlayer implements Comparable<LMPlayer>
 	
 	public void writeToNBT(NBTTagCompound tag)
 	{
-		tag.setString("Name", username);
+		if(customName != null)
+			tag.setString(TAG_CUSTOM_NAME, customName);
 		
-		for(int i = 0; i < custom.length; i++)
-		{
-			if(custom[i] != null && custom[i].length() > 0)
-				tag.setString(Custom.values()[i].key, custom[i]);
-		}
-		
-		if(friends.size() > 0)
+		if(friends.size() > 0 || groups.size() > 0)
 		{
 			NBTTagCompound tag1 = new NBTTagCompound();
+			
+			for(int i = 0; i < groups.size(); i++)
+			{
+				Group g = groups.get(i);
+				NBTTagList list = new NBTTagList();
+				for(int j = 0; j < g.members.size(); j++)
+					list.appendTag(new NBTTagString(g.members.get(j).uuid.toString()));
+				tag1.setTag(g.name, list);
+			}
+			
+			NBTTagList friendsList = new NBTTagList();
 			for(int i = 0; i < friends.size(); i++)
-				tag1.setBoolean(friends.keys.get(i).toString(), friends.values.get(i).isFriend());
-			tag.setTag("Friends", tag1);
+				friendsList.appendTag(new NBTTagString(friends.get(i).toString()));
+			tag1.setTag("Friends", friendsList);
+			
+			tag.setTag("Groups", tag1);
 		}
 		
 		if(customData != null)
@@ -253,11 +187,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 	}
 	
 	public int compareTo(LMPlayer o)
-	{
-		if(username == null || o.username == null)
-			return 0;
-		return username.compareTo(o.username);
-	}
+	{ return username.compareTo(o.username); }
 	
 	public boolean equals(Object o)
 	{
@@ -271,9 +201,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 	}
 	
 	public boolean isOP()
-	{
-		return false;
-	}
+	{ return LatCoreMC.getServer().func_152358_ax().func_152652_a(uuid) != null; }
 	
 	// Static //
 	
@@ -298,10 +226,8 @@ public class LMPlayer implements Comparable<LMPlayer>
 			
 			String s = LatCoreMC.removeFormatting(display ? p.getDisplayName() : p.username);
 			
-			if(p.isOnline())
-				allOn.add(s);
-			else if(!online)
-				allOff.add(s);
+			if(p.isOnline()) allOn.add(s);
+			else if(!online) allOff.add(s);
 		}
 		
 		allOn.sort(null);

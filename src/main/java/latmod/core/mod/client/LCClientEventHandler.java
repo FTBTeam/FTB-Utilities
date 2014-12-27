@@ -4,23 +4,19 @@ import java.util.UUID;
 import latmod.core.*;
 import latmod.core.client.LatCoreMCClient;
 import latmod.core.client.playerdeco.*;
-import latmod.core.event.ReloadEvent;
+import latmod.core.event.*;
 import latmod.core.mod.*;
-import latmod.core.net.CustomActionEvent;
+import latmod.core.net.*;
 import latmod.core.tile.IPaintable;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fluids.*;
-
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-
 import cpw.mods.fml.common.eventhandler.*;
+import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
@@ -107,23 +103,10 @@ public class LCClientEventHandler
 		}
 		else if(e.action.equals(LCEventHandler.ACTION_OPEN_URL))
 			LatCore.openURL(e.extraData.getString("URL"));
-		else if(e.action.equals(LMPlayer.Custom.SKIN.key))
-			updateSkin(UUID.fromString(e.extraData.getString("UUID")));
 		else if(e.action.equals(ReloadEvent.ACTION))
 			new ReloadEvent(Side.CLIENT).post();
-	}
-	
-	public void updateSkin(UUID id)
-	{
-		EntityPlayer ep = Minecraft.getMinecraft().theWorld.func_152378_a(id);
-		if(ep == null || !(ep instanceof AbstractClientPlayer)) return;
-		
-		String s = LMPlayer.getPlayer(ep).getCustom(LMPlayer.Custom.SKIN);
-		if(s == null) s = "http://skins.minecraft.net/MinecraftSkins/" + ep.getCommandSenderName() + ".png";
-		
-		ResourceLocation loc = LC.mod.getLocation("custom_skin_" + ep.getUniqueID() + ".png");
-		Minecraft.getMinecraft().getTextureManager().loadTexture(loc, new ThreadDownloadImageData(null, s, AbstractClientPlayer.locationStevePng, new CustomSkinBufferDownload()));
-		((AbstractClientPlayer)ep).func_152121_a(MinecraftProfileTexture.Type.SKIN, loc);
+		else if(e.action.equals(LCEventHandler.ACTION_OPEN_FRIENDS_GUI))
+			Minecraft.getMinecraft().displayGuiScreen(new GuiFriends(e.player));
 	}
 	
 	@SubscribeEvent
@@ -147,6 +130,21 @@ public class LCClientEventHandler
 		if(r.side.isClient())
 		{
 			ThreadCheckPlayerDecorators.init();
+		}
+	}
+	
+	@SubscribeEvent
+	public void onKeyPressed(InputEvent.KeyInputEvent e)
+	{
+		if(LCClient.key.isPressed() && LC.proxy.inGameHasFocus())
+		{
+			EntityPlayer ep = LC.proxy.getClientPlayer();
+			
+			if (ep != null && ep.worldObj.isRemote)
+			{
+				new LMKeyEvent(Side.CLIENT, LC.proxy.isShiftDown(), LC.proxy.isCtrlDown(), LC.proxy.getClientPlayer()).post();
+				LMNetHandler.INSTANCE.sendToServer(new MessageLMKeyPressed(LC.proxy.isShiftDown(), LC.proxy.isCtrlDown()));
+			}
 		}
 	}
 }

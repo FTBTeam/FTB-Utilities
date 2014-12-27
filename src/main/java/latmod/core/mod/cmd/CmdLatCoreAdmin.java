@@ -1,4 +1,4 @@
-package latmod.core.cmd.mod;
+package latmod.core.mod.cmd;
 
 import java.io.*;
 
@@ -8,6 +8,7 @@ import latmod.core.MathHelper;
 import latmod.core.cmd.CommandLevel;
 import latmod.core.event.ReloadEvent;
 import latmod.core.net.*;
+import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.event.*;
@@ -28,14 +29,14 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 	}
 	
 	public String[] getSubcommands(ICommandSender ics)
-	{ return new String[] { "killblock", "gamerule", "player", "reload" }; }
+	{ return new String[] { "killblock", "getblock", "gamerule", "player", "reload" }; }
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
 		if(i == 0) return getSubcommands(ics);
 		
 		if(i == 2 && isArg(args, 0, "player"))
-			return new String[] { "uuid", "delete", "saveinv", "loadinv", "nick", "skin" };
+			return new String[] { "uuid", "delete", "saveinv", "loadinv", "nick" };
 		
 		if(isArg(args, 0, "gamerule"))
 		{
@@ -62,7 +63,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 	public NameType getUsername(String[] args, int i)
 	{
 		if(i == 1 && isArg(args, 0, "player"))
-			return NameType.MC;
+			return NameType.MC_ON;
 		return NameType.NONE;
 	}
 	
@@ -148,14 +149,8 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			else if(args[2].equals("nick"))
 			{
 				if(args.length != 4) return "Missing arguments!";
-				p.setCustom(LMPlayer.Custom.NAME, args[3].trim());
+				p.setCustomName(args[3].trim());
 				return FINE + "Custom nickname changed to " + p.getDisplayName() + " for " + p.username;
-			}
-			else if(args[2].equals("skin"))
-			{
-				if(args.length != 4) return "Missing arguments!";
-				p.setCustom(LMPlayer.Custom.SKIN, args[3].trim());
-				return FINE + "Custom skin changed to " + p.getCustom(LMPlayer.Custom.SKIN) + " for " + p.username;
 			}
 		}
 		else if(args[0].equals("killblock"))
@@ -173,6 +168,19 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			}
 			catch(Exception e)
 			{ return "Failed to destroy the block!"; }
+		}
+		else if(args[0].equals("getblock"))
+		{
+			EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
+			
+			try
+			{
+				MovingObjectPosition mop = MathHelper.rayTrace(ep);
+				Block b = ep.worldObj.getBlock(mop.blockX, mop.blockY, mop.blockZ);
+				return FINE + LatCoreMC.getRegName(Item.getItemFromBlock(b));
+			}
+			catch(Exception e)
+			{ return FINE + "minecraft:air"; }
 		}
 		else if(args[0].equals("gamerule"))
 		{
@@ -208,20 +216,6 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			else if(s.equals("all")) LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(ReloadEvent.ACTION, null));
 			
 			return FINE + "LatMods Reloaded";
-		}
-		else if(args[0].equals("updateSkins"))
-		{
-			if(LatCoreMC.hasOnlinePlayers()) for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers())
-			{
-				if(ep != null)
-				{
-					NBTTagCompound data1 = new NBTTagCompound();
-					data1.setString("UUID", ep.getUniqueID().toString());
-					LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(LMPlayer.Custom.SKIN.key, data1));
-				}
-			}
-			
-			return FINE + "Skins updated";
 		}
 		
 		return onCommand(ics, null);

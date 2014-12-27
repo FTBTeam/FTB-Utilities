@@ -1,53 +1,35 @@
 package latmod.core.net;
-import io.netty.buffer.ByteBuf;
 import latmod.core.tile.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.common.network.simpleimpl.*;
 
-public class MessageClientTileAction implements IMessage, IMessageHandler<MessageClientTileAction, IMessage>
+public class MessageClientTileAction extends MessageLM implements IMessageHandler<MessageClientTileAction, IMessage>
 {
-	public int posX, posY, posZ;
-	public String action;
-	public NBTTagCompound extraData;
-	
 	public MessageClientTileAction() { }
 	
 	public MessageClientTileAction(TileLM t, String s, NBTTagCompound tag)
 	{
-		posX = t.xCoord;
-		posY = t.yCoord;
-		posZ = t.zCoord;
-		action = s;
-		extraData = tag;
+		data = new NBTTagCompound();
+		data.setInteger("X", t.xCoord);
+		data.setInteger("Y", t.yCoord);
+		data.setInteger("Z", t.zCoord);
+		data.setString("A", s);
+		if(tag != null) data.setTag("T", tag);
 	}
 	
-	public void fromBytes(ByteBuf data)
+	public IMessage onMessage(MessageClientTileAction m, MessageContext ctx)
 	{
-		posX = data.readInt();
-		posY = data.readInt();
-		posZ = data.readInt();
-		action = LMNetHandler.readString(data);
-		extraData = LMNetHandler.readNBTTagCompound(data);
-	}
-	
-	public void toBytes(ByteBuf data)
-	{
-		data.writeInt(posX);
-		data.writeInt(posY);
-		data.writeInt(posZ);
-		LMNetHandler.writeString(data, action);
-		LMNetHandler.writeNBTTagCompound(data, extraData);
-	}
-	
-	public IMessage onMessage(MessageClientTileAction message, MessageContext ctx)
-	{
+		int x = m.data.getInteger("X");
+		int y = m.data.getInteger("Y");
+		int z = m.data.getInteger("Z");
+		
 		EntityPlayer ep = ctx.getServerHandler().playerEntity;
-		TileEntity te = ep.worldObj.getTileEntity(message.posX, message.posY, message.posZ);
+		TileEntity te = ep.worldObj.getTileEntity(x, y, z);
 		
 		if(te instanceof IClientActionTile)
-			((IClientActionTile)te).onClientAction(ep, message.action, message.extraData);
+			((IClientActionTile)te).onClientAction(ep, m.data.getString("A"), (NBTTagCompound)m.data.getTag("T"));
 		
 		return null;
 	}

@@ -2,7 +2,7 @@ package latmod.core.mod;
 import java.io.File;
 
 import latmod.core.*;
-import latmod.core.cmd.mod.*;
+import latmod.core.mod.cmd.*;
 import latmod.core.net.LMNetHandler;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;

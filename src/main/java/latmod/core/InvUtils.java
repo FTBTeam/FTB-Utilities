@@ -278,16 +278,17 @@ public class InvUtils
 		return null;
 	}
 	
-	public static void dropItem(World w, double x, double y, double z, ItemStack is, int delay)
+	public static void dropItem(World w, double x, double y, double z, double mx, double my, double mz, ItemStack is, int delay)
 	{
 		if(w == null || is == null || is.stackSize == 0) return;
 		EntityItem ei = new EntityItem(w, x, y, z, is.copy());
-		ei.motionX = w.rand.nextGaussian() * 0.07F;
-		ei.motionY = w.rand.nextFloat() * 0.05F;
-		ei.motionZ = w.rand.nextGaussian() * 0.07F;
+		ei.motionX = mx; ei.motionY = my; ei.motionZ = mz;
 		ei.delayBeforeCanPickup = delay;
 		w.spawnEntityInWorld(ei);
 	}
+	
+	public static void dropItem(World w, double x, double y, double z, ItemStack is, int delay)
+	{ dropItem(w, x, y, z, w.rand.nextGaussian() * 0.07F, w.rand.nextFloat() * 0.05F, w.rand.nextGaussian() * 0.07F, is, delay); }
 	
 	public static void dropItem(Entity e, ItemStack item)
 	{

@@ -1,58 +1,42 @@
 package latmod.core.net;
-import io.netty.buffer.ByteBuf;
-
 import java.util.UUID;
 
 import latmod.core.LMPlayer;
 import latmod.core.event.LMPlayerEvent;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.Side;
 
-public class MessageUpdatePlayerData implements IMessage, IMessageHandler<MessageUpdatePlayerData, IMessage>
+public class MessageUpdatePlayerData extends MessageLM implements IMessageHandler<MessageUpdatePlayerData, IMessage>
 {
-	public UUID uuid;
-	public NBTTagCompound data;
-	public String channel;
-	
 	public MessageUpdatePlayerData() { }
 	
-	public MessageUpdatePlayerData(LMPlayer p, String s)
+	public MessageUpdatePlayerData(LMPlayer p, String channel)
 	{
-		uuid = p.uuid;
 		data = new NBTTagCompound();
-		p.writeToNBT(data);
-		data.setString("UUID", p.uuid.toString());
-		channel = s;
+		data.setLong("M", p.uuid.getMostSignificantBits());
+		data.setLong("L", p.uuid.getLeastSignificantBits());
+		data.setString("U", p.username);
+		data.setString("C", channel);
+		NBTTagCompound data1 = new NBTTagCompound();
+		p.writeToNBT(data1);
+		data.setTag("D", data1);
+		
 	}
 	
-	public void fromBytes(ByteBuf bb)
+	public IMessage onMessage(MessageUpdatePlayerData m, MessageContext ctx)
 	{
-		uuid = UUID.fromString(LMNetHandler.readString(bb));
-		data = LMNetHandler.readNBTTagCompound(bb);
-		channel = LMNetHandler.readString(bb);
-	}
-	
-	public void toBytes(ByteBuf bb)
-	{
-		LMNetHandler.writeString(bb, uuid.toString());
-		LMNetHandler.writeNBTTagCompound(bb, data);
-		LMNetHandler.writeString(bb, channel);
-	}
-	
-	public IMessage onMessage(MessageUpdatePlayerData message, MessageContext ctx)
-	{
-		LMPlayer p = LMPlayer.getPlayer(message.uuid);
+		UUID id = new UUID(m.data.getLong("M"), m.data.getLong("L"));
+		LMPlayer p = LMPlayer.getPlayer(id);
 		
 		if(p == null)
 		{
-			p = new LMPlayer(message.uuid);
+			p = new LMPlayer(id, m.data.getString("U"));
 			LMPlayer.list.add(p);
 		}
 		
-		p.readFromNBT(message.data);
-		MinecraftForge.EVENT_BUS.post(new LMPlayerEvent.DataChanged(p, Side.CLIENT, message.channel));
+		p.readFromNBT(m.data.getCompoundTag("D"));
+		new LMPlayerEvent.DataChanged(p, Side.CLIENT, m.data.getString("C")).post();
 		
 		return null;
 	}

@@ -9,14 +9,15 @@ latcoremc.config.addFluidContainerNames=Add Fluid names
 latcoremc:owner=Owner: %s
 latcoremc:settings=Settings
 latcoremc:back=Back
+key.latcoremc=LatCoreMC
 
 latcoremc:command.uuid=%0 's UUID: %1
 
 latcoremc:security=Security
 latcoremc:security.public=Public
 latcoremc:security.private=Private
-latcoremc:security.whitelist=Whitelist
-latcoremc:security.blacklist=Blacklist
+latcoremc:security.friends=Friends
+latcoremc:security.custom=Custom Group
 
 latcoremc:redstonemode=Redstone Mode
 latcoremc:redstonemode.disabled=Disabled

@@ -4,6 +4,7 @@ import java.io.*;
 
 import net.minecraft.nbt.*;
 
+@SuppressWarnings("all")
 public class NBTHelper // NBTBase
 {
 	public static final int END = 0;
@@ -19,7 +20,6 @@ public class NBTHelper // NBTBase
 	public static final int MAP = 10;
 	public static final int INT_ARRAY = 11;
 	
-	@SuppressWarnings("unchecked")
 	public static FastList<String> getMapKeys(NBTTagCompound tag)
 	{
 		FastList<String> list = new FastList<String>();
@@ -32,6 +32,20 @@ public class NBTHelper // NBTBase
 		FastList<String> keys = getMapKeys(tag);
 		for(int i = 0; i < keys.size(); i++)
 		{ String s = keys.get(i); map.put(s, tag.getTag(s)); }
+		return map;
+	}
+	
+	public static <E extends NBTBase> FastMap<String, E> toFastMapWithType(NBTTagCompound tag)
+	{
+		FastMap<String, E> map = new FastMap<String, E>();
+		FastList<String> keys = getMapKeys(tag);
+		
+		for(int i = 0; i < keys.size(); i++)
+		{
+			String s = keys.get(i);
+			map.put(s, (E)tag.getTag(s));
+		}
+		
 		return map;
 	}
 	

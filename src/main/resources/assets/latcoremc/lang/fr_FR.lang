@@ -1,0 +1,48 @@
+latcoremc.config.enablePlayerDecorators=Activer les décorateurs du joueur
+latcoremc.config.rotateBlocks=Tourner les blocs personalisés
+latcoremc.config.renderHighlights=Afficher le surlignage des blocs personalisés
+latcoremc.config.onlyAdvanced=Seulement les astuces d'outils avancés
+latcoremc.config.addOreNames=Ajouter des noms OreDictionary
+latcoremc.config.addRegistryNames=Ajouter des noms de registre
+latcoremc.config.addFluidContainerNames=Ajouter des noms de fluides
+
+latcoremc:owner=Owner: %s
+latcoremc:settings=Options
+latcoremc:back=Arrière
+key.latcoremc=LatCoreMC
+
+latcoremc:command.uuid=%0 's UUID: %1
+
+latcoremc:security=Securité
+latcoremc:security.public=Public
+latcoremc:security.private=Privé
+latcoremc:security.friends=Amis
+latcoremc:security.custom=Personalisé
+
+latcoremc:redstonemode=Mode Redstone
+latcoremc:redstonemode.disabled=Désactivé
+latcoremc:redstonemode.high=Très actif
+latcoremc:redstonemode.low=Peu actif
+
+latcoremc:invmode=Automatisation
+latcoremc:invmode.enabled=Activé
+latcoremc:invmode.onlyin=Insertion seule
+latcoremc:invmode.onlyout=Extraction seule
+latcoremc:invmode.disabled=Désactivé
+
+latcoremc:color.black=Noir
+latcoremc:color.red=Rouge
+latcoremc:color.green=Vert
+latcoremc:color.brown=Marron
+latcoremc:color.blue=Bleu
+latcoremc:color.purple=Violet
+latcoremc:color.cyan=Cyan
+latcoremc:color.silver=Gris clair
+latcoremc:color.gray=Gris foncé
+latcoremc:color.pink=Rose
+latcoremc:color.lime=Citron
+latcoremc:color.yellow=Jaune
+latcoremc:color.light_blue=Bleu clair
+latcoremc:color.magenta=Magenta
+latcoremc:color.orange=Orange
+latcoremc:color.white=Blanc

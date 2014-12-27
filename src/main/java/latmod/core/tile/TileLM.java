@@ -157,7 +157,7 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 	
 	public void onPlacedBy(EntityPlayer ep, ItemStack is)
 	{
-		security.owner = ep.getUniqueID();
+		security.setOwner(ep);
 		markDirty();
 	}
 	
@@ -173,7 +173,10 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 	}
 	
 	public final void printOwner(EntityPlayer ep)
-	{ LatCoreMC.printChat(ep, LC.mod.translate("owner", LMPlayer.getPlayer(security.owner).getDisplayName())); }
+	{
+		if(security.owner == null) LatCoreMC.printChat(ep, "No owner");
+		else LatCoreMC.printChat(ep, LC.mod.translate("owner", security.owner.getDisplayName()));
+	}
 	
 	public void dropItem(ItemStack is, double ox, double oy, double oz)
 	{ EntityItem ei = new EntityItem(worldObj, xCoord + 0.5D + ox, yCoord + 0.5D + oy, zCoord + 0.5D + oz, is);

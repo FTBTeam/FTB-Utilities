@@ -37,18 +37,20 @@ public abstract class LMPlayerEvent extends EventLM
 	
 	public static class LoggedIn extends LMPlayerEvent
 	{
+		public final Side side;
 		public final EntityPlayer entityPlayer;
 		public final boolean firstTime;
 		
-		public LoggedIn(LMPlayer p, EntityPlayer ep, boolean b)
-		{ super(p); entityPlayer = ep; firstTime = b; }
+		public LoggedIn(LMPlayer p, Side s, EntityPlayer ep, boolean b)
+		{ super(p); side = s; entityPlayer = ep; firstTime = b; }
 	}
 	
 	public static class LoggedOut extends LMPlayerEvent
 	{
+		public final Side side;
 		public final EntityPlayer entityPlayer;
 		
-		public LoggedOut(LMPlayer p, EntityPlayer ep)
-		{ super(p); entityPlayer = ep; }
+		public LoggedOut(LMPlayer p, Side s, EntityPlayer ep)
+		{ super(p); side = s; entityPlayer = ep; }
 	}
 }

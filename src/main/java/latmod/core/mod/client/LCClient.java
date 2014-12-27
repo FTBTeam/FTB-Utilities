@@ -8,6 +8,7 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -31,10 +32,9 @@ public class LCClient extends LCCommon
 		key = LatCoreMCClient.addKeyBinding("key.latcoremc", Keyboard.KEY_P, "key.categories.gameplay");
 	}
 	
-	public int getKeyID(String s) { return Keyboard.getKeyIndex(s); }
-	public boolean isKeyDown(int id) { return Keyboard.isKeyDown(id); }
 	public boolean isShiftDown() { return GuiScreen.isShiftKeyDown(); }
 	public boolean isCtrlDown() { return GuiScreen.isCtrlKeyDown(); }
+	public boolean isTabDown() { return Keyboard.isKeyDown(Keyboard.KEY_TAB); }
 	
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
@@ -65,4 +65,7 @@ public class LCClient extends LCCommon
 		AbstractClientPlayer.getDownloadImageSkin(r, username);
 		return r;
 	}
+	
+	public void displayMessage(String title, String desc, ItemStack item, long d)
+	{ LCClientEventHandler.instance.messages.add(new GuiMessage(title, desc, item, d)); }
 }

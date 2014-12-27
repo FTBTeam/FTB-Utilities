@@ -8,56 +8,94 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class LMSecurity
 {
-	public UUID owner;
+	public LMPlayer owner;
 	public Level level;
-	private TwoObjects<String, Boolean> group = null;
+	private TwoObjects<String, Boolean> group;
 	
-	public LMSecurity(UUID id)
+	public LMSecurity(Object o)
 	{
-		owner = id;
-		if(owner == null)
-			owner = UUID.randomUUID();
+		setOwner(o);
 		level = Level.PUBLIC;
 		group = null;
 	}
 	
+	public void setOwner(Object o)
+	{ owner = LMPlayer.getPlayer(o); }
+	
 	public void readFromNBT(NBTTagCompound tag, String s)
 	{
-		String ow = tag.getString("Sec_" + s + "_Owner");
-		if(ow != null && ow.length() > 0) owner = UUID.fromString(ow);
-		else owner = null;
-		
-		level = Level.VALUES[tag.getByte("Sec_" + s + "_Level")];
+		if(tag.hasKey("Sec_" + s + "_Owner") && tag.hasKey("Sec_" + s + "_Level"))
+		{
+			owner = LMPlayer.getPlayer(tag.getString("Sec_" + s + "_Owner"));
+			level = Level.VALUES[tag.getByte("Sec_" + s + "_Level")];
+			if(level == Level.CUSTOM) level = Level.PRIVATE;
+			group = null;
+		}
+		else
+		{
+			NBTTagCompound tag1 = tag.getCompoundTag(s);
+			
+			String o = tag1.getString("Owner");
+			
+			if(o == null || o.isEmpty())
+			{
+				owner = null;
+				level = Level.PUBLIC;
+				group = null;
+			}
+			else
+			{
+				owner = LMPlayer.getPlayer(o);
+				level = Level.VALUES[tag1.getByte("Level")];
+				
+				if(tag1.hasKey("Group"))
+				{
+					String g = tag1.getString("Group");
+					boolean w = tag1.getBoolean("Whitelist");
+					group = new TwoObjects<String, Boolean>(g, w);
+				}
+				else group = null;
+			}
+		}
 	}
 	
 	public void writeToNBT(NBTTagCompound tag, String s)
 	{
-		if(owner != null) tag.setString("Sec_" + s + "_Owner", owner.toString());
-		tag.setByte("Sec_" + s + "_Level", (byte)level.ID);
+		NBTTagCompound tag1 = new NBTTagCompound();
+		
+		if(owner != null)
+		{
+			tag1.setString("Owner", owner.username);
+			tag1.setByte("Level", (byte)level.ID);
+			
+			if(group != null && group.object1 != null && group.object2 != null)
+			{
+				tag1.setString("Group", group.object1);
+				tag1.setBoolean("Whitelist", group.object2);
+			}
+			
+			tag.setTag(s, tag1);
+		}
 	}
 	
-	public boolean isOwner(UUID id)
-	{ return owner.equals(id); }
-	
-	public boolean isOwner(EntityPlayer ep)
-	{ return isOwner((ep == null) ? null : ep.getUniqueID()); }
+	public boolean isOwner(Object o)
+	{ return owner != null && owner.equals(o); }
 	
 	public boolean canInteract(UUID id)
 	{
-		if(level == Level.PUBLIC) return true;
+		if(level == Level.PUBLIC || owner == null) return true;
 		if(id == null) return false;
 		if(isOwner(id)) return true;
 		if(level == Level.PRIVATE) return false;
 		
-		LMPlayer o = LMPlayer.getPlayer(owner);
 		LMPlayer p = LMPlayer.getPlayer(id);
 		
-		if(o != null && p != null)
+		if(p != null)
 		{
-			if(level == Level.FRIENDS) return o.isFriend(p);
+			if(level == Level.FRIENDS) return owner.isFriend(p);
 			if(level == Level.CUSTOM && group != null)
 			{
-				boolean has = o.getGroupsFor(p.uuid).contains(group.object1);
+				boolean has = owner.getGroupsFor(p.uuid).contains(group.object1);
 				return (has && group.object2) || (!has && !group.object2);
 			}
 		}

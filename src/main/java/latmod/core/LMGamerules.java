@@ -4,6 +4,7 @@ import net.minecraft.nbt.*;
 
 public class LMGamerules
 {
+	public static final String TAG = "Gamerules";
 	private static final FastMap<RuleID, Rule> registredRules = new FastMap<RuleID, Rule>();
 	public static final FastMap<RuleID, Rule> rules = new FastMap<RuleID, Rule>();
 	
@@ -64,23 +65,50 @@ public class LMGamerules
 		{ return value + ""; }
 	}
 	
-	public static void readFromNBT(NBTTagCompound tag, String s)
+	public static void readFromNBT(NBTTagCompound tag)
 	{
 		rules.clear();
 		
-		NBTTagList list = (NBTTagList)tag.getTag(s);
-		
-		if(list != null) for(int i = 0; i < list.tagCount(); i++)
+		if(tag.func_150299_b(TAG) == NBTHelper.LIST)
 		{
-			NBTTagCompound tag1 = list.getCompoundTagAt(i);
-			String g = tag1.getString("G");
-			String k = tag1.getString("K");
-			String v = tag1.getString("V");
+			NBTTagList list = tag.getTagList(TAG, NBTHelper.MAP);
 			
-			RuleID id = new RuleID(g, k);
-			rules.put(id, new Rule(id, v));
+			for(int i = 0; i < list.tagCount(); i++)
+			{
+				NBTTagCompound tag1 = list.getCompoundTagAt(i);
+				String g = tag1.getString("G");
+				String k = tag1.getString("K");
+				String v = tag1.getString("V");
+				
+				RuleID id = new RuleID(g, k);
+				rules.put(id, new Rule(id, v));
+			}
+			
+			LatCoreMC.logger.info("Found old LMGamerules");
 		}
-		
+		else
+		{
+			FastMap<String, NBTTagCompound> map = NBTHelper.toFastMapWithType(tag.getCompoundTag(TAG));
+			
+			for(int i = 0; i < map.size(); i++)
+			{
+				String g = map.keys.get(i);
+				FastMap<String, NBTTagString> map1 = NBTHelper.toFastMapWithType(map.values.get(i));
+				
+				for(int j = 0; j < map1.size(); j++)
+				{
+					String k = map1.keys.get(j);
+					String v = map1.values.get(j).func_150285_a_();
+					
+					RuleID id = new RuleID(g, k);
+					rules.put(id, new Rule(id, v));
+				}
+			}
+		}
+	}
+	
+	public static void postInit()
+	{
 		for(int i = 0; i < registredRules.size(); i++)
 		{
 			RuleID id = registredRules.keys.get(i);
@@ -92,22 +120,37 @@ public class LMGamerules
 		if(LatCoreMC.isDevEnv) LatCoreMC.logger.info("LMGamerules: " + rules.values);
 	}
 	
-	public static void writeToNBT(NBTTagCompound tag, String s)
+	public static void writeToNBT(NBTTagCompound tag)
 	{
-		NBTTagList list = new NBTTagList();
+		FastMap<String, FastMap<String, String>> map = new FastMap<String, FastMap<String, String>>();
 		
 		for(int i = 0; i < rules.size(); i++)
 		{
 			Rule r = rules.values.get(i);
 			
-			NBTTagCompound tag1 = new NBTTagCompound();
-			tag1.setString("G", r.id.group);
-			tag1.setString("K", r.id.key);
-			tag1.setString("V", r.value);
-			list.appendTag(tag1);
+			FastMap<String, String> m = map.get(r.id.group);
+			
+			if(m == null)
+			{
+				m = new FastMap<String, String>();
+				map.put(r.id.group, m);
+			}
+			
+			m.put(r.id.key, r.value);
 		}
 		
-		tag.setTag(s, list);
+		NBTTagCompound groups = new NBTTagCompound();
+		
+		for(int i = 0; i < map.size(); i++)
+		{
+			NBTTagCompound tag1 = new NBTTagCompound();
+			FastMap<String, String> map1 = map.values.get(i);
+			for(int j = 0; j < map1.size(); j++)
+				tag1.setString(map1.keys.get(j), map1.values.get(j));
+			groups.setTag(map.keys.get(i), tag1);
+		}
+		
+		tag.setTag(TAG, groups);
 	}
 	
 	public static void register(RuleID id, Object val)

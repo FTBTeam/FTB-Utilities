@@ -6,7 +6,6 @@ import latmod.core.event.LMPlayerEvent;
 import latmod.core.net.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.*;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.FakePlayer;
 import cpw.mods.fml.relauncher.Side;
@@ -31,10 +30,12 @@ public class LMPlayer implements Comparable<LMPlayer>
 	
 	public final UUID uuid;
 	public final String username;
-	public String customName;
+	private String customName;
 	public final FastList<LMPlayer> friends = new FastList<LMPlayer>();
-	public final FastList<Group> groups = new FastList<Group>();
+	public final FastMap<String, Group> groups = new FastMap<String, Group>();
 	public NBTTagCompound customData = new NBTTagCompound();
+	private boolean isOnline;
+	public boolean isOld;
 	
 	public LMPlayer(UUID id, String s)
 	{
@@ -70,9 +71,6 @@ public class LMPlayer implements Comparable<LMPlayer>
 		}
 	}
 	
-	public String getCustomNick()
-	{ return customName; }
-	
 	public String getDisplayName()
 	{ if(hasCustomName()) return customName + EnumChatFormatting.RESET; return username + ""; }
 	
@@ -80,30 +78,28 @@ public class LMPlayer implements Comparable<LMPlayer>
 	{ return customName != null && !customName.isEmpty(); }
 	
 	public EntityPlayerMP getPlayer()
-	{
-		for(int i = 0; i < MinecraftServer.getServer().getConfigurationManager().playerEntityList.size(); i++)
-		{
-			EntityPlayerMP ep = (EntityPlayerMP)MinecraftServer.getServer().getConfigurationManager().playerEntityList.get(i);
-			if(ep.getUniqueID().equals(uuid)) return ep;
-		}
-		
-		return null;
-	}
+	{ return LatCoreMC.getAllOnlinePlayers().get(uuid); }
 	
 	public boolean isOnline()
-	{ return getPlayer() != null; }
+	{ return isOnline; }
+	
+	public void setOnline(boolean b)
+	{ isOnline = b; }
 	
 	public void sendUpdate(String channel, boolean clientUpdate)
 	{
 		if(LatCoreMC.isServer())
 		{
 			new LMPlayerEvent.DataChanged(this, Side.SERVER, channel).post();
-			if(clientUpdate) LMNetHandler.INSTANCE.sendToAll(new MessageUpdatePlayerData(this, channel));
+			if(clientUpdate) LMNetHandler.INSTANCE.sendToAll(new MessageUpdateLMPlayer(this, channel));
 		}
 	}
 	
+	public boolean isFriendRaw(LMPlayer p)
+	{ return p != null && (uuid.equals(p.uuid) || friends.contains(p.uuid)); }
+	
 	public boolean isFriend(LMPlayer p)
-	{ return p != null && (uuid.equals(p.uuid) || (friends.contains(p.uuid) && p.friends.contains(uuid))); }
+	{ return isFriendRaw(p) && p.isFriendRaw(this); }
 	
 	public void sendUpdate(String channel)
 	{ sendUpdate(channel, true); }
@@ -118,6 +114,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 	
 	public void readFromNBT(NBTTagCompound tag)
 	{
+		if(tag.hasKey("On")); isOnline = tag.getBoolean("On");
 		customName = tag.getString(TAG_CUSTOM_NAME).trim();
 		if(customName.isEmpty()) customName = null;
 		
@@ -148,16 +145,47 @@ public class LMPlayer implements Comparable<LMPlayer>
 			
 			FastMap<String, NBTTagList> lists = NBTHelper.toFastMapWithType(tag1);
 			
+			NBTTagList fl = lists.get("Friends");
+			
+			if(fl != null) for(int j = 0; j < fl.tagCount(); j++)
+			{
+				LMPlayer p = LMPlayer.getPlayer(fl.getStringTagAt(j));
+				if(p != null) friends.add(p);
+			}
+			
+			lists.remove("Friends");
+			
 			for(int i = 0; i < lists.size(); i++)
 			{
+				Group g = new Group(this, lists.keys.get(i));
+				NBTTagList l = lists.get(i);
+				
+				for(int j = 0; j < l.tagCount(); j++)
+				{
+					LMPlayer p = LMPlayer.getPlayer(l.getStringTagAt(j));
+					if(p != null) g.members.add(p);
+				}
+				
+				groups.put(g.name, g);
 			}
 		}
 		
-		customData = (NBTTagCompound) tag.getTag("CustomData");
+		customData = tag.getCompoundTag("CustomData");
+		
+		if(customData.hasKey("IsOld"))
+		{
+			tag.setBoolean("Old", customData.getBoolean("IsOld"));
+			customData.removeTag("IsOld");
+		}
+		
+		isOld = tag.getBoolean("Old");
 	}
 	
 	public void writeToNBT(NBTTagCompound tag)
 	{
+		tag.setBoolean("Old", isOld);
+		tag.setBoolean("On", isOnline);
+		
 		if(customName != null)
 			tag.setString(TAG_CUSTOM_NAME, customName);
 		
@@ -182,12 +210,17 @@ public class LMPlayer implements Comparable<LMPlayer>
 			tag.setTag("Groups", tag1);
 		}
 		
-		if(customData != null)
-			tag.setTag("CustomData", customData);
+		tag.setTag("CustomData", customData);
 	}
 	
 	public int compareTo(LMPlayer o)
 	{ return username.compareTo(o.username); }
+	
+	public String toString()
+	{ return username; }
+	
+	public int hashCode()
+	{ return uuid.hashCode(); }
 	
 	public boolean equals(Object o)
 	{
@@ -196,7 +229,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 		else if(o instanceof UUID) return ((UUID)o).equals(uuid);
 		else if(o instanceof EntityPlayer) return equals(((EntityPlayer)o).getUniqueID());
 		else if(o instanceof LMPlayer) return equals(((LMPlayer)o).uuid);
-		else if(o instanceof String) return o.equals(username) || ((String)o).equalsIgnoreCase(LatCoreMC.removeFormatting(getDisplayName()));
+		else if(o instanceof String) return o.equals(username) || uuid.toString().equals(o) || ((String)o).equalsIgnoreCase(LatCoreMC.removeFormatting(getDisplayName()));
 		else return false;
 	}
 	

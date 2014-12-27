@@ -3,18 +3,16 @@ package latmod.core.mod;
 import latmod.core.LMProxy;
 import latmod.core.tile.IGuiTile;
 import net.minecraft.entity.player.*;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 public class LCCommon extends LMProxy implements IGuiHandler // LCClient
 {
-	public int getKeyID(String s) { return 0; }
-	public boolean isKeyDown(int id) { return false; }
 	public boolean isShiftDown() { return false; }
 	public boolean isCtrlDown() { return false; }
-	
-	public boolean isKeyDown(String id) { return isKeyDown(getKeyID(id)); }
+	public boolean isTabDown() { return false; }
 	
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
@@ -48,4 +46,11 @@ public class LCCommon extends LMProxy implements IGuiHandler // LCClient
 	
 	public boolean inGameHasFocus()
 	{ return true; }
+	
+	public void displayMessage(String title, String desc, ItemStack item)
+	{ displayMessage(title, desc, item, 3000L); }
+	
+	public void displayMessage(String title, String desc, ItemStack item, long d)
+	{
+	}
 }

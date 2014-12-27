@@ -1,6 +1,4 @@
 package latmod.core.mod.client;
-import java.util.UUID;
-
 import latmod.core.*;
 import latmod.core.client.LatCoreMCClient;
 import latmod.core.client.playerdeco.*;
@@ -16,7 +14,7 @@ import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fluids.*;
 import cpw.mods.fml.common.eventhandler.*;
-import cpw.mods.fml.common.gameevent.InputEvent;
+import cpw.mods.fml.common.gameevent.*;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
@@ -25,6 +23,7 @@ public class LCClientEventHandler
 	public static final LCClientEventHandler instance = new LCClientEventHandler();
 	
 	public final FastMap<String, FastList<PlayerDecorator>> playerDecorators = new FastMap<String, FastList<PlayerDecorator>>();
+	public final FastList<GuiMessage> messages = new FastList<GuiMessage>();
 	
 	@SubscribeEvent
 	public void onTooltip(ItemTooltipEvent e)
@@ -81,32 +80,23 @@ public class LCClientEventHandler
 	@SubscribeEvent
 	public void onCustomAction(CustomActionEvent e)
 	{
-		if(e.action.equals(LCEventHandler.ACTION_PLAYER_JOINED))
+		if(e.action.equals(LCEventHandler.ACTION_OPEN_FRIENDS_GUI))
+			Minecraft.getMinecraft().displayGuiScreen(new GuiFriends(e.player));
+	}
+	
+	@SubscribeEvent
+	public void playerJoined(LMPlayerEvent.LoggedIn e)
+	{
+		if(e.side.isClient() && e.entityPlayer != null)
 		{
-			LMPlayer p = LMPlayer.getPlayer(UUID.fromString(e.extraData.getString("UUID")));
+			FastList<PlayerDecorator> l = playerDecorators.get(e.entityPlayer.getCommandSenderName());
 			
-			if(p != null)
+			if(l != null) for(int i = 0; i < l.size(); i++)
 			{
-				EntityPlayer ep = p.getPlayer();
-				
-				if(ep != null)
-				{
-					FastList<PlayerDecorator> l = playerDecorators.get(ep.getCommandSenderName());
-					
-					if(l != null) for(int i = 0; i < l.size(); i++)
-					{
-						if(l.get(i) instanceof PDLatMod)
-							LatCoreMC.printChat(ep, EnumChatFormatting.BLUE + "Hello, LatMod member!");
-					}
-				}
+				if(l.get(i) instanceof PDLatMod)
+					LatCoreMC.printChat(e.entityPlayer, EnumChatFormatting.BLUE + "Hello, LatMod member!");
 			}
 		}
-		else if(e.action.equals(LCEventHandler.ACTION_OPEN_URL))
-			LatCore.openURL(e.extraData.getString("URL"));
-		else if(e.action.equals(ReloadEvent.ACTION))
-			new ReloadEvent(Side.CLIENT).post();
-		else if(e.action.equals(LCEventHandler.ACTION_OPEN_FRIENDS_GUI))
-			Minecraft.getMinecraft().displayGuiScreen(new GuiFriends(e.player));
 	}
 	
 	@SubscribeEvent
@@ -142,9 +132,22 @@ public class LCClientEventHandler
 			
 			if (ep != null && ep.worldObj.isRemote)
 			{
-				new LMKeyEvent(Side.CLIENT, LC.proxy.isShiftDown(), LC.proxy.isCtrlDown(), LC.proxy.getClientPlayer()).post();
-				LMNetHandler.INSTANCE.sendToServer(new MessageLMKeyPressed(LC.proxy.isShiftDown(), LC.proxy.isCtrlDown()));
+				FastList<Key> l = Key.toList(null);
+				new LMKeyEvent(Side.CLIENT, l, ep).post();
+				LMNetHandler.INSTANCE.sendToServer(new MessageLMKeyPressed(l));
 			}
 		}
 	}
+	
+	@SubscribeEvent
+    public void renderTick(TickEvent.RenderTickEvent event)
+    {
+        Minecraft mc = Minecraft.getMinecraft();
+
+        if(mc.theWorld != null && event.phase == TickEvent.Phase.END && !messages.isEmpty())
+        {
+        	GuiMessage m = messages.get(0);
+        	m.render(mc); if(m.isDead()) messages.remove(0);
+        }
+    }
 }

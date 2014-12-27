@@ -1,8 +1,9 @@
 package latmod.core;
 import java.io.File;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
-import latmod.core.mod.*;
+import latmod.core.mod.LC;
 import latmod.core.net.*;
 import latmod.core.tile.IGuiTile;
 import net.minecraft.block.Block;
@@ -10,7 +11,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.*;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -57,14 +57,14 @@ public class LatCoreMC
 	{
 		if(ep != null)
 		{
-			IChatComponent msg = new ChatComponentText("" + o);
-			ep.addChatMessage(msg);
+			IChatComponent msg = (o != null && o instanceof IChatComponent) ? (IChatComponent)o : new ChatComponentText("" + o);
 			
 			if(broadcast && ep instanceof MinecraftServer)
 			{
-				for(EntityPlayerMP ep1 : getAllOnlinePlayers())
-					ep1.addChatMessage(msg);
+				//for(EntityPlayerMP ep1 : getAllOnlinePlayers()) ep1.addChatMessage(msg);
+				((MinecraftServer)ep).getConfigurationManager().sendChatMsg(msg);
 			}
+			else ep.addChatMessage(msg);
 		}
 		else logger.info(o);
 	}
@@ -216,22 +216,21 @@ public class LatCoreMC
 	public static boolean hasOnlinePlayers()
 	{ return !MinecraftServer.getServer().getConfigurationManager().playerEntityList.isEmpty(); }
 	
-	@SuppressWarnings("unchecked")
-	public static FastList<EntityPlayerMP> getAllOnlinePlayers()
+	public static FastMap<UUID, EntityPlayerMP> getAllOnlinePlayers()
 	{
-		FastList<EntityPlayerMP> al = new FastList<EntityPlayerMP>();
-		al.addAll(MinecraftServer.getServer().getConfigurationManager().playerEntityList);
-		return al;
+		FastMap<UUID, EntityPlayerMP> m = new FastMap<UUID, EntityPlayerMP>();
+		
+		for(int i = 0; i < MinecraftServer.getServer().getConfigurationManager().playerEntityList.size(); i++)
+		{
+			EntityPlayerMP ep = (EntityPlayerMP)MinecraftServer.getServer().getConfigurationManager().playerEntityList.get(i);
+			m.put(ep.getUniqueID(), ep);
+		}
+		
+		return m;
 	}
 	
 	public static Vertex getSpawnPoint(World w)
 	{ ChunkCoordinates c = w.getSpawnPoint(); return new Vertex(c.posX + 0.5D, c.posY + 0.5D, c.posZ + 0.5D); }
-	
-	public static void openURL(EntityPlayerMP ep, String url)
-	{
-		NBTTagCompound data = new NBTTagCompound(); data.setString("URL", url);
-		LMNetHandler.INSTANCE.sendTo(new MessageCustomServerAction(LCEventHandler.ACTION_OPEN_URL, data), ep);
-	}
 	
 	public static void remap(MissingMapping m, String id, Item i)
 	{ if(m.type == GameRegistry.Type.ITEM && id.equals(m.name)) m.remap(i); }
@@ -270,4 +269,10 @@ public class LatCoreMC
 		try { getServer().getCommandManager().executeCommand(ics, (cmd + " " + LatCore.unsplit(args, " ")).trim()); }
 		catch(Exception e) { return e; } return null;
 	}
+	
+	public static void sendMessage(EntityPlayerMP ep, String title, String desc, ItemStack item)
+	{ sendMessage(ep, title, desc, item, 3000L); }
+	
+	public static void sendMessage(EntityPlayerMP ep, String title, String desc, ItemStack item, long d)
+	{ LMNetHandler.INSTANCE.sendTo(new MessageDisplayMsg(title, desc, item, d), ep); }
 }

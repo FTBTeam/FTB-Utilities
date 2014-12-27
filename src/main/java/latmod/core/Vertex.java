@@ -2,6 +2,7 @@ package latmod.core;
 import java.util.Random;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChunkCoordinates;
 
 /** Made by LatvianModder */
@@ -81,4 +82,63 @@ public final class Vertex implements Cloneable
 	
 	public double dist(Vertex v)
 	{ return MathHelper.sqrt(distSq(v)); }
+	
+	public static class DimPos
+	{
+		public Vertex pos;
+		public int dim;
+		
+		public DimPos(double x, double y, double z, int d)
+		{ pos = new Vertex(x, y, z); dim = d; }
+		
+		public DimPos(Entity e)
+		{ this(e.posX, e.posY, e.posZ, e.dimension); }
+		
+		public void readFromNBT(NBTTagCompound tag)
+		{
+			pos.x = tag.getDouble("X");
+			pos.y = tag.getDouble("Y");
+			pos.z = tag.getDouble("Z");
+			dim = tag.getInteger("D");
+		}
+		
+		public void writeToNBT(NBTTagCompound tag)
+		{
+			tag.setDouble("X", pos.x);
+			tag.setDouble("Y", pos.y);
+			tag.setDouble("Z", pos.z);
+			tag.setInteger("D", dim);
+		}
+		
+		public boolean equals(Object o)
+		{ return (o instanceof DimPos) && ((DimPos)o).dim == dim && ((DimPos)o).pos.equalsPos(pos); }
+		
+		public static class Rot extends DimPos
+		{
+			public float yaw, pitch;
+			
+			public Rot(double x, double y, double z, int d, float yr, float pr)
+			{ super(x, y, z, d); yaw = yr; pitch = pr; }
+			
+			public Rot(Entity e)
+			{ super(e); yaw = e.rotationYaw; pitch = e.rotationPitch; }
+			
+			public void readFromNBT(NBTTagCompound tag)
+			{
+				super.readFromNBT(tag);
+				yaw = tag.getFloat("YR");
+				pitch = tag.getFloat("PR");
+			}
+			
+			public void writeToNBT(NBTTagCompound tag)
+			{
+				super.writeToNBT(tag);
+				tag.setFloat("YR", yaw);
+				tag.setFloat("PR", pitch);
+			}
+			
+			public boolean equals(Object o)
+			{ return (o instanceof Rot) && super.equals(o) && ((Rot)o).yaw == yaw && ((Rot)o).pitch == pitch; }
+		}
+	}
 }

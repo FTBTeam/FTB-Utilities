@@ -4,6 +4,7 @@ import java.io.File;
 import latmod.core.*;
 import latmod.core.mod.cmd.*;
 import latmod.core.net.LMNetHandler;
+import net.minecraft.entity.player.EntityPlayerMP;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 
@@ -74,6 +75,13 @@ public class LC
 		regCmd(e, new CmdListOverride(LCConfig.Commands.list));
 		e.registerServerCommand(new CmdGamemodeOverride(LCConfig.Commands.gamemode));
 		e.registerServerCommand(new CmdGameruleOverride(LCConfig.Commands.gamerule));
+	}
+	
+	@Mod.EventHandler
+	public void shuttingDown(FMLServerStoppingEvent e)
+	{
+		if(LatCoreMC.hasOnlinePlayers()) for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers().values)
+			LCEventHandler.instance.playerLoggedOut(new cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent(ep));
 	}
 	
 	private static void regCmd(FMLServerStartingEvent e, CommandBaseLC c)

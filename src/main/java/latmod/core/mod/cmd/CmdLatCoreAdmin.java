@@ -2,6 +2,7 @@ package latmod.core.mod.cmd;
 
 import java.io.*;
 
+import cpw.mods.fml.relauncher.Side;
 import latmod.core.*;
 import latmod.core.LMGamerules.RuleID;
 import latmod.core.MathHelper;
@@ -12,12 +13,12 @@ import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.event.*;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
 import net.minecraft.util.*;
 import baubles.api.BaublesApi;
-import cpw.mods.fml.relauncher.Side;
 
 public class CmdLatCoreAdmin extends CommandBaseLC
 {
@@ -29,14 +30,14 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 	}
 	
 	public String[] getSubcommands(ICommandSender ics)
-	{ return new String[] { "killblock", "getblock", "gamerule", "player", "reload" }; }
+	{ return new String[] { "killblock", "getblock", "gamerule", "player" }; }
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
 		if(i == 0) return getSubcommands(ics);
 		
 		if(i == 2 && isArg(args, 0, "player"))
-			return new String[] { "uuid", "delete", "saveinv", "loadinv", "nick" };
+			return new String[] { "uuid", "delete", "saveinv", "loadinv", "nick", "notify" };
 		
 		if(isArg(args, 0, "gamerule"))
 		{
@@ -152,6 +153,18 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				p.setCustomName(args[3].trim());
 				return FINE + "Custom nickname changed to " + p.getDisplayName() + " for " + p.username;
 			}
+			else if(args[2].equals("notify"))
+			{
+				if(!p.isOnline()) return "The player must be online!";
+				
+				if(args.length != 5) return "Missing arguments!";
+				String item[] = LatCore.split(args[3], ";");
+				if(item.length == 1) item = new String[]{ item[0], "0" };
+				ItemStack is = LatCoreMC.getStackFromRegName(item[0], parseInt(ics, item[1]));
+				if(is == null || is.getItem() == null) is = new ItemStack(Blocks.stone);
+				
+				LatCoreMC.sendMessage(p.getPlayer(), args[4].replace('_', ' '), "", is);
+			}
 		}
 		else if(args[0].equals("killblock"))
 		{
@@ -203,19 +216,9 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 		}
 		else if(args[0].equals("reload"))
 		{
-			String s = "none";
-			if(args.length >= 2) s = args[1];
-			
 			new ReloadEvent(Side.SERVER).post();
-			
-			if(s.equals("self"))
-			{
-				EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-				LMNetHandler.INSTANCE.sendTo(new MessageCustomServerAction(ReloadEvent.ACTION, null), ep);
-			}
-			else if(s.equals("all")) LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(ReloadEvent.ACTION, null));
-			
-			return FINE + "LatMods Reloaded";
+			LMNetHandler.INSTANCE.sendToAll(new MessageReload());
+			return FINE + "LatvianModders's mods reloaded (Server)";
 		}
 		
 		return onCommand(ics, null);

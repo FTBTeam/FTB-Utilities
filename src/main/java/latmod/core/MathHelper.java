@@ -162,8 +162,8 @@ public class MathHelper // Converter
 	public static boolean isPlural(int i) { String s = "" + i;
 	return !(s.endsWith("1") && !s.endsWith("11")); }
 	
-	public static String getPluralWord(int i, String a, String b)
-	{ return isPlural(i) ? a : b; }
+	public static String getPluralWord(int i, String s, String p)
+	{ return isPlural(i) ? p : s; }
 	
 	public static String formatDouble(double d)
 	{

@@ -52,10 +52,9 @@ public class LCEventHandler
 		
 		updateAllData((EntityPlayerMP)e.player);
 		new LMPlayerEvent.LoggedIn(p, Side.SERVER, e.player, first).post();
-		p.sendUpdate("LoggedIn");
+		p.sendUpdate(LMPlayer.ACTION_LOGGED_IN);
 		
 		e.player.refreshDisplayName();
-		LatCoreMC.printChat(e.player, "Logged in!");
 	}
 	
 	@SubscribeEvent
@@ -66,7 +65,7 @@ public class LCEventHandler
 		if(p != null && p.isOnline())
 		{
 			p.setOnline(false);
-			p.sendUpdate("LoggedOut");
+			p.sendUpdate(LMPlayer.ACTION_LOGGED_OUT);
 			new LMPlayerEvent.LoggedOut(p, Side.SERVER, e.player).post();
 		}
 	}
@@ -112,6 +111,7 @@ public class LCEventHandler
 	public void loadAllData(NBTTagCompound tag)
 	{
 		LMPlayer.list.clear();
+		new LoadCustomLMDataEvent(EventLM.Phase.PRE, tag).post();
 		
 		FastMap<UUID, NBTTagCompound> playerData = new FastMap<UUID, NBTTagCompound>();
 		
@@ -151,7 +151,7 @@ public class LCEventHandler
 		
 		LMGamerules.readFromNBT(tag);
 		
-		new LoadCustomLMDataEvent(tag).post();
+		new LoadCustomLMDataEvent(EventLM.Phase.POST, tag).post();
 	}
 	
 	@SubscribeEvent
@@ -165,7 +165,6 @@ public class LCEventHandler
 			{
 				NBTTagCompound tag = new NBTTagCompound();
 				saveAllData(tag);
-				if(LatCoreMC.isDevEnv) LatCoreMC.logger.info("Saved: " + tag);
 				NBTHelper.writeMap(new FileOutputStream(f), tag);
 			}
 			catch(Exception ex)
@@ -195,7 +194,6 @@ public class LCEventHandler
 		tag.setTag("Players", players);
 		
 		LMGamerules.writeToNBT(tag);
-		
 		new SaveCustomLMDataEvent(tag).post();
 	}
 	

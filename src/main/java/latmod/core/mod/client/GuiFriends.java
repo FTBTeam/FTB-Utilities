@@ -1,15 +1,12 @@
 package latmod.core.mod.client;
 
-import java.util.UUID;
-
 import latmod.core.*;
 import latmod.core.event.LMPlayerEvent;
 import latmod.core.gui.*;
 import latmod.core.mod.LC;
+import latmod.core.net.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.*;
@@ -34,7 +31,6 @@ public class GuiFriends extends GuiLM
 	public ButtonPlayer pbOwner;
 	public ButtonPlayer[] pbPlayers;
 	public int page = 0;
-	private long clearMillis = 0L;
 	public final LMPlayer owner;
 	public final FastList<Player> players = new FastList<Player>();
 	public boolean changed = false;
@@ -43,8 +39,6 @@ public class GuiFriends extends GuiLM
 	{
 		super(new ContainerEmpty(ep, null), texPlayers);
 		owner = LMPlayer.getPlayer(ep);
-		
-		clearMillis = Minecraft.getSystemTime();
 		
 		xSize = 163;
 		ySize = 184;
@@ -56,23 +50,26 @@ public class GuiFriends extends GuiLM
 				updateButtons();
 			}
 		});
+		
 		searchBox.charLimit = 15;
 		
 		widgets.add(buttonClear = new ButtonLM(this, 121, 6, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
+			}
+			
+			public void onButtonDoublePressed(int b)
+			{
 				if(isShiftKeyDown())
 				{
-					if(Minecraft.getSystemTime() - clearMillis < 300)
-					{
-						playClickSound();
-						LC.proxy.displayMessage(EnumChatFormatting.RED + "Friends cleared", "", new ItemStack(Items.iron_sword), 2000L);
-					}
-					else clearMillis = Minecraft.getSystemTime();
+					playClickSound();
+					sendUpdate(MessageManageGroups.C_RESET, null);
 				}
 			}
 		});
+		
+		buttonClear.doubleClickRequired = true;
 		
 		widgets.add(buttonSave = new ButtonLM(this, 140, 6, 16, 16)
 		{
@@ -115,6 +112,9 @@ public class GuiFriends extends GuiLM
 		updateButtons();
 	}
 	
+	public void sendUpdate(String c, String d)
+	{ changed = true; LMNetHandler.INSTANCE.sendToServer(new MessageManageGroups(owner, c, d)); }
+	
 	public int maxPages()
 	{ return (players.size() / pbPlayers.length) + 1; }
 	
@@ -143,7 +143,7 @@ public class GuiFriends extends GuiLM
 			al.add("Double click this button");
 			al.add("with Shift key down");
 		}
-		if(buttonSave.mouseOver(mx, my)) al.add(EnumChatFormatting.GREEN + "Save");
+		if(buttonSave.mouseOver(mx, my)) al.add(EnumChatFormatting.GREEN + "Close");
 		if(buttonPrevPage.mouseOver(mx, my)) al.add("Prev Page");
 		if(buttonNextPage.mouseOver(mx, my)) al.add("Next Page");
 		if(pbOwner.mouseOver(mx, my)) pbOwner.addInfo(al);
@@ -165,8 +165,7 @@ public class GuiFriends extends GuiLM
 	public void onGuiClosed()
 	{
 		LatCoreMC.EVENT_BUS.unregister(this);
-		if(changed)
-		LC.proxy.displayMessage(EnumChatFormatting.GREEN + "Players saved", "", new ItemStack(Items.diamond), 2000L);
+		if(changed) sendUpdate(null, null);
 		super.onGuiClosed();
 	}
 	
@@ -181,42 +180,8 @@ public class GuiFriends extends GuiLM
 		for(int i = 0; i < LMPlayer.list.size(); i++)
 		{
 			LMPlayer p = LMPlayer.list.get(i);
-			
-			if(!p.equals(owner))
-				players.add(new Player(p));
+			if(!p.equals(owner)) players.add(new Player(p));
 		}
-		
-		/*
-		players.add(new Player("Baphometis", true));
-		players.add(new Player("HaniiPuppy", true));
-		players.add(new Player("tfox83", true));
-		players.add(new Player("_Draelock_", false));
-		players.add(new Player("Ordo1776", false));
-		players.add(new Player("annijamic", false));
-		players.add(new Player("armixmen", false));
-		players.add(new Player("happy_aivita", false));
-		
-		players.add(new Player("UnwiseDeadkilla", false));
-		players.add(new Player("omaxkpo", true));
-		players.add(new Player("Tatsu011", false));
-		players.add(new Player("Skimphy", false));
-		players.add(new Player("Maelstraz", false));
-		players.add(new Player("polraudio", false));
-		players.add(new Player("Calst85", true));
-		players.add(new Player("gaffercake", false));
-		
-		players.add(new Player("Stickyricky24", false));
-		players.add(new Player("Gekkarto", false));
-		players.add(new Player("ObamaStoleMyKFC", true));
-		players.add(new Player("LoveMakerr", false));
-		players.add(new Player("wolfofmibu66", false));
-		players.add(new Player("dapandaman", false));
-		players.add(new Player("RetroMaster2011", false));
-		players.add(new Player("orranmargath", false));
-		
-		players.add(new Player("JAY247", false));
-		players.add(new Player("vintagepaper", true));
-		*/
 		
 		if(!searchBox.text.isEmpty())
 		{
@@ -258,36 +223,28 @@ public class GuiFriends extends GuiLM
 			isOwner = player.equals(owner);
 		}
 		
-		public Player(String username, boolean online)
-		{
-			this(new LMPlayer(new UUID(0L, 0L), username));
-			//if(ParticleHelper.rand.nextBoolean());
-			//player.friends.add(owner);
-			player.setOnline(online);
-		}
-		
 		public int compareTo(Player o)
 		{
-			int s = getStatus();
+			int s0 = getStatus();
 			int s1 = o.getStatus();
 			
-			if(s == s1)
+			if(s0 == 0 && s1 != 0) return 1;
+			if(s0 != 0 && s1 == 0) return -1;
+			
+			if(s0 == s1)
 			{
-				boolean on = player.isOnline();
+				boolean on0 = player.isOnline();
 				boolean on1 = o.player.isOnline();
 				
-				if(on == on1)
-				{
-					String u = player.getDisplayName();
-					String u1 = o.player.getDisplayName();
-					
-					return u.compareTo(u1);
-				}
+				if(on0 && !on1) return -1;
+				if(!on0 && on1) return 1;
 				
-				return Boolean.compare(on1, on);
+				String u = player.getUnformattedName();
+				String u1 = o.player.getUnformattedName();
+				return u.compareTo(u1);
 			}
 			
-			return Integer.compare(s, s1);
+			return Integer.compare(s0, s1);
 		}
 		
 		public boolean equals(Object o)
@@ -303,13 +260,12 @@ public class GuiFriends extends GuiLM
 		/** 0 - None, 1 - Friend, 2 - Inviting, 3 - Invited */
 		public int getStatus()
 		{
-			boolean b1 = owner.isFriend(player);
-			boolean b2 = player.isFriend(owner);
+			boolean b1 = owner.isFriendRaw(player);
+			boolean b2 = player.isFriendRaw(owner);
 			
-			if(!b1 && !b2) return 0;
 			if(b1 && b2) return 1;
-			if(b1) return 2;
-			if(b2) return 3;
+			if(b1 && !b2) return 2;
+			if(!b1 && b2) return 3;
 			return 0;
 		}
 	}
@@ -321,6 +277,7 @@ public class GuiFriends extends GuiLM
 		public ButtonPlayer(GuiLM g, int i, int x, int y)
 		{
 			super(g, x, y, 18, 18);
+			doubleClickRequired = true;
 		}
 		
 		public void setPlayer(Player p)
@@ -328,9 +285,16 @@ public class GuiFriends extends GuiLM
 		
 		public void onButtonPressed(int b)
 		{
+		}
+		
+		public void onButtonDoublePressed(int b)
+		{
 			if(player != null && !player.isOwner())
 			{
-				LC.proxy.displayMessage("Click!", player.player.getDisplayName(), new ItemStack(Items.skull, 1, 3), 500L);
+				if(isShiftKeyDown())
+					sendUpdate(MessageManageGroups.C_ADD_FRIEND, player.player.username);
+				else if(isCtrlKeyDown())
+					sendUpdate(MessageManageGroups.C_REM_FRIEND, player.player.username);
 			}
 		}
 		
@@ -351,6 +315,15 @@ public class GuiFriends extends GuiLM
 						al.add(EnumChatFormatting.GREEN + "Friends");
 						// Add other groups //
 					}
+				}
+				else
+				{
+					al.add("");
+					al.add("Double " + EnumChatFormatting.GREEN + "Shift" + EnumChatFormatting.RESET + " click");
+					al.add("To add as friend");
+					al.add("Double " + EnumChatFormatting.RED + "Ctrl" + EnumChatFormatting.RESET + " click");
+					al.add("To remove friend");
+					
 				}
 			}
 		}

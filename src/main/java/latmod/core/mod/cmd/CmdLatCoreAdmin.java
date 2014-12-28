@@ -77,6 +77,20 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 		{
 			if(args.length < 2) return "Missing arguments!";
 			
+			if(args[1].equals("@a"))
+			{
+				String[] s = LMPlayer.getAllNames(true, false);
+				
+				for(int i = 0; i < s.length; i++)
+				{
+					String[] args1 = args.clone();
+					args1[1] = s[i];
+					onCommand(ics, args1);
+				}
+				
+				return null;
+			}
+			
 			LMPlayer p = getLMPlayer(args[1]);
 			
 			if(args[2].equals("uuid"))
@@ -164,6 +178,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				if(is == null || is.getItem() == null) is = new ItemStack(Blocks.stone);
 				
 				LatCoreMC.sendMessage(p.getPlayer(), args[4].replace('_', ' '), "", is);
+				return null;
 			}
 		}
 		else if(args[0].equals("killblock"))

@@ -13,6 +13,9 @@ import cpw.mods.fml.relauncher.Side;
 public class LMPlayer implements Comparable<LMPlayer>
 {
 	public static final String TAG_CUSTOM_NAME = "CustomName";
+	public static final String ACTION_LOGGED_IN = "LoggedIn";
+	public static final String ACTION_LOGGED_OUT = "LoggedOut";
+	public static final String ACTION_GROUPS_CHANGED = "GroupsChanged";
 	
 	public static class Group
 	{
@@ -74,6 +77,9 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public String getDisplayName()
 	{ if(hasCustomName()) return customName + EnumChatFormatting.RESET; return username + ""; }
 	
+	public String getUnformattedName()
+	{ return LatCoreMC.removeFormatting(getDisplayName()); }
+	
 	public boolean hasCustomName()
 	{ return customName != null && !customName.isEmpty(); }
 	
@@ -123,21 +129,19 @@ public class LMPlayer implements Comparable<LMPlayer>
 		
 		if(tag.hasKey("Friends"))
 		{
-			NBTTagCompound map = tag.getCompoundTag("Friends");
-			FastList<String> al = NBTHelper.getMapKeys(map);
+			FastMap<String, NBTBase.NBTPrimitive> map = NBTHelper.toFastMapWithType(tag.getCompoundTag("Friends"));
 			
-			for(int i = 0; i < al.size(); i++)
+			for(int i = 0; i < map.size(); i++)
 			{
-				String s = al.get(i);
-				boolean b = map.getBoolean(s);
-				if(b)
+				if(map.values.get(i).func_150290_f() == 1)
 				{
-					LMPlayer p = LMPlayer.getPlayer(s);
+					LMPlayer p = getPlayer(map.keys.get(i));
 					if(p != null) friends.add(p);
 				}
 			}
 			
 			tag.removeTag("Friends");
+			LatCoreMC.logger.info("Found old LMFriends");
 		}
 		else
 		{
@@ -149,7 +153,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 			
 			if(fl != null) for(int j = 0; j < fl.tagCount(); j++)
 			{
-				LMPlayer p = LMPlayer.getPlayer(fl.getStringTagAt(j));
+				LMPlayer p = getPlayer(fl.getStringTagAt(j));
 				if(p != null) friends.add(p);
 			}
 			
@@ -162,7 +166,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 				
 				for(int j = 0; j < l.tagCount(); j++)
 				{
-					LMPlayer p = LMPlayer.getPlayer(l.getStringTagAt(j));
+					LMPlayer p = getPlayer(l.getStringTagAt(j));
 					if(p != null) g.members.add(p);
 				}
 				
@@ -199,12 +203,14 @@ public class LMPlayer implements Comparable<LMPlayer>
 				NBTTagList list = new NBTTagList();
 				for(int j = 0; j < g.members.size(); j++)
 					list.appendTag(new NBTTagString(g.members.get(j).uuid.toString()));
-				tag1.setTag(g.name, list);
+				
+				if(list.tagCount() > 0)
+					tag1.setTag(g.name, list);
 			}
 			
 			NBTTagList friendsList = new NBTTagList();
 			for(int i = 0; i < friends.size(); i++)
-				friendsList.appendTag(new NBTTagString(friends.get(i).toString()));
+				friendsList.appendTag(new NBTTagString(friends.get(i).username));
 			tag1.setTag("Friends", friendsList);
 			
 			tag.setTag("Groups", tag1);
@@ -229,7 +235,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 		else if(o instanceof UUID) return ((UUID)o).equals(uuid);
 		else if(o instanceof EntityPlayer) return equals(((EntityPlayer)o).getUniqueID());
 		else if(o instanceof LMPlayer) return equals(((LMPlayer)o).uuid);
-		else if(o instanceof String) return o.equals(username) || uuid.toString().equals(o) || ((String)o).equalsIgnoreCase(LatCoreMC.removeFormatting(getDisplayName()));
+		else if(o instanceof String) return o.equals(username) || ((String)o).equalsIgnoreCase(getUnformattedName()) || o.equals(uuid.toString());
 		else return false;
 	}
 	

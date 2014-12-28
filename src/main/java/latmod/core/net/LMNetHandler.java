@@ -19,5 +19,6 @@ public class LMNetHandler
 		INSTANCE.registerMessage(MessageLMKeyPressed.class, MessageLMKeyPressed.class, 5, Side.SERVER);
 		INSTANCE.registerMessage(MessageReload.class, MessageReload.class, 6, Side.CLIENT);
 		INSTANCE.registerMessage(MessageDisplayMsg.class, MessageDisplayMsg.class, 7, Side.CLIENT);
+		INSTANCE.registerMessage(MessageManageGroups.class, MessageManageGroups.class, 8, Side.SERVER);
 	}
 }

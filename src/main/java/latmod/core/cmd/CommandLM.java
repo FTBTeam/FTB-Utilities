@@ -102,7 +102,7 @@ public abstract class CommandLM extends CommandBase
 	
 	public static EntityPlayerMP getPlayer(ICommandSender ics, String s)
 	{
-		EntityPlayerMP ep = getLMPlayer(s).getPlayer();
+		EntityPlayerMP ep = getLMPlayer(s).getPlayerMP();
 		if(ep != null) return ep;
 		throw new PlayerNotFoundException();
 	}

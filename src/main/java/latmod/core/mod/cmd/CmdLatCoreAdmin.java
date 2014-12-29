@@ -2,7 +2,6 @@ package latmod.core.mod.cmd;
 
 import java.io.*;
 
-import cpw.mods.fml.relauncher.Side;
 import latmod.core.*;
 import latmod.core.LMGamerules.RuleID;
 import latmod.core.MathHelper;
@@ -19,6 +18,7 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.*;
 import net.minecraft.util.*;
 import baubles.api.BaublesApi;
+import cpw.mods.fml.relauncher.Side;
 
 public class CmdLatCoreAdmin extends CommandBaseLC
 {
@@ -30,7 +30,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 	}
 	
 	public String[] getSubcommands(ICommandSender ics)
-	{ return new String[] { "killblock", "getblock", "gamerule", "player" }; }
+	{ return new String[] { "killblock", "getblock", "gamerule", "player", "reload" }; }
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
@@ -116,7 +116,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				
 				try
 				{
-					EntityPlayerMP ep = p.getPlayer();
+					EntityPlayerMP ep = p.getPlayerMP();
 					NBTTagCompound tag = new NBTTagCompound();
 					writeItemsToNBT(ep.inventory, tag, "Inventory");
 					
@@ -142,7 +142,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				
 				try
 				{
-					EntityPlayerMP ep = p.getPlayer();
+					EntityPlayerMP ep = p.getPlayerMP();
 					NBTTagCompound tag = NBTHelper.readMap(new FileInputStream(new File(LatCoreMC.latmodFolder, "playerinvs/" + ep.getCommandSenderName() + ".dat")));
 					
 					readItemsFromNBT(ep.inventory, tag, "Inventory");
@@ -177,7 +177,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				ItemStack is = LatCoreMC.getStackFromRegName(item[0], parseInt(ics, item[1]));
 				if(is == null || is.getItem() == null) is = new ItemStack(Blocks.stone);
 				
-				LatCoreMC.sendMessage(p.getPlayer(), args[4].replace('_', ' '), "", is);
+				LatCoreMC.notifyPlayer(p.getPlayerMP(), new Notification(args[4].replace('_', ' '), "", is));
 				return null;
 			}
 		}

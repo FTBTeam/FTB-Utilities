@@ -23,7 +23,7 @@ public class LCClientEventHandler
 	public static final LCClientEventHandler instance = new LCClientEventHandler();
 	
 	public final FastMap<String, FastList<PlayerDecorator>> playerDecorators = new FastMap<String, FastList<PlayerDecorator>>();
-	public final FastList<GuiMessage> messages = new FastList<GuiMessage>();
+	public final FastList<GuiNotification> messages = new FastList<GuiNotification>();
 	
 	@SubscribeEvent
 	public void onTooltip(ItemTooltipEvent e)
@@ -146,7 +146,7 @@ public class LCClientEventHandler
 
         if(mc.theWorld != null && event.phase == TickEvent.Phase.END && !messages.isEmpty())
         {
-        	GuiMessage m = messages.get(0);
+        	GuiNotification m = messages.get(0);
         	m.render(mc); if(m.isDead()) messages.remove(0);
         }
     }

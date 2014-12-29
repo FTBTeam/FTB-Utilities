@@ -3,10 +3,12 @@ package latmod.core;
 import java.util.UUID;
 
 import latmod.core.event.LMPlayerEvent;
+import latmod.core.mod.LC;
 import latmod.core.net.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.*;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import cpw.mods.fml.relauncher.Side;
 
@@ -61,7 +63,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 		{
 			sendUpdate(TAG_CUSTOM_NAME);
 			
-			EntityPlayer ep = getPlayer();
+			EntityPlayer ep = getPlayerMP();
 			
 			if(ep != null)
 			{
@@ -83,8 +85,15 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public boolean hasCustomName()
 	{ return customName != null && !customName.isEmpty(); }
 	
-	public EntityPlayerMP getPlayer()
+	public EntityPlayerMP getPlayerMP()
 	{ return LatCoreMC.getAllOnlinePlayers().get(uuid); }
+	
+	public EntityPlayer getPlayerSP()
+	{
+		World w = LC.proxy.getClientWorld();
+		if(w != null) return w.func_152378_a(uuid);
+		return null;
+	}
 	
 	public boolean isOnline()
 	{ return isOnline; }

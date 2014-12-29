@@ -22,8 +22,6 @@ public class LCEventHandler
 	
 	public static final LCEventHandler instance = new LCEventHandler();
 	
-	public static final UUID UUID_LatvianModder  = UUID.fromString("5afb9a5b-207d-480e-8879-67bc848f9a8f");
-	
 	@SubscribeEvent
 	public void playerLoggedIn(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e)
 	{
@@ -40,10 +38,6 @@ public class LCEventHandler
 		{
 			first = true;
 			p = new LMPlayer(e.player.getUniqueID(), e.player.getCommandSenderName());
-			
-			if(p.uuid.equals(UUID_LatvianModder))
-				p.setCustomName("LatvianModder");
-			
 			LMPlayer.list.add(p);
 		}
 		

@@ -1,5 +1,6 @@
 package latmod.core.mod.client;
 
+import static net.minecraft.util.EnumChatFormatting.*;
 import latmod.core.*;
 import latmod.core.event.LMPlayerEvent;
 import latmod.core.gui.*;
@@ -7,7 +8,7 @@ import latmod.core.mod.LC;
 import latmod.core.net.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.*;
+import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.*;
 
@@ -139,11 +140,11 @@ public class GuiFriends extends GuiLM
 		
 		if(buttonClear.mouseOver(mx, my))
 		{
-			al.add(EnumChatFormatting.RED + "Clear All Friends");
+			al.add(RED + "Clear All Friends");
 			al.add("Double click this button");
 			al.add("with Shift key down");
 		}
-		if(buttonSave.mouseOver(mx, my)) al.add(EnumChatFormatting.GREEN + "Close");
+		if(buttonSave.mouseOver(mx, my)) al.add(GREEN + "Close");
 		if(buttonPrevPage.mouseOver(mx, my)) al.add("Prev Page");
 		if(buttonNextPage.mouseOver(mx, my)) al.add("Next Page");
 		if(pbOwner.mouseOver(mx, my)) pbOwner.addInfo(al);
@@ -312,16 +313,16 @@ public class GuiFriends extends GuiLM
 					{
 						al.add("");
 						al.add("Groups:");
-						al.add(EnumChatFormatting.GREEN + "Friends");
+						al.add(GREEN + "Friends");
 						// Add other groups //
 					}
 				}
 				else
 				{
 					al.add("");
-					al.add("Double " + EnumChatFormatting.GREEN + "Shift" + EnumChatFormatting.RESET + " click");
+					al.add("Double " + GREEN + "Shift" + RESET + " click");
 					al.add("To add as friend");
-					al.add("Double " + EnumChatFormatting.RED + "Ctrl" + EnumChatFormatting.RESET + " click");
+					al.add("Double " + RED + "Ctrl" + RESET + " click");
 					al.add("To remove friend");
 					
 				}

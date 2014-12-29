@@ -1,9 +1,8 @@
 package latmod.core.mod;
 
-import latmod.core.LMProxy;
+import latmod.core.*;
 import latmod.core.tile.IGuiTile;
 import net.minecraft.entity.player.*;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
@@ -47,10 +46,7 @@ public class LCCommon extends LMProxy implements IGuiHandler // LCClient
 	public boolean inGameHasFocus()
 	{ return true; }
 	
-	public void displayMessage(String title, String desc, ItemStack item)
-	{ displayMessage(title, desc, item, 3000L); }
-	
-	public void displayMessage(String title, String desc, ItemStack item, long d)
+	public void notifyPlayer(Notification n)
 	{
 	}
 }

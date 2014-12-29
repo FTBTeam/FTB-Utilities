@@ -270,9 +270,9 @@ public class LatCoreMC
 		catch(Exception e) { return e; } return null;
 	}
 	
-	public static void sendMessage(EntityPlayerMP ep, String title, String desc, ItemStack item)
-	{ sendMessage(ep, title, desc, item, 3000L); }
-	
-	public static void sendMessage(EntityPlayerMP ep, String title, String desc, ItemStack item, long d)
-	{ LMNetHandler.INSTANCE.sendTo(new MessageDisplayMsg(title, desc, item, d), ep); }
+	public static void notifyPlayer(EntityPlayerMP ep, Notification n)
+	{
+		if(ep != null) LMNetHandler.INSTANCE.sendTo(new MessageNotifyPlayer(n), ep);
+		else LMNetHandler.INSTANCE.sendToAll(new MessageNotifyPlayer(n));
+	}
 }

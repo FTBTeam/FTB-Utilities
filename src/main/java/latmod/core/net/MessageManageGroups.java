@@ -1,11 +1,10 @@
 package latmod.core.net;
+import static net.minecraft.util.EnumChatFormatting.*;
 import latmod.core.*;
-import latmod.core.mod.LC;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
 import cpw.mods.fml.common.network.simpleimpl.*;
 
 public class MessageManageGroups extends MessageLM implements IMessageHandler<MessageManageGroups, IMessage>
@@ -50,7 +49,7 @@ public class MessageManageGroups extends MessageLM implements IMessageHandler<Me
 						{
 							owner.friends.clear();
 							changed = true;
-							LatCoreMC.sendMessage(ep, EnumChatFormatting.DARK_RED + "Groups reset", "", new ItemStack(Items.iron_sword), 2000L);
+							LatCoreMC.notifyPlayer(ep, new Notification(DARK_RED + "Groups reset", "", new ItemStack(Items.iron_sword), 2000L));
 						}
 					}
 					else if(c.equals(C_ADD_FRIEND))
@@ -61,7 +60,7 @@ public class MessageManageGroups extends MessageLM implements IMessageHandler<Me
 						{
 							owner.friends.add(p);
 							changed = true;
-							LC.proxy.displayMessage(EnumChatFormatting.GREEN + "+ " + p.getDisplayName(), "Friends", new ItemStack(Blocks.emerald_block), 1500L);
+							LatCoreMC.notifyPlayer(ep, new Notification(GREEN + "+ " + p.getDisplayName(), "Friends", new ItemStack(Blocks.emerald_block), 1500L));
 						}
 					}
 					else if(c.equals(C_REM_FRIEND))
@@ -72,20 +71,20 @@ public class MessageManageGroups extends MessageLM implements IMessageHandler<Me
 						{
 							owner.friends.remove(p);
 							changed = true;
-							LC.proxy.displayMessage(EnumChatFormatting.RED + "- " + p.getDisplayName(), "Friends", new ItemStack(Blocks.redstone_block), 1500L);
+							LatCoreMC.notifyPlayer(ep, new Notification(RED + "- " + p.getDisplayName(), "Friends", new ItemStack(Blocks.redstone_block), 1500L));
 						}
 						else if(p != null && p.friends.contains(owner))
 						{
 							p.friends.remove(owner);
 							changed = true;
 							p.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED);
-							LC.proxy.displayMessage(EnumChatFormatting.RED + "- " + p.getDisplayName(), "Friends", new ItemStack(Blocks.redstone_block), 1500L);
+							LatCoreMC.notifyPlayer(ep, new Notification(RED + "- " + p.getDisplayName(), "Friends", new ItemStack(Blocks.redstone_block), 1500L));
 						}
 					}
 				}
 				else
 				{
-					LatCoreMC.sendMessage(ep, EnumChatFormatting.AQUA + "Players saved", "", new ItemStack(Items.diamond), 2000L);
+					LatCoreMC.notifyPlayer(ep, new Notification(AQUA + "Players saved", "", new ItemStack(Items.diamond), 2000L));
 					changed = true;
 				}
 				

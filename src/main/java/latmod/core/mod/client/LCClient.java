@@ -1,5 +1,5 @@
 package latmod.core.mod.client;
-import latmod.core.LatCoreMC;
+import latmod.core.*;
 import latmod.core.client.LatCoreMCClient;
 import latmod.core.mod.LCCommon;
 import latmod.core.tile.IGuiTile;
@@ -8,7 +8,6 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -66,6 +65,6 @@ public class LCClient extends LCCommon
 		return r;
 	}
 	
-	public void displayMessage(String title, String desc, ItemStack item, long d)
-	{ LCClientEventHandler.instance.messages.add(new GuiMessage(title, desc, item, d)); }
+	public void notifyPlayer(Notification n)
+	{ LCClientEventHandler.instance.messages.add(new GuiNotification(n)); }
 }

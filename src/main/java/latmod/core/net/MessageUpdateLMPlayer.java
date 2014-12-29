@@ -27,7 +27,15 @@ public class MessageUpdateLMPlayer extends MessageLM implements IMessageHandler<
 		UUID id = new UUID(m.data.getLong("M"), m.data.getLong("L"));
 		LMPlayer p = LMPlayer.getPlayer(id);
 		p.readFromNBT(m.data.getCompoundTag("D"));
-		new LMPlayerEvent.DataChanged(p, Side.CLIENT, m.data.getString("C")).post();
+		String c = m.data.getString("C");
+		new LMPlayerEvent.DataChanged(p, Side.CLIENT, c).post();
+		
+		if(c.equals(LMPlayer.ACTION_LOGGED_IN))
+			new LMPlayerEvent.LoggedIn(p, Side.CLIENT, p.getPlayerSP(), !p.isOld).post();
+		
+		if(c.equals(LMPlayer.ACTION_LOGGED_OUT))
+			new LMPlayerEvent.LoggedOut(p, Side.CLIENT, p.getPlayerSP()).post();
+		
 		return null;
 	}
 }

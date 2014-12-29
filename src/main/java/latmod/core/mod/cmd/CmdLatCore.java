@@ -1,10 +1,10 @@
 package latmod.core.mod.cmd;
 
-import latmod.core.*;
+import latmod.core.LatCore;
 import latmod.core.cmd.CommandLevel;
 import latmod.core.mod.*;
 import latmod.core.net.*;
-import net.minecraft.command.*;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class CmdLatCore extends CommandBaseLC

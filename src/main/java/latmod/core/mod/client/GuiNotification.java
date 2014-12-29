@@ -1,10 +1,10 @@
 package latmod.core.mod.client;
 
+import latmod.core.Notification;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.*;
@@ -12,24 +12,18 @@ import org.lwjgl.opengl.*;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
-public class GuiMessage extends Gui
+public class GuiNotification extends Gui
 {
 	private static final ResourceLocation tex = new ResourceLocation("textures/gui/achievement/achievement_background.png");
 	
-	public final String title;
-	public final String desc;
-	public final ItemStack item;
-	public final long duration;
+	public final Notification notification;
 	
 	private RenderItem renderItem;
 	private long time;
 
-	public GuiMessage(String s, String s1, ItemStack is, long d)
+	public GuiNotification(Notification n)
 	{
-		title = s;
-		desc = s1;
-		item = is;
-		duration = d;
+		notification = n;
 		renderItem = new RenderItem();
 		time = -1L;
 	}
@@ -40,7 +34,7 @@ public class GuiMessage extends Gui
 		
 		if (time > 0L && mc.thePlayer != null)
 		{
-			double d0 = (double)(Minecraft.getSystemTime() - time) / (double)duration;
+			double d0 = (double)(Minecraft.getSystemTime() - time) / (double)notification.timer;
 			
 			if (d0 < 0D || d0 > 1D) { time = 0L; return; }
 			
@@ -81,14 +75,14 @@ public class GuiMessage extends Gui
 			GL11.glDisable(GL11.GL_LIGHTING);
 			drawTexturedModalRect(i, j, 96, 202, 160, 32);
 			
-			if(desc.isEmpty())
+			if(notification.desc.isEmpty())
 			{
-				mc.fontRenderer.drawString(title, i + 32, j + 12, -256);
+				mc.fontRenderer.drawString(notification.title, i + 32, j + 12, -256);
 			}
 			else
 			{
-				mc.fontRenderer.drawString(title, i + 30, j + 7, -256);
-				mc.fontRenderer.drawString(desc, i + 30, j + 18, -1);
+				mc.fontRenderer.drawString(notification.title, i + 30, j + 7, -256);
+				mc.fontRenderer.drawString(notification.desc, i + 30, j + 18, -1);
 			}
 
 			RenderHelper.enableGUIStandardItemLighting();
@@ -96,7 +90,8 @@ public class GuiMessage extends Gui
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 			GL11.glEnable(GL11.GL_COLOR_MATERIAL);
 			GL11.glEnable(GL11.GL_LIGHTING);
-			renderItem.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.getTextureManager(), item, i + 8, j + 8);
+			renderItem.renderItemIntoGUI(mc.fontRenderer, mc.getTextureManager(), notification.item, i + 8, j + 8, false);
+			//renderItem.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.getTextureManager(), notification.item, i + 8, j + 8);
 			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glDepthMask(true);
 			GL11.glEnable(GL11.GL_DEPTH_TEST);

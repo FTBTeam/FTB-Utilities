@@ -39,7 +39,7 @@ public abstract class ItemLM extends Item implements IItemLM
 	public abstract CreativeTabs getCreativeTab();
 	
 	public void onPostLoaded()
-	{ itemsAdded.add(new ItemStack(this)); }
+	{ addAllDamages(1); }
 	
 	public void loadRecipes()
 	{

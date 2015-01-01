@@ -15,6 +15,8 @@ public class ODItems
 	public static final String STONE = "stone";
 	public static final String COBBLE = "cobblestone";
 	public static ItemStack OBSIDIAN;
+	public static ItemStack WOOL;
+	public static ItemStack WOOL_WHITE;
 	
 	public static final String SLIMEBALL = "slimeball";
 	public static final String MEAT_RAW = "meatRaw";
@@ -48,12 +50,6 @@ public class ODItems
 	public static final String NUGGET_SILVER = "nuggetSilver";
 	
 	public static final String TOOL_SAW = "toolSaw";
-	public static final String TOOL_PAINTER = "toolPainter";
-	public static final String TOOL_PAINTER_ANY = "toolPainterAny";
-	public static final String PAINTABLE_BLOCK = "blockPaintable";
-	public static final String PAINTABLE_COVER = "coverPaintable";
-	
-	public static ItemStack paintableBlock = new ItemStack(Blocks.wool, 1, 0);
 	
 	private static boolean hasFMP = false;
 	
@@ -78,6 +74,8 @@ public class ODItems
 	public static void preInit()
 	{
 		OBSIDIAN = new ItemStack(Blocks.obsidian);
+		WOOL = new ItemStack(Blocks.wool, 1, LatCoreMC.ANY);
+		WOOL_WHITE = new ItemStack(Blocks.wool, 1, 0);
 		
 		LatCoreMC.addOreDictionary(MEAT_RAW, new ItemStack(Items.beef));
 		LatCoreMC.addOreDictionary(MEAT_RAW, new ItemStack(Items.porkchop));

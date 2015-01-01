@@ -48,9 +48,7 @@ public class ThreadCheckPlayerDecorators implements Runnable
 						if(al1.size() > 0) LCClientEventHandler.instance.playerDecorators.put(s[0], al1);
 					}
 				}
-				
-				if(LatCoreMC.isDevEnv) LatCoreMC.logger.info("Player Decorators: " + LCClientEventHandler.instance.playerDecorators + " [ " + PlayerDecorator.map.keys + " ] from file " + al);
-				else LatCoreMC.logger.info("PlayerDecorators loaded!");
+				LatCoreMC.logger.info("PlayerDecorators loaded!");
 			}
 			else LatCoreMC.logger.warn("Player Decorators failed to load!");;
 		}

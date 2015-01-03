@@ -75,7 +75,10 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 		
 		if(args[0].equals("player"))
 		{
-			if(args.length < 2) return "Missing arguments!";
+			if(args.length < 2) return missingArgs();
+			
+			String mustBeOnline = "The player must be online!";
+			String mustBeOffline = "The player must be offline!";
 			
 			if(args[1].equals("@a"))
 			{
@@ -106,13 +109,13 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			}
 			else if(args[2].equals("delete"))
 			{
-				if(p.isOnline()) return "The player must be offline!";
+				if(p.isOnline()) return mustBeOffline;
 				LMPlayer.list.remove(p.uuid);
 				return FINE + "Player removed!";
 			}
 			else if(args[2].equals("saveinv"))
 			{
-				if(!p.isOnline()) return "The player must be online!";
+				if(!p.isOnline()) return mustBeOnline;
 				
 				try
 				{
@@ -138,7 +141,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			}
 			else if(args[2].equals("loadinv"))
 			{
-				if(!p.isOnline()) return "The player must be online!";
+				if(!p.isOnline()) return mustBeOnline;
 				
 				try
 				{
@@ -163,7 +166,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			}
 			else if(args[2].equals("nick"))
 			{
-				if(args.length != 4) return "Missing arguments!";
+				if(args.length != 4) return missingArgs();
 				p.setCustomName(args[3].trim());
 				return FINE + "Custom nickname changed to " + p.getDisplayName() + " for " + p.username;
 			}
@@ -171,7 +174,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			{
 				if(!p.isOnline()) return "The player must be online!";
 				
-				if(args.length != 5) return "Missing arguments!";
+				if(args.length != 5) return missingArgs();
 				String item[] = LatCore.split(args[3], ";");
 				if(item.length == 1) item = new String[]{ item[0], "0" };
 				ItemStack is = LatCoreMC.getStackFromRegName(item[0], parseInt(ics, item[1]));

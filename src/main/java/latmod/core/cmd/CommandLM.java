@@ -49,7 +49,13 @@ public abstract class CommandLM extends CommandBase
 		{ LatCoreMC.printChat(ics, "Subcommands: " + LatCore.strip(scmds)); return; }
 		
 		String s = onCommand(ics, args);
-		if(s != null) LatCoreMC.printChat(ics, EnumChatFormatting.RED + s);
+		if(s != null)
+		{
+			s = EnumChatFormatting.RED + s;
+			
+			if(s.startsWith(EnumChatFormatting.RED + FINE)) s = s.substring(4);
+			LatCoreMC.printChat(ics, s);
+		}
 		onPostCommand(ics, args);
 	}
 	
@@ -113,4 +119,7 @@ public abstract class CommandLM extends CommandBase
 		if(p == null) throw new PlayerNotFoundException();
 		return p;
 	}
+	
+	public static String missingArgs()
+	{ return "Missing arguments!"; }
 }

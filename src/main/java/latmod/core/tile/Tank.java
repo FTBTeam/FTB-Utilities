@@ -35,6 +35,12 @@ public class Tank
 		fluidTank.readFromNBT(tankTag);
 		if(tankTag.hasKey("Empty"))
 		fluidTank.setFluid(null);
+		
+		if(fluidTank.getFluidAmount() > fluidTank.getCapacity())
+		{
+			FluidStack fs = fluidTank.getFluid().copy();
+			fs.amount = fluidTank.getCapacity(); fluidTank.setFluid(fs);
+		}
 	}
 	
 	public void writeToNBT(NBTTagCompound tag)

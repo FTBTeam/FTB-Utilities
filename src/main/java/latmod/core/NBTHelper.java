@@ -60,4 +60,12 @@ public class NBTHelper // NBTBase
 		byte[] b = new byte[is.available()]; is.read(b); is.close();
 		return CompressedStreamTools.func_152457_a(b, new NBTSizeTracker(Long.MAX_VALUE));
 	}
+	
+	public static boolean areTagsEqual(NBTTagCompound tag1, NBTTagCompound tag2)
+	{
+		if(tag1 == null && tag2 == null) return true;
+		if(tag1 != null && tag2 == null) return false;
+		if(tag1 == null && tag2 != null) return false;
+		return tag1.equals(tag2);
+	}
 }

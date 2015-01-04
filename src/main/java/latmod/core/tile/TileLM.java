@@ -1,6 +1,4 @@
 package latmod.core.tile;
-import java.util.Arrays;
-
 import latmod.core.*;
 import latmod.core.mod.LC;
 import latmod.core.net.*;
@@ -153,7 +151,10 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 	}
 	
 	public void onPlaced()
-	{ blockType = worldObj.getBlock(xCoord, yCoord, zCoord); }
+	{
+		getBlockType();
+		getBlockMetadata();
+	}
 	
 	public void onPlacedBy(EntityPlayer ep, ItemStack is)
 	{
@@ -164,10 +165,7 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 	public void onBroken()
 	{
 		if(isServer() && dropItems && items != null && items.length > 0)
-		{
 			InvUtils.dropAllItems(worldObj, xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, items);
-			Arrays.fill(items, null);
-		}
 		
 		markDirty();
 	}

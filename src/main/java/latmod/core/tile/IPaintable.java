@@ -249,7 +249,7 @@ public interface IPaintable extends ITileInterface
 				
 				if(b.getMaterial() != Material.air)
 				{
-					double d = -0.001D;
+					double d = -0.0001D;
 					if(side == 0) { rb.renderMaxY -= d; rb.renderMinY -= d; }
 					if(side == 1) { rb.renderMinY += d; rb.renderMaxY += d; }
 					if(side == 2) { rb.renderMaxZ -= d; rb.renderMinZ -= d; }

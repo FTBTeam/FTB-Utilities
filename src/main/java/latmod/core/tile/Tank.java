@@ -7,6 +7,7 @@ public class Tank
 {
 	public final String name;
 	public FluidTank fluidTank;
+	private int prevAmount = -1;
 	
 	public Tank(String s, double buckets)
 	{
@@ -15,7 +16,10 @@ public class Tank
 	}
 	
 	public boolean hasFluid()
-	{ return fluidTank.getFluidAmount() > 0; }
+	{ return getAmount() > 0; }
+	
+	public boolean isEmpty()
+	{ return !hasFluid(); }
 	
 	public FluidStack getFluidStack()
 	{ return fluidTank.getFluid(); }
@@ -41,6 +45,8 @@ public class Tank
 			FluidStack fs = fluidTank.getFluid().copy();
 			fs.amount = fluidTank.getCapacity(); fluidTank.setFluid(fs);
 		}
+		
+		checkIfChanged();
 	}
 	
 	public void writeToNBT(NBTTagCompound tag)
@@ -51,18 +57,31 @@ public class Tank
 	}
 	
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
-	{ if(canFill(from, resource.getFluid())) return fluidTank.fill(resource, doFill); return 0; }
+	{
+		if(canFill(from, resource.getFluid()))
+		{
+			int i = fluidTank.fill(resource, doFill);
+			if(doFill) checkIfChanged();
+			return i;
+		}
+		return 0;
+	}
 	
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		if(fluidTank.getFluidAmount() <= 0) return null;
 		if(!fluidTank.getFluid().isFluidEqual(resource)) return null;
 		if(!canDrain(from, resource.getFluid())) return null;
-		return fluidTank.drain(resource.amount, doDrain);
+		FluidStack fs = fluidTank.drain(resource.amount, doDrain);
+		if(doDrain) checkIfChanged(); return fs;
 	}
 	
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
-	{ return fluidTank.drain(maxDrain, doDrain); }
+	{
+		FluidStack fs = fluidTank.drain(maxDrain, doDrain);
+		if(doDrain) checkIfChanged();
+		return fs;
+	}
 	
 	public boolean canFill(ForgeDirection from, Fluid fluid)
 	{ return true; }
@@ -72,4 +91,17 @@ public class Tank
 	
 	public FluidTankInfo[] getTankInfo(ForgeDirection from)
 	{ return new FluidTankInfo[] { fluidTank.getInfo() }; }
+	
+	private void checkIfChanged()
+	{
+		if(prevAmount == -1 || prevAmount != getAmount())
+		{
+			prevAmount = getAmount();
+			onFluidChanged();
+		}
+	}
+	
+	public void onFluidChanged()
+	{
+	}
 }

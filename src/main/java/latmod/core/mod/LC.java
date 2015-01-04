@@ -53,7 +53,7 @@ public class LC
 		LMNetHandler.init();
 		proxy.init(e);
 		
-		FMLInterModComms.sendMessage("Waila", "register", "latmod.core.waila.RegisterWailaEvent.registerHandlers");
+		FMLInterModComms.sendMessage("Waila", "register", "latmod.core.event.RegisterWailaEvent.registerHandlers");
 	}
 	
 	@Mod.EventHandler

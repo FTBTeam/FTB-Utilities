@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.*;
 
@@ -231,16 +231,16 @@ public interface IPaintable extends ITileInterface
 		public static Paint[] to6(Paint p)
 		{ return new Paint[] { p, p, p, p, p, p }; }
 		
-		public static void renderCube(RenderBlocksCustom rb, Paint[] p, IIcon[] defIcon, int x, int y, int z, AxisAlignedBB aabb)
+		public static void renderCube(IBlockAccess iba, RenderBlocksCustom rb, Paint[] p, IIcon[] defIcon, int x, int y, int z, AxisAlignedBB aabb)
 		{
 			for(int i = 0; i < 6; i++)
 			{
 				rb.setFaceBounds(aabb, i);
-				renderFace(rb, i, p[i], defIcon[i], x, y, z);
+				renderFace(iba, rb, i, p[i], defIcon[i], x, y, z);
 			}
 		}
 		
-		public static void renderFace(RenderBlocksCustom rb, int side, Paint p, IIcon defIcon, int x, int y, int z)
+		public static void renderFace(IBlockAccess iba, RenderBlocksCustom rb, int side, final Paint p, IIcon defIcon, final int x, final int y, final int z)
 		{
 			if(rb.blockAccess != null)
 			{
@@ -262,22 +262,38 @@ public interface IPaintable extends ITileInterface
 			boolean b = rb.renderAllFaces;
 			rb.renderAllFaces = true;
 			rb.setCustomColor(null);
-			rb.customMetadata = null;
 			
 			if(p != null)
 			{
-				//renderBlocks.setOverrideBlockTexture(p[id].block.getIcon(renderBlocks.blockAccess, x, y, z, id));
-				rb.setOverrideBlockTexture(p.block.getIcon(side, p.meta));
+				rb.blockAccess = new CustomBlockAccess(iba)
+				{
+					public Block getBlock(int x1, int y1, int z1)
+					{
+						if(x1 == x && y1 == y && z1 == z)
+							return p.block;
+						return Blocks.air;
+					}
+					
+					public int getBlockMetadata(int x1, int y1, int z1)
+					{
+						if(x1 == x && y1 == y && z1 == z)
+							return p.meta;
+						return 0;
+					}
+				};
 				
-				if(side == 1 || !(p.block != null && p.block instanceof BlockGrass))
-					rb.setCustomColor(p.block.getRenderColor(p.meta));
-				rb.customMetadata = p.meta;
+				rb.setOverrideBlockTexture(p.block.getIcon(rb.blockAccess, x, y, z, side));
+				
+				if(side != 1 && p.block != null && p.block instanceof BlockGrass)
+					rb.setCustomColor(null);
+				else
+					rb.setCustomColor(p.block.colorMultiplier(rb.blockAccess, x, y, z));
 			}
 			else rb.setOverrideBlockTexture(defIcon);
 			
 			rb.renderStandardBlock(Blocks.stained_glass, x, y, z);
-			
 			rb.renderAllFaces = b;
+			rb.blockAccess = iba;
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package latmod.core.client;
 
+import latmod.core.CustomBlockAccess;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.*;
 import net.minecraft.util.*;
@@ -15,7 +16,7 @@ public class RenderBlocksCustom extends RenderBlocks
 {
 	public AxisAlignedBB fullBlock = AxisAlignedBB.getBoundingBox(0D, 0D, 0D, 1D, 1D, 1D);
 	
-	public Integer customMetadata = null;
+	public CustomBlockAccess customBlockAccess = null;
 	private float customColRed = 1F;
 	private float customColGreen = 1F;
 	private float customColBlue = 1F;
@@ -32,25 +33,12 @@ public class RenderBlocksCustom extends RenderBlocks
 		}
 	}
 	
-	public IIcon getBlockIcon(Block b, IBlockAccess iba, int x, int y, int z, int s)
-	{
-		if(customMetadata != null)
-			return getBlockIconFromSideAndMetadata(b, s, customMetadata);
-		
-		return super.getBlockIcon(b, iba, x, y, z, s);
-	}
-	
-	public IIcon getBlockIconFromSideAndMetadata(Block b, int s, int m)
-	{ return getIconSafe(b.getIcon(s, m)); }
-
-	public IIcon getBlockIconFromSide(Block b, int s)
-	{ return this.getIconSafe(b.getBlockTextureFromSide(s)); }
-
-	public IIcon getBlockIcon(Block b)
-	{ return getBlockIconFromSide(b, 1); }
-	
 	public boolean renderStandardBlock(Block b, int x, int y, int z)
-	{ return renderStandardBlockWithColorMultiplier(b, x, y, z, customColRed, customColGreen, customColBlue); }
+	{
+		if(customColRed == 1F && customColGreen == 1F && customColBlue == 1F)
+			return super.renderStandardBlock(b, x, y, z);
+		return renderStandardBlockWithColorMultiplier(b, x, y, z, customColRed, customColGreen, customColBlue);
+	}
 	
 	public void renderBlockSandFalling(Block b, World w, int x, int y, int z, int m)
 	{

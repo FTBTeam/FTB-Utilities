@@ -367,9 +367,14 @@ public class InvUtils
 	
 	public static ItemStack reduceItem(ItemStack is)
 	{
-		if(is == null || is.getItem() == null) return null;
-		is.stackSize--; if(is.stackSize <= 0)
-			is = is.getItem().getContainerItem(is);
+		if (is.stackSize == 1)
+		{
+			if (is.getItem().hasContainerItem(is))
+				return is.getItem().getContainerItem(is);
+			return null;
+		}
+		
+		is.splitStack(1);
 		return is;
 	}
 }

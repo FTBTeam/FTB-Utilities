@@ -1,7 +1,12 @@
 package latmod.core.client;
 
+import latmod.core.mod.LCConfig;
+
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
@@ -33,6 +38,12 @@ public class BlockRendererLM implements ISimpleBlockRenderingHandler
 	
 	public final void register()
 	{ LatCoreMCClient.addBlockRenderer(renderID, this); }
+	
+	public static void rotateBlocks()
+	{
+		if(LCConfig.Client.rotateBlocks)
+			GL11.glRotated(Minecraft.getSystemTime() * 0.053D, 0D, 1D, 0D);
+	}
 	
 	public static class BlockCustom extends Block
 	{

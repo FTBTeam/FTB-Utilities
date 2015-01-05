@@ -15,11 +15,20 @@ public class Tank
 		fluidTank = new FluidTank((int)(buckets * FluidContainerRegistry.BUCKET_VOLUME));
 	}
 	
+	public void setCapacity(double buckets)
+	{ fluidTank.setCapacity((int)(buckets * FluidContainerRegistry.BUCKET_VOLUME)); }
+	
+	public boolean hasFluid(int amt)
+	{ return getAmount() >= amt; }
+	
 	public boolean hasFluid()
-	{ return getAmount() > 0; }
+	{ return hasFluid(1); }
 	
 	public boolean isEmpty()
 	{ return !hasFluid(); }
+	
+	public boolean isFull()
+	{ return hasFluid(getCapacity()); }
 	
 	public FluidStack getFluidStack()
 	{ return fluidTank.getFluid(); }
@@ -29,6 +38,9 @@ public class Tank
 	
 	public int getAmount()
 	{ return fluidTank.getFluidAmount(); }
+	
+	public double getAmountD()
+	{ return getAmount() / (double)getCapacity(); }
 	
 	public int getCapacity()
 	{ return fluidTank.getCapacity(); }

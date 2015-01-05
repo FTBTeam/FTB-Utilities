@@ -181,7 +181,7 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 	ei.delayBeforeCanPickup = 20; worldObj.spawnEntityInWorld(ei); }
 	
 	public void setMeta(int m)
-	{ worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, m, 3); isDirty = true; }
+	{ blockMetadata = m; worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, m, 3); isDirty = true; }
 	
 	public void getMeta()
 	{ blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); }

@@ -11,8 +11,5 @@ public class CmdGamemodeOverride extends CommandGameMode
 	{ level = l; }
 	
 	public final int getRequiredPermissionLevel()
-	{ return level.isOP() ? 2 : (level.isEnabled() ? 0 : 5); }
-	
-	public final boolean canCommandSenderUseCommand(ICommandSender ics)
-	{ return level.isEnabled(); }
+	{ return level.requiredPermsLevel(); }
 }

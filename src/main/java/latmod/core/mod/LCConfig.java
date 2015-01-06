@@ -86,7 +86,11 @@ public class LCConfig extends LMConfig
 		}
 		
 		private static CommandLevel get(Category c, String s, CommandLevel def)
-		{ return CommandLevel.get(c.getString(s, def.toString(), CommandLevel.LEVEL_STRINGS)); }
+		{
+			CommandLevel cl = CommandLevel.get(c.getString(s, def.toString(), CommandLevel.LEVEL_STRINGS.clone()));
+			if(LatCoreMC.isDevEnv) LatCoreMC.logger.info(s + ": " + cl);
+			return cl;
+		}
 	}
 	
 	public static class Recipes

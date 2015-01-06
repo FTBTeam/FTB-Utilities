@@ -11,8 +11,8 @@ public abstract class CommandBaseLC extends CommandLM
 	{ super(s); level = l; }
 	
 	public final int getRequiredPermissionLevel()
-	{ return level.isOP() ? 2 : (level.isEnabled() ? 0 : 5); }
+	{ return level.requiredPermsLevel(); }
 	
 	public final boolean canCommandSenderUseCommand(ICommandSender ics)
-	{ return level.isEnabled(); }
+	{ return super.canCommandSenderUseCommand(ics); }
 }

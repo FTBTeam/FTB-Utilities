@@ -19,4 +19,11 @@ public enum CommandLevel
 	
 	public boolean isOP()
 	{ return this == OP; }
+	
+	public int requiredPermsLevel()
+	{
+		if(this == NONE) return 5;
+		else if(this == OP) return 2;
+		return 0;
+	}
 }

@@ -5,13 +5,10 @@ import java.util.UUID;
 import latmod.core.*;
 import latmod.core.event.*;
 import latmod.core.net.*;
-import latmod.core.tile.IWailaTile;
-import latmod.core.waila.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fluids.IFluidHandler;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.*;
 import cpw.mods.fml.relauncher.Side;
@@ -62,17 +59,6 @@ public class LCEventHandler
 			p.sendUpdate(LMPlayer.ACTION_LOGGED_OUT);
 			new LMPlayerEvent.LoggedOut(p, Side.SERVER, e.player).post();
 		}
-	}
-	
-	@SubscribeEvent
-	public void registerWaila(RegisterWailaEvent e)
-	{
-		e.register(IWailaTile.Stack.class, new WailaLMTile(e, WailaType.STACK));
-		e.register(IWailaTile.Head.class, new WailaLMTile(e, WailaType.HEAD));
-		e.register(IWailaTile.Body.class, new WailaLMTile(e, WailaType.BODY));
-		e.register(IWailaTile.Tail.class, new WailaLMTile(e, WailaType.TAIL));
-		
-		if(LCConfig.General.addWailaTanks) e.register(IFluidHandler.class, new WailaTankHandler(e));
 	}
 	
 	@SubscribeEvent

@@ -1,5 +1,6 @@
 package latmod.core.event;
 
+import latmod.core.tile.IWailaTile;
 import latmod.core.waila.*;
 import mcp.mobius.waila.api.IWailaRegistrar;
 
@@ -19,5 +20,12 @@ public class RegisterWailaEvent extends EventLM
 	}
 	
 	public static void registerHandlers(IWailaRegistrar i)
-	{ new RegisterWailaEvent(i).post(); }
+	{
+		RegisterWailaEvent e = new RegisterWailaEvent(i);
+		e.register(IWailaTile.Stack.class, new WailaLMTile(e, WailaType.STACK));
+		e.register(IWailaTile.Head.class, new WailaLMTile(e, WailaType.HEAD));
+		e.register(IWailaTile.Body.class, new WailaLMTile(e, WailaType.BODY));
+		e.register(IWailaTile.Tail.class, new WailaLMTile(e, WailaType.TAIL));
+		e.post();
+	}
 }

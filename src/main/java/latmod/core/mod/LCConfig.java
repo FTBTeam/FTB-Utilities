@@ -29,12 +29,10 @@ public class LCConfig extends LMConfig
 	public static class General
 	{
 		public static boolean checkUpdates;
-		public static boolean addWailaTanks;
 		
 		public static void load(Category c)
 		{
 			checkUpdates = c.getBool("checkUpdates", true);
-			addWailaTanks = c.getBool("addWailaTanks", false);
 		}
 	}
 	

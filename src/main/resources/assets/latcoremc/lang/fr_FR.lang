@@ -11,13 +11,13 @@ latcoremc:settings=Options
 latcoremc:back=Arrière
 key.latcoremc=LatCoreMC
 
-latcoremc:command.uuid=%0 's UUID: %1
-
 latcoremc:security=Securité
 latcoremc:security.public=Public
 latcoremc:security.private=Privé
 latcoremc:security.friends=Amis
-latcoremc:security.custom=Personalisé
+latcoremc:security.group=Groupes
+latcoremc:security.whitelist=Accueillis
+latcoremc:security.blacklist=Bannis
 
 latcoremc:redstonemode=Mode Redstone
 latcoremc:redstonemode.disabled=Désactivé

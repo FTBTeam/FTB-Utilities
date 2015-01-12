@@ -263,34 +263,34 @@ public interface IPaintable extends ITileInterface
 			rb.renderAllFaces = true;
 			rb.setCustomColor(null);
 			
+			rb.blockAccess = new CustomBlockAccess(iba)
+			{
+				public Block getBlock(int x1, int y1, int z1)
+				{
+					if(p != null && x1 == x && y1 == y && z1 == z)
+					return p.block; return Blocks.air;
+				}
+				
+				public int getBlockMetadata(int x1, int y1, int z1)
+				{
+					if(p != null && x1 == x && y1 == y && z1 == z)
+					return p.meta; return 0;
+				}
+			};
+			
+			IIcon icon = defIcon;
+			
 			if(p != null)
 			{
-				rb.blockAccess = new CustomBlockAccess(iba)
-				{
-					public Block getBlock(int x1, int y1, int z1)
-					{
-						if(x1 == x && y1 == y && z1 == z)
-							return p.block;
-						return Blocks.air;
-					}
-					
-					public int getBlockMetadata(int x1, int y1, int z1)
-					{
-						if(x1 == x && y1 == y && z1 == z)
-							return p.meta;
-						return 0;
-					}
-				};
-				
-				rb.setOverrideBlockTexture(p.block.getIcon(rb.blockAccess, x, y, z, side));
+				icon = p.block.getIcon(rb.blockAccess, x, y, z, side);
 				
 				if(side != 1 && p.block != null && p.block instanceof BlockGrass)
 					rb.setCustomColor(null);
 				else
 					rb.setCustomColor(p.block.colorMultiplier(rb.blockAccess, x, y, z));
 			}
-			else rb.setOverrideBlockTexture(defIcon);
 			
+			rb.setOverrideBlockTexture(icon);
 			rb.renderStandardBlock(Blocks.stained_glass, x, y, z);
 			rb.renderAllFaces = b;
 			rb.blockAccess = iba;

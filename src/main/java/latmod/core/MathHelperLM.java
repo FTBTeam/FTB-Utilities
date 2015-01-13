@@ -86,10 +86,28 @@ public class MathHelperLM
 	{ return MathHelper.ceiling_double_int(d); }
 	
 	public static int randomInt(Random r, int min, int max)
-	{ return min + r.nextInt(max - min + 1); }
+	{
+		if(min == max) return min;
+		if(min > max)
+		{
+			int min0 = min;
+			min = max;
+			max = min0; 
+		}
+		return min + r.nextInt(max - min + 1);
+	}
 	
 	public static double randomDouble(Random r, double min, double max)
-	{ return min + r.nextDouble() * (max - min); }
+	{
+		if(min == max) return min;
+		if(min > max)
+		{
+			double min0 = min;
+			min = max;
+			max = min0; 
+		}
+		return min + r.nextDouble() * (max - min);
+	}
 
 	public static boolean isRound(double d)
 	{ return Math.round(d) == d; }

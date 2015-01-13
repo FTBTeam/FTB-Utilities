@@ -14,6 +14,7 @@ public abstract class PlayerDecorator
 	{
 		map.put("latmod", PDLatMod.class);
 		map.put("part", PDParticles.class);
+		map.put("dust", PDDustCol.class);
 	}
 	
 	private String name = null; public String toString()

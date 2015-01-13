@@ -34,6 +34,7 @@ import cpw.mods.fml.relauncher.Side;
 /** Made by LatvianModder */
 public class LatCoreMC
 {
+	// Something, Something, Eclipse, Something... \Minecraft\eclipse\.metadata\.plugins\org.eclipse.debug.core\.launches
 	public static final String MC_VERSION = "1.7.10";
 	
 	public static final Logger logger = LogManager.getLogger("LatCoreMC");

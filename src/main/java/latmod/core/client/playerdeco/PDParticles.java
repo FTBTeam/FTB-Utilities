@@ -48,7 +48,7 @@ public class PDParticles extends PlayerDecorator
 				{
 					double w = e.entity.width / 2D;
 					double x = MathHelperLM.randomDouble(ParticleHelper.rand, e.entity.posX - w, e.entity.posX + w);
-					double y = MathHelperLM.randomDouble(ParticleHelper.rand, e.entity.posY - e.entity.getYOffset(), e.entity.posY);
+					double y = MathHelperLM.randomDouble(ParticleHelper.rand, e.entity.boundingBox.minY, e.entity.boundingBox.maxY);
 					double z = MathHelperLM.randomDouble(ParticleHelper.rand, e.entity.posZ - w, e.entity.posZ + w);
 					ParticleHelper.spawnPart(e.entity.worldObj, part, x, y, z, parA, parB, parC);
 				}

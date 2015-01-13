@@ -1,5 +1,6 @@
 package latmod.core;
 
+/** Made by LatvianModder */
 public class Converter
 {
 	public static int[] toInts(byte[] b)
@@ -89,17 +90,5 @@ public class Converter
 		for(int i = 0; i < size; i++)
 		a[i] = f[index][i];
 		return a;
-	}
-	
-	public static Integer decode(String s)
-	{
-		try { Integer i = Integer.decode(s); return i; }
-		catch(Exception e) { } return null;
-	}
-	
-	public static Integer parseInt(String s)
-	{
-		try { Integer i = Integer.parseInt(s); return i; }
-		catch(Exception e) { } return null;
 	}
 }

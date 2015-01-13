@@ -3,7 +3,6 @@ package latmod.core.tile;
 import java.util.Arrays;
 
 import latmod.core.*;
-import latmod.core.MathHelper;
 import latmod.core.client.RenderBlocksCustom;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -166,7 +165,7 @@ public interface IPaintable extends ITileInterface
 				
 				if(ep.capabilities.isCreativeMode || i.canPaintBlock(is))
 				{
-					MovingObjectPosition mop = MathHelper.rayTrace(ep);
+					MovingObjectPosition mop = MathHelperLM.rayTrace(ep);
 					
 					Paint p = null;
 					if(paint != null && paint.getItem() != null)

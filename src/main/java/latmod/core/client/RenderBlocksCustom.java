@@ -4,7 +4,7 @@ import latmod.core.CustomBlockAccess;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.*;
 import net.minecraft.util.*;
-import net.minecraft.world.*;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;

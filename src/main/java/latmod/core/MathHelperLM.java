@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /** Made by LatvianModder */
-public class MathHelper // Converter
+public class MathHelperLM
 {
 	public static final Random rand = new Random();
 	public static final double RAD = Math.PI / 180D;
@@ -19,10 +19,10 @@ public class MathHelper // Converter
 	public static final double HALF_PI = Math.PI / 2D;
 	
 	public static double sin(double d)
-	{ return net.minecraft.util.MathHelper.sin((float)d); }
+	{ return MathHelper.sin((float)d); }
 	
 	public static double cos(double d)
-	{ return net.minecraft.util.MathHelper.cos((float)d); }
+	{ return MathHelper.cos((float)d); }
 	
 	public static double tan(double d)
 	{ return sin(d) / cos(d); }
@@ -35,16 +35,6 @@ public class MathHelper // Converter
 	
 	public static double tanFromDeg(double f)
 	{ return tan(f * RAD); }
-	
-	/** atan2 using Vertex */
-	public static double atan2(Vertex pos, Vertex tar)
-	{ if(pos == null || tar == null) return -1F;
-	return Math.atan2(pos.x - tar.x, pos.z - tar.z); }
-	
-	/** atan using Vertex */
-	public static double atan(Vertex pos, Vertex tar)
-	{ if(pos == null || tar == null) return -1F;
-	return Math.atan(pos.y - tar.y); }
 	
 	public static double sqrt(double d)
 	{
@@ -63,7 +53,7 @@ public class MathHelper // Converter
 	{ return f * f; }
 	
 	public static double sq(double f, int i)
-	{ if(i == 2) return sq(f); double f1 = 1F; for(int j = 0; j < i; j++)
+	{ if(i == 2) return sq(f); double f1 = 1D; for(int j = 0; j < i; j++)
 	f1 *= f; return f1; }
 	
 	public static int power(int f, int n)
@@ -87,13 +77,13 @@ public class MathHelper // Converter
 	}
 	
 	public static int floor(double d)
-	{ return net.minecraft.util.MathHelper.floor_double(d); }
+	{ return MathHelper.floor_double(d); }
 	
 	public static int chunk(double d)
 	{ return floor(d) >> 4; }
 	
 	public static int ceil(double d)
-	{ return net.minecraft.util.MathHelper.ceiling_double_int(d); }
+	{ return MathHelper.ceiling_double_int(d); }
 	
 	public static int randomInt(Random r, int min, int max)
 	{ return min + r.nextInt(max - min + 1); }
@@ -132,13 +122,19 @@ public class MathHelper // Converter
 	{ return Double.parseDouble(s.trim()); }
 	
 	public static int toInt(String s, int def)
-	{ try { return toInt(s); } catch(Exception e) { return def; } }
+	{ try { return Integer.parseInt(s.trim()); } catch(Exception e) { return def; } }
 	
 	public static double toDouble(String s, double def)
 	{ try { return toDouble(s); } catch(Exception e) { return def; } }
 	
 	public static double toSmallDouble(double f)
 	{ long i = (long)(f * 100D); return i / 100D; }
+	
+	public static Integer decode(String s)
+	{
+		try { Integer i = Integer.decode(s); return i; }
+		catch(Exception e) { } return null;
+	}
 	
 	public static boolean canParseInt(String s)
 	{

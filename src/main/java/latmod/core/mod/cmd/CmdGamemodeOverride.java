@@ -1,7 +1,7 @@
 package latmod.core.mod.cmd;
 
 import latmod.core.cmd.CommandLevel;
-import net.minecraft.command.*;
+import net.minecraft.command.CommandGameMode;
 
 public class CmdGamemodeOverride extends CommandGameMode
 {

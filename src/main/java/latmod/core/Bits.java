@@ -1,5 +1,6 @@
 package latmod.core;
 
+/** Made by LatvianModder */
 public class Bits
 {
 	public static int toInt(boolean[] b)

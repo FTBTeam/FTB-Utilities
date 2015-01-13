@@ -13,6 +13,9 @@ public class EArray<E>
 
 	private boolean equalsEArray(EArray<E> o)
 	{
+		if(o == null) return false;
+		if(this == o) return true;
+		if(array == o.array) return true;
 		if(array == null && o.array == null) return true;
 		if(array != null && o.array == null) return false;
 		if(array == null && o.array != null) return false;

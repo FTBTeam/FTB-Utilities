@@ -1,6 +1,7 @@
 package latmod.core;
 import java.util.*;
 
+/** Made by LatvianModder */
 public class FastMap<K, V> implements Iterable<V>
 {
 	public FastList<K> keys;

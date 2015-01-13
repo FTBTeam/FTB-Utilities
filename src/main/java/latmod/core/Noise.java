@@ -12,7 +12,7 @@ public class Noise
 	static
 	{
 		for(int i = 0; i < perlin_cosTable.length; i++)
-			perlin_cosTable[i] = Math.cos(i * 0.5D * MathHelper.RAD);
+			perlin_cosTable[i] = Math.cos(i * 0.5D * MathHelperLM.RAD);
 	}
 	
 	private final Random perlinRandom;

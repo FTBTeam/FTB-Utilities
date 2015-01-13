@@ -170,7 +170,7 @@ public class LatCore
 		String s1;
 		for(int i = 0; i < o.length; i++)
 		{
-			s1 = "" + (MathHelper.toSmallDouble(o[i]));
+			s1 = "" + (MathHelperLM.toSmallDouble(o[i]));
 			if(s1.endsWith(".0")) s1 = s1 + "0"; s += s1;
 			if(i != o.length - 1) s += ", ";
 		}

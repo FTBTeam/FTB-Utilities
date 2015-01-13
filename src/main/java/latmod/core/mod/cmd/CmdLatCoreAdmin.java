@@ -4,7 +4,6 @@ import java.io.*;
 
 import latmod.core.*;
 import latmod.core.LMGamerules.RuleID;
-import latmod.core.MathHelper;
 import latmod.core.cmd.CommandLevel;
 import latmod.core.event.ReloadEvent;
 import latmod.core.net.*;
@@ -190,7 +189,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			
 			try
 			{
-				MovingObjectPosition mop = MathHelper.rayTrace(ep);
+				MovingObjectPosition mop = MathHelperLM.rayTrace(ep);
 				
 				//ep.worldObj.setTileEntity(mop.blockX, mop.blockY, mop.blockZ, null);
 				ep.worldObj.setBlockToAir(mop.blockX, mop.blockY, mop.blockZ);
@@ -206,7 +205,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			
 			try
 			{
-				MovingObjectPosition mop = MathHelper.rayTrace(ep);
+				MovingObjectPosition mop = MathHelperLM.rayTrace(ep);
 				Block b = ep.worldObj.getBlock(mop.blockX, mop.blockY, mop.blockZ);
 				return FINE + LatCoreMC.getRegName(Item.getItemFromBlock(b));
 			}

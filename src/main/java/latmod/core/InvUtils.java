@@ -11,6 +11,7 @@ import net.minecraft.tileentity.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+/** Made by LatvianModder */
 public class InvUtils
 {
 	public static ItemStack singleCopy(ItemStack is)

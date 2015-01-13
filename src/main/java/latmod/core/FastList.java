@@ -1,9 +1,7 @@
 package latmod.core;
 import java.util.*;
 
-/** <b>Made by LatvianModder</b>
- * <br>Use only in cases when 100% sure
- * <br>That this won't crash*/
+/** Made by LatvianModder */
 public class FastList<E> implements Iterable<E>, List<E>, Set<E> //ArrayList
 {
 	public Object[] objects;
@@ -14,7 +12,7 @@ public class FastList<E> implements Iterable<E>, List<E>, Set<E> //ArrayList
 	public FastList(int init, int inc)
 	{
 		initSize = init;
-		incr = MathHelper.clampInt(inc, 1, 100);
+		incr = MathHelperLM.clampInt(inc, 1, 100);
 		objects = new Object[initSize];
 	}
 	

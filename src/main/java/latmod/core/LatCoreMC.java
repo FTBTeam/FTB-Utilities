@@ -31,6 +31,7 @@ import cpw.mods.fml.common.network.*;
 import cpw.mods.fml.common.registry.*;
 import cpw.mods.fml.relauncher.Side;
 
+/** Made by LatvianModder */
 public class LatCoreMC
 {
 	public static final String MC_VERSION = "1.7.10";

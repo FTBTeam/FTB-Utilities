@@ -72,16 +72,34 @@ public final class Vertex implements Cloneable
 	{ return new Vertex(x, y, z); }
 	
 	public double distSq(double x1, double y1, double z1)
-	{ return MathHelper.sq(x1 - x) + MathHelper.sq(y1 - y) + MathHelper.sq(z1 - z); }
+	{ return MathHelperLM.sq(x1 - x) + MathHelperLM.sq(y1 - y) + MathHelperLM.sq(z1 - z); }
 	
 	public double dist(double x1, double y1, double z1)
-	{ return MathHelper.sqrt(distSq(x1, y1, z1)); }
+	{ return MathHelperLM.sqrt(distSq(x1, y1, z1)); }
 	
 	public double distSq(Vertex v)
 	{ return distSq(v.x, v.y, v.z); }
 	
 	public double dist(Vertex v)
-	{ return MathHelper.sqrt(distSq(v)); }
+	{ return MathHelperLM.sqrt(distSq(v)); }
+	
+	public double atan2(Vertex v)
+	{
+		if(v == null) return -1D;
+		return Math.atan2(x - v.x, z - v.z);
+	}
+	
+	public double atan2Y(Vertex v)
+	{
+		if(v == null) return -1D;
+		return Math.atan2(x - v.x, y - v.y);
+	}
+	
+	public double atan(Vertex v)
+	{
+		if(v == null) return -1D;
+		return Math.atan(y - v.y);
+	}
 	
 	public static class DimPos
 	{

@@ -6,6 +6,7 @@ import latmod.core.tile.IGuiTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.particle.EntityReddustFX;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -67,4 +68,18 @@ public class LCClient extends LCCommon
 	
 	public void notifyPlayer(Notification n)
 	{ LCClientEventHandler.instance.messages.add(new GuiNotification(n)); }
+	
+	public void spawnDust(World w, double x, double y, double z, int col)
+	{
+		EntityReddustFX fx = new EntityReddustFX(w, x, y, z, 0F, 0F, 0F);
+		
+		float alpha = ((col >> 24) & 0xFF) / 255F;
+		float red = ((col >> 16) & 0xFF) / 255F;
+		float green = ((col >> 8) & 0xFF) / 255F;
+		float blue = ((col >> 0) & 0xFF) / 255F;
+		
+		fx.setRBGColorF(red, green, blue);
+		fx.setAlphaF(alpha);
+		Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+	}
 }

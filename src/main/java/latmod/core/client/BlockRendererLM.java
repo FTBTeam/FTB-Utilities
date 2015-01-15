@@ -59,10 +59,12 @@ public class BlockRendererLM implements ISimpleBlockRenderingHandler
 	
 	public static class BlockGlowing extends BlockCustom
 	{
+		public static final int MAX = 0xF000F0;
+		
 		public BlockGlowing()
 		{ setLightLevel(1F); }
 		
 		public int getMixedBrightnessForBlock(IBlockAccess iba, int x, int y, int z)
-		{ return 15 << 20 | 15 << 4; }
+		{ return MAX; }
 	}
 }

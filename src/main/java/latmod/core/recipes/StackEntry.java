@@ -89,7 +89,7 @@ public class StackEntry implements IStackArray
 		else if(o instanceof ItemStack[]) list.addAll((ItemStack[])o);
 		else if(o instanceof Item) list.add(new ItemStack((Item)o));
 		else if(o instanceof Block) list.add(new ItemStack((Block)o));
-		else if(o instanceof String) list = LatCoreMC.getOreDictionary((String)o).clone();
+		else if(o instanceof String) list = ODItems.getOreDictionary((String)o).clone();
 		else if(o instanceof FluidStack)
 		{
 			FluidStack fs = (FluidStack)o;
@@ -116,7 +116,7 @@ public class StackEntry implements IStackArray
 		{
 			int dmg1 = is1.getItemDamage();
 			int dmg2 = is1.getItemDamage();
-			return dmg1 == dmg2 || dmg2 == LatCoreMC.ANY;// || dmg1 == LatCore.ANY;
+			return dmg1 == dmg2 || dmg2 == ODItems.ANY;// || dmg1 == ODItems.ANY;
 		}
 				
 		return false;

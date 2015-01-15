@@ -47,10 +47,10 @@ dependencies {
 sourceSets {
     main {
         java {
-            srcDir "\\\\LATMODPC\\ProjMCP/LatCoreMC/src/main/java"
+            srcDir config.source_dir + "LatCoreMC/src/main/java"
         }
         resources {
-            srcDir "\\\\LATMODPC\\ProjMCP/LatCoreMC/src/main/resources"
+            srcDir config.source_dir + "LatCoreMC/src/main/resources"
         }
     }
 }

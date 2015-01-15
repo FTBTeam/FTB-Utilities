@@ -83,10 +83,11 @@ public class RenderBlocksCustom extends RenderBlocks
 		GL11.glRotatef(90F, 0F, 1F, 0F);
 		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
 		
-		tessellator.setColorOpaque_F(1F, 1F, 1F);
+		tessellator.setColorOpaque_F(customColRed, customColGreen, customColBlue);
 		if(customBrightness != null) tessellator.setBrightness(customBrightness);
+		
 		else tessellator.setBrightness(0);
-		GL11.glColor4f(1F, 1F, 1F, 1F);
+		GL11.glColor4f(customColRed, customColGreen, customColBlue, 1F);
 		
 		for(int i = 0; i < 6; i++)
 		{

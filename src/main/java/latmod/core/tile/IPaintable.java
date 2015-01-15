@@ -134,6 +134,11 @@ public interface IPaintable extends ITileInterface
 		public IIcon getCustomPaint(int side, int meta);
 	}
 	
+	public static interface INoPaint
+	{
+		public boolean hasPaint(IBlockAccess iba, int x, int y, int z, int s);
+	}
+	
 	public static class Helper
 	{
 		public static ItemStack getPaintItem(ItemStack is)
@@ -192,6 +197,9 @@ public interface IPaintable extends ITileInterface
 					if(b.getBlockBoundsMinX() == 0D && b.getBlockBoundsMinY() == 0D && b.getBlockBoundsMinZ() == 0D
 					&& b.getBlockBoundsMaxX() == 1D && b.getBlockBoundsMaxY() == 1D && b.getBlockBoundsMaxZ() == 1D)
 					{
+						if(b instanceof INoPaint && !((INoPaint)b).hasPaint(w, x, y, z, s))
+							return true;
+						
 						ItemStack paint = new ItemStack(b, 1, ep.worldObj.getBlockMetadata(x, y, z));
 						
 						try

@@ -49,4 +49,8 @@ public class LCCommon extends LMProxy implements IGuiHandler // LCClient
 	public void notifyPlayer(Notification n)
 	{
 	}
+	
+	public void spawnDust(World w, double x, double y, double z, int col)
+	{
+	}
 }

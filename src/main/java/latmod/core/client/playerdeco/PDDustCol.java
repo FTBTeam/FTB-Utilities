@@ -1,9 +1,9 @@
 package latmod.core.client.playerdeco;
 
+import java.awt.Color;
+
 import latmod.core.*;
 import latmod.core.mod.LC;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityReddustFX;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import cpw.mods.fml.relauncher.*;
 
@@ -13,6 +13,7 @@ public class PDDustCol extends PlayerDecorator
 	public int rarity_still, rarity_moving;
 	public int quantity_still, quantity_moving;
 	public float red, green, blue, alpha;
+	public int color;
 	
 	public void onDataLoaded(FastMap<String, String> data)
 	{
@@ -25,6 +26,8 @@ public class PDDustCol extends PlayerDecorator
 		green = getN(data, "g", 1F).floatValue();
 		blue = getN(data, "b", 1F).floatValue();
 		alpha = getN(data, "a", 1F).floatValue();
+		
+		color = new Color((int)(red * 255F), (int)(green * 255F), (int)(blue * 255F), (int)(alpha * 255F)).getRGB();
 	}
 	
 	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
@@ -45,10 +48,7 @@ public class PDDustCol extends PlayerDecorator
 				double x = MathHelperLM.randomDouble(ParticleHelper.rand, e.entity.posX - w, e.entity.posX + w);
 				double y = MathHelperLM.randomDouble(ParticleHelper.rand, e.entity.boundingBox.minY, e.entity.boundingBox.maxY);
 				double z = MathHelperLM.randomDouble(ParticleHelper.rand, e.entity.posZ - w, e.entity.posZ + w);
-				EntityReddustFX fx = new EntityReddustFX(e.entity.worldObj, x, y, z, 0F, 0F, 0F);
-				fx.setRBGColorF(red, green, blue);
-				fx.setAlphaF(alpha);
-				Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+				LC.proxy.spawnDust(e.entity.worldObj, x, y, z, color);
 			}
 		}
 	}

@@ -12,11 +12,11 @@ public class Tank
 	public Tank(String s, double buckets)
 	{
 		name = s;
-		fluidTank = new FluidTank((int)(buckets * FluidContainerRegistry.BUCKET_VOLUME));
+		fluidTank = new FluidTank((int)(buckets * 1000));
 	}
 	
 	public void setCapacity(double buckets)
-	{ fluidTank.setCapacity((int)(buckets * FluidContainerRegistry.BUCKET_VOLUME)); }
+	{ fluidTank.setCapacity((int)(buckets * 1000)); }
 	
 	public boolean hasFluid(int amt)
 	{ return getAmount() >= amt; }

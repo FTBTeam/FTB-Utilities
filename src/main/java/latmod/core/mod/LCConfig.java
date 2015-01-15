@@ -111,7 +111,7 @@ public class LCConfig extends LMConfig
 			{
 				for(int i = 0; i < 16; i++)
 					LC.mod.recipes.addRecipe(new ItemStack(Blocks.wool, 8, i), "WWW", "WDW", "WWW",
-							'W', new ItemStack(Blocks.wool, 1, LatCoreMC.ANY),
+							'W', new ItemStack(Blocks.wool, 1, ODItems.ANY),
 							'D', EnumDyeColor.VALUES[i].dyeName);
 			}
 		}

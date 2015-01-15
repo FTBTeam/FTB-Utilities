@@ -19,7 +19,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
-import net.minecraftforge.oredict.OreDictionary;
 
 import org.apache.logging.log4j.*;
 
@@ -40,7 +39,6 @@ public class LatCoreMC
 	public static final Logger logger = LogManager.getLogger("LatCoreMC");
 	public static final EventBus EVENT_BUS = new EventBus();
 	
-	public static final int ANY = OreDictionary.WILDCARD_VALUE;
 	public static final int TOP = ForgeDirection.UP.ordinal();
 	public static final int BOTTOM = ForgeDirection.DOWN.ordinal();
 	
@@ -96,20 +94,6 @@ public class LatCoreMC
 	
 	public static final int getNewEntityID()
 	{ return EntityRegistry.findGlobalUniqueEntityId(); }
-	
-	public static void addOreDictionary(String name, ItemStack is)
-	{
-		ItemStack is1 = InvUtils.singleCopy(is);
-		if(!getOreDictionary(name).contains(is1))
-		OreDictionary.registerOre(name, is1);
-	}
-	
-	public static FastList<ItemStack> getOreDictionary(String name)
-	{
-		FastList<ItemStack> l = new FastList<ItemStack>();
-		l.addAll(OreDictionary.getOres(name));
-		return l;
-	}
 	
 	public static void addWorldGenerator(IWorldGenerator i, int w)
 	{ GameRegistry.registerWorldGenerator(i, w); }

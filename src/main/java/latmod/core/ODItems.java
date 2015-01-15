@@ -5,6 +5,8 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class ODItems
 {
+	public static final int ANY = OreDictionary.WILDCARD_VALUE;
+	
 	public static final String WOOD = "logWood";
 	public static final String PLANKS = "plankWood";
 	public static final String STICK = "stickWood";
@@ -14,9 +16,9 @@ public class ODItems
 	public static final String GLASS_PANE_ANY = "paneGlass";
 	public static final String STONE = "stone";
 	public static final String COBBLE = "cobblestone";
-	public static ItemStack OBSIDIAN;
-	public static ItemStack WOOL;
-	public static ItemStack WOOL_WHITE;
+	public static final ItemStack OBSIDIAN = new ItemStack(Blocks.obsidian);
+	public static final ItemStack WOOL = new ItemStack(Blocks.wool, 1, ANY);
+	public static final ItemStack WOOL_WHITE = new ItemStack(Blocks.wool, 1, 0);
 	
 	public static final String SLIMEBALL = "slimeball";
 	public static final String MEAT_RAW = "meatRaw";
@@ -67,31 +69,27 @@ public class ODItems
 		public boolean equals(Object o)
 		{
 			ItemStack is = (o == null) ? null : ((o instanceof OreStackEntry) ? ((OreStackEntry)o).itemStack : (ItemStack)o);
-			return is.getItem() == itemStack.getItem() && (is.getItemDamage() == itemStack.getItemDamage() || itemStack.getItemDamage() == LatCoreMC.ANY);
+			return is.getItem() == itemStack.getItem() && (is.getItemDamage() == itemStack.getItemDamage() || itemStack.getItemDamage() == ANY);
 		}
 	}
 	
 	public static void preInit()
 	{
-		OBSIDIAN = new ItemStack(Blocks.obsidian);
-		WOOL = new ItemStack(Blocks.wool, 1, LatCoreMC.ANY);
-		WOOL_WHITE = new ItemStack(Blocks.wool, 1, 0);
+		add(MEAT_RAW, new ItemStack(Items.beef));
+		add(MEAT_RAW, new ItemStack(Items.porkchop));
+		add(MEAT_RAW, new ItemStack(Items.chicken));
 		
-		LatCoreMC.addOreDictionary(MEAT_RAW, new ItemStack(Items.beef));
-		LatCoreMC.addOreDictionary(MEAT_RAW, new ItemStack(Items.porkchop));
-		LatCoreMC.addOreDictionary(MEAT_RAW, new ItemStack(Items.chicken));
-		
-		LatCoreMC.addOreDictionary(MEAT_COOKED, new ItemStack(Items.cooked_beef));
-		LatCoreMC.addOreDictionary(MEAT_COOKED, new ItemStack(Items.cooked_porkchop));
-		LatCoreMC.addOreDictionary(MEAT_COOKED, new ItemStack(Items.cooked_chicken));
+		add(MEAT_COOKED, new ItemStack(Items.cooked_beef));
+		add(MEAT_COOKED, new ItemStack(Items.cooked_porkchop));
+		add(MEAT_COOKED, new ItemStack(Items.cooked_chicken));
 	}
 	
 	public static void postInit()
 	{
 		hasFMP = false;
-		hasFMP |= addOreName("ForgeMicroblock:sawStone", LatCoreMC.ANY, TOOL_SAW);
-		hasFMP |= addOreName("ForgeMicroblock:sawIron", LatCoreMC.ANY, TOOL_SAW);
-		hasFMP |= addOreName("ForgeMicroblock:sawDiamond", LatCoreMC.ANY, TOOL_SAW);
+		hasFMP |= addOreName("ForgeMicroblock:sawStone", ANY, TOOL_SAW);
+		hasFMP |= addOreName("ForgeMicroblock:sawIron", ANY, TOOL_SAW);
+		hasFMP |= addOreName("ForgeMicroblock:sawDiamond", ANY, TOOL_SAW);
 		
 		Item wrench = LatCoreMC.getItemFromRegName("ThermalExpansion:wrench");
 		if(wrench != null) wrench.setHarvestLevel("wrench", 0);
@@ -103,8 +101,15 @@ public class ODItems
 	private static boolean addOreName(String item, int damage, String name)
 	{
 		Item i = LatCoreMC.getItemFromRegName(item);
-		if(i != null) LatCoreMC.addOreDictionary(name, new ItemStack(i, 1, damage));
+		if(i != null) add(name, new ItemStack(i, 1, damage));
 		return i != null;
+	}
+	
+	public static void add(String name, ItemStack is)
+	{
+		ItemStack is1 = InvUtils.singleCopy(is);
+		if(!getOreDictionary(name).contains(is1))
+		OreDictionary.registerOre(name, is1);
 	}
 	
 	public static FastList<String> getOreNames(ItemStack is)
@@ -113,6 +118,13 @@ public class ODItems
 		if(ai == null || ai.length == 0) return null;
 		FastList<String> l = new FastList<String>();
 		for(int i : ai) l.add(OreDictionary.getOreName(i));
+		return l;
+	}
+	
+	public static FastList<ItemStack> getOreDictionary(String name)
+	{
+		FastList<ItemStack> l = new FastList<ItemStack>();
+		l.addAll(OreDictionary.getOres(name));
 		return l;
 	}
 }

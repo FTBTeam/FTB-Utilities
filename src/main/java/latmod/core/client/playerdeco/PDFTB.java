@@ -9,23 +9,20 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
-public class PDLatMod extends PlayerDecorator
+public class PDFTB extends PlayerDecorator
 {
 	public static int[] pixels =
 	{
-		0, 1, 1, 1, 0,
-		1, 0, 0, 0, 1,
-		1, 0, 1, 0, 1,
-		1, 0, 0, 1, 0,
-		0, 1, 0, 0, 0,
-		0, 1, 1, 1, 0,
-		1, 0, 0, 0, 1,
-		1, 0, 1, 0, 1,
-		1, 0, 0, 0, 1,
-		0, 1, 1, 1, 0,
+		1, 1, 1, 0, 0, 0,
+		1, 2, 2, 2, 0, 0,
+		1, 1, 2, 3, 3, 0,
+		1, 0, 2, 3, 0, 3,
+		1, 0, 2, 3, 3, 0,
+		0, 0, 2, 3, 0, 3,
+		0, 0, 0, 3, 3, 0,
 	};
 	
-	public PDLatMod()
+	public PDFTB()
 	{
 	}
 	
@@ -41,7 +38,7 @@ public class PDLatMod extends PlayerDecorator
 		GL11.glDisable(GL11.GL_LIGHTING);
 		
 		GL11.glPushMatrix();
-		GL11.glTranslated(0.1D, 0.03D, -0.126D);
+		GL11.glTranslated(-0.23D, 0.03D, -0.126D);
 		
 		if(e.entityPlayer.isSneaking())
 			GL11.glRotatef(25F, 1F, 0F, 0F);
@@ -57,15 +54,32 @@ public class PDLatMod extends PlayerDecorator
 		for(int i = 0; i < pixels.length; i++)
 		if(pixels[i] != 0)
 		{
-			int x = i % 5;
-			int y = i / 5;
+			int x = i % 6;
+			int y = i / 6;
 			
 			double b = (secs + x * 0.3D + y * 0.7D) % 2D;
 			if(b > 1D) b = 2D - b;
 			
-			double cm = b * 0.35D + 0.65D;
+			double cm = b * 0.3D + 0.7D;
 			
-			GL11.glColor4d(1D * cm, 0.8D * cm, 0.1D * cm, 1D);
+			int red = 0;
+			int green = 148;
+			int blue = 255;
+			
+			if(pixels[i] == 2)
+			{
+				red = 60;
+				green = 255;
+				blue = 53;
+			}
+			else if(pixels[i] == 3)
+			{
+				red = 255;
+				green = 62;
+				blue = 56;
+			}
+			
+			GL11.glColor4d((red / 255D) * cm, (green / 255D) * cm, (blue / 255D) * cm, 1D);
 			
 			GL11.glBegin(GL11.GL_QUADS);
 			

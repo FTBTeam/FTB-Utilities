@@ -13,6 +13,7 @@ public abstract class PlayerDecorator
 	static
 	{
 		map.put("latmod", PDLatMod.class);
+		map.put("ftb", PDFTB.class);
 		map.put("part", PDParticles.class);
 		map.put("dust", PDDustCol.class);
 	}

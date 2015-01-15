@@ -53,7 +53,7 @@ public class LCEventHandler
 	{
 		LMPlayer p = LMPlayer.getPlayer(e.player);
 		
-		if(p != null && p.isOnline())
+		if(p != null)
 		{
 			p.setOnline(false);
 			p.sendUpdate(LMPlayer.ACTION_LOGGED_OUT);
@@ -74,6 +74,10 @@ public class LCEventHandler
 				{
 					NBTTagCompound tag = NBTHelper.readMap(new FileInputStream(f));
 					loadAllData(tag);
+					
+					for(int i = 0; i < LMPlayer.list.size(); i++)
+						LMPlayer.list.get(i).setOnline(false);
+					
 					LatCoreMC.logger.info("LatCoreMC.dat loaded");
 				}
 				catch(Exception ex)

@@ -1,6 +1,7 @@
 package latmod.core.mod.client;
 import latmod.core.*;
 import latmod.core.client.LatCoreMCClient;
+import latmod.core.client.playerdeco.ThreadCheckPlayerDecorators;
 import latmod.core.mod.LCCommon;
 import latmod.core.tile.IGuiTile;
 import net.minecraft.client.Minecraft;

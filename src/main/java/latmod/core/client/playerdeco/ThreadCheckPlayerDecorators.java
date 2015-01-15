@@ -1,9 +1,10 @@
-package latmod.core.mod.client;
+package latmod.core.client.playerdeco;
 
 import java.net.URL;
 
 import latmod.core.*;
-import latmod.core.client.playerdeco.PlayerDecorator;
+import latmod.core.event.CustomPDEvent;
+import latmod.core.mod.client.LCClientEventHandler;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
@@ -50,10 +51,12 @@ public class ThreadCheckPlayerDecorators implements Runnable
 				}
 				LatCoreMC.logger.info("PlayerDecorators loaded!");
 			}
-			else LatCoreMC.logger.warn("Player Decorators failed to load!");;
+			else LatCoreMC.logger.warn("Player Decorators failed to load!");
 		}
 		catch(Exception ex)
 		{ ex.printStackTrace(); }
+		
+		new CustomPDEvent().post();
 		
 		thread = null;
 	}

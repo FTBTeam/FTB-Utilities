@@ -257,8 +257,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 	
 	public static LMPlayer getPlayer(Object o)
 	{
-		if(o == null) return null;
-		if(o instanceof FakePlayer) return null;
+		if(o == null || o instanceof FakePlayer) return null;
 		if(o instanceof LMPlayer) return (LMPlayer)o;
 		return list.getObj(o);
 	}

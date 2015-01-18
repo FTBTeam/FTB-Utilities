@@ -240,8 +240,8 @@ public class GuiFriends extends GuiLM
 				if(on0 && !on1) return -1;
 				if(!on0 && on1) return 1;
 				
-				String u = player.getUnformattedName();
-				String u1 = o.player.getUnformattedName();
+				String u = player.getDisplayName();
+				String u1 = o.player.getDisplayName();
 				return u.compareTo(u1);
 			}
 			

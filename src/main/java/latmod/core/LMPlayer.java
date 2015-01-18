@@ -7,7 +7,6 @@ import latmod.core.mod.LC;
 import latmod.core.net.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.*;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import cpw.mods.fml.relauncher.Side;
@@ -54,7 +53,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 		
 		if(s != null && s.length() > 0)
 		{
-			customName = s.trim().replace("&k", "").replace("&", LatCoreMC.FORMATTING);
+			customName = LatCoreMC.removeFormatting(s.trim());
 			if(customName.length() == 0 || customName.equals("null")) customName = null;
 		}
 		else customName = null;
@@ -77,10 +76,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 	}
 	
 	public String getDisplayName()
-	{ if(hasCustomName()) return customName + EnumChatFormatting.RESET; return username + ""; }
-	
-	public String getUnformattedName()
-	{ return LatCoreMC.removeFormatting(getDisplayName()); }
+	{ if(hasCustomName()) return customName + ""; return username + ""; }
 	
 	public boolean hasCustomName()
 	{ return customName != null && !customName.isEmpty(); }
@@ -132,6 +128,8 @@ public class LMPlayer implements Comparable<LMPlayer>
 		if(tag.hasKey("On")); isOnline = tag.getBoolean("On");
 		customName = tag.getString(TAG_CUSTOM_NAME).trim();
 		if(customName.isEmpty()) customName = null;
+		else if(customName.contains(LatCoreMC.FORMATTING))
+			customName = LatCoreMC.removeFormatting(customName);
 		
 		friends.clear();
 		groups.clear();
@@ -244,7 +242,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 		else if(o instanceof UUID) return ((UUID)o).equals(uuid);
 		else if(o instanceof EntityPlayer) return equals(((EntityPlayer)o).getUniqueID());
 		else if(o instanceof LMPlayer) return equals(((LMPlayer)o).uuid);
-		else if(o instanceof String) return o.equals(username) || ((String)o).equalsIgnoreCase(getUnformattedName()) || o.equals(uuid.toString());
+		else if(o instanceof String) return o.equals(username) || ((String)o).equalsIgnoreCase(getDisplayName()) || o.equals(uuid.toString());
 		else return false;
 	}
 	

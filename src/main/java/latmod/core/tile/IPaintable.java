@@ -289,16 +289,24 @@ public interface IPaintable extends ITileInterface
 			
 			if(p != null)
 			{
-				icon = p.block.getIcon(rb.blockAccess, x, y, z, side);
-				
-				if(side != 1 && p.block != null && p.block instanceof BlockGrass)
-					rb.setCustomColor(null);
-				else
-					rb.setCustomColor(p.block.colorMultiplier(rb.blockAccess, x, y, z));
+				if(p.block == null || p.block == Blocks.air) icon = Blocks.stone.getBlockTextureFromSide(1);
+				else try
+				{
+					icon = p.block.getIcon(rb.blockAccess, x, y, z, side);
+					
+					if(side != 1 && p.block instanceof BlockGrass)
+						rb.setCustomColor(null);
+					else
+						rb.setCustomColor(p.block.colorMultiplier(rb.blockAccess, x, y, z));
+				}
+				catch(Exception e)
+				{
+					icon = Blocks.stone.getBlockTextureFromSide(1);
+				}
 			}
 			
 			rb.setOverrideBlockTexture(icon);
-			rb.renderStandardBlock(Blocks.stained_glass, x, y, z);
+			rb.renderStandardBlock(Blocks.stone, x, y, z);
 			rb.renderAllFaces = b;
 			rb.blockAccess = iba;
 		}

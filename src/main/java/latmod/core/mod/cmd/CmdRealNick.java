@@ -7,8 +7,8 @@ import net.minecraft.util.EnumChatFormatting;
 
 public class CmdRealNick extends CommandBaseLC
 {
-	public CmdRealNick(CommandLevel l)
-	{ super("realnick", l); }
+	public CmdRealNick()
+	{ super("realnick", CommandLevel.ALL); }
 	
 	public String[] getSubcommands(ICommandSender ics)
 	{ return null; }

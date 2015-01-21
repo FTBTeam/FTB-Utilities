@@ -8,8 +8,8 @@ import net.minecraft.server.MinecraftServer;
 
 public class CmdListOverride extends CommandBaseLC
 {
-	public CmdListOverride(CommandLevel l)
-	{ super("list", l); }
+	public CmdListOverride()
+	{ super("list", CommandLevel.ALL); }
 	
 	public String[] getSubcommands(ICommandSender ics)
 	{ return null; }

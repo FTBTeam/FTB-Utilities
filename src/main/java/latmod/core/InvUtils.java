@@ -378,4 +378,17 @@ public class InvUtils
 		is.splitStack(1);
 		return is;
 	}
+	
+	public static ItemStack loadStack(NBTTagCompound tag, String s)
+	{ if(tag.hasKey(s)) return ItemStack.loadItemStackFromNBT(tag.getCompoundTag(s)); return null; }
+	
+	public static void saveStack(NBTTagCompound tag, String s, ItemStack is)
+	{
+		if(is != null)
+		{
+			NBTTagCompound tag1 = new NBTTagCompound();
+			is.writeToNBT(tag1);
+			tag.setTag(s, tag1);
+		}
+	}
 }

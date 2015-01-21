@@ -9,8 +9,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 
 public class CmdLatCore extends CommandBaseLC
 {
-	public CmdLatCore(CommandLevel l)
-	{ super("latcore", l); }
+	public CmdLatCore()
+	{ super("latcore", CommandLevel.ALL); }
 	
 	public void printHelp(ICommandSender ics)
 	{

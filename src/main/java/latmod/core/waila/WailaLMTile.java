@@ -5,8 +5,11 @@ import java.util.List;
 import latmod.core.event.RegisterWailaEvent;
 import latmod.core.tile.IWailaTile;
 import mcp.mobius.waila.api.*;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 public class WailaLMTile extends BasicWailaHandler
 {
@@ -55,5 +58,10 @@ public class WailaLMTile extends BasicWailaHandler
 			((IWailaTile.Tail)te).addWailaTail(data, config, l);
 		
 		return l;
+	}
+	
+	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z)
+	{
+		return tag;
 	}
 }

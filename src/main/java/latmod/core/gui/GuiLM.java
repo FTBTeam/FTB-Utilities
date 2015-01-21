@@ -14,43 +14,26 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public abstract class GuiLM extends GuiContainer
 {
-	public static final ResourceLocation icons_lm = LC.mod.getLocation("textures/gui/icons_lm.png");
-	private static final int BS = 19;
-	public static final TextureCoords
+	// General IIcons //
 	
-	button_basic =			new TextureCoords(icons_lm, BS * 0, BS * 0),
-	button_pressed =		new TextureCoords(icons_lm, BS * 0, BS * 1),
-	button_over =			new TextureCoords(icons_lm, BS * 0, BS * 2),
-	button_inner =			new TextureCoords(icons_lm, BS * 0, BS * 3),
-	button_inner_pressed =	new TextureCoords(icons_lm, BS * 0, BS * 4),
+	public static IIcon
+	button_basic,
+	button_pressed,
+	button_toggle_off,
+	button_toggle_on,
+	button_back,
+	button_help,
+	button_settings,
+	button_up,
+	button_down;
 	
-	button_back =			new TextureCoords(icons_lm, BS * 1, BS * 0),
-	button_help =			new TextureCoords(icons_lm, BS * 1, BS * 1),
-	button_settings =		new TextureCoords(icons_lm, BS * 1, BS * 2);
+	public static final IIcon[] button_security = new IIcon[4];
+	public static final IIcon[] button_inv = new IIcon[4];
+	public static final IIcon[] button_redstone = new IIcon[4];
 	
-	public static final TextureCoords[] button_security =
-	{
-		new TextureCoords(icons_lm, BS * 2, BS * 0),
-		new TextureCoords(icons_lm, BS * 2, BS * 1),
-		new TextureCoords(icons_lm, BS * 2, BS * 2),
-		new TextureCoords(icons_lm, BS * 2, BS * 3),
-	};
+	public static IIcon security_whitelist, security_blacklist;
 	
-	public static final TextureCoords[] button_inv =
-	{
-		new TextureCoords(icons_lm, BS * 3, BS * 0),
-		new TextureCoords(icons_lm, BS * 3, BS * 1),
-		new TextureCoords(icons_lm, BS * 3, BS * 2),
-		new TextureCoords(icons_lm, BS * 3, BS * 3),
-	};
-	
-	public static final TextureCoords[] button_redstone =
-	{
-		new TextureCoords(icons_lm, BS * 4, BS * 0),
-		new TextureCoords(icons_lm, BS * 4, BS * 1),
-		new TextureCoords(icons_lm, BS * 4, BS * 2),
-		new TextureCoords(icons_lm, BS * 4, BS * 3),
-	};
+	// GuiLM //
 	
 	public final ContainerLM container;
 	public final ResourceLocation texture;
@@ -59,6 +42,8 @@ public abstract class GuiLM extends GuiContainer
 	public GuiLM(ContainerLM c, ResourceLocation tex)
 	{
 		super(c);
+		
+		LC.mod.getLocation("textures/gui/icons/button.png");
 		container = c;
 		texture = tex;
 		widgets = new FastList<WidgetLM>();
@@ -112,6 +97,32 @@ public abstract class GuiLM extends GuiContainer
 		LMRenderHelper.recolor();
 		setTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+	}
+	
+	public void drawScreen(int mx, int my, float f)
+	{
+		super.drawScreen(mx, my, f);
+		drawText(mx, my);
+	}
+	
+	public void drawText(int mx, int my)
+	{
+		FastList<String> l = new FastList<String>();
+		
+		addMouseText(mx, my, l);
+		
+		for(int i = 0; i < widgets.size(); i++)
+		{
+			WidgetLM w = widgets.get(i);
+			if(w.mouseOver(mx, my))
+				w.addMouseOverText(l);
+		}
+		
+		if(!l.isEmpty()) drawHoveringText(l, mx, my, fontRendererObj);
+	}
+	
+	public void addMouseText(int mx, int my, FastList<String> l)
+	{
 	}
 	
 	public void drawWrappedIcon(IIcon i, float x, float y, float w, float h)

@@ -28,7 +28,7 @@ public class LMSecurity
 		{
 			owner = LMPlayer.getPlayer(tag.getString("Sec_" + s + "_Owner"));
 			level = Level.VALUES[tag.getByte("Sec_" + s + "_Level")];
-			if(level == Level.CUSTOM) level = Level.PRIVATE;
+			if(level == Level.GROUP) level = Level.PRIVATE;
 			group = null;
 		}
 		else
@@ -93,7 +93,7 @@ public class LMSecurity
 		if(p != null)
 		{
 			if(level == Level.FRIENDS) return owner.isFriend(p);
-			if(level == Level.CUSTOM && group != null)
+			if(level == Level.GROUP && group != null)
 			{
 				boolean has = owner.getGroupsFor(p.uuid).contains(group.object1);
 				return (has && group.object2) || (!has && !group.object2);
@@ -119,9 +119,11 @@ public class LMSecurity
 		PUBLIC("public"),
 		PRIVATE("private"),
 		FRIENDS("friends"),
-		CUSTOM("custom");
+		GROUP("group");
 		
 		public static final Level[] VALUES = values();
+		public static final Level[] VALUES_2 = new Level[] { PUBLIC, PRIVATE };
+		public static final Level[] VALUES_3 = new Level[] { PUBLIC, PRIVATE, FRIENDS };
 		
 		public final int ID;
 		private String uname;
@@ -136,16 +138,16 @@ public class LMSecurity
 		{ return this == PUBLIC; }
 		
 		public boolean isRestricted()
-		{ return this == FRIENDS || this == CUSTOM; }
+		{ return this == FRIENDS || this == GROUP; }
 		
-		public Level next()
-		{ return VALUES[(ID + 1) % VALUES.length]; }
+		public Level next(Level[] l)
+		{ return l[(ID + 1) % l.length]; }
 		
-		public Level prev()
+		public Level prev(Level[] l)
 		{
 			int id = ID - 1;
-			if(id < 0) id = VALUES.length - 1;
-			return VALUES[id];
+			if(id < 0) id = l.length - 1;
+			return l[id];
 		}
 		
 		public String getText()

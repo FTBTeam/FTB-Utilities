@@ -1,10 +1,10 @@
 package latmod.core.tile;
 import latmod.core.*;
+import latmod.core.block.BlockLM;
 import latmod.core.mod.LC;
 import latmod.core.net.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.*;
@@ -21,14 +21,11 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 	public static final int[] NO_SLOTS = new int[0];
 	
 	public String customName = null;
-	public boolean dropItems = true;
 	private boolean isDirty = true;
 	public boolean isLoaded = false;
 	public long tick = 0L;
 	public final LMSecurity security = new LMSecurity(null);
 	public boolean redstonePowered = false;
-	
-	public ItemStack items[] = null;
 	
 	@Override
 	public final TileEntity getTile()
@@ -59,9 +56,6 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 	{
 		security.readFromNBT(tag, "Security");
 		
-		if(items != null)
-		InvUtils.readItemsFromNBT(items, tag, "Items");
-		
 		customName = null;
 		if(tag.hasKey("CustomName")) customName = tag.getString("CustomName");
 		tick = tag.getLong("Tick");
@@ -75,9 +69,6 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 	public void writeTileData(NBTTagCompound tag)
 	{
 		security.writeToNBT(tag, "Security");
-		
-		if(items != null)
-		InvUtils.writeItemsToNBT(items, tag, "Items");
 		
 		if(customName != null) tag.setString("CustomName", customName);
 		if(tick < 0L) tick = 0L;
@@ -164,9 +155,6 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 	
 	public void onBroken()
 	{
-		if(isServer() && dropItems && items != null && items.length > 0)
-			InvUtils.dropAllItems(worldObj, xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, items);
-		
 		markDirty();
 	}
 	
@@ -185,6 +173,9 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 	
 	public void getMeta()
 	{ blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); }
+	
+	public BlockLM getBlockType()
+	{ return (BlockLM)super.getBlockType(); }
 	
 	public boolean recolourBlock(ForgeDirection side, int col)
 	{ return false; }
@@ -271,44 +262,8 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 		return false;
 	}
 	
-	// Inventory stuff //
-	
 	public void markDirty()
 	{ isDirty = true; }
-	
-	public String getInventoryName()
-	{ return hasCustomInventoryName() ? customName : "Inventory"; }
-	
-	public boolean hasCustomInventoryName()
-	{ return customName != null; }
-	
-	public void openInventory() { }
-
-	public void closeInventory() { }
-	
-	public ItemStack decrStackSize(int i, int j)
-	{ return (items == null) ? null : InvUtils.decrStackSize((IInventory)this, i, j); }
-	
-	public int getInventoryStackLimit()
-	{ return 64; }
-	
-	public int getSizeInventory()
-	{ return (items == null) ? 0 : items.length; }
-	
-	public ItemStack getStackInSlot(int i)
-	{ return (items == null) ? null : items[i]; }
-	
-	public ItemStack getStackInSlotOnClosing(int i)
-	{ return (items == null) ? null : InvUtils.getStackInSlotOnClosing((IInventory)this, i); }
-	
-	public void setInventorySlotContents(int i, ItemStack is)
-	{ if(items != null) items[i] = is; }
-	
-	public boolean isUseableByPlayer(EntityPlayer ep)
-	{ return items != null && security.canInteract(ep); }
-	
-	public boolean isItemValidForSlot(int i, ItemStack is)
-	{ return items != null; }
 	
 	public void onNeighborBlockChange()
 	{ redstonePowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord); }

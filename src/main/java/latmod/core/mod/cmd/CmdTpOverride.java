@@ -7,8 +7,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 
 public class CmdTpOverride extends CommandBaseLC // CommandTeleport
 {
-	public CmdTpOverride(CommandLevel l)
-	{ super("tp", l); }
+	public static CommandLevel commandLevel = CommandLevel.OP;
+	
+	public CmdTpOverride()
+	{ super("tp", commandLevel); }
 	
 	public NameType getUsername(String[] args, int i)
 	{ return (i == 0 || i == 1) ? NameType.LM_ON : NameType.NONE; }

@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.particle.EntityReddustFX;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -17,12 +18,14 @@ import net.minecraft.world.World;
 import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class LCClient extends LCCommon
 {
+	public static final ResourceLocation iconsTexture = new ResourceLocation("textures/atlas/icon_lm.png");
+	public static final TextureMap iconsTextureMap = new TextureMap(38, "");
 	public static KeyBinding key;
 	
 	public void preInit(FMLPreInitializationEvent e)
@@ -32,6 +35,9 @@ public class LCClient extends LCCommon
 		ThreadCheckPlayerDecorators.init();
 		key = LatCoreMCClient.addKeyBinding("key.latcoremc", Keyboard.KEY_P, "key.categories.gameplay");
 	}
+	
+	public void postInit(FMLPostInitializationEvent e)
+	{ Minecraft.getMinecraft().getTextureManager().loadTextureMap(iconsTexture, iconsTextureMap); }
 	
 	public boolean isShiftDown() { return GuiScreen.isShiftKeyDown(); }
 	public boolean isCtrlDown() { return GuiScreen.isCtrlKeyDown(); }

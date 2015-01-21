@@ -8,7 +8,7 @@ import latmod.core.mod.LC;
 import latmod.core.net.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.*;
 
@@ -68,6 +68,13 @@ public class GuiFriends extends GuiLM
 					sendUpdate(MessageManageGroups.C_RESET, null);
 				}
 			}
+			
+			public void addMouseOverText(FastList<String> l)
+			{
+				l.add(RED + "Clear All Friends");
+				l.add("Double click this button");
+				l.add("with Shift key down");
+			}
 		});
 		
 		buttonClear.doubleClickRequired = true;
@@ -82,6 +89,8 @@ public class GuiFriends extends GuiLM
 			}
 		});
 		
+		buttonSave.title = GREEN + "Close";
+		
 		widgets.add(buttonPrevPage = new ButtonLM(this, 7, 159, 35, 16)
 		{
 			public void onButtonPressed(int b)
@@ -92,6 +101,8 @@ public class GuiFriends extends GuiLM
 			}
 		});
 		
+		buttonPrevPage.title = "Prev Page";
+		
 		widgets.add(buttonNextPage = new ButtonLM(this, 121, 159, 35, 16)
 		{
 			public void onButtonPressed(int b)
@@ -101,6 +112,8 @@ public class GuiFriends extends GuiLM
 				updateButtons();
 			}
 		});
+		
+		buttonNextPage.title = "Next Page";
 		
 		widgets.add(pbOwner = new ButtonPlayer(this, -1, 6, 5));
 		pbOwner.setPlayer(new Player(owner));
@@ -130,31 +143,12 @@ public class GuiFriends extends GuiLM
 		setTexture(texture);
 	}
 	
-	public void drawScreen(int mx, int my, float f)
+	public void drawText(int mx, int my)
 	{
-		super.drawScreen(mx, my, f);
-		
 		searchBox.render(30, 10, 0xFFA7A7A7);
-		
-		FastList<String> al = new FastList<String>();
-		
-		if(buttonClear.mouseOver(mx, my))
-		{
-			al.add(RED + "Clear All Friends");
-			al.add("Double click this button");
-			al.add("with Shift key down");
-		}
-		if(buttonSave.mouseOver(mx, my)) al.add(GREEN + "Close");
-		if(buttonPrevPage.mouseOver(mx, my)) al.add("Prev Page");
-		if(buttonNextPage.mouseOver(mx, my)) al.add("Next Page");
-		if(pbOwner.mouseOver(mx, my)) pbOwner.addInfo(al);
-		
-		for(int i = 0; i < pbPlayers.length; i++)
-			if(pbPlayers[i].mouseOver(mx, my)) pbPlayers[i].addInfo(al);
-		
-		if(!al.isEmpty()) drawHoveringText(al, mx, my, fontRendererObj);
-		
 		drawCenteredString(fontRendererObj, (page + 1) + " / " + maxPages(), guiLeft + 81, guiTop + 163, 0xFF5A5A5A);
+		
+		super.drawText(mx, my);
 	}
 	
 	public void initGui()
@@ -299,7 +293,7 @@ public class GuiFriends extends GuiLM
 			}
 		}
 		
-		public void addInfo(FastList<String> al)
+		public void addMouseOverText(FastList<String> al)
 		{
 			if(player != null)
 			{

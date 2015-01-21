@@ -13,7 +13,7 @@ import cpw.mods.fml.relauncher.*;
 public abstract class ItemButtonLM extends ButtonLM
 {
 	public ItemStack item = null;
-	public TextureCoords background = null;
+	public String title = null;
 	
 	private static final RenderItem itemRender = new RenderItem();
 	
@@ -23,13 +23,12 @@ public abstract class ItemButtonLM extends ButtonLM
 	public ItemButtonLM setItem(ItemStack is)
 	{ item = is; return this; }
 	
-	public ItemButtonLM setBackground(TextureCoords bg)
-	{ background = bg; return this; }
+	public void setBackground(TextureCoords t)
+	{ background = t; }
 	
 	public void render()
 	{
-		if(background != null)
-			super.render(background, 1D, 1D);
+		render(null);
 		
 		if(item != null)
 		{
@@ -49,15 +48,10 @@ public abstract class ItemButtonLM extends ButtonLM
 			int y = gui.getPosY() + posY;
 			
 			itemRender.renderItemAndEffectIntoGUI(font, Minecraft.getMinecraft().getTextureManager(), item, x, y);
-			//itemRender.renderItemOverlayIntoGUI(font, Minecraft.getMinecraft().getTextureManager(), item, x, y, "Test");
 			gui.setZLevel(0F);
 			itemRender.zLevel = 0F;
 			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glPopMatrix();
 		}
-		
-		//GuiContainer
-		//gui.setTexture(c.texture);
-		//gui.drawTexturedModalRect(gui.getPosX() + posX, gui.getPosY() + posY, c.posX, c.posY, (int)(width * rw), (int)(height * rh));
 	}
 }

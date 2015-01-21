@@ -21,8 +21,10 @@ import cpw.mods.fml.relauncher.Side;
 
 public class CmdLatCoreAdmin extends CommandBaseLC
 {
-	public CmdLatCoreAdmin(CommandLevel l)
-	{ super("latcoreadmin", l); }
+	public static CommandLevel commandLevel = CommandLevel.OP;
+	
+	public CmdLatCoreAdmin()
+	{ super("latcoreadmin", commandLevel); }
 	
 	public void printHelp(ICommandSender ics)
 	{

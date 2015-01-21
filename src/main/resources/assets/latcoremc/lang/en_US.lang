@@ -1,15 +1,19 @@
-latcoremc.config.enablePlayerDecorators=Enable Player Decorators
-latcoremc.config.rotateBlocks=Rotate custom blocks
-latcoremc.config.renderHighlights=Render custom block highlights
-latcoremc.config.onlyAdvanced=Only advanced tool tips
-latcoremc.config.addOreNames=Add OreDictionary names
-latcoremc.config.addRegistryNames=Add Registry names
-latcoremc.config.addFluidContainerNames=Add Fluid names
+key.latcoremc=LatCoreMC
+
+latcoremc:button.settings=Settings
+latcoremc:button.back=Back
+latcoremc:button.up=Up
+latcoremc:button.down=Down
+latcoremc:button.prev=Previous
+latcoremc:button.next=Next
+latcoremc:button.enabled=Enabled
+latcoremc:button.disabled=Disabled
+latcoremc:button.cancel=Cancel
+latcoremc:button.accept=Accept
+latcoremc:button.remove=Remove
+latcoremc:button.add=Add
 
 latcoremc:owner=Owner: %s
-latcoremc:settings=Settings
-latcoremc:back=Back
-key.latcoremc=LatCoreMC
 
 latcoremc:security=Security
 latcoremc:security.public=Public

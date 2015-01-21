@@ -5,11 +5,8 @@ import net.minecraft.command.CommandGameRule;
 
 public class CmdGameruleOverride extends CommandGameRule
 {
-	public final CommandLevel level;
-	
-	public CmdGameruleOverride(CommandLevel l)
-	{ level = l; }
+	public static CommandLevel commandLevel = CommandLevel.OP;
 	
 	public final int getRequiredPermissionLevel()
-	{ return level.requiredPermsLevel(); }
+	{ return commandLevel.requiredPermsLevel(); }
 }

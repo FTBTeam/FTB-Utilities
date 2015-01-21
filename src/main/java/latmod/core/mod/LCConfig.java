@@ -1,7 +1,6 @@
 package latmod.core.mod;
 
 import latmod.core.*;
-import latmod.core.cmd.CommandLevel;
 import net.minecraft.init.*;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -21,7 +20,6 @@ public class LCConfig extends LMConfig
 	{
 		General.load(get("general"));
 		Client.load(get("client"));
-		Commands.load(get("cmds"));
 		Recipes.load(get("recipes"));
 		save();
 	}
@@ -29,10 +27,12 @@ public class LCConfig extends LMConfig
 	public static class General
 	{
 		public static boolean checkUpdates;
+		public static boolean disableLatCoreCommand;
 		
 		public static void load(Category c)
 		{
 			checkUpdates = c.getBool("checkUpdates", true);
+			disableLatCoreCommand = c.getBool("disableLatCoreCommand", false);
 		}
 	}
 	
@@ -41,6 +41,7 @@ public class LCConfig extends LMConfig
 		public static boolean enablePlayerDecorators;
 		public static boolean rotateBlocks;
 		public static boolean renderHighlights;
+		public static boolean addAllColorBlocks;
 		
 		public static boolean onlyAdvanced;
 		public static boolean addOreNames;
@@ -52,42 +53,12 @@ public class LCConfig extends LMConfig
 			enablePlayerDecorators = c.getBool("enablePlayerDecorators", true);
 			rotateBlocks = c.getBool("rotateBlocks", true);
 			renderHighlights = c.getBool("renderHighlights", true);
+			addAllColorBlocks = c.getBool("addAllColorBlocks", false);
 			
 			onlyAdvanced = c.getBool("onlyAdvanced", false);
 			addOreNames = c.getBool("addOreNames", false);
 			addRegistryNames = c.getBool("addRegistryNames", false);
 			addFluidContainerNames = c.getBool("addFluidContainerNames", false);
-		}
-	}
-	
-	public static class Commands
-	{
-		public static CommandLevel latcore;
-		public static CommandLevel latcoreadmin;
-		public static CommandLevel realnick;
-		public static CommandLevel teleport;
-		public static CommandLevel list;
-		public static CommandLevel gamemode;
-		public static CommandLevel gamerule;
-		
-		public static void load(Category c)
-		{
-			c.setCategoryComment("Valid values: NONE, ALL, OP");
-			
-			latcore = get(c, "latcore", CommandLevel.ALL);
-			latcoreadmin = get(c, "latcoreadmin", CommandLevel.OP);
-			realnick = get(c, "realnick", CommandLevel.ALL);
-			teleport = get(c, "teleport", CommandLevel.OP);
-			list = get(c, "list", CommandLevel.ALL);
-			gamemode = get(c, "gamemode", CommandLevel.OP);
-			gamerule = get(c, "gamerule", CommandLevel.OP);
-		}
-		
-		private static CommandLevel get(Category c, String s, CommandLevel def)
-		{
-			CommandLevel cl = CommandLevel.get(c.getString(s, def.toString(), CommandLevel.LEVEL_STRINGS.clone()));
-			if(LatCoreMC.isDevEnv) LatCoreMC.logger.info(s + ": " + cl);
-			return cl;
 		}
 	}
 	

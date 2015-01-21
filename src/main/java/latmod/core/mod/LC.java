@@ -68,13 +68,15 @@ public class LC
 	@Mod.EventHandler
 	public void registerCommands(FMLServerStartingEvent e)
 	{
-		regCmd(e, new CmdLatCore(LCConfig.Commands.latcore));
-		regCmd(e, new CmdLatCoreAdmin(LCConfig.Commands.latcoreadmin));
-		regCmd(e, new CmdRealNick(LCConfig.Commands.realnick));
-		regCmd(e, new CmdTpOverride(LCConfig.Commands.teleport));
-		regCmd(e, new CmdListOverride(LCConfig.Commands.list));
-		e.registerServerCommand(new CmdGamemodeOverride(LCConfig.Commands.gamemode));
-		e.registerServerCommand(new CmdGameruleOverride(LCConfig.Commands.gamerule));
+		if(!LCConfig.General.disableLatCoreCommand)
+			regCmd(e, new CmdLatCore());
+		
+		regCmd(e, new CmdLatCoreAdmin());
+		regCmd(e, new CmdRealNick());
+		regCmd(e, new CmdTpOverride());
+		regCmd(e, new CmdListOverride());
+		e.registerServerCommand(new CmdGamemodeOverride());
+		e.registerServerCommand(new CmdGameruleOverride());
 	}
 	
 	@Mod.EventHandler

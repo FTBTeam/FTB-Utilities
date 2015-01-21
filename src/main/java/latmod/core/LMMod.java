@@ -14,6 +14,8 @@ import cpw.mods.fml.relauncher.*;
 
 public class LMMod
 {
+	public static final FastMap<String, LMMod> modsMap = new FastMap<String, LMMod>();
+	
 	public final String modID;
 	public final String assets;
 	
@@ -27,17 +29,18 @@ public class LMMod
 	public LMMod(String s, LMConfig c, LMRecipes r)
 	{
 		modID = s;
-		
 		assets = s.toLowerCase() + ":";
 		
 		blocks = new FastList<IBlockLM>();
 		items = new FastList<IItemLM>();
 		
 		logger = LogManager.getLogger(modID);
-		logger.info("Loading mod: " + modID);
+		logger.info("PreIniting...");
 		
 		config = c; if(config != null) config.setMod(this);
 		recipes = (r == null) ? new LMRecipes() : r;
+		
+		modsMap.put(modID, this);
 	}
 	
 	public ResourceLocation getLocation(String s)

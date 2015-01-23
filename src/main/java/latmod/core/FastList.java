@@ -122,7 +122,7 @@ public class FastList<E> implements Iterable<E>, List<E>, Set<E> //ArrayList
 	}
 	
 	@SuppressWarnings("all")
-	public void sort(Comparator<E> c)
+	public void sort(Comparator<? super E> c)
 	{
 		if(size > 0)
 		{

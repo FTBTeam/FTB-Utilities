@@ -327,6 +327,8 @@ public class GuiFriends extends GuiLM
 		{
 			if(player != null)
 			{
+				background = null;
+				
 				drawPlayerHead(player.player.username, GuiFriends.this.guiLeft + posX + 1, GuiFriends.this.guiTop + posY + 1, 16, 16);
 				
 				if(!player.isOwner())

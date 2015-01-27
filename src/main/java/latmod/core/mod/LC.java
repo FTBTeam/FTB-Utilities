@@ -3,7 +3,7 @@ import java.io.File;
 
 import latmod.core.*;
 import latmod.core.mod.cmd.*;
-import latmod.core.net.LMNetHandler;
+import latmod.core.net.MessageLM;
 import net.minecraft.entity.player.EntityPlayerMP;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
@@ -50,7 +50,7 @@ public class LC
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent e)
 	{
-		LMNetHandler.init();
+		MessageLM.init();
 		proxy.init(e);
 		
 		FMLInterModComms.sendMessage("Waila", "register", "latmod.core.event.RegisterWailaEvent.registerHandlers");

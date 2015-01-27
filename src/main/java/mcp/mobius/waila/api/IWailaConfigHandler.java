@@ -1,7 +1,6 @@
 package mcp.mobius.waila.api;
 
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Read-only interface for Waila internal config storage.<br>

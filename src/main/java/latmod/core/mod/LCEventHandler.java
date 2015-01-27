@@ -183,8 +183,8 @@ public class LCEventHandler
 	
 	public void updateAllData(EntityPlayerMP ep)
 	{
-		if(ep != null) LMNetHandler.INSTANCE.sendTo(new MessageUpdateLMData(), ep);
-		else LMNetHandler.INSTANCE.sendToAll(new MessageUpdateLMData());
+		if(ep != null) MessageLM.NET.sendTo(new MessageUpdateLMData(), ep);
+		else MessageLM.NET.sendToAll(new MessageUpdateLMData());
 	}
 	
 	@SubscribeEvent(priority = EventPriority.LOW)
@@ -207,7 +207,7 @@ public class LCEventHandler
 	{
 		if(e.side.isServer() && e.keys.contains(Key.CRTL))
 		{
-			LMNetHandler.INSTANCE.sendTo(new MessageCustomServerAction(LCEventHandler.ACTION_OPEN_FRIENDS_GUI, null), (EntityPlayerMP)e.player);
+			MessageLM.NET.sendTo(new MessageCustomServerAction(LCEventHandler.ACTION_OPEN_FRIENDS_GUI, null), (EntityPlayerMP)e.player);
 			e.setCanceled(true);
 		}
 	}

@@ -258,7 +258,7 @@ public class LatCoreMC
 	
 	public static void notifyPlayer(EntityPlayerMP ep, Notification n)
 	{
-		if(ep != null) LMNetHandler.INSTANCE.sendTo(new MessageNotifyPlayer(n), ep);
-		else LMNetHandler.INSTANCE.sendToAll(new MessageNotifyPlayer(n));
+		if(ep != null) MessageLM.NET.sendTo(new MessageNotifyPlayer(n), ep);
+		else MessageLM.NET.sendToAll(new MessageNotifyPlayer(n));
 	}
 }

@@ -10,7 +10,7 @@ import latmod.core.tile.IPaintable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fluids.*;
@@ -32,6 +32,12 @@ public class LCClientEventHandler
 		if(e.itemStack == null || e.itemStack.getItem() == null) return;
 		
 		Item item = e.itemStack.getItem();
+		
+		if(item instanceof IPaintable.IPainterItem)
+		{
+			ItemStack paint = ((IPaintable.IPainterItem)item).getPaintItem(e.itemStack);
+			if(paint != null) e.toolTip.add(EnumChatFormatting.WHITE + "" + EnumChatFormatting.BOLD + paint.getDisplayName());
+		}
 		
 		if(e.showAdvancedItemTooltips || !LCConfig.Client.onlyAdvanced)
 		{
@@ -62,12 +68,6 @@ public class LCClientEventHandler
 					e.toolTip.add(FluidRegistry.getFluidName(fs.fluidID));
 				}
 			}
-		}
-		
-		if(item instanceof IPaintable.IPainterItem)
-		{
-			ItemStack paint = ((IPaintable.IPainterItem)item).getPaintItem(e.itemStack);
-			if(paint != null) e.toolTip.add("Paint: " + paint.getDisplayName());
 		}
 	}
 	
@@ -135,7 +135,7 @@ public class LCClientEventHandler
 			{
 				FastList<Key> l = Key.toList(null);
 				new LMKeyEvent(Side.CLIENT, l, ep).post();
-				LMNetHandler.INSTANCE.sendToServer(new MessageLMKeyPressed(l));
+				MessageLM.NET.sendToServer(new MessageLMKeyPressed(l));
 			}
 		}
 	}
@@ -157,43 +157,10 @@ public class LCClientEventHandler
 	{
 		if(e.map.getTextureType() == LCClient.iconsTextureMap.getTextureType())
 		{
-			LoadLMIconsEvent ev = new LoadLMIconsEvent(e.map); ev.post();
+			LoadLMIconsEvent ev = new LoadLMIconsEvent(e.map);
+			GuiLM.Icons.load(ev);
+			ev.post();
 			LatCoreMC.logger.info("Loaded " + ev.texturesLoaded() + " LMIcons");
 		}
 	}
-	
-	@SubscribeEvent
-	public void loadLMIcons(LoadLMIconsEvent e)
-	{
-		GuiLM.button_basic = load(e, "button");
-		GuiLM.button_pressed = load(e, "pressed");
-		GuiLM.button_toggle_off = load(e, "toggle_off");
-		GuiLM.button_toggle_on = load(e, "toggle_on");
-		GuiLM.button_back = load(e, "back");
-		GuiLM.button_help = load(e, "help");
-		GuiLM.button_settings = load(e, "settings");
-		GuiLM.button_up = load(e, "up");
-		GuiLM.button_down = load(e, "down");
-		
-		GuiLM.button_security[0] = load(e, "security_public");
-		GuiLM.button_security[1] = load(e, "security_private");
-		GuiLM.button_security[2] = load(e, "security_friends");
-		GuiLM.button_security[3] = load(e, "security_group");
-		
-		GuiLM.security_blacklist = load(e, "security_bl");
-		GuiLM.security_whitelist = load(e, "security_wl");
-		
-		GuiLM.button_inv[0] = load(e, "inv_io");
-		GuiLM.button_inv[1] = load(e, "inv_in");
-		GuiLM.button_inv[2] = load(e, "inv_out");
-		GuiLM.button_inv[3] = load(e, "inv_off");
-		
-		GuiLM.button_redstone[0] = load(e, "rs_off");
-		GuiLM.button_redstone[1] = load(e, "rs_high");
-		GuiLM.button_redstone[2] = load(e, "rs_low");
-		GuiLM.button_redstone[3] = load(e, "rs_pulse");
-	}
-	
-	private IIcon load(LoadLMIconsEvent e, String s)
-	{ return e.load(LC.mod, "gui/icons/" + s); }
 }

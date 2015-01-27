@@ -49,7 +49,11 @@ public interface IPaintable extends ITileInterface
 				NBTTagCompound tag1 = l.getCompoundTagAt(i);
 				
 				int id = tag1.getByte("ID");
-				paint[id] = new Paint(Block.getBlockById(tag1.getInteger("BlockID")), tag1.getInteger("Metadata"));
+				Block b = Block.getBlockById(tag1.getInteger("BlockID"));
+				int m = tag1.getInteger("Metadata");
+				if(b == null || b == Blocks.air || b.hasTileEntity(m))
+				{ b = Blocks.stone; m = 0; }
+				paint[id] = new Paint(b, m);
 			}
 		}
 		
@@ -194,13 +198,17 @@ public interface IPaintable extends ITileInterface
 				
 				if(b != Blocks.air)
 				{
+					int m = ep.worldObj.getBlockMetadata(x, y, z);
+					
+					if(b.hasTileEntity(m)) return true;
+					
 					if(b.getBlockBoundsMinX() == 0D && b.getBlockBoundsMinY() == 0D && b.getBlockBoundsMinZ() == 0D
 					&& b.getBlockBoundsMaxX() == 1D && b.getBlockBoundsMaxY() == 1D && b.getBlockBoundsMaxZ() == 1D)
 					{
 						if(b instanceof INoPaint && !((INoPaint)b).hasPaint(w, x, y, z, s))
 							return true;
 						
-						ItemStack paint = new ItemStack(b, 1, ep.worldObj.getBlockMetadata(x, y, z));
+						ItemStack paint = new ItemStack(b, 1, m);
 						
 						try
 						{

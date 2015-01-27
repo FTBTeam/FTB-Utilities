@@ -8,7 +8,7 @@ public abstract class ButtonLM extends WidgetLM
 	public int customID = 0;
 	private long lastClickMillis = Minecraft.getSystemTime();
 	public boolean doubleClickRequired = false;
-	public Object background = GuiLM.button_basic;
+	public Object background = GuiLM.Icons.button;
 	
 	public ButtonLM(GuiLM g, int x, int y, int w, int h)
 	{ super(g, x, y, w, h); }

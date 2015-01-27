@@ -41,7 +41,7 @@ public class LCConfig extends LMConfig
 		public static boolean enablePlayerDecorators;
 		public static boolean rotateBlocks;
 		public static boolean renderHighlights;
-		public static boolean addAllColorBlocks;
+		public static boolean addAllColorItems;
 		
 		public static boolean onlyAdvanced;
 		public static boolean addOreNames;
@@ -53,7 +53,7 @@ public class LCConfig extends LMConfig
 			enablePlayerDecorators = c.getBool("enablePlayerDecorators", true);
 			rotateBlocks = c.getBool("rotateBlocks", true);
 			renderHighlights = c.getBool("renderHighlights", true);
-			addAllColorBlocks = c.getBool("addAllColorBlocks", false);
+			addAllColorItems = c.getBool("addAllColorItems", true);
 			
 			onlyAdvanced = c.getBool("onlyAdvanced", false);
 			addOreNames = c.getBool("addOreNames", false);

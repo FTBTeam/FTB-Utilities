@@ -40,7 +40,7 @@ public class CmdLatCore extends CommandBaseLC
 		else if(args[0].equals("friends"))
 		{
 			EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-			LMNetHandler.INSTANCE.sendTo(new MessageCustomServerAction(LCEventHandler.ACTION_OPEN_FRIENDS_GUI, null), ep);
+			MessageLM.NET.sendTo(new MessageCustomServerAction(LCEventHandler.ACTION_OPEN_FRIENDS_GUI, null), ep);
 			return null;
 		}
 		

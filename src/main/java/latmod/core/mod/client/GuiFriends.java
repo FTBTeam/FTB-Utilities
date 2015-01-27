@@ -8,7 +8,7 @@ import latmod.core.mod.LC;
 import latmod.core.net.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.*;
+import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.*;
 
@@ -127,7 +127,7 @@ public class GuiFriends extends GuiLM
 	}
 	
 	public void sendUpdate(String c, String d)
-	{ changed = true; LMNetHandler.INSTANCE.sendToServer(new MessageManageGroups(owner, c, d)); }
+	{ changed = true; MessageLM.NET.sendToServer(new MessageManageGroups(owner, c, d)); }
 	
 	public int maxPages()
 	{ return (players.size() / pbPlayers.length) + 1; }
@@ -141,6 +141,9 @@ public class GuiFriends extends GuiLM
 			pbPlayers[i].render();
 		
 		setTexture(texture);
+		
+		buttonClear.render(Icons.cancel);
+		buttonSave.render(Icons.accept);
 	}
 	
 	public void drawText(int mx, int my)

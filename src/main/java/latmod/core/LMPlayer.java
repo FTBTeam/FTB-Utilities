@@ -70,7 +70,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 				
 				NBTTagCompound data = new NBTTagCompound();
 				data.setString("UUID", uuid.toString());
-				LMNetHandler.INSTANCE.sendToAll(new MessageCustomServerAction(TAG_CUSTOM_NAME, data));
+				MessageLM.NET.sendToAll(new MessageCustomServerAction(TAG_CUSTOM_NAME, data));
 			}
 		}
 	}
@@ -102,7 +102,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 		if(LatCoreMC.isServer())
 		{
 			new LMPlayerEvent.DataChanged(this, Side.SERVER, channel).post();
-			if(clientUpdate) LMNetHandler.INSTANCE.sendToAll(new MessageUpdateLMPlayer(this, channel));
+			if(clientUpdate) MessageLM.NET.sendToAll(new MessageUpdateLMPlayer(this, channel));
 		}
 	}
 	

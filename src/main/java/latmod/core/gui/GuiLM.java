@@ -1,6 +1,7 @@
 package latmod.core.gui;
 import latmod.core.FastList;
 import latmod.core.client.LMRenderHelper;
+import latmod.core.event.LoadLMIconsEvent;
 import latmod.core.mod.LC;
 import latmod.core.mod.client.LCClient;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -9,6 +10,9 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
+
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
@@ -16,22 +20,63 @@ public abstract class GuiLM extends GuiContainer
 {
 	// General IIcons //
 	
-	public static IIcon
-	button_basic,
-	button_pressed,
-	button_toggle_off,
-	button_toggle_on,
-	button_back,
-	button_help,
-	button_settings,
-	button_up,
-	button_down;
-	
-	public static final IIcon[] button_security = new IIcon[4];
-	public static final IIcon[] button_inv = new IIcon[4];
-	public static final IIcon[] button_redstone = new IIcon[4];
-	
-	public static IIcon security_whitelist, security_blacklist;
+	public static class Icons
+	{
+		public static IIcon
+		button,
+		pressed,
+		toggle_off,
+		toggle_on,
+		back,
+		help,
+		settings,
+		up,
+		down,
+		accept,
+		cancel;
+		
+		public static final IIcon[] security = new IIcon[4];
+		public static IIcon security_whitelist, security_blacklist;
+		
+		public static final IIcon[] inv = new IIcon[4];
+		public static final IIcon[] redstone = new IIcon[4];
+		
+		public static void load(LoadLMIconsEvent e)
+		{
+			button = load(e, "button");
+			pressed = load(e, "pressed");
+			toggle_off = load(e, "toggle_off");
+			toggle_on = load(e, "toggle_on");
+			back = load(e, "back");
+			help = load(e, "help");
+			settings = load(e, "settings");
+			up = load(e, "up");
+			down = load(e, "down");
+			accept = load(e, "accept");
+			cancel = load(e, "cancel");
+			
+			security[0] = load(e, "security_public");
+			security[1] = load(e, "security_private");
+			security[2] = load(e, "security_friends");
+			security[3] = load(e, "security_group");
+			
+			security_blacklist = load(e, "security_bl");
+			security_whitelist = load(e, "security_wl");
+			
+			inv[0] = load(e, "inv_io");
+			inv[1] = load(e, "inv_in");
+			inv[2] = load(e, "inv_out");
+			inv[3] = load(e, "inv_off");
+			
+			redstone[0] = load(e, "rs_off");
+			redstone[1] = load(e, "rs_high");
+			redstone[2] = load(e, "rs_low");
+			redstone[3] = load(e, "rs_pulse");
+		}
+		
+		private static IIcon load(LoadLMIconsEvent e, String s)
+		{ return e.load(LC.mod, "gui/icons/" + s); }
+	}
 	
 	// GuiLM //
 	
@@ -94,6 +139,8 @@ public abstract class GuiLM extends GuiContainer
 	
 	public void drawGuiContainerBackgroundLayer(float f, int mx, int my)
 	{
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_BLEND);
 		LMRenderHelper.recolor();
 		setTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);

@@ -236,7 +236,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 		else if(args[0].equals("reload"))
 		{
 			new ReloadEvent(Side.SERVER).post();
-			LMNetHandler.INSTANCE.sendToAll(new MessageReload());
+			MessageLM.NET.sendToAll(new MessageReload());
 			return FINE + "LatvianModders's mods reloaded (Server)";
 		}
 		

@@ -1,4 +1,6 @@
 package latmod.core;
+import java.awt.Color;
+
 import latmod.core.mod.LC;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;
@@ -28,7 +30,7 @@ public enum EnumDyeColor // ItemDye
 	public final int ID;
 	public final String name;
 	public final String lang;
-	public final int color;
+	public final Color color;
 	public final String dyeName;
 	public final String glassName;
 	public final String paneName;
@@ -38,7 +40,7 @@ public enum EnumDyeColor // ItemDye
 		ID = ordinal();
 		name = ItemDye.field_150921_b[ID];
 		lang = LC.mod.assets + "color." + name;
-		color = ItemDye.field_150922_c[ID];
+		color = new Color(ItemDye.field_150922_c[ID]);
 		
 		dyeName = "dye" + s;
 		glassName = "blockGlass" + s;

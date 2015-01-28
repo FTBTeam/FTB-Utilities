@@ -300,7 +300,12 @@ public interface IPaintable extends ITileInterface
 				if(p.block == null || p.block == Blocks.air) icon = Blocks.stone.getBlockTextureFromSide(1);
 				else try
 				{
-					icon = p.block.getIcon(rb.blockAccess, x, y, z, side);
+					if(p.block instanceof ICustomPaintBlock)
+					{
+						icon = ((ICustomPaintBlock)p.block).getCustomPaint(side, p.meta);
+						if(icon == null) icon = defIcon;
+					}
+					else icon = p.block.getIcon(rb.blockAccess, x, y, z, side);
 					
 					if(side != 1 && p.block instanceof BlockGrass)
 						rb.setCustomColor(null);

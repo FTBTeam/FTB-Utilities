@@ -142,7 +142,7 @@ public class GuiFriends extends GuiLM
 		
 		setTexture(texture);
 		
-		//buttonClear.render(Icons.cancel);
+		//FIXME: buttonClear.render(Icons.cancel);
 		//buttonSave.render(Icons.accept);
 	}
 	

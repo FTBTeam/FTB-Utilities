@@ -142,8 +142,8 @@ public class GuiFriends extends GuiLM
 		
 		setTexture(texture);
 		
-		buttonClear.render(Icons.cancel);
-		buttonSave.render(Icons.accept);
+		//buttonClear.render(Icons.cancel);
+		//buttonSave.render(Icons.accept);
 	}
 	
 	public void drawText(int mx, int my)

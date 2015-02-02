@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import latmod.core.*;
 import latmod.core.client.RenderBlocksCustom;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -71,30 +71,6 @@ public interface IPaintable extends ITileInterface
 			}
 			
 			if(l.tagCount() > 0) tag.setTag(s, l);
-		}
-		
-		@SideOnly(Side.CLIENT)
-		public static IIcon getIcon(Paint p, int side, IIcon def)
-		{
-			if(p == null) return def;
-			
-			if(p.block instanceof ICustomPaintBlock)
-			{
-				IIcon i = ((ICustomPaintBlock)p.block).getCustomPaint(side, p.meta);
-				return (i == null) ? def : i;
-			}
-			
-			return p.block.getIcon(side, p.meta);
-		}
-		
-		@SideOnly(Side.CLIENT)
-		public static IIcon[] getIcons(Paint[] p, IIcon def)
-		{
-			IIcon[] ai = new IIcon[6];
-			if(p == null || !(p.length == 1 || p.length == 6)) return ai;
-			if(p.length == 1) p = new Paint[]{ p[0], p[0], p[0], p[0], p[0], p[0] };
-			for(int i = 0; i < ai.length; i++) ai[i] = getIcon(p[i], i, def);
-			return ai;
 		}
 	}
 	
@@ -255,7 +231,7 @@ public interface IPaintable extends ITileInterface
 			}
 		}
 		
-		public static void renderFace(IBlockAccess iba, RenderBlocksCustom rb, int side, final Paint p, IIcon defIcon, final int x, final int y, final int z)
+		public static void renderFace(IBlockAccess iba, RenderBlocksCustom rb, int side, Paint p, IIcon defIcon, int x, int y, int z)
 		{
 			if(rb.blockAccess != null)
 			{
@@ -278,20 +254,7 @@ public interface IPaintable extends ITileInterface
 			rb.renderAllFaces = true;
 			rb.setCustomColor(null);
 			
-			rb.blockAccess = new CustomBlockAccess(iba)
-			{
-				public Block getBlock(int x1, int y1, int z1)
-				{
-					if(p != null && x1 == x && y1 == y && z1 == z)
-					return p.block; return Blocks.air;
-				}
-				
-				public int getBlockMetadata(int x1, int y1, int z1)
-				{
-					if(p != null && x1 == x && y1 == y && z1 == z)
-					return p.meta; return 0;
-				}
-			};
+			rb.blockAccess = new BlockAccess(iba, x, y, z, p);
 			
 			IIcon icon = defIcon;
 			
@@ -307,7 +270,7 @@ public interface IPaintable extends ITileInterface
 					}
 					else icon = p.block.getIcon(rb.blockAccess, x, y, z, side);
 					
-					if(side != 1 && p.block instanceof BlockGrass)
+					if(side != 1 && p.block == Blocks.grass)
 						rb.setCustomColor(null);
 					else
 						rb.setCustomColor(p.block.colorMultiplier(rb.blockAccess, x, y, z));
@@ -322,6 +285,27 @@ public interface IPaintable extends ITileInterface
 			rb.renderStandardBlock(Blocks.stone, x, y, z);
 			rb.renderAllFaces = b;
 			rb.blockAccess = iba;
+		}
+	}
+	
+	public static class BlockAccess extends CustomBlockAccess
+	{
+		public final int blockX, blockY, blockZ;
+		public final Paint paint;
+		
+		public BlockAccess(IBlockAccess iba, int x, int y, int z, Paint p)
+		{ super(iba); blockX = x; blockY = y; blockZ = z; paint = p; }
+		
+		public Block getBlock(int x, int y, int z)
+		{
+			if(paint != null && x == blockX && y == blockY && z == blockZ)
+				return paint.block; return Blocks.air;
+		}
+		
+		public int getBlockMetadata(int x, int y, int z)
+		{
+			if(paint != null && x == blockX && y == blockY && z == blockZ)
+				return paint.meta; return 0;
 		}
 	}
 }

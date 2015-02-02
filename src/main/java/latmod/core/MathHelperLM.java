@@ -187,9 +187,6 @@ public class MathHelperLM
 		return s;
 	}
 	
-	public static AxisAlignedBB getBox(double cx, double y0, double cz, double w, double y1, double d)
-	{ return AxisAlignedBB.getBoundingBox(cx - w / 2D, y0, cz - d / 2D, cx + w / 2D, y1, cz + d / 2D); }
-	
 	public static final int getRotations(double yaw, int max)
 	{ return floor((yaw * max / 360D) + 0.5D) & (max - 1); }
 	
@@ -325,5 +322,26 @@ public class MathHelperLM
 		if(s >= 0 && s < ForgeDirection.VALID_DIRECTIONS.length)
 			return ForgeDirection.VALID_DIRECTIONS[s];
 		return ForgeDirection.UNKNOWN;
+	}
+	
+	public static AxisAlignedBB getBox(double cx, double y0, double cz, double w, double y1, double d)
+	{ return AxisAlignedBB.getBoundingBox(cx - w / 2D, y0, cz - d / 2D, cx + w / 2D, y1, cz + d / 2D); }
+	
+	public static AxisAlignedBB centerBox(double x, double y, double z, double w, double h, double d)
+	{ return getBox(x, y - h / 2D, z, w, y + h / 2D, d); }
+	
+	public static AxisAlignedBB rotate90BoxV(AxisAlignedBB bb, ForgeDirection dir)
+	{
+		double x1 = bb.minX;
+		double y1 = bb.minY;
+		double z1 = bb.minZ;
+		
+		double x2 = bb.maxX;
+		double y2 = bb.maxY;
+		double z2 = bb.maxZ;
+		
+		if(dir == null || dir == ForgeDirection.UNKNOWN || dir == ForgeDirection.NORTH || dir == ForgeDirection.SOUTH)
+			return AxisAlignedBB.getBoundingBox(x1, y1, z1, x2, y2, z2);
+		return AxisAlignedBB.getBoundingBox(z1, y1, x1, z2, y2, x2);
 	}
 }

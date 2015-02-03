@@ -51,8 +51,7 @@ public class LatCore
 	
 	public static void saveFile(File f, String s) throws Exception
 	{
-		if(!f.exists()) f = LatCore.newFile(f);
-		OutputStream os = new FileOutputStream(f);
+		OutputStream os = new FileOutputStream(newFile(f));
 		os.write(s.getBytes()); os.close();
 	}
 	
@@ -313,14 +312,7 @@ public class LatCore
 		
 		try
 		{
-			if(!f.exists())
-			{
-				File f0 = f.getParentFile();
-				if(!f0.exists()) f0.mkdirs();
-				f.createNewFile();
-			}
-			
-			FileOutputStream fos = new FileOutputStream(f);
+			FileOutputStream fos = new FileOutputStream(newFile(f));
 			fos.write(s.getBytes()); fos.close();
 		}
 		catch(Exception e)

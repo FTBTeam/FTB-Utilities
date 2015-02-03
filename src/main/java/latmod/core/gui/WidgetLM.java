@@ -1,6 +1,6 @@
 package latmod.core.gui;
 import latmod.core.FastList;
-import latmod.core.mod.client.LCClient;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 import cpw.mods.fml.relauncher.*;
 
@@ -31,7 +31,7 @@ public class WidgetLM
 		if(icon == null) return;
 		if(icon instanceof IIcon)
 		{
-			gui.setTexture(LCClient.iconsTexture);
+			gui.setTexture(TextureMap.locationItemsTexture);
 			gui.drawTexturedModelRectFromIcon(posX + gui.getPosX(), posY + gui.getPosY(), (IIcon)icon, (int)(width * rw), (int)(height * rh));
 		}
 		else if(icon instanceof TextureCoords)

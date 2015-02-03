@@ -8,7 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.particle.EntityReddustFX;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -24,8 +23,6 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class LCClient extends LCCommon
 {
-	public static final ResourceLocation iconsTexture = new ResourceLocation("textures/atlas/icon_lm.png");
-	public static final TextureMap iconsTextureMap = new TextureMap(38, "");
 	public static KeyBinding key;
 	
 	public void preInit(FMLPreInitializationEvent e)
@@ -37,7 +34,9 @@ public class LCClient extends LCCommon
 	}
 	
 	public void postInit(FMLPostInitializationEvent e)
-	{ Minecraft.getMinecraft().getTextureManager().loadTextureMap(iconsTexture, iconsTextureMap); }
+	{
+		//Minecraft.getMinecraft().getTextureManager().loadTextureMap(iconsTexture, iconsTextureMap);
+	}
 	
 	public boolean isShiftDown() { return GuiScreen.isShiftKeyDown(); }
 	public boolean isCtrlDown() { return GuiScreen.isCtrlKeyDown(); }

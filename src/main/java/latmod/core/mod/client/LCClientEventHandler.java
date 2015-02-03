@@ -3,6 +3,7 @@ import latmod.core.*;
 import latmod.core.client.LatCoreMCClient;
 import latmod.core.client.playerdeco.*;
 import latmod.core.event.*;
+import latmod.core.gui.GuiLM;
 import latmod.core.mod.*;
 import latmod.core.net.*;
 import latmod.core.tile.IPaintable;
@@ -154,12 +155,12 @@ public class LCClientEventHandler
 	@SubscribeEvent
 	public void onIconsLoaded(TextureStitchEvent.Pre e)
 	{
-		if(e.map.getTextureType() == LCClient.iconsTextureMap.getTextureType())
+		if(e.map.getTextureType() == 1)
 		{
 			LoadLMIconsEvent ev = new LoadLMIconsEvent(e.map);
-			//FIXME: GuiLM.Icons.load(ev);
+			GuiLM.Icons.load(ev);
 			ev.post();
-			LatCoreMC.logger.info("Loaded " + ev.texturesLoaded() + " LMIcons");
+			//LatCoreMC.logger.info("Loaded " + ev.texturesLoaded() + " LMIcons");
 		}
 	}
 }

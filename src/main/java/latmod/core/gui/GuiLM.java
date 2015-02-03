@@ -43,39 +43,36 @@ public abstract class GuiLM extends GuiContainer
 		
 		public static void load(LoadLMIconsEvent e)
 		{
-			button = load(e, "button");
-			pressed = load(e, "pressed");
-			toggle_off = load(e, "toggle_off");
-			toggle_on = load(e, "toggle_on");
-			back = load(e, "back");
-			help = load(e, "help");
-			settings = load(e, "settings");
-			up = load(e, "up");
-			down = load(e, "down");
-			accept = load(e, "accept");
-			cancel = load(e, "cancel");
+			button = e.load("button");
+			pressed = e.load("pressed");
+			toggle_off = e.load("toggle_off");
+			toggle_on = e.load("toggle_on");
+			back = e.load("back");
+			help = e.load("help");
+			settings = e.load("settings");
+			up = e.load("up");
+			down = e.load("down");
+			accept = e.load("accept");
+			cancel = e.load("cancel");
 			
-			security[0] = load(e, "security_public");
-			security[1] = load(e, "security_private");
-			security[2] = load(e, "security_friends");
-			security[3] = load(e, "security_group");
+			security[0] = e.load("security/public");
+			security[1] = e.load("security/private");
+			security[2] = e.load("security/friends");
+			security[3] = e.load("security/group");
 			
-			security_blacklist = load(e, "security_bl");
-			security_whitelist = load(e, "security_wl");
+			security_blacklist = e.load("security/black");
+			security_whitelist = e.load("security/white");
 			
-			inv[0] = load(e, "inv_io");
-			inv[1] = load(e, "inv_in");
-			inv[2] = load(e, "inv_out");
-			inv[3] = load(e, "inv_off");
+			inv[0] = e.load("inv/io");
+			inv[1] = e.load("inv/in");
+			inv[2] = e.load("inv/out");
+			inv[3] = e.load("inv/off");
 			
-			redstone[0] = load(e, "rs_off");
-			redstone[1] = load(e, "rs_high");
-			redstone[2] = load(e, "rs_low");
-			redstone[3] = load(e, "rs_pulse");
+			redstone[0] = e.load("rs/off");
+			redstone[1] = e.load("rs/high");
+			redstone[2] = e.load("rs/low");
+			redstone[3] = e.load("rs/pulse");
 		}
-		
-		private static IIcon load(LoadLMIconsEvent e, String s)
-		{ return e.load(LC.mod, "gui/icons/" + s); }
 	}
 	
 	// GuiLM //

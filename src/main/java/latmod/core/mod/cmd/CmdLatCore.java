@@ -18,6 +18,12 @@ public class CmdLatCore extends CommandBaseLC
 		printHelpLine(ics, "<friends>");
 	}
 	
+	public int getRequiredPermissionLevel()
+	{ return 0; }
+	
+	public boolean canCommandSenderUseCommand(ICommandSender ics)
+	{ return !LCConfig.General.disableLatCoreCommand; }
+	
 	public String[] getSubcommands(ICommandSender ics)
 	{ return new String[] { "versions", "friends" }; }
 	

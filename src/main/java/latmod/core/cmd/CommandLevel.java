@@ -23,7 +23,8 @@ public enum CommandLevel
 	public int requiredPermsLevel()
 	{
 		if(this == NONE) return 5;
-		else if(this == OP) return 2;
+		if(this == ALL) return 0;
+		if(this == OP) return 2;
 		return 0;
 	}
 }

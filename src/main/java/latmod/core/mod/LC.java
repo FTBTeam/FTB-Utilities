@@ -68,15 +68,17 @@ public class LC
 	@Mod.EventHandler
 	public void registerCommands(FMLServerStartingEvent e)
 	{
-		if(!LCConfig.General.disableLatCoreCommand)
-			regCmd(e, new CmdLatCore());
+		e.registerServerCommand(new CmdLatCore());
+		e.registerServerCommand(new CmdLatCoreAdmin());
+		e.registerServerCommand(new CmdRealNick());
 		
-		regCmd(e, new CmdLatCoreAdmin());
-		regCmd(e, new CmdRealNick());
-		regCmd(e, new CmdTpOverride());
-		regCmd(e, new CmdListOverride());
-		e.registerServerCommand(new CmdGamemodeOverride());
-		e.registerServerCommand(new CmdGameruleOverride());
+		if(!LCConfig.General.disableCommandOverrides)
+		{
+			e.registerServerCommand(new CmdTpOverride());
+			e.registerServerCommand(new CmdListOverride());
+			e.registerServerCommand(new CmdGamemodeOverride());
+			e.registerServerCommand(new CmdGameruleOverride());
+		}
 	}
 	
 	@Mod.EventHandler
@@ -85,7 +87,4 @@ public class LC
 		if(LatCoreMC.hasOnlinePlayers()) for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers().values)
 			LCEventHandler.instance.playerLoggedOut(new cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent(ep));
 	}
-	
-	private static void regCmd(FMLServerStartingEvent e, CommandBaseLC c)
-	{ if(c.level.isEnabled()) e.registerServerCommand(c); }
 }

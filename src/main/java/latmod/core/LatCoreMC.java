@@ -218,12 +218,28 @@ public class LatCoreMC
 	public static Vertex getSpawnPoint(World w)
 	{ ChunkCoordinates c = w.getSpawnPoint(); return new Vertex(c.posX + 0.5D, c.posY + 0.5D, c.posZ + 0.5D); }
 	
-	public static void remap(MissingMapping m, String id, Item i)
-	{ if(m.type == GameRegistry.Type.ITEM && id.equals(m.name)) m.remap(i); }
+	public static boolean remap(MissingMapping m, String id, Item i)
+	{
+		if(m.type == GameRegistry.Type.ITEM && id.equals(m.name))
+		{
+			m.remap(i);
+			return true;
+		}
+		
+		return false;
+	}
 	
-	public static void remap(MissingMapping m, String id, Block b)
-	{ if(id.equals(m.name)) { if(m.type == GameRegistry.Type.BLOCK) m.remap(b);
-	else if(m.type == GameRegistry.Type.ITEM) m.remap(Item.getItemFromBlock(b)); } }
+	public static boolean remap(MissingMapping m, String id, Block b)
+	{
+		if(id.equals(m.name))
+		{
+			if(m.type == GameRegistry.Type.BLOCK) m.remap(b);
+			else if(m.type == GameRegistry.Type.ITEM) m.remap(Item.getItemFromBlock(b));
+			return true;
+		}
+		
+		return false;
+	}
 	
 	public static boolean isModInstalled(String s)
 	{ return Loader.isModLoaded(s); }

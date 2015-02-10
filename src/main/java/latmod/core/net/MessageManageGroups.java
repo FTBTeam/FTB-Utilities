@@ -9,21 +9,21 @@ import cpw.mods.fml.common.network.simpleimpl.*;
 
 public class MessageManageGroups extends MessageLM implements IMessageHandler<MessageManageGroups, IMessage>
 {
-	public static final String C_RESET = "R";
-	public static final String C_ADD_FRIEND = "AF";
-	public static final String C_REM_FRIEND = "RF";
-	public static final String C_ADD_GROUP = "AG";
-	public static final String C_REM_GROUP = "RG";
-	public static final String C_ADD_TO_GROUP = "A2G";
-	public static final String C_REM_FROM_GROUP = "R2G";
+	public static final int C_ADD_FRIEND = 1;
+	public static final int C_REM_FRIEND = 2;
+	public static final int C_ADD_GROUP = 3;
+	public static final int C_REM_GROUP = 4;
+	public static final int C_ADD_TO_GROUP = 5;
+	public static final int C_REM_FROM_GROUP = 6;
+	public static final int C_RESET = 7;
 	
 	public MessageManageGroups() { }
 	
-	public MessageManageGroups(LMPlayer p, String c, String d)
+	public MessageManageGroups(LMPlayer p, int c, String d)
 	{
 		data = new NBTTagCompound();
-		data.setString("U", p.username);
-		if(c != null) data.setString("C", c);
+		data.setInteger("ID", p.playerID);
+		if(c != -1) data.setByte("C", (byte)c);
 		if(d != null) data.setString("D", d);
 	}
 	
@@ -31,19 +31,19 @@ public class MessageManageGroups extends MessageLM implements IMessageHandler<Me
 	{
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
 		
-		if(ep.getCommandSenderName().equals(m.data.getString("U")))
+		LMPlayer owner = LMPlayer.getPlayer(ep);
+		
+		if(owner != null && owner.playerID == m.data.getInteger("ID"))
 		{
-			LMPlayer owner = LMPlayer.getPlayer(ep);
-			
 			if(owner != null)
 			{
-				String c = m.data.getString("C");
+				int c = m.data.getByte("C");
 				String d = m.data.getString("D");
 				boolean changed = false;
 				
-				if(!c.isEmpty())
+				if(c != 0)
 				{
-					if(c.equals(C_RESET))
+					if(c == C_RESET)
 					{
 						if(!owner.friends.isEmpty())
 						{
@@ -52,7 +52,7 @@ public class MessageManageGroups extends MessageLM implements IMessageHandler<Me
 							LatCoreMC.notifyPlayer(ep, new Notification(DARK_RED + "Groups reset", "", new ItemStack(Items.iron_sword), 2000L));
 						}
 					}
-					else if(c.equals(C_ADD_FRIEND))
+					else if(c == C_ADD_FRIEND)
 					{
 						LMPlayer p = LMPlayer.getPlayer(d);
 						
@@ -63,7 +63,7 @@ public class MessageManageGroups extends MessageLM implements IMessageHandler<Me
 							LatCoreMC.notifyPlayer(ep, new Notification(GREEN + "+ " + p.getDisplayName(), "Friends", new ItemStack(Blocks.emerald_block), 1500L));
 						}
 					}
-					else if(c.equals(C_REM_FRIEND))
+					else if(c == C_REM_FRIEND)
 					{
 						LMPlayer p = LMPlayer.getPlayer(d);
 						

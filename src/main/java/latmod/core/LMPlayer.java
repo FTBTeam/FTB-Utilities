@@ -32,8 +32,10 @@ public class LMPlayer implements Comparable<LMPlayer>
 		}
 	}
 	
+	public final int playerID;
 	public final UUID uuid;
 	public final String username;
+	
 	private String customName;
 	public final FastList<LMPlayer> friends = new FastList<LMPlayer>();
 	public final FastMap<String, Group> groups = new FastMap<String, Group>();
@@ -41,11 +43,8 @@ public class LMPlayer implements Comparable<LMPlayer>
 	private boolean isOnline;
 	public boolean isOld;
 	
-	public LMPlayer(UUID id, String s)
-	{
-		uuid = id;
-		username = s;
-	}
+	public LMPlayer(int i, UUID id, String s)
+	{ playerID = i; uuid = id; username = s; }
 	
 	public void setCustomName(String s)
 	{
@@ -107,7 +106,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 	}
 	
 	public boolean isFriendRaw(LMPlayer p)
-	{ return p != null && (uuid.equals(p.uuid) || friends.contains(p.uuid)); }
+	{ return p != null && (playerID == p.playerID || friends.contains(p.playerID)); }
 	
 	public boolean isFriend(LMPlayer p)
 	{ return isFriendRaw(p) && p.isFriendRaw(this); }
@@ -115,70 +114,44 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public void sendUpdate(String channel)
 	{ sendUpdate(channel, true); }
 	
-	public FastList<Group> getGroupsFor(UUID id)
-	{
-		FastList<Group> al = new FastList<Group>();
-		return al;
-	}
-	
 	// NBT reading / writing
 	
 	public void readFromNBT(NBTTagCompound tag)
 	{
-		if(tag.hasKey("On")); isOnline = tag.getBoolean("On");
-		customName = tag.getString(TAG_CUSTOM_NAME).trim();
+		isOnline = tag.getBoolean("On");
+		
+		customName = LatCoreMC.removeFormatting(tag.getString(TAG_CUSTOM_NAME)).trim();
 		if(customName.isEmpty()) customName = null;
-		else if(customName.contains(LatCoreMC.FORMATTING))
-			customName = LatCoreMC.removeFormatting(customName);
 		
 		friends.clear();
 		groups.clear();
 		
-		if(tag.hasKey("Friends"))
+		NBTTagCompound tag1 = tag.getCompoundTag("Groups");
+		
+		FastMap<String, NBTTagList> lists = NBTHelper.toFastMapWithType(tag1);
+		
+		NBTTagList fl = lists.get("Friends");
+		
+		if(fl != null) for(int j = 0; j < fl.tagCount(); j++)
 		{
-			FastMap<String, NBTBase.NBTPrimitive> map = NBTHelper.toFastMapWithType(tag.getCompoundTag("Friends"));
-			
-			for(int i = 0; i < map.size(); i++)
-			{
-				if(map.values.get(i).func_150290_f() == 1)
-				{
-					LMPlayer p = getPlayer(map.keys.get(i));
-					if(p != null) friends.add(p);
-				}
-			}
-			
-			tag.removeTag("Friends");
-			LatCoreMC.logger.info("Found old LMFriends");
+			LMPlayer p = getPlayer(fl.getStringTagAt(j));
+			if(p != null) friends.add(p);
 		}
-		else
+		
+		lists.remove("Friends");
+		
+		for(int i = 0; i < lists.size(); i++)
 		{
-			NBTTagCompound tag1 = tag.getCompoundTag("Groups");
+			Group g = new Group(this, lists.keys.get(i));
+			NBTTagList l = lists.get(i);
 			
-			FastMap<String, NBTTagList> lists = NBTHelper.toFastMapWithType(tag1);
-			
-			NBTTagList fl = lists.get("Friends");
-			
-			if(fl != null) for(int j = 0; j < fl.tagCount(); j++)
+			for(int j = 0; j < l.tagCount(); j++)
 			{
-				LMPlayer p = getPlayer(fl.getStringTagAt(j));
-				if(p != null) friends.add(p);
+				LMPlayer p = getPlayer(l.getStringTagAt(j));
+				if(p != null) g.members.add(p);
 			}
 			
-			lists.remove("Friends");
-			
-			for(int i = 0; i < lists.size(); i++)
-			{
-				Group g = new Group(this, lists.keys.get(i));
-				NBTTagList l = lists.get(i);
-				
-				for(int j = 0; j < l.tagCount(); j++)
-				{
-					LMPlayer p = getPlayer(l.getStringTagAt(j));
-					if(p != null) g.members.add(p);
-				}
-				
-				groups.put(g.name, g);
-			}
+			groups.put(g.name, g);
 		}
 		
 		customData = tag.getCompoundTag("CustomData");
@@ -239,6 +212,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 	{
 		if(o == null) return false;
 		else if(o == this) return true;
+		else if(o instanceof Integer) return ((Integer)o).intValue() == playerID;
 		else if(o instanceof UUID) return ((UUID)o).equals(uuid);
 		else if(o instanceof EntityPlayer) return equals(((EntityPlayer)o).getUniqueID());
 		else if(o instanceof LMPlayer) return equals(((LMPlayer)o).uuid);
@@ -251,13 +225,14 @@ public class LMPlayer implements Comparable<LMPlayer>
 	
 	// Static //
 	
-	public static final FastList<LMPlayer> list = new FastList<LMPlayer>();
+	public static final FastMap<Integer, LMPlayer> map = new FastMap<Integer, LMPlayer>();
 	
 	public static LMPlayer getPlayer(Object o)
 	{
 		if(o == null || o instanceof FakePlayer) return null;
 		if(o instanceof LMPlayer) return (LMPlayer)o;
-		return list.getObj(o);
+		if(o instanceof Integer) return map.get(o);
+		return map.values.getObj(o);
 	}
 	
 	public static String[] getAllNames(boolean online, boolean display)
@@ -265,9 +240,9 @@ public class LMPlayer implements Comparable<LMPlayer>
 		FastList<String> allOn = new FastList<String>();
 		FastList<String> allOff = new FastList<String>();
 		
-		for(int i = 0; i < list.size(); i++)
+		for(int i = 0; i < map.values.size(); i++)
 		{
-			LMPlayer p = list.get(i);
+			LMPlayer p = map.values.get(i);
 			
 			String s = LatCoreMC.removeFormatting(display ? p.getDisplayName() : p.username);
 			

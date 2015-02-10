@@ -111,7 +111,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			else if(args[2].equals("delete"))
 			{
 				if(p.isOnline()) return mustBeOffline;
-				LMPlayer.list.remove(p.uuid);
+				LMPlayer.map.remove(p.playerID);
 				return FINE + "Player removed!";
 			}
 			else if(args[2].equals("saveinv"))

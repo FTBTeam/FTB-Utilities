@@ -24,17 +24,10 @@ public class LMSecurity
 	
 	public void readFromNBT(NBTTagCompound tag, String s)
 	{
-		if(tag.hasKey("Sec_" + s + "_Owner") && tag.hasKey("Sec_" + s + "_Level"))
+		NBTTagCompound tag1 = tag.getCompoundTag(s);
+		
+		if(tag1.func_150299_b("Owner") == NBTHelper.STRING)
 		{
-			owner = LMPlayer.getPlayer(tag.getString("Sec_" + s + "_Owner"));
-			level = Level.VALUES[tag.getByte("Sec_" + s + "_Level")];
-			if(level == Level.GROUP) level = Level.PRIVATE;
-			group = null;
-		}
-		else
-		{
-			NBTTagCompound tag1 = tag.getCompoundTag(s);
-			
 			String o = tag1.getString("Owner");
 			
 			if(o == null || o.isEmpty())
@@ -43,20 +36,30 @@ public class LMSecurity
 				level = Level.PUBLIC;
 				group = null;
 			}
-			else
-			{
-				owner = LMPlayer.getPlayer(o);
-				level = Level.VALUES[tag1.getByte("Level")];
-				
-				if(tag1.hasKey("Group"))
-				{
-					String g = tag1.getString("Group");
-					boolean w = tag1.getBoolean("Whitelist");
-					group = new TwoObjects<String, Boolean>(g, w);
-				}
-				else group = null;
-			}
+			else owner = LMPlayer.getPlayer(o);
 		}
+		else
+		{
+			int o = tag1.getInteger("Owner");
+			
+			if(o == 0)
+			{
+				owner = null;
+				level = Level.PUBLIC;
+				group = null;
+			}
+			else owner = LMPlayer.getPlayer(o);
+		}
+		
+		level = Level.VALUES[tag1.getByte("Level")];
+		
+		if(tag1.hasKey("Group"))
+		{
+			String g = tag1.getString("Group");
+			boolean w = tag1.getBoolean("Whitelist");
+			group = new TwoObjects<String, Boolean>(g, w);
+		}
+		else group = null;
 	}
 	
 	public void writeToNBT(NBTTagCompound tag, String s)
@@ -95,8 +98,9 @@ public class LMSecurity
 			if(level == Level.FRIENDS) return owner.isFriend(p);
 			if(level == Level.GROUP && group != null)
 			{
-				boolean has = owner.getGroupsFor(p.uuid).contains(group.object1);
-				return (has && group.object2) || (!has && !group.object2);
+				LMPlayer.Group g = owner.groups.get(group.object1);
+				boolean has = (g != null && g.members.contains(id));
+				return has == group.object2.booleanValue();
 			}
 		}
 		

@@ -245,7 +245,10 @@ public class LatCoreMC
 	{ return FluidContainerRegistry.isBucket(is); }
 	
 	public static String removeFormatting(String s)
-	{ return textFormattingPattern.matcher(s).replaceAll(""); }
+	{
+		if(s == null) return null; if(s.isEmpty()) return "";
+		return textFormattingPattern.matcher(s).replaceAll("");
+	}
 	
 	public static MinecraftServer getServer()
 	{ return FMLCommonHandler.instance().getMinecraftServerInstance(); }

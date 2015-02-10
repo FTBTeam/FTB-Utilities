@@ -126,7 +126,7 @@ public class GuiFriends extends GuiLM
 		updateButtons();
 	}
 	
-	public void sendUpdate(String c, String d)
+	public void sendUpdate(int c, String d)
 	{ changed = true; MessageLM.NET.sendToServer(new MessageManageGroups(owner, c, d)); }
 	
 	public int maxPages()
@@ -163,7 +163,7 @@ public class GuiFriends extends GuiLM
 	public void onGuiClosed()
 	{
 		LatCoreMC.EVENT_BUS.unregister(this);
-		if(changed) sendUpdate(null, null);
+		if(changed) sendUpdate(0, null);
 		super.onGuiClosed();
 	}
 	
@@ -175,9 +175,9 @@ public class GuiFriends extends GuiLM
 	{
 		players.clear();
 		
-		for(int i = 0; i < LMPlayer.list.size(); i++)
+		for(int i = 0; i < LMPlayer.map.values.size(); i++)
 		{
-			LMPlayer p = LMPlayer.list.get(i);
+			LMPlayer p = LMPlayer.map.values.get(i);
 			if(!p.equals(owner)) players.add(new Player(p));
 		}
 		

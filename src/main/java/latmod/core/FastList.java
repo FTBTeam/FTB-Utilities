@@ -2,7 +2,7 @@ package latmod.core;
 import java.util.*;
 
 /** Made by LatvianModder */
-public class FastList<E> implements Iterable<E>, List<E>, Set<E> //ArrayList
+public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 {
 	public Object[] objects;
 	private int initSize;
@@ -257,6 +257,7 @@ public class FastList<E> implements Iterable<E>, List<E>, Set<E> //ArrayList
 		return true;
 	}
 	
+	@SafeVarargs
 	public static <T> FastList<T> asList(T... a)
 	{ return new FastList<T>(a); }
 }

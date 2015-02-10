@@ -18,6 +18,7 @@ public class LCEventHandler
 	public static final String ACTION_OPEN_FRIENDS_GUI = "OpenFriendsGUI";
 	
 	public static final LCEventHandler instance = new LCEventHandler();
+	private static int nextPlayerID = 0;
 	
 	@SubscribeEvent
 	public void playerLoggedIn(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e)
@@ -34,8 +35,8 @@ public class LCEventHandler
 		if(p == null)
 		{
 			first = true;
-			p = new LMPlayer(e.player.getUniqueID(), e.player.getCommandSenderName());
-			LMPlayer.list.add(p);
+			p = new LMPlayer(++nextPlayerID, e.player.getUniqueID(), e.player.getCommandSenderName());
+			LMPlayer.map.put(p.playerID, p);
 		}
 		
 		p.isOld = true;
@@ -75,8 +76,8 @@ public class LCEventHandler
 					NBTTagCompound tag = NBTHelper.readMap(new FileInputStream(f));
 					loadAllData(tag);
 					
-					for(int i = 0; i < LMPlayer.list.size(); i++)
-						LMPlayer.list.get(i).setOnline(false);
+					for(int i = 0; i < LMPlayer.map.values.size(); i++)
+						LMPlayer.map.values.get(i).setOnline(false);
 					
 					LatCoreMC.logger.info("LatCoreMC.dat loaded");
 				}
@@ -94,42 +95,46 @@ public class LCEventHandler
 	
 	public void loadAllData(NBTTagCompound tag)
 	{
-		LMPlayer.list.clear();
+		LMPlayer.map.clear();
+		
+		nextPlayerID = tag.getInteger("NextPlayerID");
+		
 		new LoadCustomLMDataEvent(EventLM.Phase.PRE, tag).post();
 		
-		FastMap<UUID, NBTTagCompound> playerData = new FastMap<UUID, NBTTagCompound>();
+		FastMap<Integer, NBTTagCompound> playerData = new FastMap<Integer, NBTTagCompound>();
 		
-		if(tag.func_150299_b("Players") == NBTHelper.LIST)
-		{
-			NBTTagList players = tag.getTagList("Players", NBTHelper.MAP);
-			
-			for(int i = 0; i < players.tagCount(); i++)
-			{
-				NBTTagCompound tag1 = players.getCompoundTagAt(i);
-				LMPlayer p = new LMPlayer(UUID.fromString(tag1.getString("UUID")), tag1.getString("Name"));
-				LMPlayer.list.add(p);
-				playerData.put(p.uuid, tag1);
-			}
-			
-			LatCoreMC.logger.info("Found old LMPlayers");
-		}
-		else
+		if(tag.hasKey("Players"))
 		{
 			FastMap<String, NBTTagCompound> map = NBTHelper.toFastMapWithType(tag.getCompoundTag("Players"));
 			
 			for(int i = 0; i < map.size(); i++)
 			{
 				NBTTagCompound tag1 = map.values.get(i);
-				LMPlayer p = new LMPlayer(UUID.fromString(tag1.getString("UUID")), map.keys.get(i));
-				LMPlayer.list.add(p);
-				playerData.put(p.uuid, tag1);
+				LMPlayer p = new LMPlayer(++nextPlayerID, UUID.fromString(tag1.getString("UUID")), map.keys.get(i));
+				LMPlayer.map.put(p.playerID, p);
+				playerData.put(p.playerID, tag1);
+			}
+			
+			LatCoreMC.logger.info("Found Old LMPlayers");
+		}
+		else
+		{
+			FastMap<String, NBTTagCompound> map = NBTHelper.toFastMapWithType(tag.getCompoundTag("LMPlayers"));
+			
+			for(int i = 0; i < map.size(); i++)
+			{
+				int id = Integer.parseInt(map.keys.get(i));
+				NBTTagCompound tag1 = map.values.get(i);
+				LMPlayer p = new LMPlayer(id, UUID.fromString(tag1.getString("UUID")), tag1.getString("Name"));
+				LMPlayer.map.put(p.playerID, p);
+				playerData.put(p.playerID, tag1);
 			}
 		}
 		
-		for(int i = 0; i < LMPlayer.list.size(); i++)
+		for(int i = 0; i < LMPlayer.map.values.size(); i++)
 		{
-			LMPlayer p = LMPlayer.list.get(i);
-			p.readFromNBT(playerData.get(p.uuid));
+			LMPlayer p = LMPlayer.map.values.get(i);
+			p.readFromNBT(playerData.get(p.playerID));
 			new LMPlayerEvent.DataLoaded(p).post();
 		}
 		
@@ -163,19 +168,21 @@ public class LCEventHandler
 	{
 		NBTTagCompound players = new NBTTagCompound();
 		
-		for(int i = 0; i < LMPlayer.list.size(); i++)
+		for(int i = 0; i < LMPlayer.map.values.size(); i++)
 		{
 			NBTTagCompound tag1 = new NBTTagCompound();
 			
-			LMPlayer p = LMPlayer.list.get(i);
+			LMPlayer p = LMPlayer.map.values.get(i);
 			p.writeToNBT(tag1);
 			new LMPlayerEvent.DataSaved(p).post();
 			tag1.setString("UUID", p.uuid.toString());
+			tag1.setString("Name", p.username);
 			
-			players.setTag(p.username, tag1);
+			players.setTag(p.playerID + "", tag1);
 		}
 		
-		tag.setTag("Players", players);
+		tag.setTag("LMPlayers", players);
+		tag.setInteger("NextPlayerID", nextPlayerID);
 		
 		LMGamerules.writeToNBT(tag);
 		new SaveCustomLMDataEvent(tag).post();

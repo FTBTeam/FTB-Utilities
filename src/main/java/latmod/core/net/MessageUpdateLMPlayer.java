@@ -16,6 +16,7 @@ public class MessageUpdateLMPlayer extends MessageLM implements IMessageHandler<
 	public MessageUpdateLMPlayer(LMPlayer p, String channel)
 	{
 		data = new NBTTagCompound();
+		data.setInteger("ID", p.playerID);
 		data.setLong("M", p.uuid.getMostSignificantBits());
 		data.setLong("L", p.uuid.getLeastSignificantBits());
 		NBTTagCompound data1 = new NBTTagCompound();
@@ -27,6 +28,9 @@ public class MessageUpdateLMPlayer extends MessageLM implements IMessageHandler<
 	public IMessage onMessage(MessageUpdateLMPlayer m, MessageContext ctx)
 	{
 		if(LC.proxy.getClientWorld() == null) return null;
+		
+		int playerID = m.data.getInteger("ID");
+		
 		UUID id = new UUID(m.data.getLong("M"), m.data.getLong("L"));
 		EntityPlayer ep = LC.proxy.getClientWorld().func_152378_a(id);
 		if(ep == null) return null;
@@ -34,8 +38,8 @@ public class MessageUpdateLMPlayer extends MessageLM implements IMessageHandler<
 		LMPlayer p = LMPlayer.getPlayer(id);
 		if(p == null)
 		{
-			p = new LMPlayer(id, ep.getCommandSenderName());
-			LMPlayer.list.add(p);
+			p = new LMPlayer(playerID, id, ep.getCommandSenderName());
+			LMPlayer.map.put(playerID, p);
 		}
 		
 		p.readFromNBT(m.data.getCompoundTag("D"));

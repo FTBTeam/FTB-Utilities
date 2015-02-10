@@ -7,7 +7,7 @@ import cpw.mods.fml.relauncher.*;
 
 public class ContainerEmpty extends ContainerLM
 {
-	public ContainerEmpty(EntityPlayer ep, IInventory inv)
+	public ContainerEmpty(EntityPlayer ep, Object inv)
 	{ super(ep, inv); }
 	
 	public ItemStack transferStackInSlot(EntityPlayer ep, int i)

@@ -1,6 +1,6 @@
 package latmod.core.mod.client;
 
-import static net.minecraft.util.EnumChatFormatting.*;
+import static net.minecraft.util.EnumChatFormatting.GREEN;
 import latmod.core.*;
 import latmod.core.event.LMPlayerEvent;
 import latmod.core.gui.*;
@@ -26,8 +26,6 @@ public class GuiFriends extends GuiLM
 		new TextureCoords(texPlayers, 161 + 18 * 2, 0),
 	};
 	
-	public static final TextureCoords icon_online = new TextureCoords(texPlayers, 163, 18);
-	
 	public TextBoxLM searchBox;
 	public ButtonLM buttonSave, buttonPrevPage, buttonNextPage;
 	public ButtonPlayer pbOwner;
@@ -36,7 +34,12 @@ public class GuiFriends extends GuiLM
 	public final LMPlayer owner;
 	public final FastList<Player> players = new FastList<Player>();
 	public boolean changed = false;
-	public GuiActions actions = null;
+	
+	public LMPlayer playerActionsOpen = null;
+	public boolean hasViewOpen = false;
+	public ButtonLM buttonAdd, buttonGroup, buttonClose;
+	public ButtonLM buttonView, buttonTrade, buttonMail;
+	public ButtonLM buttonViewLeft, buttonViewRight, buttonViewClose;
 	
 	public GuiFriends(EntityPlayer ep)
 	{
@@ -92,6 +95,90 @@ public class GuiFriends extends GuiLM
 		
 		buttonNextPage.title = "Next Page";
 		
+		// Action gui buttons //
+		
+		widgets.add(buttonAdd = new ButtonLM(this, -58, 20, 16, 16)
+		{
+			public void onButtonPressed(int b)
+			{
+				playClickSound();
+				
+				if(owner.isFriendRaw(playerActionsOpen))
+					sendUpdate(MessageManageGroups.C_REM_FRIEND, playerActionsOpen.playerID, null);
+				else
+					sendUpdate(MessageManageGroups.C_ADD_FRIEND, playerActionsOpen.playerID, null);
+				
+				refreshActionButtons();
+			}
+			
+			public boolean isEnabled()
+			{ return playerActionsOpen != null && !playerActionsOpen.equals(owner); }
+		});
+		
+		widgets.add(buttonGroup = new ButtonLM(this, -39, 20, 16, 16)
+		{
+			public void onButtonPressed(int b)
+			{
+				playClickSound();
+			}
+			
+			public boolean isEnabled()
+			{ return playerActionsOpen != null && !playerActionsOpen.equals(owner); }
+		});
+		
+		widgets.add(buttonClose = new ButtonLM(this, -20, 20, 16, 16)
+		{
+			public void onButtonPressed(int b)
+			{
+				playClickSound();
+				playerActionsOpen = null;
+			}
+			
+			public boolean isEnabled()
+			{ return playerActionsOpen != null; }
+		});
+		
+		buttonClose.title = "Close";
+		
+		widgets.add(buttonView = new ButtonLM(this, -58, 39, 16, 16)
+		{
+			public void onButtonPressed(int b)
+			{
+				playClickSound();
+				hasViewOpen = !hasViewOpen;
+				refreshActionButtons();
+			}
+			
+			public boolean isEnabled()
+			{ return playerActionsOpen != null; }
+		});
+		
+		widgets.add(buttonTrade = new ButtonLM(this, -39, 39, 16, 16)
+		{
+			public void onButtonPressed(int b)
+			{
+				playClickSound();
+			}
+			
+			public boolean isEnabled()
+			{ return playerActionsOpen != null && !playerActionsOpen.equals(owner); }
+		});
+		
+		widgets.add(buttonMail = new ButtonLM(this, -20, 39, 16, 16)
+		{
+			public void onButtonPressed(int b)
+			{
+				playClickSound();
+			}
+			
+			public boolean isEnabled()
+			{ return playerActionsOpen != null && !playerActionsOpen.equals(owner); }
+		});
+		
+		refreshActionButtons();
+		
+		// Player buttons //
+		
 		widgets.add(pbOwner = new ButtonPlayer(this, -1, 5, 5));
 		pbOwner.setPlayer(new Player(owner));
 		
@@ -101,6 +188,25 @@ public class GuiFriends extends GuiLM
 			widgets.add(pbPlayers[i] = new ButtonPlayer(this, i, 5 + (i % 8) * 19, 25 + (i / 8) * 19));
 		
 		updateButtons();
+	}
+	
+	public void refreshActionButtons()
+	{
+		if(playerActionsOpen == null) return;
+		
+		if(owner.equals(playerActionsOpen))
+		{
+			buttonAdd.title = null;
+			buttonGroup.title = null;
+		}
+		else
+		{
+			buttonAdd.title = owner.isFriendRaw(playerActionsOpen) ? LC.mod.translate("button.remove") : LC.mod.translate("button.add");
+			buttonGroup.title = "[WIP] Edit Groups";
+			buttonView.title = "View player";
+			buttonTrade.title = "[WIP] Trade";
+			buttonMail.title = "[WIP] Mail";
+		}
 	}
 	
 	public void sendUpdate(int c, int u, String g)
@@ -120,7 +226,31 @@ public class GuiFriends extends GuiLM
 		for(int i = 0; i < pbPlayers.length; i++)
 			pbPlayers[i].render();
 		
-		setTexture(texture);
+		if(playerActionsOpen != null)
+		{
+			setTexture(texActions);
+			drawTexturedModalRect(guiLeft - 65, guiTop + 13, 0, 0, 65, 49);
+			
+			if(hasViewOpen)
+			{
+				setTexture(texView);
+				drawTexturedModalRect(guiLeft - 65, guiTop + 63, 0, 0, 65, 106);
+			}
+			
+			setTexture(texture);
+			
+			if(owner.equals(playerActionsOpen))
+				buttonAdd.render(Icons.toggle_on);
+			else
+				buttonAdd.render(owner.isFriendRaw(playerActionsOpen) ? Icons.remove : Icons.add);
+			
+			buttonGroup.render(buttonGroup.isEnabled() ? Icons.Friends.groups : Icons.Friends.groups_gray);
+			buttonView.render(buttonView.isEnabled() ? Icons.Friends.view : Icons.Friends.view_gray);
+			buttonTrade.render(buttonTrade.isEnabled() ? Icons.Friends.trade : Icons.Friends.trade_gray);
+			buttonMail.render(buttonMail.isEnabled() ? Icons.Friends.mail : Icons.Friends.mail_gray);
+			
+			buttonClose.render(Icons.cancel);
+		}
 		
 		buttonSave.render(Icons.accept);
 	}
@@ -128,7 +258,13 @@ public class GuiFriends extends GuiLM
 	public void drawText(int mx, int my)
 	{
 		searchBox.render(30, 10, 0xFFA7A7A7);
-		drawCenteredString(fontRendererObj, (page + 1) + " / " + maxPages(), guiLeft + 81, guiTop + 163, 0xFF5A5A5A);
+		drawCenteredString(fontRendererObj, (page + 1) + " / " + maxPages(), guiLeft + 81, guiTop + 163, 0xFF444444);
+		
+		if(playerActionsOpen != null)
+		{
+			String s = playerActionsOpen.getDisplayName();
+			drawString(fontRendererObj, s, guiLeft - fontRendererObj.getStringWidth(s) - 2, guiTop + 3, 0xFFFFFFFF);
+		}
 		
 		super.drawText(mx, my);
 	}
@@ -187,6 +323,8 @@ public class GuiFriends extends GuiLM
 			
 			pbPlayers[i].setPlayer((j == -1) ? null : players.get(j));
 		}
+		
+		refreshActionButtons();
 	}
 	
 	public class Player implements Comparable<Player>
@@ -252,27 +390,18 @@ public class GuiFriends extends GuiLM
 		public Player player = null;
 		
 		public ButtonPlayer(GuiLM g, int i, int x, int y)
-		{
-			super(g, x, y, 18, 18);
-			doubleClickRequired = true;
-		}
+		{ super(g, x, y, 18, 18); }
 		
 		public void setPlayer(Player p)
 		{ player = p; }
 		
 		public void onButtonPressed(int b)
 		{
-		}
-		
-		public void onButtonDoublePressed(int b)
-		{
-			if(player != null && !player.isOwner())
-			{
-				if(isShiftKeyDown())
-					sendUpdate(MessageManageGroups.C_ADD_FRIEND, player.player.playerID, null);
-				else if(isCtrlKeyDown())
-					sendUpdate(MessageManageGroups.C_REM_FRIEND, player.player.playerID, null);
-			}
+			if(player != null)
+				playerActionsOpen = player.player;
+			else playerActionsOpen = null;
+			
+			refreshActionButtons();
 		}
 		
 		public void addMouseOverText(FastList<String> al)
@@ -280,11 +409,10 @@ public class GuiFriends extends GuiLM
 			if(player != null)
 			{
 				al.add(player.player.getDisplayName());
+				if(player.player.isOnline()) al.add(GREEN + "[Online]");
 				
 				if(!player.isOwner())
 				{
-					if(player.player.isOnline()) al.add("[Online]");
-					
 					if(player.player.isFriend(owner))
 					{
 						al.add("");
@@ -292,14 +420,6 @@ public class GuiFriends extends GuiLM
 						al.add(GREEN + "Friends");
 						// Add other groups //
 					}
-				}
-				else
-				{
-					al.add("");
-					al.add("Double " + GREEN + "Shift" + RESET + " click");
-					al.add("To add as friend");
-					al.add("Double " + RED + "Ctrl" + RESET + " click");
-					al.add("To remove friend");
 				}
 			}
 		}
@@ -312,31 +432,14 @@ public class GuiFriends extends GuiLM
 				
 				drawPlayerHead(player.player.username, GuiFriends.this.guiLeft + posX + 1, GuiFriends.this.guiTop + posY + 1, 16, 16);
 				
+				if(player.player.isOnline()) render(Icons.Friends.online);
+				
 				if(!player.isOwner())
 				{
-					if(player.player.isOnline()) render(icon_online);
-					
 					int status = player.getStatus();
 					if(status > 0) render(icon_status[status - 1]);
 				}
 			}
-		}
-	}
-	
-	public class GuiActions extends GuiLM
-	{
-		public GuiActions()
-		{
-			super(GuiFriends.this.container, texActions);
-			xSize = 65;
-			ySize = 49;
-			
-			GuiActions.this.widgets.add(new ButtonLM(GuiActions.this, 7, 7, 16, 16)
-			{
-				public void onButtonPressed(int b)
-				{
-				}
-			});
 		}
 	}
 }

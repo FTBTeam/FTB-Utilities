@@ -15,7 +15,7 @@ public abstract class ButtonLM extends WidgetLM
 	
 	public boolean mousePressed(int mx, int my, int b)
 	{
-		if(mouseOver(mx, my))
+		if(mouseOver(mx, my) && isEnabled())
 		{
 			if(doubleClickRequired)
 			{
@@ -35,6 +35,9 @@ public abstract class ButtonLM extends WidgetLM
 	public void onButtonDoublePressed(int b)
 	{
 	}
+	
+	public boolean isEnabled()
+	{ return true; }
 	
 	public void render(Object icon, double rw, double rh)
 	{

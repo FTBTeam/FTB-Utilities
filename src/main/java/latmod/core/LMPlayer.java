@@ -189,8 +189,8 @@ public class LMPlayer implements Comparable<LMPlayer>
 		else if(o == this) return true;
 		else if(o instanceof Integer) return ((Integer)o).intValue() == playerID;
 		else if(o instanceof UUID) return ((UUID)o).equals(uuid);
-		else if(o instanceof EntityPlayer) return equals(((EntityPlayer)o).getUniqueID());
-		else if(o instanceof LMPlayer) return equals(((LMPlayer)o).playerID);
+		else if(o instanceof EntityPlayer) return ((EntityPlayer)o).getUniqueID().equals(uuid);
+		else if(o instanceof LMPlayer) return playerID == ((LMPlayer)o).playerID;
 		else if(o instanceof String) return o.equals(username) || o.equals(uuid.toString());
 		else return false;
 	}

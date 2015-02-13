@@ -35,13 +35,42 @@ public abstract class GuiLM extends GuiContainer
 		right,
 		accept,
 		back,
-		cancel;
+		cancel,
+		add,
+		remove;
 		
 		public static final IIcon[] security = new IIcon[4];
 		public static IIcon security_whitelist, security_blacklist;
 		
 		public static final IIcon[] inv = new IIcon[4];
 		public static final IIcon[] redstone = new IIcon[4];
+		
+		public static class Friends
+		{
+			public static IIcon
+			online,
+			groups,
+			groups_gray,
+			mail,
+			mail_gray,
+			trade,
+			trade_gray,
+			view,
+			view_gray;
+			
+			public static void load(LoadLMIconsEvent e)
+			{
+				online = e.load("friends/online");
+				groups = e.load("friends/groups");
+				groups_gray = e.load("friends/groups_gray");
+				mail = e.load("friends/mail");
+				mail_gray = e.load("friends/mail_gray");
+				trade = e.load("friends/trade");
+				trade_gray = e.load("friends/trade_gray");
+				view = e.load("friends/view");
+				view_gray = e.load("friends/view_gray");
+			}
+		}
 		
 		public static void load(LoadLMIconsEvent e)
 		{
@@ -58,6 +87,8 @@ public abstract class GuiLM extends GuiContainer
 			accept = e.load("accept");
 			back = left;
 			cancel = e.load("cancel");
+			add = e.load("add");
+			remove = e.load("remove");
 			
 			security[0] = e.load("security/public");
 			security[1] = e.load("security/private");
@@ -76,6 +107,8 @@ public abstract class GuiLM extends GuiContainer
 			redstone[1] = e.load("rs/high");
 			redstone[2] = e.load("rs/low");
 			redstone[3] = e.load("rs/pulse");
+			
+			Friends.load(e);
 		}
 	}
 	
@@ -150,6 +183,8 @@ public abstract class GuiLM extends GuiContainer
 	public void drawScreen(int mx, int my, float f)
 	{
 		super.drawScreen(mx, my, f);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_BLEND);
 		drawText(mx, my);
 	}
 	

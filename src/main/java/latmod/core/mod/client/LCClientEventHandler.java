@@ -132,11 +132,7 @@ public class LCClientEventHandler
 			EntityPlayer ep = LC.proxy.getClientPlayer();
 			
 			if (ep != null && ep.worldObj.isRemote)
-			{
-				FastList<Key> l = Key.toList(null);
-				new LMKeyEvent(Side.CLIENT, l, ep).post();
-				MessageLM.NET.sendToServer(new MessageLMKeyPressed(l));
-			}
+				MessageLM.NET.sendToServer(new MessageLMKeyPressed());
 		}
 	}
 	

@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 
-@Mod(modid = LC.MOD_ID, name = "LatCoreMC", version = LC.VERSION, dependencies = "required-after:Forge@[10.13.2.1270,)", guiFactory = "latmod.core.mod.client.LCGuiFactory")
+@Mod(modid = LC.MOD_ID, name = "LatCoreMC", version = LC.VERSION, dependencies = "required-after:Forge@[10.13.2.1291,)", guiFactory = "latmod.core.mod.client.LCGuiFactory")
 public class LC
 {
 	protected static final String MOD_ID = "LatCoreMC";

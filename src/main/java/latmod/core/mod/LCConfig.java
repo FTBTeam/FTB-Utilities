@@ -29,12 +29,14 @@ public class LCConfig extends LMConfig
 		public static boolean checkUpdates;
 		public static boolean disableLatCoreCommand;
 		public static boolean disableCommandOverrides;
+		public static boolean enableFriendsGui;
 		
 		public static void load(Category c)
 		{
 			checkUpdates = c.getBool("checkUpdates", true);
 			disableLatCoreCommand = c.getBool("disableLatCoreCommand", false);
 			disableCommandOverrides = c.getBool("disableCommandOverrides", false);
+			enableFriendsGui = c.getBool("enableFriendsGui", true);
 		}
 	}
 	

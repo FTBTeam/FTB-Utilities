@@ -1,12 +1,11 @@
 package latmod.core.mod;
 import java.io.*;
-import java.util.UUID;
 
 import latmod.core.*;
 import latmod.core.event.*;
 import latmod.core.net.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
@@ -18,7 +17,6 @@ public class LCEventHandler
 	public static final String ACTION_OPEN_FRIENDS_GUI = "OpenFriendsGUI";
 	
 	public static final LCEventHandler instance = new LCEventHandler();
-	private static int nextPlayerID = 0;
 	
 	@SubscribeEvent
 	public void playerLoggedIn(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e)
@@ -32,11 +30,21 @@ public class LCEventHandler
 		
 		boolean first = p != null && !p.isOld;
 		
+		String cmdName = e.player.getCommandSenderName();
+		
 		if(p == null)
 		{
 			first = true;
-			p = new LMPlayer(++nextPlayerID, e.player.getUniqueID(), e.player.getCommandSenderName());
+			p = new LMPlayer(LMDataLoader.nextPlayerID(), e.player.getUniqueID(), cmdName);
 			LMPlayer.map.put(p.playerID, p);
+		}
+		else
+		{
+			if(!p.username.equals(cmdName))
+			{
+				p = new LMPlayer(p.playerID, e.player.getUniqueID(), cmdName);
+				LMPlayer.map.put(p.playerID, p);
+			}
 		}
 		
 		p.isOld = true;
@@ -71,76 +79,55 @@ public class LCEventHandler
 			
 			if(f.exists())
 			{
+				LatCoreMC.logger.info("Old LatCoreMC.dat found");
+				
 				try
 				{
 					NBTTagCompound tag = NBTHelper.readMap(new FileInputStream(f));
-					loadAllData(tag);
+					LMDataLoader.Old.readFromNBT(tag);
 					
 					for(int i = 0; i < LMPlayer.map.values.size(); i++)
 						LMPlayer.map.values.get(i).setOnline(false);
 					
-					LatCoreMC.logger.info("LatCoreMC.dat loaded");
+					f.delete();
+					
+					LatCoreMC.logger.info("Old LatCoreMC.dat loaded");
 				}
 				catch(Exception ex)
 				{
 					LatCoreMC.logger.warn("Error occured while loading LatCoreMC.dat!");
 					ex.printStackTrace();
 				}
+				
+				worldSaved(new WorldEvent.Save(e.world));
 			}
-			else LatCoreMC.logger.info("LatCoreMC.dat not found");
+			else
+			{
+				f = new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/LatCoreMC.dat");
+				
+				if(f.exists())
+				{
+					try
+					{
+						NBTTagCompound tag = NBTHelper.readMap(new FileInputStream(f));
+						LMDataLoader.readFromNBT(tag);
+						
+						for(int i = 0; i < LMPlayer.map.values.size(); i++)
+							LMPlayer.map.values.get(i).setOnline(false);
+						
+						LatCoreMC.logger.info("LatCoreMC.dat loaded");
+					}
+					catch(Exception ex)
+					{
+						LatCoreMC.logger.warn("Error occured while loading LatCoreMC.dat!");
+						ex.printStackTrace();
+					}
+				}
+				else LatCoreMC.logger.info("LatCoreMC.dat not found");
+			}
 			
 			LMGamerules.postInit();
 		}
-	}
-	
-	public void loadAllData(NBTTagCompound tag)
-	{
-		LMPlayer.map.clear();
-		
-		nextPlayerID = tag.getInteger("NextPlayerID");
-		
-		new LoadCustomLMDataEvent(EventLM.Phase.PRE, tag).post();
-		
-		FastMap<Integer, NBTTagCompound> playerData = new FastMap<Integer, NBTTagCompound>();
-		
-		if(tag.hasKey("Players"))
-		{
-			FastMap<String, NBTTagCompound> map = NBTHelper.toFastMapWithType(tag.getCompoundTag("Players"));
-			
-			for(int i = 0; i < map.size(); i++)
-			{
-				NBTTagCompound tag1 = map.values.get(i);
-				LMPlayer p = new LMPlayer(++nextPlayerID, UUID.fromString(tag1.getString("UUID")), map.keys.get(i));
-				LMPlayer.map.put(p.playerID, p);
-				playerData.put(p.playerID, tag1);
-			}
-			
-			LatCoreMC.logger.info("Found Old LMPlayers");
-		}
-		else
-		{
-			FastMap<String, NBTTagCompound> map = NBTHelper.toFastMapWithType(tag.getCompoundTag("LMPlayers"));
-			
-			for(int i = 0; i < map.size(); i++)
-			{
-				int id = Integer.parseInt(map.keys.get(i));
-				NBTTagCompound tag1 = map.values.get(i);
-				LMPlayer p = new LMPlayer(id, UUID.fromString(tag1.getString("UUID")), tag1.getString("Name"));
-				LMPlayer.map.put(p.playerID, p);
-				playerData.put(p.playerID, tag1);
-			}
-		}
-		
-		for(int i = 0; i < LMPlayer.map.values.size(); i++)
-		{
-			LMPlayer p = LMPlayer.map.values.get(i);
-			p.readFromNBT(playerData.get(p.playerID));
-			new LMPlayerEvent.DataLoaded(p).post();
-		}
-		
-		LMGamerules.readFromNBT(tag);
-		
-		new LoadCustomLMDataEvent(EventLM.Phase.POST, tag).post();
 	}
 	
 	@SubscribeEvent
@@ -148,13 +135,32 @@ public class LCEventHandler
 	{
 		if(LatCoreMC.isServer() && e.world.provider.dimensionId == 0)
 		{
-			File f = LatCore.newFile(new File(e.world.getSaveHandler().getWorldDirectory(), "LatCoreMC.dat"));
+			File f = LatCore.newFile(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/LatCoreMC.dat"));
 			
 			try
 			{
 				NBTTagCompound tag = new NBTTagCompound();
-				saveAllData(tag);
+				LMDataLoader.writeToNBT(tag);
 				NBTHelper.writeMap(new FileOutputStream(f), tag);
+				
+				FastList<String> l = new FastList<String>();
+				FastList<Integer> list = new FastList<Integer>();
+				list.addAll(LMPlayer.map.keys);
+				list.sort(null);
+				
+				for(int i = 0; i < list.size(); i++)
+				{
+					LMPlayer p = LMPlayer.getPlayer(list.get(i));
+					
+					String id = LatCore.fillString("" + p.playerID, ' ', 6);
+					String u = LatCore.fillString(p.username, ' ', 21);
+					String s = "" + p.uuid;
+					if(p.hasCustomName()) s += " (" + p.getDisplayName() + ")";
+					
+					l.add(id + u + s);
+				}
+				
+				LatCore.saveFile(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/LMPlayers.txt"), l);
 			}
 			catch(Exception ex)
 			{
@@ -162,30 +168,6 @@ public class LCEventHandler
 				ex.printStackTrace();
 			}
 		}
-	}
-	
-	public void saveAllData(NBTTagCompound tag)
-	{
-		NBTTagCompound players = new NBTTagCompound();
-		
-		for(int i = 0; i < LMPlayer.map.values.size(); i++)
-		{
-			NBTTagCompound tag1 = new NBTTagCompound();
-			
-			LMPlayer p = LMPlayer.map.values.get(i);
-			p.writeToNBT(tag1);
-			new LMPlayerEvent.DataSaved(p).post();
-			tag1.setString("UUID", p.uuid.toString());
-			tag1.setString("Name", p.username);
-			
-			players.setTag(p.playerID + "", tag1);
-		}
-		
-		tag.setTag("LMPlayers", players);
-		tag.setInteger("NextPlayerID", nextPlayerID);
-		
-		LMGamerules.writeToNBT(tag);
-		new SaveCustomLMDataEvent(tag).post();
 	}
 	
 	public void updateAllData(EntityPlayerMP ep)
@@ -207,15 +189,5 @@ public class LCEventHandler
     {
 		if(e.modID.equalsIgnoreCase(LC.MOD_ID))
 			LCConfig.instance.load();
-	}
-	
-	@SubscribeEvent(priority = EventPriority.HIGHEST)
-	public void onLMKeyEvent(LMKeyEvent e)
-	{
-		if(e.side.isServer() && e.keys.contains(Key.CRTL))
-		{
-			MessageLM.NET.sendTo(new MessageCustomServerAction(LCEventHandler.ACTION_OPEN_FRIENDS_GUI, null), (EntityPlayerMP)e.player);
-			e.setCanceled(true);
-		}
 	}
 }

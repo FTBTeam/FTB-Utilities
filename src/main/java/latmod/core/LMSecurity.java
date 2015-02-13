@@ -24,6 +24,14 @@ public class LMSecurity
 	
 	public void readFromNBT(NBTTagCompound tag, String s)
 	{
+		if(!tag.hasKey(s))
+		{
+			owner = null;
+			level = Level.PUBLIC;
+			group = null;
+			return;
+		}
+		
 		NBTTagCompound tag1 = tag.getCompoundTag(s);
 		
 		if(tag1.func_150299_b("Owner") == NBTHelper.STRING)

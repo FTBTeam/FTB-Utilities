@@ -20,9 +20,9 @@ public class GuiFriends extends GuiLM
 	
 	public static final TextureCoords icon_status[] =
 	{
-		new TextureCoords(texPlayers, 163 + 18 * 0, 0),
-		new TextureCoords(texPlayers, 163 + 18 * 1, 0),
-		new TextureCoords(texPlayers, 163 + 18 * 2, 0),
+		new TextureCoords(texPlayers, 161 + 18 * 0, 0),
+		new TextureCoords(texPlayers, 161 + 18 * 1, 0),
+		new TextureCoords(texPlayers, 161 + 18 * 2, 0),
 	};
 	
 	public static final TextureCoords icon_online = new TextureCoords(texPlayers, 163, 18);
@@ -41,10 +41,10 @@ public class GuiFriends extends GuiLM
 		super(new ContainerEmpty(ep, null), texPlayers);
 		owner = LMPlayer.getPlayer(ep);
 		
-		xSize = 163;
+		xSize = 161;
 		ySize = 184;
 		
-		widgets.add(searchBox = new TextBoxLM(this, 25, 5, 94, 18)
+		widgets.add(searchBox = new TextBoxLM(this, 24, 5, 94, 18)
 		{
 			public void textChanged()
 			{
@@ -54,7 +54,7 @@ public class GuiFriends extends GuiLM
 		
 		searchBox.charLimit = 15;
 		
-		widgets.add(buttonClear = new ButtonLM(this, 121, 6, 16, 16)
+		widgets.add(buttonClear = new ButtonLM(this, 120, 6, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
@@ -79,7 +79,7 @@ public class GuiFriends extends GuiLM
 		
 		buttonClear.doubleClickRequired = true;
 		
-		widgets.add(buttonSave = new ButtonLM(this, 140, 6, 16, 16)
+		widgets.add(buttonSave = new ButtonLM(this, 139, 6, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
@@ -91,7 +91,7 @@ public class GuiFriends extends GuiLM
 		
 		buttonSave.title = GREEN + "Close";
 		
-		widgets.add(buttonPrevPage = new ButtonLM(this, 7, 159, 35, 16)
+		widgets.add(buttonPrevPage = new ButtonLM(this, 7, 158, 35, 16)
 		{
 			public void onButtonPressed(int b)
 			{
@@ -103,7 +103,7 @@ public class GuiFriends extends GuiLM
 		
 		buttonPrevPage.title = "Prev Page";
 		
-		widgets.add(buttonNextPage = new ButtonLM(this, 121, 159, 35, 16)
+		widgets.add(buttonNextPage = new ButtonLM(this, 120, 159, 35, 16)
 		{
 			public void onButtonPressed(int b)
 			{
@@ -115,13 +115,13 @@ public class GuiFriends extends GuiLM
 		
 		buttonNextPage.title = "Next Page";
 		
-		widgets.add(pbOwner = new ButtonPlayer(this, -1, 6, 5));
+		widgets.add(pbOwner = new ButtonPlayer(this, -1, 5, 5));
 		pbOwner.setPlayer(new Player(owner));
 		
 		pbPlayers = new ButtonPlayer[7 * 8];
 		
 		for(int i = 0; i < pbPlayers.length; i++)
-			widgets.add(pbPlayers[i] = new ButtonPlayer(this, i, 6 + (i % 8) * 19, 25 + (i / 8) * 19));
+			widgets.add(pbPlayers[i] = new ButtonPlayer(this, i, 5 + (i % 8) * 19, 25 + (i / 8) * 19));
 		
 		updateButtons();
 	}

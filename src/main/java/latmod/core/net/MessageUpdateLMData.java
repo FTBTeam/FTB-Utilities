@@ -1,5 +1,5 @@
 package latmod.core.net;
-import latmod.core.mod.LCEventHandler;
+import latmod.core.mod.*;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.simpleimpl.*;
 
@@ -8,12 +8,12 @@ public class MessageUpdateLMData extends MessageLM implements IMessageHandler<Me
 	public MessageUpdateLMData()
 	{
 		data = new NBTTagCompound();
-		LCEventHandler.instance.saveAllData(data);
+		LMDataLoader.writeToNBT(data);
 	}
 	
 	public IMessage onMessage(MessageUpdateLMData m, MessageContext ctx)
 	{
-		LCEventHandler.instance.loadAllData(m.data);
+		LMDataLoader.readFromNBT(m.data);
 		return null;
 	}
 }

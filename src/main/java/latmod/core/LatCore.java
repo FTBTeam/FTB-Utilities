@@ -379,4 +379,19 @@ public class LatCore
 		
 		return hs + ":" + ms + ":" + ss;
 	}
+
+	public static String fillString(String s, char fill, int length)
+	{
+		int sl = s.length();
+		
+		char[] c = new char[Math.max(sl, length)];
+		
+		for(int i = 0; i < c.length; i++)
+		{
+			if(i >= sl) c[i] = fill;
+			else c[i] = s.charAt(i);
+		}
+		
+		return new String(c);
+	}
 }

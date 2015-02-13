@@ -1,6 +1,6 @@
 package latmod.core.event;
 
-import latmod.core.LMPlayer;
+import latmod.core.*;
 import net.minecraft.entity.player.EntityPlayer;
 import cpw.mods.fml.relauncher.Side;
 
@@ -52,5 +52,13 @@ public abstract class LMPlayerEvent extends EventLM
 		
 		public LoggedOut(LMPlayer p, Side s, EntityPlayer ep)
 		{ super(p); side = s; entityPlayer = ep; }
+	}
+	
+	public static class CustomInfo extends LMPlayerEvent
+	{
+		public final FastList<String> info;
+		
+		public CustomInfo(LMPlayer p, FastList<String> l)
+		{ super(p); info = l; }
 	}
 }

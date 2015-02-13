@@ -72,11 +72,11 @@ public class LMSecurity
 	
 	public void writeToNBT(NBTTagCompound tag, String s)
 	{
-		NBTTagCompound tag1 = new NBTTagCompound();
-		
 		if(owner != null)
 		{
-			tag1.setString("Owner", owner.username);
+			NBTTagCompound tag1 = new NBTTagCompound();
+			
+			tag1.setInteger("Owner", owner.playerID);
 			tag1.setByte("Level", (byte)level.ID);
 			
 			if(group != null && group.object1 != null && group.object2 != null)

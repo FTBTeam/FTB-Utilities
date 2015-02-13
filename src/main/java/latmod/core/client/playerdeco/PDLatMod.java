@@ -11,6 +11,8 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class PDLatMod extends PlayerDecorator
 {
+	public static final PDLatMod instance = new PDLatMod();
+	
 	public static int[] pixels =
 	{
 		0, 1, 1, 1, 0,
@@ -36,12 +38,12 @@ public class PDLatMod extends PlayerDecorator
 	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
 	{
 		// RenderPlayer //
-		float s = 0.025F;
+		float s = 0.028F;
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		
 		GL11.glPushMatrix();
-		GL11.glTranslated(0.1D, 0.03D, -0.126D);
+		GL11.glTranslated(0.08D, 0.03D, -0.126D);
 		
 		if(e.entityPlayer.isSneaking())
 			GL11.glRotatef(25F, 1F, 0F, 0F);

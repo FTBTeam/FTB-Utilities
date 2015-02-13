@@ -38,7 +38,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 		if(i == 0) return getSubcommands(ics);
 		
 		if(i == 2 && isArg(args, 0, "player"))
-			return new String[] { "uuid", "delete", "saveinv", "loadinv", "nick", "notify" };
+			return new String[] { "uuid", "delete", "saveinv", "loadinv", "notify" };
 		
 		if(isArg(args, 0, "gamerule"))
 		{
@@ -65,7 +65,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 	public NameType getUsername(String[] args, int i)
 	{
 		if(i == 1 && isArg(args, 0, "player"))
-			return NameType.MC_ON;
+			return NameType.ON;
 		return NameType.NONE;
 	}
 	
@@ -83,7 +83,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			
 			if(args[1].equals("@a"))
 			{
-				String[] s = LMPlayer.getAllNames(true, false);
+				String[] s = LMPlayer.getAllNames(true);
 				
 				for(int i = 0; i < s.length; i++)
 				{
@@ -164,12 +164,6 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				}
 				
 				return FINE + "Inventory loaded!";
-			}
-			else if(args[2].equals("nick"))
-			{
-				if(args.length != 4) return missingArgs();
-				p.setCustomName(args[3].trim());
-				return FINE + "Custom nickname changed to " + p.getDisplayName() + " for " + p.username;
 			}
 			else if(args[2].equals("notify"))
 			{

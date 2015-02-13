@@ -16,7 +16,8 @@ import cpw.mods.fml.relauncher.*;
 public class GuiFriends extends GuiLM
 {
 	public static final ResourceLocation texPlayers = LC.mod.getLocation("textures/gui/players.png");
-	public static final ResourceLocation texGroups = LC.mod.getLocation("textures/gui/groups.png");
+	public static final ResourceLocation texActions = LC.mod.getLocation("textures/gui/actions.png");
+	public static final ResourceLocation texView = LC.mod.getLocation("textures/gui/view.png");
 	
 	public static final TextureCoords icon_status[] =
 	{
@@ -28,13 +29,14 @@ public class GuiFriends extends GuiLM
 	public static final TextureCoords icon_online = new TextureCoords(texPlayers, 163, 18);
 	
 	public TextBoxLM searchBox;
-	public ButtonLM buttonClear, buttonSave, buttonPrevPage, buttonNextPage;
+	public ButtonLM buttonSave, buttonPrevPage, buttonNextPage;
 	public ButtonPlayer pbOwner;
 	public ButtonPlayer[] pbPlayers;
 	public int page = 0;
 	public final LMPlayer owner;
 	public final FastList<Player> players = new FastList<Player>();
 	public boolean changed = false;
+	public GuiActions actions = null;
 	
 	public GuiFriends(EntityPlayer ep)
 	{
@@ -44,7 +46,7 @@ public class GuiFriends extends GuiLM
 		xSize = 161;
 		ySize = 184;
 		
-		widgets.add(searchBox = new TextBoxLM(this, 24, 5, 94, 18)
+		widgets.add(searchBox = new TextBoxLM(this, 24, 5, 113, 18)
 		{
 			public void textChanged()
 			{
@@ -53,31 +55,6 @@ public class GuiFriends extends GuiLM
 		});
 		
 		searchBox.charLimit = 15;
-		
-		widgets.add(buttonClear = new ButtonLM(this, 120, 6, 16, 16)
-		{
-			public void onButtonPressed(int b)
-			{
-			}
-			
-			public void onButtonDoublePressed(int b)
-			{
-				if(isShiftKeyDown())
-				{
-					playClickSound();
-					sendUpdate(MessageManageGroups.C_RESET, null);
-				}
-			}
-			
-			public void addMouseOverText(FastList<String> l)
-			{
-				l.add(RED + "Clear All Friends");
-				l.add("Double click this button");
-				l.add("with Shift key down");
-			}
-		});
-		
-		buttonClear.doubleClickRequired = true;
 		
 		widgets.add(buttonSave = new ButtonLM(this, 139, 6, 16, 16)
 		{
@@ -126,8 +103,11 @@ public class GuiFriends extends GuiLM
 		updateButtons();
 	}
 	
-	public void sendUpdate(int c, String d)
-	{ changed = true; MessageLM.NET.sendToServer(new MessageManageGroups(owner, c, d)); }
+	public void sendUpdate(int c, int u, String g)
+	{
+		changed = true;
+		MessageLM.NET.sendToServer(new MessageManageGroups(owner, c, u, g));
+	}
 	
 	public int maxPages()
 	{ return (players.size() / pbPlayers.length) + 1; }
@@ -142,7 +122,6 @@ public class GuiFriends extends GuiLM
 		
 		setTexture(texture);
 		
-		buttonClear.render(Icons.cancel);
 		buttonSave.render(Icons.accept);
 	}
 	
@@ -163,7 +142,7 @@ public class GuiFriends extends GuiLM
 	public void onGuiClosed()
 	{
 		LatCoreMC.EVENT_BUS.unregister(this);
-		if(changed) sendUpdate(0, null);
+		if(changed) sendUpdate(0, 0, null);
 		super.onGuiClosed();
 	}
 	
@@ -270,7 +249,7 @@ public class GuiFriends extends GuiLM
 	
 	public class ButtonPlayer extends ButtonLM
 	{
-		public Player player;
+		public Player player = null;
 		
 		public ButtonPlayer(GuiLM g, int i, int x, int y)
 		{
@@ -290,9 +269,9 @@ public class GuiFriends extends GuiLM
 			if(player != null && !player.isOwner())
 			{
 				if(isShiftKeyDown())
-					sendUpdate(MessageManageGroups.C_ADD_FRIEND, player.player.username);
+					sendUpdate(MessageManageGroups.C_ADD_FRIEND, player.player.playerID, null);
 				else if(isCtrlKeyDown())
-					sendUpdate(MessageManageGroups.C_REM_FRIEND, player.player.username);
+					sendUpdate(MessageManageGroups.C_REM_FRIEND, player.player.playerID, null);
 			}
 		}
 		
@@ -321,7 +300,6 @@ public class GuiFriends extends GuiLM
 					al.add("To add as friend");
 					al.add("Double " + RED + "Ctrl" + RESET + " click");
 					al.add("To remove friend");
-					
 				}
 			}
 		}
@@ -342,6 +320,23 @@ public class GuiFriends extends GuiLM
 					if(status > 0) render(icon_status[status - 1]);
 				}
 			}
+		}
+	}
+	
+	public class GuiActions extends GuiLM
+	{
+		public GuiActions()
+		{
+			super(GuiFriends.this.container, texActions);
+			xSize = 65;
+			ySize = 49;
+			
+			GuiActions.this.widgets.add(new ButtonLM(GuiActions.this, 7, 7, 16, 16)
+			{
+				public void onButtonPressed(int b)
+				{
+				}
+			});
 		}
 	}
 }

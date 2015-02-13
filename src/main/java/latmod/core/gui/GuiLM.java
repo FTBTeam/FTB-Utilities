@@ -27,12 +27,14 @@ public abstract class GuiLM extends GuiContainer
 		pressed,
 		toggle_off,
 		toggle_on,
-		back,
 		help,
 		settings,
 		up,
 		down,
+		left,
+		right,
 		accept,
+		back,
 		cancel;
 		
 		public static final IIcon[] security = new IIcon[4];
@@ -47,12 +49,14 @@ public abstract class GuiLM extends GuiContainer
 			pressed = e.load("pressed");
 			toggle_off = e.load("toggle_off");
 			toggle_on = e.load("toggle_on");
-			back = e.load("back");
 			help = e.load("help");
 			settings = e.load("settings");
-			up = e.load("up");
-			down = e.load("down");
+			up = e.load("arrows/up");
+			down = e.load("arrows/down");
+			left = e.load("arrows/left");
+			right = e.load("arrows/right");
 			accept = e.load("accept");
+			back = left;
 			cancel = e.load("cancel");
 			
 			security[0] = e.load("security/public");

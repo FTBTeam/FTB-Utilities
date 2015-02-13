@@ -1,6 +1,7 @@
 package latmod.core.client.playerdeco;
 
 import java.net.URL;
+import java.util.UUID;
 
 import latmod.core.*;
 import latmod.core.event.CustomPDEvent;
@@ -24,16 +25,20 @@ public class ThreadCheckPlayerDecorators implements Runnable
 		LatCoreMC.logger.info("Loading PlayerDecorators...");
 		
 		LCClientEventHandler.instance.playerDecorators.clear();
+		LCClientEventHandler.instance.listLatMod.clear();
+		LCClientEventHandler.instance.listFTB.clear();
 		
 		try
 		{
-			FastList<String> al = LatCore.toStringList(new URL("http://pastebin.com/raw.php?i=tBtpYGRT").openStream());
+			FastList<String> al = LatCore.toStringList(new URL("http://pastebin.com/raw.php?i=rurC7PNd").openStream());
 			
-			if(al != null && al.size() > 0)
+			for(int i = 0; i < al.size(); i++)
 			{
-				for(int i = 0; i < al.size(); i++)
+				String raw = al.get(i).trim();
+				
+				if(!raw.isEmpty() && !raw.startsWith("#"))
 				{
-					String[] s = al.get(i).split(" :: ");
+					String[] s = raw.split(" :: ");
 					
 					if(s != null && s.length == 2)
 					{
@@ -46,15 +51,38 @@ public class ThreadCheckPlayerDecorators implements Runnable
 							if(p != null) al1.add(p); else if(LatCoreMC.isDevEnv) LatCoreMC.logger.warn("Unknown PlayerDecorator: " + s1[j]);
 						}
 						
-						if(al1.size() > 0) LCClientEventHandler.instance.playerDecorators.put(s[0], al1);
+						if(al1.size() > 0) LCClientEventHandler.instance.playerDecorators.put(UUID.fromString(s[0]), al1);
 					}
 				}
-				LatCoreMC.logger.info("PlayerDecorators loaded!");
 			}
-			else LatCoreMC.logger.warn("Player Decorators failed to load!");
+			
+			al = LatCore.toStringList(new URL("http://pastebin.com/raw.php?i=c2LJZtE3").openStream());
+			
+			for(int i = 0; i < al.size(); i++)
+			{
+				String raw = al.get(i).trim();
+				
+				if(!raw.isEmpty() && !raw.startsWith("#"))
+					LCClientEventHandler.instance.listLatMod.add(UUID.fromString(raw));
+			}
+			
+			al = LatCore.toStringList(new URL("http://pastebin.com/raw.php?i=6wQU5MWK").openStream());
+			
+			for(int i = 0; i < al.size(); i++)
+			{
+				String raw = al.get(i).trim();
+				
+				if(!raw.isEmpty() && !raw.startsWith("#"))
+					LCClientEventHandler.instance.listFTB.add(UUID.fromString(raw));
+			}
+			
+			LatCoreMC.logger.info("PlayerDecorators loaded!");
 		}
 		catch(Exception ex)
-		{ ex.printStackTrace(); }
+		{
+			ex.printStackTrace();
+			LatCoreMC.logger.warn("Player Decorators failed to load!");
+		}
 		
 		new CustomPDEvent().post();
 		

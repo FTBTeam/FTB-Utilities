@@ -13,7 +13,7 @@ public class CmdTpOverride extends CommandBaseLC // CommandTeleport
 	{ super("tp", commandLevel); }
 	
 	public NameType getUsername(String[] args, int i)
-	{ return (i == 0 || i == 1) ? NameType.LM_ON : NameType.NONE; }
+	{ return (i == 0 || i == 1) ? NameType.ON : NameType.NONE; }
 	
 	public String[] getSubcommands(ICommandSender ics)
 	{ return null; }
@@ -37,7 +37,7 @@ public class CmdTpOverride extends CommandBaseLC // CommandTeleport
 		{
 			if(args[0].equals("@a"))
 			{
-				String[] players = LMPlayer.getAllNames(true, true);
+				String[] players = LMPlayer.getAllNames(true);
 				for(int i = 0; i < players.length; i++)
 				{
 					String[] args1 = args.clone();

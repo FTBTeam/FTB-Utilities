@@ -12,19 +12,11 @@ public abstract class CommandLM extends CommandBase
 	public static enum NameType
 	{
 		NONE,
-		LM_ON,
-		LM_OFF,
-		MC_ON,
-		MC_OFF;
+		ON,
+		OFF;
 		
-		public boolean isOnline()
-		{ return this == LM_ON || this == MC_ON; }
-		
-		public boolean isDisplay()
-		{ return this == LM_ON || this == LM_OFF; }
-
 		public String[] getUsernames()
-		{ return (this == NONE) ? null : LMPlayer.getAllNames(isOnline(), isDisplay()); }
+		{ return (this == NONE) ? null : LMPlayer.getAllNames(this == ON); }
 	}
 	
 	protected static final String FINE = EnumChatFormatting.WHITE + "";

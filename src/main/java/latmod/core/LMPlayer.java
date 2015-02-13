@@ -13,7 +13,6 @@ import cpw.mods.fml.relauncher.Side;
 
 public class LMPlayer implements Comparable<LMPlayer>
 {
-	public static final String TAG_CUSTOM_NAME = "CustomName";
 	public static final String ACTION_LOGGED_IN = "LoggedIn";
 	public static final String ACTION_LOGGED_OUT = "LoggedOut";
 	public static final String ACTION_GROUPS_CHANGED = "GroupsChanged";
@@ -36,7 +35,6 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public final UUID uuid;
 	public final String username;
 	
-	private String customName;
 	public final FastList<LMPlayer> friends = new FastList<LMPlayer>();
 	public final FastMap<String, Group> groups = new FastMap<String, Group>();
 	public NBTTagCompound customData = new NBTTagCompound();
@@ -46,39 +44,8 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public LMPlayer(int i, UUID id, String s)
 	{ playerID = i; uuid = id; username = s; }
 	
-	public void setCustomName(String s)
-	{
-		String s0 = customName + "";
-		
-		if(s != null && s.length() > 0)
-		{
-			customName = LatCoreMC.removeFormatting(s.trim());
-			if(customName.length() == 0 || customName.equals("null")) customName = null;
-		}
-		else customName = null;
-		
-		if(LatCore.isDifferent(s0, customName))
-		{
-			sendUpdate(TAG_CUSTOM_NAME);
-			
-			EntityPlayer ep = getPlayerMP();
-			
-			if(ep != null)
-			{
-				ep.refreshDisplayName();
-				
-				NBTTagCompound data = new NBTTagCompound();
-				data.setString("UUID", uuid.toString());
-				MessageLM.NET.sendToAll(new MessageCustomServerAction(TAG_CUSTOM_NAME, data));
-			}
-		}
-	}
-	
 	public String getDisplayName()
-	{ if(hasCustomName()) return customName + ""; return username + ""; }
-	
-	public boolean hasCustomName()
-	{ return customName != null && !customName.isEmpty(); }
+	{ return username + ""; }
 	
 	public EntityPlayerMP getPlayerMP()
 	{ return LatCoreMC.getAllOnlinePlayers().get(uuid); }
@@ -119,9 +86,6 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		isOnline = tag.getBoolean("On");
-		
-		customName = LatCoreMC.removeFormatting(tag.getString(TAG_CUSTOM_NAME)).trim();
-		if(customName.isEmpty() || customName.equals(username)) customName = null;
 		
 		friends.clear();
 		groups.clear();
@@ -175,9 +139,6 @@ public class LMPlayer implements Comparable<LMPlayer>
 		tag.setBoolean("Old", isOld);
 		tag.setBoolean("On", isOnline);
 		
-		if(customName != null)
-			tag.setString(TAG_CUSTOM_NAME, customName);
-		
 		if(friends.size() > 0 || groups.size() > 0)
 		{
 			NBTTagCompound tag1 = new NBTTagCompound();
@@ -230,7 +191,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 		else if(o instanceof UUID) return ((UUID)o).equals(uuid);
 		else if(o instanceof EntityPlayer) return equals(((EntityPlayer)o).getUniqueID());
 		else if(o instanceof LMPlayer) return equals(((LMPlayer)o).playerID);
-		else if(o instanceof String) return o.equals(username) || ((String)o).equalsIgnoreCase(getDisplayName()) || o.equals(uuid.toString());
+		else if(o instanceof String) return o.equals(username) || o.equals(uuid.toString());
 		else return false;
 	}
 	
@@ -249,7 +210,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 		return map.values.getObj(o);
 	}
 	
-	public static String[] getAllNames(boolean online, boolean display)
+	public static String[] getAllNames(boolean online)
 	{
 		FastList<String> allOn = new FastList<String>();
 		FastList<String> allOff = new FastList<String>();
@@ -258,7 +219,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 		{
 			LMPlayer p = map.values.get(i);
 			
-			String s = LatCoreMC.removeFormatting(display ? p.getDisplayName() : p.username);
+			String s = LatCoreMC.removeFormatting(p.username);
 			
 			if(p.isOnline()) allOn.add(s);
 			else if(!online) allOff.add(s);

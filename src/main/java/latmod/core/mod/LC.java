@@ -70,7 +70,6 @@ public class LC
 	{
 		e.registerServerCommand(new CmdLatCore());
 		e.registerServerCommand(new CmdLatCoreAdmin());
-		e.registerServerCommand(new CmdRealNick());
 		
 		if(!LCConfig.General.disableCommandOverrides)
 		{

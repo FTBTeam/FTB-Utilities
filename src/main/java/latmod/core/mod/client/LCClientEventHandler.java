@@ -1,4 +1,6 @@
 package latmod.core.mod.client;
+import java.util.UUID;
+
 import latmod.core.*;
 import latmod.core.client.LatCoreMCClient;
 import latmod.core.client.playerdeco.*;
@@ -23,8 +25,10 @@ public class LCClientEventHandler
 {
 	public static final LCClientEventHandler instance = new LCClientEventHandler();
 	
-	public final FastMap<String, FastList<PlayerDecorator>> playerDecorators = new FastMap<String, FastList<PlayerDecorator>>();
 	public final FastList<GuiNotification> messages = new FastList<GuiNotification>();
+	public final FastMap<UUID, FastList<PlayerDecorator>> playerDecorators = new FastMap<UUID, FastList<PlayerDecorator>>();
+	public final FastList<UUID> listLatMod = new FastList<UUID>();
+	public final FastList<UUID> listFTB = new FastList<UUID>();
 	
 	@SubscribeEvent
 	public void onTooltip(ItemTooltipEvent e)
@@ -90,7 +94,7 @@ public class LCClientEventHandler
 	{
 		if(e.side.isClient() && e.entityPlayer != null)
 		{
-			FastList<PlayerDecorator> l = playerDecorators.get(e.entityPlayer.getCommandSenderName());
+			FastList<PlayerDecorator> l = playerDecorators.get(e.entityPlayer.getUniqueID());
 			
 			if(l != null) for(int i = 0; i < l.size(); i++)
 			{
@@ -105,7 +109,12 @@ public class LCClientEventHandler
 	{
 		if(LCConfig.Client.enablePlayerDecorators && !e.entityPlayer.isInvisible())
 		{
-			FastList<PlayerDecorator> l = playerDecorators.get(e.entityPlayer.getCommandSenderName());
+			UUID id = e.entityPlayer.getUniqueID();
+			
+			if(listLatMod.contains(id)) PDLatMod.instance.onPlayerRender(e);
+			if(listFTB.contains(id)) PDFTB.instance.onPlayerRender(e);
+			
+			FastList<PlayerDecorator> l = playerDecorators.get(id);
 			
 			if(l != null && l.size() > 0)
 			{

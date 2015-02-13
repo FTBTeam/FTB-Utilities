@@ -15,16 +15,16 @@ public class MessageManageGroups extends MessageLM implements IMessageHandler<Me
 	public static final int C_REM_GROUP = 4;
 	public static final int C_ADD_TO_GROUP = 5;
 	public static final int C_REM_FROM_GROUP = 6;
-	public static final int C_RESET = 7;
 	
 	public MessageManageGroups() { }
 	
-	public MessageManageGroups(LMPlayer p, int c, String d)
+	public MessageManageGroups(LMPlayer p, int code, int user, String group)
 	{
 		data = new NBTTagCompound();
-		data.setInteger("ID", p.playerID);
-		if(c != -1) data.setByte("C", (byte)c);
-		if(d != null) data.setString("D", d);
+		data.setInteger("O", p.playerID);
+		if(code > 0) data.setByte("C", (byte)code);
+		if(user > 0) data.setInteger("U", user);
+		if(group != null) data.setString("G", group);
 	}
 	
 	public IMessage onMessage(MessageManageGroups m, MessageContext ctx)
@@ -33,28 +33,21 @@ public class MessageManageGroups extends MessageLM implements IMessageHandler<Me
 		
 		LMPlayer owner = LMPlayer.getPlayer(ep);
 		
-		if(owner != null && owner.playerID == m.data.getInteger("ID"))
+		if(owner != null && owner.playerID == m.data.getInteger("O"))
 		{
 			if(owner != null)
 			{
-				int c = m.data.getByte("C");
-				String d = m.data.getString("D");
+				int code = m.data.getByte("C");
+				int user = m.data.getInteger("U");
+				//String group = m.data.getString("G");
+				
 				boolean changed = false;
 				
-				if(c != 0)
+				if(code > 0)
 				{
-					if(c == C_RESET)
+					if(code == C_ADD_FRIEND)
 					{
-						if(!owner.friends.isEmpty())
-						{
-							owner.friends.clear();
-							changed = true;
-							LatCoreMC.notifyPlayer(ep, new Notification(DARK_RED + "Groups reset", "", new ItemStack(Items.iron_sword), 2000L));
-						}
-					}
-					else if(c == C_ADD_FRIEND)
-					{
-						LMPlayer p = LMPlayer.getPlayer(d);
+						LMPlayer p = LMPlayer.getPlayer(user);
 						
 						if(p != null && !owner.friends.contains(p))
 						{
@@ -63,9 +56,9 @@ public class MessageManageGroups extends MessageLM implements IMessageHandler<Me
 							LatCoreMC.notifyPlayer(ep, new Notification(GREEN + "+ " + p.getDisplayName(), "Friends", new ItemStack(Blocks.emerald_block), 1500L));
 						}
 					}
-					else if(c == C_REM_FRIEND)
+					else if(code == C_REM_FRIEND)
 					{
-						LMPlayer p = LMPlayer.getPlayer(d);
+						LMPlayer p = LMPlayer.getPlayer(user);
 						
 						if(p != null && owner.friends.contains(p))
 						{

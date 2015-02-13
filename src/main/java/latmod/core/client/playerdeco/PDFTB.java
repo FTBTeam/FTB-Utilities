@@ -11,6 +11,8 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class PDFTB extends PlayerDecorator
 {
+	public static final PDFTB instance = new PDFTB();
+	
 	public static int[] pixels =
 	{
 		1, 1, 1, 0, 0, 0,
@@ -33,7 +35,7 @@ public class PDFTB extends PlayerDecorator
 	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
 	{
 		// RenderPlayer //
-		float s = 0.025F;
+		float s = 0.035F;
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		

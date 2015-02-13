@@ -99,10 +99,6 @@ public class LMDataLoader
 		{
 			player.setOnline(tag.getBoolean("On"));
 			
-			String customName = LatCoreMC.removeFormatting(tag.getString(LMPlayer.TAG_CUSTOM_NAME)).trim();
-			if(customName.isEmpty() || customName.equals(player.username)) customName = null;
-			player.setCustomName(customName);
-			
 			player.friends.clear();
 			player.groups.clear();
 			

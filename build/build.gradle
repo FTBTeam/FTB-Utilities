@@ -48,6 +48,7 @@ sourceSets {
     main {
         java {
             srcDir config.source_dir + "LatCoreMC/src/main/java"
+			srcDir config.source_dir + "LatCoreMC/src/main/api"
         }
         resources {
             srcDir config.source_dir + "LatCoreMC/src/main/resources"

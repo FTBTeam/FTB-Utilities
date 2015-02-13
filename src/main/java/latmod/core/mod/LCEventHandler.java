@@ -2,14 +2,13 @@ package latmod.core.mod;
 import java.io.*;
 
 import latmod.core.*;
-import latmod.core.event.*;
+import latmod.core.event.LMPlayerEvent;
 import latmod.core.net.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
-import cpw.mods.fml.common.eventhandler.*;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 
 public class LCEventHandler
@@ -155,7 +154,6 @@ public class LCEventHandler
 					String id = LatCore.fillString("" + p.playerID, ' ', 6);
 					String u = LatCore.fillString(p.username, ' ', 21);
 					String s = "" + p.uuid;
-					if(p.hasCustomName()) s += " (" + p.getDisplayName() + ")";
 					
 					l.add(id + u + s);
 				}
@@ -174,14 +172,6 @@ public class LCEventHandler
 	{
 		if(ep != null) MessageLM.NET.sendTo(new MessageUpdateLMData(), ep);
 		else MessageLM.NET.sendToAll(new MessageUpdateLMData());
-	}
-	
-	@SubscribeEvent(priority = EventPriority.LOW)
-	public void playerName(PlayerEvent.NameFormat e)
-	{
-		LMPlayer p = LMPlayer.getPlayer(e.entityPlayer);
-		if(p != null && p.hasCustomName())
-			e.displayname = p.getDisplayName();
 	}
 	
 	@SubscribeEvent

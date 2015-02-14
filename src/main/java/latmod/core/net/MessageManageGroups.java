@@ -1,8 +1,8 @@
 package latmod.core.net;
-import static net.minecraft.util.EnumChatFormatting.*;
+import static net.minecraft.util.EnumChatFormatting.AQUA;
 import latmod.core.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.*;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.simpleimpl.*;

@@ -1,5 +1,5 @@
 package latmod.core.net;
-import latmod.core.mod.*;
+import latmod.core.mod.LMDataLoader;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.simpleimpl.*;
 

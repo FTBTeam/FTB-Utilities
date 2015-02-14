@@ -29,6 +29,21 @@ public class LMPlayer implements Comparable<LMPlayer>
 			name = s;
 			members = new FastList<LMPlayer>();
 		}
+		
+		public boolean equals(Object o)
+		{
+			if(o == null) return false;
+			if(o == this) return true;
+			if(o instanceof Group) return equals(o.toString());
+			if(o instanceof String) return o.equals(name);
+			return false;
+		}
+		
+		public String toString()
+		{ return name; }
+		
+		public int hashCode()
+		{ return toString().hashCode(); }
 	}
 	
 	public final int playerID;
@@ -240,4 +255,23 @@ public class LMPlayer implements Comparable<LMPlayer>
 		
 		return allOn.toArray(new String[0]);
 	}
+
+	public FastList<Group> getGroupsFor(Object o)
+	{
+		FastList<Group> l = new FastList<Group>();
+		
+		if(o == null || o instanceof FakePlayer) return l;
+		
+		for(int i = 0; i < groups.values.size(); i++)
+		{
+			Group g = groups.values.get(i);
+			if(g.members.contains(o))
+				l.add(g);
+		}
+		
+		return l;
+	}
+	
+	public boolean isPlayerInGroup(String g, Object o)
+	{ FastList<Group> l = getGroupsFor(o); return l.contains(g); }
 }

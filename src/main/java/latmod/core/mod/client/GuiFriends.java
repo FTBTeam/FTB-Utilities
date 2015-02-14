@@ -7,8 +7,14 @@ import latmod.core.gui.*;
 import latmod.core.mod.LC;
 import latmod.core.net.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
+
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.*;
 
@@ -35,10 +41,11 @@ public class GuiFriends extends GuiLM
 	public final FastList<Player> players = new FastList<Player>();
 	public boolean changed = false;
 	
-	public LMPlayer playerActionsOpen = null;
-	public boolean hasViewOpen = false;
-	public ButtonLM buttonAdd, buttonGroup, buttonClose;
-	public ButtonLM buttonView, buttonTrade, buttonMail;
+	private static LMPlayer selectedPlayer = null;
+	private static boolean hasViewOpen = false;
+	private static float viewPos = 0F;
+	
+	public ButtonLM buttonAdd, buttonGroup, buttonClose, buttonView;
 	public ButtonLM buttonViewLeft, buttonViewRight, buttonViewClose;
 	
 	public GuiFriends(EntityPlayer ep)
@@ -97,25 +104,25 @@ public class GuiFriends extends GuiLM
 		
 		// Action gui buttons //
 		
-		widgets.add(buttonAdd = new ButtonLM(this, -58, 20, 16, 16)
+		widgets.add(buttonAdd = new ButtonLM(this, -39, 20, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
 				playClickSound();
 				
-				if(owner.isFriendRaw(playerActionsOpen))
-					sendUpdate(MessageManageGroups.C_REM_FRIEND, playerActionsOpen.playerID, null);
+				if(owner.isFriendRaw(selectedPlayer))
+					sendUpdate(MessageManageGroups.C_REM_FRIEND, selectedPlayer.playerID, null);
 				else
-					sendUpdate(MessageManageGroups.C_ADD_FRIEND, playerActionsOpen.playerID, null);
+					sendUpdate(MessageManageGroups.C_ADD_FRIEND, selectedPlayer.playerID, null);
 				
 				refreshActionButtons();
 			}
 			
 			public boolean isEnabled()
-			{ return playerActionsOpen != null && !playerActionsOpen.equals(owner); }
+			{ return selectedPlayer != null && !selectedPlayer.equals(owner); }
 		});
 		
-		widgets.add(buttonGroup = new ButtonLM(this, -39, 20, 16, 16)
+		widgets.add(buttonGroup = new ButtonLM(this, -20, 39, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
@@ -123,7 +130,7 @@ public class GuiFriends extends GuiLM
 			}
 			
 			public boolean isEnabled()
-			{ return playerActionsOpen != null && !playerActionsOpen.equals(owner); }
+			{ return selectedPlayer != null && !selectedPlayer.equals(owner); }
 		});
 		
 		widgets.add(buttonClose = new ButtonLM(this, -20, 20, 16, 16)
@@ -131,16 +138,16 @@ public class GuiFriends extends GuiLM
 			public void onButtonPressed(int b)
 			{
 				playClickSound();
-				playerActionsOpen = null;
+				selectedPlayer = null;
 			}
 			
 			public boolean isEnabled()
-			{ return playerActionsOpen != null; }
+			{ return selectedPlayer != null; }
 		});
 		
 		buttonClose.title = "Close";
 		
-		widgets.add(buttonView = new ButtonLM(this, -58, 39, 16, 16)
+		widgets.add(buttonView = new ButtonLM(this, -39, 39, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
@@ -150,29 +157,7 @@ public class GuiFriends extends GuiLM
 			}
 			
 			public boolean isEnabled()
-			{ return playerActionsOpen != null; }
-		});
-		
-		widgets.add(buttonTrade = new ButtonLM(this, -39, 39, 16, 16)
-		{
-			public void onButtonPressed(int b)
-			{
-				playClickSound();
-			}
-			
-			public boolean isEnabled()
-			{ return playerActionsOpen != null && !playerActionsOpen.equals(owner); }
-		});
-		
-		widgets.add(buttonMail = new ButtonLM(this, -20, 39, 16, 16)
-		{
-			public void onButtonPressed(int b)
-			{
-				playClickSound();
-			}
-			
-			public boolean isEnabled()
-			{ return playerActionsOpen != null && !playerActionsOpen.equals(owner); }
+			{ return selectedPlayer != null; }
 		});
 		
 		refreshActionButtons();
@@ -192,20 +177,18 @@ public class GuiFriends extends GuiLM
 	
 	public void refreshActionButtons()
 	{
-		if(playerActionsOpen == null) return;
+		if(selectedPlayer == null) return;
 		
-		if(owner.equals(playerActionsOpen))
+		if(owner.equals(selectedPlayer))
 		{
 			buttonAdd.title = null;
 			buttonGroup.title = null;
 		}
 		else
 		{
-			buttonAdd.title = owner.isFriendRaw(playerActionsOpen) ? "Remove from friends" : "Add as friend";
+			buttonAdd.title = owner.isFriendRaw(selectedPlayer) ? "Remove from friends" : "Add as friend";
 			buttonGroup.title = "[WIP] Edit Groups";
 			buttonView.title = "View player";
-			buttonTrade.title = "[WIP] Trade";
-			buttonMail.title = "[WIP] Mail";
 		}
 	}
 	
@@ -220,37 +203,95 @@ public class GuiFriends extends GuiLM
 	
 	public void drawGuiContainerBackgroundLayer(float f, int mx, int my)
 	{
+		if(selectedPlayer != null)
+		{
+			if(hasViewOpen)
+			{
+				if(viewPos > 0) viewPos -= 1.33F;
+				if(viewPos < 0) viewPos = 0;
+			}
+			else
+			{
+				if(viewPos < 65) viewPos += 1.33F;
+				if(viewPos > 65) viewPos = 65;
+			}
+			
+			if(viewPos > 0)
+			{
+				setTexture(texView);
+				drawTexturedModalRect(guiLeft - (int)viewPos, guiTop + 63, 0, 0, 65, 101);
+			}
+		}
+		
+		if(selectedPlayer != null && viewPos > 60)
+		{
+			int x = guiLeft - 31 + (int)(65F - viewPos);
+			int y = guiTop + 147;
+			
+			AbstractClientPlayer ep = new AbstractClientPlayer(mc.theWorld, new GameProfile(selectedPlayer.uuid, selectedPlayer.username))
+			{
+				public void addChatMessage(IChatComponent p_145747_1_) { }
+				
+				public boolean canCommandSenderUseCommand(int p_70003_1_, String p_70003_2_)
+				{ return false; }
+				
+				public ChunkCoordinates getPlayerCoordinates()
+				{ return new ChunkCoordinates(0, 0, 0); }
+				
+				public boolean isInvisibleToPlayer(EntityPlayer ep)
+				{ return true; }
+			};
+			
+			ep.func_152121_a(MinecraftProfileTexture.Type.SKIN, AbstractClientPlayer.getLocationSkin(selectedPlayer.username));
+			ep.inventory.currentItem = 0;
+			
+			EntityPlayer ep1 = mc.theWorld.func_152378_a(selectedPlayer.uuid);
+			if(ep1 != null)
+			{
+				ep.inventory.mainInventory = ep1.inventory.mainInventory.clone();
+				ep.inventory.armorInventory = ep1.inventory.armorInventory.clone();
+				ep.inventory.mainInventory[0] = ep1.inventory.getCurrentItem();
+			}
+			else
+			{
+				for(int i = 0; i < 4; i++)
+					ep.inventory.armorInventory[i] = selectedPlayer.lastArmor[i];
+				ep.inventory.mainInventory[0] = selectedPlayer.lastArmor[4];
+			}
+			
+			if(isShiftKeyDown())
+			{
+				for(int i = 0; i < 4; i++)
+					ep.inventory.armorInventory[i] = null;
+			}
+			
+			GuiInventory.func_147046_a(x, y, 35, x - mx, y - 50 - my, ep);
+		}
+		
 		super.drawGuiContainerBackgroundLayer(f, mx, my);
 		
 		pbOwner.render();
 		for(int i = 0; i < pbPlayers.length; i++)
 			pbPlayers[i].render();
 		
-		if(playerActionsOpen != null)
+		if(selectedPlayer != null)
 		{
 			setTexture(texActions);
-			drawTexturedModalRect(guiLeft - 65, guiTop + 13, 0, 0, 65, 49);
-			
-			if(hasViewOpen)
-			{
-				setTexture(texView);
-				drawTexturedModalRect(guiLeft - 65, guiTop + 63, 0, 0, 65, 106);
-			}
+			drawTexturedModalRect(guiLeft - 46, guiTop + 13, 0, 0, 65, 49);
 			
 			setTexture(texture);
 			
-			if(owner.equals(playerActionsOpen))
+			if(owner.equals(selectedPlayer))
 				buttonAdd.render(Icons.toggle_on);
 			else
-				buttonAdd.render(owner.isFriendRaw(playerActionsOpen) ? Icons.remove : Icons.add);
+				buttonAdd.render(owner.isFriendRaw(selectedPlayer) ? Icons.Friends.remove : Icons.Friends.add);
 			
 			buttonGroup.render(buttonGroup.isEnabled() ? Icons.Friends.groups : Icons.Friends.groups_gray);
 			buttonView.render(buttonView.isEnabled() ? Icons.Friends.view : Icons.Friends.view_gray);
-			buttonTrade.render(buttonTrade.isEnabled() ? Icons.Friends.trade : Icons.Friends.trade_gray);
-			buttonMail.render(buttonMail.isEnabled() ? Icons.Friends.mail : Icons.Friends.mail_gray);
 			
 			buttonClose.render(Icons.cancel);
 		}
+		else viewPos = 0;
 		
 		buttonSave.render(Icons.accept);
 	}
@@ -260,9 +301,9 @@ public class GuiFriends extends GuiLM
 		searchBox.render(30, 10, 0xFFA7A7A7);
 		drawCenteredString(fontRendererObj, (page + 1) + " / " + maxPages(), guiLeft + 81, guiTop + 163, 0xFF444444);
 		
-		if(playerActionsOpen != null)
+		if(selectedPlayer != null)
 		{
-			String s = playerActionsOpen.getDisplayName();
+			String s = selectedPlayer.getDisplayName();
 			drawString(fontRendererObj, s, guiLeft - fontRendererObj.getStringWidth(s) - 2, guiTop + 3, 0xFFFFFFFF);
 		}
 		
@@ -303,7 +344,7 @@ public class GuiFriends extends GuiLM
 			String s = searchBox.text.trim().toLowerCase();
 			for(int i = 0; i < players.size(); i++)
 			{
-				String s1 = LatCoreMC.removeFormatting(players.get(i).player.getDisplayName().toLowerCase());
+				String s1 = players.get(i).player.getDisplayName().toLowerCase();
 				if(s1.contains(s)) l.add(players.get(i));
 			}
 			
@@ -356,7 +397,7 @@ public class GuiFriends extends GuiLM
 				
 				String u = player.getDisplayName();
 				String u1 = o.player.getDisplayName();
-				return u.compareTo(u1);
+				return u.compareToIgnoreCase(u1);
 			}
 			
 			return Integer.compare(s0, s1);
@@ -398,8 +439,7 @@ public class GuiFriends extends GuiLM
 		public void onButtonPressed(int b)
 		{
 			if(player != null)
-				playerActionsOpen = player.player;
-			else playerActionsOpen = null;
+				selectedPlayer = player.player;
 			
 			refreshActionButtons();
 		}

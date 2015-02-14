@@ -6,6 +6,7 @@ import latmod.core.event.LMPlayerEvent;
 import latmod.core.mod.LC;
 import latmod.core.net.*;
 import net.minecraft.entity.player.*;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
@@ -13,9 +14,9 @@ import cpw.mods.fml.relauncher.Side;
 
 public class LMPlayer implements Comparable<LMPlayer>
 {
-	public static final String ACTION_LOGGED_IN = "LoggedIn";
-	public static final String ACTION_LOGGED_OUT = "LoggedOut";
-	public static final String ACTION_GROUPS_CHANGED = "GroupsChanged";
+	public static final byte ACTION_LOGGED_IN = 1;
+	public static final byte ACTION_LOGGED_OUT = 2;
+	public static final byte ACTION_GROUPS_CHANGED = 3;
 	
 	public static class Group
 	{
@@ -55,6 +56,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public NBTTagCompound customData = new NBTTagCompound();
 	private boolean isOnline;
 	public boolean isOld;
+	public final ItemStack[] lastArmor = new ItemStack[5];
 	
 	public LMPlayer(int i, UUID id, String s)
 	{ playerID = i; uuid = id; username = s; }
@@ -78,23 +80,23 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public void setOnline(boolean b)
 	{ isOnline = b; }
 	
-	public void sendUpdate(String channel, boolean clientUpdate)
+	public void sendUpdate(byte action, boolean clientUpdate)
 	{
 		if(LatCoreMC.isServer())
 		{
-			new LMPlayerEvent.DataChanged(this, Side.SERVER, channel).post();
-			if(clientUpdate) MessageLM.NET.sendToAll(new MessageUpdateLMPlayer(this, channel));
+			new LMPlayerEvent.DataChanged(this, Side.SERVER, action).post();
+			if(clientUpdate) MessageLM.NET.sendToAll(new MessageUpdateLMPlayer(this, action));
 		}
 	}
+	
+	public void sendUpdate(byte action)
+	{ sendUpdate(action, true); }
 	
 	public boolean isFriendRaw(LMPlayer p)
 	{ return p != null && (playerID == p.playerID || friends.contains(p.playerID)); }
 	
 	public boolean isFriend(LMPlayer p)
 	{ return isFriendRaw(p) && p.isFriendRaw(this); }
-	
-	public void sendUpdate(String channel)
-	{ sendUpdate(channel, true); }
 	
 	// NBT reading / writing
 	
@@ -147,6 +149,8 @@ public class LMPlayer implements Comparable<LMPlayer>
 		}
 		
 		isOld = tag.getBoolean("Old");
+		
+		InvUtils.readItemsFromNBT(lastArmor, tag, "LastItems");
 	}
 	
 	public void writeToNBT(NBTTagCompound tag)
@@ -187,10 +191,12 @@ public class LMPlayer implements Comparable<LMPlayer>
 		}
 		
 		tag.setTag("CustomData", customData);
+		
+		InvUtils.writeItemsToNBT(lastArmor, tag, "LastItems");
 	}
 	
 	public int compareTo(LMPlayer o)
-	{ return username.compareTo(o.username); }
+	{ return getDisplayName().compareToIgnoreCase(o.getDisplayName()); }
 	
 	public String toString()
 	{ return username; }
@@ -206,7 +212,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 		else if(o instanceof UUID) return ((UUID)o).equals(uuid);
 		else if(o instanceof EntityPlayer) return ((EntityPlayer)o).getUniqueID().equals(uuid);
 		else if(o instanceof LMPlayer) return playerID == ((LMPlayer)o).playerID;
-		else if(o instanceof String) return o.equals(username) || o.equals(uuid.toString());
+		else if(o instanceof String) return username.equalsIgnoreCase(o.toString()) || o.equals(uuid.toString());
 		else return false;
 	}
 	

@@ -66,13 +66,6 @@ public class MessageManageGroups extends MessageLM implements IMessageHandler<Me
 							changed = true;
 							//LatCoreMC.notifyPlayer(ep, new Notification(RED + "- " + p.getDisplayName(), "Friends", new ItemStack(Blocks.redstone_block), 1500L));
 						}
-						else if(p != null && p.friends.contains(owner))
-						{
-							p.friends.remove(owner);
-							changed = true;
-							p.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED);
-							//LatCoreMC.notifyPlayer(ep, new Notification(RED + "- " + p.getDisplayName(), "Friends", new ItemStack(Blocks.redstone_block), 1500L));
-						}
 					}
 				}
 				else
@@ -81,7 +74,16 @@ public class MessageManageGroups extends MessageLM implements IMessageHandler<Me
 					changed = true;
 				}
 				
-				if(changed) owner.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED);
+				if(changed)
+				{
+					owner.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED);
+					
+					if(user > 0)
+					{
+						LMPlayer p = LMPlayer.getPlayer(user);
+						if(p != null) p.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED);
+					}
+				}
 			}
 		}
 		return null;

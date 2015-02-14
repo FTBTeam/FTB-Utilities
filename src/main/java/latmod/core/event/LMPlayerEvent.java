@@ -14,13 +14,13 @@ public abstract class LMPlayerEvent extends EventLM
 	public static class DataChanged extends LMPlayerEvent
 	{
 		public final Side side;
-		public final String channel;
+		public final int action;
 		
-		public DataChanged(LMPlayer p, Side s, String c)
-		{ super(p); side = s; channel = c; }
+		public DataChanged(LMPlayer p, Side s, byte b)
+		{ super(p); side = s; action = b; }
 		
-		public boolean isChannel(String s)
-		{ return channel != null && channel.equals(s); }
+		public boolean isAction(byte b)
+		{ return action == b; }
 	}
 	
 	public static class DataLoaded extends LMPlayerEvent

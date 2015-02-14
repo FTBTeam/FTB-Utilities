@@ -64,6 +64,11 @@ public class LCEventHandler
 		if(p != null)
 		{
 			p.setOnline(false);
+			
+			for(int i = 0; i < 4; i++)
+				p.lastArmor[i] = e.player.inventory.armorInventory[i];
+			p.lastArmor[4] = e.player.inventory.getCurrentItem();
+			
 			p.sendUpdate(LMPlayer.ACTION_LOGGED_OUT);
 			new LMPlayerEvent.LoggedOut(p, Side.SERVER, e.player).post();
 		}

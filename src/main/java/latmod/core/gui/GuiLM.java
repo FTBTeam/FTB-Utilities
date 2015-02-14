@@ -49,6 +49,8 @@ public abstract class GuiLM extends GuiContainer
 		{
 			public static IIcon
 			online,
+			add,
+			remove,
 			groups,
 			groups_gray,
 			mail,
@@ -61,6 +63,8 @@ public abstract class GuiLM extends GuiContainer
 			public static void load(LoadLMIconsEvent e)
 			{
 				online = e.load("friends/online");
+				add = e.load("friends/add");
+				remove = e.load("friends/remove");
 				groups = e.load("friends/groups");
 				groups_gray = e.load("friends/groups_gray");
 				mail = e.load("friends/mail");

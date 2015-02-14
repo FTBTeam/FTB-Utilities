@@ -13,7 +13,7 @@ public class MessageUpdateLMPlayer extends MessageLM implements IMessageHandler<
 {
 	public MessageUpdateLMPlayer() { }
 	
-	public MessageUpdateLMPlayer(LMPlayer p, String channel)
+	public MessageUpdateLMPlayer(LMPlayer p, byte action)
 	{
 		data = new NBTTagCompound();
 		data.setInteger("ID", p.playerID);
@@ -22,7 +22,7 @@ public class MessageUpdateLMPlayer extends MessageLM implements IMessageHandler<
 		NBTTagCompound data1 = new NBTTagCompound();
 		p.writeToNBT(data1);
 		data.setTag("D", data1);
-		if(channel != null) data.setString("C", channel);
+		if(action > 0) data.setByte("A", action);
 	}
 	
 	public IMessage onMessage(MessageUpdateLMPlayer m, MessageContext ctx)
@@ -43,13 +43,13 @@ public class MessageUpdateLMPlayer extends MessageLM implements IMessageHandler<
 		}
 		
 		p.readFromNBT(m.data.getCompoundTag("D"));
-		String c = m.data.getString("C");
+		byte c = m.data.getByte("A");
 		new LMPlayerEvent.DataChanged(p, Side.CLIENT, c).post();
 		
-		if(c.equals(LMPlayer.ACTION_LOGGED_IN))
+		if(c == LMPlayer.ACTION_LOGGED_IN)
 			new LMPlayerEvent.LoggedIn(p, Side.CLIENT, ep, !p.isOld).post();
 		
-		if(c.equals(LMPlayer.ACTION_LOGGED_OUT))
+		if(c == LMPlayer.ACTION_LOGGED_OUT)
 			new LMPlayerEvent.LoggedOut(p, Side.CLIENT, ep).post();
 		
 		return null;

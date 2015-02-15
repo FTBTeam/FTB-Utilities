@@ -48,31 +48,31 @@ public abstract class GuiLM extends GuiContainer
 		public static class Friends
 		{
 			public static IIcon
-			online,
 			add,
 			remove,
 			groups,
-			groups_gray,
-			mail,
-			mail_gray,
-			trade,
-			trade_gray,
+			//groups_gray,
+			//mail,
+			//mail_gray,
+			//trade,
+			//trade_gray,
 			view,
-			view_gray;
+			//view_gray,
+			online;
 			
 			public static void load(LoadLMIconsEvent e)
 			{
-				online = e.load("friends/online");
 				add = e.load("friends/add");
 				remove = e.load("friends/remove");
 				groups = e.load("friends/groups");
-				groups_gray = e.load("friends/groups_gray");
-				mail = e.load("friends/mail");
-				mail_gray = e.load("friends/mail_gray");
-				trade = e.load("friends/trade");
-				trade_gray = e.load("friends/trade_gray");
+				//groups_gray = e.load("friends/groups_gray");
+				//mail = e.load("friends/mail");
+				//mail_gray = e.load("friends/mail_gray");
+				//trade = e.load("friends/trade");
+				//trade_gray = e.load("friends/trade_gray");
 				view = e.load("friends/view");
-				view_gray = e.load("friends/view_gray");
+				//view_gray = e.load("friends/view_gray");
+				online = e.load("friends/online");
 			}
 		}
 		

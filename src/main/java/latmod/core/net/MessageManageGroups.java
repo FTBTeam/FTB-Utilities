@@ -13,8 +13,9 @@ public class MessageManageGroups extends MessageLM implements IMessageHandler<Me
 	public static final int C_REM_FRIEND = 2;
 	public static final int C_ADD_GROUP = 3;
 	public static final int C_REM_GROUP = 4;
-	public static final int C_ADD_TO_GROUP = 5;
-	public static final int C_REM_FROM_GROUP = 6;
+	public static final int C_REN_GROUP = 5;
+	public static final int C_ADD_TO_GROUP = 6;
+	public static final int C_REM_FROM_GROUP = 7;
 	
 	public MessageManageGroups() { }
 	
@@ -39,7 +40,7 @@ public class MessageManageGroups extends MessageLM implements IMessageHandler<Me
 			{
 				int code = m.data.getByte("C");
 				int user = m.data.getInteger("U");
-				//String group = m.data.getString("G");
+				String group = m.data.getString("G");
 				
 				boolean changed = false;
 				
@@ -53,7 +54,6 @@ public class MessageManageGroups extends MessageLM implements IMessageHandler<Me
 						{
 							owner.friends.add(p);
 							changed = true;
-							//LatCoreMC.notifyPlayer(ep, new Notification(GREEN + "+ " + p.getDisplayName(), "Friends", new ItemStack(Blocks.emerald_block), 1500L));
 						}
 					}
 					else if(code == C_REM_FRIEND)
@@ -64,7 +64,65 @@ public class MessageManageGroups extends MessageLM implements IMessageHandler<Me
 						{
 							owner.friends.remove(p);
 							changed = true;
-							//LatCoreMC.notifyPlayer(ep, new Notification(RED + "- " + p.getDisplayName(), "Friends", new ItemStack(Blocks.redstone_block), 1500L));
+						}
+					}
+					else if(code == C_ADD_GROUP)
+					{
+						if(!group.isEmpty() && owner.groups.size() < 8 && !owner.groups.keys.contains(group))
+						{
+							LMPlayer.Group g = new LMPlayer.Group(owner, group);
+							owner.groups.put(g.name, g);
+							changed = true;
+						}
+					}
+					else if(code == C_REM_GROUP)
+					{
+						if(!group.isEmpty() && owner.groups.size() > 0 && owner.groups.keys.contains(group))
+						{
+							owner.groups.remove(group);
+							changed = true;
+						}
+					}
+					else if(code == C_REN_GROUP)
+					{
+						if(!group.isEmpty() && owner.groups.size() > 0)
+						{
+							String[] s = group.split("=", 2);
+							
+							if(s != null && s.length == 2 && owner.groups.keys.contains(s[0]))
+							{
+								LMPlayer.Group g = owner.groups.get(s[0]).copy(s[1]);
+								owner.groups.put(g.name, g);
+								changed = true;
+							}
+						}
+					}
+					else if(code == C_ADD_TO_GROUP)
+					{
+						LMPlayer p = LMPlayer.getPlayer(user);
+						
+						if(p != null && owner.groups.size() > 0 && owner.groups.keys.contains(group))
+						{
+							LMPlayer.Group g = owner.groups.get(group);
+							
+							if(!g.members.contains(p))
+								g.members.add(p);
+							
+							changed = true;
+						}
+					}
+					else if(code == C_REM_FROM_GROUP)
+					{
+						LMPlayer p = LMPlayer.getPlayer(user);
+						
+						if(p != null && owner.groups.size() > 0 && owner.groups.keys.contains(group))
+						{
+							LMPlayer.Group g = owner.groups.get(group);
+							
+							if(g.members.contains(p))
+								g.members.remove(p);
+							
+							changed = true;
 						}
 					}
 				}

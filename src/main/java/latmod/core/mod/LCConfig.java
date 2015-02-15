@@ -3,6 +3,7 @@ package latmod.core.mod;
 import latmod.core.*;
 import net.minecraft.init.*;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.config.Property;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 public class LCConfig extends LMConfig
@@ -29,14 +30,16 @@ public class LCConfig extends LMConfig
 		public static boolean checkUpdates;
 		public static boolean disableLatCoreCommand;
 		public static boolean disableCommandOverrides;
-		public static boolean enableFriendsGui;
+		public static boolean friendsGuiEnabled;
+		public static boolean friendsGuiArmor;
 		
 		public static void load(Category c)
 		{
 			checkUpdates = c.getBool("checkUpdates", true);
 			disableLatCoreCommand = c.getBool("disableLatCoreCommand", false);
 			disableCommandOverrides = c.getBool("disableCommandOverrides", false);
-			enableFriendsGui = c.getBool("enableFriendsGui", true);
+			friendsGuiEnabled = c.getBool("friendsGuiEnabled", true);
+			friendsGuiArmor = c.getBool("friendsGuiArmor", true);
 		}
 	}
 	
@@ -46,23 +49,28 @@ public class LCConfig extends LMConfig
 		public static boolean rotateBlocks;
 		public static boolean renderHighlights;
 		public static boolean addAllColorItems;
-		
-		public static boolean onlyAdvanced;
 		public static boolean addOreNames;
 		public static boolean addRegistryNames;
-		public static boolean addFluidContainerNames;
 		
 		public static void load(Category c)
 		{
-			enablePlayerDecorators = c.getBool("enablePlayerDecorators", true);
-			rotateBlocks = c.getBool("rotateBlocks", true);
-			renderHighlights = c.getBool("renderHighlights", true);
-			addAllColorItems = c.getBool("addAllColorItems", true);
+			FastList<String> p = new FastList<String>();
 			
-			onlyAdvanced = c.getBool("onlyAdvanced", false);
-			addOreNames = c.getBool("addOreNames", false);
-			addRegistryNames = c.getBool("addRegistryNames", false);
-			addFluidContainerNames = c.getBool("addFluidContainerNames", false);
+			enablePlayerDecorators = c.getBool("enablePlayerDecorators", true); p.add("enablePlayerDecorators");
+			rotateBlocks = c.getBool("rotateBlocks", true); p.add("rotateBlocks");
+			renderHighlights = c.getBool("renderHighlights", true); p.add("renderHighlights");
+			addAllColorItems = c.getBool("addAllColorItems", true); p.add("addAllColorItems");
+			addOreNames = c.getBool("addOreNames", false); p.add("addOreNames");
+			addRegistryNames = c.getBool("addRegistryNames", false); p.add("addRegistryNames");
+			
+			FastList<Property> l = new FastList<Property>();
+			l.addAll(c.getCategory().values());
+			
+			for(int i = 0; i < l.size(); i++)
+			{
+				String p1 = l.get(i).getName();
+				if(!p.contains(p1)) c.getCategory().remove(p1);
+			}
 		}
 	}
 	

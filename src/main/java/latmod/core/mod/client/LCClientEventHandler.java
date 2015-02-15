@@ -15,7 +15,6 @@ import net.minecraft.item.*;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.fluids.*;
 import cpw.mods.fml.common.eventhandler.*;
 import cpw.mods.fml.common.gameevent.*;
 import cpw.mods.fml.relauncher.*;
@@ -43,34 +42,20 @@ public class LCClientEventHandler
 			if(paint != null) e.toolTip.add(EnumChatFormatting.WHITE + "" + EnumChatFormatting.BOLD + paint.getDisplayName());
 		}
 		
-		if(e.showAdvancedItemTooltips || !LCConfig.Client.onlyAdvanced)
+		if(LCConfig.Client.addRegistryNames)
 		{
-			if(LCConfig.Client.addRegistryNames)
-			{
-				e.toolTip.add(LatCoreMC.getRegName(e.itemStack));
-			}
+			e.toolTip.add(LatCoreMC.getRegName(e.itemStack));
+		}
+		
+		if(LCConfig.Client.addOreNames)
+		{
+			FastList<String> ores = ODItems.getOreNames(e.itemStack);
 			
-			if(LCConfig.Client.addOreNames)
+			if(ores != null && !ores.isEmpty())
 			{
-				FastList<String> ores = ODItems.getOreNames(e.itemStack);
-				
-				if(ores != null && !ores.isEmpty())
-				{
-					e.toolTip.add("Ore Dictionary names:");
-					for(String or : ores)
-					e.toolTip.add("> " + or);
-				}
-			}
-			
-			if(LCConfig.Client.addFluidContainerNames)
-			{
-				FluidStack fs = LatCoreMC.getFluid(e.itemStack);
-				
-				if(fs != null && fs.amount > 0)
-				{
-					e.toolTip.add("Stored FluidID:");
-					e.toolTip.add(FluidRegistry.getFluidName(fs.fluidID));
-				}
+				e.toolTip.add("Ore Dictionary names:");
+				for(String or : ores)
+				e.toolTip.add("> " + or);
 			}
 		}
 	}

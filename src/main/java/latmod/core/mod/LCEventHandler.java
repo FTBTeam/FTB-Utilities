@@ -65,9 +65,17 @@ public class LCEventHandler
 		{
 			p.setOnline(false);
 			
-			for(int i = 0; i < 4; i++)
-				p.lastArmor[i] = e.player.inventory.armorInventory[i];
-			p.lastArmor[4] = e.player.inventory.getCurrentItem();
+			if(LCConfig.General.friendsGuiArmor)
+			{
+				for(int i = 0; i < 4; i++)
+					p.lastArmor[i] = e.player.inventory.armorInventory[i];
+				p.lastArmor[4] = e.player.inventory.getCurrentItem();
+			}
+			else
+			{
+				for(int i = 0; i < p.lastArmor.length; i++)
+					p.lastArmor[i] = null;
+			}
 			
 			p.sendUpdate(LMPlayer.ACTION_LOGGED_OUT);
 			new LMPlayerEvent.LoggedOut(p, Side.SERVER, e.player).post();

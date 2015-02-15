@@ -7,7 +7,7 @@ public class MessageLMKeyPressed extends MessageLM implements IMessageHandler<Me
 {
 	public IMessage onMessage(MessageLMKeyPressed m, MessageContext ctx)
 	{
-		if(LCConfig.General.enableFriendsGui)
+		if(LCConfig.General.friendsGuiEnabled)
 			MessageLM.NET.sendTo(new MessageCustomServerAction(LCEventHandler.ACTION_OPEN_FRIENDS_GUI, null), ctx.getServerHandler().playerEntity);
 		else
 			LatCoreMC.printChat(ctx.getServerHandler().playerEntity, "FriendsGUI is disabled!");

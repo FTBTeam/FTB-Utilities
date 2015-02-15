@@ -7,7 +7,7 @@ import latmod.core.gui.*;
 import latmod.core.mod.LC;
 import latmod.core.net.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.entity.*;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.*;
@@ -42,11 +42,11 @@ public class GuiFriends extends GuiLM
 	public boolean changed = false;
 	
 	private static LMPlayer selectedPlayer = null;
-	private static boolean hasViewOpen = false;
+	private static boolean viewOpen = false;
 	private static float viewPos = 0F;
+	private static AbstractClientPlayer selectedPlayerEntity = null;
 	
 	public ButtonLM buttonAdd, buttonGroup, buttonClose, buttonView;
-	public ButtonLM buttonViewLeft, buttonViewRight, buttonViewClose;
 	
 	public GuiFriends(EntityPlayer ep)
 	{
@@ -137,7 +137,7 @@ public class GuiFriends extends GuiLM
 			}
 			
 			public boolean isEnabled()
-			{ return selectedPlayer != null && !selectedPlayer.equals(owner); }
+			{ return selectedPlayer != null; }
 		});
 		
 		widgets.add(buttonClose = new ButtonLM(this, -20, 20, 16, 16)
@@ -152,14 +152,12 @@ public class GuiFriends extends GuiLM
 			{ return selectedPlayer != null; }
 		});
 		
-		buttonClose.title = "Close";
-		
 		widgets.add(buttonView = new ButtonLM(this, -39, 39, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
 				playClickSound();
-				hasViewOpen = !hasViewOpen;
+				viewOpen = !viewOpen;
 				refreshActionButtons();
 			}
 			
@@ -187,16 +185,13 @@ public class GuiFriends extends GuiLM
 		if(selectedPlayer == null) return;
 		
 		if(owner.equals(selectedPlayer))
-		{
 			buttonAdd.title = LC.mod.translate("button.settings");
-			buttonGroup.title = null;
-		}
 		else
-		{
 			buttonAdd.title = owner.isFriendRaw(selectedPlayer) ? "Remove from friends" : "Add as friend";
-			buttonGroup.title = "[WIP] Edit Groups";
-			buttonView.title = "View player";
-		}
+		
+		buttonClose.title = "Close";
+		buttonView.title = "View player";
+		buttonGroup.title = "[WIP] Edit Groups";
 	}
 	
 	public void sendUpdate(int c, int u, String g)
@@ -212,7 +207,7 @@ public class GuiFriends extends GuiLM
 	{
 		if(selectedPlayer != null)
 		{
-			if(hasViewOpen)
+			if(viewOpen)
 			{
 				if(viewPos > 0) viewPos -= 1.33F;
 				if(viewPos < 0) viewPos = 0;
@@ -230,49 +225,34 @@ public class GuiFriends extends GuiLM
 			}
 		}
 		
-		if(selectedPlayer != null && viewPos > 60)
+		if(selectedPlayer != null && viewPos > 60 && selectedPlayerEntity != null)
 		{
 			int x = guiLeft - 31 + (int)(65F - viewPos);
 			int y = guiTop + 147;
 			
-			AbstractClientPlayer ep = new AbstractClientPlayer(mc.theWorld, new GameProfile(selectedPlayer.uuid, selectedPlayer.username))
-			{
-				public void addChatMessage(IChatComponent p_145747_1_) { }
-				
-				public boolean canCommandSenderUseCommand(int p_70003_1_, String p_70003_2_)
-				{ return false; }
-				
-				public ChunkCoordinates getPlayerCoordinates()
-				{ return new ChunkCoordinates(0, 0, 0); }
-				
-				public boolean isInvisibleToPlayer(EntityPlayer ep)
-				{ return true; }
-			};
-			
-			ep.func_152121_a(MinecraftProfileTexture.Type.SKIN, AbstractClientPlayer.getLocationSkin(selectedPlayer.username));
-			ep.inventory.currentItem = 0;
-			
-			EntityPlayer ep1 = mc.theWorld.func_152378_a(selectedPlayer.uuid);
-			if(ep1 != null)
-			{
-				ep.inventory.mainInventory = ep1.inventory.mainInventory.clone();
-				ep.inventory.armorInventory = ep1.inventory.armorInventory.clone();
-				ep.inventory.mainInventory[0] = ep1.inventory.getCurrentItem();
-			}
-			else
-			{
-				for(int i = 0; i < 4; i++)
-					ep.inventory.armorInventory[i] = selectedPlayer.lastArmor[i];
-				ep.inventory.mainInventory[0] = selectedPlayer.lastArmor[4];
-			}
-			
 			if(isShiftKeyDown())
 			{
 				for(int i = 0; i < 4; i++)
-					ep.inventory.armorInventory[i] = null;
+					selectedPlayerEntity.inventory.armorInventory[i] = null;
+			}
+			else
+			{
+				EntityPlayer ep1 = mc.theWorld.func_152378_a(selectedPlayer.uuid);
+				if(ep1 != null)
+				{
+					selectedPlayerEntity.inventory.mainInventory = ep1.inventory.mainInventory.clone();
+					selectedPlayerEntity.inventory.armorInventory = ep1.inventory.armorInventory.clone();
+					selectedPlayerEntity.inventory.mainInventory[0] = ep1.inventory.getCurrentItem();
+				}
+				else
+				{
+					for(int i = 0; i < 4; i++)
+						selectedPlayerEntity.inventory.armorInventory[i] = selectedPlayer.lastArmor[i];
+					selectedPlayerEntity.inventory.mainInventory[0] = selectedPlayer.lastArmor[4];
+				}
 			}
 			
-			GuiInventory.func_147046_a(x, y, 35, x - mx, y - 50 - my, ep);
+			GuiInventory.func_147046_a(x, y, 35, x - mx, y - 50 - my, selectedPlayerEntity);
 		}
 		
 		super.drawGuiContainerBackgroundLayer(f, mx, my);
@@ -293,9 +273,8 @@ public class GuiFriends extends GuiLM
 			else
 				buttonAdd.render(owner.isFriendRaw(selectedPlayer) ? Icons.Friends.remove : Icons.Friends.add);
 			
-			buttonGroup.render(buttonGroup.isEnabled() ? Icons.Friends.groups : Icons.Friends.groups_gray);
-			buttonView.render(buttonView.isEnabled() ? Icons.Friends.view : Icons.Friends.view_gray);
-			
+			buttonGroup.render(Icons.Friends.groups);
+			buttonView.render(Icons.Friends.view);
 			buttonClose.render(Icons.cancel);
 		}
 		else viewPos = 0;
@@ -446,7 +425,26 @@ public class GuiFriends extends GuiLM
 		public void onButtonPressed(int b)
 		{
 			if(player != null)
+			{
 				selectedPlayer = player.player;
+				
+				selectedPlayerEntity = new AbstractClientPlayer(mc.theWorld, new GameProfile(selectedPlayer.uuid, selectedPlayer.username))
+				{
+					public void addChatMessage(IChatComponent p_145747_1_) { }
+					
+					public boolean canCommandSenderUseCommand(int p_70003_1_, String p_70003_2_)
+					{ return false; }
+					
+					public ChunkCoordinates getPlayerCoordinates()
+					{ return new ChunkCoordinates(0, 0, 0); }
+					
+					public boolean isInvisibleToPlayer(EntityPlayer ep)
+					{ return true; }
+				};
+				
+				selectedPlayerEntity.func_152121_a(MinecraftProfileTexture.Type.SKIN, AbstractClientPlayer.getLocationSkin(selectedPlayer.username));
+				selectedPlayerEntity.inventory.currentItem = 0;
+			}
 			
 			refreshActionButtons();
 		}

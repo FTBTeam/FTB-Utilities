@@ -24,6 +24,7 @@ public class ChiselHelper
 	public static class Group implements ICarvingGroup
 	{
 		public final Block block;
+		public String name = "Unnamed";
 		public String sound = null;
 		public String oreName = null;
 		public final FastList<ICarvingVariation> variations = new FastList<ICarvingVariation>();
@@ -38,7 +39,7 @@ public class ChiselHelper
 		{ addVariation(b, meta, meta); }
 		
 		public String getName()
-		{ return "Glowium Blocks"; }
+		{ return name; }
 		
 		public String getSound()
 		{ return sound; }

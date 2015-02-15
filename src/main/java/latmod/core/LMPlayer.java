@@ -45,6 +45,10 @@ public class LMPlayer implements Comparable<LMPlayer>
 		
 		public int hashCode()
 		{ return toString().hashCode(); }
+		
+		public Group copy(String newName)
+		{ Group g = new Group(owner, newName);
+		g.members.addAll(members); return g; }
 	}
 	
 	public final int playerID;

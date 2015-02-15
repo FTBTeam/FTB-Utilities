@@ -5,7 +5,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.item.Item;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
@@ -38,6 +40,9 @@ public class BlockRendererLM implements ISimpleBlockRenderingHandler
 	
 	public final void register()
 	{ LatCoreMCClient.addBlockRenderer(renderID, this); }
+	
+	public final void registerItemRenderer(Block b)
+	{ if(this instanceof IItemRenderer) LatCoreMCClient.addItemRenderer(Item.getItemFromBlock(b), (IItemRenderer)this); }
 	
 	public static void rotateBlocks()
 	{

@@ -30,7 +30,7 @@ public class LCClient extends LCCommon
 		super.preInit(e);
 		LatCoreMC.addEventHandler(LCClientEventHandler.instance, true, true, true);
 		ThreadCheckPlayerDecorators.init();
-		key = LatCoreMCClient.addKeyBinding("key.latcoremc", Keyboard.KEY_P, "key.categories.gameplay");
+		key = LatCoreMCClient.addKeyBinding("key.latcoremc", Keyboard.KEY_GRAVE, "key.categories.gameplay");
 	}
 	
 	public void postInit(FMLPostInitializationEvent e)

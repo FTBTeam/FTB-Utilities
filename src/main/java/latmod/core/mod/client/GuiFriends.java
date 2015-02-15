@@ -110,16 +110,23 @@ public class GuiFriends extends GuiLM
 			{
 				playClickSound();
 				
-				if(owner.isFriendRaw(selectedPlayer))
-					sendUpdate(MessageManageGroups.C_REM_FRIEND, selectedPlayer.playerID, null);
+				if(selectedPlayer.equals(owner))
+				{
+					mc.displayGuiScreen(new LCGuiFactory.ModGuiConfig(GuiFriends.this));
+				}
 				else
-					sendUpdate(MessageManageGroups.C_ADD_FRIEND, selectedPlayer.playerID, null);
+				{
+					if(owner.isFriendRaw(selectedPlayer))
+						sendUpdate(MessageManageGroups.C_REM_FRIEND, selectedPlayer.playerID, null);
+					else
+						sendUpdate(MessageManageGroups.C_ADD_FRIEND, selectedPlayer.playerID, null);
+				}
 				
 				refreshActionButtons();
 			}
 			
 			public boolean isEnabled()
-			{ return selectedPlayer != null && !selectedPlayer.equals(owner); }
+			{ return selectedPlayer != null; }
 		});
 		
 		widgets.add(buttonGroup = new ButtonLM(this, -20, 39, 16, 16)
@@ -181,7 +188,7 @@ public class GuiFriends extends GuiLM
 		
 		if(owner.equals(selectedPlayer))
 		{
-			buttonAdd.title = null;
+			buttonAdd.title = LC.mod.translate("button.settings");
 			buttonGroup.title = null;
 		}
 		else
@@ -282,7 +289,7 @@ public class GuiFriends extends GuiLM
 			setTexture(texture);
 			
 			if(owner.equals(selectedPlayer))
-				buttonAdd.render(Icons.toggle_on);
+				buttonAdd.render(Icons.settings);
 			else
 				buttonAdd.render(owner.isFriendRaw(selectedPlayer) ? Icons.Friends.remove : Icons.Friends.add);
 			

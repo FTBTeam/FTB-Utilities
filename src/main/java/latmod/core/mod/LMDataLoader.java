@@ -3,7 +3,6 @@ package latmod.core.mod;
 import java.util.UUID;
 
 import latmod.core.*;
-import latmod.core.LMPlayer.Group;
 import latmod.core.event.*;
 import net.minecraft.nbt.*;
 
@@ -122,30 +121,12 @@ public class LMDataLoader
 			{
 				NBTTagCompound tag1 = tag.getCompoundTag("Groups");
 				
-				FastMap<String, NBTTagList> lists = NBTHelper.toFastMapWithType(tag1);
-				
-				NBTTagList fl = lists.get("Friends");
+				NBTTagList fl = (NBTTagList)tag1.getTag("Friends");
 				
 				if(fl != null) for(int j = 0; j < fl.tagCount(); j++)
 				{
 					LMPlayer p = LMPlayer.getPlayer(fl.getStringTagAt(j));
 					if(p != null) player.friends.add(p);
-				}
-				
-				lists.remove("Friends");
-				
-				for(int i = 0; i < lists.size(); i++)
-				{
-					Group g = new Group(player, lists.keys.get(i));
-					NBTTagList l = lists.get(i);
-					
-					for(int j = 0; j < l.tagCount(); j++)
-					{
-						LMPlayer p = LMPlayer.getPlayer(l.getStringTagAt(j));
-						if(p != null) g.members.add(p);
-					}
-					
-					player.groups.put(g.name, g);
 				}
 			}
 			

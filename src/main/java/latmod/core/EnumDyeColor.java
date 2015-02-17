@@ -8,22 +8,22 @@ import net.minecraft.util.StatCollector;
 
 public enum EnumDyeColor // ItemDye
 {
-	BLACK("Black", 0xFF262626),
-	RED("Red", 0xFFE01414),
-	GREEN("Green", 0xFF00980E),
-	BROWN("Brown", 0xFF934E23),
+	BLACK("Black", 0xFF3F3F3F),
+	RED("Red", 0xFFFF0000),
+	GREEN("Green", 0xFF009B0E),
+	BROWN("Brown", 0xFFA35C2D),
 	BLUE("Blue", 0xFF004CC4),
 	PURPLE("Purple", 0xFF9A41E2),
-	CYAN("Cyan", 0xFF00AEFF),
-	LIGHT_GRAY("LightGray", 0xFFC0C0C0),
+	CYAN("Cyan", 0xFF00D8C6),
+	LIGHT_GRAY("LightGray", 0xFFBCBCBC),
 	GRAY("Gray", 0xFF636363),
-	PINK("Pink", 0xFFFF7F7F),
-	LIME("Lime", 0xFF2BE541),
+	PINK("Pink", 0xFFFF95A3),
+	LIME("Lime", 0xFF00FF2E),
 	YELLOW("Yellow", 0xFFFFD500),
 	LIGHT_BLUE("LightBlue", 0xFF63BEFF),
-	MAGENTA("Magenta", 0xFFFF00DC),
-	ORANGE("Orange", 0xFFFF952B),
-	WHITE("White", 0xFFEFEFEF);
+	MAGENTA("Magenta", 0xFFFF006E),
+	ORANGE("Orange", 0xFFFF9500),
+	WHITE("White", 0xFFFFFFFF);
 	
 	public static final EnumDyeColor[] VALUES = values();
 	

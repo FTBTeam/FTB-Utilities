@@ -6,8 +6,7 @@ import latmod.core.event.LMPlayerEvent;
 import latmod.core.gui.*;
 import latmod.core.mod.LC;
 import latmod.core.net.*;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.*;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.*;
@@ -72,7 +71,7 @@ public class GuiFriends extends GuiLM
 			{
 				playClickSound();
 				changed = true;
-				Minecraft.getMinecraft().displayGuiScreen(null);
+				mc.thePlayer.closeScreen();
 			}
 		});
 		
@@ -117,9 +116,9 @@ public class GuiFriends extends GuiLM
 				else
 				{
 					if(owner.isFriendRaw(selectedPlayer))
-						sendUpdate(MessageManageGroups.C_REM_FRIEND, selectedPlayer.playerID, null);
+						sendUpdate(MessageManageGroups.C_REM_FRIEND, selectedPlayer.playerID);
 					else
-						sendUpdate(MessageManageGroups.C_ADD_FRIEND, selectedPlayer.playerID, null);
+						sendUpdate(MessageManageGroups.C_ADD_FRIEND, selectedPlayer.playerID);
 				}
 				
 				refreshActionButtons();
@@ -134,10 +133,12 @@ public class GuiFriends extends GuiLM
 			public void onButtonPressed(int b)
 			{
 				playClickSound();
+				mc.displayGuiScreen(new GuiManageGroups(container.player));
 			}
 			
 			public boolean isEnabled()
-			{ return selectedPlayer != null; }
+			//{ return selectedPlayer != null; }
+			{ return false; }
 		});
 		
 		widgets.add(buttonClose = new ButtonLM(this, -20, 20, 16, 16)
@@ -164,8 +165,6 @@ public class GuiFriends extends GuiLM
 			public boolean isEnabled()
 			{ return selectedPlayer != null; }
 		});
-		
-		refreshActionButtons();
 		
 		// Player buttons //
 		
@@ -194,10 +193,10 @@ public class GuiFriends extends GuiLM
 		buttonGroup.title = "[WIP] Edit Groups";
 	}
 	
-	public void sendUpdate(int c, int u, String g)
+	public void sendUpdate(int c, int u)
 	{
 		changed = true;
-		MessageLM.NET.sendToServer(new MessageManageGroups(owner, c, u, g));
+		MessageLM.NET.sendToServer(new MessageManageGroups(owner, c, u, 0, null));
 	}
 	
 	public int maxPages()
@@ -305,13 +304,21 @@ public class GuiFriends extends GuiLM
 	public void onGuiClosed()
 	{
 		LatCoreMC.EVENT_BUS.unregister(this);
-		if(changed) sendUpdate(0, 0, null);
+		if(changed) sendUpdate(0, 0);
 		super.onGuiClosed();
 	}
 	
 	@SubscribeEvent
 	public void onClientEvent(LMPlayerEvent.DataChanged e)
 	{ updateButtons(); }
+	
+	protected void keyTyped(char c, int k)
+	{
+		if(k == LCClient.key.getKeyCode())
+			mc.thePlayer.closeScreen();
+		
+		super.keyTyped(c, k);
+	}
 	
 	public void updateButtons()
 	{

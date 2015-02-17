@@ -56,7 +56,7 @@ public class TileInvLM extends TileLM implements IInventory
 	public void closeInventory() { }
 	
 	public ItemStack decrStackSize(int i, int j)
-	{ return InvUtils.decrStackSize((IInventory)this, i, j); }
+	{ return InvUtils.decrStackSize(this, i, j); }
 	
 	public int getInventoryStackLimit()
 	{ return 64; }
@@ -68,7 +68,7 @@ public class TileInvLM extends TileLM implements IInventory
 	{ return items[i]; }
 	
 	public ItemStack getStackInSlotOnClosing(int i)
-	{ return InvUtils.getStackInSlotOnClosing((IInventory)this, i); }
+	{ return InvUtils.getStackInSlotOnClosing(this, i); }
 	
 	public void setInventorySlotContents(int i, ItemStack is)
 	{ items[i] = is; }

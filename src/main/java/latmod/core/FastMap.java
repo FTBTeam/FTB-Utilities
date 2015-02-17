@@ -30,45 +30,55 @@ public class FastMap<K, V> implements Iterable<V>
 	{ int i = values.indexOf(o);
 	return (i == -1) ? null : keys.get(i); }
 	
-	public void put(K k, V v)
+	public boolean put(K k, V v)
 	{
 		int i = keys.indexOf(k);
 		if(i != -1)
 		{
 			keys.set(i, k);
 			values.set(i, v);
+			return false;
 		}
 		else
 		{
 			keys.add(k);
 			values.add(v);
+			return true;
 		}
 	}
 	
-	public void remove(K k)
+	public boolean remove(K k)
 	{
 		int i = keys.indexOf(k);
 		if(i != -1)
 		{
 			keys.remove(i);
 			values.remove(i);
+			return true;
 		}
+		
+		return false;
 	}
 	
-	public void removeValue(V v)
+	public boolean removeValue(V v)
 	{
 		int i = values.indexOf(v);
 		if(i != -1)
 		{
 			keys.remove(i);
 			values.remove(i);
+			return true;
 		}
+		
+		return false;
 	}
 	
-	public void clear()
+	public boolean clear()
 	{
+		boolean b = hasKeys();
 		keys.clear();
 		values.clear();
+		return b;
 	}
 	
 	public FastMap<K, V> clone()
@@ -93,6 +103,9 @@ public class FastMap<K, V> implements Iterable<V>
 	
 	public boolean isEmpty()
 	{ return keys.isEmpty(); }
+	
+	public boolean hasKeys()
+	{ return !keys.isEmpty(); }
 
 	public void putAll(FastMap<K, V> map)
 	{

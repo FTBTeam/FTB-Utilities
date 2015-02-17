@@ -10,7 +10,7 @@ public class LMSecurity
 {
 	public LMPlayer owner;
 	public Level level;
-	private TwoObjects<String, Boolean> group;
+	private TwoObjects<Integer, Boolean> group;
 	
 	public LMSecurity(Object o)
 	{
@@ -63,9 +63,9 @@ public class LMSecurity
 		
 		if(tag1.hasKey("Group"))
 		{
-			String g = tag1.getString("Group");
+			int g = tag1.getInteger("Group");
 			boolean w = tag1.getBoolean("Whitelist");
-			group = new TwoObjects<String, Boolean>(g, w);
+			group = new TwoObjects<Integer, Boolean>(g, w);
 		}
 		else group = null;
 	}
@@ -81,7 +81,7 @@ public class LMSecurity
 			
 			if(group != null && group.object1 != null && group.object2 != null)
 			{
-				tag1.setString("Group", group.object1);
+				tag1.setInteger("Group", group.object1.intValue());
 				tag1.setBoolean("Whitelist", group.object2);
 			}
 			
@@ -107,8 +107,8 @@ public class LMSecurity
 			if(level == Level.GROUP && group != null)
 			{
 				LMPlayer.Group g = owner.groups.get(group.object1);
-				boolean has = (g != null && g.members.contains(id));
-				return has == group.object2.booleanValue();
+				if(g == null) return false;
+				return g.members.contains(id) == group.object2.booleanValue();
 			}
 		}
 		
@@ -118,11 +118,9 @@ public class LMSecurity
 	public boolean canInteract(EntityPlayer ep)
 	{ return canInteract((ep == null) ? null : ep.getUniqueID()); }
 	
-	public void setGroup(String s, boolean b)
-	{
-		if(s == null || s.isEmpty()) group = null;
-		else group = new TwoObjects<String, Boolean>(s, b);
-	}
+	public void setGroup(int g, boolean b)
+	{ if(g <= 0) group = null;
+	else group = new TwoObjects<Integer, Boolean>(g, b); }
 	
 	// Level enum //
 	

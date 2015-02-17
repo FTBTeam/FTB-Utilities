@@ -20,7 +20,6 @@ public class RenderBlocksCustom extends RenderBlocks
 	private float customColRed = 1F;
 	private float customColGreen = 1F;
 	private float customColBlue = 1F;
-	public Integer customBrightness = null;
 	
 	public void setCustomColor(Integer col)
 	{
@@ -61,8 +60,7 @@ public class RenderBlocksCustom extends RenderBlocks
 		if(tileEntity)
 		{
 			tessellator.startDrawingQuads();
-			if(customBrightness != null) tessellator.setBrightness(customBrightness);
-			else tessellator.setBrightness(b.getMixedBrightnessForBlock(blockAccess, x, y, z));
+			tessellator.setBrightness(b.getMixedBrightnessForBlock(blockAccess, x, y, z));
 		}
 		
 		double off = -0.5D;
@@ -84,9 +82,8 @@ public class RenderBlocksCustom extends RenderBlocks
 		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
 		
 		tessellator.setColorOpaque_F(customColRed, customColGreen, customColBlue);
-		if(customBrightness != null) tessellator.setBrightness(customBrightness);
+		tessellator.setBrightness(0);
 		
-		else tessellator.setBrightness(0);
 		GL11.glColor4f(customColRed, customColGreen, customColBlue, 1F);
 		
 		for(int i = 0; i < 6; i++)

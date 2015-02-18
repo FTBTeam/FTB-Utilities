@@ -1,0 +1,67 @@
+key.latcoremc=LatCoreMC
+
+latcoremc:button.settings=Uzstādījumi
+latcoremc:button.back=Atpakaļ
+latcoremc:button.up=Augšup
+latcoremc:button.down=Lejup
+latcoremc:button.prev=Iepriekšējais
+latcoremc:button.next=Nākamais
+latcoremc:button.enabled=Ieslēgts
+latcoremc:button.disabled=Izslēgts
+latcoremc:button.cancel=Atcelt
+latcoremc:button.accept=Apstiprināt
+latcoremc:button.remove=Noņemt
+latcoremc:button.add=Pievienot
+
+#FriendsGUI
+latcoremc:button.close=Aizvērt
+latcoremc:button.addFriend=Pievienot Draugiem
+latcoremc:button.remFriend=Noņemt no Draugiem
+latcoremc:button.editGroups=Rediģēt Grupas
+latcoremc:button.viewPlayer=Apskatīt Spēlētāju
+latcoremc:label.online=Tiešsaitē
+latcoremc:label.friend=Draugs
+latcoremc:label.pfriend=Neapstiprināts Draugs
+latcoremc:label.groups=Grupas
+
+#ManageGroups
+latcoremc:button.addGroup=Add Group
+latcoremc:button.remGroup=Remove Group
+
+latcoremc:owner=Īpašnieks: %s
+
+latcoremc:security=Drošība
+latcoremc:security.public=Publisks
+latcoremc:security.private=Privāts
+latcoremc:security.friends=Draugi
+latcoremc:security.group=Groupa
+latcoremc:security.whitelist=Baltais Saraksts
+latcoremc:security.blacklist=Melnais Saraksts
+
+latcoremc:redstonemode=Sarkanakmens Režīms
+latcoremc:redstonemode.disabled=Nereaģē
+latcoremc:redstonemode.high=Aktīvs Ieslēgts
+latcoremc:redstonemode.low=Aktīvs Izslēgts
+
+latcoremc:invmode=Automatizācija
+latcoremc:invmode.enabled=Ieslēgta
+latcoremc:invmode.onlyin=Tikai Ievietot
+latcoremc:invmode.onlyout=Tikai Izvadīt
+latcoremc:invmode.disabled=Izslēgta
+
+latcoremc:color.black=Melns
+latcoremc:color.red=Sarkans
+latcoremc:color.green=Zaļš
+latcoremc:color.brown=Brūns
+latcoremc:color.blue=Zils
+latcoremc:color.purple=Violets
+latcoremc:color.cyan=Ciānzaļš
+latcoremc:color.silver=Gaišpelēks
+latcoremc:color.gray=Tumšpelēks
+latcoremc:color.pink=Rozā
+latcoremc:color.lime=Laima
+latcoremc:color.yellow=Dzeltens
+latcoremc:color.light_blue=Gaišzils
+latcoremc:color.magenta=Fuksīna
+latcoremc:color.orange=Oranžs
+latcoremc:color.white=Balts

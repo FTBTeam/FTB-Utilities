@@ -13,6 +13,21 @@ latcoremc:button.accept=Accept
 latcoremc:button.remove=Remove
 latcoremc:button.add=Add
 
+#FriendsGUI
+latcoremc:button.close=Close
+latcoremc:button.addFriend=Add as Friend
+latcoremc:button.remFriend=Remove from Friends
+latcoremc:button.editGroups=Edit Groups
+latcoremc:button.viewPlayer=View Player
+latcoremc:label.online=Online
+latcoremc:label.friend=Friend
+latcoremc:label.pfriend=Pending Friend
+latcoremc:label.groups=Groups
+
+#ManageGroups
+latcoremc:button.addGroup=Add Group
+latcoremc:button.remGroup=Remove Group
+
 latcoremc:owner=Owner: %s
 
 latcoremc:security=Security

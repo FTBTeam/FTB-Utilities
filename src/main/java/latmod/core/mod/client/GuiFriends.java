@@ -75,7 +75,7 @@ public class GuiFriends extends GuiLM
 			}
 		});
 		
-		buttonSave.title = GREEN + "Close";
+		buttonSave.title = GREEN + LC.mod.translate("button.close");
 		
 		widgets.add(buttonPrevPage = new ButtonLM(this, 7, 158, 35, 16)
 		{
@@ -141,6 +141,8 @@ public class GuiFriends extends GuiLM
 			{ return false; }
 		});
 		
+		buttonGroup.title = "[WIP] " + LC.mod.translate("button.editGroups");
+		
 		widgets.add(buttonClose = new ButtonLM(this, -20, 20, 16, 16)
 		{
 			public void onButtonPressed(int b)
@@ -152,6 +154,8 @@ public class GuiFriends extends GuiLM
 			public boolean isEnabled()
 			{ return selectedPlayer != null; }
 		});
+		
+		buttonClose.title = LC.mod.translate("button.close");
 		
 		widgets.add(buttonView = new ButtonLM(this, -39, 39, 16, 16)
 		{
@@ -165,6 +169,8 @@ public class GuiFriends extends GuiLM
 			public boolean isEnabled()
 			{ return selectedPlayer != null; }
 		});
+		
+		buttonView.title = LC.mod.translate("button.viewPlayer");
 		
 		// Player buttons //
 		
@@ -186,11 +192,7 @@ public class GuiFriends extends GuiLM
 		if(owner.equals(selectedPlayer))
 			buttonAdd.title = LC.mod.translate("button.settings");
 		else
-			buttonAdd.title = owner.isFriendRaw(selectedPlayer) ? "Remove from friends" : "Add as friend";
-		
-		buttonClose.title = "Close";
-		buttonView.title = "View player";
-		buttonGroup.title = "[WIP] Edit Groups";
+			buttonAdd.title = owner.isFriendRaw(selectedPlayer) ? LC.mod.translate("button.remFriend") : LC.mod.translate("button.addFriend");
 	}
 	
 	public void sendUpdate(int c, int u)
@@ -461,7 +463,7 @@ public class GuiFriends extends GuiLM
 			if(player != null)
 			{
 				al.add(player.player.getDisplayName());
-				if(player.player.isOnline()) al.add(GREEN + "[Online]");
+				if(player.player.isOnline()) al.add(GREEN + "[" + LC.mod.translate("label.online") + "]");
 				
 				if(!player.isOwner())
 				{
@@ -469,16 +471,16 @@ public class GuiFriends extends GuiLM
 					boolean raw2 = owner.isFriendRaw(player.player);
 					
 					if(raw1 && raw2)
-						al.add(GREEN + "[Friend]");
+						al.add(GREEN + "[" + LC.mod.translate("label.friend") + "]");
 					else if(raw1 || raw2)
-						al.add((raw1 ? GOLD : BLUE) + "[Pending Friend]");
+						al.add((raw1 ? GOLD : BLUE) + "[" + LC.mod.translate("label.pfriend") + "]");
 					
 					FastList<LMPlayer.Group> g = owner.getGroupsFor(player.player);
 					
 					if(g.size() > 0)
 					{
 						al.add("");
-						al.add("Groups:");
+						al.add(LC.mod.translate("label.groups") + ":");
 						
 						for(int i = 0; i < g.size(); i++)
 							al.add(g.get(i).name);

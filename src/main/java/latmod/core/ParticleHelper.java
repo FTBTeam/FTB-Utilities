@@ -2,6 +2,7 @@ package latmod.core;
 import java.util.Random;
 
 import latmod.core.mod.LC;
+import latmod.core.util.MathHelperLM;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;

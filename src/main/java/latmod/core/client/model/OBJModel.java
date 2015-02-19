@@ -1,8 +1,9 @@
 package latmod.core.client.model;
 import java.io.*;
 
-import latmod.core.*;
+import latmod.core.LatCoreMC;
 import latmod.core.client.LMRenderHelper;
+import latmod.core.util.*;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.util.vector.Vector3f;

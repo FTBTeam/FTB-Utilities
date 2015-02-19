@@ -2,7 +2,8 @@ package latmod.core.mod;
 
 import java.util.List;
 
-import latmod.core.*;
+import latmod.core.LatCoreMC;
+import latmod.core.util.FastList;
 import net.minecraft.block.Block;
 
 import com.cricketcraft.chisel.api.carving.*;

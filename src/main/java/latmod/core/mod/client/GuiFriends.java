@@ -6,6 +6,7 @@ import latmod.core.event.LMPlayerEvent;
 import latmod.core.gui.*;
 import latmod.core.mod.LC;
 import latmod.core.net.*;
+import latmod.core.util.FastList;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;

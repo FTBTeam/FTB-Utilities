@@ -2,8 +2,9 @@ package latmod.core.client.playerdeco;
 
 import java.awt.Color;
 
-import latmod.core.*;
+import latmod.core.ParticleHelper;
 import latmod.core.mod.LC;
+import latmod.core.util.*;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import cpw.mods.fml.relauncher.*;
 

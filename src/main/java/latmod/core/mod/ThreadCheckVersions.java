@@ -4,7 +4,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
-import latmod.core.*;
+import latmod.core.LatCoreMC;
+import latmod.core.util.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.event.*;
 import net.minecraft.util.*;

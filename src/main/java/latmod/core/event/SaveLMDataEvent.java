@@ -2,7 +2,7 @@ package latmod.core.event;
 
 import java.io.File;
 
-import latmod.core.LatCore;
+import latmod.core.util.LatCore;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class SaveLMDataEvent extends EventLM

@@ -1,6 +1,6 @@
 package latmod.core.event;
 
-import latmod.core.*;
+import latmod.core.LMPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import cpw.mods.fml.relauncher.Side;
 

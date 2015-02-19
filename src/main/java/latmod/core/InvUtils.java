@@ -1,6 +1,7 @@
 package latmod.core;
 import java.util.Arrays;
 
+import latmod.core.util.FastMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;

@@ -1,9 +1,10 @@
 package latmod.core.block;
 import java.util.*;
 
-import latmod.core.*;
+import latmod.core.LMMod;
 import latmod.core.item.ItemBlockLM;
 import latmod.core.tile.TileLM;
+import latmod.core.util.FastList;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;

@@ -1,5 +1,5 @@
 package latmod.core.recipes;
-import latmod.core.FastList;
+import latmod.core.util.FastList;
 import net.minecraft.block.Block;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.*;

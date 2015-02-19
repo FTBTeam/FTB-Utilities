@@ -2,9 +2,9 @@ package latmod.core.event;
 
 import java.util.UUID;
 
-import latmod.core.FastList;
 import latmod.core.client.playerdeco.PlayerDecorator;
 import latmod.core.mod.client.LCClientEventHandler;
+import latmod.core.util.FastList;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)

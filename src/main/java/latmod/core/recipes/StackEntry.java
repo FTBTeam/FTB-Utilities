@@ -1,5 +1,6 @@
 package latmod.core.recipes;
 import latmod.core.*;
+import latmod.core.util.FastList;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;

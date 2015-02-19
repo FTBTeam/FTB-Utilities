@@ -3,6 +3,7 @@ package latmod.core.cmd;
 import java.util.*;
 
 import latmod.core.*;
+import latmod.core.util.LatCore;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;

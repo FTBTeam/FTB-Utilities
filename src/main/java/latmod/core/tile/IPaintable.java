@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import latmod.core.*;
 import latmod.core.client.RenderBlocksCustom;
+import latmod.core.util.MathHelperLM;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;

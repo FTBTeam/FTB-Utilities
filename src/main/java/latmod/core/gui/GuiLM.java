@@ -1,9 +1,9 @@
 package latmod.core.gui;
-import latmod.core.FastList;
 import latmod.core.client.LMRenderHelper;
 import latmod.core.event.LoadLMIconsEvent;
 import latmod.core.mod.LC;
 import latmod.core.mod.client.LCClient;
+import latmod.core.util.FastList;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;

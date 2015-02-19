@@ -1,7 +1,7 @@
 package latmod.core.net;
-import latmod.core.*;
-import latmod.core.mod.*;
-import net.minecraft.nbt.*;
+import latmod.core.LMPlayer;
+import latmod.core.mod.LC;
+import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.simpleimpl.*;
 
 public class MessageUpdateLMPlayer extends MessageLM implements IMessageHandler<MessageUpdateLMPlayer, IMessage>

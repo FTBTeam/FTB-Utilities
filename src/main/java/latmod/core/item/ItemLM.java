@@ -1,7 +1,8 @@
 package latmod.core.item;
 import java.util.List;
 
-import latmod.core.*;
+import latmod.core.LMMod;
+import latmod.core.util.FastList;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;

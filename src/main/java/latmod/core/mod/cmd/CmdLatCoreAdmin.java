@@ -6,6 +6,7 @@ import latmod.core.*;
 import latmod.core.cmd.CommandLevel;
 import latmod.core.event.ReloadEvent;
 import latmod.core.net.*;
+import latmod.core.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -13,6 +14,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import baubles.api.BaublesApi;
 import cpw.mods.fml.relauncher.Side;
@@ -177,7 +179,13 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			{
 				MovingObjectPosition mop = MathHelperLM.rayTrace(ep);
 				Block b = ep.worldObj.getBlock(mop.blockX, mop.blockY, mop.blockZ);
-				return FINE + LatCoreMC.getRegName(Item.getItemFromBlock(b));
+				int meta = ep.worldObj.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ);
+				TileEntity te = ep.worldObj.getTileEntity(mop.blockX, mop.blockY, mop.blockZ);
+				
+				LatCoreMC.printChat(ep, "Block: " + LatCoreMC.getRegName(Item.getItemFromBlock(b)) + (meta > 0 ? ("@" +  meta) : ""));
+				if(te != null) LatCoreMC.printChat(ep, "Tile: " + LatCore.classpath(te.getClass()));
+				
+				return null;
 			}
 			catch(Exception e)
 			{ return FINE + "minecraft:air"; }

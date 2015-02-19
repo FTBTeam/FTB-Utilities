@@ -1,5 +1,5 @@
 package latmod.core.gui;
-import latmod.core.FastList;
+import latmod.core.util.FastList;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 import cpw.mods.fml.relauncher.*;

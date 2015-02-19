@@ -1,8 +1,8 @@
 package latmod.core.item;
 import java.util.List;
 
-import latmod.core.*;
 import latmod.core.block.BlockLM;
+import latmod.core.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;

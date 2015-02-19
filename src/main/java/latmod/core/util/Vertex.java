@@ -1,4 +1,4 @@
-package latmod.core;
+package latmod.core.util;
 import java.util.Random;
 
 import net.minecraft.entity.Entity;

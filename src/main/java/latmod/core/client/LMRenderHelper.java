@@ -1,7 +1,7 @@
 package latmod.core.client;
 import java.awt.Color;
 
-import latmod.core.MathHelperLM;
+import latmod.core.util.MathHelperLM;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.entity.item.EntityItem;

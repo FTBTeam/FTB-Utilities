@@ -1,7 +1,7 @@
 package latmod.core.net;
-import latmod.core.*;
-import latmod.core.mod.*;
-import net.minecraft.nbt.*;
+import latmod.core.IServerConfig;
+import latmod.core.mod.LMDataLoader;
+import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.simpleimpl.*;
 
 public class MessageUpdateAllData extends MessageLM implements IMessageHandler<MessageUpdateAllData, IMessage>

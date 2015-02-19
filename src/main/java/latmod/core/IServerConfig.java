@@ -1,5 +1,6 @@
 package latmod.core;
 
+import latmod.core.util.FastMap;
 import net.minecraft.nbt.NBTTagCompound;
 
 public interface IServerConfig

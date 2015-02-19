@@ -3,7 +3,8 @@ package latmod.core.mod;
 import java.util.UUID;
 
 import latmod.core.*;
-import latmod.core.event.*;
+import latmod.core.event.LMPlayerEvent;
+import latmod.core.util.FastMap;
 import net.minecraft.nbt.*;
 
 public class LMDataLoader

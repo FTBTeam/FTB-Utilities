@@ -3,9 +3,10 @@ package latmod.core.client.playerdeco;
 import java.net.URL;
 import java.util.UUID;
 
-import latmod.core.*;
+import latmod.core.LatCoreMC;
 import latmod.core.event.CustomPDEvent;
 import latmod.core.mod.client.LCClientEventHandler;
+import latmod.core.util.*;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)

@@ -2,6 +2,7 @@ package latmod.core;
 
 import java.io.*;
 
+import latmod.core.util.*;
 import net.minecraft.nbt.*;
 
 @SuppressWarnings("all")
@@ -53,6 +54,12 @@ public class NBTHelper // NBTBase
 	{
 		byte[] b = CompressedStreamTools.compress(tag);
 		os.write(b); os.flush(); os.close();
+	}
+	
+	public static void writeMap(File f, NBTTagCompound tag)
+	{
+		try { writeMap(new FileOutputStream(LatCore.newFile(f)), tag); }
+		catch(Exception e) { e.printStackTrace(); }
 	}
 	
 	public static NBTTagCompound readMap(InputStream is) throws Exception

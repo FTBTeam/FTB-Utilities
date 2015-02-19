@@ -9,6 +9,7 @@ import latmod.core.gui.GuiLM;
 import latmod.core.mod.*;
 import latmod.core.net.*;
 import latmod.core.tile.IPaintable;
+import latmod.core.util.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;

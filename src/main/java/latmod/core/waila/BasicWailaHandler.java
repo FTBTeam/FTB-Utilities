@@ -1,8 +1,8 @@
 package latmod.core.waila;
 import java.util.List;
 
-import latmod.core.FastList;
 import latmod.core.event.RegisterWailaEvent;
+import latmod.core.util.FastList;
 import mcp.mobius.waila.api.*;
 import net.minecraft.item.ItemStack;
 

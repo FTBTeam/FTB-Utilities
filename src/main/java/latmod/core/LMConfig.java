@@ -3,6 +3,7 @@ import java.io.File;
 import java.util.regex.Pattern;
 
 import latmod.core.mod.LC;
+import latmod.core.util.*;
 import net.minecraftforge.common.config.*;
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;

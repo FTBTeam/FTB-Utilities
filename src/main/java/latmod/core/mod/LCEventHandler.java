@@ -4,6 +4,7 @@ import java.io.*;
 import latmod.core.*;
 import latmod.core.event.*;
 import latmod.core.net.*;
+import latmod.core.util.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.world.WorldEvent;
@@ -106,27 +107,24 @@ public class LCEventHandler
 			}
 			else
 			{
-				File latmodFolder = new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/");
-				LoadLMDataEvent e1 = new LoadLMDataEvent(latmodFolder, EventLM.Phase.PRE);
-				
+				LoadLMDataEvent e1 = new LoadLMDataEvent(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/"), EventLM.Phase.PRE);
+				e1.post();
 				LMGamerules.load(e1);
 				
-				e1.post();
-				
-				NBTTagCompound players = NBTHelper.readMap(new File(latmodFolder, "LMPlayers.dat"));
+				NBTTagCompound players = NBTHelper.readMap(e1.getFile("LMPlayers.dat"));
 				if(players != null) LMDataLoader.readPlayersFromNBT(players);
 				
 				for(int i = 0; i < LMPlayer.map.values.size(); i++)
 					LMPlayer.map.values.get(i).setOnline(false);
 				
-				NBTTagCompound common = NBTHelper.readMap(new File(latmodFolder, "CommonData.dat"));
+				NBTTagCompound common = NBTHelper.readMap(e1.getFile("CommonData.dat"));
 				if(common != null)
 				{
 					new LoadLMDataEvent.CommonData(common).post();
 					LMDataLoader.lastPlayerID = common.getInteger("LastPlayerID");
 				}
 				
-				new LoadLMDataEvent(latmodFolder, EventLM.Phase.POST).post();
+				new LoadLMDataEvent(e1.latmodFolder, EventLM.Phase.POST).post();
 				
 				LatCoreMC.logger.info("LatCoreMC data loaded");
 			}
@@ -138,24 +136,23 @@ public class LCEventHandler
 	{
 		if(LatCoreMC.isServer() && e.world.provider.dimensionId == 0)
 		{
+			SaveLMDataEvent e1 = new SaveLMDataEvent(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/"));
+			e1.post();
+			LMGamerules.save(e1);
+			
+			NBTTagCompound common = new NBTTagCompound();
+			new SaveLMDataEvent.CommonData(common).post();
+			common.setInteger("LastPlayerID", LMDataLoader.lastPlayerID);
+			NBTHelper.writeMap(e1.getFile("CommonData.dat"), common);
+			
+			NBTTagCompound players = new NBTTagCompound();
+			LMDataLoader.writePlayersToNBT(players);
+			NBTHelper.writeMap(e1.getFile("LMPlayers.dat"), players);
+			
+			// Export player list //
+			
 			try
 			{
-				SaveLMDataEvent e1 = new SaveLMDataEvent(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/"));
-				e1.post();
-				LMGamerules.save(e1);
-				
-				NBTTagCompound common = new NBTTagCompound();
-				new SaveLMDataEvent.CommonData(common);
-				common.setInteger("LastPlayerID", LMDataLoader.lastPlayerID);
-				NBTHelper.writeMap(new FileOutputStream(e1.getFile("CommonData.dat")), common);
-				
-				NBTTagCompound players = new NBTTagCompound();
-				LMDataLoader.writePlayersToNBT(players);
-				NBTHelper.writeMap(new FileOutputStream(e1.getFile("LMPlayers.dat")), players);
-				
-				
-				// Export player list //
-				
 				FastList<String> l = new FastList<String>();
 				FastList<Integer> list = new FastList<Integer>();
 				list.addAll(LMPlayer.map.keys);

@@ -3,6 +3,7 @@ package latmod.core;
 import java.util.UUID;
 
 import latmod.core.mod.LC;
+import latmod.core.util.TwoObjects;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 

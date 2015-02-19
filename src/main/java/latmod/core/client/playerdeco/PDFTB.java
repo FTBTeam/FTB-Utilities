@@ -1,6 +1,6 @@
 package latmod.core.client.playerdeco;
 
-import latmod.core.FastMap;
+import latmod.core.util.FastMap;
 import net.minecraft.item.ItemArmor;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 

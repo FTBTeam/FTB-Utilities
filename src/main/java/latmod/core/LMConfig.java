@@ -83,7 +83,11 @@ public abstract class LMConfig
 	public LMMod mod = null;
 	
 	public LMConfig(File f)
-	{ loadedFrom = f; config = new Configuration(loadedFrom); load(); save(); }
+	{
+		loadedFrom = f;
+		config = new Configuration(loadedFrom);
+		load(); save();
+	}
 	
 	public LMConfig(FMLPreInitializationEvent e, String s)
 	{ this(new File(e.getModConfigurationDirectory(), s)); }
@@ -111,4 +115,7 @@ public abstract class LMConfig
 	
 	public void reload()
 	{ config.load(); load(); }
+	
+	public String getConfigName()
+	{ return (mod == null) ? null : mod.modID; }
 }

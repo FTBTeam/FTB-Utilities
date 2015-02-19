@@ -77,15 +77,10 @@ public class LCClientEventHandler
 	@SubscribeEvent
 	public void playerJoined(LMPlayerEvent.LoggedIn e)
 	{
-		if(e.side.isClient() && e.entityPlayer != null)
+		if(e.side.isClient() && e.entityPlayer != null && e.player.equals(LC.proxy.getClientPlayer()))
 		{
-			FastList<PlayerDecorator> l = playerDecorators.get(e.entityPlayer.getUniqueID());
-			
-			if(l != null) for(int i = 0; i < l.size(); i++)
-			{
-				if(l.get(i) instanceof PDLatMod)
-					LatCoreMC.printChat(e.entityPlayer, EnumChatFormatting.BLUE + "Hello, LatMod member!");
-			}
+			if(listLatMod.contains(e.player.uuid))
+				LatCoreMC.printChat(null, EnumChatFormatting.BLUE + "Hello, LatMod member!");
 		}
 	}
 	

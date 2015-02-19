@@ -13,7 +13,7 @@ public class MessageLM implements IMessage
 	
 	public static void init()
 	{
-		NET.registerMessage(MessageUpdateLMData.class, MessageUpdateLMData.class, 0, Side.CLIENT);
+		NET.registerMessage(MessageUpdateAllData.class, MessageUpdateAllData.class, 0, Side.CLIENT);
 		NET.registerMessage(MessageUpdateLMPlayer.class, MessageUpdateLMPlayer.class, 1, Side.CLIENT);
 		NET.registerMessage(MessageCustomClientAction.class, MessageCustomClientAction.class, 2, Side.SERVER);
 		NET.registerMessage(MessageCustomServerAction.class, MessageCustomServerAction.class, 3, Side.CLIENT);

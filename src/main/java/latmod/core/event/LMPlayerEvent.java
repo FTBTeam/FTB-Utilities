@@ -14,12 +14,12 @@ public abstract class LMPlayerEvent extends EventLM
 	public static class DataChanged extends LMPlayerEvent
 	{
 		public final Side side;
-		public final int action;
+		public final String action;
 		
-		public DataChanged(LMPlayer p, Side s, byte b)
+		public DataChanged(LMPlayer p, Side s, String b)
 		{ super(p); side = s; action = b; }
 		
-		public boolean isAction(byte b)
+		public boolean isAction(String b)
 		{ return action == b; }
 	}
 	
@@ -52,13 +52,5 @@ public abstract class LMPlayerEvent extends EventLM
 		
 		public LoggedOut(LMPlayer p, Side s, EntityPlayer ep)
 		{ super(p); side = s; entityPlayer = ep; }
-	}
-	
-	public static class CustomInfo extends LMPlayerEvent
-	{
-		public final FastList<String> info;
-		
-		public CustomInfo(LMPlayer p, FastList<String> l)
-		{ super(p); info = l; }
 	}
 }

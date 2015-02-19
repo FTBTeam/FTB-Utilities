@@ -3,19 +3,17 @@ package latmod.core.mod.cmd;
 import java.io.*;
 
 import latmod.core.*;
-import latmod.core.LMGamerules.RuleID;
 import latmod.core.cmd.CommandLevel;
 import latmod.core.event.ReloadEvent;
 import latmod.core.net.*;
 import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.event.*;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
-import net.minecraft.util.*;
+import net.minecraft.util.MovingObjectPosition;
 import baubles.api.BaublesApi;
 import cpw.mods.fml.relauncher.Side;
 
@@ -38,23 +36,10 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 		if(i == 0) return getSubcommands(ics);
 		
 		if(i == 2 && isArg(args, 0, "player"))
-			return new String[] { "uuid", "delete", "saveinv", "loadinv", "notify" };
+			return new String[] { "delete", "saveinv", "loadinv", "notify" };
 		
-		if(isArg(args, 0, "gamerule"))
-		{
-			if(i == 1 || i == 2)
-			{
-				FastList<String> l = new FastList<String>();
-				
-				for(int j = 0; j < LMGamerules.rules.keys.size(); j++)
-				{
-					String s = i == 1 ? LMGamerules.rules.keys.get(j).group : LMGamerules.rules.keys.get(j).key;
-					if(!l.contains(s)) l.add(s);
-				}
-				
-				return l.toArray(new String[0]);
-			}
-		}
+		if(i == 1 && isArg(args, 0, "gamerule"))
+			return LMGamerules.rules.keys.toArray(new String[0]);
 		
 		if(i == 1 && isArg(args, 0, "reload"))
 			return new String[] { "all", "self", "none" };
@@ -65,7 +50,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 	public NameType getUsername(String[] args, int i)
 	{
 		if(i == 1 && isArg(args, 0, "player"))
-			return NameType.ON;
+			return NameType.OFF;
 		return NameType.NONE;
 	}
 	
@@ -97,18 +82,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			
 			LMPlayer p = getLMPlayer(args[1]);
 			
-			if(args[2].equals("uuid"))
-			{
-				IChatComponent toPrint = new ChatComponentText(p.getDisplayName() + "'s UUID: ");
-				IChatComponent uuid = new ChatComponentText(p.uuid.toString());
-				uuid.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Copy to chat")));
-				uuid.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, p.uuid.toString()));
-				uuid.getChatStyle().setColor(EnumChatFormatting.GOLD);
-				toPrint.appendSibling(uuid);
-				ics.addChatMessage(uuid);
-				return null;
-			}
-			else if(args[2].equals("delete"))
+			if(args[2].equals("delete"))
 			{
 				if(p.isOnline()) return mustBeOffline;
 				LMPlayer.map.remove(p.playerID);
@@ -210,20 +184,18 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 		}
 		else if(args[0].equals("gamerule"))
 		{
-			if(args.length >= 3)
+			if(args.length >= 2)
 			{
-				RuleID id = new RuleID(args[1], args[2]);
-				
-				if(args.length >= 4)
+				if(args.length >= 3)
 				{
-					LMGamerules.set(id, args[3]);
-					return FINE + "LMGamerule '" + id + "' set to " + args[3];
+					LMGamerules.set(args[1], args[2]);
+					return FINE + "LMGamerule '" + args[1] + "' set to " + args[2];
 				}
 				else
 				{
-					LMGamerules.Rule r = LMGamerules.get(id);
-					if(r == null) return FINE + "LMGamerule '" + id + "' does not exist";
-					return FINE + "LMGamrule '" + id + "' is '" + r.value + "'";
+					LMGamerules.Rule r = LMGamerules.get(args[1]);
+					if(r == null) return FINE + "LMGamerule '" + args[1] + "' does not exist";
+					return FINE + "LMGamrule '" + args[1] + "' is '" + r.value + "'";
 				}
 			}
 		}

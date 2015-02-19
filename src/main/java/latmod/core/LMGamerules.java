@@ -1,44 +1,21 @@
 package latmod.core;
 
-import net.minecraft.nbt.*;
+import java.io.File;
+
+import latmod.core.event.*;
 
 public class LMGamerules
 {
 	public static final String TAG = "Gamerules";
-	private static final FastMap<RuleID, Rule> registredRules = new FastMap<RuleID, Rule>();
-	public static final FastMap<RuleID, Rule> rules = new FastMap<RuleID, Rule>();
-	
-	public static class RuleID
-	{
-		public final String group;
-		public final String key;
-		
-		public RuleID(String g, String k)
-		{
-			group = g;
-			key = k;
-		}
-		
-		public String toString()
-		{ return group + ":" + key; }
-		
-		public int hashCode()
-		{ return key.hashCode(); }
-		
-		public boolean equals(Object o)
-		{
-			if(o == null) return false;
-			else if(o == this) return true;
-			else return o.toString().equals(toString());
-		}
-	}
+	private static final FastMap<String, Rule> registredRules = new FastMap<String, Rule>();
+	public static final FastMap<String, Rule> rules = new FastMap<String, Rule>();
 	
 	public static class Rule
 	{
-		public final RuleID id;
+		public final String id;
 		public String value;
 		
-		public Rule(RuleID i, String v)
+		public Rule(String i, String v)
 		{
 			id = i;
 			value = v;
@@ -59,59 +36,39 @@ public class LMGamerules
 		}
 		
 		public String toString()
-		{ return id.toString() + ":" + value; }
+		{ return id + "=" + value; }
 		
 		public String toStringID()
 		{ return value + ""; }
 	}
 	
-	public static void readFromNBT(NBTTagCompound tag)
+	public static void load(LoadLMDataEvent e)
 	{
 		rules.clear();
 		
-		if(tag.func_150299_b(TAG) == NBTHelper.LIST)
+		File f = e.getFile("LMGamerules.txt");
+		
+		if(f.exists())
 		{
-			NBTTagList list = tag.getTagList(TAG, NBTHelper.MAP);
-			
-			for(int i = 0; i < list.tagCount(); i++)
+			try
 			{
-				NBTTagCompound tag1 = list.getCompoundTagAt(i);
-				String g = tag1.getString("G");
-				String k = tag1.getString("K");
-				String v = tag1.getString("V");
+				FastList<String> l = LatCore.loadFile(f);
 				
-				RuleID id = new RuleID(g, k);
-				rules.put(id, new Rule(id, v));
-			}
-			
-			LatCoreMC.logger.info("Found old LMGamerules");
-		}
-		else
-		{
-			FastMap<String, NBTTagCompound> map = NBTHelper.toFastMapWithType(tag.getCompoundTag(TAG));
-			
-			for(int i = 0; i < map.size(); i++)
-			{
-				String g = map.keys.get(i);
-				FastMap<String, NBTTagString> map1 = NBTHelper.toFastMapWithType(map.values.get(i));
-				
-				for(int j = 0; j < map1.size(); j++)
+				for(int i = 0; i < l.size(); i++)
 				{
-					String k = map1.keys.get(j);
-					String v = map1.values.get(j).func_150285_a_();
+					String[] s = LatCore.split(l.get(i), " = ");
 					
-					RuleID id = new RuleID(g, k);
-					rules.put(id, new Rule(id, v));
+					if(s != null && s.length == 2)
+						rules.put(s[0], new Rule(s[0], s[1]));
 				}
 			}
+			catch(Exception ex)
+			{ ex.printStackTrace(); }
 		}
-	}
-	
-	public static void postInit()
-	{
+		
 		for(int i = 0; i < registredRules.size(); i++)
 		{
-			RuleID id = registredRules.keys.get(i);
+			String id = registredRules.keys.get(i);
 			
 			if(!rules.keys.contains(id))
 				rules.put(id, registredRules.values.get(i));
@@ -120,43 +77,30 @@ public class LMGamerules
 		if(LatCoreMC.isDevEnv) LatCoreMC.logger.info("LMGamerules: " + rules.values);
 	}
 	
-	public static void writeToNBT(NBTTagCompound tag)
+	public static void save(SaveLMDataEvent e)
 	{
-		FastMap<String, FastMap<String, String>> map = new FastMap<String, FastMap<String, String>>();
+		File f = LatCore.newFile(e.getFile("LMGamerules.txt"));
 		
-		for(int i = 0; i < rules.size(); i++)
+		try
 		{
-			Rule r = rules.values.get(i);
+			FastList<String> l = new FastList<String>();
 			
-			FastMap<String, String> m = map.get(r.id.group);
-			
-			if(m == null)
+			for(int i = 0; i < rules.size(); i++)
 			{
-				m = new FastMap<String, String>();
-				map.put(r.id.group, m);
+				Rule r = rules.values.get(i);
+				l.add(r.id + " = " + r.value);
 			}
 			
-			m.put(r.id.key, r.value);
+			LatCore.saveFile(f, l);
 		}
-		
-		NBTTagCompound groups = new NBTTagCompound();
-		
-		for(int i = 0; i < map.size(); i++)
-		{
-			NBTTagCompound tag1 = new NBTTagCompound();
-			FastMap<String, String> map1 = map.values.get(i);
-			for(int j = 0; j < map1.size(); j++)
-				tag1.setString(map1.keys.get(j), map1.values.get(j));
-			groups.setTag(map.keys.get(i), tag1);
-		}
-		
-		tag.setTag(TAG, groups);
+		catch(Exception ex)
+		{ ex.printStackTrace(); }
 	}
 	
-	public static void register(RuleID id, Object val)
+	public static void register(String id, Object val)
 	{ registredRules.put(id, new Rule(id, val + "")); }
 	
-	public static Rule set(RuleID id, String val)
+	public static Rule set(String id, String val)
 	{
 		Rule r = rules.get(id);
 		
@@ -170,6 +114,6 @@ public class LMGamerules
 		return r;
 	}
 	
-	public static Rule get(RuleID id)
+	public static Rule get(String id)
 	{ return rules.get(id); }
 }

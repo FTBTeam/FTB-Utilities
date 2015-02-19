@@ -3,10 +3,11 @@ package latmod.core.mod;
 import latmod.core.*;
 import net.minecraft.init.*;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.config.Property;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-public class LCConfig extends LMConfig
+public class LCConfig extends LMConfig implements IServerConfig
 {
 	public static LCConfig instance;
 	
@@ -23,6 +24,18 @@ public class LCConfig extends LMConfig
 		Client.load(get("client"));
 		Recipes.load(get("recipes"));
 		save();
+	}
+	
+	public void readConfig(NBTTagCompound tag)
+	{
+		General.friendsGuiEnabled = tag.getBoolean("Friends");
+		General.friendsGuiArmor = tag.getBoolean("Armor");
+	}
+	
+	public void writeConfig(NBTTagCompound tag)
+	{
+		tag.setBoolean("Friends", General.friendsGuiEnabled);
+		tag.setBoolean("Armor", General.friendsGuiArmor);
 	}
 	
 	public static class General
@@ -56,12 +69,12 @@ public class LCConfig extends LMConfig
 		{
 			FastList<String> p = new FastList<String>();
 			
-			enablePlayerDecorators = c.getBool("enablePlayerDecorators", true); p.add("enablePlayerDecorators");
-			rotateBlocks = c.getBool("rotateBlocks", true); p.add("rotateBlocks");
-			renderHighlights = c.getBool("renderHighlights", true); p.add("renderHighlights");
-			addAllColorItems = c.getBool("addAllColorItems", true); p.add("addAllColorItems");
-			addOreNames = c.getBool("addOreNames", false); p.add("addOreNames");
-			addRegistryNames = c.getBool("addRegistryNames", false); p.add("addRegistryNames");
+			enablePlayerDecorators = c.getBool("EnablePlayerDecorators", true); p.add("EnablePlayerDecorators");
+			rotateBlocks = c.getBool("RotateBlocks", true); p.add("RotateBlocks");
+			renderHighlights = c.getBool("RenderHighlights", true); p.add("RenderHighlights");
+			addAllColorItems = c.getBool("AddAllColorItems", true); p.add("AddAllColorItems");
+			addOreNames = c.getBool("AddOreNames", false); p.add("AddOreNames");
+			addRegistryNames = c.getBool("AddRegistryNames", false); p.add("AddRegistryNames");
 			
 			FastList<Property> l = new FastList<Property>();
 			l.addAll(c.getCategory().values());

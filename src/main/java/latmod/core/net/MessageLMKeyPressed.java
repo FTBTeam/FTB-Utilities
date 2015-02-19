@@ -1,5 +1,5 @@
 package latmod.core.net;
-import latmod.core.LatCoreMC;
+import latmod.core.*;
 import latmod.core.mod.*;
 import cpw.mods.fml.common.network.simpleimpl.*;
 

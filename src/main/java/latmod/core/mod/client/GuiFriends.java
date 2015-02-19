@@ -137,8 +137,7 @@ public class GuiFriends extends GuiLM
 			}
 			
 			public boolean isEnabled()
-			//{ return selectedPlayer != null; }
-			{ return false; }
+			{ return LatCoreMC.isDevEnv; }
 		});
 		
 		buttonGroup.title = "[WIP] " + LC.mod.translate("button.editGroups");
@@ -210,12 +209,12 @@ public class GuiFriends extends GuiLM
 		{
 			if(viewOpen)
 			{
-				if(viewPos > 0) viewPos -= 1.33F;
+				if(viewPos > 0) viewPos -= 2.33F;
 				if(viewPos < 0) viewPos = 0;
 			}
 			else
 			{
-				if(viewPos < 65) viewPos += 1.33F;
+				if(viewPos < 65) viewPos += 2.33F;
 				if(viewPos > 65) viewPos = 65;
 			}
 			
@@ -290,7 +289,7 @@ public class GuiFriends extends GuiLM
 		
 		if(selectedPlayer != null)
 		{
-			String s = selectedPlayer.getDisplayName();
+			String s = selectedPlayer.username;
 			drawString(fontRendererObj, s, guiLeft - fontRendererObj.getStringWidth(s) - 2, guiTop + 3, 0xFFFFFFFF);
 		}
 		
@@ -339,7 +338,7 @@ public class GuiFriends extends GuiLM
 			String s = searchBox.text.trim().toLowerCase();
 			for(int i = 0; i < players.size(); i++)
 			{
-				String s1 = players.get(i).player.getDisplayName().toLowerCase();
+				String s1 = players.get(i).player.username.toLowerCase();
 				if(s1.contains(s)) l.add(players.get(i));
 			}
 			
@@ -390,9 +389,7 @@ public class GuiFriends extends GuiLM
 				if(on0 && !on1) return -1;
 				if(!on0 && on1) return 1;
 				
-				String u = player.getDisplayName();
-				String u1 = o.player.getDisplayName();
-				return u.compareToIgnoreCase(u1);
+				return player.username.compareToIgnoreCase(o.player.username);
 			}
 			
 			return Integer.compare(s0, s1);
@@ -462,20 +459,24 @@ public class GuiFriends extends GuiLM
 		{
 			if(player != null)
 			{
-				al.add(player.player.getDisplayName());
-				if(player.player.isOnline()) al.add(GREEN + "[" + LC.mod.translate("label.online") + "]");
+				LMPlayer p = LMPlayer.getPlayer(player.player.playerID);
+				
+				if(p == null) return;
+				
+				al.add(p.username);
+				if(p.isOnline()) al.add(GREEN + "[" + LC.mod.translate("label.online") + "]");
 				
 				if(!player.isOwner())
 				{
-					boolean raw1 = player.player.isFriendRaw(owner);
-					boolean raw2 = owner.isFriendRaw(player.player);
+					boolean raw1 = p.isFriendRaw(owner);
+					boolean raw2 = owner.isFriendRaw(p);
 					
 					if(raw1 && raw2)
 						al.add(GREEN + "[" + LC.mod.translate("label.friend") + "]");
 					else if(raw1 || raw2)
 						al.add((raw1 ? GOLD : BLUE) + "[" + LC.mod.translate("label.pfriend") + "]");
 					
-					FastList<LMPlayer.Group> g = owner.getGroupsFor(player.player);
+					FastList<LMPlayer.Group> g = owner.getGroupsFor(p);
 					
 					if(g.size() > 0)
 					{

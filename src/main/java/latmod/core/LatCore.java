@@ -192,7 +192,7 @@ public class LatCore
 	}
 	
 	public static String classpath(Class<?> c)
-	{ return c.toString().split(" ")[1]; }
+	{ return (c == null) ? null : (c.toString().split(" ")[1]); }
 	
 	public static File getSourceDirectory(Class<?> c)
 	{ return new File(c.getProtectionDomain().getCodeSource().getLocation().getPath().replace("%20", " ")); }

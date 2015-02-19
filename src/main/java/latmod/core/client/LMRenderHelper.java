@@ -1,4 +1,7 @@
 package latmod.core.client;
+import java.awt.Color;
+
+import latmod.core.MathHelperLM;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.entity.item.EntityItem;
@@ -92,5 +95,14 @@ public class LMRenderHelper
 		GL11.glVertex3d(bb.minX, bb.minY, bb.maxZ);
 		GL11.glVertex3d(bb.minX, bb.maxY, bb.maxZ);
 		GL11.glEnd();
+	}
+
+	public static int copyB(int col, int bright)
+	{
+		Color c0 = new Color(col, true);
+		int r = MathHelperLM.clampInt(c0.getRed() + bright, 0, 255);
+		int g = MathHelperLM.clampInt(c0.getGreen() + bright, 0, 255);
+		int b = MathHelperLM.clampInt(c0.getBlue() + bright, 0, 255);
+		return new Color(r, g, b, c0.getAlpha()).getRGB();
 	}
 }

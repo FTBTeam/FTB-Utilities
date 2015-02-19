@@ -37,7 +37,14 @@ public class LMMod
 		logger = LogManager.getLogger(modID);
 		logger.info("PreIniting...");
 		
-		config = c; if(config != null) config.setMod(this);
+		config = c; if(config != null)
+		{
+			config.setMod(this);
+			
+			if(config instanceof IServerConfig)
+				IServerConfig.Registry.add((IServerConfig)config);
+		}
+		
 		recipes = (r == null) ? new LMRecipes() : r;
 		
 		modsMap.put(modID, this);

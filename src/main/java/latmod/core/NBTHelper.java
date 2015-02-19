@@ -61,6 +61,14 @@ public class NBTHelper // NBTBase
 		return CompressedStreamTools.func_152457_a(b, new NBTSizeTracker(Long.MAX_VALUE));
 	}
 	
+	public static NBTTagCompound readMap(File f)
+	{
+		if(f == null || !f.exists()) return null;
+		try { return readMap(new FileInputStream(f)); }
+		catch(Exception e) { e.printStackTrace(); }
+		return null;
+	}
+	
 	public static boolean areTagsEqual(NBTTagCompound tag1, NBTTagCompound tag2)
 	{
 		if(tag1 == null && tag2 == null) return true;

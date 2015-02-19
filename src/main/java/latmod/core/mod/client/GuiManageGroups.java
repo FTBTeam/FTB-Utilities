@@ -11,17 +11,9 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
-public class GuiManageGroups extends GuiLM
+public class GuiManageGroups extends GuiLM // GuiFriends
 {
 	public static final ResourceLocation tex = LC.mod.getLocation("textures/gui/groups.png");
-	
-	/*
-	public static final TextureCoords icon_status =
-	{
-		new TextureCoords(texPlayers, 161 + 18 * 0, 0),
-		new TextureCoords(texPlayers, 161 + 18 * 1, 0),
-		new TextureCoords(texPlayers, 161 + 18 * 2, 0),
-	};*/
 	
 	public TextBoxLM searchBox;
 	public final LMPlayer owner;
@@ -122,63 +114,5 @@ public class GuiManageGroups extends GuiLM
 			mc.thePlayer.closeScreen();
 		
 		super.keyTyped(c, k);
-	}
-	
-	public class Player implements Comparable<Player>
-	{
-		public final LMPlayer player;
-		public final boolean isOwner;
-		
-		public Player(LMPlayer p)
-		{
-			player = p;
-			isOwner = player.equals(owner);
-		}
-		
-		public int compareTo(Player o)
-		{
-			int s0 = getStatus();
-			int s1 = o.getStatus();
-			
-			if(s0 == 0 && s1 != 0) return 1;
-			if(s0 != 0 && s1 == 0) return -1;
-			
-			if(s0 == s1)
-			{
-				boolean on0 = player.isOnline();
-				boolean on1 = o.player.isOnline();
-				
-				if(on0 && !on1) return -1;
-				if(!on0 && on1) return 1;
-				
-				String u = player.getDisplayName();
-				String u1 = o.player.getDisplayName();
-				return u.compareToIgnoreCase(u1);
-			}
-			
-			return Integer.compare(s0, s1);
-		}
-		
-		public boolean equals(Object o)
-		{
-			if(o instanceof Player)
-				return equals(((Player)o).player);
-			return player.equals(o);
-		}
-		
-		public boolean isOwner()
-		{ return owner.equals(player); }
-		
-		/** 0 - None, 1 - Friend, 2 - Inviting, 3 - Invited */
-		public int getStatus()
-		{
-			boolean b1 = owner.isFriendRaw(player);
-			boolean b2 = player.isFriendRaw(owner);
-			
-			if(b1 && b2) return 1;
-			if(b1 && !b2) return 2;
-			if(!b1 && b2) return 3;
-			return 0;
-		}
 	}
 }

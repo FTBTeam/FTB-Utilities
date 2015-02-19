@@ -55,6 +55,8 @@ public class LatCoreMC
 	/** Prints message to chat (doesn't translate it) */
 	public static final void printChat(ICommandSender ep, Object o, boolean broadcast)
 	{
+		if(ep == null && isDevEnv) ep = LC.proxy.getClientPlayer();
+		
 		if(ep != null)
 		{
 			IChatComponent msg = (o != null && o instanceof IChatComponent) ? (IChatComponent)o : new ChatComponentText("" + o);

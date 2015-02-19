@@ -8,15 +8,13 @@ import net.minecraft.nbt.*;
 
 public class LMDataLoader
 {
-	private static int lastPlayerID = 0;
+	public static int lastPlayerID = 0;
 	
-	public static int nextPlayerID()
+	public static final int nextPlayerID()
 	{ return ++lastPlayerID; }
 	
-	public static void writeToNBT(NBTTagCompound tag)
+	public static void writePlayersToNBT(NBTTagCompound tag)
 	{
-		NBTTagCompound players = new NBTTagCompound();
-		
 		for(int i = 0; i < LMPlayer.map.values.size(); i++)
 		{
 			NBTTagCompound tag1 = new NBTTagCompound();
@@ -27,23 +25,16 @@ public class LMDataLoader
 			tag1.setString("UUID", p.uuid.toString());
 			tag1.setString("Name", p.username);
 			
-			players.setTag(p.playerID + "", tag1);
+			tag.setTag(p.playerID + "", tag1);
 		}
-		
-		tag.setTag("Players", players);
-		tag.setInteger("LastPlayerID", lastPlayerID);
-		
-		LMGamerules.writeToNBT(tag);
-		new SaveCustomLMDataEvent(tag).post();
 	}
 	
-	public static void readFromNBT(NBTTagCompound tag)
+	public static void readPlayersFromNBT(NBTTagCompound tag)
 	{
 		LMPlayer.map.clear();
-		lastPlayerID = tag.getInteger("LastPlayerID");
-		new LoadCustomLMDataEvent(EventLM.Phase.PRE, tag).post();
+		
 		FastMap<Integer, NBTTagCompound> playerData = new FastMap<Integer, NBTTagCompound>();
-		FastMap<String, NBTTagCompound> map = NBTHelper.toFastMapWithType(tag.getCompoundTag("Players"));
+		FastMap<String, NBTTagCompound> map = NBTHelper.toFastMapWithType(tag);
 		
 		for(int i = 0; i < map.size(); i++)
 		{
@@ -60,9 +51,6 @@ public class LMDataLoader
 			p.readFromNBT(playerData.get(Integer.valueOf(p.playerID)));
 			new LMPlayerEvent.DataLoaded(p).post();
 		}
-		
-		LMGamerules.readFromNBT(tag);
-		new LoadCustomLMDataEvent(EventLM.Phase.POST, tag).post();
 	}
 	
 	public static class Old
@@ -71,7 +59,7 @@ public class LMDataLoader
 		{
 			LMPlayer.map.clear();
 			lastPlayerID = 0;
-			new LoadCustomLMDataEvent(EventLM.Phase.PRE, tag).post();
+			
 			FastMap<Integer, NBTTagCompound> playerData = new FastMap<Integer, NBTTagCompound>();
 			FastMap<String, NBTTagCompound> map = NBTHelper.toFastMapWithType(tag.getCompoundTag("Players"));
 			
@@ -89,9 +77,6 @@ public class LMDataLoader
 				readPlayerFromNBT(p, playerData.get(Integer.valueOf(p.playerID)));
 				new LMPlayerEvent.DataLoaded(p).post();
 			}
-			
-			LMGamerules.readFromNBT(tag);
-			new LoadCustomLMDataEvent(EventLM.Phase.POST, tag).post();
 		}
 		
 		private static void readPlayerFromNBT(LMPlayer player, NBTTagCompound tag)

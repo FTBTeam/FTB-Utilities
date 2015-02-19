@@ -60,8 +60,8 @@ public class CmdTpOverride extends CommandBaseLC // CommandTeleport
 			z = to.posZ;
 			dim = to.dimension;
 			
-			LatCoreMC.printChat(who, "Teleported to " + LMPlayer.getPlayer(to).getDisplayName());
-			if(who != ics) LatCoreMC.printChat(ics, "Teleported " + LMPlayer.getPlayer(who).getDisplayName() + " to " + LMPlayer.getPlayer(to).getDisplayName());
+			LatCoreMC.printChat(who, "Teleported to " + LMPlayer.getPlayer(to).username);
+			if(who != ics) LatCoreMC.printChat(ics, "Teleported " + LMPlayer.getPlayer(who).username + " to " + LMPlayer.getPlayer(to).username);
 		}
 		else if(args.length == 3 || args.length == 4)
 		{
@@ -72,7 +72,7 @@ public class CmdTpOverride extends CommandBaseLC // CommandTeleport
 			dim = who.dimension;
 			
 			LatCoreMC.printChat(who, "Teleported to " + LatCore.stripInt(x, y, z));
-			if(who != ics) LatCoreMC.printChat(who, "Teleported " + LMPlayer.getPlayer(who).getDisplayName() + " to " + LatCore.stripInt(x, y, z));
+			if(who != ics) LatCoreMC.printChat(who, "Teleported " + LMPlayer.getPlayer(who).username + " to " + LatCore.stripInt(x, y, z));
 		}
 		else printHelp(ics);
 		

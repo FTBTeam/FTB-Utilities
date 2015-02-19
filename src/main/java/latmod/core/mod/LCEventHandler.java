@@ -2,14 +2,13 @@ package latmod.core.mod;
 import java.io.*;
 
 import latmod.core.*;
-import latmod.core.event.LMPlayerEvent;
+import latmod.core.event.*;
 import latmod.core.net.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
 
 public class LCEventHandler
 {
@@ -20,14 +19,13 @@ public class LCEventHandler
 	@SubscribeEvent
 	public void playerLoggedIn(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e)
 	{
-		if(LatCoreMC.isDevEnv) LatCoreMC.logger.info("UUID: " + e.player.getUniqueID() + ", " + e.player);
-		
 		if(LCConfig.General.checkUpdates)
 			ThreadCheckVersions.init(e.player, false);
 		
 		LMPlayer p = LMPlayer.getPlayer(e.player);
 		
 		boolean first = p != null && !p.isOld;
+		boolean sendAll = false;
 		
 		String cmdName = e.player.getCommandSenderName();
 		
@@ -43,15 +41,17 @@ public class LCEventHandler
 			{
 				p = new LMPlayer(p.playerID, e.player.getUniqueID(), cmdName);
 				LMPlayer.map.put(p.playerID, p);
+				sendAll = true;
 			}
 		}
 		
-		p.isOld = true;
+		p.isOld = !first;
 		p.setOnline(true);
 		
-		updateAllData((EntityPlayerMP)e.player);
-		new LMPlayerEvent.LoggedIn(p, Side.SERVER, e.player, first).post();
+		updateAllData(sendAll ? null : (EntityPlayerMP)e.player);
 		p.sendUpdate(LMPlayer.ACTION_LOGGED_IN);
+		
+		p.isOld = true;
 		
 		e.player.refreshDisplayName();
 	}
@@ -65,20 +65,11 @@ public class LCEventHandler
 		{
 			p.setOnline(false);
 			
-			if(LCConfig.General.friendsGuiArmor)
-			{
-				for(int i = 0; i < 4; i++)
-					p.lastArmor[i] = e.player.inventory.armorInventory[i];
-				p.lastArmor[4] = e.player.inventory.getCurrentItem();
-			}
-			else
-			{
-				for(int i = 0; i < p.lastArmor.length; i++)
-					p.lastArmor[i] = null;
-			}
+			for(int i = 0; i < 4; i++)
+				p.lastArmor[i] = e.player.inventory.armorInventory[i];
+			p.lastArmor[4] = e.player.inventory.getCurrentItem();
 			
 			p.sendUpdate(LMPlayer.ACTION_LOGGED_OUT);
-			new LMPlayerEvent.LoggedOut(p, Side.SERVER, e.player).post();
 		}
 	}
 	
@@ -87,21 +78,21 @@ public class LCEventHandler
 	{
 		if(LatCoreMC.isServer() && e.world.provider.dimensionId == 0)
 		{
-			File f = new File(e.world.getSaveHandler().getWorldDirectory(), "LatCoreMC.dat");
+			File f0 = new File(e.world.getSaveHandler().getWorldDirectory(), "LatCoreMC.dat");
 			
-			if(f.exists())
+			if(f0.exists())
 			{
 				LatCoreMC.logger.info("Old LatCoreMC.dat found");
 				
 				try
 				{
-					NBTTagCompound tag = NBTHelper.readMap(new FileInputStream(f));
+					NBTTagCompound tag = NBTHelper.readMap(new FileInputStream(f0));
 					LMDataLoader.Old.readFromNBT(tag);
 					
 					for(int i = 0; i < LMPlayer.map.values.size(); i++)
 						LMPlayer.map.values.get(i).setOnline(false);
 					
-					f.delete();
+					f0.delete();
 					
 					LatCoreMC.logger.info("Old LatCoreMC.dat loaded");
 				}
@@ -115,30 +106,30 @@ public class LCEventHandler
 			}
 			else
 			{
-				f = new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/LatCoreMC.dat");
+				File latmodFolder = new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/");
+				LoadLMDataEvent e1 = new LoadLMDataEvent(latmodFolder, EventLM.Phase.PRE);
 				
-				if(f.exists())
+				LMGamerules.load(e1);
+				
+				e1.post();
+				
+				NBTTagCompound players = NBTHelper.readMap(new File(latmodFolder, "LMPlayers.dat"));
+				if(players != null) LMDataLoader.readPlayersFromNBT(players);
+				
+				for(int i = 0; i < LMPlayer.map.values.size(); i++)
+					LMPlayer.map.values.get(i).setOnline(false);
+				
+				NBTTagCompound common = NBTHelper.readMap(new File(latmodFolder, "CommonData.dat"));
+				if(common != null)
 				{
-					try
-					{
-						NBTTagCompound tag = NBTHelper.readMap(new FileInputStream(f));
-						LMDataLoader.readFromNBT(tag);
-						
-						for(int i = 0; i < LMPlayer.map.values.size(); i++)
-							LMPlayer.map.values.get(i).setOnline(false);
-						
-						LatCoreMC.logger.info("LatCoreMC.dat loaded");
-					}
-					catch(Exception ex)
-					{
-						LatCoreMC.logger.warn("Error occured while loading LatCoreMC.dat!");
-						ex.printStackTrace();
-					}
+					new LoadLMDataEvent.CommonData(common).post();
+					LMDataLoader.lastPlayerID = common.getInteger("LastPlayerID");
 				}
-				else LatCoreMC.logger.info("LatCoreMC.dat not found");
+				
+				new LoadLMDataEvent(latmodFolder, EventLM.Phase.POST).post();
+				
+				LatCoreMC.logger.info("LatCoreMC data loaded");
 			}
-			
-			LMGamerules.postInit();
 		}
 	}
 	
@@ -147,13 +138,23 @@ public class LCEventHandler
 	{
 		if(LatCoreMC.isServer() && e.world.provider.dimensionId == 0)
 		{
-			File f = LatCore.newFile(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/LatCoreMC.dat"));
-			
 			try
 			{
-				NBTTagCompound tag = new NBTTagCompound();
-				LMDataLoader.writeToNBT(tag);
-				NBTHelper.writeMap(new FileOutputStream(f), tag);
+				SaveLMDataEvent e1 = new SaveLMDataEvent(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/"));
+				e1.post();
+				LMGamerules.save(e1);
+				
+				NBTTagCompound common = new NBTTagCompound();
+				new SaveLMDataEvent.CommonData(common);
+				common.setInteger("LastPlayerID", LMDataLoader.lastPlayerID);
+				NBTHelper.writeMap(new FileOutputStream(e1.getFile("CommonData.dat")), common);
+				
+				NBTTagCompound players = new NBTTagCompound();
+				LMDataLoader.writePlayersToNBT(players);
+				NBTHelper.writeMap(new FileOutputStream(e1.getFile("LMPlayers.dat")), players);
+				
+				
+				// Export player list //
 				
 				FastList<String> l = new FastList<String>();
 				FastList<Integer> list = new FastList<Integer>();
@@ -183,8 +184,8 @@ public class LCEventHandler
 	
 	public void updateAllData(EntityPlayerMP ep)
 	{
-		if(ep != null) MessageLM.NET.sendTo(new MessageUpdateLMData(), ep);
-		else MessageLM.NET.sendToAll(new MessageUpdateLMData());
+		if(ep != null) MessageLM.NET.sendTo(new MessageUpdateAllData(), ep);
+		else MessageLM.NET.sendToAll(new MessageUpdateAllData());
 	}
 	
 	@SubscribeEvent

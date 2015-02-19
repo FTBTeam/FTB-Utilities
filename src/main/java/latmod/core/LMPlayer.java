@@ -14,9 +14,9 @@ import cpw.mods.fml.relauncher.Side;
 
 public class LMPlayer implements Comparable<LMPlayer>
 {
-	public static final byte ACTION_LOGGED_IN = 1;
-	public static final byte ACTION_LOGGED_OUT = 2;
-	public static final byte ACTION_GROUPS_CHANGED = 3;
+	public static final String ACTION_LOGGED_IN = "Login";
+	public static final String ACTION_LOGGED_OUT = "Logout";
+	public static final String ACTION_GROUPS_CHANGED = "Groups";
 	
 	public static class Group
 	{
@@ -53,19 +53,28 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public final UUID uuid;
 	public final String username;
 	
-	public final FastList<LMPlayer> friends = new FastList<LMPlayer>();
-	public final FastMap<Integer, Group> groups = new FastMap<Integer, Group>();
-	public NBTTagCompound customData = new NBTTagCompound();
+	private final String uuidString;
+	public final FastList<LMPlayer> friends;
+	public final FastMap<Integer, Group> groups;
+	public final ItemStack[] lastArmor;
+	
+	public NBTTagCompound customData;
 	private boolean isOnline;
 	public boolean isOld;
-	public final ItemStack[] lastArmor = new ItemStack[5];
 	public int lastGroupID = 0;
 	
 	public LMPlayer(int i, UUID id, String s)
-	{ playerID = i; uuid = id; username = s; }
-	
-	public String getDisplayName()
-	{ return username + ""; }
+	{
+		playerID = i;
+		uuid = id;
+		username = s;
+		
+		uuidString = uuid.toString();
+		friends = new FastList<LMPlayer>();
+		groups = new FastMap<Integer, Group>();
+		customData = new NBTTagCompound();
+		lastArmor = new ItemStack[5];
+	}
 	
 	public EntityPlayerMP getPlayerMP()
 	{ return LatCoreMC.getAllOnlinePlayers().get(uuid); }
@@ -83,17 +92,39 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public void setOnline(boolean b)
 	{ isOnline = b; }
 	
-	public void sendUpdate(int action, boolean clientUpdate)
+	public void sendUpdate(String action, boolean clientUpdate)
 	{
-		if(LatCoreMC.isServer())
+		if(LatCoreMC.isServer() && action != null && !action.isEmpty())
 		{
-			new LMPlayerEvent.DataChanged(this, Side.SERVER, (byte)action).post();
-			if(clientUpdate) MessageLM.NET.sendToAll(new MessageUpdateLMPlayer(this, (byte)action));
+			if(action.equals(ACTION_LOGGED_IN))
+			{
+				new LMPlayerEvent.LoggedIn(this, Side.SERVER, getPlayerMP(), !isOld).post();
+			}
+			else if(action.equals(ACTION_LOGGED_IN))
+			{
+				new LMPlayerEvent.LoggedOut(this, Side.SERVER, getPlayerMP()).post();
+			}
+			
+			new LMPlayerEvent.DataChanged(this, Side.SERVER, action).post();
+			if(clientUpdate) MessageLM.NET.sendToAll(new MessageUpdateLMPlayer(this, action));
 		}
 	}
 	
-	public void sendUpdate(int action)
+	public void sendUpdate(String action)
 	{ sendUpdate(action, true); }
+	
+	public void receiveUpdate(String action)
+	{
+		EntityPlayer ep = getPlayerSP();
+		
+		if(action.equals(ACTION_LOGGED_IN))
+			new LMPlayerEvent.LoggedIn(this, Side.CLIENT, ep, !isOld).post();
+		
+		if(action.equals(ACTION_LOGGED_OUT))
+			new LMPlayerEvent.LoggedOut(this, Side.CLIENT, ep).post();
+		
+		new LMPlayerEvent.DataChanged(this, Side.CLIENT, action).post();
+	}
 	
 	public boolean isFriendRaw(LMPlayer p)
 	{ return p != null && (playerID == p.playerID || friends.contains(p.playerID)); }
@@ -157,7 +188,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public void writeToNBT(NBTTagCompound tag)
 	{
 		tag.setBoolean("Old", isOld);
-		tag.setBoolean("On", isOnline);
+		if(isOnline) tag.setBoolean("On", isOnline);
 		
 		if(!friends.isEmpty())
 		{
@@ -172,7 +203,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 			}
 		}
 		
-		tag.setInteger("GID", lastGroupID);
+		if(lastGroupID > 0) tag.setInteger("GID", lastGroupID);
 		
 		if(groups.size() > 0)
 		{
@@ -208,7 +239,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 	{ return username; }
 	
 	public int hashCode()
-	{ return uuid.hashCode(); }
+	{ return playerID; }
 	
 	public boolean equals(Object o)
 	{
@@ -217,8 +248,8 @@ public class LMPlayer implements Comparable<LMPlayer>
 		else if(o instanceof Integer) return ((Integer)o).intValue() == playerID;
 		else if(o instanceof UUID) return ((UUID)o).equals(uuid);
 		else if(o instanceof EntityPlayer) return ((EntityPlayer)o).getUniqueID().equals(uuid);
-		else if(o instanceof LMPlayer) return playerID == ((LMPlayer)o).playerID;
-		else if(o instanceof String) return username.equalsIgnoreCase(o.toString()) || o.equals(uuid.toString());
+		else if(o instanceof LMPlayer) return playerID == o.hashCode();
+		else if(o instanceof String) return username.equalsIgnoreCase(o.toString()) || uuidString.equalsIgnoreCase(o.toString());
 		else return false;
 	}
 	
@@ -232,7 +263,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public static LMPlayer getPlayer(Object o)
 	{
 		if(o == null || o instanceof FakePlayer) return null;
-		if(o instanceof LMPlayer) return (LMPlayer)o;
+		if(o instanceof LMPlayer) return map.get(o.hashCode());
 		if(o instanceof Integer) return map.get(o);
 		return map.values.getObj(o);
 	}

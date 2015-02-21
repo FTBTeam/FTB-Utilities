@@ -91,26 +91,16 @@ public class LCConfig extends LMConfig implements IServerConfig
 	public static class Recipes
 	{
 		public static boolean smeltFleshToLeather;
-		public static boolean craftWoolWithDye;
 		
 		public static void load(Category c)
 		{
 			smeltFleshToLeather = c.getBool("smeltFleshToLeather", true);
-			craftWoolWithDye = c.getBool("craftWoolWithDye", true);
 		}
 		
 		public static void loadRecipes()
 		{
 			if(smeltFleshToLeather)
 				LC.mod.recipes.addSmelting(new ItemStack(Items.rotten_flesh), new ItemStack(Items.leather));
-			
-			if(craftWoolWithDye)
-			{
-				for(int i = 0; i < 16; i++)
-					LC.mod.recipes.addRecipe(new ItemStack(Blocks.wool, 8, i), "WWW", "WDW", "WWW",
-							'W', new ItemStack(Blocks.wool, 1, ODItems.ANY),
-							'D', EnumDyeColor.VALUES[i].dyeName);
-			}
 		}
 	}
 }

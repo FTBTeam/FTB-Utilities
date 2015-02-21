@@ -76,16 +76,6 @@ public class LCClientEventHandler
 	}
 	
 	@SubscribeEvent
-	public void playerJoined(LMPlayerEvent.LoggedIn e)
-	{
-		if(e.side.isClient() && e.entityPlayer != null && e.player.equals(LC.proxy.getClientPlayer()))
-		{
-			if(listLatMod.contains(e.player.uuid))
-				LatCoreMC.printChat(null, EnumChatFormatting.BLUE + "Hello, LatMod member!");
-		}
-	}
-	
-	@SubscribeEvent
 	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
 	{
 		if(LCConfig.Client.enablePlayerDecorators && !e.entityPlayer.isInvisible())

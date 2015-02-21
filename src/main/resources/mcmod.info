@@ -3,14 +3,14 @@
   "modid": "LatCoreMC",
   "name": "LatCoreMC",
   "description": "Core Mod for all LatvianModder's mods",
-  "version": "@VERSION@",
+  "version": "${version}",
   "url": "http://minecraft.curseforge.com/mc-mods/224778-latcoremc",
   "updateUrl": "",
   "authorList": [
     "LatvianModder"
   ],
   "credits": "",
-  "logoFile": "",
+  "logoFile": "assets/latcoremc/textures/gui/logo.png",
   "screenshots": [
   ],
   "parent":"",

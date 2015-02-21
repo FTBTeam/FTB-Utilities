@@ -344,4 +344,7 @@ public class MathHelperLM
 			return AxisAlignedBB.getBoundingBox(x1, y1, z1, x2, y2, z2);
 		return AxisAlignedBB.getBoundingBox(z1, y1, x1, z2, y2, x2);
 	}
+
+	public static boolean inRange(double d, double min, double max)
+	{ return d >= min && d <= max; }
 }

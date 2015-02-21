@@ -5,6 +5,7 @@ import latmod.core.*;
 import latmod.core.mod.cmd.*;
 import latmod.core.net.MessageLM;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.EnumChatFormatting;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 
@@ -24,6 +25,8 @@ public class LC
 	
 	public LC() { LatCoreMC.addEventHandler(LCEventHandler.instance, true, true, true); }
 	
+	private ModMetadata modMeta;
+	
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
@@ -31,6 +34,8 @@ public class LC
 			LatCoreMC.logger.info("Loading LatCoreMC, Dev Build");
 		else
 			LatCoreMC.logger.info("Loading LatCoreMC, Build #" + VERSION);
+		
+		modMeta = e.getModMetadata();
 		
 		LatCoreMC.latmodFolder = new File(e.getModConfigurationDirectory().getParentFile(), "latmod/");
 		if(!LatCoreMC.latmodFolder.exists()) LatCoreMC.latmodFolder.mkdirs();
@@ -63,6 +68,23 @@ public class LC
 		mod.loadRecipes();
 		LCConfig.Recipes.loadRecipes();
 		proxy.postInit(e);
+		
+		boolean addedDesc = false;
+		if(modMeta != null) for(int i = 0; i < LMMod.modsMap.size(); i++)
+		{
+			LMMod m = LMMod.modsMap.values.get(i);
+			
+			if(!m.modID.equals(mod.modID))
+			{
+				if(!addedDesc)
+				{
+					modMeta.description += EnumChatFormatting.GREEN + "\n\nMods using LatCoreMC:";
+					addedDesc = true;
+				}
+				
+				modMeta.description += "\n" + m.modID;
+			}
+		}
 	}
 	
 	@Mod.EventHandler

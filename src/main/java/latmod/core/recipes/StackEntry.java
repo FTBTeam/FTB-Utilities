@@ -90,7 +90,7 @@ public class StackEntry implements IStackArray
 		else if(o instanceof ItemStack[]) list.addAll((ItemStack[])o);
 		else if(o instanceof Item) list.add(new ItemStack((Item)o));
 		else if(o instanceof Block) list.add(new ItemStack((Block)o));
-		else if(o instanceof String) list = ODItems.getOreDictionary((String)o).clone();
+		else if(o instanceof String) list = ODItems.getOres((String)o).clone();
 		else if(o instanceof FluidStack)
 		{
 			FluidStack fs = (FluidStack)o;

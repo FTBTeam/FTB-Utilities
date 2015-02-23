@@ -109,23 +109,30 @@ public class ODItems
 	public static void add(String name, ItemStack is)
 	{
 		ItemStack is1 = InvUtils.singleCopy(is);
-		if(!getOreDictionary(name).contains(is1))
+		if(!getOres(name).contains(is1))
 		OreDictionary.registerOre(name, is1);
 	}
 	
 	public static FastList<String> getOreNames(ItemStack is)
 	{
 		int[] ai = OreDictionary.getOreIDs(is);
-		if(ai == null || ai.length == 0) return null;
+		if(ai == null || ai.length == 0) return new FastList<String>();
 		FastList<String> l = new FastList<String>();
 		for(int i : ai) l.add(OreDictionary.getOreName(i));
 		return l;
 	}
 	
-	public static FastList<ItemStack> getOreDictionary(String name)
+	public static FastList<ItemStack> getOres(String name)
 	{
 		FastList<ItemStack> l = new FastList<ItemStack>();
 		l.addAll(OreDictionary.getOres(name));
 		return l;
+	}
+	
+	public static ItemStack getFirstOre(String name)
+	{
+		FastList<ItemStack> l = getOres(name);
+		if(!l.isEmpty()) return l.get(0);
+		return null;
 	}
 }

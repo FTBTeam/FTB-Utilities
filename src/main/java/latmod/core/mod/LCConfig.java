@@ -2,7 +2,7 @@ package latmod.core.mod;
 
 import latmod.core.*;
 import latmod.core.util.FastList;
-import net.minecraft.init.*;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.config.Property;

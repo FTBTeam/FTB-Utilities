@@ -347,4 +347,7 @@ public class MathHelperLM
 
 	public static boolean inRange(double d, double min, double max)
 	{ return d >= min && d <= max; }
+	
+	public static int percent(double d, double max)
+	{ return (int)(d / max * 100D); }
 }

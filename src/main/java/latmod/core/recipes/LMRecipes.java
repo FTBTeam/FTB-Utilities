@@ -10,15 +10,6 @@ public class LMRecipes
 {
 	public boolean enableOreRecipes = true;
 	
-	public FastList<CustomRecipes<?>> customRecipes;
-	
-	public LMRecipes()
-	{
-	}
-	
-	public void addCustomRecipes(CustomRecipes<?> c)
-	{ customRecipes.add(c); }
-	
 	public static ItemStack size(ItemStack is, int s)
 	{ ItemStack is1 = is.copy(); is1.stackSize = s; return is1; }
 	

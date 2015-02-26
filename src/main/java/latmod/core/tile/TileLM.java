@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.*;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileLM extends TileEntity implements ITileInterface, IClientActionTile
@@ -261,6 +262,9 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 
 		return false;
 	}
+	
+	public boolean equalsMOP(MovingObjectPosition mop)
+	{ return mop != null && mop.blockX == xCoord && mop.blockY == yCoord && mop.blockZ == zCoord; }
 	
 	public void markDirty()
 	{ isDirty = true; }

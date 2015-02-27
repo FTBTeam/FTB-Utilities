@@ -1,7 +1,7 @@
 package latmod.core.mod;
 
 import latmod.core.*;
-import latmod.core.util.FastList;
+import latmod.core.util.*;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,14 +29,16 @@ public class LCConfig extends LMConfig implements IServerConfig
 	
 	public void readConfig(NBTTagCompound tag)
 	{
-		General.friendsGuiEnabled = tag.getBoolean("Friends");
-		General.friendsGuiArmor = tag.getBoolean("Armor");
+		boolean[] b = Bits.fromBits(tag.getShort("Flags"), 2);
+		General.friendsGuiEnabled = b[0];
+		General.friendsGuiArmor = b[1];
 	}
 	
 	public void writeConfig(NBTTagCompound tag)
 	{
-		tag.setBoolean("Friends", General.friendsGuiEnabled);
-		tag.setBoolean("Armor", General.friendsGuiArmor);
+		tag.setShort("Flags", (short)Bits.toBits(
+				General.friendsGuiEnabled,
+				General.friendsGuiArmor));
 	}
 	
 	public static class General

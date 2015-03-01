@@ -7,8 +7,6 @@ import latmod.core.net.*;
 import latmod.core.util.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.event.world.WorldEvent;
-import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class LCEventHandler
@@ -75,7 +73,7 @@ public class LCEventHandler
 	}
 	
 	@SubscribeEvent
-	public void worldLoaded(WorldEvent.Load e)
+	public void worldLoaded(net.minecraftforge.event.world.WorldEvent.Load e)
 	{
 		if(LatCoreMC.isServer() && e.world.provider.dimensionId == 0)
 		{
@@ -103,7 +101,7 @@ public class LCEventHandler
 					ex.printStackTrace();
 				}
 				
-				worldSaved(new WorldEvent.Save(e.world));
+				worldSaved(new net.minecraftforge.event.world.WorldEvent.Save(e.world));
 			}
 			else
 			{
@@ -132,7 +130,7 @@ public class LCEventHandler
 	}
 	
 	@SubscribeEvent
-	public void worldSaved(WorldEvent.Save e)
+	public void worldSaved(net.minecraftforge.event.world.WorldEvent.Save e)
 	{
 		if(LatCoreMC.isServer() && e.world.provider.dimensionId == 0)
 		{
@@ -186,7 +184,7 @@ public class LCEventHandler
 	}
 	
 	@SubscribeEvent
-    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent e)
+    public void onConfigChanged(cpw.mods.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent e)
     {
 		if(e.modID.equalsIgnoreCase(LC.MOD_ID))
 			LCConfig.instance.load();

@@ -1,7 +1,9 @@
 package latmod.core.client;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.client.IItemRenderer;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
@@ -15,4 +17,7 @@ public abstract class TileRenderer<T extends TileEntity> extends TileEntitySpeci
 	
 	public final void register(Class<? extends T> c)
 	{ LatCoreMCClient.addTileRenderer(c, this); }
+	
+	public final void registerItemRenderer(Block b)
+	{ if(this instanceof IItemRenderer) LatCoreMCClient.addItemRenderer(b, (IItemRenderer)this); }
 }

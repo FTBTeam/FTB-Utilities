@@ -5,7 +5,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.item.Item;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.IItemRenderer;
 
@@ -42,7 +41,7 @@ public class BlockRendererLM implements ISimpleBlockRenderingHandler
 	{ LatCoreMCClient.addBlockRenderer(renderID, this); }
 	
 	public final void registerItemRenderer(Block b)
-	{ if(this instanceof IItemRenderer) LatCoreMCClient.addItemRenderer(Item.getItemFromBlock(b), (IItemRenderer)this); }
+	{ if(this instanceof IItemRenderer) LatCoreMCClient.addItemRenderer(b, (IItemRenderer)this); }
 	
 	public static void rotateBlocks()
 	{

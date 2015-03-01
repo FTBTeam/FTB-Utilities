@@ -136,7 +136,6 @@ public class LCClientEventHandler
 			LoadLMIconsEvent ev = new LoadLMIconsEvent(e.map);
 			GuiLM.Icons.load(ev);
 			ev.post();
-			//LatCoreMC.logger.info("Loaded " + ev.texturesLoaded() + " LMIcons");
 		}
 	}
 }

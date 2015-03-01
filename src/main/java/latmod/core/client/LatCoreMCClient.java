@@ -1,4 +1,5 @@
 package latmod.core.client;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.entity.Render;
@@ -37,6 +38,9 @@ public class LatCoreMCClient
 
 	public static final void addItemRenderer(Item item, IItemRenderer i)
 	{ MinecraftForgeClient.registerItemRenderer(item, i); }
+	
+	public static final void addItemRenderer(Block block, IItemRenderer i)
+	{ MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(block), i); }
 	
 	public static void spawnPart(EntityFX e)
 	{ Minecraft.getMinecraft().effectRenderer.addEffect(e); }

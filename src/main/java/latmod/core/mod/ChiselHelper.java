@@ -20,7 +20,15 @@ public class ChiselHelper
 	}
 	
 	public static void register(ICarvingGroup g)
-	{ if(isInstalled()) CarvingUtils.getChiselRegistry().addGroup(g); }
+	{
+		if(isInstalled()) try
+		{
+			ICarvingRegistry r = CarvingUtils.getChiselRegistry();
+			if(r == null) isInstalled = false;
+			else r.addGroup(g);
+		}
+		catch(Exception e) { e.printStackTrace(); }
+	}
 	
 	public static class Group implements ICarvingGroup
 	{

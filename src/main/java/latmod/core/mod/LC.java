@@ -1,5 +1,6 @@
 package latmod.core.mod;
 import java.io.File;
+import java.util.Map;
 
 import latmod.core.*;
 import latmod.core.mod.cmd.*;
@@ -8,6 +9,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.network.NetworkCheckHandler;
+import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = LC.MOD_ID, name = "LatCoreMC", version = LC.VERSION, dependencies = "required-after:Forge@[10.13.2.1291,)", guiFactory = "latmod.core.mod.client.LCGuiFactory")
 public class LC
@@ -107,5 +110,12 @@ public class LC
 	{
 		if(LatCoreMC.hasOnlinePlayers()) for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers().values)
 			LCEventHandler.instance.playerLoggedOut(new cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent(ep));
+	}
+	
+	@NetworkCheckHandler
+	public boolean checkNetwork(Map<String, String> m, Side s)
+	{
+		String v = m.get(MOD_ID);
+		return v == null || (v.equals(VERSION));
 	}
 }

@@ -209,7 +209,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 		}
 		else if(args[0].equals("reload"))
 		{
-			new ReloadEvent(Side.SERVER).post();
+			new ReloadEvent(Side.SERVER, ics).post();
 			MessageLM.NET.sendToAll(new MessageReload());
 			return FINE + "LatvianModders's mods reloaded (Server)";
 		}

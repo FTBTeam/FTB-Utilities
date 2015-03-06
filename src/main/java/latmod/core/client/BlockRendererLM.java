@@ -1,5 +1,6 @@
 package latmod.core.client;
 
+import latmod.core.LatCoreMC;
 import latmod.core.mod.LCConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -16,7 +17,7 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class BlockRendererLM implements ISimpleBlockRenderingHandler
 {
-	private final int renderID = LatCoreMCClient.getNewBlockRenderID();
+	private final int renderID = LatCoreMC.getNewBlockRenderID();
 	public RenderBlocksCustom renderBlocks = new RenderBlocksCustom();
 	
 	public void renderInventoryBlock(Block b, int meta, int modelID, RenderBlocks rb)
@@ -38,10 +39,10 @@ public class BlockRendererLM implements ISimpleBlockRenderingHandler
 	{ return renderID; }
 	
 	public final void register()
-	{ LatCoreMCClient.addBlockRenderer(renderID, this); }
+	{ LatCoreMC.addBlockRenderer(renderID, this); }
 	
 	public final void registerItemRenderer(Block b)
-	{ if(this instanceof IItemRenderer) LatCoreMCClient.addItemRenderer(b, (IItemRenderer)this); }
+	{ if(this instanceof IItemRenderer) LatCoreMC.addItemRenderer(b, (IItemRenderer)this); }
 	
 	public static void rotateBlocks()
 	{

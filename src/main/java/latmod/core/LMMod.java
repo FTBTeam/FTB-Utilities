@@ -11,14 +11,20 @@ import net.minecraft.util.*;
 
 import org.apache.logging.log4j.*;
 
+import cpw.mods.fml.common.ModMetadata;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.*;
 
-public class LMMod
+public final class LMMod
 {
 	public static final FastMap<String, LMMod> modsMap = new FastMap<String, LMMod>();
 	
+	public final ModMetadata modMetadata;
 	public final String modID;
+	public final String displayName;
+	public final String version;
 	public final String assets;
+	private final Version getVersion;
 	
 	public final FastList<IBlockLM> blocks;
 	public final FastList<IItemLM> items;
@@ -27,16 +33,22 @@ public class LMMod
 	public LMRecipes recipes;
 	public LMConfig config;
 	
-	public LMMod(String s, LMConfig c, LMRecipes r)
+	public LMMod(FMLPreInitializationEvent e, LMConfig c, LMRecipes r)
 	{
-		modID = s;
-		assets = s.toLowerCase() + ":";
+		modMetadata = e.getModMetadata();
+		
+		modID = modMetadata.modId;
+		displayName = modMetadata.name;
+		version = modMetadata.version;
+		assets = modID.toLowerCase() + ":";
+		getVersion = Version.parseVersion(version);
 		
 		blocks = new FastList<IBlockLM>();
 		items = new FastList<IItemLM>();
 		
 		logger = LogManager.getLogger(modID);
-		logger.info("PreIniting...");
+		
+		if(LatCoreMC.isDevEnv) logger.info("LMMod '" + displayName + "' v" + version + " created");
 		
 		config = c; if(config != null)
 		{
@@ -50,6 +62,15 @@ public class LMMod
 		
 		modsMap.put(modID, this);
 	}
+	
+	public Version getVersion()
+	{ return getVersion; }
+	
+	public String toFullString()
+	{ return modID + '-' + LatCoreMC.MC_VERSION + '-' + version; }
+	
+	public String toString()
+	{ return modID; }
 	
 	public ResourceLocation getLocation(String s)
 	{ return new ResourceLocation(assets + s); }
@@ -70,13 +91,13 @@ public class LMMod
 		return tab;
 	}
 	
-	public final String getBlockName(String s)
+	public String getBlockName(String s)
 	{ return assets + "tile." + s; }
 	
-	public final String getItemName(String s)
+	public String getItemName(String s)
 	{ return assets + "item." + s; }
 	
-	public final String translate(String s, Object... args)
+	public String translate(String s, Object... args)
 	{ if(args == null || args.length == 0) return StatCollector.translateToLocal(assets + s);
 	else return StatCollector.translateToLocalFormatted(assets + s, args); }
 	

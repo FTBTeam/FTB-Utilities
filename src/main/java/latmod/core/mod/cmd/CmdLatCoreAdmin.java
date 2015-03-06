@@ -63,14 +63,14 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 		
 		if(args[0].equals("player"))
 		{
-			if(args.length < 2) return missingArgs();
+			checkArgs(args, 2);
 			
 			String mustBeOnline = "The player must be online!";
 			String mustBeOffline = "The player must be offline!";
 			
 			if(args[1].equals("@a"))
 			{
-				String[] s = LMPlayer.getAllNames(true);
+				String[] s = LMPlayer.getAllNames(NameType.ON);
 				
 				for(int i = 0; i < s.length; i++)
 				{
@@ -144,8 +144,8 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			else if(args[2].equals("notify"))
 			{
 				if(!p.isOnline()) return "The player must be online!";
+				checkArgsStrong(args, 5);
 				
-				if(args.length != 5) return missingArgs();
 				String item[] = LatCore.split(args[3], ";");
 				if(item.length == 1) item = new String[]{ item[0], "0" };
 				ItemStack is = LatCoreMC.getStackFromRegName(item[0], parseInt(ics, item[1]));

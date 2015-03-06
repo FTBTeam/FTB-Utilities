@@ -18,7 +18,7 @@ public class OBJModel
 	public FastList<Vector3f> vertices;
 	public FastList<Vector3f> vertexNormals;
 	public FastList<Vector3f> texVertices;
-	public FastList<Group> groups;
+	public Group[] groups;
 	private Group current = null;
 	public String[] groupNames = null;
 	public double sizeV = 0D;
@@ -30,7 +30,7 @@ public class OBJModel
 		vertices = new FastList<Vector3f>();
 		vertexNormals = new FastList<Vector3f>();
 		texVertices = new FastList<Vector3f>();
-		groups = new FastList<Group>();
+		groups = new Group[0];
 		groupIDMap = new FastMap<Integer, Group>();
 	}
 	
@@ -51,6 +51,7 @@ public class OBJModel
 			double maxSizeV = Double.NEGATIVE_INFINITY;
 			
 			FastList<String> gnames = new FastList<String>();
+			FastList<Group> groups0 = new FastList<Group>();
 			
 			String s = null;
 			while((s = br.readLine()) != null)
@@ -63,7 +64,7 @@ public class OBJModel
 					{
 						Group g = new Group(m, s3[1]);
 						if(m.current != null)
-						m.groups.add(m.current);
+						groups0.add(m.current);
 						m.current = g;
 						gnames.add(g.groupName);
 					}
@@ -124,8 +125,9 @@ public class OBJModel
 			}
 			
 			//if(!m.groups.contains(m.current));
-			m.groups.add(m.current);
-			m.groupNames = gnames.toArray(new String[]{});
+			groups0.add(m.current);
+			m.groups = groups0.toArray(new Group[0]);
+			m.groupNames = gnames.toArray(new String[0]);
 			m.sizeV = maxSizeV - minSizeV;
 		}
 		
@@ -137,63 +139,33 @@ public class OBJModel
 		
 		return m;
 	}
-
+	
 	public void renderAll()
 	{
-		for(int i = 0; i < groups.size(); i++)
-		groups.get(i).render();
-	}
-	
-	public void render(String... s)
-	{
-		if(s == null || s.length == 0) throw new RuntimeException("Can't render no faces!");
-		for(int i = 0; i < groups.size(); i++)
-		{
-			Group g = groups.get(i);
-			
-			if(s.length > 1)
-			{
-				for(int j = 0; j < s.length; j++)
-				if(s[j].equalsIgnoreCase(g.groupName))
-				g.render();
-			}
-			else { if(s[0].equalsIgnoreCase(g.groupName))
-			g.render(); }
-		}
+		for(int i = 0; i < groups.length; i++)
+			groups[i].render();
 	}
 	
 	public void render(int... index)
 	{
 		for(int i = 0; i < index.length; i++)
 		{
-			if(index[i] >= 0 && index[i] < groups.size())
-			groups.get(index[i]).render();
-		}
-	}
-	
-	public void renderAllExcept(String... s)
-	{
-		for(int i = 0; i < groups.size(); i++)
-		{
-			Group g = groups.get(i);
-			for(int j = 0; j < s.length; j++)
-			if(!s[j].equalsIgnoreCase(g.groupName))
-			g.render();
+			if(index[i] >= 0 && index[i] < groups.length)
+				groups[index[i]].render();
 		}
 	}
 	
 	public void renderAllExcept(int... index)
 	{
-		for(int i = 0; i < groups.size(); i++)
+		for(int i = 0; i < groups.length; i++)
 		{
-			Group g = groups.get(i);
 			boolean render = true;
 			
 			for(int j = 0; j < index.length; j++)
 			{ if(!render) continue;
 			if(i == index[j]) render = false; }
 			
-			if(render) g.render();
+			if(render) groups[i].render();
 		}
 	}
 	
@@ -202,21 +174,19 @@ public class OBJModel
 	
 	public Group getGroup(String s)
 	{
-		for(int i = 0; i < groups.size(); i++)
-		{ Group g = groups.get(i);
-		if(g.groupName.equalsIgnoreCase(s))
-		return g; } return null;
+		for(int i = 0; i < groups.length; i++)
+		{ if(groups[i].groupName.equalsIgnoreCase(s))
+		return groups[i]; } return null;
 	}
 	
 	public int getGroupIndex(String s)
 	{
-		for(int i = 0; i < groups.size(); i++)
-		{ Group g = groups.get(i);
-		if(g.groupName.equalsIgnoreCase(s))
+		for(int i = 0; i < groups.length; i++)
+		{ if(groups[i].groupName.equalsIgnoreCase(s))
 		return i; } return -1;
 	}
 	
-	public OBJModel copy()
+	public OBJModel copy(boolean render)
 	{
 		OBJModel m = new OBJModel();
 		m.vertices.addAll(vertices);
@@ -224,16 +194,19 @@ public class OBJModel
 		m.texVertices.addAll(texVertices);
 		//if(vertexNormals.size() > 0)
 		m.vertexNormals.addAll(vertexNormals);
-		m.groups.addAll(groups);
+		m.groups = groups.clone();
 		m.groupNames = groupNames.clone();
 		m.totalFaces.addAll(totalFaces);
 		m.sizeV = sizeV;
 		
-		if(m != null && m.texVertices != null)
-			LMRenderHelper.enableTexture();
-		else LMRenderHelper.disableTexture();
-		
-		m.renderAll();
+		if(render)
+		{
+			if(m != null && m.texVertices != null)
+				LMRenderHelper.enableTexture();
+			else LMRenderHelper.disableTexture();
+			
+			m.renderAll();
+		}
 		
 		return m;
 	}

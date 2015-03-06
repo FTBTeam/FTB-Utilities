@@ -2,6 +2,7 @@ package latmod.core;
 
 import java.util.UUID;
 
+import latmod.core.cmd.CommandLM;
 import latmod.core.event.LMPlayerEvent;
 import latmod.core.mod.LC;
 import latmod.core.net.*;
@@ -257,6 +258,9 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public boolean isOP()
 	{ return LatCoreMC.getServer().func_152358_ax().func_152652_a(uuid) != null; }
 	
+	public CommandLM.NameType getNameType()
+	{ return isOnline() ? CommandLM.NameType.ON : CommandLM.NameType.OFF; }
+	
 	// Static //
 	
 	public static final FastMap<Integer, LMPlayer> map = new FastMap<Integer, LMPlayer>();
@@ -269,7 +273,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 		return map.values.getObj(o);
 	}
 	
-	public static String[] getAllNames(boolean online)
+	public static String[] getAllNames(CommandLM.NameType type)
 	{
 		FastList<String> allOn = new FastList<String>();
 		FastList<String> allOff = new FastList<String>();
@@ -281,12 +285,12 @@ public class LMPlayer implements Comparable<LMPlayer>
 			String s = LatCoreMC.removeFormatting(p.username);
 			
 			if(p.isOnline()) allOn.add(s);
-			else if(!online) allOff.add(s);
+			else if(!type.isOnline()) allOff.add(s);
 		}
 		
 		allOn.sort(null);
 		
-		if(!online)
+		if(!type.isOnline())
 		{
 			allOff.sort(null);
 			

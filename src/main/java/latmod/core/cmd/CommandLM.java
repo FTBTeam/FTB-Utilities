@@ -16,8 +16,11 @@ public abstract class CommandLM extends CommandBase
 		ON,
 		OFF;
 		
+		public boolean isOnline()
+		{ return this == ON; }
+		
 		public String[] getUsernames()
-		{ return (this == NONE) ? null : LMPlayer.getAllNames(this == ON); }
+		{ return LMPlayer.getAllNames(this); }
 	}
 	
 	protected static final String FINE = EnumChatFormatting.WHITE + "";
@@ -113,6 +116,9 @@ public abstract class CommandLM extends CommandBase
 		return p;
 	}
 	
-	public static String missingArgs()
-	{ return "Missing arguments!"; }
+	public static void checkArgs(String[] args, int i)
+	{ if(args == null || args.length < i) throw new MissingArgsException(); }
+	
+	public static void checkArgsStrong(String[] args, int i)
+	{ if(args == null || args.length != i) throw new MissingArgsException(); }
 }

@@ -1,5 +1,6 @@
 package latmod.core.client;
 
+import latmod.core.LatCoreMC;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -16,8 +17,8 @@ public abstract class TileRenderer<T extends TileEntity> extends TileEntitySpeci
 	public abstract void renderTile(T t, double rx, double ry, double rz, float f);
 	
 	public final void register(Class<? extends T> c)
-	{ LatCoreMCClient.addTileRenderer(c, this); }
+	{ LatCoreMC.addTileRenderer(c, this); }
 	
 	public final void registerItemRenderer(Block b)
-	{ if(this instanceof IItemRenderer) LatCoreMCClient.addItemRenderer(b, (IItemRenderer)this); }
+	{ if(this instanceof IItemRenderer) LatCoreMC.addItemRenderer(b, (IItemRenderer)this); }
 }

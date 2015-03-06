@@ -50,12 +50,18 @@ public class CmdLatCore extends CommandBaseLC
 		}
 		else if(args[0].equals("friends"))
 		{
-			EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-			MessageLM.NET.sendTo(new MessageCustomServerAction(LCEventHandler.ACTION_OPEN_FRIENDS_GUI, null), ep);
+			if(!LCConfig.General.disableLMFriendsCommand)
+			{
+				EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
+				MessageLM.NET.sendTo(new MessageCustomServerAction(LCEventHandler.ACTION_OPEN_FRIENDS_GUI, null), ep);
+			}
+			
 			return null;
 		}
 		else if(args[0].equals("uuid"))
 		{
+			checkArgs(args, 2);
+			
 			LMPlayer p = LMPlayer.getPlayer(args.length > 1 ? args[1] : ics);
 			
 			IChatComponent toPrint = new ChatComponentText("UUID for " + p.username + ": ");
@@ -69,6 +75,8 @@ public class CmdLatCore extends CommandBaseLC
 		}
 		if(args[0].equals("playerID"))
 		{
+			checkArgs(args, 2);
+			
 			LMPlayer p = LMPlayer.getPlayer(args.length > 1 ? args[1] : ics);
 			return FINE + "PlayerID for " + p.username + ": " + p.playerID;
 		}

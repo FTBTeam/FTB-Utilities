@@ -77,6 +77,8 @@ public class LCEventHandler
 	{
 		if(LatCoreMC.isServer() && e.world.provider.dimensionId == 0)
 		{
+			IServerConfig.Registry.load();
+			
 			File f0 = new File(e.world.getSaveHandler().getWorldDirectory(), "LatCoreMC.dat");
 			
 			if(f0.exists())

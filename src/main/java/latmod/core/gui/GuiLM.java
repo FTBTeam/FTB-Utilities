@@ -34,6 +34,7 @@ public abstract class GuiLM extends GuiContainer
 		left,
 		right,
 		accept,
+		accept_gray,
 		back,
 		cancel,
 		add,
@@ -89,6 +90,7 @@ public abstract class GuiLM extends GuiContainer
 			left = e.load("arrows/left");
 			right = e.load("arrows/right");
 			accept = e.load("accept");
+			accept_gray = e.load("accept_gray");
 			back = left;
 			cancel = e.load("cancel");
 			add = e.load("add");

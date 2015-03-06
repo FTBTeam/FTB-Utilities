@@ -2,12 +2,11 @@ package latmod.core.mod.client;
 import java.util.UUID;
 
 import latmod.core.*;
-import latmod.core.client.LatCoreMCClient;
+import latmod.core.client.IResourceReloader;
 import latmod.core.client.playerdeco.*;
 import latmod.core.event.*;
 import latmod.core.gui.GuiLM;
 import latmod.core.mod.*;
-import latmod.core.net.*;
 import latmod.core.tile.IPaintable;
 import latmod.core.util.*;
 import net.minecraft.client.Minecraft;
@@ -29,6 +28,7 @@ public class LCClientEventHandler
 	public final FastMap<UUID, FastList<PlayerDecorator>> playerDecorators = new FastMap<UUID, FastList<PlayerDecorator>>();
 	public final FastList<UUID> listLatMod = new FastList<UUID>();
 	public final FastList<UUID> listFTB = new FastList<UUID>();
+	public final FastList<IResourceReloader> resourceReloaders = new FastList<IResourceReloader>();
 	
 	@SubscribeEvent
 	public void onTooltip(ItemTooltipEvent e)
@@ -65,7 +65,12 @@ public class LCClientEventHandler
 	public void preTexturesLoaded(TextureStitchEvent.Pre e)
 	{
 		if(e.map.getTextureType() == 0)
-			LatCoreMCClient.blockNullIcon = e.map.registerIcon(LC.mod.assets + "nullIcon");
+		{
+			LatCoreMC.blockNullIcon = e.map.registerIcon(LC.mod.assets + "nullIcon");
+			
+			for(int i = 0; i < resourceReloaders.size(); i++)
+				resourceReloaders.get(i).reloadResources();
+		}
 	}
 	
 	@SubscribeEvent
@@ -112,7 +117,7 @@ public class LCClientEventHandler
 			EntityPlayer ep = LC.proxy.getClientPlayer();
 			
 			if (ep != null && ep.worldObj.isRemote)
-				MessageLM.NET.sendToServer(new MessageLMKeyPressed());
+				Minecraft.getMinecraft().displayGuiScreen(new GuiFriends(ep));
 		}
 	}
 	

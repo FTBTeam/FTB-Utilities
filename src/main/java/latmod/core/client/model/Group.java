@@ -60,6 +60,10 @@ public class Group
 						else GL11.glTexCoord3f(vt.x, vt.y, vt.z);
 					}
 					
+					Vector3f vn = parent.vertexNormals.get(f.normals[j]);
+					if(vn != null) GL11.glNormal3f(vn.x, vn.y, vn.z);
+					else GL11.glNormal3f(0F, 1F, 0F);
+					
 					GL11.glVertex3f(v.x, v.y, v.z);
 					posX0 += v.x;
 					posY0 += v.y;

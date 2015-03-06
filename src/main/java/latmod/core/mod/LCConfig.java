@@ -29,15 +29,13 @@ public class LCConfig extends LMConfig implements IServerConfig
 	
 	public void readConfig(NBTTagCompound tag)
 	{
-		boolean[] b = Bits.fromBits(tag.getShort("Flags"), 2);
-		General.friendsGuiEnabled = b[0];
-		General.friendsGuiArmor = b[1];
+		boolean[] b = Bits.fromBits(tag.getShort("Flags"), 1);
+		General.friendsGuiArmor = b[0];
 	}
 	
 	public void writeConfig(NBTTagCompound tag)
 	{
 		tag.setShort("Flags", (short)Bits.toBits(
-				General.friendsGuiEnabled,
 				General.friendsGuiArmor));
 	}
 	
@@ -45,16 +43,16 @@ public class LCConfig extends LMConfig implements IServerConfig
 	{
 		public static boolean checkUpdates;
 		public static boolean disableLatCoreCommand;
+		public static boolean disableLMFriendsCommand;
 		public static boolean disableCommandOverrides;
-		public static boolean friendsGuiEnabled;
 		public static boolean friendsGuiArmor;
 		
 		public static void load(Category c)
 		{
 			checkUpdates = c.getBool("checkUpdates", true);
 			disableLatCoreCommand = c.getBool("disableLatCoreCommand", false);
+			disableLMFriendsCommand = c.getBool("disableLMFriendsCommand", false);
 			disableCommandOverrides = c.getBool("disableCommandOverrides", false);
-			friendsGuiEnabled = c.getBool("friendsGuiEnabled", true);
 			friendsGuiArmor = c.getBool("friendsGuiArmor", true);
 		}
 	}

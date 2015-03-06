@@ -6,6 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 public interface IServerConfig
 {
 	public String getConfigName();
+	public void load();
 	public void readConfig(NBTTagCompound tag);
 	public void writeConfig(NBTTagCompound tag);
 	
@@ -45,6 +46,12 @@ public interface IServerConfig
 				map.values.get(i).writeConfig(tag1);
 				if(!tag1.hasNoTags()) tag.setTag(map.keys.get(i), tag1);
 			}
+		}
+
+		public static void load()
+		{
+			for(int i = 0; i < map.size(); i++)
+				map.values.get(i).load();
 		}
 	}
 }

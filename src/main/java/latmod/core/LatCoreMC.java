@@ -3,11 +3,18 @@ import java.io.File;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import latmod.core.client.IResourceReloader;
 import latmod.core.mod.LC;
+import latmod.core.mod.client.LCClientEventHandler;
 import latmod.core.net.*;
 import latmod.core.tile.IGuiTile;
 import latmod.core.util.*;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.*;
@@ -16,32 +23,35 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.*;
+import net.minecraftforge.client.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
 
 import org.apache.logging.log4j.*;
 
+import cpw.mods.fml.client.registry.*;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.eventhandler.EventBus;
 import cpw.mods.fml.common.network.*;
 import cpw.mods.fml.common.registry.*;
-import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.*;
 
 /** Made by LatvianModder */
 public class LatCoreMC
 {
 	// Something, Something, Eclipse, Something... \Minecraft\eclipse\.metadata\.plugins\org.eclipse.debug.core\.launches
-	public static final String MC_VERSION = "1.7.10";
+	public static final Version MC_VERSION = new Version(1, 7, 10);
+	public static final String DEV_VERSION = "@VERSION@";
 	
 	public static final Logger logger = LogManager.getLogger("LatCoreMC");
 	public static final EventBus EVENT_BUS = new EventBus();
 	
-	public static final int TOP = ForgeDirection.UP.ordinal();
-	public static final int BOTTOM = ForgeDirection.DOWN.ordinal();
+	public static final int TOP = 1;
+	public static final int BOTTOM = 0;
+	public static final int FRONT = 3;
 	
 	public static final boolean isDevEnv = LC.VERSION.equals("@VERSION@");
 	
@@ -50,8 +60,55 @@ public class LatCoreMC
 	
 	public static File latmodFolder = null;
 	
+	// Client //
+	
+	@SideOnly(Side.CLIENT)
+	public static IIcon blockNullIcon;
+	
+	@SideOnly(Side.CLIENT)
+	public static final void addEntityRenderer(Class<? extends Entity> c, Render r)
+	{ RenderingRegistry.registerEntityRenderingHandler(c, r); }
+	
+	@SideOnly(Side.CLIENT)
+	public static final void addTileRenderer(Class<? extends TileEntity> c, TileEntitySpecialRenderer r)
+	{ ClientRegistry.bindTileEntitySpecialRenderer(c, r); }
+	
+	@SideOnly(Side.CLIENT)
+	public static final int getNewArmorID(String s)
+	{ return RenderingRegistry.addNewArmourRendererPrefix(s); }
+	
+	@SideOnly(Side.CLIENT)
+	public static final int getNewBlockRenderID()
+	{ return RenderingRegistry.getNextAvailableRenderId(); }
+	
+	@SideOnly(Side.CLIENT)
+	public static final void addBlockRenderer(int i, ISimpleBlockRenderingHandler r)
+	{ RenderingRegistry.registerBlockHandler(i, r); }
+	
+	@SideOnly(Side.CLIENT)
+	public static final void addItemRenderer(Item item, IItemRenderer i)
+	{ MinecraftForgeClient.registerItemRenderer(item, i); }
+	
+	@SideOnly(Side.CLIENT)
+	public static final void addItemRenderer(Block block, IItemRenderer i)
+	{ MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(block), i); }
+	
+	@SideOnly(Side.CLIENT)
+	public static void spawnPart(EntityFX e)
+	{ Minecraft.getMinecraft().effectRenderer.addEffect(e); }
+	
+	@SideOnly(Side.CLIENT)
+	public static KeyBinding addKeyBinding(String name, int key, String cat)
+	{ KeyBinding k = new KeyBinding(name, key, cat); ClientRegistry.registerKeyBinding(k); return k; }
+	
+	@SideOnly(Side.CLIENT)
+	public static void addResourceReloader(IResourceReloader r)
+	{ LCClientEventHandler.instance.resourceReloaders.add(r); }
+	
 	public static final Configuration loadConfig(FMLPreInitializationEvent e, String s)
 	{ return new Configuration(new File(e.getModConfigurationDirectory(), s)); }
+	
+	// Proxy methods //
 	
 	/** Prints message to chat (doesn't translate it) */
 	public static final void printChat(ICommandSender ep, Object o, boolean broadcast)
@@ -272,11 +329,14 @@ public class LatCoreMC
 	public static MinecraftServer getServer()
 	{ return FMLCommonHandler.instance().getMinecraftServerInstance(); }
 	
-	public static Exception executeCommand(ICommandSender ics, String cmd, String... args)
+	public static Exception executeCommand(ICommandSender ics, String s)
 	{
-		try { getServer().getCommandManager().executeCommand(ics, (cmd + " " + LatCore.unsplit(args, " ")).trim()); }
+		try { getServer().getCommandManager().executeCommand(ics, s); }
 		catch(Exception e) { return e; } return null;
 	}
+	
+	public static Exception executeCommand(ICommandSender ics, String cmd, String[] args)
+	{ return executeCommand(ics, cmd + " " + LatCore.unsplit(args, " ")); }
 	
 	public static void notifyPlayer(EntityPlayerMP ep, Notification n)
 	{

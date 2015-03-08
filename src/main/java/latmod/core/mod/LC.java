@@ -117,9 +117,6 @@ public class LC
 	public boolean checkNetwork(Map<String, String> m, Side side)
 	{
 		String s = m.get(MOD_ID);
-		if(s == null || (s.equals(LatCoreMC.DEV_VERSION) && mod.version.equals(LatCoreMC.DEV_VERSION))) return true;
-		Version version0 = Version.parseVersion(s);
-		LatCoreMC.logger.info("Local version: " + mod.getVersion() + ", Remote version: " + version0 + ", Matches: " + version0.equalsVersion(mod.getVersion()));
-		return version0.equalsVersion(mod.getVersion());
+		return s == null || s.equals(VERSION) || VERSION.equals(LatCoreMC.DEV_VERSION);
 	}
 }

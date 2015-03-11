@@ -6,12 +6,16 @@ public class FastMap<K, V> implements Iterable<V>
 {
 	public FastList<K> keys;
 	public FastList<V> values;
+	private boolean nullRemoves = true;
 	
 	public FastMap(int init, int inc)
 	{
 		keys = new FastList<K>(init, inc);
 		values = new FastList<V>(init, inc);
 	}
+	
+	public FastMap<K, V> setNullRemoves(boolean b)
+	{ nullRemoves = b; return this; }
 	
 	public FastMap(int init)
 	{ this(init, 5); }
@@ -35,12 +39,24 @@ public class FastMap<K, V> implements Iterable<V>
 		int i = keys.indexOf(k);
 		if(i != -1)
 		{
-			keys.set(i, k);
-			values.set(i, v);
+			if(nullRemoves && v == null)
+			{
+				keys.remove(i);
+				values.remove(i);
+			}
+			else
+			{
+				keys.set(i, k);
+				values.set(i, v);
+			}
+			
 			return false;
 		}
 		else
 		{
+			if(nullRemoves && v == null)
+				return false;
+			
 			keys.add(k);
 			values.add(v);
 			return true;

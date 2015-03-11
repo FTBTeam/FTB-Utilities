@@ -106,11 +106,13 @@ public class LatCore
 	}
 	
 	public static String[] split(String s, String regex)
-	{ String[] s2 = s.split(regex);
-	return (s2 == null) ? (new String[] { s }) : s2; }
+	{ return split(s, regex, 0); }
 	
-	public static FastList<String> splitToList(String s, String regex)
-	{ return FastList.asList(split(s, regex)); }
+	public static String[] split(String s, String regex, int limit)
+	{
+		String[] s2 = s.split(regex, limit);
+		return (s2 == null) ? (new String[] { s }) : s2;
+	}
 	
 	public static void replace(FastList<String> txt, String s, String s1)
 	{
@@ -353,12 +355,13 @@ public class LatCore
 		return false;
 	}
 	
-	public static boolean isDifferent(String s0, String s1)
+	public static boolean areEqual(String s0, String s1)
 	{
-		if(s0 == null && s1 == null) return false;
-		if(s0 != null && s1 == null) return true;
-		if(s0 == null && s1 != null) return true;
-		return !s0.equals(s1);
+		if(s0 == null && s1 == null) return true;
+		if(s0 != null && s1 == null) return false;
+		if(s0 == null && s1 != null) return false;
+		if(s0.length() != s1.length()) return false;
+		return s0.equals(s1);
 	}
 	
 	public static String formatTime(long secs, boolean wrap)

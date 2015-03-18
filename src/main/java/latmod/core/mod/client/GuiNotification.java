@@ -1,6 +1,7 @@
 package latmod.core.mod.client;
 
 import latmod.core.Notification;
+import latmod.core.mod.LC;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.RenderHelper;
@@ -14,7 +15,7 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class GuiNotification extends Gui
 {
-	private static final ResourceLocation tex = new ResourceLocation("textures/gui/achievement/achievement_background.png");
+	private static final ResourceLocation tex = LC.mod.getLocation("textures/gui/notification.png");
 	
 	public final Notification notification;
 	
@@ -64,20 +65,26 @@ public class GuiNotification extends Gui
 			d1 = 1D - d1;
 
 			if (d1 < 0D) d1 = 0D;
-
+			
 			d1 *= d1;
 			d1 *= d1;
-			int i = displayW - 160;
+			
+			int width = 40 + Math.max(mc.fontRenderer.getStringWidth(notification.title), mc.fontRenderer.getStringWidth(notification.desc));
+			if(width > 224) width = 224;
+			
+			int i = displayW - width;
 			int j = 0 - (int)(d1 * 36D);
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			mc.getTextureManager().bindTexture(tex);
 			GL11.glDisable(GL11.GL_LIGHTING);
-			drawTexturedModalRect(i, j, 96, 202, 160, 32);
+			drawTexturedModalRect(i, j, 0, 0, 8, 32);
+			drawTexturedModalRect(i + 8, j, 16, 0, width - 16, 32);
+			drawTexturedModalRect(i + width - 8, j, 256 - 8, 0, 8, 32);
 			
 			if(notification.desc.isEmpty())
 			{
-				mc.fontRenderer.drawString(notification.title, i + 32, j + 12, -256);
+				mc.fontRenderer.drawString(notification.title, i + 30, j + 12, -256);
 			}
 			else
 			{

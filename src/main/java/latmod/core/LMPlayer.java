@@ -31,7 +31,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 		{
 			owner = p;
 			groupID = id;
-			name = s;
+			name = (s == null) ? "Unnamed" : s;
 			members = new FastList<LMPlayer>();
 		}
 		
@@ -41,6 +41,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 			if(o == this) return true;
 			if(o instanceof Group) return equals(o.toString());
 			if(o instanceof String) return o.equals(name);
+			if(o instanceof Integer) return groupID == ((Integer)o).intValue();
 			return false;
 		}
 		
@@ -48,7 +49,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 		{ return name; }
 		
 		public int hashCode()
-		{ return toString().hashCode(); }
+		{ return groupID; }
 	}
 	
 	public final int playerID;
@@ -57,12 +58,12 @@ public class LMPlayer implements Comparable<LMPlayer>
 	
 	private final String uuidString;
 	public final FastList<LMPlayer> friends;
-	public final FastMap<Integer, Group> groups;
+	public final FastList<Group> groups;
 	public final ItemStack[] lastArmor;
 	
 	public NBTTagCompound customData;
 	private boolean isOnline;
-	public boolean isOld;
+	public boolean newPlayer = false;
 	public int lastGroupID = 0;
 	
 	public LMPlayer(int i, UUID id, String s)
@@ -73,7 +74,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 		
 		uuidString = uuid.toString();
 		friends = new FastList<LMPlayer>();
-		groups = new FastMap<Integer, Group>();
+		groups = new FastList<Group>();
 		customData = new NBTTagCompound();
 		lastArmor = new ItemStack[5];
 	}
@@ -99,13 +100,9 @@ public class LMPlayer implements Comparable<LMPlayer>
 		if(LatCoreMC.isServer() && action != null && !action.isEmpty())
 		{
 			if(action.equals(ACTION_LOGGED_IN))
-			{
-				new LMPlayerEvent.LoggedIn(this, Side.SERVER, getPlayerMP(), !isOld).post();
-			}
+				new LMPlayerEvent.LoggedIn(this, Side.SERVER, getPlayerMP(), newPlayer).post();
 			else if(action.equals(ACTION_LOGGED_IN))
-			{
 				new LMPlayerEvent.LoggedOut(this, Side.SERVER, getPlayerMP()).post();
-			}
 			
 			new LMPlayerEvent.DataChanged(this, Side.SERVER, action).post();
 			if(clientUpdate) MessageLM.NET.sendToAll(new MessageUpdateLMPlayer(this, action));
@@ -120,7 +117,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 		EntityPlayer ep = getPlayerSP();
 		
 		if(action.equals(ACTION_LOGGED_IN))
-			new LMPlayerEvent.LoggedIn(this, Side.CLIENT, ep, !isOld).post();
+			new LMPlayerEvent.LoggedIn(this, Side.CLIENT, ep, newPlayer).post();
 		
 		if(action.equals(ACTION_LOGGED_OUT))
 			new LMPlayerEvent.LoggedOut(this, Side.CLIENT, ep).post();
@@ -171,7 +168,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 				if(p != null) g.members.add(p);
 			}
 			
-			groups.put(g.groupID, g);
+			groups.add(g);
 		}
 		
 		customData = tag.getCompoundTag("CustomData");
@@ -182,14 +179,15 @@ public class LMPlayer implements Comparable<LMPlayer>
 			customData.removeTag("IsOld");
 		}
 		
-		isOld = tag.getBoolean("Old");
+		newPlayer = tag.getBoolean("NewPlayer");
 		
 		InvUtils.readItemsFromNBT(lastArmor, tag, "LastItems");
 	}
 	
 	public void writeToNBT(NBTTagCompound tag)
 	{
-		tag.setBoolean("Old", isOld);
+		if(newPlayer) tag.setBoolean("NewPlayer", true);
+		
 		if(isOnline) tag.setBoolean("On", isOnline);
 		
 		if(!friends.isEmpty())
@@ -209,11 +207,15 @@ public class LMPlayer implements Comparable<LMPlayer>
 		
 		if(groups.size() > 0)
 		{
-			NBTTagCompound tag1 = new NBTTagCompound();
+			NBTTagList tag1 = new NBTTagList();
 			
 			for(int i = 0; i < groups.size(); i++)
 			{
 				Group g = groups.get(i);
+				
+				NBTTagCompound tag2 = new NBTTagCompound();
+				tag2.setByte("ID", (byte)g.groupID);
+				tag2.setString("N", g.name);
 				
 				int[] m = new int[g.members.size()];
 				
@@ -222,8 +224,10 @@ public class LMPlayer implements Comparable<LMPlayer>
 					for(int j = 0; j < m.length; j++)
 						m[j] = g.members.get(j).playerID;
 					
-					tag1.setIntArray(g.name, m);
+					tag2.setIntArray("M", m);
 				}
+				
+				tag1.appendTag(tag2);
 			}
 			
 			tag.setTag("Groups", tag1);
@@ -275,6 +279,8 @@ public class LMPlayer implements Comparable<LMPlayer>
 	
 	public static String[] getAllNames(CommandLM.NameType type)
 	{
+		if(type == CommandLM.NameType.NONE) return new String[0];
+		
 		FastList<String> allOn = new FastList<String>();
 		FastList<String> allOff = new FastList<String>();
 		
@@ -303,16 +309,36 @@ public class LMPlayer implements Comparable<LMPlayer>
 		
 		return allOn.toArray(new String[0]);
 	}
-
+	
+	public Group getGroup(int id)
+	{
+		if(id < 1 || id >= lastGroupID)
+			return null;
+		return groups.getObj(id);
+	}
+	
+	public Group getGroup(String name)
+	{
+		if(name == null || name.isEmpty())
+			return null;
+		return groups.getObj(name);
+	}
+	
+	public int getGroupID(String name)
+	{
+		Group g = getGroup(name);
+		return (g == null) ? 0 : g.groupID;
+	}
+	
 	public FastList<Group> getGroupsFor(Object o)
 	{
 		FastList<Group> l = new FastList<Group>();
 		
 		if(o == null || o instanceof FakePlayer) return l;
 		
-		for(int i = 0; i < groups.values.size(); i++)
+		for(int i = 0; i < groups.size(); i++)
 		{
-			Group g = groups.values.get(i);
+			Group g = groups.get(i);
 			if(g.members.contains(o))
 				l.add(g);
 		}
@@ -322,4 +348,12 @@ public class LMPlayer implements Comparable<LMPlayer>
 	
 	public boolean isPlayerInGroup(String g, Object o)
 	{ FastList<Group> l = getGroupsFor(o); return l.contains(g); }
+
+	public String[] getAllGroups()
+	{
+		String[] s = new String[groups.size()];
+		for(int i = 0; i < s.length; i++)
+			s[i] = groups.get(i).name;
+		return s;
+	}
 }

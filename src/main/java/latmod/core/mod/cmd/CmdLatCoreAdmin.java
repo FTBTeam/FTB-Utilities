@@ -151,7 +151,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				ItemStack is = LatCoreMC.getStackFromRegName(item[0], parseInt(ics, item[1]));
 				if(is == null || is.getItem() == null) is = new ItemStack(Blocks.stone);
 				
-				LatCoreMC.notifyPlayer(p.getPlayerMP(), new Notification(args[4].replace('_', ' '), "", is));
+				LatCoreMC.notifyPlayer(p.getPlayerMP(), new Notification(args[4].replace("\\_", "<$US>").replace('_', ' ').replace("<$US>", "_"), "", is));
 				return null;
 			}
 		}

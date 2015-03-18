@@ -23,7 +23,7 @@ public class LCEventHandler
 		
 		LMPlayer p = LMPlayer.getPlayer(e.player);
 		
-		boolean first = p != null && !p.isOld;
+		boolean first = p == null || p.newPlayer;
 		boolean sendAll = false;
 		
 		String cmdName = e.player.getCommandSenderName();
@@ -44,15 +44,13 @@ public class LCEventHandler
 			}
 		}
 		
-		p.isOld = !first;
+		p.newPlayer = first;
 		p.setOnline(true);
 		
 		updateAllData(sendAll ? null : (EntityPlayerMP)e.player);
 		p.sendUpdate(LMPlayer.ACTION_LOGGED_IN);
 		
-		p.isOld = true;
-		
-		e.player.refreshDisplayName();
+		p.newPlayer = false;
 	}
 	
 	@SubscribeEvent

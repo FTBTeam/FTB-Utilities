@@ -1,6 +1,8 @@
 package latmod.core.net;
 import static net.minecraft.util.EnumChatFormatting.AQUA;
 import latmod.core.*;
+import latmod.core.mod.cmd.CmdLMFriends;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,6 +33,7 @@ public class MessageManageGroups extends MessageLM implements IMessageHandler<Me
 	public IMessage onMessage(MessageManageGroups m, MessageContext ctx)
 	{
 		LMPlayer owner = LMPlayer.getPlayer(m.data.getInteger("O"));
+		EntityPlayerMP ep = owner.getPlayerMP();
 		
 		if(owner != null)
 		{
@@ -39,99 +42,40 @@ public class MessageManageGroups extends MessageLM implements IMessageHandler<Me
 			int user0 = m.data.getInteger("U");
 			LMPlayer p = (user0 > 0) ? LMPlayer.getPlayer(user0) : null;
 			
-			boolean changed = false;
-			
 			if(code > 0)
 			{
+				String args[] = null;
+				
 				if(code == C_ADD_FRIEND)
-				{
-					if(p != null && !owner.friends.contains(p))
-					{
-						owner.friends.add(p);
-						changed = true;
-					}
-				}
+					args = new String[] { "add", p.username };
 				else if(code == C_REM_FRIEND)
-				{
-					if(p != null && owner.friends.contains(p))
-					{
-						owner.friends.remove(p);
-						changed = true;
-					}
-				}
+					args = new String[] { "rem", p.username };
 				else
 				{
-					int groupID = m.data.getInteger("G");
+					LMPlayer.Group g = owner.getGroup(m.data.getInteger("G"));
 					
 					if(code == C_ADD_GROUP)
-					{
-						if(owner.groups.size() < 8)
-						{
-							LMPlayer.Group g = new LMPlayer.Group(owner, ++owner.lastGroupID, "Unnamed");
-							owner.groups.put(g.groupID, g);
-							changed = true;
-						}
-					}
+						args = new String[] { "addgroup", "Unnamed" };
 					else if(code == C_REM_GROUP)
-					{
-						if(groupID > 0 && owner.groups.hasKeys())
-						{
-							if(owner.groups.remove(groupID))
-								changed = true;
-						}
-					}
+						args = new String[] { "remgroup", g.name };
 					else if(code == C_REN_GROUP)
-					{
-						String groupName = m.data.getString("GN");
-						
-						if(groupID > 0 && owner.groups.hasKeys() && !groupName.isEmpty())
-						{
-							LMPlayer.Group g = owner.groups.get(groupID);
-							if(g != null && !g.name.equals(groupName))
-							{
-								g.name = groupName;
-								changed = true;
-							}
-						}
-					}
+						args = new String[] { "rengroup", g.name, m.data.getString("GN") };
 					else if(code == C_ADD_TO_GROUP)
-					{
-						if(p != null && owner.groups.hasKeys() && owner.groups.keys.contains(groupID))
-						{
-							LMPlayer.Group g = owner.groups.get(groupID);
-							
-							if(!g.members.contains(p))
-								g.members.add(p);
-							
-							changed = true;
-						}
-					}
+						args = new String[] { "addto", g.name, p.username };
 					else if(code == C_REM_FROM_GROUP)
-					{
-						if(p != null && owner.groups.hasKeys() && owner.groups.keys.contains(groupID))
-						{
-							LMPlayer.Group g = owner.groups.get(groupID);
-							
-							if(g.members.contains(p))
-								g.members.remove(p);
-							
-							changed = true;
-						}
-					}
+						args = new String[] { "remfrom", g.name, p.username };
+				}
+				
+				if(args != null)
+				{
+					String s = CmdLMFriends.onStaticCommand(ep, owner, args);
+					LatCoreMC.notifyPlayer(ep, new Notification(s, null, new ItemStack(Items.skull, 1, 3), 800L));
 				}
 			}
 			else
 			{
 				LatCoreMC.notifyPlayer(ctx.getServerHandler().playerEntity, new Notification(AQUA + "Players saved", "", new ItemStack(Items.diamond), 2000L));
-				changed = true;
-			}
-			
-			if(changed)
-			{
 				owner.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED);
-				
-				if(p != null)
-					p.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED);
 			}
 		}
 		

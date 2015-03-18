@@ -1,12 +1,12 @@
 package latmod.core.mod.cmd;
 
-import latmod.core.LMPlayer;
+import latmod.core.*;
 import latmod.core.cmd.CommandLevel;
 import latmod.core.mod.*;
 import latmod.core.net.*;
-import latmod.core.util.FastList;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.EnumChatFormatting;
 
 public class CmdLMFriends extends CommandBaseLC
 {
@@ -31,7 +31,7 @@ public class CmdLMFriends extends CommandBaseLC
 	{ return !LCConfig.General.disableLMFriendsCommand; }
 	
 	public String[] getSubcommands(ICommandSender ics)
-	{ return new String[] { "help", "add", "rem", "addgroup", "remgroup", "rengroup", "addto", "remfrom" }; }
+	{ return new String[] { "help", "add", "rem", "addgroup", "remgroup", "rengroup", "addto", "remfrom", "list" }; }
 	
 	public NameType getUsername(String[] args, int i)
 	{
@@ -43,121 +43,172 @@ public class CmdLMFriends extends CommandBaseLC
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
 		if(i == 0) return getSubcommands(ics);
+		if(i == 1 && isArg(args, 0, "list")) return new String[]{ "friends", "groups", "members" };
+		if(i == 2 && isArg(args, 0, "list") && args[1].equals("members"))
+			return getLMPlayer(ics).getAllGroups();
 		if(i == 1 && isArg(args, 0, "remgroup", "rengroup", "addto", "remfrom"))
-		{
-			LMPlayer p = LMPlayer.getPlayer(ics);
-			if(p != null && p.groups.hasKeys())
-			{
-				FastList<String> l = new FastList<String>();
-				for(int j = 0; j < p.groups.size(); j++)
-					l.add(p.groups.values.get(j).name);
-				return l.toArray(new String[0]);
-			}
-		}
+			getLMPlayer(ics).getAllGroups();
+		
 		return super.getTabStrings(ics, args, i);
 	}
 	
 	public String onCommand(ICommandSender ics, String[] args)
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
+		LMPlayer owner = getLMPlayer(ep);
 		
 		if(args == null || args.length == 0 || args[0].equals("gui"))
 		{ MessageLM.NET.sendTo(new MessageCustomServerAction(LCEventHandler.ACTION_OPEN_FRIENDS_GUI, null), ep); return null; }
-		else if(args[0].equals("help")) { printHelp(ics); return null; }
+		else if(args[0].equals("help")) { printHelp(ep); return null; }
 		
-		LMPlayer owner = LMPlayer.getPlayer(ep);
+		return onStaticCommand(ep, owner, args);
+	}
+	
+	public static String onStaticCommand(EntityPlayerMP ep, LMPlayer owner, String[] args)
+	{
+		checkArgs(args, 1);
+		
+		if(args[0].equals("list"))
+		{
+			checkArgs(args, 2);
+			
+			if(args[1].equals("friends"))
+			{
+				if(owner.friends.isEmpty()) return FINE + "No friends added";
+				
+				LatCoreMC.printChat(ep, "Your friends:");
+				
+				for(int i = 0; i < owner.friends.size(); i++)
+				{
+					LMPlayer p = owner.friends.get(i);
+					EnumChatFormatting col = EnumChatFormatting.GREEN;
+					if(p.isFriendRaw(owner) && !owner.isFriendRaw(p)) col = EnumChatFormatting.GOLD;
+					if(!p.isFriendRaw(owner) && owner.isFriendRaw(p)) col = EnumChatFormatting.BLUE;
+					LatCoreMC.printChat(ep, col + "[" + i + "]: " + p.username);
+				}
+			}
+			else if(args[1].equals("groups"))
+			{
+				if(owner.groups.isEmpty()) return FINE + "No groups created";
+				
+				LatCoreMC.printChat(ep, "Your groups:");
+				
+				for(int i = 0; i < owner.groups.size(); i++)
+				{
+					LMPlayer.Group g = owner.groups.get(i);
+					LatCoreMC.printChat(ep, "[" + g.groupID + "]: " + g.name);
+				}
+			}
+			else if(args[1].equals("members"))
+			{
+				checkArgs(args, 3);
+				
+				LMPlayer.Group g = owner.getGroup(args[1]);
+				
+				if(g.members.isEmpty()) return FINE + "No members added";
+				
+				LatCoreMC.printChat(ep, "Members of " + g.name + ":");
+				
+				for(int i = 0; i < g.members.size(); i++)
+					LatCoreMC.printChat(ep, "[" + i + "]: " + g.members.get(i).username);
+			}
+			
+			return null;
+		}
+		
 		LMPlayer p = null;
-		boolean changed = false;
 		
-		if(args.length >= 2 && isArg(args, 0, "add", "rem")) p = LMPlayer.getPlayer(args[1]);
-		if(args.length >= 3 && !isArg(args, 0, "add", "rem")) p = LMPlayer.getPlayer(args[2]);
+		if(args.length >= 2 && isArg(args, 0, "add", "rem")) p = getLMPlayer(args[1]);
+		if(args.length >= 3 && isArg(args, 0, "addto", "remfrom")) p = getLMPlayer(args[2]);
+		if(p != null && p.equals(owner)) return "Invalid player!";
+		
+		checkArgs(args, 2);
 		
 		if(args[0].equals("add"))
 		{
-			if(p != null && !owner.friends.contains(p))
+			if(!owner.friends.contains(p))
 			{
 				owner.friends.add(p);
-				changed = true;
+				return changed(owner, p, "Added " + p.username + " as friend");
 			}
+			else return p.username + " is already added as friend!";
 		}
 		else if(args[0].equals("rem"))
 		{
-			if(p != null && owner.friends.contains(p))
+			if(owner.friends.contains(p))
 			{
 				owner.friends.remove(p);
-				changed = true;
+				return changed(owner, p, "Removed " + p.username + " from friends");
 			}
+			else return p.username + " is not added as friend!";
 		}
 		else
 		{
-			Integer gid = owner.groups.getKey(args[1]);
-			int groupID = (gid == null) ? 0 : gid.intValue();
+			int groupID = owner.getGroupID(args[1]);
+			LMPlayer.Group g = owner.getGroup(groupID);
 			
 			if(args[0].equals("addgroup"))
 			{
-				if(owner.groups.size() < 8)
+				if(owner.getGroup(args[1]) != null) return "Group name is already taken!";
+				
+				if(owner.groups.size() < 8 && args[1] != null)
 				{
-					LMPlayer.Group g = new LMPlayer.Group(owner, ++owner.lastGroupID, "Unnamed");
-					owner.groups.put(g.groupID, g);
-					changed = true;
+					g = new LMPlayer.Group(owner, ++owner.lastGroupID, args[1]);
+					owner.groups.add(g);
+					return changed(owner, null, "Group '" + g.name + "' created!");
 				}
+				else return "Can't add any more groups!";
 			}
 			else if(args[0].equals("remgroup"))
 			{
-				if(groupID > 0 && owner.groups.hasKeys())
+				if(groupID > 0 && owner.groups.notEmpty())
 				{
-					if(owner.groups.remove(groupID))
-						changed = true;
+					if(owner.groups.remove(owner.getGroup(groupID)))
+						return changed(owner, null, "Group " + args[1] + " deleted!");
+					else return "Group " + args[1] + " not found!";
 				}
 			}
-			else if(args[0].equals("rengroup"))
+			
+			checkArgs(args, 3);
+			
+			if(args[0].equals("rengroup"))
 			{
-				String groupName = args[2];
+				if(owner.getGroup(args[2]) != null) return "Group name is already taken!";
 				
-				if(groupID > 0 && owner.groups.hasKeys() && !groupName.isEmpty())
+				if(g != null && owner.groups.notEmpty() && !args[2].isEmpty())
 				{
-					LMPlayer.Group g = owner.groups.get(groupID);
-					if(g != null && !g.name.equals(groupName))
-					{
-						g.name = groupName;
-						changed = true;
-					}
+					String name0 = g.name + ""; g.name = args[2];
+					return changed(owner, null, "Renamed " + name0 + " to " + g.name);
 				}
+				else return "Group " + args[1] + " not found!";
 			}
 			else if(args[0].equals("addto"))
 			{
-				if(p != null && owner.groups.hasKeys() && owner.groups.keys.contains(groupID))
+				if(g != null && p != null && owner.groups.notEmpty())
 				{
-					LMPlayer.Group g = owner.groups.get(groupID);
-					
-					if(!g.members.contains(p))
-						g.members.add(p);
-					
-					changed = true;
+					if(!g.members.contains(p)) g.members.add(p);
+					return changed(owner, p, "Added " + p.username + " to " + g.name);
 				}
+				else return "Group " + args[1] + " not found!";
 			}
 			else if(args[0].equals("remfrom"))
 			{
-				if(p != null && owner.groups.hasKeys() && owner.groups.keys.contains(groupID))
+				if(groupID > 0 && p != null && owner.groups.notEmpty())
 				{
-					LMPlayer.Group g = owner.groups.get(groupID);
-					
-					if(g.members.contains(p))
-						g.members.remove(p);
-					
-					changed = true;
+					if(g.members.contains(p)) g.members.remove(p);
+					return changed(owner, p, "Removed " + p.username + " from " + g.name);
 				}
+				else return "Group " + args[1] + " not found!";
 			}
 		}
 		
-		if(changed)
-		{
-			owner.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED);
-			
-			if(p != null)
-				p.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED);
-		}
-		
-		return onCommand(ics, null);
+		return null;
+	}
+	
+	private static String changed(LMPlayer o, LMPlayer p, String s)
+	{
+		o.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED);
+		if(p != null) p.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED);
+		return FINE + s;
 	}
 }

@@ -85,7 +85,7 @@ public abstract class CommandLM extends CommandBase
 	public NameType getUsername(String[] args, int i)
 	{ return NameType.NONE; }
 	
-	public boolean isArg(String[] args, int i, String... s)
+	public static boolean isArg(String[] args, int i, String... s)
 	{
 		if(args != null && i >= 0 && i < args.length)
 		{

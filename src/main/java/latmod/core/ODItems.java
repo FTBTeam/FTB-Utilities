@@ -9,6 +9,7 @@ public class ODItems
 	public static final int ANY = OreDictionary.WILDCARD_VALUE;
 	
 	public static final String WOOD = "logWood";
+	public static final String SAPLING = "treeSapling";
 	public static final String PLANKS = "plankWood";
 	public static final String STICK = "stickWood";
 	public static final String GLASS = "blockGlassColorless";
@@ -17,6 +18,7 @@ public class ODItems
 	public static final String GLASS_PANE_ANY = "paneGlass";
 	public static final String STONE = "stone";
 	public static final String COBBLE = "cobblestone";
+	public static final String SAND = "sand";
 	public static final ItemStack OBSIDIAN = new ItemStack(Blocks.obsidian);
 	public static final ItemStack WOOL = new ItemStack(Blocks.wool, 1, ANY);
 	public static final ItemStack WOOL_WHITE = new ItemStack(Blocks.wool, 1, 0);

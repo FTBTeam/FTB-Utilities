@@ -65,3 +65,5 @@ latcoremc:color.light_blue=Bleu clair
 latcoremc:color.magenta=Magenta
 latcoremc:color.orange=Orange
 latcoremc:color.white=Blanc
+
+commands.lmmissingargs=Arguments manquants!

@@ -1,10 +1,11 @@
 package latmod.core.mod.client;
 import latmod.core.*;
 import latmod.core.client.playerdeco.ThreadCheckPlayerDecorators;
+import latmod.core.event.LMPlayerEvent;
 import latmod.core.mod.LCCommon;
 import latmod.core.tile.IGuiTile;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.entity.*;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.particle.EntityReddustFX;
 import net.minecraft.client.settings.KeyBinding;
@@ -40,6 +41,7 @@ public class LCClient extends LCCommon
 	public boolean isShiftDown() { return GuiScreen.isShiftKeyDown(); }
 	public boolean isCtrlDown() { return GuiScreen.isCtrlKeyDown(); }
 	public boolean isTabDown() { return Keyboard.isKeyDown(Keyboard.KEY_TAB); }
+	public boolean inGameHasFocus() { return Minecraft.getMinecraft().inGameHasFocus; }
 	
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
@@ -60,9 +62,6 @@ public class LCClient extends LCCommon
 	
 	public void openClientGui(EntityPlayer ep, IGuiTile i, int ID)
 	{ Minecraft.getMinecraft().displayGuiScreen(i.getGui(ep, ID)); }
-	
-	public boolean inGameHasFocus()
-	{ return Minecraft.getMinecraft().inGameHasFocus; }
 	
 	public static ResourceLocation getSkinTexture(String username)
 	{
@@ -86,5 +85,18 @@ public class LCClient extends LCCommon
 		fx.setRBGColorF(red, green, blue);
 		fx.setAlphaF(alpha);
 		Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+	}
+	
+	public void receiveLMPlayerUpdate(LMPlayer p, String action)
+	{
+		EntityPlayerSP ep = p.getPlayerSP();
+		
+		if(action.equals(LMPlayer.ACTION_LOGGED_IN))
+			new LMPlayerEvent.LoggedInClient(p, ep).post();
+		
+		if(action.equals(LMPlayer.ACTION_LOGGED_OUT))
+			new LMPlayerEvent.LoggedOutClient(p, ep).post();
+		
+		new LMPlayerEvent.DataChanged(p, Side.CLIENT, action).post();
 	}
 }

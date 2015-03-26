@@ -12,6 +12,7 @@ public class LCCommon extends LMProxy implements IGuiHandler // LCClient
 	public boolean isShiftDown() { return false; }
 	public boolean isCtrlDown() { return false; }
 	public boolean isTabDown() { return false; }
+	public boolean inGameHasFocus() { return true; }
 	
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
@@ -39,18 +40,8 @@ public class LCCommon extends LMProxy implements IGuiHandler // LCClient
 		return 0F;
 	}
 	
-	public void openClientGui(EntityPlayer ep, IGuiTile i, int ID)
-	{
-	}
-	
-	public boolean inGameHasFocus()
-	{ return true; }
-	
-	public void notifyPlayer(Notification n)
-	{
-	}
-	
-	public void spawnDust(World w, double x, double y, double z, int col)
-	{
-	}
+	public void openClientGui(EntityPlayer ep, IGuiTile i, int ID) { }
+	public void notifyPlayer(Notification n) { }
+	public void spawnDust(World w, double x, double y, double z, int col) { }
+	public void receiveLMPlayerUpdate(LMPlayer p, String action) { }
 }

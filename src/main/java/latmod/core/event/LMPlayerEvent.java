@@ -1,8 +1,9 @@
 package latmod.core.event;
 
 import latmod.core.LMPlayer;
-import net.minecraft.entity.player.EntityPlayer;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.player.*;
+import cpw.mods.fml.relauncher.*;
 
 public abstract class LMPlayerEvent extends EventLM
 {
@@ -37,20 +38,42 @@ public abstract class LMPlayerEvent extends EventLM
 	
 	public static class LoggedIn extends LMPlayerEvent
 	{
-		public final Side side;
-		public final EntityPlayer entityPlayer;
+		public final EntityPlayerMP playerMP;
 		public final boolean firstTime;
 		
-		public LoggedIn(LMPlayer p, Side s, EntityPlayer ep, boolean b)
-		{ super(p); side = s; entityPlayer = ep; firstTime = b; }
+		public LoggedIn(LMPlayer p, EntityPlayerMP ep, boolean b)
+		{ super(p); playerMP = ep; firstTime = b; }
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static class LoggedInClient extends LMPlayerEvent
+	{
+		public final EntityPlayerSP playerSP;
+		
+		public LoggedInClient(LMPlayer p, EntityPlayerSP ep)
+		{
+			super(p);
+			playerSP = ep;
+		}
 	}
 	
 	public static class LoggedOut extends LMPlayerEvent
 	{
-		public final Side side;
-		public final EntityPlayer entityPlayer;
+		public final EntityPlayerMP playerMP;
 		
-		public LoggedOut(LMPlayer p, Side s, EntityPlayer ep)
-		{ super(p); side = s; entityPlayer = ep; }
+		public LoggedOut(LMPlayer p, EntityPlayerMP ep)
+		{ super(p); playerMP = ep; }
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static class LoggedOutClient extends LMPlayerEvent
+	{
+		public final EntityPlayerSP playerSP;
+		
+		public LoggedOutClient(LMPlayer p, EntityPlayerSP ep)
+		{
+			super(p);
+			playerSP = ep;
+		}
 	}
 }

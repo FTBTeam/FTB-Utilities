@@ -50,7 +50,7 @@ public class MessageUpdateLMPlayer extends MessageLM implements IMessageHandler<
 			p.readFromNBT(m.data.getCompoundTag("D"));
 			String a = m.data.getString("A");
 			
-			if(!a.isEmpty()) p.receiveUpdate(a);
+			if(!a.isEmpty()) LC.proxy.receiveLMPlayerUpdate(p, a);
 		}
 		else LatCoreMC.printChat(LC.proxy.getClientPlayer(), "LatCoreMC error! PlayerID: " + playerID);
 		

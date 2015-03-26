@@ -7,12 +7,13 @@ import latmod.core.event.LMPlayerEvent;
 import latmod.core.mod.LC;
 import latmod.core.net.*;
 import latmod.core.util.*;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
-import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.*;
 
 public class LMPlayer implements Comparable<LMPlayer>
 {
@@ -56,7 +57,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public final UUID uuid;
 	public final String username;
 	
-	private final String uuidString;
+	public final String uuidString;
 	public final FastList<LMPlayer> friends;
 	public final FastList<Group> groups;
 	public final ItemStack[] lastArmor;
@@ -83,10 +84,16 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public EntityPlayerMP getPlayerMP()
 	{ return LatCoreMC.getAllOnlinePlayers().get(uuid); }
 	
-	public EntityPlayer getPlayerSP()
+	@SideOnly(Side.CLIENT)
+	public EntityPlayerSP getPlayerSP()
 	{
 		World w = LC.proxy.getClientWorld();
-		if(w != null) return w.func_152378_a(uuid);
+		if(w != null)
+		{
+			EntityPlayer ep = w.func_152378_a(uuid);
+			if(ep != null && ep instanceof EntityPlayerSP)
+				return (EntityPlayerSP)ep;
+		}
 		return null;
 	}
 	
@@ -101,9 +108,9 @@ public class LMPlayer implements Comparable<LMPlayer>
 		if(LatCoreMC.isServer() && action != null && !action.isEmpty())
 		{
 			if(action.equals(ACTION_LOGGED_IN))
-				new LMPlayerEvent.LoggedIn(this, Side.SERVER, getPlayerMP(), !isOld).post();
+				new LMPlayerEvent.LoggedIn(this, getPlayerMP(), !isOld).post();
 			else if(action.equals(ACTION_LOGGED_IN))
-				new LMPlayerEvent.LoggedOut(this, Side.SERVER, getPlayerMP()).post();
+				new LMPlayerEvent.LoggedOut(this, getPlayerMP()).post();
 			
 			new LMPlayerEvent.DataChanged(this, Side.SERVER, action).post();
 			if(clientUpdate) MessageLM.NET.sendToAll(new MessageUpdateLMPlayer(this, action.equals(ACTION_LOGGED_IN), action));
@@ -112,19 +119,6 @@ public class LMPlayer implements Comparable<LMPlayer>
 	
 	public void sendUpdate(String action)
 	{ sendUpdate(action, true); }
-	
-	public void receiveUpdate(String action)
-	{
-		EntityPlayer ep = getPlayerSP();
-		
-		if(action.equals(ACTION_LOGGED_IN))
-			new LMPlayerEvent.LoggedIn(this, Side.CLIENT, ep, !isOld).post();
-		
-		if(action.equals(ACTION_LOGGED_OUT))
-			new LMPlayerEvent.LoggedOut(this, Side.CLIENT, ep).post();
-		
-		new LMPlayerEvent.DataChanged(this, Side.CLIENT, action).post();
-	}
 	
 	public boolean isFriendRaw(LMPlayer p)
 	{ return p != null && (playerID == p.playerID || friends.contains(p.playerID)); }

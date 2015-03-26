@@ -124,7 +124,7 @@ public class LMDataLoader
 				player.customData.removeTag("IsOld");
 			}
 			
-			player.newPlayer = !tag.getBoolean("Old");
+			player.isOld = tag.getBoolean("Old");
 		}
 	}
 }

@@ -63,8 +63,9 @@ public class LMPlayer implements Comparable<LMPlayer>
 	
 	public NBTTagCompound customData;
 	private boolean isOnline;
-	public boolean newPlayer = false;
+	public boolean isOld;
 	public int lastGroupID = 0;
+	public final NBTTagCompound tempData = new NBTTagCompound();
 	
 	public LMPlayer(int i, UUID id, String s)
 	{
@@ -100,12 +101,12 @@ public class LMPlayer implements Comparable<LMPlayer>
 		if(LatCoreMC.isServer() && action != null && !action.isEmpty())
 		{
 			if(action.equals(ACTION_LOGGED_IN))
-				new LMPlayerEvent.LoggedIn(this, Side.SERVER, getPlayerMP(), newPlayer).post();
+				new LMPlayerEvent.LoggedIn(this, Side.SERVER, getPlayerMP(), !isOld).post();
 			else if(action.equals(ACTION_LOGGED_IN))
 				new LMPlayerEvent.LoggedOut(this, Side.SERVER, getPlayerMP()).post();
 			
 			new LMPlayerEvent.DataChanged(this, Side.SERVER, action).post();
-			if(clientUpdate) MessageLM.NET.sendToAll(new MessageUpdateLMPlayer(this, action));
+			if(clientUpdate) MessageLM.NET.sendToAll(new MessageUpdateLMPlayer(this, action.equals(ACTION_LOGGED_IN), action));
 		}
 	}
 	
@@ -117,7 +118,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 		EntityPlayer ep = getPlayerSP();
 		
 		if(action.equals(ACTION_LOGGED_IN))
-			new LMPlayerEvent.LoggedIn(this, Side.CLIENT, ep, newPlayer).post();
+			new LMPlayerEvent.LoggedIn(this, Side.CLIENT, ep, !isOld).post();
 		
 		if(action.equals(ACTION_LOGGED_OUT))
 			new LMPlayerEvent.LoggedOut(this, Side.CLIENT, ep).post();
@@ -179,14 +180,14 @@ public class LMPlayer implements Comparable<LMPlayer>
 			customData.removeTag("IsOld");
 		}
 		
-		newPlayer = tag.getBoolean("NewPlayer");
+		isOld = !tag.getBoolean("NewPlayer");
 		
 		InvUtils.readItemsFromNBT(lastArmor, tag, "LastItems");
 	}
 	
 	public void writeToNBT(NBTTagCompound tag)
 	{
-		if(newPlayer) tag.setBoolean("NewPlayer", true);
+		if(!isOld) tag.setBoolean("NewPlayer", true);
 		
 		if(isOnline) tag.setBoolean("On", isOnline);
 		

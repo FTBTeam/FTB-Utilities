@@ -18,12 +18,14 @@ public class LCEventHandler
 	@SubscribeEvent
 	public void playerLoggedIn(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e)
 	{
+		if(!(e.player instanceof EntityPlayerMP)) return;
+		
 		if(LCConfig.General.checkUpdates)
 			ThreadCheckVersions.init(e.player, false);
 		
 		LMPlayer p = LMPlayer.getPlayer(e.player);
 		
-		boolean first = p == null || p.newPlayer;
+		boolean first = p == null || !p.isOld;
 		boolean sendAll = false;
 		
 		String cmdName = e.player.getCommandSenderName();
@@ -44,13 +46,13 @@ public class LCEventHandler
 			}
 		}
 		
-		p.newPlayer = first;
+		p.isOld = !first;
 		p.setOnline(true);
 		
 		updateAllData(sendAll ? null : (EntityPlayerMP)e.player);
 		p.sendUpdate(LMPlayer.ACTION_LOGGED_IN);
 		
-		p.newPlayer = false;
+		p.isOld = true;
 	}
 	
 	@SubscribeEvent

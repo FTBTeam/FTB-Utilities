@@ -397,4 +397,12 @@ public class LatCore
 		
 		return new String(c);
 	}
+	
+	public static int hashCode(Object... o)
+	{
+		int h = 0;
+		for(int i = 0; i < o.length; i++)
+			h = h * 31 + ((o[i] == null) ? 0 : o[i].hashCode());
+		return h;
+	}
 }

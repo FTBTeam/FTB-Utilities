@@ -1,4 +1,4 @@
-package latmod.core;
+package latmod.core.item;
 
 public class ToolClass
 {

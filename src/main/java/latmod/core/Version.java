@@ -16,12 +16,7 @@ public class Version implements Comparable<Version>
 		minor = i;
 		rev = r;
 		
-		int h = 0;
-		h = 31 * h + major;
-		h = 31 * h + minor;
-		h = 31 * h + rev;
-		hashCode = h;
-		
+		hashCode = LatCore.hashCode(major, minor, rev);
 		toString = "" + major + '.' + minor + '.' + rev;
 	}
 	

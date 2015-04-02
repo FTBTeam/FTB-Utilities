@@ -4,6 +4,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 import latmod.core.client.IResourceReloader;
+import latmod.core.item.IItemLM;
 import latmod.core.mod.LC;
 import latmod.core.mod.client.LCClientEventHandler;
 import latmod.core.net.*;
@@ -133,6 +134,9 @@ public class LatCoreMC
 	{ printChat(ep, o, false); }
 	
 	// Registry methods //
+	
+	public static final void addItem(IItemLM i)
+	{ addItem(i.getItem(), i.getItemID()); }
 	
 	public static final void addItem(Item i, String name)
 	{ GameRegistry.registerItem(i, name); }

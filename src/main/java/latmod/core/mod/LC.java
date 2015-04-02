@@ -96,14 +96,6 @@ public class LC
 		e.registerServerCommand(new CmdLatCore());
 		e.registerServerCommand(new CmdLMFriends());
 		e.registerServerCommand(new CmdLatCoreAdmin());
-		
-		if(!LCConfig.General.disableCommandOverrides)
-		{
-			e.registerServerCommand(new CmdTpOverride());
-			e.registerServerCommand(new CmdListOverride());
-			e.registerServerCommand(new CmdGamemodeOverride());
-			e.registerServerCommand(new CmdGameruleOverride());
-		}
 	}
 	
 	@Mod.EventHandler

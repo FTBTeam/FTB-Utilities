@@ -44,7 +44,6 @@ public class LCConfig extends LMConfig implements IServerConfig
 		public static boolean checkUpdates;
 		public static boolean disableLatCoreCommand;
 		public static boolean disableLMFriendsCommand;
-		public static boolean disableCommandOverrides;
 		public static boolean friendsGuiArmor;
 		
 		public static void load(Category c)
@@ -52,7 +51,6 @@ public class LCConfig extends LMConfig implements IServerConfig
 			checkUpdates = c.getBool("checkUpdates", true);
 			disableLatCoreCommand = c.getBool("disableLatCoreCommand", false);
 			disableLMFriendsCommand = c.getBool("disableLMFriendsCommand", false);
-			disableCommandOverrides = c.getBool("disableCommandOverrides", false);
 			friendsGuiArmor = c.getBool("friendsGuiArmor", true);
 		}
 	}

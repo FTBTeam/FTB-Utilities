@@ -75,6 +75,22 @@ public class Converter
 		d[i] = f[i]; return d;
 	}
 	
+	public static Boolean[] fromBooleans(boolean[] i)
+	{
+		if(i == null) return null;
+		Boolean ai[] = new Boolean[i.length];
+		for(int j = 0; j < ai.length; j++)
+		ai[j] = i[j]; return ai;
+	}
+	
+	public static boolean[] toInts(Boolean[] i)
+	{
+		if(i == null) return null;
+		boolean ai[] = new boolean[i.length];
+		for(int j = 0; j < ai.length; j++)
+		ai[j] = i[j]; return ai;
+	}
+	
 	public static double[][] to2DArray(double[][][] f, int index, int lvl1size, int lvl2size)
 	{
 		double[][] a = new double[lvl1size][lvl2size];

@@ -140,8 +140,9 @@ public class LatCore
 		return f;
 	}
 	
-	public static String[] toStrings(Object... o)
+	public static <E> String[] toStrings(E[] o)
 	{
+		if(o == null) return null;
 		String[] s = new String[o.length];
 		for(int i = 0; i < o.length; i++)
 			s[i] = "" + o[i];
@@ -187,6 +188,20 @@ public class LatCore
 		for(int i = 0; i < o.length; i++)
 		{
 			s += ((long)o[i]);
+			if(i != o.length - 1) s += ", ";
+		}
+		
+		return s;
+	}
+	
+	public static String stripBool(boolean... o)
+	{
+		if(o == null) return null;
+		if(o.length == 0) return "";
+		String s = "";
+		for(int i = 0; i < o.length; i++)
+		{
+			s += (o[i] ? 1 : 0);
 			if(i != o.length - 1) s += ", ";
 		}
 		

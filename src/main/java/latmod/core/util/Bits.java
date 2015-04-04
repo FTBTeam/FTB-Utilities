@@ -12,7 +12,7 @@ public class Bits
 	b[j] = ((d >> j) & 1) == 1; return b; }
 	
 	public static int getBit(int bits, int i)
-	{ return bits >> i; }
+	{ return (bits >> i) & 1; }
 	
 	public static boolean isBit(int bits, int i)
 	{ return getBit(bits, i) == 1; }

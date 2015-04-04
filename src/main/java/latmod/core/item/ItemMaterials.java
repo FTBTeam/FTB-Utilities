@@ -23,7 +23,13 @@ public abstract class ItemMaterials extends ItemLM
 	}
 	
 	public void onPostLoaded()
-	{ addAllDamages(names.length); }
+	{
+		for(int i = 0; i < names.length; i++)
+		{
+			if(names[i] != null && !names[i].isEmpty())
+				itemsAdded.add(new ItemStack(this, 1, i));
+		}
+	}
 	
 	public void loadRecipes()
 	{
@@ -36,8 +42,11 @@ public abstract class ItemMaterials extends ItemLM
 	public void registerIcons(IIconRegister ir)
 	{
 		icons = new IIcon[names.length];
-		for(int i = 0; i < icons.length; i++)
-		icons[i] = ir.registerIcon(mod.assets + (prefix != null ? (prefix + "/") : "") + names[i]);
+		for(int i = 0; i < names.length; i++)
+		{
+			if(names[i] != null && !names[i].isEmpty())
+				icons[i] = ir.registerIcon(mod.assets + (prefix != null ? (prefix + "/") : "") + names[i]);
+		}
 	}
 	
 	@SideOnly(Side.CLIENT)

@@ -62,22 +62,37 @@ public class LMRecipes
 		return r;
 	}
 	
-	public void addItemBlockRecipe(ItemStack item, ItemStack block, boolean back)
+	public void addItemBlockRecipe(ItemStack block, ItemStack item, boolean back, boolean small)
 	{
-		addRecipe(block, "EEE", "EEE", "EEE", Character.valueOf('E'), item);
-		if(back)
+		if(small)
 		{
-			ItemStack out9 = item.copy();
-			out9.stackSize = 9;
-			addShapelessRecipe(out9, block);
+			addRecipe(block, "EE", "EE", Character.valueOf('E'), item);
+			
+			if(back)
+			{
+				ItemStack out4 = item.copy();
+				out4.stackSize = 4;
+				addShapelessRecipe(out4, block);
+			}
+		}
+		else
+		{
+			addRecipe(block, "EEE", "EEE", "EEE", Character.valueOf('E'), item);
+			
+			if(back)
+			{
+				ItemStack out9 = item.copy();
+				out9.stackSize = 9;
+				addShapelessRecipe(out9, block);
+			}
 		}
 	}
 	
-	public void addSmelting(ItemStack in, ItemStack out, float xp)
+	public void addSmelting(ItemStack out, ItemStack in, float xp)
 	{ FurnaceRecipes.smelting().func_151394_a(in, out, xp); }
 	
-	public void addSmelting(ItemStack in, ItemStack out)
-	{ addSmelting(in, out, 0F); }
+	public void addSmelting(ItemStack out, ItemStack in)
+	{ addSmelting(out, in, 0F); }
 	
 	public void loadRecipes()
 	{

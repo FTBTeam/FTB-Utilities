@@ -2,7 +2,7 @@ package latmod.core.event;
 
 import latmod.core.LMPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.entity.player.*;
+import net.minecraft.entity.player.EntityPlayerMP;
 import cpw.mods.fml.relauncher.*;
 
 public abstract class LMPlayerEvent extends EventLM

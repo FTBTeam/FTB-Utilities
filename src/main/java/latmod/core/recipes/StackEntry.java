@@ -128,4 +128,12 @@ public class StackEntry implements IStackArray
 	
 	public StackEntry[] getItems()
 	{ return array; }
+	
+	public static ItemStack getFrom(Object o)
+	{
+		if(o instanceof ItemStack) return ((ItemStack)o);
+		if(o instanceof Item) return new ItemStack((Item)o);
+		if(o instanceof Block) return new ItemStack((Block)o);
+		return null;
+	}
 }

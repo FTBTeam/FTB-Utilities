@@ -98,7 +98,7 @@ public class LCConfig extends LMConfig implements IServerConfig
 		public static void loadRecipes()
 		{
 			if(smeltFleshToLeather)
-				LC.mod.recipes.addSmelting(new ItemStack(Items.rotten_flesh), new ItemStack(Items.leather));
+				LC.mod.recipes.addSmelting(new ItemStack(Items.leather), new ItemStack(Items.rotten_flesh));
 		}
 	}
 }

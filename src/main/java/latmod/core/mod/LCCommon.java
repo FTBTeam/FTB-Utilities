@@ -3,12 +3,16 @@ package latmod.core.mod;
 import latmod.core.*;
 import latmod.core.tile.IGuiTile;
 import net.minecraft.entity.player.*;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 public class LCCommon extends LMProxy implements IGuiHandler // LCClient
 {
+	public static final String GUI_FRIENDS = "latcore.friends";
+	public static final String GUI_SECURITY = "latcore.security";
+	
 	public boolean isShiftDown() { return false; }
 	public boolean isCtrlDown() { return false; }
 	public boolean isTabDown() { return false; }
@@ -43,5 +47,9 @@ public class LCCommon extends LMProxy implements IGuiHandler // LCClient
 	public void openClientGui(EntityPlayer ep, IGuiTile i, int ID) { }
 	public void notifyPlayer(Notification n) { }
 	public void spawnDust(World w, double x, double y, double z, int col) { }
-	public void receiveLMPlayerUpdate(LMPlayer p, String action) { }
+	public void playerLMLoggedIn(LMPlayer p) { }
+	public void playerLMLoggedOut(LMPlayer p) { }
+	public void playerLMDataChanged(LMPlayer p, String action) { }
+	
+	public boolean openClientGui(String id, NBTTagCompound data) { return false; }
 }

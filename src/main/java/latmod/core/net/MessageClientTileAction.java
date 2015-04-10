@@ -3,9 +3,9 @@ import latmod.core.tile.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import cpw.mods.fml.common.network.simpleimpl.*;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageClientTileAction extends MessageLM implements IMessageHandler<MessageClientTileAction, IMessage>
+public class MessageClientTileAction extends MessageLM<MessageClientTileAction>
 {
 	public MessageClientTileAction() { }
 	
@@ -19,18 +19,16 @@ public class MessageClientTileAction extends MessageLM implements IMessageHandle
 		if(tag != null) data.setTag("T", tag);
 	}
 	
-	public IMessage onMessage(MessageClientTileAction m, MessageContext ctx)
+	public void onMessage(MessageContext ctx)
 	{
-		int x = m.data.getInteger("X");
-		int y = m.data.getInteger("Y");
-		int z = m.data.getInteger("Z");
+		int x = data.getInteger("X");
+		int y = data.getInteger("Y");
+		int z = data.getInteger("Z");
 		
 		EntityPlayer ep = ctx.getServerHandler().playerEntity;
 		TileEntity te = ep.worldObj.getTileEntity(x, y, z);
 		
 		if(te instanceof IClientActionTile)
-			((IClientActionTile)te).onClientAction(ep, m.data.getString("A"), (NBTTagCompound)m.data.getTag("T"));
-		
-		return null;
+			((IClientActionTile)te).onClientAction(ep, data.getString("A"), (NBTTagCompound)data.getTag("T"));
 	}
 }

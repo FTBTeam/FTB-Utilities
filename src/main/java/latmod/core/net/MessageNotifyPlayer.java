@@ -2,9 +2,9 @@ package latmod.core.net;
 import latmod.core.Notification;
 import latmod.core.mod.LC;
 import net.minecraft.nbt.NBTTagCompound;
-import cpw.mods.fml.common.network.simpleimpl.*;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageNotifyPlayer extends MessageLM implements IMessageHandler<MessageNotifyPlayer, IMessage>
+public class MessageNotifyPlayer extends MessageLM<MessageNotifyPlayer>
 {
 	public MessageNotifyPlayer() { }
 	
@@ -14,9 +14,8 @@ public class MessageNotifyPlayer extends MessageLM implements IMessageHandler<Me
 		n.writeToNBT(data);
 	}
 	
-	public IMessage onMessage(MessageNotifyPlayer m, MessageContext ctx)
+	public void onMessage(MessageContext ctx)
 	{
-		LC.proxy.notifyPlayer(Notification.readFromNBT(m.data));
-		return null;
+		LC.proxy.notifyPlayer(Notification.readFromNBT(data));
 	}
 }

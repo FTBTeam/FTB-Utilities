@@ -1,4 +1,5 @@
 package latmod.core.item;
+import latmod.core.LatCoreMC;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -36,7 +37,11 @@ public abstract class ItemMaterials extends ItemLM
 	}
 	
 	public String getUnlocalizedName(ItemStack is)
-	{ return mod.getItemName((prefix != null ? (prefix + ".") : "") + names[is.getItemDamage()]); }
+	{
+		int dmg = is.getItemDamage();
+		if(dmg < 0 || dmg >= names.length) return "unknown";
+		return mod.getItemName((prefix != null ? (prefix + ".") : "") + names[dmg]);
+	}
 	
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister ir)
@@ -51,7 +56,7 @@ public abstract class ItemMaterials extends ItemLM
 	
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconFromDamageForRenderPass(int m, int r)
-	{ return icons[m]; }
+	{ return (m >= 0 && m < icons.length) ? icons[m] : LatCoreMC.unknownItemIcon; }
 	
 	public abstract String[] getNames();
 	public abstract String getPrefix();

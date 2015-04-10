@@ -4,6 +4,7 @@ import java.util.List;
 import latmod.core.block.BlockLM;
 import latmod.core.util.*;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -59,7 +60,7 @@ public class ItemBlockLM extends ItemBlock
 	
 	public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int s, float hitX, float hitY, float hitZ)
 	{
-		if(!blockLM.canPlace(w, x, y, z, s, is)) return false;
+		if(!canPlace(w, x, y, z, s, is)) return false;
 		
 		Block block = w.getBlock(x, y, z);
 		
@@ -87,5 +88,20 @@ public class ItemBlockLM extends ItemBlock
 		}
 		
 		return false;
+	}
+	
+	public boolean canPlace(World w, int x, int y, int z, int s, ItemStack is)
+	{
+		Block b = w.getBlock(x, y, z);
+		
+        if (b == Blocks.snow_layer && (w.getBlockMetadata(x, y, z) & 7) < 1) s = 1;
+        else if (b != Blocks.vine && b != Blocks.tallgrass && b != Blocks.deadbush && !b.isReplaceable(w, x, y, z))
+        {
+        	x += ForgeDirection.VALID_DIRECTIONS[s].offsetX;
+			y += ForgeDirection.VALID_DIRECTIONS[s].offsetY;
+			z += ForgeDirection.VALID_DIRECTIONS[s].offsetZ;
+        }
+        
+		return b.getMaterial() != Material.air && w.canPlaceEntityOnSide(b, x, y, z, false, s, null, is.copy());
 	}
 }

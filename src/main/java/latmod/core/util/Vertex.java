@@ -112,6 +112,9 @@ public final class Vertex implements Cloneable
 		public DimPos(Entity e)
 		{ this(e.posX, e.posY, e.posZ, e.dimension); }
 		
+		public DimPos()
+		{ this(0D, 0D, 0D, 0); }
+		
 		public void readFromNBT(NBTTagCompound tag)
 		{
 			pos.x = tag.getDouble("X");
@@ -127,6 +130,15 @@ public final class Vertex implements Cloneable
 			tag.setDouble("Z", pos.z);
 			tag.setInteger("D", dim);
 		}
+		
+		public int intX()
+		{ return MathHelperLM.floor(pos.x); }
+		
+		public int intY()
+		{ return MathHelperLM.floor(pos.y); }
+		
+		public int intZ()
+		{ return MathHelperLM.floor(pos.z); }
 		
 		public boolean equals(Object o)
 		{ return (o instanceof DimPos) && ((DimPos)o).dim == dim && ((DimPos)o).pos.equalsPos(pos); }

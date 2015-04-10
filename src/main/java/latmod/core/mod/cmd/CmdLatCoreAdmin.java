@@ -148,7 +148,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				
 				String item[] = LatCore.split(args[3], ";");
 				if(item.length == 1) item = new String[]{ item[0], "0" };
-				ItemStack is = LatCoreMC.getStackFromRegName(item[0], parseInt(ics, item[1]));
+				ItemStack is = InvUtils.getStackFromRegName(item[0], parseInt(ics, item[1]));
 				if(is == null || is.getItem() == null) is = new ItemStack(Blocks.stone);
 				
 				LatCoreMC.notifyPlayer(p.getPlayerMP(), new Notification(args[4].replace("\\_", "<$US>").replace('_', ' ').replace("<$US>", "_"), "", is));
@@ -182,7 +182,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				int meta = ep.worldObj.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ);
 				TileEntity te = ep.worldObj.getTileEntity(mop.blockX, mop.blockY, mop.blockZ);
 				
-				LatCoreMC.printChat(ep, "Block: " + LatCoreMC.getRegName(Item.getItemFromBlock(b)) + (meta > 0 ? ("@" +  meta) : ""));
+				LatCoreMC.printChat(ep, "Block: " + InvUtils.getRegName(Item.getItemFromBlock(b)) + (meta > 0 ? ("@" +  meta) : ""));
 				if(te != null) LatCoreMC.printChat(ep, "Tile: " + LatCore.classpath(te.getClass()));
 				
 				return null;
@@ -229,7 +229,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			{
 				NBTTagCompound tag1 = new NBTTagCompound();
 				tag1.setShort("S", (short)i);
-				tag1.setString("ID", LatCoreMC.getRegName(is.getItem()));
+				tag1.setString("ID", InvUtils.getRegName(is.getItem()));
 		        tag1.setByte("C", (byte)is.stackSize);
 		        tag1.setShort("D", (short)is.getItemDamage());
 		        if (is.stackTagCompound != null) tag1.setTag("T", is.stackTagCompound);
@@ -253,7 +253,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			for(int i = 0; i < list.tagCount(); i++)
 			{
 				NBTTagCompound tag1 = list.getCompoundTagAt(i);
-				Item item = LatCoreMC.getItemFromRegName(tag1.getString("ID"));
+				Item item = InvUtils.getItemFromRegName(tag1.getString("ID"));
 		        
 		        if(item != null)
 		        {

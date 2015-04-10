@@ -64,7 +64,7 @@ public class LatCoreMC
 	// Client //
 	
 	@SideOnly(Side.CLIENT)
-	public static IIcon blockNullIcon;
+	public static IIcon blockNullIcon, unknownItemIcon;
 	
 	@SideOnly(Side.CLIENT)
 	public static final void addEntityRenderer(Class<? extends Entity> c, Render r)
@@ -136,7 +136,7 @@ public class LatCoreMC
 	// Registry methods //
 	
 	public static final void addItem(IItemLM i)
-	{ addItem(i.getItem(), i.getItemID()); }
+	{ addItem((Item)i, i.getItemID()); }
 	
 	public static final void addItem(Item i, String name)
 	{ GameRegistry.registerItem(i, name); }
@@ -188,22 +188,6 @@ public class LatCoreMC
 	
 	public static String getPath(ResourceLocation res)
 	{ return "/assets/" + res.getResourceDomain() + "/" + res.getResourcePath(); }
-	
-	public static Item getItemFromRegName(String s)
-	{ return (Item)Item.itemRegistry.getObject(s); }
-	
-	public static ItemStack getStackFromRegName(String s, int dmg)
-	{
-		Item i = getItemFromRegName(s);
-		if(i != null) return new ItemStack(i, dmg);
-		return null;
-	}
-	
-	public static String getRegName(Item item)
-	{ return Item.itemRegistry.getNameForObject(item); }
-	
-	public static String getRegName(ItemStack is)
-	{ return (is != null && is.getItem() != null) ? getRegName(is.getItem()) : null; }
 	
 	public static void teleportEntity(Entity e, int dim)
 	{

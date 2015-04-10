@@ -1,15 +1,17 @@
 package latmod.core.mod.client;
 import latmod.core.*;
 import latmod.core.client.playerdeco.ThreadCheckPlayerDecorators;
-import latmod.core.event.LMPlayerEvent;
+import latmod.core.event.LMPlayerClientEvent;
+import latmod.core.gui.IClientGuiHandler;
 import latmod.core.mod.LCCommon;
 import latmod.core.tile.IGuiTile;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.*;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.particle.EntityReddustFX;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -31,11 +33,11 @@ public class LCClient extends LCCommon
 		LatCoreMC.addEventHandler(LCClientEventHandler.instance, true, true, true);
 		ThreadCheckPlayerDecorators.init();
 		key = LatCoreMC.addKeyBinding("key.latcoremc", Keyboard.KEY_GRAVE, "key.categories.gameplay");
+		IClientGuiHandler.Registry.add(LCClientEventHandler.instance, GUI_FRIENDS, GUI_SECURITY);
 	}
 	
 	public void postInit(FMLPostInitializationEvent e)
 	{
-		//Minecraft.getMinecraft().getTextureManager().loadTextureMap(iconsTexture, iconsTextureMap);
 	}
 	
 	public boolean isShiftDown() { return GuiScreen.isShiftKeyDown(); }
@@ -87,16 +89,37 @@ public class LCClient extends LCCommon
 		Minecraft.getMinecraft().effectRenderer.addEffect(fx);
 	}
 	
-	public void receiveLMPlayerUpdate(LMPlayer p, String action)
+	public void playerLMLoggedIn(LMPlayer p)
+	{ new LMPlayerClientEvent.LoggedIn(p, p.getPlayerSP()).post(); }
+	
+	public void playerLMLoggedOut(LMPlayer p)
+	{ new LMPlayerClientEvent.LoggedOut(p, p.getPlayerSP()).post(); }
+	
+	public void playerLMDataChanged(LMPlayer p, String action)
+	{ new LMPlayerClientEvent.DataChanged(p, action); }
+	
+	public boolean openClientGui(String id, NBTTagCompound data)
 	{
-		EntityPlayerSP ep = p.getPlayerSP();
+		EntityPlayer ep = getClientPlayer();
 		
-		if(action.equals(LMPlayer.ACTION_LOGGED_IN))
-			new LMPlayerEvent.LoggedInClient(p, ep).post();
+		if(ep == null) return false;
 		
-		if(action.equals(LMPlayer.ACTION_LOGGED_OUT))
-			new LMPlayerEvent.LoggedOutClient(p, ep).post();
+		for(int i = 0; i < IClientGuiHandler.Registry.map.size(); i++)
+		{
+			String s = IClientGuiHandler.Registry.map.keys.get(i);
+			
+			if(s.equals(id))
+			{
+				GuiScreen gui = IClientGuiHandler.Registry.map.values.get(i).displayGui(s, data, ep);
+				
+				if(gui != null)
+				{
+					Minecraft.getMinecraft().displayGuiScreen(gui);
+					return true;
+				}
+			}
+		}
 		
-		new LMPlayerEvent.DataChanged(p, Side.CLIENT, action).post();
+		return false;
 	}
 }

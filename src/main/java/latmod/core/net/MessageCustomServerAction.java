@@ -1,26 +1,32 @@
 package latmod.core.net;
-import latmod.core.event.CustomActionEvent;
+import latmod.core.event.CustomAction;
 import latmod.core.mod.LC;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageCustomServerAction extends MessageLM implements IMessageHandler<MessageCustomServerAction, IMessage>
+public class MessageCustomServerAction extends MessageLM<MessageCustomServerAction>
 {
 	public MessageCustomServerAction() { }
 	
-	public MessageCustomServerAction(String action, NBTTagCompound extraData)
+	public MessageCustomServerAction(EntityPlayerMP ep, String channel)
 	{
 		data = new NBTTagCompound();
-		data.setString("A", action);
-		if(extraData != null) data.setTag("D", extraData);
+		
+		CustomAction.FromServer h = CustomAction.sHandlers.get(channel);
+		
+		if(h != null)
+		{
+			NBTTagCompound data1 = new NBTTagCompound();
+			h.sendToClient(ep, data1);
+			data.setString("C", channel);
+			if(!data.hasNoTags()) data.setTag("D", data1);
+		}
 	}
 	
-	public IMessage onMessage(MessageCustomServerAction m, MessageContext ctx)
+	public void onMessage(MessageContext ctx)
 	{
-		EntityPlayer ep = LC.proxy.getClientPlayer();
-		new CustomActionEvent(ep, m.data.getString("A"), (NBTTagCompound)m.data.getTag("D"), Side.CLIENT).post();
-		return null;
+		CustomAction.FromServer h = CustomAction.sHandlers.get(data.getString("C"));
+		h.readFromServer(LC.proxy.getClientPlayer(), (NBTTagCompound)data.getTag("D"));
 	}
 }

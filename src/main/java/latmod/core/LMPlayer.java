@@ -17,9 +17,7 @@ import cpw.mods.fml.relauncher.*;
 
 public class LMPlayer implements Comparable<LMPlayer>
 {
-	public static final String ACTION_LOGGED_IN = "Login";
-	public static final String ACTION_LOGGED_OUT = "Logout";
-	public static final String ACTION_GROUPS_CHANGED = "Groups";
+	public static final String ACTION_GROUPS_CHANGED = "latcore.groups";
 	
 	public static class Group
 	{
@@ -62,11 +60,12 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public final FastList<Group> groups;
 	public final ItemStack[] lastArmor;
 	
-	public NBTTagCompound customData;
+	public final NBTTagCompound tempData;
+	public NBTTagCompound commonData;
+	public NBTTagCompound serverData;
 	private boolean isOnline;
 	public boolean isOld;
 	public int lastGroupID = 0;
-	public final NBTTagCompound tempData = new NBTTagCompound();
 	
 	public LMPlayer(int i, UUID id, String s)
 	{
@@ -77,8 +76,11 @@ public class LMPlayer implements Comparable<LMPlayer>
 		uuidString = uuid.toString();
 		friends = new FastList<LMPlayer>();
 		groups = new FastList<Group>();
-		customData = new NBTTagCompound();
 		lastArmor = new ItemStack[5];
+		
+		commonData = new NBTTagCompound();
+		serverData = new NBTTagCompound();
+		tempData = new NBTTagCompound();
 	}
 	
 	public EntityPlayerMP getPlayerMP()
@@ -97,28 +99,20 @@ public class LMPlayer implements Comparable<LMPlayer>
 		return null;
 	}
 	
+	public void sendUpdate(String action, boolean updateClient)
+	{
+		if(LatCoreMC.isServer())
+		{
+			new LMPlayerEvent.DataChanged(this, action).post();
+			if(updateClient) MessageLM.NET.sendToAll(new MessageLMPlayerUpdate(this, action));
+		}
+	}
+	
 	public boolean isOnline()
 	{ return isOnline; }
 	
 	public void setOnline(boolean b)
 	{ isOnline = b; }
-	
-	public void sendUpdate(String action, boolean clientUpdate)
-	{
-		if(LatCoreMC.isServer() && action != null && !action.isEmpty())
-		{
-			if(action.equals(ACTION_LOGGED_IN))
-				new LMPlayerEvent.LoggedIn(this, getPlayerMP(), !isOld).post();
-			else if(action.equals(ACTION_LOGGED_IN))
-				new LMPlayerEvent.LoggedOut(this, getPlayerMP()).post();
-			
-			new LMPlayerEvent.DataChanged(this, Side.SERVER, action).post();
-			if(clientUpdate) MessageLM.NET.sendToAll(new MessageUpdateLMPlayer(this, action.equals(ACTION_LOGGED_IN), action));
-		}
-	}
-	
-	public void sendUpdate(String action)
-	{ sendUpdate(action, true); }
 	
 	public boolean isFriendRaw(LMPlayer p)
 	{ return p != null && (playerID == p.playerID || friends.contains(p.playerID)); }
@@ -128,7 +122,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 	
 	// NBT reading / writing
 	
-	public void readFromNBT(NBTTagCompound tag)
+	public void readFromNBT(NBTTagCompound tag, boolean server)
 	{
 		isOnline = tag.getBoolean("On");
 		
@@ -166,20 +160,15 @@ public class LMPlayer implements Comparable<LMPlayer>
 			groups.add(g);
 		}
 		
-		customData = tag.getCompoundTag("CustomData");
-		
-		if(customData.hasKey("IsOld"))
-		{
-			tag.setBoolean("Old", customData.getBoolean("IsOld"));
-			customData.removeTag("IsOld");
-		}
+		commonData = tag.getCompoundTag("CustomData");
+		if(server) serverData = tag.getCompoundTag("ServerData");
 		
 		isOld = !tag.getBoolean("NewPlayer");
 		
 		InvUtils.readItemsFromNBT(lastArmor, tag, "LastItems");
 	}
 	
-	public void writeToNBT(NBTTagCompound tag)
+	public void writeToNBT(NBTTagCompound tag, boolean server)
 	{
 		if(!isOld) tag.setBoolean("NewPlayer", true);
 		
@@ -228,7 +217,8 @@ public class LMPlayer implements Comparable<LMPlayer>
 			tag.setTag("Groups", tag1);
 		}
 		
-		tag.setTag("CustomData", customData);
+		tag.setTag("CustomData", commonData);
+		if(server) tag.setTag("ServerData", serverData);
 		
 		InvUtils.writeItemsToNBT(lastArmor, tag, "LastItems");
 	}

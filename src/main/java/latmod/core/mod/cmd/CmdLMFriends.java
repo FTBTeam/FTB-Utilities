@@ -58,7 +58,7 @@ public class CmdLMFriends extends CommandBaseLC
 		LMPlayer owner = getLMPlayer(ep);
 		
 		if(args == null || args.length == 0 || args[0].equals("gui"))
-		{ MessageLM.NET.sendTo(new MessageCustomServerAction(LCEventHandler.ACTION_OPEN_FRIENDS_GUI, null), ep); return null; }
+		{ MessageLM.NET.sendTo(new MessageCustomClientGUI(LCCommon.GUI_FRIENDS, null), ep); return null; }
 		else if(args[0].equals("help")) { printHelp(ep); return null; }
 		
 		return onStaticCommand(ep, owner, args);
@@ -207,8 +207,8 @@ public class CmdLMFriends extends CommandBaseLC
 	
 	private static String changed(LMPlayer o, LMPlayer p, String s)
 	{
-		o.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED);
-		if(p != null) p.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED);
+		o.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
+		if(p != null) p.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
 		return FINE + s;
 	}
 }

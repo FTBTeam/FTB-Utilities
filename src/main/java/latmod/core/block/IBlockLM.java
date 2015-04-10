@@ -1,11 +1,11 @@
 package latmod.core.block;
 
-import net.minecraft.block.Block;
+import latmod.core.item.ItemBlockLM;
 
 public interface IBlockLM
 {
-	public Block getBlock();
-	public String getBlockID();
+	public Class<? extends ItemBlockLM> getItemBlock();
+	public String getItemID();
 	public void onPostLoaded();
 	public void loadRecipes();
 }

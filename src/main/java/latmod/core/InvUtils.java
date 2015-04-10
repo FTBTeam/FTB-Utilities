@@ -1,12 +1,12 @@
 package latmod.core;
 import java.util.Arrays;
 
-import latmod.core.util.FastMap;
+import latmod.core.util.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.nbt.*;
 import net.minecraft.tileentity.*;
 import net.minecraft.world.World;
@@ -391,5 +391,41 @@ public class InvUtils
 			is.writeToNBT(tag1);
 			tag.setTag(s, tag1);
 		}
+	}
+	
+	public static Item getItemFromRegName(String s)
+	{ return (Item)Item.itemRegistry.getObject(s); }
+	
+	public static ItemStack getStackFromRegName(String s, int dmg)
+	{
+		Item i = getItemFromRegName(s);
+		if(i != null) return new ItemStack(i, dmg);
+		return null;
+	}
+	
+	public static String getRegName(Item item)
+	{ return Item.itemRegistry.getNameForObject(item); }
+	
+	public static String getRegName(ItemStack is)
+	{ return (is != null && is.getItem() != null) ? getRegName(is.getItem()) : null; }
+	
+	public static ItemStack parseItem(String s)
+	{
+		try
+		{
+			String[] s1 = LatCore.split(s, "@");
+			if(s1.length <= 0 || s1.length > 3) return null;
+			ItemStack is = getStackFromRegName(s1[0], 0);
+			if(s1.length == 2) is.setItemDamage(Integer.parseInt(s1[1]));
+			if(s1.length == 3)
+			{
+				is.stackSize = Integer.parseInt(s1[1]);
+				is.setItemDamage(Integer.parseInt(s1[2]));
+			}
+			
+			return is;
+		}
+		catch(Exception e) {}
+		return null;
 	}
 }

@@ -11,8 +11,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class LCEventHandler
 {
-	public static final String ACTION_OPEN_FRIENDS_GUI = "OpenFriendsGUI";
-	
 	public static final LCEventHandler instance = new LCEventHandler();
 	
 	@SubscribeEvent
@@ -49,8 +47,9 @@ public class LCEventHandler
 		p.isOld = !first;
 		p.setOnline(true);
 		
+		new LMPlayerEvent.LoggedIn(p, (EntityPlayerMP)e.player, !p.isOld).post();
 		updateAllData(sendAll ? null : (EntityPlayerMP)e.player);
-		p.sendUpdate(LMPlayer.ACTION_LOGGED_IN);
+		MessageLM.NET.sendToAll(new MessageLMPlayerLoggedIn(p));
 		
 		p.isOld = true;
 	}
@@ -60,7 +59,7 @@ public class LCEventHandler
 	{
 		LMPlayer p = LMPlayer.getPlayer(e.player);
 		
-		if(p != null)
+		if(p != null && e.player instanceof EntityPlayerMP)
 		{
 			p.setOnline(false);
 			
@@ -68,7 +67,8 @@ public class LCEventHandler
 				p.lastArmor[i] = e.player.inventory.armorInventory[i];
 			p.lastArmor[4] = e.player.inventory.getCurrentItem();
 			
-			p.sendUpdate(LMPlayer.ACTION_LOGGED_OUT);
+			new LMPlayerEvent.LoggedOut(p, (EntityPlayerMP)e.player).post();
+			MessageLM.NET.sendToAll(new MessageLMPlayerLoggedOut(p));
 		}
 	}
 	
@@ -79,55 +79,26 @@ public class LCEventHandler
 		{
 			IServerConfig.Registry.load();
 			
-			File f0 = new File(e.world.getSaveHandler().getWorldDirectory(), "LatCoreMC.dat");
+			LoadLMDataEvent e1 = new LoadLMDataEvent(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/"), EventLM.Phase.PRE);
+			e1.post();
+			LMGamerules.load(e1);
 			
-			if(f0.exists())
+			NBTTagCompound players = NBTHelper.readMap(e1.getFile("LMPlayers.dat"));
+			if(players != null) LMDataLoader.readPlayersFromNBT(players, true);
+			
+			for(int i = 0; i < LMPlayer.map.values.size(); i++)
+				LMPlayer.map.values.get(i).setOnline(false);
+			
+			NBTTagCompound common = NBTHelper.readMap(e1.getFile("CommonData.dat"));
+			if(common != null)
 			{
-				LatCoreMC.logger.info("Old LatCoreMC.dat found");
-				
-				try
-				{
-					NBTTagCompound tag = NBTHelper.readMap(new FileInputStream(f0));
-					LMDataLoader.Old.readFromNBT(tag);
-					
-					for(int i = 0; i < LMPlayer.map.values.size(); i++)
-						LMPlayer.map.values.get(i).setOnline(false);
-					
-					f0.delete();
-					
-					LatCoreMC.logger.info("Old LatCoreMC.dat loaded");
-				}
-				catch(Exception ex)
-				{
-					LatCoreMC.logger.warn("Error occured while loading LatCoreMC.dat!");
-					ex.printStackTrace();
-				}
-				
-				worldSaved(new net.minecraftforge.event.world.WorldEvent.Save(e.world));
+				new LoadLMDataEvent.CommonData(common).post();
+				LMDataLoader.lastPlayerID = common.getInteger("LastPlayerID");
 			}
-			else
-			{
-				LoadLMDataEvent e1 = new LoadLMDataEvent(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/"), EventLM.Phase.PRE);
-				e1.post();
-				LMGamerules.load(e1);
-				
-				NBTTagCompound players = NBTHelper.readMap(e1.getFile("LMPlayers.dat"));
-				if(players != null) LMDataLoader.readPlayersFromNBT(players);
-				
-				for(int i = 0; i < LMPlayer.map.values.size(); i++)
-					LMPlayer.map.values.get(i).setOnline(false);
-				
-				NBTTagCompound common = NBTHelper.readMap(e1.getFile("CommonData.dat"));
-				if(common != null)
-				{
-					new LoadLMDataEvent.CommonData(common).post();
-					LMDataLoader.lastPlayerID = common.getInteger("LastPlayerID");
-				}
-				
-				new LoadLMDataEvent(e1.latmodFolder, EventLM.Phase.POST).post();
-				
-				LatCoreMC.logger.info("LatCoreMC data loaded");
-			}
+			
+			new LoadLMDataEvent(e1.latmodFolder, EventLM.Phase.POST).post();
+			
+			LatCoreMC.logger.info("LatCoreMC data loaded");
 		}
 	}
 	
@@ -146,7 +117,7 @@ public class LCEventHandler
 			NBTHelper.writeMap(e1.getFile("CommonData.dat"), common);
 			
 			NBTTagCompound players = new NBTTagCompound();
-			LMDataLoader.writePlayersToNBT(players);
+			LMDataLoader.writePlayersToNBT(players, true);
 			NBTHelper.writeMap(e1.getFile("LMPlayers.dat"), players);
 			
 			// Export player list //

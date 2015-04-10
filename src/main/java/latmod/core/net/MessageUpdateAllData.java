@@ -2,16 +2,16 @@ package latmod.core.net;
 import latmod.core.IServerConfig;
 import latmod.core.mod.LMDataLoader;
 import net.minecraft.nbt.NBTTagCompound;
-import cpw.mods.fml.common.network.simpleimpl.*;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageUpdateAllData extends MessageLM implements IMessageHandler<MessageUpdateAllData, IMessage>
+public class MessageUpdateAllData extends MessageLM<MessageUpdateAllData>
 {
 	public MessageUpdateAllData()
 	{
 		data = new NBTTagCompound();
 		
 		NBTTagCompound players = new NBTTagCompound();
-		LMDataLoader.writePlayersToNBT(players);
+		LMDataLoader.writePlayersToNBT(players, false);
 		data.setTag("P", players);
 		
 		NBTTagCompound config = new NBTTagCompound();
@@ -19,10 +19,9 @@ public class MessageUpdateAllData extends MessageLM implements IMessageHandler<M
 		data.setTag("C", config);
 	}
 	
-	public IMessage onMessage(MessageUpdateAllData m, MessageContext ctx)
+	public void onMessage(MessageContext ctx)
 	{
-		LMDataLoader.readPlayersFromNBT(m.data.getCompoundTag("P"));
-		IServerConfig.Registry.readFromNBT(m.data.getCompoundTag("C"));
-		return null;
+		LMDataLoader.readPlayersFromNBT(data.getCompoundTag("P"), false);
+		IServerConfig.Registry.readFromNBT(data.getCompoundTag("C"));
 	}
 }

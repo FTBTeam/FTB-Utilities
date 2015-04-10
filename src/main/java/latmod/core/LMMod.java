@@ -4,6 +4,7 @@ import latmod.core.item.*;
 import latmod.core.recipes.LMRecipes;
 import latmod.core.tile.TileLM;
 import latmod.core.util.*;
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.*;
@@ -102,14 +103,11 @@ public final class LMMod
 	else return StatCollector.translateToLocalFormatted(assets + s, args); }
 	
 	public void addItem(IItemLM i)
-	{ LatCoreMC.addItem(i.getItem(), i.getItemID()); items.add(i); }
-
-	public void addBlock(IBlockLM b, Class<? extends ItemBlockLM> c)
-	{ LatCoreMC.addBlock(b.getBlock(), c, b.getBlockID()); blocks.add(b); }
+	{ LatCoreMC.addItem((Item)i, i.getItemID()); items.add(i); }
 
 	public void addBlock(IBlockLM b)
-	{ addBlock(b, ItemBlockLM.class); }
-	
+	{ LatCoreMC.addBlock((Block)b, b.getItemBlock(), b.getItemID()); blocks.add(b); }
+
 	public void addTile(Class<? extends TileLM> c, String s, String... alt)
 	{ LatCoreMC.addTileEntity(c, modID + '.' + s, alt); }
 	

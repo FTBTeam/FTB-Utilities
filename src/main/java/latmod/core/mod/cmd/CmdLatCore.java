@@ -53,7 +53,7 @@ public class CmdLatCore extends CommandBaseLC
 			if(!LCConfig.General.disableLMFriendsCommand)
 			{
 				EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-				MessageLM.NET.sendTo(new MessageCustomServerAction(LCEventHandler.ACTION_OPEN_FRIENDS_GUI, null), ep);
+				MessageLM.NET.sendTo(new MessageCustomClientGUI(LCCommon.GUI_FRIENDS, null), ep);
 			}
 			
 			return null;

@@ -6,9 +6,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import cpw.mods.fml.common.network.simpleimpl.*;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageManageGroups extends MessageLM implements IMessageHandler<MessageManageGroups, IMessage>
+public class MessageManageGroups extends MessageLM<MessageManageGroups>
 {
 	public static final int C_ADD_FRIEND = 1;
 	public static final int C_REM_FRIEND = 2;
@@ -30,16 +30,16 @@ public class MessageManageGroups extends MessageLM implements IMessageHandler<Me
 		if(groupName != null && !groupName.isEmpty()) data.setString("GN", groupName);
 	}
 	
-	public IMessage onMessage(MessageManageGroups m, MessageContext ctx)
+	public void onMessage(MessageContext ctx)
 	{
-		LMPlayer owner = LMPlayer.getPlayer(m.data.getInteger("O"));
+		LMPlayer owner = LMPlayer.getPlayer(data.getInteger("O"));
 		EntityPlayerMP ep = owner.getPlayerMP();
 		
 		if(owner != null)
 		{
-			int code = m.data.getByte("C");
+			int code = data.getByte("C");
 			
-			int user0 = m.data.getInteger("U");
+			int user0 = data.getInteger("U");
 			LMPlayer p = (user0 > 0) ? LMPlayer.getPlayer(user0) : null;
 			
 			if(code > 0)
@@ -52,14 +52,14 @@ public class MessageManageGroups extends MessageLM implements IMessageHandler<Me
 					args = new String[] { "rem", p.username };
 				else
 				{
-					LMPlayer.Group g = owner.getGroup(m.data.getInteger("G"));
+					LMPlayer.Group g = owner.getGroup(data.getInteger("G"));
 					
 					if(code == C_ADD_GROUP)
 						args = new String[] { "addgroup", "Unnamed" };
 					else if(code == C_REM_GROUP)
 						args = new String[] { "remgroup", g.name };
 					else if(code == C_REN_GROUP)
-						args = new String[] { "rengroup", g.name, m.data.getString("GN") };
+						args = new String[] { "rengroup", g.name, data.getString("GN") };
 					else if(code == C_ADD_TO_GROUP)
 						args = new String[] { "addto", g.name, p.username };
 					else if(code == C_REM_FROM_GROUP)
@@ -75,10 +75,8 @@ public class MessageManageGroups extends MessageLM implements IMessageHandler<Me
 			else
 			{
 				LatCoreMC.notifyPlayer(ctx.getServerHandler().playerEntity, new Notification(AQUA + "Players saved", "", new ItemStack(Items.diamond), 2000L));
-				owner.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED);
+				owner.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
 			}
 		}
-		
-		return null;
 	}
 }

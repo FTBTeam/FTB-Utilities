@@ -33,7 +33,7 @@ public class LCClient extends LCCommon
 		LatCoreMC.addEventHandler(LCClientEventHandler.instance, true, true, true);
 		ThreadCheckPlayerDecorators.init();
 		key = LatCoreMC.addKeyBinding("key.latcoremc", Keyboard.KEY_GRAVE, "key.categories.gameplay");
-		IClientGuiHandler.Registry.add(LCClientEventHandler.instance, GUI_FRIENDS, GUI_SECURITY);
+		IClientGuiHandler.Registry.add(LCClientEventHandler.instance);
 	}
 	
 	public void postInit(FMLPostInitializationEvent e)
@@ -104,19 +104,14 @@ public class LCClient extends LCCommon
 		
 		if(ep == null) return false;
 		
-		for(int i = 0; i < IClientGuiHandler.Registry.map.size(); i++)
+		for(int i = 0; i < IClientGuiHandler.Registry.list.size(); i++)
 		{
-			String s = IClientGuiHandler.Registry.map.keys.get(i);
+			GuiScreen gui = IClientGuiHandler.Registry.list.get(i).displayGui(id, data, ep);
 			
-			if(s.equals(id))
+			if(gui != null)
 			{
-				GuiScreen gui = IClientGuiHandler.Registry.map.values.get(i).displayGui(s, data, ep);
-				
-				if(gui != null)
-				{
-					Minecraft.getMinecraft().displayGuiScreen(gui);
-					return true;
-				}
+				Minecraft.getMinecraft().displayGuiScreen(gui);
+				return true;
 			}
 		}
 		

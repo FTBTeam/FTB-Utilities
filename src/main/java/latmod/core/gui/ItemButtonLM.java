@@ -13,7 +13,6 @@ import cpw.mods.fml.relauncher.*;
 public abstract class ItemButtonLM extends ButtonLM
 {
 	public ItemStack item = null;
-	public String title = null;
 	
 	private static final RenderItem itemRender = new RenderItem();
 	
@@ -28,8 +27,6 @@ public abstract class ItemButtonLM extends ButtonLM
 	
 	public void render()
 	{
-		render(null);
-		
 		if(item != null)
 		{
 			GL11.glPushMatrix();

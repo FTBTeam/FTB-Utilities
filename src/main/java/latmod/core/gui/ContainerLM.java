@@ -46,6 +46,8 @@ public abstract class ContainerLM extends Container
 	
 	public void addPlayerSlots(int posX, int posY)
 	{
+		if(player == null || player.inventory == null) return;
+		
 		for(int y = 0; y < 3; y++) for(int x = 0; x < 9; x++)
 		addSlotToContainer(new Slot(player.inventory, x + y * 9 + 9, posX + x * 18, posY + y * 18));
 		

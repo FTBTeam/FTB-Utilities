@@ -12,9 +12,10 @@ latcoremc:button.cancel=Atcelt
 latcoremc:button.accept=Apstiprināt
 latcoremc:button.remove=Noņemt
 latcoremc:button.add=Pievienot
+latcoremc:button.close=Aizvērt
+latcoremc:button.save=Saglabāt
 
 #FriendsGUI
-latcoremc:button.close=Aizvērt
 latcoremc:button.addFriend=Pievienot Draugiem
 latcoremc:button.remFriend=Noņemt no Draugiem
 latcoremc:button.editGroups=Rediģēt Grupas
@@ -65,3 +66,5 @@ latcoremc:color.light_blue=Gaišzils
 latcoremc:color.magenta=Fuksīna
 latcoremc:color.orange=Oranžs
 latcoremc:color.white=Balts
+
+commands.lmmissingargs=Pietrūkst argumentu!

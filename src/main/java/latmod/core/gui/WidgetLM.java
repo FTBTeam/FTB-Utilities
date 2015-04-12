@@ -21,7 +21,7 @@ public class WidgetLM
 	}
 	
 	public boolean isAt(int x, int y)
-	{ return x >= posX && y >= posY && x <= posX + width && y <= posY + height; }
+	{ return x >= posX && y >= posY && x < posX + width && y < posY + height; }
 	
 	public boolean mouseOver(int mx, int my)
 	{ return isAt(mx - gui.getPosX(), my - gui.getPosY()); }

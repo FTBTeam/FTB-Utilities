@@ -20,6 +20,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.*;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -330,5 +331,11 @@ public class LatCoreMC
 	{
 		if(ep != null) MessageLM.NET.sendTo(new MessageNotifyPlayer(n), ep);
 		else MessageLM.NET.sendToAll(new MessageNotifyPlayer(n));
+	}
+	
+	public static void displayClientGui(EntityPlayer ep, String id, NBTTagCompound tag)
+	{
+		if(ep == null) MessageLM.NET.sendToAll(new MessageCustomClientGUI(id, tag));
+		else if(ep instanceof EntityPlayerMP) MessageLM.NET.sendTo(new MessageCustomClientGUI(id, tag), (EntityPlayerMP)ep);
 	}
 }

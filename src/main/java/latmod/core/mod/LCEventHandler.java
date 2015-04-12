@@ -1,5 +1,5 @@
 package latmod.core.mod;
-import java.io.*;
+import java.io.File;
 
 import latmod.core.*;
 import latmod.core.event.*;

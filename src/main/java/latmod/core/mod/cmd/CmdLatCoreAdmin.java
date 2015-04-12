@@ -10,7 +10,6 @@ import latmod.core.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
@@ -146,10 +145,8 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				if(!p.isOnline()) return "The player must be online!";
 				checkArgsStrong(args, 5);
 				
-				String item[] = LatCore.split(args[3], ";");
-				if(item.length == 1) item = new String[]{ item[0], "0" };
-				ItemStack is = InvUtils.getStackFromRegName(item[0], parseInt(ics, item[1]));
-				if(is == null || is.getItem() == null) is = new ItemStack(Blocks.stone);
+				ItemStack is = InvUtils.parseItem(args[3]);
+				if(is == null || is.getItem() == null) return "Item '" + args[3] + "' not found!";
 				
 				LatCoreMC.notifyPlayer(p.getPlayerMP(), new Notification(args[4].replace("\\_", "<$US>").replace('_', ' ').replace("<$US>", "_"), "", is));
 				return null;

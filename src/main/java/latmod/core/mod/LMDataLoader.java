@@ -5,7 +5,7 @@ import java.util.UUID;
 import latmod.core.*;
 import latmod.core.event.LMPlayerEvent;
 import latmod.core.util.FastMap;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class LMDataLoader
 {

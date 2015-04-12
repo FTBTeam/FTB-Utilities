@@ -396,13 +396,6 @@ public class InvUtils
 	public static Item getItemFromRegName(String s)
 	{ return (Item)Item.itemRegistry.getObject(s); }
 	
-	public static ItemStack getStackFromRegName(String s, int dmg)
-	{
-		Item i = getItemFromRegName(s);
-		if(i != null) return new ItemStack(i, dmg);
-		return null;
-	}
-	
 	public static String getRegName(Item item)
 	{ return Item.itemRegistry.getNameForObject(item); }
 	
@@ -413,17 +406,20 @@ public class InvUtils
 	{
 		try
 		{
-			String[] s1 = LatCore.split(s, "@");
-			if(s1.length <= 0 || s1.length > 3) return null;
-			ItemStack is = getStackFromRegName(s1[0], 0);
-			if(s1.length == 2) is.setItemDamage(Integer.parseInt(s1[1]));
-			if(s1.length == 3)
-			{
-				is.stackSize = Integer.parseInt(s1[1]);
-				is.setItemDamage(Integer.parseInt(s1[2]));
-			}
+			String regex = "@";
+			if(s.contains(";")) regex = ";";
+			else if(s.contains(" x ")) regex = " x ";
 			
-			return is;
+			String[] s1 = LatCore.split(s, regex);
+			if(s1.length <= 0 || s1.length > 3) return null;
+			Item item = getItemFromRegName(s1[0]);
+			if(item == null) return null;
+			int dmg = 0;
+			int size = 1;
+			if(s1.length == 2) dmg = Integer.parseInt(s1[1]);
+			if(s1.length == 3)
+			{ size = Integer.parseInt(s1[1]); dmg = Integer.parseInt(s1[2]); }
+			return new ItemStack(item, size, dmg);
 		}
 		catch(Exception e) {}
 		return null;

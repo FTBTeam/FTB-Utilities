@@ -12,9 +12,10 @@ latcoremc:button.cancel=Cancel
 latcoremc:button.accept=Accept
 latcoremc:button.remove=Remove
 latcoremc:button.add=Add
+latcoremc:button.close=Close
+latcoremc:button.save=Save
 
 #FriendsGUI
-latcoremc:button.close=Close
 latcoremc:button.addFriend=Add as Friend
 latcoremc:button.remFriend=Remove from Friends
 latcoremc:button.editGroups=Edit Groups

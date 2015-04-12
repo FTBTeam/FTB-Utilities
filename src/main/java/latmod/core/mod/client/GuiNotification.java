@@ -98,6 +98,7 @@ public class GuiNotification extends Gui
 			GL11.glEnable(GL11.GL_COLOR_MATERIAL);
 			GL11.glEnable(GL11.GL_LIGHTING);
 			renderItem.renderItemIntoGUI(mc.fontRenderer, mc.getTextureManager(), notification.item, i + 8, j + 8, false);
+			renderItem.renderItemOverlayIntoGUI(mc.fontRenderer, mc.getTextureManager(), notification.item, i + 8, j + 8);
 			//renderItem.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.getTextureManager(), notification.item, i + 8, j + 8);
 			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glDepthMask(true);

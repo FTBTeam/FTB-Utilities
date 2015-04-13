@@ -7,7 +7,6 @@ import latmod.core.cmd.CommandLevel;
 import latmod.core.event.ReloadEvent;
 import latmod.core.net.*;
 import latmod.core.util.*;
-import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
@@ -30,7 +29,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 	}
 	
 	public String[] getSubcommands(ICommandSender ics)
-	{ return new String[] { "killblock", "getblock", "gamerule", "player", "reload" }; }
+	{ return new String[] { "block", "gamerule", "player", "reload" }; }
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
@@ -152,40 +151,27 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				return null;
 			}
 		}
-		else if(args[0].equals("killblock"))
+		else if(args[0].equals("block"))
 		{
 			EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 			
 			try
 			{
 				MovingObjectPosition mop = MathHelperLM.rayTrace(ep);
-				
-				//ep.worldObj.setTileEntity(mop.blockX, mop.blockY, mop.blockZ, null);
-				ep.worldObj.setBlockToAir(mop.blockX, mop.blockY, mop.blockZ);
-				
-				return FINE + "Block destroyed!";
-			}
-			catch(Exception e)
-			{ return "Failed to destroy the block!"; }
-		}
-		else if(args[0].equals("getblock"))
-		{
-			EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-			
-			try
-			{
-				MovingObjectPosition mop = MathHelperLM.rayTrace(ep);
-				Block b = ep.worldObj.getBlock(mop.blockX, mop.blockY, mop.blockZ);
+				Item b = Item.getItemFromBlock(ep.worldObj.getBlock(mop.blockX, mop.blockY, mop.blockZ));
 				int meta = ep.worldObj.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ);
 				TileEntity te = ep.worldObj.getTileEntity(mop.blockX, mop.blockY, mop.blockZ);
 				
 				LatCoreMC.printChat(ep, "Block: " + InvUtils.getRegName(Item.getItemFromBlock(b)) + (meta > 0 ? ("@" +  meta) : ""));
+				if(b == null) return "Unknown block!";
+				
+				LatCoreMC.printChat(ep, LatCoreMC.getRegName(b) + (meta > 0 ? (";" +  meta) : "") + " @ " + LatCore.stripInt(mop.blockX, mop.blockY, mop.blockZ));
 				if(te != null) LatCoreMC.printChat(ep, "Tile: " + LatCore.classpath(te.getClass()));
 				
 				return null;
 			}
 			catch(Exception e)
-			{ return FINE + "minecraft:air"; }
+			{ return "Unknown block!"; }
 		}
 		else if(args[0].equals("gamerule"))
 		{

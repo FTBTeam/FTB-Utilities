@@ -263,7 +263,11 @@ public class MathHelperLM
 	}
 	
 	public static MovingObjectPosition collisionRayTrace(World w, int x, int y, int z, Vec3 start, Vec3 end, FastList<AxisAlignedBB> boxes)
-	{ return collisionRayTrace(w, x, y, z, start, end, boxes.toArray(new AxisAlignedBB[boxes.size()])); }
+	{
+		AxisAlignedBB[] boxesa = new AxisAlignedBB[boxes.size()];
+		for(int i = 0; i < boxesa.length; i++) boxesa[i] = boxes.get(i).copy();
+		return collisionRayTrace(w, x, y, z, start, end, boxesa);
+	}
 	
 	public static MovingObjectPosition collisionRayTrace(World w, int x, int y, int z, Vec3 start, Vec3 end, AxisAlignedBB aabb)
 	{

@@ -9,8 +9,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.*;
+import net.minecraft.util.Facing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.*;
 
 public class ItemBlockLM extends ItemBlock
@@ -66,11 +66,7 @@ public class ItemBlockLM extends ItemBlock
 		
 		if (block == Blocks.snow_layer && (w.getBlockMetadata(x, y, z) & 7) < 1) s = 1;
 		else if (block != Blocks.vine && block != Blocks.tallgrass && block != Blocks.deadbush && !block.isReplaceable(w, x, y, z))
-		{
-			x += ForgeDirection.VALID_DIRECTIONS[s].offsetX;
-			y += ForgeDirection.VALID_DIRECTIONS[s].offsetY;
-			z += ForgeDirection.VALID_DIRECTIONS[s].offsetZ;
-		}
+		{ x += Facing.offsetsXForSide[s]; y += Facing.offsetsYForSide[s]; z += Facing.offsetsZForSide[s]; }
 		
 		if (is.stackSize == 0) return false;
 		else if (!ep.canPlayerEdit(x, y, z, s, is)) return false;
@@ -94,12 +90,12 @@ public class ItemBlockLM extends ItemBlock
 		
         if (b == Blocks.snow_layer && (w.getBlockMetadata(x, y, z) & 7) < 1) s = 1;
         else if (b != Blocks.vine && b != Blocks.tallgrass && b != Blocks.deadbush && !b.isReplaceable(w, x, y, z))
-        {
-        	x += ForgeDirection.VALID_DIRECTIONS[s].offsetX;
-			y += ForgeDirection.VALID_DIRECTIONS[s].offsetY;
-			z += ForgeDirection.VALID_DIRECTIONS[s].offsetZ;
-        }
+        { x += Facing.offsetsXForSide[s]; y += Facing.offsetsYForSide[s]; z += Facing.offsetsZForSide[s]; }
         
 		return b.getMaterial() != Material.air && w.canPlaceEntityOnSide(b, x, y, z, false, s, null, is.copy());
 	}
+	
+	@SideOnly(Side.CLIENT)
+	public boolean func_150936_a(World w, int x, int y, int z, int s, EntityPlayer ep, ItemStack is)
+	{ return canPlace(w, x, y, z, s, is); }
 }

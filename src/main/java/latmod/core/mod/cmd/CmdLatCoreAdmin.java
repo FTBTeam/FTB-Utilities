@@ -158,7 +158,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			try
 			{
 				MovingObjectPosition mop = MathHelperLM.rayTrace(ep);
-				Item b = Item.getItemFromBlock(ep.worldObj.getBlock(mop.blockX, mop.blockY, mop.blockZ));
+				String b = InvUtils.getRegName(ep.worldObj.getBlock(mop.blockX, mop.blockY, mop.blockZ));
 				if(b == null) return "Unknown block!";
 				
 				int meta = ep.worldObj.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ);

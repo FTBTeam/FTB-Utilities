@@ -233,20 +233,18 @@ public class MathHelperLM
 	public static MovingObjectPosition rayTrace(EntityPlayer ep)
 	{ return rayTrace(ep, LC.proxy.getReachDist(ep)); }
 	
-	public static MovingObjectPosition collisionRayTrace(World w, int x, int y, int z, Vec3 start, Vec3 end, FastList<AxisAlignedBB> boxes)
+	public static MovingObjectPosition collisionRayTrace(World w, int x, int y, int z, Vec3 start, Vec3 end, AxisAlignedBB[] boxes)
 	{
-		if(boxes == null || boxes.isEmpty()) return null;
+		if(boxes == null || boxes.length <= 0) return null;
 		
 		MovingObjectPosition current = null;
 		double dist = Double.POSITIVE_INFINITY;
 		
-		for(int i = 0; i < boxes.size(); i++)
+		for(int i = 0; i < boxes.length; i++)
 		{
-			AxisAlignedBB aabb = boxes.get(i);
-			
-			if(aabb != null)
+			if(boxes[i] != null)
 			{
-				MovingObjectPosition mop = collisionRayTrace(w, x, y, z, start, end, aabb);
+				MovingObjectPosition mop = collisionRayTrace(w, x, y, z, start, end, boxes[i]);
 				
 				if(mop != null)
 				{
@@ -263,6 +261,9 @@ public class MathHelperLM
 		
 		return current;
 	}
+	
+	public static MovingObjectPosition collisionRayTrace(World w, int x, int y, int z, Vec3 start, Vec3 end, FastList<AxisAlignedBB> boxes)
+	{ return collisionRayTrace(w, x, y, z, start, end, boxes.toArray(new AxisAlignedBB[boxes.size()])); }
 	
 	public static MovingObjectPosition collisionRayTrace(World w, int x, int y, int z, Vec3 start, Vec3 end, AxisAlignedBB aabb)
 	{

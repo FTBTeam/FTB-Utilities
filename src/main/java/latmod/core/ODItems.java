@@ -137,4 +137,7 @@ public class ODItems
 		if(!l.isEmpty()) return l.get(0);
 		return null;
 	}
+
+	public static boolean hasOre(String s)
+	{ return !getOres(s).isEmpty(); }
 }

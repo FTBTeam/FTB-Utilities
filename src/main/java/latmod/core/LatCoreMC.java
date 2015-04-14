@@ -338,4 +338,7 @@ public class LatCoreMC
 		if(ep == null) MessageLM.NET.sendToAll(new MessageCustomClientGUI(id, tag));
 		else if(ep instanceof EntityPlayerMP) MessageLM.NET.sendTo(new MessageCustomClientGUI(id, tag), (EntityPlayerMP)ep);
 	}
+
+	public static Object invokeStatic(String className, String methodName) throws Exception
+	{ Class<?> c = Class.forName(className); return c.getMethod(methodName).invoke(null); }
 }

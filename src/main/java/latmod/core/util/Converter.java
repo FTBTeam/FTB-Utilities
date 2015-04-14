@@ -1,5 +1,7 @@
 package latmod.core.util;
 
+import scala.actors.threadpool.Arrays;
+
 /** Made by LatvianModder */
 public class Converter
 {
@@ -106,5 +108,20 @@ public class Converter
 		for(int i = 0; i < size; i++)
 		a[i] = f[index][i];
 		return a;
+	}
+	
+	public static void toBools(boolean[] bools, int[] idx, boolean isTrue)
+	{
+		Arrays.fill(bools, !isTrue);
+		for(int i = 0; i < idx.length; i++)
+			bools[idx[i]] = isTrue;
+	}
+	
+	public static int[] fromBools(boolean[] bools, boolean isTrue)
+	{
+		IntList il = new IntList();
+		for(int i = 0; i < bools.length; i++)
+			if(bools[i] == isTrue) il.add(i);
+		return il.array;
 	}
 }

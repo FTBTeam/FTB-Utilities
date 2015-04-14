@@ -2,6 +2,7 @@ package latmod.core;
 import java.util.Arrays;
 
 import latmod.core.util.*;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -398,6 +399,9 @@ public class InvUtils
 	
 	public static String getRegName(Item item)
 	{ return Item.itemRegistry.getNameForObject(item); }
+	
+	public static String getRegName(Block block)
+	{ return Block.blockRegistry.getNameForObject(block); }
 	
 	public static String getRegName(ItemStack is)
 	{ return (is != null && is.getItem() != null) ? getRegName(is.getItem()) : null; }

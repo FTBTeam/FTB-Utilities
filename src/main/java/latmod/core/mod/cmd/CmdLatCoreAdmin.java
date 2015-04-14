@@ -159,13 +159,12 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			{
 				MovingObjectPosition mop = MathHelperLM.rayTrace(ep);
 				Item b = Item.getItemFromBlock(ep.worldObj.getBlock(mop.blockX, mop.blockY, mop.blockZ));
+				if(b == null) return "Unknown block!";
+				
 				int meta = ep.worldObj.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ);
 				TileEntity te = ep.worldObj.getTileEntity(mop.blockX, mop.blockY, mop.blockZ);
 				
-				LatCoreMC.printChat(ep, "Block: " + InvUtils.getRegName(Item.getItemFromBlock(b)) + (meta > 0 ? ("@" +  meta) : ""));
-				if(b == null) return "Unknown block!";
-				
-				LatCoreMC.printChat(ep, LatCoreMC.getRegName(b) + (meta > 0 ? (";" +  meta) : "") + " @ " + LatCore.stripInt(mop.blockX, mop.blockY, mop.blockZ));
+				LatCoreMC.printChat(ep, b + (meta > 0 ? (";" +  meta) : "") + " @ " + LatCore.stripInt(mop.blockX, mop.blockY, mop.blockZ));
 				if(te != null) LatCoreMC.printChat(ep, "Tile: " + LatCore.classpath(te.getClass()));
 				
 				return null;

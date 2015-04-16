@@ -4,9 +4,12 @@ import java.io.File;
 import latmod.core.*;
 import latmod.core.event.*;
 import latmod.core.net.*;
+import latmod.core.tile.ISecureTile;
 import latmod.core.util.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class LCEventHandler
@@ -161,5 +164,31 @@ public class LCEventHandler
     {
 		if(e.modID.equalsIgnoreCase(LC.MOD_ID))
 			LCConfig.instance.load();
+	}
+	
+	@SubscribeEvent
+	public void onBlockClick(net.minecraftforge.event.entity.player.PlayerInteractEvent e)
+	{
+		if(e.world.isRemote) return;
+		
+		if(e.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR) return;
+		if(!canInteract(e)) e.setCanceled(true);
+	}
+	
+	private boolean canInteract(net.minecraftforge.event.entity.player.PlayerInteractEvent e)
+	{
+		if(e.entityPlayer.capabilities.isCreativeMode && LCConfig.General.allowCreativeInteractSecure) return true;
+		
+		TileEntity te = e.world.getTileEntity(e.x, e.y, e.z);
+		
+		if(te != null && !te.isInvalid() && te instanceof ISecureTile)
+		{
+			LMSecurity s = ((ISecureTile)te).getSecurity();
+			
+			if(s != null && !s.level.isPublic() && s.owner != null && !s.canInteract(e.entityPlayer))
+				return false;
+		}
+		
+		return true;
 	}
 }

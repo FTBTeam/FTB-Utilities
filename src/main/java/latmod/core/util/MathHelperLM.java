@@ -220,14 +220,21 @@ public class MathHelperLM
 		return 0;
 	}
 	
+	public static Vec3 getEyePosition(EntityPlayer ep)
+	{
+		double y = 0D;
+		if(!ep.worldObj.isRemote) y = ep.getEyeHeight();
+		return Vec3.createVectorHelper(ep.posX, ep.posY + y, ep.posZ);
+	}
+	
 	public static MovingObjectPosition rayTrace(EntityPlayer ep, double d)
 	{
-		double y = ep.posY + ep.getDefaultEyeHeight();
-		if(ep.worldObj.isRemote) y -= ep.getEyeHeight();
-		Vec3 pos = Vec3.createVectorHelper(ep.posX, y, ep.posZ);
+		Vec3 pos = getEyePosition(ep);
 		Vec3 look = ep.getLookVec();
 		Vec3 vec = pos.addVector(look.xCoord * d, look.yCoord * d, look.zCoord * d);
-		return ep.worldObj.func_147447_a(pos, vec, false, true, false);
+		MovingObjectPosition mop = ep.worldObj.func_147447_a(pos, vec, false, true, false);
+		if(mop != null && mop.hitVec == null) mop.hitVec = Vec3.createVectorHelper(0D, 0D, 0D);
+		return mop;
 	}
 	
 	public static MovingObjectPosition rayTrace(EntityPlayer ep)

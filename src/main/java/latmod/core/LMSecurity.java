@@ -3,7 +3,6 @@ package latmod.core;
 import java.util.UUID;
 
 import latmod.core.mod.LC;
-import latmod.core.util.TwoObjects;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -11,13 +10,14 @@ public class LMSecurity
 {
 	public LMPlayer owner;
 	public Level level;
-	private TwoObjects<Integer, Boolean> group;
+	private int groupID;
+	private boolean groupWhitelist;
 	
 	public LMSecurity(Object o)
 	{
 		setOwner(o);
 		level = Level.PUBLIC;
-		group = null;
+		groupID = 0;
 	}
 	
 	public void setOwner(Object o)
@@ -25,13 +25,11 @@ public class LMSecurity
 	
 	public void readFromNBT(NBTTagCompound tag, String s)
 	{
-		if(!tag.hasKey(s))
-		{
-			owner = null;
-			level = Level.PUBLIC;
-			group = null;
-			return;
-		}
+		owner = null;
+		level = Level.PUBLIC;
+		groupID = 0;
+		
+		if(!tag.hasKey(s)) return;
 		
 		NBTTagCompound tag1 = tag.getCompoundTag(s);
 		
@@ -39,36 +37,20 @@ public class LMSecurity
 		{
 			String o = tag1.getString("Owner");
 			
-			if(o == null || o.isEmpty())
-			{
-				owner = null;
-				level = Level.PUBLIC;
-				group = null;
-			}
-			else owner = LMPlayer.getPlayer(o);
+			if(o != null && !o.isEmpty())
+				owner = LMPlayer.getPlayer(o);
 		}
 		else
 		{
 			int o = tag1.getInteger("Owner");
-			
-			if(o == 0)
-			{
-				owner = null;
-				level = Level.PUBLIC;
-				group = null;
-			}
-			else owner = LMPlayer.getPlayer(o);
+			if(o > 0) owner = LMPlayer.getPlayer(o);
 		}
 		
 		level = Level.VALUES[tag1.getByte("Level")];
 		
-		if(tag1.hasKey("Group"))
-		{
-			int g = tag1.getInteger("Group");
-			boolean w = tag1.getBoolean("Whitelist");
-			group = new TwoObjects<Integer, Boolean>(g, w);
-		}
-		else group = null;
+		int gid = tag1.getInteger("Group");
+		groupID = Math.abs(gid);
+		groupWhitelist = gid >= 0;
 	}
 	
 	public void writeToNBT(NBTTagCompound tag, String s)
@@ -80,11 +62,7 @@ public class LMSecurity
 			tag1.setInteger("Owner", owner.playerID);
 			tag1.setByte("Level", (byte)level.ID);
 			
-			if(group != null && group.object1 != null && group.object2 != null)
-			{
-				tag1.setInteger("Group", group.object1.intValue());
-				tag1.setBoolean("Whitelist", group.object2);
-			}
+			if(groupID > 0) tag1.setInteger("Group", groupWhitelist ? groupID : -groupID);
 			
 			tag.setTag(s, tag1);
 		}
@@ -105,11 +83,11 @@ public class LMSecurity
 		if(p != null)
 		{
 			if(level == Level.FRIENDS) return owner.isFriend(p);
-			if(level == Level.GROUP && group != null)
+			if(level == Level.GROUP && groupID > 0)
 			{
-				LMPlayer.Group g = owner.groups.get(group.object1);
+				LMPlayer.Group g = owner.groups.get(groupID);
 				if(g == null) return false;
-				return g.members.contains(id) == group.object2.booleanValue();
+				return g.members.contains(id) == groupWhitelist;
 			}
 		}
 		
@@ -120,8 +98,7 @@ public class LMSecurity
 	{ return canInteract((ep == null) ? null : ep.getUniqueID()); }
 	
 	public void setGroup(int g, boolean b)
-	{ if(g <= 0) group = null;
-	else group = new TwoObjects<Integer, Boolean>(g, b); }
+	{ groupID = g; groupWhitelist = b; }
 	
 	// Level enum //
 	

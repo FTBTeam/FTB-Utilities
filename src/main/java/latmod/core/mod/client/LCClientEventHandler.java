@@ -146,4 +146,14 @@ public class LCClientEventHandler implements IClientGuiHandler
 		if(s.equals(LCCommon.GUI_FRIENDS)) return new GuiFriends(ep);
 		return null;
 	}
+	
+	@SubscribeEvent
+	public void onDrawDebugText(RenderGameOverlayEvent.Text event)
+	{
+		if(LatCoreMC.isDevEnv && Minecraft.getMinecraft().gameSettings.showDebugInfo)
+		{
+			event.right.add(null);
+			event.right.add("[LatCoreMC] Test!");
+		}
+	}
 }

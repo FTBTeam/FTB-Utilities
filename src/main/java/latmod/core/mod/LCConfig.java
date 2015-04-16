@@ -45,6 +45,7 @@ public class LCConfig extends LMConfig implements IServerConfig
 		public static boolean disableLatCoreCommand;
 		public static boolean disableLMFriendsCommand;
 		public static boolean friendsGuiArmor;
+		public static boolean allowCreativeInteractSecure;
 		
 		public static void load(Category c)
 		{
@@ -52,6 +53,7 @@ public class LCConfig extends LMConfig implements IServerConfig
 			disableLatCoreCommand = c.getBool("disableLatCoreCommand", false);
 			disableLMFriendsCommand = c.getBool("disableLMFriendsCommand", false);
 			friendsGuiArmor = c.getBool("friendsGuiArmor", true);
+			allowCreativeInteractSecure = c.getBool("allowCreativeInteractSecure", true);
 		}
 	}
 	

@@ -258,7 +258,7 @@ public class LMPlayer implements Comparable<LMPlayer>
 	{
 		if(o == null || o instanceof FakePlayer) return null;
 		if(o instanceof LMPlayer) return map.get(o.hashCode());
-		if(o instanceof Integer) return map.get(o);
+		if(o instanceof Integer) return (o.hashCode() > 0) ? map.get(o) : null;
 		return map.values.getObj(o);
 	}
 	

@@ -22,6 +22,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	public final String blockName;
 	public ArrayList<ItemStack> blocksAdded = new ArrayList<ItemStack>();
 	public final LMMod mod;
+	private Item blockItem = null;
 	
 	public BlockLM(String s, Material m)
 	{
@@ -190,13 +191,17 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	}
 	
 	public final Item getItem()
-	{ return Item.getItemFromBlock(this); }
+	{
+		if(blockItem == null)
+			blockItem = Item.getItemFromBlock(this);
+		return blockItem;
+	}
 	
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World w, int x, int y, int z)
 	{ setBlockBoundsBasedOnState(w, x, y, z); return super.getCollisionBoundingBoxFromPool(w, x, y, z); }
 	
 	@SideOnly(Side.CLIENT)
-	public IIcon getBlockIcon() { return blockIcon; }
+	public final IIcon getBlockIcon() { return blockIcon; }
 	
 	@Deprecated
 	public final int onBlockPlaced(World w, int x, int y, int z, int s, float hitX, float hitY, float hitZ, int m)

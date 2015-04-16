@@ -60,7 +60,7 @@ public class ItemBlockLM extends ItemBlock
 	
 	public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int s, float hitX, float hitY, float hitZ)
 	{
-		if(!canPlace(w, x, y, z, s, is)) return false;
+		if(!canPlace(w, x, y, z, s, ep, is)) return false;
 		
 		Block block = w.getBlock(x, y, z);
 		
@@ -84,7 +84,7 @@ public class ItemBlockLM extends ItemBlock
 		}
 	}
 	
-	public boolean canPlace(World w, int x, int y, int z, int s, ItemStack is)
+	public boolean canPlace(World w, int x, int y, int z, int s, EntityPlayer ep, ItemStack is)
 	{
 		Block b = w.getBlock(x, y, z);
 		
@@ -97,5 +97,5 @@ public class ItemBlockLM extends ItemBlock
 	
 	@SideOnly(Side.CLIENT)
 	public boolean func_150936_a(World w, int x, int y, int z, int s, EntityPlayer ep, ItemStack is)
-	{ return canPlace(w, x, y, z, s, is); }
+	{ return canPlace(w, x, y, z, s, ep, is); }
 }

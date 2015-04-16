@@ -272,7 +272,6 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 	public void onNeighborBlockChange()
 	{ redstonePowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord); }
 	
-	//ISecureTile
-	public LMSecurity getSecurty()
+	public LMSecurity getSecurity()
 	{ return security; }
 }

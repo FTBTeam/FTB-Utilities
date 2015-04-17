@@ -60,18 +60,23 @@ public class ItemBlockLM extends ItemBlock
 	
 	public boolean onItemUse(ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int s, float hitX, float hitY, float hitZ)
 	{
+		if(is == null || is.stackSize == 0) return false;
 		if(!canPlace(w, x, y, z, s, ep, is)) return false;
+		
+		x += Facing.offsetsXForSide[s];
+		y += Facing.offsetsYForSide[s];
+		z += Facing.offsetsZForSide[s];
 		
 		Block block = w.getBlock(x, y, z);
 		
-		if (block == Blocks.snow_layer && (w.getBlockMetadata(x, y, z) & 7) < 1) s = 1;
-		else if (block != Blocks.vine && block != Blocks.tallgrass && block != Blocks.deadbush && !block.isReplaceable(w, x, y, z))
-		{ x += Facing.offsetsXForSide[s]; y += Facing.offsetsYForSide[s]; z += Facing.offsetsZForSide[s]; }
+		if(!block.isAir(w, x, y, z))
+		{
+			if(!block.isReplaceable(w, x, y, z))
+				return false;
+		}
 		
-		if (is.stackSize == 0) return false;
-		else if (!ep.canPlayerEdit(x, y, z, s, is)) return false;
-		else if (y == 255 && blockLM.getMaterial().isSolid()) return false;
-		//else if (w.canPlaceEntityOnSide(blockLM, x, y, z, false, s, null, is.copy()))
+		if (y > 255) return false;
+		if (!ep.canPlayerEdit(x, y, z, s, is)) return false;
 		{
 			int j1 = blockLM.onBlockPlaced(w, ep, MathHelperLM.getMOPFrom(x, y, z, s, hitX, hitY, hitZ), getMetadata(is.getItemDamage()));
 			if (placeBlockAt(is, ep, w, x, y, z, s, hitX, hitY, hitZ, j1))

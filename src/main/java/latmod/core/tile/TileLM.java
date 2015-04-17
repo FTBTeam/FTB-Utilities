@@ -3,8 +3,10 @@ import latmod.core.*;
 import latmod.core.block.BlockLM;
 import latmod.core.mod.LC;
 import latmod.core.net.*;
+import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.*;
@@ -111,7 +113,7 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 		isLoaded = true;
 		blockType = getBlockType();
 		getMeta();
-		onNeighborBlockChange();
+		onNeighborBlockChange(Blocks.air);
 	}
 	
 	public void onUnloaded()
@@ -269,7 +271,7 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 	public void markDirty()
 	{ isDirty = true; }
 	
-	public void onNeighborBlockChange()
+	public void onNeighborBlockChange(Block b)
 	{ redstonePowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord); }
 	
 	public LMSecurity getSecurity()

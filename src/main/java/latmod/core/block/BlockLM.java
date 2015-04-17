@@ -186,7 +186,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 		if(isBlockContainer)
 		{
 			TileLM t = (TileLM) w.getTileEntity(x, y, z);
-			if(t != null) t.onNeighborBlockChange();
+			if(t != null) t.onNeighborBlockChange(b);
 		}
 	}
 	

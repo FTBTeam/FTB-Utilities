@@ -124,4 +124,16 @@ public class Converter
 			if(bools[i] == isTrue) il.add(i);
 		return il.array;
 	}
+
+	public static Integer toInt(String text)
+	{
+		try { Integer i = Integer.parseInt(text); return i; }
+		catch(Exception e) { } return null;
+	}
+	
+	public static Float toFloat(String text)
+	{
+		try { Float f = Float.parseFloat(text); return f; }
+		catch(Exception e) { } return null;
+	}
 }

@@ -110,9 +110,12 @@ public class TextBoxLM extends WidgetLM
 		text = "";
 	}
 	
+	public String getText()
+	{ return text; }
+	
 	public void render(int x, int y, int col)
 	{
-		String s = text + "";
+		String s = getText() + "";
 		
 		if(isSelected && Minecraft.getSystemTime() % 1000L > 500L)
 			s += '_';

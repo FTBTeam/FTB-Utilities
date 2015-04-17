@@ -122,7 +122,7 @@ public class LCClientEventHandler implements IClientGuiHandler
     public void renderTick(TickEvent.RenderTickEvent event)
     {
         Minecraft mc = Minecraft.getMinecraft();
-
+        
         if(mc.theWorld != null && event.phase == TickEvent.Phase.END && !messages.isEmpty())
         {
         	GuiNotification m = messages.get(0);
@@ -150,10 +150,7 @@ public class LCClientEventHandler implements IClientGuiHandler
 	@SubscribeEvent
 	public void onDrawDebugText(RenderGameOverlayEvent.Text event)
 	{
-		if(LatCoreMC.isDevEnv && Minecraft.getMinecraft().gameSettings.showDebugInfo)
-		{
-			event.right.add(null);
-			event.right.add("[LatCoreMC] Test!");
-		}
+		// Some ideas around this //
+		if(LatCoreMC.isDevEnv) event.left.add("[LatCoreMC] Dev version!");
 	}
 }

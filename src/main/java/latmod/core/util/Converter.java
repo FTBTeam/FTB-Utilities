@@ -1,6 +1,6 @@
 package latmod.core.util;
 
-import scala.actors.threadpool.Arrays;
+import java.util.Arrays;
 
 /** Made by LatvianModder */
 public class Converter

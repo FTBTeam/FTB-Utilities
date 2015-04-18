@@ -32,13 +32,14 @@ public class GuiFriends extends GuiLM
 		new TextureCoords(texPlayers, 161 + 18 * 2, 0),
 	};
 	
+	public final LMPlayer owner;
+	public final FastList<Player> players;
+	
 	public TextBoxLM searchBox;
 	public ButtonLM buttonSave, buttonPrevPage, buttonNextPage;
 	public ButtonPlayer pbOwner;
 	public ButtonPlayer[] pbPlayers;
 	public int page = 0;
-	public final LMPlayer owner;
-	public final FastList<Player> players = new FastList<Player>();
 	public boolean changed = false;
 	
 	private static LMPlayer selectedPlayer = null;
@@ -52,6 +53,7 @@ public class GuiFriends extends GuiLM
 	{
 		super(new ContainerEmpty(ep, null), texPlayers);
 		owner = LMPlayer.getPlayer(ep);
+		players = new FastList<Player>();
 		
 		xSize = 161;
 		ySize = 184;
@@ -477,7 +479,7 @@ public class GuiFriends extends GuiLM
 					else if(raw1 || raw2)
 						al.add((raw1 ? GOLD : BLUE) + "[" + LC.mod.translate("label.pfriend") + "]");
 					
-					FastList<LMPlayer.Group> g = owner.getGroupsFor(p);
+					FastList<Group> g = Group.getAllGroups(player.player);
 					
 					if(g.size() > 0)
 					{
@@ -485,7 +487,7 @@ public class GuiFriends extends GuiLM
 						al.add(LC.mod.translate("label.groups") + ":");
 						
 						for(int i = 0; i < g.size(); i++)
-							al.add(g.get(i).name);
+							al.add(g.get(i).title);
 					}
 				}
 			}

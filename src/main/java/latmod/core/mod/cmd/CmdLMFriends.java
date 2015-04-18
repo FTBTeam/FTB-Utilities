@@ -4,6 +4,7 @@ import latmod.core.*;
 import latmod.core.cmd.CommandLevel;
 import latmod.core.mod.*;
 import latmod.core.net.*;
+import latmod.core.util.FastList;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
@@ -45,9 +46,9 @@ public class CmdLMFriends extends CommandBaseLC
 		if(i == 0) return getSubcommands(ics);
 		if(i == 1 && isArg(args, 0, "list")) return new String[]{ "friends", "groups", "members" };
 		if(i == 2 && isArg(args, 0, "list") && args[1].equals("members"))
-			return getLMPlayer(ics).getAllGroups();
+			return Group.getAllGroupNames(getLMPlayer(ics));
 		if(i == 1 && isArg(args, 0, "remgroup", "rengroup", "addto", "remfrom"))
-			getLMPlayer(ics).getAllGroups();
+			return Group.getAllGroupNames(getLMPlayer(ics));
 		
 		return super.getTabStrings(ics, args, i);
 	}
@@ -89,28 +90,27 @@ public class CmdLMFriends extends CommandBaseLC
 			}
 			else if(args[1].equals("groups"))
 			{
-				if(owner.groups.isEmpty()) return FINE + "No groups created";
+				FastList<Group> groups = Group.getAllGroups(owner);
+				
+				if(groups.isEmpty()) return FINE + "No groups found";
 				
 				LatCoreMC.printChat(ep, "Your groups:");
 				
-				for(int i = 0; i < owner.groups.size(); i++)
-				{
-					LMPlayer.Group g = owner.groups.get(i);
-					LatCoreMC.printChat(ep, "[" + g.groupID + "]: " + g.name);
-				}
+				for(Group g : groups)
+					LatCoreMC.printChat(ep, "[" + g.groupID + "]: " + g.title);
 			}
 			else if(args[1].equals("members"))
 			{
 				checkArgs(args, 3);
 				
-				LMPlayer.Group g = owner.getGroup(args[1]);
+				Group g = Group.getGroup(args[1]);
 				
 				if(g.members.isEmpty()) return FINE + "No members added";
 				
-				LatCoreMC.printChat(ep, "Members of " + g.name + ":");
+				LatCoreMC.printChat(ep, "Members of " + g.title + ":");
 				
 				for(int i = 0; i < g.members.size(); i++)
-					LatCoreMC.printChat(ep, "[" + i + "]: " + g.members.get(i).username);
+					LatCoreMC.printChat(ep, "[" + i + "]: " + g.members.keys.get(i).username);
 			}
 			
 			return null;
@@ -144,26 +144,29 @@ public class CmdLMFriends extends CommandBaseLC
 		}
 		else
 		{
-			int groupID = owner.getGroupID(args[1]);
-			LMPlayer.Group g = owner.getGroup(groupID);
+			int groupID = Group.getGroupID(args[1]);
+			Group g = Group.getGroup(groupID);
 			
 			if(args[0].equals("addgroup"))
 			{
-				if(owner.getGroup(args[1]) != null) return "Group name is already taken!";
+				if(Group.getGroup(args[1]) != null) return "Group name is already taken!";
 				
-				if(owner.groups.size() < 8 && args[1] != null)
+				if(args[1] != null)
 				{
-					g = new LMPlayer.Group(owner, ++owner.lastGroupID, args[1]);
-					owner.groups.add(g);
-					return changed(owner, null, "Group '" + g.name + "' created!");
+					g = new Group(++Group.lastGroupID);
+					g.title = args[1];
+					g.members.put(owner, Group.Status.OWNER);
+					
+					Group.groups.add(g);
+					return changed(owner, null, "Group '" + g.title + "' created!");
 				}
 				else return "Can't add any more groups!";
 			}
 			else if(args[0].equals("remgroup"))
 			{
-				if(groupID > 0 && owner.groups.notEmpty())
+				if(groupID > 0 && Group.groups.notEmpty())
 				{
-					if(owner.groups.remove(owner.getGroup(groupID)))
+					if(Group.groups.remove(Group.getGroup(groupID)))
 						return changed(owner, null, "Group " + args[1] + " deleted!");
 					else return "Group " + args[1] + " not found!";
 				}
@@ -173,30 +176,30 @@ public class CmdLMFriends extends CommandBaseLC
 			
 			if(args[0].equals("rengroup"))
 			{
-				if(owner.getGroup(args[2]) != null) return "Group name is already taken!";
+				if(Group.getGroup(args[2]) != null) return "Group name is already taken!";
 				
-				if(g != null && owner.groups.notEmpty() && !args[2].isEmpty())
+				if(g != null && Group.groups.notEmpty() && !args[2].isEmpty())
 				{
-					String name0 = g.name + ""; g.name = args[2];
-					return changed(owner, null, "Renamed " + name0 + " to " + g.name);
+					String name0 = g.title + ""; g.title = args[2];
+					return changed(owner, null, "Renamed " + name0 + " to " + g.title);
 				}
 				else return "Group " + args[1] + " not found!";
 			}
 			else if(args[0].equals("addto"))
 			{
-				if(g != null && p != null && owner.groups.notEmpty())
+				if(g != null && p != null && Group.groups.notEmpty())
 				{
-					if(!g.members.contains(p)) g.members.add(p);
-					return changed(owner, p, "Added " + p.username + " to " + g.name);
+					if(!g.isPlayerInGroup(p)) g.members.put(p, Group.Status.MEMBER);
+					return changed(owner, p, "Added " + p.username + " to " + g.title);
 				}
 				else return "Group " + args[1] + " not found!";
 			}
 			else if(args[0].equals("remfrom"))
 			{
-				if(groupID > 0 && p != null && owner.groups.notEmpty())
+				if(groupID > 0 && p != null && Group.groups.notEmpty())
 				{
-					if(g.members.contains(p)) g.members.remove(p);
-					return changed(owner, p, "Removed " + p.username + " from " + g.name);
+					if(g.isPlayerInGroup(p)) g.members.remove(p);
+					return changed(owner, p, "Removed " + p.username + " from " + g.title);
 				}
 				else return "Group " + args[1] + " not found!";
 			}

@@ -19,45 +19,12 @@ public class LMPlayer implements Comparable<LMPlayer>
 {
 	public static final String ACTION_GROUPS_CHANGED = "latcore.groups";
 	
-	public static class Group
-	{
-		public final LMPlayer owner;
-		public final int groupID;
-		public String name;
-		public final FastList<LMPlayer> members;
-		
-		public Group(LMPlayer p, int id, String s)
-		{
-			owner = p;
-			groupID = id;
-			name = (s == null) ? "Unnamed" : s;
-			members = new FastList<LMPlayer>();
-		}
-		
-		public boolean equals(Object o)
-		{
-			if(o == null) return false;
-			if(o == this) return true;
-			if(o instanceof Group) return equals(o.toString());
-			if(o instanceof String) return o.equals(name);
-			if(o instanceof Integer) return groupID == ((Integer)o).intValue();
-			return false;
-		}
-		
-		public String toString()
-		{ return name; }
-		
-		public int hashCode()
-		{ return groupID; }
-	}
-	
 	public final int playerID;
 	public final UUID uuid;
 	public final String username;
 	
 	public final String uuidString;
 	public final FastList<LMPlayer> friends;
-	public final FastList<Group> groups;
 	public final ItemStack[] lastArmor;
 	
 	public final NBTTagCompound tempData;
@@ -65,7 +32,6 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public NBTTagCompound serverData;
 	private boolean isOnline;
 	public boolean isOld;
-	public int lastGroupID = 0;
 	
 	public LMPlayer(int i, UUID id, String s)
 	{
@@ -75,7 +41,6 @@ public class LMPlayer implements Comparable<LMPlayer>
 		
 		uuidString = uuid.toString();
 		friends = new FastList<LMPlayer>();
-		groups = new FastList<Group>();
 		lastArmor = new ItemStack[5];
 		
 		commonData = new NBTTagCompound();
@@ -137,29 +102,6 @@ public class LMPlayer implements Comparable<LMPlayer>
 			if(p != null) friends.add(p);
 		}
 		
-		lastGroupID = tag.getInteger("GID");
-		groups.clear();
-		
-		NBTTagList gl = (NBTTagList)tag.getTag("Groups");
-		
-		if(gl != null) for(int i = 0; i < gl.tagCount(); i++)
-		{
-			NBTTagCompound tag1 = gl.getCompoundTagAt(i);
-			int id = tag1.getInteger("ID");
-			String name = tag1.getString("N");
-			int[] m = tag1.getIntArray("M");
-			
-			Group g = new Group(this, id, name);
-			
-			for(int j = 0; j < m.length; j++)
-			{
-				LMPlayer p = getPlayer(m[j]);
-				if(p != null) g.members.add(p);
-			}
-			
-			groups.add(g);
-		}
-		
 		commonData = tag.getCompoundTag("CustomData");
 		if(server) serverData = tag.getCompoundTag("ServerData");
 		
@@ -185,36 +127,6 @@ public class LMPlayer implements Comparable<LMPlayer>
 				
 				tag.setIntArray("Friends", m);
 			}
-		}
-		
-		if(lastGroupID > 0) tag.setInteger("GID", lastGroupID);
-		
-		if(groups.size() > 0)
-		{
-			NBTTagList tag1 = new NBTTagList();
-			
-			for(int i = 0; i < groups.size(); i++)
-			{
-				Group g = groups.get(i);
-				
-				NBTTagCompound tag2 = new NBTTagCompound();
-				tag2.setByte("ID", (byte)g.groupID);
-				tag2.setString("N", g.name);
-				
-				int[] m = new int[g.members.size()];
-				
-				if(m.length > 0)
-				{
-					for(int j = 0; j < m.length; j++)
-						m[j] = g.members.get(j).playerID;
-					
-					tag2.setIntArray("M", m);
-				}
-				
-				tag1.appendTag(tag2);
-			}
-			
-			tag.setTag("Groups", tag1);
 		}
 		
 		tag.setTag("CustomData", commonData);
@@ -293,52 +205,5 @@ public class LMPlayer implements Comparable<LMPlayer>
 		}
 		
 		return allOn.toArray(new String[0]);
-	}
-	
-	public Group getGroup(int id)
-	{
-		if(id < 1 || id >= lastGroupID)
-			return null;
-		return groups.getObj(id);
-	}
-	
-	public Group getGroup(String name)
-	{
-		if(name == null || name.isEmpty())
-			return null;
-		return groups.getObj(name);
-	}
-	
-	public int getGroupID(String name)
-	{
-		Group g = getGroup(name);
-		return (g == null) ? 0 : g.groupID;
-	}
-	
-	public FastList<Group> getGroupsFor(Object o)
-	{
-		FastList<Group> l = new FastList<Group>();
-		
-		if(o == null || o instanceof FakePlayer) return l;
-		
-		for(int i = 0; i < groups.size(); i++)
-		{
-			Group g = groups.get(i);
-			if(g.members.contains(o))
-				l.add(g);
-		}
-		
-		return l;
-	}
-	
-	public boolean isPlayerInGroup(String g, Object o)
-	{ FastList<Group> l = getGroupsFor(o); return l.contains(g); }
-
-	public String[] getAllGroups()
-	{
-		String[] s = new String[groups.size()];
-		for(int i = 0; i < s.length; i++)
-			s[i] = groups.get(i).name;
-		return s;
 	}
 }

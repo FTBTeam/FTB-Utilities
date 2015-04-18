@@ -12,4 +12,7 @@ public class IntList // Improve this
 		array1[array1.length - 1] = i;
 		array = array1;
 	}
+	
+	public boolean isEmpty()
+	{ return array.length <= 0; }
 }

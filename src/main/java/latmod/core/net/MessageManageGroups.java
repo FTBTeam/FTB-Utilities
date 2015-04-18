@@ -52,18 +52,18 @@ public class MessageManageGroups extends MessageLM<MessageManageGroups>
 					args = new String[] { "rem", p.username };
 				else
 				{
-					LMPlayer.Group g = owner.getGroup(data.getInteger("G"));
+					Group g = Group.getGroup(data.getInteger("G"));
 					
 					if(code == C_ADD_GROUP)
 						args = new String[] { "addgroup", "Unnamed" };
 					else if(code == C_REM_GROUP)
-						args = new String[] { "remgroup", g.name };
+						args = new String[] { "remgroup", g.title };
 					else if(code == C_REN_GROUP)
-						args = new String[] { "rengroup", g.name, data.getString("GN") };
+						args = new String[] { "rengroup", g.title, data.getString("GN") };
 					else if(code == C_ADD_TO_GROUP)
-						args = new String[] { "addto", g.name, p.username };
+						args = new String[] { "addto", g.title, p.username };
 					else if(code == C_REM_FROM_GROUP)
-						args = new String[] { "remfrom", g.name, p.username };
+						args = new String[] { "remfrom", g.title, p.username };
 				}
 				
 				if(args != null)

@@ -85,9 +85,9 @@ public class LMSecurity
 			if(level == Level.FRIENDS) return owner.isFriend(p);
 			if(level == Level.GROUP && groupID > 0)
 			{
-				LMPlayer.Group g = owner.groups.get(groupID);
+				Group g = Group.getGroup(groupID);
 				if(g == null) return false;
-				return g.members.contains(id) == groupWhitelist;
+				return g.isPlayerInGroup(id) == groupWhitelist;
 			}
 		}
 		

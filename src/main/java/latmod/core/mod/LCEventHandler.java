@@ -87,17 +87,29 @@ public class LCEventHandler
 			LMGamerules.load(e1);
 			
 			NBTTagCompound players = NBTHelper.readMap(e1.getFile("LMPlayers.dat"));
-			if(players != null) LMDataLoader.readPlayersFromNBT(players, true);
+			if(players != null)
+			{
+				if(players.hasKey("Players"))
+				{
+					LMDataLoader.lastPlayerID = players.getInteger("LastID");
+					LMDataLoader.readPlayersFromNBT(players.getCompoundTag("Players"), true);
+				}
+				else
+				{
+					LMDataLoader.readPlayersFromNBT(players, true);
+					
+					// TODO: Deprecated, will be removed //
+					NBTTagCompound common = NBTHelper.readMap(e1.getFile("CommonData.dat"));
+					if(common != null)
+					{
+						LMDataLoader.lastPlayerID = common.getInteger("LastPlayerID");
+						e1.getFile("CommonData.dat").delete();
+					}
+				}
+			}
 			
 			for(int i = 0; i < LMPlayer.map.values.size(); i++)
 				LMPlayer.map.values.get(i).setOnline(false);
-			
-			NBTTagCompound common = NBTHelper.readMap(e1.getFile("CommonData.dat"));
-			if(common != null)
-			{
-				new LoadLMDataEvent.CommonData(common).post();
-				LMDataLoader.lastPlayerID = common.getInteger("LastPlayerID");
-			}
 			
 			new LoadLMDataEvent(e1.latmodFolder, EventLM.Phase.POST).post();
 			
@@ -114,14 +126,14 @@ public class LCEventHandler
 			e1.post();
 			LMGamerules.save(e1);
 			
-			NBTTagCompound common = new NBTTagCompound();
-			new SaveLMDataEvent.CommonData(common).post();
-			common.setInteger("LastPlayerID", LMDataLoader.lastPlayerID);
-			NBTHelper.writeMap(e1.getFile("CommonData.dat"), common);
-			
-			NBTTagCompound players = new NBTTagCompound();
-			LMDataLoader.writePlayersToNBT(players, true);
-			NBTHelper.writeMap(e1.getFile("LMPlayers.dat"), players);
+			{
+				NBTTagCompound tag = new NBTTagCompound();
+				NBTTagCompound players = new NBTTagCompound();
+				LMDataLoader.writePlayersToNBT(players, true);
+				tag.setTag("Players", players);
+				tag.setInteger("LastID", LMDataLoader.lastPlayerID);
+				NBTHelper.writeMap(e1.getFile("LMPlayers.dat"), tag);
+			}
 			
 			// Export player list //
 			

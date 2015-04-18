@@ -44,6 +44,12 @@ public abstract class ContainerLM extends Container
 		return is;
 	}
 	
+	public Slot getSlot(int i)
+	{
+		if(i < 0 || i >= inventorySlots.size()) return null;
+		return super.getSlot(i);
+	}
+	
 	public void addPlayerSlots(int posX, int posY)
 	{
 		if(player == null || player.inventory == null) return;

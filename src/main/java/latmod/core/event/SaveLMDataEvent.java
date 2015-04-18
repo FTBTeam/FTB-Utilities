@@ -3,7 +3,6 @@ package latmod.core.event;
 import java.io.File;
 
 import latmod.core.util.LatCore;
-import net.minecraft.nbt.NBTTagCompound;
 
 public class SaveLMDataEvent extends EventLM
 {
@@ -14,12 +13,4 @@ public class SaveLMDataEvent extends EventLM
 	
 	public File getFile(String s)
 	{ return LatCore.newFile(new File(latmodFolder, s)); }
-	
-	public static class CommonData extends EventLM
-	{
-		public final NBTTagCompound tag;
-		
-		public CommonData(NBTTagCompound t)
-		{ tag = t; }
-	}
 }

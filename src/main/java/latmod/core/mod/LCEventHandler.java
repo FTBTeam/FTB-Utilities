@@ -7,7 +7,7 @@ import latmod.core.net.*;
 import latmod.core.tile.ISecureTile;
 import latmod.core.util.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -86,25 +86,36 @@ public class LCEventHandler
 			e1.post();
 			LMGamerules.load(e1);
 			
-			NBTTagCompound players = NBTHelper.readMap(e1.getFile("LMPlayers.dat"));
-			if(players != null)
 			{
-				if(players.hasKey("Players"))
+				NBTTagCompound tag = NBTHelper.readMap(e1.getFile("LMPlayers.dat"));
+				if(tag != null)
 				{
-					LMDataLoader.lastPlayerID = players.getInteger("LastID");
-					LMDataLoader.readPlayersFromNBT(players.getCompoundTag("Players"), true);
-				}
-				else
-				{
-					LMDataLoader.readPlayersFromNBT(players, true);
-					
-					// TODO: Deprecated, will be removed //
-					NBTTagCompound common = NBTHelper.readMap(e1.getFile("CommonData.dat"));
-					if(common != null)
+					if(tag.hasKey("Players"))
 					{
-						LMDataLoader.lastPlayerID = common.getInteger("LastPlayerID");
-						e1.getFile("CommonData.dat").delete();
+						LMDataLoader.lastPlayerID = tag.getInteger("LastID");
+						LMDataLoader.readPlayersFromNBT(tag.getCompoundTag("Players"), true);
 					}
+					else
+					{
+						LMDataLoader.readPlayersFromNBT(tag, true);
+						
+						// TODO: Deprecated, will be removed //
+						NBTTagCompound common = NBTHelper.readMap(e1.getFile("CommonData.dat"));
+						if(common != null)
+						{
+							LMDataLoader.lastPlayerID = common.getInteger("LastPlayerID");
+							e1.getFile("CommonData.dat").delete();
+						}
+					}
+				}
+			}
+			
+			{
+				NBTTagCompound tag = NBTHelper.readMap(e1.getFile("LMGroups.dat"));
+				if(tag != null)
+				{
+					Group.lastGroupID = tag.getInteger("LastID");
+					Group.readGroupsFromNBT((NBTTagList)tag.getTag("Groups"));
 				}
 			}
 			
@@ -133,6 +144,13 @@ public class LCEventHandler
 				tag.setTag("Players", players);
 				tag.setInteger("LastID", LMDataLoader.lastPlayerID);
 				NBTHelper.writeMap(e1.getFile("LMPlayers.dat"), tag);
+			}
+			
+			{
+				NBTTagCompound tag = new NBTTagCompound();
+				tag.setInteger("LastID", Group.lastGroupID);
+				tag.setTag("Groups", Group.writeGroupsToNBT());
+				NBTHelper.writeMap(e1.getFile("LMGroups.dat"), tag);
 			}
 			
 			// Export player list //

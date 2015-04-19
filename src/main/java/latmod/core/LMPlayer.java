@@ -10,7 +10,7 @@ import latmod.core.util.*;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import cpw.mods.fml.relauncher.*;

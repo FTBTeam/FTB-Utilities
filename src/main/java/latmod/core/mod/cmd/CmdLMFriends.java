@@ -3,7 +3,6 @@ package latmod.core.mod.cmd;
 import latmod.core.*;
 import latmod.core.cmd.CommandLevel;
 import latmod.core.mod.*;
-import latmod.core.net.*;
 import latmod.core.util.FastList;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -59,7 +58,7 @@ public class CmdLMFriends extends CommandBaseLC
 		LMPlayer owner = getLMPlayer(ep);
 		
 		if(args == null || args.length == 0 || args[0].equals("gui"))
-		{ MessageLM.NET.sendTo(new MessageCustomClientGUI(LCCommon.GUI_FRIENDS, null), ep); return null; }
+		{ LatCoreMC.openGui(ep, LCGuiHandler.FRIENDS, null); return null; }
 		else if(args[0].equals("help")) { printHelp(ep); return null; }
 		
 		return onStaticCommand(ep, owner, args);

@@ -49,9 +49,6 @@ public class LC
 		ODItems.preInit();
 		
 		mod.onPostLoaded();
-		
-		LatCoreMC.addGuiHandler(this, proxy);
-		
 		proxy.preInit(e);
 	}
 	
@@ -88,6 +85,8 @@ public class LC
 				modMeta.description += "\n" + m.modID;
 			}
 		}
+		
+		for(String s : LCGuiHandler.IDs) LatCoreMC.addLMGuiHandler(s, LCGuiHandler.instance);
 	}
 	
 	@Mod.EventHandler

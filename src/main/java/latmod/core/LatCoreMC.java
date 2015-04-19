@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 import latmod.core.client.IResourceReloader;
 import latmod.core.item.IItemLM;
-import latmod.core.mod.LC;
+import latmod.core.mod.*;
 import latmod.core.mod.client.LCClientEventHandler;
 import latmod.core.net.*;
 import latmod.core.tile.IGuiTile;
@@ -19,6 +19,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.*;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -28,6 +29,7 @@ import net.minecraft.world.*;
 import net.minecraftforge.client.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.*;
 
 import org.apache.logging.log4j.*;
@@ -37,7 +39,6 @@ import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.eventhandler.EventBus;
-import cpw.mods.fml.common.network.*;
 import cpw.mods.fml.common.registry.*;
 import cpw.mods.fml.relauncher.*;
 
@@ -61,6 +62,14 @@ public class LatCoreMC
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
 	
 	public static File latmodFolder = null;
+	
+	private static final FastMap<String, ILMGuiHandler> guiHandlers = new FastMap<String, ILMGuiHandler>();
+	
+	public static ILMGuiHandler getLMGuiHandler(String id)
+	{ return guiHandlers.get(id); }
+	
+	public static void addLMGuiHandler(String id, ILMGuiHandler i)
+	{ guiHandlers.put(id, i); }
 	
 	// Client //
 	
@@ -163,9 +172,6 @@ public class LatCoreMC
 	public static void addWorldGenerator(IWorldGenerator i, int w)
 	{ GameRegistry.registerWorldGenerator(i, w); }
 	
-	public static void addGuiHandler(Object mod, IGuiHandler i)
-	{ NetworkRegistry.INSTANCE.registerGuiHandler(mod, i); }
-	
 	public static void addEventHandler(Object o, boolean forge, boolean cpw, boolean lm)
 	{
 		if(forge) MinecraftForge.EVENT_BUS.register(o);
@@ -235,15 +241,6 @@ public class LatCoreMC
 		ws1.resetUpdateEntityTick();
 		e.worldObj.theProfiler.endSection();
 	}
-	
-	public static void openGui(EntityPlayer ep, IGuiTile i, int ID)
-	{
-		TileEntity te = i.getTile();
-		ep.openGui(LC.inst, ID, te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord);
-	}
-	
-	public static void openClientGui(EntityPlayer ep, IGuiTile i, int ID)
-	{ LC.proxy.openClientGui(ep, i, ID); }
 	
 	public static boolean isWrench(ItemStack is)
 	{ return is != null && is.getItem() != null && is.getItem().getHarvestLevel(is, "wrench") != -1; }
@@ -333,12 +330,39 @@ public class LatCoreMC
 		else MessageLM.NET.sendToAll(new MessageNotifyPlayer(n));
 	}
 	
-	public static void displayClientGui(EntityPlayer ep, String id, NBTTagCompound tag)
-	{
-		if(ep == null) MessageLM.NET.sendToAll(new MessageCustomClientGUI(id, tag));
-		else if(ep instanceof EntityPlayerMP) MessageLM.NET.sendTo(new MessageCustomClientGUI(id, tag), (EntityPlayerMP)ep);
-	}
-
 	public static Object invokeStatic(String className, String methodName) throws Exception
 	{ Class<?> c = Class.forName(className); return c.getMethod(methodName).invoke(null); }
+	
+	public static void openGui(EntityPlayer ep, String id, NBTTagCompound data)
+	{
+		if(ep == null || ep instanceof FakePlayer) return;
+		
+		ILMGuiHandler h = getLMGuiHandler(id);
+		
+		if(h == null) return;
+		
+		if(ep instanceof EntityPlayerMP)
+		{
+			Container c = h.getContainer(ep, id, data);
+			if(c == null) return;
+			
+			EntityPlayerMP epM = (EntityPlayerMP)ep;
+			epM.getNextWindowId();
+			epM.closeContainer();
+			epM.openContainer = c;
+			epM.openContainer.windowId = epM.currentWindowId;
+			epM.openContainer.addCraftingToCrafters(epM);
+			MessageLM.NET.sendTo(new MessageOpenGui(id, data, epM.currentWindowId), epM);
+		}
+		else if(getEffectiveSide() == Side.CLIENT)
+			LC.proxy.openClientGui(ep, id, data);
+	}
+	
+	public static void openGui(EntityPlayer ep, IGuiTile i, NBTTagCompound data)
+	{
+		TileEntity te = i.getTile();
+		if(data == null) data = new NBTTagCompound();
+		data.setIntArray("XYZ", new int[] { te.xCoord, te.yCoord, te.zCoord });
+		openGui(ep, LCGuiHandler.TILE, data);
+	}
 }

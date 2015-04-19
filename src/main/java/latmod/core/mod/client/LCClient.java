@@ -2,9 +2,7 @@ package latmod.core.mod.client;
 import latmod.core.*;
 import latmod.core.client.playerdeco.ThreadCheckPlayerDecorators;
 import latmod.core.event.LMPlayerClientEvent;
-import latmod.core.gui.IClientGuiHandler;
 import latmod.core.mod.LCCommon;
-import latmod.core.tile.IGuiTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
@@ -12,8 +10,7 @@ import net.minecraft.client.particle.EntityReddustFX;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 import org.lwjgl.input.Keyboard;
@@ -33,7 +30,6 @@ public class LCClient extends LCCommon
 		LatCoreMC.addEventHandler(LCClientEventHandler.instance, true, true, true);
 		ThreadCheckPlayerDecorators.init();
 		key = LatCoreMC.addKeyBinding("key.latcoremc", Keyboard.KEY_GRAVE, "key.categories.gameplay");
-		IClientGuiHandler.Registry.add(LCClientEventHandler.instance);
 	}
 	
 	public void postInit(FMLPostInitializationEvent e)
@@ -45,14 +41,6 @@ public class LCClient extends LCCommon
 	public boolean isTabDown() { return Keyboard.isKeyDown(Keyboard.KEY_TAB); }
 	public boolean inGameHasFocus() { return Minecraft.getMinecraft().inGameHasFocus; }
 	
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
-	{
-		TileEntity te = world.getTileEntity(x, y, z);
-		if(te instanceof IGuiTile)
-			return ((IGuiTile)te).getGui(player, ID);
-		return null;
-	}
-	
 	public EntityPlayer getClientPlayer()
 	{ return FMLClientHandler.instance().getClientPlayerEntity(); }
 	
@@ -61,9 +49,6 @@ public class LCClient extends LCCommon
 	
 	public double getReachDist(EntityPlayer ep)
 	{ return Minecraft.getMinecraft().playerController.getBlockReachDistance(); }
-	
-	public void openClientGui(EntityPlayer ep, IGuiTile i, int ID)
-	{ Minecraft.getMinecraft().displayGuiScreen(i.getGui(ep, ID)); }
 	
 	public static ResourceLocation getSkinTexture(String username)
 	{
@@ -98,23 +83,14 @@ public class LCClient extends LCCommon
 	public void playerLMDataChanged(LMPlayer p, String action)
 	{ new LMPlayerClientEvent.DataChanged(p, action); }
 	
-	public boolean openClientGui(String id, NBTTagCompound data)
+	public void openClientGui(EntityPlayer ep, String id, NBTTagCompound data)
 	{
-		EntityPlayer ep = getClientPlayer();
+		ILMGuiHandler h = LatCoreMC.getLMGuiHandler(id);
 		
-		if(ep == null) return false;
-		
-		for(int i = 0; i < IClientGuiHandler.Registry.list.size(); i++)
+		if(h != null)
 		{
-			GuiScreen gui = IClientGuiHandler.Registry.list.get(i).displayGui(id, data, ep);
-			
-			if(gui != null)
-			{
-				Minecraft.getMinecraft().displayGuiScreen(gui);
-				return true;
-			}
+			GuiScreen g = h.getGui(ep, id, data);
+			if(g != null) Minecraft.getMinecraft().displayGuiScreen(g);
 		}
-		
-		return false;
 	}
 }

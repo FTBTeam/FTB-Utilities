@@ -201,12 +201,8 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 		sendClientAction(ACTION_BUTTON_PRESSED, data);
 	}
 	
-	public void clientOpenGui(int guiID)
-	{
-		NBTTagCompound data = new NBTTagCompound();
-		data.setByte("ID", (byte)guiID);
-		sendClientAction(ACTION_OPEN_GUI, data);
-	}
+	public void clientOpenGui(NBTTagCompound data)
+	{ sendClientAction(ACTION_OPEN_GUI, data); }
 	
 	public void clientCustomName(String name)
 	{
@@ -225,19 +221,13 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 			markDirty();
 		}
 		else if(action.equals(ACTION_OPEN_GUI))
-			openGui(ep, (data == null) ? 0 : data.getByte("ID"));
+			LatCoreMC.openGui(ep, (IGuiTile)this, data);
 		else if(action.equals(ACTION_CUSTOM_NAME))
 		{
 			String name = data.getString("Name");
 			customName = (name.length() == 0) ? null : name;
 			markDirty();
 		}
-	}
-	
-	public void openGui(EntityPlayer ep, int ID)
-	{
-		if(this instanceof IGuiTile)
-			LatCoreMC.openGui(ep, (IGuiTile)this, ID);
 	}
 	
 	public void handleButton(String button, int mouseButton, EntityPlayer ep)

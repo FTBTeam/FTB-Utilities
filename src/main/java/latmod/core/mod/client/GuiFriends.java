@@ -12,6 +12,8 @@ import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.*;
 
+import org.lwjgl.opengl.GL11;
+
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
@@ -78,7 +80,7 @@ public class GuiFriends extends GuiLM
 			}
 		});
 		
-		buttonSave.title = GREEN + LC.mod.translate("button.close");
+		buttonSave.title = GREEN + LC.mod.translate("button.save");
 		
 		widgets.add(buttonPrevPage = new ButtonLM(this, 7, 158, 35, 16)
 		{
@@ -228,6 +230,32 @@ public class GuiFriends extends GuiLM
 			}
 		}
 		
+		super.drawGuiContainerBackgroundLayer(f, mx, my);
+		
+		pbOwner.render();
+		for(int i = 0; i < pbPlayers.length; i++)
+			pbPlayers[i].render();
+		
+		if(selectedPlayer != null)
+		{
+			setTexture(texActions);
+			drawTexturedModalRect(guiLeft - 46, guiTop + 13, 0, 0, 65, 49);
+			
+			setTexture(texture);
+			
+			if(owner.equals(selectedPlayer))
+				buttonAdd.render(Icons.settings);
+			else
+				buttonAdd.render(owner.isFriendRaw(selectedPlayer) ? Icons.Friends.remove : Icons.Friends.add);
+			
+			buttonGroup.render(Icons.Friends.groups);
+			buttonView.render(Icons.Friends.view);
+			buttonClose.render(Icons.cancel);
+		}
+		else viewPos = 0;
+		
+		buttonSave.render(Icons.accept);
+		
 		if(selectedPlayer != null && viewPos > 60 && selectedPlayerEntity != null)
 		{
 			int x = guiLeft - 31 + (int)(65F - viewPos);
@@ -256,33 +284,8 @@ public class GuiFriends extends GuiLM
 			}
 			
 			GuiInventory.func_147046_a(x, y, 35, x - mx, y - 50 - my, selectedPlayerEntity);
+			GL11.glColor4f(1F, 1F, 1F, 1F);
 		}
-		
-		super.drawGuiContainerBackgroundLayer(f, mx, my);
-		
-		pbOwner.render();
-		for(int i = 0; i < pbPlayers.length; i++)
-			pbPlayers[i].render();
-		
-		if(selectedPlayer != null)
-		{
-			setTexture(texActions);
-			drawTexturedModalRect(guiLeft - 46, guiTop + 13, 0, 0, 65, 49);
-			
-			setTexture(texture);
-			
-			if(owner.equals(selectedPlayer))
-				buttonAdd.render(Icons.settings);
-			else
-				buttonAdd.render(owner.isFriendRaw(selectedPlayer) ? Icons.Friends.remove : Icons.Friends.add);
-			
-			buttonGroup.render(Icons.Friends.groups);
-			buttonView.render(Icons.Friends.view);
-			buttonClose.render(Icons.cancel);
-		}
-		else viewPos = 0;
-		
-		buttonSave.render(Icons.accept);
 	}
 	
 	public void drawText(int mx, int my)

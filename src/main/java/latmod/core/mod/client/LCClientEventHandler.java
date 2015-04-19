@@ -143,6 +143,9 @@ public class LCClientEventHandler
 	public void onDrawDebugText(RenderGameOverlayEvent.Text event)
 	{
 		// Some ideas around this //
-		if(LatCoreMC.isDevEnv) event.left.add("[LatCoreMC] Dev version!");
+		if(LatCoreMC.isDevEnv && !Minecraft.getMinecraft().gameSettings.showDebugInfo)
+		{
+			event.left.add("[LatCoreMC] Dev version!");
+		}
 	}
 }

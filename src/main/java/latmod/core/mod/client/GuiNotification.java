@@ -19,13 +19,12 @@ public class GuiNotification extends Gui
 	
 	public final Notification notification;
 	
-	private RenderItem renderItem;
+	private RenderItem renderItem = new RenderItem();
 	private long time;
 
 	public GuiNotification(Notification n)
 	{
 		notification = n;
-		renderItem = new RenderItem();
 		time = -1L;
 	}
 	

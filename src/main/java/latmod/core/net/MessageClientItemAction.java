@@ -1,6 +1,6 @@
 package latmod.core.net;
 import latmod.core.item.IClientActionItem;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -18,7 +18,7 @@ public class MessageClientItemAction extends MessageLM<MessageClientItemAction>
 	
 	public void onMessage(MessageContext ctx)
 	{
-		EntityPlayer ep = ctx.getServerHandler().playerEntity;
+		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
 		
 		ItemStack is = ep.inventory.mainInventory[ep.inventory.currentItem];
 		
@@ -27,7 +27,8 @@ public class MessageClientItemAction extends MessageLM<MessageClientItemAction>
 		
 		if(is != null && is.stackSize <= 0) is = null;
 		
-		ep.inventory.mainInventory[ep.inventory.currentItem] = is;
+		ep.inventory.mainInventory[ep.inventory.currentItem] = (is == null) ? null : is.copy();
 		ep.inventory.markDirty();
+		ep.openContainer.detectAndSendChanges();
 	}
 }

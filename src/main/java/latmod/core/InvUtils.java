@@ -306,12 +306,19 @@ public class InvUtils
 	{
 		if(ep == null || item == null || item.stackSize <= 0) return;
 		ItemStack is = item.copy();
+		boolean changed = false;
 		
 		int size = is.stackSize;
 		for(int i = 0; i < size; i++)
 		{
 			if(InvUtils.addSingleItemToInv(is, ep.inventory, InvUtils.getPlayerSlots(ep), -1, true))
-			{ is.stackSize--; ep.inventory.markDirty(); }
+			{ is.stackSize--; changed = true; }
+		}
+		
+		if(changed)
+		{
+			ep.inventory.markDirty();
+			ep.openContainer.detectAndSendChanges();
 		}
 		
 		if(is.stackSize > 0) dropItem(ep, is);

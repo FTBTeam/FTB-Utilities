@@ -3,7 +3,6 @@ package latmod.core.mod.cmd;
 import latmod.core.*;
 import latmod.core.cmd.CommandLevel;
 import latmod.core.mod.*;
-import latmod.core.util.FastList;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
@@ -18,10 +17,10 @@ public class CmdLMFriends extends CommandBaseLC
 		printHelpLine(ics, "[gui]");
 		printHelpLine(ics, "add <player>");
 		printHelpLine(ics, "rem <player>");
-		printHelpLine(ics, "addgroup <name>");
-		printHelpLine(ics, "remgroup <name>");
-		printHelpLine(ics, "addto <name> <player>");
-		printHelpLine(ics, "remfrom <name> <player>");
+		//printHelpLine(ics, "addgroup <name>");
+		//printHelpLine(ics, "remgroup <name>");
+		//printHelpLine(ics, "addto <name> <player>");
+		//printHelpLine(ics, "remfrom <name> <player>");
 	}
 	
 	public int getRequiredPermissionLevel()
@@ -31,23 +30,23 @@ public class CmdLMFriends extends CommandBaseLC
 	{ return !LCConfig.General.disableLMFriendsCommand; }
 	
 	public String[] getSubcommands(ICommandSender ics)
-	{ return new String[] { "help", "add", "rem", "addgroup", "remgroup", "rengroup", "addto", "remfrom", "list" }; }
+	{ return new String[] { "help", "add", "rem", /*"addgroup", "remgroup", "rengroup", "addto", "remfrom",*/ "list" }; }
 	
 	public NameType getUsername(String[] args, int i)
 	{
 		if(i == 1 && isArg(args, 0, "add", "rem")) return NameType.OFF;
-		if(i == 2 && isArg(args, 0, "addto", "remfrom")) return NameType.OFF;
+		//if(i == 2 && isArg(args, 0, "addto", "remfrom")) return NameType.OFF;
 		return NameType.NONE;
 	}
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
 		if(i == 0) return getSubcommands(ics);
-		if(i == 1 && isArg(args, 0, "list")) return new String[]{ "friends", "groups", "members" };
-		if(i == 2 && isArg(args, 0, "list") && args[1].equals("members"))
-			return Group.getAllGroupNames(getLMPlayer(ics));
-		if(i == 1 && isArg(args, 0, "remgroup", "rengroup", "addto", "remfrom"))
-			return Group.getAllGroupNames(getLMPlayer(ics));
+		if(i == 1 && isArg(args, 0, "list")) return new String[]{ "friends", /*"groups", "members"*/ };
+		//if(i == 2 && isArg(args, 0, "list") && args[1].equals("members"))
+		//	return Group.getAllGroupNames(getLMPlayer(ics));
+		//if(i == 1 && isArg(args, 0, "remgroup", "rengroup", "addto", "remfrom"))
+		//	return Group.getAllGroupNames(getLMPlayer(ics));
 		
 		return super.getTabStrings(ics, args, i);
 	}
@@ -87,7 +86,7 @@ public class CmdLMFriends extends CommandBaseLC
 					LatCoreMC.printChat(ep, col + "[" + i + "]: " + p.username);
 				}
 			}
-			else if(args[1].equals("groups"))
+			/*else if(args[1].equals("groups"))
 			{
 				FastList<Group> groups = Group.getAllGroups(owner);
 				
@@ -110,7 +109,7 @@ public class CmdLMFriends extends CommandBaseLC
 				
 				for(int i = 0; i < g.members.size(); i++)
 					LatCoreMC.printChat(ep, "[" + i + "]: " + g.members.keys.get(i).username);
-			}
+			}*/
 			
 			return null;
 		}
@@ -118,7 +117,7 @@ public class CmdLMFriends extends CommandBaseLC
 		LMPlayer p = null;
 		
 		if(args.length >= 2 && isArg(args, 0, "add", "rem")) p = getLMPlayer(args[1]);
-		if(args.length >= 3 && isArg(args, 0, "addto", "remfrom")) p = getLMPlayer(args[2]);
+		//if(args.length >= 3 && isArg(args, 0, "addto", "remfrom")) p = getLMPlayer(args[2]);
 		if(p != null && p.equals(owner)) return "Invalid player!";
 		
 		checkArgs(args, 2);
@@ -143,6 +142,7 @@ public class CmdLMFriends extends CommandBaseLC
 		}
 		else
 		{
+			/*
 			int groupID = Group.getGroupID(args[1]);
 			Group g = Group.getGroup(groupID);
 			
@@ -202,6 +202,7 @@ public class CmdLMFriends extends CommandBaseLC
 				}
 				else return "Group " + args[1] + " not found!";
 			}
+			*/
 		}
 		
 		return null;

@@ -4,7 +4,6 @@ import latmod.core.block.BlockLM;
 import latmod.core.mod.LC;
 import latmod.core.net.*;
 import net.minecraft.block.Block;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -166,10 +165,6 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 		if(security.owner == null) LatCoreMC.printChat(ep, "No owner");
 		else LatCoreMC.printChat(ep, LC.mod.translate("owner", security.owner.username));
 	}
-	
-	public void dropItem(ItemStack is, double ox, double oy, double oz)
-	{ EntityItem ei = new EntityItem(worldObj, xCoord + 0.5D + ox, yCoord + 0.5D + oy, zCoord + 0.5D + oz, is);
-	ei.delayBeforeCanPickup = 20; worldObj.spawnEntityInWorld(ei); }
 	
 	public void setMeta(int m)
 	{ blockMetadata = m; worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, m, 3); isDirty = true; }

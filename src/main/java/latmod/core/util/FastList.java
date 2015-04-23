@@ -99,13 +99,7 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	
 	@SuppressWarnings("all")
 	public <E> E[] toArray(E[] a)
-	{
-		if(a.length < size)
-		return (E[]) Arrays.copyOf(objects, size, a.getClass());
-		System.arraycopy(objects, 0, a, 0, size);
-		if(a.length > size) a[size] = null;
-		return null;
-	}
+	{ return (E[]) Arrays.copyOf(objects, size, a.getClass()); }
 	
 	public boolean removeAll(Collection<?> list)
 	{ for(Object e : list) remove(e); return true; }

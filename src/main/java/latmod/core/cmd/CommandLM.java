@@ -79,9 +79,6 @@ public abstract class CommandLM extends CommandBase
 		return null;
 	}
 	
-	public final int isUsername(int i)
-	{ return 0; }
-	
 	public NameType getUsername(String[] args, int i)
 	{ return NameType.NONE; }
 	

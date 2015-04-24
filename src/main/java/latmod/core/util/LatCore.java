@@ -154,13 +154,8 @@ public class LatCore
 		if(o == null) return null;
 		if(o.length == 0) return "";
 		String s = "";
-		
 		for(int i = 0; i < o.length; i++)
-		{
-			s += o[i];
-			if(i != o.length - 1) s += ", ";
-		}
-		
+		{ s += o[i]; if(i != o.length - 1) s += ", "; }
 		return s;
 	}
 	
@@ -180,17 +175,23 @@ public class LatCore
 		return s;
 	}
 	
-	public static String stripInt(double... o)
+	public static String stripDoubleInt(double... o)
 	{
 		if(o == null) return null;
 		if(o.length == 0) return "";
 		String s = "";
 		for(int i = 0; i < o.length; i++)
-		{
-			s += ((long)o[i]);
-			if(i != o.length - 1) s += ", ";
-		}
-		
+		{ s += ((long)o[i]); if(i != o.length - 1) s += ", "; }
+		return s;
+	}
+	
+	public static String stripInt(int... o)
+	{
+		if(o == null) return null;
+		if(o.length == 0) return "";
+		String s = "";
+		for(int i = 0; i < o.length; i++)
+		{ s += o[i]; if(i != o.length - 1) s += ", "; }
 		return s;
 	}
 	
@@ -200,11 +201,7 @@ public class LatCore
 		if(o.length == 0) return "";
 		String s = "";
 		for(int i = 0; i < o.length; i++)
-		{
-			s += (o[i] ? 1 : 0);
-			if(i != o.length - 1) s += ", ";
-		}
-		
+		{ s += (o[i] ? "1" : "0"); if(i != o.length - 1) s += ", "; }
 		return s;
 	}
 	

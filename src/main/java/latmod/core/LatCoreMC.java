@@ -242,6 +242,12 @@ public class LatCoreMC
 		e.worldObj.theProfiler.endSection();
 	}
 	
+	public static void teleportPlayer(EntityPlayerMP ep, double x, double y, double z, int dim)
+	{
+		if(ep.dimension != dim) teleportEntity(ep, dim);
+		ep.playerNetServerHandler.setPlayerLocation(x, y, z, ep.rotationYaw, ep.rotationPitch);
+	}
+	
 	public static boolean isWrench(ItemStack is)
 	{ return is != null && is.getItem() != null && is.getItem().getHarvestLevel(is, "wrench") != -1; }
 	

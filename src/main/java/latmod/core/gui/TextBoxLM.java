@@ -111,16 +111,28 @@ public class TextBoxLM extends WidgetLM
 	}
 	
 	public String getText()
-	{ return text; }
+	{ if(text == null) text = ""; return text; }
 	
 	public void render(int x, int y, int col)
 	{
-		String s = getText() + "";
+		String s = getText();
 		
 		if(isSelected && Minecraft.getSystemTime() % 1000L > 500L)
 			s += '_';
 		
 		if(s.length() > 0)
 			gui.getFontRenderer().drawString(s, gui.getPosX() + x, gui.getPosY() + y, col);
+	}
+	
+	public void renderCentred(int x, int y, int col)
+	{
+		String s = getText();
+		String os = s + "";
+		
+		if(isSelected && Minecraft.getSystemTime() % 1000L > 500L)
+			s += '_';
+		
+		if(s.length() > 0)
+			gui.getFontRenderer().drawString(s, gui.getPosX() + x - gui.getFontRenderer().getStringWidth(os) / 2, gui.getPosY() + y, col);
 	}
 }

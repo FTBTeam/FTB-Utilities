@@ -46,7 +46,7 @@ import cpw.mods.fml.relauncher.*;
 public class LatCoreMC
 {
 	// Something, Something, Eclipse, Something... \Minecraft\eclipse\.metadata\.plugins\org.eclipse.debug.core\.launches
-	public static final Version MC_VERSION = new Version(1, 7, 10);
+	public static final String MC_VERSION = Loader.MC_VERSION;
 	public static final String DEV_VERSION = "@VERSION@";
 	
 	public static final Logger logger = LogManager.getLogger("LatCoreMC");
@@ -56,7 +56,7 @@ public class LatCoreMC
 	public static final int BOTTOM = 0;
 	public static final int FRONT = 3;
 	
-	public static final boolean isDevEnv = LC.VERSION.equals("@VERSION@");
+	public static final boolean isDevEnv = LC.VERSION.equals(DEV_VERSION);
 	
 	public static final String FORMATTING = "\u00a7";
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");

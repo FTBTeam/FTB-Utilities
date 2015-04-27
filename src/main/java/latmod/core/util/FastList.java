@@ -125,6 +125,21 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 		}
 	}
 	
+	@SuppressWarnings("all")
+	public FastList<E> sortToNew(Comparator<? super E> c)
+	{
+		FastList<E> l = new FastList<E>();
+		
+		if(size > 0)
+		{
+			l.addAll(this);
+			if(c == null) Arrays.sort(l.objects, 0, size);
+			else Arrays.sort((E[])l.objects, 0, size, c);
+		}
+		
+		return l;
+	}
+	
 	public String toString()
 	{ return LatCore.strip(LatCore.toStrings(toArray())); }
 	

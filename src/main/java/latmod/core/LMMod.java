@@ -25,7 +25,6 @@ public final class LMMod
 	public final String displayName;
 	public final String version;
 	public final String assets;
-	private final Version getVersion;
 	
 	public final FastList<IBlockLM> blocks;
 	public final FastList<IItemLM> items;
@@ -42,7 +41,6 @@ public final class LMMod
 		displayName = modMetadata.name;
 		version = modMetadata.version;
 		assets = modID.toLowerCase() + ":";
-		getVersion = Version.parseVersion(version);
 		
 		blocks = new FastList<IBlockLM>();
 		items = new FastList<IItemLM>();
@@ -63,9 +61,6 @@ public final class LMMod
 		
 		modsMap.put(modID, this);
 	}
-	
-	public Version getVersion()
-	{ return getVersion; }
 	
 	public String toFullString()
 	{ return modID + '-' + LatCoreMC.MC_VERSION + '-' + version; }

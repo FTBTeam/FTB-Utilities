@@ -58,7 +58,10 @@ public class MathHelperLM
 	
 	public static int power(int f, int n)
 	{ int j = 1; for(int i = 0; i < n; i++) j *= f; return j; }
-
+	
+	public static long powerLong(long f, int n)
+	{ long j = 1L; for(int i = 0; i < n; i++) j *= f; return j; }
+	
 	public static double distSq(double x1, double y1, double z1, double x2, double y2, double z2)
 	{ return (sq(x2 - x1) + sq(y2 - y1) + sq(z2 - z1)); }
 	

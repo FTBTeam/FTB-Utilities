@@ -192,6 +192,7 @@ public abstract class GuiLM extends GuiContainer
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
 		drawText(mx, my);
+		GL11.glDisable(GL11.GL_LIGHTING);
 	}
 	
 	public void drawText(int mx, int my)

@@ -417,4 +417,48 @@ public class LatCore
 			h = h * 31 + ((o[i] == null) ? 0 : o[i].hashCode());
 		return h;
 	}
+	
+	public static boolean contains(String[] s, String s1)
+	{
+		for(int i = 0; i < s.length; i++)
+			if(s[i] != null && (s[i] == s1 || s[i].equals(s1)))
+				return true;
+		return false;
+	}
+
+	public static boolean copyFile(File oldFile, File newFile)
+	{
+		boolean result = false;
+		
+		if(oldFile != null && newFile != null && oldFile.exists() && !oldFile.equals(newFile))
+		{
+			newFile = newFile(newFile);
+			
+			FileChannel oldC = null;
+			FileChannel newC = null;
+			
+			try
+			{
+				oldC = new FileInputStream(oldFile).getChannel();
+				newC = new FileOutputStream(newFile).getChannel();
+				newC.transferFrom(oldC, 0, oldC.size());
+				if(oldC != null) oldC.close();
+				if(newC != null) newC.close();
+				result = true;
+			}
+			catch(Exception e) { e.printStackTrace(); }
+		}
+		
+		return result;
+	}
+	
+	public static boolean deleteFile(File dir)
+	{
+		if(!dir.exists()) return false;
+		if(dir.isFile()) return dir.delete();
+		String[] files = dir.list();
+		for(int i = 0; i < files.length; i++)
+			deleteFile(new File(dir, files[i]));
+		return dir.delete();
+	}
 }

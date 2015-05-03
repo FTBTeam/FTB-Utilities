@@ -5,7 +5,6 @@ import latmod.core.mod.LC;
 import latmod.core.net.*;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.*;
@@ -109,10 +108,14 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 	
 	public void onLoaded()
 	{
-		isLoaded = true;
 		blockType = getBlockType();
-		getMeta();
-		onNeighborBlockChange(Blocks.air);
+		
+		if(blockType != null)
+		{
+			isLoaded = true;
+			getMeta();
+			onNeighborBlockChange(blockType);
+		}
 	}
 	
 	public void onUnloaded()
@@ -173,7 +176,11 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 	{ blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); }
 	
 	public BlockLM getBlockType()
-	{ return (BlockLM)super.getBlockType(); }
+	{
+		Block b = super.getBlockType();
+		if(b instanceof BlockLM) return (BlockLM)b;
+		return null;
+	}
 	
 	public boolean recolourBlock(ForgeDirection side, int col)
 	{ return false; }

@@ -41,7 +41,6 @@ public class LCConfig extends LMConfig implements IServerConfig
 	
 	public static class General
 	{
-		public static boolean checkUpdates;
 		public static boolean disableLatCoreCommand;
 		public static boolean disableLMFriendsCommand;
 		public static boolean friendsGuiArmor;
@@ -49,7 +48,8 @@ public class LCConfig extends LMConfig implements IServerConfig
 		
 		public static void load(Category c)
 		{
-			checkUpdates = c.getBool("checkUpdates", true);
+			c.remove("checkUpdates");
+			
 			disableLatCoreCommand = c.getBool("disableLatCoreCommand", false);
 			disableLMFriendsCommand = c.getBool("disableLMFriendsCommand", false);
 			friendsGuiArmor = c.getBool("friendsGuiArmor", true);

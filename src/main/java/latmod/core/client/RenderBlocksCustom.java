@@ -100,7 +100,8 @@ public class RenderBlocksCustom extends RenderBlocks
 	
 	public void renderFace(Block b, int f, double x, double y, double z, IIcon icon)
 	{
-		if(f == 0) renderFaceYNeg(b, x, y, z, icon);
+		if(f < 0 || f > 5);
+		else if(f == 0) renderFaceYNeg(b, x, y, z, icon);
 		else if(f == 1) renderFaceYPos(b, x, y, z, icon);
 		else if(f == 2) renderFaceZNeg(b, x, y, z, icon);
 		else if(f == 3) renderFaceZPos(b, x, y, z, icon);

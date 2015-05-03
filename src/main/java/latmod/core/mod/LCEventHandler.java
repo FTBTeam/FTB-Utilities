@@ -21,9 +21,6 @@ public class LCEventHandler
 	{
 		if(!(e.player instanceof EntityPlayerMP)) return;
 		
-		if(LCConfig.General.checkUpdates)
-			ThreadCheckVersions.init(e.player, false);
-		
 		LMPlayer p = LMPlayer.getPlayer(e.player);
 		
 		boolean first = p == null || !p.isOld;

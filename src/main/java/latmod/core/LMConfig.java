@@ -78,6 +78,12 @@ public abstract class LMConfig
 			Property prop = cat1.get(property);
 			if(prop != null) prop.setLanguageKey(langKey);
 		}
+		
+		public void remove(String s)
+		{
+			ConfigCategory cat1 = getCategory();
+			if(cat1.containsKey(s)) cat1.remove(s);
+		}
 	}
 	
 	public final File loadedFrom;

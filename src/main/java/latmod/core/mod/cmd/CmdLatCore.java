@@ -42,11 +42,9 @@ public class CmdLatCore extends CommandBaseLC
 		if(args == null || args.length == 0)
 			return "Subcommands: " + LatCore.strip(getSubcommands(ics));
 		
-		if(args[0].equals("versions"))
-		{
-			ThreadCheckVersions.init(ics, true);
-			return null;
-		}
+		if(args[0].equals("version"))
+			return FINE + "Current version: " + LC.VERSION;
+		
 		else if(args[0].equals("friends"))
 		{
 			if(!LCConfig.General.disableLMFriendsCommand)

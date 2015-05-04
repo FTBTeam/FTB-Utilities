@@ -10,7 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.*;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.*;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileLM extends TileEntity implements ITileInterface, IClientActionTile
@@ -268,4 +268,7 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 	
 	public LMSecurity getSecurity()
 	{ return security; }
+	
+	public TileEntity getTile(int side)
+	{ return worldObj.getTileEntity(xCoord + Facing.offsetsXForSide[side], yCoord + Facing.offsetsYForSide[side], zCoord + Facing.offsetsZForSide[side]); }
 }

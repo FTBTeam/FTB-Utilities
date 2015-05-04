@@ -10,14 +10,11 @@ public class LMSecurity
 {
 	public LMPlayer owner;
 	public Level level;
-	private int groupID;
-	private boolean groupWhitelist;
 	
 	public LMSecurity(Object o)
 	{
 		setOwner(o);
 		level = Level.PUBLIC;
-		groupID = 0;
 	}
 	
 	public void setOwner(Object o)
@@ -27,7 +24,6 @@ public class LMSecurity
 	{
 		owner = null;
 		level = Level.PUBLIC;
-		groupID = 0;
 		
 		if(!tag.hasKey(s)) return;
 		
@@ -47,10 +43,6 @@ public class LMSecurity
 		}
 		
 		level = Level.VALUES[tag1.getByte("Level")];
-		
-		int gid = tag1.getInteger("Group");
-		groupID = Math.abs(gid);
-		groupWhitelist = gid >= 0;
 	}
 	
 	public void writeToNBT(NBTTagCompound tag, String s)
@@ -58,12 +50,8 @@ public class LMSecurity
 		if(owner != null)
 		{
 			NBTTagCompound tag1 = new NBTTagCompound();
-			
 			tag1.setInteger("Owner", owner.playerID);
 			tag1.setByte("Level", (byte)level.ID);
-			
-			if(groupID > 0) tag1.setInteger("Group", groupWhitelist ? groupID : -groupID);
-			
 			tag.setTag(s, tag1);
 		}
 	}
@@ -78,18 +66,8 @@ public class LMSecurity
 		if(isOwner(id)) return true;
 		if(level == Level.PRIVATE) return false;
 		
-		LMPlayer p = LMPlayer.getPlayer(id);
-		
-		if(p != null)
-		{
-			if(level == Level.FRIENDS) return owner.isFriend(p);
-			if(level == Level.GROUP && groupID > 0)
-			{
-				Group g = Group.getGroup(groupID);
-				if(g == null) return false;
-				return g.isPlayerInGroup(id) == groupWhitelist;
-			}
-		}
+		if(level == Level.FRIENDS && owner.isFriend(LMPlayer.getPlayer(id)))
+			return true;
 		
 		return false;
 	}
@@ -97,21 +75,16 @@ public class LMSecurity
 	public boolean canInteract(EntityPlayer ep)
 	{ return canInteract((ep == null) ? null : ep.getUniqueID()); }
 	
-	public void setGroup(int g, boolean b)
-	{ groupID = g; groupWhitelist = b; }
-	
 	// Level enum //
 	
 	public static enum Level
 	{
 		PUBLIC("public"),
 		PRIVATE("private"),
-		FRIENDS("friends"),
-		GROUP("group");
+		FRIENDS("friends");
 		
 		public static final Level[] VALUES = values();
 		public static final Level[] VALUES_2 = new Level[] { PUBLIC, PRIVATE };
-		public static final Level[] VALUES_3 = new Level[] { PUBLIC, PRIVATE, FRIENDS };
 		
 		public final int ID;
 		private String uname;
@@ -126,7 +99,7 @@ public class LMSecurity
 		{ return this == PUBLIC; }
 		
 		public boolean isRestricted()
-		{ return this == FRIENDS || this == GROUP; }
+		{ return this == FRIENDS; }
 		
 		public Level next(Level[] l)
 		{ return l[(ID + 1) % l.length]; }

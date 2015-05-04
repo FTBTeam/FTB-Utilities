@@ -12,22 +12,15 @@ public class MessageManageGroups extends MessageLM<MessageManageGroups>
 {
 	public static final int C_ADD_FRIEND = 1;
 	public static final int C_REM_FRIEND = 2;
-	public static final int C_ADD_GROUP = 3;
-	public static final int C_REM_GROUP = 4;
-	public static final int C_REN_GROUP = 5;
-	public static final int C_ADD_TO_GROUP = 6;
-	public static final int C_REM_FROM_GROUP = 7;
 	
 	public MessageManageGroups() { }
 	
-	public MessageManageGroups(LMPlayer p, int code, int user, int group, String groupName)
+	public MessageManageGroups(LMPlayer p, int code, int user)
 	{
 		data = new NBTTagCompound();
 		data.setInteger("O", p.playerID);
 		if(code > 0) data.setByte("C", (byte)code);
 		if(user > 0) data.setInteger("U", user);
-		if(group > 0) data.setInteger("G", group);
-		if(groupName != null && !groupName.isEmpty()) data.setString("GN", groupName);
 	}
 	
 	public void onMessage(MessageContext ctx)
@@ -50,21 +43,6 @@ public class MessageManageGroups extends MessageLM<MessageManageGroups>
 					args = new String[] { "add", p.username };
 				else if(code == C_REM_FRIEND)
 					args = new String[] { "rem", p.username };
-				else
-				{
-					Group g = Group.getGroup(data.getInteger("G"));
-					
-					if(code == C_ADD_GROUP)
-						args = new String[] { "addgroup", "Unnamed" };
-					else if(code == C_REM_GROUP)
-						args = new String[] { "remgroup", g.title };
-					else if(code == C_REN_GROUP)
-						args = new String[] { "rengroup", g.title, data.getString("GN") };
-					else if(code == C_ADD_TO_GROUP)
-						args = new String[] { "addto", g.title, p.username };
-					else if(code == C_REM_FROM_GROUP)
-						args = new String[] { "remfrom", g.title, p.username };
-				}
 				
 				if(args != null)
 				{

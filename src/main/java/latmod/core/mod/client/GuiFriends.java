@@ -49,7 +49,7 @@ public class GuiFriends extends GuiLM
 	private static float viewPos = 0F;
 	private static AbstractClientPlayer selectedPlayerEntity = null;
 	
-	public ButtonLM buttonAdd, buttonGroup, buttonClose, buttonView;
+	public ButtonLM buttonAdd, buttonInfo, buttonClose, buttonView;
 	
 	public GuiFriends(EntityPlayer ep)
 	{
@@ -133,19 +133,18 @@ public class GuiFriends extends GuiLM
 			{ return selectedPlayer != null; }
 		});
 		
-		widgets.add(buttonGroup = new ButtonLM(this, -20, 39, 16, 16)
+		widgets.add(buttonInfo = new ButtonLM(this, -20, 39, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
 				playClickSound();
-				mc.displayGuiScreen(new GuiManageGroups(container.player));
 			}
 			
 			public boolean isEnabled()
 			{ return LatCoreMC.isDevEnv; }
 		});
 		
-		buttonGroup.title = "[WIP] " + LC.mod.translate("button.editGroups");
+		buttonInfo.title = "[WIP] " + LC.mod.translate("button.info");
 		
 		widgets.add(buttonClose = new ButtonLM(this, -20, 20, 16, 16)
 		{
@@ -202,7 +201,7 @@ public class GuiFriends extends GuiLM
 	public void sendUpdate(int c, int u)
 	{
 		changed = true;
-		MessageLM.NET.sendToServer(new MessageManageGroups(owner, c, u, 0, null));
+		MessageLM.NET.sendToServer(new MessageManageGroups(owner, c, u));
 	}
 	
 	public int maxPages()
@@ -248,7 +247,7 @@ public class GuiFriends extends GuiLM
 			else
 				buttonAdd.render(owner.isFriendRaw(selectedPlayer) ? Icons.Friends.remove : Icons.Friends.add);
 			
-			buttonGroup.render(Icons.Friends.groups);
+			buttonInfo.render(Icons.help);
 			buttonView.render(Icons.Friends.view);
 			buttonClose.render(Icons.cancel);
 		}
@@ -481,17 +480,6 @@ public class GuiFriends extends GuiLM
 						al.add(GREEN + "[" + LC.mod.translate("label.friend") + "]");
 					else if(raw1 || raw2)
 						al.add((raw1 ? GOLD : BLUE) + "[" + LC.mod.translate("label.pfriend") + "]");
-					
-					FastList<Group> g = Group.getAllGroups(player.player);
-					
-					if(g.size() > 0)
-					{
-						al.add("");
-						al.add(LC.mod.translate("label.groups") + ":");
-						
-						for(int i = 0; i < g.size(); i++)
-							al.add(g.get(i).title);
-					}
 				}
 			}
 		}

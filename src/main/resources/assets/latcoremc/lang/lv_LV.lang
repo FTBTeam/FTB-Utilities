@@ -18,12 +18,11 @@ latcoremc:button.save=Saglabāt
 #FriendsGUI
 latcoremc:button.addFriend=Pievienot Draugiem
 latcoremc:button.remFriend=Noņemt no Draugiem
-latcoremc:button.editGroups=Rediģēt Grupas
+latcoremc:button.info=Informācija
 latcoremc:button.viewPlayer=Apskatīt Spēlētāju
 latcoremc:label.online=Tiešsaitē
 latcoremc:label.friend=Draugs
 latcoremc:label.pfriend=Neapstiprināts Draugs
-latcoremc:label.groups=Grupas
 
 #ManageGroups
 latcoremc:button.addGroup=Add Group

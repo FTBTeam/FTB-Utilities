@@ -18,12 +18,11 @@ latcoremc:button.save=Save
 #FriendsGUI
 latcoremc:button.addFriend=Add as Friend
 latcoremc:button.remFriend=Remove from Friends
-latcoremc:button.editGroups=Edit Groups
+latcoremc:button.info=Info
 latcoremc:button.viewPlayer=View Player
 latcoremc:label.online=Online
 latcoremc:label.friend=Friend
 latcoremc:label.pfriend=Pending Friend
-latcoremc:label.groups=Groups
 
 #ManageGroups
 latcoremc:button.addGroup=Add Group

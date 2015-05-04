@@ -107,15 +107,6 @@ public class LCEventHandler
 				}
 			}
 			
-			{
-				NBTTagCompound tag = NBTHelper.readMap(e1.getFile("LMGroups.dat"));
-				if(tag != null)
-				{
-					Group.lastGroupID = tag.getInteger("LastID");
-					Group.readGroupsFromNBT((NBTTagList)tag.getTag("Groups"));
-				}
-			}
-			
 			for(int i = 0; i < LMPlayer.map.values.size(); i++)
 				LMPlayer.map.values.get(i).setOnline(false);
 			
@@ -141,13 +132,6 @@ public class LCEventHandler
 				tag.setTag("Players", players);
 				tag.setInteger("LastID", LMDataLoader.lastPlayerID);
 				NBTHelper.writeMap(e1.getFile("LMPlayers.dat"), tag);
-			}
-			
-			{
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setInteger("LastID", Group.lastGroupID);
-				tag.setTag("Groups", Group.writeGroupsToNBT());
-				NBTHelper.writeMap(e1.getFile("LMGroups.dat"), tag);
 			}
 			
 			// Export player list //

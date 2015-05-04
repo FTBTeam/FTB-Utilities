@@ -4,7 +4,6 @@ import static net.minecraft.util.EnumChatFormatting.GREEN;
 import latmod.core.LMPlayer;
 import latmod.core.gui.*;
 import latmod.core.mod.LC;
-import latmod.core.net.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.*;
@@ -36,11 +35,6 @@ public class GuiSecurity extends GuiLM
 		});
 		
 		buttonSave.title = GREEN + LC.mod.translate("button.save");
-	}
-	
-	public void sendUpdate(int c, int u)
-	{
-		MessageLM.NET.sendToServer(new MessageManageGroups(owner, c, u, 0, null));
 	}
 	
 	public void drawGuiContainerBackgroundLayer(float f, int mx, int my)

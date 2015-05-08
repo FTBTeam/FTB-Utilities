@@ -3,10 +3,8 @@ import java.io.File;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import latmod.core.client.IResourceReloader;
 import latmod.core.item.IItemLM;
 import latmod.core.mod.*;
-import latmod.core.mod.client.LCClientEventHandler;
 import latmod.core.net.*;
 import latmod.core.tile.IGuiTile;
 import latmod.core.util.*;
@@ -111,10 +109,6 @@ public class LatCoreMC
 	@SideOnly(Side.CLIENT)
 	public static KeyBinding addKeyBinding(String name, int key, String cat)
 	{ KeyBinding k = new KeyBinding(name, key, cat); ClientRegistry.registerKeyBinding(k); return k; }
-	
-	@SideOnly(Side.CLIENT)
-	public static void addResourceReloader(IResourceReloader r)
-	{ LCClientEventHandler.instance.resourceReloaders.add(r); }
 	
 	public static final Configuration loadConfig(FMLPreInitializationEvent e, String s)
 	{ return new Configuration(new File(e.getModConfigurationDirectory(), s)); }

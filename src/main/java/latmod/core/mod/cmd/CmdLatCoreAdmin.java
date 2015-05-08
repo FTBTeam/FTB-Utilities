@@ -7,6 +7,7 @@ import latmod.core.cmd.CommandLevel;
 import latmod.core.event.ReloadEvent;
 import latmod.core.net.*;
 import latmod.core.util.*;
+import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
@@ -29,7 +30,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 	}
 	
 	public String[] getSubcommands(ICommandSender ics)
-	{ return new String[] { "block", "gamerule", "player", "reload" }; }
+	{ return new String[] { "block", "player", "reload" }; }
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
@@ -37,9 +38,6 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 		
 		if(i == 2 && isArg(args, 0, "player"))
 			return new String[] { "delete", "saveinv", "loadinv", "notify" };
-		
-		if(i == 1 && isArg(args, 0, "gamerule"))
-			return LMGamerules.rules.keys.toArray(new String[0]);
 		
 		if(i == 1 && isArg(args, 0, "reload"))
 			return new String[] { "all", "self", "none" };
@@ -158,36 +156,42 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			try
 			{
 				MovingObjectPosition mop = MathHelperLM.rayTrace(ep);
-				String b = InvUtils.getRegName(ep.worldObj.getBlock(mop.blockX, mop.blockY, mop.blockZ));
+				Block block = ep.worldObj.getBlock(mop.blockX, mop.blockY, mop.blockZ);
+				String b = InvUtils.getRegName(block);
 				if(b == null) return "Unknown block!";
+				
+				boolean ints = args.length >= 2 && args[1].equals("interfaces");
 				
 				int meta = ep.worldObj.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ);
 				TileEntity te = ep.worldObj.getTileEntity(mop.blockX, mop.blockY, mop.blockZ);
 				
 				LatCoreMC.printChat(ep, b + (meta > 0 ? (";" +  meta) : "") + " @ " + LatCore.stripInt(mop.blockX, mop.blockY, mop.blockZ));
-				if(te != null) LatCoreMC.printChat(ep, "Tile: " + LatCore.classpath(te.getClass()));
+				
+				if(ints)
+				{
+					Class<?> bInts[] = block.getClass().getInterfaces();
+					
+					if(bInts.length > 0) for(int i = 0; i < bInts.length; i++)
+						LatCoreMC.printChat(ep, ">  " + bInts[i].getSimpleName());
+				}
+				
+				if(te != null)
+				{
+					LatCoreMC.printChat(ep, "Tile: " + LatCore.classpath(te.getClass()));
+					
+					if(ints)
+					{
+						Class<?> tInts[] = te.getClass().getInterfaces();
+						
+						if(tInts.length > 0) for(int i = 0; i < tInts.length; i++)
+							LatCoreMC.printChat(ep, ">  " + tInts[i].getSimpleName());
+					}
+				}
 				
 				return null;
 			}
 			catch(Exception e)
 			{ return "Unknown block!"; }
-		}
-		else if(args[0].equals("gamerule"))
-		{
-			if(args.length >= 2)
-			{
-				if(args.length >= 3)
-				{
-					LMGamerules.set(args[1], args[2]);
-					return FINE + "LMGamerule '" + args[1] + "' set to " + args[2];
-				}
-				else
-				{
-					LMGamerules.Rule r = LMGamerules.get(args[1]);
-					if(r == null) return FINE + "LMGamerule '" + args[1] + "' does not exist";
-					return FINE + "LMGamrule '" + args[1] + "' is '" + r.value + "'";
-				}
-			}
 		}
 		else if(args[0].equals("reload"))
 		{

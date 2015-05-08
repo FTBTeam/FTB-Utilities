@@ -7,7 +7,7 @@ import latmod.core.net.*;
 import latmod.core.tile.ISecureTile;
 import latmod.core.util.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -81,7 +81,6 @@ public class LCEventHandler
 			
 			LoadLMDataEvent e1 = new LoadLMDataEvent(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/"), EventLM.Phase.PRE);
 			e1.post();
-			LMGamerules.load(e1);
 			
 			{
 				NBTTagCompound tag = NBTHelper.readMap(e1.getFile("LMPlayers.dat"));
@@ -123,7 +122,6 @@ public class LCEventHandler
 		{
 			SaveLMDataEvent e1 = new SaveLMDataEvent(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/"));
 			e1.post();
-			LMGamerules.save(e1);
 			
 			{
 				NBTTagCompound tag = new NBTTagCompound();

@@ -26,8 +26,6 @@ public class ThreadCheckPlayerDecorators implements Runnable
 		LatCoreMC.logger.info("Loading PlayerDecorators...");
 		
 		LCClientEventHandler.instance.playerDecorators.clear();
-		LCClientEventHandler.instance.listLatMod.clear();
-		LCClientEventHandler.instance.listFTB.clear();
 		
 		try
 		{
@@ -57,25 +55,8 @@ public class ThreadCheckPlayerDecorators implements Runnable
 				}
 			}
 			
-			al = LatCore.toStringList(new URL("http://pastebin.com/raw.php?i=c2LJZtE3").openStream());
-			
-			for(int i = 0; i < al.size(); i++)
-			{
-				String raw = al.get(i).trim();
-				
-				if(!raw.isEmpty() && !raw.startsWith("#"))
-					LCClientEventHandler.instance.listLatMod.add(UUID.fromString(raw));
-			}
-			
-			al = LatCore.toStringList(new URL("http://pastebin.com/raw.php?i=6wQU5MWK").openStream());
-			
-			for(int i = 0; i < al.size(); i++)
-			{
-				String raw = al.get(i).trim();
-				
-				if(!raw.isEmpty() && !raw.startsWith("#"))
-					LCClientEventHandler.instance.listFTB.add(UUID.fromString(raw));
-			}
+			readList("http://pastebin.com/raw.php?i=c2LJZtE3", LCClientEventHandler.instance.listLatMod);
+			readList("http://pastebin.com/raw.php?i=6wQU5MWK", LCClientEventHandler.instance.listFTB);
 			
 			LatCoreMC.logger.info("PlayerDecorators loaded!");
 		}
@@ -88,5 +69,20 @@ public class ThreadCheckPlayerDecorators implements Runnable
 		new CustomPDEvent().post();
 		
 		thread = null;
+	}
+	
+	public void readList(String url, FastList<UUID> list) throws Exception
+	{
+		list.clear();
+		
+		FastList<String> al = LatCore.toStringList(new URL(url).openStream());
+		
+		for(int i = 0; i < al.size(); i++)
+		{
+			String raw = al.get(i).trim();
+			
+			if(!raw.isEmpty() && !raw.startsWith("#"))
+				list.add(UUID.fromString(raw));
+		}
 	}
 }

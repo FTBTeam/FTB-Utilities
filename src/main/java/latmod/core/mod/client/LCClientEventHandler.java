@@ -8,10 +8,13 @@ import latmod.core.gui.GuiLM;
 import latmod.core.mod.*;
 import latmod.core.tile.IPaintable;
 import latmod.core.util.*;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.*;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import cpw.mods.fml.common.eventhandler.*;
@@ -135,10 +138,64 @@ public class LCClientEventHandler
 	@SubscribeEvent
 	public void onDrawDebugText(RenderGameOverlayEvent.Text event)
 	{
+		boolean shift = LC.proxy.isShiftDown();
+		Minecraft mc = Minecraft.getMinecraft();
+		
 		// Some ideas around this //
-		if(LatCoreMC.isDevEnv && !Minecraft.getMinecraft().gameSettings.showDebugInfo)
+		if(!mc.gameSettings.showDebugInfo)
 		{
-			event.left.add("[LatCoreMC] Dev version!");
+			if(LatCoreMC.isDevEnv) event.left.add("[LatCoreMC] Dev version!");
+		}
+		else if(LCConfig.Client.displayDebugInfo)
+		{
+			event.right.add(null);
+			
+			if(mc.objectMouseOver != null)
+			{
+				if(mc.objectMouseOver.typeOfHit == MovingObjectType.BLOCK)
+				{
+					int x = mc.objectMouseOver.blockX;
+					int y = mc.objectMouseOver.blockY;
+					int z = mc.objectMouseOver.blockZ;
+					
+					Block block = mc.theWorld.getBlock(x, y, z);
+					
+					int meta = mc.theWorld.getBlockMetadata(x, y, z);
+					TileEntity te = mc.theWorld.getTileEntity(x, y, z);
+					
+					event.right.add(shift ? (LatCore.classpath(block.getClass())) : (InvUtils.getRegName(block) + (meta > 0 ? (";" +  meta) : "")) + " @ " + LatCore.stripInt(x, y, z));
+					
+					if(shift)
+					{
+						Class<?> bInts[] = block.getClass().getInterfaces();
+						
+						if(bInts.length > 0)
+						{
+							event.right.add(null);
+							for(int i = 0; i < bInts.length; i++)
+								event.right.add(LatCore.classpath(bInts[i]) + "  <");
+						}
+					}
+					
+					if(te != null)
+					{
+						event.right.add(null);
+						event.right.add("Tile: " + LatCore.classpath(te.getClass()));
+						
+						if(shift)
+						{
+							Class<?> tInts[] = te.getClass().getInterfaces();
+							
+							if(tInts.length > 0)
+							{
+								event.right.add(null);
+								for(int i = 0; i < tInts.length; i++)
+									event.right.add(LatCore.classpath(tInts[i]) + "  <");
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }

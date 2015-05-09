@@ -6,15 +6,12 @@ import latmod.core.*;
 import latmod.core.cmd.CommandLevel;
 import latmod.core.event.ReloadEvent;
 import latmod.core.net.*;
-import latmod.core.util.*;
-import net.minecraft.block.Block;
+import latmod.core.util.LatCore;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MovingObjectPosition;
 import baubles.api.BaublesApi;
 import cpw.mods.fml.relauncher.Side;
 
@@ -30,7 +27,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 	}
 	
 	public String[] getSubcommands(ICommandSender ics)
-	{ return new String[] { "block", "player", "reload" }; }
+	{ return new String[] { "player", "reload" }; }
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
@@ -38,9 +35,6 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 		
 		if(i == 2 && isArg(args, 0, "player"))
 			return new String[] { "delete", "saveinv", "loadinv", "notify" };
-		
-		if(i == 1 && isArg(args, 0, "reload"))
-			return new String[] { "all", "self", "none" };
 		
 		return super.getTabStrings(ics, args, i);
 	}
@@ -148,50 +142,6 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				LatCoreMC.notifyPlayer(p.getPlayerMP(), new Notification(args[4].replace("\\_", "<$US>").replace('_', ' ').replace("<$US>", "_"), "", is));
 				return null;
 			}
-		}
-		else if(args[0].equals("block"))
-		{
-			EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-			
-			try
-			{
-				MovingObjectPosition mop = MathHelperLM.rayTrace(ep);
-				Block block = ep.worldObj.getBlock(mop.blockX, mop.blockY, mop.blockZ);
-				String b = InvUtils.getRegName(block);
-				if(b == null) return "Unknown block!";
-				
-				boolean ints = args.length >= 2 && args[1].equals("interfaces");
-				
-				int meta = ep.worldObj.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ);
-				TileEntity te = ep.worldObj.getTileEntity(mop.blockX, mop.blockY, mop.blockZ);
-				
-				LatCoreMC.printChat(ep, b + (meta > 0 ? (";" +  meta) : "") + " @ " + LatCore.stripInt(mop.blockX, mop.blockY, mop.blockZ));
-				
-				if(ints)
-				{
-					Class<?> bInts[] = block.getClass().getInterfaces();
-					
-					if(bInts.length > 0) for(int i = 0; i < bInts.length; i++)
-						LatCoreMC.printChat(ep, ">  " + bInts[i].getSimpleName());
-				}
-				
-				if(te != null)
-				{
-					LatCoreMC.printChat(ep, "Tile: " + LatCore.classpath(te.getClass()));
-					
-					if(ints)
-					{
-						Class<?> tInts[] = te.getClass().getInterfaces();
-						
-						if(tInts.length > 0) for(int i = 0; i < tInts.length; i++)
-							LatCoreMC.printChat(ep, ">  " + tInts[i].getSimpleName());
-					}
-				}
-				
-				return null;
-			}
-			catch(Exception e)
-			{ return "Unknown block!"; }
 		}
 		else if(args[0].equals("reload"))
 		{

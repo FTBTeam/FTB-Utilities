@@ -31,7 +31,6 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public NBTTagCompound commonData;
 	public NBTTagCompound serverData;
 	private boolean isOnline;
-	public boolean isOld;
 	
 	public LMPlayer(int i, UUID id, String s)
 	{
@@ -105,15 +104,11 @@ public class LMPlayer implements Comparable<LMPlayer>
 		commonData = tag.getCompoundTag("CustomData");
 		if(server) serverData = tag.getCompoundTag("ServerData");
 		
-		isOld = !tag.getBoolean("NewPlayer");
-		
 		InvUtils.readItemsFromNBT(lastArmor, tag, "LastItems");
 	}
 	
 	public void writeToNBT(NBTTagCompound tag, boolean server)
 	{
-		if(!isOld) tag.setBoolean("NewPlayer", true);
-		
 		if(isOnline) tag.setBoolean("On", isOnline);
 		
 		if(!friends.isEmpty())

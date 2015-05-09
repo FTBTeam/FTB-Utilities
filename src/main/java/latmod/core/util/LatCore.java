@@ -44,7 +44,12 @@ public class LatCore
 	}
 	
 	public static FastList<String> toStringList(InputStream is) throws Exception
-	{ return toStringList(toString(is), "\n"); }
+	{
+		FastList<String> l = new FastList<String>();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		String s = null; while((s = reader.readLine()) != null)
+			l.add(s); reader.close(); return l;
+	}
 	
 	public static void saveFile(File f, FastList<String> al) throws Exception
 	{ saveFile(f, toString(al)); }

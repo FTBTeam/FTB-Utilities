@@ -23,14 +23,13 @@ public class LCEventHandler
 		
 		LMPlayer p = LMPlayer.getPlayer(e.player);
 		
-		boolean first = p == null || !p.isOld;
+		boolean first = (p == null);
 		boolean sendAll = false;
 		
 		String cmdName = e.player.getCommandSenderName();
 		
-		if(p == null)
+		if(first)
 		{
-			first = true;
 			p = new LMPlayer(LMDataLoader.nextPlayerID(), e.player.getUniqueID(), cmdName);
 			LMPlayer.map.put(p.playerID, p);
 		}
@@ -44,14 +43,11 @@ public class LCEventHandler
 			}
 		}
 		
-		p.isOld = !first;
 		p.setOnline(true);
 		
-		new LMPlayerEvent.LoggedIn(p, (EntityPlayerMP)e.player, !p.isOld).post();
+		new LMPlayerEvent.LoggedIn(p, (EntityPlayerMP)e.player, first).post();
 		updateAllData(sendAll ? null : (EntityPlayerMP)e.player);
 		MessageLM.NET.sendToAll(new MessageLMPlayerLoggedIn(p));
-		
-		p.isOld = true;
 	}
 	
 	@SubscribeEvent

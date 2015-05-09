@@ -304,7 +304,7 @@ public class InvUtils
 	
 	public static void giveItem(EntityPlayer ep, ItemStack item, int optionalSlot)
 	{
-		if(ep == null || item == null || item.stackSize <= 0) return;
+		if(ep == null || ep.inventory == null || item == null || item.stackSize <= 0) return;
 		ItemStack is = item.copy();
 		boolean changed = false;
 		
@@ -318,7 +318,9 @@ public class InvUtils
 		if(changed)
 		{
 			ep.inventory.markDirty();
-			ep.openContainer.detectAndSendChanges();
+			
+			if(ep.openContainer != null)
+				ep.openContainer.detectAndSendChanges();
 		}
 		
 		if(is.stackSize > 0) dropItem(ep, is);

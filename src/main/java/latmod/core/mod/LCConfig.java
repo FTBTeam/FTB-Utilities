@@ -65,6 +65,7 @@ public class LCConfig extends LMConfig implements IServerConfig
 		public static boolean addAllColorItems;
 		public static boolean addOreNames;
 		public static boolean addRegistryNames;
+		public static boolean displayDebugInfo;
 		
 		public static void load(Category c)
 		{
@@ -76,6 +77,7 @@ public class LCConfig extends LMConfig implements IServerConfig
 			addAllColorItems = c.getBool("AddAllColorItems", true); p.add("AddAllColorItems");
 			addOreNames = c.getBool("AddOreNames", false); p.add("AddOreNames");
 			addRegistryNames = c.getBool("AddRegistryNames", false); p.add("AddRegistryNames");
+			displayDebugInfo = c.getBool("DisplayDebugInfo", false); p.add("DisplayDebugInfo");
 			
 			FastList<Property> l = new FastList<Property>();
 			l.addAll(c.getCategory().values());

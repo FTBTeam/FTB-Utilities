@@ -1,7 +1,7 @@
 package latmod.core.block;
 import java.util.*;
 
-import latmod.core.LMMod;
+import latmod.core.*;
 import latmod.core.item.ItemBlockLM;
 import latmod.core.tile.TileLM;
 import latmod.core.util.FastList;
@@ -47,6 +47,9 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	
 	@SuppressWarnings("unchecked")
 	public final <E> E register() { mod.addBlock(this); return (E)this; }
+	
+	@SuppressWarnings("unchecked")
+	public final <E> E registerDevOnly() { if(LatCoreMC.isDevEnv) mod.addBlock(this); return (E)this; }
 	
 	public final String getItemID()
 	{ return blockName; }

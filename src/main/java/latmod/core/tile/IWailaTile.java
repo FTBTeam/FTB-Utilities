@@ -5,7 +5,7 @@ import java.util.List;
 import mcp.mobius.waila.api.*;
 import net.minecraft.item.ItemStack;
 
-public abstract interface IWailaTile extends ITileInterface
+public abstract interface IWailaTile
 {
 	public static interface Stack extends IWailaTile
 	{

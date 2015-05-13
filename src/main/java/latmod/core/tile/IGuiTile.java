@@ -6,7 +6,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.relauncher.*;
 
-public interface IGuiTile extends ITileInterface
+public interface IGuiTile
 {
 	public Container getContainer(EntityPlayer ep, NBTTagCompound data);
 	

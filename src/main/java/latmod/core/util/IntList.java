@@ -1,18 +1,106 @@
 package latmod.core.util;
 
-public class IntList // Improve this
+import java.util.*;
+
+public class IntList // Improve this // FastList
 {
-	public int array[] = new int[0];
+	private final int init;
+	private int defVal = 0;
+	private int array[];
+	private int size;
 	
-	public void add(int i)
+	public IntList(int i)
+	{ init = i; array = new int[init]; }
+	
+	public IntList()
+	{ this(0); }
+	
+	public int size()
+	{ return size; }
+	
+	public void clear()
+	{ size = 0; array = new int[init]; }
+	
+	public void setDefVal(int value)
+	{ defVal = value; }
+	
+	public void add(int value)
 	{
-		int array1[] = new int[array.length + 1];
-		for(int j = 0; j < array.length; j++)
-			array1[j] = array[j];
-		array1[array1.length - 1] = i;
+		int array1[] = new int[size + 1];
+		for(int i = 0; i < size; i++)
+			array1[i] = array[i];
+		array1[array1.length - 1] = value;
 		array = array1;
+		size++;
 	}
 	
+	public void addAll(int... value)
+	{
+		if(value.length <= 0) return;
+		int array1[] = new int[size + value.length];
+		for(int i = 0; i < size; i++)
+			array1[i] = array[i];
+		for(int i = 0; i < value.length; i++)
+			array1[array1.length - value.length + i] = value[i];
+		array = array1;
+		size += value.length;
+	}
+	
+	public void addAll(IntList l)
+	{ if(l.size > 0) addAll(l.toArray()); }
+	
+	public int get(int key)
+	{ return (key >= 0 && key < size()) ? array[key] : defVal; }
+	
+	public int indexOf(int value)
+	{
+		for(int i = 0; i < size(); i++)
+			if(array[i] == value) return i;
+		return -1;
+	}
+	
+	public boolean contains(int value)
+	{ return indexOf(value) != -1; }
+	
+	public int remove(int key)
+	{
+		if(key < 0 || key >= size) return defVal;
+		int rem = get(key);
+		size--;
+		for(int j = key; j < size; j++)
+		array[j] = array[j + 1];
+		return rem;
+	}
+	
+	public int removeValue(int value)
+	{ return remove(indexOf(value)); }
+	
 	public boolean isEmpty()
-	{ return array.length <= 0; }
+	{ return size <= 0; }
+	
+	public int[] toArray()
+	{
+		if(size <= 0) return new int[0];
+		int ai[] = new int[size];
+		for(int i = 0; i < size; i++)
+			ai[i] = array[i];
+		return ai;
+	}
+	
+	public void sort()
+	{
+		int[] a = toArray();
+		Arrays.sort(a);
+		clear();
+		addAll(a);
+	}
+
+	public IntList copy()
+	{
+		IntList l = new IntList(init);
+		l.defVal = defVal;
+		l.array = toArray();
+		l.size = size;
+		return l;
+	}
 }

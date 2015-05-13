@@ -13,7 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileLM extends TileEntity implements ITileInterface, IClientActionTile
+public class TileLM extends TileEntity implements IClientActionTile
 {
 	public static final String ACTION_BUTTON_PRESSED = "button";
 	public static final String ACTION_OPEN_GUI = "openGUI";
@@ -27,10 +27,6 @@ public class TileLM extends TileEntity implements ITileInterface, IClientActionT
 	public long tick = 0L;
 	public final LMSecurity security = new LMSecurity(null);
 	public boolean redstonePowered = false;
-	
-	@Override
-	public final TileEntity getTile()
-	{ return this; }
 	
 	public final void readFromNBT(NBTTagCompound tag)
 	{

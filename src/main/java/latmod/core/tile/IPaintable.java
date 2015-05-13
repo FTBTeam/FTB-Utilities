@@ -17,7 +17,7 @@ import net.minecraft.world.*;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.*;
 
-public interface IPaintable extends ITileInterface
+public interface IPaintable
 {
 	public boolean setPaint(PaintData p);
 	

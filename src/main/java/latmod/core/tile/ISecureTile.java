@@ -2,7 +2,7 @@ package latmod.core.tile;
 
 import latmod.core.LMSecurity;
 
-public interface ISecureTile extends ITileInterface
+public interface ISecureTile
 {
 	public LMSecurity getSecurity();
 }

@@ -91,7 +91,7 @@ public class FastMap<K, V> implements Iterable<V>
 	
 	public boolean clear()
 	{
-		boolean b = hasKeys();
+		boolean b = !isEmpty();
 		keys.clear();
 		values.clear();
 		return b;
@@ -120,9 +120,6 @@ public class FastMap<K, V> implements Iterable<V>
 	public boolean isEmpty()
 	{ return keys.isEmpty(); }
 	
-	public boolean hasKeys()
-	{ return !keys.isEmpty(); }
-
 	public void putAll(FastMap<K, V> map)
 	{
 		Iterator<K> itrK = map.keys.iterator();

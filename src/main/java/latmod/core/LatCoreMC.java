@@ -360,7 +360,7 @@ public class LatCoreMC
 	
 	public static void openGui(EntityPlayer ep, IGuiTile i, NBTTagCompound data)
 	{
-		TileEntity te = i.getTile();
+		TileEntity te = (TileEntity)i;
 		if(data == null) data = new NBTTagCompound();
 		data.setIntArray("XYZ", new int[] { te.xCoord, te.yCoord, te.zCoord });
 		openGui(ep, LCGuiHandler.TILE, data);

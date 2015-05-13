@@ -174,13 +174,10 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 		public void add(E e)
 		{ FastList.this.add(e); }
 	}
-
+	
 	public boolean isEmpty()
 	{ return size <= 0; }
 	
-	public boolean notEmpty()
-	{ return size > 0; }
-
 	public boolean containsAll(Collection<?> c)
 	{ for(Object o : c) if(!contains(o))
 	return false; return true; }

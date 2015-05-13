@@ -122,7 +122,7 @@ public class Converter
 		IntList il = new IntList();
 		for(int i = 0; i < bools.length; i++)
 			if(bools[i] == isTrue) il.add(i);
-		return il.array;
+		return il.toArray();
 	}
 
 	public static Integer toInt(String text)

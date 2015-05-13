@@ -417,6 +417,8 @@ public class LatCore
 	
 	public static int hashCode(Object... o)
 	{
+		if(o.length == 0) return 0;
+		if(o.length == 1) return (o[0] == null) ? 0 : o[0].hashCode();
 		int h = 0;
 		for(int i = 0; i < o.length; i++)
 			h = h * 31 + ((o[i] == null) ? 0 : o[i].hashCode());

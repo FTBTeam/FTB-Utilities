@@ -34,20 +34,23 @@ public class IntList // Improve this // FastList
 		size++;
 	}
 	
-	public void addAll(int... value)
+	public void addAll(int... values)
 	{
-		if(value.length <= 0) return;
-		int array1[] = new int[size + value.length];
+		if(values.length <= 0) return;
+		int array1[] = new int[size + values.length];
 		for(int i = 0; i < size; i++)
 			array1[i] = array[i];
-		for(int i = 0; i < value.length; i++)
-			array1[array1.length - value.length + i] = value[i];
+		for(int i = 0; i < values.length; i++)
+			array1[array1.length - values.length + i] = values[i];
 		array = array1;
-		size += value.length;
+		size += values.length;
 	}
 	
 	public void addAll(IntList l)
 	{ if(l.size > 0) addAll(l.toArray()); }
+	
+	public void setAll(int... values)
+	{ clear(); addAll(values); }
 	
 	public int get(int key)
 	{ return (key >= 0 && key < size()) ? array[key] : defVal; }
@@ -102,5 +105,27 @@ public class IntList // Improve this // FastList
 		l.array = toArray();
 		l.size = size;
 		return l;
+	}
+	
+	public int hashCode()
+	{
+		int h = 0;
+		for(int i = 0; i < size; i++)
+			h = h * 31 + array[i];
+		return h;
+	}
+	
+	public String toString()
+	{
+		String s = "[ ";
+		
+		for(int i = 0; i < size; i++)
+		{
+			s += array[i];
+			if(i != size - 1)
+				s += ", ";
+		}
+		
+		return s + " ]";
 	}
 }

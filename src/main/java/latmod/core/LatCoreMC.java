@@ -192,14 +192,10 @@ public class LatCoreMC
 	
 	public static void teleportEntity(Entity e, int dim)
 	{
-		if ((e.worldObj.isRemote) || (e.isDead) || e.dimension == dim) return;
+		if(e.worldObj.isRemote || e.isDead) return;
 		
 		if(e instanceof EntityPlayerMP)
-		{
-			e.travelToDimension(dim);
-			MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP)e, dim);
-			return;
-		}
+		{ teleportPlayer((EntityPlayerMP)e, e.posX, e.posY, e.posZ, dim); return; }
 		
 		e.worldObj.theProfiler.startSection("changeDimension");
 		MinecraftServer ms = MinecraftServer.getServer();
@@ -213,21 +209,9 @@ public class LatCoreMC
 		e.worldObj.theProfiler.startSection("reposition");
 		ms.getConfigurationManager().transferEntityToWorld(e, dim0, ws0, ws1);
 		e.worldObj.theProfiler.endStartSection("reloading");
-		Entity entity = EntityList.createEntityByName(EntityList.getEntityString(e), ws1);
 		
-		if (entity != null)
-		{
-			entity.copyDataFrom(e, true);
-			
-			/*if(dim == 1)
-			{
-				ChunkCoordinates chunkcoordinates = worldserver1.getSpawnPoint();
-				chunkcoordinates.posY = e.worldObj.getTopSolidOrLiquidBlock(chunkcoordinates.posX, chunkcoordinates.posZ);
-				entity.setLocationAndAngles((double)chunkcoordinates.posX, (double)chunkcoordinates.posY, (double)chunkcoordinates.posZ, entity.rotationYaw, entity.rotationPitch);
-			}*/
-
-			ws1.spawnEntityInWorld(entity);
-		}
+		Entity e1 = EntityList.createEntityByName(EntityList.getEntityString(e), ws1);
+		if(e1 != null) { e1.copyDataFrom(e, true); ws1.spawnEntityInWorld(e1); }
 		
 		e.isDead = true;
 		e.worldObj.theProfiler.endSection();
@@ -238,12 +222,10 @@ public class LatCoreMC
 	
 	public static void teleportPlayer(EntityPlayerMP ep, double x, double y, double z, int dim)
 	{
-		if(ep.dimension != dim) teleportEntity(ep, dim);
+		if(ep.dimension == 1) dim = 1;
+		MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(ep, dim);
 		ep.playerNetServerHandler.setPlayerLocation(x, y, z, ep.rotationYaw, ep.rotationPitch);
 	}
-	
-	public static boolean isWrench(ItemStack is)
-	{ return is != null && is.getItem() != null && is.getItem().getHarvestLevel(is, "wrench") != -1; }
 	
 	public static boolean hasOnlinePlayers()
 	{ return !MinecraftServer.getServer().getConfigurationManager().playerEntityList.isEmpty(); }
@@ -289,22 +271,6 @@ public class LatCoreMC
 	
 	public static boolean isModInstalled(String s)
 	{ return Loader.isModLoaded(s); }
-	
-	public static FluidStack getFluid(ItemStack is)
-	{
-		if(is == null || is.getItem() == null) return null;
-		
-		if(is.getItem() instanceof IFluidContainerItem)
-		{
-			FluidStack fs = ((IFluidContainerItem)is.getItem()).getFluid(is);
-			if(fs != null) return fs;
-		}
-		
-		return FluidContainerRegistry.getFluidForFilledItem(is);
-	}
-	
-	public static boolean isBucket(ItemStack is)
-	{ return FluidContainerRegistry.isBucket(is); }
 	
 	public static String removeFormatting(String s)
 	{

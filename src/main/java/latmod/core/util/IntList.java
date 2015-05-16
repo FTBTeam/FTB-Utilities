@@ -1,6 +1,6 @@
 package latmod.core.util;
 
-import java.util.*;
+import java.util.Arrays;
 
 public class IntList // Improve this // FastList
 {

@@ -1,6 +1,7 @@
 package latmod.core;
 import java.util.Arrays;
 
+import latmod.core.item.Tool;
 import latmod.core.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -12,6 +13,7 @@ import net.minecraft.nbt.*;
 import net.minecraft.tileentity.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.*;
 
 /** Made by LatvianModder */
 public class InvUtils
@@ -437,4 +439,23 @@ public class InvUtils
 		catch(Exception e) {}
 		return null;
 	}
+	
+	public static boolean isWrench(ItemStack is)
+	{ return is != null && is.getItem() != null && is.getItem().getHarvestLevel(is, Tool.Type.WRENCH) >= Tool.Level.BASIC; }
+	
+	public static FluidStack getFluid(ItemStack is)
+	{
+		if(is == null || is.getItem() == null) return null;
+		
+		if(is.getItem() instanceof IFluidContainerItem)
+		{
+			FluidStack fs = ((IFluidContainerItem)is.getItem()).getFluid(is);
+			if(fs != null) return fs;
+		}
+		
+		return FluidContainerRegistry.getFluidForFilledItem(is);
+	}
+	
+	public static boolean isBucket(ItemStack is)
+	{ return FluidContainerRegistry.isBucket(is); }
 }

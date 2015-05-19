@@ -3,7 +3,7 @@ package latmod.core.cmd;
 import java.util.*;
 
 import latmod.core.*;
-import latmod.core.util.LatCore;
+import latmod.core.util.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
@@ -26,6 +26,7 @@ public abstract class CommandLM extends CommandBase
 	protected static final String FINE = EnumChatFormatting.WHITE + "";
 	
 	public final String commandName;
+	public final FastList<String> aliases = new FastList<String>();
 	
 	public CommandLM(String s)
 	{ commandName = s; }
@@ -54,6 +55,9 @@ public abstract class CommandLM extends CommandBase
 		}
 		onPostCommand(ics, args);
 	}
+	
+	public List<String> getCommandAliases()
+	{ return aliases.isEmpty() ? null : aliases; }
 	
 	public abstract String[] getSubcommands(ICommandSender ics);
 	public abstract void printHelp(ICommandSender ics);

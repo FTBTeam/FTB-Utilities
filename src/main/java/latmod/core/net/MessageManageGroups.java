@@ -1,60 +1,78 @@
 package latmod.core.net;
-import static net.minecraft.util.EnumChatFormatting.AQUA;
+import static net.minecraft.util.EnumChatFormatting.*;
+import io.netty.buffer.ByteBuf;
 import latmod.core.*;
-import latmod.core.mod.cmd.CmdLMFriends;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.common.network.simpleimpl.*;
 
 public class MessageManageGroups extends MessageLM<MessageManageGroups>
 {
 	public static final int C_ADD_FRIEND = 1;
 	public static final int C_REM_FRIEND = 2;
 	
+	public int playerID;
+	public int code;
+	public int user;
+	
 	public MessageManageGroups() { }
 	
-	public MessageManageGroups(LMPlayer p, int code, int user)
+	public MessageManageGroups(LMPlayer p, int c, int u)
 	{
-		data = new NBTTagCompound();
-		data.setInteger("O", p.playerID);
-		if(code > 0) data.setByte("C", (byte)code);
-		if(user > 0) data.setInteger("U", user);
+		playerID = p.playerID;
+		code = c;
+		user = u;
 	}
 	
-	public void onMessage(MessageContext ctx)
+	public void fromBytes(ByteBuf bb)
 	{
-		LMPlayer owner = LMPlayer.getPlayer(data.getInteger("O"));
-		EntityPlayerMP ep = owner.getPlayerMP();
+		playerID = bb.readInt();
+		code = bb.readInt();
+		user = bb.readInt();
+	}
+	
+	public void toBytes(ByteBuf bb)
+	{
+		bb.writeInt(playerID);
+		bb.writeInt(code);
+		bb.writeInt(user);
+	}
+	
+	public IMessage onMessage(MessageManageGroups m, MessageContext ctx)
+	{
+		LMPlayer owner = LMPlayer.getPlayer(m.playerID);
+		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
+		//EntityPlayerMP ep = owner.getPlayerMP();
 		
-		if(owner != null)
+		if(owner == null || !ep.getUniqueID().equals(owner.uuid)) return null;
+		
+		if(m.code > 0)
 		{
-			int code = data.getByte("C");
+			LMPlayer p = LMPlayer.getPlayer(m.user);
+			if(p == null || p.equals(owner)) return null;
 			
-			int user0 = data.getInteger("U");
-			LMPlayer p = (user0 > 0) ? LMPlayer.getPlayer(user0) : null;
-			
-			if(code > 0)
+			if(m.code == C_ADD_FRIEND)
 			{
-				String args[] = null;
-				
-				if(code == C_ADD_FRIEND)
-					args = new String[] { "add", p.username };
-				else if(code == C_REM_FRIEND)
-					args = new String[] { "rem", p.username };
-				
-				if(args != null)
+				if(!owner.friends.contains(p))
 				{
-					String s = CmdLMFriends.onStaticCommand(ep, owner, args);
-					LatCoreMC.notifyPlayer(ep, new Notification(s, null, new ItemStack(Items.skull, 1, 3), 800L));
+					owner.friends.add(p);
+					LatCoreMC.notifyPlayer(ep, new Notification(GREEN + "Added friend", p.username, null, 800));
 				}
 			}
-			else
+			else if(m.code == C_REM_FRIEND)
 			{
-				LatCoreMC.notifyPlayer(ctx.getServerHandler().playerEntity, new Notification(AQUA + "Players saved", "", new ItemStack(Items.diamond), 2000L));
-				owner.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
+				if(owner.friends.contains(p))
+				{
+					owner.friends.remove(p);
+					LatCoreMC.notifyPlayer(ep, new Notification(RED + "Removed friend", p.username, null, 800));
+				}
 			}
 		}
+		else
+		{
+			LatCoreMC.notifyPlayer(ep, new Notification(AQUA + "Players saved", null, null, 2000));
+			owner.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
+		}
+		
+		return null;
 	}
 }

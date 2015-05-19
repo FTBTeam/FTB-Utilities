@@ -1,23 +1,34 @@
 package latmod.core.net;
+import io.netty.buffer.ByteBuf;
 import latmod.core.LMPlayer;
 import latmod.core.mod.LC;
-import net.minecraft.nbt.NBTTagCompound;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.common.network.simpleimpl.*;
 
 public class MessageLMPlayerLoggedOut extends MessageLM<MessageLMPlayerLoggedOut>
 {
+	public int playerID;
+	
 	public MessageLMPlayerLoggedOut() { }
 	
 	public MessageLMPlayerLoggedOut(LMPlayer p)
 	{
-		data = new NBTTagCompound();
-		data.setInteger("P", p.playerID);
+		playerID = p.playerID;
 	}
 	
-	public void onMessage(MessageContext ctx)
+	public void fromBytes(ByteBuf bb)
 	{
-		int playerID = data.getInteger("P");
-		LMPlayer p = LMPlayer.getPlayer(playerID);
+		playerID = bb.readInt();
+	}
+	
+	public void toBytes(ByteBuf bb)
+	{
+		bb.writeInt(playerID);
+	}
+	
+	public IMessage onMessage(MessageLMPlayerLoggedOut m, MessageContext ctx)
+	{
+		LMPlayer p = LMPlayer.getPlayer(m.playerID);
 		LC.proxy.playerLMLoggedOut(p);
+		return null;
 	}
 }

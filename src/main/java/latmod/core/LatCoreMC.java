@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.*;
@@ -23,7 +23,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.world.*;
+import net.minecraft.world.World;
 import net.minecraftforge.client.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -189,43 +189,6 @@ public class LatCoreMC
 	
 	public static String getPath(ResourceLocation res)
 	{ return "/assets/" + res.getResourceDomain() + "/" + res.getResourcePath(); }
-	
-	public static void teleportEntity(Entity e, int dim)
-	{
-		if(e.worldObj.isRemote || e.isDead) return;
-		
-		if(e instanceof EntityPlayerMP)
-		{ teleportPlayer((EntityPlayerMP)e, e.posX, e.posY, e.posZ, dim); return; }
-		
-		e.worldObj.theProfiler.startSection("changeDimension");
-		MinecraftServer ms = MinecraftServer.getServer();
-		int dim0 = e.dimension;
-		WorldServer ws0 = ms.worldServerForDimension(dim0);
-		WorldServer ws1 = ms.worldServerForDimension(dim);
-		e.dimension = dim;
-		
-		e.worldObj.removeEntity(e);
-		e.isDead = false;
-		e.worldObj.theProfiler.startSection("reposition");
-		ms.getConfigurationManager().transferEntityToWorld(e, dim0, ws0, ws1);
-		e.worldObj.theProfiler.endStartSection("reloading");
-		
-		Entity e1 = EntityList.createEntityByName(EntityList.getEntityString(e), ws1);
-		if(e1 != null) { e1.copyDataFrom(e, true); ws1.spawnEntityInWorld(e1); }
-		
-		e.isDead = true;
-		e.worldObj.theProfiler.endSection();
-		ws0.resetUpdateEntityTick();
-		ws1.resetUpdateEntityTick();
-		e.worldObj.theProfiler.endSection();
-	}
-	
-	public static void teleportPlayer(EntityPlayerMP ep, double x, double y, double z, int dim)
-	{
-		if(ep.dimension == 1) dim = 1;
-		MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(ep, dim);
-		ep.playerNetServerHandler.setPlayerLocation(x, y, z, ep.rotationYaw, ep.rotationPitch);
-	}
 	
 	public static boolean hasOnlinePlayers()
 	{ return !MinecraftServer.getServer().getConfigurationManager().playerEntityList.isEmpty(); }

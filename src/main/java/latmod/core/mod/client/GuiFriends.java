@@ -481,6 +481,9 @@ public class GuiFriends extends GuiLM
 					else if(raw1 || raw2)
 						al.add((raw1 ? GOLD : BLUE) + "[" + LC.mod.translate("label.pfriend") + "]");
 				}
+				
+				if(LatCoreMC.isDevEnv && isShiftKeyDown())
+					al.add(p.uuidString);
 			}
 		}
 		

@@ -1,27 +1,40 @@
 package latmod.core.net;
+import io.netty.buffer.ByteBuf;
 import latmod.core.IServerConfig;
 import latmod.core.mod.LMDataLoader;
 import net.minecraft.nbt.NBTTagCompound;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.common.network.simpleimpl.*;
 
 public class MessageUpdateAllData extends MessageLM<MessageUpdateAllData>
 {
+	public NBTTagCompound players;
+	public NBTTagCompound config;
+	
 	public MessageUpdateAllData()
 	{
-		data = new NBTTagCompound();
-		
-		NBTTagCompound players = new NBTTagCompound();
+		players = new NBTTagCompound();
 		LMDataLoader.writePlayersToNBT(players, false);
-		data.setTag("P", players);
 		
-		NBTTagCompound config = new NBTTagCompound();
+		config = new NBTTagCompound();
 		IServerConfig.Registry.writeToNBT(config);
-		data.setTag("C", config);
 	}
 	
-	public void onMessage(MessageContext ctx)
+	public void fromBytes(ByteBuf bb)
 	{
-		LMDataLoader.readPlayersFromNBT(data.getCompoundTag("P"), false);
-		IServerConfig.Registry.readFromNBT(data.getCompoundTag("C"));
+		players = readTagCompound(bb);
+		config = readTagCompound(bb);
+	}
+	
+	public void toBytes(ByteBuf bb)
+	{
+		writeTagCompound(bb, players);
+		writeTagCompound(bb, config);
+	}
+	
+	public IMessage onMessage(MessageUpdateAllData m, MessageContext ctx)
+	{
+		LMDataLoader.readPlayersFromNBT(m.players, false);
+		IServerConfig.Registry.readFromNBT(m.config);
+		return null;
 	}
 }

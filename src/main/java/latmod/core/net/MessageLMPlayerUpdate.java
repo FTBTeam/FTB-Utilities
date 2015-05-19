@@ -1,28 +1,46 @@
 package latmod.core.net;
+import io.netty.buffer.ByteBuf;
 import latmod.core.LMPlayer;
 import latmod.core.mod.LC;
 import net.minecraft.nbt.NBTTagCompound;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.common.network.simpleimpl.*;
 
 public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate>
 {
+	public int playerID;
+	public String action;
+	public NBTTagCompound dat;
+	
 	public MessageLMPlayerUpdate() { }
 	
-	public MessageLMPlayerUpdate(LMPlayer p, String action)
+	public MessageLMPlayerUpdate(LMPlayer p, String a)
 	{
-		data = new NBTTagCompound();
-		data.setString("A", action);
-		data.setInteger("P", p.playerID);
-		NBTTagCompound data1 = new NBTTagCompound();
-		p.writeToNBT(data1, false);
-		data.setTag("D", data1);
+		playerID = p.playerID;
+		action = a;
+		
+		dat = new NBTTagCompound();
+		p.writeToNBT(dat, false);
 	}
 	
-	public void onMessage(MessageContext ctx)
+	public void fromBytes(ByteBuf bb)
 	{
-		int playerID = data.getInteger("P");
-		LMPlayer p = LMPlayer.getPlayer(playerID);
-		p.readFromNBT(data.getCompoundTag("D"), false);
-		LC.proxy.playerLMDataChanged(p, data.getString("A"));
+		playerID = bb.readInt();
+		action = readString(bb);
+		dat = readTagCompound(bb);
+	}
+	
+	public void toBytes(ByteBuf bb)
+	{
+		bb.writeInt(playerID);
+		writeString(bb, action);
+		writeTagCompound(bb, dat);
+	}
+	
+	public IMessage onMessage(MessageLMPlayerUpdate m, MessageContext ctx)
+	{
+		LMPlayer p = LMPlayer.getPlayer(m.playerID);
+		p.readFromNBT(m.dat, false);
+		LC.proxy.playerLMDataChanged(p, m.action);
+		return null;
 	}
 }

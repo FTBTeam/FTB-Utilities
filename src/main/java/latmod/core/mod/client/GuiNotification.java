@@ -70,6 +70,7 @@ public class GuiNotification extends Gui
 			
 			int width = 40 + Math.max(mc.fontRenderer.getStringWidth(notification.title), mc.fontRenderer.getStringWidth(notification.desc));
 			if(width > 224) width = 224;
+			if(notification.item == null) width -= 20;
 			
 			int i = displayW - width;
 			int j = 0 - (int)(d1 * 36D);
@@ -81,16 +82,20 @@ public class GuiNotification extends Gui
 			drawTexturedModalRect(i + 8, j, 16, 0, width - 16, 32);
 			drawTexturedModalRect(i + width - 8, j, 256 - 8, 0, 8, 32);
 			
+			int w = notification.item == null ? 10 : 30;
+			
 			if(notification.desc.isEmpty())
 			{
-				mc.fontRenderer.drawString(notification.title, i + 30, j + 12, -256);
+				mc.fontRenderer.drawString(notification.title, i + w, j + 12, -256);
 			}
 			else
 			{
-				mc.fontRenderer.drawString(notification.title, i + 30, j + 7, -256);
-				mc.fontRenderer.drawString(notification.desc, i + 30, j + 18, -1);
+				mc.fontRenderer.drawString(notification.title, i + w, j + 7, -256);
+				mc.fontRenderer.drawString(notification.desc, i + w, j + 18, -1);
 			}
-
+			
+			if(notification.item == null) return;
+			
 			RenderHelper.enableGUIStandardItemLighting();
 			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);

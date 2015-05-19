@@ -1,32 +1,47 @@
 package latmod.core.net;
+import io.netty.buffer.ByteBuf;
 import latmod.core.event.CustomAction;
 import latmod.core.mod.LC;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.common.network.simpleimpl.*;
 
 public class MessageCustomServerAction extends MessageLM<MessageCustomServerAction>
 {
+	public String channel;
+	public NBTTagCompound data;
+	
 	public MessageCustomServerAction() { }
 	
-	public MessageCustomServerAction(EntityPlayerMP ep, String channel)
+	public MessageCustomServerAction(EntityPlayerMP ep, String s)
 	{
-		data = new NBTTagCompound();
+		channel = s;
 		
 		CustomAction.FromServer h = CustomAction.sHandlers.get(channel);
 		
 		if(h != null)
 		{
-			NBTTagCompound data1 = new NBTTagCompound();
-			h.sendToClient(ep, data1);
-			data.setString("C", channel);
-			if(!data.hasNoTags()) data.setTag("D", data1);
+			data = new NBTTagCompound();
+			h.sendToClient(ep, data);
 		}
 	}
 	
-	public void onMessage(MessageContext ctx)
+	public void fromBytes(ByteBuf bb)
 	{
-		CustomAction.FromServer h = CustomAction.sHandlers.get(data.getString("C"));
-		h.readFromServer(LC.proxy.getClientPlayer(), (NBTTagCompound)data.getTag("D"));
+		channel = readString(bb);
+		data = readTagCompound(bb);
+	}
+	
+	public void toBytes(ByteBuf bb)
+	{
+		writeString(bb, channel);
+		writeTagCompound(bb, data);
+	}
+	
+	public IMessage onMessage(MessageCustomServerAction m, MessageContext ctx)
+	{
+		CustomAction.FromServer h = CustomAction.sHandlers.get(m.channel);
+		h.readFromServer(LC.proxy.getClientPlayer(), m.data);
+		return null;
 	}
 }

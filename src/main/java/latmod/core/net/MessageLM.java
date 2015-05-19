@@ -30,43 +30,57 @@ public abstract class MessageLM<E extends MessageLM<?>> implements IMessage, IMe
 	
 	// End of static //
 	
-	public NBTTagCompound data = null;
+	public abstract void fromBytes(ByteBuf bb);
+	public abstract void toBytes(ByteBuf bb);
+	public abstract IMessage onMessage(E m, MessageContext ctx);
 	
-	public final void fromBytes(ByteBuf bb)
+	public static String readString(ByteBuf bb)
 	{
-		data = null;
-		
+		int i = bb.readShort();
+		if(i == -1) return null;
+		if(i == 0) return "";
+		byte[] b = new byte[i];
+		bb.readBytes(b);
+		return new String(b);
+	}
+	
+	public static void writeString(ByteBuf bb, String s)
+	{
+		if(s == null) bb.writeShort(-1);
+		else if(s.isEmpty()) bb.writeShort(0);
+		else
+		{
+			byte[] b = s.getBytes();
+			bb.writeShort(b.length);
+			bb.writeBytes(b);
+		}
+	}
+	
+	public static NBTTagCompound readTagCompound(ByteBuf bb)
+	{
 		int s = bb.readInt();
 		if (s >= 0)
 		{
 			byte[] b = new byte[s]; bb.readBytes(b);
-			try { data = CompressedStreamTools.func_152457_a(b, new NBTSizeTracker(2097152L)); }
+			try { return CompressedStreamTools.func_152457_a(b, new NBTSizeTracker(2097152L)); }
 			catch(Exception e) { }
 		}
+		
+		return null;
 	}
 	
-	public final void toBytes(ByteBuf bb)
+	public static void writeTagCompound(ByteBuf bb, NBTTagCompound tag)
 	{
-		if (data == null) bb.writeInt(-1);
+		if (tag == null) bb.writeInt(-1);
 		else
 		{
 			try
 			{
-				byte[] b = CompressedStreamTools.compress(data);
+				byte[] b = CompressedStreamTools.compress(tag);
 				bb.writeInt(b.length);
 				bb.writeBytes(b);
 			}
 			catch(Exception e) { bb.writeInt(-1); }
 		}
 	}
-	
-	public final IMessage onMessage(E m, MessageContext ctx)
-	{
-		//LatCoreMC.logger.info(ctx.side + " :: " + getClass().getSimpleName() + " :: " + m.data);
-		data = m.data;
-		onMessage(ctx);
-		return null;
-	}
-	
-	public abstract void onMessage(MessageContext ctx);
 }

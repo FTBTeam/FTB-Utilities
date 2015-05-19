@@ -1,38 +1,60 @@
 package latmod.core.net;
+import io.netty.buffer.ByteBuf;
+
 import java.util.UUID;
 
 import latmod.core.LMPlayer;
 import latmod.core.mod.LC;
 import net.minecraft.nbt.NBTTagCompound;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.common.network.simpleimpl.*;
 
 public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn>
 {
+	public int playerID;
+	public UUID uuid;
+	public String username;
+	public NBTTagCompound data;
+	
 	public MessageLMPlayerLoggedIn() { }
 	
 	public MessageLMPlayerLoggedIn(LMPlayer p)
 	{
-		data = new NBTTagCompound();
-		data.setInteger("P", p.playerID);
-		data.setLong("M", p.uuid.getMostSignificantBits());
-		data.setLong("L", p.uuid.getLeastSignificantBits());
-		data.setString("U", p.username);
+		playerID = p.playerID;
+		uuid = p.uuid;
+		username = p.username;
 		
-		NBTTagCompound data1 = new NBTTagCompound();
-		p.writeToNBT(data1, false);
-		data.setTag("D", data1);
+		data = new NBTTagCompound();
+		p.writeToNBT(data, false);
 	}
 	
-	public void onMessage(MessageContext ctx)
+	public void fromBytes(ByteBuf bb)
 	{
-		if(LC.proxy.getClientWorld() == null) return;
+		playerID = bb.readInt();
+		long msb = bb.readLong();
+		long lsb = bb.readLong();
+		uuid = new UUID(msb, lsb);
+		username = readString(bb);
+		data = readTagCompound(bb);
+	}
+	
+	public void toBytes(ByteBuf bb)
+	{
+		bb.writeInt(playerID);
+		bb.writeLong(uuid.getMostSignificantBits());
+		bb.writeLong(uuid.getLeastSignificantBits());
+		writeString(bb, username);
+		writeTagCompound(bb, data);
+	}
+	
+	public IMessage onMessage(MessageLMPlayerLoggedIn m, MessageContext ctx)
+	{
+		if(LC.proxy.getClientWorld() == null) return null;
 		
-		int playerID = data.getInteger("P");
-		
-		LMPlayer p = new LMPlayer(playerID, new UUID(data.getLong("M"), data.getLong("L")), data.getString("U"));
+		LMPlayer p = new LMPlayer(m.playerID, m.uuid, m.username);
 		LMPlayer.map.put(p.playerID, p);
 		
-		p.readFromNBT(data.getCompoundTag("D"), false);
+		p.readFromNBT(m.data, false);
 		LC.proxy.playerLMLoggedIn(p);
+		return null;
 	}
 }

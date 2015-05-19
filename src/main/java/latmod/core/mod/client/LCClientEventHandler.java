@@ -1,4 +1,5 @@
 package latmod.core.mod.client;
+import java.lang.reflect.Field;
 import java.util.UUID;
 
 import latmod.core.*;
@@ -108,7 +109,7 @@ public class LCClientEventHandler
 			EntityPlayer ep = LC.proxy.getClientPlayer();
 			
 			if (ep != null && ep.worldObj.isRemote)
-				Minecraft.getMinecraft().displayGuiScreen(new GuiFriends(ep));
+				LatCoreMC.openGui(ep, LCGuiHandler.FRIENDS, null);
 		}
 	}
 	
@@ -135,6 +136,8 @@ public class LCClientEventHandler
 		}
 	}
 	
+	private static Field fps = null;
+	
 	@SubscribeEvent
 	public void onDrawDebugText(RenderGameOverlayEvent.Text event)
 	{
@@ -144,7 +147,22 @@ public class LCClientEventHandler
 		// Some ideas around this //
 		if(!mc.gameSettings.showDebugInfo)
 		{
-			if(LatCoreMC.isDevEnv) event.left.add("[LatCoreMC] Dev version!");
+			if(LatCoreMC.isDevEnv)
+			{
+				try
+				{
+					if(fps == null)
+					{
+						fps = Minecraft.class.getDeclaredField("debugFPS");
+						fps.setAccessible(true);
+					}
+					
+					event.left.add("[LatCoreMC] Dev version!");
+					event.right.add("FPS: " + fps.getInt(null));
+				}
+				catch(Exception e)
+				{ e.printStackTrace(); }
+			}
 		}
 		else if(LCConfig.Client.displayDebugInfo)
 		{

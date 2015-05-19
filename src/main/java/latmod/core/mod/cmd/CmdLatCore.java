@@ -5,19 +5,23 @@ import latmod.core.cmd.CommandLevel;
 import latmod.core.mod.*;
 import latmod.core.util.LatCore;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.event.*;
 import net.minecraft.util.*;
 
 public class CmdLatCore extends CommandBaseLC
 {
 	public CmdLatCore()
-	{ super("latcore", CommandLevel.ALL); }
+	{
+		super("latcore", CommandLevel.ALL);
+		if(LCConfig.General.addCommandAlias)
+			aliases.add("lc");
+	}
 	
 	public void printHelp(ICommandSender ics)
 	{
 		printHelpLine(ics, "<versions>");
-		printHelpLine(ics, "<friends>");
+		printHelpLine(ics, "<friends> <add | rem> <player>");
+		printHelpLine(ics, "<friends> <list>");
 		printHelpLine(ics, "<uuid> [player]");
 		printHelpLine(ics, "<playerID> [player]");
 	}
@@ -47,10 +51,55 @@ public class CmdLatCore extends CommandBaseLC
 		
 		else if(args[0].equals("friends"))
 		{
-			if(!LCConfig.General.disableLMFriendsCommand)
+			checkArgs(args, 2);
+			
+			LMPlayer owner = getLMPlayer(ics);
+			
+			if(args[1].equals("list"))
 			{
-				EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-				LatCoreMC.openGui(ep, LCGuiHandler.FRIENDS, null);
+				if(owner.friends.isEmpty()) return FINE + "No friends added";
+				
+				LatCoreMC.printChat(ics, "Your friends:");
+				
+				for(int i = 0; i < owner.friends.size(); i++)
+				{
+					LMPlayer p = owner.friends.get(i);
+					EnumChatFormatting col = EnumChatFormatting.GREEN;
+					if(p.isFriendRaw(owner) && !owner.isFriendRaw(p)) col = EnumChatFormatting.GOLD;
+					if(!p.isFriendRaw(owner) && owner.isFriendRaw(p)) col = EnumChatFormatting.BLUE;
+					LatCoreMC.printChat(ics, col + "[" + i + "]: " + p.username);
+				}
+				
+				return null;
+			}
+			else
+			{
+				checkArgs(args, 3);
+				
+				LMPlayer p = getLMPlayer(args[2]);
+				
+				if(p.equals(owner)) return "Invalid player!";
+				
+				if(args[1].equals("add"))
+				{
+					if(!owner.friends.contains(p))
+					{
+						owner.friends.add(p);
+						return changed(owner, p, "Added " + p.username + " as friend");
+					}
+					
+					return p.username + " is already a friend!";
+				}
+				else if(args[1].equals("rem"))
+				{
+					if(owner.friends.contains(p))
+					{
+						owner.friends.remove(p);
+						return changed(owner, p, "Removed " + p.username + " from friends");
+					}
+					
+					return p.username + " is not added as friend!";
+				}
 			}
 			
 			return null;
@@ -79,5 +128,12 @@ public class CmdLatCore extends CommandBaseLC
 		}
 		
 		return onCommand(ics, null);
+	}
+	
+	private static String changed(LMPlayer o, LMPlayer p, String s)
+	{
+		o.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
+		if(p != null) p.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
+		return FINE + s;
 	}
 }

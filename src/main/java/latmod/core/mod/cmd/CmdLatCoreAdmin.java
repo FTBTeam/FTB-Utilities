@@ -5,6 +5,7 @@ import java.io.*;
 import latmod.core.*;
 import latmod.core.cmd.CommandLevel;
 import latmod.core.event.ReloadEvent;
+import latmod.core.mod.LCConfig;
 import latmod.core.net.*;
 import latmod.core.util.LatCore;
 import net.minecraft.command.ICommandSender;
@@ -20,14 +21,18 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 	public static CommandLevel commandLevel = CommandLevel.OP;
 	
 	public CmdLatCoreAdmin()
-	{ super("latcoreadmin", commandLevel); }
+	{
+		super("latcoreadmin", commandLevel);
+		if(LCConfig.General.addCommandAlias)
+			aliases.add("lca");
+	}
 	
 	public void printHelp(ICommandSender ics)
 	{
 	}
 	
 	public String[] getSubcommands(ICommandSender ics)
-	{ return new String[] { "player", "reload" }; }
+	{ return new String[] { "player", "reload", "setitemname" }; }
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
@@ -136,10 +141,10 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				if(!p.isOnline()) return "The player must be online!";
 				checkArgsStrong(args, 5);
 				
-				ItemStack is = InvUtils.parseItem(args[3]);
-				if(is == null || is.getItem() == null) return "Item '" + args[3] + "' not found!";
+				ItemStack is = args[3].equals("null") ? null : InvUtils.parseItem(args[3]);
+				if(!args[3].equals("null") && (is == null || is.getItem() == null)) return "Item '" + args[3] + "' not found!";
 				
-				LatCoreMC.notifyPlayer(p.getPlayerMP(), new Notification(args[4].replace("\\_", "<$US>").replace('_', ' ').replace("<$US>", "_"), "", is));
+				LatCoreMC.notifyPlayer(p.getPlayerMP(), new Notification(args[4].replace("\\_", "<$US>").replace('_', ' ').replace("<$US>", "_").replace("&", LatCoreMC.FORMATTING).replace("@n", p.username), "", is));
 				return null;
 			}
 		}
@@ -148,6 +153,17 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			new ReloadEvent(Side.SERVER, ics).post();
 			MessageLM.NET.sendToAll(new MessageReload());
 			return FINE + "LatvianModders's mods reloaded (Server)";
+		}
+		else if(args[0].equals("setitemname"))
+		{
+			checkArgs(args, 2);
+			EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
+			if(ep.inventory.getCurrentItem() != null)
+			{
+				ep.inventory.getCurrentItem().setStackDisplayName(args[1].replace('_', ' '));
+				ep.openContainer.detectAndSendChanges();
+				return FINE + "Item name set to '" + ep.inventory.getCurrentItem().getDisplayName() + "'!";
+			}
 		}
 		
 		return onCommand(ics, null);

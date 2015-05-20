@@ -1,6 +1,7 @@
 package latmod.core.event;
 
 import latmod.core.LMPlayer;
+import latmod.core.util.FastList;
 import net.minecraft.client.entity.EntityPlayerSP;
 import cpw.mods.fml.relauncher.*;
 
@@ -38,5 +39,13 @@ public class LMPlayerClientEvent
 			super(p);
 			playerSP = ep;
 		}
+	}
+	
+	public static class CustomInfo extends LMPlayerEvent
+	{
+		public final FastList<String> info;
+		
+		public CustomInfo(LMPlayer p, FastList<String> l)
+		{ super(p); info = l; }
 	}
 }

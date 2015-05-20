@@ -19,7 +19,6 @@ public class CmdLatCore extends CommandBaseLC
 	
 	public void printHelp(ICommandSender ics)
 	{
-		printHelpLine(ics, "<versions>");
 		printHelpLine(ics, "<friends> <add | rem> <player>");
 		printHelpLine(ics, "<friends> <list>");
 		printHelpLine(ics, "<uuid> [player]");
@@ -33,7 +32,7 @@ public class CmdLatCore extends CommandBaseLC
 	{ return !LCConfig.General.disableLatCoreCommand; }
 	
 	public String[] getSubcommands(ICommandSender ics)
-	{ return new String[] { "versions", "friends", "uuid", "playerID" }; }
+	{ return new String[] { "version", "friends", "uuid", "playerID" }; }
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{

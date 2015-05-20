@@ -32,6 +32,9 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public NBTTagCompound serverData;
 	private boolean isOnline;
 	
+	@SideOnly(Side.CLIENT)
+	public FastList<String> clientInfo;
+	
 	public LMPlayer(int i, UUID id, String s)
 	{
 		playerID = i;
@@ -54,12 +57,14 @@ public class LMPlayer implements Comparable<LMPlayer>
 	public EntityPlayerSP getPlayerSP()
 	{
 		World w = LC.proxy.getClientWorld();
+		
 		if(w != null)
 		{
 			EntityPlayer ep = w.func_152378_a(uuid);
 			if(ep != null && ep instanceof EntityPlayerSP)
 				return (EntityPlayerSP)ep;
 		}
+		
 		return null;
 	}
 	
@@ -70,6 +75,14 @@ public class LMPlayer implements Comparable<LMPlayer>
 			new LMPlayerEvent.DataChanged(this, action).post();
 			if(updateClient) MessageLM.NET.sendToAll(new MessageLMPlayerUpdate(this, action));
 		}
+	}
+	
+	public void updateInfo(EntityPlayerMP ep)
+	{
+		FastList<String> info = new FastList<String>();
+		new LMPlayerEvent.CustomInfo(this, info).post();
+		if(ep == null) MessageLM.NET.sendToAll(new MessageLMPlayerInfo(playerID, info));
+		else MessageLM.NET.sendTo(new MessageLMPlayerInfo(playerID, info), ep);
 	}
 	
 	public boolean isOnline()

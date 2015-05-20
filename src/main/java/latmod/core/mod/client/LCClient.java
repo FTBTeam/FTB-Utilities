@@ -3,6 +3,7 @@ import latmod.core.*;
 import latmod.core.client.playerdeco.ThreadCheckPlayerDecorators;
 import latmod.core.event.LMPlayerClientEvent;
 import latmod.core.mod.LCCommon;
+import latmod.core.net.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
@@ -17,6 +18,7 @@ import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
@@ -57,9 +59,6 @@ public class LCClient extends LCCommon
 		return r;
 	}
 	
-	public void notifyPlayer(Notification n)
-	{ LCClientEventHandler.instance.messages.add(new GuiNotification(n)); }
-	
 	public void spawnDust(World w, double x, double y, double z, int col)
 	{
 		EntityReddustFX fx = new EntityReddustFX(w, x, y, z, 0F, 0F, 0F);
@@ -93,4 +92,8 @@ public class LCClient extends LCCommon
 			if(g != null) Minecraft.getMinecraft().displayGuiScreen(g);
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public <M extends MessageLM<?>> void handleClientMessage(IClientMessageLM<M> m, MessageContext ctx)
+	{ m.onMessageClient((M) m, ctx); }
 }

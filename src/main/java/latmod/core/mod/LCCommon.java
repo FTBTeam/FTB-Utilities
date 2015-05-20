@@ -1,6 +1,8 @@
 package latmod.core.mod;
 
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import latmod.core.*;
+import latmod.core.net.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -25,11 +27,10 @@ public class LCCommon extends LMProxy // LCClient
 		return 0F;
 	}
 	
-	public void notifyPlayer(Notification n) { }
 	public void spawnDust(World w, double x, double y, double z, int col) { }
 	public void playerLMLoggedIn(LMPlayer p) { }
 	public void playerLMLoggedOut(LMPlayer p) { }
 	public void playerLMDataChanged(LMPlayer p, String action) { }
-	
 	public void openClientGui(EntityPlayer ep, String id, NBTTagCompound data) { }
+	public <M extends MessageLM<?>> void handleClientMessage(IClientMessageLM<M> m, MessageContext ctx) { }
 }

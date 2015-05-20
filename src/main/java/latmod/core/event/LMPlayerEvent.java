@@ -1,6 +1,7 @@
 package latmod.core.event;
 
 import latmod.core.LMPlayer;
+import latmod.core.util.FastList;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public abstract class LMPlayerEvent extends EventLM
@@ -48,5 +49,13 @@ public abstract class LMPlayerEvent extends EventLM
 		
 		public LoggedOut(LMPlayer p, EntityPlayerMP ep)
 		{ super(p); playerMP = ep; }
+	}
+	
+	public static class CustomInfo extends LMPlayerEvent
+	{
+		public final FastList<String> info;
+		
+		public CustomInfo(LMPlayer p, FastList<String> l)
+		{ super(p); info = l; }
 	}
 }

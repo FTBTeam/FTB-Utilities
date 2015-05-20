@@ -48,6 +48,10 @@ public class LCEventHandler
 		new LMPlayerEvent.LoggedIn(p, (EntityPlayerMP)e.player, first).post();
 		updateAllData(sendAll ? null : (EntityPlayerMP)e.player);
 		MessageLM.NET.sendToAll(new MessageLMPlayerLoggedIn(p));
+		
+		p.updateInfo(null);
+		for(LMPlayer p1 : LMPlayer.map.values)
+		{ if(p1 != p) p1.updateInfo((EntityPlayerMP)e.player); }
 	}
 	
 	@SubscribeEvent

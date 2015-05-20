@@ -1,7 +1,6 @@
 package latmod.core;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 public class Notification
 {
@@ -30,22 +29,4 @@ public class Notification
 	
 	public boolean equalsNotification(Notification o)
 	{ return title.equals(o.title) && desc.equals(o.desc) && InvUtils.itemsEquals(item, o.item, true, true); }
-	
-	public static Notification readFromNBT(NBTTagCompound tag)
-	{ return new Notification(tag.getString("T"), tag.getString("D"), ItemStack.loadItemStackFromNBT(tag.getCompoundTag("I")), tag.getInteger("R")); }
-	
-	public void writeToNBT(NBTTagCompound tag)
-	{
-		if(!title.isEmpty()) tag.setString("T", title);
-		if(!desc.isEmpty()) tag.setString("D", desc);
-		
-		if(item != null)
-		{
-			NBTTagCompound tag1 = new NBTTagCompound();
-			item.writeToNBT(tag1);
-			tag.setTag("I", tag1);
-		}
-		
-		tag.setInteger("R", timer);
-	}
 }

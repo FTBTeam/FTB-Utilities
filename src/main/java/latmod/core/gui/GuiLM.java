@@ -58,7 +58,7 @@ public abstract class GuiLM extends GuiContainer
 			//trade,
 			//trade_gray,
 			view,
-			//view_gray,
+			view_gray,
 			online;
 			
 			public static void load(LoadLMIconsEvent e)
@@ -72,7 +72,7 @@ public abstract class GuiLM extends GuiContainer
 				//trade = e.load("friends/trade");
 				//trade_gray = e.load("friends/trade_gray");
 				view = e.load("friends/view");
-				//view_gray = e.load("friends/view_gray");
+				view_gray = e.load("friends/view_gray");
 				online = e.load("friends/online");
 			}
 		}

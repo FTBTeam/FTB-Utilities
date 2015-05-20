@@ -45,15 +45,16 @@ public class GuiFriends extends GuiLM
 	public boolean changed = false;
 	
 	private static LMPlayer selectedPlayer = null;
-	private static boolean viewOpen = false;
-	private static float viewPos = 0F;
 	private static AbstractClientPlayer selectedPlayerEntity = null;
+	private static boolean hideArmor = false;
 	
-	public ButtonLM buttonAdd, buttonInfo, buttonClose, buttonView;
+	public ButtonLM buttonAdd, buttonInfo, buttonClose, buttonHideArmor;
 	
 	public GuiFriends(EntityPlayer ep)
 	{
 		super(new ContainerEmpty(ep, null), texPlayers);
+		LatCoreMC.printChat(ep, "FriendsGUI opened!");
+		
 		owner = LMPlayer.getPlayer(ep);
 		players = new FastList<Player>();
 		
@@ -160,12 +161,12 @@ public class GuiFriends extends GuiLM
 		
 		buttonClose.title = LC.mod.translate("button.close");
 		
-		widgets.add(buttonView = new ButtonLM(this, -39, 39, 16, 16)
+		widgets.add(buttonHideArmor = new ButtonLM(this, -39, 39, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
 				playClickSound();
-				viewOpen = !viewOpen;
+				hideArmor = !hideArmor;
 				refreshActionButtons();
 			}
 			
@@ -173,7 +174,7 @@ public class GuiFriends extends GuiLM
 			{ return selectedPlayer != null; }
 		});
 		
-		buttonView.title = LC.mod.translate("button.viewPlayer");
+		buttonHideArmor.title = "Hide armor";
 		
 		// Player buttons //
 		
@@ -211,22 +212,8 @@ public class GuiFriends extends GuiLM
 	{
 		if(selectedPlayer != null)
 		{
-			if(viewOpen)
-			{
-				if(viewPos > 0) viewPos -= 2.33F;
-				if(viewPos < 0) viewPos = 0;
-			}
-			else
-			{
-				if(viewPos < 65) viewPos += 2.33F;
-				if(viewPos > 65) viewPos = 65;
-			}
-			
-			if(viewPos > 0)
-			{
-				setTexture(texView);
-				drawTexturedModalRect(guiLeft - (int)viewPos, guiTop + 63, 0, 0, 65, 101);
-			}
+			setTexture(texView);
+			drawTexturedModalRect(guiLeft - 65, guiTop + 63, 0, 0, 65, 101);
 		}
 		
 		super.drawGuiContainerBackgroundLayer(f, mx, my);
@@ -248,19 +235,18 @@ public class GuiFriends extends GuiLM
 				buttonAdd.render(owner.isFriendRaw(selectedPlayer) ? Icons.Friends.remove : Icons.Friends.add);
 			
 			buttonInfo.render(Icons.help);
-			buttonView.render(Icons.Friends.view);
+			buttonHideArmor.render(hideArmor ? Icons.Friends.view_gray : Icons.Friends.view);
 			buttonClose.render(Icons.cancel);
 		}
-		else viewPos = 0;
 		
 		buttonSave.render(Icons.accept);
 		
-		if(selectedPlayer != null && viewPos > 60 && selectedPlayerEntity != null)
+		if(selectedPlayer != null && selectedPlayerEntity != null)
 		{
-			int x = guiLeft - 31 + (int)(65F - viewPos);
+			int x = guiLeft - 31;
 			int y = guiTop + 147;
 			
-			if(isShiftKeyDown())
+			if(hideArmor)
 			{
 				for(int i = 0; i < 4; i++)
 					selectedPlayerEntity.inventory.armorInventory[i] = null;
@@ -484,6 +470,12 @@ public class GuiFriends extends GuiLM
 				
 				if(LatCoreMC.isDevEnv && isShiftKeyDown())
 					al.add(p.uuidString);
+				
+				if(p.clientInfo != null && !p.clientInfo.isEmpty())
+				{
+					//al.add("");
+					al.addAll(p.clientInfo);
+				}
 			}
 		}
 		

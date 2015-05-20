@@ -7,7 +7,6 @@ import latmod.core.mod.cmd.*;
 import latmod.core.net.MessageLM;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.client.ClientCommandHandler;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkCheckHandler;
@@ -96,8 +95,8 @@ public class LC
 		e.registerServerCommand(new CmdLatCore());
 		e.registerServerCommand(new CmdLatCoreAdmin());
 		
-		if(e.getSide().isClient())
-			ClientCommandHandler.instance.registerCommand(new CmdLMFriendsGui());
+		//if(e.getSide().isClient())
+		//	ClientCommandHandler.instance.registerCommand(new CmdLMFriendsGui());
 	}
 	
 	@Mod.EventHandler

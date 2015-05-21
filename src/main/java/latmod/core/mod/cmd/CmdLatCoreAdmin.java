@@ -5,7 +5,7 @@ import java.io.*;
 import latmod.core.*;
 import latmod.core.cmd.CommandLevel;
 import latmod.core.event.ReloadEvent;
-import latmod.core.mod.LCConfig;
+import latmod.core.mod.*;
 import latmod.core.net.*;
 import latmod.core.util.LatCore;
 import net.minecraft.command.ICommandSender;
@@ -32,7 +32,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 	}
 	
 	public String[] getSubcommands(ICommandSender ics)
-	{ return new String[] { "player", "reload", "setitemname" }; }
+	{ return new String[] { "player", "reload", "setitemname", "displayitem" }; }
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
@@ -164,6 +164,24 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				ep.openContainer.detectAndSendChanges();
 				return FINE + "Item name set to '" + ep.inventory.getCurrentItem().getDisplayName() + "'!";
 			}
+		}
+		else if(args[0].equals("displayitem"))
+		{
+			EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
+			
+			if(ep.inventory.getCurrentItem() != null)
+			{
+				NBTTagCompound data = new NBTTagCompound();
+				
+				NBTTagCompound item = new NBTTagCompound();
+				ep.inventory.getCurrentItem().writeToNBT(item);
+				data.setTag("I", item);
+				
+				LatCoreMC.openGui(ep, LCGuiHandler.ITEM_DISPLAY, data);
+				return null;
+			}
+			
+			return "Invalid item!";
 		}
 		
 		return onCommand(ics, null);

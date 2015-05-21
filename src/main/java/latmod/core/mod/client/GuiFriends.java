@@ -53,7 +53,6 @@ public class GuiFriends extends GuiLM
 	public GuiFriends(EntityPlayer ep)
 	{
 		super(new ContainerEmpty(ep, null), texPlayers);
-		LatCoreMC.printChat(ep, "FriendsGUI opened!");
 		
 		owner = LMPlayer.getPlayer(ep);
 		players = new FastList<Player>();

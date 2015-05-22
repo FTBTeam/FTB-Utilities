@@ -8,7 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.particle.EntityReddustFX;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -24,14 +23,11 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class LCClient extends LCCommon
 {
-	public static KeyBinding key;
-	
 	public void preInit(FMLPreInitializationEvent e)
 	{
 		super.preInit(e);
 		LatCoreMC.addEventHandler(LCClientEventHandler.instance, true, true, true);
 		ThreadCheckPlayerDecorators.init();
-		key = LatCoreMC.addKeyBinding("key.latcoremc", Keyboard.KEY_GRAVE, "key.categories.gameplay");
 	}
 	
 	public void postInit(FMLPostInitializationEvent e)

@@ -177,7 +177,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 				ep.inventory.getCurrentItem().writeToNBT(item);
 				data.setTag("I", item);
 				
-				LatCoreMC.openGui(ep, LCGuiHandler.ITEM_DISPLAY, data);
+				LatCoreMC.openGui(ep, LCGuiHandler.DISPLAY_ITEM, data);
 				return null;
 			}
 			

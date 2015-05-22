@@ -305,9 +305,6 @@ public class GuiFriends extends GuiLM
 	
 	protected void keyTyped(char c, int k)
 	{
-		if(k == LCClient.key.getKeyCode())
-			mc.thePlayer.closeScreen();
-		
 		super.keyTyped(c, k);
 	}
 	
@@ -484,7 +481,7 @@ public class GuiFriends extends GuiLM
 			{
 				background = null;
 				
-				drawPlayerHead(player.player.username, GuiFriends.this.guiLeft + posX + 1, GuiFriends.this.guiTop + posY + 1, 16, 16);
+				drawPlayerHead(player.player.username, GuiFriends.this.guiLeft + posX + 1, GuiFriends.this.guiTop + posY + 1, 16, 16, zLevel);
 				
 				if(player.player.isOnline()) render(Icons.Friends.online);
 				

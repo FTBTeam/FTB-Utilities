@@ -11,20 +11,25 @@ import latmod.core.tile.IPaintable;
 import latmod.core.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.*;
 import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.common.eventhandler.*;
-import cpw.mods.fml.common.gameevent.*;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class LCClientEventHandler
 {
+	public static final ResourceLocation friendsButtonTexture = LC.mod.getLocation("textures/gui/friendsbutton.png");
 	public static final LCClientEventHandler instance = new LCClientEventHandler();
 	
 	public final FastList<GuiNotification> messages = new FastList<GuiNotification>();
@@ -67,9 +72,9 @@ public class LCClientEventHandler
 	public void preTexturesLoaded(TextureStitchEvent.Pre e)
 	{
 		if(e.map.getTextureType() == 0)
-			LatCoreMC.blockNullIcon = e.map.registerIcon(LC.mod.assets + "nullIcon");
+			LatCoreMC.Client.blockNullIcon = e.map.registerIcon(LC.mod.assets + "nullIcon");
 		else if(e.map.getTextureType() == 1)
-			LatCoreMC.unknownItemIcon = e.map.registerIcon(LC.mod.assets + "unknown");
+			LatCoreMC.Client.unknownItemIcon = e.map.registerIcon(LC.mod.assets + "unknown");
 	}
 	
 	@SubscribeEvent
@@ -98,18 +103,6 @@ public class LCClientEventHandler
 		if(r.side.isClient())
 		{
 			ThreadCheckPlayerDecorators.init();
-		}
-	}
-	
-	@SubscribeEvent
-	public void onKeyPressed(InputEvent.KeyInputEvent e)
-	{
-		if(LCClient.key.isPressed() && LC.proxy.inGameHasFocus())
-		{
-			EntityPlayer ep = LC.proxy.getClientPlayer();
-			
-			if (ep != null && ep.worldObj.isRemote)
-				LatCoreMC.openGui(ep, LCGuiHandler.FRIENDS, null);
 		}
 	}
 	
@@ -215,5 +208,57 @@ public class LCClientEventHandler
 				}
 			}
 		}
+	}
+	
+	public GuiButton guiButton = null;
+	
+	@SuppressWarnings("unchecked")
+	@SubscribeEvent
+	public void guiInitEvent(GuiScreenEvent.InitGuiEvent.Post e)
+	{
+		if(!(e.gui instanceof GuiInventory) && !(e.gui instanceof GuiContainerCreative)) return;
+		
+		int xSize = 176;
+		int ySize = 166;
+		
+		int buttonX = 28;
+		int buttonY = 10;
+		
+		if(e.gui instanceof GuiContainerCreative)
+		{
+			xSize = 195;
+			ySize = 136;
+			
+			buttonX = 50;
+			buttonY = 39;
+		}
+
+		int guiLeft = (e.gui.width - xSize) / 2;
+		int guiTop = (e.gui.height - ySize) / 2;
+		
+		guiButton = new GuiButton(4950, guiLeft + buttonX, guiTop + buttonY, 8, 8, "Friends")
+		{
+			public void drawButton(Minecraft mc, int mx, int my)
+			{
+				GL11.glEnable(GL11.GL_BLEND);
+				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				e.gui.mc.getTextureManager().bindTexture(friendsButtonTexture);
+				GuiLM.drawTexturedModalRectD(xPosition, yPosition, 0D, 0D, width, height, 8, 8, 0D);
+				if(mx >= xPosition && my >= yPosition && mx <= xPosition + width && my <= yPosition + height)
+					drawCenteredString(mc.fontRenderer, displayString, mx + 4, my - 28, -1);
+				GL11.glDisable(GL11.GL_BLEND);
+			}
+		};
+		
+		e.buttonList.add(guiButton);
+	}
+	
+	@SubscribeEvent
+	public void guiActionEvent(GuiScreenEvent.ActionPerformedEvent.Post e)
+	{
+		if(!(e.gui instanceof GuiInventory) && !(e.gui instanceof GuiContainerCreative)) return;
+		
+		if(e.button == guiButton)
+			LatCoreMC.openGui(e.gui.mc.thePlayer, LCGuiHandler.FRIENDS, null);
 	}
 }

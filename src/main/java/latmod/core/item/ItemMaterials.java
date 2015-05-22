@@ -56,7 +56,7 @@ public abstract class ItemMaterials extends ItemLM
 	
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconFromDamageForRenderPass(int m, int r)
-	{ return (m >= 0 && m < icons.length) ? icons[m] : LatCoreMC.unknownItemIcon; }
+	{ return (m >= 0 && m < icons.length) ? icons[m] : LatCoreMC.Client.unknownItemIcon; }
 	
 	public abstract String[] getNames();
 	public abstract String getPrefix();

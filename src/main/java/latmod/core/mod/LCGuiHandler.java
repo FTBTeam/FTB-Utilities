@@ -1,6 +1,6 @@
 package latmod.core.mod;
 
-import latmod.core.*;
+import latmod.core.ILMGuiHandler;
 import latmod.core.gui.ContainerEmpty;
 import latmod.core.mod.client.*;
 import latmod.core.tile.IGuiTile;
@@ -19,8 +19,8 @@ public class LCGuiHandler implements ILMGuiHandler
 	public static final String TILE = "lmc.tile";
 	public static final String FRIENDS = "lmc.friends";
 	public static final String SECURITY = "lmc.security";
-	public static final String ITEM_DISPLAY = "lmc.itemdisplay";
-	public static final String[] IDs = { TILE, FRIENDS, SECURITY, ITEM_DISPLAY };
+	public static final String DISPLAY_ITEM = "lmc.displayitem";
+	public static final String[] IDs = { TILE, FRIENDS, SECURITY, DISPLAY_ITEM };
 	
 	public Container getContainer(EntityPlayer ep, String id, NBTTagCompound data)
 	{
@@ -48,12 +48,13 @@ public class LCGuiHandler implements ILMGuiHandler
 		}
 		else if(id.equals(FRIENDS)) return new GuiFriends(ep);
 		else if(id.equals(SECURITY)) return new GuiSecurity(ep);
-		else if(id.equals(ITEM_DISPLAY))
+		else if(id.equals(DISPLAY_ITEM))
 		{
 			ItemStack item = ItemStack.loadItemStackFromNBT(data.getCompoundTag("I"));
 			String title = data.getString("T");
 			String desc = data.getString("D");
-			return new GuiDisplayBlock(ep, item, title, desc);
+			float scale = data.hasKey("S") ? data.getFloat("S") : 8F;
+			return new GuiDisplayItem(ep, item, title, desc, scale);
 		}
 		
 		return null;

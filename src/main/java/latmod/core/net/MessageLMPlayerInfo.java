@@ -1,7 +1,7 @@
 package latmod.core.net;
 import io.netty.buffer.ByteBuf;
 import latmod.core.LMPlayer;
-import latmod.core.event.*;
+import latmod.core.event.LMPlayerClientEvent;
 import latmod.core.mod.LC;
 import latmod.core.util.FastList;
 import cpw.mods.fml.common.network.simpleimpl.*;

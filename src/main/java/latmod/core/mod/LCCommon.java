@@ -1,11 +1,11 @@
 package latmod.core.mod;
 
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import latmod.core.*;
 import latmod.core.net.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class LCCommon extends LMProxy // LCClient
 {

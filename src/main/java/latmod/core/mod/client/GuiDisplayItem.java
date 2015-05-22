@@ -7,38 +7,42 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 
 import org.lwjgl.opengl.*;
 
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
-public class GuiDisplayBlock extends GuiLM
+public class GuiDisplayItem extends GuiLM
 {
-	public static final ResourceLocation texture = LC.mod.getLocation("textures/gui/block.png");
+	public static final ResourceLocation texture = LC.mod.getLocation("textures/gui/displayitem.png");
 	
-	public final ItemStack item;
-	public final String title;
-	public final String desc;
+	public ItemStack item;
+	public String title;
+	public String desc;
+	public float scale;
 	
-	public GuiDisplayBlock(EntityPlayer ep, ItemStack is, String t, String d)
+	public GuiDisplayItem(EntityPlayer ep, ItemStack is, String t, String d, float s)
 	{
 		super(new ContainerEmpty(ep, null), texture);
-		System.out.println("Test! " + is);
-		xSize = 128;
-		ySize = 128;
+		xSize = 144;
+		ySize = 182;
 		item = is;
 		title = t;
 		desc = d;
+		scale = MathHelper.clamp_float(s, 1F, 8F);
 	}
 	
 	public void drawGuiContainerBackgroundLayer(float f, int mx, int my)
 	{
 		super.drawGuiContainerBackgroundLayer(f, mx, my);
 		
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		
 		GL11.glPushMatrix();
-		GL11.glTranslatef(0F, 0F, 32F);
+		GL11.glTranslatef(guiLeft + xSize / 2F, guiTop + ySize / 2F, 32F);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		RenderHelper.enableGUIStandardItemLighting();
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
@@ -49,16 +53,16 @@ public class GuiDisplayBlock extends GuiLM
 		FontRenderer font = item.getItem().getFontRenderer(item);
 		if (font == null) font = fontRendererObj;
 		
-		GL11.glPushMatrix();
-		GL11.glTranslatef(guiLeft + xSize / 4F, guiTop + ySize / 4F - 2F, 0F);
-		GL11.glScalef(4F, 4F, 1F);
-		itemRender.renderItemAndEffectIntoGUI(font, Minecraft.getMinecraft().getTextureManager(), item, 0, 0);
-		GL11.glPopMatrix();
+		GL11.glScalef(scale, scale, 1F);
+		
+		itemRender.renderItemAndEffectIntoGUI(font, Minecraft.getMinecraft().getTextureManager(), item, -8, -8);
 		
 		zLevel = 0;
 		itemRender.zLevel = 0F;
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();
+		
+		GL11.glDisable(GL11.GL_BLEND);
 	}
 	
 	public void drawText(int mx, int my)

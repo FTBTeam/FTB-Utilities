@@ -17,8 +17,8 @@ public abstract class TileRenderer<T extends TileEntity> extends TileEntitySpeci
 	public abstract void renderTile(T t, double rx, double ry, double rz, float f);
 	
 	public final void register(Class<? extends T> c)
-	{ LatCoreMC.addTileRenderer(c, this); }
+	{ LatCoreMC.Client.addTileRenderer(c, this); }
 	
 	public final void registerItemRenderer(Block b)
-	{ if(this instanceof IItemRenderer) LatCoreMC.addItemRenderer(b, (IItemRenderer)this); }
+	{ if(this instanceof IItemRenderer) LatCoreMC.Client.addItemRenderer(b, (IItemRenderer)this); }
 }

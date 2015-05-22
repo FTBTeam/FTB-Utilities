@@ -11,6 +11,7 @@ import latmod.core.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.settings.KeyBinding;
@@ -72,43 +73,48 @@ public class LatCoreMC
 	// Client //
 	
 	@SideOnly(Side.CLIENT)
-	public static IIcon blockNullIcon, unknownItemIcon;
-	
-	@SideOnly(Side.CLIENT)
-	public static final void addEntityRenderer(Class<? extends Entity> c, Render r)
-	{ RenderingRegistry.registerEntityRenderingHandler(c, r); }
-	
-	@SideOnly(Side.CLIENT)
-	public static final void addTileRenderer(Class<? extends TileEntity> c, TileEntitySpecialRenderer r)
-	{ ClientRegistry.bindTileEntitySpecialRenderer(c, r); }
-	
-	@SideOnly(Side.CLIENT)
-	public static final int getNewArmorID(String s)
-	{ return RenderingRegistry.addNewArmourRendererPrefix(s); }
-	
-	@SideOnly(Side.CLIENT)
-	public static final int getNewBlockRenderID()
-	{ return RenderingRegistry.getNextAvailableRenderId(); }
-	
-	@SideOnly(Side.CLIENT)
-	public static final void addBlockRenderer(int i, ISimpleBlockRenderingHandler r)
-	{ RenderingRegistry.registerBlockHandler(i, r); }
-	
-	@SideOnly(Side.CLIENT)
-	public static final void addItemRenderer(Item item, IItemRenderer i)
-	{ MinecraftForgeClient.registerItemRenderer(item, i); }
-	
-	@SideOnly(Side.CLIENT)
-	public static final void addItemRenderer(Block block, IItemRenderer i)
-	{ MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(block), i); }
-	
-	@SideOnly(Side.CLIENT)
-	public static void spawnPart(EntityFX e)
-	{ Minecraft.getMinecraft().effectRenderer.addEffect(e); }
-	
-	@SideOnly(Side.CLIENT)
-	public static KeyBinding addKeyBinding(String name, int key, String cat)
-	{ KeyBinding k = new KeyBinding(name, key, cat); ClientRegistry.registerKeyBinding(k); return k; }
+	public static class Client
+	{
+		public static IIcon blockNullIcon, unknownItemIcon;
+		private static float lastBrightnessX, lastBrightnessY;
+		
+		public static final void addEntityRenderer(Class<? extends Entity> c, Render r)
+		{ RenderingRegistry.registerEntityRenderingHandler(c, r); }
+		
+		public static final void addTileRenderer(Class<? extends TileEntity> c, TileEntitySpecialRenderer r)
+		{ ClientRegistry.bindTileEntitySpecialRenderer(c, r); }
+		
+		public static final int getNewArmorID(String s)
+		{ return RenderingRegistry.addNewArmourRendererPrefix(s); }
+		
+		public static final int getNewBlockRenderID()
+		{ return RenderingRegistry.getNextAvailableRenderId(); }
+		
+		public static final void addBlockRenderer(int i, ISimpleBlockRenderingHandler r)
+		{ RenderingRegistry.registerBlockHandler(i, r); }
+		
+		public static final void addItemRenderer(Item item, IItemRenderer i)
+		{ MinecraftForgeClient.registerItemRenderer(item, i); }
+		
+		public static final void addItemRenderer(Block block, IItemRenderer i)
+		{ MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(block), i); }
+		
+		public static void spawnPart(EntityFX e)
+		{ Minecraft.getMinecraft().effectRenderer.addEffect(e); }
+		
+		public static KeyBinding addKeyBinding(String name, int key, String cat)
+		{ KeyBinding k = new KeyBinding(name, key, cat); ClientRegistry.registerKeyBinding(k); return k; }
+		
+		public static void pushMaxBrightness()
+		{
+			lastBrightnessX = OpenGlHelper.lastBrightnessX;
+			lastBrightnessY = OpenGlHelper.lastBrightnessY;
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+		}
+		
+		public static void popMaxBrightness()
+		{ OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY); }
+	}
 	
 	public static final Configuration loadConfig(FMLPreInitializationEvent e, String s)
 	{ return new Configuration(new File(e.getModConfigurationDirectory(), s)); }

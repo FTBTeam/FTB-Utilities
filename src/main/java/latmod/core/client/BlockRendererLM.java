@@ -17,7 +17,7 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class BlockRendererLM implements ISimpleBlockRenderingHandler
 {
-	private final int renderID = LatCoreMC.getNewBlockRenderID();
+	private final int renderID = LatCoreMC.Client.getNewBlockRenderID();
 	public RenderBlocksCustom renderBlocks = new RenderBlocksCustom();
 	
 	public void renderInventoryBlock(Block b, int meta, int modelID, RenderBlocks rb)
@@ -39,10 +39,10 @@ public class BlockRendererLM implements ISimpleBlockRenderingHandler
 	{ return renderID; }
 	
 	public final void register()
-	{ LatCoreMC.addBlockRenderer(renderID, this); }
+	{ LatCoreMC.Client.addBlockRenderer(renderID, this); }
 	
 	public final void registerItemRenderer(Block b)
-	{ if(this instanceof IItemRenderer) LatCoreMC.addItemRenderer(b, (IItemRenderer)this); }
+	{ if(this instanceof IItemRenderer) LatCoreMC.Client.addItemRenderer(b, (IItemRenderer)this); }
 	
 	public static void rotateBlocks()
 	{

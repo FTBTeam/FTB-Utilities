@@ -1,6 +1,6 @@
 package latmod.core.mod.client;
 import latmod.core.*;
-import latmod.core.client.playerdeco.ThreadCheckPlayerDecorators;
+import latmod.core.client.badges.ThreadLoadBadges;
 import latmod.core.event.LMPlayerClientEvent;
 import latmod.core.mod.LCCommon;
 import latmod.core.net.*;
@@ -27,11 +27,11 @@ public class LCClient extends LCCommon
 	{
 		super.preInit(e);
 		LatCoreMC.addEventHandler(LCClientEventHandler.instance, true, true, true);
-		ThreadCheckPlayerDecorators.init();
 	}
 	
 	public void postInit(FMLPostInitializationEvent e)
 	{
+		ThreadLoadBadges.init();
 	}
 	
 	public boolean isShiftDown() { return GuiScreen.isShiftKeyDown(); }

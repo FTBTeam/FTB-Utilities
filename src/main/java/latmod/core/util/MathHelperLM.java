@@ -111,7 +111,15 @@ public class MathHelperLM
 		}
 		return min + r.nextDouble() * (max - min);
 	}
-
+	
+	public static Vertex randomAABB(Random r, AxisAlignedBB bb)
+	{
+		double x = randomDouble(r, bb.minX, bb.maxX);
+		double y = randomDouble(r, bb.minY, bb.maxY);
+		double z = randomDouble(r, bb.minZ, bb.maxZ);
+		return new Vertex(x, y, z);
+	}
+	
 	public static boolean isRound(double d)
 	{ return Math.round(d) == d; }
 	
@@ -126,6 +134,9 @@ public class MathHelperLM
 	
 	public static int clampInt(int i, int min, int max)
 	{ if(i < min) i = min; if(i > max) i = max; return i; }
+	
+	public static float clampFloat(float d, float min, float max)
+	{ if(d < min) d = min; if(d > max) d = max; return d; }
 	
 	public static double[] clamp(double[] d, double min, double max)
 	{ for(int i = 0; i < d.length; i++) d[i] = clamp(d[i], min, max); return d; }

@@ -1,9 +1,8 @@
 package latmod.core.mod.client;
 import java.lang.reflect.Field;
-import java.util.UUID;
 
 import latmod.core.*;
-import latmod.core.client.playerdeco.*;
+import latmod.core.client.badges.*;
 import latmod.core.event.*;
 import latmod.core.gui.GuiLM;
 import latmod.core.mod.*;
@@ -27,15 +26,13 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
-public class LCClientEventHandler
+public class LCClientEventHandler // LCClient
 {
 	public static final ResourceLocation friendsButtonTexture = LC.mod.getLocation("textures/gui/friendsbutton.png");
 	public static final LCClientEventHandler instance = new LCClientEventHandler();
 	
-	public final FastList<GuiNotification> messages = new FastList<GuiNotification>();
-	public final FastMap<UUID, FastList<PlayerDecorator>> playerDecorators = new FastMap<UUID, FastList<PlayerDecorator>>();
-	public final FastList<UUID> listLatMod = new FastList<UUID>();
-	public final FastList<UUID> listFTB = new FastList<UUID>();
+	public static final FastList<GuiNotification> messages = new FastList<GuiNotification>();
+	public static final FastMap<String, Badge> playerBadges = new FastMap<String, Badge>();
 	
 	@SubscribeEvent
 	public void onTooltip(ItemTooltipEvent e)
@@ -82,18 +79,8 @@ public class LCClientEventHandler
 	{
 		if(LCConfig.Client.enablePlayerDecorators && !e.entityPlayer.isInvisible())
 		{
-			UUID id = e.entityPlayer.getUniqueID();
-			
-			if(listLatMod.contains(id)) PDLatMod.instance.onPlayerRender(e);
-			if(listFTB.contains(id)) PDFTB.instance.onPlayerRender(e);
-			
-			FastList<PlayerDecorator> l = playerDecorators.get(id);
-			
-			if(l != null && l.size() > 0)
-			{
-				for(int i = 0; i < l.size(); i++)
-					l.get(i).onPlayerRender(e);
-			}
+			Badge b = playerBadges.get(e.entityPlayer.getCommandSenderName());
+			if(b != null) b.onPlayerRender(e.entityPlayer);
 		}
 	}
 	
@@ -102,7 +89,7 @@ public class LCClientEventHandler
 	{
 		if(r.side.isClient())
 		{
-			ThreadCheckPlayerDecorators.init();
+			ThreadLoadBadges.init();
 		}
 	}
 	
@@ -233,8 +220,8 @@ public class LCClientEventHandler
 			buttonY = 39;
 		}
 
-		int guiLeft = (e.gui.width - xSize) / 2;
-		int guiTop = (e.gui.height - ySize) / 2;
+		final int guiLeft = (e.gui.width - xSize) / 2;
+		final int guiTop = (e.gui.height - ySize) / 2;
 		
 		guiButton = new GuiButton(4950, guiLeft + buttonX, guiTop + buttonY, 8, 8, "Friends")
 		{
@@ -244,8 +231,8 @@ public class LCClientEventHandler
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				e.gui.mc.getTextureManager().bindTexture(friendsButtonTexture);
 				GuiLM.drawTexturedModalRectD(xPosition, yPosition, 0D, 0D, width, height, 8, 8, 0D);
-				if(mx >= xPosition && my >= yPosition && mx <= xPosition + width && my <= yPosition + height)
-					drawCenteredString(mc.fontRenderer, displayString, mx + 4, my - 28, -1);
+				if(mx >= xPosition && my >= yPosition && mx < xPosition + width && my < yPosition + height)
+					drawString(mc.fontRenderer, displayString, xPosition, yPosition + 12, -1);
 				GL11.glDisable(GL11.GL_BLEND);
 			}
 		};

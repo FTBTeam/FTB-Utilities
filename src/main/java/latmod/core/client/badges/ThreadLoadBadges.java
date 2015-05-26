@@ -2,6 +2,7 @@ package latmod.core.client.badges;
 
 import java.io.*;
 import java.net.URL;
+import java.util.UUID;
 
 import latmod.core.LatCoreMC;
 import latmod.core.event.CustomBadgesEvent;
@@ -13,10 +14,7 @@ import cpw.mods.fml.relauncher.*;
 public class ThreadLoadBadges extends Thread
 {
 	public static void init()
-	{
-		Badges.init();
-		new ThreadLoadBadges().start();
-	}
+	{ new ThreadLoadBadges().start(); }
 	
 	public ThreadLoadBadges()
 	{
@@ -26,7 +24,9 @@ public class ThreadLoadBadges extends Thread
 	
 	public void run()
 	{
-		LatCoreMC.logger.info("Loading Badges...");
+		Badge.reloading = true;
+		Badge.init();
+		LatCoreMC.logger.info("Loading badges...");
 		LCClientEventHandler.playerBadges.clear();
 		
 		try
@@ -43,18 +43,20 @@ public class ThreadLoadBadges extends Thread
 					
 					if(s != null && s.length == 2)
 					{
-						Badge b = Badges.registry.get(s[1]);
-						if(b != null)
+						UUID id = LatCoreMC.getUUIDFromString(s[0]);
+						
+						if(id != null)
 						{
-							LCClientEventHandler.playerBadges.put(s[0], b);
+							LCClientEventHandler.playerBadges.put(id, Badge.getBadge(s[1]));
 							loaded++;
 						}
+						else LatCoreMC.logger.warn("Invalid UUID: " + s[0]);
 					}
 				}
 			}
 			
 			reader.close();
-			LatCoreMC.logger.info(loaded + MathHelperLM.getPluralWord(loaded, " badge", " badges") + " loaded!");
+			LatCoreMC.logger.info("Loaded badges for " + loaded + MathHelperLM.getPluralWord(loaded, " player!", " players!"));
 		}
 		catch(Exception ex)
 		{
@@ -63,5 +65,6 @@ public class ThreadLoadBadges extends Thread
 		}
 		
 		new CustomBadgesEvent().post();
+		Badge.reloading = false;
 	}
 }

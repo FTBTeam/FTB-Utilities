@@ -196,6 +196,9 @@ public class LatCoreMC
 	public static String getPath(ResourceLocation res)
 	{ return "/assets/" + res.getResourceDomain() + "/" + res.getResourcePath(); }
 	
+	public static boolean resourceExists(ResourceLocation res)
+	{ return LatCoreMC.class.getResource(getPath(res)) != null; }
+	
 	public static boolean hasOnlinePlayers()
 	{ return !MinecraftServer.getServer().getConfigurationManager().playerEntityList.isEmpty(); }
 	
@@ -299,5 +302,17 @@ public class LatCoreMC
 		if(data == null) data = new NBTTagCompound();
 		data.setIntArray("XYZ", new int[] { te.xCoord, te.yCoord, te.zCoord });
 		openGui(ep, LCGuiHandler.TILE, data);
+	}
+
+	public static UUID getUUIDFromString(String s)
+	{
+		if(s == null || s.isEmpty()) return null;
+		try
+		{
+			if(s.contains("-")) return UUID.fromString(s);
+			else return com.mojang.util.UUIDTypeAdapter.fromString(s);
+		}
+		catch(Exception e) { }
+		return null;
 	}
 }

@@ -1,5 +1,6 @@
 package latmod.core.mod.client;
 import java.lang.reflect.Field;
+import java.util.UUID;
 
 import latmod.core.*;
 import latmod.core.client.badges.*;
@@ -32,7 +33,7 @@ public class LCClientEventHandler // LCClient
 	public static final LCClientEventHandler instance = new LCClientEventHandler();
 	
 	public static final FastList<GuiNotification> messages = new FastList<GuiNotification>();
-	public static final FastMap<String, Badge> playerBadges = new FastMap<String, Badge>();
+	public static final FastMap<UUID, Badge> playerBadges = new FastMap<UUID, Badge>();
 	
 	@SubscribeEvent
 	public void onTooltip(ItemTooltipEvent e)
@@ -77,9 +78,9 @@ public class LCClientEventHandler // LCClient
 	@SubscribeEvent
 	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
 	{
-		if(LCConfig.Client.enablePlayerDecorators && !e.entityPlayer.isInvisible())
+		if(!Badge.reloading && LCConfig.Client.enablePlayerDecorators && !e.entityPlayer.isInvisible())
 		{
-			Badge b = playerBadges.get(e.entityPlayer.getCommandSenderName());
+			Badge b = playerBadges.get(e.entityPlayer.getUniqueID());
 			if(b != null) b.onPlayerRender(e.entityPlayer);
 		}
 	}
@@ -245,7 +246,7 @@ public class LCClientEventHandler // LCClient
 	{
 		if(!(e.gui instanceof GuiInventory) && !(e.gui instanceof GuiContainerCreative)) return;
 		
-		if(e.button == guiButton)
+		if(e.button.id == guiButton.id)
 			LatCoreMC.openGui(e.gui.mc.thePlayer, LCGuiHandler.FRIENDS, null);
 	}
 }

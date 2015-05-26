@@ -2,6 +2,7 @@ package latmod.core.client.badges;
 
 import latmod.core.LatCoreMC;
 import latmod.core.mod.LC;
+import latmod.core.util.FastMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
@@ -23,9 +24,6 @@ public class Badge // Badges
 		ID = id;
 		texture = LC.mod.getLocation("textures/badges/" + ID + ".png");
 	}
-	
-	public Badge register()
-	{ Badges.registry.put(ID, this); return this; }
 	
 	public Badge setNotGlowing()
 	{ isGlowing = false; return this; }
@@ -76,5 +74,35 @@ public class Badge // Badges
 		
 		GL11.glPopMatrix();
 		GL11.glPopAttrib();
+	}
+	
+	// Static //
+	
+	public static boolean reloading = false;
+	private static final FastMap<String, Badge> registry = new FastMap<String, Badge>();
+	public static final Badge none = new Badge("none") { public void onPlayerRender(EntityPlayer ep) { } };
+	
+	public static final void init()
+	{
+		registry.clear();
+		register(none);
+		register(new Badge("latmod"));
+		register(new Badge("ftb"));
+		register(new Badge("mods"));
+		register(new Badge("packs"));
+	}
+	
+	public static final void register(Badge b)
+	{ registry.put(b.ID, b); }
+	
+	public static final Badge getBadge(String s)
+	{
+		Badge b = registry.get(s);
+		if(b != null) return b;
+		b = new Badge(s);
+		if(LatCoreMC.resourceExists(b.getTexture()))
+		{ registry.put(s, b); return b; }
+		registry.put(s, none);
+		return none;
 	}
 }

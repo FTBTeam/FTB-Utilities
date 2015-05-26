@@ -11,10 +11,10 @@ import cpw.mods.fml.relauncher.*;
 public abstract class TileRenderer<T extends TileEntity> extends TileEntitySpecialRenderer
 {
 	@SuppressWarnings("unchecked")
-	public final void renderTileEntityAt(TileEntity te, double rx, double ry, double rz, float f)
-	{ if(te != null && !te.isInvalid()) renderTile((T)te, rx, ry, rz, f); }
+	public final void renderTileEntityAt(TileEntity te, double rx, double ry, double rz, float pt)
+	{ if(te != null && !te.isInvalid()) renderTile((T)te, rx, ry, rz, pt); }
 	
-	public abstract void renderTile(T t, double rx, double ry, double rz, float f);
+	public abstract void renderTile(T t, double rx, double ry, double rz, float pt);
 	
 	public final void register(Class<? extends T> c)
 	{ LatCoreMC.Client.addTileRenderer(c, this); }

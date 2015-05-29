@@ -13,6 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.*;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -205,6 +206,7 @@ public class LCClientEventHandler // LCClient
 	public void guiInitEvent(GuiScreenEvent.InitGuiEvent.Post e)
 	{
 		if(!(e.gui instanceof GuiInventory) && !(e.gui instanceof GuiContainerCreative)) return;
+		final GuiContainerCreative creativeContainer = (e.gui instanceof GuiContainerCreative) ? (GuiContainerCreative)e.gui : null;
 		
 		int xSize = 176;
 		int ySize = 166;
@@ -212,7 +214,7 @@ public class LCClientEventHandler // LCClient
 		int buttonX = 28;
 		int buttonY = 10;
 		
-		if(e.gui instanceof GuiContainerCreative)
+		if(creativeContainer != null)
 		{
 			xSize = 195;
 			ySize = 136;
@@ -220,7 +222,7 @@ public class LCClientEventHandler // LCClient
 			buttonX = 50;
 			buttonY = 39;
 		}
-
+		
 		final int guiLeft = (e.gui.width - xSize) / 2;
 		final int guiTop = (e.gui.height - ySize) / 2;
 		
@@ -228,12 +230,15 @@ public class LCClientEventHandler // LCClient
 		{
 			public void drawButton(Minecraft mc, int mx, int my)
 			{
+				if(creativeContainer != null && creativeContainer.func_147056_g() != CreativeTabs.tabInventory.getTabIndex())
+					return;
+				
 				GL11.glEnable(GL11.GL_BLEND);
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				e.gui.mc.getTextureManager().bindTexture(friendsButtonTexture);
 				GuiLM.drawTexturedModalRectD(xPosition, yPosition, 0D, 0D, width, height, 8, 8, 0D);
 				if(mx >= xPosition && my >= yPosition && mx < xPosition + width && my < yPosition + height)
-					drawString(mc.fontRenderer, displayString, xPosition, yPosition + 12, -1);
+					drawString(mc.fontRenderer, displayString, xPosition - 24, yPosition, -1);
 				GL11.glDisable(GL11.GL_BLEND);
 			}
 		};
@@ -245,6 +250,11 @@ public class LCClientEventHandler // LCClient
 	public void guiActionEvent(GuiScreenEvent.ActionPerformedEvent.Post e)
 	{
 		if(!(e.gui instanceof GuiInventory) && !(e.gui instanceof GuiContainerCreative)) return;
+		
+		final GuiContainerCreative creativeContainer = (e.gui instanceof GuiContainerCreative) ? (GuiContainerCreative)e.gui : null;
+		
+		if(creativeContainer != null && creativeContainer.func_147056_g() != CreativeTabs.tabInventory.getTabIndex())
+			return;
 		
 		if(e.button.id == guiButton.id)
 			LatCoreMC.openGui(e.gui.mc.thePlayer, LCGuiHandler.FRIENDS, null);

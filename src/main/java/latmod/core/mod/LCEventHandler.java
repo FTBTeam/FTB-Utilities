@@ -179,7 +179,6 @@ public class LCEventHandler
 	public void onBlockClick(net.minecraftforge.event.entity.player.PlayerInteractEvent e)
 	{
 		if(e.world.isRemote) return;
-		
 		if(e.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR) return;
 		if(!canInteract(e)) e.setCanceled(true);
 	}
@@ -192,10 +191,8 @@ public class LCEventHandler
 		
 		if(te != null && !te.isInvalid() && te instanceof ISecureTile)
 		{
-			LMSecurity s = ((ISecureTile)te).getSecurity();
-			
-			if(s != null && !s.level.isPublic() && s.owner != null && !s.canInteract(e.entityPlayer))
-				return false;
+			if(!((ISecureTile)te).canPlayerInteract(e.entityPlayer, e.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK))
+			{ ((ISecureTile)te).onPlayerNotOwner(e.entityPlayer, e.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK); return false; }
 		}
 		
 		return true;

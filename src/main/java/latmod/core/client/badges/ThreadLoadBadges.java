@@ -32,12 +32,13 @@ public class ThreadLoadBadges extends Thread
 		try
 		{
 			int loaded = 0;
+			long msStarted = System.currentTimeMillis();
 			
 			BufferedReader reader = new BufferedReader(new InputStreamReader(new URL("http://pastebin.com/raw.php?i=W7DcLN1b").openStream()));
 			String raw = null;
 			while((raw = reader.readLine()) != null)
 			{
-				if(!raw.isEmpty() && !raw.startsWith("#"))
+				if(!raw.isEmpty() && raw.charAt(0) != '#' && raw.length() >= 35)
 				{
 					String[] s = raw.split(": ");
 					
@@ -56,7 +57,7 @@ public class ThreadLoadBadges extends Thread
 			}
 			
 			reader.close();
-			LatCoreMC.logger.info("Loaded badges for " + loaded + MathHelperLM.getPluralWord(loaded, " player!", " players!"));
+			LatCoreMC.logger.info("Loaded badges for " + loaded + MathHelperLM.getPluralWord(loaded, " player ", " players ") + "in " + ((System.currentTimeMillis() - msStarted) / 1000F) + " ms!");
 		}
 		catch(Exception ex)
 		{

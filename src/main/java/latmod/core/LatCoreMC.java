@@ -24,9 +24,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.client.*;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.*;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.*;
@@ -206,6 +206,8 @@ public class LatCoreMC
 	{
 		FastMap<UUID, EntityPlayerMP> m = new FastMap<UUID, EntityPlayerMP>();
 		
+		if(!hasOnlinePlayers()) return m;
+		
 		for(int i = 0; i < MinecraftServer.getServer().getConfigurationManager().playerEntityList.size(); i++)
 		{
 			EntityPlayerMP ep = (EntityPlayerMP)MinecraftServer.getServer().getConfigurationManager().playerEntityList.get(i);
@@ -215,8 +217,13 @@ public class LatCoreMC
 		return m;
 	}
 	
-	public static Vertex getSpawnPoint(World w)
-	{ ChunkCoordinates c = w.getSpawnPoint(); return new Vertex(c.posX + 0.5D, c.posY + 0.5D, c.posZ + 0.5D); }
+	public static Vertex getSpawnPoint(int dim)
+	{
+		WorldServer w = DimensionManager.getWorld(dim);
+		if(w == null) return null;
+		ChunkCoordinates c = w.getSpawnPoint();
+		return new Vertex(c.posX + 0.5D, c.posY + 0.5D, c.posZ + 0.5D);
+	}
 	
 	public static boolean remap(MissingMapping m, String id, Item i)
 	{

@@ -64,7 +64,7 @@ public class BlockRendererLM implements ISimpleBlockRenderingHandler
 	
 	public static class BlockGlowing extends BlockCustom
 	{
-		public static final int MAX = 0xF000F0;
+		public static final int MAX = 0xE000E0;
 		
 		public BlockGlowing()
 		{ setLightLevel(1F); }

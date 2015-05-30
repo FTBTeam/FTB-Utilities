@@ -3,6 +3,7 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.net.*;
 import java.nio.channels.*;
+import java.nio.charset.Charset;
 import java.util.*;
 
 import com.google.gson.*;
@@ -12,6 +13,9 @@ import com.google.gson.reflect.TypeToken;
 public class LatCore
 {
 	public static final int DAY24 = 24 * 60 * 60;
+	public static final String STRIP_SEP = ", ";
+	public static final Charset UTF_8 = Charset.forName("UTF-8");
+	public static final String ALLOWED_TEXT_CHARS = "!@#$%^&*()_+ -=\\/,.<>?\'\"[]{}|;:`~";
 	
 	@SuppressWarnings("all")
 	public static URL getURL(String s)
@@ -24,7 +28,12 @@ public class LatCore
 	}
 	
 	public static String toString(InputStream is) throws Exception
-	{ byte b[] = new byte[is.available()]; is.read(b); return new String(b); }
+	{
+		StringBuilder sb = new StringBuilder();
+		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		String s = null; while((s = br.readLine()) != null) sb.append(s);
+		return sb.toString();
+	}
 	
 	public static FastList<String> toStringList(String s, String regex)
 	{
@@ -37,10 +46,10 @@ public class LatCore
 	
 	public static String toString(FastList<String> l)
 	{
-		String s = "";
+		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < l.size(); i++)
-		{ s += l.get(i); if(i != l.size() - 1) s += "\n"; }
-		return s;
+		{ sb.append(l.get(i)); if(i != l.size() - 1) sb.append('\n'); }
+		return sb.toString();
 	}
 	
 	public static FastList<String> toStringList(InputStream is) throws Exception
@@ -93,8 +102,7 @@ public class LatCore
 		if(c >= '0' && c <= '9') return true;
 		if(c >= 'a' && c <= 'z') return true;
 		if(c >= 'A' && c <= 'Z') return true;
-		String allowed = "!@#$%^&*()_+ -=\\/,.<>?\'\"[]{}|;:`~";
-		return (allowed.indexOf(c) != -1);
+		return (ALLOWED_TEXT_CHARS.indexOf(c) != -1);
 	}
 	
 	public static FastList<Package> getAllPackages()
@@ -150,7 +158,7 @@ public class LatCore
 		if(o == null) return null;
 		String[] s = new String[o.length];
 		for(int i = 0; i < o.length; i++)
-			s[i] = "" + o[i];
+			s[i] = String.valueOf(o[i]);
 		return s;
 	}
 	
@@ -158,56 +166,79 @@ public class LatCore
 	{
 		if(o == null) return null;
 		if(o.length == 0) return "";
-		String s = "";
+		StringBuilder sb = new StringBuilder();
+		
 		for(int i = 0; i < o.length; i++)
-		{ s += o[i]; if(i != o.length - 1) s += ", "; }
-		return s;
+		{
+			sb.append(o[i]);
+			if(i != o.length - 1)
+				sb.append(STRIP_SEP);
+		}
+		
+		return sb.toString();
 	}
 	
 	public static String stripDouble(double... o)
 	{
 		if(o == null) return null;
 		if(o.length == 0) return "";
-		String s = "";
-		String s1;
+		StringBuilder sb = new StringBuilder();
+		
 		for(int i = 0; i < o.length; i++)
 		{
-			s1 = "" + (MathHelperLM.toSmallDouble(o[i]));
-			if(s1.endsWith(".0")) s1 = s1 + "0"; s += s1;
-			if(i != o.length - 1) s += ", ";
+			sb.append(MathHelperLM.formatDouble(MathHelperLM.toSmallDouble(o[i])));
+			if(i != o.length - 1) sb.append(STRIP_SEP);
 		}
 		
-		return s;
+		return sb.toString();
 	}
 	
 	public static String stripDoubleInt(double... o)
 	{
 		if(o == null) return null;
 		if(o.length == 0) return "";
-		String s = "";
+		StringBuilder sb = new StringBuilder();
+		
 		for(int i = 0; i < o.length; i++)
-		{ s += ((long)o[i]); if(i != o.length - 1) s += ", "; }
-		return s;
+		{
+			sb.append((long)o[i]);
+			if(i != o.length - 1)
+				sb.append(STRIP_SEP);
+		}
+		
+		return sb.toString();
 	}
 	
 	public static String stripInt(int... o)
 	{
 		if(o == null) return null;
 		if(o.length == 0) return "";
-		String s = "";
+		StringBuilder sb = new StringBuilder();
+		
 		for(int i = 0; i < o.length; i++)
-		{ s += o[i]; if(i != o.length - 1) s += ", "; }
-		return s;
+		{
+			sb.append(o[i]);
+			if(i != o.length - 1)
+				sb.append(STRIP_SEP);
+		}
+		
+		return sb.toString();
 	}
 	
 	public static String stripBool(boolean... o)
 	{
 		if(o == null) return null;
 		if(o.length == 0) return "";
-		String s = "";
+		StringBuilder sb = new StringBuilder();
+		
 		for(int i = 0; i < o.length; i++)
-		{ s += (o[i] ? "1" : "0"); if(i != o.length - 1) s += ", "; }
-		return s;
+		{
+			sb.append(o[i] ? '1' : '0');
+			if(i != o.length - 1)
+				sb.append(STRIP_SEP);
+		}
+		
+		return sb.toString();
 	}
 	
 	public static String classpath(Class<?> c)
@@ -275,15 +306,15 @@ public class LatCore
 	public static String unsplit(String[] s, String s1)
 	{
 		if(s == null) return null;
-		String s2 = "";
+		StringBuilder sb = new StringBuilder();
 		if(s.length == 1) return s[0];
 		for(int i = 0; i < s.length; i++)
 		{
-			s2 += s[i];
+			sb.append(s[i]);
 			if(i != s.length - 1)
-				s2 += s1;
+				sb.append(s1);
 		}
-		return s2;
+		return sb.toString();
 	}
 
 	public static String firstUppercase(String s)
@@ -292,11 +323,19 @@ public class LatCore
 		return Character.toUpperCase(s.charAt(0)) + (s.length() > 1 ? s.substring(1) : "");
 	}
 	
-	public static boolean objectsEquals(Object o1, Object o2, boolean allowNulls)
+	public static boolean areObjectsEqual(Object o1, Object o2, boolean allowNulls)
 	{
 		if(o1 == null && o2 == null && allowNulls) return true;
 		if(o1 == null || o2 == null) return false;
 		return o1.equals(o2);
+	}
+	
+	public static boolean areStringsEqual(String s0, String s1)
+	{
+		if(s0 == null && s1 == null) return true;
+		if(s0 == null || s1 == null) return false;
+		if(s0.length() != s1.length()) return false;
+		return s0.equals(s1);
 	}
 	
 	public static <T> T fromJson(String s, Type t)
@@ -308,15 +347,8 @@ public class LatCore
 	
 	public static <T> T fromJsonFromFile(File f, Type t)
 	{
-		try
-		{
-			FileInputStream fis = new FileInputStream(f);
-			byte[] b = new byte[fis.available()];
-			fis.read(b); fis.close();
-			return fromJson(new String(b), t);
-		}
-		catch(Exception e)
-		{ e.printStackTrace(); return null; }
+		try { return fromJson(toString(new FileInputStream(f)), t); }
+		catch(Exception e) { e.printStackTrace(); return null; }
 	}
 	
 	public static String toJson(Object o, boolean asTree)
@@ -372,15 +404,6 @@ public class LatCore
 		return false;
 	}
 	
-	public static boolean areEqual(String s0, String s1)
-	{
-		if(s0 == null && s1 == null) return true;
-		if(s0 != null && s1 == null) return false;
-		if(s0 == null && s1 != null) return false;
-		if(s0.length() != s1.length()) return false;
-		return s0.equals(s1);
-	}
-	
 	public static String formatTime(long secs, boolean wrap)
 	{
 		long secs1 = secs;
@@ -393,11 +416,16 @@ public class LatCore
 		long m = (secs1 / 60L) % 60L;
 		long s = secs1 % 60L;
 		
-		String hs = "" + h; if(hs.length() == 1) hs = "0" + hs;
-		String ms = "" + m; if(ms.length() == 1) ms = "0" + ms;
-		String ss = "" + s; if(ss.length() == 1) ss = "0" + ss;
-		
-		return hs + ":" + ms + ":" + ss;
+		StringBuilder sb = new StringBuilder();
+		if(h < 10) sb.append('0');
+		sb.append(h);
+		sb.append(':');
+		if(m < 10) sb.append('0');
+		sb.append(m);
+		sb.append(':');
+		if(s < 10) sb.append('0');
+		sb.append(s);
+		return sb.toString();
 	}
 
 	public static String fillString(String s, char fill, int length)

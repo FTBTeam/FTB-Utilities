@@ -194,12 +194,8 @@ public class MathHelperLM
 	{ return isPlural(i) ? p : s; }
 	
 	public static String formatDouble(double d)
-	{
-		String s = "" + d;
-		if(s.endsWith(".0"))
-			s = s.substring(0, s.length() - 2);
-		return s;
-	}
+	{ String s = "" + d; if(s.endsWith(".0"))
+	return s.substring(0, s.length() - 2); return s; }
 	
 	public static final int getRotations(double yaw, int max)
 	{ return floor((yaw * max / 360D) + 0.5D) & (max - 1); }

@@ -139,8 +139,8 @@ public class LCClientEventHandler // LCClient
 						fps.setAccessible(true);
 					}
 					
-					event.left.add("[LatCoreMC] Dev version!");
-					event.right.add("FPS: " + fps.getInt(null));
+					event.left.add("[MC " + EnumChatFormatting.GOLD + LatCoreMC.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");
+					event.right.add("FPS: " + EnumChatFormatting.GOLD + fps.getInt(null));
 				}
 				catch(Exception e)
 				{ e.printStackTrace(); }
@@ -214,17 +214,26 @@ public class LCClientEventHandler // LCClient
 		int buttonX = 28;
 		int buttonY = 10;
 		
+		int textOX = -24;
+		int textOY = 0;
+		
 		if(creativeContainer != null)
 		{
 			xSize = 195;
 			ySize = 136;
 			
-			buttonX = 50;
-			buttonY = 39;
+			buttonX = 29;
+			buttonY = 8;
+			
+			textOX = 0;
+			textOY = 0;
 		}
 		
 		final int guiLeft = (e.gui.width - xSize) / 2;
 		final int guiTop = (e.gui.height - ySize) / 2;
+		
+		final int textOX1 = textOX;
+		final int textOY1 = textOY;
 		
 		guiButton = new GuiButton(4950, guiLeft + buttonX, guiTop + buttonY, 8, 8, "Friends")
 		{
@@ -238,7 +247,7 @@ public class LCClientEventHandler // LCClient
 				e.gui.mc.getTextureManager().bindTexture(friendsButtonTexture);
 				GuiLM.drawTexturedModalRectD(xPosition, yPosition, 0D, 0D, width, height, 8, 8, 0D);
 				if(mx >= xPosition && my >= yPosition && mx < xPosition + width && my < yPosition + height)
-					drawString(mc.fontRenderer, displayString, xPosition - 24, yPosition, -1);
+					drawString(mc.fontRenderer, displayString, xPosition + textOX1, yPosition + textOY1, -1);
 				GL11.glDisable(GL11.GL_BLEND);
 			}
 		};

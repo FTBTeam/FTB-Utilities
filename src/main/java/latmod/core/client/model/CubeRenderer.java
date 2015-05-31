@@ -1,34 +1,57 @@
 package latmod.core.client.model;
 
-import static org.lwjgl.opengl.GL11.*;
 import net.minecraft.block.Block;
 import net.minecraft.util.*;
+
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class CubeRenderer
 {
-	public static final int TEX_DISABLED = 0;
-	public static final int TEX_SCALED = 1;
-	public static final int TEX_NOT_SCALED = 2;
+	public boolean enableNormals = true;
 	
-	public final int textureType;
-	public double minX = 0D;
-	public double minY = 0D;
-	public double minZ = 0D;
-	public double maxX = 1D;
-	public double maxY = 1D;
-	public double maxZ = 1D;
-	public float minU = 0F;
-	public float minV = 0F;
-	public float maxU = 1F;
-	public float maxV = 1F;
+	protected int currentSide;
+	protected final double[] vertexMapX = new double[24];
+	protected final double[] vertexMapY = new double[24];
+	protected final double[] vertexMapZ = new double[24];
 	
-	public CubeRenderer(int i)
-	{ textureType = i; }
+	public void setVertex(int idx, double x, double y, double z)
+	{ vertexMapX[idx] = x; vertexMapY[idx] = y; vertexMapZ[idx] = z; }
 	
-	public void setSize(double x0, double y0, double z0, double x1, double y1, double z1)
-	{ minX = x0; minY = y0; minZ = z0; maxX = x1; maxY = y1; maxZ = z1; }
+	public void setSize(double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
+	{
+		setVertex(0, minX, minY, minZ);
+		setVertex(1, maxX, minY, minZ);
+		setVertex(2, maxX, minY, maxZ);
+		setVertex(3, minX, minY, maxZ);
+		
+		setVertex(4, minX, maxY, minZ);
+		setVertex(5, minX, maxY, maxZ);
+		setVertex(6, maxX, maxY, maxZ);
+		setVertex(7, maxX, maxY, minZ);
+		
+		setVertex(8, minX, minY, maxZ);
+		setVertex(9, maxX, minY, maxZ);
+		setVertex(10, maxX, maxY, maxZ);
+		setVertex(11, minX, maxY, maxZ);
+		
+		setVertex(12, minX, minY, minZ);
+		setVertex(13, minX, maxY, minZ);
+		setVertex(14, maxX, maxY, minZ);
+		setVertex(15, maxX, minY, minZ);
+		
+		setVertex(16, minX, minY, minZ);
+		setVertex(17, minX, minY, maxZ);
+		setVertex(18, minX, maxY, maxZ);
+		setVertex(19, minX, maxY, minZ);
+		
+		setVertex(20, maxX, minY, minZ);
+		setVertex(21, maxX, maxY, minZ);
+		setVertex(22, maxX, maxY, maxZ);
+		setVertex(23, maxX, minY, maxZ);
+	}
 	
 	public void setSize(AxisAlignedBB aabb)
 	{ setSize(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ); }
@@ -36,100 +59,53 @@ public class CubeRenderer
 	public void setSize(Block b)
 	{ setSize(b.getBlockBoundsMinX(), b.getBlockBoundsMinY(), b.getBlockBoundsMinZ(), b.getBlockBoundsMaxX(), b.getBlockBoundsMaxY(), b.getBlockBoundsMaxZ()); }
 	
-	public void setUV(float u0, float v0, float u1, float v1)
-	{ minU = u0; minV = v0; maxU = u1; maxV = v1; }
-	
-	public void setUV(IIcon icon)
-	{ setUV(icon.getMinU(), icon.getMinV(), icon.getMaxU(), icon.getMaxV()); }
-	
 	public void renderAll()
 	{
-		renderUp();
-		renderDown();
-		renderNorth();
-		renderSouth();
-		renderWest();
-		renderEast();
+		for(int i = 0; i < 6; i++)
+			renderSide0(i);
 	}
 	
-	public void renderFace(int face)
+	public void renderSide(int s)
 	{
-		if(face == 0) renderUp();
-		else if(face == 1) renderDown();
-		else if(face == 2) renderNorth();
-		else if(face == 3) renderSouth();
-		else if(face == 4) renderWest();
-		else if(face == 5) renderEast();
+		if(s < 0 || s >= 6);
+		renderSide0(s);
 	}
 	
-	public void vertex(double x, double y, double z, float u, float v)
+	protected void vertex(int i)
 	{
-		// float f = this.maxV - this.minV;
-		//return this.minV + f * ((float)p_94207_1_ / 16.0F);
-		if(textureType == TEX_SCALED)
-			glTexCoord2f(u, v);
-		else if(textureType == TEX_NOT_SCALED)
-			glTexCoord2f(u, v);
-		glVertex3d(x, y, z);
+		int j = currentSide * 4 + i;
+		GL11.glVertex3d(vertexMapX[j], vertexMapY[j], vertexMapZ[j]);
 	}
 	
-	public void renderUp()
+	protected void begin(int i)
 	{
-		glBegin(GL_QUADS);
-		vertex(minX, maxY, minZ, minU, minV);
-		vertex(minX, maxY, maxZ, minU, maxV);
-		vertex(maxX, maxY, maxZ, maxU, maxV);
-		vertex(maxX, maxY, minZ, maxU, minV);
-		glEnd();
+		currentSide = i;
+		if(enableNormals)
+			GL11.glNormal3f(Facing.offsetsXForSide[i], Facing.offsetsYForSide[i], Facing.offsetsZForSide[i]);
+		GL11.glBegin(GL11.GL_QUADS);
 	}
+	
+	protected void end()
+	{ GL11.glEnd(); }
+	
+	protected void renderSide0(int s)
+	{ begin(s); vertex(0); vertex(1); vertex(2); vertex(3); end(); }
 	
 	public void renderDown()
-	{
-		glBegin(GL_QUADS);
-		vertex(minX, minY, minZ, minU, minV);
-		vertex(maxX, minY, minZ, maxU, minV);
-		vertex(maxX, minY, maxZ, maxU, maxV);
-		vertex(minX, minY, maxZ, minU, maxV);
-		glEnd();
-	}
+	{ renderSide0(0); }
 	
-	public void renderNorth()
-	{
-		glBegin(GL_QUADS);
-		vertex(minX, minY, minZ, maxU, maxV);
-		vertex(minX, maxY, minZ, maxU, minV);
-		vertex(maxX, maxY, minZ, minU, minV);
-		vertex(maxX, minY, minZ, minU, maxV);
-		glEnd();
-	}
+	public void renderUp()
+	{ renderSide0(1); }
 	
 	public void renderSouth()
-	{
-		glBegin(GL_QUADS);
-		vertex(minX, minY, maxZ, minU, maxV);
-		vertex(maxX, minY, maxZ, maxU, maxV);
-		vertex(maxX, maxY, maxZ, maxU, minV);
-		vertex(minX, maxY, maxZ, minU, minV);
-		glEnd();
-	}
+	{ renderSide0(2); }
+	
+	public void renderNorth()
+	{ renderSide0(3); }
 	
 	public void renderWest()
-	{
-		glBegin(GL_QUADS);
-		vertex(minX, minY, minZ, minU, maxV);
-		vertex(minX, minY, maxZ, maxU, maxV);
-		vertex(minX, maxY, maxZ, maxU, minV);
-		vertex(minX, maxY, minZ, minU, minV);
-		glEnd();
-	}
+	{ renderSide0(4); }
 	
 	public void renderEast()
-	{
-		glBegin(GL_QUADS);
-		vertex(maxX, minY, minZ, maxU, maxV);
-		vertex(maxX, maxY, minZ, maxU, minV);
-		vertex(maxX, maxY, maxZ, minU, minV);
-		vertex(maxX, minY, maxZ, minU, maxV);
-		glEnd();
-	}
+	{ renderSide0(5); }
 }

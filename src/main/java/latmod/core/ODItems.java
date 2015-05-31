@@ -108,11 +108,12 @@ public class ODItems
 		return i != null;
 	}
 	
-	public static void add(String name, ItemStack is)
+	public static ItemStack add(String name, ItemStack is)
 	{
 		ItemStack is1 = InvUtils.singleCopy(is);
 		if(!getOres(name).contains(is1))
 		OreDictionary.registerOre(name, is1);
+		return is1;
 	}
 	
 	public static FastList<String> getOreNames(ItemStack is)

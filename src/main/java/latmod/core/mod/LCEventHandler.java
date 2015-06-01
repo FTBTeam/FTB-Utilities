@@ -3,6 +3,7 @@ import java.io.File;
 
 import latmod.core.*;
 import latmod.core.event.*;
+import latmod.core.item.ICreativeSafeItem;
 import latmod.core.net.*;
 import latmod.core.tile.ISecureTile;
 import latmod.core.util.*;
@@ -178,9 +179,9 @@ public class LCEventHandler
 	@SubscribeEvent
 	public void onBlockClick(net.minecraftforge.event.entity.player.PlayerInteractEvent e)
 	{
-		if(e.world.isRemote) return;
-		if(e.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR) return;
-		if(!canInteract(e)) e.setCanceled(true);
+		if(e.entityPlayer.capabilities.isCreativeMode && e.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK && e.entityPlayer.getHeldItem() != null && e.entityPlayer.getHeldItem().getItem() instanceof ICreativeSafeItem)
+		{ e.setCanceled(true); return; }
+		if(!e.world.isRemote && (e.action != PlayerInteractEvent.Action.RIGHT_CLICK_AIR) && !canInteract(e)) e.setCanceled(true);
 	}
 	
 	private boolean canInteract(net.minecraftforge.event.entity.player.PlayerInteractEvent e)

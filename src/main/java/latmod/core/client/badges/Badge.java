@@ -44,14 +44,14 @@ public class Badge // Badges
 		if(isGlowing) LatCoreMC.Client.pushMaxBrightness();
 		
 		GL11.glPushMatrix();
-		GL11.glTranslated(0.04D, 0.01D, 0.86D);
-		
-		
-		if(ep.getEquipmentInSlot(3) != null && ep.getEquipmentInSlot(3).getItem() instanceof ItemArmor)
-				GL11.glTranslated(0D, 0D, -0.0625D);
 		
 		if(ep.isSneaking())
 			GL11.glRotatef(25F, 1F, 0F, 0F);
+		
+		GL11.glTranslated(0.04D, 0.01D, 0.86D);
+		
+		if(ep.getEquipmentInSlot(3) != null && ep.getEquipmentInSlot(3).getItem() instanceof ItemArmor)
+				GL11.glTranslated(0D, 0D, -0.0625D);
 		
 		float s = 0.20F;
 		GL11.glScalef(s, s, 1F);

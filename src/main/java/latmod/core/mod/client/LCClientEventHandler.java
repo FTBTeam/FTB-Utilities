@@ -214,7 +214,7 @@ public class LCClientEventHandler // LCClient
 		int buttonX = 28;
 		int buttonY = 10;
 		
-		int textOX = -24;
+		int textOX = 0;//-24;
 		int textOY = 0;
 		
 		if(creativeContainer != null)

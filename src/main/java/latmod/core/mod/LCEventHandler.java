@@ -180,7 +180,12 @@ public class LCEventHandler
 	public void onBlockClick(net.minecraftforge.event.entity.player.PlayerInteractEvent e)
 	{
 		if(e.entityPlayer.capabilities.isCreativeMode && e.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK && e.entityPlayer.getHeldItem() != null && e.entityPlayer.getHeldItem().getItem() instanceof ICreativeSafeItem)
-		{ e.setCanceled(true); return; }
+		{
+			if(!e.world.isRemote) e.world.markBlockForUpdate(e.x, e.y, e.z);
+			else e.world.markBlockRangeForRenderUpdate(e.x, e.y, e.z, e.x, e.y, e.z);
+			e.setCanceled(true);
+			return;
+		}
 		if(!e.world.isRemote && (e.action != PlayerInteractEvent.Action.RIGHT_CLICK_AIR) && !canInteract(e)) e.setCanceled(true);
 	}
 	

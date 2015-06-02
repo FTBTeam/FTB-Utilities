@@ -13,6 +13,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.DimensionManager;
 import baubles.api.BaublesApi;
 import cpw.mods.fml.relauncher.Side;
 
@@ -32,7 +34,7 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 	}
 	
 	public String[] getSubcommands(ICommandSender ics)
-	{ return new String[] { "player", "reload", "setitemname", "displayitem" }; }
+	{ return new String[] { "player", "reload", "setitemname", "displayitem", "getdim" }; }
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
@@ -182,6 +184,14 @@ public class CmdLatCoreAdmin extends CommandBaseLC
 			}
 			
 			return "Invalid item!";
+		}
+		else if(args[0].equals("getdim"))
+		{
+			checkArgs(args, 2);
+			int i = parseInt(ics, args[1]);
+			WorldServer w = DimensionManager.getWorld(i);
+			if(w == null) return "Invalid DimensionID!";
+			return FINE + "Dimension " + i + " name is '" + w.provider.getDimensionName() + "'";
 		}
 		
 		return onCommand(ics, null);

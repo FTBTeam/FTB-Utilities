@@ -17,9 +17,9 @@ public class RenderBlocksCustom extends RenderBlocks
 	public AxisAlignedBB fullBlock = AxisAlignedBB.getBoundingBox(0D, 0D, 0D, 1D, 1D, 1D);
 	
 	public CustomBlockAccess customBlockAccess = null;
-	private float customColRed = 1F;
-	private float customColGreen = 1F;
-	private float customColBlue = 1F;
+	public float customColRed = 1F;
+	public float customColGreen = 1F;
+	public float customColBlue = 1F;
 	
 	public void setCustomColor(Integer col)
 	{
@@ -121,13 +121,16 @@ public class RenderBlocksCustom extends RenderBlocks
 	public void setRenderBounds(AxisAlignedBB aabb, double exp)
 	{ if(aabb != null) super.setRenderBounds(aabb.minX - exp, aabb.minY - exp, aabb.minZ - exp, aabb.maxX + exp, aabb.maxY + exp, aabb.maxZ + exp); }
 	
-	public void setFaceBounds(AxisAlignedBB aabb, int side)
+	public void setFaceBounds(int side, AxisAlignedBB aabb)
+	{ setFaceBounds(side, aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ); }
+	
+	public void setFaceBounds(int side, double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
 	{
-		if(side == 0) setRenderBounds(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.minY, aabb.maxZ);
-		if(side == 1) setRenderBounds(aabb.minX, aabb.maxY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ);
-		if(side == 2) setRenderBounds(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.minZ);
-		if(side == 3) setRenderBounds(aabb.minX, aabb.minY, aabb.maxZ, aabb.maxX, aabb.maxY, aabb.maxZ);
-		if(side == 4) setRenderBounds(aabb.minX, aabb.minY, aabb.minZ, aabb.minX, aabb.maxY, aabb.maxZ);
-		if(side == 5) setRenderBounds(aabb.maxX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ);
+		if(side == 0) setRenderBounds(minX, minY, minZ, maxX, minY, maxZ);
+		else if(side == 1) setRenderBounds(minX, maxY, minZ, maxX, maxY, maxZ);
+		else if(side == 2) setRenderBounds(minX, minY, minZ, maxX, maxY, minZ);
+		else if(side == 3) setRenderBounds(minX, minY, maxZ, maxX, maxY, maxZ);
+		else if(side == 4) setRenderBounds(minX, minY, minZ, minX, maxY, maxZ);
+		else if(side == 5) setRenderBounds(maxX, minY, minZ, maxX, maxY, maxZ);
 	}
 }

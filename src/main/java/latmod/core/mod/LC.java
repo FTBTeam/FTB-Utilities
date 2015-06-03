@@ -94,6 +94,8 @@ public class LC
 	{
 		e.registerServerCommand(new CmdLatCore());
 		e.registerServerCommand(new CmdLatCoreAdmin());
+		
+		proxy.serverStarting(e);
 	}
 	
 	@Mod.EventHandler

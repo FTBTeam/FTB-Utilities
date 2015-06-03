@@ -31,6 +31,10 @@ public class LCClient extends LCCommon
 	
 	public void postInit(FMLPostInitializationEvent e)
 	{
+	}
+	
+	public void serverStarting(FMLServerStartingEvent e)
+	{
 		ThreadLoadBadges.init();
 	}
 	

@@ -4,7 +4,6 @@ import java.util.regex.Pattern;
 
 import latmod.core.mod.LC;
 import latmod.core.util.*;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.config.*;
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -126,13 +125,4 @@ public abstract class LMConfig
 	
 	public String getConfigName()
 	{ return (mod == null) ? null : mod.modID; }
-	
-	public static boolean[] readBools(NBTTagCompound tag, String s)
-	{ return Bits.fromBits(tag.getByte(s) & 255, 8); }
-	
-	public static void writeBools(NBTTagCompound tag, String s, boolean... b)
-	{
-		if(b.length <= 0 || b.length > 8) throw new IllegalArgumentException("0 < " + b.length + " <= 8");
-		tag.setByte(s, (byte)Bits.toBits(b));
-	}
 }

@@ -29,14 +29,12 @@ public class LCConfig extends LMConfig implements IServerConfig
 	
 	public void readConfig(NBTTagCompound tag)
 	{
-		boolean[] b = readBools(tag, "C");
-		General.friendsGuiArmor = b[0];
+		General.friendsGuiArmor = tag.getBoolean("A");
 	}
 	
 	public void writeConfig(NBTTagCompound tag)
 	{
-		writeBools(tag, "C",
-		General.friendsGuiArmor);
+		tag.setBoolean("A", General.friendsGuiArmor);
 	}
 	
 	public static class General

@@ -1,9 +1,10 @@
 package latmod.core;
-import java.util.Arrays;
+import java.util.*;
 
 import latmod.core.item.Tool;
 import latmod.core.util.*;
 import net.minecraft.block.Block;
+import net.minecraft.enchantment.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -458,4 +459,28 @@ public class InvUtils
 	
 	public static boolean isBucket(ItemStack is)
 	{ return FluidContainerRegistry.isBucket(is); }
+	
+	public FastMap<Enchantment, Integer> getEnchantments(ItemStack is)
+	{
+		FastMap<Enchantment, Integer> map = new FastMap<Enchantment, Integer>();
+		
+		@SuppressWarnings("unchecked")
+		Map<Integer, Integer> m = EnchantmentHelper.getEnchantments(is);
+		
+		for(Integer k : m.keySet())
+		{
+			Enchantment e = Enchantment.enchantmentsList[k.intValue()];
+			if(e != null) map.put(e, m.get(k).intValue());
+		}
+		
+		return map;
+	}
+	
+	public static void setEnchantments(ItemStack is, FastMap<Enchantment, Integer> map)
+	{
+		HashMap<Integer, Integer> m = new HashMap<Integer, Integer>();
+		for(int i = 0; i < map.size(); i++)
+			m.put(map.keys.get(i).effectId, map.values.get(i).intValue());
+		EnchantmentHelper.setEnchantments(m, is);
+	}
 }

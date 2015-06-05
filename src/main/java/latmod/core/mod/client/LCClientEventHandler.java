@@ -203,7 +203,7 @@ public class LCClientEventHandler // LCClient
 	
 	@SuppressWarnings("unchecked")
 	@SubscribeEvent
-	public void guiInitEvent(GuiScreenEvent.InitGuiEvent.Post e)
+	public void guiInitEvent(final GuiScreenEvent.InitGuiEvent.Post e)
 	{
 		if(!(e.gui instanceof GuiInventory) && !(e.gui instanceof GuiContainerCreative)) return;
 		final GuiContainerCreative creativeContainer = (e.gui instanceof GuiContainerCreative) ? (GuiContainerCreative)e.gui : null;

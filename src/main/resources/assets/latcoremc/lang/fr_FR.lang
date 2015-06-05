@@ -22,7 +22,6 @@ latcoremc:button.viewPlayer=Visualiser le joueur
 latcoremc:label.online=En ligne
 latcoremc:label.friend=Ami
 latcoremc:label.pfriend=Demande d'ami
-latcoremc:label.groups=Groupes
 
 #ManageGroups
 latcoremc:button.addGroup=Ajouter un groupe

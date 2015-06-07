@@ -1,6 +1,6 @@
-def mod_name = "LatCoreMC";
-def mod_group = "latmod.core";
-def mod_class = "LC.java";
+def mod_name = "FTBUtilities";
+def mod_group = "latmod.ftbu";
+def mod_class = "FTBUFinals.java";
 
 buildscript {
     repositories {

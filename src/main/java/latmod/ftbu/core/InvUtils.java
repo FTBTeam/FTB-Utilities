@@ -39,7 +39,10 @@ public class InvUtils
 	}
 	
 	public static boolean itemsEquals(ItemStack is1, ItemStack is2, boolean size, boolean nbt)
-	{ return is1.getItem() == is2.getItem() && is1.getItemDamage() == is2.getItemDamage() && (nbt ? ItemStack.areItemStackTagsEqual(is1, is2) : true) && (size ? (is1.stackSize == is2.stackSize) : true); }
+	{
+		if(is1 == null && is2 == null) return true; if(is1 == null || is2 == null) return false;
+		return is1.getItem() == is2.getItem() && is1.getItemDamage() == is2.getItemDamage() && (nbt ? ItemStack.areItemStackTagsEqual(is1, is2) : true) && (size ? (is1.stackSize == is2.stackSize) : true);
+	}
 	
 	public static int[] getAllSlots(IInventory inv, int side)
 	{

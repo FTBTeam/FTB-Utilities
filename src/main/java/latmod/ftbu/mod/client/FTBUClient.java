@@ -1,10 +1,10 @@
-package latmod.ftbu.client;
-import latmod.ftbu.FTBUCommon;
+package latmod.ftbu.mod.client;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.client.ClientConfig;
 import latmod.ftbu.core.client.badges.ThreadLoadBadges;
 import latmod.ftbu.core.event.LMPlayerClientEvent;
 import latmod.ftbu.core.net.*;
+import latmod.ftbu.mod.FTBUCommon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;

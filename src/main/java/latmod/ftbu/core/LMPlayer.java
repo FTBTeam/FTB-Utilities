@@ -19,7 +19,8 @@ import cpw.mods.fml.relauncher.*;
 
 public final class LMPlayer implements Comparable<LMPlayer>
 {
-	public static final String ACTION_GROUPS_CHANGED = "latcore.groups";
+	public static final String ACTION_GENERAL = "-";
+	public static final String ACTION_GROUPS_CHANGED = "ftbu.groups";
 	
 	public final int playerID;
 	public final GameProfile gameProfile;
@@ -68,6 +69,7 @@ public final class LMPlayer implements Comparable<LMPlayer>
 	{
 		if(LatCoreMC.isServer())
 		{
+			if(action == null) action = ACTION_GENERAL;
 			new LMPlayerEvent.DataChanged(this, action).post();
 			if(updateClient) MessageLM.NET.sendToAll(new MessageLMPlayerUpdate(this, action));
 		}

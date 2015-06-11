@@ -1,4 +1,4 @@
-package latmod.ftbu;
+package latmod.ftbu.mod;
 import java.io.File;
 
 import latmod.ftbu.core.*;

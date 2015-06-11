@@ -2,8 +2,8 @@ package latmod.ftbu.core;
 import java.io.File;
 import java.util.regex.Pattern;
 
-import latmod.ftbu.FTBU;
 import latmod.ftbu.core.util.*;
+import latmod.ftbu.mod.FTBU;
 import net.minecraftforge.common.config.*;
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;

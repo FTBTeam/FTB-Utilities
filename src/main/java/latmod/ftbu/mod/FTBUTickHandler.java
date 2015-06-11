@@ -1,6 +1,6 @@
-package latmod.ftbu;
+package latmod.ftbu.mod;
 
-public class FTBUTickHandler
+public class FTBUTickHandler // FTBU
 {
 	public static final FTBUTickHandler instance = new FTBUTickHandler();
 }

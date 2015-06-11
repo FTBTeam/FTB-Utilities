@@ -1,12 +1,12 @@
-package latmod.ftbu.client;
+package latmod.ftbu.mod.client;
 
 import static net.minecraft.util.EnumChatFormatting.*;
-import latmod.ftbu.FTBU;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.event.LMPlayerEvent;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.FastList;
+import latmod.ftbu.mod.FTBU;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;

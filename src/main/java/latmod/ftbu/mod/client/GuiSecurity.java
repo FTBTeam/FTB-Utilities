@@ -1,9 +1,9 @@
-package latmod.ftbu.client;
+package latmod.ftbu.mod.client;
 
 import static net.minecraft.util.EnumChatFormatting.GREEN;
-import latmod.ftbu.FTBU;
 import latmod.ftbu.core.LMPlayer;
 import latmod.ftbu.core.gui.*;
+import latmod.ftbu.mod.FTBU;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.*;

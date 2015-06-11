@@ -1,7 +1,7 @@
-package latmod.ftbu.client;
+package latmod.ftbu.mod.client;
 
-import latmod.ftbu.FTBU;
 import latmod.ftbu.core.Notification;
+import latmod.ftbu.mod.FTBU;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.RenderHelper;

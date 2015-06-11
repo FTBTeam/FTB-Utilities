@@ -1,5 +1,5 @@
 package latmod.ftbu.core.tile;
-import latmod.ftbu.FTBU;
+import latmod.ftbu.mod.FTBU;
 
 public enum InvMode
 {

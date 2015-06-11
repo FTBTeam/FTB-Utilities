@@ -3,11 +3,11 @@ import java.io.File;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import latmod.ftbu.*;
 import latmod.ftbu.core.item.IItemLM;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.IGuiTile;
 import latmod.ftbu.core.util.*;
+import latmod.ftbu.mod.*;
 import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;

@@ -1,9 +1,9 @@
-package latmod.ftbu;
+package latmod.ftbu.mod;
 import java.io.File;
 
-import latmod.ftbu.cmd.*;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.net.MessageLM;
+import latmod.ftbu.mod.cmd.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
 import cpw.mods.fml.common.*;
@@ -22,7 +22,7 @@ public class FTBU
 	@Mod.Instance(FTBUFinals.MOD_ID)
 	public static FTBU inst;
 	
-	@SidedProxy(clientSide = "latmod.ftbu.client.FTBUClient", serverSide = "latmod.ftbu.FTBUCommon")
+	@SidedProxy(clientSide = "latmod.ftbu.mod.client.FTBUClient", serverSide = "latmod.ftbu.mod.FTBUCommon")
 	public static FTBUCommon proxy;
 	
 	@LMMod.Instance(FTBUFinals.MOD_ID)
@@ -71,10 +71,8 @@ public class FTBU
 		proxy.postInit(e);
 		
 		boolean addedDesc = false;
-		if(modMeta != null) for(int i = 0; i < LMMod.modsMap.size(); i++)
+		if(modMeta != null) for(LMMod m : LMMod.modsMap.values)
 		{
-			LMMod m = LMMod.modsMap.values.get(i);
-			
 			if(!m.modID.equals(mod.modID))
 			{
 				if(!addedDesc)
@@ -94,7 +92,7 @@ public class FTBU
 	public void registerCommands(FMLServerStartingEvent e)
 	{
 		e.registerServerCommand(new CmdFTBU());
-		e.registerServerCommand(new CmdFTBUAdmin());
+		e.registerServerCommand(new CmdAdmin());
 		
 		proxy.serverStarting(e);
 	}

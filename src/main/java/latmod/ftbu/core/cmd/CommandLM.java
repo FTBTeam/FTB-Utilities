@@ -10,7 +10,7 @@ import net.minecraft.util.EnumChatFormatting;
 
 public abstract class CommandLM extends CommandBase
 {
-	protected static final String FINE = EnumChatFormatting.WHITE + "";
+	public static final String FINE = EnumChatFormatting.WHITE + "";
 	
 	public final String commandName;
 	public final CommandLevel level;

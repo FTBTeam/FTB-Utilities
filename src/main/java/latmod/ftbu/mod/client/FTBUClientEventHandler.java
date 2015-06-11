@@ -1,5 +1,4 @@
-package latmod.ftbu.client;
-import latmod.ftbu.*;
+package latmod.ftbu.mod.client;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.client.badges.ThreadLoadBadges;
@@ -7,6 +6,7 @@ import latmod.ftbu.core.event.*;
 import latmod.ftbu.core.gui.GuiLM;
 import latmod.ftbu.core.tile.IPaintable;
 import latmod.ftbu.core.util.*;
+import latmod.ftbu.mod.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;

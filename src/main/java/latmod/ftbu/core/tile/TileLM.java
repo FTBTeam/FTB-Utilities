@@ -1,8 +1,8 @@
 package latmod.ftbu.core.tile;
-import latmod.ftbu.FTBU;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.block.BlockLM;
 import latmod.ftbu.core.net.*;
+import latmod.ftbu.mod.FTBU;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

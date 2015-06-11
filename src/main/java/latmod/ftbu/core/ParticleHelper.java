@@ -1,8 +1,8 @@
 package latmod.ftbu.core;
 import java.util.Random;
 
-import latmod.ftbu.FTBU;
 import latmod.ftbu.core.util.MathHelperLM;
+import latmod.ftbu.mod.FTBU;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;

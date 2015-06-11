@@ -1,4 +1,4 @@
-package latmod.ftbu.client;
+package latmod.ftbu.mod.client;
 import java.util.UUID;
 
 import latmod.ftbu.core.client.badges.Badge;

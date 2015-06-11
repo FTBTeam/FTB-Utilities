@@ -1,9 +1,9 @@
-package latmod.ftbu.client;
+package latmod.ftbu.mod.client;
 
 import java.util.Set;
 
-import latmod.ftbu.FTBU;
 import latmod.ftbu.core.util.FastList;
+import latmod.ftbu.mod.FTBU;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import cpw.mods.fml.client.IModGuiFactory;

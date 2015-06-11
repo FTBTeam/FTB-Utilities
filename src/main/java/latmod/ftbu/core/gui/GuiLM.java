@@ -1,9 +1,9 @@
 package latmod.ftbu.core.gui;
-import latmod.ftbu.FTBU;
-import latmod.ftbu.client.FTBUClient;
 import latmod.ftbu.core.client.LMRenderHelper;
 import latmod.ftbu.core.event.LoadLMIconsEvent;
 import latmod.ftbu.core.util.FastList;
+import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.client.FTBUClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;

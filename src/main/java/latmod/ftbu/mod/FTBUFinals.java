@@ -1,4 +1,4 @@
-package latmod.ftbu;
+package latmod.ftbu.mod;
 
 public class FTBUFinals // FTBU
 {
@@ -6,5 +6,5 @@ public class FTBUFinals // FTBU
 	public static final String VERSION = "@VERSION@";
 	public static final String MOD_NAME = "FTBUtilities";
 	public static final String DEPENDENCIES = "required-after:Forge@[10.13.2.1291,);after:Baubles;after:Waila";
-	public static final String GUI_FACTORY = "latmod.ftbu.client.FTBUGuiFactory";
+	public static final String GUI_FACTORY = "latmod.ftbu.mod.client.FTBUGuiFactory";
 }

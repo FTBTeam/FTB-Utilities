@@ -1,4 +1,4 @@
-package latmod.ftbu.client;
+package latmod.ftbu.mod.client;
 
 import latmod.ftbu.core.client.ClientConfig;
 import net.minecraft.client.gui.*;

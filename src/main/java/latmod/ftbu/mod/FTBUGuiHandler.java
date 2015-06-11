@@ -1,9 +1,9 @@
-package latmod.ftbu;
+package latmod.ftbu.mod;
 
-import latmod.ftbu.client.*;
 import latmod.ftbu.core.ILMGuiHandler;
 import latmod.ftbu.core.gui.ContainerEmpty;
 import latmod.ftbu.core.tile.IGuiTile;
+import latmod.ftbu.mod.client.*;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;

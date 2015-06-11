@@ -2,7 +2,7 @@ package latmod.ftbu.core.client;
 
 import java.util.UUID;
 
-import latmod.ftbu.FTBU;
+import latmod.ftbu.mod.FTBU;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;

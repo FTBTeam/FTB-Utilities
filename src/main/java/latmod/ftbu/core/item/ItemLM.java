@@ -16,6 +16,8 @@ public abstract class ItemLM extends Item implements IItemLM
 	public final FastList<ItemStack> itemsAdded;
 	public final LMMod mod;
 	
+	public boolean requiresMultipleRenderPasses = false;
+	
 	public ItemLM(String s)
 	{
 		super();
@@ -70,7 +72,7 @@ public abstract class ItemLM extends Item implements IItemLM
 	}
 	
 	public final boolean requiresMultipleRenderPasses()
-	{ return true; }
+	{ return requiresMultipleRenderPasses; }
 	
 	public int getRenderPasses(int m)
 	{ return 1; }
@@ -82,12 +84,20 @@ public abstract class ItemLM extends Item implements IItemLM
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconFromDamageForRenderPass(int i, int r)
 	{ return itemIcon; }
-
+	
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(ItemStack is, int r)
 	{ return getIconFromDamageForRenderPass(is.getItemDamage(), r); }
 	
-	private FastList<String> infoList = new FastList<String>();
+	@SideOnly(Side.CLIENT)
+	public final IIcon getIconFromDamage(int i)
+	{ return getIconFromDamageForRenderPass(i, 0); }
+	
+	@SideOnly(Side.CLIENT)
+	public final IIcon getIconIndex(ItemStack is)
+	{ return getIcon(is, 0); }
+	
+	private static final FastList<String> infoList = new FastList<String>();
 	
 	@SuppressWarnings("all") @SideOnly(Side.CLIENT)
     public final void addInformation(ItemStack is, EntityPlayer ep, List l, boolean b)

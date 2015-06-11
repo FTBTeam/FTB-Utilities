@@ -2,7 +2,7 @@ package latmod.ftbu.core;
 
 import java.util.UUID;
 
-import latmod.ftbu.FTBU;
+import latmod.ftbu.mod.FTBU;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 

@@ -3,8 +3,8 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.UUID;
 
-import latmod.ftbu.FTBU;
 import latmod.ftbu.core.LMPlayer;
+import latmod.ftbu.mod.FTBU;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.mojang.authlib.GameProfile;

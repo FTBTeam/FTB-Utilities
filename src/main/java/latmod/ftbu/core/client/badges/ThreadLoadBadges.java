@@ -4,10 +4,10 @@ import java.io.*;
 import java.net.URL;
 import java.util.UUID;
 
-import latmod.ftbu.client.*;
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.event.CustomBadgesEvent;
 import latmod.ftbu.core.util.MathHelperLM;
+import latmod.ftbu.mod.client.FTBURenderHandler;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)

@@ -1,4 +1,4 @@
-package latmod.ftbu;
+package latmod.ftbu.mod;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.net.*;

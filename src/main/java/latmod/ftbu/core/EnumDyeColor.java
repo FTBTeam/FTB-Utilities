@@ -1,7 +1,7 @@
 package latmod.ftbu.core;
 import java.awt.Color;
 
-import latmod.ftbu.FTBU;
+import latmod.ftbu.mod.FTBU;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;
 import net.minecraft.util.StatCollector;

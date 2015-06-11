@@ -1,7 +1,7 @@
 package latmod.ftbu.core.util;
 import java.util.Random;
 
-import latmod.ftbu.FTBU;
+import latmod.ftbu.mod.FTBU;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

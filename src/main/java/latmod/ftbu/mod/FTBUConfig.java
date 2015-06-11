@@ -1,4 +1,4 @@
-package latmod.ftbu;
+package latmod.ftbu.mod;
 
 import latmod.ftbu.core.*;
 import net.minecraft.nbt.NBTTagCompound;
@@ -35,6 +35,8 @@ public class FTBUConfig extends LMConfig implements IServerConfig
 	{
 		public static boolean friendsGuiArmor;
 		public static boolean allowCreativeInteractSecure;
+		public static String commandFTBU;
+		public static String commandAdmin;
 		
 		public static void load(Category c)
 		{
@@ -42,6 +44,8 @@ public class FTBUConfig extends LMConfig implements IServerConfig
 			
 			friendsGuiArmor = c.getBool("friendsGuiArmor", true);
 			allowCreativeInteractSecure = c.getBool("allowCreativeInteractSecure", true);
+			commandFTBU = c.getString("commandFTBU", "ftbu");
+			commandAdmin = c.getString("commandAdmin", "admin");
 		}
 	}
 }

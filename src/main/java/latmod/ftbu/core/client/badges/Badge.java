@@ -1,9 +1,9 @@
 package latmod.ftbu.core.client.badges;
 
-import latmod.ftbu.FTBU;
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.util.FastMap;
+import latmod.ftbu.mod.FTBU;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;

@@ -1,8 +1,8 @@
 package latmod.ftbu.core.net;
 import io.netty.buffer.ByteBuf;
-import latmod.ftbu.FTBU;
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.event.ReloadEvent;
+import latmod.ftbu.mod.FTBU;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.Side;
 

@@ -1,9 +1,9 @@
 package latmod.ftbu.core.net;
 import io.netty.buffer.ByteBuf;
-import latmod.ftbu.FTBU;
 import latmod.ftbu.core.LMPlayer;
 import latmod.ftbu.core.event.LMPlayerClientEvent;
 import latmod.ftbu.core.util.FastList;
+import latmod.ftbu.mod.FTBU;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 

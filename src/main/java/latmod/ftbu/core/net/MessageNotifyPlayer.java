@@ -60,6 +60,6 @@ public class MessageNotifyPlayer extends MessageLM<MessageNotifyPlayer> implemen
 	{
 		if(m.timer <= 0) return;
 		Notification n = new Notification(m.title, m.desc, m.item, m.timer);
-		FTBUClientEventHandler.messages.add(new GuiNotification(n));
+		FTBURenderHandler.messages.add(new GuiNotification(n));
 	}
 }

@@ -1,0 +1,69 @@
+key.latcoremc=LatCoreMC
+
+ftbu:button.settings=Settings
+ftbu:button.back=Back
+ftbu:button.up=Up
+ftbu:button.down=Down
+ftbu:button.prev=Previous
+ftbu:button.next=Next
+ftbu:button.enabled=Enabled
+ftbu:button.disabled=Disabled
+ftbu:button.cancel=Cancel
+ftbu:button.accept=Accept
+ftbu:button.remove=Remove
+ftbu:button.add=Add
+ftbu:button.close=Close
+ftbu:button.save=Save
+
+#FriendsGUI
+ftbu:button.addFriend=Add as Friend
+ftbu:button.remFriend=Remove from Friends
+ftbu:button.info=Info
+ftbu:button.viewPlayer=View Player
+ftbu:label.online=Online
+ftbu:label.friend=Friend
+ftbu:label.pfriend=Pending Friend
+
+#ManageGroups
+ftbu:button.addGroup=Add Group
+ftbu:button.remGroup=Remove Group
+
+ftbu:owner=Owner: %s
+
+ftbu:security=Security
+ftbu:security.public=Public
+ftbu:security.private=Private
+ftbu:security.friends=Friends
+ftbu:security.group=Group
+ftbu:security.whitelist=Whitelist
+ftbu:security.blacklist=Blacklist
+
+ftbu:redstonemode=Redstone Mode
+ftbu:redstonemode.disabled=Disabled
+ftbu:redstonemode.high=Active High
+ftbu:redstonemode.low=Active Low
+
+ftbu:invmode=Automation
+ftbu:invmode.enabled=Enabled
+ftbu:invmode.onlyin=Insert Only
+ftbu:invmode.onlyout=Extract Only
+ftbu:invmode.disabled=Disabled
+
+ftbu:color.black=Black
+ftbu:color.red=Red
+ftbu:color.green=Green
+ftbu:color.brown=Brown
+ftbu:color.blue=Blue
+ftbu:color.purple=Purple
+ftbu:color.cyan=Cyan
+ftbu:color.silver=Light Gray
+ftbu:color.gray=Dark Gray
+ftbu:color.pink=Pink
+ftbu:color.lime=Lime
+ftbu:color.yellow=Yellow
+ftbu:color.light_blue=Light Blue
+ftbu:color.magenta=Magenta
+ftbu:color.orange=Orange
+ftbu:color.white=White
+
+commands.lmmissingargs=Missing Arguments!

@@ -27,18 +27,16 @@ public class FTBUEventHandler
 		boolean first = (p == null);
 		boolean sendAll = false;
 		
-		String cmdName = e.player.getCommandSenderName();
-		
 		if(first)
 		{
-			p = new LMPlayer(LMDataLoader.nextPlayerID(), e.player.getUniqueID(), cmdName);
+			p = new LMPlayer(LMDataLoader.nextPlayerID(), e.player.getGameProfile());
 			LMPlayer.map.put(p.playerID, p);
 		}
 		else
 		{
-			if(!p.username.equals(cmdName))
+			if(!p.getName().equals(e.player.getGameProfile().getName()))
 			{
-				p = new LMPlayer(p.playerID, e.player.getUniqueID(), cmdName);
+				p = new LMPlayer(p.playerID, e.player.getGameProfile());
 				LMPlayer.map.put(p.playerID, p);
 				sendAll = true;
 			}
@@ -85,25 +83,10 @@ public class FTBUEventHandler
 			
 			{
 				NBTTagCompound tag = NBTHelper.readMap(e1.getFile("LMPlayers.dat"));
-				if(tag != null)
+				if(tag != null && tag.hasKey("Players"))
 				{
-					if(tag.hasKey("Players"))
-					{
-						LMDataLoader.lastPlayerID = tag.getInteger("LastID");
-						LMDataLoader.readPlayersFromNBT(tag.getCompoundTag("Players"), true);
-					}
-					else
-					{
-						LMDataLoader.readPlayersFromNBT(tag, true);
-						
-						// TODO: Deprecated, will be removed //
-						NBTTagCompound common = NBTHelper.readMap(e1.getFile("CommonData.dat"));
-						if(common != null)
-						{
-							LMDataLoader.lastPlayerID = common.getInteger("LastPlayerID");
-							e1.getFile("CommonData.dat").delete();
-						}
-					}
+					LMDataLoader.lastPlayerID = tag.getInteger("LastID");
+					LMDataLoader.readPlayersFromNBT(tag.getCompoundTag("Players"), true);
 				}
 			}
 			
@@ -146,11 +129,11 @@ public class FTBUEventHandler
 				{
 					LMPlayer p = LMPlayer.getPlayer(list.get(i));
 					
-					String id = LatCore.fillString("" + p.playerID, ' ', 6);
-					String u = LatCore.fillString(p.username, ' ', 21);
-					String s = "" + p.uuid;
-					
-					l.add(id + u + s);
+					StringBuilder sb = new StringBuilder();
+					sb.append(LatCore.fillString("" + p.playerID, ' ', 6));
+					sb.append(LatCore.fillString(p.getName(), ' ', 21));
+					sb.append(p.uuidString);
+					l.add(sb.toString());
 				}
 				
 				LatCore.saveFile(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/LMPlayers.txt"), l);

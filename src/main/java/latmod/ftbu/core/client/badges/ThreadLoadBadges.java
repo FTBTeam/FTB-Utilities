@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.URL;
 import java.util.UUID;
 
-import latmod.ftbu.client.FTBUClientEventHandler;
+import latmod.ftbu.client.*;
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.event.CustomBadgesEvent;
 import latmod.ftbu.core.util.MathHelperLM;
@@ -27,28 +27,28 @@ public class ThreadLoadBadges extends Thread
 		Badge.reloading = true;
 		Badge.init();
 		LatCoreMC.logger.info("Loading badges...");
-		FTBUClientEventHandler.playerBadges.clear();
+		FTBURenderHandler.playerBadges.clear();
 		
 		try
 		{
 			int loaded = 0;
 			long msStarted = System.currentTimeMillis();
 			
-			BufferedReader reader = new BufferedReader(new InputStreamReader(new URL("http://pastebin.com/raw.php?i=W7DcLN1b").openStream()));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new URL("http://pastebin.com/raw.php?i=3FRAVbJN").openStream()));
 			String raw = null;
 			while((raw = reader.readLine()) != null)
 			{
-				if(!raw.isEmpty() && raw.charAt(0) != '#' && raw.length() >= 35)
+				if(!raw.isEmpty())
 				{
-					String[] s = raw.split(": ");
+					String[] s = raw.split(":");
 					
-					if(s != null && s.length == 2)
+					if(s != null && s.length >= 2)
 					{
 						UUID id = LatCoreMC.getUUIDFromString(s[0]);
 						
 						if(id != null)
 						{
-							FTBUClientEventHandler.playerBadges.put(id, Badge.getBadge(s[1]));
+							FTBURenderHandler.playerBadges.put(id, Badge.getBadge(s[1]));
 							loaded++;
 						}
 						else LatCoreMC.logger.warn("Invalid UUID: " + s[0]);

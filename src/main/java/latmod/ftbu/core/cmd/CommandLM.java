@@ -56,10 +56,6 @@ public abstract class CommandLM extends CommandBase
 	public String[] getSubcommands(ICommandSender ics)
 	{ return null; }
 	
-	public void printHelp(ICommandSender ics)
-	{
-	}
-	
 	public abstract String onCommand(ICommandSender ics, String[] args);
 	
 	public String retHelp(ICommandSender ics, String cmd)

@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class LMSecurity
 {
-	public LMPlayer owner;
+	private int ownerID;
 	public Level level;
 	
 	public LMSecurity(Object o)
@@ -17,12 +17,18 @@ public class LMSecurity
 		level = Level.PUBLIC;
 	}
 	
+	public int getOwnerID()
+	{ return ownerID; }
+	
+	public LMPlayer getOwner()
+	{ return LMPlayer.getPlayer(ownerID); }
+	
 	public void setOwner(Object o)
-	{ owner = LMPlayer.getPlayer(o); }
+	{ ownerID = LMPlayer.getPlayerID(o); }
 	
 	public void readFromNBT(NBTTagCompound tag, String s)
 	{
-		owner = null;
+		ownerID = 0;
 		level = Level.PUBLIC;
 		
 		if(!tag.hasKey(s)) return;
@@ -34,12 +40,11 @@ public class LMSecurity
 			String o = tag1.getString("Owner");
 			
 			if(o != null && !o.isEmpty())
-				owner = LMPlayer.getPlayer(o);
+				ownerID = LMPlayer.getPlayerID(o);
 		}
 		else
 		{
-			int o = tag1.getInteger("Owner");
-			if(o > 0) owner = LMPlayer.getPlayer(o);
+			ownerID = tag1.getInteger("Owner");
 		}
 		
 		level = Level.VALUES[tag1.getByte("Level")];
@@ -47,26 +52,30 @@ public class LMSecurity
 	
 	public void writeToNBT(NBTTagCompound tag, String s)
 	{
-		if(owner != null)
+		if(ownerID > 0)
 		{
 			NBTTagCompound tag1 = new NBTTagCompound();
-			tag1.setInteger("Owner", owner.playerID);
+			tag1.setInteger("Owner", ownerID);
 			tag1.setByte("Level", (byte)level.ID);
 			tag.setTag(s, tag1);
 		}
 	}
 	
+	public boolean hasOwner()
+	{ return ownerID > 0; }
+	
 	public boolean isOwner(Object o)
-	{ return owner != null && owner.equals(o); }
+	{ return hasOwner() && getOwnerID() == LMPlayer.getPlayerID(o); }
 	
 	public boolean canInteract(UUID id)
 	{
-		if(level == Level.PUBLIC || owner == null) return true;
+		if(level == Level.PUBLIC || ownerID == 0) return true;
 		if(id == null) return false;
 		if(isOwner(id)) return true;
 		if(level == Level.PRIVATE) return false;
 		
-		if(level == Level.FRIENDS && owner.isFriend(LMPlayer.getPlayer(id)))
+		LMPlayer owner = getOwner();
+		if(level == Level.FRIENDS && owner != null && owner.isFriend(LMPlayer.getPlayer(id)))
 			return true;
 		
 		return false;

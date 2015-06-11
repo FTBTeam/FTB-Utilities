@@ -127,13 +127,25 @@ public class Converter
 
 	public static Integer toInt(String text)
 	{
-		try { Integer i = Integer.parseInt(text); return i; }
+		try { int i = Integer.parseInt(text); return i; }
 		catch(Exception e) { } return null;
+	}
+	
+	public static int toInt(String text, int def)
+	{
+		try { int i = Integer.parseInt(text); return i; }
+		catch(Exception e) { } return def;
 	}
 	
 	public static Float toFloat(String text)
 	{
-		try { Float f = Float.parseFloat(text); return f; }
+		try { float f = Float.parseFloat(text); return f; }
 		catch(Exception e) { } return null;
+	}
+	
+	public static float toFloat(String text, int def)
+	{
+		try { float f = Float.parseFloat(text); return f; }
+		catch(Exception e) { } return def;
 	}
 }

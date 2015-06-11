@@ -6,6 +6,9 @@ import java.util.UUID;
 import latmod.ftbu.FTBU;
 import latmod.ftbu.core.LMPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+
+import com.mojang.authlib.GameProfile;
+
 import cpw.mods.fml.common.network.simpleimpl.*;
 
 public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn>
@@ -20,8 +23,8 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn>
 	public MessageLMPlayerLoggedIn(LMPlayer p)
 	{
 		playerID = p.playerID;
-		uuid = p.uuid;
-		username = p.username;
+		uuid = p.getUUID();
+		username = p.getName();
 		
 		data = new NBTTagCompound();
 		p.writeToNBT(data, false);
@@ -50,7 +53,7 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn>
 	{
 		if(FTBU.proxy.getClientWorld() == null) return null;
 		
-		LMPlayer p = new LMPlayer(m.playerID, m.uuid, m.username);
+		LMPlayer p = new LMPlayer(m.playerID, new GameProfile(m.uuid, m.username));
 		LMPlayer.map.put(p.playerID, p);
 		
 		p.readFromNBT(m.data, false);

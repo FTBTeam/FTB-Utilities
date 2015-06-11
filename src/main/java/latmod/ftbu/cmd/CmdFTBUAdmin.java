@@ -23,7 +23,7 @@ public class CmdFTBUAdmin extends CommandLM
 	public CmdFTBUAdmin()
 	{
 		super("ftbua", CommandLevel.OP);
-		aliases.add("ftbuadmin");
+		//aliases.add("ftbuadmin");
 	}
 	
 	public void printHelp(ICommandSender ics)
@@ -143,7 +143,7 @@ public class CmdFTBUAdmin extends CommandLM
 				ItemStack is = args[3].equals("null") ? null : InvUtils.parseItem(args[3]);
 				if(!args[3].equals("null") && (is == null || is.getItem() == null)) return "Item '" + args[3] + "' not found!";
 				
-				LatCoreMC.notifyPlayer(p.getPlayerMP(), new Notification(args[4].replace("\\_", "<$US>").replace('_', ' ').replace("<$US>", "_").replace("&", LatCoreMC.FORMATTING).replace("@n", p.username), "", is));
+				LatCoreMC.notifyPlayer(p.getPlayerMP(), new Notification(args[4].replace("\\_", "<$US>").replace('_', ' ').replace("<$US>", "_").replace("&", LatCoreMC.FORMATTING).replace("@n", p.getName()), "", is));
 				return null;
 			}
 		}

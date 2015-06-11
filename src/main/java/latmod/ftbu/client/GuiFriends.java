@@ -14,7 +14,6 @@ import net.minecraft.util.*;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -116,7 +115,7 @@ public class GuiFriends extends GuiLM
 				
 				if(selectedPlayer.equals(owner))
 				{
-					mc.displayGuiScreen(new FTBUGuiFactory.ModGuiConfig(GuiFriends.this));
+					mc.displayGuiScreen(new GuiClientConfig());
 				}
 				else
 				{
@@ -252,7 +251,8 @@ public class GuiFriends extends GuiLM
 			}
 			else
 			{
-				EntityPlayer ep1 = mc.theWorld.func_152378_a(selectedPlayer.uuid);
+				EntityPlayer ep1 = selectedPlayer.getPlayerSP();
+				
 				if(ep1 != null)
 				{
 					selectedPlayerEntity.inventory.mainInventory = ep1.inventory.mainInventory.clone();
@@ -279,7 +279,7 @@ public class GuiFriends extends GuiLM
 		
 		if(selectedPlayer != null)
 		{
-			String s = selectedPlayer.username;
+			String s = selectedPlayer.getName();
 			drawString(fontRendererObj, s, guiLeft - fontRendererObj.getStringWidth(s) - 2, guiTop + 3, 0xFFFFFFFF);
 		}
 		
@@ -325,7 +325,7 @@ public class GuiFriends extends GuiLM
 			String s = searchBox.text.trim().toLowerCase();
 			for(int i = 0; i < players.size(); i++)
 			{
-				String s1 = players.get(i).player.username.toLowerCase();
+				String s1 = players.get(i).player.getName().toLowerCase();
 				if(s1.contains(s)) l.add(players.get(i));
 			}
 			
@@ -376,7 +376,7 @@ public class GuiFriends extends GuiLM
 				if(on0 && !on1) return -1;
 				if(!on0 && on1) return 1;
 				
-				return player.username.compareToIgnoreCase(o.player.username);
+				return player.getName().compareToIgnoreCase(o.player.getName());
 			}
 			
 			return Integer.compare(s0, s1);
@@ -421,7 +421,7 @@ public class GuiFriends extends GuiLM
 			{
 				selectedPlayer = player.player;
 				
-				selectedPlayerEntity = new AbstractClientPlayer(mc.theWorld, new GameProfile(selectedPlayer.uuid, selectedPlayer.username))
+				selectedPlayerEntity = new AbstractClientPlayer(mc.theWorld, selectedPlayer.gameProfile)
 				{
 					public void addChatMessage(IChatComponent p_145747_1_) { }
 					
@@ -435,7 +435,7 @@ public class GuiFriends extends GuiLM
 					{ return true; }
 				};
 				
-				selectedPlayerEntity.func_152121_a(MinecraftProfileTexture.Type.SKIN, AbstractClientPlayer.getLocationSkin(selectedPlayer.username));
+				selectedPlayerEntity.func_152121_a(MinecraftProfileTexture.Type.SKIN, AbstractClientPlayer.getLocationSkin(selectedPlayer.getName()));
 				selectedPlayerEntity.inventory.currentItem = 0;
 			}
 			
@@ -450,7 +450,7 @@ public class GuiFriends extends GuiLM
 				
 				if(p == null) return;
 				
-				al.add(p.username);
+				al.add(p.getName());
 				if(p.isOnline()) al.add(GREEN + "[" + FTBU.mod.translate("label.online") + "]");
 				
 				if(!player.isOwner())
@@ -481,7 +481,7 @@ public class GuiFriends extends GuiLM
 			{
 				background = null;
 				
-				drawPlayerHead(player.player.username, GuiFriends.this.guiLeft + posX + 1, GuiFriends.this.guiTop + posY + 1, 16, 16, zLevel);
+				drawPlayerHead(player.player.getName(), GuiFriends.this.guiLeft + posX + 1, GuiFriends.this.guiTop + posY + 1, 16, 16, zLevel);
 				
 				if(player.player.isOnline()) render(Icons.Friends.online);
 				

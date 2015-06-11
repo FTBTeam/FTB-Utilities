@@ -34,7 +34,7 @@ import cpw.mods.fml.common.registry.*;
 import cpw.mods.fml.relauncher.Side;
 
 /** Made by LatvianModder */
-public class LatCoreMC
+public final class LatCoreMC // LatCoreMCClient
 {
 	// Something, Something, Eclipse, Something... \Minecraft\eclipse\.metadata\.plugins\org.eclipse.debug.core\.launches
 	public static final String MC_VERSION = Loader.MC_VERSION;
@@ -42,10 +42,6 @@ public class LatCoreMC
 	
 	public static final Logger logger = LogManager.getLogger("LatCoreMC");
 	public static final EventBus EVENT_BUS = new EventBus();
-	
-	public static final int TOP = 1;
-	public static final int BOTTOM = 0;
-	public static final int FRONT = 3;
 	
 	public static final boolean isDevEnv = FTBUFinals.VERSION.equals(DEV_VERSION);
 	
@@ -68,7 +64,7 @@ public class LatCoreMC
 	// Proxy methods //
 	
 	/** Prints message to chat (doesn't translate it) */
-	public static final void printChat(ICommandSender ep, Object o, boolean broadcast)
+	public static void printChat(ICommandSender ep, Object o, boolean broadcast)
 	{
 		if(ep == null && isDevEnv) ep = FTBU.proxy.getClientPlayer();
 		
@@ -86,33 +82,33 @@ public class LatCoreMC
 		else logger.info(o);
 	}
 	
-	public static final void printChat(ICommandSender ep, Object o)
+	public static void printChat(ICommandSender ep, Object o)
 	{ printChat(ep, o, false); }
 	
 	// Registry methods //
 	
-	public static final void addItem(IItemLM i)
+	public static void addItem(IItemLM i)
 	{ addItem((Item)i, i.getItemID()); }
 	
-	public static final void addItem(Item i, String name)
+	public static void addItem(Item i, String name)
 	{ GameRegistry.registerItem(i, name); }
 	
-	public static final void addBlock(Block b, Class<? extends ItemBlock> c, String name)
+	public static void addBlock(Block b, Class<? extends ItemBlock> c, String name)
 	{ GameRegistry.registerBlock(b, c, name); }
 	
-	public static final void addBlock(Block b, String name)
+	public static void addBlock(Block b, String name)
 	{ addBlock(b, ItemBlock.class, name); }
 	
-	public static final void addTileEntity(Class<? extends TileEntity> c, String s, String... alt)
+	public static void addTileEntity(Class<? extends TileEntity> c, String s, String... alt)
 	{
 		if(alt == null || alt.length == 0) GameRegistry.registerTileEntity(c, s);
 		else GameRegistry.registerTileEntityWithAlternatives(c, s, alt);
 	}
 	
-	public static final void addEntity(Class<? extends Entity> c, String s, int id, Object mod)
+	public static void addEntity(Class<? extends Entity> c, String s, int id, Object mod)
 	{ EntityRegistry.registerModEntity(c, s, id, mod, 50, 1, true); }
 	
-	public static final int getNewEntityID()
+	public static int getNewEntityID()
 	{ return EntityRegistry.findGlobalUniqueEntityId(); }
 	
 	public static void addWorldGenerator(IWorldGenerator i, int w)
@@ -268,4 +264,13 @@ public class LatCoreMC
 		catch(Exception e) { }
 		return null;
 	}
+	
+	public static String toShortUUID(UUID uuid)
+	{
+		if(uuid == null) return "";
+		return com.mojang.util.UUIDTypeAdapter.fromUUID(uuid);
+	}
+	
+	public static boolean isDedicatedServer()
+	{ return getServer().isDedicatedServer(); }
 }

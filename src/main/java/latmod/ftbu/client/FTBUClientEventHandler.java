@@ -1,18 +1,15 @@
 package latmod.ftbu.client;
-import java.lang.reflect.Field;
-import java.util.UUID;
-
 import latmod.ftbu.*;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.client.LatCoreMCClient;
-import latmod.ftbu.core.client.badges.*;
+import latmod.ftbu.core.client.badges.ThreadLoadBadges;
 import latmod.ftbu.core.event.*;
 import latmod.ftbu.core.gui.GuiLM;
 import latmod.ftbu.core.tile.IPaintable;
 import latmod.ftbu.core.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.*;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.*;
@@ -25,7 +22,6 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.eventhandler.*;
-import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
@@ -33,9 +29,7 @@ public class FTBUClientEventHandler
 {
 	public static final ResourceLocation friendsButtonTexture = FTBU.mod.getLocation("textures/gui/friendsbutton.png");
 	public static final FTBUClientEventHandler instance = new FTBUClientEventHandler();
-	
-	public static final FastList<GuiNotification> messages = new FastList<GuiNotification>();
-	public static final FastMap<UUID, Badge> playerBadges = new FastMap<UUID, Badge>();
+	private static final int BUTTON_ID = 86;
 	
 	@SubscribeEvent
 	public void onTooltip(ItemTooltipEvent e)
@@ -50,12 +44,12 @@ public class FTBUClientEventHandler
 			if(paint != null) e.toolTip.add(EnumChatFormatting.WHITE + "" + EnumChatFormatting.BOLD + paint.getDisplayName());
 		}
 		
-		if(FTBUConfig.Client.addRegistryNames)
+		if(FTBUClient.addRegistryNames.getB())
 		{
 			e.toolTip.add(InvUtils.getRegName(e.itemStack));
 		}
 		
-		if(FTBUConfig.Client.addOreNames)
+		if(FTBUClient.addOreNames.getB())
 		{
 			FastList<String> ores = ODItems.getOreNames(e.itemStack);
 			
@@ -78,16 +72,6 @@ public class FTBUClientEventHandler
 	}
 	
 	@SubscribeEvent
-	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
-	{
-		if(!Badge.reloading && FTBUConfig.Client.enablePlayerDecorators && !e.entityPlayer.isInvisible())
-		{
-			Badge b = playerBadges.get(e.entityPlayer.getUniqueID());
-			if(b != null) b.onPlayerRender(e.entityPlayer);
-		}
-	}
-	
-	@SubscribeEvent
 	public void onReload(ReloadEvent r)
 	{
 		if(r.side.isClient())
@@ -95,18 +79,6 @@ public class FTBUClientEventHandler
 			ThreadLoadBadges.init();
 		}
 	}
-	
-	@SubscribeEvent
-    public void renderTick(TickEvent.RenderTickEvent event)
-    {
-        Minecraft mc = Minecraft.getMinecraft();
-        
-        if(mc.theWorld != null && event.phase == TickEvent.Phase.END && !messages.isEmpty())
-        {
-        	GuiNotification m = messages.get(0);
-        	m.render(mc); if(m.isDead()) messages.remove(0);
-        }
-    }
 	
 	@SubscribeEvent
 	public void onIconsLoaded(TextureStitchEvent.Pre e)
@@ -119,13 +91,11 @@ public class FTBUClientEventHandler
 		}
 	}
 	
-	private static Field fps = null;
-	
 	@SubscribeEvent
 	public void onDrawDebugText(RenderGameOverlayEvent.Text event)
 	{
 		boolean shift = FTBU.proxy.isShiftDown();
-		Minecraft mc = Minecraft.getMinecraft();
+		Minecraft mc = LatCoreMCClient.getMinecraft();
 		
 		// Some ideas around this //
 		if(!mc.gameSettings.showDebugInfo)
@@ -134,20 +104,14 @@ public class FTBUClientEventHandler
 			{
 				try
 				{
-					if(fps == null)
-					{
-						fps = Minecraft.class.getDeclaredField("debugFPS");
-						fps.setAccessible(true);
-					}
-					
 					event.left.add("[MC " + EnumChatFormatting.GOLD + LatCoreMC.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");
-					event.right.add("FPS: " + EnumChatFormatting.GOLD + fps.getInt(null));
+					event.right.add(mc.debug);
 				}
 				catch(Exception e)
 				{ e.printStackTrace(); }
 			}
 		}
-		else if(FTBUConfig.Client.displayDebugInfo)
+		else if(FTBUClient.displayDebugInfo.getB())
 		{
 			event.right.add(null);
 			
@@ -200,14 +164,14 @@ public class FTBUClientEventHandler
 		}
 	}
 	
-	public GuiButton guiButton = null;
+	private boolean isValidGui(GuiScreen g)
+	{ return g instanceof GuiInventory || g instanceof GuiContainerCreative; }
 	
 	@SuppressWarnings("unchecked")
 	@SubscribeEvent
 	public void guiInitEvent(final GuiScreenEvent.InitGuiEvent.Post e)
 	{
-		if(!(e.gui instanceof GuiInventory) && !(e.gui instanceof GuiContainerCreative)) return;
-		final GuiContainerCreative creativeContainer = (e.gui instanceof GuiContainerCreative) ? (GuiContainerCreative)e.gui : null;
+		if(!isValidGui(e.gui)) return;
 		
 		int xSize = 176;
 		int ySize = 166;
@@ -215,58 +179,57 @@ public class FTBUClientEventHandler
 		int buttonX = 28;
 		int buttonY = 10;
 		
-		int textOX = 0;//-24;
-		int textOY = 0;
-		
-		if(creativeContainer != null)
+		if(e.gui instanceof GuiContainerCreative)
 		{
 			xSize = 195;
 			ySize = 136;
 			
 			buttonX = 29;
 			buttonY = 8;
-			
-			textOX = 0;
-			textOY = 0;
 		}
 		
 		final int guiLeft = (e.gui.width - xSize) / 2;
 		final int guiTop = (e.gui.height - ySize) / 2;
 		
-		final int textOX1 = textOX;
-		final int textOY1 = textOY;
-		
-		guiButton = new GuiButton(4950, guiLeft + buttonX, guiTop + buttonY, 8, 8, "Friends")
-		{
-			public void drawButton(Minecraft mc, int mx, int my)
-			{
-				if(creativeContainer != null && creativeContainer.func_147056_g() != CreativeTabs.tabInventory.getTabIndex())
-					return;
-				
-				GL11.glEnable(GL11.GL_BLEND);
-				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-				e.gui.mc.getTextureManager().bindTexture(friendsButtonTexture);
-				GuiLM.drawTexturedModalRectD(xPosition, yPosition, 0D, 0D, width, height, 8, 8, 0D);
-				if(mx >= xPosition && my >= yPosition && mx < xPosition + width && my < yPosition + height)
-					drawString(mc.fontRenderer, displayString, xPosition + textOX1, yPosition + textOY1, -1);
-				GL11.glDisable(GL11.GL_BLEND);
-			}
-		};
-		
-		e.buttonList.add(guiButton);
+		e.buttonList.add(new ButtonFriends(e.gui, guiLeft + buttonX, guiTop + buttonY));
 	}
 	
 	@SubscribeEvent
 	public void guiActionEvent(GuiScreenEvent.ActionPerformedEvent.Post e)
 	{
-		if(!(e.gui instanceof GuiInventory) && !(e.gui instanceof GuiContainerCreative)) return;
+		if(e.button.id != BUTTON_ID || !isValidGui(e.gui)) return;
 		
 		final GuiContainerCreative creativeContainer = (e.gui instanceof GuiContainerCreative) ? (GuiContainerCreative)e.gui : null;
 		
 		if(creativeContainer != null && creativeContainer.func_147056_g() != CreativeTabs.tabInventory.getTabIndex())
 			return;
 		
-		if(e.button.id == guiButton.id)
-			LatCoreMC.openGui(e.gui.mc.thePlayer, FTBUGuiHandler.FRIENDS, null);
+		LatCoreMC.openGui(e.gui.mc.thePlayer, FTBUGuiHandler.FRIENDS, null);
+	}
+	
+	private static class ButtonFriends extends GuiButton
+	{
+		private final GuiContainerCreative creativeContainer;
+		private int textOX = 0, textOY = 0;
+		
+		public ButtonFriends(GuiScreen g, int x, int y)
+		{
+			super(BUTTON_ID, x, y, 8, 8, "Friends");
+			creativeContainer = (g instanceof GuiContainerCreative) ? (GuiContainerCreative)g : null;
+		}
+		
+		public void drawButton(Minecraft mc, int mx, int my)
+		{
+			if(creativeContainer != null && creativeContainer.func_147056_g() != CreativeTabs.tabInventory.getTabIndex())
+				return;
+			
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			mc.getTextureManager().bindTexture(friendsButtonTexture);
+			GuiLM.drawTexturedModalRectD(xPosition, yPosition, 0D, 0D, width, height, 8, 8, 0D);
+			if(mx >= xPosition && my >= yPosition && mx < xPosition + width && my < yPosition + height)
+				drawString(mc.fontRenderer, displayString, xPosition + textOX, yPosition + textOY, -1);
+			GL11.glDisable(GL11.GL_BLEND);
+		}
 	}
 }

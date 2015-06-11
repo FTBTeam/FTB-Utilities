@@ -21,16 +21,17 @@ public class CmdFTBU extends CommandLM
 		printHelpLine(ics, "<friends> <list>");
 		printHelpLine(ics, "<uuid> [player]");
 		printHelpLine(ics, "<playerID> [player]");
+		printHelpLine(ics, "<notify> <off | screen | chat>");
 	}
 	
 	public int getRequiredPermissionLevel()
 	{ return 0; }
 	
 	public boolean canCommandSenderUseCommand(ICommandSender ics)
-	{ return !FTBUConfig.General.disableLatCoreCommand; }
+	{ return true; }
 	
 	public String[] getSubcommands(ICommandSender ics)
-	{ return new String[] { "version", "friends", "uuid", "playerID" }; }
+	{ return new String[] { "help", "version", "friends", "uuid", "playerID", "notify" }; }
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
@@ -64,7 +65,7 @@ public class CmdFTBU extends CommandLM
 					EnumChatFormatting col = EnumChatFormatting.GREEN;
 					if(p.isFriendRaw(owner) && !owner.isFriendRaw(p)) col = EnumChatFormatting.GOLD;
 					if(!p.isFriendRaw(owner) && owner.isFriendRaw(p)) col = EnumChatFormatting.BLUE;
-					LatCoreMC.printChat(ics, col + "[" + i + "]: " + p.username);
+					LatCoreMC.printChat(ics, col + "[" + i + "]: " + p.getName());
 				}
 				
 				return null;
@@ -82,20 +83,20 @@ public class CmdFTBU extends CommandLM
 					if(!owner.friends.contains(p))
 					{
 						owner.friends.add(p);
-						return changed(owner, p, "Added " + p.username + " as friend");
+						return changed(owner, p, "Added " + p.getName() + " as friend");
 					}
 					
-					return p.username + " is already a friend!";
+					return p.getName() + " is already a friend!";
 				}
 				else if(args[1].equals("rem"))
 				{
 					if(owner.friends.contains(p))
 					{
 						owner.friends.remove(p);
-						return changed(owner, p, "Removed " + p.username + " from friends");
+						return changed(owner, p, "Removed " + p.getName() + " from friends");
 					}
 					
-					return p.username + " is not added as friend!";
+					return p.getName() + " is not added as friend!";
 				}
 			}
 			
@@ -107,10 +108,10 @@ public class CmdFTBU extends CommandLM
 			
 			LMPlayer p = LMPlayer.getPlayer(args.length > 1 ? args[1] : ics);
 			
-			IChatComponent toPrint = new ChatComponentText("UUID for " + p.username + ": ");
-			IChatComponent uuid = new ChatComponentText(p.uuid.toString());
+			IChatComponent toPrint = new ChatComponentText("UUID for " + p.getName() + ": ");
+			IChatComponent uuid = new ChatComponentText(p.uuidString);
 			uuid.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Copy to chat")));
-			uuid.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, p.uuid.toString()));
+			uuid.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, p.uuidString));
 			uuid.getChatStyle().setColor(EnumChatFormatting.GOLD);
 			toPrint.appendSibling(uuid);
 			ics.addChatMessage(toPrint);
@@ -121,7 +122,7 @@ public class CmdFTBU extends CommandLM
 			checkArgs(args, 2);
 			
 			LMPlayer p = LMPlayer.getPlayer(args.length > 1 ? args[1] : ics);
-			return FINE + "PlayerID for " + p.username + ": " + p.playerID;
+			return FINE + "PlayerID for " + p.getName() + ": " + p.playerID;
 		}
 		
 		return onCommand(ics, null);

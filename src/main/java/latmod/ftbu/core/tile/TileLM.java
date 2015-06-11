@@ -161,8 +161,8 @@ public class TileLM extends TileEntity implements IClientActionTile
 	
 	public final void printOwner(EntityPlayer ep)
 	{
-		if(security.owner == null) LatCoreMC.printChat(ep, "No owner");
-		else LatCoreMC.printChat(ep, FTBU.mod.translate("owner", security.owner.username));
+		if(!security.hasOwner()) LatCoreMC.printChat(ep, "No owner");
+		else LatCoreMC.printChat(ep, FTBU.mod.translate("owner", security.getOwner().getName()));
 	}
 	
 	public void setMeta(int m)

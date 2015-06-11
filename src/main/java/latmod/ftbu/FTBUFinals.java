@@ -1,6 +1,6 @@
 package latmod.ftbu;
 
-public class FTBUFinals
+public class FTBUFinals // FTBU
 {
 	public static final String MOD_ID = "FTBU";
 	public static final String VERSION = "@VERSION@";

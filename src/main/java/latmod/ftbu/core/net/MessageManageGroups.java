@@ -43,7 +43,7 @@ public class MessageManageGroups extends MessageLM<MessageManageGroups>
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
 		//EntityPlayerMP ep = owner.getPlayerMP();
 		
-		if(owner == null || !ep.getUniqueID().equals(owner.uuid)) return null;
+		if(owner == null || !ep.getUniqueID().equals(owner.getUUID())) return null;
 		
 		if(m.code > 0)
 		{
@@ -55,7 +55,7 @@ public class MessageManageGroups extends MessageLM<MessageManageGroups>
 				if(!owner.friends.contains(p))
 				{
 					owner.friends.add(p);
-					LatCoreMC.notifyPlayer(ep, new Notification(GREEN + "Added friend", p.username, null, 800));
+					LatCoreMC.notifyPlayer(ep, new Notification(GREEN + "Added friend", p.getName(), null, 800));
 				}
 			}
 			else if(m.code == C_REM_FRIEND)
@@ -63,7 +63,7 @@ public class MessageManageGroups extends MessageLM<MessageManageGroups>
 				if(owner.friends.contains(p))
 				{
 					owner.friends.remove(p);
-					LatCoreMC.notifyPlayer(ep, new Notification(RED + "Removed friend", p.username, null, 800));
+					LatCoreMC.notifyPlayer(ep, new Notification(RED + "Removed friend", p.getName(), null, 800));
 				}
 			}
 		}

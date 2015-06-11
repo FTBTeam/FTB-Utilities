@@ -1,16 +1,16 @@
 [
 {
-  "modid": "LatCoreMC",
-  "name": "LatCoreMC",
-  "description": "Core Mod for all LatvianModder's mods",
+  "modid": "FTBU",
+  "name": "FTBUtilities",
+  "description": "",
   "version": "${version}",
-  "url": "http://minecraft.curseforge.com/mc-mods/224778-latcoremc",
+  "url": "http://minecraft.curseforge.com/mc-mods/224778",
   "updateUrl": "",
   "authorList": [
     "LatvianModder"
   ],
   "credits": "",
-  "logoFile": "assets/latcoremc/textures/gui/logo.png",
+  "logoFile": "assets/ftbu/textures/gui/logo.png",
   "screenshots": [
   ],
   "parent":"",

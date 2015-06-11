@@ -1,15 +1,10 @@
 package latmod.ftbu.core.client;
 
-import latmod.ftbu.FTBUConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.IItemRenderer;
-
-import org.lwjgl.opengl.GL11;
-
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.relauncher.*;
 
@@ -42,12 +37,6 @@ public class BlockRendererLM implements ISimpleBlockRenderingHandler
 	
 	public final void registerItemRenderer(Block b)
 	{ if(this instanceof IItemRenderer) LatCoreMCClient.addItemRenderer(b, (IItemRenderer)this); }
-	
-	public static void rotateBlocks()
-	{
-		if(FTBUConfig.Client.rotateBlocks)
-			GL11.glRotated(Minecraft.getSystemTime() * 0.053D, 0D, 1D, 0D);
-	}
 	
 	public static class BlockCustom extends Block
 	{

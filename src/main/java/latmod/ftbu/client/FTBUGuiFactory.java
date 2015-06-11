@@ -3,9 +3,9 @@ package latmod.ftbu.client;
 import java.util.Set;
 
 import latmod.ftbu.FTBU;
+import latmod.ftbu.core.util.FastList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.common.config.ConfigElement;
 import cpw.mods.fml.client.IModGuiFactory;
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.relauncher.*;
@@ -30,6 +30,12 @@ public class FTBUGuiFactory implements IModGuiFactory
 	{
 		@SuppressWarnings("all")
 		public ModGuiConfig(GuiScreen s)
-		{ super(s, new ConfigElement(FTBU.mod.config.getCategory("client")).getChildElements(), FTBU.mod.modID, false, false, FTBU.mod.config.getAbridgedPath()); }
+		{ super(s, new FastList<>(), FTBU.mod.modID, false, false, FTBU.mod.config.getAbridgedPath()); }
+		
+		public void initGui()
+		{ mc.displayGuiScreen(new GuiClientConfig()); }
+		
+		public void onGuiClosed()
+		{ }
 	}
 }

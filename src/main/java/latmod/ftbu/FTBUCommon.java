@@ -8,7 +8,7 @@ import net.minecraft.world.World;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class FTBUCommon extends LMProxy // LCClient // LC
+public class FTBUCommon extends LMProxy // FTBUClient
 {
 	public boolean isShiftDown() { return false; }
 	public boolean isCtrlDown() { return false; }

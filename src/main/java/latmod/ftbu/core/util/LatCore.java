@@ -44,7 +44,7 @@ public class LatCore
 		al.add(s1[i].trim()); return al;
 	}
 	
-	public static String toString(FastList<String> l)
+	public static String toString(List<String> l)
 	{
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < l.size(); i++)
@@ -60,14 +60,11 @@ public class LatCore
 			l.add(s); reader.close(); return l;
 	}
 	
-	public static void saveFile(File f, FastList<String> al) throws Exception
+	public static void saveFile(File f, List<String> al) throws Exception
 	{ saveFile(f, toString(al)); }
 	
 	public static void saveFile(File f, String s) throws Exception
-	{
-		OutputStream os = new FileOutputStream(newFile(f));
-		os.write(s.getBytes()); os.close();
-	}
+	{ BufferedWriter br = new BufferedWriter(new FileWriter(newFile(f))); br.write(s); br.close(); }
 	
 	public static FastList<String> loadFile(File f) throws Exception
 	{ return toStringList(new FileInputStream(f)); }

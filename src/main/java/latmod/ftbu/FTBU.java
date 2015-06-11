@@ -9,7 +9,14 @@ import net.minecraft.util.EnumChatFormatting;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 
-@Mod(modid = FTBUFinals.MOD_ID, version = FTBUFinals.VERSION, name = FTBUFinals.MOD_NAME, dependencies = FTBUFinals.DEPENDENCIES, guiFactory = FTBUFinals.GUI_FACTORY)
+@Mod
+(
+		modid = FTBUFinals.MOD_ID,
+		version = FTBUFinals.VERSION,
+		name = FTBUFinals.MOD_NAME,
+		dependencies = FTBUFinals.DEPENDENCIES,
+		guiFactory = FTBUFinals.GUI_FACTORY
+)
 public class FTBU
 {
 	@Mod.Instance(FTBUFinals.MOD_ID)
@@ -29,7 +36,7 @@ public class FTBU
 	public void preInit(FMLPreInitializationEvent e)
 	{
 		if(LatCoreMC.isDevEnv)
-			LatCoreMC.logger.info("Loading LatCoreMC, Dev Build");
+			LatCoreMC.logger.info("Loading FTBUtilities, Dev Build");
 		else
 			LatCoreMC.logger.info("Loading LatCoreMC, Build #" + FTBUFinals.VERSION);
 		
@@ -53,7 +60,7 @@ public class FTBU
 		MessageLM.init();
 		proxy.init(e);
 		
-		FMLInterModComms.sendMessage("Waila", "register", "latmod.core.event.RegisterWailaEvent.registerHandlers");
+		FMLInterModComms.sendMessage("Waila", "register", "latmod.ftbu.core.event.RegisterWailaEvent.registerHandlers");
 	}
 	
 	@Mod.EventHandler
@@ -61,7 +68,6 @@ public class FTBU
 	{
 		ODItems.postInit();
 		mod.loadRecipes();
-		FTBUConfig.Recipes.loadRecipes();
 		proxy.postInit(e);
 		
 		boolean addedDesc = false;
@@ -73,7 +79,7 @@ public class FTBU
 			{
 				if(!addedDesc)
 				{
-					modMeta.description += EnumChatFormatting.GREEN + "\n\nMods using LatCoreMC:";
+					modMeta.description += EnumChatFormatting.GREEN + "\n\nMods using FTBUtilities:";
 					addedDesc = true;
 				}
 				

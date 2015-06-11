@@ -1,44 +1,54 @@
 package latmod.ftbu.core.client;
 
+import java.util.UUID;
+
+import latmod.ftbu.FTBU;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
 import net.minecraftforge.client.*;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.*;
 
 /** Made by LatvianModder */
-public class LatCoreMCClient
+public final class LatCoreMCClient // LatCoreMC
 {
 	public static IIcon blockNullIcon, unknownItemIcon;
 	private static float lastBrightnessX, lastBrightnessY;
 	
-	public static final void addEntityRenderer(Class<? extends Entity> c, Render r)
+	public static Minecraft getMinecraft()
+	{ return FMLClientHandler.instance().getClient(); }
+	
+	public static void addEntityRenderer(Class<? extends Entity> c, Render r)
 	{ RenderingRegistry.registerEntityRenderingHandler(c, r); }
 	
-	public static final void addTileRenderer(Class<? extends TileEntity> c, TileEntitySpecialRenderer r)
+	public static void addTileRenderer(Class<? extends TileEntity> c, TileEntitySpecialRenderer r)
 	{ ClientRegistry.bindTileEntitySpecialRenderer(c, r); }
 	
-	public static final int getNewArmorID(String s)
+	public static int getNewArmorID(String s)
 	{ return RenderingRegistry.addNewArmourRendererPrefix(s); }
 	
-	public static final int getNewBlockRenderID()
+	public static int getNewBlockRenderID()
 	{ return RenderingRegistry.getNextAvailableRenderId(); }
 	
-	public static final void addBlockRenderer(int i, ISimpleBlockRenderingHandler r)
+	public static void addBlockRenderer(int i, ISimpleBlockRenderingHandler r)
 	{ RenderingRegistry.registerBlockHandler(i, r); }
 	
-	public static final void addItemRenderer(Item item, IItemRenderer i)
+	public static void addItemRenderer(Item item, IItemRenderer i)
 	{ MinecraftForgeClient.registerItemRenderer(item, i); }
 	
-	public static final void addItemRenderer(Block block, IItemRenderer i)
+	public static void addItemRenderer(Block block, IItemRenderer i)
 	{ MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(block), i); }
 	
 	public static void spawnPart(EntityFX e)
@@ -56,4 +66,18 @@ public class LatCoreMCClient
 	
 	public static void popMaxBrightness()
 	{ OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY); }
+
+	public static EntityPlayerSP getPlayerSP(UUID uuid)
+	{
+		World w = FTBU.proxy.getClientWorld();
+		
+		if(w != null)
+		{
+			EntityPlayer ep = w.func_152378_a(uuid);
+			if(ep != null && ep instanceof EntityPlayerSP)
+				return (EntityPlayerSP)ep;
+		}
+		
+		return null;
+	}
 }

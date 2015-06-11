@@ -2,7 +2,7 @@ package latmod.ftbu.core.event;
 
 import java.util.UUID;
 
-import latmod.ftbu.client.FTBUClientEventHandler;
+import latmod.ftbu.client.FTBURenderHandler;
 import latmod.ftbu.core.client.badges.Badge;
 import cpw.mods.fml.relauncher.*;
 
@@ -10,5 +10,5 @@ import cpw.mods.fml.relauncher.*;
 public class CustomBadgesEvent extends EventLM
 {
 	public void register(UUID user, Badge b)
-	{ FTBUClientEventHandler.playerBadges.put(user, b); }
+	{ FTBURenderHandler.playerBadges.put(user, b); }
 }

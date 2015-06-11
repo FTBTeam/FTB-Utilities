@@ -20,6 +20,7 @@ buildscript {
 }
 
 apply plugin: 'forge'
+apply plugin: 'curseforge'
 
 ext.configFile = file "build.props"
 
@@ -79,6 +80,14 @@ processResources
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+}
+
+curse
+{
+    projectId = '224778'
+    apiKey = project.curse_token
+    releaseType = 'alpha'
+    addGameVersion config.version_mc
 }
 
 task deobfJar(type: Jar) {

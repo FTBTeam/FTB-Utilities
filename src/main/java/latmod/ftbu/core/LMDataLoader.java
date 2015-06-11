@@ -1,10 +1,10 @@
 package latmod.ftbu.core;
 
-import java.util.UUID;
-
 import latmod.ftbu.core.event.LMPlayerEvent;
 import latmod.ftbu.core.util.FastMap;
 import net.minecraft.nbt.NBTTagCompound;
+
+import com.mojang.authlib.GameProfile;
 
 public class LMDataLoader
 {
@@ -22,8 +22,8 @@ public class LMDataLoader
 			LMPlayer p = LMPlayer.map.values.get(i);
 			p.writeToNBT(tag1, server);
 			new LMPlayerEvent.DataSaved(p).post();
-			tag1.setString("UUID", p.uuid.toString());
-			tag1.setString("Name", p.username);
+			tag1.setString("UUID", p.uuidString);
+			tag1.setString("Name", p.getName());
 			
 			tag.setTag(p.playerID + "", tag1);
 		}
@@ -40,7 +40,7 @@ public class LMDataLoader
 		{
 			int id = Integer.parseInt(map.keys.get(i));
 			NBTTagCompound tag1 = map.values.get(i);
-			LMPlayer p = new LMPlayer(id, UUID.fromString(tag1.getString("UUID")), tag1.getString("Name"));
+			LMPlayer p = new LMPlayer(id, new GameProfile(LatCoreMC.getUUIDFromString(tag1.getString("UUID")), tag1.getString("Name")));
 			LMPlayer.map.put(p.playerID, p);
 			playerData.put(Integer.valueOf(p.playerID), tag1);
 		}

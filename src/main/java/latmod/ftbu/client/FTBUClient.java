@@ -1,6 +1,7 @@
 package latmod.ftbu.client;
 import latmod.ftbu.FTBUCommon;
 import latmod.ftbu.core.*;
+import latmod.ftbu.core.client.ClientConfig;
 import latmod.ftbu.core.client.badges.ThreadLoadBadges;
 import latmod.ftbu.core.event.LMPlayerClientEvent;
 import latmod.ftbu.core.net.*;
@@ -23,14 +24,30 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class FTBUClient extends FTBUCommon
 {
+	private static final ClientConfig clientConfig = new ClientConfig("FTBUtilities");
+	public static final ClientConfig.Property enablePlayerDecorators = new ClientConfig.Property("EnablePlayerDecorators", true);
+	public static final ClientConfig.Property addOreNames = new ClientConfig.Property("AddOreNames", false);
+	public static final ClientConfig.Property addRegistryNames = new ClientConfig.Property("AddRegistryNames", false);
+	public static final ClientConfig.Property displayDebugInfo = new ClientConfig.Property("DisplayDebugInfo", false);
+	
 	public void preInit(FMLPreInitializationEvent e)
 	{
 		super.preInit(e);
-		LatCoreMC.addEventHandler(FTBUClientEventHandler.instance, true, true, true);
+		LatCoreMC.addEventHandler(FTBUClientEventHandler.instance, true, false, true);
+		LatCoreMC.addEventHandler(FTBURenderHandler.instance, true, true, false);
+		ClientConfig.Registry.init();
+		
+		clientConfig.add(enablePlayerDecorators);
+		clientConfig.add(addOreNames);
+		clientConfig.add(addRegistryNames);
+		clientConfig.add(displayDebugInfo);
+		ClientConfig.Registry.add(clientConfig);
 	}
 	
 	public void postInit(FMLPostInitializationEvent e)
 	{
+		ClientConfig.Registry.load();
+		ThreadLoadBadges.init();
 	}
 	
 	public void serverStarting(FMLServerStartingEvent e)

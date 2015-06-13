@@ -325,8 +325,16 @@ public class GuiFriends extends GuiLM
 			String s = searchBox.text.trim().toLowerCase();
 			for(int i = 0; i < players.size(); i++)
 			{
-				String s1 = players.get(i).player.getName().toLowerCase();
-				if(s1.contains(s)) l.add(players.get(i));
+				Player p = players.get(i);
+				if(p.player.getName().toLowerCase().contains(s)) l.add(players.get(i));
+				else
+				{
+					for(int j = 0; j < p.player.clientInfo.size(); j++)
+					{
+						if(p.player.clientInfo.get(j).toLowerCase().contains(s))
+						{ l.add(players.get(i)); break; }
+					}
+				}
 			}
 			
 			players.clear();
@@ -465,7 +473,7 @@ public class GuiFriends extends GuiLM
 				}
 				
 				if(LatCoreMC.isDevEnv && isShiftKeyDown())
-					al.add(p.uuidString);
+					al.add("[" + p.playerID + "] " + p.uuidString);
 				
 				if(p.clientInfo != null && !p.clientInfo.isEmpty())
 				{

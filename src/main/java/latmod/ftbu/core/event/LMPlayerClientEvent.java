@@ -22,22 +22,26 @@ public class LMPlayerClientEvent
 	public static class LoggedIn extends LMPlayerEvent
 	{
 		public final EntityPlayerSP playerSP;
+		public final boolean isSelf;
 		
-		public LoggedIn(LMPlayer p, EntityPlayerSP ep)
+		public LoggedIn(LMPlayer p, EntityPlayerSP ep, boolean b)
 		{
 			super(p);
 			playerSP = ep;
+			isSelf = b;
 		}
 	}
 	
 	public static class LoggedOut extends LMPlayerEvent
 	{
 		public final EntityPlayerSP playerSP;
+		public final boolean isSelf;
 		
-		public LoggedOut(LMPlayer p, EntityPlayerSP ep)
+		public LoggedOut(LMPlayer p, EntityPlayerSP ep, boolean b)
 		{
 			super(p);
 			playerSP = ep;
+			isSelf = b;
 		}
 	}
 	

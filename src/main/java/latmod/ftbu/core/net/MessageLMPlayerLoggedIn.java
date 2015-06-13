@@ -3,15 +3,18 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.UUID;
 
-import latmod.ftbu.core.LMPlayer;
+import latmod.ftbu.core.*;
+import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.mod.FTBU;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.common.network.simpleimpl.*;
+import cpw.mods.fml.relauncher.*;
 
-public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn>
+public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> implements IClientMessageLM<MessageLMPlayerLoggedIn>
 {
 	public int playerID;
 	public UUID uuid;
@@ -50,14 +53,23 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn>
 	}
 	
 	public IMessage onMessage(MessageLMPlayerLoggedIn m, MessageContext ctx)
+	{ FTBU.proxy.handleClientMessage(m, ctx); return null; }
+	
+	@SideOnly(Side.CLIENT)
+	public void onMessageClient(MessageLMPlayerLoggedIn m, MessageContext ctx)
 	{
-		if(FTBU.proxy.getClientWorld() == null) return null;
+		Minecraft mc = LatCoreMCClient.getMinecraft();
+		if(mc.theWorld == null || mc.thePlayer == null)
+		{
+			LatCoreMC.logger.info("Client connection error: " + mc.theWorld + " ; " + mc.thePlayer);
+			return;
+		}
 		
 		LMPlayer p = new LMPlayer(m.playerID, new GameProfile(m.uuid, m.username));
 		LMPlayer.map.put(p.playerID, p);
 		
 		p.readFromNBT(m.data, false);
 		FTBU.proxy.playerLMLoggedIn(p);
-		return null;
+			
 	}
 }

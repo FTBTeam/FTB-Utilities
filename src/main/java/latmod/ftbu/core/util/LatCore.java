@@ -304,6 +304,20 @@ public class LatCore
 		}
 		return sb.toString();
 	}
+	
+	public static String unsplit(Object[] o, String s1)
+	{
+		if(o == null) return null;
+		StringBuilder sb = new StringBuilder();
+		if(o.length == 1) return String.valueOf(o[0]);
+		for(int i = 0; i < o.length; i++)
+		{
+			sb.append(o[i]);
+			if(i != o.length - 1)
+				sb.append(s1);
+		}
+		return sb.toString();
+	}
 
 	public static String firstUppercase(String s)
 	{

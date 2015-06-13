@@ -10,6 +10,8 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class CubeRenderer
 {
+	public static final CubeRenderer instance = new CubeRenderer();
+	
 	public boolean enableNormals = true;
 	
 	protected int currentSide;

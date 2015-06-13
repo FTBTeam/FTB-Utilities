@@ -38,7 +38,7 @@ public class FTBU
 		if(LatCoreMC.isDevEnv)
 			LatCoreMC.logger.info("Loading FTBUtilities, Dev Build");
 		else
-			LatCoreMC.logger.info("Loading LatCoreMC, Build #" + FTBUFinals.VERSION);
+			LatCoreMC.logger.info("Loading FTBUtilities, Build #" + FTBUFinals.VERSION);
 		
 		modMeta = e.getModMetadata();
 		
@@ -73,7 +73,7 @@ public class FTBU
 		boolean addedDesc = false;
 		if(modMeta != null) for(LMMod m : LMMod.modsMap.values)
 		{
-			if(!m.modID.equals(mod.modID))
+			if(m != mod)
 			{
 				if(!addedDesc)
 				{
@@ -93,8 +93,6 @@ public class FTBU
 	{
 		e.registerServerCommand(new CmdFTBU());
 		e.registerServerCommand(new CmdAdmin());
-		
-		proxy.serverStarting(e);
 	}
 	
 	@Mod.EventHandler

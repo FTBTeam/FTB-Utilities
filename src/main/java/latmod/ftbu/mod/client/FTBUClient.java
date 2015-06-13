@@ -24,7 +24,7 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class FTBUClient extends FTBUCommon
 {
-	private static final ClientConfig clientConfig = new ClientConfig("FTBUtilities");
+	public static final ClientConfig clientConfig = new ClientConfig("FTBUtilities");
 	public static final ClientConfig.Property enablePlayerDecorators = new ClientConfig.Property("EnablePlayerDecorators", true);
 	public static final ClientConfig.Property addOreNames = new ClientConfig.Property("AddOreNames", false);
 	public static final ClientConfig.Property addRegistryNames = new ClientConfig.Property("AddRegistryNames", false);
@@ -42,17 +42,14 @@ public class FTBUClient extends FTBUCommon
 		clientConfig.add(addRegistryNames);
 		clientConfig.add(displayDebugInfo);
 		ClientConfig.Registry.add(clientConfig);
+		
+		Waypoints.init();
 	}
 	
 	public void postInit(FMLPostInitializationEvent e)
 	{
 		ClientConfig.Registry.load();
-		ThreadLoadBadges.init();
-	}
-	
-	public void serverStarting(FMLServerStartingEvent e)
-	{
-		ThreadLoadBadges.init();
+		//ThreadLoadBadges.init();
 	}
 	
 	public boolean isShiftDown() { return GuiScreen.isShiftKeyDown(); }
@@ -91,10 +88,24 @@ public class FTBUClient extends FTBUCommon
 	}
 	
 	public void playerLMLoggedIn(LMPlayer p)
-	{ new LMPlayerClientEvent.LoggedIn(p, p.getPlayerSP()).post(); }
+	{
+		boolean isSelf = p.getUUID().equals(getClientPlayer().getUniqueID());
+		if(isSelf)
+		{
+			LatCoreMC.logger.info("Joined the server with PlayerID " + p.playerID);
+			LMPlayer.currentClientPlayerID = p.playerID;
+		}
+		
+		new LMPlayerClientEvent.LoggedIn(p, p.getPlayerSP(), isSelf).post();
+		
+		if(isSelf)
+		{
+			ThreadLoadBadges.init();
+		}
+	}
 	
 	public void playerLMLoggedOut(LMPlayer p)
-	{ new LMPlayerClientEvent.LoggedOut(p, p.getPlayerSP()).post(); }
+	{ new LMPlayerClientEvent.LoggedOut(p, p.getPlayerSP(), p.getUUID().equals(getClientPlayer().getUniqueID())).post(); }
 	
 	public void playerLMDataChanged(LMPlayer p, String action)
 	{ new LMPlayerClientEvent.DataChanged(p, action); }

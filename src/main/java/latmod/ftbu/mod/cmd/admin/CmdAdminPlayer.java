@@ -35,15 +35,18 @@ public class CmdAdminPlayer extends SubCommand
 			return null;
 		}
 		
-		LMPlayer p = CommandLM.getLMPlayer(args[0]);
-		
 		if(args[1].equals("delete"))
 		{
+			int playerID = CommandLM.parseInt(ics, args[0]);
+			LMPlayer p = CommandLM.getLMPlayer(playerID);
 			if(p.isOnline()) return mustBeOffline;
-			LMPlayer.map.remove(p.playerID);
+			LMPlayer.map.remove(playerID);
 			return CommandLM.FINE + "Player removed!";
 		}
-		else if(args[1].equals("saveinv"))
+		
+		LMPlayer p = CommandLM.getLMPlayer(args[0]);
+		
+		if(args[1].equals("saveinv"))
 		{
 			if(!p.isOnline()) return mustBeOnline;
 			

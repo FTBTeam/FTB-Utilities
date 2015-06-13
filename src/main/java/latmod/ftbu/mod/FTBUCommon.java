@@ -5,7 +5,6 @@ import latmod.ftbu.core.net.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class FTBUCommon extends LMProxy // FTBUClient
@@ -14,10 +13,6 @@ public class FTBUCommon extends LMProxy // FTBUClient
 	public boolean isCtrlDown() { return false; }
 	public boolean isTabDown() { return false; }
 	public boolean inGameHasFocus() { return true; }
-	
-	public void serverStarting(FMLServerStartingEvent e)
-	{
-	}
 	
 	public EntityPlayer getClientPlayer()
 	{ return null; }

@@ -26,14 +26,14 @@ public class MessageManageGroups extends MessageLM<MessageManageGroups>
 	public void fromBytes(ByteBuf bb)
 	{
 		playerID = bb.readInt();
-		code = bb.readInt();
+		code = bb.readByte();
 		user = bb.readInt();
 	}
 	
 	public void toBytes(ByteBuf bb)
 	{
 		bb.writeInt(playerID);
-		bb.writeInt(code);
+		bb.writeByte(code);
 		bb.writeInt(user);
 	}
 	

@@ -2,7 +2,6 @@ package latmod.ftbu.mod.client;
 
 import latmod.ftbu.core.client.ClientConfig;
 import net.minecraft.client.gui.*;
-import scala.actors.threadpool.Arrays;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
@@ -11,11 +10,8 @@ public class GuiClientConfig extends GuiScreen
 	@SuppressWarnings("unchecked")
 	public void initGui()
 	{
-		String[] keys = ClientConfig.Registry.map.keys.toArray(new String[0]);
-		Arrays.sort(keys);
-		
-		for(int i = 0; i < keys.length; i++)
-			buttonList.add(new GuiButton(i, width / 2 - 100, i * 28 + 32, 200, 20, keys[i]));
+		for(int i = 0; i < ClientConfig.Registry.map.size(); i++)
+			buttonList.add(new GuiButton(i, width / 2 - 100, i * 28 + 32, 200, 20, ClientConfig.Registry.map.keys.get(i)));
 		
 		buttonList.add(new GuiButton(255, width / 2 - 100, height - 40, 200, 20, "Back"));
 	}
@@ -53,11 +49,8 @@ public class GuiClientConfig extends GuiScreen
 		@SuppressWarnings("unchecked")
 		public void initGui()
 		{
-			ClientConfig.Property[] props = clientConfig.map.values.toArray(new ClientConfig.Property[0]);
-			Arrays.sort(props);
-			
-			for(int i = 0; i < props.length; i++)
-				buttonList.add(new PropButton(i, props[i]));
+			for(int i = 0; i < clientConfig.map.size(); i++)
+				buttonList.add(new PropButton(i, clientConfig.map.get(i)));
 			
 			buttonList.add(new GuiButton(255, width / 2 - 100, height - 40, 200, 20, "Back"));
 		}

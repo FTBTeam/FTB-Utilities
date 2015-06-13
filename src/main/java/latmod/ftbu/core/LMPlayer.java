@@ -21,6 +21,7 @@ public final class LMPlayer implements Comparable<LMPlayer>
 {
 	public static final String ACTION_GENERAL = "-";
 	public static final String ACTION_GROUPS_CHANGED = "ftbu.groups";
+	public static int currentClientPlayerID = 0;
 	
 	public final int playerID;
 	public final GameProfile gameProfile;
@@ -28,12 +29,12 @@ public final class LMPlayer implements Comparable<LMPlayer>
 	public final String uuidString;
 	public final FastList<LMPlayer> friends;
 	public final ItemStack[] lastArmor;
+	private boolean isOnline;
+	public int notify;
 	
 	public final NBTTagCompound tempData;
 	public NBTTagCompound commonData;
 	public NBTTagCompound serverData;
-	private boolean isOnline;
-	public int notify;
 	
 	@SideOnly(Side.CLIENT)
 	public FastList<String> clientInfo;
@@ -46,6 +47,8 @@ public final class LMPlayer implements Comparable<LMPlayer>
 		uuidString = LatCoreMC.toShortUUID(getUUID());
 		friends = new FastList<LMPlayer>();
 		lastArmor = new ItemStack[5];
+		isOnline = false;
+		notify = 2;
 		
 		commonData = new NBTTagCompound();
 		serverData = new NBTTagCompound();

@@ -21,22 +21,23 @@ public class FTBUEventHandler
 	public void playerLoggedIn(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e)
 	{
 		if(!(e.player instanceof EntityPlayerMP)) return;
+		EntityPlayerMP ep = (EntityPlayerMP)e.player;
 		
-		LMPlayer p = LMPlayer.getPlayer(e.player);
+		LMPlayer p = LMPlayer.getPlayer(ep);
 		
 		boolean first = (p == null);
 		boolean sendAll = false;
 		
 		if(first)
 		{
-			p = new LMPlayer(LMDataLoader.nextPlayerID(), e.player.getGameProfile());
+			p = new LMPlayer(LMDataLoader.nextPlayerID(), ep.getGameProfile());
 			LMPlayer.map.put(p.playerID, p);
 		}
 		else
 		{
-			if(!p.getName().equals(e.player.getGameProfile().getName()))
+			if(!p.getName().equals(ep.getGameProfile().getName()))
 			{
-				p = new LMPlayer(p.playerID, e.player.getGameProfile());
+				p = new LMPlayer(p.playerID, ep.getGameProfile());
 				LMPlayer.map.put(p.playerID, p);
 				sendAll = true;
 			}
@@ -44,13 +45,13 @@ public class FTBUEventHandler
 		
 		p.setOnline(true);
 		
-		new LMPlayerEvent.LoggedIn(p, (EntityPlayerMP)e.player, first).post();
-		updateAllData(sendAll ? null : (EntityPlayerMP)e.player);
+		new LMPlayerEvent.LoggedIn(p, ep, first).post();
+		updateAllData(sendAll ? null : ep);
 		MessageLM.NET.sendToAll(new MessageLMPlayerLoggedIn(p));
 		
 		p.updateInfo(null);
 		for(LMPlayer p1 : LMPlayer.map.values)
-		{ if(p1 != p) p1.updateInfo((EntityPlayerMP)e.player); }
+		{ if(p1 != p) p1.updateInfo(ep); }
 	}
 	
 	@SubscribeEvent

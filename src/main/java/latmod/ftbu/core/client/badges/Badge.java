@@ -5,6 +5,7 @@ import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.util.FastMap;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.util.ResourceLocation;
@@ -14,20 +15,40 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
-public class Badge // Badges
+public class Badge
 {
 	public final String ID;
 	private ResourceLocation texture;
 	public boolean isGlowing = true;
+	private double scaleX, scaleY, offsetX, offsetY;
 	
 	public Badge(String id)
 	{
 		ID = id;
 		texture = FTBU.mod.getLocation("textures/badges/" + ID + ".png");
+		scaleX = scaleY = 1D;
 	}
 	
 	public Badge setNotGlowing()
 	{ isGlowing = false; return this; }
+	
+	public Badge setScale(double x, double y)
+	{ scaleX = x; scaleY = y; return this; }
+	
+	public Badge setOffset(double x, double y)
+	{ offsetX = x; offsetY = y; return this; }
+	
+	public double scaleX()
+	{ return scaleX; }
+	
+	public double scaleY()
+	{ return scaleY; }
+	
+	public double offsetX()
+	{ return offsetX; }
+	
+	public double offsetY()
+	{ return offsetY; }
 	
 	public ResourceLocation getTexture()
 	{ return texture; }
@@ -56,20 +77,15 @@ public class Badge // Badges
 		
 		float s = 0.20F;
 		GL11.glScalef(s, s, 1F);
-		GL11.glTranslated(0D, 0D, -1D);
-		
-		GL11.glColor4f(1F, 1F, 1F, 1F);
-		GL11.glBegin(GL11.GL_QUADS);
-		
-		GL11.glTexCoord2f(0F, 0F);
-		GL11.glVertex3f(0F, 0F, 0F);
-		GL11.glTexCoord2f(1F, 0F);
-		GL11.glVertex3f(1F, 0F, 0F);
-		GL11.glTexCoord2f(1F, 1F);
-		GL11.glVertex3f(1F, 1F, 0F);
-		GL11.glTexCoord2f(0F, 1F);
-		GL11.glVertex3f(0F, 1F, 0F);
-		GL11.glEnd();
+		GL11.glTranslated(offsetX(), offsetY(), -1D);
+		Tessellator t = Tessellator.instance;
+		t.startDrawingQuads();
+		t.setColorRGBA(255, 255, 255, 255);
+		t.addVertexWithUV(0D, 0D, 0D, 0D, 0D);
+		t.addVertexWithUV(scaleX(), 0D, 0D, 1D, 0D);
+		t.addVertexWithUV(scaleX(), scaleY(), 0D, 1D, 1D);
+		t.addVertexWithUV(0D, scaleY(), 0D, 0D, 1D);
+		t.draw();
 		
 		if(isGlowing) LatCoreMCClient.popMaxBrightness();
 		
@@ -81,16 +97,29 @@ public class Badge // Badges
 	
 	public static boolean reloading = false;
 	private static final FastMap<String, Badge> registry = new FastMap<String, Badge>();
-	public static final Badge none = new Badge("none") { public void onPlayerRender(EntityPlayer ep) { } };
+	private static final Badge none = new Badge("none") { public void onPlayerRender(EntityPlayer ep) { } };
 	
 	public static final void init()
 	{
 		registry.clear();
-		register(none);
 		register(new Badge("latmod"));
 		register(new Badge("ftb"));
 		register(new Badge("mods"));
 		register(new Badge("packs"));
+		register(new Badge("enki")
+		{
+			public double scaleX()
+			{ return 2D; }
+			
+			public double scaleY()
+			{ return 0.5D; }
+			
+			public double offsetX()
+			{ return -0.5D; }
+			
+			public double offsetY()
+			{ return 0.2D; }
+		});
 	}
 	
 	public static final void register(Badge b)

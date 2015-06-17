@@ -31,6 +31,8 @@ public final class LMPlayer implements Comparable<LMPlayer>
 	public final ItemStack[] lastArmor;
 	private boolean isOnline;
 	public int notify;
+	public int deaths;
+	public long lastSeen;
 	
 	public final NBTTagCompound tempData;
 	public NBTTagCompound commonData;
@@ -38,6 +40,8 @@ public final class LMPlayer implements Comparable<LMPlayer>
 	
 	@SideOnly(Side.CLIENT)
 	public FastList<String> clientInfo;
+	
+	public Vertex.DimPos.Rot lastPosition;
 	
 	public LMPlayer(int i, GameProfile gp)
 	{
@@ -122,6 +126,9 @@ public final class LMPlayer implements Comparable<LMPlayer>
 		
 		if(!tag.hasKey("Notify")) notify = 1;
 		else notify = tag.getByte("Notify");
+		
+		deaths = tag.getShort("Deaths");
+		lastSeen = tag.getLong("LastSeen");
 	}
 	
 	public void writeToNBT(NBTTagCompound tag, boolean server)
@@ -146,6 +153,12 @@ public final class LMPlayer implements Comparable<LMPlayer>
 		
 		InvUtils.writeItemsToNBT(lastArmor, tag, "LastItems");
 		tag.setByte("Notify", (byte)notify);
+		
+		if(deaths > 0)
+			tag.setShort("Deaths", (short)deaths);
+		
+		if(lastSeen > 0L)
+			tag.setLong("LastSeen", lastSeen);
 	}
 	
 	public int compareTo(LMPlayer o)

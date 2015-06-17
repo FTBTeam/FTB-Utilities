@@ -18,7 +18,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.*;
 import net.minecraftforge.common.*;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.FakePlayer;
@@ -40,7 +40,7 @@ public final class LatCoreMC // LatCoreMCClient
 	public static final String MC_VERSION = Loader.MC_VERSION;
 	public static final String DEV_VERSION = "@VERSION@";
 	
-	public static final Logger logger = LogManager.getLogger("LatCoreMC");
+	public static final Logger logger = LogManager.getLogger("FTBUtilities");
 	public static final EventBus EVENT_BUS = new EventBus();
 	
 	public static final boolean isDevEnv = FTBUFinals.VERSION.equals(DEV_VERSION);
@@ -273,4 +273,13 @@ public final class LatCoreMC // LatCoreMCClient
 	
 	public static boolean isDedicatedServer()
 	{ return getServer().isDedicatedServer(); }
+	
+	public static String getDimName(World w)
+	{ return w.provider.getDimensionName(); }
+	
+	public static String getDimName(int dim)
+	{
+		WorldServer w = DimensionManager.getWorld(dim);
+		return (w == null) ? "" : getDimName(w);
+	}
 }

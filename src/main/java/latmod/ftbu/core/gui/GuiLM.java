@@ -1,6 +1,5 @@
 package latmod.ftbu.core.gui;
 import latmod.ftbu.core.client.LMRenderHelper;
-import latmod.ftbu.core.event.LoadLMIconsEvent;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
@@ -23,100 +22,70 @@ public abstract class GuiLM extends GuiContainer
 	
 	public static class Icons
 	{
-		public static IIcon
-		button,
-		pressed,
-		toggle_off,
-		toggle_on,
-		help,
-		settings,
-		up,
-		down,
-		left,
-		right,
-		accept,
-		accept_gray,
-		back,
-		cancel,
-		add,
-		remove;
+		public static final ResourceLocation tex = FTBU.mod.getLocation("textures/gui/icons.png");
 		
-		public static final IIcon[] security = new IIcon[4];
-		public static IIcon security_whitelist, security_blacklist;
+		public static final TextureCoords left = new TextureCoords(tex, 0);
+		public static final TextureCoords right = new TextureCoords(tex, 1);
+		public static final TextureCoords accept = new TextureCoords(tex, 2);
+		public static final TextureCoords add = new TextureCoords(tex, 3);
+		public static final TextureCoords remove = new TextureCoords(tex, 4);
+		public static final TextureCoords info = new TextureCoords(tex, 5);
+		public static final TextureCoords sort = new TextureCoords(tex, 6);
+		public static final TextureCoords friends = new TextureCoords(tex, 7);
+		public static final TextureCoords bug = new TextureCoords(tex, 8);
+		public static final TextureCoords jacket = new TextureCoords(tex, 9);
+		public static final TextureCoords up = new TextureCoords(tex, 10);
+		public static final TextureCoords down = new TextureCoords(tex, 11);
+		public static final TextureCoords button = new TextureCoords(tex, 12);
+		public static final TextureCoords pressed = new TextureCoords(tex, 13);
+		public static final TextureCoords player = new TextureCoords(tex, 14);
+		public static final TextureCoords online = new TextureCoords(tex, 15);
 		
-		public static final IIcon[] inv = new IIcon[4];
-		public static final IIcon[] redstone = new IIcon[4];
+		public static final TextureCoords settings = new TextureCoords(tex, 16);
+		public static final TextureCoords bed = new TextureCoords(tex, 17);
+		public static final TextureCoords bell = new TextureCoords(tex, 18);
+		public static final TextureCoords compass = new TextureCoords(tex, 19);
+		public static final TextureCoords map = new TextureCoords(tex, 20);
+		public static final TextureCoords shield = new TextureCoords(tex, 21);
+		public static final TextureCoords picture = new TextureCoords(tex, 22);
+		public static final TextureCoords moneybag = new TextureCoords(tex, 23);
+		public static final TextureCoords game = new TextureCoords(tex, 24);
+		public static final TextureCoords feather = new TextureCoords(tex, 25);
+		public static final TextureCoords camera = new TextureCoords(tex, 26);
+		public static final TextureCoords cancel = new TextureCoords(tex, 27);
+		public static final TextureCoords accept_gray = new TextureCoords(tex, 28);
+		public static final TextureCoords add_gray = new TextureCoords(tex, 29);
+		public static final TextureCoords remove_gray = new TextureCoords(tex, 30);
+		public static final TextureCoords info_gray = new TextureCoords(tex, 31);
 		
-		public static class Friends
+		public static final TextureCoords[] inv =
 		{
-			public static IIcon
-			add,
-			remove,
-			groups,
-			//groups_gray,
-			//mail,
-			//mail_gray,
-			//trade,
-			//trade_gray,
-			view,
-			view_gray,
-			online;
-			
-			public static void load(LoadLMIconsEvent e)
-			{
-				add = e.load("friends/add");
-				remove = e.load("friends/remove");
-				groups = e.load("friends/groups");
-				//groups_gray = e.load("friends/groups_gray");
-				//mail = e.load("friends/mail");
-				//mail_gray = e.load("friends/mail_gray");
-				//trade = e.load("friends/trade");
-				//trade_gray = e.load("friends/trade_gray");
-				view = e.load("friends/view");
-				view_gray = e.load("friends/view_gray");
-				online = e.load("friends/online");
-			}
-		}
+			new TextureCoords(tex, 32),
+			new TextureCoords(tex, 33),
+			new TextureCoords(tex, 34),
+			new TextureCoords(tex, 35),
+		};
 		
-		public static void load(LoadLMIconsEvent e)
+		public static final TextureCoords[] redstone =
 		{
-			button = e.load("button");
-			pressed = e.load("pressed");
-			toggle_off = e.load("toggle_off");
-			toggle_on = e.load("toggle_on");
-			help = e.load("help");
-			settings = e.load("settings");
-			up = e.load("arrows/up");
-			down = e.load("arrows/down");
-			left = e.load("arrows/left");
-			right = e.load("arrows/right");
-			accept = e.load("accept");
-			accept_gray = e.load("accept_gray");
-			back = left;
-			cancel = e.load("cancel");
-			add = e.load("add");
-			remove = e.load("remove");
-			
-			security[0] = e.load("security/public");
-			security[1] = e.load("security/private");
-			security[2] = e.load("security/friends");
-			security[3] = e.load("security/group");
-			
-			security_blacklist = e.load("security/black");
-			security_whitelist = e.load("security/white");
-			
-			inv[0] = e.load("inv/io");
-			inv[1] = e.load("inv/in");
-			inv[2] = e.load("inv/out");
-			inv[3] = e.load("inv/off");
-			
-			redstone[0] = e.load("rs/off");
-			redstone[1] = e.load("rs/high");
-			redstone[2] = e.load("rs/low");
-			redstone[3] = e.load("rs/pulse");
-			
-			Friends.load(e);
-		}
+			new TextureCoords(tex, 36),
+			new TextureCoords(tex, 37),
+			new TextureCoords(tex, 38),
+			new TextureCoords(tex, 39),
+		};
+		
+		public static final TextureCoords[] security =
+		{
+			new TextureCoords(tex, 40),
+			new TextureCoords(tex, 41),
+			new TextureCoords(tex, 42),
+			new TextureCoords(tex, 43),
+		};
+		
+		public static final TextureCoords back = new TextureCoords(tex, 44);
+		public static final TextureCoords close = new TextureCoords(tex, 45);
+		public static final TextureCoords player_gray = new TextureCoords(tex, 46);
+		public static final TextureCoords online_red = new TextureCoords(tex, 47);
 	}
 	
 	// GuiLM //
@@ -149,6 +118,12 @@ public abstract class GuiLM extends GuiContainer
 	
 	public final void setZLevel(float z)
 	{ zLevel = z; }
+	
+	public final int getWidth()
+	{ return xSize; }
+	
+	public final int getHeight()
+	{ return ySize; }
 	
 	public final void setTexture(ResourceLocation tex)
 	{ mc.getTextureManager().bindTexture(tex); }
@@ -236,19 +211,27 @@ public abstract class GuiLM extends GuiContainer
 	{ drawTexturedModalRectD(x, y, u, v, w, h); }
 	
 	public void drawTexturedModalRectD(double x, double y, double u, double v, double w, double h)
-	{ drawTexturedModalRectD(x, y, u, v, w, h, 256, 256, zLevel); }
+	{ drawTexturedModalRectD(x, y, zLevel, u, v, w, h, 256, 256); }
 	
-	public static void drawTexturedModalRectD(double x, double y, double u, double v, double w, double h, int width, int height, double z)
+	public static void drawTexturedModalRectD(double x, double y, double z, double u, double v, double w, double h, int width, int height)
+	{ drawTexturedRect(x, y, z, w, h, u, v, u + w, v + h, width, height); }
+	
+	public static void drawTexturedRectD(double x, double y, double z, double w, double h, double u0, double v0, double u1, double v1)
 	{
-		double scX = 1D / (double)width;
-		double scY = 1D / (double)height;
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(x + 0, y + h, z, (u + 0) * scX, (v + h) * scY);
-		tessellator.addVertexWithUV(x + w, y + h, z, (u + w) * scX, (v + h) * scY);
-		tessellator.addVertexWithUV(x + w, y + 0, z, (u + w) * scX, (v + 0) * scY);
-		tessellator.addVertexWithUV(x + 0, y + 0, z, (u + 0) * scX, (v + 0) * scY);
-		tessellator.draw();
+		Tessellator t = Tessellator.instance;
+		t.startDrawingQuads();
+		t.addVertexWithUV(x + 0, y + h, z, u0, v1);
+		t.addVertexWithUV(x + w, y + h, z, u1, v1);
+		t.addVertexWithUV(x + w, y + 0, z, u1, v0);
+		t.addVertexWithUV(x + 0, y + 0, z, u0, v0);
+		t.draw();
+	}
+	
+	public static void drawTexturedRect(double x, double y, double z, double w, double h, double u0, double v0, double u1, double v1, int textureW, int textureH)
+	{
+		double scX = 1D / (double)textureW;
+		double scY = 1D / (double)textureH;
+		drawTexturedRectD(x, y, z, w, h, u0 * scX, v0 * scY, u1 * scX, v1 * scY);
 	}
 	
 	public void playSoundFX(String s, float pitch)

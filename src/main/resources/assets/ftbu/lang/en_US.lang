@@ -28,6 +28,28 @@ ftbu:label.pfriend=Pending Friend
 ftbu:button.addGroup=Add Group
 ftbu:button.remGroup=Remove Group
 
+#ClientConfig
+config.value.enabled=Enabled
+config.value.disabled=Disabled
+config.value.true=True
+config.value.false=False
+
+config.group.ftbu=FTBUtilities
+config.property.player_decorators=Player Decorators
+config.property.item_ore_names=Item OreDict Names
+config.property.item_reg_names=Item Registry Names
+config.property.debug_info=Debug Info
+
+config.group.waypoints=Waypoints
+config.property.waypoint_type=Waypoint Type
+config.property.display_title=Display Title
+config.property.display_distance=Display Distance
+config.property.render_distance=Render Distance
+config.property.death_point=Death Point
+config.value.marker=Marker
+config.value.beacon=Beacon
+
+#Misc
 ftbu:owner=Owner: %s
 
 ftbu:security=Security

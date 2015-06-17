@@ -80,6 +80,13 @@ public class FTBUEventHandler
 			IServerConfig.Registry.load();
 			
 			LoadLMDataEvent e1 = new LoadLMDataEvent(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/"), EventLM.Phase.PRE);
+			
+			{
+				NBTTagCompound tag = NBTHelper.readMap(e1.getFile("LMWorld.dat"));
+				if(tag == null) tag = new NBTTagCompound();
+				LMWorld.load(tag);
+			}
+			
 			e1.post();
 			
 			{
@@ -107,6 +114,12 @@ public class FTBUEventHandler
 		{
 			SaveLMDataEvent e1 = new SaveLMDataEvent(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/"));
 			e1.post();
+			
+			{
+				NBTTagCompound tag = new NBTTagCompound();
+				LMWorld.save(tag);
+				NBTHelper.writeMap(e1.getFile("LMWorld.dat"), tag);
+			}
 			
 			{
 				NBTTagCompound tag = new NBTTagCompound();

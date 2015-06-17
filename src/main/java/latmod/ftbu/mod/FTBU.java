@@ -6,6 +6,7 @@ import latmod.ftbu.core.net.MessageLM;
 import latmod.ftbu.mod.cmd.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.client.ClientCommandHandler;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 
@@ -48,6 +49,7 @@ public class FTBU
 		LMMod.init(this, new FTBUConfig(e), null);
 		mod.logger = LatCoreMC.logger;
 		
+		FTBULang.reload();
 		ODItems.preInit();
 		
 		mod.onPostLoaded();
@@ -91,15 +93,23 @@ public class FTBU
 	@Mod.EventHandler
 	public void registerCommands(FMLServerStartingEvent e)
 	{
+		FTBUTickHandler.instance.resetTimer(true);
 		e.registerServerCommand(new CmdFTBU());
 		e.registerServerCommand(new CmdAdmin());
+		ClientCommandHandler.instance.registerCommand(new CmdWaypoints());
 	}
 	
 	@Mod.EventHandler
-	public void shuttingDown(FMLServerStoppingEvent e)
+	public void serverStopping(FMLServerStoppingEvent e)
 	{
 		if(LatCoreMC.hasOnlinePlayers()) for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers().values)
 			FTBUEventHandler.instance.playerLoggedOut(new cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent(ep));
+	}
+	
+	@Mod.EventHandler
+	public void serverStopped(FMLServerStoppedEvent e)
+	{
+		FTBUTickHandler.instance.resetTimer(false);
 	}
 	
 	/*

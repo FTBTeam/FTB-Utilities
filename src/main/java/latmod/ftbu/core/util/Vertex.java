@@ -141,7 +141,10 @@ public final class Vertex implements Cloneable
 		{ return MathHelperLM.floor(pos.z); }
 		
 		public boolean equals(Object o)
-		{ return (o instanceof DimPos) && ((DimPos)o).dim == dim && ((DimPos)o).pos.equalsPos(pos); }
+		{ return (o instanceof DimPos) && equalsDimPos((DimPos)o); }
+		
+		public boolean equalsDimPos(DimPos p)
+		{ return pos.equalsPos(p.pos) && dim == p.dim; }
 		
 		public static class Rot extends DimPos
 		{
@@ -168,7 +171,10 @@ public final class Vertex implements Cloneable
 			}
 			
 			public boolean equals(Object o)
-			{ return (o instanceof Rot) && super.equals(o) && ((Rot)o).yaw == yaw && ((Rot)o).pitch == pitch; }
+			{ return (o instanceof Rot) && equalsDimPosRot((Rot)o); }
+			
+			public boolean equalsDimPosRot(Rot p)
+			{ return equalsDimPos(p) && yaw == p.yaw && pitch == p.pitch; }
 		}
 	}
 }

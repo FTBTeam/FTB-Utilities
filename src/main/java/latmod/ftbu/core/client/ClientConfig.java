@@ -4,6 +4,7 @@ import java.io.File;
 
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.util.*;
+import net.minecraft.util.StatCollector;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
@@ -21,6 +22,9 @@ public final class ClientConfig
 	public void add(Property e)
 	{ map.put(e.id, e); }
 	
+	public String getIDS()
+	{ return StatCollector.translateToLocal("config.group." + id); }
+	
 	public final static class Registry
 	{
 		private static File configFile;
@@ -31,7 +35,7 @@ public final class ClientConfig
 		
 		public static void init()
 		{
-			configFile = LatCore.newFile(new File(LatCoreMC.latmodFolder, "client_config.txt"));
+			configFile = LatCore.newFile(new File(LatCoreMC.latmodFolder, "client/config.txt"));
 		}
 		
 		public static void load()
@@ -87,23 +91,16 @@ public final class ClientConfig
 		public final int def;
 		public final String[] values;
 		private int value = -1;
+		private boolean translateValues = true;
 		
 		public Property(String s, int d, String[] v)
 		{ id = s; def = d; values = v; }
 		
 		public Property(String s, boolean d)
-		{ this(s, d ? 1 : 0, new String[] { "False", "True" }); }
+		{ this(s, d ? 1 : 0, new String[] { "disabled", "enabled" }); }
 		
-		public void incValue(boolean b)
-		{
-			if(b) value = (value + 1) % values.length;
-			else
-			{
-				int i = value - 1;
-				if(i >= 0) value = i;
-				else value = values.length - 1;
-			}
-		}
+		public void incValue()
+		{ value = (value + 1) % values.length; }
 		
 		public int getI()
 		{ return (value == -1) ? def : value; }
@@ -115,6 +112,15 @@ public final class ClientConfig
 		{ return id.compareTo(o.id); }
 		
 		public String toString()
-		{ return id + ": " + values[getI()]; }
+		{ return getIDS() + ": " + getValueS(getI()); }
+		
+		public String getIDS()
+		{ return StatCollector.translateToLocal("config.property." + id); }
+		
+		public String getValueS(int i)
+		{ return translateValues ? StatCollector.translateToLocal("config.value." + values[i]) : values[i]; }
+
+		public Property setTranslateValues(boolean b)
+		{ translateValues = b; return this; }
 	}
 }

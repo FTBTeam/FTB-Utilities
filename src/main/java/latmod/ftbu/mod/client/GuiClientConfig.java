@@ -1,5 +1,6 @@
 package latmod.ftbu.mod.client;
 
+import latmod.ftbu.core.FTBULang;
 import latmod.ftbu.core.client.ClientConfig;
 import net.minecraft.client.gui.*;
 import cpw.mods.fml.relauncher.*;
@@ -11,19 +12,16 @@ public class GuiClientConfig extends GuiScreen
 	public void initGui()
 	{
 		for(int i = 0; i < ClientConfig.Registry.map.size(); i++)
-			buttonList.add(new GuiButton(i, width / 2 - 100, i * 28 + 32, 200, 20, ClientConfig.Registry.map.keys.get(i)));
+			buttonList.add(new GroupButton(i, ClientConfig.Registry.map.values.get(i)));
 		
-		buttonList.add(new GuiButton(255, width / 2 - 100, height - 40, 200, 20, "Back"));
+		buttonList.add(new GuiButton(255, width / 2 - 100, height - 40, 200, 20, FTBULang.button_back));
 	}
 	
 	public void actionPerformed(GuiButton b)
 	{
 		if(b.id == 255) mc.displayGuiScreen(null);
-		else
-		{
-			ClientConfig c = ClientConfig.Registry.map.get(b.displayString);
-			if(c != null) mc.displayGuiScreen(new GuiClientConfigTab(c));
-		}
+		else if(b instanceof GroupButton)
+			mc.displayGuiScreen(new GuiClientConfigTab(((GroupButton)b).config));
 	}
 	
 	public void onGuiClosed()
@@ -35,6 +33,17 @@ public class GuiClientConfig extends GuiScreen
 		drawDefaultBackground();
 		drawCenteredString(fontRendererObj, "Client Config", width / 2, 15, 16777215);
 		super.drawScreen(mx, my, pt);
+	}
+	
+	private class GroupButton extends GuiButton
+	{
+		public final ClientConfig config;
+		
+		public GroupButton(int id, ClientConfig c)
+		{
+			super(id, GuiClientConfig.this.width / 2 - 100, id * 28 + 32, 200, 20, c.getIDS());
+			config = c;
+		}
 	}
 	
 	public static class GuiClientConfigTab extends GuiScreen
@@ -50,9 +59,9 @@ public class GuiClientConfig extends GuiScreen
 		public void initGui()
 		{
 			for(int i = 0; i < clientConfig.map.size(); i++)
-				buttonList.add(new PropButton(i, clientConfig.map.get(i)));
+				buttonList.add(new PropButton(i, clientConfig.map.values.get(i)));
 			
-			buttonList.add(new GuiButton(255, width / 2 - 100, height - 40, 200, 20, "Back"));
+			buttonList.add(new GuiButton(255, width / 2 - 100, height - 40, 200, 20, FTBULang.button_back));
 		}
 		
 		public void actionPerformed(GuiButton b)
@@ -61,7 +70,7 @@ public class GuiClientConfig extends GuiScreen
 			else if(b instanceof PropButton)
 			{
 				ClientConfig.Property p = ((PropButton)b).property;
-				p.incValue(true);
+				p.incValue();
 				b.displayString = p.toString();
 			}
 		}

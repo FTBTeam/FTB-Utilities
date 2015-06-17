@@ -7,9 +7,11 @@ import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.FTBU;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.stats.*;
 import net.minecraft.util.*;
 
 import org.lwjgl.opengl.GL11;
@@ -23,31 +25,28 @@ import cpw.mods.fml.relauncher.*;
 public class GuiFriends extends GuiLM
 {
 	public static final ResourceLocation texPlayers = FTBU.mod.getLocation("textures/gui/players.png");
-	public static final ResourceLocation texActions = FTBU.mod.getLocation("textures/gui/actions.png");
-	public static final ResourceLocation texView = FTBU.mod.getLocation("textures/gui/view.png");
 	
 	public static final TextureCoords icon_status[] =
 	{
-		new TextureCoords(texPlayers, 161 + 18 * 0, 0),
-		new TextureCoords(texPlayers, 161 + 18 * 1, 0),
-		new TextureCoords(texPlayers, 161 + 18 * 2, 0),
+		new TextureCoords(texPlayers, 18 * 0, 181, 18, 18),
+		new TextureCoords(texPlayers, 18 * 1, 181, 18, 18),
+		new TextureCoords(texPlayers, 18 * 2, 181, 18, 18),
 	};
 	
 	public final LMPlayer owner;
 	public final FastList<Player> players;
 	
 	public TextBoxLM searchBox;
-	public ButtonLM buttonSave, buttonPrevPage, buttonNextPage;
+	public ButtonLM buttonSave, buttonSort, buttonPrevPage, buttonNextPage;
 	public ButtonPlayer pbOwner;
-	public ButtonPlayer[] pbPlayers;
+	public final ButtonPlayer[] pbPlayers;
 	public int page = 0;
-	public boolean changed = false;
 	
-	private static LMPlayer selectedPlayer = null;
-	private static AbstractClientPlayer selectedPlayerEntity = null;
+	private static LMClientPlayer selectedPlayer = null;
 	private static boolean hideArmor = false;
-	
-	public ButtonLM buttonAdd, buttonInfo, buttonClose, buttonHideArmor;
+	private static boolean sortAZ = false;
+	private static final FastList<ActionButton> actionButtons = new FastList<ActionButton>();
+	private static boolean refreshActionButtons;
 	
 	public GuiFriends(EntityPlayer ep)
 	{
@@ -56,10 +55,10 @@ public class GuiFriends extends GuiLM
 		owner = LMPlayer.getPlayer(ep);
 		players = new FastList<Player>();
 		
-		xSize = 161;
-		ySize = 184;
+		xSize = 240;
+		ySize = 181;
 		
-		widgets.add(searchBox = new TextBoxLM(this, 24, 5, 113, 18)
+		widgets.add(searchBox = new TextBoxLM(this, 103, 5, 94, 18)
 		{
 			public void textChanged()
 			{
@@ -69,19 +68,28 @@ public class GuiFriends extends GuiLM
 		
 		searchBox.charLimit = 15;
 		
-		widgets.add(buttonSave = new ButtonLM(this, 139, 6, 16, 16)
+		widgets.add(buttonSave = new ButtonLM(this, 218, 6, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
 				playClickSound();
-				changed = true;
 				mc.thePlayer.closeScreen();
 			}
 		});
 		
-		buttonSave.title = GREEN + FTBU.mod.translate("button.save");
+		buttonSave.title = GREEN + FTBULang.button_close;
 		
-		widgets.add(buttonPrevPage = new ButtonLM(this, 7, 158, 35, 16)
+		widgets.add(buttonSort = new ButtonLM(this, 199, 6, 16, 16)
+		{
+			public void onButtonPressed(int b)
+			{
+				sortAZ = !sortAZ;
+				updateButtons();
+				playClickSound();
+			}
+		});
+		
+		widgets.add(buttonPrevPage = new ButtonLM(this, 85, 158, 35, 16)
 		{
 			public void onButtonPressed(int b)
 			{
@@ -93,7 +101,7 @@ public class GuiFriends extends GuiLM
 		
 		buttonPrevPage.title = "Prev Page";
 		
-		widgets.add(buttonNextPage = new ButtonLM(this, 120, 159, 35, 16)
+		widgets.add(buttonNextPage = new ButtonLM(this, 199, 159, 35, 16)
 		{
 			public void onButtonPressed(int b)
 			{
@@ -105,113 +113,53 @@ public class GuiFriends extends GuiLM
 		
 		buttonNextPage.title = "Next Page";
 		
-		// Action gui buttons //
-		
-		widgets.add(buttonAdd = new ButtonLM(this, -39, 20, 16, 16)
-		{
-			public void onButtonPressed(int b)
-			{
-				playClickSound();
-				
-				if(selectedPlayer.equals(owner))
-				{
-					mc.displayGuiScreen(new GuiClientConfig());
-				}
-				else
-				{
-					if(owner.isFriendRaw(selectedPlayer))
-						sendUpdate(MessageManageGroups.C_REM_FRIEND, selectedPlayer.playerID);
-					else
-						sendUpdate(MessageManageGroups.C_ADD_FRIEND, selectedPlayer.playerID);
-				}
-				
-				refreshActionButtons();
-			}
-			
-			public boolean isEnabled()
-			{ return selectedPlayer != null; }
-		});
-		
-		widgets.add(buttonInfo = new ButtonLM(this, -20, 39, 16, 16)
-		{
-			public void onButtonPressed(int b)
-			{
-				playClickSound();
-			}
-			
-			public boolean isEnabled()
-			{ return LatCoreMC.isDevEnv; }
-		});
-		
-		buttonInfo.title = "[WIP] " + FTBU.mod.translate("button.info");
-		
-		widgets.add(buttonClose = new ButtonLM(this, -20, 20, 16, 16)
-		{
-			public void onButtonPressed(int b)
-			{
-				playClickSound();
-				selectedPlayer = null;
-			}
-			
-			public boolean isEnabled()
-			{ return selectedPlayer != null; }
-		});
-		
-		buttonClose.title = FTBU.mod.translate("button.close");
-		
-		widgets.add(buttonHideArmor = new ButtonLM(this, -39, 39, 16, 16)
-		{
-			public void onButtonPressed(int b)
-			{
-				playClickSound();
-				hideArmor = !hideArmor;
-				refreshActionButtons();
-			}
-			
-			public boolean isEnabled()
-			{ return selectedPlayer != null; }
-		});
-		
-		buttonHideArmor.title = "Hide armor";
-		
 		// Player buttons //
 		
-		widgets.add(pbOwner = new ButtonPlayer(this, -1, 5, 5));
+		widgets.add(pbOwner = new ButtonPlayer(this, -1, 84, 5));
 		pbOwner.setPlayer(new Player(owner));
 		
 		pbPlayers = new ButtonPlayer[7 * 8];
 		
 		for(int i = 0; i < pbPlayers.length; i++)
-			widgets.add(pbPlayers[i] = new ButtonPlayer(this, i, 5 + (i % 8) * 19, 25 + (i / 8) * 19));
+			widgets.add(pbPlayers[i] = new ButtonPlayer(this, i, 84 + (i % 8) * 19, 25 + (i / 8) * 19));
+		
+		if(selectedPlayer == null) selectedPlayer = new LMClientPlayer(owner);
 		
 		updateButtons();
 	}
 	
 	public void refreshActionButtons()
-	{
-		if(selectedPlayer == null) return;
-		
-		if(owner.equals(selectedPlayer))
-			buttonAdd.title = FTBU.mod.translate("button.settings");
-		else
-			buttonAdd.title = owner.isFriendRaw(selectedPlayer) ? FTBU.mod.translate("button.remFriend") : FTBU.mod.translate("button.addFriend");
-	}
+	{ refreshActionButtons = true; }
 	
 	public void sendUpdate(int c, int u)
-	{
-		changed = true;
-		MessageLM.NET.sendToServer(new MessageManageGroups(owner, c, u));
-	}
+	{ MessageLM.NET.sendToServer(new MessageManageGroups(owner, c, u)); }
 	
 	public int maxPages()
 	{ return (players.size() / pbPlayers.length) + 1; }
 	
 	public void drawGuiContainerBackgroundLayer(float f, int mx, int my)
 	{
-		if(selectedPlayer != null)
+		if(refreshActionButtons)
 		{
-			setTexture(texView);
-			drawTexturedModalRect(guiLeft - 65, guiTop + 63, 0, 0, 65, 101);
+			widgets.removeAll(actionButtons);
+			actionButtons.clear();
+			
+			if(selectedPlayer.playerLM.equals(owner))
+			{
+				actionButtons.add(new ActionButton(this, PlayerAction.settings, FTBU.mod.translate("button.settings")));
+			}
+			else
+			{
+				if(owner.isFriendRaw(selectedPlayer.playerLM))
+					actionButtons.add(new ActionButton(this, PlayerAction.friend_remove, FTBU.mod.translate("button.remFriend")));
+				else
+					actionButtons.add(new ActionButton(this, PlayerAction.friend_add, FTBU.mod.translate("button.addFriend")));
+			}
+			
+			for(ActionButton a : actionButtons)
+				widgets.add(a);
+			
+			refreshActionButtons = false;
 		}
 		
 		super.drawGuiContainerBackgroundLayer(f, mx, my);
@@ -222,66 +170,64 @@ public class GuiFriends extends GuiLM
 		
 		if(selectedPlayer != null)
 		{
-			setTexture(texActions);
-			drawTexturedModalRect(guiLeft - 46, guiTop + 13, 0, 0, 65, 49);
-			
+			/*
 			setTexture(texture);
 			
 			if(owner.equals(selectedPlayer))
 				buttonAdd.render(Icons.settings);
 			else
-				buttonAdd.render(owner.isFriendRaw(selectedPlayer) ? Icons.Friends.remove : Icons.Friends.add);
+				buttonAdd.render(owner.isFriendRaw(selectedPlayer) ? Icons.remove : Icons.add);
 			
-			buttonInfo.render(Icons.help);
-			buttonHideArmor.render(hideArmor ? Icons.Friends.view_gray : Icons.Friends.view);
-			buttonClose.render(Icons.cancel);
+			buttonInfo.render(Icons.info);
+			buttonHideArmor.render(hideArmor ? Icons.player_gray : Icons.player);
+			buttonClose.render(Icons.close);
+			*/
 		}
 		
 		buttonSave.render(Icons.accept);
+		buttonSort.render(Icons.sort);
+		Icons.left.render(this, 94, 159, 16, 16);
+		Icons.right.render(this, 209, 159, 16, 16);
 		
-		if(selectedPlayer != null && selectedPlayerEntity != null)
+		for(ActionButton a : actionButtons)
+			a.render(a.action.icon);
+		
+		if(hideArmor)
 		{
-			int x = guiLeft - 31;
-			int y = guiTop + 147;
+			for(int i = 0; i < 4; i++)
+				selectedPlayer.inventory.armorInventory[i] = null;
+		}
+		else
+		{
+			EntityPlayer ep1 = selectedPlayer.playerLM.getPlayerSP();
 			
-			if(hideArmor)
+			if(ep1 != null)
 			{
-				for(int i = 0; i < 4; i++)
-					selectedPlayerEntity.inventory.armorInventory[i] = null;
+				selectedPlayer.inventory.mainInventory = ep1.inventory.mainInventory.clone();
+				selectedPlayer.inventory.armorInventory = ep1.inventory.armorInventory.clone();
+				selectedPlayer.inventory.mainInventory[0] = ep1.inventory.getCurrentItem();
 			}
 			else
 			{
-				EntityPlayer ep1 = selectedPlayer.getPlayerSP();
-				
-				if(ep1 != null)
-				{
-					selectedPlayerEntity.inventory.mainInventory = ep1.inventory.mainInventory.clone();
-					selectedPlayerEntity.inventory.armorInventory = ep1.inventory.armorInventory.clone();
-					selectedPlayerEntity.inventory.mainInventory[0] = ep1.inventory.getCurrentItem();
-				}
-				else
-				{
-					for(int i = 0; i < 4; i++)
-						selectedPlayerEntity.inventory.armorInventory[i] = selectedPlayer.lastArmor[i];
-					selectedPlayerEntity.inventory.mainInventory[0] = selectedPlayer.lastArmor[4];
-				}
+				for(int i = 0; i < 4; i++)
+					selectedPlayer.inventory.armorInventory[i] = selectedPlayer.playerLM.lastArmor[i];
+				selectedPlayer.inventory.mainInventory[0] = selectedPlayer.playerLM.lastArmor[4];
 			}
-			
-			GuiInventory.func_147046_a(x, y, 35, x - mx, y - 50 - my, selectedPlayerEntity);
-			GL11.glColor4f(1F, 1F, 1F, 1F);
 		}
+		
+		int playerX = guiLeft + 44;
+		int playerY = guiTop + 160;
+		GuiInventory.func_147046_a(playerX, playerY, 55, playerX - mx, playerY - 75 - my, selectedPlayer);
+		GL11.glColor4f(1F, 1F, 1F, 1F);
 	}
 	
 	public void drawText(int mx, int my)
 	{
-		searchBox.render(30, 10, 0xFFA7A7A7);
-		drawCenteredString(fontRendererObj, (page + 1) + " / " + maxPages(), guiLeft + 81, guiTop + 163, 0xFF444444);
+		searchBox.render(107, 10, 0xFFA7A7A7);
+		drawCenteredString(fontRendererObj, (page + 1) + " / " + maxPages(), guiLeft + 159, guiTop + 163, 0xFF444444);
 		
-		if(selectedPlayer != null)
-		{
-			String s = selectedPlayer.getName();
-			drawString(fontRendererObj, s, guiLeft - fontRendererObj.getStringWidth(s) - 2, guiTop + 3, 0xFFFFFFFF);
-		}
+		String s = selectedPlayer.playerLM.getName();
+		drawString(fontRendererObj, s, guiLeft + 5, guiTop - 10, 0xFFFFFFFF);
 		
 		super.drawText(mx, my);
 	}
@@ -295,7 +241,6 @@ public class GuiFriends extends GuiLM
 	public void onGuiClosed()
 	{
 		LatCoreMC.EVENT_BUS.unregister(this);
-		if(changed) sendUpdate(0, 0);
 		super.onGuiClosed();
 	}
 	
@@ -310,6 +255,8 @@ public class GuiFriends extends GuiLM
 	
 	public void updateButtons()
 	{
+		buttonSort.title = BLUE + "Sort: " + (sortAZ ? "A-Z" : "Friends");
+		
 		players.clear();
 		
 		for(int i = 0; i < LMPlayer.map.values.size(); i++)
@@ -370,6 +317,8 @@ public class GuiFriends extends GuiLM
 		
 		public int compareTo(Player o)
 		{
+			if(sortAZ) return player.getName().compareToIgnoreCase(o.player.getName());
+			
 			int s0 = getStatus();
 			int s1 = o.getStatus();
 			
@@ -425,26 +374,11 @@ public class GuiFriends extends GuiLM
 		
 		public void onButtonPressed(int b)
 		{
-			if(player != null)
+			if(player != null && player.player != null)
 			{
-				selectedPlayer = player.player;
-				
-				selectedPlayerEntity = new AbstractClientPlayer(mc.theWorld, selectedPlayer.gameProfile)
-				{
-					public void addChatMessage(IChatComponent p_145747_1_) { }
-					
-					public boolean canCommandSenderUseCommand(int p_70003_1_, String p_70003_2_)
-					{ return false; }
-					
-					public ChunkCoordinates getPlayerCoordinates()
-					{ return new ChunkCoordinates(0, 0, 0); }
-					
-					public boolean isInvisibleToPlayer(EntityPlayer ep)
-					{ return true; }
-				};
-				
-				selectedPlayerEntity.func_152121_a(MinecraftProfileTexture.Type.SKIN, AbstractClientPlayer.getLocationSkin(selectedPlayer.getName()));
-				selectedPlayerEntity.inventory.currentItem = 0;
+				selectedPlayer = new LMClientPlayer(player.player);
+				selectedPlayer.func_152121_a(MinecraftProfileTexture.Type.SKIN, AbstractClientPlayer.getLocationSkin(selectedPlayer.playerLM.getName()));
+				selectedPlayer.inventory.currentItem = 0;
 			}
 			
 			refreshActionButtons();
@@ -475,6 +409,12 @@ public class GuiFriends extends GuiLM
 				if(LatCoreMC.isDevEnv && isShiftKeyDown())
 					al.add("[" + p.playerID + "] " + p.uuidString);
 				
+				if(p.deaths > 0)
+					al.add("Deaths: " + p.deaths);
+				
+				//if(p.lastSeen > 0L)
+				//	al.add("Last ");
+				
 				if(p.clientInfo != null && !p.clientInfo.isEmpty())
 				{
 					//al.add("");
@@ -491,7 +431,7 @@ public class GuiFriends extends GuiLM
 				
 				drawPlayerHead(player.player.getName(), GuiFriends.this.guiLeft + posX + 1, GuiFriends.this.guiTop + posY + 1, 16, 16, zLevel);
 				
-				if(player.player.isOnline()) render(Icons.Friends.online);
+				if(player.player.isOnline()) render(Icons.online);
 				
 				if(!player.isOwner())
 				{
@@ -500,5 +440,84 @@ public class GuiFriends extends GuiLM
 				}
 			}
 		}
+	}
+	
+	public static class ActionButton extends ButtonLM
+	{
+		public final GuiFriends gui;
+		public final PlayerAction action;
+		
+		public ActionButton(GuiFriends g, PlayerAction a, String s)
+		{
+			super(g, 7 + (actionButtons.size() % 4) * 19, 6 + (actionButtons.size() / 4) * 20, 16, 16);
+			gui = g;
+			action = a;
+			title = s;
+		}
+		
+		public void onButtonPressed(int b)
+		{
+			gui.playClickSound();
+			action.onClicked((GuiFriends)gui);
+		}
+	}
+	
+	public abstract static class PlayerAction
+	{
+		public final TextureCoords icon;
+		
+		public PlayerAction(TextureCoords c)
+		{ icon = c; }
+		
+		public abstract void onClicked(GuiFriends g);
+		
+		// Static //
+		
+		public static final PlayerAction settings = new PlayerAction(Icons.settings)
+		{
+			public void onClicked(GuiFriends g)
+			{ g.mc.displayGuiScreen(new GuiClientConfig()); }
+		};
+		
+		public static final PlayerAction friend_add = new PlayerAction(Icons.add)
+		{
+			public void onClicked(GuiFriends g)
+			{
+				g.sendUpdate(MessageManageGroups.C_ADD_FRIEND, selectedPlayer.playerLM.playerID);
+				g.refreshActionButtons();
+			}
+		};
+		
+		public static final PlayerAction friend_remove = new PlayerAction(Icons.remove)
+		{
+			public void onClicked(GuiFriends g)
+			{
+				g.sendUpdate(MessageManageGroups.C_REM_FRIEND, selectedPlayer.playerLM.playerID);
+				g.refreshActionButtons();
+			}
+		};
+	}
+	
+	public static class LMClientPlayer extends AbstractClientPlayer
+	{
+		private static final ChunkCoordinates coords000 = new ChunkCoordinates(0, 0, 0);
+		public final LMPlayer playerLM;
+		
+		public LMClientPlayer(LMPlayer p)
+		{
+			super(Minecraft.getMinecraft().theWorld, p.gameProfile);
+			playerLM = p;
+		}
+		
+		public void addChatMessage(IChatComponent i) { }
+		
+		public boolean canCommandSenderUseCommand(int i, String s)
+		{ return false; }
+		
+		public ChunkCoordinates getPlayerCoordinates()
+		{ return coords000; }
+		
+		public boolean isInvisibleToPlayer(EntityPlayer ep)
+		{ return true; }
 	}
 }

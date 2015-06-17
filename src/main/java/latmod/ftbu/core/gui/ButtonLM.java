@@ -8,7 +8,7 @@ public abstract class ButtonLM extends WidgetLM
 	public int customID = 0;
 	private long lastClickMillis = Minecraft.getSystemTime();
 	public boolean doubleClickRequired = false;
-	public Object background = GuiLM.Icons.button;
+	public TextureCoords background = null;
 	
 	public ButtonLM(GuiLM g, int x, int y, int w, int h)
 	{ super(g, x, y, w, h); }
@@ -39,7 +39,7 @@ public abstract class ButtonLM extends WidgetLM
 	public boolean isEnabled()
 	{ return true; }
 	
-	public void render(Object icon, double rw, double rh)
+	public void render(TextureCoords icon, double rw, double rh)
 	{
 		super.render(background, rw, rh);
 		super.render(icon, rw, rh);

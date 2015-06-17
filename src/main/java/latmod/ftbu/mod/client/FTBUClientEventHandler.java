@@ -29,7 +29,8 @@ public class FTBUClientEventHandler
 {
 	public static final ResourceLocation friendsButtonTexture = FTBU.mod.getLocation("textures/gui/friendsbutton.png");
 	public static final FTBUClientEventHandler instance = new FTBUClientEventHandler();
-	private static final int BUTTON_ID = 86;
+	private static final int BUTTON_ID = 24286;
+	private static final int SETTINGS_BUTTON_ID = 24287;
 	
 	@SubscribeEvent
 	public void onTooltip(ItemTooltipEvent e)
@@ -66,7 +67,10 @@ public class FTBUClientEventHandler
 	public void preTexturesLoaded(TextureStitchEvent.Pre e)
 	{
 		if(e.map.getTextureType() == 0)
+		{
 			LatCoreMCClient.blockNullIcon = e.map.registerIcon(FTBU.mod.assets + "nullIcon");
+			FTBULang.reload();
+		}
 		else if(e.map.getTextureType() == 1)
 			LatCoreMCClient.unknownItemIcon = e.map.registerIcon(FTBU.mod.assets + "unknown");
 	}
@@ -77,17 +81,6 @@ public class FTBUClientEventHandler
 		if(r.side.isClient())
 		{
 			ThreadLoadBadges.init();
-		}
-	}
-	
-	@SubscribeEvent
-	public void onIconsLoaded(TextureStitchEvent.Pre e)
-	{
-		if(e.map.getTextureType() == 1)
-		{
-			LoadLMIconsEvent ev = new LoadLMIconsEvent(e.map);
-			GuiLM.Icons.load(ev);
-			ev.post();
 		}
 	}
 	
@@ -164,47 +157,54 @@ public class FTBUClientEventHandler
 		}
 	}
 	
-	private boolean isValidGui(GuiScreen g)
-	{ return g instanceof GuiInventory || g instanceof GuiContainerCreative; }
-	
 	@SuppressWarnings("unchecked")
 	@SubscribeEvent
 	public void guiInitEvent(final GuiScreenEvent.InitGuiEvent.Post e)
 	{
-		if(!isValidGui(e.gui)) return;
-		
-		int xSize = 176;
-		int ySize = 166;
-		
-		int buttonX = 28;
-		int buttonY = 10;
-		
-		if(e.gui instanceof GuiContainerCreative)
+		if(e.gui instanceof GuiOptions)
 		{
-			xSize = 195;
-			ySize = 136;
-			
-			buttonX = 29;
-			buttonY = 8;
+			e.buttonList.add(new GuiButton(SETTINGS_BUTTON_ID, e.gui.width / 2 - 155, e.gui.height / 6 + 48 - 6, 150, 20, "FTBU Client Config"));
 		}
-		
-		final int guiLeft = (e.gui.width - xSize) / 2;
-		final int guiTop = (e.gui.height - ySize) / 2;
-		
-		e.buttonList.add(new ButtonFriends(e.gui, guiLeft + buttonX, guiTop + buttonY));
+		else if(e.gui instanceof GuiInventory || e.gui instanceof GuiContainerCreative)
+		{
+			int xSize = 176;
+			int ySize = 166;
+			
+			int buttonX = 28;
+			int buttonY = 10;
+			
+			if(e.gui instanceof GuiContainerCreative)
+			{
+				xSize = 195;
+				ySize = 136;
+				
+				buttonX = 29;
+				buttonY = 8;
+			}
+			
+			final int guiLeft = (e.gui.width - xSize) / 2;
+			final int guiTop = (e.gui.height - ySize) / 2;
+			
+			e.buttonList.add(new ButtonFriends(e.gui, guiLeft + buttonX, guiTop + buttonY));
+		}
 	}
 	
 	@SubscribeEvent
 	public void guiActionEvent(GuiScreenEvent.ActionPerformedEvent.Post e)
 	{
-		if(e.button.id != BUTTON_ID || !isValidGui(e.gui)) return;
-		
-		final GuiContainerCreative creativeContainer = (e.gui instanceof GuiContainerCreative) ? (GuiContainerCreative)e.gui : null;
-		
-		if(creativeContainer != null && creativeContainer.func_147056_g() != CreativeTabs.tabInventory.getTabIndex())
-			return;
-		
-		LatCoreMC.openGui(e.gui.mc.thePlayer, FTBUGuiHandler.FRIENDS, null);
+		if(e.button.id == SETTINGS_BUTTON_ID)
+		{
+			Minecraft.getMinecraft().displayGuiScreen(new GuiClientConfig()); 
+		}
+		else if(e.button.id == BUTTON_ID)
+		{
+			final GuiContainerCreative creativeContainer = (e.gui instanceof GuiContainerCreative) ? (GuiContainerCreative)e.gui : null;
+			
+			if(creativeContainer != null && creativeContainer.func_147056_g() != CreativeTabs.tabInventory.getTabIndex())
+				return;
+			
+			LatCoreMC.openGui(e.gui.mc.thePlayer, FTBUGuiHandler.FRIENDS, null);
+		}
 	}
 	
 	private static class ButtonFriends extends GuiButton
@@ -226,7 +226,7 @@ public class FTBUClientEventHandler
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			mc.getTextureManager().bindTexture(friendsButtonTexture);
-			GuiLM.drawTexturedModalRectD(xPosition, yPosition, 0D, 0D, width, height, 8, 8, 0D);
+			GuiLM.drawTexturedRectD(xPosition, yPosition, 0D, 8, 8, 0D, 0D, 1D, 1D);
 			if(mx >= xPosition && my >= yPosition && mx < xPosition + width && my < yPosition + height)
 				drawString(mc.fontRenderer, displayString, xPosition + textOX, yPosition + textOY, -1);
 			GL11.glDisable(GL11.GL_BLEND);

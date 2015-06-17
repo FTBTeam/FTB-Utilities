@@ -24,11 +24,11 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class FTBUClient extends FTBUCommon
 {
-	public static final ClientConfig clientConfig = new ClientConfig("FTBUtilities");
-	public static final ClientConfig.Property enablePlayerDecorators = new ClientConfig.Property("EnablePlayerDecorators", true);
-	public static final ClientConfig.Property addOreNames = new ClientConfig.Property("AddOreNames", false);
-	public static final ClientConfig.Property addRegistryNames = new ClientConfig.Property("AddRegistryNames", false);
-	public static final ClientConfig.Property displayDebugInfo = new ClientConfig.Property("DisplayDebugInfo", false);
+	public static final ClientConfig clientConfig = new ClientConfig("ftbu");
+	public static final ClientConfig.Property enablePlayerDecorators = new ClientConfig.Property("player_decorators", true);
+	public static final ClientConfig.Property addOreNames = new ClientConfig.Property("item_ore_names", false);
+	public static final ClientConfig.Property addRegistryNames = new ClientConfig.Property("item_reg_names", false);
+	public static final ClientConfig.Property displayDebugInfo = new ClientConfig.Property("debug_info", false);
 	
 	public void preInit(FMLPreInitializationEvent e)
 	{
@@ -92,7 +92,7 @@ public class FTBUClient extends FTBUCommon
 		boolean isSelf = p.getUUID().equals(getClientPlayer().getUniqueID());
 		if(isSelf)
 		{
-			LatCoreMC.logger.info("Joined the server with PlayerID " + p.playerID);
+			LatCoreMC.logger.info("Joined the server with PlayerID " + p.playerID + " in world " + LMWorld.getIDS());
 			LMPlayer.currentClientPlayerID = p.playerID;
 		}
 		
@@ -101,6 +101,7 @@ public class FTBUClient extends FTBUCommon
 		if(isSelf)
 		{
 			ThreadLoadBadges.init();
+			Waypoints.load();
 		}
 	}
 	

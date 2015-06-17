@@ -63,7 +63,10 @@ public class MathHelperLM
 	{ long j = 1L; for(int i = 0; i < n; i++) j *= f; return j; }
 	
 	public static double distSq(double x1, double y1, double z1, double x2, double y2, double z2)
-	{ return (sq(x2 - x1) + sq(y2 - y1) + sq(z2 - z1)); }
+	{
+		if(x1 == x2 && y1 == y2 && z1 == z2) return 0D;
+		return (sq(x2 - x1) + sq(y2 - y1) + sq(z2 - z1));
+	}
 	
 	public static double dist(double x1, double y1, double z1, double x2, double y2, double z2)
 	{ return sqrt(distSq(x1, y1, z1, x2, y2, z2)); }
@@ -372,4 +375,26 @@ public class MathHelperLM
 	
 	public static int percent(double d, double max)
 	{ return (int)(d / max * 100D); }
+	
+	public static Number min(Number... v)
+	{
+		if(v == null || v.length == 0) return 0;
+		Number m = v[0];
+		
+		for(int i = 0; i < v.length; i++)
+			if(v[i].doubleValue() < m.doubleValue()) m = v[i];
+		
+		return m;
+	}
+	
+	public static Number max(Number... v)
+	{
+		if(v == null || v.length == 0) return 0;
+		Number m = v[0];
+		
+		for(int i = 0; i < v.length; i++)
+			if(v[i].doubleValue() > m.doubleValue()) m = v[i];
+		
+		return m;
+	}
 }

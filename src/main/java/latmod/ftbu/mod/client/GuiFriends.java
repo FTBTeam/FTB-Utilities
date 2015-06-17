@@ -5,13 +5,12 @@ import latmod.ftbu.core.*;
 import latmod.ftbu.core.event.LMPlayerEvent;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
-import latmod.ftbu.core.util.FastList;
+import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.stats.*;
 import net.minecraft.util.*;
 
 import org.lwjgl.opengl.GL11;
@@ -412,8 +411,8 @@ public class GuiFriends extends GuiLM
 				if(p.deaths > 0)
 					al.add("Deaths: " + p.deaths);
 				
-				//if(p.lastSeen > 0L)
-				//	al.add("Last ");
+				if(p.lastSeen > 0L)
+					al.add("Last Seen: " + LatCore.getTimeAgo(p.lastSeen) + " ago");
 				
 				if(p.clientInfo != null && !p.clientInfo.isEmpty())
 				{

@@ -1,68 +1,89 @@
-key.latcoremc=LatCoreMC
-
-latcoremc:button.settings=Options
-latcoremc:button.back=Arrière
-latcoremc:button.up=Haut
-latcoremc:button.down=Bas
-latcoremc:button.prev=Précédent
-latcoremc:button.next=Suivant
-latcoremc:button.enabled=Activé
-latcoremc:button.disabled=Désactivé
-latcoremc:button.cancel=Annuler
-latcoremc:button.accept=Accepter
-latcoremc:button.remove=Supprimer
-latcoremc:button.add=Ajouter
+ftbu:button.settings=Options
+ftbu:button.back=Arrière
+ftbu:button.up=Haut
+ftbu:button.down=Bas
+ftbu:button.prev=Précédent
+ftbu:button.next=Suivant
+ftbu:button.enabled=Activé
+ftbu:button.disabled=Désactivé
+ftbu:button.cancel=Annuler
+ftbu:button.accept=Accepter
+ftbu:button.remove=Supprimer
+ftbu:button.add=Ajouter
+ftbu:button.close=Fermer
+ftbu:button.save=Save < To be translated
 
 #FriendsGUI
-latcoremc:button.close=Fermer
-latcoremc:button.addFriend=Ajouter comme ami
-latcoremc:button.remFriend=Supprimer des amis
-latcoremc:button.editGroups=Modifier le groupe
-latcoremc:button.viewPlayer=Visualiser le joueur
-latcoremc:label.online=En ligne
-latcoremc:label.friend=Ami
-latcoremc:label.pfriend=Demande d'ami
+ftbu:button.addFriend=Ajouter comme ami
+ftbu:button.remFriend=Supprimer des amis
+ftbu:label.online=En ligne
+ftbu:label.friend=Ami
+ftbu:label.pfriend=Demande d'ami
 
 #ManageGroups
-latcoremc:button.addGroup=Ajouter un groupe
-latcoremc:button.remGroup=Supprimer le groupe
+ftbu:button.addGroup=Ajouter un groupe
+ftbu:button.remGroup=Supprimer le groupe
 
-latcoremc:owner=Propriétaire : %s
+#ClientConfig < All this \/ To be translated
+config.value.enabled=Enabled
+config.value.disabled=Disabled
+config.value.true=True
+config.value.false=False
+config.property.enabled=Enabled
 
-latcoremc:security=Securité
-latcoremc:security.public=Public
-latcoremc:security.private=Privé
-latcoremc:security.friends=Amis
-latcoremc:security.group=Groupes
-latcoremc:security.whitelist=Liste blanche
-latcoremc:security.blacklist=Liste noire
+config.group.ftbu=FTBUtilities
+config.property.player_decorators=Player Decorators
+config.property.item_ore_names=Item OreDict Names
+config.property.item_reg_names=Item Registry Names
+config.property.debug_info=Debug Info
+config.property.options_button=Options Button
 
-latcoremc:redstonemode=Mode Redstone
-latcoremc:redstonemode.disabled=Désactivé
-latcoremc:redstonemode.high=Très actif
-latcoremc:redstonemode.low=Peu actif
+config.group.waypoints=Waypoints
+config.property.waypoint_type=Waypoint Type
+config.property.display_title=Display Title
+config.property.display_distance=Display Distance
+config.property.render_distance=Render Distance
+config.property.death_point=Death Point
+config.value.marker=Marker
+config.value.beacon=Beacon
 
-latcoremc:invmode=Automatisation
-latcoremc:invmode.enabled=Activé
-latcoremc:invmode.onlyin=Insertion seule
-latcoremc:invmode.onlyout=Extraction seule
-latcoremc:invmode.disabled=Désactivé
+#Misc
+ftbu:owner=Propriétaire : %s
 
-latcoremc:color.black=Noir
-latcoremc:color.red=Rouge
-latcoremc:color.green=Vert
-latcoremc:color.brown=Marron
-latcoremc:color.blue=Bleu
-latcoremc:color.purple=Violet
-latcoremc:color.cyan=Cyan
-latcoremc:color.silver=Gris clair
-latcoremc:color.gray=Gris foncé
-latcoremc:color.pink=Rose
-latcoremc:color.lime=Citron
-latcoremc:color.yellow=Jaune
-latcoremc:color.light_blue=Bleu clair
-latcoremc:color.magenta=Magenta
-latcoremc:color.orange=Orange
-latcoremc:color.white=Blanc
+ftbu:security=Securité
+ftbu:security.public=Public
+ftbu:security.private=Privé
+ftbu:security.friends=Amis
+ftbu:security.group=Groupes
+ftbu:security.whitelist=Liste blanche
+ftbu:security.blacklist=Liste noire
+
+ftbu:redstonemode=Mode Redstone
+ftbu:redstonemode.disabled=Désactivé
+ftbu:redstonemode.high=Très actif
+ftbu:redstonemode.low=Peu actif
+
+ftbu:invmode=Automatisation
+ftbu:invmode.enabled=Activé
+ftbu:invmode.onlyin=Insertion seule
+ftbu:invmode.onlyout=Extraction seule
+ftbu:invmode.disabled=Désactivé
+
+ftbu:color.black=Noir
+ftbu:color.red=Rouge
+ftbu:color.green=Vert
+ftbu:color.brown=Marron
+ftbu:color.blue=Bleu
+ftbu:color.purple=Violet
+ftbu:color.cyan=Cyan
+ftbu:color.silver=Gris clair
+ftbu:color.gray=Gris foncé
+ftbu:color.pink=Rose
+ftbu:color.lime=Citron
+ftbu:color.yellow=Jaune
+ftbu:color.light_blue=Bleu clair
+ftbu:color.magenta=Magenta
+ftbu:color.orange=Orange
+ftbu:color.white=Blanc
 
 commands.lmmissingargs=Arguments manquants!

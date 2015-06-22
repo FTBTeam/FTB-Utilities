@@ -63,27 +63,19 @@ public final class LatCoreMC // LatCoreMCClient
 	
 	// Proxy methods //
 	
+	public static IChatComponent getChatComponent(Object o)
+	{ return (o != null && o instanceof IChatComponent) ? (IChatComponent)o : new ChatComponentText("" + o); }
+	
 	/** Prints message to chat (doesn't translate it) */
-	public static void printChat(ICommandSender ep, Object o, boolean broadcast)
+	public static void printChat(ICommandSender ep, Object o)
 	{
 		if(ep == null && isDevEnv) ep = FTBU.proxy.getClientPlayer();
-		
-		if(ep != null)
-		{
-			IChatComponent msg = (o != null && o instanceof IChatComponent) ? (IChatComponent)o : new ChatComponentText("" + o);
-			
-			if(broadcast && ep instanceof MinecraftServer)
-			{
-				//for(EntityPlayerMP ep1 : getAllOnlinePlayers()) ep1.addChatMessage(msg);
-				((MinecraftServer)ep).getConfigurationManager().sendChatMsg(msg);
-			}
-			else ep.addChatMessage(msg);
-		}
+		if(ep != null) ep.addChatMessage(getChatComponent(o));
 		else logger.info(o);
 	}
 	
-	public static void printChat(ICommandSender ep, Object o)
-	{ printChat(ep, o, false); }
+	public static void printChatAll(Object o)
+	{ getServer().getConfigurationManager().sendChatMsgImpl(getChatComponent(o), true); }
 	
 	// Registry methods //
 	
@@ -212,10 +204,7 @@ public final class LatCoreMC // LatCoreMCClient
 	{ return executeCommand(ics, cmd + " " + LatCore.unsplit(args, " ")); }
 	
 	public static void notifyPlayer(EntityPlayerMP ep, Notification n)
-	{
-		if(ep != null) MessageLM.NET.sendTo(new MessageNotifyPlayer(n), ep);
-		else MessageLM.NET.sendToAll(new MessageNotifyPlayer(n));
-	}
+	{ MessageLM.sendTo(ep, new MessageNotifyPlayer(n)); }
 	
 	public static Object invokeStatic(String className, String methodName) throws Exception
 	{ Class<?> c = Class.forName(className); return c.getMethod(methodName).invoke(null); }
@@ -272,7 +261,7 @@ public final class LatCoreMC // LatCoreMCClient
 	}
 	
 	public static boolean isDedicatedServer()
-	{ return getServer().isDedicatedServer(); }
+	{ return FTBUTickHandler.isDediServer; }
 	
 	public static String getDimName(World w)
 	{ return w.provider.getDimensionName(); }

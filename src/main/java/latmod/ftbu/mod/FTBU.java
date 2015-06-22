@@ -29,7 +29,11 @@ public class FTBU
 	@LMMod.Instance(FTBUFinals.MOD_ID)
 	public static LMMod mod;
 	
-	public FTBU() { LatCoreMC.addEventHandler(FTBUEventHandler.instance, true, true, true); }
+	public FTBU()
+	{
+		LatCoreMC.addEventHandler(FTBUEventHandler.instance, true, true, true);
+		LatCoreMC.addEventHandler(FTBUTickHandler.instance, false, true, false);
+	}
 	
 	private ModMetadata modMeta;
 	

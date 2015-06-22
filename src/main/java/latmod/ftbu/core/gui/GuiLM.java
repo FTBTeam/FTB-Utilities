@@ -88,21 +88,35 @@ public abstract class GuiLM extends GuiContainer
 		public static final TextureCoords online_red = new TextureCoords(tex, 47);
 	}
 	
+	private static final FastList<String> tempTextList = new FastList<String>();
+	
 	// GuiLM //
 	
 	public final ContainerLM container;
 	public final ResourceLocation texture;
-	public final FastList<WidgetLM> widgets;
+	private final FastList<WidgetLM> widgets;
+	private boolean refreshWidgets = true;
+	public int mouseX, mouseY, mouseXR, mouseYR;
+	public float delta;
 	
 	public GuiLM(ContainerLM c, ResourceLocation tex)
 	{
 		super(c);
+		refreshWidgets();
 		
 		FTBU.mod.getLocation("textures/gui/icons/button.png");
 		container = c;
 		texture = tex;
 		widgets = new FastList<WidgetLM>();
 	}
+	
+	public void refreshWidgets()
+	{ refreshWidgets = true; }
+	
+	public FastList<WidgetLM> getWidgets()
+	{ return widgets; }
+	
+	public abstract void addWidgets(FastList<WidgetLM> l);
 	
 	public ItemStack getHeldItem()
 	{ return container.player.inventory.getItemStack(); }
@@ -131,14 +145,7 @@ public abstract class GuiLM extends GuiContainer
 	protected void mouseClicked(int mx, int my, int b)
 	{
 		for(int i = 0; i < widgets.size(); i++)
-			widgets.get(i).voidMousePressed(mx, my, b);
-		
-		for(int i = 0; i < widgets.size(); i++)
-		{
-			if(widgets.get(i).mousePressed(mx, my, b))
-				return;
-		}
-		
+			widgets.get(i).mousePressed(b);
 		super.mouseClicked(mx, my, b);
 	}
 	
@@ -153,7 +160,10 @@ public abstract class GuiLM extends GuiContainer
 		super.keyTyped(keyChar, key);
 	}
 	
-	public void drawGuiContainerBackgroundLayer(float f, int mx, int my)
+	public final void drawGuiContainerBackgroundLayer(float f, int mx, int my)
+	{ drawBackground(); }
+	
+	public void drawBackground()
 	{
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
@@ -162,32 +172,61 @@ public abstract class GuiLM extends GuiContainer
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 	}
 	
-	public void drawScreen(int mx, int my, float f)
+	public final void drawGuiContainerForegroundLayer(int mx, int my)
+	{ drawForeground(); }
+	
+	public void drawForeground()
 	{
+	}
+	
+	public final void drawScreen(int mx, int my, float f)
+	{
+		guiLeft = (width - xSize) / 2;
+		guiTop = (height - ySize) / 2;
+		mouseX = mx;
+		mouseY = my;
+		mouseXR = mx - guiLeft;
+		mouseYR = my - guiTop;
+		delta = f;
+		
+		if(refreshWidgets)
+		{
+			widgets.clear();
+			addWidgets(widgets);
+			widgets.removeNullValues();
+			
+			refreshWidgets = false;
+		}
+		
 		super.drawScreen(mx, my, f);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
-		drawText(mx, my);
+		tempTextList.clear();
+		drawText(tempTextList);
+		
+		if(!tempTextList.isEmpty())
+			drawHoveringText(tempTextList, mouseX, mouseY, fontRendererObj);
+		
 		GL11.glDisable(GL11.GL_LIGHTING);
+		
+		drawForeground();
 	}
 	
-	public void drawText(int mx, int my)
+	public final void drawText(int mx, int my)
 	{
-		FastList<String> l = new FastList<String>();
-		
-		addMouseText(mx, my, l);
-		
+	}
+	
+	public void drawText(FastList<String> l)
+	{
 		for(int i = 0; i < widgets.size(); i++)
 		{
 			WidgetLM w = widgets.get(i);
-			if(w.mouseOver(mx, my))
+			if(w.mouseOver())
 				w.addMouseOverText(l);
 		}
-		
-		if(!l.isEmpty()) drawHoveringText(l, mx, my, fontRendererObj);
 	}
 	
-	public void addMouseText(int mx, int my, FastList<String> l)
+	public final void addMouseText(int mx, int my, FastList<String> l)
 	{
 	}
 	

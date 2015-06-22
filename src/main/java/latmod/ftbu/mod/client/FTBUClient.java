@@ -29,6 +29,7 @@ public class FTBUClient extends FTBUCommon
 	public static final ClientConfig.Property addOreNames = new ClientConfig.Property("item_ore_names", false);
 	public static final ClientConfig.Property addRegistryNames = new ClientConfig.Property("item_reg_names", false);
 	public static final ClientConfig.Property displayDebugInfo = new ClientConfig.Property("debug_info", false);
+	public static final ClientConfig.Property optionsButton = new ClientConfig.Property("options_button", true);
 	
 	public void preInit(FMLPreInitializationEvent e)
 	{
@@ -41,6 +42,7 @@ public class FTBUClient extends FTBUCommon
 		clientConfig.add(addOreNames);
 		clientConfig.add(addRegistryNames);
 		clientConfig.add(displayDebugInfo);
+		clientConfig.add(optionsButton);
 		ClientConfig.Registry.add(clientConfig);
 		
 		Waypoints.init();
@@ -109,7 +111,7 @@ public class FTBUClient extends FTBUCommon
 	{ new LMPlayerClientEvent.LoggedOut(p, p.getPlayerSP(), p.getUUID().equals(getClientPlayer().getUniqueID())).post(); }
 	
 	public void playerLMDataChanged(LMPlayer p, String action)
-	{ new LMPlayerClientEvent.DataChanged(p, action); }
+	{ new LMPlayerClientEvent.DataChanged(p, action).post(); }
 	
 	public void openClientGui(EntityPlayer ep, String id, NBTTagCompound data)
 	{

@@ -13,28 +13,23 @@ public abstract class ButtonLM extends WidgetLM
 	public ButtonLM(GuiLM g, int x, int y, int w, int h)
 	{ super(g, x, y, w, h); }
 	
-	public boolean mousePressed(int mx, int my, int b)
+	public void mousePressed(int b)
 	{
-		if(mouseOver(mx, my) && isEnabled())
+		if(mouseOver() && isEnabled())
 		{
 			if(doubleClickRequired)
 			{
-				if(Minecraft.getSystemTime() - lastClickMillis < 300)
-					onButtonDoublePressed(b);
-				lastClickMillis = Minecraft.getSystemTime();
+				long l = Minecraft.getSystemTime();
+				if(l - lastClickMillis < 300)
+					onButtonPressed(b);
+				lastClickMillis = l;
 			}
+			
 			else onButtonPressed(b);
-			return true;
 		}
-		
-		return false;
 	}
 	
 	public abstract void onButtonPressed(int b);
-	
-	public void onButtonDoublePressed(int b)
-	{
-	}
 	
 	public boolean isEnabled()
 	{ return true; }

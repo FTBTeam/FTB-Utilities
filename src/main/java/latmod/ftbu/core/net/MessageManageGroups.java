@@ -55,6 +55,8 @@ public class MessageManageGroups extends MessageLM<MessageManageGroups>
 				if(!owner.friends.contains(p))
 				{
 					owner.friends.add(p);
+					owner.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
+					p.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
 					LatCoreMC.notifyPlayer(ep, new Notification(GREEN + "Added friend", p.getName(), null, 800));
 				}
 			}
@@ -63,14 +65,11 @@ public class MessageManageGroups extends MessageLM<MessageManageGroups>
 				if(owner.friends.contains(p))
 				{
 					owner.friends.remove(p);
+					owner.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
+					p.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
 					LatCoreMC.notifyPlayer(ep, new Notification(RED + "Removed friend", p.getName(), null, 800));
 				}
 			}
-		}
-		else
-		{
-			LatCoreMC.notifyPlayer(ep, new Notification(AQUA + "Players saved", null, null, 2000));
-			owner.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
 		}
 		
 		return null;

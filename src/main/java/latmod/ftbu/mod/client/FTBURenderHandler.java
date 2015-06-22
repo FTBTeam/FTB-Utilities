@@ -7,6 +7,7 @@ import latmod.ftbu.core.client.model.CubeRenderer;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.Waypoints.Waypoint;
+import latmod.ftbu.mod.client.gui.GuiNotification;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderManager;

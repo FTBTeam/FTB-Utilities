@@ -267,4 +267,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 	
 	public TileEntity getTile(int side)
 	{ return worldObj.getTileEntity(xCoord + Facing.offsetsXForSide[side], yCoord + Facing.offsetsYForSide[side], zCoord + Facing.offsetsZForSide[side]); }
+	
+	public Block getBlock(int side)
+	{ return worldObj.getBlock(xCoord + Facing.offsetsXForSide[side], yCoord + Facing.offsetsYForSide[side], zCoord + Facing.offsetsZForSide[side]); }
 }

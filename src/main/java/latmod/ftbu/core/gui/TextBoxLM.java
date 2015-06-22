@@ -19,33 +19,28 @@ public class TextBoxLM extends WidgetLM
 		super(g, x, y, w, h);
 	}
 	
-	public boolean mousePressed(int mx, int my, int b)
+	public void mousePressed(int b)
 	{
-		if(mouseOver(mx, my))
+		if(mouseOver())
 		{
 			isSelected = true;
 			Keyboard.enableRepeatEvents(true);
 			
 			if(b == 1 && text.length() > 0)
 			{
-				text = "";
+				clear();
 				textChanged();
 			}
-			
-			return true;
 		}
-		
-		return false;
+		else
+		{
+			Keyboard.enableRepeatEvents(false);
+			isSelected = false;
+		}
 	}
 	
 	public boolean canAddChar(char c)
 	{ return charLimit == -1 || text.length() + 1 <= charLimit; }
-	
-	public void voidMousePressed(int mx, int my, int b)
-	{
-		Keyboard.enableRepeatEvents(false);
-		isSelected = false;
-	}
 	
 	public boolean keyPressed(int key, char keyChar)
 	{
@@ -55,9 +50,9 @@ public class TextBoxLM extends WidgetLM
 			{
 				if(text.length() > 0)
 				{
-					if(GuiScreen.isCtrlKeyDown()) text = ""; else
-						text = text.substring(0, text.length() - 1);
-					
+					if(GuiScreen.isCtrlKeyDown())
+						clear();
+					else text = text.substring(0, text.length() - 1);
 					textChanged();
 				}
 			}

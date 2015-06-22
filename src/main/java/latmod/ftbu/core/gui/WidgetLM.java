@@ -21,8 +21,8 @@ public class WidgetLM
 	public boolean isAt(int x, int y)
 	{ return x >= posX && y >= posY && x < posX + width && y < posY + height; }
 	
-	public boolean mouseOver(int mx, int my)
-	{ return isAt(mx - gui.getPosX(), my - gui.getPosY()); }
+	public boolean mouseOver()
+	{ return isAt(gui.mouseXR, gui.mouseYR); }
 	
 	public void render(TextureCoords icon, double rw, double rh)
 	{ if(icon != null) icon.render(gui, posX, posY, (int)(width * rw), (int)(height * rh)); }
@@ -30,12 +30,7 @@ public class WidgetLM
 	public void render(TextureCoords icon)
 	{ render(icon, 1D, 1D); }
 	
-	public boolean mousePressed(int mx, int my, int b)
-	{
-		return false;
-	}
-	
-	public void voidMousePressed(int mx, int my, int b)
+	public void mousePressed(int b)
 	{
 	}
 	

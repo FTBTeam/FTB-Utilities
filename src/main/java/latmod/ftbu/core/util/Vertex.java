@@ -101,6 +101,15 @@ public final class Vertex implements Cloneable
 		return Math.atan(y - v.y);
 	}
 	
+	public int getX()
+	{ return MathHelperLM.floor(x); }
+	
+	public int getY()
+	{ return MathHelperLM.floor(y); }
+	
+	public int getZ()
+	{ return MathHelperLM.floor(z); }
+	
 	public static class DimPos
 	{
 		public Vertex pos;

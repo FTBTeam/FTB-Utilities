@@ -94,9 +94,9 @@ public class Waypoints
 		{
 			name = n;
 			enabled = true;
-			posX = (int)x;
-			posY = (int)y;
-			posZ = (int)z;
+			posX = MathHelperLM.floor(x);
+			posY = MathHelperLM.floor(y);
+			posZ = MathHelperLM.floor(z);
 			dim = d;
 			colR = 0;
 			colG = 148;

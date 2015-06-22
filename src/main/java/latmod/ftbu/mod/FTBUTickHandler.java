@@ -14,28 +14,23 @@ import cpw.mods.fml.relauncher.Side;
 public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
 {
 	public static final FTBUTickHandler instance = new FTBUTickHandler();
-	public boolean isDediServer = false;
-	public boolean serverStarted = false;
-	private long startMillis = 0L;
-	private long startSeconds = 0L;
-	private long currentMillis = 0L;
-	private long currentSeconds = 0L;
-	private long restartSeconds = 0L;
-	
-	private static void printServer(String s)
-	{ LatCoreMC.printChat(MinecraftServer.getServer(), s, true); }
+	public static MinecraftServer server;
+	public static boolean isDediServer = false;
+	public static boolean serverStarted = false;
+	private static long startMillis = 0L;
+	private static long currentMillis = 0L;
+	private static long restartSeconds = 0L;
 	
 	@SubscribeEvent
 	public void onWorldTick(TickEvent.WorldTickEvent e)
 	{
 		if(LatCoreMC.isServer() && e.side == Side.SERVER && e.phase == TickEvent.Phase.END && e.type == TickEvent.Type.WORLD)
 		{
-			long t = System.currentTimeMillis();
+			long t = LatCore.millis();
 			
 			if(t - currentMillis >= 1000L)
 			{
 				currentMillis = t;
-				currentSeconds = currentMillis / 1000L;
 				
 				if(FTBUConfig.General.restartTimer > 0)
 				{
@@ -43,20 +38,15 @@ public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
 					
 					String msg = null;
 					
-					if(secondsLeft <= 0) { MinecraftServer.getServer().initiateShutdown(); return; }
+					if(secondsLeft <= 0) { server.initiateShutdown(); return; }
 					else if(secondsLeft <= 10) msg = secondsLeft + " Seconds";
 					else if(secondsLeft == 30) msg = "30 Seconds";
 					else if(secondsLeft == 60) msg = "1 Minute";
 					else if(secondsLeft == 300) msg = "5 Minutes";
 					else if(secondsLeft == 600) msg = "10 Minutes";
 					
-					if(msg != null)
-					{
-						if(secondsLeft >= 60)
-							printServer(LIGHT_PURPLE + "Server will restart after " + msg);
-						
-						//LatCoreMC.notifyPlayer(null, new Notification("Server restarts in...", msg, new ItemStack(Items.clock), 4000));
-					}
+					if(msg != null && secondsLeft >= 30)
+						LatCoreMC.printChatAll(LIGHT_PURPLE + "Server will restart after " + msg);
 				}
 				
 				for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers().values)
@@ -102,16 +92,15 @@ public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
 	{
 	}
 	
-	public void resetTimer(boolean started)
+	public static void resetTimer(boolean started)
 	{
 		serverStarted = started;
 		
 		if(serverStarted)
 		{
-			isDediServer = LatCoreMC.isDedicatedServer();
+			isDediServer = LatCoreMC.getServer().isDedicatedServer();
 			
-			currentMillis = startMillis = System.currentTimeMillis();
-			currentSeconds = startSeconds = startMillis / 1000L;
+			currentMillis = startMillis = LatCore.millis();
 			restartSeconds = 0;
 			
 			if(FTBUConfig.General.restartTimer > 0)
@@ -122,22 +111,25 @@ public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
 		}
 	}
 	
-	public long getSecondsUntilRestart()
-	{ return restartSeconds - (currentSeconds - startSeconds); }
+	public static long getSecondsUntilRestart()
+	{ return Math.max(0L, restartSeconds - (currentSeconds() - startSeconds())); }
 	
-	public void forceShutdown(int sec)
+	public static void forceShutdown(int sec)
 	{
 		restartSeconds = sec + 1;
-		currentMillis = startMillis = System.currentTimeMillis();
-		currentSeconds = startSeconds = startMillis / 1000L;
+		//currentMillis = LatCore.millis();
+		//currentSeconds = startSeconds = startMillis / 1000L;
 	}
 	
-	public long currentMillis()
+	public static long currentMillis()
 	{ return currentMillis; }
 	
-	public long currentSeconds()
-	{ return currentSeconds; }
+	public static long currentSeconds()
+	{ return currentMillis() / 1000L; }
 	
-	public long secondsElapsed()
-	{ return currentSeconds - startMillis; }
+	public static long startMillis()
+	{ return startMillis; }
+	
+	public static long startSeconds()
+	{ return startMillis() / 1000L; }
 }

@@ -498,18 +498,18 @@ public class LatCore
 			deleteFile(new File(dir, files[i]));
 		return dir.delete();
 	}
-
+	
 	public static String getTimeAgo(long t)
 	{
 		if(t < 1000L) return "Now";
-		t /= 1000L; // Seconds
-		if(t < 60L) return t + getPW(t, " second", " seconds");
-		t /= 60L; // Minutes
-		if(t < 60L) return t + getPW(t, " minute", " minutes");
-		t /= 24L; // Hours
-		if(t < 24L) return t + getPW(t, " hour", " hours");
-		t /= 30L; // Days
-		return t + getPW(t, " day", " days");
+		t /= 1000L;// if(t < 60L) // Seconds
+			return t + getPW(t, " second", " seconds");
+		//t /= 60L; if(t < 60L) // Minutes
+		//	return t + getPW(t, " minute", " minutes");
+		//t /= 24L; // if(t < 24L) // Hours
+		//	return t + getPW(t, " hour", " hours");
+		//t /= 30L; // Days
+		//return t + getPW(t, " day", " days");
 	}
 	
 	private static String getPW(long t, String s, String p)
@@ -517,4 +517,7 @@ public class LatCore
 		String s0 = "" + t;
 		return (s0.endsWith("1") && !s0.endsWith("11")) ? s : p;
 	}
+	
+	public static long millis()
+	{ return System.currentTimeMillis(); }
 }

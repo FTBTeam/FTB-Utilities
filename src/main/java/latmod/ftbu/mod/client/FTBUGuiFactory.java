@@ -4,6 +4,7 @@ import java.util.Set;
 
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.client.gui.GuiClientConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import cpw.mods.fml.client.IModGuiFactory;
@@ -33,7 +34,7 @@ public class FTBUGuiFactory implements IModGuiFactory
 		{ super(s, new FastList<>(), FTBU.mod.modID, false, false, FTBU.mod.config.getAbridgedPath()); }
 		
 		public void initGui()
-		{ mc.displayGuiScreen(new GuiClientConfig()); }
+		{ mc.displayGuiScreen(new GuiClientConfig(parentScreen)); }
 		
 		public void onGuiClosed()
 		{ }

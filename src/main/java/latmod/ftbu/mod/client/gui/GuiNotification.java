@@ -1,4 +1,4 @@
-package latmod.ftbu.mod.client;
+package latmod.ftbu.mod.client.gui;
 
 import latmod.ftbu.core.Notification;
 import latmod.ftbu.mod.FTBU;

@@ -1,7 +1,8 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import latmod.ftbu.core.LatCoreMC;
+import latmod.ftbu.core.*;
 import latmod.ftbu.core.cmd.*;
+import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.FTBUGuiHandler;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -17,14 +18,9 @@ public class CmdAdminDisplayItem extends SubCommand
 		
 		if(ep.inventory.getCurrentItem() != null)
 		{
+			ItemDisplay itemDisplay = new ItemDisplay(is, is.getDisplayName(), is.hasDisplayName() ? FastList.asList(is.getItem().getItemStackDisplayName(is)) : null, 8F);
 			NBTTagCompound data = new NBTTagCompound();
-			
-			NBTTagCompound item = new NBTTagCompound();
-			is.writeToNBT(item);
-			data.setTag("I", item);
-			data.setString("T", is.getDisplayName());
-			if(is.hasDisplayName()) data.setString("D", is.getItem().getItemStackDisplayName(is));
-			
+			itemDisplay.writeToNBT(data);
 			LatCoreMC.openGui(ep, FTBUGuiHandler.DISPLAY_ITEM, data);
 			return null;
 		}

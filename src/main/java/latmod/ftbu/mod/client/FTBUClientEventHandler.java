@@ -7,6 +7,7 @@ import latmod.ftbu.core.gui.GuiLM;
 import latmod.ftbu.core.tile.IPaintable;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.*;
+import latmod.ftbu.mod.client.gui.GuiClientConfig;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
@@ -163,7 +164,8 @@ public class FTBUClientEventHandler
 	{
 		if(e.gui instanceof GuiOptions)
 		{
-			e.buttonList.add(new GuiButton(SETTINGS_BUTTON_ID, e.gui.width / 2 - 155, e.gui.height / 6 + 48 - 6, 150, 20, "FTBU Client Config"));
+			if(FTBUClient.optionsButton.getB())
+				e.buttonList.add(new GuiButton(SETTINGS_BUTTON_ID, e.gui.width / 2 - 155, e.gui.height / 6 + 48 - 6, 150, 20, "FTBU Client Config"));
 		}
 		else if(e.gui instanceof GuiInventory || e.gui instanceof GuiContainerCreative)
 		{
@@ -194,7 +196,7 @@ public class FTBUClientEventHandler
 	{
 		if(e.button.id == SETTINGS_BUTTON_ID)
 		{
-			Minecraft.getMinecraft().displayGuiScreen(new GuiClientConfig()); 
+			Minecraft.getMinecraft().displayGuiScreen(new GuiClientConfig(e.gui)); 
 		}
 		else if(e.button.id == BUTTON_ID)
 		{

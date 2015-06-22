@@ -1,4 +1,6 @@
-package latmod.ftbu.mod.client;
+package latmod.ftbu.mod.client.gui;
+
+import java.util.*;
 
 import latmod.ftbu.core.FTBULang;
 import latmod.ftbu.core.client.ClientConfig;
@@ -8,11 +10,17 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class GuiClientConfig extends GuiScreen
 {
+	public GuiClientConfig(GuiScreen g)
+	{
+		//To-Do: Make a return gui
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void initGui()
 	{
-		for(int i = 0; i < ClientConfig.Registry.map.size(); i++)
-			buttonList.add(new GroupButton(i, ClientConfig.Registry.map.values.get(i)));
+		int i = -1;
+		for(ClientConfig c : ClientConfig.Registry.map.values)
+			buttonList.add(new GroupButton(++i, c));
 		
 		buttonList.add(new GuiButton(255, width / 2 - 100, height - 40, 200, 20, FTBULang.button_back));
 	}
@@ -21,11 +29,12 @@ public class GuiClientConfig extends GuiScreen
 	{
 		if(b.id == 255) mc.displayGuiScreen(null);
 		else if(b instanceof GroupButton)
-			mc.displayGuiScreen(new GuiClientConfigTab(((GroupButton)b).config));
+			mc.displayGuiScreen(new GuiClientConfigTab(this, ((GroupButton)b).config));
 	}
 	
 	public void onGuiClosed()
 	{
+		//mc.displayGuiScreen(prev);
 	}
 	
 	public void drawScreen(int mx, int my, float pt)
@@ -48,25 +57,26 @@ public class GuiClientConfig extends GuiScreen
 	
 	public static class GuiClientConfigTab extends GuiScreen
 	{
-		public final ClientConfig clientConfig;
+		public final ClientConfig config;
 		
-		public GuiClientConfigTab(ClientConfig c)
+		public GuiClientConfigTab(GuiClientConfig g, ClientConfig c)
 		{
-			clientConfig = c;
+			config = c;
 		}
 		
 		@SuppressWarnings("unchecked")
 		public void initGui()
 		{
-			for(int i = 0; i < clientConfig.map.size(); i++)
-				buttonList.add(new PropButton(i, clientConfig.map.values.get(i)));
+			int i = -1;
+			for(ClientConfig.Property p : config.map.values)
+				buttonList.add(new PropButton(++i, p));
 			
 			buttonList.add(new GuiButton(255, width / 2 - 100, height - 40, 200, 20, FTBULang.button_back));
 		}
 		
 		public void actionPerformed(GuiButton b)
 		{
-			if(b.id == 255) mc.displayGuiScreen(new GuiClientConfig());
+			if(b.id == 255) mc.displayGuiScreen(new GuiClientConfig(null));
 			else if(b instanceof PropButton)
 			{
 				ClientConfig.Property p = ((PropButton)b).property;
@@ -78,7 +88,7 @@ public class GuiClientConfig extends GuiScreen
 		public void drawScreen(int mx, int my, float pt)
 		{
 			drawDefaultBackground();
-			drawCenteredString(fontRendererObj, clientConfig.id, width / 2, 15, 16777215);
+			drawCenteredString(fontRendererObj, config.getIDS(), width / 2, 15, 16777215);
 			super.drawScreen(mx, my, pt);
 		}
 		

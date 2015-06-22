@@ -25,6 +25,9 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	public FastList(Object[] o)
 	{ this(); addAll(o); }
 	
+	public FastList<E> blankCopy()
+	{ return new FastList<E>(initSize, incr); }
+	
 	private void expand()
 	{
 		Object[] o = new Object[objects.length + incr];
@@ -109,7 +112,7 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	
 	public FastList<E> clone()
 	{
-		FastList<E> l = new FastList<E>(initSize, incr);
+		FastList<E> l = blankCopy();
 		l.objects = toArray();
 		l.size = size;
 		return l;
@@ -128,7 +131,7 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	@SuppressWarnings("all")
 	public FastList<E> sortToNew(Comparator<? super E> c)
 	{
-		FastList<E> l = new FastList<E>();
+		FastList<E> l = blankCopy();
 		
 		if(size > 0)
 		{
@@ -223,7 +226,7 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	public List<E> subList(int fromIndex, int toIndex)
 	{
 		if(fromIndex < 0 || toIndex <= 0 || toIndex - fromIndex >= size) return null;
-		FastList<E> al = new FastList<E>();
+		FastList<E> al = blankCopy();
 		al.objects = new Object[toIndex - fromIndex];
 		System.arraycopy(objects, fromIndex, al.objects, 0, fromIndex + toIndex);
 		return al;
@@ -233,7 +236,7 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	{
 		if(size > t)
 		{
-			FastList<E> newRes = new FastList<E>();
+			FastList<E> newRes = blankCopy();
 			for(int i = 0; i < t; i++)
 				newRes.add(get(i));
 			clear();
@@ -247,7 +250,7 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	
 	public FastList<E> flip()
 	{
-		FastList<E> al1 = new FastList<E>();
+		FastList<E> al1 = blankCopy();
 		if(size == 0) return al1;
 		for(int i = size - 1; i >= 0; i--)
 		al1.add(get(i)); return al1;
@@ -269,4 +272,15 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	@SafeVarargs
 	public static <T> FastList<T> asList(T... a)
 	{ return new FastList<T>(a); }
+	
+	public void removeNullValues()
+	{
+		E[] e0 = (E[])objects;
+		int size0 = size;
+		
+		clear();
+		
+		for(int i = 0; i < size0; i++)
+			if(e0[i] != null) add(e0[i]);
+	}
 }

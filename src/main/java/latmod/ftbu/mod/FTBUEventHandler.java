@@ -49,9 +49,9 @@ public class FTBUEventHandler
 		updateAllData(sendAll ? null : ep);
 		MessageLM.NET.sendToAll(new MessageLMPlayerLoggedIn(p));
 		
-		p.updateInfo(null);
+		p.sendInfo(null);
 		for(LMPlayer p1 : LMPlayer.map.values)
-		{ if(p1 != p) p1.updateInfo(ep); }
+			p1.sendInfo(ep);
 	}
 	
 	@SubscribeEvent
@@ -62,6 +62,7 @@ public class FTBUEventHandler
 		if(p != null && e.player instanceof EntityPlayerMP)
 		{
 			p.setOnline(false);
+			p.lastSeen = LatCore.millis();
 			
 			for(int i = 0; i < 4; i++)
 				p.lastArmor[i] = e.player.inventory.armorInventory[i];

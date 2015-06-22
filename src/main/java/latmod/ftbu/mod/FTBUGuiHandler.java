@@ -1,9 +1,11 @@
 package latmod.ftbu.mod;
 
-import latmod.ftbu.core.ILMGuiHandler;
+import latmod.ftbu.core.*;
 import latmod.ftbu.core.gui.ContainerEmpty;
 import latmod.ftbu.core.tile.IGuiTile;
+import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.client.*;
+import latmod.ftbu.mod.client.gui.*;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -47,15 +49,8 @@ public class FTBUGuiHandler implements ILMGuiHandler
 				return ((IGuiTile)te).getGui(ep, data);
 		}
 		else if(id.equals(FRIENDS)) return new GuiFriends(ep);
-		else if(id.equals(SECURITY)) return new GuiSecurity(ep);
 		else if(id.equals(DISPLAY_ITEM))
-		{
-			ItemStack item = ItemStack.loadItemStackFromNBT(data.getCompoundTag("I"));
-			String title = data.getString("T");
-			String desc = data.getString("D");
-			float scale = data.hasKey("S") ? data.getFloat("S") : 8F;
-			return new GuiDisplayItem(ep, item, title, desc, scale);
-		}
+			return new GuiDisplayItem(ep, ItemDisplay.readFromNBT(data));
 		
 		return null;
 	}

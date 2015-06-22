@@ -1,12 +1,13 @@
 package latmod.ftbu.core;
 
-import java.util.UUID;
+import java.util.*;
 
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.cmd.NameType;
 import latmod.ftbu.core.event.LMPlayerEvent;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.*;
+import latmod.ftbu.mod.FTBUTickHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.ItemStack;
@@ -74,20 +75,25 @@ public final class LMPlayer implements Comparable<LMPlayer>
 	
 	public void sendUpdate(String action, boolean updateClient)
 	{
-		if(LatCoreMC.isServer())
-		{
-			if(action == null) action = ACTION_GENERAL;
-			new LMPlayerEvent.DataChanged(this, action).post();
-			if(updateClient) MessageLM.NET.sendToAll(new MessageLMPlayerUpdate(this, action));
-		}
+		if(!LatCoreMC.isServer()) return;
+		
+		if(action == null) action = ACTION_GENERAL;
+		new LMPlayerEvent.DataChanged(this, action).post();
+		if(updateClient) MessageLM.NET.sendToAll(new MessageLMPlayerUpdate(this, action));
 	}
 	
-	public void updateInfo(EntityPlayerMP ep)
+	public void sendInfo(EntityPlayerMP ep)
 	{
+		if(!LatCoreMC.isServer()) return;
+		
 		FastList<String> info = new FastList<String>();
+		
+		if(!isOnline() && lastSeen > 0L) info.add("Last seen: " + LatCore.getTimeAgo(LatCore.millis() - lastSeen) + " ago");
+		if(deaths > 0) info.add("Deaths: " + deaths);
+		
 		new LMPlayerEvent.CustomInfo(this, info).post();
-		if(ep == null) MessageLM.NET.sendToAll(new MessageLMPlayerInfo(playerID, info));
-		else MessageLM.NET.sendTo(new MessageLMPlayerInfo(playerID, info), ep);
+		
+		MessageLM.sendTo(ep, new MessageLMPlayerInfo(playerID, info));
 	}
 	
 	public boolean isOnline()
@@ -120,7 +126,6 @@ public final class LMPlayer implements Comparable<LMPlayer>
 		}
 		
 		commonData = tag.getCompoundTag("CustomData");
-		if(server) serverData = tag.getCompoundTag("ServerData");
 		
 		InvUtils.readItemsFromNBT(lastArmor, tag, "LastItems");
 		
@@ -128,7 +133,14 @@ public final class LMPlayer implements Comparable<LMPlayer>
 		else notify = tag.getByte("Notify");
 		
 		deaths = tag.getShort("Deaths");
-		lastSeen = tag.getLong("LastSeen");
+		
+		if(server)
+		{
+			serverData = tag.getCompoundTag("ServerData");
+			lastSeen = tag.getLong("LastSeen");
+			
+			if(lastSeen == 0) lastSeen = FTBUTickHandler.instance.currentMillis();
+		}
 	}
 	
 	public void writeToNBT(NBTTagCompound tag, boolean server)
@@ -149,7 +161,6 @@ public final class LMPlayer implements Comparable<LMPlayer>
 		}
 		
 		tag.setTag("CustomData", commonData);
-		if(server) tag.setTag("ServerData", serverData);
 		
 		InvUtils.writeItemsToNBT(lastArmor, tag, "LastItems");
 		tag.setByte("Notify", (byte)notify);
@@ -157,8 +168,11 @@ public final class LMPlayer implements Comparable<LMPlayer>
 		if(deaths > 0)
 			tag.setShort("Deaths", (short)deaths);
 		
-		if(lastSeen > 0L)
+		if(server)
+		{
+			tag.setTag("ServerData", serverData);
 			tag.setLong("LastSeen", lastSeen);
+		}
 	}
 	
 	public int compareTo(LMPlayer o)

@@ -1,6 +1,8 @@
-package latmod.ftbu.mod.client;
+package latmod.ftbu.mod.client.gui;
 
+import latmod.ftbu.core.ItemDisplay;
 import latmod.ftbu.core.gui.*;
+import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -18,25 +20,23 @@ public class GuiDisplayItem extends GuiLM
 {
 	public static final ResourceLocation texture = FTBU.mod.getLocation("textures/gui/displayitem.png");
 	
-	public ItemStack item;
-	public String title;
-	public String desc;
-	public float scale;
+	public final ItemDisplay itemDisplay;
 	
-	public GuiDisplayItem(EntityPlayer ep, ItemStack is, String t, String d, float s)
+	public GuiDisplayItem(EntityPlayer ep, ItemDisplay i)
 	{
 		super(new ContainerEmpty(ep, null), texture);
 		xSize = 144;
 		ySize = 182;
-		item = is;
-		title = t;
-		desc = d;
-		scale = MathHelper.clamp_float(s, 1F, 8F);
+		itemDisplay = i;
 	}
 	
-	public void drawGuiContainerBackgroundLayer(float f, int mx, int my)
+	public void addWidgets(FastList<WidgetLM> l)
 	{
-		super.drawGuiContainerBackgroundLayer(f, mx, my);
+	}
+	
+	public void drawBackground()
+	{
+		super.drawBackground();
 		
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -50,12 +50,12 @@ public class GuiDisplayItem extends GuiLM
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		zLevel = 200;
 		itemRender.zLevel = 200F;
-		FontRenderer font = item.getItem().getFontRenderer(item);
+		FontRenderer font = itemDisplay.item.getItem().getFontRenderer(itemDisplay.item);
 		if (font == null) font = fontRendererObj;
 		
-		GL11.glScalef(scale, scale, 1F);
+		GL11.glScalef(itemDisplay.scale, itemDisplay.scale, 1F);
 		
-		itemRender.renderItemAndEffectIntoGUI(font, Minecraft.getMinecraft().getTextureManager(), item, -8, -8);
+		itemRender.renderItemAndEffectIntoGUI(font, Minecraft.getMinecraft().getTextureManager(), itemDisplay.item, -8, -8);
 		
 		zLevel = 0;
 		itemRender.zLevel = 0F;
@@ -65,10 +65,10 @@ public class GuiDisplayItem extends GuiLM
 		GL11.glDisable(GL11.GL_BLEND);
 	}
 	
-	public void drawText(int mx, int my)
+	public void drawText(FastList<String> l)
 	{
-		drawCenteredString(fontRendererObj, title.isEmpty() ? item.getDisplayName() : title, guiLeft + xSize / 2, guiTop + 6, 0xFFFFFFFF);
-		if(!desc.isEmpty()) drawCenteredString(fontRendererObj, desc, guiLeft + xSize / 2, guiTop + ySize - 14, 0xFFFFFFFF);
-		super.drawText(mx, my);
+		if(itemDisplay.title != null && !itemDisplay.title.isEmpty()) drawCenteredString(fontRendererObj, itemDisplay.title, guiLeft + xSize / 2, guiTop + 6, 0xFFFFFFFF);
+		if(itemDisplay.desc != null && !itemDisplay.desc.isEmpty()) l.addAll(itemDisplay.desc);
+		super.drawText(l);
 	}
 }

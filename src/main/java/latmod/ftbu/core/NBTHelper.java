@@ -83,4 +83,20 @@ public class NBTHelper // NBTBase
 		if(tag1 == null && tag2 != null) return false;
 		return tag1.equals(tag2);
 	}
+	
+	public static FastList<String> toStringList(NBTTagList tag)
+	{
+		FastList<String> l = new FastList<String>();
+		for(int i = 0; i < tag.tagCount(); i++)
+			l.add(tag.getStringTagAt(i));
+		return l;
+	}
+	
+	public static NBTTagList fromStringList(FastList<String> l)
+	{
+		NBTTagList tag = new NBTTagList();
+		for(int i = 0; i < l.size(); i++)
+			tag.appendTag(new NBTTagString(l.get(i)));
+		return tag;
+	}
 }

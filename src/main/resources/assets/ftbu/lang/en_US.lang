@@ -1,5 +1,3 @@
-key.latcoremc=LatCoreMC
-
 ftbu:button.settings=Settings
 ftbu:button.back=Back
 ftbu:button.up=Up
@@ -18,8 +16,6 @@ ftbu:button.save=Save
 #FriendsGUI
 ftbu:button.addFriend=Add as Friend
 ftbu:button.remFriend=Remove from Friends
-ftbu:button.info=Info
-ftbu:button.viewPlayer=View Player
 ftbu:label.online=Online
 ftbu:label.friend=Friend
 ftbu:label.pfriend=Pending Friend
@@ -33,12 +29,14 @@ config.value.enabled=Enabled
 config.value.disabled=Disabled
 config.value.true=True
 config.value.false=False
+config.property.enabled=Enabled
 
 config.group.ftbu=FTBUtilities
 config.property.player_decorators=Player Decorators
 config.property.item_ore_names=Item OreDict Names
 config.property.item_reg_names=Item Registry Names
 config.property.debug_info=Debug Info
+config.property.options_button=Options Button
 
 config.group.waypoints=Waypoints
 config.property.waypoint_type=Waypoint Type

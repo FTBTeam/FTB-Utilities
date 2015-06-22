@@ -2,6 +2,7 @@ package latmod.ftbu.core.net;
 
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.mod.FTBU;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.*;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.*;
@@ -28,6 +29,9 @@ public abstract class MessageLM<E extends MessageLM<?>> implements IMessage, IMe
 		NET.registerMessage(MessageOpenGui.class, MessageOpenGui.class, 12, Side.CLIENT);
 		NET.registerMessage(MessageLMPlayerInfo.class, MessageLMPlayerInfo.class, 13, Side.CLIENT);
 	}
+	
+	public static void sendTo(EntityPlayerMP ep, MessageLM m)
+	{ if(ep == null) NET.sendToAll(m); else NET.sendTo(m, ep); }
 	
 	// End of static //
 	

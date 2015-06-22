@@ -5,7 +5,6 @@ import latmod.ftbu.core.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.claims.Claims;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.DimensionManager;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -14,8 +13,6 @@ import cpw.mods.fml.relauncher.Side;
 public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
 {
 	public static final FTBUTickHandler instance = new FTBUTickHandler();
-	public static MinecraftServer server;
-	public static boolean isDediServer = false;
 	public static boolean serverStarted = false;
 	private static long startMillis = 0L;
 	private static long currentMillis = 0L;
@@ -38,7 +35,7 @@ public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
 					
 					String msg = null;
 					
-					if(secondsLeft <= 0) { server.initiateShutdown(); return; }
+					if(secondsLeft <= 0) { LatCoreMC.getServer().initiateShutdown(); return; }
 					else if(secondsLeft <= 10) msg = secondsLeft + " Seconds";
 					else if(secondsLeft == 30) msg = "30 Seconds";
 					else if(secondsLeft == 60) msg = "1 Minute";
@@ -52,19 +49,19 @@ public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
 				for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers().values)
 				{
 					LMPlayer p = LMPlayer.getPlayer(ep.getUniqueID());
-					Vertex.DimPos.Rot pos = new Vertex.DimPos.Rot(ep);
+					Vertex.DimPos pos = new Vertex.DimPos(ep);
 					
-					if(p.lastPosition == null || !p.lastPosition.equalsDimPos(pos))
+					if(p.last != null && !p.last.equalsDimPos(pos))
 					{
-						if(Claims.isOutsideWorldBorderD(ep.worldObj.provider.dimensionId, ep.posX, ep.posZ))
+						if(Claims.isOutsideWorldBorderD(ep.dimension, ep.posX, ep.posZ))
 						{
 							ep.motionX = ep.motionY = ep.motionZ = 0D;
 							LatCoreMC.printChat(ep, "You have reached the world border!");
 							
-							if(Claims.isOutsideWorldBorderD(p.lastPosition.dim, p.lastPosition.pos.x, p.lastPosition.pos.z))
+							if(Claims.isOutsideWorldBorderD(p.last.dim, p.last.x, p.last.z))
 							{
 								LatCoreMC.printChat(ep, "Teleporting to spawn!");
-								Vertex spawn = LatCoreMC.getSpawnPoint(0);
+								Vertex spawn = new Vertex(LatCoreMC.getSpawnPoint(0));
 								
 								if(Claims.isOutsideWorldBorderD(0, spawn.x, spawn.z))
 								{
@@ -76,11 +73,11 @@ public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
 							}
 							else
 							{
-								Teleporter.travelEntity(ep, p.lastPosition.pos.x, p.lastPosition.pos.y, p.lastPosition.pos.z, ep.worldObj.provider.dimensionId);
+								Teleporter.travelEntity(ep, p.last.x, p.last.y, p.last.z, p.last.dim);
 							}
 						}
 						
-						p.lastPosition = pos;
+						p.last.set(pos);
 						updateChunkMessage(ep);
 					}
 				}
@@ -98,16 +95,17 @@ public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
 		
 		if(serverStarted)
 		{
-			isDediServer = LatCoreMC.getServer().isDedicatedServer();
-			
 			currentMillis = startMillis = LatCore.millis();
 			restartSeconds = 0;
 			
 			if(FTBUConfig.General.restartTimer > 0)
 			{
-				restartSeconds = FTBUConfig.General.restartTimer * 3600L;
+				restartSeconds = (long)(FTBUConfig.General.restartTimer * 3600D);
 				LatCoreMC.logger.info("Server restart in " + LatCore.formatTime(restartSeconds, false));
 			}
+		}
+		else
+		{
 		}
 	}
 	
@@ -125,11 +123,8 @@ public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
 	{ return currentMillis; }
 	
 	public static long currentSeconds()
-	{ return currentMillis() / 1000L; }
-	
-	public static long startMillis()
-	{ return startMillis; }
+	{ return currentMillis / 1000L; }
 	
 	public static long startSeconds()
-	{ return startMillis() / 1000L; }
+	{ return startMillis / 1000L; }
 }

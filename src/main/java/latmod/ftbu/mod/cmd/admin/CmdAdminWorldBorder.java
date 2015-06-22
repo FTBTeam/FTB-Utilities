@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import latmod.ftbu.core.cmd.*;
+import latmod.ftbu.core.cmd.SubCommand;
 import net.minecraft.command.ICommandSender;
 
 public class CmdAdminWorldBorder extends SubCommand

@@ -59,6 +59,11 @@ public class FTBURenderHandler
 	}
 	
 	@SubscribeEvent
+	public void renderChunk(RenderWorldEvent.Post e)
+	{
+	}
+	
+	@SubscribeEvent
 	public void renderWorld(RenderWorldLastEvent e)
 	{
 		if(Waypoints.waypoints.isEmpty() || !Waypoints.enabled.getB() || Minecraft.getMinecraft().theWorld == null) return;
@@ -159,10 +164,12 @@ public class FTBURenderHandler
 				float d = 0.4F;
 				GL11.glColor4f(w.colR / 255F, w.colG / 255F, w.colB / 255F, 0.15F);
 				CubeRenderer.instance.setSize(-d, -w.posY, -d, d, 256D - w.posY, d);
-				CubeRenderer.instance.renderAll();
+				for(int k = 2; k < 6; k++)
+					CubeRenderer.instance.renderSide(k);
 				d = 0.3F;
 				CubeRenderer.instance.setSize(-d, -w.posY, -d, d, 256D - w.posY, d);
-				CubeRenderer.instance.renderAll();
+				for(int k = 2; k < 6; k++)
+					CubeRenderer.instance.renderSide(k);
 				GL11.glPopMatrix();
 			}
 			
@@ -174,13 +181,11 @@ public class FTBURenderHandler
 		
 		if(mc.gameSettings.thirdPersonView == 0 && (displayTitle || displayDist))
 		{
-			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, 1, 0);
 			GL11.glColor4f(1F, 1F, 1F, 1F);
 			GL11.glDisable(GL11.GL_CULL_FACE);
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
 			GL11.glDepthMask(false);
-			
-			OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 			
 			for(int i = 0; i < visibleWaypoints.size(); i++)
 			{
@@ -227,6 +232,48 @@ public class FTBURenderHandler
 		}
 		
 		GL11.glPopAttrib();
+		
+		// Chunks //
+		
+		int cx = MathHelperLM.chunk(playerX);
+		int cz = MathHelperLM.chunk(playerZ);
+		
+		if(!mc.theWorld.getChunkProvider().chunkExists(cx, cz)) return;
+		
+		GL11.glPushMatrix();
+		GL11.glTranslated(cx * 16 - renderX, -renderY, cz * 16 - renderZ);
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+		LatCoreMCClient.pushMaxBrightness();
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_BLEND);
+		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+		GL11.glDisable(GL11.GL_CULL_FACE);
+		
+		GL11.glColor4f(0F, 1F, 1F, 0.2F);
+		
+		if(mc.theWorld.getChunkProvider().chunkExists(cx + 1, cz))
+		{
+		}
+		
+		if(mc.theWorld.getChunkProvider().chunkExists(cx + 1, cz))
+		{
+		}
+		
+		if(mc.theWorld.getChunkProvider().chunkExists(cx + 1, cz))
+		{
+		}
+		
+		if(mc.theWorld.getChunkProvider().chunkExists(cx + 1, cz))
+		{
+		}
+		
+		CubeRenderer.instance.setSize(0D, 0D, 0D, 16D, 256D, 16D);
+		CubeRenderer.instance.renderAll();
+		
+		LatCoreMCClient.popMaxBrightness();
+		GL11.glPopAttrib();
+		GL11.glPopMatrix();
 	}
 	
 	public static class WaypointClient

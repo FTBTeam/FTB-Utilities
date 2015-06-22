@@ -2,7 +2,7 @@ package latmod.ftbu.core.net;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.Notification;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.client.*;
+import latmod.ftbu.mod.client.FTBURenderHandler;
 import latmod.ftbu.mod.client.gui.GuiNotification;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

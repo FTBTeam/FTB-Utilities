@@ -2,7 +2,7 @@ package latmod.ftbu.mod.claims;
 
 import java.util.List;
 
-import latmod.ftbu.core.LMPlayer;
+import latmod.ftbu.core.*;
 import latmod.ftbu.core.util.MathHelperLM;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -33,17 +33,17 @@ public enum ChunkType
 	public static ChunkType getD(int dim, double x, double z, LMPlayer p)
 	{ return get(dim, MathHelperLM.chunk(x), MathHelperLM.chunk(z), p); }
 	
-	public void getMessage(int dim, int cx, int cz, LMPlayer p, List<String> l)
+	public static void getMessage(int dim, int cx, int cz, LMPlayer p, List<String> l, boolean shift)
 	{
 		ChunkType t = get(dim, cx, cz, p);
 		
-		if(t == SPAWN) l.add(EnumChatFormatting.AQUA + "Spawn area");
+		if(t == SPAWN) l.add(EnumChatFormatting.AQUA + "Spawn area: " + LatCoreMC.getServer().getSpawnProtectionSize());
 		else if(t == WILDERNESS) l.add(EnumChatFormatting.DARK_GREEN + "Wilderness");
 		else if(t == WORLD_BORDER) l.add(EnumChatFormatting.DARK_RED + "You have reached world border!");
 		else if(t == CLAIMED_SELF)
 		{
 			l.add(EnumChatFormatting.GREEN + "Claimed area");
-			l.add(p.getName());
+			if(shift) l.add(p.getName());
 		}
 		else
 		{
@@ -52,12 +52,12 @@ public enum ChunkType
 			if(t == CLAIMED_FRIEND)
 			{
 				l.add(EnumChatFormatting.GREEN + "Claimed area");
-				l.add(EnumChatFormatting.GREEN + c.owner.getName());
+				if(shift) l.add(EnumChatFormatting.GREEN + c.owner.getName());
 			}
 			else
 			{
 				l.add(EnumChatFormatting.BLUE + "Claimed area");
-				l.add(EnumChatFormatting.BLUE + c.owner.getName());
+				if(shift) l.add(EnumChatFormatting.BLUE + c.owner.getName());
 			}
 		}
 	}

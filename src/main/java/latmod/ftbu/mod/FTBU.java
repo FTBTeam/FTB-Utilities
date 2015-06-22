@@ -97,9 +97,14 @@ public class FTBU
 	@Mod.EventHandler
 	public void registerCommands(FMLServerStartingEvent e)
 	{
-		FTBUTickHandler.instance.resetTimer(true);
+		FTBUTickHandler.resetTimer(true);
 		e.registerServerCommand(new CmdFTBU());
 		e.registerServerCommand(new CmdAdmin());
+		e.registerServerCommand(new CmdMotd());
+		e.registerServerCommand(new CmdRules());
+		e.registerServerCommand(new CmdSpawn());
+		e.registerServerCommand(new CmdTplast());
+		e.registerServerCommand(new CmdRestartTimer());
 		ClientCommandHandler.instance.registerCommand(new CmdWaypoints());
 	}
 	
@@ -113,7 +118,7 @@ public class FTBU
 	@Mod.EventHandler
 	public void serverStopped(FMLServerStoppedEvent e)
 	{
-		FTBUTickHandler.instance.resetTimer(false);
+		FTBUTickHandler.resetTimer(false);
 	}
 	
 	/*

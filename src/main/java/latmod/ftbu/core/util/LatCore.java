@@ -502,14 +502,14 @@ public class LatCore
 	public static String getTimeAgo(long t)
 	{
 		if(t < 1000L) return "Now";
-		t /= 1000L;// if(t < 60L) // Seconds
+		t /= 1000L; if(t < 60L) // Seconds
 			return t + getPW(t, " second", " seconds");
-		//t /= 60L; if(t < 60L) // Minutes
-		//	return t + getPW(t, " minute", " minutes");
-		//t /= 24L; // if(t < 24L) // Hours
-		//	return t + getPW(t, " hour", " hours");
-		//t /= 30L; // Days
-		//return t + getPW(t, " day", " days");
+		t /= 60L; if(t < 60L) // Minutes
+			return t + getPW(t, " minute", " minutes");
+		t /= 24L; if(t < 24L) // Hours
+			return t + getPW(t, " hour", " hours");
+		t /= 30L; // Days
+		return t + getPW(t, " day", " days");
 	}
 	
 	private static String getPW(long t, String s, String p)

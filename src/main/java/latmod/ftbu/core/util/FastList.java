@@ -2,6 +2,7 @@ package latmod.ftbu.core.util;
 import java.util.*;
 
 /** Made by LatvianModder */
+@SuppressWarnings("all")
 public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 {
 	public Object[] objects;
@@ -46,7 +47,6 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	public E set(int i, E e)
 	{ objects[i] = e; return e; }
 	
-	@SuppressWarnings("unchecked")
 	public E get(int i)
 	{ return (E)objects[i]; }
 	
@@ -100,7 +100,6 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 		return objects;
 	}
 	
-	@SuppressWarnings("all")
 	public <E> E[] toArray(E[] a)
 	{ return (E[]) Arrays.copyOf(objects, size, a.getClass()); }
 	
@@ -118,7 +117,6 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 		return l;
 	}
 	
-	@SuppressWarnings("all")
 	public void sort(Comparator<? super E> c)
 	{
 		if(size > 0)
@@ -128,7 +126,6 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 		}
 	}
 	
-	@SuppressWarnings("all")
 	public FastList<E> sortToNew(Comparator<? super E> c)
 	{
 		FastList<E> l = blankCopy();
@@ -269,7 +266,6 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 		return true;
 	}
 	
-	@SafeVarargs
 	public static <T> FastList<T> asList(T... a)
 	{ return new FastList<T>(a); }
 	

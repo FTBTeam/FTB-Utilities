@@ -2,10 +2,10 @@ package latmod.ftbu.mod.client.gui;
 
 import static net.minecraft.util.EnumChatFormatting.*;
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.event.LMPlayerClientEvent;
+import latmod.ftbu.core.event.LMPlayerEvent;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
-import latmod.ftbu.core.util.*;
+import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -250,14 +250,9 @@ public class GuiFriends extends GuiLM
 	}
 	
 	@SubscribeEvent
-	public void onClientEvent(LMPlayerClientEvent.DataChanged e)
+	public void onClientEvent(LMPlayerEvent.DataChanged e)
 	{
-		refreshPlayers();
-	}
-	
-	protected void keyTyped(char c, int k)
-	{
-		super.keyTyped(c, k);
+		if(e.side == Side.CLIENT) refreshPlayers();
 	}
 	
 	public void refreshPlayers()

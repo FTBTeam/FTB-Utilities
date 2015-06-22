@@ -8,8 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.*;
 

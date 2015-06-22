@@ -84,13 +84,15 @@ public class NBTHelper // NBTBase
 		return tag1.equals(tag2);
 	}
 	
-	public static FastList<String> toStringList(NBTTagList tag)
+	public static void toStringList(FastList<String> l, NBTTagList tag)
 	{
-		FastList<String> l = new FastList<String>();
+		l.clear();
 		for(int i = 0; i < tag.tagCount(); i++)
 			l.add(tag.getStringTagAt(i));
-		return l;
 	}
+	
+	public static FastList<String> toStringList(NBTTagList tag)
+	{ FastList<String> l = new FastList<String>(); toStringList(l, tag); return l; }
 	
 	public static NBTTagList fromStringList(FastList<String> l)
 	{
@@ -98,5 +100,22 @@ public class NBTHelper // NBTBase
 		for(int i = 0; i < l.size(); i++)
 			tag.appendTag(new NBTTagString(l.get(i)));
 		return tag;
+	}
+	
+	public static Vertex getVertex(NBTTagCompound tag, String s)
+	{
+		NBTTagList list = tag.getTagList(s, DOUBLE);
+		if(list.tagCount() != 3) return null;
+		return new Vertex(list.func_150309_d(0), list.func_150309_d(1), list.func_150309_d(2));
+	}
+	
+	public static void setVertex(NBTTagCompound tag, String s, Vertex v)
+	{
+		if(v == null) return;
+		NBTTagList list = new NBTTagList();
+		list.appendTag(new NBTTagDouble(v.x));
+		list.appendTag(new NBTTagDouble(v.y));
+		list.appendTag(new NBTTagDouble(v.z));
+		tag.setTag(s, list);
 	}
 }

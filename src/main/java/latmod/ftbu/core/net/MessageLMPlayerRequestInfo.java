@@ -1,9 +1,6 @@
 package latmod.ftbu.core.net;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.LMPlayer;
-import latmod.ftbu.core.event.CustomAction;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.simpleimpl.*;
 
 public class MessageLMPlayerRequestInfo extends MessageLM<MessageLMPlayerRequestInfo>
@@ -29,7 +26,7 @@ public class MessageLMPlayerRequestInfo extends MessageLM<MessageLMPlayerRequest
 	
 	public IMessage onMessage(MessageLMPlayerRequestInfo m, MessageContext ctx)
 	{
-		LMPlayer p = LMPlayer.getPlayer(playerID);
+		LMPlayer p = LMPlayer.getPlayer(m.playerID);
 		if(p != null) p.sendInfo(ctx.getServerHandler().playerEntity);
 		return null;
 	}

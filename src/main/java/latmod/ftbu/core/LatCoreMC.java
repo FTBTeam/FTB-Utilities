@@ -151,12 +151,11 @@ public final class LatCoreMC // LatCoreMCClient
 		return m;
 	}
 	
-	public static Vertex getSpawnPoint(int dim)
+	public static ChunkCoordinates getSpawnPoint(int dim)
 	{
 		WorldServer w = DimensionManager.getWorld(dim);
 		if(w == null) return null;
-		ChunkCoordinates c = w.getSpawnPoint();
-		return new Vertex(c.posX + 0.5D, c.posY + 0.5D, c.posZ + 0.5D);
+		return w.getSpawnPoint();
 	}
 	
 	public static boolean remap(MissingMapping m, String id, Item i)
@@ -261,7 +260,7 @@ public final class LatCoreMC // LatCoreMCClient
 	}
 	
 	public static boolean isDedicatedServer()
-	{ return FTBUTickHandler.isDediServer; }
+	{ return getServer().isDedicatedServer(); }
 	
 	public static String getDimName(World w)
 	{ return w.provider.getDimensionName(); }
@@ -270,5 +269,17 @@ public final class LatCoreMC // LatCoreMCClient
 	{
 		WorldServer w = DimensionManager.getWorld(dim);
 		return (w == null) ? "" : getDimName(w);
+	}
+	
+	public static double getWorldScale(World w)
+	{
+		if(w == null || w.provider.dimensionId == 0) return 1D;
+		return 1D / w.provider.getMovementFactor();
+	}
+	
+	public static double getWorldScale(int dim)
+	{
+		if(dim == 0) return 1D;
+		return getWorldScale(DimensionManager.getWorld(dim));
 	}
 }

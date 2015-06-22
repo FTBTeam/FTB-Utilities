@@ -20,10 +20,11 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> 
 	public UUID uuid;
 	public String username;
 	public NBTTagCompound data;
+	public boolean firstTime;
 	
 	public MessageLMPlayerLoggedIn() { }
 	
-	public MessageLMPlayerLoggedIn(LMPlayer p)
+	public MessageLMPlayerLoggedIn(LMPlayer p, boolean first)
 	{
 		playerID = p.playerID;
 		uuid = p.getUUID();
@@ -31,6 +32,8 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> 
 		
 		data = new NBTTagCompound();
 		p.writeToNBT(data, false);
+		
+		firstTime = first;
 	}
 	
 	public void fromBytes(ByteBuf bb)
@@ -41,6 +44,7 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> 
 		uuid = new UUID(msb, lsb);
 		username = readString(bb);
 		data = readTagCompound(bb);
+		firstTime = bb.readBoolean();
 	}
 	
 	public void toBytes(ByteBuf bb)
@@ -50,6 +54,7 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> 
 		bb.writeLong(uuid.getLeastSignificantBits());
 		writeString(bb, username);
 		writeTagCompound(bb, data);
+		bb.writeBoolean(firstTime);
 	}
 	
 	public IMessage onMessage(MessageLMPlayerLoggedIn m, MessageContext ctx)
@@ -69,7 +74,7 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> 
 		LMPlayer.map.put(p.playerID, p);
 		
 		p.readFromNBT(m.data, false);
-		FTBU.proxy.playerLMLoggedIn(p);
+		FTBU.proxy.playerLMLoggedIn(p, m.firstTime);
 			
 	}
 }

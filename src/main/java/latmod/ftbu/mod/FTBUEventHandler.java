@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
 
 public class FTBUEventHandler
 {
@@ -44,10 +45,13 @@ public class FTBUEventHandler
 		}
 		
 		p.setOnline(true);
+		if(p.last == null) p.last = new LMPlayer.Last();
+		p.last.set(new Vertex.DimPos(e.player));
+		p.last.seen = LatCore.millis();
 		
-		new LMPlayerEvent.LoggedIn(p, ep, first).post();
+		new LMPlayerEvent.LoggedIn(p, Side.SERVER, ep, first).post();
 		updateAllData(sendAll ? null : ep);
-		MessageLM.NET.sendToAll(new MessageLMPlayerLoggedIn(p));
+		MessageLM.NET.sendToAll(new MessageLMPlayerLoggedIn(p, first));
 		
 		p.sendInfo(null);
 		for(LMPlayer p1 : LMPlayer.map.values)
@@ -62,13 +66,16 @@ public class FTBUEventHandler
 		if(p != null && e.player instanceof EntityPlayerMP)
 		{
 			p.setOnline(false);
-			p.lastSeen = LatCore.millis();
+			
+			if(p.last == null) p.last = new LMPlayer.Last();
+			p.last.set(new Vertex.DimPos(e.player));
+			p.last.seen = LatCore.millis();
 			
 			for(int i = 0; i < 4; i++)
 				p.lastArmor[i] = e.player.inventory.armorInventory[i];
 			p.lastArmor[4] = e.player.inventory.getCurrentItem();
 			
-			new LMPlayerEvent.LoggedOut(p, (EntityPlayerMP)e.player).post();
+			new LMPlayerEvent.LoggedOut(p, Side.SERVER, (EntityPlayerMP)e.player).post();
 			MessageLM.NET.sendToAll(new MessageLMPlayerLoggedOut(p));
 		}
 	}

@@ -28,9 +28,10 @@ public abstract class MessageLM<E extends MessageLM<?>> implements IMessage, IMe
 		NET.registerMessage(MessageLMPlayerLoggedOut.class, MessageLMPlayerLoggedOut.class, 11, Side.CLIENT);
 		NET.registerMessage(MessageOpenGui.class, MessageOpenGui.class, 12, Side.CLIENT);
 		NET.registerMessage(MessageLMPlayerInfo.class, MessageLMPlayerInfo.class, 13, Side.CLIENT);
+		NET.registerMessage(MessageLMPlayerRequestInfo.class, MessageLMPlayerRequestInfo.class, 14, Side.SERVER);
 	}
 	
-	public static void sendTo(EntityPlayerMP ep, MessageLM m)
+	public static void sendTo(EntityPlayerMP ep, MessageLM<?> m)
 	{ if(ep == null) NET.sendToAll(m); else NET.sendTo(m, ep); }
 	
 	// End of static //

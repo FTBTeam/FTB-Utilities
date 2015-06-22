@@ -2,21 +2,19 @@ package latmod.ftbu.mod.client;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.client.badges.ThreadLoadBadges;
-import latmod.ftbu.core.event.*;
+import latmod.ftbu.core.event.ReloadEvent;
 import latmod.ftbu.core.gui.GuiLM;
 import latmod.ftbu.core.tile.IPaintable;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.*;
+import latmod.ftbu.mod.claims.ChunkType;
 import latmod.ftbu.mod.client.gui.GuiClientConfig;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.*;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.*;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
@@ -86,7 +84,7 @@ public class FTBUClientEventHandler
 	}
 	
 	@SubscribeEvent
-	public void onDrawDebugText(RenderGameOverlayEvent.Text event)
+	public void onDrawDebugText(RenderGameOverlayEvent.Text e)
 	{
 		boolean shift = FTBU.proxy.isShiftDown();
 		Minecraft mc = LatCoreMCClient.getMinecraft();
@@ -98,14 +96,14 @@ public class FTBUClientEventHandler
 			{
 				try
 				{
-					event.left.add("[MC " + EnumChatFormatting.GOLD + LatCoreMC.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");
-					event.right.add(mc.debug);
+					e.left.add("[MC " + EnumChatFormatting.GOLD + LatCoreMC.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");
+					e.right.add(mc.debug);
 				}
-				catch(Exception e)
-				{ e.printStackTrace(); }
+				catch(Exception ex)
+				{ ex.printStackTrace(); }
 			}
 		}
-		else if(FTBUClient.displayDebugInfo.getB())
+		/*else if(FTBUClient.displayDebugInfo.getB())
 		{
 			event.right.add(null);
 			
@@ -155,7 +153,10 @@ public class FTBUClientEventHandler
 					}
 				}
 			}
-		}
+		}*/
+		
+		LMPlayer p = LMPlayer.getPlayer(LMPlayer.currentClientPlayerID);
+		if(p != null) ChunkType.getMessage(mc.theWorld.provider.dimensionId, MathHelperLM.chunk(mc.thePlayer.posX), MathHelperLM.chunk(mc.thePlayer.posZ), p, e.right, shift);
 	}
 	
 	@SuppressWarnings("unchecked")

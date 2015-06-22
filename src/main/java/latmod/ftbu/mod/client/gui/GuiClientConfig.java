@@ -1,7 +1,5 @@
 package latmod.ftbu.mod.client.gui;
 
-import java.util.*;
-
 import latmod.ftbu.core.FTBULang;
 import latmod.ftbu.core.client.ClientConfig;
 import net.minecraft.client.gui.*;

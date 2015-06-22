@@ -28,7 +28,7 @@ public class FTBUCommon extends LMProxy // FTBUClient
 	}
 	
 	public void spawnDust(World w, double x, double y, double z, int col) { }
-	public void playerLMLoggedIn(LMPlayer p) { }
+	public void playerLMLoggedIn(LMPlayer p, boolean firstTime) { }
 	public void playerLMLoggedOut(LMPlayer p) { }
 	public void playerLMDataChanged(LMPlayer p, String action) { }
 	public void openClientGui(EntityPlayer ep, String id, NBTTagCompound data) { }

@@ -11,7 +11,7 @@ ftbu:button.accept=Accepter
 ftbu:button.remove=Supprimer
 ftbu:button.add=Ajouter
 ftbu:button.close=Fermer
-ftbu:button.save=Save < To be translated
+ftbu:button.save=Enregistrer
 
 #FriendsGUI
 ftbu:button.addFriend=Ajouter comme ami
@@ -24,28 +24,28 @@ ftbu:label.pfriend=Demande d'ami
 ftbu:button.addGroup=Ajouter un groupe
 ftbu:button.remGroup=Supprimer le groupe
 
-#ClientConfig < All this \/ To be translated
-config.value.enabled=Enabled
-config.value.disabled=Disabled
-config.value.true=True
-config.value.false=False
-config.property.enabled=Enabled
+#ClientConfig 
+config.value.enabled=Activé
+config.value.disabled=Désactivé
+config.value.true=Vrai
+config.value.false=Faux
+config.property.enabled=Actif
 
 config.group.ftbu=FTBUtilities
-config.property.player_decorators=Player Decorators
-config.property.item_ore_names=Item OreDict Names
-config.property.item_reg_names=Item Registry Names
-config.property.debug_info=Debug Info
-config.property.options_button=Options Button
+config.property.player_decorators=Décorateurs de joueurs
+config.property.item_ore_names=Noms d'OreDict d'éléments 
+config.property.item_reg_names=Noms d'enregistrement d'éléments
+config.property.debug_info=Info de déboggue
+config.property.options_button=Bouton d'options
 
-config.group.waypoints=Waypoints
-config.property.waypoint_type=Waypoint Type
-config.property.display_title=Display Title
-config.property.display_distance=Display Distance
-config.property.render_distance=Render Distance
-config.property.death_point=Death Point
-config.value.marker=Marker
-config.value.beacon=Beacon
+config.group.waypoints=Point de repère
+config.property.waypoint_type=Type de point de repère
+config.property.display_title=Titre affiché
+config.property.display_distance=Distance d'affichage
+config.property.render_distance=Distance de rendu
+config.property.death_point=Lieu de mort
+config.value.marker=Marqueur
+config.value.beacon=Balise
 
 #Misc
 ftbu:owner=Propriétaire : %s

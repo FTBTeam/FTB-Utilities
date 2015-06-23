@@ -32,6 +32,9 @@ public class FTBURenderHandler
 	private static double playerX, playerY, playerZ, renderX, renderY, renderZ, far = 4D;
 	private static final FastList<String> stringList = new FastList<String>();
 	
+	private static final CubeRenderer beaconRenderer = new CubeRenderer();
+	//private static final CubeRenderer chunkRenderer = new CubeRenderer();
+	
 	@SubscribeEvent
 	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
 	{
@@ -163,13 +166,13 @@ public class FTBURenderHandler
 				
 				float d = 0.4F;
 				GL11.glColor4f(w.colR / 255F, w.colG / 255F, w.colB / 255F, 0.15F);
-				CubeRenderer.instance.setSize(-d, -w.posY, -d, d, 256D - w.posY, d);
+				beaconRenderer.setSize(-d, -w.posY, -d, d, 256D - w.posY, d);
 				for(int k = 2; k < 6; k++)
-					CubeRenderer.instance.renderSide(k);
+					beaconRenderer.renderSide(k);
 				d = 0.3F;
-				CubeRenderer.instance.setSize(-d, -w.posY, -d, d, 256D - w.posY, d);
+				beaconRenderer.setSize(-d, -w.posY, -d, d, 256D - w.posY, d);
 				for(int k = 2; k < 6; k++)
-					CubeRenderer.instance.renderSide(k);
+					beaconRenderer.renderSide(k);
 				GL11.glPopMatrix();
 			}
 			
@@ -235,6 +238,7 @@ public class FTBURenderHandler
 		
 		// Chunks //
 		
+		/*
 		int cx = MathHelperLM.chunk(playerX);
 		int cz = MathHelperLM.chunk(playerZ);
 		
@@ -252,28 +256,39 @@ public class FTBURenderHandler
 		
 		GL11.glColor4f(0F, 1F, 1F, 0.2F);
 		
-		if(mc.theWorld.getChunkProvider().chunkExists(cx + 1, cz))
-		{
-		}
+		int thisType = getChunkType(cx, cz);
+		
+		chunkRenderer.setSize(0D, 0D, 0D, 16D, 256D, 16D);
 		
 		if(mc.theWorld.getChunkProvider().chunkExists(cx + 1, cz))
 		{
+			chunkRenderer.renderEast();
 		}
 		
-		if(mc.theWorld.getChunkProvider().chunkExists(cx + 1, cz))
+		if(mc.theWorld.getChunkProvider().chunkExists(cx - 1, cz))
 		{
+			chunkRenderer.renderWest();
 		}
 		
-		if(mc.theWorld.getChunkProvider().chunkExists(cx + 1, cz))
+		if(mc.theWorld.getChunkProvider().chunkExists(cx, cz + 1))
 		{
+			chunkRenderer.renderNorth();
 		}
 		
-		CubeRenderer.instance.setSize(0D, 0D, 0D, 16D, 256D, 16D);
-		CubeRenderer.instance.renderAll();
+		if(mc.theWorld.getChunkProvider().chunkExists(cx, cz - 1))
+		{
+			chunkRenderer.renderSouth();
+		}
 		
 		LatCoreMCClient.popMaxBrightness();
 		GL11.glPopAttrib();
 		GL11.glPopMatrix();
+	}
+	
+	private static int getChunkType(int cx, int cz)
+	{
+		return -1;
+		*/
 	}
 	
 	public static class WaypointClient

@@ -20,6 +20,8 @@ public enum ChunkType
 	
 	public static ChunkType get(int dim, int cx, int cz, LMPlayer p)
 	{
+		if(!LatCoreMC.isDedicatedServer()) return WILDERNESS;
+		
 		if(Claims.isInSpawn(dim, cx, cz)) return SPAWN;
 		if(Claims.isOutsideWorldBorder(dim, cx, cz)) return WORLD_BORDER;
 		ClaimedChunk c = Claims.get(dim, cx, cz);
@@ -37,7 +39,7 @@ public enum ChunkType
 	{
 		ChunkType t = get(dim, cx, cz, p);
 		
-		if(t == SPAWN) l.add(EnumChatFormatting.AQUA + "Spawn area: " + LatCoreMC.getServer().getSpawnProtectionSize());
+		if(t == SPAWN) l.add(EnumChatFormatting.AQUA + "Spawn area");
 		else if(t == WILDERNESS) l.add(EnumChatFormatting.DARK_GREEN + "Wilderness");
 		else if(t == WORLD_BORDER) l.add(EnumChatFormatting.DARK_RED + "You have reached world border!");
 		else if(t == CLAIMED_SELF)

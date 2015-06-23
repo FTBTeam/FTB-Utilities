@@ -8,6 +8,7 @@ import latmod.ftbu.core.recipes.LMRecipes;
 import latmod.ftbu.core.tile.TileLM;
 import latmod.ftbu.core.util.*;
 import net.minecraft.block.Block;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.*;
@@ -141,8 +142,11 @@ public class LMMod
 	{ return assets + "item." + s; }
 	
 	public String translate(String s, Object... args)
-	{ if(args == null || args.length == 0) return StatCollector.translateToLocal(assets + s);
-	else return StatCollector.translateToLocalFormatted(assets + s, args); }
+	{
+		return I18n.format(assets + s, args);
+		//if(args == null || args.length == 0) return StatCollector.translateToLocal(assets + s);
+		//else return StatCollector.translateToLocalFormatted(assets + s, args);
+	}
 	
 	public void addItem(IItemLM i)
 	{ LatCoreMC.addItem((Item)i, i.getItemID()); items.add(i); }

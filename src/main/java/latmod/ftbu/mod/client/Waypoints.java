@@ -9,7 +9,7 @@ import latmod.ftbu.core.util.*;
 public class Waypoints
 {
 	private static final ClientConfig config = new ClientConfig("waypoints");
-	public static final ClientConfig.Property enabled = new ClientConfig.Property("enabled", 1, new String[] { "true", "false" });
+	public static final ClientConfig.Property enabled = new ClientConfig.Property("enabled", 1, new String[] { "false", "true" });
 	public static final ClientConfig.Property waypointType = new ClientConfig.Property("waypoint_type", 1, new String[] { "marker", "beacon" });
 	public static final ClientConfig.Property displayTitle = new ClientConfig.Property("display_title", true);
 	public static final ClientConfig.Property displayDist = new ClientConfig.Property("display_distance", false);

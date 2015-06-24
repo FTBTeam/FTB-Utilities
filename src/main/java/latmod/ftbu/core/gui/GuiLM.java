@@ -1,5 +1,5 @@
 package latmod.ftbu.core.gui;
-import latmod.ftbu.core.client.LMRenderHelper;
+import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
@@ -102,6 +102,7 @@ public abstract class GuiLM extends GuiContainer
 	public GuiLM(ContainerLM c, ResourceLocation tex)
 	{
 		super(c);
+		mc = LatCoreMCClient.getMinecraft();
 		refreshWidgets();
 		
 		FTBU.mod.getLocation("textures/gui/icons/button.png");

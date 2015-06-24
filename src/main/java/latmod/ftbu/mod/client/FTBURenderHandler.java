@@ -69,7 +69,10 @@ public class FTBURenderHandler
 	@SubscribeEvent
 	public void renderWorld(RenderWorldLastEvent e)
 	{
-		if(Waypoints.waypoints.isEmpty() || !Waypoints.enabled.getB() || Minecraft.getMinecraft().theWorld == null) return;
+		if(!Waypoints.enabled.getB() || Minecraft.getMinecraft().theWorld == null) return;
+		FastList<Waypoints.Waypoint> list = Waypoints.getAll();
+		if(list.isEmpty()) return;
+		
 		visibleWaypoints.clear();
 		
 		Minecraft mc = LatCoreMCClient.getMinecraft();
@@ -91,9 +94,9 @@ public class FTBURenderHandler
 		renderY = RenderManager.renderPosY;
 		renderZ = RenderManager.renderPosZ;
 		
-		for(int i = 0; i < Waypoints.waypoints.size(); i++)
+		for(int i = 0; i < list.size(); i++)
 		{
-			Waypoint w = Waypoints.waypoints.get(i);
+			Waypoint w = list.get(i);
 			
 			if(w.enabled && w.dim == currentDim)
 			{

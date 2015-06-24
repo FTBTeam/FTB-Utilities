@@ -19,6 +19,11 @@ public class FTBULang
 	public static String button_close;
 	public static String button_save;
 	
+	// Friends //
+	
+	public static String button_add_friend;
+	public static String button_rem_friend;
+	
 	public static void reload()
 	{
 		button_settings = get("button.settings");
@@ -35,6 +40,9 @@ public class FTBULang
 		button_remove = get("button.remove");
 		button_close = get("button.close");
 		button_save = get("button.save");
+		
+		button_add_friend = get("button.addFriend");
+		button_rem_friend = get("button.remFriend");
 	}
 	
 	private static String get(String s)

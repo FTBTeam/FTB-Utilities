@@ -17,6 +17,24 @@ public class LatCore
 	public static final Charset UTF_8 = Charset.forName("UTF-8");
 	public static final String ALLOWED_TEXT_CHARS = "!@#$%^&*()_+ -=\\/,.<>?\'\"[]{}|;:`~";
 	
+	public static class Colors
+	{
+		public static int getRGB(int r, int g, int b, int a)
+		{ return ((a & 0xFF) << 24) | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | ((b & 0xFF) << 0); }
+		
+		public static int getRed(int c)
+		{ return (c >> 16) & 0xFF; }
+		
+		public static int getGreen(int c)
+		{ return (c >> 8) & 0xFF; }
+		
+		public static int getBlue(int c)
+		{ return (c >> 0) & 0xFF; }
+		
+		public static int getAlpha(int c)
+		{ return (c >> 24) & 0xFF; }
+	}
+	
 	@SuppressWarnings("all")
 	public static URL getURL(String s)
 	{
@@ -93,13 +111,13 @@ public class LatCore
 	public static boolean isASCIIChar(char c)
 	{ return c > 0 && c < 256; }
 	
-	public static boolean isTextChar(char c)
+	public static boolean isTextChar(char c, boolean onlyAZ09)
 	{
 		if(!isASCIIChar(c)) return false;
 		if(c >= '0' && c <= '9') return true;
 		if(c >= 'a' && c <= 'z') return true;
 		if(c >= 'A' && c <= 'Z') return true;
-		return (ALLOWED_TEXT_CHARS.indexOf(c) != -1);
+		return !onlyAZ09 && (ALLOWED_TEXT_CHARS.indexOf(c) != -1);
 	}
 	
 	public static FastList<Package> getAllPackages()

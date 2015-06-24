@@ -23,23 +23,21 @@ public class CmdWaypoints extends CommandSubLM
 			if(!(ics instanceof EntityPlayer)) return "Invalid player!";
 			EntityPlayer ep = (EntityPlayer)ics;
 			
-			Waypoints.Waypoint w = new Waypoints.Waypoint(args[0], ep.posX, ep.posY, ep.posZ, ep.worldObj.provider.dimensionId);
+			Waypoints.Waypoint w = new Waypoints.Waypoint(args[0], ep.worldObj.provider.dimensionId);
+			w.setPos(ep.posX, ep.posY, ep.posZ);
 			
-			if(args.length >= 4)
+			if(args.length >= 7)
 			{
-				w.colR = parseInt(ics, args[1]);
-				w.colG = parseInt(ics, args[2]);
-				w.colB = parseInt(ics, args[3]);
+				w.setPos(parseDouble(ics, args[1]), parseDouble(ics, args[2]), parseDouble(ics, args[3]));
+				w.setColor(parseInt(ics, args[4]), parseInt(ics, args[5]), parseInt(ics, args[6]));
+				
 			}
 			else
 			{
-				w.colR = ep.worldObj.rand.nextInt(256);
-				w.colG = ep.worldObj.rand.nextInt(256);
-				w.colB = ep.worldObj.rand.nextInt(256);
+				w.setColor(ep.worldObj.rand.nextInt());
 			}
 			
-			Waypoints.waypoints.add(w);
-			Waypoints.save();
+			Waypoints.add(w);
 			
 			return FINE + "Waypoint '" + args[0] + "' (" + LatCoreMC.getDimName(ics.getEntityWorld()) + ") added!";
 		}
@@ -50,10 +48,7 @@ public class CmdWaypoints extends CommandSubLM
 		public String[] getTabStrings(ICommandSender ics, String args[], int i)
 		{
 			if(i != 0) return null;
-			String[] s = new String[Waypoints.waypoints.size()];
-			for(int j = 0; j < s.length; j++)
-				s[j] = Waypoints.waypoints.get(j).name;
-			return s;
+			return Waypoints.getAllNames(Waypoints.getAll());
 		}
 		
 		public String onCommand(ICommandSender ics, String[] args)
@@ -64,8 +59,7 @@ public class CmdWaypoints extends CommandSubLM
 			
 			if(i != -1)
 			{
-				Waypoints.waypoints.remove(i);
-				Waypoints.save();
+				Waypoints.remove(i);
 				return FINE + "Waypoint removed";
 			}
 			

@@ -7,6 +7,7 @@ import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.client.Waypoints;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -143,14 +144,15 @@ public class GuiFriends extends GuiLM
 		
 		if(selectedPlayer.playerLM.equals(owner))
 		{
-			actionButtons.add(new ActionButton(this, PlayerAction.settings, FTBU.mod.translate("button.settings")));
+			actionButtons.add(new ActionButton(this, PlayerAction.settings, FTBULang.button_settings));
+			actionButtons.add(new ActionButton(this, PlayerAction.waypoints, Waypoints.config.getIDS()));
 		}
 		else
 		{
 			if(owner.isFriendRaw(selectedPlayer.playerLM))
 				actionButtons.add(new ActionButton(this, PlayerAction.friend_remove, FTBU.mod.translate("button.remFriend")));
 			else
-				actionButtons.add(new ActionButton(this, PlayerAction.friend_add, FTBU.mod.translate("button.addFriend")));
+				actionButtons.add(new ActionButton(this, PlayerAction.friend_add, FTBULang.button_add_friend));
 		}
 		
 		actionButtons.add(new ActionButton(this, PlayerAction.hide_armor, "Hide Armor: " + (hideArmor ? FTBULang.button_enabled : FTBULang.button_disabled)));
@@ -473,6 +475,12 @@ public class GuiFriends extends GuiLM
 		{
 			public void onClicked(GuiFriends g)
 			{ g.mc.displayGuiScreen(new GuiClientConfig(g)); }
+		};
+		
+		public static final PlayerAction waypoints = new PlayerAction(Icons.compass)
+		{
+			public void onClicked(GuiFriends g)
+			{ g.mc.displayGuiScreen(new GuiWaypoints()); }
 		};
 		
 		// Other players //

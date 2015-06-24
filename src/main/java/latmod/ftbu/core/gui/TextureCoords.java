@@ -32,4 +32,8 @@ public final class TextureCoords
 		gui.setTexture(texture);
 		GuiLM.drawTexturedRect(x + gui.getPosX(), y + gui.getPosY(), gui.getZLevel(), w, h, posX, posY, posX + width, posY + height, textureW, textureH);
 	}
+	
+	@SideOnly(Side.CLIENT)
+	public void render(GuiLM gui, int x, int y)
+	{ render(gui, x, y, width, height); }
 }

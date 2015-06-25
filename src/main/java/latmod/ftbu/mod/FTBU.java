@@ -6,7 +6,6 @@ import latmod.ftbu.core.net.MessageLM;
 import latmod.ftbu.mod.cmd.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.client.ClientCommandHandler;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 
@@ -105,7 +104,7 @@ public class FTBU
 		e.registerServerCommand(new CmdSpawn());
 		e.registerServerCommand(new CmdTplast());
 		e.registerServerCommand(new CmdRestartTimer());
-		ClientCommandHandler.instance.registerCommand(new CmdWaypoints());
+		//ClientCommandHandler.instance.registerCommand(new CmdWaypoints());
 	}
 	
 	@Mod.EventHandler

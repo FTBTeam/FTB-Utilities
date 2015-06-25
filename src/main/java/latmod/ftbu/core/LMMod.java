@@ -12,7 +12,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.*;
-import net.minecraft.util.*;
+import net.minecraft.util.ResourceLocation;
 
 import org.apache.logging.log4j.*;
 
@@ -141,12 +141,9 @@ public class LMMod
 	public String getItemName(String s)
 	{ return assets + "item." + s; }
 	
-	public String translate(String s, Object... args)
-	{
-		return I18n.format(assets + s, args);
-		//if(args == null || args.length == 0) return StatCollector.translateToLocal(assets + s);
-		//else return StatCollector.translateToLocalFormatted(assets + s, args);
-	}
+	@SideOnly(Side.CLIENT)
+	public String translateClient(String s, Object... args)
+	{ return I18n.format(assets + s, args); }
 	
 	public void addItem(IItemLM i)
 	{ LatCoreMC.addItem((Item)i, i.getItemID()); items.add(i); }

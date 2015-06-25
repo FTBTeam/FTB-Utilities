@@ -150,7 +150,7 @@ public class GuiFriends extends GuiLM
 		else
 		{
 			if(owner.isFriendRaw(selectedPlayer.playerLM))
-				actionButtons.add(new ActionButton(this, PlayerAction.friend_remove, FTBU.mod.translate("button.remFriend")));
+				actionButtons.add(new ActionButton(this, PlayerAction.friend_remove, FTBU.mod.translateClient("button.remFriend")));
 			else
 				actionButtons.add(new ActionButton(this, PlayerAction.friend_add, FTBULang.button_add_friend));
 		}
@@ -396,7 +396,7 @@ public class GuiFriends extends GuiLM
 				if(p == null) return;
 				
 				al.add(p.getName());
-				if(p.isOnline()) al.add(GREEN + "[" + FTBU.mod.translate("label.online") + "]");
+				if(p.isOnline()) al.add(GREEN + "[" + FTBU.mod.translateClient("label.online") + "]");
 				
 				if(!player.isOwner())
 				{
@@ -404,9 +404,9 @@ public class GuiFriends extends GuiLM
 					boolean raw2 = owner.isFriendRaw(p);
 					
 					if(raw1 && raw2)
-						al.add(GREEN + "[" + FTBU.mod.translate("label.friend") + "]");
+						al.add(GREEN + "[" + FTBU.mod.translateClient("label.friend") + "]");
 					else if(raw1 || raw2)
-						al.add((raw1 ? GOLD : BLUE) + "[" + FTBU.mod.translate("label.pfriend") + "]");
+						al.add((raw1 ? GOLD : BLUE) + "[" + FTBU.mod.translateClient("label.pfriend") + "]");
 				}
 				
 				if(LatCoreMC.isDevEnv && isShiftKeyDown())

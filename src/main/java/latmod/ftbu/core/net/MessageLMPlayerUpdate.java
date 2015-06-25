@@ -1,9 +1,10 @@
 package latmod.ftbu.core.net;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.LMPlayer;
-import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.core.event.LMPlayerEvent;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.simpleimpl.*;
+import cpw.mods.fml.relauncher.Side;
 
 public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate>
 {
@@ -40,7 +41,7 @@ public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate>
 	{
 		LMPlayer p = LMPlayer.getPlayer(m.playerID);
 		p.readFromNBT(m.dat, false);
-		FTBU.proxy.playerLMDataChanged(p, m.action);
+		new LMPlayerEvent.DataChanged(p, Side.CLIENT, action).post();
 		return null;
 	}
 }

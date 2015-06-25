@@ -208,4 +208,11 @@ public class FTBUEventHandler
 		
 		return true;
 	}
+	
+	@SubscribeEvent
+	public void onPlayerDeath(net.minecraftforge.event.entity.living.LivingDeathEvent e)
+	{
+		if(e.entity instanceof EntityPlayerMP)
+			MessageLM.NET.sendToAll(new MessageLMPlayerDied(LMPlayer.getPlayer(e.entity)));
+	}
 }

@@ -6,7 +6,7 @@ import latmod.ftbu.core.FTBULang;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.client.Waypoints;
+import latmod.ftbu.mod.client.*;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
@@ -77,7 +77,7 @@ public class GuiWaypoints extends GuiLM
 	{
 		super.drawForeground();
 		int dw = Mouse.getDWheel();
-		if(dw != 0) scroll((dw > 0) ? 1 : -1);
+		if(dw != 0) scroll((dw > 0) ? -1 : 1);
 	}
 	
 	public void addWidgets(FastList<WidgetLM> l)
@@ -90,13 +90,13 @@ public class GuiWaypoints extends GuiLM
 		
 		Arrays.fill(waypoints, null);
 		
-		FastList<Waypoints.Waypoint> l1 = Waypoints.getAll();
+		FastList<Waypoint> l1 = Waypoints.getAll();
 		
 		int added = 0;
 		
 		for(int i = scroll; i < l1.size(); i++)
 		{
-			Waypoints.Waypoint w = l1.get(i);
+			Waypoint w = l1.get(i);
 			
 			if(w.dim == currentDim)
 			{
@@ -135,11 +135,16 @@ public class GuiWaypoints extends GuiLM
 		super.drawText(l);
 	}
 	
+	public void onGuiClosed()
+	{
+		Waypoints.save();
+	}
+	
 	public static class WaypointButton extends ButtonLM
 	{
-		public final Waypoints.Waypoint waypoint;
+		public final Waypoint waypoint;
 		
-		public WaypointButton(GuiLM g, int i, Waypoints.Waypoint w)
+		public WaypointButton(GuiLM g, int i, Waypoint w)
 		{
 			super(g, 7, 6 + i * 13, wpbutton.width, wpbutton.height);
 			waypoint = w;
@@ -161,25 +166,29 @@ public class GuiWaypoints extends GuiLM
 	{
 		public static final ResourceLocation tex_edit = FTBU.mod.getLocation("textures/gui/editwp.png");
 		public static final TextureCoords col_button_tex = new TextureCoords(tex_edit, 91, 0, 28, 10);
+		public static final TextureCoords marker_tex = new TextureCoords(tex_edit, 91, 10, 32, 32);
+		public static final TextureCoords beacon_tex = new TextureCoords(tex_edit, 123, 10, 32, 32);
 		
 		public final GuiWaypoints parent;
 		public final boolean newWaypoint;
-		public final Waypoints.Waypoint waypoint;
+		public final Waypoint waypoint;
 		
-		public final ButtonLM buttonSave, buttonShare, buttonRemove, buttonSetColor;
+		public final ButtonLM buttonSave, buttonType, buttonRemove, buttonSetColor;
 		public final TextBoxLM textBoxName, textBoxX, textBoxY, textBoxZ;
 		
-		public GuiEditWaypoint(GuiWaypoints g, Waypoints.Waypoint w)
+		public GuiEditWaypoint(GuiWaypoints g, Waypoint w)
 		{
 			super(new ContainerEmpty.ClientGui(), tex_edit);
 			parent = g;
 			newWaypoint = w == null;
-			waypoint = newWaypoint ? new Waypoints.Waypoint("", mc.thePlayer.dimension) : w;
+			waypoint = newWaypoint ? new Waypoint() : w;
 			xSize = 91;
 			ySize = 61;
 			
 			if(newWaypoint)
 			{
+				waypoint.name = "New";
+				waypoint.dim = mc.thePlayer.dimension;
 				waypoint.setPos(RenderManager.instance.viewerPosX, RenderManager.instance.viewerPosY, RenderManager.instance.viewerPosZ);
 				waypoint.setColor(mc.theWorld.rand.nextInt());
 			}
@@ -196,15 +205,16 @@ public class GuiWaypoints extends GuiLM
 			
 			buttonSave.title = newWaypoint ? FTBULang.button_add : FTBULang.button_save;
 			
-			buttonShare = new ButtonLM(this, 70, 22, 16, 16)
+			buttonType = new ButtonLM(this, 70, 22, 16, 16)
 			{
 				public void onButtonPressed(int b)
 				{
-					closeGui();
+					waypoint.isMarker = !waypoint.isMarker;
+					buttonType.title = Waypoints.waypointType.getValueS(waypoint.isMarker ? 0 : 1);
 				}
 			};
 			
-			buttonShare.title = "Share";
+			buttonType.title = Waypoints.waypointType.getValueS(waypoint.isMarker ? 0 : 1);
 			
 			buttonRemove = new ButtonLM(this, 70, 40, 16, 16)
 			{
@@ -221,10 +231,10 @@ public class GuiWaypoints extends GuiLM
 			buttonSetColor = new ButtonLM(this, 38, 32, col_button_tex.width, col_button_tex.height)
 			{
 				public void onButtonPressed(int b)
-				{ mc.displayGuiScreen(new GuiSelectColor(gui, waypoint.getColorRGB())); }
+				{ mc.displayGuiScreen(new GuiSelectColor((GuiEditWaypoint)gui, waypoint.getColorRGB(), 0)); }
 			};
 			
-			buttonSetColor.title = "Set Color";
+			buttonSetColor.title = LatCore.Colors.getHex(waypoint.getColorRGB());
 			
 			//
 			textBoxName = new TextBoxLM(this, 6, 5, 61, 12)
@@ -275,7 +285,7 @@ public class GuiWaypoints extends GuiLM
 		public void addWidgets(FastList<WidgetLM> l)
 		{
 			l.add(buttonSave);
-			l.add(buttonShare);
+			l.add(buttonType);
 			l.add(buttonRemove);
 			l.add(buttonSetColor);
 			
@@ -290,7 +300,7 @@ public class GuiWaypoints extends GuiLM
 			super.drawBackground();
 			
 			buttonSave.render(newWaypoint ? Icons.add : Icons.accept);
-			buttonShare.render(Icons.friends);
+			buttonType.render(waypoint.isMarker ? marker_tex : beacon_tex);
 			buttonRemove.render(newWaypoint ? Icons.cancel : Icons.remove);
 			
 			GL11.glColor4f(waypoint.colR / 255F, waypoint.colG / 255F, waypoint.colB / 255F, 1F);
@@ -314,16 +324,22 @@ public class GuiWaypoints extends GuiLM
 			mc.displayGuiScreen(parent);
 		}
 		
-		public void confirmClicked(boolean b, int i)
+		public void onGuiClosed()
 		{
-			if(b && !newWaypoint)
+			Waypoints.save();
+		}
+		
+		public void confirmClicked(boolean set, int ID)
+		{
+			if(set && !newWaypoint)
 				Waypoints.remove(waypoint.listID);
 			closeGui();
 		}
 		
-		public void onColorSelected(int color)
+		public void onColorSelected(boolean set, int color, int ID)
 		{
 			waypoint.setColor(color);
+			mc.displayGuiScreen(this);
 		}
 	}
 }

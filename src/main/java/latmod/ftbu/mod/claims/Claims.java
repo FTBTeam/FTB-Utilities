@@ -1,12 +1,27 @@
 package latmod.ftbu.mod.claims;
 
 import latmod.ftbu.core.LatCoreMC;
+import latmod.ftbu.core.client.ClientConfig;
 import latmod.ftbu.core.util.MathHelperLM;
 import latmod.ftbu.mod.FTBUConfig;
 import net.minecraft.util.ChunkCoordinates;
+import cpw.mods.fml.relauncher.*;
 
 public class Claims
 {
+	@SideOnly(Side.CLIENT)
+	public static class Client
+	{
+		public static final ClientConfig config = new ClientConfig("claims");
+		public static final ClientConfig.Property displayChunk = new ClientConfig.Property("display_chunk", true);
+		
+		public static void init()
+		{
+			config.add(displayChunk);
+			ClientConfig.Registry.add(config);
+		}
+	}
+	
 	public static void init()
 	{
 	}

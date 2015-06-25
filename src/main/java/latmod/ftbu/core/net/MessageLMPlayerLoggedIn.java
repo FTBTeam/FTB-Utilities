@@ -5,7 +5,9 @@ import java.util.UUID;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.client.LatCoreMCClient;
+import latmod.ftbu.core.event.LMPlayerEvent;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.client.FTBUClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -74,7 +76,14 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> 
 		LMPlayer.map.put(p.playerID, p);
 		
 		p.readFromNBT(m.data, false);
-		FTBU.proxy.playerLMLoggedIn(p, m.firstTime);
-			
+		
+		if(m.uuid.equals(mc.thePlayer.getUniqueID()))
+		{
+			LatCoreMC.logger.info("Joined the server with PlayerID " + p.playerID + " in world " + LMWorld.getIDS());
+			LMPlayer.currentClientPlayerID = p.playerID;
+			FTBUClient.onWorldJoined(p);
+		}
+		
+		new LMPlayerEvent.LoggedIn(p, Side.CLIENT, p.getPlayerMP(), firstTime).post();
 	}
 }

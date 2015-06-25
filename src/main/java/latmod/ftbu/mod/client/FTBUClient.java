@@ -2,7 +2,6 @@ package latmod.ftbu.mod.client;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.client.ClientConfig;
 import latmod.ftbu.core.client.badges.ThreadLoadBadges;
-import latmod.ftbu.core.event.LMPlayerEvent;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.mod.FTBUCommon;
 import net.minecraft.client.Minecraft;
@@ -89,29 +88,11 @@ public class FTBUClient extends FTBUCommon
 		Minecraft.getMinecraft().effectRenderer.addEffect(fx);
 	}
 	
-	public void playerLMLoggedIn(LMPlayer p, boolean firstTime)
+	public static void onWorldJoined(LMPlayer p)
 	{
-		boolean isSelf = p.getUUID().equals(getClientPlayer().getUniqueID());
-		if(isSelf)
-		{
-			LatCoreMC.logger.info("Joined the server with PlayerID " + p.playerID + " in world " + LMWorld.getIDS());
-			LMPlayer.currentClientPlayerID = p.playerID;
-		}
-		
-		new LMPlayerEvent.LoggedIn(p, Side.CLIENT, p.getPlayerMP(), firstTime).post();
-		
-		if(isSelf)
-		{
-			ThreadLoadBadges.init();
-			Waypoints.load();
-		}
+		ThreadLoadBadges.init();
+		Waypoints.load();
 	}
-	
-	public void playerLMLoggedOut(LMPlayer p)
-	{ new LMPlayerEvent.LoggedOut(p, Side.CLIENT, p.getPlayerMP()).post(); }
-	
-	public void playerLMDataChanged(LMPlayer p, String action)
-	{ new LMPlayerEvent.DataChanged(p, Side.CLIENT, action).post(); }
 	
 	public void openClientGui(EntityPlayer ep, String id, NBTTagCompound data)
 	{

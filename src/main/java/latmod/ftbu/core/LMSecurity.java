@@ -5,6 +5,7 @@ import java.util.UUID;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import cpw.mods.fml.relauncher.*;
 
 public class LMSecurity
 {
@@ -120,10 +121,12 @@ public class LMSecurity
 			return l[id];
 		}
 		
+		@SideOnly(Side.CLIENT)
 		public String getText()
-		{ return FTBU.mod.translate("security." + uname); }
+		{ return FTBU.mod.translateClient("security." + uname); }
 		
+		@SideOnly(Side.CLIENT)
 		public String getTitle()
-		{ return FTBU.mod.translate("security"); }
+		{ return FTBU.mod.translateClient("security"); }
 	}
 }

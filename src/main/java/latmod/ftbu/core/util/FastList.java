@@ -52,11 +52,13 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	
 	public E remove(int i)
 	{
+		if(i == -1) return null;
+		E e0 = get(i);
 		size--;
 		for(int j = i; j < size; j++)
 		objects[j] = objects[j + 1];
 		objects[size] = null;
-		return null;
+		return e0;
 	}
 	
 	public boolean remove(Object o)

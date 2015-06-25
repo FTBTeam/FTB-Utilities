@@ -1,5 +1,6 @@
 package latmod.ftbu.core.tile;
 import latmod.ftbu.mod.FTBU;
+import cpw.mods.fml.relauncher.*;
 
 public enum RedstoneMode
 {
@@ -36,9 +37,11 @@ public enum RedstoneMode
 		return VALUES[id];
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public String getText()
-	{ return FTBU.mod.translate("redstonemode." + uname); }
+	{ return FTBU.mod.translateClient("redstonemode." + uname); }
 	
+	@SideOnly(Side.CLIENT)
 	public String getTitle()
-	{ return FTBU.mod.translate("redstonemode"); }
+	{ return FTBU.mod.translateClient("redstonemode"); }
 }

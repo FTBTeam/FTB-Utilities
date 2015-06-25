@@ -1,7 +1,9 @@
 package latmod.ftbu.core;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.mod.FTBU;
 
+@SideOnly(Side.CLIENT)
 public class FTBULang
 {
 	public static String button_settings;
@@ -46,5 +48,5 @@ public class FTBULang
 	}
 	
 	private static String get(String s)
-	{ return FTBU.mod.translate(s); }
+	{ return FTBU.mod.translateClient(s); }
 }

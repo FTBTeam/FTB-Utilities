@@ -232,20 +232,7 @@ public abstract class GuiLM extends GuiContainer
 	}
 	
 	public void drawWrappedIcon(IIcon i, float x, float y, float w, float h)
-	{
-		float minU = i.getMinU();
-		float minV = i.getMinV();
-		float maxU = i.getMaxU();
-		float maxV = i.getMaxV();
-		
-		Tessellator t = Tessellator.instance;
-		t.startDrawingQuads();
-		t.addVertexWithUV(x + 0, y + h, zLevel, minU, maxV);
-		t.addVertexWithUV(x + w, y + h, zLevel, maxU, maxV);
-		t.addVertexWithUV(x + w, y + 0, zLevel, maxU, minV);
-		t.addVertexWithUV(x + 0, y + 0, zLevel, minU, minV);
-		t.draw();
-	}
+	{ drawTexturedRectD(x, y, zLevel, w, h, i.getMinU(), i.getMinV(), i.getMaxU(), i.getMaxV()); }
 	
 	public void drawTexturedModalRect(int x, int y, int u, int v, int w, int h)
 	{ drawTexturedModalRectD(x, y, u, v, w, h); }

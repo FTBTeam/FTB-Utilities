@@ -4,7 +4,7 @@ import java.io.File;
 
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.util.*;
-import net.minecraft.util.StatCollector;
+import net.minecraft.client.resources.I18n;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
@@ -23,7 +23,7 @@ public final class ClientConfig
 	{ map.put(e.id, e); }
 	
 	public String getIDS()
-	{ return StatCollector.translateToLocal("config.group." + id); }
+	{ return I18n.format("config.group." + id); }
 	
 	public final static class Registry
 	{
@@ -115,10 +115,10 @@ public final class ClientConfig
 		{ return getIDS() + ": " + getValueS(getI()); }
 		
 		public String getIDS()
-		{ return StatCollector.translateToLocal("config.property." + id); }
+		{ return I18n.format("config.property." + id); }
 		
 		public String getValueS(int i)
-		{ return translateValues ? StatCollector.translateToLocal("config.value." + values[i]) : values[i]; }
+		{ return translateValues ? I18n.format("config.value." + values[i]) : values[i]; }
 
 		public Property setTranslateValues(boolean b)
 		{ translateValues = b; return this; }

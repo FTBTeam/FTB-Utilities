@@ -19,7 +19,7 @@ public abstract class MessageLM<E extends MessageLM<?>> implements IMessage, IMe
 		NET.registerMessage(MessageCustomClientAction.class, MessageCustomClientAction.class, 2, Side.SERVER);
 		NET.registerMessage(MessageCustomServerAction.class, MessageCustomServerAction.class, 3, Side.CLIENT);
 		NET.registerMessage(MessageClientTileAction.class, MessageClientTileAction.class, 4, Side.SERVER);
-		//
+		NET.registerMessage(MessageLMPlayerDied.class, MessageLMPlayerDied.class, 5, Side.CLIENT);
 		NET.registerMessage(MessageReload.class, MessageReload.class, 6, Side.CLIENT);
 		NET.registerMessage(MessageNotifyPlayer.class, MessageNotifyPlayer.class, 7, Side.CLIENT);
 		NET.registerMessage(MessageManageGroups.class, MessageManageGroups.class, 8, Side.SERVER);

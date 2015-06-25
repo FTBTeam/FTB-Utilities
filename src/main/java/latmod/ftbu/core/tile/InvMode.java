@@ -1,5 +1,6 @@
 package latmod.ftbu.core.tile;
 import latmod.ftbu.mod.FTBU;
+import cpw.mods.fml.relauncher.*;
 
 public enum InvMode
 {
@@ -35,9 +36,11 @@ public enum InvMode
 	public boolean canExtractItem()
 	{ return this == ENABLED || this == ONLY_OUT; }
 	
+	@SideOnly(Side.CLIENT)
 	public String getText()
-	{ return FTBU.mod.translate("invmode." + uname); }
+	{ return FTBU.mod.translateClient("invmode." + uname); }
 	
+	@SideOnly(Side.CLIENT)
 	public String getTitle()
-	{ return FTBU.mod.translate("invmode"); }
+	{ return FTBU.mod.translateClient("invmode"); }
 }

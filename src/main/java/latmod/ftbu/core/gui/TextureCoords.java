@@ -8,6 +8,7 @@ public final class TextureCoords
 	public final ResourceLocation texture;
 	public final int posX, posY, width, height;
 	public final int textureW, textureH;
+	public final double minU, minV, maxU, maxV;
 	
 	public TextureCoords(ResourceLocation res, int x, int y, int w, int h, int tw, int th)
 	{
@@ -18,6 +19,11 @@ public final class TextureCoords
 		height = h;
 		textureW = tw;
 		textureH = th;
+		
+		minU = posX / (double)textureW;
+		minV = posY / (double)textureH;
+		maxU = (posX + width) / (double)textureW;
+		maxV = (posY + height) / (double)textureH;
 	}
 	
 	public TextureCoords(ResourceLocation res, int x, int y, int w, int h)
@@ -30,7 +36,7 @@ public final class TextureCoords
 	public void render(GuiLM gui, int x, int y, int w, int h)
 	{
 		gui.setTexture(texture);
-		GuiLM.drawTexturedRect(x + gui.getPosX(), y + gui.getPosY(), gui.getZLevel(), w, h, posX, posY, posX + width, posY + height, textureW, textureH);
+		GuiLM.drawTexturedRectD(x + gui.getPosX(), y + gui.getPosY(), gui.getZLevel(), w, h, minU, minV, maxU, maxV);
 	}
 	
 	@SideOnly(Side.CLIENT)

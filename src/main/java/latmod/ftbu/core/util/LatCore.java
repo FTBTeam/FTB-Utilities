@@ -19,7 +19,7 @@ public class LatCore
 	
 	public static class Colors
 	{
-		public static int getRGB(int r, int g, int b, int a)
+		public static int getRGBA(int r, int g, int b, int a)
 		{ return ((a & 0xFF) << 24) | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | ((b & 0xFF) << 0); }
 		
 		public static int getRed(int c)
@@ -33,6 +33,12 @@ public class LatCore
 		
 		public static int getAlpha(int c)
 		{ return (c >> 24) & 0xFF; }
+
+		public static String getHex(int c)
+		{ return "#" + Integer.toHexString(getRGBA(c, 0)).toUpperCase(); }
+		
+		public static int getRGBA(int c, int a)
+		{ return getRGBA(getRed(c), getGreen(c), getBlue(c), a); }
 	}
 	
 	@SuppressWarnings("all")
@@ -446,6 +452,24 @@ public class LatCore
 		if(s < 10) sb.append('0');
 		sb.append(s);
 		return sb.toString();
+	}
+	
+	public static String formatInt(int i)
+	{ return formatInt(i, 1); }
+	
+	public static String formatInt(int i, int z)
+	{
+		String s0 = "" + i;
+		if(z <= 0) return s0;
+		z += 1;
+		
+		StringBuilder s = new StringBuilder();
+		
+		for(int j = 0; j < z - s0.length(); j++)
+			s.append('0');
+		
+		s.append(i);
+		return s.toString();
 	}
 
 	public static String fillString(String s, char fill, int length)

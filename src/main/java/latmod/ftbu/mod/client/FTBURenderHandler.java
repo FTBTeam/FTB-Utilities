@@ -6,7 +6,6 @@ import latmod.ftbu.core.client.badges.Badge;
 import latmod.ftbu.core.client.model.CubeRenderer;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.client.Waypoints.Waypoint;
 import latmod.ftbu.mod.client.gui.GuiNotification;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
@@ -26,9 +25,9 @@ public class FTBURenderHandler
 	public static final FTBURenderHandler instance = new FTBURenderHandler();
 	public static final FastList<GuiNotification> messages = new FastList<GuiNotification>();
 	public static final FastMap<UUID, Badge> playerBadges = new FastMap<UUID, Badge>();
-	private static final FastList<WaypointClient> visibleWaypoints = new FastList<WaypointClient>();
+	private static final FastList<WaypointClient> visibleBeacons = new FastList<WaypointClient>();
+	private static final FastList<WaypointClient> visibleMarkers = new FastList<WaypointClient>();
 	public static final ResourceLocation texMarker = FTBU.mod.getLocation("textures/map/marker.png");
-	public static final ResourceLocation texBeacon = FTBU.mod.getLocation("textures/map/beacon.png");
 	private static double playerX, playerY, playerZ, renderX, renderY, renderZ, far = 4D;
 	private static final FastList<String> stringList = new FastList<String>();
 	
@@ -70,20 +69,21 @@ public class FTBURenderHandler
 	public void renderWorld(RenderWorldLastEvent e)
 	{
 		if(!Waypoints.enabled.getB() || Minecraft.getMinecraft().theWorld == null) return;
-		FastList<Waypoints.Waypoint> list = Waypoints.getAll();
+		FastList<Waypoint> list = Waypoints.getAll();
 		if(list.isEmpty()) return;
 		
-		visibleWaypoints.clear();
+		visibleBeacons.clear();
+		visibleMarkers.clear();
 		
 		Minecraft mc = LatCoreMCClient.getMinecraft();
 		
-		boolean isMarker = Waypoints.waypointType.getI() == 0;
-		if(mc.thePlayer == null || mc.theWorld == null || (isMarker && mc.gameSettings.thirdPersonView != 0)) return;
+		boolean isFPS = mc.gameSettings.thirdPersonView == 0;
+		
+		if(mc.thePlayer == null || mc.theWorld == null) return;
 		
 		Tessellator t = Tessellator.instance;
 		
 		int currentDim = mc.theWorld.provider.dimensionId;
-		//double renderDistSq = Math.min(Waypoints.renderDistanceSq[Waypoints.renderDistance.getI()], MathHelperLM.sq(mc.gameSettings.renderDistanceChunks * 20D));
 		double renderDistSq = Waypoints.renderDistanceSq[Waypoints.renderDistance.getI()];
 		
 		playerX = RenderManager.instance.viewerPosX;
@@ -107,30 +107,36 @@ public class FTBURenderHandler
 				
 				if(distSq <= renderDistSq)
 				{
-					visibleWaypoints.add(new WaypointClient(w, x, y, z, distSq));
+					if(w.isMarker) visibleMarkers.add(new WaypointClient(w, x, y, z, distSq));
+					else visibleBeacons.add(new WaypointClient(w, x, y, z, distSq));
 				}
 			}
 		}
 		
-		if(visibleWaypoints.isEmpty()) return;
+		boolean hasMarkers = !visibleMarkers.isEmpty();
+		boolean hasBeacons = !visibleBeacons.isEmpty();
+		
+		if(!hasMarkers && !hasBeacons) return;
 		
 		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
-		visibleWaypoints.sort(WaypointComparator.instance);
+		visibleMarkers.sort(WaypointComparator.instance);
+		visibleBeacons.sort(WaypointComparator.instance);
 		
-		if(isMarker)
+		if(hasMarkers && isFPS)
 		{
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
 			GL11.glDepthMask(false);
 			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 			mc.getTextureManager().bindTexture(texMarker);
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			
-			for(int i = 0; i < visibleWaypoints.size(); i++)
+			for(int i = 0; i < visibleMarkers.size(); i++)
 			{
-				WaypointClient w = visibleWaypoints.get(i);
+				WaypointClient w = visibleMarkers.get(i);
 				
 				GL11.glPushMatrix();
 				GL11.glTranslated(w.closeRenderX, w.closeRenderY, w.closeRenderZ);
@@ -150,19 +156,20 @@ public class FTBURenderHandler
 			}
 			
 			GL11.glDepthMask(true);
+			GL11.glEnable(GL11.GL_DEPTH_TEST);
 		}
-		else
+		
+		if(hasBeacons)
 		{
-			mc.getTextureManager().bindTexture(texBeacon);
 			GL11.glDisable(GL11.GL_CULL_FACE);
 			GL11.glDepthMask(false);
 			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 			//OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, 1, 0);
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			
-			for(int i = 0; i < visibleWaypoints.size(); i++)
+			for(int i = 0; i < visibleBeacons.size(); i++)
 			{
-				WaypointClient w = visibleWaypoints.get(i);
+				WaypointClient w = visibleBeacons.get(i);
 				
 				GL11.glPushMatrix();
 				GL11.glTranslated(w.posX - renderX, w.posY - renderY, w.posZ - renderZ);
@@ -185,7 +192,7 @@ public class FTBURenderHandler
 		boolean displayTitle = Waypoints.displayTitle.getB();
 		boolean displayDist = Waypoints.displayDist.getB();
 		
-		if(mc.gameSettings.thirdPersonView == 0 && (displayTitle || displayDist))
+		if(isFPS && (displayTitle || displayDist))
 		{
 			GL11.glColor4f(1F, 1F, 1F, 1F);
 			GL11.glDisable(GL11.GL_CULL_FACE);
@@ -193,9 +200,9 @@ public class FTBURenderHandler
 			GL11.glDepthMask(false);
 			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 			
-			for(int i = 0; i < visibleWaypoints.size(); i++)
+			for(int i = 0; i < visibleBeacons.size() + visibleMarkers.size(); i++)
 			{
-				WaypointClient w = visibleWaypoints.get(i);
+				WaypointClient w = (i >= visibleBeacons.size()) ? visibleMarkers.get(i - visibleBeacons.size()) : visibleBeacons.get(i);
 				
 				if(displayDist || !w.name.isEmpty())
 				{

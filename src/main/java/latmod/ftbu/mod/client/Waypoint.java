@@ -56,7 +56,6 @@ public class Waypoint
 		
 		sb.append("M=");
 		sb.append(isMarker ? '1' : '0');
-		sb.append(", ");
 		
 		if(customIcon != null)
 		{

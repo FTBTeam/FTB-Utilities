@@ -2,7 +2,7 @@
 {
   "modid": "FTBU",
   "name": "FTBUtilities",
-  "description": "",
+  "description": "FTB Utilities is a mod by LatvianModder. It aims to provide several useful utilities within the FTB Platform ranging from waypoints, friends list, server configuration utilities, world borders, and many other features.",
   "version": "${version}",
   "url": "http://minecraft.curseforge.com/mc-mods/224778",
   "updateUrl": "",

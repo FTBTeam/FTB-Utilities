@@ -6,8 +6,12 @@ import java.nio.channels.*;
 import java.nio.charset.Charset;
 import java.util.*;
 
+import org.lwjgl.opengl.GL11;
+
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+
+import cpw.mods.fml.relauncher.*;
 
 /** Made by LatvianModder */
 public class LatCore
@@ -35,10 +39,21 @@ public class LatCore
 		{ return (c >> 24) & 0xFF; }
 
 		public static String getHex(int c)
-		{ return "#" + Integer.toHexString(getRGBA(c, 0)).toUpperCase(); }
+		{ return "#" + Integer.toHexString(getRGBA(c, 255)).substring(2).toUpperCase(); }
 		
 		public static int getRGBA(int c, int a)
 		{ return getRGBA(getRed(c), getGreen(c), getBlue(c), a); }
+		
+		@SideOnly(Side.CLIENT)
+		public static void setGLColor(int c, int a)
+		{
+			int r = getRed(c); int g = getGreen(c); int b = getBlue(c);
+			GL11.glColor4f(r / 255F, g / 255F, b / 255F, a / 255F);
+		}
+		
+		@SideOnly(Side.CLIENT)
+		public static void setGLColor(int c)
+		{ setGLColor(c, getAlpha(c)); }
 	}
 	
 	@SuppressWarnings("all")
@@ -366,34 +381,40 @@ public class LatCore
 	
 	public static <T> T fromJson(String s, Type t)
 	{
-		if(s == null || s.length() < 2) s = "{}";
+		if(s == null || s.length() < 2) return null;
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		return gson.fromJson(s, t);
 	}
 	
 	public static <T> T fromJsonFromFile(File f, Type t)
 	{
+		if(!f.exists()) return null;
 		try { return fromJson(toString(new FileInputStream(f)), t); }
 		catch(Exception e) { e.printStackTrace(); return null; }
 	}
 	
 	public static String toJson(Object o, boolean asTree)
 	{
+		if(o == null) return null;
 		GsonBuilder gb = new GsonBuilder().excludeFieldsWithoutExposeAnnotation();
 		if(asTree) gb.setPrettyPrinting(); Gson gson = gb.create(); return gson.toJson(o);
 	}
 	
-	public static void toJsonFile(File f, Object o)
+	public static boolean toJsonFile(File f, Object o)
 	{
 		String s = toJson(o, true);
+		if(s == null) return false;
 		
 		try
 		{
 			FileOutputStream fos = new FileOutputStream(newFile(f));
-			fos.write(s.getBytes()); fos.close();
+			fos.write(s.getBytes());
+			fos.close();
+			return true;
 		}
 		catch(Exception e)
 		{ e.printStackTrace(); }
+		return false;
 	}
 	
 	public static <K, V> Type getMapType(Type K, Type V)

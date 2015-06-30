@@ -49,8 +49,8 @@ public class Claims
 	
 	public static boolean isOutsideWorldBorder(int dim, int cx, int cz)
 	{
-		if(!FTBUConfig.WorldBorder.enabled) return false;
-		int radius = FTBUConfig.WorldBorder.getWorldBorder(dim);
+		if(!FTBUConfig.WorldBorder.inst.enabled) return false;
+		int radius = FTBUConfig.WorldBorder.inst.getWorldBorder(dim);
 		int min = MathHelperLM.chunk(-radius);
 		int max = MathHelperLM.chunk(radius);
 		return cx >= max || cx <= min || cz >= max || cz <= min;

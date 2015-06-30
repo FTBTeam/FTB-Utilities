@@ -11,27 +11,29 @@ public class CmdTplast extends CommandLM
 	{ super("tpl", CommandLevel.OP); }
 	
 	public NameType getUsername(String[] args, int i)
-	{ if(i == 0) return NameType.OFF; return NameType.NONE; }
+	{ if(i == 0 || i == 1) return NameType.OFF; return NameType.NONE; }
 	
 	public String onCommand(ICommandSender ics, String[] args)
 	{
 		checkArgs(args, 1);
-		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		
-		LMPlayer p = getLMPlayer(args[0]);
+		EntityPlayerMP who;
+		LMPlayer to;
 		
-		if(p.isOnline())
+		if(args.length == 1)
 		{
-			EntityPlayerMP ep1 = p.getPlayerMP();
-			Teleporter.travelEntity(ep, ep1.posX, ep1.posY, ep1.posZ, ep1.dimension);
+			who = getCommandSenderAsPlayer(ics);
+			to = getLMPlayer(args[0]);
 		}
 		else
 		{
-			//EnkiData.Data d = EnkiData.getData(p);
-			if(p.last == null) return "No last position!";
-			Teleporter.travelEntity(ep, p.last.x, p.last.y, p.last.z, p.last.dim);
+			who = getPlayer(ics, args[0]);
+			to = getLMPlayer(args[1]);
 		}
 		
-		return FINE + "Teleported to " + p.getName() + "!";
+		EntityPos p = to.getLastPos();
+		if(p == null) return "No last position!";
+		Teleporter.travelEntity(who, p);
+		return FINE + "Teleported to " + to.getName() + "!";
 	}
 }

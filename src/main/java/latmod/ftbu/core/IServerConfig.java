@@ -19,7 +19,7 @@ public interface IServerConfig
 			if(i != null && i.getConfigName() != null)
 			{
 				map.put(i.getConfigName(), i);
-				LatCoreMC.logger.info("Added IServerConfig '" + i.getConfigName() + "'");
+				if(LatCoreMC.isDevEnv) LatCoreMC.logger.info("Added IServerConfig '" + i.getConfigName() + "'");
 			}
 		}
 		
@@ -38,8 +38,17 @@ public interface IServerConfig
 			}
 		}
 		
-		public static void writeToNBT(NBTTagCompound tag)
+		public static void writeToNBT(NBTTagCompound tag, String s)
 		{
+			if(s != null)
+			{
+				NBTTagCompound tag1 = new NBTTagCompound();
+				IServerConfig c = map.get(s);
+				if(c != null) c.writeConfig(tag1);
+				if(!tag1.hasNoTags()) tag.setTag(s, tag1);
+				return;
+			}
+			
 			for(int i = 0; i < map.size(); i++)
 			{
 				NBTTagCompound tag1 = new NBTTagCompound();
@@ -52,6 +61,11 @@ public interface IServerConfig
 		{
 			for(int i = 0; i < map.size(); i++)
 				map.values.get(i).load();
+		}
+		
+		public static void update(String s)
+		{
+			
 		}
 	}
 }

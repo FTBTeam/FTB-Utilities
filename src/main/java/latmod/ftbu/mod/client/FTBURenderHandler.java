@@ -3,14 +3,16 @@ import java.util.*;
 
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.client.badges.Badge;
-import latmod.ftbu.core.client.model.CubeRenderer;
+import latmod.ftbu.core.client.model.*;
 import latmod.ftbu.core.util.*;
-import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.client.gui.GuiNotification;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
+import net.minecraft.util.*;
 import net.minecraftforge.client.event.*;
 
 import org.lwjgl.opengl.GL11;
@@ -30,9 +32,12 @@ public class FTBURenderHandler
 	public static final ResourceLocation texMarker = FTBU.mod.getLocation("textures/map/marker.png");
 	private static double playerX, playerY, playerZ, renderX, renderY, renderZ, far = 4D;
 	private static final FastList<String> stringList = new FastList<String>();
-	
+	public static final TexturedCubeRenderer worldBorderRenderer = new TexturedCubeRenderer(true);
 	private static final CubeRenderer beaconRenderer = new CubeRenderer();
-	//private static final CubeRenderer chunkRenderer = new CubeRenderer();
+	public static final ResourceLocation world_border_tex = FTBU.mod.getLocation("textures/map/world_border.png");
+	private static Minecraft mc;
+	private static boolean isFPS;
+	private static int currentDim;
 	
 	@SubscribeEvent
 	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
@@ -61,30 +66,14 @@ public class FTBURenderHandler
 	}
 	
 	@SubscribeEvent
-	public void renderChunk(RenderWorldEvent.Post e)
-	{
-	}
-	
-	@SubscribeEvent
 	public void renderWorld(RenderWorldLastEvent e)
 	{
-		if(!Waypoints.enabled.getB() || Minecraft.getMinecraft().theWorld == null) return;
-		FastList<Waypoint> list = Waypoints.getAll();
-		if(list.isEmpty()) return;
-		
-		visibleBeacons.clear();
-		visibleMarkers.clear();
-		
-		Minecraft mc = LatCoreMCClient.getMinecraft();
-		
-		boolean isFPS = mc.gameSettings.thirdPersonView == 0;
-		
+		mc = LatCoreMCClient.getMinecraft();
 		if(mc.thePlayer == null || mc.theWorld == null) return;
 		
-		Tessellator t = Tessellator.instance;
+		isFPS = mc.gameSettings.thirdPersonView == 0;
 		
-		int currentDim = mc.theWorld.provider.dimensionId;
-		double renderDistSq = Waypoints.renderDistanceSq[Waypoints.renderDistance.getI()];
+		currentDim = mc.theWorld.provider.dimensionId;
 		
 		playerX = RenderManager.instance.viewerPosX;
 		playerY = RenderManager.instance.viewerPosY;
@@ -93,6 +82,21 @@ public class FTBURenderHandler
 		renderX = RenderManager.renderPosX;
 		renderY = RenderManager.renderPosY;
 		renderZ = RenderManager.renderPosZ;
+		
+		renderWaypoints();
+		renderWorldBorder();
+	}
+	
+	private void renderWaypoints()
+	{
+		if(!Waypoints.enabled.getB() || Minecraft.getMinecraft().theWorld == null) return;
+		FastList<Waypoint> list = Waypoints.getAll();
+		if(list.isEmpty()) return;
+		
+		visibleBeacons.clear();
+		visibleMarkers.clear();
+		
+		double renderDistSq = Waypoints.renderDistanceSq[Waypoints.renderDistance.getI()];
 		
 		for(int i = 0; i < list.size(); i++)
 		{
@@ -125,6 +129,8 @@ public class FTBURenderHandler
 		
 		visibleMarkers.sort(WaypointComparator.instance);
 		visibleBeacons.sort(WaypointComparator.instance);
+		
+		Tessellator t = Tessellator.instance;
 		
 		if(hasMarkers && isFPS)
 		{
@@ -245,60 +251,74 @@ public class FTBURenderHandler
 		}
 		
 		GL11.glPopAttrib();
-		
-		// Chunks //
-		
-		/*
-		int cx = MathHelperLM.chunk(playerX);
-		int cz = MathHelperLM.chunk(playerZ);
-		
-		if(!mc.theWorld.getChunkProvider().chunkExists(cx, cz)) return;
-		
-		GL11.glPushMatrix();
-		GL11.glTranslated(cx * 16 - renderX, -renderY, cz * 16 - renderZ);
-		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-		LatCoreMCClient.pushMaxBrightness();
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_BLEND);
-		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-		GL11.glDisable(GL11.GL_CULL_FACE);
-		
-		GL11.glColor4f(0F, 1F, 1F, 0.2F);
-		
-		int thisType = getChunkType(cx, cz);
-		
-		chunkRenderer.setSize(0D, 0D, 0D, 16D, 256D, 16D);
-		
-		if(mc.theWorld.getChunkProvider().chunkExists(cx + 1, cz))
-		{
-			chunkRenderer.renderEast();
-		}
-		
-		if(mc.theWorld.getChunkProvider().chunkExists(cx - 1, cz))
-		{
-			chunkRenderer.renderWest();
-		}
-		
-		if(mc.theWorld.getChunkProvider().chunkExists(cx, cz + 1))
-		{
-			chunkRenderer.renderNorth();
-		}
-		
-		if(mc.theWorld.getChunkProvider().chunkExists(cx, cz - 1))
-		{
-			chunkRenderer.renderSouth();
-		}
-		
-		LatCoreMCClient.popMaxBrightness();
-		GL11.glPopAttrib();
-		GL11.glPopMatrix();
 	}
 	
-	private static int getChunkType(int cx, int cz)
+	private void renderWorldBorder()
 	{
-		return -1;
-		*/
+		mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+		
+		int currentDim = mc.theWorld.provider.dimensionId;
+		
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		
+		GL11.glDisable(GL11.GL_CULL_FACE);
+		GL11.glDepthMask(false);
+		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+		//OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, 1, 0);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		LatCoreMCClient.pushMaxBrightness();
+		mc.getTextureManager().bindTexture(world_border_tex);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+		
+		GL11.glPushMatrix();
+		GL11.glTranslated(-renderX, -renderY, -renderZ);
+		
+		int wb = FTBUConfig.WorldBorder.inst.getWorldBorder(currentDim);
+		float min = (MathHelperLM.chunk(-wb) + 1) * 16 + 0.01F;
+		float max = MathHelperLM.chunk(wb) * 16 - 0.01F;
+		float f = Minecraft.getSystemTime() * 0.0004F;
+		
+		worldBorderRenderer.setSize(min, 0D, min, max, 256D, max);
+		worldBorderRenderer.setUV(-1, min + f, 0F, max + f, 256F);
+		
+		float maxA = 0.8F;
+		
+		GL11.glColor4f(1F, 1F, 1F, maxA);
+		
+		if(playerX <= min + 16)
+		{
+			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(playerX - min) * maxA / 16F);
+			worldBorderRenderer.renderWest();
+		}
+		
+		if(playerX >= max - 16)
+		{
+			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(max - playerX) * maxA / 16F);
+			worldBorderRenderer.renderEast();
+		}
+		
+		if(playerZ <= min + 16)
+		{
+			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(playerZ - min) * maxA / 16F);
+			worldBorderRenderer.renderNorth();
+		}
+		
+		if(playerZ >= max - 16)
+		{
+			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(max - playerZ) * maxA / 16F);
+			worldBorderRenderer.renderSouth();
+		}
+		
+		GL11.glPopMatrix();
+		
+		LatCoreMCClient.popMaxBrightness();
+		GL11.glDepthMask(true);
+		GL11.glPopAttrib();
 	}
 	
 	public static class WaypointClient

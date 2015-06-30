@@ -20,14 +20,14 @@ public enum ChunkType
 	
 	public static ChunkType get(int dim, int cx, int cz, LMPlayer p)
 	{
-		if(!LatCoreMC.isDedicatedServer()) return WILDERNESS;
+		//if(!LatCoreMC.isDedicatedServer()) return WILDERNESS;
 		
 		if(Claims.isInSpawn(dim, cx, cz)) return SPAWN;
 		if(Claims.isOutsideWorldBorder(dim, cx, cz)) return WORLD_BORDER;
 		ClaimedChunk c = Claims.get(dim, cx, cz);
 		if(c == null) return WILDERNESS;
 		if(p == null) return CLAIMED;
-		else if(c.owner.equals(p)) return CLAIMED_SELF;
+		else if(c.owner.equalsPlayer(p)) return CLAIMED_SELF;
 		else if(c.owner.isFriend(p)) return CLAIMED_FRIEND;
 		else return CLAIMED;
 	}

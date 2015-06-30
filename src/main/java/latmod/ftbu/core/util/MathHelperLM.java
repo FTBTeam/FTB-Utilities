@@ -397,4 +397,21 @@ public class MathHelperLM
 		
 		return m;
 	}
+	
+	public static final int[] flip(int[] i)
+	{
+		if(i == null) return null;
+		int ai[] = new int[i.length];
+		for(int j = 0; j < i.length; j++)
+			ai[j] = i[(i.length - 1) - j];
+		return ai;
+	}
+	
+	public static final int[] getAllInts(int min, int size)
+	{
+		int[] ai = new int[size];
+		for(int i = 0; i < size; i++)
+			ai[i] = min + i;
+		return ai;
+	}
 }

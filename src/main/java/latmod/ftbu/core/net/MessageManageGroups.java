@@ -48,7 +48,7 @@ public class MessageManageGroups extends MessageLM<MessageManageGroups>
 		if(m.code > 0)
 		{
 			LMPlayer p = LMPlayer.getPlayer(m.user);
-			if(p == null || p.equals(owner)) return null;
+			if(p == null || p.equalsPlayer(owner)) return null;
 			
 			if(m.code == C_ADD_FRIEND)
 			{

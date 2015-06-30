@@ -7,7 +7,10 @@ import latmod.ftbu.core.item.ICreativeSafeItem;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.ISecureTile;
 import latmod.ftbu.core.util.*;
+import latmod.ftbu.mod.claims.*;
+import latmod.ftbu.mod.cmd.CmdMotd;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -45,17 +48,27 @@ public class FTBUEventHandler
 		}
 		
 		p.setOnline(true);
-		if(p.last == null) p.last = new LMPlayer.Last();
-		p.last.set(new Vertex.DimPos(e.player));
-		p.last.seen = LatCore.millis();
+		if(p.lastPos == null) p.lastPos = new EntityPos();
+		p.lastPos.set(ep);
+		p.lastSeen = LatCore.millis();
+		if(first || p.firstJoined == 0L) p.firstJoined = p.lastSeen;
 		
 		new LMPlayerEvent.LoggedIn(p, Side.SERVER, ep, first).post();
-		updateAllData(sendAll ? null : ep);
+		MessageLM.sendTo(sendAll ? null : ep, new MessageUpdateAllData());
 		MessageLM.NET.sendToAll(new MessageLMPlayerLoggedIn(p, first));
+		
+		if(first)
+		{
+			FastList<ItemStack> items = FTBUConfig.Login.getStartingItems(ep.getUniqueID());
+			if(items != null && !items.isEmpty()) for(ItemStack is : items)
+				InvUtils.giveItem(ep, is);
+		}
 		
 		p.sendInfo(null);
 		for(LMPlayer p1 : LMPlayer.map.values)
 			p1.sendInfo(ep);
+		
+		CmdMotd.printMotd(ep);
 	}
 	
 	@SubscribeEvent
@@ -67,9 +80,9 @@ public class FTBUEventHandler
 		{
 			p.setOnline(false);
 			
-			if(p.last == null) p.last = new LMPlayer.Last();
-			p.last.set(new Vertex.DimPos(e.player));
-			p.last.seen = LatCore.millis();
+			if(p.lastPos == null) p.lastPos = new EntityPos();
+			p.lastPos.set(e.player);
+			p.lastSeen = LatCore.millis();
 			
 			for(int i = 0; i < 4; i++)
 				p.lastArmor[i] = e.player.inventory.armorInventory[i];
@@ -168,17 +181,11 @@ public class FTBUEventHandler
 		}
 	}
 	
-	public void updateAllData(EntityPlayerMP ep)
-	{
-		if(ep != null) MessageLM.NET.sendTo(new MessageUpdateAllData(), ep);
-		else MessageLM.NET.sendToAll(new MessageUpdateAllData());
-	}
-	
 	@SubscribeEvent
     public void onConfigChanged(cpw.mods.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent e)
     {
 		if(e.modID.equalsIgnoreCase(FTBUFinals.MOD_ID))
-			FTBUConfig.instance.load();
+			FTBU.mod.config.load();
 	}
 	
 	@SubscribeEvent
@@ -191,12 +198,15 @@ public class FTBUEventHandler
 			e.setCanceled(true);
 			return;
 		}
-		if(!e.world.isRemote && (e.action != PlayerInteractEvent.Action.RIGHT_CLICK_AIR) && !canInteract(e)) e.setCanceled(true);
+		if(!e.world.isRemote && !canInteract(e)) e.setCanceled(true);
 	}
 	
 	private boolean canInteract(net.minecraftforge.event.entity.player.PlayerInteractEvent e)
 	{
 		if(e.entityPlayer.capabilities.isCreativeMode && FTBUConfig.General.allowCreativeInteractSecure) return true;
+		if(!ChunkType.getD(e.world.provider.dimensionId, e.x, e.z, LMPlayer.getPlayer(e.entityPlayer)).isFriendly()) return false;
+		
+		if(e.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR) return true;
 		
 		TileEntity te = e.world.getTileEntity(e.x, e.y, e.z);
 		
@@ -213,6 +223,10 @@ public class FTBUEventHandler
 	public void onPlayerDeath(net.minecraftforge.event.entity.living.LivingDeathEvent e)
 	{
 		if(e.entity instanceof EntityPlayerMP)
-			MessageLM.NET.sendToAll(new MessageLMPlayerDied(LMPlayer.getPlayer(e.entity)));
+		{
+			LMPlayer p = LMPlayer.getPlayer(e.entity);
+			p.deaths++;
+			MessageLM.NET.sendToAll(new MessageLMPlayerDied(p));
+		}
 	}
 }

@@ -13,8 +13,22 @@ import net.minecraftforge.common.DimensionManager;
 /** Made by XCompWiz */
 public class Teleporter
 {
+	public static boolean travelEntity(Entity entity, EntityPos pos)
+	{ return travelEntity(entity, pos.x, pos.y, pos.z, pos.dim); }
+	
 	public static boolean travelEntity(Entity entity, double x, double y, double z, int dim)
 	{
+		if(entity == null) return false;
+		
+		EntityPlayerMP ep = (entity instanceof EntityPlayerMP) ? (EntityPlayerMP)entity : null;
+		
+		if(entity.worldObj.provider.dimensionId == dim)
+		{
+			if(ep != null) ep.playerNetServerHandler.setPlayerLocation(x, y, z, ep.rotationYaw, ep.rotationPitch);
+			else entity.setLocationAndAngles(x, y, z, entity.rotationYaw, entity.rotationPitch);
+			return true;
+		}
+		
 		if(!DimensionManager.isDimensionRegistered(dim)) return false;
 		MinecraftServer mcs = MinecraftServer.getServer();
 		if (mcs == null || (dim != 0 && !mcs.getAllowNether()))
@@ -23,15 +37,15 @@ public class Teleporter
 		WorldServer w1 = mcs.worldServerForDimension(dim);
 		if (w1 == null)
 		{
-			System.err.println("Cannot Link Entity to Dimension: Could not get World for Dimension " + dim);
+			System.err.println("Cannot Teleport Entity to Dimension: Could not get World for Dimension " + dim);
 			return false;
 		}
 		
-		teleportEntity(w1, entity, x, y, z, dim);
+		teleportEntity(w1, entity, x, y, z, dim, ep);
 		return true;
 	}
 	
-	private static Entity teleportEntity(WorldServer w1, Entity e, double x, double y, double z, int dim)
+	private static Entity teleportEntity(WorldServer w1, Entity e, double x, double y, double z, int dim, EntityPlayerMP ep)
 	{
 		WorldServer w0 = (WorldServer)e.worldObj;
 		Entity mount = e.ridingEntity;
@@ -39,18 +53,18 @@ public class Teleporter
 		if(e.ridingEntity != null)
 		{
 			e.mountEntity(null);
-			mount = teleportEntity(w1, mount, x, y, z, dim);
+			mount = teleportEntity(w1, mount, x, y, z, dim, ep);
 		}
 		
 		boolean chw = w0 != w1;
 		
 		w0.updateEntityWithOptionalForce(e, false);
 		
-		if(e instanceof EntityPlayerMP)
+		if(ep != null)
 		{
-			EntityPlayerMP ep = (EntityPlayerMP) e;
 			ep.closeScreen();
-			if (chw)
+			
+			if(chw)
 			{
 				ep.dimension = dim;
 				ep.playerNetServerHandler.sendPacket(new S07PacketRespawn(ep.dimension, ep.worldObj.difficultySetting, w1.getWorldInfo().getTerrainType(), ep.theItemInWorldManager.getGameType()));
@@ -58,13 +72,30 @@ public class Teleporter
 			}
 		}
 		
-		if(chw) removeEntityFromWorld(w0, e);
+		if(chw && ep != null)
+		{
+			ep.closeScreen();
+			w0.playerEntities.remove(ep);
+			w0.updateAllPlayersSleepingFlag();
+			int i = ep.chunkCoordX;
+			int j = ep.chunkCoordZ;
+			
+			if(ep.addedToChunk && w0.getChunkProvider().chunkExists(i, j))
+			{
+				w0.getChunkFromChunkCoords(i, j).removeEntity(ep);
+				w0.getChunkFromChunkCoords(i, j).isModified = true;
+			}
+			
+			w0.loadedEntityList.remove(ep);
+			w0.onEntityRemoved(ep);
+		}
+		
 		e.setLocationAndAngles(x, y, z, e.rotationYaw, e.rotationPitch);
 		w1.theChunkProviderServer.loadChunk(MathHelper.floor_double(x) >> 4, MathHelper.floor_double(z) >> 4);
 		
 		if(chw)
 		{
-			if(!(e instanceof EntityPlayer))
+			if(ep == null)
 			{
 				NBTTagCompound entityNBT = new NBTTagCompound();
 				e.isDead = false;
@@ -85,22 +116,20 @@ public class Teleporter
 		w1.updateEntityWithOptionalForce(e, false);
 		e.setLocationAndAngles(x, y, z, e.rotationYaw, e.rotationPitch);
 		
-		if(e instanceof EntityPlayerMP)
+		if(ep != null)
 		{
-			EntityPlayerMP ep = (EntityPlayerMP) e;
-			if (chw) ep.mcServer.getConfigurationManager().func_72375_a(ep, w1);
+			if(chw) ep.mcServer.getConfigurationManager().func_72375_a(ep, w1);
 			ep.playerNetServerHandler.setPlayerLocation(x, y, z, ep.rotationYaw, ep.rotationPitch);
 		}
 		
 		w1.updateEntityWithOptionalForce(e, false);
 		
-		if(e instanceof EntityPlayerMP && chw)
+		if(ep != null && chw)
 		{
-			EntityPlayerMP ep = (EntityPlayerMP)e;
 			ep.theItemInWorldManager.setWorld(w1);
 			ep.mcServer.getConfigurationManager().updateTimeAndWeatherForPlayer(ep, w1);
 			ep.mcServer.getConfigurationManager().syncPlayerInventory(ep);
-			for (Object o : ep.getActivePotionEffects())
+			for(Object o : ep.getActivePotionEffects())
 				ep.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(ep.getEntityId(), (PotionEffect)o));
 			ep.playerNetServerHandler.sendPacket(new S1FPacketSetExperience(ep.experience, ep.experienceTotal, ep.experienceLevel));
 		}
@@ -109,31 +138,11 @@ public class Teleporter
 		
 		if(mount != null)
 		{
-			if (e instanceof EntityPlayerMP)
+			if(ep != null)
 				w1.updateEntityWithOptionalForce(e, true);
 			e.mountEntity(mount);
 		}
 		
 		return e;
-	}
-	
-	private static void removeEntityFromWorld(World w, Entity e)
-	{
-		if(e instanceof EntityPlayer)
-		{
-			EntityPlayer ep = (EntityPlayer) e;
-			ep.closeScreen();
-			w.playerEntities.remove(ep);
-			w.updateAllPlayersSleepingFlag();
-			int i = e.chunkCoordX;
-			int j = e.chunkCoordZ;
-			if ((e.addedToChunk)
-					&& (w.getChunkProvider().chunkExists(i, j))) {
-				w.getChunkFromChunkCoords(i, j).removeEntity(e);
-				w.getChunkFromChunkCoords(i, j).isModified = true;
-			}
-			w.loadedEntityList.remove(e);
-			w.onEntityRemoved(e);
-		}
 	}
 }

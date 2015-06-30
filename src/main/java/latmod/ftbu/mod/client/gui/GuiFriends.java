@@ -142,7 +142,7 @@ public class GuiFriends extends GuiLM
 		
 		actionButtons.clear();
 		
-		if(selectedPlayer.playerLM.equals(owner))
+		if(selectedPlayer.playerLM.equalsPlayer(owner))
 		{
 			actionButtons.add(new ActionButton(this, PlayerAction.settings, FTBULang.button_settings));
 			actionButtons.add(new ActionButton(this, PlayerAction.waypoints, Waypoints.config.getIDS()));
@@ -266,7 +266,7 @@ public class GuiFriends extends GuiLM
 		for(int i = 0; i < LMPlayer.map.values.size(); i++)
 		{
 			LMPlayer p = LMPlayer.map.values.get(i);
-			if(!p.equals(owner)) players.add(new Player(p));
+			if(!p.equalsPlayer(owner)) players.add(new Player(p));
 		}
 		
 		if(!searchBox.text.isEmpty())
@@ -314,7 +314,7 @@ public class GuiFriends extends GuiLM
 		public Player(LMPlayer p)
 		{
 			player = p;
-			isOwner = player.equals(owner);
+			isOwner = player.equalsPlayer(owner);
 		}
 		
 		public int compareTo(Player o)
@@ -344,12 +344,12 @@ public class GuiFriends extends GuiLM
 		public boolean equals(Object o)
 		{
 			if(o instanceof Player)
-				return equals(((Player)o).player);
+				return player.equalsPlayer(((Player)o).player);
 			return player.equals(o);
 		}
 		
 		public boolean isOwner()
-		{ return owner.equals(player); }
+		{ return owner.equalsPlayer(player); }
 		
 		/** 0 - None, 1 - Friend, 2 - Inviting, 3 - Invited */
 		public int getStatus()

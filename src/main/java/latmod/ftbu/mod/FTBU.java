@@ -97,13 +97,14 @@ public class FTBU
 	public void registerCommands(FMLServerStartingEvent e)
 	{
 		FTBUTickHandler.resetTimer(true);
-		e.registerServerCommand(new CmdFTBU());
 		e.registerServerCommand(new CmdAdmin());
+		e.registerServerCommand(new CmdFTBU());
 		e.registerServerCommand(new CmdMotd());
+		e.registerServerCommand(new CmdRestartTimer());
 		e.registerServerCommand(new CmdRules());
 		e.registerServerCommand(new CmdSpawn());
 		e.registerServerCommand(new CmdTplast());
-		e.registerServerCommand(new CmdRestartTimer());
+		e.registerServerCommand(new CmdWarp());
 		//ClientCommandHandler.instance.registerCommand(new CmdWaypoints());
 	}
 	

@@ -48,7 +48,7 @@ public class CmdFTBUFriends extends SubCommand
 			
 			LMPlayer p = CommandLM.getLMPlayer(args[1]);
 			
-			if(p.equals(owner)) return "Invalid player!";
+			if(p.equalsPlayer(owner)) return "Invalid player!";
 			
 			if(args[0].equals("add"))
 			{

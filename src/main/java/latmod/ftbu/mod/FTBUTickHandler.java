@@ -48,17 +48,18 @@ public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
 				
 				for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers().values)
 				{
-					LMPlayer p = LMPlayer.getPlayer(ep.getUniqueID());
-					Vertex.DimPos pos = new Vertex.DimPos(ep);
+					LMPlayer p = LMPlayer.getPlayer(ep);
+					if(p == null) continue;
+					if(p.lastPos == null) p.lastPos = new EntityPos(ep);
 					
-					if(p.last != null && !p.last.equalsDimPos(pos))
+					else if(!p.lastPos.equalsPos(ep))
 					{
 						if(Claims.isOutsideWorldBorderD(ep.dimension, ep.posX, ep.posZ))
 						{
 							ep.motionX = ep.motionY = ep.motionZ = 0D;
 							LatCoreMC.printChat(ep, "You have reached the world border!");
 							
-							if(Claims.isOutsideWorldBorderD(p.last.dim, p.last.x, p.last.z))
+							if(Claims.isOutsideWorldBorderD(p.lastPos.dim, p.lastPos.x, p.lastPos.z))
 							{
 								LatCoreMC.printChat(ep, "Teleporting to spawn!");
 								Vertex spawn = new Vertex(LatCoreMC.getSpawnPoint(0));
@@ -73,11 +74,11 @@ public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
 							}
 							else
 							{
-								Teleporter.travelEntity(ep, p.last.x, p.last.y, p.last.z, p.last.dim);
+								Teleporter.travelEntity(ep, p.lastPos.x, p.lastPos.y, p.lastPos.z, p.lastPos.dim);
 							}
 						}
 						
-						p.last.set(pos);
+						p.lastPos.set(ep);
 						updateChunkMessage(ep);
 					}
 				}
@@ -106,6 +107,7 @@ public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
 		}
 		else
 		{
+			currentMillis = startMillis = restartSeconds = 0;
 		}
 	}
 	

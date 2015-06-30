@@ -1,35 +1,72 @@
 package latmod.ftbu.mod;
 
+import java.io.*;
+import java.util.*;
+
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.util.*;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+
+import com.google.gson.annotations.Expose;
+
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 public class FTBUConfig extends LMConfig implements IServerConfig
 {
-	public static FTBUConfig instance;
-	
 	public FTBUConfig(FMLPreInitializationEvent e)
 	{
 		super(e, "/LatMod/FTBU.cfg");
-		instance = this;
 		load();
+		
+		try
+		{
+			File f = LatCore.newFile(new File(LatCoreMC.latmodFolder, "/ftbu/readme.txt"));
+			FileOutputStream fos = new FileOutputStream(f);
+			InputStream is = FTBUConfig.class.getResourceAsStream("/assets/ftbu/lang/readme.txt");
+			
+			byte[] b = new byte[is.available()];
+			is.read(b);
+			fos.write(b);
+			
+			fos.close();
+			is.close();
+			
+			b = null;
+			is = null;
+			fos = null;
+		}
+		catch(Exception ex)
+		{ ex.printStackTrace(); }
 	}
 	
 	public void load()
 	{
 		General.load(get("general"));
 		Login.load(get("login"));
-		WorldBorder.load(get("world_border"));
+		WorldBorder.load();
 		save();
 	}
 	
 	public void readConfig(NBTTagCompound tag)
 	{
+		/*{
+			NBTTagCompound tag1 = tag.getCompoundTag("WB");
+			WorldBorder.inst.enabled = tag1.getBoolean("E");
+			WorldBorder.inst.radius = tag1.getInteger("R");
+			WorldBorder.inst.custom.clear();
+			int[] cr = tag1.getIntArray("C");
+			for(int i = 0; i < cr.length / 2; i++)
+				WorldBorder.inst.custom.put(cr[i * 2 + 0], cr[i * 2 + 1]);
+		}*/
 	}
 	
 	public void writeConfig(NBTTagCompound tag)
 	{
+		/*{
+			NBTTagCompound tag1 = new NBTTagCompound();
+			tag1.setBoolean(p_74757_1_, p_74757_2_);
+		}*/
 	}
 	
 	public static class General
@@ -75,47 +112,50 @@ public class FTBUConfig extends LMConfig implements IServerConfig
 			rules = c.getString("rules", "");
 			c.setComment("rules", "Rules page link, blank - ");
 		}
+
+		public static FastList<ItemStack> getStartingItems(UUID id)
+		{
+			return null;
+		}
 	}
 	
 	public static class WorldBorder
 	{
-		public static boolean enabled;
-		public static int radius;
-		private static FastMap<Integer, Integer> custom;
+		public static WorldBorder inst;
+		private static File saveFile;
 		
-		public static void load(Category c)
+		@Expose public boolean enabled;
+		@Expose private int radius;
+		@Expose private Map<Integer, Integer> custom;
+		
+		public static void load()
 		{
-			enabled = c.getBool("enabled", false);
-			c.setComment("enabled", "World border enabled");
-			
-			radius = c.getInt("radius", 10000, 0, 20000000);
-			c.setComment("radius", "World border radius in blocks for DIM0 (Overworld)");
-			
-			String s[] = c.getString("custom", "").split(", ");
-			
-			for(String s1 : s)
-			{
-				if(s1 != null && !s1.isEmpty() && s1.contains(" = "))
-				{
-					String[] s2 = s1.split(" = ");
-					if(s2 != null && s2.length == 2)
-					{
-						int dimID = Converter.toInt(s2[0], 0);
-						int rad = Converter.toInt(s2[1], 0);
-						
-						if(dimID != 0 && rad > 0)
-						{
-							if(custom == null) custom = new FastMap<Integer, Integer>();
-							custom.put(Integer.valueOf(dimID), Integer.valueOf(rad));
-						}
-					}
-				}
-			}
-			
-			c.setComment("custom", "Custom world borders.\nDimID can't be 0 and radius must be > 0.\nExample:\n6 = 10000, -1 = 3000, 1 = 500");
+			saveFile = new File(LatCoreMC.latmodFolder, "ftbu/world_border.txt");
+			inst = LatCore.fromJsonFromFile(saveFile, WorldBorder.class);
+			if(inst == null) save();
 		}
 		
-		public static int getWorldBorder(int dim)
+		public static void save()
+		{
+			if(inst == null)
+			{
+				inst = new WorldBorder();
+				inst.custom = new HashMap<Integer, Integer>();
+				inst.radius = 10000;
+				inst.enabled = false;
+			}
+			
+			if(!LatCore.toJsonFile(saveFile, inst))
+				LatCoreMC.logger.warn(saveFile.getName() + " failed to save!");
+		}
+		
+		public void setWorldBorder(int dim, int rad)
+		{
+			if(dim == 0) radius = rad;
+			else custom.put(dim, rad);
+		}
+		
+		public int getWorldBorder(int dim)
 		{
 			if(!enabled) return 0;
 			if(dim == 0) return radius;

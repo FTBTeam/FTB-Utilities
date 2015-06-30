@@ -7,7 +7,6 @@ import latmod.ftbu.core.cmd.NameType;
 import latmod.ftbu.core.event.LMPlayerEvent;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.*;
-import latmod.ftbu.core.util.Vertex.DimPos;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.ItemStack;
@@ -24,24 +23,6 @@ public final class LMPlayer implements Comparable<LMPlayer>
 	public static final String ACTION_GROUPS_CHANGED = "ftbu.groups";
 	public static int currentClientPlayerID = 0;
 	
-	public static class Last
-	{
-		public double x, y, z;
-		public int dim;
-		public long seen;
-		
-		public boolean equalsDimPos(Vertex.DimPos pos)
-		{ return x == pos.pos.x && y == pos.pos.y && z == pos.pos.z && dim == pos.dim; }
-
-		public void set(DimPos pos)
-		{
-			x = pos.pos.x;
-			y = pos.pos.y;
-			z = pos.pos.z;
-			dim = pos.dim;
-		}
-	}
-	
 	public final int playerID;
 	public final GameProfile gameProfile;
 	
@@ -51,7 +32,9 @@ public final class LMPlayer implements Comparable<LMPlayer>
 	private boolean isOnline;
 	public int notify;
 	public int deaths;
-	public Last last;
+	public EntityPos lastPos;
+	public long lastSeen;
+	public long firstJoined;
 	
 	public final NBTTagCompound tempData;
 	public NBTTagCompound commonData;
@@ -105,7 +88,8 @@ public final class LMPlayer implements Comparable<LMPlayer>
 		NBTTagCompound tag = new NBTTagCompound();
 		
 		FastList<String> info = new FastList<String>();
-		if(!isOnline() && last != null) info.add("Last seen: " + LatCore.getTimeAgo(LatCore.millis() - last.seen) + " ago");
+		if(!isOnline() && lastSeen > 0L) info.add("Last seen: " + LatCore.getTimeAgo(LatCore.millis() - lastSeen) + " ago");
+		if(firstJoined > 0L) info.add("Joined: " + LatCore.getTimeAgo(LatCore.millis() - firstJoined) + " ago");
 		if(deaths > 0) info.add("Deaths: " + deaths);
 		new LMPlayerEvent.CustomInfo(this, Side.SERVER, info).post();
 		tag.setTag("I", NBTHelper.fromStringList(info));
@@ -163,16 +147,15 @@ public final class LMPlayer implements Comparable<LMPlayer>
 		{
 			serverData = tag.getCompoundTag("ServerData");
 			
-			if(tag.hasKey("Last"))
+			if(tag.hasKey("LastPos"))
 			{
-				if(last == null) last = new Last();
-				last.x = tag.getDouble("X");
-				last.y = tag.getDouble("Y");
-				last.z = tag.getDouble("Z");
-				last.dim = tag.getInteger("Dim");
-				last.seen = tag.getLong("Seen");
+				if(lastPos == null) lastPos = new EntityPos();
+				lastPos.readFromNBT(tag.getCompoundTag("LastPos"));
 			}
-			else last = null;
+			else lastPos = null;
+			
+			lastSeen = tag.getLong("LastSeen");
+			firstJoined = tag.getLong("Joined");
 		}
 	}
 	
@@ -205,14 +188,15 @@ public final class LMPlayer implements Comparable<LMPlayer>
 		{
 			tag.setTag("ServerData", serverData);
 			
-			if(last != null)
+			if(lastPos != null)
 			{
-				tag.setDouble("X", last.x);
-				tag.setDouble("Y", last.y);
-				tag.setDouble("Z", last.z);
-				tag.setInteger("Dim", last.dim);
-				tag.setLong("Seen", last.seen);
+				NBTTagCompound tag1 = new NBTTagCompound();
+				lastPos.writeToNBT(tag1);
+				tag.setTag("LastPos", tag1);
 			}
+			
+			if(lastSeen > 0L) tag.setLong("LastSeen", lastSeen);
+			if(firstJoined > 0L) tag.setLong("Joined", firstJoined);
 		}
 	}
 	
@@ -226,22 +210,27 @@ public final class LMPlayer implements Comparable<LMPlayer>
 	{ return playerID; }
 	
 	public boolean equals(Object o)
-	{
-		if(o == null) return false;
-		else if(o == this) return true;
-		else if(o instanceof Integer) return o.hashCode() == playerID;
-		else if(o instanceof UUID) return getUUID().equals(o);
-		else if(o instanceof EntityPlayer) return ((EntityPlayer)o).getUniqueID().equals(getUUID());
-		else if(o instanceof LMPlayer) return playerID == o.hashCode();
-		else if(o instanceof String) return getName().equalsIgnoreCase(o.toString()) || uuidString.equalsIgnoreCase(o.toString());
-		else return false;
-	}
+	{ return o != null && (o == this || equalsPlayer(getPlayer(o))); }
+	
+	public boolean equalsPlayer(LMPlayer p)
+	{ return p != null && (p == this || p.playerID == playerID); }
 	
 	public boolean isOP()
 	{ return LatCoreMC.getServer().getConfigurationManager().func_152596_g(gameProfile); }
 	
 	public NameType getNameType()
 	{ return isOnline() ? NameType.ON : NameType.OFF; }
+	
+	public EntityPos getLastPos()
+	{
+		if(isOnline())
+		{
+			EntityPlayerMP ep = getPlayerMP();
+			if(ep != null) return new EntityPos(ep);
+		}
+		
+		return lastPos;
+	}
 	
 	// Static //
 	
@@ -250,22 +239,51 @@ public final class LMPlayer implements Comparable<LMPlayer>
 	public static LMPlayer getPlayer(Object o)
 	{
 		if(o == null || o instanceof FakePlayer) return null;
-		if(o instanceof LMPlayer) return map.get(o.hashCode());
-		if(o instanceof Integer) return (o.hashCode() > 0) ? map.get(o) : null;
-		return map.values.getObj(o);
+		else if(o instanceof Integer || o instanceof LMPlayer)
+		{
+			int h = o.hashCode();
+			return (h <= 0) ? null : map.get(h);
+		}
+		else if(o.getClass() == UUID.class)
+		{
+			UUID id = (UUID)o;
+			
+			for(int i = 0; i < map.size(); i++)
+			{
+				LMPlayer p = map.values.get(i);
+				if(p.getUUID().equals(id)) return p;
+			}
+		}
+		else if(o instanceof EntityPlayer)
+			return getPlayer(((EntityPlayer)o).getUniqueID());
+		else if(o instanceof String)
+		{
+			String s = o.toString();
+			
+			if(s == null || s.isEmpty()) return null;
+			
+			for(int i = 0; i < map.size(); i++)
+			{
+				LMPlayer p = map.values.get(i);
+				if(p.getName().equalsIgnoreCase(s)) return p;
+			}
+			
+			return getPlayer(LatCoreMC.getUUIDFromString(s));
+		}
+		
+		return null;
 	}
 	
 	public static int getPlayerID(Object o)
 	{
 		if(o == null) return 0;
-		if(o instanceof Integer) return Math.max(0, o.hashCode());
 		LMPlayer p = getPlayer(o);
 		return (p == null) ? 0 : p.playerID;
 	}
 	
 	public static String[] getAllNames(NameType type)
 	{
-		if(type == NameType.NONE) return new String[0];
+		if(type == null || type == NameType.NONE) return new String[0];
 		
 		FastList<String> allOn = new FastList<String>();
 		FastList<String> allOff = new FastList<String>();

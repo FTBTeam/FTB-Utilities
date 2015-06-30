@@ -1,6 +1,7 @@
 package latmod.ftbu.core.tile;
 
 import latmod.ftbu.core.InvUtils;
+import latmod.ftbu.core.util.MathHelperLM;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -16,11 +17,7 @@ public class TileInvLM extends TileLM implements IInventory
 	public TileInvLM(int invSize)
 	{
 		items = new ItemStack[invSize];
-		
-		ALL_SLOTS = new int[invSize];
-		
-		for(int i = 0; i < invSize; i++)
-			ALL_SLOTS[i] = i;
+		ALL_SLOTS = MathHelperLM.getAllInts(0, invSize);
 	}
 	
 	public void readTileData(NBTTagCompound tag)

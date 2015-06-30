@@ -62,7 +62,9 @@ public class CmdAdminPlayer extends SubCommand
 					if(inv != null) writeItemsToNBT(inv, tag, "Baubles");
 				}
 				
-				NBTHelper.writeMap(new FileOutputStream(LatCore.newFile(new File(LatCoreMC.latmodFolder, "playerinvs/" + ep.getCommandSenderName() + ".dat"))), tag);
+				String filename = ep.getCommandSenderName();
+				if(args.length == 3) filename = "custom/" + args[2];
+				NBTHelper.writeMap(new FileOutputStream(LatCore.newFile(new File(LatCoreMC.latmodFolder, "playerinvs/" + filename + ".dat"))), tag);
 			}
 			catch(Exception e)
 			{
@@ -79,7 +81,9 @@ public class CmdAdminPlayer extends SubCommand
 			try
 			{
 				EntityPlayerMP ep = p.getPlayerMP();
-				NBTTagCompound tag = NBTHelper.readMap(new FileInputStream(new File(LatCoreMC.latmodFolder, "playerinvs/" + ep.getCommandSenderName() + ".dat")));
+				String filename = ep.getCommandSenderName();
+				if(args.length == 3) filename = "custom/" + args[2];
+				NBTTagCompound tag = NBTHelper.readMap(new FileInputStream(new File(LatCoreMC.latmodFolder, "playerinvs/" + filename + ".dat")));
 				
 				readItemsFromNBT(ep.inventory, tag, "Inventory");
 				

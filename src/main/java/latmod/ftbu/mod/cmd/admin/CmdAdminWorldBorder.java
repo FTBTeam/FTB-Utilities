@@ -1,26 +1,26 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import latmod.ftbu.core.cmd.SubCommand;
+import latmod.ftbu.core.cmd.*;
+import latmod.ftbu.mod.FTBUConfig;
 import net.minecraft.command.ICommandSender;
 
 public class CmdAdminWorldBorder extends SubCommand
 {
 	public String onCommand(ICommandSender ics, String[] args)
 	{
-		/*
 		CommandLM.checkArgs(args, 1);
 		
-		if(args[0].equals("square"))
+		if(args[0].equals("on"))
 		{
-			EnkiToolsConfig.get().world.worldBorderSquare = true;
-			EnkiToolsConfig.saveConfig();
-			return CommandLM.FINE + "World border is now a square";
+			FTBUConfig.WorldBorder.inst.enabled = true;
+			FTBUConfig.WorldBorder.save();
+			return CommandLM.FINE + "World border enabled";
 		}
-		if(args[0].equals("round"))
+		else if(args[0].equals("off"))
 		{
-			EnkiToolsConfig.get().world.worldBorderSquare = false;
-			EnkiToolsConfig.saveConfig();
-			return CommandLM.FINE + "World border is now round";
+			FTBUConfig.WorldBorder.inst.enabled = false;
+			FTBUConfig.WorldBorder.save();
+			return CommandLM.FINE + "World border disabled";
 		}
 		
 		CommandLM.checkArgs(args, 2);
@@ -28,11 +28,8 @@ public class CmdAdminWorldBorder extends SubCommand
 		int dim = CommandLM.parseInt(ics, args[0]);
 		int dist = CommandLM.parseInt(ics, args[1]);
 		
-		EnkiToolsConfig.get().world.worldBorder.put(dim, dist);
-		EnkiToolsConfig.saveConfig();
+		FTBUConfig.WorldBorder.inst.setWorldBorder(dim, dist);
+		FTBUConfig.WorldBorder.save();
 		return CommandLM.FINE + "World border for dimension " + dim + " set to " + dist;
-		*/
-		
-		return "Unimplemented";
 	}
 }

@@ -21,7 +21,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 	
 	public static final int[] NO_SLOTS = new int[0];
 	
-	public String customName = null;
+	public String customName = "";
 	private boolean isDirty = true;
 	public boolean isLoaded = false;
 	public long tick = 0L;
@@ -52,9 +52,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 	public void readTileData(NBTTagCompound tag)
 	{
 		security.readFromNBT(tag, "Security");
-		
-		customName = null;
-		if(tag.hasKey("CustomName")) customName = tag.getString("CustomName");
+		customName = tag.getString("CustomName");
 		tick = tag.getLong("Tick");
 		if(tick < 0L) tick = 0L;
 	}
@@ -66,8 +64,8 @@ public class TileLM extends TileEntity implements IClientActionTile
 	public void writeTileData(NBTTagCompound tag)
 	{
 		security.writeToNBT(tag, "Security");
-		
-		if(customName != null) tag.setString("CustomName", customName);
+		if(customName == null) customName = "";
+		if(!customName.isEmpty()) tag.setString("CustomName", customName);
 		if(tick < 0L) tick = 0L;
 		tag.setLong("Tick", tick);
 	}

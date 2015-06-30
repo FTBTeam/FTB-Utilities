@@ -11,8 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
-import net.minecraft.util.*;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.*;
 
 import org.lwjgl.opengl.GL11;

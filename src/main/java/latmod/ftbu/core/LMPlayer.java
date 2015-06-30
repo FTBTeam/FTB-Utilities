@@ -36,7 +36,6 @@ public final class LMPlayer implements Comparable<LMPlayer>
 	public long lastSeen;
 	public long firstJoined;
 	
-	public final NBTTagCompound tempData;
 	public NBTTagCompound commonData;
 	public NBTTagCompound serverData;
 	
@@ -56,7 +55,6 @@ public final class LMPlayer implements Comparable<LMPlayer>
 		
 		commonData = new NBTTagCompound();
 		serverData = new NBTTagCompound();
-		tempData = new NBTTagCompound();
 	}
 	
 	public String getName()

@@ -1,7 +1,7 @@
 package latmod.ftbu.core;
 
-import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.mod.FTBU;
+import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class FTBULang

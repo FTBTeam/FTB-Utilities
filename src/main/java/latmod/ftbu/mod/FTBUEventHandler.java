@@ -7,7 +7,7 @@ import latmod.ftbu.core.item.ICreativeSafeItem;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.ISecureTile;
 import latmod.ftbu.core.util.*;
-import latmod.ftbu.mod.claims.*;
+import latmod.ftbu.mod.claims.ChunkType;
 import latmod.ftbu.mod.cmd.CmdMotd;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;

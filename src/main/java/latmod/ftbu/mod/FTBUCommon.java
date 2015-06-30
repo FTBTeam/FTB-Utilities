@@ -1,6 +1,6 @@
 package latmod.ftbu.mod;
 
-import latmod.ftbu.core.*;
+import latmod.ftbu.core.LMProxy;
 import latmod.ftbu.core.net.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;

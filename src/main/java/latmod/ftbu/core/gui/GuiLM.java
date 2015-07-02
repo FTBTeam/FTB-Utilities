@@ -99,6 +99,8 @@ public abstract class GuiLM extends GuiContainer
 	public int mouseX, mouseY, mouseXR, mouseYR;
 	public float delta;
 	
+	private ResourceLocation prevTexture = null;
+	
 	public GuiLM(ContainerLM c, ResourceLocation tex)
 	{
 		super(c);
@@ -141,7 +143,13 @@ public abstract class GuiLM extends GuiContainer
 	{ return ySize; }
 	
 	public final void setTexture(ResourceLocation tex)
-	{ mc.getTextureManager().bindTexture(tex); }
+	{
+		if(prevTexture == null || prevTexture != tex)
+		{
+			prevTexture = tex;
+			mc.getTextureManager().bindTexture(tex);
+		}
+	}
 	
 	protected void mouseClicked(int mx, int my, int b)
 	{
@@ -189,6 +197,7 @@ public abstract class GuiLM extends GuiContainer
 		mouseXR = mx - guiLeft;
 		mouseYR = my - guiTop;
 		delta = f;
+		prevTexture = null;
 		
 		if(refreshWidgets)
 		{

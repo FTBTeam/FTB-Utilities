@@ -93,70 +93,19 @@ public class FTBUClientEventHandler
 		if(!mc.gameSettings.showDebugInfo)
 		{
 			if(LatCoreMC.isDevEnv)
-			{
-				try
-				{
-					e.left.add("[MC " + EnumChatFormatting.GOLD + LatCoreMC.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");
-					e.right.add(mc.debug);
-				}
-				catch(Exception ex)
-				{ ex.printStackTrace(); }
-			}
-		}
-		/*else if(FTBUClient.displayDebugInfo.getB())
-		{
-			event.right.add(null);
+				e.left.add("[MC " + EnumChatFormatting.GOLD + LatCoreMC.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");
 			
-			if(mc.objectMouseOver != null)
-			{
-				if(mc.objectMouseOver.typeOfHit == MovingObjectType.BLOCK)
-				{
-					int x = mc.objectMouseOver.blockX;
-					int y = mc.objectMouseOver.blockY;
-					int z = mc.objectMouseOver.blockZ;
-					
-					Block block = mc.theWorld.getBlock(x, y, z);
-					
-					int meta = mc.theWorld.getBlockMetadata(x, y, z);
-					TileEntity te = mc.theWorld.getTileEntity(x, y, z);
-					
-					event.right.add(shift ? (LatCore.classpath(block.getClass())) : (InvUtils.getRegName(block) + (meta > 0 ? (";" +  meta) : "")) + " @ " + LatCore.stripInt(x, y, z));
-					
-					if(shift)
-					{
-						Class<?> bInts[] = block.getClass().getInterfaces();
-						
-						if(bInts.length > 0)
-						{
-							event.right.add(null);
-							for(int i = 0; i < bInts.length; i++)
-								event.right.add(LatCore.classpath(bInts[i]) + "  <");
-						}
-					}
-					
-					if(te != null)
-					{
-						event.right.add(null);
-						event.right.add("Tile: " + LatCore.classpath(te.getClass()));
-						
-						if(shift)
-						{
-							Class<?> tInts[] = te.getClass().getInterfaces();
-							
-							if(tInts.length > 0)
-							{
-								event.right.add(null);
-								for(int i = 0; i < tInts.length; i++)
-									event.right.add(LatCore.classpath(tInts[i]) + "  <");
-							}
-						}
-					}
-				}
-			}
-		}*/
+			if(FTBUClient.displayDebugInfo.getB())
+				e.right.add(mc.debug);
+		}
 		
 		LMPlayer p = LMPlayer.getPlayer(LMPlayer.currentClientPlayerID);
 		if(p != null) ChunkType.getMessage(mc.theWorld.provider.dimensionId, MathHelperLM.chunk(mc.thePlayer.posX), MathHelperLM.chunk(mc.thePlayer.posZ), p, e.right, shift);
+		
+		if(FTBUClient.displayDebugInfo.getB())
+		{
+			//e.right.add("WorldClient@" + mc.theWorld.hashCode() + ", " + mc.theWorld.provider.dimensionId + ", " + mc.theWorld.provider.getDimensionName());
+		}
 	}
 	
 	@SuppressWarnings("unchecked")

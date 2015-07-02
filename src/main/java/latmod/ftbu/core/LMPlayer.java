@@ -33,8 +33,8 @@ public final class LMPlayer implements Comparable<LMPlayer>
 	public int notify;
 	public int deaths;
 	public EntityPos lastPos;
-	public long lastSeen;
-	public long firstJoined;
+	private long lastSeen;
+	private long firstJoined;
 	
 	public NBTTagCompound commonData;
 	public NBTTagCompound serverData;
@@ -64,7 +64,7 @@ public final class LMPlayer implements Comparable<LMPlayer>
 	{ return gameProfile.getId(); }
 	
 	public EntityPlayerMP getPlayerMP()
-	{ return LatCoreMC.getAllOnlinePlayers().get(getUUID()); }
+	{ return LatCoreMC.getPlayerMP(getUUID()); }
 	
 	@SideOnly(Side.CLIENT)
 	public EntityPlayerSP getPlayerSP()
@@ -81,17 +81,19 @@ public final class LMPlayer implements Comparable<LMPlayer>
 	
 	public void sendInfo(EntityPlayerMP ep)
 	{
-		if(!LatCoreMC.isServer()) return;
-		
 		NBTTagCompound tag = new NBTTagCompound();
 		
+		long ms = LatCore.millis();
+		
 		FastList<String> info = new FastList<String>();
-		if(!isOnline() && lastSeen > 0L) info.add("Last seen: " + LatCore.getTimeAgo(LatCore.millis() - lastSeen) + " ago");
-		if(firstJoined > 0L) info.add("Joined: " + LatCore.getTimeAgo(LatCore.millis() - firstJoined) + " ago");
-		if(deaths > 0) info.add("Deaths: " + deaths);
 		new LMPlayerEvent.CustomInfo(this, Side.SERVER, info).post();
 		tag.setTag("I", NBTHelper.fromStringList(info));
 		
+		if(lastSeen > 0L) tag.setLong("L", ms - lastSeen);
+		if(firstJoined > 0L) tag.setLong("J", ms - firstJoined);
+		if(deaths > 0) tag.setShort("D", (short)deaths);
+		
+		LatCoreMC.printChat(ep, "Sending info: " + tag + " ; " + lastSeen);
 		MessageLM.sendTo(ep, new MessageLMPlayerInfo(playerID, tag));
 	}
 	
@@ -100,6 +102,11 @@ public final class LMPlayer implements Comparable<LMPlayer>
 	{
 		if(clientInfo == null) clientInfo = new FastList<String>();
 		NBTHelper.toStringList(clientInfo, tag.getTagList("I", NBTHelper.STRING));
+		
+		if(!isOnline() && tag.hasKey("L")) clientInfo.add("Last seen: " + LatCore.getTimeAgo(tag.getLong("L")) + " ago");
+		if(tag.hasKey("J")) clientInfo.add("Joined: " + LatCore.getTimeAgo(tag.getLong("J")) + " ago");
+		if(deaths > 0) clientInfo.add("Deaths: " + deaths);
+		
 		new LMPlayerEvent.CustomInfo(this, Side.CLIENT, clientInfo).post();
 	}
 	
@@ -108,6 +115,13 @@ public final class LMPlayer implements Comparable<LMPlayer>
 	
 	public void setOnline(boolean b)
 	{ isOnline = b; }
+	
+	public void setLastSeen(long l)
+	{
+		lastSeen = l;
+		if(firstJoined <= 0L)
+			firstJoined = l;
+	}
 	
 	public boolean isFriendRaw(LMPlayer p)
 	{ return p != null && (playerID == p.playerID || friends.contains(p.playerID)); }
@@ -174,7 +188,7 @@ public final class LMPlayer implements Comparable<LMPlayer>
 			}
 		}
 		
-		tag.setTag("CustomData", commonData);
+		if(!commonData.hasNoTags()) tag.setTag("CustomData", commonData);
 		
 		InvUtils.writeItemsToNBT(lastArmor, tag, "LastItems");
 		tag.setByte("Notify", (byte)notify);
@@ -184,7 +198,7 @@ public final class LMPlayer implements Comparable<LMPlayer>
 		
 		if(server)
 		{
-			tag.setTag("ServerData", serverData);
+			if(!serverData.hasNoTags()) tag.setTag("ServerData", serverData);
 			
 			if(lastPos != null)
 			{

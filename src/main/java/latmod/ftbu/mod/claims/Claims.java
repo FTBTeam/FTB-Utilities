@@ -37,10 +37,10 @@ public class Claims
 		int radius = LatCoreMC.getServer().getSpawnProtectionSize();
 		if(radius <= 0) return false;
 		ChunkCoordinates c = LatCoreMC.getSpawnPoint(0);
-		double minX = MathHelperLM.chunk(c.posX + 0.5D - radius);
-		double minZ = MathHelperLM.chunk(c.posZ + 0.5D - radius);
-		double maxX = MathHelperLM.chunk(c.posX + 0.5D + radius);
-		double maxZ = MathHelperLM.chunk(c.posZ + 0.5D + radius);
+		int minX = MathHelperLM.chunk(c.posX + 0.5D - radius);
+		int minZ = MathHelperLM.chunk(c.posZ + 0.5D - radius);
+		int maxX = MathHelperLM.chunk(c.posX + 0.5D + radius);
+		int maxZ = MathHelperLM.chunk(c.posZ + 0.5D + radius);
 		return cx >= minX && cx <= maxX && cz >= minZ && cz <= maxZ;
 	}
 	

@@ -427,6 +427,7 @@ public class InvUtils
 		{
 			String regex = "@";
 			if(s.contains(";")) regex = ";";
+			else if(s.contains(" ")) regex = " ";
 			else if(s.contains(" x ")) regex = " x ";
 			
 			String[] s1 = s.split(regex);

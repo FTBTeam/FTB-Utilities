@@ -18,7 +18,7 @@ public class CmdMotd extends CommandLM
 	{
 		if(!LatCoreMC.isDedicatedServer()) return;
 		
-		if(!FTBUConfig.Login.motd.isEmpty()) for(String s : FTBUConfig.Login.motd)
+		for(String s : FTBUConfig.Login.inst.motd)
 			LatCoreMC.printChat(ep, s.replace("$and$", "&").replace("$player$", ep.getDisplayName()).replace("$", LatCoreMC.FORMATTING));
 		CmdRules.printRules(ep);
 	}

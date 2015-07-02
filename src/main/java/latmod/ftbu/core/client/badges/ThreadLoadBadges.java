@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.UUID;
 
 import latmod.ftbu.core.LatCoreMC;
-import latmod.ftbu.core.event.CustomBadgesEvent;
 import latmod.ftbu.core.util.MathHelperLM;
 import latmod.ftbu.mod.client.FTBURenderHandler;
 import cpw.mods.fml.relauncher.*;
@@ -65,7 +64,6 @@ public class ThreadLoadBadges extends Thread
 			LatCoreMC.logger.warn("Badges failed to load!");
 		}
 		
-		new CustomBadgesEvent().post();
 		Badge.reloading = false;
 	}
 }

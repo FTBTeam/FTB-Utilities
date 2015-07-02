@@ -1,8 +1,12 @@
 package latmod.ftbu.mod.client;
+import java.util.UUID;
+
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.client.ClientConfig;
+import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.client.badges.ThreadLoadBadges;
 import latmod.ftbu.core.net.*;
+import latmod.ftbu.core.tile.TileLM;
+import latmod.ftbu.core.util.LatCore;
 import latmod.ftbu.mod.FTBUCommon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -10,6 +14,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.particle.EntityReddustFX;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
@@ -61,6 +66,9 @@ public class FTBUClient extends FTBUCommon
 	public EntityPlayer getClientPlayer()
 	{ return FMLClientHandler.instance().getClientPlayerEntity(); }
 	
+	public EntityPlayer getClientPlayer(UUID id)
+	{ return LatCoreMCClient.getPlayerSP(id); }
+	
 	public World getClientWorld()
 	{ return FMLClientHandler.instance().getWorldClient(); }
 	
@@ -78,10 +86,11 @@ public class FTBUClient extends FTBUCommon
 	{
 		EntityReddustFX fx = new EntityReddustFX(w, x, y, z, 0F, 0F, 0F);
 		
-		float alpha = ((col >> 24) & 0xFF) / 255F;
-		float red = ((col >> 16) & 0xFF) / 255F;
-		float green = ((col >> 8) & 0xFF) / 255F;
-		float blue = ((col >> 0) & 0xFF) / 255F;
+		float alpha = LatCore.Colors.getAlpha(col) / 255F;
+		float red = LatCore.Colors.getRed(col) / 255F;
+		float green = LatCore.Colors.getGreen(col) / 255F;
+		float blue = LatCore.Colors.getBlue(col) / 255F;
+		if(alpha == 0F) alpha = 1F;
 		
 		fx.setRBGColorF(red, green, blue);
 		fx.setAlphaF(alpha);
@@ -108,4 +117,11 @@ public class FTBUClient extends FTBUCommon
 	@SuppressWarnings("unchecked")
 	public <M extends MessageLM<?>> void handleClientMessage(IClientMessageLM<M> m, MessageContext ctx)
 	{ m.onMessageClient((M) m, ctx); }
+	
+	public void readTileData(TileLM t, S35PacketUpdateTileEntity p)
+	{
+		t.readTileData(p.func_148857_g());
+		t.readTileClientData(p.func_148857_g());
+		t.onUpdatePacket();
+	}
 }

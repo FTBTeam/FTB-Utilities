@@ -12,6 +12,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.*;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -212,4 +213,13 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	
 	public int onBlockPlaced(World w, EntityPlayer ep, MovingObjectPosition mop, int m)
 	{ return m; }
+	
+	@SuppressWarnings("unchecked")
+	public final <T extends TileEntity> T getTile(Class<T> c, IBlockAccess iba, int x, int y, int z)
+	{
+		TileEntity te = iba.getTileEntity(x, y, z);
+		if(te != null && c.isAssignableFrom(te.getClass()))
+			return (T)te;
+		return null;
+	}
 }

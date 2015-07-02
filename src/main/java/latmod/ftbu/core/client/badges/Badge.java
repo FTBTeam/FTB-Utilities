@@ -104,7 +104,9 @@ public class Badge
 		registry.clear();
 		register(new Badge("latmod"));
 		register(new Badge("ftb"));
+		register(new Badge("curse"));
 		register(new Badge("mods"));
+		register(new Badge("mods_pink"));
 		register(new Badge("packs"));
 		register(new Badge("enki")
 		{
@@ -120,6 +122,10 @@ public class Badge
 			public double offsetY()
 			{ return 0.2D; }
 		});
+		register(new Badge("twitch"));
+		register(new Badge("yt"));
+		register(new Badge("swords"));
+		register(new Badge("gamer"));
 	}
 	
 	public static final void register(Badge b)

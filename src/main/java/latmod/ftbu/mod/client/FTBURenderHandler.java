@@ -10,7 +10,6 @@ import latmod.ftbu.mod.client.gui.GuiNotification;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.*;
 
@@ -24,19 +23,23 @@ import cpw.mods.fml.relauncher.*;
 public class FTBURenderHandler
 {
 	public static final FTBURenderHandler instance = new FTBURenderHandler();
-	public static final FastList<GuiNotification> messages = new FastList<GuiNotification>();
-	public static final FastMap<UUID, Badge> playerBadges = new FastMap<UUID, Badge>();
-	private static final FastList<WaypointClient> visibleBeacons = new FastList<WaypointClient>();
-	private static final FastList<WaypointClient> visibleMarkers = new FastList<WaypointClient>();
-	public static final ResourceLocation texMarker = FTBU.mod.getLocation("textures/map/marker.png");
-	private static double playerX, playerY, playerZ, renderX, renderY, renderZ, far = 4D;
-	private static final FastList<String> stringList = new FastList<String>();
-	public static final TexturedCubeRenderer worldBorderRenderer = new TexturedCubeRenderer(true);
-	private static final CubeRenderer beaconRenderer = new CubeRenderer();
 	public static final ResourceLocation world_border_tex = FTBU.mod.getLocation("textures/map/world_border.png");
+	public static final ResourceLocation spawn_border_tex = FTBU.mod.getLocation("textures/map/spawn_border.png");
+	
 	private static Minecraft mc;
 	private static boolean isFPS;
 	private static int currentDim;
+	private static double playerX, playerY, playerZ, renderX, renderY, renderZ, far = 4D;
+	
+	public static final FastList<GuiNotification> messages = new FastList<GuiNotification>();
+	public static final FastMap<UUID, Badge> playerBadges = new FastMap<UUID, Badge>();
+	
+	private static final FastList<WaypointClient> visibleBeacons = new FastList<WaypointClient>();
+	private static final FastList<WaypointClient> visibleMarkers = new FastList<WaypointClient>();
+	public static final ResourceLocation texMarker = FTBU.mod.getLocation("textures/map/marker.png");
+	private static final FastList<String> stringList = new FastList<String>();
+	public static final TexturedCubeRenderer worldBorderRenderer = new TexturedCubeRenderer(true);
+	private static final CubeRenderer beaconRenderer = new CubeRenderer();
 	
 	@SubscribeEvent
 	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
@@ -254,9 +257,14 @@ public class FTBURenderHandler
 	
 	private void renderWorldBorder()
 	{
-		mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+		int wb = FTBUConfig.WorldBorder.inst.getWorldBorder(currentDim);
+		float min = (MathHelperLM.chunk(-wb) + 1) * 16 + 0.01F;
+		float max = MathHelperLM.chunk(wb) * 16 - 0.01F;
 		
-		int currentDim = mc.theWorld.provider.dimensionId;
+		boolean renderWest = playerX <= min + 16;
+		boolean renderEast = playerX >= max - 16;
+		boolean renderNorth = playerZ <= min + 16;
+		boolean renderSouth = playerZ >= max - 16;
 		
 		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 		GL11.glEnable(GL11.GL_BLEND);
@@ -277,9 +285,6 @@ public class FTBURenderHandler
 		GL11.glPushMatrix();
 		GL11.glTranslated(-renderX, -renderY, -renderZ);
 		
-		int wb = FTBUConfig.WorldBorder.inst.getWorldBorder(currentDim);
-		float min = (MathHelperLM.chunk(-wb) + 1) * 16 + 0.01F;
-		float max = MathHelperLM.chunk(wb) * 16 - 0.01F;
 		float f = Minecraft.getSystemTime() * 0.0004F;
 		
 		worldBorderRenderer.setSize(min, 0D, min, max, 256D, max);
@@ -289,25 +294,25 @@ public class FTBURenderHandler
 		
 		GL11.glColor4f(1F, 1F, 1F, maxA);
 		
-		if(playerX <= min + 16)
+		if(renderWest)
 		{
 			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(playerX - min) * maxA / 16F);
 			worldBorderRenderer.renderWest();
 		}
 		
-		if(playerX >= max - 16)
+		if(renderEast)
 		{
 			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(max - playerX) * maxA / 16F);
 			worldBorderRenderer.renderEast();
 		}
 		
-		if(playerZ <= min + 16)
+		if(renderNorth)
 		{
 			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(playerZ - min) * maxA / 16F);
 			worldBorderRenderer.renderNorth();
 		}
 		
-		if(playerZ >= max - 16)
+		if(renderSouth)
 		{
 			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(max - playerZ) * maxA / 16F);
 			worldBorderRenderer.renderSouth();

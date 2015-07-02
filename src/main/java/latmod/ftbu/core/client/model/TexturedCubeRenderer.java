@@ -77,6 +77,9 @@ public class TexturedCubeRenderer extends CubeRenderer
 		}
 	}
 	
+	public void setUVD(int side, double minU, double minV, double maxU, double maxV)
+	{ setUV(side, (float)minU, (float)minV, (float)maxU, (float)maxV); }
+	
 	public void setUV(int s, IIcon icon)
 	{ setUV(s, icon.getMinU(), icon.getMinV(), icon.getMaxU(), icon.getMaxV()); }
 	

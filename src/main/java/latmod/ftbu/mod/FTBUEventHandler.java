@@ -13,7 +13,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 
@@ -50,12 +50,12 @@ public class FTBUEventHandler
 		p.setOnline(true);
 		if(p.lastPos == null) p.lastPos = new EntityPos();
 		p.lastPos.set(ep);
-		p.lastSeen = LatCore.millis();
-		if(first || p.firstJoined == 0L) p.firstJoined = p.lastSeen;
+		p.setLastSeen(LatCore.millis());
 		
 		new LMPlayerEvent.LoggedIn(p, Side.SERVER, ep, first).post();
-		MessageLM.sendTo(sendAll ? null : ep, new MessageUpdateAllData());
-		MessageLM.NET.sendToAll(new MessageLMPlayerLoggedIn(p, first));
+		MessageLM.sendTo(sendAll ? null : ep, new MessageLMWorldUpdate());
+		IServerConfig.Registry.update(ep, null);
+		MessageLM.sendTo(null, new MessageLMPlayerLoggedIn(p, first));
 		
 		if(first)
 		{
@@ -82,7 +82,7 @@ public class FTBUEventHandler
 			
 			if(p.lastPos == null) p.lastPos = new EntityPos();
 			p.lastPos.set(e.player);
-			p.lastSeen = LatCore.millis();
+			p.setLastSeen(LatCore.millis());
 			
 			for(int i = 0; i < 4; i++)
 				p.lastArmor[i] = e.player.inventory.armorInventory[i];
@@ -115,7 +115,7 @@ public class FTBUEventHandler
 				if(tag != null && tag.hasKey("Players"))
 				{
 					LMDataLoader.lastPlayerID = tag.getInteger("LastID");
-					LMDataLoader.readPlayersFromNBT(tag.getCompoundTag("Players"), true);
+					LMDataLoader.readSavePlayersFromNBT(tag.getCompoundTag("Players"));
 				}
 			}
 			
@@ -145,7 +145,7 @@ public class FTBUEventHandler
 			{
 				NBTTagCompound tag = new NBTTagCompound();
 				NBTTagCompound players = new NBTTagCompound();
-				LMDataLoader.writePlayersToNBT(players, true);
+				LMDataLoader.writeSavePlayersToNBT(players);
 				tag.setTag("Players", players);
 				tag.setInteger("LastID", LMDataLoader.lastPlayerID);
 				NBTHelper.writeMap(e1.getFile("LMPlayers.dat"), tag);
@@ -191,7 +191,9 @@ public class FTBUEventHandler
 	@SubscribeEvent
 	public void onBlockClick(net.minecraftforge.event.entity.player.PlayerInteractEvent e)
 	{
-		if(e.entityPlayer.capabilities.isCreativeMode && e.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK && e.entityPlayer.getHeldItem() != null && e.entityPlayer.getHeldItem().getItem() instanceof ICreativeSafeItem)
+		if(e.action == Action.RIGHT_CLICK_AIR) return;
+		
+		if(e.entityPlayer.capabilities.isCreativeMode && e.action == Action.LEFT_CLICK_BLOCK && e.entityPlayer.getHeldItem() != null && e.entityPlayer.getHeldItem().getItem() instanceof ICreativeSafeItem)
 		{
 			if(!e.world.isRemote) e.world.markBlockForUpdate(e.x, e.y, e.z);
 			else e.world.markBlockRangeForRenderUpdate(e.x, e.y, e.z, e.x, e.y, e.z);
@@ -206,14 +208,12 @@ public class FTBUEventHandler
 		if(e.entityPlayer.capabilities.isCreativeMode && FTBUConfig.General.allowCreativeInteractSecure) return true;
 		if(!ChunkType.getD(e.world.provider.dimensionId, e.x, e.z, LMPlayer.getPlayer(e.entityPlayer)).isFriendly()) return false;
 		
-		if(e.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR) return true;
-		
 		TileEntity te = e.world.getTileEntity(e.x, e.y, e.z);
 		
 		if(te != null && !te.isInvalid() && te instanceof ISecureTile)
 		{
-			if(!((ISecureTile)te).canPlayerInteract(e.entityPlayer, e.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK))
-			{ ((ISecureTile)te).onPlayerNotOwner(e.entityPlayer, e.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK); return false; }
+			if(!((ISecureTile)te).canPlayerInteract(e.entityPlayer, e.action == Action.LEFT_CLICK_BLOCK))
+			{ ((ISecureTile)te).onPlayerNotOwner(e.entityPlayer, e.action == Action.LEFT_CLICK_BLOCK); return false; }
 		}
 		
 		return true;

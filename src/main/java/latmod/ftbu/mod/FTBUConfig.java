@@ -1,9 +1,10 @@
 package latmod.ftbu.mod;
 
-import java.io.*;
+import java.io.File;
 import java.util.*;
 
 import latmod.ftbu.core.*;
+import latmod.ftbu.core.event.FTBUReadmeEvent;
 import latmod.ftbu.core.util.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,23 +20,7 @@ public class FTBUConfig extends LMConfig implements IServerConfig
 		super(e, "/LatMod/FTBU.cfg");
 		load();
 		
-		try
-		{
-			File f = LatCore.newFile(new File(LatCoreMC.latmodFolder, "/ftbu/readme.txt"));
-			FileOutputStream fos = new FileOutputStream(f);
-			InputStream is = FTBUConfig.class.getResourceAsStream("/assets/ftbu/lang/readme.txt");
-			
-			byte[] b = new byte[is.available()];
-			is.read(b);
-			fos.write(b);
-			
-			fos.close();
-			is.close();
-			
-			b = null;
-			is = null;
-			fos = null;
-		}
+		try { saveReadme(); }
 		catch(Exception ex)
 		{ ex.printStackTrace(); }
 	}
@@ -43,7 +28,7 @@ public class FTBUConfig extends LMConfig implements IServerConfig
 	public void load()
 	{
 		General.load(get("general"));
-		Login.load(get("login"));
+		Login.load();
 		WorldBorder.load();
 		save();
 	}
@@ -101,21 +86,52 @@ public class FTBUConfig extends LMConfig implements IServerConfig
 	
 	public static class Login
 	{
-		public static FastList<String> motd;
-		public static String rules;
+		public static Login inst;
+		private static File saveFile;
 		
-		public static void load(Category c)
+		@Expose public String[] motd;
+		@Expose public String rules;
+		@Expose public String customBadgesPlayers;
+		@Expose public String customBadgesIDs;
+		@Expose private String[] startingItems;
+		private final FastList<ItemStack> startingItemsList = new FastList<ItemStack>();
+		
+		public static void load()
 		{
-			motd = c.getStringArray("motd", new String[] { "Welcome to the server!" });
-			c.setComment("motd", "Message of the day. Will appear when player logs in");
+			saveFile = new File(LatCoreMC.latmodFolder, "ftbu/login.txt");
+			inst = LatCore.fromJsonFromFile(saveFile, Login.class);
+			if(inst == null) inst = new Login();
+			inst.loadDefaults();
+			save();
+		}
+		
+		public void loadDefaults()
+		{
+			if(motd == null) motd = new String[] { "Welcome to the server!" };
+			if(rules == null) rules = "";
+			if(customBadgesPlayers == null) customBadgesPlayers = "";
+			if(customBadgesIDs == null) customBadgesIDs = "";
+			if(startingItems == null) startingItems = new String[] { "minecraft:apple 16 0" };
 			
-			rules = c.getString("rules", "");
-			c.setComment("rules", "Rules page link, blank - ");
+			startingItemsList.clear();
+			for(String s : startingItems)
+			{
+				ItemStack is = InvUtils.parseItem(s);
+				if(is != null && is.stackSize > 0)
+					startingItemsList.add(is);
+			}
+		}
+		
+		public static void save()
+		{
+			if(inst == null) load();
+			if(!LatCore.toJsonFile(saveFile, inst))
+				LatCoreMC.logger.warn(saveFile.getName() + " failed to save!");
 		}
 
 		public static FastList<ItemStack> getStartingItems(UUID id)
 		{
-			return null;
+			return inst.startingItemsList;
 		}
 	}
 	
@@ -124,8 +140,8 @@ public class FTBUConfig extends LMConfig implements IServerConfig
 		public static WorldBorder inst;
 		private static File saveFile;
 		
-		@Expose public boolean enabled;
-		@Expose private int radius;
+		@Expose public Boolean enabled;
+		@Expose private Integer radius;
 		@Expose private Map<Integer, Integer> custom;
 		
 		public static void load()
@@ -168,5 +184,23 @@ public class FTBUConfig extends LMConfig implements IServerConfig
 			
 			return (int)(radius * LatCoreMC.getWorldScale(dim));
 		}
+	}
+	
+	public static void saveReadme() throws Exception
+	{
+		FTBUReadmeEvent e = new FTBUReadmeEvent();
+		
+		FTBUReadmeEvent.ReadmeFile.Category login = e.file.get("latmod/ftbu/login.txt");
+		login.add("motd", "Message of the day. This will be displayed when player joins the server. Default: blank");
+		login.add("rules", "Rules link you can click on. This will be displayed when player joins the server. Default: blank");
+		
+		FTBUReadmeEvent.ReadmeFile.Category world_border = e.file.get("latmod/ftbu/world_border.txt");
+		world_border.add("enabled", "true enabled world border, false disables. Default: false");
+		world_border.add("radius", "Radius of the world border, starting at 0, 0. Its a square, so radius 5000 = 10000x10000 blocks of available world. Default: 5000");
+		
+		e.post();
+		
+		FastList<String> l = new FastList<String>();
+		LatCore.saveFile(new File(LatCoreMC.latmodFolder, "/ftbu/readme.txt"), l);
 	}
 }

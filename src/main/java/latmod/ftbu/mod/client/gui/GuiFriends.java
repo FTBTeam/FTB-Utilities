@@ -146,6 +146,7 @@ public class GuiFriends extends GuiLM
 		{
 			actionButtons.add(new ActionButton(this, PlayerAction.settings, FTBULang.button_settings));
 			actionButtons.add(new ActionButton(this, PlayerAction.waypoints, Waypoints.config.getIDS()));
+			actionButtons.add(new ActionButton(this, PlayerAction.minimap, "Claimed Chunks"));
 		}
 		else
 		{
@@ -481,6 +482,12 @@ public class GuiFriends extends GuiLM
 		{
 			public void onClicked(GuiFriends g)
 			{ g.mc.displayGuiScreen(new GuiWaypoints()); }
+		};
+		
+		public static final PlayerAction minimap = new PlayerAction(Icons.map)
+		{
+			public void onClicked(GuiFriends g)
+			{ g.mc.displayGuiScreen(new GuiMinimap()); }
 		};
 		
 		// Other players //

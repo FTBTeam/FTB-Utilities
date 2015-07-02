@@ -7,17 +7,17 @@ import latmod.ftbu.core.*;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.simpleimpl.*;
 
-public class MessageUpdateAllData extends MessageLM<MessageUpdateAllData>
+public class MessageLMWorldUpdate extends MessageLM<MessageLMWorldUpdate>
 {
 	public UUID worldID;
 	public NBTTagCompound players;
 	
-	public MessageUpdateAllData()
+	public MessageLMWorldUpdate()
 	{
 		worldID = LMWorld.getID();
 		
 		players = new NBTTagCompound();
-		LMDataLoader.writePlayersToNBT(players, false);
+		LMDataLoader.writeNetPlayersToNBT(players);
 	}
 	
 	public void fromBytes(ByteBuf bb)
@@ -33,10 +33,10 @@ public class MessageUpdateAllData extends MessageLM<MessageUpdateAllData>
 		writeTagCompound(bb, players);
 	}
 	
-	public IMessage onMessage(MessageUpdateAllData m, MessageContext ctx)
+	public IMessage onMessage(MessageLMWorldUpdate m, MessageContext ctx)
 	{
 		LMWorld.setID(m.worldID);
-		LMDataLoader.readPlayersFromNBT(m.players, false);
+		LMDataLoader.readNetPlayersFromNBT(m.players);
 		return null;
 	}
 }

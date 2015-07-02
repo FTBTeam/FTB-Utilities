@@ -2,7 +2,6 @@ package latmod.ftbu.core.client;
 
 import java.util.UUID;
 
-import latmod.ftbu.mod.FTBU;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -69,8 +68,9 @@ public final class LatCoreMCClient // LatCoreMC
 
 	public static EntityPlayerSP getPlayerSP(UUID uuid)
 	{
-		World w = FTBU.proxy.getClientWorld();
+		//getMinecraft().getIntegratedServer().getConfigurationManager().playerEntityList
 		
+		World w = getMinecraft().theWorld;
 		if(w != null)
 		{
 			EntityPlayer ep = w.func_152378_a(uuid);

@@ -14,7 +14,7 @@ public abstract class MessageLM<E extends MessageLM<?>> implements IMessage, IMe
 	
 	public static void init()
 	{
-		NET.registerMessage(MessageUpdateAllData.class, MessageUpdateAllData.class, 0, Side.CLIENT);
+		NET.registerMessage(MessageLMWorldUpdate.class, MessageLMWorldUpdate.class, 0, Side.CLIENT);
 		NET.registerMessage(MessageLMPlayerUpdate.class, MessageLMPlayerUpdate.class, 1, Side.CLIENT);
 		NET.registerMessage(MessageCustomClientAction.class, MessageCustomClientAction.class, 2, Side.SERVER);
 		NET.registerMessage(MessageCustomServerAction.class, MessageCustomServerAction.class, 3, Side.CLIENT);

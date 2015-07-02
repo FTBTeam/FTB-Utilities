@@ -43,11 +43,15 @@ public class TileLM extends TileEntity implements IClientActionTile
 	}
 	
 	public final Packet getDescriptionPacket()
-	{ NBTTagCompound tag = new NBTTagCompound(); writeTileData(tag);
-	return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, tag); }
+	{
+		NBTTagCompound tag = new NBTTagCompound();
+		writeTileData(tag);
+		writeTileClientData(tag);
+		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, tag);
+	}
 	
 	public final void onDataPacket(NetworkManager m, S35PacketUpdateTileEntity p)
-	{ readTileData(p.func_148857_g()); onUpdatePacket(); }
+	{ FTBU.proxy.readTileData(this, p); }
 	
 	public void readTileData(NBTTagCompound tag)
 	{
@@ -57,10 +61,6 @@ public class TileLM extends TileEntity implements IClientActionTile
 		if(tick < 0L) tick = 0L;
 	}
 	
-	public void readTileServerData(NBTTagCompound tag)
-	{
-	}
-
 	public void writeTileData(NBTTagCompound tag)
 	{
 		security.writeToNBT(tag, "Security");
@@ -70,7 +70,19 @@ public class TileLM extends TileEntity implements IClientActionTile
 		tag.setLong("Tick", tick);
 	}
 	
+	public void readTileServerData(NBTTagCompound tag)
+	{
+	}
+	
 	public void writeTileServerData(NBTTagCompound tag)
+	{
+	}
+	
+	public void readTileClientData(NBTTagCompound tag)
+	{
+	}
+	
+	public void writeTileClientData(NBTTagCompound tag)
 	{
 	}
 	
@@ -186,13 +198,17 @@ public class TileLM extends TileEntity implements IClientActionTile
 	public final void sendClientAction(String action, NBTTagCompound data)
 	{ MessageLM.NET.sendToServer(new MessageClientTileAction(this, action, data)); }
 	
-	public void clientPressButton(String button, int mouseButton)
+	public void clientPressButton(String button, int mouseButton, NBTTagCompound data)
 	{
-		NBTTagCompound data = new NBTTagCompound();
-		data.setString("ID", button);
-		data.setByte("MB", (byte)mouseButton);
-		sendClientAction(ACTION_BUTTON_PRESSED, data);
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setString("ID", button);
+		tag.setByte("MB", (byte)mouseButton);
+		if(data != null) tag.setTag("D", data);
+		sendClientAction(ACTION_BUTTON_PRESSED, tag);
 	}
+	
+	public void clientPressButton(String button, int mouseButton)
+	{ clientPressButton(button, mouseButton, null); }
 	
 	public void clientOpenGui(NBTTagCompound data)
 	{ sendClientAction(ACTION_OPEN_GUI, data); }
@@ -208,9 +224,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 	{
 		if(action.equals(ACTION_BUTTON_PRESSED))
 		{
-			String button = data.getString("ID");
-			int mouseButton = data.getByte("MB");
-			handleButton(button, mouseButton, ep);
+			handleButton(data.getString("ID"), data.getByte("MB"), data.getCompoundTag("D"), ep);
 			markDirty();
 		}
 		else if(action.equals(ACTION_OPEN_GUI))
@@ -223,15 +237,15 @@ public class TileLM extends TileEntity implements IClientActionTile
 		}
 	}
 	
-	public void handleButton(String button, int mouseButton, EntityPlayer ep)
+	public final void handleButton(String button, int mouseButton, EntityPlayer ep)
+	{ handleButton(button, mouseButton, new NBTTagCompound(), ep); }
+	
+	public void handleButton(String button, int mouseButton, NBTTagCompound data, EntityPlayer ep)
 	{
 	}
 	
 	public final boolean isServer()
 	{ return !worldObj.isRemote; }
-	
-	public final boolean isValid()
-	{ return !isInvalid(); }
 	
 	public void notifyNeighbors()
 	{ worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, blockType); }

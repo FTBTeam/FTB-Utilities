@@ -142,13 +142,19 @@ public final class LatCoreMC // LatCoreMCClient
 		
 		if(!hasOnlinePlayers()) return m;
 		
-		for(int i = 0; i < MinecraftServer.getServer().getConfigurationManager().playerEntityList.size(); i++)
+		for(int i = 0; i < getServer().getConfigurationManager().playerEntityList.size(); i++)
 		{
-			EntityPlayerMP ep = (EntityPlayerMP)MinecraftServer.getServer().getConfigurationManager().playerEntityList.get(i);
+			EntityPlayerMP ep = (EntityPlayerMP)getServer().getConfigurationManager().playerEntityList.get(i);
 			m.put(ep.getUniqueID(), ep);
 		}
 		
 		return m;
+	}
+	
+	public static EntityPlayerMP getPlayerMP(UUID id)
+	{
+		if(id == null || !hasOnlinePlayers()) return null;
+		return getAllOnlinePlayers().get(id);
 	}
 	
 	public static ChunkCoordinates getSpawnPoint(int dim)

@@ -1,6 +1,8 @@
 package latmod.ftbu.core;
 
+import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.FastMap;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
 public interface IServerConfig
@@ -46,10 +48,8 @@ public interface IServerConfig
 				IServerConfig c = map.get(s);
 				if(c != null) c.writeConfig(tag1);
 				if(!tag1.hasNoTags()) tag.setTag(s, tag1);
-				return;
 			}
-			
-			for(int i = 0; i < map.size(); i++)
+			else for(int i = 0; i < map.size(); i++)
 			{
 				NBTTagCompound tag1 = new NBTTagCompound();
 				map.values.get(i).writeConfig(tag1);
@@ -63,9 +63,7 @@ public interface IServerConfig
 				map.values.get(i).load();
 		}
 		
-		public static void update(String s)
-		{
-			
-		}
+		public static void update(EntityPlayerMP ep, String s)
+		{ MessageLM.sendTo(ep, new MessageUpdateConfig(s)); }
 	}
 }

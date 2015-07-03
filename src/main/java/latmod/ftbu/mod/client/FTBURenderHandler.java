@@ -7,6 +7,7 @@ import latmod.ftbu.core.client.model.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.client.gui.GuiNotification;
+import latmod.ftbu.mod.client.minimap.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -91,9 +92,8 @@ public class FTBURenderHandler
 	
 	private void renderWaypoints()
 	{
-		if(!Waypoints.enabled.getB() || Minecraft.getMinecraft().theWorld == null) return;
+		if(!Waypoints.enabled.getB() || Minecraft.getMinecraft().theWorld == null || !Waypoints.hasWaypoints()) return;
 		FastList<Waypoint> list = Waypoints.getAll();
-		if(list.isEmpty()) return;
 		
 		visibleBeacons.clear();
 		visibleMarkers.clear();

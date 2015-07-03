@@ -1,8 +1,9 @@
 package latmod.ftbu.core;
 
-import latmod.ftbu.core.util.MathHelperLM;
+import latmod.ftbu.core.util.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChunkCoordinates;
 
 public class EntityPos
 {
@@ -14,16 +15,17 @@ public class EntityPos
 	public EntityPos(Entity e)
 	{ set(e); }
 	
+	public EntityPos(double px, double py, double pz, int d)
+	{ setPos(px, py, pz, d); }
+	
 	public boolean equalsPos(Entity e)
 	{ return x == e.posX && y == e.posY && z == e.posZ && dim == e.dimension; }
-
+	
+	public void setPos(double px, double py, double pz, int d)
+	{ x = px; y = py; z = pz; dim = d; }
+	
 	public void set(Entity e)
-	{
-		x = e.posX;
-		y = e.posY;
-		z = e.posZ;
-		dim = e.dimension;
-	}
+	{ setPos(e.posX, e.posY, e.posZ, e.dimension); }
 	
 	public void readFromNBT(NBTTagCompound tag)
 	{
@@ -49,6 +51,15 @@ public class EntityPos
 	
 	public int intZ()
 	{ return MathHelperLM.floor(z); }
+	
+	public ChunkCoordinates toChunkCoordinates()
+	{ return new ChunkCoordinates(intX(), intY(), intZ()); }
+	
+	public Vertex toVertex()
+	{ return new Vertex(x, y, z); }
+	
+	public int[] toIntArray()
+	{ return new int[] { intX(), intY(), intZ(), dim }; }
 	
 	public static class Rot extends EntityPos
 	{

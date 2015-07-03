@@ -164,6 +164,17 @@ public final class LatCoreMC // LatCoreMCClient
 		return w.getSpawnPoint();
 	}
 	
+	public static EntityPos getEntitySpawnPoint(int dim)
+	{
+		ChunkCoordinates c = getSpawnPoint(dim);
+		EntityPos p = new EntityPos();
+		p.x = c.posX + 0.5D;
+		p.y = c.posY + 0.5D;
+		p.z = c.posZ + 0.5D;
+		p.dim = dim;
+		return p;
+	}
+	
 	public static boolean remap(MissingMapping m, String id, Item i)
 	{
 		if(m.type == GameRegistry.Type.ITEM && id.equals(m.name))

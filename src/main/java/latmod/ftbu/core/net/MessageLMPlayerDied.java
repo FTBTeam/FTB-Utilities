@@ -7,7 +7,7 @@ import latmod.ftbu.core.*;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.util.LatCore;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.client.*;
+import latmod.ftbu.mod.client.minimap.*;
 import net.minecraft.entity.player.EntityPlayer;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;

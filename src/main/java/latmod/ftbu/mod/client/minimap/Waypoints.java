@@ -1,4 +1,4 @@
-package latmod.ftbu.mod.client;
+package latmod.ftbu.mod.client.minimap;
 
 import java.io.File;
 
@@ -29,6 +29,9 @@ public class Waypoints
 		config.add(deathPoint);
 		ClientConfig.Registry.add(config);
 	}
+	
+	public static boolean hasWaypoints()
+	{ return !waypoints.isEmpty(); }
 	
 	public static FastList<Waypoint> getAll()
 	{ return waypoints; }

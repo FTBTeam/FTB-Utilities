@@ -6,7 +6,7 @@ import latmod.ftbu.core.FTBULang;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.client.*;
+import latmod.ftbu.mod.client.minimap.*;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;

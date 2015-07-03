@@ -41,7 +41,7 @@ public class ThreadLoadBadges extends Thread
 				{
 					String[] s = raw.split(":");
 					
-					if(s != null && s.length >= 2)
+					if(s != null && s.length >= 2 && !s[0].startsWith("#"))
 					{
 						UUID id = LatCoreMC.getUUIDFromString(s[0]);
 						

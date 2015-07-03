@@ -19,10 +19,6 @@ public class FTBUConfig extends LMConfig implements IServerConfig
 	{
 		super(e, "/LatMod/FTBU.cfg");
 		load();
-		
-		try { saveReadme(); }
-		catch(Exception ex)
-		{ ex.printStackTrace(); }
 	}
 	
 	public void load()
@@ -200,7 +196,28 @@ public class FTBUConfig extends LMConfig implements IServerConfig
 		
 		e.post();
 		
-		FastList<String> l = new FastList<String>();
-		LatCore.saveFile(new File(LatCoreMC.latmodFolder, "/ftbu/readme.txt"), l);
+		StringBuilder sb = new StringBuilder();
+		
+		for(int j = 0; j < e.file.map.size(); j++)
+		{
+			FTBUReadmeEvent.ReadmeFile.Category c = e.file.map.values.get(j);
+			
+			sb.append('[');
+			sb.append(c.name);
+			sb.append(']');
+			sb.append('\n');
+			
+			for(int i = 0; i < c.lines.size(); i++)
+			{
+				sb.append(c.lines.keys.get(i));
+				sb.append(" - ");
+				sb.append(c.lines.values.get(i));
+				sb.append('\n');
+			}
+			
+			sb.append('\n');
+		}
+		
+		LatCore.saveFile(new File(LatCoreMC.latmodFolder, "readme.txt"), sb.toString().trim());
 	}
 }

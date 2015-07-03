@@ -1,4 +1,4 @@
-package latmod.ftbu.mod.client;
+package latmod.ftbu.mod.client.minimap;
 
 import latmod.ftbu.core.util.*;
 

@@ -33,7 +33,7 @@ public class CmdTplast extends CommandLM
 		
 		EntityPos p = to.getLastPos();
 		if(p == null) return "No last position!";
-		Teleporter.travelEntity(who, p);
+		Teleporter.teleportPlayer(who, p);
 		return FINE + "Teleported to " + to.getName() + "!";
 	}
 }

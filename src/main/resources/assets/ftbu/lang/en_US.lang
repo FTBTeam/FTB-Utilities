@@ -12,6 +12,7 @@ ftbu:button.remove=Remove
 ftbu:button.add=Add
 ftbu:button.close=Close
 ftbu:button.save=Save
+ftbu:button.refresh=Refresh
 
 #FriendsGUI
 ftbu:button.addFriend=Add as Friend
@@ -50,6 +51,7 @@ config.value.beacon=Beacon
 #Misc
 ftbu:owner=Owner: %s
 
+#Security Mode
 ftbu:security=Security
 ftbu:security.public=Public
 ftbu:security.private=Private
@@ -58,17 +60,20 @@ ftbu:security.group=Group
 ftbu:security.whitelist=Whitelist
 ftbu:security.blacklist=Blacklist
 
+#Redstone Mode
 ftbu:redstonemode=Redstone Mode
 ftbu:redstonemode.disabled=Disabled
 ftbu:redstonemode.high=Active High
 ftbu:redstonemode.low=Active Low
 
+#Inventory Mode
 ftbu:invmode=Automation
 ftbu:invmode.enabled=Enabled
 ftbu:invmode.onlyin=Insert Only
 ftbu:invmode.onlyout=Extract Only
 ftbu:invmode.disabled=Disabled
 
+#Colors
 ftbu:color.black=Black
 ftbu:color.red=Red
 ftbu:color.green=Green
@@ -87,3 +92,12 @@ ftbu:color.orange=Orange
 ftbu:color.white=White
 
 commands.lmmissingargs=Missing Arguments!
+commands.lmdisabled=This feature is disabled!
+
+#Chunktypes
+ftbu:chunktype.spawn=Spawn Area
+ftbu:chunktype.world_border=World Border
+ftbu:chunktype.world_border.warning=You have reached the world border!
+ftbu:chunktype.wilderness=Wilderness
+ftbu:chunktype.claimed=Claimed Area
+ftbu:chunktype.unloaded=Chunk not loaded

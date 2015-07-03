@@ -33,7 +33,7 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> 
 		username = p.getName();
 		
 		data = new NBTTagCompound();
-		p.writeToNBT(data, false);
+		p.writeToNet(data);
 		
 		firstTime = first;
 	}
@@ -75,7 +75,7 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> 
 		LMPlayer p = new LMPlayer(m.playerID, new GameProfile(m.uuid, m.username));
 		LMPlayer.map.put(p.playerID, p);
 		
-		p.readFromNBT(m.data, false);
+		p.readFromNet(m.data);
 		
 		if(m.uuid.equals(mc.thePlayer.getUniqueID()))
 		{

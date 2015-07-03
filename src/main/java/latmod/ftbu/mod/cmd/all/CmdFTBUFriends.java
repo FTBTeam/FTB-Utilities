@@ -33,7 +33,7 @@ public class CmdFTBUFriends extends SubCommand
 			
 			for(int i = 0; i < owner.friends.size(); i++)
 			{
-				LMPlayer p = owner.friends.get(i);
+				LMPlayer p = LMPlayer.getPlayer(owner.friends.get(i));
 				EnumChatFormatting col = EnumChatFormatting.GREEN;
 				if(p.isFriendRaw(owner) && !owner.isFriendRaw(p)) col = EnumChatFormatting.GOLD;
 				if(!p.isFriendRaw(owner) && owner.isFriendRaw(p)) col = EnumChatFormatting.BLUE;
@@ -52,9 +52,9 @@ public class CmdFTBUFriends extends SubCommand
 			
 			if(args[0].equals("add"))
 			{
-				if(!owner.friends.contains(p))
+				if(!owner.friends.contains(p.playerID))
 				{
-					owner.friends.add(p);
+					owner.friends.add(p.playerID);
 					return changed(owner, p, "Added " + p.getName() + " as friend");
 				}
 				
@@ -62,9 +62,9 @@ public class CmdFTBUFriends extends SubCommand
 			}
 			else if(args[0].equals("rem"))
 			{
-				if(owner.friends.contains(p))
+				if(owner.friends.contains(p.playerID))
 				{
-					owner.friends.remove(p);
+					owner.friends.removeValue(p.playerID);
 					return changed(owner, p, "Removed " + p.getName() + " from friends");
 				}
 				

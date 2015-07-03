@@ -2,12 +2,11 @@ package latmod.ftbu.mod.client.gui;
 
 import static net.minecraft.util.EnumChatFormatting.*;
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.event.LMPlayerEvent;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.client.Waypoints;
+import latmod.ftbu.mod.client.minimap.Waypoints;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -18,11 +17,10 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
-public class GuiFriends extends GuiLM
+public class GuiFriends extends GuiLM implements IClientActionGui
 {
 	public static final ResourceLocation texPlayers = FTBU.mod.getLocation("textures/gui/players.png");
 	
@@ -47,11 +45,11 @@ public class GuiFriends extends GuiLM
 	private static boolean sortAZ = false;
 	private static final FastList<ActionButton> actionButtons = new FastList<ActionButton>();
 	
-	public GuiFriends(EntityPlayer ep)
+	public GuiFriends()
 	{
-		super(new ContainerEmpty(ep, null), texPlayers);
+		super(new ContainerEmpty.ClientGui(), texPlayers);
 		
-		owner = LMPlayer.getPlayer(ep);
+		owner = LMPlayer.getPlayer(container.player);
 		players = new FastList<Player>();
 		
 		xSize = 240;
@@ -242,20 +240,12 @@ public class GuiFriends extends GuiLM
 	public void initGui()
 	{
 		super.initGui();
-		LatCoreMC.EVENT_BUS.register(this);
 		MessageLM.NET.sendToServer(new MessageLMPlayerRequestInfo(owner));
 	}
 	
-	public void onGuiClosed()
+	public void onClientAction(String action)
 	{
-		LatCoreMC.EVENT_BUS.unregister(this);
-		super.onGuiClosed();
-	}
-	
-	@SubscribeEvent
-	public void onClientEvent(LMPlayerEvent.DataChanged e)
-	{
-		if(e.side == Side.CLIENT) refreshPlayers();
+		refreshPlayers();
 	}
 	
 	public void refreshPlayers()

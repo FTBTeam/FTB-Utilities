@@ -8,6 +8,8 @@ import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.TileLM;
 import latmod.ftbu.core.util.LatCore;
 import latmod.ftbu.mod.FTBUCommon;
+import latmod.ftbu.mod.claims.Claims;
+import latmod.ftbu.mod.client.minimap.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
@@ -50,6 +52,7 @@ public class FTBUClient extends FTBUCommon
 		ClientConfig.Registry.add(clientConfig);
 		
 		Waypoints.init();
+		Claims.Client.init();
 	}
 	
 	public void postInit(FMLPostInitializationEvent e)
@@ -101,6 +104,7 @@ public class FTBUClient extends FTBUCommon
 	{
 		ThreadLoadBadges.init();
 		Waypoints.load();
+		Minimap.minimaps.clear();
 	}
 	
 	public void openClientGui(EntityPlayer ep, String id, NBTTagCompound data)

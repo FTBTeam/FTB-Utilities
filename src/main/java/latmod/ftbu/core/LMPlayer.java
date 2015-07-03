@@ -7,6 +7,7 @@ import latmod.ftbu.core.cmd.NameType;
 import latmod.ftbu.core.event.LMPlayerEvent;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.*;
+import latmod.ftbu.mod.claims.Claims;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.ItemStack;
@@ -27,17 +28,18 @@ public final class LMPlayer implements Comparable<LMPlayer>
 	public final GameProfile gameProfile;
 	
 	public final String uuidString;
-	public final FastList<LMPlayer> friends;
+	public final IntList friends;
 	public final ItemStack[] lastArmor;
 	private boolean isOnline;
-	public int notify;
 	public int deaths;
-	public EntityPos lastPos;
+	public NBTTagCompound commonData;
+	
+	// Server only //
+	public NBTTagCompound serverData;
+	public EntityPos lastPos, lastDeath;
 	private long lastSeen;
 	private long firstJoined;
-	
-	public NBTTagCompound commonData;
-	public NBTTagCompound serverData;
+	public final Claims claims;
 	
 	@SideOnly(Side.CLIENT)
 	public FastList<String> clientInfo;
@@ -48,13 +50,13 @@ public final class LMPlayer implements Comparable<LMPlayer>
 		gameProfile = gp;
 		
 		uuidString = LatCoreMC.toShortUUID(getUUID());
-		friends = new FastList<LMPlayer>();
+		friends = new IntList();
 		lastArmor = new ItemStack[5];
 		isOnline = false;
-		notify = 2;
 		
 		commonData = new NBTTagCompound();
 		serverData = new NBTTagCompound();
+		claims = new Claims(this);
 	}
 	
 	public String getName()
@@ -74,7 +76,7 @@ public final class LMPlayer implements Comparable<LMPlayer>
 	{
 		if(!LatCoreMC.isServer()) return;
 		
-		if(action == null) action = ACTION_GENERAL;
+		if(action == null || action.isEmpty()) action = ACTION_GENERAL;
 		new LMPlayerEvent.DataChanged(this, Side.SERVER, action).post();
 		if(updateClient) MessageLM.NET.sendToAll(new MessageLMPlayerUpdate(this, action));
 	}
@@ -93,7 +95,7 @@ public final class LMPlayer implements Comparable<LMPlayer>
 		if(firstJoined > 0L) tag.setLong("J", ms - firstJoined);
 		if(deaths > 0) tag.setShort("D", (short)deaths);
 		
-		LatCoreMC.printChat(ep, "Sending info: " + tag + " ; " + lastSeen);
+		//LatCoreMC.printChat(ep, "Sending info: " + tag);
 		MessageLM.sendTo(ep, new MessageLMPlayerInfo(playerID, tag));
 	}
 	
@@ -131,85 +133,94 @@ public final class LMPlayer implements Comparable<LMPlayer>
 	
 	// NBT reading / writing
 	
-	public void readFromNBT(NBTTagCompound tag, boolean server)
+	public void readFromServer(NBTTagCompound tag)
 	{
-		isOnline = tag.getBoolean("On");
-		
 		friends.clear();
-		
-		int[] fl = tag.getIntArray("Friends");
-		
-		if(fl != null && fl.length > 0)
-		for(int j = 0; j < fl.length; j++)
-		{
-			LMPlayer p = getPlayer(fl[j]);
-			if(p != null) friends.add(p);
-		}
+		friends.addAll(tag.getIntArray("Friends"));
 		
 		commonData = tag.getCompoundTag("CustomData");
 		
 		InvUtils.readItemsFromNBT(lastArmor, tag, "LastItems");
 		
-		if(!tag.hasKey("Notify")) notify = 1;
-		else notify = tag.getByte("Notify");
+		deaths = tag.getInteger("Deaths");
 		
-		deaths = tag.getShort("Deaths");
+		serverData = tag.getCompoundTag("ServerData");
 		
-		if(server)
+		if(tag.hasKey("LastPos"))
 		{
-			serverData = tag.getCompoundTag("ServerData");
-			
-			if(tag.hasKey("LastPos"))
-			{
-				if(lastPos == null) lastPos = new EntityPos();
-				lastPos.readFromNBT(tag.getCompoundTag("LastPos"));
-			}
-			else lastPos = null;
-			
-			lastSeen = tag.getLong("LastSeen");
-			firstJoined = tag.getLong("Joined");
+			if(lastPos == null) lastPos = new EntityPos();
+			lastPos.readFromNBT(tag.getCompoundTag("LastPos"));
 		}
+		else lastPos = null;
+		
+		if(tag.hasKey("LastDeath"))
+		{
+			if(lastDeath == null) lastDeath = new EntityPos();
+			lastDeath.readFromNBT(tag.getCompoundTag("LastDeath"));
+		}
+		else lastDeath = null;
+		
+		lastSeen = tag.getLong("LastSeen");
+		firstJoined = tag.getLong("Joined");
+		
+		claims.readFromNBT(tag);
 	}
 	
-	public void writeToNBT(NBTTagCompound tag, boolean server)
+	public void writeToServer(NBTTagCompound tag)
 	{
-		if(isOnline) tag.setBoolean("On", isOnline);
-		
 		if(!friends.isEmpty())
-		{
-			int[] m = new int[friends.size()];
-			
-			if(m.length > 0)
-			{
-				for(int j = 0; j < m.length; j++)
-					m[j] = friends.get(j).playerID;
-				
-				tag.setIntArray("Friends", m);
-			}
-		}
+			tag.setIntArray("Friends", friends.toArray());
 		
 		if(!commonData.hasNoTags()) tag.setTag("CustomData", commonData);
 		
 		InvUtils.writeItemsToNBT(lastArmor, tag, "LastItems");
-		tag.setByte("Notify", (byte)notify);
 		
-		if(deaths > 0)
-			tag.setShort("Deaths", (short)deaths);
+		if(deaths > 0) tag.setInteger("Deaths", deaths);
 		
-		if(server)
+		if(!serverData.hasNoTags()) tag.setTag("ServerData", serverData);
+		
+		if(lastPos != null)
 		{
-			if(!serverData.hasNoTags()) tag.setTag("ServerData", serverData);
-			
-			if(lastPos != null)
-			{
-				NBTTagCompound tag1 = new NBTTagCompound();
-				lastPos.writeToNBT(tag1);
-				tag.setTag("LastPos", tag1);
-			}
-			
-			if(lastSeen > 0L) tag.setLong("LastSeen", lastSeen);
-			if(firstJoined > 0L) tag.setLong("Joined", firstJoined);
+			NBTTagCompound tag1 = new NBTTagCompound();
+			lastPos.writeToNBT(tag1);
+			tag.setTag("LastPos", tag1);
 		}
+		
+		if(lastDeath != null)
+		{
+			NBTTagCompound tag1 = new NBTTagCompound();
+			lastDeath.writeToNBT(tag1);
+			tag.setTag("LastDeath", tag1);
+		}
+		
+		if(lastSeen > 0L) tag.setLong("LastSeen", lastSeen);
+		if(firstJoined > 0L) tag.setLong("Joined", firstJoined);
+		
+		claims.writeToNBT(tag);
+	}
+	
+	public void readFromNet(NBTTagCompound tag)
+	{
+		isOnline = tag.getBoolean("On");
+		
+		friends.clear();
+		friends.addAll(tag.getIntArray("F"));
+		
+		commonData = tag.getCompoundTag("CD");
+		InvUtils.readItemsFromNBT(lastArmor, tag, "LI");
+		deaths = tag.getInteger("D");
+	}
+	
+	public void writeToNet(NBTTagCompound tag) // MID, LID, ID, N
+	{
+		if(isOnline) tag.setBoolean("On", isOnline);
+		
+		if(!friends.isEmpty())
+			tag.setIntArray("F", friends.toArray());
+		
+		if(!commonData.hasNoTags()) tag.setTag("CD", commonData);
+		InvUtils.writeItemsToNBT(lastArmor, tag, "LI");
+		if(deaths > 0) tag.setInteger("D", deaths);
 	}
 	
 	public int compareTo(LMPlayer o)
@@ -242,6 +253,17 @@ public final class LMPlayer implements Comparable<LMPlayer>
 		}
 		
 		return lastPos;
+	}
+	
+	public FastList<LMPlayer> getFriends()
+	{
+		FastList<LMPlayer> list = new FastList<LMPlayer>();
+		for(int i = 0; i < friends.size(); i++)
+		{
+			LMPlayer p = getPlayer(friends.get(i));
+			if(p != null) list.add(p);
+		}
+		return list;
 	}
 	
 	// Static //

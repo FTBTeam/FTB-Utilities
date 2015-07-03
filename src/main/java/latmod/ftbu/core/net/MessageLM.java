@@ -30,6 +30,9 @@ public abstract class MessageLM<E extends MessageLM<?>> implements IMessage, IMe
 		NET.registerMessage(MessageLMPlayerInfo.class, MessageLMPlayerInfo.class, 13, Side.CLIENT);
 		NET.registerMessage(MessageLMPlayerRequestInfo.class, MessageLMPlayerRequestInfo.class, 14, Side.SERVER);
 		NET.registerMessage(MessageUpdateConfig.class, MessageUpdateConfig.class, 15, Side.CLIENT);
+		NET.registerMessage(MessageAreaRequest.class, MessageAreaRequest.class, 16, Side.SERVER);
+		NET.registerMessage(MessageAreaUpdate.class, MessageAreaUpdate.class, 17, Side.CLIENT);
+		NET.registerMessage(MessageClaimChunk.class, MessageClaimChunk.class, 18, Side.SERVER);
 	}
 	
 	public static void sendTo(EntityPlayerMP ep, MessageLM<?> m)
@@ -69,7 +72,7 @@ public abstract class MessageLM<E extends MessageLM<?>> implements IMessage, IMe
 		if (s >= 0)
 		{
 			byte[] b = new byte[s]; bb.readBytes(b);
-			try { return CompressedStreamTools.func_152457_a(b, new NBTSizeTracker(2097152L)); }
+			try { return CompressedStreamTools.func_152457_a(b, NBTSizeTracker.field_152451_a); }
 			catch(Exception e) { }
 		}
 		

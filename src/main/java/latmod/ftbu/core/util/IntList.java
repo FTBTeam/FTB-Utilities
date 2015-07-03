@@ -1,8 +1,8 @@
 package latmod.ftbu.core.util;
 
-import java.util.Arrays;
+import java.util.*;
 
-public class IntList // Improve this // FastList
+public class IntList implements Iterable<Integer>// Improve this // FastList
 {
 	private final int init;
 	private int defVal = 0;
@@ -65,7 +65,7 @@ public class IntList // Improve this // FastList
 	public boolean contains(int value)
 	{ return indexOf(value) != -1; }
 	
-	public int remove(int key)
+	public int removeKey(int key)
 	{
 		if(key < 0 || key >= size) return defVal;
 		int rem = get(key);
@@ -76,7 +76,7 @@ public class IntList // Improve this // FastList
 	}
 	
 	public int removeValue(int value)
-	{ return remove(indexOf(value)); }
+	{ return removeKey(indexOf(value)); }
 	
 	public boolean isEmpty()
 	{ return size <= 0; }
@@ -127,5 +127,23 @@ public class IntList // Improve this // FastList
 		}
 		
 		return s + " ]";
+	}
+	
+	public Iterator<Integer> iterator()
+	{ return new IntIterator(array); }
+	
+	public static class IntIterator implements Iterator<Integer>
+	{
+		public final int[] values;
+		public int pos = -1;
+		
+		public IntIterator(int[] v)
+		{ values = v; }
+		
+		public boolean hasNext()
+		{ return pos < values.length; }
+		
+		public Integer next()
+		{ return Integer.valueOf(values[++pos]); }
 	}
 }

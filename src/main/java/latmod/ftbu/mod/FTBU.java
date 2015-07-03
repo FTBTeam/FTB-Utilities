@@ -31,7 +31,7 @@ public class FTBU
 	public FTBU()
 	{
 		LatCoreMC.addEventHandler(FTBUEventHandler.instance, true, true, true);
-		LatCoreMC.addEventHandler(FTBUTickHandler.instance, false, true, false);
+		LatCoreMC.addEventHandler(FTBUTickHandler.instance, true, true, false);
 	}
 	
 	private ModMetadata modMeta;
@@ -91,6 +91,7 @@ public class FTBU
 		}
 		
 		for(String s : FTBUGuiHandler.IDs) LatCoreMC.addLMGuiHandler(s, FTBUGuiHandler.instance);
+		try { FTBUConfig.saveReadme(); } catch(Exception ex) { ex.printStackTrace(); }
 	}
 	
 	@Mod.EventHandler
@@ -98,6 +99,7 @@ public class FTBU
 	{
 		FTBUTickHandler.resetTimer(true);
 		e.registerServerCommand(new CmdAdmin());
+		e.registerServerCommand(new CmdBack());
 		e.registerServerCommand(new CmdFTBU());
 		e.registerServerCommand(new CmdMotd());
 		e.registerServerCommand(new CmdRestartTimer());

@@ -256,10 +256,21 @@ public abstract class GuiLM extends GuiContainer
 	{
 		Tessellator t = Tessellator.instance;
 		t.startDrawingQuads();
-		t.addVertexWithUV(x + 0, y + h, z, u0, v1);
-		t.addVertexWithUV(x + w, y + h, z, u1, v1);
-		t.addVertexWithUV(x + w, y + 0, z, u1, v0);
-		t.addVertexWithUV(x + 0, y + 0, z, u0, v0);
+		
+		if(u0 == 0D && v0 == 0D && u1 == 0D && v1 == 0D)
+		{
+			t.addVertex(x + 0, y + h, z);
+			t.addVertex(x + w, y + h, z);
+			t.addVertex(x + w, y + 0, z);
+			t.addVertex(x + 0, y + 0, z);
+		}
+		else
+		{
+			t.addVertexWithUV(x + 0, y + h, z, u0, v1);
+			t.addVertexWithUV(x + w, y + h, z, u1, v1);
+			t.addVertexWithUV(x + w, y + 0, z, u1, v0);
+			t.addVertexWithUV(x + 0, y + 0, z, u0, v0);
+		}
 		t.draw();
 	}
 	
@@ -281,7 +292,9 @@ public abstract class GuiLM extends GuiContainer
 	
 	public static void drawPlayerHead(String username, double x, double y, double w, double h, double z)
 	{
-		Minecraft.getMinecraft().getTextureManager().bindTexture(FTBUClient.getSkinTexture(username));
+		Minecraft mc = LatCoreMCClient.getMinecraft();
+		if(mc.currentScreen instanceof GuiLM) ((GuiLM)mc.currentScreen).setTexture(FTBUClient.getSkinTexture(username));
+		else mc.getTextureManager().bindTexture(FTBUClient.getSkinTexture(username));
 		
 		Tessellator tessellator = Tessellator.instance;
 		

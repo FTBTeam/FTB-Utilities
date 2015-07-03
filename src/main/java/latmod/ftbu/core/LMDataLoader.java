@@ -15,7 +15,7 @@ public class LMDataLoader
 	public static final int nextPlayerID()
 	{ return ++lastPlayerID; }
 	
-	public static void writeNetPlayersToNBT(NBTTagCompound tag)
+	public static void writePlayersToNet(NBTTagCompound tag)
 	{
 		NBTTagList list = new NBTTagList();
 		
@@ -24,11 +24,11 @@ public class LMDataLoader
 			NBTTagCompound tag1 = new NBTTagCompound();
 			
 			LMPlayer p = LMPlayer.map.values.get(i);
-			p.writeToNBT(tag1, false);
+			p.writeToNet(tag1);
 			new LMPlayerEvent.DataSaved(p).post();
 			tag1.setLong("MID", p.getUUID().getMostSignificantBits());
 			tag1.setLong("LID", p.getUUID().getLeastSignificantBits());
-			tag1.setString("Name", p.getName());
+			tag1.setString("N", p.getName());
 			tag1.setInteger("PID", p.playerID);
 			
 			list.appendTag(tag1);
@@ -37,7 +37,7 @@ public class LMDataLoader
 		tag.setTag("Players", list);
 	}
 	
-	public static void readNetPlayersFromNBT(NBTTagCompound tag)
+	public static void readPlayersFromNet(NBTTagCompound tag)
 	{
 		LMPlayer.map.clear();
 		
@@ -47,7 +47,7 @@ public class LMDataLoader
 		for(int i = 0; i < list.tagCount(); i++)
 		{
 			NBTTagCompound tag1 = list.getCompoundTagAt(i);
-			LMPlayer p = new LMPlayer(tag1.getInteger("PID"), new GameProfile(new UUID(tag1.getLong("MID"), tag1.getLong("LID")), tag1.getString("Name")));
+			LMPlayer p = new LMPlayer(tag1.getInteger("PID"), new GameProfile(new UUID(tag1.getLong("MID"), tag1.getLong("LID")), tag1.getString("N")));
 			LMPlayer.map.put(p.playerID, p);
 			playerData.put(Integer.valueOf(p.playerID), tag1);
 		}
@@ -55,19 +55,19 @@ public class LMDataLoader
 		for(int i = 0; i < LMPlayer.map.values.size(); i++)
 		{
 			LMPlayer p = LMPlayer.map.values.get(i);
-			p.readFromNBT(playerData.get(Integer.valueOf(p.playerID)), false);
+			p.readFromNet(playerData.get(Integer.valueOf(p.playerID)));
 			new LMPlayerEvent.DataLoaded(p).post();
 		}
 	}
 	
-	public static void writeSavePlayersToNBT(NBTTagCompound tag)
+	public static void writePlayersToServer(NBTTagCompound tag)
 	{
 		for(int i = 0; i < LMPlayer.map.values.size(); i++)
 		{
 			NBTTagCompound tag1 = new NBTTagCompound();
 			
 			LMPlayer p = LMPlayer.map.values.get(i);
-			p.writeToNBT(tag1, true);
+			p.writeToServer(tag1);
 			new LMPlayerEvent.DataSaved(p).post();
 			tag1.setString("UUID", p.uuidString);
 			tag1.setString("Name", p.getName());
@@ -76,7 +76,7 @@ public class LMDataLoader
 		}
 	}
 	
-	public static void readSavePlayersFromNBT(NBTTagCompound tag)
+	public static void readPlayersFromServer(NBTTagCompound tag)
 	{
 		LMPlayer.map.clear();
 		
@@ -95,7 +95,7 @@ public class LMDataLoader
 		for(int i = 0; i < LMPlayer.map.values.size(); i++)
 		{
 			LMPlayer p = LMPlayer.map.values.get(i);
-			p.readFromNBT(playerData.get(Integer.valueOf(p.playerID)), true);
+			p.readFromServer(playerData.get(Integer.valueOf(p.playerID)));
 			new LMPlayerEvent.DataLoaded(p).post();
 		}
 	}

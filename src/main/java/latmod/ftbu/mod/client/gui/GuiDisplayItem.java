@@ -7,7 +7,6 @@ import latmod.ftbu.mod.FTBU;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.*;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.*;
@@ -21,9 +20,9 @@ public class GuiDisplayItem extends GuiLM
 	
 	public final ItemDisplay itemDisplay;
 	
-	public GuiDisplayItem(EntityPlayer ep, ItemDisplay i)
+	public GuiDisplayItem(ItemDisplay i)
 	{
-		super(new ContainerEmpty(ep, null), texture);
+		super(new ContainerEmpty.ClientGui(), texture);
 		xSize = 144;
 		ySize = 182;
 		itemDisplay = i;

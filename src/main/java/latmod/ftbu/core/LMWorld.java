@@ -2,15 +2,14 @@ package latmod.ftbu.core;
 
 import java.util.UUID;
 
-import latmod.ftbu.core.util.FastList;
-import net.minecraft.entity.player.EntityPlayerMP;
+import latmod.ftbu.core.util.*;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class LMWorld
 {
 	private static UUID worldID;
 	private static String worldIDS;
-	public static final FastList<Warp> warps = new FastList<Warp>();
+	public static final FastMap<String, EntityPos> warps = new FastMap<String, EntityPos>();
 	
 	public static void load(NBTTagCompound tag)
 	{
@@ -42,8 +41,8 @@ public class LMWorld
 		tag.setString("UUID", getIDS());
 		
 		NBTTagCompound tagWarps = new NBTTagCompound();
-		for(Warp w : warps)
-			tagWarps.setIntArray(w.name, new int[] { w.x, w.y, w.z, w.dim });
+		for(int i = 0; i < warps.size(); i++)
+			tagWarps.setIntArray(warps.keys.get(i), warps.values.get(i).toIntArray());
 		tag.setTag("Warps", tagWarps);
 	}
 	
@@ -64,42 +63,14 @@ public class LMWorld
 	// Warps //
 	
 	public static String[] listWarps()
-	{
-		String[] s = new String[warps.size()];
-		for(int i = 0; i < s.length; i++)
-			s[i] = warps.get(i).name;
-		return s;
-	}
+	{ return warps.keys.toArray(new String[0]); }
 	
-	public static LMWorld.Warp getWarp(String s)
-	{ return warps.getObj(s); }
+	public static EntityPos getWarp(String s)
+	{ return warps.get(s); }
 	
 	public static boolean setWarp(String s, int x, int y, int z, int dim)
-	{
-		int i = warps.indexOf(s);
-		if(i == -1) { warps.add(new LMWorld.Warp(s, x, y, z, dim)); return true; }
-		else { warps.set(i, new LMWorld.Warp(s, x, y, z, dim)); return false; }
-	}
+	{ return warps.put(s, new EntityPos(x + 0.5D, y + 0.5D, z + 0.5D, dim)); }
 	
 	public static boolean remWarp(String s)
 	{ return warps.remove(s); }
-	
-	public static class Warp
-	{
-		public String name;
-		public int x, y, z;
-		public int dim;
-		
-		public Warp(String s, int px, int py, int pz, int d)
-		{ name = s; x = px; y = py; z = pz; dim = d; }
-		
-		public String toString()
-		{ return name; }
-		
-		public boolean equals(Object o)
-		{ return o != null && (o == this || o.toString().equals(toString())); }
-		
-		public void teleportPlayer(EntityPlayerMP ep)
-		{ Teleporter.travelEntity(ep, x + 0.5D, y + 0.5D, z + 0.5D, dim); }
-	}
 }

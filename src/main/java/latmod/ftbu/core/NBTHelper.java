@@ -65,7 +65,7 @@ public class NBTHelper // NBTBase
 	public static NBTTagCompound readMap(InputStream is) throws Exception
 	{
 		byte[] b = new byte[is.available()]; is.read(b); is.close();
-		return CompressedStreamTools.func_152457_a(b, new NBTSizeTracker(Long.MAX_VALUE));
+		return CompressedStreamTools.func_152457_a(b, NBTSizeTracker.field_152451_a);
 	}
 	
 	public static NBTTagCompound readMap(File f)

@@ -17,7 +17,7 @@ public class MessageLMWorldUpdate extends MessageLM<MessageLMWorldUpdate>
 		worldID = LMWorld.getID();
 		
 		players = new NBTTagCompound();
-		LMDataLoader.writeNetPlayersToNBT(players);
+		LMDataLoader.writePlayersToNet(players);
 	}
 	
 	public void fromBytes(ByteBuf bb)
@@ -36,7 +36,7 @@ public class MessageLMWorldUpdate extends MessageLM<MessageLMWorldUpdate>
 	public IMessage onMessage(MessageLMWorldUpdate m, MessageContext ctx)
 	{
 		LMWorld.setID(m.worldID);
-		LMDataLoader.readNetPlayersFromNBT(m.players);
+		LMDataLoader.readPlayersFromNet(m.players);
 		return null;
 	}
 }

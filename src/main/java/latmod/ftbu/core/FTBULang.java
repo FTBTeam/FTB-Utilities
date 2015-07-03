@@ -20,6 +20,7 @@ public class FTBULang
 	public static String button_remove;
 	public static String button_close;
 	public static String button_save;
+	public static String button_refresh;
 	
 	// Friends //
 	
@@ -42,6 +43,7 @@ public class FTBULang
 		button_remove = get("button.remove");
 		button_close = get("button.close");
 		button_save = get("button.save");
+		button_refresh = get("button.refresh");
 		
 		button_add_friend = get("button.addFriend");
 		button_rem_friend = get("button.remFriend");

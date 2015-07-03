@@ -14,7 +14,7 @@ public class FTBUReadmeEvent extends EventLM
 	
 	public static class ReadmeFile
 	{
-		private final FastMap<String, Category> map = new FastMap<String, Category>();
+		public final FastMap<String, Category> map = new FastMap<String, Category>();
 		
 		public Category get(String s)
 		{

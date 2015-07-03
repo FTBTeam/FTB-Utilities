@@ -64,9 +64,12 @@ public class FTBUEventHandler
 				InvUtils.giveItem(ep, is);
 		}
 		
-		p.sendInfo(null);
+		/*p.sendInfo(null);
 		for(LMPlayer p1 : LMPlayer.map.values)
 			p1.sendInfo(ep);
+		*/
+		
+		p.sendInfo(ep);
 		
 		CmdMotd.printMotd(ep);
 	}
@@ -115,7 +118,7 @@ public class FTBUEventHandler
 				if(tag != null && tag.hasKey("Players"))
 				{
 					LMDataLoader.lastPlayerID = tag.getInteger("LastID");
-					LMDataLoader.readSavePlayersFromNBT(tag.getCompoundTag("Players"));
+					LMDataLoader.readPlayersFromServer(tag.getCompoundTag("Players"));
 				}
 			}
 			
@@ -145,7 +148,7 @@ public class FTBUEventHandler
 			{
 				NBTTagCompound tag = new NBTTagCompound();
 				NBTTagCompound players = new NBTTagCompound();
-				LMDataLoader.writeSavePlayersToNBT(players);
+				LMDataLoader.writePlayersToServer(players);
 				tag.setTag("Players", players);
 				tag.setInteger("LastID", LMDataLoader.lastPlayerID);
 				NBTHelper.writeMap(e1.getFile("LMPlayers.dat"), tag);
@@ -226,6 +229,10 @@ public class FTBUEventHandler
 		{
 			LMPlayer p = LMPlayer.getPlayer(e.entity);
 			p.deaths++;
+			
+			if(p.lastDeath == null) p.lastDeath = new EntityPos(e.entity);
+			else p.lastDeath.set(e.entity);
+			
 			MessageLM.NET.sendToAll(new MessageLMPlayerDied(p));
 		}
 	}

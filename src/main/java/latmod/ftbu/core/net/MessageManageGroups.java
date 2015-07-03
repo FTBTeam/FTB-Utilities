@@ -52,9 +52,9 @@ public class MessageManageGroups extends MessageLM<MessageManageGroups>
 			
 			if(m.code == C_ADD_FRIEND)
 			{
-				if(!owner.friends.contains(p))
+				if(!owner.friends.contains(p.playerID))
 				{
-					owner.friends.add(p);
+					owner.friends.add(p.playerID);
 					owner.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
 					p.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
 					LatCoreMC.notifyPlayer(ep, new Notification(GREEN + "Added friend", p.getName(), null, 800));
@@ -62,9 +62,9 @@ public class MessageManageGroups extends MessageLM<MessageManageGroups>
 			}
 			else if(m.code == C_REM_FRIEND)
 			{
-				if(owner.friends.contains(p))
+				if(owner.friends.contains(p.playerID))
 				{
-					owner.friends.remove(p);
+					owner.friends.removeValue(p.playerID);
 					owner.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
 					p.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
 					LatCoreMC.notifyPlayer(ep, new Notification(RED + "Removed friend", p.getName(), null, 800));

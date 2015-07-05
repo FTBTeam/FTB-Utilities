@@ -4,6 +4,7 @@ import static net.minecraft.util.EnumChatFormatting.LIGHT_PURPLE;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.LatCore;
+import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.claims.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
@@ -25,7 +26,7 @@ public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
 		if(e.entity instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP ep = (EntityPlayerMP)e.entity;
-			LMPlayer p = LMPlayer.getPlayer(ep);
+			LMPlayerServer p = LMWorld.server.getPlayer(ep);
 			if(p == null) return;
 			
 			if(p.lastPos == null) p.lastPos = new EntityPos(ep);

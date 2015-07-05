@@ -55,9 +55,10 @@ public class FTBURenderHandler
 	@SubscribeEvent
 	public void renderTick(TickEvent.RenderTickEvent event)
 	{
-		Minecraft mc = Minecraft.getMinecraft();
+		mc = Minecraft.getMinecraft();
+		if(mc.theWorld == null) return;
 		
-		if(mc.theWorld != null && event.phase == TickEvent.Phase.END)
+		if(event.phase == TickEvent.Phase.END)
 		{
 			if(!messages.isEmpty())
 			{
@@ -71,8 +72,7 @@ public class FTBURenderHandler
 	@SubscribeEvent
 	public void renderWorld(RenderWorldLastEvent e)
 	{
-		mc = LatCoreMCClient.getMinecraft();
-		if(mc.thePlayer == null || mc.theWorld == null) return;
+		if(mc == null || mc.thePlayer == null || mc.theWorld == null) return;
 		
 		isFPS = mc.gameSettings.thirdPersonView == 0;
 		
@@ -92,7 +92,7 @@ public class FTBURenderHandler
 	
 	private void renderWaypoints()
 	{
-		if(!Waypoints.enabled.getB() || Minecraft.getMinecraft().theWorld == null || !Waypoints.hasWaypoints()) return;
+		if(!Waypoints.enabled.getB() || mc == null || mc.theWorld == null || !Waypoints.hasWaypoints()) return;
 		FastList<Waypoint> list = Waypoints.getAll();
 		
 		visibleBeacons.clear();

@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.cmd.all;
 
-import latmod.ftbu.core.LMPlayer;
 import latmod.ftbu.core.cmd.*;
+import latmod.ftbu.core.world.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.event.*;
 import net.minecraft.util.*;
@@ -16,7 +16,7 @@ public class CmdFTBUUUID extends SubCommand
 	
 	public String onCommand(ICommandSender ics, String[] args)
 	{
-		LMPlayer p = LMPlayer.getPlayer(args.length > 0 ? args[0] : ics);
+		LMPlayer p = LMWorld.server.getPlayer(args.length > 0 ? args[0] : ics);
 		IChatComponent toPrint = new ChatComponentText("UUID for " + p.getName() + ": ");
 		IChatComponent uuid = new ChatComponentText(p.uuidString);
 		uuid.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Copy to chat")));

@@ -30,6 +30,10 @@ config.value.enabled=Enabled
 config.value.disabled=Disabled
 config.value.true=True
 config.value.false=False
+config.value.left=Left
+config.value.right=Right
+config.value.top=Top
+config.value.bottom=Bottom
 config.property.enabled=Enabled
 
 config.group.ftbu=FTBUtilities
@@ -47,6 +51,11 @@ config.property.render_distance=Render Distance
 config.property.death_point=Death Point
 config.value.marker=Marker
 config.value.beacon=Beacon
+
+config.group.minimap=Minimap
+config.property.render_ingame=Render Ingame
+config.property.render_players=Players
+config.property.render_waypoints=Waypoints
 
 #Misc
 ftbu:owner=Owner: %s

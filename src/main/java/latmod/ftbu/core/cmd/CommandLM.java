@@ -2,8 +2,9 @@ package latmod.ftbu.core.cmd;
 
 import java.util.*;
 
-import latmod.ftbu.core.*;
+import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.util.*;
+import latmod.ftbu.core.world.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
@@ -105,9 +106,9 @@ public abstract class CommandLM extends CommandBase
 		throw new PlayerNotFoundException();
 	}
 	
-	public static LMPlayer getLMPlayer(Object o)
+	public static LMPlayerServer getLMPlayer(Object o)
 	{
-		LMPlayer p = LMPlayer.getPlayer(o);
+		LMPlayerServer p = LMWorld.server.getPlayer(o);
 		if(p == null) throw new PlayerNotFoundException();
 		return p;
 	}

@@ -2,6 +2,7 @@ package latmod.ftbu.mod.cmd;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.cmd.*;
+import latmod.ftbu.core.world.LMPlayerServer;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -18,7 +19,7 @@ public class CmdTplast extends CommandLM
 		checkArgs(args, 1);
 		
 		EntityPlayerMP who;
-		LMPlayer to;
+		LMPlayerServer to;
 		
 		if(args.length == 1)
 		{

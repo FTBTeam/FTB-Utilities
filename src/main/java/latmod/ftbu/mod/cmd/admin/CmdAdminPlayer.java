@@ -5,6 +5,7 @@ import java.io.*;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.cmd.*;
 import latmod.ftbu.core.util.LatCore;
+import latmod.ftbu.core.world.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
@@ -23,7 +24,7 @@ public class CmdAdminPlayer extends SubCommand
 		
 		if(args[0].equals("@a"))
 		{
-			String[] s = LMPlayer.getAllNames(NameType.ON);
+			String[] s = LMWorld.server.getAllNames(NameType.ON);
 			
 			for(int i = 0; i < s.length; i++)
 			{
@@ -40,11 +41,11 @@ public class CmdAdminPlayer extends SubCommand
 			int playerID = CommandLM.parseInt(ics, args[0]);
 			LMPlayer p = CommandLM.getLMPlayer(playerID);
 			if(p.isOnline()) return mustBeOffline;
-			LMPlayer.map.remove(playerID);
+			LMWorld.server.players.remove(playerID);
 			return CommandLM.FINE + "Player removed!";
 		}
 		
-		LMPlayer p = CommandLM.getLMPlayer(args[0]);
+		LMPlayerServer p = CommandLM.getLMPlayer(args[0]);
 		
 		if(args[1].equals("saveinv"))
 		{

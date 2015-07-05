@@ -1,7 +1,8 @@
 package latmod.ftbu.mod.cmd.all;
 
-import latmod.ftbu.core.*;
+import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.cmd.*;
+import latmod.ftbu.core.world.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -23,7 +24,7 @@ public class CmdFTBUFriends extends SubCommand
 	{
 		CommandLM.checkArgs(args, 1);
 		
-		LMPlayer owner = CommandLM.getLMPlayer(ics);
+		LMPlayerServer owner = CommandLM.getLMPlayer(ics);
 		
 		if(args[0].equals("list"))
 		{
@@ -33,7 +34,7 @@ public class CmdFTBUFriends extends SubCommand
 			
 			for(int i = 0; i < owner.friends.size(); i++)
 			{
-				LMPlayer p = LMPlayer.getPlayer(owner.friends.get(i));
+				LMPlayer p = LMWorld.server.getPlayer(owner.friends.get(i));
 				EnumChatFormatting col = EnumChatFormatting.GREEN;
 				if(p.isFriendRaw(owner) && !owner.isFriendRaw(p)) col = EnumChatFormatting.GOLD;
 				if(!p.isFriendRaw(owner) && owner.isFriendRaw(p)) col = EnumChatFormatting.BLUE;
@@ -46,7 +47,7 @@ public class CmdFTBUFriends extends SubCommand
 		{
 			CommandLM.checkArgs(args, 2);
 			
-			LMPlayer p = CommandLM.getLMPlayer(args[1]);
+			LMPlayerServer p = CommandLM.getLMPlayer(args[1]);
 			
 			if(p.equalsPlayer(owner)) return "Invalid player!";
 			
@@ -75,7 +76,7 @@ public class CmdFTBUFriends extends SubCommand
 		return null;
 	}
 	
-	private static String changed(LMPlayer o, LMPlayer p, String s)
+	private static String changed(LMPlayerServer o, LMPlayerServer p, String s)
 	{
 		o.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
 		if(p != null) p.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);

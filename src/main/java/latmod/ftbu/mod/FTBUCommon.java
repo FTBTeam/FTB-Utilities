@@ -5,6 +5,7 @@ import java.util.UUID;
 import latmod.ftbu.core.LMProxy;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.TileLM;
+import latmod.ftbu.core.world.LMWorld;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
@@ -25,6 +26,9 @@ public class FTBUCommon extends LMProxy // FTBUClient
 	{ return null; }
 	
 	public World getClientWorld()
+	{ return null; }
+	
+	public LMWorld getClientWorldLM()
 	{ return null; }
 	
 	public double getReachDist(EntityPlayer ep)

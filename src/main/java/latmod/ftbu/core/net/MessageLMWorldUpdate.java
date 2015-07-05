@@ -3,21 +3,25 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.UUID;
 
-import latmod.ftbu.core.*;
+import latmod.ftbu.core.world.*;
+import latmod.ftbu.mod.FTBU;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.simpleimpl.*;
+import cpw.mods.fml.relauncher.*;
 
-public class MessageLMWorldUpdate extends MessageLM<MessageLMWorldUpdate>
+public class MessageLMWorldUpdate extends MessageLM<MessageLMWorldUpdate> implements IClientMessageLM<MessageLMWorldUpdate>
 {
 	public UUID worldID;
 	public NBTTagCompound players;
 	
-	public MessageLMWorldUpdate()
+	public MessageLMWorldUpdate() { }
+	
+	public MessageLMWorldUpdate(UUID id)
 	{
-		worldID = LMWorld.getID();
+		worldID = id;
 		
 		players = new NBTTagCompound();
-		LMDataLoader.writePlayersToNet(players);
+		LMWorld.server.writePlayersToNet(players);
 	}
 	
 	public void fromBytes(ByteBuf bb)
@@ -34,9 +38,12 @@ public class MessageLMWorldUpdate extends MessageLM<MessageLMWorldUpdate>
 	}
 	
 	public IMessage onMessage(MessageLMWorldUpdate m, MessageContext ctx)
+	{ FTBU.proxy.handleClientMessage(m, ctx); return null; }
+	
+	@SideOnly(Side.CLIENT)
+	public void onMessageClient(MessageLMWorldUpdate m, MessageContext ctx)
 	{
-		LMWorld.setID(m.worldID);
-		LMDataLoader.readPlayersFromNet(m.players);
-		return null;
+		LMWorld.client = new LMWorldClient(m.worldID);
+		LMWorld.client.readPlayersFromNet(m.players);
 	}
 }

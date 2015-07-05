@@ -1,6 +1,6 @@
 package latmod.ftbu.core.net;
 import io.netty.buffer.ByteBuf;
-import latmod.ftbu.core.LMPlayer;
+import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.simpleimpl.*;
@@ -37,7 +37,7 @@ public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo> implemen
 	@SideOnly(Side.CLIENT)
 	public void onMessageClient(MessageLMPlayerInfo m, MessageContext ctx)
 	{
-		LMPlayer p = LMPlayer.getPlayer(m.playerID);
+		LMPlayerClient p = LMWorld.client.getPlayer(m.playerID);
 		if(p != null) p.receiveInfo(m.info);
 	}
 }

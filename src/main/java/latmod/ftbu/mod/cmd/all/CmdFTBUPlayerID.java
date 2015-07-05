@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.cmd.all;
 
-import latmod.ftbu.core.LMPlayer;
 import latmod.ftbu.core.cmd.*;
+import latmod.ftbu.core.world.*;
 import net.minecraft.command.ICommandSender;
 
 public class CmdFTBUPlayerID extends SubCommand
@@ -14,7 +14,7 @@ public class CmdFTBUPlayerID extends SubCommand
 	
 	public String onCommand(ICommandSender ics, String[] args)
 	{
-		LMPlayer p = LMPlayer.getPlayer(args.length > 0 ? args[0] : ics);
+		LMPlayer p = LMWorld.server.getPlayer(args.length > 0 ? args[0] : ics);
 		return CommandLM.FINE + "PlayerID for " + p.getName() + ": " + p.playerID;
 	}
 }

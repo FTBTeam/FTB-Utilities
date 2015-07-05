@@ -2,9 +2,10 @@ package latmod.ftbu.mod.client.minimap;
 
 import java.io.File;
 
-import latmod.ftbu.core.*;
+import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.client.ClientConfig;
 import latmod.ftbu.core.util.*;
+import latmod.ftbu.core.world.LMWorld;
 
 public class Waypoints
 {
@@ -57,7 +58,7 @@ public class Waypoints
 		try
 		{
 			waypoints.clear();
-			waypointsFile = LatCore.newFile(new File(LatCoreMC.latmodFolder, "client/waypoints/" + LMWorld.getIDS() + ".txt"));
+			waypointsFile = LatCore.newFile(new File(LatCoreMC.latmodFolder, "client/" + LMWorld.client.worldIDS + "/waypoints.txt"));
 			FastList<String> f = LatCore.loadFile(waypointsFile);
 			
 			for(String s : f)

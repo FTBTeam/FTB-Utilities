@@ -4,22 +4,23 @@ import java.io.*;
 
 import latmod.ftbu.core.util.*;
 import net.minecraft.nbt.*;
+import net.minecraftforge.common.util.Constants;
 
 @SuppressWarnings("all")
 public class NBTHelper // NBTBase
 {
-	public static final int END = 0;
-	public static final int BYTE = 1;
-	public static final int SHORT = 2;
-	public static final int INT = 3;
-	public static final int LONG = 4;
-	public static final int FLOAT = 5;
-	public static final int DOUBLE = 6;
-	public static final int BYTE_ARRAY = 7;
-	public static final int STRING = 8;
-	public static final int LIST = 9;
-	public static final int MAP = 10;
-	public static final int INT_ARRAY = 11;
+	public static final int END = Constants.NBT.TAG_END;
+	public static final int BYTE = Constants.NBT.TAG_BYTE;
+	public static final int SHORT = Constants.NBT.TAG_SHORT;
+	public static final int INT = Constants.NBT.TAG_INT;
+	public static final int LONG = Constants.NBT.TAG_LONG;
+	public static final int FLOAT = Constants.NBT.TAG_FLOAT;
+	public static final int DOUBLE = Constants.NBT.TAG_DOUBLE;
+	public static final int BYTE_ARRAY = Constants.NBT.TAG_BYTE_ARRAY;
+	public static final int STRING = Constants.NBT.TAG_STRING;
+	public static final int LIST = Constants.NBT.TAG_LIST;
+	public static final int MAP = Constants.NBT.TAG_COMPOUND;
+	public static final int INT_ARRAY = Constants.NBT.TAG_INT_ARRAY;
 	
 	public static FastList<String> getMapKeys(NBTTagCompound tag)
 	{

@@ -1,6 +1,6 @@
 package latmod.ftbu.core.net;
 import io.netty.buffer.ByteBuf;
-import latmod.ftbu.core.LMPlayer;
+import latmod.ftbu.core.world.*;
 import cpw.mods.fml.common.network.simpleimpl.*;
 
 public class MessageLMPlayerRequestInfo extends MessageLM<MessageLMPlayerRequestInfo>
@@ -26,8 +26,7 @@ public class MessageLMPlayerRequestInfo extends MessageLM<MessageLMPlayerRequest
 	
 	public IMessage onMessage(MessageLMPlayerRequestInfo m, MessageContext ctx)
 	{
-		LMPlayer p = LMPlayer.getPlayer(m.playerID);
-		if(p != null) p.sendInfo(ctx.getServerHandler().playerEntity);
-		return null;
+		LMPlayerServer p = LMWorld.server.getPlayer(m.playerID);
+		return (p == null) ? null : p.getInfo(ctx.getServerHandler().playerEntity);
 	}
 }

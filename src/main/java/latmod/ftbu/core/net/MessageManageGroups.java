@@ -2,6 +2,7 @@ package latmod.ftbu.core.net;
 import static net.minecraft.util.EnumChatFormatting.*;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.*;
+import latmod.ftbu.core.world.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import cpw.mods.fml.common.network.simpleimpl.*;
 
@@ -39,7 +40,7 @@ public class MessageManageGroups extends MessageLM<MessageManageGroups>
 	
 	public IMessage onMessage(MessageManageGroups m, MessageContext ctx)
 	{
-		LMPlayer owner = LMPlayer.getPlayer(m.playerID);
+		LMPlayerServer owner = LMWorld.server.getPlayer(m.playerID);
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
 		//EntityPlayerMP ep = owner.getPlayerMP();
 		
@@ -47,7 +48,7 @@ public class MessageManageGroups extends MessageLM<MessageManageGroups>
 		
 		if(m.code > 0)
 		{
-			LMPlayer p = LMPlayer.getPlayer(m.user);
+			LMPlayerServer p = LMWorld.server.getPlayer(m.user);
 			if(p == null || p.equalsPlayer(owner)) return null;
 			
 			if(m.code == C_ADD_FRIEND)

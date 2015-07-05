@@ -7,8 +7,8 @@ import latmod.ftbu.core.client.badges.ThreadLoadBadges;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.TileLM;
 import latmod.ftbu.core.util.LatCore;
+import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBUCommon;
-import latmod.ftbu.mod.claims.Claims;
 import latmod.ftbu.mod.client.minimap.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -52,7 +52,7 @@ public class FTBUClient extends FTBUCommon
 		ClientConfig.Registry.add(clientConfig);
 		
 		Waypoints.init();
-		Claims.Client.init();
+		Minimap.init();
 	}
 	
 	public void postInit(FMLPostInitializationEvent e)
@@ -74,6 +74,9 @@ public class FTBUClient extends FTBUCommon
 	
 	public World getClientWorld()
 	{ return FMLClientHandler.instance().getWorldClient(); }
+	
+	public LMWorld getClientWorldLM()
+	{ return LMWorld.client; }
 	
 	public double getReachDist(EntityPlayer ep)
 	{ return Minecraft.getMinecraft().playerController.getBlockReachDistance(); }

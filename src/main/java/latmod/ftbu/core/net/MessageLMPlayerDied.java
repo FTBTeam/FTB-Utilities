@@ -3,9 +3,10 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.Calendar;
 
-import latmod.ftbu.core.*;
+import latmod.ftbu.core.ParticleHelper;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.util.LatCore;
+import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.minimap.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,15 +35,12 @@ public class MessageLMPlayerDied extends MessageLM<MessageLMPlayerDied> implemen
 	}
 	
 	public IMessage onMessage(MessageLMPlayerDied m, MessageContext ctx)
-	{
-		FTBU.proxy.handleClientMessage(m, ctx);
-		return null;
-	}
+	{ FTBU.proxy.handleClientMessage(m, ctx); return null; }
 	
 	@SideOnly(Side.CLIENT)
 	public void onMessageClient(MessageLMPlayerDied m, MessageContext ctx)
 	{
-		if(m.playerID == LMPlayer.currentClientPlayerID && Waypoints.enabled.getB() && Waypoints.deathPoint.getB())
+		if(m.playerID == LMWorld.client.clientPlayerID && Waypoints.enabled.getB() && Waypoints.deathPoint.getB())
 		{
 			EntityPlayer ep = LatCoreMCClient.getMinecraft().thePlayer;
 			Calendar c = Calendar.getInstance();

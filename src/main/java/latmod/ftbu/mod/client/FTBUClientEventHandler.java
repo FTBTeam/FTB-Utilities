@@ -6,6 +6,7 @@ import latmod.ftbu.core.event.ReloadEvent;
 import latmod.ftbu.core.gui.GuiLM;
 import latmod.ftbu.core.tile.IPaintable;
 import latmod.ftbu.core.util.*;
+import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.claims.ChunkType;
 import latmod.ftbu.mod.client.gui.GuiClientConfig;
@@ -99,7 +100,7 @@ public class FTBUClientEventHandler
 				e.right.add(mc.debug);
 		}
 		
-		LMPlayer p = LMPlayer.getPlayer(LMPlayer.currentClientPlayerID);
+		LMPlayer p = LMWorld.client.getClientPlayer();
 		if(p != null) ChunkType.getMessage(mc.theWorld.provider.dimensionId, MathHelperLM.chunk(mc.thePlayer.posX), MathHelperLM.chunk(mc.thePlayer.posZ), p, e.right, shift);
 		
 		if(FTBUClient.displayDebugInfo.getB())
@@ -175,6 +176,7 @@ public class FTBUClientEventHandler
 			if(creativeContainer != null && creativeContainer.func_147056_g() != CreativeTabs.tabInventory.getTabIndex())
 				return;
 			
+			GL11.glColor4f(1F, 1F, 1F, 1F);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			mc.getTextureManager().bindTexture(friendsButtonTexture);

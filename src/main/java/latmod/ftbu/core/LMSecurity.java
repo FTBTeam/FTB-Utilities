@@ -2,6 +2,7 @@ package latmod.ftbu.core;
 
 import java.util.UUID;
 
+import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,10 +23,10 @@ public class LMSecurity
 	{ return ownerID; }
 	
 	public LMPlayer getOwner()
-	{ return LMPlayer.getPlayer(ownerID); }
+	{ return (ownerID == 0) ? null : LMWorld.getWorld().getPlayer(ownerID); }
 	
 	public void setOwner(Object o)
-	{ ownerID = LMPlayer.getPlayerID(o); }
+	{ ownerID = (o == null) ? 0 : LMWorld.getWorld().getPlayerID(o); }
 	
 	public void readFromNBT(NBTTagCompound tag, String s)
 	{
@@ -41,7 +42,7 @@ public class LMSecurity
 			String o = tag1.getString("Owner");
 			
 			if(o != null && !o.isEmpty())
-				ownerID = LMPlayer.getPlayerID(o);
+				ownerID = LMWorld.getWorld().getPlayerID(o);
 		}
 		else
 		{
@@ -66,7 +67,7 @@ public class LMSecurity
 	{ return ownerID > 0; }
 	
 	public boolean isOwner(Object o)
-	{ return hasOwner() && getOwnerID() == LMPlayer.getPlayerID(o); }
+	{ return hasOwner() && getOwnerID() == LMWorld.getWorld().getPlayerID(o); }
 	
 	public boolean canInteract(UUID id)
 	{
@@ -76,7 +77,7 @@ public class LMSecurity
 		if(level == Level.PRIVATE) return false;
 		
 		LMPlayer owner = getOwner();
-		if(level == Level.FRIENDS && owner != null && owner.isFriend(LMPlayer.getPlayer(id)))
+		if(level == Level.FRIENDS && owner != null && owner.isFriend(LMWorld.getWorld().getPlayer(id)))
 			return true;
 		
 		return false;

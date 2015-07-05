@@ -43,11 +43,9 @@ public class GuiNotification extends Gui
 			GL11.glLoadIdentity();
 			GL11.glMatrixMode(GL11.GL_MODELVIEW);
 			GL11.glLoadIdentity();
-			int displayW = mc.displayWidth;
-			int displayH = mc.displayHeight;
 			ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-			displayW = sr.getScaledWidth();
-			displayH = sr.getScaledHeight();
+			int displayW = sr.getScaledWidth();
+			int displayH = sr.getScaledHeight();
 			GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 			GL11.glMatrixMode(GL11.GL_PROJECTION);
 			GL11.glLoadIdentity();

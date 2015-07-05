@@ -1,5 +1,6 @@
 package latmod.ftbu.mod.client.minimap;
 
+import latmod.ftbu.core.client.ClientConfig;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.claims.ChunkType;
 import latmod.ftbu.mod.client.gui.GuiMinimap;
@@ -10,6 +11,22 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class Minimap
 {
+	public static final ClientConfig config = new ClientConfig("minimap");
+	public static final ClientConfig.Property renderIngame = new ClientConfig.Property("render_ingame", 0, new String[] { "disabled", "right", "left" });
+	public static final ClientConfig.Property renderPlayers = new ClientConfig.Property("render_players", true);
+	public static final ClientConfig.Property renderWaypoints = new ClientConfig.Property("render_waypoints", true);
+	
+	public static void init()
+	{
+		config.add(renderIngame);
+		config.add(renderPlayers);
+		config.add(renderWaypoints);
+		ClientConfig.Registry.add(config);
+		get(0);
+	}
+	
+	//
+	
 	public final int dim;
 	public final FastMap<Pos2D, MArea> areas;
 	
@@ -30,7 +47,14 @@ public class Minimap
 	}
 	
 	public void setChunkPixels(int cx, int cz, int[] col)
-	{ loadChunk(cx, cz).setPixels(col); }
+	{
+		if(col.length != 16 * 16) return;
+		boolean hasColor = false;
+		for(int i = 0; i < col.length; i++)
+			if(col[i] != 0) hasColor = true;
+		
+		if(hasColor) loadChunk(cx, cz).setPixels(col);
+	}
 	
 	public MChunk getChunk(int cx, int cz)
 	{
@@ -44,7 +68,7 @@ public class Minimap
 	{
 		Pos2D apos = MArea.getPos(cx, cz);
 		MArea a = areas.get(apos);
-		if(a == null) areas.put(apos, a = new MArea(apos));
+		if(a == null) areas.put(apos, a = new MArea(dim, apos));
 		Pos2D cpos = new Pos2D(cx, cz);
 		MChunk c = a.chunks.get(cpos);
 		if(c == null) a.chunks.put(cpos, c = new MChunk(cpos));

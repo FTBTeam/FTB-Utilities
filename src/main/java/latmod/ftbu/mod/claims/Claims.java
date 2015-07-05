@@ -1,21 +1,20 @@
 package latmod.ftbu.mod.claims;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.client.ClientConfig;
 import latmod.ftbu.core.util.*;
+import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBUConfig;
 import net.minecraft.nbt.*;
 import net.minecraft.util.ChunkCoordinates;
-import cpw.mods.fml.relauncher.*;
 
 public class Claims
 {
-	public final LMPlayer owner;
-	public final FastList<ClaimedChunk> chunks;
+	public final LMPlayerServer owner;
+	private final FastList<ClaimedChunk> chunks;
 	public String desc;
-	public boolean safe;
+	private boolean safe;
 	
-	public Claims(LMPlayer p)
+	public Claims(LMPlayerServer p)
 	{
 		owner = p;
 		chunks = new FastList<ClaimedChunk>();
@@ -28,15 +27,13 @@ public class Claims
 		chunks.clear();
 		
 		NBTTagCompound tag = serverData.getCompoundTag("Claims");
-		NBTTagList list = (NBTTagList)tag.getTag("Chunks");
+		NBTTagList list = tag.getTagList("Chunks", NBTHelper.INT_ARRAY);
 		
 		if(list != null) for(int i = 0; i < list.tagCount(); i++)
 		{
 			int[] ai = list.func_150306_c(i);
 			chunks.add(new ClaimedChunk(this, ai[0], ai[1], ai[2]));
 		}
-		
-		LatCoreMC.logger.info("Loaded claims: " + chunks);
 		
 		desc = tag.getString("Desc");
 		safe = tag.getBoolean("Safe");
@@ -52,22 +49,16 @@ public class Claims
 			ClaimedChunk c = chunks.get(i);
 			list.appendTag(new NBTTagIntArray(new int[] { c.dim, c.posX, c.posZ }));
 		}
-		if(list.tagCount() > 0)
-			tag.setTag("Chunks", list);
 		
-		LatCoreMC.logger.info("Saved claims: " + list);
+		tag.setTag("Chunks", list);
+		tag.setString("Desc", desc);
+		tag.setBoolean("Safe", safe);
 		
-		if(!desc.isEmpty()) tag.setString("Desc", desc);
-		if(safe) tag.setBoolean("Safe", safe);
-		
-		if(!tag.hasNoTags())
-			serverData.setTag("Claims", tag);
+		serverData.setTag("Claims", tag);
 	}
 	
 	public boolean isSafe()
-	{
-		return safe;
-	}
+	{ return safe; }
 	
 	public ClaimedChunk getLocal(int dim, int cx, int cz)
 	{
@@ -110,28 +101,11 @@ public class Claims
 	
 	// Static //
 	
-	@SideOnly(Side.CLIENT)
-	public static class Client
-	{
-		public static final ClientConfig config = new ClientConfig("claims");
-		public static final ClientConfig.Property displayChunk = new ClientConfig.Property("display_chunk", true);
-		
-		public static void init()
-		{
-			config.add(displayChunk);
-			ClientConfig.Registry.add(config);
-		}
-	}
-	
-	public static void init()
-	{
-	}
-	
 	public static ClaimedChunk get(int dim, int cx, int cz)
 	{
-		for(int i = 0; i < LMPlayer.map.size(); i++)
+		for(int i = 0; i < LMWorld.server.players.size(); i++)
 		{
-			ClaimedChunk c = LMPlayer.map.values.get(i).claims.getLocal(dim, cx, cz);
+			ClaimedChunk c = LMWorld.server.players.values.get(i).claims.getLocal(dim, cx, cz);
 			if(c != null) return c;
 		}
 		
@@ -151,7 +125,7 @@ public class Claims
 		return cx >= minX && cx <= maxX && cz >= minZ && cz <= maxZ;
 	}
 	
-	public static boolean isInSpawn(int dim, double x, double z)
+	public static boolean isInSpawnD(int dim, double x, double z)
 	{ return dim == 0 && isInSpawn(dim, MathHelperLM.chunk(x), MathHelperLM.chunk(z)); }
 	
 	public static boolean isOutsideWorldBorder(int dim, int cx, int cz)

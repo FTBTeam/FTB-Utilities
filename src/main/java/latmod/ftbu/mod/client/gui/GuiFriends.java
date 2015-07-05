@@ -5,6 +5,7 @@ import latmod.ftbu.core.*;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.FastList;
+import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.minimap.Waypoints;
 import net.minecraft.client.Minecraft;
@@ -31,7 +32,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		new TextureCoords(texPlayers, 18 * 2, 181, 18, 18),
 	};
 	
-	public final LMPlayer owner;
+	public final LMPlayerClient owner;
 	public final FastList<Player> players;
 	
 	public final TextBoxLM searchBox;
@@ -49,7 +50,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	{
 		super(new ContainerEmpty.ClientGui(), texPlayers);
 		
-		owner = LMPlayer.getPlayer(container.player);
+		owner = LMWorld.client.getPlayer(container.player);
 		players = new FastList<Player>();
 		
 		xSize = 240;
@@ -254,9 +255,9 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		
 		players.clear();
 		
-		for(int i = 0; i < LMPlayer.map.values.size(); i++)
+		for(int i = 0; i < LMWorld.client.players.values.size(); i++)
 		{
-			LMPlayer p = LMPlayer.map.values.get(i);
+			LMPlayerClient p = LMWorld.client.players.values.get(i);
 			if(!p.equalsPlayer(owner)) players.add(new Player(p));
 		}
 		
@@ -299,10 +300,10 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	
 	public class Player implements Comparable<Player>
 	{
-		public final LMPlayer player;
+		public final LMPlayerClient player;
 		public final boolean isOwner;
 		
-		public Player(LMPlayer p)
+		public Player(LMPlayerClient p)
 		{
 			player = p;
 			isOwner = player.equalsPlayer(owner);
@@ -382,7 +383,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		{
 			if(player != null)
 			{
-				LMPlayer p = LMPlayer.getPlayer(player.player.playerID);
+				LMPlayerClient p = LMWorld.client.getPlayer(player.player.playerID);
 				
 				if(p == null) return;
 				
@@ -515,9 +516,9 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	public static class LMClientPlayer extends AbstractClientPlayer
 	{
 		private static final ChunkCoordinates coords000 = new ChunkCoordinates(0, 0, 0);
-		public final LMPlayer playerLM;
+		public final LMPlayerClient playerLM;
 		
-		public LMClientPlayer(LMPlayer p)
+		public LMClientPlayer(LMPlayerClient p)
 		{
 			super(Minecraft.getMinecraft().theWorld, p.gameProfile);
 			playerLM = p;

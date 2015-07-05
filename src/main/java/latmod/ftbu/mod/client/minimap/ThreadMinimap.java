@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.client.minimap;
 
-import latmod.ftbu.core.LMPlayer;
 import latmod.ftbu.core.net.*;
+import latmod.ftbu.core.world.LMPlayer;
 import latmod.ftbu.mod.client.gui.GuiMinimap;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.*;

@@ -6,6 +6,7 @@ import java.util.*;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
 import latmod.ftbu.core.util.*;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -52,10 +53,12 @@ public class FTBUConfig extends LMConfig implements IServerConfig
 	
 	public static class General
 	{
-		public static boolean allowCreativeInteractSecure;
+		private static boolean allowCreativeInteractSecure;
 		public static String commandFTBU;
 		public static String commandAdmin;
 		public static double restartTimer;
+		public static boolean safeSpawn;
+		public static boolean spawnPVP;
 		
 		public static void load(Category c)
 		{
@@ -77,7 +80,16 @@ public class FTBUConfig extends LMConfig implements IServerConfig
 					"24 - 1 Day",
 					"168 - 1 Week",
 					"720 - 1 Month");
+			
+			safeSpawn = c.getBool("safeSpawn", false);
+			c.setComment("safeSpawn", "If set to true, explosions and hostile mobs in spawn area will be disabled");
+			
+			spawnPVP = c.getBool("spawnPVP", true);
+			c.setComment("spawnPVP", "If set to false, players won't be able to attack each other in spawn area");
 		}
+		
+		public static boolean allowInteractSecure(EntityPlayer ep)
+		{ return allowCreativeInteractSecure && ep.capabilities.isCreativeMode; }
 	}
 	
 	public static class Login

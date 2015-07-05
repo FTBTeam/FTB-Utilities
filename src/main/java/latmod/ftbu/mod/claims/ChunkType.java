@@ -2,8 +2,8 @@ package latmod.ftbu.mod.claims;
 
 import java.util.List;
 
-import latmod.ftbu.core.LMPlayer;
 import latmod.ftbu.core.util.MathHelperLM;
+import latmod.ftbu.core.world.LMPlayer;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.WorldServer;

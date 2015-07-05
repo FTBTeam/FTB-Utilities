@@ -4,11 +4,13 @@ import latmod.ftbu.core.util.FastMap;
 
 public class MArea
 {
+	public final int dim;
 	public final Pos2D pos;
 	public final FastMap<Pos2D, MChunk> chunks;
 	
-	public MArea(Pos2D c)
+	public MArea(int d, Pos2D c)
 	{
+		dim = d;
 		pos = c;
 		chunks = new FastMap<Pos2D, MChunk>();
 	}

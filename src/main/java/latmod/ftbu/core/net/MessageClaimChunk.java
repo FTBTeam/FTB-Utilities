@@ -1,7 +1,7 @@
 package latmod.ftbu.core.net;
 
 import io.netty.buffer.ByteBuf;
-import latmod.ftbu.core.LMPlayer;
+import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.claims.ChunkType;
 import net.minecraft.entity.player.EntityPlayerMP;
 import cpw.mods.fml.common.network.simpleimpl.*;
@@ -39,7 +39,7 @@ public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 	public IMessage onMessage(MessageClaimChunk m, MessageContext ctx)
 	{
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
-		LMPlayer p = LMPlayer.getPlayer(ep);
+		LMPlayerServer p = LMWorld.server.getPlayer(ep);
 		if(m.claim % 2 == 0) p.claims.unclaim(m.dim, m.chunkX, m.chunkZ, m.claim > 1);
 		else if(m.claim % 2 == 1) p.claims.claim(m.dim, m.chunkX, m.chunkZ, m.claim > 1);
 		

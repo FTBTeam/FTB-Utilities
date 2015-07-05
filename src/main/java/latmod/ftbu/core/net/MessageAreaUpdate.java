@@ -1,7 +1,7 @@
 package latmod.ftbu.core.net;
 
 import io.netty.buffer.ByteBuf;
-import latmod.ftbu.core.LMPlayer;
+import latmod.ftbu.core.world.LMPlayer;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.claims.ChunkType;
 import latmod.ftbu.mod.client.minimap.Minimap;

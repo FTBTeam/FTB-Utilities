@@ -1,8 +1,8 @@
 package latmod.ftbu.core.net;
 
-import latmod.ftbu.core.LMPlayer;
-import latmod.ftbu.mod.claims.ChunkType;
 import io.netty.buffer.ByteBuf;
+import latmod.ftbu.core.world.*;
+import latmod.ftbu.mod.claims.ChunkType;
 import cpw.mods.fml.common.network.simpleimpl.*;
 
 public class MessageAreaRequest extends MessageLM<MessageAreaRequest>
@@ -41,7 +41,7 @@ public class MessageAreaRequest extends MessageLM<MessageAreaRequest>
 	
 	public IMessage onMessage(MessageAreaRequest m, MessageContext ctx)
 	{
-		LMPlayer p = LMPlayer.getPlayer(m.playerID);
+		LMPlayer p = LMWorld.server.getPlayer(m.playerID);
 		
 		byte[] types = new byte[m.size * m.size];
 		

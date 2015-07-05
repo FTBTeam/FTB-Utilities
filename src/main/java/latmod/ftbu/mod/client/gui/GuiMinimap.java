@@ -1,15 +1,17 @@
 package latmod.ftbu.mod.client.gui;
 
-import latmod.ftbu.core.*;
+import latmod.ftbu.core.FTBULang;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.*;
+import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.claims.ChunkType;
 import latmod.ftbu.mod.client.FTBURenderHandler;
 import latmod.ftbu.mod.client.minimap.*;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.*;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
@@ -21,9 +23,10 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 	public static final ResourceLocation tex = FTBU.mod.getLocation("textures/gui/minimap.png");
 	public static final ResourceLocation tex_area = FTBU.mod.getLocation("textures/gui/minimap_area.png");
 	public static final TextureCoords tex_mouse = new TextureCoords(tex, 156, 0, 32, 32);
-	//public static final TextureCoords tex_pixel = new TextureCoords(tex, 140, 0, 1, 1);
-	
 	public static final TextureCoords[][][][] tex_area_coords = new TextureCoords[2][2][2][2];
+	
+	private static final TextureCoords getAreaCoords(int i)
+	{ return new TextureCoords(tex_area, (i % 4) * 64, (i / 4) * 64, 64, 64); }
 	
 	static
 	{
@@ -45,17 +48,15 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		tex_area_coords[1][1][1][0] = getAreaCoords(15);
 	}
 	
-	private static final TextureCoords getAreaCoords(int i)
-	{ return new TextureCoords(tex_area, (i % 4) * 64, (i / 4) * 64, 64, 64); }
-	
-	public static final byte SIZE_CHUNKS = 9;
+	public static final byte CHUNKS_OFFSET = 4;
+	public static final byte SIZE_CHUNKS = CHUNKS_OFFSET * 2 + 1;
 	public static final int SIZE = SIZE_CHUNKS * 16;
-	private static int GL_ID = -1;
-	public static boolean shouldRedraw;
 	
 	public final LMPlayer owner;
 	public final int startX, startZ;
 	public final int dimension;
+	private static int GL_ID = -1;
+	public static boolean shouldRedraw = true;
 	
 	public final ButtonLM buttonRefresh, buttonClose;
 	public final MapButton mapButton;
@@ -65,14 +66,13 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		super(new ContainerEmpty.ClientGui(), tex);
 		xSize = 156;
 		ySize = 185;
-		shouldRedraw = false;
-		
-		owner = LMPlayer.getPlayer(container.player);
-		startX = MathHelperLM.chunk(mc.thePlayer.posX) - 4;
-		startZ = MathHelperLM.chunk(mc.thePlayer.posZ) - 4;
-		dimension = mc.theWorld.provider.dimensionId;
 		
 		if(GL_ID == -1) GL_ID = GL11.glGenLists(1);
+		
+		owner = LMWorld.client.getClientPlayer();
+		startX = MathHelperLM.chunk(mc.thePlayer.posX) - CHUNKS_OFFSET;
+		startZ = MathHelperLM.chunk(mc.thePlayer.posZ) - CHUNKS_OFFSET;
+		dimension = mc.theWorld.provider.dimensionId;
 		
 		final String loading = "Loading...";
 		
@@ -120,15 +120,21 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		setTexture(tex);
 		
+		int renderX = guiLeft + mapButton.posX;
+		int renderY = guiTop + mapButton.posY;
+		
 		int bx = startX * 16;
 		int bz = startZ * 16;
 		
-		mapButton.renderX = guiLeft + mapButton.posX;
-		mapButton.renderY = guiTop + mapButton.posY;
+		GL11.glEnable(GL11.GL_BLEND);
 		
-		if(shouldRedraw)
+		if(shouldRedraw || (dimension != mc.theWorld.provider.dimensionId))
 		{
 			shouldRedraw = false;
+			
+			if(GL_ID == -1) GL_ID = GL11.glGenLists(1);
+			
+			Tessellator ts = Tessellator.instance;
 			
 			GL11.glNewList(GL_ID, GL11.GL_COMPILE);
 			Minimap m = Minimap.get(dimension);
@@ -136,7 +142,18 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			
 			GL11.glColor4f(0F, 0F, 0F, 1F);
-			GuiLM.drawTexturedRectD(mapButton.renderX, mapButton.renderY, zLevel, SIZE, SIZE, 0D, 0D, 0D, 0D);
+			
+			ts.startDrawingQuads();
+			
+			ts.addTranslation(renderX, renderY, zLevel);
+			ts.setColorRGBA(0, 0, 0, 255);
+			ts.addVertex(0D, SIZE, 0D);
+			ts.addVertex(SIZE, SIZE, 0D);
+			ts.addVertex(SIZE, 0D, 0D);
+			ts.addVertex(0D, 0D, 0D);
+			
+			//GuiLM.drawTexturedRectD(, renderY, zLevel, SIZE, SIZE, 0D, 0D, 0D, 0D);
+			GL11.glColor4f(1F, 1F, 1F, 1F);
 			
 			for(int z = 0; z < SIZE_CHUNKS; z++)
 			for(int x = 0; x < SIZE_CHUNKS; x++)
@@ -146,74 +163,106 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 				{
 					if(pixels[i] != 0)
 					{
-						LatCore.Colors.setGLColor(pixels[i], 255);
-						GuiLM.drawTexturedRectD(mapButton.renderX + x * 16 + (i % 16), mapButton.renderY + z * 16 + (i / 16), zLevel, 1, 1, 0D, 0D, 0D, 0D);
+						//LatCore.Colors.setGLColor(pixels[i], 255);
+						//GuiLM.drawTexturedRectD(renderX + x * 16 + (i % 16), renderY + z * 16 + (i / 16), zLevel, 1, 1, 0D, 0D, 0D, 0D);
+						double rx = x * 16 + (i % 16);
+						double rz = z * 16 + (i / 16);
+						
+						ts.setColorOpaque_I(pixels[i]);
+						ts.addVertex(rx, rz + 1D, 0D);
+						ts.addVertex(rx + 1D, rz + 1D, 0D);
+						ts.addVertex(rx + 1D, rz, 0D);
+						ts.addVertex(rx, rz, 0D);
 					}
 				}
 			}
 			
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			setTexture(tex_area);
+			ts.addTranslation(-renderX, -renderY, -zLevel);
+			ts.draw();
 			
-			for(int z = 0; z < SIZE_CHUNKS; z++) for(int x = 0; x < SIZE_CHUNKS; x++)
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			
 			{
-				ChunkType t = m.getChunkType(startX + x, startZ + z);
+				mc.getTextureManager().bindTexture(tex_area);
 				
-				if(t.drawGrid())
+				for(int z = 0; z < SIZE_CHUNKS; z++) for(int x = 0; x < SIZE_CHUNKS; x++)
 				{
-					boolean a = m.getChunkType(startX + x, startZ + z - 1) == t;
-					boolean b = m.getChunkType(startX + x + 1, startZ + z) == t;
-					boolean c = m.getChunkType(startX + x, startZ + z + 1) == t;
-					boolean d = m.getChunkType(startX + x - 1, startZ + z) == t;
+					ChunkType t = m.getChunkType(startX + x, startZ + z);
 					
-					TextureCoords tc = tex_area_coords[a ? 1 : 0][b ? 1 : 0][c ? 1 : 0][d ? 1 : 0];
-					
-					LatCore.Colors.setGLColor(t.areaColor, 255);
-					GuiLM.drawTexturedRectD(mapButton.renderX + x * 16, mapButton.renderY + z * 16, zLevel, 16, 16, tc.minU, tc.minV, tc.maxU, tc.maxV);
+					if(t.drawGrid())
+					{
+						boolean a = m.getChunkType(startX + x, startZ + z - 1) == t;
+						boolean b = m.getChunkType(startX + x + 1, startZ + z) == t;
+						boolean c = m.getChunkType(startX + x, startZ + z + 1) == t;
+						boolean d = m.getChunkType(startX + x - 1, startZ + z) == t;
+						
+						TextureCoords tc = tex_area_coords[a ? 1 : 0][b ? 1 : 0][c ? 1 : 0][d ? 1 : 0];
+						
+						LatCore.Colors.setGLColor(t.areaColor, 255);
+						GuiLM.drawTexturedRectD(renderX + x * 16, renderY + z * 16, zLevel, 16, 16, tc.minU, tc.minV, tc.maxU, tc.maxV);
+					}
 				}
 			}
 			
 			GL11.glEndList();
-			refreshWidgets();
 		}
 		
 		GL11.glCallList(GL_ID);
 		
-		if(Waypoints.hasWaypoints())
+		if(Minimap.renderWaypoints.getB() && Waypoints.hasWaypoints())
 		{
-			setTexture(FTBURenderHandler.texMarker);
+			mc.getTextureManager().bindTexture(FTBURenderHandler.texMarker);
 			
 			for(Waypoint w : Waypoints.getAll())
 			{
-				if(w.dim == dimension && w.enabled && w.posX >= bx && w.posZ >= bz && w.posX < bx + SIZE_CHUNKS * 16 && w.posZ < bz + SIZE_CHUNKS * 16)
+				if(w.enabled && w.dim == dimension)
 				{
 					GL11.glColor4f(w.colR / 255F, w.colG / 255F, w.colB / 255F, 1F);
-					GuiLM.drawTexturedRectD(mapButton.renderX + w.posX - bx, mapButton.renderY + w.posZ - bz, zLevel, 8, 8, 0D, 0D, 1D, 1D);
+					
+					double x = renderX + (w.posX - bx);
+					double y = renderY + (w.posZ - bz);
+					
+					if(x < renderX) x = renderX;
+					if(y < renderY) y = renderY;
+					if(x > renderX + SIZE) x = renderX + SIZE;
+					if(y > renderY + SIZE) y = renderY + SIZE;
+					
+					GuiLM.drawTexturedRectD(x, y, zLevel, 8, 8, 0D, 0D, 1D, 1D);
 				}
 			}
 		}
 		
+		if(Minimap.renderPlayers.getB())
 		{
 			FastList<EntityPlayer> list = new FastList<EntityPlayer>();
-			list.addAll(mc.theWorld.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(startX * 16, Double.NEGATIVE_INFINITY, startZ * 16, (startX + SIZE_CHUNKS) * 16, Double.POSITIVE_INFINITY, (startZ + SIZE_CHUNKS) * 16)));
-			list.add(mc.thePlayer);
+			list.addAll(mc.theWorld.playerEntities);
+			//list.add(mc.thePlayer);
 			
 			if(!list.isEmpty())
 			{
 				GL11.glColor4f(1F, 1F, 1F, 0.7F);
 				
-				for(EntityPlayer ep : list)
+				for(int i = 0; i < list.size(); i++)
 				{
-					if(!ep.isInvisible())
-						GuiLM.drawPlayerHead(ep.getCommandSenderName(), mapButton.renderX + ep.posX - bx - 4, mapButton.renderY + ep.posZ - bz - 4, 8, 8, zLevel);
+					EntityPlayer ep = list.get(i);
+					if(ep.dimension == dimension && !ep.isInvisible() && ep.posX >= bx && ep.posZ >= bz && ep.posX < bx + SIZE && ep.posZ < bz + SIZE)
+					{
+						GL11.glPushMatrix();
+						GL11.glTranslated(renderX + ep.posX - bx, renderY + ep.posZ - bz, 0D);
+						//GL11.glRotatef(ep.rotationYaw + 180F, 0F, 0F, 1F);
+						GuiLM.drawPlayerHead(ep.getCommandSenderName(), -4, -4, 8, 8, zLevel);
+						GL11.glPopMatrix();
+					}
 				}
 			}
 		}
 		
+		GL11.glColor4f(1F, 1F, 1F, 1F);
+		
 		if(mapButton.mouseOver())
 		{
 			GL11.glColor4f(0.1F, 1F, 0.7F, 0.8F);
-			tex_mouse.render(this, mapButton.renderX + (mapButton.chunkX() - startX) * 16 - guiLeft, mapButton.renderY + (mapButton.chunkZ() - startZ) * 16 - guiTop, 16, 16);
+			tex_mouse.render(this, renderX + (mapButton.chunkX() - startX) * 16 - guiLeft, renderY + (mapButton.chunkZ() - startZ) * 16 - guiTop, 16, 16);
 		}
 		
 		GL11.glColor4f(1F, 1F, 1F, 1F);
@@ -235,7 +284,6 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 	public static class MapButton extends ButtonLM
 	{
 		public final GuiMinimap guiM;
-		public int renderX, renderY;
 		
 		public MapButton(GuiMinimap g, int x, int y)
 		{

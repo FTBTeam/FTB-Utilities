@@ -10,11 +10,11 @@ import latmod.ftbu.core.world.LMWorld;
 public class Waypoints
 {
 	public static final ClientConfig config = new ClientConfig("waypoints");
-	public static final ClientConfig.Property enabled = new ClientConfig.Property("enabled", 0, new String[] { "false", "true" });
-	public static final ClientConfig.Property waypointType = new ClientConfig.Property("waypoint_type", 1, new String[] { "marker", "beacon" });
+	public static final ClientConfig.Property enabled = new ClientConfig.Property("enabled", 0, "false", "true");
+	public static final ClientConfig.Property waypointType = new ClientConfig.Property("waypoint_type", 1, "marker", "beacon");
 	public static final ClientConfig.Property displayTitle = new ClientConfig.Property("display_title", true);
 	public static final ClientConfig.Property displayDist = new ClientConfig.Property("display_distance", false);
-	public static final ClientConfig.Property renderDistance = new ClientConfig.Property("render_distance", 2, new String[] { "300", "600", "1200", "2500", "10000" }).setTranslateValues(false);
+	public static final ClientConfig.Property renderDistance = new ClientConfig.Property("render_distance", 2, "300", "600", "1200", "2500", "10000").setTranslateValues(false);
 	public static final ClientConfig.Property deathPoint = new ClientConfig.Property("death_point", true);
 	private static final FastList<Waypoint> waypoints = new FastList<Waypoint>();
 	

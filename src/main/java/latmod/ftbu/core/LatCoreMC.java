@@ -49,6 +49,7 @@ public final class LatCoreMC // LatCoreMCClient
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
 	
 	public static File latmodFolder = null;
+	public static File configFolder = null;
 	
 	private static final FastMap<String, ILMGuiHandler> guiHandlers = new FastMap<String, ILMGuiHandler>();
 	

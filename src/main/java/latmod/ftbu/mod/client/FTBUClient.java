@@ -36,6 +36,7 @@ public class FTBUClient extends FTBUCommon
 	public static final ClientConfig.Property addRegistryNames = new ClientConfig.Property("item_reg_names", false);
 	public static final ClientConfig.Property displayDebugInfo = new ClientConfig.Property("debug_info", false);
 	public static final ClientConfig.Property optionsButton = new ClientConfig.Property("options_button", true);
+	public static final ClientConfig.Property chatLinks = new ClientConfig.Property("chat_links", 1, "disabled", "enabled"); //"replace", "print" });
 	
 	public void preInit(FMLPreInitializationEvent e)
 	{
@@ -49,6 +50,7 @@ public class FTBUClient extends FTBUCommon
 		clientConfig.add(addRegistryNames);
 		clientConfig.add(displayDebugInfo);
 		clientConfig.add(optionsButton);
+		clientConfig.add(chatLinks);
 		ClientConfig.Registry.add(clientConfig);
 		
 		Waypoints.init();

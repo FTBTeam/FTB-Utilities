@@ -15,11 +15,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.event.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -191,13 +189,6 @@ public class FTBUEventHandler // FTBUTickHandler
 	}
 	
 	@SubscribeEvent
-    public void onConfigChanged(cpw.mods.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent e)
-    {
-		if(e.modID.equalsIgnoreCase(FTBUFinals.MOD_ID))
-			FTBU.mod.config.load();
-	}
-	
-	@SubscribeEvent
 	public void onBlockClick(net.minecraftforge.event.entity.player.PlayerInteractEvent e)
 	{
 		if(e.action == Action.RIGHT_CLICK_AIR) return;
@@ -214,8 +205,8 @@ public class FTBUEventHandler // FTBUTickHandler
 	
 	private boolean canInteract(net.minecraftforge.event.entity.player.PlayerInteractEvent e)
 	{
-		if(FTBUConfig.General.allowInteractSecure(e.entityPlayer)) return true;
-		if(!ChunkType.getD(e.world.provider.dimensionId, e.x, e.z, LMWorld.server.getPlayer(e.entityPlayer)).isFriendly()) return false;
+		if(FTBUConfig.allowInteractSecure(e.entityPlayer)) return true;
+		if(FTBUConfig.isDedi() && !ChunkType.getD(e.world.provider.dimensionId, e.x, e.z, LMWorld.server.getPlayer(e.entityPlayer)).isFriendly()) return false;
 		
 		TileEntity te = e.world.getTileEntity(e.x, e.y, e.z);
 		
@@ -246,7 +237,7 @@ public class FTBUEventHandler // FTBUTickHandler
 	@SubscribeEvent
 	public void onMobSpawned(net.minecraftforge.event.entity.EntityJoinWorldEvent e)
 	{
-		if(!FTBUConfig.General.safeSpawn) return;
+		if(!FTBUConfig.General.inst.safeSpawn || !FTBUConfig.isDedi()) return;
 		
 		if((e.entity instanceof IMob || (e.entity instanceof EntityChicken && e.entity.riddenByEntity != null)) && Claims.isInSpawnD(e.world.provider.dimensionId, e.entity.posX, e.entity.posZ))
 			e.setCanceled(true);
@@ -255,6 +246,8 @@ public class FTBUEventHandler // FTBUTickHandler
 	@SubscribeEvent
 	public void onPlayerAttacked(net.minecraftforge.event.entity.living.LivingAttackEvent e)
 	{
+		if(!FTBUConfig.isDedi()) return;
+		
 		int dim = e.entity.dimension;
 		if(dim != 0 || !(e.entity instanceof EntityPlayerMP) || e.entity instanceof FakePlayer) return;
 		
@@ -262,73 +255,31 @@ public class FTBUEventHandler // FTBUTickHandler
 		
 		if(entity != null && entity instanceof EntityPlayerMP && !(entity instanceof FakePlayer))
 		{
-			if(FTBUConfig.General.allowInteractSecure((EntityPlayerMP)entity)) return;
+			if(FTBUConfig.allowInteractSecure((EntityPlayerMP)entity)) return;
 			
 			int cx = MathHelperLM.chunk(e.entity.posX);
 			int cz = MathHelperLM.chunk(e.entity.posZ);
 			
-			if(Claims.isOutsideWorldBorder(dim, cx, cz) || (FTBUConfig.General.safeSpawn && Claims.isInSpawn(dim, cx, cz))) e.setCanceled(true);
+			if(Claims.isOutsideWorldBorder(dim, cx, cz) || (FTBUConfig.General.inst.safeSpawn && Claims.isInSpawn(dim, cx, cz))) e.setCanceled(true);
 			else
 			{
 				ClaimedChunk c = Claims.get(dim, cx, cz);
 				if(c != null && c.claims.isSafe()) e.setCanceled(true);
 			}
 		}
-		
-		/*
-		if(EnkiToolsConfig.get().world.spawnPVP || !EnkiTools.isSpawnChunkD(e.entity.worldObj.provider.dimensionId, e.entity.posX, e.entity.posZ)) return;
-		
-		if(e.entity instanceof EntityPlayer && e.source instanceof EntityDamageSource)
-		{
-			Entity e1 = ((EntityDamageSource)e.source).getEntity();
-			
-			if(e1 instanceof EntityPlayerMP && !(e1 instanceof FakePlayer))
-			{
-				EntityPlayerMP ep = (EntityPlayerMP)e1;
-				
-				if(!ep.capabilities.isCreativeMode && !Rank.getConfig(ep, RankConfig.IGNORE_SPAWN).getBool())
-					e.setCanceled(true);
-			}
-		}*/
-	}
-	
-	@SubscribeEvent
-	public void onChatEvent(net.minecraftforge.client.event.ClientChatReceivedEvent e)
-	{
-		String[] msg = e.message.getUnformattedText().split(" ");
-		
-		FastList<IChatComponent> links = new FastList<IChatComponent>();
-		
-		for(String s : msg)
-		{
-			if(s.startsWith("http://") || s.startsWith("https://"))
-			{
-				IChatComponent c = new ChatComponentText("[Link] ");
-				c.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(s)));
-				c.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, s));
-				links.add(c);
-			}
-		}
-		
-		if(!links.isEmpty())
-		{
-			IChatComponent c = new ChatComponentText("");
-			for(int i = 0; i < links.size(); i++)
-				c.appendSibling(links.get(i));
-			c.getChatStyle().setColor(EnumChatFormatting.GOLD);
-			LatCoreMC.printChat(null, c);
-		}
 	}
 	
 	@SubscribeEvent
 	public void onExplosion(net.minecraftforge.event.world.ExplosionEvent.Start e)
 	{
+		if(!FTBUConfig.isDedi()) return;
+		
 		int dim = e.world.provider.dimensionId;
 		if(dim != 0) return;
 		int cx = MathHelperLM.chunk(e.explosion.explosionX);
 		int cz = MathHelperLM.chunk(e.explosion.explosionZ);
 		
-		if(Claims.isOutsideWorldBorder(dim, cx, cz) || (FTBUConfig.General.safeSpawn && Claims.isInSpawn(dim, cx, cz))) e.setCanceled(true);
+		if(Claims.isOutsideWorldBorder(dim, cx, cz) || (FTBUConfig.General.inst.safeSpawn && Claims.isInSpawn(dim, cx, cz))) e.setCanceled(true);
 		else
 		{
 			ClaimedChunk c = Claims.get(dim, cx, cz);

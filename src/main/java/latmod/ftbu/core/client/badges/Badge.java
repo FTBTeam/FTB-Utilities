@@ -29,6 +29,12 @@ public class Badge
 		scaleX = scaleY = 1D;
 	}
 	
+	public String toString()
+	{ return ID; }
+	
+	public boolean equals(Object o)
+	{ return o != null && (o == this || o.toString().equals(toString())); }
+	
 	public Badge setNotGlowing()
 	{ isGlowing = false; return this; }
 	
@@ -102,12 +108,10 @@ public class Badge
 	public static final void init()
 	{
 		registry.clear();
-		register(new Badge("latmod"));
-		register(new Badge("ftb"));
+		register(new Badge("admin"));
 		register(new Badge("curse"));
-		register(new Badge("mods"));
-		register(new Badge("mods_pink"));
-		register(new Badge("packs"));
+		register(new Badge("donator"));
+		
 		register(new Badge("enki")
 		{
 			public double scaleX()
@@ -122,10 +126,17 @@ public class Badge
 			public double offsetY()
 			{ return 0.2D; }
 		});
+		
+		register(new Badge("ftb"));
+		register(new Badge("gamer"));
+		register(new Badge("latmod"));
+		register(new Badge("mods_pink"));
+		register(new Badge("mods"));
+		register(new Badge("packs"));
+		register(new Badge("swords"));
+		register(new Badge("tester"));
 		register(new Badge("twitch"));
 		register(new Badge("yt"));
-		register(new Badge("swords"));
-		register(new Badge("gamer"));
 	}
 	
 	public static final void register(Badge b)

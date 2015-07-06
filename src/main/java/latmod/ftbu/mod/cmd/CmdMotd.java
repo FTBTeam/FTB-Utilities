@@ -12,14 +12,19 @@ public class CmdMotd extends CommandLM
 	{ super("motd", CommandLevel.ALL); }
 	
 	public String onCommand(ICommandSender ics, String[] args)
-	{ printMotd(getCommandSenderAsPlayer(ics)); return null; }
-	
-	public static void printMotd(EntityPlayerMP ep)
 	{
-		if(!LatCoreMC.isDedicatedServer()) return;
+		if(!printMotd(getCommandSenderAsPlayer(ics)))
+			throw new FeatureDisabledException();
+		return null;
+	}
+	
+	public static boolean printMotd(EntityPlayerMP ep)
+	{
+		if(!FTBUConfig.isDedi()) return false;
 		
 		for(String s : FTBUConfig.Login.inst.motd)
-			LatCoreMC.printChat(ep, s.replace("$and$", "&").replace("$player$", ep.getDisplayName()).replace("$", LatCoreMC.FORMATTING));
+			LatCoreMC.printChat(ep, s.replace("$player$", ep.getDisplayName()).replace("$", LatCoreMC.FORMATTING));
 		CmdRules.printRules(ep);
+		return true;
 	}
 }

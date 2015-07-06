@@ -1,20 +1,22 @@
 package latmod.ftbu.core.client;
 
+import java.io.File;
 import java.util.UUID;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.texture.*;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.client.*;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -79,5 +81,19 @@ public final class LatCoreMCClient // LatCoreMC
 		}
 		
 		return null;
+	}
+	
+	public static ThreadDownloadImageData getDownloadImage(ResourceLocation out, String url, ResourceLocation def, IImageBuffer buffer)
+	{
+		TextureManager t = getMinecraft().getTextureManager();
+		ThreadDownloadImageData img = (ThreadDownloadImageData)t.getTexture(out);
+		
+		if (img == null)
+		{
+			img = new ThreadDownloadImageData((File)null, url, def, buffer);
+			t.loadTexture(out, img);
+		}
+		
+		return img;
 	}
 }

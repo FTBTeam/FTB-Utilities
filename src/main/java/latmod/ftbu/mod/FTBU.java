@@ -46,11 +46,14 @@ public class FTBU
 		
 		modMeta = e.getModMetadata();
 		
-		LatCoreMC.latmodFolder = new File(e.getModConfigurationDirectory().getParentFile(), "latmod/");
+		LatCoreMC.configFolder = e.getModConfigurationDirectory();
+		LatCoreMC.latmodFolder = new File(LatCoreMC.configFolder.getParentFile(), "latmod/");
 		if(!LatCoreMC.latmodFolder.exists()) LatCoreMC.latmodFolder.mkdirs();
 		
-		LMMod.init(this, new FTBUConfig(e), null);
+		LMMod.init(this, null, null);
 		mod.logger = LatCoreMC.logger;
+		IServerConfig.Registry.add(FTBUConfig.instance);
+		FTBUConfig.instance.load();
 		
 		FTBULang.reload();
 		ODItems.preInit();
@@ -75,23 +78,23 @@ public class FTBU
 		mod.loadRecipes();
 		proxy.postInit(e);
 		
-		boolean addedDesc = false;
-		if(modMeta != null) for(LMMod m : LMMod.modsMap.values)
+		if(modMeta != null && LMMod.modsMap.values.size() >= 2)
 		{
-			if(m != mod)
-			{
-				if(!addedDesc)
-				{
-					modMeta.description += EnumChatFormatting.GREEN + "\n\nMods using FTBUtilities:";
-					addedDesc = true;
-				}
-				
-				modMeta.description += "\n" + m.modID;
-			}
+			modMeta.description += EnumChatFormatting.GREEN + "\n\nMods using FTBUtilities:";
+			
+			for(LMMod m : LMMod.modsMap.values)
+			{ if(m != mod) modMeta.description += "\n" + m.modID; }
 		}
 		
 		for(String s : FTBUGuiHandler.IDs) LatCoreMC.addLMGuiHandler(s, FTBUGuiHandler.instance);
-		try { FTBUConfig.saveReadme(); } catch(Exception ex) { ex.printStackTrace(); }
+		
+		Thread readmeThread = new Thread("LM_Readme")
+		{
+			public void run()
+			{ try { FTBUConfig.saveReadme(); } catch(Exception ex) { ex.printStackTrace(); } }
+		};
+		
+		readmeThread.start();
 	}
 	
 	@Mod.EventHandler

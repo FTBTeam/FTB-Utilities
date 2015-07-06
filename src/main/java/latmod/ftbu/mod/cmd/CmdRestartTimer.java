@@ -13,7 +13,7 @@ public class CmdRestartTimer extends CommandLM
 	
 	public String onCommand(ICommandSender ics, String[] args)
 	{
-		if(FTBUConfig.General.restartTimer <= 0D) return "Restart timer disabled!";
-		return "Time left until next restart: " + LatCore.formatTime(FTBUTickHandler.getSecondsUntilRestart(), false);
+		if(FTBUConfig.General.inst.restartTimer <= 0D) return "Restart timer disabled!";
+		return FINE + "Time left until next restart: " + LatCore.formatTime(FTBUTickHandler.getSecondsUntilRestart(), false);
 	}
 }

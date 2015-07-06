@@ -1,6 +1,7 @@
 package latmod.ftbu.mod;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.*;
 
 import latmod.ftbu.core.*;
@@ -12,85 +13,93 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import com.google.gson.annotations.Expose;
 
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-
-public class FTBUConfig extends LMConfig implements IServerConfig
+public class FTBUConfig implements IServerConfig // FTBU
 {
-	public FTBUConfig(FMLPreInitializationEvent e)
-	{
-		super(e, "/LatMod/FTBU.cfg");
-		load();
-	}
+	public static final FTBUConfig instance = new FTBUConfig();
+	
+	public String getConfigName()
+	{ return FTBU.mod.modID; }
 	
 	public void load()
 	{
-		General.load(get("general"));
+		General.load();
 		Login.load();
 		WorldBorder.load();
-		save();
+		Backups.load();
+		
+		int overrides = loadOverrides();
+		LatCoreMC.logger.info("Config loaded with " + overrides + " overrides");
+		
+		saveAll();
 	}
 	
 	public void readConfig(NBTTagCompound tag)
 	{
-		/*{
-			NBTTagCompound tag1 = tag.getCompoundTag("WB");
-			WorldBorder.inst.enabled = tag1.getBoolean("E");
-			WorldBorder.inst.radius = tag1.getInteger("R");
-			WorldBorder.inst.custom.clear();
-			int[] cr = tag1.getIntArray("C");
-			for(int i = 0; i < cr.length / 2; i++)
-				WorldBorder.inst.custom.put(cr[i * 2 + 0], cr[i * 2 + 1]);
-		}*/
+		Login.inst.customBadges = tag.getString("CB");
 	}
 	
 	public void writeConfig(NBTTagCompound tag)
 	{
-		/*{
-			NBTTagCompound tag1 = new NBTTagCompound();
-			tag1.setBoolean(p_74757_1_, p_74757_2_);
-		}*/
+		if(!Login.inst.customBadges.isEmpty())
+			tag.setString("CB", Login.inst.customBadges);
 	}
+	
+	public static void saveAll()
+	{
+		General.save();
+		Login.save();
+		WorldBorder.save();
+		Backups.save();
+	}
+	
+	// Categories //
 	
 	public static class General
 	{
-		private static boolean allowCreativeInteractSecure;
-		public static String commandFTBU;
-		public static String commandAdmin;
-		public static double restartTimer;
-		public static boolean safeSpawn;
-		public static boolean spawnPVP;
+		public static General inst;
+		private static File saveFile;
 		
-		public static void load(Category c)
+		@Expose private Boolean allowCreativeInteractSecure;
+		@Expose public String commandFTBU;
+		@Expose public String commandAdmin;
+		@Expose public Float restartTimer;
+		@Expose public Boolean safeSpawn;
+		@Expose public Boolean spawnPVP;
+		@Expose public Boolean enableDedicatedOnSP;
+		
+		public static void load()
 		{
-			allowCreativeInteractSecure = c.getBool("allowCreativeInteractSecure", true);
-			c.setComment("allowCreativeInteractSecure", "If set to true, creative players will be able to access protected chests / chunks");
-			
-			commandFTBU = c.getString("commandFTBU", "ftbu");
-			c.setComment("commandFTBU", "Command name for ftbu command");
-			
-			commandAdmin = c.getString("commandAdmin", "admin");
-			c.setComment("commandAdmin", "Command name for admin command");
-			
-			restartTimer = c.getFloat("restartTimer", 0F, 0F, 720F);
-			c.setComment("restartTimer",
-					"Server will automatically shut down after X hours",
-					"0 - Disabled",
-					"0.5 - 30 minutes",
-					"1 - 1 Hour",
-					"24 - 1 Day",
-					"168 - 1 Week",
-					"720 - 1 Month");
-			
-			safeSpawn = c.getBool("safeSpawn", false);
-			c.setComment("safeSpawn", "If set to true, explosions and hostile mobs in spawn area will be disabled");
-			
-			spawnPVP = c.getBool("spawnPVP", true);
-			c.setComment("spawnPVP", "If set to false, players won't be able to attack each other in spawn area");
+			saveFile = new File(LatCoreMC.latmodFolder, "ftbu/general.txt");
+			inst = LatCore.fromJsonFromFile(saveFile, General.class);
+			if(inst == null) inst = new General();
+			inst.loadDefaults();
+			save();
 		}
 		
-		public static boolean allowInteractSecure(EntityPlayer ep)
-		{ return allowCreativeInteractSecure && ep.capabilities.isCreativeMode; }
+		public void loadDefaults()
+		{
+			if(allowCreativeInteractSecure == null) allowCreativeInteractSecure = true;
+			if(commandFTBU == null) commandFTBU = "ftbu";
+			if(commandAdmin == null) commandAdmin = "admin";
+			if(restartTimer == null) restartTimer = 0F;
+			if(safeSpawn == null) safeSpawn = false;
+			if(spawnPVP == null) spawnPVP = true;
+			if(enableDedicatedOnSP == null) enableDedicatedOnSP = false;
+		}
+		
+		public static void save()
+		{
+			if(inst == null) load();
+			if(!LatCore.toJsonFile(saveFile, inst))
+				LatCoreMC.logger.warn(saveFile.getName() + " failed to save!");
+		}
 	}
+	
+	public static boolean allowInteractSecure(EntityPlayer ep)
+	{ return General.inst.allowCreativeInteractSecure && ep.capabilities.isCreativeMode; }
+	
+	public static boolean isDedi()
+	{ return General.inst.enableDedicatedOnSP || LatCoreMC.isDedicatedServer(); }
 	
 	public static class Login
 	{
@@ -99,8 +108,7 @@ public class FTBUConfig extends LMConfig implements IServerConfig
 		
 		@Expose public String[] motd;
 		@Expose public String rules;
-		@Expose public String customBadgesPlayers;
-		@Expose public String customBadgesIDs;
+		@Expose public String customBadges;
 		@Expose private String[] startingItems;
 		private final FastList<ItemStack> startingItemsList = new FastList<ItemStack>();
 		
@@ -117,8 +125,7 @@ public class FTBUConfig extends LMConfig implements IServerConfig
 		{
 			if(motd == null) motd = new String[] { "Welcome to the server!" };
 			if(rules == null) rules = "";
-			if(customBadgesPlayers == null) customBadgesPlayers = "";
-			if(customBadgesIDs == null) customBadgesIDs = "";
+			if(customBadges == null) customBadges = "";
 			if(startingItems == null) startingItems = new String[] { "minecraft:apple 16 0" };
 			
 			startingItemsList.clear();
@@ -156,19 +163,21 @@ public class FTBUConfig extends LMConfig implements IServerConfig
 		{
 			saveFile = new File(LatCoreMC.latmodFolder, "ftbu/world_border.txt");
 			inst = LatCore.fromJsonFromFile(saveFile, WorldBorder.class);
-			if(inst == null) save();
+			if(inst == null) inst = new WorldBorder();
+			inst.loadDefaults();
+			save();
+		}
+		
+		public void loadDefaults()
+		{
+			if(enabled == null) enabled = false;
+			if(radius == null) radius = 10000;
+			if(custom == null) custom = new HashMap<Integer, Integer>();
 		}
 		
 		public static void save()
 		{
-			if(inst == null)
-			{
-				inst = new WorldBorder();
-				inst.custom = new HashMap<Integer, Integer>();
-				inst.radius = 10000;
-				inst.enabled = false;
-			}
-			
+			if(inst == null) load();
 			if(!LatCore.toJsonFile(saveFile, inst))
 				LatCoreMC.logger.warn(saveFile.getName() + " failed to save!");
 		}
@@ -194,17 +203,78 @@ public class FTBUConfig extends LMConfig implements IServerConfig
 		}
 	}
 	
+	public static class Backups
+	{
+		public static Backups inst;
+		private static File saveFile;
+		
+		@Expose public Boolean enabled;
+		@Expose public Float backupTimer;
+		@Expose public Integer backupsToKeep;
+		@Expose public Boolean onStartup;
+		@Expose public Boolean onShutdown;
+		@Expose public Boolean compress;
+		
+		public static void load()
+		{
+			saveFile = new File(LatCoreMC.latmodFolder, "ftbu/backups.txt");
+			inst = LatCore.fromJsonFromFile(saveFile, Backups.class);
+			if(inst == null) inst = new Backups();
+			inst.loadDefaults();
+			save();
+		}
+		
+		public void loadDefaults()
+		{
+			if(enabled == null) enabled = false;
+			if(backupTimer == null) backupTimer = 2F;
+			if(backupsToKeep == null) backupsToKeep = 20;
+			if(onStartup == null) onStartup = false;
+			if(onShutdown == null) onShutdown = false;
+			if(compress == null) compress = false;
+		}
+		
+		public static void save()
+		{
+			if(inst == null) load();
+			if(!LatCore.toJsonFile(saveFile, inst))
+				LatCoreMC.logger.warn(saveFile.getName() + " failed to save!");
+		}
+	}
+	
+	// Other //
+	
 	public static void saveReadme() throws Exception
 	{
 		FTBUReadmeEvent e = new FTBUReadmeEvent();
 		
+		FTBUReadmeEvent.ReadmeFile.Category general = e.file.get("latmod/ftbu/general.txt");
+		general.add("allowCreativeInteractSecure", "If set to true, creative players will be able to access protected chests / chunks.", true);
+		general.add("commandFTBU", "Command name for ftbu command.", "ftbu");
+		general.add("commandAdmin", "Command name for ftbu command.", "admin");
+		general.add("restartTimer", "Server will automatically shut down after X hours. 0 - Disabled, 0.5 - 30 minutes, 1 - 1 Hour, 24 - 1 Day, 168 - 1 Week, 720 - 1 Month, etc.", 0);
+		general.add("safeSpawn", "If set to true, explosions and hostile mobs in spawn area will be disabled.", false);
+		general.add("spawnPVP", "If set to false, players won't be able to attack each other in spawn area.", true);
+		general.add("enableDedicatedOnSP", "Enables server-only features on singleplayer / LAN worlds.", false);
+		
 		FTBUReadmeEvent.ReadmeFile.Category login = e.file.get("latmod/ftbu/login.txt");
-		login.add("motd", "Message of the day. This will be displayed when player joins the server. Default: blank");
-		login.add("rules", "Rules link you can click on. This will be displayed when player joins the server. Default: blank");
+		login.add("motd", "Message of the day. This will be displayed when player joins the server.", "Blank");
+		login.add("rules", "Rules link you can click on. This will be displayed when player joins the server.", "Blank");
+		login.add("customBadges", "URL for per-server custom badges file (Json). Example can be seen here: http://pastebin.com/LvBB9HmV ", "Blank");
+		login.add("startingItems", "Items to give player when it first joins the server. Format: StringID Size Metadata, does not support NBT yet.", "minecraft:apple 16 0");
 		
 		FTBUReadmeEvent.ReadmeFile.Category world_border = e.file.get("latmod/ftbu/world_border.txt");
-		world_border.add("enabled", "true enabled world border, false disables. Default: false");
-		world_border.add("radius", "Radius of the world border, starting at 0, 0. Its a square, so radius 5000 = 10000x10000 blocks of available world. Default: 5000");
+		world_border.add("enabled", "true enables world border, false disables.", false);
+		world_border.add("radius", "Radius of the world border, starting at 0, 0. Its a square, so radius 5000 = 10000x10000 blocks of available world.", 5000);
+		world_border.add("custom", "'DimensionID:Size' map. Example: \"custom\": { \"7\":1000, \"27\":3000 }", "Blank");
+		
+		FTBUReadmeEvent.ReadmeFile.Category backups = e.file.get("latmod/ftbu/backups.txt");
+		backups.add("enabled", "true enables backups, false disabled.", false);
+		backups.add("backupTimer", "Timer in hours. Can be .x, 1.0 - backups every hour, 6.0 - backups every 6 hours, 0.5 - backups every 30 minutes.", 2F);
+		backups.add("backupsToKeep", "The number of backup files to keep. More backups = more space used.", 20);
+		backups.add("onStartup", "Launches backup when server starts.", false);
+		backups.add("onShutdown", "Launches backup when server stops.", false);
+		backups.add("compress", "true to compress into .zip, false to backup as folders. true = less space used, false = faster to backup.", false);
 		
 		e.post();
 		
@@ -231,5 +301,88 @@ public class FTBUConfig extends LMConfig implements IServerConfig
 		}
 		
 		LatCore.saveFile(new File(LatCoreMC.latmodFolder, "readme.txt"), sb.toString().trim());
+	}
+	
+	private static class Overrides
+	{
+		@Expose public Map<String, Map<String, Object>> overrides;
+		
+		private static Object getFromFile(String s)
+		{
+			if(s.equals("general")) return General.inst;
+			else if(s.equals("login")) return Login.inst;
+			else if(s.equals("world_border")) return WorldBorder.inst;
+			else if(s.equals("backups")) return Backups.inst;
+			else return null;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static int loadOverrides()
+	{
+		int loaded = 0;
+		
+		try
+		{
+			File f = new File(LatCoreMC.configFolder, "LatMod/FTBU_Overrides.txt");
+			Overrides overrides = LatCore.fromJsonFromFile(f, Overrides.class);
+			if(overrides == null || overrides.overrides == null)
+			{
+				overrides = new Overrides();
+				overrides.overrides = new HashMap<String, Map<String, Object>>();
+				LatCore.toJsonFile(f, overrides);
+				return 0;
+			}
+			
+			if(overrides.overrides.isEmpty()) return 0;
+			
+			for(String cat : overrides.overrides.keySet())
+			{
+				Object c = Overrides.getFromFile(cat);
+				
+				if(c != null)
+				{
+					Map<String, Object> m = overrides.overrides.get(cat);
+					
+					if(m != null && !m.isEmpty())
+					{
+						for(String k : m.keySet())
+						{
+							Object v = m.get(k);
+							
+							if(v != null)
+							{
+								try
+								{
+									Field kf = c.getClass().getField(k);
+									kf.setAccessible(true);
+									
+									Object v0 = kf.get(c);
+									
+									if(v0.getClass() == Float.class && v.getClass() == Double.class)
+										v = ((Double)v).floatValue();
+									
+									if(List.class.isAssignableFrom(v.getClass()))
+									{
+										if(v0.getClass() == (new String[0]).getClass())
+											v = ((List<String>)v).toArray(new String[0]);
+									}
+									
+									kf.set(c, v);
+									LatCoreMC.logger.info("Replaced " + v0 + " in '" + cat + "." + k + "' with " + v);
+									loaded++;
+								}
+								catch(Exception e)
+								{ e.printStackTrace(); }
+							}
+						}
+					}
+				}
+			}
+		}
+		catch(Exception e)
+		{ e.printStackTrace(); }
+		
+		return loaded;
 	}
 }

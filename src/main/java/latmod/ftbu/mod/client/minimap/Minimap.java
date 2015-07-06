@@ -12,7 +12,7 @@ import cpw.mods.fml.relauncher.*;
 public class Minimap
 {
 	public static final ClientConfig config = new ClientConfig("minimap");
-	public static final ClientConfig.Property renderIngame = new ClientConfig.Property("render_ingame", 0, new String[] { "disabled", "right", "left" });
+	public static final ClientConfig.Property renderIngame = new ClientConfig.Property("render_ingame", 0, "disabled", "right", "left");
 	public static final ClientConfig.Property renderPlayers = new ClientConfig.Property("render_players", true);
 	public static final ClientConfig.Property renderWaypoints = new ClientConfig.Property("render_waypoints", true);
 	

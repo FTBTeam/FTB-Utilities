@@ -36,8 +36,8 @@ public class LMPlayerClient extends LMPlayer
 	{
 		NBTHelper.toStringList(clientInfo, tag.getTagList("I", NBTHelper.STRING));
 		
-		if(!isOnline() && tag.hasKey("L")) clientInfo.add("Last seen: " + LatCore.getTimeAgo(tag.getLong("L")) + " ago");
-		if(tag.hasKey("J")) clientInfo.add("Joined: " + LatCore.getTimeAgo(tag.getLong("J")) + " ago");
+		if(!isOnline() && tag.hasKey("L")) clientInfo.add("Last seen " + LatCore.getTimeAgo(tag.getLong("L")) + " ago");
+		if(tag.hasKey("J")) clientInfo.add("Joined " + LatCore.getTimeAgo(tag.getLong("J")) + " ago");
 		if(deaths > 0) clientInfo.add("Deaths: " + deaths);
 		
 		new LMPlayerEvent.CustomInfo(this, Side.CLIENT, clientInfo).post();

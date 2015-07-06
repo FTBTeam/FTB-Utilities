@@ -45,6 +45,9 @@ public class FTBUReadmeEvent extends EventLM
 			
 			public void add(String id, String text)
 			{ lines.put(id, text); }
+			
+			public void add(String id, String text, Object def)
+			{ add(id, text + " Default: " + def); }
 		}
 	}
 }

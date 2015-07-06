@@ -8,7 +8,7 @@ public class CmdFTBU extends CommandSubLM
 {
 	public CmdFTBU()
 	{
-		super(FTBUConfig.General.commandFTBU, CommandLevel.ALL);
+		super(FTBUConfig.General.inst.commandFTBU, CommandLevel.ALL);
 		subCommands.put("version", new CmdFTBUVersion());
 		subCommands.put("friends", new CmdFTBUFriends());
 		subCommands.put("uuid", new CmdFTBUUUID());

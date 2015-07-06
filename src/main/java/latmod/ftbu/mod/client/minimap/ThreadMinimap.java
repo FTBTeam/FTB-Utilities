@@ -17,12 +17,12 @@ public class ThreadMinimap extends Thread
 	public ThreadMinimap(World w, int x, int z, int s, LMPlayer p)
 	{
 		super("LM_Minimap");
+		setDaemon(true);
 		worldObj = w;
 		startX = x;
 		startZ = z;
 		size = s;
 		player = p;
-		
 		MessageLM.NET.sendToServer(new MessageAreaRequest(startX - 1, startZ - 1, worldObj.provider.dimensionId, (byte)(size + 2), player.playerID));
 	}
 	

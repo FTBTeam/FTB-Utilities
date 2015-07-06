@@ -1,6 +1,5 @@
 package latmod.ftbu.mod.cmd;
 
-import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.cmd.*;
 import latmod.ftbu.mod.FTBUConfig;
 import net.minecraft.command.ICommandSender;
@@ -14,11 +13,15 @@ public class CmdRules extends CommandLM
 	{ super("rules", CommandLevel.ALL); }
 	
 	public String onCommand(ICommandSender ics, String[] args)
-	{ if(!printRules(getCommandSenderAsPlayer(ics))) return "Rules link not set!"; return null; }
+	{
+		if(!printRules(getCommandSenderAsPlayer(ics)))
+			throw new FeatureDisabledException();
+		return null;
+	}
 	
 	public static boolean printRules(EntityPlayerMP ep)
 	{
-		if(!LatCoreMC.isDedicatedServer() || FTBUConfig.Login.inst.rules.isEmpty()) return false;
+		if(!FTBUConfig.isDedi() || FTBUConfig.Login.inst.rules.isEmpty()) return false;
 		
 		IChatComponent c = new ChatComponentText("[Click here to open rules]");
 		c.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, FTBUConfig.Login.inst.rules));

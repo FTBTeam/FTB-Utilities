@@ -100,9 +100,9 @@ public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
 			currentMillis = startMillis = LatCore.millis();
 			restartSeconds = 0;
 			
-			if(FTBUConfig.General.restartTimer > 0)
+			if(FTBUConfig.General.inst.restartTimer > 0)
 			{
-				restartSeconds = (long)(FTBUConfig.General.restartTimer * 3600D);
+				restartSeconds = (long)(FTBUConfig.General.inst.restartTimer * 3600D);
 				LatCoreMC.logger.info("Server restart in " + LatCore.formatTime(restartSeconds, false));
 			}
 		}

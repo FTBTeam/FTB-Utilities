@@ -93,11 +93,11 @@ public final class ClientConfig
 		private int value = -1;
 		private boolean translateValues = true;
 		
-		public Property(String s, int d, String[] v)
+		public Property(String s, int d, String... v)
 		{ id = s; def = d; values = v; }
 		
 		public Property(String s, boolean d)
-		{ this(s, d ? 1 : 0, new String[] { "disabled", "enabled" }); }
+		{ this(s, d ? 1 : 0, "disabled", "enabled"); }
 		
 		public void incValue()
 		{ value = (value + 1) % values.length; }

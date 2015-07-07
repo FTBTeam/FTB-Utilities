@@ -526,24 +526,39 @@ public class LatCore
 		return false;
 	}
 
-	public static boolean copyFile(File oldFile, File newFile)
+	public static boolean copyFile(File src, File dst)
 	{
 		boolean result = false;
 		
-		if(oldFile != null && newFile != null && oldFile.exists() && !oldFile.equals(newFile))
+		if(src != null && dst != null && src.exists() && !src.equals(dst))
 		{
-			newFile = newFile(newFile);
+			if(src.isDirectory() && dst.isDirectory())
+			{
+				result = true;
+				
+				FastList<File> files = LatCore.getAllFiles(src);
+				
+				for(File f : files)
+				{
+					File dst1 = new File(dst.getAbsolutePath() + File.separator + (f.getAbsolutePath().replace(src.getAbsolutePath(), "")));
+					if(!copyFile(f, dst1)) result = false;
+				}
+				
+				return result;
+			}
 			
-			FileChannel oldC = null;
-			FileChannel newC = null;
+			dst = newFile(dst);
+			
+			FileChannel srcC = null;
+			FileChannel dstC = null;
 			
 			try
 			{
-				oldC = new FileInputStream(oldFile).getChannel();
-				newC = new FileOutputStream(newFile).getChannel();
-				newC.transferFrom(oldC, 0, oldC.size());
-				if(oldC != null) oldC.close();
-				if(newC != null) newC.close();
+				srcC = new FileInputStream(src).getChannel();
+				dstC = new FileOutputStream(dst).getChannel();
+				dstC.transferFrom(srcC, 0L, srcC.size());
+				if(srcC != null) srcC.close();
+				if(dstC != null) dstC.close();
 				result = true;
 			}
 			catch(Exception e) { e.printStackTrace(); }
@@ -584,4 +599,57 @@ public class LatCore
 	
 	public static long millis()
 	{ return System.currentTimeMillis(); }
+
+	public static FastList<File> getAllFiles(File f)
+	{ FastList<File> l = new FastList<File>(); addAllFiles(l, f); return l; }
+	
+	private static void addAllFiles(FastList<File> l, File f)
+	{
+		if(f.isDirectory())
+		{
+			File[] fl = f.listFiles();
+			
+			if(fl != null && fl.length > 0)
+			{
+				for(int i = 0; i < fl.length; i++)
+					addAllFiles(l, fl[i]);
+			}
+		}
+		else l.add(f);
+	}
+
+	public static long fileSize(File f)
+	{
+		if(f == null) return 0L;
+		if(f.isFile()) return f.length();
+		long size = 0L;
+		FastList<File> files = getAllFiles(f);
+		for(int i = 0; i < files.size(); i++)
+			size += fileSize(files.get(i));
+		return size;
+	}
+	
+	public static String fileSizeS(double b)
+	{
+		if(b >= 1024D * 1024D * 1024D)
+		{
+			b /= 1024D * 1024D * 1024D;
+			b = (long)(b * 10D) / 10D;
+			return b + "GB";
+		}
+		else if(b >= 1024D * 1024D)
+		{
+			b /= 1024D * 1024D;
+			b = (long)(b * 10D) / 10D;
+			return b + "MB";
+		}
+		else if(b >= 1024L)
+		{
+			b /= 1024D;
+			b = (long)(b * 10D) / 10D;
+			return b + "KB";
+		}
+		
+		return b + "B";
+	}
 }

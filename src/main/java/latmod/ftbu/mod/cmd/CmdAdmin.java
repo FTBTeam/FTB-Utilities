@@ -15,10 +15,11 @@ public class CmdAdmin extends CommandSubLM
 		subCommands.put("displayitem", new CmdAdminDisplayItem());
 		subCommands.put("getdim", new CmdAdminGetDim());
 		subCommands.put("invsee", new CmdAdminInvsee());
-		
 		subCommands.put("setwarp", new CmdAdminSetWarp());
 		subCommands.put("worldborder", new CmdAdminWorldBorder());
 		subCommands.put("spawnarea", new CmdAdminSpawnArea());
 		subCommands.put("unclaim", new CmdAdminUnclaim());
+		subCommands.put("backup", new CmdAdminBackup());
+		subCommands.put("clearbackups", new CmdAdminClearBackups());
 	}
 }

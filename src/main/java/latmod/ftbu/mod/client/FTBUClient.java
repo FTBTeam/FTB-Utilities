@@ -41,8 +41,8 @@ public class FTBUClient extends FTBUCommon
 	public void preInit(FMLPreInitializationEvent e)
 	{
 		super.preInit(e);
-		LatCoreMC.addEventHandler(FTBUClientEventHandler.instance, true, false, true);
-		LatCoreMC.addEventHandler(FTBURenderHandler.instance, true, true, false);
+		LatCoreMC.addEventHandler(FTBUClientEventHandler.instance, LatCoreMC.BusType.FORGE, LatCoreMC.BusType.LATMOD);
+		LatCoreMC.addEventHandler(FTBURenderHandler.instance, LatCoreMC.BusType.FORGE, LatCoreMC.BusType.FML);
 		ClientConfig.Registry.init();
 		
 		clientConfig.add(enablePlayerDecorators);
@@ -114,7 +114,7 @@ public class FTBUClient extends FTBUCommon
 	
 	public void openClientGui(EntityPlayer ep, String id, NBTTagCompound data)
 	{
-		ILMGuiHandler h = LatCoreMC.getLMGuiHandler(id);
+		ILMGuiHandler h = ILMGuiHandler.Registry.getLMGuiHandler(id);
 		
 		if(h != null)
 		{

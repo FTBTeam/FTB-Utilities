@@ -5,6 +5,7 @@ import latmod.ftbu.core.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.LatCore;
 import latmod.ftbu.core.world.*;
+import latmod.ftbu.mod.backups.Backups;
 import latmod.ftbu.mod.claims.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
@@ -62,7 +63,7 @@ public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
 	@SubscribeEvent
 	public void onWorldTick(TickEvent.WorldTickEvent e)
 	{
-		if(LatCoreMC.isServer() && restartSeconds > 0L && e.side == Side.SERVER && e.phase == TickEvent.Phase.END && e.type == TickEvent.Type.WORLD)
+		if(LatCoreMC.isServer() && e.side == Side.SERVER && e.phase == TickEvent.Phase.END && e.type == TickEvent.Type.WORLD)
 		{
 			long t = LatCore.millis();
 			
@@ -70,19 +71,25 @@ public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
 			{
 				currentMillis = t;
 				
-				long secondsLeft = getSecondsUntilRestart();
+				long secondsLeft = 3600L;
 				
-				String msg = null;
+				if(restartSeconds > 0L)
+				{
+					secondsLeft = getSecondsUntilRestart();
+					
+					String msg = null;
+					
+					if(secondsLeft <= 0) { LatCoreMC.getServer().initiateShutdown(); return; }
+					else if(secondsLeft <= 10) msg = secondsLeft + " Seconds";
+					else if(secondsLeft == 30) msg = "30 Seconds";
+					else if(secondsLeft == 60) msg = "1 Minute";
+					else if(secondsLeft == 300) msg = "5 Minutes";
+					else if(secondsLeft == 600) msg = "10 Minutes";
+					
+					if(msg != null) LatCoreMC.printChatAll(LIGHT_PURPLE + "Server will restart after " + msg);
+				}
 				
-				if(secondsLeft <= 0) { LatCoreMC.getServer().initiateShutdown(); return; }
-				else if(secondsLeft <= 10) msg = secondsLeft + " Seconds";
-				else if(secondsLeft == 30) msg = "30 Seconds";
-				else if(secondsLeft == 60) msg = "1 Minute";
-				else if(secondsLeft == 300) msg = "5 Minutes";
-				else if(secondsLeft == 600) msg = "10 Minutes";
-				
-				if(msg != null && secondsLeft >= 30)
-					LatCoreMC.printChatAll(LIGHT_PURPLE + "Server will restart after " + msg);
+				if(secondsLeft > 60 && Backups.getSecondsUntilNextBackup() <= 0L) Backups.run(e.world, true);
 			}
 		}
 	}
@@ -97,7 +104,7 @@ public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
 		
 		if(serverStarted)
 		{
-			currentMillis = startMillis = LatCore.millis();
+			currentMillis = startMillis = Backups.lastTimeRun = LatCore.millis();
 			restartSeconds = 0;
 			
 			if(FTBUConfig.General.inst.restartTimer > 0)
@@ -105,10 +112,13 @@ public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
 				restartSeconds = (long)(FTBUConfig.General.inst.restartTimer * 3600D);
 				LatCoreMC.logger.info("Server restart in " + LatCore.formatTime(restartSeconds, false));
 			}
+			
+			if(FTBUConfig.Backups.inst.onStartup) Backups.run(LatCoreMC.getServer().getEntityWorld(), true);
 		}
 		else
 		{
 			currentMillis = startMillis = restartSeconds = 0;
+			if(FTBUConfig.Backups.inst.onShutdown) Backups.run(LatCoreMC.getServer().getEntityWorld(), false);
 		}
 	}
 	

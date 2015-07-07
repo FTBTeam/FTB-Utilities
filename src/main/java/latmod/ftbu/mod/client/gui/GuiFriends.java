@@ -401,14 +401,8 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 						al.add((raw1 ? GOLD : BLUE) + "[" + FTBU.mod.translateClient("label.pfriend") + "]");
 				}
 				
-				if(LatCoreMC.isDevEnv && isShiftKeyDown())
-					al.add("[" + p.playerID + "] " + p.uuidString);
-				
 				if(p.clientInfo != null && !p.clientInfo.isEmpty())
-				{
-					//al.add("");
 					al.addAll(p.clientInfo);
-				}
 			}
 		}
 		

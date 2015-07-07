@@ -3,6 +3,7 @@ import java.io.File;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.net.MessageLM;
+import latmod.ftbu.mod.backups.Backups;
 import latmod.ftbu.mod.cmd.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
@@ -30,8 +31,8 @@ public class FTBU
 	
 	public FTBU()
 	{
-		LatCoreMC.addEventHandler(FTBUEventHandler.instance, true, true, true);
-		LatCoreMC.addEventHandler(FTBUTickHandler.instance, true, true, false);
+		LatCoreMC.addEventHandler(FTBUEventHandler.instance, LatCoreMC.BusType.FORGE, LatCoreMC.BusType.FML, LatCoreMC.BusType.LATMOD);
+		LatCoreMC.addEventHandler(FTBUTickHandler.instance, LatCoreMC.BusType.FORGE, LatCoreMC.BusType.FML);
 	}
 	
 	private ModMetadata modMeta;
@@ -57,6 +58,7 @@ public class FTBU
 		
 		FTBULang.reload();
 		ODItems.preInit();
+		Backups.init();
 		
 		mod.onPostLoaded();
 		proxy.preInit(e);
@@ -67,7 +69,6 @@ public class FTBU
 	{
 		MessageLM.init();
 		proxy.init(e);
-		
 		FMLInterModComms.sendMessage("Waila", "register", "latmod.ftbu.core.event.RegisterWailaEvent.registerHandlers");
 	}
 	
@@ -86,7 +87,7 @@ public class FTBU
 			{ if(m != mod) modMeta.description += "\n" + m.modID; }
 		}
 		
-		for(String s : FTBUGuiHandler.IDs) LatCoreMC.addLMGuiHandler(s, FTBUGuiHandler.instance);
+		for(String s : FTBUGuiHandler.IDs) ILMGuiHandler.Registry.addLMGuiHandler(s, FTBUGuiHandler.instance);
 		
 		Thread readmeThread = new Thread("LM_Readme")
 		{
@@ -105,12 +106,10 @@ public class FTBU
 		e.registerServerCommand(new CmdBack());
 		e.registerServerCommand(new CmdFTBU());
 		e.registerServerCommand(new CmdMotd());
-		e.registerServerCommand(new CmdRestartTimer());
 		e.registerServerCommand(new CmdRules());
 		e.registerServerCommand(new CmdSpawn());
 		e.registerServerCommand(new CmdTplast());
 		e.registerServerCommand(new CmdWarp());
-		//ClientCommandHandler.instance.registerCommand(new CmdWaypoints());
 	}
 	
 	@Mod.EventHandler

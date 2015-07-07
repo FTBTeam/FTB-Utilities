@@ -9,6 +9,7 @@ import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.ISecureTile;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.*;
+import latmod.ftbu.mod.backups.Backups;
 import latmod.ftbu.mod.claims.*;
 import latmod.ftbu.mod.cmd.CmdMotd;
 import net.minecraft.entity.Entity;
@@ -60,6 +61,7 @@ public class FTBUEventHandler // FTBUTickHandler
 		MessageLM.sendTo(sendAll ? null : ep, new MessageLMWorldUpdate(LMWorld.server.worldID));
 		IServerConfig.Registry.update(ep, null);
 		MessageLM.sendTo(null, new MessageLMPlayerLoggedIn(p, first));
+		MessageLM.sendTo(null, p.getInfo(ep));
 		
 		if(first)
 		{
@@ -75,6 +77,7 @@ public class FTBUEventHandler // FTBUTickHandler
 		
 		MessageLM.sendTo(ep, p.getInfo(ep));
 		CmdMotd.printMotd(ep);
+		Backups.shouldRun = true;
 	}
 	
 	@SubscribeEvent
@@ -94,7 +97,9 @@ public class FTBUEventHandler // FTBUTickHandler
 			p.lastArmor[4] = e.player.inventory.getCurrentItem();
 			
 			new LMPlayerEvent.LoggedOut(p, (EntityPlayerMP)e.player).post();
-			MessageLM.NET.sendToAll(new MessageLMPlayerLoggedOut(p));
+			MessageLM.sendTo(null, new MessageLMPlayerLoggedOut(p));
+			MessageLM.sendTo(null, p.getInfo((EntityPlayerMP)e.player));
+			Backups.shouldRun = true;
 		}
 	}
 	

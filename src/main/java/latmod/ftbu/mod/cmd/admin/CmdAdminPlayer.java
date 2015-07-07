@@ -1,6 +1,7 @@
 package latmod.ftbu.mod.cmd.admin;
 
 import java.io.*;
+import java.util.UUID;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.cmd.*;
@@ -13,11 +14,30 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.*;
 import baubles.api.BaublesApi;
 
+import com.mojang.authlib.GameProfile;
+
 public class CmdAdminPlayer extends SubCommand
 {
 	public String onCommand(ICommandSender ics, String[] args)
 	{
 		CommandLM.checkArgs(args, 1);
+		
+		if(LatCoreMC.isDevEnv && args[0].equals("addfake"))
+		{
+			CommandLM.checkArgs(args, 3);
+			
+			UUID id = LatCoreMC.getUUIDFromString(args[1]);
+			if(id == null) return "Invalid UUID!";
+			
+			if(LMWorld.server.getPlayer(id) != null || LMWorld.server.getPlayer(args[2]) != null)
+				return "Player already exists!";
+			
+			LMPlayerServer p = new LMPlayerServer(LMWorld.server, LMPlayerServer.nextPlayerID(), new GameProfile(id, args[2]));
+			LMWorld.server.players.put(p.playerID, p);
+			p.updateLastSeen();
+			
+			return "Fake player " + args[2] + " added!";
+		}
 		
 		String mustBeOnline = "The player must be online!";
 		String mustBeOffline = "The player must be offline!";

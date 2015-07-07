@@ -36,12 +36,14 @@ public class FTBUConfig implements IServerConfig // FTBU
 	public void readConfig(NBTTagCompound tag)
 	{
 		Login.inst.customBadges = tag.getString("CB");
+		General.inst.maxClaims = tag.getInteger("MxC");
 	}
 	
 	public void writeConfig(NBTTagCompound tag)
 	{
 		if(!Login.inst.customBadges.isEmpty())
 			tag.setString("CB", Login.inst.customBadges);
+		tag.setInteger("MxC", General.inst.maxClaims);
 	}
 	
 	public static void saveAll()
@@ -66,6 +68,7 @@ public class FTBUConfig implements IServerConfig // FTBU
 		@Expose public Boolean safeSpawn;
 		@Expose public Boolean spawnPVP;
 		@Expose public Boolean enableDedicatedOnSP;
+		@Expose public Integer maxClaims;
 		
 		public static void load()
 		{
@@ -85,6 +88,7 @@ public class FTBUConfig implements IServerConfig // FTBU
 			if(safeSpawn == null) safeSpawn = false;
 			if(spawnPVP == null) spawnPVP = true;
 			if(enableDedicatedOnSP == null) enableDedicatedOnSP = false;
+			if(maxClaims == null) maxClaims = 16;
 		}
 		
 		public static void save()
@@ -208,12 +212,15 @@ public class FTBUConfig implements IServerConfig // FTBU
 		public static Backups inst;
 		private static File saveFile;
 		
-		@Expose public Boolean enabled;
-		@Expose public Float backupTimer;
 		@Expose public Integer backupsToKeep;
+		@Expose private Float backupTimer;
 		@Expose public Boolean onStartup;
 		@Expose public Boolean onShutdown;
 		@Expose public Boolean compress;
+		@Expose public String folder;
+		@Expose public Boolean oneFolder;
+		@Expose public Boolean displayFileSize;
+		public long backupTimerL;
 		
 		public static void load()
 		{
@@ -226,12 +233,16 @@ public class FTBUConfig implements IServerConfig // FTBU
 		
 		public void loadDefaults()
 		{
-			if(enabled == null) enabled = false;
+			if(backupsToKeep == null) backupsToKeep = 0;
 			if(backupTimer == null) backupTimer = 2F;
-			if(backupsToKeep == null) backupsToKeep = 20;
 			if(onStartup == null) onStartup = false;
 			if(onShutdown == null) onShutdown = false;
 			if(compress == null) compress = false;
+			if(folder == null) folder = "./backups/";
+			if(oneFolder == null) oneFolder = true;
+			if(displayFileSize == null) displayFileSize = true;
+			
+			backupTimerL = (long)(backupTimer.doubleValue() * 3600D * 1000D);
 		}
 		
 		public static void save()
@@ -269,12 +280,12 @@ public class FTBUConfig implements IServerConfig // FTBU
 		world_border.add("custom", "'DimensionID:Size' map. Example: \"custom\": { \"7\":1000, \"27\":3000 }", "Blank");
 		
 		FTBUReadmeEvent.ReadmeFile.Category backups = e.file.get("latmod/ftbu/backups.txt");
-		backups.add("enabled", "true enables backups, false disabled.", false);
+		backups.add("backupsToKeep", "The number of backup files to keep. 0 - Disabled. More backups = more space used. Recommended: 10.", 0);
 		backups.add("backupTimer", "Timer in hours. Can be .x, 1.0 - backups every hour, 6.0 - backups every 6 hours, 0.5 - backups every 30 minutes.", 2F);
-		backups.add("backupsToKeep", "The number of backup files to keep. More backups = more space used.", 20);
 		backups.add("onStartup", "Launches backup when server starts.", false);
 		backups.add("onShutdown", "Launches backup when server stops.", false);
 		backups.add("compress", "true to compress into .zip, false to backup as folders. true = less space used, false = faster to backup.", false);
+		backups.add("folder", "Path to backups folder, can be an absoute path.", "./backups/");
 		
 		e.post();
 		

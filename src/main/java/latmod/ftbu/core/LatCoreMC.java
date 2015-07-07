@@ -36,7 +36,6 @@ import cpw.mods.fml.relauncher.Side;
 /** Made by LatvianModder */
 public final class LatCoreMC // LatCoreMCClient
 {
-	// Something, Something, Eclipse, Something... \Minecraft\eclipse\.metadata\.plugins\org.eclipse.debug.core\.launches
 	public static final String MC_VERSION = Loader.MC_VERSION;
 	public static final String DEV_VERSION = "@VERSION@";
 	
@@ -51,18 +50,22 @@ public final class LatCoreMC // LatCoreMCClient
 	public static File latmodFolder = null;
 	public static File configFolder = null;
 	
-	private static final FastMap<String, ILMGuiHandler> guiHandlers = new FastMap<String, ILMGuiHandler>();
-	
-	public static ILMGuiHandler getLMGuiHandler(String id)
-	{ return guiHandlers.get(id); }
-	
-	public static void addLMGuiHandler(String id, ILMGuiHandler i)
-	{ guiHandlers.put(id, i); }
+	public static enum BusType
+	{
+		LATMOD,
+		FORGE,
+		FML;
+		
+		public EventBus getBus()
+		{
+			if(this == LATMOD) return EVENT_BUS;
+			else if(this == FORGE) return MinecraftForge.EVENT_BUS;
+			return FMLCommonHandler.instance().bus();
+		}
+	}
 	
 	public static final Configuration loadConfig(FMLPreInitializationEvent e, String s)
 	{ return new Configuration(new File(e.getModConfigurationDirectory(), s)); }
-	
-	// Proxy methods //
 	
 	public static IChatComponent getChatComponent(Object o)
 	{ return (o != null && o instanceof IChatComponent) ? (IChatComponent)o : new ChatComponentText("" + o); }
@@ -107,12 +110,8 @@ public final class LatCoreMC // LatCoreMCClient
 	public static void addWorldGenerator(IWorldGenerator i, int w)
 	{ GameRegistry.registerWorldGenerator(i, w); }
 	
-	public static void addEventHandler(Object o, boolean forge, boolean cpw, boolean lm)
-	{
-		if(forge) MinecraftForge.EVENT_BUS.register(o);
-		if(cpw) FMLCommonHandler.instance().bus().register(o);
-		if(lm) EVENT_BUS.register(o);
-	}
+	public static void addEventHandler(Object o, BusType... t)
+	{ for(BusType bt : t) bt.getBus().register(o); }
 	
 	public static Fluid addFluid(Fluid f)
 	{
@@ -230,7 +229,7 @@ public final class LatCoreMC // LatCoreMCClient
 	{
 		if(ep == null || ep instanceof FakePlayer) return;
 		
-		ILMGuiHandler h = getLMGuiHandler(id);
+		ILMGuiHandler h = ILMGuiHandler.Registry.getLMGuiHandler(id);
 		
 		if(h == null) return;
 		

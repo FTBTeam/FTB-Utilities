@@ -1,39 +1,28 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import latmod.ftbu.core.cmd.SubCommand;
+import latmod.ftbu.core.cmd.*;
+import latmod.ftbu.mod.FTBUConfig;
 import net.minecraft.command.ICommandSender;
 
 public class CmdAdminSpawnArea extends SubCommand
 {
 	public String onCommand(ICommandSender ics, String[] args)
 	{
-		/*
-		if(args.length == 0)
-			return CommandLM.FINE + "Curent spawn area size: " + EnkiToolsConfig.get().world.spawnDistance + (EnkiToolsConfig.get().world.spawnSquare ? " [Square]" : " [Round]");
+		CommandLM.checkArgs(args, 2);
 		
-		CommandLM.checkArgs(args, 1);
+		if(args[0].equals("safe"))
+		{
+			FTBUConfig.General.inst.safeSpawn = args[1].equals("true");
+			FTBUConfig.General.save();
+			return "SafeSpawn set to: "+ FTBUConfig.General.inst.safeSpawn;
+		}
+		else if(args[0].equals("pvp"))
+		{
+			FTBUConfig.General.inst.spawnPVP = args[1].equals("true");
+			FTBUConfig.General.save();
+			return "SpawnPVP set to: "+ FTBUConfig.General.inst.spawnPVP;
+		}
 		
-		if(args[1].equals("square"))
-		{
-			EnkiToolsConfig.get().world.spawnSquare = true;
-			EnkiToolsConfig.saveConfig();
-			return CommandLM.FINE + "Spawn area is now a square";
-		}
-		if(args[1].equals("round"))
-		{
-			EnkiToolsConfig.get().world.spawnSquare = false;
-			EnkiToolsConfig.saveConfig();
-			return CommandLM.FINE + "Spawn area is now round";
-		}
-		else
-		{
-			int dist = CommandLM.parseInt(ics, args[0]);
-			EnkiToolsConfig.get().world.spawnDistance = dist;
-			EnkiToolsConfig.saveConfig();
-			return CommandLM.FINE + "Spawn distance set to " + dist;
-		}
-		*/
-		
-		return "Unimplemented!";
+		return "Subcommands: safe, pvp";
 	}
 }

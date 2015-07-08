@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.cmd;
 
 import latmod.ftbu.core.cmd.*;
-import latmod.ftbu.mod.FTBUConfig;
+import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.event.ClickEvent;
@@ -21,10 +21,10 @@ public class CmdRules extends CommandLM
 	
 	public static boolean printRules(EntityPlayerMP ep)
 	{
-		if(!FTBUConfig.isDedi() || FTBUConfig.Login.inst.rules.isEmpty()) return false;
+		if(!FTBUConfig.isDedi() || FTBUConfig.login.rules.isEmpty()) return false;
 		
 		IChatComponent c = new ChatComponentText("[Click here to open rules]");
-		c.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, FTBUConfig.Login.inst.rules));
+		c.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, FTBUConfig.login.rules));
 		c.getChatStyle().setColor(EnumChatFormatting.GOLD);
 		ep.addChatMessage(c);
 		return true;

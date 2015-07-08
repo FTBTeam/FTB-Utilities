@@ -2,9 +2,11 @@ package latmod.ftbu.mod;
 import java.io.File;
 
 import latmod.ftbu.core.*;
+import latmod.ftbu.core.event.FTBUReadmeEvent;
 import latmod.ftbu.core.net.MessageLM;
 import latmod.ftbu.mod.backups.Backups;
 import latmod.ftbu.mod.cmd.*;
+import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
 import cpw.mods.fml.common.*;
@@ -92,7 +94,7 @@ public class FTBU
 		Thread readmeThread = new Thread("LM_Readme")
 		{
 			public void run()
-			{ try { FTBUConfig.saveReadme(); } catch(Exception ex) { ex.printStackTrace(); } }
+			{ try { FTBUReadmeEvent.saveReadme(); } catch(Exception ex) { ex.printStackTrace(); } }
 		};
 		
 		readmeThread.start();

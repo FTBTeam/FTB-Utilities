@@ -6,6 +6,7 @@ import java.nio.channels.*;
 import java.nio.charset.Charset;
 import java.util.*;
 
+import org.apache.commons.io.FileUtils;
 import org.lwjgl.opengl.GL11;
 
 import com.google.gson.*;
@@ -526,25 +527,21 @@ public class LatCore
 		return false;
 	}
 
-	public static boolean copyFile(File src, File dst)
+	public static Exception copyFile(File src, File dst)
 	{
-		boolean result = false;
-		
 		if(src != null && dst != null && src.exists() && !src.equals(dst))
 		{
 			if(src.isDirectory() && dst.isDirectory())
 			{
-				result = true;
-				
 				FastList<File> files = LatCore.getAllFiles(src);
 				
 				for(File f : files)
 				{
 					File dst1 = new File(dst.getAbsolutePath() + File.separator + (f.getAbsolutePath().replace(src.getAbsolutePath(), "")));
-					if(!copyFile(f, dst1)) result = false;
+					Exception e = copyFile(f, dst1); if(e != null) return e;
 				}
 				
-				return result;
+				return null;
 			}
 			
 			dst = newFile(dst);
@@ -559,12 +556,12 @@ public class LatCore
 				dstC.transferFrom(srcC, 0L, srcC.size());
 				if(srcC != null) srcC.close();
 				if(dstC != null) dstC.close();
-				result = true;
+				return null;
 			}
-			catch(Exception e) { e.printStackTrace(); }
+			catch(Exception e) { return e; }
 		}
 		
-		return result;
+		return null;
 	}
 	
 	public static boolean deleteFile(File dir)
@@ -605,6 +602,8 @@ public class LatCore
 	
 	private static void addAllFiles(FastList<File> l, File f)
 	{
+		//FileUtils.listFiles(directory, extensions, recursive);
+		
 		if(f.isDirectory())
 		{
 			File[] fl = f.listFiles();
@@ -615,18 +614,14 @@ public class LatCore
 					addAllFiles(l, fl[i]);
 			}
 		}
-		else l.add(f);
+		else if(f.isFile()) l.add(f);
 	}
 
 	public static long fileSize(File f)
 	{
-		if(f == null) return 0L;
+		if(f == null || !f.exists()) return 0L;
 		if(f.isFile()) return f.length();
-		long size = 0L;
-		FastList<File> files = getAllFiles(f);
-		for(int i = 0; i < files.size(); i++)
-			size += fileSize(files.get(i));
-		return size;
+		return FileUtils.sizeOf(f);
 	}
 	
 	public static String fileSizeS(double b)
@@ -652,4 +647,7 @@ public class LatCore
 		
 		return b + "B";
 	}
+	
+	public static void throwException(Exception e) throws Exception
+	{ if(e != null) throw e; }
 }

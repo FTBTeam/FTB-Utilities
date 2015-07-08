@@ -3,6 +3,7 @@ package latmod.ftbu.mod;
 import java.util.UUID;
 
 import latmod.ftbu.core.LMProxy;
+import latmod.ftbu.core.event.FTBUReadmeEvent;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.TileLM;
 import latmod.ftbu.core.world.LMWorld;
@@ -14,6 +15,10 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class FTBUCommon extends LMProxy // FTBUClient
 {
+	public void addInfo(FTBUReadmeEvent e)
+	{
+	}
+	
 	public boolean isShiftDown() { return false; }
 	public boolean isCtrlDown() { return false; }
 	public boolean isTabDown() { return false; }

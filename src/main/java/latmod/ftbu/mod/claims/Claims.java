@@ -3,7 +3,7 @@ package latmod.ftbu.mod.claims;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.*;
-import latmod.ftbu.mod.FTBUConfig;
+import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.nbt.*;
 import net.minecraft.util.ChunkCoordinates;
 
@@ -130,8 +130,8 @@ public class Claims
 	
 	public static boolean isOutsideWorldBorder(int dim, int cx, int cz)
 	{
-		if(!FTBUConfig.WorldBorder.inst.enabled) return false;
-		int radius = FTBUConfig.WorldBorder.inst.getWorldBorder(dim);
+		if(!FTBUConfig.world_border.enabled) return false;
+		int radius = FTBUConfig.world_border.getWorldBorder(dim);
 		int min = MathHelperLM.chunk(-radius);
 		int max = MathHelperLM.chunk(radius);
 		return cx >= max || cx <= min || cz >= max || cz <= min;

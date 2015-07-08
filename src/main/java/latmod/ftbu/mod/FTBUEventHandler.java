@@ -12,6 +12,7 @@ import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.backups.Backups;
 import latmod.ftbu.mod.claims.*;
 import latmod.ftbu.mod.cmd.CmdMotd;
+import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityChicken;
@@ -65,7 +66,7 @@ public class FTBUEventHandler // FTBUTickHandler
 		
 		if(first)
 		{
-			FastList<ItemStack> items = FTBUConfig.Login.getStartingItems(ep.getUniqueID());
+			FastList<ItemStack> items = FTBUConfig.login.getStartingItems(ep.getUniqueID());
 			if(items != null && !items.isEmpty()) for(ItemStack is : items)
 				InvUtils.giveItem(ep, is);
 		}
@@ -242,7 +243,7 @@ public class FTBUEventHandler // FTBUTickHandler
 	@SubscribeEvent
 	public void onMobSpawned(net.minecraftforge.event.entity.EntityJoinWorldEvent e)
 	{
-		if(!FTBUConfig.General.inst.safeSpawn || !FTBUConfig.isDedi()) return;
+		if(!FTBUConfig.general.safeSpawn || !FTBUConfig.isDedi()) return;
 		
 		if((e.entity instanceof IMob || (e.entity instanceof EntityChicken && e.entity.riddenByEntity != null)) && Claims.isInSpawnD(e.world.provider.dimensionId, e.entity.posX, e.entity.posZ))
 			e.setCanceled(true);
@@ -265,7 +266,7 @@ public class FTBUEventHandler // FTBUTickHandler
 			int cx = MathHelperLM.chunk(e.entity.posX);
 			int cz = MathHelperLM.chunk(e.entity.posZ);
 			
-			if(Claims.isOutsideWorldBorder(dim, cx, cz) || (FTBUConfig.General.inst.safeSpawn && Claims.isInSpawn(dim, cx, cz))) e.setCanceled(true);
+			if(Claims.isOutsideWorldBorder(dim, cx, cz) || (FTBUConfig.general.safeSpawn && Claims.isInSpawn(dim, cx, cz))) e.setCanceled(true);
 			else
 			{
 				ClaimedChunk c = Claims.get(dim, cx, cz);
@@ -284,7 +285,7 @@ public class FTBUEventHandler // FTBUTickHandler
 		int cx = MathHelperLM.chunk(e.explosion.explosionX);
 		int cz = MathHelperLM.chunk(e.explosion.explosionZ);
 		
-		if(Claims.isOutsideWorldBorder(dim, cx, cz) || (FTBUConfig.General.inst.safeSpawn && Claims.isInSpawn(dim, cx, cz))) e.setCanceled(true);
+		if(Claims.isOutsideWorldBorder(dim, cx, cz) || (FTBUConfig.general.safeSpawn && Claims.isInSpawn(dim, cx, cz))) e.setCanceled(true);
 		else
 		{
 			ClaimedChunk c = Claims.get(dim, cx, cz);

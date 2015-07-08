@@ -4,6 +4,7 @@ import java.util.UUID;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.client.badges.ThreadLoadBadges;
+import latmod.ftbu.core.event.FTBUReadmeEvent;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.TileLM;
 import latmod.ftbu.core.util.LatCore;
@@ -61,6 +62,12 @@ public class FTBUClient extends FTBUCommon
 	{
 		ClientConfig.Registry.load();
 		//ThreadLoadBadges.init();
+	}
+	
+	public void addInfo(FTBUReadmeEvent e)
+	{
+		FTBUReadmeEvent.ReadmeFile.Category waypoints = e.file.get("waypoints");
+		waypoints.add("testing", "test");
 	}
 	
 	public boolean isShiftDown() { return GuiScreen.isShiftKeyDown(); }

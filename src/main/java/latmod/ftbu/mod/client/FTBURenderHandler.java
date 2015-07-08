@@ -5,9 +5,10 @@ import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.client.badges.Badge;
 import latmod.ftbu.core.client.model.*;
 import latmod.ftbu.core.util.*;
-import latmod.ftbu.mod.*;
+import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.GuiNotification;
 import latmod.ftbu.mod.client.minimap.*;
+import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -257,7 +258,7 @@ public class FTBURenderHandler
 	
 	private void renderWorldBorder()
 	{
-		int wb = FTBUConfig.WorldBorder.inst.getWorldBorder(currentDim);
+		int wb = FTBUConfig.world_border.getWorldBorder(currentDim);
 		float min = (MathHelperLM.chunk(-wb) + 1) * 16 + 0.01F;
 		float max = MathHelperLM.chunk(wb) * 16 - 0.01F;
 		

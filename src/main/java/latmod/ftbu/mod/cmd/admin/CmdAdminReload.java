@@ -3,7 +3,7 @@ package latmod.ftbu.mod.cmd.admin;
 import latmod.ftbu.core.cmd.*;
 import latmod.ftbu.core.event.ReloadEvent;
 import latmod.ftbu.core.net.*;
-import latmod.ftbu.mod.FTBUConfig;
+import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.command.ICommandSender;
 import cpw.mods.fml.relauncher.Side;
 

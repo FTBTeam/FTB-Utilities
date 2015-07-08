@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.client.gui;
 
 import static net.minecraft.util.EnumChatFormatting.*;
-import latmod.ftbu.core.*;
+import latmod.ftbu.core.FTBULang;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.FastList;

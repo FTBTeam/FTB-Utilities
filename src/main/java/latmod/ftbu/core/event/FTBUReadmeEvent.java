@@ -1,6 +1,11 @@
 package latmod.ftbu.core.event;
 
-import latmod.ftbu.core.util.FastMap;
+import java.io.File;
+
+import latmod.ftbu.core.LatCoreMC;
+import latmod.ftbu.core.util.*;
+import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.config.*;
 
 public class FTBUReadmeEvent extends EventLM
 {
@@ -31,7 +36,7 @@ public class FTBUReadmeEvent extends EventLM
 			public final String name;
 			public final FastMap<String, String> lines;
 			
-			public Category(String s)
+			private Category(String s)
 			{
 				name = s;
 				lines = new FastMap<String, String>();
@@ -49,5 +54,43 @@ public class FTBUReadmeEvent extends EventLM
 			public void add(String id, String text, Object def)
 			{ add(id, text + " Default: " + def); }
 		}
+	}
+	
+	public static void saveReadme() throws Exception
+	{
+		FTBUReadmeEvent e = new FTBUReadmeEvent();
+		
+		ConfigGeneral.saveReadme(e);
+		ConfigLogin.saveReadme(e);
+		ConfigWorldBorder.saveReadme(e);
+		ConfigBackups.saveReadme(e);
+		
+		FTBU.proxy.addInfo(e);
+		
+		e.post();
+		
+		StringBuilder sb = new StringBuilder();
+		
+		for(int j = 0; j < e.file.map.size(); j++)
+		{
+			FTBUReadmeEvent.ReadmeFile.Category c = e.file.map.values.get(j);
+			
+			sb.append('[');
+			sb.append(c.name);
+			sb.append(']');
+			sb.append('\n');
+			
+			for(int i = 0; i < c.lines.size(); i++)
+			{
+				sb.append(c.lines.keys.get(i));
+				sb.append(" - ");
+				sb.append(c.lines.values.get(i));
+				sb.append('\n');
+			}
+			
+			sb.append('\n');
+		}
+		
+		LatCore.saveFile(new File(LatCoreMC.latmodFolder, "readme.txt"), sb.toString().trim());
 	}
 }

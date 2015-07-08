@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.cmd.admin;
 
 import latmod.ftbu.core.cmd.*;
-import latmod.ftbu.mod.FTBUConfig;
+import latmod.ftbu.mod.config.*;
 import net.minecraft.command.ICommandSender;
 
 public class CmdAdminSpawnArea extends SubCommand
@@ -12,15 +12,15 @@ public class CmdAdminSpawnArea extends SubCommand
 		
 		if(args[0].equals("safe"))
 		{
-			FTBUConfig.General.inst.safeSpawn = args[1].equals("true");
-			FTBUConfig.General.save();
-			return "SafeSpawn set to: "+ FTBUConfig.General.inst.safeSpawn;
+			FTBUConfig.general.safeSpawn = args[1].equals("true");
+			ConfigGeneral.save();
+			return "SafeSpawn set to: "+ FTBUConfig.general.safeSpawn;
 		}
 		else if(args[0].equals("pvp"))
 		{
-			FTBUConfig.General.inst.spawnPVP = args[1].equals("true");
-			FTBUConfig.General.save();
-			return "SpawnPVP set to: "+ FTBUConfig.General.inst.spawnPVP;
+			FTBUConfig.general.spawnPVP = args[1].equals("true");
+			ConfigGeneral.save();
+			return "SpawnPVP set to: "+ FTBUConfig.general.spawnPVP;
 		}
 		
 		return "Subcommands: safe, pvp";

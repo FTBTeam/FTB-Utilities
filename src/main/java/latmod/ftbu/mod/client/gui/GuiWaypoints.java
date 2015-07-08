@@ -26,7 +26,7 @@ public class GuiWaypoints extends GuiLM
 	public static final int LIST_SIZE = 8;
 	
 	public final WaypointButton[] waypoints;
-	public final ButtonLM buttonUp, buttonAdd, buttonDown;
+	public final ButtonLM buttonUp, buttonClose, buttonAdd, buttonToggleAll, buttonDown;
 	private int scroll = 0;
 	private static int currentDim;
 	
@@ -47,15 +47,45 @@ public class GuiWaypoints extends GuiLM
 		
 		buttonUp.title = FTBULang.button_up;
 		
+		buttonClose = new ButtonLM(this, 102, 27, 16, 16)
+		{
+			public void onButtonPressed(int b)
+			{
+				gui.playClickSound();
+				mc.displayGuiScreen(new GuiFriends());
+			}
+		};
+		
+		buttonClose.title = FTBULang.button_close;
+		
 		buttonAdd = new ButtonLM(this, 102, 48, 16, 16)
 		{
 			public void onButtonPressed(int b)
-			{ mc.displayGuiScreen(new GuiEditWaypoint(GuiWaypoints.this, null)); }
+			{
+				gui.playClickSound();
+				mc.displayGuiScreen(new GuiEditWaypoint(GuiWaypoints.this, null));
+			}
 		};
 		
 		buttonAdd.title = FTBULang.button_add;
 		
-		buttonDown = new ButtonLM(this, 102, 91, 16, 16)
+		buttonToggleAll = new ButtonLM(this, 102, 69, 16, 16)
+		{
+			public void onButtonPressed(int b)
+			{
+				if(Waypoints.hasWaypoints())
+				{
+					boolean on = !firstEnabled();
+					gui.playClickSound();
+					for(Waypoint w : Waypoints.getAll())
+					{ if(w.dim == currentDim) w.enabled = on; }
+				}
+			}
+		};
+		
+		buttonToggleAll.title = "Toggle all";
+		
+		buttonDown = new ButtonLM(this, 102, 90, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{ scroll(1); }
@@ -64,13 +94,28 @@ public class GuiWaypoints extends GuiLM
 		buttonDown.title = FTBULang.button_down;
 	}
 	
+	private static boolean firstEnabled()
+	{
+		for(int i = 0; i < Waypoints.getAll().size(); i++)
+		{
+			Waypoint w = Waypoints.getAll().get(i);
+			if(w.dim == currentDim) return w.enabled;
+		}
+		return false;
+	}
+	
 	public void scroll(int s)
 	{
 		s = scroll + s;
 		int max = Waypoints.getAll().size() - LIST_SIZE;
 		if(s > max) s = max;
 		if(s < 0) s = 0;
-		if(scroll != s) { scroll = s; refreshWidgets(); }
+		if(scroll != s)
+		{
+			playClickSound();
+			scroll = s;
+			refreshWidgets();
+		}
 	}
 	
 	public void drawForeground()
@@ -85,7 +130,9 @@ public class GuiWaypoints extends GuiLM
 		scroll(0);
 		
 		l.add(buttonUp);
+		l.add(buttonClose);
 		l.add(buttonAdd);
+		l.add(buttonToggleAll);
 		l.add(buttonDown);
 		
 		Arrays.fill(waypoints, null);
@@ -115,7 +162,9 @@ public class GuiWaypoints extends GuiLM
 		super.drawBackground();
 		
 		buttonUp.render(Icons.up);
+		buttonClose.render(Icons.accept);
 		buttonAdd.render(Icons.add);
+		buttonToggleAll.render(Icons.close);
 		buttonDown.render(Icons.down);
 		
 		for(int i = 0; i < LIST_SIZE; i++) if(waypoints[i] != null)
@@ -157,6 +206,13 @@ public class GuiWaypoints extends GuiLM
 		{
 			gui.playClickSound();
 			
+			if(b == 1 && isCtrlKeyDown())
+			{
+				Waypoints.remove(waypoint.listID);
+				gui.refreshWidgets();
+				return;
+			}
+			
 			if(b == 1) waypoint.enabled = !waypoint.enabled;
 			else gui.mc.displayGuiScreen(new GuiEditWaypoint((GuiWaypoints)gui, waypoint));
 		}
@@ -197,6 +253,7 @@ public class GuiWaypoints extends GuiLM
 			{
 				public void onButtonPressed(int b)
 				{
+					gui.playClickSound();
 					if(newWaypoint) Waypoints.add(waypoint);
 					else Waypoints.save();
 					closeGui();
@@ -209,6 +266,7 @@ public class GuiWaypoints extends GuiLM
 			{
 				public void onButtonPressed(int b)
 				{
+					gui.playClickSound();
 					waypoint.isMarker = !waypoint.isMarker;
 					buttonType.title = Waypoints.waypointType.getValueS(waypoint.isMarker ? 0 : 1);
 				}
@@ -220,6 +278,7 @@ public class GuiWaypoints extends GuiLM
 			{
 				public void onButtonPressed(int b)
 				{
+					gui.playClickSound();
 					//mc.thePlayer.closeScreen();
 					if(newWaypoint) closeGui();
 					else mc.displayGuiScreen(new GuiYesNo(GuiEditWaypoint.this, "", "", 0));

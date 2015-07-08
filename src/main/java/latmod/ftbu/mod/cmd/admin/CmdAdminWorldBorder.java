@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.cmd.admin;
 
 import latmod.ftbu.core.cmd.*;
-import latmod.ftbu.mod.FTBUConfig;
+import latmod.ftbu.mod.config.*;
 import net.minecraft.command.ICommandSender;
 
 public class CmdAdminWorldBorder extends SubCommand
@@ -12,14 +12,14 @@ public class CmdAdminWorldBorder extends SubCommand
 		
 		if(args[0].equals("on"))
 		{
-			FTBUConfig.WorldBorder.inst.enabled = true;
-			FTBUConfig.WorldBorder.save();
+			FTBUConfig.world_border.enabled = true;
+			ConfigWorldBorder.save();
 			return CommandLM.FINE + "World border enabled";
 		}
 		else if(args[0].equals("off"))
 		{
-			FTBUConfig.WorldBorder.inst.enabled = false;
-			FTBUConfig.WorldBorder.save();
+			FTBUConfig.world_border.enabled = false;
+			ConfigWorldBorder.save();
 			return CommandLM.FINE + "World border disabled";
 		}
 		
@@ -28,8 +28,8 @@ public class CmdAdminWorldBorder extends SubCommand
 		int dim = CommandLM.parseInt(ics, args[0]);
 		int dist = CommandLM.parseInt(ics, args[1]);
 		
-		FTBUConfig.WorldBorder.inst.setWorldBorder(dim, dist);
-		FTBUConfig.WorldBorder.save();
+		FTBUConfig.world_border.setWorldBorder(dim, dist);
+		ConfigWorldBorder.save();
 		return CommandLM.FINE + "World border for dimension " + dim + " set to " + dist;
 	}
 }

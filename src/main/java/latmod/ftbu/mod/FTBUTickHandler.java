@@ -7,13 +7,14 @@ import latmod.ftbu.core.util.LatCore;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.backups.Backups;
 import latmod.ftbu.mod.claims.*;
+import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 
-public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
+public class FTBUTickHandler
 {
 	public static final FTBUTickHandler instance = new FTBUTickHandler();
 	public static boolean serverStarted = false;
@@ -56,7 +57,7 @@ public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
 				updateChunkMessage(ep);
 			}
 			
-			MessageLM.sendTo(ep, new MessageAreaUpdate(e.newChunkX, e.newChunkZ, ep.dimension, (byte)3, p));
+			MessageLM.sendTo(ep, new MessageAreaUpdate(e.newChunkX, e.newChunkZ, ep.dimension, (byte)1, p));
 		}
 	}
 	
@@ -89,7 +90,7 @@ public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
 					if(msg != null) LatCoreMC.printChatAll(LIGHT_PURPLE + "Server will restart after " + msg);
 				}
 				
-				if(secondsLeft > 60 && Backups.getSecondsUntilNextBackup() <= 0L) Backups.run(e.world, true);
+				if(secondsLeft > 60 && Backups.getSecondsUntilNextBackup() <= 0L) Backups.run();
 			}
 		}
 	}
@@ -107,18 +108,21 @@ public class FTBUTickHandler // FTBU // EnkiToolsTickHandler
 			currentMillis = startMillis = Backups.lastTimeRun = LatCore.millis();
 			restartSeconds = 0;
 			
-			if(FTBUConfig.General.inst.restartTimer > 0)
+			if(FTBUConfig.general.restartTimer > 0)
 			{
-				restartSeconds = (long)(FTBUConfig.General.inst.restartTimer * 3600D);
+				restartSeconds = (long)(FTBUConfig.general.restartTimer * 3600D);
 				LatCoreMC.logger.info("Server restart in " + LatCore.formatTime(restartSeconds, false));
 			}
-			
-			if(FTBUConfig.Backups.inst.onStartup) Backups.run(LatCoreMC.getServer().getEntityWorld(), true);
 		}
 		else
 		{
+			if(FTBUConfig.backups.backupOnShutdown)
+			{
+				Backups.shouldRun = true;
+				Backups.run();
+			}
+			
 			currentMillis = startMillis = restartSeconds = 0;
-			if(FTBUConfig.Backups.inst.onShutdown) Backups.run(LatCoreMC.getServer().getEntityWorld(), false);
 		}
 	}
 	

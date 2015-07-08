@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.cmd.all;
 
 import latmod.ftbu.core.cmd.*;
-import latmod.ftbu.core.world.*;
+import latmod.ftbu.core.world.LMWorld;
 import net.minecraft.command.ICommandSender;
 
 public class CmdFTBUWorldID extends SubCommand

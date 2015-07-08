@@ -210,6 +210,13 @@ public final class LatCoreMC // LatCoreMCClient
 	public static MinecraftServer getServer()
 	{ return FMLCommonHandler.instance().getMinecraftServerInstance(); }
 	
+	public static WorldServer getServerWorld()
+	{
+		MinecraftServer ms = getServer();
+		if(ms == null || ms.worldServers.length == 0) return null;
+		return ms.worldServers[0];
+	}
+	
 	public static Exception executeCommand(ICommandSender ics, String s)
 	{
 		try { getServer().getCommandManager().executeCommand(ics, s); }

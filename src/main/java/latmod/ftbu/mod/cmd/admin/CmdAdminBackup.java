@@ -11,7 +11,7 @@ public class CmdAdminBackup extends SubCommand
 	{
 		LatCoreMC.printChatAll(ics.getCommandSenderName() + " launched manual backup!");
 		Backups.shouldRun = true;
-		Backups.run(ics.getEntityWorld(), true);
+		if(!Backups.run()) return "Backup in progress!";
 		return null;
 	}
 }

@@ -6,8 +6,8 @@ import java.util.UUID;
 
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.util.*;
-import latmod.ftbu.mod.FTBUConfig;
 import latmod.ftbu.mod.client.FTBURenderHandler;
+import latmod.ftbu.mod.config.FTBUConfig;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
@@ -72,7 +72,10 @@ public class ThreadLoadBadges extends Thread
 			for(String k : custom.players.keySet())
 			{
 				UUID id = LatCoreMC.getUUIDFromString(k);
-				BadgeURL b = urlBadges.get(custom.players.get(k));
+				String bs = custom.players.get(k);
+				if(bs.indexOf(',') != -1) bs = bs.split(",")[0];
+				
+				BadgeURL b = urlBadges.get(bs);
 				if(id != null && b != null)
 				{
 					FTBURenderHandler.playerBadges.put(id, b);
@@ -80,9 +83,9 @@ public class ThreadLoadBadges extends Thread
 				}
 			}
 			
-			if(!FTBUConfig.Login.inst.customBadges.isEmpty())
+			if(!FTBUConfig.login.customBadges.isEmpty())
 			{
-				lastLoadedURL = FTBUConfig.Login.inst.customBadges;
+				lastLoadedURL = FTBUConfig.login.customBadges;
 				custom = LatCore.fromJson("{" + LatCore.toString(new URL(lastLoadedURL).openStream()) + "}", CustomBadges.class);
 				
 				for(String k : custom.badges.keySet())

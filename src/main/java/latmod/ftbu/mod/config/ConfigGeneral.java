@@ -2,6 +2,7 @@ package latmod.ftbu.mod.config;
 
 import java.io.File;
 
+import net.minecraft.entity.player.EntityPlayer;
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
 import latmod.ftbu.core.util.LatCore;
@@ -20,11 +21,14 @@ public class ConfigGeneral
 	@Expose public Boolean spawnPVP;
 	@Expose public Boolean enableDedicatedOnSP;
 	@Expose public Integer maxClaims;
+	//@Expose public String[] spawnBreakWhitelist;
+	//@Expose public String[] spawnInteractWhitelist;
+	//@Expose public String[] placementBlacklist;
 	
 	public static void load()
 	{
 		saveFile = new File(LatCoreMC.latmodFolder, "ftbu/general.txt");
-		FTBUConfig.general = LatCore.fromJsonFromFile(saveFile, ConfigGeneral.class);
+		FTBUConfig.general = LatCore.fromJsonFile(saveFile, ConfigGeneral.class);
 		if(FTBUConfig.general == null) FTBUConfig.general = new ConfigGeneral();
 		FTBUConfig.general.loadDefaults();
 		save();
@@ -39,8 +43,36 @@ public class ConfigGeneral
 		if(safeSpawn == null) safeSpawn = false;
 		if(spawnPVP == null) spawnPVP = true;
 		if(enableDedicatedOnSP == null) enableDedicatedOnSP = false;
-		if(maxClaims == null) maxClaims = 16;
+		if(maxClaims == null) maxClaims = 0;
+		
+		/*
+		if(spawnBreakWhitelist == null) spawnBreakWhitelist = new String[]
+		{
+				"OpenBlocks:grave"
+		};
+		
+		if(spawnInteractWhitelist == null) spawnInteractWhitelist = new String[]
+		{
+				"minecraft:furnace",
+				"minecraft:crafting_table",
+				"minecraft:sign",
+				"minecraft:door",
+				"Natura:BerryBush",
+				"IC2:blockPersonal",
+				"Mystcraft:BlockBookstand",
+		};
+		
+		if(placementBlacklist == null) placementBlacklist = new String[]
+		{
+		};
+		*/
 	}
+	
+	public boolean allowInteractSecure(EntityPlayer ep)
+	{ return allowCreativeInteractSecure && ep.capabilities.isCreativeMode; }
+	
+	public boolean isDedi()
+	{ return enableDedicatedOnSP || LatCoreMC.isDedicatedServer(); }
 	
 	public static void save()
 	{
@@ -59,5 +91,6 @@ public class ConfigGeneral
 		general.add("safeSpawn", "If set to true, explosions and hostile mobs in spawn area will be disabled.", false);
 		general.add("spawnPVP", "If set to false, players won't be able to attack each other in spawn area.", true);
 		general.add("enableDedicatedOnSP", "Enables server-only features on singleplayer / LAN worlds.", false);
+		general.add("maxClaims", "Max amount of chunks that player can claim. 0 - Disabled, recommended: 16. ", 0);
 	}
 }

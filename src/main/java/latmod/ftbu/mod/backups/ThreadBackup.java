@@ -40,27 +40,50 @@ public class ThreadBackup extends Thread
 			appendNum(out, calendar.get(Calendar.HOUR_OF_DAY), '-');
 			appendNum(out, calendar.get(Calendar.MINUTE), '-');
 			appendNum(out, calendar.get(Calendar.SECOND), File.separatorChar);
-			out.append(LMWorld.server.worldIDS);
 			
-			File dst = new File(Backups.backupsFolder, out.toString());
-			dst.mkdirs();
-			
-			LatCoreMC.logger.info("Saving " + src.getAbsolutePath() + " to " + dst.getAbsolutePath());
-			
-			LatCore.throwException(LatCore.copyFile(src, dst));
+			File dst;
 			
 			if(FTBUConfig.backups.compress)
 			{
-				File dst0 = new File(dst.getAbsolutePath());
-				dst = new File(dst0.getAbsolutePath() + ".zip");
+				out.append(LMWorld.server.worldIDS);
+				out.append(".zip");
+				
+				dst = LatCore.newFile(new File(Backups.backupsFolder, out.toString()));
 				
 				long start = LatCore.millis();
-				LatCoreMC.logger.info("Compressing...");
-				if(compress(dst0, dst) && LatCore.deleteFile(dst0))
-					LatCoreMC.logger.info("Done compressing in " + ((LatCore.millis() - start) / 1000F) + " seconds (" + LatCore.fileSizeS(new File(dst.getAbsolutePath() + ".zip").length()) + ")!");
-				else LatCoreMC.logger.info("Failed to compress backup!");
 				
+				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(dst));
+				
+				FastList<File> files = LatCore.getAllFiles(src);
+				
+				for(int i = 0; i < files.size(); i++)
+				{
+					String filePath = files.get(i).getAbsolutePath();
+					ZipEntry ze = new ZipEntry(src.getName() + File.separator + filePath.substring(src.getAbsolutePath().length() + 1, filePath.length()));
+					zos.putNextEntry(ze);
+					FileInputStream fis = new FileInputStream(filePath);
+					byte[] buffer = new byte[1024];
+					int len;
+					while ((len = fis.read(buffer)) > 0)
+						zos.write(buffer, 0, len);
+					zos.closeEntry();
+					fis.close();
+				}
+				
+				zos.close();
+				
+				LatCoreMC.logger.info("Done compressing in " + ((LatCore.millis() - start) / 1000F) + " seconds (" + LatCore.fileSizeS(dst.length()) + ")!");
 			}
+			else
+			{
+				out.append(src.getName());
+				
+				dst = new File(Backups.backupsFolder, out.toString());
+				dst.mkdirs();
+				LatCore.throwException(LatCore.copyFile(src, dst));
+			}
+			
+			LatCoreMC.logger.info("Created " + dst.getAbsolutePath() + " from " + src.getAbsolutePath());
 			
 			Backups.clearOldBackups();
 			
@@ -80,6 +103,7 @@ public class ThreadBackup extends Thread
 		
 		setSave(true);
 		Backups.canRun = true;
+		System.gc();
 	}
 	
 	private static void appendNum(StringBuilder sb, int num, char c)
@@ -98,38 +122,5 @@ public class ThreadBackup extends Thread
 			if(ms.worldServers[i] != null)
 				ms.worldServers[i].levelSaving = b;
 		}
-	}
-	
-	private boolean compress(File src, File dst)
-	{
-		try
-		{
-			FileOutputStream fos = new FileOutputStream(dst);
-			ZipOutputStream zos = new ZipOutputStream(fos);
-			
-			FastList<File> files = LatCore.getAllFiles(src);
-			
-			for(File f : files)
-			{
-				String filePath = f.getAbsolutePath();
-				ZipEntry ze = new ZipEntry(src.getName() + File.separator + filePath.substring(src.getAbsolutePath().length() + 1, filePath.length()));
-				zos.putNextEntry(ze);
-				FileInputStream fis = new FileInputStream(filePath);
-				byte[] buffer = new byte[1024];
-				int len;
-				while ((len = fis.read(buffer)) > 0)
-					zos.write(buffer, 0, len);
-				zos.closeEntry();
-				fis.close();
-			}
-			
-			zos.close();
-			fos.close();
-			return true;
-		}
-		catch(Exception e)
-		{ e.printStackTrace(); }
-		
-		return false;
 	}
 }

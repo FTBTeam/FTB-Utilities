@@ -21,7 +21,7 @@ public class CmdRules extends CommandLM
 	
 	public static boolean printRules(EntityPlayerMP ep)
 	{
-		if(!FTBUConfig.isDedi() || FTBUConfig.login.rules.isEmpty()) return false;
+		if(!FTBUConfig.general.isDedi() || FTBUConfig.login.rules.isEmpty()) return false;
 		
 		IChatComponent c = new ChatComponentText("[Click here to open rules]");
 		c.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, FTBUConfig.login.rules));

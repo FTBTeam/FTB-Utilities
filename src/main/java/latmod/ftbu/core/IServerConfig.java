@@ -10,7 +10,7 @@ public interface IServerConfig
 	public String getConfigName();
 	public void load();
 	public void readConfig(NBTTagCompound tag);
-	public void writeConfig(NBTTagCompound tag);
+	public void writeConfig(NBTTagCompound tag, EntityPlayerMP ep);
 	
 	public static class Registry
 	{
@@ -40,19 +40,19 @@ public interface IServerConfig
 			}
 		}
 		
-		public static void writeToNBT(NBTTagCompound tag, String s)
+		public static void writeToNBT(NBTTagCompound tag, EntityPlayerMP ep, String s)
 		{
 			if(s != null)
 			{
 				NBTTagCompound tag1 = new NBTTagCompound();
 				IServerConfig c = map.get(s);
-				if(c != null) c.writeConfig(tag1);
+				if(c != null) c.writeConfig(tag1, ep);
 				if(!tag1.hasNoTags()) tag.setTag(s, tag1);
 			}
 			else for(int i = 0; i < map.size(); i++)
 			{
 				NBTTagCompound tag1 = new NBTTagCompound();
-				map.values.get(i).writeConfig(tag1);
+				map.values.get(i).writeConfig(tag1, ep);
 				if(!tag1.hasNoTags()) tag.setTag(map.keys.get(i), tag1);
 			}
 		}
@@ -63,7 +63,7 @@ public interface IServerConfig
 				map.values.get(i).load();
 		}
 		
-		public static void update(EntityPlayerMP ep, String s)
-		{ MessageLM.sendTo(ep, new MessageUpdateConfig(s)); }
+		public static void updateConfig(EntityPlayerMP ep, String s)
+		{ MessageLM.NET.sendTo(new MessageUpdateConfig(ep, s), ep); }
 	}
 }

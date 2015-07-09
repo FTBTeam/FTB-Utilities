@@ -62,6 +62,12 @@ public final class LatCoreMC // LatCoreMCClient
 			else if(this == FORGE) return MinecraftForge.EVENT_BUS;
 			return FMLCommonHandler.instance().bus();
 		}
+		
+		public void register(Object o)
+		{ getBus().register(o); }
+		
+		public void unregister(Object o)
+		{ getBus().unregister(o); }
 	}
 	
 	public static final Configuration loadConfig(FMLPreInitializationEvent e, String s)
@@ -110,8 +116,9 @@ public final class LatCoreMC // LatCoreMCClient
 	public static void addWorldGenerator(IWorldGenerator i, int w)
 	{ GameRegistry.registerWorldGenerator(i, w); }
 	
+	@Deprecated
 	public static void addEventHandler(Object o, BusType... t)
-	{ for(BusType bt : t) bt.getBus().register(o); }
+	{ for(BusType bt : t) bt.register(o); }
 	
 	public static Fluid addFluid(Fluid f)
 	{

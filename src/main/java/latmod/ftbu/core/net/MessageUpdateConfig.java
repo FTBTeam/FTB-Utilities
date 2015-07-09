@@ -1,6 +1,7 @@
 package latmod.ftbu.core.net;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.IServerConfig;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.simpleimpl.*;
 
@@ -10,10 +11,10 @@ public class MessageUpdateConfig extends MessageLM<MessageUpdateConfig>
 	
 	public MessageUpdateConfig() { }
 	
-	public MessageUpdateConfig(String s)
+	public MessageUpdateConfig(EntityPlayerMP ep, String s)
 	{
 		data = new NBTTagCompound();
-		IServerConfig.Registry.writeToNBT(data, s);
+		IServerConfig.Registry.writeToNBT(data, ep, s);
 	}
 	
 	public void fromBytes(ByteBuf bb)

@@ -144,7 +144,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		if(selectedPlayer.playerLM.equalsPlayer(owner))
 		{
 			actionButtons.add(new ActionButton(this, PlayerAction.settings, FTBULang.button_settings));
-			actionButtons.add(new ActionButton(this, PlayerAction.waypoints, Waypoints.config.getIDS()));
+			actionButtons.add(new ActionButton(this, PlayerAction.waypoints, Waypoints.clientConfig.getIDS()));
 			actionButtons.add(new ActionButton(this, PlayerAction.minimap, "Claimed Chunks"));
 		}
 		else

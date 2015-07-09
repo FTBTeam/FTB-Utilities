@@ -60,9 +60,9 @@ public class FTBUEventHandler // FTBUTickHandler
 		
 		new LMPlayerEvent.LoggedIn(p, ep, first).post();
 		MessageLM.sendTo(sendAll ? null : ep, new MessageLMWorldUpdate(LMWorld.server.worldID));
-		IServerConfig.Registry.update(ep, null);
+		IServerConfig.Registry.updateConfig(ep, null);
 		MessageLM.sendTo(null, new MessageLMPlayerLoggedIn(p, first));
-		MessageLM.sendTo(null, p.getInfo(ep));
+		MessageLM.sendTo(null, p.getInfo());
 		
 		if(first)
 		{
@@ -76,7 +76,7 @@ public class FTBUEventHandler // FTBUTickHandler
 			p1.sendInfo(ep);
 		*/
 		
-		MessageLM.sendTo(ep, p.getInfo(ep));
+		MessageLM.sendTo(ep, p.getInfo());
 		CmdMotd.printMotd(ep);
 		Backups.shouldRun = true;
 	}
@@ -99,7 +99,7 @@ public class FTBUEventHandler // FTBUTickHandler
 			
 			new LMPlayerEvent.LoggedOut(p, (EntityPlayerMP)e.player).post();
 			MessageLM.sendTo(null, new MessageLMPlayerLoggedOut(p));
-			MessageLM.sendTo(null, p.getInfo((EntityPlayerMP)e.player));
+			MessageLM.sendTo(null, p.getInfo());
 			Backups.shouldRun = true;
 		}
 	}
@@ -211,8 +211,8 @@ public class FTBUEventHandler // FTBUTickHandler
 	
 	private boolean canInteract(net.minecraftforge.event.entity.player.PlayerInteractEvent e)
 	{
-		if(FTBUConfig.allowInteractSecure(e.entityPlayer)) return true;
-		if(FTBUConfig.isDedi() && !ChunkType.getD(e.world.provider.dimensionId, e.x, e.z, LMWorld.server.getPlayer(e.entityPlayer)).isFriendly()) return false;
+		if(FTBUConfig.general.allowInteractSecure(e.entityPlayer)) return true;
+		if(FTBUConfig.general.isDedi() && !ChunkType.getD(e.world.provider.dimensionId, e.x, e.z, LMWorld.server.getPlayer(e.entityPlayer)).isFriendly()) return false;
 		
 		TileEntity te = e.world.getTileEntity(e.x, e.y, e.z);
 		
@@ -243,7 +243,7 @@ public class FTBUEventHandler // FTBUTickHandler
 	@SubscribeEvent
 	public void onMobSpawned(net.minecraftforge.event.entity.EntityJoinWorldEvent e)
 	{
-		if(!FTBUConfig.general.safeSpawn || !FTBUConfig.isDedi()) return;
+		if(!FTBUConfig.general.safeSpawn || !FTBUConfig.general.isDedi()) return;
 		
 		if((e.entity instanceof IMob || (e.entity instanceof EntityChicken && e.entity.riddenByEntity != null)) && Claims.isInSpawnD(e.world.provider.dimensionId, e.entity.posX, e.entity.posZ))
 			e.setCanceled(true);
@@ -252,7 +252,7 @@ public class FTBUEventHandler // FTBUTickHandler
 	@SubscribeEvent
 	public void onPlayerAttacked(net.minecraftforge.event.entity.living.LivingAttackEvent e)
 	{
-		if(!FTBUConfig.isDedi()) return;
+		if(!FTBUConfig.general.isDedi()) return;
 		
 		int dim = e.entity.dimension;
 		if(dim != 0 || !(e.entity instanceof EntityPlayerMP) || e.entity instanceof FakePlayer) return;
@@ -261,7 +261,7 @@ public class FTBUEventHandler // FTBUTickHandler
 		
 		if(entity != null && entity instanceof EntityPlayerMP && !(entity instanceof FakePlayer))
 		{
-			if(FTBUConfig.allowInteractSecure((EntityPlayerMP)entity)) return;
+			if(FTBUConfig.general.allowInteractSecure((EntityPlayerMP)entity)) return;
 			
 			int cx = MathHelperLM.chunk(e.entity.posX);
 			int cz = MathHelperLM.chunk(e.entity.posZ);
@@ -278,7 +278,7 @@ public class FTBUEventHandler // FTBUTickHandler
 	@SubscribeEvent
 	public void onExplosion(net.minecraftforge.event.world.ExplosionEvent.Start e)
 	{
-		if(!FTBUConfig.isDedi()) return;
+		if(!FTBUConfig.general.isDedi()) return;
 		
 		int dim = e.world.provider.dimensionId;
 		if(dim != 0) return;

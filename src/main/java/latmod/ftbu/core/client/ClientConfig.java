@@ -19,11 +19,11 @@ public final class ClientConfig
 		map = new FastMap<String, Property>();
 	}
 	
-	public void add(Property e)
-	{ map.put(e.id, e); }
-	
 	public String getIDS()
 	{ return I18n.format("config.group." + id); }
+	
+	public String toString()
+	{ return getIDS() + ": " + map; }
 	
 	public final static class Registry
 	{
@@ -87,17 +87,18 @@ public final class ClientConfig
 	
 	public final static class Property implements Comparable<Property>
 	{
+		public final ClientConfig parent;
 		public final String id;
 		public final int def;
 		public final String[] values;
 		private int value = -1;
 		private boolean translateValues = true;
 		
-		public Property(String s, int d, String... v)
-		{ id = s; def = d; values = v; }
+		public Property(ClientConfig c, String s, int d, String... v)
+		{ parent = c; parent.map.put(s, this); id = s; def = d; values = v; }
 		
-		public Property(String s, boolean d)
-		{ this(s, d ? 1 : 0, "disabled", "enabled"); }
+		public Property(ClientConfig c, String s, boolean d)
+		{ this(c, s, d ? 1 : 0, "disabled", "enabled"); }
 		
 		public void incValue()
 		{ value = (value + 1) % values.length; }
@@ -109,7 +110,7 @@ public final class ClientConfig
 		{ return getI() == 1; }
 		
 		public int compareTo(Property o)
-		{ return id.compareTo(o.id); }
+		{ return getIDS().compareTo(o.getIDS()); }
 		
 		public String toString()
 		{ return getIDS() + ": " + getValueS(getI()); }
@@ -119,7 +120,7 @@ public final class ClientConfig
 		
 		public String getValueS(int i)
 		{ return translateValues ? I18n.format("config.value." + values[i]) : values[i]; }
-
+		
 		public Property setTranslateValues(boolean b)
 		{ translateValues = b; return this; }
 	}

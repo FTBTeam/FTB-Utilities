@@ -1,7 +1,7 @@
 package latmod.ftbu.core.net;
 
 import io.netty.buffer.ByteBuf;
-import latmod.ftbu.core.world.LMPlayer;
+import latmod.ftbu.core.world.LMPlayerServer;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.claims.ChunkType;
 import latmod.ftbu.mod.client.minimap.Minimap;
@@ -16,11 +16,13 @@ public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate> implements I
 	
 	public MessageAreaUpdate() { }
 	
+	@Deprecated
 	public MessageAreaUpdate(int x, int z, int d, byte s, byte[] b)
 	{
-		chunkX = x; chunkZ = z; dim = d; size = s; types = b; }
+		chunkX = x; chunkZ = z; dim = d; size = s; types = b;
+	}
 	
-	public MessageAreaUpdate(int x, int z, int d, byte s, LMPlayer p)
+	public MessageAreaUpdate(int x, int z, int d, byte s, LMPlayerServer p)
 	{
 		this(x, z, d, s, new byte[s * s]);
 		for(int z1 = 0; z1 < s; z1++) for(int x1 = 0; x1 < s; x1++)

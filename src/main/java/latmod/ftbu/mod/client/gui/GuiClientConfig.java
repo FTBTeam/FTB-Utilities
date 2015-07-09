@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.client.gui;
 
-import latmod.ftbu.core.FTBULang;
+import latmod.ftbu.core.*;
 import latmod.ftbu.core.client.ClientConfig;
 import net.minecraft.client.gui.*;
 import cpw.mods.fml.relauncher.*;
@@ -10,15 +10,15 @@ public class GuiClientConfig extends GuiScreen
 {
 	public GuiClientConfig(GuiScreen g)
 	{
-		//To-Do: Make a return gui
 	}
 	
 	@SuppressWarnings("unchecked")
 	public void initGui()
 	{
-		int i = -1;
-		for(ClientConfig c : ClientConfig.Registry.map.values)
-			buttonList.add(new GroupButton(++i, c));
+		buttonList.clear();
+		
+		for(int i = 0; i < ClientConfig.Registry.map.size(); i++)
+			buttonList.add(new GroupButton(i, ClientConfig.Registry.map.values.get(i)));
 		
 		buttonList.add(new GuiButton(255, width / 2 - 100, height - 40, 200, 20, FTBULang.button_back));
 	}
@@ -65,9 +65,10 @@ public class GuiClientConfig extends GuiScreen
 		@SuppressWarnings("unchecked")
 		public void initGui()
 		{
-			int i = -1;
-			for(ClientConfig.Property p : config.map.values)
-				buttonList.add(new PropButton(++i, p));
+			buttonList.clear();
+			
+			for(int i = 0; i < config.map.size(); i++)
+				buttonList.add(new PropButton(i, config.map.values.get(i)));
 			
 			buttonList.add(new GuiButton(255, width / 2 - 100, height - 40, 200, 20, FTBULang.button_back));
 		}

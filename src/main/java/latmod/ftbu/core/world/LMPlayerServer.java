@@ -80,7 +80,7 @@ public class LMPlayerServer extends LMPlayer
 	
 	// Reading / Writing //
 	
-	public MessageLMPlayerInfo getInfo(EntityPlayerMP ep)
+	public MessageLMPlayerInfo getInfo()
 	{
 		NBTTagCompound tag = new NBTTagCompound();
 		

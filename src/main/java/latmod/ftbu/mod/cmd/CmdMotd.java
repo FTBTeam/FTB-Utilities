@@ -20,7 +20,7 @@ public class CmdMotd extends CommandLM
 	
 	public static boolean printMotd(EntityPlayerMP ep)
 	{
-		if(!FTBUConfig.isDedi()) return false;
+		if(!FTBUConfig.general.isDedi()) return false;
 		
 		for(String s : FTBUConfig.login.motd)
 			LatCoreMC.printChat(ep, s.replace("$player$", ep.getDisplayName()).replace("$", LatCoreMC.FORMATTING));

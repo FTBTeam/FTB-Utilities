@@ -33,8 +33,11 @@ public class FTBU
 	
 	public FTBU()
 	{
-		LatCoreMC.addEventHandler(FTBUEventHandler.instance, LatCoreMC.BusType.FORGE, LatCoreMC.BusType.FML, LatCoreMC.BusType.LATMOD);
-		LatCoreMC.addEventHandler(FTBUTickHandler.instance, LatCoreMC.BusType.FORGE, LatCoreMC.BusType.FML);
+		LatCoreMC.BusType.FORGE.register(FTBUEventHandler.instance);
+		LatCoreMC.BusType.FML.register(FTBUEventHandler.instance);
+		LatCoreMC.BusType.LATMOD.register(FTBUEventHandler.instance);
+		LatCoreMC.BusType.FORGE.register(FTBUTickHandler.instance);
+		LatCoreMC.BusType.FML.register(FTBUTickHandler.instance);
 	}
 	
 	private ModMetadata modMeta;
@@ -63,15 +66,15 @@ public class FTBU
 		Backups.init();
 		
 		mod.onPostLoaded();
-		proxy.preInit(e);
+		proxy.preInit();
 	}
 	
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent e)
 	{
 		MessageLM.init();
-		proxy.init(e);
 		FMLInterModComms.sendMessage("Waila", "register", "latmod.ftbu.core.event.RegisterWailaEvent.registerHandlers");
+		proxy.init();
 	}
 	
 	@Mod.EventHandler
@@ -79,7 +82,7 @@ public class FTBU
 	{
 		ODItems.postInit();
 		mod.loadRecipes();
-		proxy.postInit(e);
+		proxy.postInit();
 		
 		if(modMeta != null && LMMod.modsMap.values.size() >= 2)
 		{

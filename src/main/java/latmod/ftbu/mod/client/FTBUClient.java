@@ -24,7 +24,6 @@ import net.minecraft.world.World;
 import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.*;
 
@@ -32,33 +31,28 @@ import cpw.mods.fml.relauncher.*;
 public class FTBUClient extends FTBUCommon
 {
 	public static final ClientConfig clientConfig = new ClientConfig("ftbu");
-	public static final ClientConfig.Property enablePlayerDecorators = new ClientConfig.Property("player_decorators", true);
-	public static final ClientConfig.Property addOreNames = new ClientConfig.Property("item_ore_names", false);
-	public static final ClientConfig.Property addRegistryNames = new ClientConfig.Property("item_reg_names", false);
-	public static final ClientConfig.Property displayDebugInfo = new ClientConfig.Property("debug_info", false);
-	public static final ClientConfig.Property optionsButton = new ClientConfig.Property("options_button", true);
-	public static final ClientConfig.Property chatLinks = new ClientConfig.Property("chat_links", 1, "disabled", "enabled"); //"replace", "print" });
+	public static final ClientConfig.Property enablePlayerDecorators = new ClientConfig.Property(clientConfig, "player_decorators", true);
+	public static final ClientConfig.Property addOreNames = new ClientConfig.Property(clientConfig, "item_ore_names", false);
+	public static final ClientConfig.Property addRegistryNames = new ClientConfig.Property(clientConfig, "item_reg_names", false);
+	public static final ClientConfig.Property displayDebugInfo = new ClientConfig.Property(clientConfig, "debug_info", false);
+	public static final ClientConfig.Property optionsButton = new ClientConfig.Property(clientConfig, "options_button", true);
+	public static final ClientConfig.Property chatLinks = new ClientConfig.Property(clientConfig, "chat_links", 1, "disabled", "enabled"); //"replace", "print" });
 	
-	public void preInit(FMLPreInitializationEvent e)
+	public void preInit()
 	{
-		super.preInit(e);
-		LatCoreMC.addEventHandler(FTBUClientEventHandler.instance, LatCoreMC.BusType.FORGE, LatCoreMC.BusType.LATMOD);
-		LatCoreMC.addEventHandler(FTBURenderHandler.instance, LatCoreMC.BusType.FORGE, LatCoreMC.BusType.FML);
-		ClientConfig.Registry.init();
+		LatCoreMC.BusType.FORGE.register(FTBUClientEventHandler.instance);
+		LatCoreMC.BusType.LATMOD.register(FTBUClientEventHandler.instance);
+		LatCoreMC.BusType.FORGE.register(FTBURenderHandler.instance);
+		LatCoreMC.BusType.FML.register(FTBURenderHandler.instance);
 		
-		clientConfig.add(enablePlayerDecorators);
-		clientConfig.add(addOreNames);
-		clientConfig.add(addRegistryNames);
-		clientConfig.add(displayDebugInfo);
-		clientConfig.add(optionsButton);
-		clientConfig.add(chatLinks);
+		ClientConfig.Registry.init();
 		ClientConfig.Registry.add(clientConfig);
 		
 		Waypoints.init();
 		Minimap.init();
 	}
 	
-	public void postInit(FMLPostInitializationEvent e)
+	public void postInit()
 	{
 		ClientConfig.Registry.load();
 		//ThreadLoadBadges.init();

@@ -299,7 +299,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		
 		public void onButtonPressed(int b)
 		{
-			MessageLM.NET.sendToServer(new MessageClaimChunk(guiM.dimension, chunkX(), chunkZ(), (b == 0) ? 1 : 0));
+			MessageLM.NET.sendToServer(new MessageClaimChunk(guiM.dimension, chunkX(), chunkZ(), b == 0));
 			gui.playClickSound();
 		}
 		

@@ -24,7 +24,7 @@ public class ConfigBackups
 	public static void load()
 	{
 		saveFile = new File(LatCoreMC.latmodFolder, "ftbu/backups.txt");
-		FTBUConfig.backups = LatCore.fromJsonFromFile(saveFile, ConfigBackups.class);
+		FTBUConfig.backups = LatCore.fromJsonFile(saveFile, ConfigBackups.class);
 		if(FTBUConfig.backups == null) FTBUConfig.backups = new ConfigBackups();
 		FTBUConfig.backups.loadDefaults();
 		save();

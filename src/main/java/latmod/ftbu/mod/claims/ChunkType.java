@@ -5,6 +5,7 @@ import java.util.List;
 import latmod.ftbu.core.util.MathHelperLM;
 import latmod.ftbu.core.world.LMPlayer;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
@@ -53,7 +54,7 @@ public enum ChunkType
 	
 	public static ChunkType get(int dim, int cx, int cz, LMPlayer p)
 	{
-		//if(!LatCoreMC.isDedicatedServer()) return WILDERNESS;
+		if(!FTBUConfig.general.isDedi()) return WILDERNESS;
 		
 		WorldServer w = DimensionManager.getWorld(dim);
 		if(w != null && !w.getChunkProvider().chunkExists(cx, cz)) return UNLOADED;

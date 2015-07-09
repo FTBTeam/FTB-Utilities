@@ -387,7 +387,7 @@ public class LatCore
 		return gson.fromJson(s, t);
 	}
 	
-	public static <T> T fromJsonFromFile(File f, Type t)
+	public static <T> T fromJsonFile(File f, Type t)
 	{
 		if(!f.exists()) return null;
 		try { return fromJson(toString(new FileInputStream(f)), t); }

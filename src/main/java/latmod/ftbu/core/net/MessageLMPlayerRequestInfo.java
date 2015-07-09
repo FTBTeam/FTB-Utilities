@@ -27,6 +27,6 @@ public class MessageLMPlayerRequestInfo extends MessageLM<MessageLMPlayerRequest
 	public IMessage onMessage(MessageLMPlayerRequestInfo m, MessageContext ctx)
 	{
 		LMPlayerServer p = LMWorld.server.getPlayer(m.playerID);
-		return (p == null) ? null : p.getInfo(ctx.getServerHandler().playerEntity);
+		return (p == null) ? null : p.getInfo();
 	}
 }

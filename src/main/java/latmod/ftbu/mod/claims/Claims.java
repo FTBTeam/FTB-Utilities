@@ -71,8 +71,11 @@ public class Claims
 		return null;
 	}
 	
-	public boolean claim(int dim, int cx, int cz, boolean admin)
+	public boolean claim(int dim, int cx, int cz)
 	{
+		if(chunks.size() >= FTBUConfig.general.maxClaims)
+			return false;
+		
 		ChunkType t = ChunkType.get(dim, cx, cz, owner);
 		
 		if(t == ChunkType.WILDERNESS)

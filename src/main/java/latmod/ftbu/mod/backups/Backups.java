@@ -27,8 +27,10 @@ public class Backups
 	
 	public static boolean run()
 	{
+		if(!canRun || !shouldRun || !FTBUConfig.backups.enabled) return false;
+		if(!FTBUConfig.general.isDedi()) return false;
 		World w = LatCoreMC.getServerWorld();
-		if(w == null || !canRun || !shouldRun || !FTBUConfig.backups.enabled) return false;
+		if(w == null) return false;
 		shouldRun = false;
 		new ThreadBackup(w).start();
 		return true;

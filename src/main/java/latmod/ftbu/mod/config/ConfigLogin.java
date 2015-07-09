@@ -23,7 +23,7 @@ public class ConfigLogin
 	public static void load()
 	{
 		saveFile = new File(LatCoreMC.latmodFolder, "ftbu/login.txt");
-		FTBUConfig.login = LatCore.fromJsonFromFile(saveFile, ConfigLogin.class);
+		FTBUConfig.login = LatCore.fromJsonFile(saveFile, ConfigLogin.class);
 		if(FTBUConfig.login == null) FTBUConfig.login = new ConfigLogin();
 		FTBUConfig.login.loadDefaults();
 		save();

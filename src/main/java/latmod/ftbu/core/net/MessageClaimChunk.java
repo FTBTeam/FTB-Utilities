@@ -2,17 +2,17 @@ package latmod.ftbu.core.net;
 
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.world.*;
-import latmod.ftbu.mod.claims.ChunkType;
 import net.minecraft.entity.player.EntityPlayerMP;
 import cpw.mods.fml.common.network.simpleimpl.*;
 
 public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 {
-	public int chunkX, chunkZ, dim, claim;
+	public int chunkX, chunkZ, dim;
+	public boolean claim;
 	
 	public MessageClaimChunk() { }
 	
-	public MessageClaimChunk(int d, int x, int z, int c)
+	public MessageClaimChunk(int d, int x, int z, boolean c)
 	{
 		dim = d;
 		chunkX = x;
@@ -25,7 +25,7 @@ public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 		dim = bb.readInt();
 		chunkX = bb.readInt();
 		chunkZ = bb.readInt();
-		claim = bb.readByte();
+		claim = bb.readBoolean();
 	}
 	
 	public void toBytes(ByteBuf bb)
@@ -33,18 +33,15 @@ public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 		bb.writeInt(dim);
 		bb.writeInt(chunkX);
 		bb.writeInt(chunkZ);
-		bb.writeByte(claim);
+		bb.writeBoolean(claim);
 	}
 	
 	public IMessage onMessage(MessageClaimChunk m, MessageContext ctx)
 	{
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
 		LMPlayerServer p = LMWorld.server.getPlayer(ep);
-		if(m.claim % 2 == 0) p.claims.unclaim(m.dim, m.chunkX, m.chunkZ, m.claim > 1);
-		else if(m.claim % 2 == 1) p.claims.claim(m.dim, m.chunkX, m.chunkZ, m.claim > 1);
-		
-		byte[] types = new byte[1];
-		types[0] = (byte)ChunkType.get(m.dim, m.chunkX, m.chunkZ, p).ordinal();
-		return new MessageAreaUpdate(m.chunkX, m.chunkZ, m.dim, (byte)1, types);
+		if(m.claim) p.claims.claim(m.dim, m.chunkX, m.chunkZ);
+		else p.claims.unclaim(m.dim, m.chunkX, m.chunkZ, false);
+		return new MessageAreaUpdate(m.chunkX, m.chunkZ, m.dim, (byte)1, p);
 	}
 }

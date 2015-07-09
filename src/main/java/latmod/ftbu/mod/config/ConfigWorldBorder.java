@@ -5,7 +5,7 @@ import java.util.*;
 
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
-import latmod.ftbu.core.util.LatCore;
+import latmod.ftbu.core.util.*;
 
 import com.google.gson.annotations.Expose;
 
@@ -14,13 +14,13 @@ public class ConfigWorldBorder
 	private static File saveFile;
 	
 	@Expose public Boolean enabled;
-	@Expose private Integer radius;
-	@Expose private Map<Integer, Integer> custom;
+	@Expose public Integer radius;
+	@Expose public Map<Integer, Integer> custom;
 	
 	public static void load()
 	{
 		saveFile = new File(LatCoreMC.latmodFolder, "ftbu/world_border.txt");
-		FTBUConfig.world_border = LatCore.fromJsonFromFile(saveFile, ConfigWorldBorder.class);
+		FTBUConfig.world_border = LatCore.fromJsonFile(saveFile, ConfigWorldBorder.class);
 		if(FTBUConfig.world_border == null) FTBUConfig.world_border = new ConfigWorldBorder();
 		FTBUConfig.world_border.loadDefaults();
 		save();
@@ -31,6 +31,7 @@ public class ConfigWorldBorder
 		if(enabled == null) enabled = false;
 		if(radius == null) radius = 10000;
 		if(custom == null) custom = new HashMap<Integer, Integer>();
+		radius = MathHelperLM.clampInt(radius, 20, 20000000);
 	}
 	
 	public static void save()
@@ -44,7 +45,7 @@ public class ConfigWorldBorder
 	{
 		FTBUReadmeEvent.ReadmeFile.Category world_border = e.file.get("latmod/ftbu/world_border.txt");
 		world_border.add("enabled", "true enables world border, false disables.", false);
-		world_border.add("radius", "Radius of the world border, starting at 0, 0. Its a square, so radius 5000 = 10000x10000 blocks of available world.", 5000);
+		world_border.add("radius", "Radius of the world border, starting at 0, 0. Its a square, so if radius is 5000, then 10000x10000 blocks are available of the world. Other dimensions without a custom size, will scale depending on dimension scale (in nether, size is 8 times smaller)", 5000);
 		world_border.add("custom", "'DimensionID:Size' map. Example: \"custom\": { \"7\":1000, \"27\":3000 }", "Blank");
 	}
 	
@@ -57,6 +58,11 @@ public class ConfigWorldBorder
 	public int getWorldBorder(int dim)
 	{
 		if(!enabled) return 0;
+		return MathHelperLM.clampInt(getWorldBorder0(dim), 20, 20000000);
+	}
+	
+	private int getWorldBorder0(int dim)
+	{
 		if(dim == 0) return radius;
 		
 		if(custom != null && !custom.isEmpty())

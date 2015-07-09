@@ -7,7 +7,7 @@ import java.util.*;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.util.LatCore;
 import latmod.ftbu.mod.FTBU;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.google.gson.annotations.Expose;
@@ -43,7 +43,7 @@ public class FTBUConfig implements IServerConfig // FTBU
 		general.maxClaims = tag.getInteger("MxC");
 	}
 	
-	public void writeConfig(NBTTagCompound tag)
+	public void writeConfig(NBTTagCompound tag, EntityPlayerMP ep)
 	{
 		if(!login.customBadges.isEmpty())
 			tag.setString("CB", login.customBadges);
@@ -57,12 +57,6 @@ public class FTBUConfig implements IServerConfig // FTBU
 		ConfigWorldBorder.save();
 		ConfigBackups.save();
 	}
-	
-	public static boolean allowInteractSecure(EntityPlayer ep)
-	{ return general.allowCreativeInteractSecure && ep.capabilities.isCreativeMode; }
-	
-	public static boolean isDedi()
-	{ return general.enableDedicatedOnSP || LatCoreMC.isDedicatedServer(); }
 	
 	private static class Overrides
 	{
@@ -86,7 +80,7 @@ public class FTBUConfig implements IServerConfig // FTBU
 		try
 		{
 			File f = new File(LatCoreMC.configFolder, "LatMod/FTBU_Overrides.txt");
-			Overrides overrides = LatCore.fromJsonFromFile(f, Overrides.class);
+			Overrides overrides = LatCore.fromJsonFile(f, Overrides.class);
 			if(overrides == null || overrides.overrides == null)
 			{
 				overrides = new Overrides();

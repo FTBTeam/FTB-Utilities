@@ -1,18 +1,16 @@
 package latmod.ftbu.core;
 
-import cpw.mods.fml.common.event.*;
-
 public class LMProxy
 {
-	public void preInit(FMLPreInitializationEvent e)
+	public void preInit()
 	{
 	}
 	
-	public void init(FMLInitializationEvent e)
+	public void init()
 	{
 	}
 	
-	public void postInit(FMLPostInitializationEvent e)
+	public void postInit()
 	{
 	}
 }

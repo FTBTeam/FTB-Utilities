@@ -62,7 +62,14 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	}
 	
 	public boolean remove(Object o)
-	{ int i = indexOf(o); if(i != -1) remove(i); return i != -1; }
+	{ return removeObj(o); }
+	
+	public boolean removeObj(Object o)
+	{
+		int i = indexOf(o);
+		if(i != -1) remove(i);
+		return i != -1;
+	}
 	
 	public int indexOf(Object o)
 	{

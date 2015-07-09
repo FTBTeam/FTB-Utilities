@@ -15,11 +15,13 @@ import cpw.mods.fml.relauncher.*;
 public class LMPlayerClient extends LMPlayer
 {
 	public final FastList<String> clientInfo;
+	protected boolean isOnline;
 	
 	public LMPlayerClient(LMWorldClient w, int i, GameProfile gp)
 	{
 		super(w, i, gp);
 		clientInfo = new FastList<String>();
+		isOnline = false;
 	}
 	
 	public LMPlayerServer toPlayerMP()

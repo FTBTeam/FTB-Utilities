@@ -70,7 +70,7 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> 
 		
 		LMPlayerClient p = new LMPlayerClient(LMWorld.client, m.playerID, new GameProfile(m.uuid, m.username));
 		p.readFromNet(m.data);
-		LMWorld.client.players.put(p.playerID, p);
+		LMWorld.client.players.add(p);
 		p.onPostLoaded();
 		
 		if(m.uuid.equals(mc.thePlayer.getUniqueID()))

@@ -26,6 +26,8 @@ public class LMPlayerServer extends LMPlayer
 	public final Claims claims;
 	private String playerName;
 	
+	private EntityPlayerMP entityPlayer = null;
+	
 	public LMPlayerServer(LMWorldServer w, int i, GameProfile gp)
 	{
 		super(w, i, gp);
@@ -47,8 +49,17 @@ public class LMPlayerServer extends LMPlayer
 	public LMPlayerClient toPlayerSP()
 	{ return null; }
 	
+	public void setPlayer(EntityPlayerMP ep)
+	{
+		entityPlayer = ep;
+	}
+	
 	public EntityPlayerMP getPlayerMP()
-	{ return LatCoreMC.getPlayerMP(getUUID()); }
+	//{ return LatCoreMC.getPlayerMP(getUUID()); }
+	{ return entityPlayer; }
+	
+	public boolean isOnline()
+	{ return entityPlayer != null; }
 	
 	public void sendUpdate(String action, boolean updateClient)
 	{
@@ -62,6 +73,12 @@ public class LMPlayerServer extends LMPlayer
 		lastSeen = LatCore.millis();
 		if(firstJoined <= 0L)
 			firstJoined = lastSeen;
+		if(entityPlayer != null)
+		{
+			if(lastPos == null)
+				lastPos = new EntityPos(entityPlayer);
+			lastPos.set(entityPlayer);
+		}
 	}
 	
 	public boolean isOP()
@@ -166,7 +183,7 @@ public class LMPlayerServer extends LMPlayer
 	
 	public void writeToNet(NBTTagCompound tag) // MID, LID, ID, N
 	{
-		if(isOnline) tag.setBoolean("On", isOnline);
+		if(isOnline()) tag.setBoolean("On", true);
 		
 		if(!friends.isEmpty())
 			tag.setIntArray("F", friends.toArray());

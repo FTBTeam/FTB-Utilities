@@ -8,8 +8,11 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class GuiClientConfig extends GuiScreen
 {
+	public final GuiScreen parent;
+	
 	public GuiClientConfig(GuiScreen g)
 	{
+		parent = g;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -25,14 +28,13 @@ public class GuiClientConfig extends GuiScreen
 	
 	public void actionPerformed(GuiButton b)
 	{
-		if(b.id == 255) mc.displayGuiScreen(null);
+		if(b.id == 255) mc.displayGuiScreen(parent);
 		else if(b instanceof GroupButton)
 			mc.displayGuiScreen(new GuiClientConfigTab(this, ((GroupButton)b).config));
 	}
 	
 	public void onGuiClosed()
 	{
-		//mc.displayGuiScreen(prev);
 	}
 	
 	public void drawScreen(int mx, int my, float pt)
@@ -55,10 +57,12 @@ public class GuiClientConfig extends GuiScreen
 	
 	public static class GuiClientConfigTab extends GuiScreen
 	{
+		public final GuiScreen parent;
 		public final ClientConfig config;
 		
 		public GuiClientConfigTab(GuiClientConfig g, ClientConfig c)
 		{
+			parent = g.parent;
 			config = c;
 		}
 		
@@ -75,7 +79,7 @@ public class GuiClientConfig extends GuiScreen
 		
 		public void actionPerformed(GuiButton b)
 		{
-			if(b.id == 255) mc.displayGuiScreen(new GuiClientConfig(null));
+			if(b.id == 255) mc.displayGuiScreen(new GuiClientConfig(parent));
 			else if(b instanceof PropButton)
 			{
 				ClientConfig.Property p = ((PropButton)b).property;

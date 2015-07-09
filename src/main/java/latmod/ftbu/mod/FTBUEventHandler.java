@@ -1,6 +1,6 @@
 package latmod.ftbu.mod;
 import java.io.File;
-import java.util.UUID;
+import java.util.*;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.event.*;
@@ -42,7 +42,7 @@ public class FTBUEventHandler // FTBUTickHandler
 		if(first)
 		{
 			p = new LMPlayerServer(LMWorld.server, LMPlayerServer.nextPlayerID(), ep.getGameProfile());
-			LMWorld.server.players.put(p.playerID, p);
+			LMWorld.server.players.add(p);
 			sendAll = true;
 		}
 		else
@@ -54,9 +54,8 @@ public class FTBUEventHandler // FTBUTickHandler
 			}
 		}
 		
-		p.setOnline(true);
+		p.setPlayer(ep);
 		if(p.lastPos == null) p.lastPos = new EntityPos();
-		p.lastPos.set(ep);
 		
 		new LMPlayerEvent.LoggedIn(p, ep, first).post();
 		MessageLM.sendTo(sendAll ? null : ep, new MessageLMWorldUpdate(LMWorld.server.worldID));
@@ -88,8 +87,6 @@ public class FTBUEventHandler // FTBUTickHandler
 		
 		if(p != null && e.player instanceof EntityPlayerMP)
 		{
-			p.setOnline(false);
-			
 			if(p.lastPos == null) p.lastPos = new EntityPos();
 			p.lastPos.set(e.player);
 			
@@ -100,6 +97,7 @@ public class FTBUEventHandler // FTBUTickHandler
 			new LMPlayerEvent.LoggedOut(p, (EntityPlayerMP)e.player).post();
 			MessageLM.sendTo(null, new MessageLMPlayerLoggedOut(p));
 			MessageLM.sendTo(null, p.getInfo());
+			p.setPlayer(null);
 			Backups.shouldRun = true;
 		}
 	}
@@ -131,8 +129,8 @@ public class FTBUEventHandler // FTBUTickHandler
 				}
 			}
 			
-			for(int i = 0; i < LMWorld.server.players.values.size(); i++)
-				LMWorld.server.players.values.get(i).setOnline(false);
+			for(int i = 0; i < LMWorld.server.players.size(); i++)
+				LMWorld.server.players.get(i).setPlayer(null);
 			
 			new LoadLMDataEvent(e1.latmodFolder, EventLM.Phase.POST).post();
 			
@@ -169,13 +167,12 @@ public class FTBUEventHandler // FTBUTickHandler
 			try
 			{
 				FastList<String> l = new FastList<String>();
-				FastList<Integer> list = new FastList<Integer>();
-				list.addAll(LMWorld.server.players.keys);
-				list.sort(null);
+				int[] list = LMWorld.server.getAllPlayerIDs();
+				Arrays.sort(list);
 				
-				for(int i = 0; i < list.size(); i++)
+				for(int i = 0; i < list.length; i++)
 				{
-					LMPlayer p = LMWorld.server.getPlayer(list.get(i));
+					LMPlayer p = LMWorld.server.getPlayer(list[i]);
 					
 					StringBuilder sb = new StringBuilder();
 					sb.append(LatCore.fillString("" + p.playerID, ' ', 6));

@@ -18,18 +18,17 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 	public static final String ACTION_GENERAL = "-";
 	public static final String ACTION_GROUPS_CHANGED = "ftbu.groups";
 	
-	public final LMWorld world;
+	public final LMWorld<?> world;
 	public final int playerID;
 	public final GameProfile gameProfile;
 	
 	public final String uuidString;
 	public final IntList friends;
 	public final ItemStack[] lastArmor;
-	protected boolean isOnline;
 	public int deaths;
 	public NBTTagCompound commonData;
 	
-	public LMPlayer(LMWorld w, int i, GameProfile gp)
+	public LMPlayer(LMWorld<?> w, int i, GameProfile gp)
 	{
 		world = w;
 		playerID = i;
@@ -38,7 +37,6 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 		uuidString = LatCoreMC.toShortUUID(getUUID());
 		friends = new IntList();
 		lastArmor = new ItemStack[5];
-		isOnline = false;
 		
 		commonData = new NBTTagCompound();
 	}
@@ -60,10 +58,7 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 	{ new LMPlayerEvent.DataLoaded(this).post(); }
 	
 	public boolean isOnline()
-	{ return isOnline; }
-	
-	public void setOnline(boolean b)
-	{ isOnline = b; }
+	{ return false; }
 	
 	public boolean isFriendRaw(LMPlayer p)
 	{ return p != null && (playerID == p.playerID || friends.contains(p.playerID)); }

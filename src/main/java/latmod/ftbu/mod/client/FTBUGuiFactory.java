@@ -31,7 +31,7 @@ public class FTBUGuiFactory implements IModGuiFactory
 	{
 		@SuppressWarnings("all")
 		public ModGuiConfig(GuiScreen s)
-		{ super(s, new FastList<>(), FTBU.mod.modID, false, false, FTBU.mod.config.getAbridgedPath()); }
+		{ super(s, new FastList<>(), FTBU.mod.modID, false, false, ""); }
 		
 		public void initGui()
 		{ mc.displayGuiScreen(new GuiClientConfig(parentScreen)); }

@@ -255,9 +255,9 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		
 		players.clear();
 		
-		for(int i = 0; i < LMWorld.client.players.values.size(); i++)
+		for(int i = 0; i < LMWorld.client.players.size(); i++)
 		{
-			LMPlayerClient p = LMWorld.client.players.values.get(i);
+			LMPlayerClient p = LMWorld.client.players.get(i);
 			if(!p.equalsPlayer(owner)) players.add(new Player(p));
 		}
 		

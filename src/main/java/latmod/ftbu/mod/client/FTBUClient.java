@@ -78,7 +78,7 @@ public class FTBUClient extends FTBUCommon
 	public World getClientWorld()
 	{ return FMLClientHandler.instance().getWorldClient(); }
 	
-	public LMWorld getClientWorldLM()
+	public LMWorld<?> getClientWorldLM()
 	{ return LMWorld.client; }
 	
 	public double getReachDist(EntityPlayer ep)

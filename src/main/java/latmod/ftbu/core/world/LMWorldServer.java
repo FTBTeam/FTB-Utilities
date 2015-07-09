@@ -5,65 +5,20 @@ import java.util.UUID;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.event.LMPlayerEvent;
 import latmod.ftbu.core.util.*;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.*;
-import net.minecraftforge.common.util.FakePlayer;
 
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.Side;
 
-public class LMWorldServer extends LMWorld
+public class LMWorldServer extends LMWorld<LMPlayerServer>
 {
-	public final FastMap<Integer, LMPlayerServer> players;
 	public final FastMap<String, EntityPos> warps;
 	
 	public LMWorldServer(UUID id)
 	{
 		super(Side.SERVER, id);
-		players = new FastMap<Integer, LMPlayerServer>();
 		warps = new FastMap<String, EntityPos>();
-	}
-	
-	public FastMap<Integer, ? extends LMPlayer> getPlayers()
-	{ return players; }
-	
-	public LMPlayerServer getPlayer(Object o)
-	{
-		if(o == null || o instanceof FakePlayer) return null;
-		else if(o instanceof Integer || o instanceof LMPlayer)
-		{
-			int h = o.hashCode();
-			return (h <= 0) ? null : players.get(h);
-		}
-		else if(o.getClass() == UUID.class)
-		{
-			UUID id = (UUID)o;
-			
-			for(int i = 0; i < players.size(); i++)
-			{
-				LMPlayerServer p = players.values.get(i);
-				if(p.getUUID().equals(id)) return p;
-			}
-		}
-		else if(o instanceof EntityPlayer)
-			return getPlayer(((EntityPlayer)o).getUniqueID());
-		else if(o instanceof String)
-		{
-			String s = o.toString();
-			
-			if(s == null || s.isEmpty()) return null;
-			
-			for(int i = 0; i < players.size(); i++)
-			{
-				LMPlayerServer p = players.values.get(i);
-				if(p.getName().equalsIgnoreCase(s)) return p;
-			}
-			
-			return getPlayer(LatCoreMC.getUUIDFromString(s));
-		}
-		
-		return null;
 	}
 	
 	public void load(NBTTagCompound tag)
@@ -96,11 +51,11 @@ public class LMWorldServer extends LMWorld
 	{
 		NBTTagList list = new NBTTagList();
 		
-		for(int i = 0; i < players.values.size(); i++)
+		for(int i = 0; i < players.size(); i++)
 		{
 			NBTTagCompound tag1 = new NBTTagCompound();
 			
-			LMPlayerServer p = players.values.get(i);
+			LMPlayerServer p = players.get(i);
 			p.writeToNet(tag1);
 			new LMPlayerEvent.DataSaved(p).post();
 			tag1.setLong("MID", p.getUUID().getMostSignificantBits());
@@ -116,11 +71,11 @@ public class LMWorldServer extends LMWorld
 	
 	public void writePlayersToServer(NBTTagCompound tag)
 	{
-		for(int i = 0; i < players.values.size(); i++)
+		for(int i = 0; i < players.size(); i++)
 		{
 			NBTTagCompound tag1 = new NBTTagCompound();
 			
-			LMPlayerServer p = players.values.get(i);
+			LMPlayerServer p = players.get(i);
 			p.writeToServer(tag1);
 			new LMPlayerEvent.DataSaved(p).post();
 			tag1.setString("UUID", p.uuidString);
@@ -142,11 +97,11 @@ public class LMWorldServer extends LMWorld
 			NBTTagCompound tag1 = map.values.get(i);
 			LMPlayerServer p = new LMPlayerServer(this, id, new GameProfile(LatCoreMC.getUUIDFromString(tag1.getString("UUID")), tag1.getString("Name")));
 			p.readFromServer(tag1);
-			players.put(p.playerID, p);
+			players.add(p);
 		}
 		
-		for(int i = 0; i < players.values.size(); i++)
-			players.values.get(i).onPostLoaded();
+		for(int i = 0; i < players.size(); i++)
+			players.get(i).onPostLoaded();
 	}
 	
 	// Warps //

@@ -33,7 +33,7 @@ public class FTBUCommon extends LMProxy // FTBUClient
 	public World getClientWorld()
 	{ return null; }
 	
-	public LMWorld getClientWorldLM()
+	public LMWorld<?> getClientWorldLM()
 	{ return null; }
 	
 	public double getReachDist(EntityPlayer ep)

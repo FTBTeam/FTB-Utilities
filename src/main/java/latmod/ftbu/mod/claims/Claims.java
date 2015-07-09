@@ -108,7 +108,7 @@ public class Claims
 	{
 		for(int i = 0; i < LMWorld.server.players.size(); i++)
 		{
-			ClaimedChunk c = LMWorld.server.players.values.get(i).claims.getLocal(dim, cx, cz);
+			ClaimedChunk c = LMWorld.server.players.get(i).claims.getLocal(dim, cx, cz);
 			if(c != null) return c;
 		}
 		

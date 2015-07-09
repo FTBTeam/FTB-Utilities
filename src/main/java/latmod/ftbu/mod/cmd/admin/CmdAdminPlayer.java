@@ -33,7 +33,7 @@ public class CmdAdminPlayer extends SubCommand
 				return "Player already exists!";
 			
 			LMPlayerServer p = new LMPlayerServer(LMWorld.server, LMPlayerServer.nextPlayerID(), new GameProfile(id, args[2]));
-			LMWorld.server.players.put(p.playerID, p);
+			LMWorld.server.players.add(p);
 			p.updateLastSeen();
 			
 			return "Fake player " + args[2] + " added!";
@@ -61,7 +61,7 @@ public class CmdAdminPlayer extends SubCommand
 			int playerID = CommandLM.parseInt(ics, args[0]);
 			LMPlayer p = CommandLM.getLMPlayer(playerID);
 			if(p.isOnline()) return mustBeOffline;
-			LMWorld.server.players.remove(playerID);
+			LMWorld.server.players.removeObj(playerID);
 			return CommandLM.FINE + "Player removed!";
 		}
 		

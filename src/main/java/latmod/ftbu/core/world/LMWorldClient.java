@@ -19,7 +19,7 @@ public class LMWorldClient extends LMWorld<LMPlayerClient>
 		super(Side.CLIENT, id);
 	}
 	
-	public LMPlayer getClientPlayer()
+	public LMPlayerClient getClientPlayer()
 	{ return getPlayer(clientPlayerID); }
 	
 	public void readPlayersFromNet(NBTTagCompound tag)

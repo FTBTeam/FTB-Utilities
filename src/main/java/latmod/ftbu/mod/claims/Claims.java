@@ -102,6 +102,9 @@ public class Claims
 		return false;
 	}
 	
+	public int getClaimedChunks()
+	{ return chunks.size(); }
+	
 	// Static //
 	
 	public static ClaimedChunk get(int dim, int cx, int cz)

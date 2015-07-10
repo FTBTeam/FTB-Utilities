@@ -9,6 +9,7 @@ import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.claims.ChunkType;
 import latmod.ftbu.mod.client.FTBURenderHandler;
 import latmod.ftbu.mod.client.minimap.*;
+import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -52,7 +53,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 	public static final byte SIZE_CHUNKS = CHUNKS_OFFSET * 2 + 1;
 	public static final int SIZE = SIZE_CHUNKS * 16;
 	
-	public final LMPlayer owner;
+	public final LMPlayerClient owner;
 	public final int startX, startZ;
 	public final int dimension;
 	private static int GL_ID = -1;
@@ -227,7 +228,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 					if(x > renderX + SIZE) x = renderX + SIZE;
 					if(y > renderY + SIZE) y = renderY + SIZE;
 					
-					GuiLM.drawTexturedRectD(x, y, zLevel, 8, 8, 0D, 0D, 1D, 1D);
+					GuiLM.drawTexturedRectD(x - 3.5D, y - 3.5D, zLevel, 8, 8, 0D, 0D, 1D, 1D);
 				}
 			}
 		}
@@ -269,6 +270,13 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		
 		buttonRefresh.render(Icons.map);
 		buttonClose.render(Icons.accept);
+	}
+	
+	public void drawText(FastList<String> l)
+	{
+		String s = owner.claimedChunks + " / " + FTBUConfig.general.maxClaims;
+		fontRendererObj.drawString(s, guiLeft + xSize - fontRendererObj.getStringWidth(s) - 4, guiTop + ySize - 12, 0xFFFFFFFF);
+		super.drawText(l);
 	}
 	
 	public void onGuiClosed()

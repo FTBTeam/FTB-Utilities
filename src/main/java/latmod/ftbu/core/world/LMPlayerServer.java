@@ -50,9 +50,7 @@ public class LMPlayerServer extends LMPlayer
 	{ return null; }
 	
 	public void setPlayer(EntityPlayerMP ep)
-	{
-		entityPlayer = ep;
-	}
+	{ entityPlayer = ep; }
 	
 	public EntityPlayerMP getPlayerMP()
 	//{ return LatCoreMC.getPlayerMP(getUUID()); }
@@ -77,7 +75,7 @@ public class LMPlayerServer extends LMPlayer
 		{
 			if(lastPos == null)
 				lastPos = new EntityPos(entityPlayer);
-			lastPos.set(entityPlayer);
+			else lastPos.set(entityPlayer);
 		}
 	}
 	
@@ -184,6 +182,7 @@ public class LMPlayerServer extends LMPlayer
 	public void writeToNet(NBTTagCompound tag) // MID, LID, ID, N
 	{
 		if(isOnline()) tag.setBoolean("On", true);
+		if(claims.getClaimedChunks() > 0) tag.setInteger("Claimed", claims.getClaimedChunks());
 		
 		if(!friends.isEmpty())
 			tag.setIntArray("F", friends.toArray());

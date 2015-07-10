@@ -55,7 +55,7 @@ public class FTBUEventHandler // FTBUTickHandler
 		}
 		
 		p.setPlayer(ep);
-		if(p.lastPos == null) p.lastPos = new EntityPos();
+		p.updateLastSeen();
 		
 		new LMPlayerEvent.LoggedIn(p, ep, first).post();
 		MessageLM.sendTo(sendAll ? null : ep, new MessageLMWorldUpdate(LMWorld.server.worldID));
@@ -87,8 +87,7 @@ public class FTBUEventHandler // FTBUTickHandler
 		
 		if(p != null && e.player instanceof EntityPlayerMP)
 		{
-			if(p.lastPos == null) p.lastPos = new EntityPos();
-			p.lastPos.set(e.player);
+			p.updateLastSeen();
 			
 			for(int i = 0; i < 4; i++)
 				p.lastArmor[i] = e.player.inventory.armorInventory[i];

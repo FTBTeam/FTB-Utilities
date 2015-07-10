@@ -16,6 +16,7 @@ public class LMPlayerClient extends LMPlayer
 {
 	public final FastList<String> clientInfo;
 	protected boolean isOnline;
+	public int claimedChunks;
 	
 	public LMPlayerClient(LMWorldClient w, int i, GameProfile gp)
 	{
@@ -34,6 +35,9 @@ public class LMPlayerClient extends LMPlayer
 	public EntityPlayerSP getPlayerSP()
 	{ return LatCoreMCClient.getPlayerSP(getUUID()); }
 	
+	public boolean isOnline()
+	{ return isOnline; }
+	
 	public void receiveInfo(NBTTagCompound tag)
 	{
 		NBTHelper.toStringList(clientInfo, tag.getTagList("I", NBTHelper.STRING));
@@ -48,6 +52,7 @@ public class LMPlayerClient extends LMPlayer
 	public void readFromNet(NBTTagCompound tag)
 	{
 		isOnline = tag.getBoolean("On");
+		claimedChunks = tag.getInteger("Claimed");
 		
 		friends.clear();
 		friends.addAll(tag.getIntArray("F"));

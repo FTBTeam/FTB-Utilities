@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.cmd.NameType;
-import latmod.ftbu.core.event.LMPlayerEvent;
 import latmod.ftbu.core.util.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -53,9 +52,6 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 	
 	public UUID getUUID()
 	{ return gameProfile.getId(); }
-	
-	public void onPostLoaded()
-	{ new LMPlayerEvent.DataLoaded(this).post(); }
 	
 	public boolean isOnline()
 	{ return false; }

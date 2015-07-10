@@ -61,6 +61,12 @@ public class EntityPos
 	public int[] toIntArray()
 	{ return new int[] { intX(), intY(), intZ(), dim }; }
 	
+	public static EntityPos fromIntArray(int[] pos)
+	{
+		if(pos == null || pos.length < 4) return null;
+		return new EntityPos(pos[0] + 0.5D, pos[1] + 0.5D, pos[2] + 0.5D, pos[3]);
+	}
+	
 	public static class Rot extends EntityPos
 	{
 		public float rotYaw, rotPitch;

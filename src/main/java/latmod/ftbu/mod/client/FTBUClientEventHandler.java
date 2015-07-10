@@ -179,12 +179,10 @@ public class FTBUClientEventHandler
 				e.right.add(mc.debug);
 		}
 		
-		LMPlayer p = LMWorld.client.getClientPlayer();
-		if(p != null) ChunkType.getMessage(mc.theWorld.provider.dimensionId, MathHelperLM.chunk(mc.thePlayer.posX), MathHelperLM.chunk(mc.thePlayer.posZ), p, e.right, shift);
-		
-		if(FTBUClient.displayDebugInfo.getB())
+		if(LMWorld.client != null)
 		{
-			//e.right.add("WorldClient@" + mc.theWorld.hashCode() + ", " + mc.theWorld.provider.dimensionId + ", " + mc.theWorld.provider.getDimensionName());
+			LMPlayerClient p = LMWorld.client.getClientPlayer();
+			if(p != null) ChunkType.getMessage(mc.theWorld.provider.dimensionId, MathHelperLM.chunk(mc.thePlayer.posX), MathHelperLM.chunk(mc.thePlayer.posZ), p, e.right, shift);
 		}
 	}
 	

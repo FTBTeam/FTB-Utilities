@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.client.LatCoreMCClient;
-import latmod.ftbu.core.event.LMPlayerEvent;
+import latmod.ftbu.core.event.LMPlayerClientEvent;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
@@ -80,6 +80,6 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> 
 			FTBUClient.onWorldJoined(p);
 		}
 		
-		new LMPlayerEvent.LoggedInClient(p, m.firstTime).post();
+		new LMPlayerClientEvent.LoggedIn(p, m.firstTime).post();
 	}
 }

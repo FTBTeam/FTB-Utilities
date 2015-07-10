@@ -91,6 +91,6 @@ public class ConfigGeneral
 		general.add("safeSpawn", "If set to true, explosions and hostile mobs in spawn area will be disabled.", false);
 		general.add("spawnPVP", "If set to false, players won't be able to attack each other in spawn area.", true);
 		general.add("enableDedicatedOnSP", "Enables server-only features on singleplayer / LAN worlds.", false);
-		general.add("maxClaims", "Max amount of chunks that player can claim. 0 - Disabled, recommended: 16. ", 0);
+		general.add("maxClaims", "Max amount of chunks that player can claim. EnkiTools mod overrides this. 0 - Disabled, recommended: 16. ", 0);
 	}
 }

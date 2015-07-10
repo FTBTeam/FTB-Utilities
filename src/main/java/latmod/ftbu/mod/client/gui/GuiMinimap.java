@@ -9,7 +9,6 @@ import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.claims.ChunkType;
 import latmod.ftbu.mod.client.FTBURenderHandler;
 import latmod.ftbu.mod.client.minimap.*;
-import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -274,7 +273,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 	
 	public void drawText(FastList<String> l)
 	{
-		String s = owner.claimedChunks + " / " + FTBUConfig.general.maxClaims;
+		String s = owner.claimedChunks + " / " + owner.maxClaimPower;
 		fontRendererObj.drawString(s, guiLeft + xSize - fontRendererObj.getStringWidth(s) - 4, guiTop + ySize - 12, 0xFFFFFFFF);
 		super.drawText(l);
 	}

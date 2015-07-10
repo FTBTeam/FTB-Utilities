@@ -57,7 +57,7 @@ public class FTBUEventHandler // FTBUTickHandler
 		p.setPlayer(ep);
 		p.updateLastSeen();
 		
-		new LMPlayerEvent.LoggedIn(p, ep, first).post();
+		new LMPlayerServerEvent.LoggedIn(p, ep, first).post();
 		MessageLM.sendTo(sendAll ? null : ep, new MessageLMWorldUpdate(LMWorld.server.worldID));
 		IServerConfig.Registry.updateConfig(ep, null);
 		MessageLM.sendTo(null, new MessageLMPlayerLoggedIn(p, first));
@@ -93,7 +93,7 @@ public class FTBUEventHandler // FTBUTickHandler
 				p.lastArmor[i] = e.player.inventory.armorInventory[i];
 			p.lastArmor[4] = e.player.inventory.getCurrentItem();
 			
-			new LMPlayerEvent.LoggedOut(p, (EntityPlayerMP)e.player).post();
+			new LMPlayerServerEvent.LoggedOut(p, (EntityPlayerMP)e.player).post();
 			MessageLM.sendTo(null, new MessageLMPlayerLoggedOut(p));
 			MessageLM.sendTo(null, p.getInfo());
 			p.setPlayer(null);

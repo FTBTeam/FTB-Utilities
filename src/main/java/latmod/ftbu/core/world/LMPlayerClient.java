@@ -2,7 +2,7 @@ package latmod.ftbu.core.world;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.client.LatCoreMCClient;
-import latmod.ftbu.core.event.LMPlayerEvent;
+import latmod.ftbu.core.event.*;
 import latmod.ftbu.core.util.*;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,6 +17,7 @@ public class LMPlayerClient extends LMPlayer
 	public final FastList<String> clientInfo;
 	protected boolean isOnline;
 	public int claimedChunks;
+	public int maxClaimPower;
 	
 	public LMPlayerClient(LMWorldClient w, int i, GameProfile gp)
 	{
@@ -46,13 +47,14 @@ public class LMPlayerClient extends LMPlayer
 		if(tag.hasKey("J")) clientInfo.add("Joined " + LatCore.getTimeAgo(tag.getLong("J")) + " ago");
 		if(deaths > 0) clientInfo.add("Deaths: " + deaths);
 		
-		new LMPlayerEvent.CustomInfo(this, Side.CLIENT, clientInfo).post();
+		new LMPlayerClientEvent.CustomInfo(this, clientInfo).post();
 	}
 	
 	public void readFromNet(NBTTagCompound tag)
 	{
 		isOnline = tag.getBoolean("On");
 		claimedChunks = tag.getInteger("Claimed");
+		maxClaimPower = tag.getInteger("MaxClaimed");
 		
 		friends.clear();
 		friends.addAll(tag.getIntArray("F"));
@@ -61,4 +63,7 @@ public class LMPlayerClient extends LMPlayer
 		InvUtils.readItemsFromNBT(lastArmor, tag, "LI");
 		deaths = tag.getInteger("D");
 	}
+	
+	public void onPostLoaded()
+	{ new LMPlayerClientEvent.DataLoaded(this).post(); }
 }

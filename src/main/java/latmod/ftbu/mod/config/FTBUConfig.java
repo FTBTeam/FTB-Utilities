@@ -40,14 +40,12 @@ public class FTBUConfig implements IServerConfig // FTBU
 	public void readConfig(NBTTagCompound tag)
 	{
 		login.customBadges = tag.getString("CB");
-		general.maxClaims = tag.getInteger("MxC");
 	}
 	
 	public void writeConfig(NBTTagCompound tag, EntityPlayerMP ep)
 	{
 		if(!login.customBadges.isEmpty())
 			tag.setString("CB", login.customBadges);
-		tag.setInteger("MxC", general.maxClaims);
 	}
 	
 	public static void saveAll()

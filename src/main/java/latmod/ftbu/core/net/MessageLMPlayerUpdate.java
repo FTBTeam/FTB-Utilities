@@ -1,7 +1,7 @@
 package latmod.ftbu.core.net;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.client.LatCoreMCClient;
-import latmod.ftbu.core.event.LMPlayerEvent;
+import latmod.ftbu.core.event.LMPlayerClientEvent;
 import latmod.ftbu.core.gui.IClientActionGui;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
@@ -49,7 +49,7 @@ public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate> impl
 	{
 		LMPlayerClient p = LMWorld.client.getPlayer(m.playerID);
 		p.readFromNet(m.data);
-		new LMPlayerEvent.DataChanged(p, Side.CLIENT, action).post();
+		new LMPlayerClientEvent.DataChanged(p, action).post();
 		
 		GuiScreen g = LatCoreMCClient.getMinecraft().currentScreen;
 		if(g != null && g instanceof IClientActionGui)

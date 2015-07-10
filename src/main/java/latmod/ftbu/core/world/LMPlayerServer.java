@@ -1,10 +1,11 @@
 package latmod.ftbu.core.world;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.event.LMPlayerEvent;
+import latmod.ftbu.core.event.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.claims.Claims;
+import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -25,8 +26,8 @@ public class LMPlayerServer extends LMPlayer
 	private long firstJoined;
 	public final Claims claims;
 	private String playerName;
-	
 	private EntityPlayerMP entityPlayer = null;
+	private int maxClaimPower = -1;
 	
 	public LMPlayerServer(LMWorldServer w, int i, GameProfile gp)
 	{
@@ -62,7 +63,7 @@ public class LMPlayerServer extends LMPlayer
 	public void sendUpdate(String action, boolean updateClient)
 	{
 		if(action == null || action.isEmpty()) action = ACTION_GENERAL;
-		new LMPlayerEvent.DataChanged(this, Side.SERVER, action).post();
+		new LMPlayerServerEvent.DataChanged(this, action).post();
 		if(updateClient) MessageLM.NET.sendToAll(new MessageLMPlayerUpdate(this, action));
 	}
 	
@@ -102,7 +103,7 @@ public class LMPlayerServer extends LMPlayer
 		long ms = LatCore.millis();
 		
 		FastList<String> info = new FastList<String>();
-		new LMPlayerEvent.CustomInfo(this, Side.SERVER, info).post();
+		new LMPlayerServerEvent.CustomInfo(this, info).post();
 		tag.setTag("I", NBTHelper.fromStringList(info));
 		
 		if(lastSeen > 0L) tag.setLong("L", ms - lastSeen);
@@ -183,6 +184,7 @@ public class LMPlayerServer extends LMPlayer
 	{
 		if(isOnline()) tag.setBoolean("On", true);
 		if(claims.getClaimedChunks() > 0) tag.setInteger("Claimed", claims.getClaimedChunks());
+		tag.setInteger("MaxClaimed", getMaxClaimPower());
 		
 		if(!friends.isEmpty())
 			tag.setIntArray("F", friends.toArray());
@@ -190,5 +192,24 @@ public class LMPlayerServer extends LMPlayer
 		if(!commonData.hasNoTags()) tag.setTag("CD", commonData);
 		InvUtils.writeItemsToNBT(lastArmor, tag, "LI");
 		if(deaths > 0) tag.setInteger("D", deaths);
+	}
+	
+	public void onPostLoaded()
+	{ new LMPlayerServerEvent.DataLoaded(this).post(); }
+	
+	public int updateMaxClaimPower()
+	{ maxClaimPower = -1; return getMaxClaimPower(); }
+	
+	public int getMaxClaimPower()
+	{
+		if(maxClaimPower == -1)
+		{
+			maxClaimPower = FTBUConfig.general.maxClaims;
+			LMPlayerServerEvent.GetMaxClaimPower e = new LMPlayerServerEvent.GetMaxClaimPower(this, maxClaimPower);
+			e.post();
+			maxClaimPower = e.result;
+		}
+		
+		return maxClaimPower;
 	}
 }

@@ -1,6 +1,6 @@
 package latmod.ftbu.core.net;
 import io.netty.buffer.ByteBuf;
-import latmod.ftbu.core.event.LMPlayerEvent;
+import latmod.ftbu.core.event.LMPlayerClientEvent;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import cpw.mods.fml.common.network.simpleimpl.*;
@@ -34,6 +34,6 @@ public class MessageLMPlayerLoggedOut extends MessageLM<MessageLMPlayerLoggedOut
 	public void onMessageClient(MessageLMPlayerLoggedOut m, MessageContext ctx)
 	{
 		LMPlayerClient p = LMWorld.client.getPlayer(m.playerID);
-		new LMPlayerEvent.LoggedOutClient(p).post();
+		new LMPlayerClientEvent.LoggedOut(p).post();
 	}
 }

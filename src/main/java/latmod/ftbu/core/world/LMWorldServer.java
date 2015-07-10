@@ -3,7 +3,7 @@ package latmod.ftbu.core.world;
 import java.util.UUID;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.event.LMPlayerEvent;
+import latmod.ftbu.core.event.LMPlayerServerEvent;
 import latmod.ftbu.core.util.*;
 import net.minecraft.nbt.*;
 
@@ -57,7 +57,7 @@ public class LMWorldServer extends LMWorld<LMPlayerServer>
 			
 			LMPlayerServer p = players.get(i);
 			p.writeToNet(tag1);
-			new LMPlayerEvent.DataSaved(p).post();
+			new LMPlayerServerEvent.DataSaved(p).post();
 			tag1.setLong("MID", p.getUUID().getMostSignificantBits());
 			tag1.setLong("LID", p.getUUID().getLeastSignificantBits());
 			tag1.setString("N", p.getName());
@@ -77,7 +77,7 @@ public class LMWorldServer extends LMWorld<LMPlayerServer>
 			
 			LMPlayerServer p = players.get(i);
 			p.writeToServer(tag1);
-			new LMPlayerEvent.DataSaved(p).post();
+			new LMPlayerServerEvent.DataSaved(p).post();
 			tag1.setString("UUID", p.uuidString);
 			tag1.setString("Name", p.getName());
 			

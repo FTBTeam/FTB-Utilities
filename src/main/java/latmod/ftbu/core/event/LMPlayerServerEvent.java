@@ -1,0 +1,84 @@
+package latmod.ftbu.core.event;
+
+import latmod.ftbu.core.util.FastList;
+import latmod.ftbu.core.world.*;
+import net.minecraft.entity.player.EntityPlayerMP;
+import cpw.mods.fml.common.eventhandler.Cancelable;
+import cpw.mods.fml.relauncher.Side;
+
+public abstract class LMPlayerServerEvent extends LMPlayerEvent
+{
+	public final LMPlayerServer player;
+	
+	public LMPlayerServerEvent(LMPlayerServer p)
+	{ player = p; }
+	
+	public LMPlayer getPlayer()
+	{ return player; }
+	
+	public Side getSide()
+	{ return Side.SERVER; }
+	
+	// Events //
+	
+	public static class DataChanged extends LMPlayerServerEvent
+	{
+		public final String action;
+		
+		public DataChanged(LMPlayerServer p, String b)
+		{ super(p); action = b; }
+		
+		public boolean isAction(String b)
+		{ return action == b || action.equals(b); }
+	}
+	
+	public static class DataLoaded extends LMPlayerServerEvent
+	{
+		public DataLoaded(LMPlayerServer p)
+		{ super(p); }
+	}
+	
+	public static class DataSaved extends LMPlayerServerEvent
+	{
+		public DataSaved(LMPlayerServer p)
+		{ super(p); }
+	}
+	
+	public static class LoggedIn extends LMPlayerServerEvent
+	{
+		public final EntityPlayerMP playerMP;
+		public final boolean firstTime;
+		
+		public LoggedIn(LMPlayerServer p, EntityPlayerMP ep, boolean b)
+		{ super(p); playerMP = ep; firstTime = b; }
+	}
+	
+	public static class LoggedOut extends LMPlayerServerEvent
+	{
+		public final EntityPlayerMP playerMP;
+		
+		public LoggedOut(LMPlayerServer p, EntityPlayerMP ep)
+		{ super(p); playerMP = ep; }
+	}
+	
+	public static class CustomInfo extends LMPlayerServerEvent
+	{
+		public final FastList<String> info;
+		
+		public CustomInfo(LMPlayerServer p, FastList<String> l)
+		{ super(p); info = l; }
+	}
+	
+	@Cancelable
+	public static class GetMaxClaimPower extends LMPlayerServerEvent
+	{
+		public final int config;
+		public int result;
+		
+		public GetMaxClaimPower(LMPlayerServer p, int c)
+		{
+			super(p);
+			config = result = c;
+		}
+	}
+}

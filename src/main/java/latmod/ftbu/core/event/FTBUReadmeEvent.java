@@ -14,9 +14,6 @@ public class FTBUReadmeEvent extends EventLM
 	public FTBUReadmeEvent()
 	{ file = new ReadmeFile(); }
 	
-	public void add(String cat, String id, String text)
-	{ file.get(cat).add(id, text); }
-	
 	public static class ReadmeFile
 	{
 		public final FastMap<String, Category> map = new FastMap<String, Category>();
@@ -48,11 +45,11 @@ public class FTBUReadmeEvent extends EventLM
 			public String toString()
 			{ return name; }
 			
-			public void add(String id, String text)
-			{ lines.put(id, text); }
+			public void add(String text)
+			{ lines.put("", text); }
 			
 			public void add(String id, String text, Object def)
-			{ add(id, text + " Default: " + def); }
+			{ lines.put(id, text + " Default: " + def); }
 		}
 	}
 	
@@ -82,8 +79,14 @@ public class FTBUReadmeEvent extends EventLM
 			
 			for(int i = 0; i < c.lines.size(); i++)
 			{
-				sb.append(c.lines.keys.get(i));
-				sb.append(" - ");
+				String k = c.lines.keys.get(i); 
+				
+				if(!k.isEmpty())
+				{
+					sb.append(k);
+					sb.append(" - ");
+				}
+				
 				sb.append(c.lines.values.get(i));
 				sb.append('\n');
 			}

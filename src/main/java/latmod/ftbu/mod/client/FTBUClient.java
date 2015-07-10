@@ -61,7 +61,9 @@ public class FTBUClient extends FTBUCommon
 	public void addInfo(FTBUReadmeEvent e)
 	{
 		FTBUReadmeEvent.ReadmeFile.Category waypoints = e.file.get("waypoints");
-		waypoints.add("testing", "test");
+		waypoints.add("You can create waypoints by opening WaypointsGUI (FriendsGUI > You > Waypoits)");
+		waypoints.add("Right click on a waypoint to enable / disable it, Ctrl + right click to delete it, left click to open it's settings");
+		waypoints.add("You can select between Marker and Beacon waypoints, change it's color, title and coords");
 	}
 	
 	public boolean isShiftDown() { return GuiScreen.isShiftKeyDown(); }

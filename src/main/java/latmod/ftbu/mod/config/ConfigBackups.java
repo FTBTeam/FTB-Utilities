@@ -53,7 +53,7 @@ public class ConfigBackups
 	public static void saveReadme(FTBUReadmeEvent e)
 	{
 		FTBUReadmeEvent.ReadmeFile.Category backups = e.file.get("latmod/ftbu/backups.txt");
-		backups.add("enabled", "true enables backups");
+		backups.add("enabled", "true enables backups", false);
 		backups.add("backupsToKeep", "The number of backup files to keep. 0 - Disabled. More backups = more space used.", 12);
 		backups.add("backupTimer", "Timer in hours. Can be .x, 1.0 - backups every hour, 6.0 - backups every 6 hours, 0.5 - backups every 30 minutes.", 2F);
 		backups.add("backupOnShutdown", "Launches backup when server stops.", false);

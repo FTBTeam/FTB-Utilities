@@ -34,7 +34,7 @@ public class CmdFTBUFriends extends SubCommand
 			
 			for(int i = 0; i < owner.friends.size(); i++)
 			{
-				LMPlayer p = LMWorld.server.getPlayer(owner.friends.get(i));
+				LMPlayerServer p = LMWorldServer.inst.getPlayer(owner.friends.get(i));
 				EnumChatFormatting col = EnumChatFormatting.GREEN;
 				if(p.isFriendRaw(owner) && !owner.isFriendRaw(p)) col = EnumChatFormatting.GOLD;
 				if(!p.isFriendRaw(owner) && owner.isFriendRaw(p)) col = EnumChatFormatting.BLUE;

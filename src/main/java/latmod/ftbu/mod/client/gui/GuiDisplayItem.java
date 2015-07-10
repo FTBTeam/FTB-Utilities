@@ -6,7 +6,9 @@ import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.*;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.*;
@@ -18,7 +20,7 @@ public class GuiDisplayItem extends GuiLM
 {
 	public static final ResourceLocation texture = FTBU.mod.getLocation("textures/gui/displayitem.png");
 	
-	public final ItemDisplay itemDisplay;
+	public ItemDisplay itemDisplay;
 	
 	public GuiDisplayItem(ItemDisplay i)
 	{
@@ -68,5 +70,17 @@ public class GuiDisplayItem extends GuiLM
 		if(itemDisplay.title != null && !itemDisplay.title.isEmpty()) drawCenteredString(fontRendererObj, itemDisplay.title, guiLeft + xSize / 2, guiTop + 6, 0xFFFFFFFF);
 		if(itemDisplay.desc != null && !itemDisplay.desc.isEmpty()) l.addAll(itemDisplay.desc);
 		super.drawText(l);
+	}
+	
+	public boolean handleDragNDrop(GuiContainer g, int x, int y, ItemStack is, int b)
+	{
+		if(is != null && x > guiLeft && x < guiLeft + xSize && y > guiTop && y < guiTop + ySize)
+		{
+			itemDisplay = new ItemDisplay(is.copy(), is.getDisplayName(), null, itemDisplay.scale);
+			is.stackSize = 0;
+			return true;
+		}
+		
+		return false;
 	}
 }

@@ -31,12 +31,12 @@ import cpw.mods.fml.relauncher.*;
 public class FTBUClient extends FTBUCommon
 {
 	public static final ClientConfig clientConfig = new ClientConfig("ftbu");
-	public static final ClientConfig.Property enablePlayerDecorators = new ClientConfig.Property(clientConfig, "player_decorators", true);
-	public static final ClientConfig.Property addOreNames = new ClientConfig.Property(clientConfig, "item_ore_names", false);
-	public static final ClientConfig.Property addRegistryNames = new ClientConfig.Property(clientConfig, "item_reg_names", false);
-	public static final ClientConfig.Property displayDebugInfo = new ClientConfig.Property(clientConfig, "debug_info", false);
-	public static final ClientConfig.Property optionsButton = new ClientConfig.Property(clientConfig, "options_button", true);
-	public static final ClientConfig.Property chatLinks = new ClientConfig.Property(clientConfig, "chat_links", 1, "disabled", "enabled"); //"replace", "print" });
+	public static final ClientConfig.Property enablePlayerDecorators = new ClientConfig.Property("player_decorators", true);
+	public static final ClientConfig.Property addOreNames = new ClientConfig.Property("item_ore_names", false);
+	public static final ClientConfig.Property addRegistryNames = new ClientConfig.Property("item_reg_names", false);
+	public static final ClientConfig.Property displayDebugInfo = new ClientConfig.Property("debug_info", false);
+	public static final ClientConfig.Property optionsButton = new ClientConfig.Property("options_button", true);
+	public static final ClientConfig.Property chatLinks = new ClientConfig.Property("chat_links", 1, "disabled", "enabled"); //"replace", "print" });
 	
 	public void preInit()
 	{
@@ -44,8 +44,16 @@ public class FTBUClient extends FTBUCommon
 		LatCoreMC.BusType.LATMOD.register(FTBUClientEventHandler.instance);
 		LatCoreMC.BusType.FORGE.register(FTBURenderHandler.instance);
 		LatCoreMC.BusType.FML.register(FTBURenderHandler.instance);
+		LatCoreMC.BusType.FORGE.register(FTBUGuiEventHandler.instance);
 		
 		ClientConfig.Registry.init();
+		
+		clientConfig.add(enablePlayerDecorators);
+		clientConfig.add(addOreNames);
+		clientConfig.add(addRegistryNames);
+		clientConfig.add(displayDebugInfo);
+		clientConfig.add(optionsButton);
+		clientConfig.add(chatLinks);
 		ClientConfig.Registry.add(clientConfig);
 		
 		Waypoints.init();
@@ -81,7 +89,7 @@ public class FTBUClient extends FTBUCommon
 	{ return FMLClientHandler.instance().getWorldClient(); }
 	
 	public LMWorld<?> getClientWorldLM()
-	{ return LMWorld.client; }
+	{ return LMWorldClient.inst; }
 	
 	public double getReachDist(EntityPlayer ep)
 	{ return Minecraft.getMinecraft().playerController.getBlockReachDistance(); }

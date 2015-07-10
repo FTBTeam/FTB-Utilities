@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.client.minimap;
 
 import latmod.ftbu.core.net.*;
-import latmod.ftbu.core.world.LMPlayer;
+import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.client.gui.GuiMinimap;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.*;
@@ -28,7 +28,7 @@ public class ThreadMinimap extends Thread
 	
 	public void run()
 	{
-		try
+		if(LMWorldClient.inst != null) try
 		{
 			Minimap m = Minimap.get(worldObj.provider.dimensionId);
 			

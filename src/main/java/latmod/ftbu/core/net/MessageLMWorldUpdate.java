@@ -21,7 +21,7 @@ public class MessageLMWorldUpdate extends MessageLM<MessageLMWorldUpdate> implem
 		worldID = id;
 		
 		players = new NBTTagCompound();
-		LMWorld.server.writePlayersToNet(players);
+		LMWorldServer.inst.writePlayersToNet(players);
 	}
 	
 	public void fromBytes(ByteBuf bb)
@@ -43,7 +43,7 @@ public class MessageLMWorldUpdate extends MessageLM<MessageLMWorldUpdate> implem
 	@SideOnly(Side.CLIENT)
 	public void onMessageClient(MessageLMWorldUpdate m, MessageContext ctx)
 	{
-		LMWorld.client = new LMWorldClient(m.worldID);
-		LMWorld.client.readPlayersFromNet(m.players);
+		LMWorldClient.inst = new LMWorldClient(m.worldID);
+		LMWorldClient.inst.readPlayersFromNet(m.players);
 	}
 }

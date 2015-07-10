@@ -37,7 +37,7 @@ public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo> implemen
 	@SideOnly(Side.CLIENT)
 	public void onMessageClient(MessageLMPlayerInfo m, MessageContext ctx)
 	{
-		LMPlayerClient p = LMWorld.client.getPlayer(m.playerID);
+		LMPlayerClient p = LMWorldClient.inst.getPlayer(m.playerID);
 		if(p != null) p.receiveInfo(m.info);
 	}
 }

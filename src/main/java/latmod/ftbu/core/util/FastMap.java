@@ -165,12 +165,4 @@ public class FastMap<K, V> implements Iterable<V>
 		map.values.addAll(keys);
 		return map;
 	}
-	
-	public FastList<TwoObjects<K, V>> toTwoObjects()
-	{
-		FastList<TwoObjects<K, V>> l = new FastList<TwoObjects<K, V>>();
-		for(int i = 0; i < size(); i++)
-			l.add(new TwoObjects<K, V>(keys.get(i), values.get(i)));
-		return l;
-	}
 }

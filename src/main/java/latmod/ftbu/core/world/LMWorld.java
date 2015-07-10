@@ -2,26 +2,21 @@ package latmod.ftbu.core.world;
 
 import java.util.UUID;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.util.FakePlayer;
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.cmd.NameType;
-import latmod.ftbu.core.util.*;
+import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.FTBU;
-import cpw.mods.fml.relauncher.*;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.util.FakePlayer;
+import cpw.mods.fml.relauncher.Side;
 
 public abstract class LMWorld<P extends LMPlayer>
 {
-	public static LMWorldServer server;
-	
-	@SideOnly(Side.CLIENT)
-	public static LMWorldClient client;
-	
 	public static LMWorld<?> getWorld()
 	{
 		if(!LatCoreMC.isServer())
 			return FTBU.proxy.getClientWorldLM();
-		return server;
+		return LMWorldServer.inst;
 	}
 	
 	public final Side side;

@@ -45,7 +45,7 @@ public class FTBUGuiHandler implements ILMGuiHandler
 			if(te != null && !te.isInvalid() && te instanceof IGuiTile)
 				return ((IGuiTile)te).getGui(ep, data);
 		}
-		else if(id.equals(FRIENDS)) return new GuiFriends();
+		else if(id.equals(FRIENDS)) return new GuiFriends(null);
 		else if(id.equals(DISPLAY_ITEM))
 			return new GuiDisplayItem(ItemDisplay.readFromNBT(data));
 		

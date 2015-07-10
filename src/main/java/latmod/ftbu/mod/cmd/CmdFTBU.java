@@ -11,8 +11,7 @@ public class CmdFTBU extends CommandSubLM
 		super(FTBUConfig.general.commandFTBU, CommandLevel.ALL);
 		subCommands.put("version", new CmdFTBUVersion());
 		subCommands.put("friends", new CmdFTBUFriends());
-		subCommands.put("uuid", new CmdFTBUUUID());
-		subCommands.put("playerID", new CmdFTBUPlayerID());
+		subCommands.put("ID", new CmdFTBUPlayerID());
 		subCommands.put("restartTimer", new CmdFTBURestartTimer());
 		subCommands.put("backupTimer", new CmdFTBUBackupTimer());
 	}

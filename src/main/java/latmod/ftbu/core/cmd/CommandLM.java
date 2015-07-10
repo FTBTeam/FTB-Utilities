@@ -108,7 +108,7 @@ public abstract class CommandLM extends CommandBase
 	
 	public static LMPlayerServer getLMPlayer(Object o)
 	{
-		LMPlayerServer p = LMWorld.server.getPlayer(o);
+		LMPlayerServer p = LMWorldServer.inst.getPlayer(o);
 		if(p == null) throw new PlayerNotFoundException();
 		return p;
 	}

@@ -1,7 +1,7 @@
 package latmod.ftbu.core.net;
 
 import io.netty.buffer.ByteBuf;
-import latmod.ftbu.core.world.LMWorld;
+import latmod.ftbu.core.world.LMWorldServer;
 import cpw.mods.fml.common.network.simpleimpl.*;
 
 public class MessageAreaRequest extends MessageLM<MessageAreaRequest>
@@ -39,5 +39,5 @@ public class MessageAreaRequest extends MessageLM<MessageAreaRequest>
 	}
 	
 	public IMessage onMessage(MessageAreaRequest m, MessageContext ctx)
-	{ return new MessageAreaUpdate(m.chunkX, m.chunkZ, m.dim, m.size, LMWorld.server.getPlayer(m.playerID)); }
+	{ return new MessageAreaUpdate(m.chunkX, m.chunkZ, m.dim, m.size, LMWorldServer.inst.getPlayer(m.playerID)); }
 }

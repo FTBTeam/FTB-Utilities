@@ -13,6 +13,8 @@ import cpw.mods.fml.relauncher.Side;
 
 public class LMWorldServer extends LMWorld<LMPlayerServer>
 {
+	public static LMWorldServer inst = null;
+	
 	public final FastMap<String, EntityPos> warps;
 	
 	public LMWorldServer(UUID id)

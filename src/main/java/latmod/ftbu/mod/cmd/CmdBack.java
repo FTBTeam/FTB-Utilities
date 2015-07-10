@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.cmd;
 
-import latmod.ftbu.core.Teleporter;
+import latmod.ftbu.core.LMDimHelper;
 import latmod.ftbu.core.cmd.*;
 import latmod.ftbu.core.world.*;
 import net.minecraft.command.ICommandSender;
@@ -14,9 +14,9 @@ public class CmdBack extends CommandLM
 	public String onCommand(ICommandSender ics, String[] args)
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-		LMPlayerServer p = LMWorld.server.getPlayer(ep);
+		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
 		if(p.lastDeath == null) return "No deathpoint found!";
-		Teleporter.teleportPlayer(ep, p.lastDeath);
+		LMDimHelper.teleportPlayer(ep, p.lastDeath);
 		return null;
 	}
 }

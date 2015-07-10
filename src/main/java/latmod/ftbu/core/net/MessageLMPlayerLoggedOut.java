@@ -33,7 +33,7 @@ public class MessageLMPlayerLoggedOut extends MessageLM<MessageLMPlayerLoggedOut
 	@SideOnly(Side.CLIENT)
 	public void onMessageClient(MessageLMPlayerLoggedOut m, MessageContext ctx)
 	{
-		LMPlayerClient p = LMWorld.client.getPlayer(m.playerID);
+		LMPlayerClient p = LMWorldClient.inst.getPlayer(m.playerID);
 		new LMPlayerClientEvent.LoggedOut(p).post();
 	}
 }

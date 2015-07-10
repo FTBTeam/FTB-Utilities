@@ -18,7 +18,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.world.*;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.*;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.FakePlayer;
@@ -292,25 +292,4 @@ public final class LatCoreMC // LatCoreMCClient
 	
 	public static boolean isDedicatedServer()
 	{ return getServer().isDedicatedServer(); }
-	
-	public static String getDimName(World w)
-	{ return w.provider.getDimensionName(); }
-	
-	public static String getDimName(int dim)
-	{
-		WorldServer w = DimensionManager.getWorld(dim);
-		return (w == null) ? "" : getDimName(w);
-	}
-	
-	public static double getWorldScale(World w)
-	{
-		if(w == null || w.provider.dimensionId == 0) return 1D;
-		return 1D / w.provider.getMovementFactor();
-	}
-	
-	public static double getWorldScale(int dim)
-	{
-		if(dim == 0) return 1D;
-		return getWorldScale(DimensionManager.getWorld(dim));
-	}
 }

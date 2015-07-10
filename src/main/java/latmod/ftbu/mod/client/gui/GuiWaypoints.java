@@ -35,6 +35,7 @@ public class GuiWaypoints extends GuiLM
 		super(new ContainerEmpty.ClientGui(), tex);
 		xSize = 124;
 		ySize = 114;
+		hideNEI = true;
 		currentDim = mc.thePlayer.dimension;
 		
 		waypoints = new WaypointButton[LIST_SIZE];
@@ -52,7 +53,7 @@ public class GuiWaypoints extends GuiLM
 			public void onButtonPressed(int b)
 			{
 				gui.playClickSound();
-				mc.displayGuiScreen(new GuiFriends());
+				mc.displayGuiScreen(new GuiFriends(null));
 			}
 		};
 		

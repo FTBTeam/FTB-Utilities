@@ -29,11 +29,11 @@ public class CmdAdminPlayer extends SubCommand
 			UUID id = LatCoreMC.getUUIDFromString(args[1]);
 			if(id == null) return "Invalid UUID!";
 			
-			if(LMWorld.server.getPlayer(id) != null || LMWorld.server.getPlayer(args[2]) != null)
+			if(LMWorldServer.inst.getPlayer(id) != null || LMWorldServer.inst.getPlayer(args[2]) != null)
 				return "Player already exists!";
 			
-			LMPlayerServer p = new LMPlayerServer(LMWorld.server, LMPlayerServer.nextPlayerID(), new GameProfile(id, args[2]));
-			LMWorld.server.players.add(p);
+			LMPlayerServer p = new LMPlayerServer(LMWorldServer.inst, LMPlayerServer.nextPlayerID(), new GameProfile(id, args[2]));
+			LMWorldServer.inst.players.add(p);
 			p.updateLastSeen();
 			
 			return "Fake player " + args[2] + " added!";
@@ -44,7 +44,7 @@ public class CmdAdminPlayer extends SubCommand
 		
 		if(args[0].equals("@a"))
 		{
-			String[] s = LMWorld.server.getAllNames(NameType.ON);
+			String[] s = LMWorldServer.inst.getAllNames(NameType.ON);
 			
 			for(int i = 0; i < s.length; i++)
 			{
@@ -61,7 +61,7 @@ public class CmdAdminPlayer extends SubCommand
 			int playerID = CommandLM.parseInt(ics, args[0]);
 			LMPlayer p = CommandLM.getLMPlayer(playerID);
 			if(p.isOnline()) return mustBeOffline;
-			LMWorld.server.players.removeObj(playerID);
+			LMWorldServer.inst.players.removeObj(playerID);
 			return CommandLM.FINE + "Player removed!";
 		}
 		

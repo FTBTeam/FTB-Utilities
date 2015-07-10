@@ -34,6 +34,7 @@ public class GuiSelectColor extends GuiLM
 	public GuiSelectColor(ColorSelectorCallback cb, int col, int id)
 	{
 		super(new ContainerEmpty.ClientGui(), tex);
+		hideNEI = true;
 		callback = cb;
 		initColR = LatCore.Colors.getRed(col) / 255F;
 		initColG = LatCore.Colors.getGreen(col) / 255F;

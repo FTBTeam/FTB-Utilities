@@ -2,10 +2,10 @@ package latmod.ftbu.mod.config;
 
 import java.io.File;
 
-import net.minecraft.entity.player.EntityPlayer;
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
 import latmod.ftbu.core.util.LatCore;
+import net.minecraft.entity.player.EntityPlayer;
 
 import com.google.gson.annotations.Expose;
 

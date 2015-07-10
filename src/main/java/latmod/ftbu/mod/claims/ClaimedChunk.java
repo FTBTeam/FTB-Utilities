@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.claims;
 
 import latmod.ftbu.core.util.*;
-import latmod.ftbu.core.world.LMWorld;
+import latmod.ftbu.core.world.LMWorldServer;
 import net.minecraft.entity.player.EntityPlayer;
 
 public final class ClaimedChunk
@@ -18,7 +18,7 @@ public final class ClaimedChunk
 	}
 	
 	public ClaimedChunk(EntityPlayer ep)
-	{ this(LMWorld.server.getPlayer(ep).claims, ep.dimension, MathHelperLM.chunk(ep.posX), MathHelperLM.chunk(ep.posZ)); }
+	{ this(LMWorldServer.inst.getPlayer(ep).claims, ep.dimension, MathHelperLM.chunk(ep.posX), MathHelperLM.chunk(ep.posZ)); }
 	
 	public boolean equals(Object o)
 	{ return o != null && (o == this || (o.getClass() == ClaimedChunk.class && equalsChunk((ClaimedChunk)o))); }

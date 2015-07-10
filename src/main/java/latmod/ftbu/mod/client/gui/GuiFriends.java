@@ -10,6 +10,7 @@ import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.minimap.Waypoints;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.*;
@@ -32,6 +33,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		new TextureCoords(texPlayers, 18 * 2, 181, 18, 18),
 	};
 	
+	public final GuiScreen parentScreen;
 	public final LMPlayerClient owner;
 	public final FastList<Player> players;
 	
@@ -46,11 +48,13 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	private static boolean sortAZ = false;
 	private static final FastList<ActionButton> actionButtons = new FastList<ActionButton>();
 	
-	public GuiFriends()
+	public GuiFriends(GuiScreen gui)
 	{
 		super(new ContainerEmpty.ClientGui(), texPlayers);
+		parentScreen = gui;
+		hideNEI = true;
 		
-		owner = LMWorld.client.getPlayer(container.player);
+		owner = LMWorldClient.inst.getPlayer(container.player);
 		players = new FastList<Player>();
 		
 		xSize = 240;
@@ -71,7 +75,10 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			public void onButtonPressed(int b)
 			{
 				playClickSound();
-				mc.thePlayer.closeScreen();
+				if(parentScreen != null)
+					mc.displayGuiScreen(parentScreen);
+				else
+					mc.thePlayer.closeScreen();
 			}
 		};
 		
@@ -255,9 +262,9 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		
 		players.clear();
 		
-		for(int i = 0; i < LMWorld.client.players.size(); i++)
+		for(int i = 0; i < LMWorldClient.inst.players.size(); i++)
 		{
-			LMPlayerClient p = LMWorld.client.players.get(i);
+			LMPlayerClient p = LMWorldClient.inst.players.get(i);
 			if(!p.equalsPlayer(owner)) players.add(new Player(p));
 		}
 		
@@ -383,7 +390,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		{
 			if(player != null)
 			{
-				LMPlayerClient p = LMWorld.client.getPlayer(player.player.playerID);
+				LMPlayerClient p = LMWorldClient.inst.getPlayer(player.player.playerID);
 				
 				if(p == null) return;
 				

@@ -3,7 +3,7 @@ package latmod.ftbu.mod.config;
 import java.io.File;
 import java.util.*;
 
-import latmod.ftbu.core.LatCoreMC;
+import latmod.ftbu.core.*;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
 import latmod.ftbu.core.util.*;
 
@@ -30,8 +30,9 @@ public class ConfigWorldBorder
 	{
 		if(enabled == null) enabled = false;
 		if(radius == null) radius = 10000;
-		if(custom == null) custom = new HashMap<Integer, Integer>();
 		radius = MathHelperLM.clampInt(radius, 20, 20000000);
+		
+		if(custom == null) custom = new HashMap<Integer, Integer>();
 	}
 	
 	public static void save()
@@ -65,12 +66,8 @@ public class ConfigWorldBorder
 	{
 		if(dim == 0) return radius;
 		
-		if(custom != null && !custom.isEmpty())
-		{
-			Integer i = custom.get(dim);
-			if(i != null) return i.intValue();
-		}
-		
-		return (int)(radius * LatCoreMC.getWorldScale(dim));
+		Integer r = custom.get(dim);
+		if(r != null) return r.intValue();
+		return (int)(radius * LMDimHelper.getWorldScale(LMDimHelper.getWorld(dim)));
 	}
 }

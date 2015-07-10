@@ -1,8 +1,10 @@
 package latmod.ftbu.mod.cmd.all;
 
 import latmod.ftbu.core.cmd.*;
-import latmod.ftbu.core.world.*;
+import latmod.ftbu.core.world.LMPlayerServer;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.event.*;
+import net.minecraft.util.*;
 
 public class CmdFTBUPlayerID extends SubCommand
 {
@@ -14,7 +16,17 @@ public class CmdFTBUPlayerID extends SubCommand
 	
 	public String onCommand(ICommandSender ics, String[] args)
 	{
-		LMPlayer p = LMWorld.server.getPlayer(args.length > 0 ? args[0] : ics);
-		return CommandLM.FINE + "PlayerID for " + p.getName() + ": " + p.playerID;
+		LMPlayerServer p = CommandLM.getLMPlayer(args.length > 0 ? args[0] : ics);
+		IChatComponent toPrint = new ChatComponentText("");
+		toPrint.getChatStyle().setColor(EnumChatFormatting.GOLD);
+		toPrint.appendSibling(new ChatComponentText("[" + p.getName() + "] "));
+		toPrint.appendSibling(new ChatComponentText("[" + p.playerID + "] "));
+		IChatComponent uuid = new ChatComponentText("[" + p.uuidString + "]");
+		uuid.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Copy to chat")));
+		uuid.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, p.uuidString));
+		toPrint.appendSibling(uuid);
+		
+		ics.addChatMessage(toPrint);
+		return null;
 	}
 }

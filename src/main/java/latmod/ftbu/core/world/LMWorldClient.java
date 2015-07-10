@@ -12,6 +12,8 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class LMWorldClient extends LMWorld<LMPlayerClient>
 {
+	public static LMWorldClient inst = null;
+	
 	public int clientPlayerID;
 	
 	public LMWorldClient(UUID id)

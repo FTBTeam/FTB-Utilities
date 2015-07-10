@@ -47,7 +47,7 @@ public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate> impl
 	@SideOnly(Side.CLIENT)
 	public void onMessageClient(MessageLMPlayerUpdate m, MessageContext ctx)
 	{
-		LMPlayerClient p = LMWorld.client.getPlayer(m.playerID);
+		LMPlayerClient p = LMWorldClient.inst.getPlayer(m.playerID);
 		p.readFromNet(m.data);
 		new LMPlayerClientEvent.DataChanged(p, action).post();
 		

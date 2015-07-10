@@ -34,15 +34,15 @@ public class FTBUEventHandler // FTBUTickHandler
 		if(!(e.player instanceof EntityPlayerMP)) return;
 		EntityPlayerMP ep = (EntityPlayerMP)e.player;
 		
-		LMPlayerServer p = LMWorld.server.getPlayer(ep);
+		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
 		
 		boolean first = (p == null);
 		boolean sendAll = false;
 		
 		if(first)
 		{
-			p = new LMPlayerServer(LMWorld.server, LMPlayerServer.nextPlayerID(), ep.getGameProfile());
-			LMWorld.server.players.add(p);
+			p = new LMPlayerServer(LMWorldServer.inst, LMPlayerServer.nextPlayerID(), ep.getGameProfile());
+			LMWorldServer.inst.players.add(p);
 			sendAll = true;
 		}
 		else
@@ -58,7 +58,7 @@ public class FTBUEventHandler // FTBUTickHandler
 		p.updateLastSeen();
 		
 		new LMPlayerServerEvent.LoggedIn(p, ep, first).post();
-		MessageLM.sendTo(sendAll ? null : ep, new MessageLMWorldUpdate(LMWorld.server.worldID));
+		MessageLM.sendTo(sendAll ? null : ep, new MessageLMWorldUpdate(LMWorldServer.inst.worldID));
 		IServerConfig.Registry.updateConfig(ep, null);
 		MessageLM.sendTo(null, new MessageLMPlayerLoggedIn(p, first));
 		MessageLM.sendTo(null, p.getInfo());
@@ -83,7 +83,7 @@ public class FTBUEventHandler // FTBUTickHandler
 	@SubscribeEvent
 	public void playerLoggedOut(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent e)
 	{
-		LMPlayerServer p = LMWorld.server.getPlayer(e.player);
+		LMPlayerServer p = LMWorldServer.inst.getPlayer(e.player);
 		
 		if(p != null && e.player instanceof EntityPlayerMP)
 		{
@@ -113,8 +113,8 @@ public class FTBUEventHandler // FTBUTickHandler
 			{
 				NBTTagCompound tag = NBTHelper.readMap(e1.getFile("LMWorld.dat"));
 				if(tag == null) tag = new NBTTagCompound();
-				LMWorld.server = new LMWorldServer(tag.hasKey("UUID") ? LatCoreMC.getUUIDFromString(tag.getString("UUID")) : UUID.randomUUID());
-				LMWorld.server.load(tag);
+				LMWorldServer.inst = new LMWorldServer(tag.hasKey("UUID") ? LatCoreMC.getUUIDFromString(tag.getString("UUID")) : UUID.randomUUID());
+				LMWorldServer.inst.load(tag);
 			}
 			
 			e1.post();
@@ -124,12 +124,12 @@ public class FTBUEventHandler // FTBUTickHandler
 				if(tag != null && tag.hasKey("Players"))
 				{
 					LMPlayerServer.lastPlayerID = tag.getInteger("LastID");
-					LMWorld.server.readPlayersFromServer(tag.getCompoundTag("Players"));
+					LMWorldServer.inst.readPlayersFromServer(tag.getCompoundTag("Players"));
 				}
 			}
 			
-			for(int i = 0; i < LMWorld.server.players.size(); i++)
-				LMWorld.server.players.get(i).setPlayer(null);
+			for(int i = 0; i < LMWorldServer.inst.players.size(); i++)
+				LMWorldServer.inst.players.get(i).setPlayer(null);
 			
 			new LoadLMDataEvent(e1.latmodFolder, EventLM.Phase.POST).post();
 			
@@ -147,15 +147,15 @@ public class FTBUEventHandler // FTBUTickHandler
 			
 			{
 				NBTTagCompound tag = new NBTTagCompound();
-				LMWorld.server.save(tag);
-				tag.setString("UUID", LMWorld.server.worldIDS);
+				LMWorldServer.inst.save(tag);
+				tag.setString("UUID", LMWorldServer.inst.worldIDS);
 				NBTHelper.writeMap(e1.getFile("LMWorld.dat"), tag);
 			}
 			
 			{
 				NBTTagCompound tag = new NBTTagCompound();
 				NBTTagCompound players = new NBTTagCompound();
-				LMWorld.server.writePlayersToServer(players);
+				LMWorldServer.inst.writePlayersToServer(players);
 				tag.setTag("Players", players);
 				tag.setInteger("LastID", LMPlayerServer.lastPlayerID);
 				NBTHelper.writeMap(e1.getFile("LMPlayers.dat"), tag);
@@ -166,12 +166,12 @@ public class FTBUEventHandler // FTBUTickHandler
 			try
 			{
 				FastList<String> l = new FastList<String>();
-				int[] list = LMWorld.server.getAllPlayerIDs();
+				int[] list = LMWorldServer.inst.getAllPlayerIDs();
 				Arrays.sort(list);
 				
 				for(int i = 0; i < list.length; i++)
 				{
-					LMPlayer p = LMWorld.server.getPlayer(list[i]);
+					LMPlayer p = LMWorldServer.inst.getPlayer(list[i]);
 					
 					StringBuilder sb = new StringBuilder();
 					sb.append(LatCore.fillString("" + p.playerID, ' ', 6));
@@ -208,7 +208,7 @@ public class FTBUEventHandler // FTBUTickHandler
 	private boolean canInteract(net.minecraftforge.event.entity.player.PlayerInteractEvent e)
 	{
 		if(FTBUConfig.general.allowInteractSecure(e.entityPlayer)) return true;
-		if(FTBUConfig.general.isDedi() && !ChunkType.getD(e.world.provider.dimensionId, e.x, e.z, LMWorld.server.getPlayer(e.entityPlayer)).isFriendly()) return false;
+		if(FTBUConfig.general.isDedi() && !ChunkType.getD(e.world.provider.dimensionId, e.x, e.z, LMWorldServer.inst.getPlayer(e.entityPlayer)).isFriendly()) return false;
 		
 		TileEntity te = e.world.getTileEntity(e.x, e.y, e.z);
 		
@@ -226,7 +226,7 @@ public class FTBUEventHandler // FTBUTickHandler
 	{
 		if(e.entity instanceof EntityPlayerMP)
 		{
-			LMPlayerServer p = LMWorld.server.getPlayer(e.entity);
+			LMPlayerServer p = LMWorldServer.inst.getPlayer(e.entity);
 			p.deaths++;
 			
 			if(p.lastDeath == null) p.lastDeath = new EntityPos(e.entity);

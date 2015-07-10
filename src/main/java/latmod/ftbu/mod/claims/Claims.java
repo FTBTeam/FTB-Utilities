@@ -109,9 +109,9 @@ public class Claims
 	
 	public static ClaimedChunk get(int dim, int cx, int cz)
 	{
-		for(int i = 0; i < LMWorld.server.players.size(); i++)
+		for(int i = 0; i < LMWorldServer.inst.players.size(); i++)
 		{
-			ClaimedChunk c = LMWorld.server.players.get(i).claims.getLocal(dim, cx, cz);
+			ClaimedChunk c = LMWorldServer.inst.players.get(i).claims.getLocal(dim, cx, cz);
 			if(c != null) return c;
 		}
 		

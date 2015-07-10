@@ -13,7 +13,7 @@ public class CmdSpawn extends CommandLM
 	public String onCommand(ICommandSender ics, String[] args)
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-		if(Teleporter.teleportPlayer(ep, LatCoreMC.getEntitySpawnPoint(0)))
+		if(LMDimHelper.teleportPlayer(ep, LatCoreMC.getEntitySpawnPoint(0)))
 			return FINE + "Teleported to spawn";
 		return "Failed to teleport!";
 	}

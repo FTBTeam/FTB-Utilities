@@ -28,7 +28,7 @@ public class FTBUTickHandler
 		if(e.entity instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP ep = (EntityPlayerMP)e.entity;
-			LMPlayerServer p = LMWorld.server.getPlayer(ep);
+			LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
 			if(p == null) return;
 			
 			if(p.lastPos == null) p.lastPos = new EntityPos(ep);
@@ -45,11 +45,11 @@ public class FTBUTickHandler
 					if(Claims.isOutsideWorldBorderD(p.lastPos.dim, p.lastPos.x, p.lastPos.z))
 					{
 						LatCoreMC.printChat(ep, "Teleporting to spawn!");
-						Teleporter.teleportPlayer(ep, LatCoreMC.getEntitySpawnPoint(0));
+						LMDimHelper.teleportPlayer(ep, LatCoreMC.getEntitySpawnPoint(0));
 					}
 					else
 					{
-						Teleporter.teleportPlayer(ep, p.lastPos);
+						LMDimHelper.teleportPlayer(ep, p.lastPos);
 					}
 				}
 				
@@ -116,13 +116,7 @@ public class FTBUTickHandler
 		}
 		else
 		{
-			if(FTBUConfig.backups.backupOnShutdown)
-			{
-				Backups.shouldRun = true;
-				Backups.run();
-			}
-			
-			currentMillis = startMillis = restartSeconds = 0;
+			currentMillis = startMillis = restartSeconds = 0L;
 		}
 	}
 	

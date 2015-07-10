@@ -5,6 +5,7 @@ import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.client.badges.Badge;
 import latmod.ftbu.core.client.model.*;
 import latmod.ftbu.core.util.*;
+import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.GuiNotification;
 import latmod.ftbu.mod.client.minimap.*;
@@ -93,6 +94,8 @@ public class FTBURenderHandler
 	
 	private void renderWaypoints()
 	{
+		if(LMWorldClient.inst == null) return;
+		
 		if(!Waypoints.enabled.getB() || mc == null || mc.theWorld == null || !Waypoints.hasWaypoints()) return;
 		FastList<Waypoint> list = Waypoints.getAll();
 		
@@ -258,6 +261,8 @@ public class FTBURenderHandler
 	
 	private void renderWorldBorder()
 	{
+		if(LMWorldClient.inst == null) return;
+		
 		int wb = FTBUConfig.world_border.getWorldBorder(currentDim);
 		float min = (MathHelperLM.chunk(-wb) + 1) * 16 + 0.01F;
 		float max = MathHelperLM.chunk(wb) * 16 - 0.01F;

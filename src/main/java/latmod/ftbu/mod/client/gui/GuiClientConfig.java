@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.client.gui;
 
-import latmod.ftbu.core.*;
+import latmod.ftbu.core.FTBULang;
 import latmod.ftbu.core.client.ClientConfig;
 import net.minecraft.client.gui.*;
 import cpw.mods.fml.relauncher.*;

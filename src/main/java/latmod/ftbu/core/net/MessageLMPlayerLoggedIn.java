@@ -68,15 +68,15 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> 
 	{
 		Minecraft mc = LatCoreMCClient.getMinecraft();
 		
-		LMPlayerClient p = new LMPlayerClient(LMWorld.client, m.playerID, new GameProfile(m.uuid, m.username));
+		LMPlayerClient p = new LMPlayerClient(LMWorldClient.inst, m.playerID, new GameProfile(m.uuid, m.username));
 		p.readFromNet(m.data);
-		LMWorld.client.players.add(p);
+		LMWorldClient.inst.players.add(p);
 		p.onPostLoaded();
 		
 		if(m.uuid.equals(mc.thePlayer.getUniqueID()))
 		{
-			LatCoreMC.logger.info("Joined the server with PlayerID " + p.playerID + " in world " + LMWorld.client.worldIDS);
-			LMWorld.client.clientPlayerID = p.playerID;
+			LatCoreMC.logger.info("Joined the server with PlayerID " + p.playerID + " in world " + LMWorldClient.inst.worldIDS);
+			LMWorldClient.inst.clientPlayerID = p.playerID;
 			FTBUClient.onWorldJoined(p);
 		}
 		

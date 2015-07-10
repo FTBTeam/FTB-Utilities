@@ -78,6 +78,9 @@ public class IntList implements Iterable<Integer>// Improve this // FastList
 	public int removeValue(int value)
 	{ return removeKey(indexOf(value)); }
 	
+	public void set(int i, int value)
+	{ array[i] = value; }
+	
 	public boolean isEmpty()
 	{ return size <= 0; }
 	
@@ -131,6 +134,13 @@ public class IntList implements Iterable<Integer>// Improve this // FastList
 	
 	public Iterator<Integer> iterator()
 	{ return new IntIterator(array); }
+	
+	public IntList clone()
+	{
+		IntList l = new IntList(init);
+		l.array = array.clone();
+		return l;
+	}
 	
 	public static class IntIterator implements Iterator<Integer>
 	{

@@ -1,4 +1,7 @@
 package latmod.ftbu.core.gui;
+import java.util.List;
+
+import latmod.ftbu.core.OtherMods;
 import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.FTBU;
@@ -13,10 +16,12 @@ import net.minecraft.util.*;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
-public abstract class GuiLM extends GuiContainer
+@Optional.Interface(iface = "codechicken.nei.api.INEIGuiHandler", modid = OtherMods.NEI)
+public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.INEIGuiHandler
 {
 	// General IIcons //
 	
@@ -98,6 +103,8 @@ public abstract class GuiLM extends GuiContainer
 	private boolean refreshWidgets = true;
 	public int mouseX, mouseY, mouseXR, mouseYR;
 	public float delta;
+	
+	public boolean hideNEI = false;
 	
 	private ResourceLocation prevTexture = null;
 	
@@ -322,4 +329,21 @@ public abstract class GuiLM extends GuiContainer
 		tessellator.addVertexWithUV(x + 0, y + 0, z, minU2, minV2);
 		tessellator.draw();
 	}
+	
+	@Optional.Method(modid = OtherMods.NEI)
+	public codechicken.nei.VisiblityData modifyVisiblity(GuiContainer g, codechicken.nei.VisiblityData vd)
+	{ if(hideNEI) vd.showNEI = false; return vd; }
+	
+	public Iterable<Integer> getItemSpawnSlots(GuiContainer g, ItemStack is)
+	{ return null; }
+	
+	@Optional.Method(modid = OtherMods.NEI)
+	public List<codechicken.nei.api.TaggedInventoryArea> getInventoryAreas(GuiContainer paramGuiContainer)
+	{ return null; }
+	
+	public boolean handleDragNDrop(GuiContainer g, int x, int y, ItemStack is, int b)
+	{ return false; }
+	
+	public boolean hideItemPanelSlot(GuiContainer g, int x, int y, int w, int h)
+	{ return hideNEI; }
 }

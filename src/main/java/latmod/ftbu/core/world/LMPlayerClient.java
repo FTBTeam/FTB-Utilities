@@ -2,7 +2,7 @@ package latmod.ftbu.core.world;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.client.LatCoreMCClient;
-import latmod.ftbu.core.event.*;
+import latmod.ftbu.core.event.LMPlayerClientEvent;
 import latmod.ftbu.core.util.*;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.nbt.NBTTagCompound;

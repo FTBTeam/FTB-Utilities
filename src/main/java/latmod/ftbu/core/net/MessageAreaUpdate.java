@@ -16,15 +16,9 @@ public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate> implements I
 	
 	public MessageAreaUpdate() { }
 	
-	@Deprecated
-	public MessageAreaUpdate(int x, int z, int d, byte s, byte[] b)
-	{
-		chunkX = x; chunkZ = z; dim = d; size = s; types = b;
-	}
-	
 	public MessageAreaUpdate(int x, int z, int d, byte s, LMPlayerServer p)
 	{
-		this(x, z, d, s, new byte[s * s]);
+		chunkX = x; chunkZ = z; dim = d; size = s; types = new byte[s * s];
 		for(int z1 = 0; z1 < s; z1++) for(int x1 = 0; x1 < s; x1++)
 			types[x1 + z1 * s] = (byte)ChunkType.get(d, x + x1, z + z1, p).ordinal();
 	}

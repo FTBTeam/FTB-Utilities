@@ -40,7 +40,7 @@ public class MessageManageGroups extends MessageLM<MessageManageGroups>
 	
 	public IMessage onMessage(MessageManageGroups m, MessageContext ctx)
 	{
-		LMPlayerServer owner = LMWorld.server.getPlayer(m.playerID);
+		LMPlayerServer owner = LMWorldServer.inst.getPlayer(m.playerID);
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
 		//EntityPlayerMP ep = owner.getPlayerMP();
 		
@@ -48,7 +48,7 @@ public class MessageManageGroups extends MessageLM<MessageManageGroups>
 		
 		if(m.code > 0)
 		{
-			LMPlayerServer p = LMWorld.server.getPlayer(m.user);
+			LMPlayerServer p = LMWorldServer.inst.getPlayer(m.user);
 			if(p == null || p.equalsPlayer(owner)) return null;
 			
 			if(m.code == C_ADD_FRIEND)

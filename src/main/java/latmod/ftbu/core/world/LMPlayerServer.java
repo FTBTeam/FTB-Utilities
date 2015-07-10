@@ -1,7 +1,7 @@
 package latmod.ftbu.core.world;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.event.*;
+import latmod.ftbu.core.event.LMPlayerServerEvent;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.claims.Claims;

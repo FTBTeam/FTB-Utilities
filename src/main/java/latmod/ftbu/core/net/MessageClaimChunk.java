@@ -39,7 +39,7 @@ public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 	public IMessage onMessage(MessageClaimChunk m, MessageContext ctx)
 	{
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
-		LMPlayerServer p = LMWorld.server.getPlayer(ep);
+		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
 		if(m.claim) p.claims.claim(m.dim, m.chunkX, m.chunkZ);
 		else p.claims.unclaim(m.dim, m.chunkX, m.chunkZ, false);
 		return new MessageAreaUpdate(m.chunkX, m.chunkZ, m.dim, (byte)1, p);

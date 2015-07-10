@@ -2,10 +2,10 @@ package latmod.ftbu.mod.cmd;
 
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.cmd.*;
+import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.core.world.*;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 public class CmdListOverride extends CommandLM
 {
@@ -22,13 +22,16 @@ public class CmdListOverride extends CommandLM
 	
 	public String onCommand(ICommandSender ics, String[] args)
 	{
-		LatCoreMC.printChat(ics, "Players currently online: [ " + MinecraftServer.getServer().getConfigurationManager().playerEntityList.size() + " ]");
-		for(int i = 0; i < MinecraftServer.getServer().getConfigurationManager().playerEntityList.size(); i++)
+		FastList<EntityPlayerMP> players = LatCoreMC.getAllOnlinePlayers().values;
+		boolean printUUID = args.length > 0 && args[0].equals("uuid");
+		
+		LatCoreMC.printChat(ics, "Players currently online: [ " + players.size() + " ]");
+		for(int i = 0; i < players.size(); i++)
 		{
-			EntityPlayer ep = (EntityPlayer)MinecraftServer.getServer().getConfigurationManager().playerEntityList.get(i);
-			LMPlayer p = LMWorld.server.getPlayer(ep);
+			EntityPlayerMP ep = players.get(i);
+			LMPlayer p = LMWorldServer.inst.getPlayer(ep);
 			
-			if(args.length > 0 && args[0].equals("uuids"))
+			if(printUUID)
 				LatCoreMC.printChat(ics, p.getName() + " :: " + ep.getUniqueID());
 			else
 				LatCoreMC.printChat(ics, p.getName());

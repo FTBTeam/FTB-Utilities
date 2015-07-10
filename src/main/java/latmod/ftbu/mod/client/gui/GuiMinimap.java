@@ -66,10 +66,11 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		super(new ContainerEmpty.ClientGui(), tex);
 		xSize = 156;
 		ySize = 185;
+		hideNEI = true;
 		
 		if(GL_ID == -1) GL_ID = GL11.glGenLists(1);
 		
-		owner = LMWorld.client.getClientPlayer();
+		owner = LMWorldClient.inst.getClientPlayer();
 		startX = MathHelperLM.chunk(mc.thePlayer.posX) - CHUNKS_OFFSET;
 		startZ = MathHelperLM.chunk(mc.thePlayer.posZ) - CHUNKS_OFFSET;
 		dimension = mc.theWorld.provider.dimensionId;
@@ -93,7 +94,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 			public void onButtonPressed(int b)
 			{
 				gui.playClickSound();
-				mc.displayGuiScreen(new GuiFriends());
+				mc.displayGuiScreen(new GuiFriends(null));
 			}
 		};
 		

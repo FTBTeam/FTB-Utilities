@@ -2,7 +2,7 @@ package latmod.ftbu.core.world;
 
 import java.util.UUID;
 
-import latmod.ftbu.core.NBTHelper;
+import latmod.ftbu.core.*;
 import net.minecraft.nbt.*;
 
 import com.mojang.authlib.GameProfile;
@@ -19,6 +19,7 @@ public class LMWorldClient extends LMWorld<LMPlayerClient>
 	public LMWorldClient(UUID id)
 	{
 		super(Side.CLIENT, id);
+		LatCoreMC.logger.info("Created LMWorldClient " + worldIDS + " with UUID " + worldID);
 	}
 	
 	public LMPlayerClient getClientPlayer()
@@ -40,5 +41,17 @@ public class LMWorldClient extends LMWorld<LMPlayerClient>
 		
 		for(int i = 0; i < players.size(); i++)
 			players.get(i).onPostLoaded();
+	}
+	
+	public static class NoServerWorld extends LMWorldClient
+	{
+		public static final UUID noServerWorldUUID = new UUID(0L, 0L);
+		public static String worldIDSNoWorld;
+		
+		public NoServerWorld()
+		{ super(noServerWorldUUID); }
+		
+		protected String getWorldIDS()
+		{ return worldIDSNoWorld + ""; }
 	}
 }

@@ -91,6 +91,13 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 		public static final TextureCoords close = new TextureCoords(tex, 45);
 		public static final TextureCoords player_gray = new TextureCoords(tex, 46);
 		public static final TextureCoords online_red = new TextureCoords(tex, 47);
+		public static final TextureCoords notes = new TextureCoords(tex, 48);
+		public static final TextureCoords hsb = new TextureCoords(tex, 49);
+		public static final TextureCoords rgb = new TextureCoords(tex, 50);
+		public static final TextureCoords comment = new TextureCoords(tex, 51);
+		public static final TextureCoords bin = new TextureCoords(tex, 52);
+		public static final TextureCoords marker = new TextureCoords(tex, 53);
+		public static final TextureCoords beacon = new TextureCoords(tex, 54);
 	}
 	
 	private static final FastList<String> tempTextList = new FastList<String>();

@@ -2,7 +2,7 @@ package latmod.ftbu.mod;
 
 import java.util.UUID;
 
-import latmod.ftbu.core.LMProxy;
+import latmod.ftbu.core.*;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.TileLM;
@@ -44,7 +44,7 @@ public class FTBUCommon extends LMProxy // FTBUClient
 	}
 	
 	public void spawnDust(World w, double x, double y, double z, int col) { }
-	public void openClientGui(EntityPlayer ep, String id, NBTTagCompound data) { }
+	public boolean openClientGui(EntityPlayer ep, String mod, int id, NBTTagCompound data) { return false; }
 	public <M extends MessageLM<?>> void handleClientMessage(IClientMessageLM<M> m, MessageContext ctx) { }
 	public void readTileData(TileLM t, S35PacketUpdateTileEntity p) { }
 }

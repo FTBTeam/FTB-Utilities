@@ -1,11 +1,10 @@
 package latmod.ftbu.core;
 
-import java.util.UUID;
-
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentTranslation;
 import cpw.mods.fml.relauncher.*;
 
 public class LMSecurity
@@ -64,27 +63,24 @@ public class LMSecurity
 	}
 	
 	public boolean hasOwner()
-	{ return ownerID > 0; }
+	{ return getOwner() != null; }
 	
-	public boolean isOwner(Object o)
-	{ return hasOwner() && getOwnerID() == LMWorld.getWorld().getPlayerID(o); }
+	public boolean isOwner(Object player)
+	{ return hasOwner() && getOwnerID() == LMWorld.getWorld().getPlayerID(player); }
 	
-	public boolean canInteract(UUID id)
+	public boolean canInteract(Object player)
 	{
-		if(level == Level.PUBLIC || ownerID == 0) return true;
-		if(id == null) return false;
-		if(isOwner(id)) return true;
+		if(level == Level.PUBLIC || getOwner() == null) return true;
+		if(player == null) return false;
+		if(isOwner(player)) return true;
 		if(level == Level.PRIVATE) return false;
 		
 		LMPlayer owner = getOwner();
-		if(level == Level.FRIENDS && owner != null && owner.isFriend(LMWorld.getWorld().getPlayer(id)))
+		if(level == Level.FRIENDS && owner.isFriend(LMWorld.getWorld().getPlayer(player)))
 			return true;
 		
 		return false;
 	}
-	
-	public boolean canInteract(EntityPlayer ep)
-	{ return canInteract((ep == null) ? null : ep.getUniqueID()); }
 	
 	// Level enum //
 	
@@ -130,4 +126,7 @@ public class LMSecurity
 		public String getTitle()
 		{ return FTBU.mod.translateClient("security"); }
 	}
+
+	public void printOwner(ICommandSender ep)
+	{ ep.addChatMessage(new ChatComponentTranslation(FTBU.mod.assets + "owner", hasOwner() ? getOwner().getName() : "null")); }
 }

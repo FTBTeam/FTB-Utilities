@@ -170,7 +170,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 	}
 	
 	public final void printOwner(EntityPlayer ep)
-	{ ep.addChatMessage(new ChatComponentTranslation(FTBU.mod.assets + "owner", security.hasOwner() ? security.getOwner().getName() : "null")); }
+	{ security.printOwner(ep); }
 	
 	public void setMeta(int m)
 	{ blockMetadata = m; worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, m, 3); isDirty = true; }

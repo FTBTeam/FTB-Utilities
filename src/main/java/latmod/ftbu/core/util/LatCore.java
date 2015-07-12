@@ -55,6 +55,28 @@ public class LatCore
 		@SideOnly(Side.CLIENT)
 		public static void setGLColor(int c)
 		{ setGLColor(c, getAlpha(c)); }
+		
+		public static int getHSB(float h, float s, float b)
+		{ return java.awt.Color.HSBtoRGB(h, s, b); }
+		
+		public static float[] getHSB(int r, int g, int b)
+		{
+			float[] f = new float[3];
+			java.awt.Color.RGBtoHSB(r, g, b, f);
+			return f;
+		}
+		
+		public static float[] getHSB(int c)
+		{ return getHSB(getRed(c), getGreen(c), getBlue(c)); }
+		
+		public static float getHue(int c)
+		{ return getHSB(c)[0]; }
+		
+		public static float getSaturation(int c)
+		{ return getHSB(c)[1]; }
+		
+		public static float getBrightness(int c)
+		{ return getHSB(c)[2]; }
 	}
 	
 	@SuppressWarnings("all")

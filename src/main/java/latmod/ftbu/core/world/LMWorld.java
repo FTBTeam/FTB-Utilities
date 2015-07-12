@@ -14,9 +14,9 @@ public abstract class LMWorld<P extends LMPlayer>
 {
 	public static LMWorld<?> getWorld()
 	{
-		if(!LatCoreMC.isServer())
-			return FTBU.proxy.getClientWorldLM();
-		return LMWorldServer.inst;
+		if(LatCoreMC.isServer())
+			return LMWorldServer.inst;
+		return FTBU.proxy.getClientWorldLM();
 	}
 	
 	public final Side side;
@@ -28,9 +28,12 @@ public abstract class LMWorld<P extends LMPlayer>
 	{
 		side = s;
 		worldID = id;
-		worldIDS = LatCoreMC.toShortUUID(worldID);
+		worldIDS = getWorldIDS();
 		players = new FastList<P>();
 	}
+	
+	protected String getWorldIDS()
+	{ return LatCoreMC.toShortUUID(worldID); }
 	
 	public P getPlayer(Object o)
 	{

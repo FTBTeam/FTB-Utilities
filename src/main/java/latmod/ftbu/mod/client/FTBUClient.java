@@ -9,7 +9,7 @@ import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.TileLM;
 import latmod.ftbu.core.util.LatCore;
 import latmod.ftbu.core.world.*;
-import latmod.ftbu.mod.FTBUCommon;
+import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.client.minimap.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -38,16 +38,13 @@ public class FTBUClient extends FTBUCommon
 	public static final ClientConfig.Property optionsButton = new ClientConfig.Property("options_button", true);
 	public static final ClientConfig.Property chatLinks = new ClientConfig.Property("chat_links", 1, "disabled", "enabled"); //"replace", "print" });
 	
-	public void preInit()
+	public static final ClientConfig miscConfig = new ClientConfig("ftbu_misc").setHidden();
+	public static final ClientConfig.Property hideArmorFG = new ClientConfig.Property("hide_armor_fg", false);
+	public static final ClientConfig.Property sortingFG = new ClientConfig.Property("sorting_fg", 0, "Friends", "A-Z").setRawValues();
+	public static final ClientConfig.Property openHSB = new ClientConfig.Property("openHSB_cg", false);
+	
+	private static void initConfig()
 	{
-		LatCoreMC.BusType.FORGE.register(FTBUClientEventHandler.instance);
-		LatCoreMC.BusType.LATMOD.register(FTBUClientEventHandler.instance);
-		LatCoreMC.BusType.FORGE.register(FTBURenderHandler.instance);
-		LatCoreMC.BusType.FML.register(FTBURenderHandler.instance);
-		LatCoreMC.BusType.FORGE.register(FTBUGuiEventHandler.instance);
-		
-		ClientConfig.Registry.init();
-		
 		clientConfig.add(enablePlayerDecorators);
 		clientConfig.add(addOreNames);
 		clientConfig.add(addRegistryNames);
@@ -56,6 +53,23 @@ public class FTBUClient extends FTBUCommon
 		clientConfig.add(chatLinks);
 		ClientConfig.Registry.add(clientConfig);
 		
+		miscConfig.add(hideArmorFG);
+		miscConfig.add(sortingFG);
+		miscConfig.add(openHSB);
+		ClientConfig.Registry.add(miscConfig);
+	}
+	
+	public void preInit()
+	{
+		LatCoreMC.BusType.FORGE.register(FTBUClientEventHandler.instance);
+		LatCoreMC.BusType.FML.register(FTBUClientEventHandler.instance);
+		LatCoreMC.BusType.LATMOD.register(FTBUClientEventHandler.instance);
+		LatCoreMC.BusType.FORGE.register(FTBURenderHandler.instance);
+		LatCoreMC.BusType.FML.register(FTBURenderHandler.instance);
+		LatCoreMC.BusType.FORGE.register(FTBUGuiEventHandler.instance);
+		
+		ClientConfig.Registry.init();
+		initConfig();
 		Waypoints.init();
 		Minimap.init();
 	}
@@ -64,6 +78,7 @@ public class FTBUClient extends FTBUCommon
 	{
 		ClientConfig.Registry.load();
 		//ThreadLoadBadges.init();
+		FTBUGuiHandler.instance.registerClient();
 	}
 	
 	public void addInfo(FTBUReadmeEvent e)
@@ -123,15 +138,22 @@ public class FTBUClient extends FTBUCommon
 		Minimap.minimaps.clear();
 	}
 	
-	public void openClientGui(EntityPlayer ep, String id, NBTTagCompound data)
+	public boolean openClientGui(EntityPlayer ep, String mod, int id, NBTTagCompound data)
 	{
-		ILMGuiHandler h = ILMGuiHandler.Registry.getLMGuiHandler(id);
+		LMGuiHandler h = LMGuiHandler.Registry.getLMGuiHandler(mod);
 		
 		if(h != null)
 		{
 			GuiScreen g = h.getGui(ep, id, data);
-			if(g != null) Minecraft.getMinecraft().displayGuiScreen(g);
+			
+			if(g != null)
+			{
+				Minecraft.getMinecraft().displayGuiScreen(g);
+				return true;
+			}
 		}
+		
+		return false;
 	}
 	
 	@SuppressWarnings("unchecked")

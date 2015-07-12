@@ -21,7 +21,7 @@ public class CmdAdminDisplayItem extends SubCommand
 			ItemDisplay itemDisplay = new ItemDisplay(is, is.getDisplayName(), is.hasDisplayName() ? FastList.asList(is.getItem().getItemStackDisplayName(is)) : null, 8F);
 			NBTTagCompound data = new NBTTagCompound();
 			itemDisplay.writeToNBT(data);
-			LatCoreMC.openGui(ep, FTBUGuiHandler.DISPLAY_ITEM, data);
+			FTBUGuiHandler.instance.openGui(ep, FTBUGuiHandler.DISPLAY_ITEM, data);
 			return null;
 		}
 		

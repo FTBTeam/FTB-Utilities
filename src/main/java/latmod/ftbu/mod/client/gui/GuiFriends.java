@@ -2,11 +2,13 @@ package latmod.ftbu.mod.client.gui;
 
 import static net.minecraft.util.EnumChatFormatting.*;
 import latmod.ftbu.core.FTBULang;
+import latmod.ftbu.core.client.ClientConfig;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.mod.client.minimap.Waypoints;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -38,14 +40,12 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	public final FastList<Player> players;
 	
 	public final TextBoxLM searchBox;
-	public final ButtonLM buttonSave, buttonSort, buttonPrevPage, buttonNextPage;
+	public final ButtonLM buttonSave, buttonSort, buttonPrevPage, buttonNextPage, buttonArmor;
 	public final ButtonPlayer pbOwner;
 	public final ButtonPlayer[] pbPlayers;
 	public int page = 0;
 	
 	private static LMClientPlayer selectedPlayer = null;
-	private static boolean hideArmor = false;
-	private static boolean sortAZ = false;
 	private static final FastList<ActionButton> actionButtons = new FastList<ActionButton>();
 	
 	public GuiFriends(GuiScreen gui)
@@ -88,7 +88,8 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		{
 			public void onButtonPressed(int b)
 			{
-				sortAZ = !sortAZ;
+				FTBUClient.sortingFG.incValue();
+				ClientConfig.Registry.save();
 				refreshPlayers();
 				playClickSound();
 			}
@@ -104,8 +105,6 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			}
 		};
 		
-		buttonPrevPage.title = "Prev Page";
-		
 		buttonNextPage = new ButtonLM(this, 199, 159, 35, 16)
 		{
 			public void onButtonPressed(int b)
@@ -116,7 +115,15 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			}
 		};
 		
-		buttonNextPage.title = "Next Page";
+		buttonArmor = new ButtonLM(this, 64, 46, 16, 16)
+		{
+			public void onButtonPressed(int b)
+			{
+				playClickSound();
+				FTBUClient.hideArmorFG.incValue();
+				ClientConfig.Registry.save();
+			}
+		};
 		
 		// Player buttons //
 		
@@ -135,13 +142,14 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	
 	public void addWidgets(FastList<WidgetLM> l)
 	{
-		buttonSort.title = BLUE + "Sort: " + (sortAZ ? "A-Z" : "Friends");
+		buttonSort.title = BLUE + "Sort: " + FTBUClient.sortingFG.getValueS(FTBUClient.sortingFG.getI());
 		
 		l.add(searchBox);
 		l.add(buttonSave);
 		l.add(buttonSort);
 		l.add(buttonPrevPage);
 		l.add(buttonNextPage);
+		l.add(buttonArmor);
 		
 		l.add(pbOwner);
 		l.addAll(pbPlayers);
@@ -153,6 +161,8 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			actionButtons.add(new ActionButton(this, PlayerAction.settings, FTBULang.button_settings));
 			actionButtons.add(new ActionButton(this, PlayerAction.waypoints, Waypoints.clientConfig.getIDS()));
 			actionButtons.add(new ActionButton(this, PlayerAction.minimap, "Claimed Chunks"));
+			//actionButtons.add(new ActionButton(this, PlayerAction.notes, "Notes [WIP]"));
+			//actionButtons.add(new ActionButton(this, PlayerAction.notifications, "Notifications [WIP]"));
 		}
 		else
 		{
@@ -161,8 +171,6 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			else
 				actionButtons.add(new ActionButton(this, PlayerAction.friend_add, FTBULang.button_add_friend));
 		}
-		
-		actionButtons.add(new ActionButton(this, PlayerAction.hide_armor, "Hide Armor: " + (hideArmor ? FTBULang.button_enabled : FTBULang.button_disabled)));
 		
 		l.addAll(actionButtons);
 	}
@@ -181,31 +189,18 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		for(int i = 0; i < pbPlayers.length; i++)
 			pbPlayers[i].render();
 		
-		if(selectedPlayer != null)
-		{
-			/*
-			setTexture(texture);
-			
-			if(owner.equals(selectedPlayer))
-				buttonAdd.render(Icons.settings);
-			else
-				buttonAdd.render(owner.isFriendRaw(selectedPlayer) ? Icons.remove : Icons.add);
-			
-			buttonInfo.render(Icons.info);
-			buttonHideArmor.render(hideArmor ? Icons.player_gray : Icons.player);
-			buttonClose.render(Icons.close);
-			*/
-		}
-		
 		buttonSave.render(Icons.accept);
 		buttonSort.render(Icons.sort);
 		Icons.left.render(this, 94, 159, 16, 16);
 		Icons.right.render(this, 209, 159, 16, 16);
 		
+		buttonArmor.render(Icons.jacket);
+		if(FTBUClient.hideArmorFG.getB()) buttonArmor.render(Icons.close);
+		
 		for(ActionButton a : actionButtons)
 			a.render(a.action.icon);
 		
-		if(hideArmor)
+		if(FTBUClient.hideArmorFG.getB())
 		{
 			for(int i = 0; i < 4; i++)
 				selectedPlayer.inventory.armorInventory[i] = null;
@@ -318,7 +313,9 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		
 		public int compareTo(Player o)
 		{
-			if(sortAZ) return player.getName().compareToIgnoreCase(o.player.getName());
+			int sort = FTBUClient.sortingFG.getI();
+			
+			if(sort == 1) return player.getName().compareToIgnoreCase(o.player.getName());
 			
 			int s0 = getStatus();
 			int s1 = o.getStatus();
@@ -482,6 +479,18 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			{ g.mc.displayGuiScreen(new GuiMinimap()); }
 		};
 		
+		public static final PlayerAction notes = new PlayerAction(Icons.notes)
+		{
+			public void onClicked(GuiFriends g)
+			{ /* g.mc.displayGuiScreen(new GuiNotes()); */ }
+		};
+		
+		public static final PlayerAction notifications = new PlayerAction(Icons.comment)
+		{
+			public void onClicked(GuiFriends g)
+			{ /* g.mc.displayGuiScreen(new GuiNotifications()); */ }
+		};
+		
 		// Other players //
 		
 		public static final PlayerAction friend_add = new PlayerAction(Icons.add)
@@ -499,17 +508,6 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			{
 				g.sendUpdate(MessageManageGroups.C_REM_FRIEND, selectedPlayer.playerLM.playerID);
 				g.refreshPlayers();
-			}
-		};
-		
-		// Common //
-		
-		public static final PlayerAction hide_armor = new PlayerAction(Icons.jacket)
-		{
-			public void onClicked(GuiFriends g)
-			{
-				hideArmor = !hideArmor;
-				g.refreshWidgets();
 			}
 		};
 	}

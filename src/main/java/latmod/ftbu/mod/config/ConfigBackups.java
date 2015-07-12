@@ -15,7 +15,7 @@ public class ConfigBackups
 	@Expose public Boolean enabled;
 	@Expose public Integer backupsToKeep;
 	@Expose private Float backupTimer;
-	@Expose public Boolean backupOnShutdown;
+	//@Expose public Boolean backupOnShutdown;
 	@Expose public Boolean compress;
 	@Expose public String folder;
 	@Expose public Boolean displayFileSize;
@@ -35,7 +35,7 @@ public class ConfigBackups
 		if(enabled == null) enabled = false;
 		if(backupsToKeep == null) backupsToKeep = 12;
 		if(backupTimer == null) backupTimer = 2F;
-		if(backupOnShutdown == null) backupOnShutdown = false;
+		//if(backupOnShutdown == null) backupOnShutdown = false;
 		if(compress == null) compress = true;
 		if(folder == null) folder = "./latmod/backups/";
 		if(displayFileSize == null) displayFileSize = true;
@@ -56,7 +56,7 @@ public class ConfigBackups
 		backups.add("enabled", "true enables backups", false);
 		backups.add("backupsToKeep", "The number of backup files to keep. 0 - Disabled. More backups = more space used.", 12);
 		backups.add("backupTimer", "Timer in hours. Can be .x, 1.0 - backups every hour, 6.0 - backups every 6 hours, 0.5 - backups every 30 minutes.", 2F);
-		backups.add("backupOnShutdown", "Launches backup when server stops.", false);
+		//backups.add("backupOnShutdown", "Launches backup when server stops.", false);
 		backups.add("compress", "true to compress into .zip, false to backup as folders.", true);
 		backups.add("folder", "Absoute path to backups folder, blank means /latmod/backups/.", "Blank");
 		backups.add("displayFileSize", "Prints (current size | total size) when backup is done", true);

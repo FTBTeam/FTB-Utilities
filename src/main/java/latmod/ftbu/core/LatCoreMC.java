@@ -12,7 +12,6 @@ import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.*;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -21,7 +20,6 @@ import net.minecraft.util.*;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.*;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.*;
 
 import org.apache.logging.log4j.*;
@@ -239,37 +237,12 @@ public final class LatCoreMC // LatCoreMCClient
 	public static Object invokeStatic(String className, String methodName) throws Exception
 	{ Class<?> c = Class.forName(className); return c.getMethod(methodName).invoke(null); }
 	
-	public static void openGui(EntityPlayer ep, String id, NBTTagCompound data)
-	{
-		if(ep == null || ep instanceof FakePlayer) return;
-		
-		ILMGuiHandler h = ILMGuiHandler.Registry.getLMGuiHandler(id);
-		
-		if(h == null) return;
-		
-		if(ep instanceof EntityPlayerMP)
-		{
-			Container c = h.getContainer(ep, id, data);
-			if(c == null) return;
-			
-			EntityPlayerMP epM = (EntityPlayerMP)ep;
-			epM.getNextWindowId();
-			epM.closeContainer();
-			epM.openContainer = c;
-			epM.openContainer.windowId = epM.currentWindowId;
-			epM.openContainer.addCraftingToCrafters(epM);
-			MessageLM.NET.sendTo(new MessageOpenGui(id, data, epM.currentWindowId), epM);
-		}
-		else if(getEffectiveSide() == Side.CLIENT)
-			FTBU.proxy.openClientGui(ep, id, data);
-	}
-	
 	public static void openGui(EntityPlayer ep, IGuiTile i, NBTTagCompound data)
 	{
 		TileEntity te = (TileEntity)i;
 		if(data == null) data = new NBTTagCompound();
 		data.setIntArray("XYZ", new int[] { te.xCoord, te.yCoord, te.zCoord });
-		openGui(ep, FTBUGuiHandler.TILE, data);
+		FTBUGuiHandler.instance.openGui(ep, FTBUGuiHandler.TILE, data);
 	}
 
 	public static UUID getUUIDFromString(String s)

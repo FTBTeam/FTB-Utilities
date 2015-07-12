@@ -9,6 +9,7 @@ import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.claims.ChunkType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.event.*;
 import net.minecraft.item.*;
 import net.minecraft.util.*;
@@ -179,7 +180,10 @@ public class FTBUClientEventHandler
 	@SubscribeEvent
 	public void onConnected(FMLNetworkEvent.ClientConnectedToServerEvent e)
 	{
-		LMWorldClient.inst = null;
+		ServerData sd = LatCoreMCClient.getMinecraft().func_147104_D();
+		String s = (sd == null || sd.serverIP.isEmpty()) ? "localhost" : sd.serverIP.replace('.', '_');
+		LMWorldClient.NoServerWorld.worldIDSNoWorld = s;
+		LMWorldClient.inst = new LMWorldClient.NoServerWorld();
 		LatCoreMC.logger.info("Connecting to world...");
 	}
 	

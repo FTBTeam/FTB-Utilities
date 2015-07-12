@@ -18,6 +18,9 @@ public class MathHelperLM
 	public static final double TWO_PI = Math.PI * 2D;
 	public static final double HALF_PI = Math.PI / 2D;
 	
+	public static final float RAD_F = (float)RAD;
+	public static final float DEG_F = (float)DEG;
+	
 	public static double sin(double d)
 	{ return MathHelper.sin((float)d); }
 	

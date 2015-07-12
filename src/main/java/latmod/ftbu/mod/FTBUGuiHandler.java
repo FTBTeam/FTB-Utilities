@@ -11,19 +11,21 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.relauncher.*;
 
-public class FTBUGuiHandler implements ILMGuiHandler
+public class FTBUGuiHandler extends LMGuiHandler
 {
-	public static final FTBUGuiHandler instance = new FTBUGuiHandler();
+	public static final FTBUGuiHandler instance = new FTBUGuiHandler(FTBUFinals.MOD_ID);
 	
-	public static final String TILE = "lmc.tile";
-	public static final String FRIENDS = "lmc.friends";
-	public static final String SECURITY = "lmc.security";
-	public static final String DISPLAY_ITEM = "lmc.displayitem";
-	public static final String[] IDs = { TILE, FRIENDS, SECURITY, DISPLAY_ITEM };
+	public static final int TILE = 1;
+	public static final int FRIENDS = 2;
+	public static final int SECURITY = 3;
+	public static final int DISPLAY_ITEM = 4;
 	
-	public Container getContainer(EntityPlayer ep, String id, NBTTagCompound data)
+	public FTBUGuiHandler(String s)
+	{ super(s); }
+	
+	public Container getContainer(EntityPlayer ep, int id, NBTTagCompound data)
 	{
-		if(id.equals(TILE))
+		if(id == TILE)
 		{
 			int[] xyz = data.getIntArray("XYZ");
 			TileEntity te = ep.worldObj.getTileEntity(xyz[0], xyz[1], xyz[2]);
@@ -36,17 +38,17 @@ public class FTBUGuiHandler implements ILMGuiHandler
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public GuiScreen getGui(EntityPlayer ep, String id, NBTTagCompound data)
+	public GuiScreen getGui(EntityPlayer ep, int id, NBTTagCompound data)
 	{
-		if(id.equals(TILE))
+		if(id == TILE)
 		{
 			int[] xyz = data.getIntArray("XYZ");
 			TileEntity te = ep.worldObj.getTileEntity(xyz[0], xyz[1], xyz[2]);
 			if(te != null && !te.isInvalid() && te instanceof IGuiTile)
 				return ((IGuiTile)te).getGui(ep, data);
 		}
-		else if(id.equals(FRIENDS)) return new GuiFriends(null);
-		else if(id.equals(DISPLAY_ITEM))
+		else if(id == FRIENDS) return new GuiFriends(null);
+		else if(id == DISPLAY_ITEM)
 			return new GuiDisplayItem(ItemDisplay.readFromNBT(data));
 		
 		return null;

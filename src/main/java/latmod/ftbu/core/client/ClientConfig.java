@@ -12,6 +12,7 @@ public final class ClientConfig
 {
 	public final String id;
 	public final FastMap<String, Property> map;
+	public boolean isHidden = false;
 	
 	public ClientConfig(String s)
 	{
@@ -27,6 +28,9 @@ public final class ClientConfig
 	
 	public String toString()
 	{ return getIDS() + ": " + map; }
+	
+	public ClientConfig setHidden()
+	{ isHidden = true; return this; }
 	
 	public final static class Registry
 	{
@@ -58,8 +62,11 @@ public final class ClientConfig
 						{
 							ClientConfig c = map.get(s2[0]);
 							
-							Property p = c.map.get(s2[1]);
-							if(p != null) p.value = Converter.toInt(s1[1], -1);
+							if(c != null)
+							{
+								Property p = c.map.get(s2[1]);
+								if(p != null) p.value = Converter.toInt(s1[1], -1);
+							}
 						}
 					}
 				}
@@ -103,7 +110,13 @@ public final class ClientConfig
 		{ this(s, d ? 1 : 0, "disabled", "enabled"); }
 		
 		public void incValue()
-		{ value = (value + 1) % values.length; }
+		{ setValue(value + 1); }
+		
+		public void setValue(int i)
+		{
+			value = i % values.length;
+			if(value < 0) value = values.length + value;
+		}
 		
 		public int getI()
 		{ return (value == -1) ? def : value; }
@@ -123,7 +136,7 @@ public final class ClientConfig
 		public String getValueS(int i)
 		{ return translateValues ? I18n.format("config.value." + values[i]) : values[i]; }
 		
-		public Property setTranslateValues(boolean b)
-		{ translateValues = b; return this; }
+		public Property setRawValues()
+		{ translateValues = false; return this; }
 	}
 }

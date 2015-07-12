@@ -33,13 +33,13 @@ public final class TextureCoords
 	{ this(res, (index % 16) * 16, (index / 16) * 16, 16, 16, 256, 256); }
 	
 	@SideOnly(Side.CLIENT)
-	public void render(GuiLM gui, int x, int y, int w, int h)
+	public void render(GuiLM gui, double x, double y, double w, double h)
 	{
 		gui.setTexture(texture);
 		GuiLM.drawTexturedRectD(x + gui.getPosX(), y + gui.getPosY(), gui.getZLevel(), w, h, minU, minV, maxU, maxV);
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public void render(GuiLM gui, int x, int y)
+	public void render(GuiLM gui, double x, double y)
 	{ render(gui, x, y, width, height); }
 }

@@ -208,7 +208,6 @@ public class FTBUEventHandler // FTBUTickHandler
 	private boolean canInteract(net.minecraftforge.event.entity.player.PlayerInteractEvent e)
 	{
 		if(FTBUConfig.general.allowInteractSecure(e.entityPlayer)) return true;
-		if(FTBUConfig.general.isDedi() && !ChunkType.getD(e.world.provider.dimensionId, e.x, e.z, LMWorldServer.inst.getPlayer(e.entityPlayer)).isFriendly()) return false;
 		
 		TileEntity te = e.world.getTileEntity(e.x, e.y, e.z);
 		
@@ -217,6 +216,10 @@ public class FTBUEventHandler // FTBUTickHandler
 			if(!((ISecureTile)te).canPlayerInteract(e.entityPlayer, e.action == Action.LEFT_CLICK_BLOCK))
 			{ ((ISecureTile)te).onPlayerNotOwner(e.entityPlayer, e.action == Action.LEFT_CLICK_BLOCK); return false; }
 		}
+		
+		LMPlayerServer p = LMWorldServer.inst.getPlayer(e.entityPlayer);
+		if(p.isOP()) return true;
+		if(FTBUConfig.general.isDedi() && !ChunkType.getD(e.world.provider.dimensionId, e.x, e.z, p).isFriendly()) return false;
 		
 		return true;
 	}

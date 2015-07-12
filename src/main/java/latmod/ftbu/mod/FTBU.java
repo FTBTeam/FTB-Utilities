@@ -4,6 +4,7 @@ import java.io.File;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
 import latmod.ftbu.core.net.MessageLM;
+import latmod.ftbu.core.world.LMWorldServer;
 import latmod.ftbu.mod.backups.Backups;
 import latmod.ftbu.mod.cmd.*;
 import latmod.ftbu.mod.config.FTBUConfig;
@@ -92,8 +93,6 @@ public class FTBU
 			{ if(m != mod) modMeta.description += "\n" + m.modID; }
 		}
 		
-		for(String s : FTBUGuiHandler.IDs) ILMGuiHandler.Registry.addLMGuiHandler(s, FTBUGuiHandler.instance);
-		
 		Thread readmeThread = new Thread("LM_Readme")
 		{
 			public void run()
@@ -123,17 +122,18 @@ public class FTBU
 		if(LatCoreMC.hasOnlinePlayers()) for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers().values)
 			FTBUEventHandler.instance.playerLoggedOut(new cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent(ep));
 		
-		if(FTBUConfig.backups.backupOnShutdown)
+		/*if(FTBUConfig.backups.backupOnShutdown)
 		{
 			Backups.shouldRun = true;
 			Backups.run();
-		}
+		}*/
 	}
 	
 	@Mod.EventHandler
 	public void serverStopped(FMLServerStoppedEvent e)
 	{
 		FTBUTickHandler.resetTimer(false);
+		LMWorldServer.inst = null;
 	}
 	
 	/*

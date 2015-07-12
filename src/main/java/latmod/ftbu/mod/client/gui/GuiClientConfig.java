@@ -19,9 +19,12 @@ public class GuiClientConfig extends GuiScreen
 	public void initGui()
 	{
 		buttonList.clear();
-		
+		int j = -1;
 		for(int i = 0; i < ClientConfig.Registry.map.size(); i++)
-			buttonList.add(new GroupButton(i, ClientConfig.Registry.map.values.get(i)));
+		{
+			ClientConfig cc = ClientConfig.Registry.map.values.get(i);
+			if(!cc.isHidden) buttonList.add(new GroupButton(++j, cc));
+		}
 		
 		buttonList.add(new GuiButton(255, width / 2 - 100, height - 40, 200, 20, FTBULang.button_back));
 	}

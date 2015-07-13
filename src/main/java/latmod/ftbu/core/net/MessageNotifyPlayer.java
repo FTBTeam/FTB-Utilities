@@ -27,19 +27,19 @@ public class MessageNotifyPlayer extends MessageLM<MessageNotifyPlayer> implemen
 	
 	public void fromBytes(ByteBuf bb)
 	{
-		title = readString(bb);
-		desc = readString(bb);
+		title = LMNetHelper.readString(bb);
+		desc = LMNetHelper.readString(bb);
 		timer = bb.readShort();
 		item = null;
 		
-		NBTTagCompound itemTag = readTagCompound(bb);
+		NBTTagCompound itemTag = LMNetHelper.readTagCompound(bb);
 		if(itemTag != null) item = ItemStack.loadItemStackFromNBT(itemTag);
 	}
 	
 	public void toBytes(ByteBuf bb)
 	{
-		writeString(bb, title);
-		writeString(bb, desc);
+		LMNetHelper.writeString(bb, title);
+		LMNetHelper.writeString(bb, desc);
 		bb.writeShort(timer);
 		
 		NBTTagCompound itemTag = null;
@@ -50,7 +50,7 @@ public class MessageNotifyPlayer extends MessageLM<MessageNotifyPlayer> implemen
 			item.writeToNBT(itemTag);
 		}
 		
-		writeTagCompound(bb, itemTag);
+		LMNetHelper.writeTagCompound(bb, itemTag);
 	}
 	
 	public IMessage onMessage(MessageNotifyPlayer m, MessageContext ctx)

@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.cmd.*;
-import latmod.ftbu.core.util.LatCore;
+import latmod.ftbu.core.util.LMFileUtils;
 import latmod.ftbu.core.world.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -85,7 +85,7 @@ public class CmdAdminPlayer extends SubCommand
 				
 				String filename = ep.getCommandSenderName();
 				if(args.length == 3) filename = "custom/" + args[2];
-				NBTHelper.writeMap(new FileOutputStream(LatCore.newFile(new File(LatCoreMC.latmodFolder, "playerinvs/" + filename + ".dat"))), tag);
+				NBTHelper.writeMap(new FileOutputStream(LMFileUtils.newFile(new File(LatCoreMC.latmodFolder, "playerinvs/" + filename + ".dat"))), tag);
 			}
 			catch(Exception e)
 			{

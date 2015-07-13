@@ -4,10 +4,11 @@ import java.io.*;
 import java.util.Calendar;
 import java.util.zip.*;
 
-import latmod.ftbu.core.LatCoreMC;
+import latmod.ftbu.core.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldServer;
 import latmod.ftbu.mod.config.FTBUConfig;
+import net.minecraft.command.server.CommandSaveAll;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
@@ -23,13 +24,17 @@ public class ThreadBackup extends Thread
 		src = w.getSaveHandler().getWorldDirectory();
 		calendar = Calendar.getInstance();
 		time = calendar.getTimeInMillis();
+		setPriority(7);
 	}
 	
 	public void run()
 	{
 		Backups.lastTimeRun = time;
-		LatCoreMC.printChatAll(EnumChatFormatting.LIGHT_PURPLE + "Starting server backup, expect lag!");
+		LatCoreMC.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Starting server backup, expect lag!");
+		new CommandSaveAll().processCommand(LatCoreMC.getServer(), new String[] { "flush" });
 		setSave(false);
+		
+		File dstFile = null;
 		
 		try
 		{
@@ -41,28 +46,54 @@ public class ThreadBackup extends Thread
 			appendNum(out, calendar.get(Calendar.MINUTE), '-');
 			appendNum(out, calendar.get(Calendar.SECOND), File.separatorChar);
 			
-			File dst;
+			FastList<File> files = LMFileUtils.listAll(src);
+			int allFiles = files.size();
 			
-			if(FTBUConfig.backups.compress)
+			LatCoreMC.logger.info("Backing up " + files.size() + " files...");
+			
+			if(FTBUConfig.backups.compressionLevel > 0)
+			//if(false)
 			{
 				out.append(LMWorldServer.inst.worldIDS);
 				out.append(".zip");
-				
-				dst = LatCore.newFile(new File(Backups.backupsFolder, out.toString()));
+				dstFile = LMFileUtils.newFile(new File(Backups.backupsFolder, out.toString()));
 				
 				long start = LatCore.millis();
 				
-				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(dst));
+				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(dstFile));
+				zos.setLevel(FTBUConfig.backups.compressionLevel);
 				
-				FastList<File> files = LatCore.getAllFiles(src);
+				long logMillis = LatCore.millis() + 5000L;
 				
-				for(int i = 0; i < files.size(); i++)
+				byte[] buffer = new byte[1024];
+				
+				LatCoreMC.logger.info("Compressing " + allFiles + " files!");
+				
+				for(int i = 0; i < allFiles; i++)
 				{
-					String filePath = files.get(i).getAbsolutePath();
+					File file = files.get(i);
+					String filePath = file.getAbsolutePath();
 					ZipEntry ze = new ZipEntry(src.getName() + File.separator + filePath.substring(src.getAbsolutePath().length() + 1, filePath.length()));
+					
+					long millis = LatCore.millis();
+					
+					if(i == 0 || millis > logMillis || i == allFiles - 1)
+					{
+						logMillis = millis + 5000L;
+						
+						StringBuilder log = new StringBuilder();
+						log.append('[');
+						log.append(i);
+						log.append(" | ");
+						log.append(MathHelperLM.toSmallDouble((i / (double)allFiles) * 100D));
+						log.append("%]: ");
+						log.append(ze.getName());
+						LatCoreMC.logger.info(log.toString());
+					}
+					
 					zos.putNextEntry(ze);
-					FileInputStream fis = new FileInputStream(filePath);
-					byte[] buffer = new byte[1024];
+					FileInputStream fis = new FileInputStream(file);
+					
 					int len;
 					while ((len = fis.read(buffer)) > 0)
 						zos.write(buffer, 0, len);
@@ -72,38 +103,75 @@ public class ThreadBackup extends Thread
 				
 				zos.close();
 				
-				LatCoreMC.logger.info("Done compressing in " + ((LatCore.millis() - start) / 1000F) + " seconds (" + LatCore.fileSizeS(dst.length()) + ")!");
+				LatCoreMC.logger.info("Done compressing in " + getDoneTime(start) + " seconds (" + LMFileUtils.getSizeS(dstFile) + ")!");
 			}
 			else
 			{
 				out.append(src.getName());
+				dstFile = new File(Backups.backupsFolder, out.toString());
+				dstFile.mkdirs();
 				
-				dst = new File(Backups.backupsFolder, out.toString());
-				dst.mkdirs();
-				LatCore.throwException(LatCore.copyFile(src, dst));
+				String dstPath = dstFile.getAbsolutePath() + File.separator;
+				String srcPath = src.getAbsolutePath();
+				
+				long logMillis = LatCore.millis() + 5000L;
+				
+				for(int i = 0; i < allFiles; i++)
+				{
+					File file = files.get(i);
+					
+					long millis = LatCore.millis();
+					
+					if(i == 0 || millis > logMillis || i == allFiles - 1)
+					{
+						logMillis = millis + 5000L;
+						
+						StringBuilder log = new StringBuilder();
+						log.append('[');
+						log.append(i);
+						log.append(" | ");
+						log.append(MathHelperLM.toSmallDouble((i / (double)allFiles) * 100D));
+						log.append("%]: ");
+						log.append(file.getName());
+						LatCoreMC.logger.info(log.toString());
+					}
+					
+					File dst1 = new File(dstPath + (file.getAbsolutePath().replace(srcPath, "")));
+					LatCore.throwException(LMFileUtils.copyFile(file, dst1));
+				}
 			}
 			
-			LatCoreMC.logger.info("Created " + dst.getAbsolutePath() + " from " + src.getAbsolutePath());
+			LatCoreMC.logger.info("Created " + dstFile.getAbsolutePath() + " from " + src.getAbsolutePath());
 			
 			Backups.clearOldBackups();
 			
 			if(FTBUConfig.backups.displayFileSize)
 			{
-				String sizeB = LatCore.fileSizeS(LatCore.fileSize(dst));
-				String sizeT = LatCore.fileSizeS(LatCore.fileSize(Backups.backupsFolder));
-				LatCoreMC.printChatAll(EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + ((LatCore.millis() - time) / 1000F) + " seconds! (" + sizeB + " | " + sizeT + ")");
+				String sizeB = LMFileUtils.getSizeS(dstFile);
+				String sizeT = LMFileUtils.getSizeS(Backups.backupsFolder);
+				LatCoreMC.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(time) + "! (" + sizeB + " | " + sizeT + ")");
 			}
-			else LatCoreMC.printChatAll(EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + ((LatCore.millis() - time) / 1000F) + " seconds!");
+			else LatCoreMC.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(time) + "!");
 		}
 		catch(Exception e)
 		{
-			LatCoreMC.printChatAll(EnumChatFormatting.DARK_RED + "Failed to save world! (" + LatCore.classpath(e.getClass()) + ")");
+			LatCoreMC.printChat(BroadcastSender.inst, EnumChatFormatting.DARK_RED + "Failed to save world! (" + LatCore.classpath(e.getClass()) + ")");
 			e.printStackTrace();
+			if(dstFile != null) LMFileUtils.delete(dstFile);
 		}
 		
 		setSave(true);
-		Backups.canRun = true;
+		Backups.thread = null;
 		System.gc();
+	}
+	
+	private static String getDoneTime(long l)
+	{
+		float f = (LatCore.millis() - l) / 1000F;
+		if(f < 60F) return f + " seconds";
+		int m = (int)(f / 60F);
+		int s = (int)(f - m * 60F);
+		return m + MathHelperLM.getPluralWord(m, " minute and ", " minutes and ") + s + MathHelperLM.getPluralWord(m, " second", " seconds");
 	}
 	
 	private static void appendNum(StringBuilder sb, int num, char c)

@@ -28,8 +28,8 @@ public class MessageClientTileAction extends MessageLM<MessageClientTileAction>
 		x = bb.readInt();
 		y = bb.readInt();
 		z = bb.readInt();
-		action = readString(bb);
-		data = readTagCompound(bb);
+		action = LMNetHelper.readString(bb);
+		data = LMNetHelper.readTagCompound(bb);
 	}
 	
 	public void toBytes(ByteBuf bb)
@@ -37,8 +37,8 @@ public class MessageClientTileAction extends MessageLM<MessageClientTileAction>
 		bb.writeInt(x);
 		bb.writeInt(y);
 		bb.writeInt(z);
-		writeString(bb, action);
-		writeTagCompound(bb, data);
+		LMNetHelper.writeString(bb, action);
+		LMNetHelper.writeTagCompound(bb, data);
 	}
 	
 	public IMessage onMessage(MessageClientTileAction m, MessageContext ctx)

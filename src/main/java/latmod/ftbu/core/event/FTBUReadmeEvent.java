@@ -94,6 +94,6 @@ public class FTBUReadmeEvent extends EventLM
 			sb.append('\n');
 		}
 		
-		LatCore.saveFile(new File(LatCoreMC.latmodFolder, "readme.txt"), sb.toString().trim());
+		LMFileUtils.save(new File(LatCoreMC.latmodFolder, "readme.txt"), sb.toString().trim());
 	}
 }

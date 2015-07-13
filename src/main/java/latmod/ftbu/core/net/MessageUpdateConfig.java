@@ -19,12 +19,12 @@ public class MessageUpdateConfig extends MessageLM<MessageUpdateConfig>
 	
 	public void fromBytes(ByteBuf bb)
 	{
-		data = readTagCompound(bb);
+		data = LMNetHelper.readTagCompound(bb);
 	}
 	
 	public void toBytes(ByteBuf bb)
 	{
-		writeTagCompound(bb, data);
+		LMNetHelper.writeTagCompound(bb, data);
 	}
 	
 	public IMessage onMessage(MessageUpdateConfig m, MessageContext ctx)

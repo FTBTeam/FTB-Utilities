@@ -10,4 +10,5 @@ public class OtherMods
 	public static final String THERMAL_EXPANSION = "ThermalExpansion";
 	public static final String THERMAL_FOUNDATION = "ThermalFoundation";
 	public static final String BLUE_POWER = "bluepower";
+	public static final String CHISEL2 = "Chisel2";
 }

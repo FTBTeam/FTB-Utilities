@@ -42,14 +42,14 @@ public final class ClientConfig
 		
 		public static void init()
 		{
-			configFile = LatCore.newFile(new File(LatCoreMC.latmodFolder, "client/config.txt"));
+			configFile = LMFileUtils.newFile(new File(LatCoreMC.latmodFolder, "client/config.txt"));
 		}
 		
 		public static void load()
 		{
 			try
 			{
-				FastList<String> l = LatCore.loadFile(configFile);
+				FastList<String> l = LMFileUtils.load(configFile);
 				
 				for(String s : l) if(!s.isEmpty())
 				{
@@ -88,7 +88,7 @@ public final class ClientConfig
 						l.add(c.id + ":" + e.id + "=" + e.getI());
 				
 				l.sort(null);
-				LatCore.saveFile(configFile, l);
+				LMFileUtils.save(configFile, l);
 			}
 			catch(Exception e)
 			{ e.printStackTrace(); }

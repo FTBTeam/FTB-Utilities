@@ -27,14 +27,14 @@ public class MessageLMWorldUpdate extends MessageLM<MessageLMWorldUpdate> implem
 	public void fromBytes(ByteBuf bb)
 	{
 		worldID = new UUID(bb.readLong(), bb.readLong());
-		players = readTagCompound(bb);
+		players = LMNetHelper.readTagCompound(bb);
 	}
 	
 	public void toBytes(ByteBuf bb)
 	{
 		bb.writeLong(worldID.getMostSignificantBits());
 		bb.writeLong(worldID.getLeastSignificantBits());
-		writeTagCompound(bb, players);
+		LMNetHelper.writeTagCompound(bb, players);
 	}
 	
 	public IMessage onMessage(MessageLMWorldUpdate m, MessageContext ctx)

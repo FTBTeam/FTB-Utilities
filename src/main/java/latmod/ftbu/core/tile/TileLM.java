@@ -196,7 +196,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 	{ return !security.level.isPublic(); }
 	
 	public final void sendClientAction(String action, NBTTagCompound data)
-	{ MessageLM.NET.sendToServer(new MessageClientTileAction(this, action, data)); }
+	{ LMNetHelper.sendToServer(new MessageClientTileAction(this, action, data)); }
 	
 	public void clientPressButton(String button, int mouseButton, NBTTagCompound data)
 	{

@@ -2,7 +2,7 @@ package latmod.ftbu.core.event;
 
 import java.io.File;
 
-import latmod.ftbu.core.util.LatCore;
+import latmod.ftbu.core.util.LMFileUtils;
 
 public class SaveLMDataEvent extends EventLM
 {
@@ -12,5 +12,5 @@ public class SaveLMDataEvent extends EventLM
 	{ latmodFolder = f; }
 	
 	public File getFile(String s)
-	{ return LatCore.newFile(new File(latmodFolder, s)); }
+	{ return LMFileUtils.newFile(new File(latmodFolder, s)); }
 }

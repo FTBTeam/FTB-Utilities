@@ -2,33 +2,31 @@ package latmod.ftbu.core.waila;
 import java.util.List;
 
 import latmod.ftbu.core.event.RegisterWailaEvent;
-import latmod.ftbu.core.util.FastList;
-import mcp.mobius.waila.api.*;
 import net.minecraft.item.ItemStack;
 
-public abstract class BasicWailaHandler implements IWailaDataProvider
+public abstract class BasicWailaHandler
 {
-	public final FastList<WailaType> types;
+	public final WailaType[] types;
 	
 	public BasicWailaHandler(RegisterWailaEvent e, WailaType... t)
-	{ types = FastList.asList(t); }
+	{ types = t; }
 	
-	public ItemStack getWailaStack(IWailaDataAccessor data, IWailaConfigHandler config)
+	public ItemStack getWailaStack(WailaDataAccessor data)
 	{
 		return null;
 	}
 	
-	public List<String> getWailaHead(ItemStack is, List<String> l, IWailaDataAccessor data, IWailaConfigHandler config)
+	public List<String> getWailaHead(ItemStack is, List<String> l, WailaDataAccessor data)
 	{
 		return l;
 	}
 	
-	public List<String> getWailaBody(ItemStack is, List<String> l, IWailaDataAccessor data, IWailaConfigHandler config)
+	public List<String> getWailaBody(ItemStack is, List<String> l, WailaDataAccessor data)
 	{
 		return l;
 	}
 	
-	public List<String> getWailaTail(ItemStack is, List<String> l, IWailaDataAccessor data, IWailaConfigHandler config)
+	public List<String> getWailaTail(ItemStack is, List<String> l, WailaDataAccessor data)
 	{
 		return l;
 	}

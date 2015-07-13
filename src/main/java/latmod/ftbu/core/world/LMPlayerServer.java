@@ -64,7 +64,7 @@ public class LMPlayerServer extends LMPlayer
 	{
 		if(action == null || action.isEmpty()) action = ACTION_GENERAL;
 		new LMPlayerServerEvent.DataChanged(this, action).post();
-		if(updateClient) MessageLM.NET.sendToAll(new MessageLMPlayerUpdate(this, action));
+		if(updateClient) LMNetHelper.sendTo(null, new MessageLMPlayerUpdate(this, action));
 	}
 	
 	public void updateLastSeen()

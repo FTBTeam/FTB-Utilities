@@ -22,13 +22,13 @@ public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo> implemen
 	public void fromBytes(ByteBuf bb)
 	{
 		playerID = bb.readInt();
-		info = readTagCompound(bb);
+		info = LMNetHelper.readTagCompound(bb);
 	}
 	
 	public void toBytes(ByteBuf bb)
 	{
 		bb.writeInt(playerID);
-		writeTagCompound(bb, info);
+		LMNetHelper.writeTagCompound(bb, info);
 	}
 	
 	public IMessage onMessage(MessageLMPlayerInfo m, MessageContext ctx)

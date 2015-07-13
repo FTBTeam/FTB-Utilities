@@ -20,6 +20,5 @@ public class CmdAdmin extends CommandSubLM
 		subCommands.put("spawnarea", new CmdAdminSpawnArea());
 		subCommands.put("unclaim", new CmdAdminUnclaim());
 		subCommands.put("backup", new CmdAdminBackup());
-		subCommands.put("clearbackups", new CmdAdminClearBackups());
 	}
 }

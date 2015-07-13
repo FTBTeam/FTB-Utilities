@@ -64,6 +64,6 @@ public interface IServerConfig
 		}
 		
 		public static void updateConfig(EntityPlayerMP ep, String s)
-		{ MessageLM.NET.sendTo(new MessageUpdateConfig(ep, s), ep); }
+		{ if(ep != null) LMNetHelper.sendTo(ep, new MessageUpdateConfig(ep, s)); }
 	}
 }

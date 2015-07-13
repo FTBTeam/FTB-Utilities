@@ -82,9 +82,6 @@ public final class LatCoreMC // LatCoreMCClient
 		else logger.info(o);
 	}
 	
-	public static void printChatAll(Object o)
-	{ getServer().getConfigurationManager().sendChatMsgImpl(getChatComponent(o), true); }
-	
 	// Registry methods //
 	
 	public static void addItem(IItemLM i)
@@ -113,10 +110,6 @@ public final class LatCoreMC // LatCoreMCClient
 	
 	public static void addWorldGenerator(IWorldGenerator i, int w)
 	{ GameRegistry.registerWorldGenerator(i, w); }
-	
-	@Deprecated
-	public static void addEventHandler(Object o, BusType... t)
-	{ for(BusType bt : t) bt.register(o); }
 	
 	public static Fluid addFluid(Fluid f)
 	{
@@ -232,7 +225,7 @@ public final class LatCoreMC // LatCoreMCClient
 	{ return executeCommand(ics, cmd + " " + LatCore.unsplit(args, " ")); }
 	
 	public static void notifyPlayer(EntityPlayerMP ep, Notification n)
-	{ MessageLM.sendTo(ep, new MessageNotifyPlayer(n)); }
+	{ LMNetHelper.sendTo(ep, new MessageNotifyPlayer(n)); }
 	
 	public static Object invokeStatic(String className, String methodName) throws Exception
 	{ Class<?> c = Class.forName(className); return c.getMethod(methodName).invoke(null); }

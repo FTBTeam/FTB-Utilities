@@ -23,7 +23,7 @@ public class ThreadMinimap extends Thread
 		startZ = z;
 		size = s;
 		player = p;
-		MessageLM.NET.sendToServer(new MessageAreaRequest(startX - 1, startZ - 1, worldObj.provider.dimensionId, (byte)(size + 2), player.playerID));
+		LMNetHelper.sendToServer(new MessageAreaRequest(startX - 1, startZ - 1, worldObj.provider.dimensionId, (byte)(size + 2), player.playerID));
 	}
 	
 	public void run()

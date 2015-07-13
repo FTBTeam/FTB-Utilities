@@ -45,8 +45,8 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> 
 		long msb = bb.readLong();
 		long lsb = bb.readLong();
 		uuid = new UUID(msb, lsb);
-		username = readString(bb);
-		data = readTagCompound(bb);
+		username = LMNetHelper.readString(bb);
+		data = LMNetHelper.readTagCompound(bb);
 		firstTime = bb.readBoolean();
 	}
 	
@@ -55,8 +55,8 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> 
 		bb.writeInt(playerID);
 		bb.writeLong(uuid.getMostSignificantBits());
 		bb.writeLong(uuid.getLeastSignificantBits());
-		writeString(bb, username);
-		writeTagCompound(bb, data);
+		LMNetHelper.writeString(bb, username);
+		LMNetHelper.writeTagCompound(bb, data);
 		bb.writeBoolean(firstTime);
 	}
 	

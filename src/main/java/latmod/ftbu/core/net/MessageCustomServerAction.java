@@ -28,14 +28,14 @@ public class MessageCustomServerAction extends MessageLM<MessageCustomServerActi
 	
 	public void fromBytes(ByteBuf bb)
 	{
-		channel = readString(bb);
-		data = readTagCompound(bb);
+		channel = LMNetHelper.readString(bb);
+		data = LMNetHelper.readTagCompound(bb);
 	}
 	
 	public void toBytes(ByteBuf bb)
 	{
-		writeString(bb, channel);
-		writeTagCompound(bb, data);
+		LMNetHelper.writeString(bb, channel);
+		LMNetHelper.writeTagCompound(bb, data);
 	}
 	
 	public IMessage onMessage(MessageCustomServerAction m, MessageContext ctx)

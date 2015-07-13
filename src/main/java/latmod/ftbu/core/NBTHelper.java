@@ -59,7 +59,7 @@ public class NBTHelper // NBTBase
 	
 	public static void writeMap(File f, NBTTagCompound tag)
 	{
-		try { writeMap(new FileOutputStream(LatCore.newFile(f)), tag); }
+		try { writeMap(new FileOutputStream(LMFileUtils.newFile(f)), tag); }
 		catch(Exception e) { e.printStackTrace(); }
 	}
 	

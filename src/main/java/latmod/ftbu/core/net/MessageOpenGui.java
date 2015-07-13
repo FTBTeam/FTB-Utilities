@@ -27,18 +27,18 @@ public class MessageOpenGui extends MessageLM<MessageOpenGui> implements IClient
 	
 	public void fromBytes(ByteBuf bb)
 	{
-		modID = readString(bb);
+		modID = LMNetHelper.readString(bb);
 		guiID = bb.readInt();
-		data = readTagCompound(bb);
-		windowID = bb.readInt();
+		data = LMNetHelper.readTagCompound(bb);
+		windowID = bb.readUnsignedByte();
 	}
 	
 	public void toBytes(ByteBuf bb)
 	{
-		writeString(bb, modID);
+		LMNetHelper.writeString(bb, modID);
 		bb.writeInt(guiID);
-		writeTagCompound(bb, data);
-		bb.writeInt(windowID);
+		LMNetHelper.writeTagCompound(bb, data);
+		bb.writeByte(windowID);
 	}
 	
 	public IMessage onMessage(MessageOpenGui m, MessageContext ctx)

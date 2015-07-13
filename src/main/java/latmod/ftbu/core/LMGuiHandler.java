@@ -41,7 +41,7 @@ public abstract class LMGuiHandler
 			epM.openContainer = c;
 			epM.openContainer.windowId = epM.currentWindowId;
 			epM.openContainer.addCraftingToCrafters(epM);
-			MessageLM.NET.sendTo(new MessageOpenGui(ID, id, data, epM.currentWindowId), epM);
+			LMNetHelper.sendTo(epM, new MessageOpenGui(ID, id, data, epM.currentWindowId));
 		}
 		else if(!LatCoreMC.isServer())
 			FTBU.proxy.openClientGui(ep, ID, id, data);

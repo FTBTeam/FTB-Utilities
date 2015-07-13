@@ -50,6 +50,7 @@ public class FTBUTickHandler
 					else
 					{
 						LMDimHelper.teleportPlayer(ep, p.lastPos);
+						ep.worldObj.playSoundAtEntity(ep, "random.fizz", 1F, 1F);
 					}
 				}
 				
@@ -57,7 +58,7 @@ public class FTBUTickHandler
 				updateChunkMessage(ep);
 			}
 			
-			MessageLM.sendTo(ep, new MessageAreaUpdate(e.newChunkX, e.newChunkZ, ep.dimension, (byte)1, p));
+			LMNetHelper.sendTo(ep, new MessageAreaUpdate(e.newChunkX, e.newChunkZ, ep.dimension, (byte)1, p));
 		}
 	}
 	
@@ -87,7 +88,7 @@ public class FTBUTickHandler
 					else if(secondsLeft == 300) msg = "5 Minutes";
 					else if(secondsLeft == 600) msg = "10 Minutes";
 					
-					if(msg != null) LatCoreMC.printChatAll(LIGHT_PURPLE + "Server will restart after " + msg);
+					if(msg != null) LatCoreMC.printChat(BroadcastSender.inst, LIGHT_PURPLE + "Server will restart after " + msg);
 				}
 				
 				if(secondsLeft > 60 && Backups.getSecondsUntilNextBackup() <= 0L) Backups.run();

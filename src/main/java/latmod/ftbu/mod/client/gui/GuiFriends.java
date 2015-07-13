@@ -176,7 +176,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	}
 	
 	public void sendUpdate(int c, int u)
-	{ MessageLM.NET.sendToServer(new MessageManageGroups(owner, c, u)); }
+	{ LMNetHelper.sendToServer(new MessageManageGroups(owner, c, u)); }
 	
 	public int maxPages()
 	{ return (players.size() / pbPlayers.length) + 1; }
@@ -243,7 +243,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	public void initGui()
 	{
 		super.initGui();
-		MessageLM.NET.sendToServer(new MessageLMPlayerRequestInfo(owner));
+		LMNetHelper.sendToServer(new MessageLMPlayerRequestInfo(owner));
 	}
 	
 	public void onClientAction(String action)
@@ -377,7 +377,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 				selectedPlayer = new LMClientPlayer(player.player);
 				selectedPlayer.func_152121_a(MinecraftProfileTexture.Type.SKIN, AbstractClientPlayer.getLocationSkin(selectedPlayer.playerLM.getName()));
 				selectedPlayer.inventory.currentItem = 0;
-				MessageLM.NET.sendToServer(new MessageLMPlayerRequestInfo(selectedPlayer.playerLM));
+				LMNetHelper.sendToServer(new MessageLMPlayerRequestInfo(selectedPlayer.playerLM));
 			}
 			
 			refreshWidgets();
@@ -446,7 +446,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		{
 			gui.playClickSound();
 			action.onClicked((GuiFriends)gui);
-			MessageLM.NET.sendToServer(new MessageLMPlayerRequestInfo(selectedPlayer.playerLM));
+			LMNetHelper.sendToServer(new MessageLMPlayerRequestInfo(selectedPlayer.playerLM));
 		}
 	}
 	

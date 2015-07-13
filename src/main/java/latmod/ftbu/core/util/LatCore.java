@@ -2,11 +2,9 @@ package latmod.ftbu.core.util;
 import java.io.*;
 import java.lang.reflect.*;
 import java.net.*;
-import java.nio.channels.*;
 import java.nio.charset.Charset;
 import java.util.*;
 
-import org.apache.commons.io.FileUtils;
 import org.lwjgl.opengl.GL11;
 
 import com.google.gson.*;
@@ -79,14 +77,28 @@ public class LatCore
 		{ return getHSB(c)[2]; }
 	}
 	
-	@SuppressWarnings("all")
-	public static URL getURL(String s)
+	public static enum OS
 	{
-		try { return new File(s).toURL(); }
-		catch(Exception e) { }
-		try { return new URL(s); }
-		catch(Exception e) { e.printStackTrace(); }
-		return null;
+		WINDOWS,
+		LINUX,
+		OSX,
+		OTHER;
+		
+		private static OS current = null;
+		
+		public static OS get()
+		{ return (current == null) ? (current = get0()) : current; }
+		
+		private static OS get0()
+		{
+			String s = System.getProperty("os.name");
+			if(s == null || s.isEmpty()) return OTHER;
+			s = s.toLowerCase();
+			if(s.contains("win")) return WINDOWS;
+			else if(s.contains("mac")) return OSX;
+			else if(s.contains("linux") || s.contains("unix")) return LINUX;
+			return OTHER;
+		}
 	}
 	
 	public static String toString(InputStream is) throws Exception
@@ -121,18 +133,6 @@ public class LatCore
 		String s = null; while((s = reader.readLine()) != null)
 			l.add(s); reader.close(); return l;
 	}
-	
-	public static void saveFile(File f, List<String> al) throws Exception
-	{ saveFile(f, toString(al)); }
-	
-	public static void saveFile(File f, String s) throws Exception
-	{ BufferedWriter br = new BufferedWriter(new FileWriter(newFile(f))); br.write(s); br.close(); }
-	
-	public static FastList<String> loadFile(File f) throws Exception
-	{ return toStringList(new FileInputStream(f)); }
-	
-	public static String loadFileAsText(File f) throws Exception
-	{ return toString(new FileInputStream(f)); }
 	
 	@SuppressWarnings("all")
 	public static <E> E newObject(Class<?> c, Object... o) throws Exception
@@ -185,22 +185,6 @@ public class LatCore
 			if(s2 != null && s2.length() > 0 && s2.contains(s))
 			{ s2 = s2.replace(s, s1); txt.set(i, s2); }
 		}
-	}
-	
-	public static File newFile(File f)
-	{
-		if(!f.exists())
-		{
-			try { f.createNewFile(); }
-			catch(Exception e)
-			{
-				f.getParentFile().mkdirs();
-				try { f.createNewFile(); }
-				catch(Exception e1)
-				{ e1.printStackTrace(); }
-			}
-		}
-		return f;
 	}
 	
 	public static <E> String[] toStrings(E[] o)
@@ -294,9 +278,6 @@ public class LatCore
 	public static String classpath(Class<?> c)
 	{ return (c == null) ? null : (c.toString().split(" ")[1]); }
 	
-	public static File getSourceDirectory(Class<?> c)
-	{ return new File(c.getProtectionDomain().getCodeSource().getLocation().getPath().replace("%20", " ")); }
-	
 	public static FastList<Class<?>> addSubclasses(Class<?> c, FastList<Class<?>> al, boolean all)
 	{
 		if(c == null) return null;
@@ -306,16 +287,6 @@ public class LatCore
 		if(all && !al1.isEmpty()) for(int i = 0; i < al1.size(); i++)
 		al.addAll(addSubclasses(al1.get(i), null, true));
 		al.addAll(al1); return al;
-	}
-	
-	@Deprecated
-	public static URLConnection connectTo(String s, int timeout) throws Exception
-	{
-		URLConnection uc = new URL(s).openConnection();
-		uc.setConnectTimeout(timeout);
-		uc.setDoInput(true);
-		uc.setDoOutput(true);
-		uc.connect(); return uc;
 	}
 	
 	public static String substring(String s, String pre, String post, boolean ignoreSpace)
@@ -430,7 +401,7 @@ public class LatCore
 		
 		try
 		{
-			FileOutputStream fos = new FileOutputStream(newFile(f));
+			FileOutputStream fos = new FileOutputStream(LMFileUtils.newFile(f));
 			fos.write(s.getBytes());
 			fos.close();
 			return true;
@@ -456,21 +427,6 @@ public class LatCore
 			return true;
 		}
 		catch (Exception e) { e.printStackTrace(); }
-		return false;
-	}
-	
-	public static boolean downloadFile(String url, File out)
-	{
-		try
-		{
-			URL website = new URL(url);
-			ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-			FileOutputStream fos = new FileOutputStream(out);
-			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-			fos.close();
-			return true;
-		}
-		catch(Exception e) { }
 		return false;
 	}
 	
@@ -549,53 +505,6 @@ public class LatCore
 		return false;
 	}
 
-	public static Exception copyFile(File src, File dst)
-	{
-		if(src != null && dst != null && src.exists() && !src.equals(dst))
-		{
-			if(src.isDirectory() && dst.isDirectory())
-			{
-				FastList<File> files = LatCore.getAllFiles(src);
-				
-				for(File f : files)
-				{
-					File dst1 = new File(dst.getAbsolutePath() + File.separator + (f.getAbsolutePath().replace(src.getAbsolutePath(), "")));
-					Exception e = copyFile(f, dst1); if(e != null) return e;
-				}
-				
-				return null;
-			}
-			
-			dst = newFile(dst);
-			
-			FileChannel srcC = null;
-			FileChannel dstC = null;
-			
-			try
-			{
-				srcC = new FileInputStream(src).getChannel();
-				dstC = new FileOutputStream(dst).getChannel();
-				dstC.transferFrom(srcC, 0L, srcC.size());
-				if(srcC != null) srcC.close();
-				if(dstC != null) dstC.close();
-				return null;
-			}
-			catch(Exception e) { return e; }
-		}
-		
-		return null;
-	}
-	
-	public static boolean deleteFile(File dir)
-	{
-		if(!dir.exists()) return false;
-		if(dir.isFile()) return dir.delete();
-		String[] files = dir.list();
-		for(int i = 0; i < files.length; i++)
-			deleteFile(new File(dir, files[i]));
-		return dir.delete();
-	}
-	
 	public static String getTimeAgo(long t)
 	{
 		long sec = 1000L;
@@ -619,57 +528,6 @@ public class LatCore
 	public static long millis()
 	{ return System.currentTimeMillis(); }
 
-	public static FastList<File> getAllFiles(File f)
-	{ FastList<File> l = new FastList<File>(); addAllFiles(l, f); return l; }
-	
-	private static void addAllFiles(FastList<File> l, File f)
-	{
-		//FileUtils.listFiles(directory, extensions, recursive);
-		
-		if(f.isDirectory())
-		{
-			File[] fl = f.listFiles();
-			
-			if(fl != null && fl.length > 0)
-			{
-				for(int i = 0; i < fl.length; i++)
-					addAllFiles(l, fl[i]);
-			}
-		}
-		else if(f.isFile()) l.add(f);
-	}
-
-	public static long fileSize(File f)
-	{
-		if(f == null || !f.exists()) return 0L;
-		if(f.isFile()) return f.length();
-		return FileUtils.sizeOf(f);
-	}
-	
-	public static String fileSizeS(double b)
-	{
-		if(b >= 1024D * 1024D * 1024D)
-		{
-			b /= 1024D * 1024D * 1024D;
-			b = (long)(b * 10D) / 10D;
-			return b + "GB";
-		}
-		else if(b >= 1024D * 1024D)
-		{
-			b /= 1024D * 1024D;
-			b = (long)(b * 10D) / 10D;
-			return b + "MB";
-		}
-		else if(b >= 1024L)
-		{
-			b /= 1024D;
-			b = (long)(b * 10D) / 10D;
-			return b + "KB";
-		}
-		
-		return b + "B";
-	}
-	
 	public static void throwException(Exception e) throws Exception
 	{ if(e != null) throw e; }
 }

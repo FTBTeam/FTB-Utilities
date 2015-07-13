@@ -62,8 +62,8 @@ public class Waypoints
 			
 			if(LMWorldClient.inst == null) return;
 			
-			waypointsFile = LatCore.newFile(new File(LatCoreMC.latmodFolder, "client/" + LMWorldClient.inst.worldIDS + "/waypoints.txt"));
-			FastList<String> f = LatCore.loadFile(waypointsFile);
+			waypointsFile = LMFileUtils.newFile(new File(LatCoreMC.latmodFolder, "client/" + LMWorldClient.inst.worldIDS + "/waypoints.txt"));
+			FastList<String> f = LMFileUtils.load(waypointsFile);
 			
 			for(String s : f)
 			{
@@ -85,7 +85,7 @@ public class Waypoints
 			
 			FastList<String> f = new FastList<String>();
 			for(Waypoint w : waypoints) f.add(w.toString());
-			LatCore.saveFile(waypointsFile, f);
+			LMFileUtils.save(waypointsFile, f);
 		}
 		catch(Exception e)
 		{ e.printStackTrace(); }

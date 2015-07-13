@@ -275,6 +275,7 @@ public class FTBURenderHandler
 		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glShadeModel(GL11.GL_SMOOTH);
 		
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glDepthMask(false);
@@ -326,6 +327,7 @@ public class FTBURenderHandler
 		
 		GL11.glPopMatrix();
 		
+		GL11.glShadeModel(GL11.GL_FLAT);
 		LatCoreMCClient.popMaxBrightness();
 		GL11.glDepthMask(true);
 		GL11.glPopAttrib();

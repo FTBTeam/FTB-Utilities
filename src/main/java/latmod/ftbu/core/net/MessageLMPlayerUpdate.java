@@ -30,15 +30,15 @@ public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate> impl
 	public void fromBytes(ByteBuf bb)
 	{
 		playerID = bb.readInt();
-		action = readString(bb);
-		data = readTagCompound(bb);
+		action = LMNetHelper.readString(bb);
+		data = LMNetHelper.readTagCompound(bb);
 	}
 	
 	public void toBytes(ByteBuf bb)
 	{
 		bb.writeInt(playerID);
-		writeString(bb, action);
-		writeTagCompound(bb, data);
+		LMNetHelper.writeString(bb, action);
+		LMNetHelper.writeTagCompound(bb, data);
 	}
 	
 	public IMessage onMessage(MessageLMPlayerUpdate m, MessageContext ctx)

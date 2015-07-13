@@ -20,7 +20,7 @@ public class CmdAdminReload extends SubCommand
 				IServerConfig.Registry.updateConfig(ep, null);
 		}
 		new ReloadEvent(Side.SERVER, ics).post();
-		MessageLM.NET.sendToAll(new MessageReload());
+		LMNetHelper.sendTo(null, new MessageReload());
 		return CommandLM.FINE + "LatvianModders's mods reloaded (Server)";
 	}
 }

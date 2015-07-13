@@ -58,10 +58,9 @@ public class FTBUEventHandler // FTBUTickHandler
 		p.updateLastSeen();
 		
 		new LMPlayerServerEvent.LoggedIn(p, ep, first).post();
-		MessageLM.sendTo(sendAll ? null : ep, new MessageLMWorldUpdate(LMWorldServer.inst.worldID));
+		LMNetHelper.sendTo(sendAll ? null : ep, new MessageLMWorldUpdate(LMWorldServer.inst.worldID));
 		IServerConfig.Registry.updateConfig(ep, null);
-		MessageLM.sendTo(null, new MessageLMPlayerLoggedIn(p, first));
-		MessageLM.sendTo(null, p.getInfo());
+		LMNetHelper.sendTo(null, new MessageLMPlayerLoggedIn(p, first));
 		
 		if(first)
 		{
@@ -75,7 +74,7 @@ public class FTBUEventHandler // FTBUTickHandler
 			p1.sendInfo(ep);
 		*/
 		
-		MessageLM.sendTo(ep, p.getInfo());
+		LMNetHelper.sendTo(ep, p.getInfo());
 		CmdMotd.printMotd(ep);
 		Backups.shouldRun = true;
 	}
@@ -94,8 +93,8 @@ public class FTBUEventHandler // FTBUTickHandler
 			p.lastArmor[4] = e.player.inventory.getCurrentItem();
 			
 			new LMPlayerServerEvent.LoggedOut(p, (EntityPlayerMP)e.player).post();
-			MessageLM.sendTo(null, new MessageLMPlayerLoggedOut(p));
-			MessageLM.sendTo(null, p.getInfo());
+			LMNetHelper.sendTo(null, new MessageLMPlayerLoggedOut(p));
+			LMNetHelper.sendTo(null, p.getInfo());
 			p.setPlayer(null);
 			Backups.shouldRun = true;
 		}
@@ -180,7 +179,7 @@ public class FTBUEventHandler // FTBUTickHandler
 					l.add(sb.toString());
 				}
 				
-				LatCore.saveFile(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/LMPlayers.txt"), l);
+				LMFileUtils.save(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/LMPlayers.txt"), l);
 			}
 			catch(Exception ex)
 			{
@@ -218,7 +217,7 @@ public class FTBUEventHandler // FTBUTickHandler
 		}
 		
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(e.entityPlayer);
-		if(p.isOP()) return true;
+		if(!LatCoreMC.isDedicatedServer() || p.isOP()) return true;
 		if(FTBUConfig.general.isDedi() && !ChunkType.getD(e.world.provider.dimensionId, e.x, e.z, p).isFriendly()) return false;
 		
 		return true;
@@ -235,7 +234,7 @@ public class FTBUEventHandler // FTBUTickHandler
 			if(p.lastDeath == null) p.lastDeath = new EntityPos(e.entity);
 			else p.lastDeath.set(e.entity);
 			
-			MessageLM.NET.sendToAll(new MessageLMPlayerDied(p));
+			LMNetHelper.sendTo(null, new MessageLMPlayerDied(p));
 		}
 	}
 	

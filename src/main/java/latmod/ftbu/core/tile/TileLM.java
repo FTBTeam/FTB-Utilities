@@ -251,16 +251,21 @@ public class TileLM extends TileEntity implements IClientActionTile
 	public void notifyNeighbors()
 	{ worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, blockType); }
 	
-	public int hashCode()
-	{ return LatCore.hashCode(xCoord, yCoord, zCoord); }
+	public int getDimension()
+	{ return worldObj == null ? 0 : worldObj.provider.dimensionId; }
 	
-	public boolean equals(Object o)
+	public final int hashCode()
+	{ return LatCore.hashCode(xCoord, yCoord, zCoord, getDimension()); }
+	
+	public final boolean equals(Object o)
 	{
+		if(o == null) return false;
+		if(o == this) return true;
+		
 		if(o.hashCode() == hashCode() && o instanceof TileLM)
 		{
 			TileLM t = (TileLM)o;
-			return t.worldObj.provider.dimensionId == worldObj.provider.dimensionId &&
-				t.xCoord == xCoord && t.yCoord == yCoord && t.zCoord == zCoord;
+			return t.getDimension() == getDimension() && t.xCoord == xCoord && t.yCoord == yCoord && t.zCoord == zCoord;
 		}
 
 		return false;

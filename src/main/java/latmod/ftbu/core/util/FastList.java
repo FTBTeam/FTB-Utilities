@@ -71,6 +71,9 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 		return i != -1;
 	}
 	
+	public void removeAll(int... i)
+	{ for(int j : i) remove(j); }
+	
 	public int indexOf(Object o)
 	{
 		if(o == null || size == 0) return -1;

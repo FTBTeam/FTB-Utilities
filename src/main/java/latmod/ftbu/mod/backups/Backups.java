@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.Arrays;
 
 import latmod.ftbu.core.LatCoreMC;
-import latmod.ftbu.core.util.*;
+import latmod.ftbu.core.util.LMFileUtils;
 import latmod.ftbu.mod.FTBUTickHandler;
 import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.world.World;

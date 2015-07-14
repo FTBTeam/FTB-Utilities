@@ -2,6 +2,7 @@ package latmod.ftbu.core.tile;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.block.BlockLM;
 import latmod.ftbu.core.net.*;
+import latmod.ftbu.core.util.LatCore;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -250,9 +251,12 @@ public class TileLM extends TileEntity implements IClientActionTile
 	public void notifyNeighbors()
 	{ worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, blockType); }
 	
+	public int hashCode()
+	{ return LatCore.hashCode(xCoord, yCoord, zCoord); }
+	
 	public boolean equals(Object o)
 	{
-		if(o instanceof TileLM)
+		if(o.hashCode() == hashCode() && o instanceof TileLM)
 		{
 			TileLM t = (TileLM)o;
 			return t.worldObj.provider.dimensionId == worldObj.provider.dimensionId &&

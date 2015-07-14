@@ -2,8 +2,8 @@ package latmod.ftbu.core.waila;
 
 import java.util.List;
 
-import net.minecraft.item.ItemStack;
 import mcp.mobius.waila.api.*;
+import net.minecraft.item.ItemStack;
 
 public class WailaDataProvider implements IWailaDataProvider
 {

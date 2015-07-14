@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import latmod.ftbu.core.*;
+import latmod.ftbu.core.ItemDisplay;
 import latmod.ftbu.core.cmd.*;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.FTBUGuiHandler;

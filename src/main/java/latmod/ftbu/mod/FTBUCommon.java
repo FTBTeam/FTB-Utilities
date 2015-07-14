@@ -2,7 +2,7 @@ package latmod.ftbu.mod;
 
 import java.util.UUID;
 
-import latmod.ftbu.core.*;
+import latmod.ftbu.core.LMProxy;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.TileLM;

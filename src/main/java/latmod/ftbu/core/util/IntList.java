@@ -52,8 +52,8 @@ public class IntList implements Iterable<Integer>// Improve this // FastList
 	public void setAll(int... values)
 	{ clear(); addAll(values); }
 	
-	public int get(int key)
-	{ return (key >= 0 && key < size()) ? array[key] : defVal; }
+	public int get(int index)
+	{ return (index >= 0 && index < size()) ? array[index] : defVal; }
 	
 	public int indexOf(int value)
 	{

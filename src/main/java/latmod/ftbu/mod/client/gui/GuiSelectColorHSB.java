@@ -7,7 +7,7 @@ import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.mod.client.gui.GuiSelectColor.ColorSelected;
-import net.minecraft.util.*;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;

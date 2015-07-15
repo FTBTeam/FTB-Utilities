@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.cmd.*;
+import latmod.ftbu.core.inv.InvUtils;
 import latmod.ftbu.core.util.LMFileUtils;
 import latmod.ftbu.core.world.*;
 import net.minecraft.command.ICommandSender;

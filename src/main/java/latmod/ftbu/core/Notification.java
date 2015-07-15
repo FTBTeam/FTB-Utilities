@@ -1,5 +1,6 @@
 package latmod.ftbu.core;
 
+import latmod.ftbu.core.inv.InvUtils;
 import net.minecraft.item.ItemStack;
 
 public class Notification

@@ -1,6 +1,7 @@
-package latmod.ftbu.core;
+package latmod.ftbu.core.inv;
 import java.util.*;
 
+import latmod.ftbu.core.NBTHelper;
 import latmod.ftbu.core.item.Tool;
 import latmod.ftbu.core.util.FastMap;
 import net.minecraft.block.Block;
@@ -258,21 +259,21 @@ public class InvUtils
 	
 	public static ItemStack decrStackSize(IInventory inv, int slot, int amt)
 	{
-	    ItemStack stack = inv.getStackInSlot(slot);
-	    if (stack != null)
-	    {
-		    if (stack.stackSize <= amt)
-		    inv.setInventorySlotContents(slot, null);
-		    else
-		    {
-			    stack = stack.splitStack(amt);
-			    if (stack.stackSize == 0)
-			    inv.setInventorySlotContents(slot, null);
-		    }
-	    }
-	    
-	    return stack;
-    }
+		ItemStack stack = inv.getStackInSlot(slot);
+		if (stack != null)
+		{
+			if (stack.stackSize <= amt)
+			inv.setInventorySlotContents(slot, null);
+			else
+			{
+				stack = stack.splitStack(amt);
+				if (stack.stackSize == 0)
+				inv.setInventorySlotContents(slot, null);
+			}
+		}
+		
+		return stack;
+	}
 	
 	public static ItemStack getStackInSlotOnClosing(IInventory inv, int i)
 	{
@@ -486,5 +487,25 @@ public class InvUtils
 		for(int i = 0; i < map.size(); i++)
 			m.put(map.keys.get(i).effectId, map.values.get(i).intValue());
 		EnchantmentHelper.setEnchantments(m, is);
+	}
+	
+	public static void removeDisplayName(ItemStack is)
+	{
+		if(is.stackTagCompound != null)
+		{
+			if(is.getTagCompound().hasKey("display"))
+			{
+				NBTTagCompound tag1 = is.getTagCompound().getCompoundTag("display");
+				
+				if(tag1.hasKey("Name"))
+				{
+					tag1.removeTag("Name");
+					
+					if(tag1.hasNoTags()) is.getTagCompound().removeTag("display");
+				}
+				
+				if(is.getTagCompound().hasNoTags()) is.setTagCompound(null);
+			}
+		}
 	}
 }

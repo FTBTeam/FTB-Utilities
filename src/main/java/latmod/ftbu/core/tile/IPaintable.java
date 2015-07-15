@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.client.RenderBlocksCustom;
+import latmod.ftbu.core.inv.InvUtils;
 import latmod.ftbu.core.util.MathHelperLM;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

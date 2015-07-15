@@ -38,7 +38,7 @@ public class FTBUGuiEventHandler
 			int xSize = 176;
 			int ySize = 166;
 			
-			int buttonX = -13;
+			int buttonX = -17;
 			int buttonY = 8;
 			
 			if(e.gui instanceof GuiContainerCreative)
@@ -46,7 +46,6 @@ public class FTBUGuiEventHandler
 				xSize = 195;
 				ySize = 136;
 				
-				buttonX = -13;
 				buttonY = 6;
 			}
 			
@@ -98,7 +97,7 @@ public class FTBUGuiEventHandler
 			mc.getTextureManager().bindTexture(friendsButtonTexture);
 			GuiLM.drawTexturedRectD(xPosition, yPosition, 0D, width, height, 0D, 0D, 1D, 1D);
 			if(mx >= xPosition && my >= yPosition && mx < xPosition + width && my < yPosition + height)
-				drawString(mc.fontRenderer, displayString, xPosition + width - mc.fontRenderer.getStringWidth(displayString) - 3, yPosition - 9, -1);
+				drawString(mc.fontRenderer, displayString, xPosition + width - mc.fontRenderer.getStringWidth(displayString) - 1, yPosition - 9, -1);
 			GL11.glDisable(GL11.GL_BLEND);
 		}
 	}

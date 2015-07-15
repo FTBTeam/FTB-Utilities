@@ -1,6 +1,6 @@
 package latmod.ftbu.core;
 import java.io.File;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import latmod.ftbu.core.item.IItemLM;
@@ -39,6 +39,7 @@ public final class LatCoreMC // LatCoreMCClient
 	
 	public static final Logger logger = LogManager.getLogger("FTBUtilities");
 	public static final EventBus EVENT_BUS = new EventBus();
+	public static final Random rand = new Random();
 	
 	public static final boolean isDevEnv = FTBUFinals.VERSION.equals(DEV_VERSION);
 	

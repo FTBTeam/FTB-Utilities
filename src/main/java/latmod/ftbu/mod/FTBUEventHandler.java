@@ -4,6 +4,7 @@ import java.util.*;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.event.*;
+import latmod.ftbu.core.inv.InvUtils;
 import latmod.ftbu.core.item.ICreativeSafeItem;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.ISecureTile;

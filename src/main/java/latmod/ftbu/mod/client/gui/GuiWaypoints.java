@@ -311,7 +311,7 @@ public class GuiWaypoints extends GuiLM
 				{ return c >= '0' && c <= '9' && super.canAddChar(c); }
 				
 				public void textChanged()
-				{ waypoint.posX = Integer.parseInt(text); }
+				{ waypoint.posX = MathHelperLM.toInt(text, waypoint.posX); }
 			};
 			textBoxX.charLimit = 8;
 			textBoxX.text = waypoint.posX + "";
@@ -322,7 +322,7 @@ public class GuiWaypoints extends GuiLM
 				{ return c >= '0' && c <= '9' && super.canAddChar(c); }
 				
 				public void textChanged()
-				{ waypoint.posY = Integer.parseInt(text); }
+				{ waypoint.posY = MathHelperLM.toInt(text, waypoint.posY); }
 			};
 			textBoxY.charLimit = 3;
 			textBoxY.text = waypoint.posY + "";
@@ -333,7 +333,7 @@ public class GuiWaypoints extends GuiLM
 				{ return c >= '0' && c <= '9' && super.canAddChar(c); }
 				
 				public void textChanged()
-				{ waypoint.posZ = Integer.parseInt(text); }
+				{ waypoint.posZ = MathHelperLM.toInt(text, waypoint.posZ); }
 			};
 			textBoxZ.charLimit = 8;
 			textBoxZ.text = waypoint.posZ + "";

@@ -229,12 +229,12 @@ public class FTBURenderHandler
 					GL11.glRotatef(-RenderManager.instance.playerViewY, 0F, 1F, 0F);
 					GL11.glRotatef(RenderManager.instance.playerViewX, 1F, 0F, 0F);
 					GL11.glNormal3f(0F, 1F, 0F);
-					float f1 = 0.02F;
+					float f1 = 0.0125F;
 					GL11.glScalef(-f1, -f1, f1);
 					
 					for(int j = 0; j < stringList.size(); j++)
 					{
-						int y = -5 + 11 * j;
+						double y = -2.5D + 11 * j;
 						String s = stringList.get(j);
 						int l = mc.fontRenderer.getStringWidth(s) / 2;
 						GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -246,7 +246,7 @@ public class FTBURenderHandler
 						t.addVertex(-l -1, y + 10, 0D);
 						t.draw();
 						GL11.glEnable(GL11.GL_TEXTURE_2D);
-						mc.fontRenderer.drawString(s, -l, y + 1, 0xFFFFFFFF);
+						mc.fontRenderer.drawString(s, -l, (int)(y + 1D), 0xFFFFFFFF);
 					}
 					
 					GL11.glPopMatrix();

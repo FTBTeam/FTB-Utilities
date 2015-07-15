@@ -18,6 +18,7 @@ import cpw.mods.fml.relauncher.*;
 public class GuiSelectColorHSB extends GuiLM
 {
 	public static final ResourceLocation tex = FTBU.mod.getLocation("textures/gui/colselector_hsb.png");
+	public static final ResourceLocation tex_colors = FTBU.mod.getLocation("textures/gui/colselector_hsb_colors.png");
 	public static final TextureCoords col_tex = new TextureCoords(tex, 76, 10, 21, 16);
 	public static final TextureCoords cursor_tex = new TextureCoords(tex, 97, 20, 4, 4);
 	
@@ -183,7 +184,6 @@ public class GuiSelectColorHSB extends GuiLM
 	
 	public static class ColorSelector extends WidgetLM
 	{
-		private static int GL_ID = -1;
 		public static boolean shouldRedraw = true;
 		
 		public final GuiSelectColorHSB gui;
@@ -195,7 +195,6 @@ public class GuiSelectColorHSB extends GuiLM
 		{
 			super(g, x, y, w, h);
 			gui = g;
-			if(GL_ID == -1) GL_ID = GL11.glGenLists(1);
 			cursorPosX = cursorPosY = -1D;
 			shouldRedraw = true;
 		}
@@ -220,58 +219,11 @@ public class GuiSelectColorHSB extends GuiLM
 				gui.updateColor();
 			}
 			
-			GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-			GL11.glColor4f(1F, 1F, 1F, 1F);
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glDisable(GL11.GL_CULL_FACE);
-			GL11.glShadeModel(GL11.GL_SMOOTH);
+			float br = gui.sliderBrightness.value;
+			GL11.glColor4f(br, br, br, 1F);
 			
-			if(shouldRedraw)
-			{
-				shouldRedraw = false;
-				GL11.glNewList(GL_ID, GL11.GL_COMPILE);
-				
-				float br = gui.sliderBrightness.value;
-				
-				double prevS = Math.sin(359D * MathHelperLM.RAD + Math.PI / 2D);
-				double prevC = -Math.cos(359D * MathHelperLM.RAD + Math.PI / 2D);
-				int prevCol = LatCore.Colors.getHSB(359F / 360F, 1F, br);
-				
-				for(int i = 0; i <= 360; i += 12)
-				{
-					GL11.glBegin(GL11.GL_TRIANGLES);
-					
-					double s = Math.sin(i * MathHelperLM.RAD + Math.PI / 2D);
-					double c = -Math.cos(i * MathHelperLM.RAD + Math.PI / 2D);
-					int col = LatCore.Colors.getHSB(i / 360F, 1F, br);
-					
-					GL11.glColor4f(br, br, br, 1F);
-					GL11.glVertex3d(0D, 0D, 0D);
-					
-					LatCore.Colors.setGLColor(prevCol, 255);
-					GL11.glVertex3d(prevS, prevC, 0D);
-					
-					LatCore.Colors.setGLColor(col);
-					GL11.glVertex3d(s, c, 0D);
-					
-					prevS = s;
-					prevC = c;
-					prevCol = col;
-					
-					GL11.glEnd();
-				}
-				
-				GL11.glEndList();
-			}
-			
-			GL11.glPushMatrix();
-			GL11.glTranslatef(gui.getPosX() + posX + width / 2F, gui.getPosY() + posY + height / 2F, gui.getZLevel());
-			GL11.glScalef(width / 2F, height / 2F, 1F);
-			GL11.glCallList(GL_ID);
-			GL11.glPopMatrix();
-			
-			GL11.glShadeModel(GL11.GL_FLAT);
-			GL11.glColor4f(1F, 1F, 1F, 1F);
+			gui.setTexture(tex_colors);
+			GuiLM.drawTexturedRectD(gui.guiLeft + posX, gui.guiTop + posY, gui.zLevel, width, height, 0D, 0D, 1D, 1D);
 			
 			GL11.glPopAttrib();
 			

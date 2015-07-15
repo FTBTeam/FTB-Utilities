@@ -3,6 +3,7 @@ import latmod.ftbu.core.*;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.client.badges.ThreadLoadBadges;
 import latmod.ftbu.core.event.ReloadEvent;
+import latmod.ftbu.core.inv.*;
 import latmod.ftbu.core.tile.IPaintable;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.*;

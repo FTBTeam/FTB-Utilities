@@ -52,7 +52,6 @@ public class ThreadBackup extends Thread
 			LatCoreMC.logger.info("Backing up " + files.size() + " files...");
 			
 			if(FTBUConfig.backups.compressionLevel > 0)
-			//if(false)
 			{
 				out.append(LMWorldServer.inst.worldIDS);
 				out.append(".zip");
@@ -61,6 +60,7 @@ public class ThreadBackup extends Thread
 				long start = LatCore.millis();
 				
 				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(dstFile));
+				//zos.setLevel(9);
 				zos.setLevel(FTBUConfig.backups.compressionLevel);
 				
 				long logMillis = LatCore.millis() + 5000L;
@@ -148,8 +148,8 @@ public class ThreadBackup extends Thread
 			if(FTBUConfig.backups.displayFileSize)
 			{
 				String sizeB = LMFileUtils.getSizeS(dstFile);
-				String sizeT = LMFileUtils.getSizeS(Backups.backupsFolder);
-				LatCoreMC.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(time) + "! (" + sizeB + " | " + sizeT + ")");
+				String sizeS = LMFileUtils.getSizeS(src);
+				LatCoreMC.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(time) + "! (" + (sizeB.equals(sizeS) ? sizeB : (sizeB + " | " + sizeS)) + ")");
 			}
 			else LatCoreMC.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(time) + "!");
 		}

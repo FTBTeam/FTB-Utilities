@@ -7,36 +7,37 @@ public abstract class ContainerLM extends Container
 {
 	public final EntityPlayer player;
 	public final Object inv;
+	public final IInventory iinv;
 	
 	public ContainerLM(EntityPlayer ep, Object i)
 	{
 		player = ep;
 		inv = i;
+		iinv = (inv !=  null && inv instanceof IInventory) ? (IInventory)inv : null;
 	}
 	
 	public ItemStack transferStackInSlot(EntityPlayer ep, int i)
 	{
-		if(inv == null || !(inv instanceof IInventory)) return null;
+		if(iinv == null) return null;
 		
-		IInventory inv1 = (IInventory)inv;
 		ItemStack is = null;
 		Slot slot = (Slot)inventorySlots.get(i);
-
-		if (slot != null && slot.getHasStack())
+		
+		if(slot != null && slot.getHasStack())
 		{
 			ItemStack is1 = slot.getStack();
 			is = is1.copy();
 
-			if (i < inv1.getSizeInventory())
+			if (i < iinv.getSizeInventory())
 			{
-				if (!mergeItemStack(is1, inv1.getSizeInventory(), inventorySlots.size(), true))
+				if (!mergeItemStack(is1, iinv.getSizeInventory(), inventorySlots.size(), true))
 					return null;
 			}
-			else if (!mergeItemStack(is1, 0, inv1.getSizeInventory(), false))
+			else if (!mergeItemStack(is1, 0, iinv.getSizeInventory(), false))
 				return null;
 
 			if (is1.stackSize == 0)
-				slot.putStack((ItemStack)null);
+				slot.putStack(null);
 			else
 				slot.onSlotChanged();
 		}
@@ -71,4 +72,10 @@ public abstract class ContainerLM extends Container
 	
 	public boolean canInteractWith(EntityPlayer ep)
 	{ return true; }
+	
+	public void onContainerClosed(EntityPlayer ep)
+	{
+		super.onContainerClosed(ep);
+		iinv.closeInventory();
+    }
 }

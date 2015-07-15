@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.client.gui;
 
-import latmod.ftbu.core.ItemDisplay;
 import latmod.ftbu.core.gui.*;
+import latmod.ftbu.core.inv.ItemDisplay;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.client.Minecraft;

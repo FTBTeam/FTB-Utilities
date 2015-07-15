@@ -3,7 +3,7 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.Calendar;
 
-import latmod.ftbu.core.ParticleHelper;
+import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.util.LatCore;
 import latmod.ftbu.core.world.*;
@@ -59,7 +59,7 @@ public class MessageLMPlayerDied extends MessageLM<MessageLMPlayerDied> implemen
 			w.dim = ep.dimension;
 			w.setPos(ep.posX, ep.posY, ep.posZ);
 			w.isMarker = false;
-			w.setColor(ParticleHelper.rand.nextInt(100) + 155, ParticleHelper.rand.nextInt(100), 0);
+			w.setColor(LatCoreMC.rand.nextInt(100) + 155, LatCoreMC.rand.nextInt(100), 0);
 			Waypoints.add(w);
 		}
 	}

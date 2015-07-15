@@ -1,5 +1,6 @@
-package latmod.ftbu.core;
+package latmod.ftbu.core.inv;
 
+import latmod.ftbu.core.NBTHelper;
 import latmod.ftbu.core.util.FastList;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;

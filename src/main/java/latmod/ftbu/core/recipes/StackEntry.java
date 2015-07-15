@@ -1,5 +1,5 @@
 package latmod.ftbu.core.recipes;
-import latmod.ftbu.core.*;
+import latmod.ftbu.core.inv.*;
 import latmod.ftbu.core.util.FastList;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;

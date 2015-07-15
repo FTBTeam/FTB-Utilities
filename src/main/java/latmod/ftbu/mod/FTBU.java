@@ -3,6 +3,7 @@ import java.io.File;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
+import latmod.ftbu.core.inv.ODItems;
 import latmod.ftbu.core.net.LMNetHelper;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldServer;

@@ -3,7 +3,7 @@ package latmod.ftbu.core.cmd;
 import java.util.*;
 
 import latmod.ftbu.core.LatCoreMC;
-import latmod.ftbu.core.util.*;
+import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.core.world.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;

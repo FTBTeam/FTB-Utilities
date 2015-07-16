@@ -158,7 +158,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		
 		if(selectedPlayer.playerLM.equalsPlayer(owner))
 		{
-			actionButtons.add(new ActionButton(this, PlayerAction.settings, FTBULang.button_settings));
+			actionButtons.add(new ActionButton(this, PlayerAction.settings, FTBULang.client_config));
 			actionButtons.add(new ActionButton(this, PlayerAction.waypoints, Waypoints.clientConfig.getIDS()));
 			actionButtons.add(new ActionButton(this, PlayerAction.minimap, "Claimed Chunks"));
 			//actionButtons.add(new ActionButton(this, PlayerAction.notes, "Notes [WIP]"));
@@ -167,7 +167,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		else
 		{
 			if(owner.isFriendRaw(selectedPlayer.playerLM))
-				actionButtons.add(new ActionButton(this, PlayerAction.friend_remove, FTBU.mod.translateClient("button.remFriend")));
+				actionButtons.add(new ActionButton(this, PlayerAction.friend_remove, FTBULang.button_rem_friend));
 			else
 				actionButtons.add(new ActionButton(this, PlayerAction.friend_add, FTBULang.button_add_friend));
 		}
@@ -392,7 +392,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 				if(p == null) return;
 				
 				al.add(p.getName());
-				if(p.isOnline()) al.add(GREEN + "[" + FTBU.mod.translateClient("label.online") + "]");
+				if(p.isOnline()) al.add(GREEN + "[" + FTBULang.label_online + "]");
 				
 				if(!player.isOwner())
 				{
@@ -400,9 +400,9 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 					boolean raw2 = owner.isFriendRaw(p);
 					
 					if(raw1 && raw2)
-						al.add(GREEN + "[" + FTBU.mod.translateClient("label.friend") + "]");
+						al.add(GREEN + "[" + FTBULang.label_friend + "]");
 					else if(raw1 || raw2)
-						al.add((raw1 ? GOLD : BLUE) + "[" + FTBU.mod.translateClient("label.pfriend") + "]");
+						al.add((raw1 ? GOLD : BLUE) + "[" + FTBULang.label_pfriend + "]");
 				}
 				
 				if(p.clientInfo != null && !p.clientInfo.isEmpty())

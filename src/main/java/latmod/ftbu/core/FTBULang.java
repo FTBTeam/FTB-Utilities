@@ -26,6 +26,13 @@ public class FTBULang
 	
 	public static String button_add_friend;
 	public static String button_rem_friend;
+	public static String label_online;
+	public static String label_friend;
+	public static String label_pfriend;
+	
+	// Other //
+	public static String client_config;
+	public static final String colors[] = new String[16];
 	
 	public static void reload()
 	{
@@ -47,6 +54,13 @@ public class FTBULang
 		
 		button_add_friend = get("button.addFriend");
 		button_rem_friend = get("button.remFriend");
+		label_online = get("label.online");
+		label_friend = get("label.friend");
+		label_pfriend = get("label.pfriend");
+		
+		client_config = get("client_config");
+		for(int i = 0; i < 16; i++)
+			colors[i] = get("color." + EnumDyeColor.VALUES[i].name);
 	}
 	
 	private static String get(String s)

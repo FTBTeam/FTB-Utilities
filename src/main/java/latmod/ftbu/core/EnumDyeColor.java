@@ -1,10 +1,8 @@
 package latmod.ftbu.core;
 import java.awt.Color;
 
-import latmod.ftbu.mod.FTBU;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;
-import net.minecraft.util.StatCollector;
 
 public enum EnumDyeColor // ItemDye
 {
@@ -29,7 +27,6 @@ public enum EnumDyeColor // ItemDye
 	
 	public final int ID;
 	public final String name;
-	public final String lang;
 	public final Color color;
 	public final Color colorBright;
 	public final String dyeName;
@@ -40,7 +37,6 @@ public enum EnumDyeColor // ItemDye
 	{
 		ID = ordinal();
 		name = ItemDye.field_150921_b[ID];
-		lang = FTBU.mod.assets + "color." + name;
 		color = new Color(ItemDye.field_150922_c[ID]);
 		colorBright = new Color(c);
 		
@@ -50,7 +46,7 @@ public enum EnumDyeColor // ItemDye
 	}
 
 	public String toString()
-	{ return StatCollector.translateToLocal(lang); }
+	{ return FTBULang.colors[ID]; }
 	
 	public ItemStack getDye()
 	{ return new ItemStack(Items.dye, 1, ID); }

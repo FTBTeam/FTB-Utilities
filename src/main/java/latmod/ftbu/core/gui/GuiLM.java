@@ -157,6 +157,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	public final void setTexture(ResourceLocation tex)
 	{
+		if(tex == null) return;
 		if(prevTexture == null || prevTexture != tex)
 		{
 			prevTexture = tex;

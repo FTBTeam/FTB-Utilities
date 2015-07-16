@@ -1,21 +1,19 @@
 package latmod.ftbu.mod.client.gui;
 
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.client.ClientConfig;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.util.*;
-import latmod.ftbu.mod.FTBU;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class GuiClientConfig extends GuiLM
 {
-	public static final ResourceLocation tex = FTBU.mod.getLocation("textures/gui/client_config.png");
 	public final GuiScreen parent;
 	public final FastList<ConfigLine> lines;
 	public int totalHeight = 0;
@@ -25,7 +23,7 @@ public class GuiClientConfig extends GuiLM
 	
 	public GuiClientConfig(GuiScreen g)
 	{
-		super(null, tex);
+		super(null, null);
 		parent = g;
 		hideNEI = true;
 		xSize = width;
@@ -107,11 +105,10 @@ public class GuiClientConfig extends GuiLM
 				scrollI = (int)(scroll.value * (height - totalHeight));
 		}
 		
-		for(ConfigLine l : lines)
-			if(l.isVisible()) l.renderLine();
+		for(ConfigLine l : lines) l.renderLine();
 		
 		drawRect(0, 0, width, 20, 0x99333333);
-		drawCenteredString(fontRendererObj, "Client Config", width / 2, 6, 0xFFFFFFFF);
+		drawCenteredString(fontRendererObj, FTBULang.client_config, width / 2, 6, 0xFFFFFFFF);
 		
 		if(drawScroll)
 		{
@@ -158,14 +155,12 @@ public class GuiClientConfig extends GuiLM
 		public ButtonCategory(GuiClientConfig g, ClientConfig c)
 		{
 			super(g, c);
-			title = LatCoreMC.FORMATTING + "l" + c.getIDS();
+			title = LatCoreMC.FORMATTING + "l- " + c.getIDS() + " -";
 		}
-		
-		public boolean isHidden()
-		{ return false; }
 		
 		public void renderLine()
 		{
+			if(!isVisible()) return;
 			int y = posY + gui.scrollI;
 			gui.drawString(gui.fontRendererObj, title, 4, y + 4, 0xFFFFFFFF);
 		}
@@ -190,12 +185,22 @@ public class GuiClientConfig extends GuiLM
 		
 		public void renderLine()
 		{
-			int textCol = mouseOver() ? 0xFFFFFFFF : 0xFF999999;
+			if(!isVisible()) return;
+			
+			boolean mouseOver = mouseOver();
+			int textCol = mouseOver ? 0xFFFFFFFF : 0xFF999999;
 			
 			int y = posY + gui.scrollI;
 			gui.drawString(gui.fontRendererObj, title, 4, y + 4, textCol);
+			int i = prop.getI();
 			
-			String s = prop.getValueS(prop.getI());
+			String s = prop.getValueS(i);
+			
+			if(prop.values[i].equals("true") || prop.values[i].equals("enabled"))
+				textCol = mouseOver ? 0xFF33D333 : 0xFF339933;
+			else if(prop.values[i].equals("false") || prop.values[i].equals("disabled"))
+				textCol = mouseOver ? 0xFFD33333 : 0xFF993333;
+			
 			gui.drawString(gui.fontRendererObj, s, gui.width - (gui.fontRendererObj.getStringWidth(s) + 20), y + 4, textCol);
 		}
 		

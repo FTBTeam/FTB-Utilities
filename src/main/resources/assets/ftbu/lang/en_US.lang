@@ -26,6 +26,7 @@ ftbu:button.addGroup=Add Group
 ftbu:button.remGroup=Remove Group
 
 #ClientConfig
+ftbu:client_config=Client Config
 config.value.enabled=Enabled
 config.value.disabled=Disabled
 config.value.true=True

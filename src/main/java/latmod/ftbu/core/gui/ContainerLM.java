@@ -13,7 +13,7 @@ public abstract class ContainerLM extends Container
 	{
 		player = ep;
 		inv = i;
-		iinv = (inv !=  null && inv instanceof IInventory) ? (IInventory)inv : null;
+		iinv = (inv != null && inv instanceof IInventory) ? (IInventory)inv : null;
 	}
 	
 	public ItemStack transferStackInSlot(EntityPlayer ep, int i)
@@ -28,15 +28,15 @@ public abstract class ContainerLM extends Container
 			ItemStack is1 = slot.getStack();
 			is = is1.copy();
 
-			if (i < iinv.getSizeInventory())
+			if(i < iinv.getSizeInventory())
 			{
-				if (!mergeItemStack(is1, iinv.getSizeInventory(), inventorySlots.size(), true))
+				if(!mergeItemStack(is1, iinv.getSizeInventory(), inventorySlots.size(), true))
 					return null;
 			}
-			else if (!mergeItemStack(is1, 0, iinv.getSizeInventory(), false))
+			else if(!mergeItemStack(is1, 0, iinv.getSizeInventory(), false))
 				return null;
 
-			if (is1.stackSize == 0)
+			if(is1.stackSize == 0)
 				slot.putStack(null);
 			else
 				slot.onSlotChanged();

@@ -20,8 +20,7 @@ import cpw.mods.fml.common.event.*;
 		modid = FTBUFinals.MOD_ID,
 		version = FTBUFinals.VERSION,
 		name = FTBUFinals.MOD_NAME,
-		dependencies = FTBUFinals.DEPENDENCIES,
-		guiFactory = FTBUFinals.GUI_FACTORY
+		dependencies = FTBUFinals.DEPENDENCIES
 )
 public class FTBU
 {

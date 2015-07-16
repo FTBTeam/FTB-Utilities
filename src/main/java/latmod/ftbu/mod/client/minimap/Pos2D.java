@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.client.minimap;
 
-import latmod.ftbu.core.util.LatCore;
+import latmod.ftbu.core.util.*;
 
 public class Pos2D
 {
@@ -19,5 +19,5 @@ public class Pos2D
 	{ return LatCore.hashCode(x, y); }
 	
 	public String toString()
-	{ return LatCore.stripInt(x, y); }
+	{ return LMStringUtils.stripI(x, y); }
 }

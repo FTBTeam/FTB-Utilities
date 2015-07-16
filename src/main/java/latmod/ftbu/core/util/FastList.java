@@ -161,7 +161,20 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	}
 	
 	public String toString()
-	{ return LatCore.strip(LatCore.toStrings(toArray())); }
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append('[');
+		
+		for(int i = 0; i < size; i++)
+		{
+			sb.append(String.valueOf(objects[i]));
+			if(i != size - 1)
+				sb.append(", ");
+		}
+		
+		sb.append(']');
+		return sb.toString();
+	}
 	
 	private class FastIterator implements ListIterator<E>
 	{

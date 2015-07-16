@@ -35,11 +35,6 @@ public abstract class CommandLM extends CommandBase
 	public final void processCommand(ICommandSender ics, String[] args)
 	{
 		if(args == null) args = new String[0];
-		
-		String[] scmds = getSubcommands(ics);
-		if(scmds != null && args.length == 0)
-		{ LatCoreMC.printChat(ics, "Subcommands: " + LatCore.strip(scmds)); return; }
-		
 		String s = onCommand(ics, args);
 		if(s != null)
 		{
@@ -53,9 +48,6 @@ public abstract class CommandLM extends CommandBase
 	
 	public List<String> getCommandAliases()
 	{ return aliases.isEmpty() ? null : aliases; }
-	
-	public String[] getSubcommands(ICommandSender ics)
-	{ return null; }
 	
 	public abstract String onCommand(ICommandSender ics, String[] args);
 	

@@ -14,6 +14,7 @@ public class SliderLM extends WidgetLM
 	public final int sliderSize;
 	public int displayMin = 0;
 	public int displayMax = 100;
+	public boolean isVertical = false;
 	
 	public SliderLM(GuiLM g, int x, int y, int w, int h, int ss)
 	{
@@ -29,7 +30,10 @@ public class SliderLM extends WidgetLM
 		{
 			if(Mouse.isButtonDown(0))
 			{
-				value = (float)(gui.mouseX - (gui.getPosX() + posX + (sliderSize / 2))) / (float)(width - sliderSize);
+				if(isVertical)
+					value = (float)(gui.mouseY - (gui.getPosY() + posY + (sliderSize / 2))) / (float)(height - sliderSize);
+				else
+					value = (float)(gui.mouseX - (gui.getPosX() + posX + (sliderSize / 2))) / (float)(width - sliderSize);
 				value = MathHelperLM.clampFloat(value, 0F, 1F);
 			}
 			else isGrabbed = false;
@@ -39,21 +43,25 @@ public class SliderLM extends WidgetLM
 	}
 	
 	public int getValueI()
-	{ return (int)(value * (width - sliderSize)); }
+	{ return (int)(value * ((isVertical ? height : width) - sliderSize)); }
 	
 	public void renderSlider(TextureCoords tc)
-	{ tc.render(gui, posX + getValueI(), posY, sliderSize, height); }
+	{
+		if(isVertical)
+			tc.render(gui, posY, posY + getValueI(), width, sliderSize);
+		else
+			tc.render(gui, posX + getValueI(), posY, sliderSize, height);
+	}
 	
 	public void mousePressed(int b)
 	{
 		if(mouseOver() && b == 0)
-		{
 			isGrabbed = true;
-		}
 	}
 	
 	public void addMouseOverText(FastList<String> l)
 	{
+		if(displayMin == 0 && displayMax == 0) return;
 		String s = "" + (int)MathHelperLM.map(value, 0D, 1D, displayMin, displayMax);
 		if(title != null) s = title + ": " + s;
 		l.add(s);

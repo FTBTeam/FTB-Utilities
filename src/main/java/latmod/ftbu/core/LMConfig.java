@@ -69,7 +69,7 @@ public abstract class LMConfig
 		}
 		
 		public void setCategoryComment(String... comment)
-		{ config.config.setCategoryComment(cat, LatCore.unsplit(comment, "\n")); }
+		{ config.config.setCategoryComment(cat, LMStringUtils.unsplit(comment, "\n")); }
 		
 		public void setLang(String property, String langKey)
 		{

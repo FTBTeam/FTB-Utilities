@@ -16,7 +16,7 @@ public class MessageCustomClientAction extends MessageLM<MessageCustomClientActi
 	{
 		channel = s;
 		
-		CustomAction.FromClient h = CustomAction.cHandlers.get(channel);
+		CustomActionFromClient h = CustomAction.cHandlers.get(channel);
 		
 		if(h != null)
 		{
@@ -39,7 +39,7 @@ public class MessageCustomClientAction extends MessageLM<MessageCustomClientActi
 	
 	public IMessage onMessage(MessageCustomClientAction m, MessageContext ctx)
 	{
-		CustomAction.FromClient h = CustomAction.cHandlers.get(m.channel);
+		CustomActionFromClient h = CustomAction.cHandlers.get(m.channel);
 		h.readFromClient(ctx.getServerHandler().playerEntity, m.data);
 		return null;
 	}

@@ -12,9 +12,6 @@ public class CmdListOverride extends CommandLM
 	public CmdListOverride()
 	{ super("list", CommandLevel.ALL); }
 	
-	public String[] getSubcommands(ICommandSender ics)
-	{ return null; }
-	
 	public void printHelp(ICommandSender ics)
 	{
 		printHelpLine(ics, "[uuid]");

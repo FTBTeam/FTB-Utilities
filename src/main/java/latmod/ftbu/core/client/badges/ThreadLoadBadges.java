@@ -64,7 +64,7 @@ public class ThreadLoadBadges extends Thread
 			reader.close();
 			
 			lastLoadedURL = "http://pastebin.com/raw.php?i=LvBB9HmV";
-			CustomBadges custom = LatCore.fromJson("{" + LatCore.toString(new URL(lastLoadedURL).openStream()) + "}", CustomBadges.class);
+			CustomBadges custom = LatCore.fromJson("{" + LMStringUtils.toString(new URL(lastLoadedURL).openStream()) + "}", CustomBadges.class);
 			
 			for(String k : custom.badges.keySet())
 				urlBadges.put(k, new BadgeURL(custom.badges.get(k)));
@@ -86,7 +86,7 @@ public class ThreadLoadBadges extends Thread
 			if(!FTBUConfig.login.customBadges.isEmpty())
 			{
 				lastLoadedURL = FTBUConfig.login.customBadges;
-				custom = LatCore.fromJson("{" + LatCore.toString(new URL(lastLoadedURL).openStream()) + "}", CustomBadges.class);
+				custom = LatCore.fromJson("{" + LMStringUtils.toString(new URL(lastLoadedURL).openStream()) + "}", CustomBadges.class);
 				
 				for(String k : custom.badges.keySet())
 					urlBadges.put(k, new BadgeURL(custom.badges.get(k)));

@@ -16,9 +16,7 @@ import cpw.mods.fml.relauncher.*;
 public class LatCore
 {
 	public static final int DAY24 = 24 * 60 * 60;
-	public static final String STRIP_SEP = ", ";
 	public static final Charset UTF_8 = Charset.forName("UTF-8");
-	public static final String ALLOWED_TEXT_CHARS = "!@#$%^&*()_+ -=\\/,.<>?\'\"[]{}|;:`~";
 	
 	public static class Colors
 	{
@@ -101,39 +99,6 @@ public class LatCore
 		}
 	}
 	
-	public static String toString(InputStream is) throws Exception
-	{
-		StringBuilder sb = new StringBuilder();
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-		String s = null; while((s = br.readLine()) != null) sb.append(s);
-		return sb.toString();
-	}
-	
-	public static FastList<String> toStringList(String s, String regex)
-	{
-		FastList<String> al = new FastList<String>();
-		String[] s1 = s.split(regex);
-		if(s1 != null && s1.length > 0)
-		for(int i = 0; i < s1.length; i++)
-		al.add(s1[i].trim()); return al;
-	}
-	
-	public static String toString(List<String> l)
-	{
-		StringBuilder sb = new StringBuilder();
-		for(int i = 0; i < l.size(); i++)
-		{ sb.append(l.get(i)); if(i != l.size() - 1) sb.append('\n'); }
-		return sb.toString();
-	}
-	
-	public static FastList<String> toStringList(InputStream is) throws Exception
-	{
-		FastList<String> l = new FastList<String>();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		String s = null; while((s = reader.readLine()) != null)
-			l.add(s); reader.close(); return l;
-	}
-	
 	@SuppressWarnings("all")
 	public static <E> E newObject(Class<?> c, Object... o) throws Exception
 	{
@@ -152,18 +117,6 @@ public class LatCore
 		return (E) c.newInstance();
 	}
 	
-	public static boolean isASCIIChar(char c)
-	{ return c > 0 && c < 256; }
-	
-	public static boolean isTextChar(char c, boolean onlyAZ09)
-	{
-		if(!isASCIIChar(c)) return false;
-		if(c >= '0' && c <= '9') return true;
-		if(c >= 'a' && c <= 'z') return true;
-		if(c >= 'A' && c <= 'Z') return true;
-		return !onlyAZ09 && (ALLOWED_TEXT_CHARS.indexOf(c) != -1);
-	}
-	
 	public static FastList<Package> getAllPackages()
 	{
 		FastList<Package> p = FastList.asList(Package.getPackages());
@@ -175,104 +128,6 @@ public class LatCore
 		});
 		
 		return p;
-	}
-	
-	public static void replace(FastList<String> txt, String s, String s1)
-	{
-		for(int i = 0; i < txt.size(); i++)
-		{
-			String s2 = txt.get(i);
-			if(s2 != null && s2.length() > 0 && s2.contains(s))
-			{ s2 = s2.replace(s, s1); txt.set(i, s2); }
-		}
-	}
-	
-	public static <E> String[] toStrings(E[] o)
-	{
-		if(o == null) return null;
-		String[] s = new String[o.length];
-		for(int i = 0; i < o.length; i++)
-			s[i] = String.valueOf(o[i]);
-		return s;
-	}
-	
-	public static String strip(String... o)
-	{
-		if(o == null) return null;
-		if(o.length == 0) return "";
-		StringBuilder sb = new StringBuilder();
-		
-		for(int i = 0; i < o.length; i++)
-		{
-			sb.append(o[i]);
-			if(i != o.length - 1)
-				sb.append(STRIP_SEP);
-		}
-		
-		return sb.toString();
-	}
-	
-	public static String stripDouble(double... o)
-	{
-		if(o == null) return null;
-		if(o.length == 0) return "";
-		StringBuilder sb = new StringBuilder();
-		
-		for(int i = 0; i < o.length; i++)
-		{
-			sb.append(MathHelperLM.formatDouble(MathHelperLM.toSmallDouble(o[i])));
-			if(i != o.length - 1) sb.append(STRIP_SEP);
-		}
-		
-		return sb.toString();
-	}
-	
-	public static String stripDoubleInt(double... o)
-	{
-		if(o == null) return null;
-		if(o.length == 0) return "";
-		StringBuilder sb = new StringBuilder();
-		
-		for(int i = 0; i < o.length; i++)
-		{
-			sb.append((long)o[i]);
-			if(i != o.length - 1)
-				sb.append(STRIP_SEP);
-		}
-		
-		return sb.toString();
-	}
-	
-	public static String stripInt(int... o)
-	{
-		if(o == null) return null;
-		if(o.length == 0) return "";
-		StringBuilder sb = new StringBuilder();
-		
-		for(int i = 0; i < o.length; i++)
-		{
-			sb.append(o[i]);
-			if(i != o.length - 1)
-				sb.append(STRIP_SEP);
-		}
-		
-		return sb.toString();
-	}
-	
-	public static String stripBool(boolean... o)
-	{
-		if(o == null) return null;
-		if(o.length == 0) return "";
-		StringBuilder sb = new StringBuilder();
-		
-		for(int i = 0; i < o.length; i++)
-		{
-			sb.append(o[i] ? '1' : '0');
-			if(i != o.length - 1)
-				sb.append(STRIP_SEP);
-		}
-		
-		return sb.toString();
 	}
 	
 	public static String classpath(Class<?> c)
@@ -320,42 +175,8 @@ public class LatCore
 	
 	public static String getExternalAddress()
 	{
-		try { return toString(new URL("http://checkip.amazonaws.com").openStream()); }
+		try { return LMStringUtils.toString(new URL("http://checkip.amazonaws.com").openStream()); }
 		catch(Exception e) { } return null;
-	}
-	
-	public static String unsplit(String[] s, String s1)
-	{
-		if(s == null) return null;
-		StringBuilder sb = new StringBuilder();
-		if(s.length == 1) return s[0];
-		for(int i = 0; i < s.length; i++)
-		{
-			sb.append(s[i]);
-			if(i != s.length - 1)
-				sb.append(s1);
-		}
-		return sb.toString();
-	}
-	
-	public static String unsplit(Object[] o, String s1)
-	{
-		if(o == null) return null;
-		StringBuilder sb = new StringBuilder();
-		if(o.length == 1) return String.valueOf(o[0]);
-		for(int i = 0; i < o.length; i++)
-		{
-			sb.append(o[i]);
-			if(i != o.length - 1)
-				sb.append(s1);
-		}
-		return sb.toString();
-	}
-
-	public static String firstUppercase(String s)
-	{
-		if(s == null || s.length() == 0) return s;
-		return Character.toUpperCase(s.charAt(0)) + (s.length() > 1 ? s.substring(1) : "");
 	}
 	
 	public static boolean areObjectsEqual(Object o1, Object o2, boolean allowNulls)
@@ -363,14 +184,6 @@ public class LatCore
 		if(o1 == null && o2 == null && allowNulls) return true;
 		if(o1 == null || o2 == null) return false;
 		return o1.equals(o2);
-	}
-	
-	public static boolean areStringsEqual(String s0, String s1)
-	{
-		if(s0 == null && s1 == null) return true;
-		if(s0 == null || s1 == null) return false;
-		if(s0.length() != s1.length()) return false;
-		return s0.equals(s1);
 	}
 	
 	public static <T> T fromJson(String s, Type t)
@@ -383,7 +196,7 @@ public class LatCore
 	public static <T> T fromJsonFile(File f, Type t)
 	{
 		if(!f.exists()) return null;
-		try { return fromJson(toString(new FileInputStream(f)), t); }
+		try { return fromJson(LMStringUtils.toString(new FileInputStream(f)), t); }
 		catch(Exception e) { e.printStackTrace(); return null; }
 	}
 	
@@ -472,21 +285,6 @@ public class LatCore
 		return s.toString();
 	}
 
-	public static String fillString(String s, char fill, int length)
-	{
-		int sl = s.length();
-		
-		char[] c = new char[Math.max(sl, length)];
-		
-		for(int i = 0; i < c.length; i++)
-		{
-			if(i >= sl) c[i] = fill;
-			else c[i] = s.charAt(i);
-		}
-		
-		return new String(c);
-	}
-	
 	public static int hashCode(Object... o)
 	{
 		if(o.length == 0) return 0;
@@ -497,14 +295,6 @@ public class LatCore
 		return h;
 	}
 	
-	public static boolean contains(String[] s, String s1)
-	{
-		for(int i = 0; i < s.length; i++)
-			if(s[i] != null && (s[i] == s1 || s[i].equals(s1)))
-				return true;
-		return false;
-	}
-
 	public static String getTimeAgo(long t)
 	{
 		long sec = 1000L;

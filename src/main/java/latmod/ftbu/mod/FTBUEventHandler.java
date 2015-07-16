@@ -174,8 +174,8 @@ public class FTBUEventHandler // FTBUTickHandler
 					LMPlayer p = LMWorldServer.inst.getPlayer(list[i]);
 					
 					StringBuilder sb = new StringBuilder();
-					sb.append(LatCore.fillString("" + p.playerID, ' ', 6));
-					sb.append(LatCore.fillString(p.getName(), ' ', 21));
+					sb.append(LMStringUtils.fillString("" + p.playerID, ' ', 6));
+					sb.append(LMStringUtils.fillString(p.getName(), ' ', 21));
 					sb.append(p.uuidString);
 					l.add(sb.toString());
 				}

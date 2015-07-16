@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.cmd.admin;
 
 import latmod.ftbu.core.cmd.*;
-import latmod.ftbu.core.util.LatCore;
+import latmod.ftbu.core.util.LMStringUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -13,7 +13,7 @@ public class CmdAdminSetItemName extends SubCommand
 		EntityPlayerMP ep = CommandLM.getCommandSenderAsPlayer(ics);
 		if(ep.inventory.getCurrentItem() != null)
 		{
-			ep.inventory.getCurrentItem().setStackDisplayName(LatCore.unsplit(args, " "));
+			ep.inventory.getCurrentItem().setStackDisplayName(LMStringUtils.unsplit(args, " "));
 			ep.openContainer.detectAndSendChanges();
 			return CommandLM.FINE + "Item name set to '" + ep.inventory.getCurrentItem().getDisplayName() + "'!";
 		}

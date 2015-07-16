@@ -223,7 +223,7 @@ public final class LatCoreMC // LatCoreMCClient
 	}
 	
 	public static Exception executeCommand(ICommandSender ics, String cmd, String[] args)
-	{ return executeCommand(ics, cmd + " " + LatCore.unsplit(args, " ")); }
+	{ return executeCommand(ics, cmd + " " + LMStringUtils.unsplit(args, " ")); }
 	
 	public static void notifyPlayer(EntityPlayerMP ep, Notification n)
 	{ LMNetHelper.sendTo(ep, new MessageNotifyPlayer(n)); }

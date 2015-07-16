@@ -1,5 +1,6 @@
 package latmod.ftbu.mod.client;
 
+import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.gui.GuiLM;
 import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.FTBU;
@@ -28,7 +29,7 @@ public class FTBUGuiEventHandler
 	@SubscribeEvent
 	public void guiInitEvent(final GuiScreenEvent.InitGuiEvent.Post e)
 	{
-		if(e.gui instanceof GuiOptions)
+		if(e.gui instanceof GuiOptions && LatCoreMCClient.getMinecraft().thePlayer != null)
 		{
 			if(FTBUClient.optionsButton.getB())
 				e.buttonList.add(new GuiButton(SETTINGS_BUTTON_ID, e.gui.width / 2 - 155, e.gui.height / 6 + 48 - 6, 150, 20, "FTBU Client Config"));

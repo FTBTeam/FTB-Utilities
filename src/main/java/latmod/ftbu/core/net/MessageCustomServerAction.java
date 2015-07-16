@@ -17,7 +17,7 @@ public class MessageCustomServerAction extends MessageLM<MessageCustomServerActi
 	{
 		channel = s;
 		
-		CustomAction.FromServer h = CustomAction.sHandlers.get(channel);
+		CustomActionFromServer h = CustomAction.sHandlers.get(channel);
 		
 		if(h != null)
 		{
@@ -40,7 +40,7 @@ public class MessageCustomServerAction extends MessageLM<MessageCustomServerActi
 	
 	public IMessage onMessage(MessageCustomServerAction m, MessageContext ctx)
 	{
-		CustomAction.FromServer h = CustomAction.sHandlers.get(m.channel);
+		CustomActionFromServer h = CustomAction.sHandlers.get(m.channel);
 		h.readFromServer(FTBU.proxy.getClientPlayer(), m.data);
 		return null;
 	}

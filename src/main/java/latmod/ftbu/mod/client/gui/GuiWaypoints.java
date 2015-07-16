@@ -297,7 +297,7 @@ public class GuiWaypoints extends GuiLM
 			textBoxName = new TextBoxLM(this, 7, 6, 98, 17)
 			{
 				public boolean canAddChar(char c)
-				{ return (c == ' ' || c == '.' || c == '-' || c == '_' || LatCore.isTextChar(c, true)) && super.canAddChar(c); }
+				{ return (c == ' ' || c == '.' || c == '-' || c == '_' || LMStringUtils.isTextChar(c, true)) && super.canAddChar(c); }
 				
 				public void textChanged()
 				{ waypoint.name = text.trim(); }

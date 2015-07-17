@@ -13,7 +13,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
-import baubles.api.BaublesApi;
 
 import com.mojang.authlib.GameProfile;
 
@@ -80,7 +79,7 @@ public class CmdAdminPlayer extends SubCommand
 				
 				if(LatCoreMC.isModInstalled("Baubles"))
 				{
-					IInventory inv = BaublesApi.getBaubles(ep);
+					IInventory inv = BaublesHelper.getBaubles(ep);
 					if(inv != null) writeItemsToNBT(inv, tag, "Baubles");
 				}
 				
@@ -111,7 +110,7 @@ public class CmdAdminPlayer extends SubCommand
 				
 				if(LatCoreMC.isModInstalled("Baubles"))
 				{
-					IInventory inv = BaublesApi.getBaubles(ep);
+					IInventory inv = BaublesHelper.getBaubles(ep);
 					if(inv != null) readItemsFromNBT(inv, tag, "Baubles");
 				}
 			}

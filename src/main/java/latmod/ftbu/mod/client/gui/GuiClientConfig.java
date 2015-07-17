@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.client.gui;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.client.ClientConfig;
+import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.util.*;
 import net.minecraft.client.gui.GuiScreen;
@@ -67,6 +67,8 @@ public class GuiClientConfig extends GuiLM
 		buttonClose.posX = width - 18;
 		scroll.posX = width - 16;
 		scroll.height = height - 20;
+		scrollI = 0;
+		scroll.value = 0F;
 		refreshWidgets();
 	}
 	
@@ -85,6 +87,10 @@ public class GuiClientConfig extends GuiLM
 	
 	public void drawBackground()
 	{
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_BLEND);
+		LMRenderHelper.recolor();
+		
 		boolean drawScroll = totalHeight > height;
 		
 		if(drawScroll)
@@ -117,7 +123,10 @@ public class GuiClientConfig extends GuiLM
 			drawRect(scroll.posX, sy, scroll.posX + scroll.width, sy + scroll.sliderSize, 0x99666666);
 		}
 		
-		GL11.glColor4f(1F, 1F, 1F, 1F);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_BLEND);
+		LMRenderHelper.recolor();
+		
 		buttonClose.render(Icons.accept);
 	}
 	

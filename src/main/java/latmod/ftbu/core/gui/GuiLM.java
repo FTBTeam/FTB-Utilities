@@ -10,11 +10,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.*;
@@ -188,6 +188,9 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	public void drawBackground()
 	{
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_BLEND);
+		LMRenderHelper.recolor();
 		setTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 	}
@@ -219,22 +222,9 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 			refreshWidgets = false;
 		}
 		
-		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-		RenderHelper.disableStandardItemLighting();
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		LMRenderHelper.recolor();
-		
 		super.drawScreen(mx, my, f);
-		
-		//GL11.glDisable(GL11.GL_LIGHTING);
-		//GL11.glEnable(GL11.GL_BLEND);
-		//GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		LMRenderHelper.recolor();
-		
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_BLEND);
 		tempTextList.clear();
 		drawText(tempTextList);
 		
@@ -242,12 +232,8 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 			drawHoveringText(tempTextList, mouseX, mouseY, fontRendererObj);
 		
 		GL11.glDisable(GL11.GL_LIGHTING);
-		//GL11.glEnable(GL11.GL_BLEND);
-		//GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		LMRenderHelper.recolor();
 		
 		drawForeground();
-		GL11.glPopAttrib();
 	}
 	
 	public final void drawText(int mx, int my)

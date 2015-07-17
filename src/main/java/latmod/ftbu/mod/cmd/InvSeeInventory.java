@@ -1,9 +1,9 @@
 package latmod.ftbu.mod.cmd;
 
+import latmod.ftbu.core.BaublesHelper;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import baubles.api.BaublesApi;
 
 public class InvSeeInventory implements IInventory
 {
@@ -24,7 +24,7 @@ public class InvSeeInventory implements IInventory
 	{
 		player = ep;
 		invPlayer = ep.inventory;
-		baubles = BaublesApi.getBaubles(ep);
+		baubles = BaublesHelper.getBaubles(ep);
 	}
 	
 	public int getSizeInventory()

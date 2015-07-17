@@ -96,7 +96,7 @@ public class FTBUClientEventHandler
 			
 			if(!links.isEmpty())
 			{
-				IChatComponent line = new ChatComponentText("");
+				final IChatComponent line = new ChatComponentText("");
 				boolean oneLink = links.size() == 1;
 				
 				for(int i = 0; i < links.size(); i++)
@@ -115,7 +115,7 @@ public class FTBUClientEventHandler
 				{
 					public void run()
 					{
-						try { Thread.sleep(10L); }
+						try { Thread.sleep(50L); }
 						catch(Exception e) { }
 						LatCoreMC.printChat(null, line);
 					}

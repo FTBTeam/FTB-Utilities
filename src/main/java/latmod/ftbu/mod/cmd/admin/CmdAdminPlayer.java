@@ -77,7 +77,7 @@ public class CmdAdminPlayer extends SubCommand
 				NBTTagCompound tag = new NBTTagCompound();
 				writeItemsToNBT(ep.inventory, tag, "Inventory");
 				
-				if(LatCoreMC.isModInstalled("Baubles"))
+				if(LatCoreMC.isModInstalled(OtherMods.BAUBLES))
 				{
 					IInventory inv = BaublesHelper.getBaubles(ep);
 					if(inv != null) writeItemsToNBT(inv, tag, "Baubles");
@@ -108,7 +108,7 @@ public class CmdAdminPlayer extends SubCommand
 				
 				readItemsFromNBT(ep.inventory, tag, "Inventory");
 				
-				if(LatCoreMC.isModInstalled("Baubles"))
+				if(LatCoreMC.isModInstalled(OtherMods.BAUBLES))
 				{
 					IInventory inv = BaublesHelper.getBaubles(ep);
 					if(inv != null) readItemsFromNBT(inv, tag, "Baubles");
@@ -130,7 +130,9 @@ public class CmdAdminPlayer extends SubCommand
 			ItemStack is = args[2].equals("null") ? null : InvUtils.parseItem(args[2]);
 			if(!args[2].equals("null") && (is == null || is.getItem() == null)) return "Item '" + args[3] + "' not found!";
 			
-			LatCoreMC.notifyPlayer(p.getPlayerMP(), new Notification(args[3].replace("\\_", "<$US>").replace('_', ' ').replace("<$US>", "_").replace("&", LatCoreMC.FORMATTING).replace("@n", p.getName()), "", is));
+			Notification n = new Notification(args[3].replace("\\_", "<$US>").replace('_', ' ').replace("<$US>", "_").replace("&", LatCoreMC.FORMATTING).replace("@n", p.getName()), "", 3000);
+			n.setItem(is);
+			LatCoreMC.notifyPlayer(p.getPlayerMP(), n);
 			return null;
 		}
 		

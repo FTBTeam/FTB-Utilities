@@ -272,14 +272,6 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			{
 				Player p = players.get(i);
 				if(p.player.getName().toLowerCase().contains(s)) l.add(players.get(i));
-				else
-				{
-					for(int j = 0; j < p.player.clientInfo.size(); j++)
-					{
-						if(p.player.clientInfo.get(j).toLowerCase().contains(s))
-						{ l.add(players.get(i)); break; }
-					}
-				}
 			}
 			
 			players.clear();

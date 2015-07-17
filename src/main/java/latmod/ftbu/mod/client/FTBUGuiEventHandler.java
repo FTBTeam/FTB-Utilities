@@ -1,5 +1,6 @@
 package latmod.ftbu.mod.client;
 
+import latmod.ftbu.core.FTBULang;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.gui.GuiLM;
 import latmod.ftbu.core.world.LMWorldClient;
@@ -22,6 +23,7 @@ public class FTBUGuiEventHandler
 {
 	public static final FTBUGuiEventHandler instance = new FTBUGuiEventHandler();
 	public static final ResourceLocation friendsButtonTexture = FTBU.mod.getLocation("textures/gui/friendsbutton.png");
+	public static final ResourceLocation friendsButtonTextureOn = FTBU.mod.getLocation("textures/gui/friendsbutton_on.png");
 	private static final int BUTTON_ID = 24286;
 	private static final int SETTINGS_BUTTON_ID = 24287;
 	
@@ -32,7 +34,7 @@ public class FTBUGuiEventHandler
 		if(e.gui instanceof GuiOptions && LatCoreMCClient.getMinecraft().thePlayer != null)
 		{
 			if(FTBUClient.optionsButton.getB())
-				e.buttonList.add(new GuiButton(SETTINGS_BUTTON_ID, e.gui.width / 2 - 155, e.gui.height / 6 + 48 - 6, 150, 20, "FTBU Client Config"));
+				e.buttonList.add(new GuiButton(SETTINGS_BUTTON_ID, e.gui.width / 2 - 155, e.gui.height / 6 + 48 - 6, 150, 20, "[FTBU] " + FTBULang.client_config));
 		}
 		else if(LMWorldClient.inst != null && e.gui instanceof GuiInventory || e.gui instanceof GuiContainerCreative)
 		{
@@ -83,7 +85,7 @@ public class FTBUGuiEventHandler
 		
 		public ButtonFriends(GuiScreen g, int x, int y)
 		{
-			super(BUTTON_ID, x, y, 16, 16, "FriendsGUI");
+			super(BUTTON_ID, x, y, 16, 16, "");
 			creativeContainer = (g instanceof GuiContainerCreative) ? (GuiContainerCreative)g : null;
 		}
 		
@@ -92,13 +94,13 @@ public class FTBUGuiEventHandler
 			if(creativeContainer != null && creativeContainer.func_147056_g() != CreativeTabs.tabInventory.getTabIndex())
 				return;
 			
-			GL11.glColor4f(1F, 1F, 1F, 1F);
+			boolean mouseOver = (mx >= xPosition && my >= yPosition && mx < xPosition + width && my < yPosition + height);
+			
+			GL11.glColor4f(1F, 1F, 1F, mouseOver ? 1F : 0.8F);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			mc.getTextureManager().bindTexture(friendsButtonTexture);
+			mc.getTextureManager().bindTexture(mouseOver ? friendsButtonTextureOn : friendsButtonTexture);
 			GuiLM.drawTexturedRectD(xPosition, yPosition, 0D, width, height, 0D, 0D, 1D, 1D);
-			if(mx >= xPosition && my >= yPosition && mx < xPosition + width && my < yPosition + height)
-				drawString(mc.fontRenderer, displayString, xPosition + width - mc.fontRenderer.getStringWidth(displayString) - 1, yPosition - 9, -1);
 			GL11.glDisable(GL11.GL_BLEND);
 		}
 	}

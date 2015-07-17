@@ -1,12 +1,10 @@
 package latmod.ftbu.mod.client.gui;
 
 import latmod.ftbu.core.Notification;
-import latmod.ftbu.mod.FTBU;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.*;
 
@@ -15,8 +13,6 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class GuiNotification extends Gui
 {
-	private static final ResourceLocation tex = FTBU.mod.getLocation("textures/gui/notification.png");
-	
 	public final Notification notification;
 	
 	private RenderItem renderItem = new RenderItem();
@@ -67,18 +63,15 @@ public class GuiNotification extends Gui
 			d1 *= d1;
 			
 			int width = 40 + Math.max(mc.fontRenderer.getStringWidth(notification.title), mc.fontRenderer.getStringWidth(notification.desc));
-			if(width > 224) width = 224;
 			if(notification.item == null) width -= 20;
 			
 			int i = displayW - width;
 			int j = 0 - (int)(d1 * 36D);
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			mc.getTextureManager().bindTexture(tex);
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glDisable(GL11.GL_LIGHTING);
-			drawTexturedModalRect(i, j, 0, 0, 8, 32);
-			drawTexturedModalRect(i + 8, j, 16, 0, width - 16, 32);
-			drawTexturedModalRect(i + width - 8, j, 256 - 8, 0, 8, 32);
+			drawRect(i, j, displayW, j + 32, 0xF6666666);
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			
 			int w = notification.item == null ? 10 : 30;
 			
@@ -95,7 +88,6 @@ public class GuiNotification extends Gui
 			if(notification.item == null) return;
 			
 			RenderHelper.enableGUIStandardItemLighting();
-			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 			GL11.glEnable(GL11.GL_COLOR_MATERIAL);
 			GL11.glEnable(GL11.GL_LIGHTING);

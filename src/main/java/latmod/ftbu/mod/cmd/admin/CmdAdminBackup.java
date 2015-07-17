@@ -14,7 +14,7 @@ public class CmdAdminBackup extends SubCommand
 		return null;
 	}
 	
-	public String onCommand(ICommandSender ics, String[] args)
+	public String onCommand(final ICommandSender ics, String[] args)
 	{
 		if(args.length > 0)
 		{

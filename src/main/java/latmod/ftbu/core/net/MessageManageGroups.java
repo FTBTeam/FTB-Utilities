@@ -58,7 +58,7 @@ public class MessageManageGroups extends MessageLM<MessageManageGroups>
 					owner.friends.add(p.playerID);
 					owner.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
 					p.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
-					LatCoreMC.notifyPlayer(ep, new Notification(GREEN + "Added friend", p.getName(), null, 800));
+					LatCoreMC.notifyPlayer(ep, new Notification(GREEN + "Added friend", p.getName(), 800));
 				}
 			}
 			else if(m.code == C_REM_FRIEND)
@@ -68,7 +68,7 @@ public class MessageManageGroups extends MessageLM<MessageManageGroups>
 					owner.friends.removeValue(p.playerID);
 					owner.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
 					p.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
-					LatCoreMC.notifyPlayer(ep, new Notification(RED + "Removed friend", p.getName(), null, 800));
+					LatCoreMC.notifyPlayer(ep, new Notification(RED + "Removed friend", p.getName(), 800));
 				}
 			}
 		}

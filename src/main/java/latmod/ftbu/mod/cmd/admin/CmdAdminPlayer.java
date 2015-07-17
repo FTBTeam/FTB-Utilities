@@ -125,15 +125,31 @@ public class CmdAdminPlayer extends SubCommand
 		else if(args[1].equals("notify"))
 		{
 			if(!p.isOnline()) return "The player must be online!";
-			CommandLM.checkArgsStrong(args, 4);
+			CommandLM.checkArgs(args, 3);
 			
-			ItemStack is = args[2].equals("null") ? null : InvUtils.parseItem(args[2]);
-			if(!args[2].equals("null") && (is == null || is.getItem() == null)) return "Item '" + args[3] + "' not found!";
+			String s = "";
 			
-			Notification n = new Notification(args[3].replace("\\_", "<$US>").replace('_', ' ').replace("<$US>", "_").replace("&", LatCoreMC.FORMATTING).replace("@n", p.getName()), "", 3000);
-			n.setItem(is);
-			LatCoreMC.notifyPlayer(p.getPlayerMP(), n);
-			return null;
+			for(int i = 2; i < args.length; i++)
+			{
+				s += args[i];
+				if(i != args.length - 1)
+					s += " ";
+			}
+			
+			try
+			{
+				Notification n = Notification.getFromJson(s);
+				
+				if(n != null)
+				{
+					LatCoreMC.notifyPlayer(p.getPlayerMP(), n);
+					return null;
+				}
+			}
+			catch(Exception e)
+			{ e.printStackTrace(); }
+			
+			return "Invalid notification: " + s;
 		}
 		
 		return null;

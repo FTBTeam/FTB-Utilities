@@ -1,6 +1,7 @@
 package latmod.ftbu.mod.client.gui;
 
 import latmod.ftbu.core.Notification;
+import latmod.ftbu.core.util.LatCore;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.RenderHelper;
@@ -70,7 +71,7 @@ public class GuiNotification extends Gui
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glDisable(GL11.GL_LIGHTING);
-			drawRect(i, j, displayW, j + 32, 0xF6666666);
+			drawRect(i, j, displayW, j + 32, LatCore.Colors.getRGBA(notification.color, 140));
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			
 			int w = notification.item == null ? 10 : 30;

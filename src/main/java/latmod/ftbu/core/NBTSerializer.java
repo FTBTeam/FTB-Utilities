@@ -39,7 +39,7 @@ public abstract class NBTSerializer<E> implements JsonDeserializer<E>, JsonSeria
 			for(Map.Entry<String, JsonElement> e : o.entrySet())
 			{
 				JsonElement je = e.getValue();
-				tag.setTag(e.getKey(), context.deserialize(je, getElementType(je)));
+				tag.setTag(e.getKey(), (NBTBase)context.deserialize(je, getElementType(je)));
 			}
 			
 			return tag;
@@ -64,7 +64,12 @@ public abstract class NBTSerializer<E> implements JsonDeserializer<E>, JsonSeria
 			NBTTagList list = new NBTTagList();
 			JsonArray a = json.getAsJsonArray();
 			for(int i = 0; i < a.size(); i++)
-				list.appendTag(context.deserialize(a.get(i), NBTBase.class));
+			{
+				JsonElement e = a.get(i);
+				try { list.appendTag(new NBTTagDouble(e.getAsDouble())); }
+				catch(Exception e2) { list.appendTag(new NBTTagString(e.getAsString())); }
+			}
+			
 			return list;
 		}
 		

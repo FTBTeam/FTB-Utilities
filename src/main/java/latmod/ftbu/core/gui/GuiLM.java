@@ -2,7 +2,7 @@ package latmod.ftbu.core.gui;
 import java.util.List;
 
 import latmod.ftbu.core.OtherMods;
-import latmod.ftbu.core.client.LatCoreMCClient;
+import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
@@ -11,6 +11,7 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 
@@ -335,6 +336,16 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 		tessellator.addVertexWithUV(x + w, y + 0, z, maxU2, minV2);
 		tessellator.addVertexWithUV(x + 0, y + 0, z, minU2, minV2);
 		tessellator.draw();
+	}
+	
+	public void drawItem(ItemStack is, int x, int y)
+	{
+		setTexture(TextureMap.locationItemsTexture);
+		zLevel = 200F;
+		itemRender.zLevel = 200F;
+		LMRenderHelper.renderGuiItem(is, itemRender, getFontRenderer(), guiLeft + x, guiTop + y);
+		zLevel = 0F;
+		itemRender.zLevel = 0F;
 	}
 	
 	@Optional.Method(modid = OtherMods.NEI)

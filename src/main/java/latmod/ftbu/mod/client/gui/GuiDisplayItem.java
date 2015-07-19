@@ -4,8 +4,6 @@ import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.inv.ItemDisplay;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.FTBU;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.item.ItemStack;
@@ -48,17 +46,22 @@ public class GuiDisplayItem extends GuiLM
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
+		
+		/*
 		zLevel = 200;
 		itemRender.zLevel = 200F;
 		FontRenderer font = itemDisplay.item.getItem().getFontRenderer(itemDisplay.item);
 		if (font == null) font = fontRendererObj;
 		
-		GL11.glScalef(itemDisplay.scale, itemDisplay.scale, 1F);
-		
 		itemRender.renderItemAndEffectIntoGUI(font, Minecraft.getMinecraft().getTextureManager(), itemDisplay.item, -8, -8);
 		
 		zLevel = 0;
 		itemRender.zLevel = 0F;
+		*/
+		
+		GL11.glScalef(itemDisplay.scale, itemDisplay.scale, 1F);
+		drawItem(itemDisplay.item, -8, -8);
+		
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();
 		

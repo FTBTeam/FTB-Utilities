@@ -44,7 +44,7 @@ public class LMInvUtils
 			Item i = getItemFromRegName(o.get("id").getAsString());
 			if(i == null) return null;
 			ItemStack is = new ItemStack(i, o.has("size") ? o.get("size").getAsInt() : 1, o.has("dmg") ? o.get("dmg").getAsInt() : 1);
-			if(o.has("data")) is.setTagCompound(context.deserialize(o.get("data"), NBTTagCompound.class));
+			if(o.has("data")) is.setTagCompound((NBTTagCompound)context.deserialize(o.get("data"), NBTTagCompound.class));
 			return is;
 		}
 	}

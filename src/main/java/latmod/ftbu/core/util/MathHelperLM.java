@@ -245,6 +245,7 @@ public class MathHelperLM
 	
 	public static MovingObjectPosition rayTrace(EntityPlayer ep, double d)
 	{
+		if(ep == null) return null;
 		Vec3 pos = getEyePosition(ep);
 		Vec3 look = ep.getLookVec();
 		Vec3 vec = pos.addVector(look.xCoord * d, look.yCoord * d, look.zCoord * d);

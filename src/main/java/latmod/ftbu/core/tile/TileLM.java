@@ -121,7 +121,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 		{
 			isLoaded = true;
 			getMeta();
-			onNeighborBlockChange(blockType);
+			//onNeighborBlockChange(blockType);
 		}
 	}
 	
@@ -143,6 +143,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 			if(isServer())
 				sendDirtyUpdate();
 		}
+		
 		tick++;
 	}
 	
@@ -151,12 +152,6 @@ public class TileLM extends TileEntity implements IClientActionTile
 	public void sendDirtyUpdate()
 	{
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-	}
-	
-	public void onPlaced()
-	{
-		getBlockType();
-		getBlockMetadata();
 	}
 	
 	public void onPlacedBy(EntityPlayer ep, ItemStack is)

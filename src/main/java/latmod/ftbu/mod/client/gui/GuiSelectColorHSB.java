@@ -219,9 +219,7 @@ public class GuiSelectColorHSB extends GuiLM
 				gui.updateColor();
 			}
 			
-			float br = gui.sliderBrightness.value;
-			GL11.glColor4f(br, br, br, 1F);
-			
+			GL11.glColor4f(1F, 1F, 1F, 1F);
 			gui.setTexture(tex_colors);
 			GuiLM.drawTexturedRectD(gui.guiLeft + posX, gui.guiTop + posY, gui.zLevel, width, height, 0D, 0D, 1D, 1D);
 			

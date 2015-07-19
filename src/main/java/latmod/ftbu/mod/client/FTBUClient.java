@@ -11,11 +11,11 @@ import latmod.ftbu.core.util.LatCore;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.client.minimap.*;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.EntityReddustFX;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -92,7 +92,7 @@ public class FTBUClient extends FTBUCommon
 	public boolean isShiftDown() { return GuiScreen.isShiftKeyDown(); }
 	public boolean isCtrlDown() { return GuiScreen.isCtrlKeyDown(); }
 	public boolean isTabDown() { return Keyboard.isKeyDown(Keyboard.KEY_TAB); }
-	public boolean inGameHasFocus() { return Minecraft.getMinecraft().inGameHasFocus; }
+	public boolean inGameHasFocus() { return LatCoreMCClient.getMinecraft().inGameHasFocus; }
 	
 	public EntityPlayer getClientPlayer()
 	{ return FMLClientHandler.instance().getClientPlayerEntity(); }
@@ -107,7 +107,12 @@ public class FTBUClient extends FTBUCommon
 	{ return LMWorldClient.inst; }
 	
 	public double getReachDist(EntityPlayer ep)
-	{ return Minecraft.getMinecraft().playerController.getBlockReachDistance(); }
+	{
+		if(ep == null) return 0D;
+		if(ep instanceof EntityPlayerMP) return super.getReachDist(ep);
+		PlayerControllerMP c = LatCoreMCClient.getMinecraft().playerController;
+		return (c == null) ? 0D : c.getBlockReachDistance();
+	}
 	
 	public static ResourceLocation getSkinTexture(String username)
 	{
@@ -128,7 +133,7 @@ public class FTBUClient extends FTBUCommon
 		
 		fx.setRBGColorF(red, green, blue);
 		fx.setAlphaF(alpha);
-		Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+		LatCoreMCClient.getMinecraft().effectRenderer.addEffect(fx);
 	}
 	
 	public static void onWorldJoined(LMPlayer p)
@@ -148,7 +153,7 @@ public class FTBUClient extends FTBUCommon
 			
 			if(g != null)
 			{
-				Minecraft.getMinecraft().displayGuiScreen(g);
+				LatCoreMCClient.getMinecraft().displayGuiScreen(g);
 				return true;
 			}
 		}

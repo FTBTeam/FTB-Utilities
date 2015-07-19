@@ -15,12 +15,14 @@ public class Minimap
 	public static final ClientConfig.Property renderIngame = new ClientConfig.Property("render_ingame", 0, "disabled", "right", "left");
 	public static final ClientConfig.Property renderPlayers = new ClientConfig.Property("render_players", true);
 	public static final ClientConfig.Property renderWaypoints = new ClientConfig.Property("render_waypoints", true);
+	public static final ClientConfig.Property calcHeight = new ClientConfig.Property("calc_height", true);
 	
 	public static void init()
 	{
 		//clientConfig.add(renderIngame);
 		clientConfig.add(renderPlayers);
 		clientConfig.add(renderWaypoints);
+		clientConfig.add(calcHeight);
 		ClientConfig.Registry.add(clientConfig);
 		get(0);
 	}
@@ -116,11 +118,13 @@ public class Minimap
 					int green = LatCore.Colors.getGreen(col);
 					int blue = LatCore.Colors.getBlue(col);
 					
-					int d = MathHelperLM.clampInt((by - 64) * 5, -60, 60);
-					
-					red = MathHelperLM.clampInt(red + d, 0, 255);
-					green = MathHelperLM.clampInt(green + d, 0, 255);
-					blue = MathHelperLM.clampInt(blue + d, 0, 255);
+					if(calcHeight.getB())
+					{
+						int d = MathHelperLM.clampInt((by - 64) * 5, -60, 60);
+						red = MathHelperLM.clampInt(red + d, 0, 255);
+						green = MathHelperLM.clampInt(green + d, 0, 255);
+						blue = MathHelperLM.clampInt(blue + d, 0, 255);
+					}
 					
 					return LatCore.Colors.getRGBA(red, green, blue, 255);
 				}

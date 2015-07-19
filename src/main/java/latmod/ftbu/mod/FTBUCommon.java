@@ -38,9 +38,9 @@ public class FTBUCommon extends LMProxy // FTBUClient
 	
 	public double getReachDist(EntityPlayer ep)
 	{
-		if(ep instanceof EntityPlayerMP)
+		if(ep != null && ep instanceof EntityPlayerMP)
 			return ((EntityPlayerMP)ep).theItemInWorldManager.getBlockReachDistance();
-		return 0F;
+		return 0D;
 	}
 	
 	public void spawnDust(World w, double x, double y, double z, int col) { }

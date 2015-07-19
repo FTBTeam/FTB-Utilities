@@ -1,9 +1,9 @@
 package latmod.ftbu.core.world;
 
-import latmod.ftbu.core.NBTHelper;
+import latmod.ftbu.core.LMNBTUtils;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.event.LMPlayerClientEvent;
-import latmod.ftbu.core.inv.InvUtils;
+import latmod.ftbu.core.inv.LMInvUtils;
 import latmod.ftbu.core.util.*;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -42,7 +42,7 @@ public class LMPlayerClient extends LMPlayer
 	
 	public void receiveInfo(NBTTagCompound tag)
 	{
-		NBTHelper.toStringList(clientInfo, tag.getTagList("I", NBTHelper.STRING));
+		LMNBTUtils.toStringList(clientInfo, tag.getTagList("I", LMNBTUtils.STRING));
 		
 		if(!isOnline() && tag.hasKey("L")) clientInfo.add("Last seen " + LatCore.getTimeAgo(tag.getLong("L")) + " ago");
 		if(tag.hasKey("J")) clientInfo.add("Joined " + LatCore.getTimeAgo(tag.getLong("J")) + " ago");
@@ -61,7 +61,7 @@ public class LMPlayerClient extends LMPlayer
 		friends.addAll(tag.getIntArray("F"));
 		
 		commonData = tag.getCompoundTag("CD");
-		InvUtils.readItemsFromNBT(lastArmor, tag, "LI");
+		LMInvUtils.readItemsFromNBT(lastArmor, tag, "LI");
 		deaths = tag.getInteger("D");
 	}
 	

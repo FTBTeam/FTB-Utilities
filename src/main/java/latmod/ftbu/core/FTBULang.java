@@ -1,6 +1,7 @@
 package latmod.ftbu.core;
 
 import latmod.ftbu.mod.FTBU;
+import net.minecraft.client.resources.I18n;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
@@ -33,6 +34,7 @@ public class FTBULang
 	// Other //
 	public static String client_config;
 	public static final String colors[] = new String[16];
+	public static String feature_disabled;
 	
 	public static void reload()
 	{
@@ -61,6 +63,7 @@ public class FTBULang
 		client_config = get("client_config");
 		for(int i = 0; i < 16; i++)
 			colors[i] = get("color." + EnumDyeColor.VALUES[i].name);
+		feature_disabled = I18n.format("commands.lmdisabled");
 	}
 	
 	private static String get(String s)

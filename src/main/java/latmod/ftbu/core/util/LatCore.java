@@ -5,6 +5,11 @@ import java.net.*;
 import java.nio.charset.Charset;
 import java.util.*;
 
+import latmod.ftbu.core.NBTSerializer;
+import latmod.ftbu.core.inv.LMInvUtils;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.*;
+
 import org.lwjgl.opengl.GL11;
 
 import com.google.gson.*;
@@ -52,6 +57,10 @@ public class LatCore
 		public static void setGLColor(int c)
 		{ setGLColor(c, getAlpha(c)); }
 		
+		@SideOnly(Side.CLIENT)
+		public static final void recolor()
+		{ GL11.glColor4f(1F, 1F, 1F, 1F); }
+		
 		public static int getHSB(float h, float s, float b)
 		{ return java.awt.Color.HSBtoRGB(h, s, b); }
 		
@@ -97,6 +106,25 @@ public class LatCore
 			else if(s.contains("linux") || s.contains("unix")) return LINUX;
 			return OTHER;
 		}
+	}
+	
+	public static final Gson gson = createGson();
+	
+	private static Gson createGson()
+	{
+		GsonBuilder gb = new GsonBuilder();
+		gb.excludeFieldsWithoutExposeAnnotation();
+		gb.setPrettyPrinting();
+		gb.registerTypeHierarchyAdapter(IChatComponent.class, new IChatComponent.Serializer());
+		gb.registerTypeHierarchyAdapter(ChatStyle.class, new ChatStyle.Serializer());
+		gb.registerTypeAdapterFactory(new EnumTypeAdapterFactory());
+		
+		NBTSerializer.init(gb);
+		gb.registerTypeHierarchyAdapter(IntList.class, new IntList.Serializer());
+		gb.registerTypeHierarchyAdapter(IntMap.class, new IntMap.Serializer());
+		gb.registerTypeHierarchyAdapter(ItemStack.class, new LMInvUtils.Serializer());
+		gb.registerTypeHierarchyAdapter(UUID.class, new UUIDSerializer());
+		return gb.create();
 	}
 	
 	@SuppressWarnings("all")
@@ -189,7 +217,6 @@ public class LatCore
 	public static <T> T fromJson(String s, Type t)
 	{
 		if(s == null || s.length() < 2) return null;
-		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		return gson.fromJson(s, t);
 	}
 	
@@ -200,16 +227,15 @@ public class LatCore
 		catch(Exception e) { e.printStackTrace(); return null; }
 	}
 	
-	public static String toJson(Object o, boolean asTree)
+	public static String toJson(Object o)
 	{
 		if(o == null) return null;
-		GsonBuilder gb = new GsonBuilder().excludeFieldsWithoutExposeAnnotation();
-		if(asTree) gb.setPrettyPrinting(); Gson gson = gb.create(); return gson.toJson(o);
+		return gson.toJson(o);
 	}
 	
 	public static boolean toJsonFile(File f, Object o)
 	{
-		String s = toJson(o, true);
+		String s = toJson(o);
 		if(s == null) return false;
 		
 		try

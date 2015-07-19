@@ -1,6 +1,6 @@
 package latmod.ftbu.core.tile;
 
-import latmod.ftbu.core.inv.InvUtils;
+import latmod.ftbu.core.inv.LMInvUtils;
 import latmod.ftbu.core.util.MathHelperLM;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -23,19 +23,19 @@ public class TileInvLM extends TileLM implements IInventory
 	public void readTileData(NBTTagCompound tag)
 	{
 		super.readTileData(tag);
-		InvUtils.readItemsFromNBT(items, tag, "Items");
+		LMInvUtils.readItemsFromNBT(items, tag, "Items");
 	}
 	
 	public void writeTileData(NBTTagCompound tag)
 	{
 		super.writeTileData(tag);
-		InvUtils.writeItemsToNBT(items, tag, "Items");
+		LMInvUtils.writeItemsToNBT(items, tag, "Items");
 	}
 	
 	public void onBroken()
 	{
 		if(isServer() && dropItems && items.length > 0)
-			InvUtils.dropAllItems(worldObj, xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, items);
+			LMInvUtils.dropAllItems(worldObj, xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, items);
 		
 		markDirty();
 		
@@ -53,7 +53,7 @@ public class TileInvLM extends TileLM implements IInventory
 	public void closeInventory() { }
 	
 	public ItemStack decrStackSize(int i, int j)
-	{ return InvUtils.decrStackSize(this, i, j); }
+	{ return LMInvUtils.decrStackSize(this, i, j); }
 	
 	public int getInventoryStackLimit()
 	{ return 64; }
@@ -65,7 +65,7 @@ public class TileInvLM extends TileLM implements IInventory
 	{ return items[i]; }
 	
 	public ItemStack getStackInSlotOnClosing(int i)
-	{ return InvUtils.getStackInSlotOnClosing(this, i); }
+	{ return LMInvUtils.getStackInSlotOnClosing(this, i); }
 	
 	public void setInventorySlotContents(int i, ItemStack is)
 	{ items[i] = is; }

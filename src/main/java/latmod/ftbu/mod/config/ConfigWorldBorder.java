@@ -1,7 +1,6 @@
 package latmod.ftbu.mod.config;
 
 import java.io.File;
-import java.util.*;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
@@ -15,7 +14,7 @@ public class ConfigWorldBorder
 	
 	@Expose public Boolean enabled;
 	@Expose public Integer radius;
-	@Expose public Map<Integer, Integer> custom;
+	@Expose public IntMap custom;
 	
 	public static void load()
 	{
@@ -32,12 +31,14 @@ public class ConfigWorldBorder
 		if(radius == null) radius = 10000;
 		radius = MathHelperLM.clampInt(radius, 20, 20000000);
 		
-		if(custom == null) custom = new HashMap<Integer, Integer>();
+		if(custom == null) custom = new IntMap();
+		custom.setDefVal(-1);
 	}
 	
 	public static void save()
 	{
 		if(FTBUConfig.world_border == null) load();
+		
 		if(!LatCore.toJsonFile(saveFile, FTBUConfig.world_border))
 			LatCoreMC.logger.warn(saveFile.getName() + " failed to save!");
 	}
@@ -54,6 +55,7 @@ public class ConfigWorldBorder
 	{
 		if(dim == 0) radius = rad;
 		else custom.put(dim, rad);
+		save();
 	}
 	
 	public int getWorldBorder(int dim)
@@ -65,9 +67,8 @@ public class ConfigWorldBorder
 	private int getWorldBorder0(int dim)
 	{
 		if(dim == 0) return radius;
-		
-		Integer r = custom.get(dim);
-		if(r != null) return r.intValue();
-		return (int)(radius * LMDimHelper.getWorldScale(LMDimHelper.getWorld(dim)));
+		int r = custom.get(dim);
+		if(r != -1) return r;
+		return (int)(radius * LMDimUtils.getWorldScale(LMDimUtils.getWorld(dim)));
 	}
 }

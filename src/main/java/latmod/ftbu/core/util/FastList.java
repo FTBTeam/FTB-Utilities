@@ -163,7 +163,7 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append('[');
+		sb.append("[ ");
 		
 		for(int i = 0; i < size; i++)
 		{
@@ -172,7 +172,7 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 				sb.append(", ");
 		}
 		
-		sb.append(']');
+		sb.append(" ]");
 		return sb.toString();
 	}
 	

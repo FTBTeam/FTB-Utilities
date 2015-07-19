@@ -45,13 +45,10 @@ public class FTBUTickHandler
 					if(Claims.isOutsideWorldBorderD(p.lastPos.dim, p.lastPos.x, p.lastPos.z))
 					{
 						LatCoreMC.printChat(ep, "Teleporting to spawn!");
-						LMDimHelper.teleportPlayer(ep, LatCoreMC.getEntitySpawnPoint(0));
+						FTBUEventHandler.instance.teleportToSpawn(ep);
 					}
-					else
-					{
-						LMDimHelper.teleportPlayer(ep, p.lastPos);
-						ep.worldObj.playSoundAtEntity(ep, "random.fizz", 1F, 1F);
-					}
+					else LMDimUtils.teleportPlayer(ep, p.lastPos);
+					ep.worldObj.playSoundAtEntity(ep, "random.fizz", 1F, 1F);
 				}
 				
 				p.lastPos.set(ep);

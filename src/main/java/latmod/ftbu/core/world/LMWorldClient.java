@@ -29,7 +29,7 @@ public class LMWorldClient extends LMWorld<LMPlayerClient>
 	{
 		players.clear();
 		
-		NBTTagList list = tag.getTagList("Players", NBTHelper.MAP);
+		NBTTagList list = tag.getTagList("Players", LMNBTUtils.MAP);
 		
 		for(int i = 0; i < list.tagCount(); i++)
 		{

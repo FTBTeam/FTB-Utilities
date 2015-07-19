@@ -1,11 +1,14 @@
 package latmod.ftbu.core.util;
 
+import java.lang.reflect.Type;
 import java.util.*;
+
+import com.google.gson.*;
 
 public class IntList implements Iterable<Integer>// Improve this // FastList
 {
 	private final int init;
-	private int defVal = 0;
+	private int defVal = -1;
 	private int array[];
 	private int size;
 	
@@ -120,16 +123,18 @@ public class IntList implements Iterable<Integer>// Improve this // FastList
 	
 	public String toString()
 	{
-		String s = "[ ";
+		StringBuilder sb = new StringBuilder();
+		sb.append("[ ");
 		
 		for(int i = 0; i < size; i++)
 		{
-			s += array[i];
+			sb.append(array[i]);
 			if(i != size - 1)
-				s += ", ";
+				sb.append(", ");
 		}
 		
-		return s + " ]";
+		sb.append(" ]");
+		return sb.toString();
 	}
 	
 	public Iterator<Integer> iterator()
@@ -155,5 +160,27 @@ public class IntList implements Iterable<Integer>// Improve this // FastList
 		
 		public Integer next()
 		{ return Integer.valueOf(values[++pos]); }
+	}
+	
+	public static class Serializer implements JsonDeserializer<IntList>, JsonSerializer<IntList>
+	{
+		public JsonElement serialize(IntList src, Type typeOfSrc, JsonSerializationContext context)
+		{
+			JsonArray o = new JsonArray();
+			for(int i = 0; i < src.size; i++)
+				o.add(new JsonPrimitive(src.array[i]));
+			return o;
+		}
+		
+		public IntList deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+		{
+			if(json.isJsonNull()) return null;
+			
+			IntList list = new IntList();
+			JsonArray o = json.getAsJsonArray();
+			for(int i = 0; i < o.size(); i++)
+				list.add(o.get(i).getAsInt());
+			return list;
+		}
 	}
 }

@@ -1,6 +1,6 @@
 package latmod.ftbu.core.inv;
 
-import latmod.ftbu.core.NBTHelper;
+import latmod.ftbu.core.LMNBTUtils;
 import latmod.ftbu.core.util.FastList;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -28,10 +28,10 @@ public class ItemDisplay
 		item.writeToNBT(tag1);
 		tag.setTag("I", tag1);
 		tag.setString("T", title);
-		tag.setTag("D", NBTHelper.fromStringList(desc));
+		tag.setTag("D", LMNBTUtils.fromStringList(desc));
 		tag.setFloat("S", scale);
 	}
 	
 	public static ItemDisplay readFromNBT(NBTTagCompound tag)
-	{ return new ItemDisplay(ItemStack.loadItemStackFromNBT(tag.getCompoundTag("I")), tag.getString("T"), NBTHelper.toStringList(tag.getTagList("D", NBTHelper.STRING)), tag.getFloat("S")); }
+	{ return new ItemDisplay(ItemStack.loadItemStackFromNBT(tag.getCompoundTag("I")), tag.getString("T"), LMNBTUtils.toStringList(tag.getTagList("D", LMNBTUtils.STRING)), tag.getFloat("S")); }
 }

@@ -2,7 +2,7 @@ package latmod.ftbu.core.world;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.event.LMPlayerServerEvent;
-import latmod.ftbu.core.inv.InvUtils;
+import latmod.ftbu.core.inv.LMInvUtils;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.claims.Claims;
@@ -105,7 +105,7 @@ public class LMPlayerServer extends LMPlayer
 		
 		FastList<String> info = new FastList<String>();
 		new LMPlayerServerEvent.CustomInfo(this, info).post();
-		tag.setTag("I", NBTHelper.fromStringList(info));
+		tag.setTag("I", LMNBTUtils.fromStringList(info));
 		
 		if(lastSeen > 0L) tag.setLong("L", ms - lastSeen);
 		if(firstJoined > 0L) tag.setLong("J", ms - firstJoined);
@@ -122,7 +122,7 @@ public class LMPlayerServer extends LMPlayer
 		
 		commonData = tag.getCompoundTag("CustomData");
 		
-		InvUtils.readItemsFromNBT(lastArmor, tag, "LastItems");
+		LMInvUtils.readItemsFromNBT(lastArmor, tag, "LastItems");
 		
 		deaths = tag.getInteger("Deaths");
 		
@@ -155,7 +155,7 @@ public class LMPlayerServer extends LMPlayer
 		
 		if(!commonData.hasNoTags()) tag.setTag("CustomData", commonData);
 		
-		InvUtils.writeItemsToNBT(lastArmor, tag, "LastItems");
+		LMInvUtils.writeItemsToNBT(lastArmor, tag, "LastItems");
 		
 		tag.setInteger("Deaths", deaths);
 		
@@ -191,7 +191,7 @@ public class LMPlayerServer extends LMPlayer
 			tag.setIntArray("F", friends.toArray());
 		
 		if(!commonData.hasNoTags()) tag.setTag("CD", commonData);
-		InvUtils.writeItemsToNBT(lastArmor, tag, "LI");
+		LMInvUtils.writeItemsToNBT(lastArmor, tag, "LI");
 		if(deaths > 0) tag.setInteger("D", deaths);
 	}
 	

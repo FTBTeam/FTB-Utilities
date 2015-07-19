@@ -142,7 +142,7 @@ public class FastMap<K, V> implements Iterable<V>
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append("Map { ");
+		sb.append("{ ");
 		
 		for(int i = 0; i < size(); i++)
 		{
@@ -165,4 +165,38 @@ public class FastMap<K, V> implements Iterable<V>
 		map.values.addAll(keys);
 		return map;
 	}
+	
+	/*public static class Serializer implements JsonDeserializer<FastMap>, JsonSerializer<FastMap>
+	{
+		public JsonElement serialize(FastMap src, Type typeOfSrc, JsonSerializationContext context)
+		{
+			com.google.gson.GsonBuilder
+			JsonObject o = new JsonObject();
+			for(int i = 0; i < src.size(); i++)
+				o.add(context.serialize(src.keys.get(i)), context.serialize(src.values.get(i)));
+			return o;
+		}
+		
+		public FastMap deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+		{
+			FastMap map = new IntMap();
+			JsonObject o = json.getAsJsonObject();
+			
+			for(Map.Entry<String, JsonElement> e : o.entrySet())
+			{
+				Integer i = MathHelperLM.decode(e.getKey());
+				if(i != null) map.put(i.intValue(), e.getValue().getAsInt());
+			}
+			
+			return map;
+		}
+	}
+	
+	public static class TypeSerializer implements TypeAdapterFactory
+	{
+		public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type)
+		{
+			return null;
+		}
+	}*/
 }

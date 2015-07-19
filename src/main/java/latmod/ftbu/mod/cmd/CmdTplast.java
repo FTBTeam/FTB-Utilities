@@ -34,7 +34,7 @@ public class CmdTplast extends CommandLM
 		
 		EntityPos p = to.getLastPos();
 		if(p == null) return "No last position!";
-		LMDimHelper.teleportPlayer(who, p);
+		LMDimUtils.teleportPlayer(who, p);
 		return FINE + "Teleported to " + to.getName() + "!";
 	}
 }

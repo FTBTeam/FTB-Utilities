@@ -115,11 +115,11 @@ public class RenderBlocksCustom extends RenderBlocks
 	public void updateColor()
 	{ Tessellator.instance.setColorOpaque_F(customColRed, customColGreen, customColBlue); }
 	
-	public void setRenderBounds(AxisAlignedBB aabb)
-	{ setRenderBounds(aabb, 0D); }
+	public void setRenderBounds(double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
+	{ super.setRenderBounds(Math.max(0D, minX), Math.max(0D, minY), Math.max(0D, minZ), Math.min(1D, maxX), Math.min(1D, maxY), Math.min(1D, maxZ)); }
 	
-	public void setRenderBounds(AxisAlignedBB aabb, double exp)
-	{ if(aabb != null) super.setRenderBounds(aabb.minX - exp, aabb.minY - exp, aabb.minZ - exp, aabb.maxX + exp, aabb.maxY + exp, aabb.maxZ + exp); }
+	public void setRenderBounds(AxisAlignedBB aabb)
+	{ if(aabb != null) super.setRenderBounds(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ); }
 	
 	public void setFaceBounds(int side, AxisAlignedBB aabb)
 	{ setFaceBounds(side, aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ); }
@@ -133,4 +133,10 @@ public class RenderBlocksCustom extends RenderBlocks
 		else if(side == 4) setRenderBounds(minX, minY, minZ, minX, maxY, maxZ);
 		else if(side == 5) setRenderBounds(maxX, minY, minZ, maxX, maxY, maxZ);
 	}
+	
+	public void expandBounds(double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
+	{ setRenderBounds(renderMinX - minX, renderMinY - minY, renderMinZ - minZ, renderMaxX + maxX, renderMaxY + maxY, renderMaxZ + maxZ); }
+	
+	public void expandBounds(double d)
+	{ if(d != 0D) expandBounds(d, d, d, d, d, d); }
 }

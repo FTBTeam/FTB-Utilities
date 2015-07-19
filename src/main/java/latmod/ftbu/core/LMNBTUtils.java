@@ -7,20 +7,20 @@ import net.minecraft.nbt.*;
 import net.minecraftforge.common.util.Constants;
 
 @SuppressWarnings("all")
-public class NBTHelper // NBTBase
+public class LMNBTUtils
 {
-	public static final int END = Constants.NBT.TAG_END;
-	public static final int BYTE = Constants.NBT.TAG_BYTE;
-	public static final int SHORT = Constants.NBT.TAG_SHORT;
-	public static final int INT = Constants.NBT.TAG_INT;
-	public static final int LONG = Constants.NBT.TAG_LONG;
-	public static final int FLOAT = Constants.NBT.TAG_FLOAT;
-	public static final int DOUBLE = Constants.NBT.TAG_DOUBLE;
-	public static final int BYTE_ARRAY = Constants.NBT.TAG_BYTE_ARRAY;
-	public static final int STRING = Constants.NBT.TAG_STRING;
-	public static final int LIST = Constants.NBT.TAG_LIST;
-	public static final int MAP = Constants.NBT.TAG_COMPOUND;
-	public static final int INT_ARRAY = Constants.NBT.TAG_INT_ARRAY;
+	public static final byte END = Constants.NBT.TAG_END;
+	public static final byte BYTE = Constants.NBT.TAG_BYTE;
+	public static final byte SHORT = Constants.NBT.TAG_SHORT;
+	public static final byte INT = Constants.NBT.TAG_INT;
+	public static final byte LONG = Constants.NBT.TAG_LONG;
+	public static final byte FLOAT = Constants.NBT.TAG_FLOAT;
+	public static final byte DOUBLE = Constants.NBT.TAG_DOUBLE;
+	public static final byte BYTE_ARRAY = Constants.NBT.TAG_BYTE_ARRAY;
+	public static final byte STRING = Constants.NBT.TAG_STRING;
+	public static final byte LIST = Constants.NBT.TAG_LIST;
+	public static final byte MAP = Constants.NBT.TAG_COMPOUND;
+	public static final byte INT_ARRAY = Constants.NBT.TAG_INT_ARRAY;
 	
 	public static FastList<String> getMapKeys(NBTTagCompound tag)
 	{
@@ -101,22 +101,5 @@ public class NBTHelper // NBTBase
 		for(int i = 0; i < l.size(); i++)
 			tag.appendTag(new NBTTagString(l.get(i)));
 		return tag;
-	}
-	
-	public static Vertex getVertex(NBTTagCompound tag, String s)
-	{
-		NBTTagList list = tag.getTagList(s, DOUBLE);
-		if(list.tagCount() != 3) return null;
-		return new Vertex(list.func_150309_d(0), list.func_150309_d(1), list.func_150309_d(2));
-	}
-	
-	public static void setVertex(NBTTagCompound tag, String s, Vertex v)
-	{
-		if(v == null) return;
-		NBTTagList list = new NBTTagList();
-		list.appendTag(new NBTTagDouble(v.x));
-		list.appendTag(new NBTTagDouble(v.y));
-		list.appendTag(new NBTTagDouble(v.z));
-		tag.setTag(s, list);
 	}
 }

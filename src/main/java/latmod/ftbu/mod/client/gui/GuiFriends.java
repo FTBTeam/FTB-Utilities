@@ -50,7 +50,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	
 	public GuiFriends(GuiScreen gui)
 	{
-		super(new ContainerEmpty.ClientGui(), texPlayers);
+		super(null, texPlayers);
 		parentScreen = gui;
 		hideNEI = true;
 		

@@ -40,7 +40,7 @@ public class FTBUClientEventHandler
 		
 		if(FTBUClient.addRegistryNames.getB())
 		{
-			e.toolTip.add(InvUtils.getRegName(e.itemStack));
+			e.toolTip.add(LMInvUtils.getRegName(e.itemStack));
 		}
 		
 		if(FTBUClient.addOreNames.getB())

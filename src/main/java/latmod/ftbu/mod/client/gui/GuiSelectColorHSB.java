@@ -38,7 +38,7 @@ public class GuiSelectColorHSB extends GuiLM
 	
 	public GuiSelectColorHSB(GuiSelectColor.ColorSelectorCallback cb, int col, int id, boolean instant)
 	{
-		super(new ContainerEmpty.ClientGui(), tex);
+		super(null, tex);
 		hideNEI = true;
 		callback = cb;
 		currentColor = initCol = LatCore.Colors.getRGBA(col, 255);

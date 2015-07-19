@@ -36,28 +36,6 @@ public class LMRenderHelper
 		RenderItem.renderInFrame = false;
 	}
 	
-	public static final void colorize(int c, int a)
-	{
-		float r = ((c >> 16) & 255) / 255F;
-		float g = ((c >> 8) & 255) / 255F;
-		float b = ((c >> 0) & 255) / 255F;
-		GL11.glColor4f(r, g, b, a / 255F);
-	}
-	
-	public static final void colorize(int c)
-	{ colorize(c, (c >> 24) & 255); }
-	
-	public static final int getColor(int c, int a)
-	{
-		int r = (c >> 16) & 255;
-		int g = (c >> 8) & 255;
-		int b = (c >> 0) & 255;
-		return (a << 24) | (r << 16) | (g << 8) | b;
-	}
-	
-	public static final void recolor()
-	{ GL11.glColor4f(1F, 1F, 1F, 1F); }
-	
 	public static void enableTexture()
 	{ GL11.glEnable(GL11.GL_TEXTURE_2D); }
 	

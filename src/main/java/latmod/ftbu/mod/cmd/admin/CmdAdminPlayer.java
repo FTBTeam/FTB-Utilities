@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.cmd.*;
-import latmod.ftbu.core.inv.InvUtils;
+import latmod.ftbu.core.inv.LMInvUtils;
 import latmod.ftbu.core.util.LMFileUtils;
 import latmod.ftbu.core.world.*;
 import net.minecraft.command.ICommandSender;
@@ -85,7 +85,7 @@ public class CmdAdminPlayer extends SubCommand
 				
 				String filename = ep.getCommandSenderName();
 				if(args.length == 3) filename = "custom/" + args[2];
-				NBTHelper.writeMap(new FileOutputStream(LMFileUtils.newFile(new File(LatCoreMC.latmodFolder, "playerinvs/" + filename + ".dat"))), tag);
+				LMNBTUtils.writeMap(new FileOutputStream(LMFileUtils.newFile(new File(LatCoreMC.latmodFolder, "playerinvs/" + filename + ".dat"))), tag);
 			}
 			catch(Exception e)
 			{
@@ -104,7 +104,7 @@ public class CmdAdminPlayer extends SubCommand
 				EntityPlayerMP ep = p.getPlayerMP();
 				String filename = ep.getCommandSenderName();
 				if(args.length == 3) filename = "custom/" + args[2];
-				NBTTagCompound tag = NBTHelper.readMap(new FileInputStream(new File(LatCoreMC.latmodFolder, "playerinvs/" + filename + ".dat")));
+				NBTTagCompound tag = LMNBTUtils.readMap(new FileInputStream(new File(LatCoreMC.latmodFolder, "playerinvs/" + filename + ".dat")));
 				
 				readItemsFromNBT(ep.inventory, tag, "Inventory");
 				
@@ -179,7 +179,7 @@ public class CmdAdminPlayer extends SubCommand
 			{
 				NBTTagCompound tag1 = new NBTTagCompound();
 				tag1.setShort("S", (short)i);
-				tag1.setString("ID", InvUtils.getRegName(is.getItem()));
+				tag1.setString("ID", LMInvUtils.getRegName(is.getItem()));
 		        tag1.setByte("C", (byte)is.stackSize);
 		        tag1.setShort("D", (short)is.getItemDamage());
 		        if (is.stackTagCompound != null) tag1.setTag("T", is.stackTagCompound);
@@ -198,12 +198,12 @@ public class CmdAdminPlayer extends SubCommand
 		
 		if(tag.hasKey(s))
 		{
-			NBTTagList list = tag.getTagList(s, NBTHelper.MAP);
+			NBTTagList list = tag.getTagList(s, LMNBTUtils.MAP);
 			
 			for(int i = 0; i < list.tagCount(); i++)
 			{
 				NBTTagCompound tag1 = list.getCompoundTagAt(i);
-				Item item = InvUtils.getItemFromRegName(tag1.getString("ID"));
+				Item item = LMInvUtils.getItemFromRegName(tag1.getString("ID"));
 		        
 		        if(item != null)
 		        {

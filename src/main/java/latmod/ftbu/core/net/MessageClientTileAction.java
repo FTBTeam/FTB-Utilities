@@ -1,7 +1,7 @@
 package latmod.ftbu.core.net;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.tile.*;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.common.network.simpleimpl.*;
@@ -43,7 +43,7 @@ public class MessageClientTileAction extends MessageLM<MessageClientTileAction>
 	
 	public IMessage onMessage(MessageClientTileAction m, MessageContext ctx)
 	{
-		EntityPlayer ep = ctx.getServerHandler().playerEntity;
+		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
 		TileEntity te = ep.worldObj.getTileEntity(m.x, m.y, m.z);
 		
 		if(te instanceof IClientActionTile)

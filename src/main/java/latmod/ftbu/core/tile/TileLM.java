@@ -5,7 +5,7 @@ import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.LatCore;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.*;
@@ -221,7 +221,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 		sendClientAction(ACTION_CUSTOM_NAME, data);
 	}
 	
-	public void onClientAction(EntityPlayer ep, String action, NBTTagCompound data)
+	public void onClientAction(EntityPlayerMP ep, String action, NBTTagCompound data)
 	{
 		if(action.equals(ACTION_BUTTON_PRESSED))
 		{
@@ -238,10 +238,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 		}
 	}
 	
-	public final void handleButton(String button, int mouseButton, EntityPlayer ep)
-	{ handleButton(button, mouseButton, new NBTTagCompound(), ep); }
-	
-	public void handleButton(String button, int mouseButton, NBTTagCompound data, EntityPlayer ep)
+	public void handleButton(String button, int mouseButton, NBTTagCompound data, EntityPlayerMP ep)
 	{
 	}
 	

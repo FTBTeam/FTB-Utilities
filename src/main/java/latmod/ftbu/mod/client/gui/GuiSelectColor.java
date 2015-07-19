@@ -60,7 +60,7 @@ public class GuiSelectColor extends GuiLM
 	
 	public GuiSelectColor(ColorSelectorCallback cb, int col, int id, boolean instant)
 	{
-		super(new ContainerEmpty.ClientGui(), tex);
+		super(null, tex);
 		hideNEI = true;
 		callback = cb;
 		initCol = LatCore.Colors.getRGBA(col, 255);

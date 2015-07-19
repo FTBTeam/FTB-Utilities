@@ -3,6 +3,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 
 import org.lwjgl.opengl.*;
@@ -29,6 +30,8 @@ public abstract class ItemButtonLM extends ButtonLM
 	{
 		if(item != null)
 		{
+			gui.setTexture(TextureMap.locationItemsTexture);
+			
 			GL11.glPushMatrix();
 			GL11.glTranslatef(0F, 0F, 32F);
 			GL11.glEnable(GL11.GL_LIGHTING);

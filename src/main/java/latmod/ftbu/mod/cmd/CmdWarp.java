@@ -23,7 +23,7 @@ public class CmdWarp extends CommandLM
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		EntityPos p = LMWorldServer.inst.getWarp(args[0]);
 		if(p == null) return "Warp '" + args[0] + "' not set!";
-		LMDimHelper.teleportPlayer(ep, p);
+		LMDimUtils.teleportPlayer(ep, p);
 		return FINE + "Teleported to '" + args[0] + "'";
 	}
 }

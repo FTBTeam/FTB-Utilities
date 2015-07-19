@@ -27,7 +27,7 @@ public class Claims
 		chunks.clear();
 		
 		NBTTagCompound tag = serverData.getCompoundTag("Claims");
-		NBTTagList list = tag.getTagList("Chunks", NBTHelper.INT_ARRAY);
+		NBTTagList list = tag.getTagList("Chunks", LMNBTUtils.INT_ARRAY);
 		
 		if(list != null) for(int i = 0; i < list.tagCount(); i++)
 		{
@@ -123,7 +123,7 @@ public class Claims
 		if(dim != 0) return false;
 		int radius = LatCoreMC.getServer().getSpawnProtectionSize();
 		if(radius <= 0) return false;
-		ChunkCoordinates c = LatCoreMC.getSpawnPoint(0);
+		ChunkCoordinates c = LMDimUtils.getSpawnPoint(0);
 		int minX = MathHelperLM.chunk(c.posX + 0.5D - radius);
 		int minZ = MathHelperLM.chunk(c.posZ + 0.5D - radius);
 		int maxX = MathHelperLM.chunk(c.posX + 0.5D + radius);

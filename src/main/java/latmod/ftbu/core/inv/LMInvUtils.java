@@ -1,7 +1,8 @@
 package latmod.ftbu.core.inv;
+import java.lang.reflect.Type;
 import java.util.*;
 
-import latmod.ftbu.core.NBTHelper;
+import latmod.ftbu.core.LMNBTUtils;
 import latmod.ftbu.core.item.Tool;
 import latmod.ftbu.core.util.FastMap;
 import net.minecraft.block.Block;
@@ -17,9 +18,37 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
 
+import com.google.gson.*;
+
 /** Made by LatvianModder */
-public class InvUtils
+public class LMInvUtils
 {
+	public static class Serializer implements JsonDeserializer<ItemStack>, JsonSerializer<ItemStack>
+	{
+		public JsonElement serialize(ItemStack is, Type typeOfSrc, JsonSerializationContext context)
+		{
+			JsonObject o = new JsonObject();
+			o.add("id", new JsonPrimitive(getRegName(is)));
+			if(is.stackSize != 1) o.add("size", new JsonPrimitive(is.stackSize));
+			if(is.getItemDamage() != 0 || is.getItem().getHasSubtypes()) o.add("dmg", new JsonPrimitive(is.getItemDamage()));
+			if(is.hasTagCompound()) o.add("data", context.serialize(is.getTagCompound()));
+			return o;
+		}
+		
+		public ItemStack deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+		{
+			if(json.isJsonNull()) return null;
+			
+			JsonObject o = json.getAsJsonObject();
+			if(!o.has("id")) return null;
+			Item i = getItemFromRegName(o.get("id").getAsString());
+			if(i == null) return null;
+			ItemStack is = new ItemStack(i, o.has("size") ? o.get("size").getAsInt() : 1, o.has("dmg") ? o.get("dmg").getAsInt() : 1);
+			if(o.has("data")) is.setTagCompound(context.deserialize(o.get("data"), NBTTagCompound.class));
+			return is;
+		}
+	}
+	
 	public static ItemStack singleCopy(ItemStack is)
 	{
 		if(is == null || is.stackSize <= 0) return null;
@@ -167,7 +196,7 @@ public class InvUtils
 		for(int i = 0; i < slots.length; i++)
 		{
 			ItemStack is1 = inv.getStackInSlot(slots[i]);
-			if(is1 != null && is1.stackSize > 0 && InvUtils.itemsEquals(is, is1, false, true))
+			if(is1 != null && is1.stackSize > 0 && LMInvUtils.itemsEquals(is, is1, false, true))
 			{
 				if(is1.stackSize + 1 <= is1.getMaxStackSize())
 				{
@@ -244,7 +273,7 @@ public class InvUtils
 		
 		if(tag.hasKey(s))
 		{
-			NBTTagList list = tag.getTagList(s, NBTHelper.MAP);
+			NBTTagList list = tag.getTagList(s, LMNBTUtils.MAP);
 			
 			for(int i = 0; i < list.tagCount(); i++)
 			{
@@ -318,7 +347,7 @@ public class InvUtils
 		int size = is.stackSize;
 		for(int i = 0; i < size; i++)
 		{
-			if(InvUtils.addSingleItemToInv(is, ep.inventory, InvUtils.getPlayerSlots(ep), -1, true))
+			if(LMInvUtils.addSingleItemToInv(is, ep.inventory, LMInvUtils.getPlayerSlots(ep), -1, true))
 			{ is.stackSize--; changed = true; }
 		}
 		
@@ -354,7 +383,7 @@ public class InvUtils
 	public static ItemStack[] getAllItems(IInventory inv, int side)
 	{
 		if(inv == null) return null;
-		int[] slots = InvUtils.getAllSlots(inv, side);
+		int[] slots = LMInvUtils.getAllSlots(inv, side);
 		ItemStack[] ai = new ItemStack[slots.length];
 		if(ai.length == 0) return ai;
 		for(int i = 0; i < ai.length; i++)

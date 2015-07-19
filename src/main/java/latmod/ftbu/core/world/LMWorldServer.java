@@ -31,7 +31,7 @@ public class LMWorldServer extends LMWorld<LMPlayerServer>
 		
 		if(tagWarps != null && !tagWarps.hasNoTags())
 		{
-			FastList<String> l = NBTHelper.getMapKeys(tagWarps);
+			FastList<String> l = LMNBTUtils.getMapKeys(tagWarps);
 			
 			for(int i = 0; i < l.size(); i++)
 			{
@@ -91,7 +91,7 @@ public class LMWorldServer extends LMWorld<LMPlayerServer>
 	{
 		players.clear();
 		
-		FastMap<String, NBTTagCompound> map = NBTHelper.toFastMapWithType(tag);
+		FastMap<String, NBTTagCompound> map = LMNBTUtils.toFastMapWithType(tag);
 		
 		for(int i = 0; i < map.size(); i++)
 		{

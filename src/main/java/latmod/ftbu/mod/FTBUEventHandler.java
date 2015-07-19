@@ -4,7 +4,7 @@ import java.util.*;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.event.*;
-import latmod.ftbu.core.inv.InvUtils;
+import latmod.ftbu.core.inv.LMInvUtils;
 import latmod.ftbu.core.item.ICreativeSafeItem;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.ISecureTile;
@@ -67,7 +67,7 @@ public class FTBUEventHandler // FTBUTickHandler
 		{
 			FastList<ItemStack> items = FTBUConfig.login.getStartingItems(ep.getUniqueID());
 			if(items != null && !items.isEmpty()) for(ItemStack is : items)
-				InvUtils.giveItem(ep, is);
+				LMInvUtils.giveItem(ep, is);
 		}
 		
 		/*p.sendInfo(null);
@@ -78,6 +78,8 @@ public class FTBUEventHandler // FTBUTickHandler
 		LMNetHelper.sendTo(ep, p.getInfo());
 		CmdMotd.printMotd(ep);
 		Backups.shouldRun = true;
+		
+		if(first) teleportToSpawn(ep);
 	}
 	
 	@SubscribeEvent
@@ -102,6 +104,16 @@ public class FTBUEventHandler // FTBUTickHandler
 	}
 	
 	@SubscribeEvent
+	public void playerRespawned(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent e)
+	{ if(e.player instanceof EntityPlayerMP) teleportToSpawn((EntityPlayerMP)e.player); }
+	
+	public void teleportToSpawn(EntityPlayerMP ep)
+	{
+		if(ep.worldObj.provider.dimensionId != 0) return;
+		LMDimUtils.teleportPlayer(ep, LMDimUtils.getPlayerEntitySpawnPoint(ep, 0));
+	}
+	
+	@SubscribeEvent
 	public void worldLoaded(net.minecraftforge.event.world.WorldEvent.Load e)
 	{
 		if(LatCoreMC.isServer() && e.world.provider.dimensionId == 0)
@@ -111,7 +123,7 @@ public class FTBUEventHandler // FTBUTickHandler
 			LoadLMDataEvent e1 = new LoadLMDataEvent(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/"), EventLM.Phase.PRE);
 			
 			{
-				NBTTagCompound tag = NBTHelper.readMap(e1.getFile("LMWorld.dat"));
+				NBTTagCompound tag = LMNBTUtils.readMap(e1.getFile("LMWorld.dat"));
 				if(tag == null) tag = new NBTTagCompound();
 				LMWorldServer.inst = new LMWorldServer(tag.hasKey("UUID") ? LatCoreMC.getUUIDFromString(tag.getString("UUID")) : UUID.randomUUID());
 				LMWorldServer.inst.load(tag);
@@ -120,7 +132,7 @@ public class FTBUEventHandler // FTBUTickHandler
 			e1.post();
 			
 			{
-				NBTTagCompound tag = NBTHelper.readMap(e1.getFile("LMPlayers.dat"));
+				NBTTagCompound tag = LMNBTUtils.readMap(e1.getFile("LMPlayers.dat"));
 				if(tag != null && tag.hasKey("Players"))
 				{
 					LMPlayerServer.lastPlayerID = tag.getInteger("LastID");
@@ -149,7 +161,7 @@ public class FTBUEventHandler // FTBUTickHandler
 				NBTTagCompound tag = new NBTTagCompound();
 				LMWorldServer.inst.save(tag);
 				tag.setString("UUID", LMWorldServer.inst.worldIDS);
-				NBTHelper.writeMap(e1.getFile("LMWorld.dat"), tag);
+				LMNBTUtils.writeMap(e1.getFile("LMWorld.dat"), tag);
 			}
 			
 			{
@@ -158,7 +170,7 @@ public class FTBUEventHandler // FTBUTickHandler
 				LMWorldServer.inst.writePlayersToServer(players);
 				tag.setTag("Players", players);
 				tag.setInteger("LastID", LMPlayerServer.lastPlayerID);
-				NBTHelper.writeMap(e1.getFile("LMPlayers.dat"), tag);
+				LMNBTUtils.writeMap(e1.getFile("LMPlayers.dat"), tag);
 			}
 			
 			// Export player list //

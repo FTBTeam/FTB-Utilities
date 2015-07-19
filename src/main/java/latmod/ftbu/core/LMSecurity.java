@@ -2,7 +2,9 @@ package latmod.ftbu.core;
 
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
 import cpw.mods.fml.relauncher.*;
@@ -36,7 +38,7 @@ public class LMSecurity
 		
 		NBTTagCompound tag1 = tag.getCompoundTag(s);
 		
-		if(tag1.func_150299_b("Owner") == NBTHelper.STRING)
+		if(tag1.func_150299_b("Owner") == LMNBTUtils.STRING)
 		{
 			String o = tag1.getString("Owner");
 			
@@ -73,8 +75,9 @@ public class LMSecurity
 		if(level == Level.PUBLIC || getOwner() == null) return true;
 		if(player == null) return false;
 		if(isOwner(player)) return true;
+		if(player instanceof EntityPlayer && FTBUConfig.general.allowInteractSecure((EntityPlayer)player))
+			return true;
 		if(level == Level.PRIVATE) return false;
-		
 		LMPlayer owner = getOwner();
 		if(level == Level.FRIENDS && owner.isFriend(LMWorld.getWorld().getPlayer(player)))
 			return true;

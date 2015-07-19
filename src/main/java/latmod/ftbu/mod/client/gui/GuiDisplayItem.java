@@ -24,7 +24,7 @@ public class GuiDisplayItem extends GuiLM
 	
 	public GuiDisplayItem(ItemDisplay i)
 	{
-		super(new ContainerEmpty.ClientGui(), texture);
+		super(null, texture);
 		xSize = 144;
 		ySize = 182;
 		itemDisplay = i;

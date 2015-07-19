@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
-import latmod.ftbu.core.inv.InvUtils;
+import latmod.ftbu.core.inv.LMInvUtils;
 import latmod.ftbu.core.util.*;
 import net.minecraft.item.ItemStack;
 
@@ -40,7 +40,7 @@ public class ConfigLogin
 		startingItemsList.clear();
 		for(String s : startingItems)
 		{
-			ItemStack is = InvUtils.parseItem(s);
+			ItemStack is = LMInvUtils.parseItem(s);
 			if(is != null && is.stackSize > 0)
 				startingItemsList.add(is);
 		}

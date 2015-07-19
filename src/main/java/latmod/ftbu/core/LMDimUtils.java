@@ -3,10 +3,11 @@ package latmod.ftbu.core;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.*;
 import net.minecraftforge.common.DimensionManager;
 
-public class LMDimHelper
+public class LMDimUtils
 {
 	public static boolean teleportPlayer(EntityPlayerMP ep, EntityPos pos)
 	{ return teleportPlayer(ep, pos.x, pos.y, pos.z, pos.dim); }
@@ -60,4 +61,38 @@ public class LMDimHelper
 	
 	public static double getWorldScale(World w)
 	{ return 1D / getMovementFactor(w); }
+	
+	public static ChunkCoordinates getSpawnPoint(int dim)
+	{
+		WorldServer w = DimensionManager.getWorld(dim);
+		if(w == null) return null;
+		return w.getSpawnPoint();
+	}
+	
+	public static EntityPos getEntitySpawnPoint(int dim)
+	{
+		ChunkCoordinates c = getSpawnPoint(dim);
+		EntityPos p = new EntityPos();
+		p.x = c.posX + 0.5D;
+		p.y = c.posY + 0.5D;
+		p.z = c.posZ + 0.5D;
+		p.dim = dim;
+		return p;
+	}
+	
+	public static ChunkCoordinates getPlayerSpawnPoint(EntityPlayerMP ep, int dim)
+	{
+		return getSpawnPoint(dim);
+	}
+	
+	public static EntityPos getPlayerEntitySpawnPoint(EntityPlayerMP ep, int dim)
+	{
+		ChunkCoordinates c = getPlayerSpawnPoint(ep, dim);
+		EntityPos p = new EntityPos();
+		p.x = c.posX + 0.5D;
+		p.y = c.posY + 0.5D;
+		p.z = c.posZ + 0.5D;
+		p.dim = dim;
+		return p;
+	}
 }

@@ -2,8 +2,8 @@ package latmod.ftbu.core.gui;
 import java.util.List;
 
 import latmod.ftbu.core.OtherMods;
-import latmod.ftbu.core.client.*;
-import latmod.ftbu.core.util.FastList;
+import latmod.ftbu.core.client.LatCoreMCClient;
+import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
 import net.minecraft.client.Minecraft;
@@ -117,11 +117,11 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	public GuiLM(ContainerLM c, ResourceLocation tex)
 	{
-		super((c == null) ? new ContainerEmpty.ClientGui() : c);
+		super((c == null) ? new ContainerEmpty(LatCoreMCClient.getMinecraft().thePlayer, null) : c);
 		mc = LatCoreMCClient.getMinecraft();
 		refreshWidgets();
 		
-		container = (c == null) ? null : (ContainerLM)inventorySlots;
+		container = (ContainerLM)inventorySlots;
 		texture = tex;
 		widgets = new FastList<WidgetLM>();
 	}
@@ -190,7 +190,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	{
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
-		LMRenderHelper.recolor();
+		LatCore.Colors.recolor();
 		setTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 	}

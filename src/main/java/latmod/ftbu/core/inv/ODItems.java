@@ -95,7 +95,7 @@ public class ODItems
 		hasFMP |= addOreName("ForgeMicroblock:sawIron", ANY, TOOL_SAW);
 		hasFMP |= addOreName("ForgeMicroblock:sawDiamond", ANY, TOOL_SAW);
 		
-		Item wrench = InvUtils.getItemFromRegName("ThermalExpansion:wrench");
+		Item wrench = LMInvUtils.getItemFromRegName("ThermalExpansion:wrench");
 		if(wrench != null) wrench.setHarvestLevel("wrench", 0);
 	}
 	
@@ -104,14 +104,14 @@ public class ODItems
 	
 	private static boolean addOreName(String item, int damage, String name)
 	{
-		Item i = InvUtils.getItemFromRegName(item);
+		Item i = LMInvUtils.getItemFromRegName(item);
 		if(i != null) add(name, new ItemStack(i, 1, damage));
 		return i != null;
 	}
 	
 	public static ItemStack add(String name, ItemStack is)
 	{
-		ItemStack is1 = InvUtils.singleCopy(is);
+		ItemStack is1 = LMInvUtils.singleCopy(is);
 		if(!getOres(name).contains(is1))
 		OreDictionary.registerOre(name, is1);
 		return is1;

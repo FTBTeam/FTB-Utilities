@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.client.RenderBlocksCustom;
-import latmod.ftbu.core.inv.InvUtils;
+import latmod.ftbu.core.inv.LMInvUtils;
 import latmod.ftbu.core.util.MathHelperLM;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -50,7 +50,7 @@ public interface IPaintable
 			if(l != null)
 			for(int i = 0; i < l.tagCount(); i++)
 			{
-				if(l.func_150303_d() == NBTHelper.MAP)
+				if(l.func_150303_d() == LMNBTUtils.MAP)
 				{
 					NBTTagCompound tag1 = l.getCompoundTagAt(i);
 					int id = tag1.getByte("ID");
@@ -159,7 +159,7 @@ public interface IPaintable
 		{
 			if(!w.isRemote && ep.isSneaking() && is.hasTagCompound() && is.stackTagCompound.hasKey("Paint"))
 			{
-				is = InvUtils.removeTags(is, "Paint");
+				is = LMInvUtils.removeTags(is, "Paint");
 				LatCoreMC.printChat(ep, "Paint texture cleared");
 			}
 			

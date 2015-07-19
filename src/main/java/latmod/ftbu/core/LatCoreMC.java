@@ -18,7 +18,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.*;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.*;
 
@@ -154,24 +154,6 @@ public final class LatCoreMC // LatCoreMCClient
 	{
 		if(id == null || !hasOnlinePlayers()) return null;
 		return getAllOnlinePlayers().get(id);
-	}
-	
-	public static ChunkCoordinates getSpawnPoint(int dim)
-	{
-		WorldServer w = DimensionManager.getWorld(dim);
-		if(w == null) return null;
-		return w.getSpawnPoint();
-	}
-	
-	public static EntityPos getEntitySpawnPoint(int dim)
-	{
-		ChunkCoordinates c = getSpawnPoint(dim);
-		EntityPos p = new EntityPos();
-		p.x = c.posX + 0.5D;
-		p.y = c.posY + 0.5D;
-		p.z = c.posZ + 0.5D;
-		p.dim = dim;
-		return p;
 	}
 	
 	public static boolean remap(MissingMapping m, String id, Item i)

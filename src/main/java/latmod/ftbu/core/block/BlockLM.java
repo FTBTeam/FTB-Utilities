@@ -80,6 +80,8 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 
 	public void onBlockPlacedBy(World w, int x, int y, int z, EntityLivingBase el, ItemStack is)
 	{
+		super.onBlockPlacedBy(w, x, y, z, el, is);
+		
 		if(isBlockContainer && el instanceof EntityPlayer)
 		{
 			TileLM tile = (TileLM) w.getTileEntity(x, y, z);
@@ -163,6 +165,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 			TileLM t = (TileLM) w.getTileEntity(x, y, z);
 			if(t != null) return t.receiveClientEvent(eventID, param);
 		}
+		
 		return false;
 	}
 

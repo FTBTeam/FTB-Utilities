@@ -39,6 +39,7 @@ public class FTBUConfig implements IServerConfig // FTBU
 	
 	public void readConfig(NBTTagCompound tag)
 	{
+		general.allowCreativeInteractSecure = tag.getBoolean("CS");
 		login.customBadges = tag.getString("CB");
 		
 		world_border.enabled = tag.getBoolean("WB");
@@ -46,19 +47,13 @@ public class FTBUConfig implements IServerConfig // FTBU
 		if(world_border.enabled)
 		{
 			world_border.radius = tag.getInteger("WB_R");
-			world_border.custom.clear();
-			
-			int[] l = tag.getIntArray("WB_C");
-			if(l.length >= 2)
-			{
-				for(int i = 0; i < l.length / 2; i++)
-					world_border.custom.put(l[i * 2 + 0], l[i * 2 + 1]);
-			}
+			world_border.custom.fromIntArray(tag.getIntArray("WB_C"));
 		}
 	}
 	
 	public void writeConfig(NBTTagCompound tag, EntityPlayerMP ep)
 	{
+		tag.setBoolean("CS", general.allowCreativeInteractSecure);
 		if(!login.customBadges.isEmpty())
 			tag.setString("CB", login.customBadges);
 		
@@ -66,19 +61,7 @@ public class FTBUConfig implements IServerConfig // FTBU
 		{
 			tag.setBoolean("WB", true);
 			tag.setInteger("WB_R", world_border.radius);
-			
-			int[] ai = new int[world_border.custom.size() * 2];
-			
-			if(ai.length > 0)
-			{
-				int i = -1;
-				
-				for(Integer k : world_border.custom.keySet())
-				{
-					ai[++i] = k.intValue();
-					ai[++i] = world_border.custom.get(k);
-				}
-			}
+			if(!world_border.custom.isEmpty()) tag.setIntArray("WB_C", world_border.custom.toIntArray());
 		}
 	}
 	

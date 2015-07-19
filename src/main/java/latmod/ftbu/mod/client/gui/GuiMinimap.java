@@ -63,7 +63,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 	
 	public GuiMinimap()
 	{
-		super(new ContainerEmpty.ClientGui(), tex);
+		super(null, tex);
 		xSize = 156;
 		ySize = 185;
 		hideNEI = true;

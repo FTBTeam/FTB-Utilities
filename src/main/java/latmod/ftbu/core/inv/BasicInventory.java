@@ -18,10 +18,10 @@ public class BasicInventory implements IInventory
 	{ return items[i]; }
 	
 	public ItemStack decrStackSize(int slot, int amt)
-	{ return InvUtils.decrStackSize(this, slot, amt); }
+	{ return LMInvUtils.decrStackSize(this, slot, amt); }
 	
 	public ItemStack getStackInSlotOnClosing(int i)
-	{ return InvUtils.getStackInSlotOnClosing(this, i); }
+	{ return LMInvUtils.getStackInSlotOnClosing(this, i); }
 	
 	public void setInventorySlotContents(int i, ItemStack is)
 	{ items[i] = is; markDirty(); }

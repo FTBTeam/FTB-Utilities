@@ -32,7 +32,7 @@ public class GuiWaypoints extends GuiLM
 	
 	public GuiWaypoints()
 	{
-		super(new ContainerEmpty.ClientGui(), tex);
+		super(null, tex);
 		xSize = 124;
 		ySize = 114;
 		hideNEI = true;
@@ -233,7 +233,7 @@ public class GuiWaypoints extends GuiLM
 		
 		public GuiEditWaypoint(GuiWaypoints g, Waypoint w)
 		{
-			super(new ContainerEmpty.ClientGui(), tex_edit);
+			super(null, tex_edit);
 			parent = g;
 			newWaypoint = w == null;
 			waypoint = newWaypoint ? new Waypoint() : w;

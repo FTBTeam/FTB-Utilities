@@ -5,7 +5,7 @@ import latmod.ftbu.core.*;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
 import latmod.ftbu.core.inv.ODItems;
 import latmod.ftbu.core.net.LMNetHelper;
-import latmod.ftbu.core.util.*;
+import latmod.ftbu.core.util.LatCore;
 import latmod.ftbu.core.world.LMWorldServer;
 import latmod.ftbu.mod.backups.Backups;
 import latmod.ftbu.mod.cmd.*;
@@ -53,10 +53,6 @@ public class FTBU
 			LatCoreMC.logger.info("Loading FTBUtilities, Build #" + FTBUFinals.VERSION);
 		
 		LatCoreMC.logger.info("OS: " + LatCore.OS.get());
-		searchMod("mcp.mobius.waila.Waila");
-		searchMod("latmod.latblocks.LatBlocks");
-		searchMod("net.minecraftforge.common.MinecraftForge");
-		searchMod("com.bluepowermod.BluePower");
 		
 		modMeta = e.getModMetadata();
 		
@@ -75,21 +71,6 @@ public class FTBU
 		
 		mod.onPostLoaded();
 		proxy.preInit();
-	}
-	
-	private void searchMod(String c)
-	{
-		try
-		{
-			Class<?> clazz = Class.forName(c);
-			if(clazz != null)
-			{
-				File f = LMFileUtils.getSourceDirectory(clazz);
-				if(f.exists()) LatCoreMC.logger.info("Found mod " + c + " in " + f.getPath());
-			}
-		}
-		catch(Exception e)
-		{ e.printStackTrace(); }
 	}
 	
 	@Mod.EventHandler

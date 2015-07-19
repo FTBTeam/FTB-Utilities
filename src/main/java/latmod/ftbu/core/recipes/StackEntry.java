@@ -78,7 +78,7 @@ public class StackEntry implements IStackArray
 	public static StackEntry[] convertInv(IInventory inv, int side)
 	{
 		if(inv == null) return null;
-		return convert(InvUtils.getAllItems(inv, side));
+		return convert(LMInvUtils.getAllItems(inv, side));
 	}
 	
 	public static FastList<ItemStack> getItems(Object o)

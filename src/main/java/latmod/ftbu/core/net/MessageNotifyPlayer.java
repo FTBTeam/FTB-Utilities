@@ -4,30 +4,28 @@ import latmod.ftbu.core.Notification;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBURenderHandler;
 import latmod.ftbu.mod.client.gui.GuiNotification;
-import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 
 public class MessageNotifyPlayer extends MessageLM<MessageNotifyPlayer> implements IClientMessageLM<MessageNotifyPlayer>
 {
-	public NBTTagCompound data;
+	public String data;
 	
 	public MessageNotifyPlayer() { }
 	
 	public MessageNotifyPlayer(Notification n)
 	{
-		data = new NBTTagCompound();
-		n.writeToNBT(data);
+		data = n.toString();
 	}
 	
 	public void fromBytes(ByteBuf bb)
 	{
-		data = LMNetHelper.readTagCompound(bb);
+		data = LMNetHelper.readString(bb);
 	}
 	
 	public void toBytes(ByteBuf bb)
 	{
-		LMNetHelper.writeTagCompound(bb, data);
+		LMNetHelper.writeString(bb, data);
 	}
 	
 	public IMessage onMessage(MessageNotifyPlayer m, MessageContext ctx)
@@ -36,7 +34,7 @@ public class MessageNotifyPlayer extends MessageLM<MessageNotifyPlayer> implemen
 	@SideOnly(Side.CLIENT)
 	public void onMessageClient(MessageNotifyPlayer m, MessageContext ctx)
 	{
-		Notification n = Notification.readFromNBT(m.data);
+		Notification n = Notification.getFromJson(m.data);
 		if(n != null) FTBURenderHandler.messages.add(new GuiNotification(n));
 	}
 }

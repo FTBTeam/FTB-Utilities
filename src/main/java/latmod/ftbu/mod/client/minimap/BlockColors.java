@@ -3,7 +3,9 @@ package latmod.ftbu.mod.client.minimap;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.init.Blocks;
+import cpw.mods.fml.relauncher.*;
 
+@SideOnly(Side.CLIENT)
 public class BlockColors
 {
 	public static MapColor getBlockColor(Block b, int m)

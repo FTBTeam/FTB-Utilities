@@ -2,7 +2,6 @@ package latmod.ftbu.mod;
 
 import java.util.UUID;
 
-import latmod.ftbu.core.LMProxy;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.TileLM;
@@ -13,8 +12,16 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class FTBUCommon extends LMProxy // FTBUClient
+public class FTBUCommon // FTBUClient
 {
+	public void preInit()
+	{
+	}
+	
+	public void postInit()
+	{
+	}
+	
 	public void addInfo(FTBUReadmeEvent e)
 	{
 	}

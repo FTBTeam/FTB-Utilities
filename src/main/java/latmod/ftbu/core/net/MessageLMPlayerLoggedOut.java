@@ -35,5 +35,6 @@ public class MessageLMPlayerLoggedOut extends MessageLM<MessageLMPlayerLoggedOut
 	{
 		LMPlayerClient p = LMWorldClient.inst.getPlayer(m.playerID);
 		new LMPlayerClientEvent.LoggedOut(p).post();
+		p.isOnline = false;
 	}
 }

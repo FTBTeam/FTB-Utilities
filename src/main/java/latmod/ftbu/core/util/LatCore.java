@@ -5,7 +5,8 @@ import java.net.*;
 import java.nio.charset.Charset;
 import java.util.*;
 
-import latmod.ftbu.core.NBTSerializer;
+import latmod.ftbu.core.*;
+import latmod.ftbu.core.event.LMGsonEvent;
 import latmod.ftbu.core.inv.LMInvUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
@@ -108,9 +109,10 @@ public class LatCore
 		}
 	}
 	
-	public static final Gson gson = createGson();
+	private static Gson gson = null;
+	//public static boolean jsonPrettyPrinting = true;
 	
-	private static Gson createGson()
+	public static void updateGson()
 	{
 		GsonBuilder gb = new GsonBuilder();
 		gb.excludeFieldsWithoutExposeAnnotation();
@@ -124,7 +126,16 @@ public class LatCore
 		gb.registerTypeHierarchyAdapter(IntMap.class, new IntMap.Serializer());
 		gb.registerTypeHierarchyAdapter(ItemStack.class, new LMInvUtils.Serializer());
 		gb.registerTypeHierarchyAdapter(UUID.class, new UUIDSerializer());
-		return gb.create();
+		gb.registerTypeHierarchyAdapter(Notification.class, new Notification.Serializer());
+		
+		new LMGsonEvent(gb).post();
+		gson = gb.create();
+	}
+	
+	public static Gson getGson()
+	{
+		if(gson == null) updateGson();
+		return gson;
 	}
 	
 	@SuppressWarnings("all")
@@ -217,7 +228,7 @@ public class LatCore
 	public static <T> T fromJson(String s, Type t)
 	{
 		if(s == null || s.length() < 2) return null;
-		return gson.fromJson(s, t);
+		return getGson().fromJson(s, t);
 	}
 	
 	public static <T> T fromJsonFile(File f, Type t)
@@ -230,7 +241,7 @@ public class LatCore
 	public static String toJson(Object o)
 	{
 		if(o == null) return null;
-		return gson.toJson(o);
+		return getGson().toJson(o);
 	}
 	
 	public static boolean toJsonFile(File f, Object o)
@@ -310,7 +321,21 @@ public class LatCore
 		s.append(i);
 		return s.toString();
 	}
-
+	
+	public static String formatJson(String s, boolean array)
+	{
+		if(s == null) return null;
+		s = s.trim();
+		if(s.length() < 2) return array ? "[]" : "{}";
+		StringBuilder sb = new StringBuilder();
+		if(array) { if(s.charAt(0) != '[') sb.append('['); }
+		else { if(s.charAt(0) != '{') sb.append('{'); }
+		sb.append(s);
+		if(array) { if(s.charAt(s.length() - 1) != ']') sb.append(']'); }
+		else { if(s.charAt(s.length() - 1) != '}') sb.append('}'); }
+		return sb.toString();
+	}
+	
 	public static int hashCode(Object... o)
 	{
 		if(o.length == 0) return 0;

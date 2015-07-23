@@ -1,23 +1,24 @@
 package latmod.ftbu.core.net;
 
 import io.netty.buffer.ByteBuf;
-import latmod.ftbu.core.world.LMWorldServer;
+import latmod.ftbu.core.world.*;
 import cpw.mods.fml.common.network.simpleimpl.*;
+import cpw.mods.fml.relauncher.*;
 
 public class MessageAreaRequest extends MessageLM<MessageAreaRequest>
 {
-	public int chunkX, chunkZ, dim, playerID;
-	public byte size;
+	public int chunkX, chunkZ, dim, size, playerID;
 	
 	public MessageAreaRequest() { }
 	
-	public MessageAreaRequest(int x, int z, int d, byte s, int p)
+	@SideOnly(Side.CLIENT)
+	public MessageAreaRequest(int x, int z, int d, int s)
 	{
 		chunkX = x;
 		chunkZ = z;
 		dim = d;
 		size = s;
-		playerID = p;
+		playerID = LMWorldClient.inst.clientPlayerID;
 	}
 	
 	public void fromBytes(ByteBuf bb)

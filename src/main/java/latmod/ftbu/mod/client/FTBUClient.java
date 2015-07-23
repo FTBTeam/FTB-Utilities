@@ -3,13 +3,13 @@ import java.util.UUID;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.client.*;
-import latmod.ftbu.core.client.badges.ThreadLoadBadges;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.TileLM;
 import latmod.ftbu.core.util.LatCore;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.*;
+import latmod.ftbu.mod.client.badges.ThreadLoadBadges;
 import latmod.ftbu.mod.client.minimap.*;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
@@ -36,7 +36,7 @@ public class FTBUClient extends FTBUCommon
 	public static final ClientConfig.Property addRegistryNames = new ClientConfig.Property("item_reg_names", false);
 	public static final ClientConfig.Property displayDebugInfo = new ClientConfig.Property("debug_info", false);
 	public static final ClientConfig.Property optionsButton = new ClientConfig.Property("options_button", true);
-	public static final ClientConfig.Property chatLinks = new ClientConfig.Property("chat_links", 1, "disabled", "enabled"); //"replace", "print" });
+	public static final ClientConfig.Property chatLinks = new ClientConfig.Property("chat_links", true);
 	
 	public static final ClientConfig miscConfig = new ClientConfig("ftbu_misc").setHidden();
 	public static final ClientConfig.Property hideArmorFG = new ClientConfig.Property("hide_armor_fg", false);
@@ -61,6 +61,8 @@ public class FTBUClient extends FTBUCommon
 	
 	public void preInit()
 	{
+		FTBULang.reload();
+		
 		LatCoreMC.BusType.FORGE.register(FTBUClientEventHandler.instance);
 		LatCoreMC.BusType.FML.register(FTBUClientEventHandler.instance);
 		LatCoreMC.BusType.LATMOD.register(FTBUClientEventHandler.instance);

@@ -1,7 +1,6 @@
 package latmod.ftbu.mod.client;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.client.LatCoreMCClient;
-import latmod.ftbu.core.client.badges.ThreadLoadBadges;
 import latmod.ftbu.core.event.ReloadEvent;
 import latmod.ftbu.core.inv.*;
 import latmod.ftbu.core.tile.IPaintable;
@@ -9,6 +8,7 @@ import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.claims.ChunkType;
+import latmod.ftbu.mod.client.badges.ThreadLoadBadges;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.event.*;
@@ -80,9 +80,7 @@ public class FTBUClientEventHandler
 	@SubscribeEvent
 	public void onChatEvent(net.minecraftforge.client.event.ClientChatReceivedEvent e)
 	{
-		int chatLinks = FTBUClient.chatLinks.getI();
-		if(chatLinks == 0) return;
-		else if(chatLinks == 1)
+		if(FTBUClient.chatLinks.getB())
 		{
 			String[] msg = e.message.getUnformattedText().split(" ");
 			
@@ -125,9 +123,9 @@ public class FTBUClientEventHandler
 				thread.start();
 			}
 		}
-		else if(chatLinks == 2)
+		/*else if(chatLinks == 2)
 		{
-			/*String[] msg = e.message.getFormattedText().split(" ");
+			String[] msg = e.message.getFormattedText().split(" ");
 			
 			IChatComponent line = new ChatComponentText("");
 			//e.message.getSiblings();
@@ -151,8 +149,7 @@ public class FTBUClientEventHandler
 			}
 			
 			e.message = line;
-			*/
-		}
+		}*/
 	}
 	
 	@SubscribeEvent

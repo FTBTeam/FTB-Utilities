@@ -2,11 +2,11 @@ package latmod.ftbu.mod.client;
 import java.util.*;
 
 import latmod.ftbu.core.client.LatCoreMCClient;
-import latmod.ftbu.core.client.badges.Badge;
 import latmod.ftbu.core.client.model.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.client.badges.Badge;
 import latmod.ftbu.mod.client.gui.GuiNotification;
 import latmod.ftbu.mod.client.minimap.*;
 import latmod.ftbu.mod.config.FTBUConfig;
@@ -35,7 +35,6 @@ public class FTBURenderHandler
 	private static double playerX, playerY, playerZ, renderX, renderY, renderZ, far = 4D;
 	
 	public static final FastList<GuiNotification> messages = new FastList<GuiNotification>();
-	public static final FastMap<UUID, Badge> playerBadges = new FastMap<UUID, Badge>();
 	
 	private static final FastList<WaypointClient> visibleBeacons = new FastList<WaypointClient>();
 	private static final FastList<WaypointClient> visibleMarkers = new FastList<WaypointClient>();
@@ -47,9 +46,9 @@ public class FTBURenderHandler
 	@SubscribeEvent
 	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
 	{
-		if(!Badge.reloading && FTBUClient.enablePlayerDecorators.getB() && !e.entityPlayer.isInvisible())
+		if(!Badge.isReloading && FTBUClient.enablePlayerDecorators.getB() && !e.entityPlayer.isInvisible())
 		{
-			Badge b = playerBadges.get(e.entityPlayer.getUniqueID());
+			Badge b = Badge.badges.get(e.entityPlayer.getUniqueID());
 			if(b != null) b.onPlayerRender(e.entityPlayer);
 		}
 	}

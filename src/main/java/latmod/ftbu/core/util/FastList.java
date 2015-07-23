@@ -5,7 +5,7 @@ import java.util.*;
 @SuppressWarnings("all")
 public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 {
-	public Object[] objects;
+	public E[] objects;
 	private int initSize;
 	private int incr;
 	private int size = 0;
@@ -14,7 +14,7 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	{
 		initSize = init;
 		incr = MathHelperLM.clampInt(inc, 1, 100);
-		objects = new Object[initSize];
+		objects = (E[])new Object[initSize];
 	}
 	
 	public FastList(int init)
@@ -31,7 +31,7 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	
 	private void expand()
 	{
-		Object[] o = new Object[objects.length + incr];
+		E[] o = (E[])new Object[objects.length + incr];
 		for(int i = 0; i < objects.length; i++)
 		o[i] = objects[i];
 		objects = o;
@@ -48,7 +48,7 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	{ objects[i] = e; return e; }
 	
 	public E get(int i)
-	{ return (E)objects[i]; }
+	{ return objects[i]; }
 	
 	public E remove(int i)
 	{
@@ -96,17 +96,17 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	public void clear()
 	{
 		if(size == 0) return;
-		objects = new Object[initSize];
+		objects = (E[])new Object[initSize];
 		size = 0;
 	}
 	
 	public Iterator<E> iterator()
 	{ return listIterator(); }
 	
-	public Object[] toArray()
+	public E[] toArray()
 	{
 		if(size == objects.length) return objects;
-		Object o[] = new Object[size];
+		E o[] = (E[])new Object[size];
 		System.arraycopy(objects, 0, o, 0, size);
 		objects = o;
 		return objects;
@@ -257,7 +257,7 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	{
 		if(fromIndex < 0 || toIndex <= 0 || toIndex - fromIndex >= size) return null;
 		FastList<E> al = blankCopy();
-		al.objects = new Object[toIndex - fromIndex];
+		al.objects = (E[])new Object[toIndex - fromIndex];
 		System.arraycopy(objects, fromIndex, al.objects, 0, fromIndex + toIndex);
 		return al;
 	}

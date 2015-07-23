@@ -203,7 +203,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 		sendClientAction(ACTION_BUTTON_PRESSED, tag);
 	}
 	
-	public void clientPressButton(String button, int mouseButton)
+	public final void clientPressButton(String button, int mouseButton)
 	{ clientPressButton(button, mouseButton, null); }
 	
 	public void clientOpenGui(NBTTagCompound data)

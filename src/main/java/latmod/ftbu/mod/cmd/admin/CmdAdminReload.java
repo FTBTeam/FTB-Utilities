@@ -14,9 +14,9 @@ public class CmdAdminReload extends SubCommand
 	public String onCommand(ICommandSender ics, String[] args)
 	{
 		FTBUConfig.instance.load();
-		if(LatCoreMC.isDedicatedServer() && LatCoreMC.hasOnlinePlayers())
+		if(FTBUConfig.general.isDedi())
 		{
-			for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers().values)
+			for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers())
 				IServerConfig.Registry.updateConfig(ep, null);
 		}
 		new ReloadEvent(Side.SERVER, ics).post();

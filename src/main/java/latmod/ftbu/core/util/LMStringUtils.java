@@ -178,7 +178,21 @@ public class LMStringUtils
 		}
 		return sb.toString();
 	}
-
+	
+	public static String unsplitSpaceUntilEnd(int startIndex, String[] o)
+	{
+		if(o == null || startIndex < 0 || o.length <= startIndex) return null;
+		StringBuilder sb = new StringBuilder();
+		
+		for(int i = startIndex; i < o.length; i++)
+		{
+			sb.append(o[i]);
+			if(i != o.length -1) sb.append(' ');
+		}
+		
+		return sb.toString();
+	}
+	
 	public static String firstUppercase(String s)
 	{
 		if(s == null || s.length() == 0) return s;

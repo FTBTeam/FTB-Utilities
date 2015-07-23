@@ -5,6 +5,7 @@ import java.util.List;
 import latmod.ftbu.core.util.MathHelperLM;
 import latmod.ftbu.core.world.LMPlayer;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.client.minimap.*;
 import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.WorldServer;
@@ -75,18 +76,22 @@ public enum ChunkType
 	@SideOnly(Side.CLIENT)
 	public static void getMessage(int dim, int cx, int cz, LMPlayer p, List<String> l, boolean shift)
 	{
-		ChunkType t = get(dim, cx, cz, p);
+		MChunk mc = Minimap.get(dim).getChunk(cx, cz);
 		
-		if(t == UNLOADED || t == SPAWN || t == WILDERNESS || t == WORLD_BORDER) l.add(t.chatColor + t.getIDS());
-		else
+		if(mc != null)
 		{
-			l.add(t.chatColor + t.getIDS());
-			if(shift)
+			ChunkType t = mc.type;
+			
+			if(t == UNLOADED || t == SPAWN || t == WILDERNESS || t == WORLD_BORDER) l.add(t.chatColor + t.getIDS());
+			else
 			{
-				ClaimedChunk c = Claims.get(dim, cx, cz);
-				if(!c.claims.desc.isEmpty())
-					l.add(c.claims.desc);
-				l.add(c.claims.owner.getName());
+				l.add(t.chatColor + t.getIDS());
+				if(shift && mc.owner != null)
+				{
+					//if(!c.claims.desc.isEmpty())
+					//	l.add(c.claims.desc);
+					l.add(mc.owner.getName());
+				}
 			}
 		}
 	}

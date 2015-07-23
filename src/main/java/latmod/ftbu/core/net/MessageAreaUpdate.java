@@ -3,24 +3,32 @@ package latmod.ftbu.core.net;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.world.LMPlayerServer;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.claims.ChunkType;
+import latmod.ftbu.mod.claims.*;
 import latmod.ftbu.mod.client.minimap.Minimap;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 
 public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate> implements IClientMessageLM<MessageAreaUpdate> //MessageAreaRequest
 {
-	public int chunkX, chunkZ, dim;
-	public byte size;
-	public byte[] types;
+	public int chunkX, chunkZ, dim, size;
+	public int[] types;
 	
 	public MessageAreaUpdate() { }
 	
-	public MessageAreaUpdate(int x, int z, int d, byte s, LMPlayerServer p)
+	public MessageAreaUpdate(int x, int z, int d, int s, LMPlayerServer p)
 	{
-		chunkX = x; chunkZ = z; dim = d; size = s; types = new byte[s * s];
+		chunkX = x; chunkZ = z; dim = d; size = s; types = new int[s * s];
 		for(int z1 = 0; z1 < s; z1++) for(int x1 = 0; x1 < s; x1++)
-			types[x1 + z1 * s] = (byte)ChunkType.get(d, x + x1, z + z1, p).ordinal();
+		{
+			ChunkType type = ChunkType.get(d, x + x1, z + z1, p);
+			int t = -type.ordinal();
+			if(type.isClaimed())
+			{
+				ClaimedChunk c = Claims.get(dim, x + x1, z + z1);
+				if(c != null) t = c.claims.owner.playerID;
+			}
+			types[x1 + z1 * s] = t;
+		}
 	}
 	
 	public void fromBytes(ByteBuf bb)
@@ -29,8 +37,9 @@ public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate> implements I
 		chunkZ = bb.readInt();
 		dim = bb.readInt();
 		size = bb.readByte();
-		types = new byte[size * size];
-		bb.readBytes(types);
+		types = new int[size * size];
+		for(int i = 0; i < types.length; i++)
+			types[i] = bb.readInt();
 	}
 	
 	public void toBytes(ByteBuf bb)
@@ -39,7 +48,8 @@ public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate> implements I
 		bb.writeInt(chunkZ);
 		bb.writeInt(dim);
 		bb.writeByte(size);
-		bb.writeBytes(types);
+		for(int i = 0; i < types.length; i++)
+			bb.writeInt(types[i]);
 	}
 	
 	public IMessage onMessage(MessageAreaUpdate m, MessageContext ctx)

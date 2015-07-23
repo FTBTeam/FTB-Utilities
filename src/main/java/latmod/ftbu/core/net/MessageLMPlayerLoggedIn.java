@@ -68,9 +68,11 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> 
 	{
 		Minecraft mc = LatCoreMCClient.getMinecraft();
 		
-		LMPlayerClient p = new LMPlayerClient(LMWorldClient.inst, m.playerID, new GameProfile(m.uuid, m.username));
+		LMPlayerClient p = LMWorldClient.inst.getPlayer(m.playerID);
+		boolean add = p == null;
+		if(add) p = new LMPlayerClient(LMWorldClient.inst, m.playerID, new GameProfile(m.uuid, m.username));
 		p.readFromNet(m.data);
-		LMWorldClient.inst.players.add(p);
+		if(add) LMWorldClient.inst.players.add(p);
 		p.onPostLoaded();
 		
 		if(m.uuid.equals(mc.thePlayer.getUniqueID()))

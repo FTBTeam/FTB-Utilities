@@ -62,10 +62,10 @@ public class FTBU
 		
 		LMMod.init(this, null, null);
 		mod.logger = LatCoreMC.logger;
+		LatCore.updateGson();
 		IServerConfig.Registry.add(FTBUConfig.instance);
 		FTBUConfig.instance.load();
 		
-		FTBULang.reload();
 		ODItems.preInit();
 		Backups.init();
 		
@@ -78,7 +78,6 @@ public class FTBU
 	{
 		LMNetHelper.init();
 		FMLInterModComms.sendMessage("Waila", "register", "latmod.ftbu.core.event.RegisterWailaEvent.registerHandlers");
-		proxy.init();
 	}
 	
 	@Mod.EventHandler
@@ -108,6 +107,7 @@ public class FTBU
 	@Mod.EventHandler
 	public void registerCommands(FMLServerStartingEvent e)
 	{
+		LatCore.updateGson();
 		FTBUTickHandler.resetTimer(true);
 		e.registerServerCommand(new CmdAdmin());
 		e.registerServerCommand(new CmdBack());
@@ -117,12 +117,13 @@ public class FTBU
 		e.registerServerCommand(new CmdSpawn());
 		e.registerServerCommand(new CmdTplast());
 		e.registerServerCommand(new CmdWarp());
+		e.registerServerCommand(new CmdListOverride());
 	}
 	
 	@Mod.EventHandler
 	public void serverStopping(FMLServerStoppingEvent e)
 	{
-		if(LatCoreMC.hasOnlinePlayers()) for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers().values)
+		if(LatCoreMC.hasOnlinePlayers()) for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers())
 			FTBUEventHandler.instance.playerLoggedOut(new cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent(ep));
 		
 		/*if(FTBUConfig.backups.backupOnShutdown)

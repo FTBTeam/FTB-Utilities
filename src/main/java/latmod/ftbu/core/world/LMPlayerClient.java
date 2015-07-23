@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.*;
 public class LMPlayerClient extends LMPlayer
 {
 	public final FastList<String> clientInfo;
-	protected boolean isOnline;
+	public boolean isOnline;
 	public int claimedChunks;
 	public int maxClaimPower;
 	
@@ -26,9 +26,6 @@ public class LMPlayerClient extends LMPlayer
 		clientInfo = new FastList<String>();
 		isOnline = false;
 	}
-	
-	public LMPlayerServer toPlayerMP()
-	{ return null; }
 	
 	@SideOnly(Side.CLIENT)
 	public LMPlayerClient toPlayerSP()

@@ -6,7 +6,9 @@ import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.client.ClientConfig;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldClient;
+import cpw.mods.fml.relauncher.*;
 
+@SideOnly(Side.CLIENT)
 public class Waypoints
 {
 	public static final ClientConfig clientConfig = new ClientConfig("waypoints");

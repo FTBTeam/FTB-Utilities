@@ -12,8 +12,6 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import com.mojang.authlib.GameProfile;
 
-import cpw.mods.fml.relauncher.*;
-
 public class LMPlayerServer extends LMPlayer
 {
 	public static int lastPlayerID = 0;
@@ -46,10 +44,6 @@ public class LMPlayerServer extends LMPlayer
 	
 	public LMPlayerServer toPlayerMP()
 	{ return this; }
-	
-	@SideOnly(Side.CLIENT)
-	public LMPlayerClient toPlayerSP()
-	{ return null; }
 	
 	public void setPlayer(EntityPlayerMP ep)
 	{ entityPlayer = ep; }

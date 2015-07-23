@@ -120,30 +120,28 @@ public class FTBUEventHandler // FTBUTickHandler
 		{
 			IServerConfig.Registry.load();
 			
-			LoadLMDataEvent e1 = new LoadLMDataEvent(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/"), EventLM.Phase.PRE);
+			File latmodFolder = new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/");
 			
+			NBTTagCompound tagWorldData = LMNBTUtils.readMap(new File(latmodFolder, "LMWorld.dat"));
+			if(tagWorldData == null) tagWorldData = new NBTTagCompound();
+			LMWorldServer.inst = new LMWorldServer(tagWorldData.hasKey("UUID") ? LatCoreMC.getUUIDFromString(tagWorldData.getString("UUID")) : UUID.randomUUID());
+			LMWorldServer.inst.load(tagWorldData);
+			
+			NBTTagCompound customData = tagWorldData.getCompoundTag("Custom");
+			
+			new LoadLMDataEvent(latmodFolder, EventLM.Phase.PRE, customData).post();
+			
+			NBTTagCompound tagPlayers = LMNBTUtils.readMap(new File(latmodFolder, "LMPlayers.dat"));
+			if(tagPlayers != null && tagPlayers.hasKey("Players"))
 			{
-				NBTTagCompound tag = LMNBTUtils.readMap(e1.getFile("LMWorld.dat"));
-				if(tag == null) tag = new NBTTagCompound();
-				LMWorldServer.inst = new LMWorldServer(tag.hasKey("UUID") ? LatCoreMC.getUUIDFromString(tag.getString("UUID")) : UUID.randomUUID());
-				LMWorldServer.inst.load(tag);
-			}
-			
-			e1.post();
-			
-			{
-				NBTTagCompound tag = LMNBTUtils.readMap(e1.getFile("LMPlayers.dat"));
-				if(tag != null && tag.hasKey("Players"))
-				{
-					LMPlayerServer.lastPlayerID = tag.getInteger("LastID");
-					LMWorldServer.inst.readPlayersFromServer(tag.getCompoundTag("Players"));
-				}
+				LMPlayerServer.lastPlayerID = tagPlayers.getInteger("LastID");
+				LMWorldServer.inst.readPlayersFromServer(tagPlayers.getCompoundTag("Players"));
 			}
 			
 			for(int i = 0; i < LMWorldServer.inst.players.size(); i++)
 				LMWorldServer.inst.players.get(i).setPlayer(null);
 			
-			new LoadLMDataEvent(e1.latmodFolder, EventLM.Phase.POST).post();
+			new LoadLMDataEvent(latmodFolder, EventLM.Phase.POST, customData).post();
 			
 			LatCoreMC.logger.info("LatCoreMC data loaded");
 		}
@@ -154,13 +152,15 @@ public class FTBUEventHandler // FTBUTickHandler
 	{
 		if(LatCoreMC.isServer() && e.world.provider.dimensionId == 0)
 		{
-			SaveLMDataEvent e1 = new SaveLMDataEvent(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/"));
+			NBTTagCompound customData = new NBTTagCompound();
+			SaveLMDataEvent e1 = new SaveLMDataEvent(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/"), customData);
 			e1.post();
 			
 			{
 				NBTTagCompound tag = new NBTTagCompound();
 				LMWorldServer.inst.save(tag);
 				tag.setString("UUID", LMWorldServer.inst.worldIDS);
+				tag.setTag("Custom", customData);
 				LMNBTUtils.writeMap(e1.getFile("LMWorld.dat"), tag);
 			}
 			

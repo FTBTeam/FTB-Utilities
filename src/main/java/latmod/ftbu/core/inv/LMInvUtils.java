@@ -4,7 +4,7 @@ import java.util.*;
 
 import latmod.ftbu.core.LMNBTUtils;
 import latmod.ftbu.core.item.Tool;
-import latmod.ftbu.core.util.FastMap;
+import latmod.ftbu.core.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.*;
 import net.minecraft.entity.Entity;
@@ -38,6 +38,7 @@ public class LMInvUtils
 		public ItemStack deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
 		{
 			if(json.isJsonNull()) return null;
+			if(json.isJsonPrimitive()) return parseItem(json.getAsString());
 			
 			JsonObject o = json.getAsJsonObject();
 			if(!o.has("id")) return null;
@@ -70,7 +71,8 @@ public class LMInvUtils
 	
 	public static boolean itemsEquals(ItemStack is1, ItemStack is2, boolean size, boolean nbt)
 	{
-		if(is1 == null && is2 == null) return true; if(is1 == null || is2 == null) return false;
+		if(is1 == null && is2 == null) return true;
+		if(is1 == null || is2 == null) return false;
 		return is1.getItem() == is2.getItem() && is1.getItemDamage() == is2.getItemDamage() && (nbt ? ItemStack.areItemStackTagsEqual(is1, is2) : true) && (size ? (is1.stackSize == is2.stackSize) : true);
 	}
 	
@@ -415,6 +417,7 @@ public class LMInvUtils
 	
 	public static ItemStack reduceItem(ItemStack is)
 	{
+		if(is == null || is.stackSize <= 0) return null;
 		if (is.stackSize == 1)
 		{
 			if (is.getItem().hasContainerItem(is))
@@ -451,17 +454,21 @@ public class LMInvUtils
 	public static String getRegName(ItemStack is)
 	{ return (is != null && is.getItem() != null) ? getRegName(is.getItem()) : null; }
 	
+	private static String getParseRegex(String s)
+	{
+		if(s.indexOf(';') != -1) return ";";
+		if(s.indexOf('@') != -1) return "@";
+		if(s.indexOf(" x ") != -1) return " x ";
+		return " ";
+	}
+	
 	public static ItemStack parseItem(String s)
 	{
 		try
 		{
-			String regex = "@";
-			if(s.contains(";")) regex = ";";
-			else if(s.contains(" ")) regex = " ";
-			else if(s.contains(" x ")) regex = " x ";
-			
+			String regex = getParseRegex(s);
 			String[] s1 = s.split(regex);
-			if(s1.length <= 0 || s1.length > 3) return null;
+			if(s1.length <= 0) return null;
 			Item item = getItemFromRegName(s1[0]);
 			if(item == null) return null;
 			int dmg = 0;
@@ -469,6 +476,20 @@ public class LMInvUtils
 			if(s1.length == 2) dmg = Integer.parseInt(s1[1]);
 			if(s1.length == 3)
 			{ size = Integer.parseInt(s1[1]); dmg = Integer.parseInt(s1[2]); }
+			if(s1.length >= 4)
+			{
+				String tagS = LMStringUtils.unsplitSpaceUntilEnd(3, s1);
+				//NBTTagCompound tag = LatCore.fromJson(tagS, NBTTagCompound.class);
+				NBTTagCompound tag = (NBTTagCompound)JsonToNBT.func_150315_a(tagS);
+				
+				if(tag != null)
+				{
+					ItemStack is = new ItemStack(item, size, dmg);
+					is.setTagCompound(tag);
+					return is;
+				}
+			}
+			
 			return new ItemStack(item, size, dmg);
 		}
 		catch(Exception e) {}

@@ -1,7 +1,6 @@
 package latmod.ftbu.mod.client.minimap;
 
-import latmod.ftbu.core.net.*;
-import latmod.ftbu.core.world.*;
+import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.client.gui.GuiMinimap;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.*;
@@ -12,9 +11,8 @@ public class ThreadMinimap extends Thread
 	public final World worldObj;
 	public final int startX, startZ;
 	public final int size;
-	public final LMPlayer player;
 	
-	public ThreadMinimap(World w, int x, int z, int s, LMPlayer p)
+	public ThreadMinimap(World w, int x, int z, int s)
 	{
 		super("LM_Minimap");
 		setDaemon(true);
@@ -22,8 +20,6 @@ public class ThreadMinimap extends Thread
 		startX = x;
 		startZ = z;
 		size = s;
-		player = p;
-		LMNetHelper.sendToServer(new MessageAreaRequest(startX - 1, startZ - 1, worldObj.provider.dimensionId, (byte)(size + 2), player.playerID));
 	}
 	
 	public void run()

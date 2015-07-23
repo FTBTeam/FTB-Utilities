@@ -1,7 +1,9 @@
 package latmod.ftbu.mod.client.minimap;
 
 import latmod.ftbu.core.util.*;
+import cpw.mods.fml.relauncher.*;
 
+@SideOnly(Side.CLIENT)
 public class Pos2D
 {
 	public final int x, y;

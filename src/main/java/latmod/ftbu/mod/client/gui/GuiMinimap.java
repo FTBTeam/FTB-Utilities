@@ -48,8 +48,8 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		tex_area_coords[1][1][1][0] = getAreaCoords(15);
 	}
 	
-	public static final byte CHUNKS_OFFSET = 4;
-	public static final byte SIZE_CHUNKS = CHUNKS_OFFSET * 2 + 1;
+	public static final int CHUNKS_OFFSET = 4;
+	public static final int SIZE_CHUNKS = CHUNKS_OFFSET * 2 + 1;
 	public static final int SIZE = SIZE_CHUNKS * 16;
 	
 	public final LMPlayerClient owner;
@@ -82,7 +82,8 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 			public void onButtonPressed(int b)
 			{
 				mapButton.title = loading;
-				Minimap.startThread(new ThreadMinimap(mc.theWorld, startX, startZ, SIZE_CHUNKS, owner));
+				LMNetHelper.sendToServer(new MessageAreaRequest(startX - 1, startZ - 1, dimension, SIZE_CHUNKS + 2));
+				Minimap.startThread(new ThreadMinimap(mc.theWorld, startX, startZ, SIZE_CHUNKS));
 				gui.playClickSound();
 			}
 		};
@@ -183,6 +184,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 			
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			
+			if(!isShiftKeyDown())
 			{
 				mc.getTextureManager().bindTexture(tex_area);
 				

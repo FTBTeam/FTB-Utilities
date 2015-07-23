@@ -52,7 +52,6 @@ public class FTBUTickHandler
 				}
 				
 				p.lastPos.set(ep);
-				updateChunkMessage(ep);
 			}
 			
 			LMNetHelper.sendTo(ep, new MessageAreaUpdate(e.newChunkX, e.newChunkZ, ep.dimension, (byte)1, p));
@@ -66,7 +65,7 @@ public class FTBUTickHandler
 		{
 			long t = LatCore.millis();
 			
-			if(t - currentMillis >= 1000L)
+			if(t - currentMillis >= 200L)
 			{
 				currentMillis = t;
 				
@@ -91,10 +90,6 @@ public class FTBUTickHandler
 				if(secondsLeft > 60 && Backups.getSecondsUntilNextBackup() <= 0L) Backups.run();
 			}
 		}
-	}
-	
-	private void updateChunkMessage(EntityPlayerMP ep)
-	{
 	}
 	
 	public static void resetTimer(boolean started)

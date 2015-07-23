@@ -41,11 +41,11 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 	}
 	
 	public LMPlayerServer toPlayerMP()
-	{ return (LMPlayerServer)this; }
+	{ return null; }
 	
 	@SideOnly(Side.CLIENT)
 	public LMPlayerClient toPlayerSP()
-	{ return (LMPlayerClient)this; }
+	{ return null; }
 	
 	public String getName()
 	{ return gameProfile.getName(); }

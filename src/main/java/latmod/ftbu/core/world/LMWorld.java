@@ -12,12 +12,11 @@ import cpw.mods.fml.relauncher.Side;
 
 public abstract class LMWorld<P extends LMPlayer>
 {
+	public static LMWorld<?> getWorld(Side s)
+	{ if(s.isServer()) return LMWorldServer.inst; return FTBU.proxy.getClientWorldLM(); }
+	
 	public static LMWorld<?> getWorld()
-	{
-		if(LatCoreMC.isServer())
-			return LMWorldServer.inst;
-		return FTBU.proxy.getClientWorldLM();
-	}
+	{ return getWorld((LatCoreMC.isServer() && LatCoreMC.getServer() != null) ? Side.SERVER : Side.CLIENT); }
 	
 	public final Side side;
 	public final UUID worldID;

@@ -75,17 +75,10 @@ public class Minimap
 		return c;
 	}
 	
-	public void loadChunkTypes(int cx, int cz, byte size, byte[] types)
+	public void loadChunkTypes(int cx, int cz, int size, int[] types)
 	{
-		for(int z = 0; z < size; z++)
-		for(int x = 0; x < size; x++)
-		{
-			ChunkType t = ChunkType.VALUES[types[x + z * size]];
-			
-			if(t != ChunkType.UNLOADED)
-				loadChunk(cx + x, cz + z).type = t;
-		}
-		
+		for(int z = 0; z < size; z++) for(int x = 0; x < size; x++)
+			loadChunk(cx + x, cz + z).setType(types[x + z * size]);
 		GuiMinimap.shouldRedraw = true;
 	}
 	
@@ -108,27 +101,45 @@ public class Minimap
 	{
 		if(w.getChunkProvider().chunkExists(MathHelperLM.chunk(bx), MathHelperLM.chunk(bz)))
 		{
-			for(int by = 255; by > 0; by--)
+			int by = getTopY(w, bx, bz);
+			
+			Block b = w.getBlock(bx, by, bz);
+			if(!b.isAir(w, bx, by, bz))
 			{
-				Block b = w.getBlock(bx, by, bz);
-				if(!b.isAir(w, bx, by, bz))
+				int col = BlockColors.getBlockColor(b, w.getBlockMetadata(bx, by, bz)).colorValue;
+				int red = LatCore.Colors.getRed(col);
+				int green = LatCore.Colors.getGreen(col);
+				int blue = LatCore.Colors.getBlue(col);
+				
+				if(calcHeight.getB())
 				{
-					int col = BlockColors.getBlockColor(b, w.getBlockMetadata(bx, by, bz)).colorValue;
-					int red = LatCore.Colors.getRed(col);
-					int green = LatCore.Colors.getGreen(col);
-					int blue = LatCore.Colors.getBlue(col);
+					int d = 0;
 					
-					if(calcHeight.getB())
-					{
-						int d = MathHelperLM.clampInt((by - 64) * 5, -60, 60);
-						red = MathHelperLM.clampInt(red + d, 0, 255);
-						green = MathHelperLM.clampInt(green + d, 0, 255);
-						blue = MathHelperLM.clampInt(blue + d, 0, 255);
-					}
+					if(getTopY(w, bx - 1, bz) < by || getTopY(w, bx, bz + 1) < by)
+						d = 20;
 					
-					return LatCore.Colors.getRGBA(red, green, blue, 255);
+					if(getTopY(w, bx + 1, bz) < by || getTopY(w, bx, bz - 1) < by)
+						d = -20;
+					
+					red = MathHelperLM.clampInt(red + d, 0, 255);
+					green = MathHelperLM.clampInt(green + d, 0, 255);
+					blue = MathHelperLM.clampInt(blue + d, 0, 255);
 				}
+				
+				return LatCore.Colors.getRGBA(red, green, blue, 255);
 			}
+		}
+		
+		return 0;
+	}
+	
+	private static int getTopY(World w, int bx, int bz)
+	{
+		for(int by = 255; by > 0; by--)
+		{
+			Block b = w.getBlock(bx, by, bz);
+			if(!b.isAir(w, bx, by, bz))
+				return by;
 		}
 		
 		return 0;

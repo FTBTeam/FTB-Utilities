@@ -1,11 +1,12 @@
 package latmod.ftbu.core;
 
+import java.lang.reflect.Type;
+
 import latmod.ftbu.core.inv.LMInvUtils;
 import latmod.ftbu.core.util.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
-import com.google.gson.annotations.Expose;
+import com.google.gson.*;
 
 public class Notification
 {
@@ -13,9 +14,9 @@ public class Notification
 	public final String desc;
 	public final int timer;
 	
-	public ItemStack item = null;
-	public ClickAction action = null;
 	public int color = 0xFFA0A0A0;
+	public ItemStack item = null;
+	private ClickAction action = null;
 	
 	public Notification(String s, String s1, int t)
 	{
@@ -28,7 +29,7 @@ public class Notification
 	{ item = is; }
 	
 	public void setAction(ClickAction a)
-	{ action = a; }
+	{ if(a == null || (a.type != null && a.data != null && !a.data.isEmpty())) action = a; }
 	
 	public void setColor(int c)
 	{ color = c; }
@@ -41,90 +42,105 @@ public class Notification
 	}
 	
 	public boolean equalsNotification(Notification o)
-	{ return title.equals(o.title) && desc.equals(o.desc) && LMInvUtils.itemsEquals(item, o.item, true, true); }
+	{
+		if(o == null) return false;
+		if(o == this) return true;
+		if(!title.equals(o.title)) return false;
+		if(!desc.equals(o.desc)) return false;
+		if(!title.equals(o.title)) return false;
+		if(color != o.color) return false;
+		if(!LatCore.areObjectsEqual(action, o.action, true)) return false;
+		return LMInvUtils.itemsEquals(item, o.item, true, true);
+	}
 	
 	public static Notification getFromJson(String s)
-	{
-		JsonLoader j = LatCore.fromJson(s, JsonLoader.class);
-		
-		if(j != null && j.title != null)
-		{
-			if(j.timer == null) j.timer = 3000;
-			Notification n = new Notification(j.title, j.desc, j.timer);
-			
-			if(j.item != null) n.setItem(j.item);
-			if(j.action != null && j.action.data != null) n.setAction(j.action);
-			if(j.color != null) n.setColor(MathHelperLM.toIntDecoded(j.color));
-			return n;
-		}
-		
-		return null;
-	}
+	{ return LatCore.fromJson(s, Notification.class); }
 	
-	public static Notification readFromNBT(NBTTagCompound tag)
-	{
-		if(!tag.hasKey("T")) return null;
-		String t = tag.getString("T");
-		String d = tag.getString("D");
-		int l = tag.getShort("L");
-		Notification n = new Notification(t, d, l);
-		
-		if(tag.hasKey("I"))
-			n.setItem(ItemStack.loadItemStackFromNBT(tag.getCompoundTag("I")));
-		
-		if(tag.hasKey("A"))
-			n.setAction(new ClickAction(tag.getByte("A"), tag.getString("AD")));
-		
-		if(tag.hasKey("C"))
-			n.color = tag.getInteger("C");
-		
-		return n;
-	}
+	public String toString()
+	{ return LatCore.toJson(this); }
 	
-	public void writeToNBT(NBTTagCompound tag)
-	{
-		tag.setString("T", title);
-		if(!desc.isEmpty()) tag.setString("D", desc);
-		tag.setShort("L", (short)timer);
-		
-		if(item != null)
-		{
-			NBTTagCompound tag1 = new NBTTagCompound();
-			item.writeToNBT(tag1);
-			tag.setTag("I", tag1);
-		}
-		
-		if(action != null)
-		{
-			tag.setByte("A", (byte)action.id);
-			tag.setString("AD", action.data);
-		}
-		
-		if(color != 0xFFA0A0A0)
-			tag.setInteger("C", color);
-	}
+	public ClickAction getAction()
+	{ return action; }
 	
 	public static class ClickAction
 	{
-		public static final int LINK = 0;
-		public static final int COMMAND = 1;
+		public static enum Type
+		{
+			LINK("link"),
+			COMMAND("cmd");
+			
+			public final String ID;
+			
+			Type(String s)
+			{ ID = s; }
+			
+			public static Type fromString(String s)
+			{
+				for(Type t : values())
+					if(t.ID.equals(s)) return t;
+				return null;
+			}
+		}
 		
-		@Expose public int id;
-		@Expose public String data;
+		public final Type type;
+		public final String data;
 		
-		public ClickAction() { }
-		
-		public ClickAction(byte b, String s)
-		{ id = b; data = s; }
+		public ClickAction(Type t, String s)
+		{ type = t; data = s; }
 	}
 	
-	private static class JsonLoader
+	public static class Serializer implements JsonSerializer<Notification>, JsonDeserializer<Notification>
 	{
-		@Expose public String title;
-		@Expose public String desc;
-		@Expose public Integer timer;
-		@Expose public String color;
-		@Expose public ItemStack item;
-		@Expose public ClickAction action;
+		public JsonElement serialize(Notification src, Type typeOfSrc, JsonSerializationContext context)
+		{
+			JsonObject o = new JsonObject();
+			
+			o.add("title", new JsonPrimitive(src.title));
+			if(!src.desc.isEmpty()) o.add("desc", new JsonPrimitive(src.desc));
+			if(src.timer != 3000) o.add("timer", new JsonPrimitive(src.timer));
+			if(src.color != 0xFFA0A0A0) o.add("color", new JsonPrimitive(src.color));
+			if(src.item != null) o.add("item", context.serialize(src.item));
+			if(src.action != null)
+			{
+				JsonObject o1 = new JsonObject();
+				o1.add("type", new JsonPrimitive(src.action.type.ID));
+				o1.add("data", new JsonPrimitive(src.action.data));
+				o.add("action", o1);
+			}
+			
+			return o;
+		}
+		
+		public Notification deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+		{
+			if(json.isJsonNull()) return null;
+			JsonObject o = json.getAsJsonObject();
+			if(!o.has("title")) return null;
+			
+			String t = o.get("title").getAsString();
+			String d = o.has("desc") ? o.get("desc").getAsString() : "";
+			int l = o.has("timer") ? o.get("timer").getAsInt() : 3000;
+			Notification n = new Notification(t, d, l);
+			
+			if(o.has("color")) n.color = MathHelperLM.toIntDecoded(o.get("color").getAsString());
+			
+			if(o.has("item"))
+			{
+				ItemStack is = context.deserialize(o.get("item"), ItemStack.class);
+				if(is != null) n.setItem(is);
+			}
+			
+			if(o.has("action"))
+			{
+				JsonObject o1 = o.get("").getAsJsonObject();
+				if(o1.has("data"))
+				{
+					ClickAction.Type type = o1.has("type") ? ClickAction.Type.fromString(o1.get("type").getAsString()) : ClickAction.Type.LINK;
+					if(type != null) n.setAction(new ClickAction(type, o1.get("data").getAsString()));
+				}
+			}
+			
+			return n;
+		}
 	}
 }

@@ -135,7 +135,15 @@ public final class LatCoreMC // LatCoreMCClient
 	public static boolean hasOnlinePlayers()
 	{ return !MinecraftServer.getServer().getConfigurationManager().playerEntityList.isEmpty(); }
 	
-	public static FastMap<UUID, EntityPlayerMP> getAllOnlinePlayers()
+	@SuppressWarnings("unchecked")
+	public static FastList<EntityPlayerMP> getAllOnlinePlayers()
+	{
+		FastList<EntityPlayerMP> l = new FastList<EntityPlayerMP>();
+		if(hasOnlinePlayers()) l.addAll(getServer().getConfigurationManager().playerEntityList);
+		return l;
+	}
+	
+	public static FastMap<UUID, EntityPlayerMP> getAllOnlinePlayersMap()
 	{
 		FastMap<UUID, EntityPlayerMP> m = new FastMap<UUID, EntityPlayerMP>();
 		
@@ -152,8 +160,15 @@ public final class LatCoreMC // LatCoreMCClient
 	
 	public static EntityPlayerMP getPlayerMP(UUID id)
 	{
-		if(id == null || !hasOnlinePlayers()) return null;
-		return getAllOnlinePlayers().get(id);
+		if(!hasOnlinePlayers()) return null;
+		
+		for(int i = 0; i < getServer().getConfigurationManager().playerEntityList.size(); i++)
+		{
+			EntityPlayerMP ep = (EntityPlayerMP)getServer().getConfigurationManager().playerEntityList.get(i);
+			if(ep.getUniqueID().equals(id)) return ep;
+		}
+		
+		return null;
 	}
 	
 	public static boolean remap(MissingMapping m, String id, Item i)
@@ -240,5 +255,5 @@ public final class LatCoreMC // LatCoreMCClient
 	}
 	
 	public static boolean isDedicatedServer()
-	{ return getServer().isDedicatedServer(); }
+	{ return getServer() != null && getServer().isDedicatedServer(); }
 }

@@ -8,8 +8,7 @@ import latmod.ftbu.core.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldServer;
 import latmod.ftbu.mod.config.FTBUConfig;
-import net.minecraft.command.server.CommandSaveAll;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.command.server.*;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
@@ -32,7 +31,7 @@ public class ThreadBackup extends Thread
 		Backups.lastTimeRun = time;
 		LatCoreMC.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Starting server backup, expect lag!");
 		new CommandSaveAll().processCommand(LatCoreMC.getServer(), new String[] { "flush" });
-		setSave(false);
+		new CommandSaveOff().processCommand(LatCoreMC.getServer(), new String[0]);
 		
 		File dstFile = null;
 		
@@ -148,8 +147,8 @@ public class ThreadBackup extends Thread
 			if(FTBUConfig.backups.displayFileSize)
 			{
 				String sizeB = LMFileUtils.getSizeS(dstFile);
-				String sizeS = LMFileUtils.getSizeS(src);
-				LatCoreMC.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(time) + "! (" + (sizeB.equals(sizeS) ? sizeB : (sizeB + " | " + sizeS)) + ")");
+				String sizeT = LMFileUtils.getSizeS(Backups.backupsFolder);
+				LatCoreMC.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(time) + "! (" + (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)) + ")");
 			}
 			else LatCoreMC.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(time) + "!");
 		}
@@ -160,7 +159,7 @@ public class ThreadBackup extends Thread
 			if(dstFile != null) LMFileUtils.delete(dstFile);
 		}
 		
-		setSave(true);
+		new CommandSaveOn().processCommand(LatCoreMC.getServer(), new String[0]);
 		Backups.thread = null;
 		System.gc();
 	}
@@ -179,16 +178,5 @@ public class ThreadBackup extends Thread
 		if(num < 10) sb.append('0');
 		sb.append(num);
 		if(c != 0) sb.append(c);
-	}
-	
-	private static void setSave(boolean b)
-	{
-		MinecraftServer ms = LatCoreMC.getServer();
-		
-		for(int i = 0; i < ms.worldServers.length; ++i)
-		{
-			if(ms.worldServers[i] != null)
-				ms.worldServers[i].levelSaving = b;
-		}
 	}
 }

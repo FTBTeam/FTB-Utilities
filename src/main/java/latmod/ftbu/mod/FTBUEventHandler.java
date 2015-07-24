@@ -3,6 +3,7 @@ import java.io.File;
 import java.util.*;
 
 import latmod.ftbu.core.*;
+import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.event.*;
 import latmod.ftbu.core.inv.LMInvUtils;
 import latmod.ftbu.core.item.ICreativeSafeItem;
@@ -12,18 +13,22 @@ import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.backups.Backups;
 import latmod.ftbu.mod.claims.*;
+import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.mod.cmd.CmdMotd;
 import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.event.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.*;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.eventhandler.*;
+import cpw.mods.fml.relauncher.*;
 
 public class FTBUEventHandler // FTBUTickHandler
 {
@@ -70,12 +75,7 @@ public class FTBUEventHandler // FTBUTickHandler
 				LMInvUtils.giveItem(ep, is);
 		}
 		
-		/*p.sendInfo(null);
-		for(LMPlayer p1 : LMPlayer.map.values)
-			p1.sendInfo(ep);
-		*/
-		
-		LMNetHelper.sendTo(ep, p.getInfo());
+		LMNetHelper.sendTo(null, new MessageLMPlayerInfo(p));
 		CmdMotd.printMotd(ep);
 		Backups.shouldRun = true;
 		
@@ -97,7 +97,7 @@ public class FTBUEventHandler // FTBUTickHandler
 			
 			new LMPlayerServerEvent.LoggedOut(p, (EntityPlayerMP)e.player).post();
 			LMNetHelper.sendTo(null, new MessageLMPlayerLoggedOut(p));
-			LMNetHelper.sendTo(null, p.getInfo());
+			LMNetHelper.sendTo(null, new MessageLMPlayerInfo(p));
 			p.setPlayer(null);
 			Backups.shouldRun = true;
 		}
@@ -301,6 +301,48 @@ public class FTBUEventHandler // FTBUTickHandler
 		{
 			ClaimedChunk c = Claims.get(dim, cx, cz);
 			if(c != null && c.claims.isSafe()) e.setCanceled(true);
+		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	public void onChatEvent(net.minecraftforge.client.event.ClientChatReceivedEvent e)
+	{
+		if(FTBUClient.chatLinks.getB())
+		{
+			String[] msg = e.message.getUnformattedText().split(" ");
+			
+			FastList<String> links = new FastList<String>();
+			
+			for(String s : msg)
+			{
+				if(s.startsWith("http://") || s.startsWith("https://"))
+					links.add(s);
+			}
+			
+			if(!links.isEmpty())
+			{
+				final IChatComponent line = new ChatComponentText("");
+				boolean oneLink = links.size() == 1;
+				
+				for(int i = 0; i < links.size(); i++)
+				{
+					String link = links.get(i);
+					IChatComponent c = new ChatComponentText(oneLink ? "[ Link ]" : ("[ Link #" + (i + 1) + " ]"));
+					c.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(link)));
+					c.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, link));
+					line.appendSibling(c);
+					if(!oneLink) line.appendSibling(new ChatComponentText(" "));
+				}
+				
+				line.getChatStyle().setColor(EnumChatFormatting.GOLD);
+				
+				LatCoreMCClient.addCallbackEvent(new ICallbackEvent()
+				{
+					public void onCallback()
+					{ LatCoreMC.printChat(null, line); }
+				});
+			}
 		}
 	}
 }

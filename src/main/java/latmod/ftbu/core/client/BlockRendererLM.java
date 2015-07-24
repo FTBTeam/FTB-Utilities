@@ -40,8 +40,6 @@ public class BlockRendererLM implements ISimpleBlockRenderingHandler
 	
 	public static class BlockCustom extends Block
 	{
-		public static final BlockCustom inst = new BlockCustom();
-		
 		public BlockCustom()
 		{ super(Material.glass); }
 		
@@ -54,7 +52,6 @@ public class BlockRendererLM implements ISimpleBlockRenderingHandler
 	
 	public static class BlockGlowing extends BlockCustom
 	{
-		public static final BlockGlowing instGlowing = new BlockGlowing();
 		public static final int MAX = 0xF000F0;
 		
 		public BlockGlowing()

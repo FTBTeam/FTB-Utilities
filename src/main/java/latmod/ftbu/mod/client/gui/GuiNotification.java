@@ -49,7 +49,7 @@ public class GuiNotification extends Gui
 			GL11.glOrtho(0D, displayW, displayH, 0D, 1000D, 3000D);
 			GL11.glMatrixMode(GL11.GL_MODELVIEW);
 			GL11.glLoadIdentity();
-			GL11.glTranslatef(0.0F, 0.0F, -2000.0F);
+			GL11.glTranslatef(0F, 0F, -2000F);
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
 			GL11.glDepthMask(false);
 			double d1 = d0 * 2D;
@@ -68,7 +68,7 @@ public class GuiNotification extends Gui
 			
 			int i = displayW - width;
 			int j = 0 - (int)(d1 * 36D);
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			GL11.glColor4f(1F, 1F, 1F, 1F);
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glDisable(GL11.GL_LIGHTING);
 			drawRect(i, j, displayW, j + 32, LatCore.Colors.getRGBA(notification.color, 140));

@@ -136,10 +136,15 @@ public interface IPaintable
 		}
 	}
 	
-	public static interface ICustomPaintBlock
+	public static interface ICustomPaintBlockIcon
 	{
 		@SideOnly(Side.CLIENT)
-		public IIcon getCustomPaint(int side, int meta);
+		public IIcon getCustomPaintIcon(int side, Paint p);
+	}
+	
+	public static interface ICustomPaintBlock
+	{
+		public Paint getCustomPaint(World w, int x, int y, int z);
 	}
 	
 	public static interface INoPaint
@@ -170,7 +175,7 @@ public interface IPaintable
 		{
 			if(w.isRemote) return true;
 			
-			TileEntity te = ep.worldObj.getTileEntity(x, y, z);
+			TileEntity te = w.getTileEntity(x, y, z);
 			
 			if(te != null && te instanceof IPaintable)
 			{
@@ -198,13 +203,13 @@ public interface IPaintable
 			}
 			else if(ep.isSneaking())
 			{
-				Block b = ep.worldObj.getBlock(x, y, z);
+				Block b = w.getBlock(x, y, z);
 				
 				if(b != Blocks.air)
 				{
-					int m = ep.worldObj.getBlockMetadata(x, y, z);
+					int m = w.getBlockMetadata(x, y, z);
 					
-					if(b.hasTileEntity(m)) return true;
+					if(b.hasTileEntity(m) && !(b instanceof ICustomPaintBlock)) return true;
 					
 					if(b.getBlockBoundsMinX() == 0D && b.getBlockBoundsMinY() == 0D && b.getBlockBoundsMinZ() == 0D
 					&& b.getBlockBoundsMaxX() == 1D && b.getBlockBoundsMaxY() == 1D && b.getBlockBoundsMaxZ() == 1D)
@@ -213,6 +218,13 @@ public interface IPaintable
 							return true;
 						
 						ItemStack paint = new ItemStack(b, 1, m);
+						
+						if(b instanceof ICustomPaintBlock)
+						{
+							Paint p = ((ICustomPaintBlock) b).getCustomPaint(w, x, y, z);
+							if(p != null) paint = new ItemStack(p.block, 1, p.meta);
+							else return true;
+						}
 						
 						try
 						{
@@ -289,12 +301,14 @@ public interface IPaintable
 			if(p != null)
 			{
 				if(p.block == null || p.block == Blocks.air) icon = Blocks.stone.getBlockTextureFromSide(1);
-				else try
+				else// try
 				{
-					if(p.block instanceof ICustomPaintBlock)
+					Block bo = iba.getBlock(x, y, z);
+					if(bo instanceof ICustomPaintBlockIcon)
 					{
-						icon = ((ICustomPaintBlock)p.block).getCustomPaint(side, p.meta);
-						if(icon == null) icon = defIcon;
+						IIcon i1 = ((ICustomPaintBlockIcon)bo).getCustomPaintIcon(side, p);
+						if(i1 != null) icon = i1;
+						else icon = p.block.getIcon(rb.blockAccess, x, y, z, side);;
 					}
 					else icon = p.block.getIcon(rb.blockAccess, x, y, z, side);
 					
@@ -303,10 +317,10 @@ public interface IPaintable
 					else
 						rb.setCustomColor(p.block.colorMultiplier(rb.blockAccess, x, y, z));
 				}
-				catch(Exception e)
+				/*catch(Exception e)
 				{
 					icon = Blocks.stone.getBlockTextureFromSide(1);
-				}
+				}*/
 			}
 			
 			rb.setOverrideBlockTexture(icon);

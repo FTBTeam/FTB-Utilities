@@ -1,16 +1,19 @@
 package latmod.ftbu.mod.cmd.all;
 
-import latmod.ftbu.core.LatCoreMC;
+import latmod.ftbu.core.*;
+import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.cmd.*;
 import latmod.ftbu.core.world.*;
+import latmod.ftbu.mod.FTBUGuiHandler;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumChatFormatting;
 
 public class CmdFTBUFriends extends SubCommand
 {
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
-		if(i == 0) return new String[] { "add", "rem" };
+		if(i == 0) return new String[] { "add", "rem", "list", "gui" };
 		return null;
 	}
 	
@@ -22,6 +25,18 @@ public class CmdFTBUFriends extends SubCommand
 	
 	public String onCommand(ICommandSender ics, String[] args)
 	{
+		if(args.length == 0 || args[0].equals("gui"))
+		{
+			EntityPlayerMP ep = CommandLM.getCommandSenderAsPlayer(ics);
+			LatCoreMCClient.addCallbackEvent(new ICallbackEvent()
+			{
+				public void onCallback()
+				{ FTBUGuiHandler.instance.openGui(ep, FTBUGuiHandler.FRIENDS, null); }
+			});
+			
+			return null;
+		}
+		
 		CommandLM.checkArgs(args, 1);
 		
 		LMPlayerServer owner = CommandLM.getLMPlayer(ics);

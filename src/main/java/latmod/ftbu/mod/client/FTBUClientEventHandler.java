@@ -11,9 +11,8 @@ import latmod.ftbu.mod.claims.ChunkType;
 import latmod.ftbu.mod.client.badges.ThreadLoadBadges;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.event.*;
 import net.minecraft.item.*;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -75,81 +74,6 @@ public class FTBUClientEventHandler
 		{
 			ThreadLoadBadges.init();
 		}
-	}
-	
-	@SubscribeEvent
-	public void onChatEvent(net.minecraftforge.client.event.ClientChatReceivedEvent e)
-	{
-		if(FTBUClient.chatLinks.getB())
-		{
-			String[] msg = e.message.getUnformattedText().split(" ");
-			
-			FastList<String> links = new FastList<String>();
-			
-			for(String s : msg)
-			{
-				if(s.startsWith("http://") || s.startsWith("https://"))
-					links.add(s);
-			}
-			
-			if(!links.isEmpty())
-			{
-				final IChatComponent line = new ChatComponentText("");
-				boolean oneLink = links.size() == 1;
-				
-				for(int i = 0; i < links.size(); i++)
-				{
-					String link = links.get(i);
-					IChatComponent c = new ChatComponentText(oneLink ? "[Link]" : ("[Link #" + (i + 1) + "]"));
-					c.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(link)));
-					c.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, link));
-					line.appendSibling(c);
-					if(!oneLink) line.appendSibling(new ChatComponentText(" "));
-				}
-				
-				line.getChatStyle().setColor(EnumChatFormatting.GOLD);
-				
-				Thread thread = new Thread()
-				{
-					public void run()
-					{
-						try { Thread.sleep(50L); }
-						catch(Exception e) { }
-						LatCoreMC.printChat(null, line);
-					}
-				};
-				
-				thread.setDaemon(true);
-				thread.start();
-			}
-		}
-		/*else if(chatLinks == 2)
-		{
-			String[] msg = e.message.getFormattedText().split(" ");
-			
-			IChatComponent line = new ChatComponentText("");
-			//e.message.getSiblings();
-			for(int i = 0; i < msg.length; i++)
-			{
-				if(msg[i].contains("http://") || msg[i].contains("https://"))
-				{
-					String link = LatCoreMC.removeFormatting(msg[i]);
-					IChatComponent c = new ChatComponentText("[Link]");
-					c.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(link)));
-					c.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, link));
-					c.getChatStyle().setColor(EnumChatFormatting.GOLD);
-					line.appendSibling(c);
-				}
-				else
-				{
-					line.appendSibling(new ChatComponentText(msg[i]));
-				}
-				
-				if(i != msg.length - 1) line.appendSibling(new ChatComponentText(" "));
-			}
-			
-			e.message = line;
-		}*/
 	}
 	
 	@SubscribeEvent

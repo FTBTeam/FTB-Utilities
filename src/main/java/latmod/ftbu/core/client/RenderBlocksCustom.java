@@ -20,6 +20,7 @@ public class RenderBlocksCustom extends RenderBlocks
 	public float customColRed = 1F;
 	public float customColGreen = 1F;
 	public float customColBlue = 1F;
+	public boolean clampBounds = false;
 	
 	public void setCustomColor(Integer col)
 	{
@@ -116,7 +117,10 @@ public class RenderBlocksCustom extends RenderBlocks
 	{ Tessellator.instance.setColorOpaque_F(customColRed, customColGreen, customColBlue); }
 	
 	public void setRenderBounds(double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
-	{ super.setRenderBounds(Math.max(0D, minX), Math.max(0D, minY), Math.max(0D, minZ), Math.min(1D, maxX), Math.min(1D, maxY), Math.min(1D, maxZ)); }
+	{
+		if(clampBounds) super.setRenderBounds(Math.max(0D, minX), Math.max(0D, minY), Math.max(0D, minZ), Math.min(1D, maxX), Math.min(1D, maxY), Math.min(1D, maxZ));
+		else super.setRenderBounds(minX, minY, minZ, maxX, maxY, maxZ);
+	}
 	
 	public void setRenderBounds(AxisAlignedBB aabb)
 	{ if(aabb != null) super.setRenderBounds(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ); }

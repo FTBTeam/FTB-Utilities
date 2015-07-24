@@ -51,7 +51,7 @@ public class CmdAdminBackup extends SubCommand
 				String sizeW = LMFileUtils.getSizeS(ics.getEntityWorld().getSaveHandler().getWorldDirectory());
 				String sizeT = LMFileUtils.getSizeS(Backups.backupsFolder);
 				
-				return CommandLM.FINE + "Current world size: " + sizeW + ", total backups size: " + sizeT;
+				return CommandLM.FINE + "Current world size: " + sizeW + ", total backups folder size: " + sizeT;
 			}
 		}
 		

@@ -40,7 +40,6 @@ public class FTBUClient extends FTBUCommon
 	
 	public static final ClientConfig miscConfig = new ClientConfig("ftbu_misc").setHidden();
 	public static final ClientConfig.Property hideArmorFG = new ClientConfig.Property("hide_armor_fg", false);
-	public static final ClientConfig.Property sortingFG = new ClientConfig.Property("sorting_fg", 0, "Friends", "A-Z").setRawValues();
 	public static final ClientConfig.Property openHSB = new ClientConfig.Property("openHSB_cg", false);
 	
 	private static void initConfig()
@@ -54,7 +53,6 @@ public class FTBUClient extends FTBUCommon
 		ClientConfig.Registry.add(clientConfig);
 		
 		miscConfig.add(hideArmorFG);
-		miscConfig.add(sortingFG);
 		miscConfig.add(openHSB);
 		ClientConfig.Registry.add(miscConfig);
 	}

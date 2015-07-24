@@ -1,6 +1,7 @@
 package latmod.ftbu.mod.client;
-import java.util.*;
+import java.util.Comparator;
 
+import latmod.ftbu.core.ICallbackEvent;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.client.model.*;
 import latmod.ftbu.core.util.*;
@@ -35,6 +36,8 @@ public class FTBURenderHandler
 	private static double playerX, playerY, playerZ, renderX, renderY, renderZ, far = 4D;
 	
 	public static final FastList<GuiNotification> messages = new FastList<GuiNotification>();
+	public GuiNotification currentNotification = null;
+	public static final FastList<ICallbackEvent> callbacks = new FastList<ICallbackEvent>();
 	
 	private static final FastList<WaypointClient> visibleBeacons = new FastList<WaypointClient>();
 	private static final FastList<WaypointClient> visibleMarkers = new FastList<WaypointClient>();
@@ -46,7 +49,7 @@ public class FTBURenderHandler
 	@SubscribeEvent
 	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
 	{
-		if(!Badge.isReloading && FTBUClient.enablePlayerDecorators.getB() && !e.entityPlayer.isInvisible())
+		if(!Badge.isReloading && !Badge.badges.isEmpty() && FTBUClient.enablePlayerDecorators.getB() && !e.entityPlayer.isInvisible())
 		{
 			Badge b = Badge.badges.get(e.entityPlayer.getUniqueID());
 			if(b != null) b.onPlayerRender(e.entityPlayer);
@@ -54,19 +57,35 @@ public class FTBURenderHandler
 	}
 	
 	@SubscribeEvent
-	public void renderTick(TickEvent.RenderTickEvent event)
+	public void renderTick(TickEvent.RenderTickEvent e)
 	{
 		mc = Minecraft.getMinecraft();
 		if(mc.theWorld == null) return;
 		
-		if(event.phase == TickEvent.Phase.END)
+		if(e.phase == TickEvent.Phase.END)
 		{
-			if(!messages.isEmpty())
+			if(currentNotification != null)
 			{
-				GuiNotification m = messages.get(0);
-				m.render(mc);
-				if(m.isDead()) messages.remove(0);
+				currentNotification.render(mc);
+				if(currentNotification.isDead())
+					currentNotification = null;
 			}
+			else if(!messages.isEmpty())
+			{
+				currentNotification = messages.get(0);
+				messages.remove(0);
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void clientTick(TickEvent.ClientTickEvent e)
+	{
+		if(e.phase == TickEvent.Phase.END && !callbacks.isEmpty())
+		{
+			for(int i = 0; i < callbacks.size(); i++)
+				callbacks.get(i).onCallback();
+			callbacks.clear();
 		}
 	}
 	

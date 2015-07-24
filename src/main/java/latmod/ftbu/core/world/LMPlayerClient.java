@@ -19,6 +19,8 @@ public class LMPlayerClient extends LMPlayer
 	public boolean isOnline;
 	public int claimedChunks;
 	public int maxClaimPower;
+	public long lastSeen;
+	public long firstJoined;
 	
 	public LMPlayerClient(LMWorldClient w, int i, GameProfile gp)
 	{
@@ -41,8 +43,12 @@ public class LMPlayerClient extends LMPlayer
 	{
 		LMNBTUtils.toStringList(clientInfo, tag.getTagList("I", LMNBTUtils.STRING));
 		
-		if(!isOnline() && tag.hasKey("L")) clientInfo.add("Last seen " + LatCore.getTimeAgo(tag.getLong("L")) + " ago");
-		if(tag.hasKey("J")) clientInfo.add("Joined " + LatCore.getTimeAgo(tag.getLong("J")) + " ago");
+		lastSeen = tag.getLong("L");
+		if(!isOnline() && lastSeen > 0L) clientInfo.add("Last seen " + LatCore.getTimeAgo(lastSeen) + " ago");
+		
+		firstJoined = tag.getLong("J");
+		if(firstJoined > 0L) clientInfo.add("Joined " + LatCore.getTimeAgo(firstJoined) + " ago");
+		
 		if(deaths > 0) clientInfo.add("Deaths: " + deaths);
 		
 		new LMPlayerClientEvent.CustomInfo(this, clientInfo).post();
@@ -64,4 +70,16 @@ public class LMPlayerClient extends LMPlayer
 	
 	public void onPostLoaded()
 	{ new LMPlayerClientEvent.DataLoaded(this).post(); }
+	
+	/** 0 - None, 1 - Friend, 2 - Inviting, 3 - Invited */
+	public int getStatus(LMPlayerClient p)
+	{
+		boolean b1 = isFriendRaw(p);
+		boolean b2 = p.isFriendRaw(this);
+		
+		if(b1 && b2) return 1;
+		if(b1 && !b2) return 2;
+		if(!b1 && b2) return 3;
+		return 0;
+	}
 }

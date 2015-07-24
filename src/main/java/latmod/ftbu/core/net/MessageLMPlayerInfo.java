@@ -8,26 +8,38 @@ import cpw.mods.fml.relauncher.*;
 
 public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo> implements IClientMessageLM<MessageLMPlayerInfo>
 {
-	public int playerID;
 	public NBTTagCompound info;
 	
 	public MessageLMPlayerInfo() { }
 	
-	public MessageLMPlayerInfo(int i, NBTTagCompound s)
+	public MessageLMPlayerInfo(LMPlayerServer p0)
 	{
-		playerID = i;
-		info = s;
+		info = new NBTTagCompound();
+		
+		if(p0 == null)
+		{
+			for(LMPlayerServer p : LMWorldServer.inst.players)
+			{
+				NBTTagCompound tag = new NBTTagCompound();
+				p.getInfo(tag);
+				info.setTag("" + p.playerID, tag);
+			}
+		}
+		else
+		{
+			NBTTagCompound tag = new NBTTagCompound();
+			p0.getInfo(tag);
+			info.setTag("" + p0.playerID, tag);
+		}
 	}
 	
 	public void fromBytes(ByteBuf bb)
 	{
-		playerID = bb.readInt();
 		info = LMNetHelper.readTagCompound(bb);
 	}
 	
 	public void toBytes(ByteBuf bb)
 	{
-		bb.writeInt(playerID);
 		LMNetHelper.writeTagCompound(bb, info);
 	}
 	
@@ -37,7 +49,10 @@ public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo> implemen
 	@SideOnly(Side.CLIENT)
 	public void onMessageClient(MessageLMPlayerInfo m, MessageContext ctx)
 	{
-		LMPlayerClient p = LMWorldClient.inst.getPlayer(m.playerID);
-		if(p != null) p.receiveInfo(m.info);
+		for(LMPlayerClient p : LMWorldClient.inst.players)
+		{
+			NBTTagCompound tag = (NBTTagCompound)m.info.getTag("" + p.playerID);
+			if(tag != null) p.receiveInfo(tag);
+		}
 	}
 }

@@ -11,14 +11,12 @@ public class Claims
 {
 	public final LMPlayerServer owner;
 	private final FastList<ClaimedChunk> chunks;
-	public String desc;
 	private boolean safe;
 	
 	public Claims(LMPlayerServer p)
 	{
 		owner = p;
 		chunks = new FastList<ClaimedChunk>();
-		desc = "";
 		safe = false;
 	}
 	
@@ -35,7 +33,6 @@ public class Claims
 			chunks.add(new ClaimedChunk(this, ai[0], ai[1], ai[2]));
 		}
 		
-		desc = tag.getString("Desc");
 		safe = tag.getBoolean("Safe");
 	}
 	
@@ -51,7 +48,6 @@ public class Claims
 		}
 		
 		tag.setTag("Chunks", list);
-		tag.setString("Desc", desc);
 		tag.setBoolean("Safe", safe);
 		
 		serverData.setTag("Claims", tag);

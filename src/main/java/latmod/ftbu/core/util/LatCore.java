@@ -353,7 +353,7 @@ public class LatCore
 		long hour = 60L * min;
 		long day = 24L * hour;
 		
-		if(t < sec) return "Now";
+		if(t < sec) return "0 seconds";
 		if(t < min) return (t / sec) + getPW(t / sec, " second", " seconds");
 		if(t < hour) return (t / min) + getPW(t / min, " minute", " minutes");
 		if(t < day) return (t / hour) + getPW(t / hour, " hour", " hours");

@@ -3,6 +3,8 @@ package latmod.ftbu.core.client;
 import java.io.File;
 import java.util.UUID;
 
+import latmod.ftbu.core.ICallbackEvent;
+import latmod.ftbu.mod.client.FTBURenderHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -57,6 +59,9 @@ public final class LatCoreMCClient // LatCoreMC
 	
 	public static KeyBinding addKeyBinding(String name, int key, String cat)
 	{ KeyBinding k = new KeyBinding(name, key, cat); ClientRegistry.registerKeyBinding(k); return k; }
+	
+	public static void addCallbackEvent(ICallbackEvent e)
+	{ FTBURenderHandler.callbacks.add(e); }
 	
 	public static void pushMaxBrightness()
 	{

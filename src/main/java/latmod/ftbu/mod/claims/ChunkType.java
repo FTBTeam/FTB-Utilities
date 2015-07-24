@@ -3,7 +3,7 @@ package latmod.ftbu.mod.claims;
 import java.util.List;
 
 import latmod.ftbu.core.util.MathHelperLM;
-import latmod.ftbu.core.world.LMPlayer;
+import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.minimap.*;
 import latmod.ftbu.mod.config.FTBUConfig;
@@ -74,7 +74,7 @@ public enum ChunkType
 	{ return get(dim, MathHelperLM.chunk(x), MathHelperLM.chunk(z), p); }
 	
 	@SideOnly(Side.CLIENT)
-	public static void getMessage(int dim, int cx, int cz, LMPlayer p, List<String> l, boolean shift)
+	public static void getMessage(int dim, int cx, int cz, LMPlayerClient p, List<String> l, boolean shift)
 	{
 		MChunk mc = Minimap.get(dim).getChunk(cx, cz);
 		
@@ -87,11 +87,7 @@ public enum ChunkType
 			{
 				l.add(t.chatColor + t.getIDS());
 				if(shift && mc.owner != null)
-				{
-					//if(!c.claims.desc.isEmpty())
-					//	l.add(c.claims.desc);
 					l.add(mc.owner.getName());
-				}
 			}
 		}
 	}

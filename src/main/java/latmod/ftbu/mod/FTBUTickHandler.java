@@ -8,6 +8,7 @@ import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.backups.Backups;
 import latmod.ftbu.mod.claims.*;
 import latmod.ftbu.mod.config.FTBUConfig;
+import net.minecraft.command.server.CommandSaveAll;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -77,7 +78,12 @@ public class FTBUTickHandler
 					
 					String msg = null;
 					
-					if(secondsLeft <= 0) { LatCoreMC.getServer().initiateShutdown(); return; }
+					if(secondsLeft <= 0)
+					{
+						new CommandSaveAll().processCommand(BroadcastSender.inst, new String[] { "flush" });
+						LatCoreMC.getServer().initiateShutdown();
+						return;
+					}
 					else if(secondsLeft <= 10) msg = secondsLeft + " Seconds";
 					else if(secondsLeft == 30) msg = "30 Seconds";
 					else if(secondsLeft == 60) msg = "1 Minute";

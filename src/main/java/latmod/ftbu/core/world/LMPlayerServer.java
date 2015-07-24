@@ -91,10 +91,8 @@ public class LMPlayerServer extends LMPlayer
 	
 	// Reading / Writing //
 	
-	public MessageLMPlayerInfo getInfo()
+	public void getInfo(NBTTagCompound tag)
 	{
-		NBTTagCompound tag = new NBTTagCompound();
-		
 		long ms = LatCore.millis();
 		
 		FastList<String> info = new FastList<String>();
@@ -104,9 +102,6 @@ public class LMPlayerServer extends LMPlayer
 		if(lastSeen > 0L) tag.setLong("L", ms - lastSeen);
 		if(firstJoined > 0L) tag.setLong("J", ms - firstJoined);
 		if(deaths > 0) tag.setShort("D", (short)deaths);
-		
-		//LatCoreMC.printChat(ep, "Sending info: " + tag);
-		return new MessageLMPlayerInfo(playerID, tag);
 	}
 	
 	public void readFromServer(NBTTagCompound tag)

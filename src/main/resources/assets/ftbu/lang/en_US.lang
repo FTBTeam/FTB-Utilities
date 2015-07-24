@@ -115,3 +115,10 @@ ftbu:chunktype.world_border.warning=You have reached the world border!
 ftbu:chunktype.wilderness=Wilderness
 ftbu:chunktype.claimed=Claimed Area
 ftbu:chunktype.unloaded=Chunk not loaded
+
+ftbu:button.lmp_comparator=Sorting
+lmp_comparator.friends_status=Friends Status
+lmp_comparator.name=Username
+lmp_comparator.deaths=Deaths
+lmp_comparator.date_joined=Date Joined
+lmp_comparator.last_seen=Last Seen

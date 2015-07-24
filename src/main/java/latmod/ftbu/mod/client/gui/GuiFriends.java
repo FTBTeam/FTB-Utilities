@@ -1,11 +1,15 @@
 package latmod.ftbu.mod.client.gui;
 
 import static net.minecraft.util.EnumChatFormatting.*;
+
+import java.util.Comparator;
+
 import latmod.ftbu.core.FTBULang;
 import latmod.ftbu.core.client.ClientConfig;
+import latmod.ftbu.core.event.EventLM;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
-import latmod.ftbu.core.util.FastList;
+import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
@@ -14,6 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.*;
 
@@ -47,6 +52,8 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	
 	private static LMClientPlayer selectedPlayer = null;
 	private static final FastList<ActionButton> actionButtons = new FastList<ActionButton>();
+	private static LMPlayerClient staticOwner;
+	private static LMPComparator comparator;
 	
 	public GuiFriends(GuiScreen gui)
 	{
@@ -56,6 +63,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		
 		owner = LMWorldClient.inst.getPlayer(container.player);
 		players = new FastList<Player>();
+		staticOwner = owner;
 		
 		xSize = 240;
 		ySize = 181;
@@ -88,12 +96,32 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		{
 			public void onButtonPressed(int b)
 			{
-				FTBUClient.sortingFG.incValue();
-				ClientConfig.Registry.save();
+				if(b == 0)
+					comparator = LMPComparator.map.values.get((comparator.listID + 1) % LMPComparator.map.size());
+				else
+				{
+					int i = comparator.listID - 1;
+					if(i < 0) i = LMPComparator.map.size() - 1;
+					comparator = LMPComparator.map.values.get(i);
+				}
+				
 				refreshPlayers();
 				playClickSound();
 			}
+			
+			public void addMouseOverText(FastList<String> l)
+			{
+				l.add(title);
+				if(isShiftKeyDown())
+				{
+					for(LMPComparator c : LMPComparator.map.values)
+						l.add(((c == comparator) ? EnumChatFormatting.BLUE : EnumChatFormatting.GRAY) + c.translatedName);
+				}
+				else l.add(EnumChatFormatting.BLUE + comparator.translatedName);
+			}
 		};
+		
+		buttonSort.title = FTBU.mod.translateClient("button.lmp_comparator");
 		
 		buttonPrevPage = new ButtonLM(this, 85, 158, 35, 16)
 		{
@@ -137,13 +165,15 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		
 		if(selectedPlayer == null) selectedPlayer = new LMClientPlayer(owner);
 		
+		LMPComparator.init();
+		if(comparator == null)
+			comparator = LMPComparator.map.values.get(0);
+		
 		refreshPlayers();
 	}
 	
 	public void addWidgets(FastList<WidgetLM> l)
 	{
-		buttonSort.title = BLUE + "Sort: " + FTBUClient.sortingFG.getValueS(FTBUClient.sortingFG.getI());
-		
 		l.add(searchBox);
 		l.add(buttonSave);
 		l.add(buttonSort);
@@ -223,10 +253,14 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			}
 		}
 		
+		GL11.glPushMatrix();
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 		int playerX = guiLeft + 44;
 		int playerY = guiTop + 163;
 		GuiInventory.func_147046_a(playerX, playerY, 55, playerX - mouseX, playerY - 75 - mouseY, selectedPlayer);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
+		GL11.glPopAttrib();
+		GL11.glPopAttrib();
 	}
 	
 	public void drawText(FastList<String> l)
@@ -243,7 +277,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	public void initGui()
 	{
 		super.initGui();
-		LMNetHelper.sendToServer(new MessageLMPlayerRequestInfo(owner));
+		LMNetHelper.sendToServer(new MessageLMPlayerRequestInfo(0));
 	}
 	
 	public void onClientAction(String action)
@@ -257,11 +291,13 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		
 		players.clear();
 		
-		for(int i = 0; i < LMWorldClient.inst.players.size(); i++)
-		{
-			LMPlayerClient p = LMWorldClient.inst.players.get(i);
-			if(!p.equalsPlayer(owner)) players.add(new Player(p));
-		}
+		FastList<LMPlayerClient> list0 = new FastList<LMPlayerClient>();
+		list0.addAll(LMWorldClient.inst.players);
+		list0.remove(owner);
+		list0.sort(comparator);
+		
+		for(LMPlayerClient p : list0)
+			players.add(new Player(p));
 		
 		if(!searchBox.text.isEmpty())
 		{
@@ -281,8 +317,6 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		if(page < 0) page = maxPages() - 1;
 		if(page >= maxPages()) page = 0;
 		
-		players.sort(null);
-		
 		for(int i = 0; i < pbPlayers.length; i++)
 		{
 			int j = i + page * pbPlayers.length;
@@ -292,7 +326,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		}
 	}
 	
-	public class Player implements Comparable<Player>
+	public class Player
 	{
 		public final LMPlayerClient player;
 		public final boolean isOwner;
@@ -301,32 +335,6 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		{
 			player = p;
 			isOwner = player.equalsPlayer(owner);
-		}
-		
-		public int compareTo(Player o)
-		{
-			int sort = FTBUClient.sortingFG.getI();
-			
-			if(sort == 1) return player.getName().compareToIgnoreCase(o.player.getName());
-			
-			int s0 = getStatus();
-			int s1 = o.getStatus();
-			
-			if(s0 == 0 && s1 != 0) return 1;
-			if(s0 != 0 && s1 == 0) return -1;
-			
-			if(s0 == s1)
-			{
-				boolean on0 = player.isOnline();
-				boolean on1 = o.player.isOnline();
-				
-				if(on0 && !on1) return -1;
-				if(!on0 && on1) return 1;
-				
-				return player.getName().compareToIgnoreCase(o.player.getName());
-			}
-			
-			return Integer.compare(s0, s1);
 		}
 		
 		public boolean equals(Object o)
@@ -338,18 +346,6 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		
 		public boolean isOwner()
 		{ return owner.equalsPlayer(player); }
-		
-		/** 0 - None, 1 - Friend, 2 - Inviting, 3 - Invited */
-		public int getStatus()
-		{
-			boolean b1 = owner.isFriendRaw(player);
-			boolean b2 = player.isFriendRaw(owner);
-			
-			if(b1 && b2) return 1;
-			if(b1 && !b2) return 2;
-			if(!b1 && b2) return 3;
-			return 0;
-		}
 	}
 	
 	public class ButtonPlayer extends ButtonLM
@@ -369,7 +365,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 				selectedPlayer = new LMClientPlayer(player.player);
 				selectedPlayer.func_152121_a(MinecraftProfileTexture.Type.SKIN, AbstractClientPlayer.getLocationSkin(selectedPlayer.playerLM.getName()));
 				selectedPlayer.inventory.currentItem = 0;
-				LMNetHelper.sendToServer(new MessageLMPlayerRequestInfo(selectedPlayer.playerLM));
+				LMNetHelper.sendToServer(new MessageLMPlayerRequestInfo(player.player.playerID));
 			}
 			
 			refreshWidgets();
@@ -414,7 +410,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 				
 				if(!player.isOwner())
 				{
-					int status = player.getStatus();
+					int status = owner.getStatus(player.player);
 					if(status > 0) render(icon_status[status - 1]);
 				}
 			}
@@ -438,7 +434,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		{
 			gui.playClickSound();
 			action.onClicked((GuiFriends)gui);
-			LMNetHelper.sendToServer(new MessageLMPlayerRequestInfo(selectedPlayer.playerLM));
+			LMNetHelper.sendToServer(new MessageLMPlayerRequestInfo(selectedPlayer.playerLM.playerID));
 		}
 	}
 	
@@ -525,5 +521,111 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		
 		public boolean isInvisibleToPlayer(EntityPlayer ep)
 		{ return true; }
+	}
+	
+	public static class LMPComparator implements Comparator<LMPlayerClient>
+	{
+		private static final FastMap<String, LMPComparator> map = new FastMap<String, LMPComparator>();
+		
+		public static void init()
+		{
+			map.clear();
+			Event e = new Event();
+			e.add("friends_status", new ByFriendsStatus());
+			e.add("name", new ByName());
+			e.add("deaths", new ByDeaths());
+			e.add("date_joined", new ByJoined());
+			e.add("last_seen", new ByLastSeen());
+			e.post();
+		}
+		
+		public String translatedName;
+		public int listID;
+		
+		public static class Event extends EventLM
+		{
+			public void add(String s, LMPComparator c)
+			{
+				if(!map.keys.contains(s))
+				{
+					c.listID = map.size();
+					c.translatedName = I18n.format("lmp_comparator." + s);
+					map.put(s, c);
+				}
+			}
+		}
+		
+		public int compare(LMPlayerClient o1, LMPlayerClient o2)
+		{
+			return 0;
+		}
+		
+		public static class ByName extends LMPComparator
+		{
+			public int compare(LMPlayerClient o1, LMPlayerClient o2)
+			{ return o1.getName().compareToIgnoreCase(o2.getName()); }
+		}
+		
+		public static class ByOnlineStatus extends ByName
+		{
+			public int compare(LMPlayerClient o1, LMPlayerClient o2)
+			{
+				boolean on0 = o1.isOnline();
+				boolean on1 = o2.isOnline();
+				
+				if(on0 && !on1) return -1;
+				if(!on0 && on1) return 1;
+				
+				return super.compare(o1, o2);
+			}
+		}
+		
+		public static class ByFriendsStatus extends ByOnlineStatus
+		{
+			public int compare(LMPlayerClient o1, LMPlayerClient o2)
+			{
+				int s0 = staticOwner.getStatus(o1);
+				int s1 = staticOwner.getStatus(o2);
+				
+				if(s0 == 0 && s1 != 0) return 1;
+				if(s0 != 0 && s1 == 0) return -1;
+				
+				if(s0 == s1)
+					return super.compare(o1, o2);
+				return Integer.compare(s0, s1);
+			}
+		}
+		
+		public static class ByDeaths extends ByName
+		{
+			public int compare(LMPlayerClient o1, LMPlayerClient o2)
+			{
+				int i = Integer.compare(o2.deaths, o1.deaths);
+				if(i == 0) return super.compare(o1, o2);
+				return i;
+			}
+		}
+		
+		public static class ByJoined extends ByOnlineStatus
+		{
+			public int compare(LMPlayerClient o1, LMPlayerClient o2)
+			{
+				if(o1.firstJoined == 0L) return 1;
+				int i = Long.compare(o1.firstJoined, o2.firstJoined);
+				if(i == 0) return super.compare(o1, o2);
+				return i;
+			}
+		}
+		
+		public static class ByLastSeen extends ByOnlineStatus
+		{
+			public int compare(LMPlayerClient o1, LMPlayerClient o2)
+			{
+				if(o1.lastSeen == 0L) return 1;
+				int i = Long.compare(o1.lastSeen, o2.lastSeen);
+				if(i == 0) return super.compare(o1, o2);
+				return i;
+			}
+		}
 	}
 }

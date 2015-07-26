@@ -21,8 +21,6 @@ public class LMPlayerServer extends LMPlayer
 	
 	public NBTTagCompound serverData;
 	public EntityPos lastPos, lastDeath;
-	private long lastSeen;
-	private long firstJoined;
 	public final Claims claims;
 	private String playerName;
 	private EntityPlayerMP entityPlayer = null;

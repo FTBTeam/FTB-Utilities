@@ -410,8 +410,8 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 				
 				if(!player.isOwner())
 				{
-					int status = owner.getStatus(player.player);
-					if(status > 0) render(icon_status[status - 1]);
+					FriendStatus status = owner.getStatus(player.player);
+					if(status != FriendStatus.NONE) render(icon_status[status.ordinal() - 1]);
 				}
 			}
 		}
@@ -584,15 +584,9 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		{
 			public int compare(LMPlayerClient o1, LMPlayerClient o2)
 			{
-				int s0 = staticOwner.getStatus(o1);
-				int s1 = staticOwner.getStatus(o2);
-				
-				if(s0 == 0 && s1 != 0) return 1;
-				if(s0 != 0 && s1 == 0) return -1;
-				
-				if(s0 == s1)
-					return super.compare(o1, o2);
-				return Integer.compare(s0, s1);
+				int i = FriendStatus.compare(staticOwner, o1, o2);
+				if(i == 0) return super.compare(o1, o2);
+				return i;
 			}
 		}
 		

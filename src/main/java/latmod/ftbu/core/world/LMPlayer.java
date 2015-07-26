@@ -26,6 +26,8 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 	public final ItemStack[] lastArmor;
 	public int deaths;
 	public NBTTagCompound commonData;
+	public long lastSeen;
+	public long firstJoined;
 	
 	public LMPlayer(LMWorld<?> w, int i, GameProfile gp)
 	{
@@ -90,4 +92,7 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 		}
 		return list;
 	}
+	
+	public FriendStatus getStatus(LMPlayer p)
+	{ return FriendStatus.get(this, p); }
 }

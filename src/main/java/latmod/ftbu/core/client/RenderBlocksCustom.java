@@ -2,6 +2,7 @@ package latmod.ftbu.core.client;
 
 import latmod.ftbu.core.CustomBlockAccess;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
@@ -33,11 +34,28 @@ public class RenderBlocksCustom extends RenderBlocks
 		}
 	}
 	
-	public boolean renderStandardBlock(Block b, int x, int y, int z)
+	public boolean renderStandardBlock(Block block, int x, int y, int z)
 	{
-		if(customColRed == 1F && customColGreen == 1F && customColBlue == 1F)
-			return super.renderStandardBlock(b, x, y, z);
-		return renderStandardBlockWithColorMultiplier(b, x, y, z, customColRed, customColGreen, customColBlue);
+		float r = customColRed;
+		float g = customColGreen;
+		float b = customColBlue;
+		
+		if(r == 1F && g == 1F && b == 1F)
+		{
+			int l = block.colorMultiplier(blockAccess, x, y, z);
+			r = (float)(l >> 16 & 255) / 255F;
+			g = (float)(l >> 8 & 255) / 255F;
+			b = (float)(l & 255) / 255F;
+		}
+		
+		if (EntityRenderer.anaglyphEnable)
+		{
+			r = (r * 30F + g * 59F + b * 11F) / 100F;
+			g = (r * 30F + g * 70F) / 100F;
+			b = (r * 30F + b * 70F) / 100F;
+		}
+		
+		return Minecraft.isAmbientOcclusionEnabled() && block.getLightValue() == 0 ? (partialRenderBounds ? renderStandardBlockWithAmbientOcclusionPartial(block, x, y, z, r, g, b) : renderStandardBlockWithAmbientOcclusion(block, x, y, z, r, g, b)) : renderStandardBlockWithColorMultiplier(block, x, y, z, r, g, b);
 	}
 	
 	public void renderBlockSandFalling(Block b, World w, int x, int y, int z, int m)
@@ -126,7 +144,7 @@ public class RenderBlocksCustom extends RenderBlocks
 	{ if(aabb != null) super.setRenderBounds(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ); }
 	
 	public void setFaceBounds(int side, AxisAlignedBB aabb)
-	{ setFaceBounds(side, aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ); }
+	{ if(aabb != null) setFaceBounds(side, aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ); }
 	
 	public void setFaceBounds(int side, double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
 	{

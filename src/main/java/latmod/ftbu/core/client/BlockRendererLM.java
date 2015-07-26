@@ -1,5 +1,6 @@
 package latmod.ftbu.core.client;
 
+import latmod.ftbu.core.tile.IPaintable;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -40,6 +41,9 @@ public class BlockRendererLM implements ISimpleBlockRenderingHandler
 	
 	public static class BlockCustom extends Block
 	{
+		public static int currentSide;
+		public static IPaintable.Paint currentPaint;
+		
 		public BlockCustom()
 		{ super(Material.glass); }
 		

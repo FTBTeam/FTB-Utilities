@@ -3,7 +3,7 @@ package latmod.ftbu.core.tile;
 import java.util.Arrays;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.client.RenderBlocksCustom;
+import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.inv.LMInvUtils;
 import latmod.ftbu.core.util.MathHelperLM;
 import net.minecraft.block.Block;
@@ -39,6 +39,9 @@ public interface IPaintable
 			block = b;
 			meta = m;
 		}
+		
+		public String toString()
+		{ return Block.blockRegistry.getNameForObject(block).replace("minecraft:", "") + "@" + meta; }
 		
 		public static void readFromNBT(NBTTagCompound tag, String s, Paint[] paint)
 		{
@@ -256,23 +259,26 @@ public interface IPaintable
 	@SideOnly(Side.CLIENT)
 	public static class Renderer
 	{
-		public static IIcon[] to6(IIcon p)
-		{ return new IIcon[] { p, p, p, p, p, p }; }
-		
 		public static Paint[] to6(Paint p)
 		{ return new Paint[] { p, p, p, p, p, p }; }
 		
-		public static void renderCube(IBlockAccess iba, RenderBlocksCustom rb, Paint[] p, IIcon[] defIcon, int x, int y, int z, AxisAlignedBB aabb)
+		public static void renderCube(IBlockAccess iba, RenderBlocksCustom rb, Paint[] p, Block parent, int x, int y, int z, AxisAlignedBB aabb)
 		{
 			for(int i = 0; i < 6; i++)
 			{
-				rb.setFaceBounds(i, aabb);
-				renderFace(iba, rb, i, p[i], defIcon[i], x, y, z);
+				if(aabb != null) rb.setFaceBounds(i, aabb);
+				else rb.setFaceBounds(i, 0D, 0D, 0D, 1D, 1D, 1D);
+				renderFace(iba, rb, i, p[i], parent, x, y, z);
 			}
 		}
 		
-		public static void renderFace(IBlockAccess iba, RenderBlocksCustom rb, int side, Paint p, IIcon defIcon, int x, int y, int z)
+		public static void renderFace(IBlockAccess iba, RenderBlocksCustom rb, int side, Paint p, Block parent, int x, int y, int z)
 		{
+			BlockRendererLM.BlockCustom.currentSide = side;
+			BlockRendererLM.BlockCustom.currentPaint = p;
+			
+			if(parent == null || !parent.shouldSideBeRendered(iba, x + Facing.offsetsXForSide[side], y + Facing.offsetsYForSide[side], z + Facing.offsetsZForSide[side], side)) return;
+			
 			if(rb.blockAccess != null)
 			{
 				ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[side];
@@ -296,35 +302,29 @@ public interface IPaintable
 			
 			rb.blockAccess = new BlockAccess(iba, x, y, z, p);
 			
-			IIcon icon = defIcon;
+			IIcon icon = null;
 			
-			if(p != null)
+			if(p != null && p.block != null && p.block != Blocks.air)
 			{
-				if(p.block == null || p.block == Blocks.air) icon = Blocks.stone.getBlockTextureFromSide(1);
-				else// try
-				{
-					Block bo = iba.getBlock(x, y, z);
-					if(bo instanceof ICustomPaintBlockIcon)
-					{
-						IIcon i1 = ((ICustomPaintBlockIcon)bo).getCustomPaintIcon(side, p);
-						if(i1 != null) icon = i1;
-						else icon = p.block.getIcon(rb.blockAccess, x, y, z, side);;
-					}
-					else icon = p.block.getIcon(rb.blockAccess, x, y, z, side);
-					
-					if(side != 1 && p.block == Blocks.grass)
-						rb.setCustomColor(null);
-					else
-						rb.setCustomColor(p.block.colorMultiplier(rb.blockAccess, x, y, z));
-				}
-				/*catch(Exception e)
-				{
-					icon = Blocks.stone.getBlockTextureFromSide(1);
-				}*/
+				Block bo = iba.getBlock(x, y, z);
+				if(bo instanceof ICustomPaintBlockIcon)
+					icon = ((ICustomPaintBlockIcon)bo).getCustomPaintIcon(side, p);
+				
+				if(icon == null) icon = p.block.getIcon(rb.blockAccess, x, y, z, side);
+				
+				if(p.block == Blocks.grass && side != 1)
+					rb.setCustomColor(null);
+				else
+					rb.setCustomColor(p.block.colorMultiplier(rb.blockAccess, x, y, z));
 			}
 			
+			if(icon == null) icon = parent.getIcon(iba, x, y, z, side);
+			
+			//LatCoreMC.printChat(null, icon.getIconName() + " : " + side + " : " + p);
+			
+			rb.setCustomColor(null);
 			rb.setOverrideBlockTexture(icon);
-			rb.renderStandardBlock(Blocks.stone, x, y, z);
+			rb.renderStandardBlock(parent, x, y, z);
 			rb.renderAllFaces = b;
 			rb.blockAccess = iba;
 		}

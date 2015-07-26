@@ -19,8 +19,6 @@ public class LMPlayerClient extends LMPlayer
 	public boolean isOnline;
 	public int claimedChunks;
 	public int maxClaimPower;
-	public long lastSeen;
-	public long firstJoined;
 	
 	public LMPlayerClient(LMWorldClient w, int i, GameProfile gp)
 	{
@@ -70,16 +68,4 @@ public class LMPlayerClient extends LMPlayer
 	
 	public void onPostLoaded()
 	{ new LMPlayerClientEvent.DataLoaded(this).post(); }
-	
-	/** 0 - None, 1 - Friend, 2 - Inviting, 3 - Invited */
-	public int getStatus(LMPlayerClient p)
-	{
-		boolean b1 = isFriendRaw(p);
-		boolean b2 = p.isFriendRaw(this);
-		
-		if(b1 && b2) return 1;
-		if(b1 && !b2) return 2;
-		if(!b1 && b2) return 3;
-		return 0;
-	}
 }

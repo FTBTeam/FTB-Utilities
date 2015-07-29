@@ -1,8 +1,8 @@
 package latmod.ftbu.core.client;
 
 import latmod.ftbu.core.CustomBlockAccess;
+import latmod.ftbu.core.util.LatCore;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
@@ -18,20 +18,18 @@ public class RenderBlocksCustom extends RenderBlocks
 	public AxisAlignedBB fullBlock = AxisAlignedBB.getBoundingBox(0D, 0D, 0D, 1D, 1D, 1D);
 	
 	public CustomBlockAccess customBlockAccess = null;
-	public float customColRed = 1F;
-	public float customColGreen = 1F;
-	public float customColBlue = 1F;
+	public float customColRed = -1F;
+	public float customColGreen = -1F;
+	public float customColBlue = -1F;
 	public boolean clampBounds = false;
+	
+	public void setCustomColor(float r, float g, float b)
+	{ customColRed = r; customColGreen = g; customColBlue = b; }
 	
 	public void setCustomColor(Integer col)
 	{
-		if(col == null) customColRed = customColGreen = customColBlue = 1F;
-		else
-		{
-			customColRed = ((col >> 16) & 0xFF) / 255F;
-			customColGreen = ((col >> 8) & 0xFF) / 255F;
-			customColBlue = ((col >> 0) & 0xFF) / 255F;
-		}
+		if(col == null) setCustomColor(-1F, -1F, -1F); else
+		setCustomColor(LatCore.Colors.getRed(col) / 255F, LatCore.Colors.getGreen(col) / 255F, LatCore.Colors.getBlue(col) / 255F);
 	}
 	
 	public boolean renderStandardBlock(Block block, int x, int y, int z)
@@ -40,12 +38,12 @@ public class RenderBlocksCustom extends RenderBlocks
 		float g = customColGreen;
 		float b = customColBlue;
 		
-		if(r == 1F && g == 1F && b == 1F)
+		if(r == -1F || g == -1F || b == -1F)
 		{
-			int l = block.colorMultiplier(blockAccess, x, y, z);
-			r = (float)(l >> 16 & 255) / 255F;
-			g = (float)(l >> 8 & 255) / 255F;
-			b = (float)(l & 255) / 255F;
+			int col = block.colorMultiplier(blockAccess, x, y, z);
+			r = LatCore.Colors.getRed(col) / 255F;
+			g = LatCore.Colors.getGreen(col) / 255F;
+			b = LatCore.Colors.getBlue(col) / 255F;
 		}
 		
 		if (EntityRenderer.anaglyphEnable)
@@ -55,7 +53,13 @@ public class RenderBlocksCustom extends RenderBlocks
 			b = (r * 30F + b * 70F) / 100F;
 		}
 		
-		return Minecraft.isAmbientOcclusionEnabled() && block.getLightValue() == 0 ? (partialRenderBounds ? renderStandardBlockWithAmbientOcclusionPartial(block, x, y, z, r, g, b) : renderStandardBlockWithAmbientOcclusion(block, x, y, z, r, g, b)) : renderStandardBlockWithColorMultiplier(block, x, y, z, r, g, b);
+		return renderStandardBlockRaw(block, x, y, z, r, g, b);
+	}
+	
+	public boolean renderStandardBlockRaw(Block block, int x, int y, int z, float r, float g, float b)
+	{
+		return renderStandardBlockWithColorMultiplier(block, x, y, z, r, g, b);
+		//return Minecraft.isAmbientOcclusionEnabled() && block.getLightValue() == 0 ? (partialRenderBounds ? renderStandardBlockWithAmbientOcclusionPartial(block, x, y, z, r, g, b) : renderStandardBlockWithAmbientOcclusion(block, x, y, z, r, g, b)) : renderStandardBlockWithColorMultiplier(block, x, y, z, r, g, b);
 	}
 	
 	public void renderBlockSandFalling(Block b, World w, int x, int y, int z, int m)
@@ -100,10 +104,14 @@ public class RenderBlocksCustom extends RenderBlocks
 		GL11.glRotatef(90F, 0F, 1F, 0F);
 		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
 		
-		tessellator.setColorOpaque_F(customColRed, customColGreen, customColBlue);
+		float r = customColRed == -1F ? 1F : customColRed;
+		float g = customColGreen == -1F ? 1F : customColGreen;
+		float b = customColBlue == -1F ? 1F : customColBlue;
+		
+		tessellator.setColorOpaque_F(r, g, b);
 		tessellator.setBrightness(0);
 		
-		GL11.glColor4f(customColRed, customColGreen, customColBlue, 1F);
+		GL11.glColor4f(r, g, b, 1F);
 		
 		for(int i = 0; i < 6; i++)
 		{

@@ -3,7 +3,7 @@ import latmod.ftbu.core.*;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.event.ReloadEvent;
 import latmod.ftbu.core.inv.*;
-import latmod.ftbu.core.tile.IPaintable;
+import latmod.ftbu.core.paint.IPainterItem;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
@@ -31,9 +31,9 @@ public class FTBUClientEventHandler
 		
 		Item item = e.itemStack.getItem();
 		
-		if(item instanceof IPaintable.IPainterItem)
+		if(item instanceof IPainterItem)
 		{
-			ItemStack paint = ((IPaintable.IPainterItem)item).getPaintItem(e.itemStack);
+			ItemStack paint = ((IPainterItem)item).getPaintItem(e.itemStack);
 			if(paint != null) e.toolTip.add(EnumChatFormatting.WHITE + "" + EnumChatFormatting.BOLD + paint.getDisplayName());
 		}
 		

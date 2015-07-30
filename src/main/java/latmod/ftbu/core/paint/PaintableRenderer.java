@@ -78,6 +78,10 @@ public class PaintableRenderer
 			
 			rb.blockAccess = new PaintBlockAccess(iba, x, y, z, p);
 			rb.setCustomColor(p.block.colorMultiplier(rb.blockAccess, x, y, z));
+			
+			if(p.block == Blocks.grass && s != 1)
+				rb.setCustomColor(1F, 1F, 1F);
+			
 			rb.setOverrideBlockTexture(p.getIcon(rb.blockAccess, x, y, z, s));
 			rb.renderStandardBlock(parent, x, y, z);
 			rb.blockAccess = iba;

@@ -169,7 +169,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 	{ security.printOwner(ep); }
 	
 	public void setMeta(int m)
-	{ blockMetadata = m; worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, m, 3); isDirty = true; }
+	{ blockMetadata = m; worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, m, 3); markDirty(); }
 	
 	public void getMeta()
 	{ blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); }

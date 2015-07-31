@@ -1,6 +1,5 @@
 package latmod.ftbu.core;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.*;
 import net.minecraft.potion.PotionEffect;

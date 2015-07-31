@@ -3,9 +3,10 @@ package latmod.ftbu.core.client;
 import latmod.ftbu.core.CustomBlockAccess;
 import latmod.ftbu.core.util.LatCore;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.util.*;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
@@ -15,6 +16,8 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class RenderBlocksCustom extends RenderBlocks
 {
+	public static RenderBlocksCustom inst = null;
+	
 	public AxisAlignedBB fullBlock = AxisAlignedBB.getBoundingBox(0D, 0D, 0D, 1D, 1D, 1D);
 	
 	public CustomBlockAccess customBlockAccess = null;
@@ -22,6 +25,10 @@ public class RenderBlocksCustom extends RenderBlocks
 	public float customColGreen = -1F;
 	public float customColBlue = -1F;
 	public boolean clampBounds = false;
+	public int currentSide = -1;
+	
+	public void setInst(IBlockAccess iba)
+	{ blockAccess = iba; inst = this; }
 	
 	public void setCustomColor(float r, float g, float b)
 	{ customColRed = r; customColGreen = g; customColBlue = b; }
@@ -58,8 +65,8 @@ public class RenderBlocksCustom extends RenderBlocks
 	
 	public boolean renderStandardBlockRaw(Block block, int x, int y, int z, float r, float g, float b)
 	{
-		return renderStandardBlockWithColorMultiplier(block, x, y, z, r, g, b);
-		//return Minecraft.isAmbientOcclusionEnabled() && block.getLightValue() == 0 ? (partialRenderBounds ? renderStandardBlockWithAmbientOcclusionPartial(block, x, y, z, r, g, b) : renderStandardBlockWithAmbientOcclusion(block, x, y, z, r, g, b)) : renderStandardBlockWithColorMultiplier(block, x, y, z, r, g, b);
+		if(currentSide != 1) return renderStandardBlockWithColorMultiplier(block, x, y, z, r, g, b);
+		return Minecraft.isAmbientOcclusionEnabled() && block.getLightValue() == 0 ? (partialRenderBounds ? renderStandardBlockWithAmbientOcclusionPartial(block, x, y, z, r, g, b) : renderStandardBlockWithAmbientOcclusion(block, x, y, z, r, g, b)) : renderStandardBlockWithColorMultiplier(block, x, y, z, r, g, b);
 	}
 	
 	public void renderBlockSandFalling(Block b, World w, int x, int y, int z, int m)

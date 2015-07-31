@@ -9,23 +9,25 @@ import cpw.mods.fml.relauncher.*;
 
 public class MaterialItem
 {
+	public final ItemMaterialsLM item;
 	public final int damage;
 	public final String ID;
-	
-	public ItemMaterialsLM item;
-	public ItemStack stack;
 	
 	@SideOnly(Side.CLIENT)
 	public IIcon icon;
 	
-	public MaterialItem(int d, String s)
-	{ damage = d; ID = s; }
-	
-	public void init(ItemMaterialsLM i)
+	public MaterialItem(ItemMaterialsLM i, int d, String s)
 	{
 		item = i;
-		stack = new ItemStack(item, 1, damage);
+		damage = d;
+		ID = s;
 	}
+	
+	public ItemStack getStack(int s)
+	{ return new ItemStack(item, s, damage); }
+	
+	public ItemStack getStack()
+	{ return getStack(1); }
 	
 	public void onPostLoaded()
 	{ }

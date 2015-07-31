@@ -1,4 +1,5 @@
 package latmod.ftbu.core.recipes;
+import latmod.ftbu.core.item.MaterialItem;
 import latmod.ftbu.core.util.FastList;
 import net.minecraft.block.Block;
 import net.minecraft.item.*;
@@ -16,9 +17,22 @@ public class LMRecipes
 	@SuppressWarnings("unchecked")
 	public IRecipe addIRecipe(IRecipe r)
 	{ CraftingManager.getInstance().getRecipeList().add(r); return r; }
-
+	
+	public Object[] fixObjects(Object[] in)
+	{
+		for(int i = 0; i < in.length; i++)
+		{
+			if(in[i] instanceof MaterialItem)
+				in[i] = ((MaterialItem)in[i]).getStack();
+			in[i] = in[i];
+		}
+		
+		return in;
+	}
+	
 	public IRecipe addRecipe(ItemStack out, Object... in)
 	{
+		in = fixObjects(in);
 		IRecipe r;
 		
 		if(!enableOreRecipes) r = GameRegistry.addShapedRecipe(out, in);
@@ -29,6 +43,7 @@ public class LMRecipes
 	
 	public IRecipe addShapelessRecipe(ItemStack out, Object... in)
 	{
+		in = fixObjects(in);
 		IRecipe r;
 		
 		if(!enableOreRecipes)

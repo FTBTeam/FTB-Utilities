@@ -145,7 +145,7 @@ public class GuiClientConfig extends GuiLM
 		}
 		
 		public boolean isVisible()
-		{ return posY + gui.scrollI >= 0 && posY + gui.scrollI <= gui.height; }
+		{ return posY + gui.scrollI >= -height && posY + gui.scrollI <= gui.height; }
 		
 		public abstract void renderLine();
 		public abstract void onButtonPressed(int b);

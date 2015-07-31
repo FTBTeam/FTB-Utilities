@@ -206,19 +206,19 @@ public class MathHelperLM
 	public static final int getRotations(double yaw, int max)
 	{ return floor((yaw * max / 360D) + 0.5D) & (max - 1); }
 	
-	public static ForgeDirection get2DRotation(EntityLivingBase el)
+	public static int get2DRotation(EntityLivingBase el)
 	{
 		//int i = floor(el.rotationYaw * 4D / 360D + 0.5D) & 3;
 		int i = getRotations(el.rotationYaw, 4);
-		if(i == 0) return ForgeDirection.NORTH;
-		else if(i == 1) return ForgeDirection.EAST;
-		else if(i == 2) return ForgeDirection.SOUTH;
-		else if(i == 3) return ForgeDirection.WEST;
-		return ForgeDirection.UNKNOWN;
+		if(i == 0) return 2;
+		else if(i == 1) return 5;
+		else if(i == 2) return 3;
+		else if(i == 3) return 4;
+		return 6;
 	}
 	
-	public static ForgeDirection get3DRotation(World w, int x, int y, int z, EntityLivingBase el)
-	{ return ForgeDirection.values()[BlockPistonBase.determineOrientation(w, x, y, z, el)]; }
+	public static int get3DRotation(World w, int x, int y, int z, EntityLivingBase el)
+	{ return BlockPistonBase.determineOrientation(w, x, y, z, el); }
 	
 	public static final int getRotYaw(int rot)
 	{

@@ -85,9 +85,10 @@ public enum ChunkType
 			if(t == UNLOADED || t == SPAWN || t == WILDERNESS || t == WORLD_BORDER) l.add(t.chatColor + t.getIDS());
 			else
 			{
-				l.add(t.chatColor + t.getIDS());
-				if(shift && mc.owner != null)
-					l.add(mc.owner.getName());
+				l.add(t.chatColor + mc.owner.getName());
+				//l.add(t.chatColor + t.getIDS());
+				//if(shift && mc.owner != null)
+				//	l.add(mc.owner.getName());
 			}
 		}
 	}

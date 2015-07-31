@@ -76,6 +76,73 @@ public abstract class ContainerLM extends Container
 	public void onContainerClosed(EntityPlayer ep)
 	{
 		super.onContainerClosed(ep);
-		iinv.closeInventory();
-    }
+		if(iinv != null) iinv.closeInventory();
+	}
+	
+	protected boolean mergeItemStack(ItemStack is, int min, int max, boolean RtoL)
+	{
+		boolean flag1 = false;
+		int k = min;
+		if (RtoL) k = max - 1;
+		Slot slot;
+		ItemStack is1;
+		
+		if(is.isStackable())
+		{
+			while(is.stackSize > 0 && (!RtoL && k < max || RtoL && k >= min))
+			{
+				slot = (Slot)inventorySlots.get(k);
+				is1 = slot.getStack();
+
+				if(is1 != null && is1.getItem() == is.getItem() && (!is.getHasSubtypes() || is.getItemDamage() == is1.getItemDamage()) && ItemStack.areItemStackTagsEqual(is, is1))
+				{
+					int l = is1.stackSize + is.stackSize;
+
+					if(l <= is.getMaxStackSize())
+					{
+						is.stackSize = 0;
+						is1.stackSize = l;
+						slot.onSlotChanged();
+						flag1 = true;
+					}
+					else if(is1.stackSize < is.getMaxStackSize())
+					{
+						is.stackSize -= is.getMaxStackSize() - is1.stackSize;
+						is1.stackSize = is.getMaxStackSize();
+						slot.onSlotChanged();
+						flag1 = true;
+					}
+				}
+				
+				if(RtoL) --k;
+				else ++k;
+			}
+		}
+		
+		if(is.stackSize > 0)
+		{
+			if(RtoL) k = max - 1;
+			else k = min;
+			
+			while(!RtoL && k < max || RtoL && k >= min)
+			{
+				slot = (Slot)inventorySlots.get(k);
+				is1 = slot.getStack();
+
+				if(is1 == null)
+				{
+					slot.putStack(is.copy());
+					slot.onSlotChanged();
+					is.stackSize = 0;
+					flag1 = true;
+					break;
+				}
+
+				if (RtoL) --k;
+				else ++k;
+			}
+		}
+
+		return flag1;
+	}
 }

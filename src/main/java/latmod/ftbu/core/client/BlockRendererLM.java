@@ -1,7 +1,6 @@
 package latmod.ftbu.core.client;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.IItemRenderer;
@@ -37,33 +36,4 @@ public class BlockRendererLM implements ISimpleBlockRenderingHandler
 	
 	public final void registerItemRenderer(Block b)
 	{ if(this instanceof IItemRenderer) LatCoreMCClient.addItemRenderer(b, (IItemRenderer)this); }
-	
-	public static class BlockCustom extends Block
-	{
-		public BlockCustom()
-		{ super(Material.glass); }
-		
-		public boolean isOpaqueCube()
-		{ return false; }
-		
-		public boolean renderAsNormalBlock()
-		{ return false; }
-	};
-	
-	public static class BlockGlowing extends BlockCustom
-	{
-		public static final int MAX = 0xF000F0;
-		
-		public BlockGlowing()
-		{ setLightLevel(1F); }
-		
-		public int getLightValue()
-		{ return 15; }
-		
-		public int getMixedBrightnessForBlock(IBlockAccess iba, int x, int y, int z)
-		{
-			int i = getLightValue(); if(i == 15) return MAX;
-			else return iba.getLightBrightnessForSkyBlocks(x, y, z, i);
-		}
-	}
 }

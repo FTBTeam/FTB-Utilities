@@ -1,7 +1,6 @@
 package latmod.ftbu.core.paint;
 
 import latmod.ftbu.core.client.*;
-import latmod.ftbu.core.client.BlockRendererLM.BlockCustom;
 import net.minecraft.block.*;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.init.Blocks;
@@ -12,15 +11,13 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class PaintableRenderer
 {
-	public static int currentSide;
 	public static Paint currentPaint;
 	public static BlockCustom currentParentBlock;
-	public static RenderBlocksCustom currentRenderBlocks;
 	
 	public static Paint[] to6(Paint p)
 	{ return new Paint[] { p, p, p, p, p, p }; }
 	
-	public static void renderCube(IBlockAccess iba, RenderBlocksCustom rb, Paint[] p, BlockRendererLM.BlockCustom parent, int x, int y, int z, AxisAlignedBB aabb)
+	public static void renderCube(IBlockAccess iba, RenderBlocksCustom rb, Paint[] p, BlockCustom parent, int x, int y, int z, AxisAlignedBB aabb)
 	{
 		for(int i = 0; i < 6; i++)
 		{
@@ -28,14 +25,16 @@ public class PaintableRenderer
 			else rb.setFaceBounds(i, 0D, 0D, 0D, 1D, 1D, 1D);
 			renderFace(iba, rb, i, (p == null) ? null : ((p.length == 1) ? p[0] : p[i]), parent, x, y, z);
 		}
+		
+		rb.currentSide = -1;
 	}
 	
-	public static void renderFace(IBlockAccess iba, RenderBlocksCustom rb, int s, Paint p, BlockRendererLM.BlockCustom parent, int x, int y, int z)
+	public static void renderFace(IBlockAccess iba, RenderBlocksCustom rb, int s, Paint p, BlockCustom parent, int x, int y, int z)
 	{
-		currentSide = s;
 		currentPaint = p;
 		currentParentBlock = parent;
-		currentRenderBlocks = rb;
+		rb.currentSide = s;
+		rb.setInst(iba);
 		
 		int ox = x + Facing.offsetsXForSide[s];
 		int oy = y + Facing.offsetsYForSide[s];
@@ -65,7 +64,7 @@ public class PaintableRenderer
 			
 			Block sideBlock = iba.getBlock(ox, oy, oz);
 			
-			if(!sideBlock.isAir(iba, ox, oy, oz))
+			if(rb.renderAllFaces && !sideBlock.isAir(iba, ox, oy, oz))
 			{
 				double d = -0.0001D;
 				if(s == 0) { rb.renderMaxY -= d; rb.renderMinY -= d; }
@@ -76,15 +75,15 @@ public class PaintableRenderer
 				if(s == 5) { rb.renderMinX += d; rb.renderMaxX += d; }
 			}
 			
-			rb.blockAccess = new PaintBlockAccess(iba, x, y, z, p);
+			rb.setInst(new PaintBlockAccess(iba, x, y, z, p));
 			rb.setCustomColor(p.block.colorMultiplier(rb.blockAccess, x, y, z));
 			
 			if(p.block == Blocks.grass && s != 1)
 				rb.setCustomColor(1F, 1F, 1F);
 			
-			rb.setOverrideBlockTexture(p.getIcon(rb.blockAccess, x, y, z, s));
+			rb.setOverrideBlockTexture(p.getIcon(iba, iba.getBlock(x, y, z), x, y, z, s));
 			rb.renderStandardBlock(parent, x, y, z);
-			rb.blockAccess = iba;
+			rb.setInst(iba);
 			
 			if(p.block instanceof BlockLeaves)
 				((BlockLeaves)p.block).setGraphicsLevel(fancyLeaves0);

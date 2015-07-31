@@ -23,13 +23,12 @@ public abstract class ItemMaterialsLM extends ItemLM
 	
 	public ItemStack add(MaterialItem m)
 	{
-		m.init(this);
 		materials.put(m.damage, m);
 		
 		if(m.getRenderPasses() > 1)
 			requiresMultipleRenderPasses = true;
 		
-		return m.stack;
+		return m.getStack();
 	}
 	
 	public String getUnlocalizedName(ItemStack is)
@@ -43,7 +42,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 	{
 		for(MaterialItem m : materials.values)
 		{
-			itemsAdded.add(m.stack);
+			itemsAdded.add(m.getStack());
 			m.onPostLoaded();
 		}
 	}

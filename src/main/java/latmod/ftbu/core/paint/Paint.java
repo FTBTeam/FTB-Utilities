@@ -86,15 +86,12 @@ public class Paint implements Cloneable
 	{ return new Paint(block, meta); }
 	
 	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(IBlockAccess iba, int x, int y, int z, int side)
+	public IIcon getIcon(IBlockAccess iba, Block bo, int x, int y, int z, int side)
 	{
 		IIcon icon = null;
-		Block bo = iba.getBlock(x, y, z);
-		if(bo instanceof ICustomPaintBlockIcon)
+		if(bo != null && bo instanceof ICustomPaintBlockIcon)
 			icon = ((ICustomPaintBlockIcon)bo).getCustomPaintIcon(side, this);
-		
 		if(icon == null) icon = block.getIcon(iba, x, y, z, side);
-		
 		return icon;
 	}
 }

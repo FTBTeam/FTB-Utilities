@@ -27,7 +27,7 @@ public class CmdFTBUFriends extends SubCommand
 	{
 		if(args.length == 0 || args[0].equals("gui"))
 		{
-			EntityPlayerMP ep = CommandLM.getCommandSenderAsPlayer(ics);
+			final EntityPlayerMP ep = CommandLM.getCommandSenderAsPlayer(ics);
 			LatCoreMCClient.addCallbackEvent(new ICallbackEvent()
 			{
 				public void onCallback()

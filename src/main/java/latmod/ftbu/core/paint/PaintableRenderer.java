@@ -81,7 +81,7 @@ public class PaintableRenderer
 			if(p.block == Blocks.grass && s != 1)
 				rb.setCustomColor(1F, 1F, 1F);
 			
-			rb.setOverrideBlockTexture(p.getIcon(iba, iba.getBlock(x, y, z), x, y, z, s));
+			rb.setOverrideBlockTexture(p.getIcon(iba, rb.blockAccess, x, y, z, s));
 			rb.renderStandardBlock(parent, x, y, z);
 			rb.setInst(iba);
 			

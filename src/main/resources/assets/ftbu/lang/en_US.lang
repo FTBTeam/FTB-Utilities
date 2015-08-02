@@ -35,6 +35,7 @@ config.value.left=Left
 config.value.right=Right
 config.value.top=Top
 config.value.bottom=Bottom
+config.value.edit=Edit
 config.property.enabled=Enabled
 
 config.group.ftbu=FTBUtilities

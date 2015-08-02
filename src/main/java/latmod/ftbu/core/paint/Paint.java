@@ -92,7 +92,12 @@ public class Paint implements Cloneable
 		Block bo = real.getBlock(x, y, z);
 		if(bo != null && bo instanceof ICustomPaintBlockIcon)
 			icon = ((ICustomPaintBlockIcon)bo).getCustomPaintIcon(side, this);
-		if(icon == null) icon = block.getIcon(fake, x, y, z, side);
+		if(icon == null)
+		{
+			if(block instanceof ICustomPaintBlockIcon)
+				icon = ((ICustomPaintBlockIcon)block).getCustomPaintIcon(side, this);
+			if(icon == null) icon = block.getIcon(fake, x, y, z, side);
+		}
 		return icon;
 	}
 }

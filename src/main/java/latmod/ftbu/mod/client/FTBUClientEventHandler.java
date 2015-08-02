@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.client;
 import latmod.ftbu.core.*;
+import latmod.ftbu.core.api.IFTBUReloadable;
 import latmod.ftbu.core.client.LatCoreMCClient;
-import latmod.ftbu.core.event.ReloadEvent;
 import latmod.ftbu.core.inv.*;
 import latmod.ftbu.core.paint.IPainterItem;
 import latmod.ftbu.core.util.*;
@@ -11,6 +11,7 @@ import latmod.ftbu.mod.claims.ChunkType;
 import latmod.ftbu.mod.client.badges.ThreadLoadBadges;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.item.*;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.*;
@@ -20,7 +21,7 @@ import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
-public class FTBUClientEventHandler
+public class FTBUClientEventHandler implements IFTBUReloadable
 {
 	public static final FTBUClientEventHandler instance = new FTBUClientEventHandler();
 	
@@ -67,13 +68,9 @@ public class FTBUClientEventHandler
 			LatCoreMCClient.unknownItemIcon = e.map.registerIcon(FTBU.mod.assets + "unknown");
 	}
 	
-	@SubscribeEvent
-	public void onReload(ReloadEvent r)
+	public void onReloaded(Side s, ICommandSender sender) throws Exception
 	{
-		if(r.side.isClient())
-		{
-			ThreadLoadBadges.init();
-		}
+		if(s.isClient()) ThreadLoadBadges.init();
 	}
 	
 	@SubscribeEvent

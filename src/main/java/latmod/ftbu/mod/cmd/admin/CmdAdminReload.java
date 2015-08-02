@@ -1,8 +1,8 @@
 package latmod.ftbu.mod.cmd.admin;
 
 import latmod.ftbu.core.*;
+import latmod.ftbu.core.api.FTBUReloadableRegistry;
 import latmod.ftbu.core.cmd.*;
-import latmod.ftbu.core.event.ReloadEvent;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.mod.FTBUTickHandler;
 import latmod.ftbu.mod.config.FTBUConfig;
@@ -26,7 +26,7 @@ public class CmdAdminReload extends SubCommand
 				FTBUTickHandler.resetTimer(true);
 		}
 		
-		new ReloadEvent(Side.SERVER, ics).post();
+		FTBUReloadableRegistry.reload(Side.SERVER, ics);
 		LMNetHelper.sendTo(null, new MessageReload());
 		
 		return CommandLM.FINE + "LatvianModders's mods reloaded (Server)";

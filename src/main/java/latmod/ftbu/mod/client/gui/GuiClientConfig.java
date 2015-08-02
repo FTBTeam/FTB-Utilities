@@ -216,7 +216,7 @@ public class GuiClientConfig extends GuiLM
 		public void onButtonPressed(int b)
 		{
 			gui.playClickSound();
-			prop.incValue();
+			prop.onClicked();
 		}
 	}
 }

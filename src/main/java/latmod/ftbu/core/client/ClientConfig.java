@@ -95,7 +95,7 @@ public final class ClientConfig
 		}
 	}
 	
-	public final static class Property implements Comparable<Property>
+	public static class Property implements Comparable<Property>
 	{
 		public final String id;
 		public final int def;
@@ -109,7 +109,7 @@ public final class ClientConfig
 		public Property(String s, boolean d)
 		{ this(s, d ? 1 : 0, "disabled", "enabled"); }
 		
-		public void incValue()
+		public void onClicked()
 		{ setValue(value + 1); }
 		
 		public void setValue(int i)

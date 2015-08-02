@@ -148,7 +148,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			public void onButtonPressed(int b)
 			{
 				playClickSound();
-				FTBUClient.hideArmorFG.incValue();
+				FTBUClient.hideArmorFG.onClicked();
 				ClientConfig.Registry.save();
 			}
 		};

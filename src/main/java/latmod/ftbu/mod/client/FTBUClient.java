@@ -2,6 +2,7 @@ package latmod.ftbu.mod.client;
 import java.util.UUID;
 
 import latmod.ftbu.core.*;
+import latmod.ftbu.core.api.FTBUReloadableRegistry;
 import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
 import latmod.ftbu.core.net.*;
@@ -67,6 +68,7 @@ public class FTBUClient extends FTBUCommon
 		LatCoreMC.BusType.FORGE.register(FTBURenderHandler.instance);
 		LatCoreMC.BusType.FML.register(FTBURenderHandler.instance);
 		LatCoreMC.BusType.FORGE.register(FTBUGuiEventHandler.instance);
+		FTBUReloadableRegistry.add(FTBUClientEventHandler.instance);
 		
 		ClientConfig.Registry.init();
 		initConfig();

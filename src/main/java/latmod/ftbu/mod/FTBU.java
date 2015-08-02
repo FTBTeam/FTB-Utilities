@@ -1,5 +1,6 @@
 package latmod.ftbu.mod;
 import java.io.File;
+import java.lang.reflect.Method;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
@@ -138,6 +139,31 @@ public class FTBU
 	{
 		FTBUTickHandler.resetTimer(false);
 		LMWorldServer.inst = null;
+	}
+	
+	@Mod.EventHandler
+	public void onIMC(FMLInterModComms.IMCEvent e)
+	{
+		for(FMLInterModComms.IMCMessage m : e.getMessages())
+		{
+			String s = m.getStringValue();
+			if(s != null && !s.isEmpty() && s.indexOf(':') != -1)
+			{
+				try
+				{
+					String[] s1 = s.split(":");
+					if(s1 != null && s1.length == 2)
+					{
+						Class<?> c = Class.forName(s1[0]);
+						Method m1 = c.getDeclaredMethod(s1[1]);
+						m1.invoke(null);
+						LatCoreMC.logger.info("Loaded IMC registry " + s + " from " + m.getSender());
+					}
+				}
+				catch(Exception ex)
+				{ LatCoreMC.logger.info("Failed to load IMC registry " + s + " from " + m.getSender()); }
+			}
+		}
 	}
 	
 	/*

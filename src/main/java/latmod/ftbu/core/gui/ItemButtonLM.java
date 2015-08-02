@@ -10,8 +10,8 @@ public abstract class ItemButtonLM extends ButtonLM
 	public ItemButtonLM(GuiLM g, int x, int y, int w, int h)
 	{ super(g, x, y, w, h); }
 	
-	public ItemButtonLM setItem(ItemStack is)
-	{ item = is; return this; }
+	public void setItem(ItemStack is)
+	{ item = is; }
 	
 	public void setBackground(TextureCoords t)
 	{ background = t; }

@@ -1,7 +1,7 @@
 package latmod.ftbu.core.net;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.event.CustomAction;
-import net.minecraft.entity.player.EntityPlayer;
+import latmod.ftbu.mod.FTBU;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.simpleimpl.*;
 
@@ -12,7 +12,7 @@ public class MessageCustomClientAction extends MessageLM<MessageCustomClientActi
 	
 	public MessageCustomClientAction() { }
 	
-	public MessageCustomClientAction(EntityPlayer ep, String s)
+	public MessageCustomClientAction(String s)
 	{
 		channel = s;
 		
@@ -21,7 +21,7 @@ public class MessageCustomClientAction extends MessageLM<MessageCustomClientActi
 		if(h != null)
 		{
 			data = new NBTTagCompound();
-			h.sendToServer(ep, data);
+			h.sendToServer(FTBU.proxy.getClientPlayer(), data);
 		}
 	}
 	

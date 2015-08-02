@@ -138,6 +138,48 @@ public class LatCore
 		return gson;
 	}
 	
+	public static <T> T fromJson(String s, Type t)
+	{
+		if(s == null || s.length() < 2) return null;
+		return getGson().fromJson(s, t);
+	}
+	
+	public static <T> T fromJsonFile(File f, Type t)
+	{
+		if(!f.exists()) return null;
+		try { return fromJson(LMStringUtils.toString(new FileInputStream(f)), t); }
+		catch(Exception e) { e.printStackTrace(); return null; }
+	}
+	
+	public static String toJson(Object o)
+	{
+		if(o == null) return null;
+		return getGson().toJson(o);
+	}
+	
+	public static boolean toJsonFile(File f, Object o)
+	{
+		String s = toJson(o);
+		if(s == null) return false;
+		
+		try
+		{
+			FileOutputStream fos = new FileOutputStream(LMFileUtils.newFile(f));
+			fos.write(s.getBytes());
+			fos.close();
+			return true;
+		}
+		catch(Exception e)
+		{ e.printStackTrace(); }
+		return false;
+	}
+	
+	public static <K, V> Type getMapType(Type K, Type V)
+	{ return new TypeToken<Map<K, V>>() {}.getType(); }
+	
+	public static <E> Type getListType(Type E)
+	{ return new TypeToken<List<E>>() {}.getType(); }
+	
 	@SuppressWarnings("all")
 	public static <E> E newObject(Class<?> c, Object... o) throws Exception
 	{
@@ -224,48 +266,6 @@ public class LatCore
 		if(o1 == null || o2 == null) return false;
 		return o1.equals(o2);
 	}
-	
-	public static <T> T fromJson(String s, Type t)
-	{
-		if(s == null || s.length() < 2) return null;
-		return getGson().fromJson(s, t);
-	}
-	
-	public static <T> T fromJsonFile(File f, Type t)
-	{
-		if(!f.exists()) return null;
-		try { return fromJson(LMStringUtils.toString(new FileInputStream(f)), t); }
-		catch(Exception e) { e.printStackTrace(); return null; }
-	}
-	
-	public static String toJson(Object o)
-	{
-		if(o == null) return null;
-		return getGson().toJson(o);
-	}
-	
-	public static boolean toJsonFile(File f, Object o)
-	{
-		String s = toJson(o);
-		if(s == null) return false;
-		
-		try
-		{
-			FileOutputStream fos = new FileOutputStream(LMFileUtils.newFile(f));
-			fos.write(s.getBytes());
-			fos.close();
-			return true;
-		}
-		catch(Exception e)
-		{ e.printStackTrace(); }
-		return false;
-	}
-	
-	public static <K, V> Type getMapType(Type K, Type V)
-	{ return new TypeToken<Map<K, V>>() {}.getType(); }
-	
-	public static <E> Type getListType(Type E)
-	{ return new TypeToken<List<E>>() {}.getType(); }
 	
 	public static boolean openURL(String url)
 	{

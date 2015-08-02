@@ -26,27 +26,12 @@ public class LMInvUtils
 	public static class Serializer implements JsonDeserializer<ItemStack>, JsonSerializer<ItemStack>
 	{
 		public JsonElement serialize(ItemStack is, Type typeOfSrc, JsonSerializationContext context)
-		{
-			JsonObject o = new JsonObject();
-			o.add("id", new JsonPrimitive(getRegName(is)));
-			if(is.stackSize != 1) o.add("size", new JsonPrimitive(is.stackSize));
-			if(is.getItemDamage() != 0 || is.getItem().getHasSubtypes()) o.add("dmg", new JsonPrimitive(is.getItemDamage()));
-			if(is.hasTagCompound()) o.add("data", context.serialize(is.getTagCompound()));
-			return o;
-		}
+		{ return new JsonPrimitive(LMInvUtils.toString(is)); }
 		
 		public ItemStack deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
 		{
 			if(json.isJsonNull()) return null;
-			if(json.isJsonPrimitive()) return parseItem(json.getAsString());
-			
-			JsonObject o = json.getAsJsonObject();
-			if(!o.has("id")) return null;
-			Item i = getItemFromRegName(o.get("id").getAsString());
-			if(i == null) return null;
-			ItemStack is = new ItemStack(i, o.has("size") ? o.get("size").getAsInt() : 1, o.has("dmg") ? o.get("dmg").getAsInt() : 1);
-			if(o.has("data")) is.setTagCompound((NBTTagCompound)context.deserialize(o.get("data"), NBTTagCompound.class));
-			return is;
+			return parseItem(json.getAsString());
 		}
 	}
 	
@@ -464,10 +449,11 @@ public class LMInvUtils
 	
 	public static ItemStack parseItem(String s)
 	{
+		if(s == null || s.isEmpty()) return null;
+		
 		try
 		{
-			String regex = getParseRegex(s);
-			String[] s1 = s.split(regex);
+			String[] s1 = s.split(getParseRegex(s));
 			if(s1.length <= 0) return null;
 			Item item = getItemFromRegName(s1[0]);
 			if(item == null) return null;
@@ -496,6 +482,9 @@ public class LMInvUtils
 		return null;
 	}
 	
+	public static String toString(ItemStack is)
+	{ return getRegName(is) + "@" + is.stackSize + "@" + is.getItemDamage(); }
+	
 	public static boolean isWrench(ItemStack is)
 	{ return is != null && is.getItem() != null && is.getItem().getHarvestLevel(is, Tool.Type.WRENCH) >= Tool.Level.BASIC; }
 	
@@ -515,7 +504,7 @@ public class LMInvUtils
 	public static boolean isBucket(ItemStack is)
 	{ return FluidContainerRegistry.isBucket(is); }
 	
-	public FastMap<Enchantment, Integer> getEnchantments(ItemStack is)
+	public static FastMap<Enchantment, Integer> getEnchantments(ItemStack is)
 	{
 		FastMap<Enchantment, Integer> map = new FastMap<Enchantment, Integer>();
 		

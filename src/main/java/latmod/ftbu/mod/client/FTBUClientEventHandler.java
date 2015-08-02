@@ -94,6 +94,9 @@ public class FTBUClientEventHandler implements IFTBUReloadable
 			LMPlayerClient p = LMWorldClient.inst.getClientPlayer();
 			if(p != null) ChunkType.getMessage(mc.theWorld.provider.dimensionId, MathHelperLM.chunk(mc.thePlayer.posX), MathHelperLM.chunk(mc.thePlayer.posZ), p, e.right, shift);
 		}
+		
+		if(mc.gameSettings.showDebugInfo)
+			e.left.add("r: " + MathHelperLM.get2DRotation(mc.thePlayer));
 	}
 	
 	@SubscribeEvent

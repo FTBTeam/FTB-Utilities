@@ -195,21 +195,12 @@ public class GuiClientConfig extends GuiLM
 		public void renderLine()
 		{
 			if(!isVisible()) return;
-			
 			boolean mouseOver = mouseOver();
-			int textCol = mouseOver ? 0xFFFFFFFF : 0xFF999999;
-			
-			int y = posY + gui.scrollI;
-			gui.drawString(gui.fontRendererObj, title, 4, y + 4, textCol);
 			int i = prop.getI();
-			
+			int textCol = mouseOver ? prop.texColMO[i] : prop.texCol[i];
+			int y = posY + gui.scrollI;
+			gui.drawString(gui.fontRendererObj, title, 4, y + 4, mouseOver ? 0xFFFFFFFF : 0xFF999999);
 			String s = prop.getValueS(i);
-			
-			if(prop.values[i].equals("true") || prop.values[i].equals("enabled"))
-				textCol = mouseOver ? 0xFF33D333 : 0xFF339933;
-			else if(prop.values[i].equals("false") || prop.values[i].equals("disabled"))
-				textCol = mouseOver ? 0xFFD33333 : 0xFF993333;
-			
 			gui.drawString(gui.fontRendererObj, s, gui.width - (gui.fontRendererObj.getStringWidth(s) + 20), y + 4, textCol);
 		}
 		

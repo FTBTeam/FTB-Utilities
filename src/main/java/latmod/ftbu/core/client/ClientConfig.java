@@ -100,11 +100,43 @@ public final class ClientConfig
 		public final String id;
 		public final int def;
 		public final String[] values;
+		public final int[] texCol;
+		public final int[] texColMO;
+		
 		private int value = -1;
 		private boolean translateValues = true;
 		
 		public Property(String s, int d, String... v)
-		{ id = s; def = d; values = v; }
+		{
+			id = s;
+			def = d;
+			values = v;
+			
+			texCol = new int[values.length];
+			texColMO = new int[values.length];
+			
+			for(int i = 0; i < values.length; i++)
+			{
+				texCol[i] = 0xFF999999;
+				texColMO[i] = 0xFFFFFFFF;
+				
+				if(values[i].equals("edit"))
+				{
+					texCol[i] = 0xFF5500;
+					texColMO[i] = 0xFFFF00;
+				}
+				else if(values[i].equals("true") || values[i].equals("enabled"))
+				{
+					texCol[i] = 0xFF339933;
+					texColMO[i] = 0xFF33D333;
+				}
+				else if(values[i].equals("false") || values[i].equals("disabled"))
+				{
+					texCol[i] = 0xFF993333;
+					texColMO[i] = 0xFFD33333;
+				}
+			}
+		}
 		
 		public Property(String s, boolean d)
 		{ this(s, d ? 1 : 0, "disabled", "enabled"); }

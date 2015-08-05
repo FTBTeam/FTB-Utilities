@@ -341,6 +341,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	public void drawItem(ItemStack is, int x, int y)
 	{
+		if(is == null) return;
 		setTexture(TextureMap.locationItemsTexture);
 		zLevel = 200F;
 		itemRender.zLevel = 200F;

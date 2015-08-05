@@ -88,6 +88,7 @@ public class LMRenderHelper
 	
 	public static void renderGuiItem(ItemStack is, RenderItem itemRender, FontRenderer font, int x, int y)
 	{
+		if(is == null || is.getItem() == null) return;
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0F, 0F, 32F);
 		GL11.glEnable(GL11.GL_LIGHTING);

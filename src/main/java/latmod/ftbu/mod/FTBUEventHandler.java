@@ -70,7 +70,7 @@ public class FTBUEventHandler // FTBUTickHandler
 		
 		if(first)
 		{
-			FastList<ItemStack> items = FTBUConfig.login.getStartingItems(ep.getUniqueID());
+			List<ItemStack> items = FTBUConfig.login.getStartingItems(ep.getUniqueID());
 			if(items != null && !items.isEmpty()) for(ItemStack is : items)
 				LMInvUtils.giveItem(ep, is);
 		}

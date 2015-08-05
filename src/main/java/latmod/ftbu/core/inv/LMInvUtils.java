@@ -1,10 +1,9 @@
 package latmod.ftbu.core.inv;
-import java.lang.reflect.Type;
 import java.util.*;
 
 import latmod.ftbu.core.LMNBTUtils;
 import latmod.ftbu.core.item.Tool;
-import latmod.ftbu.core.util.*;
+import latmod.ftbu.core.util.FastMap;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.*;
 import net.minecraft.entity.Entity;
@@ -14,27 +13,13 @@ import net.minecraft.inventory.*;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
 import net.minecraft.tileentity.*;
+import net.minecraft.util.Facing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
-
-import com.google.gson.*;
 
 /** Made by LatvianModder */
 public class LMInvUtils
 {
-	public static class Serializer implements JsonDeserializer<ItemStack>, JsonSerializer<ItemStack>
-	{
-		public JsonElement serialize(ItemStack is, Type typeOfSrc, JsonSerializationContext context)
-		{ return new JsonPrimitive(LMInvUtils.toString(is)); }
-		
-		public ItemStack deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
-		{
-			if(json.isJsonNull()) return null;
-			return parseItem(json.getAsString());
-		}
-	}
-	
 	public static ItemStack singleCopy(ItemStack is)
 	{
 		if(is == null || is.stackSize <= 0) return null;
@@ -48,10 +33,10 @@ public class LMInvUtils
 		return (te != null && te instanceof IInventory) ? (IInventory)te : null;
 	}
 	
-	public static IInventory getInvAt(TileEntity te, ForgeDirection side, boolean entities)
+	public static IInventory getInvAt(TileEntity te, int side, boolean entities)
 	{
-		if(side == null || side == ForgeDirection.UNKNOWN) return null;
-		return getInvAt(te.getWorldObj(), te.xCoord + side.offsetX + 0.5D, te.yCoord + side.offsetY + 0.5D, te.zCoord + side.offsetZ + 0.5D, entities);
+		if(side < 0 || side >= 6) return null;
+		return getInvAt(te.getWorldObj(), te.xCoord + Facing.offsetsXForSide[side] + 0.5D, te.yCoord + Facing.offsetsYForSide[side] + 0.5D, te.zCoord + Facing.offsetsZForSide[side] + 0.5D, entities);
 	}
 	
 	public static boolean itemsEquals(ItemStack is1, ItemStack is2, boolean size, boolean nbt)
@@ -438,52 +423,6 @@ public class LMInvUtils
 	
 	public static String getRegName(ItemStack is)
 	{ return (is != null && is.getItem() != null) ? getRegName(is.getItem()) : null; }
-	
-	private static String getParseRegex(String s)
-	{
-		if(s.indexOf(';') != -1) return ";";
-		if(s.indexOf('@') != -1) return "@";
-		if(s.indexOf(" x ") != -1) return " x ";
-		return " ";
-	}
-	
-	public static ItemStack parseItem(String s)
-	{
-		if(s == null || s.isEmpty()) return null;
-		
-		try
-		{
-			String[] s1 = s.split(getParseRegex(s));
-			if(s1.length <= 0) return null;
-			Item item = getItemFromRegName(s1[0]);
-			if(item == null) return null;
-			int dmg = 0;
-			int size = 1;
-			if(s1.length == 2) dmg = Integer.parseInt(s1[1]);
-			if(s1.length == 3)
-			{ size = Integer.parseInt(s1[1]); dmg = Integer.parseInt(s1[2]); }
-			if(s1.length >= 4)
-			{
-				String tagS = LMStringUtils.unsplitSpaceUntilEnd(3, s1);
-				//NBTTagCompound tag = LatCore.fromJson(tagS, NBTTagCompound.class);
-				NBTTagCompound tag = (NBTTagCompound)JsonToNBT.func_150315_a(tagS);
-				
-				if(tag != null)
-				{
-					ItemStack is = new ItemStack(item, size, dmg);
-					is.setTagCompound(tag);
-					return is;
-				}
-			}
-			
-			return new ItemStack(item, size, dmg);
-		}
-		catch(Exception e) {}
-		return null;
-	}
-	
-	public static String toString(ItemStack is)
-	{ return getRegName(is) + "@" + is.stackSize + "@" + is.getItemDamage(); }
 	
 	public static boolean isWrench(ItemStack is)
 	{ return is != null && is.getItem() != null && is.getItem().getHarvestLevel(is, Tool.Type.WRENCH) >= Tool.Level.BASIC; }

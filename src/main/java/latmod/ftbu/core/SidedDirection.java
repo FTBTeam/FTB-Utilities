@@ -2,7 +2,6 @@ package latmod.ftbu.core;
 
 import net.minecraft.util.Facing;
 
-/** Still WIP */
 public enum SidedDirection
 {
 	BOTTOM(2, 3, 0, 0, 0, 0),

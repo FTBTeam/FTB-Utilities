@@ -93,24 +93,27 @@ public abstract class ContainerLM extends Container
 			{
 				slot = (Slot)inventorySlots.get(k);
 				is1 = slot.getStack();
-
-				if(is1 != null && is1.getItem() == is.getItem() && (!is.getHasSubtypes() || is.getItemDamage() == is1.getItemDamage()) && ItemStack.areItemStackTagsEqual(is, is1))
+				
+				if(slot.isItemValid(is) && slot.inventory.isItemValidForSlot(k, is))
 				{
-					int l = is1.stackSize + is.stackSize;
-
-					if(l <= is.getMaxStackSize())
+					if(is1 != null && is1.getItem() == is.getItem() && (!is.getHasSubtypes() || is.getItemDamage() == is1.getItemDamage()) && ItemStack.areItemStackTagsEqual(is, is1))
 					{
-						is.stackSize = 0;
-						is1.stackSize = l;
-						slot.onSlotChanged();
-						flag1 = true;
-					}
-					else if(is1.stackSize < is.getMaxStackSize())
-					{
-						is.stackSize -= is.getMaxStackSize() - is1.stackSize;
-						is1.stackSize = is.getMaxStackSize();
-						slot.onSlotChanged();
-						flag1 = true;
+						int l = is1.stackSize + is.stackSize;
+						
+						if(l <= is.getMaxStackSize())
+						{
+							is.stackSize = 0;
+							is1.stackSize = l;
+							slot.onSlotChanged();
+							flag1 = true;
+						}
+						else if(is1.stackSize < is.getMaxStackSize())
+						{
+							is.stackSize -= is.getMaxStackSize() - is1.stackSize;
+							is1.stackSize = is.getMaxStackSize();
+							slot.onSlotChanged();
+							flag1 = true;
+						}
 					}
 				}
 				

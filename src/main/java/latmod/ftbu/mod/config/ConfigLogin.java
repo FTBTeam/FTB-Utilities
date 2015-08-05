@@ -1,12 +1,12 @@
 package latmod.ftbu.mod.config;
 
 import java.io.File;
-import java.util.UUID;
+import java.util.*;
 
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
-import latmod.ftbu.core.inv.LMInvUtils;
-import latmod.ftbu.core.util.*;
+import latmod.ftbu.core.util.LatCore;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 import com.google.gson.annotations.Expose;
@@ -18,8 +18,7 @@ public class ConfigLogin
 	@Expose public String[] motd;
 	@Expose public String rules;
 	@Expose public String customBadges;
-	@Expose private String[] startingItems;
-	private final FastList<ItemStack> startingItemsList = new FastList<ItemStack>();
+	@Expose public List<ItemStack> startingItems;
 	
 	public static void load()
 	{
@@ -35,14 +34,10 @@ public class ConfigLogin
 		if(motd == null) motd = new String[] { "Welcome to the server!" };
 		if(rules == null) rules = "";
 		if(customBadges == null) customBadges = "";
-		if(startingItems == null) startingItems = new String[] { "minecraft:apple 16 0" };
-		
-		startingItemsList.clear();
-		for(String s : startingItems)
+		if(startingItems == null)
 		{
-			ItemStack is = LMInvUtils.parseItem(s);
-			if(is != null && is.stackSize > 0)
-				startingItemsList.add(is);
+			startingItems = new ArrayList<ItemStack>();
+			startingItems.add(new ItemStack(Items.apple, 16));
 		}
 	}
 	
@@ -61,7 +56,7 @@ public class ConfigLogin
 		login.add("customBadges", "URL for per-server custom badges file (Json). Example can be seen here: http://pastebin.com/LvBB9HmV ", "Blank");
 		login.add("startingItems", "Items to give player when it first joins the server. Format: StringID Size Metadata, does not support NBT yet.", "minecraft:apple 16 0");
 	}
-
-	public FastList<ItemStack> getStartingItems(UUID id)
-	{ return startingItemsList; }
+	
+	public List<ItemStack> getStartingItems(UUID id)
+	{ return startingItems; }
 }

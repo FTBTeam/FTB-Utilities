@@ -7,7 +7,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 /** Made by LatvianModder */
 public class MathHelperLM
@@ -346,20 +345,13 @@ public class MathHelperLM
 	public static MovingObjectPosition getMOPFrom(int x, int y, int z, int s, float hitX, float hitY, float hitZ)
 	{ return new MovingObjectPosition(x, y, z, s, Vec3.createVectorHelper(x + hitX, y + hitY, z + hitZ)); }
 	
-	public static final ForgeDirection getDir(int s)
-	{
-		if(s >= 0 && s < ForgeDirection.VALID_DIRECTIONS.length)
-			return ForgeDirection.VALID_DIRECTIONS[s];
-		return ForgeDirection.UNKNOWN;
-	}
-	
 	public static AxisAlignedBB getBox(double cx, double y0, double cz, double w, double y1, double d)
 	{ return AxisAlignedBB.getBoundingBox(cx - w / 2D, y0, cz - d / 2D, cx + w / 2D, y1, cz + d / 2D); }
 	
 	public static AxisAlignedBB centerBox(double x, double y, double z, double w, double h, double d)
 	{ return getBox(x, y - h / 2D, z, w, y + h / 2D, d); }
 	
-	public static AxisAlignedBB rotate90BoxV(AxisAlignedBB bb, ForgeDirection dir)
+	public static AxisAlignedBB rotate90BoxV(AxisAlignedBB bb, int dir)
 	{
 		double x1 = bb.minX;
 		double y1 = bb.minY;
@@ -369,7 +361,7 @@ public class MathHelperLM
 		double y2 = bb.maxY;
 		double z2 = bb.maxZ;
 		
-		if(dir == null || dir == ForgeDirection.UNKNOWN || dir == ForgeDirection.NORTH || dir == ForgeDirection.SOUTH)
+		if(dir < 0 || dir >= 6 || dir == 2 || dir == 3)
 			return AxisAlignedBB.getBoundingBox(x1, y1, z1, x2, y2, z2);
 		return AxisAlignedBB.getBoundingBox(z1, y1, x1, z2, y2, x2);
 	}

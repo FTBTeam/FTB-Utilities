@@ -7,7 +7,7 @@ import java.util.*;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.event.LMGsonEvent;
-import latmod.ftbu.core.inv.LMInvUtils;
+import latmod.ftbu.core.inv.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 
@@ -124,7 +124,7 @@ public class LatCore
 		NBTSerializer.init(gb);
 		gb.registerTypeHierarchyAdapter(IntList.class, new IntList.Serializer());
 		gb.registerTypeHierarchyAdapter(IntMap.class, new IntMap.Serializer());
-		gb.registerTypeHierarchyAdapter(ItemStack.class, new LMInvUtils.Serializer());
+		gb.registerTypeHierarchyAdapter(ItemStack.class, new ItemStackSerializer());
 		gb.registerTypeHierarchyAdapter(UUID.class, new UUIDSerializer());
 		gb.registerTypeHierarchyAdapter(Notification.class, new Notification.Serializer());
 		
@@ -212,7 +212,7 @@ public class LatCore
 	}
 	
 	public static String classpath(Class<?> c)
-	{ return (c == null) ? null : (c.toString().split(" ")[1]); }
+	{ return (c == null) ? null : c.getName(); }
 	
 	public static FastList<Class<?>> addSubclasses(Class<?> c, FastList<Class<?>> al, boolean all)
 	{

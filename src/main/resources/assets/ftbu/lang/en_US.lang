@@ -1,3 +1,4 @@
+#Buttons
 ftbu:button.settings=Settings
 ftbu:button.back=Back
 ftbu:button.up=Up
@@ -21,9 +22,13 @@ ftbu:label.online=Online
 ftbu:label.friend=Friend
 ftbu:label.pfriend=Pending Friend
 
-#ManageGroups
-ftbu:button.addGroup=Add Group
-ftbu:button.remGroup=Remove Group
+#FriendsGUI Info
+ftbu:button.lmp_comparator=Sorting
+lmp_comparator.friends_status=Friends Status
+lmp_comparator.name=Username
+lmp_comparator.deaths=Deaths
+lmp_comparator.date_joined=Date Joined
+lmp_comparator.last_seen=Last Seen
 
 #ClientConfig
 ftbu:client_config=Client Config
@@ -45,8 +50,6 @@ config.property.item_reg_names=Item Registry Names
 config.property.debug_info=Debug Info
 config.property.options_button=Options Button
 config.property.chat_links=Chat Links
-config.value.replace=Replace
-config.value.print=Print
 
 config.group.waypoints=Waypoints
 config.property.waypoint_type=Waypoint Type
@@ -106,6 +109,7 @@ ftbu:color.magenta=Magenta
 ftbu:color.orange=Orange
 ftbu:color.white=White
 
+#Commands
 commands.lmmissingargs=Missing Arguments!
 commands.lmdisabled=This feature is disabled!
 
@@ -117,9 +121,17 @@ ftbu:chunktype.wilderness=Wilderness
 ftbu:chunktype.claimed=Claimed Area
 ftbu:chunktype.unloaded=Chunk not loaded
 
-ftbu:button.lmp_comparator=Sorting
-lmp_comparator.friends_status=Friends Status
-lmp_comparator.name=Username
-lmp_comparator.deaths=Deaths
-lmp_comparator.date_joined=Date Joined
-lmp_comparator.last_seen=Last Seen
+#Sides
+ftbu:side.down=Down
+ftbu:side.up=Up
+ftbu:side.north=North
+ftbu:side.south=South
+ftbu:side.west=West
+ftbu:side.east=East
+
+ftbu:dside.bottom=Bottom
+ftbu:dside.top=Top
+ftbu:dside.back=Back
+ftbu:dside.front=Front
+ftbu:dside.left=Left
+ftbu:dside.right=Right

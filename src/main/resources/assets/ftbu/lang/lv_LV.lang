@@ -1,69 +1,137 @@
-key.latcoremc=LatCoreMC
-
-latcoremc:button.settings=Uzstādījumi
-latcoremc:button.back=Atpakaļ
-latcoremc:button.up=Augšup
-latcoremc:button.down=Lejup
-latcoremc:button.prev=Iepriekšējais
-latcoremc:button.next=Nākamais
-latcoremc:button.enabled=Ieslēgts
-latcoremc:button.disabled=Izslēgts
-latcoremc:button.cancel=Atcelt
-latcoremc:button.accept=Apstiprināt
-latcoremc:button.remove=Noņemt
-latcoremc:button.add=Pievienot
-latcoremc:button.close=Aizvērt
-latcoremc:button.save=Saglabāt
+#Buttons
+ftbu:button.settings=Uzstādījumi
+ftbu:button.back=Atpakaļ
+ftbu:button.up=Augšup
+ftbu:button.down=Lejup
+ftbu:button.prev=Iepriekšējais
+ftbu:button.next=Nākamais
+ftbu:button.enabled=Ieslēgts
+ftbu:button.disabled=Izslēgts
+ftbu:button.cancel=Atcelt
+ftbu:button.accept=Apstiprināt
+ftbu:button.remove=Noņemt
+ftbu:button.add=Pievienot
+ftbu:button.close=Aizvērt
+ftbu:button.save=Saglabāt
+ftbu:button.refresh=Atsvaidzināt
 
 #FriendsGUI
-latcoremc:button.addFriend=Pievienot Draugiem
-latcoremc:button.remFriend=Noņemt no Draugiem
-latcoremc:button.info=Informācija
-latcoremc:button.viewPlayer=Apskatīt Spēlētāju
-latcoremc:label.online=Tiešsaitē
-latcoremc:label.friend=Draugs
-latcoremc:label.pfriend=Neapstiprināts Draugs
+ftbu:button.addFriend=Pievienot Draugiem
+ftbu:button.remFriend=Noņemt no Draugiem
+ftbu:label.online=Tiešsaitē
+ftbu:label.friend=Draugs
+ftbu:label.pfriend=Neapstiprināts Draugs
 
-#ManageGroups
-latcoremc:button.addGroup=Add Group
-latcoremc:button.remGroup=Remove Group
+#FriendsGUI Info
+ftbu:button.lmp_comparator=Kārtošana
+lmp_comparator.friends_status=Draugu Statuss
+lmp_comparator.name=Lietotājvārds
+lmp_comparator.deaths=Nāves
+lmp_comparator.date_joined=Datums kad pievienojās
+lmp_comparator.last_seen=Pēdējo reizi manīts
 
-latcoremc:owner=Īpašnieks: %s
+#ClientConfig
+ftbu:client_config=Klienta Konfigurācija
+config.value.enabled=Ieslēgts
+config.value.disabled=Izslēgts
+config.value.true=Jā
+config.value.false=Nē
+config.value.left=Pa kreisi
+config.value.right=Pa labi
+config.value.top=Augšā
+config.value.bottom=Apakšā
+config.value.edit=Rediģēt
+config.property.enabled=Ieslēgts
 
-latcoremc:security=Drošība
-latcoremc:security.public=Publisks
-latcoremc:security.private=Privāts
-latcoremc:security.friends=Draugi
-latcoremc:security.group=Groupa
-latcoremc:security.whitelist=Baltais Saraksts
-latcoremc:security.blacklist=Melnais Saraksts
+config.group.ftbu=FTBUtilities
+config.property.player_decorators=Spēlētāju Dekorācijas
+config.property.item_ore_names=Priekšmetu OreDict nosaukumi
+config.property.item_reg_names=Priekšmetu Registry Nosaukumi
+config.property.debug_info=Atkļūdošanas Info
+config.property.options_button=Uzstādījumu Poga
+config.property.chat_links=Čata Saīsnes
 
-latcoremc:redstonemode=Sarkanakmens Režīms
-latcoremc:redstonemode.disabled=Nereaģē
-latcoremc:redstonemode.high=Aktīvs Ieslēgts
-latcoremc:redstonemode.low=Aktīvs Izslēgts
+config.group.waypoints=Waypointi
+config.property.waypoint_type=Waypointu Tips
+config.property.display_title=Rādīt Nosaukumu
+config.property.display_distance=Rādīt Attālumu
+config.property.render_distance=Zīmēšanas Attālums
+config.property.death_point=Pēdējā Nāve
+config.value.marker=Mērķis
+config.value.beacon=Stars
 
-latcoremc:invmode=Automatizācija
-latcoremc:invmode.enabled=Ieslēgta
-latcoremc:invmode.onlyin=Tikai Ievietot
-latcoremc:invmode.onlyout=Tikai Izvadīt
-latcoremc:invmode.disabled=Izslēgta
+config.group.minimap=Minikarte
+config.property.render_ingame=Rādīt Spēlē
+config.property.render_players=Spēlētāji
+config.property.render_waypoints=Waypointi
+config.property.calc_height=Aprēķināt Augstumu
 
-latcoremc:color.black=Melns
-latcoremc:color.red=Sarkans
-latcoremc:color.green=Zaļš
-latcoremc:color.brown=Brūns
-latcoremc:color.blue=Zils
-latcoremc:color.purple=Violets
-latcoremc:color.cyan=Ciānzaļš
-latcoremc:color.silver=Gaišpelēks
-latcoremc:color.gray=Tumšpelēks
-latcoremc:color.pink=Rozā
-latcoremc:color.lime=Laima
-latcoremc:color.yellow=Dzeltens
-latcoremc:color.light_blue=Gaišzils
-latcoremc:color.magenta=Fuksīna
-latcoremc:color.orange=Oranžs
-latcoremc:color.white=Balts
+#Misc
+ftbu:owner=Īpašnieks: %s
 
+#Security Mode
+ftbu:security=Drošība
+ftbu:security.public=Publisks
+ftbu:security.private=Privāts
+ftbu:security.friends=Draugi
+ftbu:security.group=Grupa
+ftbu:security.whitelist=Baltais Saraksts
+ftbu:security.blacklist=Melnais Saraksts
+
+#Redstone Mode
+ftbu:redstonemode=Sarkanakmens Režīms
+ftbu:redstonemode.disabled=Nereaģē
+ftbu:redstonemode.high=Aktīvs Ieslēgts
+ftbu:redstonemode.low=Aktīvs Izslēgts
+
+#Inventory Mode
+ftbu:invmode=Automatizācija
+ftbu:invmode.enabled=Ieslēgta
+ftbu:invmode.onlyin=Tikai Ievietot
+ftbu:invmode.onlyout=Tikai Izvadīt
+ftbu:invmode.disabled=Izslēgta
+
+#Colors
+ftbu:color.black=Melns
+ftbu:color.red=Sarkans
+ftbu:color.green=Zaļš
+ftbu:color.brown=Brūns
+ftbu:color.blue=Zils
+ftbu:color.purple=Violets
+ftbu:color.cyan=Ciānzaļš
+ftbu:color.silver=Gaišpelēks
+ftbu:color.gray=Tumšpelēks
+ftbu:color.pink=Rozā
+ftbu:color.lime=Laima
+ftbu:color.yellow=Dzeltens
+ftbu:color.light_blue=Gaišzils
+ftbu:color.magenta=Fuksīna
+ftbu:color.orange=Oranžs
+ftbu:color.white=Balts
+
+#Commands
 commands.lmmissingargs=Pietrūkst argumentu!
+commands.lmdisabled=Šī lieta nav ieslēgta!
+
+#Chunktypes
+ftbu:chunktype.spawn=Sākuma Arēna
+ftbu:chunktype.world_border=Pasaules Mala
+ftbu:chunktype.world_border.warning=Tu esi šķērsojis pasaules malu!
+ftbu:chunktype.wilderness=Savvaļa
+ftbu:chunktype.claimed=Aizņemta Arēna
+ftbu:chunktype.unloaded=Chunks Nav Ielādējies
+
+#Sides
+ftbu:side.down=Lejup
+ftbu:side.up=Augšup
+ftbu:side.north=Ziemeļi
+ftbu:side.south=Dienvidi
+ftbu:side.west=Rietumi
+ftbu:side.east=Austrumi
+
+ftbu:dside.bottom=Apakša
+ftbu:dside.top=Augša
+ftbu:dside.back=Aizmugure
+ftbu:dside.front=Priekša
+ftbu:dside.left=Kreisā Puse
+ftbu:dside.right=Labā Puse

@@ -25,7 +25,7 @@ public enum SidedDirection
 	
 	public static final SidedDirection[] VALUES = new SidedDirection[] { BOTTOM, TOP, BACK, FRONT, LEFT, RIGHT };
 	
-	public static SidedDirection getSide(int rot, int side)
+	public static SidedDirection getSide(int side, int rot)
 	{
 		if(rot < 0 || rot >= 6 || side < 0 || side >= 6) return NONE;
 		for(int i = 0; i < VALUES.length; i++)
@@ -33,36 +33,36 @@ public enum SidedDirection
 		return NONE;
 	}
 	
-	public static SidedDirection get(int f, int r3, int r2)
+	public static SidedDirection get(int side, int rot3D, int rot2D)
 	{
-		if(f == r3) return FRONT;
-		if(f == Facing.oppositeSide[r3]) return BACK;
+		if(side == rot3D) return FRONT;
+		if(side == Facing.oppositeSide[rot3D]) return BACK;
 		
-		if(r3 == 0)
+		if(rot3D == 0)
 		{
-			if(f == 2 || f == 3 || f == 4 || f == 5)
+			if(side == 2 || side == 3 || side == 4 || side == 5)
 			{
-				if(r2 == f) return TOP;
-				else if(r2 == Facing.oppositeSide[f]) return BOTTOM;
+				if(rot2D == side) return TOP;
+				else if(rot2D == Facing.oppositeSide[side]) return BOTTOM;
 			}
 			
-			return getSide(r2, f);
+			return getSide(side, rot2D);
 		}
-		else if(r3 == 1)
+		else if(rot3D == 1)
 		{
-			if(f == 2 || f == 3 || f == 4 || f == 5)
+			if(side == 2 || side == 3 || side == 4 || side == 5)
 			{
-				if(r2 == f) return BOTTOM;
-				else if(r2 == Facing.oppositeSide[f]) return TOP;
+				if(rot2D == side) return BOTTOM;
+				else if(rot2D == Facing.oppositeSide[side]) return TOP;
 			}
 			
-			return getSide(r2, f);
+			return getSide(side, rot2D);
 		}
 		else
 		{
-			if(f == 0) return BOTTOM;
-			else if(f == 1) return TOP;
-			return getSide(r3, f);
+			if(side == 0) return BOTTOM;
+			else if(side == 1) return TOP;
+			return getSide(side, rot3D);
 		}
 	}
 }

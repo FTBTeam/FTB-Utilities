@@ -1,7 +1,8 @@
 package latmod.ftbu.mod.client.minimap;
 
+import latmod.ftbu.core.util.MathHelperLM;
 import latmod.ftbu.core.world.*;
-import latmod.ftbu.mod.claims.ChunkType;
+import latmod.ftbu.mod.player.ChunkType;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
@@ -27,13 +28,12 @@ public class MChunk
 		
 		if(i > 0)
 		{
-			LMPlayer o = LMWorldClient.inst.getClientPlayer();
 			owner = LMWorldClient.inst.getPlayer(i);
 			if(owner == null) type = ChunkType.CLAIMED_OTHER;
-			else if(owner.equalsPlayer(o)) type = ChunkType.CLAIMED_SELF;
-			else type = owner.isFriend(o) ? ChunkType.CLAIMED_FRIEND : ChunkType.CLAIMED_OTHER;
+			else if(owner.equalsPlayer(LMWorldClient.inst.clientPlayer)) type = ChunkType.CLAIMED_SELF;
+			else type = owner.isFriend(LMWorldClient.inst.clientPlayer) ? ChunkType.CLAIMED_FRIEND : ChunkType.CLAIMED_OTHER;
 		}
-		else type = ChunkType.VALUES[-i];
+		else type = ChunkType.VALUES[MathHelperLM.clampInt(-i, 0, ChunkType.VALUES.length - 1)];
 	}
 	
 	public void setPixels(int[] col)

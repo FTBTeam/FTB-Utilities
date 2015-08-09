@@ -4,13 +4,15 @@ import latmod.ftbu.core.FTBULang;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.*;
-import latmod.ftbu.core.world.*;
+import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.claims.ChunkType;
 import latmod.ftbu.mod.client.FTBURenderHandler;
 import latmod.ftbu.mod.client.minimap.*;
+import latmod.ftbu.mod.player.ChunkType;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -52,13 +54,13 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 	public static final int SIZE_CHUNKS = CHUNKS_OFFSET * 2 + 1;
 	public static final int SIZE = SIZE_CHUNKS * 16;
 	
-	public final LMPlayerClient owner;
 	public final int startX, startZ;
 	public final int dimension;
 	private static int GL_ID = -1;
 	public static boolean shouldRedraw = true;
 	
 	public final ButtonLM buttonRefresh, buttonClose;
+	public final ItemButtonLM buttonSafe;
 	public final MapButton mapButton;
 	
 	public GuiMinimap()
@@ -70,7 +72,6 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		
 		if(GL_ID == -1) GL_ID = GL11.glGenLists(1);
 		
-		owner = LMWorldClient.inst.getClientPlayer();
 		startX = MathHelperLM.chunk(mc.thePlayer.posX) - CHUNKS_OFFSET;
 		startZ = MathHelperLM.chunk(mc.thePlayer.posZ) - CHUNKS_OFFSET;
 		dimension = mc.theWorld.provider.dimensionId;
@@ -101,6 +102,17 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		
 		buttonClose.title = FTBULang.button_close;
 		
+		buttonSafe = new ItemButtonLM(this, 28, 6, 16, 16)
+		{
+			public void onButtonPressed(int b)
+			{
+				gui.playClickSound();
+				LMNetHelper.sendToServer(new MessageClientGuiAction(MessageClientGuiAction.ACTION_SET_SAFE_CHUNKS, LMWorldClient.inst.clientPlayer.safeChunks ? 0 : 1));
+			}
+		};
+		
+		buttonSafe.setItem(new ItemStack(Items.skull, 1, 4));
+		
 		mapButton = new MapButton(this, 6, 26);
 		mapButton.title = loading;
 		
@@ -112,6 +124,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		l.add(mapButton);
 		l.add(buttonRefresh);
 		l.add(buttonClose);
+		l.add(buttonSafe);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -272,11 +285,22 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		
 		buttonRefresh.render(Icons.map);
 		buttonClose.render(Icons.accept);
+		buttonSafe.render();
+		
+		if(LMWorldClient.inst.clientPlayer.safeChunks)
+		{
+			zLevel = 500;
+			GL11.glColor4f(1F, 1F, 1F, 0.75F);
+			buttonSafe.render(Icons.close);
+			GL11.glColor4f(1F, 1F, 1F, 1F);
+			zLevel = 0;
+		}
 	}
 	
 	public void drawText(FastList<String> l)
 	{
-		String s = owner.claimedChunks + " / " + owner.maxClaimPower;
+		if(LMWorldClient.inst.clientPlayer == null) return;
+		String s = LMWorldClient.inst.clientPlayer.claimedChunks + " / " + LMWorldClient.inst.clientPlayer.maxClaimPower;
 		fontRendererObj.drawString(s, guiLeft + xSize - fontRendererObj.getStringWidth(s) - 4, guiTop + ySize - 12, 0xFFFFFFFF);
 		super.drawText(l);
 	}
@@ -315,7 +339,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		
 		public void addMouseOverText(FastList<String> l)
 		{
-			ChunkType.getMessage(guiM.dimension, chunkX(), chunkZ(), guiM.owner, l, isShiftKeyDown());
+			ChunkType.getMessage(guiM.dimension, chunkX(), chunkZ(), l, isShiftKeyDown());
 		}
 	}
 }

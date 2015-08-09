@@ -49,7 +49,7 @@ public class LMWorldServer extends LMWorld<LMPlayerServer>
 		tag.setTag("Warps", tagWarps);
 	}
 	
-	public void writePlayersToNet(NBTTagCompound tag)
+	public void writePlayersToNet(NBTTagCompound tag, LMPlayerServer self)
 	{
 		NBTTagList list = new NBTTagList();
 		
@@ -58,7 +58,7 @@ public class LMWorldServer extends LMWorld<LMPlayerServer>
 			NBTTagCompound tag1 = new NBTTagCompound();
 			
 			LMPlayerServer p = players.get(i);
-			p.writeToNet(tag1);
+			p.writeToNet(tag1, p.equalsPlayer(self));
 			new LMPlayerServerEvent.DataSaved(p).post();
 			tag1.setLong("MID", p.getUUID().getMostSignificantBits());
 			tag1.setLong("LID", p.getUUID().getLeastSignificantBits());

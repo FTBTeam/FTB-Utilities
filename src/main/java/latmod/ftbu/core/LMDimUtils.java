@@ -175,7 +175,8 @@ public class LMDimUtils
 	
 	public static ChunkCoordinates getPlayerSpawnPoint(EntityPlayerMP ep, int dim)
 	{
-		return getSpawnPoint(dim);
+		ChunkCoordinates c = ep.getBedLocation(dim);
+		return (c == null) ? getSpawnPoint(dim) : c;
 	}
 	
 	public static EntityPos getPlayerEntitySpawnPoint(EntityPlayerMP ep, int dim)

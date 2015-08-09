@@ -2,8 +2,7 @@ package latmod.ftbu.core.net;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.Notification;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.client.FTBURenderHandler;
-import latmod.ftbu.mod.client.gui.GuiNotification;
+import latmod.ftbu.mod.player.ClientNotifications;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 
@@ -33,8 +32,5 @@ public class MessageNotifyPlayer extends MessageLM<MessageNotifyPlayer> implemen
 	
 	@SideOnly(Side.CLIENT)
 	public void onMessageClient(MessageNotifyPlayer m, MessageContext ctx)
-	{
-		Notification n = Notification.getFromJson(m.data);
-		if(n != null) FTBURenderHandler.messages.add(new GuiNotification(n));
-	}
+	{ ClientNotifications.add(Notification.getFromJson(m.data)); }
 }

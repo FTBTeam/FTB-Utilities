@@ -18,13 +18,13 @@ public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate> impl
 	
 	public MessageLMPlayerUpdate() { }
 	
-	public MessageLMPlayerUpdate(LMPlayerServer p, String a)
+	public MessageLMPlayerUpdate(LMPlayerServer p, String a, boolean self)
 	{
 		playerID = p.playerID;
 		action = a;
 		
 		data = new NBTTagCompound();
-		p.writeToNet(data);
+		p.writeToNet(data, self);
 	}
 	
 	public void fromBytes(ByteBuf bb)
@@ -48,7 +48,7 @@ public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate> impl
 	public void onMessageClient(MessageLMPlayerUpdate m, MessageContext ctx)
 	{
 		LMPlayerClient p = LMWorldClient.inst.getPlayer(m.playerID);
-		p.readFromNet(m.data);
+		p.readFromNet(m.data, p.getUUID().equals(LatCoreMCClient.getUUID()));
 		new LMPlayerClientEvent.DataChanged(p, action).post();
 		
 		GuiScreen g = LatCoreMCClient.getMinecraft().currentScreen;

@@ -4,52 +4,59 @@ import java.lang.reflect.Type;
 
 import latmod.ftbu.core.inv.LMInvUtils;
 import latmod.ftbu.core.util.*;
+import net.minecraft.event.ClickEvent;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IChatComponent;
 
 import com.google.gson.*;
 
 public class Notification
 {
-	public final String title;
-	public final String desc;
+	public final IChatComponent title;
 	public final int timer;
 	
-	public int color = 0xFFA0A0A0;
+	public IChatComponent desc = null;
+	private int color = 0xFFA0A0A0;
 	public ItemStack item = null;
-	private ClickAction action = null;
+	private ClickEvent clickEvent = null;
 	
-	public Notification(String s, String s1, int t)
+	public Notification(IChatComponent t, int l)
 	{
-		title = (s == null) ? "" : s;
-		desc = (s1 == null) ? "" : s1;
-		timer = MathHelperLM.clampInt(t, 1, 32000);
+		title = t;
+		timer = MathHelperLM.clampInt(l, 1, 30000);
 	}
+	
+	public void setDesc(IChatComponent c)
+	{ desc = c; }
 	
 	public void setItem(ItemStack is)
 	{ item = is; }
 	
-	public void setAction(ClickAction a)
-	{ if(a == null || (a.type != null && a.data != null && !a.data.isEmpty())) action = a; }
-	
 	public void setColor(int c)
 	{ color = c; }
 	
+	public int getColor()
+	{ return color; }
+	
+	public void setClickEvent(ClickEvent e)
+	{ clickEvent = e; }
+	
+	public ClickEvent getClickEvent()
+	{ return clickEvent; }
+	
+	public boolean isTemp()
+	{ return clickEvent == null; }
+	
 	public boolean equals(Object o)
-	{
-		if(o instanceof Notification)
-			return equalsNotification((Notification)o);
-		return title.equals(o + "");
-	}
+	{ return o != null && (o instanceof Notification) && equalsNotification((Notification)o); }
 	
 	public boolean equalsNotification(Notification o)
 	{
 		if(o == null) return false;
 		if(o == this) return true;
 		if(!title.equals(o.title)) return false;
-		if(!desc.equals(o.desc)) return false;
-		if(!title.equals(o.title)) return false;
+		if(LatCore.areObjectsEqual(desc, o.desc, true)) return false;
 		if(color != o.color) return false;
-		if(!LatCore.areObjectsEqual(action, o.action, true)) return false;
 		return LMInvUtils.itemsEquals(item, o.item, true, true);
 	}
 	
@@ -59,53 +66,24 @@ public class Notification
 	public String toString()
 	{ return LatCore.toJson(this); }
 	
-	public ClickAction getAction()
-	{ return action; }
-	
-	public static class ClickAction
-	{
-		public static enum Type
-		{
-			LINK("link"),
-			COMMAND("cmd");
-			
-			public final String ID;
-			
-			Type(String s)
-			{ ID = s; }
-			
-			public static Type fromString(String s)
-			{
-				for(Type t : values())
-					if(t.ID.equals(s)) return t;
-				return null;
-			}
-		}
-		
-		public final Type type;
-		public final String data;
-		
-		public ClickAction(Type t, String s)
-		{ type = t; data = s; }
-	}
-	
 	public static class Serializer implements JsonSerializer<Notification>, JsonDeserializer<Notification>
 	{
-		public JsonElement serialize(Notification src, Type typeOfSrc, JsonSerializationContext context)
+		public JsonElement serialize(Notification n, Type typeOfSrc, JsonSerializationContext context)
 		{
 			JsonObject o = new JsonObject();
 			
-			o.add("title", new JsonPrimitive(src.title));
-			if(!src.desc.isEmpty()) o.add("desc", new JsonPrimitive(src.desc));
-			if(src.timer != 3000) o.add("timer", new JsonPrimitive(src.timer));
-			if(src.color != 0xFFA0A0A0) o.add("color", new JsonPrimitive(src.color));
-			if(src.item != null) o.add("item", context.serialize(src.item));
-			if(src.action != null)
+			o.add("title", context.serialize(n.title));
+			if(n.timer != 3000) o.add("timer", new JsonPrimitive(n.timer));
+			if(n.desc != null) o.add("desc", context.serialize(n.desc));
+			if(n.item != null) o.add("item", context.serialize(n.item));
+			int col = n.getColor();
+			if(col != 0xFFA0A0A0) o.add("color", new JsonPrimitive(col));
+			if(n.clickEvent != null)
 			{
 				JsonObject o1 = new JsonObject();
-				o1.add("type", new JsonPrimitive(src.action.type.ID));
-				o1.add("data", new JsonPrimitive(src.action.data));
-				o.add("action", o1);
+				o1.add("action", new JsonPrimitive(n.clickEvent.getAction().getCanonicalName()));
+				o1.add("value", new JsonPrimitive(n.clickEvent.getValue()));
+				o.add("click", o1);
 			}
 			
 			return o;
@@ -117,27 +95,18 @@ public class Notification
 			JsonObject o = json.getAsJsonObject();
 			if(!o.has("title")) return null;
 			
-			String t = o.get("title").getAsString();
-			String d = o.has("desc") ? o.get("desc").getAsString() : "";
+			IChatComponent t = (IChatComponent)context.deserialize(o.get("title"), IChatComponent.class);
 			int l = o.has("timer") ? o.get("timer").getAsInt() : 3000;
-			Notification n = new Notification(t, d, l);
+			Notification n = new Notification(t, l);
 			
-			if(o.has("color")) n.color = MathHelperLM.toIntDecoded(o.get("color").getAsString());
-			
-			if(o.has("item"))
+			if(o.has("desc")) n.setDesc((IChatComponent)context.deserialize(o.get("desc"), IChatComponent.class));
+			if(o.has("color")) n.setColor(MathHelperLM.toIntDecoded(o.get("color").getAsString()));
+			if(o.has("item")) n.setItem((ItemStack)context.deserialize(o.get("item"), ItemStack.class));
+			if(o.has("click"))
 			{
-				ItemStack is = context.deserialize(o.get("item"), ItemStack.class);
-				if(is != null) n.setItem(is);
-			}
-			
-			if(o.has("action"))
-			{
-				JsonObject o1 = o.get("").getAsJsonObject();
-				if(o1.has("data"))
-				{
-					ClickAction.Type type = o1.has("type") ? ClickAction.Type.fromString(o1.get("type").getAsString()) : ClickAction.Type.LINK;
-					if(type != null) n.setAction(new ClickAction(type, o1.get("data").getAsString()));
-				}
+				JsonObject o1 = o.get("click").getAsJsonObject();
+				ClickEvent.Action a = ClickEvent.Action.getValueByCanonicalName(o1.get("action").getAsString());
+				if(a != null) n.setClickEvent(new ClickEvent(a, o1.get("value").getAsString()));
 			}
 			
 			return n;

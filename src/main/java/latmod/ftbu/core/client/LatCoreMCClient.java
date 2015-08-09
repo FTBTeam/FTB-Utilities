@@ -33,6 +33,9 @@ public final class LatCoreMCClient // LatCoreMC
 	public static Minecraft getMinecraft()
 	{ return FMLClientHandler.instance().getClient(); }
 	
+	public static UUID getUUID()
+	{ return getMinecraft().getSession().func_148256_e().getId(); }
+	
 	public static void addEntityRenderer(Class<? extends Entity> c, Render r)
 	{ RenderingRegistry.registerEntityRenderingHandler(c, r); }
 	

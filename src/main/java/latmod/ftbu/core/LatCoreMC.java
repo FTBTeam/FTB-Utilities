@@ -256,4 +256,7 @@ public final class LatCoreMC // LatCoreMCClient
 	
 	public static boolean isDedicatedServer()
 	{ return getServer() != null && getServer().isDedicatedServer(); }
+
+	public static IChatComponent setColor(EnumChatFormatting e, IChatComponent c)
+	{ c.getChatStyle().setColor(e); return c; }
 }

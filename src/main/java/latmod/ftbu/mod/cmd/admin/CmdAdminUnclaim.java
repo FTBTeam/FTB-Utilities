@@ -2,7 +2,7 @@ package latmod.ftbu.mod.cmd.admin;
 
 import latmod.ftbu.core.cmd.*;
 import latmod.ftbu.core.util.MathHelperLM;
-import latmod.ftbu.mod.claims.*;
+import latmod.ftbu.mod.player.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 

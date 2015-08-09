@@ -3,7 +3,6 @@ import java.io.File;
 import java.util.*;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.event.*;
 import latmod.ftbu.core.inv.LMInvUtils;
 import latmod.ftbu.core.item.ICreativeSafeItem;
@@ -12,10 +11,10 @@ import latmod.ftbu.core.tile.ISecureTile;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.backups.Backups;
-import latmod.ftbu.mod.claims.*;
-import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.mod.cmd.CmdMotd;
 import latmod.ftbu.mod.config.FTBUConfig;
+import latmod.ftbu.mod.player.*;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityChicken;
@@ -28,7 +27,6 @@ import net.minecraft.util.*;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import cpw.mods.fml.common.eventhandler.*;
-import cpw.mods.fml.relauncher.*;
 
 public class FTBUEventHandler // FTBUTickHandler
 {
@@ -51,22 +49,21 @@ public class FTBUEventHandler // FTBUTickHandler
 			LMWorldServer.inst.players.add(p);
 			sendAll = true;
 		}
-		else
+		else if(!p.getName().equals(ep.getGameProfile().getName()))
 		{
-			if(!p.getName().equals(ep.getGameProfile().getName()))
-			{
-				p.setName(p.gameProfile.getName());
-				sendAll = true;
-			}
+			p.setName(p.gameProfile.getName());
+			sendAll = true;
 		}
 		
 		p.setPlayer(ep);
 		p.updateLastSeen();
 		
 		new LMPlayerServerEvent.LoggedIn(p, ep, first).post();
-		LMNetHelper.sendTo(sendAll ? null : ep, new MessageLMWorldUpdate(LMWorldServer.inst.worldID));
+		LMNetHelper.sendTo(sendAll ? null : ep, new MessageLMWorldUpdate(LMWorldServer.inst.worldID, p));
 		IServerConfig.Registry.updateConfig(ep, null);
-		LMNetHelper.sendTo(null, new MessageLMPlayerLoggedIn(p, first));
+		
+		for(EntityPlayerMP ep1 : LatCoreMC.getAllOnlinePlayers())
+			LMNetHelper.sendTo(ep1, new MessageLMPlayerLoggedIn(p, first, ep1.getUniqueID().equals(ep.getUniqueID())));
 		
 		if(first)
 		{
@@ -221,12 +218,17 @@ public class FTBUEventHandler // FTBUTickHandler
 	{
 		if(FTBUConfig.general.allowInteractSecure(e.entityPlayer)) return true;
 		
-		TileEntity te = e.world.getTileEntity(e.x, e.y, e.z);
+		Block block = e.world.getBlock(e.x, e.y, e.z);
 		
-		if(te != null && !te.isInvalid() && te instanceof ISecureTile)
+		if(block.hasTileEntity(e.world.getBlockMetadata(e.x, e.y, e.z)))
 		{
-			if(!((ISecureTile)te).canPlayerInteract(e.entityPlayer, e.action == Action.LEFT_CLICK_BLOCK))
-			{ ((ISecureTile)te).onPlayerNotOwner(e.entityPlayer, e.action == Action.LEFT_CLICK_BLOCK); return false; }
+			TileEntity te = e.world.getTileEntity(e.x, e.y, e.z);
+			
+			if(te != null && !te.isInvalid() && te instanceof ISecureTile)
+			{
+				if(!((ISecureTile)te).canPlayerInteract(e.entityPlayer, e.action == Action.LEFT_CLICK_BLOCK))
+				{ ((ISecureTile)te).onPlayerNotOwner(e.entityPlayer, e.action == Action.LEFT_CLICK_BLOCK); return false; }
+			}
 		}
 		
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(e.entityPlayer);
@@ -287,9 +289,9 @@ public class FTBUEventHandler // FTBUTickHandler
 	}
 	
 	@SubscribeEvent
-	public void onExplosion(net.minecraftforge.event.world.ExplosionEvent.Start e)
+	public void onExplosionStart(net.minecraftforge.event.world.ExplosionEvent.Start e)
 	{
-		if(!FTBUConfig.general.isDedi()) return;
+		if(e.world.isRemote || !FTBUConfig.general.isDedi()) return;
 		
 		int dim = e.world.provider.dimensionId;
 		if(dim != 0) return;
@@ -304,45 +306,53 @@ public class FTBUEventHandler // FTBUTickHandler
 		}
 	}
 	
-	@SideOnly(Side.CLIENT)
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
-	public void onChatEvent(net.minecraftforge.client.event.ClientChatReceivedEvent e)
+	public void onChatEvent(net.minecraftforge.event.ServerChatEvent e)
 	{
-		if(FTBUClient.chatLinks.getB())
+		String[] msg = e.message.split(" ");
+		
+		LatCoreMC.logger.info(LMStringUtils.strip(msg));
+		
+		FastList<String> links = new FastList<String>();
+		
+		for(String s : msg)
 		{
-			String[] msg = e.message.getUnformattedText().split(" ");
+			int index = s.indexOf("http://");
+			if(index == -1) index = s.indexOf("https://");
+			if(index != -1) links.add(s.substring(index).trim());
+		}
+		
+		if(!links.isEmpty())
+		{
+			final IChatComponent line = new ChatComponentText("");
+			boolean oneLink = links.size() == 1;
 			
-			FastList<String> links = new FastList<String>();
-			
-			for(String s : msg)
+			for(int i = 0; i < links.size(); i++)
 			{
-				if(s.startsWith("http://") || s.startsWith("https://"))
-					links.add(s);
+				String link = links.get(i);
+				IChatComponent c = new ChatComponentText(oneLink ? "[ Link ]" : ("[ Link #" + (i + 1) + " ]"));
+				c.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(link)));
+				c.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, link));
+				line.appendSibling(c);
+				if(!oneLink) line.appendSibling(new ChatComponentText(" "));
 			}
 			
-			if(!links.isEmpty())
+			line.getChatStyle().setColor(EnumChatFormatting.GOLD);
+			
+			Thread t = new Thread("LM_PrintLinks")
 			{
-				final IChatComponent line = new ChatComponentText("");
-				boolean oneLink = links.size() == 1;
-				
-				for(int i = 0; i < links.size(); i++)
+				public void run()
 				{
-					String link = links.get(i);
-					IChatComponent c = new ChatComponentText(oneLink ? "[ Link ]" : ("[ Link #" + (i + 1) + " ]"));
-					c.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(link)));
-					c.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, link));
-					line.appendSibling(c);
-					if(!oneLink) line.appendSibling(new ChatComponentText(" "));
+					try { Thread.sleep(25L); }
+					catch(Exception e) { e.printStackTrace(); }
+					
+					for(LMPlayerServer p : LMWorldServer.inst.getAllOnlinePlayers())
+					{ LatCoreMC.printChat(p.getPlayerMP(), p.chatLinks); if(p.chatLinks) LatCoreMC.printChat(p.getPlayerMP(), line); }
 				}
-				
-				line.getChatStyle().setColor(EnumChatFormatting.GOLD);
-				
-				LatCoreMCClient.addCallbackEvent(new ICallbackEvent()
-				{
-					public void onCallback()
-					{ LatCoreMC.printChat(null, line); }
-				});
-			}
+			};
+			
+			t.setDaemon(true);
+			t.start();
 		}
 	}
 }

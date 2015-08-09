@@ -25,9 +25,11 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 	public final IntList friends;
 	public final ItemStack[] lastArmor;
 	public int deaths;
-	public NBTTagCompound commonData;
+	public NBTTagCompound commonPublicData;
+	public NBTTagCompound commonPrivateData;
 	public long lastSeen;
 	public long firstJoined;
+	public boolean chatLinks = false;
 	
 	public LMPlayer(LMWorld<?> w, int i, GameProfile gp)
 	{
@@ -39,7 +41,8 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 		friends = new IntList();
 		lastArmor = new ItemStack[5];
 		
-		commonData = new NBTTagCompound();
+		commonPublicData = new NBTTagCompound();
+		commonPrivateData = new NBTTagCompound();
 	}
 	
 	public LMPlayerServer toPlayerMP()
@@ -74,7 +77,13 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 	{ return playerID; }
 	
 	public boolean equals(Object o)
-	{ return o != null && (o == this || equalsPlayer(world.getPlayer(o))); }
+	{
+		if(o == null) return false;
+		else if(o == this) return true;
+		else if(o instanceof Integer || o instanceof LMPlayer)
+		{ int h = o.hashCode(); return (h <= 0) ? false : h == playerID; }
+		return o != null && (o == this || equalsPlayer(world.getPlayer(o)));
+	}
 	
 	public boolean equalsPlayer(LMPlayer p)
 	{ return p != null && (p == this || p.playerID == playerID); }

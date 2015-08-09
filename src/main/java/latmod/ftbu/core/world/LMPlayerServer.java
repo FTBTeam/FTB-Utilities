@@ -5,14 +5,14 @@ import latmod.ftbu.core.event.LMPlayerServerEvent;
 import latmod.ftbu.core.inv.LMInvUtils;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.*;
-import latmod.ftbu.mod.claims.Claims;
 import latmod.ftbu.mod.config.FTBUConfig;
+import latmod.ftbu.mod.player.Claims;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.mojang.authlib.GameProfile;
 
-public class LMPlayerServer extends LMPlayer
+public class LMPlayerServer extends LMPlayer // LMPlayerClient
 {
 	public static int lastPlayerID = 0;
 	
@@ -57,7 +57,11 @@ public class LMPlayerServer extends LMPlayer
 	{
 		if(action == null || action.isEmpty()) action = ACTION_GENERAL;
 		new LMPlayerServerEvent.DataChanged(this, action).post();
-		if(updateClient) LMNetHelper.sendTo(null, new MessageLMPlayerUpdate(this, action));
+		if(updateClient)
+		{
+			for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers())
+				LMNetHelper.sendTo(ep, new MessageLMPlayerUpdate(this, action, ep.getUniqueID().equals(getUUID())));
+		}
 	}
 	
 	public void updateLastSeen()
@@ -107,7 +111,8 @@ public class LMPlayerServer extends LMPlayer
 		friends.clear();
 		friends.addAll(tag.getIntArray("Friends"));
 		
-		commonData = tag.getCompoundTag("CustomData");
+		commonPublicData = tag.getCompoundTag("CustomData");
+		commonPrivateData = tag.getCompoundTag("CustomPrivateData");
 		
 		LMInvUtils.readItemsFromNBT(lastArmor, tag, "LastItems");
 		
@@ -133,6 +138,8 @@ public class LMPlayerServer extends LMPlayer
 		firstJoined = tag.getLong("Joined");
 		
 		claims.readFromNBT(tag);
+		
+		chatLinks = tag.hasKey("ChatLinks") ? tag.getBoolean("ChatLinks") : true;
 	}
 	
 	public void writeToServer(NBTTagCompound tag)
@@ -140,7 +147,8 @@ public class LMPlayerServer extends LMPlayer
 		if(!friends.isEmpty())
 			tag.setIntArray("Friends", friends.toArray());
 		
-		if(!commonData.hasNoTags()) tag.setTag("CustomData", commonData);
+		if(!commonPublicData.hasNoTags()) tag.setTag("CustomData", commonPublicData);
+		if(!commonPrivateData.hasNoTags()) tag.setTag("CustomPrivateData", commonPrivateData);
 		
 		LMInvUtils.writeItemsToNBT(lastArmor, tag, "LastItems");
 		
@@ -166,20 +174,29 @@ public class LMPlayerServer extends LMPlayer
 		tag.setLong("Joined", firstJoined);
 		
 		claims.writeToNBT(tag);
+		
+		tag.setBoolean("ChatLinks", chatLinks);
 	}
 	
-	public void writeToNet(NBTTagCompound tag) // MID, LID, ID, N
+	public void writeToNet(NBTTagCompound tag, boolean self)
 	{
 		if(isOnline()) tag.setBoolean("On", true);
-		if(claims.getClaimedChunks() > 0) tag.setInteger("Claimed", claims.getClaimedChunks());
-		tag.setInteger("MaxClaimed", getMaxClaimPower());
 		
 		if(!friends.isEmpty())
 			tag.setIntArray("F", friends.toArray());
 		
-		if(!commonData.hasNoTags()) tag.setTag("CD", commonData);
+		if(!commonPublicData.hasNoTags()) tag.setTag("CD", commonPublicData);
 		LMInvUtils.writeItemsToNBT(lastArmor, tag, "LI");
 		if(deaths > 0) tag.setInteger("D", deaths);
+		
+		if(self)
+		{
+			if(!commonPrivateData.hasNoTags()) tag.setTag("CPD", commonPrivateData);
+			if(claims.getClaimedChunks() > 0) tag.setInteger("Claimed", claims.getClaimedChunks());
+			tag.setInteger("MaxClaimed", getMaxClaimPower());
+			if(claims.isSafe()) tag.setBoolean("SafeChunks", true);
+			if(chatLinks) tag.setBoolean("ChatLinks", chatLinks);
+		}
 	}
 	
 	public void onPostLoaded()

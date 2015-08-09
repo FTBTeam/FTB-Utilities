@@ -47,8 +47,6 @@ public class Group
 				Face f = faces.get(i);
 				GL11.glBegin(f.drawMode);
 				
-				//TODO: Normals
-				
 				for(int j = 0; j < f.verticies.length; j++)
 				{
 					Vector3f v = parent.vertices.get(f.verticies[j]);

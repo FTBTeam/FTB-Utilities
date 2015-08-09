@@ -6,6 +6,7 @@ import latmod.ftbu.core.gui.GuiLM;
 import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.*;
+import latmod.ftbu.mod.player.ClientNotifications;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.*;
@@ -31,12 +32,14 @@ public class FTBUGuiEventHandler
 	@SubscribeEvent
 	public void guiInitEvent(final GuiScreenEvent.InitGuiEvent.Post e)
 	{
+		if(LMWorldClient.inst == null) return;
+		
 		if(e.gui instanceof GuiOptions && LatCoreMCClient.getMinecraft().thePlayer != null)
 		{
 			if(FTBUClient.optionsButton.getB())
 				e.buttonList.add(new GuiButton(SETTINGS_BUTTON_ID, e.gui.width / 2 - 155, e.gui.height / 6 + 48 - 6, 150, 20, "[FTBU] " + FTBULang.client_config));
 		}
-		else if(LMWorldClient.inst != null && e.gui instanceof GuiInventory || e.gui instanceof GuiContainerCreative)
+		else if(e.gui instanceof GuiInventory || e.gui instanceof GuiContainerCreative)
 		{
 			int xSize = 176;
 			int ySize = 166;
@@ -96,12 +99,26 @@ public class FTBUGuiEventHandler
 			
 			boolean mouseOver = (mx >= xPosition && my >= yPosition && mx < xPosition + width && my < yPosition + height);
 			
-			GL11.glColor4f(1F, 1F, 1F, mouseOver ? 1F : 0.8F);
+			GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			
+			GL11.glColor4f(1F, 1F, 1F, mouseOver ? 1F : 0.8F);
 			mc.getTextureManager().bindTexture(mouseOver ? friendsButtonTextureOn : friendsButtonTexture);
 			GuiLM.drawTexturedRectD(xPosition, yPosition, 0D, width, height, 0D, 0D, 1D, 1D);
-			GL11.glDisable(GL11.GL_BLEND);
+			
+			if(!ClientNotifications.perm.isEmpty())
+			{
+				String n = String.valueOf(ClientNotifications.perm.size());
+				int nw = mc.fontRenderer.getStringWidth(n);
+				GL11.glColor4f(1F, 1F, 1F, 1F);
+				GL11.glDisable(GL11.GL_TEXTURE_2D);
+				GuiLM.drawRect(xPosition + width - nw, yPosition - 4, xPosition + width + 1, yPosition + 5, 0xAAFF2222);
+				GL11.glEnable(GL11.GL_TEXTURE_2D);
+				mc.fontRenderer.drawString(n, xPosition + width - nw + 1, yPosition - 3, 0xFFFFFFFF);
+			}
+			
+			GL11.glPopAttrib();
 		}
 	}
 }

@@ -5,10 +5,10 @@ import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.inv.*;
 import latmod.ftbu.core.paint.IPainterItem;
 import latmod.ftbu.core.util.*;
-import latmod.ftbu.core.world.*;
+import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.claims.ChunkType;
 import latmod.ftbu.mod.client.badges.ThreadLoadBadges;
+import latmod.ftbu.mod.player.ChunkType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.command.ICommandSender;
@@ -91,8 +91,11 @@ public class FTBUClientEventHandler implements IFTBUReloadable
 		
 		if(LMWorldClient.inst != null)
 		{
-			LMPlayerClient p = LMWorldClient.inst.getClientPlayer();
-			if(p != null) ChunkType.getMessage(mc.theWorld.provider.dimensionId, MathHelperLM.chunk(mc.thePlayer.posX), MathHelperLM.chunk(mc.thePlayer.posZ), p, e.right, shift);
+			if(LMWorldClient.inst.clientPlayer != null)
+			{
+				//TODO: ClientConfig
+				ChunkType.getMessage(mc.theWorld.provider.dimensionId, MathHelperLM.chunk(mc.thePlayer.posX), MathHelperLM.chunk(mc.thePlayer.posZ), e.right, shift);
+			}
 		}
 		
 		if(mc.gameSettings.showDebugInfo)

@@ -1,4 +1,4 @@
-package latmod.ftbu.mod.claims;
+package latmod.ftbu.mod.player;
 
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldServer;

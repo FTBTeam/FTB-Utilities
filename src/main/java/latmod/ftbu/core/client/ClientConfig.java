@@ -122,7 +122,7 @@ public final class ClientConfig
 				
 				if(values[i].equals("edit"))
 				{
-					texCol[i] = 0xFF5500;
+					texCol[i] = 0xFFAA00;
 					texColMO[i] = 0xFFFF00;
 				}
 				else if(values[i].equals("true") || values[i].equals("enabled"))
@@ -170,5 +170,7 @@ public final class ClientConfig
 		
 		public Property setRawValues()
 		{ translateValues = false; return this; }
+		
+		public void initGui() { }
 	}
 }

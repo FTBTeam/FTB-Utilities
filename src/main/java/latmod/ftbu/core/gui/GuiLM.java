@@ -159,11 +159,10 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	public final void setTexture(ResourceLocation tex)
 	{
-		if(tex == null) return;
-		if(prevTexture == null || prevTexture != tex)
+		if(prevTexture != tex)
 		{
 			prevTexture = tex;
-			mc.getTextureManager().bindTexture(tex);
+			if(tex != null) mc.getTextureManager().bindTexture(tex);
 		}
 	}
 	
@@ -345,7 +344,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 		setTexture(TextureMap.locationItemsTexture);
 		zLevel = 200F;
 		itemRender.zLevel = 200F;
-		LMRenderHelper.renderGuiItem(is, itemRender, getFontRenderer(), guiLeft + x, guiTop + y);
+		LMRenderHelper.renderGuiItem(is, itemRender, getFontRenderer(), x, y);
 		zLevel = 0F;
 		itemRender.zLevel = 0F;
 	}

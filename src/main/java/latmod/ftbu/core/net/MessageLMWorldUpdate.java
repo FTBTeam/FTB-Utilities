@@ -16,12 +16,12 @@ public class MessageLMWorldUpdate extends MessageLM<MessageLMWorldUpdate> implem
 	
 	public MessageLMWorldUpdate() { }
 	
-	public MessageLMWorldUpdate(UUID id)
+	public MessageLMWorldUpdate(UUID id, LMPlayerServer self)
 	{
 		worldID = id;
 		
 		players = new NBTTagCompound();
-		LMWorldServer.inst.writePlayersToNet(players);
+		LMWorldServer.inst.writePlayersToNet(players, self);
 	}
 	
 	public void fromBytes(ByteBuf bb)

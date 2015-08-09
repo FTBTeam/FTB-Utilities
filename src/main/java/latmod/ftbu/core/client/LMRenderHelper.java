@@ -88,9 +88,10 @@ public class LMRenderHelper
 	
 	public static void renderGuiItem(ItemStack is, RenderItem itemRender, FontRenderer font, int x, int y)
 	{
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 		if(is == null || is.getItem() == null) return;
 		GL11.glPushMatrix();
-		GL11.glTranslatef(0F, 0F, 32F);
+		//GL11.glTranslatef(0F, 0F, 32F);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		RenderHelper.enableGUIStandardItemLighting();
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
@@ -99,7 +100,9 @@ public class LMRenderHelper
 		FontRenderer f = is.getItem().getFontRenderer(is);
 		if (f == null) f = font;
 		itemRender.renderItemAndEffectIntoGUI(f, Minecraft.getMinecraft().getTextureManager(), is, x, y);
+		itemRender.renderItemOverlayIntoGUI(f, LatCoreMCClient.getMinecraft().getTextureManager(), is, x, y, null);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();
+		GL11.glPopAttrib();
 	}
 }

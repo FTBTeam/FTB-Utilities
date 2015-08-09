@@ -17,5 +17,5 @@ public abstract class ItemButtonLM extends ButtonLM
 	{ background = t; }
 	
 	public void render()
-	{ if(item != null) gui.drawItem(item, posX, posY); }
+	{ if(item != null) gui.drawItem(item, gui.getPosX() + posX, gui.getPosY() + posY); }
 }

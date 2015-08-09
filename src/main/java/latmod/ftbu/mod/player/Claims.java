@@ -1,4 +1,4 @@
-package latmod.ftbu.mod.claims;
+package latmod.ftbu.mod.player;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.util.*;
@@ -51,6 +51,15 @@ public class Claims
 		tag.setBoolean("Safe", safe);
 		
 		serverData.setTag("Claims", tag);
+	}
+	
+	public void setSafe(boolean b)
+	{
+		if(safe != b)
+		{
+			safe = b;
+			owner.sendUpdate(null, true);
+		}
 	}
 	
 	public boolean isSafe()

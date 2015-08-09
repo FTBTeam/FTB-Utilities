@@ -2,8 +2,8 @@ package latmod.ftbu.mod.client.minimap;
 
 import latmod.ftbu.core.client.ClientConfig;
 import latmod.ftbu.core.util.*;
-import latmod.ftbu.mod.claims.ChunkType;
 import latmod.ftbu.mod.client.gui.GuiMinimap;
+import latmod.ftbu.mod.player.ChunkType;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.*;

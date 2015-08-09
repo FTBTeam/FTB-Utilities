@@ -22,9 +22,16 @@ public class LMNBTUtils
 	public static final byte MAP = Constants.NBT.TAG_COMPOUND;
 	public static final byte INT_ARRAY = Constants.NBT.TAG_INT_ARRAY;
 	
+	public static String[] getMapKeysA(NBTTagCompound tag)
+	{
+		if(tag == null || tag.hasNoTags()) return new String[0];
+		return (String[]) tag.func_150296_c().toArray(new String[0]);
+	}
+	
 	public static FastList<String> getMapKeys(NBTTagCompound tag)
 	{
 		FastList<String> list = new FastList<String>();
+		if(tag == null || tag.hasNoTags()) return list;
 		list.addAll(tag.func_150296_c()); return list;
 	}
 	

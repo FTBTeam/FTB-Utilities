@@ -1,9 +1,9 @@
-package latmod.ftbu.mod.claims;
+package latmod.ftbu.mod.player;
 
 import java.util.List;
 
 import latmod.ftbu.core.util.MathHelperLM;
-import latmod.ftbu.core.world.*;
+import latmod.ftbu.core.world.LMPlayerServer;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.minimap.*;
 import latmod.ftbu.mod.config.FTBUConfig;
@@ -53,7 +53,7 @@ public enum ChunkType
 	public String getIDS()
 	{ return FTBU.mod.translateClient("chunktype." + lang); }
 	
-	public static ChunkType get(int dim, int cx, int cz, LMPlayer p)
+	public static ChunkType get(int dim, int cx, int cz, LMPlayerServer p)
 	{
 		if(!FTBUConfig.general.isDedi()) return WILDERNESS;
 		
@@ -70,11 +70,11 @@ public enum ChunkType
 		else return CLAIMED_OTHER;
 	}
 	
-	public static ChunkType getD(int dim, double x, double z, LMPlayer p)
+	public static ChunkType getD(int dim, double x, double z, LMPlayerServer p)
 	{ return get(dim, MathHelperLM.chunk(x), MathHelperLM.chunk(z), p); }
 	
 	@SideOnly(Side.CLIENT)
-	public static void getMessage(int dim, int cx, int cz, LMPlayerClient p, List<String> l, boolean shift)
+	public static void getMessage(int dim, int cx, int cz, List<String> l, boolean shift)
 	{
 		MChunk mc = Minimap.get(dim).getChunk(cx, cz);
 		

@@ -3,6 +3,7 @@ package latmod.ftbu.core.world;
 import java.util.UUID;
 
 import latmod.ftbu.core.*;
+import latmod.ftbu.core.client.LatCoreMCClient;
 import net.minecraft.nbt.*;
 
 import com.mojang.authlib.GameProfile;
@@ -13,8 +14,7 @@ import cpw.mods.fml.relauncher.*;
 public class LMWorldClient extends LMWorld<LMPlayerClient>
 {
 	public static LMWorldClient inst = null;
-	
-	public int clientPlayerID;
+	public LMPlayerClient clientPlayer = null;
 	
 	public LMWorldClient(UUID id)
 	{
@@ -22,11 +22,9 @@ public class LMWorldClient extends LMWorld<LMPlayerClient>
 		LatCoreMC.logger.info("Created LMWorldClient " + worldIDS + " with UUID " + worldID);
 	}
 	
-	public LMPlayerClient getClientPlayer()
-	{ return getPlayer(clientPlayerID); }
-	
 	public void readPlayersFromNet(NBTTagCompound tag)
 	{
+		UUID selfID = LatCoreMCClient.getUUID();
 		players.clear();
 		
 		NBTTagList list = tag.getTagList("Players", LMNBTUtils.MAP);
@@ -35,7 +33,7 @@ public class LMWorldClient extends LMWorld<LMPlayerClient>
 		{
 			NBTTagCompound tag1 = list.getCompoundTagAt(i);
 			LMPlayerClient p = new LMPlayerClient(this, tag1.getInteger("PID"), new GameProfile(new UUID(tag1.getLong("MID"), tag1.getLong("LID")), tag1.getString("N")));
-			p.readFromNet(tag1);
+			p.readFromNet(tag1, p.getUUID().equals(selfID));
 			players.add(p);
 		}
 		

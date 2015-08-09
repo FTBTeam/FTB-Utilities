@@ -5,9 +5,10 @@ import java.util.UUID;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.cmd.*;
-import latmod.ftbu.core.inv.LMInvUtils;
-import latmod.ftbu.core.util.LMFileUtils;
+import latmod.ftbu.core.inv.*;
+import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.*;
+import latmod.ftbu.mod.FTBUGuiHandler;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
@@ -151,13 +152,30 @@ public class CmdAdminPlayer extends SubCommand
 			
 			return "Invalid notification: " + s;
 		}
+		else if(args[1].equals("displayitem"))
+		{
+			if(!p.isOnline()) return mustBeOnline;
+			
+			ItemStack is = p.getPlayerMP().inventory.getCurrentItem();
+			
+			if(p.getPlayerMP().inventory.getCurrentItem() != null)
+			{
+				ItemDisplay itemDisplay = new ItemDisplay(is, is.getDisplayName(), is.hasDisplayName() ? FastList.asList(is.getItem().getItemStackDisplayName(is)) : null, 8F);
+				NBTTagCompound data = new NBTTagCompound();
+				itemDisplay.writeToNBT(data);
+				FTBUGuiHandler.instance.openGui(p.getPlayerMP(), FTBUGuiHandler.DISPLAY_ITEM, data);
+				return null;
+			}
+			
+			return "Invalid item!";
+		}
 		
 		return null;
 	}
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
-		if(i == 1) return new String[] { "delete", "saveinv", "loadinv", "notify" };
+		if(i == 1) return new String[] { "delete", "saveinv", "loadinv", "notify", "displayitem" };
 		return null;
 	}
 	

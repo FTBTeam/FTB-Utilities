@@ -37,7 +37,21 @@ public class FTBUClient extends FTBUCommon
 	public static final ClientConfig.Property addRegistryNames = new ClientConfig.Property("item_reg_names", false);
 	public static final ClientConfig.Property displayDebugInfo = new ClientConfig.Property("debug_info", false);
 	public static final ClientConfig.Property optionsButton = new ClientConfig.Property("options_button", true);
-	public static final ClientConfig.Property chatLinks = new ClientConfig.Property("chat_links", true);
+	
+	public static final ClientConfig.Property chatLinks = new ClientConfig.Property("chat_links", true)
+	{
+		public void initGui()
+		{
+			setValue(LMWorldClient.inst.clientPlayer.chatLinks ? 1 : 0);
+		}
+		
+		public void onClicked()
+		{
+			LMWorldClient.inst.clientPlayer.chatLinks = !LMWorldClient.inst.clientPlayer.chatLinks;
+			setValue(LMWorldClient.inst.clientPlayer.chatLinks ? 1 : 0);
+			LMNetHelper.sendToServer(new MessageClientGuiAction(MessageClientGuiAction.ACTION_CHAT_LINKS, LMWorldClient.inst.clientPlayer.chatLinks ? 1 : 0));
+		}
+	};
 	
 	public static final ClientConfig miscConfig = new ClientConfig("ftbu_misc").setHidden();
 	public static final ClientConfig.Property hideArmorFG = new ClientConfig.Property("hide_armor_fg", false);

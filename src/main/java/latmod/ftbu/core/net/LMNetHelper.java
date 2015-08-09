@@ -23,7 +23,7 @@ public class LMNetHelper
 		NET.registerMessage(MessageLMPlayerDied.class, MessageLMPlayerDied.class, 5, Side.CLIENT);
 		NET.registerMessage(MessageReload.class, MessageReload.class, 6, Side.CLIENT);
 		NET.registerMessage(MessageNotifyPlayer.class, MessageNotifyPlayer.class, 7, Side.CLIENT);
-		NET.registerMessage(MessageManageGroups.class, MessageManageGroups.class, 8, Side.SERVER);
+		NET.registerMessage(MessageClientGuiAction.class, MessageClientGuiAction.class, 8, Side.SERVER);
 		NET.registerMessage(MessageClientItemAction.class, MessageClientItemAction.class, 9, Side.SERVER);
 		NET.registerMessage(MessageLMPlayerLoggedIn.class, MessageLMPlayerLoggedIn.class, 10, Side.CLIENT);
 		NET.registerMessage(MessageLMPlayerLoggedOut.class, MessageLMPlayerLoggedOut.class, 11, Side.CLIENT);

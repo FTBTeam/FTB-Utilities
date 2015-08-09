@@ -8,9 +8,9 @@ import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.badges.Badge;
-import latmod.ftbu.mod.client.gui.GuiNotification;
 import latmod.ftbu.mod.client.minimap.*;
 import latmod.ftbu.mod.config.FTBUConfig;
+import latmod.ftbu.mod.player.ClientNotifications;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -35,8 +35,6 @@ public class FTBURenderHandler
 	private static int currentDim;
 	private static double playerX, playerY, playerZ, renderX, renderY, renderZ, far = 4D;
 	
-	public static final FastList<GuiNotification> messages = new FastList<GuiNotification>();
-	public GuiNotification currentNotification = null;
 	public static final FastList<ICallbackEvent> callbacks = new FastList<ICallbackEvent>();
 	
 	private static final FastList<WaypointClient> visibleBeacons = new FastList<WaypointClient>();
@@ -59,23 +57,13 @@ public class FTBURenderHandler
 	@SubscribeEvent
 	public void renderTick(TickEvent.RenderTickEvent e)
 	{
-		mc = Minecraft.getMinecraft();
+		if(e.phase == TickEvent.Phase.START)
+			mc = Minecraft.getMinecraft();
+		
 		if(mc.theWorld == null) return;
 		
 		if(e.phase == TickEvent.Phase.END)
-		{
-			if(currentNotification != null)
-			{
-				currentNotification.render(mc);
-				if(currentNotification.isDead())
-					currentNotification = null;
-			}
-			else if(!messages.isEmpty())
-			{
-				currentNotification = messages.get(0);
-				messages.remove(0);
-			}
-		}
+			ClientNotifications.renderTemp(mc);
 	}
 	
 	@SubscribeEvent

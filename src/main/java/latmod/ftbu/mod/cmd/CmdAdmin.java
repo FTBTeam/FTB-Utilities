@@ -12,7 +12,6 @@ public class CmdAdmin extends CommandSubLM
 		subCommands.put("player", new CmdAdminPlayer());
 		subCommands.put("reload", new CmdAdminReload());
 		subCommands.put("setitemname", new CmdAdminSetItemName());
-		subCommands.put("displayitem", new CmdAdminDisplayItem());
 		subCommands.put("getdim", new CmdAdminGetDim());
 		subCommands.put("invsee", new CmdAdminInvsee());
 		subCommands.put("setwarp", new CmdAdminSetWarp());

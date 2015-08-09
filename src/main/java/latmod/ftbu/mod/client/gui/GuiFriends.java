@@ -14,6 +14,7 @@ import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.mod.client.minimap.Waypoints;
+import latmod.ftbu.mod.player.ClientNotifications;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
@@ -54,6 +55,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	private static final FastList<ActionButton> actionButtons = new FastList<ActionButton>();
 	private static LMPlayerClient staticOwner;
 	private static LMPComparator comparator;
+	private static boolean notificationsGuiOpen = false;
 	
 	public GuiFriends(GuiScreen gui)
 	{
@@ -189,24 +191,18 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		if(selectedPlayer.playerLM.equalsPlayer(owner))
 		{
 			actionButtons.add(new ActionButton(this, PlayerAction.settings, FTBULang.client_config));
+			actionButtons.add(new ActionButton(this, PlayerAction.notifications, "Notifications"));
 			actionButtons.add(new ActionButton(this, PlayerAction.waypoints, Waypoints.clientConfig.getIDS()));
 			actionButtons.add(new ActionButton(this, PlayerAction.minimap, "Claimed Chunks"));
-			//actionButtons.add(new ActionButton(this, PlayerAction.notes, "Notes [WIP]"));
-			//actionButtons.add(new ActionButton(this, PlayerAction.notifications, "Notifications [WIP]"));
+			//actionButtons.add(new ActionButton(this, PlayerAction.notes, "Notes"));
 		}
 		else
 		{
-			if(owner.isFriendRaw(selectedPlayer.playerLM))
-				actionButtons.add(new ActionButton(this, PlayerAction.friend_remove, FTBULang.button_rem_friend));
-			else
-				actionButtons.add(new ActionButton(this, PlayerAction.friend_add, FTBULang.button_add_friend));
+			actionButtons.add(new ActionButton(this, PlayerAction.friend_toggle, owner.isFriendRaw(selectedPlayer.playerLM) ? FTBULang.button_rem_friend : FTBULang.button_add_friend));
 		}
 		
 		l.addAll(actionButtons);
 	}
-	
-	public void sendUpdate(int c, int u)
-	{ LMNetHelper.sendToServer(new MessageManageGroups(owner, c, u)); }
 	
 	public int maxPages()
 	{ return (players.size() / pbPlayers.length) + 1; }
@@ -228,7 +224,9 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		if(FTBUClient.hideArmorFG.getB()) buttonArmor.render(Icons.close);
 		
 		for(ActionButton a : actionButtons)
-			a.render(a.action.icon);
+		{
+			a.render(a.action);
+		}
 		
 		if(FTBUClient.hideArmorFG.getB())
 		{
@@ -260,7 +258,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		GuiInventory.func_147046_a(playerX, playerY, 55, playerX - mouseX, playerY - 75 - mouseY, selectedPlayer);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		GL11.glPopAttrib();
-		GL11.glPopAttrib();
+		GL11.glPopMatrix();
 	}
 	
 	public void drawText(FastList<String> l)
@@ -430,6 +428,24 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			title = s;
 		}
 		
+		public void render(PlayerAction a)
+		{
+			render(a.getIcon(gui));
+			
+			if(a == PlayerAction.notifications && !ClientNotifications.perm.isEmpty())
+			{
+				String n = String.valueOf(ClientNotifications.perm.size());
+				int nw = gui.mc.fontRenderer.getStringWidth(n);
+				GL11.glDisable(GL11.GL_TEXTURE_2D);
+				LatCore.Colors.setGLColor(0xAAFF2222);
+				GuiLM.drawTexturedRectD(gui.getPosX() + posX + width - nw, gui.getPosY() + posY - 2, gui.zLevel, nw + 1, 9, 0D, 0D, 0D, 0D);
+				GL11.glEnable(GL11.GL_TEXTURE_2D);
+				GL11.glColor4f(1F, 1F, 1F, 1F);
+				gui.setTexture(null);
+				gui.mc.fontRenderer.drawString(n, gui.getPosX() + posX + width - nw + 1, gui.getPosY() + posY - 1, 0xFFFFFFFF);
+			}
+		}
+
 		public void onButtonPressed(int b)
 		{
 			gui.playClickSound();
@@ -446,6 +462,9 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		{ icon = c; }
 		
 		public abstract void onClicked(GuiFriends g);
+		
+		public TextureCoords getIcon(GuiFriends g)
+		{ return icon; }
 		
 		// Self //
 		
@@ -470,33 +489,40 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		public static final PlayerAction notes = new PlayerAction(Icons.notes)
 		{
 			public void onClicked(GuiFriends g)
-			{ /* g.mc.displayGuiScreen(new GuiNotes()); */ }
+			{ /*WindowNotes.open();*/ }
 		};
 		
 		public static final PlayerAction notifications = new PlayerAction(Icons.comment)
 		{
 			public void onClicked(GuiFriends g)
-			{ /* g.mc.displayGuiScreen(new GuiNotifications()); */ }
+			{
+				notificationsGuiOpen = !notificationsGuiOpen;
+				g.playClickSound();
+				g.refreshWidgets();
+				
+				if(!ClientNotifications.perm.isEmpty())
+				{
+					ClientNotifications.perm.get(0).onClicked(g.mc);
+					ClientNotifications.perm.remove(0);
+				}
+			}
 		};
 		
 		// Other players //
 		
-		public static final PlayerAction friend_add = new PlayerAction(Icons.add)
+		public static final PlayerAction friend_toggle = new PlayerAction(Icons.add)
 		{
 			public void onClicked(GuiFriends g)
 			{
-				g.sendUpdate(MessageManageGroups.C_ADD_FRIEND, selectedPlayer.playerLM.playerID);
+				if(g.owner.isFriendRaw(selectedPlayer.playerLM))
+					LMNetHelper.sendToServer(new MessageClientGuiAction(MessageClientGuiAction.ACTION_REM_FRIEND, selectedPlayer.playerLM.playerID));
+				else
+					LMNetHelper.sendToServer(new MessageClientGuiAction(MessageClientGuiAction.ACTION_ADD_FRIEND, selectedPlayer.playerLM.playerID));
 				g.refreshPlayers();
 			}
-		};
-		
-		public static final PlayerAction friend_remove = new PlayerAction(Icons.remove)
-		{
-			public void onClicked(GuiFriends g)
-			{
-				g.sendUpdate(MessageManageGroups.C_REM_FRIEND, selectedPlayer.playerLM.playerID);
-				g.refreshPlayers();
-			}
+			
+			public TextureCoords getIcon(GuiFriends g)
+			{ return g.owner.isFriendRaw(selectedPlayer.playerLM) ? Icons.remove : Icons.add; }
 		};
 	}
 	

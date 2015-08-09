@@ -82,6 +82,19 @@ public abstract class LMWorld<P extends LMPlayer>
 		return null;
 	}
 	
+	public FastList<P> getAllOnlinePlayers()
+	{
+		FastList<P> l = new FastList<P>();
+		
+		for(int i = 0; i < players.size(); i++)
+		{
+			P p = players.get(i);
+			if(p.isOnline()) l.add(p);
+		}
+		
+		return l;
+	}
+	
 	public int getPlayerID(Object o)
 	{
 		if(o == null) return 0;

@@ -9,7 +9,6 @@ import latmod.ftbu.core.event.LMPlayerClientEvent;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 
 import com.mojang.authlib.GameProfile;
@@ -27,14 +26,14 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> 
 	
 	public MessageLMPlayerLoggedIn() { }
 	
-	public MessageLMPlayerLoggedIn(LMPlayerServer p, boolean first)
+	public MessageLMPlayerLoggedIn(LMPlayerServer p, boolean first, boolean self)
 	{
 		playerID = p.playerID;
 		uuid = p.getUUID();
 		username = p.getName();
 		
 		data = new NBTTagCompound();
-		p.writeToNet(data);
+		p.writeToNet(data, self);
 		
 		firstTime = first;
 	}
@@ -66,19 +65,20 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> 
 	@SideOnly(Side.CLIENT)
 	public void onMessageClient(MessageLMPlayerLoggedIn m, MessageContext ctx)
 	{
-		Minecraft mc = LatCoreMCClient.getMinecraft();
-		
 		LMPlayerClient p = LMWorldClient.inst.getPlayer(m.playerID);
 		boolean add = p == null;
 		if(add) p = new LMPlayerClient(LMWorldClient.inst, m.playerID, new GameProfile(m.uuid, m.username));
-		p.readFromNet(m.data);
+		
+		boolean self = m.uuid.equals(LatCoreMCClient.getUUID());
+		
+		p.readFromNet(m.data, self);
 		if(add) LMWorldClient.inst.players.add(p);
 		p.onPostLoaded();
 		
-		if(m.uuid.equals(mc.thePlayer.getUniqueID()))
+		if(self)
 		{
 			LatCoreMC.logger.info("Joined the server with PlayerID " + p.playerID + " in world " + LMWorldClient.inst.worldIDS);
-			LMWorldClient.inst.clientPlayerID = p.playerID;
+			LMWorldClient.inst.clientPlayer = p;
 			FTBUClient.onWorldJoined(p);
 		}
 		

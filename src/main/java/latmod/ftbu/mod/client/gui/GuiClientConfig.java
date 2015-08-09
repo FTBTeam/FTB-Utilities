@@ -54,7 +54,10 @@ public class GuiClientConfig extends GuiLM
 				lines.add(cat);
 				
 				for(ClientConfig.Property p : c.map.values)
+				{
+					p.initGui();
 					lines.add(new ButtonConfig(cat, p));
+				}
 			}
 		}
 	}

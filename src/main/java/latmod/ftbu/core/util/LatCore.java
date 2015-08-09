@@ -7,7 +7,7 @@ import java.util.*;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.event.LMGsonEvent;
-import latmod.ftbu.core.inv.*;
+import latmod.ftbu.core.inv.ItemStackSerializer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 
@@ -23,6 +23,15 @@ public class LatCore
 {
 	public static final int DAY24 = 24 * 60 * 60;
 	public static final Charset UTF_8 = Charset.forName("UTF-8");
+	
+	public static final File latmodHomeFolder = getFolder();
+	
+	private static File getFolder()
+	{
+		File f = new File(System.getProperty("user.home"), "/LatMod/");
+		if(!f.exists()) f.mkdirs();
+		return f;
+	}
 	
 	public static class Colors
 	{
@@ -110,18 +119,18 @@ public class LatCore
 	}
 	
 	private static Gson gson = null;
-	//public static boolean jsonPrettyPrinting = true;
+	private static Gson gson_pretty = null;
+	public static boolean jsonPrettyPrinting = false;
 	
 	public static void updateGson()
 	{
 		GsonBuilder gb = new GsonBuilder();
 		gb.excludeFieldsWithoutExposeAnnotation();
-		gb.setPrettyPrinting();
-		gb.registerTypeHierarchyAdapter(IChatComponent.class, new IChatComponent.Serializer());
-		gb.registerTypeHierarchyAdapter(ChatStyle.class, new ChatStyle.Serializer());
-		gb.registerTypeAdapterFactory(new EnumTypeAdapterFactory());
 		
 		NBTSerializer.init(gb);
+		gb.registerTypeAdapterFactory(new EnumTypeAdapterFactory());
+		gb.registerTypeHierarchyAdapter(IChatComponent.class, new IChatComponent.Serializer());
+		gb.registerTypeHierarchyAdapter(ChatStyle.class, new ChatStyle.Serializer());
 		gb.registerTypeHierarchyAdapter(IntList.class, new IntList.Serializer());
 		gb.registerTypeHierarchyAdapter(IntMap.class, new IntMap.Serializer());
 		gb.registerTypeHierarchyAdapter(ItemStack.class, new ItemStackSerializer());
@@ -130,12 +139,14 @@ public class LatCore
 		
 		new LMGsonEvent(gb).post();
 		gson = gb.create();
+		gb.setPrettyPrinting();
+		gson_pretty = gb.create();
 	}
 	
 	public static Gson getGson()
 	{
-		if(gson == null) updateGson();
-		return gson;
+		if(gson == null || gson_pretty == null) updateGson();
+		return jsonPrettyPrinting ? gson_pretty : gson;
 	}
 	
 	public static <T> T fromJson(String s, Type t)
@@ -159,7 +170,9 @@ public class LatCore
 	
 	public static boolean toJsonFile(File f, Object o)
 	{
+		jsonPrettyPrinting = true;
 		String s = toJson(o);
+		jsonPrettyPrinting = false;
 		if(s == null) return false;
 		
 		try
@@ -262,7 +275,7 @@ public class LatCore
 	
 	public static boolean areObjectsEqual(Object o1, Object o2, boolean allowNulls)
 	{
-		if(o1 == null && o2 == null && allowNulls) return true;
+		if(o1 == null && o2 == null) return allowNulls;
 		if(o1 == null || o2 == null) return false;
 		return o1.equals(o2);
 	}
@@ -346,24 +359,32 @@ public class LatCore
 		return h;
 	}
 	
-	public static String getTimeAgo(long t)
+	public static String getTimeAgo(long millis)
 	{
-		long sec = 1000L;
-		long min = 60L * sec;
-		long hour = 60L * min;
-		long day = 24L * hour;
+		long secs = millis / 1000L;
+		StringBuilder sb = new StringBuilder();
 		
-		if(t < sec) return "0 seconds";
-		if(t < min) return (t / sec) + getPW(t / sec, " second", " seconds");
-		if(t < hour) return (t / min) + getPW(t / min, " minute", " minutes");
-		if(t < day) return (t / hour) + getPW(t / hour, " hour", " hours");
-		return (t / day) + getPW(t / day, " day", " days");
-	}
-	
-	private static String getPW(long t, String s, String p)
-	{
-		String s0 = "" + t;
-		return (s0.endsWith("1") && !s0.endsWith("11")) ? s : p;
+		long h = (secs / 3600L) % 24;
+		long m = (secs / 60L) % 60L;
+		long s = secs % 60L;
+		
+		if(secs >= DAY24)
+		{
+			sb.append(secs / DAY24);
+			sb.append("d ");
+		}
+		
+		if(h < 10) sb.append('0');
+		sb.append(h);
+		sb.append("h ");
+		if(m < 10) sb.append('0');
+		sb.append(m);
+		sb.append("m ");
+		if(s < 10) sb.append('0');
+		sb.append(s);
+		sb.append('s');
+		
+		return sb.toString();
 	}
 	
 	public static long millis()

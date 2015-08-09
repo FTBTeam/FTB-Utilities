@@ -5,11 +5,10 @@ import latmod.ftbu.core.inv.ItemDisplay;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
 
@@ -36,36 +35,13 @@ public class GuiDisplayItem extends GuiLM
 	{
 		super.drawBackground();
 		
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		
-		GL11.glPushMatrix();
-		GL11.glTranslatef(guiLeft + xSize / 2F, guiTop + ySize / 2F, 32F);
-		GL11.glEnable(GL11.GL_LIGHTING);
-		RenderHelper.enableGUIStandardItemLighting();
-		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
-		
-		/*
-		zLevel = 200;
-		itemRender.zLevel = 200F;
-		FontRenderer font = itemDisplay.item.getItem().getFontRenderer(itemDisplay.item);
-		if (font == null) font = fontRendererObj;
-		
-		itemRender.renderItemAndEffectIntoGUI(font, Minecraft.getMinecraft().getTextureManager(), itemDisplay.item, -8, -8);
-		
-		zLevel = 0;
-		itemRender.zLevel = 0F;
-		*/
-		
+		GL11.glPushMatrix();
+		GL11.glTranslatef(guiLeft + xSize / 2F, guiTop + ySize / 2F, 0F);
 		GL11.glScalef(itemDisplay.scale, itemDisplay.scale, 1F);
+		itemDisplay.item.stackSize = 1;
 		drawItem(itemDisplay.item, -8, -8);
-		
-		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();
-		
-		GL11.glDisable(GL11.GL_BLEND);
 	}
 	
 	public void drawText(FastList<String> l)

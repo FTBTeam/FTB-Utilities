@@ -12,6 +12,8 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import com.mojang.authlib.GameProfile;
 
+import cpw.mods.fml.relauncher.*;
+
 public class LMPlayerServer extends LMPlayer // LMPlayerClient
 {
 	public static int lastPlayerID = 0;
@@ -40,33 +42,35 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public void setName(String s)
 	{ playerName = s; }
 	
+	public boolean isOnline()
+	{ return entityPlayer != null; }
+	
 	public LMPlayerServer toPlayerMP()
 	{ return this; }
+	
+	@SideOnly(Side.CLIENT)
+	public LMPlayerClient toPlayerSP()
+	{ return null; }
+	
+	public EntityPlayerMP getPlayer()
+	{ return entityPlayer; }
 	
 	public void setPlayer(EntityPlayerMP ep)
 	{ entityPlayer = ep; }
 	
-	public EntityPlayerMP getPlayerMP()
-	//{ return LatCoreMC.getPlayerMP(getUUID()); }
-	{ return entityPlayer; }
-	
-	public boolean isOnline()
-	{ return entityPlayer != null; }
-	
-	public void sendUpdate(String action, boolean updateClient)
+	public void sendUpdate(boolean updateClient)
 	{
-		if(action == null || action.isEmpty()) action = ACTION_GENERAL;
-		new LMPlayerServerEvent.DataChanged(this, action).post();
+		new LMPlayerServerEvent.DataChanged(this).post();
 		if(updateClient)
 		{
 			for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers())
-				LMNetHelper.sendTo(ep, new MessageLMPlayerUpdate(this, action, ep.getUniqueID().equals(getUUID())));
+				LMNetHelper.sendTo(ep, new MessageLMPlayerUpdate(this, ep.getUniqueID().equals(getUUID())));
 		}
 	}
 	
 	public void updateLastSeen()
 	{
-		lastSeen = LatCore.millis();
+		lastSeen = LMUtils.millis();
 		if(firstJoined <= 0L)
 			firstJoined = lastSeen;
 		if(entityPlayer != null)
@@ -84,7 +88,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	{
 		if(isOnline())
 		{
-			EntityPlayerMP ep = getPlayerMP();
+			EntityPlayerMP ep = getPlayer();
 			if(ep != null) return new EntityPos(ep);
 		}
 		
@@ -95,7 +99,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public void getInfo(NBTTagCompound tag)
 	{
-		long ms = LatCore.millis();
+		long ms = LMUtils.millis();
 		
 		FastList<String> info = new FastList<String>();
 		new LMPlayerServerEvent.CustomInfo(this, info).post();
@@ -140,6 +144,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		claims.readFromNBT(tag);
 		
 		chatLinks = tag.hasKey("ChatLinks") ? tag.getBoolean("ChatLinks") : true;
+		chunkMessages = tag.hasKey("ChunkMessages") ? tag.getByte("ChunkMessages") : 1;
 	}
 	
 	public void writeToServer(NBTTagCompound tag)
@@ -176,11 +181,12 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		claims.writeToNBT(tag);
 		
 		tag.setBoolean("ChatLinks", chatLinks);
+		tag.setByte("ChunkMessages", (byte)chunkMessages);
 	}
 	
 	public void writeToNet(NBTTagCompound tag, boolean self)
 	{
-		if(isOnline()) tag.setBoolean("On", true);
+		if(isOnline()) tag.setBoolean("ON", true);
 		
 		if(!friends.isEmpty())
 			tag.setIntArray("F", friends.toArray());
@@ -192,10 +198,11 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		if(self)
 		{
 			if(!commonPrivateData.hasNoTags()) tag.setTag("CPD", commonPrivateData);
-			if(claims.getClaimedChunks() > 0) tag.setInteger("Claimed", claims.getClaimedChunks());
-			tag.setInteger("MaxClaimed", getMaxClaimPower());
-			if(claims.isSafe()) tag.setBoolean("SafeChunks", true);
-			if(chatLinks) tag.setBoolean("ChatLinks", chatLinks);
+			if(claims.getClaimedChunks() > 0) tag.setInteger("CC", claims.getClaimedChunks());
+			tag.setInteger("MCC", getMaxClaimPower());
+			if(claims.isSafe()) tag.setBoolean("SC", true);
+			if(chatLinks) tag.setBoolean("CL", chatLinks);
+			if(chunkMessages != 0) tag.setByte("CM", (byte)chunkMessages);
 		}
 	}
 	

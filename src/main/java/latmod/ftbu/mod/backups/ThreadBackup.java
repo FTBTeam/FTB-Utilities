@@ -56,13 +56,13 @@ public class ThreadBackup extends Thread
 				out.append(".zip");
 				dstFile = LMFileUtils.newFile(new File(Backups.backupsFolder, out.toString()));
 				
-				long start = LatCore.millis();
+				long start = LMUtils.millis();
 				
 				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(dstFile));
 				//zos.setLevel(9);
 				zos.setLevel(FTBUConfig.backups.compressionLevel);
 				
-				long logMillis = LatCore.millis() + 5000L;
+				long logMillis = LMUtils.millis() + 5000L;
 				
 				byte[] buffer = new byte[1024];
 				
@@ -74,7 +74,7 @@ public class ThreadBackup extends Thread
 					String filePath = file.getAbsolutePath();
 					ZipEntry ze = new ZipEntry(src.getName() + File.separator + filePath.substring(src.getAbsolutePath().length() + 1, filePath.length()));
 					
-					long millis = LatCore.millis();
+					long millis = LMUtils.millis();
 					
 					if(i == 0 || millis > logMillis || i == allFiles - 1)
 					{
@@ -113,13 +113,13 @@ public class ThreadBackup extends Thread
 				String dstPath = dstFile.getAbsolutePath() + File.separator;
 				String srcPath = src.getAbsolutePath();
 				
-				long logMillis = LatCore.millis() + 5000L;
+				long logMillis = LMUtils.millis() + 5000L;
 				
 				for(int i = 0; i < allFiles; i++)
 				{
 					File file = files.get(i);
 					
-					long millis = LatCore.millis();
+					long millis = LMUtils.millis();
 					
 					if(i == 0 || millis > logMillis || i == allFiles - 1)
 					{
@@ -136,7 +136,7 @@ public class ThreadBackup extends Thread
 					}
 					
 					File dst1 = new File(dstPath + (file.getAbsolutePath().replace(srcPath, "")));
-					LatCore.throwException(LMFileUtils.copyFile(file, dst1));
+					LMUtils.throwException(LMFileUtils.copyFile(file, dst1));
 				}
 			}
 			
@@ -154,7 +154,7 @@ public class ThreadBackup extends Thread
 		}
 		catch(Exception e)
 		{
-			LatCoreMC.printChat(BroadcastSender.inst, EnumChatFormatting.DARK_RED + "Failed to save world! (" + LatCore.classpath(e.getClass()) + ")");
+			LatCoreMC.printChat(BroadcastSender.inst, EnumChatFormatting.DARK_RED + "Failed to save world! (" + LMUtils.classpath(e.getClass()) + ")");
 			e.printStackTrace();
 			if(dstFile != null) LMFileUtils.delete(dstFile);
 		}
@@ -166,7 +166,7 @@ public class ThreadBackup extends Thread
 	
 	private static String getDoneTime(long l)
 	{
-		float f = (LatCore.millis() - l) / 1000F;
+		float f = (LMUtils.millis() - l) / 1000F;
 		if(f < 60F) return f + " seconds";
 		int m = (int)(f / 60F);
 		int s = (int)(f - m * 60F);

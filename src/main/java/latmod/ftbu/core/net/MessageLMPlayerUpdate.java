@@ -13,15 +13,13 @@ import cpw.mods.fml.relauncher.*;
 public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate> implements IClientMessageLM<MessageLMPlayerUpdate>
 {
 	public int playerID;
-	public String action;
 	public NBTTagCompound data;
 	
 	public MessageLMPlayerUpdate() { }
 	
-	public MessageLMPlayerUpdate(LMPlayerServer p, String a, boolean self)
+	public MessageLMPlayerUpdate(LMPlayerServer p, boolean self)
 	{
 		playerID = p.playerID;
-		action = a;
 		
 		data = new NBTTagCompound();
 		p.writeToNet(data, self);
@@ -30,14 +28,12 @@ public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate> impl
 	public void fromBytes(ByteBuf bb)
 	{
 		playerID = bb.readInt();
-		action = LMNetHelper.readString(bb);
 		data = LMNetHelper.readTagCompound(bb);
 	}
 	
 	public void toBytes(ByteBuf bb)
 	{
 		bb.writeInt(playerID);
-		LMNetHelper.writeString(bb, action);
 		LMNetHelper.writeTagCompound(bb, data);
 	}
 	
@@ -49,10 +45,10 @@ public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate> impl
 	{
 		LMPlayerClient p = LMWorldClient.inst.getPlayer(m.playerID);
 		p.readFromNet(m.data, p.getUUID().equals(LatCoreMCClient.getUUID()));
-		new LMPlayerClientEvent.DataChanged(p, action).post();
+		new LMPlayerClientEvent.DataChanged(p).post();
 		
 		GuiScreen g = LatCoreMCClient.getMinecraft().currentScreen;
 		if(g != null && g instanceof IClientActionGui)
-			((IClientActionGui)g).onClientAction(action);
+			((IClientActionGui)g).onClientDataChanged();
 	}
 }

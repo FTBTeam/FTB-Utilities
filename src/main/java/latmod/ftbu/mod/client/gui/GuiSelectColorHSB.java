@@ -41,7 +41,7 @@ public class GuiSelectColorHSB extends GuiLM
 		super(null, tex);
 		hideNEI = true;
 		callback = cb;
-		currentColor = initCol = LatCore.Colors.getRGBA(col, 255);
+		currentColor = initCol = LMColorUtils.getRGBA(col, 255);
 		colorID = id;
 		isInstant = instant;
 		
@@ -60,7 +60,7 @@ public class GuiSelectColorHSB extends GuiLM
 			}
 		};
 		
-		colorInit.title = LatCore.Colors.getHex(getInitRGB());
+		colorInit.title = LMColorUtils.getHex(getInitRGB());
 		
 		colorCurrent = new ButtonLM(this, 49, 5, col_tex.width, col_tex.height)
 		{
@@ -88,9 +88,10 @@ public class GuiSelectColorHSB extends GuiLM
 		switchRGB.title = "RGB";
 		
 		sliderBrightness = new SliderLM(this, 6, 91, SLIDER_BAR_W, SLIDER_H, SLIDER_W);
-		sliderBrightness.value = LatCore.Colors.getBrightness(col);
+		sliderBrightness.value = LMColorUtils.getBrightness(col);
 		sliderBrightness.displayMax = 255;
 		sliderBrightness.title = EnumDyeColor.BLACK.toString();
+		sliderBrightness.scrollStep = 1F / 255F;
 		
 		colorSelector = new ColorSelector(this, 6, 24, 64, 64);
 	}
@@ -116,9 +117,9 @@ public class GuiSelectColorHSB extends GuiLM
 			ColorSelector.shouldRedraw = true;
 		}
 		
-		LatCore.Colors.setGLColor(initCol, 255);
+		LMColorUtils.setGLColor(initCol, 255);
 		colorInit.render(col_tex);
-		LatCore.Colors.setGLColor(currentColor, 255);
+		LMColorUtils.setGLColor(currentColor, 255);
 		colorCurrent.render(col_tex);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		switchRGB.render(Icons.rgb);
@@ -145,7 +146,7 @@ public class GuiSelectColorHSB extends GuiLM
 		GL11.glColor4f(0F, 0F, 0F, 1F);
 		GL11.glTexCoord2d(u0, v0); GL11.glVertex3d(x + 0, y + 0, z);
 		GL11.glTexCoord2d(u0, v1); GL11.glVertex3d(x + 0, y + h, z);
-		LatCore.Colors.setGLColor(currentColor, 255);
+		LMColorUtils.setGLColor(currentColor, 255);
 		GL11.glTexCoord2d(u1, v1); GL11.glVertex3d(x + w, y + h, z);
 		GL11.glTexCoord2d(u1, v0); GL11.glVertex3d(x + w, y + 0, z);
 		GL11.glEnd();
@@ -162,14 +163,14 @@ public class GuiSelectColorHSB extends GuiLM
 	public void update()
 	{
 		sliderBrightness.update();
-		colorCurrent.title = LatCore.Colors.getHex(currentColor);
+		colorCurrent.title = LMColorUtils.getHex(currentColor);
 	}
 	
 	public void updateColor()
 	{
 		float h = (float)(Math.atan2(colorSelector.cursorPosY - 0.5D, colorSelector.cursorPosX - 0.5D) / MathHelperLM.TWO_PI);
 		float s = (float)(MathHelperLM.dist(colorSelector.cursorPosX, colorSelector.cursorPosY, 0D, 0.5D, 0.5D, 0D) * 2D);
-		currentColor = LatCore.Colors.getHSB(h, s, sliderBrightness.value);
+		currentColor = LMColorUtils.getHSB(h, s, sliderBrightness.value);
 		if(isInstant) callback.onColorSelected(new ColorSelected(true, currentColor, colorID, false));
 	}
 	
@@ -227,7 +228,7 @@ public class GuiSelectColorHSB extends GuiLM
 			
 			if(cursorPosX >= 0D && cursorPosY >= 0D)
 			{
-				GL11.glColor4f(1F - LatCore.Colors.getRed(gui.currentColor) / 255F, 1F - LatCore.Colors.getGreen(gui.currentColor) / 255F, 1F - LatCore.Colors.getBlue(gui.currentColor) / 255F, 1F);
+				GL11.glColor4f(1F - LMColorUtils.getRed(gui.currentColor) / 255F, 1F - LMColorUtils.getGreen(gui.currentColor) / 255F, 1F - LMColorUtils.getBlue(gui.currentColor) / 255F, 1F);
 				cursor_tex.render(gui, posX + cursorPosX * width - 2, posY + cursorPosY * height - 2, 4, 4);
 				GL11.glColor4f(1F, 1F, 1F, 1F);
 			}

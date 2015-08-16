@@ -3,7 +3,7 @@ import java.io.File;
 import java.util.*;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.event.*;
+import latmod.ftbu.core.event.LMPlayerServerEvent;
 import latmod.ftbu.core.inv.LMInvUtils;
 import latmod.ftbu.core.item.ICreativeSafeItem;
 import latmod.ftbu.core.net.*;
@@ -24,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import cpw.mods.fml.common.eventhandler.*;
@@ -76,7 +77,25 @@ public class FTBUEventHandler // FTBUTickHandler
 		CmdMotd.printMotd(ep);
 		Backups.shouldRun = true;
 		
-		if(first) teleportToSpawn(ep);
+		//if(first) teleportToSpawn(ep);
+		
+		int requests = 0;
+		
+		for(LMPlayerServer p1 : LMWorldServer.inst.players)
+		{
+			if(p1.isFriendRaw(p) && !p.isFriendRaw(p1))
+				requests++;
+		}
+		
+		if(requests > 0)
+		{
+			IChatComponent cc = new ChatComponentText("You got " + requests + " new friend requests!");
+			cc.getChatStyle().setColor(EnumChatFormatting.GREEN);
+			Notification n = new Notification("new_friend_requests", cc, 2000);
+			n.setDesc(new ChatComponentText("Click to add all as friends"));
+			n.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftbu friends addall"));
+			LatCoreMC.notifyPlayer(ep, n);
+		}
 	}
 	
 	@SubscribeEvent
@@ -95,6 +114,9 @@ public class FTBUEventHandler // FTBUTickHandler
 			new LMPlayerServerEvent.LoggedOut(p, (EntityPlayerMP)e.player).post();
 			LMNetHelper.sendTo(null, new MessageLMPlayerLoggedOut(p));
 			LMNetHelper.sendTo(null, new MessageLMPlayerInfo(p));
+			
+			LatCoreMC.runCommand(LatCoreMC.getServer(), "admin player " + p.getName() + " saveinv");
+			
 			p.setPlayer(null);
 			Backups.shouldRun = true;
 		}
@@ -113,20 +135,17 @@ public class FTBUEventHandler // FTBUTickHandler
 	@SubscribeEvent
 	public void worldLoaded(net.minecraftforge.event.world.WorldEvent.Load e)
 	{
-		if(LatCoreMC.isServer() && e.world.provider.dimensionId == 0)
+		if(LatCoreMC.isServer() && e.world.provider.dimensionId == 0 && e.world instanceof WorldServer)
 		{
 			IServerConfig.Registry.load();
 			
 			File latmodFolder = new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/");
-			
 			NBTTagCompound tagWorldData = LMNBTUtils.readMap(new File(latmodFolder, "LMWorld.dat"));
 			if(tagWorldData == null) tagWorldData = new NBTTagCompound();
-			LMWorldServer.inst = new LMWorldServer(tagWorldData.hasKey("UUID") ? LatCoreMC.getUUIDFromString(tagWorldData.getString("UUID")) : UUID.randomUUID());
+			LMWorldServer.inst = new LMWorldServer(tagWorldData.hasKey("UUID") ? LatCoreMC.getUUIDFromString(tagWorldData.getString("UUID")) : UUID.randomUUID(), (WorldServer)e.world, latmodFolder);
 			LMWorldServer.inst.load(tagWorldData);
 			
-			NBTTagCompound customData = tagWorldData.getCompoundTag("Custom");
-			
-			new LoadLMDataEvent(latmodFolder, EventLM.Phase.PRE, customData).post();
+			ILMWorldData.Registry.load(Phase.PRE);
 			
 			NBTTagCompound tagPlayers = LMNBTUtils.readMap(new File(latmodFolder, "LMPlayers.dat"));
 			if(tagPlayers != null && tagPlayers.hasKey("Players"))
@@ -138,7 +157,7 @@ public class FTBUEventHandler // FTBUTickHandler
 			for(int i = 0; i < LMWorldServer.inst.players.size(); i++)
 				LMWorldServer.inst.players.get(i).setPlayer(null);
 			
-			new LoadLMDataEvent(latmodFolder, EventLM.Phase.POST, customData).post();
+			ILMWorldData.Registry.load(Phase.POST);
 			
 			LatCoreMC.logger.info("LatCoreMC data loaded");
 		}
@@ -147,18 +166,15 @@ public class FTBUEventHandler // FTBUTickHandler
 	@SubscribeEvent
 	public void worldSaved(net.minecraftforge.event.world.WorldEvent.Save e)
 	{
-		if(LatCoreMC.isServer() && e.world.provider.dimensionId == 0)
+		if(LatCoreMC.isServer() && e.world.provider.dimensionId == 0 && e.world instanceof WorldServer)
 		{
-			NBTTagCompound customData = new NBTTagCompound();
-			SaveLMDataEvent e1 = new SaveLMDataEvent(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/"), customData);
-			e1.post();
+			ILMWorldData.Registry.save();
 			
 			{
 				NBTTagCompound tag = new NBTTagCompound();
 				LMWorldServer.inst.save(tag);
 				tag.setString("UUID", LMWorldServer.inst.worldIDS);
-				tag.setTag("Custom", customData);
-				LMNBTUtils.writeMap(e1.getFile("LMWorld.dat"), tag);
+				LMNBTUtils.writeMap(new File(LMWorldServer.inst.latmodFolder, "LMWorld.dat"), tag);
 			}
 			
 			{
@@ -167,7 +183,7 @@ public class FTBUEventHandler // FTBUTickHandler
 				LMWorldServer.inst.writePlayersToServer(players);
 				tag.setTag("Players", players);
 				tag.setInteger("LastID", LMPlayerServer.lastPlayerID);
-				LMNBTUtils.writeMap(e1.getFile("LMPlayers.dat"), tag);
+				LMNBTUtils.writeMap(new File(LMWorldServer.inst.latmodFolder, "LMPlayers.dat"), tag);
 			}
 			
 			// Export player list //
@@ -192,10 +208,7 @@ public class FTBUEventHandler // FTBUTickHandler
 				LMFileUtils.save(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/LMPlayers.txt"), l);
 			}
 			catch(Exception ex)
-			{
-				LatCoreMC.logger.warn("Error occured while saving LatCoreMC.dat!");
-				ex.printStackTrace();
-			}
+			{ ex.printStackTrace(); }
 		}
 	}
 	
@@ -347,7 +360,7 @@ public class FTBUEventHandler // FTBUTickHandler
 					catch(Exception e) { e.printStackTrace(); }
 					
 					for(LMPlayerServer p : LMWorldServer.inst.getAllOnlinePlayers())
-					{ LatCoreMC.printChat(p.getPlayerMP(), p.chatLinks); if(p.chatLinks) LatCoreMC.printChat(p.getPlayerMP(), line); }
+					{ LatCoreMC.printChat(p.getPlayer(), p.chatLinks); if(p.chatLinks) LatCoreMC.printChat(p.getPlayer(), line); }
 				}
 			};
 			

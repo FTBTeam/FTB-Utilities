@@ -19,7 +19,7 @@ public class ConfigWorldBorder
 	public static void load()
 	{
 		saveFile = new File(LatCoreMC.latmodFolder, "ftbu/world_border.txt");
-		FTBUConfig.world_border = LatCore.fromJsonFile(saveFile, ConfigWorldBorder.class);
+		FTBUConfig.world_border = LMJsonUtils.fromJsonFile(saveFile, ConfigWorldBorder.class);
 		if(FTBUConfig.world_border == null) FTBUConfig.world_border = new ConfigWorldBorder();
 		FTBUConfig.world_border.loadDefaults();
 		save();
@@ -39,7 +39,7 @@ public class ConfigWorldBorder
 	{
 		if(FTBUConfig.world_border == null) load();
 		
-		if(!LatCore.toJsonFile(saveFile, FTBUConfig.world_border))
+		if(!LMJsonUtils.toJsonFile(saveFile, FTBUConfig.world_border))
 			LatCoreMC.logger.warn(saveFile.getName() + " failed to save!");
 	}
 	

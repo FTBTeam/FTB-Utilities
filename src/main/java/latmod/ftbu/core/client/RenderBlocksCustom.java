@@ -1,7 +1,7 @@
 package latmod.ftbu.core.client;
 
 import latmod.ftbu.core.CustomBlockAccess;
-import latmod.ftbu.core.util.LatCore;
+import latmod.ftbu.core.util.LMColorUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
@@ -36,7 +36,7 @@ public class RenderBlocksCustom extends RenderBlocks
 	public void setCustomColor(Integer col)
 	{
 		if(col == null) setCustomColor(-1F, -1F, -1F); else
-		setCustomColor(LatCore.Colors.getRed(col) / 255F, LatCore.Colors.getGreen(col) / 255F, LatCore.Colors.getBlue(col) / 255F);
+		setCustomColor(LMColorUtils.getRed(col) / 255F, LMColorUtils.getGreen(col) / 255F, LMColorUtils.getBlue(col) / 255F);
 	}
 	
 	public boolean renderStandardBlock(Block block, int x, int y, int z)
@@ -48,9 +48,9 @@ public class RenderBlocksCustom extends RenderBlocks
 		if(r == -1F || g == -1F || b == -1F)
 		{
 			int col = block.colorMultiplier(blockAccess, x, y, z);
-			r = LatCore.Colors.getRed(col) / 255F;
-			g = LatCore.Colors.getGreen(col) / 255F;
-			b = LatCore.Colors.getBlue(col) / 255F;
+			r = LMColorUtils.getRed(col) / 255F;
+			g = LMColorUtils.getGreen(col) / 255F;
+			b = LMColorUtils.getBlue(col) / 255F;
 		}
 		
 		if (EntityRenderer.anaglyphEnable)

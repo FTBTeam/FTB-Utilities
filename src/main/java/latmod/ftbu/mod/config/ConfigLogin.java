@@ -5,7 +5,7 @@ import java.util.*;
 
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
-import latmod.ftbu.core.util.LatCore;
+import latmod.ftbu.core.util.LMJsonUtils;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
@@ -23,7 +23,7 @@ public class ConfigLogin
 	public static void load()
 	{
 		saveFile = new File(LatCoreMC.latmodFolder, "ftbu/login.txt");
-		FTBUConfig.login = LatCore.fromJsonFile(saveFile, ConfigLogin.class);
+		FTBUConfig.login = LMJsonUtils.fromJsonFile(saveFile, ConfigLogin.class);
 		if(FTBUConfig.login == null) FTBUConfig.login = new ConfigLogin();
 		FTBUConfig.login.loadDefaults();
 		save();
@@ -44,7 +44,7 @@ public class ConfigLogin
 	public static void save()
 	{
 		if(FTBUConfig.login == null) load();
-		if(!LatCore.toJsonFile(saveFile, FTBUConfig.login))
+		if(!LMJsonUtils.toJsonFile(saveFile, FTBUConfig.login))
 			LatCoreMC.logger.warn(saveFile.getName() + " failed to save!");
 	}
 	

@@ -15,7 +15,7 @@ public abstract class ButtonLM extends WidgetLM
 	
 	public void mousePressed(int b)
 	{
-		if(mouseOver() && isEnabled())
+		if(mouseOver())
 		{
 			if(doubleClickRequired)
 			{
@@ -30,9 +30,6 @@ public abstract class ButtonLM extends WidgetLM
 	}
 	
 	public abstract void onButtonPressed(int b);
-	
-	public boolean isEnabled()
-	{ return true; }
 	
 	public void render(TextureCoords icon, double rw, double rh)
 	{

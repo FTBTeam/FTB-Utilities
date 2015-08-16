@@ -1,22 +1,10 @@
 package latmod.ftbu.core.event;
 
-import latmod.ftbu.core.LatCoreMC;
+import latmod.ftbu.core.EnumBusType;
 import cpw.mods.fml.common.eventhandler.Event;
 
 public class EventLM extends Event
 {
 	public final void post()
-	{ LatCoreMC.EVENT_BUS.post(this); }
-	
-	public static enum Phase
-	{
-		PRE,
-		POST;
-		
-		public boolean isPre()
-		{ return this == PRE; }
-		
-		public boolean isPost()
-		{ return this == POST; }
-	}
+	{ EnumBusType.FTBU_EVENT_BUS.post(this); }
 }

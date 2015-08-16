@@ -19,12 +19,13 @@ public class ConfigBackups
 	@Expose public Integer compressionLevel;
 	@Expose public String folder;
 	@Expose public Boolean displayFileSize;
+	@Expose public Boolean autoExportInvOnLogout;
 	public long backupTimerL;
 	
 	public static void load()
 	{
 		saveFile = new File(LatCoreMC.latmodFolder, "ftbu/backups.txt");
-		FTBUConfig.backups = LatCore.fromJsonFile(saveFile, ConfigBackups.class);
+		FTBUConfig.backups = LMJsonUtils.fromJsonFile(saveFile, ConfigBackups.class);
 		if(FTBUConfig.backups == null) FTBUConfig.backups = new ConfigBackups();
 		FTBUConfig.backups.loadDefaults();
 		save();
@@ -39,6 +40,7 @@ public class ConfigBackups
 		if(compressionLevel == null) compressionLevel = 1;
 		if(folder == null) folder = "./latmod/backups/";
 		if(displayFileSize == null) displayFileSize = true;
+		if(autoExportInvOnLogout == null) autoExportInvOnLogout = false;
 		
 		backupTimerL = (long)(backupTimer.doubleValue() * 3600D * 1000D);
 		compressionLevel = MathHelperLM.clampInt(compressionLevel, 0, 9);
@@ -47,7 +49,7 @@ public class ConfigBackups
 	public static void save()
 	{
 		if(FTBUConfig.backups == null) load();
-		if(!LatCore.toJsonFile(saveFile, FTBUConfig.backups))
+		if(!LMJsonUtils.toJsonFile(saveFile, FTBUConfig.backups))
 			LatCoreMC.logger.warn(saveFile.getName() + " failed to save!");
 	}
 	
@@ -61,5 +63,6 @@ public class ConfigBackups
 		backups.add("compressionLevel", "0 - Disabled (output = folders), Min - 1 (Best speed), Max - 9 (Smallest file),", 1);
 		backups.add("folder", "Absoute path to backups folder, blank means /latmod/backups/.", "Blank");
 		backups.add("displayFileSize", "Prints (current size | total size) when backup is done", true);
+		backups.add("autoExportInvOnLogout", "Same as running '/admin player @p saveinv' on logout", false);
 	}
 }

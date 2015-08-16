@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import cpw.mods.fml.common.eventhandler.Cancelable;
 import cpw.mods.fml.relauncher.Side;
 
-public abstract class LMPlayerServerEvent extends LMPlayerEvent
+public abstract class LMPlayerServerEvent extends LMPlayerEvent // LMPlayerClientEvent
 {
 	public final LMPlayerServer player;
 	
@@ -23,13 +23,14 @@ public abstract class LMPlayerServerEvent extends LMPlayerEvent
 	
 	public static class DataChanged extends LMPlayerServerEvent
 	{
-		public final String action;
-		
-		public DataChanged(LMPlayerServer p, String b)
-		{ super(p); action = b; }
-		
-		public boolean isAction(String b)
-		{ return action == b || action.equals(b); }
+		public DataChanged(LMPlayerServer p)
+		{ super(p); }
+	}
+	
+	public static class GroupsChanged extends LMPlayerServerEvent
+	{
+		public GroupsChanged(LMPlayerServer p)
+		{ super(p); }
 	}
 	
 	public static class DataLoaded extends LMPlayerServerEvent

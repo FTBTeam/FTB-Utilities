@@ -18,6 +18,9 @@ public class WidgetLM
 		height = h;
 	}
 	
+	public boolean isEnabled()
+	{ return true; }
+	
 	public boolean isAt(int x, int y)
 	{ return x >= posX && y >= posY && x < posX + width && y < posY + height; }
 	

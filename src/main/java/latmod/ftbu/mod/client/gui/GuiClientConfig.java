@@ -62,7 +62,7 @@ public class GuiClientConfig extends GuiLM
 		}
 	}
 	
-	public void initGui()
+	public void initLMGui()
 	{
 		xSize = width;
 		ySize = height;
@@ -82,17 +82,16 @@ public class GuiClientConfig extends GuiLM
 		l.addAll(lines);
 	}
 	
-	public void onGuiClosed()
+	public void onLMGuiClosed()
 	{
 		ClientConfig.Registry.save();
-		super.onGuiClosed();
 	}
 	
 	public void drawBackground()
 	{
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
-		LatCore.Colors.recolor();
+		LMColorUtils.recolor();
 		
 		boolean drawScroll = totalHeight > height;
 		
@@ -104,7 +103,7 @@ public class GuiClientConfig extends GuiLM
 			int dw = Mouse.getDWheel();
 			if(dw != 0)
 			{
-				float s = 20F / (float)(height - totalHeight);
+				float s = (20F / (float)(height - totalHeight)) * 3F;
 				if(dw < 0) scroll.value -= s;
 				else scroll.value += s;
 				scroll.value = MathHelperLM.clampFloat(scroll.value, 0F, 1F);
@@ -128,7 +127,7 @@ public class GuiClientConfig extends GuiLM
 		
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
-		LatCore.Colors.recolor();
+		LMColorUtils.recolor();
 		
 		buttonClose.render(Icons.accept);
 	}

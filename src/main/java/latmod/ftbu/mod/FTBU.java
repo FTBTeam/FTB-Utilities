@@ -6,7 +6,7 @@ import latmod.ftbu.core.*;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
 import latmod.ftbu.core.inv.ODItems;
 import latmod.ftbu.core.net.LMNetHelper;
-import latmod.ftbu.core.util.LatCore;
+import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldServer;
 import latmod.ftbu.mod.backups.Backups;
 import latmod.ftbu.mod.cmd.*;
@@ -36,11 +36,11 @@ public class FTBU
 	
 	public FTBU()
 	{
-		LatCoreMC.BusType.FORGE.register(FTBUEventHandler.instance);
-		LatCoreMC.BusType.FML.register(FTBUEventHandler.instance);
-		LatCoreMC.BusType.LATMOD.register(FTBUEventHandler.instance);
-		LatCoreMC.BusType.FORGE.register(FTBUTickHandler.instance);
-		LatCoreMC.BusType.FML.register(FTBUTickHandler.instance);
+		EnumBusType.FORGE.register(FTBUEventHandler.instance);
+		EnumBusType.FML.register(FTBUEventHandler.instance);
+		EnumBusType.LATMOD.register(FTBUEventHandler.instance);
+		EnumBusType.FORGE.register(FTBUTickHandler.instance);
+		EnumBusType.FML.register(FTBUTickHandler.instance);
 	}
 	
 	private ModMetadata modMeta;
@@ -53,7 +53,7 @@ public class FTBU
 		else
 			LatCoreMC.logger.info("Loading FTBUtilities, Build #" + FTBUFinals.VERSION);
 		
-		LatCoreMC.logger.info("OS: " + LatCore.OS.get());
+		LatCoreMC.logger.info("OS: " + OS.get());
 		
 		modMeta = e.getModMetadata();
 		
@@ -63,7 +63,7 @@ public class FTBU
 		
 		LMMod.init(this, null, null);
 		mod.logger = LatCoreMC.logger;
-		LatCore.updateGson();
+		LMJsonUtils.updateGson();
 		IServerConfig.Registry.add(FTBUConfig.instance);
 		FTBUConfig.instance.load();
 		
@@ -108,7 +108,7 @@ public class FTBU
 	@Mod.EventHandler
 	public void registerCommands(FMLServerStartingEvent e)
 	{
-		LatCore.updateGson();
+		LMJsonUtils.updateGson();
 		FTBUTickHandler.resetTimer(true);
 		e.registerServerCommand(new CmdAdmin());
 		e.registerServerCommand(new CmdBack());

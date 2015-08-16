@@ -29,11 +29,8 @@ public class MaterialItem
 	public ItemStack getStack()
 	{ return getStack(1); }
 	
-	public void onPostLoaded()
-	{ }
-	
-	public void loadRecipes()
-	{ }
+	public void onPostLoaded() { }
+	public void loadRecipes() { }
 	
 	public int getRenderPasses()
 	{ return 1; }

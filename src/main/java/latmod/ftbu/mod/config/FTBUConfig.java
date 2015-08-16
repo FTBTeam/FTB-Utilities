@@ -5,7 +5,8 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.util.LatCore;
+import latmod.ftbu.core.event.FTBUReadmeEvent;
+import latmod.ftbu.core.util.LMJsonUtils;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,6 +21,7 @@ public class FTBUConfig implements IServerConfig // FTBU
 	public static ConfigLogin login;
 	public static ConfigWorldBorder world_border;
 	public static ConfigBackups backups;
+	public static ConfigIRC irc;
 	
 	public String getConfigName()
 	{ return FTBU.mod.modID; }
@@ -30,11 +32,30 @@ public class FTBUConfig implements IServerConfig // FTBU
 		ConfigLogin.load();
 		ConfigWorldBorder.load();
 		ConfigBackups.load();
+		ConfigIRC.load();
 		
 		int overrides = loadOverrides();
 		LatCoreMC.logger.info("Config loaded with " + overrides + " overrides");
 		
 		saveAll();
+	}
+	
+	public static void saveAll()
+	{
+		ConfigGeneral.save();
+		ConfigLogin.save();
+		ConfigWorldBorder.save();
+		ConfigBackups.save();
+		ConfigIRC.save();
+	}
+	
+	public static void saveReadme(FTBUReadmeEvent e)
+	{
+		ConfigGeneral.saveReadme(e);
+		ConfigLogin.saveReadme(e);
+		ConfigWorldBorder.saveReadme(e);
+		ConfigBackups.saveReadme(e);
+		ConfigIRC.saveReadme(e);
 	}
 	
 	public void readConfig(NBTTagCompound tag)
@@ -65,14 +86,6 @@ public class FTBUConfig implements IServerConfig // FTBU
 		}
 	}
 	
-	public static void saveAll()
-	{
-		ConfigGeneral.save();
-		ConfigLogin.save();
-		ConfigWorldBorder.save();
-		ConfigBackups.save();
-	}
-	
 	private static class Overrides
 	{
 		@Expose public Map<String, Map<String, Object>> overrides;
@@ -83,6 +96,7 @@ public class FTBUConfig implements IServerConfig // FTBU
 			else if(s.equals("login")) return login;
 			else if(s.equals("world_border")) return world_border;
 			else if(s.equals("backups")) return backups;
+			else if(s.equals("irc")) return irc;
 			else return null;
 		}
 	}
@@ -95,12 +109,12 @@ public class FTBUConfig implements IServerConfig // FTBU
 		try
 		{
 			File f = new File(LatCoreMC.configFolder, "LatMod/FTBU_Overrides.txt");
-			Overrides overrides = LatCore.fromJsonFile(f, Overrides.class);
+			Overrides overrides = LMJsonUtils.fromJsonFile(f, Overrides.class);
 			if(overrides == null || overrides.overrides == null)
 			{
 				overrides = new Overrides();
 				overrides.overrides = new HashMap<String, Map<String, Object>>();
-				LatCore.toJsonFile(f, overrides);
+				LMJsonUtils.toJsonFile(f, overrides);
 				return 0;
 			}
 			

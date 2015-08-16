@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.cmd.all;
 
 import latmod.ftbu.core.cmd.*;
-import latmod.ftbu.core.util.LatCore;
+import latmod.ftbu.core.util.LMStringUtils;
 import latmod.ftbu.mod.FTBUTickHandler;
 import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.command.ICommandSender;
@@ -12,6 +12,6 @@ public class CmdFTBURestartTimer extends SubCommand
 	{
 		if(FTBUConfig.general.restartTimer <= 0D)
 			throw new FeatureDisabledException();
-		return CommandLM.FINE + "Time left until next restart: " + LatCore.formatTime(FTBUTickHandler.getSecondsUntilRestart(), false);
+		return CommandLM.FINE + "Time left until next restart: " + LMStringUtils.formatTime(FTBUTickHandler.getSecondsUntilRestart(), false);
 	}
 }

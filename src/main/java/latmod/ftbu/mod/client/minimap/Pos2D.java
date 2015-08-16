@@ -18,7 +18,7 @@ public class Pos2D
 	{ return p != null && p.x == x && p.y == y; }
 	
 	public int hashCode()
-	{ return LatCore.hashCode(x, y); }
+	{ return LMUtils.hashCode(x, y); }
 	
 	public String toString()
 	{ return LMStringUtils.stripI(x, y); }

@@ -5,7 +5,7 @@ import java.io.File;
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.config.*;
+import latmod.ftbu.mod.config.FTBUConfig;
 
 public class FTBUReadmeEvent extends EventLM
 {
@@ -56,12 +56,7 @@ public class FTBUReadmeEvent extends EventLM
 	public static void saveReadme() throws Exception
 	{
 		FTBUReadmeEvent e = new FTBUReadmeEvent();
-		
-		ConfigGeneral.saveReadme(e);
-		ConfigLogin.saveReadme(e);
-		ConfigWorldBorder.saveReadme(e);
-		ConfigBackups.saveReadme(e);
-		
+		FTBUConfig.saveReadme(e);
 		FTBU.proxy.addInfo(e);
 		
 		e.post();

@@ -7,19 +7,18 @@ import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.TileLM;
-import latmod.ftbu.core.util.LatCore;
+import latmod.ftbu.core.util.LMColorUtils;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.client.badges.ThreadLoadBadges;
 import latmod.ftbu.mod.client.minimap.*;
-import net.minecraft.client.entity.AbstractClientPlayer;
+import latmod.ftbu.mod.player.ClientNotifications;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.EntityReddustFX;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 import org.lwjgl.input.Keyboard;
@@ -76,12 +75,12 @@ public class FTBUClient extends FTBUCommon
 	{
 		FTBULang.reload();
 		
-		LatCoreMC.BusType.FORGE.register(FTBUClientEventHandler.instance);
-		LatCoreMC.BusType.FML.register(FTBUClientEventHandler.instance);
-		LatCoreMC.BusType.LATMOD.register(FTBUClientEventHandler.instance);
-		LatCoreMC.BusType.FORGE.register(FTBURenderHandler.instance);
-		LatCoreMC.BusType.FML.register(FTBURenderHandler.instance);
-		LatCoreMC.BusType.FORGE.register(FTBUGuiEventHandler.instance);
+		EnumBusType.FORGE.register(FTBUClientEventHandler.instance);
+		EnumBusType.FML.register(FTBUClientEventHandler.instance);
+		EnumBusType.LATMOD.register(FTBUClientEventHandler.instance);
+		EnumBusType.FORGE.register(FTBURenderHandler.instance);
+		EnumBusType.FML.register(FTBURenderHandler.instance);
+		EnumBusType.FORGE.register(FTBUGuiEventHandler.instance);
 		FTBUReloadableRegistry.add(FTBUClientEventHandler.instance);
 		
 		ClientConfig.Registry.init();
@@ -130,21 +129,14 @@ public class FTBUClient extends FTBUCommon
 		return (c == null) ? 0D : c.getBlockReachDistance();
 	}
 	
-	public static ResourceLocation getSkinTexture(String username)
-	{
-		ResourceLocation r = AbstractClientPlayer.getLocationSkin(username);
-		AbstractClientPlayer.getDownloadImageSkin(r, username);
-		return r;
-	}
-	
 	public void spawnDust(World w, double x, double y, double z, int col)
 	{
 		EntityReddustFX fx = new EntityReddustFX(w, x, y, z, 0F, 0F, 0F);
 		
-		float alpha = LatCore.Colors.getAlpha(col) / 255F;
-		float red = LatCore.Colors.getRed(col) / 255F;
-		float green = LatCore.Colors.getGreen(col) / 255F;
-		float blue = LatCore.Colors.getBlue(col) / 255F;
+		float alpha = LMColorUtils.getAlpha(col) / 255F;
+		float red = LMColorUtils.getRed(col) / 255F;
+		float green = LMColorUtils.getGreen(col) / 255F;
+		float blue = LMColorUtils.getBlue(col) / 255F;
 		if(alpha == 0F) alpha = 1F;
 		
 		fx.setRBGColorF(red, green, blue);
@@ -157,6 +149,8 @@ public class FTBUClient extends FTBUCommon
 		ThreadLoadBadges.init();
 		Waypoints.load();
 		Minimap.minimaps.clear();
+		ClientNotifications.perm.clear();
+		ClientNotifications.temp.clear();
 	}
 	
 	public boolean openClientGui(EntityPlayer ep, String mod, int id, NBTTagCompound data)

@@ -107,9 +107,9 @@ public class Minimap
 			if(!b.isAir(w, bx, by, bz))
 			{
 				int col = BlockColors.getBlockColor(b, w.getBlockMetadata(bx, by, bz)).colorValue;
-				int red = LatCore.Colors.getRed(col);
-				int green = LatCore.Colors.getGreen(col);
-				int blue = LatCore.Colors.getBlue(col);
+				int red = LMColorUtils.getRed(col);
+				int green = LMColorUtils.getGreen(col);
+				int blue = LMColorUtils.getBlue(col);
 				
 				if(calcHeight.getB())
 				{
@@ -126,7 +126,7 @@ public class Minimap
 					blue = MathHelperLM.clampInt(blue + d, 0, 255);
 				}
 				
-				return LatCore.Colors.getRGBA(red, green, blue, 255);
+				return LMColorUtils.getRGBA(red, green, blue, 255);
 			}
 		}
 		

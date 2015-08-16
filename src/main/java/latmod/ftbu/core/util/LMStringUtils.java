@@ -1,10 +1,14 @@
 package latmod.ftbu.core.util;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.List;
 
 public class LMStringUtils
 {
+	public static final int DAY24 = 24 * 60 * 60;
+	public static final Charset UTF_8 = Charset.forName("UTF-8");
+	
 	public static final String STRIP_SEP = ", ";
 	public static final String ALLOWED_TEXT_CHARS = "!@#$%^&*()_+ -=\\/,.<>?\'\"[]{}|;:`~";
 	
@@ -228,5 +232,98 @@ public class LMStringUtils
 			if(s[i] != null && (s[i] == s1 || s[i].equals(s1)))
 				return true;
 		return false;
+	}
+	
+	public static String substring(String s, String pre, String post, boolean ignoreSpace)
+	{
+		int preI = s.indexOf(pre);
+		int postI = s.lastIndexOf(post);
+		String s1 = s.substring(preI + 1, postI);
+		return ignoreSpace ? s1.trim() : s1;
+	}
+	
+	public static String removeAllWhitespace(String s)
+	{
+		if(s == null) return null;
+		s = s.trim(); if(s.length() == 0) return "";
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < s.length(); i++)
+		{
+			char c = s.charAt(i);
+			if(!Character.isWhitespace(c))
+			sb.append(c);
+		}
+		
+		return sb.toString();
+	}
+	
+	public static String formatTime(long secs, boolean wrap)
+	{
+		long secs1 = secs;
+		if(secs < 0L) secs1 = -secs1;
+		if(wrap) secs1 %= DAY24;
+		
+		long h = (secs1 / 3600L);
+		if(wrap) h %= 24L;
+		
+		long m = (secs1 / 60L) % 60L;
+		long s = secs1 % 60L;
+		
+		StringBuilder sb = new StringBuilder();
+		if(h < 10) sb.append('0');
+		sb.append(h);
+		sb.append(':');
+		if(m < 10) sb.append('0');
+		sb.append(m);
+		sb.append(':');
+		if(s < 10) sb.append('0');
+		sb.append(s);
+		return sb.toString();
+	}
+	
+	public static String formatInt(int i)
+	{ return formatInt(i, 1); }
+	
+	public static String formatInt(int i, int z)
+	{
+		String s0 = "" + i;
+		if(z <= 0) return s0;
+		z += 1;
+		
+		StringBuilder s = new StringBuilder();
+		
+		for(int j = 0; j < z - s0.length(); j++)
+			s.append('0');
+		
+		s.append(i);
+		return s.toString();
+	}
+	
+	public static String getTimeAgo(long millis)
+	{
+		long secs = millis / 1000L;
+		StringBuilder sb = new StringBuilder();
+		
+		long h = (secs / 3600L) % 24;
+		long m = (secs / 60L) % 60L;
+		long s = secs % 60L;
+		
+		if(secs >= DAY24)
+		{
+			sb.append(secs / DAY24);
+			sb.append("d ");
+		}
+		
+		if(h < 10) sb.append('0');
+		sb.append(h);
+		sb.append("h ");
+		if(m < 10) sb.append('0');
+		sb.append(m);
+		sb.append("m ");
+		if(s < 10) sb.append('0');
+		sb.append(s);
+		sb.append('s');
+		
+		return sb.toString();
 	}
 }

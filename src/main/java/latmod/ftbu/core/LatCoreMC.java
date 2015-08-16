@@ -18,7 +18,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.*;
 
@@ -27,7 +26,6 @@ import org.apache.logging.log4j.*;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
 import cpw.mods.fml.common.event.*;
-import cpw.mods.fml.common.eventhandler.EventBus;
 import cpw.mods.fml.common.registry.*;
 import cpw.mods.fml.relauncher.Side;
 
@@ -38,7 +36,6 @@ public final class LatCoreMC // LatCoreMCClient
 	public static final String DEV_VERSION = "@VERSION@";
 	
 	public static final Logger logger = LogManager.getLogger("FTBUtilities");
-	public static final EventBus EVENT_BUS = new EventBus();
 	public static final Random rand = new Random();
 	
 	public static final boolean isDevEnv = FTBUFinals.VERSION.equals(DEV_VERSION);
@@ -48,26 +45,6 @@ public final class LatCoreMC // LatCoreMCClient
 	
 	public static File latmodFolder = null;
 	public static File configFolder = null;
-	
-	public static enum BusType
-	{
-		LATMOD,
-		FORGE,
-		FML;
-		
-		public EventBus getBus()
-		{
-			if(this == LATMOD) return EVENT_BUS;
-			else if(this == FORGE) return MinecraftForge.EVENT_BUS;
-			return FMLCommonHandler.instance().bus();
-		}
-		
-		public void register(Object o)
-		{ getBus().register(o); }
-		
-		public void unregister(Object o)
-		{ getBus().unregister(o); }
-	}
 	
 	public static final Configuration loadConfig(FMLPreInitializationEvent e, String s)
 	{ return new Configuration(new File(e.getModConfigurationDirectory(), s)); }
@@ -213,14 +190,14 @@ public final class LatCoreMC // LatCoreMCClient
 		return ms.worldServers[0];
 	}
 	
-	public static Exception executeCommand(ICommandSender ics, String s)
+	public static Exception runCommand(ICommandSender ics, String s)
 	{
 		try { getServer().getCommandManager().executeCommand(ics, s); }
 		catch(Exception e) { return e; } return null;
 	}
 	
-	public static Exception executeCommand(ICommandSender ics, String cmd, String[] args)
-	{ return executeCommand(ics, cmd + " " + LMStringUtils.unsplit(args, " ")); }
+	public static Exception runCommand(ICommandSender ics, String cmd, String[] args)
+	{ return runCommand(ics, cmd + " " + LMStringUtils.unsplit(args, " ")); }
 	
 	public static void notifyPlayer(EntityPlayerMP ep, Notification n)
 	{ LMNetHelper.sendTo(ep, new MessageNotifyPlayer(n)); }

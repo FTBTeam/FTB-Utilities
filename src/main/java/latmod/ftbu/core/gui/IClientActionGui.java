@@ -5,5 +5,5 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public interface IClientActionGui
 {
-	public void onClientAction(String action);
+	public void onClientDataChanged();
 }

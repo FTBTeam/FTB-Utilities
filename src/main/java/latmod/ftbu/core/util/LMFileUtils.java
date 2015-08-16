@@ -9,6 +9,8 @@ import org.apache.commons.io.FileUtils;
 
 public class LMFileUtils
 {
+	public static final File latmodHomeFolder = getFolder();
+	
 	public static final int KB = 1024;
 	public static final int MB = KB * 1024;
 	public static final int GB = MB * 1024;
@@ -16,6 +18,13 @@ public class LMFileUtils
 	public static final double KB_D = 1024D;
 	public static final double MB_D = KB_D * 1024D;
 	public static final double GB_D = MB_D * 1024D;
+	
+	private static File getFolder()
+	{
+		File f = new File(System.getProperty("user.home"), "/LatMod/");
+		if(!f.exists()) f.mkdirs();
+		return f;
+	}
 	
 	public static File newFile(File f)
 	{

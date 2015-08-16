@@ -5,7 +5,7 @@ import java.util.Calendar;
 
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.client.LatCoreMCClient;
-import latmod.ftbu.core.util.LatCore;
+import latmod.ftbu.core.util.LMStringUtils;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.minimap.*;
@@ -46,13 +46,13 @@ public class MessageLMPlayerDied extends MessageLM<MessageLMPlayerDied> implemen
 			Calendar c = Calendar.getInstance();
 			
 			StringBuilder sb = new StringBuilder();
-			sb.append(LatCore.formatInt(c.get(Calendar.MONTH) + 1));
+			sb.append(LMStringUtils.formatInt(c.get(Calendar.MONTH) + 1));
 			sb.append('_');
-			sb.append(LatCore.formatInt(c.get(Calendar.DAY_OF_MONTH)));
+			sb.append(LMStringUtils.formatInt(c.get(Calendar.DAY_OF_MONTH)));
 			sb.append('_');
-			sb.append(LatCore.formatInt(c.get(Calendar.HOUR_OF_DAY)));
+			sb.append(LMStringUtils.formatInt(c.get(Calendar.HOUR_OF_DAY)));
 			sb.append('_');
-			sb.append(LatCore.formatInt(c.get(Calendar.MINUTE)));
+			sb.append(LMStringUtils.formatInt(c.get(Calendar.MINUTE)));
 			
 			Waypoint w = new Waypoint();
 			w.name = sb.toString();

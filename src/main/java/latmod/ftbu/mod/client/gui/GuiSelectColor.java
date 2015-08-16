@@ -63,7 +63,7 @@ public class GuiSelectColor extends GuiLM
 		super(null, tex);
 		hideNEI = true;
 		callback = cb;
-		initCol = LatCore.Colors.getRGBA(col, 255);
+		initCol = LMColorUtils.getRGBA(col, 255);
 		colorID = id;
 		isInstant = instant;
 		
@@ -82,7 +82,7 @@ public class GuiSelectColor extends GuiLM
 			}
 		};
 		
-		colorInit.title = LatCore.Colors.getHex(getInitRGB());
+		colorInit.title = LMColorUtils.getHex(getInitRGB());
 		
 		colorCurrent = new ButtonLM(this, 60, 6, col_tex.width, col_tex.height)
 		{
@@ -110,19 +110,22 @@ public class GuiSelectColor extends GuiLM
 		switchHSB.title = "HSB";
 		
 		currentColR = new SliderLM(this, 6, 25, SLIDER_BAR_W, SLIDER_H, SLIDER_W);
-		currentColR.value = LatCore.Colors.getRed(col) / 255F;
+		currentColR.value = LMColorUtils.getRed(col) / 255F;
 		currentColR.displayMax = 255;
 		currentColR.title = EnumDyeColor.RED.toString();
+		currentColR.scrollStep = 1F / 255F;
 		
 		currentColG = new SliderLM(this, 6, 41, SLIDER_BAR_W, SLIDER_H, SLIDER_W);
-		currentColG.value = LatCore.Colors.getGreen(col) / 255F;
+		currentColG.value = LMColorUtils.getGreen(col) / 255F;
 		currentColG.displayMax = 255;
 		currentColG.title = EnumDyeColor.GREEN.toString();
+		currentColG.scrollStep = 1F / 255F;
 		
 		currentColB = new SliderLM(this, 6, 57, SLIDER_BAR_W, SLIDER_H, SLIDER_W);
-		currentColB.value = LatCore.Colors.getBlue(col) / 255F;
+		currentColB.value = LMColorUtils.getBlue(col) / 255F;
 		currentColB.displayMax = 255;
 		currentColB.title = EnumDyeColor.BLUE.toString();
+		currentColB.scrollStep = 1F / 255F;
 	}
 	
 	public void addWidgets(FastList<WidgetLM> l)
@@ -145,7 +148,7 @@ public class GuiSelectColor extends GuiLM
 		if(isInstant && prevCol != getCurrentRGB())
 			callback.onColorSelected(new ColorSelected(true, getCurrentRGB(), colorID, false));
 		
-		LatCore.Colors.setGLColor(initCol, 255);
+		LMColorUtils.setGLColor(initCol, 255);
 		colorInit.render(col_tex);
 		GL11.glColor4f(currentColR.value, currentColG.value, currentColB.value, 1F);
 		colorCurrent.render(col_tex);
@@ -214,7 +217,7 @@ public class GuiSelectColor extends GuiLM
 		currentColR.update();
 		currentColG.update();
 		currentColB.update();
-		colorCurrent.title = LatCore.Colors.getHex(getCurrentRGB());
+		colorCurrent.title = LMColorUtils.getHex(getCurrentRGB());
 	}
 	
 	public int getInitRGB()
@@ -225,7 +228,7 @@ public class GuiSelectColor extends GuiLM
 		int r = (int)(currentColR.value * 255F);
 		int g = (int)(currentColG.value * 255F);
 		int b = (int)(currentColB.value * 255F);
-		return LatCore.Colors.getRGBA(r, g, b, 255);
+		return LMColorUtils.getRGBA(r, g, b, 255);
 	}
 	
 	public void closeGui(boolean set)

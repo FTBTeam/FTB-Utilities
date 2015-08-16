@@ -50,6 +50,10 @@ config.property.item_reg_names=Item Registry Names
 config.property.debug_info=Debug Info
 config.property.options_button=Options Button
 config.property.chat_links=Chat Links
+config.property.chunk_messages=Chunk Messages
+config.value.cm_notify=Notification
+config.value.cm_screen=Screen
+config.value.cm_chat=Chat
 
 config.group.waypoints=Waypoints
 config.property.waypoint_type=Waypoint Type

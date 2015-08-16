@@ -5,6 +5,7 @@ import java.util.UUID;
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.cmd.NameType;
 import latmod.ftbu.core.util.*;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -14,12 +15,11 @@ import cpw.mods.fml.relauncher.*;
 
 public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer // LMPlayerClient
 {
-	public static final String ACTION_GENERAL = "-";
-	public static final String ACTION_GROUPS_CHANGED = "ftbu.groups";
-	
 	public final LMWorld<?> world;
 	public final int playerID;
 	public final GameProfile gameProfile;
+	public final boolean isServer;
+	public final Side side;
 	
 	public final String uuidString;
 	public final IntList friends;
@@ -29,13 +29,16 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 	public NBTTagCompound commonPrivateData;
 	public long lastSeen;
 	public long firstJoined;
-	public boolean chatLinks = false;
+	public boolean chatLinks;
+	public int chunkMessages;
 	
 	public LMPlayer(LMWorld<?> w, int i, GameProfile gp)
 	{
 		world = w;
 		playerID = i;
 		gameProfile = gp;
+		isServer = (this instanceof LMPlayerServer);
+		side = isServer ? Side.SERVER : Side.CLIENT;
 		
 		uuidString = LatCoreMC.toShortUUID(getUUID());
 		friends = new IntList();
@@ -45,21 +48,20 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 		commonPrivateData = new NBTTagCompound();
 	}
 	
-	public LMPlayerServer toPlayerMP()
-	{ return null; }
+	public abstract boolean isOnline();
+	
+	public abstract LMPlayerServer toPlayerMP();
 	
 	@SideOnly(Side.CLIENT)
-	public LMPlayerClient toPlayerSP()
-	{ return null; }
+	public abstract LMPlayerClient toPlayerSP();
+	
+	public abstract EntityPlayer getPlayer();
 	
 	public String getName()
 	{ return gameProfile.getName(); }
 	
 	public UUID getUUID()
 	{ return gameProfile.getId(); }
-	
-	public boolean isOnline()
-	{ return false; }
 	
 	public boolean isFriendRaw(LMPlayer p)
 	{ return p != null && (playerID == p.playerID || friends.contains(p.playerID)); }

@@ -1,6 +1,6 @@
 package latmod.ftbu.core.world;
 
-import java.util.UUID;
+import java.util.*;
 
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.cmd.NameType;
@@ -102,36 +102,31 @@ public abstract class LMWorld<P extends LMPlayer>
 		return (p == null) ? 0 : p.playerID;
 	}
 	
-	public String[] getAllNames(NameType type)
+	public String[] getAllPlayerNames(NameType type)
 	{
-		if(type == null || type == NameType.NONE) return new String[0];
+		if(type == null || type == NameType.NONE)
+			return new String[0];
+		FastList<P> list = (type == NameType.ON) ? getAllOnlinePlayers() : players;
 		
-		FastList<String> allOn = new FastList<String>();
-		FastList<String> allOff = new FastList<String>();
-		
-		for(int i = 0; i < players.size(); i++)
+		list.sort(new Comparator<P>()
 		{
-			P p = players.get(i);
-			String s = LatCoreMC.removeFormatting(p.getName());
-			
-			if(p.isOnline()) allOn.add(s);
-			else if(!type.isOnline()) allOff.add(s);
-		}
-		
-		allOn.sort(null);
-		
-		if(!type.isOnline())
-		{
-			allOff.sort(null);
-			
-			for(int i = 0; i < allOff.size(); i++)
+			public int compare(P o1, P o2)
 			{
-				String s = allOff.get(i);
-				if(!allOn.contains(s)) allOn.add(s);
+				if(o1.isOnline() == o2.isOnline())
+					return o1.getName().compareToIgnoreCase(o2.getName());
+				return Boolean.compare(o2.isOnline(), o1.isOnline());
 			}
+		});
+		
+		FastList<String> l = new FastList<String>();
+		
+		for(int i = 0; i < list.size(); i++)
+		{
+			String s = list.get(i).getName();
+			if(!l.contains(s)) l.add(s);
 		}
 		
-		return allOn.toArray(new String[0]);
+		return l.toArray(new String[l.size()]);
 	}
 	
 	public int[] getAllPlayerIDs()

@@ -3,7 +3,7 @@ package latmod.ftbu.mod;
 import static net.minecraft.util.EnumChatFormatting.LIGHT_PURPLE;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.net.*;
-import latmod.ftbu.core.util.LatCore;
+import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.backups.Backups;
 import latmod.ftbu.mod.config.FTBUConfig;
@@ -64,7 +64,7 @@ public class FTBUTickHandler
 	{
 		if(LatCoreMC.isServer() && e.side == Side.SERVER && e.phase == TickEvent.Phase.END && e.type == TickEvent.Type.WORLD)
 		{
-			long t = LatCore.millis();
+			long t = LMUtils.millis();
 			
 			if(t - currentMillis >= 200L)
 			{
@@ -104,13 +104,13 @@ public class FTBUTickHandler
 		
 		if(serverStarted)
 		{
-			currentMillis = startMillis = Backups.lastTimeRun = LatCore.millis();
+			currentMillis = startMillis = Backups.lastTimeRun = LMUtils.millis();
 			restartSeconds = 0;
 			
 			if(FTBUConfig.general.restartTimer > 0)
 			{
 				restartSeconds = (long)(FTBUConfig.general.restartTimer * 3600D);
-				LatCoreMC.logger.info("Server restart in " + LatCore.formatTime(restartSeconds, false));
+				LatCoreMC.logger.info("Server restart in " + LMStringUtils.formatTime(restartSeconds, false));
 			}
 		}
 		else

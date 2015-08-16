@@ -14,15 +14,14 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class OBJModel
 {
-	public FastList<Face> totalFaces;
-	public FastList<Vector3f> vertices;
-	public FastList<Vector3f> vertexNormals;
-	public FastList<Vector3f> texVertices;
-	public Group[] groups;
+	public final FastList<Face> totalFaces;
+	public final FastList<Vector3f> vertices;
+	public final FastList<Vector3f> vertexNormals;
+	public final FastList<Vector3f> texVertices;
+	public final FastMap<String, Group> groups;
+	
 	private Group current = null;
-	public String[] groupNames = null;
 	public double sizeV = 0D;
-	public FastMap<Integer, Group> groupIDMap;
 	
 	protected OBJModel()
 	{
@@ -30,8 +29,7 @@ public class OBJModel
 		vertices = new FastList<Vector3f>();
 		vertexNormals = new FastList<Vector3f>();
 		texVertices = new FastList<Vector3f>();
-		groups = new Group[0];
-		groupIDMap = new FastMap<Integer, Group>();
+		groups = new FastMap<String, Group>();
 	}
 	
 	public static OBJModel load(ResourceLocation rl)
@@ -50,9 +48,6 @@ public class OBJModel
 			double minSizeV = Double.POSITIVE_INFINITY;
 			double maxSizeV = Double.NEGATIVE_INFINITY;
 			
-			FastList<String> gnames = new FastList<String>();
-			FastList<Group> groups0 = new FastList<Group>();
-			
 			String s = null;
 			while((s = br.readLine()) != null)
 			{
@@ -64,9 +59,8 @@ public class OBJModel
 					{
 						Group g = new Group(m, s3[1]);
 						if(m.current != null)
-						groups0.add(m.current);
+						m.groups.put(m.current.groupName, m.current);
 						m.current = g;
-						gnames.add(g.groupName);
 					}
 					else if(s3[0].equals("g"))
 					{
@@ -125,9 +119,7 @@ public class OBJModel
 			}
 			
 			//if(!m.groups.contains(m.current));
-			groups0.add(m.current);
-			m.groups = groups0.toArray(new Group[0]);
-			m.groupNames = gnames.toArray(new String[0]);
+			m.groups.put(m.current.groupName, m.current);
 			m.sizeV = maxSizeV - minSizeV;
 		}
 		
@@ -142,47 +134,43 @@ public class OBJModel
 	
 	public void renderAll()
 	{
-		for(int i = 0; i < groups.length; i++)
-			groups[i].render();
+		for(int i = 0; i < groups.size(); i++)
+			groups.get(i).render();
 	}
 	
 	public void render(int... index)
 	{
 		for(int i = 0; i < index.length; i++)
 		{
-			if(index[i] >= 0 && index[i] < groups.length)
-				groups[index[i]].render();
+			if(index[i] >= 0 && index[i] < groups.size())
+				groups.get(index[i]).render();
 		}
 	}
 	
 	public void renderAllExcept(int... index)
 	{
-		for(int i = 0; i < groups.length; i++)
+		for(int i = 0; i < groups.size(); i++)
 		{
-			boolean render = true;
-			
 			for(int j = 0; j < index.length; j++)
-			{ if(!render) continue;
-			if(i == index[j]) render = false; }
-			
-			if(render) groups[i].render();
+				if(i == index[j]) continue;
+			groups.get(i).render();
 		}
 	}
 	
-	public boolean hasGroup(String s)
-	{ return getGroup(s) != null; }
-	
-	public Group getGroup(String s)
+	public void render(String... name)
 	{
-		for(int i = 0; i < groups.length; i++)
-		{ if(groups[i].groupName.equalsIgnoreCase(s))
-		return groups[i]; } return null;
+		for(int i = 0; i < name.length; i++)
+		{
+			int index = getGroupIndex(name[i]);
+			if(index >= 0 && index < groups.size())
+				groups.get(index).render();
+		}
 	}
 	
 	public int getGroupIndex(String s)
 	{
-		for(int i = 0; i < groups.length; i++)
-		{ if(groups[i].groupName.equalsIgnoreCase(s))
+		for(int i = 0; i < groups.size(); i++)
+		{ if(groups.get(i).groupName.equalsIgnoreCase(s))
 		return i; } return -1;
 	}
 	
@@ -194,8 +182,7 @@ public class OBJModel
 		m.texVertices.addAll(texVertices);
 		//if(vertexNormals.size() > 0)
 		m.vertexNormals.addAll(vertexNormals);
-		m.groups = groups.clone();
-		m.groupNames = groupNames.clone();
+		m.groups.putAll(groups);
 		m.totalFaces.addAll(totalFaces);
 		m.sizeV = sizeV;
 		

@@ -16,7 +16,11 @@ import net.minecraft.item.*;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+
+import org.lwjgl.input.Keyboard;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.relauncher.*;
 
@@ -116,5 +120,14 @@ public class FTBUClientEventHandler implements IFTBUReloadable
 	public void onDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent e)
 	{
 		LMWorldClient.inst = null;
+	}
+	
+	@SubscribeEvent
+	public void keyEvent(InputEvent.KeyInputEvent e)
+	{
+		if(Keyboard.getEventKeyState())
+		{
+			//LatCoreMC.printChat(null, Keyboard.getKeyName(Keyboard.getEventKey()));
+		}
 	}
 }

@@ -4,8 +4,9 @@ import java.io.File;
 
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
-import latmod.ftbu.core.util.LatCore;
+import latmod.ftbu.core.util.LMJsonUtils;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.util.FakePlayer;
 
 import com.google.gson.annotations.Expose;
 
@@ -28,7 +29,7 @@ public class ConfigGeneral
 	public static void load()
 	{
 		saveFile = new File(LatCoreMC.latmodFolder, "ftbu/general.txt");
-		FTBUConfig.general = LatCore.fromJsonFile(saveFile, ConfigGeneral.class);
+		FTBUConfig.general = LMJsonUtils.fromJsonFile(saveFile, ConfigGeneral.class);
 		if(FTBUConfig.general == null) FTBUConfig.general = new ConfigGeneral();
 		FTBUConfig.general.loadDefaults();
 		save();
@@ -69,7 +70,7 @@ public class ConfigGeneral
 	}
 	
 	public boolean allowInteractSecure(EntityPlayer ep)
-	{ return allowCreativeInteractSecure && ep.capabilities.isCreativeMode; }
+	{ return allowCreativeInteractSecure || (ep != null && !(ep instanceof FakePlayer) && ep.capabilities.isCreativeMode); }
 	
 	public boolean isDedi()
 	{ return enableDedicatedOnSP || LatCoreMC.isDedicatedServer(); }
@@ -77,7 +78,7 @@ public class ConfigGeneral
 	public static void save()
 	{
 		if(FTBUConfig.general == null) load();
-		if(!LatCore.toJsonFile(saveFile, FTBUConfig.general))
+		if(!LMJsonUtils.toJsonFile(saveFile, FTBUConfig.general))
 			LatCoreMC.logger.warn(saveFile.getName() + " failed to save!");
 	}
 

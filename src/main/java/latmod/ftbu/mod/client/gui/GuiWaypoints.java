@@ -6,6 +6,7 @@ import latmod.ftbu.core.FTBULang;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.client.gui.friends.GuiFriends;
 import latmod.ftbu.mod.client.minimap.*;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -185,7 +186,7 @@ public class GuiWaypoints extends GuiLM
 		super.drawText(l);
 	}
 	
-	public void onGuiClosed()
+	public void onLMGuiClosed()
 	{
 		Waypoints.save();
 	}
@@ -291,7 +292,7 @@ public class GuiWaypoints extends GuiLM
 				{ GuiSelectColor.displayGui((GuiEditWaypoint)gui, waypoint.getColorRGB(), 0, true); }
 			};
 			
-			buttonSetColor.title = LatCore.Colors.getHex(waypoint.getColorRGB());
+			buttonSetColor.title = LMColorUtils.getHex(waypoint.getColorRGB());
 			
 			//
 			textBoxName = new TextBoxLM(this, 7, 6, 98, 17)
@@ -381,7 +382,7 @@ public class GuiWaypoints extends GuiLM
 			mc.displayGuiScreen(parent);
 		}
 		
-		public void onGuiClosed()
+		public void onLMGuiClosed()
 		{
 			Waypoints.save();
 		}

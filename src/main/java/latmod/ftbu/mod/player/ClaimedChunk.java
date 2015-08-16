@@ -33,7 +33,7 @@ public final class ClaimedChunk
 	{ return "{" + dim + "," + posX + "," + posZ + "}"; }
 	
 	public int hashCode()
-	{ return LatCore.hashCode(dim, posX, posZ); }
+	{ return LMUtils.hashCode(dim, posX, posZ); }
 	
 	public double getDistSq(double x, double z)
 	{

@@ -10,6 +10,7 @@ import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.event.ClickEvent;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.ClientCommandHandler;
 
 import org.lwjgl.opengl.*;
@@ -41,8 +42,13 @@ public class ClientNotifications
 	public static void add(Notification n)
 	{
 		if(n == null) return;
+		//temp.remove(n);
 		temp.add(new TempNotification(n));
-		if(!n.isTemp()) perm.add(new PermNotification(n));
+		if(!n.isTemp())
+		{
+			perm.remove(n.toString());
+			perm.add(new PermNotification(n));
+		}
 	}
 	
 	public static class TempNotification extends Gui
@@ -57,6 +63,9 @@ public class ClientNotifications
 			notification = n;
 			time = -1L;
 		}
+		
+		public boolean equals(Object o)
+		{ return notification.equals(o); }
 		
 		public void render(Minecraft mc)
 		{
@@ -86,7 +95,7 @@ public class ClientNotifications
 				GL11.glDisable(GL11.GL_DEPTH_TEST);
 				GL11.glDepthMask(false);
 				double d1 = d0 * 2D;
-
+				
 				if (d1 > 1D) d1 = 2D - d1;
 				d1 *= 4D;
 				d1 = 1D - d1;
@@ -97,20 +106,21 @@ public class ClientNotifications
 				d1 *= d1;
 				
 				String title = notification.title.getFormattedText();
-				String desc = (notification.desc == null) ? null : notification.desc.getFormattedText();
+				String desc = (notification.getDesc() == null) ? null : notification.getDesc().getFormattedText();
+				ItemStack is = notification.getItem();
 				
 				int width = 20 + Math.max(mc.fontRenderer.getStringWidth(title), mc.fontRenderer.getStringWidth(desc));
-				if(notification.item != null) width += 20;
+				if(is != null) width += 20;
 				
 				int i = displayW - width;
 				int j = 0 - (int)(d1 * 36D);
 				GL11.glColor4f(1F, 1F, 1F, 1F);
 				GL11.glDisable(GL11.GL_TEXTURE_2D);
 				GL11.glDisable(GL11.GL_LIGHTING);
-				drawRect(i, j, displayW, j + 32, LatCore.Colors.getRGBA(notification.getColor(), 140));
+				drawRect(i, j, displayW, j + 32, LMColorUtils.getRGBA(notification.getColor(), 140));
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
 				
-				int w = notification.item == null ? 10 : 30;
+				int w = is == null ? 10 : 30;
 				
 				if(desc == null)
 				{
@@ -122,14 +132,14 @@ public class ClientNotifications
 					mc.fontRenderer.drawString(desc, i + w, j + 18, -1);
 				}
 				
-				if(notification.item == null) return;
+				if(is == null) return;
 				
 				RenderHelper.enableGUIStandardItemLighting();
 				GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 				GL11.glEnable(GL11.GL_COLOR_MATERIAL);
 				GL11.glEnable(GL11.GL_LIGHTING);
-				renderItem.renderItemIntoGUI(mc.fontRenderer, mc.getTextureManager(), notification.item, i + 8, j + 8, false);
-				renderItem.renderItemOverlayIntoGUI(mc.fontRenderer, mc.getTextureManager(), notification.item, i + 8, j + 8);
+				renderItem.renderItemIntoGUI(mc.fontRenderer, mc.getTextureManager(), is, i + 8, j + 8, false);
+				renderItem.renderItemOverlayIntoGUI(mc.fontRenderer, mc.getTextureManager(), is, i + 8, j + 8);
 				//renderItem.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.getTextureManager(), notification.item, i + 8, j + 8);
 				GL11.glDisable(GL11.GL_LIGHTING);
 				GL11.glDepthMask(true);
@@ -149,8 +159,11 @@ public class ClientNotifications
 		public PermNotification(Notification n)
 		{
 			notification = n;
-			timeAdded = LatCore.millis();
+			timeAdded = LMUtils.millis();
 		}
+		
+		public boolean equals(Object o)
+		{ return notification.equals(o); }
 		
 		public int compareTo(PermNotification o)
 		{ return Long.compare(timeAdded, o.timeAdded); }
@@ -165,7 +178,7 @@ public class ClientNotifications
 				
 				if(a == ClickEvent.Action.OPEN_URL)
 				{
-					LatCore.openURL(v);
+					LMUtils.openURL(v);
 				}
 				else if(a == ClickEvent.Action.OPEN_FILE)
 				{

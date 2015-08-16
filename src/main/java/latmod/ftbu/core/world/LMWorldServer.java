@@ -1,11 +1,13 @@
 package latmod.ftbu.core.world;
 
+import java.io.File;
 import java.util.UUID;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.event.LMPlayerServerEvent;
 import latmod.ftbu.core.util.*;
 import net.minecraft.nbt.*;
+import net.minecraft.world.WorldServer;
 
 import com.mojang.authlib.GameProfile;
 
@@ -15,12 +17,18 @@ public class LMWorldServer extends LMWorld<LMPlayerServer>
 {
 	public static LMWorldServer inst = null;
 	
+	public final WorldServer worldObj;
+	public final File latmodFolder;
 	public final FastMap<String, EntityPos> warps;
+	public NBTTagCompound customData;
 	
-	public LMWorldServer(UUID id)
+	public LMWorldServer(UUID id, WorldServer w, File f)
 	{
 		super(Side.SERVER, id);
+		worldObj = w;
+		latmodFolder = f;
 		warps = new FastMap<String, EntityPos>();
+		customData = new NBTTagCompound();
 	}
 	
 	public void load(NBTTagCompound tag)
@@ -39,6 +47,8 @@ public class LMWorldServer extends LMWorld<LMPlayerServer>
 				setWarp(l.get(i), a[0], a[1], a[2], a[3]);
 			}
 		}
+		
+		customData = tag.getCompoundTag("Custom");
 	}
 	
 	public void save(NBTTagCompound tag)
@@ -47,6 +57,7 @@ public class LMWorldServer extends LMWorld<LMPlayerServer>
 		for(int i = 0; i < warps.size(); i++)
 			tagWarps.setIntArray(warps.keys.get(i), warps.values.get(i).toIntArray());
 		tag.setTag("Warps", tagWarps);
+		tag.setTag("Custom", customData);
 	}
 	
 	public void writePlayersToNet(NBTTagCompound tag, LMPlayerServer self)
@@ -109,7 +120,7 @@ public class LMWorldServer extends LMWorld<LMPlayerServer>
 	// Warps //
 	
 	public String[] listWarps()
-	{ return warps.keys.toArray(new String[0]); }
+	{ return warps.keys.toArray(new String[warps.keys.size()]); }
 	
 	public EntityPos getWarp(String s)
 	{ return warps.get(s); }

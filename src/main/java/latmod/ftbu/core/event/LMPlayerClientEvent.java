@@ -20,23 +20,18 @@ public abstract class LMPlayerClientEvent extends LMPlayerEvent
 	
 	// Events //
 	
+	public static class DataChanged extends LMPlayerClientEvent
+	{
+		public DataChanged(LMPlayerClient p)
+		{ super(p); }
+	}
+	
 	public static class LoggedIn extends LMPlayerClientEvent
 	{
 		public final boolean firstTime;
 		
 		public LoggedIn(LMPlayerClient p, boolean b)
 		{ super(p); firstTime = b; }
-	}
-	
-	public static class DataChanged extends LMPlayerClientEvent
-	{
-		public final String action;
-		
-		public DataChanged(LMPlayerClient p, String b)
-		{ super(p); action = b; }
-		
-		public boolean isAction(String b)
-		{ return action == b || action.equals(b); }
 	}
 	
 	public static class LoggedOut extends LMPlayerClientEvent

@@ -2,26 +2,28 @@ package latmod.ftbu.core;
 
 import java.lang.reflect.Type;
 
-import latmod.ftbu.core.inv.LMInvUtils;
 import latmod.ftbu.core.util.*;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IChatComponent;
 
 import com.google.gson.*;
 
 public class Notification
 {
+	public final String ID;
 	public final IChatComponent title;
 	public final int timer;
 	
-	public IChatComponent desc = null;
+	private IChatComponent desc = null;
 	private int color = 0xFFA0A0A0;
-	public ItemStack item = null;
+	private ItemStack item = null;
 	private ClickEvent clickEvent = null;
 	
-	public Notification(IChatComponent t, int l)
+	public Notification(String s, IChatComponent t, int l)
 	{
+		ID = s;
 		title = t;
 		timer = MathHelperLM.clampInt(l, 1, 30000);
 	}
@@ -29,8 +31,14 @@ public class Notification
 	public void setDesc(IChatComponent c)
 	{ desc = c; }
 	
+	public IChatComponent getDesc()
+	{ return desc; }
+	
 	public void setItem(ItemStack is)
 	{ item = is; }
+	
+	public ItemStack getItem()
+	{ return item; }
 	
 	public void setColor(int c)
 	{ color = c; }
@@ -48,23 +56,71 @@ public class Notification
 	{ return clickEvent == null; }
 	
 	public boolean equals(Object o)
-	{ return o != null && (o instanceof Notification) && equalsNotification((Notification)o); }
+	{ return o != null && (o == this || o.toString().equals(toString())); }
 	
-	public boolean equalsNotification(Notification o)
-	{
-		if(o == null) return false;
-		if(o == this) return true;
-		if(!title.equals(o.title)) return false;
-		if(LatCore.areObjectsEqual(desc, o.desc, true)) return false;
-		if(color != o.color) return false;
-		return LMInvUtils.itemsEquals(item, o.item, true, true);
-	}
-	
-	public static Notification getFromJson(String s)
-	{ return LatCore.fromJson(s, Notification.class); }
+	public int hashCode()
+	{ return ID.hashCode(); }
 	
 	public String toString()
-	{ return LatCore.toJson(this); }
+	{ return ID; }
+	
+	public static Notification fromJson(String s)
+	{ return LMJsonUtils.fromJson(s, Notification.class); }
+	
+	public String toJson()
+	{ return LMJsonUtils.toJson(this); }
+	
+	public static Notification readFromNBT(NBTTagCompound tag)
+	{
+		if(tag == null || tag.hasNoTags() || !tag.hasKey("ID") || !tag.hasKey("T"))
+			return null;
+		
+		IChatComponent title = (IChatComponent)LMJsonUtils.fromJson(tag.getString("T"), IChatComponent.class);
+		int timer = tag.hasKey("L") ? tag.getInteger("L") : 3000;
+		Notification n = new Notification(tag.getString("ID"), title, timer);
+		
+		if(tag.hasKey("D"))
+			n.setDesc((IChatComponent)LMJsonUtils.fromJson(tag.getString("D"), IChatComponent.class));
+		
+		if(tag.hasKey("I"))
+			n.setItem(ItemStack.loadItemStackFromNBT(tag.getCompoundTag("I")));
+		
+		if(tag.hasKey("C"))
+			n.setColor(tag.getInteger("C"));
+		
+		if(tag.hasKey("CEA"))
+			n.setClickEvent(new ClickEvent(ClickEvent.Action.values()[tag.getByte("CEA")], tag.getString("CEV")));
+		
+		return n;
+	}
+	
+	public void writeToNBT(NBTTagCompound tag)
+	{
+		tag.setString("ID", ID);
+		tag.setString("T", LMJsonUtils.toJson(title));
+		if(timer != 3000) tag.setInteger("L", timer);
+		
+		IChatComponent desc = getDesc();
+		if(desc != null) tag.setString("D", LMJsonUtils.toJson(desc));
+		
+		ItemStack is = getItem();
+		if(is != null)
+		{
+			NBTTagCompound tag1 = new NBTTagCompound();
+			is.writeToNBT(tag1);
+			tag.setTag("I", tag1);
+		}
+		
+		int col = getColor();
+		if(col != 0xFFA0A0A0) tag.setInteger("C", col);
+		
+		ClickEvent ce = getClickEvent();
+		if(ce != null)
+		{
+			tag.setByte("CEA", (byte)ce.getAction().ordinal());
+			tag.setString("CEV", ce.getValue());
+		}
+	}
 	
 	public static class Serializer implements JsonSerializer<Notification>, JsonDeserializer<Notification>
 	{
@@ -72,17 +128,25 @@ public class Notification
 		{
 			JsonObject o = new JsonObject();
 			
+			o.add("id", new JsonPrimitive(n.ID));
 			o.add("title", context.serialize(n.title));
 			if(n.timer != 3000) o.add("timer", new JsonPrimitive(n.timer));
-			if(n.desc != null) o.add("desc", context.serialize(n.desc));
-			if(n.item != null) o.add("item", context.serialize(n.item));
+			
+			IChatComponent desc = n.getDesc();
+			if(desc != null) o.add("desc", context.serialize(desc));
+			
+			ItemStack is = n.getItem();
+			if(is != null) o.add("item", context.serialize(is));
+			
 			int col = n.getColor();
 			if(col != 0xFFA0A0A0) o.add("color", new JsonPrimitive(col));
-			if(n.clickEvent != null)
+			
+			ClickEvent ce = n.getClickEvent();
+			if(ce != null)
 			{
 				JsonObject o1 = new JsonObject();
-				o1.add("action", new JsonPrimitive(n.clickEvent.getAction().getCanonicalName()));
-				o1.add("value", new JsonPrimitive(n.clickEvent.getValue()));
+				o1.add("action", new JsonPrimitive(ce.getAction().getCanonicalName()));
+				o1.add("value", new JsonPrimitive(ce.getValue()));
 				o.add("click", o1);
 			}
 			
@@ -93,11 +157,11 @@ public class Notification
 		{
 			if(json.isJsonNull()) return null;
 			JsonObject o = json.getAsJsonObject();
-			if(!o.has("title")) return null;
+			if(!o.has("id") || !o.has("title")) return null;
 			
 			IChatComponent t = (IChatComponent)context.deserialize(o.get("title"), IChatComponent.class);
 			int l = o.has("timer") ? o.get("timer").getAsInt() : 3000;
-			Notification n = new Notification(t, l);
+			Notification n = new Notification(o.get("id").getAsString(), t, l);
 			
 			if(o.has("desc")) n.setDesc((IChatComponent)context.deserialize(o.get("desc"), IChatComponent.class));
 			if(o.has("color")) n.setColor(MathHelperLM.toIntDecoded(o.get("color").getAsString()));

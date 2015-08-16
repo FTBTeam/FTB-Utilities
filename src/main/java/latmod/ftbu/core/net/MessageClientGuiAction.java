@@ -14,6 +14,7 @@ public class MessageClientGuiAction extends MessageLM<MessageClientGuiAction>
 	public static final int ACTION_DENY_FRIEND = 3;
 	public static final int ACTION_SET_SAFE_CHUNKS = 4;
 	public static final int ACTION_CHAT_LINKS = 5;
+	public static final int ACTION_CHUNK_MESSAGES = 6;
 	
 	public int action;
 	public int extra;
@@ -53,13 +54,22 @@ public class MessageClientGuiAction extends MessageLM<MessageClientGuiAction>
 				if(!owner.friends.contains(p.playerID))
 				{
 					owner.friends.add(p.playerID);
-					owner.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
-					p.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
+					owner.sendUpdate(true);
+					p.sendUpdate(true);
 					
-					Notification n = new Notification(LatCoreMC.setColor(EnumChatFormatting.GREEN, new ChatComponentText("Added a friend")), 800);
+					Notification n = new Notification("friend_added_" + LatCoreMC.rand.nextInt(), LatCoreMC.setColor(EnumChatFormatting.GREEN, new ChatComponentText("Added a friend")), 800);
 					n.setDesc(new ChatComponentText(p.getName()));
-					n.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, "C:/LatvianModder/Pictures/terrain.png"));
+					n.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/ftbu friends rem " + p.getName()));
+					n.setItem(ep.getCurrentEquippedItem());
 					LatCoreMC.notifyPlayer(ep, n);
+					
+					if(p.isOnline())
+					{
+						n = new Notification("friend_request", LatCoreMC.setColor(EnumChatFormatting.GREEN, new ChatComponentText("New friend request from " + owner.getName() + "!")), 2000);
+						n.setDesc(new ChatComponentText("Click to add as friend"));
+						n.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftbu friends add " + owner.getName()));
+						LatCoreMC.notifyPlayer(p.getPlayer(), n);
+					}
 				}
 			}
 			else if(m.action == ACTION_REM_FRIEND)
@@ -67,10 +77,9 @@ public class MessageClientGuiAction extends MessageLM<MessageClientGuiAction>
 				if(owner.friends.contains(p.playerID))
 				{
 					owner.friends.removeValue(p.playerID);
-					owner.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
-					p.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
-					
-					Notification n = new Notification(LatCoreMC.setColor(EnumChatFormatting.RED, new ChatComponentText("Removed a friend")), 800);
+					owner.sendUpdate(true);
+					p.sendUpdate(true);
+					Notification n = new Notification("friend_removed", LatCoreMC.setColor(EnumChatFormatting.RED, new ChatComponentText("Removed a friend")), 800);
 					n.setDesc(new ChatComponentText(p.getName()));
 					LatCoreMC.notifyPlayer(ep, n);
 				}
@@ -80,10 +89,10 @@ public class MessageClientGuiAction extends MessageLM<MessageClientGuiAction>
 				if(p.friends.contains(owner.playerID))
 				{
 					p.friends.removeValue(owner.playerID);
-					owner.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
-					p.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
+					owner.sendUpdate(true);
+					p.sendUpdate(true);
 					
-					Notification n = new Notification(LatCoreMC.setColor(EnumChatFormatting.RED, new ChatComponentText("Denied a friend request")), 800);
+					Notification n = new Notification("friend_denied", LatCoreMC.setColor(EnumChatFormatting.RED, new ChatComponentText("Denied a friend request")), 800);
 					n.setDesc(new ChatComponentText(p.getName()));
 					LatCoreMC.notifyPlayer(ep, n);
 				}
@@ -92,12 +101,17 @@ public class MessageClientGuiAction extends MessageLM<MessageClientGuiAction>
 		else if(m.action == ACTION_SET_SAFE_CHUNKS)
 		{
 			owner.claims.setSafe(m.extra == 1);
-			owner.sendUpdate(null, true);
+			owner.sendUpdate(true);
 		}
 		else if(m.action == ACTION_CHAT_LINKS)
 		{
 			owner.chatLinks = (m.extra == 1);
-			owner.sendUpdate(null, true);
+			owner.sendUpdate(true);
+		}
+		else if(m.action == ACTION_CHUNK_MESSAGES)
+		{
+			owner.chunkMessages = m.extra;
+			owner.sendUpdate(true);
 		}
 		
 		return null;

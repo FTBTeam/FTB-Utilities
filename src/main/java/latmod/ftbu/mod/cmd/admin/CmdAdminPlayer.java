@@ -45,7 +45,7 @@ public class CmdAdminPlayer extends SubCommand
 		
 		if(args[0].equals("@a"))
 		{
-			String[] s = LMWorldServer.inst.getAllNames(NameType.ON);
+			String[] s = LMWorldServer.inst.getAllPlayerNames(NameType.ON);
 			
 			for(int i = 0; i < s.length; i++)
 			{
@@ -74,7 +74,7 @@ public class CmdAdminPlayer extends SubCommand
 			
 			try
 			{
-				EntityPlayerMP ep = p.getPlayerMP();
+				EntityPlayerMP ep = p.getPlayer();
 				NBTTagCompound tag = new NBTTagCompound();
 				writeItemsToNBT(ep.inventory, tag, "Inventory");
 				
@@ -102,7 +102,7 @@ public class CmdAdminPlayer extends SubCommand
 			
 			try
 			{
-				EntityPlayerMP ep = p.getPlayerMP();
+				EntityPlayerMP ep = p.getPlayer();
 				String filename = ep.getCommandSenderName();
 				if(args.length == 3) filename = "custom/" + args[2];
 				NBTTagCompound tag = LMNBTUtils.readMap(new FileInputStream(new File(LatCoreMC.latmodFolder, "playerinvs/" + filename + ".dat")));
@@ -139,11 +139,11 @@ public class CmdAdminPlayer extends SubCommand
 			
 			try
 			{
-				Notification n = Notification.getFromJson(s);
+				Notification n = Notification.fromJson(s);
 				
 				if(n != null)
 				{
-					LatCoreMC.notifyPlayer(p.getPlayerMP(), n);
+					LatCoreMC.notifyPlayer(p.getPlayer(), n);
 					return null;
 				}
 			}
@@ -156,14 +156,14 @@ public class CmdAdminPlayer extends SubCommand
 		{
 			if(!p.isOnline()) return mustBeOnline;
 			
-			ItemStack is = p.getPlayerMP().inventory.getCurrentItem();
+			ItemStack is = p.getPlayer().inventory.getCurrentItem();
 			
-			if(p.getPlayerMP().inventory.getCurrentItem() != null)
+			if(p.getPlayer().inventory.getCurrentItem() != null)
 			{
 				ItemDisplay itemDisplay = new ItemDisplay(is, is.getDisplayName(), is.hasDisplayName() ? FastList.asList(is.getItem().getItemStackDisplayName(is)) : null, 8F);
 				NBTTagCompound data = new NBTTagCompound();
 				itemDisplay.writeToNBT(data);
-				FTBUGuiHandler.instance.openGui(p.getPlayerMP(), FTBUGuiHandler.DISPLAY_ITEM, data);
+				FTBUGuiHandler.instance.openGui(p.getPlayer(), FTBUGuiHandler.DISPLAY_ITEM, data);
 				return null;
 			}
 			

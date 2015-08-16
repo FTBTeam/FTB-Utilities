@@ -52,7 +52,7 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	
 	public E remove(int i)
 	{
-		if(i == -1) return null;
+		if(size == 0 || i == -1) return null;
 		E e0 = get(i);
 		size--;
 		for(int j = i; j < size; j++)
@@ -62,7 +62,10 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	}
 	
 	public boolean remove(Object o)
-	{ return removeObj(o); }
+	{
+		if(size == 0 || o == null) return false;
+		return removeObj(o);
+	}
 	
 	public boolean removeObj(Object o)
 	{
@@ -72,11 +75,14 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	}
 	
 	public void removeAll(int... i)
-	{ for(int j : i) remove(j); }
+	{
+		if(size == 0 || i == null || i.length == 0) return;
+		for(int j : i) remove(j);
+	}
 	
 	public int indexOf(Object o)
 	{
-		if(o == null || size == 0) return -1;
+		if(size == 0 || o == null) return -1;
 		
 		for(int i = 0; i < size; i++)
 		if(objects[i] == o) return i;
@@ -96,7 +102,8 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	public void clear()
 	{
 		if(size == 0) return;
-		objects = (E[])new Object[initSize];
+		for(int i = 0; i < size; i++)
+			objects[i] = null;
 		size = 0;
 	}
 	
@@ -105,8 +112,9 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	
 	public E[] toArray()
 	{
-		if(size == objects.length) return objects;
+		if(size == objects.length) return objects.clone();
 		E o[] = (E[])new Object[size];
+		if(size == 0) return o;
 		System.arraycopy(objects, 0, o, 0, size);
 		objects = o;
 		return objects;
@@ -114,6 +122,7 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	
 	public <E> E[] toArray(E[] a)
 	{
+		if(size == 0) return (E[])new Object[0];
 		if(a.length == size)
 		{
 			for(int i = 0; i < size; i++)
@@ -132,6 +141,7 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	public FastList<E> clone()
 	{
 		FastList<E> l = blankCopy();
+		if(size == 0) return l;
 		l.objects = toArray();
 		l.size = size;
 		return l;
@@ -139,29 +149,24 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	
 	public void sort(Comparator<? super E> c)
 	{
-		if(size > 0)
-		{
-			if(c == null) Arrays.sort(objects, 0, size);
-			else Arrays.sort((E[])objects, 0, size, c);
-		}
+		if(size == 0) return;
+		if(c == null) Arrays.sort(objects, 0, size);
+		else Arrays.sort((E[])objects, 0, size, c);
 	}
 	
 	public FastList<E> sortToNew(Comparator<? super E> c)
 	{
 		FastList<E> l = blankCopy();
-		
-		if(size > 0)
-		{
-			l.addAll(this);
-			if(c == null) Arrays.sort(l.objects, 0, size);
-			else Arrays.sort((E[])l.objects, 0, size, c);
-		}
-		
+		if(size == 0) return l;
+		l.addAll(this);
+		if(c == null) Arrays.sort(l.objects, 0, size);
+		else Arrays.sort((E[])l.objects, 0, size, c);
 		return l;
 	}
 	
 	public String toString()
 	{
+		if(size == 0) return "[ ]";
 		StringBuilder sb = new StringBuilder();
 		sb.append("[ ");
 		
@@ -304,7 +309,7 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	
 	public void removeNullValues()
 	{
-		E[] e0 = (E[])objects;
+		E[] e0 = (E[])objects.clone();
 		int size0 = size;
 		
 		clear();

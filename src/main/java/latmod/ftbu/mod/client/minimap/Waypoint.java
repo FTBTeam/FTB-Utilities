@@ -22,7 +22,7 @@ public class Waypoint
 	{ colR = r; colG = g; colB = b; }
 	
 	public void setColor(int col)
-	{ setColor(LatCore.Colors.getRed(col), LatCore.Colors.getGreen(col), LatCore.Colors.getBlue(col)); }
+	{ setColor(LMColorUtils.getRed(col), LMColorUtils.getGreen(col), LMColorUtils.getBlue(col)); }
 	
 	public String toString()
 	{
@@ -53,7 +53,7 @@ public class Waypoint
 		sb.append(", ");
 		
 		sb.append("C=");
-		sb.append(LatCore.Colors.getHex(getColorRGB()));
+		sb.append(LMColorUtils.getHex(getColorRGB()));
 		sb.append(", ");
 		
 		sb.append("M=");
@@ -98,5 +98,5 @@ public class Waypoint
 	{ return listID; }
 
 	public int getColorRGB()
-	{ return LatCore.Colors.getRGBA(colR, colG, colB, 255); }
+	{ return LMColorUtils.getRGBA(colR, colG, colB, 255); }
 }

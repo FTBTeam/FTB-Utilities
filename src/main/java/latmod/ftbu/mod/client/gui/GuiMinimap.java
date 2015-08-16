@@ -7,6 +7,7 @@ import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBURenderHandler;
+import latmod.ftbu.mod.client.gui.friends.GuiFriends;
 import latmod.ftbu.mod.client.minimap.*;
 import latmod.ftbu.mod.player.ChunkType;
 import net.minecraft.client.renderer.Tessellator;
@@ -214,7 +215,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 						
 						TextureCoords tc = tex_area_coords[a ? 1 : 0][b ? 1 : 0][c ? 1 : 0][d ? 1 : 0];
 						
-						LatCore.Colors.setGLColor(t.areaColor, 255);
+						LMColorUtils.setGLColor(t.areaColor, 255);
 						GuiLM.drawTexturedRectD(renderX + x * 16, renderY + z * 16, zLevel, 16, 16, tc.minU, tc.minV, tc.maxU, tc.maxV);
 					}
 				}
@@ -305,12 +306,12 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		super.drawText(l);
 	}
 	
-	public void onGuiClosed()
+	public void onLMGuiClosed()
 	{
 		Minimap.stopThread();
 	}
 	
-	public void onClientAction(String action)
+	public void onClientDataChanged()
 	{
 		shouldRedraw = true;
 	}

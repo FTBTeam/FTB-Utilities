@@ -3,28 +3,30 @@ import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.Notification;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.player.ClientNotifications;
+import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 
 public class MessageNotifyPlayer extends MessageLM<MessageNotifyPlayer> implements IClientMessageLM<MessageNotifyPlayer>
 {
-	public String data;
+	public NBTTagCompound data;
 	
 	public MessageNotifyPlayer() { }
 	
 	public MessageNotifyPlayer(Notification n)
 	{
-		data = n.toString();
+		data = new NBTTagCompound();
+		n.writeToNBT(data);
 	}
 	
 	public void fromBytes(ByteBuf bb)
 	{
-		data = LMNetHelper.readString(bb);
+		data = LMNetHelper.readTagCompound(bb);
 	}
 	
 	public void toBytes(ByteBuf bb)
 	{
-		LMNetHelper.writeString(bb, data);
+		LMNetHelper.writeTagCompound(bb, data);
 	}
 	
 	public IMessage onMessage(MessageNotifyPlayer m, MessageContext ctx)
@@ -32,5 +34,5 @@ public class MessageNotifyPlayer extends MessageLM<MessageNotifyPlayer> implemen
 	
 	@SideOnly(Side.CLIENT)
 	public void onMessageClient(MessageNotifyPlayer m, MessageContext ctx)
-	{ ClientNotifications.add(Notification.getFromJson(m.data)); }
+	{ ClientNotifications.add(Notification.readFromNBT(m.data)); }
 }

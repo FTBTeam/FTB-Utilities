@@ -12,5 +12,5 @@ public enum NameType
 	{ return this == ON; }
 	
 	public String[] getUsernames()
-	{ return LMWorld.getWorld().getAllNames(this); }
+	{ return LMWorld.getWorld().getAllPlayerNames(this); }
 }

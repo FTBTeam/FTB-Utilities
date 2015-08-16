@@ -4,10 +4,12 @@ import java.io.File;
 import java.util.UUID;
 
 import latmod.ftbu.core.ICallbackEvent;
+import latmod.ftbu.core.gui.GuiLM;
+import latmod.ftbu.core.util.FastMap;
 import latmod.ftbu.mod.client.FTBURenderHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.entity.*;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.Render;
@@ -21,6 +23,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.client.*;
+
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.*;
 
@@ -29,6 +34,7 @@ public final class LatCoreMCClient // LatCoreMC
 {
 	public static IIcon blockNullIcon, unknownItemIcon;
 	private static float lastBrightnessX, lastBrightnessY;
+	private static final FastMap<ResourceLocation, Integer> textureMap = new FastMap<ResourceLocation, Integer>();
 	
 	public static Minecraft getMinecraft()
 	{ return FMLClientHandler.instance().getClient(); }
@@ -103,5 +109,31 @@ public final class LatCoreMCClient // LatCoreMC
 		}
 		
 		return img;
+	}
+	
+	public static ResourceLocation getSkinTexture(String username)
+	{
+		ResourceLocation r = AbstractClientPlayer.getLocationSkin(username);
+		AbstractClientPlayer.getDownloadImageSkin(r, username);
+		return r;
+	}
+	
+	public static void setTexture(ResourceLocation tex)
+	{
+		if(GuiLM.currentGui != null)
+		{
+			GuiLM.currentGui.setTexture(tex);
+			return;
+		}
+		
+		Integer i = textureMap.get(tex);
+		
+		if(i == null)
+		{
+			getMinecraft().getTextureManager().bindTexture(tex);
+			textureMap.put(tex, i = Integer.valueOf(getMinecraft().getTextureManager().getTexture(tex).getGlTextureId()));
+		}
+		
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, i.intValue());
 	}
 }

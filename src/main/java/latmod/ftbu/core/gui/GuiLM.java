@@ -5,7 +5,6 @@ import latmod.ftbu.core.OtherMods;
 import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.client.FTBUClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
@@ -15,6 +14,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.Optional;
@@ -110,12 +110,12 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	public final ResourceLocation texture;
 	private final FastList<WidgetLM> widgets;
 	private boolean refreshWidgets = true;
-	public int mouseX, mouseY, mouseXR, mouseYR;
+	public int mouseX, mouseY, mouseXR, mouseYR, mouseDWheel;
 	public float delta;
 	
 	public boolean hideNEI = false;
-	
 	private ResourceLocation prevTexture = null;
+	public static GuiLM currentGui = null;
 	
 	public GuiLM(ContainerLM c, ResourceLocation tex)
 	{
@@ -139,11 +139,11 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	public ItemStack getHeldItem()
 	{ return container.player.inventory.getItemStack(); }
 	
-	public final int getPosX()
-	{ return guiLeft; }
+	public final int getPosX(int x)
+	{ return guiLeft + x; }
 	
-	public final int getPosY()
-	{ return guiTop; }
+	public final int getPosY(int y)
+	{ return guiTop + y; }
 	
 	public final float getZLevel()
 	{ return zLevel; }
@@ -166,20 +166,29 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 		}
 	}
 	
+	public final void initGui()
+	{
+		currentGui = this;
+		super.initGui();
+		initLMGui();
+		refreshWidgets();
+	}
+	
+	public void initLMGui()
+	{
+	}
+	
 	protected void mouseClicked(int mx, int my, int b)
 	{
-		for(int i = 0; i < widgets.size(); i++)
-			widgets.get(i).mousePressed(b);
+		for(WidgetLM w : widgets)
+			if(w.isEnabled()) w.mousePressed(b);
 		super.mouseClicked(mx, my, b);
 	}
 	
 	protected void keyTyped(char keyChar, int key)
 	{
-		for(int i = 0; i < widgets.size(); i++)
-		{
-			if(widgets.get(i).keyPressed(key, keyChar))
-				return;
-		}
+		for(WidgetLM w : widgets)
+			if(w.isEnabled() && w.keyPressed(key, keyChar)) return;
 		
 		super.keyTyped(keyChar, key);
 	}
@@ -191,7 +200,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	{
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
-		LatCore.Colors.recolor();
+		LMColorUtils.recolor();
 		setTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 	}
@@ -213,6 +222,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 		mouseYR = my - guiTop;
 		delta = f;
 		prevTexture = null;
+		mouseDWheel = Mouse.getDWheel();
 		
 		if(refreshWidgets)
 		{
@@ -237,10 +247,6 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 		drawForeground();
 	}
 	
-	public final void drawText(int mx, int my)
-	{
-	}
-	
 	public void drawText(FastList<String> l)
 	{
 		for(int i = 0; i < widgets.size(); i++)
@@ -251,7 +257,14 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 		}
 	}
 	
-	public final void addMouseText(int mx, int my, FastList<String> l)
+	public final void onGuiClosed()
+	{
+		super.onGuiClosed();
+		onLMGuiClosed();
+		currentGui = null;
+	}
+	
+	public void onLMGuiClosed()
 	{
 	}
 	
@@ -308,8 +321,8 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	public static void drawPlayerHead(String username, double x, double y, double w, double h, double z)
 	{
 		Minecraft mc = LatCoreMCClient.getMinecraft();
-		if(mc.currentScreen instanceof GuiLM) ((GuiLM)mc.currentScreen).setTexture(FTBUClient.getSkinTexture(username));
-		else mc.getTextureManager().bindTexture(FTBUClient.getSkinTexture(username));
+		if(mc.currentScreen instanceof GuiLM) ((GuiLM)mc.currentScreen).setTexture(LatCoreMCClient.getSkinTexture(username));
+		else mc.getTextureManager().bindTexture(LatCoreMCClient.getSkinTexture(username));
 		
 		Tessellator tessellator = Tessellator.instance;
 		

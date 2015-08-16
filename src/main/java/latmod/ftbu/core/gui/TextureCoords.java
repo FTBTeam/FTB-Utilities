@@ -36,7 +36,7 @@ public final class TextureCoords
 	public void render(GuiLM gui, double x, double y, double w, double h)
 	{
 		gui.setTexture(texture);
-		GuiLM.drawTexturedRectD(x + gui.getPosX(), y + gui.getPosY(), gui.getZLevel(), w, h, minU, minV, maxU, maxV);
+		GuiLM.drawTexturedRectD(x + gui.getPosX(0), y + gui.getPosY(0), gui.getZLevel(), w, h, minU, minV, maxU, maxV);
 	}
 	
 	@SideOnly(Side.CLIENT)

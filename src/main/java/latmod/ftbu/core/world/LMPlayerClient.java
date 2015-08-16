@@ -29,25 +29,28 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 		isOnline = false;
 	}
 	
+	public boolean isOnline()
+	{ return isOnline; }
+	
+	public LMPlayerServer toPlayerMP()
+	{ return null; }
+	
 	@SideOnly(Side.CLIENT)
 	public LMPlayerClient toPlayerSP()
 	{ return this; }
 	
-	public EntityPlayerSP getPlayerSP()
-	{ return LatCoreMCClient.getPlayerSP(getUUID()); }
-	
-	public boolean isOnline()
-	{ return isOnline; }
+	public EntityPlayerSP getPlayer()
+	{ return isOnline() ? LatCoreMCClient.getPlayerSP(getUUID()) : null; }
 	
 	public void receiveInfo(NBTTagCompound tag)
 	{
 		LMNBTUtils.toStringList(clientInfo, tag.getTagList("I", LMNBTUtils.STRING));
 		
 		lastSeen = tag.getLong("L");
-		if(!isOnline() && lastSeen > 0L) clientInfo.add("Last seen " + LatCore.getTimeAgo(lastSeen) + " ago");
+		if(!isOnline() && lastSeen > 0L) clientInfo.add("Last seen " + LMStringUtils.getTimeAgo(lastSeen) + " ago");
 		
 		firstJoined = tag.getLong("J");
-		if(firstJoined > 0L) clientInfo.add("Joined " + LatCore.getTimeAgo(firstJoined) + " ago");
+		if(firstJoined > 0L) clientInfo.add("Joined " + LMStringUtils.getTimeAgo(firstJoined) + " ago");
 		
 		if(deaths > 0) clientInfo.add("Deaths: " + deaths);
 		
@@ -56,7 +59,7 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 	
 	public void readFromNet(NBTTagCompound tag, boolean self)
 	{
-		isOnline = tag.getBoolean("On");
+		isOnline = tag.getBoolean("ON");
 		
 		friends.clear();
 		friends.addAll(tag.getIntArray("F"));
@@ -69,10 +72,11 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 		{
 			commonPrivateData = tag.getCompoundTag("CPD");
 			
-			claimedChunks = tag.getInteger("Claimed");
-			maxClaimPower = tag.getInteger("MaxClaimed");
-			safeChunks = tag.getBoolean("SafeChunks");
-			chatLinks = tag.getBoolean("ChatLinks");
+			claimedChunks = tag.getInteger("CC");
+			maxClaimPower = tag.getInteger("MCC");
+			safeChunks = tag.getBoolean("SC");
+			chatLinks = tag.getBoolean("CL");
+			chunkMessages = tag.getByte("CM");
 		}
 	}
 	

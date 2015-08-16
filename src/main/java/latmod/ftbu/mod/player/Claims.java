@@ -58,7 +58,7 @@ public class Claims
 		if(safe != b)
 		{
 			safe = b;
-			owner.sendUpdate(null, true);
+			owner.sendUpdate(true);
 		}
 	}
 	
@@ -86,7 +86,7 @@ public class Claims
 		if(t == ChunkType.WILDERNESS)
 		{
 			chunks.add(new ClaimedChunk(this, dim, cx, cz));
-			owner.sendUpdate(null, true);
+			owner.sendUpdate(true);
 			return true;
 		}
 		
@@ -100,7 +100,7 @@ public class Claims
 		if(t == ChunkType.CLAIMED_SELF)
 		{
 			chunks.remove(new ClaimedChunk(this, dim, cx, cz));
-			owner.sendUpdate(null, true);
+			owner.sendUpdate(true);
 			return true;
 		}
 		

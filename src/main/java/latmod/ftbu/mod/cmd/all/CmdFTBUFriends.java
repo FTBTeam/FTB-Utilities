@@ -58,6 +58,26 @@ public class CmdFTBUFriends extends SubCommand
 			
 			return null;
 		}
+		else if(args[0].equals("addall"))
+		{
+			int friendsAdded = 0;
+			
+			for(LMPlayerServer p1 : LMWorldServer.inst.players)
+			{
+				if(p1.isFriendRaw(owner) && !owner.isFriendRaw(p1))
+				{
+					friendsAdded++;
+					
+					if(!owner.friends.contains(p1.playerID))
+					{
+						owner.friends.add(p1.playerID);
+						changed(owner, p1, null);
+					}
+				}
+			}
+			
+			return CommandLM.FINE + "Added " + friendsAdded + " friends!";
+		}
 		else
 		{
 			CommandLM.checkArgs(args, 2);
@@ -93,8 +113,8 @@ public class CmdFTBUFriends extends SubCommand
 	
 	private static String changed(LMPlayerServer o, LMPlayerServer p, String s)
 	{
-		o.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
-		if(p != null) p.sendUpdate(LMPlayer.ACTION_GROUPS_CHANGED, true);
+		o.sendUpdate(true);
+		if(p != null) p.sendUpdate(true);
 		return CommandLM.FINE + s;
 	}
 }

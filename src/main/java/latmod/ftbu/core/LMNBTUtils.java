@@ -64,10 +64,10 @@ public class LMNBTUtils
 		os.write(b); os.flush(); os.close();
 	}
 	
-	public static void writeMap(File f, NBTTagCompound tag)
+	public static Exception writeMap(File f, NBTTagCompound tag)
 	{
 		try { writeMap(new FileOutputStream(LMFileUtils.newFile(f)), tag); }
-		catch(Exception e) { e.printStackTrace(); }
+		catch(Exception e) { return e; } return null;
 	}
 	
 	public static NBTTagCompound readMap(InputStream is) throws Exception

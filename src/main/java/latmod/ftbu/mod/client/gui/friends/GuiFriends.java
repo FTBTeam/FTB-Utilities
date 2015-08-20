@@ -180,18 +180,18 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		if(selectedPlayer.playerLM.equalsPlayer(owner))
 		{
 			actionButtons.add(new ButtonAction(this, PlayerAction.settings, FTBULang.client_config));
-			actionButtons.add(new ButtonAction(this, PlayerAction.notifications, "Notifications"));
+			actionButtons.add(new ButtonAction(this, PlayerAction.notifications, FTBULang.Friends.notifications));
 			actionButtons.add(new ButtonAction(this, PlayerAction.waypoints, Waypoints.clientConfig.getIDS()));
-			actionButtons.add(new ButtonAction(this, PlayerAction.minimap, "Claimed Chunks"));
+			actionButtons.add(new ButtonAction(this, PlayerAction.minimap, FTBULang.Friends.claimed_chunks));
 			//actionButtons.add(new ActionButton(this, PlayerAction.notes, "Notes"));
 		}
 		else
 		{
 			boolean isFriend = owner.isFriendRaw(selectedPlayer.playerLM);
-			actionButtons.add(new ButtonAction(this, PlayerAction.friend_toggle, isFriend ? FTBULang.button_rem_friend : FTBULang.button_add_friend));
+			actionButtons.add(new ButtonAction(this, PlayerAction.friend_toggle, isFriend ? FTBULang.Friends.button_rem_friend : FTBULang.Friends.button_add_friend));
 			
 			if(!isFriend && GuiFriends.selectedPlayer.playerLM.isFriendRaw(owner))
-				actionButtons.add(new ButtonAction(this, PlayerAction.friend_deny, "Deny friend"));
+				actionButtons.add(new ButtonAction(this, PlayerAction.friend_deny, FTBULang.Friends.button_deny_friend));
 		}
 		
 		l.addAll(actionButtons);
@@ -314,7 +314,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			drawRect(0, 0, notificationsWidth + 4, height, 0x33666666);
 			drawRect(2, 2, notificationsWidth + 2, 16, 0xFF666666);
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			fontRendererObj.drawString("Notifications [" + ClientNotifications.perm.size() + "]", 6, 5, 0xFFFFFFFF);
+			fontRendererObj.drawString(FTBULang.Friends.notifications + " [" + ClientNotifications.perm.size() + "]", 6, 5, 0xFFFFFFFF);
 			for(ButtonNotification b : notificationButtons) b.render();
 		}
 	}

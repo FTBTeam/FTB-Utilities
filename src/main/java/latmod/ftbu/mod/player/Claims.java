@@ -11,13 +11,13 @@ public class Claims
 {
 	public final LMPlayerServer owner;
 	private final FastList<ClaimedChunk> chunks;
-	private boolean safe;
+	public final ClaimSettings settings;
 	
 	public Claims(LMPlayerServer p)
 	{
 		owner = p;
 		chunks = new FastList<ClaimedChunk>();
-		safe = false;
+		settings = new ClaimSettings();
 	}
 	
 	public void readFromNBT(NBTTagCompound serverData)
@@ -33,7 +33,7 @@ public class Claims
 			chunks.add(new ClaimedChunk(this, ai[0], ai[1], ai[2]));
 		}
 		
-		safe = tag.getBoolean("Safe");
+		settings.readFromNBT(tag);
 	}
 	
 	public void writeToNBT(NBTTagCompound serverData)
@@ -48,22 +48,10 @@ public class Claims
 		}
 		
 		tag.setTag("Chunks", list);
-		tag.setBoolean("Safe", safe);
+		settings.writeToNBT(tag);
 		
 		serverData.setTag("Claims", tag);
 	}
-	
-	public void setSafe(boolean b)
-	{
-		if(safe != b)
-		{
-			safe = b;
-			owner.sendUpdate(true);
-		}
-	}
-	
-	public boolean isSafe()
-	{ return safe; }
 	
 	public ClaimedChunk getLocal(int dim, int cx, int cz)
 	{

@@ -293,11 +293,11 @@ public class FTBUEventHandler // FTBUTickHandler
 			int cz = MathHelperLM.chunk(e.entity.posZ);
 			
 			if(Claims.isOutsideWorldBorder(dim, cx, cz) || (FTBUConfig.general.safeSpawn && Claims.isInSpawn(dim, cx, cz))) e.setCanceled(true);
-			else
+			/*else
 			{
 				ClaimedChunk c = Claims.get(dim, cx, cz);
-				if(c != null && c.claims.isSafe()) e.setCanceled(true);
-			}
+				if(c != null && c.claims.settings.isSafe()) e.setCanceled(true);
+			}*/
 		}
 	}
 	
@@ -312,11 +312,11 @@ public class FTBUEventHandler // FTBUTickHandler
 		int cz = MathHelperLM.chunk(e.explosion.explosionZ);
 		
 		if(Claims.isOutsideWorldBorder(dim, cx, cz) || (FTBUConfig.general.safeSpawn && Claims.isInSpawn(dim, cx, cz))) e.setCanceled(true);
-		else
+		/*else
 		{
 			ClaimedChunk c = Claims.get(dim, cx, cz);
 			if(c != null && c.claims.isSafe()) e.setCanceled(true);
-		}
+		}*/
 	}
 	
 	@SubscribeEvent(priority = EventPriority.HIGHEST)

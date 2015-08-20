@@ -252,7 +252,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 		for(int i = 0; i < widgets.size(); i++)
 		{
 			WidgetLM w = widgets.get(i);
-			if(w.mouseOver())
+			if(w.isEnabled() && w.mouseOver())
 				w.addMouseOverText(l);
 		}
 	}

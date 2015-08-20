@@ -19,6 +19,7 @@ public class FTBUTickHandler
 {
 	public static final FTBUTickHandler instance = new FTBUTickHandler();
 	public static boolean serverStarted = false;
+	
 	private static long startMillis = 0L;
 	private static long currentMillis = 0L;
 	private static long restartSeconds = 0L;
@@ -98,25 +99,25 @@ public class FTBUTickHandler
 		}
 	}
 	
-	public static void resetTimer(boolean started)
+	public static void serverStarted()
 	{
-		serverStarted = started;
+		serverStarted = true;
 		
-		if(serverStarted)
+		currentMillis = startMillis = Backups.lastTimeRun = LMUtils.millis();
+		restartSeconds = 0;
+		
+		if(FTBUConfig.general.restartTimer > 0)
 		{
-			currentMillis = startMillis = Backups.lastTimeRun = LMUtils.millis();
-			restartSeconds = 0;
-			
-			if(FTBUConfig.general.restartTimer > 0)
-			{
-				restartSeconds = (long)(FTBUConfig.general.restartTimer * 3600D);
-				LatCoreMC.logger.info("Server restart in " + LMStringUtils.formatTime(restartSeconds, false));
-			}
+			restartSeconds = (long)(FTBUConfig.general.restartTimer * 3600D);
+			LatCoreMC.logger.info("Server restart in " + LMStringUtils.formatTime(restartSeconds, false));
 		}
-		else
-		{
-			currentMillis = startMillis = restartSeconds = 0L;
-		}
+	}
+	
+	@SuppressWarnings("all")
+	public static void serverStopped()
+	{
+		serverStarted = false;
+		currentMillis = startMillis = restartSeconds = 0L;
 	}
 	
 	public static long getSecondsUntilRestart()

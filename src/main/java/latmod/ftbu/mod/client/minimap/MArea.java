@@ -7,6 +7,7 @@ public class MArea
 	public final int dim;
 	public final Pos2D pos;
 	public final FastMap<Pos2D, MChunk> chunks;
+	public int textureID = -1;
 	
 	public MArea(int d, Pos2D c)
 	{

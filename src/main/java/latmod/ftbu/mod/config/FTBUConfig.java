@@ -21,7 +21,6 @@ public class FTBUConfig implements IServerConfig // FTBU
 	public static ConfigLogin login;
 	public static ConfigWorldBorder world_border;
 	public static ConfigBackups backups;
-	public static ConfigIRC irc;
 	
 	public String getConfigName()
 	{ return FTBU.mod.modID; }
@@ -32,7 +31,6 @@ public class FTBUConfig implements IServerConfig // FTBU
 		ConfigLogin.load();
 		ConfigWorldBorder.load();
 		ConfigBackups.load();
-		ConfigIRC.load();
 		
 		int overrides = loadOverrides();
 		LatCoreMC.logger.info("Config loaded with " + overrides + " overrides");
@@ -46,7 +44,6 @@ public class FTBUConfig implements IServerConfig // FTBU
 		ConfigLogin.save();
 		ConfigWorldBorder.save();
 		ConfigBackups.save();
-		ConfigIRC.save();
 	}
 	
 	public static void saveReadme(FTBUReadmeEvent e)
@@ -55,7 +52,6 @@ public class FTBUConfig implements IServerConfig // FTBU
 		ConfigLogin.saveReadme(e);
 		ConfigWorldBorder.saveReadme(e);
 		ConfigBackups.saveReadme(e);
-		ConfigIRC.saveReadme(e);
 	}
 	
 	public void readConfig(NBTTagCompound tag)
@@ -96,7 +92,6 @@ public class FTBUConfig implements IServerConfig // FTBU
 			else if(s.equals("login")) return login;
 			else if(s.equals("world_border")) return world_border;
 			else if(s.equals("backups")) return backups;
-			else if(s.equals("irc")) return irc;
 			else return null;
 		}
 	}

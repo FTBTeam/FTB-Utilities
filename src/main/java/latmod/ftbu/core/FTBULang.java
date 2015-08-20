@@ -25,11 +25,31 @@ public class FTBULang
 	
 	// Friends //
 	
-	public static String button_add_friend;
-	public static String button_rem_friend;
-	public static String label_online;
-	public static String label_friend;
-	public static String label_pfriend;
+	public static class Friends
+	{
+		public static String button_add_friend;
+		public static String button_rem_friend;
+		public static String button_deny_friend;
+		
+		public static String label_online;
+		public static String label_friend;
+		public static String label_pfriend;
+		
+		public static String notifications;
+		public static String claimed_chunks;
+		public static String notes;
+		
+		public static void reload()
+		{
+			button_add_friend = get("button.addFriend");
+			button_rem_friend = get("button.remFriend");
+			button_deny_friend = get("button.denyFriend");
+			
+			label_online = get("label.online");
+			label_friend = get("label.friend");
+			label_pfriend = get("label.pfriend");
+		}
+	}
 	
 	// Other //
 	public static String client_config;
@@ -54,11 +74,7 @@ public class FTBULang
 		button_save = get("button.save");
 		button_refresh = get("button.refresh");
 		
-		button_add_friend = get("button.addFriend");
-		button_rem_friend = get("button.remFriend");
-		label_online = get("label.online");
-		label_friend = get("label.friend");
-		label_pfriend = get("label.pfriend");
+		Friends.reload();
 		
 		client_config = get("client_config");
 		for(int i = 0; i < 16; i++)

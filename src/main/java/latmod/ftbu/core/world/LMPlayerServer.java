@@ -64,7 +64,10 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		if(updateClient)
 		{
 			for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers())
+			{
+				LatCoreMC.printChat(null, ep == getPlayer());
 				LMNetHelper.sendTo(ep, new MessageLMPlayerUpdate(this, ep.getUniqueID().equals(getUUID())));
+			}
 		}
 	}
 	
@@ -200,7 +203,12 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			if(!commonPrivateData.hasNoTags()) tag.setTag("CPD", commonPrivateData);
 			if(claims.getClaimedChunks() > 0) tag.setInteger("CC", claims.getClaimedChunks());
 			tag.setInteger("MCC", getMaxClaimPower());
-			if(claims.isSafe()) tag.setBoolean("SC", true);
+			if(claims.settings.shouldSend())
+			{
+				NBTTagCompound tag1 = new NBTTagCompound();
+				claims.settings.writeToNBT(tag1);
+				tag.setTag("SC", tag1);
+			}
 			if(chatLinks) tag.setBoolean("CL", chatLinks);
 			if(chunkMessages != 0) tag.setByte("CM", (byte)chunkMessages);
 		}

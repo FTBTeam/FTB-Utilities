@@ -46,7 +46,7 @@ public class ButtonPlayer extends ButtonLM
 			if(p == null) return;
 			
 			al.add(p.getName());
-			if(p.isOnline()) al.add(GREEN + "[" + FTBULang.label_online + "]");
+			if(p.isOnline()) al.add(GREEN + "[" + FTBULang.Friends.label_online + "]");
 			
 			if(!player.isOwner())
 			{
@@ -54,9 +54,9 @@ public class ButtonPlayer extends ButtonLM
 				boolean raw2 = GuiFriends.staticOwner.isFriendRaw(p);
 				
 				if(raw1 && raw2)
-					al.add(GREEN + "[" + FTBULang.label_friend + "]");
+					al.add(GREEN + "[" + FTBULang.Friends.label_friend + "]");
 				else if(raw1 || raw2)
-					al.add((raw1 ? GOLD : BLUE) + "[" + FTBULang.label_pfriend + "]");
+					al.add((raw1 ? GOLD : BLUE) + "[" + FTBULang.Friends.label_pfriend + "]");
 			}
 			
 			if(p.clientInfo != null && !p.clientInfo.isEmpty())

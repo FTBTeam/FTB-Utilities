@@ -100,7 +100,7 @@ public class MessageClientGuiAction extends MessageLM<MessageClientGuiAction>
 		}
 		else if(m.action == ACTION_SET_SAFE_CHUNKS)
 		{
-			owner.claims.setSafe(m.extra == 1);
+			owner.claims.settings.setSafe(owner, m.extra == 1);
 			owner.sendUpdate(true);
 		}
 		else if(m.action == ACTION_CHAT_LINKS)

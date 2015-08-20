@@ -109,7 +109,7 @@ public class FTBU
 	public void registerCommands(FMLServerStartingEvent e)
 	{
 		LMJsonUtils.updateGson();
-		FTBUTickHandler.resetTimer(true);
+		FTBUTickHandler.serverStarted();
 		e.registerServerCommand(new CmdAdmin());
 		e.registerServerCommand(new CmdBack());
 		e.registerServerCommand(new CmdFTBU());
@@ -137,7 +137,7 @@ public class FTBU
 	@Mod.EventHandler
 	public void serverStopped(FMLServerStoppedEvent e)
 	{
-		FTBUTickHandler.resetTimer(false);
+		FTBUTickHandler.serverStopped();
 		LMWorldServer.inst = null;
 	}
 	

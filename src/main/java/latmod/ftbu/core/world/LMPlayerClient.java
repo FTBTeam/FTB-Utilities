@@ -5,6 +5,7 @@ import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.event.LMPlayerClientEvent;
 import latmod.ftbu.core.inv.LMInvUtils;
 import latmod.ftbu.core.util.*;
+import latmod.ftbu.mod.player.ClaimSettings;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -16,16 +17,17 @@ import cpw.mods.fml.relauncher.*;
 public class LMPlayerClient extends LMPlayer // LMPlayerServer
 {
 	public final FastList<String> clientInfo;
+	public final ClaimSettings claimSettings;
 	public boolean isOnline;
 	
 	public int claimedChunks;
 	public int maxClaimPower;
-	public boolean safeChunks;
 	
 	public LMPlayerClient(LMWorldClient w, int i, GameProfile gp)
 	{
 		super(w, i, gp);
 		clientInfo = new FastList<String>();
+		claimSettings = new ClaimSettings();
 		isOnline = false;
 	}
 	
@@ -71,12 +73,11 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 		if(self)
 		{
 			commonPrivateData = tag.getCompoundTag("CPD");
-			
 			claimedChunks = tag.getInteger("CC");
 			maxClaimPower = tag.getInteger("MCC");
-			safeChunks = tag.getBoolean("SC");
 			chatLinks = tag.getBoolean("CL");
 			chunkMessages = tag.getByte("CM");
+			claimSettings.readFromNBT(tag.getCompoundTag("SC"));
 		}
 	}
 	

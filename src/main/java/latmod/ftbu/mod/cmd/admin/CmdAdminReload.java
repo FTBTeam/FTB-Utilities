@@ -23,7 +23,7 @@ public class CmdAdminReload extends SubCommand
 				IServerConfig.Registry.updateConfig(ep, null);
 			
 			if(prevRRTimer != FTBUConfig.general.restartTimer.floatValue())
-				FTBUTickHandler.resetTimer(true);
+				FTBUTickHandler.serverStarted();
 		}
 		
 		FTBUReloadableRegistry.reload(Side.SERVER, ics);

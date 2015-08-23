@@ -9,16 +9,16 @@ import cpw.mods.fml.relauncher.*;
 public class ThreadMinimap extends Thread
 {
 	public final World worldObj;
-	public final int startX, startZ;
+	public final int startX, startY;
 	public final int size;
 	
-	public ThreadMinimap(World w, int x, int z, int s)
+	public ThreadMinimap(World w, int x, int y, int s)
 	{
 		super("LM_Minimap");
 		setDaemon(true);
 		worldObj = w;
 		startX = x;
-		startZ = z;
+		startY = y;
 		size = s;
 	}
 	
@@ -28,21 +28,18 @@ public class ThreadMinimap extends Thread
 		{
 			Minimap m = Minimap.get(worldObj.provider.dimensionId);
 			
-			for(int z = 0; z < size; z++)
+			for(int y = 0; y < size; y++)
 			for(int x = 0; x < size; x++)
 			{
-				int chunkX = startX + x;
-				int chunkZ = startZ + z;
+				MChunk c = m.loadChunk(startX + x, startY + y);
 				
-				int[] pixels = new int[16 * 16];
-				for(int i = 0; i < pixels.length; i++)
+				for(int i = 0; i < 256; i++)
 				{
-					int bx = chunkX * 16 + (i % 16);
-					int bz = chunkZ * 16 + (i / 16);
-					pixels[i] = Minimap.getBlockColor(worldObj, bx, bz);
+					int bx = c.posX * 16 + (i % 16);
+					int by = c.posY * 16 + (i / 16);
+					int col = Minimap.getBlockColor(worldObj, bx, by);
+					c.setPixel(bx, by, col);
 				}
-				
-				m.setChunkPixels(chunkX, chunkZ, pixels);
 			}
 			
 			GuiMinimap.shouldRedraw = true;

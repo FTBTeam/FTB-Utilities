@@ -9,6 +9,7 @@ import latmod.ftbu.core.util.FastMap;
 import latmod.ftbu.mod.client.FTBURenderHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.*;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.*;
@@ -35,6 +36,8 @@ public final class LatCoreMCClient // LatCoreMC
 	public static IIcon blockNullIcon, unknownItemIcon;
 	private static float lastBrightnessX, lastBrightnessY;
 	private static final FastMap<ResourceLocation, Integer> textureMap = new FastMap<ResourceLocation, Integer>();
+	private static final ResourceLocation clickSound = new ResourceLocation("gui.button.press");
+	public static int displayW, displayH;
 	
 	public static Minecraft getMinecraft()
 	{ return FMLClientHandler.instance().getClient(); }
@@ -136,4 +139,7 @@ public final class LatCoreMCClient // LatCoreMC
 		
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, i.intValue());
 	}
+	
+	public static void playClickSound()
+	{ LatCoreMCClient.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(clickSound, 1F)); }
 }

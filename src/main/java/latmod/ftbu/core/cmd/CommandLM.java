@@ -7,7 +7,7 @@ import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.core.world.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.*;
 
 public abstract class CommandLM extends CommandBase
 {
@@ -38,10 +38,17 @@ public abstract class CommandLM extends CommandBase
 		String s = onCommand(ics, args);
 		if(s != null)
 		{
-			s = EnumChatFormatting.RED + s;
+			IChatComponent c = null;
 			
-			if(s.startsWith(EnumChatFormatting.RED + FINE)) s = s.substring(4);
-			LatCoreMC.printChat(ics, s);
+			if(s.startsWith(FINE))
+				c = new ChatComponentText(s.substring(2));
+			else
+			{
+				c = new ChatComponentText(s);
+				c.getChatStyle().setColor(EnumChatFormatting.RED);
+			}
+			
+			LatCoreMC.printChat(ics, c);
 		}
 		onPostCommand(ics, args);
 	}

@@ -46,4 +46,34 @@ public class Bits
 	public static int or(int... i)
 	{ int ai = 0; for(int j = 0; j < i.length; j++)
 	ai |= i[j]; return ai; }
+	
+	//
+	
+	public static long intToLong(int a, int b)
+	{ return (((long)a) << 32) | (b & 0xFFFFFFFFL); }
+	
+	public static int intFromLongA(long l)
+	{ return (int)(l >> 32); }
+	
+	public static int intFromLongB(long l)
+	{ return (int)l; }
+	
+	/*
+	
+	public static int shortToInt(int a, int b)
+	{ return 0; }
+	
+	public static short shortFromInt(int l, boolean a)
+	{ return (short)0; }
+	
+	*/
+	
+	public static short byteToShort(int a, int b)
+	{ return (short)(((a & 0xFF) << 8) | (b & 0xFF)); }
+	
+	public static byte byteFromShortA(short s)
+	{ return (byte)((s >> 8) & 0xFF); }
+	
+	public static byte byteFromShortB(short s)
+	{ return (byte)(s & 0xFF); }
 }

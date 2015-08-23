@@ -20,6 +20,7 @@ import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.EntityEvent;
 
 import org.lwjgl.input.Keyboard;
 
@@ -96,7 +97,21 @@ public class FTBUClient extends FTBUCommon
 		FTBUGuiHandler.instance.registerClient();
 	}
 	
-	public void addInfo(FTBUReadmeEvent e)
+	public static void onWorldJoined(LMPlayer p)
+	{
+		ClientNotifications.clear();
+		ThreadLoadBadges.init();
+		Waypoints.load();
+		Minimap.load();
+	}
+	
+	public static void onWorldClosed()
+	{
+		Minimap.save();
+		ClientNotifications.clear();
+	}
+	
+	public void onReadmeEvent(FTBUReadmeEvent e)
 	{
 		FTBUReadmeEvent.ReadmeFile.Category waypoints = e.file.get("waypoints");
 		waypoints.add("You can create waypoints by opening WaypointsGUI (FriendsGUI > You > Waypoits)");
@@ -144,15 +159,6 @@ public class FTBUClient extends FTBUCommon
 		LatCoreMCClient.getMinecraft().effectRenderer.addEffect(fx);
 	}
 	
-	public static void onWorldJoined(LMPlayer p)
-	{
-		ThreadLoadBadges.init();
-		Waypoints.load();
-		Minimap.minimaps.clear();
-		ClientNotifications.perm.clear();
-		ClientNotifications.temp.clear();
-	}
-	
 	public boolean openClientGui(EntityPlayer ep, String mod, int id, NBTTagCompound data)
 	{
 		LMGuiHandler h = LMGuiHandler.Registry.getLMGuiHandler(mod);
@@ -180,5 +186,13 @@ public class FTBUClient extends FTBUCommon
 		t.readTileData(p.func_148857_g());
 		t.readTileClientData(p.func_148857_g());
 		t.onUpdatePacket();
+	}
+	
+	public void chunkChanged(EntityEvent.EnteringChunk e)
+	{
+		super.chunkChanged(e);
+		
+		if(e.entity.worldObj.isRemote && e.entity.getUniqueID().equals(getClientPlayer().getUniqueID()))
+			Minimap.startThread(new ThreadMinimap(e.entity.worldObj, e.newChunkX - 2, e.newChunkZ - 2, 5));
 	}
 }

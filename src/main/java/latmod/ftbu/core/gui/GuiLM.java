@@ -309,11 +309,11 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 		drawTexturedRectD(x, y, z, w, h, u0 * scX, v0 * scY, u1 * scX, v1 * scY);
 	}
 	
-	public void playSoundFX(String s, float pitch)
-	{ mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation(s), pitch)); }
+	public void playSoundFX(ResourceLocation s, float pitch)
+	{ mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(s, pitch)); }
 	
 	public void playClickSound()
-	{ playSoundFX("gui.button.press", 1F); }
+	{ LatCoreMCClient.playClickSound(); }
 	
 	public FontRenderer getFontRenderer()
 	{ return fontRendererObj; }

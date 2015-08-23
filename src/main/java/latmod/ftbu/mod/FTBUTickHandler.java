@@ -2,15 +2,10 @@ package latmod.ftbu.mod;
 
 import static net.minecraft.util.EnumChatFormatting.LIGHT_PURPLE;
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.*;
-import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.backups.Backups;
 import latmod.ftbu.mod.config.FTBUConfig;
-import latmod.ftbu.mod.player.*;
 import net.minecraft.command.server.CommandSaveAll;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.*;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -26,39 +21,7 @@ public class FTBUTickHandler
 	
 	@SubscribeEvent
 	public void onChunkChanged(net.minecraftforge.event.entity.EntityEvent.EnteringChunk e)
-	{
-		if(e.entity instanceof EntityPlayerMP)
-		{
-			EntityPlayerMP ep = (EntityPlayerMP)e.entity;
-			LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
-			if(p == null) return;
-			
-			if(p.lastPos == null) p.lastPos = new EntityPos(ep);
-			
-			else if(!p.lastPos.equalsPos(ep))
-			{
-				if(Claims.isOutsideWorldBorderD(ep.dimension, ep.posX, ep.posZ))
-				{
-					ep.motionX = ep.motionY = ep.motionZ = 0D;
-					IChatComponent warning = new ChatComponentTranslation("ftbu:chunktype." + ChunkType.WORLD_BORDER.lang + ".warning");
-					warning.getChatStyle().setColor(EnumChatFormatting.RED);
-					ep.addChatMessage(warning);
-					
-					if(Claims.isOutsideWorldBorderD(p.lastPos.dim, p.lastPos.x, p.lastPos.z))
-					{
-						LatCoreMC.printChat(ep, "Teleporting to spawn!");
-						FTBUEventHandler.instance.teleportToSpawn(ep);
-					}
-					else LMDimUtils.teleportPlayer(ep, p.lastPos);
-					ep.worldObj.playSoundAtEntity(ep, "random.fizz", 1F, 1F);
-				}
-				
-				p.lastPos.set(ep);
-			}
-			
-			LMNetHelper.sendTo(ep, new MessageAreaUpdate(e.newChunkX, e.newChunkZ, ep.dimension, (byte)1, p));
-		}
-	}
+	{ FTBU.proxy.chunkChanged(e); }
 	
 	@SubscribeEvent
 	public void onWorldTick(TickEvent.WorldTickEvent e)

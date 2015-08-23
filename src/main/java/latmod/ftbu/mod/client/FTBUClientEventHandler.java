@@ -1,4 +1,6 @@
 package latmod.ftbu.mod.client;
+import java.io.File;
+
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.api.IFTBUReloadable;
 import latmod.ftbu.core.client.LatCoreMCClient;
@@ -8,12 +10,14 @@ import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.badges.ThreadLoadBadges;
+import latmod.ftbu.mod.client.minimap.Minimap;
 import latmod.ftbu.mod.player.ChunkType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.event.*;
 import net.minecraft.item.*;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.*;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
@@ -119,6 +123,7 @@ public class FTBUClientEventHandler implements IFTBUReloadable
 	@SubscribeEvent
 	public void onDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent e)
 	{
+		FTBUClient.onWorldClosed();
 		LMWorldClient.inst = null;
 	}
 	
@@ -128,6 +133,30 @@ public class FTBUClientEventHandler implements IFTBUReloadable
 		if(Keyboard.getEventKeyState())
 		{
 			//LatCoreMC.printChat(null, Keyboard.getKeyName(Keyboard.getEventKey()));
+			
+			int key = Keyboard.getEventKey();
+			if(key == Keyboard.KEY_GRAVE)
+			{
+				File f = Minimap.get(FTBU.proxy.getClientPlayer().dimension).exportImage();
+				if(f == null) LatCoreMC.printChat(null, EnumChatFormatting.RED + "Image failed to export!");
+				else
+				{
+					IChatComponent c = new ChatComponentText("Minimap " + f.getName() + " exported!");
+					c.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(f.getName())));
+					c.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, f.getAbsolutePath()));
+					LatCoreMC.printChat(null, c);
+				}
+			}
+			else if(key == Keyboard.KEY_MINUS)
+			{
+				Minimap.zoom.setValue(Minimap.zoom.getI() - 1);
+				LatCoreMCClient.playClickSound();
+			}
+			else if(key == Keyboard.KEY_EQUALS)
+			{
+				Minimap.zoom.setValue(Minimap.zoom.getI() + 1);
+				LatCoreMCClient.playClickSound();
+			}
 		}
 	}
 }

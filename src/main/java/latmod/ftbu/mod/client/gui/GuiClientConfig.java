@@ -40,7 +40,11 @@ public class GuiClientConfig extends GuiLM
 			}
 		};
 		
-		scroll = new SliderLM(this, -16, 20, 16, 0, 10);
+		scroll = new SliderLM(this, -16, 20, 16, 0, 10)
+		{
+			public boolean canMouseScroll()
+			{ return true; }
+		};
 		scroll.isVertical = true;
 		scroll.displayMin = scroll.displayMax = 0;
 		

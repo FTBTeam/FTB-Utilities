@@ -57,7 +57,7 @@ public class FTBUReadmeEvent extends EventLM
 	{
 		FTBUReadmeEvent e = new FTBUReadmeEvent();
 		FTBUConfig.saveReadme(e);
-		FTBU.proxy.addInfo(e);
+		FTBU.proxy.onReadmeEvent(e);
 		
 		e.post();
 		

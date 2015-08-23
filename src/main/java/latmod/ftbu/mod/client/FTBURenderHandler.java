@@ -4,6 +4,7 @@ import java.util.Comparator;
 import latmod.ftbu.core.ICallbackEvent;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.client.model.*;
+import latmod.ftbu.core.gui.GuiLM;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.FTBU;
@@ -12,6 +13,7 @@ import latmod.ftbu.mod.client.minimap.*;
 import latmod.ftbu.mod.config.FTBUConfig;
 import latmod.ftbu.mod.player.ClientNotifications;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
@@ -58,12 +60,51 @@ public class FTBURenderHandler
 	public void renderTick(TickEvent.RenderTickEvent e)
 	{
 		if(e.phase == TickEvent.Phase.START)
-			mc = Minecraft.getMinecraft();
+		{
+			mc = LatCoreMCClient.getMinecraft();
+			ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+			LatCoreMCClient.displayW = sr.getScaledWidth();
+			LatCoreMCClient.displayH = sr.getScaledHeight();
+		}
 		
 		if(mc.theWorld == null) return;
 		
-		if(e.phase == TickEvent.Phase.END)
+		if(e.phase == TickEvent.Phase.END && mc.thePlayer != null)
+		{
+			boolean renderMinimap = Minimap.renderIngame.getI() > 0;
+			
 			ClientNotifications.renderTemp(mc);
+			
+			if(renderMinimap)
+			{
+				Minimap m = Minimap.get(mc.thePlayer.dimension);
+				
+				int rx = 8;
+				
+				if(Minimap.renderIngame.getI() == 1)
+					rx = LatCoreMCClient.displayW - 70;
+				
+				int zoom = Minimap.zoomA[Minimap.zoom.getI()];
+				int zoom2 = zoom / 2;
+				int pcx = MathHelperLM.floor(mc.thePlayer.posX);
+				int pcy = MathHelperLM.floor(mc.thePlayer.posZ);
+				double zoomD = 1D / (double)zoom;
+				double tileSize = 64D * zoomD;
+				
+				GL11.glColor4f(1F, 1F, 1F, 1F);
+				
+				for(int y = -zoom2; y <= zoom2; y++)
+				for(int x = -zoom2; x <= zoom2; x++)
+				{
+					MChunk c = m.loadChunk(x + pcx, y + pcy);
+					
+					double ux = c.rposX * zoomD;
+					double uy = c.rposY * zoomD;
+					c.area.setTexture();
+					GuiLM.drawTexturedRectD(rx + (x + zoom2) * tileSize, 8 + (y + zoom2) * tileSize, 0D, tileSize, tileSize, ux, uy, ux + zoomD, uy + zoomD);
+				}
+			}
+		}
 	}
 	
 	@SubscribeEvent

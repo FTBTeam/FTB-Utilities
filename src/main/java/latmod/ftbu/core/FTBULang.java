@@ -48,6 +48,10 @@ public class FTBULang
 			label_online = get("label.online");
 			label_friend = get("label.friend");
 			label_pfriend = get("label.pfriend");
+			
+			notifications = get("button.notifications");
+			claimed_chunks = get("button.claimed_chunks");
+			notes = get("button.notes");
 		}
 	}
 	

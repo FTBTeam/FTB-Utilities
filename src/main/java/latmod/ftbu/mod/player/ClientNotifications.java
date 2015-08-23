@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.URI;
 
 import latmod.ftbu.core.Notification;
+import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.util.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
@@ -51,6 +52,13 @@ public class ClientNotifications
 		}
 	}
 	
+	public static void clear()
+	{
+		current = null;
+		perm.clear();
+		temp.clear();
+	}
+	
 	public static class TempNotification extends Gui
 	{
 		public final Notification notification;
@@ -71,29 +79,27 @@ public class ClientNotifications
 		{
 			if(time == -1L) time = Minecraft.getSystemTime();
 			
-			if (time > 0L && mc.thePlayer != null)
+			if (time > 0L)
 			{
-				double d0 = (double)(Minecraft.getSystemTime() - time) / (double)notification.timer;
-				
-				if (d0 < 0D || d0 > 1D) { time = 0L; return; }
-				
 				GL11.glViewport(0, 0, mc.displayWidth, mc.displayHeight);
 				GL11.glMatrixMode(GL11.GL_PROJECTION);
 				GL11.glLoadIdentity();
 				GL11.glMatrixMode(GL11.GL_MODELVIEW);
 				GL11.glLoadIdentity();
-				ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-				int displayW = sr.getScaledWidth();
-				int displayH = sr.getScaledHeight();
 				GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 				GL11.glMatrixMode(GL11.GL_PROJECTION);
 				GL11.glLoadIdentity();
-				GL11.glOrtho(0D, displayW, displayH, 0D, 1000D, 3000D);
+				GL11.glOrtho(0D, LatCoreMCClient.displayW, LatCoreMCClient.displayH, 0D, 1000D, 3000D);
 				GL11.glMatrixMode(GL11.GL_MODELVIEW);
 				GL11.glLoadIdentity();
 				GL11.glTranslatef(0F, 0F, -2000F);
 				GL11.glDisable(GL11.GL_DEPTH_TEST);
 				GL11.glDepthMask(false);
+				
+				double d0 = (double)(Minecraft.getSystemTime() - time) / (double)notification.timer;
+				
+				if (d0 < 0D || d0 > 1D) { time = 0L; return; }
+				
 				double d1 = d0 * 2D;
 				
 				if (d1 > 1D) d1 = 2D - d1;
@@ -112,12 +118,12 @@ public class ClientNotifications
 				int width = 20 + Math.max(mc.fontRenderer.getStringWidth(title), mc.fontRenderer.getStringWidth(desc));
 				if(is != null) width += 20;
 				
-				int i = displayW - width;
+				int i = LatCoreMCClient.displayW - width;
 				int j = 0 - (int)(d1 * 36D);
 				GL11.glColor4f(1F, 1F, 1F, 1F);
 				GL11.glDisable(GL11.GL_TEXTURE_2D);
 				GL11.glDisable(GL11.GL_LIGHTING);
-				drawRect(i, j, displayW, j + 32, LMColorUtils.getRGBA(notification.getColor(), 140));
+				drawRect(i, j, LatCoreMCClient.displayW, j + 32, LMColorUtils.getRGBA(notification.getColor(), 140));
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
 				
 				int w = is == null ? 10 : 30;

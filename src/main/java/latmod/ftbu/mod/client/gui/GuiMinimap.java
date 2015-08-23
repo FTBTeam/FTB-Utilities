@@ -171,6 +171,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 			//GuiLM.drawTexturedRectD(, renderY, zLevel, SIZE, SIZE, 0D, 0D, 0D, 0D);
 			GL11.glColor4f(1F, 1F, 1F, 1F);
 			
+			/*
 			for(int z = 0; z < SIZE_CHUNKS; z++)
 			for(int x = 0; x < SIZE_CHUNKS; x++)
 			{
@@ -191,7 +192,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 						ts.addVertex(rx, rz, 0D);
 					}
 				}
-			}
+			}*/
 			
 			ts.addTranslation(-renderX, -renderY, -zLevel);
 			ts.draw();

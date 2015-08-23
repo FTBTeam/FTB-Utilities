@@ -69,6 +69,8 @@ config.property.render_ingame=Render Ingame
 config.property.render_players=Players
 config.property.render_waypoints=Waypoints
 config.property.calc_height=Calculate Height
+config.property.blur=Blur
+config.property.zoom=Zoom
 
 #Misc
 ftbu:owner=Owner: %s

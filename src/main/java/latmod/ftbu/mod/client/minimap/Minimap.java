@@ -38,8 +38,15 @@ public class Minimap
 		}
 	};
 	
-	public static final ClientConfig.Property zoom = new ClientConfig.Property("rendered_chunks", 2, new String[] { "3", "5", "7", "9", "11", "13" }).setRawValues();
 	public static final int[] zoomA = { 3, 5, 7, 9, 11, 13 };
+	public static final ClientConfig.Property zoom = new ClientConfig.Property("zoom", 2, getZoomAValues()).setRawValues();
+	private static final String[] getZoomAValues()
+	{
+		String[] s = new String[zoomA.length];
+		for(int i = 0; i < zoomA.length; i++)
+			s[i] = zoomA[i] + "x";
+		return s;
+	}
 	
 	public static void init()
 	{

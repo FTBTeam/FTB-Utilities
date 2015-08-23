@@ -71,7 +71,7 @@ public class FTBURenderHandler
 		
 		if(e.phase == TickEvent.Phase.END && mc.thePlayer != null)
 		{
-			boolean renderMinimap = Minimap.renderIngame.getI() > 0;
+			boolean renderMinimap = mc.currentScreen == null && Minimap.renderIngame.getI() > 0;
 			
 			ClientNotifications.renderTemp(mc);
 			

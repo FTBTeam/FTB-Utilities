@@ -4,7 +4,6 @@ import java.util.Comparator;
 import latmod.ftbu.core.ICallbackEvent;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.client.model.*;
-import latmod.ftbu.core.gui.GuiLM;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.FTBU;
@@ -13,7 +12,7 @@ import latmod.ftbu.mod.client.minimap.*;
 import latmod.ftbu.mod.config.FTBUConfig;
 import latmod.ftbu.mod.player.ClientNotifications;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
@@ -45,6 +44,7 @@ public class FTBURenderHandler
 	private static final FastList<String> stringList = new FastList<String>();
 	public static final TexturedCubeRenderer worldBorderRenderer = new TexturedCubeRenderer(true);
 	private static final CubeRenderer beaconRenderer = new CubeRenderer();
+	private static final MRenderer mapRenderer = new MRenderer();
 	
 	@SubscribeEvent
 	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
@@ -67,43 +67,26 @@ public class FTBURenderHandler
 			LatCoreMCClient.displayH = sr.getScaledHeight();
 		}
 		
-		if(mc.theWorld == null) return;
-		
-		if(e.phase == TickEvent.Phase.END && mc.thePlayer != null)
+		if(e.phase == TickEvent.Phase.END && mc.theWorld != null && mc.thePlayer != null)
 		{
-			boolean renderMinimap = mc.currentScreen == null && Minimap.renderIngame.getI() > 0;
+			if(Minimap.renderIngame.getI() > 0 && (mc.currentScreen == null || mc.currentScreen instanceof GuiChat))
+			{
+				mapRenderer.mc = mc;
+				mapRenderer.size = Minimap.sizeA[Minimap.size.getI()];
+				mapRenderer.renderX = (Minimap.renderIngame.getI() == 1) ? LatCoreMCClient.displayW - (mapRenderer.size + 3) : 4;
+				mapRenderer.renderY = 4;
+				mapRenderer.tiles = Minimap.zoomA[Minimap.zoom.getI()];
+				mapRenderer.startX = MathHelperLM.chunk(mc.thePlayer.posX) - MathHelperLM.floor(mapRenderer.tiles / 2D);
+				mapRenderer.startY = MathHelperLM.chunk(mc.thePlayer.posZ) - MathHelperLM.floor(mapRenderer.tiles / 2D);
+				
+				mapRenderer.renderClaims = Minimap.renderClaimedChunks.getB();
+				mapRenderer.renderGrid = Minimap.renderGrid.getB();
+				mapRenderer.renderPlayers = Minimap.renderPlayers.getB();
+				mapRenderer.renderWaypoints = Minimap.renderWaypoints.getB();
+				mapRenderer.render();
+			}
 			
 			ClientNotifications.renderTemp(mc);
-			
-			if(renderMinimap)
-			{
-				Minimap m = Minimap.get(mc.thePlayer.dimension);
-				
-				int rx = 8;
-				
-				if(Minimap.renderIngame.getI() == 1)
-					rx = LatCoreMCClient.displayW - 70;
-				
-				int zoom = Minimap.zoomA[Minimap.zoom.getI()];
-				int zoom2 = zoom / 2;
-				int pcx = MathHelperLM.floor(mc.thePlayer.posX);
-				int pcy = MathHelperLM.floor(mc.thePlayer.posZ);
-				double zoomD = 1D / (double)zoom;
-				double tileSize = 64D * zoomD;
-				
-				GL11.glColor4f(1F, 1F, 1F, 1F);
-				
-				for(int y = -zoom2; y <= zoom2; y++)
-				for(int x = -zoom2; x <= zoom2; x++)
-				{
-					MChunk c = m.loadChunk(x + pcx, y + pcy);
-					
-					double ux = c.rposX * zoomD;
-					double uy = c.rposY * zoomD;
-					c.area.setTexture();
-					GuiLM.drawTexturedRectD(rx + (x + zoom2) * tileSize, 8 + (y + zoom2) * tileSize, 0D, tileSize, tileSize, ux, uy, ux + zoomD, uy + zoomD);
-				}
-			}
 		}
 	}
 	

@@ -1,18 +1,21 @@
 package latmod.ftbu.mod.client.minimap;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
+import javax.imageio.ImageIO;
+
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.util.*;
+import latmod.ftbu.core.world.LMWorldClient;
 
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.*;
 
 public class MArea
 {
-	public static final int size_c = 128;
+	public static final int size_c = 32;
 	public static final int size = size_c * 16;
 	public static final int size_sq = size * size;
 	
@@ -20,9 +23,12 @@ public class MArea
 	public final int posX, posY;
 	public final FastMap<Short, MChunk> chunks;
 	public final long index;
+	public final File file;
 	
 	public boolean isDirty = true;
 	public int textureID = -1;
+	public ThreadReloadArea thread = null;
+	public ByteBuffer pixelBuffer = null;
 	
 	public MArea(Minimap m, int x, int y)
 	{
@@ -31,6 +37,8 @@ public class MArea
 		posY = y;
 		chunks = new FastMap<Short, MChunk>();
 		index = Bits.intToLong(posX, posY);
+		file = new File(LatCoreMC.latmodFolder, "client/" + LMWorldClient.inst.worldIDS + "/minimap/" + minimap.dim + "," + posX + "," + posY + ".png");
+		load();
 	}
 	
 	public static long getIndexC(int cx, int cy)
@@ -42,25 +50,8 @@ public class MArea
 		return Bits.intToLong(x, y);
 	}
 	
-	public static long getIndexB(int bx, int by)
-	{ return getIndexC(MathHelperLM.chunk(bx), MathHelperLM.chunk(by)); }
-	
-	public BufferedImage generateImage()
-	{
-		BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
-		int[] pixels = new int[size_sq];
-		Arrays.fill(pixels, 0xFF000000);
-		
-		image.setRGB(0, 0, size, size, pixels, 0, size);
-		for(MChunk c : chunks.values)
-		{
-			int[] pixels1 = new int[256];
-			Arrays.fill(pixels1, LMColorUtils.getRGBA(LatCoreMC.rand.nextInt(), 255));
-			image.setRGB(c.rposX * 16, c.rposY * 16, 16, 16, c.pixels, 0, 16);
-		}
-		
-		return image;
-	}
+	public static long getIndexB(double x, double y)
+	{ return getIndexC(MathHelperLM.chunk(x), MathHelperLM.chunk(y)); }
 	
 	public void setTexture()
 	{
@@ -71,28 +62,98 @@ public class MArea
 		
 		if(isDirty)
 		{
+			if(thread == null) thread = null;
+			thread = new ThreadReloadArea(this);
+			thread.start();
 			isDirty = false;
-			
-			ByteBuffer dataBuffer = BufferUtils.createByteBuffer(size_sq * 4);
-			
-			BufferedImage image = generateImage();
-			int pixels[] = image.getRGB(0, 0, size, size, null, 0, size);
-			
-			for(int i = 0; i < size_sq; i++)
-			{
-				dataBuffer.put((byte)LMColorUtils.getRed(pixels[i]));
-				dataBuffer.put((byte)LMColorUtils.getGreen(pixels[i]));
-				dataBuffer.put((byte)LMColorUtils.getBlue(pixels[i]));
-				dataBuffer.put((byte)255);
-			}
-			
-			dataBuffer.flip();
-			
+		}
+		
+		if(pixelBuffer != null)
+		{
 			int filter = Minimap.blur.getB() ? GL11.GL_LINEAR : GL11.GL_NEAREST;
-			
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, filter);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, filter);
-			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, size, size, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, dataBuffer);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, size, size, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, pixelBuffer);
+			pixelBuffer = null;
+			thread = null;
 		}
+	}
+	
+	public BufferedImage toImage()
+	{
+		BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+		int[] pixels = new int[size_sq];
+		
+		image.setRGB(0, 0, size, size, pixels, 0, size);
+		
+		for(int i = 0; i < chunks.values.size(); i++)
+		{
+			MChunk c = chunks.values.get(i);
+			int[] pixels1 = new int[256];
+			Arrays.fill(pixels1, LMColorUtils.getRGBA(LatCoreMC.rand.nextInt(), 255));
+			image.setRGB(c.rposX * 16, c.rposY * 16, 16, 16, c.pixels, 0, 16);
+		}
+		
+		return image;
+	}
+	
+	public void load()
+	{
+		if(file.exists())
+		{
+			Thread thread = new Thread()
+			{
+				public void run()
+				{
+					try
+					{
+						BufferedImage image = ImageIO.read(file);
+						if(image != null && image.getWidth() == size && image.getHeight() == size)
+						{
+							for(int y = 0; y < size_c; y++)
+							for(int x = 0; x < size_c; x++)
+							{
+								int[] pixelsTemp = image.getRGB(x * 16, y * 16, 16, 16, null, 0, 16);
+								
+								for(int i = 0; i < 256; i++)
+								{
+									if(pixelsTemp[i] != 0)
+									{
+										MChunk c = minimap.loadChunk(posX * size_c + x, posY * size_c + y);
+										System.arraycopy(pixelsTemp, 0, c.pixels, 0, 256);
+										break;
+									}
+								}
+							}
+						}
+					}
+					catch(Exception e)
+					{ e.printStackTrace(); }
+				}
+			};
+			
+			thread.start();
+		}
+	}
+
+	public void save()
+	{
+		Thread thread = new Thread()
+		{
+			public void run()
+			{
+				try
+				{
+					BufferedImage image = toImage();
+					ImageIO.write(image, "PNG", LMFileUtils.newFile(file));
+				}
+				catch(Exception e)
+				{ e.printStackTrace(); }
+			}
+		};
+		
+		thread.start();
 	}
 }

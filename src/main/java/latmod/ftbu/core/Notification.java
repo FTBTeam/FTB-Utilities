@@ -59,7 +59,7 @@ public class Notification
 	{ return o != null && (o == this || o.toString().equals(toString())); }
 	
 	public int hashCode()
-	{ return ID.hashCode(); }
+	{ return String.valueOf(ID).hashCode(); }
 	
 	public String toString()
 	{ return ID; }

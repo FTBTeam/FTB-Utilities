@@ -1,23 +1,22 @@
 package latmod.ftbu.mod.client;
-import java.io.File;
-
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.api.IFTBUReloadable;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.inv.*;
+import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.paint.IPainterItem;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.badges.ThreadLoadBadges;
-import latmod.ftbu.mod.client.minimap.Minimap;
-import latmod.ftbu.mod.player.ChunkType;
+import latmod.ftbu.mod.client.minimap.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.event.*;
 import net.minecraft.item.*;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
@@ -84,7 +83,6 @@ public class FTBUClientEventHandler implements IFTBUReloadable
 	@SubscribeEvent
 	public void onDrawDebugText(RenderGameOverlayEvent.Text e)
 	{
-		boolean shift = FTBU.proxy.isShiftDown();
 		Minecraft mc = LatCoreMCClient.getMinecraft();
 		
 		// Some ideas around this //
@@ -95,15 +93,6 @@ public class FTBUClientEventHandler implements IFTBUReloadable
 			
 			if(FTBUClient.displayDebugInfo.getB())
 				e.right.add(mc.debug);
-		}
-		
-		if(LMWorldClient.inst != null)
-		{
-			if(LMWorldClient.inst.clientPlayer != null)
-			{
-				//TODO: ClientConfig
-				ChunkType.getMessage(mc.theWorld.provider.dimensionId, MathHelperLM.chunk(mc.thePlayer.posX), MathHelperLM.chunk(mc.thePlayer.posZ), e.right, shift);
-			}
 		}
 		
 		if(mc.gameSettings.showDebugInfo)
@@ -128,34 +117,68 @@ public class FTBUClientEventHandler implements IFTBUReloadable
 	}
 	
 	@SubscribeEvent
+	public void renderChunk(RenderWorldEvent.Pre e)
+	{
+		if(e.pass == 0)
+		{
+			int cx = MathHelperLM.chunk(e.renderer.posX);
+			int cz = MathHelperLM.chunk(e.renderer.posZ);
+			World w = LatCoreMCClient.getMinecraft().theWorld;
+			MChunk c = Minimap.get(w.provider.dimensionId).loadChunk(cx, cz);
+			c.reload(w);
+			LMNetHelper.sendToServer(new MessageAreaRequest(cx, cz, w.provider.dimensionId, 1));
+		}
+	}
+	
+	@SubscribeEvent
 	public void keyEvent(InputEvent.KeyInputEvent e)
 	{
-		if(Keyboard.getEventKeyState())
+		if(LatCoreMC.isDevEnv && Keyboard.getEventKeyState())
 		{
 			//LatCoreMC.printChat(null, Keyboard.getKeyName(Keyboard.getEventKey()));
 			
 			int key = Keyboard.getEventKey();
 			if(key == Keyboard.KEY_GRAVE)
 			{
-				File f = Minimap.get(FTBU.proxy.getClientPlayer().dimension).exportImage();
-				if(f == null) LatCoreMC.printChat(null, EnumChatFormatting.RED + "Image failed to export!");
-				else
-				{
-					IChatComponent c = new ChatComponentText("Minimap " + f.getName() + " exported!");
-					c.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(f.getName())));
-					c.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, f.getAbsolutePath()));
-					LatCoreMC.printChat(null, c);
-				}
+				Minimap.save();
 			}
 			else if(key == Keyboard.KEY_MINUS)
 			{
-				Minimap.zoom.setValue(Minimap.zoom.getI() - 1);
+				if(GuiScreen.isShiftKeyDown())
+				{
+					int i = Minimap.size.getI() - 1;
+					if(i >= 0 && i < Minimap.size.values.length)
+						Minimap.size.setValue(i);
+				}
+				else
+				{
+					int i = Minimap.zoom.getI() + 1;
+					if(i >= 0 && i < Minimap.zoom.values.length)
+						Minimap.zoom.setValue(i);
+				}
+				
 				LatCoreMCClient.playClickSound();
 			}
 			else if(key == Keyboard.KEY_EQUALS)
 			{
-				Minimap.zoom.setValue(Minimap.zoom.getI() + 1);
+				if(GuiScreen.isShiftKeyDown())
+				{
+					int i = Minimap.size.getI() + 1;
+					if(i >= 0 && i < Minimap.size.values.length)
+						Minimap.size.setValue(i);
+				}
+				else
+				{
+					int i = Minimap.zoom.getI() - 1;
+					if(i >= 0 && i < Minimap.zoom.values.length)
+						Minimap.zoom.setValue(i);
+				}
+				
 				LatCoreMCClient.playClickSound();
+			}
+			else if(key == Keyboard.KEY_M)
+			{
+				Minimap.renderIngame.onClicked();
 			}
 		}
 	}

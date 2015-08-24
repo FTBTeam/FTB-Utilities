@@ -5,6 +5,7 @@ import java.net.URI;
 
 import latmod.ftbu.core.Notification;
 import latmod.ftbu.core.client.LatCoreMCClient;
+import latmod.ftbu.core.gui.GuiLM;
 import latmod.ftbu.core.util.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
@@ -43,13 +44,16 @@ public class ClientNotifications
 	public static void add(Notification n)
 	{
 		if(n == null) return;
-		//temp.remove(n);
-		temp.add(new TempNotification(n));
-		if(!n.isTemp())
+		if(n.ID != null)
 		{
-			perm.remove(n.toString());
-			perm.add(new PermNotification(n));
+			temp.removeObj(n.ID);
+			perm.removeObj(n.ID);
+			if(current != null && current.notification.ID != null && current.notification.ID.equals(n.ID))
+				current = null;
 		}
+		
+		temp.add(new TempNotification(n));
+		if(!n.isTemp()) perm.add(new PermNotification(n));
 	}
 	
 	public static void clear()
@@ -123,7 +127,7 @@ public class ClientNotifications
 				GL11.glColor4f(1F, 1F, 1F, 1F);
 				GL11.glDisable(GL11.GL_TEXTURE_2D);
 				GL11.glDisable(GL11.GL_LIGHTING);
-				drawRect(i, j, LatCoreMCClient.displayW, j + 32, LMColorUtils.getRGBA(notification.getColor(), 140));
+				GuiLM.drawRect(i, j, LatCoreMCClient.displayW, j + 32, LMColorUtils.getRGBA(notification.getColor(), 140));
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
 				
 				int w = is == null ? 10 : 30;

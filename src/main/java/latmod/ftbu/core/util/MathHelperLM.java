@@ -410,4 +410,10 @@ public class MathHelperLM
 			ai[i] = min + i;
 		return ai;
 	}
+	
+	public static double wrap(double i, double n)
+	{ i = i % n; if(i < 0) i += n; return i; }
+	
+	public static int wrap(int i, int n)
+	{ i = i % n; if(i < 0) i += n; return i; }
 }

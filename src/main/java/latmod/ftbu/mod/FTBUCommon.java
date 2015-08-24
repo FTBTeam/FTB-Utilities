@@ -76,7 +76,7 @@ public class FTBUCommon // FTBUClient
 					ep.motionX = ep.motionY = ep.motionZ = 0D;
 					IChatComponent warning = new ChatComponentTranslation("ftbu:chunktype." + ChunkType.WORLD_BORDER.lang + ".warning");
 					warning.getChatStyle().setColor(EnumChatFormatting.RED);
-					ep.addChatMessage(warning);
+					LatCoreMC.notifyPlayer(ep, new Notification("world_border", warning, 3000));
 					
 					if(Claims.isOutsideWorldBorderD(p.lastPos.dim, p.lastPos.x, p.lastPos.z))
 					{
@@ -90,7 +90,25 @@ public class FTBUCommon // FTBUClient
 				p.lastPos.set(ep);
 			}
 			
-			LMNetHelper.sendTo(ep, new MessageAreaUpdate(e.newChunkX, e.newChunkZ, ep.dimension, (byte)1, p));
+			int currentChunkType = ChunkType.getChunkTypeI(ep.dimension, e.newChunkX, e.newChunkZ, p);
+			
+			if(p.lastChunkType == -99 || p.lastChunkType != currentChunkType)
+			{
+				p.lastChunkType = currentChunkType;
+				
+				ChunkType type = ChunkType.getChunkTypeFromI(currentChunkType, p);
+				IChatComponent msg = null;
+				
+				if(type.isClaimed())
+					msg = new ChatComponentText("" + LMWorldServer.inst.getPlayer(currentChunkType));
+				else
+					msg = new ChatComponentTranslation("ftbu:chunktype." + type.lang);
+				
+				msg.getChatStyle().setColor(type.chatColor);
+				
+				LatCoreMC.notifyPlayer(ep, new Notification("chunk_changed", msg, 3000));
+				LMNetHelper.sendTo(ep, new MessageAreaUpdate(e.newChunkX, e.newChunkZ, ep.dimension, currentChunkType));
+			}
 		}
 	}
 }

@@ -37,7 +37,7 @@ public abstract class LMWorld<P extends LMPlayer>
 	public P getPlayer(Object o)
 	{
 		if(o == null || o instanceof FakePlayer) return null;
-		else if(o instanceof Integer || o instanceof LMPlayer)
+		else if(o instanceof Number || o instanceof LMPlayer)
 		{
 			int h = o.hashCode();
 			if(h <= 0) return null;

@@ -27,6 +27,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	private String playerName;
 	private EntityPlayerMP entityPlayer = null;
 	private int maxClaimPower = -1;
+	public int lastChunkType = -99;
 	
 	public LMPlayerServer(LMWorldServer w, int i, GameProfile gp)
 	{
@@ -64,10 +65,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		if(updateClient)
 		{
 			for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers())
-			{
-				LatCoreMC.printChat(null, ep == getPlayer());
-				LMNetHelper.sendTo(ep, new MessageLMPlayerUpdate(this, ep.getUniqueID().equals(getUUID())));
-			}
+				LMNetHelper.sendTo(ep, new MessageLMPlayerUpdate(this, ep == getPlayer()));
 		}
 	}
 	

@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.world.LMPlayerServer;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.minimap.Minimap;
-import latmod.ftbu.mod.player.*;
+import latmod.ftbu.mod.player.ChunkType;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 
@@ -19,16 +19,16 @@ public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate> implements I
 	{
 		chunkX = x; chunkZ = z; dim = d; size = s; types = new int[s * s];
 		for(int z1 = 0; z1 < s; z1++) for(int x1 = 0; x1 < s; x1++)
-		{
-			ChunkType type = ChunkType.get(d, x + x1, z + z1, p);
-			int t = -type.ordinal();
-			if(type.isClaimed())
-			{
-				ClaimedChunk c = Claims.get(dim, x + x1, z + z1);
-				if(c != null) t = c.claims.owner.playerID;
-			}
-			types[x1 + z1 * s] = t;
-		}
+			types[x1 + z1 * s] = ChunkType.getChunkTypeI(dim, x + x1, z + z1, p);
+	}
+	
+	public MessageAreaUpdate(int x, int z, int d, int type)
+	{
+		chunkX = x;
+		chunkZ = z;
+		dim = d;
+		size = 1;
+		types = new int[] { type };
 	}
 	
 	public void fromBytes(ByteBuf bb)

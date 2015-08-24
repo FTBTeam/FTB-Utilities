@@ -5,7 +5,6 @@ import latmod.ftbu.core.OtherMods;
 import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.FTBU;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -320,9 +319,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	public static void drawPlayerHead(String username, double x, double y, double w, double h, double z)
 	{
-		Minecraft mc = LatCoreMCClient.getMinecraft();
-		if(mc.currentScreen instanceof GuiLM) ((GuiLM)mc.currentScreen).setTexture(LatCoreMCClient.getSkinTexture(username));
-		else mc.getTextureManager().bindTexture(LatCoreMCClient.getSkinTexture(username));
+		LatCoreMCClient.setTexture(LatCoreMCClient.getSkinTexture(username));
 		
 		Tessellator tessellator = Tessellator.instance;
 		

@@ -1,11 +1,8 @@
 package latmod.ftbu.mod.player;
 
-import java.util.List;
-
 import latmod.ftbu.core.util.MathHelperLM;
-import latmod.ftbu.core.world.LMPlayerServer;
+import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.client.minimap.*;
 import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.WorldServer;
@@ -60,8 +57,8 @@ public enum ChunkType
 		WorldServer w = DimensionManager.getWorld(dim);
 		if(w != null && !w.getChunkProvider().chunkExists(cx, cz)) return UNLOADED;
 		
-		if(Claims.isInSpawn(dim, cx, cz)) return SPAWN;
 		if(Claims.isOutsideWorldBorder(dim, cx, cz)) return WORLD_BORDER;
+		if(Claims.isInSpawn(dim, cx, cz)) return SPAWN;
 		ClaimedChunk c = Claims.get(dim, cx, cz);
 		if(c == null) return WILDERNESS;
 		if(p == null) return CLAIMED_OTHER;
@@ -73,23 +70,29 @@ public enum ChunkType
 	public static ChunkType getD(int dim, double x, double z, LMPlayerServer p)
 	{ return get(dim, MathHelperLM.chunk(x), MathHelperLM.chunk(z), p); }
 	
-	@SideOnly(Side.CLIENT)
-	public static void getMessage(int dim, int cx, int cz, List<String> l, boolean shift)
+	public static int getChunkTypeI(int dim, int cx, int cz, LMPlayerServer p)
 	{
-		MChunk mc = Minimap.get(dim).getChunk(cx, cz);
-		
-		if(mc != null)
+		ChunkType type = ChunkType.get(dim, cx, cz, p);
+		if(type.isClaimed())
 		{
-			ChunkType t = mc.type;
-			
-			if(t == UNLOADED || t == SPAWN || t == WILDERNESS || t == WORLD_BORDER) l.add(t.chatColor + t.getIDS());
-			else
-			{
-				l.add(t.chatColor + mc.owner.getName());
-				//l.add(t.chatColor + t.getIDS());
-				//if(shift && mc.owner != null)
-				//	l.add(mc.owner.getName());
-			}
+			ClaimedChunk c = Claims.get(dim, cx, cz);
+			if(c != null) return c.claims.owner.playerID;
 		}
+		
+		return -type.ordinal();
+	}
+	
+	public static ChunkType getChunkTypeFromI(int i, LMPlayerServer o)
+	{
+		if(i < 0) return ChunkType.VALUES[-i];
+		LMPlayerServer p = LMWorldServer.inst.getPlayer(i);
+		if(o != null)
+		{
+			if(p == null) return CLAIMED_OTHER;
+			else if(o.equalsPlayer(p)) return CLAIMED_SELF;
+			else if(o.isFriend(p)) return CLAIMED_FRIEND;
+			else return CLAIMED_OTHER;
+		}
+		return ChunkType.WILDERNESS;
 	}
 }

@@ -192,7 +192,12 @@ public class FTBUClient extends FTBUCommon
 	{
 		super.chunkChanged(e);
 		
-		if(e.entity.worldObj.isRemote && e.entity.getUniqueID().equals(getClientPlayer().getUniqueID()))
-			Minimap.startThread(new ThreadMinimap(e.entity.worldObj, e.newChunkX - 2, e.newChunkZ - 2, 5));
+		/*
+		if(e.entity.worldObj.isRemote && Minimap.renderIngame.getB() && e.entity.getUniqueID().equals(getClientPlayer().getUniqueID()))
+		{
+			int rd = Math.max(5, LatCoreMCClient.getMinecraft().gameSettings.renderDistanceChunks);
+			Minimap m = Minimap.get(e.entity.dimension);
+			m.reloadArea(e.entity.worldObj, e.newChunkX - MathHelperLM.floor(rd / 2D), e.newChunkZ - MathHelperLM.floor(rd / 2D), rd, rd);
+		}*/
 	}
 }

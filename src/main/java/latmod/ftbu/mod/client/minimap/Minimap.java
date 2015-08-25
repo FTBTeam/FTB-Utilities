@@ -1,8 +1,15 @@
 package latmod.ftbu.mod.client.minimap;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+
+import javax.imageio.ImageIO;
+
+import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.client.ClientConfig;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.*;
+import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.player.ChunkType;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.*;
@@ -49,6 +56,7 @@ public class Minimap
 	
 	public static final ClientConfig.Property renderGrid = new ClientConfig.Property("render_grid", true);
 	public static final ClientConfig.Property renderClaimedChunks = new ClientConfig.Property("render_claimed_chunks", true);
+	public static final ClientConfig.Property customMapColors = new ClientConfig.Property("custom_map_colors", true);
 	
 	public static void init()
 	{
@@ -61,6 +69,7 @@ public class Minimap
 		clientConfig.add(size);
 		clientConfig.add(renderGrid);
 		clientConfig.add(renderClaimedChunks);
+		clientConfig.add(customMapColors);
 		ClientConfig.Registry.add(clientConfig);
 		get(0);
 	}
@@ -116,6 +125,60 @@ public class Minimap
 		for(int cx = x; cx < x + w; cx++)
 			loadChunk(cx, cy).reload(world);
 		if(w == h) LMNetHelper.sendToServer(new MessageAreaRequest(x - 1, y - 1, world.provider.dimensionId, w + 2));
+	}
+	
+	public File exportImage()
+	{
+		if(areas.isEmpty()) return null;
+		
+		try
+		{
+			int ms = Integer.MAX_VALUE;
+			int minX = ms;
+			int minY = ms;
+			int maxX = -ms;
+			int maxY = -ms;
+			
+			for(MArea a : areas) for(MChunk c : a.chunks)
+			{
+				for(int i = 0; i < c.pixels.length; i++)
+				{
+					if(c.pixels[i] != 0)
+					{
+						if(c.posX < minX) minX = c.posX;
+						if(c.posY < minY) minY = c.posY;
+						if(c.posX > maxX) maxX = c.posX;
+						if(c.posY > maxY) maxY = c.posY;
+						continue;
+					}
+				}
+			}
+			
+			if(minX == ms || minY == ms || maxX == -ms || maxY == -ms)
+				return null;
+			
+			long w = (maxX - minX + 1L) * 16L;
+			long h = (maxY - minY + 1L) * 16L;
+			
+			if(w <= 0L || h <= 0L || w > Integer.MAX_VALUE || h > Integer.MAX_VALUE) return null;
+			
+			PixelBuffer image = new PixelBuffer((int)w, (int)h);
+			
+			for(MArea a : areas) for(MChunk c : a.chunks)
+			{
+				int x = (c.posX - minX) * 16;
+				int y = (c.posY - minY) * 16;
+				if(x > 0 && y > 0) image.setRGB(x, y, 16, 16, c.pixels, 0, 16);
+			}
+			
+			File file = new File(LatCoreMC.latmodFolder, "client/" + LMWorldClient.inst.worldIDS + "/minimap_" + dim + ".png");
+			ImageIO.write(image.toImage(BufferedImage.TYPE_INT_RGB), "PNG", file);
+			return file;
+		}
+		catch(Exception e)
+		{ e.printStackTrace(); }
+		
+		return null;
 	}
 	
 	// Static //

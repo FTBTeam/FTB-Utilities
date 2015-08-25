@@ -1,5 +1,7 @@
 package latmod.ftbu.mod.client.minimap;
 
+import java.util.Arrays;
+
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldClient;
 import net.minecraft.block.Block;
@@ -12,10 +14,14 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class ThreadReloadChunk extends Thread
 {
+	private static final short defHeight = -1;
+	
 	public final World worldObj;
 	public final MChunk chunk;
-	public final boolean calcHeight;
+	public final boolean calcHeight, customColors;
 	public Chunk chunkMC;
+	public final short[] heightMap;
+	public short maxHeight = 0;
 	
 	public ThreadReloadChunk(World w, MChunk c)
 	{
@@ -24,6 +30,9 @@ public class ThreadReloadChunk extends Thread
 		worldObj = w;
 		chunk = c;
 		calcHeight = Minimap.calcHeight.getB();
+		customColors = Minimap.customMapColors.getB();
+		heightMap = calcHeight ? new short[256] : null;
+		if(calcHeight) Arrays.fill(heightMap, defHeight);
 	}
 	
 	public void run()
@@ -33,6 +42,7 @@ public class ThreadReloadChunk extends Thread
 			if(LMWorldClient.inst != null && worldObj.getChunkProvider().chunkExists(chunk.posX, chunk.posY))
 			{
 				chunkMC = worldObj.getChunkFromChunkCoords(chunk.posX, chunk.posY);
+				maxHeight = (short)Math.max(255, chunkMC.getTopFilledSegment() + 15);
 				
 				int x = chunk.posX * 16;
 				int y = chunk.posY * 16;
@@ -54,8 +64,8 @@ public class ThreadReloadChunk extends Thread
 	
 	public int getBlockColor(int bx, int bz)
 	{
-		int by = getTopY(bx, bz);
-		if(by > 255 || by < 0) return 0xFF000000;
+		short by = getTopY(bx, bz);
+		if(by == defHeight || by > 255) return 0;
 		
 		Block b = worldObj.getBlock(bx, by, bz);
 		
@@ -68,52 +78,83 @@ public class ThreadReloadChunk extends Thread
 			
 			if(calcHeight)
 			{
-				int d = 0;
+				short bw = getTopY(bx - 1, bz);
+				short be = getTopY(bx + 1, bz);
+				short bn = getTopY(bx, bz - 1);
+				short bs = getTopY(bx, bz + 1);
 				
-				if(getTopY(bx - 1, bz) < by || getTopY(bx, bz + 1) < by)
-					d = 20;
-				
-				if(getTopY(bx + 1, bz) < by || getTopY(bx, bz - 1) < by)
-					d = -20;
-				
-				red = MathHelperLM.clampInt(red + d, 0, 255);
-				green = MathHelperLM.clampInt(green + d, 0, 255);
-				blue = MathHelperLM.clampInt(blue + d, 0, 255);
+				if((bw != defHeight && bw < by) || (bn != defHeight && bn < by))
+				{
+					red = MathHelperLM.clampInt(red + 20, 0, 255);
+					green = MathHelperLM.clampInt(green + 20, 0, 255);
+					blue = MathHelperLM.clampInt(blue + 20, 0, 255);
+				}
+				else if((be != defHeight && be < by) || (bs != defHeight && bs < by))
+				{
+					red = MathHelperLM.clampInt(red - 20, 0, 255);
+					green = MathHelperLM.clampInt(green - 20, 0, 255);
+					blue = MathHelperLM.clampInt(blue - 20, 0, 255);
+				}
 			}
 			
 			return LMColorUtils.getRGBA(red, green, blue, 255);
 		}
 		
-		return 0xFF000000;
+		return 0;
 	}
 	
-	private int getTopY(int bx, int bz)
+	private short getTopY(int bx, int bz)
 	{
 		int x = MathHelperLM.wrap(bx, 16);
 		int z = MathHelperLM.wrap(bz, 16);
 		
-		for(int y = chunkMC.getTopFilledSegment() + 15; y > 0; --y)
+		Chunk c = chunkMC;
+		short max = maxHeight;
+		boolean mapValue = false;
+		
+		if(calcHeight)
 		{
-			Block block = chunkMC.getBlock(x, y, z);
-			if(!block.isAir(worldObj, bx, y, bz))
-				return y;
+			int cx = MathHelperLM.chunk(bx);
+			int cz = MathHelperLM.chunk(bz);
+			
+			if(cx == chunk.posX && cz == chunk.posY)
+			{
+				mapValue = true;
+				if(heightMap[x + z * 16] != defHeight)
+					return heightMap[x + z * 16];
+			}
+			else
+			{
+				c = worldObj.getChunkFromBlockCoords(bx, bz);
+				max = (short)Math.max(255, c.getTopFilledSegment() + 15);
+			}
 		}
-
-		return -1;
+		
+		
+		for(short y = max; y > 0; --y)
+		{
+			Block block = c.getBlock(x, y, z);
+			if(block != Blocks.tallgrass && !block.isAir(worldObj, bx, y, bz))
+			{
+				if(mapValue) heightMap[x + z * 16] = y;
+				return y;
+			}
+		}
+		
+		return defHeight;
 	}
 	
 	private int getBlockColor(int x, int y, int z, Block b)
 	{
 		if(b == Blocks.sandstone) return MapColor.sandColor.colorValue;
 		else if(b == Blocks.fire) return MapColor.redColor.colorValue;
+		else if(b == Blocks.yellow_flower) return MapColor.yellowColor.colorValue;
+		else if(b == Blocks.lava) return MapColor.adobeColor.colorValue;
+		else if(b == Blocks.end_stone) return MapColor.sandColor.colorValue;
 		
 		int m = worldObj.getBlockMetadata(x, y, z);
 		
-		if(b == Blocks.yellow_flower)
-			return MapColor.yellowColor.colorValue;
-		else if(b == Blocks.lava)
-			return MapColor.adobeColor.colorValue;
-		else if(b == Blocks.red_flower)
+		if(b == Blocks.red_flower)
 		{
 			if(m == 0) return MapColor.yellowColor.colorValue;
 			else if(m == 1) return MapColor.lightBlueColor.colorValue;
@@ -125,8 +166,11 @@ public class ThreadReloadChunk extends Thread
 			else if(m == 7) return MapColor.pinkColor.colorValue;
 			else if(m == 8) return MapColor.silverColor.colorValue;
 		}
-		else if(b == Blocks.grass && m == 0)
-			return b.colorMultiplier(worldObj, x, y, z);
+		
+		if(customColors)
+		{
+			if(b == Blocks.grass && m == 0) return b.colorMultiplier(worldObj, x, y, z);
+		}
 		
 		return b.getMapColor(m).colorValue;
 	}

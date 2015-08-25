@@ -94,17 +94,6 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		l.add(buttonRefresh);
 		l.add(buttonClose);
 		l.add(buttonSafe);
-		
-		l.add(new ButtonLM(this, 150, 6, 16, 16)
-		{
-			public void onButtonPressed(int b)
-			{
-				title = "Export minimap";
-				gui.playClickSound();
-				
-				
-			}
-		});
 	}
 	
 	public void drawBackground()

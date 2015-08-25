@@ -1,6 +1,7 @@
 package latmod.ftbu.mod.client;
+import java.io.File;
+
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.api.IFTBUReloadable;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.inv.*;
 import latmod.ftbu.core.net.*;
@@ -8,14 +9,15 @@ import latmod.ftbu.core.paint.IPainterItem;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.client.badges.ThreadLoadBadges;
 import latmod.ftbu.mod.client.minimap.*;
+import latmod.ftbu.mod.player.ClientNotifications;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.command.ICommandSender;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.init.Items;
 import net.minecraft.item.*;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -28,7 +30,7 @@ import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
-public class FTBUClientEventHandler implements IFTBUReloadable
+public class FTBUClientEventHandler
 {
 	public static final FTBUClientEventHandler instance = new FTBUClientEventHandler();
 	
@@ -73,11 +75,6 @@ public class FTBUClientEventHandler implements IFTBUReloadable
 		}
 		else if(e.map.getTextureType() == 1)
 			LatCoreMCClient.unknownItemIcon = e.map.registerIcon(FTBU.mod.assets + "unknown");
-	}
-	
-	public void onReloaded(Side s, ICommandSender sender) throws Exception
-	{
-		if(s.isClient()) ThreadLoadBadges.init();
 	}
 	
 	@SubscribeEvent
@@ -179,6 +176,24 @@ public class FTBUClientEventHandler implements IFTBUReloadable
 			else if(key == Keyboard.KEY_M)
 			{
 				Minimap.renderIngame.onClicked();
+			}
+			else if(key == Keyboard.KEY_N)
+			{
+				File f = Minimap.get(LatCoreMCClient.getMinecraft().thePlayer.dimension).exportImage();
+				if(f != null)
+				{
+					Notification n = new Notification(null, new ChatComponentText("Minimap exported!"), 2000);
+					n.setDesc(new ChatComponentText(f.getName()));
+					n.setItem(new ItemStack(Items.map));
+					n.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, f.getAbsolutePath()));
+					ClientNotifications.add(n);
+				}
+				else
+				{
+					Notification n = new Notification(null, new ChatComponentText("Minimap failed to export!"), 2000);
+					n.setItem(new ItemStack(Items.map));
+					ClientNotifications.add(n);
+				}
 			}
 		}
 	}

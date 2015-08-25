@@ -49,7 +49,8 @@ public class Bits
 	
 	//
 	
-	public static long intToLong(int a, int b)
+	//Int
+	public static long intsToLong(int a, int b)
 	{ return (((long)a) << 32) | (b & 0xFFFFFFFFL); }
 	
 	public static int intFromLongA(long l)
@@ -58,17 +59,18 @@ public class Bits
 	public static int intFromLongB(long l)
 	{ return (int)l; }
 	
-	/*
+	//Short
+	public static int shortsToInt(short a, short b)
+	{ return (a << 16) | (b & 0xFFFF); }
 	
-	public static int shortToInt(int a, int b)
-	{ return 0; }
+	public static short shortFromIntA(int i)
+	{ return (short)(i >> 16); }
 	
-	public static short shortFromInt(int l, boolean a)
-	{ return (short)0; }
+	public static short shortFromIntB(int i)
+	{ return (short)(i & 0xFFFF); }
 	
-	*/
-	
-	public static short byteToShort(int a, int b)
+	//Byte
+	public static short bytesToShort(int a, int b)
 	{ return (short)(((a & 0xFF) << 8) | (b & 0xFF)); }
 	
 	public static byte byteFromShortA(short s)

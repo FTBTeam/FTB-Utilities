@@ -2,7 +2,6 @@ package latmod.ftbu.mod.client;
 import java.util.UUID;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.api.FTBUReloadableRegistry;
 import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
 import latmod.ftbu.core.net.*;
@@ -16,6 +15,7 @@ import latmod.ftbu.mod.player.ClientNotifications;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.EntityReddustFX;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
@@ -82,7 +82,6 @@ public class FTBUClient extends FTBUCommon
 		EnumBusType.FORGE.register(FTBURenderHandler.instance);
 		EnumBusType.FML.register(FTBURenderHandler.instance);
 		EnumBusType.FORGE.register(FTBUGuiEventHandler.instance);
-		FTBUReloadableRegistry.add(FTBUClientEventHandler.instance);
 		
 		ClientConfig.Registry.init();
 		initConfig();
@@ -95,6 +94,12 @@ public class FTBUClient extends FTBUCommon
 		ClientConfig.Registry.load();
 		//ThreadLoadBadges.init();
 		FTBUGuiHandler.instance.registerClient();
+	}
+	
+	public void onReloaded(Side s, ICommandSender sender) throws Exception
+	{
+		super.onReloaded(s, sender);
+		if(s.isClient()) ThreadLoadBadges.init();
 	}
 	
 	public static void onWorldJoined(LMPlayer p)

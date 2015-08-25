@@ -93,6 +93,6 @@ public class MChunk
 	{
 		cx = MathHelperLM.wrap(cx, MArea.size_c);
 		cy = MathHelperLM.wrap(cy, MArea.size_c);
-		return Bits.byteToShort(cx, cy);
+		return Bits.bytesToShort(cx, cy);
 	}
 }

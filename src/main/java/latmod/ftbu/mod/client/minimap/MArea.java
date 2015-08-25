@@ -3,7 +3,6 @@ package latmod.ftbu.mod.client.minimap;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
@@ -29,6 +28,7 @@ public class MArea
 	public int textureID = -1;
 	public ThreadReloadArea thread = null;
 	public ByteBuffer pixelBuffer = null;
+	public long lastRefreshMillis = -1L;
 	
 	public MArea(Minimap m, int x, int y)
 	{
@@ -36,7 +36,7 @@ public class MArea
 		posX = x;
 		posY = y;
 		chunks = new FastMap<Short, MChunk>();
-		index = Bits.intToLong(posX, posY);
+		index = Bits.intsToLong(posX, posY);
 		file = new File(LatCoreMC.latmodFolder, "client/" + LMWorldClient.inst.worldIDS + "/minimap/" + minimap.dim + "," + posX + "," + posY + ".png");
 		load();
 	}
@@ -47,7 +47,7 @@ public class MArea
 		int y = cy / size_c;
 		if(cx < 0) x -= 1;
 		if(cy < 0) y -= 1;
-		return Bits.intToLong(x, y);
+		return Bits.intsToLong(x, y);
 	}
 	
 	public static long getIndexB(double x, double y)
@@ -62,10 +62,16 @@ public class MArea
 		
 		if(isDirty)
 		{
-			if(thread == null) thread = null;
-			thread = new ThreadReloadArea(this);
-			thread.start();
-			isDirty = false;
+			long ms = LMUtils.millis();
+			
+			if(ms - lastRefreshMillis >= 2000L)
+			{
+				lastRefreshMillis = ms;
+				if(thread == null) thread = null;
+				thread = new ThreadReloadArea(this);
+				thread.start();
+				isDirty = false;
+			}
 		}
 		
 		if(pixelBuffer != null)
@@ -81,18 +87,13 @@ public class MArea
 		}
 	}
 	
-	public BufferedImage toImage()
+	public PixelBuffer toPixelBuffer()
 	{
-		BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
-		int[] pixels = new int[size_sq];
-		
-		image.setRGB(0, 0, size, size, pixels, 0, size);
+		PixelBuffer image = new PixelBuffer(size, size);
 		
 		for(int i = 0; i < chunks.values.size(); i++)
 		{
 			MChunk c = chunks.values.get(i);
-			int[] pixels1 = new int[256];
-			Arrays.fill(pixels1, LMColorUtils.getRGBA(LatCoreMC.rand.nextInt(), 255));
 			image.setRGB(c.rposX * 16, c.rposY * 16, 16, 16, c.pixels, 0, 16);
 		}
 		
@@ -146,7 +147,7 @@ public class MArea
 			{
 				try
 				{
-					BufferedImage image = toImage();
+					BufferedImage image = toPixelBuffer().toImage(BufferedImage.TYPE_INT_ARGB);
 					ImageIO.write(image, "PNG", LMFileUtils.newFile(file));
 				}
 				catch(Exception e)

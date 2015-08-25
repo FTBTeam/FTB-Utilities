@@ -3,11 +3,14 @@ package latmod.ftbu.mod;
 import java.util.UUID;
 
 import latmod.ftbu.core.*;
+import latmod.ftbu.core.api.IFTBUReloadable;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.TileLM;
 import latmod.ftbu.core.world.*;
+import latmod.ftbu.mod.config.FTBUConfig;
 import latmod.ftbu.mod.player.*;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
@@ -15,8 +18,9 @@ import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityEvent;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.relauncher.Side;
 
-public class FTBUCommon // FTBUClient
+public class FTBUCommon implements IFTBUReloadable // FTBUClient
 {
 	public void preInit()
 	{
@@ -24,6 +28,24 @@ public class FTBUCommon // FTBUClient
 	
 	public void postInit()
 	{
+	}
+	
+	public void onReloaded(Side s, ICommandSender sender) throws Exception
+	{
+		if(s.isServer())
+		{
+			float prevRRTimer = FTBUConfig.general.restartTimer.floatValue();
+			
+			FTBUConfig.instance.load();
+			if(FTBUConfig.general.isDedi())
+			{
+				for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers())
+					IServerConfig.Registry.updateConfig(ep, null);
+				
+				if(prevRRTimer != FTBUConfig.general.restartTimer.floatValue())
+					FTBUTickHandler.serverStarted();
+			}
+		}
 	}
 	
 	public void onReadmeEvent(FTBUReadmeEvent e)

@@ -3,6 +3,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 
 import latmod.ftbu.core.*;
+import latmod.ftbu.core.api.*;
 import latmod.ftbu.core.event.FTBUReadmeEvent;
 import latmod.ftbu.core.inv.ODItems;
 import latmod.ftbu.core.net.LMNetHelper;
@@ -63,6 +64,7 @@ public class FTBU
 		
 		LMMod.init(this, null, null);
 		mod.logger = LatCoreMC.logger;
+		FTBUReloadableRegistry.add(proxy);
 		LMJsonUtils.updateGson();
 		IServerConfig.Registry.add(FTBUConfig.instance);
 		FTBUConfig.instance.load();

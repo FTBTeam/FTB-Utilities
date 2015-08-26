@@ -72,9 +72,6 @@ public class ThreadReloadChunk extends Thread
 		if(!b.isAir(worldObj, bx, by, bz))
 		{
 			int col = getBlockColor(bx, by, bz, b);
-			int red = LMColorUtils.getRed(col);
-			int green = LMColorUtils.getGreen(col);
-			int blue = LMColorUtils.getBlue(col);
 			
 			if(calcHeight)
 			{
@@ -84,20 +81,12 @@ public class ThreadReloadChunk extends Thread
 				short bs = getTopY(bx, bz + 1);
 				
 				if((bw != defHeight && bw < by) || (bn != defHeight && bn < by))
-				{
-					red = MathHelperLM.clampInt(red + 20, 0, 255);
-					green = MathHelperLM.clampInt(green + 20, 0, 255);
-					blue = MathHelperLM.clampInt(blue + 20, 0, 255);
-				}
+					return LMColorUtils.addBrightness(col, 25);
 				else if((be != defHeight && be < by) || (bs != defHeight && bs < by))
-				{
-					red = MathHelperLM.clampInt(red - 20, 0, 255);
-					green = MathHelperLM.clampInt(green - 20, 0, 255);
-					blue = MathHelperLM.clampInt(blue - 20, 0, 255);
-				}
+					return LMColorUtils.addBrightness(col, -25);
 			}
 			
-			return LMColorUtils.getRGBA(red, green, blue, 255);
+			return col;
 		}
 		
 		return 0;
@@ -169,7 +158,10 @@ public class ThreadReloadChunk extends Thread
 		
 		if(customColors)
 		{
-			if(b == Blocks.grass && m == 0) return b.colorMultiplier(worldObj, x, y, z);
+			if(b == Blocks.leaves || b == Blocks.vine)
+				return LMColorUtils.addBrightness(b.colorMultiplier(worldObj, x, y, z), -40);
+			else if(b == Blocks.grass && m == 0)
+				return LMColorUtils.addBrightness(b.colorMultiplier(worldObj, x, y, z), -15);
 		}
 		
 		return b.getMapColor(m).colorValue;

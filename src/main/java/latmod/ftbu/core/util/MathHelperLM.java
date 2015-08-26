@@ -134,14 +134,14 @@ public class MathHelperLM
 	public static double lerp(double f1, double f2, double f)
 	{ return f1 + (f2 - f1) * f; }
 	
-	public static double clamp(double d, double min, double max)
-	{ if(d < min) d = min; if(d > max) d = max; return d; }
+	public static double clamp(double n, double min, double max)
+	{ if(n < min) return min; if(n > max) return max; return n; }
 	
-	public static int clampInt(int i, int min, int max)
-	{ if(i < min) i = min; if(i > max) i = max; return i; }
+	public static int clampInt(int n, int min, int max)
+	{ if(n < min) return min; if(n > max) return max; return n; }
 	
-	public static float clampFloat(float d, float min, float max)
-	{ if(d < min) d = min; if(d > max) d = max; return d; }
+	public static float clampFloat(float n, float min, float max)
+	{ if(n < min) return min; if(n > max) return max; return n; }
 	
 	public static double[] clamp(double[] d, double min, double max)
 	{ for(int i = 0; i < d.length; i++) d[i] = clamp(d[i], min, max); return d; }

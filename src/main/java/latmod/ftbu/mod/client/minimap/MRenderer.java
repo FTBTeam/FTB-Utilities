@@ -63,9 +63,6 @@ public class MRenderer
 		GL11.glEnable(GL11.GL_BLEND);
 		LatCoreMCClient.pushMaxBrightness();
 		
-		//int pcx = MathHelperLM.chunk(mc.thePlayer.posX);
-		//int pcy = MathHelperLM.chunk(mc.thePlayer.posZ);
-		
 		double tilesD = 1D / (double)tiles;
 		double tsize = size * tilesD;
 		double chunkD = 1D / (double)MArea.size_c;
@@ -115,10 +112,6 @@ public class MRenderer
 			
 			GL11.glEnd();
 			
-			/*GL11.glBegin(GL11.GL_POINT);
-			GL11.glVertex2d(rx, ry);
-			GL11.glEnd();*/
-			
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glColor4f(1F, 1F, 1F, 1F);
 			GL11.glLineWidth(1F);
@@ -150,9 +143,6 @@ public class MRenderer
 			}
 		}
 		
-		int bx = startX * 16;
-		int by = startY * 16;
-		
 		if(renderWaypoints && Waypoints.hasWaypoints())
 		{
 			LatCoreMCClient.setTexture(FTBURenderHandler.texMarker);
@@ -163,8 +153,8 @@ public class MRenderer
 				{
 					GL11.glColor4f(w.colR / 255F, w.colG / 255F, w.colB / 255F, 1F);
 					
-					double x = renderX + (w.posX - bx);
-					double y = renderY + (w.posZ - by);
+					double x = renderX + (MathHelperLM.chunk(w.posX) - startX + 0.5D) * 16 + MathHelperLM.wrap(w.posX, 16D);
+					double y = renderY + (MathHelperLM.chunk(w.posZ) - startY + 0.5D) * 16 + MathHelperLM.wrap(w.posZ, 16D);
 					
 					if(x < renderX) x = renderX;
 					if(y < renderY) y = renderY;
@@ -176,33 +166,35 @@ public class MRenderer
 			}
 		}
 		
-		if(renderPlayers)
+		if(renderPlayers && !mc.theWorld.playerEntities.isEmpty())
 		{
 			FastList<EntityPlayer> list = new FastList<EntityPlayer>();
 			list.addAll(mc.theWorld.playerEntities);
-			//list.add(mc.thePlayer);
 			
-			if(!list.isEmpty())
+			GL11.glColor4f(1F, 1F, 1F, 0.7F);
+			
+			for(int i = 0; i < list.size(); i++)
 			{
-				GL11.glColor4f(1F, 1F, 1F, 0.7F);
-				
-				for(int i = 0; i < list.size(); i++)
+				EntityPlayer ep = list.get(i);
+				if(ep.dimension == mc.thePlayer.dimension && !ep.isInvisible())
 				{
-					EntityPlayer ep = list.get(i);
-					if(ep.dimension == mc.thePlayer.dimension && !ep.isInvisible() && ep.posX >= bx && ep.posZ >= by && ep.posX < bx + size && ep.posZ < by + size)
+					int cx = MathHelperLM.chunk(ep.posX);
+					int cy = MathHelperLM.chunk(ep.posZ);
+					
+					if(cx >= startX && cy >= startY && cx < startX + tiles && cy < startY + tiles)
 					{
-						double x = renderX + (ep.posX - bx);
-						double y = renderY + (ep.posZ - by);
+						double x = ((cx - startX) * 16D + MathHelperLM.wrap(ep.posX, 16D)) * tsize / 16D;
+						double y = ((cy - startY) * 16D + MathHelperLM.wrap(ep.posZ, 16D)) * tsize / 16D;
 						
 						GL11.glPushMatrix();
-						GL11.glTranslated(x, y, 0D);
+						GL11.glTranslated(renderX + x, renderY + y, 0D);
 						GL11.glPushMatrix();
 						//GL11.glRotatef((int)((ep.rotationYaw + 180F) / (180F / 8F)) * (180F / 8F), 0F, 0F, 1F);
 						GL11.glRotatef(ep.rotationYaw + 180F, 0F, 0F, 1F);
 						LatCoreMCClient.setTexture(tex_map_entity);
 						GuiLM.drawTexturedRectD(-8, -8, zLevel, 16, 16, 0D, 0D, 1D, 1D);
 						GL11.glPopMatrix();
-						GuiLM.drawPlayerHead(ep.getCommandSenderName(), -4, -4, 8, 8, zLevel);
+						GuiLM.drawPlayerHead(ep.getCommandSenderName(), -2, -2, 4, 4, zLevel);
 						GL11.glPopMatrix();
 					}
 				}
@@ -211,5 +203,6 @@ public class MRenderer
 		
 		LatCoreMCClient.popMaxBrightness();
 		GL11.glPopAttrib();
+		GL11.glColor4f(1F, 1F, 1F, 1F);
 	}
 }

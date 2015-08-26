@@ -43,7 +43,7 @@ public class MessageLMWorldUpdate extends MessageLM<MessageLMWorldUpdate> implem
 	@SideOnly(Side.CLIENT)
 	public void onMessageClient(MessageLMWorldUpdate m, MessageContext ctx)
 	{
-		LMWorldClient.inst = new LMWorldClient(m.worldID);
+		LMWorldClient.inst = new LMWorldClient(m.worldID, true);
 		LMWorldClient.inst.readPlayersFromNet(m.players);
 	}
 }

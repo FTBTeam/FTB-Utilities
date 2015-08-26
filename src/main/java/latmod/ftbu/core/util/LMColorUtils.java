@@ -63,4 +63,12 @@ public class LMColorUtils
 	
 	public static float getBrightness(int c)
 	{ return getHSB(c)[2]; }
+	
+	public static int addBrightness(int c, int b)
+	{
+		int red = MathHelperLM.clampInt(getRed(c) + b, 0, 255);
+		int green = MathHelperLM.clampInt(getGreen(c) + b, 0, 255);
+		int blue = MathHelperLM.clampInt(getBlue(c) + b, 0, 255);
+		return getRGBA(red, green, blue, getAlpha(c));
+	}
 }

@@ -116,7 +116,7 @@ public class FTBUClientEventHandler
 	@SubscribeEvent
 	public void renderChunk(RenderWorldEvent.Pre e)
 	{
-		if(e.pass == 0)
+		if(e.pass == 0 && Minimap.renderIngame.getB())
 		{
 			int cx = MathHelperLM.chunk(e.renderer.posX);
 			int cz = MathHelperLM.chunk(e.renderer.posZ);

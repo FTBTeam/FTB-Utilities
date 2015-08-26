@@ -15,10 +15,12 @@ public class LMWorldClient extends LMWorld<LMPlayerClient>
 {
 	public static LMWorldClient inst = null;
 	public LMPlayerClient clientPlayer = null;
+	public final boolean hasServer;
 	
-	public LMWorldClient(UUID id)
+	public LMWorldClient(UUID id, boolean b)
 	{
 		super(Side.CLIENT, id);
+		hasServer = b;
 		LatCoreMC.logger.info("Created LMWorldClient " + worldIDS + " with UUID " + worldID);
 	}
 	
@@ -47,7 +49,7 @@ public class LMWorldClient extends LMWorld<LMPlayerClient>
 		public static String worldIDSNoWorld;
 		
 		public NoServerWorld()
-		{ super(noServerWorldUUID); }
+		{ super(noServerWorldUUID, false); }
 		
 		protected String getWorldIDS()
 		{ return worldIDSNoWorld + ""; }

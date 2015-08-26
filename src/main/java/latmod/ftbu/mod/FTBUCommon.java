@@ -126,9 +126,12 @@ public class FTBUCommon implements IFTBUReloadable // FTBUClient
 				else
 					msg = new ChatComponentTranslation("ftbu:chunktype." + type.lang);
 				
-				msg.getChatStyle().setColor(type.chatColor);
+				//msg.getChatStyle().setColor(type.chatColor);
 				
-				LatCoreMC.notifyPlayer(ep, new Notification("chunk_changed", msg, 3000));
+				Notification n = new Notification("chunk_changed", msg, 3000);
+				n.setColor(type.areaColor);
+				
+				LatCoreMC.notifyPlayer(ep, n);
 				LMNetHelper.sendTo(ep, new MessageAreaUpdate(e.newChunkX, e.newChunkZ, ep.dimension, currentChunkType));
 			}
 		}

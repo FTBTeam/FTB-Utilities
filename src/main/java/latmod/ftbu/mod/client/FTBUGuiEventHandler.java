@@ -33,8 +33,6 @@ public class FTBUGuiEventHandler
 	@SubscribeEvent
 	public void guiInitEvent(final GuiScreenEvent.InitGuiEvent.Post e)
 	{
-		if(LMWorldClient.inst == null) return;
-		
 		if(e.gui instanceof GuiOptions && LatCoreMCClient.getMinecraft().thePlayer != null)
 		{
 			if(FTBUClient.optionsButton.getB())
@@ -42,6 +40,8 @@ public class FTBUGuiEventHandler
 		}
 		else if(e.gui instanceof GuiInventory || e.gui instanceof GuiContainerCreative)
 		{
+			if(!LMWorldClient.inst.hasServer) return;
+			
 			int xSize = 176;
 			int ySize = 166;
 			
@@ -67,9 +67,7 @@ public class FTBUGuiEventHandler
 	public void guiActionEvent(GuiScreenEvent.ActionPerformedEvent.Post e)
 	{
 		if(e.button.id == SETTINGS_BUTTON_ID)
-		{
-			Minecraft.getMinecraft().displayGuiScreen(new GuiClientConfig(e.gui)); 
-		}
+			e.gui.mc.displayGuiScreen(new GuiClientConfig(e.gui)); 
 		else if(e.button.id == BUTTON_ID)
 		{
 			final GuiContainerCreative creativeContainer = (e.gui instanceof GuiContainerCreative) ? (GuiContainerCreative)e.gui : null;

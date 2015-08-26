@@ -61,8 +61,8 @@ public class Minimap
 	public static void init()
 	{
 		clientConfig.add(renderIngame);
-		//clientConfig.add(renderPlayers);
-		//clientConfig.add(renderWaypoints);
+		clientConfig.add(renderPlayers);
+		clientConfig.add(renderWaypoints);
 		clientConfig.add(calcHeight);
 		clientConfig.add(blur);
 		clientConfig.add(zoom);

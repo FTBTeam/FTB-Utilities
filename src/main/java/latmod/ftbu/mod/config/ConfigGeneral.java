@@ -3,7 +3,7 @@ package latmod.ftbu.mod.config;
 import java.io.File;
 
 import latmod.ftbu.core.LatCoreMC;
-import latmod.ftbu.core.event.FTBUReadmeEvent;
+import latmod.ftbu.core.api.*;
 import latmod.ftbu.core.util.LMJsonUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.util.FakePlayer;
@@ -82,9 +82,9 @@ public class ConfigGeneral
 			LatCoreMC.logger.warn(saveFile.getName() + " failed to save!");
 	}
 
-	public static void saveReadme(FTBUReadmeEvent e)
+	public static void saveReadme(ReadmeFile file)
 	{
-		FTBUReadmeEvent.ReadmeFile.Category general = e.file.get("latmod/ftbu/general.txt");
+		ReadmeCategory general = file.get("latmod/ftbu/general.txt");
 		general.add("allowCreativeInteractSecure", "If set to true, creative players will be able to access protected chests / chunks.", true);
 		general.add("commandFTBU", "Command name for ftbu command.", "ftbu");
 		general.add("commandAdmin", "Command name for ftbu command.", "admin");

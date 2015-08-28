@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.client.gui;
 
-import latmod.ftbu.core.FTBULang;
+import latmod.ftbu.core.client.FTBULang;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.*;
@@ -8,10 +8,12 @@ import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
 import latmod.ftbu.mod.client.minimap.*;
+import latmod.ftbu.mod.player.ChunkType;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
@@ -107,29 +109,44 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		mapRenderer.renderY = guiTop + mapButton.posY;
 		mapRenderer.render();
 		
-		/*
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glColor4f(1F, 1F, 1F, 1F);
-		Tessellator ts = Tessellator.instance;
-		ts.startDrawingQuads();
-		ts.setColorRGBA(0, 0, 0, 255);
-		ts.addVertex(renderX, renderY + SIZE, zLevel);
-		ts.addVertex(renderX + SIZE, renderY + SIZE, zLevel);
-		ts.addVertex(renderX + SIZE, renderY, zLevel);
-		ts.addVertex(renderX, renderY, zLevel);
-		ts.draw();
-		
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		MRenderer.renderAt(mc, renderX, renderY, zLevel, 128, true, SIZE_CHUNKS);
-		//GL11.glEnable(GL11.GL_BLEND);
-		*/
-		
-		GL11.glColor4f(1F, 1F, 1F, 1F);
-		
 		if(mapButton.mouseOver())
 		{
 			GL11.glColor4f(0.1F, 1F, 0.7F, 0.8F);
 			tex_mouse.render(this, mapRenderer.renderX + (mapButton.chunkX() - mapRenderer.startX) * 16 - guiLeft, mapRenderer.renderY + (mapButton.chunkZ() - mapRenderer.startY) * 16 - guiTop, 16, 16);
+			
+			boolean down0 = Mouse.isButtonDown(0);
+			boolean down1 = Mouse.isButtonDown(1);
+			
+			if((down0 || down1) && down0 != down1)
+			{
+				int cx = mapButton.chunkX();
+				int cz = mapButton.chunkZ();
+				
+				MChunk c = Minimap.get(mc.thePlayer.dimension).getChunk(cx, cz);
+				if(c != null && c.type != null && (c.type == ChunkType.WILDERNESS || c.type == ChunkType.CLAIMED_SELF))
+				{
+					if(c.type == ChunkType.WILDERNESS)
+					{
+						if(down0)
+						{
+							c.type = ChunkType.CLAIMED_SELF;
+							LMNetHelper.sendToServer(new MessageAreaRequest(cx, cz, mc.thePlayer.dimension, 1));
+							LMNetHelper.sendToServer(new MessageClaimChunk(mapRenderer.mc.thePlayer.dimension, cx, cz, true));
+							playClickSound();
+						}
+					}
+					else
+					{
+						if(down1)
+						{
+							c.type = ChunkType.WILDERNESS;
+							LMNetHelper.sendToServer(new MessageAreaRequest(cx, cz, mc.thePlayer.dimension, 1));
+							LMNetHelper.sendToServer(new MessageClaimChunk(mapRenderer.mc.thePlayer.dimension, cx, cz, false));
+							playClickSound();
+						}
+					}
+				}
+			}
 		}
 		
 		GL11.glColor4f(1F, 1F, 1F, 1F);
@@ -182,8 +199,8 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		
 		public void onButtonPressed(int b)
 		{
-			LMNetHelper.sendToServer(new MessageClaimChunk(mapRenderer.mc.thePlayer.dimension, chunkX(), chunkZ(), b == 0));
-			gui.playClickSound();
+			//LMNetHelper.sendToServer(new MessageClaimChunk(mapRenderer.mc.thePlayer.dimension, chunkX(), chunkZ(), b == 0));
+			//gui.playClickSound();
 		}
 		
 		public void addMouseOverText(FastList<String> l)

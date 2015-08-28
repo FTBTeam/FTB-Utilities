@@ -5,7 +5,7 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.event.LMGsonEvent;
+import latmod.ftbu.core.api.FTBUApi;
 import latmod.ftbu.core.inv.ItemStackSerializer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
@@ -34,7 +34,7 @@ public class LMJsonUtils
 		gb.registerTypeHierarchyAdapter(UUID.class, new UUIDSerializer());
 		gb.registerTypeHierarchyAdapter(Notification.class, new Notification.Serializer());
 		
-		new LMGsonEvent(gb).post();
+		FTBUApi.addGsonHandlers(gb);
 		gson = gb.create();
 		gb.setPrettyPrinting();
 		gson_pretty = gb.create();

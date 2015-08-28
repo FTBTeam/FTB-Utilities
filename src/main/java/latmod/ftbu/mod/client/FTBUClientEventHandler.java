@@ -2,7 +2,7 @@ package latmod.ftbu.mod.client;
 import java.io.File;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.client.LatCoreMCClient;
+import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.inv.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.paint.IPainterItem;

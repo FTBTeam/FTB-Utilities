@@ -1,25 +1,46 @@
 package latmod.ftbu.core.util;
 
+import net.minecraft.util.EnumChatFormatting;
+
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
 
 public class LMColorUtils
 {
+	public static final int[] chatFormattingColors = new int[16];
+	private static final float[] staticHSB = new float[3];
+	
+	static
+	{
+		for(int i = 0; i < 16; i++)
+        {
+            int j = (i >> 3 & 1) * 85;
+            int r = (i >> 2 & 1) * 170 + j;
+            int g = (i >> 1 & 1) * 170 + j;
+            int b = (i >> 0 & 1) * 170 + j;
+            if(i == 6) r += 85;
+            chatFormattingColors[i] = getRGBA(r, g, b, 255);
+        }
+	}
+	
+	public static int getColorFrom(EnumChatFormatting e)
+	{ return e.isColor() ? chatFormattingColors[e.ordinal()] : 0xFFFFFFFF; }
+	
 	public static int getRGBA(int r, int g, int b, int a)
-	{ return ((a & 0xFF) << 24) | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | ((b & 0xFF) << 0); }
+	{ return ((a & 255) << 24) | ((r & 255) << 16) | ((g & 255) << 8) | ((b & 255) << 0); }
 	
 	public static int getRed(int c)
-	{ return (c >> 16) & 0xFF; }
+	{ return (c >> 16) & 255; }
 	
 	public static int getGreen(int c)
-	{ return (c >> 8) & 0xFF; }
+	{ return (c >> 8) & 255; }
 	
 	public static int getBlue(int c)
-	{ return (c >> 0) & 0xFF; }
+	{ return (c >> 0) & 255; }
 	
 	public static int getAlpha(int c)
-	{ return (c >> 24) & 0xFF; }
+	{ return (c >> 24) & 255; }
 	
 	public static String getHex(int c)
 	{ return "#" + Integer.toHexString(getRGBA(c, 255)).substring(2).toUpperCase(); }
@@ -38,31 +59,23 @@ public class LMColorUtils
 	public static void setGLColor(int c)
 	{ setGLColor(c, getAlpha(c)); }
 	
-	@SideOnly(Side.CLIENT)
-	public static final void recolor()
-	{ GL11.glColor4f(1F, 1F, 1F, 1F); }
-	
 	public static int getHSB(float h, float s, float b)
 	{ return java.awt.Color.HSBtoRGB(h, s, b); }
 	
-	public static float[] getHSB(int r, int g, int b)
-	{
-		float[] f = new float[3];
-		java.awt.Color.RGBtoHSB(r, g, b, f);
-		return f;
-	}
+	public static void setHSB(int r, int g, int b)
+	{ java.awt.Color.RGBtoHSB(r, g, b, staticHSB); }
 	
-	public static float[] getHSB(int c)
-	{ return getHSB(getRed(c), getGreen(c), getBlue(c)); }
+	public static void setHSB(int c)
+	{ setHSB(getRed(c), getGreen(c), getBlue(c)); }
 	
-	public static float getHue(int c)
-	{ return getHSB(c)[0]; }
+	public static float getHSBHue()
+	{ return staticHSB[0]; }
 	
-	public static float getSaturation(int c)
-	{ return getHSB(c)[1]; }
+	public static float getHSBSaturation()
+	{ return staticHSB[1]; }
 	
-	public static float getBrightness(int c)
-	{ return getHSB(c)[2]; }
+	public static float getHSBBrightness()
+	{ return staticHSB[2]; }
 	
 	public static int addBrightness(int c, int b)
 	{

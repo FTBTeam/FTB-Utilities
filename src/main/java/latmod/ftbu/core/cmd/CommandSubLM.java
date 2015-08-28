@@ -2,6 +2,7 @@ package latmod.ftbu.core.cmd;
 
 import latmod.ftbu.core.util.*;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.*;
 
 public class CommandSubLM extends CommandLM
 {
@@ -40,12 +41,12 @@ public class CommandSubLM extends CommandLM
 		return NameType.NONE;
 	}
 	
-	public String onCommand(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
 		if(args == null || args.length == 0)
-			return FINE + "Subcommands: " + LMStringUtils.strip(getTabStrings(ics, args, 0));
+			return new ChatComponentText(LMStringUtils.strip(getTabStrings(ics, args, 0)));
 		SubCommand cmd = subCommands.get(args[0]);
 		if(cmd != null) return cmd.onCommand(ics, SubCommand.trimArgs(args));
-		return "Invalid subcommand '" + args[0] + "'!";
+		return new ChatComponentText("Invalid subcommand '" + args[0] + "'!"); // LANG
 	}
 }

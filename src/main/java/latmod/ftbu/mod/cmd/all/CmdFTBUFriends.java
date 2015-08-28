@@ -7,7 +7,7 @@ import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBUGuiHandler;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.*;
 
 public class CmdFTBUFriends extends SubCommand
 {
@@ -23,7 +23,7 @@ public class CmdFTBUFriends extends SubCommand
 		return NameType.NONE;
 	}
 	
-	public String onCommand(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args) //LANG
 	{
 		if(args.length == 0 || args[0].equals("gui"))
 		{
@@ -43,7 +43,7 @@ public class CmdFTBUFriends extends SubCommand
 		
 		if(args[0].equals("list"))
 		{
-			if(owner.friends.isEmpty()) return CommandLM.FINE + "No friends added";
+			if(owner.friends.isEmpty()) return new ChatComponentText("No friends added");
 			
 			LatCoreMC.printChat(ics, "Your friends:");
 			
@@ -76,7 +76,7 @@ public class CmdFTBUFriends extends SubCommand
 				}
 			}
 			
-			return CommandLM.FINE + "Added " + friendsAdded + " friends!";
+			return new ChatComponentText("Added " + friendsAdded + " friends!");
 		}
 		else
 		{
@@ -84,7 +84,7 @@ public class CmdFTBUFriends extends SubCommand
 			
 			LMPlayerServer p = CommandLM.getLMPlayer(args[1]);
 			
-			if(p.equalsPlayer(owner)) return "Invalid player!";
+			if(p.equalsPlayer(owner)) return CommandLM.error(new ChatComponentText("Invalid player!"));
 			
 			if(args[0].equals("add"))
 			{
@@ -94,7 +94,7 @@ public class CmdFTBUFriends extends SubCommand
 					return changed(owner, p, "Added " + p.getName() + " as friend");
 				}
 				
-				return p.getName() + " is already a friend!";
+				return CommandLM.error(new ChatComponentText(p.getName() + " is already a friend!"));
 			}
 			else if(args[0].equals("rem"))
 			{
@@ -104,17 +104,17 @@ public class CmdFTBUFriends extends SubCommand
 					return changed(owner, p, "Removed " + p.getName() + " from friends");
 				}
 				
-				return p.getName() + " is not added as friend!";
+				return CommandLM.error(new ChatComponentText(p.getName() + " is not added as friend!"));
 			}
 		}
 		
 		return null;
 	}
 	
-	private static String changed(LMPlayerServer o, LMPlayerServer p, String s)
+	private static IChatComponent changed(LMPlayerServer o, LMPlayerServer p, String s)
 	{
 		o.sendUpdate(true);
 		if(p != null) p.sendUpdate(true);
-		return CommandLM.FINE + s;
+		return new ChatComponentText(s);
 	}
 }

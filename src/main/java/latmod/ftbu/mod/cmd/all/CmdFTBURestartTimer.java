@@ -5,13 +5,14 @@ import latmod.ftbu.core.util.LMStringUtils;
 import latmod.ftbu.mod.FTBUTickHandler;
 import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.*;
 
 public class CmdFTBURestartTimer extends SubCommand
 {
-	public String onCommand(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args) //LANG
 	{
 		if(FTBUConfig.general.restartTimer <= 0D)
 			throw new FeatureDisabledException();
-		return CommandLM.FINE + "Time left until next restart: " + LMStringUtils.formatTime(FTBUTickHandler.getSecondsUntilRestart(), false);
+		return new ChatComponentText("Time left until next restart: " + LMStringUtils.formatTime(FTBUTickHandler.getSecondsUntilRestart(), false));
 	}
 }

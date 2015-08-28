@@ -5,12 +5,13 @@ import latmod.ftbu.core.util.LMStringUtils;
 import latmod.ftbu.mod.backups.Backups;
 import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.*;
 
 public class CmdFTBUBackupTimer extends SubCommand
 {
-	public String onCommand(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args) //LANG
 	{
 		if(!FTBUConfig.backups.enabled) throw new FeatureDisabledException();
-		return CommandLM.FINE + "Time left until next backup: " + LMStringUtils.formatTime(Backups.getSecondsUntilNextBackup(), false);
+		return new ChatComponentText("Time left until next backup: " + LMStringUtils.formatTime(Backups.getSecondsUntilNextBackup(), false));
 	}
 }

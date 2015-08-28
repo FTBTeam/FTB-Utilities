@@ -1,6 +1,5 @@
 package latmod.ftbu.core;
-import java.awt.Color;
-
+import latmod.ftbu.core.client.FTBULang;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;
 
@@ -27,8 +26,8 @@ public enum EnumDyeColor // ItemDye
 	
 	public final int ID;
 	public final String name;
-	public final Color color;
-	public final Color colorBright;
+	public final int color;
+	public final int colorBright;
 	public final String dyeName;
 	public final String glassName;
 	public final String paneName;
@@ -37,8 +36,8 @@ public enum EnumDyeColor // ItemDye
 	{
 		ID = ordinal();
 		name = ItemDye.field_150921_b[ID];
-		color = new Color(ItemDye.field_150922_c[ID]);
-		colorBright = new Color(c);
+		color = ItemDye.field_150922_c[ID];
+		colorBright = c;
 		
 		dyeName = "dye" + s;
 		glassName = "blockGlass" + s;

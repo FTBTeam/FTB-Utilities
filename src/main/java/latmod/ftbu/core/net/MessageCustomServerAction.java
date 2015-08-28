@@ -1,6 +1,6 @@
 package latmod.ftbu.core.net;
 import io.netty.buffer.ByteBuf;
-import latmod.ftbu.core.event.CustomAction;
+import latmod.ftbu.core.api.*;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,14 +16,8 @@ public class MessageCustomServerAction extends MessageLM<MessageCustomServerActi
 	public MessageCustomServerAction(EntityPlayerMP ep, String s)
 	{
 		channel = s;
-		
-		CustomActionFromServer h = CustomAction.sHandlers.get(channel);
-		
-		if(h != null)
-		{
-			data = new NBTTagCompound();
-			h.sendToClient(ep, data);
-		}
+		ICustomActionFromServer h = FTBUApi.getCustomActionServerHandler(channel);
+		if(h != null) data = h.sendToClient(ep);
 	}
 	
 	public void fromBytes(ByteBuf bb)
@@ -40,7 +34,7 @@ public class MessageCustomServerAction extends MessageLM<MessageCustomServerActi
 	
 	public IMessage onMessage(MessageCustomServerAction m, MessageContext ctx)
 	{
-		CustomActionFromServer h = CustomAction.sHandlers.get(m.channel);
+		ICustomActionFromServer h = FTBUApi.getCustomActionServerHandler(m.channel);
 		h.readFromServer(FTBU.proxy.getClientPlayer(), m.data);
 		return null;
 	}

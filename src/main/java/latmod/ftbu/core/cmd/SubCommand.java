@@ -1,10 +1,11 @@
 package latmod.ftbu.core.cmd;
 
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.IChatComponent;
 
 public abstract class SubCommand
 {
-	public abstract String onCommand(ICommandSender ics, String[] args);
+	public abstract IChatComponent onCommand(ICommandSender ics, String[] args);
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{

@@ -5,6 +5,7 @@ import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBURenderHandler;
+import latmod.ftbu.mod.player.ChunkType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -43,7 +44,7 @@ public class MRenderer
 	public Minecraft mc;
 	public int renderX, renderY, size, tiles, startX, startY;
 	public float zLevel;
-	public boolean renderClaims, renderGrid, renderPlayers, renderWaypoints;
+	public boolean renderClaims, renderGrid, renderPlayers, renderWaypoints, renderAreaTitle;
 	
 	public MRenderer()
 	{
@@ -52,6 +53,7 @@ public class MRenderer
 		renderGrid = true;
 		renderPlayers = true;
 		renderWaypoints = true;
+		renderAreaTitle = false;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -153,8 +155,8 @@ public class MRenderer
 				{
 					GL11.glColor4f(w.colR / 255F, w.colG / 255F, w.colB / 255F, 1F);
 					
-					double x = renderX + (MathHelperLM.chunk(w.posX) - startX + 0.5D) * 16 + MathHelperLM.wrap(w.posX, 16D);
-					double y = renderY + (MathHelperLM.chunk(w.posZ) - startY + 0.5D) * 16 + MathHelperLM.wrap(w.posZ, 16D);
+					double x = renderX + ((MathHelperLM.chunk(w.posX) - startX) * 16D + MathHelperLM.wrap(w.posX, 16D)) * tsize / 16D;
+					double y = renderY + ((MathHelperLM.chunk(w.posZ) - startY) * 16D + MathHelperLM.wrap(w.posZ, 16D)) * tsize / 16D;
 					
 					if(x < renderX) x = renderX;
 					if(y < renderY) y = renderY;
@@ -199,6 +201,14 @@ public class MRenderer
 					}
 				}
 			}
+		}
+		
+		if(renderAreaTitle)
+		{
+			int cx = MathHelperLM.chunk(mc.thePlayer.posX);
+			int cy = MathHelperLM.chunk(mc.thePlayer.posZ);
+			ChunkType t = m.getChunkType(cx, cy);
+			mc.fontRenderer.drawString(t.getIDS(), renderX, renderY + size + 3, LMColorUtils.getColorFrom(t.chatColor));
 		}
 		
 		LatCoreMCClient.popMaxBrightness();

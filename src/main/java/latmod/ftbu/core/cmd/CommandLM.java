@@ -11,8 +11,6 @@ import net.minecraft.util.*;
 
 public abstract class CommandLM extends CommandBase
 {
-	public static final String FINE = EnumChatFormatting.WHITE + "";
-	
 	public final String commandName;
 	public final CommandLevel level;
 	public final FastList<String> aliases = new FastList<String>();
@@ -35,31 +33,19 @@ public abstract class CommandLM extends CommandBase
 	public final void processCommand(ICommandSender ics, String[] args)
 	{
 		if(args == null) args = new String[0];
-		String s = onCommand(ics, args);
-		if(s != null)
-		{
-			IChatComponent c = null;
-			
-			if(s.startsWith(FINE))
-				c = new ChatComponentText(s.substring(2));
-			else
-			{
-				c = new ChatComponentText(s);
-				c.getChatStyle().setColor(EnumChatFormatting.RED);
-			}
-			
-			LatCoreMC.printChat(ics, c);
-		}
+		
+		IChatComponent s = onCommand(ics, args);
+		if(s != null) LatCoreMC.printChat(ics, s);
 		onPostCommand(ics, args);
 	}
 	
 	public List<String> getCommandAliases()
 	{ return aliases.isEmpty() ? null : aliases; }
 	
-	public abstract String onCommand(ICommandSender ics, String[] args);
+	public abstract IChatComponent onCommand(ICommandSender ics, String[] args);
 	
-	public String retHelp(ICommandSender ics, String cmd)
-	{ return "Invalid command syntax!"; }
+	public static IChatComponent error(IChatComponent c)
+	{ c.getChatStyle().setColor(EnumChatFormatting.RED); return c; }
 	
 	public final void printHelpLine(ICommandSender ics, String args)
 	{ LatCoreMC.printChat(ics, "/" + commandName + (args != null && args.length() > 0 ? (" " + args) : "")); }

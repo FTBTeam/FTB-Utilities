@@ -5,13 +5,14 @@ import latmod.ftbu.core.cmd.*;
 import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.IChatComponent;
 
 public class CmdMotd extends CommandLM
 {
 	public CmdMotd()
 	{ super("motd", CommandLevel.ALL); }
 	
-	public String onCommand(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
 		if(!printMotd(getCommandSenderAsPlayer(ics)))
 			throw new FeatureDisabledException();
@@ -20,7 +21,7 @@ public class CmdMotd extends CommandLM
 	
 	public static boolean printMotd(EntityPlayerMP ep)
 	{
-		if(!FTBUConfig.general.isDedi()) return false;
+		if(!FTBUConfig.general.isDedi() || FTBUConfig.login.motd.isEmpty()) return false;
 		
 		for(String s : FTBUConfig.login.motd)
 			LatCoreMC.printChat(ep, s.replace("$player$", ep.getDisplayName()).replace("$", LatCoreMC.FORMATTING));

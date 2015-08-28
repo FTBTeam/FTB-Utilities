@@ -1,6 +1,8 @@
-package latmod.ftbu.core;
+package latmod.ftbu.core.client;
 
+import latmod.ftbu.core.EnumDyeColor;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.player.ChunkType;
 import net.minecraft.client.resources.I18n;
 import cpw.mods.fml.relauncher.*;
 
@@ -52,13 +54,19 @@ public class FTBULang
 			notifications = get("button.notifications");
 			claimed_chunks = get("button.claimed_chunks");
 			notes = get("button.notes");
+			
+			//LANG
+			notifications = "Notifications";
+			claimed_chunks = "Claimed Chunks";
+			notes = "Notes";
 		}
 	}
 	
 	// Other //
 	public static String client_config;
-	public static final String colors[] = new String[16];
+	public static final String[] colors = new String[16];
 	public static String feature_disabled;
+	public static final String[] chunk_types = new String[ChunkType.VALUES.length];
 	
 	public static void reload()
 	{
@@ -84,6 +92,9 @@ public class FTBULang
 		for(int i = 0; i < 16; i++)
 			colors[i] = get("color." + EnumDyeColor.VALUES[i].name);
 		feature_disabled = I18n.format("commands.lmdisabled");
+		
+		for(int i = 0; i < chunk_types.length; i++)
+			chunk_types[i] = FTBU.mod.translateClient("chunktype." + ChunkType.VALUES[i].lang);
 	}
 	
 	private static String get(String s)

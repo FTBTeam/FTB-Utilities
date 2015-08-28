@@ -3,7 +3,7 @@ package latmod.ftbu.mod.config;
 import java.io.File;
 
 import latmod.ftbu.core.LatCoreMC;
-import latmod.ftbu.core.event.FTBUReadmeEvent;
+import latmod.ftbu.core.api.*;
 import latmod.ftbu.core.util.*;
 
 import com.google.gson.annotations.Expose;
@@ -53,9 +53,9 @@ public class ConfigBackups
 			LatCoreMC.logger.warn(saveFile.getName() + " failed to save!");
 	}
 	
-	public static void saveReadme(FTBUReadmeEvent e)
+	public static void saveReadme(ReadmeFile file)
 	{
-		FTBUReadmeEvent.ReadmeFile.Category backups = e.file.get("latmod/ftbu/backups.txt");
+		ReadmeCategory backups = file.get("latmod/ftbu/backups.txt");
 		backups.add("enabled", "true enables backups", false);
 		backups.add("backupsToKeep", "The number of backup files to keep. 0 - Disabled. More backups = more space used.", 12);
 		backups.add("backupTimer", "Timer in hours. 1.0 - backups every hour, 6.0 - backups every 6 hours, 0.5 - backups every 30 minutes.", 2F);

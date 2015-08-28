@@ -1,18 +1,18 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import latmod.ftbu.core.api.FTBUReloadableRegistry;
-import latmod.ftbu.core.cmd.*;
+import latmod.ftbu.core.api.FTBUApi;
+import latmod.ftbu.core.cmd.SubCommand;
 import latmod.ftbu.core.net.*;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.*;
 import cpw.mods.fml.relauncher.Side;
 
 public class CmdAdminReload extends SubCommand
 {
-	public String onCommand(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
-		FTBUReloadableRegistry.reload(Side.SERVER, ics);
+		FTBUApi.reload(Side.SERVER, ics);
 		LMNetHelper.sendTo(null, new MessageReload());
-		
-		return CommandLM.FINE + "LatvianModders's mods reloaded (Server)";
+		return new ChatComponentText("FTBU reloaded (Server)");
 	}
 }

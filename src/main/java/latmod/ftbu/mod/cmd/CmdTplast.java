@@ -5,6 +5,7 @@ import latmod.ftbu.core.cmd.*;
 import latmod.ftbu.core.world.LMPlayerServer;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.*;
 
 public class CmdTplast extends CommandLM
 {
@@ -14,7 +15,7 @@ public class CmdTplast extends CommandLM
 	public NameType getUsername(String[] args, int i)
 	{ if(i == 0 || i == 1) return NameType.OFF; return NameType.NONE; }
 	
-	public String onCommand(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
 		checkArgs(args, 1);
 		
@@ -33,8 +34,8 @@ public class CmdTplast extends CommandLM
 		}
 		
 		EntityPos p = to.getLastPos();
-		if(p == null) return "No last position!";
+		if(p == null) return error(new ChatComponentText("No last position!"));
 		LMDimUtils.teleportPlayer(who, p);
-		return FINE + "Teleported to " + to.getName() + "!";
+		return new ChatComponentText("Teleported to " + to.getName() + "!"); //LANG
 	}
 }

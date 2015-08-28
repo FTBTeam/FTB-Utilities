@@ -1,7 +1,8 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import latmod.ftbu.core.cmd.SubCommand;
+import latmod.ftbu.core.cmd.*;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.IChatComponent;
 
 public class CmdAdminDelWarp extends SubCommand
 {
@@ -10,8 +11,9 @@ public class CmdAdminDelWarp extends SubCommand
 		return null;
 	}
 	
-	public String onCommand(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
+		throw new FeatureDisabledException();
 		/*
 		 * checkArgs(args, 1);
 			
@@ -19,6 +21,5 @@ public class CmdAdminDelWarp extends SubCommand
 				return FINE + "Warp '" + args[0] + "' removed!";
 			return "Warp '" + args[0] + "' doesn't exist!";
 		 */
-		return "Unimplemented!";
 	}
 }

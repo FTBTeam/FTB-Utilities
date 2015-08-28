@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.client.gui.friends;
 
 import static net.minecraft.util.EnumChatFormatting.*;
-import latmod.ftbu.core.FTBULang;
+import latmod.ftbu.core.client.FTBULang;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.gui.GuiLM.Icons;
 import latmod.ftbu.core.net.*;

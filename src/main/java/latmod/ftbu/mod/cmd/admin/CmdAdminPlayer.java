@@ -14,12 +14,13 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
+import net.minecraft.util.*;
 
 import com.mojang.authlib.GameProfile;
 
-public class CmdAdminPlayer extends SubCommand
+public class CmdAdminPlayer extends SubCommand //TODO: Swap player and command
 {
-	public String onCommand(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
 		CommandLM.checkArgs(args, 1);
 		
@@ -28,20 +29,20 @@ public class CmdAdminPlayer extends SubCommand
 			CommandLM.checkArgs(args, 3);
 			
 			UUID id = LatCoreMC.getUUIDFromString(args[1]);
-			if(id == null) return "Invalid UUID!";
+			if(id == null) return CommandLM.error(new ChatComponentText("Invalid UUID!"));
 			
 			if(LMWorldServer.inst.getPlayer(id) != null || LMWorldServer.inst.getPlayer(args[2]) != null)
-				return "Player already exists!";
+				return CommandLM.error(new ChatComponentText("Player already exists!"));
 			
 			LMPlayerServer p = new LMPlayerServer(LMWorldServer.inst, LMPlayerServer.nextPlayerID(), new GameProfile(id, args[2]));
 			LMWorldServer.inst.players.add(p);
 			p.updateLastSeen();
 			
-			return "Fake player " + args[2] + " added!";
+			return new ChatComponentText("Fake player " + args[2] + " added!");
 		}
 		
-		String mustBeOnline = "The player must be online!";
-		String mustBeOffline = "The player must be offline!";
+		IChatComponent mustBeOnline = CommandLM.error(new ChatComponentText("The player must be online!"));
+		IChatComponent mustBeOffline = CommandLM.error(new ChatComponentText("The player must be offline!"));
 		
 		if(args[0].equals("@a"))
 		{
@@ -57,13 +58,15 @@ public class CmdAdminPlayer extends SubCommand
 			return null;
 		}
 		
+		CommandLM.checkArgs(args, 2);
+		
 		if(args[1].equals("delete"))
 		{
 			int playerID = CommandLM.parseInt(ics, args[0]);
 			LMPlayer p = CommandLM.getLMPlayer(playerID);
 			if(p.isOnline()) return mustBeOffline;
 			LMWorldServer.inst.players.removeObj(playerID);
-			return CommandLM.FINE + "Player removed!";
+			return new ChatComponentText("Player removed!");//LANG
 		}
 		
 		LMPlayerServer p = CommandLM.getLMPlayer(args[0]);
@@ -91,10 +94,10 @@ public class CmdAdminPlayer extends SubCommand
 			catch(Exception e)
 			{
 				if(LatCoreMC.isDevEnv) e.printStackTrace();
-				return "Failed to save inventory!";
+				return CommandLM.error(new ChatComponentText("Failed to save inventory!"));
 			}
 			
-			return CommandLM.FINE + "Inventory saved!";
+			return new ChatComponentText("Inventory saved!");
 		}
 		else if(args[1].equals("loadinv"))
 		{
@@ -118,24 +121,18 @@ public class CmdAdminPlayer extends SubCommand
 			catch(Exception e)
 			{
 				if(LatCoreMC.isDevEnv) e.printStackTrace();
-				return "Failed to load inventory!";
+				return CommandLM.error(new ChatComponentText("Failed to load inventory!"));
 			}
 			
-			return CommandLM.FINE + "Inventory loaded!";
+			return new ChatComponentText("Inventory loaded!");
 		}
 		else if(args[1].equals("notify"))
 		{
-			if(!p.isOnline()) return "The player must be online!";
+			if(!p.isOnline()) return mustBeOnline;
+			
 			CommandLM.checkArgs(args, 3);
 			
-			String s = "";
-			
-			for(int i = 2; i < args.length; i++)
-			{
-				s += args[i];
-				if(i != args.length - 1)
-					s += " ";
-			}
+			String s = LMStringUtils.unsplitSpaceUntilEnd(2, args);
 			
 			try
 			{
@@ -150,7 +147,7 @@ public class CmdAdminPlayer extends SubCommand
 			catch(Exception e)
 			{ e.printStackTrace(); }
 			
-			return "Invalid notification: " + s;
+			return CommandLM.error(new ChatComponentText("Invalid notification: " + s));
 		}
 		else if(args[1].equals("displayitem"))
 		{
@@ -167,7 +164,7 @@ public class CmdAdminPlayer extends SubCommand
 				return null;
 			}
 			
-			return "Invalid item!";
+			return CommandLM.error(new ChatComponentText("Invalid item!"));
 		}
 		
 		return null;

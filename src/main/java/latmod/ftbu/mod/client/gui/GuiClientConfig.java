@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.client.gui;
 
-import latmod.ftbu.core.*;
-import latmod.ftbu.core.client.ClientConfig;
+import latmod.ftbu.core.LatCoreMC;
+import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.util.*;
 import net.minecraft.client.gui.GuiScreen;
@@ -95,7 +95,7 @@ public class GuiClientConfig extends GuiLM
 	{
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
-		LMColorUtils.recolor();
+		GL11.glColor4f(1F, 1F, 1F, 1F);
 		
 		boolean drawScroll = totalHeight > height;
 		
@@ -131,7 +131,7 @@ public class GuiClientConfig extends GuiLM
 		
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
-		LMColorUtils.recolor();
+		GL11.glColor4f(1F, 1F, 1F, 1F);
 		
 		buttonClose.render(Icons.accept);
 	}

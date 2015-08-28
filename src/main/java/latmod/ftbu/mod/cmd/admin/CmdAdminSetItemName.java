@@ -4,10 +4,11 @@ import latmod.ftbu.core.cmd.*;
 import latmod.ftbu.core.util.LMStringUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.*;
 
 public class CmdAdminSetItemName extends SubCommand
 {
-	public String onCommand(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
 		CommandLM.checkArgs(args, 1);
 		EntityPlayerMP ep = CommandLM.getCommandSenderAsPlayer(ics);
@@ -15,7 +16,7 @@ public class CmdAdminSetItemName extends SubCommand
 		{
 			ep.inventory.getCurrentItem().setStackDisplayName(LMStringUtils.unsplit(args, " "));
 			ep.openContainer.detectAndSendChanges();
-			return CommandLM.FINE + "Item name set to '" + ep.inventory.getCurrentItem().getDisplayName() + "'!";
+			return new ChatComponentText("Item name set to '" + ep.inventory.getCurrentItem().getDisplayName() + "'!");
 		}
 		
 		return null;

@@ -3,8 +3,7 @@ package latmod.ftbu.mod;
 import java.util.UUID;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.api.IFTBUReloadable;
-import latmod.ftbu.core.event.FTBUReadmeEvent;
+import latmod.ftbu.core.api.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.TileLM;
 import latmod.ftbu.core.world.*;
@@ -48,7 +47,7 @@ public class FTBUCommon implements IFTBUReloadable // FTBUClient
 		}
 	}
 	
-	public void onReadmeEvent(FTBUReadmeEvent e)
+	public void onReadmeEvent(ReadmeFile file)
 	{
 	}
 	
@@ -125,8 +124,6 @@ public class FTBUCommon implements IFTBUReloadable // FTBUClient
 					msg = new ChatComponentText("" + LMWorldServer.inst.getPlayer(currentChunkType));
 				else
 					msg = new ChatComponentTranslation("ftbu:chunktype." + type.lang);
-				
-				//msg.getChatStyle().setColor(type.chatColor);
 				
 				Notification n = new Notification("chunk_changed", msg, 3000);
 				n.setColor(type.areaColor);

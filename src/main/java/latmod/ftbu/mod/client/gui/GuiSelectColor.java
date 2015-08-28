@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.client.gui;
 
-import latmod.ftbu.core.*;
+import latmod.ftbu.core.EnumDyeColor;
 import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.util.*;

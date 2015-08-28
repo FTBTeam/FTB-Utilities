@@ -14,7 +14,7 @@ public class CmdFTBUPlayerID extends SubCommand
 		return NameType.NONE;
 	}
 	
-	public String onCommand(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
 		LMPlayerServer p = CommandLM.getLMPlayer(args.length > 0 ? args[0] : ics);
 		IChatComponent toPrint = new ChatComponentText("");
@@ -25,8 +25,6 @@ public class CmdFTBUPlayerID extends SubCommand
 		uuid.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Copy to chat")));
 		uuid.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, p.uuidString));
 		toPrint.appendSibling(uuid);
-		
-		ics.addChatMessage(toPrint);
-		return null;
+		return toPrint;
 	}
 }

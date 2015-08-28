@@ -3,7 +3,7 @@ import java.util.List;
 
 import latmod.ftbu.core.OtherMods;
 import latmod.ftbu.core.client.*;
-import latmod.ftbu.core.util.*;
+import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
@@ -199,7 +199,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	{
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
-		LMColorUtils.recolor();
+		GL11.glColor4f(1F, 1F, 1F, 1F);
 		setTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 	}

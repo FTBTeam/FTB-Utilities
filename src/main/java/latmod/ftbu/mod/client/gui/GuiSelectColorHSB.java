@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.client.gui;
 
-import latmod.ftbu.core.*;
-import latmod.ftbu.core.client.ClientConfig;
+import latmod.ftbu.core.EnumDyeColor;
+import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.FTBU;
@@ -88,7 +88,8 @@ public class GuiSelectColorHSB extends GuiLM
 		switchRGB.title = "RGB";
 		
 		sliderBrightness = new SliderLM(this, 6, 91, SLIDER_BAR_W, SLIDER_H, SLIDER_W);
-		sliderBrightness.value = LMColorUtils.getBrightness(col);
+		LMColorUtils.setHSB(col);
+		sliderBrightness.value = LMColorUtils.getHSBBrightness();
 		sliderBrightness.displayMax = 255;
 		sliderBrightness.title = EnumDyeColor.BLACK.toString();
 		sliderBrightness.scrollStep = 1F / 255F;

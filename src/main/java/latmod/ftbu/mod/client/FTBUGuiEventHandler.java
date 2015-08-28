@@ -1,7 +1,6 @@
 package latmod.ftbu.mod.client;
 
-import latmod.ftbu.core.FTBULang;
-import latmod.ftbu.core.client.LatCoreMCClient;
+import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.gui.GuiLM;
 import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.FTBU;

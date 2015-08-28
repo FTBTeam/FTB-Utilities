@@ -5,10 +5,11 @@ import latmod.ftbu.core.util.MathHelperLM;
 import latmod.ftbu.mod.player.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.*;
 
 public class CmdAdminUnclaim extends SubCommand
 {
-	public String onCommand(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
 		EntityPlayerMP ep = CommandLM.getCommandSenderAsPlayer(ics);
 		
@@ -18,11 +19,11 @@ public class CmdAdminUnclaim extends SubCommand
 		{
 			String s = c.toString();
 			if(c.claims.unclaim(c.dim, c.posX, c.posZ, true))
-				return CommandLM.FINE + "Unclaimed " + s;
+				return new ChatComponentText("Unclaimed " + s); //LANG
 			else
-				return "Can't unclaim " + s + "!";
+				return CommandLM.error(new ChatComponentText("Can't unclaim " + s + "!"));
 		}
 		
-		return "Chunk not claimed!";
+		return CommandLM.error(new ChatComponentText("Chunk not claimed!"));
 	}
 }

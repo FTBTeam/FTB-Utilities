@@ -1,11 +1,10 @@
 package latmod.ftbu.mod.client.gui.friends;
 
 import static net.minecraft.util.EnumChatFormatting.GREEN;
-import latmod.ftbu.core.FTBULang;
-import latmod.ftbu.core.client.ClientConfig;
+import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
-import latmod.ftbu.core.util.FastList;
+import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
@@ -198,7 +197,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		
 		if(notificationsGuiOpen)
 		{
-			notificationsWidth = Math.max(guiLeft - 10, Math.max(100, getMaxNTextLength()));
+			notificationsWidth = MathHelperLM.max(100, guiLeft - 10, getMaxNTextLength(), fontRendererObj.getStringWidth(FTBULang.Friends.notifications) + 30).intValue();
 			notificationButtons.clear();
 			ClientNotifications.perm.sort(null);
 			

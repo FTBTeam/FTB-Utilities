@@ -12,7 +12,7 @@ public class CmdRules extends CommandLM
 	public CmdRules()
 	{ super("rules", CommandLevel.ALL); }
 	
-	public String onCommand(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
 		if(!printRules(getCommandSenderAsPlayer(ics)))
 			throw new FeatureDisabledException();
@@ -23,7 +23,7 @@ public class CmdRules extends CommandLM
 	{
 		if(!FTBUConfig.general.isDedi() || FTBUConfig.login.rules.isEmpty()) return false;
 		
-		IChatComponent c = new ChatComponentText("[Click here to open rules]");
+		IChatComponent c = new ChatComponentText("[Click here to open rules]");//LANG
 		c.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, FTBUConfig.login.rules));
 		c.getChatStyle().setColor(EnumChatFormatting.GOLD);
 		ep.addChatMessage(c);

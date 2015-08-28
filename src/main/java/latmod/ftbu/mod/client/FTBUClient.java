@@ -2,8 +2,8 @@ package latmod.ftbu.mod.client;
 import java.util.UUID;
 
 import latmod.ftbu.core.*;
+import latmod.ftbu.core.api.*;
 import latmod.ftbu.core.client.*;
-import latmod.ftbu.core.event.FTBUReadmeEvent;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.TileLM;
 import latmod.ftbu.core.util.LMColorUtils;
@@ -29,7 +29,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
-public class FTBUClient extends FTBUCommon
+public class FTBUClient extends FTBUCommon implements IFTBUReloadable
 {
 	public static final ClientConfig clientConfig = new ClientConfig("ftbu");
 	public static final ClientConfig.Property enablePlayerDecorators = new ClientConfig.Property("player_decorators", true);
@@ -116,9 +116,9 @@ public class FTBUClient extends FTBUCommon
 		ClientNotifications.clear();
 	}
 	
-	public void onReadmeEvent(FTBUReadmeEvent e)
+	public void onReadmeEvent(ReadmeFile file)
 	{
-		FTBUReadmeEvent.ReadmeFile.Category waypoints = e.file.get("waypoints");
+		ReadmeCategory waypoints = file.get("waypoints");
 		waypoints.add("You can create waypoints by opening WaypointsGUI (FriendsGUI > You > Waypoits)");
 		waypoints.add("Right click on a waypoint to enable / disable it, Ctrl + right click to delete it, left click to open it's settings");
 		waypoints.add("You can select between Marker and Beacon waypoints, change it's color, title and coords");

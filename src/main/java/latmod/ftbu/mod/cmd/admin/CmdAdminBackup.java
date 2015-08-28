@@ -5,6 +5,7 @@ import latmod.ftbu.core.cmd.*;
 import latmod.ftbu.core.util.LMFileUtils;
 import latmod.ftbu.mod.backups.Backups;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.*;
 
 public class CmdAdminBackup extends SubCommand
 {
@@ -14,13 +15,13 @@ public class CmdAdminBackup extends SubCommand
 		return null;
 	}
 	
-	public String onCommand(final ICommandSender ics, String[] args)
+	public IChatComponent onCommand(final ICommandSender ics, String[] args)
 	{
 		if(args.length > 0)
 		{
 			if(args[0].equals("deleteall"))
 			{
-				if(Backups.thread != null) return "Backup in progress!";
+				if(Backups.thread != null) return CommandLM.error(new ChatComponentText("Backup in progress!")); //LANG
 				Backups.thread = new Thread("LM_Backups_delete")
 				{
 					public void run()
@@ -33,7 +34,7 @@ public class CmdAdminBackup extends SubCommand
 				};
 				
 				Backups.thread.start();
-				return CommandLM.FINE + "Deleting all backups...";
+				return new ChatComponentText("Deleting all backups...");
 			}
 			else if(args[0].equals("stop"))
 			{
@@ -41,17 +42,17 @@ public class CmdAdminBackup extends SubCommand
 				{
 					Backups.thread.interrupt();
 					Backups.thread = null;
-					return CommandLM.FINE + "Backup process stopped!";
+					return new ChatComponentText("Backup process stopped!");
 				}
 				
-				return "Backup process is not running!";
+				return CommandLM.error(new ChatComponentText("Backup process is not running!"));
 			}
 			else if(args[0].equals("getsize"))
 			{
 				String sizeW = LMFileUtils.getSizeS(ics.getEntityWorld().getSaveHandler().getWorldDirectory());
 				String sizeT = LMFileUtils.getSizeS(Backups.backupsFolder);
 				
-				return CommandLM.FINE + "Current world size: " + sizeW + ", total backups folder size: " + sizeT;
+				return new ChatComponentText("Current world size: " + sizeW + ", total backups folder size: " + sizeT);
 			}
 		}
 		
@@ -60,6 +61,6 @@ public class CmdAdminBackup extends SubCommand
 		boolean b = Backups.run();
 		Backups.commandOverride = false;
 		if(b) LatCoreMC.printChat(BroadcastSender.inst, ics.getCommandSenderName() + " launched manual backup!");
-		return b ? null : "Backup in progress!";
+		return b ? null : CommandLM.error(new ChatComponentText("Backup in progress!"));
 	}
 }

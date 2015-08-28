@@ -6,6 +6,7 @@ import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.core.world.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.IChatComponent;
 
 public class CmdListOverride extends CommandLM
 {
@@ -17,7 +18,7 @@ public class CmdListOverride extends CommandLM
 		printHelpLine(ics, "[uuid]");
 	}
 	
-	public String onCommand(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
 		FastList<EntityPlayerMP> players = LatCoreMC.getAllOnlinePlayers();
 		boolean printUUID = args.length > 0 && args[0].equals("uuid");

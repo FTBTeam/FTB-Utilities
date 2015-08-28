@@ -3,8 +3,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.api.FTBUReloadableRegistry;
-import latmod.ftbu.core.event.FTBUReadmeEvent;
+import latmod.ftbu.core.api.FTBUApi;
 import latmod.ftbu.core.inv.ODItems;
 import latmod.ftbu.core.net.LMNetHelper;
 import latmod.ftbu.core.util.*;
@@ -13,7 +12,6 @@ import latmod.ftbu.mod.backups.Backups;
 import latmod.ftbu.mod.cmd.*;
 import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.EnumChatFormatting;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 
@@ -44,8 +42,6 @@ public class FTBU
 		EnumBusType.FML.register(FTBUTickHandler.instance);
 	}
 	
-	private ModMetadata modMeta;
-	
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
@@ -56,18 +52,16 @@ public class FTBU
 		
 		LatCoreMC.logger.info("OS: " + OS.get());
 		
-		modMeta = e.getModMetadata();
-		
 		LatCoreMC.configFolder = e.getModConfigurationDirectory();
 		LatCoreMC.latmodFolder = new File(LatCoreMC.configFolder.getParentFile(), "latmod/");
 		if(!LatCoreMC.latmodFolder.exists()) LatCoreMC.latmodFolder.mkdirs();
 		
 		LMMod.init(this, null, null);
 		mod.logger = LatCoreMC.logger;
-		FTBUReloadableRegistry.add(proxy);
 		LMJsonUtils.updateGson();
 		IServerConfig.Registry.add(FTBUConfig.instance);
 		FTBUConfig.instance.load();
+		FTBUApi.add(proxy);
 		
 		ODItems.preInit();
 		Backups.init();
@@ -90,18 +84,13 @@ public class FTBU
 		mod.loadRecipes();
 		proxy.postInit();
 		
-		if(modMeta != null && LMMod.modsMap.values.size() >= 2)
-		{
-			modMeta.description += EnumChatFormatting.GREEN + "\n\nMods using FTBUtilities:";
-			
-			for(LMMod m : LMMod.modsMap.values)
-			{ if(m != mod) modMeta.description += "\n" + m.modID; }
-		}
-		
 		Thread readmeThread = new Thread("LM_Readme")
 		{
 			public void run()
-			{ try { FTBUReadmeEvent.saveReadme(); } catch(Exception ex) { ex.printStackTrace(); } }
+			{
+				try { FTBUApi.saveReadme(); }
+				catch(Exception ex) { ex.printStackTrace(); }
+			}
 		};
 		
 		readmeThread.start();

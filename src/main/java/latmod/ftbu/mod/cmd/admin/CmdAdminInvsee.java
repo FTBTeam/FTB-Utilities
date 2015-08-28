@@ -4,6 +4,7 @@ import latmod.ftbu.core.cmd.*;
 import latmod.ftbu.mod.cmd.InvSeeInventory;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.IChatComponent;
 
 public class CmdAdminInvsee extends SubCommand
 {
@@ -13,7 +14,7 @@ public class CmdAdminInvsee extends SubCommand
 		return NameType.NONE;
 	}
 	
-	public String onCommand(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
 		CommandLM.checkArgs(args, 1);
 		EntityPlayerMP ep0 = CommandLM.getCommandSenderAsPlayer(ics);

@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.*;
 
 import latmod.ftbu.core.LatCoreMC;
-import latmod.ftbu.core.event.FTBUReadmeEvent;
+import latmod.ftbu.core.api.*;
 import latmod.ftbu.core.util.LMJsonUtils;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -15,7 +15,7 @@ public class ConfigLogin
 {
 	private static File saveFile;
 	
-	@Expose public String[] motd;
+	@Expose public List<String> motd;
 	@Expose public String rules;
 	@Expose public String customBadges;
 	@Expose public List<ItemStack> startingItems;
@@ -31,9 +31,15 @@ public class ConfigLogin
 	
 	public void loadDefaults()
 	{
-		if(motd == null) motd = new String[] { "Welcome to the server!" };
+		if(motd == null)
+		{
+			motd = new ArrayList<String>();
+			motd.add("Welcome to the server!");
+		}
+		
 		if(rules == null) rules = "";
 		if(customBadges == null) customBadges = "";
+		
 		if(startingItems == null)
 		{
 			startingItems = new ArrayList<ItemStack>();
@@ -48,9 +54,9 @@ public class ConfigLogin
 			LatCoreMC.logger.warn(saveFile.getName() + " failed to save!");
 	}
 	
-	public static void saveReadme(FTBUReadmeEvent e)
+	public static void saveReadme(ReadmeFile file)
 	{
-		FTBUReadmeEvent.ReadmeFile.Category login = e.file.get("latmod/ftbu/login.txt");
+		ReadmeCategory login = file.get("latmod/ftbu/login.txt");
 		login.add("motd", "Message of the day. This will be displayed when player joins the server.", "Blank");
 		login.add("rules", "Rules link you can click on. This will be displayed when player joins the server.", "Blank");
 		login.add("customBadges", "URL for per-server custom badges file (Json). Example can be seen here: http://pastebin.com/LvBB9HmV ", "Blank");

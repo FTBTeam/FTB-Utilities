@@ -3,10 +3,11 @@ package latmod.ftbu.mod.cmd.admin;
 import latmod.ftbu.core.cmd.*;
 import latmod.ftbu.mod.config.*;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.*;
 
 public class CmdAdminWorldBorder extends SubCommand
 {
-	public String onCommand(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
 		CommandLM.checkArgs(args, 1);
 		
@@ -14,13 +15,13 @@ public class CmdAdminWorldBorder extends SubCommand
 		{
 			FTBUConfig.world_border.enabled = true;
 			ConfigWorldBorder.save();
-			return CommandLM.FINE + "World border enabled";
+			return new ChatComponentText("World border enabled");
 		}
 		else if(args[0].equals("off"))
 		{
 			FTBUConfig.world_border.enabled = false;
 			ConfigWorldBorder.save();
-			return CommandLM.FINE + "World border disabled";
+			return new ChatComponentText("World border disabled");
 		}
 		
 		CommandLM.checkArgs(args, 2);
@@ -30,6 +31,6 @@ public class CmdAdminWorldBorder extends SubCommand
 		
 		FTBUConfig.world_border.setWorldBorder(dim, dist);
 		ConfigWorldBorder.save();
-		return CommandLM.FINE + "World border for dimension " + dim + " set to " + dist;
+		return new ChatComponentText("World border for dimension " + dim + " set to " + dist);
 	}
 }

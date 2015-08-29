@@ -3,7 +3,11 @@ package latmod.ftbu.core.waila;
 import java.util.List;
 
 import mcp.mobius.waila.api.*;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 public class WailaDataProvider implements IWailaDataProvider
 {
@@ -37,4 +41,7 @@ public class WailaDataProvider implements IWailaDataProvider
 	
 	public List<String> getWailaTail(ItemStack is, List<String> l, IWailaDataAccessor data, IWailaConfigHandler config)
 	{ return handler.getWailaTail(is, l, getData(data)); }
+
+	public NBTTagCompound getNBTData(EntityPlayerMP ep, TileEntity te, NBTTagCompound tag, World w, int x, int y, int z)
+	{ return null; }
 }

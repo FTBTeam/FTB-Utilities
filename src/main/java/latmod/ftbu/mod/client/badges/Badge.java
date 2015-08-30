@@ -21,6 +21,12 @@ public class Badge
 	public static final FastMap<UUID, Badge> badges = new FastMap<UUID, Badge>();
 	public static final ResourceLocation defTex = FTBU.mod.getLocation("textures/failed_badge.png");
 	
+	public static void init()
+	{
+		badges.clear();
+		badges.put(new UUID(6556003398745671694L, -8612738752993846641L), new Badge("http://i.imgur.com/t1qZ58U.png"));
+	}
+	
 	private ResourceLocation textureURL = null;
 	public final String ID;
 	public boolean isGlowing = true;

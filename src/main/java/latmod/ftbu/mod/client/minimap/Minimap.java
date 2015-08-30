@@ -5,7 +5,6 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.client.ClientConfig;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.*;
@@ -171,7 +170,7 @@ public class Minimap
 				if(x > 0 && y > 0) image.setRGB(x, y, 16, 16, c.pixels, 0, 16);
 			}
 			
-			File file = new File(LatCoreMC.latmodFolder, "client/" + LMWorldClient.inst.worldIDS + "/minimap_" + dim + ".png");
+			File file = new File(LMWorldClient.inst.clientDataFolder, "minimap_" + dim + ".png");
 			ImageIO.write(image.toImage(BufferedImage.TYPE_INT_RGB), "PNG", file);
 			return file;
 		}

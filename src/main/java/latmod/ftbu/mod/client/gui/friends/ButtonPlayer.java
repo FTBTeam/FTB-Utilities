@@ -1,13 +1,12 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import static net.minecraft.util.EnumChatFormatting.*;
 import latmod.ftbu.core.client.FTBULang;
 import latmod.ftbu.core.gui.*;
-import latmod.ftbu.core.gui.GuiLM.Icons;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.core.world.*;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.util.EnumChatFormatting;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
@@ -19,7 +18,7 @@ public class ButtonPlayer extends ButtonLM
 	{ super(g, x, y, 18, 18); }
 	
 	public boolean isEnabled()
-	{ return !GuiFriends.notificationsGuiOpen; }
+	{ return GuiFriends.actionButtonPanel == null; }
 	
 	public void setPlayer(Player p)
 	{ player = p; }
@@ -32,6 +31,9 @@ public class ButtonPlayer extends ButtonLM
 			GuiFriends.selectedPlayer.func_152121_a(MinecraftProfileTexture.Type.SKIN, AbstractClientPlayer.getLocationSkin(GuiFriends.selectedPlayer.playerLM.getName()));
 			GuiFriends.selectedPlayer.inventory.currentItem = 0;
 			LMNetHelper.sendToServer(new MessageLMPlayerRequestInfo(player.player.playerID));
+			
+			if(b != 0)
+				GuiFriends.actionButtonPanel = new PanelActionButtons((GuiFriends)gui, gui.mouseX - gui.mainPanel.getAX(), gui.mouseY - gui.mainPanel.getAY(), player.player);
 		}
 		
 		gui.refreshWidgets();
@@ -46,17 +48,17 @@ public class ButtonPlayer extends ButtonLM
 			if(p == null) return;
 			
 			al.add(p.getName());
-			if(p.isOnline()) al.add(GREEN + "[" + FTBULang.Friends.label_online + "]");
+			if(p.isOnline()) al.add(EnumChatFormatting.GREEN + "[" + FTBULang.Friends.label_online + "]");
 			
-			if(!player.isOwner())
+			if(!player.isOwner)
 			{
-				boolean raw1 = p.isFriendRaw(GuiFriends.staticOwner);
-				boolean raw2 = GuiFriends.staticOwner.isFriendRaw(p);
+				boolean raw1 = p.isFriendRaw(LMWorldClient.inst.clientPlayer);
+				boolean raw2 = LMWorldClient.inst.clientPlayer.isFriendRaw(p);
 				
 				if(raw1 && raw2)
-					al.add(GREEN + "[" + FTBULang.Friends.label_friend + "]");
+					al.add(EnumChatFormatting.GREEN + "[" + FTBULang.Friends.label_friend + "]");
 				else if(raw1 || raw2)
-					al.add((raw1 ? GOLD : BLUE) + "[" + FTBULang.Friends.label_pfriend + "]");
+					al.add((raw1 ? EnumChatFormatting.GOLD : EnumChatFormatting.BLUE) + "[" + FTBULang.Friends.label_pfriend + "]");
 			}
 			
 			if(p.clientInfo != null && !p.clientInfo.isEmpty())
@@ -72,11 +74,11 @@ public class ButtonPlayer extends ButtonLM
 			
 			GuiLM.drawPlayerHead(player.player.getName(), gui.getPosX(posX + 1), gui.getPosY(posY + 1), 16, 16, gui.getZLevel());
 			
-			if(player.player.isOnline()) render(Icons.online);
+			if(player.player.isOnline()) render(GuiIcons.online);
 			
-			if(!player.isOwner())
+			if(!player.isOwner)
 			{
-				FriendStatus status = GuiFriends.staticOwner.getStatus(player.player);
+				FriendStatus status = LMWorldClient.inst.clientPlayer.getStatus(player.player);
 				if(status != FriendStatus.NONE) render(GuiFriends.icon_status[status.ordinal() - 1]);
 			}
 		}

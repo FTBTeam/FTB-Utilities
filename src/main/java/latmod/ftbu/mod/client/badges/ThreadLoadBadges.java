@@ -27,8 +27,7 @@ public class ThreadLoadBadges extends Thread
 		Badge.isReloading = true;
 		
 		LatCoreMC.logger.info("Loading badges...");
-		Badge.badges.clear();
-		Badge.badges.put(LatCoreMC.getUUIDFromString("5afb9a5b207d480e887967bc848f9a8f"), new Badge("http://i.imgur.com/t1qZ58U.png"));
+		Badge.init();
 		FastMap<String, Badge> urlBadges = new FastMap<String, Badge>();
 		
 		if(!url.isEmpty()) try

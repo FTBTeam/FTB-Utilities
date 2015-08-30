@@ -60,7 +60,7 @@ public class FTBUEventHandler // FTBUTickHandler
 		p.updateLastSeen();
 		
 		new LMPlayerServerEvent.LoggedIn(p, ep, first).post();
-		LMNetHelper.sendTo(sendAll ? null : ep, new MessageLMWorldUpdate(LMWorldServer.inst.worldID, p));
+		LMNetHelper.sendTo(sendAll ? null : ep, new MessageLMWorldUpdate(LMWorldServer.inst.worldID, p.playerID));
 		IServerConfig.Registry.updateConfig(ep, null);
 		
 		for(EntityPlayerMP ep1 : LatCoreMC.getAllOnlinePlayers())

@@ -56,7 +56,7 @@ public class ClientNotifications
 		if(!n.isTemp()) perm.add(new PermNotification(n));
 	}
 	
-	public static void clear()
+	public static void init()
 	{
 		current = null;
 		perm.clear();

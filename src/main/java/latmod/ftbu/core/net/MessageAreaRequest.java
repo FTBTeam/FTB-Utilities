@@ -18,7 +18,7 @@ public class MessageAreaRequest extends MessageLM<MessageAreaRequest>
 		chunkZ = z;
 		dim = d;
 		size = s;
-		playerID = LMWorldClient.inst.clientPlayer.playerID;
+		playerID = LMWorldClient.inst.clientPlayerID;
 	}
 	
 	public void fromBytes(ByteBuf bb)

@@ -7,6 +7,7 @@ public class WidgetLM
 {
 	public final GuiLM gui;
 	public int posX, posY, width, height;
+	public PanelLM<? extends WidgetLM> parentPanel = null;
 	public String title = null;
 	
 	public WidgetLM(GuiLM g, int x, int y, int w, int h)
@@ -21,14 +22,22 @@ public class WidgetLM
 	public boolean isEnabled()
 	{ return true; }
 	
-	public boolean isAt(int x, int y)
-	{ return x >= posX && y >= posY && x < posX + width && y < posY + height; }
+	public int getAX()
+	{ return (parentPanel == null) ? posX : (parentPanel.getAX() + posX); }
+	
+	public int getAY()
+	{ return (parentPanel == null) ? posY : (parentPanel.getAY() + posY); }
 	
 	public boolean mouseOver()
-	{ return isAt(gui.mouseXR, gui.mouseYR); }
+	{
+		int x = getAX();
+		int y = getAY();
+		return gui.mouseX >= x && gui.mouseY >= y
+		&& gui.mouseX <= x + width && gui.mouseY <= y + height;
+	}
 	
 	public void render(TextureCoords icon, double rw, double rh)
-	{ if(icon != null) icon.render(gui, posX, posY, (int)(width * rw), (int)(height * rh)); }
+	{ if(icon != null) icon.render(gui, getAX(), getAY(), (int)(width * rw), (int)(height * rh)); }
 	
 	public void render(TextureCoords icon)
 	{ render(icon, 1D, 1D); }

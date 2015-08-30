@@ -1,9 +1,9 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import latmod.ftbu.core.gui.GuiLM.Icons;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.FastList;
+import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.client.gui.*;
 
 public abstract class PlayerAction
@@ -22,35 +22,35 @@ public abstract class PlayerAction
 	
 	// Self //
 	
-	public static final PlayerAction settings = new PlayerAction(Icons.settings)
+	public static final PlayerAction settings = new PlayerAction(GuiIcons.settings)
 	{
 		public void onClicked(GuiFriends g)
 		{ g.mc.displayGuiScreen(new GuiClientConfig(g)); }
 	};
 	
-	public static final PlayerAction waypoints = new PlayerAction(Icons.compass)
+	public static final PlayerAction waypoints = new PlayerAction(GuiIcons.compass)
 	{
 		public void onClicked(GuiFriends g)
 		{ g.mc.displayGuiScreen(new GuiWaypoints()); }
 	};
 	
-	public static final PlayerAction minimap = new PlayerAction(Icons.map)
+	public static final PlayerAction minimap = new PlayerAction(GuiIcons.map)
 	{
 		public void onClicked(GuiFriends g)
 		{ g.mc.displayGuiScreen(new GuiMinimap()); }
 	};
 	
-	public static final PlayerAction notes = new PlayerAction(Icons.notes)
+	public static final PlayerAction notes = new PlayerAction(GuiIcons.notes)
 	{
 		public void onClicked(GuiFriends g)
 		{ /*WindowNotes.open();*/ }
 	};
 	
-	public static final PlayerAction notifications = new PlayerAction(Icons.comment)
+	public static final PlayerAction notifications = new PlayerAction(GuiIcons.comment)
 	{
 		public void onClicked(GuiFriends g)
 		{
-			GuiFriends.notificationsGuiOpen = !GuiFriends.notificationsGuiOpen;
+			//FIXME
 			g.playClickSound();
 			g.refreshWidgets();
 		}
@@ -58,11 +58,11 @@ public abstract class PlayerAction
 	
 	// Other players //
 	
-	public static final PlayerAction friend_toggle = new PlayerAction(Icons.add)
+	public static final PlayerAction friend_toggle = new PlayerAction(GuiIcons.add)
 	{
 		public void onClicked(GuiFriends g)
 		{
-			if(g.owner.isFriendRaw(GuiFriends.selectedPlayer.playerLM))
+			if(LMWorldClient.inst.clientPlayer.isFriendRaw(GuiFriends.selectedPlayer.playerLM))
 				LMNetHelper.sendToServer(new MessageClientGuiAction(MessageClientGuiAction.ACTION_REM_FRIEND, GuiFriends.selectedPlayer.playerLM.playerID));
 			else
 				LMNetHelper.sendToServer(new MessageClientGuiAction(MessageClientGuiAction.ACTION_ADD_FRIEND, GuiFriends.selectedPlayer.playerLM.playerID));
@@ -70,10 +70,10 @@ public abstract class PlayerAction
 		}
 		
 		public TextureCoords getIcon(GuiFriends g)
-		{ return g.owner.isFriendRaw(GuiFriends.selectedPlayer.playerLM) ? Icons.remove : Icons.add; }
+		{ return LMWorldClient.inst.clientPlayer.isFriendRaw(GuiFriends.selectedPlayer.playerLM) ? GuiIcons.remove : GuiIcons.add; }
 	};
 	
-	public static final PlayerAction friend_deny = new PlayerAction(Icons.remove)
+	public static final PlayerAction friend_deny = new PlayerAction(GuiIcons.remove)
 	{
 		public void onClicked(GuiFriends g)
 		{

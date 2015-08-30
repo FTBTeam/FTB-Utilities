@@ -29,11 +29,39 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	public FastList<E> blankCopy()
 	{ return new FastList<E>(initSize, incr); }
 	
+	public int hashCode()
+	{
+		if(size == 0) return 0;
+		if(size == 1) return LMUtils.hashCodeOf(objects[0]);
+		int h = 0;
+		for(int i = 0; i < size; i++)
+			h = h * 31 + LMUtils.hashCodeOf(objects[i]);
+		return h;
+	}
+	
+	public boolean equals(Object o)
+	{
+		if(o == null) return false;
+		else if(o == this) return true;
+		else if(o instanceof List)
+		{
+			List<?> l = (List<?>)o;
+			if(l.size() != size) return false;
+			else
+			{
+				for(int i = 0; i < size; i++)
+					if(!LMUtils.areObjectsEqual(l.get(i), objects[i], true))
+						return false;
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	private void expand()
 	{
 		E[] o = (E[])new Object[objects.length + incr];
-		for(int i = 0; i < objects.length; i++)
-		o[i] = objects[i];
+		System.arraycopy(objects, 0, o, 0, size);
 		objects = o;
 	}
 	
@@ -77,19 +105,17 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	public void removeAll(int... i)
 	{
 		if(size == 0 || i == null || i.length == 0) return;
-		for(int j : i) remove(j);
+		for(int j = 0; j < i.length; j++)
+			remove(i[j]);
 	}
 	
 	public int indexOf(Object o)
 	{
 		if(size == 0 || o == null) return -1;
-		
 		for(int i = 0; i < size; i++)
-		if(objects[i] == o) return i;
-		
+			if(objects[i] == o) return i;
 		for(int i = 0; i < size; i++)
-		if(objects[i] != null && objects[i].equals(o)) return i;
-		
+			if(objects[i] != null && objects[i].equals(o)) return i;
 		return -1;
 	}
 	
@@ -110,25 +136,23 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	public Iterator<E> iterator()
 	{ return listIterator(); }
 	
-	public E[] toArray()
+	public Object[] toArray()
 	{
-		if(size == objects.length) return objects.clone();
-		E o[] = (E[])new Object[size];
-		if(size == 0) return o;
-		System.arraycopy(objects, 0, o, 0, size);
-		objects = o;
-		return objects;
+		Object[] e = new Object[size];
+		if(size == 0) return e;
+		System.arraycopy(objects, 0, e, 0, size);
+		return e;
 	}
 	
 	public <E> E[] toArray(E[] a)
 	{
 		if(size == 0) return (E[])new Object[0];
-		if(a.length == size)
+		else if(a != null && a.length == size)
 		{
-			for(int i = 0; i < size; i++)
-				a[i] = (E)objects[i];
+			System.arraycopy(objects, 0, a, 0, size);
 			return a;
 		}
+		
 		return (E[]) Arrays.copyOf(objects, size, a.getClass());
 	}
 	
@@ -142,8 +166,8 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	{
 		FastList<E> l = blankCopy();
 		if(size == 0) return l;
-		l.objects = toArray();
 		l.size = size;
+		l.objects = objects.clone();
 		return l;
 	}
 	
@@ -151,16 +175,13 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	{
 		if(size == 0) return;
 		if(c == null) Arrays.sort(objects, 0, size);
-		else Arrays.sort((E[])objects, 0, size, c);
+		else Arrays.sort(objects, 0, size, c);
 	}
 	
 	public FastList<E> sortToNew(Comparator<? super E> c)
 	{
-		FastList<E> l = blankCopy();
-		if(size == 0) return l;
-		l.addAll(this);
-		if(c == null) Arrays.sort(l.objects, 0, size);
-		else Arrays.sort((E[])l.objects, 0, size, c);
+		FastList<E> l = clone();
+		l.sort(c);
 		return l;
 	}
 	
@@ -181,7 +202,7 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 		return sb.toString();
 	}
 	
-	private class FastIterator implements ListIterator<E>
+	private class FastListIterator implements ListIterator<E>
 	{
 		private int pos = 0;
 		
@@ -193,22 +214,22 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 		
 		public void remove()
 		{ FastList.this.remove(pos); }
-
+		
 		public boolean hasPrevious()
 		{ return pos > 0; }
-
+		
 		public E previous()
 		{ E e = get(pos - 1); pos--; return e; }
-
+		
 		public int nextIndex()
 		{ return pos + 1; }
-
+		
 		public int previousIndex()
 		{ return pos - 1; }
-
+		
 		public void set(E e)
 		{ FastList.this.set(pos, e); }
-
+		
 		public void add(E e)
 		{ FastList.this.add(e); }
 	}
@@ -238,26 +259,26 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 			size += s;
 		}
 	}
-
+	
 	public boolean addAll(int index, Collection<? extends E> c)
-	{ return addAll(c); }
-
+	{ throw new UnsupportedOperationException("addAllWithIndex"); }
+	
 	public boolean retainAll(Collection<?> c)
-	{ return false; }
-
+	{ throw new UnsupportedOperationException("retainAll"); }
+	
 	public void add(int i, E e)
 	{ add(e); }
-
+	
 	public int lastIndexOf(Object o)
 	{ return -1; }
-
+	
 	public ListIterator<E> listIterator()
-	{ return new FastIterator(); }
-
+	{ return new FastListIterator(); }
+	
 	public ListIterator<E> listIterator(int i)
-	{ FastIterator it = new FastIterator();
+	{ FastListIterator it = new FastListIterator();
 	it.pos = i; return it; }
-
+	
 	public List<E> subList(int fromIndex, int toIndex)
 	{
 		if(fromIndex < 0 || toIndex <= 0 || toIndex - fromIndex >= size) return null;
@@ -271,12 +292,9 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	{
 		if(size > t)
 		{
-			FastList<E> newRes = blankCopy();
-			for(int i = 0; i < t; i++)
-				newRes.add(get(i));
-			clear();
-			addAll(newRes);
-
+			size = t;
+			Object[] o = objects.clone();
+			System.arraycopy(o, 0, objects, 0, t);
 			return true;
 		}
 

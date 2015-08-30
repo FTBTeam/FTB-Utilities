@@ -46,6 +46,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		mapRenderer.renderGrid = Minimap.renderGrid.getB();
 		mapRenderer.renderPlayers = true;
 		mapRenderer.renderWaypoints = true;
+		mapRenderer.renderAreaTitle = false;
 		
 		final String loading = "Loading...";
 		
@@ -90,12 +91,12 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		buttonRefresh.onButtonPressed(0);
 	}
 	
-	public void addWidgets(FastList<WidgetLM> l)
+	public void addWidgets()
 	{
-		l.add(mapButton);
-		l.add(buttonRefresh);
-		l.add(buttonClose);
-		l.add(buttonSafe);
+		mainPanel.add(mapButton);
+		mainPanel.add(buttonRefresh);
+		mainPanel.add(buttonClose);
+		mainPanel.add(buttonSafe);
 	}
 	
 	public void drawBackground()
@@ -105,14 +106,14 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		setTexture(tex);
 		
-		mapRenderer.renderX = guiLeft + mapButton.posX;
-		mapRenderer.renderY = guiTop + mapButton.posY;
+		mapRenderer.renderX = mapButton.getAX();
+		mapRenderer.renderY = mapButton.getAY();
 		mapRenderer.render();
 		
 		if(mapButton.mouseOver())
 		{
 			GL11.glColor4f(0.1F, 1F, 0.7F, 0.8F);
-			tex_mouse.render(this, mapRenderer.renderX + (mapButton.chunkX() - mapRenderer.startX) * 16 - guiLeft, mapRenderer.renderY + (mapButton.chunkZ() - mapRenderer.startY) * 16 - guiTop, 16, 16);
+			tex_mouse.render(this, mapRenderer.renderX + (mapButton.chunkX() - mapRenderer.startX) * 16, mapRenderer.renderY + (mapButton.chunkZ() - mapRenderer.startY) * 16, 16, 16);
 			
 			boolean down0 = Mouse.isButtonDown(0);
 			boolean down1 = Mouse.isButtonDown(1);
@@ -151,15 +152,15 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		
-		buttonRefresh.render(Icons.map);
-		buttonClose.render(Icons.accept);
+		buttonRefresh.render(GuiIcons.map);
+		buttonClose.render(GuiIcons.accept);
 		buttonSafe.render();
 		
 		if(LMWorldClient.inst.clientPlayer.claimSettings.isSafe())
 		{
 			zLevel = 500;
 			GL11.glColor4f(1F, 1F, 1F, 0.75F);
-			buttonSafe.render(Icons.close);
+			buttonSafe.render(GuiIcons.close);
 			GL11.glColor4f(1F, 1F, 1F, 1F);
 			zLevel = 0;
 		}
@@ -167,9 +168,12 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 	
 	public void drawText(FastList<String> l)
 	{
-		if(LMWorldClient.inst.clientPlayer == null) return;
-		String s = LMWorldClient.inst.clientPlayer.claimedChunks + " / " + LMWorldClient.inst.clientPlayer.maxClaimPower;
-		fontRendererObj.drawString(s, guiLeft + xSize - fontRendererObj.getStringWidth(s) - 4, guiTop + ySize - 12, 0xFFFFFFFF);
+		if(LMWorldClient.inst.clientPlayer != null)
+		{
+			String s = LMWorldClient.inst.clientPlayer.claimedChunks + " / " + LMWorldClient.inst.clientPlayer.maxClaimPower;
+			fontRendererObj.drawString(s, guiLeft + xSize - fontRendererObj.getStringWidth(s) - 4, guiTop + ySize - 12, 0xFFFFFFFF);
+		}
+		
 		super.drawText(l);
 	}
 	
@@ -192,10 +196,10 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		}
 		
 		public int chunkX()
-		{ return mapRenderer.startX + (gui.mouseXR - posX) / 16; }
+		{ return mapRenderer.startX + (gui.mouseX - getAX()) / 16; }
 		
 		public int chunkZ()
-		{ return mapRenderer.startY + (gui.mouseYR - posY) / 16; }
+		{ return mapRenderer.startY + (gui.mouseY - getAY()) / 16; }
 		
 		public void onButtonPressed(int b)
 		{

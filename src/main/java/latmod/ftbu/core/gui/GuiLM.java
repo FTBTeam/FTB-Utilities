@@ -4,7 +4,6 @@ import java.util.List;
 import latmod.ftbu.core.OtherMods;
 import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.util.FastList;
-import latmod.ftbu.mod.FTBU;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -23,117 +22,39 @@ import cpw.mods.fml.relauncher.*;
 @Optional.Interface(iface = "codechicken.nei.api.INEIGuiHandler", modid = OtherMods.NEI)
 public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.INEIGuiHandler
 {
-	// General IIcons //
-	
-	public static class Icons
-	{
-		public static final ResourceLocation tex = FTBU.mod.getLocation("textures/gui/icons.png");
-		
-		public static final TextureCoords left = new TextureCoords(tex, 0);
-		public static final TextureCoords right = new TextureCoords(tex, 1);
-		public static final TextureCoords accept = new TextureCoords(tex, 2);
-		public static final TextureCoords add = new TextureCoords(tex, 3);
-		public static final TextureCoords remove = new TextureCoords(tex, 4);
-		public static final TextureCoords info = new TextureCoords(tex, 5);
-		public static final TextureCoords sort = new TextureCoords(tex, 6);
-		public static final TextureCoords friends = new TextureCoords(tex, 7);
-		public static final TextureCoords bug = new TextureCoords(tex, 8);
-		public static final TextureCoords jacket = new TextureCoords(tex, 9);
-		public static final TextureCoords up = new TextureCoords(tex, 10);
-		public static final TextureCoords down = new TextureCoords(tex, 11);
-		public static final TextureCoords button = new TextureCoords(tex, 12);
-		public static final TextureCoords pressed = new TextureCoords(tex, 13);
-		public static final TextureCoords player = new TextureCoords(tex, 14);
-		public static final TextureCoords online = new TextureCoords(tex, 15);
-		
-		public static final TextureCoords settings = new TextureCoords(tex, 16);
-		public static final TextureCoords bed = new TextureCoords(tex, 17);
-		public static final TextureCoords bell = new TextureCoords(tex, 18);
-		public static final TextureCoords compass = new TextureCoords(tex, 19);
-		public static final TextureCoords map = new TextureCoords(tex, 20);
-		public static final TextureCoords shield = new TextureCoords(tex, 21);
-		public static final TextureCoords picture = new TextureCoords(tex, 22);
-		public static final TextureCoords moneybag = new TextureCoords(tex, 23);
-		public static final TextureCoords game = new TextureCoords(tex, 24);
-		public static final TextureCoords feather = new TextureCoords(tex, 25);
-		public static final TextureCoords camera = new TextureCoords(tex, 26);
-		public static final TextureCoords cancel = new TextureCoords(tex, 27);
-		public static final TextureCoords accept_gray = new TextureCoords(tex, 28);
-		public static final TextureCoords add_gray = new TextureCoords(tex, 29);
-		public static final TextureCoords remove_gray = new TextureCoords(tex, 30);
-		public static final TextureCoords info_gray = new TextureCoords(tex, 31);
-		
-		public static final TextureCoords[] inv =
-		{
-			new TextureCoords(tex, 32),
-			new TextureCoords(tex, 33),
-			new TextureCoords(tex, 34),
-			new TextureCoords(tex, 35),
-		};
-		
-		public static final TextureCoords[] redstone =
-		{
-			new TextureCoords(tex, 36),
-			new TextureCoords(tex, 37),
-			new TextureCoords(tex, 38),
-			new TextureCoords(tex, 39),
-		};
-		
-		public static final TextureCoords[] security =
-		{
-			new TextureCoords(tex, 40),
-			new TextureCoords(tex, 41),
-			new TextureCoords(tex, 42),
-			new TextureCoords(tex, 43),
-		};
-		
-		public static final TextureCoords back = new TextureCoords(tex, 44);
-		public static final TextureCoords close = new TextureCoords(tex, 45);
-		public static final TextureCoords player_gray = new TextureCoords(tex, 46);
-		public static final TextureCoords online_red = new TextureCoords(tex, 47);
-		public static final TextureCoords notes = new TextureCoords(tex, 48);
-		public static final TextureCoords hsb = new TextureCoords(tex, 49);
-		public static final TextureCoords rgb = new TextureCoords(tex, 50);
-		public static final TextureCoords comment = new TextureCoords(tex, 51);
-		public static final TextureCoords bin = new TextureCoords(tex, 52);
-		public static final TextureCoords marker = new TextureCoords(tex, 53);
-		public static final TextureCoords beacon = new TextureCoords(tex, 54);
-		public static final TextureCoords color_blank = new TextureCoords(tex, 55);
-	}
-	
 	private static final FastList<String> tempTextList = new FastList<String>();
 	
 	// GuiLM //
 	
 	public final ContainerLM container;
 	public final ResourceLocation texture;
-	private final FastList<WidgetLM> widgets;
-	private boolean refreshWidgets = true;
-	public int mouseX, mouseY, mouseXR, mouseYR, mouseDWheel;
+	public final PanelLM<WidgetLM> mainPanel;
+	public int mouseX, mouseY, mouseDWheel;
 	public float delta;
 	
 	public boolean hideNEI = false;
 	private ResourceLocation prevTexture = null;
 	public static GuiLM currentGui = null;
+	private boolean refreshWidgets = true;
 	
 	public GuiLM(ContainerLM c, ResourceLocation tex)
 	{
 		super((c == null) ? new ContainerEmpty(LatCoreMCClient.getMinecraft().thePlayer, null) : c);
 		mc = LatCoreMCClient.getMinecraft();
+		mainPanel = new PanelLM<WidgetLM>(this, 0, 0, 0, 0)
+		{
+			public void addWidgets()
+			{ GuiLM.this.addWidgets(); }
+		};
 		refreshWidgets();
-		
 		container = (ContainerLM)inventorySlots;
 		texture = tex;
-		widgets = new FastList<WidgetLM>();
 	}
 	
 	public void refreshWidgets()
 	{ refreshWidgets = true; }
 	
-	public FastList<WidgetLM> getWidgets()
-	{ return widgets; }
-	
-	public abstract void addWidgets(FastList<WidgetLM> l);
+	public abstract void addWidgets();
 	
 	public ItemStack getHeldItem()
 	{ return container.player.inventory.getItemStack(); }
@@ -170,6 +91,10 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 		currentGui = this;
 		super.initGui();
 		initLMGui();
+		mainPanel.width = xSize;
+		mainPanel.height = ySize;
+		mainPanel.posX = guiLeft = (width - xSize) / 2;
+		mainPanel.posY = guiTop = (height - ySize) / 2;
 		refreshWidgets();
 	}
 	
@@ -179,16 +104,14 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	protected void mouseClicked(int mx, int my, int b)
 	{
-		for(WidgetLM w : widgets)
-			if(w.isEnabled()) w.mousePressed(b);
-		super.mouseClicked(mx, my, b);
+		mouseX = mx;
+		mouseY = my;
+		mainPanel.mousePressed(b);
 	}
 	
 	protected void keyTyped(char keyChar, int key)
 	{
-		for(WidgetLM w : widgets)
-			if(w.isEnabled() && w.keyPressed(key, keyChar)) return;
-		
+		if(mainPanel.keyPressed(key, keyChar)) return;
 		super.keyTyped(keyChar, key);
 	}
 	
@@ -200,8 +123,12 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
-		setTexture(texture);
-		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+		
+		if(texture != null)
+		{
+			setTexture(texture);
+			drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+		}
 	}
 	
 	public final void drawGuiContainerForegroundLayer(int mx, int my)
@@ -213,22 +140,15 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	public final void drawScreen(int mx, int my, float f)
 	{
-		guiLeft = (width - xSize) / 2;
-		guiTop = (height - ySize) / 2;
 		mouseX = mx;
 		mouseY = my;
-		mouseXR = mx - guiLeft;
-		mouseYR = my - guiTop;
 		delta = f;
 		prevTexture = null;
 		mouseDWheel = Mouse.getDWheel();
 		
 		if(refreshWidgets)
 		{
-			widgets.clear();
-			addWidgets(widgets);
-			widgets.removeNullValues();
-			
+			mainPanel.refreshWidgets();
 			refreshWidgets = false;
 		}
 		
@@ -248,12 +168,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	public void drawText(FastList<String> l)
 	{
-		for(int i = 0; i < widgets.size(); i++)
-		{
-			WidgetLM w = widgets.get(i);
-			if(w.isEnabled() && w.mouseOver())
-				w.addMouseOverText(l);
-		}
+		mainPanel.addMouseOverText(l);
 	}
 	
 	public final void onGuiClosed()

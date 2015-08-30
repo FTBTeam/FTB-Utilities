@@ -97,13 +97,13 @@ public class GuiSelectColorHSB extends GuiLM
 		colorSelector = new ColorSelector(this, 6, 24, 64, 64);
 	}
 	
-	public void addWidgets(FastList<WidgetLM> l)
+	public void addWidgets()
 	{
-		l.add(colorInit);
-		l.add(colorCurrent);
-		l.add(switchRGB);
-		l.add(sliderBrightness);
-		l.add(colorSelector);
+		mainPanel.add(colorInit);
+		mainPanel.add(colorCurrent);
+		mainPanel.add(switchRGB);
+		mainPanel.add(sliderBrightness);
+		mainPanel.add(colorSelector);
 	}
 	
 	public void drawBackground()
@@ -123,7 +123,7 @@ public class GuiSelectColorHSB extends GuiLM
 		LMColorUtils.setGLColor(currentColor, 255);
 		colorCurrent.render(col_tex);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
-		switchRGB.render(Icons.rgb);
+		switchRGB.render(GuiIcons.rgb);
 		
 		setTexture(tex);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
@@ -207,8 +207,8 @@ public class GuiSelectColorHSB extends GuiLM
 			
 			if(grabbed)
 			{
-				cursorPosX = MathHelperLM.clamp((gui.mouseXR - posX) / (double)width, 0D, 1D);
-				cursorPosY = MathHelperLM.clamp((gui.mouseYR - posY) / (double)height, 0D, 1D);
+				cursorPosX = MathHelperLM.clamp((gui.mouseX - getAX()) / (double)width, 0D, 1D);
+				cursorPosY = MathHelperLM.clamp((gui.mouseY - getAY()) / (double)height, 0D, 1D);
 				
 				double s = MathHelperLM.dist(cursorPosX, cursorPosY, 0D, 0.5D, 0.5D, 0D) * 2D;
 				

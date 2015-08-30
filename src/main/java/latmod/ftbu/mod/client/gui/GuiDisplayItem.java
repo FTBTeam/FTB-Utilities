@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.client.gui;
 
-import latmod.ftbu.core.gui.*;
+import latmod.ftbu.core.gui.GuiLM;
 import latmod.ftbu.core.inv.ItemDisplay;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.FTBU;
@@ -27,7 +27,7 @@ public class GuiDisplayItem extends GuiLM
 		itemDisplay = i;
 	}
 	
-	public void addWidgets(FastList<WidgetLM> l)
+	public void addWidgets()
 	{
 	}
 	

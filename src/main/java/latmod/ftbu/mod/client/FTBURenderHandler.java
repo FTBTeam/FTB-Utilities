@@ -83,6 +83,7 @@ public class FTBURenderHandler
 				mapRenderer.renderGrid = Minimap.renderGrid.getB();
 				mapRenderer.renderPlayers = Minimap.renderPlayers.getB();
 				mapRenderer.renderWaypoints = Minimap.renderWaypoints.getB();
+				mapRenderer.renderAreaTitle = true;
 				mapRenderer.render();
 			}
 			
@@ -291,7 +292,7 @@ public class FTBURenderHandler
 	
 	private void renderWorldBorder()
 	{
-		if(LMWorldClient.inst == null) return;
+		if(LMWorldClient.inst == null || !FTBUConfig.world_border.enabled) return;
 		
 		int wb = FTBUConfig.world_border.getWorldBorder(currentDim);
 		float min = (MathHelperLM.chunk(-wb) + 1) * 16 + 0.01F;

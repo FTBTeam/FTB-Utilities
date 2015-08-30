@@ -24,7 +24,7 @@ public class LMWorldServer extends LMWorld<LMPlayerServer>
 	
 	public LMWorldServer(UUID id, WorldServer w, File f)
 	{
-		super(Side.SERVER, id);
+		super(Side.SERVER, id, LatCoreMC.toShortUUID(id));
 		worldObj = w;
 		latmodFolder = f;
 		warps = new FastMap<String, EntityPos>();
@@ -60,7 +60,7 @@ public class LMWorldServer extends LMWorld<LMPlayerServer>
 		tag.setTag("Custom", customData);
 	}
 	
-	public void writePlayersToNet(NBTTagCompound tag, LMPlayerServer self)
+	public void writePlayersToNet(NBTTagCompound tag, int selfID)
 	{
 		NBTTagList list = new NBTTagList();
 		
@@ -69,7 +69,7 @@ public class LMWorldServer extends LMWorld<LMPlayerServer>
 			NBTTagCompound tag1 = new NBTTagCompound();
 			
 			LMPlayerServer p = players.get(i);
-			p.writeToNet(tag1, p.equalsPlayer(self));
+			p.writeToNet(tag1, p.playerID == selfID);
 			new LMPlayerServerEvent.DataSaved(p).post();
 			tag1.setLong("MID", p.getUUID().getMostSignificantBits());
 			tag1.setLong("LID", p.getUUID().getLeastSignificantBits());

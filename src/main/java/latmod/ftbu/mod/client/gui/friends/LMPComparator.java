@@ -63,7 +63,7 @@ public abstract class LMPComparator implements Comparator<LMPlayerClient>
 	{
 		public int compare(LMPlayerClient o1, LMPlayerClient o2)
 		{
-			int i = FriendStatus.compare(GuiFriends.staticOwner, o1, o2);
+			int i = FriendStatus.compare(LMWorldClient.inst.clientPlayer, o1, o2);
 			if(i == 0) return super.compare(o1, o2);
 			return i;
 		}

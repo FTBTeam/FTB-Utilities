@@ -2,8 +2,7 @@ package latmod.ftbu.mod.client.gui.friends;
 
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
-import latmod.ftbu.core.util.*;
-import latmod.ftbu.mod.player.ClientNotifications;
+import latmod.ftbu.core.util.FastList;
 
 import org.lwjgl.opengl.GL11;
 
@@ -12,45 +11,52 @@ public class ButtonAction extends ButtonLM
 	public final GuiFriends gui;
 	public final PlayerAction action;
 	
-	public ButtonAction(GuiFriends g, PlayerAction a, String s)
+	public ButtonAction(GuiFriends g, int y, PlayerAction a, String s)
 	{
-		super(g, 3 + GuiFriends.actionButtons.size() * 18, -17, 16, 16);
+		super(g, 0, y, g.getFontRenderer().getStringWidth(s) + 5 + ((a.getIcon(g) == null) ? 0 : 9), 10);
 		gui = g;
 		action = a;
 		title = s;
 	}
 	
-	public boolean isEnabled()
-	{ return !GuiFriends.notificationsGuiOpen; }
-	
 	public void render()
 	{
-		render(action.getIcon(gui));
+		int ax = getAX();
+		int ay = getAY();
 		
-		if(action == PlayerAction.notifications && !ClientNotifications.perm.isEmpty())
+		TextureCoords icon = action.getIcon(gui);
+		int x = 2;
+		if(icon != null) x += 9;
+		
+		icon.render(gui, ax + 1D, ay + 2D, 8D, 8D);
+		
+		if(mouseOver())
 		{
-			String n = String.valueOf(ClientNotifications.perm.size());
-			int nw = gui.mc.fontRenderer.getStringWidth(n);
+			GL11.glColor4f(1F, 1F, 1F, 1F);
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			LMColorUtils.setGLColor(0xAAFF2222);
-			GuiLM.drawTexturedRectD(gui.getPosX(posX + width - nw), gui.getPosY(posY - 2), gui.getZLevel(), nw + 1, 9, 0D, 0D, 0D, 0D);
+			GuiLM.drawRect(ax, ay, ax + width, ay + height, 0x66FFFFFF);
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glColor4f(1F, 1F, 1F, 1F);
-			gui.setTexture(null);
-			gui.mc.fontRenderer.drawString(n, gui.getPosX(posX + width - nw + 1), gui.getPosY(posY - 1), 0xFFFFFFFF);
+			GL11.glEnable(GL11.GL_BLEND);
 		}
+		
+		gui.setTexture(null);
+		gui.getFontRenderer().drawString(title, ax + x, ay + 2, 0xFFFFFFFF);
 	}
 	
 	public void onButtonPressed(int b)
 	{
-		gui.playClickSound();
-		action.onClicked((GuiFriends)gui);
-		LMNetHelper.sendToServer(new MessageLMPlayerRequestInfo(GuiFriends.selectedPlayer.playerLM.playerID));
+		if(b == 0)
+		{
+			gui.playClickSound();
+			action.onClicked((GuiFriends)gui);
+			LMNetHelper.sendToServer(new MessageLMPlayerRequestInfo(GuiFriends.selectedPlayer.playerLM.playerID));
+		}
 	}
 	
 	public void addMouseOverText(FastList<String> l)
 	{
-		super.addMouseOverText(l);
+		//super.addMouseOverText(l);
 		action.addMouseOverText(l);
 	}
 }

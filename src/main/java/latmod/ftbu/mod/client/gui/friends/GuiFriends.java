@@ -4,12 +4,10 @@ import static net.minecraft.util.EnumChatFormatting.GREEN;
 import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
-import latmod.ftbu.core.util.*;
+import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
-import latmod.ftbu.mod.client.minimap.Waypoints;
-import latmod.ftbu.mod.player.ClientNotifications;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,7 +32,6 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	public static final TextureCoords tex_slider = new TextureCoords(texPlayers, 0, 162, 16, 13);
 	
 	public final GuiScreen parentScreen;
-	public final LMPlayerClient owner;
 	public final FastList<Player> players;
 	
 	public final TextBoxLM searchBox;
@@ -44,11 +41,9 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	public final FastList<ButtonNotification> notificationButtons = new FastList<ButtonNotification>();
 	public final SliderLM scrollbar;
 	
+	public static PanelActionButtons actionButtonPanel = null;
 	static LMClientPlayer selectedPlayer = null;
-	static final FastList<ButtonAction> actionButtons = new FastList<ButtonAction>();
-	static LMPlayerClient staticOwner;
 	private static LMPComparator comparator = null;
-	static boolean notificationsGuiOpen = false;
 	public int notificationsWidth = 0;
 	
 	public GuiFriends(GuiScreen gui)
@@ -57,9 +52,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		parentScreen = gui;
 		hideNEI = true;
 		
-		owner = LMWorldClient.inst.getPlayer(container.player);
 		players = new FastList<Player>();
-		staticOwner = owner;
 		
 		xSize = 240;
 		ySize = 144;
@@ -117,7 +110,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			}
 			
 			public boolean isEnabled()
-			{ return !GuiFriends.notificationsGuiOpen; }
+			{ return actionButtonPanel == null; }
 		};
 		
 		buttonSort.title = FTBU.mod.translateClient("button.lmp_comparator");
@@ -132,29 +125,31 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			}
 			
 			public boolean isEnabled()
-			{ return !GuiFriends.notificationsGuiOpen; }
+			{ return actionButtonPanel == null; }
 		};
 		
 		scrollbar = new SliderLM(this, 218, 26, tex_slider.width, 111, tex_slider.height)
 		{
 			public boolean canMouseScroll()
-			{ return !notificationsGuiOpen; }
+			{ return actionButtonPanel == null; }
 		};
 		
 		scrollbar.isVertical = true;
 		scrollbar.displayMin = scrollbar.displayMax = 0;
 		
+		actionButtonPanel = null;
+		
 		// Player buttons //
 		
 		pbOwner = new ButtonPlayer(this, -1, 84, 5);
-		pbOwner.setPlayer(new Player(this, owner));
+		pbOwner.setPlayer(new Player(this, LMWorldClient.inst.clientPlayer));
 		
 		pbPlayers = new ButtonPlayer[7 * 6];
 		
 		for(int i = 0; i < pbPlayers.length; i++)
 			pbPlayers[i] = new ButtonPlayer(this, i, 84 + (i % 7) * 19, 25 + (i / 7) * 19);
 		
-		if(selectedPlayer == null) selectedPlayer = new LMClientPlayer(owner);
+		if(selectedPlayer == null) selectedPlayer = new LMClientPlayer(LMWorldClient.inst.clientPlayer);
 		
 		LMPComparator.init();
 		if(comparator == null)
@@ -163,39 +158,20 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		refreshPlayers();
 	}
 	
-	public void addWidgets(FastList<WidgetLM> l)
+	public void addWidgets()
 	{
-		l.add(searchBox);
-		l.add(buttonSave);
-		l.add(buttonSort);
-		l.add(buttonArmor);
-		l.add(scrollbar);
+		mainPanel.add(searchBox);
+		mainPanel.add(buttonSave);
+		mainPanel.add(buttonSort);
+		mainPanel.add(buttonArmor);
+		mainPanel.add(scrollbar);
 		
-		l.add(pbOwner);
-		l.addAll(pbPlayers);
+		mainPanel.add(pbOwner);
+		mainPanel.addAll(pbPlayers);
 		
-		actionButtons.clear();
+		mainPanel.add(actionButtonPanel);
 		
-		if(selectedPlayer.playerLM.equalsPlayer(owner))
-		{
-			actionButtons.add(new ButtonAction(this, PlayerAction.settings, FTBULang.client_config));
-			actionButtons.add(new ButtonAction(this, PlayerAction.notifications, FTBULang.Friends.notifications));
-			actionButtons.add(new ButtonAction(this, PlayerAction.waypoints, Waypoints.clientConfig.getIDS()));
-			actionButtons.add(new ButtonAction(this, PlayerAction.minimap, FTBULang.Friends.claimed_chunks));
-			//actionButtons.add(new ActionButton(this, PlayerAction.notes, "Notes"));
-		}
-		else
-		{
-			boolean isFriend = owner.isFriendRaw(selectedPlayer.playerLM);
-			actionButtons.add(new ButtonAction(this, PlayerAction.friend_toggle, isFriend ? FTBULang.Friends.button_rem_friend : FTBULang.Friends.button_add_friend));
-			
-			if(!isFriend && GuiFriends.selectedPlayer.playerLM.isFriendRaw(owner))
-				actionButtons.add(new ButtonAction(this, PlayerAction.friend_deny, FTBULang.Friends.button_deny_friend));
-		}
-		
-		l.addAll(actionButtons);
-		
-		if(notificationsGuiOpen)
+		/*if(notificationsGuiOpen)
 		{
 			notificationsWidth = MathHelperLM.max(100, guiLeft - 10, getMaxNTextLength(), fontRendererObj.getStringWidth(FTBULang.Friends.notifications) + 30).intValue();
 			notificationButtons.clear();
@@ -207,7 +183,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 				if(b.index * 26 + 16 <= height) notificationButtons.add(b);
 			}
 			
-			l.addAll(notificationButtons);
+			mainPanel.addAll(notificationButtons);
 			
 			ButtonLM b = new ButtonLM(this, -getPosX(0) + 2, -getPosY(0) + 2, notificationsWidth, 14)
 			{
@@ -219,10 +195,11 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			};
 			
 			b.title = FTBULang.button_close;
-			l.add(b);
-		}
+			mainPanel.add(b);
+		}*/
 	}
 	
+	/*
 	private int getMaxNTextLength()
 	{
 		int s = 0;
@@ -240,7 +217,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		}
 		
 		return s;
-	}
+	}*/
 	
 	public void drawBackground()
 	{
@@ -255,23 +232,16 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		for(int i = 0; i < pbPlayers.length; i++)
 			pbPlayers[i].render();
 		
-		buttonSave.render(Icons.accept);
-		buttonSort.render(Icons.sort);
+		buttonSave.render(GuiIcons.accept);
+		buttonSort.render(GuiIcons.sort);
 		
-		buttonArmor.render(Icons.jacket);
-		if(FTBUClient.hideArmorFG.getB()) buttonArmor.render(Icons.close);
-		
-		GL11.glColor4f(1F, 1F, 1F, 1F);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		drawRect(guiLeft + 2, guiTop - 18, guiLeft + 2 + GuiFriends.actionButtons.size() * 18, guiTop, 0x66666666);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glColor4f(1F, 1F, 1F, 1F);
-		GL11.glEnable(GL11.GL_BLEND);
-		
-		for(ButtonAction a : actionButtons)
-			a.render();
+		buttonArmor.render(GuiIcons.jacket);
+		if(FTBUClient.hideArmorFG.getB()) buttonArmor.render(GuiIcons.close);
 		
 		scrollbar.renderSlider(tex_slider);
+		
+		if(actionButtonPanel != null)
+			actionButtonPanel.render();
 		
 		if(FTBUClient.hideArmorFG.getB())
 		{
@@ -306,6 +276,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		GL11.glPopAttrib();
 		GL11.glPopMatrix();
 		
+		/*
 		if(notificationsGuiOpen)
 		{
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -315,7 +286,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			fontRendererObj.drawString(FTBULang.Friends.notifications + " [" + ClientNotifications.perm.size() + "]", 6, 5, 0xFFFFFFFF);
 			for(ButtonNotification b : notificationButtons) b.render();
-		}
+		}*/
 	}
 	
 	public void drawText(FastList<String> l)
@@ -345,7 +316,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		
 		FastList<LMPlayerClient> list0 = new FastList<LMPlayerClient>();
 		list0.addAll(LMWorldClient.inst.players);
-		list0.remove(owner);
+		list0.remove(LMWorldClient.inst.clientPlayer);
 		list0.sort(comparator);
 		
 		for(LMPlayerClient p : list0)

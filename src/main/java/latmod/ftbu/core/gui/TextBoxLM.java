@@ -116,7 +116,7 @@ public class TextBoxLM extends WidgetLM
 			s += '_';
 		
 		if(s.length() > 0)
-			gui.getFontRenderer().drawString(s, gui.getPosX(x), gui.getPosY(y), col);
+			gui.getFontRenderer().drawString(s, getAX() + x, getAY() + y, col);
 	}
 	
 	public void renderCentred(int x, int y, int col)
@@ -128,6 +128,6 @@ public class TextBoxLM extends WidgetLM
 			s += '_';
 		
 		if(s.length() > 0)
-			gui.getFontRenderer().drawString(s, gui.getPosX(x - gui.getFontRenderer().getStringWidth(os) / 2), gui.getPosY(y), col);
+			gui.getFontRenderer().drawString(s, getAX() + (x - gui.getFontRenderer().getStringWidth(os) / 2), getAY() + y, col);
 	}
 }

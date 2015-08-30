@@ -127,15 +127,15 @@ public class GuiWaypoints extends GuiLM
 		if(dw != 0) scroll((dw > 0) ? -1 : 1);
 	}
 	
-	public void addWidgets(FastList<WidgetLM> l)
+	public void addWidgets()
 	{
 		scroll(0);
 		
-		l.add(buttonUp);
-		l.add(buttonClose);
-		l.add(buttonAdd);
-		l.add(buttonToggleAll);
-		l.add(buttonDown);
+		mainPanel.add(buttonUp);
+		mainPanel.add(buttonClose);
+		mainPanel.add(buttonAdd);
+		mainPanel.add(buttonToggleAll);
+		mainPanel.add(buttonDown);
 		
 		Arrays.fill(waypoints, null);
 		
@@ -151,7 +151,7 @@ public class GuiWaypoints extends GuiLM
 			{
 				WaypointButton b = new WaypointButton(this, added, w);
 				waypoints[added] = b;
-				l.add(b);
+				mainPanel.add(b);
 				added++;
 			}
 			
@@ -163,11 +163,11 @@ public class GuiWaypoints extends GuiLM
 	{
 		super.drawBackground();
 		
-		buttonUp.render(Icons.up);
-		buttonClose.render(Icons.accept);
-		buttonAdd.render(Icons.add);
-		buttonToggleAll.render(Icons.close);
-		buttonDown.render(Icons.down);
+		buttonUp.render(GuiIcons.up);
+		buttonClose.render(GuiIcons.accept);
+		buttonAdd.render(GuiIcons.add);
+		buttonToggleAll.render(GuiIcons.close);
+		buttonDown.render(GuiIcons.down);
 		
 		for(int i = 0; i < LIST_SIZE; i++) if(waypoints[i] != null)
 		{
@@ -340,26 +340,26 @@ public class GuiWaypoints extends GuiLM
 			textBoxZ.text = waypoint.posZ + "";
 		}
 		
-		public void addWidgets(FastList<WidgetLM> l)
+		public void addWidgets()
 		{
-			l.add(buttonSave);
-			l.add(buttonType);
-			l.add(buttonRemove);
-			l.add(buttonSetColor);
+			mainPanel.add(buttonSave);
+			mainPanel.add(buttonType);
+			mainPanel.add(buttonRemove);
+			mainPanel.add(buttonSetColor);
 			
-			l.add(textBoxName);
-			l.add(textBoxX);
-			l.add(textBoxY);
-			l.add(textBoxZ);
+			mainPanel.add(textBoxName);
+			mainPanel.add(textBoxX);
+			mainPanel.add(textBoxY);
+			mainPanel.add(textBoxZ);
 		}
 		
 		public void drawBackground()
 		{
 			super.drawBackground();
 			
-			buttonSave.render(newWaypoint ? Icons.add : Icons.accept);
-			buttonType.render(waypoint.isMarker ? Icons.marker : Icons.beacon);
-			buttonRemove.render(newWaypoint ? Icons.close : Icons.bin);
+			buttonSave.render(newWaypoint ? GuiIcons.add : GuiIcons.accept);
+			buttonType.render(waypoint.isMarker ? GuiIcons.marker : GuiIcons.beacon);
+			buttonRemove.render(newWaypoint ? GuiIcons.close : GuiIcons.bin);
 			
 			GL11.glColor4f(waypoint.colR / 255F, waypoint.colG / 255F, waypoint.colB / 255F, 1F);
 			buttonSetColor.render(col_button_tex);

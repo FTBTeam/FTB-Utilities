@@ -58,9 +58,9 @@ public class SliderLM extends WidgetLM
 	public void renderSlider(TextureCoords tc)
 	{
 		if(isVertical)
-			tc.render(gui, posX, posY + getValueI(), width, sliderSize);
+			tc.render(gui, getAX(), getAY() + getValueI(), width, sliderSize);
 		else
-			tc.render(gui, posX + getValueI(), posY, sliderSize, height);
+			tc.render(gui, getAX() + getValueI(), getAY(), sliderSize, height);
 	}
 	
 	public void mousePressed(int b)

@@ -6,7 +6,6 @@ import java.nio.ByteBuffer;
 
 import javax.imageio.ImageIO;
 
-import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldClient;
 
@@ -37,7 +36,7 @@ public class MArea
 		posY = y;
 		chunks = new FastMap<Short, MChunk>();
 		index = Bits.intsToLong(posX, posY);
-		file = new File(LatCoreMC.latmodFolder, "client/" + LMWorldClient.inst.worldIDS + "/minimap/" + minimap.dim + "," + posX + "," + posY + ".png");
+		file = new File(LMWorldClient.inst.clientDataFolder, "minimap/" + minimap.dim + "," + posX + "," + posY + ".png");
 		load();
 	}
 	

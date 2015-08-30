@@ -23,16 +23,13 @@ public abstract class LMWorld<P extends LMPlayer>
 	public final String worldIDS;
 	public final FastList<P> players;
 	
-	public LMWorld(Side s, UUID id)
+	public LMWorld(Side s, UUID id, String ids)
 	{
 		side = s;
 		worldID = id;
-		worldIDS = getWorldIDS();
+		worldIDS = ids;
 		players = new FastList<P>();
 	}
-	
-	protected String getWorldIDS()
-	{ return LatCoreMC.toShortUUID(worldID); }
 	
 	public P getPlayer(Object o)
 	{

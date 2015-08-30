@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import latmod.ftbu.core.world.LMPlayerClient;
+import latmod.ftbu.core.world.*;
 
 public class Player
 {
@@ -12,7 +12,7 @@ public class Player
 	{
 		gui = g;
 		player = p;
-		isOwner = player.equalsPlayer(gui.owner);
+		isOwner = player.playerID == LMWorldClient.inst.clientPlayerID;
 	}
 	
 	public boolean equals(Object o)
@@ -21,7 +21,4 @@ public class Player
 			return player.equalsPlayer(((Player)o).player);
 		return player.equals(o);
 	}
-	
-	public boolean isOwner()
-	{ return gui.owner.equalsPlayer(player); }
 }

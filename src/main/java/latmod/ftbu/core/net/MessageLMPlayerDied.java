@@ -40,7 +40,7 @@ public class MessageLMPlayerDied extends MessageLM<MessageLMPlayerDied> implemen
 	@SideOnly(Side.CLIENT)
 	public void onMessageClient(MessageLMPlayerDied m, MessageContext ctx)
 	{
-		if(m.playerID == LMWorldClient.inst.clientPlayer.playerID && Waypoints.enabled.getB() && Waypoints.deathPoint.getB())
+		if(m.playerID == LMWorldClient.inst.clientPlayerID && Waypoints.enabled.getB() && Waypoints.deathPoint.getB())
 		{
 			EntityPlayer ep = LatCoreMCClient.getMinecraft().thePlayer;
 			Calendar c = Calendar.getInstance();

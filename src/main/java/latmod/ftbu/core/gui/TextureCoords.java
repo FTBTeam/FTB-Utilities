@@ -29,14 +29,11 @@ public final class TextureCoords
 	public TextureCoords(ResourceLocation res, int x, int y, int w, int h)
 	{ this(res, x, y, w, h, 256, 256); }
 	
-	public TextureCoords(ResourceLocation res, int index)
-	{ this(res, (index % 16) * 16, (index / 16) * 16, 16, 16, 256, 256); }
-	
 	@SideOnly(Side.CLIENT)
 	public void render(GuiLM gui, double x, double y, double w, double h)
 	{
 		gui.setTexture(texture);
-		GuiLM.drawTexturedRectD(x + gui.getPosX(0), y + gui.getPosY(0), gui.getZLevel(), w, h, minU, minV, maxU, maxV);
+		GuiLM.drawTexturedRectD(x, y, gui.getZLevel(), w, h, minU, minV, maxU, maxV);
 	}
 	
 	@SideOnly(Side.CLIENT)

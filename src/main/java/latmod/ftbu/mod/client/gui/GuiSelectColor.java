@@ -128,14 +128,14 @@ public class GuiSelectColor extends GuiLM
 		currentColB.scrollStep = 1F / 255F;
 	}
 	
-	public void addWidgets(FastList<WidgetLM> l)
+	public void addWidgets()
 	{
-		l.add(colorInit);
-		l.add(colorCurrent);
-		l.add(switchHSB);
-		l.add(currentColR);
-		l.add(currentColG);
-		l.add(currentColB);
+		mainPanel.add(colorInit);
+		mainPanel.add(colorCurrent);
+		mainPanel.add(switchHSB);
+		mainPanel.add(currentColR);
+		mainPanel.add(currentColG);
+		mainPanel.add(currentColB);
 	}
 	
 	public void drawBackground()
@@ -153,7 +153,7 @@ public class GuiSelectColor extends GuiLM
 		GL11.glColor4f(currentColR.value, currentColG.value, currentColB.value, 1F);
 		colorCurrent.render(col_tex);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
-		switchHSB.render(Icons.hsb);
+		switchHSB.render(GuiIcons.hsb);
 		
 		setTexture(tex);
 		GL11.glColor4f(1F, 1F, 1F, 1F);

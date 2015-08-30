@@ -9,7 +9,7 @@ import latmod.ftbu.core.tile.TileLM;
 import latmod.ftbu.core.util.LMColorUtils;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.*;
-import latmod.ftbu.mod.client.badges.ThreadLoadBadges;
+import latmod.ftbu.mod.client.badges.*;
 import latmod.ftbu.mod.client.minimap.*;
 import latmod.ftbu.mod.player.ClientNotifications;
 import net.minecraft.client.gui.GuiScreen;
@@ -102,10 +102,10 @@ public class FTBUClient extends FTBUCommon implements IFTBUReloadable
 		if(s.isClient()) ThreadLoadBadges.init();
 	}
 	
-	public static void onWorldJoined(LMPlayer p)
+	public static void onWorldJoined()
 	{
-		ClientNotifications.clear();
-		ThreadLoadBadges.init();
+		Badge.init();
+		ClientNotifications.init();
 		Waypoints.load();
 		Minimap.load();
 	}
@@ -113,7 +113,7 @@ public class FTBUClient extends FTBUCommon implements IFTBUReloadable
 	public static void onWorldClosed()
 	{
 		Minimap.save();
-		ClientNotifications.clear();
+		ClientNotifications.init();
 	}
 	
 	public void onReadmeEvent(ReadmeFile file)

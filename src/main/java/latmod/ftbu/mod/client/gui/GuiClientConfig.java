@@ -79,11 +79,11 @@ public class GuiClientConfig extends GuiLM
 		refreshWidgets();
 	}
 	
-	public void addWidgets(FastList<WidgetLM> l)
+	public void addWidgets()
 	{
-		l.add(buttonClose);
-		if(totalHeight > height) l.add(scroll);
-		l.addAll(lines);
+		mainPanel.add(buttonClose);
+		if(totalHeight > height) mainPanel.add(scroll);
+		mainPanel.addAll(lines);
 	}
 	
 	public void onLMGuiClosed()
@@ -133,7 +133,7 @@ public class GuiClientConfig extends GuiLM
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		
-		buttonClose.render(Icons.accept);
+		buttonClose.render(GuiIcons.accept);
 	}
 	
 	public static abstract class ConfigLine extends ButtonLM

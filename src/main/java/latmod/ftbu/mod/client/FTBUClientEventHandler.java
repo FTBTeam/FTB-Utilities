@@ -1,5 +1,6 @@
 package latmod.ftbu.mod.client;
 import java.io.File;
+import java.util.UUID;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.client.*;
@@ -101,8 +102,7 @@ public class FTBUClientEventHandler
 	{
 		ServerData sd = LatCoreMCClient.getMinecraft().func_147104_D();
 		String s = (sd == null || sd.serverIP.isEmpty()) ? "localhost" : sd.serverIP.replace('.', '_');
-		LMWorldClient.NoServerWorld.worldIDSNoWorld = s;
-		LMWorldClient.inst = new LMWorldClient.NoServerWorld();
+		LMWorldClient.inst = new LMWorldClient(new UUID(0L, 0L), s, 0);
 		LatCoreMC.logger.info("Connecting to world...");
 	}
 	

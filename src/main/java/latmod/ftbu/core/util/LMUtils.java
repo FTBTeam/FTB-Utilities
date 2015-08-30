@@ -60,13 +60,16 @@ public class LMUtils
 		return o1.equals(o2);
 	}
 	
+	public static int hashCodeOf(Object o)
+	{ return o == null ? 0 : o.hashCode(); }
+	
 	public static int hashCode(Object... o)
 	{
-		if(o.length == 0) return 0;
-		if(o.length == 1) return (o[0] == null) ? 0 : o[0].hashCode();
+		if(o == null || o.length == 0) return 0;
+		if(o.length == 1) return hashCodeOf(o[0]);
 		int h = 0;
 		for(int i = 0; i < o.length; i++)
-			h = h * 31 + ((o[i] == null) ? 0 : o[i].hashCode());
+			h = h * 31 + hashCodeOf(o[i]);
 		return h;
 	}
 	

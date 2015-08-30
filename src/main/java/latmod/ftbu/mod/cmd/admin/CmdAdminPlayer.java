@@ -11,9 +11,8 @@ import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBUGuiHandler;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.*;
-import net.minecraft.nbt.*;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 
 import com.mojang.authlib.GameProfile;
@@ -79,13 +78,10 @@ public class CmdAdminPlayer extends SubCommand //TODO: Swap player and command
 			{
 				EntityPlayerMP ep = p.getPlayer();
 				NBTTagCompound tag = new NBTTagCompound();
-				writeItemsToNBT(ep.inventory, tag, "Inventory");
+				StringIDInvLoader.writeInvToNBT(ep.inventory, tag, "Inventory");
 				
 				if(LatCoreMC.isModInstalled(OtherMods.BAUBLES))
-				{
-					IInventory inv = BaublesHelper.getBaubles(ep);
-					if(inv != null) writeItemsToNBT(inv, tag, "Baubles");
-				}
+					StringIDInvLoader.writeInvToNBT(BaublesHelper.getBaubles(ep), tag, "Baubles");
 				
 				String filename = ep.getCommandSenderName();
 				if(args.length == 3) filename = "custom/" + args[2];
@@ -110,13 +106,10 @@ public class CmdAdminPlayer extends SubCommand //TODO: Swap player and command
 				if(args.length == 3) filename = "custom/" + args[2];
 				NBTTagCompound tag = LMNBTUtils.readMap(new FileInputStream(new File(LatCoreMC.latmodFolder, "playerinvs/" + filename + ".dat")));
 				
-				readItemsFromNBT(ep.inventory, tag, "Inventory");
+				StringIDInvLoader.readInvFromNBT(ep.inventory, tag, "Inventory");
 				
 				if(LatCoreMC.isModInstalled(OtherMods.BAUBLES))
-				{
-					IInventory inv = BaublesHelper.getBaubles(ep);
-					if(inv != null) readItemsFromNBT(inv, tag, "Baubles");
-				}
+					StringIDInvLoader.readInvFromNBT(BaublesHelper.getBaubles(ep), tag, "Baubles");
 			}
 			catch(Exception e)
 			{
@@ -180,60 +173,5 @@ public class CmdAdminPlayer extends SubCommand //TODO: Swap player and command
 	{
 		if(i == 0) return NameType.OFF;
 		return NameType.NONE;
-	}
-	
-	private static void writeItemsToNBT(IInventory inv, NBTTagCompound tag, String s)
-	{
-		NBTTagList list = new NBTTagList();
-		
-		for(int i = 0; i < inv.getSizeInventory(); i++)
-		{
-			ItemStack is = inv.getStackInSlot(i);
-			
-			if(is != null)
-			{
-				NBTTagCompound tag1 = new NBTTagCompound();
-				tag1.setShort("S", (short)i);
-				tag1.setString("ID", LMInvUtils.getRegName(is.getItem()));
-		        tag1.setByte("C", (byte)is.stackSize);
-		        tag1.setShort("D", (short)is.getItemDamage());
-		        if (is.stackTagCompound != null) tag1.setTag("T", is.stackTagCompound);
-				list.appendTag(tag1);
-			}
-			
-		}
-		
-		if(list.tagCount() > 0) tag.setTag(s, list);
-	}
-	
-	private static void readItemsFromNBT(IInventory inv, NBTTagCompound tag, String s)
-	{
-		for(int i = 0; i < inv.getSizeInventory(); i++)
-			inv.setInventorySlotContents(i, null);
-		
-		if(tag.hasKey(s))
-		{
-			NBTTagList list = tag.getTagList(s, LMNBTUtils.MAP);
-			
-			for(int i = 0; i < list.tagCount(); i++)
-			{
-				NBTTagCompound tag1 = list.getCompoundTagAt(i);
-				Item item = LMInvUtils.getItemFromRegName(tag1.getString("ID"));
-		        
-		        if(item != null)
-		        {
-		        	int slot = tag1.getShort("S");
-		        	int size = tag1.getByte("C");
-		        	int dmg = Math.max(0, tag1.getShort("D"));
-		        	ItemStack is = new ItemStack(item, size, dmg);
-		        	if(tag1.hasKey("T", 10)) is.setTagCompound(tag1.getCompoundTag("T"));
-		        	inv.setInventorySlotContents(slot, is);
-		        }
-		        
-				if(i >= inv.getSizeInventory()) break;
-			}
-		}
-		
-		inv.markDirty();
 	}
 }

@@ -10,6 +10,9 @@ import net.minecraft.util.EnumChatFormatting;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
+import cpw.mods.fml.relauncher.*;
+
+@SideOnly(Side.CLIENT)
 public class ButtonPlayer extends ButtonLM
 {
 	public Player player = null;
@@ -31,9 +34,7 @@ public class ButtonPlayer extends ButtonLM
 			GuiFriends.selectedPlayer.func_152121_a(MinecraftProfileTexture.Type.SKIN, AbstractClientPlayer.getLocationSkin(GuiFriends.selectedPlayer.playerLM.getName()));
 			GuiFriends.selectedPlayer.inventory.currentItem = 0;
 			LMNetHelper.sendToServer(new MessageLMPlayerRequestInfo(player.player.playerID));
-			
-			if(b != 0)
-				GuiFriends.actionButtonPanel = new PanelActionButtons((GuiFriends)gui, gui.mouseX - gui.mainPanel.getAX(), gui.mouseY - gui.mainPanel.getAY(), player.player);
+			if(b != 0) GuiFriends.actionButtonPanel = new PanelActionButtons((GuiFriends)gui, gui.mouseX - gui.mainPanel.getAX() + 3, gui.mouseY - gui.mainPanel.getAY() - 3, player.player);
 		}
 		
 		gui.refreshWidgets();

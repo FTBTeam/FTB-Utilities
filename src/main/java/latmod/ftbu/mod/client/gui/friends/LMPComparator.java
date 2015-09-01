@@ -2,7 +2,7 @@ package latmod.ftbu.mod.client.gui.friends;
 
 import java.util.Comparator;
 
-import latmod.ftbu.core.event.EventLM;
+import latmod.ftbu.core.api.EventLM;
 import latmod.ftbu.core.util.FastMap;
 import latmod.ftbu.core.world.*;
 import net.minecraft.client.resources.I18n;

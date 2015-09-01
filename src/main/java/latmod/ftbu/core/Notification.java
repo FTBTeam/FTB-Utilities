@@ -65,7 +65,7 @@ public class Notification
 	{ return ID; }
 	
 	public static Notification fromJson(String s)
-	{ return LMJsonUtils.fromJson(s, Notification.class); }
+	{ return (Notification)LMJsonUtils.fromJson(s, Notification.class); }
 	
 	public String toJson()
 	{ return LMJsonUtils.toJson(this); }

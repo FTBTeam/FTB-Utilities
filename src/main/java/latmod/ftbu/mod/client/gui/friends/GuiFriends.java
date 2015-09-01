@@ -48,14 +48,13 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	
 	public GuiFriends(GuiScreen gui)
 	{
-		super(null, texPlayers);
+		super(null, null);
 		parentScreen = gui;
 		hideNEI = true;
 		
 		players = new FastList<Player>();
 		
-		xSize = 240;
-		ySize = 144;
+		xSize = ySize = 0;
 		
 		searchBox = new TextBoxLM(this, 103, 5, 94, 18)
 		{
@@ -156,6 +155,13 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			comparator = LMPComparator.map.values.get(0);
 		
 		refreshPlayers();
+	}
+	
+	public void initLMGui()
+	{
+		xSize = width;
+		ySize = height;
+		LMNetHelper.sendToServer(new MessageLMPlayerRequestInfo(0));
 	}
 	
 	public void addWidgets()
@@ -296,11 +302,6 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		drawString(fontRendererObj, selectedPlayer.playerLM.getName(), guiLeft + 5, guiTop + ySize + 1, 0xFFFFFFFF);
 		
 		super.drawText(l);
-	}
-	
-	public void initLMGui()
-	{
-		LMNetHelper.sendToServer(new MessageLMPlayerRequestInfo(0));
 	}
 	
 	public void onClientDataChanged()

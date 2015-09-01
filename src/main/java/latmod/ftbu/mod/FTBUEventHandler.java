@@ -3,7 +3,7 @@ import java.io.File;
 import java.util.*;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.event.LMPlayerServerEvent;
+import latmod.ftbu.core.api.LMPlayerServerEvent;
 import latmod.ftbu.core.inv.LMInvUtils;
 import latmod.ftbu.core.item.ICreativeSafeItem;
 import latmod.ftbu.core.net.*;
@@ -50,7 +50,7 @@ public class FTBUEventHandler // FTBUTickHandler
 			LMWorldServer.inst.players.add(p);
 			sendAll = true;
 		}
-		else if(!p.getName().equals(ep.getGameProfile().getName()))
+		else if(!p.getName().equals(p.gameProfile.getName()))
 		{
 			p.setName(p.gameProfile.getName());
 			sendAll = true;
@@ -63,8 +63,9 @@ public class FTBUEventHandler // FTBUTickHandler
 		LMNetHelper.sendTo(sendAll ? null : ep, new MessageLMWorldUpdate(LMWorldServer.inst.worldID, p.playerID));
 		IServerConfig.Registry.updateConfig(ep, null);
 		
-		for(EntityPlayerMP ep1 : LatCoreMC.getAllOnlinePlayers())
-			LMNetHelper.sendTo(ep1, new MessageLMPlayerLoggedIn(p, first, ep1.getUniqueID().equals(ep.getUniqueID())));
+		LMNetHelper.sendTo(ep, new MessageLMPlayerLoggedIn(p, first, true));
+		for(EntityPlayerMP ep1 : LatCoreMC.getAllOnlinePlayers(ep))
+			LMNetHelper.sendTo(ep1, new MessageLMPlayerLoggedIn(p, first, false));
 		
 		if(first)
 		{
@@ -89,7 +90,7 @@ public class FTBUEventHandler // FTBUTickHandler
 		
 		if(requests > 0)
 		{
-			IChatComponent cc = new ChatComponentText("You got " + requests + " new friend requests!");
+			IChatComponent cc = new ChatComponentText("You got " + requests + " new friend requests!"); //LANG
 			cc.getChatStyle().setColor(EnumChatFormatting.GREEN);
 			Notification n = new Notification("new_friend_requests", cc, 2000);
 			n.setDesc(new ChatComponentText("Click to add all as friends"));

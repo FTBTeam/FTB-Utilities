@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.client;
 import java.util.Comparator;
 
-import latmod.ftbu.core.ICallbackEvent;
+import latmod.ftbu.core.ServerTickCallback;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.client.model.*;
 import latmod.ftbu.core.util.*;
@@ -36,7 +36,7 @@ public class FTBURenderHandler
 	private static int currentDim;
 	private static double playerX, playerY, playerZ, renderX, renderY, renderZ, far = 4D;
 	
-	public static final FastList<ICallbackEvent> callbacks = new FastList<ICallbackEvent>();
+	public static final FastList<ServerTickCallback> callbacks = new FastList<ServerTickCallback>();
 	
 	private static final FastList<WaypointClient> visibleBeacons = new FastList<WaypointClient>();
 	private static final FastList<WaypointClient> visibleMarkers = new FastList<WaypointClient>();

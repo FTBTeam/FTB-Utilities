@@ -13,6 +13,7 @@ import cpw.mods.fml.relauncher.Side;
 public class FTBUTickHandler
 {
 	public static final FTBUTickHandler instance = new FTBUTickHandler();
+	public static final FastList<ServerTickCallback> callbacks = new FastList<ServerTickCallback>();
 	public static boolean serverStarted = false;
 	
 	private static long startMillis = 0L;
@@ -58,6 +59,13 @@ public class FTBUTickHandler
 				}
 				
 				if(secondsLeft > 60 && Backups.getSecondsUntilNextBackup() <= 0L) Backups.run();
+			}
+			
+			if(!callbacks.isEmpty())
+			{
+				for(int i = 0; i < callbacks.size(); i++)
+					if(callbacks.get(i).incAndCheck())
+						callbacks.remove(i);
 			}
 		}
 	}

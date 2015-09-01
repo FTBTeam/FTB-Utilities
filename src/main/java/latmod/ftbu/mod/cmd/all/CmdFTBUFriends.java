@@ -28,7 +28,7 @@ public class CmdFTBUFriends extends SubCommand
 		if(args.length == 0 || args[0].equals("gui"))
 		{
 			final EntityPlayerMP ep = CommandLM.getCommandSenderAsPlayer(ics);
-			LatCoreMCClient.addCallbackEvent(new ICallbackEvent()
+			LatCoreMCClient.addCallbackEvent(new ServerTickCallback()
 			{
 				public void onCallback()
 				{ FTBUGuiHandler.instance.openGui(ep, FTBUGuiHandler.FRIENDS, null); }

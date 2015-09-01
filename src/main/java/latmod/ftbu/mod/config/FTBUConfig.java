@@ -5,7 +5,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.api.ReadmeFile;
+import latmod.ftbu.core.api.readme.ReadmeFile;
 import latmod.ftbu.core.util.LMJsonUtils;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.entity.player.EntityPlayerMP;

@@ -20,7 +20,7 @@ public class CmdListOverride extends CommandLM
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
-		FastList<EntityPlayerMP> players = LatCoreMC.getAllOnlinePlayers();
+		FastList<EntityPlayerMP> players = LatCoreMC.getAllOnlinePlayers(null);
 		boolean printUUID = args.length > 0 && args[0].equals("uuid");
 		
 		LatCoreMC.printChat(ics, "Players currently online: [ " + players.size() + " ]");

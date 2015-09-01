@@ -2,20 +2,19 @@ package latmod.ftbu.mod.client;
 import java.util.UUID;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.api.*;
+import latmod.ftbu.core.api.readme.*;
 import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.TileLM;
 import latmod.ftbu.core.util.LMColorUtils;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.*;
-import latmod.ftbu.mod.client.badges.*;
+import latmod.ftbu.mod.client.badges.Badge;
 import latmod.ftbu.mod.client.minimap.*;
 import latmod.ftbu.mod.player.ClientNotifications;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.EntityReddustFX;
-import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
@@ -29,7 +28,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
-public class FTBUClient extends FTBUCommon implements IFTBUReloadable
+public class FTBUClient extends FTBUCommon
 {
 	public static final ClientConfig clientConfig = new ClientConfig("ftbu");
 	public static final ClientConfig.Property enablePlayerDecorators = new ClientConfig.Property("player_decorators", true);
@@ -76,12 +75,9 @@ public class FTBUClient extends FTBUCommon implements IFTBUReloadable
 	{
 		FTBULang.reload();
 		
-		EnumBusType.FORGE.register(FTBUClientEventHandler.instance);
-		EnumBusType.FML.register(FTBUClientEventHandler.instance);
-		EnumBusType.LATMOD.register(FTBUClientEventHandler.instance);
-		EnumBusType.FORGE.register(FTBURenderHandler.instance);
-		EnumBusType.FML.register(FTBURenderHandler.instance);
-		EnumBusType.FORGE.register(FTBUGuiEventHandler.instance);
+		EnumBusType.register(FTBUClientEventHandler.instance);
+		EnumBusType.register(FTBURenderHandler.instance);
+		EnumBusType.register(FTBUGuiEventHandler.instance);
 		
 		ClientConfig.Registry.init();
 		initConfig();
@@ -94,12 +90,6 @@ public class FTBUClient extends FTBUCommon implements IFTBUReloadable
 		ClientConfig.Registry.load();
 		//ThreadLoadBadges.init();
 		FTBUGuiHandler.instance.registerClient();
-	}
-	
-	public void onReloaded(Side s, ICommandSender sender) throws Exception
-	{
-		super.onReloaded(s, sender);
-		if(s.isClient()) ThreadLoadBadges.init();
 	}
 	
 	public static void onWorldJoined()

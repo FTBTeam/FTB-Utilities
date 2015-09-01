@@ -28,7 +28,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	public final ContainerLM container;
 	public final ResourceLocation texture;
-	public final PanelLM<WidgetLM> mainPanel;
+	public final PanelLM mainPanel;
 	public int mouseX, mouseY, mouseDWheel;
 	public float delta;
 	
@@ -41,7 +41,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	{
 		super((c == null) ? new ContainerEmpty(LatCoreMCClient.getMinecraft().thePlayer, null) : c);
 		mc = LatCoreMCClient.getMinecraft();
-		mainPanel = new PanelLM<WidgetLM>(this, 0, 0, 0, 0)
+		mainPanel = new PanelLM(this, 0, 0, 0, 0)
 		{
 			public void addWidgets()
 			{ GuiLM.this.addWidgets(); }

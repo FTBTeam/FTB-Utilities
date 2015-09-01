@@ -113,10 +113,14 @@ public final class LatCoreMC // LatCoreMCClient
 	{ return !MinecraftServer.getServer().getConfigurationManager().playerEntityList.isEmpty(); }
 	
 	@SuppressWarnings("unchecked")
-	public static FastList<EntityPlayerMP> getAllOnlinePlayers()
+	public static FastList<EntityPlayerMP> getAllOnlinePlayers(EntityPlayerMP except)
 	{
 		FastList<EntityPlayerMP> l = new FastList<EntityPlayerMP>();
-		if(hasOnlinePlayers()) l.addAll(getServer().getConfigurationManager().playerEntityList);
+		if(hasOnlinePlayers())
+		{
+			l.addAll(getServer().getConfigurationManager().playerEntityList);
+			if(except != null) l.removeObj(except);
+		}
 		return l;
 	}
 	

@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.UUID;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.event.LMPlayerServerEvent;
+import latmod.ftbu.core.api.LMPlayerServerEvent;
 import latmod.ftbu.core.util.*;
 import net.minecraft.nbt.*;
 import net.minecraft.world.WorldServer;

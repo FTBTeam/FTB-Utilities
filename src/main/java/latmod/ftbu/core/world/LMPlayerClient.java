@@ -1,8 +1,8 @@
 package latmod.ftbu.core.world;
 
 import latmod.ftbu.core.LMNBTUtils;
+import latmod.ftbu.core.api.LMPlayerClientEvent;
 import latmod.ftbu.core.client.LatCoreMCClient;
-import latmod.ftbu.core.event.LMPlayerClientEvent;
 import latmod.ftbu.core.inv.LMInvUtils;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.player.ClaimSettings;

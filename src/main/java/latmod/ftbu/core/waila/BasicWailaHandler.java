@@ -1,7 +1,7 @@
 package latmod.ftbu.core.waila;
 import java.util.List;
 
-import latmod.ftbu.core.event.RegisterWailaEvent;
+import latmod.ftbu.core.api.RegisterWailaEvent;
 import net.minecraft.item.ItemStack;
 
 public abstract class BasicWailaHandler

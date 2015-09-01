@@ -1,4 +1,4 @@
-package latmod.ftbu.core.api;
+package latmod.ftbu.core.api.readme;
 
 import latmod.ftbu.core.util.FastMap;
 

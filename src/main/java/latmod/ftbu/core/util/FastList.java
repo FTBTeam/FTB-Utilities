@@ -335,4 +335,10 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 		for(int i = 0; i < size0; i++)
 			if(e0[i] != null) add(e0[i]);
 	}
+	
+	public void removeAll(IntList l)
+	{
+		for(int i = 0; i < l.size(); i++)
+			remove(l.get(i));
+	}
 }

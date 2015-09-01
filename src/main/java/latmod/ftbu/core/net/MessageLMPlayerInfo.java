@@ -29,7 +29,8 @@ public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo> implemen
 		{
 			NBTTagCompound tag = new NBTTagCompound();
 			p0.getInfo(tag);
-			info.setTag("" + p0.playerID, tag);
+			info.setTag("D", tag);
+			info.setInteger("ID", p0.playerID);
 		}
 	}
 	
@@ -49,10 +50,18 @@ public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo> implemen
 	@SideOnly(Side.CLIENT)
 	public void onMessageClient(MessageLMPlayerInfo m, MessageContext ctx)
 	{
-		for(LMPlayerClient p : LMWorldClient.inst.players)
+		if(m.info.hasKey("ID"))
 		{
-			NBTTagCompound tag = (NBTTagCompound)m.info.getTag("" + p.playerID);
-			if(tag != null) p.receiveInfo(tag);
+			LMPlayerClient p = LMWorldClient.inst.getPlayer(m.info.getInteger("ID"));
+			p.receiveInfo(m.info.getCompoundTag("D"));
+		}
+		else
+		{
+			for(LMPlayerClient p : LMWorldClient.inst.players)
+			{
+				NBTTagCompound tag = (NBTTagCompound)m.info.getTag("" + p.playerID);
+				if(tag != null) p.receiveInfo(tag);
+			}
 		}
 	}
 }

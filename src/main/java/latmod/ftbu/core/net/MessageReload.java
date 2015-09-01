@@ -1,12 +1,13 @@
 package latmod.ftbu.core.net;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.LatCoreMC;
-import latmod.ftbu.core.api.FTBUApi;
+import latmod.ftbu.core.api.EventFTBUReload;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.client.badges.ThreadLoadBadges;
 import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.*;
 
-public class MessageReload extends MessageLM<MessageReload>
+public class MessageReload extends MessageLM<MessageReload> implements IClientMessageLM<MessageReload>
 {
 	public MessageReload() { }
 	
@@ -19,9 +20,13 @@ public class MessageReload extends MessageLM<MessageReload>
 	}
 	
 	public IMessage onMessage(MessageReload m, MessageContext ctx)
+	{ FTBU.proxy.handleClientMessage(m, ctx); return null; }
+	
+	@SideOnly(Side.CLIENT)
+	public void onMessageClient(MessageReload m, MessageContext ctx)
 	{
-		FTBUApi.reload(Side.CLIENT, FTBU.proxy.getClientPlayer());
+		ThreadLoadBadges.init();
+		new EventFTBUReload(Side.CLIENT, FTBU.proxy.getClientPlayer()).post();
 		LatCoreMC.printChat(FTBU.proxy.getClientPlayer(), "FTBU reloaded (Client)");
-		return null;
 	}
 }

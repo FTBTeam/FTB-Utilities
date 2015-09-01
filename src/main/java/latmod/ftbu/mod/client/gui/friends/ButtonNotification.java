@@ -7,6 +7,9 @@ import net.minecraft.item.ItemStack;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.*;
+
+@SideOnly(Side.CLIENT)
 public class ButtonNotification extends ButtonLM
 {
 	public final ClientNotifications.PermNotification notification;

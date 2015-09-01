@@ -3,7 +3,7 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.UUID;
 
-import latmod.ftbu.core.event.LMPlayerClientEvent;
+import latmod.ftbu.core.api.LMPlayerClientEvent;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.nbt.NBTTagCompound;
@@ -38,9 +38,7 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> 
 	public void fromBytes(ByteBuf bb)
 	{
 		playerID = bb.readInt();
-		long msb = bb.readLong();
-		long lsb = bb.readLong();
-		uuid = new UUID(msb, lsb);
+		uuid = LMNetHelper.readUUID(bb);
 		username = LMNetHelper.readString(bb);
 		data = LMNetHelper.readTagCompound(bb);
 		firstTime = bb.readBoolean();
@@ -49,8 +47,7 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> 
 	public void toBytes(ByteBuf bb)
 	{
 		bb.writeInt(playerID);
-		bb.writeLong(uuid.getMostSignificantBits());
-		bb.writeLong(uuid.getLeastSignificantBits());
+		LMNetHelper.writeUUID(bb, uuid);
 		LMNetHelper.writeString(bb, username);
 		LMNetHelper.writeTagCompound(bb, data);
 		bb.writeBoolean(firstTime);

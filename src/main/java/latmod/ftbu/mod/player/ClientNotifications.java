@@ -188,16 +188,12 @@ public class ClientNotifications
 				
 				if(a == ClickEvent.Action.OPEN_URL)
 				{
-					LMUtils.openURL(v);
+					try { LMUtils.openURI(new URI(v)); }
+					catch (Exception ex) { ex.printStackTrace(); }
 				}
 				else if(a == ClickEvent.Action.OPEN_FILE)
 				{
-					try
-					{
-						Class<?> oclass = Class.forName("java.awt.Desktop");
-						Object object = oclass.getMethod("getDesktop", new Class[0]).invoke((Object)null, new Object[0]);
-						oclass.getMethod("browse", new Class[] { URI.class }).invoke(object, new Object[] { new File(v).toURI() });
-					}
+					try { LMUtils.openURI(new File(v).toURI()); }
 					catch (Exception ex) { ex.printStackTrace(); }
 				}
 				else if(a == ClickEvent.Action.RUN_COMMAND)

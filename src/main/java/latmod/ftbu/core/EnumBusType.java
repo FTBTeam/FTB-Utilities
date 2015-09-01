@@ -6,26 +6,19 @@ import cpw.mods.fml.common.eventhandler.EventBus;
 
 public enum EnumBusType
 {
-	LATMOD,
-	FORGE,
-	FML;
+	FORGE(MinecraftForge.EVENT_BUS),
+	FML(FMLCommonHandler.instance().bus());
 	
-	public static final EnumBusType VALUES[] = values();
-	public static final EventBus FTBU_EVENT_BUS = new EventBus();
+	public final EventBus eventBus;
 	
-	public EventBus getBus()
-	{
-		if(this == LATMOD) return FTBU_EVENT_BUS;
-		else if(this == FORGE) return MinecraftForge.EVENT_BUS;
-		return FMLCommonHandler.instance().bus();
-	}
+	EnumBusType(EventBus eb)
+	{ eventBus = eb; }
 	
-	public void register(Object o)
-	{ getBus().register(o); }
+	public static final EnumBusType VALUES[] = { FORGE, FML };
 	
-	public void unregister(Object o)
-	{ getBus().unregister(o); }
+	public static void register(Object o)
+	{ for(EnumBusType e : VALUES) e.eventBus.register(o); }
 	
-	public static void registerAll(Object o)
-	{ for(EnumBusType e : VALUES) e.register(o); }
+	public static void unregister(Object o)
+	{ for(EnumBusType e : VALUES) e.eventBus.unregister(o); }
 }

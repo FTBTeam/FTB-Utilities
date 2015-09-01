@@ -3,7 +3,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.api.FTBUApi;
+import latmod.ftbu.core.api.readme.ReadmeSaveHandler;
 import latmod.ftbu.core.inv.ODItems;
 import latmod.ftbu.core.net.LMNetHelper;
 import latmod.ftbu.core.util.*;
@@ -35,11 +35,8 @@ public class FTBU
 	
 	public FTBU()
 	{
-		EnumBusType.FORGE.register(FTBUEventHandler.instance);
-		EnumBusType.FML.register(FTBUEventHandler.instance);
-		EnumBusType.LATMOD.register(FTBUEventHandler.instance);
-		EnumBusType.FORGE.register(FTBUTickHandler.instance);
-		EnumBusType.FML.register(FTBUTickHandler.instance);
+		EnumBusType.register(FTBUEventHandler.instance);
+		EnumBusType.register(FTBUTickHandler.instance);
 	}
 	
 	@Mod.EventHandler
@@ -61,7 +58,6 @@ public class FTBU
 		LMJsonUtils.updateGson();
 		IServerConfig.Registry.add(FTBUConfig.instance);
 		FTBUConfig.instance.load();
-		FTBUApi.add(proxy);
 		
 		ODItems.preInit();
 		Backups.init();
@@ -84,11 +80,11 @@ public class FTBU
 		mod.loadRecipes();
 		proxy.postInit();
 		
-		Thread readmeThread = new Thread("LM_Readme")
+		Thread readmeThread = new Thread("LM_Save_Readme")
 		{
 			public void run()
 			{
-				try { FTBUApi.saveReadme(); }
+				try { ReadmeSaveHandler.saveReadme(); }
 				catch(Exception ex) { ex.printStackTrace(); }
 			}
 		};
@@ -115,7 +111,7 @@ public class FTBU
 	@Mod.EventHandler
 	public void serverStopping(FMLServerStoppingEvent e)
 	{
-		if(LatCoreMC.hasOnlinePlayers()) for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers())
+		if(LatCoreMC.hasOnlinePlayers()) for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers(null))
 			FTBUEventHandler.instance.playerLoggedOut(new cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent(ep));
 		
 		/*if(FTBUConfig.backups.backupOnShutdown)

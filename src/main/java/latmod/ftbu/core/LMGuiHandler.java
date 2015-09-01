@@ -28,9 +28,8 @@ public abstract class LMGuiHandler
 	
 	public void openGui(EntityPlayer ep, int id, NBTTagCompound data)
 	{
-		if(ep == null || ep instanceof FakePlayer) return;
-		
-		if(ep instanceof EntityPlayerMP)
+		if(ep instanceof FakePlayer) return;
+		else if(ep instanceof EntityPlayerMP)
 		{
 			Container c = getContainer(ep, id, data);
 			if(c == null) return;
@@ -44,7 +43,7 @@ public abstract class LMGuiHandler
 			LMNetHelper.sendTo(epM, new MessageOpenGui(ID, id, data, epM.currentWindowId));
 		}
 		else if(!LatCoreMC.isServer())
-			FTBU.proxy.openClientGui(ep, ID, id, data);
+			FTBU.proxy.openClientGui((ep == null) ? FTBU.proxy.getClientPlayer() : ep, ID, id, data);
 	}
 	
 	@SideOnly(Side.CLIENT)

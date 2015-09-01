@@ -29,17 +29,14 @@ public class MessageLMWorldUpdate extends MessageLM<MessageLMWorldUpdate> implem
 	
 	public void fromBytes(ByteBuf bb)
 	{
-		long msb = bb.readLong();
-		long lsb = bb.readLong();
-		worldID = new UUID(msb, lsb);
+		worldID = LMNetHelper.readUUID(bb);
 		players = LMNetHelper.readTagCompound(bb);
 		clientPlayerID = bb.readInt();
 	}
 	
 	public void toBytes(ByteBuf bb)
 	{
-		bb.writeLong(worldID.getMostSignificantBits());
-		bb.writeLong(worldID.getLeastSignificantBits());
+		LMNetHelper.writeUUID(bb, worldID);
 		LMNetHelper.writeTagCompound(bb, players);
 		bb.writeInt(clientPlayerID);
 	}
@@ -50,10 +47,10 @@ public class MessageLMWorldUpdate extends MessageLM<MessageLMWorldUpdate> implem
 	@SideOnly(Side.CLIENT)
 	public void onMessageClient(MessageLMWorldUpdate m, MessageContext ctx)
 	{
-		if(LMWorldClient.inst != null) LatCoreMC.logger.error("Current client world instance is not null!");
+		if(LMWorldClient.inst != null); // LatCoreMC.logger.error("Current client world instance is not null!");
 		LMWorldClient.inst = new LMWorldClient(m.worldID, LatCoreMC.toShortUUID(m.worldID), m.clientPlayerID);
 		LMWorldClient.inst.readPlayersFromNet(m.players);
-		LatCoreMC.logger.info("Joined the server with PlayerID " + m.clientPlayerID + " on world " + LMWorldClient.inst.worldIDS);
+		LatCoreMC.logger.info("Joined the server with PlayerID " + LMWorldClient.inst.clientPlayer.playerID + " on world " + LMWorldClient.inst.worldIDS);
 		FTBUClient.onWorldJoined();
 	}
 }

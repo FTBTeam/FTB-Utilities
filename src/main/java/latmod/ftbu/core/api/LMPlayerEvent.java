@@ -1,4 +1,4 @@
-package latmod.ftbu.core.event;
+package latmod.ftbu.core.api;
 
 import latmod.ftbu.core.world.LMPlayer;
 import cpw.mods.fml.relauncher.Side;

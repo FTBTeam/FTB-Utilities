@@ -5,9 +5,7 @@ import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.client.minimap.Waypoints;
 
-import org.lwjgl.opengl.GL11;
-
-public class PanelActionButtons extends PanelLM<ButtonAction>
+public class PanelActionButtons extends PanelLM
 {
 	public final GuiFriends gui;
 	public final LMPlayerClient playerLM;
@@ -24,7 +22,7 @@ public class PanelActionButtons extends PanelLM<ButtonAction>
 		ButtonAction b = new ButtonAction(gui, height, a, s);
 		add(b);
 		width = Math.max(width, b.width);
-		height += 11;
+		height += b.height + 1;
 	}
 	
 	public void addWidgets()
@@ -49,42 +47,14 @@ public class PanelActionButtons extends PanelLM<ButtonAction>
 				add(PlayerAction.friend_deny, FTBULang.Friends.button_deny_friend);
 		}
 		
-		for(ButtonAction b : widgets)
+		for(WidgetLM b : widgets)
 			b.width = width;
 	}
 
 	public void render()
 	{
-		GL11.glColor4f(1F, 1F, 1F, 1F);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		
-		int ax = getAX();
-		int ay = getAY();
-		
-		GuiLM.drawRect(ax - 1, ay, ax + width + 1, ay + height, 0xFF666666);
-		GL11.glBegin(GL11.GL_LINES);
-		
-		GL11.glColor4f(0.2F, 0.2F, 0.2F, 1F);
-		
-		for(int i = 0; i <= widgets.size(); i++)
-		{
-			GL11.glVertex2f(ax - 1, ay + i * 11);
-			GL11.glVertex2f(ax + 1 + width, ay + i * 11);
-		}
-		
-		GL11.glVertex2f(ax + 1 + width, ay);
-		GL11.glVertex2f(ax + 1 + width, ay + height);
-		
-		GL11.glVertex2f(ax - 1, ay + height);
-		GL11.glVertex2f(ax - 1, ay);
-		
-		GL11.glEnd();
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glColor4f(1F, 1F, 1F, 1F);
-		GL11.glEnable(GL11.GL_BLEND);
-		
-		for(ButtonAction b : widgets)
-			b.render();
+		for(WidgetLM w : widgets)
+			w.renderWidget();
 	}
 	
 	public void mousePressed(int b)

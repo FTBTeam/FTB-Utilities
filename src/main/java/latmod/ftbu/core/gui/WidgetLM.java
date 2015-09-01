@@ -7,7 +7,7 @@ public class WidgetLM
 {
 	public final GuiLM gui;
 	public int posX, posY, width, height;
-	public PanelLM<? extends WidgetLM> parentPanel = null;
+	public PanelLM parentPanel = null;
 	public String title = null;
 	
 	public WidgetLM(GuiLM g, int x, int y, int w, int h)
@@ -54,5 +54,9 @@ public class WidgetLM
 	public void addMouseOverText(FastList<String> l)
 	{
 		if(title != null) l.add(title);
+	}
+	
+	public void renderWidget()
+	{
 	}
 }

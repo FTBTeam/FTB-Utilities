@@ -1,6 +1,9 @@
 package latmod.ftbu.core.net;
 
 import io.netty.buffer.ByteBuf;
+
+import java.util.UUID;
+
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.*;
@@ -11,14 +14,14 @@ import cpw.mods.fml.relauncher.Side;
 
 public class LMNetHelper
 {
-	public static final SimpleNetworkWrapper NET = NetworkRegistry.INSTANCE.newSimpleChannel(FTBU.mod.modID);
+	public static final SimpleNetworkWrapper NET = newChannel(FTBU.mod.modID);
 	
 	public static void init()
 	{
 		NET.registerMessage(MessageLMWorldUpdate.class, MessageLMWorldUpdate.class, 0, Side.CLIENT);
 		NET.registerMessage(MessageLMPlayerUpdate.class, MessageLMPlayerUpdate.class, 1, Side.CLIENT);
-		NET.registerMessage(MessageCustomClientAction.class, MessageCustomClientAction.class, 2, Side.SERVER);
-		NET.registerMessage(MessageCustomServerAction.class, MessageCustomServerAction.class, 3, Side.CLIENT);
+		//NET.registerMessage(MessageCustomNetDataFromClient.class, MessageCustomNetDataFromClient.class, 2, Side.SERVER);
+		//NET.registerMessage(MessageCustomNetDataFromServer.class, MessageCustomNetDataFromServer.class, 3, Side.CLIENT);
 		NET.registerMessage(MessageClientTileAction.class, MessageClientTileAction.class, 4, Side.SERVER);
 		NET.registerMessage(MessageLMPlayerDied.class, MessageLMPlayerDied.class, 5, Side.CLIENT);
 		NET.registerMessage(MessageReload.class, MessageReload.class, 6, Side.CLIENT);
@@ -36,11 +39,27 @@ public class LMNetHelper
 		NET.registerMessage(MessageClaimChunk.class, MessageClaimChunk.class, 18, Side.SERVER);
 	}
 	
+	public static SimpleNetworkWrapper newChannel(String s)
+	{ return NetworkRegistry.INSTANCE.newSimpleChannel(s); }
+	
 	public static void sendTo(EntityPlayerMP ep, MessageLM<?> m)
 	{ if(ep == null) NET.sendToAll(m); else NET.sendTo(m, ep); }
 	
 	public static void sendToServer(MessageLM<?> m)
 	{ NET.sendToServer(m); }
+	
+	public static UUID readUUID(ByteBuf bb)
+	{
+		long msb = bb.readLong();
+		long lsb = bb.readLong();
+		return new UUID(msb, lsb);
+	}
+	
+	public static void writeUUID(ByteBuf bb, UUID id)
+	{
+		bb.writeLong(id.getMostSignificantBits());
+		bb.writeLong(id.getLeastSignificantBits());
+	}
 	
 	public static String readString(ByteBuf bb)
 	{

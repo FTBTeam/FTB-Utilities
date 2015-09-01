@@ -4,28 +4,31 @@ import latmod.ftbu.core.util.FastList;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
-public abstract class PanelLM<W extends WidgetLM> extends WidgetLM // GuiLM
+public abstract class PanelLM extends WidgetLM // GuiLM
 {
-	protected final FastList<W> widgets;
+	protected final FastList<WidgetLM> widgets;
+	protected final FastList<PanelLM> childPanels;
 	
 	public PanelLM(GuiLM g, int x, int y, int w, int h)
 	{
 		super(g, x, y, w, h);
-		widgets = new FastList<W>();
+		widgets = new FastList<WidgetLM>();
+		childPanels = new FastList<PanelLM>();
 	}
 	
-	
-	public FastList<W> getWidgets()
+	public FastList<WidgetLM> getWidgets()
 	{ return widgets.clone(); }
 	
 	public abstract void addWidgets();
 	
-	@SuppressWarnings("unchecked")
 	public void add(WidgetLM w)
 	{
 		if(w == null) return;
 		w.parentPanel = this;
-		widgets.add((W)w);
+		widgets.add(w);
+		
+		if(w instanceof PanelLM)
+			childPanels.add((PanelLM)w);
 	}
 	
 	public void addAll(WidgetLM[] l)
@@ -45,9 +48,8 @@ public abstract class PanelLM<W extends WidgetLM> extends WidgetLM // GuiLM
 		widgets.clear();
 		addWidgets();
 		
-		for(WidgetLM w : widgets)
-			if(w instanceof PanelLM)
-				((PanelLM<?>)w).refreshWidgets();
+		for(PanelLM p : childPanels)
+			p.refreshWidgets();
 	}
 	
 	public void addMouseOverText(FastList<String> l)

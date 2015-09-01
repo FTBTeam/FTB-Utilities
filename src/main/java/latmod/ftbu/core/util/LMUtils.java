@@ -92,17 +92,12 @@ public class LMUtils
 	
 	// Misc //
 	
-	public static boolean openURL(String url)
+	public static boolean openURI(URI uri) throws Exception
 	{
-		try
-		{
-			Class<?> oclass = Class.forName("java.awt.Desktop");
-			Object object = oclass.getMethod("getDesktop", new Class[0]).invoke((Object)null, new Object[0]);
-			oclass.getMethod("browse", new Class[] { URI.class }).invoke(object, new Object[] { new URI(url) });
-			return true;
-		}
-		catch (Exception e) { e.printStackTrace(); }
-		return false;
+		Class<?> oclass = Class.forName("java.awt.Desktop");
+		Object object = oclass.getMethod("getDesktop", new Class[0]).invoke((Object)null, new Object[0]);
+		oclass.getMethod("browse", new Class[] { URI.class }).invoke(object, new Object[] { uri });
+		return true;
 	}
 	
 	public static long millis()

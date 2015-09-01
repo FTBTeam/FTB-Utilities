@@ -3,7 +3,7 @@ package latmod.ftbu.mod.config;
 import java.io.File;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.api.*;
+import latmod.ftbu.core.api.readme.*;
 import latmod.ftbu.core.util.*;
 
 import com.google.gson.annotations.Expose;

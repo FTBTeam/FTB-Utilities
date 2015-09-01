@@ -2,7 +2,7 @@ package latmod.ftbu.core.waila;
 
 import java.util.List;
 
-import latmod.ftbu.core.event.RegisterWailaEvent;
+import latmod.ftbu.core.api.RegisterWailaEvent;
 import latmod.ftbu.core.tile.IWailaTile;
 import net.minecraft.item.ItemStack;
 

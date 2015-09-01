@@ -1,7 +1,7 @@
 package latmod.ftbu.core.world;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.event.LMPlayerServerEvent;
+import latmod.ftbu.core.api.LMPlayerServerEvent;
 import latmod.ftbu.core.inv.LMInvUtils;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.*;
@@ -64,8 +64,9 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		new LMPlayerServerEvent.DataChanged(this).post();
 		if(updateClient)
 		{
-			for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers())
-				LMNetHelper.sendTo(ep, new MessageLMPlayerUpdate(this, ep == getPlayer()));
+			LMNetHelper.sendTo(getPlayer(), new MessageLMPlayerUpdate(this, true));
+			for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers(getPlayer()))
+				LMNetHelper.sendTo(ep, new MessageLMPlayerUpdate(this, false));
 		}
 	}
 	

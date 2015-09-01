@@ -3,7 +3,7 @@ package latmod.ftbu.core.client;
 import java.io.File;
 import java.util.UUID;
 
-import latmod.ftbu.core.ICallbackEvent;
+import latmod.ftbu.core.ServerTickCallback;
 import latmod.ftbu.core.gui.GuiLM;
 import latmod.ftbu.core.util.FastMap;
 import latmod.ftbu.mod.client.FTBURenderHandler;
@@ -72,7 +72,7 @@ public final class LatCoreMCClient // LatCoreMC
 	public static KeyBinding addKeyBinding(String name, int key, String cat)
 	{ KeyBinding k = new KeyBinding(name, key, cat); ClientRegistry.registerKeyBinding(k); return k; }
 	
-	public static void addCallbackEvent(ICallbackEvent e)
+	public static void addCallbackEvent(ServerTickCallback e)
 	{ FTBURenderHandler.callbacks.add(e); }
 	
 	public static void pushMaxBrightness()

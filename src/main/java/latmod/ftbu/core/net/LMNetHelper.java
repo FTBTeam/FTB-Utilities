@@ -57,8 +57,10 @@ public class LMNetHelper
 	
 	public static void writeUUID(ByteBuf bb, UUID id)
 	{
-		bb.writeLong(id.getMostSignificantBits());
-		bb.writeLong(id.getLeastSignificantBits());
+		long msb = id.getMostSignificantBits();
+		long lsb = id.getLeastSignificantBits();
+		bb.writeLong(msb);
+		bb.writeLong(lsb);
 	}
 	
 	public static String readString(ByteBuf bb)

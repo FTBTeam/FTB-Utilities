@@ -105,9 +105,9 @@ public class FTBUGuiEventHandler
 			mc.getTextureManager().bindTexture(mouseOver ? friendsButtonTextureOn : friendsButtonTexture);
 			GuiLM.drawTexturedRectD(xPosition, yPosition, 0D, width, height, 0D, 0D, 1D, 1D);
 			
-			if(!ClientNotifications.perm.isEmpty())
+			if(!ClientNotifications.Perm.list.isEmpty())
 			{
-				String n = String.valueOf(ClientNotifications.perm.size());
+				String n = String.valueOf(ClientNotifications.Perm.list.size());
 				int nw = mc.fontRenderer.getStringWidth(n);
 				GL11.glColor4f(1F, 1F, 1F, 1F);
 				GL11.glDisable(GL11.GL_TEXTURE_2D);

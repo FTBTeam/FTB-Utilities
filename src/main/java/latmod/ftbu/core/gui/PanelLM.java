@@ -54,6 +54,8 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 	
 	public void addMouseOverText(FastList<String> l)
 	{
+		if(title != null) l.add(title); 
+		
 		for(int i = 0; i < widgets.size(); i++)
 		{
 			WidgetLM w = widgets.get(i);

@@ -23,15 +23,8 @@ public class MChunk
 		area = a;
 		posX = x;
 		posY = y;
-		
-		x = (posX % MArea.size_c);
-		if(x < 0) x += MArea.size_c;
-		rposX = x;
-		
-		y = (posY % MArea.size_c);
-		if(y < 0) y += MArea.size_c;
-		rposY = y;
-		
+		rposX = MathHelperLM.wrap(posX, MArea.size_c);
+		rposY = MathHelperLM.wrap(posY, MArea.size_c);
 		pixels = new int[256];
 		type = ChunkType.UNLOADED;
 		owner = null;

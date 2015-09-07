@@ -22,9 +22,7 @@ import cpw.mods.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class ClientNotifications
 {
-	public static final FastList<PermNotification> perm = new FastList<PermNotification>();
-	public static final FastList<TempNotification> temp = new FastList<TempNotification>();
-	private static TempNotification current = null;
+	private static Temp current = null;
 	
 	public static void renderTemp(Minecraft mc)
 	{
@@ -34,10 +32,10 @@ public class ClientNotifications
 			if(current.isDead())
 				current = null;
 		}
-		else if(!temp.isEmpty())
+		else if(!Temp.list.isEmpty())
 		{
-			current = temp.get(0);
-			temp.remove(0);
+			current = Temp.list.get(0);
+			Temp.list.remove(0);
 		}
 	}
 	
@@ -46,31 +44,33 @@ public class ClientNotifications
 		if(n == null) return;
 		if(n.ID != null)
 		{
-			temp.removeObj(n.ID);
-			perm.removeObj(n.ID);
+			Temp.list.removeObj(n.ID);
+			Perm.list.removeObj(n.ID);
 			if(current != null && current.notification.ID != null && current.notification.ID.equals(n.ID))
 				current = null;
 		}
 		
-		temp.add(new TempNotification(n));
-		if(!n.isTemp()) perm.add(new PermNotification(n));
+		Temp.list.add(new Temp(n));
+		if(!n.isTemp()) Perm.list.add(new Perm(n));
 	}
 	
 	public static void init()
 	{
 		current = null;
-		perm.clear();
-		temp.clear();
+		Perm.list.clear();
+		Temp.list.clear();
 	}
 	
-	public static class TempNotification extends Gui
+	public static class Temp extends Gui
 	{
+		public static final FastList<Temp> list = new FastList<Temp>();
+		
 		public final Notification notification;
 		
 		private RenderItem renderItem = new RenderItem();
 		private long time;
 
-		public TempNotification(Notification n)
+		public Temp(Notification n)
 		{
 			notification = n;
 			time = -1L;
@@ -161,12 +161,14 @@ public class ClientNotifications
 		{ return time == 0L; }
 	}
 	
-	public static class PermNotification implements Comparable<PermNotification>
+	public static class Perm implements Comparable<Perm>
 	{
+		public static final FastList<Perm> list = new FastList<Perm>();
+		
 		public final Notification notification;
 		public final long timeAdded;
 		
-		public PermNotification(Notification n)
+		public Perm(Notification n)
 		{
 			notification = n;
 			timeAdded = LMUtils.millis();
@@ -175,7 +177,7 @@ public class ClientNotifications
 		public boolean equals(Object o)
 		{ return notification.equals(o); }
 		
-		public int compareTo(PermNotification o)
+		public int compareTo(Perm o)
 		{ return Long.compare(timeAdded, o.timeAdded); }
 		
 		public void onClicked(Minecraft mc)

@@ -43,17 +43,7 @@ public abstract class PlayerAction
 	public static final PlayerAction notes = new PlayerAction(GuiIcons.notes)
 	{
 		public void onClicked(GuiFriends g)
-		{ /*WindowNotes.open();*/ }
-	};
-	
-	public static final PlayerAction notifications = new PlayerAction(GuiIcons.comment)
-	{
-		public void onClicked(GuiFriends g)
-		{
-			//FIXME
-			g.playClickSound();
-			g.refreshWidgets();
-		}
+		{  }
 	};
 	
 	// Other players //
@@ -62,23 +52,35 @@ public abstract class PlayerAction
 	{
 		public void onClicked(GuiFriends g)
 		{
-			if(LMWorldClient.inst.clientPlayer.isFriendRaw(GuiFriends.selectedPlayer.playerLM))
-				LMNetHelper.sendToServer(new MessageClientGuiAction(MessageClientGuiAction.ACTION_REM_FRIEND, GuiFriends.selectedPlayer.playerLM.playerID));
+			if(LMWorldClient.inst.clientPlayer.isFriendRaw(g.panelPlayerView.selectedPlayer.playerLM))
+				LMNetHelper.sendToServer(new MessageClientGuiAction(MessageClientGuiAction.ACTION_REM_FRIEND, g.panelPlayerView.selectedPlayer.playerLM.playerID));
 			else
-				LMNetHelper.sendToServer(new MessageClientGuiAction(MessageClientGuiAction.ACTION_ADD_FRIEND, GuiFriends.selectedPlayer.playerLM.playerID));
-			g.refreshPlayers();
+				LMNetHelper.sendToServer(new MessageClientGuiAction(MessageClientGuiAction.ACTION_ADD_FRIEND, g.panelPlayerView.selectedPlayer.playerLM.playerID));
+			//g.refreshPlayers();
 		}
 		
 		public TextureCoords getIcon(GuiFriends g)
-		{ return LMWorldClient.inst.clientPlayer.isFriendRaw(GuiFriends.selectedPlayer.playerLM) ? GuiIcons.remove : GuiIcons.add; }
+		{ return LMWorldClient.inst.clientPlayer.isFriendRaw(g.panelPlayerView.selectedPlayer.playerLM) ? GuiIcons.remove : GuiIcons.add; }
 	};
 	
 	public static final PlayerAction friend_deny = new PlayerAction(GuiIcons.remove)
 	{
 		public void onClicked(GuiFriends g)
 		{
-			LMNetHelper.sendToServer(new MessageClientGuiAction(MessageClientGuiAction.ACTION_DENY_FRIEND, GuiFriends.selectedPlayer.playerLM.playerID));
-			g.refreshPlayers();
+			LMNetHelper.sendToServer(new MessageClientGuiAction(MessageClientGuiAction.ACTION_DENY_FRIEND, g.panelPlayerView.selectedPlayer.playerLM.playerID));
+			//g.refreshPlayers();
 		}
+	};
+	
+	public static final PlayerAction mail = new PlayerAction(GuiIcons.feather)
+	{
+		public void onClicked(GuiFriends g)
+		{  }
+	};
+	
+	public static final PlayerAction trade = new PlayerAction(GuiIcons.moneybag)
+	{
+		public void onClicked(GuiFriends g)
+		{  }
 	};
 }

@@ -38,6 +38,7 @@ public final class LatCoreMCClient // LatCoreMC
 	private static final FastMap<ResourceLocation, Integer> textureMap = new FastMap<ResourceLocation, Integer>();
 	private static final ResourceLocation clickSound = new ResourceLocation("gui.button.press");
 	public static int displayW, displayH;
+	private static final FastMap<String, ResourceLocation> cachedSkins = new FastMap<String, ResourceLocation>();
 	
 	public static Minecraft getMinecraft()
 	{ return FMLClientHandler.instance().getClient(); }
@@ -116,8 +117,21 @@ public final class LatCoreMCClient // LatCoreMC
 	
 	public static ResourceLocation getSkinTexture(String username)
 	{
-		ResourceLocation r = AbstractClientPlayer.getLocationSkin(username);
-		AbstractClientPlayer.getDownloadImageSkin(r, username);
+		ResourceLocation r = cachedSkins.get(username);
+		
+		if(r == null)
+		{
+			r = AbstractClientPlayer.getLocationSkin(username);
+			
+			try
+			{
+				AbstractClientPlayer.getDownloadImageSkin(r, username);
+				cachedSkins.put(username, r);
+			}
+			catch(Exception e)
+			{ e.printStackTrace(); }
+		}
+		
 		return r;
 	}
 	
@@ -138,6 +152,12 @@ public final class LatCoreMCClient // LatCoreMC
 		}
 		
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, i.intValue());
+	}
+	
+	public static void resetTextureMaps()
+	{
+		textureMap.clear();
+		cachedSkins.clear();
 	}
 	
 	public static void playClickSound()

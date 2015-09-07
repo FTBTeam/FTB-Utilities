@@ -73,6 +73,7 @@ public class FTBUClientEventHandler
 		{
 			LatCoreMCClient.blockNullIcon = e.map.registerIcon(FTBU.mod.assets + "empty_block");
 			FTBULang.reload();
+			LatCoreMCClient.resetTextureMaps();
 		}
 		else if(e.map.getTextureType() == 1)
 			LatCoreMCClient.unknownItemIcon = e.map.registerIcon(FTBU.mod.assets + "unknown");

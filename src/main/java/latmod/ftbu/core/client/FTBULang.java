@@ -2,6 +2,7 @@ package latmod.ftbu.core.client;
 
 import latmod.ftbu.core.EnumDyeColor;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.client.gui.friends.LMPComparator;
 import latmod.ftbu.mod.player.ChunkType;
 import net.minecraft.client.resources.I18n;
 import cpw.mods.fml.relauncher.*;
@@ -95,6 +96,9 @@ public class FTBULang
 		
 		for(int i = 0; i < chunk_types.length; i++)
 			chunk_types[i] = FTBU.mod.translateClient("chunktype." + ChunkType.VALUES[i].lang);
+		
+		for(LMPComparator c : LMPComparator.values())
+			c.translatedName = I18n.format("lmp_comparator." + c.ID);
 	}
 	
 	private static String get(String s)

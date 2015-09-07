@@ -1,24 +1,42 @@
 package latmod.ftbu.mod.client.gui.friends;
 
 import latmod.ftbu.core.world.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.*;
+import cpw.mods.fml.relauncher.*;
 
-public class Player
+@SideOnly(Side.CLIENT)
+public class Player extends AbstractClientPlayer
 {
-	public final GuiFriends gui;
-	public final LMPlayerClient player;
+	private static final ChunkCoordinates coords000 = new ChunkCoordinates(0, 0, 0);
+	
+	public final LMPlayerClient playerLM;
 	public final boolean isOwner;
 	
-	public Player(GuiFriends g, LMPlayerClient p)
+	public Player(LMPlayerClient p)
 	{
-		gui = g;
-		player = p;
-		isOwner = player.playerID == LMWorldClient.inst.clientPlayerID;
+		super(Minecraft.getMinecraft().theWorld, p.gameProfile);
+		playerLM = p;
+		isOwner = playerLM.playerID == LMWorldClient.inst.clientPlayerID;
 	}
 	
 	public boolean equals(Object o)
 	{
 		if(o instanceof Player)
-			return player.equalsPlayer(((Player)o).player);
-		return player.equals(o);
+			return playerLM.equalsPlayer(((Player)o).playerLM);
+		return playerLM.equals(o);
 	}
+	
+	public void addChatMessage(IChatComponent i) { }
+	
+	public boolean canCommandSenderUseCommand(int i, String s)
+	{ return false; }
+	
+	public ChunkCoordinates getPlayerCoordinates()
+	{ return coords000; }
+	
+	public boolean isInvisibleToPlayer(EntityPlayer ep)
+	{ return true; }
 }

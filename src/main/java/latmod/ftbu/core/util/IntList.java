@@ -16,7 +16,7 @@ public class IntList implements Iterable<Integer>// Improve this // FastList
 	{ init = i; array = new int[init]; }
 	
 	public IntList()
-	{ this(0); }
+	{ this(5); }
 	
 	public int size()
 	{ return size; }
@@ -29,24 +29,31 @@ public class IntList implements Iterable<Integer>// Improve this // FastList
 	
 	public void add(int value)
 	{
-		int array1[] = new int[size + 1];
-		for(int i = 0; i < size; i++)
-			array1[i] = array[i];
-		array1[array1.length - 1] = value;
-		array = array1;
+		if(size == array.length)
+		{
+			int ai[] = new int[size + 10];
+			System.arraycopy(array, 0, ai, 0, size);
+			array = ai;
+		}
+		
+		array[size] = value;
 		size++;
 	}
 	
 	public void addAll(int... values)
 	{
-		if(values.length <= 0) return;
-		int array1[] = new int[size + values.length];
-		for(int i = 0; i < size; i++)
-			array1[i] = array[i];
-		for(int i = 0; i < values.length; i++)
-			array1[array1.length - values.length + i] = values[i];
-		array = array1;
-		size += values.length;
+		if(values == null || values.length == 0) return;
+		int size1 = size + values.length;
+		
+		if(size1 >= array.length)
+		{
+			int ai[] = new int[size1];
+			System.arraycopy(array, 0, ai, 0, size);
+			array = ai;
+		}
+		
+		System.arraycopy(values, 0, array, size, values.length);
+		size = size1;
 	}
 	
 	public void addAll(IntList l)
@@ -91,8 +98,7 @@ public class IntList implements Iterable<Integer>// Improve this // FastList
 	{
 		if(size <= 0) return new int[0];
 		int ai[] = new int[size];
-		for(int i = 0; i < size; i++)
-			ai[i] = array[i];
+		System.arraycopy(array, 0, ai, 0, size);
 		return ai;
 	}
 	

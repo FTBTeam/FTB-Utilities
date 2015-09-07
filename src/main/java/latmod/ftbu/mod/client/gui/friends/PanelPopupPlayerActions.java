@@ -4,39 +4,32 @@ import latmod.ftbu.core.client.FTBULang;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.client.minimap.Waypoints;
+import cpw.mods.fml.relauncher.*;
 
-public class PanelActionButtons extends PanelLM
+@SideOnly(Side.CLIENT)
+public class PanelPopupPlayerActions extends PanelPopupMenu
 {
 	public final GuiFriends gui;
 	public final LMPlayerClient playerLM;
 	
-	public PanelActionButtons(GuiFriends g, int x, int y, LMPlayerClient p)
+	public PanelPopupPlayerActions(GuiFriends g, int x, int y, LMPlayerClient p)
 	{
-		super(g, x, y, 0, 18);
+		super(g, x, y, 18);
 		gui = g;
 		playerLM = p;
 	}
 	
 	public void add(PlayerAction a, String s)
-	{
-		ButtonAction b = new ButtonAction(gui, height, a, s);
-		add(b);
-		width = Math.max(width, b.width);
-		height += b.height + 1;
-	}
+	{ if(a != null) menuButtons.add(new ButtonAction(this, a, s)); }
 	
-	public void addWidgets()
+	public void addItems()
 	{
-		width = 0;
-		height = 0;
-		
 		if(playerLM.equalsPlayer(LMWorldClient.inst.clientPlayer))
 		{
 			add(PlayerAction.settings, FTBULang.client_config);
-			add(PlayerAction.notifications, FTBULang.Friends.notifications);
 			add(PlayerAction.waypoints, Waypoints.clientConfig.getIDS());
 			add(PlayerAction.minimap, FTBULang.Friends.claimed_chunks);
-			//actionButtons.add(new ActionButton(this, PlayerAction.notes, "Notes"));
+			//actionButtons.add(new ActionButton(this, PlayerAction.notes, "Notes")); 
 		}
 		else
 		{
@@ -45,21 +38,16 @@ public class PanelActionButtons extends PanelLM
 			
 			if(!isFriend && playerLM.isFriendRaw(LMWorldClient.inst.clientPlayer))
 				add(PlayerAction.friend_deny, FTBULang.Friends.button_deny_friend);
+			
+			add(PlayerAction.mail, "Mail"); //LANG
+			add(PlayerAction.trade, "Trade"); //LANG
 		}
-		
-		for(WidgetLM b : widgets)
-			b.width = width;
-	}
-
-	public void render()
-	{
-		for(WidgetLM w : widgets)
-			w.renderWidget();
 	}
 	
-	public void mousePressed(int b)
+	public void onClosed(ButtonPopupMenu b, int mb)
 	{
-		super.mousePressed(b);
-		if(b == 0) GuiFriends.actionButtonPanel = null;
+		if(b != null && mb == 0 && b.object instanceof PlayerAction)
+			((PlayerAction)b.object).onClicked(gui);
+		if(mb == 0) gui.panelPopupMenu = null;
 	}
 }

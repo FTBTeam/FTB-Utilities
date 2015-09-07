@@ -3,7 +3,8 @@ import java.util.List;
 
 import latmod.ftbu.core.OtherMods;
 import latmod.ftbu.core.client.*;
-import latmod.ftbu.core.util.FastList;
+import latmod.ftbu.core.util.*;
+import latmod.ftbu.mod.FTBU;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -22,6 +23,7 @@ import cpw.mods.fml.relauncher.*;
 @Optional.Interface(iface = "codechicken.nei.api.INEIGuiHandler", modid = OtherMods.NEI)
 public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.INEIGuiHandler
 {
+	public static final ResourceLocation tex_blank = FTBU.mod.getLocation("textures/gui/blank_texture.png");
 	private static final FastList<String> tempTextList = new FastList<String>();
 	
 	// GuiLM //
@@ -107,6 +109,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 		mouseX = mx;
 		mouseY = my;
 		mainPanel.mousePressed(b);
+		super.mouseClicked(mx, my, b);
 	}
 	
 	protected void keyTyped(char keyChar, int key)
@@ -230,37 +233,32 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	{ LatCoreMCClient.playClickSound(); }
 	
 	public FontRenderer getFontRenderer()
-	{ return fontRendererObj; }
+	{ setTexture(null); return fontRendererObj; }
 	
 	public static void drawPlayerHead(String username, double x, double y, double w, double h, double z)
 	{
 		LatCoreMCClient.setTexture(LatCoreMCClient.getSkinTexture(username));
-		
-		Tessellator tessellator = Tessellator.instance;
-		
-		double minU = 1D / 8D;
-		double minV = 1D / 4D;
-		double maxU = 2D / 8D;
-		double maxV = 2D / 4D;
-		
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(x + 0, y + h, z, minU, maxV);
-		tessellator.addVertexWithUV(x + w, y + h, z, maxU, maxV);
-		tessellator.addVertexWithUV(x + w, y + 0, z, maxU, minV);
-		tessellator.addVertexWithUV(x + 0, y + 0, z, minU, minV);
-		tessellator.draw();
-		
-		double minU2 = 5D / 8D;
-		double minV2 = 1D / 4D;
-		double maxU2 = 6D / 8D;
-		double maxV2 = 2D / 4D;
-		
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(x + 0, y + h, z, minU2, maxV2);
-		tessellator.addVertexWithUV(x + w, y + h, z, maxU2, maxV2);
-		tessellator.addVertexWithUV(x + w, y + 0, z, maxU2, minV2);
-		tessellator.addVertexWithUV(x + 0, y + 0, z, minU2, minV2);
-		tessellator.draw();
+		drawTexturedRectD(x, y, z, w, h, 0.125D, 0.25D, 0.25D, 0.5D);
+		drawTexturedRectD(x, y, z, w, h, 0.625D, 0.25D, 0.75D, 0.5D);
+	}
+	
+	public void drawBlankRect(int x, int y, int w, int h, int col)
+	{
+		//setTexture(tex_blank);
+		GL11.glColor4f(1F, 1F, 1F, 1F);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		//drawTexturedRectD(x, y, x + w, y + h, zLevel, 0D, 0D, 0D, 0D);
+		Tessellator t = Tessellator.instance;
+		t.startDrawingQuads();
+		t.setColorRGBA_I(col, LMColorUtils.getAlpha(col));
+		t.addVertex(x + 0, y + h, zLevel);
+		t.addVertex(x + w, y + h, zLevel);
+		t.addVertex(x + w, y + 0, zLevel);
+		t.addVertex(x + 0, y + 0, zLevel);
+		t.draw();
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 	
 	public void drawItem(ItemStack is, int x, int y)

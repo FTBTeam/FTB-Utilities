@@ -18,6 +18,7 @@ ftbu:button.refresh=Refresh
 #FriendsGUI
 ftbu:button.addFriend=Add as Friend
 ftbu:button.remFriend=Remove from Friends
+ftbu:button.denyFriend=Deny Friend Request
 ftbu:label.online=Online
 ftbu:label.friend=Friend
 ftbu:label.pfriend=Pending Friend

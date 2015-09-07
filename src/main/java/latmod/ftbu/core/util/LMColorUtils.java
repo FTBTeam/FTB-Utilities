@@ -1,7 +1,10 @@
 package latmod.ftbu.core.util;
 
+import java.nio.ByteBuffer;
+
 import net.minecraft.util.EnumChatFormatting;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
@@ -10,6 +13,7 @@ public class LMColorUtils
 {
 	public static final int[] chatFormattingColors = new int[16];
 	private static final float[] staticHSB = new float[3];
+	private static final byte alpha255 = (byte)255;
 	
 	static
 	{
@@ -83,5 +87,23 @@ public class LMColorUtils
 		int green = MathHelperLM.clampInt(getGreen(c) + b, 0, 255);
 		int blue = MathHelperLM.clampInt(getBlue(c) + b, 0, 255);
 		return getRGBA(red, green, blue, getAlpha(c));
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static ByteBuffer toByteBuffer(int pixels[], boolean alpha)
+	{
+		if(pixels == null) return null;
+		ByteBuffer bb = BufferUtils.createByteBuffer(pixels.length * 4);
+		
+		for(int i = 0; i < pixels.length; i++)
+		{
+			bb.put((byte)getRed(pixels[i]));
+			bb.put((byte)getGreen(pixels[i]));
+			bb.put((byte)getBlue(pixels[i]));
+			bb.put(alpha ? (byte)getAlpha(pixels[i]) : alpha255);
+		}
+		
+		bb.flip();
+		return bb;
 	}
 }

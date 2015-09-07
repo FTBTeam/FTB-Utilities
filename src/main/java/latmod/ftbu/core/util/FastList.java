@@ -252,6 +252,7 @@ public class FastList<E> implements Iterable<E>, List<E> //ArrayList
 	{
 		if(e != null && e.length > 0)
 		{
+			//TODO: Improve me
 			int s = e.length;
 			int incr0 = incr; incr = size + s;
 			expand(); incr = incr0;

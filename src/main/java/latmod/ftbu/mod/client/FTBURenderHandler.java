@@ -49,7 +49,7 @@ public class FTBURenderHandler
 	@SubscribeEvent
 	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
 	{
-		if(!Badge.isReloading && !Badge.badges.isEmpty() && FTBUClient.enablePlayerDecorators.getB() && !e.entityPlayer.isInvisible())
+		if(!Badge.badges.isEmpty() && FTBUClient.enablePlayerDecorators.getB() && !e.entityPlayer.isInvisible())
 		{
 			Badge b = Badge.badges.get(e.entityPlayer.getUniqueID());
 			if(b != null) b.onPlayerRender(e.entityPlayer);

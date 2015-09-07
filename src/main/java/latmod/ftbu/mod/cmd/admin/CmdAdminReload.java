@@ -8,7 +8,7 @@ import latmod.ftbu.mod.FTBUTickHandler;
 import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.*;
+import net.minecraft.util.IChatComponent;
 import cpw.mods.fml.relauncher.Side;
 
 public class CmdAdminReload extends SubCommand

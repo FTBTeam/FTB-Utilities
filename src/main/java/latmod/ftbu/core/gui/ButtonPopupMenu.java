@@ -28,21 +28,20 @@ public class ButtonPopupMenu extends ButtonLM
 	
 	public void renderWidget()
 	{
-		int ax = getAX();
 		int ay = getAY();
-		
 		if(ay + height < 0 || ay > gui.height) return;
+		int ax = getAX();
 		
 		TextureCoords icon = getIcon();
 		int x = 3;
 		if(icon != null) x += 18;
 		
-		gui.drawBlankRect(ax, ay, width, height, mouseOver() ? 0x66FFFFFF : 0x66666666);
-		
-		gui.drawBlankRect(ax, ay - 1, width, 1, 0xFF222222);
-		gui.drawBlankRect(ax, ay + height, width, 1, 0xFF222222);
-		gui.drawBlankRect(ax, ay, 1, height, 0xFF222222);
-		gui.drawBlankRect(ax + width - 1, ay, 1, height, 0xFF222222);
+		double z = gui.getZLevel();
+		GuiLM.drawBlankRect(ax, ay, z, width, height, mouseOver() ? 0xFF666666 : 0xFF444444);
+		GuiLM.drawBlankRect(ax, ay - 1, z, width, 1, 0xFF222222);
+		GuiLM.drawBlankRect(ax, ay + height, z, width, 1, 0xFF222222);
+		GuiLM.drawBlankRect(ax, ay, z, 1, height, 0xFF222222);
+		GuiLM.drawBlankRect(ax + width - 1, ay, z, 1, height, 0xFF222222);
 		
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		icon.render(gui, ax + 2, ay + 1D, 16D, 16D);

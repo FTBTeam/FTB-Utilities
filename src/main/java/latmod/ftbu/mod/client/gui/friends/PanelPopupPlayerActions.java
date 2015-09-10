@@ -29,7 +29,8 @@ public class PanelPopupPlayerActions extends PanelPopupMenu
 			add(PlayerAction.settings, FTBULang.client_config);
 			add(PlayerAction.waypoints, Waypoints.clientConfig.getIDS());
 			add(PlayerAction.minimap, FTBULang.Friends.claimed_chunks);
-			//actionButtons.add(new ActionButton(this, PlayerAction.notes, "Notes")); 
+			
+			add(PlayerAction.notes, "Notes"); //LANG
 		}
 		else
 		{

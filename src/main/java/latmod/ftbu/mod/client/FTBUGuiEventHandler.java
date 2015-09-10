@@ -24,7 +24,6 @@ public class FTBUGuiEventHandler
 {
 	public static final FTBUGuiEventHandler instance = new FTBUGuiEventHandler();
 	public static final ResourceLocation friendsButtonTexture = FTBU.mod.getLocation("textures/gui/friendsbutton.png");
-	public static final ResourceLocation friendsButtonTextureOn = FTBU.mod.getLocation("textures/gui/friendsbutton_on.png");
 	private static final int BUTTON_ID = 24286;
 	private static final int SETTINGS_BUTTON_ID = 24287;
 	
@@ -95,15 +94,16 @@ public class FTBUGuiEventHandler
 			if(creativeContainer != null && creativeContainer.func_147056_g() != CreativeTabs.tabInventory.getTabIndex())
 				return;
 			
-			boolean mouseOver = (mx >= xPosition && my >= yPosition && mx < xPosition + width && my < yPosition + height);
-			
 			GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			
-			GL11.glColor4f(1F, 1F, 1F, mouseOver ? 1F : 0.8F);
-			mc.getTextureManager().bindTexture(mouseOver ? friendsButtonTextureOn : friendsButtonTexture);
+			GL11.glColor4f(1F, 1F, 1F, 1F);
+			LatCoreMCClient.setTexture(friendsButtonTexture);
 			GuiLM.drawTexturedRectD(xPosition, yPosition, 0D, width, height, 0D, 0D, 1D, 1D);
+			
+			if(mx >= xPosition && my >= yPosition && mx < xPosition + width && my < yPosition + height)
+				GuiLM.drawBlankRect(xPosition, yPosition, 0D, width, height, 0x55FFFFFF);
 			
 			if(!ClientNotifications.Perm.list.isEmpty())
 			{

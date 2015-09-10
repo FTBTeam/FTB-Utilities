@@ -28,7 +28,10 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 		widgets.add(w);
 		
 		if(w instanceof PanelLM)
+		{
 			childPanels.add((PanelLM)w);
+			((PanelLM)w).refreshWidgets();
+		}
 	}
 	
 	public void addAll(WidgetLM[] l)
@@ -47,9 +50,6 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 	{
 		widgets.clear();
 		addWidgets();
-		
-		for(PanelLM p : childPanels)
-			p.refreshWidgets();
 	}
 	
 	public void addMouseOverText(FastList<String> l)

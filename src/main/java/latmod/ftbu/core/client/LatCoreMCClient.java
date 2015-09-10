@@ -3,10 +3,11 @@ package latmod.ftbu.core.client;
 import java.io.File;
 import java.util.UUID;
 
-import latmod.ftbu.core.ServerTickCallback;
+import latmod.ftbu.core.*;
 import latmod.ftbu.core.gui.GuiLM;
 import latmod.ftbu.core.util.FastMap;
 import latmod.ftbu.mod.client.FTBURenderHandler;
+import latmod.ftbu.mod.player.ClientNotifications;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -162,4 +163,7 @@ public final class LatCoreMCClient // LatCoreMC
 	
 	public static void playClickSound()
 	{ LatCoreMCClient.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(clickSound, 1F)); }
+
+	public static void notifyClient(String ID, Object text, int t)
+	{ ClientNotifications.add(new Notification(ID, LatCoreMC.getChatComponent(text), t)); }
 }

@@ -4,7 +4,6 @@ import java.util.List;
 import latmod.ftbu.core.OtherMods;
 import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.util.*;
-import latmod.ftbu.mod.FTBU;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -23,7 +22,6 @@ import cpw.mods.fml.relauncher.*;
 @Optional.Interface(iface = "codechicken.nei.api.INEIGuiHandler", modid = OtherMods.NEI)
 public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.INEIGuiHandler
 {
-	public static final ResourceLocation tex_blank = FTBU.mod.getLocation("textures/gui/blank_texture.png");
 	private static final FastList<String> tempTextList = new FastList<String>();
 	
 	// GuiLM //
@@ -242,21 +240,19 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 		drawTexturedRectD(x, y, z, w, h, 0.625D, 0.25D, 0.75D, 0.5D);
 	}
 	
-	public void drawBlankRect(int x, int y, int w, int h, int col)
+	public static void drawBlankRect(int x, int y, double z, int w, int h, int col)
 	{
-		//setTexture(tex_blank);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		//drawTexturedRectD(x, y, x + w, y + h, zLevel, 0D, 0D, 0D, 0D);
 		Tessellator t = Tessellator.instance;
 		t.startDrawingQuads();
 		t.setColorRGBA_I(col, LMColorUtils.getAlpha(col));
-		t.addVertex(x + 0, y + h, zLevel);
-		t.addVertex(x + w, y + h, zLevel);
-		t.addVertex(x + w, y + 0, zLevel);
-		t.addVertex(x + 0, y + 0, zLevel);
+		t.addVertex(x + 0, y + h, z);
+		t.addVertex(x + w, y + h, z);
+		t.addVertex(x + w, y + 0, z);
+		t.addVertex(x + 0, y + 0, z);
 		t.draw();
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}

@@ -1,9 +1,12 @@
 package latmod.ftbu.mod.client.gui.friends;
 
+import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.FastList;
+import latmod.ftbu.core.world.LMWorldClient;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.EnumChatFormatting;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
@@ -15,7 +18,8 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	public final PanelPlayerList panelPlayerList;
 	public final PanelPlayerView panelPlayerView;
 	public final PanelNotifications panelNotifications;
-	public PanelPopupPlayerActions panelPopupMenu = null;
+	public final PanelText panelPlayerInfo;
+	public PanelPopupMenu panelPopupMenu = null;
 	
 	public GuiFriends(GuiScreen gui)
 	{
@@ -29,6 +33,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		panelPlayerList = new PanelPlayerList(this);
 		panelPlayerView = new PanelPlayerView(this);
 		panelNotifications = new PanelNotifications(this);
+		panelPlayerInfo = new PanelText(this);
 	}
 	
 	public void initLMGui()
@@ -40,73 +45,55 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	
 	public void addWidgets()
 	{
+		if(panelPlayerView.selectedPlayer != null)
+		{
+			panelPlayerInfo.text.clear();
+			panelPlayerInfo.text.add(EnumChatFormatting.BOLD + panelPlayerView.selectedPlayer.getCommandSenderName());
+			if(panelPlayerView.selectedPlayer.playerLM.isOnline)
+				panelPlayerInfo.text.add(EnumChatFormatting.GREEN + "[" + FTBULang.Friends.label_online + "]");
+			
+			if(!panelPlayerView.selectedPlayer.isOwner)
+			{
+				boolean raw1 = panelPlayerView.selectedPlayer.playerLM.isFriendRaw(LMWorldClient.inst.clientPlayer);
+				boolean raw2 = LMWorldClient.inst.clientPlayer.isFriendRaw(panelPlayerView.selectedPlayer.playerLM);
+				
+				if(raw1 && raw2)
+					panelPlayerInfo.text.add(EnumChatFormatting.GREEN + "[" + FTBULang.Friends.label_friend + "]");
+				else if(raw1 || raw2)
+					panelPlayerInfo.text.add((raw1 ? EnumChatFormatting.GOLD : EnumChatFormatting.BLUE) + "[" + FTBULang.Friends.label_pfriend + "]");
+			}
+			
+			panelPlayerInfo.text.addAll(panelPlayerView.selectedPlayer.playerLM.clientInfo);
+		}
+		
 		mainPanel.add(panelPlayerList);
 		mainPanel.add(panelPlayerView);
 		mainPanel.add(panelNotifications);
+		mainPanel.add(panelPlayerInfo);
 		mainPanel.add(panelPopupMenu);
 		
-		//TODO: Remove this
-		panelNotifications.width = 200;
-		
-		panelPlayerList.height = panelPlayerView.height = panelNotifications.height = ySize;
+		panelPlayerList.height = panelPlayerView.height = ySize;
 		panelPlayerList.posX = 0;
-		panelNotifications.posX = xSize - panelNotifications.width;
+		panelNotifications.posX = panelPlayerInfo.posX = xSize - panelNotifications.width;
+		panelNotifications.height = height - panelPlayerInfo.height;
+		panelNotifications.posY = height - panelNotifications.height;
+		
+		panelPlayerList.buttonSort.posX = panelPlayerList.width + 1;
+		panelNotifications.width = panelPlayerInfo.width = Math.max(100, Math.max(panelNotifications.width, panelPlayerInfo.width));
+		
+		for(ButtonNotification b : panelNotifications.notificationButtons)
+			b.width = panelNotifications.width;
+		
 		panelPlayerView.width = xSize - (panelPlayerList.width + panelNotifications.width) - 2;
 		panelPlayerView.posX = panelPlayerList.width;
-		
-		/*if(notificationsGuiOpen)
-		{
-			notificationsWidth = MathHelperLM.max(100, guiLeft - 10, getMaxNTextLength(), fontRendererObj.getStringWidth(FTBULang.Friends.notifications) + 30).intValue();
-			notificationButtons.clear();
-			ClientNotifications.perm.sort(null);
-			
-			for(int i = 0; i < ClientNotifications.perm.size(); i++)
-			{
-				ButtonNotification b = new ButtonNotification(this, ClientNotifications.perm.get(i));
-				if(b.index * 26 + 16 <= height) notificationButtons.add(b);
-			}
-			
-			mainPanel.addAll(notificationButtons);
-			
-			ButtonLM b = new ButtonLM(this, -getPosX(0) + 2, -getPosY(0) + 2, notificationsWidth, 14)
-			{
-				public void onButtonPressed(int b)
-				{
-					notificationsGuiOpen = false;
-					refreshWidgets();
-				}
-			};
-			
-			b.title = FTBULang.button_close;
-			mainPanel.add(b);
-		}*/
 	}
-	
-	/*
-	private int getMaxNTextLength()
-	{
-		int s = 0;
-		
-		for(ClientNotifications.PermNotification n : ClientNotifications.perm)
-		{
-			int l = fontRendererObj.getStringWidth(n.notification.title.getFormattedText());
-			if(n.notification.getDesc() != null)
-				l = Math.max(l, fontRendererObj.getStringWidth(n.notification.getDesc().getFormattedText()));
-			
-			if(n.notification.getItem() != null) l += 20;
-			l += 6;
-			
-			if(l > s) s = l;
-		}
-		
-		return s;
-	}*/
 	
 	public void drawBackground()
 	{
 		panelPlayerList.renderWidget();
 		panelPlayerView.renderWidget();
 		panelNotifications.renderWidget();
+		panelPlayerInfo.renderWidget();
 		
 		if(panelPopupMenu != null)
 		{
@@ -115,48 +102,15 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			zLevel = 0;
 		}
 		
-		drawBlankRect(panelPlayerView.posX - 1, 0, 1, height, 0xFF000000);
-		drawBlankRect(panelNotifications.posX - 1, 0, 1, height, 0xFF000000);
+		drawBlankRect(panelPlayerView.posX - 1, 0, zLevel, 1, height, 0xFF000000);
+		drawBlankRect(panelNotifications.posX - 1, 0, zLevel, 1, height, 0xFF000000);
+		drawBlankRect(panelNotifications.posX, panelNotifications.posY, zLevel, panelNotifications.width, 1, 0xFF000000);
 		
-		/*
-		if(players.size() < pbPlayers.length)
-			scrollbar.value = 0F;
-		else if(scrollbar.update())
-			refreshPlayers();
-		
-		super.drawBackground();
-		
-		pbOwner.render();
-		for(int i = 0; i < pbPlayers.length; i++)
-			pbPlayers[i].render();
-		
-		buttonSave.render(GuiIcons.accept);
-		buttonSort.render(GuiIcons.sort);
-		
-		buttonArmor.render(GuiIcons.jacket);
-		if(FTBUClient.hideArmorFG.getB()) buttonArmor.render(GuiIcons.close);
-		
-		scrollbar.renderSlider(tex_slider);
-		
-		if(panelPopupMenu != null)
-			panelPopupMenu.render();
-		
-		if(notificationsGuiOpen)
-		{
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			
-			drawRect(0, 0, notificationsWidth + 4, height, 0x33666666);
-			drawRect(2, 2, notificationsWidth + 2, 16, 0xFF666666);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			fontRendererObj.drawString(FTBULang.Friends.notifications + " [" + ClientNotifications.perm.size() + "]", 6, 5, 0xFFFFFFFF);
-			for(ButtonNotification b : notificationButtons) b.render();
-		}*/
+		LatCoreMCClient.notifyClient("notify", panelNotifications.width, 1);
 	}
 	
 	public void drawText(FastList<String> l)
 	{
-		//searchBox.render(107, 10, 0xFFA7A7A7);
-		//drawString(getFontRenderer(), selectedPlayer.playerLM.getName(), guiLeft + 5, guiTop + ySize + 1, 0xFFFFFFFF);
 		super.drawText(l);
 	}
 	

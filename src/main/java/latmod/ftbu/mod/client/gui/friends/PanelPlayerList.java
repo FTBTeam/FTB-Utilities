@@ -1,11 +1,9 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import latmod.ftbu.core.Notification;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.core.world.*;
-import latmod.ftbu.mod.player.ClientNotifications;
-import net.minecraft.util.ChatComponentText;
+import latmod.ftbu.mod.FTBU;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
@@ -14,7 +12,6 @@ public class PanelPlayerList extends PanelFriendsGui
 	public static LMPComparator comparator = LMPComparator.FRIENDS_STATUS;
 	private static final FastList<LMPlayerClient> tempPlayerList = new FastList<LMPlayerClient>();
 	
-	public final TextBoxLM searchBox;
 	public final SliderLM scrollBar;
 	public final ButtonLM buttonSort;
 	public final FastList<ButtonPlayer> playerButtons;
@@ -24,21 +21,31 @@ public class PanelPlayerList extends PanelFriendsGui
 		super(g);
 		width = 120;
 		
-		searchBox = new TextBoxLM(g, 0, 0, width - 18, 16);
-		searchBox.charLimit = 20;
-		
-		scrollBar = new SliderLM(g, width - 17, 16, 16, 0, 8);
+		scrollBar = new SliderLM(g, 0, 0, 16, 0, 8)
+		{
+			public boolean isEnabled()
+			{ return parentPanel.mouseOver() || mouseOver(); }
+		};
 		scrollBar.displayMax = 0;
 		scrollBar.isVertical = true;
 		
-		buttonSort = new ButtonLM(g, width - 17, searchBox.posY, 16, 16)
+		buttonSort = new ButtonLM(g, 0, 0, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
+				gui.playClickSound();
 				comparator = (b == 0) ? comparator.next() : comparator.prev();
 				refreshWidgets();
 			}
+			
+			public void addMouseOverText(FastList<String> l)
+			{
+				l.add(title);
+				l.add(comparator.translatedName);
+			}
 		};
+		
+		buttonSort.title = FTBU.mod.translateClient("button.lmp_comparator");
 		
 		playerButtons = new FastList<ButtonPlayer>();
 	}
@@ -48,16 +55,14 @@ public class PanelPlayerList extends PanelFriendsGui
 	
 	public void addWidgets()
 	{
-		add(searchBox);
-		add(scrollBar);
+		//add(scrollBar);
 		add(buttonSort);
-		
-		playerButtons.clear();
 		
 		tempPlayerList.clear();
 		tempPlayerList.addAll(LMWorldClient.inst.players);
 		tempPlayerList.remove(LMWorldClient.inst.clientPlayer);
 		
+		/*
 		if(!searchBox.text.isEmpty())
 		{
 			FastList<LMPlayerClient> l = new FastList<LMPlayerClient>();
@@ -71,10 +76,11 @@ public class PanelPlayerList extends PanelFriendsGui
 			
 			tempPlayerList.clear();
 			tempPlayerList.addAll(l);
-		}
+		}*/
 		
 		tempPlayerList.sort(comparator);
 		
+		playerButtons.clear();
 		playerButtons.add(new ButtonPlayer(this, LMWorldClient.inst.clientPlayer));
 		
 		width = 0;
@@ -94,21 +100,17 @@ public class PanelPlayerList extends PanelFriendsGui
 		int size = playerButtons.size();
 		if(size == 0) return;
 		
-		if(gui.mouseDWheel != 0)
+		if(gui.mouseDWheel != 0 && gui.mouseX <= getAX() + width)
 		{
 			int newPos = posY + ((gui.mouseDWheel > 0) ? 28 : -28);
 			newPos = Math.min(newPos, 0);
-			newPos = Math.max(newPos, -size * 21 + height);
-			//scroll = Math.max(playerButtons.get(0).getAY() + scroll, 0);
-			//if(playerButtons.get(size - 1).getAY() + scroll < (height)) scroll = 0;
-			if(posY != newPos)
-			{
-				ClientNotifications.add(new Notification("scroll", new ChatComponentText("" + (height - newPos) + " : " + gui.getHeight()), 1000));
-				posY = newPos;
-			}
+			newPos = Math.max(newPos, (height - 0) - size * 21);
+			if(posY != newPos) posY = newPos;
 		}
 		
 		for(int i = 0; i < size; i++)
 			playerButtons.get(i).renderWidget();
+		
+		buttonSort.render(GuiIcons.sort);
 	}
 }

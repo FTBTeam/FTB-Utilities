@@ -2,6 +2,7 @@ package latmod.ftbu.mod.client.gui.friends;
 
 import java.util.Comparator;
 
+import latmod.ftbu.core.util.MathHelperLM;
 import latmod.ftbu.core.world.*;
 import cpw.mods.fml.relauncher.*;
 
@@ -79,11 +80,17 @@ public enum LMPComparator implements Comparator<LMPlayerClient>
 	
 	public LMPComparator next()
 	{
-		return this;
+		LMPComparator p = this;
+		LMPComparator v[] = LMPComparator.values();
+		while(!(p = v[MathHelperLM.wrap(p.ordinal() + 1, v.length)]).addToList);
+		return p;
 	}
 	
 	public LMPComparator prev()
 	{
-		return this;
+		LMPComparator p = this;
+		LMPComparator v[] = LMPComparator.values();
+		while(!(p = v[MathHelperLM.wrap(p.ordinal() - 1, v.length)]).addToList);
+		return p;
 	}
 }

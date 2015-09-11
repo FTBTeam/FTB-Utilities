@@ -1,5 +1,8 @@
 package latmod.ftbu.core.client;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.CustomBlockAccess;
 import latmod.ftbu.core.util.LMColorUtils;
 import net.minecraft.block.Block;
@@ -8,10 +11,6 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.util.*;
 import net.minecraft.world.*;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlocksCustom extends RenderBlocks

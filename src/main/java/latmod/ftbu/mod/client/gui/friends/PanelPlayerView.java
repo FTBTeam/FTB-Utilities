@@ -1,14 +1,13 @@
 package latmod.ftbu.mod.client.gui.friends;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.client.FTBUClient;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
-
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class PanelPlayerView extends PanelFriendsGui

@@ -1,6 +1,7 @@
 package latmod.ftbu.core.item;
 import java.util.List;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.block.BlockLM;
 import latmod.ftbu.core.util.*;
 import net.minecraft.block.Block;
@@ -11,7 +12,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.*;
 import net.minecraft.util.Facing;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.*;
 
 public class ItemBlockLM extends ItemBlock
 {

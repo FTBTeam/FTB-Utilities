@@ -2,9 +2,9 @@ package latmod.ftbu.mod.client.minimap;
 
 import java.nio.ByteBuffer;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.util.PixelBuffer;
 import latmod.ftbu.core.world.LMWorldClient;
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class ThreadReloadArea extends Thread

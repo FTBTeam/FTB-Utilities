@@ -2,6 +2,7 @@ package latmod.ftbu.mod.client.minimap;
 
 import java.util.Arrays;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldClient;
 import net.minecraft.block.Block;
@@ -9,7 +10,6 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class ThreadReloadChunk extends Thread

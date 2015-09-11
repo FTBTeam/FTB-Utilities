@@ -1,6 +1,6 @@
 package latmod.ftbu.core.gui;
-import net.minecraft.client.Minecraft;
 import cpw.mods.fml.relauncher.*;
+import net.minecraft.client.Minecraft;
 
 @SideOnly(Side.CLIENT)
 public abstract class ButtonLM extends WidgetLM

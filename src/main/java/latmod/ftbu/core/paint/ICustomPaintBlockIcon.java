@@ -1,7 +1,7 @@
 package latmod.ftbu.core.paint;
 
-import net.minecraft.util.IIcon;
 import cpw.mods.fml.relauncher.*;
+import net.minecraft.util.IIcon;
 
 public interface ICustomPaintBlockIcon
 {

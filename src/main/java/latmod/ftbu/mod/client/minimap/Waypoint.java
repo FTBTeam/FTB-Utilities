@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.client.minimap;
 
-import latmod.ftbu.core.util.*;
 import cpw.mods.fml.relauncher.*;
+import latmod.ftbu.core.util.*;
 
 @SideOnly(Side.CLIENT)
 public class Waypoint

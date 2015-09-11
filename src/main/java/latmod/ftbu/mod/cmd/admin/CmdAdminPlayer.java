@@ -3,6 +3,8 @@ package latmod.ftbu.mod.cmd.admin;
 import java.io.*;
 import java.util.UUID;
 
+import com.mojang.authlib.GameProfile;
+
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.cmd.*;
 import latmod.ftbu.core.inv.*;
@@ -14,8 +16,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
-
-import com.mojang.authlib.GameProfile;
 
 public class CmdAdminPlayer extends SubCommand //TODO: Swap player and command
 {

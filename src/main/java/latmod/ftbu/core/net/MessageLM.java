@@ -1,7 +1,7 @@
 package latmod.ftbu.core.net;
 
-import io.netty.buffer.ByteBuf;
 import cpw.mods.fml.common.network.simpleimpl.*;
+import io.netty.buffer.ByteBuf;
 
 public abstract class MessageLM<E extends MessageLM<?>> implements IMessage, IMessageHandler<E, IMessage>
 {

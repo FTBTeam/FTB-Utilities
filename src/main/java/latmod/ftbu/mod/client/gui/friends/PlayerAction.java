@@ -3,7 +3,6 @@ package latmod.ftbu.mod.client.gui.friends;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.FastList;
-import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.client.gui.*;
 
 public abstract class PlayerAction
@@ -48,19 +47,16 @@ public abstract class PlayerAction
 	
 	// Other players //
 	
-	public static final PlayerAction friend_toggle = new PlayerAction(GuiIcons.add)
+	public static final PlayerAction friend_add = new PlayerAction(GuiIcons.add)
 	{
 		public void onClicked(GuiFriends g)
-		{
-			if(LMWorldClient.inst.clientPlayer.isFriendRaw(g.panelPlayerView.selectedPlayer.playerLM))
-				LMNetHelper.sendToServer(new MessageClientGuiAction(MessageClientGuiAction.ACTION_REM_FRIEND, g.panelPlayerView.selectedPlayer.playerLM.playerID));
-			else
-				LMNetHelper.sendToServer(new MessageClientGuiAction(MessageClientGuiAction.ACTION_ADD_FRIEND, g.panelPlayerView.selectedPlayer.playerLM.playerID));
-			//g.refreshPlayers();
-		}
-		
-		public TextureCoords getIcon(GuiFriends g)
-		{ return LMWorldClient.inst.clientPlayer.isFriendRaw(g.panelPlayerView.selectedPlayer.playerLM) ? GuiIcons.remove : GuiIcons.add; }
+		{ LMNetHelper.sendToServer(new MessageClientGuiAction(MessageClientGuiAction.ACTION_ADD_FRIEND, g.panelPlayerView.selectedPlayer.playerLM.playerID)); }
+	};
+	
+	public static final PlayerAction friend_remove = new PlayerAction(GuiIcons.remove)
+	{
+		public void onClicked(GuiFriends g)
+		{ LMNetHelper.sendToServer(new MessageClientGuiAction(MessageClientGuiAction.ACTION_REM_FRIEND, g.panelPlayerView.selectedPlayer.playerLM.playerID)); }
 	};
 	
 	public static final PlayerAction friend_deny = new PlayerAction(GuiIcons.remove)

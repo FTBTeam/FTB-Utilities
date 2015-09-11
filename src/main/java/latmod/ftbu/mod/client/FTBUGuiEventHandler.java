@@ -1,5 +1,9 @@
 package latmod.ftbu.mod.client;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.gui.GuiLM;
 import latmod.ftbu.core.world.LMWorldClient;
@@ -13,11 +17,6 @@ import net.minecraft.client.gui.inventory.*;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent;
-
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class FTBUGuiEventHandler

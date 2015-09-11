@@ -1,11 +1,10 @@
 package latmod.ftbu.core.client.model;
 
-import net.minecraft.block.Block;
-import net.minecraft.util.*;
-
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
+import net.minecraft.block.Block;
+import net.minecraft.util.*;
 
 @SideOnly(Side.CLIENT)
 public class CubeRenderer

@@ -2,13 +2,13 @@ package latmod.ftbu.core;
 
 import java.lang.reflect.Type;
 
+import com.google.gson.*;
+
 import latmod.ftbu.core.util.*;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IChatComponent;
-
-import com.google.gson.*;
 
 public class Notification
 {

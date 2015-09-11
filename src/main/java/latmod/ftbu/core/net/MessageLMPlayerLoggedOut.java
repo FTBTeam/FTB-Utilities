@@ -1,10 +1,10 @@
 package latmod.ftbu.core.net;
+import cpw.mods.fml.common.network.simpleimpl.*;
+import cpw.mods.fml.relauncher.*;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.api.LMPlayerClientEvent;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
-import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.*;
 
 public class MessageLMPlayerLoggedOut extends MessageLM<MessageLMPlayerLoggedOut> implements IClientMessageLM<MessageLMPlayerLoggedOut>
 {

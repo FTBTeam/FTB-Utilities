@@ -1,13 +1,12 @@
 package latmod.ftbu.mod.client.gui.friends;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.player.ClientNotifications;
 import net.minecraft.item.ItemStack;
-
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class ButtonNotification extends ButtonLM

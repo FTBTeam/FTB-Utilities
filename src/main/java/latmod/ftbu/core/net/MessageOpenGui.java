@@ -1,12 +1,12 @@
 package latmod.ftbu.core.net;
+import cpw.mods.fml.common.network.simpleimpl.*;
+import cpw.mods.fml.relauncher.*;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.LMGuiHandler;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
-import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.*;
 
 public class MessageOpenGui extends MessageLM<MessageOpenGui> implements IClientMessageLM<MessageOpenGui>
 {

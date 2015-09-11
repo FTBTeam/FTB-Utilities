@@ -1,14 +1,13 @@
 package latmod.ftbu.mod.client.gui.friends;
 
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.core.world.*;
 import net.minecraft.client.entity.AbstractClientPlayer;
-
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class ButtonPlayer extends ButtonLM

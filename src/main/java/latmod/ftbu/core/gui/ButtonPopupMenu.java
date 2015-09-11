@@ -1,10 +1,9 @@
 package latmod.ftbu.core.gui;
 
-import latmod.ftbu.core.util.FastList;
-
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
+import latmod.ftbu.core.util.FastList;
 
 @SideOnly(Side.CLIENT)
 public class ButtonPopupMenu extends ButtonLM

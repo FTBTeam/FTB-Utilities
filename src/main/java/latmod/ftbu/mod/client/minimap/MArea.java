@@ -6,10 +6,10 @@ import java.nio.ByteBuffer;
 
 import javax.imageio.ImageIO;
 
+import org.lwjgl.opengl.*;
+
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldClient;
-
-import org.lwjgl.opengl.*;
 
 public class MArea
 {

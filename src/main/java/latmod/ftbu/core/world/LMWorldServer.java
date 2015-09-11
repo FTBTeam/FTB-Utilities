@@ -3,15 +3,14 @@ package latmod.ftbu.core.world;
 import java.io.File;
 import java.util.UUID;
 
+import com.mojang.authlib.GameProfile;
+
+import cpw.mods.fml.relauncher.Side;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.api.LMPlayerServerEvent;
 import latmod.ftbu.core.util.*;
 import net.minecraft.nbt.*;
 import net.minecraft.world.WorldServer;
-
-import com.mojang.authlib.GameProfile;
-
-import cpw.mods.fml.relauncher.Side;
 
 public class LMWorldServer extends LMWorld<LMPlayerServer>
 {
@@ -120,7 +119,7 @@ public class LMWorldServer extends LMWorld<LMPlayerServer>
 	// Warps //
 	
 	public String[] listWarps()
-	{ return warps.keys.toArray(new String[warps.keys.size()]); }
+	{ return warps.keys.toArray(new String[0]); }
 	
 	public EntityPos getWarp(String s)
 	{ return warps.get(s); }

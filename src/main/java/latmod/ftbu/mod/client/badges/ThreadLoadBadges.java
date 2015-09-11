@@ -3,10 +3,10 @@ package latmod.ftbu.mod.client.badges;
 import java.net.URL;
 import java.util.UUID;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.config.FTBUConfig;
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class ThreadLoadBadges extends Thread

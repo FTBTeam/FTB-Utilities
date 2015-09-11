@@ -1,9 +1,15 @@
 package latmod.ftbu.mod.client;
 import java.util.UUID;
 
+import org.lwjgl.input.Keyboard;
+
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.api.readme.*;
 import latmod.ftbu.core.client.*;
+import latmod.ftbu.core.gui.IClientActionGui;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.TileLM;
 import latmod.ftbu.core.util.LMColorUtils;
@@ -20,12 +26,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityEvent;
-
-import org.lwjgl.input.Keyboard;
-
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class FTBUClient extends FTBUCommon
@@ -181,6 +181,9 @@ public class FTBUClient extends FTBUCommon
 		t.readTileData(p.func_148857_g());
 		t.readTileClientData(p.func_148857_g());
 		t.onUpdatePacket();
+		
+		if(LatCoreMCClient.getMinecraft().currentScreen instanceof IClientActionGui)
+			((IClientActionGui)LatCoreMCClient.getMinecraft().currentScreen).onClientDataChanged();
 	}
 	
 	public void chunkChanged(EntityEvent.EnteringChunk e)

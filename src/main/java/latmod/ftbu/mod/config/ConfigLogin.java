@@ -3,13 +3,13 @@ package latmod.ftbu.mod.config;
 import java.io.File;
 import java.util.*;
 
+import com.google.gson.annotations.Expose;
+
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.api.readme.*;
 import latmod.ftbu.core.util.LMJsonUtils;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-
-import com.google.gson.annotations.Expose;
 
 public class ConfigLogin
 {

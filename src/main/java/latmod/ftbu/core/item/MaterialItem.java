@@ -1,11 +1,11 @@
 package latmod.ftbu.core.item;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.util.FastList;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
-import cpw.mods.fml.relauncher.*;
 
 public class MaterialItem
 {

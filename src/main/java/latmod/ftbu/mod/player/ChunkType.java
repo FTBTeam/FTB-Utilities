@@ -1,5 +1,6 @@
 package latmod.ftbu.mod.player;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.client.FTBULang;
 import latmod.ftbu.core.util.MathHelperLM;
 import latmod.ftbu.core.world.*;
@@ -7,7 +8,6 @@ import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
-import cpw.mods.fml.relauncher.*;
 
 public enum ChunkType
 {

@@ -1,5 +1,7 @@
 package latmod.ftbu.mod.client.minimap;
 
+import org.lwjgl.opengl.GL11;
+
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.util.*;
@@ -9,8 +11,6 @@ import latmod.ftbu.mod.player.ChunkType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
 
 public class MRenderer
 {

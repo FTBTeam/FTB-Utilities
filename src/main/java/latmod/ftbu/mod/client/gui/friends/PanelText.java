@@ -1,12 +1,11 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import latmod.ftbu.core.gui.GuiLM;
-import latmod.ftbu.core.util.FastList;
-import net.minecraft.client.gui.FontRenderer;
-
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
+import latmod.ftbu.core.gui.GuiLM;
+import latmod.ftbu.core.util.FastList;
+import net.minecraft.client.gui.FontRenderer;
 
 @SideOnly(Side.CLIENT)
 public class PanelText extends PanelFriendsGui

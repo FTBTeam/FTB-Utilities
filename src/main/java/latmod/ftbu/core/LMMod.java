@@ -2,6 +2,10 @@ package latmod.ftbu.core;
 import java.lang.annotation.*;
 import java.lang.reflect.Field;
 
+import org.apache.logging.log4j.*;
+
+import cpw.mods.fml.common.*;
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.block.IBlockLM;
 import latmod.ftbu.core.item.IItemLM;
 import latmod.ftbu.core.recipes.LMRecipes;
@@ -13,11 +17,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.*;
 import net.minecraft.util.ResourceLocation;
-
-import org.apache.logging.log4j.*;
-
-import cpw.mods.fml.common.*;
-import cpw.mods.fml.relauncher.*;
 
 public class LMMod
 {

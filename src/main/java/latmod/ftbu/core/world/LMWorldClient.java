@@ -3,12 +3,11 @@ package latmod.ftbu.core.world;
 import java.io.File;
 import java.util.UUID;
 
-import latmod.ftbu.core.*;
-import net.minecraft.nbt.*;
-
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.*;
+import latmod.ftbu.core.*;
+import net.minecraft.nbt.*;
 
 @SideOnly(Side.CLIENT)
 public class LMWorldClient extends LMWorld<LMPlayerClient>

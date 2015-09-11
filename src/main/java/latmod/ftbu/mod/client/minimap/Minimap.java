@@ -5,13 +5,13 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.client.ClientConfig;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.player.ChunkType;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class Minimap

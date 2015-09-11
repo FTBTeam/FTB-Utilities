@@ -2,6 +2,7 @@ package latmod.ftbu.mod;
 
 import java.util.UUID;
 
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.api.readme.ReadmeFile;
 import latmod.ftbu.core.net.*;
@@ -14,7 +15,6 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityEvent;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class FTBUCommon // FTBUClient
 {

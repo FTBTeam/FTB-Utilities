@@ -1,11 +1,10 @@
 package latmod.ftbu.core.client.model;
-import latmod.ftbu.core.client.LMRenderHelper;
-import latmod.ftbu.core.util.FastList;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import cpw.mods.fml.relauncher.*;
+import latmod.ftbu.core.client.LMRenderHelper;
+import latmod.ftbu.core.util.FastList;
 
 /** Made by LatvianModder */
 @SideOnly(Side.CLIENT)

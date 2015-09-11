@@ -1,6 +1,9 @@
 package latmod.ftbu.core.client;
 import java.awt.Color;
 
+import org.lwjgl.opengl.*;
+
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.util.MathHelperLM;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -10,10 +13,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
-
-import org.lwjgl.opengl.*;
-
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class LMRenderHelper

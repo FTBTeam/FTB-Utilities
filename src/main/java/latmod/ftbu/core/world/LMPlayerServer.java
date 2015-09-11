@@ -1,5 +1,8 @@
 package latmod.ftbu.core.world;
 
+import com.mojang.authlib.GameProfile;
+
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.api.LMPlayerServerEvent;
 import latmod.ftbu.core.inv.LMInvUtils;
@@ -9,10 +12,6 @@ import latmod.ftbu.mod.config.FTBUConfig;
 import latmod.ftbu.mod.player.Claims;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-
-import com.mojang.authlib.GameProfile;
-
-import cpw.mods.fml.relauncher.*;
 
 public class LMPlayerServer extends LMPlayer // LMPlayerClient
 {

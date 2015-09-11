@@ -2,13 +2,13 @@ package latmod.ftbu.core.paint;
 
 import java.util.Arrays;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.LMNBTUtils;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.*;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
-import cpw.mods.fml.relauncher.*;
 
 public class Paint implements Cloneable
 {

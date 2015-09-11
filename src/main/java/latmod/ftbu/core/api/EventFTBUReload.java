@@ -1,7 +1,7 @@
 package latmod.ftbu.core.api;
 
-import net.minecraft.command.ICommandSender;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.command.ICommandSender;
 
 public class EventFTBUReload extends EventLM
 {

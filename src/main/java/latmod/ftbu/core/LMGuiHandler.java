@@ -1,5 +1,6 @@
 package latmod.ftbu.core;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.FastMap;
 import latmod.ftbu.mod.FTBU;
@@ -8,7 +9,6 @@ import net.minecraft.entity.player.*;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.FakePlayer;
-import cpw.mods.fml.relauncher.*;
 
 public abstract class LMGuiHandler
 {

@@ -2,6 +2,10 @@ package latmod.ftbu.mod.client.gui;
 
 import java.util.Arrays;
 
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.client.FTBULang;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.util.*;
@@ -11,11 +15,6 @@ import latmod.ftbu.mod.client.minimap.*;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class GuiWaypoints extends GuiLM

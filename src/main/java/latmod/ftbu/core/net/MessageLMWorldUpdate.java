@@ -1,15 +1,14 @@
 package latmod.ftbu.core.net;
-import io.netty.buffer.ByteBuf;
-
 import java.util.UUID;
 
+import cpw.mods.fml.common.network.simpleimpl.*;
+import cpw.mods.fml.relauncher.*;
+import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
 import net.minecraft.nbt.NBTTagCompound;
-import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.*;
 
 public class MessageLMWorldUpdate extends MessageLM<MessageLMWorldUpdate> implements IClientMessageLM<MessageLMWorldUpdate>
 {

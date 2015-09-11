@@ -2,13 +2,13 @@ package latmod.ftbu.mod.config;
 
 import java.io.File;
 
+import com.google.gson.annotations.Expose;
+
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.api.readme.*;
 import latmod.ftbu.core.util.LMJsonUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.util.FakePlayer;
-
-import com.google.gson.annotations.Expose;
 
 public class ConfigGeneral
 {

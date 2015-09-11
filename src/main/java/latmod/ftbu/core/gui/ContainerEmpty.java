@@ -1,9 +1,9 @@
 package latmod.ftbu.core.gui;
 
+import cpw.mods.fml.relauncher.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import cpw.mods.fml.relauncher.*;
 
 public class ContainerEmpty extends ContainerLM
 {

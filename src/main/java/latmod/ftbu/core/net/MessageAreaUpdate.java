@@ -1,12 +1,12 @@
 package latmod.ftbu.core.net;
 
+import cpw.mods.fml.common.network.simpleimpl.*;
+import cpw.mods.fml.relauncher.*;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.world.LMPlayerServer;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.minimap.Minimap;
 import latmod.ftbu.mod.player.ChunkType;
-import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.*;
 
 public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate> implements IClientMessageLM<MessageAreaUpdate> //MessageAreaRequest
 {

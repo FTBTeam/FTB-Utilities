@@ -126,6 +126,7 @@ public class LMFileUtils
 	public static String getSizeS(File f)
 	{ return getSizeS(getSize(f)); }
 	
+	@SuppressWarnings("resource")
 	public static Exception copyFile(File src, File dst)
 	{
 		if(src != null && dst != null && src.exists() && !src.equals(dst))
@@ -153,8 +154,8 @@ public class LMFileUtils
 				srcC = new FileInputStream(src).getChannel();
 				dstC = new FileOutputStream(dst).getChannel();
 				dstC.transferFrom(srcC, 0L, srcC.size());
-				if(srcC != null) srcC.close();
-				if(dstC != null) dstC.close();
+				srcC.close();
+				dstC.close();
 				return null;
 			}
 			catch(Exception e) { return e; }

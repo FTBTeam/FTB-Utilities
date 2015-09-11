@@ -1,9 +1,9 @@
 package latmod.ftbu.core.net;
 
-import io.netty.buffer.ByteBuf;
-import latmod.ftbu.core.world.*;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
+import io.netty.buffer.ByteBuf;
+import latmod.ftbu.core.world.*;
 
 public class MessageAreaRequest extends MessageLM<MessageAreaRequest>
 {

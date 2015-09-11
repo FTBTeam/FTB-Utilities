@@ -2,16 +2,15 @@ package latmod.ftbu.core.world;
 
 import java.util.UUID;
 
+import com.mojang.authlib.GameProfile;
+
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.cmd.NameType;
 import latmod.ftbu.core.util.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-
-import com.mojang.authlib.GameProfile;
-
-import cpw.mods.fml.relauncher.*;
 
 public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer // LMPlayerClient
 {

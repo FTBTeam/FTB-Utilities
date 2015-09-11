@@ -1,11 +1,11 @@
 package latmod.ftbu.core.recipes;
+import cpw.mods.fml.common.registry.GameRegistry;
 import latmod.ftbu.core.item.MaterialItem;
 import latmod.ftbu.core.util.FastList;
 import net.minecraft.block.Block;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.*;
 import net.minecraftforge.oredict.*;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class LMRecipes
 {

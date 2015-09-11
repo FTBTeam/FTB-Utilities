@@ -4,14 +4,14 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
 
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.api.EventFTBUGson;
 import latmod.ftbu.core.inv.ItemStackSerializer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
-
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 
 public class LMJsonUtils
 {

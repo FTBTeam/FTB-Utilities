@@ -1,10 +1,10 @@
 package latmod.ftbu.core.client;
 
+import cpw.mods.fml.relauncher.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.IItemRenderer;
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public abstract class TileRenderer<T extends TileEntity> extends TileEntitySpecialRenderer

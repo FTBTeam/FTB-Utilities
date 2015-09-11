@@ -2,10 +2,10 @@ package latmod.ftbu.mod.client.minimap;
 
 import java.io.File;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.client.ClientConfig;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldClient;
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class Waypoints

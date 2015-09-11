@@ -1,5 +1,8 @@
 package latmod.ftbu.mod.client.gui;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.EnumDyeColor;
 import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.gui.*;
@@ -7,10 +10,6 @@ import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class GuiSelectColor extends GuiLM

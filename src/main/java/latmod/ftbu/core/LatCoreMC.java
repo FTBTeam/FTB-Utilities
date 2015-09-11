@@ -3,6 +3,13 @@ import java.io.File;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import org.apache.logging.log4j.*;
+
+import cpw.mods.fml.common.*;
+import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.registry.*;
+import cpw.mods.fml.relauncher.Side;
 import latmod.ftbu.core.item.IItemLM;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.IGuiTile;
@@ -20,14 +27,6 @@ import net.minecraft.util.*;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.*;
-
-import org.apache.logging.log4j.*;
-
-import cpw.mods.fml.common.*;
-import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
-import cpw.mods.fml.common.event.*;
-import cpw.mods.fml.common.registry.*;
-import cpw.mods.fml.relauncher.Side;
 
 /** Made by LatvianModder */
 public final class LatCoreMC // LatCoreMCClient

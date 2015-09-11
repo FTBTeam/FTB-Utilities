@@ -1,6 +1,6 @@
 package latmod.ftbu.core.tile;
-import latmod.ftbu.mod.FTBU;
 import cpw.mods.fml.relauncher.*;
+import latmod.ftbu.mod.FTBU;
 
 public enum InvMode
 {

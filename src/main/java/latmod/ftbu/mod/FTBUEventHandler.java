@@ -2,6 +2,7 @@ package latmod.ftbu.mod;
 import java.io.File;
 import java.util.*;
 
+import cpw.mods.fml.common.eventhandler.*;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.api.LMPlayerServerEvent;
 import latmod.ftbu.core.inv.LMInvUtils;
@@ -27,7 +28,6 @@ import net.minecraft.util.*;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
-import cpw.mods.fml.common.eventhandler.*;
 
 public class FTBUEventHandler // FTBUTickHandler
 {

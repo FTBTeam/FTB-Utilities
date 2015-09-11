@@ -1,9 +1,9 @@
 package latmod.ftbu.core.net;
+import cpw.mods.fml.common.network.simpleimpl.*;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.IServerConfig;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import cpw.mods.fml.common.network.simpleimpl.*;
 
 public class MessageUpdateConfig extends MessageLM<MessageUpdateConfig>
 {

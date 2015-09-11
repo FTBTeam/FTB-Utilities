@@ -1,10 +1,10 @@
 package latmod.ftbu.mod.client.gui.friends;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.client.FTBULang;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.client.minimap.Waypoints;
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class PanelPopupPlayerActions extends PanelPopupMenu
@@ -35,13 +35,14 @@ public class PanelPopupPlayerActions extends PanelPopupMenu
 		else
 		{
 			boolean isFriend = LMWorldClient.inst.clientPlayer.isFriendRaw(playerLM);
-			add(PlayerAction.friend_toggle, isFriend ? FTBULang.Friends.button_rem_friend : FTBULang.Friends.button_add_friend);
-			
-			if(!isFriend && playerLM.isFriendRaw(LMWorldClient.inst.clientPlayer))
-				add(PlayerAction.friend_deny, FTBULang.Friends.button_deny_friend);
+			if(!isFriend) add(PlayerAction.friend_add, FTBULang.Friends.button_add_friend);
 			
 			add(PlayerAction.mail, "Mail"); //LANG
 			add(PlayerAction.trade, "Trade"); //LANG
+			
+			if(isFriend) add(PlayerAction.friend_remove, FTBULang.Friends.button_rem_friend);
+			else if(playerLM.isFriendRaw(LMWorldClient.inst.clientPlayer))
+				add(PlayerAction.friend_deny, FTBULang.Friends.button_deny_friend);
 		}
 	}
 	

@@ -3,6 +3,10 @@ package latmod.ftbu.core.client;
 import java.io.File;
 import java.util.UUID;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.client.registry.*;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.gui.GuiLM;
 import latmod.ftbu.core.util.FastMap;
@@ -25,11 +29,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.client.*;
-
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.client.registry.*;
 
 /** Made by LatvianModder */
 public final class LatCoreMCClient // LatCoreMC

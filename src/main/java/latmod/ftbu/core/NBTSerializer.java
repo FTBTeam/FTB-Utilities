@@ -2,10 +2,10 @@ package latmod.ftbu.core;
 
 import java.lang.reflect.Type;
 
+import com.google.gson.*;
+
 import latmod.ftbu.core.util.FastMap;
 import net.minecraft.nbt.*;
-
-import com.google.gson.*;
 
 public abstract class NBTSerializer
 {

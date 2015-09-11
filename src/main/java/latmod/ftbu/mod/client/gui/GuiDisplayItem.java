@@ -1,5 +1,8 @@
 package latmod.ftbu.mod.client.gui;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.gui.GuiLM;
 import latmod.ftbu.core.inv.ItemDisplay;
 import latmod.ftbu.core.util.FastList;
@@ -7,10 +10,6 @@ import latmod.ftbu.mod.FTBU;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class GuiDisplayItem extends GuiLM

@@ -2,13 +2,13 @@ package latmod.ftbu.core.world;
 
 import java.util.*;
 
+import cpw.mods.fml.relauncher.Side;
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.cmd.NameType;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.util.FakePlayer;
-import cpw.mods.fml.relauncher.Side;
 
 public abstract class LMWorld<P extends LMPlayer>
 {

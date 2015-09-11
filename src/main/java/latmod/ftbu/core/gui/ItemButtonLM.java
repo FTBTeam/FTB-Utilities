@@ -1,6 +1,6 @@
 package latmod.ftbu.core.gui;
-import net.minecraft.item.ItemStack;
 import cpw.mods.fml.relauncher.*;
+import net.minecraft.item.ItemStack;
 
 @SideOnly(Side.CLIENT)
 public abstract class ItemButtonLM extends ButtonLM

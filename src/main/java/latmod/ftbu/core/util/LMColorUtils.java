@@ -2,12 +2,11 @@ package latmod.ftbu.core.util;
 
 import java.nio.ByteBuffer;
 
-import net.minecraft.util.EnumChatFormatting;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
+import net.minecraft.util.EnumChatFormatting;
 
 public class LMColorUtils
 {

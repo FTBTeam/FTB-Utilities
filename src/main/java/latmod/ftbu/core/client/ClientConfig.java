@@ -2,10 +2,10 @@ package latmod.ftbu.core.client;
 
 import java.io.File;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.util.*;
 import net.minecraft.client.resources.I18n;
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public final class ClientConfig

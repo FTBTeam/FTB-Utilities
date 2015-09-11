@@ -1,7 +1,7 @@
 package latmod.ftbu.core.api;
 
-import latmod.ftbu.core.EnumBusType;
 import cpw.mods.fml.common.eventhandler.Event;
+import latmod.ftbu.core.EnumBusType;
 
 public class EventLM extends Event
 {

@@ -1,5 +1,6 @@
 package latmod.ftbu.mod;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.LMGuiHandler;
 import latmod.ftbu.core.gui.ContainerEmpty;
 import latmod.ftbu.core.inv.ItemDisplay;
@@ -11,7 +12,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import cpw.mods.fml.relauncher.*;
 
 public class FTBUGuiHandler extends LMGuiHandler
 {

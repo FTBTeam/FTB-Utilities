@@ -1,8 +1,8 @@
 package latmod.ftbu.core.api;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.core.world.*;
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public abstract class LMPlayerClientEvent extends LMPlayerEvent

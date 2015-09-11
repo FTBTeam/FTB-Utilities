@@ -1,6 +1,11 @@
 package latmod.ftbu.mod.client;
 import java.util.Comparator;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.ServerTickCallback;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.client.model.*;
@@ -17,12 +22,6 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.*;
-
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class FTBURenderHandler

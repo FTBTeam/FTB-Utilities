@@ -1,11 +1,10 @@
 package latmod.ftbu.core.client.model;
 
-import net.minecraft.block.Block;
-import net.minecraft.util.IIcon;
-
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
+import net.minecraft.block.Block;
+import net.minecraft.util.IIcon;
 
 @SideOnly(Side.CLIENT)
 public class TexturedCubeRenderer extends CubeRenderer

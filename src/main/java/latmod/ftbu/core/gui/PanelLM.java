@@ -1,7 +1,7 @@
 package latmod.ftbu.core.gui;
 
-import latmod.ftbu.core.util.FastList;
 import cpw.mods.fml.relauncher.*;
+import latmod.ftbu.core.util.FastList;
 
 @SideOnly(Side.CLIENT)
 public abstract class PanelLM extends WidgetLM // GuiLM

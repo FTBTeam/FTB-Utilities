@@ -1,8 +1,8 @@
 package latmod.ftbu.core;
 
-import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.EventBus;
+import net.minecraftforge.common.MinecraftForge;
 
 public enum EnumBusType
 {

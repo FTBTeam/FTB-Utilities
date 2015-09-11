@@ -3,9 +3,9 @@ package latmod.ftbu.core.util;
 import java.lang.reflect.Type;
 import java.util.UUID;
 
-import latmod.ftbu.core.LatCoreMC;
-
 import com.google.gson.*;
+
+import latmod.ftbu.core.LatCoreMC;
 
 public class UUIDSerializer implements JsonSerializer<UUID>, JsonDeserializer<UUID>
 {

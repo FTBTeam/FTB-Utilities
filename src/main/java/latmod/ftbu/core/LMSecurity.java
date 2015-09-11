@@ -1,5 +1,6 @@
 package latmod.ftbu.core;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.config.FTBUConfig;
@@ -7,7 +8,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
-import cpw.mods.fml.relauncher.*;
 
 public class LMSecurity
 {

@@ -2,9 +2,9 @@ package latmod.ftbu.mod.client.gui.friends;
 
 import java.util.Comparator;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.util.MathHelperLM;
 import latmod.ftbu.core.world.*;
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public enum LMPComparator implements Comparator<LMPlayerClient>

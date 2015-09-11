@@ -1,10 +1,10 @@
 package latmod.ftbu.core.api;
 
+import cpw.mods.fml.common.eventhandler.Cancelable;
+import cpw.mods.fml.relauncher.Side;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.core.world.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import cpw.mods.fml.common.eventhandler.Cancelable;
-import cpw.mods.fml.relauncher.Side;
 
 public abstract class LMPlayerServerEvent extends LMPlayerEvent // LMPlayerClientEvent
 {

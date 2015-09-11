@@ -1,5 +1,6 @@
 package latmod.ftbu.mod.client.gui.friends;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
@@ -7,7 +8,6 @@ import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.core.world.LMWorldClient;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.EnumChatFormatting;
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class GuiFriends extends GuiLM implements IClientActionGui
@@ -74,12 +74,12 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		
 		panelPlayerList.height = panelPlayerView.height = ySize;
 		panelPlayerList.posX = 0;
-		panelNotifications.posX = panelPlayerInfo.posX = xSize - panelNotifications.width;
 		panelNotifications.height = height - panelPlayerInfo.height;
 		panelNotifications.posY = height - panelNotifications.height;
 		
 		panelPlayerList.buttonSort.posX = panelPlayerList.width + 1;
 		panelNotifications.width = panelPlayerInfo.width = Math.max(100, Math.max(panelNotifications.width, panelPlayerInfo.width));
+		panelNotifications.posX = panelPlayerInfo.posX = xSize - panelNotifications.width;
 		
 		for(ButtonNotification b : panelNotifications.notificationButtons)
 			b.width = panelNotifications.width;

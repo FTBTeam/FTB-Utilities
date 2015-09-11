@@ -1,11 +1,11 @@
 package latmod.ftbu.core.net;
+import cpw.mods.fml.common.network.simpleimpl.*;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.world.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.util.*;
-import cpw.mods.fml.common.network.simpleimpl.*;
 
 public class MessageClientGuiAction extends MessageLM<MessageClientGuiAction>
 {

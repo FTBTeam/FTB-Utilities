@@ -2,11 +2,11 @@ package latmod.ftbu.mod.client.minimap;
 
 import java.util.List;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.player.ChunkType;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class MChunk

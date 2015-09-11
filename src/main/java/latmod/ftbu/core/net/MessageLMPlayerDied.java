@@ -1,8 +1,9 @@
 package latmod.ftbu.core.net;
-import io.netty.buffer.ByteBuf;
-
 import java.util.Calendar;
 
+import cpw.mods.fml.common.network.simpleimpl.*;
+import cpw.mods.fml.relauncher.*;
+import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.util.LMStringUtils;
@@ -10,8 +11,6 @@ import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.minimap.*;
 import net.minecraft.entity.player.EntityPlayer;
-import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.*;
 
 public class MessageLMPlayerDied extends MessageLM<MessageLMPlayerDied> implements IClientMessageLM<MessageLMPlayerDied>
 {

@@ -1,7 +1,7 @@
 package latmod.ftbu.core.net;
+import cpw.mods.fml.common.network.simpleimpl.*;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.world.LMWorldServer;
-import cpw.mods.fml.common.network.simpleimpl.*;
 
 public class MessageLMPlayerRequestInfo extends MessageLM<MessageLMPlayerRequestInfo>
 {

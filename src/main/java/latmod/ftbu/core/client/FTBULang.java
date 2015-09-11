@@ -1,11 +1,11 @@
 package latmod.ftbu.core.client;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.EnumDyeColor;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.friends.LMPComparator;
 import latmod.ftbu.mod.player.ChunkType;
 import net.minecraft.client.resources.I18n;
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class FTBULang

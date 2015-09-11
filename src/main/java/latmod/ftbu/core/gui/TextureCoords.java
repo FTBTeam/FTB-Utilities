@@ -1,7 +1,7 @@
 package latmod.ftbu.core.gui;
 
-import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.*;
+import net.minecraft.util.ResourceLocation;
 
 public final class TextureCoords
 {

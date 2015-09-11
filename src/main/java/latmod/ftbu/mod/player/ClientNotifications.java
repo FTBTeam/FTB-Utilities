@@ -3,6 +3,9 @@ package latmod.ftbu.mod.player;
 import java.io.File;
 import java.net.URI;
 
+import org.lwjgl.opengl.*;
+
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.Notification;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.gui.GuiLM;
@@ -14,10 +17,6 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.ClientCommandHandler;
-
-import org.lwjgl.opengl.*;
-
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class ClientNotifications

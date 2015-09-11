@@ -1,17 +1,15 @@
 package latmod.ftbu.core.net;
-import io.netty.buffer.ByteBuf;
-
 import java.util.UUID;
-
-import latmod.ftbu.core.api.LMPlayerClientEvent;
-import latmod.ftbu.core.world.*;
-import latmod.ftbu.mod.FTBU;
-import net.minecraft.nbt.NBTTagCompound;
 
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
+import io.netty.buffer.ByteBuf;
+import latmod.ftbu.core.api.LMPlayerClientEvent;
+import latmod.ftbu.core.world.*;
+import latmod.ftbu.mod.FTBU;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> implements IClientMessageLM<MessageLMPlayerLoggedIn>
 {

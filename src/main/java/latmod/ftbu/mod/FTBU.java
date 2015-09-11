@@ -2,6 +2,8 @@ package latmod.ftbu.mod;
 import java.io.File;
 import java.lang.reflect.Method;
 
+import cpw.mods.fml.common.*;
+import cpw.mods.fml.common.event.*;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.api.readme.ReadmeSaveHandler;
 import latmod.ftbu.core.inv.ODItems;
@@ -12,8 +14,6 @@ import latmod.ftbu.mod.backups.Backups;
 import latmod.ftbu.mod.cmd.*;
 import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.entity.player.EntityPlayerMP;
-import cpw.mods.fml.common.*;
-import cpw.mods.fml.common.event.*;
 
 @Mod
 (

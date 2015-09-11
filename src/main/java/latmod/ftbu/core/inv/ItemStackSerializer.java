@@ -2,11 +2,11 @@ package latmod.ftbu.core.inv;
 
 import java.lang.reflect.Type;
 
+import com.google.gson.*;
+
 import latmod.ftbu.core.util.LMStringUtils;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
-
-import com.google.gson.*;
 
 public class ItemStackSerializer implements JsonDeserializer<ItemStack>, JsonSerializer<ItemStack>
 {

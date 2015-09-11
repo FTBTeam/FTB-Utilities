@@ -1,5 +1,6 @@
 package latmod.ftbu.mod.cmd.admin;
 
+import cpw.mods.fml.relauncher.Side;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.api.EventFTBUReload;
 import latmod.ftbu.core.cmd.SubCommand;
@@ -9,7 +10,6 @@ import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IChatComponent;
-import cpw.mods.fml.relauncher.Side;
 
 public class CmdAdminReload extends SubCommand
 {

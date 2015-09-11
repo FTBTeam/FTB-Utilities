@@ -1,12 +1,12 @@
 package latmod.ftbu.core.paint;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.client.*;
 import net.minecraft.block.*;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.*;
 import net.minecraft.world.IBlockAccess;
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class PaintableRenderer

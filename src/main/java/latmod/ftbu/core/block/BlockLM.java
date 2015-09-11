@@ -1,6 +1,7 @@
 package latmod.ftbu.core.block;
 import java.util.*;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.item.ItemBlockLM;
 import latmod.ftbu.core.tile.TileLM;
@@ -16,7 +17,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.*;
 import net.minecraftforge.common.util.ForgeDirection;
-import cpw.mods.fml.relauncher.*;
 
 public abstract class BlockLM extends BlockContainer implements IBlockLM
 {

@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import latmod.ftbu.core.gui.PanelLM;
 import cpw.mods.fml.relauncher.*;
+import latmod.ftbu.core.gui.PanelLM;
 
 @SideOnly(Side.CLIENT)
 public abstract class PanelFriendsGui extends PanelLM

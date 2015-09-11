@@ -1,11 +1,11 @@
 package latmod.ftbu.core.net;
+import cpw.mods.fml.common.network.simpleimpl.*;
+import cpw.mods.fml.relauncher.*;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.api.EventFTBUReload;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.badges.ThreadLoadBadges;
-import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.*;
 
 public class MessageReload extends MessageLM<MessageReload> implements IClientMessageLM<MessageReload>
 {

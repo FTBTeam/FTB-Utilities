@@ -1,10 +1,10 @@
 package latmod.ftbu.mod.client.gui.friends;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class PanelPlayerList extends PanelFriendsGui

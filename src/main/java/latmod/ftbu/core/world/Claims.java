@@ -1,8 +1,7 @@
-package latmod.ftbu.mod.player;
+package latmod.ftbu.core.world;
 
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.util.*;
-import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.nbt.*;
 import net.minecraft.util.ChunkCoordinates;

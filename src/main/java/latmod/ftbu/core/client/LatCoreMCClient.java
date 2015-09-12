@@ -11,7 +11,6 @@ import latmod.ftbu.core.*;
 import latmod.ftbu.core.gui.GuiLM;
 import latmod.ftbu.core.util.FastMap;
 import latmod.ftbu.mod.client.FTBURenderHandler;
-import latmod.ftbu.mod.player.ClientNotifications;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;

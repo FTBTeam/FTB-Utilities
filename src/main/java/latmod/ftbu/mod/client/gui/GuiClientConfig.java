@@ -119,7 +119,7 @@ public class GuiClientConfig extends GuiLM
 		for(ConfigLine l : lines) l.renderLine();
 		
 		drawRect(0, 0, width, 20, 0x99333333);
-		drawCenteredString(fontRendererObj, FTBULang.client_config, width / 2, 6, 0xFFFFFFFF);
+		drawCenteredString(fontRendererObj, FTBULang.client_config(), width / 2, 6, 0xFFFFFFFF);
 		
 		if(drawScroll)
 		{

@@ -10,7 +10,6 @@ import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.GuiClientConfig;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
-import latmod.ftbu.mod.player.ClientNotifications;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.*;
@@ -33,7 +32,7 @@ public class FTBUGuiEventHandler
 		if(e.gui instanceof GuiOptions && LatCoreMCClient.getMinecraft().thePlayer != null)
 		{
 			if(FTBUClient.optionsButton.getB())
-				e.buttonList.add(new GuiButton(SETTINGS_BUTTON_ID, e.gui.width / 2 - 155, e.gui.height / 6 + 48 - 6, 150, 20, "[FTBU] " + FTBULang.client_config));
+				e.buttonList.add(new GuiButton(SETTINGS_BUTTON_ID, e.gui.width / 2 - 155, e.gui.height / 6 + 48 - 6, 150, 20, "[FTBU] " + FTBULang.client_config()));
 		}
 		else if(e.gui instanceof GuiInventory || e.gui instanceof GuiContainerCreative)
 		{

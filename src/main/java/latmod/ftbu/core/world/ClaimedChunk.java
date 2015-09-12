@@ -1,7 +1,6 @@
-package latmod.ftbu.mod.player;
+package latmod.ftbu.core.world;
 
 import latmod.ftbu.core.util.*;
-import latmod.ftbu.core.world.LMWorldServer;
 import net.minecraft.entity.player.EntityPlayer;
 
 public final class ClaimedChunk

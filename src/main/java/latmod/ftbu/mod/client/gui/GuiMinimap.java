@@ -8,11 +8,10 @@ import latmod.ftbu.core.client.FTBULang;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.*;
-import latmod.ftbu.core.world.LMWorldClient;
+import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
 import latmod.ftbu.mod.client.minimap.*;
-import latmod.ftbu.mod.player.ChunkType;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -60,7 +59,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 			}
 		};
 		
-		buttonRefresh.title = FTBULang.button_refresh;
+		buttonRefresh.title = FTBULang.button_refresh();
 		
 		buttonClose = new ButtonLM(this, 132, 6, 16, 16)
 		{
@@ -71,7 +70,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 			}
 		};
 		
-		buttonClose.title = FTBULang.button_close;
+		buttonClose.title = FTBULang.button_close();
 		
 		buttonSafe = new ItemButtonLM(this, 28, 6, 16, 16)
 		{

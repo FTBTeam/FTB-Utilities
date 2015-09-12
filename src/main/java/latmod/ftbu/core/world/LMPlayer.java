@@ -26,6 +26,8 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 	public int deaths;
 	public NBTTagCompound commonPublicData;
 	public NBTTagCompound commonPrivateData;
+	public final FastList<Mail> mail;
+	
 	public long lastSeen;
 	public long firstJoined;
 	public boolean chatLinks;
@@ -45,6 +47,7 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 		
 		commonPublicData = new NBTTagCompound();
 		commonPrivateData = new NBTTagCompound();
+		mail = new FastList<Mail>();
 	}
 	
 	public abstract boolean isOnline();

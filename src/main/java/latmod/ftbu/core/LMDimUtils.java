@@ -40,7 +40,7 @@ public class LMDimUtils
 		if(ep == null) return false;
 		ep.fallDistance = 0F;
 		
-		if(ep.worldObj.provider.dimensionId == dim)
+		if(ep.dimension == dim)
 		{
 			ep.playerNetServerHandler.setPlayerLocation(x, y, z, ep.rotationYaw, ep.rotationPitch);
 			return true;

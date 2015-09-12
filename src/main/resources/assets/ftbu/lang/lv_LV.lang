@@ -16,19 +16,15 @@ ftbu:button.save=Saglabāt
 ftbu:button.refresh=Atsvaidzināt
 
 #FriendsGUI
-ftbu:button.addFriend=Pievienot Draugiem
-ftbu:button.remFriend=Noņemt no Draugiem
+ftbu:button.add_friend=Pievienot Draugiem
+ftbu:button.rem_friend=Noņemt no Draugiem
+ftbu:button.deny_friend=Noraidīt uzaicinājumu
 ftbu:label.online=Tiešsaitē
 ftbu:label.friend=Draugs
 ftbu:label.pfriend=Neapstiprināts Draugs
-
-#FriendsGUI Info
-ftbu:button.lmp_comparator=Kārtošana
-lmp_comparator.friends_status=Draugu Statuss
-lmp_comparator.name=Lietotājvārds
-lmp_comparator.deaths=Nāves
-lmp_comparator.date_joined=Datums kad pievienojās
-lmp_comparator.last_seen=Pēdējo reizi manīts
+ftbu:label.joined=Pievienojās pirms %s
+ftbu:label.last_seen=Pēdējo reizi mainīts pirms %s
+ftbu:label.deaths=Nāves: %s
 
 #ClientConfig
 ftbu:client_config=Klienta Konfigurācija
@@ -51,8 +47,8 @@ config.property.debug_info=Atkļūdošanas Info
 config.property.options_button=Uzstādījumu Poga
 config.property.chat_links=Čata Saīsnes
 
-config.group.waypoints=Waypointi
-config.property.waypoint_type=Waypointu Tips
+config.group.waypoints=Virzienpunkti
+config.property.waypoint_type=Virzienpunkti Tips
 config.property.display_title=Rādīt Nosaukumu
 config.property.display_distance=Rādīt Attālumu
 config.property.render_distance=Zīmēšanas Attālums
@@ -63,11 +59,19 @@ config.value.beacon=Stars
 config.group.minimap=Minikarte
 config.property.render_ingame=Rādīt Spēlē
 config.property.render_players=Spēlētāji
-config.property.render_waypoints=Waypointi
+config.property.render_waypoints=Virzienpunkti
 config.property.calc_height=Aprēķināt Augstumu
+config.property.blur=Miglains
+config.property.zoom=Pietuvinājums
+config.property.size_ingame=Izmērs Spēlē
+config.property.render_grid=Rūtiņas
+config.property.render_claimed_chunks=Iezīmētie Apgabali
+config.property.custom_map_colors=Bloku Krāsas
 
 #Misc
 ftbu:owner=Īpašnieks: %s
+commands.lmmissingargs=Pietrūkst argumentu!
+commands.lmdisabled=Šī lieta nav ieslēgta!
 
 #Security Mode
 ftbu:security=Drošība
@@ -108,10 +112,6 @@ ftbu:color.light_blue=Gaišzils
 ftbu:color.magenta=Fuksīna
 ftbu:color.orange=Oranžs
 ftbu:color.white=Balts
-
-#Commands
-commands.lmmissingargs=Pietrūkst argumentu!
-commands.lmdisabled=Šī lieta nav ieslēgta!
 
 #Chunktypes
 ftbu:chunktype.spawn=Sākuma Arēna

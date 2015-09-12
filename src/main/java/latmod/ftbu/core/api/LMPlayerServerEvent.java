@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.Side;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.core.world.*;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.IChatComponent;
 
 public abstract class LMPlayerServerEvent extends LMPlayerEvent // LMPlayerClientEvent
 {
@@ -64,9 +65,9 @@ public abstract class LMPlayerServerEvent extends LMPlayerEvent // LMPlayerClien
 	
 	public static class CustomInfo extends LMPlayerServerEvent
 	{
-		public final FastList<String> info;
+		public final FastList<IChatComponent> info;
 		
-		public CustomInfo(LMPlayerServer p, FastList<String> l)
+		public CustomInfo(LMPlayerServer p, FastList<IChatComponent> l)
 		{ super(p); info = l; }
 	}
 	

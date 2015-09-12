@@ -46,7 +46,7 @@ public class GuiWaypoints extends GuiLM
 			{ scroll(-1); }
 		};
 		
-		buttonUp.title = FTBULang.button_up;
+		buttonUp.title = FTBULang.button_up();
 		
 		buttonClose = new ButtonLM(this, 102, 27, 16, 16)
 		{
@@ -57,7 +57,7 @@ public class GuiWaypoints extends GuiLM
 			}
 		};
 		
-		buttonClose.title = FTBULang.button_close;
+		buttonClose.title = FTBULang.button_close();
 		
 		buttonAdd = new ButtonLM(this, 102, 48, 16, 16)
 		{
@@ -68,7 +68,7 @@ public class GuiWaypoints extends GuiLM
 			}
 		};
 		
-		buttonAdd.title = FTBULang.button_add;
+		buttonAdd.title = FTBULang.button_add();
 		
 		buttonToggleAll = new ButtonLM(this, 102, 69, 16, 16)
 		{
@@ -92,7 +92,7 @@ public class GuiWaypoints extends GuiLM
 			{ scroll(1); }
 		};
 		
-		buttonDown.title = FTBULang.button_down;
+		buttonDown.title = FTBULang.button_down();
 	}
 	
 	private static boolean firstEnabled()
@@ -259,7 +259,7 @@ public class GuiWaypoints extends GuiLM
 				}
 			};
 			
-			buttonSave.title = newWaypoint ? FTBULang.button_add : FTBULang.button_save;
+			buttonSave.title = newWaypoint ? FTBULang.button_add() : FTBULang.button_save();
 			
 			buttonType = new ButtonLM(this, 110, 36, 16, 16)
 			{
@@ -283,7 +283,7 @@ public class GuiWaypoints extends GuiLM
 				}
 			};
 			
-			buttonRemove.title = newWaypoint ? FTBULang.button_cancel : FTBULang.button_remove;
+			buttonRemove.title = newWaypoint ? FTBULang.button_cancel() : FTBULang.button_remove();
 			
 			buttonSetColor = new ButtonLM(this, 79, 47, col_button_tex.width, col_button_tex.height)
 			{

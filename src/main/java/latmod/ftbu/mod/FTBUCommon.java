@@ -8,7 +8,6 @@ import latmod.ftbu.core.api.readme.ReadmeFile;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.TileLM;
 import latmod.ftbu.core.world.*;
-import latmod.ftbu.mod.player.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
@@ -74,7 +73,7 @@ public class FTBUCommon // FTBUClient
 				if(Claims.isOutsideWorldBorderD(ep.dimension, ep.posX, ep.posZ))
 				{
 					ep.motionX = ep.motionY = ep.motionZ = 0D;
-					IChatComponent warning = new ChatComponentTranslation("ftbu:chunktype." + ChunkType.WORLD_BORDER.lang + ".warning");
+					IChatComponent warning = new ChatComponentTranslation("ftbu:" + ChunkType.WORLD_BORDER.lang + ".warning");
 					warning.getChatStyle().setColor(EnumChatFormatting.RED);
 					LatCoreMC.notifyPlayer(ep, new Notification("world_border", warning, 3000));
 					
@@ -102,7 +101,7 @@ public class FTBUCommon // FTBUClient
 				if(type.isClaimed())
 					msg = new ChatComponentText("" + LMWorldServer.inst.getPlayer(currentChunkType));
 				else
-					msg = new ChatComponentTranslation("ftbu:chunktype." + type.lang);
+					msg = new ChatComponentTranslation("ftbu:" + type.lang);
 				
 				Notification n = new Notification("chunk_changed", msg, 3000);
 				n.setColor(type.areaColor);

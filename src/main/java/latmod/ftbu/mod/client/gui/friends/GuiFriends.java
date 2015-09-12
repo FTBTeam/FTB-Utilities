@@ -7,7 +7,7 @@ import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.core.world.LMWorldClient;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.*;
 
 @SideOnly(Side.CLIENT)
 public class GuiFriends extends GuiLM implements IClientActionGui
@@ -50,7 +50,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			panelPlayerInfo.text.clear();
 			panelPlayerInfo.text.add(EnumChatFormatting.BOLD + panelPlayerView.selectedPlayer.getCommandSenderName());
 			if(panelPlayerView.selectedPlayer.playerLM.isOnline)
-				panelPlayerInfo.text.add(EnumChatFormatting.GREEN + "[" + FTBULang.Friends.label_online + "]");
+				panelPlayerInfo.text.add(EnumChatFormatting.GREEN + "[" + FTBULang.Friends.label_online() + "]");
 			
 			if(!panelPlayerView.selectedPlayer.isOwner)
 			{
@@ -58,12 +58,13 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 				boolean raw2 = LMWorldClient.inst.clientPlayer.isFriendRaw(panelPlayerView.selectedPlayer.playerLM);
 				
 				if(raw1 && raw2)
-					panelPlayerInfo.text.add(EnumChatFormatting.GREEN + "[" + FTBULang.Friends.label_friend + "]");
+					panelPlayerInfo.text.add(EnumChatFormatting.GREEN + "[" + FTBULang.Friends.label_friend() + "]");
 				else if(raw1 || raw2)
-					panelPlayerInfo.text.add((raw1 ? EnumChatFormatting.GOLD : EnumChatFormatting.BLUE) + "[" + FTBULang.Friends.label_pfriend + "]");
+					panelPlayerInfo.text.add((raw1 ? EnumChatFormatting.GOLD : EnumChatFormatting.BLUE) + "[" + FTBULang.Friends.label_pfriend() + "]");
 			}
 			
-			panelPlayerInfo.text.addAll(panelPlayerView.selectedPlayer.playerLM.clientInfo);
+			for(IChatComponent c : panelPlayerView.selectedPlayer.playerLM.clientInfo)
+				panelPlayerInfo.text.add(c.getFormattedText());
 		}
 		
 		mainPanel.add(panelPlayerList);
@@ -77,7 +78,6 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		panelNotifications.height = height - panelPlayerInfo.height;
 		panelNotifications.posY = height - panelNotifications.height;
 		
-		panelPlayerList.buttonSort.posX = panelPlayerList.width + 1;
 		panelNotifications.width = panelPlayerInfo.width = Math.max(100, Math.max(panelNotifications.width, panelPlayerInfo.width));
 		panelNotifications.posX = panelPlayerInfo.posX = xSize - panelNotifications.width;
 		

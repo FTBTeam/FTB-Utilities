@@ -54,7 +54,7 @@ public class GuiSelectColorHSB extends GuiLM
 			
 			public void addMouseOverText(FastList<String> s)
 			{
-				s.add(FTBULang.button_cancel);
+				s.add(FTBULang.button_cancel());
 				s.add(title);
 			}
 		};
@@ -68,7 +68,7 @@ public class GuiSelectColorHSB extends GuiLM
 			
 			public void addMouseOverText(FastList<String> s)
 			{
-				s.add(FTBULang.button_accept);
+				s.add(FTBULang.button_accept());
 				s.add(title);
 			}
 		};
@@ -155,7 +155,7 @@ public class GuiSelectColorHSB extends GuiLM
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glShadeModel(GL11.GL_FLAT);
 		
-		colorSelector.render();
+		colorSelector.renderWidget();
 		
 		sliderBrightness.renderSlider(slider_tex);
 	}
@@ -200,14 +200,17 @@ public class GuiSelectColorHSB extends GuiLM
 			shouldRedraw = true;
 		}
 
-		public void render()
+		public void renderWidget()
 		{
+			int ax = getAX();
+			int ay = getAY();
+			
 			if(grabbed && !Mouse.isButtonDown(0)) grabbed = false;
 			
 			if(grabbed)
 			{
-				cursorPosX = MathHelperLM.clamp((gui.mouseX - getAX()) / (double)width, 0D, 1D);
-				cursorPosY = MathHelperLM.clamp((gui.mouseY - getAY()) / (double)height, 0D, 1D);
+				cursorPosX = (gui.mouseX - ax) / (double)width;
+				cursorPosY = (gui.mouseY - ay) / (double)height;
 				
 				double s = MathHelperLM.dist(cursorPosX, cursorPosY, 0D, 0.5D, 0.5D, 0D) * 2D;
 				
@@ -217,19 +220,20 @@ public class GuiSelectColorHSB extends GuiLM
 					cursorPosY = (cursorPosY - 0.5D) / s + 0.5D;
 				}
 				
+				cursorPosX = MathHelperLM.clamp(cursorPosX, 0D, 1D);
+				cursorPosY = MathHelperLM.clamp(cursorPosY, 0D, 1D);
+				
 				gui.updateColor();
 			}
 			
 			GL11.glColor4f(1F, 1F, 1F, 1F);
 			gui.setTexture(tex_colors);
-			GuiLM.drawTexturedRectD(gui.guiLeft + posX, gui.guiTop + posY, gui.zLevel, width, height, 0D, 0D, 1D, 1D);
-			
-			GL11.glPopAttrib();
+			GuiLM.drawTexturedRectD(ax, ay, gui.zLevel, width, height, 0D, 0D, 1D, 1D);
 			
 			if(cursorPosX >= 0D && cursorPosY >= 0D)
 			{
 				GL11.glColor4f(1F - LMColorUtils.getRed(gui.currentColor) / 255F, 1F - LMColorUtils.getGreen(gui.currentColor) / 255F, 1F - LMColorUtils.getBlue(gui.currentColor) / 255F, 1F);
-				cursor_tex.render(gui, posX + cursorPosX * width - 2, posY + cursorPosY * height - 2, 4, 4);
+				cursor_tex.render(gui, ax + cursorPosX * width - 2, ay + cursorPosY * height - 2, 4, 4);
 				GL11.glColor4f(1F, 1F, 1F, 1F);
 			}
 		}

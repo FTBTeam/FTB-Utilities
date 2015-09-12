@@ -1,7 +1,6 @@
-package latmod.ftbu.mod.player;
+package latmod.ftbu.core.world;
 
 import latmod.ftbu.core.LMSecurity;
-import latmod.ftbu.core.world.LMPlayerServer;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class ClaimSettings

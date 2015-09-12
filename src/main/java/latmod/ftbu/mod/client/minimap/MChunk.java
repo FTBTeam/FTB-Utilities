@@ -5,7 +5,6 @@ import java.util.List;
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.*;
-import latmod.ftbu.mod.player.ChunkType;
 import net.minecraft.world.World;
 
 @SideOnly(Side.CLIENT)

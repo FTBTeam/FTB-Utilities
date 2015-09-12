@@ -28,7 +28,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	public final ContainerLM container;
 	public final ResourceLocation texture;
 	public final PanelLM mainPanel;
-	public int mouseX, mouseY, mouseDWheel;
+	public int mouseX, mouseY, mouseDWheel, mouseDX, mouseDY;
 	public float delta;
 	
 	public boolean hideNEI = false;
@@ -140,6 +140,8 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	public final void drawScreen(int mx, int my, float f)
 	{
+		mouseDX = mx - mouseX;
+		mouseDY = my - mouseY;
 		mouseX = mx;
 		mouseY = my;
 		delta = f;

@@ -76,7 +76,7 @@ public class GuiSelectColor extends GuiLM
 			
 			public void addMouseOverText(FastList<String> s)
 			{
-				s.add(FTBULang.button_cancel);
+				s.add(FTBULang.button_cancel());
 				s.add(title);
 			}
 		};
@@ -90,7 +90,7 @@ public class GuiSelectColor extends GuiLM
 			
 			public void addMouseOverText(FastList<String> s)
 			{
-				s.add(FTBULang.button_accept);
+				s.add(FTBULang.button_accept());
 				s.add(title);
 			}
 		};

@@ -1,5 +1,5 @@
 package latmod.ftbu.core;
-import latmod.ftbu.core.client.FTBULang;
+import latmod.ftbu.mod.FTBU;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;
 
@@ -25,6 +25,7 @@ public enum EnumDyeColor // ItemDye
 	public static final EnumDyeColor[] VALUES = values();
 	
 	public final int ID;
+	public final String lang;
 	public final String name;
 	public final int color;
 	public final int colorBright;
@@ -36,6 +37,7 @@ public enum EnumDyeColor // ItemDye
 	{
 		ID = ordinal();
 		name = ItemDye.field_150921_b[ID];
+		lang = "color." + name;
 		color = ItemDye.field_150922_c[ID];
 		colorBright = c;
 		
@@ -45,7 +47,7 @@ public enum EnumDyeColor // ItemDye
 	}
 
 	public String toString()
-	{ return FTBULang.colors[ID]; }
+	{ return FTBU.mod.translateClient(lang); }
 	
 	public ItemStack getDye()
 	{ return new ItemStack(Items.dye, 1, ID); }

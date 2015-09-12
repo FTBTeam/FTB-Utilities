@@ -3,19 +3,18 @@ package latmod.ftbu.core.world;
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.core.LMNBTUtils;
 import latmod.ftbu.core.api.LMPlayerClientEvent;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.inv.LMInvUtils;
-import latmod.ftbu.core.util.*;
-import latmod.ftbu.mod.player.ClaimSettings;
+import latmod.ftbu.core.util.FastList;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.*;
+import net.minecraft.util.IChatComponent;
 
 @SideOnly(Side.CLIENT)
 public class LMPlayerClient extends LMPlayer // LMPlayerServer
 {
-	public final FastList<String> clientInfo;
+	public final FastList<IChatComponent> clientInfo;
 	public final ClaimSettings claimSettings;
 	public boolean isOnline;
 	
@@ -25,7 +24,7 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 	public LMPlayerClient(LMWorldClient w, int i, GameProfile gp)
 	{
 		super(w, i, gp);
-		clientInfo = new FastList<String>();
+		clientInfo = new FastList<IChatComponent>();
 		claimSettings = new ClaimSettings();
 		isOnline = false;
 	}
@@ -43,18 +42,11 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 	public EntityPlayerSP getPlayer()
 	{ return isOnline() ? LatCoreMCClient.getPlayerSP(getUUID()) : null; }
 	
-	public void receiveInfo(NBTTagCompound tag)
+	public void receiveInfo(NBTTagList tag)
 	{
-		LMNBTUtils.toStringList(clientInfo, tag.getTagList("I", LMNBTUtils.STRING));
-		
-		lastSeen = tag.getLong("L");
-		if(!isOnline() && lastSeen > 0L) clientInfo.add("Last seen " + LMStringUtils.getTimeAgo(lastSeen) + " ago");
-		
-		firstJoined = tag.getLong("J");
-		if(firstJoined > 0L) clientInfo.add("Joined " + LMStringUtils.getTimeAgo(firstJoined) + " ago");
-		
-		if(deaths > 0) clientInfo.add("Deaths: " + deaths);
-		
+		clientInfo.clear();
+		for(int i = 0; i < tag.tagCount(); i++)
+			clientInfo.add(IChatComponent.Serializer.func_150699_a(tag.getStringTagAt(i)));
 		new LMPlayerClientEvent.CustomInfo(this, clientInfo).post();
 	}
 	
@@ -77,6 +69,7 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 			chatLinks = tag.getBoolean("CL");
 			chunkMessages = tag.getByte("CM");
 			claimSettings.readFromNBT(tag.getCompoundTag("SC"));
+			Mail.readFromNBT(this, tag, "Mail");
 		}
 	}
 	

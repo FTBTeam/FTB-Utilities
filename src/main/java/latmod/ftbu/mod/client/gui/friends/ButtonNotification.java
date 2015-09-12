@@ -3,9 +3,9 @@ package latmod.ftbu.mod.client.gui.friends;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
+import latmod.ftbu.core.client.ClientNotifications;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.util.FastList;
-import latmod.ftbu.mod.player.ClientNotifications;
 import net.minecraft.item.ItemStack;
 
 @SideOnly(Side.CLIENT)
@@ -20,7 +20,7 @@ public class ButtonNotification extends ButtonLM
 		notification = n;
 		index = p.notificationButtons.size();
 		posY += index * 26;
-		title = notification.notification.title.getFormattedText();
+		title = n.notification.title.getFormattedText();
 		width = gui.getFontRenderer().getStringWidth(n.notification.title.getFormattedText());
 		if(n.notification.getDesc() != null) width = Math.max(width, gui.getFontRenderer().getStringWidth(n.notification.getDesc().getFormattedText()));
 		if(n.notification.getItem() != null) width += 20;
@@ -58,5 +58,7 @@ public class ButtonNotification extends ButtonLM
 	
 	public void addMouseOverText(FastList<String> l)
 	{
+		if(notification.notification.getClickEvent() != null)
+			l.add(notification.notification.getClickEvent().getValue());
 	}
 }

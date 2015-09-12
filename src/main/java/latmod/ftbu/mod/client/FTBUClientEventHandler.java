@@ -17,7 +17,6 @@ import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.minimap.*;
-import latmod.ftbu.mod.player.ClientNotifications;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.ServerData;
@@ -71,7 +70,6 @@ public class FTBUClientEventHandler
 		if(e.map.getTextureType() == 0)
 		{
 			LatCoreMCClient.blockNullIcon = e.map.registerIcon(FTBU.mod.assets + "empty_block");
-			FTBULang.reload();
 			LatCoreMCClient.resetTextureMaps();
 		}
 		else if(e.map.getTextureType() == 1)
@@ -86,11 +84,11 @@ public class FTBUClientEventHandler
 		// Some ideas around this //
 		if(!mc.gameSettings.showDebugInfo)
 		{
+			if(FTBUClient.displayDebugInfo.getB())
+				e.left.add(mc.debug);
+			
 			if(LatCoreMC.isDevEnv)
 				e.left.add("[MC " + EnumChatFormatting.GOLD + LatCoreMC.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");
-			
-			if(FTBUClient.displayDebugInfo.getB())
-				e.right.add(mc.debug);
 		}
 		
 		if(mc.gameSettings.showDebugInfo)

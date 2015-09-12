@@ -17,7 +17,6 @@ import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.client.badges.Badge;
 import latmod.ftbu.mod.client.minimap.*;
-import latmod.ftbu.mod.player.ClientNotifications;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.EntityReddustFX;
@@ -73,8 +72,6 @@ public class FTBUClient extends FTBUCommon
 	
 	public void preInit()
 	{
-		FTBULang.reload();
-		
 		EnumBusType.register(FTBUClientEventHandler.instance);
 		EnumBusType.register(FTBURenderHandler.instance);
 		EnumBusType.register(FTBUGuiEventHandler.instance);

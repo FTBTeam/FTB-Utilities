@@ -16,20 +16,15 @@ ftbu:button.save=Save
 ftbu:button.refresh=Refresh
 
 #FriendsGUI
-ftbu:button.addFriend=Add as Friend
-ftbu:button.remFriend=Remove from Friends
-ftbu:button.denyFriend=Deny Friend Request
+ftbu:button.add_friend=Add as Friend
+ftbu:button.rem_friend=Remove from Friends
+ftbu:button.deny_friend=Deny Friend Request
 ftbu:label.online=Online
 ftbu:label.friend=Friend
 ftbu:label.pfriend=Pending Friend
-
-#FriendsGUI Info
-ftbu:button.lmp_comparator=Sorting
-lmp_comparator.friends_status=Friends Status
-lmp_comparator.name=Username
-lmp_comparator.deaths=Deaths
-lmp_comparator.date_joined=Date Joined
-lmp_comparator.last_seen=Last Seen
+ftbu:label.joined=Joined %s ago
+ftbu:label.last_seen=Last seen %s ago
+ftbu:label.deaths=Deaths: %s
 
 #ClientConfig
 ftbu:client_config=Client Config
@@ -72,9 +67,15 @@ config.property.render_waypoints=Waypoints
 config.property.calc_height=Calculate Height
 config.property.blur=Blur
 config.property.zoom=Zoom
+config.property.size_ingame=Ingame Size
+config.property.render_grid=Render Grid
+config.property.render_claimed_chunks=Render Claimed Chunks
+config.property.custom_map_colors=Block Colors
 
 #Misc
 ftbu:owner=Owner: %s
+commands.lmmissingargs=Missing Arguments!
+commands.lmdisabled=This feature is disabled!
 
 #Security Mode
 ftbu:security=Security
@@ -115,10 +116,6 @@ ftbu:color.light_blue=Light Blue
 ftbu:color.magenta=Magenta
 ftbu:color.orange=Orange
 ftbu:color.white=White
-
-#Commands
-commands.lmmissingargs=Missing Arguments!
-commands.lmdisabled=This feature is disabled!
 
 #Chunktypes
 ftbu:chunktype.spawn=Spawn Area

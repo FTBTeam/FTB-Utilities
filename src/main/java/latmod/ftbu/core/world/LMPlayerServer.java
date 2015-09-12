@@ -9,9 +9,9 @@ import latmod.ftbu.core.inv.LMInvUtils;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.config.FTBUConfig;
-import latmod.ftbu.mod.player.Claims;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.*;
+import net.minecraft.util.*;
 
 public class LMPlayerServer extends LMPlayer // LMPlayerClient
 {
@@ -98,17 +98,21 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	// Reading / Writing //
 	
-	public void getInfo(NBTTagCompound tag)
+	public NBTTagList getInfo()
 	{
 		long ms = LMUtils.millis();
 		
-		FastList<String> info = new FastList<String>();
+		FastList<IChatComponent> info = new FastList<IChatComponent>();
 		new LMPlayerServerEvent.CustomInfo(this, info).post();
-		tag.setTag("I", LMNBTUtils.fromStringList(info));
 		
-		if(lastSeen > 0L) tag.setLong("L", ms - lastSeen);
-		if(firstJoined > 0L) tag.setLong("J", ms - firstJoined);
-		if(deaths > 0) tag.setShort("D", (short)deaths);
+		if(lastSeen > 0L) info.add(new ChatComponentTranslation("ftbu:label.last_seen", LMStringUtils.getTimeAgo(ms - lastSeen)));
+		if(firstJoined > 0L) info.add(new ChatComponentTranslation("ftbu:label.joined", LMStringUtils.getTimeAgo(ms - firstJoined)));
+		if(deaths > 0) info.add(new ChatComponentTranslation("ftbu:label.deaths", String.valueOf(deaths)));
+		
+		NBTTagList list = new NBTTagList();
+		for(IChatComponent c : info)
+			list.appendTag(new NBTTagString(IChatComponent.Serializer.func_150696_a(c)));
+		return list;
 	}
 	
 	public void readFromServer(NBTTagCompound tag)
@@ -146,6 +150,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		chatLinks = tag.hasKey("ChatLinks") ? tag.getBoolean("ChatLinks") : true;
 		chunkMessages = tag.hasKey("ChunkMessages") ? tag.getByte("ChunkMessages") : 1;
+		
+		Mail.readFromNBT(this, tag, "Mail");
 	}
 	
 	public void writeToServer(NBTTagCompound tag)
@@ -183,6 +189,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		tag.setBoolean("ChatLinks", chatLinks);
 		tag.setByte("ChunkMessages", (byte)chunkMessages);
+		
+		Mail.writeToNBT(this, tag, "Mail");
 	}
 	
 	public void writeToNet(NBTTagCompound tag, boolean self)
@@ -209,6 +217,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			}
 			if(chatLinks) tag.setBoolean("CL", chatLinks);
 			if(chunkMessages != 0) tag.setByte("CM", (byte)chunkMessages);
+			
+			Mail.writeToNBT(this, tag, "Mail");
 		}
 	}
 	

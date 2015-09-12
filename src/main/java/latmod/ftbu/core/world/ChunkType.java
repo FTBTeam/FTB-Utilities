@@ -1,9 +1,8 @@
-package latmod.ftbu.mod.player;
+package latmod.ftbu.core.world;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.core.client.FTBULang;
 import latmod.ftbu.core.util.MathHelperLM;
-import latmod.ftbu.core.world.*;
+import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.WorldServer;
@@ -29,7 +28,7 @@ public enum ChunkType
 	ChunkType(String s, EnumChatFormatting c, int col)
 	{
 		ID = ordinal();
-		lang = s;
+		lang = "chunktype." + s;
 		chatColor = c;
 		areaColor = col;
 	}
@@ -48,7 +47,7 @@ public enum ChunkType
 	
 	@SideOnly(Side.CLIENT)
 	public String getIDS()
-	{ return FTBULang.chunk_types[ID]; }
+	{ return FTBU.mod.translateClient(lang); }
 	
 	public static ChunkType get(int dim, int cx, int cz, LMPlayerServer p)
 	{

@@ -1,4 +1,4 @@
-package latmod.ftbu.mod.player;
+package latmod.ftbu.core.client;
 
 import java.io.File;
 import java.net.URI;
@@ -7,7 +7,6 @@ import org.lwjgl.opengl.*;
 
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.Notification;
-import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.gui.GuiLM;
 import latmod.ftbu.core.util.*;
 import net.minecraft.client.Minecraft;

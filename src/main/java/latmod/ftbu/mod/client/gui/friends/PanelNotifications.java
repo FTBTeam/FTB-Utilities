@@ -1,9 +1,9 @@
 package latmod.ftbu.mod.client.gui.friends;
 
 import cpw.mods.fml.relauncher.*;
+import latmod.ftbu.core.client.ClientNotifications;
 import latmod.ftbu.core.gui.SliderLM;
 import latmod.ftbu.core.util.FastList;
-import latmod.ftbu.mod.player.ClientNotifications;
 
 @SideOnly(Side.CLIENT)
 public class PanelNotifications extends PanelFriendsGui

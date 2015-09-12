@@ -14,7 +14,6 @@ import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.backups.Backups;
 import latmod.ftbu.mod.cmd.CmdMotd;
 import latmod.ftbu.mod.config.FTBUConfig;
-import latmod.ftbu.mod.player.*;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;

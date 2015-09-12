@@ -26,23 +26,22 @@ public class PanelPopupPlayerActions extends PanelPopupMenu
 	{
 		if(playerLM.equalsPlayer(LMWorldClient.inst.clientPlayer))
 		{
-			add(PlayerAction.settings, FTBULang.client_config);
+			add(PlayerAction.settings, FTBULang.client_config());
 			add(PlayerAction.waypoints, Waypoints.clientConfig.getIDS());
-			add(PlayerAction.minimap, FTBULang.Friends.claimed_chunks);
-			
-			add(PlayerAction.notes, "Notes"); //LANG
+			add(PlayerAction.minimap, FTBULang.Friends.claimed_chunks());
+			add(PlayerAction.notes, FTBULang.Friends.notes());
 		}
 		else
 		{
 			boolean isFriend = LMWorldClient.inst.clientPlayer.isFriendRaw(playerLM);
-			if(!isFriend) add(PlayerAction.friend_add, FTBULang.Friends.button_add_friend);
+			if(!isFriend) add(PlayerAction.friend_add, FTBULang.Friends.button_add_friend());
 			
-			add(PlayerAction.mail, "Mail"); //LANG
-			add(PlayerAction.trade, "Trade"); //LANG
+			add(PlayerAction.mail, FTBULang.Friends.mail());
+			add(PlayerAction.trade, FTBULang.Friends.trade());
 			
-			if(isFriend) add(PlayerAction.friend_remove, FTBULang.Friends.button_rem_friend);
+			if(isFriend) add(PlayerAction.friend_remove, FTBULang.Friends.button_rem_friend());
 			else if(playerLM.isFriendRaw(LMWorldClient.inst.clientPlayer))
-				add(PlayerAction.friend_deny, FTBULang.Friends.button_deny_friend);
+				add(PlayerAction.friend_deny, FTBULang.Friends.button_deny_friend());
 		}
 	}
 	

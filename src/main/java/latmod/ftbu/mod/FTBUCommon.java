@@ -2,6 +2,8 @@ package latmod.ftbu.mod;
 
 import java.util.UUID;
 
+import com.google.gson.GsonBuilder;
+
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.api.readme.ReadmeFile;
@@ -26,6 +28,10 @@ public class FTBUCommon // FTBUClient
 	}
 	
 	public void onReadmeEvent(ReadmeFile file)
+	{
+	}
+	
+	public void onGsonEvent(GsonBuilder gb)
 	{
 	}
 	

@@ -72,7 +72,7 @@ public final class LatCoreMCClient // LatCoreMC
 	public static KeyBinding addKeyBinding(String name, int key, String cat)
 	{ KeyBinding k = new KeyBinding(name, key, cat); ClientRegistry.registerKeyBinding(k); return k; }
 	
-	public static void addCallbackEvent(ServerTickCallback e)
+	public static void addClientTickCallback(ClientTickCallback e)
 	{ FTBURenderHandler.callbacks.add(e); }
 	
 	public static void pushMaxBrightness()

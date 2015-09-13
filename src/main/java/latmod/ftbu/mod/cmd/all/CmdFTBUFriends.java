@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.cmd.all;
 
-import latmod.ftbu.core.*;
-import latmod.ftbu.core.client.LatCoreMCClient;
+import latmod.ftbu.core.LatCoreMC;
+import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.cmd.*;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBUGuiHandler;
@@ -28,7 +28,7 @@ public class CmdFTBUFriends extends SubCommand
 		if(args.length == 0 || args[0].equals("gui"))
 		{
 			final EntityPlayerMP ep = CommandLM.getCommandSenderAsPlayer(ics);
-			LatCoreMCClient.addCallbackEvent(new ServerTickCallback()
+			LatCoreMCClient.addClientTickCallback(new ClientTickCallback()
 			{
 				public void onCallback()
 				{ FTBUGuiHandler.instance.openGui(ep, FTBUGuiHandler.FRIENDS, null); }

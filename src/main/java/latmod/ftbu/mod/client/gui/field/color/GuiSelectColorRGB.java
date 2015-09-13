@@ -1,4 +1,4 @@
-package latmod.ftbu.mod.client.gui;
+package latmod.ftbu.mod.client.gui.field.color;
 
 import org.lwjgl.opengl.GL11;
 
@@ -12,7 +12,7 @@ import latmod.ftbu.mod.client.FTBUClient;
 import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
-public class GuiSelectColor extends GuiLM
+public class GuiSelectColorRGB extends GuiLM
 {
 	public static final ResourceLocation tex = FTBU.mod.getLocation("textures/gui/colselector_rgb.png");
 	public static final TextureCoords col_tex = new TextureCoords(tex, 98, 13, 32, 16);
@@ -21,43 +21,22 @@ public class GuiSelectColor extends GuiLM
 	public static final TextureCoords slider_tex = new TextureCoords(tex, 98, 29, SLIDER_W, SLIDER_H);
 	public static final TextureCoords slider_col_tex = new TextureCoords(tex, 98, 0, SLIDER_BAR_W, SLIDER_H);
 	
-	public static interface ColorSelectorCallback
-	{
-		public void onColorSelected(ColorSelected c);
-	}
-	
-	public static class ColorSelected
-	{
-		public final boolean set;
-		public final int color;
-		public final int ID;
-		public final boolean closeGui;
-		
-		public ColorSelected(boolean s, int c, int id, boolean g)
-		{
-			set = s;
-			color = c;
-			ID = id;
-			closeGui = g;
-		}
-	}
-	
-	public final ColorSelectorCallback callback;
+	public final IColorCallback callback;
 	public final int initCol;
-	public final int colorID;
+	public final Object colorID;
 	public final boolean isInstant;
 	
 	public final ButtonLM colorInit, colorCurrent, switchHSB;
 	public final SliderLM currentColR, currentColG, currentColB;
 	
-	public static void displayGui(ColorSelectorCallback cb, int col, int id, boolean instant)
+	public static void displayGui(IColorCallback cb, int col, int id, boolean instant)
 	{
 		if(FTBUClient.openHSB.getB())
 			LatCoreMCClient.getMinecraft().displayGuiScreen(new GuiSelectColorHSB(cb, col, id, instant));
-		else LatCoreMCClient.getMinecraft().displayGuiScreen(new GuiSelectColor(cb, col, id, instant));
+		else LatCoreMCClient.getMinecraft().displayGuiScreen(new GuiSelectColorRGB(cb, col, id, instant));
 	}
 	
-	public GuiSelectColor(ColorSelectorCallback cb, int col, int id, boolean instant)
+	public GuiSelectColorRGB(IColorCallback cb, int col, Object id, boolean instant)
 	{
 		super(null, tex);
 		hideNEI = true;
@@ -145,7 +124,7 @@ public class GuiSelectColor extends GuiLM
 		update();
 		
 		if(isInstant && prevCol != getCurrentRGB())
-			callback.onColorSelected(new ColorSelected(true, getCurrentRGB(), colorID, false));
+			callback.onColorSelected(new ColorSelected(colorID, true, getCurrentRGB(), false));
 		
 		LMColorUtils.setGLColor(initCol, 255);
 		colorInit.render(col_tex);
@@ -233,6 +212,6 @@ public class GuiSelectColor extends GuiLM
 	public void closeGui(boolean set)
 	{
 		playClickSound();
-		callback.onColorSelected(new ColorSelected(set, getCurrentRGB(), colorID, true));
+		callback.onColorSelected(new ColorSelected(colorID, set, set ? getCurrentRGB() : getInitRGB(), true));
 	}
 }

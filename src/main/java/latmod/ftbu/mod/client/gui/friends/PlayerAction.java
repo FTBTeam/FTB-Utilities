@@ -4,6 +4,7 @@ import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.client.gui.*;
+import latmod.ftbu.mod.client.gui.waypoints.GuiWaypoints;
 
 public abstract class PlayerAction
 {
@@ -30,7 +31,7 @@ public abstract class PlayerAction
 	public static final PlayerAction waypoints = new PlayerAction(GuiIcons.compass)
 	{
 		public void onClicked(GuiFriends g)
-		{ g.mc.displayGuiScreen(new GuiWaypoints()); }
+		{ g.mc.displayGuiScreen(new GuiWaypoints(g)); }
 	};
 	
 	public static final PlayerAction minimap = new PlayerAction(GuiIcons.map)

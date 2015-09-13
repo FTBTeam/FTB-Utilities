@@ -2,19 +2,17 @@ package latmod.ftbu.mod.config;
 
 import java.io.File;
 
-import com.google.gson.annotations.Expose;
-
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.api.readme.*;
 import latmod.ftbu.core.util.*;
 
 public class ConfigWorldBorder
 {
-	private static File saveFile;
+	private static transient File saveFile;
 	
-	@Expose public Boolean enabled;
-	@Expose public Integer radius;
-	@Expose public IntMap custom;
+	public Boolean enabled;
+	public Integer radius;
+	public IntMap custom;
 	
 	public static void load()
 	{

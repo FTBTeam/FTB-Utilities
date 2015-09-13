@@ -3,8 +3,6 @@ package latmod.ftbu.mod.config;
 import java.io.File;
 import java.util.*;
 
-import com.google.gson.annotations.Expose;
-
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.api.readme.*;
 import latmod.ftbu.core.util.LMJsonUtils;
@@ -13,12 +11,12 @@ import net.minecraft.item.ItemStack;
 
 public class ConfigLogin
 {
-	private static File saveFile;
+	private static transient File saveFile;
 	
-	@Expose public List<String> motd;
-	@Expose public String rules;
-	@Expose public String customBadges;
-	@Expose public List<ItemStack> startingItems;
+	public List<String> motd;
+	public String rules;
+	public String customBadges;
+	public List<ItemStack> startingItems;
 	
 	public static void load()
 	{

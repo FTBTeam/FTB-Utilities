@@ -2,24 +2,22 @@ package latmod.ftbu.mod.config;
 
 import java.io.File;
 
-import com.google.gson.annotations.Expose;
-
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.api.readme.*;
 import latmod.ftbu.core.util.*;
 
 public class ConfigBackups
 {
-	private static File saveFile;
+	private static transient File saveFile;
 	
-	@Expose public Boolean enabled;
-	@Expose public Integer backupsToKeep;
-	@Expose private Float backupTimer;
-	//@Expose public Boolean backupOnShutdown;
-	@Expose public Integer compressionLevel;
-	@Expose public String folder;
-	@Expose public Boolean displayFileSize;
-	@Expose public Boolean autoExportInvOnLogout;
+	public Boolean enabled;
+	public Integer backupsToKeep;
+	private Float backupTimer;
+	//public Boolean backupOnShutdown;
+	public Integer compressionLevel;
+	public String folder;
+	public Boolean displayFileSize;
+	public Boolean autoExportInvOnLogout;
 	public long backupTimerL;
 	
 	public static void load()

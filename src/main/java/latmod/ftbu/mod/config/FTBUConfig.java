@@ -4,8 +4,6 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.*;
 
-import com.google.gson.annotations.Expose;
-
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.api.readme.ReadmeFile;
 import latmod.ftbu.core.util.LMJsonUtils;
@@ -84,7 +82,7 @@ public class FTBUConfig implements IServerConfig // FTBU
 	
 	private static class Overrides
 	{
-		@Expose public Map<String, Map<String, Object>> overrides;
+		public Map<String, Map<String, Object>> overrides;
 		
 		private static Object getFromFile(String s)
 		{

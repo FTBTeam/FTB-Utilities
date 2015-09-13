@@ -1,6 +1,7 @@
 package latmod.ftbu.mod.client.minimap;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.client.ClientConfig;
@@ -25,7 +26,7 @@ public class Waypoints
 	public static void init()
 	{
 		clientConfig.add(enabled);
-		clientConfig.add(waypointType);
+		//clientConfig.add(waypointType);
 		clientConfig.add(displayTitle);
 		clientConfig.add(displayDist);
 		clientConfig.add(renderDistance);
@@ -60,19 +61,10 @@ public class Waypoints
 		try
 		{
 			waypoints.clear();
-			
 			if(LMWorldClient.inst == null) return;
-			
-			waypointsFile = LMFileUtils.newFile(new File(LMWorldClient.inst.clientDataFolder, "waypoints.txt"));
-			FastList<String> f = LMFileUtils.load(waypointsFile);
-			
-			for(String s : f)
-			{
-				if(s.isEmpty()) continue;
-				Waypoint w = new Waypoint();
-				try { if(w.fromString(s)) add(w); }
-				catch(Exception e1) { e1.printStackTrace(); }
-			}
+			waypointsFile = LMFileUtils.newFile(new File(LMWorldClient.inst.clientDataFolder, "waypoints.json"));
+			WaypointsFile wf = LMJsonUtils.fromJsonFile(waypointsFile, WaypointsFile.class);
+			if(wf != null) waypoints.addAll(wf.waypoints);
 		}
 		catch(Exception e)
 		{ e.printStackTrace(); }
@@ -83,10 +75,10 @@ public class Waypoints
 		try
 		{
 			if(LMWorldClient.inst == null) return;
-			
-			FastList<String> f = new FastList<String>();
-			for(Waypoint w : waypoints) f.add(w.toString());
-			LMFileUtils.save(waypointsFile, f);
+			WaypointsFile wf = new WaypointsFile();
+			wf.waypoints = new ArrayList<Waypoint>();
+			wf.waypoints.addAll(waypoints);
+			LMJsonUtils.toJsonFile(waypointsFile, wf);
 		}
 		catch(Exception e)
 		{ e.printStackTrace(); }

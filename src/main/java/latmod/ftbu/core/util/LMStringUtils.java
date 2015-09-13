@@ -15,8 +15,8 @@ public class LMStringUtils
 	public static String toString(InputStream is) throws Exception
 	{
 		StringBuilder sb = new StringBuilder();
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-		String s = null; while((s = br.readLine()) != null) sb.append(s);
+		BufferedReader br = new BufferedReader(new InputStreamReader(new BufferedInputStream(is)));
+		String s = null; while((s = br.readLine()) != null) sb.append(s); br.close();
 		return sb.toString();
 	}
 	
@@ -40,7 +40,7 @@ public class LMStringUtils
 	public static FastList<String> toStringList(InputStream is) throws Exception
 	{
 		FastList<String> l = new FastList<String>();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(new BufferedInputStream(is)));
 		String s = null; while((s = reader.readLine()) != null)
 			l.add(s); reader.close(); return l;
 	}

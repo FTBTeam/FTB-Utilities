@@ -241,7 +241,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 		drawTexturedRectD(x, y, z, w, h, 0.625D, 0.25D, 0.75D, 0.5D);
 	}
 	
-	public static void drawBlankRect(int x, int y, double z, int w, int h, int col)
+	public static void drawBlankRect(double x, double y, double z, double w, double h, int col)
 	{
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		GL11.glEnable(GL11.GL_BLEND);

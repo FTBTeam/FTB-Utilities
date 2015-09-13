@@ -2,8 +2,6 @@ package latmod.ftbu.mod.config;
 
 import java.io.File;
 
-import com.google.gson.annotations.Expose;
-
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.api.readme.*;
 import latmod.ftbu.core.util.LMJsonUtils;
@@ -12,16 +10,16 @@ import net.minecraftforge.common.util.FakePlayer;
 
 public class ConfigGeneral
 {
-	private static File saveFile;
+	private static transient File saveFile;
 	
-	@Expose public Boolean allowCreativeInteractSecure;
-	@Expose public String commandFTBU;
-	@Expose public String commandAdmin;
-	@Expose public Float restartTimer;
-	@Expose public Boolean safeSpawn;
-	@Expose public Boolean spawnPVP;
-	@Expose public Boolean enableDedicatedOnSP;
-	@Expose public Integer maxClaims;
+	public Boolean allowCreativeInteractSecure;
+	public String commandFTBU;
+	public String commandAdmin;
+	public Float restartTimer;
+	public Boolean safeSpawn;
+	public Boolean spawnPVP;
+	public Boolean enableDedicatedOnSP;
+	public Integer maxClaims;
 	//@Expose public String[] spawnBreakWhitelist;
 	//@Expose public String[] spawnInteractWhitelist;
 	//@Expose public String[] placementBlacklist;

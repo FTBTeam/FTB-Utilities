@@ -29,8 +29,9 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 		
 		if(w instanceof PanelLM)
 		{
-			childPanels.add((PanelLM)w);
-			((PanelLM)w).refreshWidgets();
+			PanelLM p = (PanelLM)w;
+			childPanels.add(p);
+			p.refreshWidgets();
 		}
 	}
 	
@@ -55,33 +56,20 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 	public void addMouseOverText(FastList<String> l)
 	{
 		if(title != null) l.add(title); 
-		
-		for(int i = 0; i < widgets.size(); i++)
-		{
-			WidgetLM w = widgets.get(i);
-			if(w.isEnabled() && w.mouseOver())
-				w.addMouseOverText(l);
-		}
+		for(WidgetLM w : widgets)
+			if(w.isEnabled() && w.mouseOver()) w.addMouseOverText(l);
 	}
 	
 	public void mousePressed(int b)
 	{
-		for(int i = 0; i < widgets.size(); i++)
-		{
-			WidgetLM w = widgets.get(i);
+		for(WidgetLM w : widgets)
 			if(w.isEnabled()) w.mousePressed(b);
-		}
 	}
 	
 	public boolean keyPressed(int key, char keyChar)
 	{
-		for(int i = 0; i < widgets.size(); i++)
-		{
-			WidgetLM w = widgets.get(i);
-			if(w.isEnabled() && w.keyPressed(key, keyChar))
-				return true;
-		}
-		
+		for(WidgetLM w : widgets)
+			if(w.isEnabled() && w.keyPressed(key, keyChar)) return true;
 		return false;
 	}
 }

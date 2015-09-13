@@ -7,7 +7,7 @@ import net.minecraft.client.resources.I18n;
 @SideOnly(Side.CLIENT)
 public class FTBULang
 {
-	private static String get(String s) { return FTBU.mod.translateClient(s); }
+	private static String get(String s, Object... o) { return FTBU.mod.translateClient(s, o); }
 	
 	// Buttons //
 	public static String button_settings() { return get("button.settings"); }
@@ -47,4 +47,5 @@ public class FTBULang
 	// Other //
 	public static String client_config() { return get("client_config"); }
 	public static String feature_disabled() { return I18n.format("commands.lmdisabled"); }
+	public static String deleteItem(String s) { return get("deleteitem", s); }
 }

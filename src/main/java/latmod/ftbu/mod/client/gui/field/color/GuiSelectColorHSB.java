@@ -1,4 +1,4 @@
-package latmod.ftbu.mod.client.gui;
+package latmod.ftbu.mod.client.gui.field.color;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -10,7 +10,6 @@ import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
-import latmod.ftbu.mod.client.gui.GuiSelectColor.ColorSelected;
 import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
@@ -25,9 +24,9 @@ public class GuiSelectColorHSB extends GuiLM
 	public static final TextureCoords slider_tex = new TextureCoords(tex, 97, 10, SLIDER_W, SLIDER_H);
 	public static final TextureCoords slider_col_tex = new TextureCoords(tex, 76, 0, SLIDER_BAR_W, SLIDER_H);
 	
-	public final GuiSelectColor.ColorSelectorCallback callback;
+	public final IColorCallback callback;
 	public final int initCol;
-	public final int colorID;
+	public final Object colorID;
 	public final boolean isInstant;
 	public int currentColor;
 	
@@ -35,7 +34,7 @@ public class GuiSelectColorHSB extends GuiLM
 	public final SliderLM sliderBrightness;
 	public final ColorSelector colorSelector;
 	
-	public GuiSelectColorHSB(GuiSelectColor.ColorSelectorCallback cb, int col, int id, boolean instant)
+	public GuiSelectColorHSB(IColorCallback cb, int col, Object id, boolean instant)
 	{
 		super(null, tex);
 		hideNEI = true;
@@ -80,7 +79,7 @@ public class GuiSelectColorHSB extends GuiLM
 				playClickSound();
 				FTBUClient.openHSB.setValue(0);
 				ClientConfig.Registry.save();
-				mc.displayGuiScreen(new GuiSelectColor(callback, getInitRGB(), colorID, isInstant));
+				mc.displayGuiScreen(new GuiSelectColorRGB(callback, getInitRGB(), colorID, isInstant));
 			}
 		};
 		
@@ -171,7 +170,7 @@ public class GuiSelectColorHSB extends GuiLM
 		float h = (float)(Math.atan2(colorSelector.cursorPosY - 0.5D, colorSelector.cursorPosX - 0.5D) / MathHelperLM.TWO_PI);
 		float s = (float)(MathHelperLM.dist(colorSelector.cursorPosX, colorSelector.cursorPosY, 0D, 0.5D, 0.5D, 0D) * 2D);
 		currentColor = LMColorUtils.getHSB(h, s, sliderBrightness.value);
-		if(isInstant) callback.onColorSelected(new ColorSelected(true, currentColor, colorID, false));
+		if(isInstant) callback.onColorSelected(new ColorSelected(colorID, true, currentColor, false));
 	}
 	
 	public int getInitRGB()
@@ -180,7 +179,7 @@ public class GuiSelectColorHSB extends GuiLM
 	public void closeGui(boolean set)
 	{
 		playClickSound();
-		callback.onColorSelected(new ColorSelected(set, currentColor, colorID, true));
+		callback.onColorSelected(new ColorSelected(colorID, set, set ? currentColor : getInitRGB(), true));
 	}
 	
 	public static class ColorSelector extends WidgetLM
@@ -198,6 +197,8 @@ public class GuiSelectColorHSB extends GuiLM
 			gui = g;
 			cursorPosX = cursorPosY = -1D;
 			shouldRedraw = true;
+			//cursorPosX = Math.sin(0D) + 0.5D;
+			//cursorPosY = Math.cos(0D) + 0.5D;
 		}
 
 		public void renderWidget()

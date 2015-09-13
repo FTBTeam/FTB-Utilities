@@ -53,8 +53,6 @@ config.property.display_title=Rādīt Nosaukumu
 config.property.display_distance=Rādīt Attālumu
 config.property.render_distance=Zīmēšanas Attālums
 config.property.death_point=Pēdējā Nāve
-config.value.marker=Mērķis
-config.value.beacon=Stars
 
 config.group.minimap=Minikarte
 config.property.render_ingame=Rādīt Spēlē
@@ -69,9 +67,16 @@ config.property.render_claimed_chunks=Iezīmētie Apgabali
 config.property.custom_map_colors=Bloku Krāsas
 
 #Misc
-ftbu:owner=Īpašnieks: %s
 commands.lmmissingargs=Pietrūkst argumentu!
 commands.lmdisabled=Šī lieta nav ieslēgta!
+ftbu:owner=Īpašnieks: %s
+ftbu:deleteitem=Vai vēlaties izdzēst '%s'?
+ftbu:waypoint.type.beacon=Stars
+ftbu:waypoint.type.marker=Mērķis
+ftbu:button.claimed_chunks=Iezīmētie Apgabali
+ftbu:button.mail=Pasts
+ftbu:button.trade=Apmaiņa
+ftbu:button.notes=Piezīmes
 
 #Security Mode
 ftbu:security=Drošība

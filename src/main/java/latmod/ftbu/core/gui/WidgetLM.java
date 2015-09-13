@@ -33,7 +33,7 @@ public class WidgetLM
 		int x = getAX();
 		int y = getAY();
 		return gui.mouseX >= x && gui.mouseY >= y
-		&& gui.mouseX <= x + width && gui.mouseY <= y + height;
+		&& gui.mouseX < x + width && gui.mouseY < y + height;
 	}
 	
 	public void render(TextureCoords icon, double rw, double rh)

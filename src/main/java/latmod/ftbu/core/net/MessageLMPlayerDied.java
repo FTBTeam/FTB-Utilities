@@ -57,7 +57,7 @@ public class MessageLMPlayerDied extends MessageLM<MessageLMPlayerDied> implemen
 			w.name = sb.toString();
 			w.dim = ep.dimension;
 			w.setPos(ep.posX, ep.posY, ep.posZ);
-			w.isMarker = false;
+			w.type = Waypoint.Type.BEACON;
 			w.setColor(LatCoreMC.rand.nextInt(100) + 155, LatCoreMC.rand.nextInt(100), 0);
 			Waypoints.add(w);
 		}

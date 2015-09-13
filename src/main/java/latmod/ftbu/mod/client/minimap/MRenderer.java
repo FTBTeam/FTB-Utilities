@@ -178,7 +178,7 @@ public class MRenderer
 			for(int i = 0; i < list.size(); i++)
 			{
 				EntityPlayer ep = list.get(i);
-				if(ep.dimension == mc.thePlayer.dimension && !ep.isInvisible())
+				if(ep.dimension == mc.thePlayer.dimension && !ep.isInvisible() && !ep.isSneaking())
 				{
 					int cx = MathHelperLM.chunk(ep.posX);
 					int cy = MathHelperLM.chunk(ep.posZ);

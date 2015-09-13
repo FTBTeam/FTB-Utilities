@@ -3,6 +3,8 @@ import java.util.UUID;
 
 import org.lwjgl.input.Keyboard;
 
+import com.google.gson.GsonBuilder;
+
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.*;
@@ -70,6 +72,20 @@ public class FTBUClient extends FTBUCommon
 		ClientConfig.Registry.add(miscConfig);
 	}
 	
+	public static void onWorldJoined()
+	{
+		Badge.init();
+		ClientNotifications.init();
+		Waypoints.load();
+		Minimap.load();
+	}
+	
+	public static void onWorldClosed()
+	{
+		Minimap.save();
+		ClientNotifications.init();
+	}
+	
 	public void preInit()
 	{
 		EnumBusType.register(FTBUClientEventHandler.instance);
@@ -89,26 +105,17 @@ public class FTBUClient extends FTBUCommon
 		FTBUGuiHandler.instance.registerClient();
 	}
 	
-	public static void onWorldJoined()
-	{
-		Badge.init();
-		ClientNotifications.init();
-		Waypoints.load();
-		Minimap.load();
-	}
-	
-	public static void onWorldClosed()
-	{
-		Minimap.save();
-		ClientNotifications.init();
-	}
-	
 	public void onReadmeEvent(ReadmeFile file)
 	{
 		ReadmeCategory waypoints = file.get("waypoints");
 		waypoints.add("You can create waypoints by opening WaypointsGUI (FriendsGUI > You > Waypoits)");
 		waypoints.add("Right click on a waypoint to enable / disable it, Ctrl + right click to delete it, left click to open it's settings");
 		waypoints.add("You can select between Marker and Beacon waypoints, change it's color, title and coords");
+	}
+	
+	public void onGsonEvent(GsonBuilder gb)
+	{
+		gb.registerTypeHierarchyAdapter(Waypoint.class, new Waypoint.Serializer());
 	}
 	
 	public boolean isShiftDown() { return GuiScreen.isShiftKeyDown(); }

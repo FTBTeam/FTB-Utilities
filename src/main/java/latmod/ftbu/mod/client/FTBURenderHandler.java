@@ -6,7 +6,6 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.core.ServerTickCallback;
 import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.client.model.*;
 import latmod.ftbu.core.util.*;
@@ -34,7 +33,7 @@ public class FTBURenderHandler
 	private static int currentDim;
 	private static double playerX, playerY, playerZ, renderX, renderY, renderZ, far = 4D;
 	
-	public static final FastList<ServerTickCallback> callbacks = new FastList<ServerTickCallback>();
+	public static final FastList<ClientTickCallback> callbacks = new FastList<ClientTickCallback>();
 	
 	private static final FastList<WaypointClient> visibleBeacons = new FastList<WaypointClient>();
 	private static final FastList<WaypointClient> visibleMarkers = new FastList<WaypointClient>();
@@ -146,7 +145,7 @@ public class FTBURenderHandler
 				
 				if(distSq <= renderDistSq)
 				{
-					if(w.isMarker) visibleMarkers.add(new WaypointClient(w, x, y, z, distSq));
+					if(w.type.isMarker()) visibleMarkers.add(new WaypointClient(w, x, y, z, distSq));
 					else visibleBeacons.add(new WaypointClient(w, x, y, z, distSq));
 				}
 			}

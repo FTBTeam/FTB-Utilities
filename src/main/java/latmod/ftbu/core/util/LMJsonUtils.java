@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.api.EventFTBUGson;
 import latmod.ftbu.core.inv.ItemStackSerializer;
+import latmod.ftbu.mod.FTBU;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 
@@ -22,7 +23,6 @@ public class LMJsonUtils
 	public static void updateGson()
 	{
 		GsonBuilder gb = new GsonBuilder();
-		gb.excludeFieldsWithoutExposeAnnotation();
 		
 		NBTSerializer.init(gb);
 		gb.registerTypeAdapterFactory(new EnumTypeAdapterFactory());
@@ -34,7 +34,14 @@ public class LMJsonUtils
 		gb.registerTypeHierarchyAdapter(UUID.class, new UUIDSerializer());
 		gb.registerTypeHierarchyAdapter(Notification.class, new Notification.Serializer());
 		
-		new EventFTBUGson(gb).post();
+		try
+		{
+			FTBU.proxy.onGsonEvent(gb);
+			new EventFTBUGson(gb).post();
+		}
+		catch(Exception e)
+		{ e.printStackTrace(); }
+		
 		gson = gb.create();
 		gb.setPrettyPrinting();
 		gson_pretty = gb.create();
@@ -74,9 +81,9 @@ public class LMJsonUtils
 		
 		try
 		{
-			FileOutputStream fos = new FileOutputStream(LMFileUtils.newFile(f));
-			fos.write(s.getBytes());
-			fos.close();
+			BufferedWriter writer = new BufferedWriter(new FileWriter(LMFileUtils.newFile(f)));
+			writer.write(s);
+			writer.close();
 			return true;
 		}
 		catch(Exception e)

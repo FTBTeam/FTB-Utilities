@@ -1,21 +1,17 @@
 package latmod.ftbu.core.client;
 
-import java.io.File;
-import java.net.URI;
-
 import org.lwjgl.opengl.*;
 
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.Notification;
 import latmod.ftbu.core.gui.GuiLM;
 import latmod.ftbu.core.util.*;
+import latmod.ftbu.core.world.LMPlayerClient;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.event.ClickEvent;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.ClientCommandHandler;
 
 @SideOnly(Side.CLIENT)
 public class ClientNotifications
@@ -114,8 +110,8 @@ public class ClientNotifications
 				d1 *= d1;
 				
 				String title = notification.title.getFormattedText();
-				String desc = (notification.getDesc() == null) ? null : notification.getDesc().getFormattedText();
-				ItemStack is = notification.getItem();
+				String desc = (notification.desc == null) ? null : notification.desc.getFormattedText();
+				ItemStack is = notification.item;
 				
 				int width = 20 + Math.max(mc.fontRenderer.getStringWidth(title), mc.fontRenderer.getStringWidth(desc));
 				if(is != null) width += 20;
@@ -125,7 +121,7 @@ public class ClientNotifications
 				GL11.glColor4f(1F, 1F, 1F, 1F);
 				GL11.glDisable(GL11.GL_TEXTURE_2D);
 				GL11.glDisable(GL11.GL_LIGHTING);
-				GuiLM.drawRect(i, j, LatCoreMCClient.displayW, j + 32, LMColorUtils.getRGBA(notification.getColor(), 140));
+				GuiLM.drawRect(i, j, LatCoreMCClient.displayW, j + 32, LMColorUtils.getRGBA(notification.color, 140));
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
 				
 				int w = is == null ? 10 : 30;
@@ -178,35 +174,10 @@ public class ClientNotifications
 		public int compareTo(Perm o)
 		{ return Long.compare(timeAdded, o.timeAdded); }
 		
-		public void onClicked(Minecraft mc)
+		public void onClicked(LMPlayerClient p)
 		{
-			ClickEvent e = notification.getClickEvent();
-			if(e != null && e.getAction() != null)
-			{
-				ClickEvent.Action a = e.getAction();
-				String v = e.getValue();
-				
-				if(a == ClickEvent.Action.OPEN_URL)
-				{
-					try { LMUtils.openURI(new URI(v)); }
-					catch (Exception ex) { ex.printStackTrace(); }
-				}
-				else if(a == ClickEvent.Action.OPEN_FILE)
-				{
-					try { LMUtils.openURI(new File(v).toURI()); }
-					catch (Exception ex) { ex.printStackTrace(); }
-				}
-				else if(a == ClickEvent.Action.RUN_COMMAND)
-				{
-					mc.ingameGUI.getChatGUI().addToSentMessages(v);
-			        if(ClientCommandHandler.instance.executeCommand(mc.thePlayer, v) != 0) return;
-			        mc.thePlayer.sendChatMessage(v);
-				}
-				else if(a == ClickEvent.Action.SUGGEST_COMMAND)
-				{
-					mc.displayGuiScreen(new GuiChat(v));
-				}
-			}
+			if(notification.clickEvent != null)
+				notification.clickEvent.onClicked(notification, p);
 		}
 	}
 }

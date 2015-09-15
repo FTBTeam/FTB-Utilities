@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.*;
 
 import latmod.ftbu.core.LatCoreMC;
-import latmod.ftbu.core.api.readme.*;
+import latmod.ftbu.core.api.readme.ReadmeInfo;
 import latmod.ftbu.core.util.LMJsonUtils;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -13,9 +13,16 @@ public class ConfigLogin
 {
 	private static transient File saveFile;
 	
+	@ReadmeInfo(info = "Message of the day. This will be displayed when player joins the server.", def = "Blank")
 	public List<String> motd;
+	
+	@ReadmeInfo(info = "Rules link you can click on. This will be displayed when player joins the server.", def = "Blank")
 	public String rules;
+	
+	@ReadmeInfo(info = "URL for per-server custom badges file (Json). Example can be seen here: http://pastebin.com/LvBB9HmV ", def = "Blank")
 	public String customBadges;
+	
+	@ReadmeInfo(info = "Items to give player when it first joins the server. Format: StringID Size Metadata, does not support NBT yet.", def = "minecraft:apple 16 0")
 	public List<ItemStack> startingItems;
 	
 	public static void load()
@@ -50,15 +57,6 @@ public class ConfigLogin
 		if(FTBUConfig.login == null) load();
 		if(!LMJsonUtils.toJsonFile(saveFile, FTBUConfig.login))
 			LatCoreMC.logger.warn(saveFile.getName() + " failed to save!");
-	}
-	
-	public static void saveReadme(ReadmeFile file)
-	{
-		ReadmeCategory login = file.get("latmod/ftbu/login.txt");
-		login.add("motd", "Message of the day. This will be displayed when player joins the server.", "Blank");
-		login.add("rules", "Rules link you can click on. This will be displayed when player joins the server.", "Blank");
-		login.add("customBadges", "URL for per-server custom badges file (Json). Example can be seen here: http://pastebin.com/LvBB9HmV ", "Blank");
-		login.add("startingItems", "Items to give player when it first joins the server. Format: StringID Size Metadata, does not support NBT yet.", "minecraft:apple 16 0");
 	}
 	
 	public List<ItemStack> getStartingItems(UUID id)

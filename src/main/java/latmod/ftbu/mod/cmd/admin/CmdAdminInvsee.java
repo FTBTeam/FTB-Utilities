@@ -6,8 +6,11 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IChatComponent;
 
-public class CmdAdminInvsee extends SubCommand
+public class CmdAdminInvsee extends CommandLM
 {
+	public CmdAdminInvsee(String s)
+	{ super(s, CommandLevel.OP); }
+
 	public NameType getUsername(String[] args, int i)
 	{
 		if(i == 0) return NameType.ON;
@@ -16,9 +19,9 @@ public class CmdAdminInvsee extends SubCommand
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
-		CommandLM.checkArgs(args, 1);
-		EntityPlayerMP ep0 = CommandLM.getCommandSenderAsPlayer(ics);
-		EntityPlayerMP ep = CommandLM.getPlayer(ics, args[0]);
+		checkArgs(args, 1);
+		EntityPlayerMP ep0 = getCommandSenderAsPlayer(ics);
+		EntityPlayerMP ep = getPlayer(ics, args[0]);
 		ep0.displayGUIChest(new InvSeeInventory(ep));
 		return null;
 	}

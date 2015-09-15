@@ -30,15 +30,7 @@ public class ReadmeSaveHandler
 			
 			for(int i = 0; i < c.lines.size(); i++)
 			{
-				String k = c.lines.keys.get(i); 
-				
-				if(!k.isEmpty())
-				{
-					sb.append(k);
-					sb.append(" - ");
-				}
-				
-				sb.append(c.lines.values.get(i));
+				sb.append(c.lines.get(i));
 				sb.append('\n');
 			}
 			

@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.*;
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.gui.GuiLM;
+import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.util.FastMap;
 import latmod.ftbu.mod.client.FTBURenderHandler;
 import net.minecraft.block.Block;
@@ -164,4 +164,10 @@ public final class LatCoreMCClient // LatCoreMC
 
 	public static void notifyClient(String ID, Object text, int t)
 	{ ClientNotifications.add(new Notification(ID, LatCoreMC.getChatComponent(text), t)); }
+	
+	public static void onGuiClientAction()
+	{
+		if(getMinecraft().currentScreen instanceof IClientActionGui)
+			((IClientActionGui)getMinecraft().currentScreen).onClientDataChanged();
+	}
 }

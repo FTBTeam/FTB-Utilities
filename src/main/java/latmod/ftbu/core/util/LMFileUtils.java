@@ -22,7 +22,7 @@ public class LMFileUtils
 	private static File getFolder()
 	{
 		File f = new File(System.getProperty("user.home"), "/LatMod/");
-		if(!f.exists()) f.mkdirs();
+		//if(!f.exists()) f.mkdirs();
 		return f;
 	}
 	

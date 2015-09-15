@@ -29,15 +29,15 @@ public class PanelPopupPlayerActions extends PanelPopupMenu
 			add(PlayerAction.settings, FTBULang.client_config());
 			add(PlayerAction.waypoints, Waypoints.clientConfig.getIDS());
 			add(PlayerAction.minimap, FTBULang.Friends.claimed_chunks());
-			add(PlayerAction.notes, FTBULang.Friends.notes());
+			add(PlayerAction.notes, "[WIP] " + FTBULang.Friends.notes());
 		}
 		else
 		{
 			boolean isFriend = LMWorldClient.inst.clientPlayer.isFriendRaw(playerLM);
 			if(!isFriend) add(PlayerAction.friend_add, FTBULang.Friends.button_add_friend());
 			
-			add(PlayerAction.mail, FTBULang.Friends.mail());
-			add(PlayerAction.trade, FTBULang.Friends.trade());
+			add(PlayerAction.mail, "[WIP] " + FTBULang.Friends.mail());
+			add(PlayerAction.trade, "[WIP] " + FTBULang.Friends.trade());
 			
 			if(isFriend) add(PlayerAction.friend_remove, FTBULang.Friends.button_rem_friend());
 			else if(playerLM.isFriendRaw(LMWorldClient.inst.clientPlayer))

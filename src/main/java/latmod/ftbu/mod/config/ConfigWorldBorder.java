@@ -3,15 +3,20 @@ package latmod.ftbu.mod.config;
 import java.io.File;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.api.readme.*;
+import latmod.ftbu.core.api.readme.ReadmeInfo;
 import latmod.ftbu.core.util.*;
 
 public class ConfigWorldBorder
 {
 	private static transient File saveFile;
 	
+	@ReadmeInfo(info = "true enables world border, false disables.", def = "false")
 	public Boolean enabled;
+	
+	@ReadmeInfo(info = "Radius of the world border, starting at 0, 0. Its a square, so if radius is 5000, then 10000x10000 blocks are available of the world. Other dimensions without a custom size, will scale depending on dimension scale (in nether, size is 8 times smaller)", def = "5000")
 	public Integer radius;
+	
+	@ReadmeInfo(info = "'DimensionID:Size' map. Example: \"custom\": { \"7\":1000, \"27\":3000 }", def = "Blank")
 	public IntMap custom;
 	
 	public static void load()
@@ -39,14 +44,6 @@ public class ConfigWorldBorder
 		
 		if(!LMJsonUtils.toJsonFile(saveFile, FTBUConfig.world_border))
 			LatCoreMC.logger.warn(saveFile.getName() + " failed to save!");
-	}
-	
-	public static void saveReadme(ReadmeFile file)
-	{
-		ReadmeCategory world_border = file.get("latmod/ftbu/world_border.txt");
-		world_border.add("enabled", "true enables world border, false disables.", false);
-		world_border.add("radius", "Radius of the world border, starting at 0, 0. Its a square, so if radius is 5000, then 10000x10000 blocks are available of the world. Other dimensions without a custom size, will scale depending on dimension scale (in nether, size is 8 times smaller)", 5000);
-		world_border.add("custom", "'DimensionID:Size' map. Example: \"custom\": { \"7\":1000, \"27\":3000 }", "Blank");
 	}
 	
 	public void setWorldBorder(int dim, int rad)

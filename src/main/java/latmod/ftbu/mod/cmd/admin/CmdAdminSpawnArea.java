@@ -6,14 +6,17 @@ import latmod.ftbu.mod.config.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.*;
 
-public class CmdAdminSpawnArea extends SubCommand //TODO: Remove
+public class CmdAdminSpawnArea extends CommandLM //TODO: Remove
 {
+	public CmdAdminSpawnArea(String s)
+	{ super(s, CommandLevel.OP); }
+
 	public String[] getTabStrings(ICommandSender ics, String[] args, int i)
 	{ return (i == 0) ? new String[] { "safe", "pvp" } : null; }
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
-		CommandLM.checkArgs(args, 2);
+		checkArgs(args, 2);
 		
 		if(args[0].equals("safe"))
 		{

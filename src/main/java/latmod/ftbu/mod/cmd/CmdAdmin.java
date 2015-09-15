@@ -9,15 +9,15 @@ public class CmdAdmin extends CommandSubLM
 	public CmdAdmin()
 	{
 		super(FTBUConfig.general.commandAdmin, CommandLevel.OP);
-		subCommands.put("player", new CmdAdminPlayer());
-		subCommands.put("reload", new CmdAdminReload());
-		subCommands.put("setitemname", new CmdAdminSetItemName());
-		subCommands.put("getdim", new CmdAdminGetDim());
-		subCommands.put("invsee", new CmdAdminInvsee());
-		subCommands.put("setwarp", new CmdAdminSetWarp());
-		subCommands.put("worldborder", new CmdAdminWorldBorder());
-		subCommands.put("spawnarea", new CmdAdminSpawnArea());
-		subCommands.put("unclaim", new CmdAdminUnclaim());
-		subCommands.put("backup", new CmdAdminBackup());
+		add(new CmdAdminPlayer("player"));
+		add(new CmdAdminReload("reload"));
+		add(new CmdAdminSetItemName("setitemname"));
+		add(new CmdAdminGetDim("getdim"));
+		add(new CmdAdminInvsee("invsee"));
+		add(new CmdAdminSetWarp("setwarp"));
+		add(new CmdAdminWorldBorder("worldborder"));
+		add(new CmdAdminSpawnArea("spawnarea"));
+		add(new CmdAdminUnclaim("unclaim"));
+		add(new CmdAdminBackup("backup"));
 	}
 }

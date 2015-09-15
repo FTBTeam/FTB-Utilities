@@ -6,8 +6,11 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.event.*;
 import net.minecraft.util.*;
 
-public class CmdFTBUPlayerID extends SubCommand
+public class CmdFTBUPlayerID extends CommandLM
 {
+	public CmdFTBUPlayerID(String s)
+	{ super(s, CommandLevel.ALL); }
+
 	public NameType getUsername(String[] args, int i)
 	{
 		if(i == 0) return NameType.OFF;
@@ -16,7 +19,7 @@ public class CmdFTBUPlayerID extends SubCommand
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
-		LMPlayerServer p = CommandLM.getLMPlayer(args.length > 0 ? args[0] : ics);
+		LMPlayerServer p = getLMPlayer(args.length > 0 ? args[0] : ics);
 		IChatComponent toPrint = new ChatComponentText("");
 		toPrint.getChatStyle().setColor(EnumChatFormatting.GOLD);
 		toPrint.appendSibling(new ChatComponentText("[" + p.getName() + "] "));

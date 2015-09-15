@@ -1,4 +1,6 @@
 package latmod.ftbu.core.inv;
+import latmod.ftbu.core.*;
+import latmod.ftbu.core.item.Tool;
 import latmod.ftbu.core.util.FastList;
 import net.minecraft.init.*;
 import net.minecraft.item.*;
@@ -86,17 +88,18 @@ public class ODItems
 		add(MEAT_COOKED, new ItemStack(Items.cooked_beef));
 		add(MEAT_COOKED, new ItemStack(Items.cooked_porkchop));
 		add(MEAT_COOKED, new ItemStack(Items.cooked_chicken));
+		
+		hasFMP = LatCoreMC.isModInstalled(OtherMods.FMP);
 	}
 	
 	public static void postInit()
 	{
-		hasFMP = false;
-		hasFMP |= addOreName("ForgeMicroblock:sawStone", ANY, TOOL_SAW);
-		hasFMP |= addOreName("ForgeMicroblock:sawIron", ANY, TOOL_SAW);
-		hasFMP |= addOreName("ForgeMicroblock:sawDiamond", ANY, TOOL_SAW);
+		addOreName(OtherMods.FMP + ":sawStone", ANY, TOOL_SAW);
+		addOreName(OtherMods.FMP + ":sawIron", ANY, TOOL_SAW);
+		addOreName(OtherMods.FMP + ":sawDiamond", ANY, TOOL_SAW);
 		
-		Item wrench = LMInvUtils.getItemFromRegName("ThermalExpansion:wrench");
-		if(wrench != null) wrench.setHarvestLevel("wrench", 0);
+		Item wrench = LMInvUtils.getItemFromRegName(OtherMods.THERMAL_EXPANSION + ":wrench");
+		if(wrench != null) wrench.setHarvestLevel(Tool.Type.WRENCH, Tool.Level.BASIC);
 	}
 	
 	public static boolean hasFMP()

@@ -76,7 +76,7 @@ public class PanelWaypoint extends PanelLM
 			public void onButtonPressed(int b)
 			{
 				gui.playClickSound();
-				gui.mc.displayGuiScreen(new GuiYesNo((GuiWaypoints)gui, FTBULang.deleteItem(waypoint.name), null, w.listID));
+				gui.mc.displayGuiScreen(new GuiYesNo((GuiWaypoints)gui, FTBULang.deleteItem(waypoint.name), null, waypoint.listID));
 			}
 		};
 		

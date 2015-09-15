@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.client.ClientNotifications;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.util.FastList;
+import latmod.ftbu.core.world.LMWorldClient;
 import net.minecraft.item.ItemStack;
 
 @SideOnly(Side.CLIENT)
@@ -22,8 +23,8 @@ public class ButtonNotification extends ButtonLM
 		posY += index * 26;
 		title = n.notification.title.getFormattedText();
 		width = gui.getFontRenderer().getStringWidth(n.notification.title.getFormattedText());
-		if(n.notification.getDesc() != null) width = Math.max(width, gui.getFontRenderer().getStringWidth(n.notification.getDesc().getFormattedText()));
-		if(n.notification.getItem() != null) width += 20;
+		if(n.notification.desc != null) width = Math.max(width, gui.getFontRenderer().getStringWidth(n.notification.desc.getFormattedText()));
+		if(n.notification.item != null) width += 20;
 		width += 8;
 	}
 	
@@ -33,7 +34,7 @@ public class ButtonNotification extends ButtonLM
 		int ay = getAY();
 		
 		int tx = 4;
-		ItemStack is = notification.notification.getItem();
+		ItemStack is = notification.notification.item;
 		if(is != null)
 		{
 			tx += 20;
@@ -43,14 +44,14 @@ public class ButtonNotification extends ButtonLM
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), parentPanel.width, height, mouseOver() ? 0xFF999999 : 0xFF666666);
 		gui.getFontRenderer().drawString(title, ax + tx, ay + 4, 0xFFFFFFFF);
-		if(notification.notification.getDesc() != null) gui.getFontRenderer().drawString(notification.notification.getDesc().getFormattedText(), ax + tx, ay + 14, 0xFFFFFFFF);
+		if(notification.notification.desc != null) gui.getFontRenderer().drawString(notification.notification.desc.getFormattedText(), ax + tx, ay + 14, 0xFFFFFFFF);
 	}
 	
 	public void onButtonPressed(int b)
 	{
 		gui.playClickSound();
 		
-		if(b == 0) notification.onClicked(gui.mc);
+		if(b == 0) notification.onClicked(LMWorldClient.inst.clientPlayer);
 		ClientNotifications.Perm.list.remove(notification);
 		
 		gui.refreshWidgets();
@@ -58,7 +59,7 @@ public class ButtonNotification extends ButtonLM
 	
 	public void addMouseOverText(FastList<String> l)
 	{
-		if(notification.notification.getClickEvent() != null)
-			l.add(notification.notification.getClickEvent().getValue());
+		//if(notification.notification.clickEvent != null)
+		//	l.add(new String(notification.notification.clickEvent.val));
 	}
 }

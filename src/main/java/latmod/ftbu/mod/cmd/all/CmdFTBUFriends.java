@@ -9,8 +9,11 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 
-public class CmdFTBUFriends extends SubCommand
+public class CmdFTBUFriends extends CommandLM
 {
+	public CmdFTBUFriends(String s)
+	{ super(s, CommandLevel.ALL); }
+
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
 		if(i == 0) return new String[] { "add", "rem", "list", "gui" };
@@ -27,7 +30,7 @@ public class CmdFTBUFriends extends SubCommand
 	{
 		if(args.length == 0 || args[0].equals("gui"))
 		{
-			final EntityPlayerMP ep = CommandLM.getCommandSenderAsPlayer(ics);
+			final EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 			LatCoreMCClient.addClientTickCallback(new ClientTickCallback()
 			{
 				public void onCallback()
@@ -37,9 +40,9 @@ public class CmdFTBUFriends extends SubCommand
 			return null;
 		}
 		
-		CommandLM.checkArgs(args, 1);
+		checkArgs(args, 1);
 		
-		LMPlayerServer owner = CommandLM.getLMPlayer(ics);
+		LMPlayerServer owner = getLMPlayer(ics);
 		
 		if(args[0].equals("list"))
 		{
@@ -80,11 +83,11 @@ public class CmdFTBUFriends extends SubCommand
 		}
 		else
 		{
-			CommandLM.checkArgs(args, 2);
+			checkArgs(args, 2);
 			
-			LMPlayerServer p = CommandLM.getLMPlayer(args[1]);
+			LMPlayerServer p = getLMPlayer(args[1]);
 			
-			if(p.equalsPlayer(owner)) return CommandLM.error(new ChatComponentText("Invalid player!"));
+			if(p.equalsPlayer(owner)) return error(new ChatComponentText("Invalid player!"));
 			
 			if(args[0].equals("add"))
 			{
@@ -94,7 +97,7 @@ public class CmdFTBUFriends extends SubCommand
 					return changed(owner, p, "Added " + p.getName() + " as friend");
 				}
 				
-				return CommandLM.error(new ChatComponentText(p.getName() + " is already a friend!"));
+				return error(new ChatComponentText(p.getName() + " is already a friend!"));
 			}
 			else if(args[0].equals("rem"))
 			{
@@ -104,7 +107,7 @@ public class CmdFTBUFriends extends SubCommand
 					return changed(owner, p, "Removed " + p.getName() + " from friends");
 				}
 				
-				return CommandLM.error(new ChatComponentText(p.getName() + " is not added as friend!"));
+				return error(new ChatComponentText(p.getName() + " is not added as friend!"));
 			}
 		}
 		

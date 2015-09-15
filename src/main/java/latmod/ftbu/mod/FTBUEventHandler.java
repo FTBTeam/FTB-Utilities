@@ -18,20 +18,17 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityChicken;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.*;
 import net.minecraft.event.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.*;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
 public class FTBUEventHandler // FTBUTickHandler
 {
-	public static final FTBUEventHandler instance = new FTBUEventHandler();
-	
 	@SubscribeEvent
 	public void playerLoggedIn(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e)
 	{
@@ -93,43 +90,33 @@ public class FTBUEventHandler // FTBUTickHandler
 			cc.getChatStyle().setColor(EnumChatFormatting.GREEN);
 			Notification n = new Notification("new_friend_requests", cc, 2000);
 			n.setDesc(new ChatComponentText("Click to add all as friends"));
-			n.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftbu friends addall"));
+			n.setClickEvent(new NotificationClick(NotificationClick.CMD, "/ftbu friends addall"));
 			LatCoreMC.notifyPlayer(ep, n);
 		}
 	}
 	
 	@SubscribeEvent
 	public void playerLoggedOut(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent e)
+	{ if(e.player instanceof EntityPlayerMP) playerLoggedOut((EntityPlayerMP)e.player); }
+	
+	public static void playerLoggedOut(EntityPlayerMP ep)
 	{
-		LMPlayerServer p = LMWorldServer.inst.getPlayer(e.player);
+		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
+		if(p == null) return;
+		p.updateLastSeen();
 		
-		if(p != null && e.player instanceof EntityPlayerMP)
-		{
-			p.updateLastSeen();
-			
-			for(int i = 0; i < 4; i++)
-				p.lastArmor[i] = e.player.inventory.armorInventory[i];
-			p.lastArmor[4] = e.player.inventory.getCurrentItem();
-			
-			new LMPlayerServerEvent.LoggedOut(p, (EntityPlayerMP)e.player).post();
-			LMNetHelper.sendTo(null, new MessageLMPlayerLoggedOut(p));
-			LMNetHelper.sendTo(null, new MessageLMPlayerInfo(p));
-			
-			LatCoreMC.runCommand(LatCoreMC.getServer(), "admin player " + p.getName() + " saveinv");
-			
-			p.setPlayer(null);
-			Backups.shouldRun = true;
-		}
-	}
-	
-	@SubscribeEvent
-	public void playerRespawned(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent e)
-	{ if(e.player instanceof EntityPlayerMP) teleportToSpawn((EntityPlayerMP)e.player); }
-	
-	public void teleportToSpawn(EntityPlayerMP ep)
-	{
-		if(ep.worldObj.provider.dimensionId != 0) return;
-		LMDimUtils.teleportPlayer(ep, LMDimUtils.getPlayerEntitySpawnPoint(ep, 0));
+		for(int i = 0; i < 4; i++)
+			p.lastArmor[i] = ep.inventory.armorInventory[i];
+		p.lastArmor[4] = ep.inventory.getCurrentItem();
+		
+		new LMPlayerServerEvent.LoggedOut(p, ep).post();
+		LMNetHelper.sendTo(null, new MessageLMPlayerLoggedOut(p));
+		LMNetHelper.sendTo(null, new MessageLMPlayerInfo(p));
+		
+		LatCoreMC.runCommand(LatCoreMC.getServer(), "admin player saveinv " + p.getName());
+		
+		p.setPlayer(null);
+		//Backups.shouldRun = true;
 	}
 	
 	@SubscribeEvent
@@ -215,40 +202,38 @@ public class FTBUEventHandler // FTBUTickHandler
 	@SubscribeEvent
 	public void onBlockClick(net.minecraftforge.event.entity.player.PlayerInteractEvent e)
 	{
-		if(e.action == Action.RIGHT_CLICK_AIR) return;
-		
-		if(e.entityPlayer.capabilities.isCreativeMode && e.action == Action.LEFT_CLICK_BLOCK && e.entityPlayer.getHeldItem() != null && e.entityPlayer.getHeldItem().getItem() instanceof ICreativeSafeItem)
-		{
-			if(!e.world.isRemote) e.world.markBlockForUpdate(e.x, e.y, e.z);
-			else e.world.markBlockRangeForRenderUpdate(e.x, e.y, e.z, e.x, e.y, e.z);
+		if(e.action == net.minecraftforge.event.entity.player.PlayerInteractEvent.Action.RIGHT_CLICK_AIR) return;
+		else if(!canInteract(e.entityPlayer, e.x, e.y, e.z, e.action == net.minecraftforge.event.entity.player.PlayerInteractEvent.Action.LEFT_CLICK_BLOCK))
 			e.setCanceled(true);
-			return;
-		}
-		if(!e.world.isRemote && !canInteract(e)) e.setCanceled(true);
 	}
 	
-	private boolean canInteract(net.minecraftforge.event.entity.player.PlayerInteractEvent e)
+	public static boolean canInteract(EntityPlayer ep, int x, int y, int z, boolean leftClick)
 	{
-		if(FTBUConfig.general.allowInteractSecure(e.entityPlayer)) return true;
+		World w = ep.worldObj;
+		boolean server = !w.isRemote;
+		if(server && Claims.isOutsideWorldBorderD(w.provider.dimensionId, x, z)) return false;
 		
-		Block block = e.world.getBlock(e.x, e.y, e.z);
-		
-		if(block.hasTileEntity(e.world.getBlockMetadata(e.x, e.y, e.z)))
+		if(ep.capabilities.isCreativeMode && leftClick && ep.getHeldItem() != null && ep.getHeldItem().getItem() instanceof ICreativeSafeItem)
 		{
-			TileEntity te = e.world.getTileEntity(e.x, e.y, e.z);
-			
-			if(te != null && !te.isInvalid() && te instanceof ISecureTile)
-			{
-				if(!((ISecureTile)te).canPlayerInteract(e.entityPlayer, e.action == Action.LEFT_CLICK_BLOCK))
-				{ ((ISecureTile)te).onPlayerNotOwner(e.entityPlayer, e.action == Action.LEFT_CLICK_BLOCK); return false; }
-			}
+			if(server) w.markBlockRangeForRenderUpdate(x, y, z, x, y, z);
+			else w.markBlockForUpdate(x, y, z);
+			return true;
 		}
 		
-		LMPlayerServer p = LMWorldServer.inst.getPlayer(e.entityPlayer);
-		if(!LatCoreMC.isDedicatedServer() || p.isOP()) return true;
-		if(FTBUConfig.general.isDedi() && !ChunkType.getD(e.world.provider.dimensionId, e.x, e.z, p).isFriendly()) return false;
+		if(!server || FTBUConfig.general.allowInteractSecure(ep)) return true;
 		
-		return true;
+		Block block = w.getBlock(x, y, z);
+		
+		if(block.hasTileEntity(w.getBlockMetadata(x, y, z)))
+		{
+			TileEntity te = w.getTileEntity(x, y, z);
+			if(te instanceof ISecureTile && !te.isInvalid() && !((ISecureTile)te).canPlayerInteract(ep, leftClick))
+			{ ((ISecureTile)te).onPlayerNotOwner(ep, leftClick); return false; }
+		}
+		
+		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
+		if(!FTBUConfig.general.isDedi() || p.isOP()) return true;
+		return ChunkType.getD(w.provider.dimensionId, x, z, p).isFriendly();
 	}
 	
 	@SubscribeEvent

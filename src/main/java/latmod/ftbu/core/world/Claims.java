@@ -128,7 +128,7 @@ public class Claims
 	
 	public static boolean isOutsideWorldBorder(int dim, int cx, int cz)
 	{
-		if(!FTBUConfig.world_border.enabled) return false;
+		if(!FTBUConfig.world_border.enabled || isInSpawn(dim, cx, cz)) return false;
 		int radius = FTBUConfig.world_border.getWorldBorder(dim);
 		int min = MathHelperLM.chunk(-radius);
 		int max = MathHelperLM.chunk(radius);

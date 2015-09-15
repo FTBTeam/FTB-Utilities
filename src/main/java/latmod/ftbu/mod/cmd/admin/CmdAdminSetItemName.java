@@ -6,12 +6,15 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 
-public class CmdAdminSetItemName extends SubCommand
+public class CmdAdminSetItemName extends CommandLM
 {
+	public CmdAdminSetItemName(String s)
+	{ super(s, CommandLevel.OP); }
+
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
-		CommandLM.checkArgs(args, 1);
-		EntityPlayerMP ep = CommandLM.getCommandSenderAsPlayer(ics);
+		checkArgs(args, 1);
+		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		if(ep.inventory.getCurrentItem() != null)
 		{
 			ep.inventory.getCurrentItem().setStackDisplayName(LMStringUtils.unsplit(args, " "));

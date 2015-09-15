@@ -4,8 +4,11 @@ import latmod.ftbu.core.cmd.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.IChatComponent;
 
-public class CmdAdminDelWarp extends SubCommand
+public class CmdAdminDelWarp extends CommandLM
 {
+	public CmdAdminDelWarp(String s)
+	{ super(s, CommandLevel.OP); }
+
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
 		return null;

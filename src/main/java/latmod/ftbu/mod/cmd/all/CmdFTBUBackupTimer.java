@@ -7,8 +7,11 @@ import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.*;
 
-public class CmdFTBUBackupTimer extends SubCommand
+public class CmdFTBUBackupTimer extends CommandLM
 {
+	public CmdFTBUBackupTimer(String s)
+	{ super(s, CommandLevel.ALL); }
+
 	public IChatComponent onCommand(ICommandSender ics, String[] args) //LANG
 	{
 		if(!FTBUConfig.backups.enabled) throw new FeatureDisabledException();

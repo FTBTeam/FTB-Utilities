@@ -7,11 +7,14 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 
-public class CmdAdminUnclaim extends SubCommand
+public class CmdAdminUnclaim extends CommandLM
 {
+	public CmdAdminUnclaim(String s)
+	{ super(s, CommandLevel.OP); }
+
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
-		EntityPlayerMP ep = CommandLM.getCommandSenderAsPlayer(ics);
+		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		
 		ClaimedChunk c = Claims.get(ep.dimension, MathHelperLM.chunk(ep.posX), MathHelperLM.chunk(ep.posZ));
 		
@@ -21,9 +24,9 @@ public class CmdAdminUnclaim extends SubCommand
 			if(c.claims.unclaim(c.dim, c.posX, c.posZ, true))
 				return new ChatComponentText("Unclaimed " + s); //LANG
 			else
-				return CommandLM.error(new ChatComponentText("Can't unclaim " + s + "!"));
+				return error(new ChatComponentText("Can't unclaim " + s + "!"));
 		}
 		
-		return CommandLM.error(new ChatComponentText("Chunk not claimed!"));
+		return error(new ChatComponentText("Chunk not claimed!"));
 	}
 }

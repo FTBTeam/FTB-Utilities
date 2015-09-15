@@ -20,7 +20,6 @@ import latmod.ftbu.mod.client.minimap.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.event.ClickEvent;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;
 import net.minecraft.util.*;
@@ -183,7 +182,7 @@ public class FTBUClientEventHandler
 					Notification n = new Notification(null, new ChatComponentText("Minimap exported!"), 2000);
 					n.setDesc(new ChatComponentText(f.getName()));
 					n.setItem(new ItemStack(Items.map));
-					n.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, f.getAbsolutePath()));
+					n.setClickEvent(new NotificationClick(NotificationClick.FILE, f.getAbsolutePath()));
 					ClientNotifications.add(n);
 				}
 				else

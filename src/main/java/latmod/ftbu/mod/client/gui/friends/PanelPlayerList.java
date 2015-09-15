@@ -34,7 +34,7 @@ public class PanelPlayerList extends PanelFriendsGui
 		playerButtons.clear();
 		playerButtons.add(new ButtonPlayer(this, LMWorldClient.inst.clientPlayer));
 		
-		width = 0;
+		width = playerButtons.get(0).width;
 		for(LMPlayerClient p : tempPlayerList)
 		{
 			ButtonPlayer b = new ButtonPlayer(this, p);

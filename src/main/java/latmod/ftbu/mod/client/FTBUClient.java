@@ -11,10 +11,9 @@ import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.api.readme.*;
 import latmod.ftbu.core.client.*;
-import latmod.ftbu.core.gui.IClientActionGui;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.TileLM;
-import latmod.ftbu.core.util.LMColorUtils;
+import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.client.badges.Badge;
@@ -88,9 +87,9 @@ public class FTBUClient extends FTBUCommon
 	
 	public void preInit()
 	{
-		EnumBusType.register(FTBUClientEventHandler.instance);
-		EnumBusType.register(FTBURenderHandler.instance);
-		EnumBusType.register(FTBUGuiEventHandler.instance);
+		EventBusHelper.register(FTBUClientEventHandler.instance);
+		EventBusHelper.register(FTBURenderHandler.instance);
+		EventBusHelper.register(FTBUGuiEventHandler.instance);
 		
 		ClientConfig.Registry.init();
 		initConfig();
@@ -185,21 +184,16 @@ public class FTBUClient extends FTBUCommon
 		t.readTileData(p.func_148857_g());
 		t.readTileClientData(p.func_148857_g());
 		t.onUpdatePacket();
-		
-		if(LatCoreMCClient.getMinecraft().currentScreen instanceof IClientActionGui)
-			((IClientActionGui)LatCoreMCClient.getMinecraft().currentScreen).onClientDataChanged();
+		LatCoreMCClient.onGuiClientAction();
 	}
 	
-	public void chunkChanged(EntityEvent.EnteringChunk e)
+	public void clientChunkChanged(EntityEvent.EnteringChunk e)
 	{
-		super.chunkChanged(e);
-		
-		/*
-		if(e.entity.worldObj.isRemote && Minimap.renderIngame.getB() && e.entity.getUniqueID().equals(getClientPlayer().getUniqueID()))
+		if(Minimap.renderIngame.getB() && e.entity.getUniqueID().equals(LMWorldClient.inst.clientPlayer.getUUID()))
 		{
-			int rd = Math.max(5, LatCoreMCClient.getMinecraft().gameSettings.renderDistanceChunks);
+			int rd = Minimap.zoomA[Minimap.zoom.getI()];
 			Minimap m = Minimap.get(e.entity.dimension);
 			m.reloadArea(e.entity.worldObj, e.newChunkX - MathHelperLM.floor(rd / 2D), e.newChunkZ - MathHelperLM.floor(rd / 2D), rd, rd);
-		}*/
+		}
 	}
 }

@@ -7,13 +7,16 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.util.*;
+import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.backups.Backups;
 import latmod.ftbu.mod.config.FTBUConfig;
 import net.minecraft.command.server.CommandSaveAll;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.*;
+import net.minecraft.world.World;
 
 public class FTBUTickHandler
 {
-	public static final FTBUTickHandler instance = new FTBUTickHandler();
 	public static final FastList<ServerTickCallback> callbacks = new FastList<ServerTickCallback>();
 	public static boolean serverStarted = false;
 	
@@ -23,7 +26,61 @@ public class FTBUTickHandler
 	
 	@SubscribeEvent
 	public void onChunkChanged(net.minecraftforge.event.entity.EntityEvent.EnteringChunk e)
-	{ FTBU.proxy.chunkChanged(e); }
+	{
+		if(e.entity.worldObj.isRemote) FTBU.proxy.clientChunkChanged(e);
+		else if(e.entity instanceof EntityPlayerMP)
+		{
+			EntityPlayerMP ep = (EntityPlayerMP)e.entity;
+			LMPlayerServer player = LMWorldServer.inst.getPlayer(ep);
+			if(player == null) return;
+			
+			if(player.lastPos == null) player.lastPos = new EntityPos(ep);
+			
+			else if(!player.lastPos.equalsPos(ep))
+			{
+				if(Claims.isOutsideWorldBorderD(ep.dimension, ep.posX, ep.posZ))
+				{
+					ep.motionX = ep.motionY = ep.motionZ = 0D;
+					IChatComponent warning = new ChatComponentTranslation(FTBU.mod.assets + ChunkType.WORLD_BORDER.lang + ".warning");
+					warning.getChatStyle().setColor(EnumChatFormatting.RED);
+					LatCoreMC.notifyPlayer(ep, new Notification("world_border", warning, 3000));
+					
+					if(Claims.isOutsideWorldBorderD(player.lastPos.dim, player.lastPos.x, player.lastPos.z))
+					{
+						LatCoreMC.printChat(ep, "Teleporting to spawn!");
+						World w = LMDimUtils.getWorld(0);
+						ChunkCoordinates pos = w.getSpawnPoint();
+						pos.posY = w.getTopSolidOrLiquidBlock(pos.posX, pos.posZ);
+						LMDimUtils.teleportPlayer(ep, pos.posX + 0.5D, pos.posY + 1.25D, pos.posZ + 0.5D, 0);
+					}
+					else LMDimUtils.teleportPlayer(ep, player.lastPos);
+					ep.worldObj.playSoundAtEntity(ep, "random.fizz", 1F, 1F);
+				}
+				
+				player.lastPos.set(ep);
+			}
+			
+			int currentChunkType = ChunkType.getChunkTypeI(ep.dimension, e.newChunkX, e.newChunkZ, player);
+			
+			if(player.lastChunkType == -99 || player.lastChunkType != currentChunkType)
+			{
+				player.lastChunkType = currentChunkType;
+				
+				ChunkType type = ChunkType.getChunkTypeFromI(currentChunkType, player);
+				IChatComponent msg = null;
+				
+				if(type.isClaimed())
+					msg = new ChatComponentText("" + LMWorldServer.inst.getPlayer(currentChunkType));
+				else
+					msg = new ChatComponentTranslation(FTBU.mod.assets + type.lang);
+				
+				Notification n = new Notification("chunk_changed", msg, 3000);
+				n.setColor(type.areaColor);
+				
+				LatCoreMC.notifyPlayer(ep, n);
+			}
+		}
+	}
 	
 	@SubscribeEvent
 	public void onWorldTick(TickEvent.WorldTickEvent e)

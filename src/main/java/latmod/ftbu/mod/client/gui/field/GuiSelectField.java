@@ -36,7 +36,7 @@ public class GuiSelectField extends GuiLM
 		{
 			public void onButtonPressed(int b)
 			{
-				c.onFieldSelected(new FieldSelected(ID, false, def, true));
+				callback.onFieldSelected(new FieldSelected(ID, false, def, true));
 			}
 		};
 		
@@ -44,7 +44,7 @@ public class GuiSelectField extends GuiLM
 		{
 			public void onButtonPressed(int b)
 			{
-				c.onFieldSelected(new FieldSelected(ID, false, textBox.text, true));
+				callback.onFieldSelected(new FieldSelected(ID, false, textBox.text, true));
 			}
 		};
 		

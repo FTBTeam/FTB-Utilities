@@ -5,7 +5,6 @@ import java.lang.reflect.Type;
 import com.google.gson.*;
 
 import latmod.ftbu.core.util.*;
-import net.minecraft.event.ClickEvent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IChatComponent;
@@ -15,11 +14,10 @@ public class Notification
 	public final String ID;
 	public final IChatComponent title;
 	public final int timer;
-	
-	private IChatComponent desc = null;
-	private int color = 0xFFA0A0A0;
-	private ItemStack item = null;
-	private ClickEvent clickEvent = null;
+	public IChatComponent desc = null;
+	public int color = 0xFFA0A0A0;
+	public ItemStack item = null;
+	public NotificationClick clickEvent = null;
 	
 	public Notification(String s, IChatComponent t, int l)
 	{
@@ -31,32 +29,20 @@ public class Notification
 	public void setDesc(IChatComponent c)
 	{ desc = c; }
 	
-	public IChatComponent getDesc()
-	{ return desc; }
-	
 	public void setItem(ItemStack is)
 	{ item = is; }
-	
-	public ItemStack getItem()
-	{ return item; }
 	
 	public void setColor(int c)
 	{ color = c; }
 	
-	public int getColor()
-	{ return color; }
-	
-	public void setClickEvent(ClickEvent e)
+	public void setClickEvent(NotificationClick e)
 	{ clickEvent = e; }
-	
-	public ClickEvent getClickEvent()
-	{ return clickEvent; }
 	
 	public boolean isTemp()
 	{ return clickEvent == null; }
 	
 	public boolean equals(Object o)
-	{ return o != null && (o == this || o.toString().equals(toString())); }
+	{ return o != null && (o == this || o.toString().equals(ID)); }
 	
 	public int hashCode()
 	{ return String.valueOf(ID).hashCode(); }
@@ -88,8 +74,8 @@ public class Notification
 		if(tag.hasKey("C"))
 			n.setColor(tag.getInteger("C"));
 		
-		if(tag.hasKey("CEA"))
-			n.setClickEvent(new ClickEvent(ClickEvent.Action.values()[tag.getByte("CEA")], tag.getString("CEV")));
+		if(tag.hasKey("CID"))
+			n.setClickEvent(new NotificationClick(tag.getString("CID"), tag.getByteArray("CV")));
 		
 		return n;
 	}
@@ -100,25 +86,21 @@ public class Notification
 		tag.setString("T", LMJsonUtils.toJson(title));
 		if(timer != 3000) tag.setInteger("L", timer);
 		
-		IChatComponent desc = getDesc();
 		if(desc != null) tag.setString("D", LMJsonUtils.toJson(desc));
 		
-		ItemStack is = getItem();
-		if(is != null)
+		if(item != null)
 		{
 			NBTTagCompound tag1 = new NBTTagCompound();
-			is.writeToNBT(tag1);
+			item.writeToNBT(tag1);
 			tag.setTag("I", tag1);
 		}
 		
-		int col = getColor();
-		if(col != 0xFFA0A0A0) tag.setInteger("C", col);
+		if(color != 0xFFA0A0A0) tag.setInteger("C", color);
 		
-		ClickEvent ce = getClickEvent();
-		if(ce != null)
+		if(clickEvent != null)
 		{
-			tag.setByte("CEA", (byte)ce.getAction().ordinal());
-			tag.setString("CEV", ce.getValue());
+			tag.setString("CID", clickEvent.ID);
+			tag.setByteArray("CV", clickEvent.val);
 		}
 	}
 	
@@ -132,21 +114,15 @@ public class Notification
 			o.add("title", context.serialize(n.title));
 			if(n.timer != 3000) o.add("timer", new JsonPrimitive(n.timer));
 			
-			IChatComponent desc = n.getDesc();
-			if(desc != null) o.add("desc", context.serialize(desc));
+			if(n.desc != null) o.add("desc", context.serialize(n.desc));
+			if(n.item != null) o.add("item", context.serialize(n.item));
+			if(n.color != 0xFFA0A0A0) o.add("color", new JsonPrimitive(n.color));
 			
-			ItemStack is = n.getItem();
-			if(is != null) o.add("item", context.serialize(is));
-			
-			int col = n.getColor();
-			if(col != 0xFFA0A0A0) o.add("color", new JsonPrimitive(col));
-			
-			ClickEvent ce = n.getClickEvent();
-			if(ce != null)
+			if(n.clickEvent != null)
 			{
 				JsonObject o1 = new JsonObject();
-				o1.add("action", new JsonPrimitive(ce.getAction().getCanonicalName()));
-				o1.add("value", new JsonPrimitive(ce.getValue()));
+				o1.add("ID", new JsonPrimitive(n.clickEvent.ID));
+				o1.add("val", new JsonPrimitive(new String(n.clickEvent.val)));
 				o.add("click", o1);
 			}
 			
@@ -169,8 +145,7 @@ public class Notification
 			if(o.has("click"))
 			{
 				JsonObject o1 = o.get("click").getAsJsonObject();
-				ClickEvent.Action a = ClickEvent.Action.getValueByCanonicalName(o1.get("action").getAsString());
-				if(a != null) n.setClickEvent(new ClickEvent(a, o1.get("value").getAsString()));
+				n.setClickEvent(new NotificationClick(o1.get("ID").getAsString(), o1.get("val").getAsString()));
 			}
 			
 			return n;

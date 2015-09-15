@@ -33,19 +33,13 @@ public class FTBU
 	@LMMod.Instance(FTBUFinals.MOD_ID)
 	public static LMMod mod;
 	
-	public FTBU()
-	{
-		EnumBusType.register(FTBUEventHandler.instance);
-		EnumBusType.register(FTBUTickHandler.instance);
-	}
-	
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
 		if(LatCoreMC.isDevEnv)
-			LatCoreMC.logger.info("Loading FTBUtilities, Dev Build");
+			LatCoreMC.logger.info("Loading " + FTBUFinals.MOD_NAME + ", Dev Build");
 		else
-			LatCoreMC.logger.info("Loading FTBUtilities, Build #" + FTBUFinals.VERSION);
+			LatCoreMC.logger.info("Loading " + FTBUFinals.MOD_NAME + ", Build #" + FTBUFinals.VERSION);
 		
 		LatCoreMC.logger.info("OS: " + OS.get());
 		
@@ -55,6 +49,8 @@ public class FTBU
 		
 		LMMod.init(this, null, null);
 		mod.logger = LatCoreMC.logger;
+		EventBusHelper.register(new FTBUEventHandler());
+		EventBusHelper.register(new FTBUTickHandler());
 		LMJsonUtils.updateGson();
 		IServerConfig.Registry.add(FTBUConfig.instance);
 		FTBUConfig.instance.load();
@@ -70,7 +66,7 @@ public class FTBU
 	public void init(FMLInitializationEvent e)
 	{
 		LMNetHelper.init();
-		FMLInterModComms.sendMessage("Waila", "register", "latmod.ftbu.core.event.RegisterWailaEvent.registerHandlers");
+		FMLInterModComms.sendMessage("Waila", "register", "latmod.ftbu.core.api.RegisterWailaEvent.registerHandlers");
 	}
 	
 	@Mod.EventHandler
@@ -111,8 +107,11 @@ public class FTBU
 	@Mod.EventHandler
 	public void serverStopping(FMLServerStoppingEvent e)
 	{
-		if(LatCoreMC.hasOnlinePlayers()) for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers(null))
-			FTBUEventHandler.instance.playerLoggedOut(new cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent(ep));
+		if(LatCoreMC.hasOnlinePlayers())
+		{
+			for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers(null))
+				FTBUEventHandler.playerLoggedOut(ep);
+		}
 		
 		/*if(FTBUConfig.backups.backupOnShutdown)
 		{

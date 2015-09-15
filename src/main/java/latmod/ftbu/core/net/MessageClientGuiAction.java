@@ -4,7 +4,6 @@ import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.world.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.event.ClickEvent;
 import net.minecraft.util.*;
 
 public class MessageClientGuiAction extends MessageLM<MessageClientGuiAction>
@@ -57,17 +56,11 @@ public class MessageClientGuiAction extends MessageLM<MessageClientGuiAction>
 					owner.sendUpdate(true);
 					p.sendUpdate(true);
 					
-					Notification n = new Notification("friend_added_" + LatCoreMC.rand.nextInt(), LatCoreMC.setColor(EnumChatFormatting.GREEN, new ChatComponentText("Added a friend")), 800);
-					n.setDesc(new ChatComponentText(p.getName()));
-					n.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/ftbu friends rem " + p.getName()));
-					n.setItem(ep.getCurrentEquippedItem());
-					LatCoreMC.notifyPlayer(ep, n);
-					
 					if(p.isOnline())
 					{
-						n = new Notification("friend_request", LatCoreMC.setColor(EnumChatFormatting.GREEN, new ChatComponentText("New friend request from " + owner.getName() + "!")), 2000);
+						Notification n = new Notification("friend_request", LatCoreMC.setColor(EnumChatFormatting.GREEN, new ChatComponentText("New friend request from " + owner.getName() + "!")), 2000);
 						n.setDesc(new ChatComponentText("Click to add as friend"));
-						n.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftbu friends add " + owner.getName()));
+						n.setClickEvent(new NotificationClick(NotificationClick.CMD, "/ftbu friends add " + owner.getName()));
 						LatCoreMC.notifyPlayer(p.getPlayer(), n);
 					}
 				}

@@ -5,7 +5,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 import latmod.ftbu.core.*;
-import latmod.ftbu.core.api.readme.ReadmeFile;
+import latmod.ftbu.core.api.readme.*;
 import latmod.ftbu.core.util.LMJsonUtils;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -46,10 +46,10 @@ public class FTBUConfig implements IServerConfig // FTBU
 	
 	public static void saveReadme(ReadmeFile file)
 	{
-		ConfigGeneral.saveReadme(file);
-		ConfigLogin.saveReadme(file);
-		ConfigWorldBorder.saveReadme(file);
-		ConfigBackups.saveReadme(file);
+		file.add(new ReadmeCategory("latmod/ftbu/general.txt").addFromClass(ConfigGeneral.class));
+		file.add(new ReadmeCategory("latmod/ftbu/login.txt").addFromClass(ConfigLogin.class));
+		file.add(new ReadmeCategory("latmod/ftbu/world_border.txt").addFromClass(ConfigWorldBorder.class));
+		file.add(new ReadmeCategory("latmod/ftbu/backups.txt").addFromClass(ConfigBackups.class));
 	}
 	
 	public void readConfig(NBTTagCompound tag)

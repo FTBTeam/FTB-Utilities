@@ -7,8 +7,11 @@ import latmod.ftbu.mod.backups.Backups;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.*;
 
-public class CmdAdminBackup extends SubCommand
+public class CmdAdminBackup extends CommandLM
 {
+	public CmdAdminBackup(String s)
+	{ super(s, CommandLevel.OP); }
+
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
 		if(i == 0) return new String[] { "now", "stop", "deleteall", "getsize" };
@@ -21,7 +24,7 @@ public class CmdAdminBackup extends SubCommand
 		{
 			if(args[0].equals("deleteall"))
 			{
-				if(Backups.thread != null) return CommandLM.error(new ChatComponentText("Backup in progress!")); //LANG
+				if(Backups.thread != null) return error(new ChatComponentText("Backup in progress!")); //LANG
 				Backups.thread = new Thread("LM_Backups_delete")
 				{
 					public void run()
@@ -45,7 +48,7 @@ public class CmdAdminBackup extends SubCommand
 					return new ChatComponentText("Backup process stopped!");
 				}
 				
-				return CommandLM.error(new ChatComponentText("Backup process is not running!"));
+				return error(new ChatComponentText("Backup process is not running!"));
 			}
 			else if(args[0].equals("getsize"))
 			{
@@ -61,6 +64,6 @@ public class CmdAdminBackup extends SubCommand
 		boolean b = Backups.run();
 		Backups.commandOverride = false;
 		if(b) LatCoreMC.printChat(BroadcastSender.inst, ics.getCommandSenderName() + " launched manual backup!");
-		return b ? null : CommandLM.error(new ChatComponentText("Backup in progress!"));
+		return b ? null : error(new ChatComponentText("Backup in progress!"));
 	}
 }

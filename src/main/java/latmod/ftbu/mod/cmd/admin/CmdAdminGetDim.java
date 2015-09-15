@@ -6,14 +6,17 @@ import net.minecraft.util.*;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 
-public class CmdAdminGetDim extends SubCommand
+public class CmdAdminGetDim extends CommandLM
 {
+	public CmdAdminGetDim(String s)
+	{ super(s, CommandLevel.OP); }
+
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
-		CommandLM.checkArgs(args, 1);
-		int i = CommandLM.parseInt(ics, args[0]);
+		checkArgs(args, 1);
+		int i = parseInt(ics, args[0]);
 		WorldServer w = DimensionManager.getWorld(i);
-		if(w == null) return CommandLM.error(new ChatComponentText("Invalid DimensionID!"));//LANG
+		if(w == null) return error(new ChatComponentText("Invalid DimensionID!")); //LANG
 		return new ChatComponentText("Dimension " + i + " name is '" + w.provider.getDimensionName() + "'");
 	}
 }

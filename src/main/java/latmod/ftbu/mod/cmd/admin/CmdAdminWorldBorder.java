@@ -5,11 +5,14 @@ import latmod.ftbu.mod.config.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.*;
 
-public class CmdAdminWorldBorder extends SubCommand
+public class CmdAdminWorldBorder extends CommandLM //TODO: Remove
 {
+	public CmdAdminWorldBorder(String s)
+	{ super(s, CommandLevel.OP); }
+
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
-		CommandLM.checkArgs(args, 1);
+		checkArgs(args, 1);
 		
 		if(args[0].equals("on"))
 		{
@@ -24,10 +27,10 @@ public class CmdAdminWorldBorder extends SubCommand
 			return new ChatComponentText("World border disabled");
 		}
 		
-		CommandLM.checkArgs(args, 2);
+		checkArgs(args, 2);
 		
-		int dim = CommandLM.parseInt(ics, args[0]);
-		int dist = CommandLM.parseInt(ics, args[1]);
+		int dim = parseInt(ics, args[0]);
+		int dist = parseInt(ics, args[1]);
 		
 		FTBUConfig.world_border.setWorldBorder(dim, dist);
 		ConfigWorldBorder.save();

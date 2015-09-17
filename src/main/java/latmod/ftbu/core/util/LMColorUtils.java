@@ -87,7 +87,17 @@ public class LMColorUtils
 		int blue = MathHelperLM.clampInt(getBlue(c) + b, 0, 255);
 		return getRGBA(red, green, blue, getAlpha(c));
 	}
-
+	
+	public static void addHue(int pixels[], float f)
+	{
+		if(pixels == null || pixels.length == 0) return;
+		for(int i = 0; i < pixels.length; i++)
+		{
+			setHSB(pixels[i]);
+			pixels[i] = getRGBA(getHSB(staticHSB[0] + f, staticHSB[1], staticHSB[2]), getAlpha(pixels[i]));
+		}
+	}
+	
 	@SideOnly(Side.CLIENT)
 	public static ByteBuffer toByteBuffer(int pixels[], boolean alpha)
 	{

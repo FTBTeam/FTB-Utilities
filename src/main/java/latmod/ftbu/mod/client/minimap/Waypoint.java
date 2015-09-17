@@ -41,7 +41,7 @@ public class Waypoint
 	//public String customIcon;
 	public boolean enabled = true;
 	public Type type = Type.BEACON;
-	public int posX, posY, posZ, dim, colR, colG, colB;
+	public int posX, posY, posZ, dim, color;
 	public int listID = -1;
 	
 	public void setPos(double x, double y, double z)
@@ -51,20 +51,23 @@ public class Waypoint
 		posZ = MathHelperLM.floor(z);
 	}
 	
-	public void setColor(int r, int g, int b)
-	{ colR = r; colG = g; colB = b; }
-	
-	public int getColorRGB()
-	{ return LMColorUtils.getRGBA(colR, colG, colB, 255); }
-	
-	public void setColor(int col)
-	{ setColor(LMColorUtils.getRed(col), LMColorUtils.getGreen(col), LMColorUtils.getBlue(col)); }
-	
 	public String toString()
 	{ return LMJsonUtils.toJson(this); }
 	
 	public int hashCode()
 	{ return listID; }
+	
+	public Waypoint clone()
+	{
+		Waypoint w = new Waypoint();
+		w.name = name;
+		w.enabled = enabled;
+		w.type = type;
+		w.setPos(posX, posY, posZ);
+		w.dim = dim;
+		w.color = color;
+		return w;
+	}
 	
 	public static class Serializer implements JsonSerializer<Waypoint>, JsonDeserializer<Waypoint>
 	{
@@ -79,7 +82,7 @@ public class Waypoint
 			o.add("Y", new JsonPrimitive(src.posY));
 			o.add("Z", new JsonPrimitive(src.posZ));
 			o.add("Dim", new JsonPrimitive(src.dim));
-			o.add("Col", new JsonPrimitive(LMColorUtils.getHex(src.getColorRGB())));
+			o.add("Col", new JsonPrimitive(LMColorUtils.getHex(src.color)));
 			return o;
 		}
 		
@@ -95,7 +98,7 @@ public class Waypoint
 			w.posY = o.get("Y").getAsInt();
 			w.posZ = o.get("Z").getAsInt();
 			w.dim = o.get("Dim").getAsInt();
-			w.setColor(Integer.decode(o.get("Col").getAsString()));
+			w.color = Integer.decode(o.get("Col").getAsString());
 			return w;
 		}
 	}

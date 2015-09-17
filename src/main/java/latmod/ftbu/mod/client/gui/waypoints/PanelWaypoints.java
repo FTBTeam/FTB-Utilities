@@ -9,13 +9,13 @@ public class PanelWaypoints extends PanelLM
 {
 	public PanelWaypoints(GuiWaypoints g)
 	{
-		super(g, 0, 0, 0, 0);
+		super(g, 0, 20, 0, 0);
 	}
 	
 	public void addWidgets()
 	{
 		height = 0;
-		for(Waypoint w : Waypoints.getAll())
+		for(Waypoint w : Waypoints.waypoints)
 		{
 			if(w.dim == gui.mc.thePlayer.dimension)
 			{

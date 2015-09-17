@@ -9,15 +9,15 @@ import latmod.ftbu.core.inv.LMInvUtils;
 import latmod.ftbu.core.util.FastList;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.nbt.*;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.*;
 
 @SideOnly(Side.CLIENT)
 public class LMPlayerClient extends LMPlayer // LMPlayerServer
 {
 	public final FastList<IChatComponent> clientInfo;
 	public final ClaimSettings claimSettings;
+	private ResourceLocation skinLocation;
 	public boolean isOnline;
-	
 	public int claimedChunks;
 	public int maxClaimPower;
 	
@@ -26,7 +26,15 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 		super(w, i, gp);
 		clientInfo = new FastList<IChatComponent>();
 		claimSettings = new ClaimSettings();
+		skinLocation = null;
 		isOnline = false;
+	}
+	
+	public ResourceLocation getSkin()
+	{
+		if(skinLocation == null)
+			skinLocation = LatCoreMCClient.getSkinTexture(getName());
+		return skinLocation;
 	}
 	
 	public boolean isOnline()

@@ -4,10 +4,8 @@ import cpw.mods.fml.relauncher.*;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.api.LMPlayerClientEvent;
 import latmod.ftbu.core.client.LatCoreMCClient;
-import latmod.ftbu.core.gui.IClientActionGui;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate> implements IClientMessageLM<MessageLMPlayerUpdate>
@@ -46,9 +44,6 @@ public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate> impl
 		LMPlayerClient p = LMWorldClient.inst.getPlayer(m.playerID);
 		p.readFromNet(m.data, p.getUUID().equals(LatCoreMCClient.getUUID()));
 		new LMPlayerClientEvent.DataChanged(p).post();
-		
-		GuiScreen g = LatCoreMCClient.getMinecraft().currentScreen;
-		if(g != null && g instanceof IClientActionGui)
-			((IClientActionGui)g).onClientDataChanged();
+		LatCoreMCClient.onGuiClientAction();
 	}
 }

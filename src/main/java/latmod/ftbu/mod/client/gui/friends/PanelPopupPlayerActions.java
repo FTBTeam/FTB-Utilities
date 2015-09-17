@@ -1,6 +1,7 @@
 package latmod.ftbu.mod.client.gui.friends;
 
 import cpw.mods.fml.relauncher.*;
+import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.client.FTBULang;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.world.*;
@@ -29,15 +30,22 @@ public class PanelPopupPlayerActions extends PanelPopupMenu
 			add(PlayerAction.settings, FTBULang.client_config());
 			add(PlayerAction.waypoints, Waypoints.clientConfig.getIDS());
 			add(PlayerAction.minimap, FTBULang.Friends.claimed_chunks());
-			add(PlayerAction.notes, "[WIP] " + FTBULang.Friends.notes());
+			
+			if(LatCoreMC.isDevEnv)
+			{
+				add(PlayerAction.notes, "[WIP] " + FTBULang.Friends.notes());
+			}
 		}
 		else
 		{
 			boolean isFriend = LMWorldClient.inst.clientPlayer.isFriendRaw(playerLM);
 			if(!isFriend) add(PlayerAction.friend_add, FTBULang.Friends.button_add_friend());
 			
-			add(PlayerAction.mail, "[WIP] " + FTBULang.Friends.mail());
-			add(PlayerAction.trade, "[WIP] " + FTBULang.Friends.trade());
+			if(LatCoreMC.isDevEnv)
+			{
+				add(PlayerAction.mail, "[WIP] " + FTBULang.Friends.mail());
+				add(PlayerAction.trade, "[WIP] " + FTBULang.Friends.trade());
+			}
 			
 			if(isFriend) add(PlayerAction.friend_remove, FTBULang.Friends.button_rem_friend());
 			else if(playerLM.isFriendRaw(LMWorldClient.inst.clientPlayer))

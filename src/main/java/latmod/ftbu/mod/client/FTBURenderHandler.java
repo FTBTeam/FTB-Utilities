@@ -26,7 +26,6 @@ public class FTBURenderHandler
 {
 	public static final FTBURenderHandler instance = new FTBURenderHandler();
 	public static final ResourceLocation world_border_tex = FTBU.mod.getLocation("textures/map/world_border.png");
-	public static final ResourceLocation spawn_border_tex = FTBU.mod.getLocation("textures/map/spawn_border.png");
 	
 	private static Minecraft mc;
 	private static boolean isFPS;
@@ -66,7 +65,7 @@ public class FTBURenderHandler
 		
 		if(e.phase == TickEvent.Phase.END && mc.theWorld != null && mc.thePlayer != null)
 		{
-			if(Minimap.renderIngame.getI() > 0 && (mc.currentScreen == null || mc.currentScreen instanceof GuiChat))
+			if(Minimap.renderIngame.getI() > 0 && !mc.gameSettings.showDebugInfo && (mc.currentScreen == null || mc.currentScreen instanceof GuiChat))
 			{
 				mapRenderer.mc = mc;
 				mapRenderer.size = Minimap.sizeA[Minimap.size.getI()];
@@ -124,18 +123,16 @@ public class FTBURenderHandler
 	{
 		if(LMWorldClient.inst == null) return;
 		
-		if(!Waypoints.enabled.getB() || mc == null || mc.theWorld == null || !Waypoints.hasWaypoints()) return;
-		FastList<Waypoint> list = Waypoints.getAll();
+		if(!Waypoints.enabled.getB() || mc == null || mc.theWorld == null || Waypoints.waypoints.isEmpty()) return;
 		
 		visibleBeacons.clear();
 		visibleMarkers.clear();
 		
 		double renderDistSq = Waypoints.renderDistanceSq[Waypoints.renderDistance.getI()];
 		
-		for(int i = 0; i < list.size(); i++)
+		for(int i = 0; i < Waypoints.waypoints.size(); i++)
 		{
-			Waypoint w = list.get(i);
-			
+			Waypoint w = Waypoints.waypoints.get(i);
 			if(w.enabled && w.dim == currentDim)
 			{
 				double x = w.posX + 0.5D;
@@ -199,7 +196,7 @@ public class FTBURenderHandler
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 		}
 		
-		if(hasBeacons)
+		if(hasBeacons) //TODO: GLList
 		{
 			GL11.glDisable(GL11.GL_CULL_FACE);
 			GL11.glDepthMask(false);
@@ -216,11 +213,11 @@ public class FTBURenderHandler
 				
 				float d = 0.4F;
 				GL11.glColor4f(w.colR / 255F, w.colG / 255F, w.colB / 255F, 0.15F);
-				beaconRenderer.setSize(-d, -w.posY, -d, d, 256D - w.posY, d);
+				beaconRenderer.setSize(-d, -w.posY, -d, d, 1024D - w.posY, d);
 				for(int k = 2; k < 6; k++)
 					beaconRenderer.renderSide(k);
 				d = 0.3F;
-				beaconRenderer.setSize(-d, -w.posY, -d, d, 256D - w.posY, d);
+				beaconRenderer.setSize(-d, -w.posY, -d, d, 1024D - w.posY, d);
 				for(int k = 2; k < 6; k++)
 					beaconRenderer.renderSide(k);
 				GL11.glPopMatrix();
@@ -367,14 +364,18 @@ public class FTBURenderHandler
 		public final double posX, posY, posZ;
 		public final double closeRenderX, closeRenderY, closeRenderZ;
 		public final int colR, colG, colB;
+		public final float colRF, colGF, colBF;
 		public final double distance, scale;
 		
 		public WaypointClient(Waypoint w, double x, double y, double z, double dsq)
 		{
 			name = w.name;
-			colR = w.colR;
-			colG = w.colG;
-			colB = w.colB;
+			colR = LMColorUtils.getRed(w.color);
+			colG = LMColorUtils.getGreen(w.color);
+			colB = LMColorUtils.getBlue(w.color);
+			colRF = colR / 255F;
+			colGF = colG / 255F;
+			colBF = colB / 255F;
 			posX = x;
 			posY = y;
 			posZ = z;

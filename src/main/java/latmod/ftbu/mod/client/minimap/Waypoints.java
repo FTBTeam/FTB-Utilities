@@ -18,7 +18,7 @@ public class Waypoints
 	public static final ClientConfig.Property displayDist = new ClientConfig.Property("display_distance", false);
 	public static final ClientConfig.Property renderDistance = new ClientConfig.Property("render_distance", 2, "300", "600", "1200", "2500", "10000").setRawValues();
 	public static final ClientConfig.Property deathPoint = new ClientConfig.Property("death_point", true);
-	private static final FastList<Waypoint> waypoints = new FastList<Waypoint>();
+	public static final FastList<Waypoint> waypoints = new FastList<Waypoint>();
 	
 	public static final double[] renderDistanceSq = { 300D * 300D, 600D * 600D, 1200D * 1200D, 2500D * 2500D, 10000D * 10000D };
 	private static File waypointsFile;
@@ -34,17 +34,16 @@ public class Waypoints
 		ClientConfig.Registry.add(clientConfig);
 	}
 	
-	public static boolean hasWaypoints()
-	{ return !waypoints.isEmpty(); }
-	
-	public static FastList<Waypoint> getAll()
-	{ return waypoints; }
-	
 	public static void add(Waypoint w)
 	{
-		waypoints.add(w);
-		for(int i = 0; i < waypoints.size(); i++)
-			waypoints.get(i).listID = i;
+		if(w.listID >= 0 && w.listID < waypoints.size())
+			waypoints.set(w.listID, w);
+		else
+		{
+			waypoints.add(w);
+			for(int i = 0; i < waypoints.size(); i++)
+				waypoints.get(i).listID = i;
+		}
 		save();
 	}
 	
@@ -64,7 +63,13 @@ public class Waypoints
 			if(LMWorldClient.inst == null) return;
 			waypointsFile = LMFileUtils.newFile(new File(LMWorldClient.inst.clientDataFolder, "waypoints.json"));
 			WaypointsFile wf = LMJsonUtils.fromJsonFile(waypointsFile, WaypointsFile.class);
-			if(wf != null) waypoints.addAll(wf.waypoints);
+			if(wf != null)
+			{
+				waypoints.addAll(wf.waypoints);
+				for(int i = 0; i < waypoints.size(); i++)
+					waypoints.get(i).listID = i;
+				save();
+			}
 		}
 		catch(Exception e)
 		{ e.printStackTrace(); }

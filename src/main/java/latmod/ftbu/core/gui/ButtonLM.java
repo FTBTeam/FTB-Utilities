@@ -1,12 +1,12 @@
 package latmod.ftbu.core.gui;
 import cpw.mods.fml.relauncher.*;
-import net.minecraft.client.Minecraft;
+import latmod.ftbu.core.util.LMUtils;
 
 @SideOnly(Side.CLIENT)
 public abstract class ButtonLM extends WidgetLM
 {
 	public int customID = 0;
-	private long lastClickMillis = Minecraft.getSystemTime();
+	private long lastClickMillis = LMUtils.millis();
 	public boolean doubleClickRequired = false;
 	public TextureCoords background = null;
 	
@@ -19,7 +19,7 @@ public abstract class ButtonLM extends WidgetLM
 		{
 			if(doubleClickRequired)
 			{
-				long l = Minecraft.getSystemTime();
+				long l = LMUtils.millis();
 				if(l - lastClickMillis < 300)
 					onButtonPressed(b);
 				lastClickMillis = l;

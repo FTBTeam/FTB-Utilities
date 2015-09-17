@@ -39,4 +39,7 @@ public class Player extends AbstractClientPlayer
 	
 	public boolean isInvisibleToPlayer(EntityPlayer ep)
 	{ return true; }
+	
+	public ResourceLocation getLocationSkin()
+	{ return playerLM.getSkin(); }
 }

@@ -6,7 +6,6 @@ import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.client.FTBULang;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.util.LMColorUtils;
-import latmod.ftbu.mod.client.gui.field.*;
 import latmod.ftbu.mod.client.gui.field.color.GuiSelectColorRGB;
 import latmod.ftbu.mod.client.minimap.Waypoint;
 import net.minecraft.client.gui.GuiYesNo;
@@ -19,7 +18,7 @@ public class PanelWaypoint extends PanelLM
 	
 	public PanelWaypoint(PanelWaypoints p, Waypoint w)
 	{
-		super(p.gui, 0, 20 + p.height, p.width, 18);
+		super(p.gui, 0, p.height, p.width, 18);
 		waypoint = w;
 		
 		edit = new ButtonLM(p.gui, 1, 1, p.gui.getFontRenderer().getStringWidth(waypoint.name) + 6, 16)
@@ -29,17 +28,7 @@ public class PanelWaypoint extends PanelLM
 				gui.playClickSound();
 				
 				if(b == 0)
-				{
-					gui.mc.displayGuiScreen(new GuiSelectField(null, GuiSelectField.TYPE_TEXT, waypoint.name, new IFieldCallback()
-					{
-						public void onFieldSelected(FieldSelected c)
-						{
-							waypoint.name = c.getS();
-							if(c.closeGui) gui.mc.displayGuiScreen(gui);
-							gui.refreshWidgets();
-						}
-					}));
-				}
+					gui.mc.displayGuiScreen(new GuiEditWaypoint((GuiWaypoints)gui, waypoint));
 				else
 				{
 					waypoint.enabled = !waypoint.enabled;
@@ -48,16 +37,18 @@ public class PanelWaypoint extends PanelLM
 			}
 		};
 		
+		edit.title = FTBULang.button_settings();
+		
 		color = new ButtonLM(p.gui, width - 54, 1, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
 				gui.playClickSound();
-				GuiSelectColorRGB.displayGui((GuiWaypoints)gui, waypoint.getColorRGB(), waypoint.listID, true);
+				GuiSelectColorRGB.displayGui((GuiWaypoints)gui, waypoint.color, waypoint.listID, true);
 			}
 		};
 		
-		color.title = LMColorUtils.getHex(waypoint.getColorRGB());
+		color.title = LMColorUtils.getHex(waypoint.color);
 		
 		type = new ButtonLM(p.gui, width - 36, 1, 16, 16)
 		{
@@ -98,7 +89,7 @@ public class PanelWaypoint extends PanelLM
 		boolean mouseOver = mouseOver();
 		GuiLM.drawBlankRect(0, ay, 0F, width, height, mouseOver ? 0x33FFFFFF : 0x33333333);
 		gui.drawString(gui.getFontRenderer(), waypoint.name, 4, ay + 5, waypoint.enabled ? 0xFFFFFFFF : 0xFF777777);
-		GL11.glColor4f(waypoint.colR / 255F, waypoint.colG / 255F, waypoint.colB / 255F, 1F);
+		LMColorUtils.setGLColor(waypoint.color, 255);
 		color.render(GuiIcons.color_blank);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		type.render(waypoint.type.icon);

@@ -6,7 +6,7 @@ import cpw.mods.fml.relauncher.*;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.client.LatCoreMCClient;
-import latmod.ftbu.core.util.LMStringUtils;
+import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.minimap.*;
@@ -58,7 +58,7 @@ public class MessageLMPlayerDied extends MessageLM<MessageLMPlayerDied> implemen
 			w.dim = ep.dimension;
 			w.setPos(ep.posX, ep.posY, ep.posZ);
 			w.type = Waypoint.Type.BEACON;
-			w.setColor(LatCoreMC.rand.nextInt(100) + 155, LatCoreMC.rand.nextInt(100), 0);
+			w.color = LMColorUtils.getRGBA(LatCoreMC.rand.nextInt(100) + 155, LatCoreMC.rand.nextInt(100), 0, 255);
 			Waypoints.add(w);
 		}
 	}

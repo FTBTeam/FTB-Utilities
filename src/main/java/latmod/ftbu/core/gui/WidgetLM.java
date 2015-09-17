@@ -28,13 +28,11 @@ public class WidgetLM
 	public int getAY()
 	{ return (parentPanel == null) ? posY : (parentPanel.getAY() + posY); }
 	
+	protected boolean mouseOver(int ax, int ay)
+	{ return gui.mouseX >= ax && gui.mouseY >= ay && gui.mouseX < ax + width && gui.mouseY < ay + height; }
+	
 	public boolean mouseOver()
-	{
-		int x = getAX();
-		int y = getAY();
-		return gui.mouseX >= x && gui.mouseY >= y
-		&& gui.mouseX < x + width && gui.mouseY < y + height;
-	}
+	{ return mouseOver(getAX(), getAY()); }
 	
 	public void render(TextureCoords icon, double rw, double rh)
 	{ if(icon != null) icon.render(gui, getAX(), getAY(), (int)(width * rw), (int)(height * rh)); }

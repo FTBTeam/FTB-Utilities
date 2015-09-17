@@ -5,7 +5,6 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.gui.*;
-import latmod.ftbu.core.util.LMColorUtils;
 import latmod.ftbu.mod.client.gui.field.color.*;
 import latmod.ftbu.mod.client.minimap.*;
 import net.minecraft.client.gui.*;
@@ -41,15 +40,19 @@ public class GuiWaypoints extends GuiLM implements IColorCallback, GuiYesNoCallb
 			public void onButtonPressed(int b)
 			{
 				gui.playClickSound();
-				//FIXME: Waypoint creation gui
-				Waypoint w = new Waypoint();
-				w.name = "Waypoint " + LMColorUtils.getHex(LatCoreMC.rand.nextInt());
-				w.type = Waypoint.Type.BEACON;
-				w.setPos(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-				w.dim = mc.thePlayer.dimension;
-				w.setColor(LatCoreMC.rand.nextInt());
-				Waypoints.add(w);
-				refreshWidgets();
+				
+				if(isShiftKeyDown())
+				{
+					Waypoint w = new Waypoint();
+					w.type = Waypoint.Type.BEACON;
+					w.setPos(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
+					w.name = w.posX + " " + w.posY + " " + w.posZ;
+					w.dim = mc.thePlayer.dimension;
+					w.color = LatCoreMC.rand.nextInt();
+					Waypoints.add(w);
+					gui.refreshWidgets();
+				}
+				else mc.displayGuiScreen(new GuiEditWaypoint(GuiWaypoints.this, null));
 			}
 		};
 	}
@@ -99,14 +102,19 @@ public class GuiWaypoints extends GuiLM implements IColorCallback, GuiYesNoCallb
 	
 	public void onColorSelected(ColorSelected c)
 	{
-		if(c.set || c.closeGui) Waypoints.getAll().get(c.ID.hashCode()).setColor(c.color);
+		if(c.set || c.closeGui)
+		{
+			int id = c.ID.hashCode();
+			if(id >= 0 && id < Waypoints.waypoints.size())
+				Waypoints.waypoints.get(id).color = c.color;
+		}
 		if(c.closeGui) mc.displayGuiScreen(this);
 		refreshWidgets();
 	}
 	
 	public void confirmClicked(boolean b, int i)
 	{
-		if(b) Waypoints.getAll().remove(i);
+		if(b) Waypoints.remove(i);
 		mc.displayGuiScreen(this);
 		refreshWidgets();
 	}

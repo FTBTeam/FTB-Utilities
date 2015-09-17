@@ -112,12 +112,6 @@ public class FTBU
 			for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers(null))
 				FTBUEventHandler.playerLoggedOut(ep);
 		}
-		
-		/*if(FTBUConfig.backups.backupOnShutdown)
-		{
-			Backups.shouldRun = true;
-			Backups.run();
-		}*/
 	}
 	
 	@Mod.EventHandler

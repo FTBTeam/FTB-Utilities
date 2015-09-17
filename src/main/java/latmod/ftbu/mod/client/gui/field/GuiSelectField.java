@@ -16,12 +16,13 @@ public class GuiSelectField extends GuiLM
 	public final String def;
 	public final IFieldCallback callback;
 	
-	public final ButtonLM buttonCancel, buttonAccept;
+	public final ButtonSimpleLM buttonCancel, buttonAccept;
 	public final TextBoxLM textBox;
 	
 	public GuiSelectField(Object id, int typ, String d, IFieldCallback c)
 	{
 		super(null, null);
+		hideNEI = true;
 		ID = id;
 		type = typ;
 		def = d;
@@ -32,7 +33,7 @@ public class GuiSelectField extends GuiLM
 		
 		int bsize = xSize / 2 - 4;
 		
-		buttonCancel = new ButtonLM(this, 2, ySize - 18, bsize, 16)
+		buttonCancel = new ButtonSimpleLM(this, 2, ySize - 18, bsize, 16)
 		{
 			public void onButtonPressed(int b)
 			{
@@ -40,7 +41,9 @@ public class GuiSelectField extends GuiLM
 			}
 		};
 		
-		buttonAccept = new ButtonLM(this, xSize - bsize - 2, ySize - 18, bsize, 16)
+		buttonCancel.title = FTBULang.button_cancel();
+		
+		buttonAccept = new ButtonSimpleLM(this, xSize - bsize - 2, ySize - 18, bsize, 16)
 		{
 			public void onButtonPressed(int b)
 			{
@@ -48,14 +51,16 @@ public class GuiSelectField extends GuiLM
 			}
 		};
 		
+		buttonAccept.title = FTBULang.button_accept();
+		
 		textBox = new TextBoxLM(this, 2, 2, xSize - 4, 18)
 		{
 			public boolean canAddChar(char c)
 			{
 				if(!super.canAddChar(c)) return false;
-				else if(type == TYPE_TEXT) return true;
-				else if(c == '.') return type == TYPE_FLOAT;
-				return c == '-' || (c < '0' || c > '9');
+				if(type == TYPE_TEXT) return true;
+				if(c == '.') return type == TYPE_FLOAT;
+				return c == '-' || (c >= '0' && c <= '9');
 			}
 		};
 		
@@ -88,16 +93,8 @@ public class GuiSelectField extends GuiLM
 		}
 		drawBlankRect(guiLeft, guiTop, zLevel, xSize, ySize, 0xAA666666);
 		drawBlankRect(textBox.getAX(), textBox.getAY(), zLevel, textBox.width, textBox.height, 0xFF333333);
-		renderButton(buttonAccept, FTBULang.button_accept());
-		renderButton(buttonCancel, FTBULang.button_cancel());
+		buttonAccept.renderWidget();
+		buttonCancel.renderWidget();
 		textBox.renderCentred(textBox.width / 2, 6, 0xFFEEEEEE);
-	}
-	
-	private void renderButton(ButtonLM b, String s)
-	{
-		int x = b.getAX();
-		int y = b.getAY();
-		drawBlankRect(x, y, zLevel, b.width, b.height, b.mouseOver() ? 0xFF999999 : 0xFF888888);
-		drawCenteredString(fontRendererObj, s, x + b.width / 2, y + (b.height - fontRendererObj.FONT_HEIGHT) / 2, 0xFFFFFFFF);
 	}
 }

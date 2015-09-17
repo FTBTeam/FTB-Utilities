@@ -3,6 +3,7 @@ import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.LMNBTUtils;
+import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.nbt.NBTTagCompound;
@@ -64,5 +65,7 @@ public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo> implemen
 				if(tag != null) p.receiveInfo(tag.getTagList("I", LMNBTUtils.STRING));
 			}
 		}
+		
+		LatCoreMCClient.onGuiClientAction();
 	}
 }

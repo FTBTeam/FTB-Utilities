@@ -145,15 +145,16 @@ public class MRenderer
 			}
 		}
 		
-		if(renderWaypoints && Waypoints.hasWaypoints())
+		if(renderWaypoints && !Waypoints.waypoints.isEmpty())
 		{
 			LatCoreMCClient.setTexture(FTBURenderHandler.texMarker);
 			
-			for(Waypoint w : Waypoints.getAll())
+			for(int i = 0; i < Waypoints.waypoints.size(); i++)
 			{
+				Waypoint w = Waypoints.waypoints.get(i);
 				if(w.enabled && w.dim == mc.thePlayer.dimension)
 				{
-					GL11.glColor4f(w.colR / 255F, w.colG / 255F, w.colB / 255F, 1F);
+					LMColorUtils.setGLColor(w.color, 255);
 					
 					double x = renderX + ((MathHelperLM.chunk(w.posX) - startX) * 16D + MathHelperLM.wrap(w.posX, 16D)) * tsize / 16D;
 					double y = renderY + ((MathHelperLM.chunk(w.posZ) - startY) * 16D + MathHelperLM.wrap(w.posZ, 16D)) * tsize / 16D;

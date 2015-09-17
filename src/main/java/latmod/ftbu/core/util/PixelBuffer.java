@@ -119,4 +119,14 @@ public class PixelBuffer
 		System.arraycopy(pixels, 0, b.pixels, 0, pixels.length);
 		return b;
 	}
+
+	public PixelBuffer getSubimage(int x, int y, int w, int h)
+	{
+		PixelBuffer b = new PixelBuffer(w, h);
+		getRGB(x, y, w, h, b.pixels, 0, w);
+		return b;
+	}
+
+	public void addHue(float f)
+	{ LMColorUtils.addHue(pixels, f); }
 }

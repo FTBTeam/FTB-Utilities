@@ -31,13 +31,8 @@ import net.minecraftforge.fluids.*;
 /** Made by LatvianModder */
 public final class LatCoreMC // LatCoreMCClient
 {
-	public static final String MC_VERSION = Loader.MC_VERSION;
-	public static final String DEV_VERSION = "@VERSION@";
-	
 	public static final Logger logger = LogManager.getLogger("FTBUtilities");
 	public static final Random rand = new Random();
-	
-	public static final boolean isDevEnv = FTBUFinals.VERSION.equals(DEV_VERSION);
 	
 	public static final String FORMATTING = "\u00a7";
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
@@ -54,7 +49,7 @@ public final class LatCoreMC // LatCoreMCClient
 	/** Prints message to chat (doesn't translate it) */
 	public static void printChat(ICommandSender ep, Object o)
 	{
-		if(ep == null && isDevEnv) ep = FTBU.proxy.getClientPlayer();
+		if(ep == null && FTBUFinals.DEV) ep = FTBU.proxy.getClientPlayer();
 		if(ep != null) ep.addChatMessage(getChatComponent(o));
 		else logger.info(o);
 	}

@@ -15,7 +15,7 @@ import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.paint.IPainterItem;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldClient;
-import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.client.minimap.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -86,8 +86,8 @@ public class FTBUClientEventHandler
 			if(FTBUClient.displayDebugInfo.getB())
 				e.left.add(mc.debug);
 			
-			if(LatCoreMC.isDevEnv)
-				e.left.add("[MC " + EnumChatFormatting.GOLD + LatCoreMC.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");
+			if(FTBUFinals.DEV)
+				e.left.add("[MC " + EnumChatFormatting.GOLD + FTBUFinals.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");
 		}
 		
 		if(mc.gameSettings.showDebugInfo)
@@ -127,7 +127,7 @@ public class FTBUClientEventHandler
 	@SubscribeEvent
 	public void keyEvent(InputEvent.KeyInputEvent e)
 	{
-		if(LatCoreMC.isDevEnv && Keyboard.getEventKeyState())
+		if(FTBUFinals.DEV && Keyboard.getEventKeyState())
 		{
 			//LatCoreMC.printChat(null, Keyboard.getKeyName(Keyboard.getEventKey()));
 			

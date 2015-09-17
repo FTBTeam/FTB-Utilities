@@ -2,10 +2,11 @@ package latmod.ftbu.core.block;
 import java.util.*;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.core.*;
+import latmod.ftbu.core.LMMod;
 import latmod.ftbu.core.item.ItemBlockLM;
 import latmod.ftbu.core.tile.TileLM;
 import latmod.ftbu.core.util.FastList;
+import latmod.ftbu.mod.FTBUFinals;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -50,7 +51,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	public final <E> E register() { mod.addBlock(this); return (E)this; }
 	
 	@SuppressWarnings("unchecked")
-	public final <E> E registerDevOnly() { if(LatCoreMC.isDevEnv) mod.addBlock(this); return (E)this; }
+	public final <E> E registerDevOnly() { if(FTBUFinals.DEV) mod.addBlock(this); return (E)this; }
 	
 	public final String getItemID()
 	{ return blockName; }

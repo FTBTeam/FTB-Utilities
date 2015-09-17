@@ -11,6 +11,7 @@ import latmod.ftbu.core.item.IItemLM;
 import latmod.ftbu.core.recipes.LMRecipes;
 import latmod.ftbu.core.tile.TileLM;
 import latmod.ftbu.core.util.*;
+import latmod.ftbu.mod.FTBUFinals;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
@@ -65,7 +66,7 @@ public class LMMod
 		mod.setConfig(c);
 		mod.setRecipes(r);
 		modsMap.put(mod.modID, mod);
-		if(LatCoreMC.isDevEnv) LatCoreMC.logger.info("LMMod '" + mod.toString() + "' loaded");
+		if(FTBUFinals.DEV) LatCoreMC.logger.info("LMMod '" + mod.toString() + "' loaded");
 	}
 	
 	// End of static //
@@ -110,7 +111,7 @@ public class LMMod
 	}
 	
 	public String toFullString()
-	{ return modID + '-' + LatCoreMC.MC_VERSION + '-' + modContainer.getDisplayVersion(); }
+	{ return modID + '-' + FTBUFinals.MC_VERSION + '-' + modContainer.getDisplayVersion(); }
 	
 	public String toString()
 	{ return modID; }

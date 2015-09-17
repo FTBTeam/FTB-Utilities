@@ -10,7 +10,7 @@ import latmod.ftbu.core.cmd.*;
 import latmod.ftbu.core.inv.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.*;
-import latmod.ftbu.mod.FTBUGuiHandler;
+import latmod.ftbu.mod.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -38,7 +38,7 @@ public class CmdAdminPlayer extends CommandLM
 	{
 		checkArgs(args, 1);
 		
-		if(LatCoreMC.isDevEnv && args[0].equals("addfake"))
+		if(FTBUFinals.DEV && args[0].equals("addfake"))
 		{
 			checkArgs(args, 3);
 			
@@ -104,7 +104,7 @@ public class CmdAdminPlayer extends CommandLM
 			}
 			catch(Exception e)
 			{
-				if(LatCoreMC.isDevEnv) e.printStackTrace();
+				if(FTBUFinals.DEV) e.printStackTrace();
 				return error(new ChatComponentText("Failed to save inventory!"));
 			}
 			
@@ -128,7 +128,7 @@ public class CmdAdminPlayer extends CommandLM
 			}
 			catch(Exception e)
 			{
-				if(LatCoreMC.isDevEnv) e.printStackTrace();
+				if(FTBUFinals.DEV) e.printStackTrace();
 				return error(new ChatComponentText("Failed to load inventory!"));
 			}
 			

@@ -18,9 +18,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 @Mod
 (
 		modid = FTBUFinals.MOD_ID,
-		version = FTBUFinals.VERSION,
+		version = FTBUFinals.MOD_VERSION,
 		name = FTBUFinals.MOD_NAME,
-		dependencies = FTBUFinals.DEPENDENCIES
+		dependencies = FTBUFinals.MOD_DEP
 )
 public class FTBU
 {
@@ -36,10 +36,10 @@ public class FTBU
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
-		if(LatCoreMC.isDevEnv)
+		if(FTBUFinals.DEV)
 			LatCoreMC.logger.info("Loading " + FTBUFinals.MOD_NAME + ", Dev Build");
 		else
-			LatCoreMC.logger.info("Loading " + FTBUFinals.MOD_NAME + ", Build #" + FTBUFinals.VERSION);
+			LatCoreMC.logger.info("Loading " + FTBUFinals.MOD_NAME + ", Build #" + FTBUFinals.MOD_VERSION);
 		
 		LatCoreMC.logger.info("OS: " + OS.get());
 		

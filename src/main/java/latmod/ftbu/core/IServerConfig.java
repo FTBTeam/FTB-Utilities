@@ -2,6 +2,7 @@ package latmod.ftbu.core;
 
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.FastMap;
+import latmod.ftbu.mod.FTBUFinals;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -21,7 +22,7 @@ public interface IServerConfig
 			if(i != null && i.getConfigName() != null)
 			{
 				map.put(i.getConfigName(), i);
-				if(LatCoreMC.isDevEnv) LatCoreMC.logger.info("Added IServerConfig '" + i.getConfigName() + "'");
+				if(FTBUFinals.DEV) LatCoreMC.logger.info("Added IServerConfig '" + i.getConfigName() + "'");
 			}
 		}
 		

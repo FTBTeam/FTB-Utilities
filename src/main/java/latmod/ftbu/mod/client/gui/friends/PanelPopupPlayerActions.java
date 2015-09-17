@@ -1,10 +1,10 @@
 package latmod.ftbu.mod.client.gui.friends;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.client.FTBULang;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.world.*;
+import latmod.ftbu.mod.FTBUFinals;
 import latmod.ftbu.mod.client.minimap.Waypoints;
 
 @SideOnly(Side.CLIENT)
@@ -31,7 +31,7 @@ public class PanelPopupPlayerActions extends PanelPopupMenu
 			add(PlayerAction.waypoints, Waypoints.clientConfig.getIDS());
 			add(PlayerAction.minimap, FTBULang.Friends.claimed_chunks());
 			
-			if(LatCoreMC.isDevEnv)
+			if(FTBUFinals.DEV)
 			{
 				add(PlayerAction.notes, "[WIP] " + FTBULang.Friends.notes());
 			}
@@ -41,7 +41,7 @@ public class PanelPopupPlayerActions extends PanelPopupMenu
 			boolean isFriend = LMWorldClient.inst.clientPlayer.isFriendRaw(playerLM);
 			if(!isFriend) add(PlayerAction.friend_add, FTBULang.Friends.button_add_friend());
 			
-			if(LatCoreMC.isDevEnv)
+			if(FTBUFinals.DEV)
 			{
 				add(PlayerAction.mail, "[WIP] " + FTBULang.Friends.mail());
 				add(PlayerAction.trade, "[WIP] " + FTBULang.Friends.trade());

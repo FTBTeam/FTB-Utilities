@@ -7,8 +7,6 @@ import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.ChunkType;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.client.FTBURenderHandler;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
@@ -41,25 +39,24 @@ public class MRenderer
 		tex_area_coords[1][1][1][0] = getAreaCoords(15);
 	}
 	
-	public Minecraft mc;
 	public int renderX, renderY, size, tiles, startX, startY;
 	public float zLevel;
-	public boolean renderClaims, renderGrid, renderPlayers, renderWaypoints, renderAreaTitle;
+	public boolean renderClaims, renderGrid, renderPlayers, renderAreaTitle;
 	
 	public MRenderer()
 	{
-		mc = LatCoreMCClient.getMinecraft();
 		renderClaims = true;
 		renderGrid = true;
 		renderPlayers = true;
-		renderWaypoints = true;
 		renderAreaTitle = false;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public void render()
 	{
-		Minimap m = Minimap.get(mc.thePlayer.dimension);
+		int dimension = LatCoreMCClient.mc.thePlayer.dimension;
+		
+		Minimap m = Minimap.get(dimension);
 		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
@@ -83,7 +80,7 @@ public class MRenderer
 			double dy = renderY + y * tsize;
 			
 			c.area.setTexture();
-			GuiLM.drawTexturedRectD(dx, dy, 0D, tsize, tsize, ux, uy, ux + chunkD, uy + chunkD);
+			GuiLM.drawTexturedRectD(dx, dy, zLevel, tsize, tsize, ux, uy, ux + chunkD, uy + chunkD);
 		}
 		
 		if(renderGrid)
@@ -99,18 +96,18 @@ public class MRenderer
 				double dx = renderX + x * tsize;
 				double dy = renderY + y * tsize;
 				
-				GL11.glVertex2d(dx, dy);
-				GL11.glVertex2d(dx + tsize, dy);
+				GL11.glVertex3d(dx, dy, zLevel);
+				GL11.glVertex3d(dx + tsize, dy, zLevel);
 				
-				GL11.glVertex2d(dx, dy);
-				GL11.glVertex2d(dx, dy + tsize);
+				GL11.glVertex3d(dx, dy, zLevel);
+				GL11.glVertex3d(dx, dy + tsize, zLevel);
 			}
 			
-			GL11.glVertex2d(renderX + size, renderY);
-			GL11.glVertex2d(renderX + size, renderY + size);
+			GL11.glVertex3d(renderX + size, renderY, zLevel);
+			GL11.glVertex3d(renderX + size, renderY + size, zLevel);
 			
-			GL11.glVertex2d(renderX, renderY + size);
-			GL11.glVertex2d(renderX + size, renderY + size);
+			GL11.glVertex3d(renderX, renderY + size, zLevel);
+			GL11.glVertex3d(renderX + size, renderY + size, zLevel);
 			
 			GL11.glEnd();
 			
@@ -145,41 +142,17 @@ public class MRenderer
 			}
 		}
 		
-		if(renderWaypoints && !Waypoints.waypoints.isEmpty())
-		{
-			LatCoreMCClient.setTexture(FTBURenderHandler.texMarker);
-			
-			for(int i = 0; i < Waypoints.waypoints.size(); i++)
-			{
-				Waypoint w = Waypoints.waypoints.get(i);
-				if(w.enabled && w.dim == mc.thePlayer.dimension)
-				{
-					LMColorUtils.setGLColor(w.color, 255);
-					
-					double x = renderX + ((MathHelperLM.chunk(w.posX) - startX) * 16D + MathHelperLM.wrap(w.posX, 16D)) * tsize / 16D;
-					double y = renderY + ((MathHelperLM.chunk(w.posZ) - startY) * 16D + MathHelperLM.wrap(w.posZ, 16D)) * tsize / 16D;
-					
-					if(x < renderX) x = renderX;
-					if(y < renderY) y = renderY;
-					if(x > renderX + size) x = renderX + size;
-					if(y > renderY + size) y = renderY + size;
-					
-					GuiLM.drawTexturedRectD(x - 3.5D, y - 3.5D, zLevel, 8, 8, 0D, 0D, 1D, 1D);
-				}
-			}
-		}
-		
-		if(renderPlayers && !mc.theWorld.playerEntities.isEmpty())
+		if(renderPlayers && !LatCoreMCClient.mc.theWorld.playerEntities.isEmpty())
 		{
 			FastList<EntityPlayer> list = new FastList<EntityPlayer>();
-			list.addAll(mc.theWorld.playerEntities);
+			list.addAll(LatCoreMCClient.mc.theWorld.playerEntities);
 			
 			GL11.glColor4f(1F, 1F, 1F, 0.7F);
 			
 			for(int i = 0; i < list.size(); i++)
 			{
 				EntityPlayer ep = list.get(i);
-				if(ep.dimension == mc.thePlayer.dimension && !ep.isInvisible() && !ep.isSneaking())
+				if(ep.dimension == dimension && !ep.isInvisible() && !ep.isSneaking())
 				{
 					int cx = MathHelperLM.chunk(ep.posX);
 					int cy = MathHelperLM.chunk(ep.posZ);
@@ -206,10 +179,11 @@ public class MRenderer
 		
 		if(renderAreaTitle)
 		{
-			int cx = MathHelperLM.chunk(mc.thePlayer.posX);
-			int cy = MathHelperLM.chunk(mc.thePlayer.posZ);
+			int cx = MathHelperLM.chunk(LatCoreMCClient.mc.thePlayer.posX);
+			int cy = MathHelperLM.chunk(LatCoreMCClient.mc.thePlayer.posZ);
 			ChunkType t = m.getChunkType(cx, cy);
-			mc.fontRenderer.drawString(t.getIDS(), renderX, renderY + size + 3, LMColorUtils.getColorFrom(t.chatColor));
+			String s = t.isClaimed() ? String.valueOf(m.getChunk(cx, cy).owner) : t.getIDS();
+			LatCoreMCClient.mc.fontRenderer.drawString(s, renderX, renderY + size + 3, LMColorUtils.getColorFrom(t.chatColor));
 		}
 		
 		LatCoreMCClient.popMaxBrightness();

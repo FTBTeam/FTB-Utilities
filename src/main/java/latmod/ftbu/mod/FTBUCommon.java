@@ -2,8 +2,6 @@ package latmod.ftbu.mod;
 
 import java.util.UUID;
 
-import com.google.gson.GsonBuilder;
-
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import latmod.ftbu.core.api.readme.ReadmeFile;
 import latmod.ftbu.core.net.*;
@@ -13,7 +11,6 @@ import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.EntityEvent;
 
 public class FTBUCommon // FTBUClient
 {
@@ -26,10 +23,6 @@ public class FTBUCommon // FTBUClient
 	}
 	
 	public void onReadmeEvent(ReadmeFile file)
-	{
-	}
-	
-	public void onGsonEvent(GsonBuilder gb)
 	{
 	}
 	
@@ -61,5 +54,4 @@ public class FTBUCommon // FTBUClient
 	public boolean openClientGui(EntityPlayer ep, String mod, int id, NBTTagCompound data) { return false; }
 	public <M extends MessageLM<?>> void handleClientMessage(IClientMessageLM<M> m, MessageContext ctx) { }
 	public void readTileData(TileLM t, S35PacketUpdateTileEntity p) { }
-	public void clientChunkChanged(EntityEvent.EnteringChunk e) { }
 }

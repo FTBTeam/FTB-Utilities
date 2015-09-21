@@ -29,8 +29,8 @@ public class ThreadReloadChunk extends Thread
 		setDaemon(true);
 		worldObj = w;
 		chunk = c;
-		calcHeight = Minimap.calcHeight.getB();
-		customColors = Minimap.customMapColors.getB();
+		calcHeight = Minimap.mapOptions.calcHeight();
+		customColors = Minimap.mapOptions.customColors();
 		heightMap = calcHeight ? new short[256] : null;
 		if(calcHeight) Arrays.fill(heightMap, defHeight);
 	}
@@ -140,6 +140,7 @@ public class ThreadReloadChunk extends Thread
 		else if(b == Blocks.yellow_flower) return MapColor.yellowColor.colorValue;
 		else if(b == Blocks.lava) return MapColor.adobeColor.colorValue;
 		else if(b == Blocks.end_stone) return MapColor.sandColor.colorValue;
+		else if(b == Blocks.obsidian) return 0xFF150047;
 		
 		int m = worldObj.getBlockMetadata(x, y, z);
 		
@@ -154,6 +155,15 @@ public class ThreadReloadChunk extends Thread
 			else if(m == 6) return MapColor.snowColor.colorValue;
 			else if(m == 7) return MapColor.pinkColor.colorValue;
 			else if(m == 8) return MapColor.silverColor.colorValue;
+		}
+		else if(b == Blocks.planks)
+		{
+			if(m == 0) return 0xFFC69849;
+			else if(m == 1) return 0xFF7C5E2E;
+			else if(m == 2) return 0xFFF2E093;
+			else if(m == 3) return 0xFFC67653;
+			else if(m == 4) return 0xFFE07F3E;
+			else if(m == 5) return 0xFF512D14;
 		}
 		
 		if(customColors)

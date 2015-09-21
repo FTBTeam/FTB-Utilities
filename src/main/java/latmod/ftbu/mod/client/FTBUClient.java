@@ -3,8 +3,6 @@ import java.util.UUID;
 
 import org.lwjgl.input.Keyboard;
 
-import com.google.gson.GsonBuilder;
-
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.*;
@@ -13,11 +11,10 @@ import latmod.ftbu.core.api.readme.*;
 import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.tile.TileLM;
-import latmod.ftbu.core.util.*;
+import latmod.ftbu.core.util.LMColorUtils;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.client.badges.Badge;
-import latmod.ftbu.mod.client.minimap.*;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.EntityReddustFX;
@@ -25,7 +22,6 @@ import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.EntityEvent;
 
 @SideOnly(Side.CLIENT)
 public class FTBUClient extends FTBUCommon
@@ -75,13 +71,10 @@ public class FTBUClient extends FTBUCommon
 	{
 		Badge.init();
 		ClientNotifications.init();
-		Waypoints.load();
-		Minimap.load();
 	}
 	
 	public static void onWorldClosed()
 	{
-		Minimap.save();
 		ClientNotifications.init();
 	}
 	
@@ -93,8 +86,6 @@ public class FTBUClient extends FTBUCommon
 		
 		ClientConfig.Registry.init();
 		initConfig();
-		Waypoints.init();
-		Minimap.init();
 	}
 	
 	public void postInit()
@@ -112,15 +103,10 @@ public class FTBUClient extends FTBUCommon
 		waypoints.add("You can select between Marker and Beacon waypoints, change it's color, title and coords");
 	}
 	
-	public void onGsonEvent(GsonBuilder gb)
-	{
-		gb.registerTypeHierarchyAdapter(Waypoint.class, new Waypoint.Serializer());
-	}
-	
 	public boolean isShiftDown() { return GuiScreen.isShiftKeyDown(); }
 	public boolean isCtrlDown() { return GuiScreen.isCtrlKeyDown(); }
 	public boolean isTabDown() { return Keyboard.isKeyDown(Keyboard.KEY_TAB); }
-	public boolean inGameHasFocus() { return LatCoreMCClient.getMinecraft().inGameHasFocus; }
+	public boolean inGameHasFocus() { return LatCoreMCClient.mc.inGameHasFocus; }
 	
 	public EntityPlayer getClientPlayer()
 	{ return FMLClientHandler.instance().getClientPlayerEntity(); }
@@ -138,7 +124,7 @@ public class FTBUClient extends FTBUCommon
 	{
 		if(ep == null) return 0D;
 		if(ep instanceof EntityPlayerMP) return super.getReachDist(ep);
-		PlayerControllerMP c = LatCoreMCClient.getMinecraft().playerController;
+		PlayerControllerMP c = LatCoreMCClient.mc.playerController;
 		return (c == null) ? 0D : c.getBlockReachDistance();
 	}
 	
@@ -154,7 +140,7 @@ public class FTBUClient extends FTBUCommon
 		
 		fx.setRBGColorF(red, green, blue);
 		fx.setAlphaF(alpha);
-		LatCoreMCClient.getMinecraft().effectRenderer.addEffect(fx);
+		LatCoreMCClient.mc.effectRenderer.addEffect(fx);
 	}
 	
 	public boolean openClientGui(EntityPlayer ep, String mod, int id, NBTTagCompound data)
@@ -167,7 +153,7 @@ public class FTBUClient extends FTBUCommon
 			
 			if(g != null)
 			{
-				LatCoreMCClient.getMinecraft().displayGuiScreen(g);
+				LatCoreMCClient.mc.displayGuiScreen(g);
 				return true;
 			}
 		}
@@ -185,15 +171,5 @@ public class FTBUClient extends FTBUCommon
 		t.readTileClientData(p.func_148857_g());
 		t.onUpdatePacket();
 		LatCoreMCClient.onGuiClientAction();
-	}
-	
-	public void clientChunkChanged(EntityEvent.EnteringChunk e)
-	{
-		if(Minimap.renderIngame.getB() && e.entity.getUniqueID().equals(LMWorldClient.inst.clientPlayer.getUUID()))
-		{
-			int rd = Minimap.zoomA[Minimap.zoom.getI()];
-			Minimap m = Minimap.get(e.entity.dimension);
-			m.reloadArea(e.entity.worldObj, e.newChunkX - MathHelperLM.floor(rd / 2D), e.newChunkZ - MathHelperLM.floor(rd / 2D), rd, rd);
-		}
 	}
 }

@@ -4,7 +4,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.core.client.FTBULang;
+import latmod.ftbu.core.client.*;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.net.*;
 import latmod.ftbu.core.util.*;
@@ -34,25 +34,20 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		ySize = 185;
 		hideNEI = true;
 		
-		mapRenderer.mc = mc;
 		mapRenderer.size = 144;
 		mapRenderer.tiles = 9;
 		mapRenderer.startX = MathHelperLM.chunk(mc.thePlayer.posX) - 4;
 		mapRenderer.startY = MathHelperLM.chunk(mc.thePlayer.posZ) - 4;
 		
 		mapRenderer.renderClaims = true;
-		mapRenderer.renderGrid = Minimap.renderGrid.getB();
+		mapRenderer.renderGrid = Minimap.mapOptions.hasGrid();
 		mapRenderer.renderPlayers = true;
-		mapRenderer.renderWaypoints = true;
 		mapRenderer.renderAreaTitle = false;
-		
-		final String loading = "Loading...";
 		
 		buttonRefresh = new ButtonLM(this, 6, 6, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
-				mapButton.title = loading;
 				Minimap m = Minimap.get(mc.thePlayer.dimension);
 				m.reloadArea(mc.theWorld, mapRenderer.startX, mapRenderer.startY, mapRenderer.tiles, mapRenderer.tiles);
 				gui.playClickSound();
@@ -84,7 +79,6 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		buttonSafe.setItem(new ItemStack(Items.skull, 1, 4));
 		
 		mapButton = new MapButton(this, 6, 26);
-		mapButton.title = loading;
 		
 		buttonRefresh.onButtonPressed(0);
 	}
@@ -130,7 +124,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 						{
 							c.type = ChunkType.CLAIMED_SELF;
 							LMNetHelper.sendToServer(new MessageAreaRequest(cx, cz, mc.thePlayer.dimension, 1));
-							LMNetHelper.sendToServer(new MessageClaimChunk(mapRenderer.mc.thePlayer.dimension, cx, cz, true));
+							LMNetHelper.sendToServer(new MessageClaimChunk(LatCoreMCClient.mc.thePlayer.dimension, cx, cz, true));
 							playClickSound();
 						}
 					}
@@ -140,7 +134,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 						{
 							c.type = ChunkType.WILDERNESS;
 							LMNetHelper.sendToServer(new MessageAreaRequest(cx, cz, mc.thePlayer.dimension, 1));
-							LMNetHelper.sendToServer(new MessageClaimChunk(mapRenderer.mc.thePlayer.dimension, cx, cz, false));
+							LMNetHelper.sendToServer(new MessageClaimChunk(LatCoreMCClient.mc.thePlayer.dimension, cx, cz, false));
 							playClickSound();
 						}
 					}
@@ -206,6 +200,6 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		}
 		
 		public void addMouseOverText(FastList<String> l)
-		{ Minimap.get(mapRenderer.mc.thePlayer.dimension).loadChunk(chunkX(), chunkZ()).getMessage(l, isShiftKeyDown()); }
+		{ Minimap.get(LatCoreMCClient.mc.thePlayer.dimension).loadChunk(chunkX(), chunkZ()).getMessage(l, isShiftKeyDown()); }
 	}
 }

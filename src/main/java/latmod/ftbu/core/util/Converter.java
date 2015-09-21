@@ -85,7 +85,7 @@ public class Converter
 		ai[j] = i[j]; return ai;
 	}
 	
-	public static boolean[] toInts(Boolean[] i)
+	public static boolean[] toBooleans(Boolean[] i)
 	{
 		if(i == null) return null;
 		boolean ai[] = new boolean[i.length];
@@ -93,38 +93,24 @@ public class Converter
 		ai[j] = i[j]; return ai;
 	}
 	
-	public static double[][] to2DArray(double[][][] f, int index, int lvl1size, int lvl2size)
-	{
-		double[][] a = new double[lvl1size][lvl2size];
-		for(int j = 0; j < lvl2size; j++)
-		for(int i = 0; i < lvl1size; i++)
-		a[i][j] = f[index][i][j];
-		return a;
-	}
-	
-	public static double[] to1DArray(double[][] f, int index, int size)
-	{
-		double[] a = new double[size];
-		for(int i = 0; i < size; i++)
-		a[i] = f[index][i];
-		return a;
-	}
-	
-	public static void toBools(boolean[] bools, int[] idx, boolean isTrue)
+	public static void toBools(boolean[] bools, IntList idx, boolean isTrue)
 	{
 		Arrays.fill(bools, !isTrue);
-		for(int i = 0; i < idx.length; i++)
-			bools[idx[i]] = isTrue;
+		for(int i = 0; i < idx.size(); i++)
+			bools[idx.get(i)] = isTrue;
 	}
 	
-	public static int[] fromBools(boolean[] bools, boolean isTrue)
+	public static IntList fromBools(boolean[] bools, boolean isTrue)
 	{
 		IntList il = new IntList();
 		for(int i = 0; i < bools.length; i++)
 			if(bools[i] == isTrue) il.add(i);
-		return il.toArray();
+		return il;
 	}
-
+	
+	public static int toIntDecoded(String s)
+	{ return Integer.decode(s); }
+	
 	public static Integer toInt(String text)
 	{
 		try { int i = Integer.parseInt(text); return i; }

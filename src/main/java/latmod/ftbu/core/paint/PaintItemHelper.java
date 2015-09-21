@@ -2,7 +2,7 @@ package latmod.ftbu.core.paint;
 
 import latmod.ftbu.core.LatCoreMC;
 import latmod.ftbu.core.inv.LMInvUtils;
-import latmod.ftbu.core.util.MathHelperLM;
+import latmod.ftbu.core.util.MathHelperMC;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -43,7 +43,7 @@ public class PaintItemHelper
 			
 			if(ep.capabilities.isCreativeMode || i.canPaintBlock(is))
 			{
-				MovingObjectPosition mop = MathHelperLM.rayTrace(ep);
+				MovingObjectPosition mop = MathHelperMC.rayTrace(ep);
 				
 				Paint p = null;
 				if(paint != null && paint.getItem() != null)

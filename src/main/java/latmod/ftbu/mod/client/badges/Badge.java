@@ -36,6 +36,9 @@ public class Badge
 	public String toString()
 	{ return ID; }
 	
+	public int hashCode()
+	{ return toString().hashCode(); }
+	
 	public boolean equals(Object o)
 	{ return o != null && (o == this || o.toString().equals(toString())); }
 	
@@ -61,7 +64,7 @@ public class Badge
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
-		LatCoreMCClient.getMinecraft().getTextureManager().bindTexture(getTexture());
+		LatCoreMCClient.setTexture(getTexture());
 		
 		if(isGlowing) LatCoreMCClient.pushMaxBrightness();
 		

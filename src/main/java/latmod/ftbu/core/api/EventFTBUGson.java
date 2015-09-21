@@ -8,4 +8,7 @@ public class EventFTBUGson extends EventLM
 	
 	public EventFTBUGson(GsonBuilder b)
 	{ builder = b; }
+	
+	public void add(Class<?> c, Object o)
+	{ builder.registerTypeHierarchyAdapter(c, o); }
 }

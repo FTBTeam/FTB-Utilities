@@ -36,38 +36,25 @@ public class PixelBuffer
 	public int getRGB(int x, int y)
 	{ return pixels[x + y * width]; }
 	
-	public void setRGB(int startX, int startY, int w, int h, int[] rgbArray, int offset, int scansize)
+	public void setRGB(int startX, int startY, int w, int h, int[] rgbArray)
 	{
-		int yoff = offset;
-		int off;
-		
-		for(int y = startY; y < startY + h; y++, yoff += scansize)
-		{
-			off = yoff;
-			
+		int off = -1;
+		for(int y = startY; y < startY + h; y++)
 			for(int x = startX; x < startX + w; x++)
-				setRGB(x, y, rgbArray[off++]);
-		}
+				setRGB(x, y, rgbArray[++off]);
 	}
 	
 	public void setRGB(int startX, int startY, PixelBuffer buffer)
-	{ setRGB(startX, startY, buffer.width, buffer.height, buffer.pixels, 0, buffer.width); }
+	{ setRGB(startX, startY, buffer.width, buffer.height, buffer.pixels); }
 	
-	public int[] getRGB(int startX, int startY, int w, int h, int[] rgbArray, int offset, int scansize)
+	public int[] getRGB(int startX, int startY, int w, int h, int[] rgbArray)
 	{
-		int yoff = offset;
-		int off;
-		
-		if(rgbArray == null || rgbArray.length != w * h) rgbArray = new int[w * h];
-		
-		for(int y = startY; y < startY + h; y++, yoff += scansize)
-		{
-			off = yoff;
-			
+		if(rgbArray == null || rgbArray.length != w * h)
+			rgbArray = new int[w * h];
+		int off = -1;
+		for(int y = startY; y < startY + h; y++)
 			for(int x = startX; x < startX + w; x++)
-				rgbArray[off++] = getRGB(x, y);
-		}
-		
+				rgbArray[++off] = getRGB(x, y);
 		return rgbArray;
 	}
 	
@@ -119,14 +106,14 @@ public class PixelBuffer
 		System.arraycopy(pixels, 0, b.pixels, 0, pixels.length);
 		return b;
 	}
-
+	
 	public PixelBuffer getSubimage(int x, int y, int w, int h)
 	{
 		PixelBuffer b = new PixelBuffer(w, h);
-		getRGB(x, y, w, h, b.pixels, 0, w);
+		getRGB(x, y, w, h, b.pixels);
 		return b;
 	}
-
+	
 	public void addHue(float f)
 	{ LMColorUtils.addHue(pixels, f); }
 }

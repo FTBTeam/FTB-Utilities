@@ -286,7 +286,7 @@ public class LMStringUtils
 	
 	public static String formatInt(int i, int z)
 	{
-		String s0 = "" + i;
+		String s0 = Integer.toString(i);
 		if(z <= 0) return s0;
 		z += 1;
 		
@@ -299,7 +299,7 @@ public class LMStringUtils
 		return s.toString();
 	}
 	
-	public static String getTimeAgo(long millis)
+	public static String getTimeString(long millis)
 	{
 		long secs = millis / 1000L;
 		StringBuilder sb = new StringBuilder();

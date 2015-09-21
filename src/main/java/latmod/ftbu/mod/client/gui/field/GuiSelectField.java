@@ -7,19 +7,15 @@ import latmod.ftbu.core.gui.*;
 @SideOnly(Side.CLIENT)
 public class GuiSelectField extends GuiLM
 {
-	public static final int TYPE_TEXT = 0;
-	public static final int TYPE_INT = 1;
-	public static final int TYPE_FLOAT = 2;
-	
 	public final Object ID;
-	public final int type;
+	public final FieldType type;
 	public final String def;
 	public final IFieldCallback callback;
 	
 	public final ButtonSimpleLM buttonCancel, buttonAccept;
 	public final TextBoxLM textBox;
 	
-	public GuiSelectField(Object id, int typ, String d, IFieldCallback c)
+	public GuiSelectField(Object id, FieldType typ, String d, IFieldCallback c)
 	{
 		super(null, null);
 		hideNEI = true;
@@ -56,12 +52,7 @@ public class GuiSelectField extends GuiLM
 		textBox = new TextBoxLM(this, 2, 2, xSize - 4, 18)
 		{
 			public boolean canAddChar(char c)
-			{
-				if(!super.canAddChar(c)) return false;
-				if(type == TYPE_TEXT) return true;
-				if(c == '.') return type == TYPE_FLOAT;
-				return c == '-' || (c >= '0' && c <= '9');
-			}
+			{ return super.canAddChar(c) && type.isCharValid(c); }
 		};
 		
 		textBox.text = def;

@@ -165,13 +165,7 @@ public class ThreadBackup extends Thread
 	}
 	
 	private static String getDoneTime(long l)
-	{
-		float f = (LMUtils.millis() - l) / 1000F;
-		if(f < 60F) return f + " seconds";
-		int m = (int)(f / 60F);
-		int s = (int)(f - m * 60F);
-		return m + MathHelperLM.getPluralWord(m, " minute and ", " minutes and ") + s + MathHelperLM.getPluralWord(m, " second", " seconds");
-	}
+	{ return LMStringUtils.getTimeString(LMUtils.millis() - l); }
 	
 	private static void appendNum(StringBuilder sb, int num, char c)
 	{

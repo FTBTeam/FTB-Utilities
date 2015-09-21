@@ -105,8 +105,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		FastList<IChatComponent> info = new FastList<IChatComponent>();
 		new LMPlayerServerEvent.CustomInfo(this, info).post();
 		
-		if(lastSeen > 0L) info.add(new ChatComponentTranslation("ftbu:label.last_seen", LMStringUtils.getTimeAgo(ms - lastSeen)));
-		if(firstJoined > 0L) info.add(new ChatComponentTranslation("ftbu:label.joined", LMStringUtils.getTimeAgo(ms - firstJoined)));
+		if(lastSeen > 0L) info.add(new ChatComponentTranslation("ftbu:label.last_seen", LMStringUtils.getTimeString(ms - lastSeen)));
+		if(firstJoined > 0L) info.add(new ChatComponentTranslation("ftbu:label.joined", LMStringUtils.getTimeString(ms - firstJoined)));
 		if(deaths > 0) info.add(new ChatComponentTranslation("ftbu:label.deaths", String.valueOf(deaths)));
 		
 		NBTTagList list = new NBTTagList();

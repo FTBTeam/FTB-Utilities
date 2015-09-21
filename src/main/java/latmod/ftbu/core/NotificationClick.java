@@ -7,7 +7,6 @@ import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMPlayerClient;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraftforge.client.ClientCommandHandler;
 
@@ -60,10 +59,9 @@ public class NotificationClick
 			public void onClicked(String id, byte[] val, Notification n, LMPlayerClient p)
 			{
 				String v = new String(val);
-				Minecraft mc = LatCoreMCClient.getMinecraft();
-				mc.ingameGUI.getChatGUI().addToSentMessages(v);
-		        if(ClientCommandHandler.instance.executeCommand(mc.thePlayer, v) != 0) return;
-		        mc.thePlayer.sendChatMessage(v);
+				LatCoreMCClient.mc.ingameGUI.getChatGUI().addToSentMessages(v);
+		        if(ClientCommandHandler.instance.executeCommand(LatCoreMCClient.mc.thePlayer, v) != 0) return;
+		        LatCoreMCClient. mc.thePlayer.sendChatMessage(v);
 			}
 		}
 		
@@ -73,7 +71,7 @@ public class NotificationClick
 			
 			public void onClicked(String id, byte[] val, Notification n, LMPlayerClient p)
 			{
-				LatCoreMCClient.getMinecraft().displayGuiScreen(new GuiChat(new String(val)));
+				LatCoreMCClient.mc.displayGuiScreen(new GuiChat(new String(val)));
 			}
 		}
 		

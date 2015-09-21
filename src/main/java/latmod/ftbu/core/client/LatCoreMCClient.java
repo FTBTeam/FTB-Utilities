@@ -10,6 +10,7 @@ import cpw.mods.fml.client.registry.*;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.gui.*;
 import latmod.ftbu.core.util.FastMap;
+import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.client.FTBURenderHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -32,6 +33,7 @@ import net.minecraftforge.client.*;
 /** Made by LatvianModder */
 public final class LatCoreMCClient // LatCoreMC
 {
+	public static final Minecraft mc = FMLClientHandler.instance().getClient();
 	public static IIcon blockNullIcon, unknownItemIcon;
 	private static float lastBrightnessX, lastBrightnessY;
 	private static final FastMap<ResourceLocation, Integer> textureMap = new FastMap<ResourceLocation, Integer>();
@@ -39,11 +41,8 @@ public final class LatCoreMCClient // LatCoreMC
 	public static int displayW, displayH;
 	private static final FastMap<String, ResourceLocation> cachedSkins = new FastMap<String, ResourceLocation>();
 	
-	public static Minecraft getMinecraft()
-	{ return FMLClientHandler.instance().getClient(); }
-	
 	public static UUID getUUID()
-	{ return getMinecraft().getSession().func_148256_e().getId(); }
+	{ return mc.getSession().func_148256_e().getId(); }
 	
 	public static void addEntityRenderer(Class<? extends Entity> c, Render r)
 	{ RenderingRegistry.registerEntityRenderingHandler(c, r); }
@@ -67,7 +66,7 @@ public final class LatCoreMCClient // LatCoreMC
 	{ MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(block), i); }
 	
 	public static void spawnPart(EntityFX e)
-	{ Minecraft.getMinecraft().effectRenderer.addEffect(e); }
+	{ mc.effectRenderer.addEffect(e); }
 	
 	public static KeyBinding addKeyBinding(String name, int key, String cat)
 	{ KeyBinding k = new KeyBinding(name, key, cat); ClientRegistry.registerKeyBinding(k); return k; }
@@ -89,7 +88,7 @@ public final class LatCoreMCClient // LatCoreMC
 	{
 		//getMinecraft().getIntegratedServer().getConfigurationManager().playerEntityList
 		
-		World w = getMinecraft().theWorld;
+		World w = mc.theWorld;
 		if(w != null)
 		{
 			EntityPlayer ep = w.func_152378_a(uuid);
@@ -102,7 +101,7 @@ public final class LatCoreMCClient // LatCoreMC
 	
 	public static ThreadDownloadImageData getDownloadImage(ResourceLocation out, String url, ResourceLocation def, IImageBuffer buffer)
 	{
-		TextureManager t = getMinecraft().getTextureManager();
+		TextureManager t = mc.getTextureManager();
 		ThreadDownloadImageData img = (ThreadDownloadImageData)t.getTexture(out);
 		
 		if (img == null)
@@ -146,8 +145,8 @@ public final class LatCoreMCClient // LatCoreMC
 		
 		if(i == null)
 		{
-			getMinecraft().getTextureManager().bindTexture(tex);
-			textureMap.put(tex, i = Integer.valueOf(getMinecraft().getTextureManager().getTexture(tex).getGlTextureId()));
+			mc.getTextureManager().bindTexture(tex);
+			textureMap.put(tex, i = Integer.valueOf(mc.getTextureManager().getTexture(tex).getGlTextureId()));
 		}
 		
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, i.intValue());
@@ -160,14 +159,20 @@ public final class LatCoreMCClient // LatCoreMC
 	}
 	
 	public static void playClickSound()
-	{ LatCoreMCClient.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(clickSound, 1F)); }
+	{ mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(clickSound, 1F)); }
 
 	public static void notifyClient(String ID, Object text, int t)
 	{ ClientNotifications.add(new Notification(ID, LatCoreMC.getChatComponent(text), t)); }
 	
 	public static void onGuiClientAction()
 	{
-		if(getMinecraft().currentScreen instanceof IClientActionGui)
-			((IClientActionGui)getMinecraft().currentScreen).onClientDataChanged();
+		if(mc.currentScreen instanceof IClientActionGui)
+			((IClientActionGui)mc.currentScreen).onClientDataChanged();
 	}
+	
+	public static boolean isPlaying()
+	{ return mc.theWorld != null && mc.thePlayer != null && mc.thePlayer.worldObj != null && LMWorldClient.inst != null; }
+	
+	public static int getDim()
+	{ return isPlaying() ? mc.thePlayer.worldObj.provider.dimensionId : 0; }
 }

@@ -18,11 +18,11 @@ public class ClientNotifications
 {
 	private static Temp current = null;
 	
-	public static void renderTemp(Minecraft mc)
+	public static void renderTemp()
 	{
 		if(current != null)
 		{
-			current.render(mc);
+			current.render();
 			if(current.isDead())
 				current = null;
 		}
@@ -73,12 +73,14 @@ public class ClientNotifications
 		public boolean equals(Object o)
 		{ return notification.equals(o); }
 		
-		public void render(Minecraft mc)
+		public void render()
 		{
 			if(time == -1L) time = Minecraft.getSystemTime();
 			
 			if (time > 0L)
 			{
+				Minecraft mc = LatCoreMCClient.mc;
+				
 				GL11.glViewport(0, 0, mc.displayWidth, mc.displayHeight);
 				GL11.glMatrixMode(GL11.GL_PROJECTION);
 				GL11.glLoadIdentity();
@@ -123,6 +125,7 @@ public class ClientNotifications
 				GL11.glDisable(GL11.GL_LIGHTING);
 				GuiLM.drawRect(i, j, LatCoreMCClient.displayW, j + 32, LMColorUtils.getRGBA(notification.color, 140));
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
+				GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 				
 				int w = is == null ? 10 : 30;
 				
@@ -144,10 +147,8 @@ public class ClientNotifications
 				GL11.glEnable(GL11.GL_LIGHTING);
 				renderItem.renderItemIntoGUI(mc.fontRenderer, mc.getTextureManager(), is, i + 8, j + 8, false);
 				renderItem.renderItemOverlayIntoGUI(mc.fontRenderer, mc.getTextureManager(), is, i + 8, j + 8);
-				//renderItem.renderItemAndEffectIntoGUI(mc.fontRenderer, mc.getTextureManager(), notification.item, i + 8, j + 8);
-				GL11.glDisable(GL11.GL_LIGHTING);
 				GL11.glDepthMask(true);
-				GL11.glEnable(GL11.GL_DEPTH_TEST);
+				GL11.glPopAttrib();
 			}
 		}
 

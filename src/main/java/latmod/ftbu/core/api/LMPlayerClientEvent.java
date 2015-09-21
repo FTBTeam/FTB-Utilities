@@ -54,4 +54,10 @@ public abstract class LMPlayerClientEvent extends LMPlayerEvent
 		public CustomInfo(LMPlayerClient p, FastList<IChatComponent> l)
 		{ super(p); info = l; }
 	}
+	
+	public static class PlayerDied extends LMPlayerClientEvent
+	{
+		public PlayerDied(LMPlayerClient p)
+		{ super(p); }
+	}
 }

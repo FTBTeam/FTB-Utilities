@@ -5,7 +5,6 @@ import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.LMGuiHandler;
 import latmod.ftbu.core.client.LatCoreMCClient;
 import latmod.ftbu.mod.FTBU;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class MessageOpenGui extends MessageLM<MessageOpenGui> implements IClientMessageLM<MessageOpenGui>
@@ -51,9 +50,8 @@ public class MessageOpenGui extends MessageLM<MessageOpenGui> implements IClient
 		
 		if(h != null)
 		{
-			Minecraft mc = LatCoreMCClient.getMinecraft();
-			if(FTBU.proxy.openClientGui(mc.thePlayer, m.modID, m.guiID, data))
-				mc.thePlayer.openContainer.windowId = m.windowID;
+			if(FTBU.proxy.openClientGui(LatCoreMCClient.mc.thePlayer, m.modID, m.guiID, data))
+				LatCoreMCClient.mc.thePlayer.openContainer.windowId = m.windowID;
 		}
 	}
 }

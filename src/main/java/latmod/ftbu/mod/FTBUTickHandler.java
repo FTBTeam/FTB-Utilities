@@ -27,8 +27,7 @@ public class FTBUTickHandler
 	@SubscribeEvent
 	public void onChunkChanged(net.minecraftforge.event.entity.EntityEvent.EnteringChunk e)
 	{
-		if(e.entity.worldObj.isRemote) FTBU.proxy.clientChunkChanged(e);
-		else if(e.entity instanceof EntityPlayerMP)
+		if(!e.entity.worldObj.isRemote && e.entity instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP ep = (EntityPlayerMP)e.entity;
 			LMPlayerServer player = LMWorldServer.inst.getPlayer(ep);

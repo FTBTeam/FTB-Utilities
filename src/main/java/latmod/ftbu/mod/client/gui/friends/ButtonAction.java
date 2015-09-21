@@ -9,15 +9,15 @@ public class ButtonAction extends ButtonPopupMenu
 {
 	public final PlayerAction action;
 	
-	public ButtonAction(PanelPopupPlayerActions p, PlayerAction a, String s)
+	public ButtonAction(PanelPopupPlayerActions p, PlayerAction a)
 	{
-		super(p, GuiIcons.right, s);
+		super(p, GuiIcons.right, a.getTitle());
 		action = a;
 		object = action;
 	}
 	
 	public TextureCoords getIcon()
-	{ return action.getIcon((GuiFriends)parentPanel.gui); }
+	{ return action.icon; }
 	
 	public void addMouseOverText(FastList<String> l)
 	{ action.addMouseOverText(l); }

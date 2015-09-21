@@ -29,7 +29,9 @@ public class FTBUGuiEventHandler
 	@SubscribeEvent
 	public void guiInitEvent(final GuiScreenEvent.InitGuiEvent.Post e)
 	{
-		if(e.gui instanceof GuiOptions && LatCoreMCClient.getMinecraft().thePlayer != null)
+		if(!LatCoreMCClient.isPlaying()) return;
+		
+		if(e.gui instanceof GuiOptions)
 		{
 			if(FTBUClient.optionsButton.getB())
 				e.buttonList.add(new GuiButton(SETTINGS_BUTTON_ID, e.gui.width / 2 - 155, e.gui.height / 6 + 48 - 6, 150, 20, "[FTBU] " + FTBULang.client_config()));
@@ -40,7 +42,6 @@ public class FTBUGuiEventHandler
 			
 			int xSize = 176;
 			int ySize = 166;
-			
 			int buttonX = -17;
 			int buttonY = 8;
 			
@@ -48,9 +49,11 @@ public class FTBUGuiEventHandler
 			{
 				xSize = 195;
 				ySize = 136;
-				
 				buttonY = 6;
 			}
+			
+			if(!e.gui.mc.thePlayer.getActivePotionEffects().isEmpty())
+			{ buttonX -= 4; buttonY -= 26; }
 			
 			int guiLeft = (e.gui.width - xSize) / 2;
 			int guiTop = (e.gui.height - ySize) / 2;

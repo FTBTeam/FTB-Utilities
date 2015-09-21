@@ -1,5 +1,7 @@
 package latmod.ftbu.mod.client.gui.friends;
 
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.world.*;
 import net.minecraft.client.Minecraft;
@@ -20,6 +22,7 @@ public class Player extends AbstractClientPlayer
 		super(Minecraft.getMinecraft().theWorld, p.gameProfile);
 		playerLM = p;
 		isOwner = playerLM.playerID == LMWorldClient.inst.clientPlayerID;
+		func_152121_a(MinecraftProfileTexture.Type.CAPE, null);
 	}
 	
 	public boolean equals(Object o)

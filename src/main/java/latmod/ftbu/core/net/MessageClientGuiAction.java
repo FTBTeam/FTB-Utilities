@@ -14,6 +14,7 @@ public class MessageClientGuiAction extends MessageLM<MessageClientGuiAction>
 	public static final int ACTION_SET_SAFE_CHUNKS = 4;
 	public static final int ACTION_CHAT_LINKS = 5;
 	public static final int ACTION_CHUNK_MESSAGES = 6;
+	//FIXME: public static final int ACTION_MY_BADGE = 7;
 	
 	public int action;
 	public int extra;
@@ -43,12 +44,20 @@ public class MessageClientGuiAction extends MessageLM<MessageClientGuiAction>
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
 		LMPlayerServer owner = LMWorldServer.inst.getPlayer(ep);
 		
-		if(m.action == ACTION_ADD_FRIEND || m.action == ACTION_REM_FRIEND || m.action == ACTION_DENY_FRIEND)
+		if(onAction(m.action, m.extra, ep, owner))
+			owner.sendUpdate(true);
+		
+		return null;
+	}
+	
+	public boolean onAction(int a, int e, EntityPlayerMP ep, LMPlayerServer owner)
+	{
+		if(a == ACTION_ADD_FRIEND || a == ACTION_REM_FRIEND || a == ACTION_DENY_FRIEND)
 		{
-			LMPlayerServer p = LMWorldServer.inst.getPlayer(m.extra);
-			if(p == null || p.equalsPlayer(owner)) return null;
+			LMPlayerServer p = LMWorldServer.inst.getPlayer(e);
+			if(p == null || p.equalsPlayer(owner)) return false;
 			
-			if(m.action == ACTION_ADD_FRIEND)
+			if(a == ACTION_ADD_FRIEND)
 			{
 				if(!owner.friends.contains(p.playerID))
 				{
@@ -58,14 +67,14 @@ public class MessageClientGuiAction extends MessageLM<MessageClientGuiAction>
 					
 					if(p.isOnline())
 					{
-						Notification n = new Notification("friend_request", LatCoreMC.setColor(EnumChatFormatting.GREEN, new ChatComponentText("New friend request from " + owner.getName() + "!")), 2000);
+						Notification n = new Notification("friend_request", LatCoreMC.setColor(EnumChatFormatting.GREEN, new ChatComponentText("New friend request from " + owner.getName() + "!")), 4000);
 						n.setDesc(new ChatComponentText("Click to add as friend"));
 						n.setClickEvent(new NotificationClick(NotificationClick.CMD, "/ftbu friends add " + owner.getName()));
 						LatCoreMC.notifyPlayer(p.getPlayer(), n);
 					}
 				}
 			}
-			else if(m.action == ACTION_REM_FRIEND)
+			else if(a == ACTION_REM_FRIEND)
 			{
 				if(owner.friends.contains(p.playerID))
 				{
@@ -77,7 +86,7 @@ public class MessageClientGuiAction extends MessageLM<MessageClientGuiAction>
 					LatCoreMC.notifyPlayer(ep, n);
 				}
 			}
-			else if(m.action == ACTION_DENY_FRIEND)
+			else if(a == ACTION_DENY_FRIEND)
 			{
 				if(p.friends.contains(owner.playerID))
 				{
@@ -91,22 +100,22 @@ public class MessageClientGuiAction extends MessageLM<MessageClientGuiAction>
 				}
 			}
 		}
-		else if(m.action == ACTION_SET_SAFE_CHUNKS)
+		else if(a == ACTION_SET_SAFE_CHUNKS)
 		{
-			owner.claims.settings.setSafe(owner, m.extra == 1);
-			owner.sendUpdate(true);
+			owner.claims.settings.setSafe(owner, e == 1);
+			return true;
 		}
-		else if(m.action == ACTION_CHAT_LINKS)
+		else if(a == ACTION_CHAT_LINKS)
 		{
-			owner.chatLinks = (m.extra == 1);
-			owner.sendUpdate(true);
+			owner.chatLinks = (e == 1);
+			return true;
 		}
-		else if(m.action == ACTION_CHUNK_MESSAGES)
+		else if(a == ACTION_CHUNK_MESSAGES)
 		{
-			owner.chunkMessages = m.extra;
-			owner.sendUpdate(true);
+			owner.chunkMessages = e;
+			return true;
 		}
 		
-		return null;
+		return false;
 	}
 }

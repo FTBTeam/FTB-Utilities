@@ -38,8 +38,8 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	public GuiLM(ContainerLM c, ResourceLocation tex)
 	{
-		super((c == null) ? new ContainerEmpty(LatCoreMCClient.getMinecraft().thePlayer, null) : c);
-		mc = LatCoreMCClient.getMinecraft();
+		super((c == null) ? new ContainerEmpty(LatCoreMCClient.mc.thePlayer, null) : c);
+		mc = LatCoreMCClient.mc;
 		mainPanel = new PanelLM(this, 0, 0, 0, 0)
 		{
 			public void addWidgets()

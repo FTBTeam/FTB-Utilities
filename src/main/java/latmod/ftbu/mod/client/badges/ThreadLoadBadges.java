@@ -1,5 +1,6 @@
 package latmod.ftbu.mod.client.badges;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.UUID;
 
@@ -11,6 +12,9 @@ import latmod.ftbu.mod.config.FTBUConfig;
 @SideOnly(Side.CLIENT)
 public class ThreadLoadBadges extends Thread
 {
+	public static final String DEF_BADGES = "http://pastebin.com/raw.php?i=KWGvviPR";
+	private static final FastMap<String, Badge> urlBadges = new FastMap<String, Badge>();
+	
 	public static void init()
 	{ new ThreadLoadBadges().start(); }
 	
@@ -23,18 +27,31 @@ public class ThreadLoadBadges extends Thread
 	public void run()
 	{
 		long msStarted = LMUtils.millis();
-		String url = FTBUConfig.login.customBadges;
 		Badge.isReloading = true;
+		urlBadges.clear();
 		
 		LatCoreMC.logger.info("Loading badges...");
 		Badge.init();
-		FastMap<String, Badge> urlBadges = new FastMap<String, Badge>();
 		
-		if(!url.isEmpty()) try
+		int loaded = loadBages(DEF_BADGES);
+		
+		if(!FTBUConfig.login.customBadges.isEmpty())
+			loaded += loadBages(FTBUConfig.login.customBadges);
+		
+		LatCoreMC.logger.info("Loaded badges for " + loaded + " players in " + ((LMUtils.millis() - msStarted) / 1000F) + " ms!");
+		
+		Badge.isReloading = false;
+	}
+	
+	public int loadBages(String url)
+	{
+		int loaded = 0;
+		
+		try
 		{
-			int loaded = 0;
+			InputStream is = new URL(url).openStream();
+			String raw = LMStringUtils.toString(is).trim();
 			
-			String raw = LMStringUtils.toString(new URL(url).openStream()).trim();
 			Badges list = LMJsonUtils.fromJson(LMJsonUtils.formatJson(raw, false), Badges.class);
 			
 			for(String k : list.badges.keySet())
@@ -50,15 +67,9 @@ public class ThreadLoadBadges extends Thread
 					loaded++;
 				}
 			}
-			
-			LatCoreMC.logger.info("Loaded badges for " + loaded + MathHelperLM.getPluralWord(loaded, " player ", " players ") + "from " + url + " in " + ((LMUtils.millis() - msStarted) / 1000F) + " ms!");
 		}
-		catch(Exception ex)
-		{
-			//ex.printStackTrace();
-			LatCoreMC.logger.warn("Badges failed to load! (" + url + ")");
-		}
+		catch(Exception e) { }
 		
-		Badge.isReloading = false;
+		return loaded;
 	}
 }

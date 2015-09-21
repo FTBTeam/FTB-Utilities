@@ -8,9 +8,11 @@ import javax.imageio.ImageIO;
 
 import org.lwjgl.opengl.*;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.util.*;
 import latmod.ftbu.core.world.LMWorldClient;
 
+@SideOnly(Side.CLIENT)
 public class MArea
 {
 	public static final int size_c = 32;
@@ -75,7 +77,7 @@ public class MArea
 		
 		if(pixelBuffer != null)
 		{
-			int filter = Minimap.blur.getB() ? GL11.GL_LINEAR : GL11.GL_NEAREST;
+			int filter = Minimap.mapOptions.hasBlur() ? GL11.GL_LINEAR : GL11.GL_NEAREST;
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, filter);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, filter);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
@@ -93,7 +95,7 @@ public class MArea
 		for(int i = 0; i < chunks.values.size(); i++)
 		{
 			MChunk c = chunks.values.get(i);
-			image.setRGB(c.rposX * 16, c.rposY * 16, 16, 16, c.pixels, 0, 16);
+			image.setRGB(c.rposX * 16, c.rposY * 16, 16, 16, c.pixels);
 		}
 		
 		return image;
@@ -137,7 +139,7 @@ public class MArea
 			thread.start();
 		}
 	}
-
+	
 	public void save()
 	{
 		Thread thread = new Thread()

@@ -10,7 +10,6 @@ import com.google.gson.reflect.TypeToken;
 import latmod.ftbu.core.*;
 import latmod.ftbu.core.api.EventFTBUGson;
 import latmod.ftbu.core.inv.ItemStackSerializer;
-import latmod.ftbu.mod.FTBU;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 
@@ -34,13 +33,8 @@ public class LMJsonUtils
 		gb.registerTypeHierarchyAdapter(UUID.class, new UUIDSerializer());
 		gb.registerTypeHierarchyAdapter(Notification.class, new Notification.Serializer());
 		
-		try
-		{
-			FTBU.proxy.onGsonEvent(gb);
-			new EventFTBUGson(gb).post();
-		}
-		catch(Exception e)
-		{ e.printStackTrace(); }
+		try { new EventFTBUGson(gb).post(); }
+		catch(Exception e) { e.printStackTrace(); }
 		
 		gson = gb.create();
 		gb.setPrettyPrinting();

@@ -29,13 +29,6 @@ public class GuiSelectColorRGB extends GuiLM
 	public final ButtonLM colorInit, colorCurrent, switchHSB;
 	public final SliderLM currentColR, currentColG, currentColB;
 	
-	public static void displayGui(IColorCallback cb, int col, int id, boolean instant)
-	{
-		if(FTBUClient.openHSB.getB())
-			LatCoreMCClient.getMinecraft().displayGuiScreen(new GuiSelectColorHSB(cb, col, id, instant));
-		else LatCoreMCClient.getMinecraft().displayGuiScreen(new GuiSelectColorRGB(cb, col, id, instant));
-	}
-	
 	public GuiSelectColorRGB(IColorCallback cb, int col, Object id, boolean instant)
 	{
 		super(null, tex);

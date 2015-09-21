@@ -1,11 +1,11 @@
 package latmod.ftbu.mod.client.gui.friends;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.core.client.FTBULang;
+import latmod.ftbu.core.api.EventPlayerAction;
 import latmod.ftbu.core.gui.*;
+import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBUFinals;
-import latmod.ftbu.mod.client.minimap.Waypoints;
 
 @SideOnly(Side.CLIENT)
 public class PanelPopupPlayerActions extends PanelPopupMenu
@@ -20,37 +20,41 @@ public class PanelPopupPlayerActions extends PanelPopupMenu
 		playerLM = p;
 	}
 	
-	public void add(PlayerAction a, String s)
-	{ if(a != null) menuButtons.add(new ButtonAction(this, a, s)); }
+	public void add(PlayerAction a)
+	{ }
 	
 	public void addItems()
 	{
+		FastList<PlayerAction> list = new FastList<PlayerAction>();
+		
 		if(playerLM.equalsPlayer(LMWorldClient.inst.clientPlayer))
 		{
-			add(PlayerAction.settings, FTBULang.client_config());
-			add(PlayerAction.waypoints, Waypoints.clientConfig.getIDS());
-			add(PlayerAction.minimap, FTBULang.Friends.claimed_chunks());
+			list.add(PlayerAction.settings);
+			list.add(PlayerAction.minimap);
 			
 			if(FTBUFinals.DEV)
 			{
-				add(PlayerAction.notes, "[WIP] " + FTBULang.Friends.notes());
+				list.add(PlayerAction.notes);
 			}
 		}
 		else
 		{
 			boolean isFriend = LMWorldClient.inst.clientPlayer.isFriendRaw(playerLM);
-			if(!isFriend) add(PlayerAction.friend_add, FTBULang.Friends.button_add_friend());
+			if(!isFriend) list.add(PlayerAction.friend_add);
 			
 			if(FTBUFinals.DEV)
 			{
-				add(PlayerAction.mail, "[WIP] " + FTBULang.Friends.mail());
-				add(PlayerAction.trade, "[WIP] " + FTBULang.Friends.trade());
+				list.add(PlayerAction.mail);
+				list.add(PlayerAction.trade);
 			}
 			
-			if(isFriend) add(PlayerAction.friend_remove, FTBULang.Friends.button_rem_friend());
+			if(isFriend) list.add(PlayerAction.friend_remove);
 			else if(playerLM.isFriendRaw(LMWorldClient.inst.clientPlayer))
-				add(PlayerAction.friend_deny, FTBULang.Friends.button_deny_friend());
+				list.add(PlayerAction.friend_deny);
 		}
+		
+		new EventPlayerAction(list, playerLM).post();
+		for(PlayerAction pa : list) menuButtons.add(new ButtonAction(this, pa));
 	}
 	
 	public void onClosed(ButtonPopupMenu b, int mb)

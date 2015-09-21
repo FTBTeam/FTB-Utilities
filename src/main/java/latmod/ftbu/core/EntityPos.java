@@ -55,8 +55,8 @@ public class EntityPos
 	public ChunkCoordinates toChunkCoordinates()
 	{ return new ChunkCoordinates(intX(), intY(), intZ()); }
 	
-	public Vertex toVertex()
-	{ return new Vertex(x, y, z); }
+	public VecLM toVertex()
+	{ return new VecLM(x, y, z); }
 	
 	public int[] toIntArray()
 	{ return new int[] { intX(), intY(), intZ(), dim }; }

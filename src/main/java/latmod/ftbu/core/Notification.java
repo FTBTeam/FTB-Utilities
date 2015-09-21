@@ -140,7 +140,7 @@ public class Notification
 			Notification n = new Notification(o.get("id").getAsString(), t, l);
 			
 			if(o.has("desc")) n.setDesc((IChatComponent)context.deserialize(o.get("desc"), IChatComponent.class));
-			if(o.has("color")) n.setColor(MathHelperLM.toIntDecoded(o.get("color").getAsString()));
+			if(o.has("color")) n.setColor(Converter.toIntDecoded(o.get("color").getAsString()));
 			if(o.has("item")) n.setItem((ItemStack)context.deserialize(o.get("item"), ItemStack.class));
 			if(o.has("click"))
 			{

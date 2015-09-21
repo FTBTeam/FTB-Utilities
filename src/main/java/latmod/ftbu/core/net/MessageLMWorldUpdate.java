@@ -5,6 +5,7 @@ import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.core.LatCoreMC;
+import latmod.ftbu.core.api.LMClientWorldJoinedEvent;
 import latmod.ftbu.core.world.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
@@ -51,5 +52,6 @@ public class MessageLMWorldUpdate extends MessageLM<MessageLMWorldUpdate> implem
 		LMWorldClient.inst.readPlayersFromNet(m.players);
 		LatCoreMC.logger.info("Joined the server with PlayerID " + LMWorldClient.inst.clientPlayer.playerID + " on world " + LMWorldClient.inst.worldIDS);
 		FTBUClient.onWorldJoined();
+		new LMClientWorldJoinedEvent().post();
 	}
 }

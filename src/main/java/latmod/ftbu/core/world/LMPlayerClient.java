@@ -28,6 +28,7 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 		claimSettings = new ClaimSettings();
 		skinLocation = null;
 		isOnline = false;
+		renderBadge = true;
 	}
 	
 	public ResourceLocation getSkin()
@@ -78,6 +79,7 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 			chunkMessages = tag.getByte("CM");
 			claimSettings.readFromNBT(tag.getCompoundTag("SC"));
 			Mail.readFromNBT(this, tag, "Mail");
+			renderBadge = tag.getBoolean("B");
 		}
 	}
 	

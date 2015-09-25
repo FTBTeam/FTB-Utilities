@@ -17,25 +17,23 @@ public class LMNetHelper
 	
 	public static void init()
 	{
-		NET.registerMessage(MessageLMWorldUpdate.class, MessageLMWorldUpdate.class, 0, Side.CLIENT);
-		NET.registerMessage(MessageLMPlayerUpdate.class, MessageLMPlayerUpdate.class, 1, Side.CLIENT);
-		//NET.registerMessage(MessageCustomNetDataFromClient.class, MessageCustomNetDataFromClient.class, 2, Side.SERVER);
-		//NET.registerMessage(MessageCustomNetDataFromServer.class, MessageCustomNetDataFromServer.class, 3, Side.CLIENT);
-		NET.registerMessage(MessageClientTileAction.class, MessageClientTileAction.class, 4, Side.SERVER);
-		NET.registerMessage(MessageLMPlayerDied.class, MessageLMPlayerDied.class, 5, Side.CLIENT);
-		NET.registerMessage(MessageReload.class, MessageReload.class, 6, Side.CLIENT);
-		NET.registerMessage(MessageNotifyPlayer.class, MessageNotifyPlayer.class, 7, Side.CLIENT);
-		NET.registerMessage(MessageClientGuiAction.class, MessageClientGuiAction.class, 8, Side.SERVER);
-		NET.registerMessage(MessageClientItemAction.class, MessageClientItemAction.class, 9, Side.SERVER);
-		NET.registerMessage(MessageLMPlayerLoggedIn.class, MessageLMPlayerLoggedIn.class, 10, Side.CLIENT);
-		NET.registerMessage(MessageLMPlayerLoggedOut.class, MessageLMPlayerLoggedOut.class, 11, Side.CLIENT);
-		NET.registerMessage(MessageOpenGui.class, MessageOpenGui.class, 12, Side.CLIENT);
-		NET.registerMessage(MessageLMPlayerInfo.class, MessageLMPlayerInfo.class, 13, Side.CLIENT);
-		NET.registerMessage(MessageLMPlayerRequestInfo.class, MessageLMPlayerRequestInfo.class, 14, Side.SERVER);
-		NET.registerMessage(MessageUpdateConfig.class, MessageUpdateConfig.class, 15, Side.CLIENT);
-		NET.registerMessage(MessageAreaRequest.class, MessageAreaRequest.class, 16, Side.SERVER);
-		NET.registerMessage(MessageAreaUpdate.class, MessageAreaUpdate.class, 17, Side.CLIENT);
-		NET.registerMessage(MessageClaimChunk.class, MessageClaimChunk.class, 18, Side.SERVER);
+		int ID = 0;
+		NET.registerMessage(MessageLMWorldUpdate.class, MessageLMWorldUpdate.class, ++ID, Side.CLIENT);
+		NET.registerMessage(MessageLMPlayerUpdate.class, MessageLMPlayerUpdate.class, ++ID, Side.CLIENT);
+		NET.registerMessage(MessageClientAction.class, MessageClientAction.class, ++ID, Side.SERVER);
+		NET.registerMessage(MessageOpenGui.class, MessageOpenGui.class, ++ID, Side.CLIENT);
+		NET.registerMessage(MessageReload.class, MessageReload.class, ++ID, Side.CLIENT);
+		NET.registerMessage(MessageClientTileAction.class, MessageClientTileAction.class, ++ID, Side.SERVER);
+		NET.registerMessage(MessageClientItemAction.class, MessageClientItemAction.class, ++ID, Side.SERVER);
+		NET.registerMessage(MessageLMPlayerDied.class, MessageLMPlayerDied.class, ++ID, Side.CLIENT);
+		NET.registerMessage(MessageNotifyPlayer.class, MessageNotifyPlayer.class, ++ID, Side.CLIENT);
+		NET.registerMessage(MessageLMPlayerLoggedIn.class, MessageLMPlayerLoggedIn.class, ++ID, Side.CLIENT);
+		NET.registerMessage(MessageLMPlayerLoggedOut.class, MessageLMPlayerLoggedOut.class, ++ID, Side.CLIENT);
+		NET.registerMessage(MessageLMPlayerInfo.class, MessageLMPlayerInfo.class, ++ID, Side.CLIENT);
+		NET.registerMessage(MessageUpdateConfig.class, MessageUpdateConfig.class, ++ID, Side.CLIENT);
+		NET.registerMessage(MessageAreaRequest.class, MessageAreaRequest.class, ++ID, Side.SERVER);
+		NET.registerMessage(MessageAreaUpdate.class, MessageAreaUpdate.class, ++ID, Side.CLIENT);
+		NET.registerMessage(MessageClaimChunk.class, MessageClaimChunk.class, ++ID, Side.SERVER);
 	}
 	
 	public static SimpleNetworkWrapper newChannel(String s)

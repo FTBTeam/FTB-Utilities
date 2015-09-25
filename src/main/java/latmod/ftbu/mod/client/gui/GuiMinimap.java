@@ -72,7 +72,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 			public void onButtonPressed(int b)
 			{
 				gui.playClickSound();
-				LMNetHelper.sendToServer(new MessageClientGuiAction(MessageClientGuiAction.ACTION_SET_SAFE_CHUNKS, LMWorldClient.inst.clientPlayer.claimSettings.isSafe() ? 0 : 1));
+				ClientAction.ACTION_SET_SAFE_CHUNKS.send(LMWorldClient.inst.clientPlayer.claimSettings.isSafe() ? 0 : 1);
 			}
 		};
 		

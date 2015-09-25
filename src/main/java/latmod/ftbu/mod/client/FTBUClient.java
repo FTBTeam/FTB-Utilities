@@ -44,7 +44,7 @@ public class FTBUClient extends FTBUCommon
 		{
 			LMWorldClient.inst.clientPlayer.chatLinks = !LMWorldClient.inst.clientPlayer.chatLinks;
 			setValue(LMWorldClient.inst.clientPlayer.chatLinks ? 1 : 0);
-			LMNetHelper.sendToServer(new MessageClientGuiAction(MessageClientGuiAction.ACTION_CHAT_LINKS, LMWorldClient.inst.clientPlayer.chatLinks ? 1 : 0));
+			ClientAction.ACTION_CHAT_LINKS.send(LMWorldClient.inst.clientPlayer.chatLinks ? 1 : 0);
 		}
 	};
 	

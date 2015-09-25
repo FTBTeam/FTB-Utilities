@@ -4,7 +4,7 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.core.gui.*;
-import latmod.ftbu.core.net.*;
+import latmod.ftbu.core.net.ClientAction;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.core.world.*;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -29,7 +29,7 @@ public class ButtonPlayer extends ButtonLM
 			panel.gui.panelPlayerView.selectedPlayer = new Player(player.playerLM);
 			panel.gui.panelPlayerView.selectedPlayer.func_152121_a(MinecraftProfileTexture.Type.SKIN, AbstractClientPlayer.getLocationSkin(player.playerLM.getName()));
 			panel.gui.panelPlayerView.selectedPlayer.inventory.currentItem = 0;
-			LMNetHelper.sendToServer(new MessageLMPlayerRequestInfo(player.playerLM.playerID));
+			ClientAction.ACTION_REQUEST_PLAYER_INFO.send(player.playerLM.playerID);
 			if(b != 0) panel.gui.panelPopupMenu = new PanelPopupPlayerActions((GuiFriends)gui, gui.mouseX - gui.mainPanel.getAX() + 3, gui.mouseY - gui.mainPanel.getAY() - 3, player.playerLM);
 		}
 		

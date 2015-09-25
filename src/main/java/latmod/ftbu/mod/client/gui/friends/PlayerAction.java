@@ -2,7 +2,7 @@ package latmod.ftbu.mod.client.gui.friends;
 
 import latmod.ftbu.core.client.FTBULang;
 import latmod.ftbu.core.gui.*;
-import latmod.ftbu.core.net.*;
+import latmod.ftbu.core.net.ClientAction;
 import latmod.ftbu.core.util.FastList;
 import latmod.ftbu.mod.client.gui.*;
 
@@ -52,7 +52,7 @@ public abstract class PlayerAction
 	public static final PlayerAction friend_add = new PlayerAction(GuiIcons.add)
 	{
 		public void onClicked(GuiFriends g)
-		{ LMNetHelper.sendToServer(new MessageClientGuiAction(MessageClientGuiAction.ACTION_ADD_FRIEND, g.panelPlayerView.selectedPlayer.playerLM.playerID)); }
+		{ ClientAction.ACTION_ADD_FRIEND.send(g.panelPlayerView.selectedPlayer.playerLM.playerID); }
 		
 		public String getTitle()
 		{ return FTBULang.Friends.button_add_friend(); }
@@ -61,7 +61,7 @@ public abstract class PlayerAction
 	public static final PlayerAction friend_remove = new PlayerAction(GuiIcons.remove)
 	{
 		public void onClicked(GuiFriends g)
-		{ LMNetHelper.sendToServer(new MessageClientGuiAction(MessageClientGuiAction.ACTION_REM_FRIEND, g.panelPlayerView.selectedPlayer.playerLM.playerID)); }
+		{ ClientAction.ACTION_REM_FRIEND.send(g.panelPlayerView.selectedPlayer.playerLM.playerID); }
 		
 		public String getTitle()
 		{ return FTBULang.Friends.button_rem_friend(); }
@@ -70,7 +70,7 @@ public abstract class PlayerAction
 	public static final PlayerAction friend_deny = new PlayerAction(GuiIcons.remove)
 	{
 		public void onClicked(GuiFriends g)
-		{ LMNetHelper.sendToServer(new MessageClientGuiAction(MessageClientGuiAction.ACTION_DENY_FRIEND, g.panelPlayerView.selectedPlayer.playerLM.playerID)); }
+		{ ClientAction.ACTION_DENY_FRIEND.send(g.panelPlayerView.selectedPlayer.playerLM.playerID); }
 		
 		public String getTitle()
 		{ return FTBULang.Friends.button_deny_friend(); }

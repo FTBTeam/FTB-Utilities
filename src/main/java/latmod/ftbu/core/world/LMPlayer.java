@@ -32,6 +32,7 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 	public long firstJoined;
 	public boolean chatLinks;
 	public int chunkMessages;
+	public boolean renderBadge;
 	
 	public LMPlayer(LMWorld<?> w, int i, GameProfile gp)
 	{

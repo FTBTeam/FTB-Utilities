@@ -152,6 +152,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		chunkMessages = tag.hasKey("ChunkMessages") ? tag.getByte("ChunkMessages") : 1;
 		
 		Mail.readFromNBT(this, tag, "Mail");
+		
+		renderBadge = tag.getBoolean("RenderBadge");
 	}
 	
 	public void writeToServer(NBTTagCompound tag)
@@ -191,6 +193,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		tag.setByte("ChunkMessages", (byte)chunkMessages);
 		
 		Mail.writeToNBT(this, tag, "Mail");
+		
+		tag.setBoolean("RenderBadge", renderBadge);
 	}
 	
 	public void writeToNet(NBTTagCompound tag, boolean self)
@@ -219,6 +223,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			if(chunkMessages != 0) tag.setByte("CM", (byte)chunkMessages);
 			
 			Mail.writeToNBT(this, tag, "Mail");
+			tag.setBoolean("B", renderBadge);
 		}
 	}
 	

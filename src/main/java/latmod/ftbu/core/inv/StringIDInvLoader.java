@@ -7,7 +7,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
 
-public class StringIDInvLoader // FIXME
+public class StringIDInvLoader
 {
 	public static void readItemsFromNBT(ItemStack[] items, NBTTagCompound tag, String s)
 	{

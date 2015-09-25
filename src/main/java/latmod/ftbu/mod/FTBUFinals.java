@@ -11,4 +11,5 @@ public class FTBUFinals // FTBU
 	
 	public static final boolean DEV = MOD_VERSION.indexOf('@') != -1;
 	public static final String MC_VERSION = Loader.MC_VERSION;
+	public static final String MOD_VERSION_DISPLAY = DEV ? "Dev" : MOD_VERSION;
 }

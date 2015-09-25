@@ -4,12 +4,12 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.core.client.*;
-import latmod.ftbu.core.gui.GuiLM;
-import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.GuiClientConfig;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
+import latmod.ftbu.util.client.*;
+import latmod.ftbu.util.gui.GuiLM;
+import latmod.ftbu.world.LMWorldClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.*;

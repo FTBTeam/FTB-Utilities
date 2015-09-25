@@ -6,15 +6,15 @@ import org.lwjgl.input.Keyboard;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.core.*;
-import latmod.ftbu.core.api.readme.*;
-import latmod.ftbu.core.client.*;
-import latmod.ftbu.core.net.*;
-import latmod.ftbu.core.tile.TileLM;
-import latmod.ftbu.core.util.LMColorUtils;
-import latmod.ftbu.core.world.*;
+import latmod.core.util.LMColorUtils;
+import latmod.ftbu.api.readme.*;
+import latmod.ftbu.badges.*;
 import latmod.ftbu.mod.*;
-import latmod.ftbu.mod.client.badges.Badge;
+import latmod.ftbu.net.*;
+import latmod.ftbu.tile.TileLM;
+import latmod.ftbu.util.*;
+import latmod.ftbu.util.client.*;
+import latmod.ftbu.world.*;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.EntityReddustFX;
@@ -28,6 +28,22 @@ public class FTBUClient extends FTBUCommon
 {
 	public static final ClientConfig clientConfig = new ClientConfig("ftbu");
 	public static final ClientConfig.Property enablePlayerDecorators = new ClientConfig.Property("player_decorators", true);
+	
+	public static final ClientConfig.Property enableMyPlayerDecorators = new ClientConfig.Property("player_decorators_self", true)
+	{
+		public void initGui()
+		{
+			setValue(LMWorldClient.inst.clientPlayer.renderBadge ? 1 : 0);
+		}
+		
+		public void onClicked()
+		{
+			LMWorldClient.inst.clientPlayer.renderBadge = !LMWorldClient.inst.clientPlayer.renderBadge;
+			setValue(LMWorldClient.inst.clientPlayer.renderBadge ? 1 : 0);
+			ClientAction.ACTION_RENDER_BADGE.send(LMWorldClient.inst.clientPlayer.renderBadge ? 1 : 0);
+		}
+	};
+	
 	public static final ClientConfig.Property addOreNames = new ClientConfig.Property("item_ore_names", false);
 	public static final ClientConfig.Property addRegistryNames = new ClientConfig.Property("item_reg_names", false);
 	public static final ClientConfig.Property displayDebugInfo = new ClientConfig.Property("debug_info", false);
@@ -54,10 +70,13 @@ public class FTBUClient extends FTBUCommon
 	
 	private static void initConfig()
 	{
+		if(FTBUFinals.DEV) clientConfig.add(displayDebugInfo);
+		else displayDebugInfo.setValue(0);
+		
 		clientConfig.add(enablePlayerDecorators);
+		clientConfig.add(enableMyPlayerDecorators);
 		clientConfig.add(addOreNames);
 		clientConfig.add(addRegistryNames);
-		clientConfig.add(displayDebugInfo);
 		clientConfig.add(optionsButton);
 		clientConfig.add(chatLinks);
 		ClientConfig.Registry.add(clientConfig);
@@ -70,6 +89,7 @@ public class FTBUClient extends FTBUCommon
 	public static void onWorldJoined()
 	{
 		Badge.init();
+		ThreadLoadBadges.init();
 		ClientNotifications.init();
 	}
 	
@@ -91,7 +111,6 @@ public class FTBUClient extends FTBUCommon
 	public void postInit()
 	{
 		ClientConfig.Registry.load();
-		//ThreadLoadBadges.init();
 		FTBUGuiHandler.instance.registerClient();
 	}
 	
@@ -123,7 +142,7 @@ public class FTBUClient extends FTBUCommon
 	public double getReachDist(EntityPlayer ep)
 	{
 		if(ep == null) return 0D;
-		if(ep instanceof EntityPlayerMP) return super.getReachDist(ep);
+		else if(ep instanceof EntityPlayerMP) return super.getReachDist(ep);
 		PlayerControllerMP c = LatCoreMCClient.mc.playerController;
 		return (c == null) ? 0D : c.getBlockReachDistance();
 	}
@@ -167,9 +186,22 @@ public class FTBUClient extends FTBUCommon
 	
 	public void readTileData(TileLM t, S35PacketUpdateTileEntity p)
 	{
-		t.readTileData(p.func_148857_g());
-		t.readTileClientData(p.func_148857_g());
+		NBTTagCompound data = p.func_148857_g();
+		t.readTileData(data);
+		t.readTileClientData(data);
 		t.onUpdatePacket();
 		LatCoreMCClient.onGuiClientAction();
+	}
+
+	public static void onReloaded()
+	{
+		LatCoreMCClient.clearCachedData();
+		ThreadLoadBadges.init();
+		
+		if(LMWorldClient.inst != null)
+		{
+			for(int i = 0; i < LMWorldClient.inst.players.size(); i++)
+				LMWorldClient.inst.players.get(i).clearCachedData();
+		}
 	}
 }

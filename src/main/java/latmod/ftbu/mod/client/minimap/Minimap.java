@@ -1,9 +1,9 @@
 package latmod.ftbu.mod.client.minimap;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.core.net.*;
-import latmod.ftbu.core.util.*;
-import latmod.ftbu.core.world.ChunkType;
+import latmod.core.util.*;
+import latmod.ftbu.net.*;
+import latmod.ftbu.world.ChunkType;
 import net.minecraft.world.World;
 
 @SideOnly(Side.CLIENT)
@@ -61,8 +61,11 @@ public class Minimap
 		for(int cy = y; cy < y + h; cy++)
 		for(int cx = x; cx < x + w; cx++)
 			loadChunk(cx, cy).reload(world);
-		if(w == h) LMNetHelper.sendToServer(new MessageAreaRequest(x - 1, y - 1, world.provider.dimensionId, w + 2));
+		if(w == h) requestArea(x - 1, y - 1, w + 2);
 	}
+	
+	public void requestArea(int x, int y, int s)
+	{ LMNetHelper.sendToServer(new MessageAreaRequest(x, y, dim, s)); }
 	
 	// Static //
 	

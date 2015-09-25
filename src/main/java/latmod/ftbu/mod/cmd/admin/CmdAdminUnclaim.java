@@ -1,8 +1,8 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import latmod.ftbu.core.cmd.*;
-import latmod.ftbu.core.util.MathHelperLM;
-import latmod.ftbu.core.world.*;
+import latmod.core.util.MathHelperLM;
+import latmod.ftbu.cmd.*;
+import latmod.ftbu.world.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;

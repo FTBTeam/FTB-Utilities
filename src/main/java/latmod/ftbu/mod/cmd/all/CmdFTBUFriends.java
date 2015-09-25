@@ -1,10 +1,10 @@
 package latmod.ftbu.mod.cmd.all;
 
-import latmod.ftbu.core.LatCoreMC;
-import latmod.ftbu.core.client.*;
-import latmod.ftbu.core.cmd.*;
-import latmod.ftbu.core.world.*;
+import latmod.ftbu.cmd.*;
 import latmod.ftbu.mod.FTBUGuiHandler;
+import latmod.ftbu.util.LatCoreMC;
+import latmod.ftbu.util.client.*;
+import latmod.ftbu.world.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;

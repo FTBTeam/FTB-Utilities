@@ -4,14 +4,14 @@ import java.util.UUID;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.core.LatCoreMC;
-import latmod.ftbu.core.api.LMClientWorldClosedEvent;
-import latmod.ftbu.core.client.LatCoreMCClient;
-import latmod.ftbu.core.inv.*;
-import latmod.ftbu.core.paint.IPainterItem;
-import latmod.ftbu.core.util.*;
-import latmod.ftbu.core.world.LMWorldClient;
+import latmod.core.util.FastList;
+import latmod.ftbu.api.EventLMWorldClient;
+import latmod.ftbu.inv.*;
 import latmod.ftbu.mod.*;
+import latmod.ftbu.paint.IPainterItem;
+import latmod.ftbu.util.*;
+import latmod.ftbu.util.client.LatCoreMCClient;
+import latmod.ftbu.world.LMWorldClient;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.item.*;
 import net.minecraft.util.EnumChatFormatting;
@@ -60,7 +60,7 @@ public class FTBUClientEventHandler
 		if(e.map.getTextureType() == 0)
 		{
 			LatCoreMCClient.blockNullIcon = e.map.registerIcon(FTBU.mod.assets + "empty_block");
-			LatCoreMCClient.resetTextureMaps();
+			LatCoreMCClient.clearCachedData();
 		}
 		else if(e.map.getTextureType() == 1)
 			LatCoreMCClient.unknownItemIcon = e.map.registerIcon(FTBU.mod.assets + "unknown");
@@ -96,7 +96,7 @@ public class FTBUClientEventHandler
 	public void onDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent e)
 	{
 		FTBUClient.onWorldClosed();
-		new LMClientWorldClosedEvent().post();
+		new EventLMWorldClient.Closed(LMWorldClient.inst).post();
 		LMWorldClient.inst = null;
 	}
 }

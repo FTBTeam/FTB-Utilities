@@ -3,8 +3,8 @@ package latmod.ftbu.mod.client.gui.friends;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.core.gui.GuiLM;
-import latmod.ftbu.core.util.FastList;
+import latmod.core.util.FastList;
+import latmod.ftbu.util.gui.GuiLM;
 import net.minecraft.client.gui.FontRenderer;
 
 @SideOnly(Side.CLIENT)

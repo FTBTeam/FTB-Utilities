@@ -3,8 +3,8 @@ package latmod.ftbu.mod.client.minimap;
 import java.util.List;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.core.util.*;
-import latmod.ftbu.core.world.*;
+import latmod.core.util.*;
+import latmod.ftbu.world.*;
 import net.minecraft.world.World;
 
 @SideOnly(Side.CLIENT)

@@ -2,11 +2,11 @@ package latmod.ftbu.mod.client.minimap;
 
 import org.lwjgl.opengl.GL11;
 
-import latmod.ftbu.core.client.LatCoreMCClient;
-import latmod.ftbu.core.gui.*;
-import latmod.ftbu.core.util.*;
-import latmod.ftbu.core.world.ChunkType;
+import latmod.core.util.*;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.util.client.LatCoreMCClient;
+import latmod.ftbu.util.gui.*;
+import latmod.ftbu.world.ChunkType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 

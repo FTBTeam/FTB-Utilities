@@ -3,17 +3,17 @@ import java.io.File;
 import java.util.*;
 
 import cpw.mods.fml.common.eventhandler.*;
-import latmod.ftbu.core.*;
-import latmod.ftbu.core.api.LMPlayerServerEvent;
-import latmod.ftbu.core.inv.LMInvUtils;
-import latmod.ftbu.core.item.ICreativeSafeItem;
-import latmod.ftbu.core.net.*;
-import latmod.ftbu.core.tile.ISecureTile;
-import latmod.ftbu.core.util.*;
-import latmod.ftbu.core.world.*;
-import latmod.ftbu.mod.backups.Backups;
+import latmod.core.util.*;
+import latmod.ftbu.api.*;
+import latmod.ftbu.backups.Backups;
+import latmod.ftbu.inv.LMInvUtils;
+import latmod.ftbu.item.ICreativeSafeItem;
 import latmod.ftbu.mod.cmd.CmdMotd;
 import latmod.ftbu.mod.config.FTBUConfig;
+import latmod.ftbu.net.*;
+import latmod.ftbu.tile.ISecureTile;
+import latmod.ftbu.util.*;
+import latmod.ftbu.world.*;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
@@ -55,9 +55,9 @@ public class FTBUEventHandler // FTBUTickHandler
 		p.setPlayer(ep);
 		p.updateLastSeen();
 		
-		new LMPlayerServerEvent.LoggedIn(p, ep, first).post();
+		new EventLMPlayerServer.LoggedIn(p, ep, first).post();
 		LMNetHelper.sendTo(sendAll ? null : ep, new MessageLMWorldUpdate(LMWorldServer.inst.worldID, p.playerID));
-		IServerConfig.Registry.updateConfig(ep, null);
+		ServerConfigRegistry.updateConfig(ep, null);
 		
 		LMNetHelper.sendTo(ep, new MessageLMPlayerLoggedIn(p, first, true));
 		for(EntityPlayerMP ep1 : LatCoreMC.getAllOnlinePlayers(ep))
@@ -109,7 +109,7 @@ public class FTBUEventHandler // FTBUTickHandler
 			p.lastArmor[i] = ep.inventory.armorInventory[i];
 		p.lastArmor[4] = ep.inventory.getCurrentItem();
 		
-		new LMPlayerServerEvent.LoggedOut(p, ep).post();
+		new EventLMPlayerServer.LoggedOut(p, ep).post();
 		LMNetHelper.sendTo(null, new MessageLMPlayerLoggedOut(p));
 		LMNetHelper.sendTo(null, new MessageLMPlayerInfo(p));
 		
@@ -124,15 +124,15 @@ public class FTBUEventHandler // FTBUTickHandler
 	{
 		if(LatCoreMC.isServer() && e.world.provider.dimensionId == 0 && e.world instanceof WorldServer)
 		{
-			IServerConfig.Registry.load();
+			ServerConfigRegistry.load();
 			
 			File latmodFolder = new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/");
 			NBTTagCompound tagWorldData = LMNBTUtils.readMap(new File(latmodFolder, "LMWorld.dat"));
 			if(tagWorldData == null) tagWorldData = new NBTTagCompound();
-			LMWorldServer.inst = new LMWorldServer(tagWorldData.hasKey("UUID") ? LatCoreMC.getUUIDFromString(tagWorldData.getString("UUID")) : UUID.randomUUID(), (WorldServer)e.world, latmodFolder);
+			LMWorldServer.inst = new LMWorldServer(tagWorldData.hasKey("UUID") ? LMStringUtils.fromString(tagWorldData.getString("UUID")) : UUID.randomUUID(), (WorldServer)e.world, latmodFolder);
 			LMWorldServer.inst.load(tagWorldData);
 			
-			ILMWorldData.Registry.load(Phase.PRE);
+			new EventLMWorldServer.Loaded(LMWorldServer.inst, Phase.PRE).post();
 			
 			NBTTagCompound tagPlayers = LMNBTUtils.readMap(new File(latmodFolder, "LMPlayers.dat"));
 			if(tagPlayers != null && tagPlayers.hasKey("Players"))
@@ -144,7 +144,7 @@ public class FTBUEventHandler // FTBUTickHandler
 			for(int i = 0; i < LMWorldServer.inst.players.size(); i++)
 				LMWorldServer.inst.players.get(i).setPlayer(null);
 			
-			ILMWorldData.Registry.load(Phase.POST);
+			new EventLMWorldServer.Loaded(LMWorldServer.inst, Phase.POST).post();
 			
 			LatCoreMC.logger.info("LatCoreMC data loaded");
 		}
@@ -155,7 +155,7 @@ public class FTBUEventHandler // FTBUTickHandler
 	{
 		if(LatCoreMC.isServer() && e.world.provider.dimensionId == 0 && e.world instanceof WorldServer)
 		{
-			ILMWorldData.Registry.save();
+			new EventLMWorldServer.Saved(LMWorldServer.inst).post();
 			
 			{
 				NBTTagCompound tag = new NBTTagCompound();
@@ -217,7 +217,7 @@ public class FTBUEventHandler // FTBUTickHandler
 		{
 			if(server) w.markBlockRangeForRenderUpdate(x, y, z, x, y, z);
 			else w.markBlockForUpdate(x, y, z);
-			return true;
+			return false;
 		}
 		
 		if(!server || FTBUConfig.general.allowInteractSecure(ep)) return true;
@@ -345,7 +345,7 @@ public class FTBUEventHandler // FTBUTickHandler
 					catch(Exception e) { e.printStackTrace(); }
 					
 					for(LMPlayerServer p : LMWorldServer.inst.getAllOnlinePlayers())
-					{ LatCoreMC.printChat(p.getPlayer(), p.chatLinks); if(p.chatLinks) LatCoreMC.printChat(p.getPlayer(), line); }
+					{ if(p.chatLinks) LatCoreMC.printChat(p.getPlayer(), line); }
 				}
 			};
 			

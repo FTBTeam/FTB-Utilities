@@ -4,13 +4,13 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.core.client.*;
-import latmod.ftbu.core.client.model.TexturedCubeRenderer;
-import latmod.ftbu.core.util.*;
-import latmod.ftbu.core.world.LMWorldClient;
+import latmod.core.util.*;
+import latmod.ftbu.badges.Badge;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.client.badges.Badge;
 import latmod.ftbu.mod.config.FTBUConfig;
+import latmod.ftbu.util.client.*;
+import latmod.ftbu.util.client.model.TexturedCubeRenderer;
+import latmod.ftbu.world.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -31,14 +31,24 @@ public class FTBURenderHandler
 	{
 		if(!Badge.badges.isEmpty() && FTBUClient.enablePlayerDecorators.getB() && !e.entityPlayer.isInvisible())
 		{
-			Badge b = Badge.badges.get(e.entityPlayer.getUniqueID());
-			if(b != null) b.onPlayerRender(e.entityPlayer);
+			LMPlayerClient pc = LMWorldClient.inst.getPlayer(e.entityPlayer);
+			
+			if(pc != null && pc.renderBadge)
+			{
+				if(pc.cachedBadge == null)
+					pc.cachedBadge = Badge.badges.get(pc.getUUID());
+				if(pc.cachedBadge != null)
+					pc.cachedBadge.onPlayerRender(e.entityPlayer);
+			}
 		}
 	}
 	
 	@SubscribeEvent
 	public void renderTick(TickEvent.RenderTickEvent e)
 	{
+		GL11.glPushMatrix();
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+		
 		if(e.phase == TickEvent.Phase.START)
 		{
 			ScaledResolution sr = new ScaledResolution(LatCoreMCClient.mc, LatCoreMCClient.mc.displayWidth, LatCoreMCClient.mc.displayHeight);
@@ -48,6 +58,9 @@ public class FTBURenderHandler
 		
 		if(e.phase == TickEvent.Phase.END && LatCoreMCClient.isPlaying())
 			ClientNotifications.renderTemp();
+		
+		GL11.glPopAttrib();
+		GL11.glPopMatrix();
 	}
 	
 	@SubscribeEvent

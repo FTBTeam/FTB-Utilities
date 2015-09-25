@@ -1,12 +1,12 @@
 package latmod.ftbu.mod;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.core.LMGuiHandler;
-import latmod.ftbu.core.gui.ContainerEmpty;
-import latmod.ftbu.core.inv.ItemDisplay;
-import latmod.ftbu.core.tile.IGuiTile;
+import latmod.ftbu.inv.ItemDisplay;
 import latmod.ftbu.mod.client.gui.GuiDisplayItem;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
+import latmod.ftbu.tile.IGuiTile;
+import latmod.ftbu.util.LMGuiHandler;
+import latmod.ftbu.util.gui.ContainerEmpty;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;

@@ -2,9 +2,9 @@ package latmod.ftbu.mod.config;
 
 import java.io.File;
 
-import latmod.ftbu.core.LatCoreMC;
-import latmod.ftbu.core.api.readme.ReadmeInfo;
-import latmod.ftbu.core.util.*;
+import latmod.core.util.*;
+import latmod.ftbu.api.readme.ReadmeInfo;
+import latmod.ftbu.util.LatCoreMC;
 
 public class ConfigBackups
 {

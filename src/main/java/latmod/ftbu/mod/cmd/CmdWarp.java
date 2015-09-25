@@ -1,8 +1,8 @@
 package latmod.ftbu.mod.cmd;
 
-import latmod.ftbu.core.*;
-import latmod.ftbu.core.cmd.*;
-import latmod.ftbu.core.world.LMWorldServer;
+import latmod.ftbu.cmd.*;
+import latmod.ftbu.util.*;
+import latmod.ftbu.world.LMWorldServer;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;

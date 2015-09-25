@@ -1,12 +1,12 @@
 package latmod.ftbu.mod.cmd.admin;
 
 import cpw.mods.fml.relauncher.Side;
-import latmod.ftbu.core.*;
-import latmod.ftbu.core.api.EventFTBUReload;
-import latmod.ftbu.core.cmd.*;
-import latmod.ftbu.core.net.*;
+import latmod.ftbu.api.*;
+import latmod.ftbu.cmd.*;
 import latmod.ftbu.mod.FTBUTickHandler;
 import latmod.ftbu.mod.config.FTBUConfig;
+import latmod.ftbu.net.*;
+import latmod.ftbu.util.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IChatComponent;
@@ -22,7 +22,7 @@ public class CmdAdminReload extends CommandLM
 		
 		FTBUConfig.instance.load();
 		for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers(null))
-			IServerConfig.Registry.updateConfig(ep, null);
+			ServerConfigRegistry.updateConfig(ep, null);
 		
 		if(FTBUConfig.general.isDedi())
 		{

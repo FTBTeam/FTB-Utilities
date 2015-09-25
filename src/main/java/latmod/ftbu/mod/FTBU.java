@@ -4,15 +4,16 @@ import java.lang.reflect.Method;
 
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
-import latmod.ftbu.core.*;
-import latmod.ftbu.core.api.readme.ReadmeSaveHandler;
-import latmod.ftbu.core.inv.ODItems;
-import latmod.ftbu.core.net.LMNetHelper;
-import latmod.ftbu.core.util.*;
-import latmod.ftbu.core.world.LMWorldServer;
-import latmod.ftbu.mod.backups.Backups;
+import latmod.core.util.*;
+import latmod.ftbu.api.ServerConfigRegistry;
+import latmod.ftbu.api.readme.ReadmeSaveHandler;
+import latmod.ftbu.backups.Backups;
+import latmod.ftbu.inv.ODItems;
 import latmod.ftbu.mod.cmd.*;
 import latmod.ftbu.mod.config.FTBUConfig;
+import latmod.ftbu.net.LMNetHelper;
+import latmod.ftbu.util.*;
+import latmod.ftbu.world.LMWorldServer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 @Mod
@@ -52,7 +53,7 @@ public class FTBU
 		EventBusHelper.register(new FTBUEventHandler());
 		EventBusHelper.register(new FTBUTickHandler());
 		LMJsonUtils.updateGson();
-		IServerConfig.Registry.add(FTBUConfig.instance);
+		ServerConfigRegistry.add(FTBUConfig.instance);
 		FTBUConfig.instance.load();
 		
 		ODItems.preInit();

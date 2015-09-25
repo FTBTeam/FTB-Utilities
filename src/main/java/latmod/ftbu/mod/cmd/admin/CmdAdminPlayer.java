@@ -5,12 +5,12 @@ import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
 
-import latmod.ftbu.core.*;
-import latmod.ftbu.core.cmd.*;
-import latmod.ftbu.core.inv.*;
-import latmod.ftbu.core.util.*;
-import latmod.ftbu.core.world.*;
+import latmod.core.util.*;
+import latmod.ftbu.cmd.*;
+import latmod.ftbu.inv.*;
 import latmod.ftbu.mod.*;
+import latmod.ftbu.util.*;
+import latmod.ftbu.world.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -42,7 +42,7 @@ public class CmdAdminPlayer extends CommandLM
 		{
 			checkArgs(args, 3);
 			
-			UUID id = LatCoreMC.getUUIDFromString(args[1]);
+			UUID id = LMStringUtils.fromString(args[1]);
 			if(id == null) return error(new ChatComponentText("Invalid UUID!"));
 			
 			if(LMWorldServer.inst.getPlayer(id) != null || LMWorldServer.inst.getPlayer(args[2]) != null)

@@ -4,10 +4,10 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.core.LatCoreMC;
-import latmod.ftbu.core.client.*;
-import latmod.ftbu.core.gui.*;
-import latmod.ftbu.core.util.*;
+import latmod.core.util.*;
+import latmod.ftbu.util.LatCoreMC;
+import latmod.ftbu.util.client.*;
+import latmod.ftbu.util.gui.*;
 import net.minecraft.client.gui.GuiScreen;
 
 @SideOnly(Side.CLIENT)

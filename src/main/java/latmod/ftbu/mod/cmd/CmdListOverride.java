@@ -1,9 +1,9 @@
 package latmod.ftbu.mod.cmd;
 
-import latmod.ftbu.core.LatCoreMC;
-import latmod.ftbu.core.cmd.*;
-import latmod.ftbu.core.util.FastList;
-import latmod.ftbu.core.world.*;
+import latmod.core.util.*;
+import latmod.ftbu.cmd.*;
+import latmod.ftbu.util.LatCoreMC;
+import latmod.ftbu.world.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IChatComponent;
@@ -30,7 +30,7 @@ public class CmdListOverride extends CommandLM
 			LMPlayer p = LMWorldServer.inst.getPlayer(ep);
 			
 			if(printUUID)
-				LatCoreMC.printChat(ics, p.getName() + " :: " + ep.getUniqueID());
+				LatCoreMC.printChat(ics, p.getName() + " :: " + LMStringUtils.fromUUID(ep.getUniqueID()));
 			else
 				LatCoreMC.printChat(ics, p.getName());
 		}

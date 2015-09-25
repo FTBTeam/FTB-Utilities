@@ -4,10 +4,11 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.*;
 
-import latmod.ftbu.core.*;
-import latmod.ftbu.core.api.readme.*;
-import latmod.ftbu.core.util.LMJsonUtils;
+import latmod.core.util.LMJsonUtils;
+import latmod.ftbu.api.IServerConfig;
+import latmod.ftbu.api.readme.*;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.util.LatCoreMC;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 

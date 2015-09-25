@@ -41,6 +41,7 @@ config.property.enabled=Enabled
 
 config.group.ftbu=FTBUtilities
 config.property.player_decorators=Player Decorators
+config.property.player_decorators_self=My Player Decorators
 config.property.item_ore_names=Item OreDict Names
 config.property.item_reg_names=Item Registry Names
 config.property.debug_info=Debug Info
@@ -51,32 +52,11 @@ config.value.cm_notify=Notification
 config.value.cm_screen=Screen
 config.value.cm_chat=Chat
 
-config.group.waypoints=Waypoints
-config.property.waypoint_type=Waypoint Type
-config.property.display_title=Display Title
-config.property.display_distance=Display Distance
-config.property.render_distance=Render Distance
-config.property.death_point=Death Point
-
-config.group.minimap=Minimap
-config.property.render_ingame=Render Ingame
-config.property.render_players=Players
-config.property.render_waypoints=Waypoints
-config.property.calc_height=Calculate Height
-config.property.blur=Blur
-config.property.zoom=Zoom
-config.property.size_ingame=Ingame Size
-config.property.render_grid=Render Grid
-config.property.render_claimed_chunks=Render Claimed Chunks
-config.property.custom_map_colors=Block Colors
-
 #Misc
 commands.lmmissingargs=Missing Arguments!
 commands.lmdisabled=This feature is disabled!
 ftbu:owner=Owner: %s
 ftbu:deleteitem=Do you want to delete '%s'?
-ftbu:waypoint.type.beacon=Beacon
-ftbu:waypoint.type.marker=Marker
 ftbu:button.claimed_chunks=Claimed Chunks
 ftbu:button.mail=Mail
 ftbu:button.trade=Trade

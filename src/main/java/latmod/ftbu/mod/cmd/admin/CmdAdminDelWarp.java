@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import latmod.ftbu.core.cmd.*;
+import latmod.ftbu.cmd.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.IChatComponent;
 

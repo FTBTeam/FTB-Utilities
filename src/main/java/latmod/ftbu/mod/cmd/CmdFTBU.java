@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.cmd;
 
-import latmod.ftbu.core.cmd.*;
+import latmod.ftbu.cmd.*;
 import latmod.ftbu.mod.cmd.all.*;
 import latmod.ftbu.mod.config.FTBUConfig;
 

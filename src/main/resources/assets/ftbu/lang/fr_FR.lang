@@ -51,32 +51,11 @@ config.value.cm_notify=Notification
 config.value.cm_screen=Écran
 config.value.cm_chat=Tchat
 
-config.group.waypoints=Point de repère
-config.property.waypoint_type=Type de point de repère
-config.property.display_title=Titre affiché
-config.property.display_distance=Distance d'affichage
-config.property.render_distance=Distance de rendu
-config.property.death_point=Lieu de mort
-
-config.group.minimap=Minicarte
-config.property.render_ingame=Rendu en jeu
-config.property.render_players=Joueurs
-config.property.render_waypoints=Points de repère
-config.property.calc_height=Calcul de la hauteur
-config.property.blur=Flou
-config.property.zoom=Zoom
-config.property.size_ingame=Taille en jeu
-config.property.render_grid=Grille de rendu
-config.property.render_claimed_chunks=Parcelles bloquées au rendu
-config.property.custom_map_colors=Couleurs de bloc
-
 #Misc
 commands.lmmissingargs=Arguments manquants !
 commands.lmdisabled=Cette fonctionalité est désactivée !
 ftbu:owner=Propriétaire : %s
 ftbu:deleteitem=Voulez-vous supprimer '%s' ?
-ftbu:waypoint.type.beacon=Balise
-ftbu:waypoint.type.marker=Marqueur
 ftbu:button.claimed_chunks=Parcelles bloquées
 ftbu:button.mail=Courrier
 ftbu:button.trade=Commerce

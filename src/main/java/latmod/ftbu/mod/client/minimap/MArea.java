@@ -9,8 +9,8 @@ import javax.imageio.ImageIO;
 import org.lwjgl.opengl.*;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.core.util.*;
-import latmod.ftbu.core.world.LMWorldClient;
+import latmod.core.util.*;
+import latmod.ftbu.world.LMWorldClient;
 
 @SideOnly(Side.CLIENT)
 public class MArea

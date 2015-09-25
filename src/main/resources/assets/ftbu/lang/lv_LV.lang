@@ -41,38 +41,18 @@ config.property.enabled=Ieslēgts
 
 config.group.ftbu=FTBUtilities
 config.property.player_decorators=Spēlētāju Dekorācijas
+config.property.player_decorators_self=Manas Spēlētāju Dekorācijas
 config.property.item_ore_names=Priekšmetu OreDict nosaukumi
 config.property.item_reg_names=Priekšmetu Registry Nosaukumi
 config.property.debug_info=Atkļūdošanas Info
 config.property.options_button=Uzstādījumu Poga
 config.property.chat_links=Čata Saīsnes
 
-config.group.waypoints=Virzienpunkti
-config.property.waypoint_type=Virzienpunkti Tips
-config.property.display_title=Rādīt Nosaukumu
-config.property.display_distance=Rādīt Attālumu
-config.property.render_distance=Zīmēšanas Attālums
-config.property.death_point=Pēdējā Nāve
-
-config.group.minimap=Minikarte
-config.property.render_ingame=Rādīt Spēlē
-config.property.render_players=Spēlētāji
-config.property.render_waypoints=Virzienpunkti
-config.property.calc_height=Aprēķināt Augstumu
-config.property.blur=Miglains
-config.property.zoom=Pietuvinājums
-config.property.size_ingame=Izmērs Spēlē
-config.property.render_grid=Rūtiņas
-config.property.render_claimed_chunks=Iezīmētie Apgabali
-config.property.custom_map_colors=Bloku Krāsas
-
 #Misc
 commands.lmmissingargs=Pietrūkst argumentu!
 commands.lmdisabled=Šī lieta nav ieslēgta!
 ftbu:owner=Īpašnieks: %s
 ftbu:deleteitem=Vai vēlaties izdzēst '%s'?
-ftbu:waypoint.type.beacon=Stars
-ftbu:waypoint.type.marker=Mērķis
 ftbu:button.claimed_chunks=Iezīmētie Apgabali
 ftbu:button.mail=Pasts
 ftbu:button.trade=Apmaiņa

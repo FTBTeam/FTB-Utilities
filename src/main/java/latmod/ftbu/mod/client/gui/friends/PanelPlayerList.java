@@ -3,8 +3,8 @@ package latmod.ftbu.mod.client.gui.friends;
 import org.lwjgl.input.Mouse;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.core.util.FastList;
-import latmod.ftbu.core.world.*;
+import latmod.core.util.FastList;
+import latmod.ftbu.world.*;
 
 @SideOnly(Side.CLIENT)
 public class PanelPlayerList extends PanelFriendsGui

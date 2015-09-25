@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.cmd;
 
-import latmod.ftbu.core.BaublesHelper;
+import latmod.ftbu.util.BaublesHelper;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;

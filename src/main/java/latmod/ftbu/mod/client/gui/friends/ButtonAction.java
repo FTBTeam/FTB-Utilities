@@ -1,8 +1,8 @@
 package latmod.ftbu.mod.client.gui.friends;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.core.gui.*;
-import latmod.ftbu.core.util.FastList;
+import latmod.core.util.FastList;
+import latmod.ftbu.util.gui.*;
 
 @SideOnly(Side.CLIENT)
 public class ButtonAction extends ButtonPopupMenu

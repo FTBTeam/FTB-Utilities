@@ -3,9 +3,9 @@ package latmod.ftbu.mod.config;
 import java.io.File;
 import java.util.*;
 
-import latmod.ftbu.core.LatCoreMC;
-import latmod.ftbu.core.api.readme.ReadmeInfo;
-import latmod.ftbu.core.util.LMJsonUtils;
+import latmod.core.util.LMJsonUtils;
+import latmod.ftbu.api.readme.ReadmeInfo;
+import latmod.ftbu.util.LatCoreMC;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 

@@ -2,9 +2,9 @@ package latmod.ftbu.mod.config;
 
 import java.io.File;
 
-import latmod.ftbu.core.LatCoreMC;
-import latmod.ftbu.core.api.readme.ReadmeInfo;
-import latmod.ftbu.core.util.LMJsonUtils;
+import latmod.core.util.LMJsonUtils;
+import latmod.ftbu.api.readme.ReadmeInfo;
+import latmod.ftbu.util.LatCoreMC;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.util.FakePlayer;
 

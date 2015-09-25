@@ -1,9 +1,7 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.core.world.*;
+import latmod.ftbu.world.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,8 +10,6 @@ import net.minecraft.util.*;
 @SideOnly(Side.CLIENT)
 public class Player extends AbstractClientPlayer
 {
-	private static final ChunkCoordinates coords000 = new ChunkCoordinates(0, 0, 0);
-	
 	public final LMPlayerClient playerLM;
 	public final boolean isOwner;
 	
@@ -22,7 +18,6 @@ public class Player extends AbstractClientPlayer
 		super(Minecraft.getMinecraft().theWorld, p.gameProfile);
 		playerLM = p;
 		isOwner = playerLM.playerID == LMWorldClient.inst.clientPlayerID;
-		func_152121_a(MinecraftProfileTexture.Type.CAPE, null);
 	}
 	
 	public boolean equals(Object o)
@@ -38,11 +33,17 @@ public class Player extends AbstractClientPlayer
 	{ return false; }
 	
 	public ChunkCoordinates getPlayerCoordinates()
-	{ return coords000; }
+	{ return new ChunkCoordinates(0, 0, 0); }
 	
 	public boolean isInvisibleToPlayer(EntityPlayer ep)
 	{ return true; }
 	
 	public ResourceLocation getLocationSkin()
 	{ return playerLM.getSkin(); }
+	
+	public boolean func_152122_n()
+	{ return false; }
+	
+	public ResourceLocation getLocationCape()
+	{ return null; }
 }

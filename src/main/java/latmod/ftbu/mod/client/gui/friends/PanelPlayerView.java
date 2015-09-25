@@ -3,8 +3,8 @@ package latmod.ftbu.mod.client.gui.friends;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.core.world.LMWorldClient;
 import latmod.ftbu.mod.client.FTBUClient;
+import latmod.ftbu.world.LMWorldClient;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
 

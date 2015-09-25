@@ -3,10 +3,10 @@ package latmod.ftbu.mod;
 import java.util.UUID;
 
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import latmod.ftbu.core.api.readme.ReadmeFile;
-import latmod.ftbu.core.net.*;
-import latmod.ftbu.core.tile.TileLM;
-import latmod.ftbu.core.world.LMWorld;
+import latmod.ftbu.api.readme.ReadmeFile;
+import latmod.ftbu.net.*;
+import latmod.ftbu.tile.TileLM;
+import latmod.ftbu.world.LMWorld;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
@@ -45,7 +45,7 @@ public class FTBUCommon // FTBUClient
 	
 	public double getReachDist(EntityPlayer ep)
 	{
-		if(ep != null && ep instanceof EntityPlayerMP)
+		if(ep instanceof EntityPlayerMP)
 			return ((EntityPlayerMP)ep).theItemInWorldManager.getBlockReachDistance();
 		return 0D;
 	}

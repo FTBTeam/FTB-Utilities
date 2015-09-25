@@ -1,3 +1,4 @@
+#Buttons
 ftbu:button.settings=Options
 ftbu:button.back=Arrière
 ftbu:button.up=Haut
@@ -17,15 +18,16 @@ ftbu:button.refresh=Raffraichir
 #FriendsGUI
 ftbu:button.addFriend=Ajouter comme ami
 ftbu:button.remFriend=Supprimer des amis
+ftbu:button.deny_friend=Refuser la demande d'ami
 ftbu:label.online=En ligne
 ftbu:label.friend=Ami
-ftbu:label.pfriend=Demande d'ami
-
-#ManageGroups
-ftbu:button.addGroup=Ajouter un groupe
-ftbu:button.remGroup=Supprimer le groupe
+ftbu:label.pfriend=Amis en attente
+ftbu:label.joined=Rejoint %s
+ftbu:label.last_seen=Dernier vu %s
+ftbu:label.deaths=Morts: %s
 
 #ClientConfig 
+ftbu:client_config=Configuration du client
 config.value.enabled=Activé
 config.value.disabled=Désactivé
 config.value.true=Vrai
@@ -34,6 +36,7 @@ config.value.left=Gauche
 config.value.right=Droite
 config.value.top=Haut
 config.value.bottom=Bas
+config.value.edit=Modifier
 config.property.enabled=Actif
 
 config.group.ftbu=FTBUtilities
@@ -42,9 +45,11 @@ config.property.item_ore_names=Noms d'OreDict d'éléments
 config.property.item_reg_names=Noms d'enregistrement d'éléments
 config.property.debug_info=Info de déboggue
 config.property.options_button=Bouton d'options
-config.property.chat_links=Liens chat
-config.value.replace=Remplacer
-config.value.print=Imprimer
+config.property.chat_links=Liens de tchat
+config.property.chunk_messages=Messages de parcelles
+config.value.cm_notify=Notification
+config.value.cm_screen=Écran
+config.value.cm_chat=Tchat
 
 config.group.waypoints=Point de repère
 config.property.waypoint_type=Type de point de repère
@@ -52,16 +57,30 @@ config.property.display_title=Titre affiché
 config.property.display_distance=Distance d'affichage
 config.property.render_distance=Distance de rendu
 config.property.death_point=Lieu de mort
-config.value.marker=Marqueur
-config.value.beacon=Balise
 
 config.group.minimap=Minicarte
 config.property.render_ingame=Rendu en jeu
 config.property.render_players=Joueurs
 config.property.render_waypoints=Points de repère
+config.property.calc_height=Calcul de la hauteur
+config.property.blur=Flou
+config.property.zoom=Zoom
+config.property.size_ingame=Taille en jeu
+config.property.render_grid=Grille de rendu
+config.property.render_claimed_chunks=Parcelles bloquées au rendu
+config.property.custom_map_colors=Couleurs de bloc
 
 #Misc
+commands.lmmissingargs=Arguments manquants !
+commands.lmdisabled=Cette fonctionalité est désactivée !
 ftbu:owner=Propriétaire : %s
+ftbu:deleteitem=Voulez-vous supprimer '%s' ?
+ftbu:waypoint.type.beacon=Balise
+ftbu:waypoint.type.marker=Marqueur
+ftbu:button.claimed_chunks=Parcelles bloquées
+ftbu:button.mail=Courrier
+ftbu:button.trade=Commerce
+ftbu:button.notes=Notes
 
 #Security Mode
 ftbu:security=Securité
@@ -94,17 +113,14 @@ ftbu:color.blue=Bleu
 ftbu:color.purple=Violet
 ftbu:color.cyan=Cyan
 ftbu:color.silver=Gris clair
-ftbu:color.gray=Gris foncé
+ftbu:color.gray=Gris
 ftbu:color.pink=Rose
-ftbu:color.lime=Citron
+ftbu:color.lime=Vert clair
 ftbu:color.yellow=Jaune
 ftbu:color.light_blue=Bleu clair
 ftbu:color.magenta=Magenta
 ftbu:color.orange=Orange
 ftbu:color.white=Blanc
-
-commands.lmmissingargs=Arguments manquants !
-commands.lmdisabled=Cette fonction est désactivée !
 
 #Chunktypes
 ftbu:chunktype.spawn=Zone d'apparition
@@ -113,3 +129,18 @@ ftbu:chunktype.world_border.warning=Vous avez atteint la bordure du monde !
 ftbu:chunktype.wilderness=Etendue sauvage
 ftbu:chunktype.claimed=Zone revendiquée
 ftbu:chunktype.unloaded=Parcelles non chargées
+
+#Sides
+ftbu:side.down=Bas
+ftbu:side.up=Haut
+ftbu:side.north=Nord
+ftbu:side.south=Sud
+ftbu:side.west=Ouest
+ftbu:side.east=Est
+
+ftbu:dside.bottom=Bas
+ftbu:dside.top=Haut
+ftbu:dside.back=Arrière
+ftbu:dside.front=Avant
+ftbu:dside.left=Gauche
+ftbu:dside.right=Droite

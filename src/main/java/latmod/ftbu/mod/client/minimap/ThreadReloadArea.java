@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 
 import cpw.mods.fml.relauncher.*;
 import latmod.core.util.PixelBuffer;
+import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.LMWorldClient;
 
 @SideOnly(Side.CLIENT)
@@ -22,7 +23,7 @@ public class ThreadReloadArea extends Thread
 		if(LMWorldClient.inst != null) try
 		{
 			PixelBuffer image = area.toPixelBuffer();
-			ByteBuffer bb = image.toByteBuffer(false);
+			ByteBuffer bb = LatCoreMCClient.toByteBuffer(image.pixels, false);
 			area.pixelBuffer = bb;
 		}
 		catch(Exception e)

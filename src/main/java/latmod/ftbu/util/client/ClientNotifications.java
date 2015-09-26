@@ -81,7 +81,7 @@ public class ClientNotifications
 			{
 				Minecraft mc = LatCoreMCClient.mc;
 				
-				GL11.glViewport(0, 0, mc.displayWidth, mc.displayHeight);
+				/*GL11.glViewport(0, 0, mc.displayWidth, mc.displayHeight);
 				GL11.glMatrixMode(GL11.GL_PROJECTION);
 				GL11.glLoadIdentity();
 				GL11.glMatrixMode(GL11.GL_MODELVIEW);
@@ -93,6 +93,7 @@ public class ClientNotifications
 				GL11.glMatrixMode(GL11.GL_MODELVIEW);
 				GL11.glLoadIdentity();
 				GL11.glTranslatef(0F, 0F, -2000F);
+				*/
 				GL11.glDisable(GL11.GL_DEPTH_TEST);
 				GL11.glDepthMask(false);
 				
@@ -139,14 +140,16 @@ public class ClientNotifications
 					mc.fontRenderer.drawString(desc, i + w, j + 18, -1);
 				}
 				
-				if(is == null) return;
+				if(is != null)
+				{
+					RenderHelper.enableGUIStandardItemLighting();
+					GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+					GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+					GL11.glEnable(GL11.GL_LIGHTING);
+					renderItem.renderItemIntoGUI(mc.fontRenderer, mc.getTextureManager(), is, i + 8, j + 8, false);
+					renderItem.renderItemOverlayIntoGUI(mc.fontRenderer, mc.getTextureManager(), is, i + 8, j + 8);
+				}
 				
-				RenderHelper.enableGUIStandardItemLighting();
-				GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-				GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-				GL11.glEnable(GL11.GL_LIGHTING);
-				renderItem.renderItemIntoGUI(mc.fontRenderer, mc.getTextureManager(), is, i + 8, j + 8, false);
-				renderItem.renderItemOverlayIntoGUI(mc.fontRenderer, mc.getTextureManager(), is, i + 8, j + 8);
 				GL11.glDepthMask(true);
 				GL11.glPopAttrib();
 			}

@@ -1,13 +1,15 @@
 package latmod.ftbu.util.client;
 
 import java.io.File;
+import java.nio.ByteBuffer;
 import java.util.UUID;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.*;
-import latmod.core.util.FastMap;
+import latmod.core.util.*;
 import latmod.ftbu.mod.client.FTBURenderHandler;
 import latmod.ftbu.util.*;
 import latmod.ftbu.util.gui.*;
@@ -175,4 +177,33 @@ public final class LatCoreMCClient // LatCoreMC
 	
 	public static int getDim()
 	{ return isPlaying() ? mc.thePlayer.worldObj.provider.dimensionId : 0; }
+	
+	public static void setColor(int c, int a)
+	{
+		int r = LMColorUtils.getRed(c);
+		int g = LMColorUtils.getGreen(c);
+		int b = LMColorUtils.getBlue(c);
+		GL11.glColor4f(r / 255F, g / 255F, b / 255F, a / 255F);
+	}
+	
+	public static void setGLColor(int c)
+	{ setColor(c, LMColorUtils.getAlpha(c)); }
+	
+	public static ByteBuffer toByteBuffer(int pixels[], boolean alpha)
+	{
+		if(pixels == null) return null;
+		ByteBuffer bb = BufferUtils.createByteBuffer(pixels.length * 4);
+		byte alpha255 = (byte)255;
+		
+		for(int i = 0; i < pixels.length; i++)
+		{
+			bb.put((byte)LMColorUtils.getRed(pixels[i]));
+			bb.put((byte)LMColorUtils.getGreen(pixels[i]));
+			bb.put((byte)LMColorUtils.getBlue(pixels[i]));
+			bb.put(alpha ? (byte)LMColorUtils.getAlpha(pixels[i]) : alpha255);
+		}
+		
+		bb.flip();
+		return bb;
+	}
 }

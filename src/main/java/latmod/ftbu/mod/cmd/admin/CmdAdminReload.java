@@ -3,7 +3,7 @@ package latmod.ftbu.mod.cmd.admin;
 import cpw.mods.fml.relauncher.Side;
 import latmod.ftbu.api.*;
 import latmod.ftbu.cmd.*;
-import latmod.ftbu.mod.FTBUTickHandler;
+import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.mod.config.FTBUConfig;
 import latmod.ftbu.net.*;
 import latmod.ftbu.util.*;
@@ -27,7 +27,7 @@ public class CmdAdminReload extends CommandLM
 		if(FTBUConfig.general.isDedi())
 		{
 			if(prevRRTimer != FTBUConfig.general.restartTimer.floatValue())
-				FTBUTickHandler.serverStarted();
+				FTBUTicks.serverStarted();
 		}
 		
 		new EventFTBUReload(Side.SERVER, ics).post();

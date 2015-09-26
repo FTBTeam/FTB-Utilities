@@ -61,32 +61,39 @@ public class Notification
 		if(tag == null || tag.hasNoTags() || !tag.hasKey("ID") || !tag.hasKey("T"))
 			return null;
 		
-		IChatComponent title = (IChatComponent)LMJsonUtils.fromJson(tag.getString("T"), IChatComponent.class);
-		int timer = tag.hasKey("L") ? tag.getInteger("L") : 3000;
-		Notification n = new Notification(tag.getString("ID"), title, timer);
+		try
+		{
+			IChatComponent title = IChatComponent.Serializer.func_150699_a(tag.getString("T"));
+			int timer = tag.hasKey("L") ? tag.getInteger("L") : 3000;
+			Notification n = new Notification(tag.getString("ID"), title, timer);
+			
+			if(tag.hasKey("D"))
+				n.setDesc(IChatComponent.Serializer.func_150699_a(tag.getString("D")));
+			
+			if(tag.hasKey("I"))
+				n.setItem(ItemStack.loadItemStackFromNBT(tag.getCompoundTag("I")));
+			
+			if(tag.hasKey("C"))
+				n.setColor(tag.getInteger("C"));
+			
+			if(tag.hasKey("CID"))
+				n.setClickEvent(new NotificationClick(tag.getString("CID"), tag.getByteArray("CV")));
+			
+			return n;
+		}
+		catch(Exception e)
+		{ e.printStackTrace(); }
 		
-		if(tag.hasKey("D"))
-			n.setDesc((IChatComponent)LMJsonUtils.fromJson(tag.getString("D"), IChatComponent.class));
-		
-		if(tag.hasKey("I"))
-			n.setItem(ItemStack.loadItemStackFromNBT(tag.getCompoundTag("I")));
-		
-		if(tag.hasKey("C"))
-			n.setColor(tag.getInteger("C"));
-		
-		if(tag.hasKey("CID"))
-			n.setClickEvent(new NotificationClick(tag.getString("CID"), tag.getByteArray("CV")));
-		
-		return n;
+		return null;
 	}
 	
 	public void writeToNBT(NBTTagCompound tag)
 	{
 		tag.setString("ID", ID);
-		tag.setString("T", LMJsonUtils.toJson(title));
+		tag.setString("T", IChatComponent.Serializer.func_150696_a(title));
 		if(timer != 3000) tag.setInteger("L", timer);
 		
-		if(desc != null) tag.setString("D", LMJsonUtils.toJson(desc));
+		if(desc != null) tag.setString("D", IChatComponent.Serializer.func_150696_a(desc));
 		
 		if(item != null)
 		{

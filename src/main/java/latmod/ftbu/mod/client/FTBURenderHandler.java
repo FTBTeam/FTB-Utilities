@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.client;
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.eventhandler.*;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.*;
 import latmod.core.util.*;
@@ -43,7 +43,7 @@ public class FTBURenderHandler
 		}
 	}
 	
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.LOW)
 	public void renderTick(TickEvent.RenderTickEvent e)
 	{
 		GL11.glPushMatrix();
@@ -80,11 +80,7 @@ public class FTBURenderHandler
 		if(!LatCoreMCClient.isPlaying()) return;
 		LMFrustrumUtils.update();
 		//LMFrustrumUtils.updateMatrix();
-		renderWorldBorder();
-	}
-	
-	private void renderWorldBorder()
-	{
+		
 		if(LMWorldClient.inst == null || !FTBUConfig.world_border.enabled) return;
 		
 		int wb = FTBUConfig.world_border.getWorldBorder(LMFrustrumUtils.currentDim);

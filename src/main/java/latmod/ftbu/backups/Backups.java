@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.Arrays;
 
 import latmod.core.util.LMFileUtils;
-import latmod.ftbu.mod.FTBUTickHandler;
+import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.mod.config.FTBUConfig;
 import latmod.ftbu.util.LatCoreMC;
 import net.minecraft.world.World;
@@ -42,7 +42,7 @@ public class Backups
 	
 	public static long getSecondsUntilNextBackup()
 	{
-		return ((lastTimeRun + FTBUConfig.backups.backupTimerL) - FTBUTickHandler.currentMillis()) / 1000L;
+		return ((lastTimeRun + FTBUConfig.backups.backupTimerL) - FTBUTicks.currentMillis()) / 1000L;
 	}
 	
 	public static void clearOldBackups()

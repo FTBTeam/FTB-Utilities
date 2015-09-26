@@ -48,7 +48,7 @@ public class MessageLMWorldUpdate extends MessageLM<MessageLMWorldUpdate> implem
 	@SideOnly(Side.CLIENT)
 	public void onMessageClient(MessageLMWorldUpdate m, MessageContext ctx)
 	{
-		if(LMWorldClient.inst != null); // LatCoreMC.logger.error("Current client world instance is not null!");
+		//if(LMWorldClient.inst != null) LatCoreMC.logger.error("Current client world instance is not null!");
 		LMWorldClient.inst = new LMWorldClient(m.worldID, LMStringUtils.fromUUID(m.worldID), m.clientPlayerID);
 		LMWorldClient.inst.readPlayersFromNet(m.players);
 		LatCoreMC.logger.info("Joined the server with PlayerID " + LMWorldClient.inst.clientPlayer.playerID + " on world " + LMWorldClient.inst.worldIDS);

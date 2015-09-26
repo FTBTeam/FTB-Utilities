@@ -120,7 +120,7 @@ public class GuiSelectColorRGB extends GuiLM
 		if(isInstant && prevCol != getCurrentRGB())
 			callback.onColorSelected(new ColorSelected(colorID, true, getCurrentRGB(), false));
 		
-		LMColorUtils.setGLColor(initCol, 255);
+		LatCoreMCClient.setColor(initCol, 255);
 		colorInit.render(col_tex);
 		GL11.glColor4f(currentColR.value, currentColG.value, currentColB.value, 1F);
 		colorCurrent.render(col_tex);

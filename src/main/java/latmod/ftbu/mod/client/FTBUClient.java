@@ -182,7 +182,7 @@ public class FTBUClient extends FTBUCommon
 	
 	@SuppressWarnings("unchecked")
 	public <M extends MessageLM<?>> void handleClientMessage(IClientMessageLM<M> m, MessageContext ctx)
-	{ m.onMessageClient((M) m, ctx); }
+	{ LatCoreMC.logger.info("Client message: " + m.getClass().getName()); m.onMessageClient((M) m, ctx); }
 	
 	public void readTileData(TileLM t, S35PacketUpdateTileEntity p)
 	{

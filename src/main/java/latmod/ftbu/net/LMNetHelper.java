@@ -31,7 +31,6 @@ public class LMNetHelper
 		NET.registerMessage(MessageLMPlayerLoggedOut.class, MessageLMPlayerLoggedOut.class, ++ID, Side.CLIENT);
 		NET.registerMessage(MessageLMPlayerInfo.class, MessageLMPlayerInfo.class, ++ID, Side.CLIENT);
 		NET.registerMessage(MessageUpdateConfig.class, MessageUpdateConfig.class, ++ID, Side.CLIENT);
-		NET.registerMessage(MessageAreaRequest.class, MessageAreaRequest.class, ++ID, Side.SERVER);
 		NET.registerMessage(MessageAreaUpdate.class, MessageAreaUpdate.class, ++ID, Side.CLIENT);
 		NET.registerMessage(MessageClaimChunk.class, MessageClaimChunk.class, ++ID, Side.SERVER);
 	}

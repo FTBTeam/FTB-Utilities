@@ -1,5 +1,7 @@
 package latmod.ftbu.net;
 
+import latmod.core.util.MathHelperLM;
+import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.util.*;
 import latmod.ftbu.world.*;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -121,6 +123,28 @@ public enum ClientAction
 	{
 		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
 		{
+			return false;
+		}
+	},
+	
+	ACTION_AREA_REQUEST
+	{
+		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
+		{
+			if(extra == 0) return false;
+			else if(extra < 0)
+			{
+				extra = -extra;
+				int x = MathHelperLM.chunk(ep.posX) - extra / 2;
+				int z = MathHelperLM.chunk(ep.posZ) - extra / 2;
+				LMNetHelper.sendTo(ep, new MessageAreaUpdate(x, z, ep.dimension, extra, owner));
+			}
+			else
+			{
+				int a = FTBUTicks.areaRequests.get(owner.playerID);
+				FTBUTicks.areaRequests.put(owner.playerID, Math.max(a, extra));
+			}
+			
 			return false;
 		}
 	},

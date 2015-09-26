@@ -60,7 +60,15 @@ public abstract class LMWorld<P extends LMPlayer>
 			return null;
 		}
 		else if(o instanceof EntityPlayer)
+		{
+			for(int i = 0; i < players.size(); i++)
+			{
+				P p = players.get(i);
+				if(p.isOnline() && p.getPlayer() == o) return p;
+			}
+			
 			return getPlayer(((EntityPlayer)o).getUniqueID());
+		}
 		else if(o instanceof String)
 		{
 			String s = o.toString();

@@ -120,20 +120,20 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 				{
 					if(c.type == ChunkType.WILDERNESS)
 					{
-						if(down0)
+						if(down0 && LMWorldClient.inst.clientPlayer.claimedChunks < LMWorldClient.inst.clientPlayer.maxClaimPower)
 						{
 							c.type = ChunkType.CLAIMED_SELF;
-							LMNetHelper.sendToServer(new MessageAreaRequest(cx, cz, mc.thePlayer.dimension, 1));
+							ClientAction.ACTION_AREA_REQUEST.send(-1);
 							LMNetHelper.sendToServer(new MessageClaimChunk(LatCoreMCClient.mc.thePlayer.dimension, cx, cz, true));
 							playClickSound();
 						}
 					}
 					else
 					{
-						if(down1)
+						if(down1 && LMWorldClient.inst.clientPlayer.claimedChunks > 0)
 						{
 							c.type = ChunkType.WILDERNESS;
-							LMNetHelper.sendToServer(new MessageAreaRequest(cx, cz, mc.thePlayer.dimension, 1));
+							ClientAction.ACTION_AREA_REQUEST.send(-1);
 							LMNetHelper.sendToServer(new MessageClaimChunk(LatCoreMCClient.mc.thePlayer.dimension, cx, cz, false));
 							playClickSound();
 						}

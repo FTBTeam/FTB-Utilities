@@ -117,9 +117,9 @@ public class GuiSelectColorHSB extends GuiLM
 			ColorSelector.shouldRedraw = true;
 		}
 		
-		LMColorUtils.setGLColor(initCol, 255);
+		LatCoreMCClient.setColor(initCol, 255);
 		colorInit.render(col_tex);
-		LMColorUtils.setGLColor(currentColor, 255);
+		LatCoreMCClient.setColor(currentColor, 255);
 		colorCurrent.render(col_tex);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		switchRGB.render(GuiIcons.rgb);
@@ -146,7 +146,7 @@ public class GuiSelectColorHSB extends GuiLM
 		GL11.glColor4f(0F, 0F, 0F, 1F);
 		GL11.glTexCoord2d(u0, v0); GL11.glVertex3d(x + 0, y + 0, z);
 		GL11.glTexCoord2d(u0, v1); GL11.glVertex3d(x + 0, y + h, z);
-		LMColorUtils.setGLColor(currentColor, 255);
+		LatCoreMCClient.setColor(currentColor, 255);
 		GL11.glTexCoord2d(u1, v1); GL11.glVertex3d(x + w, y + h, z);
 		GL11.glTexCoord2d(u1, v0); GL11.glVertex3d(x + w, y + 0, z);
 		GL11.glEnd();

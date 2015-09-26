@@ -3,6 +3,8 @@ import java.io.File;
 import java.util.*;
 
 import cpw.mods.fml.common.eventhandler.*;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
 import latmod.core.util.*;
 import latmod.ftbu.api.*;
 import latmod.ftbu.backups.Backups;
@@ -29,6 +31,15 @@ import net.minecraftforge.common.util.FakePlayer;
 
 public class FTBUEventHandler // FTBUTickHandler
 {
+	private static final String[] LINK_PREFIXES = { "http://", "https://" };
+	
+	@SubscribeEvent
+	public void onWorldTick(TickEvent.WorldTickEvent e)
+	{
+		if(LatCoreMC.isServer() && e.side == Side.SERVER && e.phase == TickEvent.Phase.END && e.type == TickEvent.Type.WORLD)
+			FTBUTicks.update();
+	}
+	
 	@SubscribeEvent
 	public void playerLoggedIn(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e)
 	{
@@ -55,8 +66,8 @@ public class FTBUEventHandler // FTBUTickHandler
 		p.setPlayer(ep);
 		p.updateLastSeen();
 		
-		new EventLMPlayerServer.LoggedIn(p, ep, first).post();
 		LMNetHelper.sendTo(sendAll ? null : ep, new MessageLMWorldUpdate(LMWorldServer.inst.worldID, p.playerID));
+		new EventLMPlayerServer.LoggedIn(p, ep, first).post();
 		ServerConfigRegistry.updateConfig(ep, null);
 		
 		LMNetHelper.sendTo(ep, new MessageLMPlayerLoggedIn(p, first, true));
@@ -304,6 +315,63 @@ public class FTBUEventHandler // FTBUTickHandler
 		}*/
 	}
 	
+	@SubscribeEvent
+	public void onChunkChanged(net.minecraftforge.event.entity.EntityEvent.EnteringChunk e)
+	{
+		if(!e.entity.worldObj.isRemote && e.entity instanceof EntityPlayerMP)
+		{
+			EntityPlayerMP ep = (EntityPlayerMP)e.entity;
+			LMPlayerServer player = LMWorldServer.inst.getPlayer(ep);
+			if(player == null || !player.isOnline()) return;
+			
+			if(player.lastPos == null) player.lastPos = new EntityPos(ep);
+			
+			else if(!player.lastPos.equalsPos(ep))
+			{
+				if(Claims.isOutsideWorldBorderD(ep.dimension, ep.posX, ep.posZ))
+				{
+					ep.motionX = ep.motionY = ep.motionZ = 0D;
+					IChatComponent warning = new ChatComponentTranslation(FTBU.mod.assets + ChunkType.WORLD_BORDER.lang + ".warning");
+					warning.getChatStyle().setColor(EnumChatFormatting.RED);
+					LatCoreMC.notifyPlayer(ep, new Notification("world_border", warning, 3000));
+					
+					if(Claims.isOutsideWorldBorderD(player.lastPos.dim, player.lastPos.x, player.lastPos.z))
+					{
+						LatCoreMC.printChat(ep, "Teleporting to spawn!");
+						World w = LMDimUtils.getWorld(0);
+						ChunkCoordinates pos = w.getSpawnPoint();
+						pos.posY = w.getTopSolidOrLiquidBlock(pos.posX, pos.posZ);
+						LMDimUtils.teleportPlayer(ep, pos.posX + 0.5D, pos.posY + 1.25D, pos.posZ + 0.5D, 0);
+					}
+					else LMDimUtils.teleportPlayer(ep, player.lastPos);
+					ep.worldObj.playSoundAtEntity(ep, "random.fizz", 1F, 1F);
+				}
+				
+				player.lastPos.set(ep);
+			}
+			
+			int currentChunkType = ChunkType.getChunkTypeI(ep.dimension, e.newChunkX, e.newChunkZ, player);
+			
+			if(player.lastChunkType == -99 || player.lastChunkType != currentChunkType)
+			{
+				player.lastChunkType = currentChunkType;
+				
+				ChunkType type = ChunkType.getChunkTypeFromI(currentChunkType, player);
+				IChatComponent msg = null;
+				
+				if(type.isClaimed())
+					msg = new ChatComponentText("" + LMWorldServer.inst.getPlayer(currentChunkType));
+				else
+					msg = new ChatComponentTranslation(FTBU.mod.assets + type.lang);
+				
+				Notification n = new Notification("chunk_changed", msg, 3000);
+				n.setColor(type.areaColor);
+				
+				LatCoreMC.notifyPlayer(ep, n);
+			}
+		}
+	}
+	
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onChatEvent(net.minecraftforge.event.ServerChatEvent e)
 	{
@@ -315,8 +383,7 @@ public class FTBUEventHandler // FTBUTickHandler
 		
 		for(String s : msg)
 		{
-			int index = s.indexOf("http://");
-			if(index == -1) index = s.indexOf("https://");
+			int index = getFirstLinkIndex(s);
 			if(index != -1) links.add(s.substring(index).trim());
 		}
 		
@@ -337,20 +404,24 @@ public class FTBUEventHandler // FTBUTickHandler
 			
 			line.getChatStyle().setColor(EnumChatFormatting.GOLD);
 			
-			Thread t = new Thread("LM_PrintLinks")
+			FTBUTicks.addCallback(new ServerTickCallback()
 			{
-				public void run()
+				public void onCallback()
 				{
-					try { Thread.sleep(25L); }
-					catch(Exception e) { e.printStackTrace(); }
-					
 					for(LMPlayerServer p : LMWorldServer.inst.getAllOnlinePlayers())
 					{ if(p.chatLinks) LatCoreMC.printChat(p.getPlayer(), line); }
 				}
-			};
-			
-			t.setDaemon(true);
-			t.start();
+			});
 		}
+	}
+	
+	private static int getFirstLinkIndex(String s)
+	{
+		for(String s1 : LINK_PREFIXES)
+		{
+			int i = s.indexOf(s1);
+			if(i > 0) return i;
+		}
+		return -1;
 	}
 }

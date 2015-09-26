@@ -8,13 +8,15 @@ import latmod.core.util.*;
 import latmod.ftbu.api.ServerConfigRegistry;
 import latmod.ftbu.api.readme.ReadmeSaveHandler;
 import latmod.ftbu.backups.Backups;
-import latmod.ftbu.inv.ODItems;
+import latmod.ftbu.inv.*;
 import latmod.ftbu.mod.cmd.*;
 import latmod.ftbu.mod.config.FTBUConfig;
 import latmod.ftbu.net.LMNetHelper;
 import latmod.ftbu.util.*;
 import latmod.ftbu.world.LMWorldServer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.*;
 
 @Mod
 (
@@ -50,9 +52,16 @@ public class FTBU
 		
 		LMMod.init(this, null, null);
 		mod.logger = LatCoreMC.logger;
+		
+		NBTSerializer.init();
+		LMJsonUtils.register(IChatComponent.class, new IChatComponent.Serializer());
+		LMJsonUtils.register(ChatStyle.class, new ChatStyle.Serializer());
+		LMJsonUtils.registerFactory(new EnumTypeAdapterFactory());
+		LMJsonUtils.register(ItemStack.class, new ItemStackSerializer());
+		LMJsonUtils.register(Notification.class, new Notification.Serializer());
+		
 		EventBusHelper.register(new FTBUEventHandler());
-		EventBusHelper.register(new FTBUTickHandler());
-		LMJsonUtils.updateGson();
+		
 		ServerConfigRegistry.add(FTBUConfig.instance);
 		FTBUConfig.instance.load();
 		
@@ -92,8 +101,7 @@ public class FTBU
 	@Mod.EventHandler
 	public void registerCommands(FMLServerStartingEvent e)
 	{
-		LMJsonUtils.updateGson();
-		FTBUTickHandler.serverStarted();
+		FTBUTicks.serverStarted();
 		e.registerServerCommand(new CmdAdmin());
 		e.registerServerCommand(new CmdBack());
 		e.registerServerCommand(new CmdFTBU());
@@ -118,7 +126,7 @@ public class FTBU
 	@Mod.EventHandler
 	public void serverStopped(FMLServerStoppedEvent e)
 	{
-		FTBUTickHandler.serverStopped();
+		FTBUTicks.serverStopped();
 		LMWorldServer.inst = null;
 	}
 	

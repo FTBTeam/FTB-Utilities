@@ -4,18 +4,18 @@ import java.lang.reflect.Type;
 
 import com.google.gson.*;
 
-import latmod.core.util.FastMap;
+import latmod.core.util.*;
 import net.minecraft.nbt.*;
 
 public abstract class NBTSerializer
 {
-	public static void init(GsonBuilder gb) // LatCore
+	public static void init()
 	{
-		gb.registerTypeHierarchyAdapter(NBTBase.class, new NBTBaseDeserializer());
-		gb.registerTypeHierarchyAdapter(NBTTagCompound.class, new MapS());
-		gb.registerTypeHierarchyAdapter(NBTTagList.class, new ListS());
-		gb.registerTypeHierarchyAdapter(NBTTagString.class, new StringS());
-		gb.registerTypeHierarchyAdapter(NBTBase.NBTPrimitive.class, new PrimitiveS());
+		LMJsonUtils.register(NBTBase.class, new NBTBaseDeserializer());
+		LMJsonUtils.register(NBTTagCompound.class, new MapS());
+		LMJsonUtils.register(NBTTagList.class, new ListS());
+		LMJsonUtils.register(NBTTagString.class, new StringS());
+		LMJsonUtils.register(NBTBase.NBTPrimitive.class, new PrimitiveS());
 	}
 	
 	public static class NBTBaseDeserializer implements JsonDeserializer<NBTBase>

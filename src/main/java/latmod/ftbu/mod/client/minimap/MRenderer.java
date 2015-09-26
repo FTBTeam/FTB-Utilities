@@ -136,7 +136,7 @@ public class MRenderer
 					
 					TextureCoords tc = tex_area_coords[a ? 1 : 0][b ? 1 : 0][c ? 1 : 0][d ? 1 : 0];
 					
-					LMColorUtils.setGLColor(ch.type.areaColor, 255);
+					LatCoreMCClient.setColor(ch.type.areaColor, 255);
 					GuiLM.drawTexturedRectD(renderX + x * tsize, renderY + y * tsize, zLevel, tsize, tsize, tc.minU, tc.minV, tc.maxU, tc.maxV);
 				}
 			}
@@ -183,7 +183,7 @@ public class MRenderer
 			int cy = MathHelperLM.chunk(LatCoreMCClient.mc.thePlayer.posZ);
 			ChunkType t = m.getChunkType(cx, cy);
 			String s = t.isClaimed() ? String.valueOf(m.getChunk(cx, cy).owner) : t.getIDS();
-			LatCoreMCClient.mc.fontRenderer.drawString(s, renderX, renderY + size + 3, LMColorUtils.getColorFrom(t.chatColor));
+			LatCoreMCClient.mc.fontRenderer.drawString(s, renderX, renderY + size + 3, LMColorUtils.chatFormattingColors[t.chatColor.ordinal()]);
 		}
 		
 		LatCoreMCClient.popMaxBrightness();

@@ -216,7 +216,4 @@ public final class LatCoreMC // LatCoreMCClient
 
 	public static IChatComponent setColor(EnumChatFormatting e, IChatComponent c)
 	{ c.getChatStyle().setColor(e); return c; }
-	
-	public static void addServerTickCallback(ServerTickCallback e)
-	{ FTBUTickHandler.callbacks.add(e); }
 }

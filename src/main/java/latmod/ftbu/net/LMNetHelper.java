@@ -1,11 +1,9 @@
 package latmod.ftbu.net;
 
-import java.util.UUID;
-
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
-import io.netty.buffer.ByteBuf;
+import latmod.core.util.ByteIOStream;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.*;
@@ -44,49 +42,13 @@ public class LMNetHelper
 	public static void sendToServer(MessageLM<?> m)
 	{ NET.sendToServer(m); }
 	
-	public static UUID readUUID(ByteBuf bb)
+	public static NBTTagCompound readTagCompound(ByteIOStream io) throws Exception
 	{
-		long msb = bb.readLong();
-		long lsb = bb.readLong();
-		return new UUID(msb, lsb);
-	}
-	
-	public static void writeUUID(ByteBuf bb, UUID id)
-	{
-		long msb = id.getMostSignificantBits();
-		long lsb = id.getLeastSignificantBits();
-		bb.writeLong(msb);
-		bb.writeLong(lsb);
-	}
-	
-	public static String readString(ByteBuf bb)
-	{
-		int i = bb.readShort();
-		if(i == -1) return null;
-		if(i == 0) return "";
-		byte[] b = new byte[i];
-		bb.readBytes(b);
-		return new String(b);
-	}
-	
-	public static void writeString(ByteBuf bb, String s)
-	{
-		if(s == null) bb.writeShort(-1);
-		else if(s.isEmpty()) bb.writeShort(0);
-		else
-		{
-			byte[] b = s.getBytes();
-			bb.writeShort(b.length);
-			bb.writeBytes(b);
-		}
-	}
-	
-	public static NBTTagCompound readTagCompound(ByteBuf bb)
-	{
-		int s = bb.readInt();
+		int s = io.readInt();
 		if (s >= 0)
 		{
-			byte[] b = new byte[s]; bb.readBytes(b);
+			byte[] b = new byte[s];
+			io.readRawBytes(b);
 			try { return CompressedStreamTools.func_152457_a(b, NBTSizeTracker.field_152451_a); }
 			catch(Exception e) { }
 		}
@@ -94,24 +56,24 @@ public class LMNetHelper
 		return null;
 	}
 	
-	public static void writeTagCompound(ByteBuf bb, NBTTagCompound tag)
+	public static void writeTagCompound(ByteIOStream io, NBTTagCompound tag) throws Exception
 	{
-		if (tag == null) bb.writeInt(-1);
+		if (tag == null) io.writeInt(-1);
 		else
 		{
 			try
 			{
 				byte[] b = CompressedStreamTools.compress(tag);
-				bb.writeInt(b.length);
-				bb.writeBytes(b);
+				io.writeInt(b.length);
+				io.writeRawBytes(b);
 			}
-			catch(Exception e) { bb.writeInt(-1); }
+			catch(Exception e) { io.writeInt(-1); }
 		}
 	}
 	
-	public static IChatComponent readChatComponent(ByteBuf bb)
-	{ return IChatComponent.Serializer.func_150699_a(readString(bb)); }
+	public static IChatComponent readChatComponent(ByteIOStream io) throws Exception
+	{ return IChatComponent.Serializer.func_150699_a(io.readUTF()); }
 	
-	public static void writeChatComponent(ByteBuf bb, IChatComponent c)
-	{ writeString(bb, IChatComponent.Serializer.func_150696_a(c)); }
+	public static void writeChatComponent(ByteIOStream io, IChatComponent c) throws Exception
+	{ io.writeUTF(IChatComponent.Serializer.func_150696_a(c)); }
 }

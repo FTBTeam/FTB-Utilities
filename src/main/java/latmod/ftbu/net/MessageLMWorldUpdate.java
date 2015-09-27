@@ -2,17 +2,14 @@ package latmod.ftbu.net;
 import java.util.UUID;
 
 import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.*;
-import io.netty.buffer.ByteBuf;
-import latmod.core.util.LMStringUtils;
+import latmod.core.util.*;
 import latmod.ftbu.api.EventLMWorldClient;
-import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.util.LatCoreMC;
 import latmod.ftbu.world.*;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class MessageLMWorldUpdate extends MessageLM<MessageLMWorldUpdate> implements IClientMessageLM<MessageLMWorldUpdate>
+public class MessageLMWorldUpdate extends MessageLM<MessageLMWorldUpdate>
 {
 	public UUID worldID;
 	public NBTTagCompound players;
@@ -28,25 +25,21 @@ public class MessageLMWorldUpdate extends MessageLM<MessageLMWorldUpdate> implem
 		clientPlayerID = p;
 	}
 	
-	public void fromBytes(ByteBuf bb)
+	public void readData(ByteIOStream io) throws Exception
 	{
-		worldID = LMNetHelper.readUUID(bb);
-		players = LMNetHelper.readTagCompound(bb);
-		clientPlayerID = bb.readInt();
+		worldID = io.readUUID();
+		players = LMNetHelper.readTagCompound(io);
+		clientPlayerID = io.readInt();
 	}
 	
-	public void toBytes(ByteBuf bb)
+	public void writeData(ByteIOStream io) throws Exception
 	{
-		LMNetHelper.writeUUID(bb, worldID);
-		LMNetHelper.writeTagCompound(bb, players);
-		bb.writeInt(clientPlayerID);
+		io.writeUUID(worldID);
+		LMNetHelper.writeTagCompound(io, players);
+		io.writeInt(clientPlayerID);
 	}
 	
 	public IMessage onMessage(MessageLMWorldUpdate m, MessageContext ctx)
-	{ FTBU.proxy.handleClientMessage(m, ctx); return null; }
-	
-	@SideOnly(Side.CLIENT)
-	public void onMessageClient(MessageLMWorldUpdate m, MessageContext ctx)
 	{
 		//if(LMWorldClient.inst != null) LatCoreMC.logger.error("Current client world instance is not null!");
 		LMWorldClient.inst = new LMWorldClient(m.worldID, LMStringUtils.fromUUID(m.worldID), m.clientPlayerID);
@@ -54,5 +47,6 @@ public class MessageLMWorldUpdate extends MessageLM<MessageLMWorldUpdate> implem
 		LatCoreMC.logger.info("Joined the server with PlayerID " + LMWorldClient.inst.clientPlayer.playerID + " on world " + LMWorldClient.inst.worldIDS);
 		FTBUClient.onWorldJoined();
 		new EventLMWorldClient.Joined(LMWorldClient.inst).post();
+		return null;
 	}
 }

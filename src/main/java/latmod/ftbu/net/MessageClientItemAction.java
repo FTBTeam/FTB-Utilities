@@ -1,6 +1,6 @@
 package latmod.ftbu.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
-import io.netty.buffer.ByteBuf;
+import latmod.core.util.ByteIOStream;
 import latmod.ftbu.item.IClientActionItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -19,16 +19,16 @@ public class MessageClientItemAction extends MessageLM<MessageClientItemAction>
 		data = tag;
 	}
 	
-	public void fromBytes(ByteBuf bb)
+	public void readData(ByteIOStream io) throws Exception
 	{
-		action = LMNetHelper.readString(bb);
-		data = LMNetHelper.readTagCompound(bb);
+		action = io.readString();
+		data = LMNetHelper.readTagCompound(io);
 	}
 	
-	public void toBytes(ByteBuf bb)
+	public void writeData(ByteIOStream io) throws Exception
 	{
-		LMNetHelper.writeString(bb, action);
-		LMNetHelper.writeTagCompound(bb, data);
+		io.writeString(action);
+		LMNetHelper.writeTagCompound(io, data);
 	}
 	
 	public IMessage onMessage(MessageClientItemAction m, MessageContext ctx)

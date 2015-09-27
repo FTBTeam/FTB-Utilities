@@ -6,7 +6,6 @@ import com.google.gson.*;
 
 import latmod.core.util.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IChatComponent;
 
 public class Notification
@@ -56,61 +55,6 @@ public class Notification
 	public String toJson()
 	{ return LMJsonUtils.toJson(this); }
 	
-	public static Notification readFromNBT(NBTTagCompound tag)
-	{
-		if(tag == null || tag.hasNoTags() || !tag.hasKey("ID") || !tag.hasKey("T"))
-			return null;
-		
-		try
-		{
-			IChatComponent title = IChatComponent.Serializer.func_150699_a(tag.getString("T"));
-			int timer = tag.hasKey("L") ? tag.getInteger("L") : 3000;
-			Notification n = new Notification(tag.getString("ID"), title, timer);
-			
-			if(tag.hasKey("D"))
-				n.setDesc(IChatComponent.Serializer.func_150699_a(tag.getString("D")));
-			
-			if(tag.hasKey("I"))
-				n.setItem(ItemStack.loadItemStackFromNBT(tag.getCompoundTag("I")));
-			
-			if(tag.hasKey("C"))
-				n.setColor(tag.getInteger("C"));
-			
-			if(tag.hasKey("CID"))
-				n.setClickEvent(new NotificationClick(tag.getString("CID"), tag.getByteArray("CV")));
-			
-			return n;
-		}
-		catch(Exception e)
-		{ e.printStackTrace(); }
-		
-		return null;
-	}
-	
-	public void writeToNBT(NBTTagCompound tag)
-	{
-		tag.setString("ID", ID);
-		tag.setString("T", IChatComponent.Serializer.func_150696_a(title));
-		if(timer != 3000) tag.setInteger("L", timer);
-		
-		if(desc != null) tag.setString("D", IChatComponent.Serializer.func_150696_a(desc));
-		
-		if(item != null)
-		{
-			NBTTagCompound tag1 = new NBTTagCompound();
-			item.writeToNBT(tag1);
-			tag.setTag("I", tag1);
-		}
-		
-		if(color != 0xFFA0A0A0) tag.setInteger("C", color);
-		
-		if(clickEvent != null)
-		{
-			tag.setString("CID", clickEvent.ID);
-			tag.setByteArray("CV", clickEvent.val);
-		}
-	}
-	
 	public static class Serializer implements JsonSerializer<Notification>, JsonDeserializer<Notification>
 	{
 		public JsonElement serialize(Notification n, Type typeOfSrc, JsonSerializationContext context)
@@ -118,18 +62,18 @@ public class Notification
 			JsonObject o = new JsonObject();
 			
 			o.add("id", new JsonPrimitive(n.ID));
-			o.add("title", context.serialize(n.title));
+			o.add("title", context.serialize(n.title, IChatComponent.class));
 			if(n.timer != 3000) o.add("timer", new JsonPrimitive(n.timer));
 			
-			if(n.desc != null) o.add("desc", context.serialize(n.desc));
-			if(n.item != null) o.add("item", context.serialize(n.item));
+			if(n.desc != null) o.add("desc", context.serialize(n.desc, IChatComponent.class));
+			if(n.item != null) o.add("item", context.serialize(n.item, ItemStack.class));
 			if(n.color != 0xFFA0A0A0) o.add("color", new JsonPrimitive(n.color));
 			
 			if(n.clickEvent != null)
 			{
 				JsonObject o1 = new JsonObject();
 				o1.add("ID", new JsonPrimitive(n.clickEvent.ID));
-				o1.add("val", new JsonPrimitive(new String(n.clickEvent.val)));
+				o1.add("val", context.serialize(n.clickEvent.val()));
 				o.add("click", o1);
 			}
 			
@@ -152,7 +96,7 @@ public class Notification
 			if(o.has("click"))
 			{
 				JsonObject o1 = o.get("click").getAsJsonObject();
-				n.setClickEvent(new NotificationClick(o1.get("ID").getAsString(), o1.get("val").getAsString()));
+				n.setClickEvent(new NotificationClick(o1.get("ID").getAsString(), (Object)context.deserialize(o1.get("val"), Object.class)));
 			}
 			
 			return n;

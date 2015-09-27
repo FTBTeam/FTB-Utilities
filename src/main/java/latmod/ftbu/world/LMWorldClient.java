@@ -8,7 +8,9 @@ import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.api.EventLMPlayerClient;
 import latmod.ftbu.util.*;
+import latmod.ftbu.util.client.LatCoreMCClient;
 import net.minecraft.nbt.*;
+import net.minecraft.world.World;
 
 @SideOnly(Side.CLIENT)
 public class LMWorldClient extends LMWorld<LMPlayerClient>
@@ -26,6 +28,9 @@ public class LMWorldClient extends LMWorld<LMPlayerClient>
 		hasServer = clientPlayerID > 0;
 		clientDataFolder = new File(LatCoreMC.latmodFolder, "client/" + worldIDS);
 	}
+	
+	public World getMCWorld()
+	{ return LatCoreMCClient.mc.theWorld; }
 	
 	public void readPlayersFromNet(NBTTagCompound tag)
 	{

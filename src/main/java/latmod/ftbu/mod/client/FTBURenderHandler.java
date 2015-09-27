@@ -5,6 +5,7 @@ import cpw.mods.fml.common.eventhandler.*;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.*;
 import latmod.core.util.*;
+import latmod.ftbu.api.callback.ClientTickCallback;
 import latmod.ftbu.badges.Badge;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.config.FTBUConfig;
@@ -29,11 +30,11 @@ public class FTBURenderHandler
 	@SubscribeEvent
 	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
 	{
-		if(!Badge.badges.isEmpty() && FTBUClient.enablePlayerDecorators.getB() && !e.entityPlayer.isInvisible())
+		if(!Badge.badges.isEmpty() && FTBUClient.renderBadges.getB() && !e.entityPlayer.isInvisible())
 		{
 			LMPlayerClient pc = LMWorldClient.inst.getPlayer(e.entityPlayer);
 			
-			if(pc != null && pc.renderBadge)
+			if(pc != null && pc.settings.renderBadge)
 			{
 				if(pc.cachedBadge == null)
 					pc.cachedBadge = Badge.badges.get(pc.getUUID());

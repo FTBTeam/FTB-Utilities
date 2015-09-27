@@ -1,6 +1,7 @@
 package latmod.ftbu.mod;
 
 import latmod.core.util.*;
+import latmod.ftbu.api.callback.ServerTickCallback;
 import latmod.ftbu.backups.Backups;
 import latmod.ftbu.mod.config.FTBUConfig;
 import latmod.ftbu.net.*;
@@ -35,6 +36,8 @@ public class FTBUTicks
 			restartSeconds = (long)(FTBUConfig.general.restartTimer * 3600D);
 			LatCoreMC.logger.info("Server restart in " + LMStringUtils.getTimeString(restartSeconds));
 		}
+		
+		areaRequests.setDefVal(0);
 	}
 	
 	@SuppressWarnings("all")

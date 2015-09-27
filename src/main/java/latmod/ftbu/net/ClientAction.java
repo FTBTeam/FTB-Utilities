@@ -87,7 +87,7 @@ public enum ClientAction
 	{
 		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
 		{
-			owner.claims.settings.setSafe(owner, extra == 1);
+			owner.settings.safeClaims = (extra == 1);
 			return true;
 		}
 	},
@@ -96,7 +96,7 @@ public enum ClientAction
 	{
 		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
 		{
-			owner.chatLinks = (extra == 1);
+			owner.settings.chatLinks = (extra == 1);
 			return true;
 		}
 	},
@@ -105,7 +105,7 @@ public enum ClientAction
 	{
 		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
 		{
-			owner.renderBadge = (extra == 1);
+			owner.settings.renderBadge = (extra == 1);
 			return true;
 		}
 	},

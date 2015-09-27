@@ -10,13 +10,11 @@ public class Claims
 {
 	public final LMPlayerServer owner;
 	private final FastList<ClaimedChunk> chunks;
-	public final ClaimSettings settings;
 	
 	public Claims(LMPlayerServer p)
 	{
 		owner = p;
 		chunks = new FastList<ClaimedChunk>();
-		settings = new ClaimSettings();
 	}
 	
 	public void readFromNBT(NBTTagCompound serverData)
@@ -31,8 +29,6 @@ public class Claims
 			int[] ai = list.func_150306_c(i);
 			chunks.add(new ClaimedChunk(this, ai[0], ai[1], ai[2]));
 		}
-		
-		settings.readFromNBT(tag);
 	}
 	
 	public void writeToNBT(NBTTagCompound serverData)
@@ -47,8 +43,6 @@ public class Claims
 		}
 		
 		tag.setTag("Chunks", list);
-		settings.writeToNBT(tag);
-		
 		serverData.setTag("Claims", tag);
 	}
 	

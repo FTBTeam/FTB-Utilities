@@ -16,7 +16,6 @@ import net.minecraft.util.*;
 public class LMPlayerClient extends LMPlayer // LMPlayerServer
 {
 	public final FastList<IChatComponent> clientInfo;
-	public final ClaimSettings claimSettings;
 	private ResourceLocation skinLocation;
 	public boolean isOnline;
 	public int claimedChunks;
@@ -27,7 +26,6 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 	{
 		super(w, i, gp);
 		clientInfo = new FastList<IChatComponent>();
-		claimSettings = new ClaimSettings();
 		skinLocation = null;
 		isOnline = false;
 		cachedBadge = null;
@@ -77,11 +75,10 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 			commonPrivateData = tag.getCompoundTag("CPD");
 			claimedChunks = tag.getInteger("CC");
 			maxClaimPower = tag.getInteger("MCC");
-			chatLinks = tag.getBoolean("CL");
-			claimSettings.readFromNBT(tag.getCompoundTag("SC"));
 			Mail.readFromNBT(this, tag, "Mail");
-			renderBadge = tag.getBoolean("B");
 		}
+		
+		settings.readFromNet(tag.getCompoundTag("CFG"), self);
 	}
 	
 	public void clearCachedData()

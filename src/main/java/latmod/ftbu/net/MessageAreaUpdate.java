@@ -1,13 +1,11 @@
 package latmod.ftbu.net;
 
 import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.*;
-import io.netty.buffer.ByteBuf;
-import latmod.ftbu.mod.FTBU;
+import latmod.core.util.ByteIOStream;
 import latmod.ftbu.mod.client.minimap.Minimap;
 import latmod.ftbu.world.*;
 
-public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate> implements IClientMessageLM<MessageAreaUpdate> //MessageAreaRequest
+public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate> //MessageAreaRequest
 {
 	public int chunkX, chunkZ, dim, size;
 	public int[] types;
@@ -30,31 +28,30 @@ public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate> implements I
 		types = new int[] { type };
 	}
 	
-	public void fromBytes(ByteBuf bb)
+	public void readData(ByteIOStream io) throws Exception
 	{
-		chunkX = bb.readInt();
-		chunkZ = bb.readInt();
-		dim = bb.readInt();
-		size = bb.readByte();
+		chunkX = io.readInt();
+		chunkZ = io.readInt();
+		dim = io.readInt();
+		size = io.readUByte();
 		types = new int[size * size];
 		for(int i = 0; i < types.length; i++)
-			types[i] = bb.readInt();
+			types[i] = io.readInt();
 	}
 	
-	public void toBytes(ByteBuf bb)
+	public void writeData(ByteIOStream io) throws Exception
 	{
-		bb.writeInt(chunkX);
-		bb.writeInt(chunkZ);
-		bb.writeInt(dim);
-		bb.writeByte(size);
+		io.writeInt(chunkX);
+		io.writeInt(chunkZ);
+		io.writeInt(dim);
+		io.writeUByte(size);
 		for(int i = 0; i < types.length; i++)
-			bb.writeInt(types[i]);
+			io.writeInt(types[i]);
 	}
 	
 	public IMessage onMessage(MessageAreaUpdate m, MessageContext ctx)
-	{ FTBU.proxy.handleClientMessage(m, ctx); return null; }
-	
-	@SideOnly(Side.CLIENT)
-	public void onMessageClient(MessageAreaUpdate m, MessageContext ctx)
-	{ Minimap.get(m.dim).loadChunkTypes(m.chunkX, m.chunkZ, m.size, m.types); }
+	{
+		Minimap.get(m.dim).loadChunkTypes(m.chunkX, m.chunkZ, m.size, m.types);
+		return null;
+	}
 }

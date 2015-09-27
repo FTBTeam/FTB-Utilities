@@ -40,7 +40,7 @@ public class ClientNotifications
 		{
 			Temp.list.removeObj(n.ID);
 			Perm.list.removeObj(n.ID);
-			if(current != null && current.notification.ID != null && current.notification.ID.equals(n.ID))
+			if(current != null && current.ID != null && current.ID.equals(n.ID))
 				current = null;
 		}
 		
@@ -58,20 +58,37 @@ public class ClientNotifications
 	public static class Temp extends Gui
 	{
 		public static final FastList<Temp> list = new FastList<Temp>();
+		private static RenderItem renderItem = new RenderItem();
+		private static Minecraft mc;
 		
-		public final Notification notification;
-		
-		private RenderItem renderItem = new RenderItem();
 		private long time;
+		private String ID;
+		private String title;
+		private String desc;
+		private double timer;
+		private ItemStack item;
+		private int color;
+		private int width;
 
 		public Temp(Notification n)
 		{
-			notification = n;
+			mc = LatCoreMCClient.mc;
 			time = -1L;
+			ID = n.ID;
+			title = n.title.getFormattedText();
+			desc = (n.desc == null) ? null : n.desc.getFormattedText();
+			timer = (double)n.timer;
+			item = n.item;
+			color = LMColorUtils.getRGBA(n.color, 230);
+			width = 20 + Math.max(mc.fontRenderer.getStringWidth(title), mc.fontRenderer.getStringWidth(desc));
+			if(item != null) width += 20;
 		}
 		
+		public String toString()
+		{ return ID; }
+		
 		public boolean equals(Object o)
-		{ return notification.equals(o); }
+		{ return toString().equals(o.toString()); }
 		
 		public void render()
 		{
@@ -79,8 +96,6 @@ public class ClientNotifications
 			
 			if (time > 0L)
 			{
-				Minecraft mc = LatCoreMCClient.mc;
-				
 				/*GL11.glViewport(0, 0, mc.displayWidth, mc.displayHeight);
 				GL11.glMatrixMode(GL11.GL_PROJECTION);
 				GL11.glLoadIdentity();
@@ -97,7 +112,7 @@ public class ClientNotifications
 				GL11.glDisable(GL11.GL_DEPTH_TEST);
 				GL11.glDepthMask(false);
 				
-				double d0 = (double)(Minecraft.getSystemTime() - time) / (double)notification.timer;
+				double d0 = (double)(Minecraft.getSystemTime() - time) / timer;
 				
 				if (d0 < 0D || d0 > 1D) { time = 0L; return; }
 				
@@ -112,23 +127,16 @@ public class ClientNotifications
 				d1 *= d1;
 				d1 *= d1;
 				
-				String title = notification.title.getFormattedText();
-				String desc = (notification.desc == null) ? null : notification.desc.getFormattedText();
-				ItemStack is = notification.item;
-				
-				int width = 20 + Math.max(mc.fontRenderer.getStringWidth(title), mc.fontRenderer.getStringWidth(desc));
-				if(is != null) width += 20;
-				
 				int i = LatCoreMCClient.displayW - width;
 				int j = 0 - (int)(d1 * 36D);
 				GL11.glColor4f(1F, 1F, 1F, 1F);
 				GL11.glDisable(GL11.GL_TEXTURE_2D);
 				GL11.glDisable(GL11.GL_LIGHTING);
-				GuiLM.drawRect(i, j, LatCoreMCClient.displayW, j + 32, LMColorUtils.getRGBA(notification.color, 140));
+				GuiLM.drawRect(i, j, LatCoreMCClient.displayW, j + 32, color);
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
 				GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 				
-				int w = is == null ? 10 : 30;
+				int w = item == null ? 10 : 30;
 				
 				if(desc == null)
 				{
@@ -140,14 +148,14 @@ public class ClientNotifications
 					mc.fontRenderer.drawString(desc, i + w, j + 18, -1);
 				}
 				
-				if(is != null)
+				if(item != null)
 				{
 					RenderHelper.enableGUIStandardItemLighting();
 					GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 					GL11.glEnable(GL11.GL_COLOR_MATERIAL);
 					GL11.glEnable(GL11.GL_LIGHTING);
-					renderItem.renderItemIntoGUI(mc.fontRenderer, mc.getTextureManager(), is, i + 8, j + 8, false);
-					renderItem.renderItemOverlayIntoGUI(mc.fontRenderer, mc.getTextureManager(), is, i + 8, j + 8);
+					renderItem.renderItemIntoGUI(mc.fontRenderer, mc.getTextureManager(), item, i + 8, j + 8, false);
+					renderItem.renderItemOverlayIntoGUI(mc.fontRenderer, mc.getTextureManager(), item, i + 8, j + 8);
 				}
 				
 				GL11.glDepthMask(true);

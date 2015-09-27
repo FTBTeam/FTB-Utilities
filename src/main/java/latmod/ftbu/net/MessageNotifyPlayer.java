@@ -1,38 +1,31 @@
 package latmod.ftbu.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.*;
-import io.netty.buffer.ByteBuf;
-import latmod.ftbu.mod.FTBU;
+import latmod.core.util.ByteIOStream;
 import latmod.ftbu.util.Notification;
 import latmod.ftbu.util.client.ClientNotifications;
-import net.minecraft.nbt.NBTTagCompound;
 
-public class MessageNotifyPlayer extends MessageLM<MessageNotifyPlayer> implements IClientMessageLM<MessageNotifyPlayer>
+public class MessageNotifyPlayer extends MessageLM<MessageNotifyPlayer>
 {
-	public NBTTagCompound data;
+	public String data;
 	
 	public MessageNotifyPlayer() { }
 	
 	public MessageNotifyPlayer(Notification n)
+	{ data = n.toJson(); }
+	
+	public void readData(ByteIOStream io) throws Exception
 	{
-		data = new NBTTagCompound();
-		n.writeToNBT(data);
+		data = io.readUTF();
 	}
 	
-	public void fromBytes(ByteBuf bb)
+	public void writeData(ByteIOStream io) throws Exception
 	{
-		data = LMNetHelper.readTagCompound(bb);
-	}
-	
-	public void toBytes(ByteBuf bb)
-	{
-		LMNetHelper.writeTagCompound(bb, data);
+		io.writeUTF(data);
 	}
 	
 	public IMessage onMessage(MessageNotifyPlayer m, MessageContext ctx)
-	{ FTBU.proxy.handleClientMessage(m, ctx); return null; }
-	
-	@SideOnly(Side.CLIENT)
-	public void onMessageClient(MessageNotifyPlayer m, MessageContext ctx)
-	{ ClientNotifications.add(Notification.readFromNBT(m.data)); }
+	{
+		ClientNotifications.add(Notification.fromJson(m.data));
+		return null;
+	}
 }

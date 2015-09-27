@@ -53,11 +53,10 @@ public class FTBU
 		LMMod.init(this, null, null);
 		mod.logger = LatCoreMC.logger;
 		
-		NBTSerializer.init();
 		LMJsonUtils.register(IChatComponent.class, new IChatComponent.Serializer());
 		LMJsonUtils.register(ChatStyle.class, new ChatStyle.Serializer());
 		LMJsonUtils.registerFactory(new EnumTypeAdapterFactory());
-		LMJsonUtils.register(ItemStack.class, new ItemStackSerializer());
+		LMJsonUtils.register(ItemStack.class, new ItemStackTypeAdapter());
 		LMJsonUtils.register(Notification.class, new Notification.Serializer());
 		
 		EventBusHelper.register(new FTBUEventHandler());

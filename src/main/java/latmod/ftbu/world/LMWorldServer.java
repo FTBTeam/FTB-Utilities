@@ -10,7 +10,7 @@ import latmod.core.util.*;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.util.*;
 import net.minecraft.nbt.*;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.*;
 
 public class LMWorldServer extends LMWorld<LMPlayerServer>
 {
@@ -29,6 +29,9 @@ public class LMWorldServer extends LMWorld<LMPlayerServer>
 		warps = new FastMap<String, EntityPos>();
 		customData = new NBTTagCompound();
 	}
+	
+	public World getMCWorld()
+	{ return LatCoreMC.getServerWorld(); }
 	
 	public void load(NBTTagCompound tag)
 	{

@@ -2,9 +2,7 @@ package latmod.ftbu.mod;
 
 import java.util.UUID;
 
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import latmod.ftbu.api.readme.ReadmeFile;
-import latmod.ftbu.net.*;
 import latmod.ftbu.tile.TileLM;
 import latmod.ftbu.world.LMWorld;
 import net.minecraft.entity.player.*;
@@ -52,6 +50,5 @@ public class FTBUCommon // FTBUClient
 	
 	public void spawnDust(World w, double x, double y, double z, int col) { }
 	public boolean openClientGui(EntityPlayer ep, String mod, int id, NBTTagCompound data) { return false; }
-	public <M extends MessageLM<?>> void handleClientMessage(IClientMessageLM<M> m, MessageContext ctx) { }
 	public void readTileData(TileLM t, S35PacketUpdateTileEntity p) { }
 }

@@ -7,6 +7,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import latmod.core.util.*;
 import latmod.ftbu.api.*;
+import latmod.ftbu.api.callback.ServerTickCallback;
 import latmod.ftbu.backups.Backups;
 import latmod.ftbu.inv.LMInvUtils;
 import latmod.ftbu.item.ICreativeSafeItem;
@@ -409,7 +410,7 @@ public class FTBUEventHandler // FTBUTickHandler
 				public void onCallback()
 				{
 					for(LMPlayerServer p : LMWorldServer.inst.getAllOnlinePlayers())
-					{ if(p.chatLinks) LatCoreMC.printChat(p.getPlayer(), line); }
+					{ if(p.settings.chatLinks) LatCoreMC.printChat(p.getPlayer(), line); }
 				}
 			});
 		}

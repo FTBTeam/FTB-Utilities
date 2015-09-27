@@ -1,37 +1,41 @@
 package latmod.ftbu.inv;
 
-import java.lang.reflect.Type;
+import java.io.IOException;
 
-import com.google.gson.*;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.*;
 
-import latmod.core.util.LMStringUtils;
 import net.minecraft.item.*;
-import net.minecraft.nbt.*;
 
-public class ItemStackSerializer implements JsonDeserializer<ItemStack>, JsonSerializer<ItemStack>
+public class ItemStackTypeAdapter extends TypeAdapter<ItemStack>
 {
-	public JsonElement serialize(ItemStack is, Type typeOfSrc, JsonSerializationContext context)
-	{ return new JsonPrimitive(toString(is)); }
-	
-	public ItemStack deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+	public void write(JsonWriter out, ItemStack value) throws IOException
 	{
-		if(json.isJsonNull()) return null;
-		return parseItem(json.getAsString());
+		if(value == null) out.nullValue();
+		else out.value(toString(value));
+	}
+	
+	public ItemStack read(JsonReader in) throws IOException
+	{
+		if(in.peek() == JsonToken.NULL) { in.nextNull(); return null; }
+		return parseItem(in.nextString());
 	}
 	
 	// Static //
 	
 	private static String getParseRegex(String s)
 	{
-		if(s.indexOf(';') != -1) return ";";
-		if(s.indexOf('@') != -1) return "@";
-		if(s.indexOf(" x ") != -1) return " x ";
-		return " ";
+		if(s.indexOf(' ') != -1) return " ";
+		else if(s.indexOf(';') != -1) return ";";
+		else if(s.indexOf('@') != -1) return "@";
+		else return " x ";
 	}
 	
 	public static ItemStack parseItem(String s)
 	{
-		if(s == null || s.isEmpty()) return null;
+		if(s == null) return null;
+		s = s.trim();
+		if(s.isEmpty()) return null;
 		
 		try
 		{
@@ -45,12 +49,12 @@ public class ItemStackSerializer implements JsonDeserializer<ItemStack>, JsonSer
 			
 			if(s1.length == 2)
 				dmg = Integer.parseInt(s1[1]);
-			else if(s1.length == 3)
+			else if(s1.length >= 3)
 			{
 				size = Integer.parseInt(s1[1]);
 				dmg = Integer.parseInt(s1[2]);
 			}
-			else if(s1.length >= 4)
+			/*else if(s1.length >= 4)
 			{
 				String tagS = LMStringUtils.unsplitSpaceUntilEnd(3, s1);
 				NBTTagCompound tag = (NBTTagCompound)JsonToNBT.func_150315_a(tagS);
@@ -61,7 +65,7 @@ public class ItemStackSerializer implements JsonDeserializer<ItemStack>, JsonSer
 					is.setTagCompound(tag);
 					return is;
 				}
-			}
+			}*/
 			
 			return new ItemStack(item, size, dmg);
 		}
@@ -72,24 +76,12 @@ public class ItemStackSerializer implements JsonDeserializer<ItemStack>, JsonSer
 	public static String toString(ItemStack is)
 	{
 		if(is == null) return null;
-		Item i = is.getItem();
-		
 		StringBuilder sb = new StringBuilder();
 		sb.append(LMInvUtils.getRegName(is));
-		
-		if(is.stackSize > 1)
-		{
-			sb.append(' ');
-			sb.append(is.stackSize);
-		}
-		
-		int dmg = is.getItemDamage();
-		if(dmg != 0 || i.getHasSubtypes())
-		{
-			sb.append(' ');
-			sb.append(dmg);
-		}
-		
+		sb.append(' ');
+		sb.append(is.stackSize);
+		sb.append(' ');
+		sb.append(is.getItemDamage());
 		return sb.toString();
 	}
 }

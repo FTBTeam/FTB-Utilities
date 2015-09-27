@@ -22,15 +22,13 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 	public final String uuidString;
 	public final IntList friends;
 	public final ItemStack[] lastArmor;
+	public final PersonalSettings settings;
 	public int deaths;
 	public NBTTagCompound commonPublicData;
 	public NBTTagCompound commonPrivateData;
 	public final FastList<Mail> mail;
-	
 	public long lastSeen;
 	public long firstJoined;
-	public boolean chatLinks;
-	public boolean renderBadge;
 	
 	public LMPlayer(LMWorld<?> w, int i, GameProfile gp)
 	{
@@ -43,13 +41,11 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 		uuidString = LMStringUtils.fromUUID(getUUID());
 		friends = new IntList();
 		lastArmor = new ItemStack[5];
+		settings = new PersonalSettings(this);
 		
 		commonPublicData = new NBTTagCompound();
 		commonPrivateData = new NBTTagCompound();
 		mail = new FastList<Mail>();
-		
-		chatLinks = true;
-		renderBadge = true;
 	}
 	
 	public abstract boolean isOnline();

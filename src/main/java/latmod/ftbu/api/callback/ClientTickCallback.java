@@ -1,4 +1,4 @@
-package latmod.ftbu.util.client;
+package latmod.ftbu.api.callback;
 
 public abstract interface ClientTickCallback
 {

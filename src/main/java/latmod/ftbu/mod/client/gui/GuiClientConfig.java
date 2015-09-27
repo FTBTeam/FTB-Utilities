@@ -11,7 +11,7 @@ import latmod.ftbu.util.gui.*;
 import net.minecraft.client.gui.GuiScreen;
 
 @SideOnly(Side.CLIENT)
-public class GuiClientConfig extends GuiLM
+public class GuiClientConfig extends GuiLM implements IClientActionGui
 {
 	public final GuiScreen parent;
 	public final FastList<ConfigLine> lines;
@@ -48,21 +48,6 @@ public class GuiClientConfig extends GuiLM
 		scroll.displayMin = scroll.displayMax = 0;
 		
 		totalHeight = 20;
-		
-		for(ClientConfig c : ClientConfig.Registry.map.values)
-		{
-			if(!c.isHidden)
-			{
-				ButtonCategory cat = new ButtonCategory(this, c);
-				lines.add(cat);
-				
-				for(ClientConfig.Property p : c.map.values)
-				{
-					p.initGui();
-					lines.add(new ButtonConfig(cat, p));
-				}
-			}
-		}
 	}
 	
 	public void initLMGui()
@@ -82,6 +67,23 @@ public class GuiClientConfig extends GuiLM
 	{
 		mainPanel.add(buttonClose);
 		if(totalHeight > height) mainPanel.add(scroll);
+		
+		lines.clear();
+		totalHeight = 20;
+		for(ClientConfig c : ClientConfig.Registry.map.values)
+		{
+			if(!c.isHidden)
+			{
+				ButtonCategory cat = new ButtonCategory(this, c);
+				lines.add(cat);
+				
+				for(ClientConfig.Property p : c.map.values)
+				{
+					p.initGui();
+					lines.add(new ButtonConfig(cat, p));
+				}
+			}
+		}
 		mainPanel.addAll(lines);
 	}
 	
@@ -215,4 +217,7 @@ public class GuiClientConfig extends GuiLM
 			prop.onClicked();
 		}
 	}
+	
+	public void onClientDataChanged()
+	{ refreshWidgets(); }
 }

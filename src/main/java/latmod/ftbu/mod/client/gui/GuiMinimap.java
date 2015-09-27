@@ -72,7 +72,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 			public void onButtonPressed(int b)
 			{
 				gui.playClickSound();
-				ClientAction.ACTION_SET_SAFE_CHUNKS.send(LMWorldClient.inst.clientPlayer.claimSettings.isSafe() ? 0 : 1);
+				ClientAction.ACTION_SET_SAFE_CHUNKS.send(LMWorldClient.inst.clientPlayer.settings.safeClaims ? 0 : 1);
 			}
 		};
 		
@@ -148,7 +148,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		buttonClose.render(GuiIcons.accept);
 		buttonSafe.render();
 		
-		if(LMWorldClient.inst.clientPlayer.claimSettings.isSafe())
+		if(LMWorldClient.inst.clientPlayer.settings.safeClaims)
 		{
 			zLevel = 500;
 			GL11.glColor4f(1F, 1F, 1F, 0.75F);

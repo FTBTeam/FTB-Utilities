@@ -105,7 +105,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		FastList<IChatComponent> info = new FastList<IChatComponent>();
 		new EventLMPlayerServer.CustomInfo(this, info).post();
 		
-		if(lastSeen > 0L) info.add(new ChatComponentTranslation("ftbu:label.last_seen", LMStringUtils.getTimeString(ms - lastSeen)));
+		if(lastSeen > 0L && !isOnline()) info.add(new ChatComponentTranslation("ftbu:label.last_seen", LMStringUtils.getTimeString(ms - lastSeen)));
 		if(firstJoined > 0L) info.add(new ChatComponentTranslation("ftbu:label.joined", LMStringUtils.getTimeString(ms - firstJoined)));
 		if(deaths > 0) info.add(new ChatComponentTranslation("ftbu:label.deaths", String.valueOf(deaths)));
 		
@@ -148,11 +148,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		claims.readFromNBT(tag);
 		
-		chatLinks = tag.hasKey("ChatLinks") ? tag.getBoolean("ChatLinks") : true;
-		
 		Mail.readFromNBT(this, tag, "Mail");
-		
-		renderBadge = tag.getBoolean("RenderBadge");
+		settings.readFromServer(tag.getCompoundTag("Settings"));
 	}
 	
 	public void writeToServer(NBTTagCompound tag)
@@ -188,11 +185,11 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		claims.writeToNBT(tag);
 		
-		tag.setBoolean("ChatLinks", chatLinks);
-		
 		Mail.writeToNBT(this, tag, "Mail");
 		
-		tag.setBoolean("RenderBadge", renderBadge);
+		NBTTagCompound settingsTag = new NBTTagCompound();
+		settings.writeToServer(settingsTag);
+		tag.setTag("Settings", settingsTag);
 	}
 	
 	public void writeToNet(NBTTagCompound tag, boolean self)
@@ -211,17 +208,12 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			if(!commonPrivateData.hasNoTags()) tag.setTag("CPD", commonPrivateData);
 			if(claims.getClaimedChunks() > 0) tag.setInteger("CC", claims.getClaimedChunks());
 			tag.setInteger("MCC", getMaxClaimPower());
-			if(claims.settings.shouldSend())
-			{
-				NBTTagCompound tag1 = new NBTTagCompound();
-				claims.settings.writeToNBT(tag1);
-				tag.setTag("SC", tag1);
-			}
-			if(chatLinks) tag.setBoolean("CL", chatLinks);
-			
 			Mail.writeToNBT(this, tag, "Mail");
-			tag.setBoolean("B", renderBadge);
 		}
+		
+		NBTTagCompound settingsTag = new NBTTagCompound();
+		settings.writeToNet(settingsTag, self);
+		tag.setTag("CFG", settingsTag);
 	}
 	
 	public void onPostLoaded()

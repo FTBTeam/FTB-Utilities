@@ -1,7 +1,7 @@
 package latmod.ftbu.net;
 
 import cpw.mods.fml.common.network.simpleimpl.*;
-import io.netty.buffer.ByteBuf;
+import latmod.core.util.ByteIOStream;
 import latmod.ftbu.world.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -20,20 +20,20 @@ public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 		claim = c;
 	}
 	
-	public void fromBytes(ByteBuf bb)
+	public void readData(ByteIOStream io) throws Exception
 	{
-		dim = bb.readInt();
-		chunkX = bb.readInt();
-		chunkZ = bb.readInt();
-		claim = bb.readBoolean();
+		dim = io.readInt();
+		chunkX = io.readInt();
+		chunkZ = io.readInt();
+		claim = io.readBoolean();
 	}
 	
-	public void toBytes(ByteBuf bb)
+	public void writeData(ByteIOStream io) throws Exception
 	{
-		bb.writeInt(dim);
-		bb.writeInt(chunkX);
-		bb.writeInt(chunkZ);
-		bb.writeBoolean(claim);
+		io.writeInt(dim);
+		io.writeInt(chunkX);
+		io.writeInt(chunkZ);
+		io.writeBoolean(claim);
 	}
 	
 	public IMessage onMessage(MessageClaimChunk m, MessageContext ctx)

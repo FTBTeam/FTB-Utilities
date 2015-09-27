@@ -4,14 +4,12 @@ import java.util.UUID;
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.*;
-import io.netty.buffer.ByteBuf;
+import latmod.core.util.ByteIOStream;
 import latmod.ftbu.api.EventLMPlayerClient;
-import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.world.*;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> implements IClientMessageLM<MessageLMPlayerLoggedIn>
+public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn>
 {
 	public int playerID;
 	public UUID uuid;
@@ -33,29 +31,25 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> 
 		firstTime = first;
 	}
 	
-	public void fromBytes(ByteBuf bb)
+	public void readData(ByteIOStream io) throws Exception
 	{
-		playerID = bb.readInt();
-		uuid = LMNetHelper.readUUID(bb);
-		username = LMNetHelper.readString(bb);
-		data = LMNetHelper.readTagCompound(bb);
-		firstTime = bb.readBoolean();
+		playerID = io.readInt();
+		uuid = io.readUUID();
+		username = io.readString();
+		data = LMNetHelper.readTagCompound(io);
+		firstTime = io.readBoolean();
 	}
 	
-	public void toBytes(ByteBuf bb)
+	public void writeData(ByteIOStream io) throws Exception
 	{
-		bb.writeInt(playerID);
-		LMNetHelper.writeUUID(bb, uuid);
-		LMNetHelper.writeString(bb, username);
-		LMNetHelper.writeTagCompound(bb, data);
-		bb.writeBoolean(firstTime);
+		io.writeInt(playerID);
+		io.writeUUID(uuid);
+		io.writeString(username);
+		LMNetHelper.writeTagCompound(io, data);
+		io.writeBoolean(firstTime);
 	}
 	
 	public IMessage onMessage(MessageLMPlayerLoggedIn m, MessageContext ctx)
-	{ FTBU.proxy.handleClientMessage(m, ctx); return null; }
-	
-	@SideOnly(Side.CLIENT)
-	public void onMessageClient(MessageLMPlayerLoggedIn m, MessageContext ctx)
 	{
 		LMPlayerClient p = LMWorldClient.inst.getPlayer(m.playerID);
 		boolean add = p == null;
@@ -64,5 +58,6 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn> 
 		if(add) LMWorldClient.inst.players.add(p);
 		new EventLMPlayerClient.DataLoaded(p).post();
 		new EventLMPlayerClient.LoggedIn(p, m.firstTime).post();
+		return null;
 	}
 }

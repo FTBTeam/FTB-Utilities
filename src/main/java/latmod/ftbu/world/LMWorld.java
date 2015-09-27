@@ -8,6 +8,7 @@ import latmod.ftbu.cmd.NameType;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.util.LatCoreMC;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
 public abstract class LMWorld<P extends LMPlayer>
@@ -30,6 +31,9 @@ public abstract class LMWorld<P extends LMPlayer>
 		worldIDS = ids;
 		players = new FastList<P>();
 	}
+	
+	public World getMCWorld()
+	{ return null; }
 	
 	public P getPlayer(Object o)
 	{

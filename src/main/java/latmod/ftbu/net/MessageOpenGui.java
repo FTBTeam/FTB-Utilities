@@ -1,13 +1,13 @@
 package latmod.ftbu.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
-import io.netty.buffer.ByteBuf;
+import latmod.core.util.ByteIOStream;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.util.LMGuiHandler;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class MessageOpenGui extends MessageLM<MessageOpenGui> implements IClientMessageLM<MessageOpenGui>
+public class MessageOpenGui extends MessageLM<MessageOpenGui>
 {
 	public String modID;
 	public int guiID;
@@ -24,34 +24,28 @@ public class MessageOpenGui extends MessageLM<MessageOpenGui> implements IClient
 		windowID = wid;
 	}
 	
-	public void fromBytes(ByteBuf bb)
+	public void readData(ByteIOStream io) throws Exception
 	{
-		modID = LMNetHelper.readString(bb);
-		guiID = bb.readInt();
-		data = LMNetHelper.readTagCompound(bb);
-		windowID = bb.readUnsignedByte();
+		modID = io.readString();
+		guiID = io.readInt();
+		data = LMNetHelper.readTagCompound(io);
+		windowID = io.readUByte();
 	}
 	
-	public void toBytes(ByteBuf bb)
+	public void writeData(ByteIOStream io) throws Exception
 	{
-		LMNetHelper.writeString(bb, modID);
-		bb.writeInt(guiID);
-		LMNetHelper.writeTagCompound(bb, data);
-		bb.writeByte(windowID);
+		io.writeString(modID);
+		io.writeInt(guiID);
+		LMNetHelper.writeTagCompound(io, data);
+		io.writeUByte(windowID);
 	}
-	
-	public IMessage onMessage(MessageOpenGui m, MessageContext ctx)
-	{ FTBU.proxy.handleClientMessage(m, ctx); return null; }
 	
 	@SideOnly(Side.CLIENT)
-	public void onMessageClient(MessageOpenGui m, MessageContext ctx)
+	public IMessage onMessage(MessageOpenGui m, MessageContext ctx)
 	{
 		LMGuiHandler h = LMGuiHandler.Registry.getLMGuiHandler(m.modID);
-		
-		if(h != null)
-		{
-			if(FTBU.proxy.openClientGui(LatCoreMCClient.mc.thePlayer, m.modID, m.guiID, data))
-				LatCoreMCClient.mc.thePlayer.openContainer.windowId = m.windowID;
-		}
+		if(h != null && FTBU.proxy.openClientGui(LatCoreMCClient.mc.thePlayer, m.modID, m.guiID, data))
+			LatCoreMCClient.mc.thePlayer.openContainer.windowId = m.windowID;
+		return null;
 	}
 }

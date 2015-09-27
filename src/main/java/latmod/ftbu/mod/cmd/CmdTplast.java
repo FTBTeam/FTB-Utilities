@@ -19,6 +19,16 @@ public class CmdTplast extends CommandLM
 	{
 		checkArgs(args, 1);
 		
+		if(args.length == 3)
+		{
+			EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
+			double x = func_110666_a(ics, ep.posX, args[0]);
+			double y = func_110666_a(ics, ep.posY, args[1]);
+			double z = func_110666_a(ics, ep.posZ, args[2]);
+			LMDimUtils.teleportPlayer(ep, x, y, z, ep.dimension);
+			return null;
+		}
+		
 		EntityPlayerMP who;
 		LMPlayerServer to;
 		

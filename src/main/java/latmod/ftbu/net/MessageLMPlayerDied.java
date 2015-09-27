@@ -1,12 +1,10 @@
 package latmod.ftbu.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.*;
-import io.netty.buffer.ByteBuf;
+import latmod.core.util.ByteIOStream;
 import latmod.ftbu.api.EventLMPlayerClient;
-import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.world.*;
 
-public class MessageLMPlayerDied extends MessageLM<MessageLMPlayerDied> implements IClientMessageLM<MessageLMPlayerDied>
+public class MessageLMPlayerDied extends MessageLM<MessageLMPlayerDied>
 {
 	public int playerID;
 	
@@ -17,23 +15,20 @@ public class MessageLMPlayerDied extends MessageLM<MessageLMPlayerDied> implemen
 		playerID = p.playerID;
 	}
 	
-	public void fromBytes(ByteBuf bb)
+	public void readData(ByteIOStream io) throws Exception
 	{
-		playerID = bb.readInt();
+		playerID = io.readInt();
 	}
 	
-	public void toBytes(ByteBuf bb)
+	public void writeData(ByteIOStream io) throws Exception
 	{
-		bb.writeInt(playerID);
+		io.writeInt(playerID);
 	}
 	
 	public IMessage onMessage(MessageLMPlayerDied m, MessageContext ctx)
-	{ FTBU.proxy.handleClientMessage(m, ctx); return null; }
-	
-	@SideOnly(Side.CLIENT)
-	public void onMessageClient(MessageLMPlayerDied m, MessageContext ctx)
 	{
 		LMPlayerClient p = LMWorldClient.inst.getPlayer(m.playerID);
 		if(p != null) new EventLMPlayerClient.PlayerDied(p).post();
+		return null;
 	}
 }

@@ -4,13 +4,12 @@ import java.util.UUID;
 import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.*;
 import latmod.core.util.LMColorUtils;
 import latmod.ftbu.api.readme.*;
 import latmod.ftbu.badges.*;
 import latmod.ftbu.mod.*;
-import latmod.ftbu.net.*;
+import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.tile.TileLM;
 import latmod.ftbu.util.*;
 import latmod.ftbu.util.client.*;
@@ -27,21 +26,15 @@ import net.minecraft.world.World;
 public class FTBUClient extends FTBUCommon
 {
 	public static final ClientConfig clientConfig = new ClientConfig("ftbu");
-	public static final ClientConfig.Property enablePlayerDecorators = new ClientConfig.Property("player_decorators", true);
+	public static final ClientConfig.Property renderBadges = new ClientConfig.Property("player_decorators", true);
 	
-	public static final ClientConfig.Property enableMyPlayerDecorators = new ClientConfig.Property("player_decorators_self", true)
+	public static final ClientConfig.Property renderMyBadge = new ClientConfig.Property("player_decorators_self", true)
 	{
 		public void initGui()
-		{
-			setValue(LMWorldClient.inst.clientPlayer.renderBadge ? 1 : 0);
-		}
+		{ setValue(LMWorldClient.inst.clientPlayer.settings.renderBadge ? 1 : 0); }
 		
 		public void onClicked()
-		{
-			LMWorldClient.inst.clientPlayer.renderBadge = !LMWorldClient.inst.clientPlayer.renderBadge;
-			setValue(LMWorldClient.inst.clientPlayer.renderBadge ? 1 : 0);
-			ClientAction.ACTION_RENDER_BADGE.send(LMWorldClient.inst.clientPlayer.renderBadge ? 1 : 0);
-		}
+		{ ClientAction.ACTION_RENDER_BADGE.send(LMWorldClient.inst.clientPlayer.settings.renderBadge ? 0 : 1); }
 	};
 	
 	public static final ClientConfig.Property addOreNames = new ClientConfig.Property("item_ore_names", false);
@@ -52,16 +45,10 @@ public class FTBUClient extends FTBUCommon
 	public static final ClientConfig.Property chatLinks = new ClientConfig.Property("chat_links", true)
 	{
 		public void initGui()
-		{
-			setValue(LMWorldClient.inst.clientPlayer.chatLinks ? 1 : 0);
-		}
+		{ setValue(LMWorldClient.inst.clientPlayer.settings.chatLinks ? 1 : 0); }
 		
 		public void onClicked()
-		{
-			LMWorldClient.inst.clientPlayer.chatLinks = !LMWorldClient.inst.clientPlayer.chatLinks;
-			setValue(LMWorldClient.inst.clientPlayer.chatLinks ? 1 : 0);
-			ClientAction.ACTION_CHAT_LINKS.send(LMWorldClient.inst.clientPlayer.chatLinks ? 1 : 0);
-		}
+		{ ClientAction.ACTION_CHAT_LINKS.send(LMWorldClient.inst.clientPlayer.settings.chatLinks ? 0 : 1); }
 	};
 	
 	public static final ClientConfig miscConfig = new ClientConfig("ftbu_misc").setHidden();
@@ -73,8 +60,8 @@ public class FTBUClient extends FTBUCommon
 		if(FTBUFinals.DEV) clientConfig.add(displayDebugInfo);
 		else displayDebugInfo.setValue(0);
 		
-		clientConfig.add(enablePlayerDecorators);
-		clientConfig.add(enableMyPlayerDecorators);
+		clientConfig.add(renderBadges);
+		clientConfig.add(renderMyBadge);
 		clientConfig.add(addOreNames);
 		clientConfig.add(addRegistryNames);
 		clientConfig.add(optionsButton);
@@ -179,10 +166,6 @@ public class FTBUClient extends FTBUCommon
 		
 		return false;
 	}
-	
-	@SuppressWarnings("unchecked")
-	public <M extends MessageLM<?>> void handleClientMessage(IClientMessageLM<M> m, MessageContext ctx)
-	{ LatCoreMC.logger.info("Client message: " + m.getClass().getName()); m.onMessageClient((M) m, ctx); }
 	
 	public void readTileData(TileLM t, S35PacketUpdateTileEntity p)
 	{

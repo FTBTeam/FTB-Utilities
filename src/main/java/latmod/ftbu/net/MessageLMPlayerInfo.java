@@ -1,14 +1,12 @@
 package latmod.ftbu.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.*;
-import io.netty.buffer.ByteBuf;
-import latmod.ftbu.mod.FTBU;
+import latmod.core.util.ByteIOStream;
 import latmod.ftbu.util.LMNBTUtils;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo> implements IClientMessageLM<MessageLMPlayerInfo>
+public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo>
 {
 	public NBTTagCompound info;
 	
@@ -36,21 +34,17 @@ public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo> implemen
 		}
 	}
 	
-	public void fromBytes(ByteBuf bb)
+	public void readData(ByteIOStream io) throws Exception
 	{
-		info = LMNetHelper.readTagCompound(bb);
+		info = LMNetHelper.readTagCompound(io);
 	}
 	
-	public void toBytes(ByteBuf bb)
+	public void writeData(ByteIOStream io) throws Exception
 	{
-		LMNetHelper.writeTagCompound(bb, info);
+		LMNetHelper.writeTagCompound(io, info);
 	}
 	
 	public IMessage onMessage(MessageLMPlayerInfo m, MessageContext ctx)
-	{ FTBU.proxy.handleClientMessage(m, ctx); return null; }
-	
-	@SideOnly(Side.CLIENT)
-	public void onMessageClient(MessageLMPlayerInfo m, MessageContext ctx)
 	{
 		if(m.info.hasKey("ID"))
 		{
@@ -67,5 +61,6 @@ public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo> implemen
 		}
 		
 		LatCoreMCClient.onGuiClientAction();
+		return null;
 	}
 }

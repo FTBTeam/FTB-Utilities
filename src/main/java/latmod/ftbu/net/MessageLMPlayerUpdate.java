@@ -1,14 +1,12 @@
 package latmod.ftbu.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.*;
-import io.netty.buffer.ByteBuf;
+import latmod.core.util.ByteIOStream;
 import latmod.ftbu.api.EventLMPlayerClient;
-import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate> implements IClientMessageLM<MessageLMPlayerUpdate>
+public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate>
 {
 	public int playerID;
 	public NBTTagCompound data;
@@ -23,27 +21,24 @@ public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate> impl
 		p.writeToNet(data, self);
 	}
 	
-	public void fromBytes(ByteBuf bb)
+	public void readData(ByteIOStream io) throws Exception
 	{
-		playerID = bb.readInt();
-		data = LMNetHelper.readTagCompound(bb);
+		playerID = io.readInt();
+		data = LMNetHelper.readTagCompound(io);
 	}
 	
-	public void toBytes(ByteBuf bb)
+	public void writeData(ByteIOStream io) throws Exception
 	{
-		bb.writeInt(playerID);
-		LMNetHelper.writeTagCompound(bb, data);
+		io.writeInt(playerID);
+		LMNetHelper.writeTagCompound(io, data);
 	}
 	
 	public IMessage onMessage(MessageLMPlayerUpdate m, MessageContext ctx)
-	{ FTBU.proxy.handleClientMessage(m, ctx); return null; }
-	
-	@SideOnly(Side.CLIENT)
-	public void onMessageClient(MessageLMPlayerUpdate m, MessageContext ctx)
 	{
 		LMPlayerClient p = LMWorldClient.inst.getPlayer(m.playerID);
 		p.readFromNet(m.data, p.getUUID().equals(LatCoreMCClient.getUUID()));
 		new EventLMPlayerClient.DataChanged(p).post();
 		LatCoreMCClient.onGuiClientAction();
+		return null;
 	}
 }

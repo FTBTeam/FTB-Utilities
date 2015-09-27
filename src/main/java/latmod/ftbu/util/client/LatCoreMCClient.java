@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.*;
 import latmod.core.util.*;
+import latmod.ftbu.api.callback.ClientTickCallback;
 import latmod.ftbu.mod.client.FTBURenderHandler;
 import latmod.ftbu.util.*;
 import latmod.ftbu.util.gui.*;
@@ -173,7 +174,7 @@ public final class LatCoreMCClient // LatCoreMC
 	}
 	
 	public static boolean isPlaying()
-	{ return mc.theWorld != null && mc.thePlayer != null && mc.thePlayer.worldObj != null && LMWorldClient.inst != null; }
+	{ return mc.theWorld != null && mc.thePlayer != null && mc.thePlayer.worldObj != null && LMWorldClient.inst != null && LMWorldClient.inst.clientPlayer != null; }
 	
 	public static int getDim()
 	{ return isPlaying() ? mc.thePlayer.worldObj.provider.dimensionId : 0; }
@@ -205,5 +206,12 @@ public final class LatCoreMCClient // LatCoreMC
 		
 		bb.flip();
 		return bb;
+	}
+	
+	public static void execClientCommand(String s)
+	{
+		mc.ingameGUI.getChatGUI().addToSentMessages(s);
+		if(ClientCommandHandler.instance.executeCommand(mc.thePlayer, s) == 0)
+			mc.thePlayer.sendChatMessage(s);
 	}
 }

@@ -13,28 +13,6 @@ public class LMDimUtils
 	public static boolean teleportPlayer(EntityPlayerMP ep, EntityPos pos)
 	{ return teleportPlayer(ep, pos.x, pos.y, pos.z, pos.dim); }
 	
-	/*
-	public static boolean teleportPlayer(EntityPlayerMP ep, double x, double y, double z, int dim)
-	{
-		if(ep == null) return false;
-		
-		ep.fallDistance = 0F;
-		
-		if(ep.worldObj.provider.dimensionId == dim)
-		{
-			ep.playerNetServerHandler.setPlayerLocation(x, y, z, ep.rotationYaw, ep.rotationPitch);
-			return true;
-		}
-		
-		if(!DimensionManager.isDimensionRegistered(dim)) return false;
-		MinecraftServer mcs = MinecraftServer.getServer();
-		WorldServer newWorldServer = mcs.worldServerForDimension(dim);
-		mcs.getConfigurationManager().transferPlayerToDimension(ep, dim, new CustomTeleporter(newWorldServer));
-		ep.setPositionAndUpdate(x, y, z);
-		return true;
-	}
-	*/
-	
 	public static boolean teleportPlayer(EntityPlayerMP ep, double x, double y, double z, int dim)
 	{
 		if(ep == null) return false;
@@ -143,17 +121,20 @@ public class LMDimUtils
 	public static String getDimName(World w)
 	{ return (w == null) ? "" : w.provider.getDimensionName(); }
 	
-	public static double getMovementFactor(World w)
+	public static double getMovementFactor(int dim)
 	{
-		if(w == null) return 1D;
-		if(w.provider.dimensionId == 0) return 1D;
-		if(w.provider.dimensionId == 1) return 1D;
-		if(w.provider.dimensionId == -1) return 8D;
-		return w.provider.getMovementFactor();
+		if(dim == 0) return 1D;
+		else if(dim == 1) return 1D;
+		else if(dim == -1) return 8D;
+		else
+		{
+			World w = getWorld(dim);
+			return (w == null) ? 1D : w.provider.getMovementFactor();
+		}
 	}
 	
-	public static double getWorldScale(World w)
-	{ return 1D / getMovementFactor(w); }
+	public static double getWorldScale(int dim)
+	{ return 1D / getMovementFactor(dim); }
 	
 	public static ChunkCoordinates getSpawnPoint(int dim)
 	{

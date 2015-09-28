@@ -8,7 +8,6 @@ import latmod.core.util.*;
 import latmod.ftbu.api.callback.ClientTickCallback;
 import latmod.ftbu.badges.Badge;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.config.FTBUConfig;
 import latmod.ftbu.util.client.*;
 import latmod.ftbu.util.client.model.TexturedCubeRenderer;
 import latmod.ftbu.world.*;
@@ -82,9 +81,9 @@ public class FTBURenderHandler
 		LMFrustrumUtils.update();
 		//LMFrustrumUtils.updateMatrix();
 		
-		if(LMWorldClient.inst == null || !FTBUConfig.world_border.enabled) return;
+		if(LMWorldClient.inst == null || !LMWorldClient.inst.worldBorder.enabled) return;
 		
-		int wb = FTBUConfig.world_border.getWorldBorder(LMFrustrumUtils.currentDim);
+		int wb = LMWorldClient.inst.worldBorder.getSize(LMFrustrumUtils.currentDim);
 		float min = (MathHelperLM.chunk(-wb) + 1) * 16 + 0.01F;
 		float max = MathHelperLM.chunk(wb) * 16 - 0.01F;
 		

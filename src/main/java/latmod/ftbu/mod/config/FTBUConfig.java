@@ -18,7 +18,6 @@ public class FTBUConfig implements IServerConfig // FTBU
 	
 	public static ConfigGeneral general;
 	public static ConfigLogin login;
-	public static ConfigWorldBorder world_border;
 	public static ConfigBackups backups;
 	
 	public String getConfigName()
@@ -28,7 +27,6 @@ public class FTBUConfig implements IServerConfig // FTBU
 	{
 		ConfigGeneral.load();
 		ConfigLogin.load();
-		ConfigWorldBorder.load();
 		ConfigBackups.load();
 		
 		int overrides = loadOverrides();
@@ -41,7 +39,6 @@ public class FTBUConfig implements IServerConfig // FTBU
 	{
 		ConfigGeneral.save();
 		ConfigLogin.save();
-		ConfigWorldBorder.save();
 		ConfigBackups.save();
 	}
 	
@@ -49,7 +46,6 @@ public class FTBUConfig implements IServerConfig // FTBU
 	{
 		file.add(new ReadmeCategory("latmod/ftbu/general.txt").addFromClass(ConfigGeneral.class));
 		file.add(new ReadmeCategory("latmod/ftbu/login.txt").addFromClass(ConfigLogin.class));
-		file.add(new ReadmeCategory("latmod/ftbu/world_border.txt").addFromClass(ConfigWorldBorder.class));
 		file.add(new ReadmeCategory("latmod/ftbu/backups.txt").addFromClass(ConfigBackups.class));
 	}
 	
@@ -57,14 +53,6 @@ public class FTBUConfig implements IServerConfig // FTBU
 	{
 		general.allowCreativeInteractSecure = tag.getBoolean("CS");
 		login.customBadges = tag.getString("CB");
-		
-		world_border.enabled = tag.getBoolean("WB");
-		
-		if(world_border.enabled)
-		{
-			world_border.radius = tag.getInteger("WB_R");
-			world_border.custom.fromIntArray(tag.getIntArray("WB_C"));
-		}
 	}
 	
 	public void writeConfig(NBTTagCompound tag, EntityPlayerMP ep)
@@ -72,13 +60,6 @@ public class FTBUConfig implements IServerConfig // FTBU
 		tag.setBoolean("CS", general.allowCreativeInteractSecure);
 		if(!login.customBadges.isEmpty())
 			tag.setString("CB", login.customBadges);
-		
-		if(world_border.enabled)
-		{
-			tag.setBoolean("WB", true);
-			tag.setInteger("WB_R", world_border.radius);
-			if(!world_border.custom.isEmpty()) tag.setIntArray("WB_C", world_border.custom.toIntArray());
-		}
 	}
 	
 	private static class Overrides
@@ -89,7 +70,6 @@ public class FTBUConfig implements IServerConfig // FTBU
 		{
 			if(s.equals("general")) return general;
 			else if(s.equals("login")) return login;
-			else if(s.equals("world_border")) return world_border;
 			else if(s.equals("backups")) return backups;
 			else return null;
 		}

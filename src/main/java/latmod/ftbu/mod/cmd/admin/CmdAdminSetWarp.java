@@ -16,7 +16,7 @@ public class CmdAdminSetWarp extends CommandLM
 		checkArgs(args, 1);
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		ChunkCoordinates c = ep.getPlayerCoordinates();
-		LMWorldServer.inst.setWarp(args[0], c.posX, c.posY, c.posZ, ep.worldObj.provider.dimensionId);
+		LMWorldServer.inst.warps.set(args[0], c.posX, c.posY, c.posZ, ep.worldObj.provider.dimensionId);
 		return new ChatComponentText("Warp '" + args[0] + "' set!"); //LANG
 	}
 }

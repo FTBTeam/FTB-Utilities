@@ -8,17 +8,18 @@ import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.Side;
 import latmod.core.util.*;
 import latmod.ftbu.api.EventLMPlayerServer;
+import latmod.ftbu.net.*;
 import latmod.ftbu.util.*;
 import net.minecraft.nbt.*;
 import net.minecraft.world.*;
 
-public class LMWorldServer extends LMWorld<LMPlayerServer>
+public class LMWorldServer extends LMWorld<LMPlayerServer> // LMWorldClient
 {
 	public static LMWorldServer inst = null;
 	
 	public final WorldServer worldObj;
 	public final File latmodFolder;
-	public final FastMap<String, EntityPos> warps;
+	public final Warps warps;
 	public NBTTagCompound customData;
 	
 	public LMWorldServer(UUID id, WorldServer w, File f)
@@ -26,7 +27,7 @@ public class LMWorldServer extends LMWorld<LMPlayerServer>
 		super(Side.SERVER, id, LMStringUtils.fromUUID(id));
 		worldObj = w;
 		latmodFolder = f;
-		warps = new FastMap<String, EntityPos>();
+		warps = new Warps();
 		customData = new NBTTagCompound();
 	}
 	
@@ -35,53 +36,43 @@ public class LMWorldServer extends LMWorld<LMPlayerServer>
 	
 	public void load(NBTTagCompound tag)
 	{
-		warps.clear();
-		
-		NBTTagCompound tagWarps = (NBTTagCompound)tag.getTag("Warps");
-		
-		if(tagWarps != null && !tagWarps.hasNoTags())
-		{
-			FastList<String> l = LMNBTUtils.getMapKeys(tagWarps);
-			
-			for(int i = 0; i < l.size(); i++)
-			{
-				int[] a = tagWarps.getIntArray(l.get(i));
-				setWarp(l.get(i), a[0], a[1], a[2], a[3]);
-			}
-		}
-		
+		warps.readFromNBT(tag, "Warps");
 		customData = tag.getCompoundTag("Custom");
+		worldBorder.readFromNBT(tag, "WorldBorder");
 	}
 	
 	public void save(NBTTagCompound tag)
 	{
-		NBTTagCompound tagWarps = new NBTTagCompound();
-		for(int i = 0; i < warps.size(); i++)
-			tagWarps.setIntArray(warps.keys.get(i), warps.values.get(i).toIntArray());
-		tag.setTag("Warps", tagWarps);
+		warps.writeToNBT(tag, "Warps");
 		tag.setTag("Custom", customData);
+		worldBorder.writeToNBT(tag, "WorldBorder");
 	}
 	
-	public void writePlayersToNet(NBTTagCompound tag, int selfID)
+	public void writeDataToNet(NBTTagCompound tag, int selfID)
 	{
-		NBTTagList list = new NBTTagList();
-		
-		for(int i = 0; i < players.size(); i++)
+		if(selfID > 0)
 		{
-			NBTTagCompound tag1 = new NBTTagCompound();
+			NBTTagList list = new NBTTagList();
 			
-			LMPlayerServer p = players.get(i);
-			p.writeToNet(tag1, p.playerID == selfID);
-			new EventLMPlayerServer.DataSaved(p).post();
-			tag1.setLong("MID", p.getUUID().getMostSignificantBits());
-			tag1.setLong("LID", p.getUUID().getLeastSignificantBits());
-			tag1.setString("N", p.getName());
-			tag1.setInteger("PID", p.playerID);
+			for(int i = 0; i < players.size(); i++)
+			{
+				NBTTagCompound tag1 = new NBTTagCompound();
+				
+				LMPlayerServer p = players.get(i);
+				p.writeToNet(tag1, p.playerID == selfID);
+				new EventLMPlayerServer.DataSaved(p).post();
+				tag1.setLong("MID", p.getUUID().getMostSignificantBits());
+				tag1.setLong("LID", p.getUUID().getLeastSignificantBits());
+				tag1.setString("N", p.getName());
+				tag1.setInteger("PID", p.playerID);
+				
+				list.appendTag(tag1);
+			}
 			
-			list.appendTag(tag1);
+			tag.setTag("PLIST", list);
 		}
 		
-		tag.setTag("Players", list);
+		worldBorder.writeToNBT(tag, "WB");
 	}
 	
 	public void writePlayersToServer(NBTTagCompound tag)
@@ -95,8 +86,7 @@ public class LMWorldServer extends LMWorld<LMPlayerServer>
 			new EventLMPlayerServer.DataSaved(p).post();
 			tag1.setString("UUID", p.uuidString);
 			tag1.setString("Name", p.getName());
-			
-			tag.setTag(p.playerID + "", tag1);
+			tag.setTag(Integer.toString(p.playerID), tag1);
 		}
 	}
 	
@@ -119,17 +109,6 @@ public class LMWorldServer extends LMWorld<LMPlayerServer>
 			players.get(i).onPostLoaded();
 	}
 	
-	// Warps //
-	
-	public String[] listWarps()
-	{ return warps.keys.toArray(new String[0]); }
-	
-	public EntityPos getWarp(String s)
-	{ return warps.get(s); }
-	
-	public boolean setWarp(String s, int x, int y, int z, int dim)
-	{ return warps.put(s, new EntityPos(x + 0.5D, y + 0.5D, z + 0.5D, dim)); }
-	
-	public boolean remWarp(String s)
-	{ return warps.remove(s); }
+	public void update()
+	{ LMNetHelper.sendTo(null, new MessageLMWorldUpdate(this)); }
 }

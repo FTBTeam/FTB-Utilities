@@ -13,6 +13,8 @@ import net.minecraftforge.common.util.FakePlayer;
 
 public abstract class LMWorld<P extends LMPlayer>
 {
+	public static final UUID nullUUID = new UUID(0L, 0L);
+	
 	public static LMWorld<? extends LMPlayer> getWorld(Side s)
 	{ if(s.isServer()) return LMWorldServer.inst; return FTBU.proxy.getClientWorldLM(); }
 	
@@ -23,6 +25,7 @@ public abstract class LMWorld<P extends LMPlayer>
 	public final UUID worldID;
 	public final String worldIDS;
 	public final FastList<P> players;
+	public final WorldBorder worldBorder;
 	
 	public LMWorld(Side s, UUID id, String ids)
 	{
@@ -30,6 +33,7 @@ public abstract class LMWorld<P extends LMPlayer>
 		worldID = id;
 		worldIDS = ids;
 		players = new FastList<P>();
+		worldBorder = new WorldBorder();
 	}
 	
 	public World getMCWorld()

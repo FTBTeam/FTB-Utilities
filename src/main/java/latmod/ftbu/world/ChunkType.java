@@ -51,13 +51,12 @@ public enum ChunkType
 	
 	public static ChunkType get(int dim, int cx, int cz, LMPlayerServer p)
 	{
-		if(!FTBUConfig.general.isDedi()) return WILDERNESS;
-		
 		WorldServer w = DimensionManager.getWorld(dim);
 		if(w != null && !w.getChunkProvider().chunkExists(cx, cz)) return UNLOADED;
+		if(!FTBUConfig.general.isDedi()) return WILDERNESS;
 		
-		if(Claims.isOutsideWorldBorder(dim, cx, cz)) return WORLD_BORDER;
-		if(Claims.isInSpawn(dim, cx, cz)) return SPAWN;
+		if(WorldBorder.isInSpawn(dim, cx, cz)) return SPAWN;
+		if(LMWorldServer.inst.worldBorder.isOutside(dim, cx, cz)) return WORLD_BORDER;
 		ClaimedChunk c = Claims.get(dim, cx, cz);
 		if(c == null) return WILDERNESS;
 		if(p == null) return CLAIMED_OTHER;

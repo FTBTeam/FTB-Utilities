@@ -1,10 +1,8 @@
 package latmod.ftbu.world;
 
-import latmod.core.util.*;
-import latmod.ftbu.mod.config.FTBUConfig;
-import latmod.ftbu.util.*;
+import latmod.core.util.FastList;
+import latmod.ftbu.util.LMNBTUtils;
 import net.minecraft.nbt.*;
-import net.minecraft.util.ChunkCoordinates;
 
 public class Claims
 {
@@ -103,32 +101,4 @@ public class Claims
 		
 		return null;
 	}
-	
-	public static boolean isInSpawn(int dim, int cx, int cz)
-	{
-		if(dim != 0) return false;
-		int radius = LatCoreMC.getServer().getSpawnProtectionSize();
-		if(radius <= 0) return false;
-		ChunkCoordinates c = LMDimUtils.getSpawnPoint(0);
-		int minX = MathHelperLM.chunk(c.posX + 0.5D - radius);
-		int minZ = MathHelperLM.chunk(c.posZ + 0.5D - radius);
-		int maxX = MathHelperLM.chunk(c.posX + 0.5D + radius);
-		int maxZ = MathHelperLM.chunk(c.posZ + 0.5D + radius);
-		return cx >= minX && cx <= maxX && cz >= minZ && cz <= maxZ;
-	}
-	
-	public static boolean isInSpawnD(int dim, double x, double z)
-	{ return dim == 0 && isInSpawn(dim, MathHelperLM.chunk(x), MathHelperLM.chunk(z)); }
-	
-	public static boolean isOutsideWorldBorder(int dim, int cx, int cz)
-	{
-		if(!FTBUConfig.world_border.enabled || isInSpawn(dim, cx, cz)) return false;
-		int radius = FTBUConfig.world_border.getWorldBorder(dim);
-		int min = MathHelperLM.chunk(-radius);
-		int max = MathHelperLM.chunk(radius);
-		return cx >= max || cx <= min || cz >= max || cz <= min;
-	}
-	
-	public static boolean isOutsideWorldBorderD(int dim, double x, double z)
-	{ return isOutsideWorldBorder(dim, MathHelperLM.chunk(x), MathHelperLM.chunk(z)); }
 }

@@ -15,12 +15,12 @@ public class MessageNotifyPlayer extends MessageLM<MessageNotifyPlayer>
 	
 	public void readData(ByteIOStream io) throws Exception
 	{
-		data = io.readUTF();
+		data = io.readString();
 	}
 	
 	public void writeData(ByteIOStream io) throws Exception
 	{
-		io.writeUTF(data);
+		io.writeString(data);
 	}
 	
 	public IMessage onMessage(MessageNotifyPlayer m, MessageContext ctx)

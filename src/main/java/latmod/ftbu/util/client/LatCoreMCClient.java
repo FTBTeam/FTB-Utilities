@@ -174,7 +174,13 @@ public final class LatCoreMCClient // LatCoreMC
 	}
 	
 	public static boolean isPlaying()
-	{ return mc.theWorld != null && mc.thePlayer != null && mc.thePlayer.worldObj != null && LMWorldClient.inst != null && LMWorldClient.inst.clientPlayer != null; }
+	{
+		return mc.theWorld != null
+		&& mc.thePlayer != null
+		&& mc.thePlayer.worldObj != null
+		&& LMWorldClient.inst != null
+		&& LMWorldClient.inst.clientPlayer != null;
+	}
 	
 	public static int getDim()
 	{ return isPlaying() ? mc.thePlayer.worldObj.provider.dimensionId : 0; }

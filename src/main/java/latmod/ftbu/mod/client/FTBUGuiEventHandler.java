@@ -9,7 +9,6 @@ import latmod.ftbu.mod.client.gui.GuiClientConfig;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
 import latmod.ftbu.util.client.*;
 import latmod.ftbu.util.gui.GuiLM;
-import latmod.ftbu.world.LMWorldClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.*;
@@ -38,8 +37,6 @@ public class FTBUGuiEventHandler
 		}
 		else if(e.gui instanceof GuiInventory || e.gui instanceof GuiContainerCreative)
 		{
-			if(!LMWorldClient.inst.hasServer) return;
-			
 			int xSize = 176;
 			int ySize = 166;
 			int buttonX = -17;

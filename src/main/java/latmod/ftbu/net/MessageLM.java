@@ -3,6 +3,7 @@ package latmod.ftbu.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import io.netty.buffer.ByteBuf;
 import latmod.core.util.ByteIOStream;
+import latmod.ftbu.mod.FTBUFinals;
 import latmod.ftbu.util.LatCoreMC;
 
 public abstract class MessageLM<E extends MessageLM<?>> implements IMessage, IMessageHandler<E, IMessage>
@@ -11,12 +12,13 @@ public abstract class MessageLM<E extends MessageLM<?>> implements IMessage, IMe
 	
 	public final void fromBytes(ByteBuf bb)
 	{
-		LatCoreMC.logger.info("[In] Message " + getClass() + " with " + bb.getClass());
+		if(FTBUFinals.DEV) LatCoreMC.logger.info("[In] Message " + getClass());
 		
 		try
 		{
-			localIO.setData(new byte[bb.readShort() & 0xFFFF]);
-			bb.readBytes(localIO.getRawBytes());
+			byte[] b = new byte[bb.readShort() & 0xFFFF];
+			bb.readBytes(b, 0, b.length);
+			localIO.setData(b, true);
 			readData(localIO);
 		}
 		catch(Exception e)
@@ -25,14 +27,15 @@ public abstract class MessageLM<E extends MessageLM<?>> implements IMessage, IMe
 	
 	public final void toBytes(ByteBuf bb)
 	{
-		LatCoreMC.logger.info("[Out] Message " + getClass() + " with " + bb.getClass());
+		if(FTBUFinals.DEV) LatCoreMC.logger.info("[Out] Message " + getClass());
 		
 		try
 		{
-			localIO.setData(new byte[0]);
+			localIO.setData(new byte[16], true);
 			writeData(localIO);
-			bb.writeShort(localIO.size());
-			bb.writeBytes(localIO.getRawBytes(), 0, localIO.size());
+			byte[] b = localIO.toByteArray(true);
+			bb.writeShort((short)b.length);
+			bb.writeBytes(b, 0, b.length);
 		}
 		catch(Exception e)
 		{ e.printStackTrace(); }

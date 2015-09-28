@@ -72,7 +72,8 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 			public void onButtonPressed(int b)
 			{
 				gui.playClickSound();
-				ClientAction.ACTION_SET_SAFE_CHUNKS.send(LMWorldClient.inst.clientPlayer.settings.safeClaims ? 0 : 1);
+				if(LatCoreMCClient.isPlaying())
+					ClientAction.ACTION_SET_SAFE_CHUNKS.send(LMWorldClient.inst.clientPlayer.settings.safeClaims ? 0 : 1);
 			}
 		};
 		
@@ -102,7 +103,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		mapRenderer.renderY = mapButton.getAY();
 		mapRenderer.render();
 		
-		if(mapButton.mouseOver())
+		if(mapButton.mouseOver() && LatCoreMCClient.isPlaying())
 		{
 			GL11.glColor4f(0.1F, 1F, 0.7F, 0.8F);
 			tex_mouse.render(this, mapRenderer.renderX + (mapButton.chunkX() - mapRenderer.startX) * 16, mapRenderer.renderY + (mapButton.chunkZ() - mapRenderer.startY) * 16, 16, 16);
@@ -148,7 +149,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		buttonClose.render(GuiIcons.accept);
 		buttonSafe.render();
 		
-		if(LMWorldClient.inst.clientPlayer.settings.safeClaims)
+		if(LatCoreMCClient.isPlaying() && LMWorldClient.inst.clientPlayer.settings.safeClaims)
 		{
 			zLevel = 500;
 			GL11.glColor4f(1F, 1F, 1F, 0.75F);
@@ -160,7 +161,7 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 	
 	public void drawText(FastList<String> l)
 	{
-		if(LMWorldClient.inst.clientPlayer != null)
+		if(LatCoreMCClient.isPlaying())
 		{
 			String s = LMWorldClient.inst.clientPlayer.claimedChunks + " / " + LMWorldClient.inst.clientPlayer.maxClaimPower;
 			fontRendererObj.drawString(s, guiLeft + xSize - fontRendererObj.getStringWidth(s) - 4, guiTop + ySize - 12, 0xFFFFFFFF);

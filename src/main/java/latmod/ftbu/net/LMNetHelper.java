@@ -16,6 +16,7 @@ public class LMNetHelper
 	public static void init()
 	{
 		int ID = 0;
+		NET.registerMessage(MessageLMWorldJoined.class, MessageLMWorldJoined.class, ++ID, Side.CLIENT);
 		NET.registerMessage(MessageLMWorldUpdate.class, MessageLMWorldUpdate.class, ++ID, Side.CLIENT);
 		NET.registerMessage(MessageLMPlayerUpdate.class, MessageLMPlayerUpdate.class, ++ID, Side.CLIENT);
 		NET.registerMessage(MessageClientAction.class, MessageClientAction.class, ++ID, Side.SERVER);
@@ -48,6 +49,7 @@ public class LMNetHelper
 		if (s >= 0)
 		{
 			byte[] b = new byte[s];
+			if(b.length == 0) return null;
 			io.readRawBytes(b);
 			try { return CompressedStreamTools.func_152457_a(b, NBTSizeTracker.field_152451_a); }
 			catch(Exception e) { }
@@ -61,19 +63,22 @@ public class LMNetHelper
 		if (tag == null) io.writeInt(-1);
 		else
 		{
-			try
+			byte[] b = null;
+			try { b = CompressedStreamTools.compress(tag); }
+			catch(Exception e) { }
+			
+			if(b != null && b.length > 0)
 			{
-				byte[] b = CompressedStreamTools.compress(tag);
 				io.writeInt(b.length);
 				io.writeRawBytes(b);
 			}
-			catch(Exception e) { io.writeInt(-1); }
+			else io.writeInt(-1);
 		}
 	}
 	
 	public static IChatComponent readChatComponent(ByteIOStream io) throws Exception
-	{ return IChatComponent.Serializer.func_150699_a(io.readUTF()); }
+	{ return IChatComponent.Serializer.func_150699_a(io.readString()); }
 	
 	public static void writeChatComponent(ByteIOStream io, IChatComponent c) throws Exception
-	{ io.writeUTF(IChatComponent.Serializer.func_150696_a(c)); }
+	{ io.writeString(IChatComponent.Serializer.func_150696_a(c)); }
 }

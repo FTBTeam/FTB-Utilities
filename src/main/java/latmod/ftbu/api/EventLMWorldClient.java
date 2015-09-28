@@ -1,9 +1,7 @@
 package latmod.ftbu.api;
 
-import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.world.LMWorldClient;
 
-@SideOnly(Side.CLIENT)
 public class EventLMWorldClient extends EventLM
 {
 	public final LMWorldClient world;

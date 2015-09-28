@@ -12,7 +12,6 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.nbt.*;
 import net.minecraft.util.*;
 
-@SideOnly(Side.CLIENT)
 public class LMPlayerClient extends LMPlayer // LMPlayerServer
 {
 	public final FastList<IChatComponent> clientInfo;

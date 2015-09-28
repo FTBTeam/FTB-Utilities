@@ -67,7 +67,7 @@ public class FTBUEventHandler // FTBUTickHandler
 		p.setPlayer(ep);
 		p.updateLastSeen();
 		
-		LMNetHelper.sendTo(sendAll ? null : ep, new MessageLMWorldUpdate(LMWorldServer.inst.worldID, p.playerID));
+		LMNetHelper.sendTo(sendAll ? null : ep, new MessageLMWorldJoined(LMWorldServer.inst.worldID, p.playerID));
 		new EventLMPlayerServer.LoggedIn(p, ep, first).post();
 		ServerConfigRegistry.updateConfig(ep, null);
 		
@@ -223,7 +223,7 @@ public class FTBUEventHandler // FTBUTickHandler
 	{
 		World w = ep.worldObj;
 		boolean server = !w.isRemote;
-		if(server && Claims.isOutsideWorldBorderD(w.provider.dimensionId, x, z)) return false;
+		if(server && LMWorldServer.inst.worldBorder.isOutsideF(w.provider.dimensionId, x, z)) return false;
 		
 		if(ep.capabilities.isCreativeMode && leftClick && ep.getHeldItem() != null && ep.getHeldItem().getItem() instanceof ICreativeSafeItem)
 		{
@@ -266,16 +266,16 @@ public class FTBUEventHandler // FTBUTickHandler
 	@SubscribeEvent
 	public void onMobSpawned(net.minecraftforge.event.entity.EntityJoinWorldEvent e)
 	{
-		if(!FTBUConfig.general.safeSpawn || !FTBUConfig.general.isDedi()) return;
+		if(e.world.isRemote || !FTBUConfig.general.safeSpawn || !FTBUConfig.general.isDedi()) return;
 		
-		if((e.entity instanceof IMob || (e.entity instanceof EntityChicken && e.entity.riddenByEntity != null)) && Claims.isInSpawnD(e.world.provider.dimensionId, e.entity.posX, e.entity.posZ))
+		if((e.entity instanceof IMob || (e.entity instanceof EntityChicken && e.entity.riddenByEntity != null)) && WorldBorder.isInSpawnF(e.world.provider.dimensionId, e.entity.posX, e.entity.posZ))
 			e.setCanceled(true);
 	}
 	
 	@SubscribeEvent
 	public void onPlayerAttacked(net.minecraftforge.event.entity.living.LivingAttackEvent e)
 	{
-		if(!FTBUConfig.general.isDedi()) return;
+		if(e.entity.worldObj.isRemote || !FTBUConfig.general.isDedi()) return;
 		
 		int dim = e.entity.dimension;
 		if(dim != 0 || !(e.entity instanceof EntityPlayerMP) || e.entity instanceof FakePlayer) return;
@@ -289,7 +289,7 @@ public class FTBUEventHandler // FTBUTickHandler
 			int cx = MathHelperLM.chunk(e.entity.posX);
 			int cz = MathHelperLM.chunk(e.entity.posZ);
 			
-			if(Claims.isOutsideWorldBorder(dim, cx, cz) || (FTBUConfig.general.safeSpawn && Claims.isInSpawn(dim, cx, cz))) e.setCanceled(true);
+			if(LMWorldServer.inst.worldBorder.isOutside(dim, cx, cz) || (FTBUConfig.general.safeSpawn && WorldBorder.isInSpawn(dim, cx, cz))) e.setCanceled(true);
 			/*else
 			{
 				ClaimedChunk c = Claims.get(dim, cx, cz);
@@ -308,68 +308,68 @@ public class FTBUEventHandler // FTBUTickHandler
 		int cx = MathHelperLM.chunk(e.explosion.explosionX);
 		int cz = MathHelperLM.chunk(e.explosion.explosionZ);
 		
-		if(Claims.isOutsideWorldBorder(dim, cx, cz) || (FTBUConfig.general.safeSpawn && Claims.isInSpawn(dim, cx, cz))) e.setCanceled(true);
-		/*else
+		if(LMWorldServer.inst.worldBorder.isOutside(dim, cx, cz) || (FTBUConfig.general.safeSpawn && WorldBorder.isInSpawn(dim, cx, cz))) e.setCanceled(true);
+		else
 		{
 			ClaimedChunk c = Claims.get(dim, cx, cz);
-			if(c != null && c.claims.isSafe()) e.setCanceled(true);
-		}*/
+			if(c != null && c.claims.owner.settings.safeClaims)
+				e.setCanceled(true);
+		}
 	}
 	
 	@SubscribeEvent
 	public void onChunkChanged(net.minecraftforge.event.entity.EntityEvent.EnteringChunk e)
 	{
-		if(!e.entity.worldObj.isRemote && e.entity instanceof EntityPlayerMP)
+		if(e.entity.worldObj.isRemote || !(e.entity instanceof EntityPlayerMP)) return;
+		
+		EntityPlayerMP ep = (EntityPlayerMP)e.entity;
+		LMPlayerServer player = LMWorldServer.inst.getPlayer(ep);
+		if(player == null || !player.isOnline()) return;
+		
+		if(player.lastPos == null) player.lastPos = new EntityPos(ep);
+		
+		else if(!player.lastPos.equalsPos(ep))
 		{
-			EntityPlayerMP ep = (EntityPlayerMP)e.entity;
-			LMPlayerServer player = LMWorldServer.inst.getPlayer(ep);
-			if(player == null || !player.isOnline()) return;
-			
-			if(player.lastPos == null) player.lastPos = new EntityPos(ep);
-			
-			else if(!player.lastPos.equalsPos(ep))
+			if(LMWorldServer.inst.worldBorder.isOutsideF(ep.dimension, ep.posX, ep.posZ))
 			{
-				if(Claims.isOutsideWorldBorderD(ep.dimension, ep.posX, ep.posZ))
+				ep.motionX = ep.motionY = ep.motionZ = 0D;
+				IChatComponent warning = new ChatComponentTranslation(FTBU.mod.assets + ChunkType.WORLD_BORDER.lang + ".warning");
+				warning.getChatStyle().setColor(EnumChatFormatting.RED);
+				LatCoreMC.notifyPlayer(ep, new Notification("world_border", warning, 3000));
+				
+				if(LMWorldServer.inst.worldBorder.isOutsideF(player.lastPos.dim, player.lastPos.x, player.lastPos.z))
 				{
-					ep.motionX = ep.motionY = ep.motionZ = 0D;
-					IChatComponent warning = new ChatComponentTranslation(FTBU.mod.assets + ChunkType.WORLD_BORDER.lang + ".warning");
-					warning.getChatStyle().setColor(EnumChatFormatting.RED);
-					LatCoreMC.notifyPlayer(ep, new Notification("world_border", warning, 3000));
-					
-					if(Claims.isOutsideWorldBorderD(player.lastPos.dim, player.lastPos.x, player.lastPos.z))
-					{
-						LatCoreMC.printChat(ep, "Teleporting to spawn!");
-						World w = LMDimUtils.getWorld(0);
-						ChunkCoordinates pos = w.getSpawnPoint();
-						pos.posY = w.getTopSolidOrLiquidBlock(pos.posX, pos.posZ);
-						LMDimUtils.teleportPlayer(ep, pos.posX + 0.5D, pos.posY + 1.25D, pos.posZ + 0.5D, 0);
-					}
-					else LMDimUtils.teleportPlayer(ep, player.lastPos);
-					ep.worldObj.playSoundAtEntity(ep, "random.fizz", 1F, 1F);
+					LatCoreMC.printChat(ep, "Teleporting to spawn!");
+					World w = LMDimUtils.getWorld(0);
+					ChunkCoordinates pos = w.getSpawnPoint();
+					pos.posY = w.getTopSolidOrLiquidBlock(pos.posX, pos.posZ);
+					LMDimUtils.teleportPlayer(ep, pos.posX + 0.5D, pos.posY + 1.25D, pos.posZ + 0.5D, 0);
 				}
-				
-				player.lastPos.set(ep);
+				else LMDimUtils.teleportPlayer(ep, player.lastPos);
+				ep.worldObj.playSoundAtEntity(ep, "random.fizz", 1F, 1F);
 			}
 			
-			int currentChunkType = ChunkType.getChunkTypeI(ep.dimension, e.newChunkX, e.newChunkZ, player);
+			player.lastPos.set(ep);
+		}
+		
+		int currentChunkType = ChunkType.getChunkTypeI(ep.dimension, e.newChunkX, e.newChunkZ, player);
+		
+		if(player.lastChunkType == -99 || player.lastChunkType != currentChunkType)
+		{
+			player.lastChunkType = currentChunkType;
 			
-			if(player.lastChunkType == -99 || player.lastChunkType != currentChunkType)
-			{
-				player.lastChunkType = currentChunkType;
-				
-				ChunkType type = ChunkType.getChunkTypeFromI(currentChunkType, player);
-				IChatComponent msg = null;
-				
-				if(type.isClaimed())
-					msg = new ChatComponentText("" + LMWorldServer.inst.getPlayer(currentChunkType));
-				else
-					msg = new ChatComponentTranslation(FTBU.mod.assets + type.lang);
-				
-				Notification n = new Notification("chunk_changed", msg, 3000);
-				n.setColor(type.areaColor);
-				
-				LatCoreMC.notifyPlayer(ep, n);
-			}
+			ChunkType type = ChunkType.getChunkTypeFromI(currentChunkType, player);
+			IChatComponent msg = null;
+			
+			if(type.isClaimed())
+				msg = new ChatComponentText(String.valueOf(LMWorldServer.inst.getPlayer(currentChunkType)));
+			else
+				msg = new ChatComponentTranslation(FTBU.mod.assets + type.lang);
+			
+			Notification n = new Notification("chunk_changed", msg, 3000);
+			n.setColor(type.areaColor);
+			
+			LatCoreMC.notifyPlayer(ep, n);
 		}
 	}
 	

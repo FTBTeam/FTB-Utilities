@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import latmod.core.util.*;
-import latmod.ftbu.api.ServerConfigRegistry;
+import latmod.ftbu.api.*;
 import latmod.ftbu.api.readme.ReadmeSaveHandler;
 import latmod.ftbu.backups.Backups;
 import latmod.ftbu.inv.*;
@@ -69,6 +69,8 @@ public class FTBU
 		
 		mod.onPostLoaded();
 		proxy.preInit();
+		
+		new EventFTBUInit(Phase.PRE).post();
 	}
 	
 	@Mod.EventHandler
@@ -84,6 +86,8 @@ public class FTBU
 		ODItems.postInit();
 		mod.loadRecipes();
 		proxy.postInit();
+		
+		new EventFTBUInit(Phase.POST).post();
 		
 		Thread readmeThread = new Thread("LM_Save_Readme")
 		{

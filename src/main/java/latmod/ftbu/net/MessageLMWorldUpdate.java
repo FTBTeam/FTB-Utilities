@@ -1,6 +1,7 @@
 package latmod.ftbu.net;
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.*;
-import latmod.core.util.ByteIOStream;
+import io.netty.buffer.ByteBuf;
 import latmod.ftbu.world.*;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -12,17 +13,18 @@ public class MessageLMWorldUpdate extends MessageLM<MessageLMWorldUpdate>
 	
 	public MessageLMWorldUpdate(LMWorldServer w)
 	{
+		data = new NBTTagCompound();
 		w.writeDataToNet(data, 0);
 	}
 	
-	public void readData(ByteIOStream io) throws Exception
+	public void fromBytes(ByteBuf io)
 	{
-		data = LMNetHelper.readTagCompound(io);
+		data = ByteBufUtils.readTag(io);
 	}
 	
-	public void writeData(ByteIOStream io) throws Exception
+	public void toBytes(ByteBuf io)
 	{
-		LMNetHelper.writeTagCompound(io, data);
+		ByteBufUtils.writeTag(io, data);
 	}
 	
 	public IMessage onMessage(MessageLMWorldUpdate m, MessageContext ctx)

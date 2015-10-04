@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.zip.*;
 
 import latmod.core.util.*;
-import latmod.ftbu.mod.config.FTBUConfig;
+import latmod.ftbu.mod.config.FTBUConfigBackups;
 import latmod.ftbu.util.*;
 import latmod.ftbu.world.LMWorldServer;
 import net.minecraft.command.server.*;
@@ -50,7 +50,7 @@ public class ThreadBackup extends Thread
 			
 			LatCoreMC.logger.info("Backing up " + files.size() + " files...");
 			
-			if(FTBUConfig.backups.compressionLevel > 0)
+			if(FTBUConfigBackups.compressionLevel.get() > 0)
 			{
 				out.append(LMWorldServer.inst.worldIDS);
 				out.append(".zip");
@@ -60,7 +60,7 @@ public class ThreadBackup extends Thread
 				
 				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(dstFile));
 				//zos.setLevel(9);
-				zos.setLevel(FTBUConfig.backups.compressionLevel);
+				zos.setLevel(FTBUConfigBackups.compressionLevel.get());
 				
 				long logMillis = LMUtils.millis() + 5000L;
 				
@@ -144,7 +144,7 @@ public class ThreadBackup extends Thread
 			
 			Backups.clearOldBackups();
 			
-			if(FTBUConfig.backups.displayFileSize)
+			if(FTBUConfigBackups.displayFileSize.get())
 			{
 				String sizeB = LMFileUtils.getSizeS(dstFile);
 				String sizeT = LMFileUtils.getSizeS(Backups.backupsFolder);

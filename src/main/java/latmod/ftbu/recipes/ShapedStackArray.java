@@ -3,15 +3,15 @@ import net.minecraft.item.ItemStack;
 
 public class ShapedStackArray implements IStackArray
 {
-	public StackEntry[] items;
+	public StackArray[] items;
 	
-	public ShapedStackArray(StackEntry... se)
+	public ShapedStackArray(StackArray... se)
 	{
 		items = se;
 	}
 	
 	public ShapedStackArray(Object... o)
-	{ this(StackEntry.convert(o)); }
+	{ this(StackArray.convert(o)); }
 	
 	public boolean matches(ItemStack[] ai)
 	{
@@ -28,6 +28,6 @@ public class ShapedStackArray implements IStackArray
 		return true;
 	}
 	
-	public StackEntry[] getItems()
+	public StackArray[] getItems()
 	{ return items; }
 }

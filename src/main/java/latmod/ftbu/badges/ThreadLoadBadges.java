@@ -7,7 +7,7 @@ import java.util.UUID;
 import cpw.mods.fml.relauncher.*;
 import latmod.core.util.*;
 import latmod.ftbu.api.EventFTBUBadges;
-import latmod.ftbu.mod.config.FTBUConfig;
+import latmod.ftbu.mod.config.FTBUConfigLogin;
 import latmod.ftbu.util.LatCoreMC;
 
 @SideOnly(Side.CLIENT)
@@ -37,8 +37,8 @@ public class ThreadLoadBadges extends Thread
 		
 		int loaded = loadBages(DEF_BADGES);
 		
-		if(!FTBUConfig.login.customBadges.isEmpty())
-			loaded += loadBages(FTBUConfig.login.customBadges);
+		if(!FTBUConfigLogin.customBadges.get().isEmpty())
+			loaded += loadBages(FTBUConfigLogin.customBadges.get());
 		
 		customBadges.clear();
 		new EventFTBUBadges(customBadges).post();

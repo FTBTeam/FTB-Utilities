@@ -1,7 +1,7 @@
 package latmod.ftbu.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.Side;
-import latmod.core.util.ByteIOStream;
+import io.netty.buffer.ByteBuf;
 import latmod.ftbu.api.EventFTBUReload;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
@@ -11,11 +11,11 @@ public class MessageReload extends MessageLM<MessageReload>
 {
 	public MessageReload() { }
 	
-	public void readData(ByteIOStream io) throws Exception
+	public void fromBytes(ByteBuf io)
 	{
 	}
 	
-	public void writeData(ByteIOStream io) throws Exception
+	public void toBytes(ByteBuf io)
 	{
 	}
 	

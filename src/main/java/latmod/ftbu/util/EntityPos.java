@@ -15,6 +15,9 @@ public class EntityPos
 	public EntityPos(Entity e)
 	{ set(e); }
 	
+	public EntityPos(ChunkCoordinates c, int dim)
+	{ set(c, dim); }
+	
 	public EntityPos(double px, double py, double pz, int d)
 	{ setPos(px, py, pz, d); }
 	
@@ -26,6 +29,9 @@ public class EntityPos
 	
 	public void set(Entity e)
 	{ setPos(e.posX, e.posY, e.posZ, e.dimension); }
+	
+	public void set(ChunkCoordinates c, int dim)
+	{ setPos(c.posX + 0.5D, c.posY + 0.5D, c.posZ + 0.5D, dim); }
 	
 	public void readFromNBT(NBTTagCompound tag)
 	{

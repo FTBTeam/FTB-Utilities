@@ -60,5 +60,5 @@ public class PersonalSettings
 	}
 	
 	public void update()
-	{ if(owner.isServer) owner.toPlayerMP().sendUpdate(true); }
+	{ if(owner.isServer) owner.toPlayerMP().sendUpdate(); }
 }

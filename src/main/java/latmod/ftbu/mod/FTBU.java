@@ -1,22 +1,19 @@
 package latmod.ftbu.mod;
 import java.io.File;
-import java.lang.reflect.Method;
 
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
-import latmod.core.util.*;
+import latmod.core.util.OS;
 import latmod.ftbu.api.*;
 import latmod.ftbu.api.readme.ReadmeSaveHandler;
 import latmod.ftbu.backups.Backups;
-import latmod.ftbu.inv.*;
+import latmod.ftbu.inv.ODItems;
 import latmod.ftbu.mod.cmd.*;
 import latmod.ftbu.mod.config.FTBUConfig;
 import latmod.ftbu.net.LMNetHelper;
 import latmod.ftbu.util.*;
 import latmod.ftbu.world.LMWorldServer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
 
 @Mod
 (
@@ -44,29 +41,18 @@ public class FTBU
 		else
 			LatCoreMC.logger.info("Loading " + FTBUFinals.MOD_NAME + ", Build #" + FTBUFinals.MOD_VERSION);
 		
-		LatCoreMC.logger.info("OS: " + OS.get());
+		LatCoreMC.logger.info("OS: " + OS.current + ", 64bit: " + OS.is64);
 		
 		LatCoreMC.configFolder = e.getModConfigurationDirectory();
 		LatCoreMC.latmodFolder = new File(LatCoreMC.configFolder.getParentFile(), "latmod/");
 		if(!LatCoreMC.latmodFolder.exists()) LatCoreMC.latmodFolder.mkdirs();
-		
-		LMMod.init(this, null, null);
+		LMMod.init(this);
 		mod.logger = LatCoreMC.logger;
-		
-		LMJsonUtils.register(IChatComponent.class, new IChatComponent.Serializer());
-		LMJsonUtils.register(ChatStyle.class, new ChatStyle.Serializer());
-		LMJsonUtils.registerFactory(new EnumTypeAdapterFactory());
-		LMJsonUtils.register(ItemStack.class, new ItemStackTypeAdapter());
-		LMJsonUtils.register(Notification.class, new Notification.Serializer());
-		
+		JsonHelper.init();
 		EventBusHelper.register(new FTBUEventHandler());
-		
-		ServerConfigRegistry.add(FTBUConfig.instance);
-		FTBUConfig.instance.load();
-		
+		FTBUConfig.load();
 		ODItems.preInit();
 		Backups.init();
-		
 		mod.onPostLoaded();
 		proxy.preInit();
 		
@@ -114,6 +100,7 @@ public class FTBU
 		e.registerServerCommand(new CmdTplast());
 		e.registerServerCommand(new CmdWarp());
 		e.registerServerCommand(new CmdListOverride());
+		e.registerServerCommand(new CmdMath());
 	}
 	
 	@Mod.EventHandler
@@ -131,31 +118,6 @@ public class FTBU
 	{
 		FTBUTicks.serverStopped();
 		LMWorldServer.inst = null;
-	}
-	
-	@Mod.EventHandler
-	public void onIMC(FMLInterModComms.IMCEvent e)
-	{
-		for(FMLInterModComms.IMCMessage m : e.getMessages())
-		{
-			String s = m.getStringValue();
-			if(s != null && !s.isEmpty() && s.indexOf(':') != -1)
-			{
-				try
-				{
-					String[] s1 = s.split(":");
-					if(s1 != null && s1.length == 2)
-					{
-						Class<?> c = Class.forName(s1[0]);
-						Method m1 = c.getDeclaredMethod(s1[1]);
-						m1.invoke(null);
-						LatCoreMC.logger.info("Loaded IMC registry " + s + " from " + m.getSender());
-					}
-				}
-				catch(Exception ex)
-				{ LatCoreMC.logger.info("Failed to load IMC registry " + s + " from " + m.getSender()); }
-			}
-		}
 	}
 	
 	/*

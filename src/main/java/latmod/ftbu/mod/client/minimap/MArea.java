@@ -95,7 +95,7 @@ public class MArea
 		for(int i = 0; i < chunks.values.size(); i++)
 		{
 			MChunk c = chunks.values.get(i);
-			image.setRGB(c.rposX * 16, c.rposY * 16, 16, 16, c.pixels);
+			if(c != null) image.setRGB(c.rposX * 16, c.rposY * 16, 16, 16, c.pixels);
 		}
 		
 		return image;

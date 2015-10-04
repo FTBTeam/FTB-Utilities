@@ -1,85 +1,49 @@
 package latmod.ftbu.mod.config;
 
 import java.io.File;
-import java.lang.reflect.Field;
-import java.util.*;
 
-import latmod.core.util.LMJsonUtils;
-import latmod.ftbu.api.IServerConfig;
+import latmod.ftbu.api.config.*;
 import latmod.ftbu.api.readme.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.util.LatCoreMC;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
 
-public class FTBUConfig implements IServerConfig // FTBU
+public class FTBUConfig // FTBU
 {
-	public static final FTBUConfig instance = new FTBUConfig();
+	private static ConfigFile configFile;
 	
-	public static ConfigGeneral general;
-	public static ConfigLogin login;
-	public static ConfigBackups backups;
-	
-	public String getConfigName()
-	{ return FTBU.mod.modID; }
-	
-	public void load()
+	public static void load()
 	{
-		ConfigGeneral.load();
-		ConfigLogin.load();
-		ConfigBackups.load();
-		
-		int overrides = loadOverrides();
-		LatCoreMC.logger.info("Config loaded with " + overrides + " overrides");
-		
-		saveAll();
+		configFile = new ConfigFile(FTBU.mod.modID, new File(LatCoreMC.latmodFolder, "ftbu/config.txt"), true);
+		FTBUConfigGeneral.load(configFile);
+		FTBUConfigLogin.load(configFile);
+		FTBUConfigBackups.load(configFile);
+		ConfigFileRegistry.add(configFile);
+		configFile.load();
 	}
 	
-	public static void saveAll()
+	public static void save()
 	{
-		ConfigGeneral.save();
-		ConfigLogin.save();
-		ConfigBackups.save();
+		configFile.save();
 	}
 	
 	public static void saveReadme(ReadmeFile file)
 	{
-		file.add(new ReadmeCategory("latmod/ftbu/general.txt").addFromClass(ConfigGeneral.class));
-		file.add(new ReadmeCategory("latmod/ftbu/login.txt").addFromClass(ConfigLogin.class));
-		file.add(new ReadmeCategory("latmod/ftbu/backups.txt").addFromClass(ConfigBackups.class));
+		file.add(new ReadmeCategory("latmod/ftbu/config.txt/" + FTBUConfigGeneral.group.ID).addFromClass(FTBUConfigGeneral.class));
+		file.add(new ReadmeCategory("latmod/ftbu/config.txt/" + FTBUConfigLogin.group.ID).addFromClass(FTBUConfigLogin.class));
+		file.add(new ReadmeCategory("latmod/ftbu/config.txt/" + FTBUConfigBackups.group.ID).addFromClass(FTBUConfigBackups.class));
 	}
 	
-	public void readConfig(NBTTagCompound tag)
-	{
-		general.allowCreativeInteractSecure = tag.getBoolean("CS");
-		login.customBadges = tag.getString("CB");
-	}
-	
-	public void writeConfig(NBTTagCompound tag, EntityPlayerMP ep)
-	{
-		tag.setBoolean("CS", general.allowCreativeInteractSecure);
-		if(!login.customBadges.isEmpty())
-			tag.setString("CB", login.customBadges);
-	}
-	
+	/* FIXME: Overrides
 	private static class Overrides
 	{
-		public Map<String, Map<String, Object>> overrides;
-		
-		private static Object getFromFile(String s)
-		{
-			if(s.equals("general")) return general;
-			else if(s.equals("login")) return login;
-			else if(s.equals("backups")) return backups;
-			else return null;
-		}
-	}
+		public Map<String, Object> overrides;
+	}*/
 	
-	@SuppressWarnings("unchecked")
 	public static int loadOverrides()
 	{
 		int loaded = 0;
 		
+		/*
 		try
 		{
 			File f = new File(LatCoreMC.configFolder, "LatMod/FTBU_Overrides.txt");
@@ -140,6 +104,7 @@ public class FTBUConfig implements IServerConfig // FTBU
 		}
 		catch(Exception e)
 		{ e.printStackTrace(); }
+		*/
 		
 		return loaded;
 	}

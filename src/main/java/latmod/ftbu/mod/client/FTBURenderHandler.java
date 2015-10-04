@@ -8,6 +8,7 @@ import latmod.core.util.*;
 import latmod.ftbu.api.callback.ClientTickCallback;
 import latmod.ftbu.badges.Badge;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.util.Coords;
 import latmod.ftbu.util.client.*;
 import latmod.ftbu.util.client.model.TexturedCubeRenderer;
 import latmod.ftbu.world.*;
@@ -82,15 +83,18 @@ public class FTBURenderHandler
 		//LMFrustrumUtils.updateMatrix();
 		
 		if(LMWorldClient.inst == null || !LMWorldClient.inst.worldBorder.enabled) return;
-		
 		int wb = LMWorldClient.inst.worldBorder.getSize(LMFrustrumUtils.currentDim);
-		float min = (MathHelperLM.chunk(-wb) + 1) * 16 + 0.01F;
-		float max = MathHelperLM.chunk(wb) * 16 - 0.01F;
+		Coords.I2 borderPos = LMWorldClient.inst.worldBorder.getPos(LMFrustrumUtils.currentDim);
 		
-		boolean renderWest = LMFrustrumUtils.playerX <= min + 16;
-		boolean renderEast = LMFrustrumUtils.playerX >= max - 16;
-		boolean renderNorth = LMFrustrumUtils.playerZ <= min + 16;
-		boolean renderSouth = LMFrustrumUtils.playerZ >= max - 16;
+		float minX = (MathHelperLM.chunk(-wb + borderPos.x) + 1) * 16 + 0.01F;
+		float maxX = MathHelperLM.chunk(wb + borderPos.x) * 16 - 0.01F;
+		float minZ = (MathHelperLM.chunk(-wb + borderPos.y) + 1) * 16 + 0.01F;
+		float maxZ = MathHelperLM.chunk(wb + borderPos.y) * 16 - 0.01F;
+		
+		boolean renderWest = LMFrustrumUtils.playerX <= minX + 16;
+		boolean renderEast = LMFrustrumUtils.playerX >= maxX - 16;
+		boolean renderNorth = LMFrustrumUtils.playerZ <= minZ + 16;
+		boolean renderSouth = LMFrustrumUtils.playerZ >= maxZ - 16;
 		
 		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 		GL11.glEnable(GL11.GL_BLEND);
@@ -114,8 +118,8 @@ public class FTBURenderHandler
 		
 		float f = Minecraft.getSystemTime() * 0.0004F;
 		
-		worldBorderRenderer.setSize(min, 0D, min, max, 256D, max);
-		worldBorderRenderer.setUV(-1, min + f, 0F, max + f, 256F);
+		worldBorderRenderer.setSize(minX, 0D, minZ, maxX, 256D, maxZ);
+		worldBorderRenderer.setUV(-1, minX + f, 0F, maxX + f, 256F);
 		
 		float maxA = 0.8F;
 		
@@ -123,25 +127,25 @@ public class FTBURenderHandler
 		
 		if(renderWest)
 		{
-			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(LMFrustrumUtils.playerX - min) * maxA / 16F);
+			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(LMFrustrumUtils.playerX - minX) * maxA / 16F);
 			worldBorderRenderer.renderWest();
 		}
 		
 		if(renderEast)
 		{
-			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(max - LMFrustrumUtils.playerX) * maxA / 16F);
+			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(maxX - LMFrustrumUtils.playerX) * maxA / 16F);
 			worldBorderRenderer.renderEast();
 		}
 		
 		if(renderNorth)
 		{
-			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(LMFrustrumUtils.playerZ - min) * maxA / 16F);
+			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(LMFrustrumUtils.playerZ - minZ) * maxA / 16F);
 			worldBorderRenderer.renderNorth();
 		}
 		
 		if(renderSouth)
 		{
-			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(max - LMFrustrumUtils.playerZ) * maxA / 16F);
+			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(maxZ - LMFrustrumUtils.playerZ) * maxA / 16F);
 			worldBorderRenderer.renderSouth();
 		}
 		

@@ -4,22 +4,22 @@ import net.minecraft.item.ItemStack;
 
 public class ShapelessStackArray implements IStackArray
 {
-	public StackEntry[] items;
+	public StackArray[] items;
 	
-	public ShapelessStackArray(StackEntry... se)
+	public ShapelessStackArray(StackArray... se)
 	{
 		items = se;
 	}
 	
 	public ShapelessStackArray(Object... o)
-	{ this(StackEntry.convert(o)); }
+	{ this(StackArray.convert(o)); }
 	
 	public boolean matches(ItemStack[] ai)
 	{
 		if(items == null || ai == null) return false;
 		if(items.length != ai.length) return false;
 		
-		FastList<StackEntry> itemsList = new FastList<StackEntry>(items);
+		FastList<StackArray> itemsList = new FastList<StackArray>(items);
 		
 		for(int i = 0; i < ai.length; i++)
 			itemsList.remove(ai[i]);
@@ -27,6 +27,6 @@ public class ShapelessStackArray implements IStackArray
 		return itemsList.isEmpty();
 	}
 	
-	public StackEntry[] getItems()
+	public StackArray[] getItems()
 	{ return items; }
 }

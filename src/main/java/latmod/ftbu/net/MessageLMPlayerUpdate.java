@@ -1,6 +1,7 @@
 package latmod.ftbu.net;
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.*;
-import latmod.core.util.ByteIOStream;
+import io.netty.buffer.ByteBuf;
 import latmod.ftbu.api.EventLMPlayerClient;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
@@ -21,16 +22,16 @@ public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate>
 		p.writeToNet(data, self);
 	}
 	
-	public void readData(ByteIOStream io) throws Exception
+	public void fromBytes(ByteBuf io)
 	{
 		playerID = io.readInt();
-		data = LMNetHelper.readTagCompound(io);
+		data = ByteBufUtils.readTag(io);
 	}
 	
-	public void writeData(ByteIOStream io) throws Exception
+	public void toBytes(ByteBuf io)
 	{
 		io.writeInt(playerID);
-		LMNetHelper.writeTagCompound(io, data);
+		ByteBufUtils.writeTag(io, data);
 	}
 	
 	public IMessage onMessage(MessageLMPlayerUpdate m, MessageContext ctx)

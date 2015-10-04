@@ -7,7 +7,6 @@ import org.apache.logging.log4j.*;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.relauncher.*;
 import latmod.core.util.*;
-import latmod.ftbu.api.*;
 import latmod.ftbu.block.IBlockLM;
 import latmod.ftbu.item.IItemLM;
 import latmod.ftbu.mod.FTBUFinals;
@@ -60,12 +59,10 @@ public class LMMod
 		return null;
 	}
 	
-	public static void init(Object o, LMConfig c, LMRecipes r)
+	public static void init(Object o)
 	{
 		LMMod mod = getLMMod(o);
 		if(mod == null) { LatCoreMC.logger.warn("LMMod failed to load from " + o); return; }
-		mod.setConfig(c);
-		mod.setRecipes(r);
 		modsMap.put(mod.modID, mod);
 		if(FTBUFinals.DEV) LatCoreMC.logger.info("LMMod '" + mod.toString() + "' loaded");
 	}
@@ -80,7 +77,6 @@ public class LMMod
 	
 	public Logger logger;
 	public LMRecipes recipes;
-	public LMConfig config;
 	
 	public LMMod(String id)
 	{
@@ -92,24 +88,10 @@ public class LMMod
 		
 		logger = LogManager.getLogger(modID);
 		recipes = new LMRecipes();
-		config = null;
 	}
 	
 	public void setRecipes(LMRecipes r)
 	{ recipes = (r == null) ? new LMRecipes() : r; }
-	
-	public void setConfig(LMConfig c)
-	{
-		config = c;
-		
-		if(config != null)
-		{
-			config.setMod(this);
-			
-			if(config instanceof IServerConfig)
-				ServerConfigRegistry.add((IServerConfig)config);
-		}
-	}
 	
 	public String toFullString()
 	{ return modID + '-' + FTBUFinals.MC_VERSION + '-' + modContainer.getDisplayVersion(); }

@@ -1,14 +1,14 @@
 package latmod.ftbu.mod.cmd.admin;
 
 import cpw.mods.fml.relauncher.Side;
-import latmod.ftbu.api.*;
+import latmod.ftbu.api.EventFTBUReload;
+import latmod.ftbu.api.config.ConfigFileRegistry;
 import latmod.ftbu.cmd.*;
 import latmod.ftbu.mod.FTBUTicks;
-import latmod.ftbu.mod.config.FTBUConfig;
+import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.net.*;
 import latmod.ftbu.util.*;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IChatComponent;
 
 public class CmdAdminReload extends CommandLM
@@ -18,15 +18,14 @@ public class CmdAdminReload extends CommandLM
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
-		float prevRRTimer = FTBUConfig.general.restartTimer.floatValue();
+		float prevRRTimer = FTBUConfigGeneral.restartTimer.get();
 		
-		FTBUConfig.instance.load();
-		for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers(null))
-			ServerConfigRegistry.updateConfig(ep, null);
+		ConfigFileRegistry.reloadAll();
+		ConfigFileRegistry.syncWithClient(null);
 		
-		if(FTBUConfig.general.isDedi())
+		if(FTBUConfigGeneral.isDedi())
 		{
-			if(prevRRTimer != FTBUConfig.general.restartTimer.floatValue())
+			if(prevRRTimer != FTBUConfigGeneral.restartTimer.get())
 				FTBUTicks.serverStarted();
 		}
 		

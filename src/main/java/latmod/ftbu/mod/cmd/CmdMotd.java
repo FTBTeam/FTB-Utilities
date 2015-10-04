@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.cmd;
 
 import latmod.ftbu.cmd.*;
-import latmod.ftbu.mod.config.FTBUConfig;
+import latmod.ftbu.mod.config.*;
 import latmod.ftbu.util.LatCoreMC;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -21,9 +21,9 @@ public class CmdMotd extends CommandLM
 	
 	public static boolean printMotd(EntityPlayerMP ep)
 	{
-		if(!FTBUConfig.general.isDedi() || FTBUConfig.login.motd.isEmpty()) return false;
+		if(!FTBUConfigGeneral.isDedi() || FTBUConfigLogin.motd.get().length == 0) return false;
 		
-		for(String s : FTBUConfig.login.motd)
+		for(String s : FTBUConfigLogin.motd.get())
 			LatCoreMC.printChat(ep, s.replace("$player$", ep.getDisplayName()).replace("$", LatCoreMC.FORMATTING));
 		CmdRules.printRules(ep);
 		return true;

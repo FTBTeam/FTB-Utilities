@@ -8,15 +8,16 @@ import latmod.core.util.FastList;
 import latmod.ftbu.api.EventLMWorldClient;
 import latmod.ftbu.inv.*;
 import latmod.ftbu.mod.*;
+import latmod.ftbu.mod.client.gui.friends.GuiFriendsGuiSmall;
 import latmod.ftbu.paint.IPainterItem;
 import latmod.ftbu.util.*;
 import latmod.ftbu.util.client.LatCoreMCClient;
-import latmod.ftbu.world.LMWorldClient;
+import latmod.ftbu.world.*;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.item.*;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.*;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.entity.player.*;
 
 @SideOnly(Side.CLIENT)
 public class FTBUClientEventHandler
@@ -98,5 +99,16 @@ public class FTBUClientEventHandler
 		FTBUClient.onWorldClosed();
 		new EventLMWorldClient.Closed(LMWorldClient.inst).post();
 		LMWorldClient.inst = null;
+	}
+	
+	@SubscribeEvent
+	public void onEntityRightClick(EntityInteractEvent e)
+	{
+		if(e.entity.worldObj.isRemote && LatCoreMCClient.isPlaying() && e.entityPlayer.getUniqueID().equals(LatCoreMCClient.mc.thePlayer.getUniqueID()) && e.entityPlayer.getHeldItem() == null)// && e.target instanceof EntityPlayer)
+		{
+			LMPlayerClient p = LMWorldClient.inst.getPlayer(e.target);
+			if(p == null) p = LMWorldClient.inst.clientPlayer;
+			if(p != null) LatCoreMCClient.mc.displayGuiScreen(new GuiFriendsGuiSmall(p));
+		}
 	}
 }

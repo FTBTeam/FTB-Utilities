@@ -1,27 +1,23 @@
 package latmod.ftbu.recipes;
 import latmod.core.util.FastList;
 import latmod.ftbu.inv.*;
+import latmod.ftbu.item.MaterialItem;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraftforge.fluids.*;
 
-public class StackEntry implements IStackArray
+public class StackArray implements IStackArray
 {
-	public final Object item;
-	
 	public final FastList<ItemStack> items;
 	private int hashCode;
+	private IStackArray[] array;
 	
-	private StackEntry[] array;
-	
-	public StackEntry(Object o)
+	public StackArray(Object o)
 	{
-		item = o;
 		items = getItems(o);
 		hashCode = toString().hashCode();
-		
-		array = new StackEntry[] { this };
+		array = new IStackArray[] { this };
 	}
 	
 	public String toString()
@@ -36,7 +32,7 @@ public class StackEntry implements IStackArray
 		if(o == this) return true;
 		FastList<ItemStack> items1 = null;
 		
-		if(o instanceof StackEntry) items1 = ((StackEntry)o).items;
+		if(o instanceof StackArray) items1 = ((StackArray)o).items;
 		else items1 = getItems(o);
 		
 		if(items1 != null) for(int i = 0; i < items1.size(); i++)
@@ -57,25 +53,25 @@ public class StackEntry implements IStackArray
 		return false;
 	}
 	
-	public static StackEntry[] convert(ItemStack... o)
+	public static StackArray[] convert(ItemStack... o)
 	{
 		if(o == null) return null;
-		StackEntry[] se = new StackEntry[o.length];
+		StackArray[] se = new StackArray[o.length];
 		for(int i = 0; i < o.length; i++)
-			se[i] = (o[i] == null) ? null : new StackEntry(o[i]);
+			se[i] = (o[i] == null) ? null : new StackArray(o[i]);
 		return se;
 	}
 	
-	public static StackEntry[] convert(Object... o)
+	public static StackArray[] convert(Object... o)
 	{
 		if(o == null) return null;
-		StackEntry[] se = new StackEntry[o.length];
+		StackArray[] se = new StackArray[o.length];
 		for(int i = 0; i < o.length; i++)
-			se[i] = (o[i] == null) ? null : new StackEntry(o[i]);
+			se[i] = (o[i] == null) ? null : new StackArray(o[i]);
 		return se;
 	}
 	
-	public static StackEntry[] convertInv(IInventory inv, int side)
+	public static StackArray[] convertInv(IInventory inv, int side)
 	{
 		if(inv == null) return null;
 		return convert(LMInvUtils.getAllItems(inv, side));
@@ -86,10 +82,10 @@ public class StackEntry implements IStackArray
 		FastList<ItemStack> list = new FastList<ItemStack>();
 		
 		if(o == null) return list;
-		else if(o instanceof ItemStack) list.add((ItemStack)o);
+		
+		ItemStack item0 = getFrom(o);
+		if(item0 != null) list.add(item0);
 		else if(o instanceof ItemStack[]) list.addAll((ItemStack[])o);
-		else if(o instanceof Item) list.add(new ItemStack((Item)o));
-		else if(o instanceof Block) list.add(new ItemStack((Block)o));
 		else if(o instanceof String) list = ODItems.getOres((String)o).clone();
 		else if(o instanceof FluidStack)
 		{
@@ -106,6 +102,16 @@ public class StackEntry implements IStackArray
 		else if(o instanceof Fluid) return getItems(new FluidStack((Fluid)o, 1000));
 		
 		return list;
+	}
+	
+	public static ItemStack getFrom(Object o)
+	{
+		if(o == null) return null;
+		else if(o instanceof ItemStack) return ((ItemStack)o);
+		else if(o instanceof Item) return new ItemStack((Item)o);
+		else if(o instanceof Block) return new ItemStack((Block)o);
+		else if(o instanceof MaterialItem) return ((MaterialItem)o).getStack();
+		else return null;
 	}
 	
 	public static boolean itemsEquals(ItemStack is1, ItemStack is2)
@@ -126,14 +132,6 @@ public class StackEntry implements IStackArray
 	public boolean matches(ItemStack[] ai)
 	{ return ai != null && ai.length == 1 && equalsItem(ai[0]); }
 	
-	public StackEntry[] getItems()
+	public IStackArray[] getItems()
 	{ return array; }
-	
-	public static ItemStack getFrom(Object o)
-	{
-		if(o instanceof ItemStack) return ((ItemStack)o);
-		if(o instanceof Item) return new ItemStack((Item)o);
-		if(o instanceof Block) return new ItemStack((Block)o);
-		return null;
-	}
 }

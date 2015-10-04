@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 import latmod.core.util.LMFileUtils;
 import latmod.ftbu.mod.FTBUTicks;
-import latmod.ftbu.mod.config.FTBUConfig;
+import latmod.ftbu.mod.config.*;
 import latmod.ftbu.util.LatCoreMC;
 import net.minecraft.world.World;
 
@@ -19,7 +19,7 @@ public class Backups
 	
 	public static void init()
 	{
-		backupsFolder = FTBUConfig.backups.folder.isEmpty() ? new File(LatCoreMC.latmodFolder, "backups/") : new File(FTBUConfig.backups.folder);
+		backupsFolder = FTBUConfigBackups.folder.get().isEmpty() ? new File(LatCoreMC.latmodFolder, "backups/") : new File(FTBUConfigBackups.folder.get());
 		if(!backupsFolder.exists()) backupsFolder.mkdirs();
 		thread = null;
 		clearOldBackups();
@@ -27,7 +27,7 @@ public class Backups
 	}
 	
 	public static boolean enabled()
-	{ return commandOverride || (FTBUConfig.backups.enabled && FTBUConfig.general.isDedi()); }
+	{ return commandOverride || (FTBUConfigBackups.enabled.get() && FTBUConfigGeneral.isDedi()); }
 	
 	public static boolean run()
 	{
@@ -41,19 +41,17 @@ public class Backups
 	}
 	
 	public static long getSecondsUntilNextBackup()
-	{
-		return ((lastTimeRun + FTBUConfig.backups.backupTimerL) - FTBUTicks.currentMillis()) / 1000L;
-	}
+	{ return ((lastTimeRun + FTBUConfigBackups.backupTimerL()) - FTBUTicks.currentMillis()) / 1000L; }
 	
 	public static void clearOldBackups()
 	{
 		String[] s = backupsFolder.list();
 		
-		if(s.length > FTBUConfig.backups.backupsToKeep)
+		if(s.length > FTBUConfigBackups.backupsToKeep.get())
 		{
 			Arrays.sort(s);
 			
-			int j = s.length - FTBUConfig.backups.backupsToKeep;
+			int j = s.length - FTBUConfigBackups.backupsToKeep.get();
 			LatCoreMC.logger.info("Deleting " + j + " old backups");
 			
 			for(int i = 0; i < j; i++)

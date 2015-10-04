@@ -47,10 +47,10 @@ public class Minimap
 		return c;
 	}
 	
-	public void loadChunkTypes(int cx, int cz, int size, int[] types)
+	public void loadChunkTypes(int cx, int cz, int sizeX, int sizeZ, int[] types)
 	{
-		for(int z = 0; z < size; z++) for(int x = 0; x < size; x++)
-			loadChunk(cx + x, cz + z).setType(types[x + z * size]);
+		for(int z = 0; z < sizeZ; z++) for(int x = 0; x < sizeX; x++)
+			loadChunk(cx + x, cz + z).setType(types[x + z * sizeX]);
 	}
 	
 	public ChunkType getChunkType(int cx, int cz)

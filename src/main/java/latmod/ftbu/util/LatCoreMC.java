@@ -14,6 +14,7 @@ import latmod.core.util.*;
 import latmod.ftbu.item.IItemLM;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.net.*;
+import latmod.ftbu.notification.Notification;
 import latmod.ftbu.tile.IGuiTile;
 import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
@@ -104,7 +105,7 @@ public final class LatCoreMC // LatCoreMCClient
 	{ return LatCoreMC.class.getResource(getPath(res)) != null; }
 	
 	public static boolean hasOnlinePlayers()
-	{ return !MinecraftServer.getServer().getConfigurationManager().playerEntityList.isEmpty(); }
+	{ return !getServer().getConfigurationManager().playerEntityList.isEmpty(); }
 	
 	@SuppressWarnings("unchecked")
 	public static FastList<EntityPlayerMP> getAllOnlinePlayers(EntityPlayerMP except)
@@ -195,13 +196,20 @@ public final class LatCoreMC // LatCoreMCClient
 	}
 	
 	public static Exception runCommand(ICommandSender ics, String cmd, String[] args)
-	{ return runCommand(ics, cmd + " " + LMStringUtils.unsplit(args, " ")); }
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(cmd);
+		if(args != null && args.length > 0)
+		{
+			for(int i = 0; i < args.length; i++)
+			{ sb.append(' '); sb.append(args[i]); }
+		}
+		
+		return runCommand(ics, sb.toString());
+	}
 	
 	public static void notifyPlayer(EntityPlayerMP ep, Notification n)
 	{ LMNetHelper.sendTo(ep, new MessageNotifyPlayer(n)); }
-	
-	public static Object invokeStatic(String className, String methodName) throws Exception
-	{ Class<?> c = Class.forName(className); return c.getMethod(methodName).invoke(null); }
 	
 	public static void openGui(EntityPlayer ep, IGuiTile i, NBTTagCompound data)
 	{
@@ -212,7 +220,7 @@ public final class LatCoreMC // LatCoreMCClient
 	}
 	
 	public static boolean isDedicatedServer()
-	{ return getServer() != null && getServer().isDedicatedServer(); }
+	{ return FTBUTicks.isDediServer; }
 
 	public static IChatComponent setColor(EnumChatFormatting e, IChatComponent c)
 	{ c.getChatStyle().setColor(e); return c; }

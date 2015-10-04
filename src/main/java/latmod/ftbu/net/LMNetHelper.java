@@ -3,11 +3,8 @@ package latmod.ftbu.net;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
-import latmod.core.util.ByteIOStream;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.*;
-import net.minecraft.util.IChatComponent;
 
 public class LMNetHelper
 {
@@ -42,43 +39,4 @@ public class LMNetHelper
 	
 	public static void sendToServer(MessageLM<?> m)
 	{ NET.sendToServer(m); }
-	
-	public static NBTTagCompound readTagCompound(ByteIOStream io) throws Exception
-	{
-		int s = io.readInt();
-		if (s >= 0)
-		{
-			byte[] b = new byte[s];
-			if(b.length == 0) return null;
-			io.readRawBytes(b);
-			try { return CompressedStreamTools.func_152457_a(b, NBTSizeTracker.field_152451_a); }
-			catch(Exception e) { }
-		}
-		
-		return null;
-	}
-	
-	public static void writeTagCompound(ByteIOStream io, NBTTagCompound tag) throws Exception
-	{
-		if (tag == null) io.writeInt(-1);
-		else
-		{
-			byte[] b = null;
-			try { b = CompressedStreamTools.compress(tag); }
-			catch(Exception e) { }
-			
-			if(b != null && b.length > 0)
-			{
-				io.writeInt(b.length);
-				io.writeRawBytes(b);
-			}
-			else io.writeInt(-1);
-		}
-	}
-	
-	public static IChatComponent readChatComponent(ByteIOStream io) throws Exception
-	{ return IChatComponent.Serializer.func_150699_a(io.readString()); }
-	
-	public static void writeChatComponent(ByteIOStream io, IChatComponent c) throws Exception
-	{ io.writeString(IChatComponent.Serializer.func_150696_a(c)); }
 }

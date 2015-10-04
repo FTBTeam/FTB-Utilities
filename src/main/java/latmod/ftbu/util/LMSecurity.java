@@ -2,7 +2,7 @@ package latmod.ftbu.util;
 
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.config.FTBUConfig;
+import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.world.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -75,7 +75,7 @@ public class LMSecurity
 		if(level == Level.PUBLIC || getOwner() == null) return true;
 		if(player == null) return false;
 		if(isOwner(player)) return true;
-		if(player instanceof EntityPlayer && FTBUConfig.general.allowInteractSecure((EntityPlayer)player))
+		if(player instanceof EntityPlayer && FTBUConfigGeneral.allowInteractSecure((EntityPlayer)player))
 			return true;
 		if(level == Level.PRIVATE) return false;
 		LMPlayer owner = getOwner();

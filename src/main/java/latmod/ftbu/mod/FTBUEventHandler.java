@@ -8,12 +8,14 @@ import cpw.mods.fml.relauncher.Side;
 import latmod.core.util.*;
 import latmod.ftbu.api.*;
 import latmod.ftbu.api.callback.ServerTickCallback;
+import latmod.ftbu.api.config.ConfigFileRegistry;
 import latmod.ftbu.backups.Backups;
 import latmod.ftbu.inv.LMInvUtils;
 import latmod.ftbu.item.ICreativeSafeItem;
 import latmod.ftbu.mod.cmd.CmdMotd;
-import latmod.ftbu.mod.config.FTBUConfig;
+import latmod.ftbu.mod.config.*;
 import latmod.ftbu.net.*;
+import latmod.ftbu.notification.*;
 import latmod.ftbu.tile.ISecureTile;
 import latmod.ftbu.util.*;
 import latmod.ftbu.world.*;
@@ -37,7 +39,7 @@ public class FTBUEventHandler // FTBUTickHandler
 	@SubscribeEvent
 	public void onWorldTick(TickEvent.WorldTickEvent e)
 	{
-		if(LatCoreMC.isServer() && e.side == Side.SERVER && e.phase == TickEvent.Phase.END && e.type == TickEvent.Type.WORLD)
+		if(!e.world.isRemote && e.side == Side.SERVER && e.phase == TickEvent.Phase.END && e.type == TickEvent.Type.WORLD)
 			FTBUTicks.update();
 	}
 	
@@ -69,7 +71,7 @@ public class FTBUEventHandler // FTBUTickHandler
 		
 		LMNetHelper.sendTo(sendAll ? null : ep, new MessageLMWorldJoined(LMWorldServer.inst.worldID, p.playerID));
 		new EventLMPlayerServer.LoggedIn(p, ep, first).post();
-		ServerConfigRegistry.updateConfig(ep, null);
+		ConfigFileRegistry.syncWithClient(ep);
 		
 		LMNetHelper.sendTo(ep, new MessageLMPlayerLoggedIn(p, first, true));
 		for(EntityPlayerMP ep1 : LatCoreMC.getAllOnlinePlayers(ep))
@@ -77,12 +79,12 @@ public class FTBUEventHandler // FTBUTickHandler
 		
 		if(first)
 		{
-			List<ItemStack> items = FTBUConfig.login.getStartingItems(ep.getUniqueID());
+			List<ItemStack> items = FTBUConfigLogin.getStartingItems(ep.getUniqueID());
 			if(items != null && !items.isEmpty()) for(ItemStack is : items)
 				LMInvUtils.giveItem(ep, is);
 		}
 		
-		LMNetHelper.sendTo(null, new MessageLMPlayerInfo(p));
+		LMNetHelper.sendTo(null, new MessageLMPlayerInfo(p.playerID));
 		CmdMotd.printMotd(ep);
 		Backups.shouldRun = true;
 		
@@ -102,9 +104,11 @@ public class FTBUEventHandler // FTBUTickHandler
 			cc.getChatStyle().setColor(EnumChatFormatting.GREEN);
 			Notification n = new Notification("new_friend_requests", cc, 2000);
 			n.setDesc(new ChatComponentText("Click to add all as friends"));
-			n.setClickEvent(new NotificationClick(NotificationClick.CMD, "/ftbu friends addall"));
+			n.setClickEvent(new ClickAction(ClickAction.CMD, "/ftbu friends addall"));
 			LatCoreMC.notifyPlayer(ep, n);
 		}
+		
+		LMNetHelper.sendTo(ep, new MessageAreaUpdate(new EntityPos(ep), 7, 7, p));
 	}
 	
 	@SubscribeEvent
@@ -123,7 +127,7 @@ public class FTBUEventHandler // FTBUTickHandler
 		
 		new EventLMPlayerServer.LoggedOut(p, ep).post();
 		LMNetHelper.sendTo(null, new MessageLMPlayerLoggedOut(p));
-		LMNetHelper.sendTo(null, new MessageLMPlayerInfo(p));
+		LMNetHelper.sendTo(null, new MessageLMPlayerInfo(p.playerID));
 		
 		LatCoreMC.runCommand(LatCoreMC.getServer(), "admin player saveinv " + p.getName());
 		
@@ -136,7 +140,7 @@ public class FTBUEventHandler // FTBUTickHandler
 	{
 		if(LatCoreMC.isServer() && e.world.provider.dimensionId == 0 && e.world instanceof WorldServer)
 		{
-			ServerConfigRegistry.load();
+			ConfigFileRegistry.reloadAll();
 			
 			File latmodFolder = new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/");
 			NBTTagCompound tagWorldData = LMNBTUtils.readMap(new File(latmodFolder, "LMWorld.dat"));
@@ -232,7 +236,7 @@ public class FTBUEventHandler // FTBUTickHandler
 			return false;
 		}
 		
-		if(!server || FTBUConfig.general.allowInteractSecure(ep)) return true;
+		if(!server || FTBUConfigGeneral.allowInteractSecure(ep)) return true;
 		
 		Block block = w.getBlock(x, y, z);
 		
@@ -244,7 +248,7 @@ public class FTBUEventHandler // FTBUTickHandler
 		}
 		
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
-		if(!FTBUConfig.general.isDedi() || p.isOP()) return true;
+		if(!FTBUConfigGeneral.isDedi() || p.isOP()) return true;
 		return ChunkType.getD(w.provider.dimensionId, x, z, p).isFriendly();
 	}
 	
@@ -266,7 +270,7 @@ public class FTBUEventHandler // FTBUTickHandler
 	@SubscribeEvent
 	public void onMobSpawned(net.minecraftforge.event.entity.EntityJoinWorldEvent e)
 	{
-		if(e.world.isRemote || !FTBUConfig.general.safeSpawn || !FTBUConfig.general.isDedi()) return;
+		if(e.world.isRemote || !FTBUConfigGeneral.safeSpawn.get() || !FTBUConfigGeneral.isDedi()) return;
 		
 		if((e.entity instanceof IMob || (e.entity instanceof EntityChicken && e.entity.riddenByEntity != null)) && WorldBorder.isInSpawnF(e.world.provider.dimensionId, e.entity.posX, e.entity.posZ))
 			e.setCanceled(true);
@@ -275,7 +279,7 @@ public class FTBUEventHandler // FTBUTickHandler
 	@SubscribeEvent
 	public void onPlayerAttacked(net.minecraftforge.event.entity.living.LivingAttackEvent e)
 	{
-		if(e.entity.worldObj.isRemote || !FTBUConfig.general.isDedi()) return;
+		if(e.entity.worldObj.isRemote || !FTBUConfigGeneral.isDedi()) return;
 		
 		int dim = e.entity.dimension;
 		if(dim != 0 || !(e.entity instanceof EntityPlayerMP) || e.entity instanceof FakePlayer) return;
@@ -284,12 +288,12 @@ public class FTBUEventHandler // FTBUTickHandler
 		
 		if(entity != null && entity instanceof EntityPlayerMP && !(entity instanceof FakePlayer))
 		{
-			if(FTBUConfig.general.allowInteractSecure((EntityPlayerMP)entity)) return;
+			if(FTBUConfigGeneral.allowInteractSecure((EntityPlayerMP)entity)) return;
 			
 			int cx = MathHelperLM.chunk(e.entity.posX);
 			int cz = MathHelperLM.chunk(e.entity.posZ);
 			
-			if(LMWorldServer.inst.worldBorder.isOutside(dim, cx, cz) || (FTBUConfig.general.safeSpawn && WorldBorder.isInSpawn(dim, cx, cz))) e.setCanceled(true);
+			if(LMWorldServer.inst.worldBorder.isOutside(dim, cx, cz) || (FTBUConfigGeneral.safeSpawn.get() && WorldBorder.isInSpawn(dim, cx, cz))) e.setCanceled(true);
 			/*else
 			{
 				ClaimedChunk c = Claims.get(dim, cx, cz);
@@ -301,14 +305,14 @@ public class FTBUEventHandler // FTBUTickHandler
 	@SubscribeEvent
 	public void onExplosionStart(net.minecraftforge.event.world.ExplosionEvent.Start e)
 	{
-		if(e.world.isRemote || !FTBUConfig.general.isDedi()) return;
+		if(e.world.isRemote || !FTBUConfigGeneral.isDedi()) return;
 		
 		int dim = e.world.provider.dimensionId;
 		if(dim != 0) return;
 		int cx = MathHelperLM.chunk(e.explosion.explosionX);
 		int cz = MathHelperLM.chunk(e.explosion.explosionZ);
 		
-		if(LMWorldServer.inst.worldBorder.isOutside(dim, cx, cz) || (FTBUConfig.general.safeSpawn && WorldBorder.isInSpawn(dim, cx, cz))) e.setCanceled(true);
+		if(LMWorldServer.inst.worldBorder.isOutside(dim, cx, cz) || (FTBUConfigGeneral.safeSpawn.get() && WorldBorder.isInSpawn(dim, cx, cz))) e.setCanceled(true);
 		else
 		{
 			ClaimedChunk c = Claims.get(dim, cx, cz);

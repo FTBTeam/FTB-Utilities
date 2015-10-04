@@ -87,6 +87,7 @@ public class FTBUClient extends FTBUCommon
 	
 	public void preInit()
 	{
+		JsonHelper.initClient();
 		EventBusHelper.register(FTBUClientEventHandler.instance);
 		EventBusHelper.register(FTBURenderHandler.instance);
 		EventBusHelper.register(FTBUGuiEventHandler.instance);

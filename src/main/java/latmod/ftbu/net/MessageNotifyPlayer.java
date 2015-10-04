@@ -1,7 +1,8 @@
 package latmod.ftbu.net;
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.*;
-import latmod.core.util.ByteIOStream;
-import latmod.ftbu.util.Notification;
+import io.netty.buffer.ByteBuf;
+import latmod.ftbu.notification.Notification;
 import latmod.ftbu.util.client.ClientNotifications;
 
 public class MessageNotifyPlayer extends MessageLM<MessageNotifyPlayer>
@@ -13,14 +14,14 @@ public class MessageNotifyPlayer extends MessageLM<MessageNotifyPlayer>
 	public MessageNotifyPlayer(Notification n)
 	{ data = n.toJson(); }
 	
-	public void readData(ByteIOStream io) throws Exception
+	public void fromBytes(ByteBuf io)
 	{
-		data = io.readString();
+		data = ByteBufUtils.readUTF8String(io);
 	}
 	
-	public void writeData(ByteIOStream io) throws Exception
+	public void toBytes(ByteBuf io)
 	{
-		io.writeString(data);
+		ByteBufUtils.writeUTF8String(io, data);
 	}
 	
 	public IMessage onMessage(MessageNotifyPlayer m, MessageContext ctx)

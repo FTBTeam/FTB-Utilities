@@ -21,10 +21,8 @@ public class CmdAdminUnclaim extends CommandLM
 		if(c != null)
 		{
 			String s = c.toString();
-			if(c.claims.unclaim(c.dim, c.posX, c.posZ, true))
-				return new ChatComponentText("Unclaimed " + s); //LANG
-			else
-				return error(new ChatComponentText("Can't unclaim " + s + "!"));
+			c.claims.unclaim(c.dim, c.posX, c.posZ, 1, 1, true);
+			return new ChatComponentText("Unclaimed " + s); //LANG
 		}
 		
 		return error(new ChatComponentText("Chunk not claimed!"));

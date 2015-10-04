@@ -1,6 +1,5 @@
 package latmod.ftbu.mod.client.gui;
 
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
@@ -11,21 +10,25 @@ import latmod.ftbu.mod.client.minimap.*;
 import latmod.ftbu.net.*;
 import latmod.ftbu.util.client.*;
 import latmod.ftbu.util.gui.*;
-import latmod.ftbu.world.*;
+import latmod.ftbu.world.LMWorldClient;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
-public class GuiMinimap extends GuiLM implements IClientActionGui
+public class GuiMinimap extends GuiLM // implements IClientActionGui
 {
 	public static final ResourceLocation tex = FTBU.mod.getLocation("textures/gui/minimap.png");
 	public static final TextureCoords tex_mouse = new TextureCoords(tex, 156, 0, 32, 32);
 	private static final MRenderer mapRenderer = new MRenderer();
+	private static final int TILES = 9;
+	
+	public final Minimap minimap;
+	public MapButton buttonPressed0 = null;
 	
 	public final ButtonLM buttonRefresh, buttonClose;
 	public final ItemButtonLM buttonSafe;
-	public final MapButton mapButton;
+	public final MapButton[] mapButtons;
 	
 	public GuiMinimap()
 	{
@@ -34,22 +37,26 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		ySize = 185;
 		hideNEI = true;
 		
-		mapRenderer.size = 144;
-		mapRenderer.tiles = 9;
-		mapRenderer.startX = MathHelperLM.chunk(mc.thePlayer.posX) - 4;
-		mapRenderer.startY = MathHelperLM.chunk(mc.thePlayer.posZ) - 4;
+		minimap = Minimap.get(LatCoreMCClient.getDim());
+		
+		mapRenderer.tiles = TILES;
+		mapRenderer.size = TILES * 16;
+		mapRenderer.startX = MathHelperLM.chunk(mc.thePlayer.posX) - TILES / 2;
+		mapRenderer.startY = MathHelperLM.chunk(mc.thePlayer.posZ) - TILES / 2;
 		
 		mapRenderer.renderClaims = true;
 		mapRenderer.renderGrid = Minimap.mapOptions.hasGrid();
 		mapRenderer.renderPlayers = true;
 		mapRenderer.renderAreaTitle = false;
 		
+		mapRenderer.reload();
+		
 		buttonRefresh = new ButtonLM(this, 6, 6, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
 				Minimap m = Minimap.get(mc.thePlayer.dimension);
-				m.reloadArea(mc.theWorld, mapRenderer.startX, mapRenderer.startY, mapRenderer.tiles, mapRenderer.tiles);
+				m.reloadArea(mc.theWorld, mapRenderer.startX, mapRenderer.startY, TILES, TILES);
 				gui.playClickSound();
 			}
 		};
@@ -79,14 +86,17 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 		
 		buttonSafe.setItem(new ItemStack(Items.skull, 1, 4));
 		
-		mapButton = new MapButton(this, 6, 26);
+		mapButtons = new MapButton[TILES * TILES];
+		
+		for(int i = 0; i < mapButtons.length; i++)
+			mapButtons[i] = new MapButton(this, 6, 26, i);
 		
 		buttonRefresh.onButtonPressed(0);
 	}
 	
 	public void addWidgets()
 	{
-		mainPanel.add(mapButton);
+		mainPanel.addAll(mapButtons);
 		mainPanel.add(buttonRefresh);
 		mainPanel.add(buttonClose);
 		mainPanel.add(buttonSafe);
@@ -94,62 +104,28 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 	
 	public void drawBackground()
 	{
+		if(minimap.dim != LatCoreMCClient.getDim() || !LatCoreMCClient.isPlaying())
+		{ mc.thePlayer.closeScreen(); return; }
+		
 		super.drawBackground();
 		
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		setTexture(tex);
 		
-		mapRenderer.renderX = mapButton.getAX();
-		mapRenderer.renderY = mapButton.getAY();
+		mapRenderer.renderX = mapButtons[0].getAX();
+		mapRenderer.renderY = mapButtons[0].getAY();
 		mapRenderer.render();
 		
-		if(mapButton.mouseOver() && LatCoreMCClient.isPlaying())
-		{
-			GL11.glColor4f(0.1F, 1F, 0.7F, 0.8F);
-			tex_mouse.render(this, mapRenderer.renderX + (mapButton.chunkX() - mapRenderer.startX) * 16, mapRenderer.renderY + (mapButton.chunkZ() - mapRenderer.startY) * 16, 16, 16);
-			
-			boolean down0 = Mouse.isButtonDown(0);
-			boolean down1 = Mouse.isButtonDown(1);
-			
-			if((down0 || down1) && down0 != down1)
-			{
-				int cx = mapButton.chunkX();
-				int cz = mapButton.chunkZ();
-				
-				MChunk c = Minimap.get(mc.thePlayer.dimension).getChunk(cx, cz);
-				if(c != null && c.type != null && (c.type == ChunkType.WILDERNESS || c.type == ChunkType.CLAIMED_SELF))
-				{
-					if(c.type == ChunkType.WILDERNESS)
-					{
-						if(down0 && LMWorldClient.inst.clientPlayer.claimedChunks < LMWorldClient.inst.clientPlayer.maxClaimPower)
-						{
-							c.type = ChunkType.CLAIMED_SELF;
-							ClientAction.ACTION_AREA_REQUEST.send(-1);
-							LMNetHelper.sendToServer(new MessageClaimChunk(LatCoreMCClient.mc.thePlayer.dimension, cx, cz, true));
-							playClickSound();
-						}
-					}
-					else
-					{
-						if(down1 && LMWorldClient.inst.clientPlayer.claimedChunks > 0)
-						{
-							c.type = ChunkType.WILDERNESS;
-							ClientAction.ACTION_AREA_REQUEST.send(-1);
-							LMNetHelper.sendToServer(new MessageClaimChunk(LatCoreMCClient.mc.thePlayer.dimension, cx, cz, false));
-							playClickSound();
-						}
-					}
-				}
-			}
-		}
-		
+		GL11.glColor4f(1F, 1F, 1F, 1F);
+		for(int i = 0; i < mapButtons.length; i++)
+			mapButtons[i].renderWidget();
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		
 		buttonRefresh.render(GuiIcons.map);
 		buttonClose.render(GuiIcons.accept);
 		buttonSafe.render();
 		
-		if(LatCoreMCClient.isPlaying() && LMWorldClient.inst.clientPlayer.settings.safeClaims)
+		if(LMWorldClient.inst.clientPlayer.settings.safeClaims)
 		{
 			zLevel = 500;
 			GL11.glColor4f(1F, 1F, 1F, 0.75F);
@@ -157,16 +133,21 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 			GL11.glColor4f(1F, 1F, 1F, 1F);
 			zLevel = 0;
 		}
+		
+		if(buttonPressed0 != null)
+		{
+			int x = Math.min(buttonPressed0.mouseCX, mouseX);
+			int y = Math.min(buttonPressed0.mouseCY, mouseY);
+			int w = Math.min(Math.abs(buttonPressed0.mouseCX - mouseX), mapRenderer.size);
+			int h = Math.min(Math.abs(buttonPressed0.mouseCY - mouseY), mapRenderer.size);
+			drawBlankRect(x, y, zLevel, w, h, 0x7700FF00);
+		}
 	}
 	
 	public void drawText(FastList<String> l)
 	{
-		if(LatCoreMCClient.isPlaying())
-		{
-			String s = LMWorldClient.inst.clientPlayer.claimedChunks + " / " + LMWorldClient.inst.clientPlayer.maxClaimPower;
-			fontRendererObj.drawString(s, guiLeft + xSize - fontRendererObj.getStringWidth(s) - 4, guiTop + ySize - 12, 0xFFFFFFFF);
-		}
-		
+		String s = LMWorldClient.inst.clientPlayer.claimedChunks + " / " + LMWorldClient.inst.clientPlayer.maxClaimPower;
+		fontRendererObj.drawString(s, guiLeft + xSize - fontRendererObj.getStringWidth(s) - 4, guiTop + ySize - 12, 0xFFFFFFFF);
 		super.drawText(l);
 	}
 	
@@ -176,31 +157,78 @@ public class GuiMinimap extends GuiLM implements IClientActionGui
 	
 	public void onClientDataChanged()
 	{
+		//refreshWidgets();
+	}
+	
+	protected void mouseMovedOrUp(int mx, int my, int b)
+	{
+		mouseX = mx;
+		mouseY = my;
+		
+		if(b < 0 || b > 1) return;
+		
+		if(buttonPressed0 != null)
+		{
+			MapButton button = getMouseOverButton();
+			
+			if(button != null)
+			{
+				int cx = Math.min(buttonPressed0.chunk.posX, button.chunk.posX);
+				int cy = Math.min(buttonPressed0.chunk.posY, button.chunk.posY);
+				int csx = Math.abs(buttonPressed0.chunk.posX - button.chunk.posX) + 1;
+				int csy = Math.abs(buttonPressed0.chunk.posY - button.chunk.posY) + 1;
+				LMNetHelper.sendToServer(new MessageClaimChunk(minimap.dim, cx, cy, csx, csy, b == 0));
+			}
+			
+			buttonPressed0 = null;
+		}
+		
+		super.mouseMovedOrUp(mx, my, b);
+	}
+	
+	private MapButton getMouseOverButton()
+	{
+		for(int i = 0; i < mapButtons.length; i++)
+			if(mapButtons[i].mouseOver())
+				return mapButtons[i];
+		return null;
 	}
 	
 	public static class MapButton extends ButtonLM
 	{
-		public final GuiMinimap guiM;
+		public final GuiMinimap gui;
+		public final MChunk chunk;
+		public int mouseCX, mouseCY;
 		
-		public MapButton(GuiMinimap g, int x, int y)
+		public MapButton(GuiMinimap g, int x, int y, int i)
 		{
-			super(g, x, y, mapRenderer.size, mapRenderer.size);
-			guiM = g;
+			super(g, x, y, 16, 16);
+			gui = g;
+			posX += (i % TILES) * width;
+			posY += (i / TILES) * height;
+			int chunkX = mapRenderer.startX + (i % TILES);
+			int chunkY = mapRenderer.startY + (i / TILES);
+			chunk = gui.minimap.loadChunk(chunkX, chunkY);
 		}
-		
-		public int chunkX()
-		{ return mapRenderer.startX + (gui.mouseX - getAX()) / 16; }
-		
-		public int chunkZ()
-		{ return mapRenderer.startY + (gui.mouseY - getAY()) / 16; }
 		
 		public void onButtonPressed(int b)
 		{
-			//LMNetHelper.sendToServer(new MessageClaimChunk(mapRenderer.mc.thePlayer.dimension, chunkX(), chunkZ(), b == 0));
-			//gui.playClickSound();
+			gui.buttonPressed0 = this;
+			mouseCX = gui.mouseX;
+			mouseCY = gui.mouseY;
+			gui.playClickSound();
 		}
 		
 		public void addMouseOverText(FastList<String> l)
-		{ Minimap.get(LatCoreMCClient.mc.thePlayer.dimension).loadChunk(chunkX(), chunkZ()).getMessage(l, isShiftKeyDown()); }
+		{ chunk.getMessage(l, isShiftKeyDown()); }
+		
+		public void renderWidget()
+		{
+			if(mouseOver())
+			{
+				GL11.glColor4f(0.1F, 1F, 0.7F, 0.8F);
+				tex_mouse.render(gui, getAX(), getAY(), 16, 16);
+			}
+		}
 	}
 }

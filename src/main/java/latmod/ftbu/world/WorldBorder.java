@@ -95,6 +95,12 @@ public class WorldBorder
 		}
 	}
 	
+	public Coords.I2 getPos(int dim)
+	{
+		Box b = get(dim);
+		return (b == null) ? new Coords.I2(0, 0) : new Coords.I2(b.posX, b.posZ);
+	}
+	
 	public void setSize(int dim, int s)
 	{ getNew(dim).size = s; }
 	

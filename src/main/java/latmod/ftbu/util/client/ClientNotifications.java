@@ -4,7 +4,7 @@ import org.lwjgl.opengl.*;
 
 import cpw.mods.fml.relauncher.*;
 import latmod.core.util.*;
-import latmod.ftbu.util.Notification;
+import latmod.ftbu.notification.*;
 import latmod.ftbu.util.gui.GuiLM;
 import latmod.ftbu.world.LMPlayerClient;
 import net.minecraft.client.Minecraft;
@@ -189,7 +189,7 @@ public class ClientNotifications
 		public void onClicked(LMPlayerClient p)
 		{
 			if(notification.clickEvent != null)
-				notification.clickEvent.onClicked(notification, p);
+				ClickActionHandler.onClicked(notification.clickEvent, p);
 		}
 	}
 }

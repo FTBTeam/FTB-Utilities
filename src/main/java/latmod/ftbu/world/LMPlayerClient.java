@@ -9,7 +9,7 @@ import latmod.ftbu.badges.Badge;
 import latmod.ftbu.inv.LMInvUtils;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 
 public class LMPlayerClient extends LMPlayer // LMPlayerServer
@@ -50,11 +50,10 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 	public EntityPlayerSP getPlayer()
 	{ return isOnline() ? LatCoreMCClient.getPlayerSP(getUUID()) : null; }
 	
-	public void receiveInfo(NBTTagList tag)
+	public void receiveInfo(FastList<IChatComponent> info)
 	{
 		clientInfo.clear();
-		for(int i = 0; i < tag.tagCount(); i++)
-			clientInfo.add(IChatComponent.Serializer.func_150699_a(tag.getStringTagAt(i)));
+		clientInfo.addAll(info);
 		new EventLMPlayerClient.CustomInfo(this, clientInfo).post();
 	}
 	

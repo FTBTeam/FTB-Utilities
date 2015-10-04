@@ -1,7 +1,8 @@
 package latmod.ftbu.net;
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.ByteIOStream;
+import io.netty.buffer.ByteBuf;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.util.LMGuiHandler;
 import latmod.ftbu.util.client.LatCoreMCClient;
@@ -24,20 +25,20 @@ public class MessageOpenGui extends MessageLM<MessageOpenGui>
 		windowID = wid;
 	}
 	
-	public void readData(ByteIOStream io) throws Exception
+	public void fromBytes(ByteBuf io)
 	{
-		modID = io.readString();
+		modID = ByteBufUtils.readUTF8String(io);
 		guiID = io.readInt();
-		data = LMNetHelper.readTagCompound(io);
-		windowID = io.readUByte();
+		data = ByteBufUtils.readTag(io);
+		windowID = io.readUnsignedByte();
 	}
 	
-	public void writeData(ByteIOStream io) throws Exception
+	public void toBytes(ByteBuf io)
 	{
-		io.writeString(modID);
+		ByteBufUtils.writeUTF8String(io, modID);
 		io.writeInt(guiID);
-		LMNetHelper.writeTagCompound(io, data);
-		io.writeUByte(windowID);
+		ByteBufUtils.writeTag(io, data);
+		io.writeByte(windowID);
 	}
 	
 	@SideOnly(Side.CLIENT)

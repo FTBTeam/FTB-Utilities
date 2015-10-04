@@ -20,15 +20,15 @@ public class CmdAdminSpawnArea extends CommandLM //TODO: Remove
 		
 		if(args[0].equals("safe"))
 		{
-			FTBUConfig.general.safeSpawn = args[1].equals("true");
-			ConfigGeneral.save();
-			return new ChatComponentText("SafeSpawn set to: " + FTBUConfig.general.safeSpawn);
+			FTBUConfigGeneral.safeSpawn.set(args[1].equals("true"));
+			FTBUConfig.save();
+			return new ChatComponentText("SafeSpawn set to: " + FTBUConfigGeneral.safeSpawn.get());
 		}
 		else if(args[0].equals("pvp"))
 		{
-			FTBUConfig.general.spawnPVP = args[1].equals("true");
-			ConfigGeneral.save();
-			return new ChatComponentText("SpawnPVP set to: " + FTBUConfig.general.spawnPVP);
+			FTBUConfigGeneral.spawnPVP.set(args[1].equals("true"));
+			FTBUConfig.save();
+			return new ChatComponentText("SpawnPVP set to: " + FTBUConfigGeneral.spawnPVP.get());
 		}
 		
 		return new ChatComponentText(LMStringUtils.strip(getTabStrings(ics, args, 0)));

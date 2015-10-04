@@ -1,8 +1,10 @@
 package latmod.ftbu.net;
 import java.util.UUID;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.*;
-import latmod.core.util.*;
+import io.netty.buffer.ByteBuf;
+import latmod.core.util.LMStringUtils;
 import latmod.ftbu.api.EventLMWorldClient;
 import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.util.LatCoreMC;
@@ -25,18 +27,21 @@ public class MessageLMWorldJoined extends MessageLM<MessageLMWorldJoined>
 		LMWorldServer.inst.writeDataToNet(data, p);
 	}
 	
-	public void readData(ByteIOStream io) throws Exception
+	public void fromBytes(ByteBuf io)
 	{
-		worldID = io.readUUID();
+		long msb = io.readLong();
+		long lsb = io.readLong();
+		worldID = new UUID(msb, lsb);
 		clientPlayerID = io.readInt();
-		data = LMNetHelper.readTagCompound(io);
+		data = ByteBufUtils.readTag(io);
 	}
 	
-	public void writeData(ByteIOStream io) throws Exception
+	public void toBytes(ByteBuf io)
 	{
-		io.writeUUID(worldID);
+		io.writeLong(worldID.getMostSignificantBits());
+		io.writeLong(worldID.getLeastSignificantBits());
 		io.writeInt(clientPlayerID);
-		LMNetHelper.writeTagCompound(io, data);
+		ByteBufUtils.writeTag(io, data);
 	}
 	
 	public IMessage onMessage(MessageLMWorldJoined m, MessageContext ctx)

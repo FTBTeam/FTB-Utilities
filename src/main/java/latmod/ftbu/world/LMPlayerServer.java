@@ -6,11 +6,11 @@ import cpw.mods.fml.relauncher.*;
 import latmod.core.util.*;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.inv.LMInvUtils;
-import latmod.ftbu.mod.config.FTBUConfig;
+import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.net.*;
 import latmod.ftbu.util.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 
 public class LMPlayerServer extends LMPlayer // LMPlayerClient
@@ -25,7 +25,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public final Claims claims;
 	private String playerName;
 	private EntityPlayerMP entityPlayer = null;
-	private int maxClaimPower = -1;
+	private int maxClaimPower = -2;
 	public int lastChunkType = -99;
 	
 	public LMPlayerServer(LMWorldServer w, int i, GameProfile gp)
@@ -58,15 +58,12 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public void setPlayer(EntityPlayerMP ep)
 	{ entityPlayer = ep; }
 	
-	public void sendUpdate(boolean updateClient)
+	public void sendUpdate()
 	{
 		new EventLMPlayerServer.DataChanged(this).post();
-		if(updateClient)
-		{
-			LMNetHelper.sendTo(getPlayer(), new MessageLMPlayerUpdate(this, true));
-			for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers(getPlayer()))
-				LMNetHelper.sendTo(ep, new MessageLMPlayerUpdate(this, false));
-		}
+		LMNetHelper.sendTo(getPlayer(), new MessageLMPlayerUpdate(this, true));
+		for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers(getPlayer()))
+			LMNetHelper.sendTo(ep, new MessageLMPlayerUpdate(this, false));
 	}
 	
 	public void updateLastSeen()
@@ -98,21 +95,15 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	// Reading / Writing //
 	
-	public NBTTagList getInfo()
+	public void getInfo(FastList<IChatComponent> info)
 	{
 		long ms = LMUtils.millis();
 		
-		FastList<IChatComponent> info = new FastList<IChatComponent>();
 		new EventLMPlayerServer.CustomInfo(this, info).post();
 		
 		if(lastSeen > 0L && !isOnline()) info.add(new ChatComponentTranslation("ftbu:label.last_seen", LMStringUtils.getTimeString(ms - lastSeen)));
 		if(firstJoined > 0L) info.add(new ChatComponentTranslation("ftbu:label.joined", LMStringUtils.getTimeString(ms - firstJoined)));
 		if(deaths > 0) info.add(new ChatComponentTranslation("ftbu:label.deaths", String.valueOf(deaths)));
-		
-		NBTTagList list = new NBTTagList();
-		for(IChatComponent c : info)
-			list.appendTag(new NBTTagString(IChatComponent.Serializer.func_150696_a(c)));
-		return list;
 	}
 	
 	public void readFromServer(NBTTagCompound tag)
@@ -220,13 +211,13 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	{ new EventLMPlayerServer.DataLoaded(this).post(); }
 	
 	public int updateMaxClaimPower()
-	{ maxClaimPower = -1; return getMaxClaimPower(); }
+	{ maxClaimPower = -2; return getMaxClaimPower(); }
 	
 	public int getMaxClaimPower()
 	{
-		if(maxClaimPower == -1)
+		if(maxClaimPower == -2)
 		{
-			maxClaimPower = FTBUConfig.general.maxClaims;
+			maxClaimPower = FTBUConfigGeneral.maxClaims.get();
 			EventLMPlayerServer.GetMaxClaimPower e = new EventLMPlayerServer.GetMaxClaimPower(this, maxClaimPower);
 			e.post();
 			maxClaimPower = e.result;

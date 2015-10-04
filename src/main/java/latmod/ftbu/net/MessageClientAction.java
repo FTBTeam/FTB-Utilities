@@ -1,6 +1,6 @@
 package latmod.ftbu.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
-import latmod.core.util.ByteIOStream;
+import io.netty.buffer.ByteBuf;
 import latmod.ftbu.world.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -17,15 +17,15 @@ public class MessageClientAction extends MessageLM<MessageClientAction>
 		extra = e;
 	}
 	
-	public void readData(ByteIOStream io) throws Exception
+	public void fromBytes(ByteBuf io)
 	{
-		action = ClientAction.VALUES[io.readUByte()];
+		action = ClientAction.VALUES[io.readUnsignedByte()];
 		extra = io.readInt();
 	}
 	
-	public void writeData(ByteIOStream io) throws Exception
+	public void toBytes(ByteBuf io)
 	{
-		io.writeUByte(action.ID);
+		io.writeByte(action.ID);
 		io.writeInt(extra);
 	}
 	
@@ -35,7 +35,7 @@ public class MessageClientAction extends MessageLM<MessageClientAction>
 		LMPlayerServer owner = LMWorldServer.inst.getPlayer(ep);
 		
 		if(m.action.onAction(m.extra, ep, owner))
-			owner.sendUpdate(true);
+			owner.sendUpdate();
 		
 		return null;
 	}

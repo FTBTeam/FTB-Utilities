@@ -100,7 +100,7 @@ public class CmdAdminWorldBorder extends CommandSubLM //TODO: Remove
 			
 			LMWorldServer.inst.worldBorder.setPos(dim, x, z);
 			LMWorldServer.inst.update();
-			return new ChatComponentText("World center for dimension " + dim + " set to " + x + ":" + z);
+			return new ChatComponentText("World center for dimension " + dim + " set to " + x + " : " + z);
 		}
 	}
 }

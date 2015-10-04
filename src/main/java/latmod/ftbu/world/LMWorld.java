@@ -77,7 +77,7 @@ public abstract class LMWorld<P extends LMPlayer>
 			
 			return getPlayer(((EntityPlayer)o).getUniqueID());
 		}
-		else if(o instanceof String)
+		else if(o instanceof CharSequence)
 		{
 			String s = o.toString();
 			

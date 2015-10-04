@@ -35,7 +35,8 @@ public class GuiClientConfig extends GuiLM implements IClientActionGui
 			public void onButtonPressed(int b)
 			{
 				gui.playClickSound();
-				mc.displayGuiScreen(parent);
+				if(parent == null) container.player.closeScreen();
+				else mc.displayGuiScreen(parent);
 			}
 		};
 		

@@ -1,9 +1,7 @@
 package latmod.ftbu.recipes;
 import cpw.mods.fml.common.registry.GameRegistry;
 import latmod.core.util.FastList;
-import latmod.ftbu.item.MaterialItem;
-import net.minecraft.block.Block;
-import net.minecraft.item.*;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraftforge.oredict.*;
 
@@ -22,9 +20,8 @@ public class LMRecipes
 	{
 		for(int i = 0; i < in.length; i++)
 		{
-			if(in[i] instanceof MaterialItem)
-				in[i] = ((MaterialItem)in[i]).getStack();
-			in[i] = in[i];
+			Object o = StackArray.getFrom(in[i]);
+			if(o != null) in[i] = o;
 		}
 		
 		return in;
@@ -44,37 +41,22 @@ public class LMRecipes
 	public IRecipe addShapelessRecipe(ItemStack out, Object... in)
 	{
 		in = fixObjects(in);
-		IRecipe r;
 		
 		if(!enableOreRecipes)
 		{
 			FastList<ItemStack> al = new FastList<ItemStack>();
 			
-			int i = in.length;
-			
-			for (int j = 0; j < i; ++j)
+			for (int j = 0; j < in.length; ++j)
 			{
-				Object o = in[j];
-				
-				if (o instanceof ItemStack)
-				al.add(((ItemStack)o).copy());
-				
-				else if (o instanceof Item)
-				al.add(new ItemStack((Item)o));
-				
-				else
-				{
-					if (!(o instanceof Block))
-					throw new RuntimeException("Invalid shapeless recipy!");
-					al.add(new ItemStack((Block)o));
-				}
+				ItemStack is = StackArray.getFrom(in[j]);
+				if(is != null) al.add(is);
+				else throw new RuntimeException("Invalid shapeless recipy!");
 			}
 			
-			r = addIRecipe(new ShapelessRecipes(out, al));
+			return addIRecipe(new ShapelessRecipes(out, al));
 		}
-		else r = addIRecipe(new ShapelessOreRecipe(out, in));
 		
-		return r;
+		return addIRecipe(new ShapelessOreRecipe(out, in));
 	}
 	
 	public void addItemBlockRecipe(ItemStack block, ItemStack item, boolean back, boolean small)

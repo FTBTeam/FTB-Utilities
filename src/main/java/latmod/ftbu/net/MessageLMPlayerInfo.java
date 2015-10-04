@@ -1,65 +1,52 @@
 package latmod.ftbu.net;
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.*;
-import latmod.core.util.ByteIOStream;
+import io.netty.buffer.ByteBuf;
+import latmod.core.util.FastList;
 import latmod.ftbu.util.LMNBTUtils;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.*;
+import net.minecraft.util.IChatComponent;
 
 public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo>
 {
-	public NBTTagCompound info;
+	public NBTTagCompound data;
 	
 	public MessageLMPlayerInfo() { }
 	
-	public MessageLMPlayerInfo(LMPlayerServer p0)
+	public MessageLMPlayerInfo(int playerID)
 	{
-		info = new NBTTagCompound();
-		
-		if(p0 == null)
-		{
-			for(LMPlayerServer p : LMWorldServer.inst.players)
-			{
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setTag("I", p.getInfo());
-				info.setTag("" + p.playerID, tag);
-			}
-		}
-		else
-		{
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setTag("I", p0.getInfo());
-			info.setTag("D", tag);
-			info.setInteger("ID", p0.playerID);
-		}
+		data = new NBTTagCompound();
+		LMPlayerServer p = LMWorldServer.inst.getPlayer(playerID);
+		if(p == null) return;
+		data.setInteger("P", playerID);
+		NBTTagList list = new NBTTagList();
+		FastList<IChatComponent> info = new FastList<IChatComponent>();
+		p.getInfo(info);
+		for(int i = 0; i < info.size(); i++)
+			list.appendTag(new NBTTagString(IChatComponent.Serializer.func_150696_a(info.get(i))));
+		data.setTag("L", list);
 	}
 	
-	public void readData(ByteIOStream io) throws Exception
+	public void fromBytes(ByteBuf io)
 	{
-		info = LMNetHelper.readTagCompound(io);
+		data = ByteBufUtils.readTag(io);
 	}
 	
-	public void writeData(ByteIOStream io) throws Exception
+	public void toBytes(ByteBuf io)
 	{
-		LMNetHelper.writeTagCompound(io, info);
+		ByteBufUtils.writeTag(io, data);
 	}
 	
 	public IMessage onMessage(MessageLMPlayerInfo m, MessageContext ctx)
 	{
-		if(m.info.hasKey("ID"))
-		{
-			LMPlayerClient p = LMWorldClient.inst.getPlayer(m.info.getInteger("ID"));
-			p.receiveInfo(m.info.getCompoundTag("D").getTagList("I", LMNBTUtils.STRING));
-		}
-		else
-		{
-			for(LMPlayerClient p : LMWorldClient.inst.players)
-			{
-				NBTTagCompound tag = (NBTTagCompound)m.info.getTag("" + p.playerID);
-				if(tag != null) p.receiveInfo(tag.getTagList("I", LMNBTUtils.STRING));
-			}
-		}
-		
+		LMPlayerClient p = LMWorldClient.inst.getPlayer(m.data.getInteger("P"));
+		FastList<IChatComponent> info = new FastList<IChatComponent>();
+		NBTTagList list = m.data.getTagList("L", LMNBTUtils.STRING);
+		for(int i = 0; i < list.tagCount(); i++)
+			info.add(IChatComponent.Serializer.func_150699_a(list.getStringTagAt(i)));
+		p.receiveInfo(info);
 		LatCoreMCClient.onGuiClientAction();
 		return null;
 	}

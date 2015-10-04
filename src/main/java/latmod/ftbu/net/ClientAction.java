@@ -2,7 +2,8 @@ package latmod.ftbu.net;
 
 import latmod.core.util.MathHelperLM;
 import latmod.ftbu.mod.FTBUTicks;
-import latmod.ftbu.util.*;
+import latmod.ftbu.notification.*;
+import latmod.ftbu.util.LatCoreMC;
 import latmod.ftbu.world.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
@@ -25,13 +26,13 @@ public enum ClientAction
 			if(!owner.friends.contains(p.playerID))
 			{
 				owner.friends.add(p.playerID);
-				p.sendUpdate(true);
+				p.sendUpdate();
 				
 				if(p.isOnline())
 				{
 					Notification n = new Notification("friend_request", LatCoreMC.setColor(EnumChatFormatting.GREEN, new ChatComponentText("New friend request from " + owner.getName() + "!")), 4000);
 					n.setDesc(new ChatComponentText("Click to add as friend"));
-					n.setClickEvent(new NotificationClick(NotificationClick.CMD, "/ftbu friends add " + owner.getName()));
+					n.setClickEvent(new ClickAction(ClickAction.CMD, "/ftbu friends add " + owner.getName()));
 					LatCoreMC.notifyPlayer(p.getPlayer(), n);
 				}
 			}
@@ -50,8 +51,8 @@ public enum ClientAction
 			if(owner.friends.contains(p.playerID))
 			{
 				owner.friends.removeValue(p.playerID);
-				owner.sendUpdate(true);
-				p.sendUpdate(true);
+				owner.sendUpdate();
+				p.sendUpdate();
 				Notification n = new Notification("friend_removed", LatCoreMC.setColor(EnumChatFormatting.RED, new ChatComponentText("Removed a friend")), 800);
 				n.setDesc(new ChatComponentText(p.getName()));
 				LatCoreMC.notifyPlayer(ep, n);
@@ -71,8 +72,8 @@ public enum ClientAction
 			if(p.friends.contains(owner.playerID))
 			{
 				p.friends.removeValue(owner.playerID);
-				owner.sendUpdate(true);
-				p.sendUpdate(true);
+				owner.sendUpdate();
+				p.sendUpdate();
 				
 				Notification n = new Notification("friend_denied", LatCoreMC.setColor(EnumChatFormatting.RED, new ChatComponentText("Denied a friend request")), 800);
 				n.setDesc(new ChatComponentText(p.getName()));
@@ -114,7 +115,7 @@ public enum ClientAction
 	{
 		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
 		{
-			LMNetHelper.sendTo(ep, new MessageLMPlayerInfo(LMWorldServer.inst.getPlayer(extra)));
+			LMNetHelper.sendTo(ep, new MessageLMPlayerInfo(extra));
 			return false;
 		}
 	},
@@ -137,7 +138,7 @@ public enum ClientAction
 				extra = -extra;
 				int x = MathHelperLM.chunk(ep.posX) - extra / 2;
 				int z = MathHelperLM.chunk(ep.posZ) - extra / 2;
-				LMNetHelper.sendTo(ep, new MessageAreaUpdate(x, z, ep.dimension, extra, owner));
+				LMNetHelper.sendTo(ep, new MessageAreaUpdate(x, z, ep.dimension, extra, extra, owner));
 			}
 			else
 			{

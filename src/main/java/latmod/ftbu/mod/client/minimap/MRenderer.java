@@ -54,7 +54,7 @@ public class MRenderer
 	@SuppressWarnings("unchecked")
 	public void render()
 	{
-		int dimension = LatCoreMCClient.mc.thePlayer.dimension;
+		int dimension = LatCoreMCClient.getDim();
 		
 		Minimap m = Minimap.get(dimension);
 		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
@@ -190,4 +190,7 @@ public class MRenderer
 		GL11.glPopAttrib();
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 	}
+	
+	public void reload()
+	{ Minimap.get(LatCoreMCClient.getDim()).reloadArea(LatCoreMCClient.mc.theWorld, startX, startY, tiles, tiles); }
 }

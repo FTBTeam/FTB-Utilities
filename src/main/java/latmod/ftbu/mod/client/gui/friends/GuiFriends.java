@@ -38,7 +38,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	
 	public void initLMGui()
 	{
-		ClientAction.ACTION_REQUEST_PLAYER_INFO.send(0);
+		ClientAction.ACTION_REQUEST_PLAYER_INFO.send(LMWorldClient.inst.clientPlayerID);
 		xSize = width;
 		ySize = height;
 	}

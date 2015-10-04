@@ -3,37 +3,41 @@ package latmod.ftbu.mod;
 import latmod.core.util.*;
 import latmod.ftbu.api.callback.ServerTickCallback;
 import latmod.ftbu.backups.Backups;
-import latmod.ftbu.mod.config.FTBUConfig;
+import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.net.*;
 import latmod.ftbu.util.*;
 import latmod.ftbu.world.*;
 import net.minecraft.command.server.CommandSaveAll;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 
 public class FTBUTicks
 {
 	private static final FastList<ServerTickCallback> callbacks = new FastList<ServerTickCallback>();
 	public static final IntMap areaRequests = new IntMap();
-	public static boolean serverStarted = false;
+	private static MinecraftServer server;
+	public static boolean isDediServer = false;
 	private static long startMillis = 0L;
 	private static long currentMillis = 0L;
 	private static long restartSeconds = 0L;
 	private static long areasUpdated = 0L;
+	private static String lastRestartMessage = "";
 	
 	public static void addCallback(ServerTickCallback e)
 	{ callbacks.add(e); }
 	
 	public static void serverStarted()
 	{
-		serverStarted = true;
+		server = LatCoreMC.getServer();
+		isDediServer = server.isDedicatedServer();
 		
 		currentMillis = startMillis = Backups.lastTimeRun = LMUtils.millis();
 		restartSeconds = 0;
 		
-		if(FTBUConfig.general.restartTimer > 0)
+		if(FTBUConfigGeneral.restartTimer.get() > 0)
 		{
-			restartSeconds = (long)(FTBUConfig.general.restartTimer * 3600D);
+			restartSeconds = (long)(FTBUConfigGeneral.restartTimer.get() * 3600D);
 			LatCoreMC.logger.info("Server restart in " + LMStringUtils.getTimeString(restartSeconds));
 		}
 		
@@ -43,7 +47,8 @@ public class FTBUTicks
 	@SuppressWarnings("all")
 	public static void serverStopped()
 	{
-		serverStarted = false;
+		server = null;
+		isDediServer = false;
 		currentMillis = startMillis = restartSeconds = 0L;
 	}
 	
@@ -75,7 +80,11 @@ public class FTBUTicks
 				else if(secondsLeft == 300) msg = "5 Minutes";
 				else if(secondsLeft == 600) msg = "10 Minutes";
 				
-				if(msg != null) LatCoreMC.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server will restart after " + msg);//LANG
+				if(msg != null && !lastRestartMessage.equals(msg))
+				{
+					lastRestartMessage = msg;
+					LatCoreMC.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server will restart after " + msg);//LANG
+				}
 			}
 			
 			if(secondsLeft > 60 && Backups.getSecondsUntilNextBackup() <= 0L) Backups.run();
@@ -101,10 +110,10 @@ public class FTBUTicks
 					
 					if(ep != null)
 					{
-						int size = areaRequests.values.get(i);
+						int size = Math.max(5, areaRequests.values.get(i));
 						int x = MathHelperLM.chunk(ep.posX) - size / 2;
 						int z = MathHelperLM.chunk(ep.posZ) - size / 2;
-						LMNetHelper.sendTo(ep, new MessageAreaUpdate(x, z, ep.dimension, size, owner));
+						LMNetHelper.sendTo(ep, new MessageAreaUpdate(x, z, ep.dimension, size, size, owner));
 					}
 				}
 				

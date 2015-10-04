@@ -3,8 +3,9 @@ import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.*;
-import latmod.core.util.ByteIOStream;
+import io.netty.buffer.ByteBuf;
 import latmod.ftbu.api.EventLMPlayerClient;
 import latmod.ftbu.world.*;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,21 +32,24 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn>
 		firstTime = first;
 	}
 	
-	public void readData(ByteIOStream io) throws Exception
+	public void fromBytes(ByteBuf io)
 	{
 		playerID = io.readInt();
-		uuid = io.readUUID();
-		username = io.readString();
-		data = LMNetHelper.readTagCompound(io);
+		long msb = io.readLong();
+		long lsb = io.readLong();
+		uuid = new UUID(msb, lsb);
+		username = ByteBufUtils.readUTF8String(io);
+		data = ByteBufUtils.readTag(io);
 		firstTime = io.readBoolean();
 	}
 	
-	public void writeData(ByteIOStream io) throws Exception
+	public void toBytes(ByteBuf io)
 	{
 		io.writeInt(playerID);
-		io.writeUUID(uuid);
-		io.writeString(username);
-		LMNetHelper.writeTagCompound(io, data);
+		io.writeLong(uuid.getMostSignificantBits());
+		io.writeLong(uuid.getLeastSignificantBits());
+		ByteBufUtils.writeUTF8String(io, username);
+		ByteBufUtils.writeTag(io, data);
 		io.writeBoolean(firstTime);
 	}
 	

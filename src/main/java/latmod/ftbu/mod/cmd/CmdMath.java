@@ -2,8 +2,8 @@ package latmod.ftbu.mod.cmd;
 
 import javax.script.*;
 
-import latmod.core.util.LMStringUtils;
 import latmod.ftbu.cmd.*;
+import latmod.lib.LMStringUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.*;
 

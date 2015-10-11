@@ -1,4 +1,4 @@
-package latmod.ftbu.api.callback;
+package latmod.ftbu.api;
 
 public abstract class ServerTickCallback
 {

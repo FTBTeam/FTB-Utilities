@@ -3,10 +3,10 @@ package latmod.ftbu.util.client;
 import org.lwjgl.opengl.*;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.*;
 import latmod.ftbu.notification.*;
 import latmod.ftbu.util.gui.GuiLM;
 import latmod.ftbu.world.LMPlayerClient;
+import latmod.lib.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;

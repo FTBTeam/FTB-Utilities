@@ -1,7 +1,8 @@
 package latmod.ftbu.mod.config;
 
-import latmod.ftbu.api.config.*;
 import latmod.ftbu.api.readme.ReadmeInfo;
+import latmod.lib.config.*;
+import latmod.lib.util.*;
 
 public class FTBUConfigBackups
 {

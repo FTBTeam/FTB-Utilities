@@ -3,14 +3,15 @@ package latmod.ftbu.world;
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.*;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.inv.LMInvUtils;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
-import latmod.ftbu.net.*;
+import latmod.ftbu.net.MessageLMPlayerUpdate;
 import latmod.ftbu.util.*;
+import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.stats.StatList;
 import net.minecraft.util.*;
 
 public class LMPlayerServer extends LMPlayer // LMPlayerClient
@@ -27,6 +28,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	private EntityPlayerMP entityPlayer = null;
 	private int maxClaimPower = -2;
 	public int lastChunkType = -99;
+	private long lastSeen, firstJoined, timePlayed;
 	
 	public LMPlayerServer(LMWorldServer w, int i, GameProfile gp)
 	{
@@ -61,9 +63,9 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public void sendUpdate()
 	{
 		new EventLMPlayerServer.DataChanged(this).post();
-		LMNetHelper.sendTo(getPlayer(), new MessageLMPlayerUpdate(this, true));
+		new MessageLMPlayerUpdate(this, true).sendTo(getPlayer());
 		for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers(getPlayer()))
-			LMNetHelper.sendTo(ep, new MessageLMPlayerUpdate(this, false));
+			new MessageLMPlayerUpdate(this, false).sendTo(ep);
 	}
 	
 	public void updateLastSeen()
@@ -82,14 +84,10 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public boolean isOP()
 	{ return LatCoreMC.getServer().getConfigurationManager().func_152596_g(gameProfile); }
 	
-	public EntityPos getLastPos()
+	public EntityPos getPos()
 	{
-		if(isOnline())
-		{
-			EntityPlayerMP ep = getPlayer();
-			if(ep != null) return new EntityPos(ep);
-		}
-		
+		EntityPlayerMP ep = getPlayer();
+		if(ep != null) lastPos = new EntityPos(ep);
 		return lastPos;
 	}
 	
@@ -104,6 +102,16 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		if(lastSeen > 0L && !isOnline()) info.add(new ChatComponentTranslation("ftbu:label.last_seen", LMStringUtils.getTimeString(ms - lastSeen)));
 		if(firstJoined > 0L) info.add(new ChatComponentTranslation("ftbu:label.joined", LMStringUtils.getTimeString(ms - firstJoined)));
 		if(deaths > 0) info.add(new ChatComponentTranslation("ftbu:label.deaths", String.valueOf(deaths)));
+		getTimePlayed();
+		if(timePlayed > 0L)
+			info.add(new ChatComponentTranslation("stat.playOneMinute").appendSibling(new ChatComponentText(": " + LMStringUtils.getTimeString(timePlayed))));
+	}
+	
+	private long getTimePlayed()
+	{
+		if(isOnline())
+			timePlayed = getPlayer().func_147099_x().writeStat(StatList.minutesPlayedStat) * 50L;
+		return timePlayed;
 	}
 	
 	public void readFromServer(NBTTagCompound tag)
@@ -136,6 +144,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		lastSeen = tag.getLong("LastSeen");
 		firstJoined = tag.getLong("Joined");
+		timePlayed = tag.getLong("TimePlayed");
 		
 		claims.readFromNBT(tag);
 		
@@ -173,6 +182,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		tag.setLong("LastSeen", lastSeen);
 		tag.setLong("Joined", firstJoined);
+		tag.setLong("TimePlayed", getTimePlayed());
 		
 		claims.writeToNBT(tag);
 		

@@ -1,9 +1,9 @@
 package latmod.ftbu.util;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.FastMap;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.net.*;
+import latmod.ftbu.net.MessageOpenGui;
+import latmod.lib.FastMap;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.Container;
@@ -40,7 +40,7 @@ public abstract class LMGuiHandler
 			epM.openContainer = c;
 			epM.openContainer.windowId = epM.currentWindowId;
 			epM.openContainer.addCraftingToCrafters(epM);
-			LMNetHelper.sendTo(epM, new MessageOpenGui(ID, id, data, epM.currentWindowId));
+			new MessageOpenGui(ID, id, data, epM.currentWindowId).sendTo(epM);
 		}
 		else if(!LatCoreMC.isServer())
 			FTBU.proxy.openClientGui((ep == null) ? FTBU.proxy.getClientPlayer() : ep, ID, id, data);

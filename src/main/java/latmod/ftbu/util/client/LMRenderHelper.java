@@ -4,7 +4,7 @@ import java.awt.Color;
 import org.lwjgl.opengl.*;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.MathHelperLM;
+import latmod.lib.MathHelperLM;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.*;

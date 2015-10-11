@@ -9,13 +9,13 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.*;
-import latmod.core.util.*;
-import latmod.ftbu.api.callback.ClientTickCallback;
+import latmod.ftbu.api.client.callback.ClientTickCallback;
 import latmod.ftbu.mod.client.FTBURenderHandler;
 import latmod.ftbu.notification.Notification;
 import latmod.ftbu.util.LatCoreMC;
 import latmod.ftbu.util.gui.*;
 import latmod.ftbu.world.LMWorldClient;
+import latmod.lib.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;

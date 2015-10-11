@@ -1,7 +1,7 @@
 package latmod.ftbu.util.gui;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.FastList;
+import latmod.lib.FastList;
 
 @SideOnly(Side.CLIENT)
 public abstract class PanelPopupMenu extends PanelLM

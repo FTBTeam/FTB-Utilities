@@ -1,7 +1,7 @@
 package latmod.ftbu.recipes;
-import latmod.core.util.FastList;
 import latmod.ftbu.inv.*;
 import latmod.ftbu.item.MaterialItem;
+import latmod.lib.FastList;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;

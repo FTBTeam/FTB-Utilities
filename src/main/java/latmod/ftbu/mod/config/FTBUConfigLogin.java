@@ -2,10 +2,11 @@ package latmod.ftbu.mod.config;
 
 import java.util.UUID;
 
-import latmod.core.util.FastList;
-import latmod.ftbu.api.config.*;
+import latmod.ftbu.api.config.ConfigSyncRegistry;
 import latmod.ftbu.api.readme.ReadmeInfo;
 import latmod.ftbu.inv.ItemStackTypeAdapter;
+import latmod.lib.FastList;
+import latmod.lib.config.*;
 import net.minecraft.item.ItemStack;
 
 public class FTBUConfigLogin
@@ -19,7 +20,7 @@ public class FTBUConfigLogin
 	public static final ConfigEntryString rules = new ConfigEntryString("rules", "");
 	
 	@ReadmeInfo(info = "URL for per-server custom badges file (Json). Example can be seen here: http://pastebin.com/LvBB9HmV ", def = "Blank")
-	public static final ConfigEntryString customBadges = new ConfigEntryString("customBadges", "").setSyncWithClient();
+	public static final ConfigEntryString customBadges = new ConfigEntryString("customBadges", "");
 	
 	@ReadmeInfo(info = "Items to give player when it first joins the server. Format: StringID Size Metadata, does not support NBT yet.", def = "minecraft:apple 16 0")
 	public static final ConfigEntryStringArray startingItems = new ConfigEntryStringArray("startingItems", new String[] { "minecraft:apple 16 0" });
@@ -31,6 +32,8 @@ public class FTBUConfigLogin
 		group.add(customBadges);
 		group.add(startingItems);
 		f.add(group);
+		
+		ConfigSyncRegistry.add(customBadges);
 	}
 	
 	public static FastList<ItemStack> getStartingItems(UUID id)

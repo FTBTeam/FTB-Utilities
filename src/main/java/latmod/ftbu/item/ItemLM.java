@@ -2,8 +2,8 @@ package latmod.ftbu.item;
 import java.util.List;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.FastList;
 import latmod.ftbu.util.LMMod;
+import latmod.lib.FastList;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;

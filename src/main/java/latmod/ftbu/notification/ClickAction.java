@@ -4,7 +4,7 @@ import java.lang.reflect.Type;
 
 import com.google.gson.*;
 
-import latmod.core.util.PrimitiveType;
+import latmod.lib.PrimitiveType;
 
 public class ClickAction
 {

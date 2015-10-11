@@ -1,8 +1,8 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import latmod.core.util.LMStringUtils;
 import latmod.ftbu.cmd.*;
 import latmod.ftbu.mod.config.*;
+import latmod.lib.LMStringUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.*;
 

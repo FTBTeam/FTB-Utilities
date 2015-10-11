@@ -2,8 +2,8 @@ package latmod.ftbu.api;
 
 import cpw.mods.fml.common.eventhandler.Cancelable;
 import cpw.mods.fml.relauncher.Side;
-import latmod.core.util.FastList;
 import latmod.ftbu.world.*;
+import latmod.lib.FastList;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IChatComponent;
 

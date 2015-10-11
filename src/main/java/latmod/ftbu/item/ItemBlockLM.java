@@ -2,9 +2,9 @@ package latmod.ftbu.item;
 import java.util.List;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.FastList;
 import latmod.ftbu.block.BlockLM;
 import latmod.ftbu.util.MathHelperMC;
+import latmod.lib.FastList;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;

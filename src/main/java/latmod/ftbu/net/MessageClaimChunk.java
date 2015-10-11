@@ -2,8 +2,8 @@ package latmod.ftbu.net;
 
 import cpw.mods.fml.common.network.simpleimpl.*;
 import io.netty.buffer.ByteBuf;
-import latmod.core.util.MathHelperLM;
 import latmod.ftbu.world.*;
+import latmod.lib.MathHelperLM;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class MessageClaimChunk extends MessageLM<MessageClaimChunk>

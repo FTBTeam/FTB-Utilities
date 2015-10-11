@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.client.gui;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.api.callback.*;
+import latmod.ftbu.api.client.callback.*;
 import latmod.ftbu.util.client.FTBULang;
 import latmod.ftbu.util.gui.*;
 

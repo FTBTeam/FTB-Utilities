@@ -3,11 +3,11 @@ package latmod.ftbu.world;
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.FastList;
 import latmod.ftbu.api.EventLMPlayerClient;
 import latmod.ftbu.badges.Badge;
 import latmod.ftbu.inv.LMInvUtils;
 import latmod.ftbu.util.client.LatCoreMCClient;
+import latmod.lib.FastList;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
@@ -79,7 +79,7 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 		settings.readFromNet(tag.getCompoundTag("CFG"), self);
 	}
 	
-	public void clearCachedData()
+	public void onReloaded()
 	{
 		cachedBadge = null;
 	}

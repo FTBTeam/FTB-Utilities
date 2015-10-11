@@ -3,8 +3,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.FastList;
 import latmod.ftbu.util.client.LMRenderHelper;
+import latmod.lib.FastList;
 
 /** Made by LatvianModder */
 @SideOnly(Side.CLIENT)

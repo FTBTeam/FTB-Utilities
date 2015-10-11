@@ -6,10 +6,10 @@ import java.util.UUID;
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.Side;
-import latmod.core.util.*;
 import latmod.ftbu.api.EventLMPlayerServer;
-import latmod.ftbu.net.*;
+import latmod.ftbu.net.MessageLMWorldUpdate;
 import latmod.ftbu.util.*;
+import latmod.lib.*;
 import net.minecraft.nbt.*;
 import net.minecraft.world.*;
 
@@ -38,14 +38,16 @@ public class LMWorldServer extends LMWorld<LMPlayerServer> // LMWorldClient
 	{
 		warps.readFromNBT(tag, "Warps");
 		customData = tag.getCompoundTag("Custom");
-		worldBorder.readFromNBT(tag, "WorldBorder");
+		settings.readFromNBT(tag.getCompoundTag("Settings"), true);
 	}
 	
 	public void save(NBTTagCompound tag)
 	{
 		warps.writeToNBT(tag, "Warps");
 		tag.setTag("Custom", customData);
-		worldBorder.writeToNBT(tag, "WorldBorder");
+		NBTTagCompound settingsTag = new NBTTagCompound();
+		settings.writeToNBT(settingsTag, true);
+		tag.setTag("WorldBorder", settingsTag);
 	}
 	
 	public void writeDataToNet(NBTTagCompound tag, int selfID)
@@ -72,7 +74,9 @@ public class LMWorldServer extends LMWorld<LMPlayerServer> // LMWorldClient
 			tag.setTag("PLIST", list);
 		}
 		
-		worldBorder.writeToNBT(tag, "WB");
+		NBTTagCompound settingsTag = new NBTTagCompound();
+		settings.writeToNBT(settingsTag, false);
+		tag.setTag("CFG", settingsTag);
 	}
 	
 	public void writePlayersToServer(NBTTagCompound tag)
@@ -110,5 +114,5 @@ public class LMWorldServer extends LMWorld<LMPlayerServer> // LMWorldClient
 	}
 	
 	public void update()
-	{ LMNetHelper.sendTo(null, new MessageLMWorldUpdate(this)); }
+	{ new MessageLMWorldUpdate(this).sendTo(null); }
 }

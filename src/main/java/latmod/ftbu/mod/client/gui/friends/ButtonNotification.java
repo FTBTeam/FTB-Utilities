@@ -3,10 +3,10 @@ package latmod.ftbu.mod.client.gui.friends;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.FastList;
 import latmod.ftbu.util.client.ClientNotifications;
 import latmod.ftbu.util.gui.*;
 import latmod.ftbu.world.LMWorldClient;
+import latmod.lib.FastList;
 import net.minecraft.item.ItemStack;
 
 @SideOnly(Side.CLIENT)

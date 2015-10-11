@@ -6,12 +6,12 @@ import org.apache.logging.log4j.*;
 
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.*;
 import latmod.ftbu.block.IBlockLM;
 import latmod.ftbu.item.IItemLM;
 import latmod.ftbu.mod.FTBUFinals;
 import latmod.ftbu.recipes.LMRecipes;
 import latmod.ftbu.tile.TileLM;
+import latmod.lib.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;

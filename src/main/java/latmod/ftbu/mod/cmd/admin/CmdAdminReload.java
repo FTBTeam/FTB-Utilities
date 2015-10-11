@@ -2,7 +2,7 @@ package latmod.ftbu.mod.cmd.admin;
 
 import cpw.mods.fml.relauncher.Side;
 import latmod.ftbu.api.EventFTBUReload;
-import latmod.ftbu.api.config.ConfigFileRegistry;
+import latmod.ftbu.api.config.ConfigListRegistry;
 import latmod.ftbu.cmd.*;
 import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
@@ -19,18 +19,17 @@ public class CmdAdminReload extends CommandLM
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
 		float prevRRTimer = FTBUConfigGeneral.restartTimer.get();
+		ConfigListRegistry.reloadAll();
+		new MessageSyncConfig(null).sendTo(null);
 		
-		ConfigFileRegistry.reloadAll();
-		ConfigFileRegistry.syncWithClient(null);
-		
-		if(FTBUConfigGeneral.isDedi())
+		if(FTBUConfigGeneral.restartTimer.get() > 0)
 		{
 			if(prevRRTimer != FTBUConfigGeneral.restartTimer.get())
 				FTBUTicks.serverStarted();
 		}
 		
 		new EventFTBUReload(Side.SERVER, ics).post();
-		LMNetHelper.sendTo(null, new MessageReload());
+		new MessageReload().sendTo(null);
 		LatCoreMC.printChat(BroadcastSender.inst, "FTBU reloaded (Server)");
 		return null;
 	}

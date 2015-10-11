@@ -1,11 +1,11 @@
 package latmod.ftbu.mod.client.gui.friends;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.FastList;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.util.client.*;
 import latmod.ftbu.util.gui.*;
 import latmod.ftbu.world.LMWorldClient;
+import latmod.lib.FastList;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.*;
 

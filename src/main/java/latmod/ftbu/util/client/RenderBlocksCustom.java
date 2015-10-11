@@ -3,8 +3,8 @@ package latmod.ftbu.util.client;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.LMColorUtils;
 import latmod.ftbu.util.CustomBlockAccess;
+import latmod.lib.LMColorUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;

@@ -1,12 +1,12 @@
 package latmod.ftbu.mod;
 
-import latmod.core.util.*;
-import latmod.ftbu.api.callback.ServerTickCallback;
+import latmod.ftbu.api.ServerTickCallback;
 import latmod.ftbu.backups.Backups;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
-import latmod.ftbu.net.*;
+import latmod.ftbu.net.MessageAreaUpdate;
 import latmod.ftbu.util.*;
 import latmod.ftbu.world.*;
+import latmod.lib.*;
 import net.minecraft.command.server.CommandSaveAll;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
@@ -111,9 +111,7 @@ public class FTBUTicks
 					if(ep != null)
 					{
 						int size = Math.max(5, areaRequests.values.get(i));
-						int x = MathHelperLM.chunk(ep.posX) - size / 2;
-						int z = MathHelperLM.chunk(ep.posZ) - size / 2;
-						LMNetHelper.sendTo(ep, new MessageAreaUpdate(x, z, ep.dimension, size, size, owner));
+						new MessageAreaUpdate(owner.getPos(), size, size, owner).sendTo(ep);
 					}
 				}
 				

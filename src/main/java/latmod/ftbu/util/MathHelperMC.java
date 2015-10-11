@@ -2,8 +2,9 @@ package latmod.ftbu.util;
 
 import java.util.Random;
 
-import latmod.core.util.*;
 import latmod.ftbu.mod.FTBU;
+import latmod.lib.*;
+import latmod.lib.util.VecLM;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

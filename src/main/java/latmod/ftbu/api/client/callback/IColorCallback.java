@@ -1,4 +1,4 @@
-package latmod.ftbu.api.callback;
+package latmod.ftbu.api.client.callback;
 
 public interface IColorCallback
 {

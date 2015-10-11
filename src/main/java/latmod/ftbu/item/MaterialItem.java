@@ -1,7 +1,7 @@
 package latmod.ftbu.item;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.FastList;
+import latmod.lib.FastList;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

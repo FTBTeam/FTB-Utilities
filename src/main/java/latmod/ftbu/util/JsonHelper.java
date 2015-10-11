@@ -1,10 +1,10 @@
 package latmod.ftbu.util;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.LMJsonUtils;
-import latmod.ftbu.api.config.ConfigList;
 import latmod.ftbu.inv.ItemStackTypeAdapter;
 import latmod.ftbu.notification.*;
+import latmod.lib.LMJsonUtils;
+import latmod.lib.config.ConfigList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 

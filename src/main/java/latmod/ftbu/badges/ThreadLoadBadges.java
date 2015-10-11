@@ -5,10 +5,10 @@ import java.net.URL;
 import java.util.UUID;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.*;
-import latmod.ftbu.api.EventFTBUBadges;
+import latmod.ftbu.api.client.EventFTBUBadges;
 import latmod.ftbu.mod.config.FTBUConfigLogin;
 import latmod.ftbu.util.LatCoreMC;
+import latmod.lib.*;
 
 @SideOnly(Side.CLIENT)
 public class ThreadLoadBadges extends Thread
@@ -56,7 +56,7 @@ public class ThreadLoadBadges extends Thread
 		try
 		{
 			InputStream is = new URL(url).openStream();
-			String raw = LMStringUtils.toString(is).trim();
+			String raw = LMStringUtils.readString(is).trim();
 			
 			Badges list = LMJsonUtils.fromJson(raw, Badges.class);
 			

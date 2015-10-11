@@ -3,7 +3,6 @@ import java.io.File;
 
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
-import latmod.core.util.OS;
 import latmod.ftbu.api.*;
 import latmod.ftbu.api.readme.ReadmeSaveHandler;
 import latmod.ftbu.backups.Backups;
@@ -13,6 +12,7 @@ import latmod.ftbu.mod.config.FTBUConfig;
 import latmod.ftbu.net.LMNetHelper;
 import latmod.ftbu.util.*;
 import latmod.ftbu.world.LMWorldServer;
+import latmod.lib.OS;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 @Mod
@@ -51,6 +51,7 @@ public class FTBU
 		JsonHelper.init();
 		EventBusHelper.register(new FTBUEventHandler());
 		FTBUConfig.load();
+		LMNetHelper.init();
 		ODItems.preInit();
 		Backups.init();
 		mod.onPostLoaded();
@@ -62,7 +63,6 @@ public class FTBU
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent e)
 	{
-		LMNetHelper.init();
 		FMLInterModComms.sendMessage("Waila", "register", "latmod.ftbu.core.api.RegisterWailaEvent.registerHandlers");
 	}
 	

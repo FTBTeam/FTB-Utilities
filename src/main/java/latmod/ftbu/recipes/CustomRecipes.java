@@ -1,5 +1,5 @@
 package latmod.ftbu.recipes;
-import latmod.core.util.FastMap;
+import latmod.lib.FastMap;
 import net.minecraft.item.ItemStack;
 
 public class CustomRecipes<Output>

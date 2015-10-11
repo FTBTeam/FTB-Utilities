@@ -1,6 +1,7 @@
 package latmod.ftbu.net;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.*;
+import cpw.mods.fml.relauncher.*;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.api.EventLMPlayerClient;
 import latmod.ftbu.util.client.LatCoreMCClient;
@@ -34,6 +35,7 @@ public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate>
 		ByteBufUtils.writeTag(io, data);
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageLMPlayerUpdate m, MessageContext ctx)
 	{
 		LMPlayerClient p = LMWorldClient.inst.getPlayer(m.playerID);

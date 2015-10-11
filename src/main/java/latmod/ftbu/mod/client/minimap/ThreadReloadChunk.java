@@ -3,8 +3,8 @@ package latmod.ftbu.mod.client.minimap;
 import java.util.Arrays;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.*;
 import latmod.ftbu.world.LMWorldClient;
+import latmod.lib.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.init.Blocks;

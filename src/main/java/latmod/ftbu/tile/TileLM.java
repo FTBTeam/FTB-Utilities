@@ -1,9 +1,9 @@
 package latmod.ftbu.tile;
-import latmod.core.util.LMUtils;
 import latmod.ftbu.block.BlockLM;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.net.*;
+import latmod.ftbu.net.MessageClientTileAction;
 import latmod.ftbu.util.*;
+import latmod.lib.LMUtils;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.ItemStack;
@@ -192,7 +192,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 	{ return !security.level.isPublic(); }
 	
 	public final void sendClientAction(String action, NBTTagCompound data)
-	{ LMNetHelper.sendToServer(new MessageClientTileAction(this, action, data)); }
+	{ new MessageClientTileAction(this, action, data).sendToServer(); }
 	
 	public void clientPressButton(String button, int mouseButton, NBTTagCompound data)
 	{

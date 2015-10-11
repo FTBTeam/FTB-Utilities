@@ -1,10 +1,10 @@
 package latmod.ftbu.api;
 
 import cpw.mods.fml.common.Optional;
-import latmod.core.util.FastList;
 import latmod.ftbu.tile.IWailaTile;
 import latmod.ftbu.util.OtherMods;
 import latmod.ftbu.waila.*;
+import latmod.lib.FastList;
 import mcp.mobius.waila.api.IWailaRegistrar;
 
 public class EventRegisterWaila extends EventLM

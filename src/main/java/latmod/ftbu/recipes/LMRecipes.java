@@ -1,6 +1,6 @@
 package latmod.ftbu.recipes;
 import cpw.mods.fml.common.registry.GameRegistry;
-import latmod.core.util.FastList;
+import latmod.lib.FastList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraftforge.oredict.*;

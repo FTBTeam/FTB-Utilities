@@ -1,7 +1,7 @@
 package latmod.ftbu.inv;
 
-import latmod.core.util.FastList;
 import latmod.ftbu.util.LMNBTUtils;
+import latmod.lib.FastList;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

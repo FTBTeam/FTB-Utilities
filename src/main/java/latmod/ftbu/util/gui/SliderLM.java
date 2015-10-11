@@ -3,7 +3,7 @@ package latmod.ftbu.util.gui;
 import org.lwjgl.input.Mouse;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.*;
+import latmod.lib.*;
 
 @SideOnly(Side.CLIENT)
 public class SliderLM extends WidgetLM

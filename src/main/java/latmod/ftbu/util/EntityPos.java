@@ -1,6 +1,7 @@
 package latmod.ftbu.util;
 
-import latmod.core.util.*;
+import latmod.lib.MathHelperLM;
+import latmod.lib.util.VecLM;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChunkCoordinates;

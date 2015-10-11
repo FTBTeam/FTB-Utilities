@@ -5,6 +5,7 @@ import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.*;
+import cpw.mods.fml.relauncher.*;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.api.EventLMPlayerClient;
 import latmod.ftbu.world.*;
@@ -53,6 +54,7 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn>
 		io.writeBoolean(firstTime);
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageLMPlayerLoggedIn m, MessageContext ctx)
 	{
 		LMPlayerClient p = LMWorldClient.inst.getPlayer(m.playerID);

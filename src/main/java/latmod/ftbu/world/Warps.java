@@ -1,7 +1,7 @@
 package latmod.ftbu.world;
 
-import latmod.core.util.*;
 import latmod.ftbu.util.*;
+import latmod.lib.*;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class Warps

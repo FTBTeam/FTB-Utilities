@@ -1,9 +1,10 @@
-package latmod.ftbu.api;
+package latmod.ftbu.api.client;
 
 import java.util.UUID;
 
-import latmod.core.util.FastMap;
+import latmod.ftbu.api.EventLM;
 import latmod.ftbu.badges.Badge;
+import latmod.lib.FastMap;
 
 public class EventFTBUBadges extends EventLM
 {

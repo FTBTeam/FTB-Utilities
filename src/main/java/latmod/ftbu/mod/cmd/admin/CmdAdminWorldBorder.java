@@ -1,8 +1,8 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import latmod.core.util.MathHelperLM;
 import latmod.ftbu.cmd.*;
 import latmod.ftbu.world.LMWorldServer;
+import latmod.lib.MathHelperLM;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
@@ -26,7 +26,7 @@ public class CmdAdminWorldBorder extends CommandSubLM //TODO: Remove
 		
 		public IChatComponent onCommand(ICommandSender ics, String[] args)
 		{
-			LMWorldServer.inst.worldBorder.enabled = true;
+			//LMWorldServer.inst.settings.enabled = true;
 			LMWorldServer.inst.update();
 			return new ChatComponentText("World border enabled");
 		}
@@ -39,7 +39,7 @@ public class CmdAdminWorldBorder extends CommandSubLM //TODO: Remove
 		
 		public IChatComponent onCommand(ICommandSender ics, String[] args)
 		{
-			LMWorldServer.inst.worldBorder.enabled = false;
+			//LMWorldServer.inst.settings.enabled = false;
 			LMWorldServer.inst.update();
 			return new ChatComponentText("World border disabled");
 		}
@@ -57,7 +57,7 @@ public class CmdAdminWorldBorder extends CommandSubLM //TODO: Remove
 			int dim = parseInt(ics, args[0]);
 			int dist = parseInt(ics, args[1]);
 			
-			LMWorldServer.inst.worldBorder.setSize(dim, dist);
+			LMWorldServer.inst.settings.setSize(dim, dist);
 			LMWorldServer.inst.update();
 			return new ChatComponentText("World border for dimension " + dim + " set to " + dist);
 		}
@@ -72,7 +72,7 @@ public class CmdAdminWorldBorder extends CommandSubLM //TODO: Remove
 		{
 			checkArgs(args, 1);
 			int dim = parseInt(ics, args[0]);
-			return new ChatComponentText("World border for dimension " + dim + ": " + LMWorldServer.inst.worldBorder.getSize(dim));
+			return new ChatComponentText("World border for dimension " + dim + ": " + LMWorldServer.inst.settings.getSize(dim));
 		}
 	}
 	
@@ -83,22 +83,24 @@ public class CmdAdminWorldBorder extends CommandSubLM //TODO: Remove
 		
 		public IChatComponent onCommand(ICommandSender ics, String[] args)
 		{
-			int x = 0, z = 0, dim = ics.getEntityWorld().provider.dimensionId;
+			int x, z, dim;
 			
 			if(args.length >= 2)
 			{
 				x = parseInt(ics, args[0]);
 				z = parseInt(ics, args[1]);
 				if(args.length >= 3) dim = parseInt(ics, args[2]);
+				else dim = ics.getEntityWorld().provider.dimensionId;
 			}
 			else
 			{
 				EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 				x = MathHelperLM.floor(ep.posX);
 				z = MathHelperLM.floor(ep.posZ);
+				dim = ep.dimension;
 			}
 			
-			LMWorldServer.inst.worldBorder.setPos(dim, x, z);
+			LMWorldServer.inst.settings.setPos(dim, x, z);
 			LMWorldServer.inst.update();
 			return new ChatComponentText("World center for dimension " + dim + " set to " + x + " : " + z);
 		}

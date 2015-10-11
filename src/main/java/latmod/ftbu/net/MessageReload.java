@@ -1,6 +1,6 @@
 package latmod.ftbu.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.*;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.api.EventFTBUReload;
 import latmod.ftbu.mod.FTBU;
@@ -19,6 +19,7 @@ public class MessageReload extends MessageLM<MessageReload>
 	{
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageReload m, MessageContext ctx)
 	{
 		FTBUClient.onReloaded();

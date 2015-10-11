@@ -4,10 +4,10 @@ import java.io.File;
 import java.net.URI;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.LMUtils;
-import latmod.ftbu.api.EventClickAction;
+import latmod.ftbu.api.client.EventClickAction;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.LMPlayerClient;
+import latmod.lib.LMUtils;
 import net.minecraft.client.gui.GuiChat;
 
 @SideOnly(Side.CLIENT)

@@ -2,9 +2,9 @@ package latmod.ftbu.mod.cmd.all;
 
 import java.util.Comparator;
 
-import latmod.core.util.FastList;
 import latmod.ftbu.cmd.*;
 import latmod.ftbu.world.*;
+import latmod.lib.FastList;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.*;
 

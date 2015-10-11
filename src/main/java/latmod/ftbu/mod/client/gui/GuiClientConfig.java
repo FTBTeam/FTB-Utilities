@@ -4,10 +4,11 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.*;
+import latmod.ftbu.api.client.*;
 import latmod.ftbu.util.LatCoreMC;
-import latmod.ftbu.util.client.*;
+import latmod.ftbu.util.client.FTBULang;
 import latmod.ftbu.util.gui.*;
+import latmod.lib.*;
 import net.minecraft.client.gui.GuiScreen;
 
 @SideOnly(Side.CLIENT)
@@ -71,14 +72,14 @@ public class GuiClientConfig extends GuiLM implements IClientActionGui
 		
 		lines.clear();
 		totalHeight = 20;
-		for(ClientConfig c : ClientConfig.Registry.map.values)
+		for(ClientConfig c : ClientConfigRegistry.map.values)
 		{
 			if(!c.isHidden)
 			{
 				ButtonCategory cat = new ButtonCategory(this, c);
 				lines.add(cat);
 				
-				for(ClientConfig.Property p : c.map.values)
+				for(ClientConfigProperty p : c.map.values)
 				{
 					p.initGui();
 					lines.add(new ButtonConfig(cat, p));
@@ -90,7 +91,7 @@ public class GuiClientConfig extends GuiLM implements IClientActionGui
 	
 	public void onLMGuiClosed()
 	{
-		ClientConfig.Registry.save();
+		ClientConfigRegistry.save();
 	}
 	
 	public void drawBackground()
@@ -190,9 +191,9 @@ public class GuiClientConfig extends GuiLM implements IClientActionGui
 	public static class ButtonConfig extends ConfigLine
 	{
 		public final ButtonCategory category;
-		public final ClientConfig.Property prop;
+		public final ClientConfigProperty prop;
 		
-		public ButtonConfig(ButtonCategory c, ClientConfig.Property p)
+		public ButtonConfig(ButtonCategory c, ClientConfigProperty p)
 		{
 			super(c.gui, c.config);
 			category = c;

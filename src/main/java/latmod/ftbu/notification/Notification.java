@@ -4,7 +4,7 @@ import java.lang.reflect.Type;
 
 import com.google.gson.*;
 
-import latmod.core.util.*;
+import latmod.lib.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IChatComponent;
 

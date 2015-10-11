@@ -3,10 +3,10 @@ package latmod.ftbu.backups;
 import java.io.File;
 import java.util.Arrays;
 
-import latmod.core.util.LMFileUtils;
 import latmod.ftbu.mod.FTBUTicks;
-import latmod.ftbu.mod.config.*;
+import latmod.ftbu.mod.config.FTBUConfigBackups;
 import latmod.ftbu.util.LatCoreMC;
+import latmod.lib.LMFileUtils;
 import net.minecraft.world.World;
 
 public class Backups
@@ -27,7 +27,7 @@ public class Backups
 	}
 	
 	public static boolean enabled()
-	{ return commandOverride || (FTBUConfigBackups.enabled.get() && FTBUConfigGeneral.isDedi()); }
+	{ return commandOverride || FTBUConfigBackups.enabled.get(); }
 	
 	public static boolean run()
 	{

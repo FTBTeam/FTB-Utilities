@@ -1,8 +1,8 @@
 package latmod.ftbu.api;
 
 import cpw.mods.fml.relauncher.Side;
-import latmod.core.util.FastList;
 import latmod.ftbu.world.*;
+import latmod.lib.FastList;
 import net.minecraft.util.IChatComponent;
 
 public abstract class EventLMPlayerClient extends EventLMPlayer

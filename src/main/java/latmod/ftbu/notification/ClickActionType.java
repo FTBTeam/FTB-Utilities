@@ -1,6 +1,6 @@
 package latmod.ftbu.notification;
 
-import latmod.core.util.PrimitiveType;
+import latmod.lib.PrimitiveType;
 
 public class ClickActionType
 {

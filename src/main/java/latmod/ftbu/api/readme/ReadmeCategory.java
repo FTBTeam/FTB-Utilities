@@ -2,7 +2,7 @@ package latmod.ftbu.api.readme;
 
 import java.lang.reflect.*;
 
-import latmod.core.util.FastList;
+import latmod.lib.FastList;
 
 public class ReadmeCategory
 {

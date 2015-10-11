@@ -4,19 +4,18 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.eventhandler.*;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.*;
-import latmod.ftbu.api.callback.ClientTickCallback;
-import latmod.ftbu.badges.Badge;
+import latmod.ftbu.api.client.callback.ClientTickCallback;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.util.Coords;
 import latmod.ftbu.util.client.*;
-import latmod.ftbu.util.client.model.TexturedCubeRenderer;
-import latmod.ftbu.world.*;
+import latmod.ftbu.util.client.model.CubeRenderer;
+import latmod.ftbu.world.LMWorldClient;
+import latmod.lib.*;
+import latmod.lib.util.Pos2I;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 @SideOnly(Side.CLIENT)
 public class FTBURenderHandler
@@ -25,24 +24,7 @@ public class FTBURenderHandler
 	public static final ResourceLocation world_border_tex = FTBU.mod.getLocation("textures/map/world_border.png");
 	
 	public static final FastList<ClientTickCallback> callbacks = new FastList<ClientTickCallback>();
-	private static final TexturedCubeRenderer worldBorderRenderer = new TexturedCubeRenderer(true);
-	
-	@SubscribeEvent
-	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
-	{
-		if(!Badge.badges.isEmpty() && FTBUClient.renderBadges.getB() && !e.entityPlayer.isInvisible())
-		{
-			LMPlayerClient pc = LMWorldClient.inst.getPlayer(e.entityPlayer);
-			
-			if(pc != null && pc.settings.renderBadge)
-			{
-				if(pc.cachedBadge == null)
-					pc.cachedBadge = Badge.badges.get(pc.getUUID());
-				if(pc.cachedBadge != null)
-					pc.cachedBadge.onPlayerRender(e.entityPlayer);
-			}
-		}
-	}
+	private static final CubeRenderer worldBorderRenderer = new CubeRenderer();
 	
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void renderTick(TickEvent.RenderTickEvent e)
@@ -82,19 +64,21 @@ public class FTBURenderHandler
 		LMFrustrumUtils.update();
 		//LMFrustrumUtils.updateMatrix();
 		
-		if(LMWorldClient.inst == null || !LMWorldClient.inst.worldBorder.enabled) return;
-		int wb = LMWorldClient.inst.worldBorder.getSize(LMFrustrumUtils.currentDim);
-		Coords.I2 borderPos = LMWorldClient.inst.worldBorder.getPos(LMFrustrumUtils.currentDim);
+		if(LMWorldClient.inst == null || !LMWorldClient.inst.settings.isEnabled(LMFrustrumUtils.currentDim)) return;
+		int wb = LMWorldClient.inst.settings.getSize(LMFrustrumUtils.currentDim);
+		Pos2I borderPos = LMWorldClient.inst.settings.getPos(LMFrustrumUtils.currentDim);
 		
 		float minX = (MathHelperLM.chunk(-wb + borderPos.x) + 1) * 16 + 0.01F;
 		float maxX = MathHelperLM.chunk(wb + borderPos.x) * 16 - 0.01F;
 		float minZ = (MathHelperLM.chunk(-wb + borderPos.y) + 1) * 16 + 0.01F;
 		float maxZ = MathHelperLM.chunk(wb + borderPos.y) * 16 - 0.01F;
 		
-		boolean renderWest = LMFrustrumUtils.playerX <= minX + 16;
-		boolean renderEast = LMFrustrumUtils.playerX >= maxX - 16;
-		boolean renderNorth = LMFrustrumUtils.playerZ <= minZ + 16;
-		boolean renderSouth = LMFrustrumUtils.playerZ >= maxZ - 16;
+		float rd = 32F;
+		
+		boolean renderWest = LMFrustrumUtils.playerX <= minX + rd;
+		boolean renderEast = LMFrustrumUtils.playerX >= maxX - rd;
+		boolean renderNorth = LMFrustrumUtils.playerZ <= minZ + rd;
+		boolean renderSouth = LMFrustrumUtils.playerZ >= maxZ - rd;
 		
 		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 		GL11.glEnable(GL11.GL_BLEND);
@@ -110,16 +94,14 @@ public class FTBURenderHandler
 		LatCoreMCClient.setTexture(world_border_tex);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		
 		GL11.glPushMatrix();
 		GL11.glTranslated(-LMFrustrumUtils.renderX, -LMFrustrumUtils.renderY, -LMFrustrumUtils.renderZ);
 		
-		float f = Minecraft.getSystemTime() * 0.0004F;
+		float f = (Minecraft.getSystemTime() * 0.0005F) % 1F;
 		
 		worldBorderRenderer.setSize(minX, 0D, minZ, maxX, 256D, maxZ);
-		worldBorderRenderer.setUV(-1, minX + f, 0F, maxX + f, 256F);
+		worldBorderRenderer.setUV(minX + f, 0F, maxX + f, 256F);
 		
 		float maxA = 0.8F;
 		
@@ -127,25 +109,25 @@ public class FTBURenderHandler
 		
 		if(renderWest)
 		{
-			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(LMFrustrumUtils.playerX - minX) * maxA / 16F);
+			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(LMFrustrumUtils.playerX - minX) * maxA / rd);
 			worldBorderRenderer.renderWest();
 		}
 		
 		if(renderEast)
 		{
-			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(maxX - LMFrustrumUtils.playerX) * maxA / 16F);
+			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(maxX - LMFrustrumUtils.playerX) * maxA / rd);
 			worldBorderRenderer.renderEast();
 		}
 		
 		if(renderNorth)
 		{
-			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(LMFrustrumUtils.playerZ - minZ) * maxA / 16F);
+			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(LMFrustrumUtils.playerZ - minZ) * maxA / rd);
 			worldBorderRenderer.renderNorth();
 		}
 		
 		if(renderSouth)
 		{
-			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(maxZ - LMFrustrumUtils.playerZ) * maxA / 16F);
+			GL11.glColor4f(1F, 1F, 1F, maxA - (float)(maxZ - LMFrustrumUtils.playerZ) * maxA / rd);
 			worldBorderRenderer.renderSouth();
 		}
 		

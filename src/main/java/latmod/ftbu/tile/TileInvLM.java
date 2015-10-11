@@ -1,7 +1,7 @@
 package latmod.ftbu.tile;
 
-import latmod.core.util.MathHelperLM;
 import latmod.ftbu.inv.LMInvUtils;
+import latmod.lib.MathHelperLM;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;

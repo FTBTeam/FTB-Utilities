@@ -1,51 +1,36 @@
 package latmod.ftbu.net;
-import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.*;
-import io.netty.buffer.ByteBuf;
-import latmod.core.util.FastList;
-import latmod.ftbu.util.LMNBTUtils;
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
-import net.minecraft.nbt.*;
+import latmod.lib.FastList;
 import net.minecraft.util.IChatComponent;
 
-public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo>
+public class MessageLMPlayerInfo extends MessageByteArray<MessageLMPlayerInfo>
 {
-	public NBTTagCompound data;
-	
 	public MessageLMPlayerInfo() { }
 	
 	public MessageLMPlayerInfo(int playerID)
 	{
-		data = new NBTTagCompound();
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(playerID);
+		io.writeInt(p == null ? 0 : p.playerID);
 		if(p == null) return;
-		data.setInteger("P", playerID);
-		NBTTagList list = new NBTTagList();
 		FastList<IChatComponent> info = new FastList<IChatComponent>();
 		p.getInfo(info);
+		io.writeUByte(Math.min(info.size(), 255));
 		for(int i = 0; i < info.size(); i++)
-			list.appendTag(new NBTTagString(IChatComponent.Serializer.func_150696_a(info.get(i))));
-		data.setTag("L", list);
+			io.writeString(IChatComponent.Serializer.func_150696_a(info.get(i)));
 	}
 	
-	public void fromBytes(ByteBuf io)
-	{
-		data = ByteBufUtils.readTag(io);
-	}
-	
-	public void toBytes(ByteBuf io)
-	{
-		ByteBufUtils.writeTag(io, data);
-	}
-	
+	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageLMPlayerInfo m, MessageContext ctx)
 	{
-		LMPlayerClient p = LMWorldClient.inst.getPlayer(m.data.getInteger("P"));
+		LMPlayerClient p = LMWorldClient.inst.getPlayer(m.io.readInt());
+		if(p == null) return null;
+		int size = m.io.readUByte();
 		FastList<IChatComponent> info = new FastList<IChatComponent>();
-		NBTTagList list = m.data.getTagList("L", LMNBTUtils.STRING);
-		for(int i = 0; i < list.tagCount(); i++)
-			info.add(IChatComponent.Serializer.func_150699_a(list.getStringTagAt(i)));
+		for(int i = 0; i < size; i++)
+			info.add(IChatComponent.Serializer.func_150699_a(m.io.readString()));
 		p.receiveInfo(info);
 		LatCoreMCClient.onGuiClientAction();
 		return null;

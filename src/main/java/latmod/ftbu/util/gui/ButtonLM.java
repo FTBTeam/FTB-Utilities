@@ -1,6 +1,6 @@
 package latmod.ftbu.util.gui;
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.LMUtils;
+import latmod.lib.LMUtils;
 
 @SideOnly(Side.CLIENT)
 public abstract class ButtonLM extends WidgetLM

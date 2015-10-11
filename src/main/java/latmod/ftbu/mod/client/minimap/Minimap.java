@@ -1,9 +1,9 @@
 package latmod.ftbu.mod.client.minimap;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.*;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.world.ChunkType;
+import latmod.lib.*;
 import net.minecraft.world.World;
 
 @SideOnly(Side.CLIENT)

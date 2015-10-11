@@ -1,13 +1,13 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import latmod.core.util.FastList;
-import latmod.ftbu.api.EventPlayerAction;
+import latmod.ftbu.api.client.EventPlayerAction;
 import latmod.ftbu.mod.FTBUFinals;
 import latmod.ftbu.mod.client.gui.*;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.util.client.*;
 import latmod.ftbu.util.gui.*;
 import latmod.ftbu.world.*;
+import latmod.lib.FastList;
 
 public abstract class PlayerAction
 {

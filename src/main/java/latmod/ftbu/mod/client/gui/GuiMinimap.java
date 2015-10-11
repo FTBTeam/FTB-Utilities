@@ -3,7 +3,6 @@ package latmod.ftbu.mod.client.gui;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
 import latmod.ftbu.mod.client.minimap.*;
@@ -11,6 +10,7 @@ import latmod.ftbu.net.*;
 import latmod.ftbu.util.client.*;
 import latmod.ftbu.util.gui.*;
 import latmod.ftbu.world.LMWorldClient;
+import latmod.lib.*;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -177,7 +177,7 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 				int cy = Math.min(buttonPressed0.chunk.posY, button.chunk.posY);
 				int csx = Math.abs(buttonPressed0.chunk.posX - button.chunk.posX) + 1;
 				int csy = Math.abs(buttonPressed0.chunk.posY - button.chunk.posY) + 1;
-				LMNetHelper.sendToServer(new MessageClaimChunk(minimap.dim, cx, cy, csx, csy, b == 0));
+				new MessageClaimChunk(minimap.dim, cx, cy, csx, csy, b == 0).sendToServer();
 			}
 			
 			buttonPressed0 = null;

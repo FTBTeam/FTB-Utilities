@@ -52,6 +52,6 @@ public class LMWorldClient extends LMWorld<LMPlayerClient> // LMWorldServer
 				new EventLMPlayerClient.DataLoaded(players.get(i)).post();
 		}
 		
-		worldBorder.readFromNBT(tag, "WB");
+		settings.readFromNBT(tag.getCompoundTag("CFG"), false);
 	}
 }

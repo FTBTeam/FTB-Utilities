@@ -10,12 +10,12 @@ import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.*;
 import cpw.mods.fml.relauncher.Side;
-import latmod.core.util.*;
 import latmod.ftbu.item.IItemLM;
 import latmod.ftbu.mod.*;
-import latmod.ftbu.net.*;
+import latmod.ftbu.net.MessageNotifyPlayer;
 import latmod.ftbu.notification.Notification;
 import latmod.ftbu.tile.IGuiTile;
+import latmod.lib.*;
 import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -180,7 +180,7 @@ public final class LatCoreMC // LatCoreMCClient
 	}
 	
 	public static MinecraftServer getServer()
-	{ return FMLCommonHandler.instance().getMinecraftServerInstance(); }
+	{ return MinecraftServer.getServer(); }
 	
 	public static WorldServer getServerWorld()
 	{
@@ -209,7 +209,7 @@ public final class LatCoreMC // LatCoreMCClient
 	}
 	
 	public static void notifyPlayer(EntityPlayerMP ep, Notification n)
-	{ LMNetHelper.sendTo(ep, new MessageNotifyPlayer(n)); }
+	{ new MessageNotifyPlayer(n).sendTo(ep); }
 	
 	public static void openGui(EntityPlayer ep, IGuiTile i, NBTTagCompound data)
 	{

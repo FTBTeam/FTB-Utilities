@@ -45,7 +45,7 @@ public class MessageOpenGui extends MessageLM<MessageOpenGui>
 	public IMessage onMessage(MessageOpenGui m, MessageContext ctx)
 	{
 		LMGuiHandler h = LMGuiHandler.Registry.getLMGuiHandler(m.modID);
-		if(h != null && FTBU.proxy.openClientGui(LatCoreMCClient.mc.thePlayer, m.modID, m.guiID, data))
+		if(h != null && FTBU.proxy.openClientGui(LatCoreMCClient.mc.thePlayer, m.modID, m.guiID, m.data))
 			LatCoreMCClient.mc.thePlayer.openContainer.windowId = m.windowID;
 		return null;
 	}

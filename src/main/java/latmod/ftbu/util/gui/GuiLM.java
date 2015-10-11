@@ -6,9 +6,9 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.*;
 import latmod.ftbu.util.OtherMods;
 import latmod.ftbu.util.client.*;
+import latmod.lib.*;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;

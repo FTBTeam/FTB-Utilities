@@ -4,11 +4,10 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import latmod.ftbu.mod.FTBU;
-import net.minecraft.entity.player.EntityPlayerMP;
 
 public class LMNetHelper
 {
-	public static final SimpleNetworkWrapper NET = newChannel(FTBU.mod.modID);
+	static final SimpleNetworkWrapper NET = newChannel(FTBU.mod.modID);
 	
 	public static void init()
 	{
@@ -19,6 +18,7 @@ public class LMNetHelper
 		NET.registerMessage(MessageClientAction.class, MessageClientAction.class, ++ID, Side.SERVER);
 		NET.registerMessage(MessageOpenGui.class, MessageOpenGui.class, ++ID, Side.CLIENT);
 		NET.registerMessage(MessageReload.class, MessageReload.class, ++ID, Side.CLIENT);
+		NET.registerMessage(MessageSyncConfig.class, MessageSyncConfig.class, ++ID, Side.CLIENT);
 		NET.registerMessage(MessageClientTileAction.class, MessageClientTileAction.class, ++ID, Side.SERVER);
 		NET.registerMessage(MessageClientItemAction.class, MessageClientItemAction.class, ++ID, Side.SERVER);
 		NET.registerMessage(MessageLMPlayerDied.class, MessageLMPlayerDied.class, ++ID, Side.CLIENT);
@@ -26,17 +26,10 @@ public class LMNetHelper
 		NET.registerMessage(MessageLMPlayerLoggedIn.class, MessageLMPlayerLoggedIn.class, ++ID, Side.CLIENT);
 		NET.registerMessage(MessageLMPlayerLoggedOut.class, MessageLMPlayerLoggedOut.class, ++ID, Side.CLIENT);
 		NET.registerMessage(MessageLMPlayerInfo.class, MessageLMPlayerInfo.class, ++ID, Side.CLIENT);
-		NET.registerMessage(MessageUpdateConfig.class, MessageUpdateConfig.class, ++ID, Side.CLIENT);
 		NET.registerMessage(MessageAreaUpdate.class, MessageAreaUpdate.class, ++ID, Side.CLIENT);
 		NET.registerMessage(MessageClaimChunk.class, MessageClaimChunk.class, ++ID, Side.SERVER);
 	}
 	
 	public static SimpleNetworkWrapper newChannel(String s)
 	{ return NetworkRegistry.INSTANCE.newSimpleChannel(s); }
-	
-	public static void sendTo(EntityPlayerMP ep, MessageLM<?> m)
-	{ if(ep == null) NET.sendToAll(m); else NET.sendTo(m, ep); }
-	
-	public static void sendToServer(MessageLM<?> m)
-	{ NET.sendToServer(m); }
 }

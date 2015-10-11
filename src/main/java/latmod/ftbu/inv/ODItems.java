@@ -1,7 +1,7 @@
 package latmod.ftbu.inv;
-import latmod.core.util.FastList;
 import latmod.ftbu.item.Tool;
 import latmod.ftbu.util.*;
+import latmod.lib.FastList;
 import net.minecraft.init.*;
 import net.minecraft.item.*;
 import net.minecraftforge.oredict.OreDictionary;

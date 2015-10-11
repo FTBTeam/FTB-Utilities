@@ -3,10 +3,10 @@ package latmod.ftbu.mod.client.gui.friends;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.FastList;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.util.gui.*;
 import latmod.ftbu.world.*;
+import latmod.lib.FastList;
 import net.minecraft.client.entity.AbstractClientPlayer;
 
 @SideOnly(Side.CLIENT)

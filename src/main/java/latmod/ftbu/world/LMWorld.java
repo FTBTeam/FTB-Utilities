@@ -3,10 +3,10 @@ package latmod.ftbu.world;
 import java.util.*;
 
 import cpw.mods.fml.relauncher.Side;
-import latmod.core.util.*;
 import latmod.ftbu.cmd.NameType;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.util.LatCoreMC;
+import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
@@ -25,7 +25,7 @@ public abstract class LMWorld<P extends LMPlayer>
 	public final UUID worldID;
 	public final String worldIDS;
 	public final FastList<P> players;
-	public final WorldBorder worldBorder;
+	public final LMWorldSettings settings;
 	
 	public LMWorld(Side s, UUID id, String ids)
 	{
@@ -33,7 +33,7 @@ public abstract class LMWorld<P extends LMPlayer>
 		worldID = id;
 		worldIDS = ids;
 		players = new FastList<P>();
-		worldBorder = new WorldBorder();
+		settings = new LMWorldSettings();
 	}
 	
 	public World getMCWorld()

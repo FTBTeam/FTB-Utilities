@@ -2,11 +2,11 @@ package latmod.ftbu.block;
 import java.util.*;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.FastList;
 import latmod.ftbu.item.ItemBlockLM;
 import latmod.ftbu.mod.FTBUFinals;
 import latmod.ftbu.tile.TileLM;
 import latmod.ftbu.util.LMMod;
+import latmod.lib.FastList;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;

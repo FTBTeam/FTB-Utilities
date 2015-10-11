@@ -43,7 +43,7 @@ public class CmdTplast extends CommandLM
 			to = getLMPlayer(args[1]);
 		}
 		
-		EntityPos p = to.getLastPos();
+		EntityPos p = to.getPos();
 		if(p == null) return error(new ChatComponentText("No last position!"));
 		LMDimUtils.teleportPlayer(who, p);
 		return new ChatComponentText("Teleported to " + to.getName() + "!"); //LANG

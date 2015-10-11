@@ -3,12 +3,13 @@ import java.util.UUID;
 
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.*;
+import cpw.mods.fml.relauncher.*;
 import io.netty.buffer.ByteBuf;
-import latmod.core.util.LMStringUtils;
 import latmod.ftbu.api.EventLMWorldClient;
 import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.util.LatCoreMC;
 import latmod.ftbu.world.*;
+import latmod.lib.LMStringUtils;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class MessageLMWorldJoined extends MessageLM<MessageLMWorldJoined>
@@ -44,6 +45,7 @@ public class MessageLMWorldJoined extends MessageLM<MessageLMWorldJoined>
 		ByteBufUtils.writeTag(io, data);
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageLMWorldJoined m, MessageContext ctx)
 	{
 		LMWorldClient.inst = new LMWorldClient(m.worldID, LMStringUtils.fromUUID(m.worldID), m.clientPlayerID);

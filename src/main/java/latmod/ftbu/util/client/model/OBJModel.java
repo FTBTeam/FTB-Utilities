@@ -4,9 +4,9 @@ import java.io.*;
 import org.lwjgl.util.vector.Vector3f;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.*;
 import latmod.ftbu.util.LatCoreMC;
 import latmod.ftbu.util.client.LMRenderHelper;
+import latmod.lib.*;
 import net.minecraft.util.ResourceLocation;
 
 /** Made by LatvianModder */

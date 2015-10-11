@@ -1,7 +1,7 @@
 package latmod.ftbu.world;
 
-import latmod.core.util.FastList;
 import latmod.ftbu.util.LMNBTUtils;
+import latmod.lib.FastList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 

@@ -2,10 +2,10 @@ package latmod.ftbu.api.readme;
 
 import java.io.File;
 
-import latmod.core.util.LMFileUtils;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.config.FTBUConfig;
 import latmod.ftbu.util.LatCoreMC;
+import latmod.lib.LMFileUtils;
 
 public class ReadmeSaveHandler
 {

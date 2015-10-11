@@ -5,15 +5,16 @@ import java.util.UUID;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.FastMap;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.util.client.LatCoreMCClient;
+import latmod.lib.FastMap;
+import latmod.lib.util.FinalIDObject;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
-public class Badge
+public class Badge extends FinalIDObject
 {
 	public static boolean isReloading = true;
 	public static final FastMap<UUID, Badge> badges = new FastMap<UUID, Badge>();
@@ -26,20 +27,10 @@ public class Badge
 	}
 	
 	private ResourceLocation textureURL = null;
-	public final String ID;
 	public boolean isGlowing = true;
 	
 	public Badge(String id)
-	{ ID = id; }
-	
-	public String toString()
-	{ return ID; }
-	
-	public int hashCode()
-	{ return toString().hashCode(); }
-	
-	public boolean equals(Object o)
-	{ return o != null && (o == this || o.toString().equals(toString())); }
+	{ super(id); }
 	
 	public Badge setNotGlowing()
 	{ isGlowing = false; return this; }
@@ -48,8 +39,8 @@ public class Badge
 	{
 		if(textureURL == null)
 		{
-			textureURL = FTBU.mod.getLocation("textures/badges/" + ID);
-			LatCoreMCClient.getDownloadImage(textureURL, ID, defTex, null);
+			textureURL = FTBU.mod.getLocation("textures/badges/" + toString());
+			LatCoreMCClient.getDownloadImage(textureURL, toString(), defTex, null);
 		}
 		
 		return textureURL;
@@ -57,6 +48,9 @@ public class Badge
 	
 	public void onPlayerRender(EntityPlayer ep)
 	{
+		ResourceLocation texture = getTexture();
+		if(texture == null) return;
+		
 		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_CULL_FACE);
@@ -64,7 +58,7 @@ public class Badge
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
-		LatCoreMCClient.mc.getTextureManager().bindTexture(getTexture());
+		LatCoreMCClient.mc.getTextureManager().bindTexture(texture);
 		
 		if(isGlowing) LatCoreMCClient.pushMaxBrightness();
 		
@@ -75,7 +69,7 @@ public class Badge
 		
 		GL11.glTranslated(0.04D, 0.01D, 0.86D);
 		
-		if(ep.getEquipmentInSlot(3) != null && ep.getEquipmentInSlot(3).getItem() instanceof ItemArmor)
+		if(ep.getEquipmentInSlot(3) != null && ep.getEquipmentInSlot(3).getItem() instanceof ItemArmor)//TODO: Change to isValidArmor
 				GL11.glTranslated(0D, 0D, -0.0625D);
 		
 		float s = 0.2F;

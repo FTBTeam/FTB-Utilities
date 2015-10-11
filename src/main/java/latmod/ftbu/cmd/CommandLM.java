@@ -2,9 +2,9 @@ package latmod.ftbu.cmd;
 
 import java.util.*;
 
-import latmod.core.util.FastList;
 import latmod.ftbu.util.LatCoreMC;
 import latmod.ftbu.world.*;
+import latmod.lib.FastList;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;

@@ -2,7 +2,7 @@ package latmod.ftbu.util;
 
 import java.io.*;
 
-import latmod.core.util.*;
+import latmod.lib.*;
 import net.minecraft.nbt.*;
 import net.minecraftforge.common.util.Constants;
 

@@ -1,8 +1,9 @@
-package latmod.ftbu.api;
+package latmod.ftbu.api.client;
 
-import latmod.core.util.FastList;
+import latmod.ftbu.api.EventLM;
 import latmod.ftbu.mod.client.gui.friends.PlayerAction;
 import latmod.ftbu.world.*;
+import latmod.lib.FastList;
 
 public class EventPlayerAction extends EventLM
 {

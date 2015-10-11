@@ -5,7 +5,7 @@ import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.LMColorUtils;
+import latmod.ftbu.api.client.*;
 import latmod.ftbu.api.readme.*;
 import latmod.ftbu.badges.*;
 import latmod.ftbu.mod.*;
@@ -14,6 +14,7 @@ import latmod.ftbu.tile.TileLM;
 import latmod.ftbu.util.*;
 import latmod.ftbu.util.client.*;
 import latmod.ftbu.world.*;
+import latmod.lib.LMColorUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.EntityReddustFX;
@@ -26,9 +27,9 @@ import net.minecraft.world.World;
 public class FTBUClient extends FTBUCommon
 {
 	public static final ClientConfig clientConfig = new ClientConfig("ftbu");
-	public static final ClientConfig.Property renderBadges = new ClientConfig.Property("player_decorators", true);
+	public static final ClientConfigProperty renderBadges = new ClientConfigProperty("player_decorators", true);
 	
-	public static final ClientConfig.Property renderMyBadge = new ClientConfig.Property("player_decorators_self", true)
+	public static final ClientConfigProperty renderMyBadge = new ClientConfigProperty("player_decorators_self", true)
 	{
 		public void initGui()
 		{ setValue(LMWorldClient.inst.clientPlayer.settings.renderBadge ? 1 : 0); }
@@ -37,12 +38,12 @@ public class FTBUClient extends FTBUCommon
 		{ ClientAction.ACTION_RENDER_BADGE.send(LMWorldClient.inst.clientPlayer.settings.renderBadge ? 0 : 1); }
 	};
 	
-	public static final ClientConfig.Property addOreNames = new ClientConfig.Property("item_ore_names", false);
-	public static final ClientConfig.Property addRegistryNames = new ClientConfig.Property("item_reg_names", false);
-	public static final ClientConfig.Property displayDebugInfo = new ClientConfig.Property("debug_info", false);
-	public static final ClientConfig.Property optionsButton = new ClientConfig.Property("options_button", true);
+	public static final ClientConfigProperty addOreNames = new ClientConfigProperty("item_ore_names", false);
+	public static final ClientConfigProperty addRegistryNames = new ClientConfigProperty("item_reg_names", false);
+	public static final ClientConfigProperty displayDebugInfo = new ClientConfigProperty("debug_info", false);
+	public static final ClientConfigProperty optionsButton = new ClientConfigProperty("options_button", true);
 	
-	public static final ClientConfig.Property chatLinks = new ClientConfig.Property("chat_links", true)
+	public static final ClientConfigProperty chatLinks = new ClientConfigProperty("chat_links", true)
 	{
 		public void initGui()
 		{ setValue(LMWorldClient.inst.clientPlayer.settings.chatLinks ? 1 : 0); }
@@ -52,8 +53,8 @@ public class FTBUClient extends FTBUCommon
 	};
 	
 	public static final ClientConfig miscConfig = new ClientConfig("ftbu_misc").setHidden();
-	public static final ClientConfig.Property hideArmorFG = new ClientConfig.Property("hide_armor_fg", false);
-	public static final ClientConfig.Property openHSB = new ClientConfig.Property("openHSB_cg", false);
+	public static final ClientConfigProperty hideArmorFG = new ClientConfigProperty("hide_armor_fg", false);
+	public static final ClientConfigProperty openHSB = new ClientConfigProperty("openHSB_cg", false);
 	
 	private static void initConfig()
 	{
@@ -66,11 +67,11 @@ public class FTBUClient extends FTBUCommon
 		clientConfig.add(addRegistryNames);
 		clientConfig.add(optionsButton);
 		clientConfig.add(chatLinks);
-		ClientConfig.Registry.add(clientConfig);
+		ClientConfigRegistry.add(clientConfig);
 		
 		miscConfig.add(hideArmorFG);
 		miscConfig.add(openHSB);
-		ClientConfig.Registry.add(miscConfig);
+		ClientConfigRegistry.add(miscConfig);
 	}
 	
 	public static void onWorldJoined()
@@ -92,13 +93,15 @@ public class FTBUClient extends FTBUCommon
 		EventBusHelper.register(FTBURenderHandler.instance);
 		EventBusHelper.register(FTBUGuiEventHandler.instance);
 		
-		ClientConfig.Registry.init();
+		ClientConfigRegistry.init();
 		initConfig();
+		
+		FTBUBadgeRenderer.instance.enable(true);
 	}
 	
 	public void postInit()
 	{
-		ClientConfig.Registry.load();
+		ClientConfigRegistry.load();
 		FTBUGuiHandler.instance.registerClient();
 	}
 	
@@ -185,7 +188,7 @@ public class FTBUClient extends FTBUCommon
 		if(LMWorldClient.inst != null)
 		{
 			for(int i = 0; i < LMWorldClient.inst.players.size(); i++)
-				LMWorldClient.inst.players.get(i).clearCachedData();
+				LMWorldClient.inst.players.get(i).onReloaded();
 		}
 	}
 }

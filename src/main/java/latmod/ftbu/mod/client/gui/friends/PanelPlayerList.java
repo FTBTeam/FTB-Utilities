@@ -3,8 +3,8 @@ package latmod.ftbu.mod.client.gui.friends;
 import org.lwjgl.input.Mouse;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.FastList;
 import latmod.ftbu.world.*;
+import latmod.lib.FastList;
 
 @SideOnly(Side.CLIENT)
 public class PanelPlayerList extends PanelFriendsGui
@@ -69,6 +69,9 @@ public class PanelPlayerList extends PanelFriendsGui
 				if(posY != newPos) posY = newPos;
 			}
 		}
+		
+		if(playerButtons.size() * 21 < height)
+			posY = 0;
 		
 		for(int i = 0; i < size; i++)
 			playerButtons.get(i).renderWidget();

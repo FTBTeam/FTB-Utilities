@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.*;
 
 @SideOnly(Side.CLIENT)
@@ -11,48 +12,24 @@ public class CubeRenderer
 {
 	public static final CubeRenderer instance = new CubeRenderer();
 	
-	public boolean enableNormals = true;
+	protected static final float[] normalsX = new float[] { 0F, 0F, 0F, 0F, -1F, 1F };
+	protected static final float[] normalsY = new float[] { -1F, 1F, 0F, 0F, 0F, 0F };
+	protected static final float[] normalsZ = new float[] { 0F, 0F, -1F, 1F, 0F, 0F };
 	
-	protected int currentSide;
-	protected final double[] vertexMapX = new double[24];
-	protected final double[] vertexMapY = new double[24];
-	protected final double[] vertexMapZ = new double[24];
+	public Tessellator tessellator = null;
 	
-	public void setVertex(int idx, double x, double y, double z)
-	{ vertexMapX[idx] = x; vertexMapY[idx] = y; vertexMapZ[idx] = z; }
+	public boolean hasTexture = true;
+	public boolean hasNormals = true;
 	
-	public void setSize(double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
-	{
-		setVertex(0, minX, minY, minZ);
-		setVertex(1, maxX, minY, minZ);
-		setVertex(2, maxX, minY, maxZ);
-		setVertex(3, minX, minY, maxZ);
-		
-		setVertex(4, minX, maxY, minZ);
-		setVertex(5, minX, maxY, maxZ);
-		setVertex(6, maxX, maxY, maxZ);
-		setVertex(7, maxX, maxY, minZ);
-		
-		setVertex(8, minX, minY, maxZ);
-		setVertex(9, maxX, minY, maxZ);
-		setVertex(10, maxX, maxY, maxZ);
-		setVertex(11, minX, maxY, maxZ);
-		
-		setVertex(12, minX, minY, minZ);
-		setVertex(13, minX, maxY, minZ);
-		setVertex(14, maxX, maxY, minZ);
-		setVertex(15, maxX, minY, minZ);
-		
-		setVertex(16, minX, minY, minZ);
-		setVertex(17, minX, minY, maxZ);
-		setVertex(18, minX, maxY, maxZ);
-		setVertex(19, minX, maxY, minZ);
-		
-		setVertex(20, maxX, minY, minZ);
-		setVertex(21, maxX, maxY, minZ);
-		setVertex(22, maxX, maxY, maxZ);
-		setVertex(23, maxX, minY, maxZ);
-	}
+	/** Unimplemented */
+	public boolean isInterpolated = false;
+	
+	protected int currentSide = -1;
+	protected double minX, minY, minZ, maxX, maxY, maxZ;
+	protected float minU, minV, maxU, maxV;
+	
+	public void setSize(double x0, double y0, double z0, double x1, double y1, double z1)
+	{ minX = x0; minY = y0; minZ = z0; maxX = x1; maxY = y1; maxZ = z1; }
 	
 	public void setSize(AxisAlignedBB aabb)
 	{ setSize(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ); }
@@ -60,53 +37,136 @@ public class CubeRenderer
 	public void setSize(Block b)
 	{ setSize(b.getBlockBoundsMinX(), b.getBlockBoundsMinY(), b.getBlockBoundsMinZ(), b.getBlockBoundsMaxX(), b.getBlockBoundsMaxY(), b.getBlockBoundsMaxZ()); }
 	
+	public void setUV(float u0, float v0, float u1, float v1)
+	{ minU = u0; minV = v0; maxU = u1; maxV = v1; }
+	
+	public void setUVD(double minU, double minV, double maxU, double maxV)
+	{ setUV((float)minU, (float)minV, (float)maxU, (float)maxV); }
+	
+	public void setUVFromIcon(IIcon icon)
+	{ setUV(icon.getMinU(), icon.getMinV(), icon.getMaxU(), icon.getMaxV()); }
+	
+	public void setUVFromBlock(Block b, int m, int s)
+	{ setUVFromIcon(b.getIcon(s, m)); }
+	
 	public void renderAll()
 	{
-		for(int i = 0; i < 6; i++)
-			renderSide0(i);
+		renderDown();
+		renderUp();
+		renderSouth();
+		renderNorth();
+		renderWest();
+		renderEast();
 	}
 	
 	public void renderSide(int s)
 	{
-		if(s < 0 || s >= 6);
-		renderSide0(s);
-	}
-	
-	protected void vertex(int i)
-	{
-		int j = currentSide * 4 + i;
-		GL11.glVertex3d(vertexMapX[j], vertexMapY[j], vertexMapZ[j]);
+		if(s < 0 || s > 5) return;
+		else if(s == 0) renderDown();
+		else if(s == 1) renderUp();
+		else if(s == 2) renderSouth();
+		else if(s == 3) renderNorth();
+		else if(s == 4) renderWest();
+		else if(s == 5) renderEast();
 	}
 	
 	protected void begin(int i)
 	{
+		if(i < 0 || i > 5)
+		{ currentSide = -1; return; }
+		
 		currentSide = i;
-		if(enableNormals)
-			GL11.glNormal3f(Facing.offsetsXForSide[i], Facing.offsetsYForSide[i], Facing.offsetsZForSide[i]);
-		GL11.glBegin(GL11.GL_QUADS);
+		if(hasNormals)
+		{
+			if(tessellator == null) GL11.glNormal3f(normalsX[i], normalsY[i], normalsZ[i]);
+			else tessellator.setNormal(normalsX[i], normalsY[i], normalsZ[i]);
+		}
+		
+		if(tessellator == null) GL11.glBegin(GL11.GL_QUADS);
+		else tessellator.startDrawingQuads();
 	}
 	
 	protected void end()
-	{ GL11.glEnd(); }
+	{
+		if(currentSide == -1) return;
+		if(tessellator == null) GL11.glEnd();
+		else tessellator.draw();
+		currentSide = -1;
+	}
 	
-	protected void renderSide0(int s)
-	{ begin(s); vertex(0); vertex(1); vertex(2); vertex(3); end(); }
+	protected void vertex(double x, double y, double z, float u, float v)
+	{
+		if(currentSide == -1) return;
+		
+		if(tessellator == null)
+		{
+			if(hasTexture) GL11.glTexCoord2d(u, v);
+			GL11.glVertex3d(x, y, z);
+		}
+		else
+		{
+			if(hasTexture) tessellator.setTextureUV(u, v);
+			tessellator.addVertex(x, y, z);
+		}
+	}
 	
 	public void renderDown()
-	{ renderSide0(0); }
+	{
+		begin(0);
+		vertex(minX, minY, minZ, minU, minV);
+		vertex(maxX, minY, minZ, maxU, minV);
+		vertex(maxX, minY, maxZ, maxU, maxV);
+		vertex(minX, minY, maxZ, minU, maxV);
+		end();
+	}
 	
 	public void renderUp()
-	{ renderSide0(1); }
+	{
+		begin(1);
+		vertex(minX, maxY, minZ, minU, minV);
+		vertex(minX, maxY, maxZ, minU, maxV);
+		vertex(maxX, maxY, maxZ, maxU, maxV);
+		vertex(maxX, maxY, minZ, maxU, minV);
+		end();
+	}
 	
 	public void renderSouth()
-	{ renderSide0(2); }
+	{
+		begin(2);
+		vertex(minX, minY, maxZ, minU, maxV);
+		vertex(maxX, minY, maxZ, maxU, maxV);
+		vertex(maxX, maxY, maxZ, maxU, minV);
+		vertex(minX, maxY, maxZ, minU, minV);
+		end();
+	}
 	
 	public void renderNorth()
-	{ renderSide0(3); }
+	{
+		begin(3);
+		vertex(minX, minY, minZ, maxU, maxV);
+		vertex(minX, maxY, minZ, maxU, minV);
+		vertex(maxX, maxY, minZ, minU, minV);
+		vertex(maxX, minY, minZ, minU, maxV);
+		end();
+	}
 	
 	public void renderWest()
-	{ renderSide0(4); }
+	{
+		begin(4);
+		vertex(minX, minY, minZ, minU, maxV);
+		vertex(minX, minY, maxZ, maxU, maxV);
+		vertex(minX, maxY, maxZ, maxU, minV);
+		vertex(minX, maxY, minZ, minU, minV);
+		end();
+	}
 	
 	public void renderEast()
-	{ renderSide0(5); }
+	{
+		begin(5);
+		vertex(maxX, minY, minZ, maxU, maxV);
+		vertex(maxX, maxY, minZ, maxU, minV);
+		vertex(maxX, maxY, maxZ, minU, minV);
+		vertex(maxX, minY, maxZ, minU, maxV);
+		end();
+	}
 }

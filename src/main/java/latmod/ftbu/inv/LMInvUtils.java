@@ -1,9 +1,9 @@
 package latmod.ftbu.inv;
 import java.util.*;
 
-import latmod.core.util.FastMap;
 import latmod.ftbu.item.Tool;
 import latmod.ftbu.util.LMNBTUtils;
+import latmod.lib.FastMap;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.*;
 import net.minecraft.entity.Entity;

@@ -1,6 +1,6 @@
 package latmod.ftbu.api.readme;
 
-import latmod.core.util.FastMap;
+import latmod.lib.FastMap;
 
 public class ReadmeFile
 {

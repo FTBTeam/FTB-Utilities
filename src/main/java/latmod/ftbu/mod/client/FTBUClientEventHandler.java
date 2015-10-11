@@ -4,7 +4,6 @@ import java.util.UUID;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.FastList;
 import latmod.ftbu.api.EventLMWorldClient;
 import latmod.ftbu.inv.*;
 import latmod.ftbu.mod.*;
@@ -13,6 +12,7 @@ import latmod.ftbu.paint.IPainterItem;
 import latmod.ftbu.util.*;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
+import latmod.lib.FastList;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.item.*;
 import net.minecraft.util.EnumChatFormatting;
@@ -107,7 +107,6 @@ public class FTBUClientEventHandler
 		if(e.entity.worldObj.isRemote && LatCoreMCClient.isPlaying() && e.entityPlayer.getUniqueID().equals(LatCoreMCClient.mc.thePlayer.getUniqueID()) && e.entityPlayer.getHeldItem() == null)// && e.target instanceof EntityPlayer)
 		{
 			LMPlayerClient p = LMWorldClient.inst.getPlayer(e.target);
-			if(p == null) p = LMWorldClient.inst.clientPlayer;
 			if(p != null) LatCoreMCClient.mc.displayGuiScreen(new GuiFriendsGuiSmall(p));
 		}
 	}

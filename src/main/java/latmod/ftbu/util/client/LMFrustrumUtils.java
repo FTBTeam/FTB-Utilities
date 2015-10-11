@@ -40,13 +40,12 @@ public class LMFrustrumUtils
 		GL11.glGetInteger(GL11.GL_VIEWPORT, viewport);
 	}
 	
-	public static Point2F getScreenCoords(float x, float y, float z)
+	public static Point2D getScreenCoords(double x, double y, double z)
 	{
 		FloatBuffer screenCoords = BufferUtils.createFloatBuffer(3);
+		//FloatBuffer screenCoords = BufferUtils.createFloatBuffer(4);
 		
-		FloatBuffer screenCoords = BufferUtils.createFloatBuffer(4);
-		
-		boolean result = GLU.gluProject(x, y, z, modelView, projection, viewport, screenCoords);
+		boolean result = GLU.gluProject((float)x, (float)y, (float)z, modelView, projection, viewport, screenCoords);
 		if(result)
 		{
 			float px = screenCoords.get(0);
@@ -55,12 +54,10 @@ public class LMFrustrumUtils
 			//if(Minecraft == 0) System.out.println(px + " : " + py);
 			
 			if(px >= 0 && py >= 0 && px < viewport.get(2) && py < viewport.get(3))
-				return new Point2F(px, py);
+				return new Point2D(px, py);
 		}
 		return null;
 	}
 	
-	public static Point2F getScreenCoords(VecLM v)
-	{ return getScreenCoords((float)v.x, (float)v.y, (float)v.z); }
 	*/
 }

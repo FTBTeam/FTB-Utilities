@@ -5,8 +5,7 @@ import java.util.UUID;
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.*;
-import latmod.ftbu.cmd.NameType;
+import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -27,8 +26,6 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 	public NBTTagCompound commonPublicData;
 	public NBTTagCompound commonPrivateData;
 	public final FastList<Mail> mail;
-	public long lastSeen;
-	public long firstJoined;
 	
 	public LMPlayer(LMWorld<?> w, int i, GameProfile gp)
 	{
@@ -89,9 +86,6 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 	
 	public boolean equalsPlayer(LMPlayer p)
 	{ return p != null && (p == this || p.playerID == playerID); }
-	
-	public NameType getNameType()
-	{ return isOnline() ? NameType.ON : NameType.OFF; }
 	
 	public FastList<LMPlayer> getFriends()
 	{

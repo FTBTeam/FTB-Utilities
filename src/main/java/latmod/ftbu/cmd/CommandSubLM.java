@@ -1,6 +1,6 @@
 package latmod.ftbu.cmd;
 
-import latmod.core.util.*;
+import latmod.lib.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.*;
 

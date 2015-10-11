@@ -4,13 +4,14 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.core.util.*;
-import latmod.ftbu.api.callback.*;
+import latmod.ftbu.api.client.ClientConfigRegistry;
+import latmod.ftbu.api.client.callback.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.util.EnumDyeColor;
 import latmod.ftbu.util.client.*;
 import latmod.ftbu.util.gui.*;
+import latmod.lib.*;
 import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
@@ -79,7 +80,7 @@ public class GuiSelectColorHSB extends GuiLM
 			{
 				playClickSound();
 				FTBUClient.openHSB.setValue(0);
-				ClientConfig.Registry.save();
+				ClientConfigRegistry.save();
 				mc.displayGuiScreen(new GuiSelectColorRGB(callback, getInitRGB(), colorID, isInstant));
 			}
 		};

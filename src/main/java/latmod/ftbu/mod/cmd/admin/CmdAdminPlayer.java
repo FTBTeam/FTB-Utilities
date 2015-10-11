@@ -5,13 +5,13 @@ import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
 
-import latmod.core.util.*;
 import latmod.ftbu.cmd.*;
 import latmod.ftbu.inv.*;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.notification.Notification;
 import latmod.ftbu.util.*;
 import latmod.ftbu.world.*;
+import latmod.lib.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;

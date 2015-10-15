@@ -15,7 +15,7 @@ public final class ClientConfigRegistry
 	
 	public static void init()
 	{
-		configFile = LMFileUtils.newFile(new File(LatCoreMC.latmodFolder, "client/config.txt"));
+		configFile = LMFileUtils.newFile(new File(LatCoreMC.localConfigFolder, "client/config.txt"));
 	}
 	
 	public static void load()

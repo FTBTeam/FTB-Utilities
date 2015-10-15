@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import org.lwjgl.opengl.*;
 
 import cpw.mods.fml.relauncher.*;
+import latmod.ftbu.mod.FTBUFinals;
 import latmod.ftbu.world.LMWorldClient;
 import latmod.lib.*;
 
@@ -23,7 +24,6 @@ public class MArea
 	public final int posX, posY;
 	public final FastMap<Short, MChunk> chunks;
 	public final long index;
-	public final File file;
 	
 	public boolean isDirty = true;
 	public int textureID = -1;
@@ -38,7 +38,6 @@ public class MArea
 		posY = y;
 		chunks = new FastMap<Short, MChunk>();
 		index = Bits.intsToLong(posX, posY);
-		file = new File(LMWorldClient.inst.clientDataFolder, "minimap/" + minimap.dim + "," + posX + "," + posY + ".png");
 		load();
 	}
 	
@@ -101,8 +100,13 @@ public class MArea
 		return image;
 	}
 	
+	public File getFile()
+	{ return new File(LMWorldClient.inst.clientDataFolder, "minimap/" + minimap.dim + "," + posX + "," + posY + ".png"); }
+	
 	public void load()
 	{
+		File file = getFile();
+		
 		if(file.exists())
 		{
 			Thread thread = new Thread()
@@ -111,13 +115,14 @@ public class MArea
 				{
 					try
 					{
-						BufferedImage image = ImageIO.read(file);
-						if(image != null && image.getWidth() == size && image.getHeight() == size)
+						PixelBuffer image = new PixelBuffer(ImageIO.read(file));
+						
+						if(image.width == size && image.height == size)
 						{
 							for(int y = 0; y < size_c; y++)
 							for(int x = 0; x < size_c; x++)
 							{
-								int[] pixelsTemp = image.getRGB(x * 16, y * 16, 16, 16, null, 0, 16);
+								int[] pixelsTemp = image.getRGB(x * 16, y * 16, 16, 16, null);
 								
 								for(int i = 0; i < 256; i++)
 								{
@@ -132,7 +137,7 @@ public class MArea
 						}
 					}
 					catch(Exception e)
-					{ e.printStackTrace(); }
+					{ if(FTBUFinals.DEV) e.printStackTrace(); }
 				}
 			};
 			
@@ -149,7 +154,7 @@ public class MArea
 				try
 				{
 					BufferedImage image = toPixelBuffer().toImage(BufferedImage.TYPE_INT_ARGB);
-					ImageIO.write(image, "PNG", LMFileUtils.newFile(file));
+					ImageIO.write(image, "PNG", LMFileUtils.newFile(getFile()));
 				}
 				catch(Exception e)
 				{ e.printStackTrace(); }

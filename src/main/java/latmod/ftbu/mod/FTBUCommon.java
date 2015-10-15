@@ -2,7 +2,7 @@ package latmod.ftbu.mod;
 
 import java.util.UUID;
 
-import latmod.ftbu.api.readme.ReadmeFile;
+import latmod.ftbu.api.guide.GuideFile;
 import latmod.ftbu.tile.TileLM;
 import latmod.ftbu.world.LMWorld;
 import net.minecraft.entity.player.*;
@@ -20,7 +20,7 @@ public class FTBUCommon // FTBUClient
 	{
 	}
 	
-	public void onReadmeEvent(ReadmeFile file)
+	public void onReadmeEvent(GuideFile file)
 	{
 	}
 	
@@ -38,7 +38,7 @@ public class FTBUCommon // FTBUClient
 	public World getClientWorld()
 	{ return null; }
 	
-	public LMWorld<?> getClientWorldLM()
+	public LMWorld getClientWorldLM()
 	{ return null; }
 	
 	public double getReachDist(EntityPlayer ep)

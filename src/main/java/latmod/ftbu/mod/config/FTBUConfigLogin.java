@@ -3,7 +3,7 @@ package latmod.ftbu.mod.config;
 import java.util.UUID;
 
 import latmod.ftbu.api.config.ConfigSyncRegistry;
-import latmod.ftbu.api.readme.ReadmeInfo;
+import latmod.ftbu.api.guide.GuideInfo;
 import latmod.ftbu.inv.ItemStackTypeAdapter;
 import latmod.lib.FastList;
 import latmod.lib.config.*;
@@ -13,16 +13,16 @@ public class FTBUConfigLogin
 {
 	public static final ConfigGroup group = new ConfigGroup("login");
 	
-	@ReadmeInfo(info = "Message of the day. This will be displayed when player joins the server.", def = "Blank")
+	@GuideInfo(info = "Message of the day. This will be displayed when player joins the server.", def = "Blank")
 	public static final ConfigEntryStringArray motd = new ConfigEntryStringArray("motd", new String[] { "Welcome to the server!" });
 	
-	@ReadmeInfo(info = "Rules link you can click on. This will be displayed when player joins the server.", def = "Blank")
+	@GuideInfo(info = "Rules link you can click on. This will be displayed when player joins the server.", def = "Blank")
 	public static final ConfigEntryString rules = new ConfigEntryString("rules", "");
 	
-	@ReadmeInfo(info = "URL for per-server custom badges file (Json). Example can be seen here: http://pastebin.com/LvBB9HmV ", def = "Blank")
+	@GuideInfo(info = "URL for per-server custom badges file (Json). Example can be seen here: http://pastebin.com/LvBB9HmV ", def = "Blank")
 	public static final ConfigEntryString customBadges = new ConfigEntryString("customBadges", "");
 	
-	@ReadmeInfo(info = "Items to give player when it first joins the server. Format: StringID Size Metadata, does not support NBT yet.", def = "minecraft:apple 16 0")
+	@GuideInfo(info = "Items to give player when it first joins the server. Format: StringID Size Metadata, does not support NBT yet.", def = "minecraft:apple 16 0")
 	public static final ConfigEntryStringArray startingItems = new ConfigEntryStringArray("startingItems", new String[] { "minecraft:apple 16 0" });
 	
 	public static void load(ConfigFile f)

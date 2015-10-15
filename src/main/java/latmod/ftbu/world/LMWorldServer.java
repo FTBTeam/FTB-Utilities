@@ -13,7 +13,7 @@ import latmod.lib.*;
 import net.minecraft.nbt.*;
 import net.minecraft.world.*;
 
-public class LMWorldServer extends LMWorld<LMPlayerServer> // LMWorldClient
+public class LMWorldServer extends LMWorld // LMWorldClient
 {
 	public static LMWorldServer inst = null;
 	
@@ -34,6 +34,15 @@ public class LMWorldServer extends LMWorld<LMPlayerServer> // LMWorldClient
 	public World getMCWorld()
 	{ return LatCoreMC.getServerWorld(); }
 	
+	public LMWorldServer getServerWorld()
+	{ return this; }
+	
+	public LMPlayerServer getPlayer(Object o)
+	{
+		LMPlayer p = super.getPlayer(o);
+		return (p == null) ? null : p.toPlayerMP();
+	}
+	
 	public void load(NBTTagCompound tag)
 	{
 		warps.readFromNBT(tag, "Warps");
@@ -47,7 +56,7 @@ public class LMWorldServer extends LMWorld<LMPlayerServer> // LMWorldClient
 		tag.setTag("Custom", customData);
 		NBTTagCompound settingsTag = new NBTTagCompound();
 		settings.writeToNBT(settingsTag, true);
-		tag.setTag("WorldBorder", settingsTag);
+		tag.setTag("Settings", settingsTag);
 	}
 	
 	public void writeDataToNet(NBTTagCompound tag, int selfID)
@@ -60,7 +69,7 @@ public class LMWorldServer extends LMWorld<LMPlayerServer> // LMWorldClient
 			{
 				NBTTagCompound tag1 = new NBTTagCompound();
 				
-				LMPlayerServer p = players.get(i);
+				LMPlayerServer p = players.get(i).toPlayerMP();
 				p.writeToNet(tag1, p.playerID == selfID);
 				new EventLMPlayerServer.DataSaved(p).post();
 				tag1.setLong("MID", p.getUUID().getMostSignificantBits());
@@ -85,7 +94,7 @@ public class LMWorldServer extends LMWorld<LMPlayerServer> // LMWorldClient
 		{
 			NBTTagCompound tag1 = new NBTTagCompound();
 			
-			LMPlayerServer p = players.get(i);
+			LMPlayerServer p = players.get(i).toPlayerMP();
 			p.writeToServer(tag1);
 			new EventLMPlayerServer.DataSaved(p).post();
 			tag1.setString("UUID", p.uuidString);
@@ -110,7 +119,7 @@ public class LMWorldServer extends LMWorld<LMPlayerServer> // LMWorldClient
 		}
 		
 		for(int i = 0; i < players.size(); i++)
-			players.get(i).onPostLoaded();
+			players.get(i).toPlayerMP().onPostLoaded();
 	}
 	
 	public void update()

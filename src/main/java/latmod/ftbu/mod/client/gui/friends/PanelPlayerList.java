@@ -9,7 +9,7 @@ import latmod.lib.FastList;
 @SideOnly(Side.CLIENT)
 public class PanelPlayerList extends PanelFriendsGui
 {
-	private static final FastList<LMPlayerClient> tempPlayerList = new FastList<LMPlayerClient>();
+	private static final FastList<LMPlayer> tempPlayerList = new FastList<LMPlayer>();
 	
 	public final FastList<ButtonPlayer> playerButtons;
 	
@@ -35,9 +35,9 @@ public class PanelPlayerList extends PanelFriendsGui
 		playerButtons.add(new ButtonPlayer(this, LMWorldClient.inst.clientPlayer));
 		
 		width = playerButtons.get(0).width;
-		for(LMPlayerClient p : tempPlayerList)
+		for(LMPlayer p : tempPlayerList)
 		{
-			ButtonPlayer b = new ButtonPlayer(this, p);
+			ButtonPlayer b = new ButtonPlayer(this, p.toPlayerSP());
 			playerButtons.add(b);
 			width = Math.max(width, b.width);
 		}

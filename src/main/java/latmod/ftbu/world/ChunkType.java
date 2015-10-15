@@ -2,7 +2,6 @@ package latmod.ftbu.world;
 
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.util.LatCoreMC;
 import latmod.lib.MathHelperLM;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.WorldServer;
@@ -53,7 +52,7 @@ public enum ChunkType
 	{
 		WorldServer w = DimensionManager.getWorld(dim);
 		if(w != null && !w.getChunkProvider().chunkExists(cx, cz)) return UNLOADED;
-		if(LatCoreMC.isDedicatedServer() && WorldBorder.isInSpawn(dim, cx, cz)) return SPAWN;
+		if(Claims.isInSpawn(dim, cx, cz)) return SPAWN;
 		if(LMWorldServer.inst.settings.isOutside(dim, cx, cz)) return WORLD_BORDER;
 		ClaimedChunk c = Claims.get(dim, cx, cz);
 		if(c == null) return WILDERNESS;

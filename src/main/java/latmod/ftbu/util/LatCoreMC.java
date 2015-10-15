@@ -38,7 +38,7 @@ public final class LatCoreMC // LatCoreMCClient
 	public static final String FORMATTING = "\u00a7";
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
 	
-	public static File latmodFolder = null;
+	public static File localConfigFolder = null;
 	public static File configFolder = null;
 	
 	public static final Configuration loadConfig(FMLPreInitializationEvent e, String s)

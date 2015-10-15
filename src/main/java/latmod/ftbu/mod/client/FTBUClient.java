@@ -6,7 +6,7 @@ import org.lwjgl.input.Keyboard;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.api.client.*;
-import latmod.ftbu.api.readme.*;
+import latmod.ftbu.api.guide.*;
 import latmod.ftbu.badges.*;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.net.ClientAction;
@@ -105,9 +105,9 @@ public class FTBUClient extends FTBUCommon
 		FTBUGuiHandler.instance.registerClient();
 	}
 	
-	public void onReadmeEvent(ReadmeFile file)
+	public void onReadmeEvent(GuideFile file)
 	{
-		ReadmeCategory waypoints = file.get("waypoints");
+		GuideCategory waypoints = new GuideCategory("Waypoints");
 		waypoints.add("You can create waypoints by opening WaypointsGUI (FriendsGUI > You > Waypoits)");
 		waypoints.add("Right click on a waypoint to enable / disable it, Ctrl + right click to delete it, left click to open it's settings");
 		waypoints.add("You can select between Marker and Beacon waypoints, change it's color, title and coords");
@@ -127,7 +127,7 @@ public class FTBUClient extends FTBUCommon
 	public World getClientWorld()
 	{ return FMLClientHandler.instance().getWorldClient(); }
 	
-	public LMWorld<?> getClientWorldLM()
+	public LMWorld getClientWorldLM()
 	{ return LMWorldClient.inst; }
 	
 	public double getReachDist(EntityPlayer ep)
@@ -188,7 +188,7 @@ public class FTBUClient extends FTBUCommon
 		if(LMWorldClient.inst != null)
 		{
 			for(int i = 0; i < LMWorldClient.inst.players.size(); i++)
-				LMWorldClient.inst.players.get(i).onReloaded();
+				LMWorldClient.inst.players.get(i).toPlayerSP().onReloaded();
 		}
 	}
 }

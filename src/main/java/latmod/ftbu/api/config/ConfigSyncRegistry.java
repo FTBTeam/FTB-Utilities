@@ -54,7 +54,7 @@ public class ConfigSyncRegistry
 			count += l.writeToIO(io);
 		}
 		
-		if(FTBUFinals.DEV) System.out.println("Sent " + count + " synced config values");
+		if(FTBUFinals.DEV) System.out.println("Sent " + count + " synced config values: " + list);
 		return count;
 	}
 	

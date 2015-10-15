@@ -7,7 +7,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 
-public class CmdAdminWorldBorder extends CommandSubLM //TODO: Remove
+public class CmdAdminWorldBorder extends CommandSubLM
 {
 	public CmdAdminWorldBorder(String s)
 	{
@@ -26,8 +26,7 @@ public class CmdAdminWorldBorder extends CommandSubLM //TODO: Remove
 		
 		public IChatComponent onCommand(ICommandSender ics, String[] args)
 		{
-			//LMWorldServer.inst.settings.enabled = true;
-			LMWorldServer.inst.update();
+			LMWorldServer.inst.settings.setWorldBorderEnabled(true);
 			return new ChatComponentText("World border enabled");
 		}
 	}
@@ -39,8 +38,7 @@ public class CmdAdminWorldBorder extends CommandSubLM //TODO: Remove
 		
 		public IChatComponent onCommand(ICommandSender ics, String[] args)
 		{
-			//LMWorldServer.inst.settings.enabled = false;
-			LMWorldServer.inst.update();
+			LMWorldServer.inst.settings.setWorldBorderEnabled(false);
 			return new ChatComponentText("World border disabled");
 		}
 	}
@@ -58,7 +56,6 @@ public class CmdAdminWorldBorder extends CommandSubLM //TODO: Remove
 			int dist = parseInt(ics, args[1]);
 			
 			LMWorldServer.inst.settings.setSize(dim, dist);
-			LMWorldServer.inst.update();
 			return new ChatComponentText("World border for dimension " + dim + " set to " + dist);
 		}
 	}

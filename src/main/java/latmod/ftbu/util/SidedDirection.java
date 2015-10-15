@@ -12,6 +12,13 @@ public enum SidedDirection
 	RIGHT (5, 4, 4, 5, 3, 2),
 	NONE  (6, 6, 6, 6, 6, 6);
 	
+	/** -Y */ public static final int DOWN = 0;
+	/** +Y */ public static final int UP = 1;
+	/** -Z */ public static final int NORTH = 2;
+	/** +Z */ public static final int SOUTH = 3;
+	/** -X */ public static final int WEST = 4;
+	/** +X */ public static final int EAST = 5;
+	
 	public final int[] directions;
 	public final int ID;
 	

@@ -4,15 +4,16 @@ import java.io.File;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import latmod.ftbu.api.*;
-import latmod.ftbu.api.readme.ReadmeSaveHandler;
+import latmod.ftbu.api.guide.*;
 import latmod.ftbu.backups.Backups;
 import latmod.ftbu.inv.ODItems;
 import latmod.ftbu.mod.cmd.*;
 import latmod.ftbu.mod.config.FTBUConfig;
+import latmod.ftbu.mod.handlers.*;
 import latmod.ftbu.net.LMNetHelper;
 import latmod.ftbu.util.*;
 import latmod.ftbu.world.LMWorldServer;
-import latmod.lib.OS;
+import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 @Mod
@@ -44,12 +45,14 @@ public class FTBU
 		LatCoreMC.logger.info("OS: " + OS.current + ", 64bit: " + OS.is64);
 		
 		LatCoreMC.configFolder = e.getModConfigurationDirectory();
-		LatCoreMC.latmodFolder = new File(LatCoreMC.configFolder.getParentFile(), "latmod/");
-		if(!LatCoreMC.latmodFolder.exists()) LatCoreMC.latmodFolder.mkdirs();
+		LatCoreMC.localConfigFolder = new File(LatCoreMC.configFolder.getParentFile(), "config_local/");
+		if(!LatCoreMC.localConfigFolder.exists()) LatCoreMC.localConfigFolder.mkdirs();
 		LMMod.init(this);
 		mod.logger = LatCoreMC.logger;
 		JsonHelper.init();
-		EventBusHelper.register(new FTBUEventHandler());
+		EventBusHelper.register(new FTBUPlayerEventHandler());
+		EventBusHelper.register(new FTBUWorldEventHandler());
+		EventBusHelper.register(new FTBUChatEventHandler());
 		FTBUConfig.load();
 		LMNetHelper.init();
 		ODItems.preInit();
@@ -75,16 +78,41 @@ public class FTBU
 		
 		new EventFTBUInit(Phase.POST).post();
 		
-		Thread readmeThread = new Thread("LM_Save_Readme")
+		//TODO: Replace with GuiGuide
+		try
 		{
-			public void run()
+			GuideFile file = new GuideFile();
+			FTBUConfig.saveReadme(file);
+			proxy.onReadmeEvent(file);
+			
+			new EventFTBUGuide(file).post();
+			
+			StringBuilder sb = new StringBuilder();
+			
+			for(int j = 0; j < file.categories.size(); j++)
 			{
-				try { ReadmeSaveHandler.saveReadme(); }
-				catch(Exception ex) { ex.printStackTrace(); }
+				GuideCategory c = file.categories.get(j);
+				
+				sb.append('[');
+				sb.append(' ');
+				sb.append(c.title);
+				sb.append(' ');
+				sb.append(']');
+				sb.append('\n');
+				
+				for(int i = 0; i < c.text.size(); i++)
+				{
+					sb.append(c.text.get(i).toString());
+					sb.append('\n');
+				}
+				
+				sb.append('\n');
 			}
-		};
-		
-		readmeThread.start();
+			
+			LMFileUtils.save(new File(LatCoreMC.localConfigFolder, "readme.txt"), sb.toString().trim());
+		}
+		catch(Exception ex)
+		{ ex.printStackTrace(); }
 	}
 	
 	@Mod.EventHandler
@@ -109,7 +137,7 @@ public class FTBU
 		if(LatCoreMC.hasOnlinePlayers())
 		{
 			for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers(null))
-				FTBUEventHandler.playerLoggedOut(ep);
+				FTBUPlayerEventHandler.playerLoggedOut(ep);
 		}
 	}
 	

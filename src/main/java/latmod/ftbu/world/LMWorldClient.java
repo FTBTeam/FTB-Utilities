@@ -13,7 +13,7 @@ import net.minecraft.nbt.*;
 import net.minecraft.world.World;
 
 @SideOnly(Side.CLIENT)
-public class LMWorldClient extends LMWorld<LMPlayerClient> // LMWorldServer
+public class LMWorldClient extends LMWorld // LMWorldServer
 {
 	public static LMWorldClient inst = null;
 	public final int clientPlayerID;
@@ -24,11 +24,20 @@ public class LMWorldClient extends LMWorld<LMPlayerClient> // LMWorldServer
 	{
 		super(Side.CLIENT, id, ids);
 		clientPlayerID = i;
-		clientDataFolder = new File(LatCoreMC.latmodFolder, "client/" + worldIDS);
+		clientDataFolder = new File(LatCoreMC.localConfigFolder, "client/" + worldIDS);
 	}
 	
 	public World getMCWorld()
 	{ return LatCoreMCClient.mc.theWorld; }
+	
+	public LMWorldClient getClientWorld()
+	{ return this; }
+	
+	public LMPlayerClient getPlayer(Object o)
+	{
+		LMPlayer p = super.getPlayer(o);
+		return (p == null) ? null : p.toPlayerSP();
+	}
 	
 	public void readDataFromNet(NBTTagCompound tag, boolean first)
 	{
@@ -49,7 +58,7 @@ public class LMWorldClient extends LMWorld<LMPlayerClient> // LMWorldServer
 			clientPlayer = LMWorldClient.inst.getPlayer(clientPlayerID);
 			
 			for(int i = 0; i < players.size(); i++)
-				new EventLMPlayerClient.DataLoaded(players.get(i)).post();
+				new EventLMPlayerClient.DataLoaded(players.get(i).toPlayerSP()).post();
 		}
 		
 		settings.readFromNBT(tag.getCompoundTag("CFG"), false);

@@ -1,6 +1,7 @@
 package latmod.ftbu.util.client;
 
 import cpw.mods.fml.relauncher.*;
+import latmod.lib.LMUtils;
 import net.minecraft.client.renderer.culling.Frustrum;
 import net.minecraft.client.renderer.entity.RenderManager;
 
@@ -11,6 +12,7 @@ public class LMFrustrumUtils
 	public static int currentDim;
 	public static double playerX, playerY, playerZ, renderX, renderY, renderZ;
 	public static final Frustrum frustrum = new Frustrum();
+	public static long playerPosHash;
 	
 	/*
 	public static final IntBuffer viewport = BufferUtils.createIntBuffer(4);
@@ -28,7 +30,7 @@ public class LMFrustrumUtils
 		renderX = RenderManager.renderPosX;
 		renderY = RenderManager.renderPosY;
 		renderZ = RenderManager.renderPosZ;
-		
+		playerPosHash = Math.abs(LMUtils.longHashCode(currentDim, playerX, playerY, playerZ) + 1);
 		frustrum.setPosition(playerX, playerY, playerZ);
 	}
 	

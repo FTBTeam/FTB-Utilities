@@ -15,11 +15,11 @@ public class CmdFTBUTopDeaths extends CommandLM
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
-		FastList<LMPlayerServer> players = LMWorldServer.inst.players.clone();
+		FastList<LMPlayer> players = LMWorldServer.inst.players.clone();
 		
-		players.sort(new Comparator<LMPlayerServer>()
+		players.sort(new Comparator<LMPlayer>()
 		{
-			public int compare(LMPlayerServer o1, LMPlayerServer o2)
+			public int compare(LMPlayer o1, LMPlayer o2)
 			{ return Integer.compare(o1.deaths, o2.deaths); }
 		});
 		
@@ -29,7 +29,7 @@ public class CmdFTBUTopDeaths extends CommandLM
 		int s = Math.min(players.size(), 10);
 		for(int i = 0; i < s; i++)
 		{
-			LMPlayerServer p = players.get(i);
+			LMPlayer p = players.get(i);
 			
 			IChatComponent c = new ChatComponentText("[" + (i + 1) + "] " + p.getName());
 			if(p == self) { isInList = true; c.getChatStyle().setColor(EnumChatFormatting.GREEN); }

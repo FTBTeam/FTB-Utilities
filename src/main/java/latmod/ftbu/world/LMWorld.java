@@ -2,7 +2,7 @@ package latmod.ftbu.world;
 
 import java.util.*;
 
-import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.cmd.NameType;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.util.LatCoreMC;
@@ -11,20 +11,20 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
-public abstract class LMWorld<P extends LMPlayer>
+public abstract class LMWorld
 {
 	public static final UUID nullUUID = new UUID(0L, 0L);
 	
-	public static LMWorld<? extends LMPlayer> getWorld(Side s)
+	public static LMWorld getWorld(Side s)
 	{ if(s.isServer()) return LMWorldServer.inst; return FTBU.proxy.getClientWorldLM(); }
 	
-	public static LMWorld<? extends LMPlayer> getWorld()
+	public static LMWorld getWorld()
 	{ return getWorld((LatCoreMC.isServer() && LatCoreMC.getServer() != null) ? Side.SERVER : Side.CLIENT); }
 	
 	public final Side side;
 	public final UUID worldID;
 	public final String worldIDS;
-	public final FastList<P> players;
+	public final FastList<LMPlayer> players;
 	public final LMWorldSettings settings;
 	
 	public LMWorld(Side s, UUID id, String ids)
@@ -32,14 +32,21 @@ public abstract class LMWorld<P extends LMPlayer>
 		side = s;
 		worldID = id;
 		worldIDS = ids;
-		players = new FastList<P>();
-		settings = new LMWorldSettings();
+		players = new FastList<LMPlayer>();
+		settings = new LMWorldSettings(this);
 	}
 	
 	public World getMCWorld()
 	{ return null; }
 	
-	public P getPlayer(Object o)
+	public LMWorldServer getServerWorld()
+	{ return null; }
+	
+	@SideOnly(Side.CLIENT)
+	public LMWorldClient getClientWorld()
+	{ return null; }
+	
+	public LMPlayer getPlayer(Object o)
 	{
 		if(o == null || o instanceof FakePlayer) return null;
 		else if(o instanceof Number || o instanceof LMPlayer)
@@ -49,7 +56,7 @@ public abstract class LMWorld<P extends LMPlayer>
 			
 			for(int i = 0; i < players.size(); i++)
 			{
-				P p = players.get(i);
+				LMPlayer p = players.get(i);
 				if(p.playerID == h) return p;
 			}
 			
@@ -61,7 +68,7 @@ public abstract class LMWorld<P extends LMPlayer>
 			
 			for(int i = 0; i < players.size(); i++)
 			{
-				P p = players.get(i);
+				LMPlayer p = players.get(i);
 				if(p.getUUID().equals(id)) return p;
 			}
 			
@@ -71,7 +78,7 @@ public abstract class LMWorld<P extends LMPlayer>
 		{
 			for(int i = 0; i < players.size(); i++)
 			{
-				P p = players.get(i);
+				LMPlayer p = players.get(i);
 				if(p.isOnline() && p.getPlayer() == o) return p;
 			}
 			
@@ -85,7 +92,7 @@ public abstract class LMWorld<P extends LMPlayer>
 			
 			for(int i = 0; i < players.size(); i++)
 			{
-				P p = players.get(i);
+				LMPlayer p = players.get(i);
 				if(p.getName().equalsIgnoreCase(s)) return p;
 			}
 			
@@ -95,13 +102,13 @@ public abstract class LMWorld<P extends LMPlayer>
 		return null;
 	}
 	
-	public FastList<P> getAllOnlinePlayers()
+	public FastList<LMPlayer> getAllOnlinePlayers()
 	{
-		FastList<P> l = new FastList<P>();
+		FastList<LMPlayer> l = new FastList<LMPlayer>();
 		
 		for(int i = 0; i < players.size(); i++)
 		{
-			P p = players.get(i);
+			LMPlayer p = players.get(i);
 			if(p.isOnline()) l.add(p);
 		}
 		
@@ -119,11 +126,11 @@ public abstract class LMWorld<P extends LMPlayer>
 	{
 		if(type == null || type == NameType.NONE)
 			return new String[0];
-		FastList<P> list = (type == NameType.ON) ? getAllOnlinePlayers() : players;
+		FastList<LMPlayer> list = (type == NameType.ON) ? getAllOnlinePlayers() : players;
 		
-		list.sort(new Comparator<P>()
+		list.sort(new Comparator<LMPlayer>()
 		{
-			public int compare(P o1, P o2)
+			public int compare(LMPlayer o1, LMPlayer o2)
 			{
 				if(o1.isOnline() == o2.isOnline())
 					return o1.getName().compareToIgnoreCase(o2.getName());
@@ -148,5 +155,9 @@ public abstract class LMWorld<P extends LMPlayer>
 		for(int i = 0; i < players.size(); i++)
 			ai[i] = players.get(i).playerID;
 		return ai;
+	}
+	
+	public void update()
+	{
 	}
 }

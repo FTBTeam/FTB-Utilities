@@ -1,8 +1,9 @@
 package latmod.ftbu.world;
 
-import latmod.ftbu.util.LMNBTUtils;
-import latmod.lib.FastList;
+import latmod.ftbu.util.*;
+import latmod.lib.*;
 import net.minecraft.nbt.*;
+import net.minecraft.util.ChunkCoordinates;
 
 public class Claims
 {
@@ -95,10 +96,27 @@ public class Claims
 	{
 		for(int i = 0; i < LMWorldServer.inst.players.size(); i++)
 		{
-			ClaimedChunk c = LMWorldServer.inst.players.get(i).claims.getLocal(dim, cx, cz);
+			ClaimedChunk c = LMWorldServer.inst.players.get(i).toPlayerMP().claims.getLocal(dim, cx, cz);
 			if(c != null) return c;
 		}
 		
 		return null;
 	}
+	
+	public static boolean isInSpawn(int dim, int cx, int cz)
+	{
+		if(dim != 0) return false;
+		//if(!LatCoreMC.isDedicatedServer()) return false;
+		int radius = LatCoreMC.getServer().getSpawnProtectionSize();
+		if(radius <= 0) return false;
+		ChunkCoordinates c = LMDimUtils.getSpawnPoint(0);
+		int minX = MathHelperLM.chunk(c.posX + 0.5D - radius);
+		int minZ = MathHelperLM.chunk(c.posZ + 0.5D - radius);
+		int maxX = MathHelperLM.chunk(c.posX + 0.5D + radius);
+		int maxZ = MathHelperLM.chunk(c.posZ + 0.5D + radius);
+		return cx >= minX && cx <= maxX && cz >= minZ && cz <= maxZ;
+	}
+	
+	public static boolean isInSpawnF(int dim, double x, double z)
+	{ return dim == 0 && isInSpawn(dim, MathHelperLM.chunk(x), MathHelperLM.chunk(z)); }
 }

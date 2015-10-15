@@ -5,13 +5,13 @@ import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.inv.LMInvUtils;
-import latmod.ftbu.mod.config.FTBUConfigGeneral;
+import latmod.ftbu.mod.config.FTBUConfigClaims;
 import latmod.ftbu.net.MessageLMPlayerUpdate;
 import latmod.ftbu.util.*;
 import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.StatList;
+import net.minecraft.stats.*;
 import net.minecraft.util.*;
 
 public class LMPlayerServer extends LMPlayer // LMPlayerClient
@@ -28,6 +28,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	private EntityPlayerMP entityPlayer = null;
 	private int maxClaimPower = -2;
 	public int lastChunkType = -99;
+	
 	private long lastSeen, firstJoined, timePlayed;
 	
 	public LMPlayerServer(LMWorldServer w, int i, GameProfile gp)
@@ -95,23 +96,25 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public void getInfo(FastList<IChatComponent> info)
 	{
-		long ms = LMUtils.millis();
+		refreshStats();
 		
+		long ms = LMUtils.millis();
 		new EventLMPlayerServer.CustomInfo(this, info).post();
 		
 		if(lastSeen > 0L && !isOnline()) info.add(new ChatComponentTranslation("ftbu:label.last_seen", LMStringUtils.getTimeString(ms - lastSeen)));
 		if(firstJoined > 0L) info.add(new ChatComponentTranslation("ftbu:label.joined", LMStringUtils.getTimeString(ms - firstJoined)));
 		if(deaths > 0) info.add(new ChatComponentTranslation("ftbu:label.deaths", String.valueOf(deaths)));
-		getTimePlayed();
 		if(timePlayed > 0L)
 			info.add(new ChatComponentTranslation("stat.playOneMinute").appendSibling(new ChatComponentText(": " + LMStringUtils.getTimeString(timePlayed))));
 	}
 	
-	private long getTimePlayed()
+	public int getStat(StatBase s)
+	{ return isOnline() ? getPlayer().func_147099_x().writeStat(s) : 0; }
+	
+	public void refreshStats()
 	{
-		if(isOnline())
-			timePlayed = getPlayer().func_147099_x().writeStat(StatList.minutesPlayedStat) * 50L;
-		return timePlayed;
+		timePlayed = getStat(StatList.minutesPlayedStat) * 50L;
+		deaths = getStat(StatList.deathsStat);
 	}
 	
 	public void readFromServer(NBTTagCompound tag)
@@ -154,6 +157,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public void writeToServer(NBTTagCompound tag)
 	{
+		refreshStats();
+		
 		if(!friends.isEmpty())
 			tag.setIntArray("Friends", friends.toArray());
 		
@@ -182,7 +187,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		tag.setLong("LastSeen", lastSeen);
 		tag.setLong("Joined", firstJoined);
-		tag.setLong("TimePlayed", getTimePlayed());
+		tag.setLong("TimePlayed", timePlayed);
 		
 		claims.writeToNBT(tag);
 		
@@ -195,6 +200,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public void writeToNet(NBTTagCompound tag, boolean self)
 	{
+		refreshStats();
+		
 		if(isOnline()) tag.setBoolean("ON", true);
 		
 		if(!friends.isEmpty())
@@ -202,6 +209,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		if(!commonPublicData.hasNoTags()) tag.setTag("CD", commonPublicData);
 		LMInvUtils.writeItemsToNBT(lastArmor, tag, "LI");
+		
 		if(deaths > 0) tag.setInteger("D", deaths);
 		
 		if(self)
@@ -227,7 +235,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	{
 		if(maxClaimPower == -2)
 		{
-			maxClaimPower = FTBUConfigGeneral.maxClaims.get();
+			maxClaimPower = isOP() ? FTBUConfigClaims.maxClaimsAdmin.get() : FTBUConfigClaims.maxClaimsPlayer.get();
 			EventLMPlayerServer.GetMaxClaimPower e = new EventLMPlayerServer.GetMaxClaimPower(this, maxClaimPower);
 			e.post();
 			maxClaimPower = e.result;

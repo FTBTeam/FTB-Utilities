@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer // LMPlayerClient
 {
-	public final LMWorld<?> world;
+	public final LMWorld world;
 	public final int playerID;
 	public final GameProfile gameProfile;
 	public final boolean isServer;
@@ -22,12 +22,12 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 	public final IntList friends;
 	public final ItemStack[] lastArmor;
 	public final PersonalSettings settings;
-	public int deaths;
 	public NBTTagCompound commonPublicData;
 	public NBTTagCompound commonPrivateData;
 	public final FastList<Mail> mail;
+	public int deaths;
 	
-	public LMPlayer(LMWorld<?> w, int i, GameProfile gp)
+	public LMPlayer(LMWorld w, int i, GameProfile gp)
 	{
 		world = w;
 		playerID = i;

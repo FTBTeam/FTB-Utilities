@@ -11,5 +11,5 @@ public class CmdAdminGetmode extends CommandLM
 	{ super(s, CommandLevel.OP); }
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
-	{ return new ChatComponentText(LMWorldServer.inst.jsonSettings.gamemode); }
+	{ return new ChatComponentText(LMWorldServer.inst.gamemode); }
 }

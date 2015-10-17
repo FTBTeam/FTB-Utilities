@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.handlers;
 
-import java.io.File;
+import java.io.*;
 import java.util.*;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -19,6 +19,7 @@ import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
 
 public class FTBUWorldEventHandler
@@ -42,9 +43,25 @@ public class FTBUWorldEventHandler
 			if(tagWorldData == null) tagWorldData = new NBTTagCompound();
 			LMWorldServer.inst = new LMWorldServer(tagWorldData.hasKey("UUID") ? LMStringUtils.fromString(tagWorldData.getString("UUID")) : UUID.randomUUID(), (WorldServer)e.world, latmodFolder);
 			LMWorldServer.inst.load(tagWorldData);
-			LMWorldServer.inst.jsonSettings = LMJsonUtils.fromJsonFile(new File(latmodFolder, "LMWorldSettings.json"), LMWorldJsonSettings.class);
-			if(LMWorldServer.inst.jsonSettings == null) LMWorldServer.inst.jsonSettings = new LMWorldJsonSettings();
-			LMWorldServer.inst.jsonSettings.loadDefaults();
+			
+			LMWorldServer.inst.gamemode = null;
+			
+			try
+			{
+				File startupPackFile = new File(MinecraftServer.getServer().getEntityWorld().getSaveHandler().getWorldDirectory(), "ftb_gamemode.txt");
+				if(!startupPackFile.exists()) startupPackFile.createNewFile();
+				BufferedReader reader = new BufferedReader(new FileReader(startupPackFile));
+				if(reader.ready())
+				{
+					try { LMWorldServer.inst.gamemode = reader.readLine().trim(); }
+					catch(Exception ex1) { }
+				}
+				reader.close();
+			}
+			catch(Exception ex)
+			{ ex.printStackTrace(); }
+			
+			if(LMWorldServer.inst.gamemode == null) LMWorldServer.inst.gamemode = "default";
 			
 			new EventLMWorldServer.Loaded(LMWorldServer.inst, Phase.PRE).post();
 			
@@ -76,7 +93,14 @@ public class FTBUWorldEventHandler
 			tag.setString("UUID", LMWorldServer.inst.worldIDS);
 			LMNBTUtils.writeMap(new File(LMWorldServer.inst.latmodFolder, "LMWorld.dat"), tag);
 			
-			LMJsonUtils.toJsonFile(new File(LMWorldServer.inst.latmodFolder, "LMWorldSettings.json"), LMWorldServer.inst.jsonSettings);
+			try
+			{
+				BufferedWriter writer = new BufferedWriter(new FileWriter(LMFileUtils.newFile(new File(MinecraftServer.getServer().getEntityWorld().getSaveHandler().getWorldDirectory(), "ftb_gamemode.txt"))));
+				writer.write(LMWorldServer.inst.gamemode);
+				writer.close();
+			}
+			catch(Exception ex)
+			{ ex.printStackTrace(); }
 			
 			tag = new NBTTagCompound();
 			NBTTagCompound players = new NBTTagCompound();

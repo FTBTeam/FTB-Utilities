@@ -61,7 +61,7 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 				new EventLMPlayerClient.DataLoaded(players.get(i).toPlayerSP()).post();
 		}
 		
-		jsonSettings.gamemode = tag.getString("GM");
+		gamemode = tag.getString("GM");
 		customCommonData = tag.getCompoundTag("C");
 		settings.readFromNBT(tag.getCompoundTag("CFG"), false);
 	}

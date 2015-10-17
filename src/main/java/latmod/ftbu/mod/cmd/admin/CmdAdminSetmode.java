@@ -43,7 +43,7 @@ public class CmdAdminSetmode extends CommandLM
 		if(!new File(LatCoreMC.modpackFolder, "gamemodes/" + args[0]).exists())
 			return new ChatComponentText("Invalid gamemode: " + args[0]);
 		
-		LMWorldServer.inst.jsonSettings.gamemode = args[0];
+		LMWorldServer.inst.gamemode = args[0];
 		LMWorldServer.inst.update();
 		
 		LatCoreMC.printChat(BroadcastSender.inst, "Gamemode changed to: " + args[0]);

@@ -38,7 +38,7 @@ public class GuideFile
 					loadFromFiles(main, f[i]);
 		}
 		
-		file = new File(LatCoreMC.modpackFolder, "gamemodes/" + world.jsonSettings.gamemode + "/guide");
+		file = new File(LatCoreMC.modpackFolder, "gamemodes/" + world.gamemode + "/guide");
 		if(file.exists() && file.isDirectory())
 		{
 			File[] f = file.listFiles();
@@ -47,7 +47,7 @@ public class GuideFile
 					loadFromFiles(main, f[i]);
 		}
 		
-		file = new File(LatCoreMC.modpackFolder, "gamemodes/" + world.jsonSettings.gamemode + "/guide_intro.txt");
+		file = new File(LatCoreMC.modpackFolder, "gamemodes/" + world.gamemode + "/guide_intro.txt");
 		if(file.exists() && file.isFile())
 		{
 			try

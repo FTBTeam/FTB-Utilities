@@ -28,7 +28,7 @@ public abstract class LMWorld
 	public final FastList<LMPlayer> players;
 	public final LMWorldSettings settings;
 	public NBTTagCompound customCommonData;
-	public LMWorldJsonSettings jsonSettings;
+	public String gamemode = "default";
 	
 	public LMWorld(Side s, UUID id, String ids)
 	{
@@ -38,8 +38,6 @@ public abstract class LMWorld
 		players = new FastList<LMPlayer>();
 		settings = new LMWorldSettings(this);
 		customCommonData = new NBTTagCompound();
-		jsonSettings = new LMWorldJsonSettings();
-		jsonSettings.loadDefaults();
 	}
 	
 	public World getMCWorld()

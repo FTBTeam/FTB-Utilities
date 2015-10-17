@@ -1,4 +1,4 @@
-package latmod.ftbu.tile;
+package latmod.ftbu.api.tile;
 
 import cpw.mods.fml.relauncher.*;
 import net.minecraft.client.gui.GuiScreen;

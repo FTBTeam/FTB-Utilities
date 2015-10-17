@@ -8,6 +8,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import latmod.ftbu.api.*;
 import latmod.ftbu.api.config.ConfigListRegistry;
+import latmod.ftbu.api.guide.GuideFile;
 import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.mod.config.*;
 import latmod.ftbu.util.*;
@@ -41,6 +42,9 @@ public class FTBUWorldEventHandler
 			if(tagWorldData == null) tagWorldData = new NBTTagCompound();
 			LMWorldServer.inst = new LMWorldServer(tagWorldData.hasKey("UUID") ? LMStringUtils.fromString(tagWorldData.getString("UUID")) : UUID.randomUUID(), (WorldServer)e.world, latmodFolder);
 			LMWorldServer.inst.load(tagWorldData);
+			LMWorldServer.inst.jsonSettings = LMJsonUtils.fromJsonFile(new File(latmodFolder, "LMWorldSettings.json"), LMWorldJsonSettings.class);
+			if(LMWorldServer.inst.jsonSettings == null) LMWorldServer.inst.jsonSettings = new LMWorldJsonSettings();
+			LMWorldServer.inst.jsonSettings.loadDefaults();
 			
 			new EventLMWorldServer.Loaded(LMWorldServer.inst, Phase.PRE).post();
 			
@@ -56,7 +60,7 @@ public class FTBUWorldEventHandler
 			
 			new EventLMWorldServer.Loaded(LMWorldServer.inst, Phase.POST).post();
 			
-			LatCoreMC.logger.info("LatCoreMC data loaded");
+			GuideFile.inst.init(Side.SERVER);
 		}
 	}
 	
@@ -67,21 +71,19 @@ public class FTBUWorldEventHandler
 		{
 			new EventLMWorldServer.Saved(LMWorldServer.inst).post();
 			
-			{
-				NBTTagCompound tag = new NBTTagCompound();
-				LMWorldServer.inst.save(tag);
-				tag.setString("UUID", LMWorldServer.inst.worldIDS);
-				LMNBTUtils.writeMap(new File(LMWorldServer.inst.latmodFolder, "LMWorld.dat"), tag);
-			}
+			NBTTagCompound tag = new NBTTagCompound();
+			LMWorldServer.inst.save(tag);
+			tag.setString("UUID", LMWorldServer.inst.worldIDS);
+			LMNBTUtils.writeMap(new File(LMWorldServer.inst.latmodFolder, "LMWorld.dat"), tag);
 			
-			{
-				NBTTagCompound tag = new NBTTagCompound();
-				NBTTagCompound players = new NBTTagCompound();
-				LMWorldServer.inst.writePlayersToServer(players);
-				tag.setTag("Players", players);
-				tag.setInteger("LastID", LMPlayerServer.lastPlayerID);
-				LMNBTUtils.writeMap(new File(LMWorldServer.inst.latmodFolder, "LMPlayers.dat"), tag);
-			}
+			LMJsonUtils.toJsonFile(new File(LMWorldServer.inst.latmodFolder, "LMWorldSettings.json"), LMWorldServer.inst.jsonSettings);
+			
+			tag = new NBTTagCompound();
+			NBTTagCompound players = new NBTTagCompound();
+			LMWorldServer.inst.writePlayersToServer(players);
+			tag.setTag("Players", players);
+			tag.setInteger("LastID", LMPlayerServer.lastPlayerID);
+			LMNBTUtils.writeMap(new File(LMWorldServer.inst.latmodFolder, "LMPlayers.dat"), tag);
 			
 			// Export player list //
 			

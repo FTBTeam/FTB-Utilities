@@ -1,4 +1,4 @@
-package latmod.ftbu.paint;
+package latmod.ftbu.api.paint;
 
 import cpw.mods.fml.relauncher.*;
 import net.minecraft.util.IIcon;

@@ -1,10 +1,7 @@
 package latmod.ftbu.mod;
-import java.io.File;
-
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import latmod.ftbu.api.*;
-import latmod.ftbu.api.guide.*;
 import latmod.ftbu.backups.Backups;
 import latmod.ftbu.inv.ODItems;
 import latmod.ftbu.mod.cmd.*;
@@ -13,7 +10,7 @@ import latmod.ftbu.mod.handlers.*;
 import latmod.ftbu.net.LMNetHelper;
 import latmod.ftbu.util.*;
 import latmod.ftbu.world.LMWorldServer;
-import latmod.lib.*;
+import latmod.lib.OS;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 @Mod
@@ -44,9 +41,7 @@ public class FTBU
 		
 		LatCoreMC.logger.info("OS: " + OS.current + ", 64bit: " + OS.is64);
 		
-		LatCoreMC.configFolder = e.getModConfigurationDirectory();
-		LatCoreMC.localConfigFolder = new File(LatCoreMC.configFolder.getParentFile(), "config_local/");
-		if(!LatCoreMC.localConfigFolder.exists()) LatCoreMC.localConfigFolder.mkdirs();
+		LatCoreMC.initFolders(e.getModConfigurationDirectory());
 		LMMod.init(this);
 		mod.logger = LatCoreMC.logger;
 		JsonHelper.init();
@@ -75,44 +70,7 @@ public class FTBU
 		ODItems.postInit();
 		mod.loadRecipes();
 		proxy.postInit();
-		
 		new EventFTBUInit(Phase.POST).post();
-		
-		//TODO: Replace with GuiGuide
-		try
-		{
-			GuideFile file = new GuideFile();
-			FTBUConfig.saveReadme(file);
-			proxy.onReadmeEvent(file);
-			
-			new EventFTBUGuide(file).post();
-			
-			StringBuilder sb = new StringBuilder();
-			
-			for(int j = 0; j < file.categories.size(); j++)
-			{
-				GuideCategory c = file.categories.get(j);
-				
-				sb.append('[');
-				sb.append(' ');
-				sb.append(c.title);
-				sb.append(' ');
-				sb.append(']');
-				sb.append('\n');
-				
-				for(int i = 0; i < c.text.size(); i++)
-				{
-					sb.append(c.text.get(i).toString());
-					sb.append('\n');
-				}
-				
-				sb.append('\n');
-			}
-			
-			LMFileUtils.save(new File(LatCoreMC.localConfigFolder, "readme.txt"), sb.toString().trim());
-		}
-		catch(Exception ex)
-		{ ex.printStackTrace(); }
 	}
 	
 	@Mod.EventHandler

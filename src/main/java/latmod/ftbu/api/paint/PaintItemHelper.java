@@ -1,4 +1,4 @@
-package latmod.ftbu.paint;
+package latmod.ftbu.api.paint;
 
 import latmod.ftbu.inv.LMInvUtils;
 import latmod.ftbu.util.*;

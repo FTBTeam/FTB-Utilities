@@ -1,10 +1,10 @@
 package latmod.ftbu.mod;
 
 import cpw.mods.fml.relauncher.*;
+import latmod.ftbu.api.tile.IGuiTile;
 import latmod.ftbu.inv.ItemDisplay;
 import latmod.ftbu.mod.client.gui.GuiDisplayItem;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
-import latmod.ftbu.tile.IGuiTile;
 import latmod.ftbu.util.LMGuiHandler;
 import latmod.ftbu.util.gui.ContainerEmpty;
 import net.minecraft.client.gui.GuiScreen;

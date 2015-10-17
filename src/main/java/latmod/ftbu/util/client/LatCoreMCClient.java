@@ -186,7 +186,7 @@ public final class LatCoreMCClient // LatCoreMC
 	public static int getDim()
 	{ return isPlaying() ? mc.thePlayer.worldObj.provider.dimensionId : 0; }
 	
-	public static void setColor(int c, int a)
+	public static void setGLColor(int c, int a)
 	{
 		int r = LMColorUtils.getRed(c);
 		int g = LMColorUtils.getGreen(c);
@@ -195,7 +195,7 @@ public final class LatCoreMCClient // LatCoreMC
 	}
 	
 	public static void setGLColor(int c)
-	{ setColor(c, LMColorUtils.getAlpha(c)); }
+	{ setGLColor(c, LMColorUtils.getAlpha(c)); }
 	
 	public static ByteBuffer toByteBuffer(int pixels[], boolean alpha)
 	{

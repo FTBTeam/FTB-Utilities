@@ -51,7 +51,7 @@ public class CmdAdminPlayer extends CommandLM
 			
 			LMPlayerServer p = new LMPlayerServer(LMWorldServer.inst, LMPlayerServer.nextPlayerID(), new GameProfile(id, args[2]));
 			LMWorldServer.inst.players.add(p);
-			p.updateLastSeen();
+			p.refreshStats();
 			
 			return new ChatComponentText("Fake player " + args[2] + " added!");
 		}
@@ -101,7 +101,7 @@ public class CmdAdminPlayer extends CommandLM
 				
 				String filename = ep.getCommandSenderName();
 				if(args.length == 3) filename = "custom/" + args[2];
-				LMNBTUtils.writeMap(new FileOutputStream(LMFileUtils.newFile(new File(LatCoreMC.localConfigFolder, "playerinvs/" + filename + ".dat"))), tag);
+				LMNBTUtils.writeMap(new FileOutputStream(LMFileUtils.newFile(new File(LatCoreMC.localFolder, "playerinvs/" + filename + ".dat"))), tag);
 			}
 			catch(Exception e)
 			{
@@ -120,7 +120,7 @@ public class CmdAdminPlayer extends CommandLM
 				EntityPlayerMP ep = p.getPlayer();
 				String filename = ep.getCommandSenderName();
 				if(args.length == 3) filename = "custom/" + args[2];
-				NBTTagCompound tag = LMNBTUtils.readMap(new FileInputStream(new File(LatCoreMC.localConfigFolder, "playerinvs/" + filename + ".dat")));
+				NBTTagCompound tag = LMNBTUtils.readMap(new FileInputStream(new File(LatCoreMC.localFolder, "playerinvs/" + filename + ".dat")));
 				
 				StringIDInvLoader.readInvFromNBT(ep.inventory, tag, "Inventory");
 				

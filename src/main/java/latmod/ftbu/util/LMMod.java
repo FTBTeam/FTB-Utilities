@@ -6,8 +6,8 @@ import org.apache.logging.log4j.*;
 
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.relauncher.*;
+import latmod.ftbu.api.item.IItemLM;
 import latmod.ftbu.block.IBlockLM;
-import latmod.ftbu.item.IItemLM;
 import latmod.ftbu.mod.FTBUFinals;
 import latmod.ftbu.recipes.LMRecipes;
 import latmod.ftbu.tile.TileLM;

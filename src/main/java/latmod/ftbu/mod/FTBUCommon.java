@@ -20,7 +20,7 @@ public class FTBUCommon // FTBUClient
 	{
 	}
 	
-	public void onReadmeEvent(GuideFile file)
+	public void onGuideEvent(GuideFile file)
 	{
 	}
 	

@@ -1,13 +1,11 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.world.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.*;
 
-@SideOnly(Side.CLIENT)
 public class Player extends AbstractClientPlayer
 {
 	public final LMPlayerClient playerLM;

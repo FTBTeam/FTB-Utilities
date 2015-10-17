@@ -31,9 +31,10 @@ public class FTBUConfigGeneral
 	@GuideInfo(info = "If set to false, players won't be able to attack each other in spawn area.", def = "true")
 	public static final ConfigEntryBool spawnPVP = new ConfigEntryBool("spawnPVP", true);
 	
-	@GuideInfo(info = "Right clicking duting daytime sets bed spawn.", def = "true")
-	public static final ConfigEntryBool daytimeBedSpawn = new ConfigEntryBool("daytimeBedSpawn", true);
+	//@GuideInfo(info = "Right clicking duting daytime sets bed spawn.", def = "true")
+	//public static final ConfigEntryBool daytimeBedSpawn = new ConfigEntryBool("daytimeBedSpawn", true);
 	
+	private static final FastList<Class<?>> blockedEntitiesC = new FastList<Class<?>>();
 	@GuideInfo(info = "Entity classes that are banned from world. They will not spawn and existing ones will be destroyed.", def = "Example Entity Class")
 	public static final ConfigEntryStringArray blockedEntities = new ConfigEntryStringArray("blockedEntities", new String[] { "net.minecraft.entity.passive.EntityExample" })
 	{
@@ -60,7 +61,8 @@ public class FTBUConfigGeneral
 		}
 	};
 	
-	private static final FastList<Class<?>> blockedEntitiesC = new FastList<Class<?>>();
+	@GuideInfo(info = "Add config info to Guide.", def = "false")
+	public static final ConfigEntryBool configInfoGuide = new ConfigEntryBool("configInfoGuide", false);
 	
 	public static void load(ConfigFile f)
 	{
@@ -70,12 +72,13 @@ public class FTBUConfigGeneral
 		group.add(restartTimer);
 		group.add(safeSpawn);
 		group.add(spawnPVP);
-		group.add(daytimeBedSpawn);
+		//group.add(daytimeBedSpawn);
 		group.add(blockedEntities);
+		group.add(configInfoGuide);
 		f.add(group);
 		
 		ConfigSyncRegistry.add(allowCreativeInteractSecure);
-		ConfigSyncRegistry.add(daytimeBedSpawn);
+		//ConfigSyncRegistry.add(daytimeBedSpawn);
 	}
 	
 	public static boolean allowInteractSecure(EntityPlayer ep)

@@ -1,90 +1,70 @@
 package latmod.ftbu.api.guide;
 
-import java.lang.reflect.*;
-
 import latmod.lib.FastList;
 
-public class GuideCategory
+public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 {
-	public final String title;
-	public final FastList<GuideText> text;
+	public final GuideCategory parent;
+	private final String title;
+	private StringBuilder text;
 	public final FastList<GuideCategory> subcategories;
 	
-	public GuideCategory(String s)
+	public GuideCategory(GuideCategory p, String s)
 	{
+		parent = p;
 		title = s;
-		text = new FastList<GuideText>();
+		text = new StringBuilder();
 		subcategories = new FastList<GuideCategory>();
 	}
 	
-	public void add(GuideText t)
-	{ text.add(t); }
+	public void print(String s)
+	{ text.append(s); }
 	
-	public void add(String text)
-	{ add(new GuideText(text)); }
+	public void println(String s)
+	{ text.append(s); text.append('\n'); }
 	
-	public void add(GuideCategory c)
+	public String getText()
+	{ return text.toString(); }
+	
+	public void addSub(GuideCategory c)
 	{ subcategories.add(c); }
 	
-	public GuideCategory addFromClass(Class<?> c)
+	public String getTitle()
+	{ return title; }
+	
+	public String toString()
+	{ return title + ": " + text + " + " + subcategories; }
+	
+	public boolean equals(Object o)
+	{ return o != null && (o == this || (o instanceof GuideCategory && getTitle().equals(((GuideCategory)o).getTitle()))); }
+	
+	public GuideCategory getSub(String s)
 	{
-		try
-		{
-			Field[] fields = c.getDeclaredFields();
-			
-			if(fields != null && fields.length > 0) for(Field f : fields)
-			{
-				f.setAccessible(true);
-				
-				if(f.isAnnotationPresent(GuideInfo.class))
-				{
-					GuideInfo i = f.getAnnotation(GuideInfo.class);
-					
-					String key = i.key();
-					String info = i.info();
-					String def = i.def();
-					
-					if(key.isEmpty()) key = f.getName();
-					
-					StringBuilder sb = new StringBuilder();
-					sb.append(key);
-					sb.append(" - ");
-					sb.append(info);
-					sb.append(" Default: ");
-					sb.append(def);
-					add(sb.toString());
-				}
-			}
-			
-			Method[] methods = c.getDeclaredMethods();
-			
-			if(methods != null && methods.length > 0) for(Method m : methods)
-			{
-				m.setAccessible(true);
-				
-				if(m.isAnnotationPresent(GuideInfo.class))
-				{
-					GuideInfo i = m.getAnnotation(GuideInfo.class);
-					
-					String key = i.key();
-					String info = i.info();
-					String def = i.def();
-					
-					if(key.isEmpty()) key = m.getName();
-					
-					StringBuilder sb = new StringBuilder();
-					sb.append(key);
-					sb.append(" - ");
-					sb.append(info);
-					sb.append(" Default: ");
-					sb.append(def);
-					add(sb.toString());
-				}
-			}
-		}
-		catch(Exception e)
-		{ e.printStackTrace(); }
+		GuideCategory c = null;
 		
-		return this;
+		for(int i = 0; i < subcategories.size(); i++)
+		{
+			GuideCategory c1 = subcategories.get(i);
+			if(c1.getTitle().equals(s)) { c = c1; break; }
+		}
+		
+		if(c == null)
+		{
+			c = new GuideCategory(this, s);
+			subcategories.add(c);
+		}
+		
+		return c;
+	}
+	
+	public int compareTo(GuideCategory o)
+	{ return getTitle().compareToIgnoreCase(o.getTitle()); }
+
+	public void clear()
+	{
+		text = new StringBuilder();
+		for(int i = 0; i < subcategories.size(); i++)
+			subcategories.get(i).clear();
+		subcategories.clear();
 	}
 }

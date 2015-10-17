@@ -4,20 +4,21 @@ import java.util.List;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import latmod.ftbu.api.EventLMPlayerServer;
+import latmod.ftbu.api.item.ICreativeSafeItem;
+import latmod.ftbu.api.tile.ISecureTile;
 import latmod.ftbu.backups.Backups;
 import latmod.ftbu.inv.LMInvUtils;
-import latmod.ftbu.item.ICreativeSafeItem;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.cmd.CmdMotd;
 import latmod.ftbu.mod.config.*;
 import latmod.ftbu.net.*;
 import latmod.ftbu.notification.*;
-import latmod.ftbu.tile.ISecureTile;
 import latmod.ftbu.util.*;
 import latmod.ftbu.world.*;
 import latmod.lib.MathHelperLM;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -51,7 +52,7 @@ public class FTBUPlayerEventHandler
 		}
 		
 		p.setPlayer(ep);
-		p.updateLastSeen();
+		p.refreshStats();
 		
 		new MessageLMWorldJoined(LMWorldServer.inst.worldID, p.playerID).sendTo(sendAll ? null : ep);
 		new EventLMPlayerServer.LoggedIn(p, ep, first).post();
@@ -102,7 +103,7 @@ public class FTBUPlayerEventHandler
 	{
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
 		if(p == null) return;
-		p.updateLastSeen();
+		p.refreshStats();
 		
 		for(int i = 0; i < 4; i++)
 			p.lastArmor[i] = ep.inventory.armorInventory[i];
@@ -238,9 +239,10 @@ public class FTBUPlayerEventHandler
 		
 		Entity entity = e.source.getSourceOfDamage();
 		
-		if(entity != null && entity instanceof EntityPlayerMP && !(entity instanceof FakePlayer))
+		if(entity != null && (entity instanceof EntityPlayerMP || entity instanceof IMob))
 		{
-			if(FTBUConfigGeneral.allowInteractSecure((EntityPlayerMP)entity)) return;
+			if(entity instanceof FakePlayer) return;
+			else if(entity instanceof EntityPlayerMP && FTBUConfigGeneral.allowInteractSecure((EntityPlayerMP)entity)) return;
 			
 			int cx = MathHelperLM.chunk(e.entity.posX);
 			int cz = MathHelperLM.chunk(e.entity.posZ);

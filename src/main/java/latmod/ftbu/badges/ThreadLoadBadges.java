@@ -13,7 +13,7 @@ import latmod.lib.*;
 @SideOnly(Side.CLIENT)
 public class ThreadLoadBadges extends Thread
 {
-	public static final String DEF_BADGES = "http://pastebin.com/raw.php?i=KWGvviPR";
+	public static final String DEF_BADGES = "http://latvianmodder.github.io/images/badges/global_badges.json";
 	private static final FastMap<String, Badge> urlBadges = new FastMap<String, Badge>();
 	private static final FastMap<UUID, Badge> customBadges = new FastMap<UUID, Badge>();
 	
@@ -29,11 +29,10 @@ public class ThreadLoadBadges extends Thread
 	public void run()
 	{
 		long msStarted = LMUtils.millis();
-		Badge.isReloading = true;
 		urlBadges.clear();
 		
 		LatCoreMC.logger.info("Loading badges...");
-		Badge.init();
+		Badge.badges.clear();
 		
 		int loaded = loadBages(DEF_BADGES);
 		
@@ -44,9 +43,7 @@ public class ThreadLoadBadges extends Thread
 		new EventFTBUBadges(customBadges).post();
 		loaded += Badge.badges.putAll(customBadges);
 		
-		LatCoreMC.logger.info("Loaded (" + loaded + ") badges for " + Badge.badges.size() + " players in " + ((LMUtils.millis() - msStarted) / 1000F) + " ms!");
-		
-		Badge.isReloading = false;
+		LatCoreMC.logger.info("Loaded " + loaded + " badges for " + Badge.badges.size() + " players in " + ((LMUtils.millis() - msStarted) / 1000F) + " ms!");
 	}
 	
 	public int loadBages(String url)

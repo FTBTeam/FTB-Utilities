@@ -5,7 +5,7 @@ import latmod.lib.config.*;
 
 public class ConfigListRegistry
 {
-	static final FastList<ConfigList> list = new FastList<ConfigList>();
+	public static final FastList<ConfigList> list = new FastList<ConfigList>();
 	
 	public static void add(ConfigList e)
 	{ if(e != null && !list.contains(e)) list.add(e); }

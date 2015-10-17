@@ -4,15 +4,20 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.*;
+import latmod.ftbu.api.guide.GuideFile;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.client.gui.GuiClientConfig;
+import latmod.ftbu.mod.client.gui.*;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
 import latmod.ftbu.util.client.*;
 import latmod.ftbu.util.gui.GuiLM;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.*;
+import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent;
 
@@ -21,8 +26,9 @@ public class FTBUGuiEventHandler
 {
 	public static final FTBUGuiEventHandler instance = new FTBUGuiEventHandler();
 	public static final ResourceLocation friendsButtonTexture = FTBU.mod.getLocation("textures/gui/friendsbutton.png");
-	private static final int BUTTON_ID = 24286;
+	private static final int FRIENDS_GUI_BUTTON_ID = 24286;
 	private static final int SETTINGS_BUTTON_ID = 24287;
+	private static final int GUIDE_BUTTON_ID = 24288;
 	
 	@SuppressWarnings("unchecked")
 	@SubscribeEvent
@@ -48,14 +54,15 @@ public class FTBUGuiEventHandler
 				ySize = 136;
 				buttonY = 6;
 			}
-			
-			if(!e.gui.mc.thePlayer.getActivePotionEffects().isEmpty())
+			boolean hasPotions = !e.gui.mc.thePlayer.getActivePotionEffects().isEmpty();
+			if(hasPotions)
 			{ buttonX -= 4; buttonY -= 26; }
 			
 			int guiLeft = (e.gui.width - xSize) / 2;
 			int guiTop = (e.gui.height - ySize) / 2;
 			
 			e.buttonList.add(new ButtonFriends(e.gui, guiLeft + buttonX, guiTop + buttonY));
+			e.buttonList.add(new ButtonGuide(e.gui, guiLeft + buttonX + (hasPotions ? -18 : 0), guiTop + buttonY + (hasPotions ? 0 : 18)));
 		}
 	}
 	
@@ -64,15 +71,24 @@ public class FTBUGuiEventHandler
 	{
 		if(e.button.id == SETTINGS_BUTTON_ID)
 			e.gui.mc.displayGuiScreen(new GuiClientConfig(e.gui)); 
-		else if(e.button.id == BUTTON_ID)
+		else if(e.button.id == FRIENDS_GUI_BUTTON_ID || e.button.id == GUIDE_BUTTON_ID)
 		{
 			final GuiContainerCreative creativeContainer = (e.gui instanceof GuiContainerCreative) ? (GuiContainerCreative)e.gui : null;
 			
 			if(creativeContainer == null || creativeContainer.func_147056_g() == CreativeTabs.tabInventory.getTabIndex())
 			{
-				GuiFriends g = new GuiFriends(e.gui);
-				g.playClickSound();
-				e.gui.mc.displayGuiScreen(g);
+				if(e.button.id == FRIENDS_GUI_BUTTON_ID)
+				{
+					GuiFriends g = new GuiFriends(e.gui);
+					g.playClickSound();
+					e.gui.mc.displayGuiScreen(g);
+				}
+				else if(e.button.id == GUIDE_BUTTON_ID)
+				{
+					GuiGuide g = new GuiGuide(null, GuideFile.inst.main);
+					g.playClickSound();
+					e.gui.mc.displayGuiScreen(g);
+				}
 			}
 		}
 	}
@@ -83,7 +99,7 @@ public class FTBUGuiEventHandler
 		
 		public ButtonFriends(GuiScreen g, int x, int y)
 		{
-			super(BUTTON_ID, x, y, 16, 16, "");
+			super(FRIENDS_GUI_BUTTON_ID, x, y, 16, 16, "");
 			creativeContainer = (g instanceof GuiContainerCreative) ? (GuiContainerCreative)g : null;
 		}
 		
@@ -113,6 +129,45 @@ public class FTBUGuiEventHandler
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
 				mc.fontRenderer.drawString(n, xPosition + width - nw + 1, yPosition - 3, 0xFFFFFFFF);
 			}
+			
+			GL11.glPopAttrib();
+		}
+	}
+	
+	private static class ButtonGuide extends GuiButton
+	{
+		private static RenderItem itemRender = new RenderItem();
+		
+		private final GuiContainerCreative creativeContainer;
+		private final ItemStack itemToDraw;
+		
+		public ButtonGuide(GuiScreen g, int x, int y)
+		{
+			super(GUIDE_BUTTON_ID, x, y, 16, 16, "");
+			creativeContainer = (g instanceof GuiContainerCreative) ? (GuiContainerCreative)g : null;
+			itemToDraw = new ItemStack(Items.book, 1);
+		}
+		
+		public void drawButton(Minecraft mc, int mx, int my)
+		{
+			if(creativeContainer != null && creativeContainer.func_147056_g() != CreativeTabs.tabInventory.getTabIndex())
+				return;
+			
+			GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			
+			GL11.glColor4f(1F, 1F, 1F, 1F);
+			LatCoreMCClient.setTexture(TextureMap.locationItemsTexture);
+			
+			zLevel = 200F;
+			itemRender.zLevel = 200F;
+			LMRenderHelper.renderGuiItem(itemToDraw, itemRender, mc.fontRenderer, xPosition, yPosition);
+			zLevel = 0F;
+			itemRender.zLevel = 0F;
+			
+			if(mx >= xPosition && my >= yPosition && mx < xPosition + width && my < yPosition + height)
+				GuiLM.drawBlankRect(xPosition, yPosition, 0D, width, height, 0x55FFFFFF);
 			
 			GL11.glPopAttrib();
 		}

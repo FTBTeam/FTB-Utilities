@@ -5,42 +5,45 @@ import java.net.URI;
 
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.api.client.EventClickAction;
+import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.LMPlayerClient;
 import latmod.lib.LMUtils;
 import net.minecraft.client.gui.GuiChat;
 
 @SideOnly(Side.CLIENT)
-public class ClickActionHandler
+public class ClickActionHandler // Notification
 {
 	public static void onClicked(ClickAction c, LMPlayerClient p)
 	{
-		if(c.equals(ClickAction.CMD))
+		if(c.ID.equals(ClickAction.CMD))
 		{
 			LatCoreMCClient.execClientCommand(c.stringVal());
 		}
-		else if(c.equals(ClickAction.SHOW_CMD))
+		else if(c.ID.equals(ClickAction.SHOW_CMD))
 		{
 			LatCoreMCClient.mc.displayGuiScreen(new GuiChat(c.stringVal()));
 		}
-		else if(c.equals(ClickAction.URL))
+		else if(c.ID.equals(ClickAction.URL))
 		{
 			try { LMUtils.openURI(new URI(c.stringVal())); }
 			catch(Exception ex) { ex.printStackTrace(); }
 		}
-		else if(c.equals(ClickAction.FILE))
+		else if(c.ID.equals(ClickAction.FILE))
 		{
 			try { LMUtils.openURI(new File(c.stringVal()).toURI()); }
 			catch(Exception ex) { ex.printStackTrace(); }
 		}
-		else if(c.equals(ClickAction.GUI))
+		else if(c.ID.equals(ClickAction.GUI))
 		{
 		}
-		else if(c.equals(ClickAction.FRIEND_ADD))
+		else if(c.ID.equals(ClickAction.FRIEND_ADD))
 		{
+			ClientAction.ACTION_ADD_FRIEND.send(c.intVal());
 		}
-		else if(c.equals(ClickAction.FRIEND_ADD_ALL))
+		else if(c.ID.equals(ClickAction.FRIEND_ADD_ALL))
 		{
+			ClientAction.ACTION_ADD_FRIEND.send(0);
 		}
 		else new EventClickAction(c, p).post();
 	}

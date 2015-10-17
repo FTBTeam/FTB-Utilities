@@ -2,11 +2,9 @@ package latmod.ftbu.mod.client.gui.friends;
 
 import org.lwjgl.input.Mouse;
 
-import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.world.*;
 import latmod.lib.FastList;
 
-@SideOnly(Side.CLIENT)
 public class PanelPlayerList extends PanelFriendsGui
 {
 	private static final FastList<LMPlayer> tempPlayerList = new FastList<LMPlayer>();

@@ -8,6 +8,7 @@ import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.util.LatCoreMC;
 import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
@@ -19,13 +20,15 @@ public abstract class LMWorld
 	{ if(s.isServer()) return LMWorldServer.inst; return FTBU.proxy.getClientWorldLM(); }
 	
 	public static LMWorld getWorld()
-	{ return getWorld((LatCoreMC.isServer() && LatCoreMC.getServer() != null) ? Side.SERVER : Side.CLIENT); }
+	{ return getWorld(LatCoreMC.isServer() ? Side.SERVER : Side.CLIENT); }
 	
 	public final Side side;
 	public final UUID worldID;
 	public final String worldIDS;
 	public final FastList<LMPlayer> players;
 	public final LMWorldSettings settings;
+	public NBTTagCompound customCommonData;
+	public LMWorldJsonSettings jsonSettings;
 	
 	public LMWorld(Side s, UUID id, String ids)
 	{
@@ -34,6 +37,9 @@ public abstract class LMWorld
 		worldIDS = ids;
 		players = new FastList<LMPlayer>();
 		settings = new LMWorldSettings(this);
+		customCommonData = new NBTTagCompound();
+		jsonSettings = new LMWorldJsonSettings();
+		jsonSettings.loadDefaults();
 	}
 	
 	public World getMCWorld()
@@ -159,5 +165,13 @@ public abstract class LMWorld
 	
 	public void update()
 	{
+	}
+	
+	public FastList<LMPlayerServer> getServerPlayers()
+	{
+		FastList<LMPlayerServer> l = new FastList<LMPlayerServer>();
+		for(int i = 0; i < players.size(); i++)
+			l.add(players.get(i).toPlayerMP());
+		return l;
 	}
 }

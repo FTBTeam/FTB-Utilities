@@ -12,7 +12,7 @@ public class SliderLM extends WidgetLM
 	public float value;
 	public final int sliderSize;
 	public int displayMin = 0;
-	public int displayMax = 100;
+	public int displayMax = 0;
 	public boolean isVertical = false;
 	public float scrollStep = 0.1F;
 	

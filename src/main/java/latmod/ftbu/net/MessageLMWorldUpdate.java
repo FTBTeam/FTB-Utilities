@@ -3,6 +3,7 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 import io.netty.buffer.ByteBuf;
+import latmod.ftbu.api.guide.GuideFile;
 import latmod.ftbu.world.*;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -32,6 +33,7 @@ public class MessageLMWorldUpdate extends MessageLM<MessageLMWorldUpdate>
 	public IMessage onMessage(MessageLMWorldUpdate m, MessageContext ctx)
 	{
 		LMWorldClient.inst.readDataFromNet(m.data, false);
+		GuideFile.inst.init(Side.CLIENT);
 		return null;
 	}
 }

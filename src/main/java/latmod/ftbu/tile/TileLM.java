@@ -1,4 +1,5 @@
 package latmod.ftbu.tile;
+import latmod.ftbu.api.tile.*;
 import latmod.ftbu.block.BlockLM;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.net.MessageClientTileAction;

@@ -20,7 +20,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	public final WorldServer worldObj;
 	public final File latmodFolder;
 	public final Warps warps;
-	public NBTTagCompound customData;
+	public NBTTagCompound customServerData;
 	
 	public LMWorldServer(UUID id, WorldServer w, File f)
 	{
@@ -28,7 +28,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		worldObj = w;
 		latmodFolder = f;
 		warps = new Warps();
-		customData = new NBTTagCompound();
+		customServerData = new NBTTagCompound();
 	}
 	
 	public World getMCWorld()
@@ -46,14 +46,16 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	public void load(NBTTagCompound tag)
 	{
 		warps.readFromNBT(tag, "Warps");
-		customData = tag.getCompoundTag("Custom");
+		customServerData = tag.getCompoundTag("CustomServer");
+		customCommonData = tag.getCompoundTag("CustomCommon");
 		settings.readFromNBT(tag.getCompoundTag("Settings"), true);
 	}
 	
 	public void save(NBTTagCompound tag)
 	{
 		warps.writeToNBT(tag, "Warps");
-		tag.setTag("Custom", customData);
+		tag.setTag("CustomServer", customServerData);
+		tag.setTag("CustomCommon", customCommonData);
 		NBTTagCompound settingsTag = new NBTTagCompound();
 		settings.writeToNBT(settingsTag, true);
 		tag.setTag("Settings", settingsTag);
@@ -82,6 +84,9 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 			
 			tag.setTag("PLIST", list);
 		}
+		
+		tag.setString("GM", jsonSettings.gamemode);
+		if(!customCommonData.hasNoTags()) tag.setTag("C", customCommonData);
 		
 		NBTTagCompound settingsTag = new NBTTagCompound();
 		settings.writeToNBT(settingsTag, false);

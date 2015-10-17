@@ -19,5 +19,8 @@ public class CmdAdmin extends CommandSubLM
 		add(new CmdAdminSpawnArea("spawnarea"));
 		add(new CmdAdminUnclaim("unclaim"));
 		add(new CmdAdminBackup("backup"));
+		add(new CmdAdminGetmode("getmode"));
+		add(new CmdAdminSetmode("setmode"));
+		add(new CmdAdminConfig("config"));
 	}
 }

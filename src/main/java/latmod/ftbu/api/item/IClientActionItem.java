@@ -1,4 +1,4 @@
-package latmod.ftbu.item;
+package latmod.ftbu.api.item;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

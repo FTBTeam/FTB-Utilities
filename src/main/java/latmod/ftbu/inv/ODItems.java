@@ -1,5 +1,5 @@
 package latmod.ftbu.inv;
-import latmod.ftbu.item.Tool;
+import latmod.ftbu.api.item.Tool;
 import latmod.ftbu.util.*;
 import latmod.lib.FastList;
 import net.minecraft.init.*;

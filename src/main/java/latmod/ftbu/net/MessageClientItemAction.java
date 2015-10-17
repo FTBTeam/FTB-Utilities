@@ -2,7 +2,7 @@ package latmod.ftbu.net;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import io.netty.buffer.ByteBuf;
-import latmod.ftbu.item.IClientActionItem;
+import latmod.ftbu.api.item.IClientActionItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

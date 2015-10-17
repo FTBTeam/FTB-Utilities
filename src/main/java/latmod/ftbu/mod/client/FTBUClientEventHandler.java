@@ -1,14 +1,18 @@
 package latmod.ftbu.mod.client;
 import java.util.UUID;
 
+import org.lwjgl.input.Keyboard;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.api.EventLMWorldClient;
+import latmod.ftbu.api.client.EventFTBUKey;
+import latmod.ftbu.api.paint.IPainterItem;
 import latmod.ftbu.inv.*;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.client.gui.friends.GuiFriendsGuiSmall;
-import latmod.ftbu.paint.IPainterItem;
 import latmod.ftbu.util.*;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
@@ -108,6 +112,18 @@ public class FTBUClientEventHandler
 		{
 			LMPlayerClient p = LMWorldClient.inst.getPlayer(e.target);
 			if(p != null) LatCoreMCClient.mc.displayGuiScreen(new GuiFriendsGuiSmall(p));
+		}
+	}
+	
+	@SubscribeEvent
+	public void onKeyEvent(InputEvent.KeyInputEvent e)
+	{
+		int key = Keyboard.getEventKey();
+		
+		if(key != Keyboard.KEY_NONE && key != Keyboard.KEY_ESCAPE)
+		{
+			boolean pressed = Keyboard.getEventKeyState();
+			new EventFTBUKey(key, pressed).post();
 		}
 	}
 }

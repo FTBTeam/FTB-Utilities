@@ -13,6 +13,6 @@ public class CmdFTBU extends CommandSubLM
 		add(new CmdFTBUPlayerID("ID"));
 		add(new CmdFTBURestartTimer("restartTimer"));
 		add(new CmdFTBUBackupTimer("backupTimer"));
-		add(new CmdFTBUTopDeaths("deaths"));
+		add(new CmdFTBUTops("top"));
 	}
 }

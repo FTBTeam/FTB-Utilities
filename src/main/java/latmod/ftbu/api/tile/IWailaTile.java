@@ -1,4 +1,4 @@
-package latmod.ftbu.tile;
+package latmod.ftbu.api.tile;
 
 import java.util.List;
 

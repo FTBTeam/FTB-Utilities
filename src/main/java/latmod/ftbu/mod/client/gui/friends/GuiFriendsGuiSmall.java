@@ -1,11 +1,9 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.util.gui.*;
 import latmod.ftbu.world.LMPlayerClient;
 import latmod.lib.FastList;
 
-@SideOnly(Side.CLIENT)
 public class GuiFriendsGuiSmall extends GuiLM
 {
 	public final LMPlayerClient playerLM;

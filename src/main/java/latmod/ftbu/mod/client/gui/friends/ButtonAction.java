@@ -1,10 +1,8 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.util.gui.*;
 import latmod.lib.FastList;
 
-@SideOnly(Side.CLIENT)
 public class ButtonAction extends ButtonPopupMenu
 {
 	public final PlayerAction action;

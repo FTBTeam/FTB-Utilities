@@ -1,4 +1,4 @@
-package latmod.ftbu.paint;
+package latmod.ftbu.api.paint;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

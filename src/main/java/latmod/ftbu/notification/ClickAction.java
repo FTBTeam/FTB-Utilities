@@ -14,7 +14,7 @@ public class ClickAction
 	public static final ClickActionType FILE = new ClickActionType("file", PrimitiveType.STRING);
 	public static final ClickActionType GUI = new ClickActionType("gui", PrimitiveType.STRING);
 	public static final ClickActionType FRIEND_ADD = new ClickActionType("friend_add", PrimitiveType.INT);
-	public static final ClickActionType FRIEND_ADD_ALL = new ClickActionType("friend_add", PrimitiveType.NULL);
+	public static final ClickActionType FRIEND_ADD_ALL = new ClickActionType("friend_add_all", PrimitiveType.NULL);
 	
 	public final ClickActionType ID;
 	public final Object val;
@@ -26,10 +26,10 @@ public class ClickAction
 	{ return val.toString(); }
 	
 	public int intVal()
-	{ return val.hashCode(); }
+	{ return numVal().intValue(); }
 	
 	public Number numVal()
-	{ return (Number)val; }
+	{ return (val == null) ? -1 : (Number)val; }
 	
 	public boolean boolVal()
 	{ return ((Boolean)val).booleanValue(); }

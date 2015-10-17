@@ -1,6 +1,6 @@
 package latmod.ftbu.waila;
 
-import latmod.ftbu.tile.IWailaTile;
+import latmod.ftbu.api.tile.IWailaTile;
 
 public enum WailaType
 {

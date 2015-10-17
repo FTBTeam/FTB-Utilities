@@ -1,4 +1,4 @@
-package latmod.ftbu.item;
+package latmod.ftbu.api.item;
 
 public class Tool
 {

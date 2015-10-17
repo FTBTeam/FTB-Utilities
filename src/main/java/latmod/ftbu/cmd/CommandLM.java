@@ -16,13 +16,16 @@ public abstract class CommandLM extends CommandBase
 	public final FastList<String> aliases = new FastList<String>();
 	
 	public CommandLM(String s, CommandLevel l)
-	{ commandName = s; level = l; }
+	{
+		commandName = s;
+		level = (l == null) ? CommandLevel.NONE : l;
+	}
 	
 	public int getRequiredPermissionLevel()
 	{ return level.requiredPermsLevel(); }
 	
 	public boolean canCommandSenderUseCommand(ICommandSender ics)
-	{ return super.canCommandSenderUseCommand(ics); }
+	{ return level != CommandLevel.NONE && (level == CommandLevel.ALL || super.canCommandSenderUseCommand(ics)); }
 	
 	public final String getCommandName()
 	{ return commandName; }

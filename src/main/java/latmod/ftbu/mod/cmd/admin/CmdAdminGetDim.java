@@ -16,7 +16,7 @@ public class CmdAdminGetDim extends CommandLM
 		checkArgs(args, 1);
 		int i = parseInt(ics, args[0]);
 		WorldServer w = DimensionManager.getWorld(i);
-		if(w == null) return error(new ChatComponentText("Invalid DimensionID!")); //LANG
+		if(w == null) return error(new ChatComponentText("Invalid/Unloaded DimensionID!"));
 		return new ChatComponentText("Dimension " + i + " name is '" + w.provider.getDimensionName() + "'");
 	}
 }

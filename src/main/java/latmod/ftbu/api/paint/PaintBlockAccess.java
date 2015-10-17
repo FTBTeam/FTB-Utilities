@@ -1,4 +1,4 @@
-package latmod.ftbu.paint;
+package latmod.ftbu.api.paint;
 
 import latmod.ftbu.util.CustomBlockAccess;
 import net.minecraft.block.Block;

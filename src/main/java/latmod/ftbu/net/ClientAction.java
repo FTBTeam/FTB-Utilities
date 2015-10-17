@@ -20,20 +20,34 @@ public enum ClientAction
 	{
 		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
 		{
-			LMPlayerServer p = LMWorldServer.inst.getPlayer(extra);
-			if(p == null || p.equalsPlayer(owner)) return false;
-			
-			if(!owner.friends.contains(p.playerID))
+			if(extra > 0)
 			{
-				owner.friends.add(p.playerID);
-				p.sendUpdate();
+				LMPlayerServer p = LMWorldServer.inst.getPlayer(extra);
+				if(p == null || p.equalsPlayer(owner)) return false;
 				
-				if(p.isOnline())
+				if(!owner.friends.contains(p.playerID))
 				{
-					Notification n = new Notification("friend_request", LatCoreMC.setColor(EnumChatFormatting.GREEN, new ChatComponentText("New friend request from " + owner.getName() + "!")), 4000);
-					n.setDesc(new ChatComponentText("Click to add as friend"));
-					n.setClickEvent(new ClickAction(ClickAction.CMD, "/ftbu friends add " + owner.getName()));
-					LatCoreMC.notifyPlayer(p.getPlayer(), n);
+					owner.friends.add(p.playerID);
+					p.sendUpdate();
+					
+					if(p.isOnline())
+					{
+						Notification n = new Notification("friend_request", LatCoreMC.setColor(EnumChatFormatting.GREEN, new ChatComponentText("New friend request from " + owner.getName() + "!")), 4000);//LANG
+						n.setDesc(new ChatComponentText("Click to add as friend"));
+						n.setClickEvent(new ClickAction(ClickAction.CMD, "/ftbu friends add " + owner.getName()));
+						LatCoreMC.notifyPlayer(p.getPlayer(), n);
+					}
+				}
+			}
+			else
+			{
+				for(LMPlayer p : LMWorldServer.inst.players)
+				{
+					if(!p.equalsPlayer(owner) && p.isFriendRaw(owner) && !owner.isFriendRaw(p))
+					{
+						owner.friends.add(p.playerID);
+						p.toPlayerMP().sendUpdate();
+					}
 				}
 			}
 			

@@ -29,7 +29,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	private int maxClaimPower = -2;
 	public int lastChunkType = -99;
 	
-	private long lastSeen, firstJoined, timePlayed;
+	public long lastSeen, firstJoined, timePlayed;
 	
 	public LMPlayerServer(LMWorldServer w, int i, GameProfile gp)
 	{
@@ -69,26 +69,17 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			new MessageLMPlayerUpdate(this, false).sendTo(ep);
 	}
 	
-	public void updateLastSeen()
-	{
-		lastSeen = LMUtils.millis();
-		if(firstJoined <= 0L)
-			firstJoined = lastSeen;
-		if(entityPlayer != null)
-		{
-			if(lastPos == null)
-				lastPos = new EntityPos(entityPlayer);
-			else lastPos.set(entityPlayer);
-		}
-	}
-	
 	public boolean isOP()
 	{ return LatCoreMC.getServer().getConfigurationManager().func_152596_g(gameProfile); }
 	
 	public EntityPos getPos()
 	{
 		EntityPlayerMP ep = getPlayer();
-		if(ep != null) lastPos = new EntityPos(ep);
+		if(ep != null)
+		{
+			if(lastPos == null) lastPos = new EntityPos(ep);
+			else lastPos.set(ep);
+		}
 		return lastPos;
 	}
 	
@@ -113,8 +104,18 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public void refreshStats()
 	{
-		timePlayed = getStat(StatList.minutesPlayedStat) * 50L;
-		deaths = getStat(StatList.deathsStat);
+		if(isOnline())
+		{
+			timePlayed = getStat(StatList.minutesPlayedStat) * 50L;
+			deaths = getStat(StatList.deathsStat);
+			
+			lastSeen = LMUtils.millis();
+			if(firstJoined <= 0L)
+				firstJoined = lastSeen;
+			
+			if(!world.settings.isOutsideF(entityPlayer.dimension, entityPlayer.posX, entityPlayer.posZ))
+				getPos();
+		}
 	}
 	
 	public void readFromServer(NBTTagCompound tag)

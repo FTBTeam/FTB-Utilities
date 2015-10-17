@@ -82,14 +82,9 @@ public class LMWorldSettings
 	public WorldBorder get(int dim)
 	{
 		if(dim == 0) return worldBorder0;
-		return worldBorder.get(Integer.valueOf(dim));
-	}
-	
-	public WorldBorder getNew(int dim)
-	{
-		WorldBorder b = get(dim);
-		if(b == null) worldBorder.put(dim, b = new WorldBorder(dim));
-		return b;
+		WorldBorder wb = worldBorder.get(Integer.valueOf(dim));
+		if(wb == null) worldBorder.put(Integer.valueOf(dim), wb = new WorldBorder(dim));
+		return wb;
 	}
 	
 	public int getSize(int dim)
@@ -99,7 +94,7 @@ public class LMWorldSettings
 		else
 		{
 			WorldBorder b = get(dim);
-			if(b != null && b.size > -1) return b.size;
+			if(b.size > -1) return b.size;
 			return (int)(worldBorder0.size * LMDimUtils.getWorldScale(dim));
 		}
 	}
@@ -114,7 +109,7 @@ public class LMWorldSettings
 	{
 		if(!world.side.isServer()) return;
 		
-		WorldBorder wb = getNew(dim);
+		WorldBorder wb = get(dim);
 		if(wb.size != s)
 		{
 			wb.size = s;
@@ -126,10 +121,10 @@ public class LMWorldSettings
 	{
 		if(!world.side.isServer()) return;
 		
-		WorldBorder wb = getNew(dim);
+		WorldBorder wb = get(dim);
 		if(wb.pos.x != x || wb.pos.y != z)
 		{
-			wb.setPos(x, z);
+			wb.pos.set(x, z);
 			world.update();
 		}
 	}
@@ -137,22 +132,19 @@ public class LMWorldSettings
 	public boolean isOutside(int dim, int cx, int cz)
 	{
 		if(Claims.isInSpawn(dim, cx, cz)) return false;
-		int radius = getSize(dim);
-		if(radius == 0) return false;
-		int min = MathHelperLM.chunk(-radius);
-		int max = MathHelperLM.chunk(radius);
-		return cx >= max || cx <= min || cz >= max || cz <= min;
+		WorldBorder wb = get(dim);
+		int size = getSize(dim);
+		if(size == 0) return false;
+		int minX = MathHelperLM.chunk(wb.pos.x - size);
+		int maxX = MathHelperLM.chunk(wb.pos.x + size);
+		int minZ = MathHelperLM.chunk(wb.pos.y - size);
+		int maxZ = MathHelperLM.chunk(wb.pos.y + size);
+		return cx >= maxX || cx <= minX || cz >= maxZ || cz <= minZ;
 	}
 	
 	public boolean isOutsideF(int dim, double x, double z)
 	{ return isOutside(dim, MathHelperLM.chunk(x), MathHelperLM.chunk(z)); }
 
 	public boolean isEnabled(int dim)
-	{
-		if(!borderEnabled) return false;
-		else if(dim == 0) return worldBorder0.size > 0;
-		WorldBorder b = get(dim);
-		if(b == null) return isEnabled(0);
-		return getSize(dim) > 0;
-	}
+	{ return getSize(dim) > 0; }
 }

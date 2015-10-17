@@ -19,7 +19,7 @@ public class Backups
 	
 	public static void init()
 	{
-		backupsFolder = FTBUConfigBackups.folder.get().isEmpty() ? new File(LatCoreMC.localConfigFolder, "backups/") : new File(FTBUConfigBackups.folder.get());
+		backupsFolder = FTBUConfigBackups.folder.get().isEmpty() ? new File(LatCoreMC.localFolder, "backups/") : new File(FTBUConfigBackups.folder.get());
 		if(!backupsFolder.exists()) backupsFolder.mkdirs();
 		thread = null;
 		clearOldBackups();

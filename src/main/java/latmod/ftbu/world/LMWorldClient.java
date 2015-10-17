@@ -24,7 +24,7 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 	{
 		super(Side.CLIENT, id, ids);
 		clientPlayerID = i;
-		clientDataFolder = new File(LatCoreMC.localConfigFolder, "client/" + worldIDS);
+		clientDataFolder = new File(LatCoreMC.localFolder, "client/" + worldIDS);
 	}
 	
 	public World getMCWorld()
@@ -61,6 +61,8 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 				new EventLMPlayerClient.DataLoaded(players.get(i).toPlayerSP()).post();
 		}
 		
+		jsonSettings.gamemode = tag.getString("GM");
+		customCommonData = tag.getCompoundTag("C");
 		settings.readFromNBT(tag.getCompoundTag("CFG"), false);
 	}
 }

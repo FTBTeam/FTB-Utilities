@@ -7,7 +7,5 @@ public class EventFTBUGuide extends EventLM
 	public final GuideFile file;
 	
 	public EventFTBUGuide(GuideFile f)
-	{
-		file = f;
-	}
+	{ file = f; }
 }

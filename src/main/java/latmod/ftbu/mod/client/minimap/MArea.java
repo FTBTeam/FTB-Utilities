@@ -30,6 +30,7 @@ public class MArea
 	public ThreadReloadArea thread = null;
 	public ByteBuffer pixelBuffer = null;
 	public long lastRefreshMillis = -1L;
+	private File saveFile = null;
 	
 	public MArea(Minimap m, int x, int y)
 	{
@@ -101,13 +102,11 @@ public class MArea
 	}
 	
 	public File getFile()
-	{ return new File(LMWorldClient.inst.clientDataFolder, "minimap/" + minimap.dim + "," + posX + "," + posY + ".png"); }
+	{ if(saveFile == null) saveFile = new File(LMWorldClient.inst.clientDataFolder, "minimap/" + minimap.dim + "," + posX + "," + posY + ".png"); return saveFile; }
 	
 	public void load()
 	{
-		File file = getFile();
-		
-		if(file.exists())
+		if(getFile().exists())
 		{
 			Thread thread = new Thread()
 			{
@@ -115,7 +114,7 @@ public class MArea
 				{
 					try
 					{
-						PixelBuffer image = new PixelBuffer(ImageIO.read(file));
+						PixelBuffer image = new PixelBuffer(ImageIO.read(getFile()));
 						
 						if(image.width == size && image.height == size)
 						{

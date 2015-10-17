@@ -3,7 +3,7 @@ package latmod.ftbu.waila;
 import java.util.List;
 
 import latmod.ftbu.api.EventRegisterWaila;
-import latmod.ftbu.tile.IWailaTile;
+import latmod.ftbu.api.tile.IWailaTile;
 import net.minecraft.item.ItemStack;
 
 public class WailaLMTile extends BasicWailaHandler

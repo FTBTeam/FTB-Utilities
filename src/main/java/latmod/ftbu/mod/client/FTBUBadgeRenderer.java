@@ -2,8 +2,8 @@ package latmod.ftbu.mod.client;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.EventBusHelper;
 import latmod.ftbu.badges.*;
-import latmod.ftbu.util.EventBusHelper;
 import latmod.ftbu.world.*;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 

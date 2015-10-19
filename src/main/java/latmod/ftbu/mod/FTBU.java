@@ -1,6 +1,7 @@
 package latmod.ftbu.mod;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
+import ftb.lib.EventBusHelper;
 import latmod.ftbu.api.*;
 import latmod.ftbu.backups.Backups;
 import latmod.ftbu.inv.ODItems;
@@ -41,7 +42,6 @@ public class FTBU
 		
 		LatCoreMC.logger.info("OS: " + OS.current + ", 64bit: " + OS.is64);
 		
-		LatCoreMC.initFolders(e.getModConfigurationDirectory());
 		LMMod.init(this);
 		mod.logger = LatCoreMC.logger;
 		JsonHelper.init();

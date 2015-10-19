@@ -3,6 +3,7 @@ package latmod.ftbu.backups;
 import java.io.File;
 import java.util.Arrays;
 
+import ftb.lib.mod.FTBLib;
 import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.mod.config.FTBUConfigBackups;
 import latmod.ftbu.util.LatCoreMC;
@@ -19,7 +20,7 @@ public class Backups
 	
 	public static void init()
 	{
-		backupsFolder = FTBUConfigBackups.folder.get().isEmpty() ? new File(LatCoreMC.localFolder, "backups/") : new File(FTBUConfigBackups.folder.get());
+		backupsFolder = FTBUConfigBackups.folder.get().isEmpty() ? new File(FTBLib.folderMinecraft, "/backups/") : new File(FTBUConfigBackups.folder.get());
 		if(!backupsFolder.exists()) backupsFolder.mkdirs();
 		thread = null;
 		clearOldBackups();

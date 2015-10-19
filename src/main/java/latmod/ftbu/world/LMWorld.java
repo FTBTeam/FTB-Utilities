@@ -28,7 +28,6 @@ public abstract class LMWorld
 	public final FastList<LMPlayer> players;
 	public final LMWorldSettings settings;
 	public NBTTagCompound customCommonData;
-	public String gamemode = "default";
 	
 	public LMWorld(Side s, UUID id, String ids)
 	{

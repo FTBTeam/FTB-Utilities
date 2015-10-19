@@ -3,11 +3,10 @@ package latmod.ftbu.api.guide;
 import java.io.File;
 import java.lang.reflect.Field;
 
-import cpw.mods.fml.relauncher.Side;
+import ftb.lib.api.EventFTBModeSet;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.config.*;
 import latmod.ftbu.util.LatCoreMC;
-import latmod.ftbu.world.LMWorld;
 import latmod.lib.LMFileUtils;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -20,16 +19,13 @@ public class GuideFile
 	private GuideFile()
 	{ main = new GuideCategory(null, "Guide"); }
 	
-	public void init(Side s)
+	public void reload(EventFTBModeSet e)
 	{
+		LatCoreMC.logger.info("Guide reloaded @ " + e.side);
+		
 		main.clear();
 		
-		LMWorld world = LMWorld.getWorld(s);
-		if(world == null) return;
-		
-		LatCoreMC.logger.info("Reloading Guide @ " + s);
-		
-		File file = new File(LatCoreMC.modpackFolder, "gamemodes/common/guide");
+		File file = e.getCommonFile("guide/");
 		if(file.exists() && file.isDirectory())
 		{
 			File[] f = file.listFiles();
@@ -38,7 +34,7 @@ public class GuideFile
 					loadFromFiles(main, f[i]);
 		}
 		
-		file = new File(LatCoreMC.modpackFolder, "gamemodes/" + world.gamemode + "/guide");
+		file = e.getFile("guide/");
 		if(file.exists() && file.isDirectory())
 		{
 			File[] f = file.listFiles();
@@ -47,7 +43,7 @@ public class GuideFile
 					loadFromFiles(main, f[i]);
 		}
 		
-		file = new File(LatCoreMC.modpackFolder, "gamemodes/" + world.gamemode + "/guide_intro.txt");
+		file = e.getFile("guide_intro.txt");
 		if(file.exists() && file.isFile())
 		{
 			try
@@ -55,8 +51,8 @@ public class GuideFile
 				String text = LMFileUtils.loadAsText(file);
 				main.println(text);
 			}
-			catch(Exception e)
-			{ e.printStackTrace(); }
+			catch(Exception ex)
+			{ ex.printStackTrace(); }
 		}
 		
 		FTBUConfig.onGuideEvent(this);

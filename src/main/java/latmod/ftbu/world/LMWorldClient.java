@@ -6,8 +6,9 @@ import java.util.UUID;
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.mod.FTBLib;
 import latmod.ftbu.api.EventLMPlayerClient;
-import latmod.ftbu.util.*;
+import latmod.ftbu.util.LMNBTUtils;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import net.minecraft.nbt.*;
 import net.minecraft.world.World;
@@ -24,7 +25,7 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 	{
 		super(Side.CLIENT, id, ids);
 		clientPlayerID = i;
-		clientDataFolder = new File(LatCoreMC.localFolder, "client/" + worldIDS);
+		clientDataFolder = new File(FTBLib.folderLocal, "client/" + worldIDS);
 	}
 	
 	public World getMCWorld()
@@ -61,7 +62,6 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 				new EventLMPlayerClient.DataLoaded(players.get(i).toPlayerSP()).post();
 		}
 		
-		gamemode = tag.getString("GM");
 		customCommonData = tag.getCompoundTag("C");
 		settings.readFromNBT(tag.getCompoundTag("CFG"), false);
 	}

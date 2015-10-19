@@ -2,7 +2,7 @@ package latmod.ftbu.api.client;
 
 import java.io.File;
 
-import latmod.ftbu.util.LatCoreMC;
+import ftb.lib.mod.FTBLib;
 import latmod.lib.*;
 
 public final class ClientConfigRegistry
@@ -15,7 +15,7 @@ public final class ClientConfigRegistry
 	
 	public static void init()
 	{
-		configFile = LMFileUtils.newFile(new File(LatCoreMC.localFolder, "client/config.txt"));
+		configFile = LMFileUtils.newFile(new File(FTBLib.folderLocal, "client/config.txt"));
 	}
 	
 	public static void load()

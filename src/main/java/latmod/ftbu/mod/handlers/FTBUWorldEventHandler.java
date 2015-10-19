@@ -1,11 +1,12 @@
 package latmod.ftbu.mod.handlers;
 
-import java.io.*;
+import java.io.File;
 import java.util.*;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
+import ftb.lib.api.EventFTBModeSet;
 import latmod.ftbu.api.*;
 import latmod.ftbu.api.config.ConfigListRegistry;
 import latmod.ftbu.api.guide.GuideFile;
@@ -19,11 +20,16 @@ import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
 
 public class FTBUWorldEventHandler
 {
+	@SubscribeEvent
+	public void onModeChanged(EventFTBModeSet e)
+	{
+		GuideFile.inst.reload(e);
+	}
+	
 	@SubscribeEvent
 	public void onWorldTick(TickEvent.WorldTickEvent e)
 	{
@@ -44,25 +50,6 @@ public class FTBUWorldEventHandler
 			LMWorldServer.inst = new LMWorldServer(tagWorldData.hasKey("UUID") ? LMStringUtils.fromString(tagWorldData.getString("UUID")) : UUID.randomUUID(), (WorldServer)e.world, latmodFolder);
 			LMWorldServer.inst.load(tagWorldData);
 			
-			LMWorldServer.inst.gamemode = null;
-			
-			try
-			{
-				File startupPackFile = new File(MinecraftServer.getServer().getEntityWorld().getSaveHandler().getWorldDirectory(), "ftb_gamemode.txt");
-				if(!startupPackFile.exists()) startupPackFile.createNewFile();
-				BufferedReader reader = new BufferedReader(new FileReader(startupPackFile));
-				if(reader.ready())
-				{
-					try { LMWorldServer.inst.gamemode = reader.readLine().trim(); }
-					catch(Exception ex1) { }
-				}
-				reader.close();
-			}
-			catch(Exception ex)
-			{ ex.printStackTrace(); }
-			
-			if(LMWorldServer.inst.gamemode == null) LMWorldServer.inst.gamemode = "default";
-			
 			new EventLMWorldServer.Loaded(LMWorldServer.inst, Phase.PRE).post();
 			
 			NBTTagCompound tagPlayers = LMNBTUtils.readMap(new File(latmodFolder, "LMPlayers.dat"));
@@ -76,8 +63,6 @@ public class FTBUWorldEventHandler
 				LMWorldServer.inst.players.get(i).toPlayerMP().setPlayer(null);
 			
 			new EventLMWorldServer.Loaded(LMWorldServer.inst, Phase.POST).post();
-			
-			GuideFile.inst.init(Side.SERVER);
 		}
 	}
 	
@@ -92,15 +77,6 @@ public class FTBUWorldEventHandler
 			LMWorldServer.inst.save(tag);
 			tag.setString("UUID", LMWorldServer.inst.worldIDS);
 			LMNBTUtils.writeMap(new File(LMWorldServer.inst.latmodFolder, "LMWorld.dat"), tag);
-			
-			try
-			{
-				BufferedWriter writer = new BufferedWriter(new FileWriter(LMFileUtils.newFile(new File(MinecraftServer.getServer().getEntityWorld().getSaveHandler().getWorldDirectory(), "ftb_gamemode.txt"))));
-				writer.write(LMWorldServer.inst.gamemode);
-				writer.close();
-			}
-			catch(Exception ex)
-			{ ex.printStackTrace(); }
 			
 			tag = new NBTTagCompound();
 			NBTTagCompound players = new NBTTagCompound();

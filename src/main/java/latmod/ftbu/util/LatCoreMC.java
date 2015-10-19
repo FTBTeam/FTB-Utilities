@@ -38,20 +38,6 @@ public final class LatCoreMC // LatCoreMCClient
 	public static final String FORMATTING = "\u00a7";
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
 	
-	//FTBU
-	public static File configFolder = null;
-	public static File localFolder = null;
-	public static File modpackFolder = null;
-	
-	public static void initFolders(File cf)
-	{
-		configFolder = cf;
-		localFolder = new File(configFolder.getParentFile(), "local/");
-		if(!localFolder.exists()) localFolder.mkdirs();
-		modpackFolder = new File(configFolder.getParentFile(), "modpack/");
-		if(!modpackFolder.exists()) modpackFolder.mkdirs();
-	}
-	
 	public static final Configuration loadConfig(FMLPreInitializationEvent e, String s)
 	{ return new Configuration(new File(e.getModConfigurationDirectory(), s)); }
 	

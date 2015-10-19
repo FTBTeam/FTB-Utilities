@@ -85,7 +85,6 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 			tag.setTag("PLIST", list);
 		}
 		
-		tag.setString("GM", gamemode);
 		if(!customCommonData.hasNoTags()) tag.setTag("C", customCommonData);
 		
 		NBTTagCompound settingsTag = new NBTTagCompound();

@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
 
+import ftb.lib.mod.FTBLib;
 import latmod.ftbu.cmd.*;
 import latmod.ftbu.inv.*;
 import latmod.ftbu.mod.*;
@@ -101,7 +102,7 @@ public class CmdAdminPlayer extends CommandLM
 				
 				String filename = ep.getCommandSenderName();
 				if(args.length == 3) filename = "custom/" + args[2];
-				LMNBTUtils.writeMap(new FileOutputStream(LMFileUtils.newFile(new File(LatCoreMC.localFolder, "playerinvs/" + filename + ".dat"))), tag);
+				LMNBTUtils.writeMap(new FileOutputStream(LMFileUtils.newFile(new File(FTBLib.folderLocal, "ftbu/playerinvs/" + filename + ".dat"))), tag);
 			}
 			catch(Exception e)
 			{
@@ -120,7 +121,7 @@ public class CmdAdminPlayer extends CommandLM
 				EntityPlayerMP ep = p.getPlayer();
 				String filename = ep.getCommandSenderName();
 				if(args.length == 3) filename = "custom/" + args[2];
-				NBTTagCompound tag = LMNBTUtils.readMap(new FileInputStream(new File(LatCoreMC.localFolder, "playerinvs/" + filename + ".dat")));
+				NBTTagCompound tag = LMNBTUtils.readMap(new FileInputStream(new File(FTBLib.folderLocal, "ftbu/playerinvs/" + filename + ".dat")));
 				
 				StringIDInvLoader.readInvFromNBT(ep.inventory, tag, "Inventory");
 				

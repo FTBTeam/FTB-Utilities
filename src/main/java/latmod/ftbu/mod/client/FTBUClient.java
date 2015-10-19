@@ -5,6 +5,7 @@ import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.EventBusHelper;
 import latmod.ftbu.api.client.*;
 import latmod.ftbu.api.guide.*;
 import latmod.ftbu.badges.ThreadLoadBadges;

@@ -5,14 +5,15 @@ import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.EventBusHelper;
+import ftb.lib.*;
+import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.api.client.*;
 import latmod.ftbu.api.guide.*;
 import latmod.ftbu.badges.ThreadLoadBadges;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.tile.TileLM;
-import latmod.ftbu.util.*;
+import latmod.ftbu.util.LMGuiHandler;
 import latmod.ftbu.util.client.*;
 import latmod.ftbu.world.*;
 import latmod.lib.LMColorUtils;
@@ -59,7 +60,7 @@ public class FTBUClient extends FTBUCommon
 	
 	private static void initConfig()
 	{
-		if(FTBUFinals.DEV) clientConfig.add(displayDebugInfo);
+		if(FTBLibFinals.DEV) clientConfig.add(displayDebugInfo);
 		else displayDebugInfo.setValue(0);
 		
 		clientConfig.add(renderBadges);

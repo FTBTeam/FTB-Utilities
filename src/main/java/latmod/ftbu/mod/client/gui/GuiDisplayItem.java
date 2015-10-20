@@ -3,7 +3,7 @@ package latmod.ftbu.mod.client.gui;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.inv.ItemDisplay;
+import ftb.lib.item.ItemDisplay;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.util.gui.GuiLM;
 import latmod.lib.FastList;

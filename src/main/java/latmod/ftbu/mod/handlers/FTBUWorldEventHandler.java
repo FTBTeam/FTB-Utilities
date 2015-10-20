@@ -6,13 +6,13 @@ import java.util.*;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
+import ftb.lib.*;
 import ftb.lib.api.EventFTBModeSet;
-import latmod.ftbu.api.*;
+import latmod.ftbu.api.EventLMWorldServer;
 import latmod.ftbu.api.config.ConfigListRegistry;
 import latmod.ftbu.api.guide.GuideFile;
 import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.mod.config.*;
-import latmod.ftbu.util.*;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
 import net.minecraft.entity.Entity;
@@ -40,7 +40,7 @@ public class FTBUWorldEventHandler
 	@SubscribeEvent
 	public void worldLoaded(net.minecraftforge.event.world.WorldEvent.Load e)
 	{
-		if(LatCoreMC.isServer() && e.world.provider.dimensionId == 0 && e.world instanceof WorldServer)
+		if(FTBLib.isServer() && e.world.provider.dimensionId == 0 && e.world instanceof WorldServer)
 		{
 			ConfigListRegistry.reloadAll();
 			
@@ -69,7 +69,7 @@ public class FTBUWorldEventHandler
 	@SubscribeEvent
 	public void worldSaved(net.minecraftforge.event.world.WorldEvent.Save e)
 	{
-		if(LatCoreMC.isServer() && e.world.provider.dimensionId == 0 && e.world instanceof WorldServer)
+		if(FTBLib.isServer() && e.world.provider.dimensionId == 0 && e.world instanceof WorldServer)
 		{
 			new EventLMWorldServer.Saved(LMWorldServer.inst).post();
 			

@@ -3,7 +3,7 @@ package latmod.ftbu.api.paint;
 import java.util.Arrays;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.util.LMNBTUtils;
+import ftb.lib.LMNBTUtils;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.*;

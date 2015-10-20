@@ -15,8 +15,8 @@ public class FTBUConfigClaims
 	public static final ConfigEntryInt maxClaimsAdmin = new ConfigEntryInt("maxClaimsAdmin", new IntBounds(10000, 0, Integer.MAX_VALUE));
 	
 	public static final ConfigEntryInt forcedExplosions = new ConfigEntryInt("forcedExplosions", new IntBounds(0, -1, 1));
-	public static final ConfigEntryInt forcedBreakMode = new ConfigEntryInt("forcedBreakMode", new IntBounds(-1, -1, 1));
-	public static final ConfigEntryInt forcedPlaceMode = new ConfigEntryInt("forcedPlaceMode", new IntBounds(-1, -1, 1));
+	//public static final ConfigEntryInt forcedBreakMode = new ConfigEntryInt("forcedBreakMode", new IntBounds(-1, -1, 1));
+	//public static final ConfigEntryInt forcedPlaceMode = new ConfigEntryInt("forcedPlaceMode", new IntBounds(-1, -1, 1));
 	
 	public static void load(ConfigFile f)
 	{

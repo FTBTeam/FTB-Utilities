@@ -4,11 +4,11 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.EnumDyeColor;
 import latmod.ftbu.api.client.ClientConfigRegistry;
 import latmod.ftbu.api.client.callback.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
-import latmod.ftbu.util.EnumDyeColor;
 import latmod.ftbu.util.client.*;
 import latmod.ftbu.util.gui.*;
 import latmod.lib.*;

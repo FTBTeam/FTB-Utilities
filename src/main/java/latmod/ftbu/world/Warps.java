@@ -1,6 +1,6 @@
 package latmod.ftbu.world;
 
-import latmod.ftbu.util.*;
+import ftb.lib.*;
 import latmod.lib.*;
 import net.minecraft.nbt.NBTTagCompound;
 

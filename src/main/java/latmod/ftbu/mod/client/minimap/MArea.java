@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 import org.lwjgl.opengl.*;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.mod.FTBUFinals;
+import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.world.LMWorldClient;
 import latmod.lib.*;
 
@@ -136,7 +136,7 @@ public class MArea
 						}
 					}
 					catch(Exception e)
-					{ if(FTBUFinals.DEV) e.printStackTrace(); }
+					{ if(FTBLibFinals.DEV) e.printStackTrace(); }
 				}
 			};
 			

@@ -1,6 +1,6 @@
 package latmod.ftbu.world;
 
-import latmod.ftbu.util.*;
+import ftb.lib.*;
 import latmod.lib.*;
 import net.minecraft.nbt.*;
 import net.minecraft.util.ChunkCoordinates;
@@ -107,7 +107,7 @@ public class Claims
 	{
 		if(dim != 0) return false;
 		//if(!LatCoreMC.isDedicatedServer()) return false;
-		int radius = LatCoreMC.getServer().getSpawnProtectionSize();
+		int radius = FTBLib.getServer().getSpawnProtectionSize();
 		if(radius <= 0) return false;
 		ChunkCoordinates c = LMDimUtils.getSpawnPoint(0);
 		int minX = MathHelperLM.chunk(c.posX + 0.5D - radius);

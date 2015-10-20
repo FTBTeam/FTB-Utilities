@@ -1,7 +1,7 @@
 package latmod.ftbu.api.paint;
 
-import latmod.ftbu.inv.LMInvUtils;
-import latmod.ftbu.util.*;
+import ftb.lib.*;
+import ftb.lib.item.LMInvUtils;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -24,7 +24,7 @@ public class PaintItemHelper
 		if(!w.isRemote && ep.isSneaking() && is.hasTagCompound() && is.stackTagCompound.hasKey("Paint"))
 		{
 			is = LMInvUtils.removeTags(is, "Paint");
-			LatCoreMC.printChat(ep, "Paint texture cleared");
+			FTBLib.printChat(ep, "Paint texture cleared");
 		}
 		
 		return is;
@@ -100,7 +100,7 @@ public class PaintItemHelper
 							paint.writeToNBT(paintTag);
 							is.stackTagCompound.setTag("Paint", paintTag);
 							
-							LatCoreMC.printChat(ep, "Paint texture set to " + paint.getDisplayName());
+							FTBLib.printChat(ep, "Paint texture set to " + paint.getDisplayName());
 						}
 					}
 					catch(Exception e) { }

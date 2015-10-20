@@ -1,5 +1,6 @@
 package latmod.ftbu.net;
 
+import ftb.lib.FTBLib;
 import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.notification.*;
 import latmod.ftbu.util.LatCoreMC;
@@ -32,7 +33,7 @@ public enum ClientAction
 					
 					if(p.isOnline())
 					{
-						Notification n = new Notification("friend_request", LatCoreMC.setColor(EnumChatFormatting.GREEN, new ChatComponentText("New friend request from " + owner.getName() + "!")), 4000);//LANG
+						Notification n = new Notification("friend_request", FTBLib.setColor(EnumChatFormatting.GREEN, new ChatComponentText("New friend request from " + owner.getName() + "!")), 4000);//LANG
 						n.setDesc(new ChatComponentText("Click to add as friend"));
 						n.setClickEvent(new ClickAction(ClickAction.CMD, "/ftbu friends add " + owner.getName()));
 						LatCoreMC.notifyPlayer(p.getPlayer(), n);
@@ -67,7 +68,7 @@ public enum ClientAction
 				owner.friends.removeValue(p.playerID);
 				owner.sendUpdate();
 				p.sendUpdate();
-				Notification n = new Notification("friend_removed", LatCoreMC.setColor(EnumChatFormatting.RED, new ChatComponentText("Removed a friend")), 800);
+				Notification n = new Notification("friend_removed", FTBLib.setColor(EnumChatFormatting.RED, new ChatComponentText("Removed a friend")), 800);
 				n.setDesc(new ChatComponentText(p.getName()));
 				LatCoreMC.notifyPlayer(ep, n);
 			}
@@ -89,7 +90,7 @@ public enum ClientAction
 				owner.sendUpdate();
 				p.sendUpdate();
 				
-				Notification n = new Notification("friend_denied", LatCoreMC.setColor(EnumChatFormatting.RED, new ChatComponentText("Denied a friend request")), 800);
+				Notification n = new Notification("friend_denied", FTBLib.setColor(EnumChatFormatting.RED, new ChatComponentText("Denied a friend request")), 800);
 				n.setDesc(new ChatComponentText(p.getName()));
 				LatCoreMC.notifyPlayer(ep, n);
 			}

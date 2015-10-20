@@ -3,11 +3,11 @@ package latmod.ftbu.world;
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.*;
+import ftb.lib.item.LMInvUtils;
 import latmod.ftbu.api.EventLMPlayerServer;
-import latmod.ftbu.inv.LMInvUtils;
 import latmod.ftbu.mod.config.FTBUConfigClaims;
 import latmod.ftbu.net.MessageLMPlayerUpdate;
-import latmod.ftbu.util.*;
 import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -65,12 +65,12 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	{
 		new EventLMPlayerServer.DataChanged(this).post();
 		new MessageLMPlayerUpdate(this, true).sendTo(getPlayer());
-		for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers(getPlayer()))
+		for(EntityPlayerMP ep : FTBLib.getAllOnlinePlayers(getPlayer()))
 			new MessageLMPlayerUpdate(this, false).sendTo(ep);
 	}
 	
 	public boolean isOP()
-	{ return LatCoreMC.getServer().getConfigurationManager().func_152596_g(gameProfile); }
+	{ return FTBLib.getServer().getConfigurationManager().func_152596_g(gameProfile); }
 	
 	public EntityPos getPos()
 	{

@@ -1,14 +1,13 @@
 package latmod.ftbu.mod.cmd.admin;
 
 import cpw.mods.fml.relauncher.Side;
-import ftb.lib.mod.FTBLib;
+import ftb.lib.*;
 import latmod.ftbu.api.EventFTBUReload;
 import latmod.ftbu.api.config.ConfigListRegistry;
 import latmod.ftbu.cmd.*;
 import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.net.*;
-import latmod.ftbu.util.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.IChatComponent;
 
@@ -22,7 +21,7 @@ public class CmdAdminReload extends CommandLM
 	
 	public static void reload(ICommandSender sender)
 	{
-		FTBLib.reloadGameModes();
+		FTBGameModes.reloadGameModes();
 		float prevRRTimer = FTBUConfigGeneral.restartTimer.get();
 		ConfigListRegistry.reloadAll();
 		new MessageSyncConfig(null).sendTo(null);
@@ -35,6 +34,6 @@ public class CmdAdminReload extends CommandLM
 		
 		new EventFTBUReload(Side.SERVER, sender).post();
 		new MessageReload().sendTo(null);
-		LatCoreMC.printChat(BroadcastSender.inst, "FTBU reloaded (Server)");
+		FTBLib.printChat(BroadcastSender.inst, "FTBU reloaded (Server)");
 	}
 }

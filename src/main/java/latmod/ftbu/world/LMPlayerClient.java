@@ -3,9 +3,9 @@ package latmod.ftbu.world;
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.item.LMInvUtils;
 import latmod.ftbu.api.EventLMPlayerClient;
 import latmod.ftbu.badges.Badge;
-import latmod.ftbu.inv.LMInvUtils;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.lib.FastList;
 import net.minecraft.client.entity.EntityPlayerSP;

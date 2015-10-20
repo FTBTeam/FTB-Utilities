@@ -2,7 +2,7 @@ package latmod.ftbu.api.client;
 
 import java.io.File;
 
-import ftb.lib.mod.FTBLib;
+import ftb.lib.FTBLib;
 import latmod.lib.*;
 
 public final class ClientConfigRegistry

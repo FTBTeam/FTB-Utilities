@@ -4,8 +4,8 @@ import java.io.*;
 import java.util.Calendar;
 import java.util.zip.*;
 
+import ftb.lib.*;
 import latmod.ftbu.mod.config.FTBUConfigBackups;
-import latmod.ftbu.util.*;
 import latmod.ftbu.world.LMWorldServer;
 import latmod.lib.*;
 import net.minecraft.command.server.*;
@@ -29,9 +29,9 @@ public class ThreadBackup extends Thread
 	public void run()
 	{
 		Backups.lastTimeRun = time;
-		LatCoreMC.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Starting server backup, expect lag!");
-		new CommandSaveAll().processCommand(LatCoreMC.getServer(), new String[] { "flush" });
-		new CommandSaveOff().processCommand(LatCoreMC.getServer(), new String[0]);
+		FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Starting server backup, expect lag!");
+		new CommandSaveAll().processCommand(FTBLib.getServer(), new String[] { "flush" });
+		new CommandSaveOff().processCommand(FTBLib.getServer(), new String[0]);
 		
 		File dstFile = null;
 		
@@ -48,7 +48,7 @@ public class ThreadBackup extends Thread
 			FastList<File> files = LMFileUtils.listAll(src);
 			int allFiles = files.size();
 			
-			LatCoreMC.logger.info("Backing up " + files.size() + " files...");
+			FTBLib.logger.info("Backing up " + files.size() + " files...");
 			
 			if(FTBUConfigBackups.compressionLevel.get() > 0)
 			{
@@ -66,7 +66,7 @@ public class ThreadBackup extends Thread
 				
 				byte[] buffer = new byte[1024];
 				
-				LatCoreMC.logger.info("Compressing " + allFiles + " files!");
+				FTBLib.logger.info("Compressing " + allFiles + " files!");
 				
 				for(int i = 0; i < allFiles; i++)
 				{
@@ -87,7 +87,7 @@ public class ThreadBackup extends Thread
 						log.append(MathHelperLM.toSmallDouble((i / (double)allFiles) * 100D));
 						log.append("%]: ");
 						log.append(ze.getName());
-						LatCoreMC.logger.info(log.toString());
+						FTBLib.logger.info(log.toString());
 					}
 					
 					zos.putNextEntry(ze);
@@ -102,7 +102,7 @@ public class ThreadBackup extends Thread
 				
 				zos.close();
 				
-				LatCoreMC.logger.info("Done compressing in " + getDoneTime(start) + " seconds (" + LMFileUtils.getSizeS(dstFile) + ")!");
+				FTBLib.logger.info("Done compressing in " + getDoneTime(start) + " seconds (" + LMFileUtils.getSizeS(dstFile) + ")!");
 			}
 			else
 			{
@@ -132,7 +132,7 @@ public class ThreadBackup extends Thread
 						log.append(MathHelperLM.toSmallDouble((i / (double)allFiles) * 100D));
 						log.append("%]: ");
 						log.append(file.getName());
-						LatCoreMC.logger.info(log.toString());
+						FTBLib.logger.info(log.toString());
 					}
 					
 					File dst1 = new File(dstPath + (file.getAbsolutePath().replace(srcPath, "")));
@@ -140,7 +140,7 @@ public class ThreadBackup extends Thread
 				}
 			}
 			
-			LatCoreMC.logger.info("Created " + dstFile.getAbsolutePath() + " from " + src.getAbsolutePath());
+			FTBLib.logger.info("Created " + dstFile.getAbsolutePath() + " from " + src.getAbsolutePath());
 			
 			Backups.clearOldBackups();
 			
@@ -148,18 +148,18 @@ public class ThreadBackup extends Thread
 			{
 				String sizeB = LMFileUtils.getSizeS(dstFile);
 				String sizeT = LMFileUtils.getSizeS(Backups.backupsFolder);
-				LatCoreMC.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(time) + "! (" + (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)) + ")");
+				FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(time) + "! (" + (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)) + ")");
 			}
-			else LatCoreMC.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(time) + "!");
+			else FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(time) + "!");
 		}
 		catch(Exception e)
 		{
-			LatCoreMC.printChat(BroadcastSender.inst, EnumChatFormatting.DARK_RED + "Failed to save world! (" + LMUtils.classpath(e.getClass()) + ")");
+			FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.DARK_RED + "Failed to save world! (" + LMUtils.classpath(e.getClass()) + ")");
 			e.printStackTrace();
 			if(dstFile != null) LMFileUtils.delete(dstFile);
 		}
 		
-		new CommandSaveOn().processCommand(LatCoreMC.getServer(), new String[0]);
+		new CommandSaveOn().processCommand(FTBLib.getServer(), new String[0]);
 		Backups.thread = null;
 		System.gc();
 	}

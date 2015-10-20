@@ -1,6 +1,7 @@
 package latmod.ftbu.util;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.LMNBTUtils;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.world.*;

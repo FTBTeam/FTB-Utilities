@@ -5,9 +5,9 @@ import java.net.URL;
 import java.util.UUID;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.FTBLib;
 import latmod.ftbu.api.client.EventFTBUBadges;
 import latmod.ftbu.mod.config.FTBUConfigLogin;
-import latmod.ftbu.util.LatCoreMC;
 import latmod.lib.*;
 
 @SideOnly(Side.CLIENT)
@@ -31,7 +31,7 @@ public class ThreadLoadBadges extends Thread
 		long msStarted = LMUtils.millis();
 		urlBadges.clear();
 		
-		LatCoreMC.logger.info("Loading badges...");
+		FTBLib.logger.info("Loading badges...");
 		Badge.badges.clear();
 		
 		int loaded = loadBages(DEF_BADGES);
@@ -43,7 +43,7 @@ public class ThreadLoadBadges extends Thread
 		new EventFTBUBadges(customBadges).post();
 		loaded += Badge.badges.putAll(customBadges);
 		
-		LatCoreMC.logger.info("Loaded " + loaded + " badges for " + Badge.badges.size() + " players in " + ((LMUtils.millis() - msStarted) / 1000F) + " ms!");
+		FTBLib.logger.info("Loaded " + loaded + " badges for " + Badge.badges.size() + " players in " + ((LMUtils.millis() - msStarted) / 1000F) + " ms!");
 	}
 	
 	public int loadBages(String url)

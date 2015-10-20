@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.client.gui.friends;
 
+import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.api.client.EventPlayerAction;
-import latmod.ftbu.mod.FTBUFinals;
 import latmod.ftbu.mod.client.gui.*;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.util.client.*;
@@ -107,7 +107,7 @@ public abstract class PlayerAction
 			list.add(PlayerAction.settings);
 			list.add(PlayerAction.minimap);
 			
-			if(FTBUFinals.DEV)
+			if(FTBLibFinals.DEV)
 			{
 				list.add(PlayerAction.notes);
 			}
@@ -117,7 +117,7 @@ public abstract class PlayerAction
 			boolean isFriend = o.isFriendRaw(p);
 			if(!isFriend) list.add(PlayerAction.friend_add);
 			
-			if(FTBUFinals.DEV)
+			if(FTBLibFinals.DEV)
 			{
 				list.add(PlayerAction.mail);
 				list.add(PlayerAction.trade);

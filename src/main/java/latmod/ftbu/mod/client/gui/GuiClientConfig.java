@@ -5,11 +5,11 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.api.client.*;
-import latmod.ftbu.util.LatCoreMC;
 import latmod.ftbu.util.client.FTBULang;
 import latmod.ftbu.util.gui.*;
 import latmod.lib.*;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.EnumChatFormatting;
 
 @SideOnly(Side.CLIENT)
 public class GuiClientConfig extends GuiLM implements IClientActionGui
@@ -173,7 +173,7 @@ public class GuiClientConfig extends GuiLM implements IClientActionGui
 		public ButtonCategory(GuiClientConfig g, ClientConfig c)
 		{
 			super(g, c);
-			title = LatCoreMC.FORMATTING + "l- " + c.getIDS() + " -";
+			title = EnumChatFormatting.BOLD + "- " + c.getIDS() + " -";
 		}
 		
 		public void renderLine()

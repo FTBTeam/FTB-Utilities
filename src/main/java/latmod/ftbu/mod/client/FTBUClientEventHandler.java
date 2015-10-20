@@ -7,13 +7,14 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.*;
+import ftb.lib.item.*;
+import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.api.EventLMWorldClient;
 import latmod.ftbu.api.client.EventFTBUKey;
 import latmod.ftbu.api.paint.IPainterItem;
-import latmod.ftbu.inv.*;
-import latmod.ftbu.mod.*;
+import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.friends.GuiFriendsGuiSmall;
-import latmod.ftbu.util.*;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
 import latmod.lib.FastList;
@@ -80,8 +81,8 @@ public class FTBUClientEventHandler
 			if(FTBUClient.displayDebugInfo.getB())
 				e.left.add(LatCoreMCClient.mc.debug);
 			
-			if(FTBUFinals.DEV)
-				e.left.add("[MC " + EnumChatFormatting.GOLD + FTBUFinals.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");
+			if(FTBLibFinals.DEV)
+				e.left.add("[MC " + EnumChatFormatting.GOLD + FTBLibFinals.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");
 		}
 		
 		if(LatCoreMCClient.mc.gameSettings.showDebugInfo)
@@ -94,7 +95,7 @@ public class FTBUClientEventHandler
 		ServerData sd = LatCoreMCClient.mc.func_147104_D();
 		String s = (sd == null || sd.serverIP.isEmpty()) ? "localhost" : sd.serverIP.replace('.', '_');
 		LMWorldClient.inst = new LMWorldClient(new UUID(0L, 0L), s, 0);
-		LatCoreMC.logger.info("Connecting to world...");
+		FTBLib.logger.info("Connecting to world...");
 	}
 	
 	@SubscribeEvent
@@ -118,12 +119,15 @@ public class FTBUClientEventHandler
 	@SubscribeEvent
 	public void onKeyEvent(InputEvent.KeyInputEvent e)
 	{
-		int key = Keyboard.getEventKey();
-		
-		if(key != Keyboard.KEY_NONE && key != Keyboard.KEY_ESCAPE)
+		if(FTBLibFinals.DEV)
 		{
-			boolean pressed = Keyboard.getEventKeyState();
-			new EventFTBUKey(key, pressed).post();
+			int key = Keyboard.getEventKey();
+			
+			if(key != Keyboard.KEY_NONE && key != Keyboard.KEY_ESCAPE)
+			{
+				boolean pressed = Keyboard.getEventKeyState();
+				new EventFTBUKey(key, pressed).post();
+			}
 		}
 	}
 }

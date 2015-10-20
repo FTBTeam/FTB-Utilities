@@ -6,9 +6,8 @@ import java.util.UUID;
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.mod.FTBLib;
+import ftb.lib.*;
 import latmod.ftbu.api.EventLMPlayerClient;
-import latmod.ftbu.util.LMNBTUtils;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import net.minecraft.nbt.*;
 import net.minecraft.world.World;

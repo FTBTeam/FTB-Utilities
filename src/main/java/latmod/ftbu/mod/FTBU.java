@@ -1,17 +1,19 @@
 package latmod.ftbu.mod;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
-import ftb.lib.EventBusHelper;
-import latmod.ftbu.api.*;
+import ftb.lib.*;
+import ftb.lib.item.ODItems;
+import ftb.lib.mod.FTBLibFinals;
+import latmod.ftbu.api.EventFTBUInit;
 import latmod.ftbu.backups.Backups;
-import latmod.ftbu.inv.ODItems;
 import latmod.ftbu.mod.cmd.*;
 import latmod.ftbu.mod.config.FTBUConfig;
 import latmod.ftbu.mod.handlers.*;
 import latmod.ftbu.net.LMNetHelper;
-import latmod.ftbu.util.*;
+import latmod.ftbu.notification.*;
+import latmod.ftbu.util.LMMod;
 import latmod.ftbu.world.LMWorldServer;
-import latmod.lib.OS;
+import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 @Mod
@@ -35,16 +37,18 @@ public class FTBU
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
-		if(FTBUFinals.DEV)
-			LatCoreMC.logger.info("Loading " + FTBUFinals.MOD_NAME + ", Dev Build");
+		if(FTBLibFinals.DEV)
+			FTBLib.logger.info("Loading " + FTBUFinals.MOD_NAME + ", Dev Build");
 		else
-			LatCoreMC.logger.info("Loading " + FTBUFinals.MOD_NAME + ", Build #" + FTBUFinals.MOD_VERSION);
+			FTBLib.logger.info("Loading " + FTBUFinals.MOD_NAME + ", Build #" + FTBUFinals.MOD_VERSION);
 		
-		LatCoreMC.logger.info("OS: " + OS.current + ", 64bit: " + OS.is64);
+		FTBLib.logger.info("OS: " + OS.current + ", 64bit: " + OS.is64);
 		
 		LMMod.init(this);
-		mod.logger = LatCoreMC.logger;
-		JsonHelper.init();
+		
+		LMJsonUtils.register(Notification.class, new Notification.Serializer());
+		LMJsonUtils.register(ClickAction.class, new ClickAction.Serializer());
+		
 		EventBusHelper.register(new FTBUPlayerEventHandler());
 		EventBusHelper.register(new FTBUWorldEventHandler());
 		EventBusHelper.register(new FTBUChatEventHandler());
@@ -92,9 +96,9 @@ public class FTBU
 	@Mod.EventHandler
 	public void serverStopping(FMLServerStoppingEvent e)
 	{
-		if(LatCoreMC.hasOnlinePlayers())
+		if(FTBLib.hasOnlinePlayers())
 		{
-			for(EntityPlayerMP ep : LatCoreMC.getAllOnlinePlayers(null))
+			for(EntityPlayerMP ep : FTBLib.getAllOnlinePlayers(null))
 				FTBUPlayerEventHandler.playerLoggedOut(ep);
 		}
 	}

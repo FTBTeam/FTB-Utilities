@@ -4,7 +4,7 @@ import java.io.*;
 import org.lwjgl.util.vector.Vector3f;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.util.LatCoreMC;
+import ftb.lib.FTBLib;
 import latmod.ftbu.util.client.LMRenderHelper;
 import latmod.lib.*;
 import net.minecraft.util.ResourceLocation;
@@ -33,7 +33,7 @@ public class OBJModel
 	
 	public static OBJModel load(ResourceLocation rl)
 	{
-		try { return OBJModel.load(OBJModel.class.getResourceAsStream(LatCoreMC.getPath(rl))); }
+		try { return OBJModel.load(OBJModel.class.getResourceAsStream(FTBLib.getPath(rl))); }
 		catch(Exception e) { e.printStackTrace(); } return null;
 	}
 	

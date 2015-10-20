@@ -1,6 +1,7 @@
 package latmod.ftbu.util;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.FTBLib;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.net.MessageOpenGui;
 import latmod.lib.FastMap;
@@ -42,7 +43,7 @@ public abstract class LMGuiHandler
 			epM.openContainer.addCraftingToCrafters(epM);
 			new MessageOpenGui(ID, id, data, epM.currentWindowId).sendTo(epM);
 		}
-		else if(!LatCoreMC.isServer())
+		else if(!FTBLib.isServer())
 			FTBU.proxy.openClientGui((ep == null) ? FTBU.proxy.getClientPlayer() : ep, ID, id, data);
 	}
 	

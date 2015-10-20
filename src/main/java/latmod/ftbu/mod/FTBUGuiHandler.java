@@ -1,8 +1,8 @@
 package latmod.ftbu.mod;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.item.ItemDisplay;
 import latmod.ftbu.api.tile.IGuiTile;
-import latmod.ftbu.inv.ItemDisplay;
 import latmod.ftbu.mod.client.gui.GuiDisplayItem;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
 import latmod.ftbu.util.LMGuiHandler;

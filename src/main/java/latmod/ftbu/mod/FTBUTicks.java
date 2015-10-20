@@ -1,10 +1,10 @@
 package latmod.ftbu.mod;
 
+import ftb.lib.*;
 import latmod.ftbu.api.ServerTickCallback;
 import latmod.ftbu.backups.Backups;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.net.MessageAreaUpdate;
-import latmod.ftbu.util.*;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
 import net.minecraft.command.server.CommandSaveAll;
@@ -29,7 +29,7 @@ public class FTBUTicks
 	
 	public static void serverStarted()
 	{
-		server = LatCoreMC.getServer();
+		server = FTBLib.getServer();
 		isDediServer = server.isDedicatedServer();
 		
 		currentMillis = startMillis = Backups.lastTimeRun = LMUtils.millis();
@@ -38,7 +38,7 @@ public class FTBUTicks
 		if(FTBUConfigGeneral.restartTimer.get() > 0)
 		{
 			restartSeconds = (long)(FTBUConfigGeneral.restartTimer.get() * 3600D);
-			LatCoreMC.logger.info("Server restart in " + LMStringUtils.getTimeString(restartSeconds));
+			FTBLib.logger.info("Server restart in " + LMStringUtils.getTimeString(restartSeconds));
 		}
 		
 		areaRequests.setDefVal(0);
@@ -71,7 +71,7 @@ public class FTBUTicks
 				if(secondsLeft <= 0)
 				{
 					new CommandSaveAll().processCommand(BroadcastSender.inst, new String[] { "flush" });
-					LatCoreMC.getServer().initiateShutdown();
+					FTBLib.getServer().initiateShutdown();
 					return;
 				}
 				else if(secondsLeft <= 10) msg = secondsLeft + " Seconds";
@@ -83,7 +83,7 @@ public class FTBUTicks
 				if(msg != null && !lastRestartMessage.equals(msg))
 				{
 					lastRestartMessage = msg;
-					LatCoreMC.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server will restart after " + msg);//LANG
+					FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server will restart after " + msg);//LANG
 				}
 			}
 			

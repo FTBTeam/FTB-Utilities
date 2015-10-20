@@ -3,10 +3,11 @@ package latmod.ftbu.api.guide;
 import java.io.File;
 import java.lang.reflect.Field;
 
+import ftb.lib.FTBLib;
 import ftb.lib.api.EventFTBModeSet;
+import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.config.*;
-import latmod.ftbu.util.LatCoreMC;
 import latmod.lib.LMFileUtils;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -21,7 +22,7 @@ public class GuideFile
 	
 	public void reload(EventFTBModeSet e)
 	{
-		LatCoreMC.logger.info("Guide reloaded @ " + e.side);
+		if(FTBLibFinals.DEV) FTBLib.logger.info("Guide reloaded @ " + e.side);
 		
 		main.clear();
 		

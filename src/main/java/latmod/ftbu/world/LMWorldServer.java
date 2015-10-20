@@ -6,9 +6,9 @@ import java.util.UUID;
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.Side;
+import ftb.lib.*;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.net.MessageLMWorldUpdate;
-import latmod.ftbu.util.*;
 import latmod.lib.*;
 import net.minecraft.nbt.*;
 import net.minecraft.world.*;
@@ -32,7 +32,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	}
 	
 	public World getMCWorld()
-	{ return LatCoreMC.getServerWorld(); }
+	{ return FTBLib.getServerWorld(); }
 	
 	public LMWorldServer getServerWorld()
 	{ return this; }

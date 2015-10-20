@@ -1,6 +1,6 @@
 package latmod.ftbu.world;
 
-import latmod.ftbu.util.*;
+import ftb.lib.*;
 import latmod.lib.*;
 import latmod.lib.util.Pos2I;
 import net.minecraft.nbt.*;

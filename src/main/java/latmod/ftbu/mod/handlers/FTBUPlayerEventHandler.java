@@ -3,17 +3,18 @@ package latmod.ftbu.mod.handlers;
 import java.util.List;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import ftb.lib.*;
+import ftb.lib.item.LMInvUtils;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.api.item.ICreativeSafeItem;
 import latmod.ftbu.api.tile.ISecureTile;
 import latmod.ftbu.backups.Backups;
-import latmod.ftbu.inv.LMInvUtils;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.cmd.CmdMotd;
 import latmod.ftbu.mod.config.*;
 import latmod.ftbu.net.*;
 import latmod.ftbu.notification.*;
-import latmod.ftbu.util.*;
+import latmod.ftbu.util.LatCoreMC;
 import latmod.ftbu.world.*;
 import latmod.lib.MathHelperLM;
 import net.minecraft.block.Block;
@@ -57,7 +58,7 @@ public class FTBUPlayerEventHandler
 		new MessageLMWorldJoined(LMWorldServer.inst.worldID, p.playerID).sendTo(sendAll ? null : ep);
 		new EventLMPlayerServer.LoggedIn(p, ep, first).post();
 		new MessageLMPlayerLoggedIn(p, first, true).sendTo(ep);
-		for(EntityPlayerMP ep1 : LatCoreMC.getAllOnlinePlayers(ep))
+		for(EntityPlayerMP ep1 : FTBLib.getAllOnlinePlayers(ep))
 			new MessageLMPlayerLoggedIn(p, first, false).sendTo(ep1);
 		new MessageSyncConfig(ep).sendTo(ep);
 		
@@ -86,7 +87,7 @@ public class FTBUPlayerEventHandler
 		{
 			IChatComponent cc = new ChatComponentText("You got " + requests + " new friend requests!"); //LANG
 			cc.getChatStyle().setColor(EnumChatFormatting.GREEN);
-			Notification n = new Notification("new_friend_requests", cc, 2000);
+			Notification n = new Notification("new_friend_requests", cc, 5000);
 			n.setDesc(new ChatComponentText("Click to add all as friends"));
 			n.setClickEvent(new ClickAction(ClickAction.FRIEND_ADD_ALL, ""));
 			LatCoreMC.notifyPlayer(ep, n);
@@ -113,7 +114,7 @@ public class FTBUPlayerEventHandler
 		new MessageLMPlayerLoggedOut(p).sendTo(null);
 		new MessageLMPlayerInfo(p.playerID).sendTo(null);
 		
-		LatCoreMC.runCommand(LatCoreMC.getServer(), "admin player saveinv " + p.getName());
+		FTBLib.runCommand(FTBLib.getServer(), "admin player saveinv " + p.getName());
 		
 		p.setPlayer(null);
 		//Backups.shouldRun = true;
@@ -141,7 +142,7 @@ public class FTBUPlayerEventHandler
 				
 				if(LMWorldServer.inst.settings.isOutsideF(player.lastPos.dim, player.lastPos.x, player.lastPos.z))
 				{
-					LatCoreMC.printChat(ep, "Teleporting to spawn!");
+					FTBLib.printChat(ep, "Teleporting to spawn!");
 					World w = LMDimUtils.getWorld(0);
 					ChunkCoordinates pos = w.getSpawnPoint();
 					pos.posY = w.getTopSolidOrLiquidBlock(pos.posX, pos.posZ);
@@ -210,7 +211,7 @@ public class FTBUPlayerEventHandler
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
 		//if(!LatCoreMC.isDedicatedServer() || p.isOP()) return true;
 		ChunkType type = ChunkType.getD(w.provider.dimensionId, x, z, p);
-		LatCoreMC.printChat(p.getPlayer(), type);
+		FTBLib.printChat(p.getPlayer(), type);
 		return type.isFriendly();
 	}
 	

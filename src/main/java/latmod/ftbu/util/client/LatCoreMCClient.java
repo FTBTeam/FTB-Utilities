@@ -9,10 +9,10 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.*;
+import ftb.lib.FTBLib;
 import latmod.ftbu.api.client.callback.ClientTickCallback;
 import latmod.ftbu.mod.client.FTBURenderHandler;
 import latmod.ftbu.notification.Notification;
-import latmod.ftbu.util.LatCoreMC;
 import latmod.ftbu.util.gui.*;
 import latmod.ftbu.world.LMWorldClient;
 import latmod.lib.*;
@@ -166,7 +166,7 @@ public final class LatCoreMCClient // LatCoreMC
 	{ mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(clickSound, 1F)); }
 
 	public static void notifyClient(String ID, Object text, int t)
-	{ ClientNotifications.add(new Notification(ID, LatCoreMC.getChatComponent(text), t)); }
+	{ ClientNotifications.add(new Notification(ID, FTBLib.getChatComponent(text), t)); }
 	
 	public static void onGuiClientAction()
 	{

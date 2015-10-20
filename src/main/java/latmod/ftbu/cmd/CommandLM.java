@@ -2,7 +2,7 @@ package latmod.ftbu.cmd;
 
 import java.util.*;
 
-import latmod.ftbu.util.LatCoreMC;
+import ftb.lib.FTBLib;
 import latmod.ftbu.world.*;
 import latmod.lib.FastList;
 import net.minecraft.command.*;
@@ -38,7 +38,7 @@ public abstract class CommandLM extends CommandBase
 		if(args == null) args = new String[0];
 		
 		IChatComponent s = onCommand(ics, args);
-		if(s != null) LatCoreMC.printChat(ics, s);
+		if(s != null) FTBLib.printChat(ics, s);
 		onPostCommand(ics, args);
 	}
 	
@@ -51,7 +51,7 @@ public abstract class CommandLM extends CommandBase
 	{ c.getChatStyle().setColor(EnumChatFormatting.RED); return c; }
 	
 	public final void printHelpLine(ICommandSender ics, String args)
-	{ LatCoreMC.printChat(ics, "/" + commandName + (args != null && args.length() > 0 ? (" " + args) : "")); }
+	{ FTBLib.printChat(ics, "/" + commandName + (args != null && args.length() > 0 ? (" " + args) : "")); }
 	
 	public void onPostCommand(ICommandSender ics, String[] args) {}
 	

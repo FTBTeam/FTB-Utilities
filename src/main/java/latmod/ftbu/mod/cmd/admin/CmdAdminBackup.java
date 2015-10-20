@@ -1,8 +1,8 @@
 package latmod.ftbu.mod.cmd.admin;
 
+import ftb.lib.*;
 import latmod.ftbu.backups.Backups;
 import latmod.ftbu.cmd.*;
-import latmod.ftbu.util.*;
 import latmod.lib.LMFileUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.*;
@@ -31,7 +31,7 @@ public class CmdAdminBackup extends CommandLM
 					{
 						LMFileUtils.delete(Backups.backupsFolder);
 						Backups.backupsFolder.mkdirs();
-						LatCoreMC.printChat(ics, "Done!");
+						FTBLib.printChat(ics, "Done!");
 						Backups.thread = null;
 					}
 				};
@@ -63,7 +63,7 @@ public class CmdAdminBackup extends CommandLM
 		Backups.shouldRun = true;
 		boolean b = Backups.run();
 		Backups.commandOverride = false;
-		if(b) LatCoreMC.printChat(BroadcastSender.inst, ics.getCommandSenderName() + " launched manual backup!");
+		if(b) FTBLib.printChat(BroadcastSender.inst, ics.getCommandSenderName() + " launched manual backup!");
 		return b ? null : error(new ChatComponentText("Backup in progress!"));
 	}
 }

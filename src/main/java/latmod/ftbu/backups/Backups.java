@@ -3,10 +3,9 @@ package latmod.ftbu.backups;
 import java.io.File;
 import java.util.Arrays;
 
-import ftb.lib.mod.FTBLib;
+import ftb.lib.FTBLib;
 import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.mod.config.FTBUConfigBackups;
-import latmod.ftbu.util.LatCoreMC;
 import latmod.lib.LMFileUtils;
 import net.minecraft.world.World;
 
@@ -24,7 +23,7 @@ public class Backups
 		if(!backupsFolder.exists()) backupsFolder.mkdirs();
 		thread = null;
 		clearOldBackups();
-		LatCoreMC.logger.info("Backups folder created @ " + backupsFolder.getAbsolutePath());
+		FTBLib.logger.info("Backups folder created @ " + backupsFolder.getAbsolutePath());
 	}
 	
 	public static boolean enabled()
@@ -33,7 +32,7 @@ public class Backups
 	public static boolean run()
 	{
 		if(thread != null || !shouldRun || !enabled()) return false;
-		World w = LatCoreMC.getServerWorld();
+		World w = FTBLib.getServerWorld();
 		if(w == null) return false;
 		shouldRun = false;
 		thread = new ThreadBackup(w);
@@ -53,14 +52,14 @@ public class Backups
 			Arrays.sort(s);
 			
 			int j = s.length - FTBUConfigBackups.backupsToKeep.get();
-			LatCoreMC.logger.info("Deleting " + j + " old backups");
+			FTBLib.logger.info("Deleting " + j + " old backups");
 			
 			for(int i = 0; i < j; i++)
 			{
 				File f = new File(backupsFolder, s[i]);
 				if(f.isDirectory())
 				{
-					LatCoreMC.logger.info("Deleted old backup: " + f.getPath());
+					FTBLib.logger.info("Deleted old backup: " + f.getPath());
 					LMFileUtils.delete(f);
 				}
 			}

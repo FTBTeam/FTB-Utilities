@@ -1,8 +1,8 @@
 package latmod.ftbu.api;
 
 import cpw.mods.fml.common.Optional;
+import ftb.lib.OtherMods;
 import latmod.ftbu.api.tile.IWailaTile;
-import latmod.ftbu.util.OtherMods;
 import latmod.ftbu.waila.*;
 import latmod.lib.FastList;
 import mcp.mobius.waila.api.IWailaRegistrar;

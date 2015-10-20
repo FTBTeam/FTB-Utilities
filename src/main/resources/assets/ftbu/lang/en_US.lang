@@ -84,24 +84,6 @@ ftbu:invmode.onlyin=Insert Only
 ftbu:invmode.onlyout=Extract Only
 ftbu:invmode.disabled=Disabled
 
-#Colors
-ftbu:color.black=Black
-ftbu:color.red=Red
-ftbu:color.green=Green
-ftbu:color.brown=Brown
-ftbu:color.blue=Blue
-ftbu:color.purple=Purple
-ftbu:color.cyan=Cyan
-ftbu:color.silver=Light Gray
-ftbu:color.gray=Dark Gray
-ftbu:color.pink=Pink
-ftbu:color.lime=Lime
-ftbu:color.yellow=Yellow
-ftbu:color.light_blue=Light Blue
-ftbu:color.magenta=Magenta
-ftbu:color.orange=Orange
-ftbu:color.white=White
-
 #Chunktypes
 ftbu:chunktype.spawn=Spawn Area
 ftbu:chunktype.world_border=World Border
@@ -109,18 +91,3 @@ ftbu:chunktype.world_border.warning=You have reached the world border!
 ftbu:chunktype.wilderness=Wilderness
 ftbu:chunktype.claimed=Claimed Area
 ftbu:chunktype.unloaded=Chunk not loaded
-
-#Sides
-ftbu:side.down=Down
-ftbu:side.up=Up
-ftbu:side.north=North
-ftbu:side.south=South
-ftbu:side.west=West
-ftbu:side.east=East
-
-ftbu:dside.bottom=Bottom
-ftbu:dside.top=Top
-ftbu:dside.back=Back
-ftbu:dside.front=Front
-ftbu:dside.left=Left
-ftbu:dside.right=Right

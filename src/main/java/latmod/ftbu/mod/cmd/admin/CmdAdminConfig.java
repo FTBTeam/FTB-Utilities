@@ -1,8 +1,8 @@
 package latmod.ftbu.mod.cmd.admin;
 
+import ftb.lib.FTBLib;
 import latmod.ftbu.api.config.ConfigListRegistry;
 import latmod.ftbu.cmd.*;
-import latmod.ftbu.util.LatCoreMC;
 import latmod.lib.*;
 import latmod.lib.config.*;
 import latmod.lib.util.IDObject;
@@ -66,7 +66,7 @@ public class CmdAdminConfig extends CommandLM
 					if(json.equals("[default]"))
 						json = null;
 					
-					LatCoreMC.logger.info("Setting " + args[0] + " " + args[1] + " " + args[2] + " to " + json);
+					FTBLib.logger.info("Setting " + args[0] + " " + args[1] + " " + args[2] + " to " + json);
 					
 					try
 					{

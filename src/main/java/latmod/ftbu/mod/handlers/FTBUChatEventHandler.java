@@ -1,9 +1,9 @@
 package latmod.ftbu.mod.handlers;
 
 import cpw.mods.fml.common.eventhandler.*;
+import ftb.lib.FTBLib;
 import latmod.ftbu.api.ServerTickCallback;
 import latmod.ftbu.mod.FTBUTicks;
-import latmod.ftbu.util.LatCoreMC;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
 import net.minecraft.event.*;
@@ -18,7 +18,7 @@ public class FTBUChatEventHandler
 	{
 		String[] msg = e.message.split(" ");
 		
-		LatCoreMC.logger.info(LMStringUtils.strip(msg));
+		FTBLib.logger.info(LMStringUtils.strip(msg));
 		
 		FastList<String> links = new FastList<String>();
 		
@@ -50,7 +50,7 @@ public class FTBUChatEventHandler
 				public void onCallback()
 				{
 					for(LMPlayer p : LMWorldServer.inst.getAllOnlinePlayers())
-					{ if(p.settings.chatLinks) LatCoreMC.printChat(p.getPlayer(), line); }
+					{ if(p.settings.chatLinks) FTBLib.printChat(p.getPlayer(), line); }
 				}
 			});
 		}

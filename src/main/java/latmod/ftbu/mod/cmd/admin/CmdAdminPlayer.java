@@ -5,12 +5,13 @@ import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
 
-import ftb.lib.mod.FTBLib;
+import ftb.lib.*;
+import ftb.lib.item.*;
+import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.cmd.*;
-import latmod.ftbu.inv.*;
-import latmod.ftbu.mod.*;
+import latmod.ftbu.mod.FTBUGuiHandler;
 import latmod.ftbu.notification.Notification;
-import latmod.ftbu.util.*;
+import latmod.ftbu.util.LatCoreMC;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
 import net.minecraft.command.ICommandSender;
@@ -40,7 +41,7 @@ public class CmdAdminPlayer extends CommandLM
 	{
 		checkArgs(args, 1);
 		
-		if(FTBUFinals.DEV && args[0].equals("addfake"))
+		if(FTBLibFinals.DEV && args[0].equals("addfake"))
 		{
 			checkArgs(args, 3);
 			
@@ -97,7 +98,7 @@ public class CmdAdminPlayer extends CommandLM
 				NBTTagCompound tag = new NBTTagCompound();
 				StringIDInvLoader.writeInvToNBT(ep.inventory, tag, "Inventory");
 				
-				if(LatCoreMC.isModInstalled(OtherMods.BAUBLES))
+				if(FTBLib.isModInstalled(OtherMods.BAUBLES))
 					StringIDInvLoader.writeInvToNBT(BaublesHelper.getBaubles(ep), tag, "Baubles");
 				
 				String filename = ep.getCommandSenderName();
@@ -106,7 +107,7 @@ public class CmdAdminPlayer extends CommandLM
 			}
 			catch(Exception e)
 			{
-				if(FTBUFinals.DEV) e.printStackTrace();
+				if(FTBLibFinals.DEV) e.printStackTrace();
 				return error(new ChatComponentText("Failed to save inventory!"));
 			}
 			
@@ -125,12 +126,12 @@ public class CmdAdminPlayer extends CommandLM
 				
 				StringIDInvLoader.readInvFromNBT(ep.inventory, tag, "Inventory");
 				
-				if(LatCoreMC.isModInstalled(OtherMods.BAUBLES))
+				if(FTBLib.isModInstalled(OtherMods.BAUBLES))
 					StringIDInvLoader.readInvFromNBT(BaublesHelper.getBaubles(ep), tag, "Baubles");
 			}
 			catch(Exception e)
 			{
-				if(FTBUFinals.DEV) e.printStackTrace();
+				if(FTBLibFinals.DEV) e.printStackTrace();
 				return error(new ChatComponentText("Failed to load inventory!"));
 			}
 			

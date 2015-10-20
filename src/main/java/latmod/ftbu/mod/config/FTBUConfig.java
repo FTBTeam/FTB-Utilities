@@ -2,7 +2,7 @@ package latmod.ftbu.mod.config;
 
 import java.io.File;
 
-import ftb.lib.mod.FTBLib;
+import ftb.lib.FTBLib;
 import latmod.ftbu.api.config.ConfigListRegistry;
 import latmod.ftbu.api.guide.GuideFile;
 import latmod.ftbu.mod.FTBU;

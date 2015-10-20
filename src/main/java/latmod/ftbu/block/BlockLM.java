@@ -2,8 +2,8 @@ package latmod.ftbu.block;
 import java.util.*;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.item.ItemBlockLM;
-import latmod.ftbu.mod.FTBUFinals;
 import latmod.ftbu.tile.TileLM;
 import latmod.ftbu.util.LMMod;
 import latmod.lib.FastList;
@@ -51,7 +51,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	public final <E> E register() { mod.addBlock(this); return (E)this; }
 	
 	@SuppressWarnings("unchecked")
-	public final <E> E registerDevOnly() { if(FTBUFinals.DEV) mod.addBlock(this); return (E)this; }
+	public final <E> E registerDevOnly() { if(FTBLibFinals.DEV) mod.addBlock(this); return (E)this; }
 	
 	public final String getItemID()
 	{ return blockName; }

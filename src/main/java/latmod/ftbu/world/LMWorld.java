@@ -3,9 +3,9 @@ package latmod.ftbu.world;
 import java.util.*;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.FTBLib;
 import latmod.ftbu.cmd.NameType;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.util.LatCoreMC;
 import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,7 +20,7 @@ public abstract class LMWorld
 	{ if(s.isServer()) return LMWorldServer.inst; return FTBU.proxy.getClientWorldLM(); }
 	
 	public static LMWorld getWorld()
-	{ return getWorld(LatCoreMC.isServer() ? Side.SERVER : Side.CLIENT); }
+	{ return getWorld(FTBLib.getEffectiveSide()); }
 	
 	public final Side side;
 	public final UUID worldID;

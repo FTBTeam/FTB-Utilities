@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.cmd;
 
+import ftb.lib.LMDimUtils;
 import latmod.ftbu.cmd.*;
-import latmod.ftbu.util.LMDimUtils;
 import latmod.ftbu.world.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;

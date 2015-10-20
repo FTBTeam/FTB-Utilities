@@ -1,6 +1,6 @@
 package latmod.ftbu.api.config;
 
-import latmod.ftbu.mod.FTBUFinals;
+import ftb.lib.mod.FTBLibFinals;
 import latmod.lib.*;
 import latmod.lib.config.*;
 
@@ -47,7 +47,7 @@ public class ConfigSyncRegistry
 			count += l.writeToIO(io);
 		}
 		
-		if(FTBUFinals.DEV) System.out.println("Sent " + count + " synced config values");
+		if(FTBLibFinals.DEV) System.out.println("Sent " + count + " synced config values");
 		return count;
 	}
 	

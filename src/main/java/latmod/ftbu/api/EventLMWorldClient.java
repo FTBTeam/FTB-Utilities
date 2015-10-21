@@ -1,5 +1,6 @@
 package latmod.ftbu.api;
 
+import ftb.lib.api.EventLM;
 import latmod.ftbu.world.LMWorldClient;
 
 public class EventLMWorldClient extends EventLM

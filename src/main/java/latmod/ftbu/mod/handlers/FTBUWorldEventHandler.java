@@ -1,15 +1,15 @@
 package latmod.ftbu.mod.handlers;
 
 import java.io.File;
-import java.util.*;
+import java.util.Arrays;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
 import ftb.lib.api.EventFTBModeSet;
+import ftb.lib.api.config.ConfigListRegistry;
 import latmod.ftbu.api.EventLMWorldServer;
-import latmod.ftbu.api.config.ConfigListRegistry;
 import latmod.ftbu.api.guide.GuideFile;
 import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.mod.config.*;
@@ -47,7 +47,7 @@ public class FTBUWorldEventHandler
 			File latmodFolder = new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/");
 			NBTTagCompound tagWorldData = LMNBTUtils.readMap(new File(latmodFolder, "LMWorld.dat"));
 			if(tagWorldData == null) tagWorldData = new NBTTagCompound();
-			LMWorldServer.inst = new LMWorldServer(tagWorldData.hasKey("UUID") ? LMStringUtils.fromString(tagWorldData.getString("UUID")) : UUID.randomUUID(), (WorldServer)e.world, latmodFolder);
+			LMWorldServer.inst = new LMWorldServer((WorldServer)e.world, latmodFolder);
 			LMWorldServer.inst.load(tagWorldData);
 			
 			new EventLMWorldServer.Loaded(LMWorldServer.inst, Phase.PRE).post();
@@ -75,7 +75,6 @@ public class FTBUWorldEventHandler
 			
 			NBTTagCompound tag = new NBTTagCompound();
 			LMWorldServer.inst.save(tag);
-			tag.setString("UUID", LMWorldServer.inst.worldIDS);
 			LMNBTUtils.writeMap(new File(LMWorldServer.inst.latmodFolder, "LMWorld.dat"), tag);
 			
 			tag = new NBTTagCompound();

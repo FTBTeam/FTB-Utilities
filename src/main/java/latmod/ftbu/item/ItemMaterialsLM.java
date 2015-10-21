@@ -1,7 +1,7 @@
 package latmod.ftbu.item;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.util.client.LatCoreMCClient;
+import ftb.lib.client.FTBLibClient;
 import latmod.lib.*;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -64,7 +64,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister ir)
 	{
-		itemIcon = LatCoreMCClient.unknownItemIcon;
+		itemIcon = FTBLibClient.unknownItemIcon;
 		for(MaterialItem m : materials.values)
 			m.registerIcons(ir);
 	}

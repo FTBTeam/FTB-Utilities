@@ -5,8 +5,8 @@ import java.util.UUID;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.lib.FastMap;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,7 +33,7 @@ public class Badge extends FinalIDObject
 		if(textureURL == null)
 		{
 			textureURL = FTBU.mod.getLocation("textures/badges/" + toString());
-			LatCoreMCClient.getDownloadImage(textureURL, toString(), defTex, null);
+			FTBLibClient.getDownloadImage(textureURL, toString(), defTex, null);
 		}
 		
 		return textureURL;
@@ -51,9 +51,9 @@ public class Badge extends FinalIDObject
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
-		LatCoreMCClient.mc.getTextureManager().bindTexture(texture);
+		FTBLibClient.mc.getTextureManager().bindTexture(texture);
 		
-		if(isGlowing) LatCoreMCClient.pushMaxBrightness();
+		if(isGlowing) FTBLibClient.pushMaxBrightness();
 		
 		GL11.glPushMatrix();
 		
@@ -79,7 +79,7 @@ public class Badge extends FinalIDObject
 		GL11.glVertex3f(0F, s, 0F);
 		GL11.glEnd();
 		
-		if(isGlowing) LatCoreMCClient.popMaxBrightness();
+		if(isGlowing) FTBLibClient.popMaxBrightness();
 		
 		GL11.glPopMatrix();
 		GL11.glPopAttrib();

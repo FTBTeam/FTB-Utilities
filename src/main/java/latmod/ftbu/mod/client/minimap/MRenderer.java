@@ -2,6 +2,7 @@ package latmod.ftbu.mod.client.minimap;
 
 import org.lwjgl.opengl.GL11;
 
+import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.util.gui.*;
@@ -60,7 +61,7 @@ public class MRenderer
 		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
-		LatCoreMCClient.pushMaxBrightness();
+		FTBLibClient.pushMaxBrightness();
 		
 		double tilesD = 1D / (double)tiles;
 		double tsize = size * tilesD;
@@ -118,7 +119,7 @@ public class MRenderer
 		
 		if(renderClaims)
 		{
-			LatCoreMCClient.setTexture(tex_area);
+			FTBLibClient.setTexture(tex_area);
 			
 			for(int y = 0; y < tiles; y++)
 			for(int x = 0; x < tiles; x++)
@@ -136,16 +137,16 @@ public class MRenderer
 					
 					TextureCoords tc = tex_area_coords[a ? 1 : 0][b ? 1 : 0][c ? 1 : 0][d ? 1 : 0];
 					
-					LatCoreMCClient.setGLColor(ch.type.areaColor, 255);
+					FTBLibClient.setGLColor(ch.type.areaColor, 255);
 					GuiLM.drawTexturedRectD(renderX + x * tsize, renderY + y * tsize, zLevel, tsize, tsize, tc.minU, tc.minV, tc.maxU, tc.maxV);
 				}
 			}
 		}
 		
-		if(renderPlayers && !LatCoreMCClient.mc.theWorld.playerEntities.isEmpty())
+		if(renderPlayers && !FTBLibClient.mc.theWorld.playerEntities.isEmpty())
 		{
 			FastList<EntityPlayer> list = new FastList<EntityPlayer>();
-			list.addAll(LatCoreMCClient.mc.theWorld.playerEntities);
+			list.addAll(FTBLibClient.mc.theWorld.playerEntities);
 			
 			GL11.glColor4f(1F, 1F, 1F, 0.7F);
 			
@@ -167,7 +168,7 @@ public class MRenderer
 						GL11.glPushMatrix();
 						//GL11.glRotatef((int)((ep.rotationYaw + 180F) / (180F / 8F)) * (180F / 8F), 0F, 0F, 1F);
 						GL11.glRotatef(ep.rotationYaw + 180F, 0F, 0F, 1F);
-						LatCoreMCClient.setTexture(tex_map_entity);
+						FTBLibClient.setTexture(tex_map_entity);
 						GuiLM.drawTexturedRectD(-8, -8, zLevel, 16, 16, 0D, 0D, 1D, 1D);
 						GL11.glPopMatrix();
 						GuiLM.drawPlayerHead(ep.getCommandSenderName(), -2, -2, 4, 4, zLevel);
@@ -179,18 +180,18 @@ public class MRenderer
 		
 		if(renderAreaTitle)
 		{
-			int cx = MathHelperLM.chunk(LatCoreMCClient.mc.thePlayer.posX);
-			int cy = MathHelperLM.chunk(LatCoreMCClient.mc.thePlayer.posZ);
+			int cx = MathHelperLM.chunk(FTBLibClient.mc.thePlayer.posX);
+			int cy = MathHelperLM.chunk(FTBLibClient.mc.thePlayer.posZ);
 			ChunkType t = m.getChunkType(cx, cy);
 			String s = t.isClaimed() ? String.valueOf(m.getChunk(cx, cy).owner) : t.getIDS();
-			LatCoreMCClient.mc.fontRenderer.drawString(s, renderX, renderY + size + 3, LMColorUtils.chatFormattingColors[t.chatColor.ordinal()]);
+			FTBLibClient.mc.fontRenderer.drawString(s, renderX, renderY + size + 3, LMColorUtils.chatFormattingColors[t.chatColor.ordinal()]);
 		}
 		
-		LatCoreMCClient.popMaxBrightness();
+		FTBLibClient.popMaxBrightness();
 		GL11.glPopAttrib();
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 	}
 	
 	public void reload()
-	{ Minimap.get(LatCoreMCClient.getDim()).reloadArea(LatCoreMCClient.mc.theWorld, startX, startY, tiles, tiles); }
+	{ Minimap.get(LatCoreMCClient.getDim()).reloadArea(FTBLibClient.mc.theWorld, startX, startY, tiles, tiles); }
 }

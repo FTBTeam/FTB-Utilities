@@ -3,6 +3,7 @@ package latmod.ftbu.util.client;
 import org.lwjgl.opengl.*;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.notification.*;
 import latmod.ftbu.util.gui.GuiLM;
 import latmod.ftbu.world.LMPlayerClient;
@@ -72,7 +73,7 @@ public class ClientNotifications
 
 		public Temp(Notification n)
 		{
-			mc = LatCoreMCClient.mc;
+			mc = FTBLibClient.mc;
 			time = -1L;
 			ID = n.ID;
 			title = n.title.getFormattedText();

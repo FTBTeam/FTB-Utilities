@@ -8,7 +8,6 @@ import latmod.ftbu.net.MessageAreaUpdate;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
 import net.minecraft.command.server.CommandSaveAll;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -106,12 +105,11 @@ public class FTBUTicks
 				for(int i = 0; i < areaRequests.size(); i++)
 				{
 					LMPlayerServer owner = LMWorldServer.inst.getPlayer(areaRequests.keys.get(i));
-					EntityPlayerMP ep = owner.getPlayer();
 					
-					if(ep != null)
+					if(owner != null && owner.isOnline())
 					{
 						int size = Math.max(5, areaRequests.values.get(i));
-						new MessageAreaUpdate(owner.getPos(), size, size, owner).sendTo(ep);
+						new MessageAreaUpdate(owner.getPos(), size, size, owner).sendTo(owner.getPlayer());
 					}
 				}
 				

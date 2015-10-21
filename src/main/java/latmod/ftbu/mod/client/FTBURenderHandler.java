@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.eventhandler.*;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.api.client.callback.ClientTickCallback;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.util.client.*;
@@ -34,7 +35,7 @@ public class FTBURenderHandler
 		
 		if(e.phase == TickEvent.Phase.START)
 		{
-			ScaledResolution sr = new ScaledResolution(LatCoreMCClient.mc, LatCoreMCClient.mc.displayWidth, LatCoreMCClient.mc.displayHeight);
+			ScaledResolution sr = new ScaledResolution(FTBLibClient.mc, FTBLibClient.mc.displayWidth, FTBLibClient.mc.displayHeight);
 			LatCoreMCClient.displayW = sr.getScaledWidth();
 			LatCoreMCClient.displayH = sr.getScaledHeight();
 		}
@@ -90,8 +91,8 @@ public class FTBURenderHandler
 		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 		//OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, 1, 0);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		LatCoreMCClient.pushMaxBrightness();
-		LatCoreMCClient.setTexture(world_border_tex);
+		FTBLibClient.pushMaxBrightness();
+		FTBLibClient.setTexture(world_border_tex);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
 		
@@ -134,7 +135,7 @@ public class FTBURenderHandler
 		GL11.glPopMatrix();
 		
 		GL11.glShadeModel(GL11.GL_FLAT);
-		LatCoreMCClient.popMaxBrightness();
+		FTBLibClient.popMaxBrightness();
 		GL11.glDepthMask(true);
 		GL11.glPopAttrib();
 	}

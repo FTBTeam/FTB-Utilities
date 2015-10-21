@@ -5,11 +5,12 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.EnumDyeColor;
+import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.api.client.ClientConfigRegistry;
 import latmod.ftbu.api.client.callback.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
-import latmod.ftbu.util.client.*;
+import latmod.ftbu.util.client.FTBULang;
 import latmod.ftbu.util.gui.*;
 import latmod.lib.*;
 import net.minecraft.util.ResourceLocation;
@@ -118,9 +119,9 @@ public class GuiSelectColorHSB extends GuiLM
 			ColorSelector.shouldRedraw = true;
 		}
 		
-		LatCoreMCClient.setGLColor(initCol, 255);
+		FTBLibClient.setGLColor(initCol, 255);
 		colorInit.render(col_tex);
-		LatCoreMCClient.setGLColor(currentColor, 255);
+		FTBLibClient.setGLColor(currentColor, 255);
 		colorCurrent.render(col_tex);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		switchRGB.render(GuiIcons.rgb);
@@ -147,7 +148,7 @@ public class GuiSelectColorHSB extends GuiLM
 		GL11.glColor4f(0F, 0F, 0F, 1F);
 		GL11.glTexCoord2d(u0, v0); GL11.glVertex3d(x + 0, y + 0, z);
 		GL11.glTexCoord2d(u0, v1); GL11.glVertex3d(x + 0, y + h, z);
-		LatCoreMCClient.setGLColor(currentColor, 255);
+		FTBLibClient.setGLColor(currentColor, 255);
 		GL11.glTexCoord2d(u1, v1); GL11.glVertex3d(x + w, y + h, z);
 		GL11.glTexCoord2d(u1, v0); GL11.glVertex3d(x + w, y + 0, z);
 		GL11.glEnd();

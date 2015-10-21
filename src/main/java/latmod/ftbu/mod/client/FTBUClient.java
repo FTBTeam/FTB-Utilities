@@ -1,11 +1,7 @@
 package latmod.ftbu.mod.client;
-import java.util.UUID;
-
-import org.lwjgl.input.Keyboard;
-
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
+import ftb.lib.client.FTBLibClient;
 import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.api.client.*;
 import latmod.ftbu.api.guide.*;
@@ -16,17 +12,13 @@ import latmod.ftbu.tile.TileLM;
 import latmod.ftbu.util.LMGuiHandler;
 import latmod.ftbu.util.client.*;
 import latmod.ftbu.world.*;
-import latmod.lib.LMColorUtils;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.multiplayer.PlayerControllerMP;
-import net.minecraft.client.particle.EntityReddustFX;
-import net.minecraft.entity.player.*;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.world.World;
 
 @SideOnly(Side.CLIENT)
-public class FTBUClient extends FTBUCommon
+public class FTBUClient extends FTBUCommon // FTBLibModClient
 {
 	public static final ClientConfig clientConfig = new ClientConfig("ftbu");
 	public static final ClientConfigProperty renderBadges = new ClientConfigProperty("player_decorators", true);
@@ -114,45 +106,8 @@ public class FTBUClient extends FTBUCommon
 		waypoints.println("You can select between Marker and Beacon waypoints, change it's color, title and coords");
 	}
 	
-	public boolean isShiftDown() { return GuiScreen.isShiftKeyDown(); }
-	public boolean isCtrlDown() { return GuiScreen.isCtrlKeyDown(); }
-	public boolean isTabDown() { return Keyboard.isKeyDown(Keyboard.KEY_TAB); }
-	public boolean inGameHasFocus() { return LatCoreMCClient.mc.inGameHasFocus; }
-	
-	public EntityPlayer getClientPlayer()
-	{ return FMLClientHandler.instance().getClientPlayerEntity(); }
-	
-	public EntityPlayer getClientPlayer(UUID id)
-	{ return LatCoreMCClient.getPlayerSP(id); }
-	
-	public World getClientWorld()
-	{ return FMLClientHandler.instance().getWorldClient(); }
-	
 	public LMWorld getClientWorldLM()
 	{ return LMWorldClient.inst; }
-	
-	public double getReachDist(EntityPlayer ep)
-	{
-		if(ep == null) return 0D;
-		else if(ep instanceof EntityPlayerMP) return super.getReachDist(ep);
-		PlayerControllerMP c = LatCoreMCClient.mc.playerController;
-		return (c == null) ? 0D : c.getBlockReachDistance();
-	}
-	
-	public void spawnDust(World w, double x, double y, double z, int col)
-	{
-		EntityReddustFX fx = new EntityReddustFX(w, x, y, z, 0F, 0F, 0F);
-		
-		float alpha = LMColorUtils.getAlpha(col) / 255F;
-		float red = LMColorUtils.getRed(col) / 255F;
-		float green = LMColorUtils.getGreen(col) / 255F;
-		float blue = LMColorUtils.getBlue(col) / 255F;
-		if(alpha == 0F) alpha = 1F;
-		
-		fx.setRBGColorF(red, green, blue);
-		fx.setAlphaF(alpha);
-		LatCoreMCClient.mc.effectRenderer.addEffect(fx);
-	}
 	
 	public boolean openClientGui(EntityPlayer ep, String mod, int id, NBTTagCompound data)
 	{
@@ -164,7 +119,7 @@ public class FTBUClient extends FTBUCommon
 			
 			if(g != null)
 			{
-				LatCoreMCClient.mc.displayGuiScreen(g);
+				FTBLibClient.mc.displayGuiScreen(g);
 				return true;
 			}
 		}
@@ -180,10 +135,10 @@ public class FTBUClient extends FTBUCommon
 		t.onUpdatePacket();
 		LatCoreMCClient.onGuiClientAction();
 	}
-
+	
 	public static void onReloaded()
 	{
-		LatCoreMCClient.clearCachedData();
+		FTBLibClient.clearCachedData();
 		ThreadLoadBadges.init();
 		
 		if(LMWorldClient.inst != null)

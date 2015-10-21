@@ -4,9 +4,9 @@ import java.io.File;
 import java.net.URI;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.api.client.EventClickAction;
 import latmod.ftbu.net.ClientAction;
-import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.LMPlayerClient;
 import latmod.lib.LMUtils;
 import net.minecraft.client.gui.GuiChat;
@@ -18,11 +18,11 @@ public class ClickActionHandler // Notification
 	{
 		if(c.ID.equals(ClickAction.CMD))
 		{
-			LatCoreMCClient.execClientCommand(c.stringVal());
+			FTBLibClient.execClientCommand(c.stringVal());
 		}
 		else if(c.ID.equals(ClickAction.SHOW_CMD))
 		{
-			LatCoreMCClient.mc.displayGuiScreen(new GuiChat(c.stringVal()));
+			FTBLibClient.mc.displayGuiScreen(new GuiChat(c.stringVal()));
 		}
 		else if(c.ID.equals(ClickAction.URL))
 		{

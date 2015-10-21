@@ -7,7 +7,8 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.OtherMods;
-import latmod.ftbu.util.client.*;
+import ftb.lib.client.FTBLibClient;
+import latmod.ftbu.util.client.LMRenderHelper;
 import latmod.lib.*;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
@@ -33,13 +34,12 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	public boolean hideNEI = false;
 	private ResourceLocation prevTexture = null;
-	public static GuiLM currentGui = null;
 	private boolean refreshWidgets = true;
 	
 	public GuiLM(ContainerLM c, ResourceLocation tex)
 	{
-		super((c == null) ? new ContainerEmpty(LatCoreMCClient.mc.thePlayer, null) : c);
-		mc = LatCoreMCClient.mc;
+		super((c == null) ? new ContainerEmpty(FTBLibClient.mc.thePlayer, null) : c);
+		mc = FTBLibClient.mc;
 		mainPanel = new PanelLM(this, 0, 0, 0, 0)
 		{
 			public void addWidgets()
@@ -87,7 +87,6 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	public final void initGui()
 	{
-		currentGui = this;
 		super.initGui();
 		initLMGui();
 		mainPanel.width = xSize;
@@ -177,7 +176,6 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	{
 		super.onGuiClosed();
 		onLMGuiClosed();
-		currentGui = null;
 	}
 	
 	public void onLMGuiClosed()
@@ -229,14 +227,14 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	{ mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(s, pitch)); }
 	
 	public void playClickSound()
-	{ LatCoreMCClient.playClickSound(); }
+	{ FTBLibClient.playClickSound(); }
 	
 	public FontRenderer getFontRenderer()
 	{ setTexture(null); return fontRendererObj; }
 	
 	public static void drawPlayerHead(String username, double x, double y, double w, double h, double z)
 	{
-		LatCoreMCClient.setTexture(LatCoreMCClient.getSkinTexture(username));
+		FTBLibClient.setTexture(FTBLibClient.getSkinTexture(username));
 		drawTexturedRectD(x, y, z, w, h, 0.125D, 0.25D, 0.25D, 0.5D);
 		drawTexturedRectD(x, y, z, w, h, 0.625D, 0.25D, 0.75D, 0.5D);
 	}

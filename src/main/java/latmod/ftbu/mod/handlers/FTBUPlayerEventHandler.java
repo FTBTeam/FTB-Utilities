@@ -55,12 +55,11 @@ public class FTBUPlayerEventHandler
 		p.setPlayer(ep);
 		p.refreshStats();
 		
-		new MessageLMWorldJoined(LMWorldServer.inst.worldID, p.playerID).sendTo(sendAll ? null : ep);
+		new MessageLMWorldJoined(p.playerID).sendTo(sendAll ? null : ep);
 		new EventLMPlayerServer.LoggedIn(p, ep, first).post();
 		new MessageLMPlayerLoggedIn(p, first, true).sendTo(ep);
 		for(EntityPlayerMP ep1 : FTBLib.getAllOnlinePlayers(ep))
 			new MessageLMPlayerLoggedIn(p, first, false).sendTo(ep1);
-		new MessageSyncConfig(ep).sendTo(ep);
 		
 		if(first)
 		{

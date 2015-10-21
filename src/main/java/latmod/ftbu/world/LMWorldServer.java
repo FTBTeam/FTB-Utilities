@@ -1,7 +1,6 @@
 package latmod.ftbu.world;
 
 import java.io.File;
-import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
 
@@ -22,9 +21,9 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	public final Warps warps;
 	public NBTTagCompound customServerData;
 	
-	public LMWorldServer(UUID id, WorldServer w, File f)
+	public LMWorldServer(WorldServer w, File f)
 	{
-		super(Side.SERVER, id, LMStringUtils.fromUUID(id));
+		super(Side.SERVER);
 		worldObj = w;
 		latmodFolder = f;
 		warps = new Warps();

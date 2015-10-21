@@ -1,6 +1,6 @@
 package latmod.ftbu.api.client;
 
-import latmod.ftbu.api.EventLM;
+import ftb.lib.api.EventLM;
 
 public class EventFTBUKey extends EventLM
 {

@@ -4,6 +4,7 @@ import java.awt.Color;
 import org.lwjgl.opengl.*;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.client.FTBLibClient;
 import latmod.lib.MathHelperLM;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -98,8 +99,8 @@ public class LMRenderHelper
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		FontRenderer f = is.getItem().getFontRenderer(is);
 		if (f == null) f = font;
-		itemRender.renderItemAndEffectIntoGUI(f, Minecraft.getMinecraft().getTextureManager(), is, x, y);
-		itemRender.renderItemOverlayIntoGUI(f, LatCoreMCClient.mc.getTextureManager(), is, x, y, null);
+		itemRender.renderItemAndEffectIntoGUI(f, FTBLibClient.mc.getTextureManager(), is, x, y);
+		itemRender.renderItemOverlayIntoGUI(f, FTBLibClient.mc.getTextureManager(), is, x, y, null);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();
 		GL11.glPopAttrib();

@@ -3,10 +3,10 @@ package latmod.ftbu.world;
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.client.FTBLibClient;
 import ftb.lib.item.LMInvUtils;
 import latmod.ftbu.api.EventLMPlayerClient;
 import latmod.ftbu.badges.Badge;
-import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.lib.FastList;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,7 +33,7 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 	public ResourceLocation getSkin()
 	{
 		if(skinLocation == null)
-			skinLocation = LatCoreMCClient.getSkinTexture(getName());
+			skinLocation = FTBLibClient.getSkinTexture(getName());
 		return skinLocation;
 	}
 	
@@ -48,7 +48,7 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 	{ return this; }
 	
 	public EntityPlayerSP getPlayer()
-	{ return isOnline() ? LatCoreMCClient.getPlayerSP(getUUID()) : null; }
+	{ return isOnline() ? FTBLibClient.getPlayerSP(getUUID()) : null; }
 	
 	public void receiveInfo(FastList<IChatComponent> info)
 	{

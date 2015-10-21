@@ -1,7 +1,8 @@
 package latmod.ftbu.mod.cmd.admin;
 
 import ftb.lib.FTBLib;
-import latmod.ftbu.api.config.ConfigListRegistry;
+import ftb.lib.api.config.ConfigListRegistry;
+import ftb.lib.mod.CommandFTBWorld;
 import latmod.ftbu.cmd.*;
 import latmod.lib.*;
 import latmod.lib.config.*;
@@ -85,7 +86,7 @@ public class CmdAdminConfig extends CommandLM
 		
 		if(!success) return new ChatComponentText("Can't find config entry '" + args[0] + " " + args[1] + " " + args[2] + "'");
 		
-		CmdAdminReload.reload(ics);
+		CommandFTBWorld.reload(ics, true);
 		return null;
 	}
 }

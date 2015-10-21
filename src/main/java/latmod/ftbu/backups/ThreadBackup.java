@@ -6,7 +6,6 @@ import java.util.zip.*;
 
 import ftb.lib.*;
 import latmod.ftbu.mod.config.FTBUConfigBackups;
-import latmod.ftbu.world.LMWorldServer;
 import latmod.lib.*;
 import net.minecraft.command.server.*;
 import net.minecraft.util.EnumChatFormatting;
@@ -52,7 +51,7 @@ public class ThreadBackup extends Thread
 			
 			if(FTBUConfigBackups.compressionLevel.get() > 0)
 			{
-				out.append(LMWorldServer.inst.worldIDS);
+				out.append(FTBWorld.server.getWorldIDS());
 				out.append(".zip");
 				dstFile = LMFileUtils.newFile(new File(Backups.backupsFolder, out.toString()));
 				

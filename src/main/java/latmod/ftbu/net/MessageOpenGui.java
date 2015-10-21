@@ -2,10 +2,10 @@ package latmod.ftbu.net;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.client.FTBLibClient;
 import io.netty.buffer.ByteBuf;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.util.LMGuiHandler;
-import latmod.ftbu.util.client.LatCoreMCClient;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class MessageOpenGui extends MessageLM<MessageOpenGui>
@@ -45,8 +45,8 @@ public class MessageOpenGui extends MessageLM<MessageOpenGui>
 	public IMessage onMessage(MessageOpenGui m, MessageContext ctx)
 	{
 		LMGuiHandler h = LMGuiHandler.Registry.getLMGuiHandler(m.modID);
-		if(h != null && FTBU.proxy.openClientGui(LatCoreMCClient.mc.thePlayer, m.modID, m.guiID, m.data))
-			LatCoreMCClient.mc.thePlayer.openContainer.windowId = m.windowID;
+		if(h != null && FTBU.proxy.openClientGui(FTBLibClient.mc.thePlayer, m.modID, m.guiID, m.data))
+			FTBLibClient.mc.thePlayer.openContainer.windowId = m.windowID;
 		return null;
 	}
 }

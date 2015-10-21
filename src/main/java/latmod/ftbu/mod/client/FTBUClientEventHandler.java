@@ -1,33 +1,34 @@
 package latmod.ftbu.mod.client;
-import java.util.UUID;
-
 import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
-import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.*;
+import ftb.lib.MathHelperMC;
+import ftb.lib.api.*;
+import ftb.lib.client.FTBLibClient;
 import ftb.lib.item.*;
 import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.api.EventLMWorldClient;
 import latmod.ftbu.api.client.EventFTBUKey;
 import latmod.ftbu.api.paint.IPainterItem;
-import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.friends.GuiFriendsGuiSmall;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
 import latmod.lib.FastList;
-import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.item.*;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.player.*;
 
 @SideOnly(Side.CLIENT)
 public class FTBUClientEventHandler
 {
 	public static final FTBUClientEventHandler instance = new FTBUClientEventHandler();
+	
+	@SubscribeEvent
+	public void onReloadedPre(EventFTBReloadPre e)
+	{ if(e.side.isClient()) FTBUClient.onReloaded(); }
 	
 	@SubscribeEvent
 	public void onTooltip(ItemTooltipEvent e)
@@ -61,58 +62,44 @@ public class FTBUClientEventHandler
 	}
 	
 	@SubscribeEvent
-	public void preTexturesLoaded(TextureStitchEvent.Pre e)
-	{
-		if(e.map.getTextureType() == 0)
-		{
-			LatCoreMCClient.blockNullIcon = e.map.registerIcon(FTBU.mod.assets + "empty_block");
-			LatCoreMCClient.clearCachedData();
-		}
-		else if(e.map.getTextureType() == 1)
-			LatCoreMCClient.unknownItemIcon = e.map.registerIcon(FTBU.mod.assets + "unknown");
-	}
-	
-	@SubscribeEvent
 	public void onDrawDebugText(RenderGameOverlayEvent.Text e)
 	{
 		// Some ideas around this //
-		if(!LatCoreMCClient.mc.gameSettings.showDebugInfo)
+		if(!FTBLibClient.mc.gameSettings.showDebugInfo)
 		{
 			if(FTBUClient.displayDebugInfo.getB())
-				e.left.add(LatCoreMCClient.mc.debug);
+				e.left.add(FTBLibClient.mc.debug);
 			
 			if(FTBLibFinals.DEV)
 				e.left.add("[MC " + EnumChatFormatting.GOLD + FTBLibFinals.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");
 		}
 		
-		if(LatCoreMCClient.mc.gameSettings.showDebugInfo)
-			e.left.add("r: " + MathHelperMC.get2DRotation(LatCoreMCClient.mc.thePlayer));
+		if(FTBLibClient.mc.gameSettings.showDebugInfo)
+			e.left.add("r: " + MathHelperMC.get2DRotation(FTBLibClient.mc.thePlayer));
 	}
 	
 	@SubscribeEvent
-	public void onConnected(FMLNetworkEvent.ClientConnectedToServerEvent e)
+	public void onFTBWorld(EventFTBWorldClient e)
 	{
-		ServerData sd = LatCoreMCClient.mc.func_147104_D();
-		String s = (sd == null || sd.serverIP.isEmpty()) ? "localhost" : sd.serverIP.replace('.', '_');
-		LMWorldClient.inst = new LMWorldClient(new UUID(0L, 0L), s, 0);
-		FTBLib.logger.info("Connecting to world...");
-	}
-	
-	@SubscribeEvent
-	public void onDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent e)
-	{
-		FTBUClient.onWorldClosed();
-		new EventLMWorldClient.Closed(LMWorldClient.inst).post();
-		LMWorldClient.inst = null;
+		if(e.world == null)
+		{
+			FTBUClient.onWorldClosed();
+			new EventLMWorldClient.Closed(LMWorldClient.inst).post();
+			LMWorldClient.inst = null;
+		}
+		else if(e.isFake)
+		{
+			LMWorldClient.inst = new LMWorldClient(0);
+		}
 	}
 	
 	@SubscribeEvent
 	public void onEntityRightClick(EntityInteractEvent e)
 	{
-		if(e.entity.worldObj.isRemote && LatCoreMCClient.isPlaying() && e.entityPlayer.getUniqueID().equals(LatCoreMCClient.mc.thePlayer.getUniqueID()) && e.entityPlayer.getHeldItem() == null)// && e.target instanceof EntityPlayer)
+		if(e.entity.worldObj.isRemote && LatCoreMCClient.isPlaying() && e.entityPlayer.getUniqueID().equals(FTBLibClient.mc.thePlayer.getUniqueID()) && e.entityPlayer.getHeldItem() == null)// && e.target instanceof EntityPlayer)
 		{
 			LMPlayerClient p = LMWorldClient.inst.getPlayer(e.target);
-			if(p != null) LatCoreMCClient.mc.displayGuiScreen(new GuiFriendsGuiSmall(p));
+			if(p != null) FTBLibClient.mc.displayGuiScreen(new GuiFriendsGuiSmall(p));
 		}
 	}
 	

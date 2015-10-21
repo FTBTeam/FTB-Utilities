@@ -2,6 +2,7 @@ package latmod.ftbu.api;
 
 import cpw.mods.fml.common.Optional;
 import ftb.lib.OtherMods;
+import ftb.lib.api.EventLM;
 import latmod.ftbu.api.tile.IWailaTile;
 import latmod.ftbu.waila.*;
 import latmod.lib.FastList;

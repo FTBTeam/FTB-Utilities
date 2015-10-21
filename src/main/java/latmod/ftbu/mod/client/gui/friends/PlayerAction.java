@@ -1,10 +1,11 @@
 package latmod.ftbu.mod.client.gui.friends;
 
+import ftb.lib.client.FTBLibClient;
 import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.api.client.EventPlayerAction;
 import latmod.ftbu.mod.client.gui.*;
 import latmod.ftbu.net.ClientAction;
-import latmod.ftbu.util.client.*;
+import latmod.ftbu.util.client.FTBULang;
 import latmod.ftbu.util.gui.*;
 import latmod.ftbu.world.*;
 import latmod.lib.FastList;
@@ -26,7 +27,7 @@ public abstract class PlayerAction
 	public static final PlayerAction settings = new PlayerAction(GuiIcons.settings)
 	{
 		public void onClicked(LMPlayerClient p)
-		{ LatCoreMCClient.mc.displayGuiScreen(new GuiClientConfig(null)); }
+		{ FTBLibClient.mc.displayGuiScreen(new GuiClientConfig(null)); }
 		
 		public String getTitle()
 		{ return FTBULang.client_config(); }
@@ -35,7 +36,7 @@ public abstract class PlayerAction
 	public static final PlayerAction minimap = new PlayerAction(GuiIcons.map)
 	{
 		public void onClicked(LMPlayerClient p)
-		{ LatCoreMCClient.mc.displayGuiScreen(new GuiMinimap()); }
+		{ FTBLibClient.mc.displayGuiScreen(new GuiMinimap()); }
 		
 		public String getTitle()
 		{ return FTBULang.Friends.claimed_chunks(); }

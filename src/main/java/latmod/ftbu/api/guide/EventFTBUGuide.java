@@ -1,6 +1,6 @@
 package latmod.ftbu.api.guide;
 
-import latmod.ftbu.api.EventLM;
+import ftb.lib.api.EventLM;
 
 public class EventFTBUGuide extends EventLM
 {

@@ -3,7 +3,7 @@ package latmod.ftbu.mod.client.minimap;
 import java.nio.ByteBuffer;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.util.client.LatCoreMCClient;
+import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.world.LMWorldClient;
 import latmod.lib.PixelBuffer;
 
@@ -23,7 +23,7 @@ public class ThreadReloadArea extends Thread
 		if(LMWorldClient.inst != null) try
 		{
 			PixelBuffer image = area.toPixelBuffer();
-			ByteBuffer bb = LatCoreMCClient.toByteBuffer(image.pixels, false);
+			ByteBuffer bb = FTBLibClient.toByteBuffer(image.pixels, false);
 			area.pixelBuffer = bb;
 		}
 		catch(Exception e)

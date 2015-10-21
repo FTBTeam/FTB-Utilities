@@ -2,8 +2,8 @@ package latmod.ftbu.mod.config;
 
 import java.util.UUID;
 
+import ftb.lib.api.config.ConfigSyncRegistry;
 import ftb.lib.item.ItemStackTypeAdapter;
-import latmod.ftbu.api.config.ConfigSyncRegistry;
 import latmod.ftbu.api.guide.GuideInfo;
 import latmod.lib.FastList;
 import latmod.lib.config.*;

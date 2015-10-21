@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.config;
 
-import latmod.ftbu.api.config.ConfigSyncRegistry;
+import ftb.lib.api.config.ConfigSyncRegistry;
 import latmod.ftbu.api.guide.GuideInfo;
 import latmod.lib.FastList;
 import latmod.lib.config.*;

@@ -17,8 +17,6 @@ public class LMNetHelper
 		NET.registerMessage(MessageLMPlayerUpdate.class, MessageLMPlayerUpdate.class, ++ID, Side.CLIENT);
 		NET.registerMessage(MessageClientAction.class, MessageClientAction.class, ++ID, Side.SERVER);
 		NET.registerMessage(MessageOpenGui.class, MessageOpenGui.class, ++ID, Side.CLIENT);
-		NET.registerMessage(MessageReload.class, MessageReload.class, ++ID, Side.CLIENT);
-		NET.registerMessage(MessageSyncConfig.class, MessageSyncConfig.class, ++ID, Side.CLIENT);
 		NET.registerMessage(MessageClientTileAction.class, MessageClientTileAction.class, ++ID, Side.SERVER);
 		NET.registerMessage(MessageClientItemAction.class, MessageClientItemAction.class, ++ID, Side.SERVER);
 		NET.registerMessage(MessageLMPlayerDied.class, MessageLMPlayerDied.class, ++ID, Side.CLIENT);

@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.api.guide.GuideFile;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.*;
@@ -113,7 +114,7 @@ public class FTBUGuiEventHandler
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			
 			GL11.glColor4f(1F, 1F, 1F, 1F);
-			LatCoreMCClient.setTexture(friendsButtonTexture);
+			FTBLibClient.setTexture(friendsButtonTexture);
 			GuiLM.drawTexturedRectD(xPosition, yPosition, 0D, width, height, 0D, 0D, 1D, 1D);
 			
 			if(mx >= xPosition && my >= yPosition && mx < xPosition + width && my < yPosition + height)
@@ -158,7 +159,7 @@ public class FTBUGuiEventHandler
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			
 			GL11.glColor4f(1F, 1F, 1F, 1F);
-			LatCoreMCClient.setTexture(TextureMap.locationItemsTexture);
+			FTBLibClient.setTexture(TextureMap.locationItemsTexture);
 			
 			zLevel = 200F;
 			itemRender.zLevel = 200F;

@@ -7,8 +7,8 @@ import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
+import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.api.EventLMPlayerClient;
-import latmod.ftbu.util.client.LatCoreMCClient;
 import net.minecraft.nbt.*;
 import net.minecraft.world.World;
 
@@ -20,15 +20,15 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 	public final File clientDataFolder;
 	public LMPlayerClient clientPlayer = null;
 	
-	public LMWorldClient(UUID id, String ids, int i)
+	public LMWorldClient(int i)
 	{
-		super(Side.CLIENT, id, ids);
+		super(Side.CLIENT);
 		clientPlayerID = i;
-		clientDataFolder = new File(FTBLib.folderLocal, "client/" + worldIDS);
+		clientDataFolder = new File(FTBLib.folderLocal, "client/" + FTBWorld.client.getWorldIDS());
 	}
 	
 	public World getMCWorld()
-	{ return LatCoreMCClient.mc.theWorld; }
+	{ return FTBLibClient.mc.theWorld; }
 	
 	public LMWorldClient getClientWorld()
 	{ return this; }

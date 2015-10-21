@@ -1,6 +1,6 @@
 package latmod.ftbu.api.client;
 
-import latmod.ftbu.api.EventLM;
+import ftb.lib.api.EventLM;
 import latmod.ftbu.mod.client.gui.friends.PlayerAction;
 import latmod.ftbu.world.*;
 import latmod.lib.FastList;

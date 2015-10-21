@@ -2,6 +2,7 @@ package latmod.ftbu.util;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
+import ftb.lib.mod.FTBLibMod;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.net.MessageOpenGui;
 import latmod.lib.FastMap;
@@ -44,7 +45,7 @@ public abstract class LMGuiHandler
 			new MessageOpenGui(ID, id, data, epM.currentWindowId).sendTo(epM);
 		}
 		else if(!FTBLib.isServer())
-			FTBU.proxy.openClientGui((ep == null) ? FTBU.proxy.getClientPlayer() : ep, ID, id, data);
+			FTBU.proxy.openClientGui((ep == null) ? FTBLibMod.proxy.getClientPlayer() : ep, ID, id, data);
 	}
 	
 	@SideOnly(Side.CLIENT)

@@ -12,10 +12,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
-public abstract class LMWorld
+public abstract class LMWorld // FTBWorld
 {
-	public static final UUID nullUUID = new UUID(0L, 0L);
-	
 	public static LMWorld getWorld(Side s)
 	{ if(s.isServer()) return LMWorldServer.inst; return FTBU.proxy.getClientWorldLM(); }
 	
@@ -23,17 +21,13 @@ public abstract class LMWorld
 	{ return getWorld(FTBLib.getEffectiveSide()); }
 	
 	public final Side side;
-	public final UUID worldID;
-	public final String worldIDS;
 	public final FastList<LMPlayer> players;
 	public final LMWorldSettings settings;
 	public NBTTagCompound customCommonData;
 	
-	public LMWorld(Side s, UUID id, String ids)
+	public LMWorld(Side s)
 	{
 		side = s;
-		worldID = id;
-		worldIDS = ids;
 		players = new FastList<LMPlayer>();
 		settings = new LMWorldSettings(this);
 		customCommonData = new NBTTagCompound();

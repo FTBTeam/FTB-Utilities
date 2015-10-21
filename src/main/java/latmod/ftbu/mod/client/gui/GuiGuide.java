@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
+import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.api.guide.GuideCategory;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.util.gui.*;
 import latmod.lib.FastList;
 import net.minecraft.util.ResourceLocation;
@@ -170,7 +170,7 @@ public class GuiGuide extends GuiLM
 		if(sliderCategories.isEnabled()) sliderCategories.renderSlider(tex_slider);
 		if(sliderText.isEnabled()) sliderText.renderSlider(tex_slider);
 		
-		LatCoreMCClient.setGLColor(buttonBack.mouseOver() ? textColorOver : textColor, 255);
+		FTBLibClient.setGLColor(buttonBack.mouseOver() ? textColorOver : textColor, 255);
 		buttonBack.render((parentGui == null) ? tex_close : tex_back);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		

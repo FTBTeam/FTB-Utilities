@@ -49,6 +49,7 @@ public class FTBU
 		LMJsonUtils.register(Notification.class, new Notification.Serializer());
 		LMJsonUtils.register(ClickAction.class, new ClickAction.Serializer());
 		
+		EventBusHelper.register(new FTBULibEventHandler());
 		EventBusHelper.register(new FTBUPlayerEventHandler());
 		EventBusHelper.register(new FTBUWorldEventHandler());
 		EventBusHelper.register(new FTBUChatEventHandler());

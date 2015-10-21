@@ -4,11 +4,12 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.EnumDyeColor;
+import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.api.client.ClientConfigRegistry;
 import latmod.ftbu.api.client.callback.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
-import latmod.ftbu.util.client.*;
+import latmod.ftbu.util.client.FTBULang;
 import latmod.ftbu.util.gui.*;
 import latmod.lib.*;
 import net.minecraft.util.ResourceLocation;
@@ -121,7 +122,7 @@ public class GuiSelectColorRGB extends GuiLM
 		if(isInstant && prevCol != getCurrentRGB())
 			callback.onColorSelected(new ColorSelected(colorID, true, getCurrentRGB(), false));
 		
-		LatCoreMCClient.setGLColor(initCol, 255);
+		FTBLibClient.setGLColor(initCol, 255);
 		colorInit.render(col_tex);
 		GL11.glColor4f(currentColR.value, currentColG.value, currentColB.value, 1F);
 		colorCurrent.render(col_tex);

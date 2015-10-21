@@ -1,6 +1,7 @@
 package latmod.ftbu.util.client;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.client.FTBLibClient;
 import latmod.lib.LMUtils;
 import net.minecraft.client.renderer.culling.Frustrum;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -22,7 +23,7 @@ public class LMFrustrumUtils
 	
 	public static void update()
 	{
-		isFirstPerson = LatCoreMCClient.mc.gameSettings.thirdPersonView == 0;
+		isFirstPerson = FTBLibClient.mc.gameSettings.thirdPersonView == 0;
 		currentDim = LatCoreMCClient.getDim();
 		playerX = RenderManager.instance.viewerPosX;
 		playerY = RenderManager.instance.viewerPosY;

@@ -1,6 +1,6 @@
 package latmod.ftbu.api.client;
 
-import latmod.ftbu.api.EventLM;
+import ftb.lib.api.EventLM;
 import latmod.ftbu.notification.ClickAction;
 import latmod.ftbu.world.LMPlayerClient;
 

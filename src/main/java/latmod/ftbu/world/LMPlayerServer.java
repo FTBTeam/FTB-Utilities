@@ -244,4 +244,10 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		return maxClaimPower;
 	}
+
+	public double getDeathsPerHour()
+	{
+		if(deaths == 0 || timePlayed == 0L) return 0D;
+		return (double)deaths / (timePlayed / 3600000D);
+	}
 }

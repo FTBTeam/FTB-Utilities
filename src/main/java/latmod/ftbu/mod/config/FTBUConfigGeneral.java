@@ -66,15 +66,7 @@ public class FTBUConfigGeneral
 	
 	public static void load(ConfigFile f)
 	{
-		group.add(allowCreativeInteractSecure);
-		group.add(commandFTBU);
-		group.add(commandAdmin);
-		group.add(restartTimer);
-		group.add(safeSpawn);
-		group.add(spawnPVP);
-		//group.add(daytimeBedSpawn);
-		group.add(blockedEntities);
-		group.add(configInfoGuide);
+		group.addAll(FTBUConfigGeneral.class);
 		f.add(group);
 		
 		ConfigSyncRegistry.add(allowCreativeInteractSecure);

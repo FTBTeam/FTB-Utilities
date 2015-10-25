@@ -2,7 +2,7 @@ package latmod.ftbu.mod.cmd;
 
 import latmod.ftbu.cmd.*;
 import latmod.ftbu.mod.cmd.all.*;
-import latmod.ftbu.mod.config.FTBUConfigGeneral;
+import latmod.ftbu.mod.config.*;
 
 public class CmdFTBU extends CommandSubLM
 {
@@ -10,9 +10,9 @@ public class CmdFTBU extends CommandSubLM
 	{
 		super(FTBUConfigGeneral.commandFTBU.get(), CommandLevel.ALL);
 		add(new CmdFTBUVersion("version"));
-		add(new CmdFTBUPlayerID("ID"));
-		add(new CmdFTBURestartTimer("restartTimer"));
-		add(new CmdFTBUBackupTimer("backupTimer"));
-		add(new CmdFTBUTops("top"));
+		if(FTBUConfigCmd.ftbu_playerID.get()) add(new CmdFTBUPlayerID("ID"));
+		if(FTBUConfigCmd.ftbu_restart_timer.get()) add(new CmdFTBURestartTimer("restartTimer"));
+		if(FTBUConfigCmd.ftbu_backup_timer.get()) add(new CmdFTBUBackupTimer("backupTimer"));
+		if(FTBUConfigCmd.ftbu_tops.get()) add(new CmdFTBUTops("top"));
 	}
 }

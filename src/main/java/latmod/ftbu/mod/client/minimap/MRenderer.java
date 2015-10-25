@@ -16,6 +16,7 @@ public class MRenderer
 	public static final ResourceLocation tex_area = FTBU.mod.getLocation("textures/gui/minimap_area.png");
 	public static final ResourceLocation tex_map_entity = FTBU.mod.getLocation("textures/gui/map_entity.png");
 	public static final TextureCoords[][][][] tex_area_coords = new TextureCoords[2][2][2][2];
+	private static final double chunkD = 1D / (double)MArea.size_c;
 	
 	private static final TextureCoords getAreaCoords(int i)
 	{ return new TextureCoords(tex_area, (i % 4) * 64, (i / 4) * 64, 64, 64); }
@@ -40,7 +41,8 @@ public class MRenderer
 		tex_area_coords[1][1][1][0] = getAreaCoords(15);
 	}
 	
-	public int renderX, renderY, size, tiles, startX, startY;
+	public double renderX, renderY, tileSize;
+	public int startX, startY, tilesX, tilesY;
 	public float zLevel;
 	public boolean renderClaims, renderGrid, renderPlayers, renderAreaTitle;
 	
@@ -55,33 +57,30 @@ public class MRenderer
 	@SuppressWarnings("unchecked")
 	public void render()
 	{
-		int dimension = LatCoreMCClient.getDim();
+		double sizeX = sizeX();
+		double sizeY = sizeY();
 		
-		Minimap m = Minimap.get(dimension);
+		Minimap m = Minimap.get(LatCoreMCClient.getDim());
 		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
 		FTBLibClient.pushMaxBrightness();
 		
-		double tilesD = 1D / (double)tiles;
-		double tsize = size * tilesD;
-		double chunkD = 1D / (double)MArea.size_c;
-		
 		GL11.glColor4f(1F, 1F, 1F, 0.9F);
 		
-		for(int y = 0; y < tiles; y++)
-		for(int x = 0; x < tiles; x++)
+		for(int y = 0; y < tilesX; y++)
+		for(int x = 0; x < tilesY; x++)
 		{
 			MChunk c = m.loadChunk(x + startX, y + startY);
 			
 			double ux = c.rposX * chunkD;
 			double uy = c.rposY * chunkD;
 			
-			double dx = renderX + x * tsize;
-			double dy = renderY + y * tsize;
+			double dx = renderX + x * tileSize;
+			double dy = renderY + y * tileSize;
 			
 			c.area.setTexture();
-			GuiLM.drawTexturedRectD(dx, dy, zLevel, tsize, tsize, ux, uy, ux + chunkD, uy + chunkD);
+			GuiLM.drawTexturedRectD(dx, dy, zLevel, tileSize, tileSize, ux, uy, ux + chunkD, uy + chunkD);
 		}
 		
 		if(renderGrid)
@@ -91,24 +90,24 @@ public class MRenderer
 			GL11.glColor4f(0.7F, 0.7F, 0.7F, 0.5F);
 			GL11.glBegin(GL11.GL_LINES);
 			
-			for(int y = 0; y < tiles; y++)
-			for(int x = 0; x < tiles; x++)
+			for(int y = 0; y < tilesX; y++)
+			for(int x = 0; x < tilesY; x++)
 			{
-				double dx = renderX + x * tsize;
-				double dy = renderY + y * tsize;
+				double dx = renderX + x * tileSize;
+				double dy = renderY + y * tileSize;
 				
 				GL11.glVertex3d(dx, dy, zLevel);
-				GL11.glVertex3d(dx + tsize, dy, zLevel);
+				GL11.glVertex3d(dx + tileSize, dy, zLevel);
 				
 				GL11.glVertex3d(dx, dy, zLevel);
-				GL11.glVertex3d(dx, dy + tsize, zLevel);
+				GL11.glVertex3d(dx, dy + tileSize, zLevel);
 			}
 			
-			GL11.glVertex3d(renderX + size, renderY, zLevel);
-			GL11.glVertex3d(renderX + size, renderY + size, zLevel);
+			GL11.glVertex3d(renderX + sizeX, renderY, zLevel);
+			GL11.glVertex3d(renderX + sizeX, renderY + sizeY, zLevel);
 			
-			GL11.glVertex3d(renderX, renderY + size, zLevel);
-			GL11.glVertex3d(renderX + size, renderY + size, zLevel);
+			GL11.glVertex3d(renderX, renderY + sizeY, zLevel);
+			GL11.glVertex3d(renderX + sizeX, renderY + sizeY, zLevel);
 			
 			GL11.glEnd();
 			
@@ -121,8 +120,8 @@ public class MRenderer
 		{
 			FTBLibClient.setTexture(tex_area);
 			
-			for(int y = 0; y < tiles; y++)
-			for(int x = 0; x < tiles; x++)
+			for(int y = 0; y < tilesX; y++)
+			for(int x = 0; x < tilesY; x++)
 			{
 				int cx = x + startX;
 				int cy = y + startY;
@@ -138,7 +137,7 @@ public class MRenderer
 					TextureCoords tc = tex_area_coords[a ? 1 : 0][b ? 1 : 0][c ? 1 : 0][d ? 1 : 0];
 					
 					FTBLibClient.setGLColor(ch.type.areaColor, 255);
-					GuiLM.drawTexturedRectD(renderX + x * tsize, renderY + y * tsize, zLevel, tsize, tsize, tc.minU, tc.minV, tc.maxU, tc.maxV);
+					GuiLM.drawTexturedRectD(renderX + x * tileSize, renderY + y * tileSize, zLevel, tileSize, tileSize, tc.minU, tc.minV, tc.maxU, tc.maxV);
 				}
 			}
 		}
@@ -148,20 +147,18 @@ public class MRenderer
 			FastList<EntityPlayer> list = new FastList<EntityPlayer>();
 			list.addAll(FTBLibClient.mc.theWorld.playerEntities);
 			
-			GL11.glColor4f(1F, 1F, 1F, 0.7F);
-			
 			for(int i = 0; i < list.size(); i++)
 			{
 				EntityPlayer ep = list.get(i);
-				if(ep.dimension == dimension && !ep.isInvisible() && !ep.isSneaking())
+				if(ep.dimension == m.dim && !ep.isInvisible())
 				{
 					int cx = MathHelperLM.chunk(ep.posX);
 					int cy = MathHelperLM.chunk(ep.posZ);
 					
-					if(cx >= startX && cy >= startY && cx < startX + tiles && cy < startY + tiles)
+					if(cx >= startX && cy >= startY && cx < startX + tilesX && cy < startY + tilesY)
 					{
-						double x = ((cx - startX) * 16D + MathHelperLM.wrap(ep.posX, 16D)) * tsize / 16D;
-						double y = ((cy - startY) * 16D + MathHelperLM.wrap(ep.posZ, 16D)) * tsize / 16D;
+						double x = ((cx - startX) * 16D + MathHelperLM.wrap(ep.posX, 16D)) * tileSize / 16D;
+						double y = ((cy - startY) * 16D + MathHelperLM.wrap(ep.posZ, 16D)) * tileSize / 16D;
 						
 						GL11.glPushMatrix();
 						GL11.glTranslated(renderX + x, renderY + y, 0D);
@@ -169,6 +166,7 @@ public class MRenderer
 						//GL11.glRotatef((int)((ep.rotationYaw + 180F) / (180F / 8F)) * (180F / 8F), 0F, 0F, 1F);
 						GL11.glRotatef(ep.rotationYaw + 180F, 0F, 0F, 1F);
 						FTBLibClient.setTexture(tex_map_entity);
+						GL11.glColor4f(1F, 1F, 1F, ep.isSneaking() ? 0.4F : 0.7F);
 						GuiLM.drawTexturedRectD(-8, -8, zLevel, 16, 16, 0D, 0D, 1D, 1D);
 						GL11.glPopMatrix();
 						GuiLM.drawPlayerHead(ep.getCommandSenderName(), -2, -2, 4, 4, zLevel);
@@ -176,6 +174,8 @@ public class MRenderer
 					}
 				}
 			}
+			
+			GL11.glColor4f(1F, 1F, 1F, 1F);
 		}
 		
 		if(renderAreaTitle)
@@ -184,14 +184,17 @@ public class MRenderer
 			int cy = MathHelperLM.chunk(FTBLibClient.mc.thePlayer.posZ);
 			ChunkType t = m.getChunkType(cx, cy);
 			String s = t.isClaimed() ? String.valueOf(m.getChunk(cx, cy).owner) : t.getIDS();
-			FTBLibClient.mc.fontRenderer.drawString(s, renderX, renderY + size + 3, LMColorUtils.chatFormattingColors[t.chatColor.ordinal()]);
+			FTBLibClient.mc.fontRenderer.drawString(s, (int)renderX, (int)(renderY + sizeY + 3D), LMColorUtils.chatFormattingColors[t.chatColor.ordinal()]);
 		}
 		
 		FTBLibClient.popMaxBrightness();
 		GL11.glPopAttrib();
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 	}
+
+	public double sizeX()
+	{ return tileSize * tilesX; }
 	
-	public void reload()
-	{ Minimap.get(LatCoreMCClient.getDim()).reloadArea(FTBLibClient.mc.theWorld, startX, startY, tiles, tiles); }
+	public double sizeY()
+	{ return tileSize * tilesY; }
 }

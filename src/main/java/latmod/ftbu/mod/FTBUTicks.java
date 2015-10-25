@@ -2,7 +2,6 @@ package latmod.ftbu.mod;
 
 import ftb.lib.*;
 import latmod.ftbu.api.ServerTickCallback;
-import latmod.ftbu.backups.Backups;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.net.MessageAreaUpdate;
 import latmod.ftbu.world.*;

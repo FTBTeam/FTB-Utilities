@@ -3,44 +3,49 @@ package latmod.ftbu.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.EntityPos;
+import ftb.lib.api.LMNetworkWrapper;
 import latmod.ftbu.mod.client.minimap.Minimap;
 import latmod.ftbu.world.*;
 import latmod.lib.MathHelperLM;
 
-public class MessageAreaUpdate extends MessageByteArray<MessageAreaUpdate>
+public class MessageAreaUpdate extends MessageFTBU
 {
-	public MessageAreaUpdate() { }
+	public MessageAreaUpdate() { super(DATA_LONG); }
 	
 	public MessageAreaUpdate(int x, int z, int d, int sx, int sz, LMPlayerServer p)
 	{
-		sx = MathHelperLM.clampInt(sx, 1, 256);
-		sz = MathHelperLM.clampInt(sx, 1, 256);
+		this();
+		sx = MathHelperLM.clampInt(sx, 1, 255);
+		sz = MathHelperLM.clampInt(sx, 1, 255);
 		
 		io.writeInt(x);
 		io.writeInt(z);
 		io.writeInt(d);
-		io.writeUByte(sx - 1);
-		io.writeUByte(sz - 1);
+		io.writeUByte(sx);
+		io.writeUByte(sz);
 		
-		for(int z1 = 0; z1 < sz; z1++) for(int x1 = 0; x1 < sz; x1++)
-			io.writeInt(ChunkType.getChunkTypeI(d, x + x1, z + z1, p));
+		for(int z1 = z; z1 < z + sz; z1++) for(int x1 = x; x1 < x + sx; x1++)
+			io.writeInt(ChunkType.getChunkTypeI(d, x1, z1, p));
 	}
 	
 	public MessageAreaUpdate(EntityPos pos, int sx, int sz, LMPlayerServer p)
 	{ this(MathHelperLM.chunk(pos.x) - (sx / 2 + 1), MathHelperLM.chunk(pos.z) - (sz / 2 + 1), pos.dim, sx, sz, p); }
 	
+	public LMNetworkWrapper getWrapper()
+	{ return FTBUNetHandler.NET_CLAIMS; }
+	
 	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageAreaUpdate m, MessageContext ctx)
+	public IMessage onMessage(MessageContext ctx)
 	{
-		int chunkX = m.io.readInt();
-		int chunkZ = m.io.readInt();
-		int dim = m.io.readInt();
-		int sx = m.io.readUByte() + 1;
-		int sz = m.io.readUByte() + 1;
+		int chunkX = io.readInt();
+		int chunkZ = io.readInt();
+		int dim = io.readInt();
+		int sx = io.readUByte();
+		int sz = io.readUByte();
 		
 		int[] types = new int[sx * sz];
 		for(int i = 0; i < types.length; i++)
-			types[i]  = m.io.readInt();
+			types[i]  = io.readInt();
 		
 		Minimap.get(dim).loadChunkTypes(chunkX, chunkZ, sz, sz, types);
 		return null;

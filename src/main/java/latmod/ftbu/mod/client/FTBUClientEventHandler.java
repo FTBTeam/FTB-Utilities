@@ -1,6 +1,7 @@
 package latmod.ftbu.mod.client;
 import org.lwjgl.input.Keyboard;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.relauncher.*;
@@ -71,7 +72,7 @@ public class FTBUClientEventHandler
 				e.left.add(FTBLibClient.mc.debug);
 			
 			if(FTBLibFinals.DEV)
-				e.left.add("[MC " + EnumChatFormatting.GOLD + FTBLibFinals.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");
+				e.left.add("[MC " + EnumChatFormatting.GOLD + Loader.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");
 		}
 		
 		if(FTBLibClient.mc.gameSettings.showDebugInfo)

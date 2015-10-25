@@ -27,10 +27,7 @@ public class FTBUConfigLogin
 	
 	public static void load(ConfigFile f)
 	{
-		group.add(motd);
-		group.add(rules);
-		group.add(customBadges);
-		group.add(startingItems);
+		group.addAll(FTBUConfigLogin.class);
 		f.add(group);
 		
 		ConfigSyncRegistry.add(customBadges);

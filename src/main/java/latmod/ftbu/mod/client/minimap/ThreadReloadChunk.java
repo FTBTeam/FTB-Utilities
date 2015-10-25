@@ -119,7 +119,6 @@ public class ThreadReloadChunk extends Thread
 			}
 		}
 		
-		
 		for(short y = max; y > 0; --y)
 		{
 			Block block = c.getBlock(x, y, z);
@@ -141,6 +140,7 @@ public class ThreadReloadChunk extends Thread
 		else if(b == Blocks.lava) return MapColor.adobeColor.colorValue;
 		else if(b == Blocks.end_stone) return MapColor.sandColor.colorValue;
 		else if(b == Blocks.obsidian) return 0xFF150047;
+		else if(b == Blocks.gravel) return 0xFF8D979B;
 		
 		int m = worldObj.getBlockMetadata(x, y, z);
 		

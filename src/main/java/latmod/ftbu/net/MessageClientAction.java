@@ -1,40 +1,28 @@
 package latmod.ftbu.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
-import io.netty.buffer.ByteBuf;
 import latmod.ftbu.world.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-public class MessageClientAction extends MessageLM<MessageClientAction>
+public class MessageClientAction extends MessageFTBU
 {
-	public ClientAction action;
-	public int extra;
-	
-	public MessageClientAction() { }
+	public MessageClientAction() { super(DATA_SHORT); }
 	
 	MessageClientAction(ClientAction a, int e)
 	{
-		action = (a == null) ? ClientAction.NULL : a;
-		extra = e;
+		this();
+		io.writeUByte((a == null) ? ClientAction.NULL.ID : a.ID);
+		io.writeInt(e);
 	}
 	
-	public void fromBytes(ByteBuf io)
+	public IMessage onMessage(MessageContext ctx)
 	{
-		action = ClientAction.VALUES[io.readUnsignedByte()];
-		extra = io.readInt();
-	}
-	
-	public void toBytes(ByteBuf io)
-	{
-		io.writeByte(action.ID);
-		io.writeInt(extra);
-	}
-	
-	public IMessage onMessage(MessageClientAction m, MessageContext ctx)
-	{
+		ClientAction action = ClientAction.VALUES[io.readUByte()];
+		int extra = io.readInt();
+		
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
 		LMPlayerServer owner = LMWorldServer.inst.getPlayer(ep);
 		
-		if(m.action.onAction(m.extra, ep, owner))
+		if(action.onAction(extra, ep, owner))
 			owner.sendUpdate();
 		
 		return null;

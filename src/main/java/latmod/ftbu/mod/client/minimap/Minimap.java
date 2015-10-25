@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.client.minimap;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.net.ClientAction;
+import latmod.ftbu.net.MessageAreaRequest;
 import latmod.ftbu.world.ChunkType;
 import latmod.lib.*;
 import net.minecraft.world.World;
@@ -56,16 +56,14 @@ public class Minimap
 	public ChunkType getChunkType(int cx, int cz)
 	{ MChunk c = getChunk(cx, cz); return (c == null) ? ChunkType.UNLOADED : c.type; }
 	
-	public void reloadArea(World world, int x, int y, int w, int h)
+	public void reloadArea(World world, int x, int y, int w, int h, boolean updateArea)
 	{
-		for(int cy = y; cy < y + h; cy++)
-		for(int cx = x; cx < x + w; cx++)
-			loadChunk(cx, cy).reload(world);
-		if(w == h) requestArea(w + 2);
+		for(int cy = y; cy < y + h; cy++) for(int cx = x; cx < x + w; cx++) loadChunk(cx, cy).reload(world);
+		if(updateArea) updateClaimedChunks(x, y, w, h);
 	}
 	
-	public void requestArea(int s)
-	{ ClientAction.ACTION_AREA_REQUEST.send(s); }
+	public void updateClaimedChunks(int x, int y, int w, int h)
+	{ new MessageAreaRequest(x - 1, y - 1, w + 2, h + 2).sendToServer(); }
 	
 	// Static //
 	

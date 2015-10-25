@@ -8,7 +8,6 @@ import ftb.lib.item.LMInvUtils;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.api.item.ICreativeSafeItem;
 import latmod.ftbu.api.tile.ISecureTile;
-import latmod.ftbu.backups.Backups;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.cmd.CmdMotd;
 import latmod.ftbu.mod.config.*;
@@ -113,7 +112,8 @@ public class FTBUPlayerEventHandler
 		new MessageLMPlayerLoggedOut(p).sendTo(null);
 		new MessageLMPlayerInfo(p.playerID).sendTo(null);
 		
-		FTBLib.runCommand(FTBLib.getServer(), "admin player saveinv " + p.getName());
+		if(FTBUConfigBackups.autoExportInvOnLogout.get())
+			FTBLib.runCommand(FTBLib.getServer(), "admin player saveinv " + p.getName());
 		
 		p.setPlayer(null);
 		//Backups.shouldRun = true;

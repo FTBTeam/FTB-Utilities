@@ -7,6 +7,7 @@ import latmod.ftbu.api.client.*;
 import latmod.ftbu.api.guide.*;
 import latmod.ftbu.badges.ThreadLoadBadges;
 import latmod.ftbu.mod.*;
+import latmod.ftbu.mod.cmd.CmdMath;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.tile.TileLM;
 import latmod.ftbu.util.LMGuiHandler;
@@ -16,6 +17,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraftforge.client.ClientCommandHandler;
 
 @SideOnly(Side.CLIENT)
 public class FTBUClient extends FTBUCommon // FTBLibModClient
@@ -66,6 +68,8 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		miscConfig.add(hideArmorFG);
 		miscConfig.add(openHSB);
 		ClientConfigRegistry.add(miscConfig);
+		
+		ClientCommandHandler.instance.registerCommand(new CmdMath());
 	}
 	
 	public static void onWorldJoined()

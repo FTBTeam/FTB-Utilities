@@ -1,5 +1,6 @@
 package latmod.ftbu.mod.client.gui.friends;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import latmod.ftbu.mod.client.FTBUClient;
@@ -23,6 +24,8 @@ public class PanelPlayerView extends PanelFriendsGui
 	
 	public void renderWidget()
 	{
+		FTBUClient.hideArmorFG.setValue((mouseOver() && Mouse.isButtonDown(1)) ? 1 : 0);
+		
 		if(FTBUClient.hideArmorFG.getB())
 		{
 			for(int i = 0; i < 4; i++)
@@ -51,8 +54,8 @@ public class PanelPlayerView extends PanelFriendsGui
 		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 		int playerX = getAX() + width / 2;
 		
-		int size = 130;
-		int playerY = height / 2 + size;
+		int size = 120;
+		int playerY = height / 2 + size - 4;
 		gui.setTexture(selectedPlayer.getLocationSkin());
 		GL11.glTranslatef(0F, 0F, 100F);
 		GuiInventory.func_147046_a(playerX, playerY, size, playerX - gui.mouseX, playerY - (size + (size / 1.625F)) - gui.mouseY, selectedPlayer);

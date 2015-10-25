@@ -1,5 +1,7 @@
 package latmod.ftbu.util.gui;
 
+import java.util.List;
+
 import cpw.mods.fml.relauncher.*;
 import latmod.lib.FastList;
 
@@ -41,7 +43,7 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 		for(int i = 0; i < l.length; i++) add(l[i]);
 	}
 	
-	public void addAll(FastList<? extends WidgetLM> l)
+	public void addAll(List<? extends WidgetLM> l)
 	{
 		if(l == null || l.isEmpty()) return;
 		for(int i = 0; i < l.size(); i++) add(l.get(i));

@@ -3,17 +3,15 @@ import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import ftb.lib.*;
 import ftb.lib.item.ODItems;
-import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.api.EventFTBUInit;
-import latmod.ftbu.backups.Backups;
 import latmod.ftbu.mod.cmd.*;
-import latmod.ftbu.mod.config.FTBUConfig;
+import latmod.ftbu.mod.config.*;
 import latmod.ftbu.mod.handlers.*;
-import latmod.ftbu.net.LMNetHelper;
+import latmod.ftbu.net.FTBUNetHandler;
 import latmod.ftbu.notification.*;
 import latmod.ftbu.util.LMMod;
-import latmod.ftbu.world.LMWorldServer;
-import latmod.lib.*;
+import latmod.ftbu.world.*;
+import latmod.lib.LMJsonUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 @Mod
@@ -37,13 +35,6 @@ public class FTBU
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
-		if(FTBLibFinals.DEV)
-			FTBLib.logger.info("Loading " + FTBUFinals.MOD_NAME + ", Dev Build");
-		else
-			FTBLib.logger.info("Loading " + FTBUFinals.MOD_NAME + ", Build #" + FTBUFinals.MOD_VERSION);
-		
-		FTBLib.logger.info("OS: " + OS.current + ", 64bit: " + OS.is64);
-		
 		LMMod.init(this);
 		
 		LMJsonUtils.register(Notification.class, new Notification.Serializer());
@@ -54,7 +45,7 @@ public class FTBU
 		EventBusHelper.register(new FTBUWorldEventHandler());
 		EventBusHelper.register(new FTBUChatEventHandler());
 		FTBUConfig.load();
-		LMNetHelper.init();
+		FTBUNetHandler.init();
 		ODItems.preInit();
 		Backups.init();
 		mod.onPostLoaded();
@@ -83,15 +74,14 @@ public class FTBU
 	{
 		FTBUTicks.serverStarted();
 		e.registerServerCommand(new CmdAdmin());
-		e.registerServerCommand(new CmdBack());
 		e.registerServerCommand(new CmdFTBU());
-		e.registerServerCommand(new CmdMotd());
-		e.registerServerCommand(new CmdRules());
-		e.registerServerCommand(new CmdSpawn());
-		e.registerServerCommand(new CmdTplast());
-		e.registerServerCommand(new CmdWarp());
 		e.registerServerCommand(new CmdListOverride());
-		e.registerServerCommand(new CmdMath());
+		if(FTBUConfigCmd.back.get()) e.registerServerCommand(new CmdBack());
+		if(FTBUConfigCmd.motd.get()) e.registerServerCommand(new CmdMotd());
+		if(FTBUConfigCmd.rules.get()) e.registerServerCommand(new CmdRules());
+		if(FTBUConfigCmd.spawn.get()) e.registerServerCommand(new CmdSpawn());
+		if(FTBUConfigCmd.tplast.get()) e.registerServerCommand(new CmdTplast());
+		if(FTBUConfigCmd.warp.get()) e.registerServerCommand(new CmdWarp());
 	}
 	
 	@Mod.EventHandler

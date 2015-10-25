@@ -56,33 +56,25 @@ public class Claims
 		return null;
 	}
 	
-	public void claim(int dim, int cx, int cz, int sx, int sz)
+	public void claim(int dim, int cx, int cz)
 	{
 		int max = owner.getMaxClaimPower();
 		
-		for(int z = cz; z < cz + sz; z++)
-		for(int x = cx; x < cx + sx; x++)
-		{
-			if(max >= 0 && chunks.size() >= max) return;
-			
-			ChunkType t = ChunkType.get(dim, x, z, owner);
-			if(t == ChunkType.WILDERNESS)
-				chunks.add(new ClaimedChunk(this, dim, x, z));
-		}
+		if(max >= 0 && chunks.size() >= max) return;
+		
+		ChunkType t = ChunkType.get(dim, cx, cz, owner);
+		if(t == ChunkType.WILDERNESS)
+			chunks.add(new ClaimedChunk(this, dim, cx, cz));
 		
 		owner.sendUpdate();
 	}
 	
-	public void unclaim(int dim, int cx, int cz, int sx, int sz, boolean admin)
+	public void unclaim(int dim, int cx, int cz, boolean admin)
 	{
-		for(int z = cz; z < cz + sz; z++)
-		for(int x = cx; x < cx + sx; x++)
-		{
-			ChunkType t = ChunkType.get(dim, x, z, owner);
-			if(t == ChunkType.CLAIMED_SELF)
-				chunks.remove(new ClaimedChunk(this, dim, x, z));
-			if(chunks.isEmpty()) return;
-		}
+		ChunkType t = ChunkType.get(dim, cx, cz, owner);
+		if(t == ChunkType.CLAIMED_SELF)
+			chunks.remove(new ClaimedChunk(this, dim, cx, cz));
+		//if(chunks.isEmpty()) return;
 		
 		owner.sendUpdate();
 	}

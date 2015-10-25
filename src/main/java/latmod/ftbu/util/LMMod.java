@@ -95,7 +95,7 @@ public class LMMod
 	{ recipes = (r == null) ? new LMRecipes() : r; }
 	
 	public String toFullString()
-	{ return modID + '-' + FTBLibFinals.MC_VERSION + '-' + modContainer.getDisplayVersion(); }
+	{ return modID + '-' + Loader.MC_VERSION + '-' + modContainer.getDisplayVersion(); }
 	
 	public String toString()
 	{ return modID; }

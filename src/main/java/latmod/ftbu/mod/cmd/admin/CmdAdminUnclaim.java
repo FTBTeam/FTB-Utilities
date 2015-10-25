@@ -21,7 +21,7 @@ public class CmdAdminUnclaim extends CommandLM
 		if(c != null)
 		{
 			String s = c.toString();
-			c.claims.unclaim(c.dim, c.posX, c.posZ, 1, 1, true);
+			c.claims.unclaim(c.dim, c.posX, c.posZ, true);
 			return new ChatComponentText("Unclaimed " + s); //LANG
 		}
 		

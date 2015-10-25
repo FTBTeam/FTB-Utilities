@@ -13,12 +13,12 @@ import net.minecraft.util.EnumChatFormatting;
 
 public class GuideFile
 {
-	public static final GuideFile inst = new GuideFile();
+	public static final GuideFile inst = new GuideFile("Guide");
 	
 	public final GuideCategory main;
 	
-	private GuideFile()
-	{ main = new GuideCategory(null, "Guide"); }
+	public GuideFile(String title)
+	{ main = new GuideCategory(null, title); }
 	
 	public void reload(EventFTBModeSet e)
 	{
@@ -92,15 +92,6 @@ public class GuideFile
 			}
 		}
 	}
-	
-	/*
-	public void writeToNBT(NBTTagCompound tag)
-	{
-	}
-	
-	public void readFromNBT(NBTTagCompound tag)
-	{
-	}*/
 	
 	public void addConfigFromClass(String mod, String id, Class<?> c)
 	{

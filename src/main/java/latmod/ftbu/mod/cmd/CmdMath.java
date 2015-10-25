@@ -18,13 +18,14 @@ public class CmdMath extends CommandLM
 		
 		try
 		{
-			ScriptEngineManager mgr = new ScriptEngineManager();
-			ScriptEngine engine = mgr.getEngineByName("JavaScript");
-			Object o = engine.eval(LMStringUtils.unsplit(args, " "));
+			String s = LMStringUtils.unsplit(args, " ").trim();
+			ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
+			if(engine == null) return error(new ChatComponentText("Error"));
+			Object o = engine.eval(s);
 			return new ChatComponentText(String.valueOf(o));
 		}
-		catch(Exception e) { }
+		catch(Exception e) { e.printStackTrace(); }
 		
-		return error(new ChatComponentText("null"));
+		return error(new ChatComponentText("Error"));
 	}
 }

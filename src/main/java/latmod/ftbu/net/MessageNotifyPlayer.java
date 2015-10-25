@@ -1,34 +1,23 @@
 package latmod.ftbu.net;
-import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
-import io.netty.buffer.ByteBuf;
 import latmod.ftbu.notification.Notification;
 import latmod.ftbu.util.client.ClientNotifications;
 
-public class MessageNotifyPlayer extends MessageLM<MessageNotifyPlayer>
+public class MessageNotifyPlayer extends MessageFTBU
 {
-	public String data;
-	
-	public MessageNotifyPlayer() { }
+	public MessageNotifyPlayer() { super(DATA_SHORT); }
 	
 	public MessageNotifyPlayer(Notification n)
-	{ data = n.toJson(); }
-	
-	public void fromBytes(ByteBuf io)
 	{
-		data = ByteBufUtils.readUTF8String(io);
-	}
-	
-	public void toBytes(ByteBuf io)
-	{
-		ByteBufUtils.writeUTF8String(io, data);
+		this();
+		io.writeString(n.toJson());
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageNotifyPlayer m, MessageContext ctx)
+	public IMessage onMessage(MessageContext ctx)
 	{
-		ClientNotifications.add(Notification.fromJson(m.data));
+		ClientNotifications.add(Notification.fromJson(io.readString()));
 		return null;
 	}
 }

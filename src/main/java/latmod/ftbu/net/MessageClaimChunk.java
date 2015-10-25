@@ -1,54 +1,37 @@
 package latmod.ftbu.net;
 
 import cpw.mods.fml.common.network.simpleimpl.*;
-import io.netty.buffer.ByteBuf;
+import ftb.lib.api.LMNetworkWrapper;
 import latmod.ftbu.world.*;
-import latmod.lib.MathHelperLM;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
+public class MessageClaimChunk extends MessageFTBU
 {
-	public int chunkX, chunkZ, dim, sizeX, sizeZ;
-	public boolean claim;
+	public MessageClaimChunk() { super(DATA_SHORT); }
 	
-	public MessageClaimChunk() { }
-	
-	public MessageClaimChunk(int d, int x, int z, int sx, int sz, boolean c)
+	public MessageClaimChunk(int d, int x, int z, boolean c)
 	{
-		dim = d;
-		chunkX = x;
-		chunkZ = z;
-		sizeX = MathHelperLM.clampInt(sx, 1, 255);
-		sizeZ = MathHelperLM.clampInt(sz, 1, 255);
-		claim = c;
+		this();
+		io.writeInt(d);
+		io.writeInt(x);
+		io.writeInt(z);
+		io.writeBoolean(c);
 	}
 	
-	public void fromBytes(ByteBuf io)
-	{
-		dim = io.readInt();
-		chunkX = io.readInt();
-		chunkZ = io.readInt();
-		sizeX = io.readUnsignedByte();
-		sizeZ = io.readUnsignedByte();
-		claim = io.readBoolean();
-	}
+	public LMNetworkWrapper getWrapper()
+	{ return FTBUNetHandler.NET_CLAIMS; }
 	
-	public void toBytes(ByteBuf io)
+	public IMessage onMessage(MessageContext ctx)
 	{
-		io.writeInt(dim);
-		io.writeInt(chunkX);
-		io.writeInt(chunkZ);
-		io.writeByte(sizeX);
-		io.writeByte(sizeZ);
-		io.writeBoolean(claim);
-	}
-	
-	public IMessage onMessage(MessageClaimChunk m, MessageContext ctx)
-	{
+		int dim = io.readInt();
+		int chunkX = io.readInt();
+		int chunkZ = io.readInt();
+		boolean claim = io.readBoolean();
+		
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
-		if(m.claim) p.claims.claim(m.dim, m.chunkX, m.chunkZ, m.sizeX, m.sizeZ);
-		else p.claims.unclaim(m.dim, m.chunkX, m.chunkZ, m.sizeX, m.sizeZ, false);
-		return new MessageAreaUpdate(m.chunkX, m.chunkZ, m.dim, m.sizeX, m.sizeZ, p);
+		if(claim) p.claims.claim(dim, chunkX, chunkZ);
+		else p.claims.unclaim(dim, chunkX, chunkZ, false);
+		return new MessageAreaUpdate(chunkX, chunkZ, dim, 1, 1, p);
 	}
 }

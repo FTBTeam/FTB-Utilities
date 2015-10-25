@@ -34,13 +34,7 @@ public class FTBUConfigBackups
 	
 	public static void load(ConfigFile f)
 	{
-		group.add(enabled);
-		group.add(backupsToKeep);
-		group.add(backupTimer);
-		group.add(compressionLevel);
-		group.add(folder);
-		group.add(displayFileSize);
-		group.add(autoExportInvOnLogout);
+		group.addAll(FTBUConfigBackups.class);
 		f.add(group);
 	}
 	

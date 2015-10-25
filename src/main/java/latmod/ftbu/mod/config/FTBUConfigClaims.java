@@ -20,11 +20,7 @@ public class FTBUConfigClaims
 	
 	public static void load(ConfigFile f)
 	{
-		group.add(maxClaimsPlayer);
-		group.add(maxClaimsAdmin);
-		group.add(forcedExplosions);
-		//group.add(forcedBreakMode);
-		//group.add(forcedPlaceMode);
+		group.addAll(FTBUConfigClaims.class);
 		f.add(group);
 	}
 }

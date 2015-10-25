@@ -3,7 +3,6 @@ package latmod.ftbu.mod.client.gui;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
 import latmod.ftbu.mod.client.minimap.*;
 import latmod.ftbu.net.*;
@@ -11,59 +10,38 @@ import latmod.ftbu.util.client.*;
 import latmod.ftbu.util.gui.*;
 import latmod.ftbu.world.LMWorldClient;
 import latmod.lib.*;
-import net.minecraft.init.Items;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
 public class GuiMinimap extends GuiLM // implements IClientActionGui
 {
-	public static final ResourceLocation tex = FTBU.mod.getLocation("textures/gui/minimap.png");
-	public static final TextureCoords tex_mouse = new TextureCoords(tex, 156, 0, 32, 32);
+	//public static final ResourceLocation tex = FTBU.mod.getLocation("textures/gui/minimap.png");
+	//public static final TextureCoords tex_mouse = new TextureCoords(tex, 156, 0, 32, 32);
 	private static final MRenderer mapRenderer = new MRenderer();
-	private static final int TILES = 9;
 	
 	public final Minimap minimap;
-	public MapButton buttonPressed0 = null;
 	
+	public int tileSize = 32;
 	public final ButtonLM buttonRefresh, buttonClose;
 	public final ItemButtonLM buttonSafe;
-	public final MapButton[] mapButtons;
+	public final FastList<MapButton> mapButtons;
 	
 	public GuiMinimap()
 	{
-		super(null, tex);
-		xSize = 156;
-		ySize = 185;
+		super(null, null);
 		hideNEI = true;
 		
-		minimap = Minimap.get(LatCoreMCClient.getDim());
+		tileSize = 16;
 		
-		mapRenderer.tiles = TILES;
-		mapRenderer.size = TILES * 16;
-		mapRenderer.startX = MathHelperLM.chunk(mc.thePlayer.posX) - TILES / 2;
-		mapRenderer.startY = MathHelperLM.chunk(mc.thePlayer.posZ) - TILES / 2;
+		minimap = Minimap.get(LatCoreMCClient.getDim());
 		
 		mapRenderer.renderClaims = true;
 		mapRenderer.renderGrid = Minimap.mapOptions.hasGrid();
 		mapRenderer.renderPlayers = true;
 		mapRenderer.renderAreaTitle = false;
 		
-		mapRenderer.reload();
-		
-		buttonRefresh = new ButtonLM(this, 6, 6, 16, 16)
-		{
-			public void onButtonPressed(int b)
-			{
-				Minimap m = Minimap.get(mc.thePlayer.dimension);
-				m.reloadArea(mc.theWorld, mapRenderer.startX, mapRenderer.startY, TILES, TILES);
-				gui.playClickSound();
-			}
-		};
-		
-		buttonRefresh.title = FTBULang.button_refresh();
-		
-		buttonClose = new ButtonLM(this, 132, 6, 16, 16)
+		buttonClose = new ButtonLM(this, 0, 0, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
@@ -72,9 +50,18 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 			}
 		};
 		
-		buttonClose.title = FTBULang.button_close();
+		buttonRefresh = new ButtonLM(this, 0, 16, 16, 16)
+		{
+			public void onButtonPressed(int b)
+			{
+				minimap.reloadArea(mc.theWorld, mapRenderer.startX, mapRenderer.startY, mapRenderer.tilesX, mapRenderer.tilesY, true);
+				gui.playClickSound();
+			}
+		};
 		
-		buttonSafe = new ItemButtonLM(this, 28, 6, 16, 16)
+		buttonRefresh.title = FTBULang.button_refresh();
+		
+		buttonSafe = new ItemButtonLM(this, 16, 0, 32, 32)
 		{
 			public void onButtonPressed(int b)
 			{
@@ -84,14 +71,27 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 			}
 		};
 		
-		buttonSafe.setItem(new ItemStack(Items.skull, 1, 4));
+		buttonSafe.setItem(new ItemStack(Blocks.tnt));
 		
-		mapButtons = new MapButton[TILES * TILES];
-		
-		for(int i = 0; i < mapButtons.length; i++)
-			mapButtons[i] = new MapButton(this, 6, 26, i);
-		
+		mapButtons = new FastList<MapButton>();
 		buttonRefresh.onButtonPressed(0);
+	}
+	
+	public void initLMGui()
+	{
+		xSize = width;
+		ySize = height;
+		
+		mapRenderer.tileSize = tileSize;
+		
+		mapRenderer.tilesX = (int)((double)xSize / mapRenderer.tileSize) + 1;
+		mapRenderer.tilesY = (int)((double)ySize / mapRenderer.tileSize);
+		mapRenderer.startX = MathHelperLM.chunk(mc.thePlayer.posX) - mapRenderer.tilesX / 2;
+		mapRenderer.startY = MathHelperLM.chunk(mc.thePlayer.posZ) - mapRenderer.tilesY / 2;
+		
+		mapButtons.clear();
+		for(int i = 0; i < mapRenderer.tilesX * mapRenderer.tilesY; i++)
+			mapButtons.add(new MapButton(this, 0, 32));
 	}
 	
 	public void addWidgets()
@@ -106,19 +106,33 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 	{
 		if(minimap.dim != LatCoreMCClient.getDim() || !LatCoreMCClient.isPlaying())
 		{ mc.thePlayer.closeScreen(); return; }
+		drawBlankRect(0, 0, zLevel, xSize, ySize, 0xFF000000);
+		
+		drawBlankRect((xSize - 128) / 2, (ySize - 128) / 2, zLevel, 128, 128, 0xFFFF0000);
+		
+		if(mapButtons.isEmpty()) return;
+		
+		if(mouseDWheel != 0)
+		{
+			if(mouseDWheel < 0) tileSize /= 2D;
+			else tileSize *= 2D;
+			if(tileSize < 8) tileSize = 8;
+			else if(tileSize > 64) tileSize = 64;
+			else initLMGui();
+		}
 		
 		super.drawBackground();
 		
 		GL11.glColor4f(1F, 1F, 1F, 1F);
-		setTexture(tex);
+		//setTexture(tex);
 		
-		mapRenderer.renderX = mapButtons[0].getAX();
-		mapRenderer.renderY = mapButtons[0].getAY();
-		mapRenderer.render();
+		mapRenderer.renderX = mapButtons.get(0).getAX();
+		mapRenderer.renderY = mapButtons.get(0).getAY();
+		//mapRenderer.render();
 		
 		GL11.glColor4f(1F, 1F, 1F, 1F);
-		for(int i = 0; i < mapButtons.length; i++)
-			mapButtons[i].renderWidget();
+		for(int i = 0; i < mapButtons.size(); i++)
+			mapButtons.get(i).renderWidget();
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		
 		buttonRefresh.render(GuiIcons.map);
@@ -127,20 +141,11 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 		
 		if(LMWorldClient.inst.clientPlayer.settings.safeClaims)
 		{
-			zLevel = 500;
+			zLevel = 500F;
 			GL11.glColor4f(1F, 1F, 1F, 0.75F);
 			buttonSafe.render(GuiIcons.close);
 			GL11.glColor4f(1F, 1F, 1F, 1F);
-			zLevel = 0;
-		}
-		
-		if(buttonPressed0 != null)
-		{
-			int x = Math.min(buttonPressed0.mouseCX, mouseX);
-			int y = Math.min(buttonPressed0.mouseCY, mouseY);
-			int w = Math.min(Math.abs(buttonPressed0.mouseCX - mouseX), mapRenderer.size);
-			int h = Math.min(Math.abs(buttonPressed0.mouseCY - mouseY), mapRenderer.size);
-			drawBlankRect(x, y, zLevel, w, h, 0x7700FF00);
+			zLevel = 0F;
 		}
 	}
 	
@@ -160,62 +165,26 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 		//refreshWidgets();
 	}
 	
-	protected void mouseMovedOrUp(int mx, int my, int b)
-	{
-		mouseX = mx;
-		mouseY = my;
-		
-		if(b < 0 || b > 1) return;
-		
-		if(buttonPressed0 != null)
-		{
-			MapButton button = getMouseOverButton();
-			
-			if(button != null)
-			{
-				int cx = Math.min(buttonPressed0.chunk.posX, button.chunk.posX);
-				int cy = Math.min(buttonPressed0.chunk.posY, button.chunk.posY);
-				int csx = Math.abs(buttonPressed0.chunk.posX - button.chunk.posX) + 1;
-				int csy = Math.abs(buttonPressed0.chunk.posY - button.chunk.posY) + 1;
-				new MessageClaimChunk(minimap.dim, cx, cy, csx, csy, b == 0).sendToServer();
-			}
-			
-			buttonPressed0 = null;
-		}
-		
-		super.mouseMovedOrUp(mx, my, b);
-	}
-	
-	private MapButton getMouseOverButton()
-	{
-		for(int i = 0; i < mapButtons.length; i++)
-			if(mapButtons[i].mouseOver())
-				return mapButtons[i];
-		return null;
-	}
-	
 	public static class MapButton extends ButtonLM
 	{
 		public final GuiMinimap gui;
 		public final MChunk chunk;
-		public int mouseCX, mouseCY;
 		
-		public MapButton(GuiMinimap g, int x, int y, int i)
+		public MapButton(GuiMinimap g, int x, int y)
 		{
-			super(g, x, y, 16, 16);
+			super(g, x, y, g.tileSize, g.tileSize);
 			gui = g;
-			posX += (i % TILES) * width;
-			posY += (i / TILES) * height;
-			int chunkX = mapRenderer.startX + (i % TILES);
-			int chunkY = mapRenderer.startY + (i / TILES);
+			int i = g.mapButtons.size();
+			posX += (i % mapRenderer.tilesX) * width;
+			posY += (i / mapRenderer.tilesX) * height;
+			int chunkX = mapRenderer.startX + (i % mapRenderer.tilesX);
+			int chunkY = mapRenderer.startY + (i / mapRenderer.tilesX);
 			chunk = gui.minimap.loadChunk(chunkX, chunkY);
 		}
 		
 		public void onButtonPressed(int b)
 		{
-			gui.buttonPressed0 = this;
-			mouseCX = gui.mouseX;
-			mouseCY = gui.mouseY;
+			new MessageClaimChunk(gui.minimap.dim, mapRenderer.startX, mapRenderer.startY, b == 0).sendToServer();
 			gui.playClickSound();
 		}
 		
@@ -227,7 +196,7 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 			if(mouseOver())
 			{
 				GL11.glColor4f(0.1F, 1F, 0.7F, 0.8F);
-				tex_mouse.render(gui, getAX(), getAY(), 16, 16);
+				drawBlankRect(getAX(), getAY(), gui.zLevel, gui.tileSize, gui.tileSize, 0x3311FF66);
 			}
 		}
 	}

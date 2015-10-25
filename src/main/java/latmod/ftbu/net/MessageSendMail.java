@@ -1,46 +1,31 @@
 package latmod.ftbu.net;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.*;
-import io.netty.buffer.ByteBuf;
 import latmod.ftbu.world.*;
 import latmod.lib.LMUtils;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class MessageSendMail extends MessageLM<MessageSendMail>
+public class MessageSendMail extends MessageFTBU
 {
-	public int receiver;
-	public NBTTagCompound data;
-	
-	public MessageSendMail() {}
+	public MessageSendMail() { super(DATA_LONG); }
 	
 	public MessageSendMail(Mail m)
 	{
-		receiver = m.receiver.playerID;
-		data = new NBTTagCompound();
+		this();
+		io.writeInt(m.receiver.playerID);
+		NBTTagCompound data = new NBTTagCompound();
 		m.writeToNBT(data);
+		writeTag(data);
 	}
 	
-	public void fromBytes(ByteBuf io)
+	public IMessage onMessage(MessageContext ctx)
 	{
-		receiver = io.readInt();
-		data = ByteBufUtils.readTag(io);
-	}
-	
-	public void toBytes(ByteBuf io)
-	{
-		io.writeInt(receiver);
-		ByteBufUtils.writeTag(io, data);
-	}
-	
-	public IMessage onMessage(MessageSendMail m, MessageContext ctx)
-	{
-		LMPlayerServer p = LMWorldServer.inst.getPlayer(m.receiver);
+		LMPlayerServer p = LMWorldServer.inst.getPlayer(io.readInt());
 		
 		if(p != null)
 		{
 			Mail mail = new Mail(p);
-			mail.readFromNBT(m.data);
+			mail.readFromNBT(readTag());
 			mail.timeSent = LMUtils.millis();
 			p.mail.add(mail);
 		}

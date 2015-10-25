@@ -12,6 +12,6 @@ public class WorldBorder
 	{
 		dim = d;
 		pos = new Pos2I(0, 0);
-		size = -1;
+		size = 0;
 	}
 }

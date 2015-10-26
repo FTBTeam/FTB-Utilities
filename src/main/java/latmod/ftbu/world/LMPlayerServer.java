@@ -4,7 +4,7 @@ import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
-import ftb.lib.item.LMInvUtils;
+import ftb.lib.item.StringIDInvLoader;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.mod.config.FTBUConfigClaims;
 import latmod.ftbu.net.MessageLMPlayerUpdate;
@@ -26,7 +26,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public final Claims claims;
 	private String playerName;
 	private EntityPlayerMP entityPlayer = null;
-	private int maxClaimPower = -2;
+	private int maxClaimPower = -1;
 	public int lastChunkType = -99;
 	
 	public long lastSeen, firstJoined, timePlayed;
@@ -126,7 +126,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		commonPublicData = tag.getCompoundTag("CustomData");
 		commonPrivateData = tag.getCompoundTag("CustomPrivateData");
 		
-		LMInvUtils.readItemsFromNBT(lastArmor, tag, "LastItems");
+		StringIDInvLoader.readItemsFromNBT(lastArmor, tag, "LastItems");
 		
 		deaths = tag.getInteger("Deaths");
 		
@@ -166,7 +166,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		if(!commonPublicData.hasNoTags()) tag.setTag("CustomData", commonPublicData);
 		if(!commonPrivateData.hasNoTags()) tag.setTag("CustomPrivateData", commonPrivateData);
 		
-		LMInvUtils.writeItemsToNBT(lastArmor, tag, "LastItems");
+		StringIDInvLoader.writeItemsToNBT(lastArmor, tag, "LastItems");
 		
 		tag.setInteger("Deaths", deaths);
 		
@@ -209,7 +209,6 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			tag.setIntArray("F", friends.toArray());
 		
 		if(!commonPublicData.hasNoTags()) tag.setTag("CD", commonPublicData);
-		LMInvUtils.writeItemsToNBT(lastArmor, tag, "LI");
 		
 		if(deaths > 0) tag.setInteger("D", deaths);
 		
@@ -230,16 +229,16 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	{ new EventLMPlayerServer.DataLoaded(this).post(); }
 	
 	public int updateMaxClaimPower()
-	{ maxClaimPower = -2; return getMaxClaimPower(); }
+	{ maxClaimPower = -1; return getMaxClaimPower(); }
 	
 	public int getMaxClaimPower()
 	{
-		if(maxClaimPower == -2)
+		if(maxClaimPower == -1)
 		{
 			maxClaimPower = isOP() ? FTBUConfigClaims.maxClaimsAdmin.get() : FTBUConfigClaims.maxClaimsPlayer.get();
 			EventLMPlayerServer.GetMaxClaimPower e = new EventLMPlayerServer.GetMaxClaimPower(this, maxClaimPower);
 			e.post();
-			maxClaimPower = e.result;
+			maxClaimPower = Math.max(0, e.result);
 		}
 		
 		return maxClaimPower;

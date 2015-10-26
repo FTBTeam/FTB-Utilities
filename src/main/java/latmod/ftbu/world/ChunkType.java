@@ -1,21 +1,21 @@
 package latmod.ftbu.world;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.LMDimUtils;
 import latmod.ftbu.mod.FTBU;
 import latmod.lib.MathHelperLM;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.DimensionManager;
+import net.minecraft.world.World;
 
 public enum ChunkType
 {
-	UNLOADED("unloaded", EnumChatFormatting.DARK_GRAY, 0x000000),
-	SPAWN("spawn", EnumChatFormatting.AQUA, 0x00EFDF),
-	WORLD_BORDER("world_border", EnumChatFormatting.RED, 0xFF0000),
-	WILDERNESS("wilderness", EnumChatFormatting.DARK_GREEN, 0x2F9E00),
-	CLAIMED_OTHER("claimed", EnumChatFormatting.BLUE, 0x0094FF),
-	CLAIMED_SELF("claimed", EnumChatFormatting.GREEN, 0x00FF21),
-	CLAIMED_FRIEND("claimed", EnumChatFormatting.GREEN, 0x00FF21),
+	UNLOADED("unloaded", EnumChatFormatting.DARK_GRAY, 0xFF000000),
+	SPAWN("spawn", EnumChatFormatting.AQUA, 0xFF00EFDF),
+	WORLD_BORDER("world_border", EnumChatFormatting.RED, 0xFFFF0000),
+	WILDERNESS("wilderness", EnumChatFormatting.DARK_GREEN, 0xFF2F9E00),
+	CLAIMED_OTHER("claimed", EnumChatFormatting.BLUE, 0xFF0094FF),
+	CLAIMED_SELF("claimed", EnumChatFormatting.GREEN, 0xFF8CBF00),
+	CLAIMED_FRIEND("claimed", EnumChatFormatting.GREEN, 0xFF8CBF00),
 	
 	; public static final ChunkType[] VALUES = values();
 	
@@ -50,8 +50,8 @@ public enum ChunkType
 	
 	public static ChunkType get(int dim, int cx, int cz, LMPlayerServer p)
 	{
-		WorldServer w = DimensionManager.getWorld(dim);
-		if(w != null && !w.getChunkProvider().chunkExists(cx, cz)) return UNLOADED;
+		World w = LMDimUtils.getWorld(dim);
+		if(w == null || !w.getChunkProvider().chunkExists(cx, cz)) return UNLOADED;
 		if(Claims.isInSpawn(dim, cx, cz)) return SPAWN;
 		if(LMWorldServer.inst.settings.isOutside(dim, cx, cz)) return WORLD_BORDER;
 		ClaimedChunk c = Claims.get(dim, cx, cz);
@@ -67,20 +67,17 @@ public enum ChunkType
 	
 	public static int getChunkTypeI(int dim, int cx, int cz, LMPlayerServer p)
 	{
+		ClaimedChunk c = Claims.get(dim, cx, cz);
+		if(c != null) return c.claims.owner.playerID;
 		ChunkType type = ChunkType.get(dim, cx, cz, p);
-		if(type.isClaimed())
-		{
-			ClaimedChunk c = Claims.get(dim, cx, cz);
-			if(c != null) return c.claims.owner.playerID;
-		}
-		
 		return -type.ordinal();
 	}
 	
-	public static ChunkType getChunkTypeFromI(int i, LMPlayerServer o)
+	public static ChunkType getChunkTypeFromI(int i, LMPlayer o)
 	{
-		if(i < 0) return ChunkType.VALUES[-i];
-		LMPlayerServer p = LMWorldServer.inst.getPlayer(i);
+		if(i <= 0) return ChunkType.VALUES[-i];
+		LMPlayer p = LMWorld.getWorld().getPlayer(i);
+		
 		if(o != null)
 		{
 			if(p == null) return CLAIMED_OTHER;
@@ -88,6 +85,7 @@ public enum ChunkType
 			else if(o.isFriend(p)) return CLAIMED_FRIEND;
 			else return CLAIMED_OTHER;
 		}
-		return ChunkType.WILDERNESS;
+		
+		return WILDERNESS;
 	}
 }

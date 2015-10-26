@@ -4,7 +4,7 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.LMNetworkWrapper;
 import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.api.guide.GuideFile;
-import latmod.ftbu.mod.client.gui.GuiGuide;
+import latmod.ftbu.mod.client.gui.guide.GuiGuide;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class MessageDisplayGuide extends MessageFTBU

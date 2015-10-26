@@ -15,6 +15,6 @@ public class CmdFTBUBackupTimer extends CommandLM
 	public IChatComponent onCommand(ICommandSender ics, String[] args) //LANG
 	{
 		if(!FTBUConfigBackups.enabled.get()) throw new FeatureDisabledException();
-		return new ChatComponentText("Time left until next backup: " + LMStringUtils.getTimeString(Backups.getSecondsUntilNextBackup()));
+		return new ChatComponentText("Time left until next backup: " + LMStringUtils.getTimeString(Backups.getSecondsUntilNextBackup() * 1000L));
 	}
 }

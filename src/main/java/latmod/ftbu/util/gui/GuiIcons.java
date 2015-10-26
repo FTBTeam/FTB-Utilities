@@ -80,4 +80,12 @@ public class GuiIcons
 	public static final TextureCoords marker = getIcon(53);
 	public static final TextureCoords beacon = getIcon(54);
 	public static final TextureCoords color_blank = getIcon(55);
+	public static final TextureCoords refresh = getIcon(56);
+	public static final TextureCoords dice = getIcon(57);
+	public static final TextureCoords diamond = getIcon(58);
+	public static final TextureCoords timer = getIcon(59);
+	public static final TextureCoords globe = getIcon(60);
+	public static final TextureCoords money = getIcon(61);
+	public static final TextureCoords tick = getIcon(62);
+	public static final TextureCoords star = getIcon(63);
 }

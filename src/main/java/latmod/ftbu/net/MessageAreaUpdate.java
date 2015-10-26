@@ -4,7 +4,7 @@ import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.EntityPos;
 import ftb.lib.api.LMNetworkWrapper;
-import latmod.ftbu.mod.client.minimap.Minimap;
+import latmod.ftbu.mod.client.gui.minimap.ClaimedAreasClient;
 import latmod.ftbu.world.*;
 import latmod.lib.MathHelperLM;
 
@@ -32,7 +32,7 @@ public class MessageAreaUpdate extends MessageFTBU
 	{ this(MathHelperLM.chunk(pos.x) - (sx / 2 + 1), MathHelperLM.chunk(pos.z) - (sz / 2 + 1), pos.dim, sx, sz, p); }
 	
 	public LMNetworkWrapper getWrapper()
-	{ return FTBUNetHandler.NET_CLAIMS; }
+	{ return FTBUNetHandler.NET_WORLD; }
 	
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
@@ -47,7 +47,7 @@ public class MessageAreaUpdate extends MessageFTBU
 		for(int i = 0; i < types.length; i++)
 			types[i]  = io.readInt();
 		
-		Minimap.get(dim).loadChunkTypes(chunkX, chunkZ, sz, sz, types);
+		ClaimedAreasClient.setTypes(dim, chunkX, chunkZ, sx, sz, types);
 		return null;
 	}
 }

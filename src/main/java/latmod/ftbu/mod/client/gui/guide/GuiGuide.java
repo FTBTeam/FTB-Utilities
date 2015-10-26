@@ -1,4 +1,4 @@
-package latmod.ftbu.mod.client.gui;
+package latmod.ftbu.mod.client.gui.guide;
 
 import java.util.List;
 
@@ -30,9 +30,9 @@ public class GuiGuide extends GuiLM
 	public final ButtonLM buttonBack;
 	
 	public final WidgetLM categoriesPanel, textPanel;
-	public final FastList<String> allTextLines;
+	public final FastList<TextLine> allTextLines;
 	public final FastList<ButtonCategory> categoryButtons; // Max 16
-	public final FastList<String> textLines; // Max 20
+	public final FastList<TextLine> textLines; // Max 20
 	
 	public GuiGuide(GuiGuide g, GuideCategory c)
 	{
@@ -80,9 +80,9 @@ public class GuiGuide extends GuiLM
 		categoriesPanel = new WidgetLM(this, 33, 29, 128, 200);
 		textPanel = new WidgetLM(this, 167, 10, 128, 219);
 		
-		allTextLines = new FastList<String>();
+		allTextLines = new FastList<TextLine>();
 		categoryButtons = new FastList<ButtonCategory>();
-		textLines = new FastList<String>();
+		textLines = new FastList<TextLine>();
 	}
 	
 	public void addWidgets()
@@ -125,7 +125,7 @@ public class GuiGuide extends GuiLM
 			List<String> list = fontRendererObj.listFormattedStringToWidth(s.trim(), textPanel.width);
 			
 			for(int i = 0; i < list.size(); i++)
-				allTextLines.add(list.get(i));
+				allTextLines.add(new TextLine(this, list.get(i)));
 			
 			fontRendererObj.setUnicodeFlag(uni);
 		}
@@ -183,7 +183,7 @@ public class GuiGuide extends GuiLM
 			boolean uni = fontRendererObj.getUnicodeFlag();
 			fontRendererObj.setUnicodeFlag(true);
 			for(int i = 0; i < textLines.size(); i++)
-				fontRendererObj.drawString(textLines.get(i), textPanel.getAX(), textPanel.getAY() + i * 11, textColor);
+				fontRendererObj.drawString(textLines.get(i).toString(), textPanel.getAX(), textPanel.getAY() + i * 11, textColor);
 			fontRendererObj.setUnicodeFlag(uni);
 		}
 		

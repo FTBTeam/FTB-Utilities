@@ -16,6 +16,6 @@ public class CmdFTBURestartTimer extends CommandLM
 	{
 		if(FTBUConfigGeneral.restartTimer.get() <= 0F)
 			throw new FeatureDisabledException();
-		return new ChatComponentText("Time left until next restart: " + LMStringUtils.getTimeString(FTBUTicks.getSecondsUntilRestart()));
+		return new ChatComponentText("Time left until next restart: " + LMStringUtils.getTimeString(FTBUTicks.getSecondsUntilRestart() * 1000L));
 	}
 }

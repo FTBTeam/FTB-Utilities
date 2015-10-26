@@ -10,6 +10,7 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 	private String title;
 	private StringBuilder text;
 	public final FastList<GuideCategory> subcategories;
+	public GuideFile file = null;
 	
 	public GuideCategory(GuideCategory p, String s)
 	{
@@ -17,6 +18,12 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 		title = s;
 		text = new StringBuilder();
 		subcategories = new FastList<GuideCategory>();
+	}
+	
+	public GuideFile getFile()
+	{
+		if(file != null) return file;
+		else return parent == null ? null : parent.getFile();
 	}
 	
 	public void print(String s)
@@ -35,10 +42,10 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 	{ return title; }
 	
 	public String toString()
-	{ return title + ": " + text + " + " + subcategories; }
+	{ return getTitle(); }
 	
 	public boolean equals(Object o)
-	{ return o != null && (o == this || (o instanceof GuideCategory && getTitle().equals(((GuideCategory)o).getTitle()))); }
+	{ return o != null && (o == this || toString().equals(o.toString())); }
 	
 	public GuideCategory getSub(String s)
 	{

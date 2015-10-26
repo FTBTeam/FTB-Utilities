@@ -59,8 +59,8 @@ public class Claims
 	public void claim(int dim, int cx, int cz)
 	{
 		int max = owner.getMaxClaimPower();
-		
-		if(max >= 0 && chunks.size() >= max) return;
+		if(max == 0) return;
+		if(chunks.size() >= max) return;
 		
 		ChunkType t = ChunkType.get(dim, cx, cz, owner);
 		if(t == ChunkType.WILDERNESS)

@@ -168,6 +168,9 @@ public class FTBUPlayerEventHandler
 			else
 				msg = new ChatComponentTranslation(FTBU.mod.assets + type.lang);
 			
+			msg.getChatStyle().setColor(EnumChatFormatting.WHITE);
+			msg.getChatStyle().setBold(true);
+			
 			Notification n = new Notification("chunk_changed", msg, 3000);
 			n.setColor(type.areaColor);
 			

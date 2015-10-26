@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.FTBLibClient;
-import ftb.lib.item.LMInvUtils;
 import latmod.ftbu.api.EventLMPlayerClient;
 import latmod.ftbu.badges.Badge;
 import latmod.lib.FastList;
@@ -65,7 +64,7 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 		friends.addAll(tag.getIntArray("F"));
 		
 		commonPublicData = tag.getCompoundTag("CD");
-		LMInvUtils.readItemsFromNBT(lastArmor, tag, "LI");
+		
 		deaths = tag.getInteger("D");
 		
 		if(self)

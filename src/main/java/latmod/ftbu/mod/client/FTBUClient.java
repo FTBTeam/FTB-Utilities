@@ -7,6 +7,7 @@ import latmod.ftbu.api.client.*;
 import latmod.ftbu.api.guide.*;
 import latmod.ftbu.badges.ThreadLoadBadges;
 import latmod.ftbu.mod.*;
+import latmod.ftbu.mod.client.gui.minimap.ClaimedAreasClient;
 import latmod.ftbu.mod.cmd.CmdMath;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.tile.TileLM;
@@ -81,6 +82,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public static void onWorldClosed()
 	{
 		ClientNotifications.init();
+		ClaimedAreasClient.clear();
 	}
 	
 	public void preInit()

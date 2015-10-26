@@ -2,13 +2,15 @@ package latmod.ftbu.api.guide;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.Map;
 
 import ftb.lib.FTBLib;
 import ftb.lib.api.EventFTBModeSet;
 import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.client.gui.guide.GuideLinkSerializer;
 import latmod.ftbu.mod.config.*;
-import latmod.lib.LMFileUtils;
+import latmod.lib.*;
 import net.minecraft.util.EnumChatFormatting;
 
 public class GuideFile
@@ -16,9 +18,13 @@ public class GuideFile
 	public static final GuideFile inst = new GuideFile("Guide");
 	
 	public final GuideCategory main;
+	public final FastMap<String, GuideLink> links;
 	
 	public GuideFile(String title)
-	{ main = new GuideCategory(null, title); }
+	{
+		main = new GuideCategory(null, title);
+		links = new FastMap<String, GuideLink>();
+	}
 	
 	public void reload(EventFTBModeSet e)
 	{
@@ -56,9 +62,16 @@ public class GuideFile
 			{ ex.printStackTrace(); }
 		}
 		
+		links.clear();
+		Map<String, GuideLink> linksMap = LMJsonUtils.fromJsonFile(GuideLinkSerializer.gson, LMFileUtils.newFile(new File(FTBLib.folderModpack, "guide_links.json")), LMJsonUtils.getMapType(String.class, GuideLink.class));
+		if(linksMap != null) links.putAll(linksMap);
+		
 		FTBUConfig.onGuideEvent(this);
 		FTBU.proxy.onGuideEvent(this);
 		new EventFTBUGuide(this).post();
+		
+		if(!FTBUConfigGeneral.configInfoGuide.get())
+			main.subcategories.remove("Mods");
 	}
 	
 	private void loadFromFiles(GuideCategory c, File f)
@@ -99,7 +112,7 @@ public class GuideFile
 		
 		try
 		{
-			GuideCategory category = main.getSub("Mods").getSub("Config").getSub(mod).getSub(id);
+			GuideCategory category = getMod("Config").getSub(mod).getSub(id);
 			
 			Field[] fields = c.getDeclaredFields();
 			
@@ -131,35 +144,6 @@ public class GuideFile
 					category.println(sb.toString());
 				}
 			}
-			
-			/*
-			Method[] methods = c.getDeclaredMethods();
-			
-			if(methods != null && methods.length > 0) for(Method m : methods)
-			{
-				m.setAccessible(true);
-				
-				if(m.isAnnotationPresent(GuideInfo.class))
-				{
-					GuideInfo i = m.getAnnotation(GuideInfo.class);
-					
-					String key = i.key();
-					String info = i.info();
-					String def = i.def();
-					
-					if(key.isEmpty()) key = m.getName();
-					
-					StringBuilder sb = new StringBuilder();
-					sb.append(key);
-					sb.append(" - ");
-					sb.append(info);
-					sb.append(" Default: ");
-					sb.append(def);
-					sb.append('\n');
-					category.println(sb.toString());
-				}
-			}
-			*/
 		}
 		catch(Exception e)
 		{ e.printStackTrace(); }
@@ -167,4 +151,12 @@ public class GuideFile
 
 	public GuideCategory getMod(String s)
 	{ return main.getSub("Mods").getSub(s); }
+	
+	public GuideLink getGuideLink(String s)
+	{
+		if(s == null || s.isEmpty()) return null;
+		if(s.length() > 2 && s.startsWith("[") && s.endsWith("]"))
+			return links.get(s.substring(1, s.length() - 1));
+		return links.get(s);
+	}
 }

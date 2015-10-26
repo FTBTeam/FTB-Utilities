@@ -1,6 +1,7 @@
 package latmod.ftbu.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.api.LMNetworkWrapper;
 import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.util.LMGuiHandler;
@@ -18,6 +19,9 @@ public class MessageOpenGui extends MessageFTBU
 		writeTag(tag);
 		io.writeUByte(wid);
 	}
+	
+	public LMNetworkWrapper getWrapper()
+	{ return FTBUNetHandler.NET_INFO; }
 	
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageOpenGui m, MessageContext ctx)

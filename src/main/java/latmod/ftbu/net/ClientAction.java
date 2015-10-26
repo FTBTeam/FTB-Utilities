@@ -97,7 +97,7 @@ public enum ClientAction
 		}
 	},
 	
-	ACTION_SET_SAFE_CHUNKS
+	ACTION_SET_SAFE_CLAIMS
 	{
 		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
 		{

@@ -2,6 +2,7 @@ package latmod.ftbu.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import ftb.lib.api.LMNetworkWrapper;
 import latmod.ftbu.world.*;
+import latmod.lib.MathHelperLM;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class MessageAreaRequest extends MessageFTBU
@@ -13,19 +14,19 @@ public class MessageAreaRequest extends MessageFTBU
 		this();
 		io.writeInt(x);
 		io.writeInt(y);
-		io.writeByte((byte)w);
-		io.writeByte((byte)h);
+		io.writeInt(MathHelperLM.clampInt(w, 1, 255));
+		io.writeInt(MathHelperLM.clampInt(h, 1, 255));
 	}
 	
 	public LMNetworkWrapper getWrapper()
-	{ return FTBUNetHandler.NET_CLAIMS; }
+	{ return FTBUNetHandler.NET_WORLD; }
 	
 	public IMessage onMessage(MessageContext ctx)
 	{
 		int chunkX = io.readInt();
 		int chunkY = io.readInt();
-		int sizeX = io.readByte() & 0xFF;
-		int sizeY = io.readByte() & 0xFF;
+		int sizeX = io.readInt();
+		int sizeY = io.readInt();
 		
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
 		LMPlayerServer owner = LMWorldServer.inst.getPlayer(ep);

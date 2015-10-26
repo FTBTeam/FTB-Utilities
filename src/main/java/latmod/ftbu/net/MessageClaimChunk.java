@@ -19,7 +19,7 @@ public class MessageClaimChunk extends MessageFTBU
 	}
 	
 	public LMNetworkWrapper getWrapper()
-	{ return FTBUNetHandler.NET_CLAIMS; }
+	{ return FTBUNetHandler.NET_WORLD; }
 	
 	public IMessage onMessage(MessageContext ctx)
 	{

@@ -1,12 +1,13 @@
-package latmod.ftbu.mod.client.minimap;
+package latmod.ftbu.mod.client.gui.minimap;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.world.LMWorldClient;
+import ftb.lib.client.FTBLibClient;
 import latmod.lib.*;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.*;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -15,51 +16,55 @@ import net.minecraft.world.chunk.Chunk;
 public class ThreadReloadChunk extends Thread
 {
 	private static final short defHeight = -1;
+	public static final PixelBuffer pixels = new PixelBuffer(GuiMinimap.tiles * 16, GuiMinimap.tiles * 16);
+	public static final short[] heightMap = new short[pixels.pixels.length];
 	
 	public final World worldObj;
-	public final MChunk chunk;
-	public final boolean calcHeight, customColors;
+	public final GuiMinimap gui;
+	
 	public Chunk chunkMC;
-	public final short[] heightMap;
 	public short maxHeight = 0;
 	
-	public ThreadReloadChunk(World w, MChunk c)
+	public ThreadReloadChunk(World w, GuiMinimap m)
 	{
-		super("LMMC_" + c.posX + "_" + c.posY);
+		super("LM_MapReloader");
 		setDaemon(true);
 		worldObj = w;
-		chunk = c;
-		calcHeight = Minimap.mapOptions.calcHeight();
-		customColors = Minimap.mapOptions.customColors();
-		heightMap = calcHeight ? new short[256] : null;
-		if(calcHeight) Arrays.fill(heightMap, defHeight);
+		gui = m;
+		Arrays.fill(heightMap, defHeight);
+		Arrays.fill(pixels.pixels, 0);
 	}
 	
 	public void run()
 	{
 		try
 		{
-			if(LMWorldClient.inst != null && worldObj.getChunkProvider().chunkExists(chunk.posX, chunk.posY))
+			for(int cz = 0; cz < GuiMinimap.tiles; cz++)
+			for(int cx = 0; cx < GuiMinimap.tiles; cx++)
 			{
-				chunkMC = worldObj.getChunkFromChunkCoords(chunk.posX, chunk.posY);
-				maxHeight = (short)Math.max(255, chunkMC.getTopFilledSegment() + 15);
-				
-				int x = chunk.posX * 16;
-				int y = chunk.posY * 16;
-				
-				for(int i = 0; i < 256; i++)
+				if(worldObj.getChunkProvider().chunkExists(gui.startX, gui.startY))
 				{
-					int bx = x + (i % 16);
-					int by = y + (i / 16);
-					int col = getBlockColor(bx, by);
-					chunk.setPixel(bx, by, col);
+					chunkMC = worldObj.getChunkFromChunkCoords(gui.startX, gui.startY);
+					maxHeight = (short)Math.max(255, chunkMC.getTopFilledSegment() + 15);
+					
+					int x = (gui.startX + cx) * 16;
+					int y = (gui.startY + cz) * 16;
+					
+					for(int i = 0; i < 256; i++)
+					{
+						int bx = x + (i % 16);
+						int by = y + (i / 16);
+						int col = getBlockColor(bx, by);
+						pixels.setRGB(cx * 16 + (i % 16), cz * 16 + (i / 16), col);
+					}
 				}
 			}
+			
+			ByteBuffer buffer = FTBLibClient.toByteBuffer(pixels.pixels, false);
+			GuiMinimap.pixelBuffer = buffer;
 		}
 		catch(Exception e)
 		{ e.printStackTrace(); }
-		
-		chunk.thread = null;
 	}
 	
 	public int getBlockColor(int bx, int bz)
@@ -73,18 +78,15 @@ public class ThreadReloadChunk extends Thread
 		{
 			int col = getBlockColor(bx, by, bz, b);
 			
-			if(calcHeight)
-			{
-				short bw = getTopY(bx - 1, bz);
-				short be = getTopY(bx + 1, bz);
-				short bn = getTopY(bx, bz - 1);
-				short bs = getTopY(bx, bz + 1);
-				
-				if((bw != defHeight && bw < by) || (bn != defHeight && bn < by))
-					return LMColorUtils.addBrightness(col, 25);
-				else if((be != defHeight && be < by) || (bs != defHeight && bs < by))
-					return LMColorUtils.addBrightness(col, -25);
-			}
+			short bw = getTopY(bx - 1, bz);
+			short be = getTopY(bx + 1, bz);
+			short bn = getTopY(bx, bz - 1);
+			short bs = getTopY(bx, bz + 1);
+			
+			if((bw != defHeight && bw < by) || (bn != defHeight && bn < by))
+				return LMColorUtils.addBrightness(col, 25);
+			else if((be != defHeight && be < by) || (bs != defHeight && bs < by))
+				return LMColorUtils.addBrightness(col, -25);
 			
 			return col;
 		}
@@ -101,22 +103,19 @@ public class ThreadReloadChunk extends Thread
 		short max = maxHeight;
 		boolean mapValue = false;
 		
-		if(calcHeight)
+		int cx = MathHelperLM.chunk(bx);
+		int cz = MathHelperLM.chunk(bz);
+		
+		if(cx == gui.startX && cz == gui.startY)
 		{
-			int cx = MathHelperLM.chunk(bx);
-			int cz = MathHelperLM.chunk(bz);
-			
-			if(cx == chunk.posX && cz == chunk.posY)
-			{
-				mapValue = true;
-				if(heightMap[x + z * 16] != defHeight)
-					return heightMap[x + z * 16];
-			}
-			else
-			{
-				c = worldObj.getChunkFromBlockCoords(bx, bz);
-				max = (short)Math.max(255, c.getTopFilledSegment() + 15);
-			}
+			mapValue = true;
+			if(heightMap[x + z * 16] != defHeight)
+				return heightMap[x + z * 16];
+		}
+		else
+		{
+			c = worldObj.getChunkFromBlockCoords(bx, bz);
+			max = (short)Math.max(255, c.getTopFilledSegment() + 15);
 		}
 		
 		for(short y = max; y > 0; --y)
@@ -141,6 +140,8 @@ public class ThreadReloadChunk extends Thread
 		else if(b == Blocks.end_stone) return MapColor.sandColor.colorValue;
 		else if(b == Blocks.obsidian) return 0xFF150047;
 		else if(b == Blocks.gravel) return 0xFF8D979B;
+		else if(b.getMaterial() == Material.water)
+			return LMColorUtils.multiply(MapColor.waterColor.colorValue, b.colorMultiplier(worldObj, x, y, z), 255);
 		
 		int m = worldObj.getBlockMetadata(x, y, z);
 		
@@ -166,13 +167,10 @@ public class ThreadReloadChunk extends Thread
 			else if(m == 5) return 0xFF512D14;
 		}
 		
-		if(customColors)
-		{
-			if(b == Blocks.leaves || b == Blocks.vine)
-				return LMColorUtils.addBrightness(b.colorMultiplier(worldObj, x, y, z), -40);
-			else if(b == Blocks.grass && m == 0)
-				return LMColorUtils.addBrightness(b.colorMultiplier(worldObj, x, y, z), -15);
-		}
+		if(b == Blocks.leaves || b == Blocks.vine || b == Blocks.waterlily)
+			return LMColorUtils.addBrightness(b.colorMultiplier(worldObj, x, y, z), -40);
+		else if(b == Blocks.grass && m == 0)
+			return LMColorUtils.addBrightness(b.colorMultiplier(worldObj, x, y, z), -15);
 		
 		return b.getMapColor(m).colorValue;
 	}

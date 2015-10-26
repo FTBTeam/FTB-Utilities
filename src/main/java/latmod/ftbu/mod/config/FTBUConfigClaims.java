@@ -1,5 +1,6 @@
 package latmod.ftbu.mod.config;
 
+import ftb.lib.api.config.ConfigSyncRegistry;
 import latmod.ftbu.api.guide.GuideInfo;
 import latmod.lib.config.*;
 import latmod.lib.util.IntBounds;
@@ -22,5 +23,7 @@ public class FTBUConfigClaims
 	{
 		group.addAll(FTBUConfigClaims.class);
 		f.add(group);
+		
+		ConfigSyncRegistry.add(forcedExplosions);
 	}
 }

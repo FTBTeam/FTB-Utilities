@@ -15,7 +15,7 @@ ftbu:button.close=Close
 ftbu:button.save=Save
 ftbu:button.refresh=Refresh
 
-#FriendsGUI
+#Guis
 ftbu:button.add_friend=Add as Friend
 ftbu:button.rem_friend=Remove from Friends
 ftbu:button.deny_friend=Deny Friend Request
@@ -25,6 +25,9 @@ ftbu:label.pfriend=Pending Friend
 ftbu:label.joined=Joined %s ago
 ftbu:label.last_seen=Last seen %s ago
 ftbu:label.deaths=Deaths: %s
+ftbu:button.explosions=Explosions
+ftbu:button.explosions_server_forced_off=Disabled by Server
+ftbu:button.explosions_server_forced_on=Force Enabled by Server
 
 #ClientConfig
 ftbu:client_config=Client Config

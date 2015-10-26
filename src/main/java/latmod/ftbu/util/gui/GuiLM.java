@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.OtherMods;
-import ftb.lib.client.FTBLibClient;
+import ftb.lib.client.*;
 import latmod.ftbu.util.client.LMRenderHelper;
 import latmod.lib.*;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -267,6 +267,16 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 		itemRender.zLevel = 0F;
 	}
 	
+	public void render(TextureCoords tc, double x, double y, double w, double h)
+	{
+		if(tc == null || !tc.isValid()) return;
+		setTexture(tc.texture);
+		GuiLM.drawTexturedRectD(x, y, zLevel, w, h, tc.minU, tc.minV, tc.maxU, tc.maxV);
+	}
+	
+	public void render(TextureCoords tc, double x, double y)
+	{ if(tc != null && tc.isValid()) render(tc, x, y, tc.width, tc.height); }
+
 	@Optional.Method(modid = OtherMods.NEI)
 	public codechicken.nei.VisiblityData modifyVisiblity(GuiContainer g, codechicken.nei.VisiblityData vd)
 	{ if(hideNEI) vd.showNEI = false; return vd; }

@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.EnumDyeColor;
-import ftb.lib.client.FTBLibClient;
+import ftb.lib.client.*;
 import latmod.ftbu.api.client.ClientConfigRegistry;
 import latmod.ftbu.api.client.callback.*;
 import latmod.ftbu.mod.FTBU;
@@ -237,7 +237,7 @@ public class GuiSelectColorHSB extends GuiLM
 			if(cursorPosX >= 0D && cursorPosY >= 0D)
 			{
 				GL11.glColor4f(1F - LMColorUtils.getRed(gui.currentColor) / 255F, 1F - LMColorUtils.getGreen(gui.currentColor) / 255F, 1F - LMColorUtils.getBlue(gui.currentColor) / 255F, 1F);
-				cursor_tex.render(gui, ax + cursorPosX * width - 2, ay + cursorPosY * height - 2, 4, 4);
+				gui.render(cursor_tex, ax + cursorPosX * width - 2, ay + cursorPosY * height - 2, 4, 4);
 				GL11.glColor4f(1F, 1F, 1F, 1F);
 			}
 		}

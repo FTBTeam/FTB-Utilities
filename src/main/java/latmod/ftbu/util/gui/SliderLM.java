@@ -3,6 +3,7 @@ package latmod.ftbu.util.gui;
 import org.lwjgl.input.Mouse;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.client.TextureCoords;
 import latmod.lib.*;
 
 @SideOnly(Side.CLIENT)
@@ -57,9 +58,9 @@ public class SliderLM extends WidgetLM
 	public void renderSlider(TextureCoords tc)
 	{
 		if(isVertical)
-			tc.render(gui, getAX(), getAY() + getValueI(), width, sliderSize);
+			gui.render(tc, getAX(), getAY() + getValueI(), width, sliderSize);
 		else
-			tc.render(gui, getAX() + getValueI(), getAY(), sliderSize, height);
+			gui.render(tc, getAX() + getValueI(), getAY(), sliderSize, height);
 	}
 	
 	public void mousePressed(int b)

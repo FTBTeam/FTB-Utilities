@@ -71,7 +71,7 @@ public class GuiFriendsGuiSmall extends GuiLM
 			int ay = getAY();
 			
 			GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), width, height, 0x88777777);
-			action.icon.render(gui, ax + 1, ay + 1);
+			gui.render(action.icon, ax + 1, ay + 1);
 			gui.getFontRenderer().drawString(title, ax + 20, ay + 6, 0xFFFFFFFF);
 			
 			if(mouseOver(ax, ay)) GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), width, height, 0x33FFFFFF);

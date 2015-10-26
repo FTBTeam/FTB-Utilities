@@ -1,13 +1,13 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import ftb.lib.client.FTBLibClient;
+import ftb.lib.client.*;
 import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.api.client.EventPlayerAction;
 import latmod.ftbu.mod.client.gui.GuiClientConfig;
 import latmod.ftbu.mod.client.gui.minimap.GuiMinimap;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.util.client.FTBULang;
-import latmod.ftbu.util.gui.*;
+import latmod.ftbu.util.gui.GuiIcons;
 import latmod.ftbu.world.*;
 import latmod.lib.FastList;
 

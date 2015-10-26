@@ -1,19 +1,16 @@
 package latmod.ftbu.mod.client.gui.guide;
 
-import latmod.ftbu.api.guide.*;
+import latmod.ftbu.api.guide.GuideLink;
 
 public class TextLine
 {
-	public final String text;
-	public final GuideLink special;
+	public final TextLine parent;
+	public String text;
+	public GuideLink special;
 	
-	public TextLine(GuiGuide g, String s)
-	{
-		text = s;
-		GuideFile f = g.category.getFile();
-		special = (f == null) ? null : f.getGuideLink(s);
-	}
+	public TextLine(TextLine p)
+	{ parent = p; }
 	
 	public String toString()
-	{ return special == null ? text : special.text; }
+	{ return text; }
 }

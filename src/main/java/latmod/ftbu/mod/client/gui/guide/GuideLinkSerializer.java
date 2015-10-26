@@ -31,9 +31,9 @@ public class GuideLinkSerializer implements JsonDeserializer<GuideLink>
 			
 			if(type.equals("url"))
 				special = new GuideLink(GuideLink.TYPE_URL);
-			else if(type.equals("img"))
+			else if(type.equals("image"))
 				special = new GuideLink(GuideLink.TYPE_IMAGE);
-			else if(type.equals("img_url"))
+			else if(type.equals("image_url"))
 				special = new GuideLink(GuideLink.TYPE_IMAGE_URL);
 			
 			if(special != null && o.has("link"))

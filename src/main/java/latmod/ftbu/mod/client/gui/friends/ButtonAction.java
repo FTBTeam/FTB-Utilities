@@ -1,5 +1,6 @@
 package latmod.ftbu.mod.client.gui.friends;
 
+import ftb.lib.client.TextureCoords;
 import latmod.ftbu.util.gui.*;
 import latmod.lib.FastList;
 

@@ -1,5 +1,6 @@
 package latmod.ftbu.util.gui;
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.client.TextureCoords;
 import latmod.lib.FastList;
 
 @SideOnly(Side.CLIENT)
@@ -35,7 +36,7 @@ public class WidgetLM
 	{ return mouseOver(getAX(), getAY()); }
 	
 	public void render(TextureCoords icon, double rw, double rh)
-	{ if(icon != null) icon.render(gui, getAX(), getAY(), (int)(width * rw), (int)(height * rh)); }
+	{ gui.render(icon, getAX(), getAY(), (int)(width * rw), (int)(height * rh)); }
 	
 	public void render(TextureCoords icon)
 	{ render(icon, 1D, 1D); }

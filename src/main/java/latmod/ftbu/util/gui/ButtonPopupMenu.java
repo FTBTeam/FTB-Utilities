@@ -3,6 +3,7 @@ package latmod.ftbu.util.gui;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.client.TextureCoords;
 import latmod.lib.FastList;
 
 @SideOnly(Side.CLIENT)
@@ -43,7 +44,7 @@ public class ButtonPopupMenu extends ButtonLM
 		GuiLM.drawBlankRect(ax + width - 1, ay, z, 1, height, 0xFF222222);
 		
 		GL11.glColor4f(1F, 1F, 1F, 1F);
-		icon.render(gui, ax + 2, ay + 1D, 16D, 16D);
+		gui.render(icon, ax + 2, ay + 1D, 16D, 16D);
 		if(title != null && !title.isEmpty())
 		{
 			GL11.glTranslatef(0F, 0F, gui.getZLevel());

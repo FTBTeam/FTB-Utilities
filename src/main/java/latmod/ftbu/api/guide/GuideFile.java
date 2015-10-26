@@ -23,6 +23,7 @@ public class GuideFile
 	public GuideFile(String title)
 	{
 		main = new GuideCategory(null, title);
+		main.file = this;
 		links = new FastMap<String, GuideLink>();
 	}
 	
@@ -63,15 +64,20 @@ public class GuideFile
 		}
 		
 		links.clear();
-		Map<String, GuideLink> linksMap = LMJsonUtils.fromJsonFile(GuideLinkSerializer.gson, LMFileUtils.newFile(new File(FTBLib.folderModpack, "guide_links.json")), LMJsonUtils.getMapType(String.class, GuideLink.class));
-		if(linksMap != null) links.putAll(linksMap);
+		LinksMap linksMap = LMJsonUtils.fromJsonFile(GuideLinkSerializer.gson, LMFileUtils.newFile(new File(FTBLib.folderModpack, "guide_links.json")), LinksMap.class);
+		if(linksMap != null && linksMap.links != null) links.putAll(linksMap.links);
 		
-		FTBUConfig.onGuideEvent(this);
-		FTBU.proxy.onGuideEvent(this);
-		new EventFTBUGuide(this).post();
-		
-		if(!FTBUConfigGeneral.configInfoGuide.get())
-			main.subcategories.remove("Mods");
+		if(FTBUConfigGeneral.configInfoGuide.get())
+		{
+			FTBUConfig.onGuideEvent(this);
+			FTBU.proxy.onGuideEvent(this);
+			new EventFTBUGuide(this).post();
+		}
+	}
+	
+	private static class LinksMap
+	{
+		public Map<String, GuideLink> links;
 	}
 	
 	private void loadFromFiles(GuideCategory c, File f)
@@ -154,9 +160,13 @@ public class GuideFile
 	
 	public GuideLink getGuideLink(String s)
 	{
-		if(s == null || s.isEmpty()) return null;
-		if(s.length() > 2 && s.startsWith("[") && s.endsWith("]"))
-			return links.get(s.substring(1, s.length() - 1));
-		return links.get(s);
+		if(s != null)
+		{
+			s = FTBLib.removeFormatting(s.trim());
+			if(s.length() > 2 && s.charAt(0) == '[' && s.charAt(s.length() - 1) == ']')
+				return links.get(s.substring(1, s.length() - 1));
+		}
+		
+		return null;
 	}
 }

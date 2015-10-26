@@ -1,5 +1,6 @@
 package latmod.ftbu.util.gui;
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.client.TextureCoords;
 import latmod.lib.LMUtils;
 
 @SideOnly(Side.CLIENT)

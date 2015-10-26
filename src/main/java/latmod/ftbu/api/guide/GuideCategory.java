@@ -10,7 +10,7 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 	private String title;
 	private StringBuilder text;
 	public final FastList<GuideCategory> subcategories;
-	public GuideFile file = null;
+	GuideFile file = null;
 	
 	public GuideCategory(GuideCategory p, String s)
 	{

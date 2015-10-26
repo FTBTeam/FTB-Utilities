@@ -1,14 +1,16 @@
 package latmod.ftbu.mod.client.gui.guide;
 
+import java.net.URI;
 import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import ftb.lib.client.FTBLibClient;
-import latmod.ftbu.api.guide.GuideCategory;
+import ftb.lib.client.*;
+import latmod.ftbu.api.guide.*;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.client.gui.GuiViewImage;
 import latmod.ftbu.util.gui.*;
-import latmod.lib.FastList;
+import latmod.lib.*;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiGuide extends GuiLM
@@ -20,8 +22,8 @@ public class GuiGuide extends GuiLM
 	
 	public static final int textColor = 0xFF7B6534;
 	public static final int textColorOver = 0xFF9D6A00;
-	public static int maxCategoryButtons = 15;
-	public static int maxTextLines = 20;
+	public static final int maxCategoryButtons = 15;
+	public static final int maxTextLines = 20;
 	
 	public final GuiGuide parentGui;
 	public final GuideCategory category;
@@ -32,7 +34,7 @@ public class GuiGuide extends GuiLM
 	public final WidgetLM categoriesPanel, textPanel;
 	public final FastList<TextLine> allTextLines;
 	public final FastList<ButtonCategory> categoryButtons; // Max 16
-	public final FastList<TextLine> textLines; // Max 20
+	public final ButtonTextLine[] textLines; // Max 20
 	
 	public GuiGuide(GuiGuide g, GuideCategory c)
 	{
@@ -78,11 +80,18 @@ public class GuiGuide extends GuiLM
 		};
 		
 		categoriesPanel = new WidgetLM(this, 33, 29, 128, 200);
-		textPanel = new WidgetLM(this, 167, 10, 128, 219);
+		textPanel = new PanelLM(this, 167, 10, 128, 219)
+		{
+			public void addWidgets()
+			{ addAll(textLines); }
+		};
 		
 		allTextLines = new FastList<TextLine>();
 		categoryButtons = new FastList<ButtonCategory>();
-		textLines = new FastList<TextLine>();
+		textLines = new ButtonTextLine[maxTextLines];
+		
+		for(int i = 0; i < maxTextLines; i++)
+			textLines[i] = new ButtonTextLine(this, i);
 	}
 	
 	public void addWidgets()
@@ -117,6 +126,9 @@ public class GuiGuide extends GuiLM
 	{
 		allTextLines.clear();
 		
+		GuideFile file = category.getFile();
+		if(file == null) return;
+		
 		String s = category.getText();
 		if(s != null && s.length() > 0)
 		{
@@ -125,7 +137,52 @@ public class GuiGuide extends GuiLM
 			List<String> list = fontRendererObj.listFormattedStringToWidth(s.trim(), textPanel.width);
 			
 			for(int i = 0; i < list.size(); i++)
-				allTextLines.add(new TextLine(this, list.get(i)));
+			{
+				TextLine l = new TextLine(null);
+				l.text = list.get(i);
+				l.special = file.getGuideLink(l.text);
+				allTextLines.add(l);
+				
+				if(l.special != null)
+				{
+					if(l.special.isText())
+					{
+						l.text = l.special.text;
+						List<String> list1 = fontRendererObj.listFormattedStringToWidth(l.text, textPanel.width);
+						
+						if(list1.size() > 1)
+						{
+							l.text = list1.get(0);
+							for(int j = 1; j < list1.size(); j++)
+							{
+								TextLine l1 = new TextLine(l);
+								l1.text = list1.get(j);
+								l1.special = l.special;
+								allTextLines.add(l1);
+							}
+						}
+					}
+					else if(l.special.isImage())
+					{
+						TextureCoords tex = l.special.getTexture();
+						
+						if(tex.isValid())
+						{
+							l.text = "";
+							int w = Math.min(textPanel.width, tex.width);
+							int lines = (int)(1D + tex.getHeight(w) / 11D);
+							
+							for(int j = 1; j < lines; j++)
+							{
+								TextLine l1 = new TextLine(l);
+								l1.text = "";
+								l1.special = l.special;
+								allTextLines.add(l1);
+							}
+						}
+					}
+				}
+			}
 			
 			fontRendererObj.setUnicodeFlag(uni);
 		}
@@ -135,7 +192,8 @@ public class GuiGuide extends GuiLM
 	
 	public void refreshText()
 	{
-		textLines.clear();
+		for(int i = 0; i < textLines.length; i++)
+			textLines[i].line = null;
 		
 		int lines = allTextLines.size();
 		int off = 0;
@@ -150,7 +208,7 @@ public class GuiGuide extends GuiLM
 		for(int i = 0; i < maxTextLines; i++)
 		{
 			if(i + off < lines)
-				textLines.add(allTextLines.get(i + off));
+				textLines[i].line = allTextLines.get(i + off);
 		}
 	}
 	
@@ -178,14 +236,11 @@ public class GuiGuide extends GuiLM
 		
 		fontRendererObj.drawString(category.getTitle(), getPosX(53), getPosY(14), textColor);
 		
-		if(!textLines.isEmpty())
-		{
-			boolean uni = fontRendererObj.getUnicodeFlag();
-			fontRendererObj.setUnicodeFlag(true);
-			for(int i = 0; i < textLines.size(); i++)
-				fontRendererObj.drawString(textLines.get(i).toString(), textPanel.getAX(), textPanel.getAY() + i * 11, textColor);
-			fontRendererObj.setUnicodeFlag(uni);
-		}
+		boolean uni = fontRendererObj.getUnicodeFlag();
+		fontRendererObj.setUnicodeFlag(true);
+		for(int i = 0; i < textLines.length; i++)
+			textLines[i].renderWidget();
+		fontRendererObj.setUnicodeFlag(uni);
 		
 		if(!categoryButtons.isEmpty())
 		{
@@ -198,7 +253,7 @@ public class GuiGuide extends GuiLM
 	{
 		public final GuideCategory cat;
 		
-		public ButtonCategory(GuiLM g, int x, int y, int w, int h, GuideCategory c)
+		public ButtonCategory(GuiGuide g, int x, int y, int w, int h, GuideCategory c)
 		{
 			super(g, x, y, w, h);
 			cat = c;
@@ -219,6 +274,59 @@ public class GuiGuide extends GuiLM
 			int ax = getAX();
 			int ay = getAY();
 			gui.getFontRenderer().drawString(cat.getTitle(), ax + 1, ay + 1, mouseOver(ax, ay) ? textColorOver : textColor);
+		}
+	}
+	
+	public class ButtonTextLine extends ButtonLM
+	{
+		public TextLine line = null;
+		
+		public ButtonTextLine(GuiGuide g, int i)
+		{ super(g, 0, i * 11, g.textPanel.width, 11); }
+		
+		public void addMouseOverText(FastList<String> l)
+		{
+			if(line != null && line.special != null && !line.special.hover.isEmpty())
+				l.add(line.special.hover);
+		}
+		
+		public void onButtonPressed(int b)
+		{
+			if(line != null && line.special != null)
+			{
+				if(line.special.type == GuideLink.TYPE_URL)
+				{
+					try { LMUtils.openURI(new URI(line.special.link)); }
+					catch(Exception e) { e.printStackTrace(); }
+				}
+				else if(line.special.isImage())
+				{
+					TextureCoords tc = line.special.getTexture();
+					if(tc != null && tc.isValid()) mc.displayGuiScreen(new GuiViewImage(GuiGuide.this, tc));
+				}
+			}
+		}
+		
+		public void renderWidget()
+		{
+			if(line == null) return;
+			
+			int ax = getAX();
+			int ay = getAY();
+			
+			if(!line.text.isEmpty()) fontRendererObj.drawString(line.text, ax, ay, textColor);
+			else if(line.special != null && line.special.isImage() && line.parent == null)
+			{
+				TextureCoords t = line.special.getTexture();
+				
+				if(t.isValid())
+				{
+					GL11.glColor4f(1F, 1F, 1F, 1F);
+					gui.setTexture(t.texture);
+					int w = Math.min(width, t.width);
+					GuiLM.drawTexturedRectD(ax, ay, gui.getZLevel(), w, t.getHeight(w), 0D, 0D, 1D, 1D);
+				}
+			}
 		}
 	}
 }

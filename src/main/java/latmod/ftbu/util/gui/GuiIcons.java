@@ -1,5 +1,6 @@
 package latmod.ftbu.util.gui;
 
+import ftb.lib.client.TextureCoords;
 import latmod.ftbu.mod.FTBU;
 import net.minecraft.util.ResourceLocation;
 

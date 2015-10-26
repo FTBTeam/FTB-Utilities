@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 import org.lwjgl.opengl.*;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.client.FTBLibClient;
+import ftb.lib.client.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
 import latmod.ftbu.mod.config.FTBUConfigClaims;
@@ -321,7 +321,7 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 			if(mouseOver())
 			{
 				GL11.glColor4f(1F, 1F, 0.3F, 0.8F);
-				tex_area_coords[0][0][0][0].render(gui, getAX(), getAY(), 16, 16);
+				gui.render(tex_area_coords[0][0][0][0], getAX(), getAY(), 16, 16);
 			}
 		}
 	}

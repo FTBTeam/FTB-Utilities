@@ -4,7 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.EnumDyeColor;
-import ftb.lib.client.FTBLibClient;
+import ftb.lib.client.*;
 import latmod.ftbu.api.client.ClientConfigRegistry;
 import latmod.ftbu.api.client.callback.*;
 import latmod.ftbu.mod.FTBU;

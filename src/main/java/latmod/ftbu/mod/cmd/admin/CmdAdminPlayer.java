@@ -83,7 +83,7 @@ public class CmdAdminPlayer extends CommandLM
 			LMPlayer p = getLMPlayer(playerID);
 			if(p.isOnline()) return mustBeOffline;
 			LMWorldServer.inst.players.removeObj(playerID);
-			return new ChatComponentText("Player removed!");//LANG
+			return new ChatComponentText("Player removed!");
 		}
 		
 		LMPlayerServer p = getLMPlayer(args[1]);

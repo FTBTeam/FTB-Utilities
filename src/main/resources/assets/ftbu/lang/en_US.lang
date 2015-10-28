@@ -14,20 +14,28 @@ ftbu:button.add=Add
 ftbu:button.close=Close
 ftbu:button.save=Save
 ftbu:button.refresh=Refresh
+ftbu:button.other=Other
 
 #Guis
 ftbu:button.add_friend=Add as Friend
 ftbu:button.rem_friend=Remove from Friends
 ftbu:button.deny_friend=Deny Friend Request
+ftbu:button.guide=Guide
+ftbu:button.claimed_chunks=Claimed Chunks
+ftbu:button.mail=Mail
+ftbu:button.trade=Trade
+ftbu:button.notes=Notes
+ftbu:button.server_info=Server Info
 ftbu:label.online=Online
 ftbu:label.friend=Friend
 ftbu:label.pfriend=Pending Friend
 ftbu:label.joined=Joined %s ago
 ftbu:label.last_seen=Last seen %s ago
 ftbu:label.deaths=Deaths: %s
+ftbu:label.server_forced_off=Disabled by Server
+ftbu:label.server_forced_on=Force Enabled by Server
 ftbu:button.explosions=Explosions
-ftbu:button.explosions_server_forced_off=Disabled by Server
-ftbu:button.explosions_server_forced_on=Force Enabled by Server
+ftbu:label.cchunks_count=Claimed Chunks: %s
 
 #ClientConfig
 ftbu:client_config=Client Config
@@ -58,12 +66,27 @@ config.value.cm_chat=Chat
 #Misc
 commands.lmmissingargs=Missing Arguments!
 commands.lmdisabled=This feature is disabled!
+ftbu:cmd.invalid_sub=Invalid subcommand: '%s'!
 ftbu:owner=Owner: %s
-ftbu:deleteitem=Do you want to delete '%s'?
-ftbu:button.claimed_chunks=Claimed Chunks
-ftbu:button.mail=Mail
-ftbu:button.trade=Trade
-ftbu:button.notes=Notes
+ftbu:delete_item=Do you want to delete '%s'?
+ftbu:label.new_friend=New friend request from %s!
+ftbu:label.new_friends=New friend requests: %s
+ftbu:cmd.warp_set=Warp '%s' set!
+ftbu:cmd.warp_del=Warp '%s' deleted!
+ftbu:cmd.warp_not_set=Unknown Warp: '%s'!
+ftbu:cmd.warp_tp=Teleported to '%s'!
+ftbu:cmd.no_dp=No deathpoint found!
+ftbu:cmd.timer_backup=Next backup: %s
+ftbu:cmd.timer_restart=Next restart: %s
+ftbu:cmd.rules=[Click here to open rules]
+ftbu:cmd.spawn_tp=Teleported to spawn
+
+ftbu:top.title=Server Tops
+ftbu:top.age=Age
+ftbu:top.last_seen=Last Seen
+ftbu:top.time_played=Time Played
+ftbu:top.deaths=Deaths
+ftbu:top.deaths_ph=Deaths per hour
 
 #Security Mode
 ftbu:security=Security

@@ -1,6 +1,6 @@
 package latmod.ftbu.world;
 
-import latmod.ftbu.util.LMSecurity;
+import latmod.ftbu.util.LMSecurityLevel;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class PersonalSettings
@@ -9,32 +9,32 @@ public class PersonalSettings
 	
 	public boolean chatLinks;
 	public boolean renderBadge;
-	public boolean safeClaims;
-	public LMSecurity.Level breakLevel;
-	public LMSecurity.Level interactLevel;
+	public boolean explosions;
+	public LMSecurityLevel blocks;
 	
 	public PersonalSettings(LMPlayer p)
 	{
 		owner = p;
 		chatLinks = true;
 		renderBadge = true;
-		safeClaims = false;
-		breakLevel = LMSecurity.Level.FRIENDS;
-		interactLevel = LMSecurity.Level.FRIENDS;
+		explosions = true;
+		blocks = LMSecurityLevel.PUBLIC;
 	}
 	
 	public void readFromServer(NBTTagCompound tag)
 	{
-		chatLinks = tag.getBoolean("ChatLinks");
-		renderBadge = tag.getBoolean("Badge");
-		safeClaims = tag.getBoolean("SafeClaims");
+		chatLinks = tag.hasKey("ChatLinks") ? tag.getBoolean("ChatLinks") : true;
+		renderBadge = tag.hasKey("Badge") ? tag.getBoolean("Badge") : true;
+		explosions = tag.hasKey("Explosions") ? tag.getBoolean("Explosions") : true;
+		blocks = tag.hasKey("Blocks") ? blocks = LMSecurityLevel.VALUES[tag.getByte("Blocks")] : LMSecurityLevel.PUBLIC;
 	}
 	
 	public void writeToServer(NBTTagCompound tag)
 	{
 		tag.setBoolean("ChatLinks", chatLinks);
 		tag.setBoolean("Badge", renderBadge);
-		tag.setBoolean("SafeClaims", safeClaims);
+		tag.setBoolean("Explosions", explosions);
+		tag.setByte("Blocks", (byte)blocks.ID);
 	}
 	
 	public void readFromNet(NBTTagCompound tag, boolean self)
@@ -44,7 +44,8 @@ public class PersonalSettings
 		if(self)
 		{
 			chatLinks = tag.getBoolean("CL");
-			safeClaims = tag.getBoolean("SC");
+			explosions = tag.getBoolean("E");
+			blocks = LMSecurityLevel.VALUES[tag.getByte("BL")];
 		}
 	}
 	
@@ -55,7 +56,8 @@ public class PersonalSettings
 		if(self)
 		{
 			tag.setBoolean("CL", chatLinks);
-			tag.setBoolean("SC", safeClaims);
+			tag.setBoolean("E", explosions);
+			tag.setByte("BL", (byte)blocks.ID);
 		}
 	}
 	

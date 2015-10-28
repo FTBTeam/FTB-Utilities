@@ -3,12 +3,15 @@ import java.util.Random;
 
 import cpw.mods.fml.common.IWorldGenerator;
 import cpw.mods.fml.common.registry.*;
+import ftb.lib.FTBLib;
+import latmod.ftbu.api.guide.GuideFile;
 import latmod.ftbu.api.item.IItemLM;
 import latmod.ftbu.api.tile.IGuiTile;
 import latmod.ftbu.mod.*;
-import latmod.ftbu.net.MessageNotifyPlayer;
+import latmod.ftbu.net.*;
 import latmod.ftbu.notification.Notification;
 import net.minecraft.block.Block;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.*;
@@ -71,4 +74,18 @@ public final class LatCoreMC // LatCoreMCClient
 	
 	public static boolean isDedicatedServer()
 	{ return FTBUTicks.isDediServer; }
+
+	public static void displayGuide(ICommandSender ics, GuideFile file) 
+	{
+		if(!FTBLib.isServer()) return;
+		
+		if(ics instanceof EntityPlayerMP)
+		{
+			new MessageDisplayGuide(file).sendTo((EntityPlayerMP)ics);
+		}
+		else
+		{
+			//TODO: Print guide file to server console
+		}
+	}
 }

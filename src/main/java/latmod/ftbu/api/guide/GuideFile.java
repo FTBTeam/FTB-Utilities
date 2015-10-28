@@ -11,16 +11,16 @@ import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.guide.GuideLinkSerializer;
 import latmod.ftbu.mod.config.*;
 import latmod.lib.*;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.*;
 
 public class GuideFile
 {
-	public static final GuideFile inst = new GuideFile("Guide");
+	public static final GuideFile modpackGuide = new GuideFile(new ChatComponentTranslation(FTBU.mod.assets + "button.guide"));
 	
 	public final GuideCategory main;
 	public final FastMap<String, GuideLink> links;
 	
-	public GuideFile(String title)
+	public GuideFile(IChatComponent title)
 	{
 		main = new GuideCategory(null, title);
 		main.file = this;
@@ -92,7 +92,7 @@ public class GuideFile
 			
 			if(f1 != null && f1.length > 0)
 			{
-				GuideCategory c1 = c.getSub(name);
+				GuideCategory c1 = c.getSub(new ChatComponentText(name));
 				for(File f2 : f1) loadFromFiles(c1, f2);
 			}
 		}
@@ -102,7 +102,7 @@ public class GuideFile
 			{
 				try
 				{
-					GuideCategory c1 = c.getSub(name.substring(0, name.length() - 4));
+					GuideCategory c1 = c.getSub(new ChatComponentText(name.substring(0, name.length() - 4)));
 					String text = LMFileUtils.loadAsText(f);
 					c1.println(text);
 				}
@@ -118,7 +118,7 @@ public class GuideFile
 		
 		try
 		{
-			GuideCategory category = getMod("Config").getSub(mod).getSub(id);
+			GuideCategory category = getMod("Config").getSub(new ChatComponentText(mod)).getSub(new ChatComponentText(id));
 			
 			Field[] fields = c.getDeclaredFields();
 			
@@ -156,7 +156,7 @@ public class GuideFile
 	}
 
 	public GuideCategory getMod(String s)
-	{ return main.getSub("Mods").getSub(s); }
+	{ return main.getSub(new ChatComponentText("Mods")).getSub(new ChatComponentText(s)); }
 	
 	public GuideLink getGuideLink(String s)
 	{

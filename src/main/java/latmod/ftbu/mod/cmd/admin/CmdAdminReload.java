@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import ftb.lib.mod.CommandFTBWorld;
+import ftb.lib.mod.FTBLibMod;
 import latmod.ftbu.cmd.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.IChatComponent;
@@ -11,5 +11,5 @@ public class CmdAdminReload extends CommandLM
 	{ super(s, CommandLevel.OP); }
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
-	{ CommandFTBWorld.reload(ics, true); return null; }
+	{ FTBLibMod.reload(ics, true); return null; }
 }

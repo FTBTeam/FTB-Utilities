@@ -4,14 +4,14 @@ import ftb.lib.*;
 import ftb.lib.client.FTBLibClient;
 import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.api.client.*;
-import latmod.ftbu.api.guide.*;
+import latmod.ftbu.api.guide.GuideFile;
 import latmod.ftbu.badges.ThreadLoadBadges;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.client.gui.minimap.ClaimedAreasClient;
 import latmod.ftbu.mod.cmd.CmdMath;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.tile.TileLM;
-import latmod.ftbu.util.LMGuiHandler;
+import latmod.ftbu.util.*;
 import latmod.ftbu.util.client.*;
 import latmod.ftbu.world.*;
 import net.minecraft.client.gui.GuiScreen;
@@ -101,15 +101,16 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public void postInit()
 	{
 		ClientConfigRegistry.load();
-		FTBUGuiHandler.instance.registerClient();
+		LMGuiHandlerRegistry.add(FTBUGuiHandler.instance);
 	}
 	
 	public void onGuideEvent(GuideFile file)
 	{
-		GuideCategory waypoints = file.main.getSub("Mods").getSub("LatMap");
+		/*GuideCategory waypoints = file.main.getSub("Mods").getSub("LatMap");
 		waypoints.println("You can create waypoints by opening WaypointsGUI (FriendsGUI > You > Waypoits)");
 		waypoints.println("Right click on a waypoint to enable / disable it, Ctrl + right click to delete it, left click to open it's settings");
 		waypoints.println("You can select between Marker and Beacon waypoints, change it's color, title and coords");
+		*/
 	}
 	
 	public LMWorld getClientWorldLM()
@@ -117,7 +118,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	
 	public boolean openClientGui(EntityPlayer ep, String mod, int id, NBTTagCompound data)
 	{
-		LMGuiHandler h = LMGuiHandler.Registry.getLMGuiHandler(mod);
+		LMGuiHandler h = LMGuiHandlerRegistry.getLMGuiHandler(mod);
 		
 		if(h != null)
 		{

@@ -26,12 +26,18 @@ public class FTBULang
 	public static String button_save() { return get("button.save"); }
 	public static String button_refresh() { return get("button.refresh"); }
 	
-	// Friends //
-	public static class Friends
+	public static String client_config() { return get("client_config"); }
+	public static String feature_disabled() { return I18n.format("commands.lmdisabled"); }
+	public static String delete_item(String s) { return get("delete_item", s); }
+	public static String label_server_forced_on() { return get("label.server_forced_on"); }
+	public static String label_server_forced_off() { return get("label.server_forced_off"); }
+	
+	public static class Guis
 	{
 		public static String button_add_friend() { return get("button.add_friend"); }
 		public static String button_rem_friend() { return get("button.rem_friend"); }
 		public static String button_deny_friend() { return get("button.deny_friend"); }
+		public static String button_server_info() { return get("button.server_info"); }
 		
 		public static String label_online() { return get("label.online"); }
 		public static String label_friend() { return get("label.friend"); }
@@ -43,9 +49,4 @@ public class FTBULang
 		public static String mail() { return get("button.mail"); }
 		public static String trade() { return get("button.trade"); }
 	}
-	
-	// Other //
-	public static String client_config() { return get("client_config"); }
-	public static String feature_disabled() { return I18n.format("commands.lmdisabled"); }
-	public static String deleteItem(String s) { return get("deleteitem", s); }
 }

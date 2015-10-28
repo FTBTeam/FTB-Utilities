@@ -11,11 +11,11 @@ public class MessageDisplayGuide extends MessageFTBU
 {
 	public MessageDisplayGuide() { super(DATA_LONG); }
 	
-	public MessageDisplayGuide(GuideFile f)
+	public MessageDisplayGuide(GuideFile file)
 	{
 		this();
 		NBTTagCompound tag = new NBTTagCompound();
-		f.main.writeToNBT(tag);
+		file.main.writeToNBT(tag);
 		writeTag(tag);
 	}
 	
@@ -25,9 +25,10 @@ public class MessageDisplayGuide extends MessageFTBU
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{
-		GuideFile f = new GuideFile("Unnamed");
-		f.main.readFromNBT(readTag());
-		FTBLibClient.mc.displayGuiScreen(new GuiGuide(null, f.main));
+		NBTTagCompound data = readTag();
+		GuideFile file = new GuideFile(null);
+		file.main.readFromNBT(data);
+		FTBLibClient.mc.displayGuiScreen(new GuiGuide(null, file.main));
 		return null;
 	}
 }

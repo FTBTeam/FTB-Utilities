@@ -1,6 +1,7 @@
 package latmod.ftbu.mod.cmd.admin;
 
 import latmod.ftbu.cmd.*;
+import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.world.LMWorldServer;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -17,6 +18,6 @@ public class CmdAdminSetWarp extends CommandLM
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		ChunkCoordinates c = ep.getPlayerCoordinates();
 		LMWorldServer.inst.warps.set(args[0], c.posX, c.posY, c.posZ, ep.worldObj.provider.dimensionId);
-		return new ChatComponentText("Warp '" + args[0] + "' set!"); //LANG
+		return new ChatComponentTranslation(FTBU.mod.assets + "cmd.warp_set", args[0]);
 	}
 }

@@ -34,13 +34,22 @@ public abstract class PlayerAction
 		{ return FTBULang.client_config(); }
 	};
 	
+	public static final PlayerAction server_info = new PlayerAction(GuiIcons.info)
+	{
+		public void onClicked(LMPlayerClient p)
+		{ ClientAction.ACTION_REQUEST_SERVER_INFO.send(p.playerID); }
+		
+		public String getTitle()
+		{ return FTBULang.Guis.button_server_info(); }
+	};
+	
 	public static final PlayerAction minimap = new PlayerAction(GuiIcons.map)
 	{
 		public void onClicked(LMPlayerClient p)
 		{ FTBLibClient.mc.displayGuiScreen(new GuiMinimap()); }
 		
 		public String getTitle()
-		{ return FTBULang.Friends.claimed_chunks(); }
+		{ return FTBULang.Guis.claimed_chunks(); }
 	};
 	
 	public static final PlayerAction notes = new PlayerAction(GuiIcons.notes)
@@ -49,7 +58,7 @@ public abstract class PlayerAction
 		{  }
 		
 		public String getTitle()
-		{ return FTBULang.Friends.notes(); }
+		{ return FTBULang.Guis.notes(); }
 	};
 	
 	// Other players //
@@ -60,7 +69,7 @@ public abstract class PlayerAction
 		{ ClientAction.ACTION_ADD_FRIEND.send(p.playerID); }
 		
 		public String getTitle()
-		{ return FTBULang.Friends.button_add_friend(); }
+		{ return FTBULang.Guis.button_add_friend(); }
 	};
 	
 	public static final PlayerAction friend_remove = new PlayerAction(GuiIcons.remove)
@@ -69,7 +78,7 @@ public abstract class PlayerAction
 		{ ClientAction.ACTION_REM_FRIEND.send(p.playerID); }
 		
 		public String getTitle()
-		{ return FTBULang.Friends.button_rem_friend(); }
+		{ return FTBULang.Guis.button_rem_friend(); }
 	};
 	
 	public static final PlayerAction friend_deny = new PlayerAction(GuiIcons.remove)
@@ -78,7 +87,7 @@ public abstract class PlayerAction
 		{ ClientAction.ACTION_DENY_FRIEND.send(p.playerID); }
 		
 		public String getTitle()
-		{ return FTBULang.Friends.button_deny_friend(); }
+		{ return FTBULang.Guis.button_deny_friend(); }
 	};
 	
 	public static final PlayerAction mail = new PlayerAction(GuiIcons.feather)
@@ -87,7 +96,7 @@ public abstract class PlayerAction
 		{  }
 		
 		public String getTitle()
-		{ return FTBULang.Friends.mail(); }
+		{ return FTBULang.Guis.mail(); }
 	};
 	
 	public static final PlayerAction trade = new PlayerAction(GuiIcons.moneybag)
@@ -96,7 +105,7 @@ public abstract class PlayerAction
 		{  }
 		
 		public String getTitle()
-		{ return FTBULang.Friends.trade(); }
+		{ return FTBULang.Guis.trade(); }
 	};
 
 	public static FastList<PlayerAction> getActionsFor(LMPlayerClient p)
@@ -106,28 +115,29 @@ public abstract class PlayerAction
 		
 		if(p.equalsPlayer(o))
 		{
-			list.add(PlayerAction.settings);
-			list.add(PlayerAction.minimap);
+			list.add(settings);
+			list.add(server_info);
+			list.add(minimap);
 			
 			if(FTBLibFinals.DEV)
 			{
-				list.add(PlayerAction.notes);
+				//list.add(notes);
 			}
 		}
 		else
 		{
 			boolean isFriend = o.isFriendRaw(p);
-			if(!isFriend) list.add(PlayerAction.friend_add);
+			if(!isFriend) list.add(friend_add);
 			
 			if(FTBLibFinals.DEV)
 			{
-				list.add(PlayerAction.mail);
-				list.add(PlayerAction.trade);
+				list.add(mail);
+				//list.add(trade);
 			}
 			
-			if(isFriend) list.add(PlayerAction.friend_remove);
+			if(isFriend) list.add(friend_remove);
 			else if(p.isFriendRaw(o))
-				list.add(PlayerAction.friend_deny);
+				list.add(friend_deny);
 		}
 		
 		new EventPlayerAction(list, p).post();

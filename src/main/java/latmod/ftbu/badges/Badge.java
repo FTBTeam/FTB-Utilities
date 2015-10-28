@@ -10,7 +10,7 @@ import latmod.ftbu.mod.FTBU;
 import latmod.lib.FastMap;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
@@ -62,7 +62,9 @@ public class Badge extends FinalIDObject
 		
 		GL11.glTranslated(0.04D, 0.01D, 0.86D);
 		
-		if(ep.getEquipmentInSlot(3) != null && ep.getEquipmentInSlot(3).getItem() instanceof ItemArmor)//TODO: Change to isValidArmor
+		ItemStack armor = ep.getEquipmentInSlot(3);
+		
+		if(armor != null && armor.getItem().isValidArmor(armor, 1, ep))
 				GL11.glTranslated(0D, 0D, -0.0625D);
 		
 		float s = 0.2F;

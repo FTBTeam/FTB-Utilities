@@ -19,6 +19,5 @@ public class CmdAdmin extends CommandSubLM
 		if(FTBUConfigCmd.admin_unclaim.get()) add(new CmdAdminUnclaim("unclaim"));
 		if(FTBUConfigCmd.admin_backup.get()) add(new CmdAdminBackup("backup"));
 		if(FTBUConfigCmd.admin_edit_config.get()) add(new CmdAdminConfig("config"));
-		add(new CmdAdminListEntities("list_entities"));
 	}
 }

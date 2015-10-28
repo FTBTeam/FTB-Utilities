@@ -2,6 +2,7 @@ package latmod.ftbu.mod.cmd;
 
 import ftb.lib.*;
 import latmod.ftbu.cmd.*;
+import latmod.ftbu.mod.FTBU;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
@@ -23,6 +24,6 @@ public class CmdSpawn extends CommandLM
 			spawnpoint.posY++;
 		
 		LMDimUtils.teleportPlayer(ep, new EntityPos(spawnpoint, 0));
-		return new ChatComponentText("Teleported to spawn"); //LANG
+		return new ChatComponentTranslation(FTBU.mod.assets + "cmd.spawn_tp");
 	}
 }

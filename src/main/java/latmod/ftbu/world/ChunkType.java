@@ -14,8 +14,8 @@ public enum ChunkType
 	WORLD_BORDER("world_border", EnumChatFormatting.RED, 0xFFFF0000),
 	WILDERNESS("wilderness", EnumChatFormatting.DARK_GREEN, 0xFF2F9E00),
 	CLAIMED_OTHER("claimed", EnumChatFormatting.BLUE, 0xFF0094FF),
-	CLAIMED_SELF("claimed", EnumChatFormatting.GREEN, 0xFF8CBF00),
-	CLAIMED_FRIEND("claimed", EnumChatFormatting.GREEN, 0xFF8CBF00),
+	CLAIMED_SELF("claimed", EnumChatFormatting.GREEN, 0xFF00FF21),
+	CLAIMED_FRIEND("claimed", EnumChatFormatting.GREEN, 0xFF00FF21),
 	
 	; public static final ChunkType[] VALUES = values();
 	

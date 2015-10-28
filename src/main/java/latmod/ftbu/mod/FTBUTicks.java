@@ -54,7 +54,7 @@ public class FTBUTicks
 	{
 		long t = LMUtils.millis();
 		
-		if(t - currentMillis >= 200L)
+		if(t - currentMillis >= 750L)
 		{
 			currentMillis = t;
 			
@@ -122,7 +122,7 @@ public class FTBUTicks
 	
 	public static void forceShutdown(int sec)
 	{
-		restartSeconds = sec + 1;
+		restartSeconds = Math.max(0, sec) + 1L;
 		//currentMillis = LatCore.millis();
 		//currentSeconds = startSeconds = startMillis / 1000L;
 	}

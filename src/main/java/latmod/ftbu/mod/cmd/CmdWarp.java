@@ -2,6 +2,7 @@ package latmod.ftbu.mod.cmd;
 
 import ftb.lib.*;
 import latmod.ftbu.cmd.*;
+import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.world.LMWorldServer;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -23,8 +24,8 @@ public class CmdWarp extends CommandLM
 		checkArgs(args, 1);
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		EntityPos p = LMWorldServer.inst.warps.get(args[0]);
-		if(p == null) return error(new ChatComponentText("Warp '" + args[0] + "' not set!"));//LANG
+		if(p == null) return error(new ChatComponentTranslation(FTBU.mod.assets + "cmd.warp_not_set", args[0]));
 		LMDimUtils.teleportPlayer(ep, p);
-		return new ChatComponentText("Teleported to '" + args[0] + "'");
+		return new ChatComponentTranslation(FTBU.mod.assets + "cmd.warp_tp", args[0]);
 	}
 }

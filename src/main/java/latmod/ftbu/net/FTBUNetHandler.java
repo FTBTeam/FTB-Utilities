@@ -23,10 +23,10 @@ public class FTBUNetHandler
 		NET.register(MessageLMPlayerLoggedOut.class, 9, Side.CLIENT);
 		
 		NET_INFO.register(MessageLMPlayerInfo.class, 1, Side.CLIENT);
-		NET_INFO.register(MessageDisplayGuide.class, 2, Side.CLIENT);
+		NET_INFO.register(MessageOpenGui.class, 2, Side.CLIENT);
 		NET_INFO.register(MessagePing.class, 3, Side.SERVER);
 		NET_INFO.register(MessagePingResponse.class, 4, Side.CLIENT);
-		NET_INFO.register(MessageOpenGui.class, 5, Side.CLIENT);
+		NET_INFO.register(MessageDisplayGuide.class, 5, Side.CLIENT);
 		
 		NET_WORLD.register(MessageAreaUpdate.class, 1, Side.CLIENT);
 		NET_WORLD.register(MessageAreaRequest.class, 2, Side.SERVER);

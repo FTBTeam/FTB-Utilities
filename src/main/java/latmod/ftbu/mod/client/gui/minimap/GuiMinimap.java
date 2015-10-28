@@ -100,7 +100,7 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 			{
 				gui.playClickSound();
 				if(LatCoreMCClient.isPlaying())
-					ClientAction.ACTION_SET_SAFE_CLAIMS.send(LMWorldClient.inst.clientPlayer.settings.safeClaims ? 0 : 1);
+					ClientAction.ACTION_EXPLOSIONS.send(LMWorldClient.inst.clientPlayer.settings.explosions ? 0 : 1);
 			}
 			
 			public void addMouseOverText(FastList<String> l)
@@ -109,8 +109,8 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 				if(FTBUConfigClaims.forcedExplosions.get() != -1)
 				{
 					if(FTBUConfigClaims.forcedExplosions.get() == 1)
-						l.add(FTBU.mod.translateClient("button.explosions_server_forced_on"));
-					else l.add(FTBU.mod.translateClient("button.explosions_server_forced_off"));
+						l.add(FTBULang.label_server_forced_on());
+					else l.add(FTBU.mod.translateClient("label.server_forced_off"));
 				}
 			}
 		};
@@ -199,7 +199,7 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 		buttonClose.render(GuiIcons.accept);
 		buttonExplosions.renderWidget();
 		
-		if(LMWorldClient.inst.clientPlayer.settings.safeClaims)
+		if(!LMWorldClient.inst.clientPlayer.settings.explosions)
 		{
 			zLevel = 500F;
 			GL11.glColor4f(1F, 1F, 1F, 0.75F);
@@ -212,17 +212,13 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 	public void drawText(FastList<String> l)
 	{
 		String s = LMWorldClient.inst.clientPlayer.claimedChunks + " / " + LMWorldClient.inst.clientPlayer.maxClaimPower;
+		s = FTBU.mod.translateClient("label.cchunks_count", s);
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 12, 0xFFFFFFFF);
 		super.drawText(l);
 	}
 	
 	public void onLMGuiClosed()
 	{
-	}
-	
-	public void onClientDataChanged()
-	{
-		//refreshWidgets();
 	}
 	
 	private ChunkType getType(int cx, int cy)

@@ -74,7 +74,6 @@ public class FTBU
 	{
 		FTBUTicks.serverStarted();
 		e.registerServerCommand(new CmdAdmin());
-		e.registerServerCommand(new CmdFTBU());
 		e.registerServerCommand(new CmdListOverride());
 		if(FTBUConfigCmd.back.get()) e.registerServerCommand(new CmdBack());
 		if(FTBUConfigCmd.motd.get()) e.registerServerCommand(new CmdMotd());

@@ -49,7 +49,7 @@ public class GuiSelectColorHSB extends GuiLM
 		xSize = 76;
 		ySize = 107;
 		
-		colorInit = new ButtonLM(this, 6, 5, col_tex.width, col_tex.height)
+		colorInit = new ButtonLM(this, 6, 5, col_tex.widthI, col_tex.heightI)
 		{
 			public void onButtonPressed(int b)
 			{ closeGui(false); }
@@ -63,7 +63,7 @@ public class GuiSelectColorHSB extends GuiLM
 		
 		colorInit.title = LMColorUtils.getHex(getInitRGB());
 		
-		colorCurrent = new ButtonLM(this, 49, 5, col_tex.width, col_tex.height)
+		colorCurrent = new ButtonLM(this, 49, 5, col_tex.widthI, col_tex.heightI)
 		{
 			public void onButtonPressed(int b)
 			{ closeGui(true); }
@@ -132,8 +132,8 @@ public class GuiSelectColorHSB extends GuiLM
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 		
 		double z = zLevel;
-		int w = slider_col_tex.width;
-		int h = slider_col_tex.height;
+		double w = slider_col_tex.width;
+		double h = slider_col_tex.height;
 		double u0 = slider_col_tex.minU;
 		double v0 = slider_col_tex.minV;
 		double u1 = slider_col_tex.maxU;

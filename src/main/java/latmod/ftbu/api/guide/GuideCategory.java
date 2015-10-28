@@ -1,22 +1,24 @@
 package latmod.ftbu.api.guide;
 
+import cpw.mods.fml.relauncher.*;
 import ftb.lib.LMNBTUtils;
 import latmod.lib.FastList;
 import net.minecraft.nbt.*;
+import net.minecraft.util.*;
 
 public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 {
 	public final GuideCategory parent;
-	private String title;
-	private StringBuilder text;
+	private IChatComponent title;
+	private FastList<IChatComponent> text;
 	public final FastList<GuideCategory> subcategories;
 	GuideFile file = null;
 	
-	public GuideCategory(GuideCategory p, String s)
+	public GuideCategory(GuideCategory p, IChatComponent s)
 	{
 		parent = p;
 		title = s;
-		text = new StringBuilder();
+		text = new FastList<IChatComponent>();
 		subcategories = new FastList<GuideCategory>();
 	}
 	
@@ -26,52 +28,66 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 		else return parent == null ? null : parent.getFile();
 	}
 	
-	public void print(String s)
-	{ text.append(s); }
+	public void println(IChatComponent c)
+	{ text.add(c); }
 	
 	public void println(String s)
-	{ text.append(s); text.append('\n'); }
+	{ println(new ChatComponentText(s)); }
 	
-	public String getText()
-	{ return text.toString(); }
+	public String getUnformattedText()
+	{
+		if(text.isEmpty()) return "";
+		StringBuilder sb = new StringBuilder();
+		int s = text.size();
+		for(int i = 0; i < s; i++)
+		{ sb.append(text.get(i).getUnformattedText());
+		if(i != s - 1) sb.append('\n'); }
+		return sb.toString();
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public String getFormattedText()
+	{
+		if(text.isEmpty()) return "";
+		StringBuilder sb = new StringBuilder();
+		int s = text.size();
+		for(int i = 0; i < s; i++)
+		{ sb.append(text.get(i).getFormattedText());
+		if(i != s - 1) sb.append('\n'); }
+		return sb.toString();
+	}
 	
 	public void addSub(GuideCategory c)
 	{ subcategories.add(c); }
 	
-	public String getTitle()
+	public IChatComponent getTitleComponent()
 	{ return title; }
 	
 	public String toString()
-	{ return getTitle(); }
+	{ return title.getUnformattedText(); }
 	
 	public boolean equals(Object o)
 	{ return o != null && (o == this || toString().equals(o.toString())); }
 	
-	public GuideCategory getSub(String s)
+	public GuideCategory getSub(IChatComponent s)
 	{
-		GuideCategory c = null;
-		
 		for(int i = 0; i < subcategories.size(); i++)
 		{
-			GuideCategory c1 = subcategories.get(i);
-			if(c1.getTitle().equals(s)) { c = c1; break; }
+			GuideCategory c = subcategories.get(i);
+			if(c.title.equals(s)) return c;
 		}
 		
-		if(c == null)
-		{
-			c = new GuideCategory(this, s);
-			subcategories.add(c);
-		}
-		
+		GuideCategory c = new GuideCategory(this, s);
+		subcategories.add(c);
 		return c;
 	}
 	
 	public int compareTo(GuideCategory o)
-	{ return getTitle().compareToIgnoreCase(o.getTitle()); }
+	{ return toString().compareToIgnoreCase(o.toString()); }
 
 	public void clear()
 	{
-		text = new StringBuilder();
+		text.clear();
 		for(int i = 0; i < subcategories.size(); i++)
 			subcategories.get(i).clear();
 		subcategories.clear();
@@ -79,10 +95,15 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 	
 	public void writeToNBT(NBTTagCompound tag)
 	{
-		tag.setString("Title", title);
+		tag.setString("N", IChatComponent.Serializer.func_150696_a(title));
 		
-		if(text.length() > 0)
-			tag.setString("Text", text.toString());
+		if(text.size() > 0)
+		{
+			NBTTagList list = new NBTTagList();
+			for(int i = 0; i < text.size(); i++)
+				list.appendTag(new NBTTagString(IChatComponent.Serializer.func_150696_a(text.get(i))));
+			tag.setTag("T", list);
+		}
 		
 		if(!subcategories.isEmpty())
 		{
@@ -93,7 +114,8 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 				subcategories.get(i).writeToNBT(tag1);
 				list.appendTag(tag1);
 			}
-			tag.setTag("Sub", list);
+			
+			tag.setTag("S", list);
 		}
 	}
 	
@@ -101,14 +123,18 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 	{
 		clear();
 		
-		title = tag.getString("Title");
+		title = IChatComponent.Serializer.func_150699_a(tag.getString("N"));
 		
-		if(tag.hasKey("Text"))
-			text.append(tag.getString("Text"));
-		
-		if(tag.hasKey("Sub"))
+		if(tag.hasKey("T"))
 		{
-			NBTTagList list = tag.getTagList("Sub", LMNBTUtils.MAP);
+			NBTTagList list = tag.getTagList("T", LMNBTUtils.STRING);
+			for(int i = 0; i < list.tagCount(); i++)
+				text.add(IChatComponent.Serializer.func_150699_a(list.getStringTagAt(i)));
+		}
+		
+		if(tag.hasKey("S"))
+		{
+			NBTTagList list = tag.getTagList("S", LMNBTUtils.MAP);
 			
 			for(int i = 0; i < list.tagCount(); i++)
 			{

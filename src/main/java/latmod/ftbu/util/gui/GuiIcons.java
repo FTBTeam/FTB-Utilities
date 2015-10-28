@@ -89,4 +89,6 @@ public class GuiIcons
 	public static final TextureCoords money = getIcon(61);
 	public static final TextureCoords tick = getIcon(62);
 	public static final TextureCoords star = getIcon(63);
+	
+	public static final TextureCoords guide = getIcon(64);
 }

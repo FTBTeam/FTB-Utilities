@@ -12,7 +12,7 @@ import ftb.lib.api.config.ConfigListRegistry;
 import latmod.ftbu.api.EventLMWorldServer;
 import latmod.ftbu.api.guide.GuideFile;
 import latmod.ftbu.mod.FTBUTicks;
-import latmod.ftbu.mod.config.*;
+import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
 import net.minecraft.entity.Entity;
@@ -27,7 +27,7 @@ public class FTBUWorldEventHandler
 	@SubscribeEvent
 	public void onModeChanged(EventFTBModeSet e)
 	{
-		GuideFile.inst.reload(e);
+		GuideFile.modpackGuide.reload(e);
 	}
 	
 	@SubscribeEvent
@@ -113,14 +113,8 @@ public class FTBUWorldEventHandler
 	@SubscribeEvent
 	public void onMobSpawned(net.minecraftforge.event.entity.EntityJoinWorldEvent e)
 	{
-		if(e.world.isRemote) return;
-		
-		if(!isEntityAllowed(e.entity))
-		{
-			e.entity.setDead();
-			e.setCanceled(true);
-			return;
-		}
+		if(!e.world.isRemote && !isEntityAllowed(e.entity))
+		{ e.entity.setDead(); e.setCanceled(true); }
 	}
 	
 	private boolean isEntityAllowed(Entity e)
@@ -143,33 +137,10 @@ public class FTBUWorldEventHandler
 	public void onExplosionStart(net.minecraftforge.event.world.ExplosionEvent.Start e)
 	{
 		if(e.world.isRemote) return;
-		
 		int dim = e.world.provider.dimensionId;
 		int cx = MathHelperLM.chunk(e.explosion.explosionX);
 		int cz = MathHelperLM.chunk(e.explosion.explosionZ);
-		
-		if(blockExplosion(dim, cx, cz))
-			e.setCanceled(true);
+		if(!Claims.allowExplosion(dim, cx, cz)) e.setCanceled(true);
 	}
 	
-	private boolean blockExplosion(int dim, int cx, int cz)
-	{
-		if(dim == 0 && FTBUConfigGeneral.safeSpawn.get() && Claims.isInSpawn(dim, cx, cz))
-			return true;
-		else if(LMWorldServer.inst.settings.isOutside(dim, cx, cz))
-			return true;
-		else
-		{
-			int fe = FTBUConfigClaims.forcedExplosions.get();
-			
-			ClaimedChunk c = Claims.get(dim, cx, cz);
-			if(c != null)
-			{
-				if(fe == -1) return c.claims.owner.settings.safeClaims;
-				else return fe == 0;
-			}
-		}
-		
-		return false;
-	}
 }

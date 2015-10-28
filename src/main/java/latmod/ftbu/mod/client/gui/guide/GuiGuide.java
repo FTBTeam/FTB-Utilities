@@ -11,7 +11,7 @@ import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.GuiViewImage;
 import latmod.ftbu.util.gui.*;
 import latmod.lib.*;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 
 public class GuiGuide extends GuiLM
 {
@@ -46,7 +46,7 @@ public class GuiGuide extends GuiLM
 		xSize = 328;
 		ySize = 240;
 		
-		sliderCategories = new SliderLM(this, 11, 14, tex_slider.width, 210, tex_slider.height)
+		sliderCategories = new SliderLM(this, 11, 14, tex_slider.widthI, 210, tex_slider.heightI)
 		{
 			public boolean canMouseScroll()
 			{ return gui.mouseX < guiLeft + xSize / 2; }
@@ -57,7 +57,7 @@ public class GuiGuide extends GuiLM
 		
 		sliderCategories.isVertical = true;
 		
-		sliderText = new SliderLM(this, 304, 14, tex_slider.width, 210, tex_slider.height)
+		sliderText = new SliderLM(this, 304, 14, tex_slider.widthI, 210, tex_slider.heightI)
 		{
 			public boolean canMouseScroll()
 			{ return gui.mouseX > guiLeft + xSize / 2; }
@@ -68,7 +68,7 @@ public class GuiGuide extends GuiLM
 		
 		sliderText.isVertical = true;
 		
-		buttonBack = new ButtonLM(this, 35, 12, tex_back.width, tex_back.height)
+		buttonBack = new ButtonLM(this, 35, 12, tex_back.widthI, tex_back.heightI)
 		{
 			public void onButtonPressed(int b)
 			{
@@ -129,7 +129,7 @@ public class GuiGuide extends GuiLM
 		GuideFile file = category.getFile();
 		if(file == null) return;
 		
-		String s = category.getText();
+		String s = category.getFormattedText();
 		if(s != null && s.length() > 0)
 		{
 			boolean uni = fontRendererObj.getUnicodeFlag();
@@ -164,22 +164,31 @@ public class GuiGuide extends GuiLM
 					}
 					else if(l.special.isImage())
 					{
-						TextureCoords tex = l.special.getTexture();
-						
-						if(tex.isValid())
+						try
 						{
-							l.text = "";
-							int w = Math.min(textPanel.width, tex.width);
-							int lines = (int)(1D + tex.getHeight(w) / 11D);
+							TextureCoords tex = l.special.getTexture();
 							
-							for(int j = 1; j < lines; j++)
+							if(tex.isValid())
 							{
-								TextLine l1 = new TextLine(l);
-								l1.text = "";
-								l1.special = l.special;
-								allTextLines.add(l1);
+								l.text = "";
+								int lines = (int)(1D + tex.getHeight(Math.min(textPanel.width, tex.width)) / 11D);
+								
+								TextureCoords[] splitTex = tex.split(1, lines);
+								
+								l.texture = splitTex[0];
+								
+								for(int j = 1; j < lines; j++)
+								{
+									TextLine l1 = new TextLine(l);
+									l1.text = "";
+									l1.special = l.special;
+									l1.texture = splitTex[j];
+									allTextLines.add(l1);
+								}
 							}
 						}
+						catch(Exception e1)
+						{ e1.printStackTrace(); }
 					}
 				}
 			}
@@ -200,9 +209,9 @@ public class GuiGuide extends GuiLM
 		
 		if(lines > maxTextLines)
 		{
-			float f = sliderText.value * (lines - 1 - maxTextLines);
+			float f = sliderText.value * (lines - maxTextLines);
 			off = (int)f;
-			sliderText.scrollStep = 1F / (lines - 1 - maxTextLines);
+			sliderText.scrollStep = 1F / (lines - maxTextLines);
 		}
 		
 		for(int i = 0; i < maxTextLines; i++)
@@ -234,7 +243,7 @@ public class GuiGuide extends GuiLM
 		
 		getFontRenderer();
 		
-		fontRendererObj.drawString(category.getTitle(), getPosX(53), getPosY(14), textColor);
+		fontRendererObj.drawString(category.getTitleComponent().getFormattedText(), getPosX(53), getPosY(14), textColor);
 		
 		boolean uni = fontRendererObj.getUnicodeFlag();
 		fontRendererObj.setUnicodeFlag(true);
@@ -273,7 +282,10 @@ public class GuiGuide extends GuiLM
 			if(!isEnabled()) return;
 			int ax = getAX();
 			int ay = getAY();
-			gui.getFontRenderer().drawString(cat.getTitle(), ax + 1, ay + 1, mouseOver(ax, ay) ? textColorOver : textColor);
+			IChatComponent titleC = cat.getTitleComponent().createCopy();
+			boolean mouseOver = mouseOver(ax, ay);
+			if(mouseOver) titleC.getChatStyle().setUnderlined(true);
+			gui.getFontRenderer().drawString(titleC.getFormattedText(), ax + 1, ay + 1, mouseOver ? textColorOver : textColor);
 		}
 	}
 	
@@ -315,17 +327,13 @@ public class GuiGuide extends GuiLM
 			int ay = getAY();
 			
 			if(!line.text.isEmpty()) fontRendererObj.drawString(line.text, ax, ay, textColor);
-			else if(line.special != null && line.special.isImage() && line.parent == null)
+			else if(line.special != null && line.special.isImage() && line.texture != null && line.texture.isValid())
 			{
-				TextureCoords t = line.special.getTexture();
-				
-				if(t.isValid())
-				{
-					GL11.glColor4f(1F, 1F, 1F, 1F);
-					gui.setTexture(t.texture);
-					int w = Math.min(width, t.width);
-					GuiLM.drawTexturedRectD(ax, ay, gui.getZLevel(), w, t.getHeight(w), 0D, 0D, 1D, 1D);
-				}
+				GL11.glColor4f(1F, 1F, 1F, 1F);
+				gui.setTexture(line.texture.texture);
+				double w = Math.min(width, line.texture.width);
+				gui.render(line.texture, ax, ay, w, line.texture.getHeight(w) + 1);
+				//GuiLM.drawTexturedRectD(ax, ay, gui.getZLevel(), w, line.texture.getHeight(w), 0D, line.texture.minU, 1D, line.texture.maxU);
 			}
 		}
 	}

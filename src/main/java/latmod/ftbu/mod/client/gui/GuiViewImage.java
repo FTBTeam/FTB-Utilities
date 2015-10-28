@@ -44,8 +44,8 @@ public class GuiViewImage extends GuiLM
 		{
 			setTexture(texCoords.texture);
 			
-			int w = texCoords.width;
-			int h = texCoords.height;
+			double w = texCoords.width;
+			double h = texCoords.height;
 			
 			if(w > width)
 			{

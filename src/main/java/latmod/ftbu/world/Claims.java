@@ -1,6 +1,7 @@
 package latmod.ftbu.world;
 
 import ftb.lib.*;
+import latmod.ftbu.mod.config.*;
 import latmod.lib.*;
 import net.minecraft.nbt.*;
 import net.minecraft.util.ChunkCoordinates;
@@ -111,4 +112,25 @@ public class Claims
 	
 	public static boolean isInSpawnF(int dim, double x, double z)
 	{ return dim == 0 && isInSpawn(dim, MathHelperLM.chunk(x), MathHelperLM.chunk(z)); }
+	
+	public static boolean allowExplosion(int dim, int cx, int cz)
+	{
+		if(dim == 0 && FTBUConfigGeneral.safeSpawn.get() && isInSpawn(dim, cx, cz))
+			return false;
+		else if(LMWorldServer.inst.settings.isOutside(dim, cx, cz))
+			return false;
+		else
+		{
+			int fe = FTBUConfigClaims.forcedExplosions.get();
+			
+			ClaimedChunk c = get(dim, cx, cz);
+			if(c != null)
+			{
+				if(fe == -1) return c.claims.owner.settings.explosions;
+				else return fe == 1;
+			}
+		}
+		
+		return true;
+	}
 }

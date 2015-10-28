@@ -13,11 +13,6 @@ public class FTBUConfigCmd
 	public static final ConfigEntryBool tplast = new ConfigEntryBool("tplast", true);
 	public static final ConfigEntryBool warp = new ConfigEntryBool("warp", true);
 	
-	public static final ConfigEntryBool ftbu_backup_timer = new ConfigEntryBool("ftbu_backup_timer", true);
-	public static final ConfigEntryBool ftbu_playerID = new ConfigEntryBool("ftbu_playerID", true);
-	public static final ConfigEntryBool ftbu_restart_timer = new ConfigEntryBool("ftbu_restart_timer", true);
-	public static final ConfigEntryBool ftbu_tops = new ConfigEntryBool("ftbu_tops", true);
-	
 	public static final ConfigEntryBool admin_backup = new ConfigEntryBool("admin_backup", true);
 	public static final ConfigEntryBool admin_edit_config = new ConfigEntryBool("admin_edit_config", true);
 	public static final ConfigEntryBool admin_invsee = new ConfigEntryBool("admin_invsee", true);

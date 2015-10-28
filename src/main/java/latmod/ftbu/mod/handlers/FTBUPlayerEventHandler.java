@@ -83,9 +83,9 @@ public class FTBUPlayerEventHandler
 		
 		if(requests > 0)
 		{
-			IChatComponent cc = new ChatComponentText("You got " + requests + " new friend requests!"); //LANG
+			IChatComponent cc = new ChatComponentTranslation(FTBU.mod.assets + "label.new_friends", String.valueOf(requests));
 			cc.getChatStyle().setColor(EnumChatFormatting.GREEN);
-			Notification n = new Notification("new_friend_requests", cc, 5000);
+			Notification n = new Notification("new_friend_requests", cc, 6000);
 			n.setDesc(new ChatComponentText("Click to add all as friends"));
 			n.setClickEvent(new ClickAction(ClickAction.FRIEND_ADD_ALL, ""));
 			LatCoreMC.notifyPlayer(ep, n);
@@ -141,7 +141,7 @@ public class FTBUPlayerEventHandler
 				
 				if(LMWorldServer.inst.settings.isOutsideF(player.lastPos.dim, player.lastPos.x, player.lastPos.z))
 				{
-					FTBLib.printChat(ep, "Teleporting to spawn!");
+					FTBLib.printChat(ep, new ChatComponentTranslation(FTBU.mod.assets + "cmd.spawn_tp"));
 					World w = LMDimUtils.getWorld(0);
 					ChunkCoordinates pos = w.getSpawnPoint();
 					pos.posY = w.getTopSolidOrLiquidBlock(pos.posX, pos.posZ);
@@ -199,7 +199,7 @@ public class FTBUPlayerEventHandler
 			return false;
 		}
 		
-		if(!server || FTBUConfigGeneral.allowInteractSecure(ep)) return true;
+		if(!server || FTBUConfigGeneral.allowCreativeInteractSecure(ep)) return true;
 		
 		Block block = w.getBlock(x, y, z);
 		
@@ -213,7 +213,6 @@ public class FTBUPlayerEventHandler
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
 		//if(!LatCoreMC.isDedicatedServer() || p.isOP()) return true;
 		ChunkType type = ChunkType.getD(w.provider.dimensionId, x, z, p);
-		FTBLib.printChat(p.getPlayer(), type);
 		return type.isFriendly();
 	}
 	
@@ -245,7 +244,7 @@ public class FTBUPlayerEventHandler
 		if(entity != null && (entity instanceof EntityPlayerMP || entity instanceof IMob))
 		{
 			if(entity instanceof FakePlayer) return;
-			else if(entity instanceof EntityPlayerMP && FTBUConfigGeneral.allowInteractSecure((EntityPlayerMP)entity)) return;
+			else if(entity instanceof EntityPlayerMP && FTBUConfigGeneral.allowCreativeInteractSecure((EntityPlayerMP)entity)) return;
 			
 			int cx = MathHelperLM.chunk(e.entity.posX);
 			int cz = MathHelperLM.chunk(e.entity.posZ);

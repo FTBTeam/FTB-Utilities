@@ -1,5 +1,6 @@
 package latmod.ftbu.cmd;
 
+import latmod.ftbu.mod.FTBU;
 import latmod.lib.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.*;
@@ -50,7 +51,7 @@ public class CommandSubLM extends CommandLM
 			return new ChatComponentText(LMStringUtils.strip(getTabStrings(ics, args, 0)));
 		CommandLM cmd = subCommands.get(args[0]);
 		if(cmd != null) return cmd.onCommand(ics, trimArgs(args));
-		return new ChatComponentText("Invalid subcommand '" + args[0] + "'!"); // LANG
+		return new ChatComponentTranslation(FTBU.mod.assets + "cmd.invalid_sub", args[0]);
 	}
 	
 	private static String[] trimArgs(String[] args)

@@ -4,7 +4,7 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.LMNetworkWrapper;
 import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.util.LMGuiHandler;
+import latmod.ftbu.util.*;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class MessageOpenGui extends MessageFTBU
@@ -24,14 +24,14 @@ public class MessageOpenGui extends MessageFTBU
 	{ return FTBUNetHandler.NET_INFO; }
 	
 	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageOpenGui m, MessageContext ctx)
+	public IMessage onMessage(MessageContext ctx)
 	{
 		String modID = io.readString();
 		int guiID = io.readInt();
 		NBTTagCompound data = readTag();
 		int windowID = io.readUByte();
 		
-		LMGuiHandler h = LMGuiHandler.Registry.getLMGuiHandler(modID);
+		LMGuiHandler h = LMGuiHandlerRegistry.getLMGuiHandler(modID);
 		if(h != null && FTBU.proxy.openClientGui(FTBLibClient.mc.thePlayer, modID, guiID, data))
 			FTBLibClient.mc.thePlayer.openContainer.windowId = windowID;
 		return null;

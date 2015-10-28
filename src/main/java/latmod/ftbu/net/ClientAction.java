@@ -1,6 +1,8 @@
 package latmod.ftbu.net;
 
 import ftb.lib.FTBLib;
+import latmod.ftbu.api.guide.GuideFile;
+import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.notification.*;
 import latmod.ftbu.util.LatCoreMC;
 import latmod.ftbu.world.*;
@@ -31,7 +33,7 @@ public enum ClientAction
 					
 					if(p.isOnline())
 					{
-						Notification n = new Notification("friend_request", FTBLib.setColor(EnumChatFormatting.GREEN, new ChatComponentText("New friend request from " + owner.getName() + "!")), 4000);//LANG
+						Notification n = new Notification("friend_request", FTBLib.setColor(EnumChatFormatting.GREEN, new ChatComponentTranslation("ftbu:label.new_friend", owner.getName())), 4000);
 						n.setDesc(new ChatComponentText("Click to add as friend"));
 						n.setClickEvent(new ClickAction(ClickAction.CMD, "/ftbu friends add " + owner.getName()));
 						LatCoreMC.notifyPlayer(p.getPlayer(), n);
@@ -97,11 +99,11 @@ public enum ClientAction
 		}
 	},
 	
-	ACTION_SET_SAFE_CLAIMS
+	ACTION_EXPLOSIONS
 	{
 		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
 		{
-			owner.settings.safeClaims = (extra == 1);
+			owner.settings.explosions = (extra == 1);
 			return true;
 		}
 	},
@@ -137,6 +139,17 @@ public enum ClientAction
 	{
 		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
 		{
+			return false;
+		}
+	},
+	
+	ACTION_REQUEST_SERVER_INFO
+	{
+		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
+		{
+			GuideFile file = new GuideFile(new ChatComponentTranslation(FTBU.mod.assets + "button.server_info"));
+			FTBU.proxy.addServerInfo(file, owner);
+			LatCoreMC.displayGuide(ep, file);
 			return false;
 		}
 	},

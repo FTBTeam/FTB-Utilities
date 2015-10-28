@@ -52,7 +52,6 @@ public class FTBUGuiHandler extends LMGuiHandler
 		else if(id == FRIENDS) return new GuiFriends(null);
 		else if(id == DISPLAY_ITEM)
 			return new GuiDisplayItem(ItemDisplay.readFromNBT(data));
-		
 		return null;
 	}
 }

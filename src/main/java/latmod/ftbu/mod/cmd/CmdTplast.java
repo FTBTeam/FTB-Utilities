@@ -2,6 +2,7 @@ package latmod.ftbu.mod.cmd;
 
 import ftb.lib.*;
 import latmod.ftbu.cmd.*;
+import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.world.LMPlayerServer;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -46,6 +47,6 @@ public class CmdTplast extends CommandLM
 		EntityPos p = to.getPos();
 		if(p == null) return error(new ChatComponentText("No last position!"));
 		LMDimUtils.teleportPlayer(who, p);
-		return new ChatComponentText("Teleported to " + to.getName() + "!"); //LANG
+		return new ChatComponentTranslation(FTBU.mod.assets + "cmd.warp_tp", to.getName());
 	}
 }

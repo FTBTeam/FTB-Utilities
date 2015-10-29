@@ -27,7 +27,7 @@ public class PanelPlayerList extends PanelFriendsGui
 		tempPlayerList.clear();
 		tempPlayerList.addAll(LMWorldClient.inst.players);
 		tempPlayerList.remove(LMWorldClient.inst.clientPlayer);
-		tempPlayerList.sort(LMPNameComparator.instance);
+		tempPlayerList.sort(FriendListComparator.instance);
 		
 		playerButtons.clear();
 		playerButtons.add(new ButtonPlayer(this, LMWorldClient.inst.clientPlayer));

@@ -1,0 +1,3 @@
+[submodule "lib/LatLib"]
+	path = lib/LatLib
+	url = https://github.com/LatvianModder/LatLib.git

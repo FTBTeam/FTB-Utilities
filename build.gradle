@@ -1,0 +1,108 @@
+buildscript
+{
+    // Repositories and plugins used by this build script. For internal Gradle use only.
+    repositories
+    {
+        mavenCentral()
+
+        maven
+        {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+
+        maven
+        {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+
+    dependencies
+    {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+    }
+}
+
+// Applies the custom Gradle plugin Forge uses, for Forge-specific tasks
+apply plugin: 'forge'
+
+// Metadata relevant to this Forge mod
+version = "1.0.0"
+group   = "latmod.ftbu"
+
+minecraft
+{
+    // Version of Forge to use
+    version = "1.7.10-10.13.4.1448-1.7.10"
+    // Defines what directory to use for debugging files
+    runDir  = "debug"
+
+    replaceIn "FTBUFinals.java"
+    replace "@VERSION@", project.version
+}
+
+// With help from https://github.com/jaquadro/StorageDrawers/blob/master/build.gradle
+repositories
+{
+    maven
+    {
+        name 'CB Maven FS'
+        url "http://chickenbones.net/maven/"
+    }
+
+    maven
+    {
+        name "Waila Mobius Repo"
+        url "http://mobiusstrip.eu/maven"
+    }
+}
+
+dependencies
+{
+    // Include all needed libs for NEI API
+    compile "codechicken:CodeChickenCore:1.7.10-1.0.7.47:dev"
+    compile "codechicken:NotEnoughItems:1.7.10-1.0.5.118:dev"
+
+    // Include all needed libs for WAILA API
+    compile "mcp.mobius.waila:Waila:1.5.11-RC1_1.7.10:dev"
+}
+
+sourceSets.main.java
+{
+    // Includes the LatLib submodule source directory into the built jar
+    // (Unable to figure out how to do this with a built jar and have it work in Forge)
+    srcDir project.projectDir.getPath() + '/lib/LatLib/src'
+}
+
+// Sets the output directory of the mod's jar file
+jar.destinationDir = file 'output'
+
+// Enforces use of Java 1.7 language level
+compileJava.sourceCompatibility = "1.7"
+compileJava.targetCompatibility = "1.7"
+
+// Fixes issues with debugging in IntelliJ
+idea.module.inheritOutputDirs = true
+
+processResources
+{
+    // This will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // Replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs)
+    {
+        include 'mcmod.info'
+
+        // Replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+
+    // Copy everything else than mcmod.info
+    from(sourceSets.main.resources.srcDirs)
+    {
+        exclude 'mcmod.info'
+    }
+}

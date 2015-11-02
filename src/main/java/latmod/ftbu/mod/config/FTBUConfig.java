@@ -4,7 +4,7 @@ import java.io.File;
 
 import ftb.lib.FTBLib;
 import ftb.lib.api.config.ConfigListRegistry;
-import latmod.ftbu.api.guide.GuideFile;
+import latmod.ftbu.api.guide.ServerGuideFile;
 import latmod.ftbu.mod.FTBU;
 import latmod.lib.config.ConfigFile;
 
@@ -31,7 +31,7 @@ public class FTBUConfig // FTBU
 		configFileModpack.save();
 	}
 	
-	public static void onGuideEvent(GuideFile file)
+	public static void onGuideEvent(ServerGuideFile file)
 	{
 		addGuideGroup(file, "General", FTBUConfigGeneral.class);
 		addGuideGroup(file, "Login", FTBUConfigLogin.class);
@@ -39,6 +39,6 @@ public class FTBUConfig // FTBU
 		addGuideGroup(file, "Claims", FTBUConfigClaims.class);
 	}
 	
-	private static void addGuideGroup(GuideFile file, String s, Class<?> c)
+	private static void addGuideGroup(ServerGuideFile file, String s, Class<?> c)
 	{ file.addConfigFromClass("FTBUtilities", s, c); }
 }

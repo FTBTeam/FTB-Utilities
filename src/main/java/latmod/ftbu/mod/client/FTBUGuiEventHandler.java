@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.*;
-import latmod.ftbu.api.guide.GuideFile;
+import latmod.ftbu.api.guide.ClientGuideFile;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.GuiClientConfig;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
@@ -88,7 +88,7 @@ public class FTBUGuiEventHandler
 				
 				public void onPressed(GuiContainer g0)
 				{
-					GuiGuide g = new GuiGuide(null, GuideFile.modpackGuide.main);
+					GuiGuide g = new GuiGuide(null, ClientGuideFile.instance.main);
 					g.playClickSound();
 					e.gui.mc.displayGuiScreen(g);
 				}

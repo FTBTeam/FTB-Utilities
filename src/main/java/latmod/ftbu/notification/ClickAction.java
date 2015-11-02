@@ -1,60 +1,81 @@
 package latmod.ftbu.notification;
 
-import java.lang.reflect.Type;
+import java.io.File;
+import java.net.URI;
 
-import com.google.gson.*;
+import cpw.mods.fml.relauncher.*;
+import ftb.lib.client.FTBLibClient;
+import latmod.ftbu.net.ClientAction;
+import latmod.ftbu.world.LMPlayerClient;
+import latmod.lib.*;
+import latmod.lib.util.FinalIDObject;
+import net.minecraft.client.gui.GuiChat;
 
-import latmod.lib.PrimitiveType;
-
-public class ClickAction
+public abstract class ClickAction extends FinalIDObject
 {
-	public static final ClickActionType CMD = new ClickActionType("cmd", PrimitiveType.STRING);
-	public static final ClickActionType SHOW_CMD = new ClickActionType("show_cmd", PrimitiveType.STRING);
-	public static final ClickActionType URL = new ClickActionType("url", PrimitiveType.STRING);
-	public static final ClickActionType FILE = new ClickActionType("file", PrimitiveType.STRING);
-	public static final ClickActionType GUI = new ClickActionType("gui", PrimitiveType.STRING);
-	public static final ClickActionType FRIEND_ADD = new ClickActionType("friend_add", PrimitiveType.INT);
-	public static final ClickActionType FRIEND_ADD_ALL = new ClickActionType("friend_add_all", PrimitiveType.NULL);
+	public final PrimitiveType type;
 	
-	public final ClickActionType ID;
-	public final Object val;
+	public ClickAction(String s, PrimitiveType t)
+	{ super(s); type = t; }
 	
-	public ClickAction(ClickActionType t, Object v)
-	{ ID = t; val = v; }
-		
-	public String stringVal()
-	{ return val.toString(); }
+	@SideOnly(Side.CLIENT)
+	public abstract void onClicked(MouseAction c, LMPlayerClient p);
 	
-	public int intVal()
-	{ return numVal().intValue(); }
+	// Static //
 	
-	public Number numVal()
-	{ return (val == null) ? -1 : (Number)val; }
-	
-	public boolean boolVal()
-	{ return ((Boolean)val).booleanValue(); }
-	
-	public static class Serializer implements JsonSerializer<ClickAction>, JsonDeserializer<ClickAction>
+	public static final ClickAction CMD = new ClickAction("cmd", PrimitiveType.STRING)
 	{
-		public JsonElement serialize(ClickAction src, Type typeOfSrc, JsonSerializationContext context)
+		@SideOnly(Side.CLIENT)
+		public void onClicked(MouseAction c, LMPlayerClient p)
+		{ FTBLibClient.execClientCommand(c.stringVal()); }
+	};
+	
+	public static final ClickAction SHOW_CMD = new ClickAction("show_cmd", PrimitiveType.STRING)
+	{
+		@SideOnly(Side.CLIENT)
+		public void onClicked(MouseAction c, LMPlayerClient p)
+		{ FTBLibClient.mc.displayGuiScreen(new GuiChat(c.stringVal())); }
+	};
+	
+	public static final ClickAction URL = new ClickAction("url", PrimitiveType.STRING)
+	{
+		@SideOnly(Side.CLIENT)
+		public void onClicked(MouseAction c, LMPlayerClient p)
 		{
-			if(src == null) return null;
-			JsonObject o = new JsonObject();
-			o.add("ID", new JsonPrimitive(src.ID.ID));
-			o.add("type", new JsonPrimitive(src.ID.type.ID));
-			if(!PrimitiveType.isNull(src.ID.type))
-				o.add("val", context.serialize(src.val));
-			return o;
+			try { LMUtils.openURI(new URI(c.stringVal())); }
+			catch(Exception ex) { ex.printStackTrace(); }
 		}
-		
-		public ClickAction deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+	};
+	
+	public static final ClickAction FILE = new ClickAction("file", PrimitiveType.STRING)
+	{
+		@SideOnly(Side.CLIENT)
+		public void onClicked(MouseAction c, LMPlayerClient p)
 		{
-			if(json.isJsonNull()) return null;
-			JsonObject o1 = json.getAsJsonObject();
-			String id = o1.get("ID").getAsString();
-			PrimitiveType type = PrimitiveType.get(o1.get("type").getAsString());
-			Object val = PrimitiveType.isNull(type) ? null : context.deserialize(o1.get("val"), type.typeClass);
-			return new ClickAction(new ClickActionType(id, type), val);
+			try { LMUtils.openURI(new File(c.stringVal()).toURI()); }
+			catch(Exception ex) { ex.printStackTrace(); }
 		}
-	}
+	};
+	
+	public static final ClickAction GUI = new ClickAction("gui", PrimitiveType.STRING)
+	{
+		@SideOnly(Side.CLIENT)
+		public void onClicked(MouseAction c, LMPlayerClient p)
+		{
+		}
+	};
+	
+	public static final ClickAction FRIEND_ADD = new ClickAction("friend_add", PrimitiveType.INT)
+	{
+		@SideOnly(Side.CLIENT)
+		public void onClicked(MouseAction c, LMPlayerClient p)
+		{ ClientAction.ACTION_ADD_FRIEND.send(c.intVal()); }
+	};
+	
+	public static final ClickAction FRIEND_ADD_ALL = new ClickAction("friend_add_all", PrimitiveType.NULL)
+	{
+		@SideOnly(Side.CLIENT)
+		public void onClicked(MouseAction c, LMPlayerClient p)
+		{ ClientAction.ACTION_ADD_FRIEND.send(0); }
+	};
 }

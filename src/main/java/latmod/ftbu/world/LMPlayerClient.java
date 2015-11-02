@@ -70,7 +70,6 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 			commonPrivateData = tag.getCompoundTag("CPD");
 			claimedChunks = tag.getInteger("CC");
 			maxClaimPower = tag.getInteger("MCC");
-			Mail.readFromNBT(this, tag, "Mail");
 		}
 		
 		settings.readFromNet(tag.getCompoundTag("CFG"), self);

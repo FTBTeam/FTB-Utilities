@@ -10,6 +10,7 @@ import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
 import latmod.ftbu.mod.config.FTBUConfigClaims;
 import latmod.ftbu.net.*;
+import latmod.ftbu.util.LMSecurityLevel;
 import latmod.ftbu.util.client.*;
 import latmod.ftbu.util.gui.*;
 import latmod.ftbu.world.*;
@@ -110,11 +111,7 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 			{
 				l.add(FTBU.mod.translateClient("button.explosions"));
 				if(FTBUConfigClaims.forcedExplosions.get() != -1)
-				{
-					if(FTBUConfigClaims.forcedExplosions.get() == 1)
-						l.add(FTBULang.label_server_forced_on());
-					else l.add(FTBU.mod.translateClient("label.server_forced_off"));
-				}
+					l.add(FTBULang.label_server_forced(Boolean.toString(FTBUConfigClaims.forcedExplosions.get() == 1)));
 			}
 		};
 		
@@ -131,6 +128,9 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 			{
 				l.add(title);
 				l.add(playerLM.settings.blocks.getText());
+				
+				if(FTBUConfigClaims.forcedChunkSecurity.get() != -1)
+					l.add(FTBULang.label_server_forced(LMSecurityLevel.VALUES_3[FTBUConfigClaims.forcedChunkSecurity.get()].getText()));
 			}
 		};
 		

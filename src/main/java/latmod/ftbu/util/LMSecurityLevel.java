@@ -1,9 +1,9 @@
 package latmod.ftbu.util;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.TextureCoords;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.util.gui.GuiIcons;
+import net.minecraft.util.StatCollector;
 
 public enum LMSecurityLevel
 {
@@ -15,12 +15,14 @@ public enum LMSecurityLevel
 	public static final LMSecurityLevel[] VALUES_2 = new LMSecurityLevel[] { PUBLIC, PRIVATE };
 	
 	public final int ID;
-	private String uname;
+	private final String uname;
+	public final String langKey;
 	
 	LMSecurityLevel(String s)
 	{
 		ID = ordinal();
 		uname = s;
+		langKey = FTBU.mod.assets + "security." + uname;
 	}
 	
 	public boolean isPublic()
@@ -39,13 +41,11 @@ public enum LMSecurityLevel
 		return l[id];
 	}
 	
-	@SideOnly(Side.CLIENT)
 	public String getText()
-	{ return FTBU.mod.translateClient("security." + uname); }
+	{ return StatCollector.translateToLocal(langKey); }
 	
-	@SideOnly(Side.CLIENT)
 	public String getTitle()
-	{ return FTBU.mod.translateClient("security"); }
+	{ return StatCollector.translateToLocal(FTBU.mod.assets + "security"); }
 	
 	public TextureCoords getIcon()
 	{ return GuiIcons.security[ID]; }

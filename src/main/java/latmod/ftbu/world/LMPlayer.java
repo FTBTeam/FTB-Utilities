@@ -24,7 +24,6 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 	public final PersonalSettings settings;
 	public NBTTagCompound commonPublicData;
 	public NBTTagCompound commonPrivateData;
-	public final FastList<Mail> mail;
 	
 	public LMPlayer(LMWorld w, int i, GameProfile gp)
 	{
@@ -41,7 +40,6 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 		
 		commonPublicData = new NBTTagCompound();
 		commonPrivateData = new NBTTagCompound();
-		mail = new FastList<Mail>();
 	}
 	
 	public abstract boolean isOnline();

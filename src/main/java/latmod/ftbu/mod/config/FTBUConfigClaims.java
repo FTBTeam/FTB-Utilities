@@ -30,5 +30,6 @@ public class FTBUConfigClaims
 		f.add(group);
 		
 		ConfigSyncRegistry.add(forcedExplosions);
+		ConfigSyncRegistry.add(forcedChunkSecurity);
 	}
 }

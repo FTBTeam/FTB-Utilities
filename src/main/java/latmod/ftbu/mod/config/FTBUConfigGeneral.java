@@ -32,9 +32,6 @@ public class FTBUConfigGeneral
 	@GuideInfo(info = "Entity classes that are banned from world. They will not spawn and existing ones will be destroyed.", def = "Blank")
 	public static final ConfigEntryStringArray blockedEntities = new ConfigEntryStringArray("blockedEntities", new String[0]);
 	
-	@GuideInfo(info = "Add config info to Guide.", def = "false")
-	public static final ConfigEntryBool configInfoGuide = new ConfigEntryBool("configInfoGuide", false);
-	
 	@GuideInfo(info = "0 - Disabled, 1 - All enabled, 2 - Only text enabled (no items)", def = "1")
 	public static final ConfigEntryInt mail = new ConfigEntryInt("configInfoGuide", new IntBounds(1, 0, 2));
 	

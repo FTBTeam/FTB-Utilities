@@ -10,7 +10,7 @@ import ftb.lib.*;
 import ftb.lib.api.EventFTBModeSet;
 import ftb.lib.api.config.ConfigListRegistry;
 import latmod.ftbu.api.EventLMWorldServer;
-import latmod.ftbu.api.guide.GuideFile;
+import latmod.ftbu.api.guide.ClientGuideFile;
 import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.world.*;
@@ -27,7 +27,7 @@ public class FTBUWorldEventHandler
 	@SubscribeEvent
 	public void onModeChanged(EventFTBModeSet e)
 	{
-		GuideFile.modpackGuide.reload(e);
+		if(e.side.isClient()) ClientGuideFile.instance.reload(e);
 	}
 	
 	@SubscribeEvent

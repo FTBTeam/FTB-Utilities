@@ -16,7 +16,7 @@ public class Notification
 	public IChatComponent desc = null;
 	public int color = 0xFFA0A0A0;
 	public ItemStack item = null;
-	public ClickAction clickEvent = null;
+	public MouseAction mouse = null;
 	
 	public Notification(String s, IChatComponent t, int l)
 	{
@@ -34,11 +34,11 @@ public class Notification
 	public void setColor(int c)
 	{ color = c; }
 	
-	public void setClickEvent(ClickAction e)
-	{ clickEvent = e; }
+	public void setMouseAction(MouseAction e)
+	{ mouse = e; }
 	
 	public boolean isTemp()
-	{ return clickEvent == null; }
+	{ return mouse == null; }
 	
 	public boolean equals(Object o)
 	{ return o != null && (o == this || o.toString().equals(ID)); }
@@ -68,7 +68,7 @@ public class Notification
 			if(n.desc != null) o.add("desc", context.serialize(n.desc, IChatComponent.class));
 			if(n.item != null) o.add("item", context.serialize(n.item, ItemStack.class));
 			if(n.color != 0xFFA0A0A0) o.add("color", new JsonPrimitive(n.color));
-			if(n.clickEvent != null) o.add("click", context.serialize(n.clickEvent));
+			if(n.mouse != null) o.add("mouse", context.serialize(n.mouse));
 			return o;
 		}
 		
@@ -83,7 +83,7 @@ public class Notification
 			if(o.has("desc")) n.setDesc((IChatComponent)context.deserialize(o.get("desc"), IChatComponent.class));
 			if(o.has("color")) n.setColor(Converter.decodeInt(o.get("color").getAsString()));
 			if(o.has("item")) n.setItem((ItemStack)context.deserialize(o.get("item"), ItemStack.class));
-			if(o.has("click")) n.setClickEvent((ClickAction)context.deserialize(o.get("click"), ClickAction.class));
+			if(o.has("mouse")) n.setMouseAction((MouseAction)context.deserialize(o.get("mouse"), MouseAction.class));
 			return n;
 		}
 	}

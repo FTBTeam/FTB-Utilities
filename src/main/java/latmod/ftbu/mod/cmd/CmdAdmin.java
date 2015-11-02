@@ -2,7 +2,7 @@ package latmod.ftbu.mod.cmd;
 
 import latmod.ftbu.cmd.*;
 import latmod.ftbu.mod.cmd.admin.*;
-import latmod.ftbu.mod.config.*;
+import latmod.ftbu.mod.config.FTBUConfigCmd;
 
 public class CmdAdmin extends CommandSubLM
 {

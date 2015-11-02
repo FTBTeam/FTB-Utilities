@@ -6,12 +6,15 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
 import ftb.lib.item.StringIDInvLoader;
 import latmod.ftbu.api.EventLMPlayerServer;
+import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.config.FTBUConfigClaims;
 import latmod.ftbu.net.MessageLMPlayerUpdate;
+import latmod.ftbu.notification.*;
+import latmod.ftbu.util.LatCoreMC;
 import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.*;
 
 public class LMPlayerServer extends LMPlayer // LMPlayerClient
 {
@@ -132,7 +135,6 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		claims.readFromNBT(tag);
 		
-		Mail.readFromNBT(this, tag, "Mail");
 		settings.readFromServer(tag.getCompoundTag("Settings"));
 	}
 	
@@ -170,8 +172,6 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		claims.writeToNBT(tag);
 		
-		Mail.writeToNBT(this, tag, "Mail");
-		
 		NBTTagCompound settingsTag = new NBTTagCompound();
 		settings.writeToServer(settingsTag);
 		tag.setTag("Settings", settingsTag);
@@ -193,7 +193,6 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			if(!commonPrivateData.hasNoTags()) tag.setTag("CPD", commonPrivateData);
 			if(claims.getClaimedChunks() > 0) tag.setInteger("CC", claims.getClaimedChunks());
 			tag.setInteger("MCC", getMaxClaimPower());
-			Mail.writeToNBT(this, tag, "Mail");
 		}
 		
 		NBTTagCompound settingsTag = new NBTTagCompound();
@@ -218,5 +217,37 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		}
 		
 		return maxClaimPower;
+	}
+
+	public void checkNewFriends()
+	{
+		if(isOnline())
+		{
+			FastList<String> requests = new FastList<String>();
+			
+			for(int i = 0; i < LMWorldServer.inst.players.size(); i++)
+			{
+				LMPlayer p1 = LMWorldServer.inst.players.get(i);
+				if(p1.isFriendRaw(this) && !isFriendRaw(p1))
+					requests.add(p1.getName());
+			}
+			
+			if(requests.size() > 0)
+			{
+				IChatComponent cc = new ChatComponentTranslation(FTBU.mod.assets + "label.new_friends");
+				cc.getChatStyle().setColor(EnumChatFormatting.GREEN);
+				Notification n = new Notification("new_friend_requests", cc, 6000);
+				n.setDesc(new ChatComponentTranslation(FTBU.mod.assets + "label.new_friends_click"));
+				
+				MouseAction mouse = new MouseAction(ClickAction.FRIEND_ADD_ALL, null);
+				requests.sort(null);
+				mouse.hover = new IChatComponent[requests.size()];
+				for(int i = 0; i < mouse.hover.length; i++)
+					mouse.hover[i] = new ChatComponentText(requests.get(i));
+				n.setMouseAction(mouse);
+				
+				LatCoreMC.notifyPlayer(getPlayer(), n);
+			}
+		}
 	}
 }

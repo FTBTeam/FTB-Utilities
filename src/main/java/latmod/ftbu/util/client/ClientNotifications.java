@@ -4,7 +4,7 @@ import org.lwjgl.opengl.*;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.FTBLibClient;
-import latmod.ftbu.notification.*;
+import latmod.ftbu.notification.Notification;
 import latmod.ftbu.util.gui.GuiLM;
 import latmod.ftbu.world.LMPlayerClient;
 import latmod.lib.*;
@@ -189,8 +189,8 @@ public class ClientNotifications
 		
 		public void onClicked(LMPlayerClient p)
 		{
-			if(notification.clickEvent != null)
-				ClickActionHandler.onClicked(notification.clickEvent, p);
+			if(notification.mouse != null && notification.mouse.click != null)
+				notification.mouse.click.onClicked(notification.mouse, p);
 		}
 	}
 }

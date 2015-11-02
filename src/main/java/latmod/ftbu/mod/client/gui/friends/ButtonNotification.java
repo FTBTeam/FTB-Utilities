@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 import latmod.ftbu.util.client.ClientNotifications;
 import latmod.ftbu.util.gui.*;
 import latmod.ftbu.world.LMWorldClient;
-import latmod.lib.FastList;
+import latmod.lib.*;
 import net.minecraft.item.ItemStack;
 
 public class ButtonNotification extends ButtonLM
@@ -40,7 +40,10 @@ public class ButtonNotification extends ButtonLM
 		}
 		
 		GL11.glColor4f(1F, 1F, 1F, 1F);
-		GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), parentPanel.width, height, mouseOver() ? 0xFF999999 : 0xFF666666);
+		
+		int color = LMColorUtils.getRGBA(notification.notification.color, mouseOver(ax, ay) ? 255 : 185);
+		
+		GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), parentPanel.width, height, color);
 		gui.getFontRenderer().drawString(title, ax + tx, ay + 4, 0xFFFFFFFF);
 		if(notification.notification.desc != null) gui.getFontRenderer().drawString(notification.notification.desc.getFormattedText(), ax + tx, ay + 14, 0xFFFFFFFF);
 	}
@@ -57,7 +60,9 @@ public class ButtonNotification extends ButtonLM
 	
 	public void addMouseOverText(FastList<String> l)
 	{
-		//if(notification.notification.clickEvent != null)
-		//	l.add(new String(notification.notification.clickEvent.val));
+		if(notification.notification.mouse != null && notification.notification.mouse.hover != null)
+			for(int i = 0; i < notification.notification.mouse.hover.length; i++)
+				if(notification.notification.mouse.hover[i] != null)
+					l.add(notification.notification.mouse.hover[i].getFormattedText());
 	}
 }

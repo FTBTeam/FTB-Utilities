@@ -1,9 +1,8 @@
 package latmod.ftbu.net;
 
 import ftb.lib.FTBLib;
-import latmod.ftbu.api.guide.GuideFile;
-import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.notification.*;
+import latmod.ftbu.api.guide.ServerGuideFile;
+import latmod.ftbu.notification.Notification;
 import latmod.ftbu.util.*;
 import latmod.ftbu.world.*;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -29,25 +28,23 @@ public enum ClientAction
 				if(!owner.friends.contains(p.playerID))
 				{
 					owner.friends.add(p.playerID);
+					owner.sendUpdate();
 					p.sendUpdate();
-					
-					if(p.isOnline())
-					{
-						Notification n = new Notification("friend_request", FTBLib.setColor(EnumChatFormatting.GREEN, new ChatComponentTranslation("ftbu:label.new_friend", owner.getName())), 4000);
-						n.setDesc(new ChatComponentText("Click to add as friend"));
-						n.setClickEvent(new ClickAction(ClickAction.FRIEND_ADD, owner.playerID));
-						LatCoreMC.notifyPlayer(p.getPlayer(), n);
-					}
+					p.checkNewFriends();
 				}
 			}
 			else
 			{
-				for(LMPlayer p : LMWorldServer.inst.players)
+				for(int i = 0; i < LMWorldServer.inst.players.size(); i++)
 				{
+					LMPlayerServer p = LMWorldServer.inst.players.get(i).toPlayerMP();
+					
 					if(!p.equalsPlayer(owner) && p.isFriendRaw(owner) && !owner.isFriendRaw(p))
 					{
 						owner.friends.add(p.playerID);
-						p.toPlayerMP().sendUpdate();
+						owner.sendUpdate();
+						p.sendUpdate();
+						p.checkNewFriends();
 					}
 				}
 			}
@@ -68,6 +65,7 @@ public enum ClientAction
 				owner.friends.removeValue(p.playerID);
 				owner.sendUpdate();
 				p.sendUpdate();
+				p.checkNewFriends();
 				Notification n = new Notification("friend_removed", FTBLib.setColor(EnumChatFormatting.RED, new ChatComponentText("Removed a friend")), 800);
 				n.setDesc(new ChatComponentText(p.getName()));
 				LatCoreMC.notifyPlayer(ep, n);
@@ -147,9 +145,8 @@ public enum ClientAction
 	{
 		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
 		{
-			GuideFile file = new GuideFile(new ChatComponentTranslation(FTBU.mod.assets + "button.server_info"));
-			FTBU.proxy.addServerInfo(file, owner);
-			LatCoreMC.displayGuide(ep, file);
+			ServerGuideFile.instance.reload(owner);
+			LatCoreMC.displayGuide(ep, ServerGuideFile.instance);
 			return false;
 		}
 	},

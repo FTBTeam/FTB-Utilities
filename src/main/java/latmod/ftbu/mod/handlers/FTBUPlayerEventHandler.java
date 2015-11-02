@@ -11,7 +11,7 @@ import latmod.ftbu.api.tile.ISecureTile;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.config.*;
 import latmod.ftbu.net.*;
-import latmod.ftbu.notification.*;
+import latmod.ftbu.notification.Notification;
 import latmod.ftbu.util.LatCoreMC;
 import latmod.ftbu.world.*;
 import latmod.lib.MathHelperLM;
@@ -71,25 +71,7 @@ public class FTBUPlayerEventHandler
 		Backups.shouldRun = true;
 		
 		//if(first) teleportToSpawn(ep);
-		
-		int requests = 0;
-		
-		for(LMPlayer p1 : LMWorldServer.inst.players)
-		{
-			if(p1.isFriendRaw(p) && !p.isFriendRaw(p1))
-				requests++;
-		}
-		
-		if(requests > 0)
-		{
-			IChatComponent cc = new ChatComponentTranslation(FTBU.mod.assets + "label.new_friends", String.valueOf(requests));
-			cc.getChatStyle().setColor(EnumChatFormatting.GREEN);
-			Notification n = new Notification("new_friend_requests", cc, 6000);
-			n.setDesc(new ChatComponentText("Click to add all as friends"));
-			n.setClickEvent(new ClickAction(ClickAction.FRIEND_ADD_ALL, ""));
-			LatCoreMC.notifyPlayer(ep, n);
-		}
-		
+		p.checkNewFriends();
 		new MessageAreaUpdate(p.getPos(), 3, 3).sendTo(ep);
 	}
 	
@@ -109,7 +91,6 @@ public class FTBUPlayerEventHandler
 		
 		new EventLMPlayerServer.LoggedOut(p, ep).post();
 		new MessageLMPlayerLoggedOut(p).sendTo(null);
-		new MessageLMPlayerInfo(p.playerID).sendTo(null);
 		
 		if(FTBUConfigBackups.autoExportInvOnLogout.get())
 			FTBLib.runCommand(FTBLib.getServer(), "admin player saveinv " + p.getName());

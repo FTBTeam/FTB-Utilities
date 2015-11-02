@@ -24,7 +24,7 @@ public class FTBUConfigLogin
 	@GuideInfo(info = "Rules link you can click on. This will be displayed when player joins the server.", def = "Blank")
 	public static final ConfigEntryString rules = new ConfigEntryString("rules", "");
 	
-	@GuideInfo(info = "URL for per-server custom badges file (Json). Example can be seen here: http://pastebin.com/LvBB9HmV ", def = "Blank")
+	@GuideInfo(info = "URL for per-server custom badges file (Json). Example can be seen here: http://pastebin.com/raw.php?i=ZXVhpEZ1 .", def = "Blank")
 	public static final ConfigEntryString customBadges = new ConfigEntryString("customBadges", "");
 	
 	@GuideInfo(info = "Items to give player when it first joins the server. Format: StringID Size Metadata, does not support NBT yet.", def = "minecraft:apple 16 0")

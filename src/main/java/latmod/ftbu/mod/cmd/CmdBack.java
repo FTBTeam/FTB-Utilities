@@ -3,6 +3,7 @@ package latmod.ftbu.mod.cmd;
 import ftb.lib.LMDimUtils;
 import latmod.ftbu.cmd.*;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.config.FTBUConfigCmd;
 import latmod.ftbu.world.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -19,6 +20,8 @@ public class CmdBack extends CommandLM
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
 		if(p.lastDeath == null) return error(new ChatComponentTranslation(FTBU.mod.assets + "no_dp"));
 		LMDimUtils.teleportPlayer(ep, p.lastDeath);
+		if(FTBUConfigCmd.back_only_once.get()) p.lastDeath = null;
+		
 		return null;
 	}
 }

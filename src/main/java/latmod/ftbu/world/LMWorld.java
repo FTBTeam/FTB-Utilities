@@ -24,7 +24,6 @@ public abstract class LMWorld // FTBWorld
 	public final FastList<LMPlayer> players;
 	public final LMWorldSettings settings;
 	public NBTTagCompound customCommonData;
-	public final FastList<Mail> tempMail;
 	
 	public LMWorld(Side s)
 	{
@@ -32,7 +31,6 @@ public abstract class LMWorld // FTBWorld
 		players = new FastList<LMPlayer>();
 		settings = new LMWorldSettings(this);
 		customCommonData = new NBTTagCompound();
-		tempMail = new FastList<Mail>();
 	}
 	
 	public World getMCWorld()
@@ -75,13 +73,16 @@ public abstract class LMWorld // FTBWorld
 		}
 		else if(o instanceof EntityPlayer)
 		{
-			for(int i = 0; i < players.size(); i++)
+			if(side.isServer())
 			{
-				LMPlayer p = players.get(i);
-				if(p.isOnline() && p.getPlayer() == o) return p;
+				for(int i = 0; i < players.size(); i++)
+				{
+					LMPlayer p = players.get(i);
+					if(p.isOnline() && p.getPlayer() == o) return p;
+				}
 			}
 			
-			return getPlayer(((EntityPlayer)o).getUniqueID());
+			return getPlayer(((EntityPlayer)o).getGameProfile().getId());
 		}
 		else if(o instanceof CharSequence)
 		{

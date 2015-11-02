@@ -7,11 +7,9 @@ import latmod.ftbu.mod.client.gui.GuiDisplayItem;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
 import latmod.ftbu.util.LMGuiHandler;
 import latmod.ftbu.util.gui.ContainerEmpty;
-import latmod.ftbu.world.*;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.*;
+import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
@@ -23,7 +21,6 @@ public class FTBUGuiHandler extends LMGuiHandler
 	public static final int FRIENDS = 2;
 	public static final int SECURITY = 3;
 	public static final int DISPLAY_ITEM = 4;
-	public static final int MAIL_ITEMS = 5;
 	
 	public FTBUGuiHandler(String s)
 	{ super(s); }
@@ -37,13 +34,8 @@ public class FTBUGuiHandler extends LMGuiHandler
 			if(te != null && !te.isInvalid() && te instanceof IGuiTile)
 				return ((IGuiTile)te).getContainer(ep, data);
 		}
-		if(id == MAIL_ITEMS)
-		{
-			Mail m = LMWorld.getWorld().tempMail.getObj(data.getInteger("ID"));
-			if(m != null) return new ContainerChest(ep.inventory, m.items);
-			else return null;
-		}
-		else return new ContainerEmpty(ep, null);
+		
+		return new ContainerEmpty(ep, null);
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -59,11 +51,6 @@ public class FTBUGuiHandler extends LMGuiHandler
 		else if(id == FRIENDS) return new GuiFriends(null);
 		else if(id == DISPLAY_ITEM)
 			return new GuiDisplayItem(ItemDisplay.readFromNBT(data));
-		else if(id == MAIL_ITEMS)
-		{
-			Mail m = LMWorldClient.inst.tempMail.getObj(data.getInteger("ID"));
-			if(m != null) return new GuiChest(ep.inventory, m.items);
-		}
 		return null;
 	}
 }

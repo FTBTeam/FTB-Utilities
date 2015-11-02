@@ -9,6 +9,7 @@ public class FTBUConfigCmd
 	
 	@GuideInfo(info = "Command name for admin command.", def = "admin")
 	public static final ConfigEntryString commandNameAdmin = new ConfigEntryString("commandNameAdmin", "admin");
+	public static final ConfigEntryBool back_only_once = new ConfigEntryBool("back_only_once", true);
 	
 	public static final ConfigEntryBool back = new ConfigEntryBool("back", true);
 	public static final ConfigEntryBool spawn = new ConfigEntryBool("spawn", true);

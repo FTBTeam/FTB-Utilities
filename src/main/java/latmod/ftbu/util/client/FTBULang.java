@@ -29,8 +29,7 @@ public class FTBULang
 	public static String client_config() { return get("client_config"); }
 	public static String feature_disabled() { return I18n.format("commands.lmdisabled"); }
 	public static String delete_item(String s) { return get("delete_item", s); }
-	public static String label_server_forced_on() { return get("label.server_forced_on"); }
-	public static String label_server_forced_off() { return get("label.server_forced_off"); }
+	public static String label_server_forced(String s) { return get("label.server_forced", s); }
 	
 	public static class Guis
 	{

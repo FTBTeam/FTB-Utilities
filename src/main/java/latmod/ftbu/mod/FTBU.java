@@ -38,7 +38,7 @@ public class FTBU
 		LMMod.init(this);
 		
 		LMJsonUtils.register(Notification.class, new Notification.Serializer());
-		LMJsonUtils.register(ClickAction.class, new ClickAction.Serializer());
+		LMJsonUtils.register(MouseAction.class, new MouseAction.Serializer());
 		
 		EventBusHelper.register(new FTBULibEventHandler());
 		EventBusHelper.register(new FTBUPlayerEventHandler());

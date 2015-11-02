@@ -24,6 +24,7 @@ public abstract class LMWorld // FTBWorld
 	public final FastList<LMPlayer> players;
 	public final LMWorldSettings settings;
 	public NBTTagCompound customCommonData;
+	public final FastList<Mail> tempMail;
 	
 	public LMWorld(Side s)
 	{
@@ -31,6 +32,7 @@ public abstract class LMWorld // FTBWorld
 		players = new FastList<LMPlayer>();
 		settings = new LMWorldSettings(this);
 		customCommonData = new NBTTagCompound();
+		tempMail = new FastList<Mail>();
 	}
 	
 	public World getMCWorld()

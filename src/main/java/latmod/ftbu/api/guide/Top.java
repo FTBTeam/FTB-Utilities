@@ -14,52 +14,55 @@ public abstract class Top implements Comparator<LMPlayerServer>
 	public Top(String s)
 	{ ID = new ChatComponentTranslation(FTBU.mod.assets + "top." + s); }
 	
-	public abstract String getData(LMPlayerServer p);
+	public abstract Object getData(LMPlayerServer p);
 	
 	// tops //
 	
 	public static final Top age = new Top("age")
 	{
 		public int compare(LMPlayerServer o1, LMPlayerServer o2)
-		{ return Long.compare(o1.firstJoined, o2.firstJoined); }
+		{ return Long.compare(o1.stats.firstJoined, o2.stats.firstJoined); }
 		
-		public String getData(LMPlayerServer p)
-		{ return LMStringUtils.getTimeString(LMUtils.millis() - p.firstJoined); }
+		public Object getData(LMPlayerServer p)
+		{
+			if(p.isOnline()) return new ChatComponentTranslation(FTBU.mod.assets + "label.online");
+			return LMStringUtils.getTimeString(LMUtils.millis() - p.stats.firstJoined);
+		}
 	};
 	
 	public static final Top deaths = new Top("deaths")
 	{
 		public int compare(LMPlayerServer o1, LMPlayerServer o2)
-		{ return Integer.compare(o2.deaths, o1.deaths); }
+		{ return Integer.compare(o2.stats.deaths, o1.stats.deaths); }
 		
-		public String getData(LMPlayerServer p)
-		{ return Integer.toString(p.deaths); }
+		public Object getData(LMPlayerServer p)
+		{ return Integer.toString(p.stats.deaths); }
 	};
 	
 	public static final Top deathsPerHour = new Top("deaths_ph")
 	{
 		public int compare(LMPlayerServer o1, LMPlayerServer o2)
-		{ return Double.compare(o2.getDeathsPerHour(), o1.getDeathsPerHour()); }
+		{ return Double.compare(o2.stats.getDeathsPerHour(), o1.stats.getDeathsPerHour()); }
 		
-		public String getData(LMPlayerServer p)
-		{ return MathHelperLM.toSmallDouble(p.getDeathsPerHour()); }
+		public Object getData(LMPlayerServer p)
+		{ return MathHelperLM.toSmallDouble(p.stats.getDeathsPerHour()); }
 	};
 	
 	public static final Top lastSeen = new Top("last_seen")
 	{
 		public int compare(LMPlayerServer o1, LMPlayerServer o2)
-		{ return Long.compare(o2.lastSeen, o1.lastSeen); }
+		{ return Long.compare(o2.stats.lastSeen, o1.stats.lastSeen); }
 		
-		public String getData(LMPlayerServer p)
-		{ return LMStringUtils.getTimeString(LMUtils.millis() - p.lastSeen); }
+		public Object getData(LMPlayerServer p)
+		{ return LMStringUtils.getTimeString(LMUtils.millis() - p.stats.lastSeen); }
 	};
 	
 	public static final Top timePlayed = new Top("time_played")
 	{
 		public int compare(LMPlayerServer o1, LMPlayerServer o2)
-		{ return Long.compare(o2.timePlayed, o1.timePlayed); }
+		{ return Long.compare(o2.stats.timePlayed, o1.stats.timePlayed); }
 		
-		public String getData(LMPlayerServer p)
-		{ return LMStringUtils.getTimeString(p.timePlayed) + " [" + (p.timePlayed / 3600000L) + "h]"; }
+		public Object getData(LMPlayerServer p)
+		{ return LMStringUtils.getTimeString(p.stats.timePlayed) + " [" + (p.stats.timePlayed / 3600000L) + "h]"; }
 	};
 }

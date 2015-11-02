@@ -63,8 +63,8 @@ public class Claims
 		if(max == 0) return;
 		if(chunks.size() >= max) return;
 		
-		ChunkType t = ChunkType.get(dim, cx, cz, owner);
-		if(t == ChunkType.WILDERNESS)
+		ChunkType t = ChunkType.get(dim, cx, cz);
+		if(!t.isClaimed() && t.canClaim(owner, false))
 			chunks.add(new ClaimedChunk(this, dim, cx, cz));
 		
 		owner.sendUpdate();
@@ -72,8 +72,8 @@ public class Claims
 	
 	public void unclaim(int dim, int cx, int cz, boolean admin)
 	{
-		ChunkType t = ChunkType.get(dim, cx, cz, owner);
-		if(t == ChunkType.CLAIMED_SELF)
+		ChunkType t = ChunkType.get(dim, cx, cz);
+		if(t.isClaimed() && t.canClaim(owner, admin))
 			chunks.remove(new ClaimedChunk(this, dim, cx, cz));
 		//if(chunks.isEmpty()) return;
 		

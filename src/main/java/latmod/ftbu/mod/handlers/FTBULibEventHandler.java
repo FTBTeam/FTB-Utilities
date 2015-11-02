@@ -10,6 +10,8 @@ public class FTBULibEventHandler
 	@SubscribeEvent
 	public void onReloadedPre(EventFTBReloadPre e)
 	{
+		FTBUConfigGeneral.onReloaded(e.side);
+		
 		if(e.side.isClient()) return;
 		
 		float prevRRTimer = FTBUConfigGeneral.restartTimer.get();

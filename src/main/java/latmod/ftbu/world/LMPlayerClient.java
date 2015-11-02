@@ -65,8 +65,6 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 		
 		commonPublicData = tag.getCompoundTag("CD");
 		
-		deaths = tag.getInteger("D");
-		
 		if(self)
 		{
 			commonPrivateData = tag.getCompoundTag("CPD");

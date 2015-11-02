@@ -49,7 +49,7 @@ public class LMSecurity
 			ownerID = tag1.getInteger("Owner");
 		}
 		
-		level = LMSecurityLevel.VALUES[tag1.getByte("Level")];
+		level = LMSecurityLevel.VALUES_3[tag1.getByte("Level")];
 	}
 	
 	public void writeToNBT(NBTTagCompound tag, String s)

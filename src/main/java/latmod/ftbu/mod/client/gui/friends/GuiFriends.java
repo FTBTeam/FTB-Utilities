@@ -54,8 +54,8 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			
 			if(!panelPlayerView.selectedPlayer.isOwner)
 			{
-				boolean raw1 = panelPlayerView.selectedPlayer.playerLM.isFriendRaw(LMWorldClient.inst.clientPlayer);
-				boolean raw2 = LMWorldClient.inst.clientPlayer.isFriendRaw(panelPlayerView.selectedPlayer.playerLM);
+				boolean raw1 = panelPlayerView.selectedPlayer.playerLM.isFriendRaw(LMWorldClient.inst.getClientPlayer());
+				boolean raw2 = LMWorldClient.inst.getClientPlayer().isFriendRaw(panelPlayerView.selectedPlayer.playerLM);
 				
 				if(raw1 && raw2)
 					panelPlayerInfo.text.add(EnumChatFormatting.GREEN + "[" + FTBULang.Guis.label_friend() + "]");

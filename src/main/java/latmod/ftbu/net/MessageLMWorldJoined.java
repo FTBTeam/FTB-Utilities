@@ -25,7 +25,7 @@ public class MessageLMWorldJoined extends MessageFTBU
 	{
 		LMWorldClient.inst = new LMWorldClient(io.readInt());
 		LMWorldClient.inst.readDataFromNet(readTag(), true);
-		FTBLib.logger.info("Joined the server with PlayerID " + LMWorldClient.inst.clientPlayer.playerID + " on world " + FTBWorld.client.getWorldIDS());
+		FTBLib.logger.info("Joined the server with PlayerID " + LMWorldClient.inst.getClientPlayer().playerID + " on world " + FTBWorld.client.getWorldIDS());
 		FTBUClient.onWorldJoined();
 		new EventLMWorldClient.Joined(LMWorldClient.inst).post();
 		return null;

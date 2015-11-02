@@ -25,7 +25,6 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 	public NBTTagCompound commonPublicData;
 	public NBTTagCompound commonPrivateData;
 	public final FastList<Mail> mail;
-	public int deaths;
 	
 	public LMPlayer(LMWorld w, int i, GameProfile gp)
 	{

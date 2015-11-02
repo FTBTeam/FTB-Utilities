@@ -8,6 +8,7 @@ public class FTBUNetHandler
 	static final LMNetworkWrapper NET = LMNetworkWrapper.newWrapper("FTBU");
 	static final LMNetworkWrapper NET_INFO = LMNetworkWrapper.newWrapper("FTBUI");
 	static final LMNetworkWrapper NET_WORLD = LMNetworkWrapper.newWrapper("FTBUW");
+	static final LMNetworkWrapper NET_MAIL = LMNetworkWrapper.newWrapper("FTBUM");
 	
 	public static void init()
 	{
@@ -31,5 +32,10 @@ public class FTBUNetHandler
 		NET_WORLD.register(MessageAreaUpdate.class, 1, Side.CLIENT);
 		NET_WORLD.register(MessageAreaRequest.class, 2, Side.SERVER);
 		NET_WORLD.register(MessageClaimChunk.class, 3, Side.SERVER);
+		
+		NET_MAIL.register(MessageMailCreate.class, 1, Side.SERVER);
+		NET_MAIL.register(MessageMailUpdate.class, 2, Side.CLIENT);
+		NET_MAIL.register(MessageMailSend.class, 3, Side.SERVER);
+		NET_MAIL.register(MessageMailEditInv.class, 4, Side.SERVER);
 	}
 }

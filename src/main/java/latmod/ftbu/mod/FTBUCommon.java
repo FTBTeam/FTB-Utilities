@@ -2,7 +2,7 @@ package latmod.ftbu.mod;
 
 import java.util.Set;
 
-import ftb.lib.FTBWorld;
+import ftb.lib.*;
 import latmod.ftbu.api.guide.*;
 import latmod.ftbu.mod.config.*;
 import latmod.ftbu.tile.TileLM;
@@ -46,7 +46,6 @@ public class FTBUCommon // FTBUClient
 		{
 			for(String s : FTBUConfigLogin.motd.get())
 				file.main.println(s);
-			file.main.println("");
 		}
 		
 		if(!FTBUConfigLogin.rules.get().isEmpty())
@@ -56,9 +55,12 @@ public class FTBUCommon // FTBUClient
 			file.main.println(c);
 			GuideLink l = new GuideLink(GuideLink.TYPE_URL);
 			l.link = FTBUConfigLogin.rules.get();
-			l.text = "[Click to open rules]";
+			l.title = new ChatComponentTranslation(FTBU.mod.assets + "cmd.rules");
 			file.links.put("rules_link", l);
 		}
+		
+		if(FTBUConfigLogin.motd.get().length > 0 || !FTBUConfigLogin.rules.get().isEmpty())
+			file.main.println("");
 		
 		if(FTBUConfigGeneral.restartTimer.get() > 0F)
 			file.main.println(new ChatComponentTranslation(FTBU.mod.assets + "cmd.timer_restart", LMStringUtils.getTimeString(FTBUTicks.getSecondsUntilRestart() * 1000L)));
@@ -86,9 +88,21 @@ public class FTBUCommon // FTBUClient
 			{
 				LMPlayerServer p = players.get(j);
 				
-				IChatComponent c = new ChatComponentText("[" + (j + 1) + "] " + p.getName() + ": " + t.getData(p));
+				Object data = t.getData(p);
+				StringBuilder sb = new StringBuilder();
+				sb.append('[');
+				sb.append(j + 1);
+				sb.append(']');
+				sb.append(' ');
+				sb.append(p.getName());
+				sb.append(':');
+				sb.append(' ');
+				if(!(data instanceof IChatComponent)) sb.append(data);
+				
+				IChatComponent c = new ChatComponentText(sb.toString());
 				if(p == self) c.getChatStyle().setColor(EnumChatFormatting.DARK_GREEN);
 				else if(j < 3) c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE);
+				if(data instanceof IChatComponent) c.appendSibling(FTBLib.getChatComponent(data));
 				thisTop.println(c);
 			}
 		}

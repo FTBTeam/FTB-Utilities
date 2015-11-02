@@ -4,13 +4,14 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Map;
 
-import ftb.lib.FTBLib;
+import ftb.lib.*;
 import ftb.lib.api.EventFTBModeSet;
 import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.guide.GuideLinkSerializer;
 import latmod.ftbu.mod.config.*;
 import latmod.lib.*;
+import net.minecraft.nbt.*;
 import net.minecraft.util.*;
 
 public class GuideFile
@@ -138,13 +139,16 @@ public class GuideFile
 					
 					StringBuilder sb = new StringBuilder();
 					sb.append(EnumChatFormatting.RED);
+					sb.append('[');
 					sb.append(key);
-					sb.append(EnumChatFormatting.RESET);
-					sb.append(" - ");
-					sb.append(info);
+					sb.append(']');
+					sb.append('\n');
 					sb.append(EnumChatFormatting.BLUE);
-					sb.append(" Default: ");
+					sb.append("Default: ");
 					sb.append(def);
+					sb.append(EnumChatFormatting.RESET);
+					sb.append('\n');
+					sb.append(info);
 					sb.append(EnumChatFormatting.RESET);
 					sb.append('\n');
 					category.println(sb.toString());
@@ -168,5 +172,56 @@ public class GuideFile
 		}
 		
 		return null;
+	}
+	
+	public void readFromNBT(NBTTagCompound tag)
+	{
+		links.clear();
+		
+		if(tag.hasKey("L"))
+		{
+			NBTTagList linksList = tag.getTagList("L", LMNBTUtils.MAP);
+			
+			for(int i = 0; i < linksList.tagCount(); i++)
+			{
+				NBTTagCompound tag1 = linksList.getCompoundTagAt(i);
+				GuideLink l = new GuideLink(tag1.getByte("I"));
+				
+				l.link = tag1.getString("L");
+				if(tag1.hasKey("T")) l.title = IChatComponent.Serializer.func_150699_a(tag1.getString("T"));
+				if(tag1.hasKey("H")) l.hover = IChatComponent.Serializer.func_150699_a(tag1.getString("H"));
+				
+				links.put(tag1.getString("ID"), l);
+			}
+		}
+		
+		main.readFromNBT(tag);
+	}
+	
+	public void writeToNBT(NBTTagCompound tag)
+	{
+		if(links.size() > 0)
+		{
+			NBTTagList linksList = new NBTTagList();
+			
+			for(int i = 0; i < links.size(); i++)
+			{
+				GuideLink l = links.values.get(i);
+				
+				NBTTagCompound tag1 = new NBTTagCompound();
+				
+				tag1.setByte("I", (byte)l.type);
+				tag1.setString("ID", links.keys.get(i));
+				if(!l.link.isEmpty()) tag1.setString("L", l.link);
+				if(l.title != null) tag1.setString("T", IChatComponent.Serializer.func_150696_a(l.title));
+				if(l.hover != null) tag1.setString("H", IChatComponent.Serializer.func_150696_a(l.hover));
+				
+				linksList.appendTag(tag1);
+			}
+			
+			tag.setTag("L", linksList);
+		}
+		
+		main.writeToNBT(tag);
 	}
 }

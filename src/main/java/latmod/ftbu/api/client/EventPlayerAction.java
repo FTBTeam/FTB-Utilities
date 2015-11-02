@@ -15,6 +15,6 @@ public class EventPlayerAction extends EventLM
 	{
 		actions = l;
 		player = p;
-		isSelf = player.equalsPlayer(LMWorldClient.inst.clientPlayer);
+		isSelf = player.equalsPlayer(LMWorldClient.inst.getClientPlayer());
 	}
 }

@@ -76,8 +76,6 @@ public class FTBU
 		e.registerServerCommand(new CmdAdmin());
 		e.registerServerCommand(new CmdListOverride());
 		if(FTBUConfigCmd.back.get()) e.registerServerCommand(new CmdBack());
-		if(FTBUConfigCmd.motd.get()) e.registerServerCommand(new CmdMotd());
-		if(FTBUConfigCmd.rules.get()) e.registerServerCommand(new CmdRules());
 		if(FTBUConfigCmd.spawn.get()) e.registerServerCommand(new CmdSpawn());
 		if(FTBUConfigCmd.tplast.get()) e.registerServerCommand(new CmdTplast());
 		if(FTBUConfigCmd.warp.get()) e.registerServerCommand(new CmdWarp());

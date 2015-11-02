@@ -49,7 +49,7 @@ public class ButtonNotification extends ButtonLM
 	{
 		gui.playClickSound();
 		
-		if(b == 0) notification.onClicked(LMWorldClient.inst.clientPlayer);
+		if(b == 0) notification.onClicked(LMWorldClient.inst.getClientPlayer());
 		ClientNotifications.Perm.list.remove(notification);
 		
 		gui.refreshWidgets();

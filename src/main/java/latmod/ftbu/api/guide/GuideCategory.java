@@ -93,7 +93,7 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 		subcategories.clear();
 	}
 	
-	public void writeToNBT(NBTTagCompound tag)
+	void writeToNBT(NBTTagCompound tag)
 	{
 		tag.setString("N", IChatComponent.Serializer.func_150696_a(title));
 		
@@ -119,7 +119,7 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 		}
 	}
 	
-	public void readFromNBT(NBTTagCompound tag)
+	void readFromNBT(NBTTagCompound tag)
 	{
 		clear();
 		

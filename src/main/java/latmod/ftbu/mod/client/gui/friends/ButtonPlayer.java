@@ -47,8 +47,8 @@ public class ButtonPlayer extends ButtonLM
 		
 		GuiLM.drawBlankRect(ax, ay, z, width, height, (parentPanel.isEnabled() && mouseOver()) ? 0x66FFFFFF : 0x66666666);
 		
-		boolean raw1 = player.playerLM.isFriendRaw(LMWorldClient.inst.clientPlayer);
-		boolean raw2 = LMWorldClient.inst.clientPlayer.isFriendRaw(player.playerLM);
+		boolean raw1 = player.playerLM.isFriendRaw(LMWorldClient.inst.getClientPlayer());
+		boolean raw2 = LMWorldClient.inst.getClientPlayer().isFriendRaw(player.playerLM);
 		
 		int statusCol = 0xFF000000;
 		if(raw1 && raw2) statusCol = 0xFF2EBD2E;

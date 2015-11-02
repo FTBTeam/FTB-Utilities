@@ -147,7 +147,7 @@ public class GuiGuide extends GuiLM
 				{
 					if(l.special.isText())
 					{
-						l.text = l.special.text;
+						l.text = (l.special.title == null) ? "" : l.special.title.getFormattedText();
 						List<String> list1 = fontRendererObj.listFormattedStringToWidth(l.text, textPanel.width);
 						
 						if(list1.size() > 1)
@@ -298,8 +298,11 @@ public class GuiGuide extends GuiLM
 		
 		public void addMouseOverText(FastList<String> l)
 		{
-			if(line != null && line.special != null && !line.special.hover.isEmpty())
-				l.add(line.special.hover);
+			if(line != null && line.special != null && line.special.hover != null)
+			{
+				String s = line.special.hover.getFormattedText();
+				if(!s.isEmpty()) l.add(s);
+			}
 		}
 		
 		public void onButtonPressed(int b)

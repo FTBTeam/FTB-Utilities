@@ -1,14 +1,16 @@
 package latmod.ftbu.mod.config;
 
+import latmod.ftbu.api.guide.GuideInfo;
 import latmod.lib.config.*;
 
 public class FTBUConfigCmd
 {
 	public static final ConfigGroup group = new ConfigGroup("commands");
 	
+	@GuideInfo(info = "Command name for admin command.", def = "admin")
+	public static final ConfigEntryString commandNameAdmin = new ConfigEntryString("commandNameAdmin", "admin");
+	
 	public static final ConfigEntryBool back = new ConfigEntryBool("back", true);
-	public static final ConfigEntryBool motd = new ConfigEntryBool("motd", true);
-	public static final ConfigEntryBool rules = new ConfigEntryBool("rules", true);
 	public static final ConfigEntryBool spawn = new ConfigEntryBool("spawn", true);
 	public static final ConfigEntryBool tplast = new ConfigEntryBool("tplast", true);
 	public static final ConfigEntryBool warp = new ConfigEntryBool("warp", true);

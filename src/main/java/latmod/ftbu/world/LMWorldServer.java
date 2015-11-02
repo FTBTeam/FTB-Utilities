@@ -20,6 +20,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	public final File latmodFolder;
 	public final Warps warps;
 	public NBTTagCompound customServerData;
+	public int lastMailID = 0;
 	
 	public LMWorldServer(WorldServer w, File f)
 	{
@@ -48,6 +49,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		customServerData = tag.getCompoundTag("CustomServer");
 		customCommonData = tag.getCompoundTag("CustomCommon");
 		settings.readFromNBT(tag.getCompoundTag("Settings"), true);
+		lastMailID = tag.getInteger("LastMailID");
 	}
 	
 	public void save(NBTTagCompound tag)
@@ -58,6 +60,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		NBTTagCompound settingsTag = new NBTTagCompound();
 		settings.writeToNBT(settingsTag, true);
 		tag.setTag("Settings", settingsTag);
+		tag.setInteger("LastMailID", lastMailID);
 	}
 	
 	public void writeDataToNet(NBTTagCompound tag, int selfID)

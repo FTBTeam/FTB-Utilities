@@ -11,8 +11,7 @@ import latmod.ftbu.net.MessageLMPlayerUpdate;
 import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.*;
-import net.minecraft.util.*;
+import net.minecraft.util.IChatComponent;
 
 public class LMPlayerServer extends LMPlayer // LMPlayerClient
 {
@@ -24,18 +23,18 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public NBTTagCompound serverData;
 	public EntityPos lastPos, lastDeath;
 	public final Claims claims;
+	public final LMPlayerStats stats;
 	private String playerName;
 	private EntityPlayerMP entityPlayer = null;
 	private int maxClaimPower = -1;
 	public int lastChunkType = -99;
-	
-	public long lastSeen, firstJoined, timePlayed;
 	
 	public LMPlayerServer(LMWorldServer w, int i, GameProfile gp)
 	{
 		super(w, i, gp);
 		serverData = new NBTTagCompound();
 		claims = new Claims(this);
+		stats = new LMPlayerStats(this);
 		playerName = gp.getName();
 	}
 	
@@ -88,31 +87,16 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public void getInfo(FastList<IChatComponent> info)
 	{
 		refreshStats();
-		
 		long ms = LMUtils.millis();
 		new EventLMPlayerServer.CustomInfo(this, info).post();
-		
-		if(lastSeen > 0L && !isOnline()) info.add(new ChatComponentTranslation("ftbu:label.last_seen", LMStringUtils.getTimeString(ms - lastSeen)));
-		if(firstJoined > 0L) info.add(new ChatComponentTranslation("ftbu:label.joined", LMStringUtils.getTimeString(ms - firstJoined)));
-		if(deaths > 0) info.add(new ChatComponentTranslation("ftbu:label.deaths", String.valueOf(deaths)));
-		if(timePlayed > 0L)
-			info.add(new ChatComponentTranslation("stat.playOneMinute").appendSibling(new ChatComponentText(": " + LMStringUtils.getTimeString(timePlayed))));
+		stats.getInfo(info, ms);
 	}
-	
-	public int getStat(StatBase s)
-	{ return isOnline() ? getPlayer().func_147099_x().writeStat(s) : 0; }
 	
 	public void refreshStats()
 	{
 		if(isOnline())
 		{
-			timePlayed = getStat(StatList.minutesPlayedStat) * 50L;
-			deaths = getStat(StatList.deathsStat);
-			
-			lastSeen = LMUtils.millis();
-			if(firstJoined <= 0L)
-				firstJoined = lastSeen;
-			
+			stats.refreshStats();
 			if(!world.settings.isOutsideF(entityPlayer.dimension, entityPlayer.posX, entityPlayer.posZ))
 				getPos();
 		}
@@ -128,7 +112,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		StringIDInvLoader.readItemsFromNBT(lastArmor, tag, "LastItems");
 		
-		deaths = tag.getInteger("Deaths");
+		stats.readFromNBT(tag.getCompoundTag("Stats"));
 		
 		serverData = tag.getCompoundTag("ServerData");
 		
@@ -145,10 +129,6 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			lastDeath.readFromNBT(tag.getCompoundTag("LastDeath"));
 		}
 		else lastDeath = null;
-		
-		lastSeen = tag.getLong("LastSeen");
-		firstJoined = tag.getLong("Joined");
-		timePlayed = tag.getLong("TimePlayed");
 		
 		claims.readFromNBT(tag);
 		
@@ -168,8 +148,6 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		StringIDInvLoader.writeItemsToNBT(lastArmor, tag, "LastItems");
 		
-		tag.setInteger("Deaths", deaths);
-		
 		if(!serverData.hasNoTags()) tag.setTag("ServerData", serverData);
 		
 		if(lastPos != null)
@@ -186,9 +164,9 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			tag.setTag("LastDeath", tag1);
 		}
 		
-		tag.setLong("LastSeen", lastSeen);
-		tag.setLong("Joined", firstJoined);
-		tag.setLong("TimePlayed", timePlayed);
+		NBTTagCompound statsTag = new NBTTagCompound();
+		stats.writeToNBT(statsTag);
+		tag.setTag("Stats", statsTag);
 		
 		claims.writeToNBT(tag);
 		
@@ -209,8 +187,6 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			tag.setIntArray("F", friends.toArray());
 		
 		if(!commonPublicData.hasNoTags()) tag.setTag("CD", commonPublicData);
-		
-		if(deaths > 0) tag.setInteger("D", deaths);
 		
 		if(self)
 		{
@@ -242,11 +218,5 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		}
 		
 		return maxClaimPower;
-	}
-
-	public double getDeathsPerHour()
-	{
-		if(deaths == 0 || timePlayed == 0L) return 0D;
-		return (double)deaths / (timePlayed / 3600000D);
 	}
 }

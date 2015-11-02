@@ -14,6 +14,7 @@ import latmod.ftbu.api.EventLMWorldClient;
 import latmod.ftbu.api.client.EventFTBUKey;
 import latmod.ftbu.api.paint.IPainterItem;
 import latmod.ftbu.mod.client.gui.friends.GuiFriendsGuiSmall;
+import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
 import latmod.lib.FastList;
@@ -60,6 +61,9 @@ public class FTBUClientEventHandler
 				e.toolTip.add("> " + or);
 			}
 		}
+		
+		if(FTBUConfigGeneral.isItemBanned(item, e.itemStack.getItemDamage()))
+			e.toolTip.add(EnumChatFormatting.RED + "Banned item");
 	}
 	
 	@SubscribeEvent
@@ -97,7 +101,7 @@ public class FTBUClientEventHandler
 	@SubscribeEvent
 	public void onEntityRightClick(EntityInteractEvent e)
 	{
-		if(e.entity.worldObj.isRemote && LatCoreMCClient.isPlaying() && e.entityPlayer.getUniqueID().equals(FTBLibClient.mc.thePlayer.getUniqueID()) && e.entityPlayer.getHeldItem() == null)// && e.target instanceof EntityPlayer)
+		if(e.entity.worldObj.isRemote && LatCoreMCClient.isPlaying() && FTBUClient.playerOptionsShortcut.getB() && e.entityPlayer.getUniqueID().equals(FTBLibClient.mc.thePlayer.getUniqueID()))
 		{
 			LMPlayerClient p = LMWorldClient.inst.getPlayer(e.target);
 			if(p != null) FTBLibClient.mc.displayGuiScreen(new GuiFriendsGuiSmall(p));

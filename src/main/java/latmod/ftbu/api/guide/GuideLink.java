@@ -10,7 +10,7 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
 import ftb.lib.client.*;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 
 public class GuideLink
 {
@@ -20,8 +20,8 @@ public class GuideLink
 	
 	public final int type;
 	public String link = "";
-	public String text = "";
-	public String hover = "";
+	public IChatComponent title = null;
+	public IChatComponent hover = null;
 	
 	private TextureCoords texture = null;
 	

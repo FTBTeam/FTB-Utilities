@@ -2,6 +2,7 @@ package latmod.ftbu.mod.client.gui.friends;
 
 import org.lwjgl.input.Mouse;
 
+import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.world.*;
 import latmod.lib.FastList;
 
@@ -26,16 +27,26 @@ public class PanelPlayerList extends PanelFriendsGui
 	{
 		tempPlayerList.clear();
 		tempPlayerList.addAll(LMWorldClient.inst.players);
-		tempPlayerList.remove(LMWorldClient.inst.clientPlayer);
-		tempPlayerList.sort(FriendListComparator.instance);
+		
+		LMPlayerClient clientPlayer = LMWorldClient.inst.getClientPlayer();
+		
+		tempPlayerList.remove(clientPlayer);
+		
+		if(FTBUClient.sortFriendsAZ.getB())
+			tempPlayerList.sort(LMPNameComparator.instance);
+		else
+		{
+			LMPStatusComparator.instance.self = clientPlayer;
+			tempPlayerList.sort(LMPStatusComparator.instance);
+		}
 		
 		playerButtons.clear();
-		playerButtons.add(new ButtonPlayer(this, LMWorldClient.inst.clientPlayer));
+		playerButtons.add(new ButtonPlayer(this, clientPlayer));
 		
 		width = playerButtons.get(0).width;
-		for(LMPlayer p : tempPlayerList)
+		for(int i = 0; i < tempPlayerList.size(); i++)
 		{
-			ButtonPlayer b = new ButtonPlayer(this, p.toPlayerSP());
+			ButtonPlayer b = new ButtonPlayer(this, tempPlayerList.get(i).toPlayerSP());
 			playerButtons.add(b);
 			width = Math.max(width, b.width);
 		}

@@ -5,6 +5,7 @@ import java.lang.reflect.Type;
 import com.google.gson.*;
 
 import latmod.ftbu.api.guide.GuideLink;
+import net.minecraft.util.*;
 
 public class GuideLinkSerializer implements JsonDeserializer<GuideLink>
 {
@@ -14,6 +15,9 @@ public class GuideLinkSerializer implements JsonDeserializer<GuideLink>
 	{
 		GsonBuilder gb = new GsonBuilder();
 		gb.registerTypeAdapter(GuideLink.class, new GuideLinkSerializer());
+		gb.registerTypeHierarchyAdapter(IChatComponent.class, new IChatComponent.Serializer());
+		gb.registerTypeHierarchyAdapter(ChatStyle.class, new ChatStyle.Serializer());
+		gb.registerTypeAdapterFactory(new EnumTypeAdapterFactory());
 		return gb.create();
 	}
 	
@@ -39,8 +43,8 @@ public class GuideLinkSerializer implements JsonDeserializer<GuideLink>
 			if(special != null && o.has("link"))
 			{
 				special.link = o.get("link").getAsString();
-				if(o.has("title")) special.text = o.get("title").getAsString(); else special.text = special.link;
-				if(o.has("hover")) special.hover = o.get("hover").getAsString();
+				special.title = o.has("title") ? (IChatComponent)context.deserialize(o.get("title"), IChatComponent.class) : new ChatComponentText(special.link);
+				if(o.has("hover")) special.hover = (IChatComponent)context.deserialize(o.get("hover"), IChatComponent.class);
 				
 				return special;
 			}

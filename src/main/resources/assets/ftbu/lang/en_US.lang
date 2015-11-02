@@ -35,6 +35,7 @@ ftbu:label.deaths=Deaths: %s
 ftbu:label.server_forced_off=Disabled by Server
 ftbu:label.server_forced_on=Force Enabled by Server
 ftbu:button.explosions=Explosions
+ftbu:button.block_security=Block Security
 ftbu:label.cchunks_count=Claimed Chunks: %s
 
 #ClientConfig
@@ -58,10 +59,14 @@ config.property.item_reg_names=Item Registry Names
 config.property.debug_info=Debug Info
 config.property.options_button=Options Button
 config.property.chat_links=Chat Links
-config.property.chunk_messages=Chunk Messages
-config.value.cm_notify=Notification
-config.value.cm_screen=Screen
-config.value.cm_chat=Chat
+config.property.player_options_shortcut=Player Options Shortcut
+config.property.sort_friends_az=Sort Friends A-Z
+
+config.group.sidebar_buttons=Sidebar Buttons
+config.property.button_guide=Guide
+config.property.button_claims=Claimed Chunks
+config.property.button_info=Server Info
+config.property.button_settings=Client Settings
 
 #Misc
 commands.lmmissingargs=Missing Arguments!
@@ -80,13 +85,19 @@ ftbu:cmd.timer_backup=Next backup: %s
 ftbu:cmd.timer_restart=Next restart: %s
 ftbu:cmd.rules=[Click here to open rules]
 ftbu:cmd.spawn_tp=Teleported to spawn
+ftbu:label.mail_from=Sent from: %s
+ftbu:label.mail_to=Sending to: %s
+ftbu:button.mail_items=Attach Items
+ftbu:button.mail_send=Send
 
 ftbu:top.title=Server Tops
-ftbu:top.age=Age
+ftbu:top.age=First Seen
 ftbu:top.last_seen=Last Seen
 ftbu:top.time_played=Time Played
 ftbu:top.deaths=Deaths
 ftbu:top.deaths_ph=Deaths per hour
+ftbu:top.blocks_mined=Blocks mined
+ftbu:top.entities_killed=Entities killed
 
 #Security Mode
 ftbu:security=Security

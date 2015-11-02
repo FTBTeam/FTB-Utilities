@@ -9,7 +9,6 @@ import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.api.item.ICreativeSafeItem;
 import latmod.ftbu.api.tile.ISecureTile;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.cmd.CmdMotd;
 import latmod.ftbu.mod.config.*;
 import latmod.ftbu.net.*;
 import latmod.ftbu.notification.*;
@@ -67,8 +66,8 @@ public class FTBUPlayerEventHandler
 				LMInvUtils.giveItem(ep, is);
 		}
 		
-		new MessageLMPlayerInfo(p.playerID).sendTo(null);
-		CmdMotd.printMotd(ep);
+		//new MessageLMPlayerInfo(p.playerID).sendTo(null);
+		FTBUConfigLogin.printMotd(ep);
 		Backups.shouldRun = true;
 		
 		//if(first) teleportToSpawn(ep);
@@ -91,7 +90,7 @@ public class FTBUPlayerEventHandler
 			LatCoreMC.notifyPlayer(ep, n);
 		}
 		
-		new MessageAreaUpdate(p.getPos(), 7, 7, p).sendTo(ep);
+		new MessageAreaUpdate(p.getPos(), 3, 3).sendTo(ep);
 	}
 	
 	@SubscribeEvent
@@ -154,13 +153,13 @@ public class FTBUPlayerEventHandler
 			player.lastPos.set(ep);
 		}
 		
-		int currentChunkType = ChunkType.getChunkTypeI(ep.dimension, e.newChunkX, e.newChunkZ, player);
+		int currentChunkType = ChunkType.getChunkTypeI(ep.dimension, e.newChunkX, e.newChunkZ);
 		
 		if(player.lastChunkType == -99 || player.lastChunkType != currentChunkType)
 		{
 			player.lastChunkType = currentChunkType;
 			
-			ChunkType type = ChunkType.getChunkTypeFromI(currentChunkType, player);
+			ChunkType type = ChunkType.getChunkTypeFromI(currentChunkType);
 			IChatComponent msg = null;
 			
 			if(type.isClaimed())
@@ -172,7 +171,7 @@ public class FTBUPlayerEventHandler
 			msg.getChatStyle().setBold(true);
 			
 			Notification n = new Notification("chunk_changed", msg, 3000);
-			n.setColor(type.areaColor);
+			n.setColor(type.getAreaColor(player));
 			
 			LatCoreMC.notifyPlayer(ep, n);
 		}
@@ -192,7 +191,9 @@ public class FTBUPlayerEventHandler
 		boolean server = !w.isRemote;
 		if(server && LMWorldServer.inst.settings.isOutsideF(w.provider.dimensionId, x, z)) return false;
 		
-		if(ep.capabilities.isCreativeMode && leftClick && ep.getHeldItem() != null && ep.getHeldItem().getItem() instanceof ICreativeSafeItem)
+		ItemStack heldItem = ep.getHeldItem();
+		
+		if(ep.capabilities.isCreativeMode && leftClick && heldItem != null && heldItem.getItem() instanceof ICreativeSafeItem)
 		{
 			if(server) w.markBlockRangeForRenderUpdate(x, y, z, x, y, z);
 			else w.markBlockForUpdate(x, y, z);
@@ -210,10 +211,23 @@ public class FTBUPlayerEventHandler
 			{ ((ISecureTile)te).onPlayerNotOwner(ep, leftClick); return false; }
 		}
 		
+		if(leftClick)
+		{
+			String[] whitelist = FTBUConfigClaims.breakWhitelist.get();
+			
+			if(whitelist != null && whitelist.length > 0)
+			{
+				String blockID = LMInvUtils.getRegName(block);
+				
+				for(int i = 0; i < whitelist.length; i++)
+					if(whitelist[i].equalsIgnoreCase(blockID)) return true;
+			}
+		}
+		
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
 		//if(!LatCoreMC.isDedicatedServer() || p.isOP()) return true;
-		ChunkType type = ChunkType.getD(w.provider.dimensionId, x, z, p);
-		return type.isFriendly();
+		ChunkType type = ChunkType.getD(w.provider.dimensionId, x, z);
+		return type.canInteract(p, leftClick);
 	}
 	
 	@SubscribeEvent

@@ -32,6 +32,6 @@ public class MessageClaimChunk extends MessageFTBU
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
 		if(claim) p.claims.claim(dim, chunkX, chunkZ);
 		else p.claims.unclaim(dim, chunkX, chunkZ, false);
-		return new MessageAreaUpdate(chunkX, chunkZ, dim, 1, 1, p);
+		return new MessageAreaUpdate(chunkX, chunkZ, dim, 1, 1);
 	}
 }

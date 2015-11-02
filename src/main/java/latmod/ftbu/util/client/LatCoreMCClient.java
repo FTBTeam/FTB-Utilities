@@ -60,7 +60,7 @@ public final class LatCoreMCClient // LatCoreMC // FTBLibClient
 		&& FTBLibClient.mc.thePlayer != null
 		&& FTBLibClient.mc.thePlayer.worldObj != null
 		&& LMWorldClient.inst != null
-		&& LMWorldClient.inst.clientPlayer != null;
+		&& LMWorldClient.inst.getClientPlayer() != null;
 	}
 	
 	public static int getDim()

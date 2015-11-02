@@ -108,7 +108,7 @@ public class FTBUTicks
 					if(owner != null && owner.isOnline())
 					{
 						int size = Math.max(5, areaRequests.values.get(i));
-						new MessageAreaUpdate(owner.getPos(), size, size, owner).sendTo(owner.getPlayer());
+						new MessageAreaUpdate(owner.getPos(), size, size).sendTo(owner.getPlayer());
 					}
 				}
 				

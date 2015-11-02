@@ -1,24 +1,40 @@
 package latmod.ftbu.world;
 
-import ftb.lib.LMNBTUtils;
+import ftb.lib.*;
+import ftb.lib.item.*;
+import latmod.ftbu.net.MessageMailUpdate;
 import latmod.lib.FastList;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 
 public class Mail
 {
+	public final int mailID;
 	public final LMPlayer receiver;
 	public long timeSent;
 	public LMPlayer sender;
 	public final FastList<String> text;
-	public final FastList<ItemStack> items;
+	public final BasicInventory items;
 	
-	public Mail(LMPlayer p)
+	public Mail(int id, LMPlayer p)
 	{
+		mailID = id;
 		receiver = p;
 		text = new FastList<String>();
-		items = new FastList<ItemStack>();
+		items = new BasicInventory(9)
+		{
+			public void markDirty()
+			{
+				//FIXME: Mail items
+				if(!FTBLib.isServer()) new MessageMailUpdate(Mail.this).sendToServer();
+			}
+		};
 	}
+	
+	public int hashCode()
+	{ return mailID; }
+	
+	public boolean equals(Object o)
+	{ return o.hashCode() == hashCode(); }
 	
 	public void readFromNBT(NBTTagCompound tag)
 	{
@@ -30,14 +46,12 @@ public class Mail
 		for(int i = 0; i < textList.tagCount(); i++)
 			text.add(textList.getStringTagAt(i));
 		
-		items.clear();
-		NBTTagList itemList = tag.getTagList("Items", LMNBTUtils.MAP);
-		for(int i = 0; i < itemList.tagCount(); i++)
-			items.add(ItemStack.loadItemStackFromNBT(itemList.getCompoundTagAt(i)));
+		StringIDInvLoader.readItemsFromNBT(items.items, tag, "Items");
 	}
 	
 	public void writeToNBT(NBTTagCompound tag)
 	{
+		tag.setInteger("ID", mailID);
 		tag.setLong("Time", timeSent);
 		tag.setInteger("Sender", (sender == null) ? 0 : sender.playerID);
 		
@@ -45,14 +59,7 @@ public class Mail
 		for(String s : text) textList.appendTag(new NBTTagString(s));
 		tag.setTag("Text", textList);
 		
-		NBTTagList itemList = new NBTTagList();
-		for(ItemStack is : items)
-		{
-			NBTTagCompound tag1 = new NBTTagCompound();
-			is.writeToNBT(tag1);
-			textList.appendTag(tag1);
-		}
-		tag.setTag("Items", itemList);
+		StringIDInvLoader.writeItemsToNBT(items.items, tag, "Items");
 	}
 	
 	public static void readFromNBT(LMPlayer player, NBTTagCompound tag, String s)
@@ -61,8 +68,9 @@ public class Mail
 		NBTTagList list = tag.getTagList(s, LMNBTUtils.MAP);
 		for(int i = 0; i < list.tagCount(); i++)
 		{
-			Mail m = new Mail(player);
-			m.readFromNBT(list.getCompoundTagAt(i));
+			NBTTagCompound tag1 = list.getCompoundTagAt(i);
+			Mail m = new Mail(tag1.getInteger("ID"), player);
+			m.readFromNBT(tag1);
 			player.mail.add(m);
 		}
 	}

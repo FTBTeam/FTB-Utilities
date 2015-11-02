@@ -44,6 +44,7 @@ public class MessageLMPlayerInfo extends MessageFTBU
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{
+		if(LMWorldClient.inst == null) return null;
 		LMPlayerClient p = LMWorldClient.inst.getPlayer(io.readInt());
 		if(p == null) return null;
 		

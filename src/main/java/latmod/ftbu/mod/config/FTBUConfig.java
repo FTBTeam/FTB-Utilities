@@ -20,13 +20,9 @@ public class FTBUConfig // FTBU
 		FTBUConfigLogin.load(configFile);
 		FTBUConfigBackups.load(configFile);
 		FTBUConfigClaims.load(configFile);
+		FTBUConfigCmd.load(configFile);
 		ConfigListRegistry.add(configFile);
 		configFile.load();
-		
-		configFileModpack = new ConfigFile(FTBU.mod.modID, new File(FTBLib.folderModpack, "statistics_config.json"), true);
-		FTBUConfigStats.load(configFileModpack);
-		ConfigListRegistry.add(configFile);
-		configFileModpack.load();
 	}
 	
 	public static void save()
@@ -41,7 +37,6 @@ public class FTBUConfig // FTBU
 		addGuideGroup(file, "Login", FTBUConfigLogin.class);
 		addGuideGroup(file, "Backups", FTBUConfigBackups.class);
 		addGuideGroup(file, "Claims", FTBUConfigClaims.class);
-		addGuideGroup(file, "Stats", FTBUConfigStats.class);
 	}
 	
 	private static void addGuideGroup(GuideFile file, String s, Class<?> c)

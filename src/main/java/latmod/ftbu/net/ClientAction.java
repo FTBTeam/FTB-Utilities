@@ -4,7 +4,7 @@ import ftb.lib.FTBLib;
 import latmod.ftbu.api.guide.GuideFile;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.notification.*;
-import latmod.ftbu.util.LatCoreMC;
+import latmod.ftbu.util.*;
 import latmod.ftbu.world.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
@@ -35,7 +35,7 @@ public enum ClientAction
 					{
 						Notification n = new Notification("friend_request", FTBLib.setColor(EnumChatFormatting.GREEN, new ChatComponentTranslation("ftbu:label.new_friend", owner.getName())), 4000);
 						n.setDesc(new ChatComponentText("Click to add as friend"));
-						n.setClickEvent(new ClickAction(ClickAction.CMD, "/ftbu friends add " + owner.getName()));
+						n.setClickEvent(new ClickAction(ClickAction.FRIEND_ADD, owner.playerID));
 						LatCoreMC.notifyPlayer(p.getPlayer(), n);
 					}
 				}
@@ -151,6 +151,15 @@ public enum ClientAction
 			FTBU.proxy.addServerInfo(file, owner);
 			LatCoreMC.displayGuide(ep, file);
 			return false;
+		}
+	},
+	
+	ACTION_SET_CLAIM_BLOCKS
+	{
+		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
+		{
+			owner.settings.blocks = (extra == 0) ? owner.settings.blocks.next(LMSecurityLevel.VALUES_3) : owner.settings.blocks.prev(LMSecurityLevel.VALUES_3);
+			return true;
 		}
 	},
 	

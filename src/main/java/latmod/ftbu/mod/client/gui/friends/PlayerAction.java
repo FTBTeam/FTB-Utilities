@@ -5,7 +5,7 @@ import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.api.client.EventPlayerAction;
 import latmod.ftbu.mod.client.gui.GuiClientConfig;
 import latmod.ftbu.mod.client.gui.minimap.GuiMinimap;
-import latmod.ftbu.net.ClientAction;
+import latmod.ftbu.net.*;
 import latmod.ftbu.util.client.FTBULang;
 import latmod.ftbu.util.gui.GuiIcons;
 import latmod.ftbu.world.*;
@@ -93,7 +93,7 @@ public abstract class PlayerAction
 	public static final PlayerAction mail = new PlayerAction(GuiIcons.feather)
 	{
 		public void onClicked(LMPlayerClient p)
-		{  }
+		{ new MessageMailCreate(p).sendToServer(); }
 		
 		public String getTitle()
 		{ return FTBULang.Guis.mail(); }
@@ -110,7 +110,7 @@ public abstract class PlayerAction
 
 	public static FastList<PlayerAction> getActionsFor(LMPlayerClient p)
 	{
-		LMPlayerClient o = LMWorldClient.inst.clientPlayer;
+		LMPlayerClient o = LMWorldClient.inst.getClientPlayer();
 		FastList<PlayerAction> list = new FastList<PlayerAction>();
 		
 		if(p.equalsPlayer(o))
@@ -121,6 +121,7 @@ public abstract class PlayerAction
 			
 			if(FTBLibFinals.DEV)
 			{
+				list.add(mail);
 				//list.add(notes);
 			}
 		}

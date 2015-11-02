@@ -24,8 +24,8 @@ import net.minecraft.util.ResourceLocation;
 public class GuiMinimap extends GuiLM // implements IClientActionGui
 {
 	public static final int tiles = 16;
-	public static final ResourceLocation tex_area = FTBU.mod.getLocation("textures/gui/minimap_area.png");
-	public static final ResourceLocation tex_map_entity = FTBU.mod.getLocation("textures/gui/map_entity.png");
+	public static final ResourceLocation tex_area = FTBU.mod.getLocation("textures/map/minimap_area.png");
+	public static final ResourceLocation tex_map_entity = FTBU.mod.getLocation("textures/map/entity.png");
 	public static final TextureCoords[][][][] tex_area_coords = new TextureCoords[2][2][2][2];
 	
 	private static final TextureCoords getAreaCoords(int i)
@@ -54,12 +54,14 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 	public static int textureID = -1;
 	public static ByteBuffer pixelBuffer = null;
 	
-	public final ButtonLM buttonRefresh, buttonClose;
+	public final LMPlayerClient playerLM;
+	public final int currentDim, startX, startY;
+	
+	public final ButtonLM buttonRefresh, buttonClose, buttonBlockLevel;
 	public final ItemButtonLM buttonExplosions;
 	public final MapButton mapButtons[];
 	public final PanelLM panelButtons;
 	
-	public int currentDim, startX, startY;
 	public ThreadReloadChunk thread = null;
 	
 	public GuiMinimap()
@@ -67,9 +69,10 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 		super(null, null);
 		hideNEI = true;
 		xSize = ySize = tiles * 16;
+		
+		playerLM = LMWorldClient.inst.getClientPlayer();
 		startX = MathHelperLM.chunk(mc.thePlayer.posX - tiles * 8D);
 		startY = MathHelperLM.chunk(mc.thePlayer.posZ - tiles * 8D);
-		
 		currentDim = LatCoreMCClient.getDim();
 		
 		buttonClose = new ButtonLM(this, 0, 0, 16, 16)
@@ -100,7 +103,7 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 			{
 				gui.playClickSound();
 				if(LatCoreMCClient.isPlaying())
-					ClientAction.ACTION_EXPLOSIONS.send(LMWorldClient.inst.clientPlayer.settings.explosions ? 0 : 1);
+					ClientAction.ACTION_EXPLOSIONS.send(playerLM.settings.explosions ? 0 : 1);
 			}
 			
 			public void addMouseOverText(FastList<String> l)
@@ -115,6 +118,24 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 			}
 		};
 		
+		buttonBlockLevel = new ButtonLM(this, 0, 48, 16, 16)
+		{
+			public void onButtonPressed(int b)
+			{
+				gui.playClickSound();
+				if(LatCoreMCClient.isPlaying())
+					ClientAction.ACTION_SET_CLAIM_BLOCKS.send(b == 0 ? 0 : 1);
+			}
+			
+			public void addMouseOverText(FastList<String> l)
+			{
+				l.add(title);
+				l.add(playerLM.settings.blocks.getText());
+			}
+		};
+		
+		buttonBlockLevel.title = FTBU.mod.translateClient("button.block_security");
+		
 		panelButtons = new PanelLM(this, 0, 0, 16, 0)
 		{
 			public void addWidgets()
@@ -122,6 +143,7 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 				add(buttonClose);
 				add(buttonRefresh);
 				add(buttonExplosions);
+				add(buttonBlockLevel);
 				height = widgets.size() * 16;
 			}
 			
@@ -198,8 +220,9 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 		buttonRefresh.render(GuiIcons.refresh);
 		buttonClose.render(GuiIcons.accept);
 		buttonExplosions.renderWidget();
+		buttonBlockLevel.render(playerLM.settings.blocks.getIcon());
 		
-		if(!LMWorldClient.inst.clientPlayer.settings.explosions)
+		if(!playerLM.settings.explosions)
 		{
 			zLevel = 500F;
 			GL11.glColor4f(1F, 1F, 1F, 0.75F);
@@ -211,7 +234,7 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 	
 	public void drawText(FastList<String> l)
 	{
-		String s = LMWorldClient.inst.clientPlayer.claimedChunks + " / " + LMWorldClient.inst.clientPlayer.maxClaimPower;
+		String s = playerLM.claimedChunks + " / " + playerLM.maxClaimPower;
 		s = FTBU.mod.translateClient("label.cchunks_count", s);
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 12, 0xFFFFFFFF);
 		super.drawText(l);
@@ -222,7 +245,7 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 	}
 	
 	private ChunkType getType(int cx, int cy)
-	{ return ClaimedAreasClient.getTypeE(currentDim, cx, cy, LMWorldClient.inst.clientPlayer); }
+	{ return ClaimedAreasClient.getTypeE(currentDim, cx, cy); }
 	
 	@SuppressWarnings("unchecked")
 	public void renderMinimap()
@@ -236,16 +259,16 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 			int cy = y + startY;
 			
 			ChunkType type = getType(cx, cy);
-			if(type != null && type.drawGrid())
+			if(type.drawGrid())
 			{
-				boolean a = getType(cx, cy - 1) == type;
-				boolean b = getType(cx + 1, cy) == type;
-				boolean c = getType(cx, cy + 1) == type;
-				boolean d = getType(cx - 1, cy) == type;
+				boolean a = type.equals(getType(cx, cy - 1));
+				boolean b = type.equals(getType(cx + 1, cy));
+				boolean c = type.equals(getType(cx, cy + 1));
+				boolean d = type.equals(getType(cx - 1, cy));
 				
 				TextureCoords tc = tex_area_coords[a ? 1 : 0][b ? 1 : 0][c ? 1 : 0][d ? 1 : 0];
 				
-				FTBLibClient.setGLColor(type.areaColor, 255);
+				FTBLibClient.setGLColor(type.getAreaColor(playerLM), 255);
 				GuiLM.drawTexturedRectD(guiLeft + x * 16, guiTop + y * 16, zLevel, 16, 16, tc.minU, tc.minV, tc.maxU, tc.maxV);
 			}
 		}
@@ -310,7 +333,7 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 		}
 		
 		public void addMouseOverText(FastList<String> l)
-		{ ClaimedAreasClient.getMessage(gui.currentDim, chunkX, chunkY, l, LMWorldClient.inst.clientPlayer, isShiftKeyDown()); }
+		{ ClaimedAreasClient.getMessage(gui.currentDim, chunkX, chunkY, l, isShiftKeyDown()); }
 		
 		public void renderWidget()
 		{

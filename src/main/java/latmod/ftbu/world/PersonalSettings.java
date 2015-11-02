@@ -18,7 +18,7 @@ public class PersonalSettings
 		chatLinks = true;
 		renderBadge = true;
 		explosions = true;
-		blocks = LMSecurityLevel.PUBLIC;
+		blocks = LMSecurityLevel.FRIENDS;
 	}
 	
 	public void readFromServer(NBTTagCompound tag)
@@ -26,7 +26,7 @@ public class PersonalSettings
 		chatLinks = tag.hasKey("ChatLinks") ? tag.getBoolean("ChatLinks") : true;
 		renderBadge = tag.hasKey("Badge") ? tag.getBoolean("Badge") : true;
 		explosions = tag.hasKey("Explosions") ? tag.getBoolean("Explosions") : true;
-		blocks = tag.hasKey("Blocks") ? blocks = LMSecurityLevel.VALUES[tag.getByte("Blocks")] : LMSecurityLevel.PUBLIC;
+		blocks = tag.hasKey("Blocks") ? blocks = LMSecurityLevel.VALUES_3[tag.getByte("Blocks")] : LMSecurityLevel.FRIENDS;
 	}
 	
 	public void writeToServer(NBTTagCompound tag)
@@ -45,7 +45,7 @@ public class PersonalSettings
 		{
 			chatLinks = tag.getBoolean("CL");
 			explosions = tag.getBoolean("E");
-			blocks = LMSecurityLevel.VALUES[tag.getByte("BL")];
+			blocks = LMSecurityLevel.VALUES_3[tag.getByte("BL")];
 		}
 	}
 	

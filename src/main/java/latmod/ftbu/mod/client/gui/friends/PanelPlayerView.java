@@ -15,7 +15,7 @@ public class PanelPlayerView extends PanelFriendsGui
 	public PanelPlayerView(GuiFriends g)
 	{
 		super(g);
-		selectedPlayer = new Player(LMWorldClient.inst.clientPlayer);
+		selectedPlayer = new Player(LMWorldClient.inst.getClientPlayer());
 	}
 	
 	public void addWidgets()

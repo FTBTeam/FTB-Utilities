@@ -29,10 +29,10 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public static final ClientConfigProperty renderMyBadge = new ClientConfigProperty("player_decorators_self", true)
 	{
 		public void initGui()
-		{ setValue(LMWorldClient.inst.clientPlayer.settings.renderBadge ? 1 : 0); }
+		{ setValue(LMWorldClient.inst.getClientPlayer().settings.renderBadge ? 1 : 0); }
 		
 		public void onClicked()
-		{ ClientAction.ACTION_RENDER_BADGE.send(LMWorldClient.inst.clientPlayer.settings.renderBadge ? 0 : 1); }
+		{ ClientAction.ACTION_RENDER_BADGE.send(LMWorldClient.inst.getClientPlayer().settings.renderBadge ? 0 : 1); }
 	};
 	
 	public static final ClientConfigProperty addOreNames = new ClientConfigProperty("item_ore_names", false);
@@ -43,11 +43,14 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public static final ClientConfigProperty chatLinks = new ClientConfigProperty("chat_links", true)
 	{
 		public void initGui()
-		{ setValue(LMWorldClient.inst.clientPlayer.settings.chatLinks ? 1 : 0); }
+		{ setValue(LMWorldClient.inst.getClientPlayer().settings.chatLinks ? 1 : 0); }
 		
 		public void onClicked()
-		{ ClientAction.ACTION_CHAT_LINKS.send(LMWorldClient.inst.clientPlayer.settings.chatLinks ? 0 : 1); }
+		{ ClientAction.ACTION_CHAT_LINKS.send(LMWorldClient.inst.getClientPlayer().settings.chatLinks ? 0 : 1); }
 	};
+	
+	public static final ClientConfigProperty playerOptionsShortcut = new ClientConfigProperty("player_options_shortcut", true);
+	public static final ClientConfigProperty sortFriendsAZ = new ClientConfigProperty("sort_friends_az", false);
 	
 	public static final ClientConfig miscConfig = new ClientConfig("ftbu_misc").setHidden();
 	public static final ClientConfigProperty hideArmorFG = new ClientConfigProperty("hide_armor_fg", false);
@@ -64,6 +67,8 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		clientConfig.add(addRegistryNames);
 		clientConfig.add(optionsButton);
 		clientConfig.add(chatLinks);
+		clientConfig.add(playerOptionsShortcut);
+		clientConfig.add(sortFriendsAZ);
 		ClientConfigRegistry.add(clientConfig);
 		
 		miscConfig.add(hideArmorFG);

@@ -18,7 +18,6 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 	public static LMWorldClient inst = null;
 	public final int clientPlayerID;
 	public final File clientDataFolder;
-	public LMPlayerClient clientPlayer = null;
 	
 	public LMWorldClient(int i)
 	{
@@ -39,10 +38,15 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 		return (p == null) ? null : p.toPlayerSP();
 	}
 	
+	public LMPlayerClient getClientPlayer()
+	{ return getPlayer(FTBLibClient.mc.thePlayer.getGameProfile().getId()); }
+	
 	public void readDataFromNet(NBTTagCompound tag, boolean first)
 	{
 		if(first)
 		{
+			UUID selfID = FTBLibClient.mc.thePlayer.getGameProfile().getId();
+			
 			players.clear();
 			
 			NBTTagList list = tag.getTagList("PLIST", LMNBTUtils.MAP);
@@ -51,11 +55,9 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 			{
 				NBTTagCompound tag1 = list.getCompoundTagAt(i);
 				LMPlayerClient p = new LMPlayerClient(this, tag1.getInteger("PID"), new GameProfile(new UUID(tag1.getLong("MID"), tag1.getLong("LID")), tag1.getString("N")));
-				p.readFromNet(tag1, p.playerID == clientPlayerID);
+				p.readFromNet(tag1, p.getUUID().equals(selfID));
 				players.add(p);
 			}
-			
-			clientPlayer = LMWorldClient.inst.getPlayer(clientPlayerID);
 			
 			for(int i = 0; i < players.size(); i++)
 				new EventLMPlayerClient.DataLoaded(players.get(i).toPlayerSP()).post();

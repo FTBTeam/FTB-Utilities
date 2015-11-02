@@ -15,7 +15,7 @@ public class MessageDisplayGuide extends MessageFTBU
 	{
 		this();
 		NBTTagCompound tag = new NBTTagCompound();
-		file.main.writeToNBT(tag);
+		file.writeToNBT(tag);
 		writeTag(tag);
 	}
 	
@@ -27,7 +27,7 @@ public class MessageDisplayGuide extends MessageFTBU
 	{
 		NBTTagCompound data = readTag();
 		GuideFile file = new GuideFile(null);
-		file.main.readFromNBT(data);
+		file.readFromNBT(data);
 		FTBLibClient.mc.displayGuiScreen(new GuiGuide(null, file.main));
 		return null;
 	}

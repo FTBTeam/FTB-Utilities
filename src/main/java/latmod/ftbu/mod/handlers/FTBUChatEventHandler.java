@@ -18,8 +18,6 @@ public class FTBUChatEventHandler
 	{
 		String[] msg = e.message.split(" ");
 		
-		FTBLib.logger.info(LMStringUtils.strip(msg));
-		
 		FastList<String> links = new FastList<String>();
 		
 		for(String s : msg)

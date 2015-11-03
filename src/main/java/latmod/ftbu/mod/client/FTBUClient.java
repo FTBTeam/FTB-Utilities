@@ -1,6 +1,7 @@
 package latmod.ftbu.mod.client;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
+import ftb.lib.api.gui.LMGuiHandlerRegistry;
 import ftb.lib.client.FTBLibClient;
 import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.api.client.*;
@@ -10,11 +11,8 @@ import latmod.ftbu.mod.client.gui.minimap.ClaimedAreasClient;
 import latmod.ftbu.mod.cmd.CmdMath;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.tile.TileLM;
-import latmod.ftbu.util.*;
 import latmod.ftbu.util.client.*;
 import latmod.ftbu.world.*;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -110,24 +108,6 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	
 	public LMWorld getClientWorldLM()
 	{ return LMWorldClient.inst; }
-	
-	public boolean openClientGui(EntityPlayer ep, String mod, int id, NBTTagCompound data)
-	{
-		LMGuiHandler h = LMGuiHandlerRegistry.getLMGuiHandler(mod);
-		
-		if(h != null)
-		{
-			GuiScreen g = h.getGui(ep, id, data);
-			
-			if(g != null)
-			{
-				FTBLibClient.mc.displayGuiScreen(g);
-				return true;
-			}
-		}
-		
-		return false;
-	}
 	
 	public void readTileData(TileLM t, S35PacketUpdateTileEntity p)
 	{

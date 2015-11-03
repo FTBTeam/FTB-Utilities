@@ -1,10 +1,18 @@
 package latmod.ftbu.world;
 
+import java.util.UUID;
+
 import ftb.lib.*;
+import ftb.lib.item.LMInvUtils;
+import latmod.ftbu.api.tile.ISecureTile;
 import latmod.ftbu.mod.config.*;
 import latmod.lib.*;
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.*;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.world.World;
 
 public class Claims
 {
@@ -64,7 +72,7 @@ public class Claims
 		if(chunks.size() >= max) return;
 		
 		ChunkType t = ChunkType.get(dim, cx, cz);
-		if(!t.isClaimed() && t.canClaim(owner, false))
+		if(!t.isClaimed() && t.canClaimChunk(owner))
 			chunks.add(new ClaimedChunk(this, dim, cx, cz));
 		
 		owner.sendUpdate();
@@ -73,7 +81,7 @@ public class Claims
 	public void unclaim(int dim, int cx, int cz, boolean admin)
 	{
 		ChunkType t = ChunkType.get(dim, cx, cz);
-		if(t.isClaimed() && t.canClaim(owner, admin))
+		if(t.isClaimed() && t.canUnclaimChunk(owner, admin))
 			chunks.remove(new ClaimedChunk(this, dim, cx, cz));
 		//if(chunks.isEmpty()) return;
 		
@@ -85,6 +93,7 @@ public class Claims
 	
 	// Static //
 	
+	/** Server side */
 	public static ClaimedChunk get(int dim, int cx, int cz)
 	{
 		for(int i = 0; i < LMWorldServer.inst.players.size(); i++)
@@ -96,6 +105,7 @@ public class Claims
 		return null;
 	}
 	
+	/** Server side */
 	public static boolean isInSpawn(int dim, int cx, int cz)
 	{
 		if(dim != 0) return false;
@@ -110,9 +120,11 @@ public class Claims
 		return cx >= minX && cx <= maxX && cz >= minZ && cz <= maxZ;
 	}
 	
+	/** Server side */
 	public static boolean isInSpawnF(int dim, double x, double z)
 	{ return dim == 0 && isInSpawn(dim, MathHelperLM.chunk(x), MathHelperLM.chunk(z)); }
 	
+	/** Server side */
 	public static boolean allowExplosion(int dim, int cx, int cz)
 	{
 		if(dim == 0 && FTBUConfigGeneral.safeSpawn.get() && isInSpawn(dim, cx, cz))
@@ -132,5 +144,46 @@ public class Claims
 		}
 		
 		return true;
+	}
+	
+	public static boolean canPlayerInteract(EntityPlayer ep, int x, int y, int z, boolean leftClick)
+	{
+		World w = ep.worldObj;
+		boolean server = !w.isRemote;
+		if(server && LMWorldServer.inst.settings.isOutsideF(w.provider.dimensionId, x, z)) return false;
+		
+		if(!server || FTBUConfigGeneral.allowCreativeInteractSecure(ep)) return true;
+		
+		Block block = w.getBlock(x, y, z);
+		
+		if(block.hasTileEntity(w.getBlockMetadata(x, y, z)))
+		{
+			TileEntity te = w.getTileEntity(x, y, z);
+			if(te instanceof ISecureTile && !te.isInvalid() && !((ISecureTile)te).canPlayerInteract(ep, leftClick))
+			{ ((ISecureTile)te).onPlayerNotOwner(ep, leftClick); return false; }
+		}
+		
+		return canInteract(ep.getGameProfile().getId(), w, x, y, z, leftClick);
+	}
+	
+	public static boolean canInteract(UUID playerID, World w, int x, int y, int z, boolean leftClick)
+	{
+		if(leftClick)
+		{
+			String[] whitelist = FTBUConfigClaims.breakWhitelist.get();
+			
+			if(whitelist != null && whitelist.length > 0)
+			{
+				Block block = w.getBlock(x, y, z);
+				
+				String blockID = LMInvUtils.getRegName(block);
+				
+				for(int i = 0; i < whitelist.length; i++)
+					if(whitelist[i].equalsIgnoreCase(blockID)) return true;
+			}
+		}
+		
+		ChunkType type = ChunkType.getD(w.provider.dimensionId, x, z);
+		return type.canInteract(LMWorldServer.inst.getPlayer(playerID), leftClick);
 	}
 }

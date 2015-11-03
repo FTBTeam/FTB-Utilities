@@ -43,7 +43,7 @@ public class ChunkType
 		public int getAreaColor(LMPlayer p)
 		{ return isFriendly(p) ? 0xFF00FF21 : 0xFF0094FF; }
 		
-		public boolean canInteract(LMPlayer p, boolean leftClick)
+		public boolean canInteract(LMPlayerServer p, boolean leftClick)
 		{
 			if(chunkOwner.equals(p)) return true;
 			LMSecurity s = new LMSecurity(chunkOwner);
@@ -53,8 +53,8 @@ public class ChunkType
 			return s.canInteract(p);
 		}
 		
-		public boolean canClaim(LMPlayer p, boolean admin)
-		{ return chunkOwner.equalsPlayer(p); }
+		public boolean canUnclaimChunk(LMPlayer p, boolean admin)
+		{ return chunkOwner.equalsPlayer(p) || admin; }
 	}
 	
 	public final int ID;
@@ -73,8 +73,11 @@ public class ChunkType
 	public boolean isClaimed()
 	{ return false; }
 	
-	public boolean canClaim(LMPlayer p, boolean admin)
+	public boolean canClaimChunk(LMPlayer p)
 	{ return this == WILDERNESS; }
+	
+	public boolean canUnclaimChunk(LMPlayer p, boolean admin)
+	{ return false; }
 	
 	public boolean drawGrid()
 	{ return this != WILDERNESS && this != UNLOADED; }
@@ -95,7 +98,7 @@ public class ChunkType
 	public int getAreaColor(LMPlayer p)
 	{ return areaColor; }
 	
-	public boolean canInteract(LMPlayer p, boolean leftClick)
+	public boolean canInteract(LMPlayerServer p, boolean leftClick)
 	{ return this == WILDERNESS || this == SPAWN; }
 	
 	public static ChunkType get(int dim, int cx, int cz)

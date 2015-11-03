@@ -7,7 +7,6 @@ import ftb.lib.*;
 import ftb.lib.item.LMInvUtils;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.api.item.ICreativeSafeItem;
-import latmod.ftbu.api.tile.ISecureTile;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.config.*;
 import latmod.ftbu.net.*;
@@ -15,12 +14,10 @@ import latmod.ftbu.notification.Notification;
 import latmod.ftbu.util.LatCoreMC;
 import latmod.ftbu.world.*;
 import latmod.lib.MathHelperLM;
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
@@ -166,49 +163,18 @@ public class FTBUPlayerEventHandler
 			e.setCanceled(true);
 	}
 	
-	public static boolean canInteract(EntityPlayer ep, int x, int y, int z, boolean leftClick)
+	private boolean canInteract(EntityPlayer ep, int x, int y, int z, boolean leftClick)
 	{
-		World w = ep.worldObj;
-		boolean server = !w.isRemote;
-		if(server && LMWorldServer.inst.settings.isOutsideF(w.provider.dimensionId, x, z)) return false;
-		
 		ItemStack heldItem = ep.getHeldItem();
 		
 		if(ep.capabilities.isCreativeMode && leftClick && heldItem != null && heldItem.getItem() instanceof ICreativeSafeItem)
 		{
-			if(server) w.markBlockRangeForRenderUpdate(x, y, z, x, y, z);
-			else w.markBlockForUpdate(x, y, z);
+			if(!ep.worldObj.isRemote) ep.worldObj.markBlockRangeForRenderUpdate(x, y, z, x, y, z);
+			else ep.worldObj.markBlockForUpdate(x, y, z);
 			return false;
 		}
 		
-		if(!server || FTBUConfigGeneral.allowCreativeInteractSecure(ep)) return true;
-		
-		Block block = w.getBlock(x, y, z);
-		
-		if(block.hasTileEntity(w.getBlockMetadata(x, y, z)))
-		{
-			TileEntity te = w.getTileEntity(x, y, z);
-			if(te instanceof ISecureTile && !te.isInvalid() && !((ISecureTile)te).canPlayerInteract(ep, leftClick))
-			{ ((ISecureTile)te).onPlayerNotOwner(ep, leftClick); return false; }
-		}
-		
-		if(leftClick)
-		{
-			String[] whitelist = FTBUConfigClaims.breakWhitelist.get();
-			
-			if(whitelist != null && whitelist.length > 0)
-			{
-				String blockID = LMInvUtils.getRegName(block);
-				
-				for(int i = 0; i < whitelist.length; i++)
-					if(whitelist[i].equalsIgnoreCase(blockID)) return true;
-			}
-		}
-		
-		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
-		//if(!LatCoreMC.isDedicatedServer() || p.isOP()) return true;
-		ChunkType type = ChunkType.getD(w.provider.dimensionId, x, z);
-		return type.canInteract(p, leftClick);
+		return Claims.canPlayerInteract(ep, x, y, z, leftClick);
 	}
 	
 	@SubscribeEvent

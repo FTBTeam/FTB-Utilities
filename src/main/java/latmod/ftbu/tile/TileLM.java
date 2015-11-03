@@ -1,9 +1,10 @@
 package latmod.ftbu.tile;
-import latmod.ftbu.api.tile.*;
+import ftb.lib.FTBLib;
+import ftb.lib.api.gui.*;
+import ftb.lib.mod.net.MessageClientTileAction;
 import latmod.ftbu.block.BlockLM;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.net.MessageClientTileAction;
-import latmod.ftbu.util.*;
+import latmod.ftbu.util.LMSecurity;
 import latmod.lib.LMUtils;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.*;
@@ -18,8 +19,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class TileLM extends TileEntity implements IClientActionTile
 {
 	public static final String ACTION_BUTTON_PRESSED = "button";
-	public static final String ACTION_OPEN_GUI = "openGUI";
-	public static final String ACTION_CUSTOM_NAME = "customName";
+	public static final String ACTION_OPEN_GUI = "open_gui";
+	public static final String ACTION_CUSTOM_NAME = "custom_name";
 	
 	public static final int[] NO_SLOTS = new int[0];
 	
@@ -225,7 +226,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 			markDirty();
 		}
 		else if(action.equals(ACTION_OPEN_GUI))
-			LatCoreMC.openGui(ep, (IGuiTile)this, data);
+			FTBLib.openGui(ep, (IGuiTile)this, data);
 		else if(action.equals(ACTION_CUSTOM_NAME))
 		{
 			String name = data.getString("Name");

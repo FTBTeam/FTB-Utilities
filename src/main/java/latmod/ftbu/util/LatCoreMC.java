@@ -6,16 +6,14 @@ import cpw.mods.fml.common.registry.*;
 import ftb.lib.FTBLib;
 import latmod.ftbu.api.guide.GuideFile;
 import latmod.ftbu.api.item.IItemLM;
-import latmod.ftbu.api.tile.IGuiTile;
-import latmod.ftbu.mod.*;
+import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.net.*;
 import latmod.ftbu.notification.Notification;
 import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.*;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.*;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.*;
 
@@ -63,14 +61,6 @@ public final class LatCoreMC // LatCoreMCClient
 	
 	public static void notifyPlayer(EntityPlayerMP ep, Notification n)
 	{ new MessageNotifyPlayer(n).sendTo(ep); }
-	
-	public static void openGui(EntityPlayer ep, IGuiTile i, NBTTagCompound data)
-	{
-		TileEntity te = (TileEntity)i;
-		if(data == null) data = new NBTTagCompound();
-		data.setIntArray("XYZ", new int[] { te.xCoord, te.yCoord, te.zCoord });
-		FTBUGuiHandler.instance.openGui(ep, FTBUGuiHandler.TILE, data);
-	}
 	
 	public static boolean isDedicatedServer()
 	{ return FTBUTicks.isDediServer; }

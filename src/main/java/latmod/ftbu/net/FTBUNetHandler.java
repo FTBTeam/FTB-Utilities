@@ -14,19 +14,16 @@ public class FTBUNetHandler
 		NET.register(MessageLMWorldJoined.class, 1, Side.CLIENT);
 		NET.register(MessageLMWorldUpdate.class, 2, Side.CLIENT);
 		NET.register(MessageLMPlayerUpdate.class, 3, Side.CLIENT);
-		NET.register(MessageClientAction.class, 4, Side.SERVER);
-		NET.register(MessageClientTileAction.class, 5, Side.SERVER);
-		NET.register(MessageClientItemAction.class, 6, Side.SERVER);
+		NET.register(MessageLMPlayerLoggedIn.class, 4, Side.CLIENT);
+		NET.register(MessageLMPlayerLoggedOut.class, 5, Side.CLIENT);
 		NET.register(MessageLMPlayerDied.class, 6, Side.CLIENT);
 		NET.register(MessageNotifyPlayer.class, 7, Side.CLIENT);
-		NET.register(MessageLMPlayerLoggedIn.class, 8, Side.CLIENT);
-		NET.register(MessageLMPlayerLoggedOut.class, 9, Side.CLIENT);
+		NET.register(MessageClientAction.class, 8, Side.SERVER);
 		
 		NET_INFO.register(MessageLMPlayerInfo.class, 1, Side.CLIENT);
-		NET_INFO.register(MessageOpenGui.class, 2, Side.CLIENT);
-		NET_INFO.register(MessagePing.class, 3, Side.SERVER);
-		NET_INFO.register(MessagePingResponse.class, 4, Side.CLIENT);
-		NET_INFO.register(MessageDisplayGuide.class, 5, Side.CLIENT);
+		NET_INFO.register(MessagePing.class, 2, Side.SERVER);
+		NET_INFO.register(MessagePingResponse.class, 3, Side.CLIENT);
+		NET_INFO.register(MessageDisplayGuide.class, 4, Side.CLIENT);
 		
 		NET_WORLD.register(MessageAreaUpdate.class, 1, Side.CLIENT);
 		NET_WORLD.register(MessageAreaRequest.class, 2, Side.SERVER);

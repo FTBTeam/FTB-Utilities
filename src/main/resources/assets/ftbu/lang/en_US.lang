@@ -75,18 +75,24 @@ ftbu:owner=Owner: %s
 ftbu:delete_item=Do you want to delete '%s'?
 ftbu:label.new_friends=New friend requests!
 ftbu:label.new_friends_click=Click to accept all requests
+
 ftbu:cmd.warp_set=Warp '%s' set!
 ftbu:cmd.warp_del=Warp '%s' deleted!
 ftbu:cmd.warp_not_set=Unknown Warp: '%s'!
 ftbu:cmd.warp_tp=Teleported to '%s'!
-ftbu:cmd.no_dp=No deathpoint found!
+
+ftbu:cmd.home_set=Home '%s' set!
+ftbu:cmd.home_del=Home '%s' deleted!
+ftbu:cmd.home_not_set=Unknown Home: '%s'!
+ftbu:cmd.home_cross_dim=You can't teleport to another dimension!
+ftbu:cmd.home_limit=You can't set any more home locations!
+
+ftbu:cmd.no_dp=You can only go back once!
 ftbu:cmd.timer_backup=Next backup: %s
 ftbu:cmd.timer_restart=Next restart: %s
 ftbu:cmd.rules=[Click here to open rules]
 ftbu:cmd.spawn_tp=Teleported to spawn
-ftbu:label.mail_from=Sent from: %s
-ftbu:label.mail_to=Sending to: %s
-ftbu:button.mail_send=Send
+
 ftbu:button.claims_unclaim_all=Unclaim all chunks
 ftbu:button.claims_unclaim_all_dim=Unclaim all chunks in %s
 ftbu:button.claims_unclaim_all_q=Unclaim all chunks?

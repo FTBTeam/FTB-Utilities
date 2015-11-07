@@ -29,18 +29,18 @@ public final class ClaimedChunk
 	{ return equalsChunk(c.dim, c.posX, c.posZ); }
 	
 	public String toString()
-	{ return "{" + dim + "," + posX + "," + posZ + "}"; }
+	{ return "[" + dim + ',' + posX + ',' + posZ + ']'; }
 	
 	public int hashCode()
 	{ return LMUtils.hashCode(dim, posX, posZ); }
 	
 	public double getDistSq(double x, double z)
 	{
-		double x0 = (posX + 0.5D) * 16D;
-		double z0 = (posZ + 0.5D) * 16D;
+		double x0 = posX * 16D + 8.5D;
+		double z0 = posZ * 16D + 8.5D;
 		return MathHelperLM.distSq(x0, 0D, z0, x, 0D, z);
 	}
 	
 	public double getDistSq(ClaimedChunk c)
-	{ return getDistSq((c.posX + 0.5D) * 16D, (c.posZ + 0.5D) * 16D); }
+	{ return getDistSq(c.posX * 16D + 8.5D, c.posZ * 16D + 8.5D); }
 }

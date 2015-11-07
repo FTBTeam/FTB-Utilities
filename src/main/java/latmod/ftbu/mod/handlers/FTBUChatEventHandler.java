@@ -16,7 +16,7 @@ public class FTBUChatEventHandler
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onChatEvent(net.minecraftforge.event.ServerChatEvent e)
 	{
-		String[] msg = e.message.split(" ");
+		String[] msg = FTBLib.removeFormatting(e.message).split(" "); // https://github.com/LatvianModder
 		
 		FastList<String> links = new FastList<String>();
 		
@@ -59,7 +59,7 @@ public class FTBUChatEventHandler
 		for(int i = 0; i < LINK_PREFIXES.length; i++)
 		{
 			int idx = s.indexOf(LINK_PREFIXES[i]);
-			if(idx > 0) return idx;
+			if(idx != -1) return idx;
 		}
 		
 		return -1;

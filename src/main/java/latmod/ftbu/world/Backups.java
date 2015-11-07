@@ -3,6 +3,8 @@ package latmod.ftbu.world;
 import java.io.File;
 import java.util.Arrays;
 
+import org.apache.logging.log4j.*;
+
 import ftb.lib.FTBLib;
 import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.mod.config.FTBUConfigBackups;
@@ -11,6 +13,8 @@ import net.minecraft.world.World;
 
 public class Backups
 {
+	public static final Logger logger = LogManager.getLogger("FTBU Backups");
+	
 	public static File backupsFolder;
 	public static long lastTimeRun = -1;
 	public static boolean shouldRun = false;
@@ -23,7 +27,7 @@ public class Backups
 		if(!backupsFolder.exists()) backupsFolder.mkdirs();
 		thread = null;
 		clearOldBackups();
-		FTBLib.logger.info("Backups folder created @ " + backupsFolder.getAbsolutePath());
+		logger.info("Backups folder created @ " + backupsFolder.getAbsolutePath());
 	}
 	
 	public static boolean enabled()
@@ -52,14 +56,14 @@ public class Backups
 			Arrays.sort(s);
 			
 			int j = s.length - FTBUConfigBackups.backupsToKeep.get();
-			FTBLib.logger.info("Deleting " + j + " old backups");
+			logger.info("Deleting " + j + " old backups");
 			
 			for(int i = 0; i < j; i++)
 			{
 				File f = new File(backupsFolder, s[i]);
 				if(f.isDirectory())
 				{
-					FTBLib.logger.info("Deleted old backup: " + f.getPath());
+					logger.info("Deleted old backup: " + f.getPath());
 					LMFileUtils.delete(f);
 				}
 			}

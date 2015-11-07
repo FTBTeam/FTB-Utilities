@@ -3,7 +3,6 @@ import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import ftb.lib.*;
 import ftb.lib.item.ODItems;
-import latmod.ftbu.api.EventFTBUInit;
 import latmod.ftbu.mod.cmd.*;
 import latmod.ftbu.mod.config.*;
 import latmod.ftbu.mod.handlers.*;
@@ -50,8 +49,6 @@ public class FTBU
 		Backups.init();
 		mod.onPostLoaded();
 		proxy.preInit();
-		
-		new EventFTBUInit(Phase.PRE).post();
 	}
 	
 	@Mod.EventHandler
@@ -66,7 +63,6 @@ public class FTBU
 		ODItems.postInit();
 		mod.loadRecipes();
 		proxy.postInit();
-		new EventFTBUInit(Phase.POST).post();
 	}
 	
 	@Mod.EventHandler
@@ -79,6 +75,7 @@ public class FTBU
 		if(FTBUConfigCmd.spawn.get()) e.registerServerCommand(new CmdSpawn());
 		if(FTBUConfigCmd.tplast.get()) e.registerServerCommand(new CmdTplast());
 		if(FTBUConfigCmd.warp.get()) e.registerServerCommand(new CmdWarp());
+		if(FTBUConfigCmd.home.get()) e.registerServerCommand(new CmdHome());
 	}
 	
 	@Mod.EventHandler

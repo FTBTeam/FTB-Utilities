@@ -6,10 +6,10 @@ import org.apache.logging.log4j.*;
 
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.FTBLib;
 import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.api.item.IItemLM;
 import latmod.ftbu.block.IBlockLM;
+import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.recipes.LMRecipes;
 import latmod.ftbu.tile.TileLM;
 import latmod.lib.*;
@@ -63,9 +63,9 @@ public class LMMod
 	public static void init(Object o)
 	{
 		LMMod mod = getLMMod(o);
-		if(mod == null) { FTBLib.logger.warn("LMMod failed to load from " + o); return; }
+		if(mod == null) { FTBU.mod.logger.warn("LMMod failed to load from " + o); return; }
 		modsMap.put(mod.modID, mod);
-		if(FTBLibFinals.DEV) FTBLib.logger.info("LMMod '" + mod.toString() + "' loaded");
+		if(FTBLibFinals.DEV) FTBU.mod.logger.info("LMMod '" + mod.toString() + "' loaded");
 	}
 	
 	// End of static //

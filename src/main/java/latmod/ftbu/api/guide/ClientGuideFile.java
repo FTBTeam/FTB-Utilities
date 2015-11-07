@@ -6,21 +6,21 @@ import java.util.Map;
 import ftb.lib.FTBLib;
 import ftb.lib.api.EventFTBModeSet;
 import ftb.lib.mod.FTBLibFinals;
-import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.client.gui.guide.GuideLinkSerializer;
 import latmod.lib.*;
 import net.minecraft.util.*;
 
 public class ClientGuideFile extends GuideFile
 {
-	public static final ClientGuideFile instance = new ClientGuideFile(new ChatComponentTranslation(FTBU.mod.assets + "button.guide"));
+	public static final ClientGuideFile instance = new ClientGuideFile(new ChatComponentTranslation(FTBUFinals.ASSETS + "button.guide"));
 	
 	public ClientGuideFile(IChatComponent title)
 	{ super(title); }
 	
 	public void reload(EventFTBModeSet e)
 	{
-		if(FTBLibFinals.DEV) FTBLib.logger.info("Guide reloaded @ " + e.side);
+		if(FTBLibFinals.DEV) FTBU.mod.logger.info("Guide reloaded @ " + e.side);
 		
 		main.clear();
 		

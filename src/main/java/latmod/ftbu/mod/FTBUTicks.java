@@ -36,7 +36,7 @@ public class FTBUTicks
 		if(FTBUConfigGeneral.restartTimer.get() > 0)
 		{
 			restartSeconds = (long)(FTBUConfigGeneral.restartTimer.get() * 3600D);
-			FTBLib.logger.info("Server restart in " + LMStringUtils.getTimeString(restartSeconds));
+			FTBU.mod.logger.info("Server restart in " + LMStringUtils.getTimeString(restartSeconds));
 		}
 		
 		areaRequests.setDefVal(0);
@@ -91,7 +91,7 @@ public class FTBUTicks
 		
 		if(!callbacks.isEmpty())
 		{
-			for(int i = 0; i < callbacks.size(); i++)
+			for(int i = callbacks.size() - 1; i >= 0; i--)
 				if(callbacks.get(i).incAndCheck())
 					callbacks.remove(i);
 		}

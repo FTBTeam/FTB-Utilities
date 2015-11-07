@@ -47,7 +47,7 @@ public class ThreadBackup extends Thread
 			FastList<File> files = LMFileUtils.listAll(src);
 			int allFiles = files.size();
 			
-			FTBLib.logger.info("Backing up " + files.size() + " files...");
+			Backups.logger.info("Backing up " + files.size() + " files...");
 			
 			if(FTBUConfigBackups.compressionLevel.get() > 0)
 			{
@@ -63,9 +63,9 @@ public class ThreadBackup extends Thread
 				
 				long logMillis = LMUtils.millis() + 5000L;
 				
-				byte[] buffer = new byte[1024];
+				byte[] buffer = new byte[8192];
 				
-				FTBLib.logger.info("Compressing " + allFiles + " files!");
+				Backups.logger.info("Compressing " + allFiles + " files!");
 				
 				for(int i = 0; i < allFiles; i++)
 				{
@@ -86,7 +86,7 @@ public class ThreadBackup extends Thread
 						log.append(MathHelperLM.toSmallDouble((i / (double)allFiles) * 100D));
 						log.append("%]: ");
 						log.append(ze.getName());
-						FTBLib.logger.info(log.toString());
+						Backups.logger.info(log.toString());
 					}
 					
 					zos.putNextEntry(ze);
@@ -101,7 +101,7 @@ public class ThreadBackup extends Thread
 				
 				zos.close();
 				
-				FTBLib.logger.info("Done compressing in " + getDoneTime(start) + " seconds (" + LMFileUtils.getSizeS(dstFile) + ")!");
+				Backups.logger.info("Done compressing in " + getDoneTime(start) + " seconds (" + LMFileUtils.getSizeS(dstFile) + ")!");
 			}
 			else
 			{
@@ -112,7 +112,7 @@ public class ThreadBackup extends Thread
 				String dstPath = dstFile.getAbsolutePath() + File.separator;
 				String srcPath = src.getAbsolutePath();
 				
-				long logMillis = LMUtils.millis() + 5000L;
+				long logMillis = LMUtils.millis() + 2000L;
 				
 				for(int i = 0; i < allFiles; i++)
 				{
@@ -122,7 +122,7 @@ public class ThreadBackup extends Thread
 					
 					if(i == 0 || millis > logMillis || i == allFiles - 1)
 					{
-						logMillis = millis + 5000L;
+						logMillis = millis + 2000L;
 						
 						StringBuilder log = new StringBuilder();
 						log.append('[');
@@ -131,7 +131,7 @@ public class ThreadBackup extends Thread
 						log.append(MathHelperLM.toSmallDouble((i / (double)allFiles) * 100D));
 						log.append("%]: ");
 						log.append(file.getName());
-						FTBLib.logger.info(log.toString());
+						Backups.logger.info(log.toString());
 					}
 					
 					File dst1 = new File(dstPath + (file.getAbsolutePath().replace(srcPath, "")));
@@ -139,7 +139,7 @@ public class ThreadBackup extends Thread
 				}
 			}
 			
-			FTBLib.logger.info("Created " + dstFile.getAbsolutePath() + " from " + src.getAbsolutePath());
+			Backups.logger.info("Created " + dstFile.getAbsolutePath() + " from " + src.getAbsolutePath());
 			
 			Backups.clearOldBackups();
 			

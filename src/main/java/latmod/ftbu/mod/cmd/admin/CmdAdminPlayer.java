@@ -42,7 +42,6 @@ public class CmdAdminPlayer extends CommandLM
 		if(FTBLibFinals.DEV && args[0].equals("addfake"))
 		{
 			checkArgs(args, 3);
-			FTBLib.logger.info(LMStringUtils.strip(args));
 			
 			UUID id = LMStringUtils.fromString(args[1]);
 			if(id == null) return error(new ChatComponentText("Invalid UUID!"));

@@ -2,6 +2,7 @@ package latmod.ftbu.mod.config;
 
 import latmod.ftbu.api.guide.GuideInfo;
 import latmod.lib.config.*;
+import latmod.lib.util.IntBounds;
 
 public class FTBUConfigCmd
 {
@@ -10,13 +11,20 @@ public class FTBUConfigCmd
 	@GuideInfo(info = "Command name for admin command.", def = "admin")
 	public static final ConfigEntryString commandNameAdmin = new ConfigEntryString("name_cmd_admin", "admin");
 	
-	@GuideInfo(info = "If true, then it deletes last death location after using /back.", def = "true")
-	public static final ConfigEntryBool back_only_once = new ConfigEntryBool("back_only_once", true);
+	@GuideInfo(info = "Max home count for players", def = "1")
+	public static final ConfigEntryInt maxHomesPlayer = new ConfigEntryInt("maxHomesPlayer", new IntBounds(1, 0, 32000));
+	
+	@GuideInfo(info = "Max home count for admins", def = "100")
+	public static final ConfigEntryInt maxHomesAdmin = new ConfigEntryInt("maxHomesAdmin", new IntBounds(100, 0, 32000));
+	
+	@GuideInfo(info = "Can use /home to teleport to another dimension", def = "true")
+	public static final ConfigEntryBool crossDimHomes = new ConfigEntryBool("crossDimHomes", true);
 	
 	public static final ConfigEntryBool back = new ConfigEntryBool("back", true);
 	public static final ConfigEntryBool spawn = new ConfigEntryBool("spawn", true);
 	public static final ConfigEntryBool tplast = new ConfigEntryBool("tplast", true);
 	public static final ConfigEntryBool warp = new ConfigEntryBool("warp", true);
+	public static final ConfigEntryBool home = new ConfigEntryBool("home", true);
 	
 	public static final ConfigEntryBool admin_backup = new ConfigEntryBool("admin_backup", true);
 	public static final ConfigEntryBool admin_edit_config = new ConfigEntryBool("admin_edit_config", true);

@@ -12,7 +12,7 @@ public class Warps
 	{
 		warps.clear();
 		
-		NBTTagCompound tag1 = (NBTTagCompound)tag.getTag("Warps");
+		NBTTagCompound tag1 = (NBTTagCompound)tag.getTag(s);
 		
 		if(tag1 != null && !tag1.hasNoTags())
 		{
@@ -31,7 +31,7 @@ public class Warps
 		NBTTagCompound tag1 = new NBTTagCompound();
 		for(int i = 0; i < warps.size(); i++)
 			tag1.setIntArray(warps.keys.get(i), warps.values.get(i).toIntArray());
-		tag.setTag("Warps", tag1);
+		tag.setTag(s, tag1);
 	}
 	
 	public String[] list()
@@ -43,9 +43,15 @@ public class Warps
 	public EntityPos get(String s)
 	{ return warps.get(s); }
 	
+	public boolean set(String s, EntityPos pos)
+	{ return warps.put(s, pos.clone()); }
+	
 	public boolean set(String s, int x, int y, int z, int dim)
 	{ return warps.put(s, new EntityPos(x + 0.5D, y + 0.5D, z + 0.5D, dim)); }
 	
 	public boolean rem(String s)
 	{ return warps.remove(s); }
+
+	public int size()
+	{ return warps.size(); }
 }

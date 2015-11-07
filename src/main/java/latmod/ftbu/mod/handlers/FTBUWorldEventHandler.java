@@ -7,10 +7,8 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
-import ftb.lib.api.EventFTBModeSet;
 import ftb.lib.api.config.ConfigListRegistry;
 import latmod.ftbu.api.EventLMWorldServer;
-import latmod.ftbu.api.guide.ClientGuideFile;
 import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.world.*;
@@ -24,12 +22,6 @@ import net.minecraft.world.WorldServer;
 
 public class FTBUWorldEventHandler
 {
-	@SubscribeEvent
-	public void onModeChanged(EventFTBModeSet e)
-	{
-		if(e.side.isClient()) ClientGuideFile.instance.reload(e);
-	}
-	
 	@SubscribeEvent
 	public void onWorldTick(TickEvent.WorldTickEvent e)
 	{

@@ -13,19 +13,19 @@ public class FTBUConfigGeneral
 {
 	public static final ConfigGroup group = new ConfigGroup("general");
 	
-	@GuideInfo(info = "If set to true, creative players will be able to access protected chests / chunks.", def = "true")
+	@GuideInfo(info = "If set to true, creative players will be able to access protected chests / chunks", def = "true")
 	public static final ConfigEntryBool allowCreativeInteractSecure = new ConfigEntryBool("allowCreativeInteractSecure", true);
 	
-	@GuideInfo(info = "Server will automatically shut down after X hours. 0 - Disabled, 0.5 - 30 minutes, 1 - 1 Hour, 24 - 1 Day, 168 - 1 Week, 720 - 1 Month.", def = "0")
+	@GuideInfo(info = "Server will automatically shut down after X hours. 0 - Disabled, 0.5 - 30 minutes, 1 - 1 Hour, 24 - 1 Day, 168 - 1 Week, 720 - 1 Month", def = "0")
 	public static final ConfigEntryFloat restartTimer = new ConfigEntryFloat("restartTimer", new FloatBounds(0F, 0F, 720F));
 	
-	@GuideInfo(info = "If set to true, explosions and hostile mobs in spawn area will be disabled.", def = "false")
+	@GuideInfo(info = "If set to true, explosions and hostile mobs in spawn area will be disabled", def = "false")
 	public static final ConfigEntryBool safeSpawn = new ConfigEntryBool("safeSpawn", false);
 	
-	@GuideInfo(info = "If set to false, players won't be able to attack each other in spawn area.", def = "true")
+	@GuideInfo(info = "If set to false, players won't be able to attack each other in spawn area", def = "true")
 	public static final ConfigEntryBool spawnPVP = new ConfigEntryBool("spawnPVP", true);
 	
-	@GuideInfo(info = "Entity classes that are banned from world. They will not spawn and existing ones will be destroyed.", def = "Blank")
+	@GuideInfo(info = "Entity classes that are banned from world. They will not spawn and existing ones will be destroyed", def = "Blank")
 	public static final ConfigEntryStringArray blockedEntities = new ConfigEntryStringArray("blockedEntities", new String[0]);
 	
 	public static void load(ConfigFile f)

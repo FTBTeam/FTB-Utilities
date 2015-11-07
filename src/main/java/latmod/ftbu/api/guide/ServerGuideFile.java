@@ -14,7 +14,7 @@ import net.minecraft.util.*;
 
 public class ServerGuideFile extends GuideFile
 {
-	public static final ServerGuideFile instance = new ServerGuideFile(new ChatComponentTranslation(FTBU.mod.assets + "button.server_info"));
+	public static final ServerGuideFile instance = new ServerGuideFile(new ChatComponentTranslation(FTBUFinals.ASSETS + "button.server_info"));
 	
 	private FastList<LMPlayerServer> players = null;
 	private LMPlayerServer self;

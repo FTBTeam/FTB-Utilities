@@ -35,7 +35,10 @@ public class Warps
 	}
 	
 	public String[] list()
-	{ return warps.keys.toArray(new String[0]); }
+	{
+		if(warps.isEmpty()) return new String[0];
+		return warps.keys.toArray(new String[0]);
+	}
 	
 	public EntityPos get(String s)
 	{ return warps.get(s); }

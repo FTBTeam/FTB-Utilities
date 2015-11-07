@@ -52,9 +52,6 @@ public class ChunkType
 			else s.level = chunkOwner.settings.blocks;
 			return s.canInteract(p);
 		}
-		
-		public boolean canUnclaimChunk(LMPlayer p, boolean admin)
-		{ return chunkOwner.equalsPlayer(p) || admin; }
 	}
 	
 	public final int ID;
@@ -75,9 +72,6 @@ public class ChunkType
 	
 	public boolean canClaimChunk(LMPlayer p)
 	{ return this == WILDERNESS; }
-	
-	public boolean canUnclaimChunk(LMPlayer p, boolean admin)
-	{ return false; }
 	
 	public boolean drawGrid()
 	{ return this != WILDERNESS && this != UNLOADED; }

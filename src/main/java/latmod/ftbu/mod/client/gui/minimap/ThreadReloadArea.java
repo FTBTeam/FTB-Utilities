@@ -13,10 +13,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
 @SideOnly(Side.CLIENT)
-public class ThreadReloadChunk extends Thread
+public class ThreadReloadArea extends Thread
 {
 	private static final short defHeight = -1;
-	public static final PixelBuffer pixels = new PixelBuffer(GuiMinimap.tiles * 16, GuiMinimap.tiles * 16);
+	public static final PixelBuffer pixels = new PixelBuffer(GuiMinimap.tiles_tex * 16, GuiMinimap.tiles_tex * 16);
 	public static final short[] heightMap = new short[pixels.pixels.length];
 	
 	public final World worldObj;
@@ -25,7 +25,7 @@ public class ThreadReloadChunk extends Thread
 	public Chunk chunkMC;
 	public short maxHeight = 0;
 	
-	public ThreadReloadChunk(World w, GuiMinimap m)
+	public ThreadReloadArea(World w, GuiMinimap m)
 	{
 		super("LM_MapReloader");
 		setDaemon(true);
@@ -39,8 +39,8 @@ public class ThreadReloadChunk extends Thread
 	{
 		try
 		{
-			for(int cz = 0; cz < GuiMinimap.tiles; cz++)
-			for(int cx = 0; cx < GuiMinimap.tiles; cx++)
+			for(int cz = 0; cz < GuiMinimap.tiles_gui; cz++)
+			for(int cx = 0; cx < GuiMinimap.tiles_gui; cx++)
 			{
 				if(worldObj.getChunkProvider().chunkExists(gui.startX, gui.startY))
 				{

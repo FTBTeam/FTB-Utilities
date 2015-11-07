@@ -71,6 +71,7 @@ public class LMMod
 	// End of static //
 	
 	public final String modID;
+	public final String lowerCaseModID;
 	public final ModContainer modContainer;
 	public final String assets;
 	public final FastList<IBlockLM> blocks;
@@ -83,7 +84,8 @@ public class LMMod
 	{
 		modID = id;
 		modContainer = Loader.instance().getIndexedModList().get(modID);
-		assets = modID.toLowerCase() + ":";
+		lowerCaseModID = modID.toLowerCase();
+		assets = lowerCaseModID + ":";
 		blocks = new FastList<IBlockLM>();
 		items = new FastList<IItemLM>();
 		
@@ -101,7 +103,7 @@ public class LMMod
 	{ return modID; }
 	
 	public ResourceLocation getLocation(String s)
-	{ return new ResourceLocation(assets + s); }
+	{ return new ResourceLocation(lowerCaseModID, s); }
 	
 	public CreativeTabs createTab(final String s, final ItemStack icon)
 	{

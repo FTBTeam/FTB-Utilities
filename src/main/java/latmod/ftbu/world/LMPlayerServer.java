@@ -66,7 +66,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public void sendUpdate()
 	{
 		new EventLMPlayerServer.DataChanged(this).post();
-		new MessageLMPlayerUpdate(this, true).sendTo(getPlayer());
+		if(isOnline()) new MessageLMPlayerUpdate(this, true).sendTo(getPlayer());
 		for(EntityPlayerMP ep : FTBLib.getAllOnlinePlayers(getPlayer()))
 			new MessageLMPlayerUpdate(this, false).sendTo(ep);
 	}

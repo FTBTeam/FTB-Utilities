@@ -4,6 +4,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.api.gui.GuiIcons;
 import latmod.ftbu.api.client.*;
 import latmod.ftbu.util.client.FTBULang;
 import latmod.ftbu.util.gui.*;

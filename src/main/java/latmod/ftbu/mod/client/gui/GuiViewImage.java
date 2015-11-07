@@ -1,5 +1,6 @@
 package latmod.ftbu.mod.client.gui;
 
+import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.client.TextureCoords;
 import latmod.ftbu.util.gui.*;
 import net.minecraft.client.gui.GuiScreen;

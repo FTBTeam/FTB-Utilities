@@ -1,13 +1,12 @@
 package latmod.ftbu.mod.client.gui.friends;
 
+import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.client.*;
 import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.api.client.EventPlayerAction;
-import latmod.ftbu.mod.client.gui.GuiClientConfig;
-import latmod.ftbu.mod.client.gui.minimap.GuiMinimap;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.util.client.FTBULang;
-import latmod.ftbu.util.gui.GuiIcons;
+import latmod.ftbu.util.gui.GuiLM;
 import latmod.ftbu.world.*;
 import latmod.lib.FastList;
 
@@ -23,43 +22,11 @@ public abstract class PlayerAction
 	
 	public void addMouseOverText(FastList<String> l) { }
 	
-	// Self //
-	
-	public static final PlayerAction settings = new PlayerAction(GuiIcons.settings)
+	public final void render(int ax, int ay, double z)
 	{
-		public void onClicked(LMPlayerClient p)
-		{ FTBLibClient.mc.displayGuiScreen(new GuiClientConfig(null)); }
-		
-		public String getTitle()
-		{ return FTBULang.client_config(); }
-	};
-	
-	public static final PlayerAction server_info = new PlayerAction(GuiIcons.info)
-	{
-		public void onClicked(LMPlayerClient p)
-		{ ClientAction.ACTION_REQUEST_SERVER_INFO.send(p.playerID); }
-		
-		public String getTitle()
-		{ return FTBULang.Guis.button_server_info(); }
-	};
-	
-	public static final PlayerAction minimap = new PlayerAction(GuiIcons.map)
-	{
-		public void onClicked(LMPlayerClient p)
-		{ FTBLibClient.mc.displayGuiScreen(new GuiMinimap()); }
-		
-		public String getTitle()
-		{ return FTBULang.Guis.claimed_chunks(); }
-	};
-	
-	public static final PlayerAction notes = new PlayerAction(GuiIcons.notes)
-	{
-		public void onClicked(LMPlayerClient p)
-		{  }
-		
-		public String getTitle()
-		{ return FTBULang.Guis.notes(); }
-	};
+		FTBLibClient.setTexture(icon.texture);
+		GuiLM.drawTexturedRectD(ax, ay, z, 16, 16, icon.minU, icon.minV, icon.maxU, icon.maxV);
+	}
 	
 	// Other players //
 	
@@ -115,14 +82,15 @@ public abstract class PlayerAction
 		
 		if(p.equalsPlayer(o))
 		{
-			list.add(settings);
-			list.add(server_info);
-			list.add(minimap);
+			list.add(PlayerSelfAction.settings);
+			list.add(PlayerSelfAction.guide);
+			list.add(PlayerSelfAction.info);
+			list.add(PlayerSelfAction.claims);
 			
 			if(FTBLibFinals.DEV)
 			{
-				//list.add(mail);
-				//list.add(notes);
+				//list.add(PlayerSelfAction.mail);
+				list.add(PlayerSelfAction.notes);
 			}
 		}
 		else

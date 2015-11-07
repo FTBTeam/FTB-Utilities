@@ -30,6 +30,7 @@ public class Claims
 		chunks.clear();
 		
 		NBTTagCompound tag = serverData.getCompoundTag("Claims");
+		
 		NBTTagList list = tag.getTagList("Chunks", LMNBTUtils.INT_ARRAY);
 		
 		if(list != null) for(int i = 0; i < list.tagCount(); i++)
@@ -44,9 +45,10 @@ public class Claims
 		NBTTagCompound tag = new NBTTagCompound();
 		
 		NBTTagList list = new NBTTagList();
-		for(int i = 0; i < chunks.size(); i++)
+		
+		for(int j = 0; j < chunks.size(); j++)
 		{
-			ClaimedChunk c = chunks.get(i);
+			ClaimedChunk c = chunks.get(j);
 			list.appendTag(new NBTTagIntArray(new int[] { c.dim, c.posX, c.posZ }));
 		}
 		
@@ -69,7 +71,7 @@ public class Claims
 	{
 		int max = owner.getMaxClaimPower();
 		if(max == 0) return;
-		if(chunks.size() >= max) return;
+		if(getClaimedChunks() >= max) return;
 		
 		ChunkType t = ChunkType.get(dim, cx, cz);
 		if(!t.isClaimed() && t.canClaimChunk(owner))
@@ -80,16 +82,32 @@ public class Claims
 	
 	public void unclaim(int dim, int cx, int cz, boolean admin)
 	{
-		ChunkType t = ChunkType.get(dim, cx, cz);
-		if(t.isClaimed() && t.canUnclaimChunk(owner, admin))
-			chunks.remove(new ClaimedChunk(this, dim, cx, cz));
-		//if(chunks.isEmpty()) return;
-		
-		owner.sendUpdate();
+		if(chunks.isEmpty()) return;
+		//chunks.clear();
+		if(chunks.remove(new ClaimedChunk(this, dim, cx, cz)))
+			owner.sendUpdate();
+	}
+	
+	public void unclaimAll(int dim)
+	{
+		if(chunksMap.isEmpty()) return;
+		if(chunksMap.remove(dim))
+			owner.sendUpdate();
+	}
+	
+	public void unclaimAll()
+	{
+		if(chunksMap.clear())
+			owner.sendUpdate();
 	}
 	
 	public int getClaimedChunks()
-	{ return chunks.size(); }
+	{
+		int s = 0;
+		for(int i = 0; i < chunksMap.size(); i++)
+			s += chunksMap.values.get(i).size();
+		return s;
+	}
 	
 	// Static //
 	

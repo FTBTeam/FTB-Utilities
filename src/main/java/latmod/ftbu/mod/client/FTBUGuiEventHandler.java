@@ -5,24 +5,18 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.*;
-import latmod.ftbu.api.guide.ClientGuideFile;
+import latmod.ftbu.api.client.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.GuiClientConfig;
-import latmod.ftbu.mod.client.gui.friends.GuiFriends;
-import latmod.ftbu.mod.client.gui.guide.GuiGuide;
-import latmod.ftbu.mod.client.gui.minimap.GuiMinimap;
-import latmod.ftbu.net.ClientAction;
+import latmod.ftbu.mod.client.gui.friends.*;
 import latmod.ftbu.util.client.*;
-import latmod.ftbu.util.gui.*;
+import latmod.ftbu.util.gui.GuiLM;
+import latmod.ftbu.world.*;
 import latmod.lib.FastList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.*;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiScreenEvent;
 
 @SideOnly(Side.CLIENT)
@@ -30,13 +24,39 @@ public class FTBUGuiEventHandler
 {
 	public static final FTBUGuiEventHandler instance = new FTBUGuiEventHandler();
 	public static final TextureCoords tex_friends = new TextureCoords(FTBU.mod.getLocation("textures/gui/friendsbutton.png"), 0, 0, 256, 256, 256, 256);
-	private static final FastList<Button> buttons = new FastList<Button>();
+	private static final FastList<PlayerSelfAction> buttons = new FastList<PlayerSelfAction>();
 	
-	private static final int BUTTON_FRIENDS = 24285;
-	private static final int BUTTON_SETTINGS = 24286;
-	private static final int BUTTON_GUIDE = 24287;
-	private static final int BUTTON_CLAIMS = 24288;
-	private static final int BUTTON_INFO = 24289;
+	private static int nextID = 24280;
+	public static final int getNextButtonID()
+	{ return ++nextID; }
+	
+	public static final PlayerSelfAction friends = new PlayerSelfAction(tex_friends)
+	{
+		public void onClicked(LMPlayerClient p)
+		{
+			GuiFriends g = new GuiFriends(FTBLibClient.mc.currentScreen);
+			g.playClickSound();
+			FTBLibClient.mc.displayGuiScreen(g);
+		}
+		
+		public String getTitle()
+		{ return "FriendsGUI"; }
+	};
+	
+	public static final ClientConfig config_buttons = new ClientConfig("sidebar_buttons");
+	public static final ClientConfigProperty button_guide = new ClientConfigProperty("button_guide", true);
+	public static final ClientConfigProperty button_info = new ClientConfigProperty("button_info", true);
+	public static final ClientConfigProperty button_claims = new ClientConfigProperty("button_claims", true);
+	public static final ClientConfigProperty button_settings = new ClientConfigProperty("button_settings", true);
+	
+	public static void init()
+	{
+		config_buttons.add(button_guide);
+		config_buttons.add(button_info);
+		config_buttons.add(button_claims);
+		config_buttons.add(button_settings);
+		ClientConfigRegistry.add(config_buttons);
+	}
 	
 	@SuppressWarnings("unchecked")
 	@SubscribeEvent
@@ -47,7 +67,7 @@ public class FTBUGuiEventHandler
 		if(e.gui instanceof GuiOptions)
 		{
 			if(FTBUClient.optionsButton.getB())
-				e.buttonList.add(new GuiButton(BUTTON_SETTINGS, e.gui.width / 2 - 155, e.gui.height / 6 + 48 - 6, 150, 20, "[FTBU] " + FTBULang.client_config()));
+				e.buttonList.add(new GuiButton(PlayerSelfAction.settings.ID, e.gui.width / 2 - 155, e.gui.height / 6 + 48 - 6, 150, 20, "[FTBU] " + FTBULang.client_config()));
 		}
 		else if(e.gui instanceof GuiInventory || e.gui instanceof GuiContainerCreative)
 		{
@@ -71,55 +91,11 @@ public class FTBUGuiEventHandler
 			
 			buttons.clear();
 			
-			buttons.add(new Button(BUTTON_FRIENDS, tex_friends)
-			{
-				public void onPressed(GuiContainer g0)
-				{
-					GuiFriends g = new GuiFriends(g0);
-					g.playClickSound();
-					e.gui.mc.displayGuiScreen(g);
-				}
-			});
-			
-			buttons.add(new Button(BUTTON_GUIDE, null)
-			{
-				private RenderItem itemRender = new RenderItem();
-				private ItemStack itemToRender = new ItemStack(Items.book);
-				
-				public void onPressed(GuiContainer g0)
-				{
-					GuiGuide g = new GuiGuide(null, ClientGuideFile.instance.main);
-					g.playClickSound();
-					e.gui.mc.displayGuiScreen(g);
-				}
-				
-				public void render(int ax, int ay, double z)
-				{
-					FTBLibClient.setTexture(TextureMap.locationItemsTexture);
-					
-					itemRender.zLevel = 200F;
-					LMRenderHelper.renderGuiItem(itemToRender, itemRender, FTBLibClient.mc.fontRenderer, ax, ay);
-					itemRender.zLevel = 0F;
-				}
-			});
-			
-			buttons.add(new Button(BUTTON_CLAIMS, GuiIcons.map)
-			{
-				public void onPressed(GuiContainer g0)
-				{ FTBLibClient.mc.displayGuiScreen(new GuiMinimap()); }
-			});
-			
-			buttons.add(new Button(BUTTON_SETTINGS, GuiIcons.settings)
-			{
-				public void onPressed(GuiContainer g0)
-				{ e.gui.mc.displayGuiScreen(new GuiClientConfig(g0)); }
-			});
-			
-			buttons.add(new Button(BUTTON_INFO, GuiIcons.info)
-			{
-				public void onPressed(GuiContainer g0)
-				{ ClientAction.ACTION_REQUEST_SERVER_INFO.send(0); }
-			});
+			buttons.add(friends);
+			if(button_guide.getB()) buttons.add(PlayerSelfAction.guide);
+			if(button_info.getB()) buttons.add(PlayerSelfAction.info);
+			if(button_claims.getB()) buttons.add(PlayerSelfAction.claims);
+			if(button_settings.getB()) buttons.add(PlayerSelfAction.settings);
 			
 			for(int i = 0; i < buttons.size(); i++)
 			{
@@ -134,7 +110,7 @@ public class FTBUGuiEventHandler
 	@SubscribeEvent
 	public void guiActionEvent(GuiScreenEvent.ActionPerformedEvent.Post e)
 	{
-		if(e.button.id == BUTTON_SETTINGS)
+		if(e.button.id == PlayerSelfAction.settings.ID)
 			e.gui.mc.displayGuiScreen(new GuiClientConfig(e.gui));
 		else if(buttons.contains(e.button.id))
 		{
@@ -142,18 +118,18 @@ public class FTBUGuiEventHandler
 			
 			if(creativeContainer == null || creativeContainer.func_147056_g() == CreativeTabs.tabInventory.getTabIndex())
 			{
-				Button b = buttons.getObj(e.button.id);
-				b.onPressed((GuiContainer)e.gui);
+				PlayerSelfAction b = buttons.getObj(e.button.id);
+				b.onClicked(LMWorldClient.inst.getClientPlayer());
 			}
 		}
 	}
 	
 	private static class ButtonInvLM extends GuiButton
 	{
-		public final Button button;
+		public final PlayerSelfAction button;
 		private final GuiContainerCreative creativeContainer;
 		
-		public ButtonInvLM(Button b, GuiScreen g, int x, int y)
+		public ButtonInvLM(PlayerSelfAction b, GuiScreen g, int x, int y)
 		{
 			super(b.ID, x, y, 16, 16, "");
 			button = b;
@@ -175,7 +151,7 @@ public class FTBUGuiEventHandler
 			if(mx >= xPosition && my >= yPosition && mx < xPosition + width && my < yPosition + height)
 				GuiLM.drawBlankRect(xPosition, yPosition, 0D, width, height, 0x55FFFFFF);
 			
-			if(button.ID == BUTTON_FRIENDS && !ClientNotifications.Perm.list.isEmpty())
+			if(button.ID == friends.ID && !ClientNotifications.Perm.list.isEmpty())
 			{
 				String n = String.valueOf(ClientNotifications.Perm.list.size());
 				int nw = mc.fontRenderer.getStringWidth(n);
@@ -188,28 +164,5 @@ public class FTBUGuiEventHandler
 			
 			GL11.glPopAttrib();
 		}
-	}
-	
-	public abstract static class Button
-	{
-		public final int ID;
-		public final TextureCoords tex;
-		
-		public Button(int i, TextureCoords tc)
-		{ ID = i; tex = tc; }
-		
-		public int hashCode()
-		{ return ID; }
-		
-		public void render(int ax, int ay, double z)
-		{
-			FTBLibClient.setTexture(tex.texture);
-			GuiLM.drawTexturedRectD(ax, ay, z, 16, 16, tex.minU, tex.minV, tex.maxU, tex.maxV);
-		}
-		
-		public boolean equals(Object o)
-		{ return o == this || o.hashCode() == hashCode(); }
-		
-		public abstract void onPressed(GuiContainer g0);
 	}
 }

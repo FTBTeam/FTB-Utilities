@@ -13,10 +13,17 @@ public class CmdAdmin extends CommandSubLM
 		add(new CmdAdminReload("reload"));
 		add(new CmdAdminSetItemName("setitemname"));
 		if(FTBUConfigCmd.admin_invsee.get()) add(new CmdAdminInvsee("invsee"));
-		if(FTBUConfigCmd.admin_warps.get()) add(new CmdAdminSetWarp("setwarp"));
-		if(FTBUConfigCmd.admin_warps.get()) add(new CmdAdminDelWarp("delwarp"));
+		if(FTBUConfigCmd.admin_warps.get())
+		{
+			add(new CmdAdminSetWarp("setwarp"));
+			add(new CmdAdminDelWarp("delwarp"));
+		}
 		if(FTBUConfigCmd.admin_world_border.get()) add(new CmdAdminWorldBorder("worldborder"));
-		if(FTBUConfigCmd.admin_unclaim.get()) add(new CmdAdminUnclaim("unclaim"));
+		if(FTBUConfigCmd.admin_unclaim.get())
+		{
+			add(new CmdAdminUnclaim("unclaim"));
+			add(new CmdAdminUnclaimAll("unclaim_all"));
+		}
 		if(FTBUConfigCmd.admin_backup.get()) add(new CmdAdminBackup("backup"));
 		if(FTBUConfigCmd.admin_edit_config.get()) add(new CmdAdminConfig("config"));
 	}

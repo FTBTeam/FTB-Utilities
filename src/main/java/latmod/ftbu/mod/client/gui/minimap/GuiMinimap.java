@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import org.lwjgl.opengl.*;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.client.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
@@ -15,6 +16,7 @@ import latmod.ftbu.util.client.*;
 import latmod.ftbu.util.gui.*;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -22,9 +24,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
-public class GuiMinimap extends GuiLM // implements IClientActionGui
+public class GuiMinimap extends GuiLM implements GuiYesNoCallback // implements IClientActionGui
 {
-	public static final int tiles = 16;
+	public static final int tiles_tex = 16;
+	public static final int tiles_gui = 15;
+	public static final double UV = (double)tiles_gui / (double)tiles_tex;
 	public static final ResourceLocation tex_area = FTBU.mod.getLocation("textures/map/minimap_area.png");
 	public static final ResourceLocation tex_map_entity = FTBU.mod.getLocation("textures/map/entity.png");
 	public static final TextureCoords[][][][] tex_area_coords = new TextureCoords[2][2][2][2];
@@ -58,22 +62,22 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 	public final LMPlayerClient playerLM;
 	public final int currentDim, startX, startY;
 	
-	public final ButtonLM buttonRefresh, buttonClose, buttonBlockLevel;
+	public final ButtonLM buttonRefresh, buttonClose, buttonBlockLevel, buttonUnclaimAll;
 	public final ItemButtonLM buttonExplosions;
 	public final MapButton mapButtons[];
 	public final PanelLM panelButtons;
 	
-	public ThreadReloadChunk thread = null;
+	public ThreadReloadArea thread = null;
 	
 	public GuiMinimap()
 	{
 		super(null, null);
 		hideNEI = true;
-		xSize = ySize = tiles * 16;
+		xSize = ySize = tiles_gui * 16;
 		
 		playerLM = LMWorldClient.inst.getClientPlayer();
-		startX = MathHelperLM.chunk(mc.thePlayer.posX - tiles * 8D);
-		startY = MathHelperLM.chunk(mc.thePlayer.posZ - tiles * 8D);
+		startX = MathHelperLM.chunk(mc.thePlayer.posX) - (int)(tiles_gui * 0.5D);
+		startY = MathHelperLM.chunk(mc.thePlayer.posZ) - (int)(tiles_gui * 0.5D);
 		currentDim = LatCoreMCClient.getDim();
 		
 		buttonClose = new ButtonLM(this, 0, 0, 16, 16)
@@ -89,9 +93,9 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 		{
 			public void onButtonPressed(int b)
 			{
-				thread = new ThreadReloadChunk(mc.theWorld, GuiMinimap.this);
+				thread = new ThreadReloadArea(mc.theWorld, GuiMinimap.this);
 				thread.start();
-				new MessageAreaRequest(startX, startY, tiles, tiles).sendToServer();
+				new MessageAreaRequest(startX, startY, tiles_gui, tiles_gui).sendToServer();
 				gui.playClickSound();
 			}
 		};
@@ -136,6 +140,22 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 		
 		buttonBlockLevel.title = FTBU.mod.translateClient("button.block_security");
 		
+		buttonUnclaimAll = new ButtonLM(this, 0, 64, 16, 16)
+		{
+			public void onButtonPressed(int b)
+			{
+				gui.playClickSound();
+				String s = isShiftKeyDown() ? FTBU.mod.translateClient("button.claims_unclaim_all_q") : FTBU.mod.translateClient("button.claims_unclaim_all_dim_q", gui.mc.theWorld.provider.getDimensionName());
+				mc.displayGuiScreen(new GuiYesNo(GuiMinimap.this, s, "", isShiftKeyDown() ? 1 : 0));
+			}
+			
+			public void addMouseOverText(FastList<String> l)
+			{
+				if(isShiftKeyDown()) l.add(FTBU.mod.translateClient("button.claims_unclaim_all"));
+				else l.add(FTBU.mod.translateClient("button.claims_unclaim_all_dim", gui.mc.theWorld.provider.getDimensionName()));
+			}
+		};
+		
 		panelButtons = new PanelLM(this, 0, 0, 16, 0)
 		{
 			public void addWidgets()
@@ -144,6 +164,7 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 				add(buttonRefresh);
 				add(buttonExplosions);
 				add(buttonBlockLevel);
+				add(buttonUnclaimAll);
 				height = widgets.size() * 16;
 			}
 			
@@ -154,7 +175,7 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 			{ return 0; }
 		};
 		
-		mapButtons = new MapButton[tiles * tiles];
+		mapButtons = new MapButton[tiles_gui * tiles_gui];
 		for(int i = 0; i < mapButtons.length; i++)
 			mapButtons[i] = new MapButton(this, 0, 0, i);
 	}
@@ -180,7 +201,7 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 			if(textureID == -1)
 			{
 				textureID = TextureUtil.glGenTextures();
-				new MessageAreaRequest(startX, startY, tiles, tiles).sendToServer();
+				new MessageAreaRequest(startX, startY, tiles_gui, tiles_gui).sendToServer();
 			}
 			
 			//boolean hasBlur = false;
@@ -191,7 +212,7 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, filter);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, tiles * 16, tiles * 16, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, pixelBuffer);
+			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, tiles_tex * 16, tiles_tex * 16, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, pixelBuffer);
 			pixelBuffer = null;
 			thread = null;
 		}
@@ -202,7 +223,7 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 		if(textureID != -1 && thread == null)
 		{
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
-			drawTexturedRectD(guiLeft, guiTop, zLevel, tiles * 16, tiles * 16, 0D, 0D, 1D, 1D);
+			drawTexturedRectD(guiLeft, guiTop, zLevel, tiles_gui * 16, tiles_gui * 16, 0D, 0D, UV, UV);
 		}
 		
 		super.drawBackground();
@@ -221,6 +242,7 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 		buttonClose.render(GuiIcons.accept);
 		buttonExplosions.renderWidget();
 		buttonBlockLevel.render(playerLM.settings.blocks.getIcon());
+		buttonUnclaimAll.render(GuiIcons.remove);
 		
 		if(!playerLM.settings.explosions)
 		{
@@ -252,8 +274,8 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 	{
 		FTBLibClient.setTexture(tex_area);
 		
-		for(int y = 0; y < tiles; y++)
-		for(int x = 0; x < tiles; x++)
+		for(int y = 0; y < tiles_gui; y++)
+		for(int x = 0; x < tiles_gui; x++)
 		{
 			int cx = x + startX;
 			int cy = y + startY;
@@ -286,7 +308,7 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 					int cx = MathHelperLM.chunk(ep.posX);
 					int cy = MathHelperLM.chunk(ep.posZ);
 					
-					if(cx >= startX && cy >= startY && cx < startX + tiles && cy < startY + tiles)
+					if(cx >= startX && cy >= startY && cx < startX + tiles_gui && cy < startY + tiles_gui)
 					{
 						double x = ((cx - startX) * 16D + MathHelperLM.wrap(ep.posX, 16D));
 						double y = ((cy - startY) * 16D + MathHelperLM.wrap(ep.posZ, 16D));
@@ -310,6 +332,18 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 		}
 	}
 	
+	public void confirmClicked(boolean set, int id)
+	{
+		if(set)
+		{
+			new MessageClaimChunk(GuiMinimap.this.currentDim, 0, 0, (id == 1) ? MessageClaimChunk.ID_UNCLAIM_ALL_DIMS : MessageClaimChunk.ID_UNCLAIM_ALL).sendToServer();
+			new MessageAreaRequest(startX, startY, tiles_gui, tiles_gui).sendToServer();
+		}
+		
+		mc.displayGuiScreen(this);
+		refreshWidgets();
+	}
+	
 	public static class MapButton extends ButtonLM
 	{
 		public final GuiMinimap gui;
@@ -319,16 +353,16 @@ public class GuiMinimap extends GuiLM // implements IClientActionGui
 		{
 			super(g, x, y, 16, 16);
 			gui = g;
-			posX += (i % tiles) * width;
-			posY += (i / tiles) * height;
-			chunkX = g.startX + (i % tiles);
-			chunkY = g.startY + (i / tiles);
+			posX += (i % tiles_gui) * width;
+			posY += (i / tiles_gui) * height;
+			chunkX = g.startX + (i % tiles_gui);
+			chunkY = g.startY + (i / tiles_gui);
 		}
 		
 		public void onButtonPressed(int b)
 		{
 			if(gui.panelButtons.mouseOver()) return;
-			new MessageClaimChunk(gui.currentDim, chunkX, chunkY, b == 0).sendToServer();
+			new MessageClaimChunk(gui.currentDim, chunkX, chunkY, (b == 0) ? MessageClaimChunk.ID_CLAIM : MessageClaimChunk.ID_UNCLAIM).sendToServer();
 			gui.playClickSound();
 		}
 		

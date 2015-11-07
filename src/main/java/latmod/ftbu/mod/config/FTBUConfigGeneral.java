@@ -5,10 +5,9 @@ import ftb.lib.api.config.ConfigSyncRegistry;
 import latmod.ftbu.api.guide.GuideInfo;
 import latmod.lib.FastList;
 import latmod.lib.config.*;
-import latmod.lib.util.*;
+import latmod.lib.util.FloatBounds;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.*;
 
 public class FTBUConfigGeneral
 {
@@ -26,17 +25,8 @@ public class FTBUConfigGeneral
 	@GuideInfo(info = "If set to false, players won't be able to attack each other in spawn area.", def = "true")
 	public static final ConfigEntryBool spawnPVP = new ConfigEntryBool("spawnPVP", true);
 	
-	//@GuideInfo(info = "Right clicking during daytime sets bed spawn.", def = "true")
-	//public static final ConfigEntryBool daytimeBedSpawn = new ConfigEntryBool("daytimeBedSpawn", true);
-	
 	@GuideInfo(info = "Entity classes that are banned from world. They will not spawn and existing ones will be destroyed.", def = "Blank")
 	public static final ConfigEntryStringArray blockedEntities = new ConfigEntryStringArray("blockedEntities", new String[0]);
-	
-	@GuideInfo(info = "0 - Disabled, 1 - All enabled, 2 - Only text enabled (no items)", def = "1")
-	public static final ConfigEntryInt mail = new ConfigEntryInt("configInfoGuide", new IntBounds(1, 0, 2));
-	
-	//@GuideInfo(info = "Items that will be banned (recipe removed).", def = "Blank")
-	//public static final ConfigEntryStringArray blockedItems = new ConfigEntryStringArray("blockedItems", new String[0]);
 	
 	public static void load(ConfigFile f)
 	{
@@ -44,15 +34,12 @@ public class FTBUConfigGeneral
 		f.add(group);
 		
 		ConfigSyncRegistry.add(allowCreativeInteractSecure);
-		ConfigSyncRegistry.add(mail);
-		//ConfigSyncRegistry.add(blockedItems);
 	}
 	
 	public static boolean allowCreativeInteractSecure(EntityPlayer ep)
 	{ return ep != null && allowCreativeInteractSecure.get() && ep.capabilities.isCreativeMode/* && !(ep instanceof FakePlayer)*/; }
 	
 	private static final FastList<Class<?>> blockedEntitiesL = new FastList<Class<?>>();
-	//private static final FastList<ItemStack> blockedItemsL = new FastList<ItemStack>();
 	
 	public static void onReloaded(Side side)
 	{
@@ -108,25 +95,5 @@ public class FTBUConfigGeneral
 		}
 		
 		return false;
-	}
-	
-	public static boolean isItemBanned(ItemStack is)
-	{ return is != null && isItemBanned(is.getItem(), is.getItemDamage()); }
-	
-	public static boolean isItemBanned(Item item, int dmg)
-	{
-		return false;
-		/*
-		if(item == null) return false;
-		
-		for(int i = 0; i < blockedItemsL.size(); i++)
-		{
-			ItemStack is = blockedItemsL.get(i);
-			if((is.getItemDamage() == dmg || is.getItemDamage() == -1) && is.getItem() == item)
-				return true;
-		}
-		
-		return false;
-		*/
 	}
 }

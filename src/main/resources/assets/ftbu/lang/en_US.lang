@@ -63,8 +63,8 @@ config.property.sort_friends_az=Sort Friends A-Z
 
 config.group.sidebar_buttons=Sidebar Buttons
 config.property.button_guide=Guide
-config.property.button_claims=Claimed Chunks
 config.property.button_info=Server Info
+config.property.button_claims=Claimed Chunks
 config.property.button_settings=Client Settings
 
 #Misc
@@ -86,17 +86,18 @@ ftbu:cmd.rules=[Click here to open rules]
 ftbu:cmd.spawn_tp=Teleported to spawn
 ftbu:label.mail_from=Sent from: %s
 ftbu:label.mail_to=Sending to: %s
-ftbu:button.mail_items=Attach Items
 ftbu:button.mail_send=Send
+ftbu:button.claims_unclaim_all=Unclaim all chunks
+ftbu:button.claims_unclaim_all_dim=Unclaim all chunks in %s
+ftbu:button.claims_unclaim_all_q=Unclaim all chunks?
+ftbu:button.claims_unclaim_all_dim_q=Unclaim all chunks in %s?
 
 ftbu:top.title=Server Tops
-ftbu:top.age=First Seen
+ftbu:top.first_joined=First Seen
 ftbu:top.last_seen=Last Seen
 ftbu:top.time_played=Time Played
 ftbu:top.deaths=Deaths
 ftbu:top.deaths_ph=Deaths per hour
-ftbu:top.blocks_mined=Blocks mined
-ftbu:top.entities_killed=Entities killed
 
 #Security Mode
 ftbu:security=Security

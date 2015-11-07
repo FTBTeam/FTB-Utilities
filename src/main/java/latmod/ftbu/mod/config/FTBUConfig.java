@@ -11,7 +11,6 @@ import latmod.lib.config.ConfigFile;
 public class FTBUConfig // FTBU
 {
 	private static ConfigFile configFile;
-	private static ConfigFile configFileModpack;
 	
 	public static void load()
 	{
@@ -21,14 +20,9 @@ public class FTBUConfig // FTBU
 		FTBUConfigBackups.load(configFile);
 		FTBUConfigClaims.load(configFile);
 		FTBUConfigCmd.load(configFile);
+		FTBUConfigTops.load(configFile);
 		ConfigListRegistry.add(configFile);
 		configFile.load();
-	}
-	
-	public static void save()
-	{
-		configFile.save();
-		configFileModpack.save();
 	}
 	
 	public static void onGuideEvent(ServerGuideFile file)
@@ -37,6 +31,7 @@ public class FTBUConfig // FTBU
 		addGuideGroup(file, "Login", FTBUConfigLogin.class);
 		addGuideGroup(file, "Backups", FTBUConfigBackups.class);
 		addGuideGroup(file, "Claims", FTBUConfigClaims.class);
+		addGuideGroup(file, "Commands", FTBUConfigCmd.class);
 	}
 	
 	private static void addGuideGroup(ServerGuideFile file, String s, Class<?> c)

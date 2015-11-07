@@ -6,17 +6,15 @@ import java.util.UUID;
 import com.mojang.authlib.GameProfile;
 
 import ftb.lib.*;
-import ftb.lib.item.*;
+import ftb.lib.item.StringIDInvLoader;
 import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.cmd.*;
-import latmod.ftbu.mod.FTBUGuiHandler;
 import latmod.ftbu.notification.Notification;
 import latmod.ftbu.util.LatCoreMC;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 
@@ -27,7 +25,7 @@ public class CmdAdminPlayer extends CommandLM
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
-		if(i == 0) return new String[] { "delete", "saveinv", "loadinv", "notify", "displayitem" };
+		if(i == 0) return new String[] { "delete", "saveinv", "loadinv", "notify", /*"displayitem"*/ };
 		return null;
 	}
 	
@@ -161,6 +159,7 @@ public class CmdAdminPlayer extends CommandLM
 			
 			return error(new ChatComponentText("Invalid notification: " + s));
 		}
+		/* TODO: Reimplement me
 		else if(args[0].equals("displayitem"))
 		{
 			if(!p.isOnline()) return mustBeOnline;
@@ -177,7 +176,7 @@ public class CmdAdminPlayer extends CommandLM
 			}
 			
 			return error(new ChatComponentText("Invalid item!"));
-		}
+		}*/
 		
 		return null;
 	}

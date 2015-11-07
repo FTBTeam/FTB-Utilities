@@ -1,8 +1,8 @@
 package latmod.ftbu.util;
 
+import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.client.TextureCoords;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.util.gui.GuiIcons;
 import net.minecraft.util.StatCollector;
 
 public enum LMSecurityLevel

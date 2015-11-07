@@ -46,7 +46,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		{ ClientAction.ACTION_CHAT_LINKS.send(LMWorldClient.inst.getClientPlayer().settings.chatLinks ? 0 : 1); }
 	};
 	
-	public static final ClientConfigProperty playerOptionsShortcut = new ClientConfigProperty("player_options_shortcut", true);
+	public static final ClientConfigProperty playerOptionsShortcut = new ClientConfigProperty("player_options_shortcut", false);
 	public static final ClientConfigProperty sortFriendsAZ = new ClientConfigProperty("sort_friends_az", false);
 	
 	public static final ClientConfig miscConfig = new ClientConfig("ftbu_misc").setHidden();
@@ -71,6 +71,8 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		miscConfig.add(hideArmorFG);
 		miscConfig.add(openHSB);
 		ClientConfigRegistry.add(miscConfig);
+		
+		FTBUGuiEventHandler.init();
 		
 		ClientCommandHandler.instance.registerCommand(new CmdMath());
 	}

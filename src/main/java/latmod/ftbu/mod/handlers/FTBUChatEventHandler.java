@@ -5,7 +5,7 @@ import ftb.lib.FTBLib;
 import latmod.ftbu.api.ServerTickCallback;
 import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.world.*;
-import latmod.lib.*;
+import latmod.lib.FastList;
 import net.minecraft.event.*;
 import net.minecraft.util.*;
 

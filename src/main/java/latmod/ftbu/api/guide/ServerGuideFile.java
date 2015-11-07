@@ -18,6 +18,7 @@ public class ServerGuideFile extends GuideFile
 	
 	private FastList<LMPlayerServer> players = null;
 	private LMPlayerServer self;
+	private boolean isOP;
 	private GuideCategory categoryTops = null;
 	private GuideCategory categoryOther = null;
 	
@@ -28,6 +29,7 @@ public class ServerGuideFile extends GuideFile
 	public void reload(LMPlayerServer pself)
 	{
 		if((self = pself) == null) return;
+		isOP = self.isOP();
 		
 		main.clear();
 		
@@ -68,17 +70,17 @@ public class ServerGuideFile extends GuideFile
 		
 		FTBUConfig.onGuideEvent(this);
 		
-		addTop(Top.age);
-		addTop(Top.deaths);
-		addTop(Top.deathsPerHour);
-		addTop(Top.lastSeen);
-		addTop(Top.timePlayed);
+		if(FTBUConfigTops.first_joined.get()) addTop(Top.first_joined);
+		if(FTBUConfigTops.deaths.get()) addTop(Top.deaths);
+		if(FTBUConfigTops.deaths_ph.get()) addTop(Top.deaths_ph);
+		if(FTBUConfigTops.last_seen.get()) addTop(Top.last_seen);
+		if(FTBUConfigTops.time_played.get()) addTop(Top.time_played);
 		
-		new EventFTBUServerGuide(this, self).post();
+		new EventFTBUServerGuide(this, self, isOP).post();
 		
 		categoryTops.subcategories.sort(null);
 		
-		if(self.isOP())
+		if(isOP)
 		{
 			GuideCategory list = categoryOther.getSub(new ChatComponentText("Entities"));
 			
@@ -135,6 +137,8 @@ public class ServerGuideFile extends GuideFile
 	
 	public void addConfigFromClass(String mod, String id, Class<?> c)
 	{
+		if(!isOP) return;
+		
 		try
 		{
 			GuideCategory category = getMod(mod).getSub(new ChatComponentText("Config")).getSub(new ChatComponentText(id));

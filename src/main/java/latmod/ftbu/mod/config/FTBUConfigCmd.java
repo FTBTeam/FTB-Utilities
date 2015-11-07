@@ -8,7 +8,9 @@ public class FTBUConfigCmd
 	public static final ConfigGroup group = new ConfigGroup("commands");
 	
 	@GuideInfo(info = "Command name for admin command.", def = "admin")
-	public static final ConfigEntryString commandNameAdmin = new ConfigEntryString("commandNameAdmin", "admin");
+	public static final ConfigEntryString commandNameAdmin = new ConfigEntryString("name_cmd_admin", "admin");
+	
+	@GuideInfo(info = "If true, then it deletes last death location after using /back.", def = "true")
 	public static final ConfigEntryBool back_only_once = new ConfigEntryBool("back_only_once", true);
 	
 	public static final ConfigEntryBool back = new ConfigEntryBool("back", true);

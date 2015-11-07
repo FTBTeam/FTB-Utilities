@@ -82,32 +82,39 @@ public class Claims
 	
 	public void unclaim(int dim, int cx, int cz, boolean admin)
 	{
-		if(chunks.isEmpty()) return;
-		//chunks.clear();
-		if(chunks.remove(new ClaimedChunk(this, dim, cx, cz)))
+		if(!chunks.isEmpty() && chunks.remove(new ClaimedChunk(this, dim, cx, cz)))
 			owner.sendUpdate();
 	}
 	
 	public void unclaimAll(int dim)
 	{
-		if(chunksMap.isEmpty()) return;
-		if(chunksMap.remove(dim))
+		if(chunks.isEmpty()) return;
+		
+		FastList<ClaimedChunk> l = new FastList<ClaimedChunk>();
+		
+		for(int i = 0; i < chunks.size(); i++)
+		{
+			ClaimedChunk c = chunks.get(i);
+			if(c.dim != dim) l.add(c);
+		}
+		
+		if(l.size() != getClaimedChunks())
+		{
+			chunks.clear();
+			chunks.addAll(l);
 			owner.sendUpdate();
+		}
 	}
 	
 	public void unclaimAll()
 	{
-		if(chunksMap.clear())
-			owner.sendUpdate();
+		int i = chunks.size();
+		chunks.clear();
+		if(i > 0) owner.sendUpdate();
 	}
 	
 	public int getClaimedChunks()
-	{
-		int s = 0;
-		for(int i = 0; i < chunksMap.size(); i++)
-			s += chunksMap.values.get(i).size();
-		return s;
-	}
+	{ return chunks.size(); }
 	
 	// Static //
 	

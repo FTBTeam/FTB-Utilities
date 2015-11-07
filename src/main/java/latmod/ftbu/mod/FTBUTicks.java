@@ -66,13 +66,7 @@ public class FTBUTicks
 				
 				String msg = null;
 				
-				if(secondsLeft <= 0)
-				{
-					new CommandSaveAll().processCommand(BroadcastSender.inst, new String[] { "flush" });
-					FTBLib.getServer().initiateShutdown();
-					return;
-				}
-				else if(secondsLeft <= 10) msg = secondsLeft + " Seconds";
+				if(secondsLeft <= 10) msg = secondsLeft + " Seconds";
 				else if(secondsLeft == 30) msg = "30 Seconds";
 				else if(secondsLeft == 60) msg = "1 Minute";
 				else if(secondsLeft == 300) msg = "5 Minutes";
@@ -81,7 +75,14 @@ public class FTBUTicks
 				if(msg != null && !lastRestartMessage.equals(msg))
 				{
 					lastRestartMessage = msg;
-					FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server will restart after " + msg);//LANG
+					
+					if(secondsLeft <= 0)
+					{
+						new CommandSaveAll().processCommand(BroadcastSender.inst, new String[] { "flush" });
+						FTBLib.getServer().initiateShutdown();
+						return;
+					}
+					else FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server will restart after " + msg);//LANG
 				}
 			}
 			

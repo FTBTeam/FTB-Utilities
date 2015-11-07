@@ -10,11 +10,11 @@ import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.net.*;
 import latmod.ftbu.notification.Notification;
 import net.minecraft.block.Block;
-import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.*;
 
 /** Made by LatvianModder */
@@ -64,18 +64,7 @@ public final class LatCoreMC // LatCoreMCClient
 	
 	public static boolean isDedicatedServer()
 	{ return FTBUTicks.isDediServer; }
-
-	public static void displayGuide(ICommandSender ics, GuideFile file) 
-	{
-		if(!FTBLib.isServer()) return;
-		
-		if(ics instanceof EntityPlayerMP)
-		{
-			new MessageDisplayGuide(file).sendTo((EntityPlayerMP)ics);
-		}
-		else
-		{
-			//TODO: Print guide file to server console
-		}
-	}
+	
+	public static void displayGuide(EntityPlayerMP ep, GuideFile file) 
+	{ if(FTBLib.isServer() && !(ep instanceof FakePlayer)) new MessageDisplayGuide(file).sendTo(ep); }
 }

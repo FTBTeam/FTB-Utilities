@@ -97,6 +97,7 @@ ftbu:button.claims_unclaim_all=Unclaim all chunks
 ftbu:button.claims_unclaim_all_dim=Unclaim all chunks in %s
 ftbu:button.claims_unclaim_all_q=Unclaim all chunks?
 ftbu:button.claims_unclaim_all_dim_q=Unclaim all chunks in %s?
+ftbu:label.claims_invalid_dim=Can't claim chunks in this dimension
 
 ftbu:top.title=Server Tops
 ftbu:top.first_joined=First Seen

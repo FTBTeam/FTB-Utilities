@@ -69,6 +69,8 @@ public class Claims
 	
 	public void claim(int dim, int cx, int cz)
 	{
+		if(FTBUConfigClaims.dimensionBlacklist.get().contains(dim)) return;
+		
 		int max = owner.getMaxClaimPower();
 		if(max == 0) return;
 		if(getClaimedChunks() >= max) return;
@@ -193,21 +195,7 @@ public class Claims
 	
 	public static boolean canInteract(UUID playerID, World w, int x, int y, int z, boolean leftClick)
 	{
-		if(leftClick)
-		{
-			String[] whitelist = FTBUConfigClaims.breakWhitelist.get();
-			
-			if(whitelist != null && whitelist.length > 0)
-			{
-				Block block = w.getBlock(x, y, z);
-				
-				String blockID = LMInvUtils.getRegName(block);
-				
-				for(int i = 0; i < whitelist.length; i++)
-					if(whitelist[i].equalsIgnoreCase(blockID)) return true;
-			}
-		}
-		
+		if(leftClick && FTBUConfigClaims.breakWhitelist.get().contains(LMInvUtils.getRegName(w.getBlock(x, y, z)))) return true;
 		ChunkType type = ChunkType.getD(w.provider.dimensionId, x, z);
 		return type.canInteract(LMWorldServer.inst.getPlayer(playerID), leftClick);
 	}

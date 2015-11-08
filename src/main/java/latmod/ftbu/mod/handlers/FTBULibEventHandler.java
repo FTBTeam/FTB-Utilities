@@ -5,6 +5,7 @@ import ftb.lib.api.*;
 import latmod.ftbu.api.guide.ClientGuideFile;
 import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
+import latmod.ftbu.world.*;
 
 public class FTBULibEventHandler
 {
@@ -15,6 +16,9 @@ public class FTBULibEventHandler
 		
 		if(FTBUConfigGeneral.restartTimer.get() > 0)
 			FTBUTicks.serverStarted();
+		
+		for(LMPlayer p : LMWorldServer.inst.players)
+			p.toPlayerMP().refreshStats();
 	}
 	
 	@SubscribeEvent

@@ -26,7 +26,7 @@ public class FTBUConfigGeneral
 	public static final ConfigEntryBool spawnPVP = new ConfigEntryBool("spawnPVP", true);
 	
 	@GuideInfo(info = "Entity classes that are banned from world. They will not spawn and existing ones will be destroyed", def = "Blank")
-	public static final ConfigEntryStringArray blockedEntities = new ConfigEntryStringArray("blockedEntities", new String[0]);
+	public static final ConfigEntryStringArray blockedEntities = new ConfigEntryStringArray("blockedEntities", new FastList<String>());
 	
 	public static void load(ConfigFile f)
 	{
@@ -43,27 +43,20 @@ public class FTBUConfigGeneral
 	
 	public static void onReloaded(Side side)
 	{
-		String[] list;
-		
 		if(side.isServer())
 		{
 			blockedEntitiesL.clear();
 			
-			list = blockedEntities.get();
-			
-			if(list != null && list.length > 0)
+			for(String s : blockedEntities.get())
 			{
-				for(String s : list)
+				try
 				{
-					try
-					{
-						Class<?> c = (Class<?>)EntityList.stringToClassMapping.get(s);
-						if(c != null && Entity.class.isAssignableFrom(c))
-							blockedEntitiesL.add(c);
-					}
-					catch(Exception e)
-					{ e.printStackTrace(); }
+					Class<?> c = (Class<?>)EntityList.stringToClassMapping.get(s);
+					if(c != null && Entity.class.isAssignableFrom(c))
+						blockedEntitiesL.add(c);
 				}
+				catch(Exception e)
+				{ e.printStackTrace(); }
 			}
 		}
 		

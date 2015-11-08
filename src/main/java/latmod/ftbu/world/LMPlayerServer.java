@@ -29,7 +29,6 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public final LMPlayerStats stats;
 	private String playerName;
 	private EntityPlayerMP entityPlayer = null;
-	private int maxClaimPower = -1;
 	public int lastChunkType = -99;
 	public final Warps homes;
 	
@@ -209,11 +208,11 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public void onPostLoaded()
 	{ new EventLMPlayerServer.DataLoaded(this).post(); }
 	
-	public int updateMaxClaimPower()
-	{ maxClaimPower = -1; return getMaxClaimPower(); }
-	
 	public int getMaxClaimPower()
 	{
+		return isOP() ? FTBUConfigClaims.maxClaimsAdmin.get() : FTBUConfigClaims.maxClaimsPlayer.get();
+		
+		/*
 		if(maxClaimPower == -1)
 		{
 			maxClaimPower = isOP() ? FTBUConfigClaims.maxClaimsAdmin.get() : FTBUConfigClaims.maxClaimsPlayer.get();
@@ -223,6 +222,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		}
 		
 		return maxClaimPower;
+		*/
 	}
 
 	public void checkNewFriends()

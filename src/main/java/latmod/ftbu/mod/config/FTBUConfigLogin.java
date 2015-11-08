@@ -19,7 +19,7 @@ public class FTBUConfigLogin
 	public static final ConfigGroup group = new ConfigGroup("login");
 	
 	@GuideInfo(info = "Message of the day. This will be displayed when player joins the server.", def = "Blank")
-	public static final ConfigEntryStringArray motd = new ConfigEntryStringArray("motd", new String[] { "Welcome to the server!" });
+	public static final ConfigEntryStringArray motd = new ConfigEntryStringArray("motd", FastList.asList("Welcome to the server!"));
 	
 	@GuideInfo(info = "Rules link you can click on. This will be displayed when player joins the server.", def = "Blank")
 	public static final ConfigEntryString rules = new ConfigEntryString("rules", "");
@@ -28,7 +28,7 @@ public class FTBUConfigLogin
 	public static final ConfigEntryString customBadges = new ConfigEntryString("customBadges", "");
 	
 	@GuideInfo(info = "Items to give player when it first joins the server. Format: StringID Size Metadata, does not support NBT yet.", def = "minecraft:apple 16 0")
-	public static final ConfigEntryStringArray startingItems = new ConfigEntryStringArray("startingItems", new String[] { "minecraft:apple 16 0" });
+	public static final ConfigEntryStringArray startingItems = new ConfigEntryStringArray("startingItems", FastList.asList("minecraft:apple 16 0"));
 	
 	public static void load(ConfigFile f)
 	{
@@ -64,10 +64,9 @@ public class FTBUConfigLogin
 	
 	public static boolean printMotd(EntityPlayerMP ep)
 	{
-		if(FTBUConfigLogin.motd.get().length == 0) return false;
-		
 		for(String s : FTBUConfigLogin.motd.get())
 			FTBLib.printChat(ep, s.replace("$player$", ep.getDisplayName()).replace("$", FTBLib.FORMATTING));
+		
 		printRules(ep);
 		return true;
 	}

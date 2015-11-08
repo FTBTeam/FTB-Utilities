@@ -42,11 +42,8 @@ public class ServerGuideFile extends GuideFile
 		
 		categoryOther.println(new ChatComponentTranslation("ftbl:worldID", FTBWorld.server.getWorldIDS()));
 		
-		if(FTBUConfigLogin.motd.get().length > 0)
-		{
-			for(String s : FTBUConfigLogin.motd.get())
-				main.println(s);
-		}
+		for(String s : FTBUConfigLogin.motd.get())
+			main.println(s);
 		
 		if(!FTBUConfigLogin.rules.get().isEmpty())
 		{
@@ -59,7 +56,7 @@ public class ServerGuideFile extends GuideFile
 			links.put("rules_link", l);
 		}
 		
-		if(FTBUConfigLogin.motd.get().length > 0 || !FTBUConfigLogin.rules.get().isEmpty())
+		if(!FTBUConfigLogin.motd.get().isEmpty() || !FTBUConfigLogin.rules.get().isEmpty())
 			main.println("");
 		
 		if(FTBUConfigGeneral.restartTimer.get() > 0F)

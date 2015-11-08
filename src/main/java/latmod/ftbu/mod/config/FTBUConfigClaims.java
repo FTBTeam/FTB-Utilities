@@ -2,6 +2,7 @@ package latmod.ftbu.mod.config;
 
 import ftb.lib.api.config.ConfigSyncRegistry;
 import latmod.ftbu.api.guide.GuideInfo;
+import latmod.lib.*;
 import latmod.lib.config.*;
 import latmod.lib.util.IntBounds;
 
@@ -22,7 +23,10 @@ public class FTBUConfigClaims
 	public static final ConfigEntryInt forcedChunkSecurity = new ConfigEntryInt("forcedChunkSecurity", new IntBounds(-1, -1, 2));
 	
 	@GuideInfo(info = "Block IDs that you can break in claimed chunks.", def = "[ \"OpenBlocks:grave\" ]")
-	public static final ConfigEntryStringArray breakWhitelist = new ConfigEntryStringArray("breakWhitelist", new String[] { "OpenBlocks:grave" });
+	public static final ConfigEntryStringArray breakWhitelist = new ConfigEntryStringArray("breakWhitelist", FastList.asList("OpenBlocks:grave"));
+	
+	@GuideInfo(info = "Dimensions where players can't claim", def = "[ ]")
+	public static final ConfigEntryIntArray dimensionBlacklist = new ConfigEntryIntArray("dimensionBlacklist", IntList.asList());
 	
 	public static void load(ConfigFile f)
 	{
@@ -31,5 +35,6 @@ public class FTBUConfigClaims
 		
 		ConfigSyncRegistry.add(forcedExplosions);
 		ConfigSyncRegistry.add(forcedChunkSecurity);
+		ConfigSyncRegistry.add(dimensionBlacklist);
 	}
 }

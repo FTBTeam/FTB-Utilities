@@ -45,7 +45,7 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 	{
 		if(first)
 		{
-			UUID selfID = FTBLibClient.mc.thePlayer.getGameProfile().getId();
+			UUID selfID = FTBLibClient.mc.thePlayer == null ? UUID.randomUUID() : FTBLibClient.mc.thePlayer.getUniqueID();
 			
 			players.clear();
 			
@@ -55,7 +55,7 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 			{
 				NBTTagCompound tag1 = list.getCompoundTagAt(i);
 				LMPlayerClient p = new LMPlayerClient(this, tag1.getInteger("PID"), new GameProfile(new UUID(tag1.getLong("MID"), tag1.getLong("LID")), tag1.getString("N")));
-				p.readFromNet(tag1, p.getUUID().equals(selfID));
+				p.readFromNet(tag1, selfID != null && p.getUUID().equals(selfID));
 				players.add(p);
 			}
 			

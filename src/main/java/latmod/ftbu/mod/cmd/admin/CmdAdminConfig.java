@@ -46,7 +46,7 @@ public class CmdAdminConfig extends CommandLM
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
-		checkArgs(args, 4); // file, group, entry, value...
+		checkArgs(args, 3); // file, group, entry, value...
 		
 		ConfigList list = ConfigListRegistry.list.getObj(args[0]);
 		
@@ -63,23 +63,25 @@ public class CmdAdminConfig extends CommandLM
 				{
 					success = true;
 					
-					String json = LMStringUtils.unsplitSpaceUntilEnd(3, args);
-					if(json.equals("[default]"))
-						json = null;
-					
-					FTBU.mod.logger.info("Setting " + args[0] + " " + args[1] + " " + args[2] + " to " + json);
-					
-					try
+					if(args.length >= 4)
 					{
-						entry.setJson(LMJsonUtils.fromJson(json, entry.type.typeClass));
-						if(list.parentFile != null) list.parentFile.save();
+						String json = LMStringUtils.unsplitSpaceUntilEnd(3, args);
+						
+						FTBU.mod.logger.info("Setting " + args[0] + " " + args[1] + " " + args[2] + " to " + json);
+						
+						try
+						{
+							entry.setJson(LMJsonUtils.getJsonElement(json));
+							if(list.parentFile != null) list.parentFile.save();
+						}
+						catch(Exception ex)
+						{
+							ChatComponentText error = new ChatComponentText(ex.getMessage());
+							error.getChatStyle().setColor(EnumChatFormatting.RED);
+							return error;
+						}
 					}
-					catch(Exception ex)
-					{
-						ChatComponentText error = new ChatComponentText(ex.getMessage());
-						error.getChatStyle().setColor(EnumChatFormatting.RED);
-						return error;
-					}
+					else return new ChatComponentText(entry.getJson().toString());
 				}
 			}
 		}

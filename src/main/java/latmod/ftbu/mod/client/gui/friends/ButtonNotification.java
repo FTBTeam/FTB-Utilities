@@ -2,7 +2,8 @@ package latmod.ftbu.mod.client.gui.friends;
 
 import org.lwjgl.opengl.GL11;
 
-import latmod.ftbu.util.client.ClientNotifications;
+import ftb.lib.api.gui.GuiIcons;
+import latmod.ftbu.util.client.*;
 import latmod.ftbu.util.gui.*;
 import latmod.ftbu.world.LMWorldClient;
 import latmod.lib.*;
@@ -15,7 +16,7 @@ public class ButtonNotification extends ButtonLM
 	
 	public ButtonNotification(PanelNotifications p, ClientNotifications.Perm n)
 	{
-		super(p.gui, 0, 0, 0, 24);
+		super(p.gui, 0, 0, 0, 25);
 		notification = n;
 		index = p.notificationButtons.size();
 		posY += index * 26;
@@ -46,13 +47,24 @@ public class ButtonNotification extends ButtonLM
 		GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), parentPanel.width, height, color);
 		gui.getFontRenderer().drawString(title, ax + tx, ay + 4, 0xFFFFFFFF);
 		if(notification.notification.desc != null) gui.getFontRenderer().drawString(notification.notification.desc.getFormattedText(), ax + tx, ay + 14, 0xFFFFFFFF);
+		
+		if(mouseOver(ax, ay))
+		{
+			float alpha = 0.4F;
+			if(gui.mouseX >= ax + width - 16)
+				alpha = 1F;
+			
+			GL11.glColor4f(1F, 1F, 1F, alpha);
+			gui.render(GuiIcons.close, ax + width - 16, ay + 4);
+			GL11.glColor4f(1F, 1F, 1F, 1F);
+		}
 	}
 	
 	public void onButtonPressed(int b)
 	{
 		gui.playClickSound();
 		
-		if(b == 0) notification.onClicked(LMWorldClient.inst.getClientPlayer());
+		if(gui.mouseX < getAX() + width - 16) notification.onClicked(LMWorldClient.inst.getClientPlayer());
 		ClientNotifications.Perm.list.remove(notification);
 		
 		gui.refreshWidgets();
@@ -60,6 +72,10 @@ public class ButtonNotification extends ButtonLM
 	
 	public void addMouseOverText(FastList<String> l)
 	{
+		int ax = getAX();
+		if(mouseOver(ax, getAY()) && gui.mouseX >= ax + width - 16)
+		{ l.add(FTBULang.button_close()); return; }
+		
 		if(notification.notification.mouse != null && notification.notification.mouse.hover != null)
 			for(int i = 0; i < notification.notification.mouse.hover.length; i++)
 				if(notification.notification.mouse.hover[i] != null)

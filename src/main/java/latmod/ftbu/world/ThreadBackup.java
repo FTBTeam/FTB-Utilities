@@ -29,8 +29,13 @@ public class ThreadBackup extends Thread
 	{
 		Backups.lastTimeRun = time;
 		FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Starting server backup, expect lag!");
-		new CommandSaveAll().processCommand(FTBLib.getServer(), new String[] { "flush" });
-		new CommandSaveOff().processCommand(FTBLib.getServer(), new String[0]);
+		
+		try
+		{
+			new CommandSaveOff().processCommand(FTBLib.getServer(), new String[0]);
+			new CommandSaveAll().processCommand(FTBLib.getServer(), new String[] { "flush" });
+		}
+		catch(Exception e) { }
 		
 		File dstFile = null;
 		
@@ -158,9 +163,9 @@ public class ThreadBackup extends Thread
 			if(dstFile != null) LMFileUtils.delete(dstFile);
 		}
 		
-		new CommandSaveOn().processCommand(FTBLib.getServer(), new String[0]);
 		Backups.thread = null;
-		System.gc();
+		new CommandSaveOn().processCommand(FTBLib.getServer(), new String[0]);
+		//System.gc();
 	}
 	
 	private static String getDoneTime(long l)

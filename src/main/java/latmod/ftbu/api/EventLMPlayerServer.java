@@ -1,6 +1,5 @@
 package latmod.ftbu.api;
 
-import cpw.mods.fml.common.eventhandler.Cancelable;
 import cpw.mods.fml.relauncher.Side;
 import latmod.ftbu.world.*;
 import latmod.lib.FastList;
@@ -69,18 +68,5 @@ public abstract class EventLMPlayerServer extends EventLMPlayer // LMPlayerClien
 		
 		public CustomInfo(LMPlayerServer p, FastList<IChatComponent> l)
 		{ super(p); info = l; }
-	}
-	
-	@Cancelable
-	public static class GetMaxClaimPower extends EventLMPlayerServer
-	{
-		public final int config;
-		public int result;
-		
-		public GetMaxClaimPower(LMPlayerServer p, int c)
-		{
-			super(p);
-			config = result = c;
-		}
 	}
 }

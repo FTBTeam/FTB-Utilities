@@ -34,7 +34,7 @@ public class FTBUWorldEventHandler
 	{
 		if(FTBLib.isServer() && e.world.provider.dimensionId == 0 && e.world instanceof WorldServer)
 		{
-			ConfigListRegistry.reloadAll();
+			ConfigListRegistry.reloadInstance();
 			
 			File latmodFolder = new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/");
 			NBTTagCompound tagWorldData = LMNBTUtils.readMap(new File(latmodFolder, "LMWorld.dat"));

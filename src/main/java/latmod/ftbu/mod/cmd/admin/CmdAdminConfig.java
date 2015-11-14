@@ -6,7 +6,6 @@ import latmod.ftbu.cmd.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.lib.*;
 import latmod.lib.config.*;
-import latmod.lib.util.IDObject;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.*;
 
@@ -17,15 +16,15 @@ public class CmdAdminConfig extends CommandLM
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
-		if(i == 0) return getTabS(ConfigListRegistry.list);
+		if(i == 0) return getTabS(ConfigListRegistry.instance.list);
 		else if(i == 1)
 		{
-			ConfigList list = ConfigListRegistry.list.getObj(args[0]);
+			ConfigList list = ConfigListRegistry.instance.list.getObj(args[0]);
 			if(list != null) return getTabS(list.groups);
 		}
 		else if(i == 2)
 		{
-			ConfigList list = ConfigListRegistry.list.getObj(args[0]);
+			ConfigList list = ConfigListRegistry.instance.list.getObj(args[0]);
 			if(list != null)
 			{
 				ConfigGroup group = list.groups.getObj(args[1]);
@@ -36,7 +35,7 @@ public class CmdAdminConfig extends CommandLM
 		return null;
 	}
 	
-	private static String[] getTabS(FastList<? extends IDObject> l)
+	private static String[] getTabS(FastList<?> l)
 	{
 		String[] s = new String[l.size()];
 		for(int i = 0; i < s.length; i++)
@@ -48,7 +47,7 @@ public class CmdAdminConfig extends CommandLM
 	{
 		checkArgs(args, 3); // file, group, entry, value...
 		
-		ConfigList list = ConfigListRegistry.list.getObj(args[0]);
+		ConfigList list = ConfigListRegistry.instance.list.getObj(args[0]);
 		
 		boolean success = false;
 		if(list != null)

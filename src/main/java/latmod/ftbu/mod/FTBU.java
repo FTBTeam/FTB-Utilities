@@ -2,7 +2,6 @@ package latmod.ftbu.mod;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import ftb.lib.*;
-import ftb.lib.item.ODItems;
 import latmod.ftbu.mod.cmd.*;
 import latmod.ftbu.mod.config.*;
 import latmod.ftbu.mod.handlers.*;
@@ -12,6 +11,7 @@ import latmod.ftbu.util.LMMod;
 import latmod.ftbu.world.*;
 import latmod.lib.LMJsonUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.common.ForgeChunkManager;
 
 @Mod
 (
@@ -40,12 +40,15 @@ public class FTBU
 		LMJsonUtils.register(MouseAction.class, new MouseAction.Serializer());
 		
 		EventBusHelper.register(new FTBULibEventHandler());
+		FTBUConfig.load();
+		
 		EventBusHelper.register(new FTBUPlayerEventHandler());
 		EventBusHelper.register(new FTBUWorldEventHandler());
 		EventBusHelper.register(new FTBUChatEventHandler());
-		FTBUConfig.load();
+		EventBusHelper.register(FTBUChunkEventHandler.instance);
+		ForgeChunkManager.setForcedChunkLoadingCallback(this, FTBUChunkEventHandler.instance);
+		
 		FTBUNetHandler.init();
-		ODItems.preInit();
 		Backups.init();
 		mod.onPostLoaded();
 		proxy.preInit();
@@ -60,7 +63,6 @@ public class FTBU
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent e)
 	{
-		ODItems.postInit();
 		mod.loadRecipes();
 		proxy.postInit();
 	}
@@ -94,13 +96,4 @@ public class FTBU
 		FTBUTicks.serverStopped();
 		LMWorldServer.inst = null;
 	}
-	
-	/*
-	@NetworkCheckHandler
-	public boolean checkNetwork(Map<String, String> m, Side side)
-	{
-		String s = m.get(MOD_ID);
-		return s == null || s.equals(VERSION) || VERSION.equals(LatCoreMC.DEV_VERSION);
-	}
-	*/
 }

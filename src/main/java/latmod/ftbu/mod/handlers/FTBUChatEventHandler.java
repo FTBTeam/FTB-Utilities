@@ -2,8 +2,7 @@ package latmod.ftbu.mod.handlers;
 
 import cpw.mods.fml.common.eventhandler.*;
 import ftb.lib.FTBLib;
-import latmod.ftbu.api.ServerTickCallback;
-import latmod.ftbu.mod.FTBUTicks;
+import ftb.lib.api.ServerTickCallback;
 import latmod.ftbu.world.*;
 import latmod.lib.FastList;
 import net.minecraft.event.*;
@@ -43,7 +42,7 @@ public class FTBUChatEventHandler
 			
 			line.getChatStyle().setColor(EnumChatFormatting.GOLD);
 			
-			FTBUTicks.addCallback(new ServerTickCallback()
+			FTBLib.addCallback(new ServerTickCallback()
 			{
 				public void onCallback()
 				{

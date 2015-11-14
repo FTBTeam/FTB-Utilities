@@ -1,29 +1,21 @@
 package latmod.ftbu.mod;
 
 import ftb.lib.*;
-import latmod.ftbu.api.ServerTickCallback;
+import latmod.ftbu.mod.cmd.admin.CmdAdminRestart;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
-import latmod.ftbu.net.MessageAreaUpdate;
-import latmod.ftbu.world.*;
+import latmod.ftbu.world.Backups;
 import latmod.lib.*;
-import net.minecraft.command.server.CommandSaveAll;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 
 public class FTBUTicks
 {
-	private static final FastList<ServerTickCallback> callbacks = new FastList<ServerTickCallback>();
-	public static final IntMap areaRequests = new IntMap();
 	private static MinecraftServer server;
 	public static boolean isDediServer = false;
 	private static long startMillis = 0L;
 	private static long currentMillis = 0L;
 	private static long restartSeconds = 0L;
-	private static long areasUpdated = 0L;
 	private static String lastRestartMessage = "";
-	
-	public static void addCallback(ServerTickCallback e)
-	{ callbacks.add(e); }
 	
 	public static void serverStarted()
 	{
@@ -38,8 +30,6 @@ public class FTBUTicks
 			restartSeconds = (long)(FTBUConfigGeneral.restartTimer.get() * 3600D);
 			FTBU.mod.logger.info("Server restart in " + LMStringUtils.getTimeString(restartSeconds));
 		}
-		
-		areaRequests.setDefVal(0);
 	}
 	
 	@SuppressWarnings("all")
@@ -76,45 +66,12 @@ public class FTBUTicks
 				{
 					lastRestartMessage = msg;
 					
-					if(secondsLeft <= 0)
-					{
-						new CommandSaveAll().processCommand(BroadcastSender.inst, new String[] { "flush" });
-						FTBLib.getServer().initiateShutdown();
-						return;
-					}
+					if(secondsLeft <= 0) { CmdAdminRestart.restart(); return; }
 					else FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server will restart after " + msg);//LANG
 				}
 			}
 			
 			if(secondsLeft > 60 && Backups.getSecondsUntilNextBackup() <= 0L) Backups.run();
-		}
-		
-		if(!callbacks.isEmpty())
-		{
-			for(int i = callbacks.size() - 1; i >= 0; i--)
-				if(callbacks.get(i).incAndCheck())
-					callbacks.remove(i);
-		}
-		
-		if(t - areasUpdated >= 2000L)
-		{
-			areasUpdated = t;
-			
-			if(!areaRequests.isEmpty())
-			{
-				for(int i = 0; i < areaRequests.size(); i++)
-				{
-					LMPlayerServer owner = LMWorldServer.inst.getPlayer(areaRequests.keys.get(i));
-					
-					if(owner != null && owner.isOnline())
-					{
-						int size = Math.max(5, areaRequests.values.get(i));
-						new MessageAreaUpdate(owner.getPos(), size, size).sendTo(owner.getPlayer());
-					}
-				}
-				
-				areaRequests.clear();
-			}
 		}
 	}
 	

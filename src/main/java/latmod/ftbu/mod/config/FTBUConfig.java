@@ -5,7 +5,6 @@ import java.io.File;
 import ftb.lib.FTBLib;
 import ftb.lib.api.config.ConfigListRegistry;
 import latmod.ftbu.api.guide.ServerGuideFile;
-import latmod.ftbu.mod.FTBU;
 import latmod.lib.config.ConfigFile;
 
 public class FTBUConfig // FTBU
@@ -14,14 +13,14 @@ public class FTBUConfig // FTBU
 	
 	public static void load()
 	{
-		configFile = new ConfigFile(FTBU.mod.modID, new File(FTBLib.folderLocal, "ftbu/config.json"), true);
+		configFile = new ConfigFile("ftbu", new File(FTBLib.folderLocal, "ftbu/config.json"), true);
 		FTBUConfigGeneral.load(configFile);
 		FTBUConfigLogin.load(configFile);
 		FTBUConfigBackups.load(configFile);
 		FTBUConfigClaims.load(configFile);
 		FTBUConfigCmd.load(configFile);
 		FTBUConfigTops.load(configFile);
-		ConfigListRegistry.add(configFile);
+		ConfigListRegistry.instance.add(configFile);
 		configFile.load();
 	}
 	

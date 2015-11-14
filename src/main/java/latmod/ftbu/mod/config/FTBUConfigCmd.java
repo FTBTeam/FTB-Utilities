@@ -11,8 +11,8 @@ public class FTBUConfigCmd
 	@GuideInfo(info = "Command name for admin command.", def = "admin")
 	public static final ConfigEntryString commandNameAdmin = new ConfigEntryString("name_cmd_admin", "admin");
 	
-	@GuideInfo(info = "Max home count for players", def = "1")
-	public static final ConfigEntryInt maxHomesPlayer = new ConfigEntryInt("maxHomesPlayer", new IntBounds(1, 0, 32000));
+	@GuideInfo(info = "Max home count for players", def = "0")
+	public static final ConfigEntryInt maxHomesPlayer = new ConfigEntryInt("maxHomesPlayer", new IntBounds(0, 0, 32000));
 	
 	@GuideInfo(info = "Max home count for admins", def = "100")
 	public static final ConfigEntryInt maxHomesAdmin = new ConfigEntryInt("maxHomesAdmin", new IntBounds(100, 0, 32000));
@@ -30,7 +30,7 @@ public class FTBUConfigCmd
 	public static final ConfigEntryBool admin_edit_config = new ConfigEntryBool("admin_edit_config", true);
 	public static final ConfigEntryBool admin_invsee = new ConfigEntryBool("admin_invsee", true);
 	public static final ConfigEntryBool admin_warps = new ConfigEntryBool("admin_warps", true);
-	public static final ConfigEntryBool admin_unclaim = new ConfigEntryBool("admin_unclaim", true);
+	public static final ConfigEntryBool admin_edit_chunks = new ConfigEntryBool("admin_edit_chunks", true);
 	public static final ConfigEntryBool admin_world_border = new ConfigEntryBool("admin_world_border", true);
 	
 	public static void load(ConfigFile f)

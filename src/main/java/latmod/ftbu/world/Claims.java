@@ -18,16 +18,19 @@ public class Claims
 {
 	public final LMPlayerServer owner;
 	private final FastList<ClaimedChunk> chunks;
+	public final FastList<ClaimedChunk> loaded;
 	
 	public Claims(LMPlayerServer p)
 	{
 		owner = p;
 		chunks = new FastList<ClaimedChunk>();
+		loaded = new FastList<ClaimedChunk>();
 	}
 	
 	public void readFromNBT(NBTTagCompound serverData)
 	{
 		chunks.clear();
+		loaded.clear();
 		
 		NBTTagCompound tag = serverData.getCompoundTag("Claims");
 		
@@ -37,6 +40,14 @@ public class Claims
 		{
 			int[] ai = list.func_150306_c(i);
 			chunks.add(new ClaimedChunk(this, ai[0], ai[1], ai[2]));
+		}
+		
+		list = tag.getTagList("Loaded", LMNBTUtils.INT_ARRAY);
+		
+		if(list != null) for(int i = 0; i < list.tagCount(); i++)
+		{
+			int[] ai = list.func_150306_c(i);
+			loaded.add(new ClaimedChunk(this, ai[0], ai[1], ai[2]));
 		}
 	}
 	
@@ -53,6 +64,17 @@ public class Claims
 		}
 		
 		tag.setTag("Chunks", list);
+		
+		list = new NBTTagList();
+		
+		for(int j = 0; j < loaded.size(); j++)
+		{
+			ClaimedChunk c = loaded.get(j);
+			list.appendTag(new NBTTagIntArray(new int[] { c.dim, c.posX, c.posZ }));
+		}
+		
+		tag.setTag("Loaded", list);
+		
 		serverData.setTag("Claims", tag);
 	}
 	
@@ -91,7 +113,8 @@ public class Claims
 	public void unclaimAll(int dim)
 	{
 		if(chunks.isEmpty()) return;
-		
+		int size0 = getClaimedChunks();
+		/*
 		FastList<ClaimedChunk> l = new FastList<ClaimedChunk>();
 		
 		for(int i = 0; i < chunks.size(); i++)
@@ -100,12 +123,16 @@ public class Claims
 			if(c.dim != dim) l.add(c);
 		}
 		
-		if(l.size() != getClaimedChunks())
+		*/
+		
+		for(int i = chunks.size() - 1; i >= 0; i--)
 		{
-			chunks.clear();
-			chunks.addAll(l);
-			owner.sendUpdate();
+			ClaimedChunk c = chunks.get(i);
+			if(c.dim == dim) chunks.remove(i);
 		}
+		
+		if(size0 != getClaimedChunks())
+			owner.sendUpdate();
 	}
 	
 	public void unclaimAll()

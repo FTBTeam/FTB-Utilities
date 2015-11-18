@@ -46,7 +46,6 @@ public class FTBU
 		EventBusHelper.register(new FTBUWorldEventHandler());
 		EventBusHelper.register(new FTBUChatEventHandler());
 		EventBusHelper.register(FTBUChunkEventHandler.instance);
-		ForgeChunkManager.setForcedChunkLoadingCallback(this, FTBUChunkEventHandler.instance);
 		
 		FTBUNetHandler.init();
 		Backups.init();
@@ -65,6 +64,7 @@ public class FTBU
 	{
 		mod.loadRecipes();
 		proxy.postInit();
+		ForgeChunkManager.setForcedChunkLoadingCallback(inst, FTBUChunkEventHandler.instance);
 	}
 	
 	@Mod.EventHandler

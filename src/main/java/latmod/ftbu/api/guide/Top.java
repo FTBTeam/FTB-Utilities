@@ -24,10 +24,7 @@ public abstract class Top implements Comparator<LMPlayerServer>
 		{ return Long.compare(o1.stats.firstJoined, o2.stats.firstJoined); }
 		
 		public Object getData(LMPlayerServer p)
-		{
-			if(p.isOnline()) return new ChatComponentTranslation(FTBU.mod.assets + "label.online");
-			return LMStringUtils.getTimeString(LMUtils.millis() - p.stats.firstJoined);
-		}
+		{ return LMStringUtils.getTimeString(LMUtils.millis() - p.stats.firstJoined); }
 	};
 	
 	public static final Top deaths = new Top("deaths")
@@ -54,7 +51,10 @@ public abstract class Top implements Comparator<LMPlayerServer>
 		{ return Long.compare(o2.stats.lastSeen, o1.stats.lastSeen); }
 		
 		public Object getData(LMPlayerServer p)
-		{ return LMStringUtils.getTimeString(LMUtils.millis() - p.stats.lastSeen); }
+		{
+			if(p.isOnline()) return new ChatComponentTranslation(FTBU.mod.assets + "label.online");
+			return LMStringUtils.getTimeString(LMUtils.millis() - p.stats.lastSeen);
+		}
 	};
 	
 	public static final Top time_played = new Top("time_played")

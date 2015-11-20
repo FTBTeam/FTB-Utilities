@@ -5,7 +5,8 @@ import java.util.Iterator;
 import com.google.common.collect.ImmutableSetMultimap;
 
 import ftb.lib.FTBLib;
-import latmod.ftbu.cmd.*;
+import ftb.lib.cmd.CommandLevel;
+import latmod.ftbu.util.CommandFTBU;
 import latmod.lib.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.IChatComponent;
@@ -13,7 +14,7 @@ import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 
-public class CmdAdminChunks extends CommandLM
+public class CmdAdminChunks extends CommandFTBU
 {
 	public CmdAdminChunks(String s)
 	{ super(s, CommandLevel.OP); }

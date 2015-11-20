@@ -1,4 +1,4 @@
-package latmod.ftbu.mod.client.gui.minimap;
+package latmod.ftbu.mod.client.gui.claims;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -16,16 +16,16 @@ import net.minecraft.world.chunk.Chunk;
 public class ThreadReloadArea extends Thread
 {
 	private static final short defHeight = -1;
-	public static final PixelBuffer pixels = new PixelBuffer(GuiMinimap.tiles_tex * 16, GuiMinimap.tiles_tex * 16);
+	public static final PixelBuffer pixels = new PixelBuffer(GuiClaimChunks.tiles_tex * 16, GuiClaimChunks.tiles_tex * 16);
 	public static final short[] heightMap = new short[pixels.pixels.length];
 	
 	public final World worldObj;
-	public final GuiMinimap gui;
+	public final GuiClaimChunks gui;
 	
 	public Chunk chunkMC;
 	public short maxHeight = 0;
 	
-	public ThreadReloadArea(World w, GuiMinimap m)
+	public ThreadReloadArea(World w, GuiClaimChunks m)
 	{
 		super("LM_MapReloader");
 		setDaemon(true);
@@ -39,8 +39,8 @@ public class ThreadReloadArea extends Thread
 	{
 		try
 		{
-			for(int cz = 0; cz < GuiMinimap.tiles_gui; cz++)
-			for(int cx = 0; cx < GuiMinimap.tiles_gui; cx++)
+			for(int cz = 0; cz < GuiClaimChunks.tiles_gui; cz++)
+			for(int cx = 0; cx < GuiClaimChunks.tiles_gui; cx++)
 			{
 				if(worldObj.getChunkProvider().chunkExists(gui.startX, gui.startY))
 				{
@@ -61,7 +61,7 @@ public class ThreadReloadArea extends Thread
 			}
 			
 			ByteBuffer buffer = FTBLibClient.toByteBuffer(pixels.pixels, false);
-			GuiMinimap.pixelBuffer = buffer;
+			GuiClaimChunks.pixelBuffer = buffer;
 		}
 		catch(Exception e)
 		{ e.printStackTrace(); }

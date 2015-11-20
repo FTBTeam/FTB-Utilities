@@ -1,13 +1,14 @@
 package latmod.ftbu.mod.cmd.admin;
 
 import ftb.lib.*;
-import latmod.ftbu.cmd.*;
+import ftb.lib.cmd.CommandLevel;
+import latmod.ftbu.util.CommandFTBU;
 import latmod.ftbu.world.Backups;
 import latmod.lib.LMFileUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.*;
 
-public class CmdAdminBackup extends CommandLM
+public class CmdAdminBackup extends CommandFTBU
 {
 	public CmdAdminBackup(String s)
 	{ super(s, CommandLevel.OP); }

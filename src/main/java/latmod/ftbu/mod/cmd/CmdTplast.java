@@ -1,20 +1,21 @@
 package latmod.ftbu.mod.cmd;
 
 import ftb.lib.*;
-import latmod.ftbu.cmd.*;
+import ftb.lib.cmd.CommandLevel;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.util.CommandFTBU;
 import latmod.ftbu.world.LMPlayerServer;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 
-public class CmdTplast extends CommandLM
+public class CmdTplast extends CommandFTBU
 {
 	public CmdTplast()
 	{ super("tpl", CommandLevel.OP); }
 	
-	public NameType getUsername(String[] args, int i)
-	{ if(i == 0 || i == 1) return NameType.OFF; return NameType.NONE; }
+	public Boolean getUsername(String[] args, int i)
+	{ return (i == 0 || i == 1) ? Boolean.FALSE : null; }
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{

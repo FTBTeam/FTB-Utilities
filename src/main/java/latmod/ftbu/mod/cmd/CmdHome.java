@@ -1,15 +1,16 @@
 package latmod.ftbu.mod.cmd;
 
 import ftb.lib.*;
-import latmod.ftbu.cmd.*;
+import ftb.lib.cmd.CommandLevel;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.config.FTBUConfigCmd;
+import latmod.ftbu.util.CommandFTBU;
 import latmod.ftbu.world.LMPlayerServer;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 
-public class CmdHome extends CommandLM
+public class CmdHome extends CommandFTBU
 {
 	public CmdHome()
 	{ super("home", CommandLevel.ALL); }

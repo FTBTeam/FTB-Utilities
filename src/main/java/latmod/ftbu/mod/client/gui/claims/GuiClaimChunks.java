@@ -1,4 +1,4 @@
-package latmod.ftbu.mod.client.gui.minimap;
+package latmod.ftbu.mod.client.gui.claims;
 
 import java.nio.ByteBuffer;
 
@@ -24,7 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
-public class GuiMinimap extends GuiLM implements GuiYesNoCallback // implements IClientActionGui
+public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // implements IClientActionGui
 {
 	public static final int tiles_tex = 16;
 	public static final int tiles_gui = 15;
@@ -59,6 +59,7 @@ public class GuiMinimap extends GuiLM implements GuiYesNoCallback // implements 
 	public static int textureID = -1;
 	public static ByteBuffer pixelBuffer = null;
 	
+	public final long adminToken;
 	public final LMPlayerClient playerLM;
 	public final int currentDim, startX, startY;
 	
@@ -69,12 +70,13 @@ public class GuiMinimap extends GuiLM implements GuiYesNoCallback // implements 
 	
 	public ThreadReloadArea thread = null;
 	
-	public GuiMinimap()
+	public GuiClaimChunks(long token)
 	{
 		super(null, null);
 		hideNEI = true;
 		xSize = ySize = tiles_gui * 16;
 		
+		adminToken = token;
 		playerLM = LMWorldClient.inst.getClientPlayer();
 		startX = MathHelperLM.chunk(mc.thePlayer.posX) - (int)(tiles_gui * 0.5D);
 		startY = MathHelperLM.chunk(mc.thePlayer.posZ) - (int)(tiles_gui * 0.5D);
@@ -93,7 +95,7 @@ public class GuiMinimap extends GuiLM implements GuiYesNoCallback // implements 
 		{
 			public void onButtonPressed(int b)
 			{
-				thread = new ThreadReloadArea(mc.theWorld, GuiMinimap.this);
+				thread = new ThreadReloadArea(mc.theWorld, GuiClaimChunks.this);
 				thread.start();
 				new MessageAreaRequest(startX, startY, tiles_gui, tiles_gui).sendToServer();
 				gui.playClickSound();
@@ -146,7 +148,7 @@ public class GuiMinimap extends GuiLM implements GuiYesNoCallback // implements 
 			{
 				gui.playClickSound();
 				String s = isShiftKeyDown() ? FTBU.mod.translateClient("button.claims_unclaim_all_q") : FTBU.mod.translateClient("button.claims_unclaim_all_dim_q", gui.mc.theWorld.provider.getDimensionName());
-				mc.displayGuiScreen(new GuiYesNo(GuiMinimap.this, s, "", isShiftKeyDown() ? 1 : 0));
+				mc.displayGuiScreen(new GuiYesNo(GuiClaimChunks.this, s, "", isShiftKeyDown() ? 1 : 0));
 			}
 			
 			public void addMouseOverText(FastList<String> l)
@@ -162,9 +164,14 @@ public class GuiMinimap extends GuiLM implements GuiYesNoCallback // implements 
 			{
 				add(buttonClose);
 				add(buttonRefresh);
-				add(buttonExplosions);
-				add(buttonBlockLevel);
-				add(buttonUnclaimAll);
+				
+				if(adminToken == 0)
+				{
+					add(buttonExplosions);
+					add(buttonBlockLevel);
+					add(buttonUnclaimAll);
+				}
+				
 				height = widgets.size() * 16;
 			}
 			
@@ -240,9 +247,13 @@ public class GuiMinimap extends GuiLM implements GuiYesNoCallback // implements 
 		
 		buttonRefresh.render(GuiIcons.refresh);
 		buttonClose.render(GuiIcons.accept);
-		buttonExplosions.renderWidget();
-		buttonBlockLevel.render(playerLM.settings.blocks.getIcon());
-		buttonUnclaimAll.render(GuiIcons.remove);
+		
+		if(adminToken == 0L)
+		{
+			buttonExplosions.renderWidget();
+			buttonBlockLevel.render(playerLM.settings.blocks.getIcon());
+			buttonUnclaimAll.render(GuiIcons.remove);
+		}
 		
 		if(!playerLM.settings.explosions)
 		{
@@ -334,9 +345,9 @@ public class GuiMinimap extends GuiLM implements GuiYesNoCallback // implements 
 	
 	public void confirmClicked(boolean set, int id)
 	{
-		if(set)
+		if(set && adminToken == 0L)
 		{
-			new MessageClaimChunk(GuiMinimap.this.currentDim, 0, 0, (id == 1) ? MessageClaimChunk.ID_UNCLAIM_ALL_DIMS : MessageClaimChunk.ID_UNCLAIM_ALL).sendToServer();
+			new MessageClaimChunk(GuiClaimChunks.this.currentDim, GuiClaimChunks.this.adminToken, 0, 0, (id == 1) ? MessageClaimChunk.ID_UNCLAIM_ALL_DIMS : MessageClaimChunk.ID_UNCLAIM_ALL).sendToServer();
 			new MessageAreaRequest(startX, startY, tiles_gui, tiles_gui).sendToServer();
 		}
 		
@@ -346,10 +357,10 @@ public class GuiMinimap extends GuiLM implements GuiYesNoCallback // implements 
 	
 	public static class MapButton extends ButtonLM
 	{
-		public final GuiMinimap gui;
+		public final GuiClaimChunks gui;
 		public final int chunkX, chunkY;
 		
-		public MapButton(GuiMinimap g, int x, int y, int i)
+		public MapButton(GuiClaimChunks g, int x, int y, int i)
 		{
 			super(g, x, y, 16, 16);
 			gui = g;
@@ -362,7 +373,8 @@ public class GuiMinimap extends GuiLM implements GuiYesNoCallback // implements 
 		public void onButtonPressed(int b)
 		{
 			if(gui.panelButtons.mouseOver()) return;
-			new MessageClaimChunk(gui.currentDim, chunkX, chunkY, (b == 0) ? MessageClaimChunk.ID_CLAIM : MessageClaimChunk.ID_UNCLAIM).sendToServer();
+			if(gui.adminToken != 0L && b == 0) return;
+			new MessageClaimChunk(gui.currentDim, gui.adminToken, chunkX, chunkY, (b == 0) ? MessageClaimChunk.ID_CLAIM : MessageClaimChunk.ID_UNCLAIM).sendToServer();
 			gui.playClickSound();
 		}
 		

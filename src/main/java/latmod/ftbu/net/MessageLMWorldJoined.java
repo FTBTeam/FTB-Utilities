@@ -16,7 +16,7 @@ public class MessageLMWorldJoined extends MessageFTBU
 		this();
 		io.writeInt(p);
 		NBTTagCompound data = new NBTTagCompound();
-		LMWorldServer.inst.writeDataToNet(data, p);
+		LMWorldServer.inst.writeDataToNet(io, p);
 		writeTag(data);
 	}
 	
@@ -24,7 +24,7 @@ public class MessageLMWorldJoined extends MessageFTBU
 	public IMessage onMessage(MessageContext ctx)
 	{
 		LMWorldClient.inst = new LMWorldClient(io.readInt());
-		LMWorldClient.inst.readDataFromNet(readTag(), true);
+		LMWorldClient.inst.readDataFromNet(io, true);
 		FTBLib.logger.info("Joined the server with PlayerID " + LMWorldClient.inst.getClientPlayer().playerID + " on world " + FTBWorld.client.getWorldIDS());
 		FTBUClient.onWorldJoined();
 		new EventLMWorldClient.Joined(LMWorldClient.inst).post();

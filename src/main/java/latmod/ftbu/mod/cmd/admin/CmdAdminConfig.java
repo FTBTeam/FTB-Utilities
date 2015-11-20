@@ -1,15 +1,16 @@
 package latmod.ftbu.mod.cmd.admin;
 
 import ftb.lib.api.config.ConfigListRegistry;
+import ftb.lib.cmd.CommandLevel;
 import ftb.lib.mod.FTBLibMod;
-import latmod.ftbu.cmd.*;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.util.CommandFTBU;
 import latmod.lib.*;
 import latmod.lib.config.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.*;
 
-public class CmdAdminConfig extends CommandLM
+public class CmdAdminConfig extends CommandFTBU
 {
 	public CmdAdminConfig(String s)
 	{ super(s, CommandLevel.OP); }

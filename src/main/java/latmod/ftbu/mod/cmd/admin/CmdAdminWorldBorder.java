@@ -1,6 +1,7 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import latmod.ftbu.cmd.*;
+import ftb.lib.cmd.*;
+import latmod.ftbu.util.CommandFTBU;
 import latmod.ftbu.world.LMWorldServer;
 import latmod.lib.MathHelperLM;
 import net.minecraft.command.ICommandSender;
@@ -19,7 +20,7 @@ public class CmdAdminWorldBorder extends CommandSubLM
 		add(new CmdCenter("center"));
 	}
 	
-	private static class CmdOn extends CommandLM
+	private static class CmdOn extends CommandFTBU
 	{
 		public CmdOn(String s)
 		{ super(s, CommandLevel.OP); }
@@ -31,7 +32,7 @@ public class CmdAdminWorldBorder extends CommandSubLM
 		}
 	}
 	
-	private static class CmdOff extends CommandLM
+	private static class CmdOff extends CommandFTBU
 	{
 		public CmdOff(String s)
 		{ super(s, CommandLevel.OP); }
@@ -43,7 +44,7 @@ public class CmdAdminWorldBorder extends CommandSubLM
 		}
 	}
 	
-	private static class CmdSet extends CommandLM
+	private static class CmdSet extends CommandFTBU
 	{
 		public CmdSet(String s)
 		{ super(s, CommandLevel.OP); }
@@ -60,7 +61,7 @@ public class CmdAdminWorldBorder extends CommandSubLM
 		}
 	}
 	
-	private static class CmdGet extends CommandLM
+	private static class CmdGet extends CommandFTBU
 	{
 		public CmdGet(String s)
 		{ super(s, CommandLevel.OP); }
@@ -73,7 +74,7 @@ public class CmdAdminWorldBorder extends CommandSubLM
 		}
 	}
 	
-	private static class CmdCenter extends CommandLM
+	private static class CmdCenter extends CommandFTBU
 	{
 		public CmdCenter(String s)
 		{ super(s, CommandLevel.OP); }

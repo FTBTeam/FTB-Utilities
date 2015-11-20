@@ -6,11 +6,9 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.MathHelperMC;
-import ftb.lib.api.*;
 import ftb.lib.client.FTBLibClient;
 import ftb.lib.item.*;
 import ftb.lib.mod.FTBLibFinals;
-import latmod.ftbu.api.EventLMWorldClient;
 import latmod.ftbu.api.client.EventFTBUKey;
 import latmod.ftbu.api.paint.IPainterItem;
 import latmod.ftbu.mod.client.gui.friends.GuiFriendsGuiSmall;
@@ -26,10 +24,6 @@ import net.minecraftforge.event.entity.player.*;
 public class FTBUClientEventHandler
 {
 	public static final FTBUClientEventHandler instance = new FTBUClientEventHandler();
-	
-	@SubscribeEvent
-	public void onReloadedPre(EventFTBReloadPre e)
-	{ if(e.side.isClient()) FTBUClient.onReloaded(); }
 	
 	@SubscribeEvent
 	public void onTooltip(ItemTooltipEvent e)
@@ -80,21 +74,6 @@ public class FTBUClientEventHandler
 		
 		if(FTBLibClient.mc.gameSettings.showDebugInfo)
 			e.left.add("r: " + MathHelperMC.get2DRotation(FTBLibClient.mc.thePlayer));
-	}
-	
-	@SubscribeEvent
-	public void onFTBWorld(EventFTBWorldClient e)
-	{
-		if(e.world == null)
-		{
-			FTBUClient.onWorldClosed();
-			new EventLMWorldClient.Closed(LMWorldClient.inst).post();
-			LMWorldClient.inst = null;
-		}
-		else if(e.isFake)
-		{
-			LMWorldClient.inst = new LMWorldClient(0);
-		}
 	}
 	
 	@SubscribeEvent

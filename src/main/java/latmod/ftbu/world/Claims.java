@@ -13,24 +13,24 @@ import net.minecraft.nbt.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeChunkManager;
 
 public class Claims
 {
 	public final LMPlayerServer owner;
 	private final FastList<ClaimedChunk> chunks;
-	public final FastList<ClaimedChunk> loaded;
+	public final FastMap<Integer, ForgeChunkManager.Ticket> ticketMap;
 	
 	public Claims(LMPlayerServer p)
 	{
 		owner = p;
 		chunks = new FastList<ClaimedChunk>();
-		loaded = new FastList<ClaimedChunk>();
+		ticketMap = new FastMap<Integer, ForgeChunkManager.Ticket>();
 	}
 	
 	public void readFromNBT(NBTTagCompound serverData)
 	{
 		chunks.clear();
-		loaded.clear();
 		
 		NBTTagCompound tag = serverData.getCompoundTag("Claims");
 		
@@ -42,12 +42,13 @@ public class Claims
 			chunks.add(new ClaimedChunk(this, ai[0], ai[1], ai[2]));
 		}
 		
-		list = tag.getTagList("Loaded", LMNBTUtils.INT_ARRAY);
+		int[] loadedChunks = tag.getIntArray("CLoaded");
 		
-		if(list != null) for(int i = 0; i < list.tagCount(); i++)
+		for(int i = 0; i < loadedChunks.length; i++)
 		{
-			int[] ai = list.func_150306_c(i);
-			loaded.add(new ClaimedChunk(this, ai[0], ai[1], ai[2]));
+			int j = loadedChunks[i];
+			if(j >= 0 && j < chunks.size())
+				chunks.get(j).isChunkloaded = true;
 		}
 	}
 	
@@ -56,25 +57,17 @@ public class Claims
 		NBTTagCompound tag = new NBTTagCompound();
 		
 		NBTTagList list = new NBTTagList();
+		IntList loadedChunks = new IntList();
 		
 		for(int j = 0; j < chunks.size(); j++)
 		{
 			ClaimedChunk c = chunks.get(j);
 			list.appendTag(new NBTTagIntArray(new int[] { c.dim, c.posX, c.posZ }));
+			if(c.isChunkloaded) loadedChunks.add(j);
 		}
 		
 		tag.setTag("Chunks", list);
-		
-		list = new NBTTagList();
-		
-		for(int j = 0; j < loaded.size(); j++)
-		{
-			ClaimedChunk c = loaded.get(j);
-			list.appendTag(new NBTTagIntArray(new int[] { c.dim, c.posX, c.posZ }));
-		}
-		
-		tag.setTag("Loaded", list);
-		
+		tag.setIntArray("CLoaded", loadedChunks.toArray());
 		serverData.setTag("Claims", tag);
 	}
 	
@@ -104,7 +97,7 @@ public class Claims
 		owner.sendUpdate();
 	}
 	
-	public void unclaim(int dim, int cx, int cz, boolean admin)
+	public void unclaim(int dim, int cx, int cz)
 	{
 		if(!chunks.isEmpty() && chunks.remove(new ClaimedChunk(this, dim, cx, cz)))
 			owner.sendUpdate();
@@ -114,6 +107,7 @@ public class Claims
 	{
 		if(chunks.isEmpty()) return;
 		int size0 = getClaimedChunks();
+		
 		/*
 		FastList<ClaimedChunk> l = new FastList<ClaimedChunk>();
 		
@@ -144,6 +138,26 @@ public class Claims
 	
 	public int getClaimedChunks()
 	{ return chunks.size(); }
+	
+	public void loadChunks(World w)
+	{
+		if(w.isRemote) return;
+		unloadChunks(w);
+		
+		//FTBLib.logger.info("FTBU Chunks loaded for " + owner);
+	}
+	
+	public void unloadChunks(World w)
+	{
+		if(w.isRemote) return;
+		
+		ForgeChunkManager.Ticket ticket = ticketMap.get(w.provider.dimensionId);
+		if(ticket != null)
+		{
+		}
+		
+		//FTBLib.logger.info("FTBU Chunks unloaded for " + owner);
+	}
 	
 	// Static //
 	

@@ -3,7 +3,6 @@ package latmod.ftbu.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import ftb.lib.api.LMNetworkWrapper;
 import latmod.ftbu.world.*;
-import net.minecraft.entity.player.EntityPlayerMP;
 
 public class MessageClaimChunk extends MessageFTBU
 {
@@ -14,10 +13,11 @@ public class MessageClaimChunk extends MessageFTBU
 	
 	public MessageClaimChunk() { super(DATA_SHORT); }
 	
-	public MessageClaimChunk(int d, int x, int z, int c)
+	public MessageClaimChunk(int d, long t, int x, int z, int c)
 	{
 		this();
 		io.writeUByte(c);
+		io.writeLong(t);
 		io.writeInt(d);
 		io.writeInt(x);
 		io.writeInt(z);
@@ -29,21 +29,27 @@ public class MessageClaimChunk extends MessageFTBU
 	public IMessage onMessage(MessageContext ctx)
 	{
 		int type = io.readUByte();
+		long token = io.readLong();
 		int dim = io.readInt();
-		int chunkX = io.readInt();
-		int chunkZ = io.readInt();
+		int cx = io.readInt();
+		int cz = io.readInt();
 		
-		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
-		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
+		LMPlayerServer p = LMWorldServer.inst.getPlayer(ctx.getServerHandler().playerEntity);
 		if(type == ID_CLAIM)
 		{
-			p.claims.claim(dim, chunkX, chunkZ);
-			return new MessageAreaUpdate(chunkX, chunkZ, dim, 1, 1);
+			p.claims.claim(dim, cx, cz);
+			return new MessageAreaUpdate(cx, cz, dim, 1, 1);
 		}
 		else if(type == ID_UNCLAIM)
 		{
-			p.claims.unclaim(dim, chunkX, chunkZ, false);
-			return new MessageAreaUpdate(chunkX, chunkZ, dim, 1, 1);
+			if(token != 0L && token == p.adminToken)
+			{
+				ClaimedChunk c = Claims.get(dim, cx, cz);
+				if(c != null) c.claims.unclaim(dim, cx, cz);
+			}
+			else
+				p.claims.unclaim(dim, cx, cz);			
+			return new MessageAreaUpdate(cx, cz, dim, 1, 1);
 		}
 		else if(type == ID_UNCLAIM_ALL) p.claims.unclaimAll(dim);
 		else if(type == ID_UNCLAIM_ALL_DIMS) p.claims.unclaimAll();

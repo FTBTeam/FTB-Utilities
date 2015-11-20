@@ -2,12 +2,13 @@ package latmod.ftbu.mod.cmd;
 
 import javax.script.*;
 
-import latmod.ftbu.cmd.*;
+import ftb.lib.cmd.CommandLevel;
+import latmod.ftbu.util.CommandFTBU;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.*;
 
-public class CmdMath extends CommandLM
+public class CmdMath extends CommandFTBU
 {
 	public CmdMath()
 	{ super("math", CommandLevel.ALL); }

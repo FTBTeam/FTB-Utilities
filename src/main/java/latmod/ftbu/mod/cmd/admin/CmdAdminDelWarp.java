@@ -1,12 +1,13 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import latmod.ftbu.cmd.*;
+import ftb.lib.cmd.CommandLevel;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.util.CommandFTBU;
 import latmod.ftbu.world.LMWorldServer;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.*;
 
-public class CmdAdminDelWarp extends CommandLM
+public class CmdAdminDelWarp extends CommandFTBU
 {
 	public CmdAdminDelWarp(String s)
 	{ super(s, CommandLevel.OP); }

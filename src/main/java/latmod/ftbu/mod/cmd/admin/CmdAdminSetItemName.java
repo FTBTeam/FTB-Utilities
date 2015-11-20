@@ -1,12 +1,13 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import latmod.ftbu.cmd.*;
+import ftb.lib.cmd.CommandLevel;
+import latmod.ftbu.util.CommandFTBU;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 
-public class CmdAdminSetItemName extends CommandLM
+public class CmdAdminSetItemName extends CommandFTBU
 {
 	public CmdAdminSetItemName(String s)
 	{ super(s, CommandLevel.OP); }

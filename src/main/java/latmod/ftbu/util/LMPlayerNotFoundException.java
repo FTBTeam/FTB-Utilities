@@ -1,4 +1,4 @@
-package latmod.ftbu.cmd;
+package latmod.ftbu.util;
 
 import net.minecraft.command.CommandException;
 

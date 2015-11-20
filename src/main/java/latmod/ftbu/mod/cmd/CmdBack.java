@@ -1,14 +1,15 @@
 package latmod.ftbu.mod.cmd;
 
 import ftb.lib.LMDimUtils;
-import latmod.ftbu.cmd.*;
+import ftb.lib.cmd.CommandLevel;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.util.CommandFTBU;
 import latmod.ftbu.world.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 
-public class CmdBack extends CommandLM
+public class CmdBack extends CommandFTBU
 {
 	public CmdBack()
 	{ super("back", CommandLevel.ALL); }

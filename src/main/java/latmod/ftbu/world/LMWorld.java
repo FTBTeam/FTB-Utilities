@@ -4,7 +4,6 @@ import java.util.*;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
-import latmod.ftbu.cmd.NameType;
 import latmod.ftbu.mod.FTBU;
 import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -122,11 +121,10 @@ public abstract class LMWorld // FTBWorld
 		return (p == null) ? 0 : p.playerID;
 	}
 	
-	public String[] getAllPlayerNames(NameType type)
+	public String[] getAllPlayerNames(Boolean type)
 	{
-		if(type == null || type == NameType.NONE)
-			return new String[0];
-		FastList<LMPlayer> list = (type == NameType.ON) ? getAllOnlinePlayers() : players;
+		if(type == null) return new String[0];
+		FastList<LMPlayer> list = (type == Boolean.TRUE) ? getAllOnlinePlayers() : players;
 		
 		list.sort(new Comparator<LMPlayer>()
 		{

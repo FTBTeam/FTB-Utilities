@@ -6,6 +6,7 @@ import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
+import ftb.lib.api.MessageLM;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.net.MessageLMWorldUpdate;
 import latmod.lib.*;
@@ -63,35 +64,50 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		tag.setInteger("LastMailID", lastMailID);
 	}
 	
-	public void writeDataToNet(NBTTagCompound tag, int selfID)
+	public void writeDataToNet(ByteIOStream io, int selfID)
 	{
+		if(selfID > 0)
+		{
+			io.writeInt(players.size());
+			for(int i = 0; i < players.size(); i++)
+			{
+				LMPlayer p = players.get(i);
+				io.writeInt(p.playerID);
+				io.writeUUID(p.getUUID());
+				io.writeString(p.getName());
+			}
+		}
+		
+		NBTTagCompound tag = new NBTTagCompound();
+		
 		if(selfID > 0)
 		{
 			NBTTagList list = new NBTTagList();
 			
 			for(int i = 0; i < players.size(); i++)
 			{
-				NBTTagCompound tag1 = new NBTTagCompound();
-				
 				LMPlayerServer p = players.get(i).toPlayerMP();
-				p.writeToNet(tag1, p.playerID == selfID);
-				new EventLMPlayerServer.DataSaved(p).post();
-				tag1.setLong("MID", p.getUUID().getMostSignificantBits());
-				tag1.setLong("LID", p.getUUID().getLeastSignificantBits());
-				tag1.setString("N", p.getName());
-				tag1.setInteger("PID", p.playerID);
 				
-				list.appendTag(tag1);
+				if(p.isOnline())
+				{
+					NBTTagCompound tag1 = new NBTTagCompound();
+					p.writeToNet(tag1, p.playerID == selfID);
+					new EventLMPlayerServer.DataSaved(p).post();
+					tag1.setInteger("PID", p.playerID);
+					list.appendTag(tag1);
+				}
 			}
 			
-			tag.setTag("PLIST", list);
+			tag.setTag("P", list);
 		}
 		
 		if(!customCommonData.hasNoTags()) tag.setTag("C", customCommonData);
 		
 		NBTTagCompound settingsTag = new NBTTagCompound();
 		settings.writeToNBT(settingsTag, false);
-		tag.setTag("CFG", settingsTag);
+		tag.setTag("S", settingsTag);
+		
+		MessageLM.writeTag(io, tag);
 	}
 	
 	public void writePlayersToServer(NBTTagCompound tag)

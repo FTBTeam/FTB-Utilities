@@ -4,6 +4,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.EventBusHelper;
 import latmod.ftbu.badges.*;
+import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
@@ -27,7 +28,7 @@ public class FTBUBadgeRenderer
 	@SubscribeEvent
 	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
 	{
-		if(!Badge.badges.isEmpty() && FTBUClient.renderBadges.getB() && !e.entityPlayer.isInvisible())
+		if(LatCoreMCClient.isPlaying() && !Badge.badges.isEmpty() && FTBUClient.renderBadges.getB() && !e.entityPlayer.isInvisible())
 		{
 			LMPlayerClient pc = LMWorldClient.inst.getPlayer(e.entityPlayer);
 			

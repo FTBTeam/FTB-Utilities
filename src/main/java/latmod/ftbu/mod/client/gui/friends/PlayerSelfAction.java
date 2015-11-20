@@ -5,8 +5,8 @@ import ftb.lib.client.*;
 import latmod.ftbu.api.guide.ClientGuideFile;
 import latmod.ftbu.mod.client.FTBUGuiEventHandler;
 import latmod.ftbu.mod.client.gui.GuiClientConfig;
+import latmod.ftbu.mod.client.gui.claims.GuiClaimChunks;
 import latmod.ftbu.mod.client.gui.guide.GuiGuide;
-import latmod.ftbu.mod.client.gui.minimap.GuiMinimap;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.util.client.FTBULang;
 import latmod.ftbu.world.LMPlayerClient;
@@ -63,7 +63,7 @@ public abstract class PlayerSelfAction extends PlayerAction
 	public static final PlayerSelfAction claims = new PlayerSelfAction(GuiIcons.map)
 	{
 		public void onClicked(LMPlayerClient p)
-		{ FTBLibClient.mc.displayGuiScreen(new GuiMinimap()); }
+		{ FTBLibClient.mc.displayGuiScreen(new GuiClaimChunks(0L)); }
 		
 		public String getTitle()
 		{ return FTBULang.Guis.claimed_chunks(); }

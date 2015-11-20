@@ -7,7 +7,7 @@ import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.api.client.*;
 import latmod.ftbu.badges.ThreadLoadBadges;
 import latmod.ftbu.mod.*;
-import latmod.ftbu.mod.client.gui.minimap.ClaimedAreasClient;
+import latmod.ftbu.mod.client.gui.claims.ClaimedAreasClient;
 import latmod.ftbu.mod.cmd.CmdMath;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.tile.TileLM;

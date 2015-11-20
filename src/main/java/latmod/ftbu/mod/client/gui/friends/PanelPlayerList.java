@@ -70,6 +70,9 @@ public class PanelPlayerList extends PanelFriendsGui
 			if(Mouse.isButtonDown(0))
 				scroll += gui.mouseDY;
 			
+			if(Mouse.isButtonDown(1))
+				scroll -= (int)((gui.mouseY - gui.lastClickY) * 0.1D);
+			
 			if(scroll != 0)
 			{
 				int newPos = posY + scroll;

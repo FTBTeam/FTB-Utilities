@@ -1,14 +1,15 @@
 package latmod.ftbu.mod.cmd;
 
 import ftb.lib.*;
-import latmod.ftbu.cmd.*;
+import ftb.lib.cmd.CommandLevel;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.util.CommandFTBU;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
-public class CmdSpawn extends CommandLM
+public class CmdSpawn extends CommandFTBU
 {
 	public CmdSpawn()
 	{ super("spawn", CommandLevel.ALL); }

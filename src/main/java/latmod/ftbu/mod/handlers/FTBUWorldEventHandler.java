@@ -7,7 +7,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
-import ftb.lib.api.config.ConfigListRegistry;
 import latmod.ftbu.api.EventLMWorldServer;
 import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
@@ -23,39 +22,10 @@ import net.minecraft.world.WorldServer;
 public class FTBUWorldEventHandler
 {
 	@SubscribeEvent
-	public void onWorldTick(TickEvent.WorldTickEvent e)
+	public void onWorldTick(TickEvent.WorldTickEvent e) // FIXME: Ticks
 	{
-		if(!e.world.isRemote && e.side == Side.SERVER && e.phase == TickEvent.Phase.END && e.type == TickEvent.Type.WORLD)
+		if(!e.world.isRemote && e.side == Side.SERVER && e.phase == TickEvent.Phase.END && e.type == TickEvent.Type.WORLD && e.world.provider.dimensionId == 0)
 			FTBUTicks.update();
-	}
-	
-	@SubscribeEvent
-	public void worldLoaded(net.minecraftforge.event.world.WorldEvent.Load e)
-	{
-		if(FTBLib.isServer() && e.world.provider.dimensionId == 0 && e.world instanceof WorldServer)
-		{
-			ConfigListRegistry.reloadInstance();
-			
-			File latmodFolder = new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/");
-			NBTTagCompound tagWorldData = LMNBTUtils.readMap(new File(latmodFolder, "LMWorld.dat"));
-			if(tagWorldData == null) tagWorldData = new NBTTagCompound();
-			LMWorldServer.inst = new LMWorldServer((WorldServer)e.world, latmodFolder);
-			LMWorldServer.inst.load(tagWorldData);
-			
-			new EventLMWorldServer.Loaded(LMWorldServer.inst, Phase.PRE).post();
-			
-			NBTTagCompound tagPlayers = LMNBTUtils.readMap(new File(latmodFolder, "LMPlayers.dat"));
-			if(tagPlayers != null && tagPlayers.hasKey("Players"))
-			{
-				LMPlayerServer.lastPlayerID = tagPlayers.getInteger("LastID");
-				LMWorldServer.inst.readPlayersFromServer(tagPlayers.getCompoundTag("Players"));
-			}
-			
-			for(int i = 0; i < LMWorldServer.inst.players.size(); i++)
-				LMWorldServer.inst.players.get(i).toPlayerMP().setPlayer(null);
-			
-			new EventLMWorldServer.Loaded(LMWorldServer.inst, Phase.POST).post();
-		}
 	}
 	
 	@SubscribeEvent

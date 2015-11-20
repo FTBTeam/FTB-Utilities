@@ -6,11 +6,11 @@ import java.util.UUID;
 import com.mojang.authlib.GameProfile;
 
 import ftb.lib.*;
+import ftb.lib.cmd.CommandLevel;
 import ftb.lib.item.StringIDInvLoader;
 import ftb.lib.mod.FTBLibFinals;
-import latmod.ftbu.cmd.*;
 import latmod.ftbu.notification.Notification;
-import latmod.ftbu.util.LatCoreMC;
+import latmod.ftbu.util.*;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
 import net.minecraft.command.ICommandSender;
@@ -18,7 +18,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 
-public class CmdAdminPlayer extends CommandLM
+public class CmdAdminPlayer extends CommandFTBU
 {
 	public CmdAdminPlayer(String s)
 	{ super(s, CommandLevel.OP); }
@@ -26,14 +26,11 @@ public class CmdAdminPlayer extends CommandLM
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
 		if(i == 0) return new String[] { "delete", "saveinv", "loadinv", "notify", /*"displayitem"*/ };
-		return null;
+		return super.getTabStrings(ics, args, i);
 	}
 	
-	public NameType getUsername(String[] args, int i)
-	{
-		if(i == 1) return NameType.OFF;
-		return NameType.NONE;
-	}
+	public Boolean getUsername(String[] args, int i)
+	{ return (i == 1) ? Boolean.FALSE : null; }
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
@@ -61,7 +58,7 @@ public class CmdAdminPlayer extends CommandLM
 		
 		if(args[1].equals("@a"))
 		{
-			String[] s = LMWorldServer.inst.getAllPlayerNames(NameType.ON);
+			String[] s = LMWorldServer.inst.getAllPlayerNames(Boolean.TRUE);
 			
 			for(int i = 0; i < s.length; i++)
 			{

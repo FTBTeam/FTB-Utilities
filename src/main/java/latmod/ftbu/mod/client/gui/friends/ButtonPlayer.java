@@ -22,6 +22,8 @@ public class ButtonPlayer extends ButtonLM
 	
 	public void onButtonPressed(int b)
 	{
+		if(b == 2) return;
+		
 		if(player != null && player.playerLM != null)
 		{
 			panel.gui.panelPlayerView.selectedPlayer = new Player(player.playerLM);

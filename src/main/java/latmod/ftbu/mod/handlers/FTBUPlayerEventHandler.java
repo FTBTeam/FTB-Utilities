@@ -1,10 +1,7 @@
 package latmod.ftbu.mod.handlers;
 
-import java.util.List;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ftb.lib.*;
-import ftb.lib.item.LMInvUtils;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.api.item.ICreativeSafeItem;
 import latmod.ftbu.mod.FTBU;
@@ -24,54 +21,6 @@ import net.minecraftforge.common.util.FakePlayer;
 
 public class FTBUPlayerEventHandler
 {
-	@SubscribeEvent
-	public void playerLoggedIn(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e)
-	{
-		if(!(e.player instanceof EntityPlayerMP)) return;
-		EntityPlayerMP ep = (EntityPlayerMP)e.player;
-		
-		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
-		
-		boolean first = (p == null);
-		boolean sendAll = false;
-		
-		if(first)
-		{
-			p = new LMPlayerServer(LMWorldServer.inst, LMPlayerServer.nextPlayerID(), ep.getGameProfile());
-			LMWorldServer.inst.players.add(p);
-			sendAll = true;
-		}
-		else if(!p.getName().equals(p.gameProfile.getName()))
-		{
-			p.setName(p.gameProfile.getName());
-			sendAll = true;
-		}
-		
-		p.setPlayer(ep);
-		p.refreshStats();
-		
-		new MessageLMWorldJoined(p.playerID).sendTo(sendAll ? null : ep);
-		new EventLMPlayerServer.LoggedIn(p, ep, first).post();
-		new MessageLMPlayerLoggedIn(p, first, true).sendTo(ep);
-		for(EntityPlayerMP ep1 : FTBLib.getAllOnlinePlayers(ep))
-			new MessageLMPlayerLoggedIn(p, first, false).sendTo(ep1);
-		
-		if(first)
-		{
-			List<ItemStack> items = FTBUConfigLogin.getStartingItems(ep.getUniqueID());
-			if(items != null && !items.isEmpty()) for(ItemStack is : items)
-				LMInvUtils.giveItem(ep, is);
-		}
-		
-		//new MessageLMPlayerInfo(p.playerID).sendTo(null);
-		FTBUConfigLogin.printMotd(ep);
-		Backups.shouldRun = true;
-		
-		//if(first) teleportToSpawn(ep);
-		p.checkNewFriends();
-		new MessageAreaUpdate(p.getPos(), 3, 3).sendTo(ep);
-	}
-	
 	@SubscribeEvent
 	public void playerLoggedOut(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent e)
 	{ if(e.player instanceof EntityPlayerMP) playerLoggedOut((EntityPlayerMP)e.player); }

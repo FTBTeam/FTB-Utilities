@@ -7,6 +7,7 @@ public final class ClaimedChunk
 {
 	public final Claims claims;
 	public final int dim, posX, posZ;
+	public boolean isChunkloaded = false;
 	
 	public ClaimedChunk(Claims c, int d, int x, int z)
 	{

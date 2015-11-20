@@ -1,21 +1,19 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import latmod.ftbu.cmd.*;
+import ftb.lib.cmd.CommandLevel;
 import latmod.ftbu.mod.cmd.InvSeeInventory;
+import latmod.ftbu.util.CommandFTBU;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IChatComponent;
 
-public class CmdAdminInvsee extends CommandLM
+public class CmdAdminInvsee extends CommandFTBU
 {
 	public CmdAdminInvsee(String s)
 	{ super(s, CommandLevel.OP); }
 
-	public NameType getUsername(String[] args, int i)
-	{
-		if(i == 0) return NameType.ON;
-		return NameType.NONE;
-	}
+	public Boolean getUsername(String[] args, int i)
+	{ return (i == 0) ? Boolean.TRUE : null; }
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{

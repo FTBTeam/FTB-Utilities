@@ -1,4 +1,4 @@
-package latmod.ftbu.mod.client.gui.minimap;
+package latmod.ftbu.mod.client.gui.claims;
 
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.util.client.LatCoreMCClient;

@@ -1,14 +1,15 @@
 package latmod.ftbu.mod.cmd;
 
 import ftb.lib.FTBLib;
-import latmod.ftbu.cmd.*;
+import ftb.lib.cmd.CommandLevel;
+import latmod.ftbu.util.CommandFTBU;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IChatComponent;
 
-public class CmdListOverride extends CommandLM
+public class CmdListOverride extends CommandFTBU
 {
 	public CmdListOverride()
 	{ super("list", CommandLevel.ALL); }

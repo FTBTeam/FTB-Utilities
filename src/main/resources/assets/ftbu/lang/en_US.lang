@@ -68,10 +68,6 @@ config.property.button_claims=Claimed Chunks
 config.property.button_settings=Client Settings
 
 #Misc
-commands.lmmissingargs=Missing Arguments!
-commands.lmdisabled=This feature is disabled!
-ftbu:cmd.invalid_sub=Invalid subcommand: '%s'!
-ftbu:owner=Owner: %s
 ftbu:delete_item=Do you want to delete '%s'?
 ftbu:label.new_friends=New friend requests!
 ftbu:label.new_friends_click=Click to accept all requests

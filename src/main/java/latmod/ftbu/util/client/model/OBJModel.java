@@ -5,7 +5,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
-import latmod.ftbu.util.client.LMRenderHelper;
+import ftb.lib.client.GlStateManager;
 import latmod.lib.*;
 import net.minecraft.util.ResourceLocation;
 
@@ -123,8 +123,8 @@ public class OBJModel
 		}
 		
 		if(m != null && m.texVertices != null)
-			LMRenderHelper.enableTexture();
-		else LMRenderHelper.disableTexture();
+			GlStateManager.enableTexture();
+		else GlStateManager.disableTexture();
 		
 		m.renderAll();
 		
@@ -188,8 +188,8 @@ public class OBJModel
 		if(render)
 		{
 			if(m != null && m.texVertices != null)
-				LMRenderHelper.enableTexture();
-			else LMRenderHelper.disableTexture();
+				GlStateManager.enableTexture();
+			else GlStateManager.disableTexture();
 			
 			m.renderAll();
 		}

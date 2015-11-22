@@ -16,7 +16,7 @@ import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
 import latmod.lib.FastList;
 import net.minecraft.item.*;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.*;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.player.*;
 
@@ -71,9 +71,26 @@ public class FTBUClientEventHandler
 			if(FTBLibFinals.DEV)
 				e.left.add("[MC " + EnumChatFormatting.GOLD + Loader.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");
 		}
-		
-		if(FTBLibClient.mc.gameSettings.showDebugInfo)
+		else
+		{
 			e.left.add("r: " + MathHelperMC.get2DRotation(FTBLibClient.mc.thePlayer));
+			
+			if(FTBUClient.displayDebugInfo.getB())
+			{
+				e.right.add("r: " + MathHelperMC.get2DRotation(FTBLibClient.mc.thePlayer));
+				
+				if(FTBLibClient.mc.objectMouseOver != null)
+				{
+					if(FTBLibClient.mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
+					{
+						int x = FTBLibClient.mc.objectMouseOver.blockX;
+						int y = FTBLibClient.mc.objectMouseOver.blockY;
+						int z = FTBLibClient.mc.objectMouseOver.blockZ;
+						e.right.add(LMInvUtils.getRegName(FTBLibClient.mc.theWorld.getBlock(x, y, z)) + " :: " + FTBLibClient.mc.theWorld.getBlockMetadata(x, y, z));
+					}
+				}
+			}
+		}
 	}
 	
 	@SubscribeEvent

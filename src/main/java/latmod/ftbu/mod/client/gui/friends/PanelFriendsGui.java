@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import latmod.ftbu.util.gui.PanelLM;
+import ftb.lib.gui.widgets.PanelLM;
 
 public abstract class PanelFriendsGui extends PanelLM
 {

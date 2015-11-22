@@ -1,5 +1,6 @@
 package latmod.ftbu.api.client;
 
+import cpw.mods.fml.relauncher.*;
 import net.minecraft.client.resources.I18n;
 
 public class ClientConfigProperty
@@ -69,6 +70,7 @@ public class ClientConfigProperty
 	public String toString()
 	{ return getIDS() + ": " + getValueS(getI()); }
 	
+	@SideOnly(Side.CLIENT)
 	public String getIDS()
 	{ return I18n.format("config.property." + id); }
 	

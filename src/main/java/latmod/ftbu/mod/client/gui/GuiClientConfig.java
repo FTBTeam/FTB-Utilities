@@ -1,13 +1,14 @@
 package latmod.ftbu.mod.client.gui;
 
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.gui.GuiIcons;
+import ftb.lib.client.GlStateManager;
+import ftb.lib.gui.GuiLM;
+import ftb.lib.gui.widgets.*;
 import latmod.ftbu.api.client.*;
 import latmod.ftbu.util.client.FTBULang;
-import latmod.ftbu.util.gui.*;
 import latmod.lib.*;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.EnumChatFormatting;
@@ -97,9 +98,9 @@ public class GuiClientConfig extends GuiLM implements IClientActionGui
 	
 	public void drawBackground()
 	{
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glColor4f(1F, 1F, 1F, 1F);
+		GlStateManager.disableLighting();
+		GlStateManager.enableBlend();
+		GlStateManager.color(1F, 1F, 1F, 1F);
 		
 		boolean drawScroll = totalHeight > height;
 		
@@ -133,9 +134,9 @@ public class GuiClientConfig extends GuiLM implements IClientActionGui
 			drawRect(scroll.posX, sy, scroll.posX + scroll.width, sy + scroll.sliderSize, 0x99666666);
 		}
 		
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glColor4f(1F, 1F, 1F, 1F);
+		GlStateManager.disableLighting();
+		GlStateManager.enableBlend();
+		GlStateManager.color(1F, 1F, 1F, 1F);
 		
 		buttonClose.render(GuiIcons.accept);
 	}

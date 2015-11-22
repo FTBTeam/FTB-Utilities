@@ -1,6 +1,7 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import latmod.ftbu.util.gui.*;
+import ftb.lib.gui.GuiLM;
+import ftb.lib.gui.widgets.*;
 import latmod.ftbu.world.LMPlayerClient;
 import latmod.lib.FastList;
 

@@ -2,7 +2,7 @@ package latmod.ftbu.mod.client.gui.friends;
 
 import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.client.TextureCoords;
-import latmod.ftbu.util.gui.ButtonPopupMenu;
+import ftb.lib.gui.widgets.ButtonPopupMenu;
 import latmod.lib.FastList;
 
 public class ButtonAction extends ButtonPopupMenu

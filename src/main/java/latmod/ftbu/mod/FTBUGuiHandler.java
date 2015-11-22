@@ -2,11 +2,11 @@ package latmod.ftbu.mod;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.gui.LMGuiHandler;
+import ftb.lib.gui.ContainerEmpty;
 import ftb.lib.item.ItemDisplay;
 import latmod.ftbu.mod.client.gui.GuiDisplayItem;
 import latmod.ftbu.mod.client.gui.claims.GuiClaimChunks;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
-import latmod.ftbu.util.gui.ContainerEmpty;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;

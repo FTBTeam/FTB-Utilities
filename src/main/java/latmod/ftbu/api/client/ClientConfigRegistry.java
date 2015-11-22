@@ -58,7 +58,7 @@ public final class ClientConfigRegistry
 			
 			for(ClientConfig c : map.values)
 				for(ClientConfigProperty e : c.map.values)
-					l.add(c.id + ":" + e.id + "=" + e.getI());
+					l.add(c.id + ':' + e.id + '=' + e.getI());
 			
 			l.sort(null);
 			LMFileUtils.save(configFile, l);

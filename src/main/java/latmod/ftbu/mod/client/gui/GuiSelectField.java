@@ -1,9 +1,10 @@
 package latmod.ftbu.mod.client.gui;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.gui.GuiLM;
+import ftb.lib.gui.widgets.*;
 import latmod.ftbu.api.client.callback.*;
 import latmod.ftbu.util.client.FTBULang;
-import latmod.ftbu.util.gui.*;
 
 @SideOnly(Side.CLIENT)
 public class GuiSelectField extends GuiLM

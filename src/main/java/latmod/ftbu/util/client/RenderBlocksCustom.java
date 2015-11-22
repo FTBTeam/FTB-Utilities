@@ -1,8 +1,7 @@
 package latmod.ftbu.util.client;
 
-import org.lwjgl.opengl.GL11;
-
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.client.GlStateManager;
 import latmod.ftbu.util.CustomBlockAccess;
 import latmod.lib.LMColorUtils;
 import net.minecraft.block.Block;
@@ -107,8 +106,8 @@ public class RenderBlocksCustom extends RenderBlocks
 	{
 		Tessellator tessellator = Tessellator.instance;
 		
-		GL11.glRotatef(90F, 0F, 1F, 0F);
-		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
+		GlStateManager.rotate(90F, 0F, 1F, 0F);
+		GlStateManager.translate(-0.5F, -0.5F, -0.5F);
 		
 		float r = customColRed == -1F ? 1F : customColRed;
 		float g = customColGreen == -1F ? 1F : customColGreen;
@@ -117,7 +116,7 @@ public class RenderBlocksCustom extends RenderBlocks
 		tessellator.setColorOpaque_F(r, g, b);
 		tessellator.setBrightness(0);
 		
-		GL11.glColor4f(r, g, b, 1F);
+		GlStateManager.color(r, g, b, 1F);
 		
 		for(int i = 0; i < 6; i++)
 		{
@@ -128,7 +127,7 @@ public class RenderBlocksCustom extends RenderBlocks
 			tessellator.draw();
 		}
 		
-		GL11.glTranslatef(0.5F, 0.5F, 0.5F);
+		GlStateManager.translate(0.5F, 0.5F, 0.5F);
 	}
 	
 	public void renderFace(Block b, int f, double x, double y, double z, IIcon icon)

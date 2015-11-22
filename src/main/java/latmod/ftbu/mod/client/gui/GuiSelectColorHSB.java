@@ -7,12 +7,13 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.EnumDyeColor;
 import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.client.*;
+import ftb.lib.gui.GuiLM;
+import ftb.lib.gui.widgets.*;
 import latmod.ftbu.api.client.ClientConfigRegistry;
 import latmod.ftbu.api.client.callback.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.util.client.FTBULang;
-import latmod.ftbu.util.gui.*;
 import latmod.lib.*;
 import net.minecraft.util.ResourceLocation;
 
@@ -124,13 +125,13 @@ public class GuiSelectColorHSB extends GuiLM
 		colorInit.render(col_tex);
 		FTBLibClient.setGLColor(currentColor, 255);
 		colorCurrent.render(col_tex);
-		GL11.glColor4f(1F, 1F, 1F, 1F);
+		GlStateManager.color(1F, 1F, 1F, 1F);
 		switchRGB.render(GuiIcons.rgb);
 		
 		setTexture(tex);
-		GL11.glColor4f(1F, 1F, 1F, 1F);
+		GlStateManager.color(1F, 1F, 1F, 1F);
 		//GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glShadeModel(GL11.GL_SMOOTH);
+		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		
 		double z = zLevel;
 		double w = slider_col_tex.width;
@@ -144,9 +145,7 @@ public class GuiSelectColorHSB extends GuiLM
 		int y = guiTop + sliderBrightness.posY;
 		
 		GL11.glBegin(GL11.GL_QUADS);
-		
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glColor4f(0F, 0F, 0F, 1F);
+		GlStateManager.color(0F, 0F, 0F, 1F);
 		GL11.glTexCoord2d(u0, v0); GL11.glVertex3d(x + 0, y + 0, z);
 		GL11.glTexCoord2d(u0, v1); GL11.glVertex3d(x + 0, y + h, z);
 		FTBLibClient.setGLColor(currentColor, 255);
@@ -154,9 +153,9 @@ public class GuiSelectColorHSB extends GuiLM
 		GL11.glTexCoord2d(u1, v0); GL11.glVertex3d(x + w, y + 0, z);
 		GL11.glEnd();
 		
-		GL11.glColor4f(1F, 1F, 1F, 1F);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glShadeModel(GL11.GL_FLAT);
+		GlStateManager.color(1F, 1F, 1F, 1F);
+		GlStateManager.enableTexture();
+		GlStateManager.shadeModel(GL11.GL_FLAT);
 		
 		colorSelector.renderWidget();
 		
@@ -231,15 +230,15 @@ public class GuiSelectColorHSB extends GuiLM
 				gui.updateColor();
 			}
 			
-			GL11.glColor4f(1F, 1F, 1F, 1F);
+			GlStateManager.color(1F, 1F, 1F, 1F);
 			gui.setTexture(tex_colors);
 			GuiLM.drawTexturedRectD(ax, ay, gui.zLevel, width, height, 0D, 0D, 1D, 1D);
 			
 			if(cursorPosX >= 0D && cursorPosY >= 0D)
 			{
-				GL11.glColor4f(1F - LMColorUtils.getRed(gui.currentColor) / 255F, 1F - LMColorUtils.getGreen(gui.currentColor) / 255F, 1F - LMColorUtils.getBlue(gui.currentColor) / 255F, 1F);
+				GlStateManager.color(1F - LMColorUtils.getRed(gui.currentColor) / 255F, 1F - LMColorUtils.getGreen(gui.currentColor) / 255F, 1F - LMColorUtils.getBlue(gui.currentColor) / 255F, 1F);
 				gui.render(cursor_tex, ax + cursorPosX * width - 2, ay + cursorPosY * height - 2, 4, 4);
-				GL11.glColor4f(1F, 1F, 1F, 1F);
+				GlStateManager.color(1F, 1F, 1F, 1F);
 			}
 		}
 		

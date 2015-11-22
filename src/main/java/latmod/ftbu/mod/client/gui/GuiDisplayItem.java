@@ -1,11 +1,10 @@
 package latmod.ftbu.mod.client.gui;
 
-import org.lwjgl.opengl.GL11;
-
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.client.GlStateManager;
+import ftb.lib.gui.GuiLM;
 import ftb.lib.item.ItemDisplay;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.util.gui.GuiLM;
 import latmod.lib.FastList;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
@@ -34,13 +33,13 @@ public class GuiDisplayItem extends GuiLM
 	{
 		super.drawBackground();
 		
-		GL11.glColor4f(1F, 1F, 1F, 1F);
-		GL11.glPushMatrix();
-		GL11.glTranslatef(guiLeft + xSize / 2F, guiTop + ySize / 2F, 0F);
-		GL11.glScalef(itemDisplay.scale, itemDisplay.scale, 1F);
+		GlStateManager.color(1F, 1F, 1F, 1F);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(guiLeft + xSize / 2F, guiTop + ySize / 2F, 0F);
+		GlStateManager.scale(itemDisplay.scale, itemDisplay.scale, 1F);
 		itemDisplay.item.stackSize = 1;
 		drawItem(itemDisplay.item, -8, -8);
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	public void drawText(FastList<String> l)

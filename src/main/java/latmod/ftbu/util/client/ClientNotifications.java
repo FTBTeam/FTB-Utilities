@@ -1,11 +1,9 @@
 package latmod.ftbu.util.client;
 
-import org.lwjgl.opengl.*;
-
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.client.FTBLibClient;
+import ftb.lib.client.*;
+import ftb.lib.gui.GuiLM;
 import latmod.ftbu.notification.Notification;
-import latmod.ftbu.util.gui.GuiLM;
 import latmod.ftbu.world.LMPlayerClient;
 import latmod.lib.*;
 import net.minecraft.client.Minecraft;
@@ -110,8 +108,8 @@ public class ClientNotifications
 				GL11.glLoadIdentity();
 				GL11.glTranslatef(0F, 0F, -2000F);
 				*/
-				GL11.glDisable(GL11.GL_DEPTH_TEST);
-				GL11.glDepthMask(false);
+				GlStateManager.disableDepth();
+				GlStateManager.depthMask(false);
 				
 				double d0 = (double)(Minecraft.getSystemTime() - time) / timer;
 				
@@ -130,12 +128,12 @@ public class ClientNotifications
 				
 				int i = LatCoreMCClient.displayW - width;
 				int j = 0 - (int)(d1 * 36D);
-				GL11.glColor4f(1F, 1F, 1F, 1F);
-				GL11.glDisable(GL11.GL_TEXTURE_2D);
-				GL11.glDisable(GL11.GL_LIGHTING);
+				GlStateManager.color(1F, 1F, 1F, 1F);
+				GlStateManager.disableTexture();
+				GlStateManager.disableLighting();
 				GuiLM.drawRect(i, j, LatCoreMCClient.displayW, j + 32, color);
-				GL11.glEnable(GL11.GL_TEXTURE_2D);
-				GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+				GlStateManager.enableTexture();
+				GlStateManager.pushAttrib();
 				
 				int w = item == null ? 10 : 30;
 				
@@ -152,15 +150,15 @@ public class ClientNotifications
 				if(item != null)
 				{
 					RenderHelper.enableGUIStandardItemLighting();
-					GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-					GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-					GL11.glEnable(GL11.GL_LIGHTING);
+					GlStateManager.enableRescaleNormal();
+					GlStateManager.enableColorMaterial();
+					GlStateManager.enableLighting();
 					renderItem.renderItemIntoGUI(mc.fontRenderer, mc.getTextureManager(), item, i + 8, j + 8, false);
 					renderItem.renderItemOverlayIntoGUI(mc.fontRenderer, mc.getTextureManager(), item, i + 8, j + 8);
 				}
 				
-				GL11.glDepthMask(true);
-				GL11.glPopAttrib();
+				GlStateManager.depthMask(true);
+				GlStateManager.popAttrib();
 			}
 		}
 

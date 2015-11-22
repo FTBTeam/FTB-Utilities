@@ -6,12 +6,13 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.EnumDyeColor;
 import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.client.*;
+import ftb.lib.gui.GuiLM;
+import ftb.lib.gui.widgets.*;
 import latmod.ftbu.api.client.ClientConfigRegistry;
 import latmod.ftbu.api.client.callback.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.util.client.FTBULang;
-import latmod.ftbu.util.gui.*;
 import latmod.lib.*;
 import net.minecraft.util.ResourceLocation;
 
@@ -125,13 +126,13 @@ public class GuiSelectColorRGB extends GuiLM
 		
 		FTBLibClient.setGLColor(initCol, 255);
 		colorInit.render(col_tex);
-		GL11.glColor4f(currentColR.value, currentColG.value, currentColB.value, 1F);
+		GlStateManager.color(currentColR.value, currentColG.value, currentColB.value, 1F);
 		colorCurrent.render(col_tex);
-		GL11.glColor4f(1F, 1F, 1F, 1F);
+		GlStateManager.color(1F, 1F, 1F, 1F);
 		switchHSB.render(GuiIcons.hsb);
 		
 		setTexture(tex);
-		GL11.glColor4f(1F, 1F, 1F, 1F);
+		GlStateManager.color(1F, 1F, 1F, 1F);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 		
 		double z = zLevel;
@@ -148,10 +149,10 @@ public class GuiSelectColorRGB extends GuiLM
 		GL11.glBegin(GL11.GL_QUADS);
 		
 		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glColor4f(0F, currentColG.value, currentColB.value, 1F);
+		GlStateManager.color(0F, currentColG.value, currentColB.value, 1F);
 		GL11.glTexCoord2d(u0, v0); GL11.glVertex3d(x + 0, y + 0, z);
 		GL11.glTexCoord2d(u0, v1); GL11.glVertex3d(x + 0, y + h, z);
-		GL11.glColor4f(1F, currentColG.value, currentColB.value, 1F);
+		GlStateManager.color(1F, currentColG.value, currentColB.value, 1F);
 		GL11.glTexCoord2d(u1, v1); GL11.glVertex3d(x + w, y + h, z);
 		GL11.glTexCoord2d(u1, v0); GL11.glVertex3d(x + w, y + 0, z);
 		GL11.glEnd();
@@ -159,10 +160,10 @@ public class GuiSelectColorRGB extends GuiLM
 		x = guiLeft + currentColG.posX;
 		y = guiTop + currentColG.posY;
 		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glColor4f(currentColR.value, 0F, currentColB.value, 1F);
+		GlStateManager.color(currentColR.value, 0F, currentColB.value, 1F);
 		GL11.glTexCoord2d(u0, v0); GL11.glVertex3d(x + 0, y + 0, z);
 		GL11.glTexCoord2d(u0, v1); GL11.glVertex3d(x + 0, y + h, z);
-		GL11.glColor4f(currentColR.value, 1F, currentColB.value, 1F);
+		GlStateManager.color(currentColR.value, 1F, currentColB.value, 1F);
 		GL11.glTexCoord2d(u1, v1); GL11.glVertex3d(x + w, y + h, z);
 		GL11.glTexCoord2d(u1, v0); GL11.glVertex3d(x + w, y + 0, z);
 		GL11.glEnd();
@@ -170,16 +171,16 @@ public class GuiSelectColorRGB extends GuiLM
 		x = guiLeft + currentColB.posX;
 		y = guiTop + currentColB.posY;
 		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glColor4f(currentColR.value, currentColG.value, 0F, 1F);
+		GlStateManager.color(currentColR.value, currentColG.value, 0F, 1F);
 		GL11.glTexCoord2d(u0, v0); GL11.glVertex3d(x + 0, y + 0, z);
 		GL11.glTexCoord2d(u0, v1); GL11.glVertex3d(x + 0, y + h, z);
-		GL11.glColor4f(currentColR.value, currentColG.value, 1F, 1F);
+		GlStateManager.color(currentColR.value, currentColG.value, 1F, 1F);
 		GL11.glTexCoord2d(u1, v1); GL11.glVertex3d(x + w, y + h, z);
 		GL11.glTexCoord2d(u1, v0); GL11.glVertex3d(x + w, y + 0, z);
 		GL11.glEnd();
 		
-		GL11.glColor4f(1F, 1F, 1F, 1F);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GlStateManager.color(1F, 1F, 1F, 1F);
+		GlStateManager.enableTexture();
 		GL11.glShadeModel(GL11.GL_FLAT);
 		
 		currentColR.renderSlider(slider_tex);

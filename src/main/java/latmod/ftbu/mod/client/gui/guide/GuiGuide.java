@@ -3,13 +3,12 @@ package latmod.ftbu.mod.client.gui.guide;
 import java.net.URI;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
 import ftb.lib.client.*;
+import ftb.lib.gui.GuiLM;
+import ftb.lib.gui.widgets.*;
 import latmod.ftbu.api.guide.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.GuiViewImage;
-import latmod.ftbu.util.gui.*;
 import latmod.lib.*;
 import net.minecraft.util.*;
 
@@ -239,7 +238,7 @@ public class GuiGuide extends GuiLM
 		
 		FTBLibClient.setGLColor(buttonBack.mouseOver() ? textColorOver : textColor, 255);
 		buttonBack.render((parentGui == null) ? tex_close : tex_back);
-		GL11.glColor4f(1F, 1F, 1F, 1F);
+		GlStateManager.color(1F, 1F, 1F, 1F);
 		
 		getFontRenderer();
 		
@@ -332,7 +331,7 @@ public class GuiGuide extends GuiLM
 			if(!line.text.isEmpty()) fontRendererObj.drawString(line.text, ax, ay, textColor);
 			else if(line.special != null && line.special.isImage() && line.texture != null && line.texture.isValid())
 			{
-				GL11.glColor4f(1F, 1F, 1F, 1F);
+				GlStateManager.color(1F, 1F, 1F, 1F);
 				gui.setTexture(line.texture.texture);
 				double w = Math.min(width, line.texture.width);
 				gui.render(line.texture, ax, ay, w, line.texture.getHeight(w) + 1);

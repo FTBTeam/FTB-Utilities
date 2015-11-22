@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.client.gui.friends;
 
+import ftb.lib.gui.widgets.SliderLM;
 import latmod.ftbu.util.client.ClientNotifications;
-import latmod.ftbu.util.gui.SliderLM;
 import latmod.lib.FastList;
 
 public class PanelNotifications extends PanelFriendsGui

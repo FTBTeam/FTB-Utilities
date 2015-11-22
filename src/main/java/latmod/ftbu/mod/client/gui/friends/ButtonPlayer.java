@@ -2,8 +2,9 @@ package latmod.ftbu.mod.client.gui.friends;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
+import ftb.lib.gui.GuiLM;
+import ftb.lib.gui.widgets.ButtonLM;
 import latmod.ftbu.net.ClientAction;
-import latmod.ftbu.util.gui.*;
 import latmod.ftbu.world.*;
 import latmod.lib.FastList;
 import net.minecraft.client.entity.AbstractClientPlayer;

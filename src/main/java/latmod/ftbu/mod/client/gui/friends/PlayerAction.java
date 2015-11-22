@@ -2,11 +2,11 @@ package latmod.ftbu.mod.client.gui.friends;
 
 import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.client.*;
+import ftb.lib.gui.GuiLM;
 import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.api.client.EventPlayerAction;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.util.client.FTBULang;
-import latmod.ftbu.util.gui.GuiLM;
 import latmod.ftbu.world.*;
 import latmod.lib.FastList;
 

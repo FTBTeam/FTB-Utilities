@@ -3,7 +3,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.util.client.LMRenderHelper;
+import ftb.lib.client.GlStateManager;
 import latmod.lib.FastList;
 
 /** Made by LatvianModder */
@@ -30,10 +30,10 @@ public class Group
 	{
 		if(listID == -1)
 		{
-			if(parent.texVertices == null) LMRenderHelper.disableTexture();
-			else LMRenderHelper.enableTexture();
+			if(parent.texVertices == null) GlStateManager.disableTexture();
+			else GlStateManager.enableTexture();
 			
-			GL11.glColor4f(1F, 1F, 1F, 1F);
+			GlStateManager.color(1F, 1F, 1F, 1F);
 			
 			listID = GL11.glGenLists(1);
 			GL11.glNewList(listID, GL11.GL_COMPILE);
@@ -84,19 +84,19 @@ public class Group
 		
 		if(hasOffset || hasRotation)
 		{
-			GL11.glPushMatrix();
-			GL11.glTranslatef(pos.x, pos.y, pos.z);
-			if(hasOffset) GL11.glTranslatef(offset.x, offset.y, offset.z);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(pos.x, pos.y, pos.z);
+			if(hasOffset) GlStateManager.translate(offset.x, offset.y, offset.z);
 			if(hasRotation)
 			{
-				GL11.glRotatef(rotation.y, 0F, 1F, 0F);
-				GL11.glRotatef(rotation.x, 1F, 0F, 0F);
-				GL11.glRotatef(rotation.z, 0F, 0F, 1F);
+				GlStateManager.rotate(rotation.y, 0F, 1F, 0F);
+				GlStateManager.rotate(rotation.x, 1F, 0F, 0F);
+				GlStateManager.rotate(rotation.z, 0F, 0F, 1F);
 			}
-			if(hasOffset) GL11.glTranslatef(offset.x, offset.y, offset.z);
-			GL11.glTranslatef(-pos.x, -pos.y, -pos.z);
+			if(hasOffset) GlStateManager.translate(offset.x, offset.y, offset.z);
+			GlStateManager.translate(-pos.x, -pos.y, -pos.z);
 			GL11.glCallList(listID);
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 		else GL11.glCallList(listID);
 	}

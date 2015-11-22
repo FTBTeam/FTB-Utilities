@@ -7,13 +7,14 @@ import org.lwjgl.opengl.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.client.*;
+import ftb.lib.gui.GuiLM;
+import ftb.lib.gui.widgets.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
 import latmod.ftbu.mod.config.FTBUConfigClaims;
 import latmod.ftbu.net.*;
 import latmod.ftbu.util.LMSecurityLevel;
 import latmod.ftbu.util.client.*;
-import latmod.ftbu.util.gui.*;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
 import net.minecraft.client.gui.*;
@@ -214,7 +215,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			//boolean hasBlur = false;
 			//int filter = hasBlur ? GL11.GL_LINEAR : GL11.GL_NEAREST;
 			int filter = GL11.GL_NEAREST;
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
+			GlStateManager.bindTexture(textureID);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, filter);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, filter);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
@@ -229,21 +230,21 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		
 		if(textureID != -1 && thread == null)
 		{
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
+			GlStateManager.bindTexture(textureID);
 			drawTexturedRectD(guiLeft, guiTop, zLevel, tiles_gui * 16, tiles_gui * 16, 0D, 0D, UV, UV);
 		}
 		
 		super.drawBackground();
 		
-		GL11.glColor4f(1F, 1F, 1F, 1F);
+		GlStateManager.color(1F, 1F, 1F, 1F);
 		//setTexture(tex);
 		
 		renderMinimap();
 		
-		GL11.glColor4f(1F, 1F, 1F, 1F);
+		GlStateManager.color(1F, 1F, 1F, 1F);
 		for(int i = 0; i < mapButtons.length; i++)
 			mapButtons[i].renderWidget();
-		GL11.glColor4f(1F, 1F, 1F, 1F);
+		GlStateManager.color(1F, 1F, 1F, 1F);
 		
 		buttonRefresh.render(GuiIcons.refresh);
 		buttonClose.render(GuiIcons.accept);
@@ -258,9 +259,9 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		if(!playerLM.settings.explosions)
 		{
 			zLevel = 500F;
-			GL11.glColor4f(1F, 1F, 1F, 0.75F);
+			GlStateManager.color(1F, 1F, 1F, 0.75F);
 			buttonExplosions.render(GuiIcons.close);
-			GL11.glColor4f(1F, 1F, 1F, 1F);
+			GlStateManager.color(1F, 1F, 1F, 1F);
 			zLevel = 0F;
 		}
 	}
@@ -324,22 +325,22 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 						double x = ((cx - startX) * 16D + MathHelperLM.wrap(ep.posX, 16D));
 						double y = ((cy - startY) * 16D + MathHelperLM.wrap(ep.posZ, 16D));
 						
-						GL11.glPushMatrix();
-						GL11.glTranslated(guiLeft + x, guiTop + y, 0D);
-						GL11.glPushMatrix();
-						//GL11.glRotatef((int)((ep.rotationYaw + 180F) / (180F / 8F)) * (180F / 8F), 0F, 0F, 1F);
-						GL11.glRotatef(ep.rotationYaw + 180F, 0F, 0F, 1F);
+						GlStateManager.pushMatrix();
+						GlStateManager.translate(guiLeft + x, guiTop + y, 0D);
+						GlStateManager.pushMatrix();
+						//GlStateManager.rotate((int)((ep.rotationYaw + 180F) / (180F / 8F)) * (180F / 8F), 0F, 0F, 1F);
+						GlStateManager.rotate(ep.rotationYaw + 180F, 0F, 0F, 1F);
 						FTBLibClient.setTexture(tex_map_entity);
-						GL11.glColor4f(1F, 1F, 1F, ep.isSneaking() ? 0.4F : 0.7F);
+						GlStateManager.color(1F, 1F, 1F, ep.isSneaking() ? 0.4F : 0.7F);
 						GuiLM.drawTexturedRectD(-8, -8, zLevel, 16, 16, 0D, 0D, 1D, 1D);
-						GL11.glPopMatrix();
+						GlStateManager.popMatrix();
 						GuiLM.drawPlayerHead(ep.getCommandSenderName(), -2, -2, 4, 4, zLevel);
-						GL11.glPopMatrix();
+						GlStateManager.popMatrix();
 					}
 				}
 			}
 			
-			GL11.glColor4f(1F, 1F, 1F, 1F);
+			GlStateManager.color(1F, 1F, 1F, 1F);
 		}
 	}
 	
@@ -385,7 +386,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		{
 			if(mouseOver())
 			{
-				GL11.glColor4f(1F, 1F, 0.3F, 0.8F);
+				GlStateManager.color(1F, 1F, 0.3F, 0.8F);
 				gui.render(tex_area_coords[0][0][0][0], getAX(), getAY(), 16, 16);
 			}
 		}

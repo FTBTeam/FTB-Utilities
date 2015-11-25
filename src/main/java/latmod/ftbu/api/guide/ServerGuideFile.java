@@ -109,7 +109,9 @@ public class ServerGuideFile extends GuideFile
 		
 		players.sort(t);
 		
-		for(int j = 0; j < players.size(); j++)
+		int size = Math.min(players.size(), 250);
+		
+		for(int j = 0; j < size; j++)
 		{
 			LMPlayerServer p = players.get(j);
 			

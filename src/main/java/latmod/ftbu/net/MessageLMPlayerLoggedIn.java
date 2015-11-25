@@ -26,10 +26,11 @@ public class MessageLMPlayerLoggedIn extends MessageFTBU
 		io.writeBoolean(first);
 	}
 	
-	
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{
+		if(LMWorldClient.inst == null) return null;
+		
 		int playerID = io.readInt();
 		UUID uuid = io.readUUID();
 		String username = io.readString();

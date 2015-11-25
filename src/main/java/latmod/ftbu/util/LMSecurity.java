@@ -1,6 +1,5 @@
 package latmod.ftbu.util;
 
-import ftb.lib.LMNBTUtils;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.world.*;
@@ -30,31 +29,22 @@ public class LMSecurity
 	
 	public void readFromNBT(NBTTagCompound tag, String s)
 	{
-		ownerID = 0;
-		level = LMSecurityLevel.PUBLIC;
-		
-		if(!tag.hasKey(s)) return;
-		
-		NBTTagCompound tag1 = tag.getCompoundTag(s);
-		
-		if(tag1.func_150299_b("Owner") == LMNBTUtils.STRING)
+		if(tag.hasKey(s))
 		{
-			String o = tag1.getString("Owner");
-			
-			if(o != null && !o.isEmpty())
-				ownerID = LMWorld.getWorld().getPlayerID(o);
+			NBTTagCompound tag1 = tag.getCompoundTag(s);
+			ownerID = tag1.getInteger("Owner");
+			level = LMSecurityLevel.VALUES_3[tag1.getByte("Level")];
 		}
 		else
 		{
-			ownerID = tag1.getInteger("Owner");
+			ownerID = 0;
+			level = LMSecurityLevel.PUBLIC;
 		}
-		
-		level = LMSecurityLevel.VALUES_3[tag1.getByte("Level")];
 	}
 	
 	public void writeToNBT(NBTTagCompound tag, String s)
 	{
-		if(ownerID > 0)
+		if(ownerID > 0 || level != LMSecurityLevel.PUBLIC)
 		{
 			NBTTagCompound tag1 = new NBTTagCompound();
 			tag1.setInteger("Owner", ownerID);

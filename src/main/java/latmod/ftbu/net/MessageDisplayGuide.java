@@ -26,6 +26,7 @@ public class MessageDisplayGuide extends MessageFTBU
 	public IMessage onMessage(MessageContext ctx)
 	{
 		NBTTagCompound data = readTag();
+		if(data == null) return null;
 		GuideFile file = new GuideFile(null);
 		file.readFromNBT(data);
 		FTBLibClient.mc.displayGuiScreen(new GuiGuide(null, file.main));

@@ -36,6 +36,8 @@ public class GuideFile // ServerGuideFile // ClientGuideFile
 	{
 		links.clear();
 		
+		if(tag == null) { main.clear(); return; }
+		
 		if(tag.hasKey("L"))
 		{
 			NBTTagList linksList = tag.getTagList("L", LMNBTUtils.MAP);

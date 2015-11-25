@@ -74,7 +74,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	}
 	
 	public boolean isOP()
-	{ return FTBLib.getServer().getConfigurationManager().func_152596_g(gameProfile); }
+	{ return FTBLib.isOP(gameProfile); }
 	
 	public EntityPos getPos()
 	{

@@ -122,4 +122,7 @@ public class FTBLIntegration extends FTBUIntegration // FTBLIntegrationClient
 		p.checkNewFriends();
 		new MessageAreaUpdate(p.getPos(), 3, 3).sendTo(ep);
 	}
+	
+	public int getPlayerID(Object player)
+	{ return LMWorld.getWorld().getPlayerID(player); }
 }

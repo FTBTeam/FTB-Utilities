@@ -4,11 +4,8 @@ import java.io.File;
 import java.util.Arrays;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
 import latmod.ftbu.api.EventLMWorldServer;
-import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
@@ -21,13 +18,6 @@ import net.minecraft.world.WorldServer;
 
 public class FTBUWorldEventHandler
 {
-	@SubscribeEvent
-	public void onWorldTick(TickEvent.WorldTickEvent e) // FIXME: Ticks
-	{
-		if(!e.world.isRemote && e.side == Side.SERVER && e.phase == TickEvent.Phase.END && e.type == TickEvent.Type.WORLD && e.world.provider.dimensionId == 0)
-			FTBUTicks.update();
-	}
-	
 	@SubscribeEvent
 	public void worldSaved(net.minecraftforge.event.world.WorldEvent.Save e)
 	{

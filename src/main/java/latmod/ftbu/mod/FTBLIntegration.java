@@ -17,7 +17,7 @@ import latmod.lib.Phase;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.*;
 
 public class FTBLIntegration extends FTBUIntegration // FTBLIntegrationClient
 {
@@ -71,9 +71,9 @@ public class FTBLIntegration extends FTBUIntegration // FTBLIntegrationClient
 	{
 	}
 	
-	public void onServerTick()
+	public void onServerTick(World w)
 	{
-		FTBUTicks.update();
+		if(w.provider.dimensionId == 0) FTBUTicks.update();
 	}
 	
 	public void onPlayerJoined(EntityPlayer player)

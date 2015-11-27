@@ -1,14 +1,15 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import ftb.lib.api.gui.GuiIcons;
+import ftb.lib.api.config.ClientConfigRegistry;
+import ftb.lib.api.gui.*;
 import ftb.lib.client.*;
+import ftb.lib.mod.client.gui.GuiEditConfig;
+import latmod.ftbu.api.client.FTBULang;
 import latmod.ftbu.api.guide.ClientGuideFile;
 import latmod.ftbu.mod.client.FTBUGuiEventHandler;
-import latmod.ftbu.mod.client.gui.GuiClientConfig;
 import latmod.ftbu.mod.client.gui.claims.GuiClaimChunks;
 import latmod.ftbu.mod.client.gui.guide.GuiGuide;
 import latmod.ftbu.net.ClientAction;
-import latmod.ftbu.util.client.FTBULang;
 import latmod.ftbu.world.LMPlayerClient;
 
 public abstract class PlayerSelfAction extends PlayerAction
@@ -32,10 +33,10 @@ public abstract class PlayerSelfAction extends PlayerAction
 	public static final PlayerSelfAction settings = new PlayerSelfAction(GuiIcons.settings)
 	{
 		public void onClicked(LMPlayerClient p)
-		{ FTBLibClient.mc.displayGuiScreen(new GuiClientConfig(FTBLibClient.mc.currentScreen)); }
+		{ FTBLibClient.mc.displayGuiScreen(new GuiEditConfig(FTBLibClient.mc.currentScreen, ClientConfigRegistry.provider)); }
 		
 		public String getTitle()
-		{ return FTBULang.client_config(); }
+		{ return FTBLibLang.client_config(); }
 	};
 	
 	public static final PlayerSelfAction guide = new PlayerSelfAction(GuiIcons.guide)
@@ -57,7 +58,7 @@ public abstract class PlayerSelfAction extends PlayerAction
 		{ ClientAction.ACTION_REQUEST_SERVER_INFO.send(0); }
 		
 		public String getTitle()
-		{ return FTBULang.Guis.button_server_info(); }
+		{ return FTBULang.button_server_info(); }
 	};
 	
 	public static final PlayerSelfAction claims = new PlayerSelfAction(GuiIcons.map)
@@ -66,7 +67,7 @@ public abstract class PlayerSelfAction extends PlayerAction
 		{ FTBLibClient.mc.displayGuiScreen(new GuiClaimChunks(0L)); }
 		
 		public String getTitle()
-		{ return FTBULang.Guis.claimed_chunks(); }
+		{ return FTBULang.claimed_chunks(); }
 	};
 	
 	public static final PlayerSelfAction notes = new PlayerSelfAction(GuiIcons.notes)
@@ -75,6 +76,6 @@ public abstract class PlayerSelfAction extends PlayerAction
 		{  }
 		
 		public String getTitle()
-		{ return FTBULang.Guis.notes(); }
+		{ return FTBULang.notes(); }
 	};
 }

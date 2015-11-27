@@ -27,6 +27,5 @@ public class CmdAdmin extends CommandSubLM
 			add(new CmdAdminChunks("chunks"));
 		}
 		if(FTBUConfigCmd.admin_backup.get()) add(new CmdAdminBackup("backup"));
-		if(FTBUConfigCmd.admin_edit_config.get()) add(new CmdAdminConfig("config"));
 	}
 }

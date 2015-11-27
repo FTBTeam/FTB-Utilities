@@ -1,11 +1,10 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import ftb.lib.api.gui.GuiIcons;
+import ftb.lib.api.gui.*;
 import ftb.lib.client.GlStateManager;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.ButtonLM;
-import latmod.ftbu.util.client.*;
-import latmod.ftbu.world.LMWorldClient;
+import ftb.lib.notification.ClientNotifications;
 import latmod.lib.*;
 import net.minecraft.item.ItemStack;
 
@@ -64,7 +63,7 @@ public class ButtonNotification extends ButtonLM
 	{
 		gui.playClickSound();
 		
-		if(gui.mouseX < getAX() + width - 16) notification.onClicked(LMWorldClient.inst.getClientPlayer());
+		if(gui.mouseX < getAX() + width - 16) notification.onClicked();
 		ClientNotifications.Perm.list.remove(notification);
 		
 		gui.refreshWidgets();
@@ -74,7 +73,7 @@ public class ButtonNotification extends ButtonLM
 	{
 		int ax = getAX();
 		if(mouseOver(ax, getAY()) && gui.mouseX >= ax + width - 16)
-		{ l.add(FTBULang.button_close()); return; }
+		{ l.add(FTBLibLang.button_close()); return; }
 		
 		if(notification.notification.mouse != null && notification.notification.mouse.hover != null)
 			for(int i = 0; i < notification.notification.mouse.hover.length; i++)

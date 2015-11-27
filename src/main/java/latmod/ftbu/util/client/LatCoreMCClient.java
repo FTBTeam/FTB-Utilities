@@ -4,9 +4,7 @@ import cpw.mods.fml.client.registry.*;
 import ftb.lib.FTBLib;
 import ftb.lib.client.FTBLibClient;
 import ftb.lib.gui.widgets.IClientActionGui;
-import latmod.ftbu.api.client.callback.ClientTickCallback;
-import latmod.ftbu.mod.client.FTBURenderHandler;
-import latmod.ftbu.notification.Notification;
+import ftb.lib.notification.*;
 import latmod.ftbu.world.LMWorldClient;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.entity.Render;
@@ -19,8 +17,6 @@ import net.minecraftforge.client.*;
 /** Made by LatvianModder */
 public final class LatCoreMCClient // LatCoreMC // FTBLibClient
 {
-	public static int displayW, displayH;
-	
 	public static void addEntityRenderer(Class<? extends Entity> c, Render r)
 	{ RenderingRegistry.registerEntityRenderingHandler(c, r); }
 	
@@ -42,9 +38,6 @@ public final class LatCoreMCClient // LatCoreMC // FTBLibClient
 	public static void addItemRenderer(Block block, IItemRenderer i)
 	{ MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(block), i); }
 	
-	public static void addClientTickCallback(ClientTickCallback e)
-	{ FTBURenderHandler.callbacks.add(e); }
-	
 	public static void notifyClient(String ID, Object text, int t)
 	{ ClientNotifications.add(new Notification(ID, FTBLib.getChatComponent(text), t)); }
 	
@@ -55,13 +48,7 @@ public final class LatCoreMCClient // LatCoreMC // FTBLibClient
 	}
 	
 	public static boolean isPlaying()
-	{
-		return FTBLibClient.mc.theWorld != null
-		&& FTBLibClient.mc.thePlayer != null
-		&& FTBLibClient.mc.thePlayer.worldObj != null
-		&& LMWorldClient.inst != null
-		&& LMWorldClient.inst.getClientPlayer() != null;
-	}
+	{ return FTBLibClient.isPlaying() && LMWorldClient.inst != null && LMWorldClient.inst.getClientPlayer() != null; }
 	
 	public static int getDim()
 	{ return isPlaying() ? FTBLibClient.mc.thePlayer.worldObj.provider.dimensionId : 0; }

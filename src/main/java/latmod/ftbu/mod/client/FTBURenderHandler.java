@@ -1,19 +1,16 @@
 package latmod.ftbu.mod.client;
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.common.eventhandler.*;
-import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.FTBLibClient;
-import latmod.ftbu.api.client.callback.ClientTickCallback;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.util.client.*;
 import latmod.ftbu.util.client.model.CubeRenderer;
 import latmod.ftbu.world.LMWorldClient;
-import latmod.lib.*;
+import latmod.lib.MathHelperLM;
 import latmod.lib.util.Pos2I;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -24,39 +21,7 @@ public class FTBURenderHandler
 	public static final FTBURenderHandler instance = new FTBURenderHandler();
 	public static final ResourceLocation world_border_tex = FTBU.mod.getLocation("textures/map/world_border.png");
 	
-	public static final FastList<ClientTickCallback> callbacks = new FastList<ClientTickCallback>();
 	private static final CubeRenderer worldBorderRenderer = new CubeRenderer();
-	
-	@SubscribeEvent(priority = EventPriority.LOW)
-	public void renderTick(TickEvent.RenderTickEvent e)
-	{
-		GL11.glPushMatrix();
-		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-		
-		if(e.phase == TickEvent.Phase.START)
-		{
-			ScaledResolution sr = new ScaledResolution(FTBLibClient.mc, FTBLibClient.mc.displayWidth, FTBLibClient.mc.displayHeight);
-			LatCoreMCClient.displayW = sr.getScaledWidth();
-			LatCoreMCClient.displayH = sr.getScaledHeight();
-		}
-		
-		if(e.phase == TickEvent.Phase.END && LatCoreMCClient.isPlaying())
-			ClientNotifications.renderTemp();
-		
-		GL11.glPopAttrib();
-		GL11.glPopMatrix();
-	}
-	
-	@SubscribeEvent
-	public void clientTick(TickEvent.ClientTickEvent e)
-	{
-		if(e.phase == TickEvent.Phase.END && !callbacks.isEmpty())
-		{
-			for(int i = 0; i < callbacks.size(); i++)
-				callbacks.get(i).onCallback();
-			callbacks.clear();
-		}
-	}
 	
 	@SubscribeEvent
 	public void renderWorld(RenderWorldLastEvent e)

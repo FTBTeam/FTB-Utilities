@@ -4,15 +4,18 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.api.config.ClientConfigRegistry;
+import ftb.lib.api.gui.FTBLibLang;
 import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
-import latmod.ftbu.api.client.*;
+import ftb.lib.mod.client.gui.GuiEditConfig;
+import ftb.lib.notification.ClientNotifications;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.client.gui.GuiClientConfig;
 import latmod.ftbu.mod.client.gui.friends.*;
-import latmod.ftbu.util.client.*;
+import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
 import latmod.lib.FastList;
+import latmod.lib.config.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.*;
@@ -43,11 +46,11 @@ public class FTBUGuiEventHandler
 		{ return "FriendsGUI"; }
 	};
 	
-	public static final ClientConfig config_buttons = new ClientConfig("sidebar_buttons");
-	public static final ClientConfigProperty button_guide = new ClientConfigProperty("button_guide", true);
-	public static final ClientConfigProperty button_info = new ClientConfigProperty("button_info", true);
-	public static final ClientConfigProperty button_claims = new ClientConfigProperty("button_claims", true);
-	public static final ClientConfigProperty button_settings = new ClientConfigProperty("button_settings", true);
+	public static final ConfigGroup config_buttons = new ConfigGroup("sidebar_buttons");
+	public static final ConfigEntryBool button_guide = new ConfigEntryBool("button_guide", true);
+	public static final ConfigEntryBool button_info = new ConfigEntryBool("button_info", true);
+	public static final ConfigEntryBool button_claims = new ConfigEntryBool("button_claims", true);
+	public static final ConfigEntryBool button_settings = new ConfigEntryBool("button_settings", true);
 	
 	public static void init()
 	{
@@ -66,8 +69,8 @@ public class FTBUGuiEventHandler
 		
 		if(e.gui instanceof GuiOptions)
 		{
-			if(FTBUClient.optionsButton.getB())
-				e.buttonList.add(new GuiButton(PlayerSelfAction.settings.ID, e.gui.width / 2 - 155, e.gui.height / 6 + 48 - 6, 150, 20, "[FTBU] " + FTBULang.client_config()));
+			if(FTBUClient.optionsButton.get())
+				e.buttonList.add(new GuiButton(PlayerSelfAction.settings.ID, e.gui.width / 2 - 155, e.gui.height / 6 + 48 - 6, 150, 20, "[FTBU] " + FTBLibLang.client_config()));
 		}
 		else if(e.gui instanceof GuiInventory || e.gui instanceof GuiContainerCreative)
 		{
@@ -92,10 +95,10 @@ public class FTBUGuiEventHandler
 			buttons.clear();
 			
 			buttons.add(friends);
-			if(button_guide.getB()) buttons.add(PlayerSelfAction.guide);
-			if(button_info.getB()) buttons.add(PlayerSelfAction.info);
-			if(button_claims.getB()) buttons.add(PlayerSelfAction.claims);
-			if(button_settings.getB()) buttons.add(PlayerSelfAction.settings);
+			if(button_guide.get()) buttons.add(PlayerSelfAction.guide);
+			if(button_info.get()) buttons.add(PlayerSelfAction.info);
+			if(button_claims.get()) buttons.add(PlayerSelfAction.claims);
+			if(button_settings.get()) buttons.add(PlayerSelfAction.settings);
 			
 			for(int i = 0; i < buttons.size(); i++)
 			{
@@ -111,7 +114,7 @@ public class FTBUGuiEventHandler
 	public void guiActionEvent(GuiScreenEvent.ActionPerformedEvent.Post e)
 	{
 		if(e.button.id == PlayerSelfAction.settings.ID)
-			e.gui.mc.displayGuiScreen(new GuiClientConfig(e.gui));
+			e.gui.mc.displayGuiScreen(new GuiEditConfig(e.gui, ClientConfigRegistry.provider));
 		else if(buttons.contains(e.button.id))
 		{
 			final GuiContainerCreative creativeContainer = (e.gui instanceof GuiContainerCreative) ? (GuiContainerCreative)e.gui : null;

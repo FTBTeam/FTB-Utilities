@@ -4,9 +4,8 @@ import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.mod.FTBLibFinals;
-import latmod.ftbu.api.client.EventPlayerAction;
+import latmod.ftbu.api.client.*;
 import latmod.ftbu.net.ClientAction;
-import latmod.ftbu.util.client.FTBULang;
 import latmod.ftbu.world.*;
 import latmod.lib.FastList;
 
@@ -36,7 +35,7 @@ public abstract class PlayerAction
 		{ ClientAction.ACTION_ADD_FRIEND.send(p.playerID); }
 		
 		public String getTitle()
-		{ return FTBULang.Guis.button_add_friend(); }
+		{ return FTBULang.button_add_friend(); }
 	};
 	
 	public static final PlayerAction friend_remove = new PlayerAction(GuiIcons.remove)
@@ -45,7 +44,7 @@ public abstract class PlayerAction
 		{ ClientAction.ACTION_REM_FRIEND.send(p.playerID); }
 		
 		public String getTitle()
-		{ return FTBULang.Guis.button_rem_friend(); }
+		{ return FTBULang.button_rem_friend(); }
 	};
 	
 	public static final PlayerAction friend_deny = new PlayerAction(GuiIcons.remove)
@@ -54,7 +53,7 @@ public abstract class PlayerAction
 		{ ClientAction.ACTION_DENY_FRIEND.send(p.playerID); }
 		
 		public String getTitle()
-		{ return FTBULang.Guis.button_deny_friend(); }
+		{ return FTBULang.button_deny_friend(); }
 	};
 	
 	public static final PlayerAction mail = new PlayerAction(GuiIcons.feather)
@@ -63,7 +62,7 @@ public abstract class PlayerAction
 		{  }
 		
 		public String getTitle()
-		{ return FTBULang.Guis.mail(); }
+		{ return FTBULang.mail(); }
 	};
 	
 	public static final PlayerAction trade = new PlayerAction(GuiIcons.moneybag)
@@ -72,7 +71,7 @@ public abstract class PlayerAction
 		{  }
 		
 		public String getTitle()
-		{ return FTBULang.Guis.trade(); }
+		{ return FTBULang.trade(); }
 	};
 
 	public static FastList<PlayerAction> getActionsFor(LMPlayerClient p)

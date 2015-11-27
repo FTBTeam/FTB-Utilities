@@ -7,8 +7,7 @@ import ftb.lib.FTBLib;
 import latmod.ftbu.api.guide.GuideFile;
 import latmod.ftbu.api.item.IItemLM;
 import latmod.ftbu.mod.FTBUTicks;
-import latmod.ftbu.net.*;
-import latmod.ftbu.notification.Notification;
+import latmod.ftbu.net.MessageDisplayGuide;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -58,9 +57,6 @@ public final class LatCoreMC // LatCoreMCClient
 		FluidRegistry.registerFluid(f);
 		return f;
 	}
-	
-	public static void notifyPlayer(EntityPlayerMP ep, Notification n)
-	{ new MessageNotifyPlayer(n).sendTo(ep); }
 	
 	public static boolean isDedicatedServer()
 	{ return FTBUTicks.isDediServer; }

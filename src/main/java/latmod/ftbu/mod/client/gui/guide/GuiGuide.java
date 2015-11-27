@@ -6,9 +6,9 @@ import java.util.List;
 import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
+import ftb.lib.mod.client.gui.GuiViewImage;
 import latmod.ftbu.api.guide.*;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.client.gui.GuiViewImage;
 import latmod.lib.*;
 import net.minecraft.util.*;
 

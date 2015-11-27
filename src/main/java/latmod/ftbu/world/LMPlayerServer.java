@@ -5,12 +5,12 @@ import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
 import ftb.lib.item.StringIDInvLoader;
+import ftb.lib.notification.*;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.client.FTBUClickAction;
 import latmod.ftbu.mod.config.FTBUConfigClaims;
 import latmod.ftbu.net.MessageLMPlayerUpdate;
-import latmod.ftbu.notification.*;
-import latmod.ftbu.util.LatCoreMC;
 import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,7 +23,6 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public static final int nextPlayerID()
 	{ return ++lastPlayerID; }
 	
-	public long adminToken = 0L;
 	public NBTTagCompound serverData;
 	public EntityPos lastPos, lastDeath;
 	public final Claims claims;
@@ -246,14 +245,14 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 				Notification n = new Notification("new_friend_requests", cc, 6000);
 				n.setDesc(new ChatComponentTranslation(FTBU.mod.assets + "label.new_friends_click"));
 				
-				MouseAction mouse = new MouseAction(ClickAction.FRIEND_ADD_ALL, null);
+				MouseAction mouse = new MouseAction(FTBUClickAction.FRIEND_ADD_ALL, null);
 				requests.sort(null);
 				mouse.hover = new IChatComponent[requests.size()];
 				for(int i = 0; i < mouse.hover.length; i++)
 					mouse.hover[i] = new ChatComponentText(requests.get(i));
 				n.setMouseAction(mouse);
 				
-				LatCoreMC.notifyPlayer(getPlayer(), n);
+				FTBLib.notifyPlayer(getPlayer(), n);
 			}
 		}
 	}

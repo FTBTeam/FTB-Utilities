@@ -2,7 +2,6 @@ package latmod.ftbu.mod.client;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.EventBusHelper;
 import latmod.ftbu.badges.*;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
@@ -12,23 +11,11 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 public class FTBUBadgeRenderer
 {
 	public static final FTBUBadgeRenderer instance = new FTBUBadgeRenderer();
-	public static boolean isEnabled = false;
-	
-	public void enable(boolean enable)
-	{
-		if(isEnabled != enable)
-		{
-			isEnabled = true;
-			
-			if(enable) EventBusHelper.register(this);
-			else EventBusHelper.unregister(this);
-		}
-	}
 	
 	@SubscribeEvent
 	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
 	{
-		if(LatCoreMCClient.isPlaying() && !Badge.badges.isEmpty() && FTBUClient.renderBadges.getB() && !e.entityPlayer.isInvisible())
+		if(LatCoreMCClient.isPlaying() && !Badge.badges.isEmpty() && FTBUClient.renderBadges.get() && !e.entityPlayer.isInvisible())
 		{
 			LMPlayerClient pc = LMWorldClient.inst.getPlayer(e.entityPlayer);
 			

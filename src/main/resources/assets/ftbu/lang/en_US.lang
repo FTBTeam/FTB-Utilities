@@ -1,22 +1,4 @@
 #Buttons
-ftbu:button.settings=Settings
-ftbu:button.back=Back
-ftbu:button.up=Up
-ftbu:button.down=Down
-ftbu:button.prev=Previous
-ftbu:button.next=Next
-ftbu:button.enabled=Enabled
-ftbu:button.disabled=Disabled
-ftbu:button.cancel=Cancel
-ftbu:button.accept=Accept
-ftbu:button.remove=Remove
-ftbu:button.add=Add
-ftbu:button.close=Close
-ftbu:button.save=Save
-ftbu:button.refresh=Refresh
-ftbu:button.other=Other
-
-#Guis
 ftbu:button.add_friend=Add as Friend
 ftbu:button.rem_friend=Remove from Friends
 ftbu:button.deny_friend=Deny Friend Request
@@ -26,49 +8,31 @@ ftbu:button.mail=Mail
 ftbu:button.trade=Trade
 ftbu:button.notes=Notes
 ftbu:button.server_info=Server Info
-ftbu:label.online=Online
 ftbu:label.friend=Friend
 ftbu:label.pfriend=Pending Friend
 ftbu:label.joined=Joined %s ago
 ftbu:label.last_seen=Last seen %s ago
 ftbu:label.deaths=Deaths: %s
-ftbu:label.server_forced=Server overrides to '%s'
 ftbu:button.explosions=Explosions
 ftbu:button.block_security=Block Security
 ftbu:label.cchunks_count=Claimed Chunks: %s
 
 #ClientConfig
-ftbu:client_config=Client Config
-config.value.enabled=Enabled
-config.value.disabled=Disabled
-config.value.true=True
-config.value.false=False
-config.value.left=Left
-config.value.right=Right
-config.value.top=Top
-config.value.bottom=Bottom
-config.value.edit=Edit
-config.property.enabled=Enabled
+client_config.ftbu=FTBUtilities
+client_config.ftbu.player_decorators=Player Decorators
+client_config.ftbu.player_decorators_self=My Player Decorators
+client_config.ftbu.options_button=Options Button
+client_config.ftbu.chat_links=Chat Links
+client_config.ftbu.player_options_shortcut=Player Options Shortcut
+client_config.ftbu.sort_friends_az=Sort Friends A-Z
 
-config.group.ftbu=FTBUtilities
-config.property.player_decorators=Player Decorators
-config.property.player_decorators_self=My Player Decorators
-config.property.item_ore_names=Item OreDict Names
-config.property.item_reg_names=Item Registry Names
-config.property.debug_info=Debug Info
-config.property.options_button=Options Button
-config.property.chat_links=Chat Links
-config.property.player_options_shortcut=Player Options Shortcut
-config.property.sort_friends_az=Sort Friends A-Z
-
-config.group.sidebar_buttons=Sidebar Buttons
-config.property.button_guide=Guide
-config.property.button_info=Server Info
-config.property.button_claims=Claimed Chunks
-config.property.button_settings=Client Settings
+client_config.sidebar_buttons=Sidebar Buttons
+client_config.sidebar_buttons.button_guide=Guide
+client_config.sidebar_buttons.button_info=Server Info
+client_config.sidebar_buttons.button_claims=Claimed Chunks
+client_config.sidebar_buttons.button_settings=Client Settings
 
 #Misc
-ftbu:delete_item=Do you want to delete '%s'?
 ftbu:label.new_friends=New friend requests!
 ftbu:label.new_friends_click=Click to accept all requests
 

@@ -1,12 +1,9 @@
 package latmod.ftbu.net;
 
-import ftb.lib.FTBLib;
 import latmod.ftbu.api.guide.ServerGuideFile;
-import latmod.ftbu.notification.Notification;
 import latmod.ftbu.util.*;
 import latmod.ftbu.world.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.*;
 
 public enum ClientAction
 {
@@ -66,9 +63,6 @@ public enum ClientAction
 				owner.sendUpdate();
 				p.sendUpdate();
 				p.checkNewFriends();
-				Notification n = new Notification("friend_removed", FTBLib.setColor(EnumChatFormatting.RED, new ChatComponentText("Removed a friend")), 800);
-				n.setDesc(new ChatComponentText(p.getName()));
-				LatCoreMC.notifyPlayer(ep, n);
 			}
 			
 			return true;
@@ -87,10 +81,6 @@ public enum ClientAction
 				p.friends.removeValue(owner.playerID);
 				owner.sendUpdate();
 				p.sendUpdate();
-				
-				Notification n = new Notification("friend_denied", FTBLib.setColor(EnumChatFormatting.RED, new ChatComponentText("Denied a friend request")), 800);
-				n.setDesc(new ChatComponentText(p.getName()));
-				LatCoreMC.notifyPlayer(ep, n);
 			}
 			
 			return true;

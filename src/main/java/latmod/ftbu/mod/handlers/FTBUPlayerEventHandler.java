@@ -2,13 +2,12 @@ package latmod.ftbu.mod.handlers;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ftb.lib.*;
+import ftb.lib.notification.Notification;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.api.item.ICreativeSafeItem;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.config.*;
 import latmod.ftbu.net.*;
-import latmod.ftbu.notification.Notification;
-import latmod.ftbu.util.LatCoreMC;
 import latmod.ftbu.world.*;
 import latmod.lib.MathHelperLM;
 import net.minecraft.entity.Entity;
@@ -63,7 +62,7 @@ public class FTBUPlayerEventHandler
 				ep.motionX = ep.motionY = ep.motionZ = 0D;
 				IChatComponent warning = new ChatComponentTranslation(FTBU.mod.assets + ChunkType.WORLD_BORDER.lang + ".warning");
 				warning.getChatStyle().setColor(EnumChatFormatting.RED);
-				LatCoreMC.notifyPlayer(ep, new Notification("world_border", warning, 3000));
+				FTBLib.notifyPlayer(ep, new Notification("world_border", warning, 3000));
 				
 				if(LMWorldServer.inst.settings.isOutsideF(player.lastPos.dim, player.lastPos.x, player.lastPos.z))
 				{
@@ -100,7 +99,7 @@ public class FTBUPlayerEventHandler
 			Notification n = new Notification("chunk_changed", msg, 3000);
 			n.setColor(type.getAreaColor(player));
 			
-			LatCoreMC.notifyPlayer(ep, n);
+			FTBLib.notifyPlayer(ep, n);
 		}
 	}
 	

@@ -27,7 +27,6 @@ public class FTBUConfigCmd
 	public static final ConfigEntryBool home = new ConfigEntryBool("home", true);
 	
 	public static final ConfigEntryBool admin_backup = new ConfigEntryBool("admin_backup", true);
-	public static final ConfigEntryBool admin_edit_config = new ConfigEntryBool("admin_edit_config", true);
 	public static final ConfigEntryBool admin_invsee = new ConfigEntryBool("admin_invsee", true);
 	public static final ConfigEntryBool admin_warps = new ConfigEntryBool("admin_warps", true);
 	public static final ConfigEntryBool admin_edit_chunks = new ConfigEntryBool("admin_edit_chunks", true);

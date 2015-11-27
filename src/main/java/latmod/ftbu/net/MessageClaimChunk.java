@@ -1,6 +1,7 @@
 package latmod.ftbu.net;
 
 import cpw.mods.fml.common.network.simpleimpl.*;
+import ftb.lib.AdminToken;
 import ftb.lib.api.LMNetworkWrapper;
 import latmod.ftbu.world.*;
 
@@ -42,7 +43,7 @@ public class MessageClaimChunk extends MessageFTBU
 		}
 		else if(type == ID_UNCLAIM)
 		{
-			if(token != 0L && token == p.adminToken)
+			if(token != 0L && AdminToken.equals(p.getPlayer(), token))
 			{
 				ClaimedChunk c = Claims.get(dim, cx, cz);
 				if(c != null) c.claims.unclaim(dim, cx, cz);

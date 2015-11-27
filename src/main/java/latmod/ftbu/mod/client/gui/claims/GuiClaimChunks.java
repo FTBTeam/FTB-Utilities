@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 import org.lwjgl.opengl.*;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.gui.GuiIcons;
+import ftb.lib.api.gui.*;
 import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
@@ -14,7 +14,7 @@ import latmod.ftbu.mod.client.gui.friends.GuiFriends;
 import latmod.ftbu.mod.config.FTBUConfigClaims;
 import latmod.ftbu.net.*;
 import latmod.ftbu.util.LMSecurityLevel;
-import latmod.ftbu.util.client.*;
+import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
 import net.minecraft.client.gui.*;
@@ -103,7 +103,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			}
 		};
 		
-		buttonRefresh.title = FTBULang.button_refresh();
+		buttonRefresh.title = FTBLibLang.button_refresh();
 		
 		buttonExplosions = new ItemButtonLM(this, 0, 32, 16, 16, new ItemStack(Blocks.tnt))
 		{
@@ -118,7 +118,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			{
 				l.add(FTBU.mod.translateClient("button.explosions"));
 				if(FTBUConfigClaims.forcedExplosions.get() != -1)
-					l.add(FTBULang.label_server_forced(Boolean.toString(FTBUConfigClaims.forcedExplosions.get() == 1)));
+					l.add(FTBLibLang.label_server_forced(Boolean.toString(FTBUConfigClaims.forcedExplosions.get() == 1)));
 			}
 		};
 		
@@ -137,7 +137,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 				l.add(playerLM.settings.blocks.getText());
 				
 				if(FTBUConfigClaims.forcedChunkSecurity.get() != -1)
-					l.add(FTBULang.label_server_forced(LMSecurityLevel.VALUES_3[FTBUConfigClaims.forcedChunkSecurity.get()].getText()));
+					l.add(FTBLibLang.label_server_forced(LMSecurityLevel.VALUES_3[FTBUConfigClaims.forcedChunkSecurity.get()].getText()));
 			}
 		};
 		

@@ -9,8 +9,8 @@ import ftb.lib.*;
 import ftb.lib.cmd.CommandLevel;
 import ftb.lib.item.StringIDInvLoader;
 import ftb.lib.mod.FTBLibFinals;
-import latmod.ftbu.notification.Notification;
-import latmod.ftbu.util.*;
+import ftb.lib.notification.Notification;
+import latmod.ftbu.util.CommandFTBU;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
 import net.minecraft.command.ICommandSender;
@@ -146,7 +146,7 @@ public class CmdAdminPlayer extends CommandFTBU
 				
 				if(n != null)
 				{
-					LatCoreMC.notifyPlayer(p.getPlayer(), n);
+					FTBLib.notifyPlayer(p.getPlayer(), n);
 					return null;
 				}
 			}

@@ -73,7 +73,7 @@ public abstract class PlayerSelfAction extends PlayerAction
 	public static final PlayerSelfAction notes = new PlayerSelfAction(GuiIcons.notes)
 	{
 		public void onClicked(LMPlayerClient p)
-		{  }
+		{ /* TODO: Notes */ }
 		
 		public String getTitle()
 		{ return FTBULang.notes(); }

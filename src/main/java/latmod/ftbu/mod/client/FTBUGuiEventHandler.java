@@ -144,11 +144,11 @@ public class FTBUGuiEventHandler
 			if(creativeContainer != null && creativeContainer.func_147056_g() != CreativeTabs.tabInventory.getTabIndex())
 				return;
 			
-			GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GlStateManager.pushAttrib();
+			GlStateManager.enableBlend();
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			
-			GL11.glColor4f(1F, 1F, 1F, 1F);
+			GlStateManager.color(1F, 1F, 1F, 1F);
 			button.render(xPosition, yPosition, 0D);
 			
 			if(mx >= xPosition && my >= yPosition && mx < xPosition + width && my < yPosition + height)
@@ -158,14 +158,14 @@ public class FTBUGuiEventHandler
 			{
 				String n = String.valueOf(ClientNotifications.Perm.list.size());
 				int nw = mc.fontRenderer.getStringWidth(n);
-				GL11.glColor4f(1F, 1F, 1F, 1F);
-				GL11.glDisable(GL11.GL_TEXTURE_2D);
+				GlStateManager.color(1F, 1F, 1F, 1F);
+				GlStateManager.disableTexture();
 				GuiLM.drawRect(xPosition + width - nw, yPosition - 4, xPosition + width + 1, yPosition + 5, 0xAAFF2222);
-				GL11.glEnable(GL11.GL_TEXTURE_2D);
+				GlStateManager.enableTexture();
 				mc.fontRenderer.drawString(n, xPosition + width - nw + 1, yPosition - 3, 0xFFFFFFFF);
 			}
 			
-			GL11.glPopAttrib();
+			GlStateManager.popAttrib();
 		}
 	}
 }

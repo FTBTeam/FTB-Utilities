@@ -14,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.util.FakePlayer;
 
 public class Claims
 {
@@ -201,13 +202,13 @@ public class Claims
 			return false;
 		else
 		{
-			int fe = FTBUConfigClaims.forcedExplosions.get();
+			EnumEnabled fe = FTBUConfigClaims.forcedExplosions.get();
 			
 			ClaimedChunk c = get(dim, cx, cz);
 			if(c != null)
 			{
-				if(fe == -1) return c.claims.owner.settings.explosions;
-				else return fe == 1;
+				if(fe == null) return c.claims.owner.settings.explosions;
+				else return fe.isEnabled();
 			}
 		}
 		
@@ -216,6 +217,8 @@ public class Claims
 	
 	public static boolean canPlayerInteract(EntityPlayer ep, int x, int y, int z, boolean leftClick)
 	{
+		if(ep instanceof FakePlayer) return true;
+		
 		World w = ep.worldObj;
 		boolean server = !w.isRemote;
 		if(server && LMWorldServer.inst.settings.isOutsideF(w.provider.dimensionId, x, z)) return false;

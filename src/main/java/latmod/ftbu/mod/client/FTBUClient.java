@@ -46,7 +46,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	
 	public static final ConfigEntryBool playerOptionsShortcut = new ConfigEntryBool("player_options_shortcut", false);
 	public static final ConfigEntryBool sortFriendsAZ = new ConfigEntryBool("sort_friends_az", false);
-	public static final ConfigEntryBool hideArmorFG = new ConfigEntryBool("hide_armor_fg", false).setHidden(true);
+	public static final ConfigEntryBool hideArmorFG = new ConfigEntryBool("hide_armor_fg", false).setHidden();
 	
 	public static void onWorldJoined()
 	{
@@ -69,9 +69,9 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		EventBusHelper.register(FTBUBadgeRenderer.instance);
 		
 		clientConfig.add(renderBadges);
-		clientConfig.add(renderMyBadge.setSave(false));
+		clientConfig.add(renderMyBadge.setExcluded());
 		clientConfig.add(optionsButton);
-		clientConfig.add(chatLinks.setSave(false));
+		clientConfig.add(chatLinks.setExcluded());
 		clientConfig.add(playerOptionsShortcut);
 		clientConfig.add(sortFriendsAZ);
 		clientConfig.add(hideArmorFG);

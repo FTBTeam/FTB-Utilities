@@ -1,13 +1,14 @@
 package latmod.ftbu.api.guide;
 
-import java.lang.reflect.Field;
 import java.util.Set;
 
 import ftb.lib.*;
+import ftb.lib.api.config.ConfigListRegistry;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.config.*;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
+import latmod.lib.config.*;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityList;
 import net.minecraft.util.*;
@@ -38,7 +39,7 @@ public class ServerGuideFile extends GuideFile
 			players.get(i).refreshStats();
 		
 		categoryTops = main.getSub(new ChatComponentTranslation(FTBU.mod.assets + "top.title"));
-		categoryOther = main.getSub(new ChatComponentTranslation(FTBU.mod.assets + "button.other"));
+		categoryOther = main.getSub(new ChatComponentTranslation("ftbl:button.other"));
 		
 		categoryOther.println(new ChatComponentTranslation("ftbl:worldID", FTBWorld.server.getWorldIDS()));
 		
@@ -65,13 +66,59 @@ public class ServerGuideFile extends GuideFile
 		if(FTBUConfigBackups.enabled.get())
 			main.println(new ChatComponentTranslation(FTBU.mod.assets + "cmd.timer_backup", LMStringUtils.getTimeString(Backups.getSecondsUntilNextBackup() * 1000L)));
 		
-		FTBUConfig.onGuideEvent(this);
-		
 		if(FTBUConfigTops.first_joined.get()) addTop(Top.first_joined);
 		if(FTBUConfigTops.deaths.get()) addTop(Top.deaths);
 		if(FTBUConfigTops.deaths_ph.get()) addTop(Top.deaths_ph);
 		if(FTBUConfigTops.last_seen.get()) addTop(Top.last_seen);
 		if(FTBUConfigTops.time_played.get()) addTop(Top.time_played);
+		
+		GuideCategory config = main.getSub(new ChatComponentText("Config"));
+		
+		for(ConfigList l : ConfigListRegistry.instance.list)
+		{
+			GuideCategory mod = config.getSub(new ChatComponentText(l.getDisplayName()));
+			
+			for(ConfigGroup g : l.groups)
+			{
+				GuideCategory group = mod.getSub(new ChatComponentText(g.getDisplayName()));
+				
+				for(ConfigEntry e : g.entries)
+				{
+					if(e.isValid() && e.info != null)
+					{
+						StringBuilder sb = new StringBuilder();
+						sb.append(EnumChatFormatting.RED);
+						sb.append('[');
+						sb.append(e.ID);
+						sb.append(']');
+						sb.append('\n');
+						sb.append(EnumChatFormatting.BLUE);
+						
+						if(e.info.def != null)
+						{
+							sb.append("Default: ");
+							sb.append(e.info.def);
+							sb.append('\n');
+						}
+						
+						if(e.info.min != null && e.info.max != null)
+						{
+							sb.append("Min: " + e.info.min + ", Max: " + e.info.max);
+							sb.append('\n');
+						}
+						
+						if(e.info.info != null)
+						{
+							sb.append(EnumChatFormatting.RESET);
+							sb.append(e.info.info);
+							sb.append('\n');
+						}
+						
+						group.println(sb.toString());
+					}
+				}
+			}
+		}
 		
 		new EventFTBUServerGuide(this, self, isOP).post();
 		
@@ -132,51 +179,5 @@ public class ServerGuideFile extends GuideFile
 			if(data instanceof IChatComponent) c.appendSibling(FTBLib.getChatComponent(data));
 			thisTop.println(c);
 		}
-	}
-	
-	public void addConfigFromClass(String mod, String id, Class<?> c)
-	{
-		if(!isOP) return;
-		
-		try
-		{
-			GuideCategory category = getMod(mod).getSub(new ChatComponentText("Config")).getSub(new ChatComponentText(id));
-			
-			Field[] fields = c.getDeclaredFields();
-			
-			if(fields != null && fields.length > 0) for(Field f : fields)
-			{
-				f.setAccessible(true);
-				
-				if(f.isAnnotationPresent(GuideInfo.class))
-				{
-					GuideInfo i = f.getAnnotation(GuideInfo.class);
-					
-					String key = i.key();
-					String info = i.info();
-					String def = i.def();
-					
-					if(key.isEmpty()) key = f.getName();
-					
-					StringBuilder sb = new StringBuilder();
-					sb.append(EnumChatFormatting.RED);
-					sb.append('[');
-					sb.append(key);
-					sb.append(']');
-					sb.append('\n');
-					sb.append(EnumChatFormatting.BLUE);
-					sb.append("Default: ");
-					sb.append(def);
-					sb.append(EnumChatFormatting.RESET);
-					sb.append('\n');
-					sb.append(info);
-					sb.append(EnumChatFormatting.RESET);
-					sb.append('\n');
-					category.println(sb.toString());
-				}
-			}
-		}
-		catch(Exception e)
-		{ e.printStackTrace(); }
 	}
 }

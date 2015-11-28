@@ -13,7 +13,6 @@ import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
 import latmod.ftbu.mod.config.FTBUConfigClaims;
 import latmod.ftbu.net.*;
-import latmod.ftbu.util.LMSecurityLevel;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
@@ -117,8 +116,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			public void addMouseOverText(FastList<String> l)
 			{
 				l.add(FTBU.mod.translateClient("button.explosions"));
-				if(FTBUConfigClaims.forcedExplosions.get() != -1)
-					l.add(FTBLibLang.label_server_forced(Boolean.toString(FTBUConfigClaims.forcedExplosions.get() == 1)));
+				if(FTBUConfigClaims.forcedExplosions.get() != null)
+					l.add(FTBLibLang.label_server_forced(Boolean.toString(FTBUConfigClaims.forcedExplosions.get().isEnabled())));
 			}
 		};
 		
@@ -136,8 +135,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 				l.add(title);
 				l.add(playerLM.settings.blocks.getText());
 				
-				if(FTBUConfigClaims.forcedChunkSecurity.get() != -1)
-					l.add(FTBLibLang.label_server_forced(LMSecurityLevel.VALUES_3[FTBUConfigClaims.forcedChunkSecurity.get()].getText()));
+				if(FTBUConfigClaims.forcedChunkSecurity.get() != null)
+					l.add(FTBLibLang.label_server_forced(FTBUConfigClaims.forcedChunkSecurity.get().getText()));
 			}
 		};
 		

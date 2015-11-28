@@ -4,7 +4,7 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.LMDimUtils;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.config.FTBUConfigClaims;
-import latmod.ftbu.util.*;
+import latmod.ftbu.util.LMSecurity;
 import latmod.lib.MathHelperLM;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
@@ -47,9 +47,8 @@ public class ChunkType
 		{
 			if(chunkOwner.equals(p)) return true;
 			LMSecurity s = new LMSecurity(chunkOwner);
-			int forced = FTBUConfigClaims.forcedChunkSecurity.get();
-			if(forced != -1) s.level = LMSecurityLevel.VALUES_3[forced];
-			else s.level = chunkOwner.settings.blocks;
+			s.level = FTBUConfigClaims.forcedChunkSecurity.get();
+			if(s.level == null) s.level = chunkOwner.settings.blocks;
 			return s.canInteract(p);
 		}
 	}

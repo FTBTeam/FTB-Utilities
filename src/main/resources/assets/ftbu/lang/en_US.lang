@@ -25,6 +25,7 @@ client_config.ftbu.options_button=Options Button
 client_config.ftbu.chat_links=Chat Links
 client_config.ftbu.player_options_shortcut=Player Options Shortcut
 client_config.ftbu.sort_friends_az=Sort Friends A-Z
+client_config.ftbu.notifications=Notifications
 
 client_config.sidebar_buttons=Sidebar Buttons
 client_config.sidebar_buttons.button_guide=Guide

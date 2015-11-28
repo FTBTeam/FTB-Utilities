@@ -4,7 +4,6 @@ import java.io.File;
 
 import ftb.lib.FTBLib;
 import ftb.lib.api.config.ConfigListRegistry;
-import latmod.ftbu.api.guide.ServerGuideFile;
 import latmod.lib.config.ConfigFile;
 
 public class FTBUConfig // FTBU
@@ -13,26 +12,15 @@ public class FTBUConfig // FTBU
 	
 	public static void load()
 	{
-		configFile = new ConfigFile("ftbu", new File(FTBLib.folderLocal, "ftbu/config.json"), true);
-		FTBUConfigGeneral.load(configFile);
-		FTBUConfigLogin.load(configFile);
-		FTBUConfigBackups.load(configFile);
-		FTBUConfigClaims.load(configFile);
-		FTBUConfigCmd.load(configFile);
-		FTBUConfigTops.load(configFile);
+		configFile = new ConfigFile("ftbu", new File(FTBLib.folderLocal, "ftbu/config.json"));
+		configFile.configList.setName("FTBUtilities");
+		configFile.add(FTBUConfigGeneral.group.addAll(FTBUConfigGeneral.class));
+		configFile.add(FTBUConfigLogin.group.addAll(FTBUConfigLogin.class));
+		configFile.add(FTBUConfigBackups.group.addAll(FTBUConfigBackups.class));
+		configFile.add(FTBUConfigClaims.group.addAll(FTBUConfigClaims.class));
+		configFile.add(FTBUConfigCmd.group.addAll(FTBUConfigCmd.class));
+		configFile.add(FTBUConfigTops.group.addAll(FTBUConfigTops.class));
 		ConfigListRegistry.instance.add(configFile);
 		configFile.load();
 	}
-	
-	public static void onGuideEvent(ServerGuideFile file)
-	{
-		addGuideGroup(file, "General", FTBUConfigGeneral.class);
-		addGuideGroup(file, "Login", FTBUConfigLogin.class);
-		addGuideGroup(file, "Backups", FTBUConfigBackups.class);
-		addGuideGroup(file, "Claims", FTBUConfigClaims.class);
-		addGuideGroup(file, "Commands", FTBUConfigCmd.class);
-	}
-	
-	private static void addGuideGroup(ServerGuideFile file, String s, Class<?> c)
-	{ file.addConfigFromClass("FTBUtilities", s, c); }
 }

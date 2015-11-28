@@ -4,7 +4,7 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.*;
 import latmod.ftbu.api.EventLMWorldClient;
 import latmod.ftbu.api.guide.ClientGuideFile;
-import latmod.ftbu.mod.FTBLIntegration;
+import latmod.ftbu.mod.handlers.FTBLIntegration;
 import latmod.ftbu.world.LMWorldClient;
 
 @SideOnly(Side.CLIENT)

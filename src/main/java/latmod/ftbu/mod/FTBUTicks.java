@@ -5,13 +5,10 @@ import latmod.ftbu.mod.cmd.admin.CmdAdminRestart;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.world.Backups;
 import latmod.lib.*;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 
 public class FTBUTicks
 {
-	private static MinecraftServer server;
-	public static boolean isDediServer = false;
 	private static long startMillis = 0L;
 	private static long currentMillis = 0L;
 	private static long restartSeconds = 0L;
@@ -19,9 +16,6 @@ public class FTBUTicks
 	
 	public static void serverStarted()
 	{
-		server = FTBLib.getServer();
-		isDediServer = server.isDedicatedServer();
-		
 		currentMillis = startMillis = Backups.lastTimeRun = LMUtils.millis();
 		restartSeconds = 0;
 		
@@ -35,8 +29,6 @@ public class FTBUTicks
 	@SuppressWarnings("all")
 	public static void serverStopped()
 	{
-		server = null;
-		isDediServer = false;
 		currentMillis = startMillis = restartSeconds = 0L;
 	}
 	

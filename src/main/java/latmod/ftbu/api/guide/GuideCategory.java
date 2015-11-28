@@ -1,7 +1,7 @@
 package latmod.ftbu.api.guide;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.LMNBTUtils;
+import ftb.lib.*;
 import latmod.lib.FastList;
 import net.minecraft.nbt.*;
 import net.minecraft.util.*;
@@ -32,7 +32,7 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 	{ text.add(c); }
 	
 	public void println(String s)
-	{ println(new ChatComponentText(s)); }
+	{ if(s != null) println(new ChatComponentText(s)); }
 	
 	public String getUnformattedText()
 	{
@@ -143,6 +143,17 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 				c.readFromNBT(tag1);
 				subcategories.add(c);
 			}
+		}
+	}
+	
+	public void cleanup()
+	{
+		for(int i = subcategories.size() - 1; i >= 0; i--)
+		{
+			GuideCategory c = subcategories.get(i);
+			
+			if(c.subcategories.isEmpty() && FTBLib.removeFormatting(c.getFormattedText().trim()).isEmpty())
+				subcategories.remove(i); else c.cleanup();
 		}
 	}
 }

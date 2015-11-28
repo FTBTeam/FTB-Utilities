@@ -26,6 +26,7 @@ public class GuiGuide extends GuiLM
 	
 	public final GuiGuide parentGui;
 	public final GuideCategory category;
+	public GuideCategory selectedCategory;
 	
 	public final SliderLM sliderCategories, sliderText;
 	public final ButtonLM buttonBack;
@@ -39,7 +40,9 @@ public class GuiGuide extends GuiLM
 	{
 		super(null, tex);
 		parentGui = g;
+		c.cleanup();
 		category = c;
+		selectedCategory = category;
 		
 		hideNEI = true;
 		xSize = 328;
@@ -72,9 +75,22 @@ public class GuiGuide extends GuiLM
 			public void onButtonPressed(int b)
 			{
 				playClickSound();
-				if(parentGui == null)
-					mc.thePlayer.closeScreen();
-				else mc.displayGuiScreen(parentGui);
+				
+				if(selectedCategory == category || category.getFormattedText().isEmpty())
+				{
+					if(parentGui == null)
+						mc.thePlayer.closeScreen();
+					else
+					{
+						mc.displayGuiScreen(parentGui);
+						parentGui.selectedCategory = parentGui.category;
+					}
+				}
+				else
+				{
+					selectedCategory = category;
+					initLMGui();
+				}
 			}
 		};
 		
@@ -125,10 +141,10 @@ public class GuiGuide extends GuiLM
 	{
 		allTextLines.clear();
 		
-		GuideFile file = category.getFile();
+		GuideFile file = selectedCategory.getFile();
 		if(file == null) return;
 		
-		String s = category.getFormattedText();
+		String s = selectedCategory.getFormattedText();
 		if(s != null && s.length() > 0)
 		{
 			boolean uni = fontRendererObj.getUnicodeFlag();
@@ -270,7 +286,13 @@ public class GuiGuide extends GuiLM
 		public void onButtonPressed(int b)
 		{
 			gui.playClickSound();
-			gui.mc.displayGuiScreen(new GuiGuide(GuiGuide.this, cat));
+			
+			if(cat.subcategories.isEmpty())
+			{
+				selectedCategory = cat;
+				initLMGui();
+			}
+			else gui.mc.displayGuiScreen(new GuiGuide(GuiGuide.this, cat));
 		}
 		
 		public boolean isEnabled()
@@ -284,6 +306,7 @@ public class GuiGuide extends GuiLM
 			IChatComponent titleC = cat.getTitleComponent().createCopy();
 			boolean mouseOver = mouseOver(ax, ay);
 			if(mouseOver) titleC.getChatStyle().setUnderlined(true);
+			if(selectedCategory == cat) titleC.getChatStyle().setBold(true);
 			gui.getFontRenderer().drawString(titleC.getFormattedText(), ax + 1, ay + 1, mouseOver ? textColorOver : textColor);
 		}
 	}

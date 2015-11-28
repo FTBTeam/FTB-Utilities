@@ -6,7 +6,6 @@ import cpw.mods.fml.common.registry.*;
 import ftb.lib.FTBLib;
 import latmod.ftbu.api.guide.GuideFile;
 import latmod.ftbu.api.item.IItemLM;
-import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.net.MessageDisplayGuide;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -57,9 +56,6 @@ public final class LatCoreMC // LatCoreMCClient
 		FluidRegistry.registerFluid(f);
 		return f;
 	}
-	
-	public static boolean isDedicatedServer()
-	{ return FTBUTicks.isDediServer; }
 	
 	public static void displayGuide(EntityPlayerMP ep, GuideFile file) 
 	{ if(FTBLib.isServer() && !(ep instanceof FakePlayer)) new MessageDisplayGuide(file).sendTo(ep); }

@@ -52,7 +52,7 @@ public abstract class Top implements Comparator<LMPlayerServer>
 		
 		public Object getData(LMPlayerServer p)
 		{
-			if(p.isOnline()) return new ChatComponentTranslation(FTBU.mod.assets + "label.online");
+			if(p.isOnline()) return new ChatComponentTranslation("ftbl:label.online");
 			return LMStringUtils.getTimeString(LMUtils.millis() - p.stats.lastSeen);
 		}
 	};

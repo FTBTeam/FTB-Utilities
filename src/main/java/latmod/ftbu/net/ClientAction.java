@@ -135,8 +135,7 @@ public enum ClientAction
 	{
 		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
 		{
-			ServerGuideFile.instance.reload(owner);
-			LatCoreMC.displayGuide(ep, ServerGuideFile.instance);
+			LatCoreMC.displayGuide(ep, new ServerGuideFile(owner));
 			return false;
 		}
 	},

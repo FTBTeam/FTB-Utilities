@@ -1,4 +1,4 @@
-package latmod.ftbu.mod;
+package latmod.ftbu.mod.handlers;
 
 import java.io.File;
 import java.util.List;
@@ -9,8 +9,9 @@ import ftb.lib.api.config.ConfigListRegistry;
 import ftb.lib.item.LMInvUtils;
 import ftb.lib.mod.FTBUIntegration;
 import latmod.ftbu.api.*;
+import latmod.ftbu.api.guide.ServerGuideFile;
+import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.mod.config.*;
-import latmod.ftbu.mod.handlers.FTBUChunkEventHandler;
 import latmod.ftbu.net.*;
 import latmod.ftbu.world.*;
 import latmod.lib.Phase;
@@ -30,6 +31,8 @@ public class FTBLIntegration extends FTBUIntegration // FTBLIntegrationClient
 		
 		for(LMPlayer p : LMWorldServer.inst.players)
 			p.toPlayerMP().refreshStats();
+		
+		ServerGuideFile.CachedInfo.reload();
 	}
 	
 	public void onModeSet(EventFTBModeSet e)

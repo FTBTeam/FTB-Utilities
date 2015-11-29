@@ -1,5 +1,6 @@
 package latmod.ftbu.mod.client.gui.guide;
 
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import ftb.lib.mod.client.gui.GuiViewImage;
 import latmod.ftbu.api.guide.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.lib.*;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 
 public class GuiGuide extends GuiLM
@@ -160,7 +162,7 @@ public class GuiGuide extends GuiLM
 				
 				if(l.special != null)
 				{
-					if(l.special.isText())
+					if(l.special.type.isText())
 					{
 						l.text = (l.special.title == null) ? "" : l.special.title.getFormattedText();
 						List<String> list1 = fontRendererObj.listFormattedStringToWidth(l.text, textPanel.width);
@@ -177,7 +179,7 @@ public class GuiGuide extends GuiLM
 							}
 						}
 					}
-					else if(l.special.isImage())
+					else if(l.special.type.isImage())
 					{
 						try
 						{
@@ -329,18 +331,22 @@ public class GuiGuide extends GuiLM
 		
 		public void onButtonPressed(int b)
 		{
-			if(line != null && line.special != null)
+			if(line == null || line.special == null) return;
+			
+			if(line.special.type == LinkType.URL)
 			{
-				if(line.special.type == GuideLink.TYPE_URL)
-				{
-					try { LMUtils.openURI(new URI(line.special.link)); }
-					catch(Exception e) { e.printStackTrace(); }
-				}
-				else if(line.special.isImage())
-				{
-					TextureCoords tc = line.special.getTexture();
-					if(tc != null && tc.isValid()) mc.displayGuiScreen(new GuiViewImage(GuiGuide.this, tc));
-				}
+				try { LMUtils.openURI(new URI(line.special.link)); }
+				catch(Exception e) { e.printStackTrace(); }
+			}
+			else if(line.special.type.isImage())
+			{
+				TextureCoords tc = line.special.getTexture();
+				if(tc != null && tc.isValid()) mc.displayGuiScreen(new GuiViewImage(GuiGuide.this, tc));
+			}
+			else if(line.special.type == LinkType.RECIPE)
+			{
+				if(line.special.getItem() != null)
+					NEIIntegration.openRecipe(line.special.getItem());
 			}
 		}
 		
@@ -352,13 +358,45 @@ public class GuiGuide extends GuiLM
 			int ay = getAY();
 			
 			if(!line.text.isEmpty()) fontRendererObj.drawString(line.text, ax, ay, textColor);
-			else if(line.special != null && line.special.isImage() && line.texture != null && line.texture.isValid())
+			else if(line.special != null && line.special.type.isImage() && line.texture != null && line.texture.isValid())
 			{
 				GlStateManager.color(1F, 1F, 1F, 1F);
 				gui.setTexture(line.texture.texture);
 				double w = Math.min(width, line.texture.width);
 				gui.render(line.texture, ax, ay, w, line.texture.getHeight(w) + 1);
 				//GuiLM.drawTexturedRectD(ax, ay, gui.getZLevel(), w, line.texture.getHeight(w), 0D, line.texture.minU, 1D, line.texture.maxU);
+			}
+		}
+	}
+	
+	private static class NEIIntegration
+	{
+		private static Boolean hasNEI = null;
+		private static Method method = null;
+		
+		public static void openRecipe(ItemStack is)
+		{
+			if(is == null) return;
+			
+			if(hasNEI == null)
+			{
+				hasNEI = Boolean.FALSE;
+				
+				try
+				{
+					Class<?> c = Class.forName("codechicken.nei.recipe.GuiCraftingRecipe");
+					method = c.getMethod("openRecipeGui", String.class, Object[].class);
+					if(method != null) hasNEI = Boolean.TRUE;
+				}
+				catch(Exception e)
+				{ e.printStackTrace(); }
+			}
+			
+			if(hasNEI.booleanValue())
+			{
+				try { method.invoke(null, "item", new Object[] { is }); }
+				catch(Exception e)
+				{ e.printStackTrace(); }
 			}
 		}
 	}

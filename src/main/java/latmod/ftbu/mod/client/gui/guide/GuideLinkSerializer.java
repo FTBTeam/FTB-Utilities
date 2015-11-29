@@ -4,7 +4,7 @@ import java.lang.reflect.Type;
 
 import com.google.gson.*;
 
-import latmod.ftbu.api.guide.GuideLink;
+import latmod.ftbu.api.guide.*;
 import net.minecraft.util.*;
 
 public class GuideLinkSerializer implements JsonDeserializer<GuideLink>
@@ -27,27 +27,13 @@ public class GuideLinkSerializer implements JsonDeserializer<GuideLink>
 		
 		JsonObject o = json.getAsJsonObject();
 		
-		if(o.has("type"))
+		if(o.has("type") && o.has("link"))
 		{
-			String type = o.get("type").getAsString();
-			
-			GuideLink special = null;
-			
-			if(type.equals("url"))
-				special = new GuideLink(GuideLink.TYPE_URL);
-			else if(type.equals("image"))
-				special = new GuideLink(GuideLink.TYPE_IMAGE);
-			else if(type.equals("image_url"))
-				special = new GuideLink(GuideLink.TYPE_IMAGE_URL);
-			
-			if(special != null && o.has("link"))
-			{
-				special.link = o.get("link").getAsString();
-				special.title = o.has("title") ? (IChatComponent)context.deserialize(o.get("title"), IChatComponent.class) : new ChatComponentText(special.link);
-				if(o.has("hover")) special.hover = (IChatComponent)context.deserialize(o.get("hover"), IChatComponent.class);
-				
-				return special;
-			}
+			LinkType type = LinkType.valueOf(o.get("type").getAsString().toUpperCase());
+			GuideLink special = new GuideLink(type, o.get("link").getAsString());
+			special.title = o.has("title") ? (IChatComponent)context.deserialize(o.get("title"), IChatComponent.class) : new ChatComponentText(special.link);
+			if(o.has("hover")) special.hover = (IChatComponent)context.deserialize(o.get("hover"), IChatComponent.class);
+			return special;
 		}
 		
 		return null;

@@ -14,7 +14,7 @@ public class FTBUConfigGeneral
 	public static final ConfigEntryFloat restartTimer = new ConfigEntryFloat("restartTimer", new FloatBounds(0F, 0F, 720F)).setInfo("Server will automatically shut down after X hours\n0 - Disabled\n0.5 - 30 minutes\n1 - 1 Hour\n24 - 1 Day\n168 - 1 Week\n720 - 1 Month");
 	public static final ConfigEntryBool safeSpawn = new ConfigEntryBool("safeSpawn", false).setInfo("If set to true, explosions and hostile mobs in spawn area will be disabled");
 	public static final ConfigEntryBool spawnPVP = new ConfigEntryBool("spawnPVP", true).setInfo("If set to false, players won't be able to attack each other in spawn area");
-	public static final ConfigEntryStringArray blockedEntities = new ConfigEntryStringArray("blockedEntities", new FastList<String>()).setInfo("Entity classes that are banned from world. They will not spawn and existing ones will be destroyed");
+	public static final ConfigEntryStringArray blockedEntities = new ConfigEntryStringArray("blockedEntities", new FastList<String>()).setInfo("Entity IDs that are banned from world. They will not spawn and existing ones will be destroyed");
 	
 	public static boolean allowCreativeInteractSecure(EntityPlayer ep)
 	{ return ep != null && allowCreativeInteractSecure.get() && ep.capabilities.isCreativeMode/* && !(ep instanceof FakePlayer)*/; }

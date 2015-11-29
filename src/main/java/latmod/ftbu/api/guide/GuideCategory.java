@@ -8,19 +8,21 @@ import net.minecraft.util.*;
 
 public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 {
-	public final GuideCategory parent;
+	public GuideCategory parent = null;
 	private IChatComponent title;
 	private FastList<IChatComponent> text;
 	public final FastList<GuideCategory> subcategories;
 	GuideFile file = null;
 	
-	public GuideCategory(GuideCategory p, IChatComponent s)
+	public GuideCategory(IChatComponent s)
 	{
-		parent = p;
 		title = s;
 		text = new FastList<IChatComponent>();
 		subcategories = new FastList<GuideCategory>();
 	}
+	
+	public GuideCategory setParent(GuideCategory c)
+	{ parent = c; return this; }
 	
 	public GuideFile getFile()
 	{
@@ -77,7 +79,8 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 			if(c.title.equals(s)) return c;
 		}
 		
-		GuideCategory c = new GuideCategory(this, s);
+		GuideCategory c = new GuideCategory(s);
+		c.setParent(this);
 		subcategories.add(c);
 		return c;
 	}
@@ -139,7 +142,8 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 			for(int i = 0; i < list.tagCount(); i++)
 			{
 				NBTTagCompound tag1 = list.getCompoundTagAt(i);
-				GuideCategory c = new GuideCategory(this, null);
+				GuideCategory c = new GuideCategory(null);
+				c.setParent(this);
 				c.readFromNBT(tag1);
 				subcategories.add(c);
 			}
@@ -156,4 +160,7 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 				subcategories.remove(i); else c.cleanup();
 		}
 	}
+
+	public void copyFrom(GuideCategory c)
+	{ for(int i = 0; i < c.subcategories.size(); i++) addSub(c.setParent(this)); }
 }

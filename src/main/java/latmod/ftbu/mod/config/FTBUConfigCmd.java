@@ -6,7 +6,7 @@ import latmod.lib.util.IntBounds;
 public class FTBUConfigCmd
 {
 	public static final ConfigGroup group = new ConfigGroup("commands");
-	public static final ConfigEntryString commandNameAdmin = new ConfigEntryString("name_cmd_admin", "admin").setInfo("Command name for admin command.");
+	public static final ConfigEntryString commandNameAdmin = new ConfigEntryString("name_cmd_admin", "admin").setInfo("Command name for admin command");
 	public static final ConfigEntryInt maxHomesPlayer = new ConfigEntryInt("maxHomesPlayer", new IntBounds(0, 0, 32000)).setInfo("Max home count for players");
 	public static final ConfigEntryInt maxHomesAdmin = new ConfigEntryInt("maxHomesAdmin", new IntBounds(100, 0, 32000)).setInfo("Max home count for admins");
 	public static final ConfigEntryBool crossDimHomes = new ConfigEntryBool("crossDimHomes", true).setInfo("Can use /home to teleport to another dimension");

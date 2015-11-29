@@ -5,13 +5,11 @@ import java.util.Set;
 
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import ftb.lib.FTBLib;
-import ftb.lib.api.config.ConfigListRegistry;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.client.gui.guide.GuideLinkSerializer;
 import latmod.ftbu.mod.config.*;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
-import latmod.lib.config.*;
 import net.minecraft.command.*;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityList;
@@ -22,7 +20,7 @@ public class ServerGuideFile extends GuideFile
 {
 	public static class CachedInfo
 	{
-		public static final GuideCategory main = new GuideCategory(null, new ChatComponentTranslation(FTBUFinals.ASSETS + "button.server_info"));
+		public static final GuideCategory main = new GuideCategory(new ChatComponentTranslation(FTBUFinals.ASSETS + "button.server_info"));
 		public static GuideCategory categoryServer, categoryServerAdmin;
 		public static final FastMap<String, GuideLink> links = new FastMap<String, GuideLink>();
 		public static final FastList<ICommand> commands = new FastList<ICommand>();
@@ -31,8 +29,8 @@ public class ServerGuideFile extends GuideFile
 		{
 			main.clear();
 			
-			categoryServer = main.getSub(new ChatComponentText("Server"));
-			categoryServerAdmin = new GuideCategory(main, new ChatComponentText("Admin"));
+			categoryServerAdmin = new GuideCategory(new ChatComponentText("Admin"));
+			categoryServerAdmin.setParent(main);
 			
 			//categoryServer.println(new ChatComponentTranslation("ftbl:worldID", FTBWorld.server.getWorldIDS()));
 			
@@ -42,7 +40,7 @@ public class ServerGuideFile extends GuideFile
 				File[] f = file.listFiles();
 				if(f != null && f.length > 0)
 					for(int i = 0; i < f.length; i++)
-						loadFromFiles(categoryServer, f[i]);
+						loadFromFiles(main, f[i]);
 			}
 			
 			file = new File(FTBLib.folderLocal, "guide_cover.txt");
@@ -51,7 +49,7 @@ public class ServerGuideFile extends GuideFile
 				try
 				{
 					String text = LMFileUtils.loadAsText(file);
-					categoryServer.println(text);
+					main.println(text);
 				}
 				catch(Exception ex)
 				{ ex.printStackTrace(); }
@@ -61,71 +59,6 @@ public class ServerGuideFile extends GuideFile
 			links.clear();
 			LinksMap linksMap = LMJsonUtils.fromJsonFile(GuideLinkSerializer.gson, LMFileUtils.newFile(file), LinksMap.class);
 			if(linksMap != null && linksMap.links != null) links.putAll(linksMap.links);
-			
-			for(String s : FTBUConfigLogin.motd.get())
-				main.println(s);
-			
-			if(!FTBUConfigLogin.rules.get().isEmpty())
-			{
-				IChatComponent c = new ChatComponentText("[rules_link]");
-				c.getChatStyle().setColor(EnumChatFormatting.GOLD);
-				main.println(c);
-				GuideLink l = new GuideLink(GuideLink.TYPE_URL);
-				l.link = FTBUConfigLogin.rules.get();
-				l.title = new ChatComponentTranslation(FTBU.mod.assets + "cmd.rules");
-				links.put("rules_link", l);
-			}
-			
-			if(!FTBUConfigLogin.motd.get().isEmpty() || !FTBUConfigLogin.rules.get().isEmpty())
-				main.println("");
-			
-			GuideCategory config = categoryServerAdmin.getSub(new ChatComponentText("Config"));
-			
-			for(ConfigList l : ConfigListRegistry.instance.list)
-			{
-				GuideCategory mod = config.getSub(new ChatComponentText(l.getDisplayName()));
-				
-				for(ConfigGroup g : l.groups)
-				{
-					GuideCategory group = mod.getSub(new ChatComponentText(g.getDisplayName()));
-					
-					for(ConfigEntry e : g.entries)
-					{
-						if(e.isValid() && e.info != null)
-						{
-							StringBuilder sb = new StringBuilder();
-							sb.append(EnumChatFormatting.RED);
-							sb.append('[');
-							sb.append(e.ID);
-							sb.append(']');
-							sb.append('\n');
-							sb.append(EnumChatFormatting.BLUE);
-							
-							if(e.info.def != null)
-							{
-								sb.append("Default: ");
-								sb.append(e.info.def);
-								sb.append('\n');
-							}
-							
-							if(e.info.min != null && e.info.max != null)
-							{
-								sb.append("Min: " + e.info.min + ", Max: " + e.info.max);
-								sb.append('\n');
-							}
-							
-							if(e.info.info != null)
-							{
-								sb.append(EnumChatFormatting.RESET);
-								sb.append(e.info.info);
-								sb.append('\n');
-							}
-							
-							group.println(sb.toString());
-						}
-					}
-				}
-			}
 			
 			GuideCategory list = categoryServerAdmin.getSub(new ChatComponentText("Entities"));
 			
@@ -179,7 +112,7 @@ public class ServerGuideFile extends GuideFile
 		boolean isDedi = FTBLib.getServer().isDedicatedServer();
 		boolean isOP = !isDedi || self.isOP();
 		
-		main.subcategories.addAll(CachedInfo.main.subcategories);
+		main.copyFrom(CachedInfo.main);
 		links.putAll(CachedInfo.links);
 		
 		categoryTops = main.getSub(new ChatComponentTranslation(FTBU.mod.assets + "top.title"));
@@ -230,6 +163,7 @@ public class ServerGuideFile extends GuideFile
 		commands.subcategories.sort(null);
 		
 		main.cleanup();
+		main.subcategories.sort(null);
 	}
 	
 	public void addTop(Top t)

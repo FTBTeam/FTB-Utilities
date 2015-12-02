@@ -3,6 +3,7 @@ package latmod.ftbu.mod.client.gui.claims;
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
+import latmod.ftbu.world.claims.ChunkType;
 import latmod.lib.*;
 
 @SideOnly(Side.CLIENT)

@@ -8,6 +8,7 @@ import ftb.lib.*;
 import latmod.ftbu.api.EventLMWorldServer;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.world.*;
+import latmod.ftbu.world.claims.Claims;
 import latmod.lib.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;

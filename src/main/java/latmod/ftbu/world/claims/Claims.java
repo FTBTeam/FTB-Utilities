@@ -1,4 +1,4 @@
-package latmod.ftbu.world;
+package latmod.ftbu.world.claims;
 
 import java.util.UUID;
 
@@ -6,6 +6,7 @@ import ftb.lib.*;
 import ftb.lib.item.LMInvUtils;
 import latmod.ftbu.api.tile.ISecureTile;
 import latmod.ftbu.mod.config.*;
+import latmod.ftbu.world.*;
 import latmod.lib.*;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,20 +14,17 @@ import net.minecraft.nbt.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.util.FakePlayer;
 
 public class Claims
 {
 	public final LMPlayerServer owner;
 	private final FastList<ClaimedChunk> chunks;
-	public final FastMap<Integer, ForgeChunkManager.Ticket> ticketMap;
 	
 	public Claims(LMPlayerServer p)
 	{
 		owner = p;
 		chunks = new FastList<ClaimedChunk>();
-		ticketMap = new FastMap<Integer, ForgeChunkManager.Ticket>();
 	}
 	
 	public void readFromNBT(NBTTagCompound serverData)
@@ -63,7 +61,7 @@ public class Claims
 		for(int j = 0; j < chunks.size(); j++)
 		{
 			ClaimedChunk c = chunks.get(j);
-			list.appendTag(new NBTTagIntArray(new int[] { c.dim, c.posX, c.posZ }));
+			list.appendTag(new NBTTagIntArray(new int[] { c.dim, c.pos.chunkXPos, c.pos.chunkZPos }));
 			if(c.isChunkloaded) loadedChunks.add(j);
 		}
 		
@@ -140,24 +138,89 @@ public class Claims
 	public int getClaimedChunks()
 	{ return chunks.size(); }
 	
-	public void loadChunks(World w)
+	public boolean loadChunk(World w, int cx, int cz)
 	{
-		if(w.isRemote) return;
-		unloadChunks(w);
+		/*
+		if(w == null || w.isRemote) return false;
 		
-		//FTBLib.logger.info("FTBU Chunks loaded for " + owner);
+		ClaimedChunk cc = getLocal(w.provider.dimensionId, cx, cz);
+		if(cc != null && !cc.isChunkloaded)
+		{
+			ForgeChunkManager.Ticket ticket = FTBUChunkEventHandler.instance.request(w, owner);
+			if(ticket != null)
+			{
+				cc.isChunkloaded = true;
+				if(!cc.isForced)
+				{
+					ForgeChunkManager.forceChunk(ticket, cc.pos);
+					cc.isForced = true;
+				}
+				return true;
+			}
+		}
+		*/
+		return false;
 	}
 	
-	public void unloadChunks(World w)
+	public boolean unloadChunk(World w, int cx, int cz)
 	{
-		if(w.isRemote) return;
+		/*
+		if(w == null || w.isRemote) return false;
 		
-		ForgeChunkManager.Ticket ticket = ticketMap.get(w.provider.dimensionId);
+		ClaimedChunk cc = getLocal(w.provider.dimensionId, cx, cz);
+		if(cc != null && cc.isChunkloaded)
+		{
+			ForgeChunkManager.Ticket ticket = FTBUChunkEventHandler.instance.request(w, owner);
+			
+			if(ticket != null)
+			{
+				cc.isChunkloaded = false;
+				if(cc.isForced)
+				{
+					ForgeChunkManager.unforceChunk(ticket, cc.pos);
+					cc.isForced = false;
+				}
+				return true;
+			}
+		}
+		*/
+		return false;
+	}
+	
+	public void loadAllChunks(World w)
+	{
+		/*
+		if(w == null || w.isRemote) return;
+		unloadAllChunks(w);
+		
+		ForgeChunkManager.Ticket ticket = FTBUChunkEventHandler.instance.request(w, owner);
+		
 		if(ticket != null)
 		{
+			for(ClaimedChunk cc : chunks) if(cc.isChunkloaded && cc.dim == w.provider.dimensionId && !cc.isForced)
+			{
+				ForgeChunkManager.forceChunk(ticket, cc.pos);
+				cc.isForced = true;
+			}
 		}
+		*/
+	}
+	
+	public void unloadAllChunks(World w)
+	{
+		/*
+		if(w == null || w.isRemote) return;
 		
-		//FTBLib.logger.info("FTBU Chunks unloaded for " + owner);
+		ForgeChunkManager.Ticket ticket = FTBUChunkEventHandler.instance.request(w, owner);
+		if(ticket != null)
+		{
+			for(ClaimedChunk cc : chunks) if(cc.isChunkloaded && cc.dim == w.provider.dimensionId && cc.isForced)
+			{
+				ForgeChunkManager.unforceChunk(ticket, cc.pos);
+				cc.isForced = false;
+			}
+		}
+		*/
 	}
 	
 	// Static //

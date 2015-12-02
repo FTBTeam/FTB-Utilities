@@ -11,7 +11,9 @@ import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClickAction;
 import latmod.ftbu.mod.config.FTBUConfigClaims;
 import latmod.ftbu.net.MessageLMPlayerUpdate;
+import latmod.ftbu.world.claims.Claims;
 import latmod.lib.*;
+import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
@@ -31,6 +33,13 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	private EntityPlayerMP entityPlayer = null;
 	public int lastChunkType = -99;
 	public final Warps homes;
+	
+	public static LMPlayerServer get(Object o) throws CommandException
+	{
+		LMPlayerServer p = LMWorldServer.inst.getPlayer(o);
+		if(p == null) throw new PlayerNotFoundException();
+		return p;
+	}
 	
 	public LMPlayerServer(LMWorldServer w, int i, GameProfile gp)
 	{

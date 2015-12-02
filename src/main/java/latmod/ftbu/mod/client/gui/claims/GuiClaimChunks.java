@@ -15,6 +15,7 @@ import latmod.ftbu.mod.config.FTBUConfigClaims;
 import latmod.ftbu.net.*;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
+import latmod.ftbu.world.claims.ChunkType;
 import latmod.lib.*;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.texture.TextureUtil;

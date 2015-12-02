@@ -1,6 +1,7 @@
 package latmod.ftbu.world;
 
 import ftb.lib.*;
+import latmod.ftbu.world.claims.Claims;
 import latmod.lib.*;
 import latmod.lib.util.Pos2I;
 import net.minecraft.nbt.*;

@@ -3,19 +3,18 @@ package latmod.ftbu.api.guide;
 import java.io.File;
 import java.util.Set;
 
-import cpw.mods.fml.relauncher.ReflectionHelper;
 import ftb.lib.FTBLib;
+import ftb.lib.cmd.CommandSubLM;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.client.gui.guide.GuideLinkSerializer;
 import latmod.ftbu.mod.config.*;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
-import net.minecraft.command.*;
+import net.minecraft.command.ICommand;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityList;
 import net.minecraft.util.*;
 
-@SuppressWarnings("all")
 public class ServerGuideFile extends GuideFile
 {
 	public static class CachedInfo
@@ -23,7 +22,6 @@ public class ServerGuideFile extends GuideFile
 		public static final GuideCategory main = new GuideCategory(new ChatComponentTranslation(FTBUFinals.ASSETS + "button.server_info"));
 		public static GuideCategory categoryServer, categoryServerAdmin;
 		public static final FastMap<String, GuideLink> links = new FastMap<String, GuideLink>();
-		public static final FastList<ICommand> commands = new FastList<ICommand>();
 		
 		public static void reload()
 		{
@@ -60,6 +58,14 @@ public class ServerGuideFile extends GuideFile
 			LinksMap linksMap = LMJsonUtils.fromJsonFile(GuideLinkSerializer.gson, LMFileUtils.newFile(file), LinksMap.class);
 			if(linksMap != null && linksMap.links != null) links.putAll(linksMap.links);
 			
+			reloadRegistries();
+			
+			main.cleanup();
+		}
+		
+		@SuppressWarnings("all")
+		public static void reloadRegistries()
+		{
 			GuideCategory list = categoryServerAdmin.getSub(new ChatComponentText("Entities"));
 			
 			FastMap<String, Class<?>> map = new FastMap<String, Class<?>>();
@@ -81,22 +87,6 @@ public class ServerGuideFile extends GuideFile
 			}
 			
 			list.println("Empty IDs: " + freeIDs.toString());
-			
-			commands.clear();
-			
-			ICommandManager icm = FTBLib.getServer().getCommandManager();
-			if(icm != null && icm instanceof CommandHandler)
-			{
-				try
-				{
-					Set set = ReflectionHelper.getPrivateValue(CommandHandler.class, (CommandHandler)icm, "commandSet", "field_71561_b");
-					for(Object o : set) commands.add((ICommand)o);
-				}
-				catch(Exception ex)
-				{ ex.printStackTrace(); }
-			}
-			
-			main.cleanup();
 		}
 	}
 	
@@ -140,26 +130,27 @@ public class ServerGuideFile extends GuideFile
 		GuideCategory commands = main.getSub(new ChatComponentText("Commands"));
 		commands.clear();
 		
-		for(ICommand c : CachedInfo.commands)
+		CommandSubLM.extendedUsageInfo = true;
+		FastList<ICommand> cachedCmds = FTBLib.getAllCommands(self.getPlayer());
+		for(int i = 0; i < cachedCmds.size(); i++)
 		{
-			if(c.canCommandSenderUseCommand(self.getPlayer()))
+			ICommand c = cachedCmds.get(i);
+			GuideCategory cat = commands.getSub(new ChatComponentText('/' + c.getCommandName()));
+			String usage = c.getCommandUsage(self.getPlayer());
+			
+			if(usage != null)
 			{
-				GuideCategory cat = commands.getSub(new ChatComponentText('/' + c.getCommandName()));
-				String usage = c.getCommandUsage(self.getPlayer());
-				
-				if(usage != null)
+				if(usage.indexOf('\n') != -1)
 				{
-					if(usage.indexOf('\n') != -1)
-					{
-						String[] usageL = usage.split("\n");
-						for(String s1 : usageL)
-							cat.println(s1);
-					}
-					else cat.println(new ChatComponentTranslation(usage));
+					String[] usageL = usage.split("\n");
+					for(String s1 : usageL)
+						cat.println(s1);
 				}
+				else cat.println(new ChatComponentTranslation(usage));
 			}
 		}
 		
+		CommandSubLM.extendedUsageInfo = false;
 		commands.subcategories.sort(null);
 		
 		main.cleanup();

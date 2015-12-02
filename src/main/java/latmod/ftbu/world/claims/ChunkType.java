@@ -1,10 +1,11 @@
-package latmod.ftbu.world;
+package latmod.ftbu.world.claims;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.LMDimUtils;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.config.FTBUConfigClaims;
 import latmod.ftbu.util.LMSecurity;
+import latmod.ftbu.world.*;
 import latmod.lib.MathHelperLM;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;

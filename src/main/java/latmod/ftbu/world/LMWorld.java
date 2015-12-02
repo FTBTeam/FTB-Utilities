@@ -121,10 +121,10 @@ public abstract class LMWorld // FTBWorld
 		return (p == null) ? 0 : p.playerID;
 	}
 	
-	public String[] getAllPlayerNames(Boolean type)
+	public FastList<String> getAllPlayerNames(Boolean online)
 	{
-		if(type == null) return new String[0];
-		FastList<LMPlayer> list = (type == Boolean.TRUE) ? getAllOnlinePlayers() : players;
+		if(online == null) return new FastList<String>();
+		FastList<LMPlayer> list = (online == Boolean.TRUE) ? getAllOnlinePlayers() : players;
 		
 		list.sort(new Comparator<LMPlayer>()
 		{
@@ -144,7 +144,7 @@ public abstract class LMWorld // FTBWorld
 			if(!l.contains(s)) l.add(s);
 		}
 		
-		return l.toArray(new String[l.size()]);
+		return l;
 	}
 	
 	public int[] getAllPlayerIDs()

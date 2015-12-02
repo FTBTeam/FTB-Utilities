@@ -9,6 +9,7 @@ import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.config.*;
 import latmod.ftbu.net.*;
 import latmod.ftbu.world.*;
+import latmod.ftbu.world.claims.*;
 import latmod.lib.MathHelperLM;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;

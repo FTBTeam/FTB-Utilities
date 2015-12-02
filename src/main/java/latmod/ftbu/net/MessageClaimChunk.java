@@ -1,9 +1,10 @@
 package latmod.ftbu.net;
 
 import cpw.mods.fml.common.network.simpleimpl.*;
-import ftb.lib.AdminToken;
+import ftb.lib.*;
 import ftb.lib.api.LMNetworkWrapper;
 import latmod.ftbu.world.*;
+import latmod.ftbu.world.claims.*;
 
 public class MessageClaimChunk extends MessageFTBU
 {
@@ -11,6 +12,8 @@ public class MessageClaimChunk extends MessageFTBU
 	public static final int ID_UNCLAIM = 1;
 	public static final int ID_UNCLAIM_ALL = 2;
 	public static final int ID_UNCLAIM_ALL_DIMS = 3;
+	public static final int ID_LOAD = 4;
+	public static final int ID_UNLOAD = 5;
 	
 	public MessageClaimChunk() { super(DATA_SHORT); }
 	
@@ -54,6 +57,8 @@ public class MessageClaimChunk extends MessageFTBU
 		}
 		else if(type == ID_UNCLAIM_ALL) p.claims.unclaimAll(dim);
 		else if(type == ID_UNCLAIM_ALL_DIMS) p.claims.unclaimAll();
+		else if(type == ID_LOAD) p.claims.loadChunk(LMDimUtils.getWorld(dim), cx, cz);
+		else if(type == ID_UNLOAD) p.claims.unloadChunk(LMDimUtils.getWorld(dim), cx, cz);
 		return null;
 	}
 }

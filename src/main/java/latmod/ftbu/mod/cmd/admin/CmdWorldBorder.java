@@ -1,18 +1,18 @@
 package latmod.ftbu.mod.cmd.admin;
 
 import ftb.lib.cmd.*;
-import latmod.ftbu.util.CommandFTBU;
+import latmod.ftbu.mod.config.FTBUConfigCmd;
 import latmod.ftbu.world.LMWorldServer;
 import latmod.lib.MathHelperLM;
-import net.minecraft.command.ICommandSender;
+import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 
-public class CmdAdminWorldBorder extends CommandSubLM
+public class CmdWorldBorder extends CommandSubLM
 {
-	public CmdAdminWorldBorder(String s)
+	public CmdWorldBorder()
 	{
-		super(s, CommandLevel.OP);
+		super(FTBUConfigCmd.name_world_border.get(), CommandLevel.OP);
 		add(new CmdOn("on"));
 		add(new CmdOff("off"));
 		add(new CmdSet("set"));
@@ -20,36 +20,36 @@ public class CmdAdminWorldBorder extends CommandSubLM
 		add(new CmdCenter("center"));
 	}
 	
-	private static class CmdOn extends CommandFTBU
+	private static class CmdOn extends CommandLM
 	{
 		public CmdOn(String s)
 		{ super(s, CommandLevel.OP); }
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args)
+		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			LMWorldServer.inst.settings.setWorldBorderEnabled(true);
 			return new ChatComponentText("World border enabled");
 		}
 	}
 	
-	private static class CmdOff extends CommandFTBU
+	private static class CmdOff extends CommandLM
 	{
 		public CmdOff(String s)
 		{ super(s, CommandLevel.OP); }
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args)
+		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			LMWorldServer.inst.settings.setWorldBorderEnabled(false);
 			return new ChatComponentText("World border disabled");
 		}
 	}
 	
-	private static class CmdSet extends CommandFTBU
+	private static class CmdSet extends CommandLM
 	{
 		public CmdSet(String s)
 		{ super(s, CommandLevel.OP); }
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args)
+		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			checkArgs(args, 2);
 			
@@ -61,12 +61,12 @@ public class CmdAdminWorldBorder extends CommandSubLM
 		}
 	}
 	
-	private static class CmdGet extends CommandFTBU
+	private static class CmdGet extends CommandLM
 	{
 		public CmdGet(String s)
 		{ super(s, CommandLevel.OP); }
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args)
+		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			checkArgs(args, 1);
 			int dim = parseInt(ics, args[0]);
@@ -74,12 +74,12 @@ public class CmdAdminWorldBorder extends CommandSubLM
 		}
 	}
 	
-	private static class CmdCenter extends CommandFTBU
+	private static class CmdCenter extends CommandLM
 	{
 		public CmdCenter(String s)
 		{ super(s, CommandLevel.OP); }
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args)
+		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			int x, z, dim;
 			

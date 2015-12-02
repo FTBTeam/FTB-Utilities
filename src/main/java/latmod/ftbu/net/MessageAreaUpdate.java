@@ -5,7 +5,7 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.EntityPos;
 import ftb.lib.api.LMNetworkWrapper;
 import latmod.ftbu.mod.client.gui.claims.ClaimedAreasClient;
-import latmod.ftbu.world.ChunkType;
+import latmod.ftbu.world.claims.ChunkType;
 import latmod.lib.MathHelperLM;
 
 public class MessageAreaUpdate extends MessageFTBU

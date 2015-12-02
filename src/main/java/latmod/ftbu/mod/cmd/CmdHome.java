@@ -1,27 +1,29 @@
 package latmod.ftbu.mod.cmd;
 
 import ftb.lib.*;
-import ftb.lib.cmd.CommandLevel;
+import ftb.lib.cmd.*;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.config.FTBUConfigCmd;
-import latmod.ftbu.util.CommandFTBU;
 import latmod.ftbu.world.LMPlayerServer;
-import net.minecraft.command.ICommandSender;
+import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 
-public class CmdHome extends CommandFTBU
+public class CmdHome extends CommandLM
 {
 	public CmdHome()
-	{ super("home", CommandLevel.ALL); }
+	{ super(FTBUConfigCmd.name_home.get(), CommandLevel.ALL); }
 	
-	public String[] getTabStrings(ICommandSender ics, String[] args, int i)
+	public String getCommandUsage(ICommandSender ics)
+	{ return '/' + commandName + " <ID>\n/" + commandName + " set <ID>\n/" + commandName + " del <ID>"; }
+	
+	public String[] getTabStrings(ICommandSender ics, String[] args, int i) throws CommandException
 	{
-		if(i == 0 || (i == 1 && isArg(args, 0, "set", "del"))) return getLMPlayer(ics).homes.list();
+		if(i == 0 || (i == 1 && isArg(args, 0, "set", "del"))) return LMPlayerServer.get(ics).homes.list();
 		return super.getTabStrings(ics, args, i);
 	}
 	
-	public IChatComponent onCommand(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		
@@ -33,7 +35,7 @@ public class CmdHome extends CommandFTBU
 			return null;
 		}
 		
-		LMPlayerServer p = getLMPlayer(ep);
+		LMPlayerServer p = LMPlayerServer.get(ep);
 		
 		if(args[0].equals("set"))
 		{

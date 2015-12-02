@@ -2,10 +2,12 @@ package latmod.ftbu.mod;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import ftb.lib.*;
+import ftb.lib.cmd.CommandLM;
 import ftb.lib.mod.FTBUIntegration;
 import ftb.lib.notification.*;
 import latmod.ftbu.mod.cmd.*;
-import latmod.ftbu.mod.config.*;
+import latmod.ftbu.mod.cmd.admin.CmdAdmin;
+import latmod.ftbu.mod.config.FTBUConfig;
 import latmod.ftbu.mod.handlers.*;
 import latmod.ftbu.net.FTBUNetHandler;
 import latmod.ftbu.util.LMMod;
@@ -74,13 +76,20 @@ public class FTBU
 	public void registerCommands(FMLServerStartingEvent e)
 	{
 		FTBUTicks.serverStarted();
-		e.registerServerCommand(new CmdAdmin());
-		e.registerServerCommand(new CmdListOverride());
-		if(FTBUConfigCmd.back.get()) e.registerServerCommand(new CmdBack());
-		if(FTBUConfigCmd.spawn.get()) e.registerServerCommand(new CmdSpawn());
-		if(FTBUConfigCmd.tplast.get()) e.registerServerCommand(new CmdTplast());
-		if(FTBUConfigCmd.warp.get()) e.registerServerCommand(new CmdWarp());
-		if(FTBUConfigCmd.home.get()) e.registerServerCommand(new CmdHome());
+		
+		// Player commands //
+		e.registerServerCommand(new CmdBack());
+		e.registerServerCommand(new CmdSpawn());
+		e.registerServerCommand(new CmdTplast());
+		e.registerServerCommand(new CmdWarp());
+		e.registerServerCommand(new CmdHome());
+		
+		// Admin commands //
+		CmdAdmin cmd = new CmdAdmin();
+		if(cmd.level.isEnabled())
+			e.registerServerCommand(cmd);
+		else for(CommandLM c : cmd.subCommands.values)
+			e.registerServerCommand(c);
 	}
 	
 	@Mod.EventHandler

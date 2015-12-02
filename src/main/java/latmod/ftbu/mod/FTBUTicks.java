@@ -1,11 +1,11 @@
 package latmod.ftbu.mod;
 
 import ftb.lib.*;
-import latmod.ftbu.mod.cmd.admin.CmdAdminRestart;
+import latmod.ftbu.mod.cmd.admin.CmdRestart;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.world.Backups;
 import latmod.lib.*;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.*;
 
 public class FTBUTicks
 {
@@ -45,21 +45,18 @@ public class FTBUTicks
 			if(restartSeconds > 0L)
 			{
 				secondsLeft = getSecondsUntilRestart();
-				
-				String msg = null;
-				
-				if(secondsLeft <= 10) msg = secondsLeft + " Seconds";
-				else if(secondsLeft == 30) msg = "30 Seconds";
-				else if(secondsLeft == 60) msg = "1 Minute";
-				else if(secondsLeft == 300) msg = "5 Minutes";
-				else if(secondsLeft == 600) msg = "10 Minutes";
-				
+				String msg = LMStringUtils.getTimeString(secondsLeft * 1000L);
 				if(msg != null && !lastRestartMessage.equals(msg))
 				{
 					lastRestartMessage = msg;
 					
-					if(secondsLeft <= 0) { CmdAdminRestart.restart(); return; }
-					else FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server will restart after " + msg);//LANG
+					if(secondsLeft <= 0) { CmdRestart.restart(); return; }
+					else if(secondsLeft <= 10 || secondsLeft == 60 || secondsLeft == 300 || secondsLeft == 600  || secondsLeft == 1800)
+					{
+						IChatComponent c = new ChatComponentTranslation(FTBU.mod.assets + "server_restart", msg);
+						c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE);
+						FTBLib.printChat(BroadcastSender.inst, c);
+					}
 				}
 			}
 			

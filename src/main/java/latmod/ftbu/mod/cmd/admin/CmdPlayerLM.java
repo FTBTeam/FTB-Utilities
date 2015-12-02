@@ -6,24 +6,24 @@ import java.util.UUID;
 import com.mojang.authlib.GameProfile;
 
 import ftb.lib.*;
-import ftb.lib.cmd.CommandLevel;
+import ftb.lib.cmd.*;
 import ftb.lib.item.StringIDInvLoader;
 import ftb.lib.mod.FTBLibFinals;
 import ftb.lib.notification.Notification;
-import latmod.ftbu.util.CommandFTBU;
+import latmod.ftbu.mod.config.FTBUConfigCmd;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
-import net.minecraft.command.ICommandSender;
+import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 
-public class CmdAdminPlayer extends CommandFTBU
+public class CmdPlayerLM extends CommandLM
 {
-	public CmdAdminPlayer(String s)
-	{ super(s, CommandLevel.OP); }
+	public CmdPlayerLM()
+	{ super(FTBUConfigCmd.name_player_lm.get(), CommandLevel.OP); }
 	
-	public String[] getTabStrings(ICommandSender ics, String args[], int i)
+	public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
 	{
 		if(i == 0) return new String[] { "delete", "saveinv", "loadinv", "notify", /*"displayitem"*/ };
 		return super.getTabStrings(ics, args, i);
@@ -32,7 +32,7 @@ public class CmdAdminPlayer extends CommandFTBU
 	public Boolean getUsername(String[] args, int i)
 	{ return (i == 1) ? Boolean.FALSE : null; }
 	
-	public IChatComponent onCommand(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
 		
@@ -58,12 +58,12 @@ public class CmdAdminPlayer extends CommandFTBU
 		
 		if(args[1].equals("@a"))
 		{
-			String[] s = LMWorldServer.inst.getAllPlayerNames(Boolean.TRUE);
+			FastList<String> s = LMWorldServer.inst.getAllPlayerNames(Boolean.TRUE);
 			
-			for(int i = 0; i < s.length; i++)
+			for(int i = 0; i < s.size(); i++)
 			{
 				String[] args1 = args.clone();
-				args1[1] = s[i];
+				args1[1] = s.get(i);
 				onCommand(ics, args1);
 			}
 			
@@ -71,17 +71,15 @@ public class CmdAdminPlayer extends CommandFTBU
 		}
 		
 		checkArgs(args, 2);
+		LMPlayerServer p = LMPlayerServer.get(args[1]);
 		
 		if(args[0].equals("delete"))
 		{
 			int playerID = parseInt(ics, args[1]);
-			LMPlayer p = getLMPlayer(playerID);
 			if(p.isOnline()) return mustBeOffline;
 			LMWorldServer.inst.players.removeObj(playerID);
 			return new ChatComponentText("Player removed!");
 		}
-		
-		LMPlayerServer p = getLMPlayer(args[1]);
 		
 		if(args[0].equals("saveinv"))
 		{

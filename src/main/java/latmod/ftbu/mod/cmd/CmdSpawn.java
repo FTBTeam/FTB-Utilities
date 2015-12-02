@@ -1,18 +1,18 @@
 package latmod.ftbu.mod.cmd;
 
 import ftb.lib.*;
-import ftb.lib.cmd.CommandLevel;
+import ftb.lib.cmd.*;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.util.CommandFTBU;
+import latmod.ftbu.mod.config.FTBUConfigCmd;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
-public class CmdSpawn extends CommandFTBU
+public class CmdSpawn extends CommandLM
 {
 	public CmdSpawn()
-	{ super("spawn", CommandLevel.ALL); }
+	{ super(FTBUConfigCmd.name_spawn.get(), CommandLevel.ALL); }
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{

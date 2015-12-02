@@ -1,20 +1,20 @@
 package latmod.ftbu.mod.cmd.admin;
 
 import ftb.lib.AdminToken;
-import ftb.lib.cmd.CommandLevel;
+import ftb.lib.cmd.*;
 import latmod.ftbu.mod.FTBUGuiHandler;
-import latmod.ftbu.util.CommandFTBU;
-import net.minecraft.command.ICommandSender;
+import latmod.ftbu.mod.config.FTBUConfigCmd;
+import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IChatComponent;
 
-public class CmdAdminUnclaim extends CommandFTBU
+public class CmdUnclaim extends CommandLM
 {
-	public CmdAdminUnclaim(String s)
-	{ super(s, CommandLevel.OP); }
+	public CmdUnclaim()
+	{ super(FTBUConfigCmd.name_unclaim.get(), CommandLevel.OP); }
 
-	public IChatComponent onCommand(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		NBTTagCompound data = new NBTTagCompound();

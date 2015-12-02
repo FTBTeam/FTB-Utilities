@@ -1,21 +1,24 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import ftb.lib.cmd.CommandLevel;
+import ftb.lib.cmd.*;
 import latmod.ftbu.mod.cmd.InvSeeInventory;
-import latmod.ftbu.util.CommandFTBU;
-import net.minecraft.command.ICommandSender;
+import latmod.ftbu.mod.config.FTBUConfigCmd;
+import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IChatComponent;
 
-public class CmdAdminInvsee extends CommandFTBU
+public class CmdInvsee extends CommandLM
 {
-	public CmdAdminInvsee(String s)
-	{ super(s, CommandLevel.OP); }
-
+	public CmdInvsee()
+	{ super(FTBUConfigCmd.name_invsee.get(), CommandLevel.OP); }
+	
+	public String getCommandUsage(ICommandSender ics)
+	{ return '/' + commandName + " <player>"; }
+	
 	public Boolean getUsername(String[] args, int i)
 	{ return (i == 0) ? Boolean.TRUE : null; }
 	
-	public IChatComponent onCommand(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
 		EntityPlayerMP ep0 = getCommandSenderAsPlayer(ics);

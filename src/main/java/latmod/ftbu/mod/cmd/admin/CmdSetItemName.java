@@ -1,18 +1,21 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import ftb.lib.cmd.CommandLevel;
-import latmod.ftbu.util.CommandFTBU;
+import ftb.lib.cmd.*;
+import latmod.ftbu.mod.config.FTBUConfigCmd;
 import latmod.lib.LMStringUtils;
-import net.minecraft.command.ICommandSender;
+import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 
-public class CmdAdminSetItemName extends CommandFTBU
+public class CmdSetItemName extends CommandLM
 {
-	public CmdAdminSetItemName(String s)
-	{ super(s, CommandLevel.OP); }
+	public CmdSetItemName()
+	{ super(FTBUConfigCmd.name_set_item_name.get(), CommandLevel.OP); }
+	
+	public String getCommandUsage(ICommandSender ics)
+	{ return '/' + commandName + " <name...>"; }
 
-	public IChatComponent onCommand(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);

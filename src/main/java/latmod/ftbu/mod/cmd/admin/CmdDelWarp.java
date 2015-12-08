@@ -2,7 +2,6 @@ package latmod.ftbu.mod.cmd.admin;
 
 import ftb.lib.cmd.*;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.config.FTBUConfigCmd;
 import latmod.ftbu.world.LMWorldServer;
 import net.minecraft.command.*;
 import net.minecraft.util.*;
@@ -10,7 +9,7 @@ import net.minecraft.util.*;
 public class CmdDelWarp extends CommandLM
 {
 	public CmdDelWarp()
-	{ super(FTBUConfigCmd.name_delwarp.get(), CommandLevel.OP); }
+	{ super("delwarp", CommandLevel.OP); }
 	
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <ID>"; }

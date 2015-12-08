@@ -6,7 +6,7 @@ import ftb.lib.notification.Notification;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.api.item.ICreativeSafeItem;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.config.*;
+import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.net.*;
 import latmod.ftbu.world.*;
 import latmod.ftbu.world.claims.*;
@@ -18,6 +18,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class FTBUPlayerEventHandler
 {
@@ -38,15 +41,12 @@ public class FTBUPlayerEventHandler
 		new EventLMPlayerServer.LoggedOut(p, ep).post();
 		new MessageLMPlayerLoggedOut(p).sendTo(null);
 		
-		if(FTBUConfigBackups.autoExportInvOnLogout.get())
-			FTBLib.runCommand(FTBLib.getServer(), "admin player saveinv " + p.getName());
-		
 		p.setPlayer(null);
 		//Backups.shouldRun = true;
 	}
 	
 	@SubscribeEvent
-	public void onChunkChanged(net.minecraftforge.event.entity.EntityEvent.EnteringChunk e)
+	public void onChunkChanged(EntityEvent.EnteringChunk e)
 	{
 		if(e.entity.worldObj.isRemote || !(e.entity instanceof EntityPlayerMP)) return;
 		
@@ -80,13 +80,13 @@ public class FTBUPlayerEventHandler
 			player.lastPos.set(ep);
 		}
 		
-		int currentChunkType = ChunkType.getChunkTypeI(ep.dimension, e.newChunkX, e.newChunkZ);
+		int currentChunkType = LMWorldServer.inst.claimedChunks.getType(ep.dimension, e.newChunkX, e.newChunkZ).ID;
 		
 		if(player.lastChunkType == -99 || player.lastChunkType != currentChunkType)
 		{
 			player.lastChunkType = currentChunkType;
 			
-			ChunkType type = ChunkType.getChunkTypeFromI(currentChunkType);
+			ChunkType type = ClaimedChunks.getChunkTypeFromI(currentChunkType);
 			IChatComponent msg = null;
 			
 			if(type.isClaimed())
@@ -105,10 +105,10 @@ public class FTBUPlayerEventHandler
 	}
 	
 	@SubscribeEvent
-	public void onBlockClick(net.minecraftforge.event.entity.player.PlayerInteractEvent e)
+	public void onBlockClick(PlayerInteractEvent e)
 	{
-		if(e.action == net.minecraftforge.event.entity.player.PlayerInteractEvent.Action.RIGHT_CLICK_AIR) return;
-		else if(!canInteract(e.entityPlayer, e.x, e.y, e.z, e.action == net.minecraftforge.event.entity.player.PlayerInteractEvent.Action.LEFT_CLICK_BLOCK))
+		if(e.entityPlayer instanceof FakePlayer || e.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR) return;
+		else if(!canInteract(e.entityPlayer, e.x, e.y, e.z, e.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK))
 			e.setCanceled(true);
 	}
 	
@@ -123,11 +123,11 @@ public class FTBUPlayerEventHandler
 			return false;
 		}
 		
-		return Claims.canPlayerInteract(ep, x, y, z, leftClick);
+		return ClaimedChunks.canPlayerInteract(ep, x, y, z, leftClick);
 	}
 	
 	@SubscribeEvent
-	public void onPlayerDeath(net.minecraftforge.event.entity.living.LivingDeathEvent e)
+	public void onPlayerDeath(LivingDeathEvent e)
 	{
 		if(e.entity instanceof EntityPlayerMP)
 		{
@@ -142,7 +142,7 @@ public class FTBUPlayerEventHandler
 	}
 	
 	@SubscribeEvent
-	public void onPlayerAttacked(net.minecraftforge.event.entity.living.LivingAttackEvent e)
+	public void onPlayerAttacked(LivingAttackEvent e)
 	{
 		if(e.entity.worldObj.isRemote) return;
 		
@@ -159,7 +159,7 @@ public class FTBUPlayerEventHandler
 			int cx = MathHelperLM.chunk(e.entity.posX);
 			int cz = MathHelperLM.chunk(e.entity.posZ);
 			
-			if(LMWorldServer.inst.settings.isOutside(dim, cx, cz) || (FTBUConfigGeneral.safeSpawn.get() && Claims.isInSpawn(dim, cx, cz))) e.setCanceled(true);
+			if(LMWorldServer.inst.settings.isOutside(dim, cx, cz) || (FTBUConfigGeneral.safeSpawn.get() && ClaimedChunks.isInSpawn(dim, cx, cz))) e.setCanceled(true);
 			/*else
 			{
 				ClaimedChunk c = Claims.get(dim, cx, cz);

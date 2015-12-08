@@ -86,7 +86,7 @@ public class StackArray implements IStackArray
 		ItemStack item0 = getFrom(o);
 		if(item0 != null) list.add(item0);
 		else if(o instanceof ItemStack[]) list.addAll((ItemStack[])o);
-		else if(o instanceof String) list = ODItems.getOres((String)o).clone();
+		else if(o instanceof String) list.addAll(ODItems.getOres((String)o));
 		else if(o instanceof FluidStack)
 		{
 			FluidStack fs = (FluidStack)o;

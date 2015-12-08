@@ -6,6 +6,7 @@ import ftb.lib.FTBLib;
 import ftb.lib.api.EventFTBModeSet;
 import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.mod.*;
+import latmod.ftbu.mod.client.gui.guide.GuiGuide;
 import latmod.lib.LMFileUtils;
 import net.minecraft.util.*;
 
@@ -56,5 +57,6 @@ public class ClientGuideFile extends GuideFile
 		new EventFTBUClientGuide(this).post();
 		
 		main.cleanup();
+		GuiGuide.clientGuideGui = null;
 	}
 }

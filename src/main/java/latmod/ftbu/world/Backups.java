@@ -45,17 +45,17 @@ public class Backups
 	}
 	
 	public static long getSecondsUntilNextBackup()
-	{ return ((lastTimeRun + (long)(FTBUConfigBackups.backupTimer.get() * 3600D * 1000D)) - FTBUTicks.currentMillis()) / 1000L; }
+	{ return ((lastTimeRun + (long)(FTBUConfigBackups.backup_timer.get() * 3600D * 1000D)) - FTBUTicks.currentMillis()) / 1000L; }
 	
 	public static void clearOldBackups()
 	{
 		String[] s = backupsFolder.list();
 		
-		if(s.length > FTBUConfigBackups.backupsToKeep.get())
+		if(s.length > FTBUConfigBackups.backups_to_keep.get())
 		{
 			Arrays.sort(s);
 			
-			int j = s.length - FTBUConfigBackups.backupsToKeep.get();
+			int j = s.length - FTBUConfigBackups.backups_to_keep.get();
 			logger.info("Deleting " + j + " old backups");
 			
 			for(int i = 0; i < j; i++)

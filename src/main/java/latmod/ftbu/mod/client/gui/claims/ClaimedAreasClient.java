@@ -3,7 +3,7 @@ package latmod.ftbu.mod.client.gui.claims;
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
-import latmod.ftbu.world.claims.ChunkType;
+import latmod.ftbu.world.claims.*;
 import latmod.lib.*;
 
 @SideOnly(Side.CLIENT)
@@ -28,7 +28,7 @@ public class ClaimedAreasClient
 	}
 	
 	public static ChunkType getTypeE(int dim, int x, int z)
-	{ return ChunkType.getChunkTypeFromI(getType(dim, x, z)); }
+	{ return ClaimedChunks.getChunkTypeFromI(getType(dim, x, z)); }
 	
 	public static void setTypes(int dim, int chunkX, int chunkZ, int sx, int sz, int[] types)
 	{
@@ -45,7 +45,7 @@ public class ClaimedAreasClient
 	public static void getMessage(int dim, int x, int z, FastList<String> l, boolean shift)
 	{
 		int type = getType(dim, x, z);
-		ChunkType typeE = ChunkType.getChunkTypeFromI(type);
+		ChunkType typeE = ClaimedChunks.getChunkTypeFromI(type);
 		
 		if(typeE != null)
 		{

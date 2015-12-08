@@ -1,7 +1,7 @@
 package latmod.ftbu.world;
 
 import ftb.lib.*;
-import latmod.ftbu.world.claims.Claims;
+import latmod.ftbu.world.claims.ClaimedChunks;
 import latmod.lib.*;
 import latmod.lib.util.Pos2I;
 import net.minecraft.nbt.*;
@@ -132,7 +132,7 @@ public class LMWorldSettings
 	
 	public boolean isOutside(int dim, int cx, int cz)
 	{
-		if(Claims.isInSpawn(dim, cx, cz)) return false;
+		if(ClaimedChunks.isInSpawn(dim, cx, cz)) return false;
 		WorldBorder wb = get(dim);
 		int size = getSize(dim);
 		if(size == 0) return false;

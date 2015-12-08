@@ -38,6 +38,15 @@ public class GuiGuide extends GuiLM
 	public final FastList<ButtonCategory> categoryButtons; // Max 16
 	public final ButtonTextLine[] textLines; // Max 20
 	
+	public static GuiGuide clientGuideGui = null;
+	
+	public static void openClientGui()
+	{
+		if(clientGuideGui == null)
+			clientGuideGui = new GuiGuide(null, ClientGuideFile.instance.main);
+		FTBLibClient.mc.displayGuiScreen(clientGuideGui);
+	}
+	
 	public GuiGuide(GuiGuide g, GuideCategory c)
 	{
 		super(null, tex);
@@ -141,6 +150,9 @@ public class GuiGuide extends GuiLM
 	@SuppressWarnings("unchecked")
 	public void initLMGui()
 	{
+		if(category.getParentTop() == ClientGuideFile.instance.main)
+			clientGuideGui = this;
+		
 		allTextLines.clear();
 		
 		GuideFile file = selectedCategory.getFile();

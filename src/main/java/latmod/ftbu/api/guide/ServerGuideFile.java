@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.Set;
 
 import ftb.lib.FTBLib;
-import ftb.lib.cmd.CommandSubLM;
+import ftb.lib.cmd.CommandLM;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.client.gui.guide.GuideLinkSerializer;
 import latmod.ftbu.mod.config.*;
@@ -130,7 +130,7 @@ public class ServerGuideFile extends GuideFile
 		GuideCategory commands = main.getSub(new ChatComponentText("Commands"));
 		commands.clear();
 		
-		CommandSubLM.extendedUsageInfo = true;
+		CommandLM.extendedUsageInfo = true;
 		FastList<ICommand> cachedCmds = FTBLib.getAllCommands(self.getPlayer());
 		for(int i = 0; i < cachedCmds.size(); i++)
 		{
@@ -150,7 +150,7 @@ public class ServerGuideFile extends GuideFile
 			}
 		}
 		
-		CommandSubLM.extendedUsageInfo = false;
+		CommandLM.extendedUsageInfo = false;
 		commands.subcategories.sort(null);
 		
 		main.cleanup();

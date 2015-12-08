@@ -4,7 +4,6 @@ import java.io.File;
 
 import ftb.lib.FTBLib;
 import ftb.lib.cmd.*;
-import latmod.ftbu.mod.config.FTBUConfigCmd;
 import latmod.lib.LMFileUtils;
 import net.minecraft.command.*;
 import net.minecraft.util.IChatComponent;
@@ -12,7 +11,7 @@ import net.minecraft.util.IChatComponent;
 public class CmdRestart extends CommandLM
 {
 	public CmdRestart()
-	{ super(FTBUConfigCmd.name_restart.get(), CommandLevel.OP); }
+	{ super("restart", CommandLevel.OP); }
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 	{ restart(); return null; }

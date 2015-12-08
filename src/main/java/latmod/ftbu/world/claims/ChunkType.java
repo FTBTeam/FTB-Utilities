@@ -1,14 +1,11 @@
 package latmod.ftbu.world.claims;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.LMDimUtils;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.config.FTBUConfigClaims;
 import latmod.ftbu.util.LMSecurity;
 import latmod.ftbu.world.*;
-import latmod.lib.MathHelperLM;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.world.World;
 
 public class ChunkType
 {
@@ -25,11 +22,11 @@ public class ChunkType
 		WILDERNESS,
 	};
 	
-	private static final class ChunkTypeClaimed extends ChunkType
+	public static final class PlayerClaimed extends ChunkType
 	{
 		public LMPlayer chunkOwner = null;
 		
-		public ChunkTypeClaimed(LMPlayer o)
+		public PlayerClaimed(LMPlayer o)
 		{ super(o.playerID, "claimed", null, 0); chunkOwner = o; }
 		
 		public boolean isFriendly(LMPlayer p)
@@ -37,6 +34,9 @@ public class ChunkType
 		
 		public boolean isClaimed()
 		{ return true; }
+		
+		public boolean isChunkOwner(LMPlayer p)
+		{ return chunkOwner.equals(p); }
 		
 		public EnumChatFormatting getChatColor(LMPlayer p)
 		{ return isFriendly(p) ? EnumChatFormatting.GREEN : EnumChatFormatting.BLUE; }
@@ -48,7 +48,7 @@ public class ChunkType
 		{
 			if(chunkOwner.equals(p)) return true;
 			LMSecurity s = new LMSecurity(chunkOwner);
-			s.level = FTBUConfigClaims.forcedChunkSecurity.get();
+			s.level = FTBUConfigClaims.forced_chunk_security.get();
 			if(s.level == null) s.level = chunkOwner.settings.blocks;
 			return s.canInteract(p);
 		}
@@ -70,7 +70,7 @@ public class ChunkType
 	public boolean isClaimed()
 	{ return false; }
 	
-	public boolean canClaimChunk(LMPlayer p)
+	public boolean isChunkOwner(LMPlayer p)
 	{ return this == WILDERNESS; }
 	
 	public boolean drawGrid()
@@ -94,28 +94,4 @@ public class ChunkType
 	
 	public boolean canInteract(LMPlayerServer p, boolean leftClick)
 	{ return this == WILDERNESS || this == SPAWN; }
-	
-	public static ChunkType get(int dim, int cx, int cz)
-	{
-		World w = LMDimUtils.getWorld(dim);
-		if(w == null || !w.getChunkProvider().chunkExists(cx, cz)) return UNLOADED;
-		if(Claims.isInSpawn(dim, cx, cz)) return SPAWN;
-		if(LMWorldServer.inst.settings.isOutside(dim, cx, cz)) return WORLD_BORDER;
-		ClaimedChunk c = Claims.get(dim, cx, cz);
-		if(c == null) return WILDERNESS;
-		return new ChunkTypeClaimed(c.claims.owner);
-	}
-	
-	public static ChunkType getD(int dim, double x, double z)
-	{ return get(dim, MathHelperLM.chunk(x), MathHelperLM.chunk(z)); }
-	
-	public static int getChunkTypeI(int dim, int cx, int cz)
-	{ return ChunkType.get(dim, cx, cz).ID; }
-	
-	public static ChunkType getChunkTypeFromI(int i)
-	{
-		if(i <= 0) return ChunkType.UNCLAIMED_VALUES[-i];
-		LMPlayer p = LMWorld.getWorld().getPlayer(i);
-		return (p == null) ? WILDERNESS : new ChunkTypeClaimed(p);
-	}
 }

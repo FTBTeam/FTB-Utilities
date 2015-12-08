@@ -11,12 +11,14 @@ import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClickAction;
 import latmod.ftbu.mod.config.FTBUConfigClaims;
 import latmod.ftbu.net.MessageLMPlayerUpdate;
-import latmod.ftbu.world.claims.Claims;
+import latmod.ftbu.world.claims.*;
+import latmod.ftbu.world.ranks.*;
 import latmod.lib.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
+import net.minecraft.world.World;
 
 public class LMPlayerServer extends LMPlayer // LMPlayerClient
 {
@@ -27,7 +29,6 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public NBTTagCompound serverData;
 	public EntityPos lastPos, lastDeath;
-	public final Claims claims;
 	public final LMPlayerStats stats;
 	private String playerName;
 	private EntityPlayerMP entityPlayer = null;
@@ -45,7 +46,6 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	{
 		super(w, i, gp);
 		serverData = new NBTTagCompound();
-		claims = new Claims(this);
 		stats = new LMPlayerStats(this);
 		playerName = gp.getName();
 		homes = new Warps();
@@ -143,8 +143,6 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		}
 		else lastDeath = null;
 		
-		claims.readFromNBT(tag);
-		
 		settings.readFromServer(tag.getCompoundTag("Settings"));
 		
 		homes.readFromNBT(tag, "Homes");
@@ -182,8 +180,6 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		stats.writeToNBT(statsTag);
 		tag.setTag("Stats", statsTag);
 		
-		claims.writeToNBT(tag);
-		
 		NBTTagCompound settingsTag = new NBTTagCompound();
 		settings.writeToServer(settingsTag);
 		tag.setTag("Settings", settingsTag);
@@ -205,8 +201,9 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		if(self)
 		{
 			if(!commonPrivateData.hasNoTags()) tag.setTag("CPD", commonPrivateData);
-			if(claims.getClaimedChunks() > 0) tag.setInteger("CC", claims.getClaimedChunks());
-			tag.setInteger("MCC", getMaxClaimPower());
+			int claimedChunks = getClaimedChunks();
+			if(claimedChunks > 0) tag.setInteger("CC", claimedChunks);
+			tag.setInteger("MCC", getRank().config.max_claims.get());
 		}
 		
 		NBTTagCompound settingsTag = new NBTTagCompound();
@@ -216,23 +213,6 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public void onPostLoaded()
 	{ new EventLMPlayerServer.DataLoaded(this).post(); }
-	
-	public int getMaxClaimPower()
-	{
-		return isOP() ? FTBUConfigClaims.maxClaimsAdmin.get() : FTBUConfigClaims.maxClaimsPlayer.get();
-		
-		/*
-		if(maxClaimPower == -1)
-		{
-			maxClaimPower = isOP() ? FTBUConfigClaims.maxClaimsAdmin.get() : FTBUConfigClaims.maxClaimsPlayer.get();
-			EventLMPlayerServer.GetMaxClaimPower e = new EventLMPlayerServer.GetMaxClaimPower(this, maxClaimPower);
-			e.post();
-			maxClaimPower = Math.max(0, e.result);
-		}
-		
-		return maxClaimPower;
-		*/
-	}
 	
 	public void checkNewFriends()
 	{
@@ -264,5 +244,85 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 				FTBLib.notifyPlayer(getPlayer(), n);
 			}
 		}
+	}
+	
+	public Rank getRank()
+	{ return Ranks.getRank(this); }
+	
+	public void claimChunk(int dim, int cx, int cz)
+	{
+		if(FTBUConfigClaims.dimension_blacklist.get().contains(dim)) return;
+		
+		int max = getRank().config.max_claims.get();
+		if(max == 0) return;
+		if(getClaimedChunks() >= max) return;
+		
+		ChunkType t = LMWorldServer.inst.claimedChunks.getType(dim, cx, cz);
+		if(!t.isClaimed() && t.isChunkOwner(this) && LMWorldServer.inst.claimedChunks.put(new ClaimedChunk(playerID, dim, cx, cz)))
+			sendUpdate();
+	}
+	
+	public void unclaimChunk(int dim, int cx, int cz)
+	{
+		if(LMWorldServer.inst.claimedChunks.getType(dim, cx, cz).isChunkOwner(this) && LMWorldServer.inst.claimedChunks.remove(dim, cx, cz))
+			sendUpdate();
+	}
+	
+	public void unclaimAllChunks(Integer dim)
+	{
+		FastList<ClaimedChunk> list = LMWorldServer.inst.claimedChunks.getChunks(this, dim);
+		int size0 = list.size();
+		if(size0 == 0) return;
+		
+		for(int i = 0; i < size0; i++)
+		{
+			ClaimedChunk c = list.get(i);
+			LMWorldServer.inst.claimedChunks.remove(c.dim, c.pos.chunkXPos, c.pos.chunkZPos);
+		}
+		
+		sendUpdate();
+	}
+	
+	public int getClaimedChunks()
+	{ return LMWorldServer.inst.claimedChunks.getChunks(this, null).size(); }
+	
+	public void setLoaded(World world, int cx, int cz, boolean flag)
+	{
+	}
+	
+	public void loadAllChunks(World w)
+	{
+		/* FIXME ChunkLoading
+		if(w == null || w.isRemote) return;
+		unloadAllChunks(w);
+		
+		ForgeChunkManager.Ticket ticket = FTBUChunkEventHandler.instance.request(w, owner);
+		
+		if(ticket != null)
+		{
+			for(ClaimedChunk cc : chunks) if(cc.isChunkloaded && cc.dim == w.provider.dimensionId && !cc.isForced)
+			{
+				ForgeChunkManager.forceChunk(ticket, cc.pos);
+				cc.isForced = true;
+			}
+		}
+		*/
+	}
+	
+	public void unloadAllChunks(World w)
+	{
+		/* FIXME ChunkLoading
+		if(w == null || w.isRemote) return;
+		
+		ForgeChunkManager.Ticket ticket = FTBUChunkEventHandler.instance.request(w, owner);
+		if(ticket != null)
+		{
+			for(ClaimedChunk cc : chunks) if(cc.isChunkloaded && cc.dim == w.provider.dimensionId && cc.isForced)
+			{
+				ForgeChunkManager.unforceChunk(ticket, cc.pos);
+				cc.isForced = false;
+			}
+		}
+		*/
 	}
 }

@@ -43,9 +43,8 @@ public abstract class PlayerSelfAction extends PlayerAction
 	{
 		public void onClicked(LMPlayerClient p)
 		{
-			GuiGuide g = new GuiGuide(null, ClientGuideFile.instance.main);
-			g.playClickSound();
-			FTBLibClient.mc.displayGuiScreen(g);
+			FTBLibClient.playClickSound();
+			GuiGuide.openClientGui();
 		}
 		
 		public String getTitle()

@@ -117,8 +117,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			public void addMouseOverText(FastList<String> l)
 			{
 				l.add(FTBU.mod.translateClient("button.explosions"));
-				if(FTBUConfigClaims.forcedExplosions.get() != null)
-					l.add(FTBLibLang.label_server_forced(Boolean.toString(FTBUConfigClaims.forcedExplosions.get().isEnabled())));
+				if(FTBUConfigClaims.forced_explosions.get() != null)
+					l.add(FTBLibLang.label_server_forced(Boolean.toString(FTBUConfigClaims.forced_explosions.get().isEnabled())));
 			}
 		};
 		
@@ -136,8 +136,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 				l.add(title);
 				l.add(playerLM.settings.blocks.getText());
 				
-				if(FTBUConfigClaims.forcedChunkSecurity.get() != null)
-					l.add(FTBLibLang.label_server_forced(FTBUConfigClaims.forcedChunkSecurity.get().getText()));
+				if(FTBUConfigClaims.forced_chunk_security.get() != null)
+					l.add(FTBLibLang.label_server_forced(FTBUConfigClaims.forced_chunk_security.get().getText()));
 			}
 		};
 		

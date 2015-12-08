@@ -2,7 +2,6 @@ package latmod.ftbu.mod;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import ftb.lib.*;
-import ftb.lib.cmd.CommandLM;
 import ftb.lib.mod.FTBUIntegration;
 import ftb.lib.notification.*;
 import latmod.ftbu.mod.cmd.*;
@@ -77,19 +76,12 @@ public class FTBU
 	{
 		FTBUTicks.serverStarted();
 		
-		// Player commands //
+		e.registerServerCommand(new CmdAdmin());
 		e.registerServerCommand(new CmdBack());
+		e.registerServerCommand(new CmdHome());
 		e.registerServerCommand(new CmdSpawn());
 		e.registerServerCommand(new CmdTplast());
 		e.registerServerCommand(new CmdWarp());
-		e.registerServerCommand(new CmdHome());
-		
-		// Admin commands //
-		CmdAdmin cmd = new CmdAdmin();
-		if(cmd.level.isEnabled())
-			e.registerServerCommand(cmd);
-		else for(CommandLM c : cmd.subCommands.values)
-			e.registerServerCommand(c);
 	}
 	
 	@Mod.EventHandler

@@ -1,27 +1,30 @@
 package latmod.ftbu.world.claims;
 
-import latmod.ftbu.world.LMWorldServer;
+import latmod.ftbu.world.*;
 import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.ChunkCoordIntPair;
 
 public final class ClaimedChunk
 {
-	public final Claims claims;
+	public final int ownerID;
 	public final int dim;
 	public final ChunkCoordIntPair pos;
 	public boolean isChunkloaded = false;
 	public boolean isForced = false;
 	
-	public ClaimedChunk(Claims c, int d, int x, int z)
+	public ClaimedChunk(int o, int d, int x, int z)
 	{
-		claims = c;
+		ownerID = o;
 		dim = d;
 		pos = new ChunkCoordIntPair(x, z);
 	}
 	
 	public ClaimedChunk(EntityPlayer ep)
-	{ this(LMWorldServer.inst.getPlayer(ep).claims, ep.dimension, MathHelperLM.chunk(ep.posX), MathHelperLM.chunk(ep.posZ)); }
+	{ this(LMWorldServer.inst.getPlayer(ep).playerID, ep.dimension, MathHelperLM.chunk(ep.posX), MathHelperLM.chunk(ep.posZ)); }
+	
+	public LMPlayer getOwner()
+	{ return LMWorld.getWorld().getPlayer(ownerID); }
 	
 	public boolean equals(Object o)
 	{ return o != null && (o == this || (o.getClass() == ClaimedChunk.class && equalsChunk((ClaimedChunk)o))); }

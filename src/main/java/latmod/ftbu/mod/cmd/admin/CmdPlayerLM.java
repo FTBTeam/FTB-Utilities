@@ -9,8 +9,6 @@ import ftb.lib.*;
 import ftb.lib.cmd.*;
 import ftb.lib.item.StringIDInvLoader;
 import ftb.lib.mod.FTBLibFinals;
-import ftb.lib.notification.Notification;
-import latmod.ftbu.mod.config.FTBUConfigCmd;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
 import net.minecraft.command.*;
@@ -21,11 +19,11 @@ import net.minecraft.util.*;
 public class CmdPlayerLM extends CommandLM
 {
 	public CmdPlayerLM()
-	{ super(FTBUConfigCmd.name_player_lm.get(), CommandLevel.OP); }
+	{ super("player_lm", CommandLevel.OP); }
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
 	{
-		if(i == 0) return new String[] { "delete", "saveinv", "loadinv", "notify", /*"displayitem"*/ };
+		if(i == 0) return new String[] { "delete", "saveinv", "loadinv", /*"displayitem"*/ };
 		return super.getTabStrings(ics, args, i);
 	}
 	
@@ -129,29 +127,6 @@ public class CmdPlayerLM extends CommandLM
 			}
 			
 			return new ChatComponentText("Inventory loaded!");
-		}
-		else if(args[0].equals("notify"))
-		{
-			if(!p.isOnline()) return mustBeOnline;
-			
-			checkArgs(args, 3);
-			
-			String s = LMStringUtils.unsplitSpaceUntilEnd(2, args);
-			
-			try
-			{
-				Notification n = Notification.fromJson(s);
-				
-				if(n != null)
-				{
-					FTBLib.notifyPlayer(p.getPlayer(), n);
-					return null;
-				}
-			}
-			catch(Exception e)
-			{ e.printStackTrace(); }
-			
-			return error(new ChatComponentText("Invalid notification: " + s));
 		}
 		/* TODO: Reimplement me
 		else if(args[0].equals("displayitem"))

@@ -5,7 +5,7 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.EntityPos;
 import ftb.lib.api.LMNetworkWrapper;
 import latmod.ftbu.mod.client.gui.claims.ClaimedAreasClient;
-import latmod.ftbu.world.claims.ChunkType;
+import latmod.ftbu.world.LMWorldServer;
 import latmod.lib.MathHelperLM;
 
 public class MessageAreaUpdate extends MessageFTBU
@@ -25,7 +25,7 @@ public class MessageAreaUpdate extends MessageFTBU
 		io.writeUByte(sz);
 		
 		for(int z1 = z; z1 < z + sz; z1++) for(int x1 = x; x1 < x + sx; x1++)
-			io.writeInt(ChunkType.getChunkTypeI(d, x1, z1));
+			io.writeInt(LMWorldServer.inst.claimedChunks.getType(d, x1, z1).ID);
 	}
 	
 	public MessageAreaUpdate(EntityPos pos, int sx, int sz)

@@ -2,7 +2,6 @@ package latmod.ftbu.mod.cmd.admin;
 
 import ftb.lib.*;
 import ftb.lib.cmd.*;
-import latmod.ftbu.mod.config.FTBUConfigCmd;
 import latmod.ftbu.world.Backups;
 import latmod.lib.LMFileUtils;
 import net.minecraft.command.*;
@@ -12,7 +11,7 @@ public class CmdBackup extends CommandSubLM
 {
 	public CmdBackup()
 	{
-		super(FTBUConfigCmd.name_backup.get(), CommandLevel.OP);
+		super("backup", CommandLevel.OP);
 		add(new CmdBackupStart("start"));
 		add(new CmdBackupStop("stop"));
 		add(new CmdBackupDeleteAll("delete_all"));

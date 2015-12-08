@@ -9,6 +9,7 @@ import ftb.lib.*;
 import ftb.lib.api.MessageLM;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.net.MessageLMWorldUpdate;
+import latmod.ftbu.world.claims.*;
 import latmod.lib.*;
 import net.minecraft.nbt.*;
 import net.minecraft.world.*;
@@ -20,6 +21,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	public final WorldServer worldObj;
 	public final File latmodFolder;
 	public final Warps warps;
+	public final ClaimedChunks claimedChunks;
 	public NBTTagCompound customServerData;
 	public int lastMailID = 0;
 	
@@ -29,6 +31,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		worldObj = w;
 		latmodFolder = f;
 		warps = new Warps();
+		claimedChunks = new ClaimedChunks();
 		customServerData = new NBTTagCompound();
 	}
 	
@@ -51,6 +54,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		customCommonData = tag.getCompoundTag("CustomCommon");
 		settings.readFromNBT(tag.getCompoundTag("Settings"), true);
 		lastMailID = tag.getInteger("LastMailID");
+		claimedChunks.load(tag);
 	}
 	
 	public void save(NBTTagCompound tag)
@@ -62,6 +66,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		settings.writeToNBT(settingsTag, true);
 		tag.setTag("Settings", settingsTag);
 		tag.setInteger("LastMailID", lastMailID);
+		claimedChunks.save(tag);
 	}
 	
 	public void writeDataToNet(ByteIOStream io, int selfID)
@@ -112,6 +117,8 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	
 	public void writePlayersToServer(NBTTagCompound tag)
 	{
+		players.sort(null);
+		
 		for(int i = 0; i < players.size(); i++)
 		{
 			NBTTagCompound tag1 = new NBTTagCompound();
@@ -137,6 +144,21 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 			NBTTagCompound tag1 = map.values.get(i);
 			LMPlayerServer p = new LMPlayerServer(this, id, new GameProfile(LMStringUtils.fromString(tag1.getString("UUID")), tag1.getString("Name")));
 			p.readFromServer(tag1);
+			
+			//TODO: Remove me after few updates
+			if(tag1.hasKey("Claims"))
+			{
+				NBTTagCompound tagClaims = tag1.getCompoundTag("Claims");
+				NBTTagList listClaims = tagClaims.getTagList("Chunks", LMNBTUtils.INT_ARRAY);
+				
+				if(listClaims != null && listClaims.tagCount() > 0)
+				for(int j = 0; j < listClaims.tagCount(); j++)
+				{
+					int[] ai = listClaims.func_150306_c(j);
+					claimedChunks.put(new ClaimedChunk(p.playerID, ai[0], ai[1], ai[2]));
+				}
+			}
+			
 			players.add(p);
 		}
 		

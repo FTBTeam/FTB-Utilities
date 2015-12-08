@@ -2,7 +2,6 @@ package latmod.ftbu.mod.cmd.admin;
 
 import ftb.lib.cmd.*;
 import latmod.ftbu.mod.cmd.InvSeeInventory;
-import latmod.ftbu.mod.config.FTBUConfigCmd;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IChatComponent;
@@ -10,7 +9,7 @@ import net.minecraft.util.IChatComponent;
 public class CmdInvsee extends CommandLM
 {
 	public CmdInvsee()
-	{ super(FTBUConfigCmd.name_invsee.get(), CommandLevel.OP); }
+	{ super("invsee", CommandLevel.OP); }
 	
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <player>"; }

@@ -8,7 +8,7 @@ import ftb.lib.*;
 import latmod.ftbu.api.EventLMWorldServer;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.world.*;
-import latmod.ftbu.world.claims.Claims;
+import latmod.ftbu.world.claims.ClaimedChunks;
 import latmod.lib.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
@@ -77,7 +77,7 @@ public class FTBUWorldEventHandler
 		if(FTBUConfigGeneral.isEntityBanned(e.getClass()))
 			return false;
 		
-		if(FTBUConfigGeneral.safeSpawn.get() && Claims.isInSpawnF(e.dimension, e.posX, e.posZ))
+		if(FTBUConfigGeneral.safeSpawn.get() && ClaimedChunks.isInSpawnF(e.dimension, e.posX, e.posZ))
 		{
 			if(e instanceof IMob) return false;
 			else if(e instanceof EntityChicken && e.riddenByEntity != null) return false;
@@ -93,7 +93,7 @@ public class FTBUWorldEventHandler
 		int dim = e.world.provider.dimensionId;
 		int cx = MathHelperLM.chunk(e.explosion.explosionX);
 		int cz = MathHelperLM.chunk(e.explosion.explosionZ);
-		if(!Claims.allowExplosion(dim, cx, cz)) e.setCanceled(true);
+		if(!LMWorldServer.inst.claimedChunks.allowExplosion(dim, cx, cz)) e.setCanceled(true);
 	}
 	
 }

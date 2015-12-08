@@ -1,7 +1,6 @@
 package latmod.ftbu.mod.cmd.admin;
 
 import ftb.lib.cmd.*;
-import latmod.ftbu.mod.config.FTBUConfigCmd;
 import latmod.ftbu.world.LMWorldServer;
 import latmod.lib.MathHelperLM;
 import net.minecraft.command.*;
@@ -12,7 +11,7 @@ public class CmdWorldBorder extends CommandSubLM
 {
 	public CmdWorldBorder()
 	{
-		super(FTBUConfigCmd.name_world_border.get(), CommandLevel.OP);
+		super("world_border", CommandLevel.OP);
 		add(new CmdOn("on"));
 		add(new CmdOff("off"));
 		add(new CmdSet("set"));

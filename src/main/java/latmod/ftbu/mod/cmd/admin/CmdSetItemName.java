@@ -1,7 +1,6 @@
 package latmod.ftbu.mod.cmd.admin;
 
 import ftb.lib.cmd.*;
-import latmod.ftbu.mod.config.FTBUConfigCmd;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -10,7 +9,7 @@ import net.minecraft.util.*;
 public class CmdSetItemName extends CommandLM
 {
 	public CmdSetItemName()
-	{ super(FTBUConfigCmd.name_set_item_name.get(), CommandLevel.OP); }
+	{ super("set_item_name", CommandLevel.OP); }
 	
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <name...>"; }

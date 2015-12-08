@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSetMultimap;
 
 import ftb.lib.cmd.*;
 import latmod.ftbu.api.guide.*;
-import latmod.ftbu.mod.config.FTBUConfigCmd;
 import latmod.ftbu.util.LatCoreMC;
 import latmod.lib.*;
 import net.minecraft.command.*;
@@ -17,7 +16,7 @@ import net.minecraftforge.common.ForgeChunkManager.Ticket;
 public class CmdLoadedChunks extends CommandLM
 {
 	public CmdLoadedChunks()
-	{ super(FTBUConfigCmd.name_loaded_chunks.get(), CommandLevel.OP); }
+	{ super("loaded_chunks", CommandLevel.OP); }
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 	{

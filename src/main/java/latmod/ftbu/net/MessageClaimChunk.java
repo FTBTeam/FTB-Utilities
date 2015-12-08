@@ -4,7 +4,7 @@ import cpw.mods.fml.common.network.simpleimpl.*;
 import ftb.lib.*;
 import ftb.lib.api.LMNetworkWrapper;
 import latmod.ftbu.world.*;
-import latmod.ftbu.world.claims.*;
+import latmod.ftbu.world.claims.ClaimedChunk;
 
 public class MessageClaimChunk extends MessageFTBU
 {
@@ -41,24 +41,28 @@ public class MessageClaimChunk extends MessageFTBU
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(ctx.getServerHandler().playerEntity);
 		if(type == ID_CLAIM)
 		{
-			p.claims.claim(dim, cx, cz);
+			p.claimChunk(dim, cx, cz);
 			return new MessageAreaUpdate(cx, cz, dim, 1, 1);
 		}
 		else if(type == ID_UNCLAIM)
 		{
 			if(token != 0L && AdminToken.equals(p.getPlayer(), token))
 			{
-				ClaimedChunk c = Claims.get(dim, cx, cz);
-				if(c != null) c.claims.unclaim(dim, cx, cz);
+				ClaimedChunk c = LMWorldServer.inst.claimedChunks.getChunk(dim, cx, cz);
+				if(c != null)
+				{
+					LMPlayerServer p1 = LMWorldServer.inst.getPlayer(c.ownerID);
+					p1.unclaimChunk(dim, cx, cz);
+				}
 			}
 			else
-				p.claims.unclaim(dim, cx, cz);			
+				p.unclaimChunk(dim, cx, cz);			
 			return new MessageAreaUpdate(cx, cz, dim, 1, 1);
 		}
-		else if(type == ID_UNCLAIM_ALL) p.claims.unclaimAll(dim);
-		else if(type == ID_UNCLAIM_ALL_DIMS) p.claims.unclaimAll();
-		else if(type == ID_LOAD) p.claims.loadChunk(LMDimUtils.getWorld(dim), cx, cz);
-		else if(type == ID_UNLOAD) p.claims.unloadChunk(LMDimUtils.getWorld(dim), cx, cz);
+		else if(type == ID_UNCLAIM_ALL) p.unclaimAllChunks(Integer.valueOf(dim));
+		else if(type == ID_UNCLAIM_ALL_DIMS) p.unclaimAllChunks(null);
+		else if(type == ID_LOAD) p.setLoaded(LMDimUtils.getWorld(dim), cx, cz, true);
+		else if(type == ID_UNLOAD) p.setLoaded(LMDimUtils.getWorld(dim), cx, cz, false);
 		return null;
 	}
 }

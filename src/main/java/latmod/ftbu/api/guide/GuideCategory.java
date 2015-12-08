@@ -163,4 +163,7 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 
 	public void copyFrom(GuideCategory c)
 	{ for(int i = 0; i < c.subcategories.size(); i++) addSub(c.setParent(this)); }
+
+	public GuideCategory getParentTop()
+	{ if(parent == null) return this; return parent.getParentTop(); }
 }

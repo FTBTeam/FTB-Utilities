@@ -75,7 +75,7 @@ public class CmdPlayerLM extends CommandLM
 		{
 			int playerID = parseInt(ics, args[1]);
 			if(p.isOnline()) return mustBeOffline;
-			LMWorldServer.inst.players.removeObj(playerID);
+			LMWorldServer.inst.players.remove((Object)Integer.valueOf(playerID));
 			return new ChatComponentText("Player removed!");
 		}
 		

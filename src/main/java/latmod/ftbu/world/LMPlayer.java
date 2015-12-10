@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer // LMPlayerClient
+public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer // LMPlayerClient
 {
 	public final LMWorld world;
 	public final int playerID;
@@ -22,8 +22,8 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 	public final IntList friends;
 	public final ItemStack[] lastArmor;
 	public final PersonalSettings settings;
-	public NBTTagCompound commonPublicData;
-	public NBTTagCompound commonPrivateData;
+	protected NBTTagCompound commonPublicData;
+	protected NBTTagCompound commonPrivateData;
 	
 	public LMPlayer(LMWorld w, int i, GameProfile gp)
 	{
@@ -37,9 +37,6 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 		friends = new IntList();
 		lastArmor = new ItemStack[5];
 		settings = new PersonalSettings(this);
-		
-		commonPublicData = new NBTTagCompound();
-		commonPrivateData = new NBTTagCompound();
 	}
 	
 	public abstract boolean isOnline();
@@ -97,4 +94,18 @@ public abstract class LMPlayer implements Comparable<LMPlayer> //LMPlayerServer 
 	
 	public FriendStatus getStatus(LMPlayer p)
 	{ return FriendStatus.get(this, p); }
+	
+	public final NBTTagCompound getPublicData()
+	{
+		if(commonPublicData == null)
+			commonPublicData = new NBTTagCompound();
+		return commonPublicData;
+	}
+	
+	public final NBTTagCompound getPrivateData()
+	{
+		if(commonPrivateData == null)
+			commonPrivateData = new NBTTagCompound();
+		return commonPrivateData;
+	}
 }

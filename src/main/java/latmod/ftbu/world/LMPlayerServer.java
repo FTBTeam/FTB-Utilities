@@ -155,8 +155,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		if(!friends.isEmpty())
 			tag.setIntArray("Friends", friends.toArray());
 		
-		if(!commonPublicData.hasNoTags()) tag.setTag("CustomData", commonPublicData);
-		if(!commonPrivateData.hasNoTags()) tag.setTag("CustomPrivateData", commonPrivateData);
+		if(commonPublicData != null && !commonPublicData.hasNoTags()) tag.setTag("CustomData", commonPublicData);
+		if(commonPrivateData != null && !commonPrivateData.hasNoTags()) tag.setTag("CustomPrivateData", commonPrivateData);
 		
 		StringIDInvLoader.writeItemsToNBT(lastArmor, tag, "LastItems");
 		
@@ -200,7 +200,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		if(self)
 		{
-			if(!commonPrivateData.hasNoTags()) tag.setTag("CPD", commonPrivateData);
+			if(commonPrivateData != null && !commonPrivateData.hasNoTags()) tag.setTag("CPD", commonPrivateData);
 			int claimedChunks = getClaimedChunks();
 			if(claimedChunks > 0) tag.setInteger("CC", claimedChunks);
 			tag.setInteger("MCC", getRank().config.max_claims.get());

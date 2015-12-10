@@ -1,5 +1,6 @@
 package latmod.ftbu.mod.client.gui.friends;
 
+import ftb.lib.api.PlayerAction;
 import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.client.TextureCoords;
 import ftb.lib.gui.widgets.ButtonPopupMenu;

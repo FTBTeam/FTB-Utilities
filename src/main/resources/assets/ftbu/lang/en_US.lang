@@ -18,6 +18,10 @@ ftbu:button.block_security=Block Security
 ftbu:label.cchunks_count=Claimed Chunks: %s
 
 #ClientConfig
+client_config.sidebar_buttons.guide=Guide
+client_config.sidebar_buttons.info=Server Info
+client_config.sidebar_buttons.claims=Claimed Chunks
+
 client_config.ftbu=FTBUtilities
 client_config.ftbu.player_decorators=Player Decorators
 client_config.ftbu.player_decorators_self=My Player Decorators
@@ -25,12 +29,6 @@ client_config.ftbu.options_button=Options Button
 client_config.ftbu.chat_links=Chat Links
 client_config.ftbu.player_options_shortcut=Player Options Shortcut
 client_config.ftbu.sort_friends_az=Sort Friends A-Z
-
-client_config.sidebar_buttons=Sidebar Buttons
-client_config.sidebar_buttons.button_guide=Guide
-client_config.sidebar_buttons.button_info=Server Info
-client_config.sidebar_buttons.button_claims=Claimed Chunks
-client_config.sidebar_buttons.button_settings=Client Settings
 
 #Misc
 ftbu:label.new_friends=New friend requests!

@@ -1,7 +1,9 @@
 package latmod.ftbu.mod.client.gui.friends;
 
+import ftb.lib.api.PlayerAction;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
+import latmod.ftbu.mod.client.FTBUActions;
 import latmod.ftbu.world.LMPlayerClient;
 import latmod.lib.FastList;
 
@@ -21,7 +23,7 @@ public class GuiFriendsGuiSmall extends GuiLM
 		mainPanel.width = 0;
 		mainPanel.height = 0;
 		
-		FastList<PlayerAction> list = PlayerAction.getActionsFor(playerLM);
+		FastList<PlayerAction> list = FTBUActions.getActionsFor(playerLM);
 		for(int i = 0; i < list.size(); i++)
 		{
 			ButtonPlayerActionSmall b = new ButtonPlayerActionSmall(this, list.get(i));
@@ -63,7 +65,7 @@ public class GuiFriendsGuiSmall extends GuiLM
 		public void onButtonPressed(int b)
 		{
 			gui.container.player.closeScreen();
-			action.onClicked(gui.playerLM);
+			action.onClicked(gui.playerLM.playerID);
 		}
 		
 		public void renderWidget()

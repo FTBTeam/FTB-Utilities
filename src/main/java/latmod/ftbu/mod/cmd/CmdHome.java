@@ -41,7 +41,7 @@ public class CmdHome extends CommandLM
 		{
 			checkArgs(args, 2);
 			
-			int maxHomes = p.isOP() ? FTBUConfigCmd.maxHomesAdmin.get() : FTBUConfigCmd.maxHomesPlayer.get();
+			int maxHomes = p.getRank().config.max_homes.get();
 			if(maxHomes <= 0 || p.homes.size() >= maxHomes)
 				return error(new ChatComponentTranslation(FTBUFinals.ASSETS + "cmd.home_limit"));
 			
@@ -62,7 +62,7 @@ public class CmdHome extends CommandLM
 		
 		if(pos == null) return error(new ChatComponentTranslation(FTBUFinals.ASSETS + "cmd.home_not_set", args[0]));
 		
-		if(ep.dimension != pos.dim && !FTBUConfigCmd.crossDimHomes.get())
+		if(ep.dimension != pos.dim && !p.getRank().config.cross_dim_homes.get())
 			return error(new ChatComponentTranslation(FTBU.mod.assets + "cmd.home_cross_dim"));
 		
 		LMDimUtils.teleportPlayer(ep, pos);

@@ -4,6 +4,7 @@ import ftb.lib.*;
 import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.LMGuiHandlerRegistry;
 import ftb.lib.client.FTBLibClient;
+import ftb.lib.mod.client.FTBLibGuiEventHandler;
 import ftb.lib.notification.ClientNotifications;
 import latmod.ftbu.badges.ThreadLoadBadges;
 import latmod.ftbu.mod.*;
@@ -21,10 +22,10 @@ import net.minecraftforge.client.ClientCommandHandler;
 @SideOnly(Side.CLIENT)
 public class FTBUClient extends FTBUCommon // FTBLibModClient
 {
-	public static final ConfigGroup clientConfig = new ConfigGroup("ftbu");
-	public static final ConfigEntryBool renderBadges = new ConfigEntryBool("player_decorators", true);
+	public static final ConfigGroup client_config = new ConfigGroup("ftbu");
+	public static final ConfigEntryBool render_badges = new ConfigEntryBool("render_badges", true);
 	
-	public static final ConfigEntryBool renderMyBadge = new ConfigEntryBool("player_decorators_self", true)
+	public static final ConfigEntryBool render_my_badge = new ConfigEntryBool("render_my_badge", true)
 	{
 		public boolean get()
 		{ return LMWorldClient.inst.getClientPlayer().settings.renderBadge; }
@@ -33,9 +34,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		{ ClientAction.ACTION_RENDER_BADGE.send(b ? 1 : 0); }
 	};
 	
-	public static final ConfigEntryBool optionsButton = new ConfigEntryBool("options_button", true);
-	
-	public static final ConfigEntryBool chatLinks = new ConfigEntryBool("chat_links", true)
+	public static final ConfigEntryBool chat_links = new ConfigEntryBool("chat_links", true)
 	{
 		public boolean get()
 		{ return LMWorldClient.inst.getClientPlayer().settings.chatLinks; }
@@ -44,9 +43,9 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		{ ClientAction.ACTION_CHAT_LINKS.send(b ? 1 : 0); }
 	};
 	
-	public static final ConfigEntryBool playerOptionsShortcut = new ConfigEntryBool("player_options_shortcut", false);
-	public static final ConfigEntryBool sortFriendsAZ = new ConfigEntryBool("sort_friends_az", false);
-	public static final ConfigEntryBool hideArmorFG = new ConfigEntryBool("hide_armor_fg", false).setHidden();
+	public static final ConfigEntryBool player_options_shortcut = new ConfigEntryBool("player_options_shortcut", false);
+	public static final ConfigEntryBool sort_friends_az = new ConfigEntryBool("sort_friends_az", false);
+	public static final ConfigEntryBool hide_armor_fg = new ConfigEntryBool("hide_armor_fg", false).setHidden();
 	
 	public static void onWorldJoined()
 	{
@@ -68,18 +67,17 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		EventBusHelper.register(FTBUGuiEventHandler.instance);
 		EventBusHelper.register(FTBUBadgeRenderer.instance);
 		
-		clientConfig.add(renderBadges);
-		clientConfig.add(renderMyBadge.setExcluded());
-		clientConfig.add(optionsButton);
-		clientConfig.add(chatLinks.setExcluded());
-		clientConfig.add(playerOptionsShortcut);
-		clientConfig.add(sortFriendsAZ);
-		clientConfig.add(hideArmorFG);
-		ClientConfigRegistry.add(clientConfig);
-		
-		FTBUGuiEventHandler.init();
+		client_config.add(render_badges);
+		client_config.add(render_my_badge.setExcluded());
+		client_config.add(chat_links.setExcluded());
+		client_config.add(player_options_shortcut);
+		client_config.add(sort_friends_az);
+		client_config.add(hide_armor_fg);
+		ClientConfigRegistry.add(client_config);
 		
 		ClientCommandHandler.instance.registerCommand(new CmdMath());
+		
+		FTBLibGuiEventHandler.sidebar_buttons_config.addAll(FTBUGuiEventHandler.class);
 	}
 	
 	public void postInit()

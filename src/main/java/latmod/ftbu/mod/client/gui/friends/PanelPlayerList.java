@@ -32,7 +32,7 @@ public class PanelPlayerList extends PanelFriendsGui
 		
 		tempPlayerList.remove(clientPlayer);
 		
-		if(FTBUClient.sortFriendsAZ.get())
+		if(FTBUClient.sort_friends_az.get())
 			tempPlayerList.sort(LMPNameComparator.instance);
 		else
 		{

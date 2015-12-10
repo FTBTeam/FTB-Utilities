@@ -24,9 +24,9 @@ public class PanelPlayerView extends PanelFriendsGui
 	
 	public void renderWidget()
 	{
-		FTBUClient.hideArmorFG.set(mouseOver() && Mouse.isButtonDown(1));
+		FTBUClient.hide_armor_fg.set(mouseOver() && Mouse.isButtonDown(1));
 		
-		if(FTBUClient.hideArmorFG.get())
+		if(FTBUClient.hide_armor_fg.get())
 		{
 			for(int i = 0; i < 4; i++)
 				selectedPlayer.inventory.armorInventory[i] = null;

@@ -15,7 +15,7 @@ public class FTBUBadgeRenderer
 	@SubscribeEvent
 	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
 	{
-		if(LatCoreMCClient.isPlaying() && !Badge.badges.isEmpty() && FTBUClient.renderBadges.get() && !e.entityPlayer.isInvisible())
+		if(LatCoreMCClient.isPlaying() && !Badge.badges.isEmpty() && FTBUClient.render_badges.get() && !e.entityPlayer.isInvisible())
 		{
 			LMPlayerClient pc = LMWorldClient.inst.getPlayer(e.entityPlayer);
 			

@@ -20,7 +20,6 @@ public class FTBUConfig // FTBU
 		configFile.add(FTBUConfigClaims.group.addAll(FTBUConfigClaims.class));
 		configFile.add(FTBUConfigCmd.group.addAll(FTBUConfigCmd.class));
 		configFile.add(FTBUConfigTops.group.addAll(FTBUConfigTops.class));
-		configFile.add(FTBUConfigChunkloading.group.addAll(FTBUConfigChunkloading.class));
 		ConfigListRegistry.instance.add(configFile);
 		configFile.load();
 	}

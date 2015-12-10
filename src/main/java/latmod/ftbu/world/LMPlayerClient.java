@@ -63,11 +63,11 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 		friends.clear();
 		friends.addAll(tag.getIntArray("F"));
 		
-		commonPublicData = tag.getCompoundTag("CD");
+		commonPublicData = tag.hasKey("CD") ? tag.getCompoundTag("CD") : null;
 		
 		if(self)
 		{
-			commonPrivateData = tag.getCompoundTag("CPD");
+			commonPrivateData = tag.hasKey("CPD") ? tag.getCompoundTag("CPD") : null;
 			claimedChunks = tag.getInteger("CC");
 			maxClaimPower = tag.getInteger("MCC");
 		}

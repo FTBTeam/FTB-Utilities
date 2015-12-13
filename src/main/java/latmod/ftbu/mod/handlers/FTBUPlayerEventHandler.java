@@ -6,6 +6,7 @@ import ftb.lib.notification.Notification;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.api.item.ICreativeSafeItem;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.cmd.*;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.net.*;
 import latmod.ftbu.world.*;
@@ -15,6 +16,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.*;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
@@ -110,6 +112,28 @@ public class FTBUPlayerEventHandler
 		if(e.entityPlayer instanceof FakePlayer || e.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR) return;
 		else if(!canInteract(e.entityPlayer, e.x, e.y, e.z, e.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK))
 			e.setCanceled(true);
+		else if(!e.world.isRemote)
+		{
+			TileEntity te = e.world.getTileEntity(e.x, e.y, e.z);
+			
+			if(te != null && !te.isInvalid() && te instanceof TileEntitySign)
+			{
+				TileEntitySign t = (TileEntitySign)te;
+				
+				if(FTBUConfigGeneral.sign_home.get() && t.signText[1].equals("[home]"))
+				{
+					new CmdHome().onCommand(e.entityPlayer, new String[] { t.signText[2] });
+					e.setCanceled(true);
+					return;
+				}
+				else if(FTBUConfigGeneral.sign_warp.get() && !t.signText[2].isEmpty() && t.signText[1].equals("[warp]"))
+				{
+					new CmdWarp().onCommand(e.entityPlayer, new String[] { t.signText[2] });
+					e.setCanceled(true);
+					return;
+				}
+			}
+		}
 	}
 	
 	private boolean canInteract(EntityPlayer ep, int x, int y, int z, boolean leftClick)
@@ -159,7 +183,7 @@ public class FTBUPlayerEventHandler
 			int cx = MathHelperLM.chunk(e.entity.posX);
 			int cz = MathHelperLM.chunk(e.entity.posZ);
 			
-			if(LMWorldServer.inst.settings.isOutside(dim, cx, cz) || (FTBUConfigGeneral.safeSpawn.get() && ClaimedChunks.isInSpawn(dim, cx, cz))) e.setCanceled(true);
+			if(LMWorldServer.inst.settings.isOutside(dim, cx, cz) || (FTBUConfigGeneral.safe_spawn.get() && ClaimedChunks.isInSpawn(dim, cx, cz))) e.setCanceled(true);
 			/*else
 			{
 				ClaimedChunk c = Claims.get(dim, cx, cz);

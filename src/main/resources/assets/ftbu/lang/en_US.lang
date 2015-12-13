@@ -23,8 +23,8 @@ client_config.sidebar_buttons.info=Server Info
 client_config.sidebar_buttons.claims=Claimed Chunks
 
 client_config.ftbu=FTBUtilities
-client_config.ftbu.player_decorators=Player Decorators
-client_config.ftbu.player_decorators_self=My Player Decorators
+client_config.ftbu.render_badges=Show Badges
+client_config.ftbu.render_my_badge=Show My Badge
 client_config.ftbu.options_button=Options Button
 client_config.ftbu.chat_links=Chat Links
 client_config.ftbu.player_options_shortcut=Player Options Shortcut

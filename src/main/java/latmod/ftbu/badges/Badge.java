@@ -32,8 +32,8 @@ public class Badge extends FinalIDObject
 	{
 		if(textureURL == null)
 		{
-			textureURL = FTBU.mod.getLocation("textures/badges/" + toString());
-			FTBLibClient.getDownloadImage(textureURL, toString(), defTex, null);
+			textureURL = FTBU.mod.getLocation("textures/badges/" + ID);
+			FTBLibClient.getDownloadImage(textureURL, ID, defTex, null);
 		}
 		
 		return textureURL;

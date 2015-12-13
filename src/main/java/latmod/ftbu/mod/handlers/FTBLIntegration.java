@@ -5,7 +5,7 @@ import java.util.List;
 
 import ftb.lib.*;
 import ftb.lib.api.*;
-import ftb.lib.api.config.ConfigListRegistry;
+import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.item.LMInvUtils;
 import ftb.lib.mod.FTBUIntegration;
 import latmod.ftbu.api.*;
@@ -26,7 +26,7 @@ public class FTBLIntegration extends FTBUIntegration // FTBLIntegrationClient
 	{
 		if(e.side.isClient() || LMWorldServer.inst == null) return;
 		
-		if(FTBUConfigGeneral.restartTimer.get() > 0)
+		if(FTBUConfigGeneral.restart_timer.get() > 0)
 			FTBUTicks.serverStarted();
 		
 		for(LMPlayer p : LMWorldServer.inst.players)
@@ -44,7 +44,7 @@ public class FTBLIntegration extends FTBUIntegration // FTBLIntegrationClient
 	{
 		if(FTBLib.isServer() && e.worldMC.provider.dimensionId == 0 && e.worldMC instanceof WorldServer)
 		{
-			ConfigListRegistry.reloadInstance();
+			ConfigRegistry.reload();
 			
 			File latmodFolder = new File(e.worldMC.getSaveHandler().getWorldDirectory(), "latmod/");
 			NBTTagCompound tagWorldData = LMNBTUtils.readMap(new File(latmodFolder, "LMWorld.dat"));

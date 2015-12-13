@@ -19,9 +19,9 @@ public class FTBUTicks
 		currentMillis = startMillis = Backups.lastTimeRun = LMUtils.millis();
 		restartSeconds = 0;
 		
-		if(FTBUConfigGeneral.restartTimer.get() > 0)
+		if(FTBUConfigGeneral.restart_timer.get() > 0)
 		{
-			restartSeconds = (long)(FTBUConfigGeneral.restartTimer.get() * 3600D);
+			restartSeconds = (long)(FTBUConfigGeneral.restart_timer.get() * 3600D);
 			FTBU.mod.logger.info("Server restart in " + LMStringUtils.getTimeString(restartSeconds * 1000L));
 		}
 	}

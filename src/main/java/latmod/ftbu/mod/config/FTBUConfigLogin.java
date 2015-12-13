@@ -12,15 +12,15 @@ import net.minecraft.item.ItemStack;
 public class FTBUConfigLogin
 {
 	public static final ConfigGroup group = new ConfigGroup("login");
-	public static final ConfigEntryStringArray motd = new ConfigEntryStringArray("motd", new FastList<String>("Welcome to the server!")).setInfo("Message of the day. This will be displayed when player joins the server");
-	public static final ConfigEntryString customBadges = new ConfigEntryString("customBadges", "").sync().setInfo("URL for per-server custom badges file (Json). Example can be seen here:\nhttp://pastebin.com/raw.php?i=ZXVhpEZ1");
-	public static final ConfigEntryStringArray startingItems = new ConfigEntryStringArray("startingItems", new FastList<String>("minecraft:apple 16 0")).setInfo("Items to give player when it first joins the server.\nFormat: StringID Size Metadata\nDoes not support NBT yet");
+	private static final ConfigEntryStringArray motd = new ConfigEntryStringArray("motd", new FastList<String>("Welcome to the server!")).setInfo("Message of the day. This will be displayed when player joins the server");
+	public static final ConfigEntryString custom_badges = new ConfigEntryString("custom_badges", "").sync().setInfo("URL for per-server custom badges file (Json). Example can be seen here:\nhttp://pastebin.com/raw.php?i=ZXVhpEZ1");
+	private static final ConfigEntryStringArray starting_items = new ConfigEntryStringArray("starting_items", new FastList<String>("minecraft:apple 16 0")).setInfo("Items to give player when it first joins the server.\nFormat: StringID Size Metadata\nDoes not support NBT yet");
 	
 	public static FastList<ItemStack> getStartingItems(UUID id)
 	{
 		FastList<ItemStack> list = new FastList<ItemStack>();
 		
-		for(String s : startingItems.get())
+		for(String s : starting_items.get())
 		{
 			ItemStack is = ItemStackTypeAdapter.parseItem(s);
 			if(is != null) list.add(is);

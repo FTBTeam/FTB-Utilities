@@ -6,7 +6,7 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.api.EventLMPlayerClient;
 import latmod.ftbu.badges.Badge;
-import latmod.lib.FastList;
+import latmod.lib.*;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
@@ -62,6 +62,22 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 		
 		friends.clear();
 		friends.addAll(tag.getIntArray("F"));
+		
+		IntList otherFriends = IntList.asList(tag.getIntArray("OF"));
+		
+		for(int i = 0; i < LMWorldClient.inst.players.size(); i++)
+		{
+			LMPlayer p = LMWorldClient.inst.players.get(i);
+			if(p != this)
+			{
+				p.friends.clear();
+				if(otherFriends.contains(p.playerID))
+				{
+					p.friends.add(playerID);
+					otherFriends.removeValue(p.playerID);
+				}
+			}
+		}
 		
 		commonPublicData = tag.hasKey("CD") ? tag.getCompoundTag("CD") : null;
 		

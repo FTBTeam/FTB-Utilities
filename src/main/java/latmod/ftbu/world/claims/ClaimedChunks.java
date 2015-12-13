@@ -136,7 +136,7 @@ public class ClaimedChunks
 	public boolean remove(int dim, int cx, int cz)
 	{
 		FastMap<Long, ClaimedChunk> map = chunks.get(Integer.valueOf(dim));
-		if(map != null && map.remove(Long.valueOf(Bits.intsToLong(cx, cz))))
+		if(map != null && map.remove(Long.valueOf(Bits.intsToLong(cx, cz))) != null)
 		{
 			if(map.isEmpty()) chunks.remove(Integer.valueOf(dim));
 			return true;
@@ -185,7 +185,7 @@ public class ClaimedChunks
 	
 	public boolean allowExplosion(int dim, int cx, int cz)
 	{
-		if(dim == 0 && FTBUConfigGeneral.safeSpawn.get() && isInSpawn(dim, cx, cz))
+		if(dim == 0 && FTBUConfigGeneral.safe_spawn.get() && isInSpawn(dim, cx, cz))
 			return false;
 		else if(LMWorldServer.inst.settings.isOutside(dim, cx, cz))
 			return false;

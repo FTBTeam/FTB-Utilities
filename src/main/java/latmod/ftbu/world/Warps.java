@@ -50,7 +50,7 @@ public class Warps
 	{ return warps.put(s, new EntityPos(x + 0.5D, y + 0.5D, z + 0.5D, dim)); }
 	
 	public boolean rem(String s)
-	{ return warps.remove(s); }
+	{ return warps.remove(s) != null; }
 
 	public int size()
 	{ return warps.size(); }

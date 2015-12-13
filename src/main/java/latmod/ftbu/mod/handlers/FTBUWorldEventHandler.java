@@ -77,7 +77,7 @@ public class FTBUWorldEventHandler
 		if(FTBUConfigGeneral.isEntityBanned(e.getClass()))
 			return false;
 		
-		if(FTBUConfigGeneral.safeSpawn.get() && ClaimedChunks.isInSpawnF(e.dimension, e.posX, e.posZ))
+		if(FTBUConfigGeneral.safe_spawn.get() && ClaimedChunks.isInSpawnF(e.dimension, e.posX, e.posZ))
 		{
 			if(e instanceof IMob) return false;
 			else if(e instanceof EntityChicken && e.riddenByEntity != null) return false;

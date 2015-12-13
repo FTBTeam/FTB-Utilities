@@ -111,7 +111,7 @@ public class ServerGuideFile extends GuideFile
 		for(int i = 0; i < players.size(); i++)
 			players.get(i).refreshStats();
 		
-		if(FTBUConfigGeneral.restartTimer.get() > 0F)
+		if(FTBUConfigGeneral.restart_timer.get() > 0F)
 			main.println(new ChatComponentTranslation(FTBU.mod.assets + "cmd.timer_restart", LMStringUtils.getTimeString(FTBUTicks.getSecondsUntilRestart() * 1000L)));
 		
 		if(FTBUConfigBackups.enabled.get())

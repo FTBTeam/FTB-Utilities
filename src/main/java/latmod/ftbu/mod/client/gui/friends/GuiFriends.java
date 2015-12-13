@@ -53,7 +53,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			panelPlayerInfo.text.clear();
 			panelPlayerInfo.text.add(EnumChatFormatting.BOLD + panelPlayerView.selectedPlayer.getCommandSenderName());
 			if(panelPlayerView.selectedPlayer.playerLM.isOnline)
-				panelPlayerInfo.text.add(EnumChatFormatting.GREEN + "[" + FTBLibLang.label_online() + "]");
+				panelPlayerInfo.text.add(EnumChatFormatting.GREEN.toString() + '[' + FTBLibLang.label_online() + ']');
 			
 			if(!panelPlayerView.selectedPlayer.isOwner)
 			{
@@ -61,9 +61,9 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 				boolean raw2 = LMWorldClient.inst.getClientPlayer().isFriendRaw(panelPlayerView.selectedPlayer.playerLM);
 				
 				if(raw1 && raw2)
-					panelPlayerInfo.text.add(EnumChatFormatting.GREEN + "[" + FTBULang.label_friend() + "]");
+					panelPlayerInfo.text.add(EnumChatFormatting.GREEN.toString() + '[' + FTBULang.label_friend() + ']');
 				else if(raw1 || raw2)
-					panelPlayerInfo.text.add((raw1 ? EnumChatFormatting.GOLD : EnumChatFormatting.BLUE) + "[" + FTBULang.label_pfriend() + "]");
+					panelPlayerInfo.text.add("" + (raw1 ? EnumChatFormatting.GOLD : EnumChatFormatting.BLUE) + '[' + FTBULang.label_pfriend() + ']');
 			}
 			
 			for(IChatComponent c : panelPlayerView.selectedPlayer.playerLM.clientInfo)

@@ -196,6 +196,16 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		if(!friends.isEmpty())
 			tag.setIntArray("F", friends.toArray());
 		
+		IntList otherFriends = new IntList();
+		
+		for(int i = 0; i < LMWorldServer.inst.players.size(); i++)
+		{
+			LMPlayer p = LMWorldServer.inst.players.get(i);
+			if(p.friends.contains(playerID)) otherFriends.add(p.playerID);
+		}
+		
+		if(otherFriends.size() > 0) tag.setIntArray("OF", otherFriends.toArray());
+		
 		if(!commonPublicData.hasNoTags()) tag.setTag("CD", commonPublicData);
 		
 		if(self)

@@ -9,7 +9,6 @@ import ftb.lib.notification.*;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClickAction;
-import latmod.ftbu.mod.config.FTBUConfigClaims;
 import latmod.ftbu.net.MessageLMPlayerUpdate;
 import latmod.ftbu.world.claims.*;
 import latmod.ftbu.world.ranks.*;
@@ -27,10 +26,9 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public static final int nextPlayerID()
 	{ return ++lastPlayerID; }
 	
-	public NBTTagCompound serverData;
+	private NBTTagCompound serverData = null;
 	public EntityPos lastPos, lastDeath;
 	public final LMPlayerStats stats;
-	private String playerName;
 	private EntityPlayerMP entityPlayer = null;
 	public int lastChunkType = -99;
 	public final Warps homes;
@@ -45,17 +43,12 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public LMPlayerServer(LMWorldServer w, int i, GameProfile gp)
 	{
 		super(w, i, gp);
-		serverData = new NBTTagCompound();
 		stats = new LMPlayerStats(this);
-		playerName = gp.getName();
 		homes = new Warps();
 	}
 	
-	public String getName()
-	{ return playerName; }
-	
-	public void setName(String s)
-	{ playerName = s; }
+	public Side getSide()
+	{ return Side.SERVER; }
 	
 	public boolean isOnline()
 	{ return entityPlayer != null; }
@@ -75,7 +68,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public void sendUpdate()
 	{
-		new EventLMPlayerServer.DataChanged(this).post();
+		new EventLMPlayerServer.UpdateSent(this).post();
 		if(isOnline()) new MessageLMPlayerUpdate(this, true).sendTo(getPlayer());
 		for(EntityPlayerMP ep : FTBLib.getAllOnlinePlayers(getPlayer()))
 			new MessageLMPlayerUpdate(this, false).sendTo(ep);
@@ -92,6 +85,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			if(lastPos == null) lastPos = new EntityPos(ep);
 			else lastPos.set(ep);
 		}
+		
 		return lastPos;
 	}
 	
@@ -187,14 +181,13 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		homes.writeToNBT(tag, "Homes");
 	}
 	
-	public void writeToNet(NBTTagCompound tag, boolean self)
+	public void writeToNet(ByteIOStream io, boolean self)
 	{
 		refreshStats();
+		new EventLMPlayerServer.DataSaved(this).post();
 		
-		if(isOnline()) tag.setBoolean("ON", true);
-		
-		if(!friends.isEmpty())
-			tag.setIntArray("F", friends.toArray());
+		io.writeBoolean(isOnline());
+		io.writeIntArray(friends.toArray(), ByteCount.SHORT);
 		
 		IntList otherFriends = new IntList();
 		
@@ -204,21 +197,16 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			if(p.friends.contains(playerID)) otherFriends.add(p.playerID);
 		}
 		
-		if(otherFriends.size() > 0) tag.setIntArray("OF", otherFriends.toArray());
-		
-		if(!commonPublicData.hasNoTags()) tag.setTag("CD", commonPublicData);
+		io.writeIntArray(otherFriends.toArray(), ByteCount.SHORT);
+		settings.writeToNet(io, self);
+		LMNBTUtils.writeTag(io, commonPublicData);
 		
 		if(self)
 		{
-			if(commonPrivateData != null && !commonPrivateData.hasNoTags()) tag.setTag("CPD", commonPrivateData);
-			int claimedChunks = getClaimedChunks();
-			if(claimedChunks > 0) tag.setInteger("CC", claimedChunks);
-			tag.setInteger("MCC", getRank().config.max_claims.get());
+			LMNBTUtils.writeTag(io, commonPrivateData);
+			io.writeInt(getClaimedChunks());
+			io.writeInt(getRank().config.max_claims.get());
 		}
-		
-		NBTTagCompound settingsTag = new NBTTagCompound();
-		settings.writeToNet(settingsTag, self);
-		tag.setTag("CFG", settingsTag);
 	}
 	
 	public void onPostLoaded()
@@ -261,9 +249,9 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public void claimChunk(int dim, int cx, int cz)
 	{
-		if(FTBUConfigClaims.dimension_blacklist.get().contains(dim)) return;
-		
-		int max = getRank().config.max_claims.get();
+		RankConfig c = getRank().config;
+		if(c.dimension_blacklist.get().contains(dim)) return;
+		int max = c.max_claims.get();
 		if(max == 0) return;
 		if(getClaimedChunks() >= max) return;
 		
@@ -295,6 +283,13 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public int getClaimedChunks()
 	{ return LMWorldServer.inst.claimedChunks.getChunks(this, null).size(); }
+	
+	public NBTTagCompound getServerData()
+	{
+		if(serverData == null)
+			serverData = new NBTTagCompound();
+		return serverData;
+	}
 	
 	public void setLoaded(World world, int cx, int cz, boolean flag)
 	{

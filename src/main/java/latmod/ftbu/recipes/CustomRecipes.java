@@ -1,4 +1,6 @@
 package latmod.ftbu.recipes;
+import java.util.Map;
+
 import latmod.lib.FastMap;
 import net.minecraft.item.ItemStack;
 
@@ -23,10 +25,10 @@ public class CustomRecipes<Output>
 	{
 		if(ai == null || ai.length == 0) return null;
 		
-		for(int i = 0; i < recipes.size(); i++)
+		for(Map.Entry<IStackArray, Output> e : recipes.entrySet())
 		{
-			if(recipes.keys.get(i).matches(ai))
-				return recipes.values.get(i);
+			if(e.getKey().matches(ai))
+				return e.getValue();
 		}
 		
 		return null;

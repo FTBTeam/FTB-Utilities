@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.handlers;
 
-import java.util.List;
+import java.util.*;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ftb.lib.FTBLib;
@@ -65,10 +65,11 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 			for(LMPlayer p : LMWorldServer.inst.players)
 				p.toPlayerMP().loadAllChunks(w);
 		
-		for(int i = instance.tickets.size() - 1; i >= 0; i--)
+		Set<Long> keys = instance.tickets.keySet();
+		
+		for(Long l : keys)
 		{
-			Long l = instance.tickets.keys.get(i);
-			if(Bits.intFromLongA(l) == w.provider.dimensionId)
+			if(Bits.intFromLongA(l.longValue()) == w.provider.dimensionId)
 			{
 				ForgeChunkManager.releaseTicket(instance.tickets.get(l));
 				instance.tickets.remove(l);

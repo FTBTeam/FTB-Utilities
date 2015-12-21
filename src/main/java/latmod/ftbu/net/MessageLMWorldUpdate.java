@@ -2,10 +2,11 @@ package latmod.ftbu.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.world.*;
+import latmod.lib.ByteCount;
 
 public class MessageLMWorldUpdate extends MessageFTBU
 {
-	public MessageLMWorldUpdate() { super(DATA_LONG); }
+	public MessageLMWorldUpdate() { super(ByteCount.INT); }
 	
 	public MessageLMWorldUpdate(LMWorldServer w)
 	{

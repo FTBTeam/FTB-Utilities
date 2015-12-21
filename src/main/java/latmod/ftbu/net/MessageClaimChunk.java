@@ -5,6 +5,7 @@ import ftb.lib.*;
 import ftb.lib.api.LMNetworkWrapper;
 import latmod.ftbu.world.*;
 import latmod.ftbu.world.claims.ClaimedChunk;
+import latmod.lib.ByteCount;
 
 public class MessageClaimChunk extends MessageFTBU
 {
@@ -15,12 +16,12 @@ public class MessageClaimChunk extends MessageFTBU
 	public static final int ID_LOAD = 4;
 	public static final int ID_UNLOAD = 5;
 	
-	public MessageClaimChunk() { super(DATA_SHORT); }
+	public MessageClaimChunk() { super(ByteCount.BYTE); }
 	
 	public MessageClaimChunk(int d, long t, int x, int z, int c)
 	{
 		this();
-		io.writeUByte(c);
+		io.writeByte(c);
 		io.writeLong(t);
 		io.writeInt(d);
 		io.writeInt(x);
@@ -32,7 +33,7 @@ public class MessageClaimChunk extends MessageFTBU
 	
 	public IMessage onMessage(MessageContext ctx)
 	{
-		int type = io.readUByte();
+		int type = io.readUnsignedByte();
 		long token = io.readLong();
 		int dim = io.readInt();
 		int cx = io.readInt();

@@ -15,19 +15,16 @@ import net.minecraft.util.*;
 @SideOnly(Side.CLIENT)
 public class GuiFriends extends GuiLM implements IClientActionGui
 {
-	public final GuiScreen parentScreen;
 	public int notificationsWidth = 0;
 	
 	public final PanelPlayerList panelPlayerList;
 	public final PanelPlayerView panelPlayerView;
-	public final PanelNotifications panelNotifications;
 	public final PanelText panelPlayerInfo;
 	public PanelPopupMenu panelPopupMenu = null;
 	
 	public GuiFriends(GuiScreen gui)
 	{
-		super(null, null);
-		parentScreen = gui;
+		super(gui, null, null);
 		hideNEI = true;
 		xSize = ySize = 0;
 		
@@ -35,7 +32,6 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		
 		panelPlayerList = new PanelPlayerList(this);
 		panelPlayerView = new PanelPlayerView(this);
-		panelNotifications = new PanelNotifications(this);
 		panelPlayerInfo = new PanelText(this);
 	}
 	
@@ -72,22 +68,16 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		
 		mainPanel.add(panelPlayerList);
 		mainPanel.add(panelPlayerView);
-		mainPanel.add(panelNotifications);
 		mainPanel.add(panelPlayerInfo);
 		mainPanel.add(panelPopupMenu);
 		
 		panelPlayerList.height = panelPlayerView.height = ySize;
 		panelPlayerList.posX = 0;
-		panelNotifications.height = height - panelPlayerInfo.height;
-		panelNotifications.posY = height - panelNotifications.height;
 		
-		panelNotifications.width = panelPlayerInfo.width = Math.max(100, Math.max(panelNotifications.width, panelPlayerInfo.width));
-		panelNotifications.posX = panelPlayerInfo.posX = xSize - panelNotifications.width;
+		panelPlayerInfo.width = Math.max(100, panelPlayerInfo.width);
+		panelPlayerInfo.posX = xSize - panelPlayerInfo.width;
 		
-		for(ButtonNotification b : panelNotifications.notificationButtons)
-			b.width = panelNotifications.width;
-		
-		panelPlayerView.width = xSize - (panelPlayerList.width + panelNotifications.width) - 2;
+		panelPlayerView.width = xSize - (panelPlayerList.width + panelPlayerInfo.width) - 2;
 		panelPlayerView.posX = panelPlayerList.width;
 	}
 	
@@ -95,7 +85,6 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	{
 		panelPlayerList.renderWidget();
 		panelPlayerView.renderWidget();
-		panelNotifications.renderWidget();
 		panelPlayerInfo.renderWidget();
 		
 		if(panelPopupMenu != null)
@@ -106,10 +95,10 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		}
 		
 		drawBlankRect(panelPlayerView.posX - 1, 0, zLevel, 1, height, 0xFF000000);
-		drawBlankRect(panelNotifications.posX - 1, 0, zLevel, 1, height, 0xFF000000);
-		drawBlankRect(panelNotifications.posX, panelNotifications.posY, zLevel, panelNotifications.width, 1, 0xFF000000);
+		drawBlankRect(panelPlayerInfo.posX - 1, 0, zLevel, 1, height, 0xFF000000);
+		drawBlankRect(width - panelPlayerInfo.width, panelPlayerInfo.height, zLevel, panelPlayerInfo.width, 1, 0xFF000000);
 		
-		LatCoreMCClient.notifyClient("notify", panelNotifications.width, 1);
+		LatCoreMCClient.notifyClient("notify", panelPlayerInfo.width, 1);
 	}
 	
 	public void drawText(FastList<String> l)

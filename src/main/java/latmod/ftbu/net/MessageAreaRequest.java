@@ -1,12 +1,12 @@
 package latmod.ftbu.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import ftb.lib.api.LMNetworkWrapper;
-import latmod.lib.MathHelperLM;
+import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class MessageAreaRequest extends MessageFTBU
 {
-	public MessageAreaRequest() { super(DATA_SHORT); }
+	public MessageAreaRequest() { super(ByteCount.BYTE); }
 	
 	public MessageAreaRequest(int x, int y, int w, int h)
 	{

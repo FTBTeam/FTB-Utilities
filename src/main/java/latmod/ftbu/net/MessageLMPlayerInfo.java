@@ -6,13 +6,13 @@ import ftb.lib.api.LMNetworkWrapper;
 import ftb.lib.item.LMInvUtils;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
-import latmod.lib.FastList;
+import latmod.lib.*;
 import net.minecraft.nbt.*;
 import net.minecraft.util.IChatComponent;
 
 public class MessageLMPlayerInfo extends MessageFTBU
 {
-	public MessageLMPlayerInfo() { super(DATA_LONG); }
+	public MessageLMPlayerInfo() { super(ByteCount.INT); }
 	
 	public MessageLMPlayerInfo(int playerID)
 	{

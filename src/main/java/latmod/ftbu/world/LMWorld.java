@@ -22,14 +22,14 @@ public abstract class LMWorld // FTBWorld
 	public final Side side;
 	public final FastList<LMPlayer> players;
 	public final LMWorldSettings settings;
-	public NBTTagCompound customCommonData;
+	protected NBTTagCompound customCommonData;
 	
 	public LMWorld(Side s)
 	{
 		side = s;
 		players = new FastList<LMPlayer>();
 		settings = new LMWorldSettings(this);
-		customCommonData = new NBTTagCompound();
+		customCommonData = null;
 	}
 	
 	public World getMCWorld()
@@ -165,5 +165,12 @@ public abstract class LMWorld // FTBWorld
 		for(int i = 0; i < players.size(); i++)
 			l.add(players.get(i).toPlayerMP());
 		return l;
+	}
+	
+	public NBTTagCompound getCommonData()
+	{
+		if(customCommonData == null)
+			customCommonData = new NBTTagCompound();
+		return customCommonData;
 	}
 }

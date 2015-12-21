@@ -33,7 +33,7 @@ public class GuiFriendsGuiSmall extends GuiLM
 				mainPanel.height += b.height + 4;
 		}
 		
-		for(WidgetLM w : mainPanel.getWidgets())
+		for(WidgetLM w : mainPanel.widgets)
 			w.width = mainPanel.width;
 		
 		xSize = mainPanel.width;
@@ -44,7 +44,7 @@ public class GuiFriendsGuiSmall extends GuiLM
 	
 	public void drawBackground()
 	{
-		for(WidgetLM w : mainPanel.getWidgets())
+		for(WidgetLM w : mainPanel.widgets)
 			w.renderWidget();
 	}
 	

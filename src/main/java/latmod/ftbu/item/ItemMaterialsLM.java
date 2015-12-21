@@ -40,7 +40,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 	
 	public void onPostLoaded()
 	{
-		for(MaterialItem m : materials.values)
+		for(MaterialItem m : materials)
 		{
 			itemsAdded.add(m.getStack());
 			m.onPostLoaded();
@@ -49,7 +49,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 	
 	public void loadRecipes()
 	{
-		for(MaterialItem m : materials.values)
+		for(MaterialItem m : materials)
 			m.loadRecipes();
 	}
 	
@@ -65,7 +65,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 	public void registerIcons(IIconRegister ir)
 	{
 		itemIcon = FTBLibClient.unknownItemIcon;
-		for(MaterialItem m : materials.values)
+		for(MaterialItem m : materials)
 			m.registerIcons(ir);
 	}
 	

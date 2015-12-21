@@ -1,12 +1,7 @@
 package latmod.ftbu.mod.client;
-import org.lwjgl.input.Keyboard;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.FTBLibClient;
-import ftb.lib.mod.FTBLibFinals;
-import latmod.ftbu.api.client.EventFTBUKey;
 import latmod.ftbu.api.paint.IPainterItem;
 import latmod.ftbu.mod.client.gui.friends.GuiFriendsGuiSmall;
 import latmod.ftbu.util.client.LatCoreMCClient;
@@ -44,21 +39,6 @@ public class FTBUClientEventHandler
 		{
 			LMPlayerClient p = LMWorldClient.inst.getPlayer(e.target);
 			if(p != null) FTBLibClient.mc.displayGuiScreen(new GuiFriendsGuiSmall(p));
-		}
-	}
-	
-	@SubscribeEvent
-	public void onKeyEvent(InputEvent.KeyInputEvent e)
-	{
-		if(FTBLibFinals.DEV)
-		{
-			int key = Keyboard.getEventKey();
-			
-			if(key != Keyboard.KEY_NONE && key != Keyboard.KEY_ESCAPE)
-			{
-				boolean pressed = Keyboard.getEventKeyState();
-				new EventFTBUKey(key, pressed).post();
-			}
 		}
 	}
 }

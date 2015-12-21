@@ -3,38 +3,34 @@ package latmod.ftbu.world;
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.LMNBTUtils;
 import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.api.EventLMPlayerClient;
 import latmod.ftbu.badges.Badge;
 import latmod.lib.*;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 
-public class LMPlayerClient extends LMPlayer // LMPlayerServer
+@SideOnly(Side.CLIENT)
+public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClientSelf
 {
 	public final FastList<IChatComponent> clientInfo;
-	private ResourceLocation skinLocation;
 	public boolean isOnline;
-	public int claimedChunks;
-	public int maxClaimPower;
 	public Badge cachedBadge;
 	
 	public LMPlayerClient(LMWorldClient w, int i, GameProfile gp)
 	{
 		super(w, i, gp);
 		clientInfo = new FastList<IChatComponent>();
-		skinLocation = null;
 		isOnline = false;
 		cachedBadge = null;
 	}
 	
 	public ResourceLocation getSkin()
-	{
-		if(skinLocation == null)
-			skinLocation = FTBLibClient.getSkinTexture(getName());
-		return skinLocation;
-	}
+	{ return FTBLibClient.getSkinTexture(getName()); }
+	
+	public Side getSide()
+	{ return Side.CLIENT; }
 	
 	public boolean isOnline()
 	{ return isOnline; }
@@ -42,9 +38,11 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 	public LMPlayerServer toPlayerMP()
 	{ return null; }
 	
-	@SideOnly(Side.CLIENT)
 	public LMPlayerClient toPlayerSP()
 	{ return this; }
+	
+	public LMPlayerClientSelf toPlayerSPSelf()
+	{ return null; }
 	
 	public EntityPlayerSP getPlayer()
 	{ return isOnline() ? FTBLibClient.getPlayerSP(getUUID()) : null; }
@@ -56,14 +54,14 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 		new EventLMPlayerClient.CustomInfo(this, clientInfo).post();
 	}
 	
-	public void readFromNet(NBTTagCompound tag, boolean self)
+	public void readFromNet(ByteIOStream io, boolean self)
 	{
-		isOnline = tag.getBoolean("ON");
+		isOnline = io.readBoolean();
 		
 		friends.clear();
-		friends.addAll(tag.getIntArray("F"));
+		friends.addAll(io.readIntArray(ByteCount.SHORT));
 		
-		IntList otherFriends = IntList.asList(tag.getIntArray("OF"));
+		IntList otherFriends = IntList.asList(io.readIntArray(ByteCount.SHORT));
 		
 		for(int i = 0; i < LMWorldClient.inst.players.size(); i++)
 		{
@@ -79,16 +77,8 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer
 			}
 		}
 		
-		commonPublicData = tag.hasKey("CD") ? tag.getCompoundTag("CD") : null;
-		
-		if(self)
-		{
-			commonPrivateData = tag.hasKey("CPD") ? tag.getCompoundTag("CPD") : null;
-			claimedChunks = tag.getInteger("CC");
-			maxClaimPower = tag.getInteger("MCC");
-		}
-		
-		settings.readFromNet(tag.getCompoundTag("CFG"), self);
+		settings.readFromNet(io, self);
+		commonPublicData = LMNBTUtils.readTag(io);
 	}
 	
 	public void onReloaded()

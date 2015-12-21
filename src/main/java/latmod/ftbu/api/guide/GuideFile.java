@@ -1,7 +1,7 @@
 package latmod.ftbu.api.guide;
 
 import java.io.File;
-import java.util.Map;
+import java.util.*;
 
 import ftb.lib.*;
 import latmod.ftbu.mod.client.gui.guide.GuideLinkSerializer;
@@ -53,6 +53,7 @@ public class GuideFile // ServerGuideFile // ClientGuideFile
 			
 			if(f1 != null && f1.length > 0)
 			{
+				Arrays.sort(f1, LMFileUtils.fileComparator);
 				GuideCategory c1 = c.getSub(new ChatComponentText(name));
 				for(File f2 : f1) loadFromFiles(c1, f2);
 			}
@@ -110,14 +111,14 @@ public class GuideFile // ServerGuideFile // ClientGuideFile
 		{
 			NBTTagList linksList = new NBTTagList();
 			
-			for(int i = 0; i < links.size(); i++)
+			for(Map.Entry<String, GuideLink> e : links.entrySet())
 			{
-				GuideLink l = links.values.get(i);
+				GuideLink l = e.getValue();
 				
 				NBTTagCompound tag1 = new NBTTagCompound();
 				
 				tag1.setByte("I", (byte)l.type.ordinal());
-				tag1.setString("ID", links.keys.get(i));
+				tag1.setString("ID", e.getKey());
 				if(!l.link.isEmpty()) tag1.setString("L", l.link);
 				if(l.title != null) tag1.setString("T", IChatComponent.Serializer.func_150696_a(l.title));
 				if(l.hover != null) tag1.setString("H", IChatComponent.Serializer.func_150696_a(l.hover));

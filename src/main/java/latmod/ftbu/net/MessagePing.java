@@ -4,7 +4,7 @@ import ftb.lib.api.LMNetworkWrapper;
 
 public class MessagePing extends MessageFTBU
 {
-	public MessagePing() { super(DATA_NONE); }
+	public MessagePing() { super(null); }
 	
 	public LMNetworkWrapper getWrapper()
 	{ return FTBUNetHandler.NET_INFO; }

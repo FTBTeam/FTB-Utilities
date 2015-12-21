@@ -5,7 +5,7 @@ import ftb.lib.api.LMNetworkWrapper;
 
 public class MessagePingResponse extends MessageFTBU
 {
-	public MessagePingResponse() { super(DATA_NONE); }
+	public MessagePingResponse() { super(null); }
 	
 	public LMNetworkWrapper getWrapper()
 	{ return FTBUNetHandler.NET_INFO; }

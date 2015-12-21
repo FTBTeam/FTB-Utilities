@@ -5,11 +5,12 @@ import ftb.lib.api.LMNetworkWrapper;
 import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.api.guide.GuideFile;
 import latmod.ftbu.mod.client.gui.guide.GuiGuide;
+import latmod.lib.ByteCount;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class MessageDisplayGuide extends MessageFTBU
 {
-	public MessageDisplayGuide() { super(DATA_LONG); }
+	public MessageDisplayGuide() { super(ByteCount.INT); }
 	
 	public MessageDisplayGuide(GuideFile file)
 	{

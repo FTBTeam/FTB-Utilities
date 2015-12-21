@@ -6,11 +6,11 @@ import ftb.lib.EntityPos;
 import ftb.lib.api.LMNetworkWrapper;
 import latmod.ftbu.mod.client.gui.claims.ClaimedAreasClient;
 import latmod.ftbu.world.LMWorldServer;
-import latmod.lib.MathHelperLM;
+import latmod.lib.*;
 
 public class MessageAreaUpdate extends MessageFTBU
 {
-	public MessageAreaUpdate() { super(DATA_LONG); }
+	public MessageAreaUpdate() { super(ByteCount.INT); }
 	
 	public MessageAreaUpdate(int x, int z, int d, int sx, int sz)
 	{
@@ -21,8 +21,8 @@ public class MessageAreaUpdate extends MessageFTBU
 		io.writeInt(x);
 		io.writeInt(z);
 		io.writeInt(d);
-		io.writeUByte(sx);
-		io.writeUByte(sz);
+		io.writeByte(sx);
+		io.writeByte(sz);
 		
 		for(int z1 = z; z1 < z + sz; z1++) for(int x1 = x; x1 < x + sx; x1++)
 			io.writeInt(LMWorldServer.inst.claimedChunks.getType(d, x1, z1).ID);
@@ -40,8 +40,8 @@ public class MessageAreaUpdate extends MessageFTBU
 		int chunkX = io.readInt();
 		int chunkZ = io.readInt();
 		int dim = io.readInt();
-		int sx = io.readUByte();
-		int sz = io.readUByte();
+		int sx = io.readUnsignedByte();
+		int sz = io.readUnsignedByte();
 		
 		int[] types = new int[sx * sz];
 		for(int i = 0; i < types.length; i++)

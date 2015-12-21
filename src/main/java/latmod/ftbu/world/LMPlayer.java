@@ -14,9 +14,7 @@ public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer
 {
 	public final LMWorld world;
 	public final int playerID;
-	public final GameProfile gameProfile;
-	public final boolean isServer;
-	public final Side side;
+	public GameProfile gameProfile;
 	
 	public final String uuidString;
 	public final IntList friends;
@@ -30,8 +28,6 @@ public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer
 		world = w;
 		playerID = i;
 		gameProfile = gp;
-		isServer = (this instanceof LMPlayerServer);
-		side = isServer ? Side.SERVER : Side.CLIENT;
 		
 		uuidString = LMStringUtils.fromUUID(getUUID());
 		friends = new IntList();
@@ -39,6 +35,7 @@ public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer
 		settings = new PersonalSettings(this);
 	}
 	
+	public abstract Side getSide();
 	public abstract boolean isOnline();
 	
 	public abstract LMPlayerServer toPlayerMP();
@@ -48,10 +45,10 @@ public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer
 	
 	public abstract EntityPlayer getPlayer();
 	
-	public String getName()
+	public final String getName()
 	{ return gameProfile.getName(); }
 	
-	public UUID getUUID()
+	public final UUID getUUID()
 	{ return gameProfile.getId(); }
 	
 	public boolean isFriendRaw(LMPlayer p)
@@ -60,13 +57,13 @@ public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer
 	public boolean isFriend(LMPlayer p)
 	{ return isFriendRaw(p) && p.isFriendRaw(this); }
 	
-	public int compareTo(LMPlayer o)
+	public final int compareTo(LMPlayer o)
 	{ return Integer.compare(playerID, o.playerID); }
 	
 	public String toString()
 	{ return getName(); }
 	
-	public int hashCode()
+	public final int hashCode()
 	{ return playerID; }
 	
 	public boolean equals(Object o)

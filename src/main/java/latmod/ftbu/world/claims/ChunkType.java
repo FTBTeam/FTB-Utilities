@@ -2,7 +2,6 @@ package latmod.ftbu.world.claims;
 
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.config.FTBUConfigClaims;
 import latmod.ftbu.util.LMSecurity;
 import latmod.ftbu.world.*;
 import net.minecraft.util.EnumChatFormatting;
@@ -48,7 +47,7 @@ public class ChunkType
 		{
 			if(chunkOwner.equals(p)) return true;
 			LMSecurity s = new LMSecurity(chunkOwner);
-			s.level = FTBUConfigClaims.forced_chunk_security.get();
+			s.level = p.getRank().config.forced_chunk_security.get();
 			if(s.level == null) s.level = chunkOwner.settings.blocks;
 			return s.canInteract(p);
 		}

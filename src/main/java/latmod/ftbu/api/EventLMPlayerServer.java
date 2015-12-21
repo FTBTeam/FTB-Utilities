@@ -21,15 +21,9 @@ public abstract class EventLMPlayerServer extends EventLMPlayer // LMPlayerClien
 	
 	// Events //
 	
-	public static class DataChanged extends EventLMPlayerServer
+	public static class UpdateSent extends EventLMPlayerServer
 	{
-		public DataChanged(LMPlayerServer p)
-		{ super(p); }
-	}
-	
-	public static class GroupsChanged extends EventLMPlayerServer
-	{
-		public GroupsChanged(LMPlayerServer p)
+		public UpdateSent(LMPlayerServer p)
 		{ super(p); }
 	}
 	

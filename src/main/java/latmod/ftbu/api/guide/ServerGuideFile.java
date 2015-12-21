@@ -1,7 +1,7 @@
 package latmod.ftbu.api.guide;
 
 import java.io.File;
-import java.util.Set;
+import java.util.*;
 
 import ftb.lib.FTBLib;
 import ftb.lib.cmd.CommandLM;
@@ -37,8 +37,11 @@ public class ServerGuideFile extends GuideFile
 			{
 				File[] f = file.listFiles();
 				if(f != null && f.length > 0)
+				{
+					Arrays.sort(f, LMFileUtils.fileComparator);
 					for(int i = 0; i < f.length; i++)
 						loadFromFiles(main, f[i]);
+				}
 			}
 			
 			file = new File(FTBLib.folderLocal, "guide_cover.txt");

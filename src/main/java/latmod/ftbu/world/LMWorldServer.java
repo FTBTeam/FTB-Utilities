@@ -1,12 +1,12 @@
 package latmod.ftbu.world;
 
 import java.io.File;
+import java.util.Map;
 
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
-import ftb.lib.api.MessageLM;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.net.MessageLMWorldUpdate;
 import latmod.ftbu.world.claims.*;
@@ -22,7 +22,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	public final File latmodFolder;
 	public final Warps warps;
 	public final ClaimedChunks claimedChunks;
-	public NBTTagCompound customServerData;
+	private NBTTagCompound customServerData;
 	public int lastMailID = 0;
 	
 	public LMWorldServer(WorldServer w, File f)
@@ -32,7 +32,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		latmodFolder = f;
 		warps = new Warps();
 		claimedChunks = new ClaimedChunks();
-		customServerData = new NBTTagCompound();
+		customServerData = null;
 	}
 	
 	public World getMCWorld()
@@ -50,8 +50,8 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	public void load(NBTTagCompound tag)
 	{
 		warps.readFromNBT(tag, "Warps");
-		customServerData = tag.getCompoundTag("CustomServer");
-		customCommonData = tag.getCompoundTag("CustomCommon");
+		customServerData = tag.hasKey("CustomServer") ? tag.getCompoundTag("CustomServer") : null;
+		customCommonData = tag.hasKey("CustomCommon") ? tag.getCompoundTag("CustomCommon") : null;
 		settings.readFromNBT(tag.getCompoundTag("Settings"), true);
 		lastMailID = tag.getInteger("LastMailID");
 		claimedChunks.load(tag);
@@ -60,8 +60,8 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	public void save(NBTTagCompound tag)
 	{
 		warps.writeToNBT(tag, "Warps");
-		tag.setTag("CustomServer", customServerData);
-		tag.setTag("CustomCommon", customCommonData);
+		if(customServerData != null) tag.setTag("CustomServer", customServerData);
+		if(customCommonData != null) tag.setTag("CustomCommon", customCommonData);
 		NBTTagCompound settingsTag = new NBTTagCompound();
 		settings.writeToNBT(settingsTag, true);
 		tag.setTag("Settings", settingsTag);
@@ -73,46 +73,34 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	{
 		if(selfID > 0)
 		{
+			IntList onlinePlayers = new IntList();
+			
 			io.writeInt(players.size());
+			
 			for(int i = 0; i < players.size(); i++)
 			{
 				LMPlayer p = players.get(i);
 				io.writeInt(p.playerID);
 				io.writeUUID(p.getUUID());
-				io.writeString(p.getName());
-			}
-		}
-		
-		NBTTagCompound tag = new NBTTagCompound();
-		
-		if(selfID > 0)
-		{
-			NBTTagList list = new NBTTagList();
-			
-			for(int i = 0; i < players.size(); i++)
-			{
-				LMPlayerServer p = players.get(i).toPlayerMP();
+				io.writeUTF(p.getName());
 				
-				if(p.isOnline())
-				{
-					NBTTagCompound tag1 = new NBTTagCompound();
-					p.writeToNet(tag1, p.playerID == selfID);
-					new EventLMPlayerServer.DataSaved(p).post();
-					tag1.setInteger("PID", p.playerID);
-					list.appendTag(tag1);
-				}
+				if(p.isOnline()) onlinePlayers.add(i);
 			}
 			
-			tag.setTag("P", list);
+			io.writeIntArray(onlinePlayers.toArray(), ByteCount.INT);
+			
+			for(int i = 0; i < onlinePlayers.size(); i++)
+			{
+				LMPlayerServer p = players.get(onlinePlayers.get(i)).toPlayerMP();
+				p.writeToNet(io, p.playerID == selfID);
+			}
 		}
 		
-		if(!customCommonData.hasNoTags()) tag.setTag("C", customCommonData);
+		LMNBTUtils.writeTag(io, customCommonData);
 		
 		NBTTagCompound settingsTag = new NBTTagCompound();
 		settings.writeToNBT(settingsTag, false);
-		tag.setTag("S", settingsTag);
-		
-		MessageLM.writeTag(io, tag);
+		LMNBTUtils.writeTag(io, settingsTag);
 	}
 	
 	public void writePlayersToServer(NBTTagCompound tag)
@@ -138,10 +126,10 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		
 		FastMap<String, NBTTagCompound> map = LMNBTUtils.toFastMapWithType(tag);
 		
-		for(int i = 0; i < map.size(); i++)
+		for(Map.Entry<String, NBTTagCompound> e : map.entrySet())
 		{
-			int id = Integer.parseInt(map.keys.get(i));
-			NBTTagCompound tag1 = map.values.get(i);
+			int id = Integer.parseInt(e.getKey());
+			NBTTagCompound tag1 = e.getValue();
 			LMPlayerServer p = new LMPlayerServer(this, id, new GameProfile(LMStringUtils.fromString(tag1.getString("UUID")), tag1.getString("Name")));
 			p.readFromServer(tag1);
 			
@@ -168,4 +156,11 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	
 	public void update()
 	{ new MessageLMWorldUpdate(this).sendTo(null); }
+	
+	public NBTTagCompound getServerData()
+	{
+		if(customServerData == null)
+			customServerData = new NBTTagCompound();
+		return customServerData;
+	}
 }

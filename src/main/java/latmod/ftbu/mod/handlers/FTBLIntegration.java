@@ -15,6 +15,7 @@ import latmod.ftbu.mod.config.*;
 import latmod.ftbu.net.*;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
+import latmod.lib.util.Phase;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -97,7 +98,7 @@ public class FTBLIntegration extends FTBUIntegration // FTBLIntegrationClient
 		}
 		else if(!p.getName().equals(p.gameProfile.getName()))
 		{
-			p.setName(p.gameProfile.getName());
+			p.gameProfile = ep.getGameProfile();
 			sendAll = true;
 		}
 		

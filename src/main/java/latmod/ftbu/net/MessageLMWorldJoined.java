@@ -5,19 +5,17 @@ import ftb.lib.*;
 import latmod.ftbu.api.EventLMWorldClient;
 import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.world.*;
-import net.minecraft.nbt.NBTTagCompound;
+import latmod.lib.ByteCount;
 
 public class MessageLMWorldJoined extends MessageFTBU
 {
-	public MessageLMWorldJoined() { super(DATA_LONG); }
+	public MessageLMWorldJoined() { super(ByteCount.INT); }
 	
 	public MessageLMWorldJoined(int p)
 	{
 		this();
 		io.writeInt(p);
-		NBTTagCompound data = new NBTTagCompound();
 		LMWorldServer.inst.writeDataToNet(io, p);
-		writeTag(data);
 	}
 	
 	@SideOnly(Side.CLIENT)

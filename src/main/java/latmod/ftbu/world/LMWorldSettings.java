@@ -62,11 +62,8 @@ public class LMWorldSettings
 		
 		wbList.appendTag(new NBTTagIntArray(new int[] { 0, worldBorder0.pos.x, worldBorder0.pos.y, worldBorder0.size }));
 		
-		for(int i = 0; i < worldBorder.size(); i++)
-		{
-			WorldBorder wb = worldBorder.values.get(i);
+		for(WorldBorder wb : worldBorder)
 			wbList.appendTag(new NBTTagIntArray(new int[] { wb.dim, wb.pos.x, wb.pos.y, wb.size }));
-		}
 		
 		tag.setTag("WBorder", wbList);
 	}

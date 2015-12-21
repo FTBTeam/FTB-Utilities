@@ -4,11 +4,12 @@ import latmod.ftbu.world.LMPlayerServer;
 
 public class Ranks
 {
-	private static final Rank DEFAULT = new Rank("default");
+	public static final Rank PLAYER = new Rank("Player");
+	public static final Rank ADMIN = new Rank("Admin");
 	
 	public static Rank getRank(LMPlayerServer p)
 	{
 		//TODO: Remove me after rank system is done
-		return DEFAULT;
+		return p.isOP() ? ADMIN : PLAYER;
 	}
 }

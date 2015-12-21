@@ -1,7 +1,6 @@
 package latmod.ftbu.world;
 
 import java.io.*;
-import java.util.Calendar;
 import java.util.zip.*;
 
 import ftb.lib.*;
@@ -14,20 +13,18 @@ import net.minecraft.world.World;
 public class ThreadBackup extends Thread
 {
 	public final File src;
-	public final Calendar calendar;
-	public final long time;
+	public final Time calendar;
 	
 	public ThreadBackup(World w)
 	{
+		calendar = Time.now();
 		src = w.getSaveHandler().getWorldDirectory();
-		calendar = Calendar.getInstance();
-		time = calendar.getTimeInMillis();
 		setPriority(7);
 	}
 	
 	public void run()
 	{
-		Backups.lastTimeRun = time;
+		Backups.lastTimeRun = calendar.millis;
 		FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Starting server backup, expect lag!");
 		
 		try
@@ -42,12 +39,12 @@ public class ThreadBackup extends Thread
 		try
 		{
 			StringBuilder out = new StringBuilder();
-			appendNum(out, calendar.get(Calendar.YEAR), '-');
-			appendNum(out, calendar.get(Calendar.MONTH) + 1, '-');
-			appendNum(out, calendar.get(Calendar.DAY_OF_MONTH), '-');
-			appendNum(out, calendar.get(Calendar.HOUR_OF_DAY), '-');
-			appendNum(out, calendar.get(Calendar.MINUTE), '-');
-			appendNum(out, calendar.get(Calendar.SECOND), File.separatorChar);
+			appendNum(out, calendar.year, '-');
+			appendNum(out, calendar.month, '-');
+			appendNum(out, calendar.day, '-');
+			appendNum(out, calendar.hours, '-');
+			appendNum(out, calendar.minutes, '-');
+			appendNum(out, calendar.seconds, File.separatorChar);
 			
 			FastList<File> files = LMFileUtils.listAll(src);
 			int allFiles = files.size();
@@ -101,6 +98,7 @@ public class ThreadBackup extends Thread
 					while ((len = fis.read(buffer)) > 0)
 						zos.write(buffer, 0, len);
 					zos.closeEntry();
+					zos.close();
 					fis.close();
 				}
 				
@@ -152,9 +150,9 @@ public class ThreadBackup extends Thread
 			{
 				String sizeB = LMFileUtils.getSizeS(dstFile);
 				String sizeT = LMFileUtils.getSizeS(Backups.backupsFolder);
-				FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(time) + "! (" + (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)) + ")");
+				FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(calendar.millis) + "! (" + (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)) + ")");
 			}
-			else FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(time) + "!");
+			else FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(calendar.millis) + "!");
 		}
 		catch(Exception e)
 		{

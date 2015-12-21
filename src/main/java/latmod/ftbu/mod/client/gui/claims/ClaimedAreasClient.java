@@ -1,7 +1,6 @@
 package latmod.ftbu.mod.client.gui.claims;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
 import latmod.ftbu.world.claims.*;
 import latmod.lib.*;
@@ -9,42 +8,36 @@ import latmod.lib.*;
 @SideOnly(Side.CLIENT)
 public class ClaimedAreasClient
 {
-	private static final FastMap<Integer, FastMap<Long, Integer>> areasMap = new FastMap<Integer, FastMap<Long, Integer>>();
+	private static final FastMap<Long, Integer> chunks = new FastMap<Long, Integer>();
 	private static int lastDimension = 0;
 	
 	public static void clear()
-	{
-		for(int i = 0; i < areasMap.size(); i++)
-			areasMap.values.get(i).clear();
-		areasMap.clear();
-	}
+	{ chunks.clear(); }
 	
-	public static int getType(int dim, int x, int z)
+	public static int getType(int x, int z)
 	{
-		FastMap<Long, Integer> c = areasMap.get(Integer.valueOf(dim));
-		if(c == null) return 0;
-		Integer i = c.get(Bits.intsToLong(x, z));
+		Integer i = chunks.get(Bits.intsToLong(x, z));
 		return (i == null) ? 0 : i.intValue();
 	}
 	
-	public static ChunkType getTypeE(int dim, int x, int z)
-	{ return ClaimedChunks.getChunkTypeFromI(getType(dim, x, z)); }
+	public static ChunkType getTypeE(int x, int z)
+	{ return ClaimedChunks.getChunkTypeFromI(getType(x, z)); }
 	
 	public static void setTypes(int dim, int chunkX, int chunkZ, int sx, int sz, int[] types)
 	{
-		if(lastDimension != LatCoreMCClient.getDim())
-		{ lastDimension = LatCoreMCClient.getDim(); clear(); }
+		if(lastDimension != dim)
+		{
+			lastDimension = dim;
+			clear();
+		}
 		
-		FastMap<Long, Integer> c = areasMap.get(Integer.valueOf(dim));
-		if(c == null) c = new FastMap<Long, Integer>();
 		for(int z = 0; z < sz; z++) for(int x = 0; x < sx; x++)
-			c.put(Bits.intsToLong(x + chunkX, z + chunkZ), Integer.valueOf(types[x + z * sx]));
-		areasMap.put(Integer.valueOf(dim), c);
+			chunks.put(Bits.intsToLong(x + chunkX, z + chunkZ), Integer.valueOf(types[x + z * sx]));
 	}
 	
-	public static void getMessage(int dim, int x, int z, FastList<String> l, boolean shift)
+	public static void getMessage(int x, int z, FastList<String> l, boolean shift)
 	{
-		int type = getType(dim, x, z);
+		int type = getType(x, z);
 		ChunkType typeE = ClaimedChunks.getChunkTypeFromI(type);
 		
 		if(typeE != null)

@@ -1,6 +1,7 @@
 package latmod.ftbu.api.guide;
 
 import java.io.File;
+import java.util.Arrays;
 
 import ftb.lib.FTBLib;
 import ftb.lib.api.EventFTBModeSet;
@@ -28,8 +29,11 @@ public class ClientGuideFile extends GuideFile
 		{
 			File[] f = file.listFiles();
 			if(f != null && f.length > 0)
+			{
+				Arrays.sort(f, LMFileUtils.fileComparator);
 				for(int i = 0; i < f.length; i++)
 					loadFromFiles(main, f[i]);
+			}
 		}
 		
 		file = e.getFile("guide/");
@@ -37,8 +41,11 @@ public class ClientGuideFile extends GuideFile
 		{
 			File[] f = file.listFiles();
 			if(f != null && f.length > 0)
+			{
+				Arrays.sort(f, LMFileUtils.fileComparator);
 				for(int i = 0; i < f.length; i++)
 					loadFromFiles(main, f[i]);
+			}
 		}
 		
 		file = e.getFile("guide_intro.txt");

@@ -1,7 +1,7 @@
 package latmod.ftbu.world;
 
 import latmod.ftbu.util.LMSecurityLevel;
-import latmod.lib.IntMap;
+import latmod.lib.*;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class PersonalSettings
@@ -38,9 +38,9 @@ public class PersonalSettings
 		tag.setByte("Blocks", (byte)blocks.ID);
 	}
 	
-	public void readFromNet(NBTTagCompound tag, boolean self)
+	public void readFromNet(ByteIOStream io, boolean self)
 	{
-		IntMap map = IntMap.fromIntArrayS(tag.getIntArray("B"));
+		IntMap map = IntMap.fromIntArrayS(io.readIntArray(ByteCount.BYTE));
 		
 		renderBadge = map.get(0) == 1;
 		
@@ -52,7 +52,7 @@ public class PersonalSettings
 		}
 	}
 	
-	public void writeToNet(NBTTagCompound tag, boolean self)
+	public void writeToNet(ByteIOStream io, boolean self)
 	{
 		IntMap map = new IntMap();
 		
@@ -65,9 +65,9 @@ public class PersonalSettings
 			map.put(3, blocks.ID);
 		}
 		
-		tag.setIntArray("B", map.toIntArray());
+		io.writeIntArray(map.toIntArray(), ByteCount.BYTE);
 	}
 	
 	public void update()
-	{ if(owner.isServer) owner.toPlayerMP().sendUpdate(); }
+	{ if(owner.getSide().isServer()) owner.toPlayerMP().sendUpdate(); }
 }

@@ -11,7 +11,6 @@ import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
-import latmod.ftbu.mod.config.FTBUConfigClaims;
 import latmod.ftbu.net.*;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
@@ -61,7 +60,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	public static ByteBuffer pixelBuffer = null;
 	
 	public final long adminToken;
-	public final LMPlayerClient playerLM;
+	public final LMPlayerClientSelf playerLM;
 	public final int currentDim, startX, startY;
 	
 	public final ButtonLM buttonRefresh, buttonClose, buttonBlockLevel, buttonUnclaimAll;
@@ -117,8 +116,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			public void addMouseOverText(FastList<String> l)
 			{
 				l.add(FTBU.mod.translateClient("button.explosions"));
-				if(FTBUConfigClaims.forced_explosions.get() != null)
-					l.add(FTBLibLang.label_server_forced(Boolean.toString(FTBUConfigClaims.forced_explosions.get().isEnabled())));
+				if(playerLM.rankConfig.forced_explosions.get() != null)
+					l.add(FTBLibLang.label_server_forced(Boolean.toString(playerLM.rankConfig.forced_explosions.get().isEnabled())));
 			}
 		};
 		
@@ -136,8 +135,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 				l.add(title);
 				l.add(playerLM.settings.blocks.getText());
 				
-				if(FTBUConfigClaims.forced_chunk_security.get() != null)
-					l.add(FTBLibLang.label_server_forced(FTBUConfigClaims.forced_chunk_security.get().getText()));
+				if(playerLM.rankConfig.forced_chunk_security.get() != null)
+					l.add(FTBLibLang.label_server_forced(playerLM.rankConfig.forced_chunk_security.get().getText()));
 			}
 		};
 		
@@ -279,7 +278,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	}
 	
 	private ChunkType getType(int cx, int cy)
-	{ return ClaimedAreasClient.getTypeE(currentDim, cx, cy); }
+	{ return ClaimedAreasClient.getTypeE(cx, cy); }
 	
 	@SuppressWarnings("unchecked")
 	public void renderMinimap()
@@ -380,7 +379,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		}
 		
 		public void addMouseOverText(FastList<String> l)
-		{ ClaimedAreasClient.getMessage(gui.currentDim, chunkX, chunkY, l, isShiftKeyDown()); }
+		{ ClaimedAreasClient.getMessage(chunkX, chunkY, l, isShiftKeyDown()); }
 		
 		public void renderWidget()
 		{

@@ -1,5 +1,7 @@
 package latmod.ftbu.world;
 
+import java.util.Map;
+
 import ftb.lib.*;
 import latmod.lib.*;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,25 +31,25 @@ public class Warps
 	public void writeToNBT(NBTTagCompound tag, String s)
 	{
 		NBTTagCompound tag1 = new NBTTagCompound();
-		for(int i = 0; i < warps.size(); i++)
-			tag1.setIntArray(warps.keys.get(i), warps.values.get(i).toIntArray());
+		for(Map.Entry<String, EntityPos> e : warps.entrySet())
+			tag1.setIntArray(e.getKey(), e.getValue().toIntArray());
 		tag.setTag(s, tag1);
 	}
 	
 	public String[] list()
 	{
 		if(warps.isEmpty()) return new String[0];
-		return warps.keys.toArray(new String[0]);
+		return warps.keySet().toArray(new String[0]);
 	}
 	
 	public EntityPos get(String s)
 	{ return warps.get(s); }
 	
 	public boolean set(String s, EntityPos pos)
-	{ return warps.put(s, pos.clone()); }
+	{ return warps.put(s, pos.clone()) == null; }
 	
 	public boolean set(String s, int x, int y, int z, int dim)
-	{ return warps.put(s, new EntityPos(x + 0.5D, y + 0.5D, z + 0.5D, dim)); }
+	{ return set(s, new EntityPos(x + 0.5D, y + 0.5D, z + 0.5D, dim)); }
 	
 	public boolean rem(String s)
 	{ return warps.remove(s) != null; }

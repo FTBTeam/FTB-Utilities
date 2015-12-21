@@ -1,5 +1,7 @@
 package latmod.ftbu.mod.cmd.admin;
 
+import java.util.Map;
+
 import com.google.common.collect.ImmutableSetMultimap;
 
 import ftb.lib.cmd.*;
@@ -40,7 +42,7 @@ public class CmdLoadedChunks extends CommandLM
 			
 			GuideCategory dim = file.main.getSub(new ChatComponentText(w.provider.getDimensionName()));
 			
-			for(MapEntry<String, FastList<ChunkCoordIntPair>> e1 : chunksMap.entrySet())
+			for(Map.Entry<String, FastList<ChunkCoordIntPair>> e1 : chunksMap.entrySet())
 			{
 				GuideCategory mod = dim.getSub(new ChatComponentText(e1.getKey() + " [" + e1.getValue().size() + "]"));
 				for(ChunkCoordIntPair c : e1.getValue())

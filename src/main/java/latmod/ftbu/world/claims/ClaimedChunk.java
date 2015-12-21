@@ -43,11 +43,11 @@ public final class ClaimedChunk
 	
 	public double getDistSq(double x, double z)
 	{
-		double x0 = pos.chunkXPos * 16D + 8.5D;
-		double z0 = pos.chunkZPos * 16D + 8.5D;
+		double x0 = MathHelperLM.unchunk(pos.chunkXPos) + 8.5D;
+		double z0 = MathHelperLM.unchunk(pos.chunkZPos) + 8.5D;
 		return MathHelperLM.distSq(x0, 0D, z0, x, 0D, z);
 	}
 	
 	public double getDistSq(ClaimedChunk c)
-	{ return getDistSq(c.pos.chunkXPos * 16D + 8.5D, c.pos.chunkZPos * 16D + 8.5D); }
+	{ return getDistSq(MathHelperLM.unchunk(c.pos.chunkXPos) + 8.5D, MathHelperLM.unchunk(c.pos.chunkZPos) + 8.5D); }
 }

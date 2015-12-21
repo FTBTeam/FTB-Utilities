@@ -93,13 +93,16 @@ public class GuiGuide extends GuiLM
 						mc.thePlayer.closeScreen();
 					else
 					{
-						mc.displayGuiScreen(parentGui);
 						parentGui.selectedCategory = parentGui.category;
+						parentGui.sliderText.value = 0F;
+						mc.displayGuiScreen(parentGui);
 					}
 				}
 				else
 				{
 					selectedCategory = category;
+					sliderText.value = 0F;
+					parentGui.refreshText();
 					initLMGui();
 				}
 			}
@@ -220,6 +223,8 @@ public class GuiGuide extends GuiLM
 						{ e1.printStackTrace(); }
 					}
 				}
+				
+				if(!l.text.isEmpty()) l.text = l.text.replace('\ufffd', '\u00a7');
 			}
 			
 			fontRendererObj.setUnicodeFlag(uni);
@@ -304,6 +309,7 @@ public class GuiGuide extends GuiLM
 			if(cat.subcategories.isEmpty())
 			{
 				selectedCategory = cat;
+				sliderText.value = 0F;
 				initLMGui();
 			}
 			else gui.mc.displayGuiScreen(new GuiGuide(GuiGuide.this, cat));

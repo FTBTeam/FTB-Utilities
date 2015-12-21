@@ -7,11 +7,9 @@ import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
-import ftb.lib.api.MessageLM;
 import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.api.EventLMPlayerClient;
-import latmod.lib.ByteIOStream;
-import net.minecraft.nbt.*;
+import latmod.lib.*;
 import net.minecraft.world.World;
 
 @SideOnly(Side.CLIENT)
@@ -20,6 +18,7 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 	public static LMWorldClient inst = null;
 	public final int clientPlayerID;
 	public final File clientDataFolder;
+	public LMPlayerClientSelf clientPlayer = null;
 	
 	public LMWorldClient(int i)
 	{
@@ -40,8 +39,8 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 		return (p == null) ? null : p.toPlayerSP();
 	}
 	
-	public LMPlayerClient getClientPlayer()
-	{ return getPlayer(FTBLibClient.mc.thePlayer.getGameProfile().getId()); }
+	public LMPlayerClientSelf getClientPlayer()
+	{ return clientPlayer; }
 	
 	public void readDataFromNet(ByteIOStream io, boolean first)
 	{
@@ -49,37 +48,34 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 		{
 			players.clear();
 			
+			GameProfile gp = FTBLibClient.mc.getSession().func_148256_e();
+			clientPlayer = new LMPlayerClientSelf(this, clientPlayerID, gp);
+			
 			int psize = io.readInt();
 			
 			for(int i = 0; i < psize; i++)
 			{
 				int id = io.readInt();
 				UUID uuid = io.readUUID();
-				String name = io.readString();
-				players.add(new LMPlayerClient(LMWorldClient.inst, id, new GameProfile(uuid, name)));
+				String name = io.readUTF();
+				
+				if(id == clientPlayerID) players.add(clientPlayer);
+				else players.add(new LMPlayerClient(this, id, new GameProfile(uuid, name)));
 			}
-		}
-		
-		NBTTagCompound tag = MessageLM.readTag(io);
-		
-		if(first)
-		{
-			UUID selfID = FTBLibClient.mc.thePlayer == null ? null : FTBLibClient.mc.thePlayer.getUniqueID();
 			
-			NBTTagList list = tag.getTagList("P", LMNBTUtils.MAP);
+			FTBLib.dev_logger.info("Client player ID: " + clientPlayerID + ", " + getPlayer(clientPlayerID).getClass());
 			
-			for(int i = 0; i < list.tagCount(); i++)
+			int[] onlinePlayers = io.readIntArray(ByteCount.INT);
+			
+			for(int i = 0; i < onlinePlayers.length; i++)
 			{
-				NBTTagCompound tag1 = list.getCompoundTagAt(i);
-				LMPlayer p = LMWorldClient.inst.getPlayer(tag1.getInteger("PID"));
-				if(p != null) p.toPlayerSP().readFromNet(tag1, selfID != null && p.getUUID().equals(selfID));
+				LMPlayerClient p = players.get(onlinePlayers[i]).toPlayerSP();
+				p.readFromNet(io, p.playerID == clientPlayerID);
+				new EventLMPlayerClient.DataLoaded(p).post();
 			}
-			
-			for(int i = 0; i < players.size(); i++)
-				new EventLMPlayerClient.DataLoaded(players.get(i).toPlayerSP()).post();
 		}
 		
-		customCommonData = tag.getCompoundTag("C");
-		settings.readFromNBT(tag.getCompoundTag("S"), false);
+		customCommonData = LMNBTUtils.readTag(io);
+		settings.readFromNBT(LMNBTUtils.readTag(io), false);
 	}
 }

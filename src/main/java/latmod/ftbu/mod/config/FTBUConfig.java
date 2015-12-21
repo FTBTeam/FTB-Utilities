@@ -4,7 +4,8 @@ import java.io.File;
 
 import ftb.lib.FTBLib;
 import ftb.lib.api.config.ConfigRegistry;
-import latmod.lib.config.ConfigFile;
+import latmod.ftbu.world.ranks.*;
+import latmod.lib.config.*;
 
 public class FTBUConfig // FTBU
 {
@@ -14,12 +15,15 @@ public class FTBUConfig // FTBU
 	{
 		configFile = new ConfigFile("ftbu", new File(FTBLib.folderLocal, "ftbu/config.json"));
 		configFile.configGroup.setName("FTBUtilities");
-		configFile.add(FTBUConfigGeneral.group.addAll(FTBUConfigGeneral.class));
-		configFile.add(FTBUConfigLogin.group.addAll(FTBUConfigLogin.class));
-		configFile.add(FTBUConfigBackups.group.addAll(FTBUConfigBackups.class));
-		configFile.add(FTBUConfigClaims.group.addAll(FTBUConfigClaims.class));
-		configFile.add(FTBUConfigCmd.group.addAll(FTBUConfigCmd.class));
-		configFile.add(FTBUConfigTops.group.addAll(FTBUConfigTops.class));
+		configFile.add(new ConfigGroup("backups").addAll(FTBUConfigBackups.class));
+		configFile.add(new ConfigGroup("commands").addAll(FTBUConfigCmd.class).setInfo("Command name configs\nEditing is not recommended"));
+		configFile.add(new ConfigGroup("general").addAll(FTBUConfigGeneral.class));
+		configFile.add(new ConfigGroup("login").addAll(FTBUConfigLogin.class));
+		configFile.add(new ConfigGroup("tops").addAll(FTBUConfigTops.class));
+		
+		configFile.add(new ConfigGroup("permissions_admin").addAll(RankConfig.class, Ranks.ADMIN.config));
+		configFile.add(new ConfigGroup("permissions_player").addAll(RankConfig.class, Ranks.PLAYER.config));
+		
 		ConfigRegistry.add(configFile);
 		configFile.load();
 	}

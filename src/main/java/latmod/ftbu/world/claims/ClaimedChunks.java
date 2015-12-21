@@ -1,13 +1,14 @@
 package latmod.ftbu.world.claims;
 
-import java.util.UUID;
+import java.util.*;
 
 import ftb.lib.*;
 import ftb.lib.item.LMInvUtils;
 import latmod.ftbu.api.tile.ISecureTile;
-import latmod.ftbu.mod.config.*;
+import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
+import latmod.lib.util.EnumEnabled;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.*;
@@ -29,24 +30,24 @@ public class ClaimedChunks
 		
 		FastMap<String, NBTTagCompound> tag1 = LMNBTUtils.toFastMapWithType(tag.getCompoundTag("ClaimedChunks"));
 		
-		for(int i = 0; i < tag1.size(); i++)
+		for(Map.Entry<String, NBTTagCompound> e : tag1.entrySet())
 		{
 			try
 			{
-				int dim = Integer.parseInt(tag1.keys.get(i));
+				int dim = Integer.parseInt(e.getKey());
 				
 				FastMap<Long, ClaimedChunk> map = new FastMap<Long, ClaimedChunk>();
 				
-				FastMap<String, NBTTagList> tag2 = LMNBTUtils.toFastMapWithType(tag1.values.get(i));
+				FastMap<String, NBTTagList> tag2 = LMNBTUtils.toFastMapWithType(e.getValue());
 				
-				for(int j = 0; j < tag2.size(); j++)
+				for(Map.Entry<String, NBTTagList> e1 : tag2.entrySet())
 				{
-					NBTTagList chunksList = tag2.values.get(j);
+					NBTTagList chunksList = e1.getValue();
 					
 					for(int k = 0; k < chunksList.tagCount(); k++)
 					{
 						int[] ai = chunksList.func_150306_c(k);
-						ClaimedChunk c = new ClaimedChunk(Integer.parseInt(tag2.keys.get(j)), dim, ai[0], ai[1]);
+						ClaimedChunk c = new ClaimedChunk(Integer.parseInt(e1.getKey()), dim, ai[0], ai[1]);
 						if(ai.length >= 3 && ai[2] == 1) c.isChunkloaded = true;
 						map.put(Bits.intsToLong(ai[0], ai[1]), c);
 					}
@@ -54,8 +55,8 @@ public class ClaimedChunks
 				
 				chunks.put(Integer.valueOf(dim), map);
 			}
-			catch(Exception e)
-			{ e.printStackTrace(); }
+			catch(Exception ex)
+			{ ex.printStackTrace(); }
 		}
 	}
 	
@@ -65,11 +66,11 @@ public class ClaimedChunks
 		
 		chunks.sortFromKeyNums();
 		
-		for(int i = 0; i < chunks.size(); i++)
+		for(Map.Entry<Integer, FastMap<Long, ClaimedChunk>> e : chunks.entrySet())
 		{
 			NBTTagCompound tag2 = new NBTTagCompound();
 			
-			for(ClaimedChunk c : chunks.values.get(i))
+			for(ClaimedChunk c : e.getValue())
 			{
 				NBTTagList tag3 = tag2.getTagList(Integer.toString(c.ownerID), LMNBTUtils.INT_ARRAY);
 				
@@ -82,7 +83,7 @@ public class ClaimedChunks
 				tag2.setTag(Integer.toString(c.ownerID), tag3);
 			}
 			
-			tag1.setTag(chunks.keys.get(i).toString(), tag2);
+			tag1.setTag(e.getKey().toString(), tag2);
 		}
 		
 		tag.setTag("ClaimedChunks", tag1);
@@ -90,7 +91,7 @@ public class ClaimedChunks
 	
 	public ClaimedChunk getChunk(int dim, int cx, int cz)
 	{
-		if(!chunks.keys.contains(dim)) return null;
+		if(!chunks.containsKey(Integer.valueOf(dim))) return null;
 		return chunks.get(Integer.valueOf(dim)).get(Long.valueOf(Bits.intsToLong(cx, cz)));
 	}
 	
@@ -100,24 +101,19 @@ public class ClaimedChunks
 		
 		if(dim == null)
 		{
-			for(int i = 0; i < chunks.size(); i++)
+			for(FastMap<Long, ClaimedChunk> map : chunks)
 			{
-				FastMap<Long, ClaimedChunk> map = chunks.values.get(i);
-				
-				for(int j = 0; j < map.size(); j++)
+				for(ClaimedChunk c : map)
 				{
-					ClaimedChunk c = map.values.get(j);
-					if(c.ownerID == p.playerID) list.add(c);
+					if(c.ownerID == p.playerID)
+						list.add(c);
 				}
 			}
 		}
 		else
 		{
-			FastMap<Long, ClaimedChunk> map = chunks.get(Integer.valueOf(dim));
-			
-			for(int j = 0; j < map.size(); j++)
+			for(ClaimedChunk c : chunks.get(Integer.valueOf(dim)))
 			{
-				ClaimedChunk c = map.values.get(j);
 				if(c.ownerID == p.playerID) list.add(c);
 			}
 		}
@@ -130,7 +126,7 @@ public class ClaimedChunks
 		if(c == null) return false;
 		FastMap<Long, ClaimedChunk> map = chunks.get(Integer.valueOf(c.dim));
 		if(map == null) chunks.put(Integer.valueOf(c.dim), map = new FastMap<Long, ClaimedChunk>());
-		return map.put(Long.valueOf(Bits.intsToLong(c.pos.chunkXPos, c.pos.chunkZPos)), c);
+		return map.put(Long.valueOf(Bits.intsToLong(c.pos.chunkXPos, c.pos.chunkZPos)), c) == null;
 	}
 	
 	public boolean remove(int dim, int cx, int cz)
@@ -191,13 +187,17 @@ public class ClaimedChunks
 			return false;
 		else
 		{
-			EnumEnabled fe = FTBUConfigClaims.forced_explosions.get();
-			
 			ClaimedChunk c = getChunk(dim, cx, cz);
 			if(c != null)
 			{
-				if(fe == null) return c.getOwner().settings.explosions;
-				else return fe.isEnabled();
+				LMPlayer p = c.getOwner();
+				
+				if(p != null)
+				{
+					EnumEnabled fe = p.toPlayerMP().getRank().config.forced_explosions.get();
+					if(fe == null) return p.settings.explosions;
+					else return fe.isEnabled();
+				}
 			}
 		}
 		
@@ -228,7 +228,13 @@ public class ClaimedChunks
 	
 	public static boolean canInteract(UUID playerID, World w, int x, int y, int z, boolean leftClick)
 	{
-		if(leftClick && FTBUConfigClaims.break_whitelist.get().contains(LMInvUtils.getRegName(w.getBlock(x, y, z)))) return true;
+		if(leftClick)
+		{
+			LMPlayerServer p = LMWorldServer.inst.getPlayer(playerID);
+			if(p != null && p.getRank().config.break_whitelist.get().contains(LMInvUtils.getRegName(w.getBlock(x, y, z))))
+				return true;
+		}
+		
 		ChunkType type = LMWorldServer.inst.claimedChunks.getTypeD(w.provider.dimensionId, x, z);
 		return type.canInteract(LMWorldServer.inst.getPlayer(playerID), leftClick);
 	}

@@ -1,10 +1,9 @@
 package latmod.ftbu.mod.config;
 
-import latmod.lib.config.*;
+import latmod.lib.config.ConfigEntryString;
 
 public class FTBUConfigCmd
 {
-	public static final ConfigGroup group = new ConfigGroup("commands");
 	public static final ConfigEntryString name_admin = new ConfigEntryString("name_admin", "admin");
 	public static final ConfigEntryString name_back = new ConfigEntryString("name_back", "back");
 	public static final ConfigEntryString name_home = new ConfigEntryString("name_home", "home");

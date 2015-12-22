@@ -1,5 +1,7 @@
 package latmod.ftbu.mod.client.gui.friends;
 
+import java.util.List;
+
 import ftb.lib.api.PlayerAction;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
@@ -80,7 +82,7 @@ public class GuiFriendsGuiSmall extends GuiLM
 			if(mouseOver(ax, ay)) GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), width, height, 0x33FFFFFF);
 		}
 		
-		public void addMouseOverText(FastList<String> l)
+		public void addMouseOverText(List<String> l)
 		{
 		}
 	}

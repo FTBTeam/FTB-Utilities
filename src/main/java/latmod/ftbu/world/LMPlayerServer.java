@@ -331,7 +331,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public void unloadAllChunks(World w)
 	{
-		/* FIXME ChunkLoading
+		/*
 		if(w == null || w.isRemote) return;
 		
 		ForgeChunkManager.Ticket ticket = FTBUChunkEventHandler.instance.request(w, owner);

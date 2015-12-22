@@ -1,5 +1,7 @@
 package latmod.ftbu.mod.client.gui.claims;
 
+import java.util.List;
+
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.world.*;
 import latmod.ftbu.world.claims.*;
@@ -35,7 +37,7 @@ public class ClaimedAreasClient
 			chunks.put(Bits.intsToLong(x + chunkX, z + chunkZ), Integer.valueOf(types[x + z * sx]));
 	}
 	
-	public static void getMessage(int x, int z, FastList<String> l, boolean shift)
+	public static void getMessage(int x, int z, List<String> l, boolean shift)
 	{
 		int type = getType(x, z);
 		ChunkType typeE = ClaimedChunks.getChunkTypeFromI(type);

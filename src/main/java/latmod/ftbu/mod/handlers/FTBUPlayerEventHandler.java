@@ -123,7 +123,7 @@ public class FTBUPlayerEventHandler
 				
 				if(FTBUConfigGeneral.sign_home.get() && t.signText[1].equals("[home]"))
 				{
-					FTBLib.runCommand(e.entityPlayer, FTBUConfigCmd.name_home.get(), new String[] { t.signText[2] });
+					FTBLib.runCommand(null, FTBUConfigCmd.name_home.get(), new String[] { t.signText[2] });
 					e.setCanceled(true);
 					return;
 				}

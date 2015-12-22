@@ -1,6 +1,7 @@
 package latmod.ftbu.mod.client.gui.claims;
 
 import java.nio.ByteBuffer;
+import java.util.List;
 
 import org.lwjgl.opengl.*;
 
@@ -122,7 +123,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 				mc.displayGuiScreen(new GuiYesNo(GuiClaimChunks.this, s, "", isShiftKeyDown() ? 1 : 0));
 			}
 			
-			public void addMouseOverText(FastList<String> l)
+			public void addMouseOverText(List<String> l)
 			{
 				if(isShiftKeyDown()) l.add(FTBU.mod.translateClient("button.claims_unclaim_all"));
 				else l.add(FTBU.mod.translateClient("button.claims_unclaim_all_dim", gui.mc.theWorld.provider.getDimensionName()));
@@ -338,7 +339,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			gui.playClickSound();
 		}
 		
-		public void addMouseOverText(FastList<String> l)
+		public void addMouseOverText(List<String> l)
 		{ ClaimedAreasClient.getMessage(chunkX, chunkY, l, isShiftKeyDown()); }
 		
 		public void renderWidget()

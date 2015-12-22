@@ -338,7 +338,7 @@ public class GuiGuide extends GuiLM
 		public ButtonTextLine(GuiGuide g, int i)
 		{ super(g, 0, i * 11, g.textPanel.width, 11); }
 		
-		public void addMouseOverText(FastList<String> l)
+		public void addMouseOverText(List<String> l)
 		{
 			if(line != null && line.special != null && line.special.hover != null)
 			{

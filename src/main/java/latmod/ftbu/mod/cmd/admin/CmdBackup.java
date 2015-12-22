@@ -57,7 +57,7 @@ public class CmdBackup extends CommandSubLM
 		public CmdBackupDeleteAll(String s)
 		{ super(s, CommandLevel.OP); }
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+		public IChatComponent onCommand(final ICommandSender ics, String[] args) throws CommandException
 		{
 			if(Backups.thread != null) return error(new ChatComponentText("Backup in progress!"));
 			Backups.thread = new Thread("LM_Backups_delete")

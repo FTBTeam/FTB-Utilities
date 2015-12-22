@@ -1,12 +1,13 @@
 package latmod.ftbu.mod.client.gui.friends;
 
+import java.util.List;
+
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.ButtonLM;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.world.*;
-import latmod.lib.FastList;
 import net.minecraft.client.entity.AbstractClientPlayer;
 
 public class ButtonPlayer extends ButtonLM
@@ -37,7 +38,7 @@ public class ButtonPlayer extends ButtonLM
 		gui.refreshWidgets();
 	}
 	
-	public void addMouseOverText(FastList<String> al)
+	public void addMouseOverText(List<String> al)
 	{
 	}
 	

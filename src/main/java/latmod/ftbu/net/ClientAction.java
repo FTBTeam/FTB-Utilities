@@ -1,7 +1,7 @@
 package latmod.ftbu.net;
 
 import latmod.ftbu.api.guide.ServerGuideFile;
-import latmod.ftbu.util.*;
+import latmod.ftbu.util.LatCoreMC;
 import latmod.ftbu.world.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -87,33 +87,6 @@ public enum ClientAction
 		}
 	},
 	
-	ACTION_EXPLOSIONS
-	{
-		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
-		{
-			owner.settings.explosions = (extra == 1);
-			return true;
-		}
-	},
-	
-	ACTION_CHAT_LINKS
-	{
-		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
-		{
-			owner.settings.chatLinks = (extra == 1);
-			return true;
-		}
-	},
-	
-	ACTION_RENDER_BADGE
-	{
-		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
-		{
-			owner.settings.renderBadge = (extra == 1);
-			return true;
-		}
-	},
-	
 	ACTION_REQUEST_PLAYER_INFO
 	{
 		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
@@ -137,15 +110,6 @@ public enum ClientAction
 		{
 			LatCoreMC.displayGuide(ep, new ServerGuideFile(owner));
 			return false;
-		}
-	},
-	
-	ACTION_SET_CLAIM_BLOCKS
-	{
-		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
-		{
-			owner.settings.blocks = (extra == 0) ? owner.settings.blocks.next(LMSecurityLevel.VALUES_3) : owner.settings.blocks.prev(LMSecurityLevel.VALUES_3);
-			return true;
 		}
 	},
 	

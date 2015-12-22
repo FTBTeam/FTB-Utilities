@@ -21,7 +21,10 @@ public class FTBUConfig // FTBU
 		configFile.add(new ConfigGroup("login").addAll(FTBUConfigLogin.class));
 		configFile.add(new ConfigGroup("tops").addAll(FTBUConfigTops.class));
 		
+		Ranks.ADMIN.config.setDefaults(true);
 		configFile.add(new ConfigGroup("permissions_admin").addAll(RankConfig.class, Ranks.ADMIN.config));
+		
+		Ranks.PLAYER.config.setDefaults(false);
 		configFile.add(new ConfigGroup("permissions_player").addAll(RankConfig.class, Ranks.PLAYER.config));
 		
 		ConfigRegistry.add(configFile);

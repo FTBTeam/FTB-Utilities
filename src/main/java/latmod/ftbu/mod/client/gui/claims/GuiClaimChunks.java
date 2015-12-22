@@ -9,6 +9,7 @@ import ftb.lib.api.gui.*;
 import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
+import ftb.lib.mod.client.gui.GuiEditConfig;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
 import latmod.ftbu.net.*;
@@ -19,8 +20,6 @@ import latmod.lib.*;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
@@ -63,8 +62,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	public final LMPlayerClientSelf playerLM;
 	public final int currentDim, startX, startY;
 	
-	public final ButtonLM buttonRefresh, buttonClose, buttonBlockLevel, buttonUnclaimAll;
-	public final ItemButtonLM buttonExplosions;
+	public final ButtonLM buttonRefresh, buttonClose, buttonSettings, buttonUnclaimAll;
 	public final MapButton mapButtons[];
 	public final PanelLM panelButtons;
 	
@@ -104,45 +102,18 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		
 		buttonRefresh.title = FTBLibLang.button_refresh();
 		
-		buttonExplosions = new ItemButtonLM(this, 0, 32, 16, 16, new ItemStack(Blocks.tnt))
+		buttonSettings = new ButtonLM(this, 0, 32, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
 				gui.playClickSound();
-				if(LatCoreMCClient.isPlaying())
-					ClientAction.ACTION_EXPLOSIONS.send(playerLM.settings.explosions ? 0 : 1);
-			}
-			
-			public void addMouseOverText(FastList<String> l)
-			{
-				l.add(FTBU.mod.translateClient("button.explosions"));
-				if(playerLM.rankConfig.forced_explosions.get() != null)
-					l.add(FTBLibLang.label_server_forced(Boolean.toString(playerLM.rankConfig.forced_explosions.get().isEnabled())));
+				mc.displayGuiScreen(new GuiEditConfig(GuiClaimChunks.this, new ClaimsConfig()));
 			}
 		};
 		
-		buttonBlockLevel = new ButtonLM(this, 0, 48, 16, 16)
-		{
-			public void onButtonPressed(int b)
-			{
-				gui.playClickSound();
-				if(LatCoreMCClient.isPlaying())
-					ClientAction.ACTION_SET_CLAIM_BLOCKS.send(b == 0 ? 0 : 1);
-			}
-			
-			public void addMouseOverText(FastList<String> l)
-			{
-				l.add(title);
-				l.add(playerLM.settings.blocks.getText());
-				
-				if(playerLM.rankConfig.forced_chunk_security.get() != null)
-					l.add(FTBLibLang.label_server_forced(playerLM.rankConfig.forced_chunk_security.get().getText()));
-			}
-		};
+		buttonSettings.title = FTBLibLang.button_settings();
 		
-		buttonBlockLevel.title = FTBU.mod.translateClient("button.block_security");
-		
-		buttonUnclaimAll = new ButtonLM(this, 0, 64, 16, 16)
+		buttonUnclaimAll = new ButtonLM(this, 0, 48, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
@@ -165,10 +136,9 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 				add(buttonClose);
 				add(buttonRefresh);
 				
-				if(adminToken == 0)
+				if(adminToken == 0L)
 				{
-					add(buttonExplosions);
-					add(buttonBlockLevel);
+					add(buttonSettings);
 					add(buttonUnclaimAll);
 				}
 				
@@ -250,18 +220,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		
 		if(adminToken == 0L)
 		{
-			buttonExplosions.renderWidget();
-			buttonBlockLevel.render(playerLM.settings.blocks.getIcon());
+			buttonSettings.render(GuiIcons.settings);
 			buttonUnclaimAll.render(GuiIcons.remove);
-		}
-		
-		if(!playerLM.settings.explosions)
-		{
-			zLevel = 500F;
-			GlStateManager.color(1F, 1F, 1F, 0.75F);
-			buttonExplosions.render(GuiIcons.close);
-			GlStateManager.color(1F, 1F, 1F, 1F);
-			zLevel = 0F;
 		}
 	}
 	

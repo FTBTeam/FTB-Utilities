@@ -46,9 +46,12 @@ public class ChunkType
 		public boolean canInteract(LMPlayerServer p, boolean leftClick)
 		{
 			if(chunkOwner.equals(p)) return true;
+			else if(p instanceof LMFakeServerPlayer)
+				return chunkOwner.getSettings().fakePlayers;
+			
 			LMSecurity s = new LMSecurity(chunkOwner);
 			s.level = p.getRank().config.forced_chunk_security.get();
-			if(s.level == null) s.level = chunkOwner.settings.blocks;
+			if(s.level == null) s.level = chunkOwner.getSettings().blocks;
 			return s.canInteract(p);
 		}
 	}

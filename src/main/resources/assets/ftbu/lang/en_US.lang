@@ -30,6 +30,11 @@ client_config.ftbu.chat_links=Chat Links
 client_config.ftbu.player_options_shortcut=Player Options Shortcut
 client_config.ftbu.sort_friends_az=Sort Friends A-Z
 
+claims_config=Claimed Chunks Config
+claims_config.explosions=Explosions
+claims_config.security_level=Block Security Level
+claims_config.fake_players=Allow Fake Players
+
 #Misc
 ftbu:label.new_friends=New friend requests!
 ftbu:label.new_friends_click=Click to accept all requests

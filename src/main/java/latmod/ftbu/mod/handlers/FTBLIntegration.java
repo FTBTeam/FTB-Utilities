@@ -14,7 +14,7 @@ import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.mod.config.*;
 import latmod.ftbu.net.*;
 import latmod.ftbu.world.*;
-import latmod.lib.*;
+import latmod.lib.FastList;
 import latmod.lib.util.Phase;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.ItemStack;
@@ -132,4 +132,7 @@ public class FTBLIntegration extends FTBUIntegration // FTBLIntegrationClient
 	
 	public FastList<String> getPlayerNames(boolean online)
 	{ return LMWorld.getWorld().getAllPlayerNames(Boolean.valueOf(online)); }
+	
+	public String[] getOfflinePlayerNames()
+	{ return LMWorld.getWorld().players.toStringArray(); }
 }

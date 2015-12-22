@@ -10,7 +10,6 @@ import latmod.ftbu.badges.ThreadLoadBadges;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.client.gui.claims.ClaimedAreasClient;
 import latmod.ftbu.mod.cmd.CmdMath;
-import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.tile.TileLM;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
@@ -28,19 +27,31 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public static final ConfigEntryBool render_my_badge = new ConfigEntryBool("render_my_badge", true)
 	{
 		public boolean get()
-		{ return LMWorldClient.inst.getClientPlayer().settings.renderBadge; }
+		{ return LMWorldClient.inst.getClientPlayer().renderBadge; }
 		
 		public void set(boolean b)
-		{ ClientAction.ACTION_RENDER_BADGE.send(b ? 1 : 0); }
+		{
+			if(LMWorldClient.inst != null)
+			{
+				LMWorldClient.inst.getClientPlayer().renderBadge = b;
+				LMWorldClient.inst.getClientPlayer().getSettings().update();
+			}
+		}
 	};
 	
 	public static final ConfigEntryBool chat_links = new ConfigEntryBool("chat_links", true)
 	{
 		public boolean get()
-		{ return LMWorldClient.inst.getClientPlayer().settings.chatLinks; }
+		{ return LMWorldClient.inst.getClientPlayer().getSettings().chatLinks; }
 		
 		public void set(boolean b)
-		{ ClientAction.ACTION_CHAT_LINKS.send(b ? 1 : 0); }
+		{
+			if(LMWorldClient.inst != null)
+			{
+				LMWorldClient.inst.getClientPlayer().getSettings().chatLinks = b;
+				LMWorldClient.inst.getClientPlayer().getSettings().update();
+			}
+		}
 	};
 	
 	public static final ConfigEntryBool player_options_shortcut = new ConfigEntryBool("player_options_shortcut", false);

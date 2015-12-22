@@ -52,7 +52,7 @@ public class FTBUWorldEventHandler
 					StringBuilder sb = new StringBuilder();
 					sb.append(LMStringUtils.fillString("" + p.playerID, ' ', 6));
 					sb.append(LMStringUtils.fillString(p.getName(), ' ', 21));
-					sb.append(p.uuidString);
+					sb.append(p.getStringUUID());
 					l.add(sb.toString());
 				}
 				

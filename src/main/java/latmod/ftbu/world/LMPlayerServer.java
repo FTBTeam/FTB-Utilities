@@ -13,6 +13,7 @@ import latmod.ftbu.net.MessageLMPlayerUpdate;
 import latmod.ftbu.world.claims.*;
 import latmod.ftbu.world.ranks.*;
 import latmod.lib.*;
+import latmod.lib.config.ConfigGroup;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,6 +27,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public static final int nextPlayerID()
 	{ return ++lastPlayerID; }
 	
+	private final PersonalSettings settings;
 	private NBTTagCompound serverData = null;
 	public EntityPos lastPos, lastDeath;
 	public final LMPlayerStats stats;
@@ -43,6 +45,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public LMPlayerServer(LMWorldServer w, int i, GameProfile gp)
 	{
 		super(w, i, gp);
+		settings = new PersonalSettings(this);
 		stats = new LMPlayerStats(this);
 		homes = new Warps();
 	}
@@ -65,6 +68,9 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public void setPlayer(EntityPlayerMP ep)
 	{ entityPlayer = ep; }
+	
+	public PersonalSettings getSettings()
+	{ return settings; }
 	
 	public void sendUpdate()
 	{
@@ -137,7 +143,10 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		}
 		else lastDeath = null;
 		
-		settings.readFromServer(tag.getCompoundTag("Settings"));
+
+		NBTTagCompound settingsTag = tag.getCompoundTag("Settings");
+		settings.readFromServer(settingsTag);
+		renderBadge = settingsTag.hasKey("Badge") ? settingsTag.getBoolean("Badge") : true;
 		
 		homes.readFromNBT(tag, "Homes");
 	}
@@ -176,6 +185,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		NBTTagCompound settingsTag = new NBTTagCompound();
 		settings.writeToServer(settingsTag);
+		settingsTag.setBoolean("Badge", renderBadge);
 		tag.setTag("Settings", settingsTag);
 		
 		homes.writeToNBT(tag, "Homes");
@@ -198,14 +208,19 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		}
 		
 		io.writeIntArray(otherFriends.toArray(), ByteCount.SHORT);
-		settings.writeToNet(io, self);
 		LMNBTUtils.writeTag(io, commonPublicData);
 		
 		if(self)
 		{
+			settings.writeToNet(io);
+			
 			LMNBTUtils.writeTag(io, commonPrivateData);
 			io.writeInt(getClaimedChunks());
 			io.writeInt(getRank().config.max_claims.get());
+			
+			ConfigGroup group = new ConfigGroup("rank");
+			group.addAll(RankConfig.class, getRank().config);
+			group.write(io);
 		}
 	}
 	

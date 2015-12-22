@@ -1,9 +1,9 @@
 package latmod.ftbu.util;
 
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.world.*;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
 
@@ -56,16 +56,21 @@ public class LMSecurity
 	public boolean hasOwner()
 	{ return getOwner() != null; }
 	
-	public boolean isOwner(Object player)
-	{ return hasOwner() && getOwnerID() == LMWorld.getWorld().getPlayerID(player); }
+	public boolean isOwner(EntityPlayer ep)
+	{ return isOwner(LMWorld.getWorld().getPlayer(ep)); }
 	
-	public boolean canInteract(Object player)
+	public boolean isOwner(LMPlayer player)
+	{ return hasOwner() && getOwnerID() == player.playerID; }
+	
+	public boolean canInteract(EntityPlayer ep)
+	{ return canInteract(LMWorld.getWorld().getPlayer(ep)); }
+	
+	public boolean canInteract(LMPlayer playerLM)
 	{
 		if(level == LMSecurityLevel.PUBLIC || getOwner() == null) return true;
-		if(player == null) return false;
-		if(isOwner(player)) return true;
-		LMPlayer playerLM = LMWorld.getWorld().getPlayer(player);
-		if(playerLM != null && playerLM.isOnline() && FTBUConfigGeneral.allowCreativeInteractSecure(playerLM.getPlayer()))
+		if(playerLM == null) return false;
+		if(isOwner(playerLM)) return true;
+		if(playerLM != null && playerLM.isOnline() && playerLM.getRank().config.allowCreativeInteractSecure(playerLM.getPlayer()))
 			return true;
 		if(level == LMSecurityLevel.PRIVATE) return false;
 		LMPlayer owner = getOwner();

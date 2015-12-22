@@ -19,7 +19,7 @@ public class FTBUBadgeRenderer
 		{
 			LMPlayerClient pc = LMWorldClient.inst.getPlayer(e.entityPlayer);
 			
-			if(pc != null && pc.settings.renderBadge)
+			if(pc != null && pc.renderBadge)
 			{
 				if(pc.cachedBadge == null)
 				{

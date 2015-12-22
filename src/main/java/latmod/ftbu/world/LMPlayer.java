@@ -5,6 +5,7 @@ import java.util.UUID;
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.*;
+import latmod.ftbu.world.ranks.Rank;
 import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -16,12 +17,11 @@ public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer
 	public final int playerID;
 	public GameProfile gameProfile;
 	
-	public final String uuidString;
 	public final IntList friends;
 	public final ItemStack[] lastArmor;
-	public final PersonalSettings settings;
-	protected NBTTagCompound commonPublicData;
-	protected NBTTagCompound commonPrivateData;
+	protected NBTTagCompound commonPublicData = null;
+	protected NBTTagCompound commonPrivateData = null;
+	public boolean renderBadge;
 	
 	public LMPlayer(LMWorld w, int i, GameProfile gp)
 	{
@@ -29,14 +29,15 @@ public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer
 		playerID = i;
 		gameProfile = gp;
 		
-		uuidString = LMStringUtils.fromUUID(getUUID());
 		friends = new IntList();
 		lastArmor = new ItemStack[5];
-		settings = new PersonalSettings(this);
 	}
 	
 	public abstract Side getSide();
 	public abstract boolean isOnline();
+	
+	public final String getStringUUID()
+	{ return LMStringUtils.fromUUID(getUUID()); }
 	
 	public abstract LMPlayerServer toPlayerMP();
 	
@@ -105,4 +106,10 @@ public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer
 			commonPrivateData = new NBTTagCompound();
 		return commonPrivateData;
 	}
+	
+	public PersonalSettings getSettings()
+	{ return null; }
+	
+	public Rank getRank()
+	{ return null; }
 }

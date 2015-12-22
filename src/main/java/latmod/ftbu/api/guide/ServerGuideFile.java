@@ -103,7 +103,7 @@ public class ServerGuideFile extends GuideFile
 		
 		if((self = pself) == null) return;
 		boolean isDedi = FTBLib.getServer().isDedicatedServer();
-		boolean isOP = !isDedi || self.isOP();
+		boolean isOP = !isDedi || self.getRank().config.admin_server_info.get();
 		
 		main.copyFrom(CachedInfo.main);
 		links.putAll(CachedInfo.links);
@@ -139,6 +139,12 @@ public class ServerGuideFile extends GuideFile
 		{
 			ICommand c = cachedCmds.get(i);
 			GuideCategory cat = commands.getSub(new ChatComponentText('/' + c.getCommandName()));
+			
+			@SuppressWarnings("unchecked")
+			List<String> al = c.getCommandAliases();
+			if(al != null && !al.isEmpty()) for(String s : al)
+				cat.println('/' + s);
+			
 			String usage = c.getCommandUsage(self.getPlayer());
 			
 			if(usage != null)

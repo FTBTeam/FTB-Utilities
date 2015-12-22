@@ -1,21 +1,17 @@
 package latmod.ftbu.world.claims;
 
-import java.util.*;
+import java.util.Map;
 
 import ftb.lib.*;
 import ftb.lib.item.LMInvUtils;
-import latmod.ftbu.api.tile.ISecureTile;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
 import latmod.lib.util.EnumEnabled;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.*;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.FakePlayer;
 
 public class ClaimedChunks
 {
@@ -195,7 +191,7 @@ public class ClaimedChunks
 				if(p != null)
 				{
 					EnumEnabled fe = p.toPlayerMP().getRank().config.forced_explosions.get();
-					if(fe == null) return p.settings.explosions;
+					if(fe == null) return p.toPlayerMP().getSettings().explosions;
 					else return fe.isEnabled();
 				}
 			}
@@ -206,36 +202,20 @@ public class ClaimedChunks
 	
 	public static boolean canPlayerInteract(EntityPlayer ep, int x, int y, int z, boolean leftClick)
 	{
-		if(ep instanceof FakePlayer) return true;
+		if(ep.worldObj.isRemote) return true;
 		
-		World w = ep.worldObj;
-		boolean server = !w.isRemote;
-		if(server && LMWorldServer.inst.settings.isOutsideF(w.provider.dimensionId, x, z)) return false;
+		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
 		
-		if(!server || FTBUConfigGeneral.allowCreativeInteractSecure(ep)) return true;
+		if(LMWorldServer.inst.settings.isOutsideF(ep.dimension, x, z)) return false;
+		else if(p.getRank().config.allowCreativeInteractSecure(ep)) return true;
 		
-		Block block = w.getBlock(x, y, z);
-		
-		if(block.hasTileEntity(w.getBlockMetadata(x, y, z)))
-		{
-			TileEntity te = w.getTileEntity(x, y, z);
-			if(te instanceof ISecureTile && !te.isInvalid() && !((ISecureTile)te).canPlayerInteract(ep, leftClick))
-			{ ((ISecureTile)te).onPlayerNotOwner(ep, leftClick); return false; }
-		}
-		
-		return canInteract(ep.getGameProfile().getId(), w, x, y, z, leftClick);
-	}
-	
-	public static boolean canInteract(UUID playerID, World w, int x, int y, int z, boolean leftClick)
-	{
 		if(leftClick)
 		{
-			LMPlayerServer p = LMWorldServer.inst.getPlayer(playerID);
-			if(p != null && p.getRank().config.break_whitelist.get().contains(LMInvUtils.getRegName(w.getBlock(x, y, z))))
+			if(p != null && p.getRank().config.break_whitelist.get().contains(LMInvUtils.getRegName(ep.worldObj.getBlock(x, y, z))))
 				return true;
 		}
 		
-		ChunkType type = LMWorldServer.inst.claimedChunks.getTypeD(w.provider.dimensionId, x, z);
-		return type.canInteract(LMWorldServer.inst.getPlayer(playerID), leftClick);
+		ChunkType type = LMWorldServer.inst.claimedChunks.getTypeD(ep.dimension, x, z);
+		return type.canInteract(p, leftClick);
 	}
 }

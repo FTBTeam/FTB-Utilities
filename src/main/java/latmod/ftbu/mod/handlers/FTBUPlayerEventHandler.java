@@ -5,13 +5,14 @@ import ftb.lib.*;
 import ftb.lib.notification.Notification;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.api.item.ICreativeSafeItem;
+import latmod.ftbu.api.tile.ISecureTile;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.cmd.*;
-import latmod.ftbu.mod.config.FTBUConfigGeneral;
+import latmod.ftbu.mod.config.*;
 import latmod.ftbu.net.*;
 import latmod.ftbu.world.*;
 import latmod.ftbu.world.claims.*;
 import latmod.lib.MathHelperLM;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.*;
@@ -122,13 +123,13 @@ public class FTBUPlayerEventHandler
 				
 				if(FTBUConfigGeneral.sign_home.get() && t.signText[1].equals("[home]"))
 				{
-					new CmdHome().onCommand(e.entityPlayer, new String[] { t.signText[2] });
+					FTBLib.runCommand(e.entityPlayer, FTBUConfigCmd.name_home.get(), new String[] { t.signText[2] });
 					e.setCanceled(true);
 					return;
 				}
 				else if(FTBUConfigGeneral.sign_warp.get() && !t.signText[2].isEmpty() && t.signText[1].equals("[warp]"))
 				{
-					new CmdWarp().onCommand(e.entityPlayer, new String[] { t.signText[2] });
+					FTBLib.runCommand(e.entityPlayer, FTBUConfigCmd.name_warp.get(), new String[] { t.signText[2] });
 					e.setCanceled(true);
 					return;
 				}
@@ -145,6 +146,18 @@ public class FTBUPlayerEventHandler
 			if(!ep.worldObj.isRemote) ep.worldObj.markBlockRangeForRenderUpdate(x, y, z, x, y, z);
 			else ep.worldObj.markBlockForUpdate(x, y, z);
 			return false;
+		}
+		
+		if(!ep.worldObj.isRemote)
+		{
+			Block block = ep.worldObj.getBlock(x, y, z);
+			
+			if(block.hasTileEntity(ep.worldObj.getBlockMetadata(x, y, z)))
+			{
+				TileEntity te = ep.worldObj.getTileEntity(x, y, z);
+				if(te instanceof ISecureTile && !te.isInvalid() && !((ISecureTile)te).canPlayerInteract(ep, leftClick))
+				{ ((ISecureTile)te).onPlayerNotOwner(ep, leftClick); return false; }
+			}
 		}
 		
 		return ClaimedChunks.canPlayerInteract(ep, x, y, z, leftClick);
@@ -178,7 +191,7 @@ public class FTBUPlayerEventHandler
 		if(entity != null && (entity instanceof EntityPlayerMP || entity instanceof IMob))
 		{
 			if(entity instanceof FakePlayer) return;
-			else if(entity instanceof EntityPlayerMP && FTBUConfigGeneral.allowCreativeInteractSecure((EntityPlayerMP)entity)) return;
+			else if(entity instanceof EntityPlayerMP && LMPlayerServer.get(entity).getRank().config.allowCreativeInteractSecure((EntityPlayerMP)entity)) return;
 			
 			int cx = MathHelperLM.chunk(e.entity.posX);
 			int cz = MathHelperLM.chunk(e.entity.posZ);

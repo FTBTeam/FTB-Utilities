@@ -13,6 +13,7 @@ import latmod.ftbu.world.claims.*;
 import latmod.lib.*;
 import net.minecraft.nbt.*;
 import net.minecraft.world.*;
+import net.minecraftforge.common.util.FakePlayer;
 
 public class LMWorldServer extends LMWorld // LMWorldClient
 {
@@ -22,6 +23,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	public final File latmodFolder;
 	public final Warps warps;
 	public final ClaimedChunks claimedChunks;
+	private final LMFakeServerPlayer fakePlayer;
 	private NBTTagCompound customServerData;
 	public int lastMailID = 0;
 	
@@ -32,6 +34,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		latmodFolder = f;
 		warps = new Warps();
 		claimedChunks = new ClaimedChunks();
+		fakePlayer = new LMFakeServerPlayer(this);
 		customServerData = null;
 	}
 	
@@ -43,6 +46,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	
 	public LMPlayerServer getPlayer(Object o)
 	{
+		if(o instanceof FakePlayer) return fakePlayer;
 		LMPlayer p = super.getPlayer(o);
 		return (p == null) ? null : p.toPlayerMP();
 	}
@@ -114,7 +118,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 			LMPlayerServer p = players.get(i).toPlayerMP();
 			p.writeToServer(tag1);
 			new EventLMPlayerServer.DataSaved(p).post();
-			tag1.setString("UUID", p.uuidString);
+			tag1.setString("UUID", p.getStringUUID());
 			tag1.setString("Name", p.getName());
 			tag.setTag(Integer.toString(p.playerID), tag1);
 		}

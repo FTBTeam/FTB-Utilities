@@ -7,6 +7,7 @@ import ftb.lib.LMNBTUtils;
 import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.api.EventLMPlayerClient;
 import latmod.ftbu.badges.Badge;
+import latmod.ftbu.world.ranks.*;
 import latmod.lib.*;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.*;
@@ -47,6 +48,9 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 	public EntityPlayerSP getPlayer()
 	{ return isOnline() ? FTBLibClient.getPlayerSP(getUUID()) : null; }
 	
+	public Rank getRank()
+	{ return Ranks.PLAYER; }
+	
 	public void receiveInfo(FastList<IChatComponent> info)
 	{
 		clientInfo.clear();
@@ -77,7 +81,6 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 			}
 		}
 		
-		settings.readFromNet(io, self);
 		commonPublicData = LMNBTUtils.readTag(io);
 	}
 	

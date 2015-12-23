@@ -1,4 +1,4 @@
-package latmod.ftbu.mod.handlers;
+package latmod.ftbu.mod.handlers.ftbl;
 
 import java.io.File;
 import java.util.List;
@@ -12,13 +12,14 @@ import ftb.lib.item.LMInvUtils;
 import ftb.lib.mod.FTBUIntegration;
 import latmod.ftbu.api.*;
 import latmod.ftbu.api.guide.ServerGuideFile;
-import latmod.ftbu.mod.FTBUTicks;
+import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.config.*;
+import latmod.ftbu.mod.handlers.FTBUChunkEventHandler;
 import latmod.ftbu.net.*;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
 import latmod.lib.util.Phase;
-import net.minecraft.entity.player.*;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.*;
@@ -27,20 +28,25 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 {
 	public void onReloaded(EventFTBReload e)
 	{
-		if(e.side.isClient() || LMWorldServer.inst == null) return;
-		
-		if(FTBUConfigGeneral.restart_timer.get() > 0)
-			FTBUTicks.serverStarted();
-		
-		for(LMPlayer p : LMWorldServer.inst.players)
-			p.toPlayerMP().refreshStats();
-		
-		ServerGuideFile.CachedInfo.reload();
+		if(e.side.isServer())
+		{
+			if(LMWorldServer.inst == null) return;
+			
+			if(FTBUConfigGeneral.restart_timer.get() > 0)
+				FTBUTicks.serverStarted();
+			
+			for(LMPlayer p : LMWorldServer.inst.players)
+				p.toPlayerMP().refreshStats();
+			
+			ServerGuideFile.CachedInfo.reload();
+		}
+		else FTBU.proxy_ftbl_int.onReloadedClient(e);
 	}
 	
 	public void onModeSet(EventFTBModeSet e)
 	{
 		FTBUConfigGeneral.onReloaded(e.side);
+		if(e.side.isClient()) FTBU.proxy_ftbl_int.onModeSetClient(e);
 	}
 	
 	public void onFTBWorldServer(EventFTBWorldServer e)
@@ -99,6 +105,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 	
 	public void onFTBWorldClient(EventFTBWorldClient e)
 	{
+		FTBU.proxy_ftbl_int.onFTBWorldClient(e);
 	}
 	
 	public void onServerTick(World w)
@@ -106,11 +113,8 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 		if(w.provider.dimensionId == 0) FTBUTicks.update();
 	}
 	
-	public void onPlayerJoined(EntityPlayer player)
+	public void onPlayerJoined(EntityPlayerMP ep)
 	{
-		if(!(player instanceof EntityPlayerMP)) return;
-		EntityPlayerMP ep = (EntityPlayerMP)player;
-		
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
 		
 		boolean first = (p == null);

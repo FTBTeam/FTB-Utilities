@@ -7,6 +7,7 @@ import latmod.ftbu.mod.cmd.*;
 import latmod.ftbu.mod.cmd.admin.CmdAdmin;
 import latmod.ftbu.mod.config.FTBUConfig;
 import latmod.ftbu.mod.handlers.*;
+import latmod.ftbu.mod.handlers.ftbl.*;
 import latmod.ftbu.net.FTBUNetHandler;
 import latmod.ftbu.util.LMMod;
 import latmod.ftbu.world.*;
@@ -29,8 +30,8 @@ public class FTBU
 	@SidedProxy(clientSide = "latmod.ftbu.mod.client.FTBUClient", serverSide = "latmod.ftbu.mod.FTBUCommon")
 	public static FTBUCommon proxy;
 	
-	@SidedProxy(clientSide = "latmod.ftbu.mod.client.FTBLIntegrationClient", serverSide = "latmod.ftbu.mod.FTBLIntegration")
-	public static FTBLIntegration ftbl_integration;
+	@SidedProxy(clientSide = "latmod.ftbu.mod.handlers.ftbl.FTBLIntegrationClient", serverSide = "latmod.ftbu.mod.handlers.ftbl.FTBLIntegrationCommon")
+	public static FTBLIntegrationCommon proxy_ftbl_int;
 	
 	@LMMod.Instance(FTBUFinals.MOD_ID)
 	public static LMMod mod;
@@ -39,7 +40,7 @@ public class FTBU
 	public void preInit(FMLPreInitializationEvent e)
 	{
 		LMMod.init(this);
-		FTBLib.ftbu = ftbl_integration;
+		FTBLib.ftbu = new FTBLIntegration();
 		
 		LMJsonUtils.register(Notification.class, new Notification.Serializer());
 		LMJsonUtils.register(MouseAction.class, new MouseAction.Serializer());

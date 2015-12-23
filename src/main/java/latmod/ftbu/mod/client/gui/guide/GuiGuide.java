@@ -102,7 +102,8 @@ public class GuiGuide extends GuiLM
 				{
 					selectedCategory = category;
 					sliderText.value = 0F;
-					parentGui.refreshText();
+					if(parentGui != null)
+						parentGui.refreshText();
 					initLMGui();
 				}
 			}

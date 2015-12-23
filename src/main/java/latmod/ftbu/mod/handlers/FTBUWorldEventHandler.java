@@ -59,7 +59,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
 					LMPlayer p = LMWorldServer.inst.getPlayer(list[i]);
 					
 					StringBuilder sb = new StringBuilder();
-					sb.append(LMStringUtils.fillString("" + p.playerID, ' ', 6));
+					sb.append(LMStringUtils.fillString(Integer.toString(p.playerID), ' ', 6));
 					sb.append(LMStringUtils.fillString(p.getName(), ' ', 21));
 					sb.append(p.getStringUUID());
 					l.add(sb.toString());

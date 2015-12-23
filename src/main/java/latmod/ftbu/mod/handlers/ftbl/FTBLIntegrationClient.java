@@ -1,29 +1,23 @@
-package latmod.ftbu.mod.client;
+package latmod.ftbu.mod.handlers.ftbl;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.*;
 import latmod.ftbu.api.EventLMWorldClient;
 import latmod.ftbu.api.guide.ClientGuideFile;
-import latmod.ftbu.mod.handlers.FTBLIntegration;
+import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.world.LMWorldClient;
 
 @SideOnly(Side.CLIENT)
-public class FTBLIntegrationClient extends FTBLIntegration
+public class FTBLIntegrationClient extends FTBLIntegrationCommon
 {
-	public void onReloaded(EventFTBReload e)
+	public void onReloadedClient(EventFTBReload e)
 	{
-		super.onReloaded(e);
-		
-		if(e.side.isClient())
-			FTBUClient.onReloaded();
+		FTBUClient.onReloaded();
 	}
 	
-	public void onModeSet(EventFTBModeSet e)
+	public void onModeSetClient(EventFTBModeSet e)
 	{
-		super.onModeSet(e);
-		
-		if(e.side.isClient())
-			ClientGuideFile.instance.reload(e);
+		ClientGuideFile.instance.reload(e);
 	}
 	
 	public void onFTBWorldClient(EventFTBWorldClient e)

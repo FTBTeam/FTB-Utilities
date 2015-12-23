@@ -75,7 +75,7 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 			}
 		}
 		
-		customCommonData = LMNBTUtils.readTag(io);
-		settings.readFromNBT(LMNBTUtils.readTag(io), false);
+		settings.readFromNet(io);
+		customCommonData.read(io);
 	}
 }

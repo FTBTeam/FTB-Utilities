@@ -59,7 +59,7 @@ public class GuiGuide extends GuiLM
 		xSize = 328;
 		ySize = 240;
 		
-		sliderCategories = new SliderLM(this, 11, 14, tex_slider.widthI, 210, tex_slider.heightI)
+		sliderCategories = new SliderLM(this, 11, 14, tex_slider.widthI(), 210, tex_slider.heightI())
 		{
 			public boolean canMouseScroll()
 			{ return gui.mouseX < guiLeft + xSize / 2; }
@@ -70,7 +70,7 @@ public class GuiGuide extends GuiLM
 		
 		sliderCategories.isVertical = true;
 		
-		sliderText = new SliderLM(this, 304, 14, tex_slider.widthI, 210, tex_slider.heightI)
+		sliderText = new SliderLM(this, 304, 14, tex_slider.widthI(), 210, tex_slider.heightI())
 		{
 			public boolean canMouseScroll()
 			{ return gui.mouseX > guiLeft + xSize / 2; }
@@ -81,7 +81,7 @@ public class GuiGuide extends GuiLM
 		
 		sliderText.isVertical = true;
 		
-		buttonBack = new ButtonLM(this, 35, 12, tex_back.widthI, tex_back.heightI)
+		buttonBack = new ButtonLM(this, 35, 12, tex_back.widthI(), tex_back.heightI())
 		{
 			public void onButtonPressed(int b)
 			{

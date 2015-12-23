@@ -110,7 +110,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		if(isOnline())
 		{
 			stats.refreshStats();
-			if(!world.settings.isOutsideF(entityPlayer.dimension, entityPlayer.posX, entityPlayer.posZ))
+			if(!world.settings.isOutsideBorderD(entityPlayer.dimension, entityPlayer.posX, entityPlayer.posZ))
 				getPos();
 		}
 	}

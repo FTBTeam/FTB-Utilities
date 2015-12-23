@@ -2,7 +2,6 @@ package latmod.ftbu.mod;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import ftb.lib.*;
-import ftb.lib.mod.FTBUIntegration;
 import ftb.lib.notification.*;
 import latmod.ftbu.mod.cmd.*;
 import latmod.ftbu.mod.cmd.admin.CmdAdmin;
@@ -40,7 +39,7 @@ public class FTBU
 	public void preInit(FMLPreInitializationEvent e)
 	{
 		LMMod.init(this);
-		FTBUIntegration.instance = ftbl_integration;
+		FTBLib.ftbu = ftbl_integration;
 		
 		LMJsonUtils.register(Notification.class, new Notification.Serializer());
 		LMJsonUtils.register(MouseAction.class, new MouseAction.Serializer());

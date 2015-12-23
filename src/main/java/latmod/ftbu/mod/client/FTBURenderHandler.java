@@ -31,8 +31,8 @@ public class FTBURenderHandler
 		//LMFrustrumUtils.updateMatrix();
 		
 		if(LMWorldClient.inst == null || !LMWorldClient.inst.settings.isEnabled(LMFrustrumUtils.currentDim)) return;
-		int wb = LMWorldClient.inst.settings.getSize(LMFrustrumUtils.currentDim);
-		Pos2I borderPos = LMWorldClient.inst.settings.getPos(LMFrustrumUtils.currentDim);
+		int wb = LMWorldClient.inst.settings.getBorderSize(LMFrustrumUtils.currentDim);
+		Pos2I borderPos = LMWorldClient.inst.settings.getBorderPos(LMFrustrumUtils.currentDim);
 		
 		float minX = (MathHelperLM.chunk(-wb + borderPos.x) + 1) * 16 + 0.01F;
 		float maxX = MathHelperLM.chunk(wb + borderPos.x) * 16 - 0.01F;

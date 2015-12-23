@@ -3,6 +3,8 @@ package latmod.ftbu.mod.handlers;
 import java.io.File;
 import java.util.Arrays;
 
+import com.google.gson.JsonObject;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ftb.lib.*;
 import latmod.ftbu.api.EventLMWorldServer;
@@ -10,6 +12,7 @@ import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.world.*;
 import latmod.ftbu.world.claims.ClaimedChunks;
 import latmod.lib.*;
+import latmod.lib.util.Phase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityChicken;
@@ -17,7 +20,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldServer;
 
-public class FTBUWorldEventHandler
+public class FTBUWorldEventHandler // FTBLIntegration
 {
 	@SubscribeEvent
 	public void worldSaved(net.minecraftforge.event.world.WorldEvent.Save e)
@@ -26,16 +29,22 @@ public class FTBUWorldEventHandler
 		{
 			new EventLMWorldServer.Saved(LMWorldServer.inst).post();
 			
-			NBTTagCompound tag = new NBTTagCompound();
-			LMWorldServer.inst.save(tag);
-			LMNBTUtils.writeMap(new File(LMWorldServer.inst.latmodFolder, "LMWorld.dat"), tag);
+			JsonObject group = new JsonObject();
+			LMWorldServer.inst.save(group, Phase.PRE);
 			
-			tag = new NBTTagCompound();
+			NBTTagCompound tag = new NBTTagCompound();
 			NBTTagCompound players = new NBTTagCompound();
 			LMWorldServer.inst.writePlayersToServer(players);
 			tag.setTag("Players", players);
 			tag.setInteger("LastID", LMPlayerServer.lastPlayerID);
 			LMNBTUtils.writeMap(new File(LMWorldServer.inst.latmodFolder, "LMPlayers.dat"), tag);
+			
+			LMWorldServer.inst.save(group, Phase.POST);
+			LMJsonUtils.toJsonFile(new File(LMWorldServer.inst.latmodFolder, "LMWorld.json"), group);
+			
+			group = new JsonObject();
+			LMWorldServer.inst.claimedChunks.save(group);
+			LMJsonUtils.toJsonFile(new File(LMWorldServer.inst.latmodFolder, "ClaimedChunks.json"), group);
 			
 			// Export player list //
 			
@@ -77,7 +86,7 @@ public class FTBUWorldEventHandler
 		if(FTBUConfigGeneral.isEntityBanned(e.getClass()))
 			return false;
 		
-		if(FTBUConfigGeneral.safe_spawn.get() && ClaimedChunks.isInSpawnF(e.dimension, e.posX, e.posZ))
+		if(FTBUConfigGeneral.safe_spawn.get() && ClaimedChunks.isInSpawnD(e.dimension, e.posX, e.posZ))
 		{
 			if(e instanceof IMob) return false;
 			else if(e instanceof EntityChicken && e.riddenByEntity != null) return false;

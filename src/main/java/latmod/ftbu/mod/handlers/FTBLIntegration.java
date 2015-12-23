@@ -3,6 +3,8 @@ package latmod.ftbu.mod.handlers;
 import java.io.File;
 import java.util.List;
 
+import com.google.gson.*;
+
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
@@ -14,14 +16,14 @@ import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.mod.config.*;
 import latmod.ftbu.net.*;
 import latmod.ftbu.world.*;
-import latmod.lib.FastList;
+import latmod.lib.*;
 import latmod.lib.util.Phase;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.*;
 
-public class FTBLIntegration extends FTBUIntegration // FTBLIntegrationClient
+public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 {
 	public void onReloaded(EventFTBReload e)
 	{
@@ -48,10 +50,23 @@ public class FTBLIntegration extends FTBUIntegration // FTBLIntegrationClient
 			ConfigRegistry.reload();
 			
 			File latmodFolder = new File(e.worldMC.getSaveHandler().getWorldDirectory(), "latmod/");
-			NBTTagCompound tagWorldData = LMNBTUtils.readMap(new File(latmodFolder, "LMWorld.dat"));
-			if(tagWorldData == null) tagWorldData = new NBTTagCompound();
+			File file = new File(latmodFolder, "LMWorld.dat");
+			
 			LMWorldServer.inst = new LMWorldServer((WorldServer)e.worldMC, latmodFolder);
-			LMWorldServer.inst.load(tagWorldData);
+			JsonElement obj = JsonNull.INSTANCE;
+			
+			if(file.exists())
+			{
+				NBTTagCompound tagWorldData = LMNBTUtils.readMap(file);
+				if(tagWorldData != null) LMWorldServer.inst.load(tagWorldData);
+				LMFileUtils.delete(file);
+			}
+			else
+			{
+				file = new File(latmodFolder, "LMWorld.json");
+				obj = LMJsonUtils.getJsonElement(file);
+				if(obj.isJsonObject()) LMWorldServer.inst.load(obj.getAsJsonObject(), Phase.PRE);
+			}
 			
 			new EventLMWorldServer.Loaded(LMWorldServer.inst, Phase.PRE).post();
 			
@@ -64,6 +79,17 @@ public class FTBLIntegration extends FTBUIntegration // FTBLIntegrationClient
 			
 			for(int i = 0; i < LMWorldServer.inst.players.size(); i++)
 				LMWorldServer.inst.players.get(i).toPlayerMP().setPlayer(null);
+			
+			if(obj.isJsonObject()) LMWorldServer.inst.load(obj.getAsJsonObject(), Phase.POST);
+			
+			file = new File(latmodFolder, "ClaimedChunks.json");
+			obj = JsonNull.INSTANCE;
+			
+			if(file.exists())
+			{
+				obj = LMJsonUtils.getJsonElement(file);
+				if(obj.isJsonObject()) LMWorldServer.inst.claimedChunks.load(obj.getAsJsonObject());
+			}
 			
 			FTBUChunkEventHandler.worldLoadEvent(e.worldMC);
 			
@@ -130,7 +156,7 @@ public class FTBLIntegration extends FTBUIntegration // FTBLIntegrationClient
 	public int getPlayerID(Object player)
 	{ return LMWorld.getWorld().getPlayerID(player); }
 	
-	public FastList<String> getPlayerNames(boolean online)
+	public String[] getPlayerNames(boolean online)
 	{ return LMWorld.getWorld().getAllPlayerNames(Boolean.valueOf(online)); }
 	
 	public String[] getOfflinePlayerNames()

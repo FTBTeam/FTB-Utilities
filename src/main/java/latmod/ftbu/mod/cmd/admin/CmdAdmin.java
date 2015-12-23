@@ -18,5 +18,6 @@ public class CmdAdmin extends CommandSubLM
 		add(new CmdUnclaimAll());
 		add(new CmdLoadedChunks());
 		add(new CmdBackup());
+		add(new CmdListFriends());
 	}
 }

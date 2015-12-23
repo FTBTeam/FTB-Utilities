@@ -61,14 +61,14 @@ public class FTBUPlayerEventHandler
 		
 		else if(!player.lastPos.equalsPos(ep))
 		{
-			if(LMWorldServer.inst.settings.isOutsideF(ep.dimension, ep.posX, ep.posZ))
+			if(LMWorldServer.inst.settings.isOutsideBorderD(ep.dimension, ep.posX, ep.posZ))
 			{
 				ep.motionX = ep.motionY = ep.motionZ = 0D;
 				IChatComponent warning = new ChatComponentTranslation(FTBU.mod.assets + ChunkType.WORLD_BORDER.lang + ".warning");
 				warning.getChatStyle().setColor(EnumChatFormatting.RED);
 				FTBLib.notifyPlayer(ep, new Notification("world_border", warning, 3000));
 				
-				if(LMWorldServer.inst.settings.isOutsideF(player.lastPos.dim, player.lastPos.x, player.lastPos.z))
+				if(LMWorldServer.inst.settings.isOutsideBorderD(player.lastPos.dim, player.lastPos.x, player.lastPos.z))
 				{
 					FTBLib.printChat(ep, new ChatComponentTranslation(FTBU.mod.assets + "cmd.spawn_tp"));
 					World w = LMDimUtils.getWorld(0);
@@ -196,7 +196,7 @@ public class FTBUPlayerEventHandler
 			int cx = MathHelperLM.chunk(e.entity.posX);
 			int cz = MathHelperLM.chunk(e.entity.posZ);
 			
-			if(LMWorldServer.inst.settings.isOutside(dim, cx, cz) || (FTBUConfigGeneral.safe_spawn.get() && ClaimedChunks.isInSpawn(dim, cx, cz))) e.setCanceled(true);
+			if(LMWorldServer.inst.settings.isOutsideBorder(dim, cx, cz) || (FTBUConfigGeneral.safe_spawn.get() && ClaimedChunks.isInSpawn(dim, cx, cz))) e.setCanceled(true);
 			/*else
 			{
 				ClaimedChunk c = Claims.get(dim, cx, cz);

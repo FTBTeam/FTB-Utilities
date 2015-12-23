@@ -3,6 +3,7 @@ package latmod.ftbu.world;
 import java.io.File;
 import java.util.Map;
 
+import com.google.gson.*;
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.relauncher.Side;
@@ -11,6 +12,8 @@ import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.net.MessageLMWorldUpdate;
 import latmod.ftbu.world.claims.*;
 import latmod.lib.*;
+import latmod.lib.config.ConfigGroup;
+import latmod.lib.util.Phase;
 import net.minecraft.nbt.*;
 import net.minecraft.world.*;
 import net.minecraftforge.common.util.FakePlayer;
@@ -24,7 +27,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	public final Warps warps;
 	public final ClaimedChunks claimedChunks;
 	private final LMFakeServerPlayer fakePlayer;
-	private NBTTagCompound customServerData;
+	public final ConfigGroup customServerData;
 	public int lastMailID = 0;
 	
 	public LMWorldServer(WorldServer w, File f)
@@ -35,7 +38,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		warps = new Warps();
 		claimedChunks = new ClaimedChunks();
 		fakePlayer = new LMFakeServerPlayer(this);
-		customServerData = null;
+		customServerData = new ConfigGroup("custom_server_data");
 	}
 	
 	public World getMCWorld()
@@ -54,23 +57,35 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	public void load(NBTTagCompound tag)
 	{
 		warps.readFromNBT(tag, "Warps");
-		customServerData = tag.hasKey("CustomServer") ? tag.getCompoundTag("CustomServer") : null;
-		customCommonData = tag.hasKey("CustomCommon") ? tag.getCompoundTag("CustomCommon") : null;
-		settings.readFromNBT(tag.getCompoundTag("Settings"), true);
+		settings.readFromNBT(tag.getCompoundTag("Settings"));
 		lastMailID = tag.getInteger("LastMailID");
 		claimedChunks.load(tag);
 	}
 	
-	public void save(NBTTagCompound tag)
+	public void load(JsonObject group, Phase p)
 	{
-		warps.writeToNBT(tag, "Warps");
-		if(customServerData != null) tag.setTag("CustomServer", customServerData);
-		if(customCommonData != null) tag.setTag("CustomCommon", customCommonData);
-		NBTTagCompound settingsTag = new NBTTagCompound();
-		settings.writeToNBT(settingsTag, true);
-		tag.setTag("Settings", settingsTag);
-		tag.setInteger("LastMailID", lastMailID);
-		claimedChunks.save(tag);
+		if(p.isPre())
+		{
+			warps.readFromJson(group, "warps");
+			customServerData.setJson(group.get(customServerData.ID));
+			customCommonData.setJson(group.get(customCommonData.ID));
+			settings.readFromJson(group.get("settings").getAsJsonObject());
+			lastMailID = group.has("last_mail_id") ? group.get("last_mail_id").getAsInt() : 0;
+		}
+	}
+	
+	public void save(JsonObject group, Phase p)
+	{
+		if(p.isPre())
+		{
+			warps.writeToJson(group, "warps");
+			group.add(customServerData.ID, customServerData.getJson());
+			group.add(customCommonData.ID, customCommonData.getJson());
+			JsonObject settingsGroup = new JsonObject();
+			settings.writeToJson(settingsGroup);
+			group.add("settings", settingsGroup);
+			if(lastMailID > 0) group.add("last_mail_id", new JsonPrimitive(lastMailID));
+		}
 	}
 	
 	public void writeDataToNet(ByteIOStream io, int selfID)
@@ -100,11 +115,8 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 			}
 		}
 		
-		LMNBTUtils.writeTag(io, customCommonData);
-		
-		NBTTagCompound settingsTag = new NBTTagCompound();
-		settings.writeToNBT(settingsTag, false);
-		LMNBTUtils.writeTag(io, settingsTag);
+		settings.writeToNet(io);
+		customCommonData.write(io);
 	}
 	
 	public void writePlayersToServer(NBTTagCompound tag)
@@ -160,11 +172,4 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	
 	public void update()
 	{ new MessageLMWorldUpdate(this).sendTo(null); }
-	
-	public NBTTagCompound getServerData()
-	{
-		if(customServerData == null)
-			customServerData = new NBTTagCompound();
-		return customServerData;
-	}
 }

@@ -2,6 +2,8 @@ package latmod.ftbu.world;
 
 import java.util.Map;
 
+import com.google.gson.*;
+
 import ftb.lib.*;
 import latmod.lib.*;
 import net.minecraft.nbt.NBTTagCompound;
@@ -34,6 +36,41 @@ public class Warps
 		for(Map.Entry<String, EntityPos> e : warps.entrySet())
 			tag1.setIntArray(e.getKey(), e.getValue().toIntArray());
 		tag.setTag(s, tag1);
+	}
+	
+	public void readFromJson(JsonObject g, String s)
+	{
+		JsonObject g1 = g.get(s).getAsJsonObject();
+		
+		if(g1 != null) for(Map.Entry<String, JsonElement> e : g1.entrySet())
+		{
+			if(e.getValue().isJsonArray())
+			{
+				int[] a = LMJsonUtils.fromArray(e.getValue());
+				set(e.getKey(), a[0], a[1], a[2], a[3]);
+			}
+			else
+			{
+				JsonObject o = e.getValue().getAsJsonObject();
+				set(e.getKey(), o.get("dim").getAsInt(), o.get("x").getAsInt(), o.get("y").getAsInt(), o.get("z").getAsInt());
+			}
+		}
+	}
+	
+	public void writeToJson(JsonObject g, String s)
+	{
+		JsonObject g1 = new JsonObject();
+		for(Map.Entry<String, EntityPos> e : warps.entrySet())
+		{
+			EntityPos pos = e.getValue();
+			JsonObject o = new JsonObject();
+			o.add("dim", new JsonPrimitive(pos.dim));
+			o.add("x", new JsonPrimitive(pos.intX()));
+			o.add("y", new JsonPrimitive(pos.intY()));
+			o.add("z", new JsonPrimitive(pos.intZ()));
+			g1.add(e.getKey(), o);
+		}
+		g.add(s, g1);
 	}
 	
 	public String[] list()

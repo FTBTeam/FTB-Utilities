@@ -2,6 +2,8 @@ package latmod.ftbu.world.claims;
 
 import java.util.Map;
 
+import com.google.gson.*;
+
 import ftb.lib.*;
 import ftb.lib.item.LMInvUtils;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
@@ -56,33 +58,71 @@ public class ClaimedChunks
 		}
 	}
 	
-	public void save(NBTTagCompound tag)
+	public void load(JsonObject group)
 	{
-		NBTTagCompound tag1 = new NBTTagCompound();
-		
+		for(Map.Entry<String, JsonElement> e : group.entrySet())
+		{
+			int dim = Integer.parseInt(e.getKey());
+			
+			FastMap<Long, ClaimedChunk> map = new FastMap<Long, ClaimedChunk>();
+			
+			for(Map.Entry<String, JsonElement> e1 : e.getValue().getAsJsonObject().entrySet())
+			{
+				try
+				{
+					LMPlayerServer p = LMPlayerServer.get(LMStringUtils.fromString(e1.getKey()));
+					
+					JsonArray chunksList = e1.getValue().getAsJsonArray();
+					
+					for(int k = 0; k < chunksList.size(); k++)
+					{
+						int[] ai = LMJsonUtils.fromArray(chunksList.get(k));
+						
+						if(ai != null)
+						{
+							ClaimedChunk c = new ClaimedChunk(p.playerID, dim, ai[0], ai[1]);
+							if(ai.length >= 3 && ai[2] == 1) c.isChunkloaded = true;
+							map.put(Bits.intsToLong(ai[0], ai[1]), c);
+						}
+					}
+				}
+				catch(Exception ex)
+				{ ex.printStackTrace(); }
+			}
+			
+			chunks.put(Integer.valueOf(dim), map);
+		}
+	}
+	
+	public void save(JsonObject group)
+	{
 		chunks.sortFromKeyNums();
 		
 		for(Map.Entry<Integer, FastMap<Long, ClaimedChunk>> e : chunks.entrySet())
 		{
-			NBTTagCompound tag2 = new NBTTagCompound();
+			JsonObject o1 = new JsonObject();
 			
 			for(ClaimedChunk c : e.getValue())
 			{
-				NBTTagList tag3 = tag2.getTagList(Integer.toString(c.ownerID), LMNBTUtils.INT_ARRAY);
+				LMPlayer p = c.getOwner();
 				
-				IntList intList = new IntList();
-				intList.add(c.pos.chunkXPos);
-				intList.add(c.pos.chunkZPos);
-				if(c.isChunkloaded) intList.add(1);
-				tag3.appendTag(new NBTTagIntArray(intList.toArray()));
-				
-				tag2.setTag(Integer.toString(c.ownerID), tag3);
+				if(p != null)
+				{
+					String id = p.getStringUUID();
+					if(!o1.has(id)) o1.add(id, new JsonArray());
+					
+					JsonArray a = o1.get(id).getAsJsonArray();
+					
+					JsonArray a1 = new JsonArray();
+					a1.add(new JsonPrimitive(c.pos.chunkXPos));
+					a1.add(new JsonPrimitive(c.pos.chunkZPos));
+					if(c.isChunkloaded) a1.add(new JsonPrimitive(1));
+					a.add(a1);
+				}
 			}
 			
-			tag1.setTag(e.getKey().toString(), tag2);
+			group.add(e.getKey().toString(), o1);
 		}
-		
-		tag.setTag("ClaimedChunks", tag1);
 	}
 	
 	public ClaimedChunk getChunk(int dim, int cx, int cz)
@@ -142,7 +182,7 @@ public class ClaimedChunks
 		World w = LMDimUtils.getWorld(dim);
 		if(w == null || !w.getChunkProvider().chunkExists(cx, cz)) return ChunkType.UNLOADED;
 		if(isInSpawn(dim, cx, cz)) return ChunkType.SPAWN;
-		if(LMWorldServer.inst.settings.isOutside(dim, cx, cz)) return ChunkType.WORLD_BORDER;
+		if(LMWorldServer.inst.settings.isOutsideBorder(dim, cx, cz)) return ChunkType.WORLD_BORDER;
 		ClaimedChunk c = getChunk(dim, cx, cz);
 		if(c == null) return ChunkType.WILDERNESS;
 		return new ChunkType.PlayerClaimed(LMWorldServer.inst.getPlayer(c.ownerID));
@@ -160,8 +200,7 @@ public class ClaimedChunks
 	
 	public static boolean isInSpawn(int dim, int cx, int cz)
 	{
-		if(dim != 0) return false;
-		//if(!LatCoreMC.isDedicatedServer()) return false;
+		if(dim != 0 || (!FTBLib.getServer().isDedicatedServer() && !FTBUConfigGeneral.spawn_area_in_sp.get())) return false;
 		int radius = FTBLib.getServer().getSpawnProtectionSize();
 		if(radius <= 0) return false;
 		ChunkCoordinates c = LMDimUtils.getSpawnPoint(0);
@@ -172,14 +211,14 @@ public class ClaimedChunks
 		return cx >= minX && cx <= maxX && cz >= minZ && cz <= maxZ;
 	}
 	
-	public static boolean isInSpawnF(int dim, double x, double z)
+	public static boolean isInSpawnD(int dim, double x, double z)
 	{ return dim == 0 && isInSpawn(dim, MathHelperLM.chunk(x), MathHelperLM.chunk(z)); }
 	
 	public boolean allowExplosion(int dim, int cx, int cz)
 	{
 		if(dim == 0 && FTBUConfigGeneral.safe_spawn.get() && isInSpawn(dim, cx, cz))
 			return false;
-		else if(LMWorldServer.inst.settings.isOutside(dim, cx, cz))
+		else if(LMWorldServer.inst.settings.isOutsideBorder(dim, cx, cz))
 			return false;
 		else
 		{
@@ -206,7 +245,7 @@ public class ClaimedChunks
 		
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
 		
-		if(LMWorldServer.inst.settings.isOutsideF(ep.dimension, x, z)) return false;
+		if(LMWorldServer.inst.settings.isOutsideBorderD(ep.dimension, x, z)) return false;
 		else if(p.getRank().config.allowCreativeInteractSecure(ep)) return true;
 		
 		if(leftClick)

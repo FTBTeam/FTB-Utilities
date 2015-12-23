@@ -19,7 +19,7 @@ public class FTBUActions
 {
 	// FriendsGUI //
 	
-	public static final PlayerAction friends_gui = new PlayerAction(new TextureCoords(FTBU.mod.getLocation("textures/gui/friendsbutton.png"), 0, 0, 256, 256, 256, 256))
+	public static final PlayerAction friends_gui = new PlayerAction(TextureCoords.getSquareIcon(FTBU.mod.getLocation("textures/gui/friendsbutton.png"), 256))
 	{
 		public void onClicked(int playerID)
 		{ FTBLibClient.mc.displayGuiScreen(new GuiFriends(FTBLibClient.mc.currentScreen)); }
@@ -107,13 +107,22 @@ public class FTBUActions
 		{ return FTBULang.claimed_chunks(); }
 	};
 	
-	public static final PlayerAction notes = new PlayerAction(GuiIcons.notes)
+	public static final PlayerAction slack = new PlayerAction(TextureCoords.getSquareIcon(FTBU.mod.getLocation("textures/gui/slack.png"), 32))
 	{
 		public void onClicked(int playerID)
-		{ /* TODO: Notes */ }
+		{ /* TODO: Slack */ }
 		
 		public String getTitle()
-		{ return FTBULang.notes(); }
+		{ return "Slack"; }
+	};
+	
+	public static final PlayerAction trello = new PlayerAction(TextureCoords.getSquareIcon(FTBU.mod.getLocation("textures/gui/trello.png"), 32))
+	{
+		public void onClicked(int playerID)
+		{ /* TODO: Trello */ }
+		
+		public String getTitle()
+		{ return "Trello"; }
 	};
 	
 	public static FastList<PlayerAction> getActionsFor(LMPlayerClient p)
@@ -134,7 +143,8 @@ public class FTBUActions
 			if(FTBLibFinals.DEV)
 			{
 				//list.add(PlayerSelfAction.mail);
-				list.add(notes);
+				list.add(slack);
+				list.add(trello);
 			}
 		}
 		else

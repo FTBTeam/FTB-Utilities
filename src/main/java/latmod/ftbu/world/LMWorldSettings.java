@@ -1,30 +1,45 @@
 package latmod.ftbu.world;
 
+import com.google.gson.*;
+
 import ftb.lib.*;
 import latmod.ftbu.world.claims.ClaimedChunks;
 import latmod.lib.*;
+import latmod.lib.config.ConfigEntryBool;
 import latmod.lib.util.Pos2I;
 import net.minecraft.nbt.*;
 
 public class LMWorldSettings
 {
 	public final LMWorld world;
-	private boolean borderEnabled;
+	public final ConfigEntryBool border_enabled;
 	private final WorldBorder worldBorder0;
 	private final FastMap<Integer, WorldBorder> worldBorder;
 	
 	public LMWorldSettings(LMWorld w)
 	{
 		world = w;
-		borderEnabled = false;
+		
+		border_enabled = new ConfigEntryBool("border_enabled", false)
+		{
+			public void set(boolean v)
+			{
+				if(get() != v && world.side.isServer())
+				{
+					super.set(v);
+					world.update();
+				}
+			}
+		};
+		
 		worldBorder0 = new WorldBorder(0);
 		worldBorder0.size = 0;
 		worldBorder = new FastMap<Integer, WorldBorder>();
 	}
 	
-	public void readFromNBT(NBTTagCompound tag, boolean server)
+	public void readFromNBT(NBTTagCompound tag)
 	{
-		borderEnabled = tag.getBoolean("WB_Enabled");
+		border_enabled.set(tag.getBoolean("WB_Enabled"));
 		worldBorder.clear();
 		worldBorder0.size = 0;
 		
@@ -48,32 +63,86 @@ public class LMWorldSettings
 					wb.pos.x = ai[1];
 					wb.pos.y = ai[2];
 					wb.size = ai[3];
-					worldBorder.put(ai[0], wb);
+					worldBorder.put(Integer.valueOf(ai[0]), wb);
 				}
 			}
 		}
 	}
 	
-	public void writeToNBT(NBTTagCompound tag, boolean server)
+	public void readFromJson(JsonObject group)
 	{
-		tag.setBoolean("WB_Enabled", borderEnabled);
+		border_enabled.setJson(group.get(border_enabled.ID));
+		worldBorder.clear();
+		worldBorder0.size = 0;
 		
-		NBTTagList wbList = new NBTTagList();
+		JsonArray a = group.get("world_border").getAsJsonArray();
 		
-		wbList.appendTag(new NBTTagIntArray(new int[] { 0, worldBorder0.pos.x, worldBorder0.pos.y, worldBorder0.size }));
-		
-		for(WorldBorder wb : worldBorder)
-			wbList.appendTag(new NBTTagIntArray(new int[] { wb.dim, wb.pos.x, wb.pos.y, wb.size }));
-		
-		tag.setTag("WBorder", wbList);
+		for(int i = 0; i < a.size(); i++)
+		{
+			WorldBorder wb = WorldBorder.fromJson(a.get(i));
+			
+			if(wb.dim == 0)
+			{
+				worldBorder0.pos.x = wb.pos.x;
+				worldBorder0.pos.y = wb.pos.y;
+				worldBorder0.size = wb.size;
+			}
+			else worldBorder.put(Integer.valueOf(wb.dim), wb);
+		}
 	}
 	
-	public void setWorldBorderEnabled(boolean b)
+	public void writeToJson(JsonObject group)
 	{
-		if(borderEnabled != b && world.side.isServer())
+		group.add(border_enabled.ID, border_enabled.getJson());
+		
+		JsonArray a = new JsonArray();
+		
+		a.add(worldBorder0.toJson());
+		
+		for(WorldBorder wb : worldBorder)
 		{
-			borderEnabled = b;
-			world.update();
+			if(wb.size != 0 || wb.pos.x != 0 || wb.pos.y != 0)
+				a.add(wb.toJson());
+		}
+		
+		group.add("world_border", a);
+	}
+	
+	public void readFromNet(ByteIOStream io)
+	{
+		border_enabled.set(io.readBoolean());
+		
+		worldBorder0.pos.x = io.readInt();
+		worldBorder0.pos.y = io.readInt();
+		worldBorder0.size = io.readInt();
+		
+		int s = io.readInt();
+		worldBorder.clear();
+		for(int i = 0; i < s; i++)
+		{
+			WorldBorder wb = new WorldBorder(io.readInt());
+			wb.pos.x = io.readInt();
+			wb.pos.y = io.readInt();
+			wb.size = io.readInt();
+		}
+	}
+	
+	public void writeToNet(ByteIOStream io)
+	{
+		io.writeBoolean(border_enabled.get());
+		
+		io.writeInt(worldBorder0.pos.x);
+		io.writeInt(worldBorder0.pos.y);
+		io.writeInt(worldBorder0.size);
+		
+		io.writeInt(worldBorder.size());
+		
+		for(WorldBorder wb : worldBorder.values())
+		{
+			io.writeInt(wb.dim);
+			io.writeInt(wb.pos.x);
+			io.writeInt(wb.pos.y);
+			io.writeInt(wb.size);
 		}
 	}
 	
@@ -85,9 +154,9 @@ public class LMWorldSettings
 		return wb;
 	}
 	
-	public int getSize(int dim)
+	public int getBorderSize(int dim)
 	{
-		if(!borderEnabled) return 0;
+		if(!border_enabled.get()) return 0;
 		else if(dim == 0) return worldBorder0.size;
 		else
 		{
@@ -97,13 +166,13 @@ public class LMWorldSettings
 		}
 	}
 	
-	public Pos2I getPos(int dim)
+	public Pos2I getBorderPos(int dim)
 	{
 		WorldBorder b = get(dim);
 		return (b == null) ? new Pos2I(0, 0) : b.pos;
 	}
 	
-	public void setSize(int dim, int s)
+	public void setBorderSize(int dim, int s)
 	{
 		if(!world.side.isServer()) return;
 		
@@ -115,7 +184,7 @@ public class LMWorldSettings
 		}
 	}
 	
-	public void setPos(int dim, int x, int z)
+	public void setBorderPos(int dim, int x, int z)
 	{
 		if(!world.side.isServer()) return;
 		
@@ -127,11 +196,11 @@ public class LMWorldSettings
 		}
 	}
 	
-	public boolean isOutside(int dim, int cx, int cz)
+	public boolean isOutsideBorder(int dim, int cx, int cz)
 	{
 		if(ClaimedChunks.isInSpawn(dim, cx, cz)) return false;
 		WorldBorder wb = get(dim);
-		int size = getSize(dim);
+		int size = getBorderSize(dim);
 		if(size == 0) return false;
 		int minX = MathHelperLM.chunk(wb.pos.x - size);
 		int maxX = MathHelperLM.chunk(wb.pos.x + size);
@@ -140,9 +209,9 @@ public class LMWorldSettings
 		return cx >= maxX || cx <= minX || cz >= maxZ || cz <= minZ;
 	}
 	
-	public boolean isOutsideF(int dim, double x, double z)
-	{ return isOutside(dim, MathHelperLM.chunk(x), MathHelperLM.chunk(z)); }
+	public boolean isOutsideBorderD(int dim, double x, double z)
+	{ return isOutsideBorder(dim, MathHelperLM.chunk(x), MathHelperLM.chunk(z)); }
 
 	public boolean isEnabled(int dim)
-	{ return getSize(dim) > 0; }
+	{ return getBorderSize(dim) > 0; }
 }

@@ -6,8 +6,8 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
 import latmod.ftbu.mod.FTBU;
 import latmod.lib.*;
+import latmod.lib.config.ConfigGroup;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
@@ -22,14 +22,14 @@ public abstract class LMWorld // FTBWorld
 	public final Side side;
 	public final FastList<LMPlayer> players;
 	public final LMWorldSettings settings;
-	protected NBTTagCompound customCommonData;
+	public final ConfigGroup customCommonData;
 	
 	public LMWorld(Side s)
 	{
 		side = s;
 		players = new FastList<LMPlayer>();
 		settings = new LMWorldSettings(this);
-		customCommonData = null;
+		customCommonData = new ConfigGroup("custom_common_data");
 	}
 	
 	public World getMCWorld()
@@ -121,9 +121,9 @@ public abstract class LMWorld // FTBWorld
 		return (p == null) ? 0 : p.playerID;
 	}
 	
-	public FastList<String> getAllPlayerNames(Boolean online)
+	public String[] getAllPlayerNames(Boolean online)
 	{
-		if(online == null) return new FastList<String>();
+		if(online == null) return new String[0];
 		FastList<LMPlayer> list = (online == Boolean.TRUE) ? getAllOnlinePlayers() : players;
 		
 		list.sort(new Comparator<LMPlayer>()
@@ -144,7 +144,7 @@ public abstract class LMWorld // FTBWorld
 			if(!l.contains(s)) l.add(s);
 		}
 		
-		return l;
+		return l.toArray(new String[l.size()]);
 	}
 	
 	public int[] getAllPlayerIDs()
@@ -165,12 +165,5 @@ public abstract class LMWorld // FTBWorld
 		for(int i = 0; i < players.size(); i++)
 			l.add(players.get(i).toPlayerMP());
 		return l;
-	}
-	
-	public NBTTagCompound getCommonData()
-	{
-		if(customCommonData == null)
-			customCommonData = new NBTTagCompound();
-		return customCommonData;
 	}
 }

@@ -1,11 +1,11 @@
 package latmod.ftbu.mod.client.gui.claims;
 
-import java.util.List;
-
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.world.*;
 import latmod.ftbu.world.claims.*;
 import latmod.lib.*;
+
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class ClaimedAreasClient

@@ -1,10 +1,9 @@
 package latmod.ftbu.world;
 
-import java.util.UUID;
-
 import com.mojang.authlib.GameProfile;
-
 import net.minecraftforge.common.util.FakePlayer;
+
+import java.util.UUID;
 
 public class LMFakeServerPlayer extends LMPlayerServer
 {

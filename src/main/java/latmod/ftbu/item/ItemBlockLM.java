@@ -1,5 +1,4 @@
 package latmod.ftbu.item;
-import java.util.List;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.MathHelperMC;
@@ -13,6 +12,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.*;
 import net.minecraft.util.Facing;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class ItemBlockLM extends ItemBlock
 {

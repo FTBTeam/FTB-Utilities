@@ -1,13 +1,13 @@
 package latmod.ftbu.mod.config;
 
-import java.util.UUID;
-
 import ftb.lib.FTBLib;
 import ftb.lib.item.ItemStackTypeAdapter;
 import latmod.lib.FastList;
 import latmod.lib.config.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+
+import java.util.UUID;
 
 public class FTBUConfigLogin
 {

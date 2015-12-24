@@ -1,9 +1,9 @@
 package latmod.ftbu.api.tile;
 
-import java.util.List;
-
 import latmod.ftbu.waila.WailaDataAccessor;
 import net.minecraft.item.ItemStack;
+
+import java.util.List;
 
 public abstract interface IWailaTile
 {

@@ -1,8 +1,5 @@
 package latmod.ftbu.api.guide;
 
-import java.io.File;
-import java.util.*;
-
 import ftb.lib.FTBLib;
 import ftb.lib.cmd.CommandLM;
 import latmod.ftbu.mod.*;
@@ -14,6 +11,9 @@ import net.minecraft.command.ICommand;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityList;
 import net.minecraft.util.*;
+
+import java.io.File;
+import java.util.*;
 
 public class ServerGuideFile extends GuideFile
 {

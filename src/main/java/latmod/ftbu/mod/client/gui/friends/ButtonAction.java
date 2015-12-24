@@ -1,11 +1,11 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import java.util.List;
-
 import ftb.lib.api.PlayerAction;
 import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.client.TextureCoords;
 import ftb.lib.gui.widgets.ButtonPopupMenu;
+
+import java.util.List;
 
 public class ButtonAction extends ButtonPopupMenu
 {

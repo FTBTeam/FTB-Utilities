@@ -1,10 +1,10 @@
 package latmod.ftbu.util.client.model;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector3f;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.GlStateManager;
 import latmod.lib.FastList;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
 
 /** Made by LatvianModder */
 @SideOnly(Side.CLIENT)

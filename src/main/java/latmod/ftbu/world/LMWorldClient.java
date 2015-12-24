@@ -1,16 +1,15 @@
 package latmod.ftbu.world;
 
-import java.io.File;
-import java.util.UUID;
-
 import com.mojang.authlib.GameProfile;
-
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
 import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.api.EventLMPlayerClient;
 import latmod.lib.*;
 import net.minecraft.world.World;
+
+import java.io.File;
+import java.util.UUID;
 
 @SideOnly(Side.CLIENT)
 public class LMWorldClient extends LMWorld // LMWorldServer

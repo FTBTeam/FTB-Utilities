@@ -1,8 +1,5 @@
 package latmod.ftbu.api.guide;
 
-import java.io.File;
-import java.util.Arrays;
-
 import ftb.lib.FTBLib;
 import ftb.lib.api.EventFTBModeSet;
 import ftb.lib.mod.FTBLibFinals;
@@ -10,6 +7,9 @@ import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.client.gui.guide.GuiGuide;
 import latmod.lib.LMFileUtils;
 import net.minecraft.util.*;
+
+import java.io.File;
+import java.util.Arrays;
 
 public class ClientGuideFile extends GuideFile
 {

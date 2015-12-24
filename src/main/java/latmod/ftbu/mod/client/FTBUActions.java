@@ -107,24 +107,6 @@ public class FTBUActions
 		{ return FTBULang.claimed_chunks(); }
 	};
 	
-	public static final PlayerAction slack = new PlayerAction(TextureCoords.getSquareIcon(FTBU.mod.getLocation("textures/gui/slack.png"), 32))
-	{
-		public void onClicked(int playerID)
-		{ /* TODO: Slack */ }
-		
-		public String getTitle()
-		{ return "Slack"; }
-	};
-	
-	public static final PlayerAction trello = new PlayerAction(TextureCoords.getSquareIcon(FTBU.mod.getLocation("textures/gui/trello.png"), 32))
-	{
-		public void onClicked(int playerID)
-		{ /* TODO: Trello */ }
-		
-		public String getTitle()
-		{ return "Trello"; }
-	};
-	
 	public static FastList<PlayerAction> getActionsFor(LMPlayerClient p)
 	{
 		LMPlayerClient o = LMWorldClient.inst.getClientPlayer();
@@ -136,16 +118,6 @@ public class FTBUActions
 		{
 			list.add(FTBLibGuiEventHandler.settings);
 			list.add(FTBLibGuiEventHandler.notifications);
-		}
-		
-		if(self)
-		{
-			if(FTBLibFinals.DEV)
-			{
-				//list.add(PlayerSelfAction.mail);
-				list.add(slack);
-				list.add(trello);
-			}
 		}
 		else
 		{

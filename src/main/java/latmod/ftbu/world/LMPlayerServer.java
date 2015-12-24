@@ -1,7 +1,6 @@
 package latmod.ftbu.world;
 
 import com.mojang.authlib.GameProfile;
-
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
 import ftb.lib.item.StringIDInvLoader;

@@ -1,10 +1,6 @@
 package latmod.ftbu.mod.handlers.ftbl;
 
-import java.io.File;
-import java.util.List;
-
 import com.google.gson.*;
-
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
@@ -23,6 +19,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.*;
+
+import java.io.File;
+import java.util.List;
 
 public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 {

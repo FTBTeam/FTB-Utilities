@@ -1,13 +1,13 @@
 package latmod.ftbu.mod.handlers;
 
-import java.util.List;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import latmod.ftbu.world.*;
 import latmod.lib.FastMap;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.event.world.WorldEvent;
+
+import java.util.List;
 
 public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 {

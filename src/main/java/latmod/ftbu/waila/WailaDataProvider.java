@@ -1,13 +1,13 @@
 package latmod.ftbu.waila;
 
-import java.util.List;
-
 import mcp.mobius.waila.api.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class WailaDataProvider implements IWailaDataProvider
 {

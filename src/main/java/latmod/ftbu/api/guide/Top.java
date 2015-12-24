@@ -1,11 +1,11 @@
 package latmod.ftbu.api.guide;
 
-import java.util.Comparator;
-
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.world.LMPlayerServer;
 import latmod.lib.*;
 import net.minecraft.util.*;
+
+import java.util.Comparator;
 
 public abstract class Top implements Comparator<LMPlayerServer>
 {

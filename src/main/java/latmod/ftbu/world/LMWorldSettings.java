@@ -1,7 +1,6 @@
 package latmod.ftbu.world;
 
 import com.google.gson.*;
-
 import ftb.lib.*;
 import latmod.ftbu.world.claims.ClaimedChunks;
 import latmod.lib.*;

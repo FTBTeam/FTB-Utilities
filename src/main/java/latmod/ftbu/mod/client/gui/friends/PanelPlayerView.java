@@ -1,12 +1,11 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import org.lwjgl.input.Mouse;
-
 import ftb.lib.client.GlStateManager;
 import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.world.LMWorldClient;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
+import org.lwjgl.input.Mouse;
 
 public class PanelPlayerView extends PanelFriendsGui
 {

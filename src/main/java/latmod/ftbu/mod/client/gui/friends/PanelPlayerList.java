@@ -1,10 +1,9 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import org.lwjgl.input.Mouse;
-
 import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.world.*;
 import latmod.lib.FastList;
+import org.lwjgl.input.Mouse;
 
 public class PanelPlayerList extends PanelFriendsGui
 {

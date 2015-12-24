@@ -1,10 +1,5 @@
 package latmod.ftbu.mod.client.gui.claims;
 
-import java.nio.ByteBuffer;
-import java.util.List;
-
-import org.lwjgl.opengl.*;
-
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.client.*;
@@ -22,6 +17,10 @@ import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.*;
+
+import java.nio.ByteBuffer;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // implements IClientActionGui

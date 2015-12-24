@@ -1,8 +1,4 @@
 package latmod.ftbu.util;
-import java.lang.annotation.*;
-import java.lang.reflect.Field;
-
-import org.apache.logging.log4j.*;
 
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.relauncher.*;
@@ -19,6 +15,10 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.*;
 import net.minecraft.util.ResourceLocation;
+import org.apache.logging.log4j.*;
+
+import java.lang.annotation.*;
+import java.lang.reflect.Field;
 
 public class LMMod
 {

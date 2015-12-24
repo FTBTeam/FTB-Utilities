@@ -1,11 +1,10 @@
 package latmod.ftbu.util.client.model;
 
-import org.lwjgl.opengl.GL11;
-
 import cpw.mods.fml.relauncher.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.*;
+import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class CubeRenderer

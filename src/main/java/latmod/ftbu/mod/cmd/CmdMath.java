@@ -1,11 +1,11 @@
 package latmod.ftbu.mod.cmd;
 
-import javax.script.*;
-
 import ftb.lib.cmd.*;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.*;
 import net.minecraft.util.*;
+
+import javax.script.*;
 
 public class CmdMath extends CommandLM
 {

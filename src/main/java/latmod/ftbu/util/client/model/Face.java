@@ -1,7 +1,7 @@
 package latmod.ftbu.util.client.model;
-import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
+import org.lwjgl.opengl.GL11;
 
 /** Made by LatvianModder */
 @SideOnly(Side.CLIENT)

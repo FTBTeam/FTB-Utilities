@@ -1,7 +1,6 @@
 package latmod.ftbu.world;
 
 import com.mojang.authlib.GameProfile;
-
 import ftb.lib.LMNBTUtils;
 import latmod.ftbu.world.ranks.RankConfig;
 import latmod.lib.ByteIOStream;

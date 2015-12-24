@@ -1,5 +1,4 @@
 package latmod.ftbu.item;
-import java.util.List;
 
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.api.item.IItemLM;
@@ -10,6 +9,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
 import net.minecraft.util.IIcon;
+
+import java.util.List;
 
 public abstract class ItemLM extends Item implements IItemLM
 {

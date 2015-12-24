@@ -1,13 +1,13 @@
 package latmod.ftbu.badges;
 
-import java.io.InputStream;
-import java.net.URL;
-import java.util.UUID;
-
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.config.FTBUConfigLogin;
 import latmod.lib.*;
+
+import java.io.InputStream;
+import java.net.URL;
+import java.util.UUID;
 
 @SideOnly(Side.CLIENT)
 public class ThreadLoadBadges extends Thread

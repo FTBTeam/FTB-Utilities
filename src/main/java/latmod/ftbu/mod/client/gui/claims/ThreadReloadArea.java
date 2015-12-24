@@ -1,8 +1,5 @@
 package latmod.ftbu.mod.client.gui.claims;
 
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.FTBLibClient;
 import latmod.lib.*;
@@ -11,6 +8,9 @@ import net.minecraft.block.material.*;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+
+import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 @SideOnly(Side.CLIENT)
 public class ThreadReloadArea extends Thread

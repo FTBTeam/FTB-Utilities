@@ -1,14 +1,13 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import java.util.List;
-
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.ButtonLM;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.world.*;
 import net.minecraft.client.entity.AbstractClientPlayer;
+
+import java.util.List;
 
 public class ButtonPlayer extends ButtonLM
 {

@@ -1,13 +1,13 @@
 package latmod.ftbu.util.client.model;
-import java.io.*;
-
-import org.lwjgl.util.vector.Vector3f;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
 import ftb.lib.client.GlStateManager;
 import latmod.lib.*;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.util.vector.Vector3f;
+
+import java.io.*;
 
 /** Made by LatvianModder */
 @SideOnly(Side.CLIENT)

@@ -1,11 +1,10 @@
 package latmod.ftbu.mod.client.gui.guide;
 
-import java.lang.reflect.Type;
-
 import com.google.gson.*;
-
 import latmod.ftbu.api.guide.*;
 import net.minecraft.util.*;
+
+import java.lang.reflect.Type;
 
 public class GuideLinkSerializer implements JsonDeserializer<GuideLink>
 {

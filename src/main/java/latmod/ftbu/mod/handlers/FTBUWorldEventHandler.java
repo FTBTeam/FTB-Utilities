@@ -1,10 +1,6 @@
 package latmod.ftbu.mod.handlers;
 
-import java.io.File;
-import java.util.Arrays;
-
 import com.google.gson.JsonObject;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ftb.lib.*;
 import latmod.ftbu.api.EventLMWorldServer;
@@ -19,6 +15,9 @@ import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldServer;
+
+import java.io.File;
+import java.util.Arrays;
 
 public class FTBUWorldEventHandler // FTBLIntegration
 {

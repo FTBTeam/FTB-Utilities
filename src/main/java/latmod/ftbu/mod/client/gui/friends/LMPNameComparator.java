@@ -1,8 +1,8 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import java.util.Comparator;
-
 import latmod.ftbu.world.LMPlayer;
+
+import java.util.Comparator;
 
 public class LMPNameComparator implements Comparator<LMPlayer>
 {

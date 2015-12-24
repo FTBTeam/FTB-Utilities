@@ -1,11 +1,5 @@
 package latmod.ftbu.api.guide;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.net.URL;
-
-import javax.imageio.ImageIO;
-
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
 import ftb.lib.client.*;
@@ -13,6 +7,11 @@ import ftb.lib.item.ItemStackTypeAdapter;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.net.URL;
 
 public class GuideLink
 {

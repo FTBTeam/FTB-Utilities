@@ -1,13 +1,13 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import java.util.List;
-
 import ftb.lib.api.PlayerAction;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
 import latmod.ftbu.mod.client.FTBUActions;
 import latmod.ftbu.world.LMPlayerClient;
 import latmod.lib.FastList;
+
+import java.util.List;
 
 public class GuiFriendsGuiSmall extends GuiLM
 {

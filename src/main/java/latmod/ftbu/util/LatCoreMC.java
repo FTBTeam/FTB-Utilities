@@ -1,5 +1,4 @@
 package latmod.ftbu.util;
-import java.util.Random;
 
 import cpw.mods.fml.common.IWorldGenerator;
 import cpw.mods.fml.common.registry.*;
@@ -14,6 +13,8 @@ import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.*;
+
+import java.util.Random;
 
 /** Made by LatvianModder */
 public final class LatCoreMC // LatCoreMCClient

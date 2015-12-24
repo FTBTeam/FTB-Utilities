@@ -1,7 +1,6 @@
 package latmod.ftbu.world;
 
 import com.google.gson.*;
-
 import latmod.lib.util.Pos2I;
 
 public class WorldBorder

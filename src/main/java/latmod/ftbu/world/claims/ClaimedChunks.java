@@ -1,9 +1,6 @@
 package latmod.ftbu.world.claims;
 
-import java.util.Map;
-
 import com.google.gson.*;
-
 import ftb.lib.*;
 import ftb.lib.item.LMInvUtils;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
@@ -14,6 +11,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.*;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
+
+import java.util.Map;
 
 public class ClaimedChunks
 {

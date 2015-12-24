@@ -1,13 +1,13 @@
 package latmod.ftbu.api.guide;
 
-import java.io.File;
-import java.util.*;
-
 import ftb.lib.*;
 import latmod.ftbu.mod.client.gui.guide.GuideLinkSerializer;
 import latmod.lib.*;
 import net.minecraft.nbt.*;
 import net.minecraft.util.*;
+
+import java.io.File;
+import java.util.*;
 
 public class GuideFile // ServerGuideFile // ClientGuideFile
 {

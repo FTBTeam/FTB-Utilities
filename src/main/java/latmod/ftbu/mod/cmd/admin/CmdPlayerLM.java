@@ -1,10 +1,6 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import java.io.*;
-import java.util.UUID;
-
 import com.mojang.authlib.GameProfile;
-
 import ftb.lib.*;
 import ftb.lib.cmd.*;
 import ftb.lib.item.StringIDInvLoader;
@@ -15,6 +11,9 @@ import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
+
+import java.io.*;
+import java.util.UUID;
 
 public class CmdPlayerLM extends CommandSubLM
 {

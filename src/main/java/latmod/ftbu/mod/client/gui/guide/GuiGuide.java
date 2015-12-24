@@ -1,9 +1,5 @@
 package latmod.ftbu.mod.client.gui.guide;
 
-import java.lang.reflect.Method;
-import java.net.URI;
-import java.util.List;
-
 import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
@@ -13,6 +9,10 @@ import latmod.ftbu.mod.FTBU;
 import latmod.lib.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
+
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.util.List;
 
 public class GuiGuide extends GuiLM
 {

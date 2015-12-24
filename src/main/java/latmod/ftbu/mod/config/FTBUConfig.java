@@ -1,11 +1,11 @@
 package latmod.ftbu.mod.config;
 
-import java.io.File;
-
 import ftb.lib.FTBLib;
 import ftb.lib.api.config.ConfigRegistry;
 import latmod.ftbu.world.ranks.*;
 import latmod.lib.config.*;
+
+import java.io.File;
 
 public class FTBUConfig // FTBU
 {

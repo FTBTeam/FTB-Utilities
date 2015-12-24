@@ -1,9 +1,6 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import java.util.Map;
-
 import com.google.common.collect.ImmutableSetMultimap;
-
 import ftb.lib.cmd.*;
 import latmod.ftbu.api.guide.*;
 import latmod.ftbu.util.LatCoreMC;
@@ -14,6 +11,8 @@ import net.minecraft.util.*;
 import net.minecraft.world.*;
 import net.minecraftforge.common.*;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
+
+import java.util.Map;
 
 public class CmdLoadedChunks extends CommandLM
 {

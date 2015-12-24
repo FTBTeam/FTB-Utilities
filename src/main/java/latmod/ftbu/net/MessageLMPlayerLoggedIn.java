@@ -1,13 +1,13 @@
 package latmod.ftbu.net;
-import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
-
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.api.EventLMPlayerClient;
 import latmod.ftbu.world.*;
 import latmod.lib.ByteCount;
+
+import java.util.UUID;
 
 public class MessageLMPlayerLoggedIn extends MessageFTBU
 {

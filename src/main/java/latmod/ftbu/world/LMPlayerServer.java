@@ -127,7 +127,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		stats.readFromNBT(tag.getCompoundTag("Stats"));
 		
-		serverData = tag.getCompoundTag("ServerData");
+		serverData = tag.hasKey("ServerData") ? tag.getCompoundTag("ServerData") : null;
 		
 		if(tag.hasKey("LastPos"))
 		{
@@ -163,7 +163,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		StringIDInvLoader.writeItemsToNBT(lastArmor, tag, "LastItems");
 		
-		if(!serverData.hasNoTags()) tag.setTag("ServerData", serverData);
+		if(serverData != null && !serverData.hasNoTags()) tag.setTag("ServerData", serverData);
 		
 		if(lastPos != null)
 		{

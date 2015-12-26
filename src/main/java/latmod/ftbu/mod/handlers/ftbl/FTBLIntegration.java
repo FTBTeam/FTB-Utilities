@@ -38,6 +38,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 				p.toPlayerMP().refreshStats();
 			
 			ServerGuideFile.CachedInfo.reload();
+			FTBUChunkEventHandler.instance.markDirty(null);
 		}
 		else FTBU.proxy_ftbl_int.onReloadedClient(e);
 	}

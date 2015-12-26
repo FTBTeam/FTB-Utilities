@@ -45,7 +45,7 @@ public class CmdLoadedChunks extends CommandLM
 			{
 				GuideCategory mod = dim.getSub(new ChatComponentText(e1.getKey() + " [" + e1.getValue().size() + "]"));
 				for(ChunkCoordIntPair c : e1.getValue())
-					mod.println(c.chunkXPos + ", " + c.chunkZPos + " [ " + (c.chunkXPos * 16 + 8) + ", " + (c.chunkZPos * 16 + 8) + " ]");
+					mod.println(c.chunkXPos + ", " + c.chunkZPos + " [ " + c.getCenterXPos() + ", " + c.getCenterZPosition() + " ]");
 			}
 		}
 		

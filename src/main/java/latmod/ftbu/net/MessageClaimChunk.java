@@ -1,7 +1,7 @@
 package latmod.ftbu.net;
 
 import cpw.mods.fml.common.network.simpleimpl.*;
-import ftb.lib.*;
+import ftb.lib.AdminToken;
 import ftb.lib.api.LMNetworkWrapper;
 import latmod.ftbu.world.*;
 import latmod.ftbu.world.claims.ClaimedChunk;

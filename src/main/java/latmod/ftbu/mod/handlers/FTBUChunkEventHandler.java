@@ -1,34 +1,43 @@
 package latmod.ftbu.mod.handlers;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import ftb.lib.*;
+import ftb.lib.LMDimUtils;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.world.*;
 import latmod.ftbu.world.claims.*;
 import latmod.lib.*;
 import net.minecraft.world.*;
 import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.event.world.WorldEvent;
 
 import java.util.List;
 
 public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 {
 	public static final FTBUChunkEventHandler instance = new FTBUChunkEventHandler();
-	public final FastMap<Long, ForgeChunkManager.Ticket> tickets = new FastMap<Long, ForgeChunkManager.Ticket>();
+	public final FastMap<Integer, FastMap<Integer, ForgeChunkManager.Ticket>> ticketMap = new FastMap<>();
 	
 	public ForgeChunkManager.Ticket request(World w, LMPlayerServer player)
 	{
-		Long l = Long.valueOf(Bits.intsToLong(w.provider.dimensionId, player.playerID));
-		ForgeChunkManager.Ticket t = tickets.get(l);
+		if(w == null || player == null) return null;
+
+		FastMap<Integer, ForgeChunkManager.Ticket> map = ticketMap.get(Integer.valueOf(w.provider.dimensionId));
+		ForgeChunkManager.Ticket t = (map == null) ? null : map.get(player.playerID);
 		
 		if(t == null)
 		{
 			t = ForgeChunkManager.requestTicket(FTBU.inst, w, ForgeChunkManager.Type.NORMAL);
-			if(t == null) return null; else
+			if(t == null) return null;
+			else
 			{
 				t.getModData().setInteger("PlayerID", player.playerID);
-				tickets.put(l, t);
+
+				if(map == null)
+				{
+					map = new FastMap<>();
+					ticketMap.put(Integer.valueOf(w.provider.dimensionId), map);
+				}
+
+				map.put(player.playerID, t);
 			}
 		}
 		
@@ -37,96 +46,123 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 	
 	public void ticketsLoaded(List<ForgeChunkManager.Ticket> list, World world)
 	{
+		Integer dim = Integer.valueOf(world.provider.dimensionId);
+		ticketMap.remove(dim);
+		FastMap<Integer, ForgeChunkManager.Ticket> newMap = new FastMap<>();
+
 		for(ForgeChunkManager.Ticket t : list)
 		{
 			int playerID = t.getModData().getInteger("PlayerID");
 
 			if(playerID == 0) ForgeChunkManager.releaseTicket(t);
-			else
-			{
-				tickets.put(Long.valueOf(Bits.intsToLong(world.provider.dimensionId, playerID)), t);
-				FTBLib.dev_logger.info("Added existing ticket for " + playerID);
-			}
+			else newMap.put(Integer.valueOf(playerID), t);
 		}
+
+		ticketMap.put(dim, newMap);
+		markDirty(dim);
 	}
-	
-	@SubscribeEvent
-	public void onChunkForced(ForgeChunkManager.ForceChunkEvent e)
-	{
-		FTBLib.dev_logger.info("Chunk from " + e.ticket.getModId() +  " forced " + e.location);
-	}
-	
-	@SubscribeEvent
-	public void onChunkUnforced(ForgeChunkManager.UnforceChunkEvent e)
-	{
-		FTBLib.dev_logger.info("Chunk from " + e.ticket.getModId() + " unforced " + e.location);
-	}
-	
-	@SubscribeEvent
-	public void worldUnloadEvent(WorldEvent.Unload e)
-	{
-		if(!e.world.isRemote && LMWorldServer.inst != null)
-		{
-			//for(LMPlayer p : LMWorldServer.inst.players)
-			//	p.toPlayerMP().unloadAllChunks(e.world);
-		}
-	}
-	
+
 	public void worldLoadEvent(World w)
 	{
 		if(w != null && !w.isRemote && LMWorldServer.inst != null)
-		{
-			for(ClaimedChunk c : LMWorldServer.inst.claimedChunks.getAllChunks())
-			{
-				if(c.isChunkloaded && c.isForced)
-				{
-					c.isForced = false;
-					ForgeChunkManager.Ticket ticket = getTicket(c);
-					if(ticket != null) ForgeChunkManager.unforceChunk(ticket, c.pos);
-				}
-			}
-		}
+			markDirty(Integer.valueOf(w.provider.dimensionId));
 	}
 
-	public void markDirty()
+	public void markDirty(Integer dim)
 	{
-		System.out.println(LMWorldServer.inst.claimedChunks.getAllChunks().size());
-		for(ClaimedChunk c : LMWorldServer.inst.claimedChunks.getAllChunks())
+		if(LMWorldServer.inst == null) return;
+
+		/*
+		int total = 0;
+		int totalLoaded = 0;
+		int markedLoaded = 0;
+		int loaded = 0;
+		int unloaded = 0;
+		*/
+
+		ChunkloaderType type = FTBUConfigGeneral.chunkloader_type.get();
+
+		Iterable<ClaimedChunk> allChunks = (dim == null) ? LMWorldServer.inst.claimedChunks.getAllChunks() : LMWorldServer.inst.claimedChunks.chunks.get(dim);
+
+		for(ClaimedChunk c : allChunks)
 		{
-			if(c.isForced != c.isChunkloaded)
+			//total++;
+
+			boolean isLoaded = c.isChunkloaded;
+
+			if(type == ChunkloaderType.DISABLED)
+				isLoaded = false;
+			else if(c.getOwner() == null)
+				isLoaded = false;
+			else if(type == ChunkloaderType.PLAYER)
+				isLoaded = c.getOwner().isOnline();
+
+			//if(isLoaded) totalLoaded++;
+			//if(c.isChunkloaded) markedLoaded++;
+
+			if(c.isForced != isLoaded)
 			{
 				ForgeChunkManager.Ticket ticket = getTicket(c);
 
 				if(ticket != null)
 				{
-					if(c.isChunkloaded)
+					if(isLoaded)
 					{
-						FTBLib.dev_logger.info("Chunk @ " + c.toString() + " loaded");
-						ForgeChunkManager.unforceChunk(ticket, c.pos);
+						ForgeChunkManager.forceChunk(ticket, c);
+						//loaded++;
 					}
 					else
 					{
-						FTBLib.dev_logger.info("Chunk @ " + c.toString() + " unloaded");
-						ForgeChunkManager.forceChunk(ticket, c.pos);
+						ForgeChunkManager.unforceChunk(ticket, c);
+						//unloaded++;
 					}
 
-					c.isForced = c.isChunkloaded;
-					LMPlayer p = c.getOwner();
+					c.isForced = isLoaded;
 				}
 			}
+		}
+
+		//FTBLib.dev_logger.info("Total: " + total + ", Loaded: " + totalLoaded + "/" + markedLoaded + ", DLoaded: " + loaded + ", DUnloaded: " + unloaded);
+		cleanupTickets(dim);
+	}
+
+	private void cleanupTickets(Integer dim)
+	{
+		if(dim == null)
+		{
+			for(Integer dim1 : ticketMap.keySet())
+				cleanupTickets(dim1);
+			return;
+		}
+
+		FastList<ForgeChunkManager.Ticket> releasedTickets = new FastList<>();
+		FastMap<Integer, ForgeChunkManager.Ticket> map = ticketMap.get(dim);
+
+		for(ForgeChunkManager.Ticket t : map.values())
+		{
+			for(ChunkCoordIntPair c : t.getChunkList())
+			{
+				ClaimedChunk cl = LMWorldServer.inst.claimedChunks.getChunk(dim.intValue(), c.chunkXPos, c.chunkZPos);
+				if(cl == null) ForgeChunkManager.unforceChunk(t, c);
+			}
+
+			if(t.getChunkList().isEmpty()) releasedTickets.add(t);
+		}
+
+		if(!releasedTickets.isEmpty())
+		{
+			for(ForgeChunkManager.Ticket t : releasedTickets)
+			{
+				map.remove(t.getModData().getInteger("PlayerID"));
+				ForgeChunkManager.releaseTicket(t);
+			}
+
+			if(map.isEmpty()) ticketMap.remove(dim);
+
+			//FTBLib.dev_logger.info("Released " + releasedTickets.size() + " tickets");
 		}
 	}
 
 	public ForgeChunkManager.Ticket getTicket(ClaimedChunk c)
-	{
-		World w = LMDimUtils.getWorld(c.dim);
-
-		if(w instanceof WorldServer)
-		{
-			LMPlayer o = c.getOwner();
-			if(o != null) return request((WorldServer)w, o.toPlayerMP());
-		}
-
-		return null;
-	}
+	{ return request(LMDimUtils.getWorld(c.dim), c.getOwner().toPlayerMP()); }
 }

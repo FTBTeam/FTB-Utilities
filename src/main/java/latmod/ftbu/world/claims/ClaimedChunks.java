@@ -16,10 +16,10 @@ import java.util.*;
 
 public class ClaimedChunks
 {
-	private final FastMap<Integer, FastMap<Long, ClaimedChunk>> chunks;
+	public final FastMap<Integer, FastMap<Long, ClaimedChunk>> chunks;
 	
 	public ClaimedChunks()
-	{ chunks = new FastMap<Integer, FastMap<Long, ClaimedChunk>>(); }
+	{ chunks = new FastMap<>(); }
 
 	public List<ClaimedChunk> getAllChunks()
 	{
@@ -54,7 +54,7 @@ public class ClaimedChunks
 						int[] ai = chunksList.func_150306_c(k);
 						ClaimedChunk c = new ClaimedChunk(Integer.parseInt(e1.getKey()), dim, ai[0], ai[1]);
 						if(ai.length >= 3 && ai[2] == 1) c.isChunkloaded = true;
-						map.put(Bits.intsToLong(ai[0], ai[1]), c);
+						map.put(Long.valueOf(Bits.intsToLong(ai[0], ai[1])), c);
 					}
 				}
 				
@@ -71,25 +71,28 @@ public class ClaimedChunks
 		{
 			int dim = Integer.parseInt(e.getKey());
 			
-			FastMap<Long, ClaimedChunk> map = new FastMap<Long, ClaimedChunk>();
+			FastMap<Long, ClaimedChunk> map = new FastMap<>();
 			
 			for(Map.Entry<String, JsonElement> e1 : e.getValue().getAsJsonObject().entrySet())
 			{
 				try
 				{
-					LMPlayerServer p = LMPlayerServer.get(LMStringUtils.fromString(e1.getKey()));
-					
-					JsonArray chunksList = e1.getValue().getAsJsonArray();
-					
-					for(int k = 0; k < chunksList.size(); k++)
+					LMPlayerServer p = LMWorldServer.inst.getPlayer(LMStringUtils.fromString(e1.getKey()));
+
+					if(p != null)
 					{
-						int[] ai = LMJsonUtils.fromArray(chunksList.get(k));
-						
-						if(ai != null)
+						JsonArray chunksList = e1.getValue().getAsJsonArray();
+
+						for(int k = 0; k < chunksList.size(); k++)
 						{
-							ClaimedChunk c = new ClaimedChunk(p.playerID, dim, ai[0], ai[1]);
-							if(ai.length >= 3 && ai[2] == 1) c.isChunkloaded = true;
-							map.put(Bits.intsToLong(ai[0], ai[1]), c);
+							int[] ai = LMJsonUtils.fromArray(chunksList.get(k));
+
+							if(ai != null)
+							{
+								ClaimedChunk c = new ClaimedChunk(p.playerID, dim, ai[0], ai[1]);
+								if(ai.length >= 3 && ai[2] == 1) c.isChunkloaded = true;
+								map.put(Bits.intsToLong(ai[0], ai[1]), c);
+							}
 						}
 					}
 				}
@@ -121,8 +124,8 @@ public class ClaimedChunks
 					JsonArray a = o1.get(id).getAsJsonArray();
 					
 					JsonArray a1 = new JsonArray();
-					a1.add(new JsonPrimitive(c.pos.chunkXPos));
-					a1.add(new JsonPrimitive(c.pos.chunkZPos));
+					a1.add(new JsonPrimitive(c.chunkXPos));
+					a1.add(new JsonPrimitive(c.chunkZPos));
 					if(c.isChunkloaded) a1.add(new JsonPrimitive(1));
 					a.add(a1);
 				}
@@ -140,7 +143,7 @@ public class ClaimedChunks
 	
 	public List<ClaimedChunk> getChunks(LMPlayer p, Integer dim)
 	{
-		FastList<ClaimedChunk> list = new FastList<ClaimedChunk>();
+		FastList<ClaimedChunk> list = new FastList<>();
 		
 		if(dim == null)
 		{
@@ -168,8 +171,8 @@ public class ClaimedChunks
 	{
 		if(c == null) return false;
 		FastMap<Long, ClaimedChunk> map = chunks.get(Integer.valueOf(c.dim));
-		if(map == null) chunks.put(Integer.valueOf(c.dim), map = new FastMap<Long, ClaimedChunk>());
-		return map.put(Long.valueOf(Bits.intsToLong(c.pos.chunkXPos, c.pos.chunkZPos)), c) == null;
+		if(map == null) chunks.put(Integer.valueOf(c.dim), map = new FastMap<>());
+		return map.put(c.getLongPos(), c) == null;
 	}
 	
 	public ClaimedChunk remove(int dim, int cx, int cz)

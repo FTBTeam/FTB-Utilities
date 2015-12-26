@@ -18,7 +18,6 @@ import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
-import net.minecraft.world.*;
 
 import java.util.List;
 
@@ -299,8 +298,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		for(int i = 0; i < size0; i++)
 		{
 			ClaimedChunk c = list.get(i);
-			setLoaded(c.dim, c.pos.chunkXPos, c.pos.chunkZPos, false);
-			LMWorldServer.inst.claimedChunks.remove(c.dim, c.pos.chunkXPos, c.pos.chunkZPos);
+			setLoaded(c.dim, c.chunkXPos, c.chunkZPos, false);
+			LMWorldServer.inst.claimedChunks.remove(c.dim, c.chunkXPos, c.chunkZPos);
 		}
 		
 		sendUpdate();
@@ -328,33 +327,29 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public void setLoaded(int dim, int cx, int cz, boolean flag)
 	{
-		World world = LMDimUtils.getWorld(dim);
-		if(world == null || getPlayer() == null) return;
 		ClaimedChunk chunk = LMWorldServer.inst.claimedChunks.getChunk(dim, cx, cz);
 		if(chunk == null) return;
 
-		if(flag == false)
+		if(flag != chunk.isChunkloaded && equalsPlayer(chunk.getOwner()))
 		{
-			if(chunk.isChunkloaded && equalsPlayer(chunk.getOwner()))
+			if(flag)
 			{
-				chunk.isChunkloaded = false;
+				RankConfig c = getRank().config;
+				if(c.dimension_blacklist.get().contains(dim)) return;
+				int max = c.max_claims.get();
+				if(max == 0) return;
+				if(getLoadedChunks() >= max) return;
+			}
+
+			chunk.isChunkloaded = flag;
+			FTBUChunkEventHandler.instance.markDirty(Integer.valueOf(dim));
+
+			if(getPlayer() != null)
+			{
 				new MessageAreaUpdate(this, cx, cz, dim, 1, 1).sendTo(getPlayer());
-				FTBUChunkEventHandler.instance.markDirty();
 				sendUpdate();
 			}
-		}
-		else if(!chunk.isChunkloaded && equalsPlayer(chunk.getOwner()))
-		{
-			RankConfig c = getRank().config;
-			if(c.dimension_blacklist.get().contains(dim)) return;
-			int max = c.max_claims.get();
-			if(max == 0) return;
-			if(getClaimedChunks() >= max) return;
 
-			chunk.isChunkloaded = true;
-			new MessageAreaUpdate(this, cx, cz, dim, 1, 1).sendTo(getPlayer());
-			FTBUChunkEventHandler.instance.markDirty();
-			sendUpdate();
 		}
 	}
 }

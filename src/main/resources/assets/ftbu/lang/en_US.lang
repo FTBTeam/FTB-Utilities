@@ -16,6 +16,7 @@ ftbu:label.deaths=Deaths: %s
 ftbu:button.explosions=Explosions
 ftbu:button.block_security=Block Security
 ftbu:label.cchunks_count=Claimed Chunks: %s
+ftbu:label.lchunks_count=Loaded Chunks: %s
 
 #ClientConfig
 client_config.sidebar_buttons.guide=Guide
@@ -93,9 +94,10 @@ ftbu:invmode.onlyout=Extract Only
 ftbu:invmode.disabled=Disabled
 
 #Chunktypes
+ftbu:chunktype.unloaded=Chunk not loaded
 ftbu:chunktype.spawn=Spawn Area
 ftbu:chunktype.world_border=World Border
 ftbu:chunktype.world_border.warning=You have reached the world border!
 ftbu:chunktype.wilderness=Wilderness
 ftbu:chunktype.claimed=Claimed Area
-ftbu:chunktype.unloaded=Chunk not loaded
+ftbu:chunktype.chunkloaded=Chunkloaded

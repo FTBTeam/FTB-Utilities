@@ -227,9 +227,11 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	
 	public void drawText(FastList<String> l)
 	{
-		String s = playerLM.claimedChunks + " / " + playerLM.maxClaimPower;
-		s = FTBU.mod.translateClient("label.cchunks_count", s);
+		String s = FTBU.mod.translateClient("label.cchunks_count", (playerLM.claimedChunks + " / " + playerLM.rankConfig.max_claims.get()));
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 12, 0xFFFFFFFF);
+		s = FTBU.mod.translateClient("label.lchunks_count", (playerLM.loadedChunks + " / " + playerLM.rankConfig.max_loaded_chunks.get()));
+		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 24, 0xFFFFFFFF);
+
 		super.drawText(l);
 	}
 	
@@ -334,7 +336,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		{
 			if(gui.panelButtons.mouseOver()) return;
 			if(gui.adminToken != 0L && b == 0) return;
-			new MessageClaimChunk(gui.currentDim, gui.adminToken, chunkX, chunkY, (b == 0) ? MessageClaimChunk.ID_CLAIM : MessageClaimChunk.ID_UNCLAIM).sendToServer();
+			boolean ctrl = isCtrlKeyDown();
+			new MessageClaimChunk(gui.currentDim, gui.adminToken, chunkX, chunkY, (b == 0) ? (ctrl ? MessageClaimChunk.ID_LOAD : MessageClaimChunk.ID_CLAIM) : (ctrl ? MessageClaimChunk.ID_UNLOAD : MessageClaimChunk.ID_UNCLAIM)).sendToServer();
 			gui.playClickSound();
 		}
 		

@@ -96,7 +96,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 				if(obj.isJsonObject()) LMWorldServer.inst.claimedChunks.load(obj.getAsJsonObject());
 			}
 			
-			FTBUChunkEventHandler.worldLoadEvent(e.worldMC);
+			FTBUChunkEventHandler.instance.worldLoadEvent(e.worldMC);
 			
 			new EventLMWorldServer.Loaded(LMWorldServer.inst, Phase.POST).post();
 		}
@@ -153,7 +153,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 		
 		//if(first) teleportToSpawn(ep);
 		p.checkNewFriends();
-		new MessageAreaUpdate(p.getPos(), 3, 3).sendTo(ep);
+		new MessageAreaUpdate(p, p.getPos(), 3, 3).sendTo(ep);
 	}
 	
 	public int getPlayerID(Object player)

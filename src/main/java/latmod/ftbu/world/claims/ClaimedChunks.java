@@ -12,7 +12,7 @@ import net.minecraft.nbt.*;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 
-import java.util.Map;
+import java.util.*;
 
 public class ClaimedChunks
 {
@@ -20,6 +20,14 @@ public class ClaimedChunks
 	
 	public ClaimedChunks()
 	{ chunks = new FastMap<Integer, FastMap<Long, ClaimedChunk>>(); }
+
+	public List<ClaimedChunk> getAllChunks()
+	{
+		FastList<ClaimedChunk> l = new FastList<>();
+		for(FastMap<Long, ClaimedChunk> m : chunks.values())
+			l.addAll(m.values());
+		return l;
+	}
 	
 	public void load(NBTTagCompound tag)
 	{
@@ -130,7 +138,7 @@ public class ClaimedChunks
 		return chunks.get(Integer.valueOf(dim)).get(Long.valueOf(Bits.intsToLong(cx, cz)));
 	}
 	
-	public FastList<ClaimedChunk> getChunks(LMPlayer p, Integer dim)
+	public List<ClaimedChunk> getChunks(LMPlayer p, Integer dim)
 	{
 		FastList<ClaimedChunk> list = new FastList<ClaimedChunk>();
 		
@@ -164,16 +172,22 @@ public class ClaimedChunks
 		return map.put(Long.valueOf(Bits.intsToLong(c.pos.chunkXPos, c.pos.chunkZPos)), c) == null;
 	}
 	
-	public boolean remove(int dim, int cx, int cz)
+	public ClaimedChunk remove(int dim, int cx, int cz)
 	{
 		FastMap<Long, ClaimedChunk> map = chunks.get(Integer.valueOf(dim));
-		if(map != null && map.remove(Long.valueOf(Bits.intsToLong(cx, cz))) != null)
+		if(map != null)
 		{
-			if(map.isEmpty()) chunks.remove(Integer.valueOf(dim));
-			return true;
+			ClaimedChunk chunk = map.remove(Long.valueOf(Bits.intsToLong(cx, cz)));
+
+			if(chunk != null)
+			{
+				if(map.isEmpty())
+					chunks.remove(Integer.valueOf(dim));
+				return chunk;
+			}
 		}
-		
-		return false;
+
+		return null;
 	}
 	
 	public ChunkType getType(int dim, int cx, int cz)

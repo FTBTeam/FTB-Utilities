@@ -9,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public class RankConfig
 {
 	public final ConfigGroup custom = new ConfigGroup("custom_config");
-	public final ConfigEntryInt max_claims = new ConfigEntryInt("max_claims", new IntBounds(100, 0, Integer.MAX_VALUE)).setInfo("Max amount of chunks that player can claim\n0 - Disabled");
+	public final ConfigEntryInt max_claims = new ConfigEntryInt("max_claims", new IntBounds(100, 0, 30000)).sync().setInfo("Max amount of chunks that player can claim\n0 - Disabled");
 	public final ConfigEntryInt max_homes = new ConfigEntryInt("max_homes", new IntBounds(1, 0, Integer.MAX_VALUE)).setInfo("Max home count");
 	public final ConfigEntryBool cross_dim_homes = new ConfigEntryBool("cross_dim_homes", true).setInfo("Can use /home to teleport to/from another dimension");
 	public final ConfigEntryEnum<EnumEnabled> forced_explosions = ConfigEntryEnum.enabledWithNull("forced_explosions", null).sync().setInfo("'-' - Player setting\n'disabled' - Explosions will never happen in claimed chunks\n'enabled' - Explosions will always happen in claimed chunks");
@@ -22,7 +22,7 @@ public class RankConfig
 	public boolean allowCreativeInteractSecure(EntityPlayer ep)
 	{ return ep != null && allow_creative_interact_secure.get() && ep.capabilities.isCreativeMode/* && !(ep instanceof FakePlayer)*/; }
 	
-	//public final ConfigEntryInt max_loaded_chunks = new ConfigEntryInt("max_loaded_chunks", new IntBounds(64, 0, Integer.MAX_VALUE)).setInfo("Max amount of chunks that player can chunkload.\n0 - Disabled");
+	public final ConfigEntryInt max_loaded_chunks = new ConfigEntryInt("max_loaded_chunks", new IntBounds(64, 0, 30000)).sync().setInfo("Max amount of chunks that player can chunkload.\n0 - Disabled");
 	
 	public void setDefaults(boolean admin)
 	{

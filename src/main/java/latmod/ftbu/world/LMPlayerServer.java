@@ -8,16 +8,19 @@ import ftb.lib.notification.*;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClickAction;
-import latmod.ftbu.net.MessageLMPlayerUpdate;
+import latmod.ftbu.mod.handlers.FTBUChunkEventHandler;
+import latmod.ftbu.net.*;
 import latmod.ftbu.world.claims.*;
 import latmod.ftbu.world.ranks.*;
 import latmod.lib.*;
-import latmod.lib.config.ConfigGroup;
+import latmod.lib.config.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
+
+import java.util.List;
 
 public class LMPlayerServer extends LMPlayer // LMPlayerClient
 {
@@ -214,11 +217,14 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			settings.writeToNet(io);
 			
 			LMNBTUtils.writeTag(io, commonPrivateData);
-			io.writeInt(getClaimedChunks());
-			io.writeInt(getRank().config.max_claims.get());
+			io.writeShort(getClaimedChunks());
+			io.writeShort(getLoadedChunks());
 			
 			ConfigGroup group = new ConfigGroup("rank");
-			group.addAll(RankConfig.class, getRank().config);
+
+			for(ConfigEntry entry : getRank().config_group.entries())
+			{ if(entry.shouldSync()) group.add(entry); }
+
 			group.write(io);
 		}
 	}
@@ -273,22 +279,27 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		if(!t.isClaimed() && t.isChunkOwner(this) && LMWorldServer.inst.claimedChunks.put(new ClaimedChunk(playerID, dim, cx, cz)))
 			sendUpdate();
 	}
-	
+
 	public void unclaimChunk(int dim, int cx, int cz)
 	{
-		if(LMWorldServer.inst.claimedChunks.getType(dim, cx, cz).isChunkOwner(this) && LMWorldServer.inst.claimedChunks.remove(dim, cx, cz))
+		if(LMWorldServer.inst.claimedChunks.getType(dim, cx, cz).isChunkOwner(this))
+		{
+			setLoaded(dim, cx, cz, false);
+			LMWorldServer.inst.claimedChunks.remove(dim, cx, cz);
 			sendUpdate();
+		}
 	}
 	
 	public void unclaimAllChunks(Integer dim)
 	{
-		FastList<ClaimedChunk> list = LMWorldServer.inst.claimedChunks.getChunks(this, dim);
+		List<ClaimedChunk> list = LMWorldServer.inst.claimedChunks.getChunks(this, dim);
 		int size0 = list.size();
 		if(size0 == 0) return;
 		
 		for(int i = 0; i < size0; i++)
 		{
 			ClaimedChunk c = list.get(i);
+			setLoaded(c.dim, c.pos.chunkXPos, c.pos.chunkZPos, false);
 			LMWorldServer.inst.claimedChunks.remove(c.dim, c.pos.chunkXPos, c.pos.chunkZPos);
 		}
 		
@@ -297,6 +308,16 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public int getClaimedChunks()
 	{ return LMWorldServer.inst.claimedChunks.getChunks(this, null).size(); }
+
+	public int getLoadedChunks()
+	{
+		int loaded = 0;
+
+		for(ClaimedChunk c : LMWorldServer.inst.claimedChunks.getChunks(this, null))
+		{ if(c.isChunkloaded) loaded++; }
+
+		return loaded;
+	}
 	
 	public NBTTagCompound getServerData()
 	{
@@ -305,43 +326,35 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		return serverData;
 	}
 	
-	public void setLoaded(World world, int cx, int cz, boolean flag)
+	public void setLoaded(int dim, int cx, int cz, boolean flag)
 	{
-	}
-	
-	public void loadAllChunks(World w)
-	{
-		/* FIXME ChunkLoading
-		if(w == null || w.isRemote) return;
-		unloadAllChunks(w);
-		
-		ForgeChunkManager.Ticket ticket = FTBUChunkEventHandler.instance.request(w, owner);
-		
-		if(ticket != null)
+		World world = LMDimUtils.getWorld(dim);
+		if(world == null || getPlayer() == null) return;
+		ClaimedChunk chunk = LMWorldServer.inst.claimedChunks.getChunk(dim, cx, cz);
+		if(chunk == null) return;
+
+		if(flag == false)
 		{
-			for(ClaimedChunk cc : chunks) if(cc.isChunkloaded && cc.dim == w.provider.dimensionId && !cc.isForced)
+			if(chunk.isChunkloaded && equalsPlayer(chunk.getOwner()))
 			{
-				ForgeChunkManager.forceChunk(ticket, cc.pos);
-				cc.isForced = true;
+				chunk.isChunkloaded = false;
+				new MessageAreaUpdate(this, cx, cz, dim, 1, 1).sendTo(getPlayer());
+				FTBUChunkEventHandler.instance.markDirty();
+				sendUpdate();
 			}
 		}
-		*/
-	}
-	
-	public void unloadAllChunks(World w)
-	{
-		/*
-		if(w == null || w.isRemote) return;
-		
-		ForgeChunkManager.Ticket ticket = FTBUChunkEventHandler.instance.request(w, owner);
-		if(ticket != null)
+		else if(!chunk.isChunkloaded && equalsPlayer(chunk.getOwner()))
 		{
-			for(ClaimedChunk cc : chunks) if(cc.isChunkloaded && cc.dim == w.provider.dimensionId && cc.isForced)
-			{
-				ForgeChunkManager.unforceChunk(ticket, cc.pos);
-				cc.isForced = false;
-			}
+			RankConfig c = getRank().config;
+			if(c.dimension_blacklist.get().contains(dim)) return;
+			int max = c.max_claims.get();
+			if(max == 0) return;
+			if(getClaimedChunks() >= max) return;
+
+			chunk.isChunkloaded = true;
+			new MessageAreaUpdate(this, cx, cz, dim, 1, 1).sendTo(getPlayer());
+			FTBUChunkEventHandler.instance.markDirty();
+			sendUpdate();
 		}
-		*/
 	}
 }

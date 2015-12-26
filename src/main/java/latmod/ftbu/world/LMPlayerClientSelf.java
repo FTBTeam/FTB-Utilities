@@ -11,8 +11,8 @@ public class LMPlayerClientSelf extends LMPlayerClient
 	private final PersonalSettings settings;
 	public final RankConfig rankConfig;
 	public int claimedChunks;
-	public int maxClaimPower;
-	
+	public int loadedChunks;
+
 	public LMPlayerClientSelf(LMWorldClient w, int i, GameProfile gp)
 	{
 		super(w, i, gp);
@@ -33,10 +33,10 @@ public class LMPlayerClientSelf extends LMPlayerClient
 			settings.readFromNet(io);
 			
 			commonPrivateData = LMNBTUtils.readTag(io);
-			claimedChunks = io.readInt();
-			maxClaimPower = io.readInt();
-			
-			ConfigGroup group = new ConfigGroup("rank");
+			claimedChunks = io.readUnsignedShort();
+			loadedChunks = io.readUnsignedShort();
+
+			ConfigGroup group = new ConfigGroup("config");
 			group.addAll(RankConfig.class, rankConfig);
 			group.read(io);
 		}

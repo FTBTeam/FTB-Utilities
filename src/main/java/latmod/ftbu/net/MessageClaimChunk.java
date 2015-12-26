@@ -43,7 +43,7 @@ public class MessageClaimChunk extends MessageFTBU
 		if(type == ID_CLAIM)
 		{
 			p.claimChunk(dim, cx, cz);
-			return new MessageAreaUpdate(cx, cz, dim, 1, 1);
+			return new MessageAreaUpdate(p, cx, cz, dim, 1, 1);
 		}
 		else if(type == ID_UNCLAIM)
 		{
@@ -58,12 +58,12 @@ public class MessageClaimChunk extends MessageFTBU
 			}
 			else
 				p.unclaimChunk(dim, cx, cz);			
-			return new MessageAreaUpdate(cx, cz, dim, 1, 1);
+			return new MessageAreaUpdate(p, cx, cz, dim, 1, 1);
 		}
 		else if(type == ID_UNCLAIM_ALL) p.unclaimAllChunks(Integer.valueOf(dim));
 		else if(type == ID_UNCLAIM_ALL_DIMS) p.unclaimAllChunks(null);
-		else if(type == ID_LOAD) p.setLoaded(LMDimUtils.getWorld(dim), cx, cz, true);
-		else if(type == ID_UNLOAD) p.setLoaded(LMDimUtils.getWorld(dim), cx, cz, false);
+		else if(type == ID_LOAD) p.setLoaded(dim, cx, cz, true);
+		else if(type == ID_UNLOAD) p.setLoaded(dim, cx, cz, false);
 		return null;
 	}
 }

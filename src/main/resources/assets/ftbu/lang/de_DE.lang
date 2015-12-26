@@ -16,6 +16,7 @@ ftbu:label.deaths=Tode: %s
 ftbu:button.explosions=Explosionen
 ftbu:button.block_security=Block Sicherheit
 ftbu:label.cchunks_count=Beanspruchte Chunks: %s
+ftbu:label.lchunks_count=Geladene Chunks: %s
 
 #ClientConfig
 client_config.sidebar_buttons.guide=Guide
@@ -23,12 +24,17 @@ client_config.sidebar_buttons.info=Server Info
 client_config.sidebar_buttons.claims=Beanspruchte Chunks
 
 client_config.ftbu=FTBUtilities
-client_config.ftbu.player_decorators=Spieler Dekorationen
-client_config.ftbu.player_decorators_self=Meine Spieler Dekorationen
+client_config.ftbu.render_badges=Zeige Abzeichen
+client_config.ftbu.render_my_badge=Zeige meine Abzeichen
 client_config.ftbu.options_button=Optionen Button
 client_config.ftbu.chat_links=Chat Links
 client_config.ftbu.player_options_shortcut=Spieler Optionen Shortcut
 client_config.ftbu.sort_friends_az=Sortiere Freunde A-Z
+
+claims_config=Beanspruchte Chunks Config
+claims_config.explosions=Explosionen
+claims_config.security_level=Block Sicherheits Level
+claims_config.fake_players=Erlaube Fake Players
 
 #Misc
 ftbu:label.new_friends=Neue Freundschaftsanfrage!
@@ -58,12 +64,12 @@ ftbu:button.claims_unclaim_all_q=Alle beanspruchten Chunks freigeben?
 ftbu:button.claims_unclaim_all_dim_q=Alle beanspruchten Chunks in %s freigeben?
 ftbu:label.claims_invalid_dim=Du kannst keine Chunks in dieser Dimension beanspruchen
 
-ftbu:top.title=Server Höchste
+ftbu:top.title=Server Rangliste
 ftbu:top.first_joined=Zuerst Gesehen
 ftbu:top.last_seen=Zuletzt Gesehen
 ftbu:top.time_played=Spielzeit
 ftbu:top.deaths=Tode
-ftbu:top.deaths_ph=Stunde per Stunde
+ftbu:top.deaths_ph=Tode per Stunde
 
 #Security Mode
 ftbu:security=Sicherheit
@@ -88,9 +94,10 @@ ftbu:invmode.onlyout=Nur Extraktion
 ftbu:invmode.disabled=Deaktviert
 
 #Chunktypes
+ftbu:chunktype.unloaded=Chunk nicht geladen
 ftbu:chunktype.spawn=Spawn Bereich
 ftbu:chunktype.world_border=Welt Begrenzung
 ftbu:chunktype.world_border.warning=Du hast die Welt Begrenzung erreicht!
 ftbu:chunktype.wilderness=Wildnis
 ftbu:chunktype.claimed=Beanspruchter Bereich
-ftbu:chunktype.unloaded=Chunk nicht geladen
+ftbu:chunktype.chunkloaded=Geladener Chunk

@@ -1,7 +1,6 @@
 package latmod.ftbu.mod.config;
 
 import cpw.mods.fml.relauncher.Side;
-import latmod.ftbu.world.claims.ChunkloaderType;
 import latmod.lib.FastList;
 import latmod.lib.config.*;
 import latmod.lib.util.DoubleBounds;
@@ -13,7 +12,6 @@ public class FTBUConfigGeneral
 	public static final ConfigEntryBool safe_spawn = new ConfigEntryBool("safe_spawn", false).setInfo("If set to true, explosions and hostile mobs in spawn area will be disabled");
 	public static final ConfigEntryBool spawn_pvp = new ConfigEntryBool("spawn_pvp", true).setInfo("If set to false, players won't be able to attack each other in spawn area");
 	private static final ConfigEntryStringArray blocked_entities = new ConfigEntryStringArray("blocked_entities", new FastList<String>()).setInfo("Entity IDs that are banned from world. They will not spawn and existing ones will be destroyed");
-	public static final ConfigEntryEnum<ChunkloaderType> chunkloader_type = new ConfigEntryEnum<ChunkloaderType>("chunkloader_type", ChunkloaderType.class, ChunkloaderType.values(), ChunkloaderType.DISABLED, false).sync().setInfo("disabled - Players won't be able to chunkload\nnormal - Chunks stay loaded when player loggs off\nplayers - Chunks only stay loaded while owner is online");
 	//public static final ConfigEntryBool ranks_enabled = new ConfigEntryBool("ranks_enabled", false);
 	//public static final ConfigEntryBool ranks_override_chat = new ConfigEntryBool("ranks_override_chat", true);
 	public static final ConfigEntryBool sign_warp = new ConfigEntryBool("sign_warp", true).setInfo("Enable right-clicking on '[warp]' signs");

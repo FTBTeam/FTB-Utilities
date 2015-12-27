@@ -1,4 +1,5 @@
 package latmod.ftbu.net;
+
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.FTBLibClient;

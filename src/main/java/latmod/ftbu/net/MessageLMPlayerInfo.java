@@ -23,7 +23,7 @@ public class MessageLMPlayerInfo extends MessageFTBU
 		
 		NBTTagCompound tag = new NBTTagCompound();
 		
-		FastList<IChatComponent> info = new FastList<IChatComponent>();
+		FastList<IChatComponent> info = new FastList<>();
 		p.getInfo(info);
 		
 		NBTTagList listInfo = new NBTTagList();

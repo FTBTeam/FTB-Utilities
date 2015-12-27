@@ -47,6 +47,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 	{
 		FTBUConfigGeneral.onReloaded(e.side);
 		if(e.side.isClient()) FTBU.proxy_ftbl_int.onModeSetClient(e);
+		else FTBUChunkEventHandler.instance.markDirty(null);
 	}
 	
 	public void onFTBWorldServer(EventFTBWorldServer e)
@@ -155,6 +156,8 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 		//if(first) teleportToSpawn(ep);
 		p.checkNewFriends();
 		new MessageAreaUpdate(p, p.getPos(), 3, 3).sendTo(ep);
+
+		FTBUChunkEventHandler.instance.markDirty(null);
 	}
 	
 	public int getPlayerID(Object player)

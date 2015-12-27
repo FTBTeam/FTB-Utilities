@@ -2,14 +2,13 @@ package latmod.ftbu.world;
 
 import com.mojang.authlib.GameProfile;
 import ftb.lib.LMNBTUtils;
-import latmod.ftbu.world.ranks.RankConfig;
+import latmod.ftbu.world.ranks.Rank;
 import latmod.lib.ByteIOStream;
-import latmod.lib.config.ConfigGroup;
 
 public class LMPlayerClientSelf extends LMPlayerClient
 {
 	private final PersonalSettings settings;
-	public final RankConfig rankConfig;
+	private Rank rank;
 	public int claimedChunks;
 	public int loadedChunks;
 
@@ -18,11 +17,21 @@ public class LMPlayerClientSelf extends LMPlayerClient
 		super(w, i, gp);
 		
 		settings = new PersonalSettings(this);
-		rankConfig = new RankConfig();
+		rank = null;
 	}
+
+	public LMPlayerClientSelf toPlayerSPSelf()
+	{ return this; }
 	
 	public PersonalSettings getSettings()
 	{ return settings; }
+
+	public Rank getRank()
+	{
+		if(rank == null)
+			rank = new Rank("Client");
+		return rank;
+	}
 	
 	public void readFromNet(ByteIOStream io, boolean self) // LMPlayerServer
 	{
@@ -36,9 +45,8 @@ public class LMPlayerClientSelf extends LMPlayerClient
 			claimedChunks = io.readUnsignedShort();
 			loadedChunks = io.readUnsignedShort();
 
-			ConfigGroup group = new ConfigGroup("config");
-			group.addAll(RankConfig.class, rankConfig);
-			group.read(io);
+			rank = new Rank(io.readUTF());
+			rank.readFromIO(io);
 		}
 	}
 }

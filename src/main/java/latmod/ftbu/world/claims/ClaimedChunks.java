@@ -106,13 +106,11 @@ public class ClaimedChunks
 	
 	public void save(JsonObject group)
 	{
-		chunks.sortFromKeyNums();
-		
-		for(Map.Entry<Integer, FastMap<Long, ClaimedChunk>> e : chunks.entrySet())
+		for(Map.Entry<Integer, FastMap<Long, ClaimedChunk>> e : chunks.sortedEntryList(chunks.byKeyNumbers()))
 		{
 			JsonObject o1 = new JsonObject();
 			
-			for(ClaimedChunk c : e.getValue())
+			for(ClaimedChunk c : e.getValue().values(e.getValue().byKeyNumbers()))
 			{
 				LMPlayer p = c.getOwner();
 				

@@ -71,10 +71,6 @@ public class ServerGuideFile extends GuideFile
 		{
 			GuideCategory list = categoryServerAdmin.getSub(new ChatComponentText("Entities"));
 			
-			FastMap<String, Class<?>> map = new FastMap<String, Class<?>>();
-			map.putAll(EntityList.stringToClassMapping);
-			map.sortFromKeyStrings(true);
-			
 			Set<Integer> entityIDset = EntityList.IDtoClassMapping.keySet();
 			for(Integer i : entityIDset)
 				list.println("[" + i + "] " + EntityList.getStringFromID(i.intValue()));

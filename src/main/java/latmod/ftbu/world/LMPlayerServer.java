@@ -13,7 +13,6 @@ import latmod.ftbu.net.*;
 import latmod.ftbu.world.claims.*;
 import latmod.ftbu.world.ranks.*;
 import latmod.lib.*;
-import latmod.lib.config.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -103,6 +102,14 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		refreshStats();
 		long ms = LMUtils.millis();
 		new EventLMPlayerServer.CustomInfo(this, info).post();
+		Rank rank = getRank();
+
+		if(rank.config.show_rank.get() && isOnline())
+		{
+			IChatComponent rankC = new ChatComponentText("[" + rank.ID + "]");
+			rankC.getChatStyle().setColor(rank.color.get());
+			info.add(rankC);
+		}
 		stats.getInfo(info, ms);
 	}
 	
@@ -196,6 +203,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	{
 		refreshStats();
 		new EventLMPlayerServer.DataSaved(this).post();
+		Rank rank = getRank();
 		
 		io.writeBoolean(isOnline());
 		io.writeIntArray(friends.toArray(), ByteCount.SHORT);
@@ -210,21 +218,17 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		io.writeIntArray(otherFriends.toArray(), ByteCount.SHORT);
 		LMNBTUtils.writeTag(io, commonPublicData);
-		
+
 		if(self)
 		{
 			settings.writeToNet(io);
 			
 			LMNBTUtils.writeTag(io, commonPrivateData);
 			io.writeShort(getClaimedChunks());
-			io.writeShort(getLoadedChunks());
-			
-			ConfigGroup group = new ConfigGroup("rank");
+			io.writeShort(getLoadedChunks(true));
 
-			for(ConfigEntry entry : getRank().config_group.entries())
-			{ if(entry.shouldSync()) group.add(entry); }
-
-			group.write(io);
+			io.writeUTF(rank.ID);
+			rank.writeToIO(io);
 		}
 	}
 	
@@ -308,13 +312,11 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public int getClaimedChunks()
 	{ return LMWorldServer.inst.claimedChunks.getChunks(this, null).size(); }
 
-	public int getLoadedChunks()
+	public int getLoadedChunks(boolean forced)
 	{
 		int loaded = 0;
-
 		for(ClaimedChunk c : LMWorldServer.inst.claimedChunks.getChunks(this, null))
-		{ if(c.isChunkloaded) loaded++; }
-
+		{ if(c.isChunkloaded && (!forced || c.isForced)) loaded++; }
 		return loaded;
 	}
 	
@@ -336,9 +338,9 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			{
 				RankConfig c = getRank().config;
 				if(c.dimension_blacklist.get().contains(dim)) return;
-				int max = c.max_claims.get();
+				int max = c.max_loaded_chunks.get();
 				if(max == 0) return;
-				if(getLoadedChunks() >= max) return;
+				if(getLoadedChunks(false) >= max) return;
 			}
 
 			chunk.isChunkloaded = flag;
@@ -349,7 +351,6 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 				new MessageAreaUpdate(this, cx, cz, dim, 1, 1).sendTo(getPlayer());
 				sendUpdate();
 			}
-
 		}
 	}
 }

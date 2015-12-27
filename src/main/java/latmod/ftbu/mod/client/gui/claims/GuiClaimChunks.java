@@ -227,9 +227,9 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	
 	public void drawText(FastList<String> l)
 	{
-		String s = FTBU.mod.translateClient("label.cchunks_count", (playerLM.claimedChunks + " / " + playerLM.rankConfig.max_claims.get()));
+		String s = FTBU.mod.translateClient("label.cchunks_count", (playerLM.claimedChunks + " / " + playerLM.getRank().config.max_claims.get()));
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 12, 0xFFFFFFFF);
-		s = FTBU.mod.translateClient("label.lchunks_count", (playerLM.loadedChunks + " / " + playerLM.rankConfig.max_loaded_chunks.get()));
+		s = FTBU.mod.translateClient("label.lchunks_count", (playerLM.loadedChunks + " / " + playerLM.getRank().config.max_loaded_chunks.get()));
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 24, 0xFFFFFFFF);
 
 		super.drawText(l);
@@ -348,8 +348,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		{
 			if(mouseOver())
 			{
-				GlStateManager.color(1F, 1F, 0.3F, 0.8F);
-				gui.render(tex_area_coords[0][0][0][0], getAX(), getAY(), 16, 16);
+				GlStateManager.color(1F, 1F, 1F, 1F);
+				drawBlankRect(getAX(), getAY(), gui.getZLevel(), 16, 16, 0x45FFFFFF);
 			}
 		}
 	}

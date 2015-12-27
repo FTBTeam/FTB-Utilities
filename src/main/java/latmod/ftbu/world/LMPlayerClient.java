@@ -17,7 +17,7 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 	public final FastList<IChatComponent> clientInfo;
 	public boolean isOnline;
 	public Badge cachedBadge;
-	
+
 	public LMPlayerClient(LMWorldClient w, int i, GameProfile gp)
 	{
 		super(w, i, gp);

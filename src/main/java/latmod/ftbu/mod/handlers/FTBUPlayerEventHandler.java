@@ -46,6 +46,8 @@ public class FTBUPlayerEventHandler
 		
 		p.setPlayer(null);
 		//Backups.shouldRun = true;
+
+		FTBUChunkEventHandler.instance.markDirty(null);
 	}
 	
 	@SubscribeEvent
@@ -175,6 +177,8 @@ public class FTBUPlayerEventHandler
 			
 			p.refreshStats();
 			new MessageLMPlayerDied(p).sendTo(null);
+
+			FTBUChunkEventHandler.instance.markDirty(null);
 		}
 	}
 	

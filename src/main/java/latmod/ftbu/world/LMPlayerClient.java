@@ -14,20 +14,25 @@ import net.minecraft.util.*;
 @SideOnly(Side.CLIENT)
 public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClientSelf
 {
+	public final LMWorldClient world;
 	public final FastList<IChatComponent> clientInfo;
 	public boolean isOnline;
 	public Badge cachedBadge;
 
 	public LMPlayerClient(LMWorldClient w, int i, GameProfile gp)
 	{
-		super(w, i, gp);
-		clientInfo = new FastList<IChatComponent>();
+		super(i, gp);
+		world = w;
+		clientInfo = new FastList<>();
 		isOnline = false;
 		cachedBadge = null;
 	}
 	
 	public ResourceLocation getSkin()
 	{ return FTBLibClient.getSkinTexture(getName()); }
+	
+	public LMWorld getWorld()
+	{ return world; }
 	
 	public Side getSide()
 	{ return Side.CLIENT; }
@@ -66,10 +71,9 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 		
 		IntList otherFriends = IntList.asList(io.readIntArray(ByteCount.SHORT));
 		
-		for(int i = 0; i < LMWorldClient.inst.players.size(); i++)
+		for(LMPlayer p : world.playerMap)
 		{
-			LMPlayer p = LMWorldClient.inst.players.get(i);
-			if(p != this)
+			if(!p.equalsPlayer(this))
 			{
 				p.friends.clear();
 				if(otherFriends.contains(p.playerID))

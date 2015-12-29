@@ -8,7 +8,7 @@ import net.minecraft.entity.*;
 
 public class FTBUConfigGeneral
 {
-	public static final ConfigEntryDouble restart_timer = new ConfigEntryDouble("restart_timer", new DoubleBounds(0D, 0D, 720D)).setInfo("Server will automatically shut down after X hours\n0 - Disabled\n0.5 - 30 minutes\n1 - 1 Hour\n24 - 1 Day\n168 - 1 Week\n720 - 1 Month");
+	public static final ConfigEntryDouble restart_timer = new ConfigEntryDouble("restart_timer", new DoubleBounds(12D, 0D, 720D)).setInfo("Server will automatically shut down after X hours\n0 - Disabled\n0.5 - 30 minutes\n1 - 1 Hour\n24 - 1 Day\n168 - 1 Week\n720 - 1 Month");
 	public static final ConfigEntryBool safe_spawn = new ConfigEntryBool("safe_spawn", false).setInfo("If set to true, explosions and hostile mobs in spawn area will be disabled");
 	public static final ConfigEntryBool spawn_pvp = new ConfigEntryBool("spawn_pvp", true).setInfo("If set to false, players won't be able to attack each other in spawn area");
 	private static final ConfigEntryStringArray blocked_entities = new ConfigEntryStringArray("blocked_entities", new FastList<String>()).setInfo("Entity IDs that are banned from world. They will not spawn and existing ones will be destroyed");

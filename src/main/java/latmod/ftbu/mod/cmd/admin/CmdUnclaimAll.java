@@ -19,7 +19,7 @@ public class CmdUnclaimAll extends CommandLM
 		
 		if(args[0].equals("@a"))
 		{
-			for(LMPlayer p : LMWorldServer.inst.players)
+			for(LMPlayer p : LMWorldServer.inst.playerMap)
 				p.toPlayerMP().unclaimAllChunks(null);
 			return new ChatComponentText("Unclaimed all chunks");
 		}

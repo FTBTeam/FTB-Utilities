@@ -25,7 +25,7 @@ public class ClaimsConfig implements IConfigProvider
 			
 			public void set(boolean v)
 			{ settings.explosions = v; save(); }
-		});
+		}, false);
 		
 		group.add(new ConfigEntryEnum<LMSecurityLevel>("security_level", LMSecurityLevel.class, LMSecurityLevel.VALUES_3, settings.blocks, false)
 		{
@@ -34,7 +34,7 @@ public class ClaimsConfig implements IConfigProvider
 			
 			public void set(Object v)
 			{ settings.blocks = (LMSecurityLevel)v; save(); }
-		});
+		}, false);
 		
 		group.add(new ConfigEntryBool("fake_players", settings.fakePlayers)
 		{
@@ -43,7 +43,7 @@ public class ClaimsConfig implements IConfigProvider
 			
 			public void set(boolean v)
 			{ settings.fakePlayers = v; save(); }
-		});
+		}, false);
 	}
 	
 	public String getGroupTitle(ConfigGroup g)

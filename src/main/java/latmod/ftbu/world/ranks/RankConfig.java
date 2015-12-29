@@ -19,8 +19,8 @@ public class RankConfig
 	public final ConfigEntryIntArray dimension_blacklist = new ConfigEntryIntArray("dimension_blacklist", IntList.asList()).sync().setInfo("Dimensions where players can't claim");
 	public final ConfigEntryBool admin_server_info = new ConfigEntryBool("admin_server_info", false).setInfo("Display server admin guide information (IDs etc.)");
 	public final ConfigEntryBool allow_creative_interact_secure = new ConfigEntryBool("allow_creative_interact_secure", false).sync().setInfo("If set to true, creative players will be able to access protected chests / chunks");
-	public final ConfigEntryEnum<ChunkloaderType> chunkloader_type = new ConfigEntryEnum<>("chunkloader_type", ChunkloaderType.class, ChunkloaderType.values(), ChunkloaderType.ONLINE, false).sync().setInfo("disabled - Players won't be able to chunkload\nnormal - Chunks stay loaded when player loggs off\nplayers - Chunks only stay loaded while owner is online");
-	public final ConfigEntryInt max_loaded_chunks = new ConfigEntryInt("max_loaded_chunks", new IntBounds(0, 0, 30000)).sync().setInfo("Max amount of chunks that player can chunkload.\n0 - Disabled");
+	public final ConfigEntryEnum<ChunkloaderType> chunkloader_type = new ConfigEntryEnum<>("chunkloader_type", ChunkloaderType.class, ChunkloaderType.values(), ChunkloaderType.OFFLINE, false).sync().setInfo("disabled - Players won't be able to chunkload\nnormal - Chunks stay loaded when player loggs off\nplayers - Chunks only stay loaded while owner is online");
+	public final ConfigEntryInt max_loaded_chunks = new ConfigEntryInt("max_loaded_chunks", new IntBounds(50, 0, 30000)).sync().setInfo("Max amount of chunks that player can chunkload.\n0 - Disabled");
 	public final ConfigEntryBool show_rank = new ConfigEntryBool("show_rank", true).setInfo("If set to false, players won't be able to see others Rank in FriendsGUI");
 
 	public boolean allowCreativeInteractSecure(EntityPlayer ep)

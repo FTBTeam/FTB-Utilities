@@ -25,7 +25,7 @@ public class PanelPlayerList extends PanelFriendsGui
 	public void addWidgets()
 	{
 		tempPlayerList.clear();
-		tempPlayerList.addAll(LMWorldClient.inst.players);
+		tempPlayerList.addAll(LMWorldClient.inst.playerMap.values());
 		
 		LMPlayerClient clientPlayer = LMWorldClient.inst.getClientPlayer();
 		

@@ -15,7 +15,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 	public static final FTBUChunkEventHandler instance = new FTBUChunkEventHandler();
 	public final FastMap<Integer, FastMap<Integer, ForgeChunkManager.Ticket>> ticketMap = new FastMap<>();
 
-	private void refreshMaxChunksCount()
+	public void refreshMaxChunksCount()
 	{
 		if(!ForgeChunkManager.getConfig().hasCategory(FTBUFinals.MOD_ID))
 		{
@@ -34,7 +34,6 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 		
 		if(t == null)
 		{
-			refreshMaxChunksCount();
 			t = ForgeChunkManager.requestTicket(FTBU.inst, w, ForgeChunkManager.Type.NORMAL);
 			if(t == null) return null;
 			else

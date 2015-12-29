@@ -12,7 +12,6 @@ import java.util.UUID;
 
 public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer // LMPlayerClient
 {
-	public final LMWorld world;
 	public final int playerID;
 	public GameProfile gameProfile;
 	
@@ -22,16 +21,16 @@ public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer
 	protected NBTTagCompound commonPrivateData = null;
 	public boolean renderBadge;
 	
-	public LMPlayer(LMWorld w, int i, GameProfile gp)
+	public LMPlayer(int i, GameProfile gp)
 	{
-		world = w;
 		playerID = i;
 		gameProfile = gp;
 		
 		friends = new IntList();
 		lastArmor = new ItemStack[5];
 	}
-	
+
+	public abstract LMWorld getWorld();
 	public abstract Side getSide();
 	public abstract boolean isOnline();
 	
@@ -72,7 +71,7 @@ public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer
 		else if(o == this) return true;
 		else if(o instanceof Integer || o instanceof LMPlayer)
 		{ int h = o.hashCode(); return (h <= 0) ? false : h == playerID; }
-		return o != null && (o == this || equalsPlayer(world.getPlayer(o)));
+		return o != null && (o == this || equalsPlayer(getWorld().getPlayer(o)));
 	}
 	
 	public boolean equalsPlayer(LMPlayer p)
@@ -80,10 +79,10 @@ public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer
 	
 	public FastList<LMPlayer> getFriends()
 	{
-		FastList<LMPlayer> list = new FastList<LMPlayer>();
+		FastList<LMPlayer> list = new FastList<>();
 		for(int i = 0; i < friends.size(); i++)
 		{
-			LMPlayer p = world.getPlayer(friends.get(i));
+			LMPlayer p = getWorld().getPlayer(friends.get(i));
 			if(p != null) list.add(p);
 		}
 		return list;

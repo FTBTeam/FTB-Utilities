@@ -93,23 +93,22 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		{
 			IntList onlinePlayers = new IntList();
 			
-			io.writeInt(players.size());
-			
-			for(int i = 0; i < players.size(); i++)
+			io.writeInt(playerMap.size());
+
+			for(LMPlayer p : playerMap.values())
 			{
-				LMPlayer p = players.get(i);
 				io.writeInt(p.playerID);
 				io.writeUUID(p.getUUID());
 				io.writeUTF(p.getName());
 				
-				if(p.isOnline()) onlinePlayers.add(i);
+				if(p.isOnline()) onlinePlayers.add(p.playerID);
 			}
 			
 			io.writeIntArray(onlinePlayers.toArray(), ByteCount.INT);
 			
 			for(int i = 0; i < onlinePlayers.size(); i++)
 			{
-				LMPlayerServer p = players.get(onlinePlayers.get(i)).toPlayerMP();
+				LMPlayerServer p = playerMap.get(onlinePlayers.get(i)).toPlayerMP();
 				p.writeToNet(io, p.playerID == selfID);
 			}
 		}
@@ -120,13 +119,11 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	
 	public void writePlayersToServer(NBTTagCompound tag)
 	{
-		players.sort(null);
-		
-		for(int i = 0; i < players.size(); i++)
+		for(LMPlayer p0 : playerMap.values(null))
 		{
 			NBTTagCompound tag1 = new NBTTagCompound();
 			
-			LMPlayerServer p = players.get(i).toPlayerMP();
+			LMPlayerServer p = p0.toPlayerMP();
 			p.writeToServer(tag1);
 			new EventLMPlayerServer.DataSaved(p).post();
 			tag1.setString("UUID", p.getStringUUID());
@@ -137,7 +134,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	
 	public void readPlayersFromServer(NBTTagCompound tag)
 	{
-		players.clear();
+		playerMap.clear();
 		
 		FastMap<String, NBTTagCompound> map = LMNBTUtils.toFastMapWithType(tag);
 		
@@ -162,11 +159,11 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 				}
 			}
 			
-			players.add(p);
+			playerMap.put(p.playerID, p);
 		}
-		
-		for(int i = 0; i < players.size(); i++)
-			players.get(i).toPlayerMP().onPostLoaded();
+
+		for(LMPlayer p : playerMap.values())
+			p.toPlayerMP().onPostLoaded();
 	}
 	
 	public void update()

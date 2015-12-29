@@ -98,7 +98,6 @@ public class ThreadBackup extends Thread
 					while ((len = fis.read(buffer)) > 0)
 						zos.write(buffer, 0, len);
 					zos.closeEntry();
-					zos.close();
 					fis.close();
 				}
 				

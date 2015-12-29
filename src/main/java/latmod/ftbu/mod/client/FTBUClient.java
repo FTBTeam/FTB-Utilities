@@ -21,7 +21,6 @@ import net.minecraftforge.client.ClientCommandHandler;
 @SideOnly(Side.CLIENT)
 public class FTBUClient extends FTBUCommon // FTBLibModClient
 {
-	public static final ConfigGroup client_config = new ConfigGroup("ftbu");
 	public static final ConfigEntryBool render_badges = new ConfigEntryBool("render_badges", true);
 	
 	public static final ConfigEntryBool render_my_badge = new ConfigEntryBool("render_my_badge", true)
@@ -37,7 +36,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 				LMWorldClient.inst.getClientPlayer().getSettings().update();
 			}
 		}
-	};
+	}.setExcluded();
 	
 	public static final ConfigEntryBool chat_links = new ConfigEntryBool("chat_links", true)
 	{
@@ -52,7 +51,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 				LMWorldClient.inst.getClientPlayer().getSettings().update();
 			}
 		}
-	};
+	}.setExcluded();
 	
 	public static final ConfigEntryBool player_options_shortcut = new ConfigEntryBool("player_options_shortcut", false);
 	public static final ConfigEntryBool sort_friends_az = new ConfigEntryBool("sort_friends_az", false);
@@ -78,17 +77,9 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		EventBusHelper.register(FTBUGuiEventHandler.instance);
 		EventBusHelper.register(FTBUBadgeRenderer.instance);
 		
-		client_config.add(render_badges);
-		client_config.add(render_my_badge.setExcluded());
-		client_config.add(chat_links.setExcluded());
-		client_config.add(player_options_shortcut);
-		client_config.add(sort_friends_az);
-		client_config.add(hide_armor_fg);
-		ClientConfigRegistry.add(client_config);
-		
+		ClientConfigRegistry.add(new ConfigGroup("ftbu").addAll(FTBUClient.class, null, false));
 		ClientCommandHandler.instance.registerCommand(new CmdMath());
-		
-		FTBLibGuiEventHandler.sidebar_buttons_config.addAll(FTBUGuiEventHandler.class);
+		FTBLibGuiEventHandler.sidebar_buttons_config.addAll(FTBUGuiEventHandler.class, null, false);
 	}
 	
 	public void postInit()
@@ -116,8 +107,8 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		
 		if(LMWorldClient.inst != null)
 		{
-			for(int i = 0; i < LMWorldClient.inst.players.size(); i++)
-				LMWorldClient.inst.players.get(i).toPlayerSP().onReloaded();
+			for(LMPlayer p : LMWorldClient.inst.playerMap)
+				p.toPlayerSP().onReloaded();
 		}
 	}
 }

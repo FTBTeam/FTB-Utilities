@@ -19,7 +19,7 @@ public enum ClientAction
 		{
 			if(extra > 0)
 			{
-				LMPlayerServer p = LMWorldServer.inst.getPlayer(extra);
+				LMPlayerServer p = owner.world.getPlayer(extra);
 				if(p == null || p.equalsPlayer(owner)) return false;
 				
 				if(!owner.friends.contains(p.playerID))
@@ -32,9 +32,9 @@ public enum ClientAction
 			}
 			else
 			{
-				for(int i = 0; i < LMWorldServer.inst.players.size(); i++)
+				for(LMPlayer p0 : owner.world.playerMap)
 				{
-					LMPlayerServer p = LMWorldServer.inst.players.get(i).toPlayerMP();
+					LMPlayerServer p = p0.toPlayerMP();
 					
 					if(!p.equalsPlayer(owner) && p.isFriendRaw(owner) && !owner.isFriendRaw(p))
 					{
@@ -54,7 +54,7 @@ public enum ClientAction
 	{
 		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
 		{
-			LMPlayerServer p = LMWorldServer.inst.getPlayer(extra);
+			LMPlayerServer p = owner.world.getPlayer(extra);
 			if(p == null || p.equalsPlayer(owner)) return false;
 			
 			if(owner.friends.contains(p.playerID))
@@ -73,7 +73,7 @@ public enum ClientAction
 	{
 		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
 		{
-			LMPlayerServer p = LMWorldServer.inst.getPlayer(extra);
+			LMPlayerServer p = owner.world.getPlayer(extra);
 			if(p == null || p.equalsPlayer(owner)) return false;
 			
 			if(p.friends.contains(owner.playerID))

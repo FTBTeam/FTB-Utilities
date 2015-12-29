@@ -26,11 +26,7 @@ public class Rank extends FinalIDObject
 	{
 		io.writeByte(color.get().ordinal());
 		io.writeUTF(prefix.get());
-
-		ConfigGroup group = new ConfigGroup(null);
-		for(ConfigEntry e : config_group.entries())
-		{ if(e.shouldSync()) group.add(e.clone()); }
-		group.write(io);
+		config_group.generateSynced(true).write(io);
 	}
 
 	public void readFromIO(ByteIOStream io)

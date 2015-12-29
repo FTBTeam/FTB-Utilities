@@ -45,7 +45,7 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 	{
 		if(first)
 		{
-			players.clear();
+			playerMap.clear();
 			
 			GameProfile gp = FTBLibClient.mc.getSession().func_148256_e();
 			clientPlayer = new LMPlayerClientSelf(this, clientPlayerID, gp);
@@ -58,8 +58,8 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 				UUID uuid = io.readUUID();
 				String name = io.readUTF();
 				
-				if(id == clientPlayerID) players.add(clientPlayer);
-				else players.add(new LMPlayerClient(this, id, new GameProfile(uuid, name)));
+				if(id == clientPlayerID) playerMap.put(id, clientPlayer);
+				else playerMap.put(id, new LMPlayerClient(this, id, new GameProfile(uuid, name)));
 			}
 			
 			FTBLib.dev_logger.info("Client player ID: " + clientPlayerID + ", " + getPlayer(clientPlayerID).getClass());
@@ -68,7 +68,7 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 			
 			for(int i = 0; i < onlinePlayers.length; i++)
 			{
-				LMPlayerClient p = players.get(onlinePlayers[i]).toPlayerSP();
+				LMPlayerClient p = playerMap.get(onlinePlayers[i]).toPlayerSP();
 				p.readFromNet(io, p.playerID == clientPlayerID);
 				new EventLMPlayerClient.DataLoaded(p).post();
 			}

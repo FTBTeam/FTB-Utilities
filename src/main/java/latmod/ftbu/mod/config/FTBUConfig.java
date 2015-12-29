@@ -16,11 +16,11 @@ public class FTBUConfig // FTBU
 	{
 		configFile = new ConfigFile("ftbu", new File(FTBLib.folderLocal, "ftbu/config.json"));
 		configFile.configGroup.setName("FTBUtilities");
-		configFile.add(new ConfigGroup("backups").addAll(FTBUConfigBackups.class));
-		configFile.add(new ConfigGroup("commands").addAll(FTBUConfigCmd.class).setInfo("Command name configs\nEditing is not recommended"));
-		configFile.add(new ConfigGroup("general").addAll(FTBUConfigGeneral.class));
-		configFile.add(new ConfigGroup("login").addAll(FTBUConfigLogin.class));
-		configFile.add(new ConfigGroup("tops").addAll(FTBUConfigTops.class));
+		configFile.add(new ConfigGroup("backups").addAll(FTBUConfigBackups.class, null, false));
+		configFile.add(new ConfigGroup("commands").addAll(FTBUConfigCmd.class, null, false).setInfo("Command name configs\nEditing is not recommended"));
+		configFile.add(new ConfigGroup("general").addAll(FTBUConfigGeneral.class, null, false));
+		configFile.add(new ConfigGroup("login").addAll(FTBUConfigLogin.class, null, false));
+		configFile.add(new ConfigGroup("tops").addAll(FTBUConfigTops.class, null, false));
 		
 		Ranks.ADMIN.config.setDefaults(true);
 		configFile.add(new ConfigGroup("permissions_admin").addAll(RankConfig.class, Ranks.ADMIN.config, false));

@@ -26,7 +26,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public static final int nextPlayerID()
 	{ return ++lastPlayerID; }
-	
+
+	public final LMWorldServer world;
 	private final PersonalSettings settings;
 	private NBTTagCompound serverData = null;
 	public EntityPos lastPos, lastDeath;
@@ -44,11 +45,15 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public LMPlayerServer(LMWorldServer w, int i, GameProfile gp)
 	{
-		super(w, i, gp);
+		super(i, gp);
+		world = w;
 		settings = new PersonalSettings(this);
 		stats = new LMPlayerStats(this);
 		homes = new Warps();
 	}
+
+	public LMWorld getWorld()
+	{ return world; }
 	
 	public Side getSide()
 	{ return Side.SERVER; }
@@ -209,12 +214,9 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		io.writeIntArray(friends.toArray(), ByteCount.SHORT);
 		
 		IntList otherFriends = new IntList();
-		
-		for(int i = 0; i < LMWorldServer.inst.players.size(); i++)
-		{
-			LMPlayer p = LMWorldServer.inst.players.get(i);
-			if(p.friends.contains(playerID)) otherFriends.add(p.playerID);
-		}
+
+		for(LMPlayer p : world.playerMap.values())
+		{ if(p.friends.contains(playerID)) otherFriends.add(p.playerID); }
 		
 		io.writeIntArray(otherFriends.toArray(), ByteCount.SHORT);
 		LMNBTUtils.writeTag(io, commonPublicData);
@@ -239,13 +241,12 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	{
 		if(isOnline())
 		{
-			FastList<String> requests = new FastList<String>();
-			
-			for(int i = 0; i < LMWorldServer.inst.players.size(); i++)
+			FastList<String> requests = new FastList<>();
+
+			for(LMPlayer p : world.playerMap.values())
 			{
-				LMPlayer p1 = LMWorldServer.inst.players.get(i);
-				if(p1.isFriendRaw(this) && !isFriendRaw(p1))
-					requests.add(p1.getName());
+				if(p.isFriendRaw(this) && !isFriendRaw(p))
+					requests.add(p.getName());
 			}
 			
 			if(requests.size() > 0)
@@ -278,24 +279,24 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		if(max == 0) return;
 		if(getClaimedChunks() >= max) return;
 		
-		ChunkType t = LMWorldServer.inst.claimedChunks.getType(dim, cx, cz);
-		if(!t.isClaimed() && t.isChunkOwner(this) && LMWorldServer.inst.claimedChunks.put(new ClaimedChunk(playerID, dim, cx, cz)))
+		ChunkType t = world.claimedChunks.getType(dim, cx, cz);
+		if(!t.isClaimed() && t.isChunkOwner(this) && world.claimedChunks.put(new ClaimedChunk(playerID, dim, cx, cz)))
 			sendUpdate();
 	}
 
 	public void unclaimChunk(int dim, int cx, int cz)
 	{
-		if(LMWorldServer.inst.claimedChunks.getType(dim, cx, cz).isChunkOwner(this))
+		if(world.claimedChunks.getType(dim, cx, cz).isChunkOwner(this))
 		{
 			setLoaded(dim, cx, cz, false);
-			LMWorldServer.inst.claimedChunks.remove(dim, cx, cz);
+			world.claimedChunks.remove(dim, cx, cz);
 			sendUpdate();
 		}
 	}
 	
 	public void unclaimAllChunks(Integer dim)
 	{
-		List<ClaimedChunk> list = LMWorldServer.inst.claimedChunks.getChunks(this, dim);
+		List<ClaimedChunk> list = world.claimedChunks.getChunks(this, dim);
 		int size0 = list.size();
 		if(size0 == 0) return;
 		
@@ -303,19 +304,19 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		{
 			ClaimedChunk c = list.get(i);
 			setLoaded(c.dim, c.chunkXPos, c.chunkZPos, false);
-			LMWorldServer.inst.claimedChunks.remove(c.dim, c.chunkXPos, c.chunkZPos);
+			world.claimedChunks.remove(c.dim, c.chunkXPos, c.chunkZPos);
 		}
 		
 		sendUpdate();
 	}
 	
 	public int getClaimedChunks()
-	{ return LMWorldServer.inst.claimedChunks.getChunks(this, null).size(); }
+	{ return world.claimedChunks.getChunks(this, null).size(); }
 
 	public int getLoadedChunks(boolean forced)
 	{
 		int loaded = 0;
-		for(ClaimedChunk c : LMWorldServer.inst.claimedChunks.getChunks(this, null))
+		for(ClaimedChunk c : world.claimedChunks.getChunks(this, null))
 		{ if(c.isChunkloaded && (!forced || c.isForced)) loaded++; }
 		return loaded;
 	}
@@ -329,7 +330,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public void setLoaded(int dim, int cx, int cz, boolean flag)
 	{
-		ClaimedChunk chunk = LMWorldServer.inst.claimedChunks.getChunk(dim, cx, cz);
+		ClaimedChunk chunk = world.claimedChunks.getChunk(dim, cx, cz);
 		if(chunk == null) return;
 
 		if(flag != chunk.isChunkloaded && equalsPlayer(chunk.getOwner()))

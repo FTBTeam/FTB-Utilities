@@ -130,31 +130,46 @@ public class ServerGuideFile extends GuideFile
 		commands.clear();
 		
 		CommandLM.extendedUsageInfo = true;
-		FastList<ICommand> cachedCmds = FTBLib.getAllCommands(self.getPlayer());
-		for(int i = 0; i < cachedCmds.size(); i++)
+
+		try
 		{
-			ICommand c = cachedCmds.get(i);
-			GuideCategory cat = commands.getSub(new ChatComponentText('/' + c.getCommandName()));
-			
-			@SuppressWarnings("unchecked")
-			List<String> al = c.getCommandAliases();
-			if(al != null && !al.isEmpty()) for(String s : al)
-				cat.println('/' + s);
-			
-			String usage = c.getCommandUsage(self.getPlayer());
-			
-			if(usage != null)
+			for(ICommand c : FTBLib.getAllCommands(self.getPlayer()))
 			{
-				if(usage.indexOf('\n') != -1)
+				try
 				{
-					String[] usageL = usage.split("\n");
-					for(String s1 : usageL)
-						cat.println(s1);
+					GuideCategory cat = new GuideCategory(new ChatComponentText('/' + c.getCommandName()));
+
+					@SuppressWarnings("unchecked")
+					List<String> al = c.getCommandAliases();
+					if(al != null && !al.isEmpty()) for(String s : al)
+						cat.println('/' + s);
+
+					String usage = c.getCommandUsage(self.getPlayer());
+
+					if(usage != null)
+					{
+						if(usage.indexOf('\n') != -1)
+						{
+							String[] usageL = usage.split("\n");
+							for(String s1 : usageL)
+								cat.println(s1);
+						}
+						else cat.println(new ChatComponentTranslation(usage));
+					}
+
+					cat.setParent(commands);
+					commands.addSub(cat);
 				}
-				else cat.println(new ChatComponentTranslation(usage));
+				catch(Exception ex1)
+				{
+					IChatComponent cc = new ChatComponentText('/' + c.getCommandName());
+					cc.getChatStyle().setColor(EnumChatFormatting.DARK_RED);
+					commands.getSub(cc).println("Errored");
+				}
 			}
 		}
-		
+		catch(Exception ex) { }
+
 		CommandLM.extendedUsageInfo = false;
 		commands.subcategories.sort(null);
 		

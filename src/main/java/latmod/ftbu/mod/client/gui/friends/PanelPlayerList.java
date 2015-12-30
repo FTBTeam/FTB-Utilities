@@ -7,7 +7,7 @@ import org.lwjgl.input.Mouse;
 
 public class PanelPlayerList extends PanelFriendsGui
 {
-	private static final FastList<LMPlayer> tempPlayerList = new FastList<LMPlayer>();
+	private static final FastList<LMPlayer> tempPlayerList = new FastList<>();
 	
 	public final FastList<ButtonPlayer> playerButtons;
 	
@@ -16,7 +16,7 @@ public class PanelPlayerList extends PanelFriendsGui
 		super(g);
 		width = 120;
 		
-		playerButtons = new FastList<ButtonPlayer>();
+		playerButtons = new FastList<>();
 	}
 	
 	public boolean isEnabled()

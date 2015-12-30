@@ -22,11 +22,11 @@ public class FTBUConfig // FTBU
 		configFile.add(new ConfigGroup("login").addAll(FTBUConfigLogin.class, null, false));
 		configFile.add(new ConfigGroup("tops").addAll(FTBUConfigTops.class, null, false));
 		
-		Ranks.ADMIN.config.setDefaults(true);
+		Ranks.ADMIN.setDefaults();
 		configFile.add(new ConfigGroup("permissions_admin").addAll(RankConfig.class, Ranks.ADMIN.config, false));
 		Ranks.ADMIN.color.set(EnumChatFormatting.DARK_GREEN);
 		
-		Ranks.PLAYER.config.setDefaults(false);
+		Ranks.PLAYER.setDefaults();
 		configFile.add(new ConfigGroup("permissions_player").addAll(RankConfig.class, Ranks.PLAYER.config, false));
 		
 		ConfigRegistry.add(configFile);

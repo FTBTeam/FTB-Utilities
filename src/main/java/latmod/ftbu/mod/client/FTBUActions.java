@@ -28,7 +28,7 @@ public class FTBUActions
 		{ return "FriendsGUI"; }
 	};
 	
-	// Other players //
+	// Other playerMap //
 	
 	public static final PlayerAction friend_add = new PlayerAction(GuiIcons.add)
 	{

@@ -71,7 +71,7 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 		
 		IntList otherFriends = IntList.asList(io.readIntArray(ByteCount.SHORT));
 		
-		for(LMPlayer p : world.playerMap)
+		for(LMPlayerClient p : world.playerMap)
 		{
 			if(!p.equalsPlayer(this))
 			{

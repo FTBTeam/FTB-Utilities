@@ -32,10 +32,8 @@ public enum ClientAction
 			}
 			else
 			{
-				for(LMPlayer p0 : owner.world.playerMap)
+				for(LMPlayerServer p : owner.world.playerMap)
 				{
-					LMPlayerServer p = p0.toPlayerMP();
-					
 					if(!p.equalsPlayer(owner) && p.isFriendRaw(owner) && !owner.isFriendRaw(p))
 					{
 						owner.friends.add(p.playerID);
@@ -109,6 +107,15 @@ public enum ClientAction
 		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
 		{
 			LatCoreMC.displayGuide(ep, new ServerGuideFile(owner));
+			return false;
+		}
+	},
+
+	ACTION_REQUEST_SELF_UPDATE
+	{
+		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
+		{
+			new MessageLMPlayerUpdate(owner, true).sendTo(ep);
 			return false;
 		}
 	},

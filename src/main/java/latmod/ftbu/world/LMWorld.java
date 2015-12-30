@@ -20,21 +20,19 @@ public abstract class LMWorld // FTBWorld
 	{ return getWorld(FTBLib.getEffectiveSide()); }
 	
 	public final Side side;
-	public final FastMap<Integer, LMPlayer> playerMap;
 	public final LMWorldSettings settings;
 	public final ConfigGroup customCommonData;
 	
 	public LMWorld(Side s)
 	{
 		side = s;
-		playerMap = new FastMap<>();
 		settings = new LMWorldSettings(this);
 		customCommonData = new ConfigGroup("custom_common_data");
 	}
-	
-	public World getMCWorld()
-	{ return null; }
-	
+
+	public abstract FastMap<Integer, ? extends LMPlayer> playerMap();
+	public abstract World getMCWorld();
+
 	public LMWorldServer getServerWorld()
 	{ return null; }
 	
@@ -45,7 +43,10 @@ public abstract class LMWorld // FTBWorld
 	public LMPlayer getPlayer(Object o)
 	{
 		if(o == null || o instanceof FakePlayer) return null;
-		else if(o instanceof Number || o instanceof LMPlayer)
+
+		FastMap<Integer, ? extends LMPlayer> playerMap = playerMap();
+
+		if(o instanceof Number || o instanceof LMPlayer)
 		{
 			int h = o.hashCode();
 			if(h <= 0) return null;
@@ -88,7 +89,7 @@ public abstract class LMWorld // FTBWorld
 	public FastList<LMPlayer> getAllOnlinePlayers()
 	{
 		FastList<LMPlayer> l = new FastList<>();
-		for(LMPlayer p : playerMap.values())
+		for(LMPlayer p : playerMap().values())
 		{ if(p.isOnline()) l.add(p); }
 		return l;
 	}
@@ -103,7 +104,7 @@ public abstract class LMWorld // FTBWorld
 	public String[] getAllPlayerNames(Boolean online)
 	{
 		if(online == null) return new String[0];
-		FastList<LMPlayer> list = (online == Boolean.TRUE) ? getAllOnlinePlayers() : FastList.asList(playerMap.values());
+		FastList<? extends LMPlayer> list = (online == Boolean.TRUE) ? getAllOnlinePlayers() : FastList.asList(playerMap().values());
 		
 		list.sort(new Comparator<LMPlayer>()
 		{
@@ -128,9 +129,9 @@ public abstract class LMWorld // FTBWorld
 	
 	public int[] getAllPlayerIDs()
 	{
-		int[] ai = new int[playerMap.size()];
+		int[] ai = new int[playerMap().size()];
 		int id = -1;
-		for(LMPlayer p : playerMap.values())
+		for(LMPlayer p : playerMap().values())
 			ai[++id] = p.playerID;
 		return ai;
 	}
@@ -142,7 +143,7 @@ public abstract class LMWorld // FTBWorld
 	public FastList<LMPlayerServer> getServerPlayers()
 	{
 		FastList<LMPlayerServer> l = new FastList<>();
-		for(LMPlayer p : playerMap.values())
+		for(LMPlayer p : playerMap().values())
 			l.add(p.toPlayerMP());
 		return l;
 	}

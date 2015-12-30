@@ -15,8 +15,10 @@ import java.util.UUID;
 public class LMWorldClient extends LMWorld // LMWorldServer
 {
 	public static LMWorldClient inst = null;
+
 	public final int clientPlayerID;
 	public final File clientDataFolder;
+	public final FastMap<Integer, LMPlayerClient> playerMap;
 	public LMPlayerClientSelf clientPlayer = null;
 	
 	public LMWorldClient(int i)
@@ -24,7 +26,11 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 		super(Side.CLIENT);
 		clientPlayerID = i;
 		clientDataFolder = new File(FTBLib.folderLocal, "client/" + FTBWorld.client.getWorldIDS());
+		playerMap = new FastMap<>();
 	}
+
+	public FastMap<Integer, ? extends LMPlayer> playerMap()
+	{ return playerMap; }
 	
 	public World getMCWorld()
 	{ return FTBLibClient.mc.theWorld; }

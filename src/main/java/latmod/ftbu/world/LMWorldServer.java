@@ -20,25 +20,28 @@ import java.util.Map;
 public class LMWorldServer extends LMWorld // LMWorldClient
 {
 	public static LMWorldServer inst = null;
-	
-	public final WorldServer worldObj;
+
 	public final File latmodFolder;
+	public final FastMap<Integer, LMPlayerServer> playerMap;
 	public final Warps warps;
 	public final ClaimedChunks claimedChunks;
 	private final LMFakeServerPlayer fakePlayer;
 	public final ConfigGroup customServerData;
 	public int lastMailID = 0;
 	
-	public LMWorldServer(WorldServer w, File f)
+	public LMWorldServer(File f)
 	{
 		super(Side.SERVER);
-		worldObj = w;
 		latmodFolder = f;
+		playerMap = new FastMap<>();
 		warps = new Warps();
 		claimedChunks = new ClaimedChunks();
 		fakePlayer = new LMFakeServerPlayer(this);
 		customServerData = new ConfigGroup("custom_server_data");
 	}
+
+	public FastMap<Integer, ? extends LMPlayer> playerMap()
+	{ return playerMap; }
 	
 	public World getMCWorld()
 	{ return FTBLib.getServerWorld(); }
@@ -95,7 +98,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 			
 			io.writeInt(playerMap.size());
 
-			for(LMPlayer p : playerMap.values())
+			for(LMPlayerServer p : playerMap.values())
 			{
 				io.writeInt(p.playerID);
 				io.writeUUID(p.getUUID());
@@ -108,7 +111,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 			
 			for(int i = 0; i < onlinePlayers.size(); i++)
 			{
-				LMPlayerServer p = playerMap.get(onlinePlayers.get(i)).toPlayerMP();
+				LMPlayerServer p = playerMap.get(onlinePlayers.get(i));
 				p.writeToNet(io, p.playerID == selfID);
 			}
 		}
@@ -119,11 +122,10 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	
 	public void writePlayersToServer(NBTTagCompound tag)
 	{
-		for(LMPlayer p0 : playerMap.values(null))
+		for(LMPlayerServer p : playerMap.values(null))
 		{
 			NBTTagCompound tag1 = new NBTTagCompound();
-			
-			LMPlayerServer p = p0.toPlayerMP();
+
 			p.writeToServer(tag1);
 			new EventLMPlayerServer.DataSaved(p).post();
 			tag1.setString("UUID", p.getStringUUID());
@@ -158,12 +160,12 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 					claimedChunks.put(new ClaimedChunk(p.playerID, ai[0], ai[1], ai[2]));
 				}
 			}
-			
+
 			playerMap.put(p.playerID, p);
 		}
 
-		for(LMPlayer p : playerMap.values())
-			p.toPlayerMP().onPostLoaded();
+		for(LMPlayerServer p : playerMap.values())
+			p.onPostLoaded();
 	}
 	
 	public void update()

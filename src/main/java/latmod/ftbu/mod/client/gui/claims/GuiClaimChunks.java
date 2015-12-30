@@ -96,6 +96,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 				thread = new ThreadReloadArea(mc.theWorld, GuiClaimChunks.this);
 				thread.start();
 				new MessageAreaRequest(startX, startY, tiles_gui, tiles_gui).sendToServer();
+				ClientAction.ACTION_REQUEST_SELF_UPDATE.send(0);
 				gui.playClickSound();
 			}
 		};

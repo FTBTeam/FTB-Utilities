@@ -107,8 +107,8 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		
 		if(LMWorldClient.inst != null)
 		{
-			for(LMPlayer p : LMWorldClient.inst.playerMap)
-				p.toPlayerSP().onReloaded();
+			for(LMPlayerClient p : LMWorldClient.inst.playerMap)
+				p.onReloaded();
 		}
 	}
 }

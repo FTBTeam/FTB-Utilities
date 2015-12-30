@@ -17,6 +17,7 @@ import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
+import net.minecraftforge.common.util.FakePlayer;
 
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public static LMPlayerServer get(Object o) throws CommandException
 	{
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(o);
-		if(p == null) throw new PlayerNotFoundException();
+		if(p == null || p.isFake()) throw new PlayerNotFoundException();
 		return p;
 	}
 	
@@ -76,6 +77,9 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public PersonalSettings getSettings()
 	{ return settings; }
+
+	public boolean isFake()
+	{ return getPlayer() instanceof FakePlayer; }
 	
 	public void sendUpdate()
 	{
@@ -215,7 +219,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		IntList otherFriends = new IntList();
 
-		for(LMPlayer p : world.playerMap.values())
+		for(LMPlayerServer p : world.playerMap.values())
 		{ if(p.friends.contains(playerID)) otherFriends.add(p.playerID); }
 		
 		io.writeIntArray(otherFriends.toArray(), ByteCount.SHORT);
@@ -243,7 +247,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		{
 			FastList<String> requests = new FastList<>();
 
-			for(LMPlayer p : world.playerMap.values())
+			for(LMPlayerServer p : world.playerMap.values())
 			{
 				if(p.isFriendRaw(this) && !isFriendRaw(p))
 					requests.add(p.getName());

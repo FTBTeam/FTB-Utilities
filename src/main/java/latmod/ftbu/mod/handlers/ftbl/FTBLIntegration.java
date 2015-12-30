@@ -13,6 +13,7 @@ import latmod.ftbu.mod.config.*;
 import latmod.ftbu.mod.handlers.FTBUChunkEventHandler;
 import latmod.ftbu.net.*;
 import latmod.ftbu.world.*;
+import latmod.ftbu.world.ranks.Ranks;
 import latmod.lib.*;
 import latmod.lib.util.Phase;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -34,11 +35,12 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 			if(FTBUConfigGeneral.restart_timer.get() > 0)
 				FTBUTicks.serverStarted();
 			
-			for(LMPlayer p : LMWorldServer.inst.playerMap)
-				p.toPlayerMP().refreshStats();
+			for(LMPlayerServer p : LMWorldServer.inst.playerMap)
+				p.refreshStats();
 			
 			ServerGuideFile.CachedInfo.reload();
 			FTBUChunkEventHandler.instance.markDirty(null);
+			Ranks.reload();
 		}
 		else FTBU.proxy_ftbl_int.onReloadedClient(e);
 	}
@@ -59,7 +61,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 			File latmodFolder = new File(e.worldMC.getSaveHandler().getWorldDirectory(), "latmod/");
 			File file = new File(latmodFolder, "LMWorld.dat");
 			
-			LMWorldServer.inst = new LMWorldServer((WorldServer)e.worldMC, latmodFolder);
+			LMWorldServer.inst = new LMWorldServer(latmodFolder);
 			JsonElement obj = JsonNull.INSTANCE;
 			
 			if(file.exists())
@@ -84,8 +86,8 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 				LMWorldServer.inst.readPlayersFromServer(tagPlayers.getCompoundTag("Players"));
 			}
 			
-			for(LMPlayer p : LMWorldServer.inst.playerMap)
-				p.toPlayerMP().setPlayer(null);
+			for(LMPlayerServer p : LMWorldServer.inst.playerMap)
+				p.setPlayer(null);
 			
 			if(obj.isJsonObject()) LMWorldServer.inst.load(obj.getAsJsonObject(), Phase.POST);
 			
@@ -167,5 +169,5 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 	{ return LMWorld.getWorld().getAllPlayerNames(Boolean.valueOf(online)); }
 	
 	public String[] getOfflinePlayerNames()
-	{ return LMWorld.getWorld().playerMap.getValueStringArray(); }
+	{ return LMWorld.getWorld().playerMap().getValueStringArray(); }
 }

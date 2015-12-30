@@ -17,8 +17,8 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 	public GuideCategory(IChatComponent s)
 	{
 		title = s;
-		text = new FastList<IChatComponent>();
-		subcategories = new FastList<GuideCategory>();
+		text = new FastList<>();
+		subcategories = new FastList<>();
 	}
 	
 	public GuideCategory setParent(GuideCategory c)
@@ -156,7 +156,7 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 		{
 			GuideCategory c = subcategories.get(i);
 			
-			if(c.subcategories.isEmpty() && FTBLib.removeFormatting(c.getFormattedText().trim()).isEmpty())
+			if(c.subcategories.isEmpty() && c.getUnformattedText().trim().isEmpty())
 				subcategories.remove(i); else c.cleanup();
 		}
 	}

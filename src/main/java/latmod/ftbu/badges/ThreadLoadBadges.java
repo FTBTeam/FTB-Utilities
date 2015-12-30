@@ -36,7 +36,7 @@ public class ThreadLoadBadges extends Thread
 		if(!FTBUConfigLogin.custom_badges.get().isEmpty())
 			loadBages(FTBUConfigLogin.custom_badges.get());
 		
-		FTBU.mod.logger.info("Loaded " + urlBadges.size() + " badges for " + Badge.badges.size() + " players in " + (LMUtils.millis() - msStarted) + " ms!");
+		FTBU.mod.logger.info("Loaded " + urlBadges.size() + " badges for " + Badge.badges.size() + " playerMap in " + (LMUtils.millis() - msStarted) + " ms!");
 	}
 	
 	public void loadBages(String url)

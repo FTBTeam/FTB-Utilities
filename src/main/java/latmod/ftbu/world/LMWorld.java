@@ -9,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
-import java.util.*;
+import java.util.UUID;
 
 public abstract class LMWorld // FTBWorld
 {
@@ -86,7 +86,7 @@ public abstract class LMWorld // FTBWorld
 		return null;
 	}
 	
-	public FastList<LMPlayer> getAllOnlinePlayers()
+	public FastList<? extends LMPlayer> getAllOnlinePlayers()
 	{
 		FastList<LMPlayer> l = new FastList<>();
 		for(LMPlayer p : playerMap().values())
@@ -99,32 +99,6 @@ public abstract class LMWorld // FTBWorld
 		if(o == null) return 0;
 		LMPlayer p = getPlayer(o);
 		return (p == null) ? 0 : p.playerID;
-	}
-	
-	public String[] getAllPlayerNames(Boolean online)
-	{
-		if(online == null) return new String[0];
-		FastList<? extends LMPlayer> list = (online == Boolean.TRUE) ? getAllOnlinePlayers() : FastList.asList(playerMap().values());
-		
-		list.sort(new Comparator<LMPlayer>()
-		{
-			public int compare(LMPlayer o1, LMPlayer o2)
-			{
-				if(o1.isOnline() == o2.isOnline())
-					return o1.getName().compareToIgnoreCase(o2.getName());
-				return Boolean.compare(o2.isOnline(), o1.isOnline());
-			}
-		});
-		
-		FastList<String> l = new FastList<>();
-		
-		for(int i = 0; i < list.size(); i++)
-		{
-			String s = list.get(i).getName();
-			if(!l.contains(s)) l.add(s);
-		}
-		
-		return l.toArray(new String[l.size()]);
 	}
 	
 	public int[] getAllPlayerIDs()

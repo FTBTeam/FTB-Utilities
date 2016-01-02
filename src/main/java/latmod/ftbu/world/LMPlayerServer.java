@@ -106,15 +106,15 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	// Reading / Writing //
 	
-	public void getInfo(FastList<IChatComponent> info)
+	public void getInfo(LMPlayerServer owner, FastList<IChatComponent> info)
 	{
 		refreshStats();
 		long ms = LMUtils.millis();
 		new EventLMPlayerServer.CustomInfo(this, info).post();
-		Rank rank = getRank();
 
-		if(rank.config.show_rank.get() && isOnline())
+		if(owner.getRank().config.show_rank.get())
 		{
+			Rank rank = getRank();
 			IChatComponent rankC = new ChatComponentText("[" + rank.ID + "]");
 			rankC.getChatStyle().setColor(rank.color.get());
 			info.add(rankC);

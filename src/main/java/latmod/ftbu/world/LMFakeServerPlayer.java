@@ -4,7 +4,7 @@ import com.mojang.authlib.GameProfile;
 import ftb.lib.FTBLib;
 import latmod.ftbu.world.ranks.*;
 import latmod.lib.FastList;
-import net.minecraft.util.*;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.FakePlayer;
 
 import java.util.UUID;

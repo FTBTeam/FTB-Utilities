@@ -1,7 +1,7 @@
 package latmod.ftbu.api.guide;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.*;
+import ftb.lib.LMNBTUtils;
 import latmod.lib.FastList;
 import net.minecraft.nbt.*;
 import net.minecraft.util.*;

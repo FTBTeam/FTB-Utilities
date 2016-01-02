@@ -166,7 +166,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 	{ return LMWorld.getWorld().getPlayerID(player); }
 	
 	public String[] getPlayerNames(boolean online)
-	{ return LMWorld.getWorld().getAllPlayerNames(Boolean.valueOf(online)); }
+	{ return LMWorldServer.inst.getAllPlayerNames(Boolean.valueOf(online)); }
 	
 	public String[] getOfflinePlayerNames()
 	{ return LMWorld.getWorld().playerMap().getValueStringArray(); }

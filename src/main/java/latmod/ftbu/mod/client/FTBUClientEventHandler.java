@@ -1,4 +1,5 @@
 package latmod.ftbu.mod.client;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.FTBLibClient;
@@ -14,7 +15,7 @@ import net.minecraftforge.event.entity.player.*;
 public class FTBUClientEventHandler
 {
 	public static final FTBUClientEventHandler instance = new FTBUClientEventHandler();
-	
+
 	@SubscribeEvent
 	public void onTooltip(ItemTooltipEvent e)
 	{

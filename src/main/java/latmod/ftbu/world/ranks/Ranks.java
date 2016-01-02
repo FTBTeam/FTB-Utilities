@@ -1,9 +1,8 @@
 package latmod.ftbu.world.ranks;
 
 import ftb.lib.FTBLib;
-import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
-import latmod.ftbu.world.*;
+import latmod.ftbu.world.LMPlayerServer;
 import latmod.lib.FastMap;
 import latmod.lib.config.*;
 
@@ -28,9 +27,11 @@ public class Ranks
 			Rank r = playerMap.get(p.getUUID());
 			return (r == null) ? defaultRank : r;
 		}
-
-		if(p == null || p.isFake()) return PLAYER;
-		return p.isOP() ? ADMIN : PLAYER;
+		else
+		{
+			if(p == null || p.isFake()) return PLAYER;
+			return p.isOP() ? ADMIN : PLAYER;
+		}
 	}
 
 	public static void reload()

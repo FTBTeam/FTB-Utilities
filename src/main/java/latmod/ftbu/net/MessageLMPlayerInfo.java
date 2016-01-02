@@ -14,7 +14,7 @@ public class MessageLMPlayerInfo extends MessageFTBU
 {
 	public MessageLMPlayerInfo() { super(ByteCount.INT); }
 	
-	public MessageLMPlayerInfo(int playerID)
+	public MessageLMPlayerInfo(LMPlayerServer owner, int playerID)
 	{
 		this();
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(playerID);
@@ -24,7 +24,7 @@ public class MessageLMPlayerInfo extends MessageFTBU
 		NBTTagCompound tag = new NBTTagCompound();
 		
 		FastList<IChatComponent> info = new FastList<>();
-		p.getInfo(info);
+		p.getInfo(owner, info);
 		
 		NBTTagList listInfo = new NBTTagList();
 		

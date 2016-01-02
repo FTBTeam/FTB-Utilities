@@ -11,11 +11,11 @@ import latmod.lib.*;
 import latmod.lib.config.ConfigGroup;
 import latmod.lib.util.Phase;
 import net.minecraft.nbt.*;
-import net.minecraft.world.*;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
 import java.io.File;
-import java.util.Map;
+import java.util.*;
 
 public class LMWorldServer extends LMWorld // LMWorldClient
 {
@@ -170,4 +170,30 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	
 	public void update()
 	{ new MessageLMWorldUpdate(this).sendTo(null); }
+
+	public FastList<LMPlayerServer> getAllOnlinePlayers()
+	{
+		FastList<LMPlayerServer> l = new FastList<>();
+		for(LMPlayerServer p : playerMap.values())
+		{ if(p.isOnline()) l.add(p); }
+		return l;
+	}
+
+	public String[] getAllPlayerNames(Boolean online)
+	{
+		if(online == null) return new String[0];
+		FastList<LMPlayerServer> list = (online == Boolean.TRUE) ? getAllOnlinePlayers() : new FastList<>(playerMap.values());
+
+		Collections.sort(list, new Comparator<LMPlayerServer>()
+		{
+			public int compare(LMPlayerServer o1, LMPlayerServer o2)
+			{
+				if(o1.isOnline() == o2.isOnline())
+					return o1.getName().compareToIgnoreCase(o2.getName());
+				return Boolean.compare(o2.isOnline(), o1.isOnline());
+			}
+		});
+
+		return list.toStringArray();
+	}
 }

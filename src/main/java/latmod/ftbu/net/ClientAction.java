@@ -2,7 +2,7 @@ package latmod.ftbu.net;
 
 import latmod.ftbu.api.guide.ServerGuideFile;
 import latmod.ftbu.util.LatCoreMC;
-import latmod.ftbu.world.*;
+import latmod.ftbu.world.LMPlayerServer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public enum ClientAction
@@ -89,7 +89,7 @@ public enum ClientAction
 	{
 		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
 		{
-			new MessageLMPlayerInfo(extra).sendTo(ep);
+			new MessageLMPlayerInfo(owner, extra).sendTo(ep);
 			return false;
 		}
 	},

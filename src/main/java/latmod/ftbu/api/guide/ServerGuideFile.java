@@ -21,7 +21,7 @@ public class ServerGuideFile extends GuideFile
 	{
 		public static final GuideCategory main = new GuideCategory(new ChatComponentTranslation(FTBUFinals.ASSETS + "button.server_info"));
 		public static GuideCategory categoryServer, categoryServerAdmin;
-		public static final FastMap<String, GuideLink> links = new FastMap<String, GuideLink>();
+		public static final FastMap<String, GuideLink> links = new FastMap<>();
 		
 		public static void reload()
 		{
@@ -103,7 +103,7 @@ public class ServerGuideFile extends GuideFile
 		
 		main.copyFrom(CachedInfo.main);
 		links.putAll(CachedInfo.links);
-		
+
 		categoryTops = main.getSub(new ChatComponentTranslation(FTBU.mod.assets + "top.title"));
 		
 		players = LMWorldServer.inst.getServerPlayers();

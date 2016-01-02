@@ -19,7 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraftforge.common.util.FakePlayer;
 
-import java.util.List;
+import java.util.*;
 
 public class LMPlayerServer extends LMPlayer // LMPlayerClient
 {
@@ -261,7 +261,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 				n.setDesc(new ChatComponentTranslation(FTBU.mod.assets + "label.new_friends_click"));
 				
 				MouseAction mouse = new MouseAction(FTBUClickAction.FRIEND_ADD_ALL, null);
-				requests.sort(null);
+				Collections.sort(requests, null);
 				mouse.hover = new IChatComponent[requests.size()];
 				for(int i = 0; i < mouse.hover.length; i++)
 					mouse.hover[i] = new ChatComponentText(requests.get(i));

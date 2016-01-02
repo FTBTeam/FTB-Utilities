@@ -54,7 +54,8 @@ public class ClientGuideFile extends GuideFile
 			try
 			{
 				String text = LMFileUtils.loadAsText(file);
-				main.println(text);
+				if(text != null && !text.isEmpty())
+					main.println(text.replace("\r", ""));
 			}
 			catch(Exception ex)
 			{ ex.printStackTrace(); }

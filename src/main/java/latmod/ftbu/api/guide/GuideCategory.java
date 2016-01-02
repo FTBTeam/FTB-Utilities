@@ -8,6 +8,12 @@ import net.minecraft.util.*;
 
 public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 {
+	private static final FastList.RemoveFilter<GuideCategory> cleanupFilter = new FastList.RemoveFilter<GuideCategory>()
+	{
+		public boolean remove(GuideCategory c)
+		{ return c.subcategories.isEmpty() && c.getUnformattedText().trim().isEmpty(); }
+	};
+
 	public GuideCategory parent = null;
 	private IChatComponent title;
 	private FastList<IChatComponent> text;
@@ -66,18 +72,15 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 	{ return title; }
 	
 	public String toString()
-	{ return title.getUnformattedText(); }
+	{ return title.getUnformattedText().trim(); }
 	
 	public boolean equals(Object o)
 	{ return o != null && (o == this || toString().equals(o.toString())); }
 	
 	public GuideCategory getSub(IChatComponent s)
 	{
-		for(int i = 0; i < subcategories.size(); i++)
-		{
-			GuideCategory c = subcategories.get(i);
-			if(c.title.equals(s)) return c;
-		}
+		for(GuideCategory c : subcategories)
+		{ if(c.toString().equalsIgnoreCase(s.getUnformattedText().trim())) return c; }
 		
 		GuideCategory c = new GuideCategory(s);
 		c.setParent(this);
@@ -152,13 +155,9 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 	
 	public void cleanup()
 	{
-		for(int i = subcategories.size() - 1; i >= 0; i--)
-		{
-			GuideCategory c = subcategories.get(i);
-			
-			if(c.subcategories.isEmpty() && c.getUnformattedText().trim().isEmpty())
-				subcategories.remove(i); else c.cleanup();
-		}
+		subcategories.removeAll(cleanupFilter);
+		for(GuideCategory c : subcategories)
+			c.cleanup();
 	}
 
 	public void copyFrom(GuideCategory c)

@@ -1,12 +1,9 @@
 package latmod.ftbu.world.ranks;
 
-import ftb.lib.FTBLib;
-import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.world.LMPlayerServer;
 import latmod.lib.FastMap;
-import latmod.lib.config.*;
+import latmod.lib.config.ConfigFile;
 
-import java.io.File;
 import java.util.UUID;
 
 public class Ranks
@@ -21,23 +18,25 @@ public class Ranks
 
 	public static Rank getRank(LMPlayerServer p)
 	{
-		if(FTBUConfigGeneral.ranks_enabled.get())
+		/*if(FTBUConfigGeneral.ranks_enabled.get())
 		{
 			if(p == null || p.isFake()) return defaultRank;
 			Rank r = playerMap.get(p.getUUID());
 			return (r == null) ? defaultRank : r;
 		}
 		else
-		{
+		{*/
 			if(p == null || p.isFake()) return PLAYER;
 			return p.isOP() ? ADMIN : PLAYER;
-		}
+		//}
 	}
 
 	public static void reload()
 	{
 		ranks.clear();
 		playerMap.clear();
+
+		/*
 
 		if(file == null) file = new ConfigFile("ranks", new File(FTBLib.folderLocal, "ftbu/ranks.json"));
 
@@ -59,6 +58,7 @@ public class Ranks
 		}
 
 		saveRanks();
+		*/
 	}
 
 	public static void saveRanks()

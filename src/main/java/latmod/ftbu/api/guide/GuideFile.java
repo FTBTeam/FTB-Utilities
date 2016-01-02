@@ -18,7 +18,7 @@ public class GuideFile // ServerGuideFile // ClientGuideFile
 	{
 		main = new GuideCategory(title);
 		main.file = this;
-		links = new FastMap<String, GuideLink>();
+		links = new FastMap<>();
 	}
 	
 	public GuideCategory getMod(String s)
@@ -45,8 +45,6 @@ public class GuideFile // ServerGuideFile // ClientGuideFile
 	{
 		if(f == null || !f.exists()) return;
 		
-		String name = f.getName();
-		
 		if(f.isDirectory())
 		{
 			File[] f1 = f.listFiles();
@@ -54,19 +52,20 @@ public class GuideFile // ServerGuideFile // ClientGuideFile
 			if(f1 != null && f1.length > 0)
 			{
 				Arrays.sort(f1, LMFileUtils.fileComparator);
-				GuideCategory c1 = c.getSub(new ChatComponentText(name));
+				GuideCategory c1 = c.getSub(new ChatComponentText(f.getName()));
 				for(File f2 : f1) loadFromFiles(c1, f2);
 			}
 		}
 		else if(f.isFile())
 		{
-			if(name.endsWith(".txt"))
+			if(f.getName().endsWith(".txt"))
 			{
 				try
 				{
-					GuideCategory c1 = c.getSub(new ChatComponentText(name.substring(0, name.length() - 4)));
-					String text = LMFileUtils.loadAsText(f);
-					c1.println(text);
+					GuideCategory c1 = c.getSub(new ChatComponentText(LMFileUtils.getRawFileName(f)));
+					String txt = LMFileUtils.loadAsText(f);
+					if(txt != null && !txt.isEmpty())
+						c1.println(txt.replace("\r", ""));
 				}
 				catch(Exception e)
 				{ e.printStackTrace(); }

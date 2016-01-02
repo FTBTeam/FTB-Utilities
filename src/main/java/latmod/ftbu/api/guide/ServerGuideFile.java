@@ -50,7 +50,8 @@ public class ServerGuideFile extends GuideFile
 				try
 				{
 					String text = LMFileUtils.loadAsText(file);
-					main.println(text);
+					if(text != null && !text.isEmpty())
+						main.println(text.replace("\r", ""));
 				}
 				catch(Exception ex)
 				{ ex.printStackTrace(); }
@@ -123,7 +124,7 @@ public class ServerGuideFile extends GuideFile
 		if(FTBUConfigTops.time_played.get()) addTop(Top.time_played);
 		
 		new EventFTBUServerGuide(this, self, isOP).post();
-		categoryTops.subcategories.sort(null);
+		Collections.sort(categoryTops.subcategories, null);
 		if(isOP) main.addSub(CachedInfo.categoryServerAdmin);
 		
 		GuideCategory commands = main.getSub(new ChatComponentText("Commands"));
@@ -171,18 +172,18 @@ public class ServerGuideFile extends GuideFile
 		catch(Exception ex) { }
 
 		CommandLM.extendedUsageInfo = false;
-		commands.subcategories.sort(null);
+		Collections.sort(commands.subcategories, null);
 		
 		main.cleanup();
-		main.subcategories.sort(null);
+		Collections.sort(main.subcategories, null);
 	}
 	
 	public void addTop(Top t)
 	{
 		GuideCategory thisTop = categoryTops.getSub(t.ID);
-		
-		players.sort(t);
-		
+
+		Collections.sort(players, t);
+
 		int size = Math.min(players.size(), 250);
 		
 		for(int j = 0; j < size; j++)

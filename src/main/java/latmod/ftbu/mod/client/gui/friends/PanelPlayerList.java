@@ -5,6 +5,8 @@ import latmod.ftbu.world.*;
 import latmod.lib.FastList;
 import org.lwjgl.input.Mouse;
 
+import java.util.Collections;
+
 public class PanelPlayerList extends PanelFriendsGui
 {
 	private static final FastList<LMPlayer> tempPlayerList = new FastList<>();
@@ -32,11 +34,11 @@ public class PanelPlayerList extends PanelFriendsGui
 		tempPlayerList.remove(clientPlayer);
 		
 		if(FTBUClient.sort_friends_az.get())
-			tempPlayerList.sort(LMPNameComparator.instance);
+			Collections.sort(tempPlayerList, LMPNameComparator.instance);
 		else
 		{
 			LMPStatusComparator.instance.self = clientPlayer;
-			tempPlayerList.sort(LMPStatusComparator.instance);
+			Collections.sort(tempPlayerList, LMPStatusComparator.instance);
 		}
 		
 		playerButtons.clear();

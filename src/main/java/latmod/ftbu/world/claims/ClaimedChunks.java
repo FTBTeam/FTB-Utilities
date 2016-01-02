@@ -255,16 +255,16 @@ public class ClaimedChunks
 	
 	public static boolean canPlayerInteract(EntityPlayer ep, int x, int y, int z, boolean leftClick)
 	{
-		if(ep.worldObj.isRemote) return true;
+		if(ep == null || ep.worldObj.isRemote) return true;
 		
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
 		
 		if(LMWorldServer.inst.settings.isOutsideBorderD(ep.dimension, x, z)) return false;
-		else if(p.getRank().config.allowCreativeInteractSecure(ep)) return true;
+		else if(!p.isFake() && p.getRank().config.allowCreativeInteractSecure(ep)) return true;
 		
 		if(leftClick)
 		{
-			if(p != null && p.getRank().config.break_whitelist.get().contains(LMInvUtils.getRegName(ep.worldObj.getBlock(x, y, z))))
+			if(p.getRank().config.break_whitelist.get().contains(LMInvUtils.getRegName(ep.worldObj.getBlock(x, y, z))))
 				return true;
 		}
 		

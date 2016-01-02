@@ -49,7 +49,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
 			
 			try
 			{
-				FastList<String> l = new FastList<String>();
+				FastList<String> l = new FastList<>();
 				int[] list = LMWorldServer.inst.getAllPlayerIDs();
 				Arrays.sort(list);
 				

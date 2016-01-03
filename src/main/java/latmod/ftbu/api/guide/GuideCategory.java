@@ -2,13 +2,13 @@ package latmod.ftbu.api.guide;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.LMNBTUtils;
-import latmod.lib.FastList;
+import latmod.lib.*;
 import net.minecraft.nbt.*;
 import net.minecraft.util.*;
 
 public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 {
-	private static final FastList.RemoveFilter<GuideCategory> cleanupFilter = new FastList.RemoveFilter<GuideCategory>()
+	private static final RemoveFilter<GuideCategory> cleanupFilter = new RemoveFilter<GuideCategory>()
 	{
 		public boolean remove(GuideCategory c)
 		{ return c.subcategories.isEmpty() && c.getUnformattedText().trim().isEmpty(); }

@@ -48,6 +48,12 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	
 	public LMWorldServer getServerWorld()
 	{ return this; }
+
+	public void close()
+	{
+		playerMap.clear();
+		claimedChunks.chunks.clear();
+	}
 	
 	public LMPlayerServer getPlayer(Object o)
 	{
@@ -55,7 +61,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		LMPlayer p = super.getPlayer(o);
 		return (p == null) ? null : p.toPlayerMP();
 	}
-	
+
 	public void load(NBTTagCompound tag)
 	{
 		warps.readFromNBT(tag, "Warps");
@@ -117,7 +123,9 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		}
 		
 		settings.writeToNet(io);
-		customCommonData.write(io);
+
+		try { customCommonData.write(io); }
+		catch(Exception ex) { }
 	}
 	
 	public void writePlayersToServer(NBTTagCompound tag)

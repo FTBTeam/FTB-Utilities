@@ -51,5 +51,5 @@ public final class LatCoreMCClient // LatCoreMC // FTBLibClient
 	{ return FTBLibClient.isPlaying() && LMWorldClient.inst != null && LMWorldClient.inst.getClientPlayer() != null; }
 	
 	public static int getDim()
-	{ return isPlaying() ? FTBLibClient.mc.thePlayer.worldObj.provider.dimensionId : 0; }
+	{ return isPlaying() ? FTBLibClient.mc.theWorld.provider.dimensionId: 0; }
 }

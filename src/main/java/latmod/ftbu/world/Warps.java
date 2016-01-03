@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class Warps
 {
-	private final FastMap<String, EntityPos> warps = new FastMap<String, EntityPos>();
+	private final FastMap<String, EntityPos> warps = new FastMap<>();
 	
 	public void readFromNBT(NBTTagCompound tag, String s)
 	{

@@ -2,7 +2,7 @@ package latmod.ftbu.mod.handlers;
 
 import com.google.gson.JsonObject;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import ftb.lib.*;
+import ftb.lib.LMNBTUtils;
 import latmod.ftbu.api.EventLMWorldServer;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.world.*;
@@ -22,9 +22,16 @@ import java.util.Arrays;
 public class FTBUWorldEventHandler // FTBLIntegration
 {
 	@SubscribeEvent
+	public void worldLoaded(net.minecraftforge.event.world.WorldEvent.Load e)
+	{
+		if(e.world instanceof WorldServer)
+			FTBUChunkEventHandler.instance.markDirty(Integer.valueOf(e.world.provider.dimensionId));
+	}
+
+	@SubscribeEvent
 	public void worldSaved(net.minecraftforge.event.world.WorldEvent.Save e)
 	{
-		if(FTBLib.isServer() && e.world.provider.dimensionId == 0 && e.world instanceof WorldServer)
+		if(e.world.provider.dimensionId == 0 && e.world instanceof WorldServer)
 		{
 			new EventLMWorldServer.Saved(LMWorldServer.inst).post();
 			

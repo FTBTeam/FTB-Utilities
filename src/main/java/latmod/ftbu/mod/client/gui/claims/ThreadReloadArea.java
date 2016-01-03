@@ -76,7 +76,7 @@ public class ThreadReloadArea extends Thread
 		
 		if(!b.isAir(worldObj, bx, by, bz))
 		{
-			int col = getBlockColor(bx, by, bz, b);
+			int col = 0xFF000000 | getBlockColor(bx, by, bz, b);
 			
 			short bw = getTopY(bx - 1, bz);
 			short be = getTopY(bx + 1, bz);
@@ -121,11 +121,10 @@ public class ThreadReloadArea extends Thread
 		for(short y = max; y > 0; --y)
 		{
 			Block block = c.getBlock(x, y, z);
-			if(block != Blocks.tallgrass && !block.isAir(worldObj, bx, y, bz))
-			{
-				if(mapValue) heightMap[x + z * 16] = y;
-				return y;
-			}
+			if(block == Blocks.tallgrass || block.isAir(worldObj, bx, y, bz)) continue;
+
+			if(mapValue) heightMap[x + z * 16] = y;
+			return y;
 		}
 		
 		return defHeight;
@@ -140,8 +139,9 @@ public class ThreadReloadArea extends Thread
 		else if(b == Blocks.end_stone) return MapColor.sandColor.colorValue;
 		else if(b == Blocks.obsidian) return 0xFF150047;
 		else if(b == Blocks.gravel) return 0xFF8D979B;
+		else if(b == Blocks.glass) return 0x33BCF9FF;
 		else if(b.getMaterial() == Material.water)
-			return LMColorUtils.multiply(MapColor.waterColor.colorValue, b.colorMultiplier(worldObj, x, y, z), 255);
+			return LMColorUtils.multiply(MapColor.waterColor.colorValue, b.colorMultiplier(worldObj, x, y, z), 200);
 		
 		int m = worldObj.getBlockMetadata(x, y, z);
 		

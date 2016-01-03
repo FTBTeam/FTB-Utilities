@@ -27,6 +27,7 @@ public class CmdWorldBorder extends CommandSubLM
 		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			LMWorldServer.inst.settings.border_enabled.set(true);
+			LMWorldServer.inst.update();
 			return new ChatComponentText("World border enabled");
 		}
 	}
@@ -39,6 +40,7 @@ public class CmdWorldBorder extends CommandSubLM
 		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			LMWorldServer.inst.settings.border_enabled.set(false);
+			LMWorldServer.inst.update();
 			return new ChatComponentText("World border disabled");
 		}
 	}
@@ -55,7 +57,7 @@ public class CmdWorldBorder extends CommandSubLM
 			int dim = parseInt(ics, args[0]);
 			int dist = parseInt(ics, args[1]);
 			
-			LMWorldServer.inst.settings.setBorderSize(dim, dist);
+			LMWorldServer.inst.settings.getAndSet(dim).setSize(dist);
 			return new ChatComponentText("World border for dimension " + dim + " set to " + dist);
 		}
 	}
@@ -69,7 +71,7 @@ public class CmdWorldBorder extends CommandSubLM
 		{
 			checkArgs(args, 1);
 			int dim = parseInt(ics, args[0]);
-			return new ChatComponentText("World border for dimension " + dim + ": " + LMWorldServer.inst.settings.getBorderSize(dim));
+			return new ChatComponentText("World border for dimension " + dim + ": " + LMWorldServer.inst.settings.getWB(dim).getSize());
 		}
 	}
 	
@@ -97,7 +99,7 @@ public class CmdWorldBorder extends CommandSubLM
 				dim = ep.dimension;
 			}
 			
-			LMWorldServer.inst.settings.setBorderPos(dim, x, z);
+			LMWorldServer.inst.settings.getAndSet(dim).setPos(x, z);
 			LMWorldServer.inst.update();
 			return new ChatComponentText("World center for dimension " + dim + " set to " + x + " : " + z);
 		}

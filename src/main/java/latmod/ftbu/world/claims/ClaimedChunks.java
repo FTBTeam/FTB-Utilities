@@ -112,7 +112,7 @@ public class ClaimedChunks
 			
 			for(ClaimedChunk c : e.getValue().values(e.getValue().byKeyNumbers()))
 			{
-				LMPlayer p = c.getOwner();
+				LMPlayerServer p = c.getOwnerS();
 				
 				if(p != null)
 				{
@@ -196,7 +196,7 @@ public class ClaimedChunks
 		World w = LMDimUtils.getWorld(dim);
 		if(w == null || !w.getChunkProvider().chunkExists(cx, cz)) return ChunkType.UNLOADED;
 		if(isInSpawn(dim, cx, cz)) return ChunkType.SPAWN;
-		if(LMWorldServer.inst.settings.isOutsideBorder(dim, cx, cz)) return ChunkType.WORLD_BORDER;
+		if(LMWorldServer.inst.settings.getWB(dim).isOutside(cx, cz)) return ChunkType.WORLD_BORDER;
 		ClaimedChunk c = getChunk(dim, cx, cz);
 		if(c == null) return ChunkType.WILDERNESS;
 		return new ChunkType.PlayerClaimed(LMWorldServer.inst.getPlayer(c.ownerID));
@@ -232,19 +232,19 @@ public class ClaimedChunks
 	{
 		if(dim == 0 && FTBUConfigGeneral.safe_spawn.get() && isInSpawn(dim, cx, cz))
 			return false;
-		else if(LMWorldServer.inst.settings.isOutsideBorder(dim, cx, cz))
+		else if(LMWorldServer.inst.settings.getWB(dim).isOutside(cx, cz))
 			return false;
 		else
 		{
 			ClaimedChunk c = getChunk(dim, cx, cz);
 			if(c != null)
 			{
-				LMPlayer p = c.getOwner();
+				LMPlayerServer p = c.getOwnerS();
 				
 				if(p != null)
 				{
-					EnumEnabled fe = p.toPlayerMP().getRank().config.forced_explosions.get();
-					if(fe == null) return p.toPlayerMP().getSettings().explosions;
+					EnumEnabled fe = p.getRank().config.forced_explosions.get();
+					if(fe == null) return p.getSettings().explosions;
 					else return fe.isEnabled();
 				}
 			}
@@ -259,7 +259,7 @@ public class ClaimedChunks
 		
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
 		
-		if(LMWorldServer.inst.settings.isOutsideBorderD(ep.dimension, x, z)) return false;
+		if(LMWorldServer.inst.settings.getWB(ep.dimension).isOutsideD(x, z)) return false;
 		else if(!p.isFake() && p.getRank().config.allowCreativeInteractSecure(ep)) return true;
 		
 		if(leftClick)

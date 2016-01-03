@@ -60,10 +60,19 @@ public class LMPlayerStats
 	}
 	
 	// - //
-	
+
 	public double getDeathsPerHour()
 	{
 		if(deaths == 0 || timePlayed == 0L) return 0D;
 		return (double)deaths / (timePlayed / 3600000D);
+	}
+
+	public long getLastSeen()
+	{ return owner.isOnline() ? LMUtils.millis() : lastSeen; }
+
+	public double getLastSeenDeltaInHours()
+	{
+		if(owner.isOnline()) return 0D;
+		return (LMUtils.millis() - getLastSeen()) / 3600000D;
 	}
 }

@@ -1,4 +1,5 @@
 package latmod.ftbu.mod;
+
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import ftb.lib.*;
@@ -10,7 +11,7 @@ import latmod.ftbu.mod.handlers.*;
 import latmod.ftbu.mod.handlers.ftbl.*;
 import latmod.ftbu.net.FTBUNetHandler;
 import latmod.ftbu.util.LMMod;
-import latmod.ftbu.world.*;
+import latmod.ftbu.world.Backups;
 import latmod.lib.LMJsonUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -84,7 +85,7 @@ public class FTBU
 		e.registerServerCommand(new CmdTplast());
 		e.registerServerCommand(new CmdWarp());
 	}
-	
+
 	@Mod.EventHandler
 	public void serverStopping(FMLServerStoppingEvent e)
 	{
@@ -93,12 +94,5 @@ public class FTBU
 			for(EntityPlayerMP ep : FTBLib.getAllOnlinePlayers(null))
 				FTBUPlayerEventHandler.playerLoggedOut(ep);
 		}
-	}
-	
-	@Mod.EventHandler
-	public void serverStopped(FMLServerStoppedEvent e)
-	{
-		FTBUTicks.serverStopped();
-		LMWorldServer.inst = null;
 	}
 }

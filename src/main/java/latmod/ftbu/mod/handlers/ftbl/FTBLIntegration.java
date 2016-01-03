@@ -19,13 +19,15 @@ import latmod.lib.util.Phase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.*;
+import net.minecraft.world.World;
 
 import java.io.File;
 import java.util.List;
 
 public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 {
+	public long nextChunkloaderUpdate = 0L;
+
 	public void onReloaded(EventFTBReload e)
 	{
 		if(e.side.isServer())
@@ -39,8 +41,10 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 				p.refreshStats();
 			
 			ServerGuideFile.CachedInfo.reload();
-			FTBUChunkEventHandler.instance.markDirty(null);
 			Ranks.reload();
+
+			if(FTBLib.getServerWorld() != null)
+				FTBUChunkEventHandler.instance.markDirty(null);
 		}
 		else FTBU.proxy_ftbl_int.onReloadedClient(e);
 	}
@@ -54,66 +58,78 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 	
 	public void onFTBWorldServer(EventFTBWorldServer e)
 	{
-		if(FTBLib.isServer() && e.worldMC.provider.dimensionId == 0 && e.worldMC instanceof WorldServer)
+		ConfigRegistry.reload();
+
+		File latmodFolder = new File(FTBLib.folderWorld, "LatMod/");
+		File file = new File(latmodFolder, "LMWorld.dat");
+
+		LMWorldServer.inst = new LMWorldServer(latmodFolder);
+		JsonElement obj = JsonNull.INSTANCE;
+
+		if(file.exists())
 		{
-			ConfigRegistry.reload();
-			
-			File latmodFolder = new File(e.worldMC.getSaveHandler().getWorldDirectory(), "latmod/");
-			File file = new File(latmodFolder, "LMWorld.dat");
-			
-			LMWorldServer.inst = new LMWorldServer(latmodFolder);
-			JsonElement obj = JsonNull.INSTANCE;
-			
-			if(file.exists())
-			{
-				NBTTagCompound tagWorldData = LMNBTUtils.readMap(file);
-				if(tagWorldData != null) LMWorldServer.inst.load(tagWorldData);
-				LMFileUtils.delete(file);
-			}
-			else
-			{
-				file = new File(latmodFolder, "LMWorld.json");
-				obj = LMJsonUtils.getJsonElement(file);
-				if(obj.isJsonObject()) LMWorldServer.inst.load(obj.getAsJsonObject(), Phase.PRE);
-			}
-			
-			new EventLMWorldServer.Loaded(LMWorldServer.inst, Phase.PRE).post();
-			
-			NBTTagCompound tagPlayers = LMNBTUtils.readMap(new File(latmodFolder, "LMPlayers.dat"));
-			if(tagPlayers != null && tagPlayers.hasKey("Players"))
-			{
-				LMPlayerServer.lastPlayerID = tagPlayers.getInteger("LastID");
-				LMWorldServer.inst.readPlayersFromServer(tagPlayers.getCompoundTag("Players"));
-			}
-			
-			for(LMPlayerServer p : LMWorldServer.inst.playerMap)
-				p.setPlayer(null);
-			
-			if(obj.isJsonObject()) LMWorldServer.inst.load(obj.getAsJsonObject(), Phase.POST);
-			
-			file = new File(latmodFolder, "ClaimedChunks.json");
-			obj = JsonNull.INSTANCE;
-			
-			if(file.exists())
-			{
-				obj = LMJsonUtils.getJsonElement(file);
-				if(obj.isJsonObject()) LMWorldServer.inst.claimedChunks.load(obj.getAsJsonObject());
-			}
-			
-			FTBUChunkEventHandler.instance.worldLoadEvent(e.worldMC);
-			
-			new EventLMWorldServer.Loaded(LMWorldServer.inst, Phase.POST).post();
+			NBTTagCompound tagWorldData = LMNBTUtils.readMap(file);
+			if(tagWorldData != null) LMWorldServer.inst.load(tagWorldData);
+			LMFileUtils.delete(file);
 		}
+		else
+		{
+			file = new File(latmodFolder, "LMWorld.json");
+			obj = LMJsonUtils.getJsonElement(file);
+			if(obj.isJsonObject()) LMWorldServer.inst.load(obj.getAsJsonObject(), Phase.PRE);
+		}
+
+		new EventLMWorldServer.Loaded(LMWorldServer.inst, Phase.PRE).post();
+
+		NBTTagCompound tagPlayers = LMNBTUtils.readMap(new File(latmodFolder, "LMPlayers.dat"));
+		if(tagPlayers != null && tagPlayers.hasKey("Players"))
+		{
+			LMPlayerServer.lastPlayerID = tagPlayers.getInteger("LastID");
+			LMWorldServer.inst.readPlayersFromServer(tagPlayers.getCompoundTag("Players"));
+		}
+
+		for(LMPlayerServer p : LMWorldServer.inst.playerMap)
+			p.setPlayer(null);
+
+		if(obj.isJsonObject()) LMWorldServer.inst.load(obj.getAsJsonObject(), Phase.POST);
+
+		file = new File(latmodFolder, "ClaimedChunks.json");
+
+		if(file.exists())
+		{
+			obj = LMJsonUtils.getJsonElement(file);
+			if(obj.isJsonObject()) LMWorldServer.inst.claimedChunks.load(obj.getAsJsonObject());
+		}
+
+		new EventLMWorldServer.Loaded(LMWorldServer.inst, Phase.POST).post();
+
+		nextChunkloaderUpdate = LMUtils.millis() + 10000L;
 	}
-	
+
 	public void onFTBWorldClient(EventFTBWorldClient e)
 	{
 		FTBU.proxy_ftbl_int.onFTBWorldClient(e);
 	}
+
+	public void onFTBWorldServerClosed()
+	{
+		LMWorldServer.inst.close();
+		LMWorldServer.inst = null;
+	}
 	
 	public void onServerTick(World w)
 	{
-		if(w.provider.dimensionId == 0) FTBUTicks.update();
+		if(w.provider.dimensionId == 0)
+		{
+			FTBUTicks.update();
+
+			long now = LMUtils.millis();
+			if(nextChunkloaderUpdate < now)
+			{
+				nextChunkloaderUpdate = now + 300000L;
+				FTBUChunkEventHandler.instance.markDirty(null);
+			}
+		}
 	}
 	
 	public void onPlayerJoined(EntityPlayerMP ep)

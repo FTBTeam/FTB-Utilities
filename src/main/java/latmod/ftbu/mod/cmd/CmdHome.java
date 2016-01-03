@@ -15,11 +15,11 @@ public class CmdHome extends CommandLM
 	{ super(FTBUConfigCmd.name_home.get(), CommandLevel.ALL); }
 	
 	public String getCommandUsage(ICommandSender ics)
-	{ return '/' + commandName + " <ID>\n/" + commandName + " set <ID>\n/" + commandName + " del <ID>"; }
+	{ return '/' + commandName + " <ID>\n/" + commandName + " set <ID>\n/" + commandName + " del <ID>\n/" + commandName + " ren <ID> <NewID>"; }
 	
 	public String[] getTabStrings(ICommandSender ics, String[] args, int i) throws CommandException
 	{
-		if(i == 0 || (i == 1 && isArg(args, 0, "set", "del"))) return LMPlayerServer.get(ics).homes.list();
+		if(i == 0 || (i == 1 && isArg(args, 0, "set", "del", "ren"))) return LMPlayerServer.get(ics).homes.list();
 		return super.getTabStrings(ics, args, i);
 	}
 	
@@ -29,9 +29,10 @@ public class CmdHome extends CommandLM
 		
 		if(args.length == 0)
 		{
-			FTBLib.printChat(ics, "/home <name>");
-			FTBLib.printChat(ics, "/home set <name>");
-			FTBLib.printChat(ics, "/home del <name>");
+			FTBLib.printChat(ics, "/home <ID>");
+			FTBLib.printChat(ics, "/home set <ID>");
+			FTBLib.printChat(ics, "/home del <ID>");
+			FTBLib.printChat(ics, "/home ren <ID> <NewID>");
 			return null;
 		}
 		
@@ -56,6 +57,18 @@ public class CmdHome extends CommandLM
 			if(p.homes.rem(args[1]))
 				return new ChatComponentTranslation(FTBUFinals.ASSETS + "cmd.home_del", args[1]);
 			return error(new ChatComponentTranslation(FTBUFinals.ASSETS + "cmd.home_not_set", args[1]));
+		}
+
+		if(args[0].equals("ren"))
+		{
+			checkArgs(args, 3);
+			EntityPos pos = p.homes.get(args[1]);
+			if(pos == null) return error(new ChatComponentTranslation(FTBUFinals.ASSETS + "cmd.home_not_set", args[0]));
+
+			pos = pos.clone();
+			p.homes.rem(args[1]);
+			p.homes.set(args[2], pos);
+			return new ChatComponentText(args[1] + " => " + args[2]);
 		}
 		
 		EntityPos pos = p.homes.get(args[0]);

@@ -1,5 +1,6 @@
 package latmod.ftbu.world.claims;
 
+import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,9 +26,13 @@ public final class ClaimedChunk extends ChunkCoordIntPair
 	public Long getLongPos()
 	{ return Long.valueOf(Bits.intsToLong(chunkXPos, chunkZPos)); }
 
-	public LMPlayer getOwner()
-	{ return LMWorld.getWorld().getPlayer(ownerID); }
-	
+	public LMPlayerServer getOwnerS()
+	{ return LMWorldServer.inst.getPlayer(ownerID); }
+
+	@SideOnly(Side.CLIENT)
+	public LMPlayerClient getOwnerC()
+	{ return LMWorldClient.inst.getPlayer(ownerID); }
+
 	public boolean equals(Object o)
 	{ return o != null && (o == this || (o.getClass() == ClaimedChunk.class && equalsChunk((ClaimedChunk)o))); }
 	

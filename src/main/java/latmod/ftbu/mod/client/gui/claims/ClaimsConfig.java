@@ -24,7 +24,7 @@ public class ClaimsConfig implements IConfigProvider
 			{ return settings.explosions; }
 			
 			public void set(boolean v)
-			{ settings.explosions = v; save(); }
+			{ settings.explosions = v; }
 		}, false);
 		
 		group.add(new ConfigEntryEnum<LMSecurityLevel>("security_level", LMSecurityLevel.class, LMSecurityLevel.VALUES_3, settings.blocks, false)

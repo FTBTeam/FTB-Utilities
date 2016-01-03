@@ -22,6 +22,7 @@ public class RankConfig
 	public final ConfigEntryEnum<ChunkloaderType> chunkloader_type = new ConfigEntryEnum<>("chunkloader_type", ChunkloaderType.class, ChunkloaderType.values(), ChunkloaderType.OFFLINE, false).sync().setInfo("disabled - Players won't be able to chunkload\nnormal - Chunks stay loaded when player loggs off\nplayerMap - Chunks only stay loaded while owner is online");
 	public final ConfigEntryInt max_loaded_chunks = new ConfigEntryInt("max_loaded_chunks", new IntBounds(50, 0, 30000)).sync().setInfo("Max amount of chunks that player can chunkload.\n0 - Disabled");
 	public final ConfigEntryBool show_rank = new ConfigEntryBool("show_rank", true).setInfo("If set to false, playerMap won't be able to see others Rank in FriendsGUI");
+	public final ConfigEntryDouble offline_chunkloader_timer = new ConfigEntryDouble("offline_chunkloader_timer", new DoubleBounds(24D, 0D, Double.POSITIVE_INFINITY)).sync().setInfo("Max hours player can be offline until he's chunks unload. 0 - Disabled, will unload instantly when he disconnects");
 
 	public boolean allowCreativeInteractSecure(EntityPlayer ep)
 	{ return ep != null && allow_creative_interact_secure.get() && ep.capabilities.isCreativeMode/* && !(ep instanceof FakePlayer)*/; }

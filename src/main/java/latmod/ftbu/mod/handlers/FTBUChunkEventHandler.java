@@ -72,12 +72,6 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 		markDirty(dim);
 	}
 
-	public void worldLoadEvent(World w)
-	{
-		if(w != null && !w.isRemote && LMWorldServer.inst != null)
-			markDirty(Integer.valueOf(w.provider.dimensionId));
-	}
-
 	public void markDirty(Integer dim)
 	{
 		if(LMWorldServer.inst == null) return;
@@ -98,7 +92,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 
 			if(c.isChunkloaded)
 			{
-				LMPlayer p = c.getOwner();
+				LMPlayerServer p = c.getOwnerS();
 				if(p == null) isLoaded = false;
 				else
 				{
@@ -107,7 +101,20 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 					if(type == ChunkloaderType.DISABLED)
 						isLoaded = false;
 					else if(type == ChunkloaderType.ONLINE)
-						isLoaded = c.getOwner().isOnline();
+						isLoaded = p.isOnline();
+					else if(type == ChunkloaderType.OFFLINE)
+					{
+						if(!p.isOnline())
+						{
+							double max = p.getRank().config.offline_chunkloader_timer.get();
+
+							if(max > 0D && p.stats.getLastSeenDeltaInHours() > max)
+							{
+								isLoaded = false;
+								if(c.isForced) FTBLib.logger.info("Unloading " + p.getName() + " chunks for being offline for too long");
+							}
+						}
+					}
 				}
 			}
 
@@ -180,8 +187,5 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 	}
 
 	public ForgeChunkManager.Ticket getTicket(ClaimedChunk c)
-	{
-		if(c == null || c.getOwner() == null) return null;
-		return request(LMDimUtils.getWorld(c.dim), c.getOwner().toPlayerMP());
-	}
+	{ if(c == null) return null; return request(LMDimUtils.getWorld(c.dim), c.getOwnerS()); }
 }

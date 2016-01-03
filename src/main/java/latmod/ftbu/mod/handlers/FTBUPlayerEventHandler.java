@@ -12,6 +12,7 @@ import latmod.ftbu.net.*;
 import latmod.ftbu.world.*;
 import latmod.ftbu.world.claims.*;
 import latmod.lib.MathHelperLM;
+import latmod.lib.util.Pos2I;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
@@ -63,20 +64,20 @@ public class FTBUPlayerEventHandler
 		
 		else if(!player.lastPos.equalsPos(ep))
 		{
-			if(LMWorldServer.inst.settings.isOutsideBorderD(ep.dimension, ep.posX, ep.posZ))
+			if(LMWorldServer.inst.settings.getWB(ep.dimension).isOutsideD(ep.posX, ep.posZ))
 			{
 				ep.motionX = ep.motionY = ep.motionZ = 0D;
 				IChatComponent warning = new ChatComponentTranslation(FTBU.mod.assets + ChunkType.WORLD_BORDER.lang + ".warning");
 				warning.getChatStyle().setColor(EnumChatFormatting.RED);
 				FTBLib.notifyPlayer(ep, new Notification("world_border", warning, 3000));
 				
-				if(LMWorldServer.inst.settings.isOutsideBorderD(player.lastPos.dim, player.lastPos.x, player.lastPos.z))
+				if(LMWorldServer.inst.settings.getWB(player.lastPos.dim).isOutsideD(player.lastPos.x, player.lastPos.z))
 				{
 					FTBLib.printChat(ep, new ChatComponentTranslation(FTBU.mod.assets + "cmd.spawn_tp"));
 					World w = LMDimUtils.getWorld(0);
-					ChunkCoordinates pos = w.getSpawnPoint();
-					pos.posY = w.getTopSolidOrLiquidBlock(pos.posX, pos.posZ);
-					LMDimUtils.teleportPlayer(ep, pos.posX + 0.5D, pos.posY + 1.25D, pos.posZ + 0.5D, 0);
+					Pos2I pos = LMWorldServer.inst.settings.getWB(0).pos;
+					int posY = w.getTopSolidOrLiquidBlock(pos.x, pos.y);
+					LMDimUtils.teleportPlayer(ep, pos.x + 0.5D, posY + 1.25D, pos.y + 0.5D, 0);
 				}
 				else LMDimUtils.teleportPlayer(ep, player.lastPos);
 				ep.worldObj.playSoundAtEntity(ep, "random.fizz", 1F, 1F);
@@ -200,7 +201,7 @@ public class FTBUPlayerEventHandler
 			int cx = MathHelperLM.chunk(e.entity.posX);
 			int cz = MathHelperLM.chunk(e.entity.posZ);
 			
-			if(LMWorldServer.inst.settings.isOutsideBorder(dim, cx, cz) || (FTBUConfigGeneral.safe_spawn.get() && ClaimedChunks.isInSpawn(dim, cx, cz))) e.setCanceled(true);
+			if(LMWorldServer.inst.settings.getWB(dim).isOutside(cx, cz) || (FTBUConfigGeneral.safe_spawn.get() && ClaimedChunks.isInSpawn(dim, cx, cz))) e.setCanceled(true);
 			/*else
 			{
 				ClaimedChunk c = Claims.get(dim, cx, cz);

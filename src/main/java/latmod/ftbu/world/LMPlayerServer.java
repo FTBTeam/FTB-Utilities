@@ -127,7 +127,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		if(isOnline())
 		{
 			stats.refreshStats();
-			if(!world.settings.isOutsideBorderD(entityPlayer.dimension, entityPlayer.posX, entityPlayer.posZ))
+			if(!world.settings.getWB(entityPlayer.dimension).isOutsideD(entityPlayer.posX, entityPlayer.posZ))
 				getPos();
 		}
 	}
@@ -234,7 +234,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			io.writeShort(getLoadedChunks(true));
 
 			io.writeUTF(rank.ID);
-			rank.writeToIO(io);
+			try { rank.writeToIO(io); }
+			catch(Exception ex) { }
 		}
 	}
 	
@@ -337,7 +338,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		ClaimedChunk chunk = world.claimedChunks.getChunk(dim, cx, cz);
 		if(chunk == null) return;
 
-		if(flag != chunk.isChunkloaded && equalsPlayer(chunk.getOwner()))
+		if(flag != chunk.isChunkloaded && equalsPlayer(chunk.getOwnerS()))
 		{
 			if(flag)
 			{

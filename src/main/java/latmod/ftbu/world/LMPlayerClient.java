@@ -11,11 +11,13 @@ import latmod.lib.*;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.*;
 
+import java.util.*;
+
 @SideOnly(Side.CLIENT)
 public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClientSelf
 {
 	public final LMWorldClient world;
-	public final FastList<IChatComponent> clientInfo;
+	public final List<IChatComponent> clientInfo;
 	public boolean isOnline;
 	public Badge cachedBadge;
 
@@ -23,7 +25,7 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 	{
 		super(i, gp);
 		world = w;
-		clientInfo = new FastList<>();
+		clientInfo = new ArrayList<>();
 		isOnline = false;
 		cachedBadge = null;
 	}
@@ -55,7 +57,7 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 	public Rank getRank()
 	{ return Ranks.PLAYER; }
 	
-	public void receiveInfo(FastList<IChatComponent> info)
+	public void receiveInfo(List<IChatComponent> info)
 	{
 		clientInfo.clear();
 		clientInfo.addAll(info);
@@ -71,7 +73,7 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 		
 		IntList otherFriends = IntList.asList(io.readIntArray(ByteCount.SHORT));
 		
-		for(LMPlayerClient p : world.playerMap)
+		for(LMPlayerClient p : world.playerMap.values())
 		{
 			if(!p.equalsPlayer(this))
 			{

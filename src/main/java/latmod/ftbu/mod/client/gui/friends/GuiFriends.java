@@ -8,9 +8,10 @@ import latmod.ftbu.api.client.FTBULang;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.LMWorldClient;
-import latmod.lib.FastList;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.*;
+
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class GuiFriends extends GuiLM implements IClientActionGui
@@ -101,7 +102,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		LatCoreMCClient.notifyClient("notify", panelPlayerInfo.width, 1);
 	}
 	
-	public void drawText(FastList<String> l)
+	public void drawText(List<String> l)
 	{
 		super.drawText(l);
 	}

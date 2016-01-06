@@ -8,6 +8,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 import java.io.*;
+import java.util.List;
 import java.util.zip.*;
 
 public class ThreadBackup extends Thread
@@ -45,8 +46,8 @@ public class ThreadBackup extends Thread
 			appendNum(out, calendar.hours, '-');
 			appendNum(out, calendar.minutes, '-');
 			appendNum(out, calendar.seconds, File.separatorChar);
-			
-			FastList<File> files = LMFileUtils.listAll(src);
+
+			List<File> files = LMFileUtils.listAll(src);
 			int allFiles = files.size();
 			
 			Backups.logger.info("Backing up " + files.size() + " files...");

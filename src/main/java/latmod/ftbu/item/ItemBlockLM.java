@@ -3,7 +3,6 @@ package latmod.ftbu.item;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.MathHelperMC;
 import latmod.ftbu.block.BlockLM;
-import latmod.lib.FastList;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -13,7 +12,7 @@ import net.minecraft.item.*;
 import net.minecraft.util.Facing;
 import net.minecraft.world.World;
 
-import java.util.List;
+import java.util.*;
 
 public class ItemBlockLM extends ItemBlock
 {
@@ -40,12 +39,12 @@ public class ItemBlockLM extends ItemBlock
 	{ blockLM.getSubBlocks(j, c, l); }
 	
 	@SideOnly(Side.CLIENT)
-	private FastList<String> infoList;
+	private ArrayList<String> infoList;
 	
 	@SuppressWarnings("all") @SideOnly(Side.CLIENT)
 	public final void addInformation(ItemStack is, EntityPlayer ep, List l, boolean b)
 	{
-		if(infoList == null) infoList = new FastList<String>();
+		if(infoList == null) infoList = new ArrayList<String>();
 		infoList.clear();
 		blockLM.addInfo(is, ep, infoList);
 		l.addAll(infoList);

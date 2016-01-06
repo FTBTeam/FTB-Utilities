@@ -2,21 +2,22 @@ package latmod.ftbu.item;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.FTBLibClient;
-import latmod.lib.*;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
+import java.util.*;
+
 public abstract class ItemMaterialsLM extends ItemLM
 {
-	public final FastMap<Integer, MaterialItem> materials;
+	public final HashMap<Integer, MaterialItem> materials;
 	public String folder = "";
 	
 	public ItemMaterialsLM(String s)
 	{
 		super(s);
-		materials = new FastMap<Integer, MaterialItem>();
+		materials = new HashMap<>();
 		setHasSubtypes(true);
 		setMaxDamage(0);
 	}
@@ -40,7 +41,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 	
 	public void onPostLoaded()
 	{
-		for(MaterialItem m : materials)
+		for(MaterialItem m : materials.values())
 		{
 			itemsAdded.add(m.getStack());
 			m.onPostLoaded();
@@ -49,7 +50,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 	
 	public void loadRecipes()
 	{
-		for(MaterialItem m : materials)
+		for(MaterialItem m : materials.values())
 			m.loadRecipes();
 	}
 	
@@ -65,7 +66,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 	public void registerIcons(IIconRegister ir)
 	{
 		itemIcon = FTBLibClient.unknownItemIcon;
-		for(MaterialItem m : materials)
+		for(MaterialItem m : materials.values())
 			m.registerIcons(ir);
 	}
 	
@@ -78,7 +79,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public void addInfo(ItemStack is, EntityPlayer ep, FastList<String> l)
+	public void addInfo(ItemStack is, EntityPlayer ep, List<String> l)
 	{
 		MaterialItem m = materials.get(is.getItemDamage());
 		if(m != null) m.addInfo(ep, l);

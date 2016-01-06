@@ -6,13 +6,13 @@ import ftb.lib.gui.widgets.*;
 import ftb.lib.mod.client.gui.GuiViewImage;
 import latmod.ftbu.api.guide.*;
 import latmod.ftbu.mod.FTBU;
-import latmod.lib.*;
+import latmod.lib.LMUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.util.List;
+import java.util.*;
 
 public class GuiGuide extends GuiLM
 {
@@ -34,8 +34,8 @@ public class GuiGuide extends GuiLM
 	public final ButtonLM buttonBack;
 	
 	public final WidgetLM categoriesPanel, textPanel;
-	public final FastList<TextLine> allTextLines;
-	public final FastList<ButtonCategory> categoryButtons; // Max 16
+	public final List<TextLine> allTextLines;
+	public final List<ButtonCategory> categoryButtons; // Max 16
 	public final ButtonTextLine[] textLines; // Max 20
 	
 	public static GuiGuide clientGuideGui = null;
@@ -116,8 +116,8 @@ public class GuiGuide extends GuiLM
 			{ addAll(textLines); }
 		};
 		
-		allTextLines = new FastList<TextLine>();
-		categoryButtons = new FastList<ButtonCategory>();
+		allTextLines = new ArrayList<>();
+		categoryButtons = new ArrayList<>();
 		textLines = new ButtonTextLine[maxTextLines];
 		
 		for(int i = 0; i < maxTextLines; i++)

@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSetMultimap;
 import ftb.lib.cmd.*;
 import latmod.ftbu.api.guide.*;
 import latmod.ftbu.util.LatCoreMC;
-import latmod.lib.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
@@ -12,7 +11,7 @@ import net.minecraft.world.*;
 import net.minecraftforge.common.*;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 
-import java.util.Map;
+import java.util.*;
 
 public class CmdLoadedChunks extends CommandLM
 {
@@ -28,20 +27,20 @@ public class CmdLoadedChunks extends CommandLM
 		for(WorldServer w : DimensionManager.getWorlds())
 		{
 			ImmutableSetMultimap<ChunkCoordIntPair, Ticket> map = ForgeChunkManager.getPersistentChunksFor(w);
-			
-			FastMap<String, FastList<ChunkCoordIntPair>> chunksMap = new FastMap<String, FastList<ChunkCoordIntPair>>();
+
+			HashMap<String, ArrayList<ChunkCoordIntPair>> chunksMap = new HashMap<>();
 			
 			for(Ticket t : map.values())
 			{
-				FastList<ChunkCoordIntPair> list = chunksMap.get(t.getModId());
-				if(list == null) chunksMap.put(t.getModId(), list = new FastList<ChunkCoordIntPair>());
+				ArrayList<ChunkCoordIntPair> list = chunksMap.get(t.getModId());
+				if(list == null) chunksMap.put(t.getModId(), list = new ArrayList<>());
 				for(ChunkCoordIntPair c : t.getChunkList())
 					if(!list.contains(c)) list.add(c);
 			}
 			
 			GuideCategory dim = file.main.getSub(new ChatComponentText(w.provider.getDimensionName()));
 			
-			for(Map.Entry<String, FastList<ChunkCoordIntPair>> e1 : chunksMap.entrySet())
+			for(Map.Entry<String, ArrayList<ChunkCoordIntPair>> e1 : chunksMap.entrySet())
 			{
 				GuideCategory mod = dim.getSub(new ChatComponentText(e1.getKey() + " [" + e1.getValue().size() + "]"));
 				for(ChunkCoordIntPair c : e1.getValue())

@@ -2,23 +2,22 @@ package latmod.ftbu.mod.client.gui.friends;
 
 import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.world.*;
-import latmod.lib.FastList;
 import org.lwjgl.input.Mouse;
 
-import java.util.Collections;
+import java.util.*;
 
 public class PanelPlayerList extends PanelFriendsGui
 {
-	private static final FastList<LMPlayer> tempPlayerList = new FastList<>();
+	private static final ArrayList<LMPlayer> tempPlayerList = new ArrayList<>();
 	
-	public final FastList<ButtonPlayer> playerButtons;
+	public final ArrayList<ButtonPlayer> playerButtons;
 	
 	public PanelPlayerList(GuiFriends g)
 	{
 		super(g);
 		width = 120;
 		
-		playerButtons = new FastList<>();
+		playerButtons = new ArrayList<>();
 	}
 	
 	public boolean isEnabled()

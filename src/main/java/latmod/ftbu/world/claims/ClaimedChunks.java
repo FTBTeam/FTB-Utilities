@@ -16,15 +16,15 @@ import java.util.*;
 
 public class ClaimedChunks
 {
-	public final FastMap<Integer, FastMap<Long, ClaimedChunk>> chunks;
+	public final HashMap<Integer, HashMap<Long, ClaimedChunk>> chunks;
 	
 	public ClaimedChunks()
-	{ chunks = new FastMap<>(); }
+	{ chunks = new HashMap<>(); }
 
 	public List<ClaimedChunk> getAllChunks()
 	{
-		FastList<ClaimedChunk> l = new FastList<>();
-		for(FastMap<Long, ClaimedChunk> m : chunks.values())
+		ArrayList<ClaimedChunk> l = new ArrayList<>();
+		for(HashMap<Long, ClaimedChunk> m : chunks.values())
 			l.addAll(m.values());
 		return l;
 	}
@@ -32,18 +32,18 @@ public class ClaimedChunks
 	public void load(NBTTagCompound tag)
 	{
 		chunks.clear();
-		
-		FastMap<String, NBTTagCompound> tag1 = LMNBTUtils.toFastMapWithType(tag.getCompoundTag("ClaimedChunks"));
+
+		Map<String, NBTTagCompound> tag1 = LMNBTUtils.toMapWithType(tag.getCompoundTag("ClaimedChunks"));
 		
 		for(Map.Entry<String, NBTTagCompound> e : tag1.entrySet())
 		{
 			try
 			{
 				int dim = Integer.parseInt(e.getKey());
+
+				HashMap<Long, ClaimedChunk> map = new HashMap<>();
 				
-				FastMap<Long, ClaimedChunk> map = new FastMap<Long, ClaimedChunk>();
-				
-				FastMap<String, NBTTagList> tag2 = LMNBTUtils.toFastMapWithType(e.getValue());
+				Map<String, NBTTagList> tag2 = LMNBTUtils.toMapWithType(e.getValue());
 				
 				for(Map.Entry<String, NBTTagList> e1 : tag2.entrySet())
 				{
@@ -70,8 +70,8 @@ public class ClaimedChunks
 		for(Map.Entry<String, JsonElement> e : group.entrySet())
 		{
 			int dim = Integer.parseInt(e.getKey());
-			
-			FastMap<Long, ClaimedChunk> map = new FastMap<>();
+
+			HashMap<Long, ClaimedChunk> map = new HashMap<>();
 			
 			for(Map.Entry<String, JsonElement> e1 : e.getValue().getAsJsonObject().entrySet())
 			{
@@ -106,11 +106,14 @@ public class ClaimedChunks
 	
 	public void save(JsonObject group)
 	{
-		for(Map.Entry<Integer, FastMap<Long, ClaimedChunk>> e : chunks.sortedEntryList(chunks.byKeyNumbers()))
+		Comparator<Map.Entry<Integer, HashMap<Long, ClaimedChunk>>> comparator = LMMapUtils.byKeyNumbers();
+		Comparator<Map.Entry<Long, ClaimedChunk>> comparator2 = LMMapUtils.byKeyNumbers();
+
+		for(Map.Entry<Integer, HashMap<Long, ClaimedChunk>> e : LMMapUtils.sortedEntryList(chunks, comparator))
 		{
 			JsonObject o1 = new JsonObject();
-			
-			for(ClaimedChunk c : e.getValue().values(e.getValue().byKeyNumbers()))
+
+			for(ClaimedChunk c : LMMapUtils.values(e.getValue(), comparator2))
 			{
 				LMPlayerServer p = c.getOwnerS();
 				
@@ -141,13 +144,13 @@ public class ClaimedChunks
 	
 	public List<ClaimedChunk> getChunks(LMPlayer p, Integer dim)
 	{
-		FastList<ClaimedChunk> list = new FastList<>();
+		ArrayList<ClaimedChunk> list = new ArrayList<>();
 		
 		if(dim == null)
 		{
-			for(FastMap<Long, ClaimedChunk> map : chunks)
+			for(HashMap<Long, ClaimedChunk> map : chunks.values())
 			{
-				for(ClaimedChunk c : map)
+				for(ClaimedChunk c : map.values())
 				{
 					if(c.ownerID == p.playerID)
 						list.add(c);
@@ -156,7 +159,7 @@ public class ClaimedChunks
 		}
 		else
 		{
-			for(ClaimedChunk c : chunks.get(Integer.valueOf(dim)))
+			for(ClaimedChunk c : chunks.get(Integer.valueOf(dim)).values())
 			{
 				if(c.ownerID == p.playerID) list.add(c);
 			}
@@ -168,14 +171,14 @@ public class ClaimedChunks
 	public boolean put(ClaimedChunk c)
 	{
 		if(c == null) return false;
-		FastMap<Long, ClaimedChunk> map = chunks.get(Integer.valueOf(c.dim));
-		if(map == null) chunks.put(Integer.valueOf(c.dim), map = new FastMap<>());
+		HashMap<Long, ClaimedChunk> map = chunks.get(Integer.valueOf(c.dim));
+		if(map == null) chunks.put(Integer.valueOf(c.dim), map = new HashMap<>());
 		return map.put(c.getLongPos(), c) == null;
 	}
 	
 	public ClaimedChunk remove(int dim, int cx, int cz)
 	{
-		FastMap<Long, ClaimedChunk> map = chunks.get(Integer.valueOf(dim));
+		HashMap<Long, ClaimedChunk> map = chunks.get(Integer.valueOf(dim));
 		if(map != null)
 		{
 			ClaimedChunk chunk = map.remove(Long.valueOf(Bits.intsToLong(cx, cz)));

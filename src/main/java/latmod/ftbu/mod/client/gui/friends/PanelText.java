@@ -2,17 +2,18 @@ package latmod.ftbu.mod.client.gui.friends;
 
 import ftb.lib.client.GlStateManager;
 import ftb.lib.gui.GuiLM;
-import latmod.lib.FastList;
 import net.minecraft.client.gui.FontRenderer;
+
+import java.util.*;
 
 public class PanelText extends PanelFriendsGui
 {
-	public final FastList<String> text;
+	public final List<String> text;
 	
 	public PanelText(GuiFriends g)
 	{
 		super(g);
-		text = new FastList<String>();
+		text = new ArrayList<>();
 	}
 	
 	public FontRenderer getFont()

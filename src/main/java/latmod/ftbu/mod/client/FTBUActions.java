@@ -5,79 +5,78 @@ import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.client.*;
 import ftb.lib.mod.FTBLibFinals;
 import ftb.lib.mod.client.FTBLibGuiEventHandler;
-import latmod.ftbu.api.client.FTBULang;
-import latmod.ftbu.api.guide.ClientGuideFile;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.claims.GuiClaimChunks;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
 import latmod.ftbu.mod.client.gui.guide.GuiGuide;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.world.*;
-import latmod.lib.FastList;
+
+import java.util.*;
 
 public class FTBUActions
 {
 	// FriendsGUI //
 	
-	public static final PlayerAction friends_gui = new PlayerAction(TextureCoords.getSquareIcon(FTBU.mod.getLocation("textures/gui/friendsbutton.png"), 256))
+	public static final PlayerAction friends_gui = new PlayerAction("ftbu:friends_gui", TextureCoords.getSquareIcon(FTBU.mod.getLocation("textures/gui/friendsbutton.png"), 256))
 	{
 		public void onClicked(int playerID)
 		{ FTBLibClient.mc.displayGuiScreen(new GuiFriends(FTBLibClient.mc.currentScreen)); }
 		
-		public String getTitle()
-		{ return "FriendsGUI"; }
+		public String getTitleKey()
+		{ return ID; }
 	};
 	
 	// Other playerMap //
 	
-	public static final PlayerAction friend_add = new PlayerAction(GuiIcons.add)
+	public static final PlayerAction friend_add = new PlayerAction("ftbu:button.add_friend", GuiIcons.add)
 	{
 		public void onClicked(int playerID)
 		{ ClientAction.ACTION_ADD_FRIEND.send(playerID); }
 		
-		public String getTitle()
-		{ return FTBULang.button_add_friend(); }
+		public String getTitleKey()
+		{ return ID; }
 	};
 	
-	public static final PlayerAction friend_remove = new PlayerAction(GuiIcons.remove)
+	public static final PlayerAction friend_remove = new PlayerAction("ftbu:button.rem_friend", GuiIcons.remove)
 	{
 		public void onClicked(int playerID)
 		{ ClientAction.ACTION_REM_FRIEND.send(playerID); }
 		
-		public String getTitle()
-		{ return FTBULang.button_rem_friend(); }
+		public String getTitleKey()
+		{ return ID; }
 	};
 	
-	public static final PlayerAction friend_deny = new PlayerAction(GuiIcons.remove)
+	public static final PlayerAction friend_deny = new PlayerAction("ftbu:button.deny_friend", GuiIcons.remove)
 	{
 		public void onClicked(int playerID)
 		{ ClientAction.ACTION_DENY_FRIEND.send(playerID); }
 		
-		public String getTitle()
-		{ return FTBULang.button_deny_friend(); }
+		public String getTitleKey()
+		{ return ID; }
 	};
 	
-	public static final PlayerAction mail = new PlayerAction(GuiIcons.feather)
+	public static final PlayerAction mail = new PlayerAction("ftbu:button.mail", GuiIcons.feather)
 	{
 		public void onClicked(int playerID)
 		{  }
 		
-		public String getTitle()
-		{ return FTBULang.mail(); }
+		public String getTitleKey()
+		{ return ID; }
 	};
 	
-	public static final PlayerAction trade = new PlayerAction(GuiIcons.moneybag)
+	public static final PlayerAction trade = new PlayerAction("ftbu:button.trade", GuiIcons.moneybag)
 	{
 		public void onClicked(int playerID)
 		{  }
 		
-		public String getTitle()
-		{ return FTBULang.trade(); }
+		public String getTitleKey()
+		{ return ID; }
 	};
 	
 	// Self actions //
 	
-	public static final PlayerAction guide = new PlayerAction(GuiIcons.guide)
+	public static final PlayerAction guide = new PlayerAction("ftbu:button.guide", GuiIcons.guide)
 	{
 		public void onClicked(int playerID)
 		{
@@ -85,34 +84,34 @@ public class FTBUActions
 			GuiGuide.openClientGui();
 		}
 		
-		public String getTitle()
-		{ return ClientGuideFile.instance.main.getTitleComponent().getFormattedText(); }
+		public String getTitleKey()
+		{ return ID; }
 	};
 	
-	public static final PlayerAction info = new PlayerAction(GuiIcons.guide_server)
+	public static final PlayerAction info = new PlayerAction("ftbu:button.server_info", GuiIcons.guide_server)
 	{
 		public void onClicked(int playerID)
 		{ ClientAction.ACTION_REQUEST_SERVER_INFO.send(0); }
 		
-		public String getTitle()
-		{ return FTBULang.button_server_info(); }
+		public String getTitleKey()
+		{ return ID; }
 	};
 	
-	public static final PlayerAction claims = new PlayerAction(GuiIcons.map)
+	public static final PlayerAction claims = new PlayerAction("ftbu:button.claimed_chunks", GuiIcons.map)
 	{
 		public void onClicked(int playerID)
 		{ FTBLibClient.mc.displayGuiScreen(new GuiClaimChunks(0L)); }
 		
-		public String getTitle()
-		{ return FTBULang.claimed_chunks(); }
+		public String getTitleKey()
+		{ return ID; }
 	};
 	
-	public static FastList<PlayerAction> getActionsFor(LMPlayerClient p)
+	public static List<PlayerAction> getActionsFor(LMPlayerClient p)
 	{
 		LMPlayerClient o = LMWorldClient.inst.getClientPlayer();
 		boolean self = o.equalsPlayer(p);
-		
-		FastList<PlayerAction> list = new FastList<PlayerAction>();
+
+		ArrayList<PlayerAction> list = new ArrayList<>();
 		
 		if(self)
 		{

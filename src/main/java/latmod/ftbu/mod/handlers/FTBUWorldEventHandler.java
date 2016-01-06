@@ -17,7 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldServer;
 
 import java.io.File;
-import java.util.Arrays;
+import java.util.*;
 
 public class FTBUWorldEventHandler // FTBLIntegration
 {
@@ -56,7 +56,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
 			
 			try
 			{
-				FastList<String> l = new FastList<>();
+				ArrayList<String> l = new ArrayList<>();
 				int[] list = LMWorldServer.inst.getAllPlayerIDs();
 				Arrays.sort(list);
 				

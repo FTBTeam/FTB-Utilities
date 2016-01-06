@@ -3,13 +3,13 @@ package latmod.ftbu.world;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
 import latmod.ftbu.mod.FTBU;
-import latmod.lib.*;
+import latmod.lib.LMStringUtils;
 import latmod.lib.config.ConfigGroup;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
-import java.util.UUID;
+import java.util.*;
 
 public abstract class LMWorld // FTBWorld
 {
@@ -30,7 +30,7 @@ public abstract class LMWorld // FTBWorld
 		customCommonData = new ConfigGroup("custom_common_data");
 	}
 
-	public abstract FastMap<Integer, ? extends LMPlayer> playerMap();
+	public abstract HashMap<Integer, ? extends LMPlayer> playerMap();
 	public abstract World getMCWorld();
 
 	public LMWorldServer getServerWorld()
@@ -44,7 +44,7 @@ public abstract class LMWorld // FTBWorld
 	{
 		if(o == null || o instanceof FakePlayer) return null;
 
-		FastMap<Integer, ? extends LMPlayer> playerMap = playerMap();
+		HashMap<Integer, ? extends LMPlayer> playerMap = playerMap();
 
 		if(o instanceof Number || o instanceof LMPlayer)
 		{
@@ -86,9 +86,9 @@ public abstract class LMWorld // FTBWorld
 		return null;
 	}
 	
-	public FastList<? extends LMPlayer> getAllOnlinePlayers()
+	public List<? extends LMPlayer> getAllOnlinePlayers()
 	{
-		FastList<LMPlayer> l = new FastList<>();
+		ArrayList<LMPlayer> l = new ArrayList<>();
 		for(LMPlayer p : playerMap().values())
 		{ if(p.isOnline()) l.add(p); }
 		return l;
@@ -114,9 +114,9 @@ public abstract class LMWorld // FTBWorld
 	{
 	}
 	
-	public FastList<LMPlayerServer> getServerPlayers()
+	public List<LMPlayerServer> getServerPlayers()
 	{
-		FastList<LMPlayerServer> l = new FastList<>();
+		ArrayList<LMPlayerServer> l = new ArrayList<>();
 		for(LMPlayer p : playerMap().values())
 			l.add(p.toPlayerMP());
 		return l;

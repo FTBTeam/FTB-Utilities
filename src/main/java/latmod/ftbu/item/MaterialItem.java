@@ -1,11 +1,12 @@
 package latmod.ftbu.item;
 
 import cpw.mods.fml.relauncher.*;
-import latmod.lib.FastList;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+
+import java.util.List;
 
 public class MaterialItem
 {
@@ -43,15 +44,15 @@ public class MaterialItem
 	public void registerIcons(IIconRegister ir)
 	{
 		if(item.folder.isEmpty())
-			icon = ir.registerIcon(item.mod.assets + ID);
+			icon = ir.registerIcon(item.getMod().assets + ID);
 		else
-			icon = ir.registerIcon(item.mod.assets + item.folder + "/" + ID);
+			icon = ir.registerIcon(item.getMod().assets + item.folder + "/" + ID);
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public void addInfo(EntityPlayer ep, FastList<String> l)
+	public void addInfo(EntityPlayer ep, List<String> l)
 	{ }
 
 	public String getUnlocalizedName()
-	{ return item.mod.getItemName(item.folder.isEmpty() ? ID : (item.folder + "." + ID)); }
+	{ return item.getMod().getItemName(item.folder.isEmpty() ? ID : (item.folder + "." + ID)); }
 }

@@ -1,15 +1,17 @@
 package latmod.ftbu.recipes;
+
 import ftb.lib.item.*;
 import latmod.ftbu.item.MaterialItem;
-import latmod.lib.FastList;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraftforge.fluids.*;
 
+import java.util.*;
+
 public class StackArray implements IStackArray
 {
-	public final FastList<ItemStack> items;
+	public final Collection<ItemStack> items;
 	private int hashCode;
 	private IStackArray[] array;
 	
@@ -30,13 +32,15 @@ public class StackArray implements IStackArray
 	{
 		if(o == null) return false;
 		if(o == this) return true;
-		FastList<ItemStack> items1 = null;
-		
+		Collection<ItemStack> items1;
 		if(o instanceof StackArray) items1 = ((StackArray)o).items;
 		else items1 = getItems(o);
 		
-		if(items1 != null) for(int i = 0; i < items1.size(); i++)
-		{ if(equalsItem(items1.get(i))) return true; }
+		if(items1 != null) for(ItemStack is1 : items1)
+		{
+			if(equalsItem(is1))
+				return true;
+		}
 		return false;
 	}
 	
@@ -44,9 +48,9 @@ public class StackArray implements IStackArray
 	{
 		if(is == null) return false;
 		
-		for(int i = 0; i < items.size(); i++)
+		for(ItemStack is1 : items)
 		{
-			if(itemsEquals(items.get(i), is))
+			if(itemsEquals(is, is1))
 				return true;
 		}
 		
@@ -77,18 +81,17 @@ public class StackArray implements IStackArray
 		return convert(LMInvUtils.getAllItems(inv, side));
 	}
 	
-	public static FastList<ItemStack> getItems(Object o)
+	public static Collection<ItemStack> getItems(Object o)
 	{
-		FastList<ItemStack> list = new FastList<ItemStack>();
-		
-		if(o == null) return list;
+		if(o == null) return new ArrayList<>();
 		
 		ItemStack item0 = getFrom(o);
-		if(item0 != null) list.add(item0);
-		else if(o instanceof ItemStack[]) list.addAll((ItemStack[])o);
-		else if(o instanceof String) list.addAll(ODItems.getOres((String)o));
+		if(item0 != null) return Collections.singleton(item0);
+		else if(o instanceof ItemStack[]) return Arrays.asList((ItemStack[])o);
+		else if(o instanceof String) ODItems.getOres((String)o);
 		else if(o instanceof FluidStack)
 		{
+			ArrayList<ItemStack> list = new ArrayList<>();
 			FluidStack fs = (FluidStack)o;
 			FluidContainerRegistry.FluidContainerData[] fd = FluidContainerRegistry.getRegisteredFluidContainerData();
 			
@@ -98,10 +101,12 @@ public class StackArray implements IStackArray
 				if(f.fluid.getFluid() == fs.getFluid() && f.fluid.amount >= fs.amount && f.filledContainer != null)
 					list.add(f.filledContainer.copy());
 			}
+
+			return list;
 		}
 		else if(o instanceof Fluid) return getItems(new FluidStack((Fluid)o, 1000));
 		
-		return list;
+		return new ArrayList<>();
 	}
 	
 	public static ItemStack getFrom(Object o)

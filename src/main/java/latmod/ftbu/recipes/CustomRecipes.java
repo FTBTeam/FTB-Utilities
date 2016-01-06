@@ -1,19 +1,18 @@
 package latmod.ftbu.recipes;
 
-import latmod.lib.FastMap;
 import net.minecraft.item.ItemStack;
 
-import java.util.Map;
+import java.util.*;
 
 public class CustomRecipes<Output>
 {
 	public final LMRecipes parent;
-	protected FastMap<IStackArray, Output> recipes;
+	protected HashMap<IStackArray, Output> recipes;
 	
 	public CustomRecipes(LMRecipes r)
 	{
 		parent = r;
-		recipes = new FastMap<IStackArray, Output>();
+		recipes = new HashMap<>();
 	}
 	
 	public void clearMap()

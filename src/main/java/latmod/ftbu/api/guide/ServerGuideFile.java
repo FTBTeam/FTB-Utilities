@@ -21,7 +21,7 @@ public class ServerGuideFile extends GuideFile
 	{
 		public static final GuideCategory main = new GuideCategory(new ChatComponentTranslation(FTBUFinals.ASSETS + "button.server_info"));
 		public static GuideCategory categoryServer, categoryServerAdmin;
-		public static final FastMap<String, GuideLink> links = new FastMap<>();
+		public static final HashMap<String, GuideLink> links = new HashMap<>();
 		
 		public static void reload()
 		{
@@ -90,7 +90,7 @@ public class ServerGuideFile extends GuideFile
 		}
 	}
 	
-	private FastList<LMPlayerServer> players = null;
+	private List<LMPlayerServer> players = null;
 	private LMPlayerServer self;
 	private GuideCategory categoryTops = null;
 	

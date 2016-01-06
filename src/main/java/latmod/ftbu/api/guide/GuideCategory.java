@@ -6,6 +6,8 @@ import latmod.lib.*;
 import net.minecraft.nbt.*;
 import net.minecraft.util.*;
 
+import java.util.*;
+
 public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 {
 	private static final RemoveFilter<GuideCategory> cleanupFilter = new RemoveFilter<GuideCategory>()
@@ -16,15 +18,15 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 
 	public GuideCategory parent = null;
 	private IChatComponent title;
-	private FastList<IChatComponent> text;
-	public final FastList<GuideCategory> subcategories;
+	private ArrayList<IChatComponent> text;
+	public final List<GuideCategory> subcategories;
 	GuideFile file = null;
 	
 	public GuideCategory(IChatComponent s)
 	{
 		title = s;
-		text = new FastList<>();
-		subcategories = new FastList<>();
+		text = new ArrayList<>();
+		subcategories = new ArrayList<>();
 	}
 	
 	public GuideCategory setParent(GuideCategory c)
@@ -155,7 +157,7 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 	
 	public void cleanup()
 	{
-		subcategories.removeAll(cleanupFilter);
+		LMListUtils.removeAll(subcategories, cleanupFilter);
 		for(GuideCategory c : subcategories)
 			c.cleanup();
 	}

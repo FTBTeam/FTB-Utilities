@@ -4,16 +4,15 @@ import ftb.lib.*;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.world.*;
 import latmod.ftbu.world.claims.*;
-import latmod.lib.*;
 import net.minecraft.world.*;
 import net.minecraftforge.common.ForgeChunkManager;
 
-import java.util.List;
+import java.util.*;
 
 public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 {
 	public static final FTBUChunkEventHandler instance = new FTBUChunkEventHandler();
-	public final FastMap<Integer, FastMap<Integer, ForgeChunkManager.Ticket>> ticketMap = new FastMap<>();
+	public final HashMap<Integer, HashMap<Integer, ForgeChunkManager.Ticket>> ticketMap = new HashMap<>();
 
 	public void refreshMaxChunksCount()
 	{
@@ -29,7 +28,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 	{
 		if(w == null || player == null) return null;
 
-		FastMap<Integer, ForgeChunkManager.Ticket> map = ticketMap.get(Integer.valueOf(w.provider.dimensionId));
+		HashMap<Integer, ForgeChunkManager.Ticket> map = ticketMap.get(Integer.valueOf(w.provider.dimensionId));
 		ForgeChunkManager.Ticket t = (map == null) ? null : map.get(player.playerID);
 		
 		if(t == null)
@@ -42,7 +41,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 
 				if(map == null)
 				{
-					map = new FastMap<>();
+					map = new HashMap<>();
 					ticketMap.put(Integer.valueOf(w.provider.dimensionId), map);
 				}
 
@@ -58,7 +57,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 		FTBLib.dev_logger.info(LMWorldServer.inst);
 		Integer dim = Integer.valueOf(world.provider.dimensionId);
 		ticketMap.remove(dim);
-		FastMap<Integer, ForgeChunkManager.Ticket> newMap = new FastMap<>();
+		HashMap<Integer, ForgeChunkManager.Ticket> newMap = new HashMap<>();
 
 		for(ForgeChunkManager.Ticket t : list)
 		{
@@ -76,15 +75,22 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 	{
 		if(LMWorldServer.inst == null) return;
 
+		if(dim == null)
+		{
+			for(Integer dim1 : ticketMap.keySet())
+				markDirty(dim1);
+			return;
+		}
+
 		/*int total = 0;
 		int totalLoaded = 0;
 		int markedLoaded = 0;
 		int loaded = 0;
 		int unloaded = 0;*/
 
-		Iterable<ClaimedChunk> allChunks = (dim == null) ? LMWorldServer.inst.claimedChunks.getAllChunks() : LMWorldServer.inst.claimedChunks.chunks.get(dim);
+		Map<Long, ClaimedChunk> chunksMap = LMWorldServer.inst.claimedChunks.chunks.get(dim);
 
-		if(allChunks != null) for(ClaimedChunk c : allChunks)
+		if(chunksMap != null) for(ClaimedChunk c : chunksMap.values())
 		{
 			//total++;
 
@@ -151,13 +157,13 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 	{
 		if(dim == null)
 		{
-			Integer[] dims = ticketMap.keySet().toArray(new Integer[0]);
-			for(Integer dim1 : dims) cleanupTickets(dim1);
+			for(Integer dim1 : ticketMap.keySet())
+				cleanupTickets(dim1);
 			return;
 		}
 
-		FastList<ForgeChunkManager.Ticket> releasedTickets = new FastList<>();
-		FastMap<Integer, ForgeChunkManager.Ticket> map = ticketMap.get(dim);
+		ArrayList<ForgeChunkManager.Ticket> releasedTickets = new ArrayList<>();
+		HashMap<Integer, ForgeChunkManager.Ticket> map = ticketMap.get(dim);
 
 		if(map == null) return;
 

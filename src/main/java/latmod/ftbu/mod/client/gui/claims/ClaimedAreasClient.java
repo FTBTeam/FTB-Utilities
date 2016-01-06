@@ -3,14 +3,14 @@ package latmod.ftbu.mod.client.gui.claims;
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.world.*;
 import latmod.ftbu.world.claims.*;
-import latmod.lib.*;
+import latmod.lib.Bits;
 
-import java.util.List;
+import java.util.*;
 
 @SideOnly(Side.CLIENT)
 public class ClaimedAreasClient
 {
-	private static final FastMap<Long, Integer> chunks = new FastMap<Long, Integer>();
+	private static final HashMap<Long, Integer> chunks = new HashMap<>();
 	private static int lastDimension = 0;
 	
 	public static void clear()

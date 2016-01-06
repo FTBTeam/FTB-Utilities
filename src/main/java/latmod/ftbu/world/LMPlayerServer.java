@@ -106,7 +106,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	// Reading / Writing //
 	
-	public void getInfo(LMPlayerServer owner, FastList<IChatComponent> info)
+	public void getInfo(LMPlayerServer owner, List<IChatComponent> info)
 	{
 		refreshStats();
 		long ms = LMUtils.millis();
@@ -246,7 +246,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	{
 		if(isOnline())
 		{
-			FastList<String> requests = new FastList<>();
+			ArrayList<String> requests = new ArrayList<>();
 
 			for(LMPlayerServer p : world.playerMap.values())
 			{

@@ -4,9 +4,10 @@ import cpw.mods.fml.common.eventhandler.*;
 import ftb.lib.FTBLib;
 import ftb.lib.api.ServerTickCallback;
 import latmod.ftbu.world.*;
-import latmod.lib.FastList;
 import net.minecraft.event.*;
 import net.minecraft.util.*;
+
+import java.util.ArrayList;
 
 public class FTBUChatEventHandler
 {
@@ -16,8 +17,8 @@ public class FTBUChatEventHandler
 	public void onChatEvent(net.minecraftforge.event.ServerChatEvent e)
 	{
 		String[] msg = FTBLib.removeFormatting(e.message).split(" "); // https://github.com/LatvianModder
-		
-		FastList<String> links = new FastList<String>();
+
+		ArrayList<String> links = new ArrayList<>();
 		
 		for(String s : msg)
 		{

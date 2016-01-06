@@ -2,9 +2,10 @@ package latmod.ftbu.api;
 
 import cpw.mods.fml.relauncher.Side;
 import latmod.ftbu.world.*;
-import latmod.lib.FastList;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IChatComponent;
+
+import java.util.List;
 
 public abstract class EventLMPlayerServer extends EventLMPlayer // LMPlayerClientEvent
 {
@@ -58,9 +59,9 @@ public abstract class EventLMPlayerServer extends EventLMPlayer // LMPlayerClien
 	
 	public static class CustomInfo extends EventLMPlayerServer
 	{
-		public final FastList<IChatComponent> info;
+		public final List<IChatComponent> info;
 		
-		public CustomInfo(LMPlayerServer p, FastList<IChatComponent> l)
+		public CustomInfo(LMPlayerServer p, List<IChatComponent> l)
 		{ super(p); info = l; }
 	}
 }

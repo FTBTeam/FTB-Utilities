@@ -2,14 +2,14 @@ package latmod.ftbu.world;
 
 import com.google.gson.*;
 import ftb.lib.*;
-import latmod.lib.*;
+import latmod.lib.LMJsonUtils;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.util.Map;
+import java.util.*;
 
 public class Warps
 {
-	private final FastMap<String, EntityPos> warps = new FastMap<>();
+	private final HashMap<String, EntityPos> warps = new HashMap<>();
 	
 	public void readFromNBT(NBTTagCompound tag, String s)
 	{
@@ -19,7 +19,7 @@ public class Warps
 		
 		if(tag1 != null && !tag1.hasNoTags())
 		{
-			FastList<String> l = LMNBTUtils.getMapKeys(tag1);
+			List<String> l = LMNBTUtils.getMapKeys(tag1);
 			
 			for(int i = 0; i < l.size(); i++)
 			{

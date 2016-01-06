@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.util.UUID;
+import java.util.*;
 
 public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer // LMPlayerClient
 {
@@ -77,9 +77,9 @@ public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer
 	public boolean equalsPlayer(LMPlayer p)
 	{ return p != null && (p == this || p.playerID == playerID); }
 	
-	public FastList<LMPlayer> getFriends()
+	public List<LMPlayer> getFriends()
 	{
-		FastList<LMPlayer> list = new FastList<>();
+		ArrayList<LMPlayer> list = new ArrayList<>();
 		for(int i = 0; i < friends.size(); i++)
 		{
 			LMPlayer p = getWorld().getPlayer(friends.get(i));

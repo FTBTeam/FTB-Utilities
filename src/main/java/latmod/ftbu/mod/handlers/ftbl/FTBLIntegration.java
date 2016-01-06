@@ -37,7 +37,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 			if(FTBUConfigGeneral.restart_timer.get() > 0)
 				FTBUTicks.serverStarted();
 			
-			for(LMPlayerServer p : LMWorldServer.inst.playerMap)
+			for(LMPlayerServer p : LMWorldServer.inst.playerMap.values())
 				p.refreshStats();
 			
 			ServerGuideFile.CachedInfo.reload();
@@ -88,7 +88,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 			LMWorldServer.inst.readPlayersFromServer(tagPlayers.getCompoundTag("Players"));
 		}
 
-		for(LMPlayerServer p : LMWorldServer.inst.playerMap)
+		for(LMPlayerServer p : LMWorldServer.inst.playerMap.values())
 			p.setPlayer(null);
 
 		if(obj.isJsonObject()) LMWorldServer.inst.load(obj.getAsJsonObject(), Phase.POST);
@@ -185,5 +185,5 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 	{ return LMWorldServer.inst.getAllPlayerNames(Boolean.valueOf(online)); }
 	
 	public String[] getOfflinePlayerNames()
-	{ return LMWorld.getWorld().playerMap().getValueStringArray(); }
+	{ return LMMapUtils.toValueStringArray(LMWorld.getWorld().playerMap()); }
 }

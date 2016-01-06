@@ -32,7 +32,7 @@ public enum ClientAction
 			}
 			else
 			{
-				for(LMPlayerServer p : owner.world.playerMap)
+				for(LMPlayerServer p : owner.world.playerMap.values())
 				{
 					if(!p.equalsPlayer(owner) && p.isFriendRaw(owner) && !owner.isFriendRaw(p))
 					{

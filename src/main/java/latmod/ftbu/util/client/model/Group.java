@@ -2,9 +2,10 @@ package latmod.ftbu.util.client.model;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.GlStateManager;
-import latmod.lib.FastList;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
+
+import java.util.*;
 
 /** Made by LatvianModder */
 @SideOnly(Side.CLIENT)
@@ -12,7 +13,7 @@ public class Group
 {
 	public OBJModel parent;
 	public String groupName;
-	public FastList<Face> faces = new FastList<Face>();
+	public final List<Face> faces;
 	private int listID = -1;
 	public Vector3f pos, rotation, offset;
 	
@@ -20,7 +21,8 @@ public class Group
 	{
 		parent = m;
 		groupName = s;
-		
+
+		faces = new ArrayList<>();
 		pos = new Vector3f();
 		rotation = new Vector3f();
 		offset = new Vector3f();

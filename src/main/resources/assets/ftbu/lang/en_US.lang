@@ -1,4 +1,5 @@
 #Buttons
+ftbu:button.friends_gui=FriendsGUI
 ftbu:button.add_friend=Add as Friend
 ftbu:button.rem_friend=Remove from Friends
 ftbu:button.deny_friend=Deny Friend Request

@@ -2,6 +2,7 @@ package latmod.ftbu.mod.cmd.admin;
 
 import ftb.lib.cmd.*;
 import latmod.ftbu.world.LMPlayerServer;
+import latmod.lib.LMListUtils;
 import net.minecraft.command.*;
 import net.minecraft.util.*;
 
@@ -20,6 +21,6 @@ public class CmdListFriends extends CommandLM
 	{
 		checkArgs(args, 1);
 		LMPlayerServer p = LMPlayerServer.get(args[0]);
-		return new ChatComponentText(joinNiceString(p.getFriends().toStringArray()));
+		return new ChatComponentText(joinNiceString(LMListUtils.toStringArray(p.getFriends())));
 	}
 }

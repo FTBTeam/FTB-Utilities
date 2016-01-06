@@ -1,4 +1,5 @@
 package latmod.ftbu.net;
+
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.LMNBTUtils;
@@ -6,9 +7,11 @@ import ftb.lib.api.LMNetworkWrapper;
 import ftb.lib.item.LMInvUtils;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
-import latmod.lib.*;
+import latmod.lib.ByteCount;
 import net.minecraft.nbt.*;
 import net.minecraft.util.IChatComponent;
+
+import java.util.ArrayList;
 
 public class MessageLMPlayerInfo extends MessageFTBU
 {
@@ -22,8 +25,8 @@ public class MessageLMPlayerInfo extends MessageFTBU
 		if(p == null) return;
 		
 		NBTTagCompound tag = new NBTTagCompound();
-		
-		FastList<IChatComponent> info = new FastList<>();
+
+		ArrayList<IChatComponent> info = new ArrayList<>();
 		p.getInfo(owner, info);
 		
 		NBTTagList listInfo = new NBTTagList();
@@ -50,8 +53,8 @@ public class MessageLMPlayerInfo extends MessageFTBU
 		
 		NBTTagCompound tag = readTag();
 		NBTTagList listInfo = tag.getTagList("I", LMNBTUtils.STRING);
-		
-		FastList<IChatComponent> info = new FastList<IChatComponent>();
+
+		ArrayList<IChatComponent> info = new ArrayList<>();
 		for(int i = 0; i < listInfo.tagCount(); i++)
 			info.add(IChatComponent.Serializer.func_150699_a(listInfo.getStringTagAt(i)));
 		p.receiveInfo(info);

@@ -12,7 +12,7 @@ import latmod.ftbu.net.*;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
 import latmod.ftbu.world.claims.ChunkType;
-import latmod.lib.*;
+import latmod.lib.MathHelperLM;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,7 +20,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.*;
 
 import java.nio.ByteBuffer;
-import java.util.List;
+import java.util.*;
 
 @SideOnly(Side.CLIENT)
 public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // implements IClientActionGui
@@ -226,7 +226,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		}
 	}
 	
-	public void drawText(FastList<String> l)
+	public void drawText(List<String> l)
 	{
 		String s = FTBU.mod.translateClient("label.cchunks_count", (playerLM.claimedChunks + " / " + playerLM.getRank().config.max_claims.get()));
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 12, 0xFFFFFFFF);
@@ -271,7 +271,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		
 		if(!FTBLibClient.mc.theWorld.playerEntities.isEmpty())
 		{
-			FastList<EntityPlayer> list = new FastList<EntityPlayer>();
+			ArrayList<EntityPlayer> list = new ArrayList<>();
 			list.addAll(FTBLibClient.mc.theWorld.playerEntities);
 			
 			for(int i = 0; i < list.size(); i++)

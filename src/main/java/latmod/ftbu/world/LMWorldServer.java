@@ -22,7 +22,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	public static LMWorldServer inst = null;
 
 	public final File latmodFolder;
-	public final FastMap<Integer, LMPlayerServer> playerMap;
+	public final HashMap<Integer, LMPlayerServer> playerMap;
 	public final Warps warps;
 	public final ClaimedChunks claimedChunks;
 	private final LMFakeServerPlayer fakePlayer;
@@ -33,14 +33,14 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	{
 		super(Side.SERVER);
 		latmodFolder = f;
-		playerMap = new FastMap<>();
+		playerMap = new HashMap<>();
 		warps = new Warps();
 		claimedChunks = new ClaimedChunks();
 		fakePlayer = new LMFakeServerPlayer(this);
 		customServerData = new ConfigGroup("custom_server_data");
 	}
 
-	public FastMap<Integer, ? extends LMPlayer> playerMap()
+	public HashMap<Integer, ? extends LMPlayer> playerMap()
 	{ return playerMap; }
 	
 	public World getMCWorld()
@@ -130,7 +130,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	
 	public void writePlayersToServer(NBTTagCompound tag)
 	{
-		for(LMPlayerServer p : playerMap.values(null))
+		for(LMPlayerServer p : LMMapUtils.values(playerMap, null))
 		{
 			NBTTagCompound tag1 = new NBTTagCompound();
 
@@ -145,8 +145,8 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	public void readPlayersFromServer(NBTTagCompound tag)
 	{
 		playerMap.clear();
-		
-		FastMap<String, NBTTagCompound> map = LMNBTUtils.toFastMapWithType(tag);
+
+		Map<String, NBTTagCompound> map = LMNBTUtils.toMapWithType(tag);
 		
 		for(Map.Entry<String, NBTTagCompound> e : map.entrySet())
 		{
@@ -179,9 +179,9 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	public void update()
 	{ new MessageLMWorldUpdate(this).sendTo(null); }
 
-	public FastList<LMPlayerServer> getAllOnlinePlayers()
+	public List<LMPlayerServer> getAllOnlinePlayers()
 	{
-		FastList<LMPlayerServer> l = new FastList<>();
+		ArrayList<LMPlayerServer> l = new ArrayList<>();
 		for(LMPlayerServer p : playerMap.values())
 		{ if(p.isOnline()) l.add(p); }
 		return l;
@@ -190,7 +190,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	public String[] getAllPlayerNames(Boolean online)
 	{
 		if(online == null) return new String[0];
-		FastList<LMPlayerServer> list = (online == Boolean.TRUE) ? getAllOnlinePlayers() : new FastList<>(playerMap.values());
+		List<LMPlayerServer> list = (online == Boolean.TRUE) ? getAllOnlinePlayers() : LMListUtils.clone(playerMap.values());
 
 		Collections.sort(list, new Comparator<LMPlayerServer>()
 		{
@@ -202,6 +202,6 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 			}
 		});
 
-		return list.toStringArray();
+		return LMListUtils.toStringArray(list);
 	}
 }

@@ -8,7 +8,6 @@ import latmod.ftbu.block.IBlockLM;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.recipes.LMRecipes;
 import latmod.ftbu.tile.TileLM;
-import latmod.lib.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
@@ -19,10 +18,11 @@ import org.apache.logging.log4j.*;
 
 import java.lang.annotation.*;
 import java.lang.reflect.Field;
+import java.util.*;
 
 public class LMMod
 {
-	public static final FastMap<String, LMMod> modsMap = new FastMap<String, LMMod>();
+	public static final HashMap<String, LMMod> modsMap = new HashMap<>();
 	
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
@@ -72,10 +72,10 @@ public class LMMod
 	
 	public final String modID;
 	public final String lowerCaseModID;
-	public final ModContainer modContainer;
 	public final String assets;
-	public final FastList<IBlockLM> blocks;
-	public final FastList<IItemLM> items;
+	private ModContainer modContainer;
+	public final List<IBlockLM> blocks;
+	public final List<IItemLM> items;
 	
 	public Logger logger;
 	public LMRecipes recipes;
@@ -83,14 +83,20 @@ public class LMMod
 	public LMMod(String id)
 	{
 		modID = id;
-		modContainer = Loader.instance().getIndexedModList().get(modID);
 		lowerCaseModID = modID.toLowerCase();
 		assets = lowerCaseModID + ":";
-		blocks = new FastList<IBlockLM>();
-		items = new FastList<IItemLM>();
+		blocks = new ArrayList<>();
+		items = new ArrayList<>();
 		
 		logger = LogManager.getLogger(modID);
-		recipes = new LMRecipes();
+		recipes = LMRecipes.defaultInstance;
+	}
+
+	public ModContainer getModContainer()
+	{
+		if(modContainer == null)
+			modContainer = Loader.instance().getModObjectList().inverse().get(modID);
+		return modContainer;
 	}
 	
 	public void setRecipes(LMRecipes r)

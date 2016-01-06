@@ -3,12 +3,11 @@ package latmod.ftbu.world;
 import com.mojang.authlib.GameProfile;
 import ftb.lib.FTBLib;
 import latmod.ftbu.world.ranks.*;
-import latmod.lib.FastList;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.FakePlayer;
 
-import java.util.UUID;
+import java.util.*;
 
 public class LMFakeServerPlayer extends LMPlayerServer
 {
@@ -36,7 +35,7 @@ public class LMFakeServerPlayer extends LMPlayerServer
 	public boolean isOP()
 	{ return false; }
 
-	public void getInfo(FastList<IChatComponent> info) { }
+	public void getInfo(LMPlayerServer owner, List<IChatComponent> info) { }
 
 	public void refreshStats() { }
 

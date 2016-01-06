@@ -3,32 +3,32 @@ package latmod.ftbu.util.client.model;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
 import ftb.lib.client.GlStateManager;
-import latmod.lib.*;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.*;
+import java.util.*;
 
 /** Made by LatvianModder */
 @SideOnly(Side.CLIENT)
 public class OBJModel
 {
-	public final FastList<Face> totalFaces;
-	public final FastList<Vector3f> vertices;
-	public final FastList<Vector3f> vertexNormals;
-	public final FastList<Vector3f> texVertices;
-	public final FastMap<String, Group> groups;
+	public final List<Face> totalFaces;
+	public final List<Vector3f> vertices;
+	public final List<Vector3f> vertexNormals;
+	public final List<Vector3f> texVertices;
+	public final HashMap<String, Group> groups;
 	
 	private Group current = null;
 	public double sizeV = 0D;
 	
 	protected OBJModel()
 	{
-		totalFaces = new FastList<Face>();
-		vertices = new FastList<Vector3f>();
-		vertexNormals = new FastList<Vector3f>();
-		texVertices = new FastList<Vector3f>();
-		groups = new FastMap<String, Group>();
+		totalFaces = new ArrayList<>();
+		vertices = new ArrayList<>();
+		vertexNormals = new ArrayList<>();
+		texVertices = new ArrayList<>();
+		groups = new HashMap<>();
 	}
 	
 	public static OBJModel load(ResourceLocation rl)

@@ -7,13 +7,13 @@ import latmod.lib.*;
 
 import java.io.InputStream;
 import java.net.URL;
-import java.util.UUID;
+import java.util.*;
 
 @SideOnly(Side.CLIENT)
 public class ThreadLoadBadges extends Thread
 {
 	public static final String DEF_BADGES = "http://latvianmodder.github.io/images/badges/global_badges.json";
-	private static final FastMap<String, Badge> urlBadges = new FastMap<String, Badge>();
+	private static final HashMap<String, Badge> urlBadges = new HashMap<>();
 	
 	public static void init()
 	{ new ThreadLoadBadges().start(); }

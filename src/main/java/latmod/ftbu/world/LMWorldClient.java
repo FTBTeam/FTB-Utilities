@@ -9,7 +9,7 @@ import latmod.lib.*;
 import net.minecraft.world.World;
 
 import java.io.File;
-import java.util.UUID;
+import java.util.*;
 
 @SideOnly(Side.CLIENT)
 public class LMWorldClient extends LMWorld // LMWorldServer
@@ -18,7 +18,7 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 
 	public final int clientPlayerID;
 	public final File clientDataFolder;
-	public final FastMap<Integer, LMPlayerClient> playerMap;
+	public final HashMap<Integer, LMPlayerClient> playerMap;
 	public LMPlayerClientSelf clientPlayer = null;
 	
 	public LMWorldClient(int i)
@@ -26,10 +26,10 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 		super(Side.CLIENT);
 		clientPlayerID = i;
 		clientDataFolder = new File(FTBLib.folderLocal, "client/" + FTBWorld.client.getWorldIDS());
-		playerMap = new FastMap<>();
+		playerMap = new HashMap<>();
 	}
 
-	public FastMap<Integer, ? extends LMPlayer> playerMap()
+	public HashMap<Integer, ? extends LMPlayer> playerMap()
 	{ return playerMap; }
 	
 	public World getMCWorld()

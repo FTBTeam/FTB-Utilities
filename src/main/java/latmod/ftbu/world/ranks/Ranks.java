@@ -1,10 +1,9 @@
 package latmod.ftbu.world.ranks;
 
 import latmod.ftbu.world.LMPlayerServer;
-import latmod.lib.FastMap;
 import latmod.lib.config.ConfigFile;
 
-import java.util.UUID;
+import java.util.*;
 
 public class Ranks
 {
@@ -13,8 +12,8 @@ public class Ranks
 
 	private static ConfigFile file;
 	private static Rank defaultRank;
-	public static final FastMap<String, Rank> ranks = new FastMap<>();
-	public static final FastMap<UUID, Rank> playerMap = new FastMap<>();
+	public static final HashMap<String, Rank> ranks = new HashMap<>();
+	public static final HashMap<UUID, Rank> playerMap = new HashMap<>();
 
 	public static Rank getRank(LMPlayerServer p)
 	{

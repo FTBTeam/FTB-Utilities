@@ -2,16 +2,18 @@ package latmod.ftbu.world;
 
 import com.google.gson.*;
 import ftb.lib.LMNBTUtils;
-import latmod.lib.*;
+import latmod.lib.ByteIOStream;
 import latmod.lib.config.ConfigEntryBool;
 import net.minecraft.nbt.*;
+
+import java.util.HashMap;
 
 public class LMWorldSettings
 {
 	public final LMWorld world;
 	public final ConfigEntryBool border_enabled;
 	public final WorldBorder worldBorder0;
-	public final FastMap<Integer, WorldBorder> worldBorder;
+	public final HashMap<Integer, WorldBorder> worldBorder;
 	
 	public LMWorldSettings(LMWorld w)
 	{
@@ -19,7 +21,7 @@ public class LMWorldSettings
 		border_enabled = new ConfigEntryBool("border_enabled", false);
 		worldBorder0 = new WorldBorder(this, 0);
 		worldBorder0.size = 0;
-		worldBorder = new FastMap<>();
+		worldBorder = new HashMap<>();
 	}
 	
 	public void readFromNBT(NBTTagCompound tag)
@@ -84,7 +86,7 @@ public class LMWorldSettings
 		
 		a.add(worldBorder0.toJson());
 		
-		for(WorldBorder wb : worldBorder)
+		for(WorldBorder wb : worldBorder.values())
 		{
 			if(wb.size != 0 || wb.pos.x != 0 || wb.pos.y != 0)
 				a.add(wb.toJson());

@@ -3,36 +3,35 @@ package latmod.ftbu.item;
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.api.item.IItemLM;
 import latmod.ftbu.util.LMMod;
-import latmod.lib.FastList;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
 import net.minecraft.util.IIcon;
 
-import java.util.List;
+import java.util.*;
 
 public abstract class ItemLM extends Item implements IItemLM
 {
+	private static final ArrayList<String> infoList = new ArrayList<>();
+
 	public final String itemName;
-	public final FastList<ItemStack> itemsAdded;
-	public final LMMod mod;
-	
+	public final List<ItemStack> itemsAdded;
+
 	public boolean requiresMultipleRenderPasses = false;
 	
 	public ItemLM(String s)
 	{
 		super();
-		mod = getMod();
 		itemName = s;
-		setUnlocalizedName(mod.getItemName(s));
-		itemsAdded = new FastList<ItemStack>();
+		setUnlocalizedName(getMod().getItemName(s));
+		itemsAdded = new ArrayList<>();
 	}
 	
 	public abstract LMMod getMod();
 	
 	@SuppressWarnings("unchecked")
-	public final <E> E register() { mod.addItem(this); return (E)this; }
+	public final <E> E register() { getMod().addItem(this); return (E)this; }
 	
 	public final Item getItem()
 	{ return this; }
@@ -59,7 +58,7 @@ public abstract class ItemLM extends Item implements IItemLM
 	}
 	
 	public String getUnlocalizedName(ItemStack is)
-	{ return mod.getItemName(itemName); }
+	{ return getMod().getItemName(itemName); }
 	
 	public void addAllDamages(int until)
 	{
@@ -81,7 +80,7 @@ public abstract class ItemLM extends Item implements IItemLM
 	
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister ir)
-	{ itemIcon = ir.registerIcon(mod.assets + itemName); }
+	{ itemIcon = ir.registerIcon(getMod().assets + itemName); }
 	
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconFromDamageForRenderPass(int i, int r)
@@ -99,8 +98,6 @@ public abstract class ItemLM extends Item implements IItemLM
 	public final IIcon getIconIndex(ItemStack is)
 	{ return getIcon(is, 0); }
 	
-	private static final FastList<String> infoList = new FastList<String>();
-	
 	@SuppressWarnings("all") @SideOnly(Side.CLIENT)
     public final void addInformation(ItemStack is, EntityPlayer ep, List l, boolean b)
 	{
@@ -110,7 +107,7 @@ public abstract class ItemLM extends Item implements IItemLM
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public void addInfo(ItemStack is, EntityPlayer ep, FastList<String> l)
+	public void addInfo(ItemStack is, EntityPlayer ep, List<String> l)
 	{
 	}
 	

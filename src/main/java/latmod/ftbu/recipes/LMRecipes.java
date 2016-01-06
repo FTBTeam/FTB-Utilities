@@ -1,13 +1,17 @@
 package latmod.ftbu.recipes;
+
 import cpw.mods.fml.common.registry.GameRegistry;
-import latmod.lib.FastList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraftforge.oredict.*;
 
+import java.util.ArrayList;
+
 public class LMRecipes
 {
-	public boolean enableOreRecipes = true;
+	public static final LMRecipes defaultInstance = new LMRecipes();
+
+	public static boolean enableOreRecipes = true;
 	
 	public static ItemStack size(ItemStack is, int s)
 	{ ItemStack is1 = is.copy(); is1.stackSize = s; return is1; }
@@ -44,7 +48,7 @@ public class LMRecipes
 		
 		if(!enableOreRecipes)
 		{
-			FastList<ItemStack> al = new FastList<ItemStack>();
+			ArrayList<ItemStack> al = new ArrayList<>();
 			
 			for (int j = 0; j < in.length; ++j)
 			{
@@ -90,7 +94,7 @@ public class LMRecipes
 	
 	public void addSmelting(ItemStack out, ItemStack in)
 	{ addSmelting(out, in, 0F); }
-	
+
 	public void loadRecipes()
 	{
 	}

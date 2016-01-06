@@ -5,6 +5,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.*;
 import net.minecraft.util.*;
 
+import java.util.List;
+
 public class LMPlayerStats
 {
 	public final LMPlayerServer owner;
@@ -35,7 +37,7 @@ public class LMPlayerStats
 	
 	// Server side //
 	
-	public void getInfo(FastList<IChatComponent> info, long ms)
+	public void getInfo(List<IChatComponent> info, long ms)
 	{
 		if(lastSeen > 0L && !owner.isOnline()) info.add(new ChatComponentTranslation("ftbu:label.last_seen", LMStringUtils.getTimeString(ms - lastSeen)));
 		if(firstJoined > 0L) info.add(new ChatComponentTranslation("ftbu:label.joined", LMStringUtils.getTimeString(ms - firstJoined)));

@@ -12,13 +12,13 @@ import java.util.*;
 public class GuideFile // ServerGuideFile // ClientGuideFile
 {
 	public final GuideCategory main;
-	public final FastMap<String, GuideLink> links;
+	public final HashMap<String, GuideLink> links;
 	
 	public GuideFile(IChatComponent title)
 	{
 		main = new GuideCategory(title);
 		main.file = this;
-		links = new FastMap<>();
+		links = new HashMap<>();
 	}
 	
 	public GuideCategory getMod(String s)

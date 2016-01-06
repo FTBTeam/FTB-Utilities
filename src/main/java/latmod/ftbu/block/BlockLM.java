@@ -5,7 +5,6 @@ import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.item.ItemBlockLM;
 import latmod.ftbu.tile.TileLM;
 import latmod.ftbu.util.LMMod;
-import latmod.lib.FastList;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -23,16 +22,14 @@ import java.util.*;
 public abstract class BlockLM extends BlockContainer implements IBlockLM
 {
 	public final String blockName;
-	public ArrayList<ItemStack> blocksAdded = new ArrayList<ItemStack>();
-	public final LMMod mod;
+	public ArrayList<ItemStack> blocksAdded = new ArrayList<>();
 	private Item blockItem = null;
 	
 	public BlockLM(String s, Material m)
 	{
 		super(m);
-		mod = getMod();
 		blockName = s;
-		setBlockName(mod.getBlockName(s));
+		setBlockName(getMod().getBlockName(s));
 		setBlockTextureName(s);
 		setHardness(1.8F);
 		setResistance(3F);
@@ -49,10 +46,10 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	public abstract TileLM createNewTileEntity(World w, int m);
 	
 	@SuppressWarnings("unchecked")
-	public final <E> E register() { mod.addBlock(this); return (E)this; }
+	public final <E> E register() { getMod().addBlock(this); return (E)this; }
 	
 	@SuppressWarnings("unchecked")
-	public final <E> E registerDevOnly() { if(FTBLibFinals.DEV) mod.addBlock(this); return (E)this; }
+	public final <E> E registerDevOnly() { if(FTBLibFinals.DEV) getMod().addBlock(this); return (E)this; }
 	
 	public final String getItemID()
 	{ return blockName; }
@@ -67,7 +64,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	{ return isBlockContainer; }
 	
 	public String getUnlocalizedName(int m)
-	{ return mod.getBlockName(blockName); }
+	{ return getMod().getBlockName(blockName); }
 	
 	public void addAllDamages(int until)
 	{
@@ -144,7 +141,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ir)
-	{ blockIcon = ir.registerIcon(mod.assets + getTextureName()); }
+	{ blockIcon = ir.registerIcon(getMod().assets + getTextureName()); }
 
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int s, int m)
@@ -186,7 +183,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public void addInfo(ItemStack is, EntityPlayer ep, FastList<String> l)
+	public void addInfo(ItemStack is, EntityPlayer ep, List<String> l)
 	{
 	}
 	

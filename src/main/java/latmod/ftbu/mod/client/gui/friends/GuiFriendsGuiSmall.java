@@ -5,7 +5,6 @@ import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
 import latmod.ftbu.mod.client.FTBUActions;
 import latmod.ftbu.world.LMPlayerClient;
-import latmod.lib.FastList;
 
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class GuiFriendsGuiSmall extends GuiLM
 		mainPanel.width = 0;
 		mainPanel.height = 0;
 		
-		FastList<PlayerAction> list = FTBUActions.getActionsFor(playerLM);
+		List<PlayerAction> list = FTBUActions.getActionsFor(playerLM);
 		for(int i = 0; i < list.size(); i++)
 		{
 			ButtonPlayerActionSmall b = new ButtonPlayerActionSmall(this, list.get(i));

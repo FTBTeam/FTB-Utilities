@@ -4,7 +4,6 @@ import ftb.lib.api.PlayerAction;
 import ftb.lib.gui.widgets.*;
 import latmod.ftbu.mod.client.FTBUActions;
 import latmod.ftbu.world.LMPlayerClient;
-import latmod.lib.FastList;
 
 public class PanelPopupPlayerActions extends PanelPopupMenu
 {
@@ -23,8 +22,8 @@ public class PanelPopupPlayerActions extends PanelPopupMenu
 	
 	public void addItems()
 	{
-		FastList<PlayerAction> list = FTBUActions.getActionsFor(playerLM);
-		for(PlayerAction pa : list) menuButtons.add(new ButtonAction(this, pa));
+		for(PlayerAction pa : FTBUActions.getActionsFor(playerLM))
+			menuButtons.add(new ButtonAction(this, pa));
 	}
 	
 	public void onClosed(ButtonPopupMenu b, int mb)

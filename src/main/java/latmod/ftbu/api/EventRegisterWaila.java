@@ -5,12 +5,13 @@ import ftb.lib.OtherMods;
 import ftb.lib.api.EventLM;
 import latmod.ftbu.api.tile.IWailaTile;
 import latmod.ftbu.waila.*;
-import latmod.lib.FastList;
 import mcp.mobius.waila.api.IWailaRegistrar;
+
+import java.util.ArrayList;
 
 public class EventRegisterWaila extends EventLM
 {
-	private static final FastList<WailaRegEntry> registry = new FastList<WailaRegEntry>();
+	private static final ArrayList<WailaRegEntry> registry = new ArrayList<>();
 	
 	public void register(Class<?> block, BasicWailaHandler h)
 	{ for(WailaType t : h.types) registry.add(new WailaRegEntry(block, h, t)); }

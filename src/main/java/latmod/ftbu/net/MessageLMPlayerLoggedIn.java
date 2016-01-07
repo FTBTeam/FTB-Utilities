@@ -38,7 +38,7 @@ public class MessageLMPlayerLoggedIn extends MessageFTBU
 		boolean add = p == null;
 		if(add) p = new LMPlayerClient(LMWorldClient.inst, playerID, new GameProfile(uuid, username));
 		p.readFromNet(io, p.playerID == LMWorldClient.inst.clientPlayerID);
-		if(add) LMWorldClient.inst.playerMap.put(p.playerID, p);
+		LMWorldClient.inst.playerMap.put(p.playerID, p);
 		new EventLMPlayerClient.LoggedIn(p, firstTime).post();
 		new EventLMPlayerClient.DataLoaded(p).post();
 		return null;

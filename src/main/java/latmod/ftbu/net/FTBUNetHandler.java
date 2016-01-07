@@ -11,7 +11,7 @@ public class FTBUNetHandler
 	
 	public static void init()
 	{
-		NET.register(MessageLMWorldJoined.class, 1, Side.CLIENT);
+		//NET.register(MessageLMWorldJoined.class, 1, Side.CLIENT);
 		NET.register(MessageLMWorldUpdate.class, 2, Side.CLIENT);
 		NET.register(MessageLMPlayerUpdate.class, 3, Side.CLIENT);
 		NET.register(MessageLMPlayerLoggedIn.class, 4, Side.CLIENT);
@@ -24,6 +24,7 @@ public class FTBUNetHandler
 		NET_INFO.register(MessagePing.class, 2, Side.SERVER);
 		NET_INFO.register(MessagePingResponse.class, 3, Side.CLIENT);
 		NET_INFO.register(MessageDisplayGuide.class, 4, Side.CLIENT);
+		NET_INFO.register(MessageSendBadge.class, 5, Side.CLIENT);
 		
 		NET_WORLD.register(MessageAreaUpdate.class, 1, Side.CLIENT);
 		NET_WORLD.register(MessageAreaRequest.class, 2, Side.SERVER);

@@ -5,7 +5,6 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.LMNBTUtils;
 import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.api.EventLMPlayerClient;
-import latmod.ftbu.badges.Badge;
 import latmod.ftbu.world.ranks.*;
 import latmod.lib.*;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -19,7 +18,6 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 	public final LMWorldClient world;
 	public final List<IChatComponent> clientInfo;
 	public boolean isOnline;
-	public Badge cachedBadge;
 
 	public LMPlayerClient(LMWorldClient w, int i, GameProfile gp)
 	{
@@ -27,7 +25,6 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 		world = w;
 		clientInfo = new ArrayList<>();
 		isOnline = false;
-		cachedBadge = null;
 	}
 	
 	public ResourceLocation getSkin()
@@ -87,10 +84,5 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 		}
 		
 		commonPublicData = LMNBTUtils.readTag(io);
-	}
-	
-	public void onReloaded()
-	{
-		cachedBadge = null;
 	}
 }

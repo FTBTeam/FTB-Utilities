@@ -30,7 +30,9 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 
 	public void onReloaded(EventFTBReload e)
 	{
-		if(e.side.isServer())
+		FTBUConfigGeneral.onReloaded(e.world.side);
+
+		if(e.world.side.isServer())
 		{
 			if(LMWorldServer.inst == null) return;
 			
@@ -48,14 +50,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 		}
 		else FTBU.proxy_ftbl_int.onReloadedClient(e);
 	}
-	
-	public void onModeSet(EventFTBModeSet e)
-	{
-		FTBUConfigGeneral.onReloaded(e.side);
-		if(e.side.isClient()) FTBU.proxy_ftbl_int.onModeSetClient(e);
-		else FTBUChunkEventHandler.instance.markDirty(null);
-	}
-	
+
 	public void onFTBWorldServer(EventFTBWorldServer e)
 	{
 		ConfigRegistry.reload();
@@ -138,7 +133,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 		
 		boolean first = (p == null);
 		boolean sendAll = false;
-		
+
 		if(first)
 		{
 			p = new LMPlayerServer(LMWorldServer.inst, LMPlayerServer.nextPlayerID(), ep.getGameProfile());
@@ -150,13 +145,12 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 			p.gameProfile = ep.getGameProfile();
 			sendAll = true;
 		}
-		
+
 		p.setPlayer(ep);
 		p.refreshStats();
 		
-		new MessageLMWorldJoined(p.playerID).sendTo(sendAll ? null : ep);
 		new EventLMPlayerServer.LoggedIn(p, ep, first).post();
-		new MessageLMPlayerLoggedIn(p, first, true).sendTo(ep);
+		new MessageLMPlayerLoggedIn(p, first, true).sendTo(sendAll ? null : ep);
 		for(EntityPlayerMP ep1 : FTBLib.getAllOnlinePlayers(ep))
 			new MessageLMPlayerLoggedIn(p, first, false).sendTo(ep1);
 		
@@ -183,7 +177,14 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 	
 	public String[] getPlayerNames(boolean online)
 	{ return LMWorldServer.inst.getAllPlayerNames(Boolean.valueOf(online)); }
-	
-	public String[] getOfflinePlayerNames()
-	{ return LMMapUtils.toValueStringArray(LMWorld.getWorld().playerMap()); }
+
+	public void writeWorldData(ByteIOStream io, EntityPlayerMP ep)
+	{
+		int id = getPlayerID(ep);
+		io.writeInt(id);
+		LMWorldServer.inst.writeDataToNet(io, id);
+	}
+
+	public void readWorldData(ByteIOStream io)
+	{ FTBU.proxy_ftbl_int.readWorldData(io); }
 }

@@ -119,7 +119,16 @@ public enum ClientAction
 			return false;
 		}
 	},
-	
+
+	ACTION_REQUEST_BADGE
+	{
+		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
+		{
+			//FIXME: Badge
+			new MessageLMPlayerUpdate(owner, true).sendTo(ep);
+			return false;
+		}
+	},
 	;
 	public static final ClientAction[] VALUES = values();
 	public final byte ID;

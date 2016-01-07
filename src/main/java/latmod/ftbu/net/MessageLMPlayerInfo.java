@@ -2,13 +2,12 @@ package latmod.ftbu.net;
 
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.LMNBTUtils;
 import ftb.lib.api.LMNetworkWrapper;
 import ftb.lib.item.LMInvUtils;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
 import latmod.lib.ByteCount;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IChatComponent;
 
 import java.util.ArrayList;
@@ -23,21 +22,18 @@ public class MessageLMPlayerInfo extends MessageFTBU
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(playerID);
 		io.writeInt(p == null ? 0 : p.playerID);
 		if(p == null) return;
-		
-		NBTTagCompound tag = new NBTTagCompound();
 
 		ArrayList<IChatComponent> info = new ArrayList<>();
 		p.getInfo(owner, info);
-		
-		NBTTagList listInfo = new NBTTagList();
-		
-		for(int i = 0; i < info.size(); i++)
-			listInfo.appendTag(new NBTTagString(IChatComponent.Serializer.func_150696_a(info.get(i))));
-		
-		tag.setTag("I", listInfo);
-		
-		LMInvUtils.writeItemsToNBT(p.lastArmor, tag, "LI");
-		
+
+		int s = Math.min(255, info.size());
+		io.writeByte(s);
+
+		for(int i = 0; i < s; i++)
+			io.writeUTF(IChatComponent.Serializer.func_150696_a(info.get(i)));
+
+		NBTTagCompound tag = new NBTTagCompound();
+		LMInvUtils.writeItemsToNBT(p.lastArmor, tag, "A");
 		writeTag(tag);
 	}
 	
@@ -50,16 +46,15 @@ public class MessageLMPlayerInfo extends MessageFTBU
 		if(LMWorldClient.inst == null) return null;
 		LMPlayerClient p = LMWorldClient.inst.getPlayer(io.readInt());
 		if(p == null) return null;
-		
-		NBTTagCompound tag = readTag();
-		NBTTagList listInfo = tag.getTagList("I", LMNBTUtils.STRING);
 
+		int s = io.readUnsignedByte();
 		ArrayList<IChatComponent> info = new ArrayList<>();
-		for(int i = 0; i < listInfo.tagCount(); i++)
-			info.add(IChatComponent.Serializer.func_150699_a(listInfo.getStringTagAt(i)));
+		for(int i = 0; i < s; i++)
+			info.add(IChatComponent.Serializer.func_150699_a(io.readUTF()));
 		p.receiveInfo(info);
-		
-		LMInvUtils.readItemsFromNBT(p.lastArmor, tag, "LI");
+
+		NBTTagCompound tag = readTag();
+		LMInvUtils.readItemsFromNBT(p.lastArmor, tag, "A");
 		
 		LatCoreMCClient.onGuiClientAction();
 		return null;

@@ -1,7 +1,7 @@
 package latmod.ftbu.api.guide;
 
 import ftb.lib.FTBLib;
-import ftb.lib.api.EventFTBModeSet;
+import ftb.lib.api.*;
 import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.client.gui.guide.GuiGuide;
@@ -18,13 +18,13 @@ public class ClientGuideFile extends GuideFile
 	public ClientGuideFile(IChatComponent title)
 	{ super(title); }
 	
-	public void reload(EventFTBModeSet e)
+	public void reload(EventFTBReload e)
 	{
-		if(FTBLibFinals.DEV) FTBU.mod.logger.info("Guide reloaded @ " + e.side);
+		if(FTBLibFinals.DEV) FTBU.mod.logger.info("Guide reloaded @ " + e.world.side);
 		
 		main.clear();
 		
-		File file = e.getCommonFile("guide/");
+		File file = GameModes.getGameModes().commonMode.getFile("guide/");
 		if(file.exists() && file.isDirectory())
 		{
 			File[] f = file.listFiles();
@@ -36,7 +36,7 @@ public class ClientGuideFile extends GuideFile
 			}
 		}
 		
-		file = e.getFile("guide/");
+		file = e.world.getMode().getFile("guide/");
 		if(file.exists() && file.isDirectory())
 		{
 			File[] f = file.listFiles();
@@ -48,7 +48,7 @@ public class ClientGuideFile extends GuideFile
 			}
 		}
 		
-		file = e.getFile("guide_intro.txt");
+		file = e.world.getMode().getFile("guide_intro.txt");
 		if(file.exists() && file.isFile())
 		{
 			try

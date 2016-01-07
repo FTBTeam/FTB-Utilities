@@ -2,7 +2,7 @@ package latmod.ftbu.world;
 
 import latmod.ftbu.net.MessageLMPlayerUpdateSettings;
 import latmod.ftbu.util.LMSecurityLevel;
-import latmod.lib.ByteIOStream;
+import latmod.lib.*;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class PersonalSettings
@@ -41,18 +41,22 @@ public class PersonalSettings
 	
 	public void readFromNet(ByteIOStream io)
 	{
-		chatLinks = io.readBoolean();
-		explosions = io.readBoolean();
+		boolean[] flags = new boolean[8];
+		Bits.fromBits(flags, io.readUnsignedByte());
+		chatLinks = flags[0];
+		explosions = flags[1];
+		fakePlayers = flags[2];
 		blocks = LMSecurityLevel.VALUES_3[io.readUnsignedByte()];
-		fakePlayers = io.readBoolean();
 	}
 	
 	public void writeToNet(ByteIOStream io)
 	{
-		io.writeBoolean(chatLinks);
-		io.writeBoolean(explosions);
+		boolean[] flags = new boolean[8];
+		flags[0] = chatLinks;
+		flags[1] = explosions;
+		flags[2] = fakePlayers;
+		io.writeByte(Bits.toBits(flags));
 		io.writeByte(blocks.ID);
-		io.writeBoolean(fakePlayers);
 	}
 	
 	public void update()

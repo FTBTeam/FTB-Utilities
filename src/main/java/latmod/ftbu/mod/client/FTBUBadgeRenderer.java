@@ -3,6 +3,7 @@ package latmod.ftbu.mod.client;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.badges.*;
+import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -15,19 +16,23 @@ public class FTBUBadgeRenderer
 	@SubscribeEvent
 	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
 	{
-		if(LatCoreMCClient.isPlaying() && !Badge.badges.isEmpty() && FTBUClient.render_badges.get() && !e.entityPlayer.isInvisible())
+		if(LatCoreMCClient.isPlaying() && FTBUClient.render_badges.get() && !e.entityPlayer.isInvisible())
 		{
 			LMPlayerClient pc = LMWorldClient.inst.getPlayer(e.entityPlayer);
 			
 			if(pc != null && pc.renderBadge)
 			{
-				if(pc.cachedBadge == null)
+				Integer id = Integer.valueOf(pc.playerID);
+				if(ClientBadges.playerBadges.containsKey(id))
 				{
-					pc.cachedBadge = Badge.badges.get(pc.getUUID());
-					if(pc.cachedBadge == null) pc.cachedBadge = new BadgeEmpty();
+					Badge b = ClientBadges.playerBadges.get(id);
+					if(b != null) b.onPlayerRender(e.entityPlayer);
 				}
-				
-				pc.cachedBadge.onPlayerRender(e.entityPlayer);
+				else
+				{
+					ClientBadges.playerBadges.put(id, Badge.emptyBadge);
+					ClientAction.ACTION_REQUEST_BADGE.send(pc.playerID);
+				}
 			}
 		}
 	}

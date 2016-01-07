@@ -1,14 +1,11 @@
 package latmod.ftbu.mod.client;
+
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
 import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.LMGuiHandlerRegistry;
-import ftb.lib.client.FTBLibClient;
 import ftb.lib.mod.client.FTBLibGuiEventHandler;
-import ftb.lib.notification.ClientNotifications;
-import latmod.ftbu.badges.ThreadLoadBadges;
 import latmod.ftbu.mod.*;
-import latmod.ftbu.mod.client.gui.claims.ClaimedAreasClient;
 import latmod.ftbu.mod.cmd.CmdMath;
 import latmod.ftbu.tile.TileLM;
 import latmod.ftbu.util.client.LatCoreMCClient;
@@ -57,18 +54,6 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public static final ConfigEntryBool sort_friends_az = new ConfigEntryBool("sort_friends_az", false);
 	public static final ConfigEntryBool hide_armor_fg = new ConfigEntryBool("hide_armor_fg", false).setHidden();
 	
-	public static void onWorldJoined()
-	{
-		ThreadLoadBadges.init();
-		ClientNotifications.init();
-	}
-	
-	public static void onWorldClosed()
-	{
-		ClientNotifications.init();
-		ClaimedAreasClient.clear();
-	}
-	
 	public void preInit()
 	{
 		JsonHelper.initClient();
@@ -98,17 +83,5 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		t.readTileClientData(data);
 		t.onUpdatePacket();
 		LatCoreMCClient.onGuiClientAction();
-	}
-	
-	public static void onReloaded()
-	{
-		FTBLibClient.clearCachedData();
-		ThreadLoadBadges.init();
-		
-		if(LMWorldClient.inst != null)
-		{
-			for(LMPlayerClient p : LMWorldClient.inst.playerMap.values())
-				p.onReloaded();
-		}
 	}
 }

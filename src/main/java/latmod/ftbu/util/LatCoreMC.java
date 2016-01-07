@@ -14,15 +14,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.*;
 
-import java.util.Random;
-
 /** Made by LatvianModder */
 public final class LatCoreMC // LatCoreMCClient
 {
-	public static final Random rand = new Random();
-	
-	// Registry methods //
-	
 	public static void addItem(IItemLM i)
 	{ addItem((Item)i, i.getItemID()); }
 	
@@ -34,7 +28,7 @@ public final class LatCoreMC // LatCoreMCClient
 	
 	public static void addBlock(Block b, String name)
 	{ addBlock(b, ItemBlock.class, name); }
-	
+
 	public static void addTileEntity(Class<? extends TileEntity> c, String s, String... alt)
 	{
 		if(alt == null || alt.length == 0) GameRegistry.registerTileEntity(c, s);
@@ -59,5 +53,5 @@ public final class LatCoreMC // LatCoreMCClient
 	}
 	
 	public static void displayGuide(EntityPlayerMP ep, GuideFile file) 
-	{ if(FTBLib.isServer() && !(ep instanceof FakePlayer)) new MessageDisplayGuide(file).sendTo(ep); }
+	{ if(FTBLib.getEffectiveSide().isServer() && !(ep instanceof FakePlayer)) new MessageDisplayGuide(file).sendTo(ep); }
 }

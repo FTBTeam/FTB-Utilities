@@ -32,7 +32,7 @@ public class FTBUActions
 	public static final PlayerAction friend_add = new PlayerAction("ftbu:button.add_friend", GuiIcons.add)
 	{
 		public void onClicked(int playerID)
-		{ ClientAction.ACTION_ADD_FRIEND.send(playerID); }
+		{ ClientAction.ADD_FRIEND.send(playerID); }
 		
 		public String getTitleKey()
 		{ return ID; }
@@ -41,7 +41,7 @@ public class FTBUActions
 	public static final PlayerAction friend_remove = new PlayerAction("ftbu:button.rem_friend", GuiIcons.remove)
 	{
 		public void onClicked(int playerID)
-		{ ClientAction.ACTION_REM_FRIEND.send(playerID); }
+		{ ClientAction.REM_FRIEND.send(playerID); }
 		
 		public String getTitleKey()
 		{ return ID; }
@@ -50,7 +50,7 @@ public class FTBUActions
 	public static final PlayerAction friend_deny = new PlayerAction("ftbu:button.deny_friend", GuiIcons.remove)
 	{
 		public void onClicked(int playerID)
-		{ ClientAction.ACTION_DENY_FRIEND.send(playerID); }
+		{ ClientAction.DENY_FRIEND.send(playerID); }
 		
 		public String getTitleKey()
 		{ return ID; }
@@ -59,7 +59,7 @@ public class FTBUActions
 	public static final PlayerAction mail = new PlayerAction("ftbu:button.mail", GuiIcons.feather)
 	{
 		public void onClicked(int playerID)
-		{  }
+		{ }
 		
 		public String getTitleKey()
 		{ return ID; }
@@ -68,7 +68,7 @@ public class FTBUActions
 	public static final PlayerAction trade = new PlayerAction("ftbu:button.trade", GuiIcons.moneybag)
 	{
 		public void onClicked(int playerID)
-		{  }
+		{ }
 		
 		public String getTitleKey()
 		{ return ID; }
@@ -91,7 +91,7 @@ public class FTBUActions
 	public static final PlayerAction info = new PlayerAction("ftbu:button.server_info", GuiIcons.guide_server)
 	{
 		public void onClicked(int playerID)
-		{ ClientAction.ACTION_REQUEST_SERVER_INFO.send(0); }
+		{ ClientAction.REQUEST_SERVER_INFO.send(0); }
 		
 		public String getTitleKey()
 		{ return ID; }
@@ -130,8 +130,7 @@ public class FTBUActions
 			}
 			
 			if(isFriend) list.add(friend_remove);
-			else if(p.isFriendRaw(o))
-				list.add(friend_deny);
+			else if(p.isFriendRaw(o)) list.add(friend_deny);
 		}
 		
 		EventPlayerActionButtons event = new EventPlayerActionButtons(p.playerID, self, true);

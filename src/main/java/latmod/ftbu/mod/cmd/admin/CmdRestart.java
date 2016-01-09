@@ -14,7 +14,10 @@ public class CmdRestart extends CommandLM
 	{ super("restart", CommandLevel.OP); }
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
-	{ restart(); return null; }
+	{
+		restart();
+		return null;
+	}
 	
 	public static void restart()
 	{

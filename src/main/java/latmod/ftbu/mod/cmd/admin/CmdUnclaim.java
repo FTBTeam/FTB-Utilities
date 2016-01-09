@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import ftb.lib.AdminToken;
+import ftb.lib.LMAccessToken;
 import ftb.lib.cmd.*;
 import latmod.ftbu.mod.FTBUGuiHandler;
 import net.minecraft.command.*;
@@ -17,7 +17,7 @@ public class CmdUnclaim extends CommandLM
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		NBTTagCompound data = new NBTTagCompound();
-		data.setLong("T", AdminToken.generate(ep));
+		data.setLong("T", LMAccessToken.generate(ep));
 		FTBUGuiHandler.instance.openGui(ep, FTBUGuiHandler.ADMIN_CLAIMS, data);
 		return null;
 	}

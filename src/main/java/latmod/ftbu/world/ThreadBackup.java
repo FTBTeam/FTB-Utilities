@@ -31,7 +31,7 @@ public class ThreadBackup extends Thread
 		try
 		{
 			new CommandSaveOff().processCommand(FTBLib.getServer(), new String[0]);
-			new CommandSaveAll().processCommand(FTBLib.getServer(), new String[] { "flush" });
+			new CommandSaveAll().processCommand(FTBLib.getServer(), new String[] {"flush"});
 		}
 		catch(Exception e) { }
 		
@@ -86,7 +86,7 @@ public class ThreadBackup extends Thread
 						log.append('[');
 						log.append(i);
 						log.append(" | ");
-						log.append(MathHelperLM.toSmallDouble((i / (double)allFiles) * 100D));
+						log.append(MathHelperLM.toSmallDouble((i / (double) allFiles) * 100D));
 						log.append("%]: ");
 						log.append(ze.getName());
 						Backups.logger.info(log.toString());
@@ -96,8 +96,7 @@ public class ThreadBackup extends Thread
 					FileInputStream fis = new FileInputStream(file);
 					
 					int len;
-					while ((len = fis.read(buffer)) > 0)
-						zos.write(buffer, 0, len);
+					while((len = fis.read(buffer)) > 0) zos.write(buffer, 0, len);
 					zos.closeEntry();
 					fis.close();
 				}
@@ -131,7 +130,7 @@ public class ThreadBackup extends Thread
 						log.append('[');
 						log.append(i);
 						log.append(" | ");
-						log.append(MathHelperLM.toSmallDouble((i / (double)allFiles) * 100D));
+						log.append(MathHelperLM.toSmallDouble((i / (double) allFiles) * 100D));
 						log.append("%]: ");
 						log.append(file.getName());
 						Backups.logger.info(log.toString());
@@ -152,7 +151,8 @@ public class ThreadBackup extends Thread
 				String sizeT = LMFileUtils.getSizeS(Backups.backupsFolder);
 				FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(calendar.millis) + "! (" + (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)) + ")");
 			}
-			else FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(calendar.millis) + "!");
+			else
+				FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(calendar.millis) + "!");
 		}
 		catch(Exception e)
 		{

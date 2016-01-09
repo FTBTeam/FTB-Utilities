@@ -3,8 +3,7 @@ package latmod.ftbu.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.LMNetworkWrapper;
-import latmod.ftbu.badges.*;
-import latmod.ftbu.world.LMWorldClient;
+import latmod.ftbu.badges.ClientBadges;
 import latmod.lib.ByteCount;
 
 public class MessageSendBadge extends MessageFTBU
@@ -24,11 +23,9 @@ public class MessageSendBadge extends MessageFTBU
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{
-		if(LMWorldClient.inst == null) return null;
 		int player = io.readInt();
 		String badge = io.readUTF();
-		Badge b = ClientBadges.loadedBadges.get(badge);
-		if(b != null) ClientBadges.playerBadges.put(Integer.valueOf(player), b);
+		ClientBadges.setClientBadge(player, badge);
 		return null;
 	}
 }

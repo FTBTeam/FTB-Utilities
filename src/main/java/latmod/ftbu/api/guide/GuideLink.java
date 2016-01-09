@@ -24,7 +24,10 @@ public class GuideLink
 	private ItemStack itemStack = null;
 	
 	public GuideLink(LinkType t, String l)
-	{ type = t; link = l; }
+	{
+		type = t;
+		link = l;
+	}
 	
 	@SideOnly(Side.CLIENT)
 	public TextureCoords getTexture()
@@ -43,7 +46,9 @@ public class GuideLink
 			texture = new TextureCoords(location, 0, 0, img.getWidth(), img.getHeight(), img.getWidth(), img.getHeight());
 		}
 		catch(Exception e)
-		{ texture = TextureCoords.nullTexture; }
+		{
+			texture = TextureCoords.nullTexture;
+		}
 		
 		return texture;
 	}

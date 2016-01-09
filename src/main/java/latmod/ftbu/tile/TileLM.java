@@ -1,4 +1,5 @@
 package latmod.ftbu.tile;
+
 import ftb.lib.FTBLib;
 import ftb.lib.api.gui.*;
 import ftb.lib.mod.net.MessageClientTileAction;
@@ -91,8 +92,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 	
 	public void onUpdatePacket()
 	{
-		if(rerenderBlock())
-			worldObj.func_147479_m(xCoord, yCoord, zCoord);
+		if(rerenderBlock()) worldObj.func_147479_m(xCoord, yCoord, zCoord);
 	}
 	
 	public boolean rerenderBlock()
@@ -142,8 +142,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 		{
 			isDirty = false;
 			
-			if(isServer())
-				sendDirtyUpdate();
+			if(isServer()) sendDirtyUpdate();
 		}
 		
 		tick++;
@@ -171,7 +170,11 @@ public class TileLM extends TileEntity implements IClientActionTile
 	{ security.printOwner(ep); }
 	
 	public void setMeta(int m)
-	{ blockMetadata = m; worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, m, 3); markDirty(); }
+	{
+		blockMetadata = m;
+		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, m, 3);
+		markDirty();
+	}
 	
 	public void getMeta()
 	{ blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord); }
@@ -179,14 +182,16 @@ public class TileLM extends TileEntity implements IClientActionTile
 	public BlockLM getBlockType()
 	{
 		Block b = super.getBlockType();
-		if(b instanceof BlockLM) return (BlockLM)b;
+		if(b instanceof BlockLM) return (BlockLM) b;
 		return null;
 	}
 	
 	public boolean recolourBlock(ForgeDirection side, int col)
 	{ return false; }
 	
-	/** Player can be null */
+	/**
+	 * Player can be null
+	 */
 	public boolean isMinable(EntityPlayer ep)
 	{ return ep == null || security.canInteract(ep); }
 	
@@ -200,7 +205,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 	{
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setString("ID", button);
-		tag.setByte("MB", (byte)mouseButton);
+		tag.setByte("MB", (byte) mouseButton);
 		if(data != null) tag.setTag("D", data);
 		sendClientAction(ACTION_BUTTON_PRESSED, tag);
 	}
@@ -225,8 +230,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 			handleButton(data.getString("ID"), data.getByte("MB"), data.getCompoundTag("D"), ep);
 			markDirty();
 		}
-		else if(action.equals(ACTION_OPEN_GUI))
-			FTBLib.openGui(ep, (IGuiTile)this, data);
+		else if(action.equals(ACTION_OPEN_GUI)) FTBLib.openGui(ep, (IGuiTile) this, data);
 		else if(action.equals(ACTION_CUSTOM_NAME))
 		{
 			String name = data.getString("Name");
@@ -258,7 +262,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 		
 		if(o.hashCode() == hashCode() && o instanceof TileLM)
 		{
-			TileLM t = (TileLM)o;
+			TileLM t = (TileLM) o;
 			return t.getDimension() == getDimension() && t.xCoord == xCoord && t.yCoord == yCoord && t.zCoord == zCoord;
 		}
 

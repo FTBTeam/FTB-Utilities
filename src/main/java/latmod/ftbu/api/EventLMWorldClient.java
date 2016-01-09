@@ -9,5 +9,8 @@ public class EventLMWorldClient extends EventLM
 	public final boolean closed;
 	
 	public EventLMWorldClient(LMWorldClient w, boolean c)
-	{ world = w; closed = c; }
+	{
+		world = w;
+		closed = c;
+	}
 }

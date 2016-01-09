@@ -64,11 +64,12 @@ public class GuideFile // ServerGuideFile // ClientGuideFile
 				{
 					GuideCategory c1 = c.getSub(new ChatComponentText(LMFileUtils.getRawFileName(f)));
 					String txt = LMFileUtils.loadAsText(f);
-					if(txt != null && !txt.isEmpty())
-						c1.println(txt.replace("\r", ""));
+					if(txt != null && !txt.isEmpty()) c1.println(txt.replace("\r", ""));
 				}
 				catch(Exception e)
-				{ e.printStackTrace(); }
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -85,7 +86,11 @@ public class GuideFile // ServerGuideFile // ClientGuideFile
 	{
 		links.clear();
 		
-		if(tag == null) { main.clear(); return; }
+		if(tag == null)
+		{
+			main.clear();
+			return;
+		}
 		
 		if(tag.hasKey("L"))
 		{
@@ -116,7 +121,7 @@ public class GuideFile // ServerGuideFile // ClientGuideFile
 				
 				NBTTagCompound tag1 = new NBTTagCompound();
 				
-				tag1.setByte("I", (byte)l.type.ordinal());
+				tag1.setByte("I", (byte) l.type.ordinal());
 				tag1.setString("ID", e.getKey());
 				if(!l.link.isEmpty()) tag1.setString("L", l.link);
 				if(l.title != null) tag1.setString("T", IChatComponent.Serializer.func_150696_a(l.title));

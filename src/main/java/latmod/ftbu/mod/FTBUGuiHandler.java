@@ -30,8 +30,7 @@ public class FTBUGuiHandler extends LMGuiHandler
 	public GuiScreen getGui(EntityPlayer ep, int id, NBTTagCompound data)
 	{
 		if(id == FRIENDS) return new GuiFriends(null);
-		else if(id == ADMIN_CLAIMS)
-			return new GuiClaimChunks(data.getLong("T"));
+		else if(id == ADMIN_CLAIMS) return new GuiClaimChunks(data.getLong("T"));
 		return null;
 	}
 }

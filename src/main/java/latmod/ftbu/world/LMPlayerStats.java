@@ -39,10 +39,13 @@ public class LMPlayerStats
 	
 	public void getInfo(List<IChatComponent> info, long ms)
 	{
-		if(lastSeen > 0L && !owner.isOnline()) info.add(new ChatComponentTranslation("ftbu:label.last_seen", LMStringUtils.getTimeString(ms - lastSeen)));
-		if(firstJoined > 0L) info.add(new ChatComponentTranslation("ftbu:label.joined", LMStringUtils.getTimeString(ms - firstJoined)));
+		if(lastSeen > 0L && !owner.isOnline())
+			info.add(new ChatComponentTranslation("ftbu:label.last_seen", LMStringUtils.getTimeString(ms - lastSeen)));
+		if(firstJoined > 0L)
+			info.add(new ChatComponentTranslation("ftbu:label.joined", LMStringUtils.getTimeString(ms - firstJoined)));
 		if(deaths > 0) info.add(new ChatComponentTranslation("ftbu:label.deaths", String.valueOf(deaths)));
-		if(timePlayed > 0L) info.add(new ChatComponentTranslation("stat.playOneMinute").appendSibling(new ChatComponentText(": " + LMStringUtils.getTimeString(timePlayed))));
+		if(timePlayed > 0L)
+			info.add(new ChatComponentTranslation("stat.playOneMinute").appendSibling(new ChatComponentText(": " + LMStringUtils.getTimeString(timePlayed))));
 	}
 	
 	public int getStat(StatBase s)
@@ -57,8 +60,7 @@ public class LMPlayerStats
 		deaths = getStat(StatList.deathsStat);
 		
 		lastSeen = ms;
-		if(firstJoined <= 0L)
-			firstJoined = lastSeen;
+		if(firstJoined <= 0L) firstJoined = lastSeen;
 	}
 	
 	// - //
@@ -66,7 +68,7 @@ public class LMPlayerStats
 	public double getDeathsPerHour()
 	{
 		if(deaths == 0 || timePlayed == 0L) return 0D;
-		return (double)deaths / (timePlayed / 3600000D);
+		return (double) deaths / (timePlayed / 3600000D);
 	}
 
 	public long getLastSeen()

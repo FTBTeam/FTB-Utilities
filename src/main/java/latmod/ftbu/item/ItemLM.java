@@ -31,7 +31,11 @@ public abstract class ItemLM extends Item implements IItemLM
 	public abstract LMMod getMod();
 	
 	@SuppressWarnings("unchecked")
-	public final <E> E register() { getMod().addItem(this); return (E)this; }
+	public final <E> E register()
+	{
+		getMod().addItem(this);
+		return (E) this;
+	}
 	
 	public final Item getItem()
 	{ return this; }
@@ -54,7 +58,7 @@ public abstract class ItemLM extends Item implements IItemLM
 	public void getSubItems(Item j, CreativeTabs c, List l)
 	{
 		for(ItemStack is : itemsAdded)
-		if(isVisible(is)) l.add(is);
+			if(isVisible(is)) l.add(is);
 	}
 	
 	public String getUnlocalizedName(ItemStack is)
@@ -63,13 +67,13 @@ public abstract class ItemLM extends Item implements IItemLM
 	public void addAllDamages(int until)
 	{
 		for(int i = 0; i < until; i++)
-		itemsAdded.add(new ItemStack(this, 1, i));
+			itemsAdded.add(new ItemStack(this, 1, i));
 	}
 	
 	public void addAllDamages(int[] dmg)
 	{
 		for(int i = 0; i < dmg.length; i++)
-		itemsAdded.add(new ItemStack(this, 1, dmg[i]));
+			itemsAdded.add(new ItemStack(this, 1, dmg[i]));
 	}
 	
 	public final boolean requiresMultipleRenderPasses()
@@ -98,8 +102,9 @@ public abstract class ItemLM extends Item implements IItemLM
 	public final IIcon getIconIndex(ItemStack is)
 	{ return getIcon(is, 0); }
 	
-	@SuppressWarnings("all") @SideOnly(Side.CLIENT)
-    public final void addInformation(ItemStack is, EntityPlayer ep, List l, boolean b)
+	@SuppressWarnings("all")
+	@SideOnly(Side.CLIENT)
+	public final void addInformation(ItemStack is, EntityPlayer ep, List l, boolean b)
 	{
 		infoList.clear();
 		addInfo(is, ep, infoList);

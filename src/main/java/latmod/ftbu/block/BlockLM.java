@@ -43,13 +43,22 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	
 	@SideOnly(Side.CLIENT)
 	public abstract CreativeTabs getCreativeTabToDisplayOn();
+
 	public abstract TileLM createNewTileEntity(World w, int m);
 	
 	@SuppressWarnings("unchecked")
-	public final <E> E register() { getMod().addBlock(this); return (E)this; }
+	public final <E> E register()
+	{
+		getMod().addBlock(this);
+		return (E) this;
+	}
 	
 	@SuppressWarnings("unchecked")
-	public final <E> E registerDevOnly() { if(FTBLibFinals.DEV) getMod().addBlock(this); return (E)this; }
+	public final <E> E registerDevOnly()
+	{
+		if(FTBLibFinals.DEV) getMod().addBlock(this);
+		return (E) this;
+	}
 	
 	public final String getItemID()
 	{ return blockName; }
@@ -69,7 +78,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	public void addAllDamages(int until)
 	{
 		for(int i = 0; i < until; i++)
-		blocksAdded.add(new ItemStack(this, 1, i));
+			blocksAdded.add(new ItemStack(this, 1, i));
 	}
 	
 	@SuppressWarnings("all")
@@ -84,7 +93,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 		if(isBlockContainer && el instanceof EntityPlayer)
 		{
 			TileLM tile = (TileLM) w.getTileEntity(x, y, z);
-			if(tile != null) tile.onPlacedBy((EntityPlayer)el, is);
+			if(tile != null) tile.onPlacedBy((EntityPlayer) el, is);
 		}
 	}
 	
@@ -127,8 +136,10 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	public void breakBlock(World w, int x, int y, int z, Block b, int m)
 	{
 		if(!w.isRemote && isBlockContainer)
-		{ TileLM tile = (TileLM) w.getTileEntity(x, y, z);
-		if(tile != null) tile.onBroken(); }
+		{
+			TileLM tile = (TileLM) w.getTileEntity(x, y, z);
+			if(tile != null) tile.onBroken();
+		}
 		super.breakBlock(w, x, y, z, b, m);
 	}
 
@@ -198,13 +209,15 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	
 	public final Item getItem()
 	{
-		if(blockItem == null)
-			blockItem = Item.getItemFromBlock(this);
+		if(blockItem == null) blockItem = Item.getItemFromBlock(this);
 		return blockItem;
 	}
 	
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World w, int x, int y, int z)
-	{ setBlockBoundsBasedOnState(w, x, y, z); return super.getCollisionBoundingBoxFromPool(w, x, y, z); }
+	{
+		setBlockBoundsBasedOnState(w, x, y, z);
+		return super.getCollisionBoundingBoxFromPool(w, x, y, z);
+	}
 	
 	@SideOnly(Side.CLIENT)
 	public final IIcon getBlockIcon() { return blockIcon; }
@@ -220,8 +233,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	public final <T extends TileEntity> T getTile(Class<T> c, IBlockAccess iba, int x, int y, int z)
 	{
 		TileEntity te = iba.getTileEntity(x, y, z);
-		if(te != null && c.isAssignableFrom(te.getClass()))
-			return (T)te;
+		if(te != null && c.isAssignableFrom(te.getClass())) return (T) te;
 		return null;
 	}
 }

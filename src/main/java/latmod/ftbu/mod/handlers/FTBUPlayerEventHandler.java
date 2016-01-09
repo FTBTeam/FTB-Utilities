@@ -30,7 +30,7 @@ public class FTBUPlayerEventHandler
 {
 	@SubscribeEvent
 	public void playerLoggedOut(cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent e)
-	{ if(e.player instanceof EntityPlayerMP) playerLoggedOut((EntityPlayerMP)e.player); }
+	{ if(e.player instanceof EntityPlayerMP) playerLoggedOut((EntityPlayerMP) e.player); }
 	
 	public static void playerLoggedOut(EntityPlayerMP ep)
 	{
@@ -56,7 +56,7 @@ public class FTBUPlayerEventHandler
 	{
 		if(e.entity.worldObj.isRemote || !(e.entity instanceof EntityPlayerMP)) return;
 		
-		EntityPlayerMP ep = (EntityPlayerMP)e.entity;
+		EntityPlayerMP ep = (EntityPlayerMP) e.entity;
 		LMPlayerServer player = LMWorldServer.inst.getPlayer(ep);
 		if(player == null || !player.isOnline()) return;
 		
@@ -97,8 +97,7 @@ public class FTBUPlayerEventHandler
 			
 			if(type.isClaimed())
 				msg = new ChatComponentText(String.valueOf(LMWorldServer.inst.getPlayer(currentChunkType)));
-			else
-				msg = new ChatComponentTranslation(FTBU.mod.assets + type.lang);
+			else msg = new ChatComponentTranslation(FTBU.mod.assets + type.lang);
 			
 			msg.getChatStyle().setColor(EnumChatFormatting.WHITE);
 			msg.getChatStyle().setBold(true);
@@ -122,17 +121,17 @@ public class FTBUPlayerEventHandler
 			
 			if(te != null && !te.isInvalid() && te instanceof TileEntitySign)
 			{
-				TileEntitySign t = (TileEntitySign)te;
+				TileEntitySign t = (TileEntitySign) te;
 				
 				if(FTBUConfigGeneral.sign_home.get() && t.signText[1].equals("[home]"))
 				{
-					FTBLib.runCommand(null, FTBUConfigCmd.name_home.get(), new String[] { t.signText[2] });
+					FTBLib.runCommand(null, FTBUConfigCmd.name_home.get(), new String[] {t.signText[2]});
 					e.setCanceled(true);
 					return;
 				}
 				else if(FTBUConfigGeneral.sign_warp.get() && !t.signText[2].isEmpty() && t.signText[1].equals("[warp]"))
 				{
-					FTBLib.runCommand(e.entityPlayer, FTBUConfigCmd.name_warp.get(), new String[] { t.signText[2] });
+					FTBLib.runCommand(e.entityPlayer, FTBUConfigCmd.name_warp.get(), new String[] {t.signText[2]});
 					e.setCanceled(true);
 					return;
 				}
@@ -158,8 +157,11 @@ public class FTBUPlayerEventHandler
 			if(block.hasTileEntity(ep.worldObj.getBlockMetadata(x, y, z)))
 			{
 				TileEntity te = ep.worldObj.getTileEntity(x, y, z);
-				if(te instanceof ISecureTile && !te.isInvalid() && !((ISecureTile)te).canPlayerInteract(ep, leftClick))
-				{ ((ISecureTile)te).onPlayerNotOwner(ep, leftClick); return false; }
+				if(te instanceof ISecureTile && !te.isInvalid() && !((ISecureTile) te).canPlayerInteract(ep, leftClick))
+				{
+					((ISecureTile) te).onPlayerNotOwner(ep, leftClick);
+					return false;
+				}
 			}
 		}
 		
@@ -196,12 +198,14 @@ public class FTBUPlayerEventHandler
 		if(entity != null && (entity instanceof EntityPlayerMP || entity instanceof IMob))
 		{
 			if(entity instanceof FakePlayer) return;
-			else if(entity instanceof EntityPlayerMP && LMPlayerServer.get(entity).getRank().config.allowCreativeInteractSecure((EntityPlayerMP)entity)) return;
+			else if(entity instanceof EntityPlayerMP && LMPlayerServer.get(entity).getRank().config.allowCreativeInteractSecure((EntityPlayerMP) entity))
+				return;
 			
 			int cx = MathHelperLM.chunk(e.entity.posX);
 			int cz = MathHelperLM.chunk(e.entity.posZ);
 			
-			if(LMWorldServer.inst.settings.getWB(dim).isOutside(cx, cz) || (FTBUConfigGeneral.safe_spawn.get() && ClaimedChunks.isInSpawn(dim, cx, cz))) e.setCanceled(true);
+			if(LMWorldServer.inst.settings.getWB(dim).isOutside(cx, cz) || (FTBUConfigGeneral.safe_spawn.get() && ClaimedChunks.isInSpawn(dim, cx, cz)))
+				e.setCanceled(true);
 			/*else
 			{
 				ClaimedChunk c = Claims.get(dim, cx, cz);

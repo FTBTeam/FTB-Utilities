@@ -24,7 +24,7 @@ public class ItemBlockLM extends ItemBlock
 		setHasSubtypes(true);
 		setMaxDamage(0);
 		
-		blockLM = (BlockLM)b;
+		blockLM = (BlockLM) b;
 	}
 
 	public int getMetadata(int m)
@@ -41,7 +41,8 @@ public class ItemBlockLM extends ItemBlock
 	@SideOnly(Side.CLIENT)
 	private ArrayList<String> infoList;
 	
-	@SuppressWarnings("all") @SideOnly(Side.CLIENT)
+	@SuppressWarnings("all")
+	@SideOnly(Side.CLIENT)
 	public final void addInformation(ItemStack is, EntityPlayer ep, List l, boolean b)
 	{
 		if(infoList == null) infoList = new ArrayList<String>();
@@ -72,15 +73,14 @@ public class ItemBlockLM extends ItemBlock
 		
 		if(!block.isAir(w, x, y, z))
 		{
-			if(!block.isReplaceable(w, x, y, z))
-				return false;
+			if(!block.isReplaceable(w, x, y, z)) return false;
 		}
 		
-		if (y > 255) return false;
-		if (!ep.canPlayerEdit(x, y, z, s, is)) return false;
+		if(y > 255) return false;
+		if(!ep.canPlayerEdit(x, y, z, s, is)) return false;
 		{
 			int j1 = blockLM.onBlockPlaced(w, ep, MathHelperMC.getMOPFrom(x, y, z, s, hitX, hitY, hitZ), getMetadata(is.getItemDamage()));
-			if (placeBlockAt(is, ep, w, x, y, z, s, hitX, hitY, hitZ, j1))
+			if(placeBlockAt(is, ep, w, x, y, z, s, hitX, hitY, hitZ, j1))
 			{
 				w.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, blockLM.stepSound.func_150496_b(), (blockLM.stepSound.getVolume() + 1F) / 2F, blockLM.stepSound.getPitch() * 0.8F);
 				is.stackSize--;
@@ -94,10 +94,14 @@ public class ItemBlockLM extends ItemBlock
 	{
 		Block b = w.getBlock(x, y, z);
 		
-        if (b == Blocks.snow_layer && (w.getBlockMetadata(x, y, z) & 7) < 1) s = 1;
-        else if (b != Blocks.vine && b != Blocks.tallgrass && b != Blocks.deadbush && !b.isReplaceable(w, x, y, z))
-        { x += Facing.offsetsXForSide[s]; y += Facing.offsetsYForSide[s]; z += Facing.offsetsZForSide[s]; }
-        
+		if(b == Blocks.snow_layer && (w.getBlockMetadata(x, y, z) & 7) < 1) s = 1;
+		else if(b != Blocks.vine && b != Blocks.tallgrass && b != Blocks.deadbush && !b.isReplaceable(w, x, y, z))
+		{
+			x += Facing.offsetsXForSide[s];
+			y += Facing.offsetsYForSide[s];
+			z += Facing.offsetsZForSide[s];
+		}
+
 		return b.getMaterial() != Material.air && w.canPlaceEntityOnSide(b, x, y, z, false, s, null, is.copy());
 	}
 	

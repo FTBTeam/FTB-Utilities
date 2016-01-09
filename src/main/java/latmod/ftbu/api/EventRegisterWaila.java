@@ -42,6 +42,10 @@ public class EventRegisterWaila extends EventLM
 		public final WailaType type;
 		
 		public WailaRegEntry(Class<?> c, BasicWailaHandler h, WailaType t)
-		{ block = c; handler = h; type = t; }
+		{
+			block = c;
+			handler = h;
+			type = t;
+		}
 	}
 }

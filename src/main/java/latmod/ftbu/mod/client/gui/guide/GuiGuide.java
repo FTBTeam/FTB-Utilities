@@ -42,8 +42,7 @@ public class GuiGuide extends GuiLM
 	
 	public static void openClientGui()
 	{
-		if(clientGuideGui == null)
-			clientGuideGui = new GuiGuide(null, ClientGuideFile.instance.main);
+		if(clientGuideGui == null) clientGuideGui = new GuiGuide(null, ClientGuideFile.instance.main);
 		FTBLibClient.mc.displayGuiScreen(clientGuideGui);
 	}
 	
@@ -89,8 +88,7 @@ public class GuiGuide extends GuiLM
 				
 				if(selectedCategory == category || category.getFormattedText().isEmpty())
 				{
-					if(parentGui == null)
-						mc.thePlayer.closeScreen();
+					if(parentGui == null) mc.thePlayer.closeScreen();
 					else
 					{
 						parentGui.selectedCategory = parentGui.category;
@@ -102,8 +100,7 @@ public class GuiGuide extends GuiLM
 				{
 					selectedCategory = category;
 					sliderText.value = 0F;
-					if(parentGui != null)
-						parentGui.refreshText();
+					if(parentGui != null) parentGui.refreshText();
 					initLMGui();
 				}
 			}
@@ -138,7 +135,7 @@ public class GuiGuide extends GuiLM
 		if(catl > maxCategoryButtons)
 		{
 			float f = sliderCategories.value * (catl - 1 - maxCategoryButtons);
-			off = (int)f;
+			off = (int) f;
 			sliderCategories.scrollStep = 1F / (catl - 1 - maxCategoryButtons);
 		}
 		
@@ -154,8 +151,7 @@ public class GuiGuide extends GuiLM
 	@SuppressWarnings("unchecked")
 	public void initLMGui()
 	{
-		if(category.getParentTop() == ClientGuideFile.instance.main)
-			clientGuideGui = this;
+		if(category.getParentTop() == ClientGuideFile.instance.main) clientGuideGui = this;
 		
 		allTextLines.clear();
 		
@@ -204,7 +200,7 @@ public class GuiGuide extends GuiLM
 							if(tex.isValid())
 							{
 								l.text = "";
-								int lines = (int)(1D + tex.getHeight(Math.min(textPanel.width, tex.width)) / 11D);
+								int lines = (int) (1D + tex.getHeight(Math.min(textPanel.width, tex.width)) / 11D);
 								
 								TextureCoords[] splitTex = tex.split(1, lines);
 								
@@ -221,7 +217,9 @@ public class GuiGuide extends GuiLM
 							}
 						}
 						catch(Exception e1)
-						{ e1.printStackTrace(); }
+						{
+							e1.printStackTrace();
+						}
 					}
 				}
 				
@@ -245,14 +243,13 @@ public class GuiGuide extends GuiLM
 		if(lines > maxTextLines)
 		{
 			float f = sliderText.value * (lines - maxTextLines);
-			off = (int)f;
+			off = (int) f;
 			sliderText.scrollStep = 1F / (lines - maxTextLines);
 		}
 		
 		for(int i = 0; i < maxTextLines; i++)
 		{
-			if(i + off < lines)
-				textLines[i].line = allTextLines.get(i + off);
+			if(i + off < lines) textLines[i].line = allTextLines.get(i + off);
 		}
 	}
 	
@@ -261,11 +258,9 @@ public class GuiGuide extends GuiLM
 	
 	public void drawBackground()
 	{
-		if(sliderCategories.isEnabled() && sliderCategories.update())
-			refreshWidgets();
+		if(sliderCategories.isEnabled() && sliderCategories.update()) refreshWidgets();
 		
-		if(sliderText.isEnabled() && sliderText.update())
-			refreshText();
+		if(sliderText.isEnabled() && sliderText.update()) refreshText();
 		
 		super.drawBackground();
 		
@@ -364,8 +359,7 @@ public class GuiGuide extends GuiLM
 			}
 			else if(line.special.type == LinkType.RECIPE)
 			{
-				if(line.special.getItem() != null)
-					NEIIntegration.openRecipe(line.special.getItem());
+				if(line.special.getItem() != null) NEIIntegration.openRecipe(line.special.getItem());
 			}
 		}
 		
@@ -408,14 +402,18 @@ public class GuiGuide extends GuiLM
 					if(method != null) hasNEI = Boolean.TRUE;
 				}
 				catch(Exception e)
-				{ e.printStackTrace(); }
+				{
+					e.printStackTrace();
+				}
 			}
 			
 			if(hasNEI.booleanValue())
 			{
-				try { method.invoke(null, "item", new Object[] { is }); }
+				try { method.invoke(null, "item", new Object[] {is}); }
 				catch(Exception e)
-				{ e.printStackTrace(); }
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 	}

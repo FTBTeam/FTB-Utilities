@@ -30,8 +30,7 @@ public class GuiFriendsGuiSmall extends GuiLM
 			ButtonPlayerActionSmall b = new ButtonPlayerActionSmall(this, list.get(i));
 			mainPanel.add(b);
 			mainPanel.width = Math.max(mainPanel.width, b.width);
-			if(i != list.size() - 1)
-				mainPanel.height += b.height + 4;
+			if(i != list.size() - 1) mainPanel.height += b.height + 4;
 		}
 		
 		for(WidgetLM w : mainPanel.widgets)

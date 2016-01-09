@@ -14,7 +14,10 @@ import java.util.*;
 public abstract class LMWorld // FTBWorld
 {
 	public static LMWorld getWorld(Side s)
-	{ if(s.isServer()) return LMWorldServer.inst; return FTBU.proxy.getClientWorldLM(); }
+	{
+		if(s.isServer()) return LMWorldServer.inst;
+		return FTBU.proxy.getClientWorldLM();
+	}
 	
 	public static LMWorld getWorld()
 	{ return getWorld(FTBLib.getEffectiveSide()); }
@@ -31,6 +34,7 @@ public abstract class LMWorld // FTBWorld
 	}
 
 	public abstract HashMap<Integer, ? extends LMPlayer> playerMap();
+
 	public abstract World getMCWorld();
 
 	public LMWorldServer getServerWorld()
@@ -54,7 +58,7 @@ public abstract class LMWorld // FTBWorld
 		}
 		else if(o.getClass() == UUID.class)
 		{
-			UUID id = (UUID)o;
+			UUID id = (UUID) o;
 
 			for(LMPlayer p : playerMap.values())
 			{ if(p.getUUID().equals(id)) return p; }
@@ -69,7 +73,7 @@ public abstract class LMWorld // FTBWorld
 				{ if(p.isOnline() && p.getPlayer() == o) return p; }
 			}
 			
-			return getPlayer(((EntityPlayer)o).getGameProfile().getId());
+			return getPlayer(((EntityPlayer) o).getGameProfile().getId());
 		}
 		else if(o instanceof CharSequence)
 		{

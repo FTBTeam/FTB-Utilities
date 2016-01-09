@@ -4,9 +4,12 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
 import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.LMGuiHandlerRegistry;
+import ftb.lib.client.FTBLibClient;
 import ftb.lib.mod.client.FTBLibGuiEventHandler;
+import latmod.ftbu.badges.BadgeRenderer;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.cmd.CmdMath;
+import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.tile.TileLM;
 import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
@@ -23,30 +26,22 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public static final ConfigEntryBool render_my_badge = new ConfigEntryBool("render_my_badge", true)
 	{
 		public boolean get()
-		{ return LMWorldClient.inst.getClientPlayer().renderBadge; }
+		{ return LatCoreMCClient.isPlaying() && LMWorldClient.inst.getClientPlayer().renderBadge; }
 		
 		public void set(boolean b)
 		{
-			if(LMWorldClient.inst != null)
-			{
-				LMWorldClient.inst.getClientPlayer().renderBadge = b;
-				LMWorldClient.inst.getClientPlayer().getSettings().update();
-			}
+			if(LatCoreMCClient.isPlaying()) ClientAction.BUTTON_RENDER_BADGE.send(b ? 1 : 0);
 		}
 	}.setExcluded();
 	
 	public static final ConfigEntryBool chat_links = new ConfigEntryBool("chat_links", true)
 	{
 		public boolean get()
-		{ return LMWorldClient.inst.getClientPlayer().getSettings().chatLinks; }
+		{ return LatCoreMCClient.isPlaying() && LMWorldClient.inst.getClientPlayer().getSettings().chatLinks; }
 		
 		public void set(boolean b)
 		{
-			if(LMWorldClient.inst != null)
-			{
-				LMWorldClient.inst.getClientPlayer().getSettings().chatLinks = b;
-				LMWorldClient.inst.getClientPlayer().getSettings().update();
-			}
+			if(LatCoreMCClient.isPlaying()) ClientAction.BUTTON_CHAT_LINKS.send(b ? 1 : 0);
 		}
 	}.setExcluded();
 	
@@ -60,7 +55,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		EventBusHelper.register(FTBUClientEventHandler.instance);
 		EventBusHelper.register(FTBURenderHandler.instance);
 		EventBusHelper.register(FTBUGuiEventHandler.instance);
-		EventBusHelper.register(FTBUBadgeRenderer.instance);
+		EventBusHelper.register(BadgeRenderer.instance);
 		
 		ClientConfigRegistry.add(new ConfigGroup("ftbu").addAll(FTBUClient.class, null, false));
 		ClientCommandHandler.instance.registerCommand(new CmdMath());
@@ -82,6 +77,6 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		t.readTileData(data);
 		t.readTileClientData(data);
 		t.onUpdatePacket();
-		LatCoreMCClient.onGuiClientAction();
+		FTBLibClient.onGuiClientAction();
 	}
 }

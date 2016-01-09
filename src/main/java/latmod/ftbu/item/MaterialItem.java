@@ -31,6 +31,7 @@ public class MaterialItem
 	{ return getStack(1); }
 	
 	public void onPostLoaded() { }
+
 	public void loadRecipes() { }
 	
 	public int getRenderPasses()
@@ -43,10 +44,8 @@ public class MaterialItem
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister ir)
 	{
-		if(item.folder.isEmpty())
-			icon = ir.registerIcon(item.getMod().assets + ID);
-		else
-			icon = ir.registerIcon(item.getMod().assets + item.folder + "/" + ID);
+		if(item.folder.isEmpty()) icon = ir.registerIcon(item.getMod().assets + ID);
+		else icon = ir.registerIcon(item.getMod().assets + item.folder + "/" + ID);
 	}
 	
 	@SideOnly(Side.CLIENT)

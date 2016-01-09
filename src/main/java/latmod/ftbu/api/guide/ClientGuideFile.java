@@ -54,11 +54,12 @@ public class ClientGuideFile extends GuideFile
 			try
 			{
 				String text = LMFileUtils.loadAsText(file);
-				if(text != null && !text.isEmpty())
-					main.println(text.replace("\r", ""));
+				if(text != null && !text.isEmpty()) main.println(text.replace("\r", ""));
 			}
 			catch(Exception ex)
-			{ ex.printStackTrace(); }
+			{
+				ex.printStackTrace();
+			}
 		}
 		
 		loadLinksFromFile(new File(FTBLib.folderModpack, "guide_links.json"));

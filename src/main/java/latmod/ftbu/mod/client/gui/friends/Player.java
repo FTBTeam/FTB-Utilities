@@ -20,8 +20,7 @@ public class Player extends AbstractClientPlayer
 	
 	public boolean equals(Object o)
 	{
-		if(o instanceof Player)
-			return playerLM.equalsPlayer(((Player)o).playerLM);
+		if(o instanceof Player) return playerLM.equalsPlayer(((Player) o).playerLM);
 		return playerLM.equals(o);
 	}
 	

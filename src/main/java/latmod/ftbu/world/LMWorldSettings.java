@@ -88,8 +88,7 @@ public class LMWorldSettings
 		
 		for(WorldBorder wb : worldBorder.values())
 		{
-			if(wb.size != 0 || wb.pos.x != 0 || wb.pos.y != 0)
-				a.add(wb.toJson());
+			if(wb.size != 0 || wb.pos.x != 0 || wb.pos.y != 0) a.add(wb.toJson());
 		}
 		
 		group.add("world_border", a);

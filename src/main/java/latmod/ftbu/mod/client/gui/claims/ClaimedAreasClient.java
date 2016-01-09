@@ -33,8 +33,9 @@ public class ClaimedAreasClient
 			clear();
 		}
 		
-		for(int z = 0; z < sz; z++) for(int x = 0; x < sx; x++)
-			chunks.put(Bits.intsToLong(x + chunkX, z + chunkZ), Integer.valueOf(types[x + z * sx]));
+		for(int z = 0; z < sz; z++)
+			for(int x = 0; x < sx; x++)
+				chunks.put(Bits.intsToLong(x + chunkX, z + chunkZ), Integer.valueOf(types[x + z * sx]));
 	}
 	
 	public static void getMessage(int x, int z, List<String> l, boolean shift)

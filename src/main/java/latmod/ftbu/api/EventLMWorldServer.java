@@ -16,7 +16,10 @@ public class EventLMWorldServer extends EventLM
 		public final Phase phase;
 		
 		public Loaded(LMWorldServer w, Phase p)
-		{ super(w); phase = p; }
+		{
+			super(w);
+			phase = p;
+		}
 	}
 	
 	public static class Saved extends EventLMWorldServer

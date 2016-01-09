@@ -3,11 +3,11 @@ package latmod.ftbu.mod.handlers.ftbl;
 import com.google.gson.*;
 import ftb.lib.*;
 import ftb.lib.api.*;
-import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.item.LMInvUtils;
 import ftb.lib.mod.FTBUIntegration;
 import latmod.ftbu.api.*;
 import latmod.ftbu.api.guide.ServerGuideFile;
+import latmod.ftbu.badges.ServerBadges;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.config.*;
 import latmod.ftbu.mod.handlers.FTBUChunkEventHandler;
@@ -22,7 +22,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 import java.io.File;
-import java.util.List;
+import java.util.*;
 
 public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 {
@@ -36,25 +36,22 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 		{
 			if(LMWorldServer.inst == null) return;
 			
-			if(FTBUConfigGeneral.restart_timer.get() > 0)
-				FTBUTicks.serverStarted();
+			if(FTBUConfigGeneral.restart_timer.get() > 0) FTBUTicks.serverStarted();
 			
 			for(LMPlayerServer p : LMWorldServer.inst.playerMap.values())
 				p.refreshStats();
 			
 			ServerGuideFile.CachedInfo.reload();
 			Ranks.reload();
+			ServerBadges.reload();
 
-			if(FTBLib.getServerWorld() != null)
-				FTBUChunkEventHandler.instance.markDirty(null);
+			if(FTBLib.getServerWorld() != null) FTBUChunkEventHandler.instance.markDirty(null);
 		}
 		else FTBU.proxy_ftbl_int.onReloadedClient(e);
 	}
 
 	public void onFTBWorldServer(EventFTBWorldServer e)
 	{
-		ConfigRegistry.reload();
-
 		File latmodFolder = new File(FTBLib.folderWorld, "LatMod/");
 		File file = new File(latmodFolder, "LMWorld.dat");
 
@@ -168,6 +165,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 		//if(first) teleportToSpawn(ep);
 		p.checkNewFriends();
 		new MessageAreaUpdate(p, p.getPos(), 3, 3).sendTo(ep);
+		new MessageUpdateBadges(Collections.EMPTY_SET).sendTo(null);
 
 		FTBUChunkEventHandler.instance.markDirty(null);
 	}

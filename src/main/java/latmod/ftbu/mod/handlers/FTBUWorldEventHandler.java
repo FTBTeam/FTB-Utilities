@@ -74,7 +74,9 @@ public class FTBUWorldEventHandler // FTBLIntegration
 				LMFileUtils.save(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/LMPlayers.txt"), l);
 			}
 			catch(Exception ex)
-			{ ex.printStackTrace(); }
+			{
+				ex.printStackTrace();
+			}
 		}
 	}
 	
@@ -82,15 +84,17 @@ public class FTBUWorldEventHandler // FTBLIntegration
 	public void onMobSpawned(net.minecraftforge.event.entity.EntityJoinWorldEvent e)
 	{
 		if(!e.world.isRemote && !isEntityAllowed(e.entity))
-		{ e.entity.setDead(); e.setCanceled(true); }
+		{
+			e.entity.setDead();
+			e.setCanceled(true);
+		}
 	}
 	
 	private boolean isEntityAllowed(Entity e)
 	{
 		if(e instanceof EntityPlayer) return true;
 		
-		if(FTBUConfigGeneral.isEntityBanned(e.getClass()))
-			return false;
+		if(FTBUConfigGeneral.isEntityBanned(e.getClass())) return false;
 		
 		if(FTBUConfigGeneral.safe_spawn.get() && ClaimedChunks.isInSpawnD(e.dimension, e.posX, e.posZ))
 		{

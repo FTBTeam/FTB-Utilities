@@ -9,7 +9,9 @@ import org.lwjgl.util.vector.Vector3f;
 import java.io.*;
 import java.util.*;
 
-/** Made by LatvianModder */
+/**
+ * Made by LatvianModder
+ */
 @SideOnly(Side.CLIENT)
 public class OBJModel
 {
@@ -34,7 +36,8 @@ public class OBJModel
 	public static OBJModel load(ResourceLocation rl)
 	{
 		try { return OBJModel.load(OBJModel.class.getResourceAsStream(FTBLib.getPath(rl))); }
-		catch(Exception e) { e.printStackTrace(); } return null;
+		catch(Exception e) { e.printStackTrace(); }
+		return null;
 	}
 	
 	public static OBJModel load(InputStream is) throws Exception
@@ -57,8 +60,7 @@ public class OBJModel
 					if(s3[0].equals("o"))
 					{
 						Group g = new Group(m, s3[1]);
-						if(m.current != null)
-						m.groups.put(m.current.groupName, m.current);
+						if(m.current != null) m.groups.put(m.current.groupName, m.current);
 						m.current = g;
 					}
 					else if(s3[0].equals("g"))
@@ -108,11 +110,14 @@ public class OBJModel
 					}
 					else if(s3[0].equals("f"))
 					{
-						if(m.current == null)
-						m.current = new Group(m, "Default");
+						if(m.current == null) m.current = new Group(m, "Default");
 						
 						Face f = Face.parseFace(m, s, s3);
-						if(f != null) { m.current.faces.add(f); m.totalFaces.add(f); }
+						if(f != null)
+						{
+							m.current.faces.add(f);
+							m.totalFaces.add(f);
+						}
 					}
 				}
 			}
@@ -122,8 +127,7 @@ public class OBJModel
 			m.sizeV = maxSizeV - minSizeV;
 		}
 		
-		if(m != null && m.texVertices != null)
-			GlStateManager.enableTexture();
+		if(m != null && m.texVertices != null) GlStateManager.enableTexture();
 		else GlStateManager.disableTexture();
 		
 		m.renderAll();
@@ -141,8 +145,7 @@ public class OBJModel
 	{
 		for(int i = 0; i < index.length; i++)
 		{
-			if(index[i] >= 0 && index[i] < groups.size())
-				groups.get(index[i]).render();
+			if(index[i] >= 0 && index[i] < groups.size()) groups.get(index[i]).render();
 		}
 	}
 	
@@ -161,16 +164,17 @@ public class OBJModel
 		for(int i = 0; i < name.length; i++)
 		{
 			int index = getGroupIndex(name[i]);
-			if(index >= 0 && index < groups.size())
-				groups.get(index).render();
+			if(index >= 0 && index < groups.size()) groups.get(index).render();
 		}
 	}
 	
 	public int getGroupIndex(String s)
 	{
 		for(int i = 0; i < groups.size(); i++)
-		{ if(groups.get(i).groupName.equalsIgnoreCase(s))
-		return i; } return -1;
+		{
+			if(groups.get(i).groupName.equalsIgnoreCase(s)) return i;
+		}
+		return -1;
 	}
 	
 	public OBJModel copy(boolean render)
@@ -187,8 +191,7 @@ public class OBJModel
 		
 		if(render)
 		{
-			if(m != null && m.texVertices != null)
-				GlStateManager.enableTexture();
+			if(m != null && m.texVertices != null) GlStateManager.enableTexture();
 			else GlStateManager.disableTexture();
 			
 			m.renderAll();

@@ -50,11 +50,12 @@ public class ServerGuideFile extends GuideFile
 				try
 				{
 					String text = LMFileUtils.loadAsText(file);
-					if(text != null && !text.isEmpty())
-						main.println(text.replace("\r", ""));
+					if(text != null && !text.isEmpty()) main.println(text.replace("\r", ""));
 				}
 				catch(Exception ex)
-				{ ex.printStackTrace(); }
+				{
+					ex.printStackTrace();
+				}
 			}
 			
 			file = new File(FTBLib.folderLocal, "guide_links.json");
@@ -140,8 +141,7 @@ public class ServerGuideFile extends GuideFile
 				{
 					GuideCategory cat = new GuideCategory(new ChatComponentText('/' + c.getCommandName()));
 
-					@SuppressWarnings("unchecked")
-					List<String> al = c.getCommandAliases();
+					@SuppressWarnings("unchecked") List<String> al = c.getCommandAliases();
 					if(al != null && !al.isEmpty()) for(String s : al)
 						cat.println('/' + s);
 

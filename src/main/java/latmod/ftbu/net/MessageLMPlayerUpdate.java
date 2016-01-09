@@ -4,7 +4,6 @@ import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.api.EventLMPlayerClient;
-import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
 import latmod.lib.ByteCount;
 
@@ -25,7 +24,7 @@ public class MessageLMPlayerUpdate extends MessageFTBU
 		LMPlayerClient p = LMWorldClient.inst.getPlayer(io.readInt());
 		p.readFromNet(io, p.getUUID().equals(FTBLibClient.getUUID()));
 		new EventLMPlayerClient.DataChanged(p).post();
-		LatCoreMCClient.onGuiClientAction();
+		FTBLibClient.onGuiClientAction();
 		return null;
 	}
 }

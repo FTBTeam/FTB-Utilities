@@ -54,8 +54,7 @@ public class CmdHome extends CommandLM
 		{
 			checkArgs(args, 2);
 			
-			if(p.homes.rem(args[1]))
-				return new ChatComponentTranslation(FTBUFinals.ASSETS + "cmd.home_del", args[1]);
+			if(p.homes.rem(args[1])) return new ChatComponentTranslation(FTBUFinals.ASSETS + "cmd.home_del", args[1]);
 			return error(new ChatComponentTranslation(FTBUFinals.ASSETS + "cmd.home_not_set", args[1]));
 		}
 

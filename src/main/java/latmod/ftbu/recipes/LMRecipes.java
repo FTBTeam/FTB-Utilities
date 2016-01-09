@@ -14,11 +14,18 @@ public class LMRecipes
 	public static boolean enableOreRecipes = true;
 	
 	public static ItemStack size(ItemStack is, int s)
-	{ ItemStack is1 = is.copy(); is1.stackSize = s; return is1; }
+	{
+		ItemStack is1 = is.copy();
+		is1.stackSize = s;
+		return is1;
+	}
 	
 	@SuppressWarnings("unchecked")
 	public IRecipe addIRecipe(IRecipe r)
-	{ CraftingManager.getInstance().getRecipeList().add(r); return r; }
+	{
+		CraftingManager.getInstance().getRecipeList().add(r);
+		return r;
+	}
 	
 	public Object[] fixObjects(Object[] in)
 	{
@@ -50,7 +57,7 @@ public class LMRecipes
 		{
 			ArrayList<ItemStack> al = new ArrayList<>();
 			
-			for (int j = 0; j < in.length; ++j)
+			for(int j = 0; j < in.length; ++j)
 			{
 				ItemStack is = StackArray.getFrom(in[j]);
 				if(is != null) al.add(is);

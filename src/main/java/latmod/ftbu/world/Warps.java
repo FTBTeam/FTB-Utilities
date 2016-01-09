@@ -15,7 +15,7 @@ public class Warps
 	{
 		warps.clear();
 		
-		NBTTagCompound tag1 = (NBTTagCompound)tag.getTag(s);
+		NBTTagCompound tag1 = (NBTTagCompound) tag.getTag(s);
 		
 		if(tag1 != null && !tag1.hasNoTags())
 		{

@@ -23,6 +23,7 @@ public class RankConfig
 	public final ConfigEntryInt max_loaded_chunks = new ConfigEntryInt("max_loaded_chunks", new IntBounds(50, 0, 30000)).sync().setInfo("Max amount of chunks that player can chunkload.\n0 - Disabled");
 	public final ConfigEntryBool show_rank = new ConfigEntryBool("show_rank", true).setInfo("If set to false, playerMap won't be able to see others Rank in FriendsGUI");
 	public final ConfigEntryDouble offline_chunkloader_timer = new ConfigEntryDouble("offline_chunkloader_timer", new DoubleBounds(24D, 0D, Double.POSITIVE_INFINITY)).sync().setInfo("Max hours player can be offline until he's chunks unload. 0 - Disabled, will unload instantly when he disconnects");
+	public final ConfigEntryString badge = new ConfigEntryString("badge", "").setInfo("Badge ID");
 
 	public boolean allowCreativeInteractSecure(EntityPlayer ep)
 	{ return ep != null && allow_creative_interact_secure.get() && ep.capabilities.isCreativeMode/* && !(ep instanceof FakePlayer)*/; }

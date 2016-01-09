@@ -26,8 +26,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 	{
 		materials.put(m.damage, m);
 		
-		if(m.getRenderPasses() > 1)
-			requiresMultipleRenderPasses = true;
+		if(m.getRenderPasses() > 1) requiresMultipleRenderPasses = true;
 		
 		return m.getStack();
 	}

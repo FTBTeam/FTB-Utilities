@@ -127,8 +127,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		if(isOnline())
 		{
 			stats.refreshStats();
-			if(!world.settings.getWB(entityPlayer.dimension).isOutsideD(entityPlayer.posX, entityPlayer.posZ))
-				getPos();
+			if(!world.settings.getWB(entityPlayer.dimension).isOutsideD(entityPlayer.posX, entityPlayer.posZ)) getPos();
 		}
 	}
 	
@@ -172,11 +171,11 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	{
 		refreshStats();
 		
-		if(!friends.isEmpty())
-			tag.setIntArray("Friends", friends.toArray());
+		if(!friends.isEmpty()) tag.setIntArray("Friends", friends.toArray());
 		
 		if(commonPublicData != null && !commonPublicData.hasNoTags()) tag.setTag("CustomData", commonPublicData);
-		if(commonPrivateData != null && !commonPrivateData.hasNoTags()) tag.setTag("CustomPrivateData", commonPrivateData);
+		if(commonPrivateData != null && !commonPrivateData.hasNoTags())
+			tag.setTag("CustomPrivateData", commonPrivateData);
 		
 		StringIDInvLoader.writeItemsToNBT(lastArmor, tag, "LastItems");
 		
@@ -250,8 +249,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 
 			for(LMPlayerServer p : world.playerMap.values())
 			{
-				if(p.isFriendRaw(this) && !isFriendRaw(p))
-					requests.add(p.getName());
+				if(p.isFriendRaw(this) && !isFriendRaw(p)) requests.add(p.getName());
 			}
 			
 			if(requests.size() > 0)
@@ -328,8 +326,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public NBTTagCompound getServerData()
 	{
-		if(serverData == null)
-			serverData = new NBTTagCompound();
+		if(serverData == null) serverData = new NBTTagCompound();
 		return serverData;
 	}
 	

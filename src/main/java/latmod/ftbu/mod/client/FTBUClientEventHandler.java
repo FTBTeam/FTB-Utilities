@@ -25,8 +25,9 @@ public class FTBUClientEventHandler
 		
 		if(item instanceof IPainterItem)
 		{
-			ItemStack paint = ((IPainterItem)item).getPaintItem(e.itemStack);
-			if(paint != null) e.toolTip.add(EnumChatFormatting.WHITE + "" + EnumChatFormatting.BOLD + paint.getDisplayName());
+			ItemStack paint = ((IPainterItem) item).getPaintItem(e.itemStack);
+			if(paint != null)
+				e.toolTip.add(EnumChatFormatting.WHITE + "" + EnumChatFormatting.BOLD + paint.getDisplayName());
 		}
 		
 		//if(FTBUConfigGeneral.isItemBanned(item, e.itemStack.getItemDamage()))

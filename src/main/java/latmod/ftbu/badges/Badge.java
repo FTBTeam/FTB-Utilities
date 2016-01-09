@@ -14,7 +14,7 @@ public class Badge extends FinalIDObject
 {
 	public static final ResourceLocation defTex = FTBU.mod.getLocation("textures/failed_badge.png");
 
-	public static final Badge emptyBadge = new Badge("_empty_")
+	public static final Badge emptyBadge = new Badge("-", null)
 	{
 		@SideOnly(Side.CLIENT)
 		public ResourceLocation getTexture()
@@ -23,10 +23,14 @@ public class Badge extends FinalIDObject
 
 	// -- //
 
+	public final String imageURL;
 	private ResourceLocation textureURL = null;
 
-	Badge(String id)
-	{ super(id); }
+	public Badge(String id, String url)
+	{
+		super(id);
+		imageURL = url;
+	}
 
 	@SideOnly(Side.CLIENT)
 	public ResourceLocation getTexture()
@@ -34,7 +38,7 @@ public class Badge extends FinalIDObject
 		if(textureURL == null)
 		{
 			textureURL = FTBU.mod.getLocation("textures/badges/" + ID);
-			FTBLibClient.getDownloadImage(textureURL, ID, defTex, null);
+			FTBLibClient.getDownloadImage(textureURL, imageURL, defTex, null);
 		}
 		
 		return textureURL;
@@ -57,15 +61,13 @@ public class Badge extends FinalIDObject
 		FTBLibClient.pushMaxBrightness();
 		GlStateManager.pushMatrix();
 
-		if(ep.isSneaking())
-			GlStateManager.rotate(25F, 1F, 0F, 0F);
+		if(ep.isSneaking()) GlStateManager.rotate(25F, 1F, 0F, 0F);
 
 		GlStateManager.translate(0.04F, 0.01F, 0.86F);
 		
 		ItemStack armor = ep.getEquipmentInSlot(3);
 		
-		if(armor != null && armor.getItem().isValidArmor(armor, 1, ep))
-			GlStateManager.translate(0F, 0F, -0.0625F);
+		if(armor != null && armor.getItem().isValidArmor(armor, 1, ep)) GlStateManager.translate(0F, 0F, -0.0625F);
 		
 		double s = 0.2D;
 		GlStateManager.translate(0F, 0F, -1F);
@@ -85,9 +87,9 @@ public class Badge extends FinalIDObject
 		t.addVertexWithUV(s, s, 0D, 1D, 1D);
 		t.addVertexWithUV(0D, s, 0D, 0D, 1D);
 		t.draw();
-		
+
 		FTBLibClient.popMaxBrightness();
 		GlStateManager.popMatrix();
-		GlStateManager.popMatrix();
+		GlStateManager.popAttrib();
 	}
 }

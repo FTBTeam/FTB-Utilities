@@ -25,7 +25,8 @@ public class BlockCustom extends Block
 	
 	public int getMixedBrightnessForBlock(IBlockAccess iba, int x, int y, int z)
 	{
-		int i = getLightValue(); if(i >= 15) return MAX_BRIGHTNESS;
+		int i = getLightValue();
+		if(i >= 15) return MAX_BRIGHTNESS;
 		else return iba.getLightBrightnessForSkyBlocks(x, y, z, Math.max(0, i));
 	}
 }

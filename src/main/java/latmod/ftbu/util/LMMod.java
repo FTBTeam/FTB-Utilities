@@ -55,7 +55,9 @@ public class LMMod
 			}
 		}
 		catch(Exception e)
-		{ e.printStackTrace(); }
+		{
+			e.printStackTrace();
+		}
 		
 		return null;
 	}
@@ -63,7 +65,11 @@ public class LMMod
 	public static void init(Object o)
 	{
 		LMMod mod = getLMMod(o);
-		if(mod == null) { FTBU.mod.logger.warn("LMMod failed to load from " + o); return; }
+		if(mod == null)
+		{
+			FTBU.mod.logger.warn("LMMod failed to load from " + o);
+			return;
+		}
 		modsMap.put(mod.modID, mod);
 		if(FTBLibFinals.DEV) FTBU.mod.logger.info("LMMod '" + mod.toString() + "' loaded");
 	}
@@ -94,8 +100,7 @@ public class LMMod
 
 	public ModContainer getModContainer()
 	{
-		if(modContainer == null)
-			modContainer = Loader.instance().getModObjectList().inverse().get(modID);
+		if(modContainer == null) modContainer = Loader.instance().getModObjectList().inverse().get(modID);
 		return modContainer;
 	}
 	
@@ -138,10 +143,16 @@ public class LMMod
 	{ return I18n.format(assets + s, args); }
 	
 	public void addItem(IItemLM i)
-	{ LatCoreMC.addItem((Item)i, i.getItemID()); items.add(i); }
+	{
+		LatCoreMC.addItem((Item) i, i.getItemID());
+		items.add(i);
+	}
 
 	public void addBlock(IBlockLM b)
-	{ LatCoreMC.addBlock((Block)b, b.getItemBlock(), b.getItemID()); blocks.add(b); }
+	{
+		LatCoreMC.addBlock((Block) b, b.getItemBlock(), b.getItemID());
+		blocks.add(b);
+	}
 
 	public void addTile(Class<? extends TileLM> c, String s, String... alt)
 	{ LatCoreMC.addTileEntity(c, modID + '.' + s, alt); }

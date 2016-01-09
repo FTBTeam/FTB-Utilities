@@ -34,7 +34,7 @@ public final class ClaimedChunk extends ChunkCoordIntPair
 	{ return LMWorldClient.inst.getPlayer(ownerID); }
 
 	public boolean equals(Object o)
-	{ return o != null && (o == this || (o.getClass() == ClaimedChunk.class && equalsChunk((ClaimedChunk)o))); }
+	{ return o != null && (o == this || (o.getClass() == ClaimedChunk.class && equalsChunk((ClaimedChunk) o))); }
 	
 	public boolean equalsChunk(int d, int x, int z)
 	{ return dim == d && chunkXPos == x && chunkZPos == z; }

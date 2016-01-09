@@ -26,15 +26,23 @@ public class RenderBlocksCustom extends RenderBlocks
 	public int currentSide = -1;
 	
 	public void setInst(IBlockAccess iba)
-	{ blockAccess = iba; inst = this; }
+	{
+		blockAccess = iba;
+		inst = this;
+	}
 	
 	public void setCustomColor(float r, float g, float b)
-	{ customColRed = r; customColGreen = g; customColBlue = b; }
+	{
+		customColRed = r;
+		customColGreen = g;
+		customColBlue = b;
+	}
 	
 	public void setCustomColor(Integer col)
 	{
-		if(col == null) setCustomColor(-1F, -1F, -1F); else
-		setCustomColor(LMColorUtils.getRed(col) / 255F, LMColorUtils.getGreen(col) / 255F, LMColorUtils.getBlue(col) / 255F);
+		if(col == null) setCustomColor(-1F, -1F, -1F);
+		else
+			setCustomColor(LMColorUtils.getRed(col) / 255F, LMColorUtils.getGreen(col) / 255F, LMColorUtils.getBlue(col) / 255F);
 	}
 	
 	public boolean renderStandardBlock(Block block, int x, int y, int z)
@@ -51,7 +59,7 @@ public class RenderBlocksCustom extends RenderBlocks
 			b = LMColorUtils.getBlue(col) / 255F;
 		}
 		
-		if (EntityRenderer.anaglyphEnable)
+		if(EntityRenderer.anaglyphEnable)
 		{
 			r = (r * 30F + g * 59F + b * 11F) / 100F;
 			g = (r * 30F + g * 70F) / 100F;
@@ -82,8 +90,8 @@ public class RenderBlocksCustom extends RenderBlocks
 		float f2 = 0.8F;
 		float f3 = 0.6F;
 		
-		float[] cols = { f, f1, f2, f2, f3, f3 };
-		cols = new float[] { 1F, 1F, 1F, 1F, 1F, 1F };
+		float[] cols = {f, f1, f2, f2, f3, f3};
+		cols = new float[] {1F, 1F, 1F, 1F, 1F, 1F};
 		
 		if(tileEntity)
 		{
@@ -132,7 +140,7 @@ public class RenderBlocksCustom extends RenderBlocks
 	
 	public void renderFace(Block b, int f, double x, double y, double z, IIcon icon)
 	{
-		if(f < 0 || f > 5);
+		if(f < 0 || f > 5) ;
 		else if(f == 0) renderFaceYNeg(b, x, y, z, icon);
 		else if(f == 1) renderFaceYPos(b, x, y, z, icon);
 		else if(f == 2) renderFaceZNeg(b, x, y, z, icon);
@@ -149,7 +157,8 @@ public class RenderBlocksCustom extends RenderBlocks
 	
 	public void setRenderBounds(double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
 	{
-		if(clampBounds) super.setRenderBounds(Math.max(0D, minX), Math.max(0D, minY), Math.max(0D, minZ), Math.min(1D, maxX), Math.min(1D, maxY), Math.min(1D, maxZ));
+		if(clampBounds)
+			super.setRenderBounds(Math.max(0D, minX), Math.max(0D, minY), Math.max(0D, minZ), Math.min(1D, maxX), Math.min(1D, maxY), Math.min(1D, maxZ));
 		else super.setRenderBounds(minX, minY, minZ, maxX, maxY, maxZ);
 	}
 	

@@ -1,4 +1,5 @@
 package latmod.ftbu.recipes;
+
 import net.minecraft.item.ItemStack;
 
 public class ShapedStackArray implements IStackArray
@@ -21,8 +22,7 @@ public class ShapedStackArray implements IStackArray
 		
 		for(int i = 0; i < items.length; i++)
 		{
-			if(!items[i].equalsItem(ai[i]))
-				return false;
+			if(!items[i].equalsItem(ai[i])) return false;
 		}
 		
 		return true;

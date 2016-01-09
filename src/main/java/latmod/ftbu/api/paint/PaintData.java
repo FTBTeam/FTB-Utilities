@@ -21,10 +21,16 @@ public class PaintData
 	
 	public PaintData(EntityPlayer ep, Paint p, int x, int y, int z, float hx, float hy, float hz, int s, int sh)
 	{
-		player = ep; paint = p;
-		posX = x; posY = y; posZ = z;
-		hitX = hx; hitY = hx; hitZ = hx;
-		side = s; subHit = sh;
+		player = ep;
+		paint = p;
+		posX = x;
+		posY = y;
+		posZ = z;
+		hitX = hx;
+		hitY = hx;
+		hitZ = hx;
+		side = s;
+		subHit = sh;
 	}
 	
 	public boolean canReplace(Paint p)

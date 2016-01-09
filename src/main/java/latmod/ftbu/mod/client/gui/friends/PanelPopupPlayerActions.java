@@ -29,7 +29,7 @@ public class PanelPopupPlayerActions extends PanelPopupMenu
 	public void onClosed(ButtonPopupMenu b, int mb)
 	{
 		if(b != null && mb == 0 && b.object instanceof PlayerAction)
-			((PlayerAction)b.object).onClicked(gui.panelPlayerView.selectedPlayer.playerLM.playerID);
+			((PlayerAction) b.object).onClicked(gui.panelPlayerView.selectedPlayer.playerLM.playerID);
 		if(mb == 0) gui.panelPopupMenu = null;
 	}
 }

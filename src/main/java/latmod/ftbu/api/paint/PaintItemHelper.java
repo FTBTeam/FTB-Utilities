@@ -15,8 +15,7 @@ public class PaintItemHelper
 {
 	public static ItemStack getPaintItem(ItemStack is)
 	{
-		return (is.hasTagCompound() && is.stackTagCompound.hasKey("Paint"))
-				? ItemStack.loadItemStackFromNBT(is.stackTagCompound.getCompoundTag("Paint")) : null;
+		return (is.hasTagCompound() && is.stackTagCompound.hasKey("Paint")) ? ItemStack.loadItemStackFromNBT(is.stackTagCompound.getCompoundTag("Paint")) : null;
 	}
 	
 	public static ItemStack onItemRightClick(IPainterItem i, ItemStack is, World w, EntityPlayer ep)
@@ -49,14 +48,12 @@ public class PaintItemHelper
 				{
 					Block b = Block.getBlockFromItem(paint.getItem());
 					
-					if(b != Blocks.air)
-						p = new Paint(b, paint.getItemDamage());
+					if(b != Blocks.air) p = new Paint(b, paint.getItemDamage());
 				}
 				
-				if(mop != null && ((IPaintable)te).setPaint(new PaintData(ep, p, x, y, z, x1, y1, z1, s, mop.subHit)))
+				if(mop != null && ((IPaintable) te).setPaint(new PaintData(ep, p, x, y, z, x1, y1, z1, s, mop.subHit)))
 				{
-					if(!ep.capabilities.isCreativeMode)
-						i.damagePainter(is, ep);
+					if(!ep.capabilities.isCreativeMode) i.damagePainter(is, ep);
 				}
 			}
 		}
@@ -70,11 +67,9 @@ public class PaintItemHelper
 				
 				if(b.hasTileEntity(m) && !(b instanceof ICustomPaintBlock)) return true;
 				
-				if(b.getBlockBoundsMinX() == 0D && b.getBlockBoundsMinY() == 0D && b.getBlockBoundsMinZ() == 0D
-				&& b.getBlockBoundsMaxX() == 1D && b.getBlockBoundsMaxY() == 1D && b.getBlockBoundsMaxZ() == 1D)
+				if(b.getBlockBoundsMinX() == 0D && b.getBlockBoundsMinY() == 0D && b.getBlockBoundsMinZ() == 0D && b.getBlockBoundsMaxX() == 1D && b.getBlockBoundsMaxY() == 1D && b.getBlockBoundsMaxZ() == 1D)
 				{
-					if(b instanceof INoPaintBlock && !((INoPaintBlock)b).hasPaint(w, x, y, z, s))
-						return true;
+					if(b instanceof INoPaintBlock && !((INoPaintBlock) b).hasPaint(w, x, y, z, s)) return true;
 					
 					ItemStack paint = new ItemStack(b, 1, m);
 					
@@ -93,8 +88,7 @@ public class PaintItemHelper
 						
 						if(paint0 == null || !ItemStack.areItemStacksEqual(paint0, paint))
 						{
-							if(!is.hasTagCompound())
-								is.stackTagCompound = new NBTTagCompound();
+							if(!is.hasTagCompound()) is.stackTagCompound = new NBTTagCompound();
 							
 							NBTTagCompound paintTag = new NBTTagCompound();
 							paint.writeToNBT(paintTag);

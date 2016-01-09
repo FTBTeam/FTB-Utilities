@@ -32,7 +32,10 @@ public abstract class EventLMPlayerClient extends EventLMPlayer
 		public final boolean firstTime;
 		
 		public LoggedIn(LMPlayerClient p, boolean b)
-		{ super(p); firstTime = b; }
+		{
+			super(p);
+			firstTime = b;
+		}
 	}
 	
 	public static class LoggedOut extends EventLMPlayerClient
@@ -52,7 +55,10 @@ public abstract class EventLMPlayerClient extends EventLMPlayer
 		public final List<IChatComponent> info;
 		
 		public CustomInfo(LMPlayerClient p, List<IChatComponent> l)
-		{ super(p); info = l; }
+		{
+			super(p);
+			info = l;
+		}
 	}
 	
 	public static class PlayerDied extends EventLMPlayerClient

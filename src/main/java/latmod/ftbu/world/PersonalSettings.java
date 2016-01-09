@@ -1,6 +1,5 @@
 package latmod.ftbu.world;
 
-import latmod.ftbu.net.MessageLMPlayerUpdateSettings;
 import latmod.ftbu.util.LMSecurityLevel;
 import latmod.lib.*;
 import net.minecraft.nbt.NBTTagCompound;
@@ -35,7 +34,7 @@ public class PersonalSettings
 	{
 		tag.setBoolean("ChatLinks", chatLinks);
 		tag.setBoolean("Explosions", explosions);
-		tag.setByte("Blocks", (byte)blocks.ID);
+		tag.setByte("Blocks", (byte) blocks.ID);
 		tag.setBoolean("FakePlayers", fakePlayers);
 	}
 	
@@ -59,9 +58,6 @@ public class PersonalSettings
 		io.writeByte(blocks.ID);
 	}
 	
-	public void update()
-	{
-		if(owner.getSide().isServer()) owner.toPlayerMP().sendUpdate();
-		else new MessageLMPlayerUpdateSettings(owner).sendToServer();
-	}
+	public void sendUpdate()
+	{ if(owner.getSide().isServer()) owner.toPlayerMP().sendUpdate(); }
 }

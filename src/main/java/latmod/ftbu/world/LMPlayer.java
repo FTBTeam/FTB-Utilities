@@ -31,7 +31,9 @@ public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer
 	}
 
 	public abstract LMWorld getWorld();
+
 	public abstract Side getSide();
+
 	public abstract boolean isOnline();
 	
 	public final String getStringUUID()
@@ -70,7 +72,10 @@ public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer
 		if(o == null) return false;
 		else if(o == this) return true;
 		else if(o instanceof Integer || o instanceof LMPlayer)
-		{ int h = o.hashCode(); return (h <= 0) ? false : h == playerID; }
+		{
+			int h = o.hashCode();
+			return (h <= 0) ? false : h == playerID;
+		}
 		return o != null && (o == this || equalsPlayer(getWorld().getPlayer(o)));
 	}
 	
@@ -93,15 +98,13 @@ public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer
 	
 	public final NBTTagCompound getPublicData()
 	{
-		if(commonPublicData == null)
-			commonPublicData = new NBTTagCompound();
+		if(commonPublicData == null) commonPublicData = new NBTTagCompound();
 		return commonPublicData;
 	}
 	
 	public final NBTTagCompound getPrivateData()
 	{
-		if(commonPrivateData == null)
-			commonPrivateData = new NBTTagCompound();
+		if(commonPrivateData == null) commonPrivateData = new NBTTagCompound();
 		return commonPrivateData;
 	}
 	

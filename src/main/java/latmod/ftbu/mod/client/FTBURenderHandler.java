@@ -72,25 +72,25 @@ public class FTBURenderHandler
 		
 		if(renderWest)
 		{
-			GlStateManager.color(1F, 1F, 1F, maxA - (float)((LMFrustrumUtils.playerX - minX) * maxA / rd));
+			GlStateManager.color(1F, 1F, 1F, maxA - (float) ((LMFrustrumUtils.playerX - minX) * maxA / rd));
 			worldBorderRenderer.renderWest();
 		}
 		
 		if(renderEast)
 		{
-			GlStateManager.color(1F, 1F, 1F, maxA - (float)((maxX - LMFrustrumUtils.playerX) * maxA / rd));
+			GlStateManager.color(1F, 1F, 1F, maxA - (float) ((maxX - LMFrustrumUtils.playerX) * maxA / rd));
 			worldBorderRenderer.renderEast();
 		}
 		
 		if(renderNorth)
 		{
-			GlStateManager.color(1F, 1F, 1F, maxA - (float)((LMFrustrumUtils.playerZ - minZ) * maxA / rd));
+			GlStateManager.color(1F, 1F, 1F, maxA - (float) ((LMFrustrumUtils.playerZ - minZ) * maxA / rd));
 			worldBorderRenderer.renderNorth();
 		}
 		
 		if(renderSouth)
 		{
-			GlStateManager.color(1F, 1F, 1F, maxA - (float)((maxZ - LMFrustrumUtils.playerZ) * maxA / rd));
+			GlStateManager.color(1F, 1F, 1F, maxA - (float) ((maxZ - LMFrustrumUtils.playerZ) * maxA / rd));
 			worldBorderRenderer.renderSouth();
 		}
 

@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.culling.Frustrum;
 import net.minecraft.client.renderer.entity.RenderManager;
 
 @SideOnly(Side.CLIENT)
-public class LMFrustrumUtils
+/** TODO: Move to FTBLib */ public class LMFrustrumUtils
 {
 	public static boolean isFirstPerson;
 	public static int currentDim;
@@ -24,7 +24,7 @@ public class LMFrustrumUtils
 	public static void update()
 	{
 		isFirstPerson = FTBLibClient.mc.gameSettings.thirdPersonView == 0;
-		currentDim = LatCoreMCClient.getDim();
+		currentDim = FTBLibClient.getDim();
 		playerX = RenderManager.instance.viewerPosX;
 		playerY = RenderManager.instance.viewerPosY;
 		playerZ = RenderManager.instance.viewerPosZ;

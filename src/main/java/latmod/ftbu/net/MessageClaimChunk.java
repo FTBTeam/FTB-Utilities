@@ -1,7 +1,7 @@
 package latmod.ftbu.net;
 
 import cpw.mods.fml.common.network.simpleimpl.*;
-import ftb.lib.AdminToken;
+import ftb.lib.LMAccessToken;
 import ftb.lib.api.LMNetworkWrapper;
 import latmod.ftbu.world.*;
 import latmod.ftbu.world.claims.ClaimedChunk;
@@ -47,7 +47,7 @@ public class MessageClaimChunk extends MessageFTBU
 		}
 		else if(type == ID_UNCLAIM)
 		{
-			if(token != 0L && AdminToken.equals(p.getPlayer(), token))
+			if(token != 0L && LMAccessToken.equals(p.getPlayer(), token))
 			{
 				ClaimedChunk c = LMWorldServer.inst.claimedChunks.getChunk(dim, cx, cz);
 				if(c != null)
@@ -56,8 +56,7 @@ public class MessageClaimChunk extends MessageFTBU
 					p1.unclaimChunk(dim, cx, cz);
 				}
 			}
-			else
-				p.unclaimChunk(dim, cx, cz);			
+			else p.unclaimChunk(dim, cx, cz);
 			return new MessageAreaUpdate(p, cx, cz, dim, 1, 1);
 		}
 		else if(type == ID_UNCLAIM_ALL) p.unclaimAllChunks(Integer.valueOf(dim));

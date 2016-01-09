@@ -3,8 +3,8 @@ package latmod.ftbu.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.LMNetworkWrapper;
+import ftb.lib.client.FTBLibClient;
 import ftb.lib.item.LMInvUtils;
-import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
 import latmod.lib.ByteCount;
 import net.minecraft.nbt.NBTTagCompound;
@@ -55,8 +55,8 @@ public class MessageLMPlayerInfo extends MessageFTBU
 
 		NBTTagCompound tag = readTag();
 		LMInvUtils.readItemsFromNBT(p.lastArmor, tag, "A");
-		
-		LatCoreMCClient.onGuiClientAction();
+
+		FTBLibClient.onGuiClientAction();
 		return null;
 	}
 }

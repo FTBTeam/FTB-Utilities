@@ -31,12 +31,13 @@ public class FTBUConfigGeneral
 			{
 				try
 				{
-					Class<?> c = (Class<?>)EntityList.stringToClassMapping.get(s);
-					if(c != null && Entity.class.isAssignableFrom(c))
-						blockedEntitiesL.add(c);
+					Class<?> c = (Class<?>) EntityList.stringToClassMapping.get(s);
+					if(c != null && Entity.class.isAssignableFrom(c)) blockedEntitiesL.add(c);
 				}
 				catch(Exception e)
-				{ e.printStackTrace(); }
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -61,8 +62,7 @@ public class FTBUConfigGeneral
 		for(int i = 0; i < blockedEntitiesL.size(); i++)
 		{
 			Class<?> c1 = blockedEntitiesL.get(i);
-			if(c1.isAssignableFrom(c))
-				return true;
+			if(c1.isAssignableFrom(c)) return true;
 		}
 		
 		return false;

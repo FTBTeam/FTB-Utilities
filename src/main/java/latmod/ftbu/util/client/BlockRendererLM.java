@@ -35,5 +35,5 @@ public class BlockRendererLM implements ISimpleBlockRenderingHandler
 	{ LatCoreMCClient.addBlockRenderer(renderID, this); }
 	
 	public final void registerItemRenderer(Block b)
-	{ if(this instanceof IItemRenderer) LatCoreMCClient.addItemRenderer(b, (IItemRenderer)this); }
+	{ if(this instanceof IItemRenderer) LatCoreMCClient.addItemRenderer(b, (IItemRenderer) this); }
 }

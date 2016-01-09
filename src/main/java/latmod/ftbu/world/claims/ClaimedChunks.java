@@ -61,7 +61,9 @@ public class ClaimedChunks
 				chunks.put(Integer.valueOf(dim), map);
 			}
 			catch(Exception ex)
-			{ ex.printStackTrace(); }
+			{
+				ex.printStackTrace();
+			}
 		}
 	}
 	
@@ -97,7 +99,9 @@ public class ClaimedChunks
 					}
 				}
 				catch(Exception ex)
-				{ ex.printStackTrace(); }
+				{
+					ex.printStackTrace();
+				}
 			}
 			
 			chunks.put(Integer.valueOf(dim), map);
@@ -152,8 +156,7 @@ public class ClaimedChunks
 			{
 				for(ClaimedChunk c : map.values())
 				{
-					if(c.ownerID == p.playerID)
-						list.add(c);
+					if(c.ownerID == p.playerID) list.add(c);
 				}
 			}
 		}
@@ -185,8 +188,7 @@ public class ClaimedChunks
 
 			if(chunk != null)
 			{
-				if(map.isEmpty())
-					chunks.remove(Integer.valueOf(dim));
+				if(map.isEmpty()) chunks.remove(Integer.valueOf(dim));
 				return chunk;
 			}
 		}
@@ -217,7 +219,8 @@ public class ClaimedChunks
 	
 	public static boolean isInSpawn(int dim, int cx, int cz)
 	{
-		if(dim != 0 || (!FTBLib.getServer().isDedicatedServer() && !FTBUConfigGeneral.spawn_area_in_sp.get())) return false;
+		if(dim != 0 || (!FTBLib.getServer().isDedicatedServer() && !FTBUConfigGeneral.spawn_area_in_sp.get()))
+			return false;
 		int radius = FTBLib.getServer().getSpawnProtectionSize();
 		if(radius <= 0) return false;
 		ChunkCoordinates c = LMDimUtils.getSpawnPoint(0);
@@ -233,10 +236,8 @@ public class ClaimedChunks
 	
 	public boolean allowExplosion(int dim, int cx, int cz)
 	{
-		if(dim == 0 && FTBUConfigGeneral.safe_spawn.get() && isInSpawn(dim, cx, cz))
-			return false;
-		else if(LMWorldServer.inst.settings.getWB(dim).isOutside(cx, cz))
-			return false;
+		if(dim == 0 && FTBUConfigGeneral.safe_spawn.get() && isInSpawn(dim, cx, cz)) return false;
+		else if(LMWorldServer.inst.settings.getWB(dim).isOutside(cx, cz)) return false;
 		else
 		{
 			ClaimedChunk c = getChunk(dim, cx, cz);

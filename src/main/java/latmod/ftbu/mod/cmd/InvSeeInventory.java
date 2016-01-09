@@ -7,14 +7,7 @@ import net.minecraft.item.ItemStack;
 
 public class InvSeeInventory implements IInventory
 {
-	public static final int slotMapping[] = 
-	{
-		39,	38,	37,	36,	-1,	40,	41,	42,	43,
-		9,	10,	11,	12,	13,	14,	15,	16,	17,
-		18,	19,	20,	21,	22,	23,	24,	25,	26,
-		27,	28,	29,	30,	31,	32,	33,	34,	35,
-		0,	1,	2,	3,	4,	5,	6,	7,	8,
-	};
+	public static final int slotMapping[] = {39, 38, 37, 36, -1, 40, 41, 42, 43, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 0, 1, 2, 3, 4, 5, 6, 7, 8,};
 	
 	public final EntityPlayerMP player;
 	public final IInventory invPlayer;
@@ -74,7 +67,7 @@ public class InvSeeInventory implements IInventory
 	}
 	
 	public String getInventoryName()
-	{ return player.getCommandSenderName();  }
+	{ return player.getCommandSenderName(); }
 	
 	public boolean hasCustomInventoryName()
 	{ return true; }

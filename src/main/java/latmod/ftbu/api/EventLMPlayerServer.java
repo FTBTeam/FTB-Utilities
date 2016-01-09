@@ -46,7 +46,11 @@ public abstract class EventLMPlayerServer extends EventLMPlayer // LMPlayerClien
 		public final boolean firstTime;
 		
 		public LoggedIn(LMPlayerServer p, EntityPlayerMP ep, boolean b)
-		{ super(p); playerMP = ep; firstTime = b; }
+		{
+			super(p);
+			playerMP = ep;
+			firstTime = b;
+		}
 	}
 	
 	public static class LoggedOut extends EventLMPlayerServer
@@ -54,7 +58,10 @@ public abstract class EventLMPlayerServer extends EventLMPlayer // LMPlayerClien
 		public final EntityPlayerMP playerMP;
 		
 		public LoggedOut(LMPlayerServer p, EntityPlayerMP ep)
-		{ super(p); playerMP = ep; }
+		{
+			super(p);
+			playerMP = ep;
+		}
 	}
 	
 	public static class CustomInfo extends EventLMPlayerServer
@@ -62,6 +69,9 @@ public abstract class EventLMPlayerServer extends EventLMPlayer // LMPlayerClien
 		public final List<IChatComponent> info;
 		
 		public CustomInfo(LMPlayerServer p, List<IChatComponent> l)
-		{ super(p); info = l; }
+		{
+			super(p);
+			info = l;
+		}
 	}
 }

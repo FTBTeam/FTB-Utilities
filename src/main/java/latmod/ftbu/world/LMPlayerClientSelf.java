@@ -28,8 +28,7 @@ public class LMPlayerClientSelf extends LMPlayerClient
 
 	public Rank getRank()
 	{
-		if(rank == null)
-			rank = new Rank("Client");
+		if(rank == null) rank = new Rank("Client");
 		return rank;
 	}
 	

@@ -30,7 +30,10 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 	}
 	
 	public GuideCategory setParent(GuideCategory c)
-	{ parent = c; return this; }
+	{
+		parent = c;
+		return this;
+	}
 	
 	public GuideFile getFile()
 	{
@@ -50,8 +53,10 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 		StringBuilder sb = new StringBuilder();
 		int s = text.size();
 		for(int i = 0; i < s; i++)
-		{ sb.append(text.get(i).getUnformattedText());
-		if(i != s - 1) sb.append('\n'); }
+		{
+			sb.append(text.get(i).getUnformattedText());
+			if(i != s - 1) sb.append('\n');
+		}
 		return sb.toString();
 	}
 	
@@ -62,8 +67,10 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 		StringBuilder sb = new StringBuilder();
 		int s = text.size();
 		for(int i = 0; i < s; i++)
-		{ sb.append(text.get(i).getFormattedText());
-		if(i != s - 1) sb.append('\n'); }
+		{
+			sb.append(text.get(i).getFormattedText());
+			if(i != s - 1) sb.append('\n');
+		}
 		return sb.toString();
 	}
 	
@@ -166,5 +173,8 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 	{ for(int i = 0; i < c.subcategories.size(); i++) addSub(c.setParent(this)); }
 
 	public GuideCategory getParentTop()
-	{ if(parent == null) return this; return parent.getParentTop(); }
+	{
+		if(parent == null) return this;
+		return parent.getParentTop();
+	}
 }

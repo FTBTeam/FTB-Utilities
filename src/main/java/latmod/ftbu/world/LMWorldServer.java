@@ -161,8 +161,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 				NBTTagCompound tagClaims = tag1.getCompoundTag("Claims");
 				NBTTagList listClaims = tagClaims.getTagList("Chunks", LMNBTUtils.INT_ARRAY);
 				
-				if(listClaims != null && listClaims.tagCount() > 0)
-				for(int j = 0; j < listClaims.tagCount(); j++)
+				if(listClaims != null && listClaims.tagCount() > 0) for(int j = 0; j < listClaims.tagCount(); j++)
 				{
 					int[] ai = listClaims.func_150306_c(j);
 					claimedChunks.put(new ClaimedChunk(p.playerID, ai[0], ai[1], ai[2]));
@@ -196,8 +195,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		{
 			public int compare(LMPlayerServer o1, LMPlayerServer o2)
 			{
-				if(o1.isOnline() == o2.isOnline())
-					return o1.getName().compareToIgnoreCase(o2.getName());
+				if(o1.isOnline() == o2.isOnline()) return o1.getName().compareToIgnoreCase(o2.getName());
 				return Boolean.compare(o2.isOnline(), o1.isOnline());
 			}
 		});

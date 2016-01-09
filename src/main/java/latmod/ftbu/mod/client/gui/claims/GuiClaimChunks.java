@@ -5,7 +5,6 @@ import ftb.lib.api.gui.*;
 import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
-import ftb.lib.mod.client.gui.GuiEditConfig;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
 import latmod.ftbu.net.*;
@@ -27,7 +26,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 {
 	public static final int tiles_tex = 16;
 	public static final int tiles_gui = 15;
-	public static final double UV = (double)tiles_gui / (double)tiles_tex;
+	public static final double UV = (double) tiles_gui / (double) tiles_tex;
 	public static final ResourceLocation tex_area = FTBU.mod.getLocation("textures/map/minimap_area.png");
 	public static final ResourceLocation tex_map_entity = FTBU.mod.getLocation("textures/map/entity.png");
 	public static final TextureCoords[][][][] tex_area_coords = new TextureCoords[2][2][2][2];
@@ -76,9 +75,9 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		
 		adminToken = token;
 		playerLM = LMWorldClient.inst.getClientPlayer();
-		startX = MathHelperLM.chunk(mc.thePlayer.posX) - (int)(tiles_gui * 0.5D);
-		startY = MathHelperLM.chunk(mc.thePlayer.posZ) - (int)(tiles_gui * 0.5D);
-		currentDim = LatCoreMCClient.getDim();
+		startX = MathHelperLM.chunk(mc.thePlayer.posX) - (int) (tiles_gui * 0.5D);
+		startY = MathHelperLM.chunk(mc.thePlayer.posZ) - (int) (tiles_gui * 0.5D);
+		currentDim = FTBLibClient.getDim();
 		
 		buttonClose = new ButtonLM(this, 0, 0, 16, 16)
 		{
@@ -96,7 +95,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 				thread = new ThreadReloadArea(mc.theWorld, GuiClaimChunks.this);
 				thread.start();
 				new MessageAreaRequest(startX, startY, tiles_gui, tiles_gui).sendToServer();
-				ClientAction.ACTION_REQUEST_SELF_UPDATE.send(0);
+				ClientAction.REQUEST_SELF_UPDATE.send(0);
 				gui.playClickSound();
 			}
 		};
@@ -108,7 +107,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			public void onButtonPressed(int b)
 			{
 				gui.playClickSound();
-				mc.displayGuiScreen(new GuiEditConfig(GuiClaimChunks.this, new ClaimsConfig()));
+				ClientAction.BUTTON_CLAIMED_CHUNKS_SETTINGS.send(0);
 			}
 		};
 		
@@ -126,7 +125,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			public void addMouseOverText(List<String> l)
 			{
 				if(isShiftKeyDown()) l.add(FTBU.mod.translateClient("button.claims_unclaim_all"));
-				else l.add(FTBU.mod.translateClient("button.claims_unclaim_all_dim", gui.mc.theWorld.provider.getDimensionName()));
+				else
+					l.add(FTBU.mod.translateClient("button.claims_unclaim_all_dim", gui.mc.theWorld.provider.getDimensionName()));
 			}
 		};
 		
@@ -171,8 +171,11 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	
 	public void drawBackground()
 	{
-		if(currentDim != LatCoreMCClient.getDim() || !LatCoreMCClient.isPlaying())
-		{ mc.thePlayer.closeScreen(); return; }
+		if(currentDim != FTBLibClient.getDim() || !LatCoreMCClient.isPlaying())
+		{
+			mc.thePlayer.closeScreen();
+			return;
+		}
 		
 		if(pixelBuffer != null)
 		{
@@ -249,25 +252,25 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		FTBLibClient.setTexture(tex_area);
 		
 		for(int y = 0; y < tiles_gui; y++)
-		for(int x = 0; x < tiles_gui; x++)
-		{
-			int cx = x + startX;
-			int cy = y + startY;
-			
-			ChunkType type = getType(cx, cy);
-			if(type.drawGrid())
+			for(int x = 0; x < tiles_gui; x++)
 			{
-				boolean a = type.equals(getType(cx, cy - 1));
-				boolean b = type.equals(getType(cx + 1, cy));
-				boolean c = type.equals(getType(cx, cy + 1));
-				boolean d = type.equals(getType(cx - 1, cy));
-				
-				TextureCoords tc = tex_area_coords[a ? 1 : 0][b ? 1 : 0][c ? 1 : 0][d ? 1 : 0];
-				
-				FTBLibClient.setGLColor(type.getAreaColor(playerLM), 255);
-				GuiLM.drawTexturedRectD(guiLeft + x * 16, guiTop + y * 16, zLevel, 16, 16, tc.minU, tc.minV, tc.maxU, tc.maxV);
+				int cx = x + startX;
+				int cy = y + startY;
+
+				ChunkType type = getType(cx, cy);
+				if(type.drawGrid())
+				{
+					boolean a = type.equals(getType(cx, cy - 1));
+					boolean b = type.equals(getType(cx + 1, cy));
+					boolean c = type.equals(getType(cx, cy + 1));
+					boolean d = type.equals(getType(cx - 1, cy));
+
+					TextureCoords tc = tex_area_coords[a ? 1 : 0][b ? 1 : 0][c ? 1 : 0][d ? 1 : 0];
+
+					FTBLibClient.setGLColor(type.getAreaColor(playerLM), 255);
+					GuiLM.drawTexturedRectD(guiLeft + x * 16, guiTop + y * 16, zLevel, 16, 16, tc.minU, tc.minV, tc.maxU, tc.maxV);
+				}
 			}
-		}
 		
 		if(!FTBLibClient.mc.theWorld.playerEntities.isEmpty())
 		{

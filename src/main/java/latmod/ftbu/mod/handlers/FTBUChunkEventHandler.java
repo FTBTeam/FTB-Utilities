@@ -104,10 +104,8 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 				{
 					ChunkloaderType type = p.getRank().config.chunkloader_type.get();
 
-					if(type == ChunkloaderType.DISABLED)
-						isLoaded = false;
-					else if(type == ChunkloaderType.ONLINE)
-						isLoaded = p.isOnline();
+					if(type == ChunkloaderType.DISABLED) isLoaded = false;
+					else if(type == ChunkloaderType.ONLINE) isLoaded = p.isOnline();
 					else if(type == ChunkloaderType.OFFLINE)
 					{
 						if(!p.isOnline())
@@ -117,7 +115,8 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 							if(max > 0D && p.stats.getLastSeenDeltaInHours() > max)
 							{
 								isLoaded = false;
-								if(c.isForced) FTBLib.logger.info("Unloading " + p.getName() + " chunks for being offline for too long");
+								if(c.isForced)
+									FTBLib.logger.info("Unloading " + p.getName() + " chunks for being offline for too long");
 							}
 						}
 					}
@@ -193,5 +192,8 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 	}
 
 	public ForgeChunkManager.Ticket getTicket(ClaimedChunk c)
-	{ if(c == null) return null; return request(LMDimUtils.getWorld(c.dim), c.getOwnerS()); }
+	{
+		if(c == null) return null;
+		return request(LMDimUtils.getWorld(c.dim), c.getOwnerS());
+	}
 }

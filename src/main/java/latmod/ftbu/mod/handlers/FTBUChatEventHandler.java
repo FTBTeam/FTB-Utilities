@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class FTBUChatEventHandler
 {
-	private static final String[] LINK_PREFIXES = { "http://", "https://" };
+	private static final String[] LINK_PREFIXES = {"http://", "https://"};
 	
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onChatEvent(net.minecraftforge.event.ServerChatEvent e)

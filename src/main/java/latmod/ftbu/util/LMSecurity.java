@@ -48,7 +48,7 @@ public class LMSecurity
 		{
 			NBTTagCompound tag1 = new NBTTagCompound();
 			tag1.setInteger("Owner", ownerID);
-			tag1.setByte("Level", (byte)level.ID);
+			tag1.setByte("Level", (byte) level.ID);
 			tag.setTag(s, tag1);
 		}
 	}
@@ -74,8 +74,7 @@ public class LMSecurity
 			return true;
 		if(level == LMSecurityLevel.PRIVATE) return false;
 		LMPlayer owner = getOwner();
-		if(level == LMSecurityLevel.FRIENDS && owner.isFriend(playerLM))
-			return true;
+		if(level == LMSecurityLevel.FRIENDS && owner.isFriend(playerLM)) return true;
 		
 		return false;
 	}

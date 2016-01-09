@@ -14,11 +14,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.*;
 
-/** Made by LatvianModder */
+/**
+ * Made by LatvianModder
+ */
 public final class LatCoreMC // LatCoreMCClient
 {
 	public static void addItem(IItemLM i)
-	{ addItem((Item)i, i.getItemID()); }
+	{ addItem((Item) i, i.getItemID()); }
 	
 	public static void addItem(Item i, String name)
 	{ GameRegistry.registerItem(i, name); }
@@ -52,6 +54,9 @@ public final class LatCoreMC // LatCoreMCClient
 		return f;
 	}
 	
-	public static void displayGuide(EntityPlayerMP ep, GuideFile file) 
-	{ if(FTBLib.getEffectiveSide().isServer() && !(ep instanceof FakePlayer)) new MessageDisplayGuide(file).sendTo(ep); }
+	public static void displayGuide(EntityPlayerMP ep, GuideFile file)
+	{
+		if(FTBLib.getEffectiveSide().isServer() && !(ep instanceof FakePlayer))
+			new MessageDisplayGuide(file).sendTo(ep);
+	}
 }

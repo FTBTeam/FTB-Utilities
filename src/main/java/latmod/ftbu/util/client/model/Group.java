@@ -7,7 +7,9 @@ import org.lwjgl.util.vector.Vector3f;
 
 import java.util.*;
 
-/** Made by LatvianModder */
+/**
+ * Made by LatvianModder
+ */
 @SideOnly(Side.CLIENT)
 public class Group
 {

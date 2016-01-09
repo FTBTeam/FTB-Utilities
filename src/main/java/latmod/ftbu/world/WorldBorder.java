@@ -46,7 +46,7 @@ public class WorldBorder
 		if(!settings.border_enabled.get()) return 0;
 		if(size > 0) size = Math.max(size, 20);
 		if(dim == 0) return Math.max(0, size);
-		else return (size == -1) ? (int)(settings.worldBorder0.size * LMDimUtils.getWorldScale(dim)) : size;
+		else return (size == -1) ? (int) (settings.worldBorder0.size * LMDimUtils.getWorldScale(dim)) : size;
 	}
 
 	public void setSize(int s)

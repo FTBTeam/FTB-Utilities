@@ -11,7 +11,7 @@ public abstract class TileRenderer<T extends TileEntity> extends TileEntitySpeci
 {
 	@SuppressWarnings("unchecked")
 	public final void renderTileEntityAt(TileEntity te, double rx, double ry, double rz, float pt)
-	{ if(te != null && !te.isInvalid()) renderTile((T)te, rx, ry, rz, pt); }
+	{ if(te != null && !te.isInvalid()) renderTile((T) te, rx, ry, rz, pt); }
 	
 	public abstract void renderTile(T t, double rx, double ry, double rz, float pt);
 	
@@ -19,5 +19,5 @@ public abstract class TileRenderer<T extends TileEntity> extends TileEntitySpeci
 	{ LatCoreMCClient.addTileRenderer(c, this); }
 	
 	public final void registerItemRenderer(Block b)
-	{ if(this instanceof IItemRenderer) LatCoreMCClient.addItemRenderer(b, (IItemRenderer)this); }
+	{ if(this instanceof IItemRenderer) LatCoreMCClient.addItemRenderer(b, (IItemRenderer) this); }
 }

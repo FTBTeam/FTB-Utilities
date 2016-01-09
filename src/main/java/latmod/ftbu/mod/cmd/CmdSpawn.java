@@ -17,12 +17,10 @@ public class CmdSpawn extends CommandLM
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-		ChunkCoordinates spawnpoint = LMDimUtils.getSpawnPoint(0);
-		
 		World w = LMDimUtils.getWorld(0);
-		
-		while(w.getBlock(spawnpoint.posX, spawnpoint.posY, spawnpoint.posZ).isOpaqueCube())
-			spawnpoint.posY++;
+		ChunkCoordinates spawnpoint = w.getSpawnPoint();
+
+		while(w.getBlock(spawnpoint.posX, spawnpoint.posY, spawnpoint.posZ).isOpaqueCube()) spawnpoint.posY++;
 		
 		LMDimUtils.teleportPlayer(ep, new EntityPos(spawnpoint, 0));
 		return new ChatComponentTranslation(FTBU.mod.assets + "cmd.spawn_tp");

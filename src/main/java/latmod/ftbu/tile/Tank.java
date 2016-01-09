@@ -1,4 +1,5 @@
 package latmod.ftbu.tile;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
@@ -12,11 +13,11 @@ public class Tank
 	public Tank(String s, double buckets)
 	{
 		name = s;
-		fluidTank = new FluidTank((int)(buckets * 1000));
+		fluidTank = new FluidTank((int) (buckets * 1000));
 	}
 	
 	public void setCapacity(double buckets)
-	{ fluidTank.setCapacity((int)(buckets * 1000)); }
+	{ fluidTank.setCapacity((int) (buckets * 1000)); }
 	
 	public boolean hasFluid(int amt)
 	{ return getAmount() >= amt; }
@@ -40,7 +41,7 @@ public class Tank
 	{ return fluidTank.getFluidAmount(); }
 	
 	public double getAmountD()
-	{ return getAmount() / (double)getCapacity(); }
+	{ return getAmount() / (double) getCapacity(); }
 	
 	public int getCapacity()
 	{ return fluidTank.getCapacity(); }
@@ -49,13 +50,13 @@ public class Tank
 	{
 		NBTTagCompound tankTag = tag.getCompoundTag(name);
 		fluidTank.readFromNBT(tankTag);
-		if(tankTag.hasKey("Empty"))
-		fluidTank.setFluid(null);
+		if(tankTag.hasKey("Empty")) fluidTank.setFluid(null);
 		
 		if(fluidTank.getFluidAmount() > fluidTank.getCapacity())
 		{
 			FluidStack fs = fluidTank.getFluid().copy();
-			fs.amount = fluidTank.getCapacity(); fluidTank.setFluid(fs);
+			fs.amount = fluidTank.getCapacity();
+			fluidTank.setFluid(fs);
 		}
 		
 		checkIfChanged();
@@ -85,7 +86,8 @@ public class Tank
 		if(!fluidTank.getFluid().isFluidEqual(resource)) return null;
 		if(!canDrain(from, resource.getFluid())) return null;
 		FluidStack fs = fluidTank.drain(resource.amount, doDrain);
-		if(doDrain) checkIfChanged(); return fs;
+		if(doDrain) checkIfChanged();
+		return fs;
 	}
 	
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
@@ -102,7 +104,7 @@ public class Tank
 	{ return true; }
 	
 	public FluidTankInfo[] getTankInfo(ForgeDirection from)
-	{ return new FluidTankInfo[] { fluidTank.getInfo() }; }
+	{ return new FluidTankInfo[] {fluidTank.getInfo()}; }
 	
 	private void checkIfChanged()
 	{

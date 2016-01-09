@@ -40,31 +40,33 @@ public class ThreadReloadArea extends Thread
 		try
 		{
 			for(int cz = 0; cz < GuiClaimChunks.tiles_gui; cz++)
-			for(int cx = 0; cx < GuiClaimChunks.tiles_gui; cx++)
-			{
-				if(worldObj.getChunkProvider().chunkExists(gui.startX, gui.startY))
+				for(int cx = 0; cx < GuiClaimChunks.tiles_gui; cx++)
 				{
-					chunkMC = worldObj.getChunkFromChunkCoords(gui.startX, gui.startY);
-					maxHeight = (short)Math.max(255, chunkMC.getTopFilledSegment() + 15);
-					
-					int x = (gui.startX + cx) * 16;
-					int y = (gui.startY + cz) * 16;
-					
-					for(int i = 0; i < 256; i++)
+					if(worldObj.getChunkProvider().chunkExists(gui.startX, gui.startY))
 					{
-						int bx = x + (i % 16);
-						int by = y + (i / 16);
-						int col = getBlockColor(bx, by);
-						pixels.setRGB(cx * 16 + (i % 16), cz * 16 + (i / 16), col);
+						chunkMC = worldObj.getChunkFromChunkCoords(gui.startX, gui.startY);
+						maxHeight = (short) Math.max(255, chunkMC.getTopFilledSegment() + 15);
+
+						int x = (gui.startX + cx) * 16;
+						int y = (gui.startY + cz) * 16;
+
+						for(int i = 0; i < 256; i++)
+						{
+							int bx = x + (i % 16);
+							int by = y + (i / 16);
+							int col = getBlockColor(bx, by);
+							pixels.setRGB(cx * 16 + (i % 16), cz * 16 + (i / 16), col);
+						}
 					}
 				}
-			}
 			
 			ByteBuffer buffer = FTBLibClient.toByteBuffer(pixels.pixels, false);
 			GuiClaimChunks.pixelBuffer = buffer;
 		}
 		catch(Exception e)
-		{ e.printStackTrace(); }
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public int getBlockColor(int bx, int bz)
@@ -83,8 +85,7 @@ public class ThreadReloadArea extends Thread
 			short bn = getTopY(bx, bz - 1);
 			short bs = getTopY(bx, bz + 1);
 			
-			if((bw != defHeight && bw < by) || (bn != defHeight && bn < by))
-				return LMColorUtils.addBrightness(col, 25);
+			if((bw != defHeight && bw < by) || (bn != defHeight && bn < by)) return LMColorUtils.addBrightness(col, 25);
 			else if((be != defHeight && be < by) || (bs != defHeight && bs < by))
 				return LMColorUtils.addBrightness(col, -25);
 			
@@ -109,13 +110,12 @@ public class ThreadReloadArea extends Thread
 		if(cx == gui.startX && cz == gui.startY)
 		{
 			mapValue = true;
-			if(heightMap[x + z * 16] != defHeight)
-				return heightMap[x + z * 16];
+			if(heightMap[x + z * 16] != defHeight) return heightMap[x + z * 16];
 		}
 		else
 		{
 			c = worldObj.getChunkFromBlockCoords(bx, bz);
-			max = (short)Math.max(255, c.getTopFilledSegment() + 15);
+			max = (short) Math.max(255, c.getTopFilledSegment() + 15);
 		}
 		
 		for(short y = max; y > 0; --y)

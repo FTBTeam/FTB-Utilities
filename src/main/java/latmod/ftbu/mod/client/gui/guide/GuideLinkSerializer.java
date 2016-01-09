@@ -30,8 +30,9 @@ public class GuideLinkSerializer implements JsonDeserializer<GuideLink>
 		{
 			LinkType type = LinkType.valueOf(o.get("type").getAsString().toUpperCase());
 			GuideLink special = new GuideLink(type, o.get("link").getAsString());
-			special.title = o.has("title") ? (IChatComponent)context.deserialize(o.get("title"), IChatComponent.class) : new ChatComponentText(special.link);
-			if(o.has("hover")) special.hover = (IChatComponent)context.deserialize(o.get("hover"), IChatComponent.class);
+			special.title = o.has("title") ? (IChatComponent) context.deserialize(o.get("title"), IChatComponent.class) : new ChatComponentText(special.link);
+			if(o.has("hover"))
+				special.hover = (IChatComponent) context.deserialize(o.get("hover"), IChatComponent.class);
 			return special;
 		}
 		

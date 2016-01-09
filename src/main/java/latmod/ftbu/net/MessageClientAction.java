@@ -1,8 +1,8 @@
 package latmod.ftbu.net;
+
 import cpw.mods.fml.common.network.simpleimpl.*;
 import latmod.ftbu.world.*;
 import latmod.lib.ByteCount;
-import net.minecraft.entity.player.EntityPlayerMP;
 
 public class MessageClientAction extends MessageFTBU
 {
@@ -19,13 +19,8 @@ public class MessageClientAction extends MessageFTBU
 	{
 		ClientAction action = ClientAction.VALUES[io.readUnsignedByte()];
 		int extra = io.readInt();
-		
-		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
-		LMPlayerServer owner = LMWorldServer.inst.getPlayer(ep);
-		
-		if(action.onAction(extra, ep, owner))
-			owner.sendUpdate();
-		
+		LMPlayerServer owner = LMWorldServer.inst.getPlayer(ctx.getServerHandler().playerEntity);
+		if(action.onAction(extra, owner)) owner.sendUpdate();
 		return null;
 	}
 }

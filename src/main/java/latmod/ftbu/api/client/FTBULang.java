@@ -10,5 +10,6 @@ public class FTBULang
 	private static String get(String s, Object... o) { return I18n.format(FTBU.mod.assets + s, o); }
 	
 	public static String label_friend() { return get("label.friend"); }
+
 	public static String label_pfriend() { return get("label.pfriend"); }
 }

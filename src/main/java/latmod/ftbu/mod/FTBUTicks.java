@@ -21,7 +21,7 @@ public class FTBUTicks
 		
 		if(FTBUConfigGeneral.restart_timer.get() > 0)
 		{
-			restartSeconds = (long)(FTBUConfigGeneral.restart_timer.get() * 3600D);
+			restartSeconds = (long) (FTBUConfigGeneral.restart_timer.get() * 3600D);
 			FTBU.mod.logger.info("Server restart in " + LMStringUtils.getTimeString(restartSeconds * 1000L));
 		}
 	}
@@ -50,8 +50,12 @@ public class FTBUTicks
 				{
 					lastRestartMessage = msg;
 					
-					if(secondsLeft <= 0) { CmdRestart.restart(); return; }
-					else if(secondsLeft <= 10 || secondsLeft == 60 || secondsLeft == 300 || secondsLeft == 600  || secondsLeft == 1800)
+					if(secondsLeft <= 0)
+					{
+						CmdRestart.restart();
+						return;
+					}
+					else if(secondsLeft <= 10 || secondsLeft == 60 || secondsLeft == 300 || secondsLeft == 600 || secondsLeft == 1800)
 					{
 						IChatComponent c = new ChatComponentTranslation(FTBU.mod.assets + "server_restart", msg);
 						c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE);

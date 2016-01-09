@@ -32,8 +32,7 @@ public class PanelPlayerList extends PanelFriendsGui
 		
 		tempPlayerList.remove(clientPlayer);
 		
-		if(FTBUClient.sort_friends_az.get())
-			Collections.sort(tempPlayerList, LMPNameComparator.instance);
+		if(FTBUClient.sort_friends_az.get()) Collections.sort(tempPlayerList, LMPNameComparator.instance);
 		else
 		{
 			LMPStatusComparator.instance.self = clientPlayer;
@@ -52,7 +51,10 @@ public class PanelPlayerList extends PanelFriendsGui
 		}
 		
 		for(ButtonPlayer b : playerButtons)
-		{ b.width = width; add(b); }
+		{
+			b.width = width;
+			add(b);
+		}
 	}
 	
 	public void renderWidget()
@@ -64,11 +66,9 @@ public class PanelPlayerList extends PanelFriendsGui
 		{
 			int scroll = 0;
 			
-			if(gui.mouseDWheel != 0)
-				scroll = ((gui.mouseDWheel > 0) ? 28 : -28);
+			if(gui.mouseDWheel != 0) scroll = ((gui.mouseDWheel > 0) ? 28 : -28);
 			
-			if(Mouse.isButtonDown(0))
-				scroll += gui.mouseDY;
+			if(Mouse.isButtonDown(0)) scroll += gui.mouseDY;
 			
 			//if(Mouse.isButtonDown(1))
 			//	scroll -= (int)((gui.mouseY - gui.lastClickY) * 0.1D);
@@ -82,8 +82,7 @@ public class PanelPlayerList extends PanelFriendsGui
 			}
 		}
 		
-		if(playerButtons.size() * 21 < height)
-			posY = 0;
+		if(playerButtons.size() * 21 < height) posY = 0;
 		
 		for(int i = 0; i < size; i++)
 			playerButtons.get(i).renderWidget();

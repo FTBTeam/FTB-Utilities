@@ -30,8 +30,9 @@ public class ButtonPlayer extends ButtonLM
 			panel.gui.panelPlayerView.selectedPlayer = new Player(player.playerLM);
 			panel.gui.panelPlayerView.selectedPlayer.func_152121_a(MinecraftProfileTexture.Type.SKIN, AbstractClientPlayer.getLocationSkin(player.playerLM.getName()));
 			panel.gui.panelPlayerView.selectedPlayer.inventory.currentItem = 0;
-			ClientAction.ACTION_REQUEST_PLAYER_INFO.send(player.playerLM.playerID);
-			if(b != 0) panel.gui.panelPopupMenu = new PanelPopupPlayerActions((GuiFriends)gui, gui.mouseX - gui.mainPanel.getAX() + 3, gui.mouseY - gui.mainPanel.getAY() - 3, player.playerLM);
+			ClientAction.REQUEST_PLAYER_INFO.send(player.playerLM.playerID);
+			if(b != 0)
+				panel.gui.panelPopupMenu = new PanelPopupPlayerActions((GuiFriends) gui, gui.mouseX - gui.mainPanel.getAX() + 3, gui.mouseY - gui.mainPanel.getAY() - 3, player.playerLM);
 		}
 		
 		gui.refreshWidgets();

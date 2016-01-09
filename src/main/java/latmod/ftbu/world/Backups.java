@@ -44,7 +44,7 @@ public class Backups
 	}
 	
 	public static long getSecondsUntilNextBackup()
-	{ return ((lastTimeRun + (long)(FTBUConfigBackups.backup_timer.get() * 3600D * 1000D)) - FTBUTicks.currentMillis()) / 1000L; }
+	{ return ((lastTimeRun + (long) (FTBUConfigBackups.backup_timer.get() * 3600D * 1000D)) - FTBUTicks.currentMillis()) / 1000L; }
 	
 	public static void clearOldBackups()
 	{

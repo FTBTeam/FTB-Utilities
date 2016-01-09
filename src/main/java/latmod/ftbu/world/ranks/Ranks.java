@@ -25,8 +25,8 @@ public class Ranks
 		}
 		else
 		{*/
-			if(p == null || p.isFake()) return PLAYER;
-			return p.isOP() ? ADMIN : PLAYER;
+		if(p == null || p.isFake()) return PLAYER;
+		return p.isOP() ? ADMIN : PLAYER;
 		//}
 	}
 

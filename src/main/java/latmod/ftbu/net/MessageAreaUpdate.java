@@ -25,13 +25,14 @@ public class MessageAreaUpdate extends MessageFTBU
 		io.writeByte(sx);
 		io.writeByte(sz);
 		
-		for(int z1 = z; z1 < z + sz; z1++) for(int x1 = x; x1 < x + sx; x1++)
-		{
-			ChunkType type = LMWorldServer.inst.claimedChunks.getType(d, x1, z1);
-			if(type instanceof ChunkType.PlayerClaimed && type.isChunkOwner(p) && LMWorldServer.inst.claimedChunks.getChunk(d, x1, z1).isChunkloaded)
-				type = ChunkType.LOADED_SELF;
-			io.writeInt(type.ID);
-		}
+		for(int z1 = z; z1 < z + sz; z1++)
+			for(int x1 = x; x1 < x + sx; x1++)
+			{
+				ChunkType type = LMWorldServer.inst.claimedChunks.getType(d, x1, z1);
+				if(type instanceof ChunkType.PlayerClaimed && type.isChunkOwner(p) && LMWorldServer.inst.claimedChunks.getChunk(d, x1, z1).isChunkloaded)
+					type = ChunkType.LOADED_SELF;
+				io.writeInt(type.ID);
+			}
 	}
 	
 	public MessageAreaUpdate(LMPlayerServer p, EntityPos pos, int sx, int sz)
@@ -51,7 +52,7 @@ public class MessageAreaUpdate extends MessageFTBU
 		
 		int[] types = new int[sx * sz];
 		for(int i = 0; i < types.length; i++)
-			types[i]  = io.readInt();
+			types[i] = io.readInt();
 		
 		ClaimedAreasClient.setTypes(dim, chunkX, chunkZ, sx, sz, types);
 		return null;

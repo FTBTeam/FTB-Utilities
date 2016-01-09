@@ -11,16 +11,18 @@ public class CubeRenderer
 {
 	public static final CubeRenderer instance = new CubeRenderer();
 	
-	protected static final float[] normalsX = new float[] { 0F, 0F, 0F, 0F, -1F, 1F };
-	protected static final float[] normalsY = new float[] { -1F, 1F, 0F, 0F, 0F, 0F };
-	protected static final float[] normalsZ = new float[] { 0F, 0F, -1F, 1F, 0F, 0F };
+	protected static final float[] normalsX = new float[] {0F, 0F, 0F, 0F, -1F, 1F};
+	protected static final float[] normalsY = new float[] {-1F, 1F, 0F, 0F, 0F, 0F};
+	protected static final float[] normalsZ = new float[] {0F, 0F, -1F, 1F, 0F, 0F};
 	
 	public Tessellator tessellator = null;
 	
 	public boolean hasTexture = true;
 	public boolean hasNormals = true;
 	
-	/** Unimplemented */
+	/**
+	 * Unimplemented
+	 */
 	public boolean isInterpolated = false;
 	
 	protected int currentSide = -1;
@@ -28,7 +30,14 @@ public class CubeRenderer
 	protected float minU, minV, maxU, maxV;
 	
 	public void setSize(double x0, double y0, double z0, double x1, double y1, double z1)
-	{ minX = x0; minY = y0; minZ = z0; maxX = x1; maxY = y1; maxZ = z1; }
+	{
+		minX = x0;
+		minY = y0;
+		minZ = z0;
+		maxX = x1;
+		maxY = y1;
+		maxZ = z1;
+	}
 	
 	public void setSize(AxisAlignedBB aabb)
 	{ setSize(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ); }
@@ -37,10 +46,15 @@ public class CubeRenderer
 	{ setSize(b.getBlockBoundsMinX(), b.getBlockBoundsMinY(), b.getBlockBoundsMinZ(), b.getBlockBoundsMaxX(), b.getBlockBoundsMaxY(), b.getBlockBoundsMaxZ()); }
 	
 	public void setUV(float u0, float v0, float u1, float v1)
-	{ minU = u0; minV = v0; maxU = u1; maxV = v1; }
+	{
+		minU = u0;
+		minV = v0;
+		maxU = u1;
+		maxV = v1;
+	}
 	
 	public void setUVD(double minU, double minV, double maxU, double maxV)
-	{ setUV((float)minU, (float)minV, (float)maxU, (float)maxV); }
+	{ setUV((float) minU, (float) minV, (float) maxU, (float) maxV); }
 	
 	public void setUVFromIcon(IIcon icon)
 	{ setUV(icon.getMinU(), icon.getMinV(), icon.getMaxU(), icon.getMaxV()); }
@@ -72,7 +86,10 @@ public class CubeRenderer
 	protected void begin(int i)
 	{
 		if(i < 0 || i > 5)
-		{ currentSide = -1; return; }
+		{
+			currentSide = -1;
+			return;
+		}
 		
 		currentSide = i;
 		if(hasNormals)

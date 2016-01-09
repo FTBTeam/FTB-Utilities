@@ -13,8 +13,7 @@ public class CustomBlockAccess implements IBlockAccess
 	
 	public CustomBlockAccess(IBlockAccess iba)
 	{
-		if(iba instanceof CustomBlockAccess)
-			parent = ((CustomBlockAccess)iba).parent;
+		if(iba instanceof CustomBlockAccess) parent = ((CustomBlockAccess) iba).parent;
 		else parent = iba;
 	}
 	

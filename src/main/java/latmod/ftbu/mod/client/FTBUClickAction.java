@@ -17,13 +17,13 @@ public class FTBUClickAction
 	{
 		@SideOnly(Side.CLIENT)
 		public void onClicked(MouseAction c)
-		{ ClientAction.ACTION_ADD_FRIEND.send(c.intVal()); }
+		{ ClientAction.ADD_FRIEND.send(c.intVal()); }
 	};
 	
 	public static final ClickAction FRIEND_ADD_ALL = new ClickAction("friend_add_all", PrimitiveType.NULL)
 	{
 		@SideOnly(Side.CLIENT)
 		public void onClicked(MouseAction c)
-		{ ClientAction.ACTION_ADD_FRIEND.send(0); }
+		{ ClientAction.ADD_FRIEND.send(0); }
 	};
 }

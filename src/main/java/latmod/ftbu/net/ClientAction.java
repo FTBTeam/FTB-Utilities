@@ -1,142 +1,239 @@
 package latmod.ftbu.net;
 
+import ftb.lib.*;
+import ftb.lib.api.config.ConfigRegistry;
+import ftb.lib.mod.FTBLibFinals;
+import ftb.lib.mod.net.MessageEditConfig;
 import latmod.ftbu.api.guide.ServerGuideFile;
-import latmod.ftbu.util.LatCoreMC;
-import latmod.ftbu.world.LMPlayerServer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import latmod.ftbu.badges.ServerBadges;
+import latmod.ftbu.util.*;
+import latmod.ftbu.world.*;
+import latmod.lib.config.*;
 
 public enum ClientAction
 {
 	NULL
-	{
-		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
-		{ return false; }
-	},
+			{
+				public boolean onAction(int extra, LMPlayerServer owner)
+				{ return false; }
+			},
 	
-	ACTION_ADD_FRIEND
-	{
-		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
-		{
-			if(extra > 0)
+	ADD_FRIEND
 			{
-				LMPlayerServer p = owner.world.getPlayer(extra);
-				if(p == null || p.equalsPlayer(owner)) return false;
-				
-				if(!owner.friends.contains(p.playerID))
+				public boolean onAction(int extra, LMPlayerServer owner)
 				{
-					owner.friends.add(p.playerID);
-					owner.sendUpdate();
-					p.sendUpdate();
-					p.checkNewFriends();
-				}
-			}
-			else
-			{
-				for(LMPlayerServer p : owner.world.playerMap.values())
-				{
-					if(!p.equalsPlayer(owner) && p.isFriendRaw(owner) && !owner.isFriendRaw(p))
+					if(extra > 0)
 					{
-						owner.friends.add(p.playerID);
+						LMPlayerServer p = owner.world.getPlayer(extra);
+						if(p == null || p.equalsPlayer(owner)) return false;
+
+						if(!owner.friends.contains(p.playerID))
+						{
+							owner.friends.add(p.playerID);
+							owner.sendUpdate();
+							p.sendUpdate();
+							p.checkNewFriends();
+						}
+					}
+					else
+					{
+						for(LMPlayerServer p : owner.world.playerMap.values())
+						{
+							if(!p.equalsPlayer(owner) && p.isFriendRaw(owner) && !owner.isFriendRaw(p))
+							{
+								owner.friends.add(p.playerID);
+								owner.sendUpdate();
+								p.sendUpdate();
+								p.checkNewFriends();
+							}
+						}
+					}
+
+					return true;
+				}
+			},
+	
+	REM_FRIEND
+			{
+				public boolean onAction(int extra, LMPlayerServer owner)
+				{
+					LMPlayerServer p = owner.world.getPlayer(extra);
+					if(p == null || p.equalsPlayer(owner)) return false;
+
+					if(owner.friends.contains(p.playerID))
+					{
+						owner.friends.removeValue(p.playerID);
 						owner.sendUpdate();
 						p.sendUpdate();
 						p.checkNewFriends();
 					}
+
+					return true;
 				}
-			}
-			
-			return true;
-		}
-	},
+			},
 	
-	ACTION_REM_FRIEND
-	{
-		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
-		{
-			LMPlayerServer p = owner.world.getPlayer(extra);
-			if(p == null || p.equalsPlayer(owner)) return false;
-			
-			if(owner.friends.contains(p.playerID))
+	DENY_FRIEND
 			{
-				owner.friends.removeValue(p.playerID);
-				owner.sendUpdate();
-				p.sendUpdate();
-				p.checkNewFriends();
-			}
-			
-			return true;
-		}
-	},
+				public boolean onAction(int extra, LMPlayerServer owner)
+				{
+					LMPlayerServer p = owner.world.getPlayer(extra);
+					if(p == null || p.equalsPlayer(owner)) return false;
+
+					if(p.friends.contains(owner.playerID))
+					{
+						p.friends.removeValue(owner.playerID);
+						owner.sendUpdate();
+						p.sendUpdate();
+					}
+
+					return true;
+				}
+			},
 	
-	ACTION_DENY_FRIEND
-	{
-		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
-		{
-			LMPlayerServer p = owner.world.getPlayer(extra);
-			if(p == null || p.equalsPlayer(owner)) return false;
-			
-			if(p.friends.contains(owner.playerID))
+	REQUEST_PLAYER_INFO
 			{
-				p.friends.removeValue(owner.playerID);
-				owner.sendUpdate();
-				p.sendUpdate();
-			}
-			
-			return true;
-		}
-	},
+				public boolean onAction(int extra, LMPlayerServer owner)
+				{
+					new MessageLMPlayerInfo(owner, extra).sendTo(owner.getPlayer());
+					return false;
+				}
+			},
 	
-	ACTION_REQUEST_PLAYER_INFO
-	{
-		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
-		{
-			new MessageLMPlayerInfo(owner, extra).sendTo(ep);
-			return false;
-		}
-	},
-	
-	ACTION_REQUEST_SERVER_CONFIG
-	{
-		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
-		{
-			return false;
-		}
-	},
-	
-	ACTION_REQUEST_SERVER_INFO
-	{
-		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
-		{
-			LatCoreMC.displayGuide(ep, new ServerGuideFile(owner));
-			return false;
-		}
-	},
+	REQUEST_SERVER_INFO
+			{
+				public boolean onAction(int extra, LMPlayerServer owner)
+				{
+					LatCoreMC.displayGuide(owner.getPlayer(), new ServerGuideFile(owner));
+					return false;
+				}
+			},
 
-	ACTION_REQUEST_SELF_UPDATE
-	{
-		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
-		{
-			new MessageLMPlayerUpdate(owner, true).sendTo(ep);
-			return false;
-		}
-	},
+	REQUEST_SELF_UPDATE
+			{
+				public boolean onAction(int extra, LMPlayerServer owner)
+				{
+					new MessageLMPlayerUpdate(owner, true).sendTo(owner.getPlayer());
+					return false;
+				}
+			},
 
-	ACTION_REQUEST_BADGE
+	REQUEST_BADGE
+			{
+				public boolean onAction(int extra, LMPlayerServer owner)
+				{
+					new MessageSendBadge(extra, ServerBadges.getServerBadge(owner.world.getPlayer(extra)).ID).sendTo(owner.getPlayer());
+					return false;
+				}
+			},
+
+	BUTTON_RENDER_BADGE
+			{
+				public boolean onAction(int extra, LMPlayerServer owner)
+				{
+					owner.renderBadge = extra == 1;
+					return true;
+				}
+			},
+
+	BUTTON_CHAT_LINKS
+			{
+				public boolean onAction(int extra, LMPlayerServer owner)
+				{
+					owner.getSettings().chatLinks = extra == 1;
+					return true;
+				}
+			},
+
+	BUTTON_CLAIMED_CHUNKS_SETTINGS
+			{
+				public boolean onAction(int extra, final LMPlayerServer owner)
+				{
+					final PersonalSettings settings = LMWorldClient.inst.clientPlayer.getSettings();
+
+					ConfigGroup group = new ConfigGroup("claims_config_" + owner.getName())
+					{
+						public void onLoadedFromGroup(ConfigGroup g)
+						{
+							owner.sendUpdate();
+							if(FTBLibFinals.DEV) FTBLib.dev_logger.info("claimed chunks settings loaded from " + g);
+						}
+					};
+
+					group.add(new ConfigEntryBool("explosions", settings.explosions)
+					{
+						public boolean get()
+						{ return settings.explosions; }
+
+						public void set(boolean v)
+						{ settings.explosions = v; }
+					}, false);
+
+					group.add(new ConfigEntryEnum<LMSecurityLevel>("security_level", LMSecurityLevel.class, LMSecurityLevel.VALUES_3, settings.blocks, false)
+					{
+						public LMSecurityLevel get()
+						{ return settings.blocks; }
+
+						public void set(Object v)
+						{
+							settings.blocks = (LMSecurityLevel) v;
+							owner.sendUpdate();
+						}
+					}, false);
+
+					group.add(new ConfigEntryBool("fake_players", settings.fakePlayers)
+					{
+						public boolean get()
+						{ return settings.fakePlayers; }
+
+						public void set(boolean v)
+						{
+							settings.fakePlayers = v;
+							owner.sendUpdate();
+						}
+					}, false);
+
+					ConfigRegistry.putTemp(group);
+					new MessageEditConfig(LMAccessToken.generate(owner.getPlayer()), true, group).sendTo(owner.getPlayer());
+					return false;
+				}
+			},
+
+	/*
+	MISC
 	{
-		public boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner)
+		public boolean onAction(int extra, LMPlayerServer owner)
 		{
-			//FIXME: Badge
-			new MessageLMPlayerUpdate(owner, true).sendTo(ep);
 			return false;
 		}
 	},
-	;
+	*/
+
+	/*
+	MISC
+	{
+		public boolean onAction(int extra, LMPlayerServer owner)
+		{
+			return false;
+		}
+	},
+	*/
+
+	/*
+	MISC
+	{
+		public boolean onAction(int extra, LMPlayerServer owner)
+		{
+			return false;
+		}
+	},
+	*/;
 	public static final ClientAction[] VALUES = values();
 	public final byte ID;
 	
 	ClientAction()
-	{ ID = (byte)ordinal(); }
+	{ ID = (byte) ordinal(); }
 	
-	public abstract boolean onAction(int extra, EntityPlayerMP ep, LMPlayerServer owner);
+	public abstract boolean onAction(int extra, LMPlayerServer owner);
 	
 	public void send(int extra)
 	{ new MessageClientAction(this, extra).sendToServer(); }

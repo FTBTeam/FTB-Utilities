@@ -3,7 +3,9 @@ package latmod.ftbu.util.client.model;
 import cpw.mods.fml.relauncher.*;
 import org.lwjgl.opengl.GL11;
 
-/** Made by LatvianModder */
+/**
+ * Made by LatvianModder
+ */
 @SideOnly(Side.CLIENT)
 public class Face
 {
@@ -28,13 +30,13 @@ public class Face
 	{
 		String[] s = new String[s1.length - 1];
 		for(int i = 0; i < s.length; i++)
-		s[i] = s1[i + 1];
+			s[i] = s1[i + 1];
 		
-		if (isValidFace_V_VN_Line(line))
+		if(isValidFace_V_VN_Line(line))
 		{
 			Face face = new Face(s.length, false, true);
 			
-			for (int i = 0; i < s.length; ++i)
+			for(int i = 0; i < s.length; ++i)
 			{
 				String s2[] = s[i].split("//");
 				face.verticies[i] = Integer.parseInt(s2[0]) - 1;
@@ -44,11 +46,11 @@ public class Face
 			return face;
 		}
 		
-		else if (isValidFace_V_VT_VN_Line(line))
+		else if(isValidFace_V_VT_VN_Line(line))
 		{
 			Face face = new Face(s.length, true, true);
 			
-			for (int i = 0; i < s.length; ++i)
+			for(int i = 0; i < s.length; ++i)
 			{
 				String s2[] = s[i].split("/");
 				face.verticies[i] = Integer.parseInt(s2[0]) - 1;
@@ -58,11 +60,11 @@ public class Face
 			
 			return face;
 		}
-		else if (isValidFace_V_VT_Line(line))
+		else if(isValidFace_V_VT_Line(line))
 		{
 			Face face = new Face(s.length, true, false);
 			
-			for (int i = 0; i < s.length; ++i)
+			for(int i = 0; i < s.length; ++i)
 			{
 				String s2[] = s[i].split("/");
 				face.verticies[i] = Integer.parseInt(s2[0]) - 1;
@@ -71,12 +73,12 @@ public class Face
 			
 			return face;
 		}
-		else if (isValidFace_V_Line(line))
+		else if(isValidFace_V_Line(line))
 		{
 			Face face = new Face(s.length, false, false);
 			
-			for (int i = 0; i < s.length; ++i)
-			face.verticies[i] = Integer.parseInt(s[i]) - 1;
+			for(int i = 0; i < s.length; ++i)
+				face.verticies[i] = Integer.parseInt(s[i]) - 1;
 			
 			return face;
 		}
@@ -85,7 +87,9 @@ public class Face
 		return null;
 	}
 	
-	/** f v1/vt1/vn1 v2/vt2/vn2 v3/vt3/vn3 ... */
+	/**
+	 * f v1/vt1/vn1 v2/vt2/vn2 v3/vt3/vn3 ...
+	 */
 	private static boolean isValidFace_V_VT_VN_Line(String line)
 	{
 		if(!line.contains("/") || !line.contains(" ")) return false;
@@ -100,7 +104,9 @@ public class Face
 		return false;
 	}
 	
-	/** f v1/vt1 v2/vt2 v3/vt3 ... */
+	/**
+	 * f v1/vt1 v2/vt2 v3/vt3 ...
+	 */
 	private static boolean isValidFace_V_VT_Line(String line)
 	{
 		if(!line.contains("/") || !line.contains(" ")) return false;
@@ -115,11 +121,15 @@ public class Face
 		return false;
 	}
 	
-	/** f v1//vn1 v2//vn2 v3//vn3 ... */
+	/**
+	 * f v1//vn1 v2//vn2 v3//vn3 ...
+	 */
 	private static boolean isValidFace_V_VN_Line(String line)
 	{ return line.contains("//") && line.contains(" "); }
 	
-	/** f v1 v2 v3 ... */
+	/**
+	 * f v1 v2 v3 ...
+	 */
 	private static boolean isValidFace_V_Line(String line)
 	{ return line.contains(" "); }
 }

@@ -11,8 +11,8 @@ public enum LMSecurityLevel
 	PRIVATE("private"),
 	FRIENDS("friends");
 	
-	public static final LMSecurityLevel[] VALUES_3 = new LMSecurityLevel[] { PUBLIC, PRIVATE, FRIENDS };
-	public static final LMSecurityLevel[] VALUES_2 = new LMSecurityLevel[] { PUBLIC, PRIVATE };
+	public static final LMSecurityLevel[] VALUES_3 = new LMSecurityLevel[] {PUBLIC, PRIVATE, FRIENDS};
+	public static final LMSecurityLevel[] VALUES_2 = new LMSecurityLevel[] {PUBLIC, PRIVATE};
 	
 	public final int ID;
 	private final String uname;

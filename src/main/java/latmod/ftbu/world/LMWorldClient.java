@@ -15,7 +15,7 @@ import java.util.*;
 public class LMWorldClient extends LMWorld // LMWorldServer
 {
 	public static LMWorldClient inst = null;
-
+	
 	public final int clientPlayerID;
 	public final File clientDataFolder;
 	public final HashMap<Integer, LMPlayerClient> playerMap;
@@ -28,7 +28,7 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 		clientDataFolder = new File(FTBLib.folderLocal, "client/" + FTBWorld.client.getWorldIDS());
 		playerMap = new HashMap<>();
 	}
-
+	
 	public HashMap<Integer, ? extends LMPlayer> playerMap()
 	{ return playerMap; }
 	
@@ -81,7 +81,7 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 		}
 		
 		settings.readFromNet(io);
-
+		
 		try { customCommonData.read(io); }
 		catch(Exception ex) {}
 	}

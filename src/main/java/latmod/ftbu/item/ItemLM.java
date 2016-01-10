@@ -14,10 +14,10 @@ import java.util.*;
 public abstract class ItemLM extends Item implements IItemLM
 {
 	private static final ArrayList<String> infoList = new ArrayList<>();
-
+	
 	public final String itemName;
 	public final List<ItemStack> itemsAdded;
-
+	
 	public boolean requiresMultipleRenderPasses = false;
 	
 	public ItemLM(String s)
@@ -39,7 +39,7 @@ public abstract class ItemLM extends Item implements IItemLM
 	
 	public final Item getItem()
 	{ return this; }
-
+	
 	public final String getItemID()
 	{ return itemName; }
 	

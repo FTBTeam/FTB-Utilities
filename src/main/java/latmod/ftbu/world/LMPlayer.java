@@ -3,7 +3,8 @@ package latmod.ftbu.world;
 import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.world.ranks.Rank;
-import latmod.lib.*;
+import latmod.lib.IntList;
+import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,15 +30,15 @@ public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer
 		friends = new IntList();
 		lastArmor = new ItemStack[5];
 	}
-
+	
 	public abstract LMWorld getWorld();
-
+	
 	public abstract Side getSide();
-
+	
 	public abstract boolean isOnline();
 	
 	public final String getStringUUID()
-	{ return LMStringUtils.fromUUID(getUUID()); }
+	{ return UUIDTypeAdapterLM.getString(getUUID()); }
 	
 	public abstract LMPlayerServer toPlayerMP();
 	

@@ -3,8 +3,8 @@ package latmod.ftbu.world;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
 import latmod.ftbu.mod.FTBU;
-import latmod.lib.LMStringUtils;
 import latmod.lib.config.ConfigGroup;
+import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
@@ -32,11 +32,11 @@ public abstract class LMWorld // FTBWorld
 		settings = new LMWorldSettings(this);
 		customCommonData = new ConfigGroup("custom_common_data");
 	}
-
+	
 	public abstract HashMap<Integer, ? extends LMPlayer> playerMap();
-
+	
 	public abstract World getMCWorld();
-
+	
 	public LMWorldServer getServerWorld()
 	{ return null; }
 	
@@ -47,9 +47,9 @@ public abstract class LMWorld // FTBWorld
 	public LMPlayer getPlayer(Object o)
 	{
 		if(o == null || o instanceof FakePlayer) return null;
-
+		
 		HashMap<Integer, ? extends LMPlayer> playerMap = playerMap();
-
+		
 		if(o instanceof Number || o instanceof LMPlayer)
 		{
 			int h = o.hashCode();
@@ -59,7 +59,7 @@ public abstract class LMWorld // FTBWorld
 		else if(o.getClass() == UUID.class)
 		{
 			UUID id = (UUID) o;
-
+			
 			for(LMPlayer p : playerMap.values())
 			{ if(p.getUUID().equals(id)) return p; }
 			
@@ -80,11 +80,11 @@ public abstract class LMWorld // FTBWorld
 			String s = o.toString();
 			
 			if(s == null || s.isEmpty()) return null;
-
+			
 			for(LMPlayer p : playerMap.values())
 			{ if(p.getName().equalsIgnoreCase(s)) return p; }
 			
-			return getPlayer(LMStringUtils.fromString(s));
+			return getPlayer(UUIDTypeAdapterLM.getUUID(s));
 		}
 		
 		return null;

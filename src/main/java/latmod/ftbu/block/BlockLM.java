@@ -43,7 +43,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	
 	@SideOnly(Side.CLIENT)
 	public abstract CreativeTabs getCreativeTabToDisplayOn();
-
+	
 	public abstract TileLM createNewTileEntity(World w, int m);
 	
 	@SuppressWarnings("unchecked")
@@ -85,7 +85,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item j, CreativeTabs c, List l)
 	{ l.addAll(blocksAdded); }
-
+	
 	public void onBlockPlacedBy(World w, int x, int y, int z, EntityLivingBase el, ItemStack is)
 	{
 		super.onBlockPlacedBy(w, x, y, z, el, is);
@@ -142,7 +142,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 		}
 		super.breakBlock(w, x, y, z, b, m);
 	}
-
+	
 	public boolean onBlockActivated(World w, int x, int y, int z, EntityPlayer ep, int s, float x1, float y1, float z1)
 	{
 		if(!isBlockContainer) return false;
@@ -153,21 +153,21 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ir)
 	{ blockIcon = ir.registerIcon(getMod().assets + getTextureName()); }
-
+	
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int s, int m)
 	{ return blockIcon; }
-
+	
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(IBlockAccess iba, int x, int y, int z, int s)
 	{ return getIcon(s, iba.getBlockMetadata(x, y, z)); }
-
+	
 	public ForgeDirection[] getValidRotations(World worldObj, int x, int y, int z)
 	{ return null; }
 	
 	public boolean rotateBlock(World w, int x, int y, int z, ForgeDirection side)
 	{ return false; }
-
+	
 	public boolean onBlockEventReceived(World w, int x, int y, int z, int eventID, int param)
 	{
 		if(isBlockContainer)
@@ -178,7 +178,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 		
 		return false;
 	}
-
+	
 	public boolean recolourBlock(World w, int x, int y, int z, ForgeDirection side, int col)
 	{
 		if(isBlockContainer)

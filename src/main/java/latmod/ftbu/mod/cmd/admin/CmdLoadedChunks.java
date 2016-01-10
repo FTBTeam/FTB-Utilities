@@ -27,7 +27,7 @@ public class CmdLoadedChunks extends CommandLM
 		for(WorldServer w : DimensionManager.getWorlds())
 		{
 			ImmutableSetMultimap<ChunkCoordIntPair, Ticket> map = ForgeChunkManager.getPersistentChunksFor(w);
-
+			
 			HashMap<String, ArrayList<ChunkCoordIntPair>> chunksMap = new HashMap<>();
 			
 			for(Ticket t : map.values())

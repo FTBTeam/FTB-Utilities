@@ -265,7 +265,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 			TileLM t = (TileLM) o;
 			return t.getDimension() == getDimension() && t.xCoord == xCoord && t.yCoord == yCoord && t.zCoord == zCoord;
 		}
-
+		
 		return false;
 	}
 	

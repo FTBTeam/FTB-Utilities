@@ -98,7 +98,7 @@ public class StackArray implements IStackArray
 				if(f.fluid.getFluid() == fs.getFluid() && f.fluid.amount >= fs.amount && f.filledContainer != null)
 					list.add(f.filledContainer.copy());
 			}
-
+			
 			return list;
 		}
 		else if(o instanceof Fluid) return getItems(new FluidStack((Fluid) o, 1000));
@@ -127,7 +127,7 @@ public class StackArray implements IStackArray
 			int dmg2 = is1.getItemDamage();
 			return dmg1 == dmg2 || dmg2 == ODItems.ANY;// || dmg1 == ODItems.ANY;
 		}
-
+		
 		return false;
 	}
 	

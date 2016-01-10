@@ -19,7 +19,7 @@ public class CmdSpawn extends CommandLM
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		World w = LMDimUtils.getWorld(0);
 		ChunkCoordinates spawnpoint = w.getSpawnPoint();
-
+		
 		while(w.getBlock(spawnpoint.posX, spawnpoint.posY, spawnpoint.posZ).isOpaqueCube()) spawnpoint.posY++;
 		
 		LMDimUtils.teleportPlayer(ep, new EntityPos(spawnpoint, 0));

@@ -110,7 +110,7 @@ public class FTBUActions
 	{
 		LMPlayerClient o = LMWorldClient.inst.getClientPlayer();
 		boolean self = o.equalsPlayer(p);
-
+		
 		ArrayList<PlayerAction> list = new ArrayList<>();
 		
 		if(self)

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class LMRecipes
 {
 	public static final LMRecipes defaultInstance = new LMRecipes();
-
+	
 	public static boolean enableOreRecipes = true;
 	
 	public static ItemStack size(ItemStack is, int s)
@@ -101,7 +101,7 @@ public class LMRecipes
 	
 	public void addSmelting(ItemStack out, ItemStack in)
 	{ addSmelting(out, in, 0F); }
-
+	
 	public void loadRecipes()
 	{
 	}

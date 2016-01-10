@@ -16,22 +16,23 @@ import latmod.ftbu.world.*;
 import latmod.ftbu.world.ranks.Ranks;
 import latmod.lib.*;
 import latmod.lib.util.Phase;
+import net.minecraft.command.server.CommandSaveOn;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 import java.io.File;
-import java.util.*;
+import java.util.List;
 
 public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 {
 	public long nextChunkloaderUpdate = 0L;
-
+	
 	public void onReloaded(EventFTBReload e)
 	{
 		FTBUConfigGeneral.onReloaded(e.world.side);
-
+		
 		if(e.world.side.isServer())
 		{
 			if(LMWorldServer.inst == null) return;
@@ -44,20 +45,24 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 			ServerGuideFile.CachedInfo.reload();
 			Ranks.reload();
 			ServerBadges.reload();
-
-			if(FTBLib.getServerWorld() != null) FTBUChunkEventHandler.instance.markDirty(null);
+			
+			if(FTBLib.getServerWorld() != null)
+			{
+				FTBUChunkEventHandler.instance.markDirty(null);
+				ServerBadges.sendToPlayer(null);
+			}
 		}
 		else FTBU.proxy_ftbl_int.onReloadedClient(e);
 	}
-
+	
 	public void onFTBWorldServer(EventFTBWorldServer e)
 	{
 		File latmodFolder = new File(FTBLib.folderWorld, "LatMod/");
 		File file = new File(latmodFolder, "LMWorld.dat");
-
+		
 		LMWorldServer.inst = new LMWorldServer(latmodFolder);
 		JsonElement obj = JsonNull.INSTANCE;
-
+		
 		if(file.exists())
 		{
 			NBTTagCompound tagWorldData = LMNBTUtils.readMap(file);
@@ -70,39 +75,39 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 			obj = LMJsonUtils.getJsonElement(file);
 			if(obj.isJsonObject()) LMWorldServer.inst.load(obj.getAsJsonObject(), Phase.PRE);
 		}
-
+		
 		new EventLMWorldServer.Loaded(LMWorldServer.inst, Phase.PRE).post();
-
+		
 		NBTTagCompound tagPlayers = LMNBTUtils.readMap(new File(latmodFolder, "LMPlayers.dat"));
 		if(tagPlayers != null && tagPlayers.hasKey("Players"))
 		{
 			LMPlayerServer.lastPlayerID = tagPlayers.getInteger("LastID");
 			LMWorldServer.inst.readPlayersFromServer(tagPlayers.getCompoundTag("Players"));
 		}
-
+		
 		for(LMPlayerServer p : LMWorldServer.inst.playerMap.values())
 			p.setPlayer(null);
-
+		
 		if(obj.isJsonObject()) LMWorldServer.inst.load(obj.getAsJsonObject(), Phase.POST);
-
+		
 		file = new File(latmodFolder, "ClaimedChunks.json");
-
+		
 		if(file.exists())
 		{
 			obj = LMJsonUtils.getJsonElement(file);
 			if(obj.isJsonObject()) LMWorldServer.inst.claimedChunks.load(obj.getAsJsonObject());
 		}
-
+		
 		new EventLMWorldServer.Loaded(LMWorldServer.inst, Phase.POST).post();
-
+		
 		nextChunkloaderUpdate = LMUtils.millis() + 10000L;
 	}
-
+	
 	public void onFTBWorldClient(EventFTBWorldClient e)
 	{
 		FTBU.proxy_ftbl_int.onFTBWorldClient(e);
 	}
-
+	
 	public void onFTBWorldServerClosed()
 	{
 		LMWorldServer.inst.close();
@@ -114,12 +119,31 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 		if(w.provider.dimensionId == 0)
 		{
 			FTBUTicks.update();
-
+			
 			long now = LMUtils.millis();
 			if(nextChunkloaderUpdate < now)
 			{
 				nextChunkloaderUpdate = now + 300000L;
 				FTBUChunkEventHandler.instance.markDirty(null);
+			}
+			
+			if(Backups.shouldKillThread)
+			{
+				Backups.shouldKillThread = false;
+				boolean wasBackup = Backups.thread instanceof ThreadBackup;
+				Backups.thread = null;
+				
+				if(wasBackup)
+				{
+					try
+					{
+						new CommandSaveOn().processCommand(FTBLib.getServer(), new String[0]);
+					}
+					catch(Exception ex)
+					{
+						ex.printStackTrace();
+					}
+				}
 			}
 		}
 	}
@@ -130,7 +154,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 		
 		boolean first = (p == null);
 		boolean sendAll = false;
-
+		
 		if(first)
 		{
 			p = new LMPlayerServer(LMWorldServer.inst, LMPlayerServer.nextPlayerID(), ep.getGameProfile());
@@ -142,7 +166,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 			p.gameProfile = ep.getGameProfile();
 			sendAll = true;
 		}
-
+		
 		p.setPlayer(ep);
 		p.refreshStats();
 		
@@ -165,8 +189,8 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 		//if(first) teleportToSpawn(ep);
 		p.checkNewFriends();
 		new MessageAreaUpdate(p, p.getPos(), 3, 3).sendTo(ep);
-		new MessageUpdateBadges(Collections.EMPTY_SET).sendTo(null);
-
+		ServerBadges.sendToPlayer(ep);
+		
 		FTBUChunkEventHandler.instance.markDirty(null);
 	}
 	
@@ -175,14 +199,14 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 	
 	public String[] getPlayerNames(boolean online)
 	{ return LMWorldServer.inst.getAllPlayerNames(Boolean.valueOf(online)); }
-
+	
 	public void writeWorldData(ByteIOStream io, EntityPlayerMP ep)
 	{
 		int id = getPlayerID(ep);
 		io.writeInt(id);
 		LMWorldServer.inst.writeDataToNet(io, id);
 	}
-
+	
 	public void readWorldData(ByteIOStream io)
 	{ FTBU.proxy_ftbl_int.readWorldData(io); }
 }

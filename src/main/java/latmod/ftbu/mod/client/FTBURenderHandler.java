@@ -26,25 +26,25 @@ public class FTBURenderHandler
 	{
 		if(!LatCoreMCClient.isPlaying()) return;
 		LMFrustrumUtils.update();
-
+		
 		if(!LMWorldClient.inst.settings.border_enabled.get()) return;
-
+		
 		WorldBorder wb = LMWorldClient.inst.settings.getWB(LMFrustrumUtils.currentDim);
 		int s = wb.getSize();
 		if(s <= 0) return;
-
+		
 		double minX = (MathHelperLM.chunk(-s + wb.pos.x) + 1D) * 16D + 0.01D;
 		double maxX = MathHelperLM.chunk(s + wb.pos.x) * 16D - 0.01D;
 		double minZ = (MathHelperLM.chunk(-s + wb.pos.y) + 1D) * 16D + 0.01D;
 		double maxZ = MathHelperLM.chunk(s + wb.pos.y) * 16D - 0.01D;
-
+		
 		double rd = 32D;
 		
 		boolean renderWest = LMFrustrumUtils.playerX <= minX + rd;
 		boolean renderEast = LMFrustrumUtils.playerX >= maxX - rd;
 		boolean renderNorth = LMFrustrumUtils.playerZ <= minZ + rd;
 		boolean renderSouth = LMFrustrumUtils.playerZ >= maxZ - rd;
-
+		
 		GlStateManager.pushAttrib();
 		GlStateManager.enableBlend();
 		GlStateManager.disableLighting();
@@ -57,7 +57,7 @@ public class FTBURenderHandler
 		FTBLibClient.setTexture(world_border_tex);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
-
+		
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(-LMFrustrumUtils.renderX, -LMFrustrumUtils.renderY, -LMFrustrumUtils.renderZ);
 		
@@ -93,7 +93,7 @@ public class FTBURenderHandler
 			GlStateManager.color(1F, 1F, 1F, maxA - (float) ((maxZ - LMFrustrumUtils.playerZ) * maxA / rd));
 			worldBorderRenderer.renderSouth();
 		}
-
+		
 		GlStateManager.popMatrix();
 		GlStateManager.shadeModel(GL11.GL_FLAT);
 		FTBLibClient.popMaxBrightness();

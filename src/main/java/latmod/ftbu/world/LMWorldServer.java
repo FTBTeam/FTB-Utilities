@@ -9,6 +9,7 @@ import latmod.ftbu.net.MessageLMWorldUpdate;
 import latmod.ftbu.world.claims.*;
 import latmod.lib.*;
 import latmod.lib.config.ConfigGroup;
+import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.util.Phase;
 import net.minecraft.nbt.*;
 import net.minecraft.world.World;
@@ -20,7 +21,7 @@ import java.util.*;
 public class LMWorldServer extends LMWorld // LMWorldClient
 {
 	public static LMWorldServer inst = null;
-
+	
 	public final File latmodFolder;
 	public final HashMap<Integer, LMPlayerServer> playerMap;
 	public final Warps warps;
@@ -39,7 +40,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		fakePlayer = new LMFakeServerPlayer(this);
 		customServerData = new ConfigGroup("custom_server_data");
 	}
-
+	
 	public HashMap<Integer, ? extends LMPlayer> playerMap()
 	{ return playerMap; }
 	
@@ -48,7 +49,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	
 	public LMWorldServer getServerWorld()
 	{ return this; }
-
+	
 	public void close()
 	{
 		playerMap.clear();
@@ -61,7 +62,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		LMPlayer p = super.getPlayer(o);
 		return (p == null) ? null : p.toPlayerMP();
 	}
-
+	
 	public void load(NBTTagCompound tag)
 	{
 		warps.readFromNBT(tag, "Warps");
@@ -103,7 +104,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 			IntList onlinePlayers = new IntList();
 			
 			io.writeInt(playerMap.size());
-
+			
 			for(LMPlayerServer p : playerMap.values())
 			{
 				io.writeInt(p.playerID);
@@ -123,7 +124,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		}
 		
 		settings.writeToNet(io);
-
+		
 		try { customCommonData.write(io); }
 		catch(Exception ex) { }
 	}
@@ -133,7 +134,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		for(LMPlayerServer p : LMMapUtils.values(playerMap, null))
 		{
 			NBTTagCompound tag1 = new NBTTagCompound();
-
+			
 			p.writeToServer(tag1);
 			new EventLMPlayerServer.DataSaved(p).post();
 			tag1.setString("UUID", p.getStringUUID());
@@ -145,14 +146,14 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	public void readPlayersFromServer(NBTTagCompound tag)
 	{
 		playerMap.clear();
-
+		
 		Map<String, NBTTagCompound> map = LMNBTUtils.toMapWithType(tag);
 		
 		for(Map.Entry<String, NBTTagCompound> e : map.entrySet())
 		{
 			int id = Integer.parseInt(e.getKey());
 			NBTTagCompound tag1 = e.getValue();
-			LMPlayerServer p = new LMPlayerServer(this, id, new GameProfile(LMStringUtils.fromString(tag1.getString("UUID")), tag1.getString("Name")));
+			LMPlayerServer p = new LMPlayerServer(this, id, new GameProfile(UUIDTypeAdapterLM.getUUID(tag1.getString("UUID")), tag1.getString("Name")));
 			p.readFromServer(tag1);
 			
 			//TODO: Remove me after few updates
@@ -167,17 +168,17 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 					claimedChunks.put(new ClaimedChunk(p.playerID, ai[0], ai[1], ai[2]));
 				}
 			}
-
+			
 			playerMap.put(p.playerID, p);
 		}
-
+		
 		for(LMPlayerServer p : playerMap.values())
 			p.onPostLoaded();
 	}
 	
 	public void update()
 	{ new MessageLMWorldUpdate(this).sendTo(null); }
-
+	
 	public List<LMPlayerServer> getAllOnlinePlayers()
 	{
 		ArrayList<LMPlayerServer> l = new ArrayList<>();
@@ -185,12 +186,12 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		{ if(p.isOnline()) l.add(p); }
 		return l;
 	}
-
+	
 	public String[] getAllPlayerNames(Boolean online)
 	{
 		if(online == null) return new String[0];
 		List<LMPlayerServer> list = (online == Boolean.TRUE) ? getAllOnlinePlayers() : LMListUtils.clone(playerMap.values());
-
+		
 		Collections.sort(list, new Comparator<LMPlayerServer>()
 		{
 			public int compare(LMPlayerServer o1, LMPlayerServer o2)
@@ -199,7 +200,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 				return Boolean.compare(o2.isOnline(), o1.isOnline());
 			}
 		});
-
+		
 		return LMListUtils.toStringArray(list);
 	}
 }

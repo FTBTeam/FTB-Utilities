@@ -148,7 +148,7 @@ public class RenderBlocksCustom extends RenderBlocks
 		else if(f == 4) renderFaceXNeg(b, x, y, z, icon);
 		else if(f == 5) renderFaceXPos(b, x, y, z, icon);
 	}
-
+	
 	public void renderBlockAsItemByRenderType(Block b, int metadata)
 	{ super.renderBlockAsItem(b, metadata, 1F); }
 	

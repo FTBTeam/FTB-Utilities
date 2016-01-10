@@ -46,10 +46,10 @@ public class ThreadReloadArea extends Thread
 					{
 						chunkMC = worldObj.getChunkFromChunkCoords(gui.startX, gui.startY);
 						maxHeight = (short) Math.max(255, chunkMC.getTopFilledSegment() + 15);
-
+						
 						int x = (gui.startX + cx) * 16;
 						int y = (gui.startY + cz) * 16;
-
+						
 						for(int i = 0; i < 256; i++)
 						{
 							int bx = x + (i % 16);
@@ -122,7 +122,7 @@ public class ThreadReloadArea extends Thread
 		{
 			Block block = c.getBlock(x, y, z);
 			if(block == Blocks.tallgrass || block.isAir(worldObj, bx, y, bz)) continue;
-
+			
 			if(mapValue) heightMap[x + z * 16] = y;
 			return y;
 		}

@@ -97,7 +97,7 @@ public class LMMod
 		logger = LogManager.getLogger(modID);
 		recipes = LMRecipes.defaultInstance;
 	}
-
+	
 	public ModContainer getModContainer()
 	{
 		if(modContainer == null) modContainer = Loader.instance().getModObjectList().inverse().get(modID);
@@ -147,13 +147,13 @@ public class LMMod
 		LatCoreMC.addItem((Item) i, i.getItemID());
 		items.add(i);
 	}
-
+	
 	public void addBlock(IBlockLM b)
 	{
 		LatCoreMC.addBlock((Block) b, b.getItemBlock(), b.getItemID());
 		blocks.add(b);
 	}
-
+	
 	public void addTile(Class<? extends TileLM> c, String s, String... alt)
 	{ LatCoreMC.addTileEntity(c, modID + '.' + s, alt); }
 	

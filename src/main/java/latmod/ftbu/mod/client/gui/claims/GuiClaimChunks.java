@@ -235,7 +235,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 12, 0xFFFFFFFF);
 		s = FTBU.mod.translateClient("label.lchunks_count", (playerLM.loadedChunks + " / " + playerLM.getRank().config.max_loaded_chunks.get()));
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 24, 0xFFFFFFFF);
-
+		
 		super.drawText(l);
 	}
 	
@@ -256,7 +256,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			{
 				int cx = x + startX;
 				int cy = y + startY;
-
+				
 				ChunkType type = getType(cx, cy);
 				if(type.drawGrid())
 				{
@@ -264,9 +264,9 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 					boolean b = type.equals(getType(cx + 1, cy));
 					boolean c = type.equals(getType(cx, cy + 1));
 					boolean d = type.equals(getType(cx - 1, cy));
-
+					
 					TextureCoords tc = tex_area_coords[a ? 1 : 0][b ? 1 : 0][c ? 1 : 0][d ? 1 : 0];
-
+					
 					FTBLibClient.setGLColor(type.getAreaColor(playerLM), 255);
 					GuiLM.drawTexturedRectD(guiLeft + x * 16, guiTop + y * 16, zLevel, 16, 16, tc.minU, tc.minV, tc.maxU, tc.maxV);
 				}

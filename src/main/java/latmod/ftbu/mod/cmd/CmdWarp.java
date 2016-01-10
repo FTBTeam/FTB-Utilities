@@ -26,6 +26,13 @@ public class CmdWarp extends CommandLM
 	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
+		if(args[0].equals("list"))
+		{
+			String[] list = LMWorldServer.inst.warps.list();
+			if(list.length == 0) return new ChatComponentText("-");
+			return new ChatComponentText(joinNiceString(list));
+		}
+		
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		EntityPos p = LMWorldServer.inst.warps.get(args[0]);
 		if(p == null) return error(new ChatComponentTranslation(FTBU.mod.assets + "cmd.warp_not_set", args[0]));

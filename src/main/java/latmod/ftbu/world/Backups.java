@@ -1,9 +1,11 @@
 package latmod.ftbu.world;
 
-import ftb.lib.FTBLib;
+import ftb.lib.*;
 import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.mod.config.FTBUConfigBackups;
 import latmod.lib.LMFileUtils;
+import net.minecraft.command.server.*;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.*;
 
@@ -19,6 +21,7 @@ public class Backups
 	public static boolean shouldRun = false;
 	public static Thread thread;
 	public static boolean commandOverride = false;
+	public static boolean shouldKillThread = false;
 	
 	public static void init()
 	{
@@ -39,6 +42,14 @@ public class Backups
 		if(w == null) return false;
 		shouldRun = false;
 		thread = new ThreadBackup(w);
+		lastTimeRun = ((ThreadBackup) thread).calendar.millis;
+		FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Starting server backup, expect lag!");
+		try
+		{
+			new CommandSaveOff().processCommand(FTBLib.getServer(), new String[0]);
+			new CommandSaveAll().processCommand(FTBLib.getServer(), new String[] {"flush"});
+		}
+		catch(Exception e) { }
 		thread.start();
 		return true;
 	}

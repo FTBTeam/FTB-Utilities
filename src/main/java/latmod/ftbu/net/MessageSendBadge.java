@@ -9,7 +9,7 @@ import latmod.lib.ByteCount;
 public class MessageSendBadge extends MessageFTBU
 {
 	public MessageSendBadge() { super(ByteCount.BYTE); }
-
+	
 	public MessageSendBadge(int player, String id)
 	{
 		this();

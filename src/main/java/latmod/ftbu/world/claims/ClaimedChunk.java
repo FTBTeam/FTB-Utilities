@@ -22,17 +22,17 @@ public final class ClaimedChunk extends ChunkCoordIntPair
 	
 	public ClaimedChunk(EntityPlayer ep)
 	{ this(LMWorldServer.inst.getPlayer(ep).playerID, ep.dimension, MathHelperLM.chunk(ep.posX), MathHelperLM.chunk(ep.posZ)); }
-
+	
 	public Long getLongPos()
 	{ return Long.valueOf(Bits.intsToLong(chunkXPos, chunkZPos)); }
-
+	
 	public LMPlayerServer getOwnerS()
 	{ return LMWorldServer.inst.getPlayer(ownerID); }
-
+	
 	@SideOnly(Side.CLIENT)
 	public LMPlayerClient getOwnerC()
 	{ return LMWorldClient.inst.getPlayer(ownerID); }
-
+	
 	public boolean equals(Object o)
 	{ return o != null && (o == this || (o.getClass() == ClaimedChunk.class && equalsChunk((ClaimedChunk) o))); }
 	

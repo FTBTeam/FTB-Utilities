@@ -10,7 +10,7 @@ public class WailaLMTile extends BasicWailaHandler
 {
 	public WailaLMTile(EventRegisterWaila e, WailaType... t)
 	{ super(e, t); }
-
+	
 	public ItemStack getWailaStack(WailaDataAccessor data)
 	{
 		if(data.tile != null && !data.tile.isInvalid() && data.tile instanceof IWailaTile.Stack)

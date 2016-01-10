@@ -15,7 +15,7 @@ import net.minecraftforge.event.entity.player.*;
 public class FTBUClientEventHandler
 {
 	public static final FTBUClientEventHandler instance = new FTBUClientEventHandler();
-
+	
 	@SubscribeEvent
 	public void onTooltip(ItemTooltipEvent e)
 	{

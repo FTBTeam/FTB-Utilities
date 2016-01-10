@@ -33,6 +33,7 @@ public class CmdHome extends CommandLM
 			FTBLib.printChat(ics, "/home set <ID>");
 			FTBLib.printChat(ics, "/home del <ID>");
 			FTBLib.printChat(ics, "/home ren <ID> <NewID>");
+			FTBLib.printChat(ics, "/home list");
 			return null;
 		}
 		
@@ -57,17 +58,24 @@ public class CmdHome extends CommandLM
 			if(p.homes.rem(args[1])) return new ChatComponentTranslation(FTBUFinals.ASSETS + "cmd.home_del", args[1]);
 			return error(new ChatComponentTranslation(FTBUFinals.ASSETS + "cmd.home_not_set", args[1]));
 		}
-
+		
 		if(args[0].equals("ren"))
 		{
 			checkArgs(args, 3);
 			EntityPos pos = p.homes.get(args[1]);
 			if(pos == null) return error(new ChatComponentTranslation(FTBUFinals.ASSETS + "cmd.home_not_set", args[0]));
-
+			
 			pos = pos.clone();
 			p.homes.rem(args[1]);
 			p.homes.set(args[2], pos);
 			return new ChatComponentText(args[1] + " => " + args[2]);
+		}
+		
+		if(args[0].equals("list"))
+		{
+			String[] list = p.homes.list();
+			if(list.length == 0) return new ChatComponentText("-");
+			return new ChatComponentText(joinNiceString(list));
 		}
 		
 		EntityPos pos = p.homes.get(args[0]);

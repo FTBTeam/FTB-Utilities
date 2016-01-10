@@ -49,7 +49,7 @@ public class TileInvLM extends TileLM implements IInventory
 	{ return customName != null; }
 	
 	public void openInventory() { }
-
+	
 	public void closeInventory() { }
 	
 	public ItemStack decrStackSize(int i, int j)

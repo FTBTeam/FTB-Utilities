@@ -14,7 +14,7 @@ public class CmdSetWarp extends CommandLM
 	
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <ID> [x] [y] [z]"; }
-
+	
 	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);

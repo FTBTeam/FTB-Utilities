@@ -15,7 +15,7 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 		public boolean remove(GuideCategory c)
 		{ return c.subcategories.isEmpty() && c.getUnformattedText().trim().isEmpty(); }
 	};
-
+	
 	public GuideCategory parent = null;
 	private IChatComponent title;
 	private ArrayList<IChatComponent> text;
@@ -99,7 +99,7 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 	
 	public int compareTo(GuideCategory o)
 	{ return toString().compareToIgnoreCase(o.toString()); }
-
+	
 	public void clear()
 	{
 		text.clear();
@@ -168,10 +168,10 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 		for(GuideCategory c : subcategories)
 			c.cleanup();
 	}
-
+	
 	public void copyFrom(GuideCategory c)
 	{ for(int i = 0; i < c.subcategories.size(); i++) addSub(c.setParent(this)); }
-
+	
 	public GuideCategory getParentTop()
 	{
 		if(parent == null) return this;

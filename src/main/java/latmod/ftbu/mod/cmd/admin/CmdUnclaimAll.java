@@ -12,7 +12,7 @@ public class CmdUnclaimAll extends CommandLM
 	
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <player | @a>"; }
-
+	
 	public Boolean getUsername(String[] args, int i)
 	{ return (i == 0) ? Boolean.FALSE : null; }
 	

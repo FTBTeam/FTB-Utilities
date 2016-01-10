@@ -26,7 +26,7 @@ public class ItemBlockLM extends ItemBlock
 		
 		blockLM = (BlockLM) b;
 	}
-
+	
 	public int getMetadata(int m)
 	{ return m; }
 	
@@ -101,7 +101,7 @@ public class ItemBlockLM extends ItemBlock
 			y += Facing.offsetsYForSide[s];
 			z += Facing.offsetsZForSide[s];
 		}
-
+		
 		return b.getMaterial() != Material.air && w.canPlaceEntityOnSide(b, x, y, z, false, s, null, is.copy());
 	}
 	

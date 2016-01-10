@@ -11,7 +11,7 @@ public class LMPlayerClientSelf extends LMPlayerClient
 	private Rank rank;
 	public int claimedChunks;
 	public int loadedChunks;
-
+	
 	public LMPlayerClientSelf(LMWorldClient w, int i, GameProfile gp)
 	{
 		super(w, i, gp);
@@ -19,13 +19,13 @@ public class LMPlayerClientSelf extends LMPlayerClient
 		settings = new PersonalSettings(this);
 		rank = null;
 	}
-
+	
 	public LMPlayerClientSelf toPlayerSPSelf()
 	{ return this; }
 	
 	public PersonalSettings getSettings()
 	{ return settings; }
-
+	
 	public Rank getRank()
 	{
 		if(rank == null) rank = new Rank("Client");
@@ -43,7 +43,7 @@ public class LMPlayerClientSelf extends LMPlayerClient
 			commonPrivateData = LMNBTUtils.readTag(io);
 			claimedChunks = io.readUnsignedShort();
 			loadedChunks = io.readUnsignedShort();
-
+			
 			rank = new Rank(io.readUTF());
 			try { rank.readFromIO(io); }
 			catch(Exception ex) { }

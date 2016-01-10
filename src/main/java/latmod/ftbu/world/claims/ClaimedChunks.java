@@ -6,6 +6,7 @@ import ftb.lib.item.LMInvUtils;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
+import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.util.EnumEnabled;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.*;
@@ -20,7 +21,7 @@ public class ClaimedChunks
 	
 	public ClaimedChunks()
 	{ chunks = new HashMap<>(); }
-
+	
 	public List<ClaimedChunk> getAllChunks()
 	{
 		ArrayList<ClaimedChunk> l = new ArrayList<>();
@@ -32,7 +33,7 @@ public class ClaimedChunks
 	public void load(NBTTagCompound tag)
 	{
 		chunks.clear();
-
+		
 		Map<String, NBTTagCompound> tag1 = LMNBTUtils.toMapWithType(tag.getCompoundTag("ClaimedChunks"));
 		
 		for(Map.Entry<String, NBTTagCompound> e : tag1.entrySet())
@@ -40,7 +41,7 @@ public class ClaimedChunks
 			try
 			{
 				int dim = Integer.parseInt(e.getKey());
-
+				
 				HashMap<Long, ClaimedChunk> map = new HashMap<>();
 				
 				Map<String, NBTTagList> tag2 = LMNBTUtils.toMapWithType(e.getValue());
@@ -72,23 +73,23 @@ public class ClaimedChunks
 		for(Map.Entry<String, JsonElement> e : group.entrySet())
 		{
 			int dim = Integer.parseInt(e.getKey());
-
+			
 			HashMap<Long, ClaimedChunk> map = new HashMap<>();
 			
 			for(Map.Entry<String, JsonElement> e1 : e.getValue().getAsJsonObject().entrySet())
 			{
 				try
 				{
-					LMPlayerServer p = LMWorldServer.inst.getPlayer(LMStringUtils.fromString(e1.getKey()));
-
+					LMPlayerServer p = LMWorldServer.inst.getPlayer(UUIDTypeAdapterLM.getUUID(e1.getKey()));
+					
 					if(p != null)
 					{
 						JsonArray chunksList = e1.getValue().getAsJsonArray();
-
+						
 						for(int k = 0; k < chunksList.size(); k++)
 						{
 							int[] ai = LMJsonUtils.fromArray(chunksList.get(k));
-
+							
 							if(ai != null)
 							{
 								ClaimedChunk c = new ClaimedChunk(p.playerID, dim, ai[0], ai[1]);
@@ -112,11 +113,11 @@ public class ClaimedChunks
 	{
 		Comparator<Map.Entry<Integer, HashMap<Long, ClaimedChunk>>> comparator = LMMapUtils.byKeyNumbers();
 		Comparator<Map.Entry<Long, ClaimedChunk>> comparator2 = LMMapUtils.byKeyNumbers();
-
+		
 		for(Map.Entry<Integer, HashMap<Long, ClaimedChunk>> e : LMMapUtils.sortedEntryList(chunks, comparator))
 		{
 			JsonObject o1 = new JsonObject();
-
+			
 			for(ClaimedChunk c : LMMapUtils.values(e.getValue(), comparator2))
 			{
 				LMPlayerServer p = c.getOwnerS();
@@ -185,14 +186,14 @@ public class ClaimedChunks
 		if(map != null)
 		{
 			ClaimedChunk chunk = map.remove(Long.valueOf(Bits.intsToLong(cx, cz)));
-
+			
 			if(chunk != null)
 			{
 				if(map.isEmpty()) chunks.remove(Integer.valueOf(dim));
 				return chunk;
 			}
 		}
-
+		
 		return null;
 	}
 	

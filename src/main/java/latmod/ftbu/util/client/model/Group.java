@@ -23,7 +23,7 @@ public class Group
 	{
 		parent = m;
 		groupName = s;
-
+		
 		faces = new ArrayList<>();
 		pos = new Vector3f();
 		rotation = new Vector3f();

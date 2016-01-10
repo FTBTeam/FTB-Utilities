@@ -59,7 +59,7 @@ public class CmdBackup extends CommandSubLM
 		
 		public IChatComponent onCommand(final ICommandSender ics, String[] args) throws CommandException
 		{
-			if(Backups.thread != null) return error(new ChatComponentText("Backup in progress!"));
+			if(Backups.thread != null) return error(new ChatComponentText("Backup process already running!"));
 			Backups.thread = new Thread("LM_Backups_delete")
 			{
 				public void run()
@@ -67,7 +67,7 @@ public class CmdBackup extends CommandSubLM
 					LMFileUtils.delete(Backups.backupsFolder);
 					Backups.backupsFolder.mkdirs();
 					FTBLib.printChat(ics, "Done!");
-					Backups.thread = null;
+					Backups.shouldKillThread = true;
 				}
 			};
 			

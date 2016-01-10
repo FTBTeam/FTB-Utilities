@@ -20,7 +20,7 @@ public class ShapelessStackArray implements IStackArray
 	{
 		if(items == null || ai == null) return false;
 		if(items.length != ai.length) return false;
-
+		
 		List<StackArray> itemsList = Arrays.asList(items);
 		
 		for(int i = 0; i < ai.length; i++)

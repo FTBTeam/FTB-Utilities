@@ -26,7 +26,7 @@ public enum ClientAction
 					{
 						LMPlayerServer p = owner.world.getPlayer(extra);
 						if(p == null || p.equalsPlayer(owner)) return false;
-
+						
 						if(!owner.friends.contains(p.playerID))
 						{
 							owner.friends.add(p.playerID);
@@ -48,7 +48,7 @@ public enum ClientAction
 							}
 						}
 					}
-
+					
 					return true;
 				}
 			},
@@ -59,7 +59,7 @@ public enum ClientAction
 				{
 					LMPlayerServer p = owner.world.getPlayer(extra);
 					if(p == null || p.equalsPlayer(owner)) return false;
-
+					
 					if(owner.friends.contains(p.playerID))
 					{
 						owner.friends.removeValue(p.playerID);
@@ -67,7 +67,7 @@ public enum ClientAction
 						p.sendUpdate();
 						p.checkNewFriends();
 					}
-
+					
 					return true;
 				}
 			},
@@ -78,14 +78,14 @@ public enum ClientAction
 				{
 					LMPlayerServer p = owner.world.getPlayer(extra);
 					if(p == null || p.equalsPlayer(owner)) return false;
-
+					
 					if(p.friends.contains(owner.playerID))
 					{
 						p.friends.removeValue(owner.playerID);
 						owner.sendUpdate();
 						p.sendUpdate();
 					}
-
+					
 					return true;
 				}
 			},
@@ -107,7 +107,7 @@ public enum ClientAction
 					return false;
 				}
 			},
-
+	
 	REQUEST_SELF_UPDATE
 			{
 				public boolean onAction(int extra, LMPlayerServer owner)
@@ -116,7 +116,7 @@ public enum ClientAction
 					return false;
 				}
 			},
-
+	
 	REQUEST_BADGE
 			{
 				public boolean onAction(int extra, LMPlayerServer owner)
@@ -125,7 +125,7 @@ public enum ClientAction
 					return false;
 				}
 			},
-
+	
 	BUTTON_RENDER_BADGE
 			{
 				public boolean onAction(int extra, LMPlayerServer owner)
@@ -134,7 +134,7 @@ public enum ClientAction
 					return true;
 				}
 			},
-
+	
 	BUTTON_CHAT_LINKS
 			{
 				public boolean onAction(int extra, LMPlayerServer owner)
@@ -143,14 +143,13 @@ public enum ClientAction
 					return true;
 				}
 			},
-
+	
 	BUTTON_CLAIMED_CHUNKS_SETTINGS
 			{
 				public boolean onAction(int extra, final LMPlayerServer owner)
 				{
 					final PersonalSettings settings = LMWorldClient.inst.clientPlayer.getSettings();
-
-					ConfigGroup group = new ConfigGroup("claims_config_" + owner.getName())
+					final ConfigGroup group = new ConfigGroup("claims_config_" + owner.getName())
 					{
 						public void onLoadedFromGroup(ConfigGroup g)
 						{
@@ -158,42 +157,51 @@ public enum ClientAction
 							if(FTBLibFinals.DEV) FTBLib.dev_logger.info("claimed chunks settings loaded from " + g);
 						}
 					};
-
+					
 					group.add(new ConfigEntryBool("explosions", settings.explosions)
 					{
 						public boolean get()
 						{ return settings.explosions; }
-
+						
 						public void set(boolean v)
 						{ settings.explosions = v; }
 					}, false);
-
+					
 					group.add(new ConfigEntryEnum<LMSecurityLevel>("security_level", LMSecurityLevel.class, LMSecurityLevel.VALUES_3, settings.blocks, false)
 					{
 						public LMSecurityLevel get()
 						{ return settings.blocks; }
-
+						
 						public void set(Object v)
 						{
 							settings.blocks = (LMSecurityLevel) v;
 							owner.sendUpdate();
 						}
 					}, false);
-
+					
 					group.add(new ConfigEntryBool("fake_players", settings.fakePlayers)
 					{
 						public boolean get()
 						{ return settings.fakePlayers; }
-
+						
 						public void set(boolean v)
 						{
 							settings.fakePlayers = v;
 							owner.sendUpdate();
 						}
 					}, false);
-
-					ConfigRegistry.putTemp(group);
-					new MessageEditConfig(LMAccessToken.generate(owner.getPlayer()), true, group).sendTo(owner.getPlayer());
+					
+					ConfigRegistry.Provider provider = new ConfigRegistry.Provider()
+					{
+						public String getID()
+						{ return group.ID; }
+						
+						public ConfigGroup getGroup()
+						{ return group; }
+					};
+					
+					ConfigRegistry.tempMap.put(provider.getID(), provider);
+					new MessageEditConfig(LMAccessToken.generate(owner.getPlayer()), true, provider).sendTo(owner.getPlayer());
 					return false;
 				}
 			},

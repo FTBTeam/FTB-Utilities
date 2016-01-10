@@ -41,7 +41,7 @@ public class WailaDataProvider implements IWailaDataProvider
 	
 	public List<String> getWailaTail(ItemStack is, List<String> l, IWailaDataAccessor data, IWailaConfigHandler config)
 	{ return handler.getWailaTail(is, l, getData(data)); }
-
+	
 	public NBTTagCompound getNBTData(EntityPlayerMP ep, TileEntity te, NBTTagCompound tag, World w, int x, int y, int z)
 	{ return null; }
 }

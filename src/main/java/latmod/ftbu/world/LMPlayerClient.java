@@ -18,7 +18,7 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 	public final LMWorldClient world;
 	public final List<IChatComponent> clientInfo;
 	public boolean isOnline;
-
+	
 	public LMPlayerClient(LMWorldClient w, int i, GameProfile gp)
 	{
 		super(i, gp);
@@ -64,6 +64,7 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 	public void readFromNet(ByteIOStream io, boolean self)
 	{
 		isOnline = io.readBoolean();
+		renderBadge = io.readBoolean();
 		
 		friends.clear();
 		friends.addAll(io.readIntArray(ByteCount.SHORT));

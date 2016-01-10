@@ -30,7 +30,7 @@ public final class LatCoreMC // LatCoreMCClient
 	
 	public static void addBlock(Block b, String name)
 	{ addBlock(b, ItemBlock.class, name); }
-
+	
 	public static void addTileEntity(Class<? extends TileEntity> c, String s, String... alt)
 	{
 		if(alt == null || alt.length == 0) GameRegistry.registerTileEntity(c, s);

@@ -9,12 +9,12 @@ public class Ranks
 {
 	public static final Rank PLAYER = new Rank("Player");
 	public static final Rank ADMIN = new Rank("Admin");
-
+	
 	private static ConfigFile file;
 	private static Rank defaultRank;
 	public static final HashMap<String, Rank> ranks = new HashMap<>();
 	public static final HashMap<UUID, Rank> playerMap = new HashMap<>();
-
+	
 	public static Rank getRank(LMPlayerServer p)
 	{
 		/*if(FTBUConfigGeneral.ranks_enabled.get())
@@ -29,7 +29,7 @@ public class Ranks
 		return p.isOP() ? ADMIN : PLAYER;
 		//}
 	}
-
+	
 	public static void reload()
 	{
 		ranks.clear();
@@ -59,9 +59,9 @@ public class Ranks
 		saveRanks();
 		*/
 	}
-
+	
 	public static void saveRanks()
 	{
-
+		
 	}
 }

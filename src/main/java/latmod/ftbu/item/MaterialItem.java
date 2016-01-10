@@ -31,7 +31,7 @@ public class MaterialItem
 	{ return getStack(1); }
 	
 	public void onPostLoaded() { }
-
+	
 	public void loadRecipes() { }
 	
 	public int getRenderPasses()
@@ -51,7 +51,7 @@ public class MaterialItem
 	@SideOnly(Side.CLIENT)
 	public void addInfo(EntityPlayer ep, List<String> l)
 	{ }
-
+	
 	public String getUnlocalizedName()
 	{ return item.getMod().getItemName(item.folder.isEmpty() ? ID : (item.folder + "." + ID)); }
 }

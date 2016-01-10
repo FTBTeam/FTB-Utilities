@@ -25,11 +25,10 @@ public class FTBLIntegrationClient extends FTBLIntegrationCommon
 	public void onFTBWorldClient(EventFTBWorldClient e)
 	{
 		ClientNotifications.init();
-
+		
 		if(e.world == null)
 		{
 			ClaimedAreasClient.clear();
-			ClientBadges.clear();
 			new EventLMWorldClient(LMWorldClient.inst, true).post();
 			LMWorldClient.inst = null;
 		}
@@ -38,7 +37,7 @@ public class FTBLIntegrationClient extends FTBLIntegrationCommon
 			LMWorldClient.inst = new LMWorldClient(0);
 		}
 	}
-
+	
 	public void readWorldData(ByteIOStream io)
 	{
 		LMWorldClient.inst = new LMWorldClient(io.readInt());

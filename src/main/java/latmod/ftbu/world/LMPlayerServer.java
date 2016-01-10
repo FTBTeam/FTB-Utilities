@@ -27,7 +27,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public static final int nextPlayerID()
 	{ return ++lastPlayerID; }
-
+	
 	public final LMWorldServer world;
 	private final PersonalSettings settings;
 	private NBTTagCompound serverData = null;
@@ -52,7 +52,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		stats = new LMPlayerStats(this);
 		homes = new Warps();
 	}
-
+	
 	public LMWorld getWorld()
 	{ return world; }
 	
@@ -77,7 +77,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public PersonalSettings getSettings()
 	{ return settings; }
-
+	
 	public boolean isFake()
 	{ return getPlayer() instanceof FakePlayer; }
 	
@@ -111,7 +111,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		refreshStats();
 		long ms = LMUtils.millis();
 		new EventLMPlayerServer.CustomInfo(this, info).post();
-
+		
 		if(owner.getRank().config.show_rank.get())
 		{
 			Rank rank = getRank();
@@ -159,7 +159,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		}
 		else lastDeath = null;
 		
-
+		
 		NBTTagCompound settingsTag = tag.getCompoundTag("Settings");
 		settings.readFromServer(settingsTag);
 		renderBadge = settingsTag.hasKey("Badge") ? settingsTag.getBoolean("Badge") : true;
@@ -214,16 +214,17 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		Rank rank = getRank();
 		
 		io.writeBoolean(isOnline());
+		io.writeBoolean(renderBadge);
 		io.writeIntArray(friends.toArray(), ByteCount.SHORT);
 		
 		IntList otherFriends = new IntList();
-
+		
 		for(LMPlayerServer p : world.playerMap.values())
 		{ if(p.friends.contains(playerID)) otherFriends.add(p.playerID); }
 		
 		io.writeIntArray(otherFriends.toArray(), ByteCount.SHORT);
 		LMNBTUtils.writeTag(io, commonPublicData);
-
+		
 		if(self)
 		{
 			settings.writeToNet(io);
@@ -231,7 +232,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			LMNBTUtils.writeTag(io, commonPrivateData);
 			io.writeShort(getClaimedChunks());
 			io.writeShort(getLoadedChunks(true));
-
+			
 			io.writeUTF(rank.ID);
 			try { rank.writeToIO(io); }
 			catch(Exception ex) { }
@@ -246,7 +247,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		if(isOnline())
 		{
 			ArrayList<String> requests = new ArrayList<>();
-
+			
 			for(LMPlayerServer p : world.playerMap.values())
 			{
 				if(p.isFriendRaw(this) && !isFriendRaw(p)) requests.add(p.getName());
@@ -286,7 +287,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		if(!t.isClaimed() && t.isChunkOwner(this) && world.claimedChunks.put(new ClaimedChunk(playerID, dim, cx, cz)))
 			sendUpdate();
 	}
-
+	
 	public void unclaimChunk(int dim, int cx, int cz)
 	{
 		if(world.claimedChunks.getType(dim, cx, cz).isChunkOwner(this))
@@ -315,7 +316,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public int getClaimedChunks()
 	{ return world.claimedChunks.getChunks(this, null).size(); }
-
+	
 	public int getLoadedChunks(boolean forced)
 	{
 		int loaded = 0;
@@ -334,7 +335,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	{
 		ClaimedChunk chunk = world.claimedChunks.getChunk(dim, cx, cz);
 		if(chunk == null) return;
-
+		
 		if(flag != chunk.isChunkloaded && equalsPlayer(chunk.getOwnerS()))
 		{
 			if(flag)
@@ -345,10 +346,10 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 				if(max == 0) return;
 				if(getLoadedChunks(false) >= max) return;
 			}
-
+			
 			chunk.isChunkloaded = flag;
 			FTBUChunkEventHandler.instance.markDirty(Integer.valueOf(dim));
-
+			
 			if(getPlayer() != null)
 			{
 				new MessageAreaUpdate(this, cx, cz, dim, 1, 1).sendTo(getPlayer());

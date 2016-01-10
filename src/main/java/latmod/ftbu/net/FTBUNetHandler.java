@@ -19,7 +19,7 @@ public class FTBUNetHandler
 		NET.register(MessageLMPlayerDied.class, 6, Side.CLIENT);
 		NET.register(MessageClientAction.class, 7, Side.SERVER);
 		//NET.register(MessageLMPlayerUpdateSettings.class, 8, Side.SERVER);
-
+		
 		NET_INFO.register(MessageLMPlayerInfo.class, 1, Side.CLIENT);
 		NET_INFO.register(MessagePing.class, 2, Side.SERVER);
 		NET_INFO.register(MessagePingResponse.class, 3, Side.CLIENT);

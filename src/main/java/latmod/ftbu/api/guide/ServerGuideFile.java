@@ -105,7 +105,7 @@ public class ServerGuideFile extends GuideFile
 		
 		main.copyFrom(CachedInfo.main);
 		links.putAll(CachedInfo.links);
-
+		
 		categoryTops = main.getSub(new ChatComponentTranslation(FTBU.mod.assets + "top.title"));
 		
 		players = LMWorldServer.inst.getServerPlayers();
@@ -132,7 +132,7 @@ public class ServerGuideFile extends GuideFile
 		commands.clear();
 		
 		CommandLM.extendedUsageInfo = true;
-
+		
 		try
 		{
 			for(ICommand c : FTBLib.getAllCommands(self.getPlayer()))
@@ -140,13 +140,13 @@ public class ServerGuideFile extends GuideFile
 				try
 				{
 					GuideCategory cat = new GuideCategory(new ChatComponentText('/' + c.getCommandName()));
-
+					
 					@SuppressWarnings("unchecked") List<String> al = c.getCommandAliases();
 					if(al != null && !al.isEmpty()) for(String s : al)
 						cat.println('/' + s);
-
+					
 					String usage = c.getCommandUsage(self.getPlayer());
-
+					
 					if(usage != null)
 					{
 						if(usage.indexOf('\n') != -1)
@@ -157,7 +157,7 @@ public class ServerGuideFile extends GuideFile
 						}
 						else cat.println(new ChatComponentTranslation(usage));
 					}
-
+					
 					cat.setParent(commands);
 					commands.addSub(cat);
 				}
@@ -170,7 +170,7 @@ public class ServerGuideFile extends GuideFile
 			}
 		}
 		catch(Exception ex) { }
-
+		
 		CommandLM.extendedUsageInfo = false;
 		Collections.sort(commands.subcategories, null);
 		
@@ -181,9 +181,9 @@ public class ServerGuideFile extends GuideFile
 	public void addTop(Top t)
 	{
 		GuideCategory thisTop = categoryTops.getSub(t.ID);
-
+		
 		Collections.sort(players, t);
-
+		
 		int size = Math.min(players.size(), 250);
 		
 		for(int j = 0; j < size; j++)

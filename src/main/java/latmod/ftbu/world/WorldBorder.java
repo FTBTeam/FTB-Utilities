@@ -20,7 +20,7 @@ public class WorldBorder
 		pos = new Pos2I(0, 0);
 		size = 0;
 	}
-
+	
 	public JsonElement toJson()
 	{
 		JsonObject o = new JsonObject();
@@ -40,7 +40,7 @@ public class WorldBorder
 		wb.size = a.get("size").getAsInt();
 		return wb;
 	}
-
+	
 	public int getSize()
 	{
 		if(!settings.border_enabled.get()) return 0;
@@ -48,7 +48,7 @@ public class WorldBorder
 		if(dim == 0) return Math.max(0, size);
 		else return (size == -1) ? (int) (settings.worldBorder0.size * LMDimUtils.getWorldScale(dim)) : size;
 	}
-
+	
 	public void setSize(int s)
 	{
 		if(settings.world.side.isServer())
@@ -60,7 +60,7 @@ public class WorldBorder
 			}
 		}
 	}
-
+	
 	public void setPos(int x, int z)
 	{
 		if(settings.world.side.isServer())
@@ -72,7 +72,7 @@ public class WorldBorder
 			}
 		}
 	}
-
+	
 	public boolean isOutside(int cx, int cz)
 	{
 		if(ClaimedChunks.isInSpawn(dim, cx, cz)) return false;
@@ -84,7 +84,7 @@ public class WorldBorder
 		int maxZ = MathHelperLM.chunk(pos.y + size1);
 		return cx >= maxX || cx <= minX || cz >= maxZ || cz <= minZ;
 	}
-
+	
 	public boolean isOutsideD(double x, double z)
 	{ return isOutside(MathHelperLM.chunk(x), MathHelperLM.chunk(z)); }
 }

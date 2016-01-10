@@ -30,7 +30,7 @@ public enum InvMode
 		if(id < 0) id = VALUES.length - 1;
 		return VALUES[id];
 	}
-
+	
 	public boolean canInsertItem()
 	{ return this == ENABLED || this == ONLY_IN; }
 	

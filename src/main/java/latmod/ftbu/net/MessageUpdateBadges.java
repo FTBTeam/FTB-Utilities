@@ -11,7 +11,7 @@ import java.util.Collection;
 public class MessageUpdateBadges extends MessageFTBU
 {
 	public MessageUpdateBadges() { super(ByteCount.INT); }
-
+	
 	public MessageUpdateBadges(Collection<Badge> badges)
 	{
 		this();
@@ -35,7 +35,7 @@ public class MessageUpdateBadges extends MessageFTBU
 	{
 		ClientBadges.clear();
 		int s = io.readInt();
-
+		
 		if(s > 0)
 		{
 			for(int i = 0; i < s; i++)
@@ -45,7 +45,7 @@ public class MessageUpdateBadges extends MessageFTBU
 				ClientBadges.addBadge(new Badge(id, url));
 			}
 		}
-
+		
 		return null;
 	}
 }

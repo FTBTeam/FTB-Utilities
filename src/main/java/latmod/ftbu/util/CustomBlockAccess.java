@@ -25,7 +25,7 @@ public class CustomBlockAccess implements IBlockAccess
 	
 	public TileEntity getTileEntity(int x, int y, int z)
 	{ return parent.getTileEntity(x, y, z); }
-
+	
 	@SideOnly(Side.CLIENT)
 	public int getLightBrightnessForSkyBlocks(int x, int y, int z, int b)
 	{ return parent.getLightBrightnessForSkyBlocks(x, y, z, b); }

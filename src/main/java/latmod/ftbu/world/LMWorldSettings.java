@@ -137,27 +137,27 @@ public class LMWorldSettings
 	{
 		if(dim == 0) return worldBorder0;
 		WorldBorder wb = worldBorder.get(Integer.valueOf(dim));
-
+		
 		if(wb == null)
 		{
 			wb = new WorldBorder(this, dim);
 			wb.size = worldBorder0.size;
 		}
-
+		
 		return wb;
 	}
-
+	
 	public WorldBorder getAndSet(int dim)
 	{
 		if(dim == 0) return worldBorder0;
 		WorldBorder wb = worldBorder.get(Integer.valueOf(dim));
-
+		
 		if(wb == null)
 		{
 			wb = new WorldBorder(this, dim);
 			worldBorder.put(Integer.valueOf(dim), wb);
 		}
-
+		
 		return wb;
 	}
 }

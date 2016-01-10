@@ -25,7 +25,7 @@ public enum FriendStatus
 		if(!b1 && b2) return INVITED;
 		return NONE;
 	}
-
+	
 	public static int compare(LMPlayerClient o, LMPlayerClient p1, LMPlayerClient p2)
 	{
 		FriendStatus s0 = get(o, p1);

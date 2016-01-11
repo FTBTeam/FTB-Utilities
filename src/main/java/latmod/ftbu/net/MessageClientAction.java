@@ -11,13 +11,13 @@ public class MessageClientAction extends MessageFTBU
 	MessageClientAction(ClientAction a, int e)
 	{
 		this();
-		io.writeByte((a == null) ? ClientAction.NULL.ID : a.ID);
+		io.writeByte((a == null) ? ClientAction.NULL.getID() : a.getID());
 		io.writeInt(e);
 	}
 	
 	public IMessage onMessage(MessageContext ctx)
 	{
-		ClientAction action = ClientAction.VALUES[io.readUnsignedByte()];
+		ClientAction action = ClientAction.get(io.readByte());
 		int extra = io.readInt();
 		LMPlayerServer owner = LMWorldServer.inst.getPlayer(ctx.getServerHandler().playerEntity);
 		if(action.onAction(extra, owner)) owner.sendUpdate();

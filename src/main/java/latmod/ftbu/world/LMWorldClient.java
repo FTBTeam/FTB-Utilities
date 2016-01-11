@@ -81,8 +81,6 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 		}
 		
 		settings.readFromNet(io);
-		
-		try { customCommonData.read(io); }
-		catch(Exception ex) {}
+		customCommonData.read(io);
 	}
 }

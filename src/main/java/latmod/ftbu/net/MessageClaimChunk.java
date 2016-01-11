@@ -47,7 +47,7 @@ public class MessageClaimChunk extends MessageFTBU
 		}
 		else if(type == ID_UNCLAIM)
 		{
-			if(token != 0L && LMAccessToken.equals(p.getPlayer(), token))
+			if(token != 0L && LMAccessToken.equals(p.getPlayer(), token, false))
 			{
 				ClaimedChunk c = LMWorldServer.inst.claimedChunks.getChunk(dim, cx, cz);
 				if(c != null)

@@ -4,7 +4,7 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.PanelPopupMenu;
-import latmod.ftbu.api.client.FTBULang;
+import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.world.LMWorldClient;
 import net.minecraft.client.gui.GuiScreen;
@@ -57,9 +57,9 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 				boolean raw2 = LMWorldClient.inst.getClientPlayer().isFriendRaw(panelPlayerView.selectedPlayer.playerLM);
 				
 				if(raw1 && raw2)
-					panelPlayerInfo.text.add(EnumChatFormatting.GREEN.toString() + '[' + FTBULang.label_friend() + ']');
+					panelPlayerInfo.text.add(EnumChatFormatting.GREEN.toString() + '[' + FTBU.mod.translateClient("label.friend") + ']');
 				else if(raw1 || raw2)
-					panelPlayerInfo.text.add("" + (raw1 ? EnumChatFormatting.GOLD : EnumChatFormatting.BLUE) + '[' + FTBULang.label_pfriend() + ']');
+					panelPlayerInfo.text.add("" + (raw1 ? EnumChatFormatting.GOLD : EnumChatFormatting.BLUE) + '[' + FTBU.mod.translateClient("label.pfriend") + ']');
 			}
 			
 			for(IChatComponent c : panelPlayerView.selectedPlayer.playerLM.clientInfo)

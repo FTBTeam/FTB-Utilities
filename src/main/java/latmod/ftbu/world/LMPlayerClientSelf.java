@@ -45,8 +45,7 @@ public class LMPlayerClientSelf extends LMPlayerClient
 			loadedChunks = io.readUnsignedShort();
 			
 			rank = new Rank(io.readUTF());
-			try { rank.readFromIO(io); }
-			catch(Exception ex) { }
+			rank.readFromIO(io);
 		}
 	}
 }

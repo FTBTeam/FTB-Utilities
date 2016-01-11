@@ -1,34 +1,30 @@
 package latmod.ftbu.world.ranks;
 
 import ftb.lib.FTBLib;
-import latmod.lib.IntList;
+import latmod.lib.*;
 import latmod.lib.config.*;
 import latmod.lib.util.*;
 import net.minecraft.util.EnumChatFormatting;
-
-import java.io.*;
 
 public class Rank extends FinalIDObject
 {
 	public final ConfigEntryString parent = new ConfigEntryString("parent", "-");
 	public final ConfigEntryEnum<EnumChatFormatting> color = new ConfigEntryEnum<>("color", EnumChatFormatting.class, FTBLib.chatColors, EnumChatFormatting.WHITE, false);
 	public final ConfigEntryString prefix = new ConfigEntryString("prefix", "");
-	public final ConfigEntryStringArray allowed_commands = new ConfigEntryStringArray("allowed_commands", "*");
-	public final ConfigGroup config_group = new ConfigGroup("config");
+	//public final ConfigEntryStringArray allowed_commands = new ConfigEntryStringArray("allowed_commands", "*");
 	public final RankConfig config;
 	
 	public Rank(String id)
 	{
 		super(id);
 		config = new RankConfig();
-		config_group.addAll(RankConfig.class, config, false);
 	}
 	
 	public Rank getParentRank()
 	{
 		String s = parent.get();
 		if(s.isEmpty() || s.equals("-")) return null;
-		return Ranks.ranks.get(s);
+		return Ranks.getRankFor(s);
 	}
 	
 	public void setDefaults()
@@ -40,34 +36,33 @@ public class Rank extends FinalIDObject
 			config.admin_server_info.set(true);
 			config.allow_creative_interact_secure.set(true);
 			
-			config.max_claims.bounds = new IntBounds(1000, config.max_claims.bounds.minValue, config.max_claims.bounds.maxValue);
-			config.max_homes.bounds = new IntBounds(100, config.max_homes.bounds.minValue, config.max_homes.bounds.maxValue);
+			config.max_claims.bounds = new IntBounds(config.max_claims.get(), config.max_claims.bounds.minValue, config.max_claims.bounds.maxValue);
+			config.max_homes.bounds = new IntBounds(config.max_homes.get(), config.max_homes.bounds.minValue, config.max_homes.bounds.maxValue);
 			config.admin_server_info.defValue = true;
 			config.allow_creative_interact_secure.defValue = true;
 		}
-		else
+		else if(this == Ranks.PLAYER)
 		{
 			config.dimension_blacklist.set(IntList.asList(1));
 			config.dimension_blacklist.defValue.clear();
-			config.dimension_blacklist.defValue.add(1);
-			
+			config.dimension_blacklist.defValue.addAll(config.dimension_blacklist.get());
 		}
 	}
 	
-	public void writeToIO(DataOutput io) throws Exception
+	public void writeToIO(ByteIOStream io)
 	{
 		io.writeByte(color.get().ordinal());
 		io.writeUTF(prefix.get());
-		config_group.generateSynced(true).write(io);
+		config.getAsGroup(null, false).generateSynced(true).write(io);
 	}
 	
-	public void readFromIO(DataInput io) throws Exception
+	public void readFromIO(ByteIOStream io)
 	{
 		color.set(EnumChatFormatting.values()[io.readUnsignedByte()]);
 		prefix.set(io.readUTF());
 		
 		ConfigGroup group = new ConfigGroup(null);
 		group.read(io);
-		config_group.loadFromGroup(group);
+		config.getAsGroup(null, false).loadFromGroup(group);
 	}
 }

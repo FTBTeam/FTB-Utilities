@@ -124,9 +124,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		}
 		
 		settings.writeToNet(io);
-		
-		try { customCommonData.write(io); }
-		catch(Exception ex) { }
+		customCommonData.write(io);
 	}
 	
 	public void writePlayersToServer(NBTTagCompound tag)

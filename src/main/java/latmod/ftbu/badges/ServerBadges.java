@@ -16,7 +16,7 @@ import java.util.*;
 public class ServerBadges
 {
 	private static final HashMap<String, Badge> map = new HashMap<>();
-	private static final HashMap<UUID, Badge> uuid = new HashMap<>();
+	private static final HashMap<UUID, String> uuid = new HashMap<>();
 	
 	public static void reload()
 	{
@@ -98,12 +98,7 @@ public class ServerBadges
 			for(Map.Entry<String, JsonElement> entry : o1.entrySet())
 			{
 				UUID id = UUIDTypeAdapterLM.getUUID(entry.getKey());
-				
-				if(id != null)
-				{
-					Badge b = map.get(entry.getValue().getAsString());
-					if(b != null) uuid.put(id, b);
-				}
+				if(id != null) uuid.put(id, entry.getValue().getAsString());
 			}
 		}
 	}
@@ -112,13 +107,16 @@ public class ServerBadges
 	{
 		if(p == null) return Badge.emptyBadge;
 		
-		Badge b = uuid.get(p.getUUID());
+		String s = uuid.get(p.getUUID());
+		Badge b = (s == null) ? null : map.get(s);
 		
+		/*
 		if(b == null)
 		{
 			String rank = p.getRank().config.badge.get();
 			if(!rank.isEmpty()) b = map.get(rank);
 		}
+		*/
 		
 		return (b == null) ? Badge.emptyBadge : b;
 	}

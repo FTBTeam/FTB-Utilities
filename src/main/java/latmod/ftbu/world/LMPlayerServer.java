@@ -234,8 +234,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			io.writeShort(getLoadedChunks(true));
 			
 			io.writeUTF(rank.ID);
-			try { rank.writeToIO(io); }
-			catch(Exception ex) { }
+			rank.writeToIO(io);
 		}
 	}
 	
@@ -273,7 +272,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	}
 	
 	public Rank getRank()
-	{ return Ranks.getRank(this); }
+	{ return Ranks.getRankFor(this); }
 	
 	public void claimChunk(int dim, int cx, int cz)
 	{

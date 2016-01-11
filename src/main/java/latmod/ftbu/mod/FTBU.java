@@ -3,7 +3,6 @@ package latmod.ftbu.mod;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import ftb.lib.*;
-import ftb.lib.notification.*;
 import latmod.ftbu.mod.cmd.*;
 import latmod.ftbu.mod.cmd.admin.CmdAdmin;
 import latmod.ftbu.mod.config.FTBUConfig;
@@ -12,7 +11,6 @@ import latmod.ftbu.mod.handlers.ftbl.*;
 import latmod.ftbu.net.FTBUNetHandler;
 import latmod.ftbu.util.LMMod;
 import latmod.ftbu.world.Backups;
-import latmod.lib.LMJsonUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.ForgeChunkManager;
 
@@ -36,9 +34,6 @@ public class FTBU
 	{
 		LMMod.init(this);
 		FTBLib.ftbu = new FTBLIntegration();
-		
-		LMJsonUtils.register(Notification.class, new Notification.Serializer());
-		LMJsonUtils.register(MouseAction.class, new MouseAction.Serializer());
 		FTBUConfig.load();
 		
 		EventBusHelper.register(new FTBUPlayerEventHandler());

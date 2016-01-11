@@ -68,7 +68,7 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 				else playerMap.put(id, new LMPlayerClient(this, id, new GameProfile(uuid, name)));
 			}
 			
-			FTBLib.dev_logger.info("Client player ID: " + clientPlayerID + ", " + getPlayer(clientPlayerID).getClass());
+			FTBLib.dev_logger.info("Client player ID: " + clientPlayerID);
 			
 			int[] onlinePlayers = io.readIntArray(ByteCount.INT);
 			

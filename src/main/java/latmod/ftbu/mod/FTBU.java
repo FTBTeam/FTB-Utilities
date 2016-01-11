@@ -2,6 +2,8 @@ package latmod.ftbu.mod;
 
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.network.NetworkCheckHandler;
+import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
 import latmod.ftbu.mod.cmd.*;
 import latmod.ftbu.mod.cmd.admin.CmdAdmin;
@@ -13,6 +15,8 @@ import latmod.ftbu.util.LMMod;
 import latmod.ftbu.world.Backups;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.ForgeChunkManager;
+
+import java.util.Map;
 
 @Mod(modid = FTBUFinals.MOD_ID, version = FTBUFinals.MOD_VERSION, name = FTBUFinals.MOD_NAME, dependencies = FTBUFinals.MOD_DEP)
 public class FTBU
@@ -83,5 +87,12 @@ public class FTBU
 			for(EntityPlayerMP ep : FTBLib.getAllOnlinePlayers(null))
 				FTBUPlayerEventHandler.playerLoggedOut(ep);
 		}
+	}
+	
+	@NetworkCheckHandler
+	public boolean checkNetwork(Map<String, String> m, Side side)
+	{
+		String s = m.get(FTBUFinals.MOD_ID);
+		return s == null || s.equals(FTBUFinals.MOD_VERSION);
 	}
 }

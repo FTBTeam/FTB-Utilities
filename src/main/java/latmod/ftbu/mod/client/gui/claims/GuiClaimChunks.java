@@ -6,6 +6,7 @@ import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
 import latmod.ftbu.net.*;
 import latmod.ftbu.util.client.LatCoreMCClient;
@@ -16,6 +17,7 @@ import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.*;
 
 import java.nio.ByteBuffer;
@@ -340,7 +342,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		{
 			if(gui.panelButtons.mouseOver()) return;
 			if(gui.adminToken != 0L && b == 0) return;
-			boolean ctrl = isCtrlKeyDown();
+			boolean ctrl = FTBUClient.loaded_chunks_space_key.get() ? Keyboard.isKeyDown(Keyboard.KEY_SPACE) : isCtrlKeyDown();
 			new MessageClaimChunk(gui.currentDim, gui.adminToken, chunkX, chunkY, (b == 0) ? (ctrl ? MessageClaimChunk.ID_LOAD : MessageClaimChunk.ID_CLAIM) : (ctrl ? MessageClaimChunk.ID_UNLOAD : MessageClaimChunk.ID_UNCLAIM)).sendToServer();
 			gui.playClickSound();
 		}

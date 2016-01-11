@@ -29,6 +29,7 @@ public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer
 		
 		friends = new IntList();
 		lastArmor = new ItemStack[5];
+		renderBadge = true;
 	}
 	
 	public abstract LMWorld getWorld();

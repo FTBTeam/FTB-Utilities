@@ -36,7 +36,7 @@ minecraft {
 
 dependencies {
     compile fileTree(dir: project_dir + "DevMods/", include: '*.jar')
-    compile files(project_dir + "/Exported/" + version_mc + "/FTBLib-" + version_mc + "-" + version_mods + "-dev.jar")
+    compile files(project_dir + "/Exported/FTBLib-" + version_mc + "-" + version_mods + "-dev.jar")
 }
 
 sourceSets {
@@ -51,7 +51,7 @@ sourceSets {
 }
 
 tasks.withType(Jar) {
-    destinationDir = file(project_dir + "/Exported/" + version_mc)
+    destinationDir = file(project_dir + "/Exported/")
 }
 
 processResources

@@ -44,7 +44,7 @@ public class ChunkType
 		public boolean canInteract(LMPlayerServer p, boolean leftClick)
 		{
 			if(chunkOwner.equals(p)) return true;
-			else if(p.isFake()) return chunkOwner.getSettings().fakePlayers;
+			else if(p.isFake()) return chunkOwner.getSettings().get(PersonalSettings.FAKE_PLAYERS);
 			
 			LMSecurity s = new LMSecurity(chunkOwner);
 			s.level = p.getRank().config.forced_chunk_security.get();

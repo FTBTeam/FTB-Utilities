@@ -37,7 +37,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public static final ConfigEntryBool chat_links = new ConfigEntryBool("chat_links", true)
 	{
 		public boolean get()
-		{ return LatCoreMCClient.isPlaying() && LMWorldClient.inst.getClientPlayer().getSettings().chatLinks; }
+		{ return LatCoreMCClient.isPlaying() && LMWorldClient.inst.getClientPlayer().getSettings().get(PersonalSettings.CHAT_LINKS); }
 		
 		public void set(boolean b)
 		{

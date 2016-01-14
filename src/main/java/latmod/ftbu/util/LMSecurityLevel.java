@@ -15,7 +15,7 @@ public enum LMSecurityLevel
 	public static final LMSecurityLevel[] VALUES_2 = new LMSecurityLevel[] {PUBLIC, PRIVATE};
 	
 	public final int ID;
-	private final String uname;
+	public final String uname;
 	public final String langKey;
 	
 	LMSecurityLevel(String s)
@@ -49,4 +49,21 @@ public enum LMSecurityLevel
 	
 	public TextureCoords getIcon()
 	{ return GuiIcons.security[ID]; }
+	
+	public static String[] getNames()
+	{
+		String[] s = new String[VALUES_3.length];
+		for(int i = 0; i < VALUES_3.length; i++)
+			s[i] = VALUES_3[i].uname;
+		return s;
+	}
+	
+	public static LMSecurityLevel get(String s)
+	{
+		for(LMSecurityLevel l : VALUES_3)
+		{
+			if(l.uname.equalsIgnoreCase(s)) return l;
+		}
+		return null;
+	}
 }

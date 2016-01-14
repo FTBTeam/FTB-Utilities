@@ -13,13 +13,7 @@ import org.lwjgl.opengl.GL11;
 public class Badge extends FinalIDObject
 {
 	public static final ResourceLocation defTex = FTBU.mod.getLocation("textures/failed_badge.png");
-	
-	public static final Badge emptyBadge = new Badge("-", null)
-	{
-		@SideOnly(Side.CLIENT)
-		public ResourceLocation getTexture()
-		{ return null; }
-	};
+	public static final Badge emptyBadge = new Badge("-", null);
 	
 	// -- //
 	
@@ -32,9 +26,14 @@ public class Badge extends FinalIDObject
 		imageURL = url;
 	}
 	
+	public String toString()
+	{ return ID + " : " + imageURL; }
+	
 	@SideOnly(Side.CLIENT)
 	public ResourceLocation getTexture()
 	{
+		if(imageURL == null) return null;
+		
 		if(textureURL == null)
 		{
 			textureURL = FTBU.mod.getLocation("textures/badges/" + ID);

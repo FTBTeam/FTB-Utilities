@@ -97,9 +97,9 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		}
 	}
 	
-	public void writeDataToNet(ByteIOStream io, int selfID)
+	public void writeDataToNet(ByteIOStream io, LMPlayerServer self, boolean first)
 	{
-		if(selfID > 0)
+		if(first)
 		{
 			IntList onlinePlayers = new IntList();
 			
@@ -111,7 +111,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 				io.writeUUID(p.getUUID());
 				io.writeUTF(p.getName());
 				
-				if(p.isOnline()) onlinePlayers.add(p.playerID);
+				if(p.isOnline() && p.playerID != self.playerID) onlinePlayers.add(p.playerID);
 			}
 			
 			io.writeIntArray(onlinePlayers.toArray(), ByteCount.INT);
@@ -119,8 +119,10 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 			for(int i = 0; i < onlinePlayers.size(); i++)
 			{
 				LMPlayerServer p = playerMap.get(onlinePlayers.get(i));
-				p.writeToNet(io, p.playerID == selfID);
+				p.writeToNet(io, false);
 			}
+			
+			self.writeToNet(io, true);
 		}
 		
 		settings.writeToNet(io);
@@ -174,8 +176,8 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 			p.onPostLoaded();
 	}
 	
-	public void update()
-	{ new MessageLMWorldUpdate(this).sendTo(null); }
+	public void update(LMPlayerServer self)
+	{ new MessageLMWorldUpdate(this, self).sendTo(null); }
 	
 	public List<LMPlayerServer> getAllOnlinePlayers()
 	{

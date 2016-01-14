@@ -48,7 +48,7 @@ public class FTBUChatEventHandler
 				public void onCallback()
 				{
 					for(LMPlayer p : LMWorldServer.inst.getAllOnlinePlayers())
-					{ if(p.getSettings().chatLinks) FTBLib.printChat(p.getPlayer(), line); }
+					{ if(p.getSettings().get(PersonalSettings.CHAT_LINKS)) FTBLib.printChat(p.getPlayer(), line); }
 				}
 			});
 		}

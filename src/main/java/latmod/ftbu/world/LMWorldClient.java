@@ -78,6 +78,9 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 				p.readFromNet(io, p.playerID == clientPlayerID);
 				new EventLMPlayerClient.DataLoaded(p).post();
 			}
+			
+			clientPlayer.readFromNet(io, true);
+			new EventLMPlayerClient.DataLoaded(clientPlayer).post();
 		}
 		
 		settings.readFromNet(io);

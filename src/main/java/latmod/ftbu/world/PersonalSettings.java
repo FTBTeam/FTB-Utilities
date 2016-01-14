@@ -8,53 +8,66 @@ public class PersonalSettings
 {
 	public final LMPlayer owner;
 	
-	public boolean chatLinks;
-	public boolean explosions;
+	public static final int CHAT_LINKS = 0;
+	public static final int EXPLOSIONS = 1;
+	public static final int FAKE_PLAYERS = 2;
+	
+	public byte flags = 0;
 	public LMSecurityLevel blocks;
-	public boolean fakePlayers;
 	
 	public PersonalSettings(LMPlayer p)
 	{
 		owner = p;
-		chatLinks = true;
-		explosions = true;
 		blocks = LMSecurityLevel.FRIENDS;
-		fakePlayers = true;
+		setDefaultFlags();
 	}
+	
+	private void setDefaultFlags()
+	{
+		set(CHAT_LINKS, true);
+		set(EXPLOSIONS, true);
+		set(FAKE_PLAYERS, true);
+	}
+	
+	public boolean set(int flag, boolean v)
+	{
+		if(get(flag) != v)
+		{
+			flags = Bits.setBit(flags, flag, v);
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean get(int flag)
+	{ return Bits.getBit(flags, flag); }
 	
 	public void readFromServer(NBTTagCompound tag)
 	{
-		chatLinks = tag.hasKey("ChatLinks") ? tag.getBoolean("ChatLinks") : true;
-		explosions = tag.hasKey("Explosions") ? tag.getBoolean("Explosions") : true;
+		if(!tag.hasKey("Flags"))
+		{
+			flags = 0;
+			setDefaultFlags();
+		}
+		else flags = tag.getByte("Flags");
 		blocks = tag.hasKey("Blocks") ? blocks = LMSecurityLevel.VALUES_3[tag.getByte("Blocks")] : LMSecurityLevel.FRIENDS;
-		fakePlayers = tag.hasKey("FakePlayers") ? tag.getBoolean("FakePlayers") : true;
 	}
 	
 	public void writeToServer(NBTTagCompound tag)
 	{
-		tag.setBoolean("ChatLinks", chatLinks);
-		tag.setBoolean("Explosions", explosions);
+		tag.setByte("Flags", flags);
 		tag.setByte("Blocks", (byte) blocks.ID);
-		tag.setBoolean("FakePlayers", fakePlayers);
 	}
 	
 	public void readFromNet(ByteIOStream io)
 	{
-		boolean[] flags = new boolean[8];
-		Bits.fromBits(flags, io.readUnsignedByte());
-		chatLinks = flags[0];
-		explosions = flags[1];
-		fakePlayers = flags[2];
+		flags = io.readByte();
 		blocks = LMSecurityLevel.VALUES_3[io.readUnsignedByte()];
 	}
 	
 	public void writeToNet(ByteIOStream io)
 	{
-		boolean[] flags = new boolean[8];
-		flags[0] = chatLinks;
-		flags[1] = explosions;
-		flags[2] = fakePlayers;
-		io.writeByte(Bits.toBits(flags));
+		io.writeByte(flags);
 		io.writeByte(blocks.ID);
 	}
 	

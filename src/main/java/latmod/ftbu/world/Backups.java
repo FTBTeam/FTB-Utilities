@@ -42,7 +42,7 @@ public class Backups
 		if(w == null) return false;
 		shouldRun = false;
 		thread = new ThreadBackup(w);
-		lastTimeRun = ((ThreadBackup) thread).calendar.millis;
+		lastTimeRun = ((ThreadBackup) thread).time.millis;
 		FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Starting server backup, expect lag!");
 		try
 		{

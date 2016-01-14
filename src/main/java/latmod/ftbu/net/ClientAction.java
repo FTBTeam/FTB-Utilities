@@ -1,9 +1,10 @@
 package latmod.ftbu.net;
 
+import ftb.lib.FTBLib;
 import latmod.ftbu.api.guide.ServerGuideFile;
 import latmod.ftbu.badges.*;
 import latmod.ftbu.util.LatCoreMC;
-import latmod.ftbu.world.LMPlayerServer;
+import latmod.ftbu.world.*;
 
 import java.util.HashMap;
 
@@ -137,7 +138,7 @@ public abstract class ClientAction
 	{
 		public boolean onAction(int extra, LMPlayerServer owner)
 		{
-			owner.getSettings().chatLinks = extra == 1;
+			owner.getSettings().set(PersonalSettings.CHAT_LINKS, extra == 1);
 			return true;
 		}
 	};
@@ -146,62 +147,9 @@ public abstract class ClientAction
 	{
 		public boolean onAction(int extra, final LMPlayerServer owner)
 		{
-			/*
-			final PersonalSettings settings = LMWorldClient.inst.clientPlayer.getSettings();
-			final ConfigGroup group = new ConfigGroup("claims_config_" + owner.getName())
-			{
-				public void onLoadedFromGroup(ConfigGroup g)
-				{
-					owner.sendUpdate();
-					if(FTBLibFinals.DEV) FTBLib.dev_logger.info("claimed chunks settings loaded from " + g);
-				}
-			};
-			
-			group.add(new ConfigEntryBool("explosions", settings.explosions)
-			{
-				public boolean get()
-				{ return settings.explosions; }
-				
-				public void set(boolean v)
-				{ settings.explosions = v; }
-			}, false);
-			
-			group.add(new ConfigEntryEnum<LMSecurityLevel>("security_level", LMSecurityLevel.class, LMSecurityLevel.VALUES_3, settings.blocks, false)
-			{
-				public LMSecurityLevel get()
-				{ return settings.blocks; }
-				
-				public void set(Object v)
-				{
-					settings.blocks = (LMSecurityLevel) v;
-					owner.sendUpdate();
-				}
-			}, false);
-			
-			group.add(new ConfigEntryBool("fake_players", settings.fakePlayers)
-			{
-				public boolean get()
-				{ return settings.fakePlayers; }
-				
-				public void set(boolean v)
-				{
-					settings.fakePlayers = v;
-					owner.sendUpdate();
-				}
-			}, false);
-			
-			ConfigRegistry.Provider provider = new ConfigRegistry.Provider()
-			{
-				public String getID()
-				{ return group.ID; }
-				
-				public ConfigGroup getGroup()
-				{ return group; }
-			};
-			
-			ConfigRegistry.tempMap.put(provider.getID(), provider);
-			new MessageEditConfig(LMAccessToken.generate(owner.getPlayer()), true, provider).sendTo(owner.getPlayer());
-			*/
+			FTBLib.printChat(owner.getPlayer(), "Settings Gui is temporarily replaced with /lmplayer_settings!");
+			//ConfigRegistry.tempMap.put(provider.getID(), provider);
+			//new MessageEditConfig(LMAccessToken.generate(owner.getPlayer()), true, provider).sendTo(owner.getPlayer());
 			return false;
 		}
 	};

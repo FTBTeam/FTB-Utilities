@@ -77,6 +77,7 @@ public class FTBU
 		e.registerServerCommand(new CmdSpawn());
 		e.registerServerCommand(new CmdTplast());
 		e.registerServerCommand(new CmdWarp());
+		e.registerServerCommand(new CmdLMPlayerSettings());
 	}
 	
 	@Mod.EventHandler

@@ -9,10 +9,10 @@ public class MessageLMWorldUpdate extends MessageFTBU
 {
 	public MessageLMWorldUpdate() { super(ByteCount.INT); }
 	
-	public MessageLMWorldUpdate(LMWorldServer w)
+	public MessageLMWorldUpdate(LMWorldServer w, LMPlayerServer self)
 	{
 		this();
-		w.writeDataToNet(io, 0);
+		w.writeDataToNet(io, self, false);
 	}
 	
 	@SideOnly(Side.CLIENT)

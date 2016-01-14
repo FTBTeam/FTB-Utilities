@@ -28,6 +28,7 @@ import java.util.List;
 public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 {
 	public long nextChunkloaderUpdate = 0L;
+	private static boolean first_login, send_all;
 	
 	public void onReloaded(EventFTBReload e)
 	{
@@ -57,7 +58,9 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 	
 	public void onFTBWorldServer(EventFTBWorldServer e)
 	{
-		File latmodFolder = new File(FTBLib.folderWorld, "LatMod/");
+		File latmodFolder = new File(FTBLib.folderWorld, "latmod/");
+		if(!latmodFolder.exists()) latmodFolder = new File(FTBLib.folderWorld, "LatMod/");
+		
 		File file = new File(latmodFolder, "LMWorld.dat");
 		
 		LMWorldServer.inst = new LMWorldServer(latmodFolder);
@@ -148,63 +151,71 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 		}
 	}
 	
-	public void onPlayerJoined(EntityPlayerMP ep)
+	public void onPlayerJoined(EntityPlayerMP ep, Phase phase)
 	{
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
 		
-		boolean first = (p == null);
-		boolean sendAll = false;
-		
-		if(first)
+		if(phase == Phase.PRE)
 		{
-			p = new LMPlayerServer(LMWorldServer.inst, LMPlayerServer.nextPlayerID(), ep.getGameProfile());
-			LMWorldServer.inst.playerMap.put(p.playerID, p);
-			sendAll = true;
+			first_login = (p == null);
+			send_all = false;
+			
+			if(first_login)
+			{
+				p = new LMPlayerServer(LMWorldServer.inst, LMPlayerServer.nextPlayerID(), ep.getGameProfile());
+				LMWorldServer.inst.playerMap.put(p.playerID, p);
+				send_all = true;
+			}
+			else if(!p.getName().equals(p.gameProfile.getName()))
+			{
+				p.gameProfile = ep.getGameProfile();
+				send_all = true;
+			}
+			
+			p.setPlayer(ep);
 		}
-		else if(!p.getName().equals(p.gameProfile.getName()))
+		else
 		{
-			p.gameProfile = ep.getGameProfile();
-			sendAll = true;
+			p.refreshStats();
+			
+			new EventLMPlayerServer.LoggedIn(p, ep, first_login).post();
+			new MessageLMPlayerLoggedIn(p, first_login, true).sendTo(send_all ? null : ep);
+			for(EntityPlayerMP ep1 : FTBLib.getAllOnlinePlayers(ep))
+				new MessageLMPlayerLoggedIn(p, first_login, false).sendTo(ep1);
+			
+			if(first_login)
+			{
+				List<ItemStack> items = FTBUConfigLogin.getStartingItems(ep.getUniqueID());
+				if(items != null && !items.isEmpty()) for(ItemStack is : items)
+					LMInvUtils.giveItem(ep, is);
+			}
+			
+			//new MessageLMPlayerInfo(p.playerID).sendTo(null);
+			FTBUConfigLogin.printMotd(ep);
+			Backups.shouldRun = true;
+			
+			p.checkNewFriends();
+			new MessageAreaUpdate(p, p.getPos(), 3, 3).sendTo(ep);
+			ServerBadges.sendToPlayer(ep);
+			
+			FTBUChunkEventHandler.instance.markDirty(null);
 		}
-		
-		p.setPlayer(ep);
-		p.refreshStats();
-		
-		new EventLMPlayerServer.LoggedIn(p, ep, first).post();
-		new MessageLMPlayerLoggedIn(p, first, true).sendTo(sendAll ? null : ep);
-		for(EntityPlayerMP ep1 : FTBLib.getAllOnlinePlayers(ep))
-			new MessageLMPlayerLoggedIn(p, first, false).sendTo(ep1);
-		
-		if(first)
-		{
-			List<ItemStack> items = FTBUConfigLogin.getStartingItems(ep.getUniqueID());
-			if(items != null && !items.isEmpty()) for(ItemStack is : items)
-				LMInvUtils.giveItem(ep, is);
-		}
-		
-		//new MessageLMPlayerInfo(p.playerID).sendTo(null);
-		FTBUConfigLogin.printMotd(ep);
-		Backups.shouldRun = true;
-		
-		//if(first) teleportToSpawn(ep);
-		p.checkNewFriends();
-		new MessageAreaUpdate(p, p.getPos(), 3, 3).sendTo(ep);
-		ServerBadges.sendToPlayer(ep);
-		
-		FTBUChunkEventHandler.instance.markDirty(null);
 	}
 	
 	public int getPlayerID(Object player)
-	{ return LMWorld.getWorld().getPlayerID(player); }
+	{
+		LMWorld w = LMWorld.getWorld();
+		return (w == null) ? 0 : w.getPlayerID(player);
+	}
 	
 	public String[] getPlayerNames(boolean online)
 	{ return LMWorldServer.inst.getAllPlayerNames(Boolean.valueOf(online)); }
 	
 	public void writeWorldData(ByteIOStream io, EntityPlayerMP ep)
 	{
-		int id = getPlayerID(ep);
-		io.writeInt(id);
-		LMWorldServer.inst.writeDataToNet(io, id);
+		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
+		io.writeInt(p.playerID);
+		LMWorldServer.inst.writeDataToNet(io, p, true);
 	}
 	
 	public void readWorldData(ByteIOStream io)

@@ -13,11 +13,11 @@ import java.util.zip.*;
 public class ThreadBackup extends Thread
 {
 	public final File src;
-	public final Time calendar;
+	public final Time time;
 	
 	public ThreadBackup(World w)
 	{
-		calendar = Time.now();
+		time = Time.now();
 		src = w.getSaveHandler().getWorldDirectory();
 		setPriority(7);
 	}
@@ -29,12 +29,12 @@ public class ThreadBackup extends Thread
 		try
 		{
 			StringBuilder out = new StringBuilder();
-			appendNum(out, calendar.year, '-');
-			appendNum(out, calendar.month, '-');
-			appendNum(out, calendar.day, '-');
-			appendNum(out, calendar.hours, '-');
-			appendNum(out, calendar.minutes, '-');
-			appendNum(out, calendar.seconds, File.separatorChar);
+			appendNum(out, time.year, '-');
+			appendNum(out, time.month, '-');
+			appendNum(out, time.day, '-');
+			appendNum(out, time.hours, '-');
+			appendNum(out, time.minutes, '-');
+			appendNum(out, time.seconds, File.separatorChar);
 			
 			List<File> files = LMFileUtils.listAll(src);
 			int allFiles = files.size();
@@ -55,7 +55,7 @@ public class ThreadBackup extends Thread
 				
 				long logMillis = LMUtils.millis() + 5000L;
 				
-				byte[] buffer = new byte[8192];
+				byte[] buffer = new byte[4096];
 				
 				Backups.logger.info("Compressing " + allFiles + " files!");
 				
@@ -138,10 +138,10 @@ public class ThreadBackup extends Thread
 			{
 				String sizeB = LMFileUtils.getSizeS(dstFile);
 				String sizeT = LMFileUtils.getSizeS(Backups.backupsFolder);
-				FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(calendar.millis) + "! (" + (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)) + ")");
+				FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(time.millis) + "! (" + (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)) + ")");
 			}
 			else
-				FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(calendar.millis) + "!");
+				FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(time.millis) + "!");
 		}
 		catch(Exception e)
 		{

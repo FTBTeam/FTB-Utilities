@@ -1,15 +1,14 @@
 package latmod.ftbu.mod.client;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.api.paint.IPainterItem;
 import latmod.ftbu.mod.client.gui.friends.GuiFriendsGuiSmall;
-import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
 import net.minecraft.item.*;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.player.*;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class FTBUClientEventHandler
@@ -37,7 +36,7 @@ public class FTBUClientEventHandler
 	@SubscribeEvent
 	public void onEntityRightClick(EntityInteractEvent e)
 	{
-		if(e.entity.worldObj.isRemote && LatCoreMCClient.isPlaying() && FTBUClient.player_options_shortcut.get() && e.entityPlayer.getUniqueID().equals(FTBLibClient.mc.thePlayer.getUniqueID()))
+		if(e.entity.worldObj.isRemote && FTBLibClient.isPlayingWithFTBU() && FTBUClient.player_options_shortcut.get() && e.entityPlayer.getUniqueID().equals(FTBLibClient.mc.thePlayer.getUniqueID()))
 		{
 			LMPlayerClient p = LMWorldClient.inst.getPlayer(e.target);
 			if(p != null) FTBLibClient.mc.displayGuiScreen(new GuiFriendsGuiSmall(p));

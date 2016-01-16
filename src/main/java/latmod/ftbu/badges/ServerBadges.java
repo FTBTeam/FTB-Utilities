@@ -123,7 +123,7 @@ public class ServerBadges
 	{
 		if(p == null) return Badge.emptyBadge;
 		
-		Badge b = uuid.get(p.getUUID());
+		Badge b = uuid.get(p.getProfile().getId());
 		if(b != null) return b;
 		
 		if(b == null)

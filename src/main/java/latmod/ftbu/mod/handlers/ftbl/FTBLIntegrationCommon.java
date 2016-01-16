@@ -16,4 +16,9 @@ public class FTBLIntegrationCommon // FTBLIntegrationClient // FTBLIntegration
 	public void readWorldData(ByteIOStream io)
 	{
 	}
+	
+	public boolean hasClientWorld()
+	{
+		return false;
+	}
 }

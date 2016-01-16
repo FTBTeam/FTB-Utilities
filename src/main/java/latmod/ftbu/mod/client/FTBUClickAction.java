@@ -1,9 +1,9 @@
 package latmod.ftbu.mod.client;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.notification.*;
 import latmod.ftbu.net.ClientAction;
 import latmod.lib.PrimitiveType;
+import net.minecraftforge.fml.relauncher.*;
 
 public class FTBUClickAction
 {

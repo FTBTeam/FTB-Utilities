@@ -2,18 +2,18 @@ package latmod.ftbu.world;
 
 import com.google.gson.*;
 import com.mojang.authlib.GameProfile;
-import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.net.MessageLMWorldUpdate;
-import latmod.ftbu.world.claims.*;
+import latmod.ftbu.world.claims.ClaimedChunks;
 import latmod.lib.*;
 import latmod.lib.config.ConfigGroup;
 import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.util.Phase;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
 import java.util.*;
@@ -63,14 +63,6 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		return (p == null) ? null : p.toPlayerMP();
 	}
 	
-	public void load(NBTTagCompound tag)
-	{
-		warps.readFromNBT(tag, "Warps");
-		settings.readFromNBT(tag.getCompoundTag("Settings"));
-		lastMailID = tag.getInteger("LastMailID");
-		claimedChunks.load(tag);
-	}
-	
 	public void load(JsonObject group, Phase p)
 	{
 		if(p.isPre())
@@ -78,7 +70,6 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 			warps.readFromJson(group, "warps");
 			customServerData.setJson(group.get(customServerData.ID));
 			customCommonData.setJson(group.get(customCommonData.ID));
-			settings.readFromJson(group.get("settings").getAsJsonObject());
 			lastMailID = group.has("last_mail_id") ? group.get("last_mail_id").getAsInt() : 0;
 		}
 	}
@@ -91,7 +82,6 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 			group.add(customServerData.ID, customServerData.getJson());
 			group.add(customCommonData.ID, customCommonData.getJson());
 			JsonObject settingsGroup = new JsonObject();
-			settings.writeToJson(settingsGroup);
 			group.add("settings", settingsGroup);
 			if(lastMailID > 0) group.add("last_mail_id", new JsonPrimitive(lastMailID));
 		}
@@ -108,8 +98,8 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 			for(LMPlayerServer p : playerMap.values())
 			{
 				io.writeInt(p.playerID);
-				io.writeUUID(p.getUUID());
-				io.writeUTF(p.getName());
+				io.writeUUID(p.getProfile().getId());
+				io.writeUTF(p.getProfile().getName());
 				
 				if(p.isOnline() && p.playerID != self.playerID) onlinePlayers.add(p.playerID);
 			}
@@ -125,7 +115,6 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 			self.writeToNet(io, true);
 		}
 		
-		settings.writeToNet(io);
 		customCommonData.write(io);
 	}
 	
@@ -138,7 +127,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 			p.writeToServer(tag1);
 			new EventLMPlayerServer.DataSaved(p).post();
 			tag1.setString("UUID", p.getStringUUID());
-			tag1.setString("Name", p.getName());
+			tag1.setString("Name", p.getProfile().getName());
 			tag.setTag(Integer.toString(p.playerID), tag1);
 		}
 	}
@@ -155,20 +144,6 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 			NBTTagCompound tag1 = e.getValue();
 			LMPlayerServer p = new LMPlayerServer(this, id, new GameProfile(UUIDTypeAdapterLM.getUUID(tag1.getString("UUID")), tag1.getString("Name")));
 			p.readFromServer(tag1);
-			
-			//TODO: Remove me after few updates
-			if(tag1.hasKey("Claims"))
-			{
-				NBTTagCompound tagClaims = tag1.getCompoundTag("Claims");
-				NBTTagList listClaims = tagClaims.getTagList("Chunks", LMNBTUtils.INT_ARRAY);
-				
-				if(listClaims != null && listClaims.tagCount() > 0) for(int j = 0; j < listClaims.tagCount(); j++)
-				{
-					int[] ai = listClaims.func_150306_c(j);
-					claimedChunks.put(new ClaimedChunk(p.playerID, ai[0], ai[1], ai[2]));
-				}
-			}
-			
 			playerMap.put(p.playerID, p);
 		}
 		
@@ -196,7 +171,8 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		{
 			public int compare(LMPlayerServer o1, LMPlayerServer o2)
 			{
-				if(o1.isOnline() == o2.isOnline()) return o1.getName().compareToIgnoreCase(o2.getName());
+				if(o1.isOnline() == o2.isOnline())
+					return o1.getProfile().getName().compareToIgnoreCase(o2.getProfile().getName());
 				return Boolean.compare(o2.isOnline(), o1.isOnline());
 			}
 		});

@@ -1,6 +1,6 @@
 package latmod.ftbu.world;
 
-import latmod.ftbu.util.LMSecurityLevel;
+import ftb.lib.LMSecurityLevel;
 import latmod.lib.*;
 import net.minecraft.nbt.NBTTagCompound;
 

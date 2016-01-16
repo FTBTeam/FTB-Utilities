@@ -1,6 +1,5 @@
 package latmod.ftbu.mod.handlers.ftbl;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.client.FTBLibClient;
@@ -9,8 +8,9 @@ import latmod.ftbu.api.EventLMWorldClient;
 import latmod.ftbu.api.guide.ClientGuideFile;
 import latmod.ftbu.badges.ClientBadges;
 import latmod.ftbu.mod.client.gui.claims.ClaimedAreasClient;
-import latmod.ftbu.world.LMWorldClient;
+import latmod.ftbu.world.*;
 import latmod.lib.ByteIOStream;
+import net.minecraftforge.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class FTBLIntegrationClient extends FTBLIntegrationCommon
@@ -42,7 +42,10 @@ public class FTBLIntegrationClient extends FTBLIntegrationCommon
 	{
 		LMWorldClient.inst = new LMWorldClient(io.readInt());
 		LMWorldClient.inst.readDataFromNet(io, true);
-		FTBLib.logger.info("Joined the server with PlayerID " + LMWorldClient.inst.getClientPlayer().playerID + " on world " + FTBWorld.client.getWorldIDS());
+		FTBLib.logger.info("Joined the server with PlayerID " + LMWorldClient.inst.clientPlayerID + " on world " + FTBWorld.client.getWorldIDS());
 		new EventLMWorldClient(LMWorldClient.inst, false).post();
 	}
+	
+	public boolean hasClientWorld()
+	{ return LMWorldServer.inst != null && LMWorldClient.inst.clientPlayerID > 0 && LMWorldClient.inst.clientPlayer != null; }
 }

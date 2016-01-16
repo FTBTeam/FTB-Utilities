@@ -1,18 +1,19 @@
 package latmod.ftbu.util.client;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.FTBLibClient;
 import latmod.lib.LMUtils;
-import net.minecraft.client.renderer.culling.Frustrum;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraftforge.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 /** TODO: Move to FTBLib */ public class LMFrustrumUtils
 {
 	public static boolean isFirstPerson;
 	public static int currentDim;
-	public static double playerX, playerY, playerZ, renderX, renderY, renderZ;
-	public static final Frustrum frustrum = new Frustrum();
+	public static double playerX, playerY, playerZ;
+	//public static double renderX, renderY, renderZ;
+	public static final Frustum frustum = new Frustum();
 	public static long playerPosHash;
 	
 	/*
@@ -23,16 +24,17 @@ import net.minecraft.client.renderer.entity.RenderManager;
 	
 	public static void update()
 	{
+		Minecraft mc = FTBLibClient.mc;
 		isFirstPerson = FTBLibClient.mc.gameSettings.thirdPersonView == 0;
 		currentDim = FTBLibClient.getDim();
-		playerX = RenderManager.instance.viewerPosX;
-		playerY = RenderManager.instance.viewerPosY;
-		playerZ = RenderManager.instance.viewerPosZ;
-		renderX = RenderManager.renderPosX;
-		renderY = RenderManager.renderPosY;
-		renderZ = RenderManager.renderPosZ;
+		playerX = mc.getRenderManager().viewerPosX;
+		playerY = mc.getRenderManager().viewerPosY;
+		playerZ = mc.getRenderManager().viewerPosZ;
+		//renderX = mc.getRenderManager().renderPosX;
+		//renderY = mc.getRenderManager().renderPosY;
+		//renderZ = mc.getRenderManager().renderPosZ;
 		playerPosHash = Math.abs(LMUtils.longHashCode(currentDim, playerX, playerY, playerZ) + 1);
-		frustrum.setPosition(playerX, playerY, playerZ);
+		frustum.setPosition(playerX, playerY, playerZ);
 	}
 	
 	/*

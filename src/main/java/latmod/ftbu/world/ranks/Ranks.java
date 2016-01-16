@@ -26,7 +26,7 @@ public class Ranks
 		if(enabled)
 		{
 			if(p == null || p.isFake()) return defaultRank;
-			Rank r = playerMap.get(p.getUUID());
+			Rank r = playerMap.get(p.getProfile().getId());
 			return (r == null) ? defaultRank : r;
 		}
 		else

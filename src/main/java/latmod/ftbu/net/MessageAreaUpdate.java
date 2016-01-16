@@ -1,13 +1,13 @@
 package latmod.ftbu.net;
 
-import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.EntityPos;
 import ftb.lib.api.LMNetworkWrapper;
 import latmod.ftbu.mod.client.gui.claims.ClaimedAreasClient;
 import latmod.ftbu.world.*;
 import latmod.ftbu.world.claims.ChunkType;
 import latmod.lib.*;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
+import net.minecraftforge.fml.relauncher.*;
 
 public class MessageAreaUpdate extends MessageFTBU
 {

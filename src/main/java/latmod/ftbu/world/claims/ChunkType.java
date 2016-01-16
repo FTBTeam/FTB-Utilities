@@ -1,10 +1,10 @@
 package latmod.ftbu.world.claims;
 
-import cpw.mods.fml.relauncher.*;
+import ftb.lib.LMSecurity;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.util.LMSecurity;
 import latmod.ftbu.world.*;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.fml.relauncher.*;
 
 public class ChunkType
 {

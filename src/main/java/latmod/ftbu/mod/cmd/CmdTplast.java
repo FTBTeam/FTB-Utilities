@@ -27,9 +27,9 @@ public class CmdTplast extends CommandLM
 		if(args.length == 3)
 		{
 			EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-			double x = func_110666_a(ics, ep.posX, args[0]);
-			double y = func_110666_a(ics, ep.posY, args[1]);
-			double z = func_110666_a(ics, ep.posZ, args[2]);
+			double x = parseDouble(ep.posX, args[0], -30000000, 30000000, true);
+			double y = parseDouble(ep.posY, args[1], -30000000, 30000000, true);
+			double z = parseDouble(ep.posZ, args[2], -30000000, 30000000, true);
 			LMDimUtils.teleportPlayer(ep, x, y, z, ep.dimension);
 			return null;
 		}
@@ -51,6 +51,6 @@ public class CmdTplast extends CommandLM
 		EntityPos p = to.getPos();
 		if(p == null) return error(new ChatComponentText("No last position!"));
 		LMDimUtils.teleportPlayer(who, p);
-		return new ChatComponentTranslation(FTBU.mod.assets + "cmd.warp_tp", to.getName());
+		return new ChatComponentTranslation(FTBU.mod.assets + "cmd.warp_tp", to.getProfile().getName());
 	}
 }

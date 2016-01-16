@@ -1,9 +1,9 @@
 package latmod.ftbu.mod.client.gui.friends;
 
 import ftb.lib.api.PlayerAction;
+import ftb.lib.api.gui.PlayerActionRegistry;
 import ftb.lib.gui.widgets.*;
-import latmod.ftbu.mod.client.FTBUActions;
-import latmod.ftbu.world.LMPlayerClient;
+import latmod.ftbu.world.*;
 
 public class PanelPopupPlayerActions extends PanelPopupMenu
 {
@@ -22,14 +22,14 @@ public class PanelPopupPlayerActions extends PanelPopupMenu
 	
 	public void addItems()
 	{
-		for(PlayerAction pa : FTBUActions.getActionsFor(playerLM))
-			menuButtons.add(new ButtonAction(this, pa));
+		for(PlayerAction a : PlayerActionRegistry.getPlayerActions(PlayerAction.Type.OTHER, LMWorldClient.inst.clientPlayer, playerLM, true))
+			menuButtons.add(new ButtonAction(this, a));
 	}
 	
 	public void onClosed(ButtonPopupMenu b, int mb)
 	{
 		if(b != null && mb == 0 && b.object instanceof PlayerAction)
-			((PlayerAction) b.object).onClicked(gui.panelPlayerView.selectedPlayer.playerLM.playerID);
+			((PlayerAction) b.object).onClicked(LMWorldClient.inst.clientPlayer, gui.panelPlayerView.selectedPlayer.playerLM);
 		if(mb == 0) gui.panelPopupMenu = null;
 	}
 }

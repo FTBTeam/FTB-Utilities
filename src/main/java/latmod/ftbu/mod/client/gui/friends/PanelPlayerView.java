@@ -1,9 +1,9 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import ftb.lib.client.GlStateManager;
 import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.world.LMWorldClient;
 import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.input.Mouse;
 
@@ -14,7 +14,7 @@ public class PanelPlayerView extends PanelFriendsGui
 	public PanelPlayerView(GuiFriends g)
 	{
 		super(g);
-		selectedPlayer = new Player(LMWorldClient.inst.getClientPlayer());
+		selectedPlayer = new Player(LMWorldClient.inst.clientPlayer);
 	}
 	
 	public void addWidgets()
@@ -56,7 +56,7 @@ public class PanelPlayerView extends PanelFriendsGui
 		int playerY = height / 2 + size - 4;
 		gui.setTexture(selectedPlayer.getLocationSkin());
 		GlStateManager.translate(0F, 0F, 100F);
-		GuiInventory.func_147046_a(playerX, playerY, size, playerX - gui.mouseX, playerY - (size + (size / 1.625F)) - gui.mouseY, selectedPlayer);
+		GuiInventory.drawEntityOnScreen(playerX, playerY, size, playerX - gui.mouseX, playerY - (size + (size / 1.625F)) - gui.mouseY, selectedPlayer);
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.popAttrib();
 		GlStateManager.popMatrix();

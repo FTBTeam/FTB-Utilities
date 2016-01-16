@@ -1,8 +1,9 @@
 package latmod.ftbu.api.paint;
 
+import net.minecraft.util.EnumFacing;
+
 public interface IPaintable
 {
-	public boolean setPaint(PaintData p);
-	
-	public boolean isPaintValid(int side, Paint p);
+	boolean setPaint(PaintData p);
+	boolean isPaintValid(EnumFacing side, Paint p);
 }

@@ -1,7 +1,5 @@
 package latmod.ftbu.net;
 
-import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.LMNetworkWrapper;
 import ftb.lib.client.FTBLibClient;
 import ftb.lib.item.LMInvUtils;
@@ -9,6 +7,8 @@ import latmod.ftbu.world.*;
 import latmod.lib.ByteCount;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IChatComponent;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.ArrayList;
 
@@ -30,7 +30,7 @@ public class MessageLMPlayerInfo extends MessageFTBU
 		io.writeByte(s);
 		
 		for(int i = 0; i < s; i++)
-			io.writeUTF(IChatComponent.Serializer.func_150696_a(info.get(i)));
+			io.writeUTF(IChatComponent.Serializer.componentToJson(info.get(i)));
 		
 		NBTTagCompound tag = new NBTTagCompound();
 		LMInvUtils.writeItemsToNBT(p.lastArmor, tag, "A");
@@ -50,7 +50,7 @@ public class MessageLMPlayerInfo extends MessageFTBU
 		int s = io.readUnsignedByte();
 		ArrayList<IChatComponent> info = new ArrayList<>();
 		for(int i = 0; i < s; i++)
-			info.add(IChatComponent.Serializer.func_150699_a(io.readUTF()));
+			info.add(IChatComponent.Serializer.jsonToComponent(io.readUTF()));
 		p.receiveInfo(info);
 		
 		NBTTagCompound tag = readTag();

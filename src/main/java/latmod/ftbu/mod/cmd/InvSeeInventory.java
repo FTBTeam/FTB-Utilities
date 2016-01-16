@@ -1,9 +1,11 @@
 package latmod.ftbu.mod.cmd;
 
 import ftb.lib.BaublesHelper;
+import ftb.lib.item.LMInvUtils;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IChatComponent;
 
 public class InvSeeInventory implements IInventory
 {
@@ -47,11 +49,11 @@ public class InvSeeInventory implements IInventory
 		return (inv == null) ? null : inv.decrStackSize(getSlot(j), k);
 	}
 	
-	public ItemStack getStackInSlotOnClosing(int i)
+	public ItemStack removeStackFromSlot(int i)
 	{
 		int j = slotMapping[i];
 		IInventory inv = getInv(j);
-		return (inv == null) ? null : inv.getStackInSlotOnClosing(getSlot(j));
+		return (inv == null) ? null : inv.removeStackFromSlot(getSlot(j));
 	}
 	
 	public void setInventorySlotContents(int i, ItemStack is)
@@ -66,11 +68,17 @@ public class InvSeeInventory implements IInventory
 		}
 	}
 	
-	public String getInventoryName()
-	{ return player.getCommandSenderName(); }
+	public String getName()
+	{ return player.getName(); }
 	
-	public boolean hasCustomInventoryName()
+	public boolean hasCustomName()
 	{ return true; }
+	
+	@Override
+	public IChatComponent getDisplayName()
+	{
+		return null;
+	}
 	
 	public int getInventoryStackLimit()
 	{ return 64; }
@@ -85,16 +93,34 @@ public class InvSeeInventory implements IInventory
 	public boolean isUseableByPlayer(EntityPlayer ep)
 	{ return true; }
 	
-	public void openInventory()
-	{ }
+	public void openInventory(EntityPlayer ep)
+	{
+	}
 	
-	public void closeInventory()
-	{ }
+	public void closeInventory(EntityPlayer ep)
+	{
+	}
 	
 	public boolean isItemValidForSlot(int i, ItemStack is)
 	{
 		int j = slotMapping[i];
 		IInventory inv = getInv(j);
 		return (inv == null) ? false : inv.isItemValidForSlot(getSlot(j), is);
+	}
+	
+	public int getField(int id)
+	{ return 0; }
+	
+	public void setField(int id, int value)
+	{
+	}
+	
+	public int getFieldCount()
+	{ return 0; }
+	
+	public void clear()
+	{
+		LMInvUtils.clear(invPlayer);
+		LMInvUtils.clear(baubles);
 	}
 }

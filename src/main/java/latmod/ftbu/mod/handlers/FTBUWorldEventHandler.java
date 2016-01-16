@@ -1,7 +1,6 @@
 package latmod.ftbu.mod.handlers;
 
 import com.google.gson.JsonObject;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ftb.lib.LMNBTUtils;
 import latmod.ftbu.api.EventLMWorldServer;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
@@ -15,6 +14,7 @@ import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.File;
 import java.util.*;
@@ -25,13 +25,13 @@ public class FTBUWorldEventHandler // FTBLIntegration
 	public void worldLoaded(net.minecraftforge.event.world.WorldEvent.Load e)
 	{
 		if(e.world instanceof WorldServer)
-			FTBUChunkEventHandler.instance.markDirty(Integer.valueOf(e.world.provider.dimensionId));
+			FTBUChunkEventHandler.instance.markDirty(Integer.valueOf(e.world.provider.getDimensionId()));
 	}
 	
 	@SubscribeEvent
 	public void worldSaved(net.minecraftforge.event.world.WorldEvent.Save e)
 	{
-		if(e.world.provider.dimensionId == 0 && e.world instanceof WorldServer)
+		if(e.world.provider.getDimensionId() == 0 && e.world instanceof WorldServer)
 		{
 			new EventLMWorldServer.Saved(LMWorldServer.inst).post();
 			
@@ -66,7 +66,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
 					
 					StringBuilder sb = new StringBuilder();
 					sb.append(LMStringUtils.fillString(Integer.toString(p.playerID), ' ', 6));
-					sb.append(LMStringUtils.fillString(p.getName(), ' ', 21));
+					sb.append(LMStringUtils.fillString(p.getProfile().getName(), ' ', 21));
 					sb.append(p.getStringUUID());
 					l.add(sb.toString());
 				}
@@ -109,9 +109,9 @@ public class FTBUWorldEventHandler // FTBLIntegration
 	public void onExplosionStart(net.minecraftforge.event.world.ExplosionEvent.Start e)
 	{
 		if(e.world.isRemote) return;
-		int dim = e.world.provider.dimensionId;
-		int cx = MathHelperLM.chunk(e.explosion.explosionX);
-		int cz = MathHelperLM.chunk(e.explosion.explosionZ);
+		int dim = e.world.provider.getDimensionId();
+		int cx = MathHelperLM.chunk(e.explosion.getPosition().xCoord);
+		int cz = MathHelperLM.chunk(e.explosion.getPosition().yCoord);
 		if(!LMWorldServer.inst.claimedChunks.allowExplosion(dim, cx, cz)) e.setCanceled(true);
 	}
 	

@@ -1,8 +1,10 @@
 package latmod.ftbu.api.paint;
 
-import net.minecraft.world.World;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.IBlockAccess;
 
 public interface ICustomPaintBlock
 {
-	public Paint getCustomPaint(World w, int x, int y, int z);
+	Paint getCustomPaint(IBlockAccess w, BlockPos pos, IBlockState state);
 }

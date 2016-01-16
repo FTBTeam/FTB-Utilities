@@ -37,7 +37,7 @@ public class LMPStatusComparator implements Comparator<LMPlayer>
 			if(o1 && !o2) output = -1;
 			else if(!o1 && o2) output = 1;
 			else if((o1 && o2) || (!o1 && !o2)) output = 0;
-			if(output == 0) output = p1.getName().compareToIgnoreCase(p2.getName());
+			if(output == 0) output = p1.getProfile().getName().compareToIgnoreCase(p2.getProfile().getName());
 		}
 		
 		return output;

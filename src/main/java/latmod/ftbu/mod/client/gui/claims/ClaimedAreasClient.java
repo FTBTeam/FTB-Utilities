@@ -1,9 +1,9 @@
 package latmod.ftbu.mod.client.gui.claims;
 
-import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.world.*;
 import latmod.ftbu.world.claims.*;
 import latmod.lib.Bits;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
 
@@ -48,7 +48,7 @@ public class ClaimedAreasClient
 			if(typeE.isClaimed())
 			{
 				LMPlayerClient owner = LMWorldClient.inst.getPlayer(type);
-				if(owner != null) l.add(typeE.getChatColor(owner) + owner.getName());
+				if(owner != null) l.add(typeE.getChatColor(owner) + owner.getProfile().getName());
 			}
 			else l.add(typeE.getChatColor(null) + typeE.getIDS());
 		}

@@ -1,10 +1,10 @@
 package latmod.ftbu.net;
 
-import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.LMNetworkWrapper;
 import latmod.ftbu.badges.*;
 import latmod.lib.ByteCount;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.Collection;
 

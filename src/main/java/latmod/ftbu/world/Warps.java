@@ -19,12 +19,10 @@ public class Warps
 		
 		if(tag1 != null && !tag1.hasNoTags())
 		{
-			List<String> l = LMNBTUtils.getMapKeys(tag1);
-			
-			for(int i = 0; i < l.size(); i++)
+			for(String s1 : LMNBTUtils.getMapKeys(tag1))
 			{
-				int[] a = tag1.getIntArray(l.get(i));
-				set(l.get(i), a[0], a[1], a[2], a[3]);
+				int[] a = tag1.getIntArray(s1);
+				set(s1, a[0], a[1], a[2], a[3]);
 			}
 		}
 	}

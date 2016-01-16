@@ -10,6 +10,6 @@ public class LMPNameComparator implements Comparator<LMPlayer>
 	
 	public int compare(LMPlayer o1, LMPlayer o2)
 	{
-		return o1.getName().compareToIgnoreCase(o2.getName());
+		return o1.getProfile().getName().compareToIgnoreCase(o2.getProfile().getName());
 	}
 }

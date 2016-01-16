@@ -1,10 +1,10 @@
 package latmod.ftbu.net;
 
-import cpw.mods.fml.common.network.simpleimpl.*;
 import ftb.lib.api.LMNetworkWrapper;
-import latmod.ftbu.world.LMPlayerServer;
+import latmod.ftbu.world.LMWorldServer;
 import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
 
 public class MessageAreaRequest extends MessageFTBU
 {
@@ -30,6 +30,6 @@ public class MessageAreaRequest extends MessageFTBU
 		int sizeY = io.readInt();
 		
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
-		return new MessageAreaUpdate(LMPlayerServer.get(ep), chunkX, chunkY, ep.dimension, sizeX, sizeY);
+		return new MessageAreaUpdate(LMWorldServer.inst.getPlayer(ep), chunkX, chunkY, ep.dimension, sizeX, sizeY);
 	}
 }

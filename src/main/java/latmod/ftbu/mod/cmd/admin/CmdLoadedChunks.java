@@ -3,7 +3,6 @@ package latmod.ftbu.mod.cmd.admin;
 import com.google.common.collect.ImmutableSetMultimap;
 import ftb.lib.cmd.*;
 import latmod.ftbu.api.guide.*;
-import latmod.ftbu.util.LatCoreMC;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
@@ -48,7 +47,7 @@ public class CmdLoadedChunks extends CommandLM
 			}
 		}
 		
-		LatCoreMC.displayGuide(ep, file);
+		GuideFile.displayGuide(ep, file);
 		return null;
 	}
 }

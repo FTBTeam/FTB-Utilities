@@ -3,24 +3,25 @@ package latmod.ftbu.api.paint;
 import ftb.lib.*;
 import ftb.lib.item.LMInvUtils;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 
 public class PaintItemHelper
 {
 	public static ItemStack getPaintItem(ItemStack is)
 	{
-		return (is.hasTagCompound() && is.stackTagCompound.hasKey("Paint")) ? ItemStack.loadItemStackFromNBT(is.stackTagCompound.getCompoundTag("Paint")) : null;
+		return (is.hasTagCompound() && is.getTagCompound().hasKey("Paint")) ? ItemStack.loadItemStackFromNBT(is.getTagCompound().getCompoundTag("Paint")) : null;
 	}
 	
 	public static ItemStack onItemRightClick(IPainterItem i, ItemStack is, World w, EntityPlayer ep)
 	{
-		if(!w.isRemote && ep.isSneaking() && is.hasTagCompound() && is.stackTagCompound.hasKey("Paint"))
+		if(!w.isRemote && ep.isSneaking() && is.hasTagCompound() && is.getTagCompound().hasKey("Paint"))
 		{
 			is = LMInvUtils.removeTags(is, "Paint");
 			FTBLib.printChat(ep, "Paint texture cleared");
@@ -29,11 +30,11 @@ public class PaintItemHelper
 		return is;
 	}
 	
-	public static boolean onItemUse(IPainterItem i, ItemStack is, EntityPlayer ep, World w, int x, int y, int z, int s, float x1, float y1, float z1)
+	public static boolean onItemUse(IPainterItem i, ItemStack is, EntityPlayer ep, World w, BlockPos pos, EnumFacing s, float x1, float y1, float z1)
 	{
 		if(w.isRemote) return true;
 		
-		TileEntity te = w.getTileEntity(x, y, z);
+		TileEntity te = w.getTileEntity(pos);
 		
 		if(te != null && te instanceof IPaintable)
 		{
@@ -51,7 +52,7 @@ public class PaintItemHelper
 					if(b != Blocks.air) p = new Paint(b, paint.getItemDamage());
 				}
 				
-				if(mop != null && ((IPaintable) te).setPaint(new PaintData(ep, p, x, y, z, x1, y1, z1, s, mop.subHit)))
+				if(mop != null && ((IPaintable) te).setPaint(new PaintData(ep, p, pos, x1, y1, z1, s, mop.subHit)))
 				{
 					if(!ep.capabilities.isCreativeMode) i.damagePainter(is, ep);
 				}
@@ -59,23 +60,22 @@ public class PaintItemHelper
 		}
 		else if(ep.isSneaking())
 		{
-			Block b = w.getBlock(x, y, z);
+			IBlockState state = w.getBlockState(pos);
+			Block b = state.getBlock();
 			
 			if(b != Blocks.air)
 			{
-				int m = w.getBlockMetadata(x, y, z);
-				
-				if(b.hasTileEntity(m) && !(b instanceof ICustomPaintBlock)) return true;
+				if(b.hasTileEntity(state) && !(b instanceof ICustomPaintBlock)) return true;
 				
 				if(b.getBlockBoundsMinX() == 0D && b.getBlockBoundsMinY() == 0D && b.getBlockBoundsMinZ() == 0D && b.getBlockBoundsMaxX() == 1D && b.getBlockBoundsMaxY() == 1D && b.getBlockBoundsMaxZ() == 1D)
 				{
-					if(b instanceof INoPaintBlock && !((INoPaintBlock) b).hasPaint(w, x, y, z, s)) return true;
+					if(b instanceof INoPaintBlock && !((INoPaintBlock) b).hasPaint(w, pos, state, s)) return true;
 					
-					ItemStack paint = new ItemStack(b, 1, m);
+					ItemStack paint = new ItemStack(b, 1, b.getMetaFromState(state));
 					
 					if(b instanceof ICustomPaintBlock)
 					{
-						Paint p = ((ICustomPaintBlock) b).getCustomPaint(w, x, y, z);
+						Paint p = ((ICustomPaintBlock) b).getCustomPaint(w, pos, state);
 						if(p != null) paint = new ItemStack(p.block, 1, p.meta);
 						else return true;
 					}
@@ -88,11 +88,11 @@ public class PaintItemHelper
 						
 						if(paint0 == null || !ItemStack.areItemStacksEqual(paint0, paint))
 						{
-							if(!is.hasTagCompound()) is.stackTagCompound = new NBTTagCompound();
+							if(!is.hasTagCompound()) is.setTagCompound(new NBTTagCompound());
 							
 							NBTTagCompound paintTag = new NBTTagCompound();
 							paint.writeToNBT(paintTag);
-							is.stackTagCompound.setTag("Paint", paintTag);
+							is.getTagCompound().setTag("Paint", paintTag);
 							
 							FTBLib.printChat(ep, "Paint texture set to " + paint.getDisplayName());
 						}

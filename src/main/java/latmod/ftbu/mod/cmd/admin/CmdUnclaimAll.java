@@ -29,6 +29,6 @@ public class CmdUnclaimAll extends CommandLM
 		
 		LMPlayerServer p = LMPlayerServer.get(args[0]);
 		p.unclaimAllChunks(null);
-		return new ChatComponentText("Unclaimed all " + p.getName() + "'s chunks");
+		return new ChatComponentText("Unclaimed all " + p.getProfile().getName() + "'s chunks");
 	}
 }

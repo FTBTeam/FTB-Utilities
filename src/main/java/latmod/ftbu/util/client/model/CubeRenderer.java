@@ -1,9 +1,8 @@
 package latmod.ftbu.util.client.model;
 
-import cpw.mods.fml.relauncher.*;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.*;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
@@ -14,8 +13,6 @@ public class CubeRenderer
 	protected static final float[] normalsX = new float[] {0F, 0F, 0F, 0F, -1F, 1F};
 	protected static final float[] normalsY = new float[] {-1F, 1F, 0F, 0F, 0F, 0F};
 	protected static final float[] normalsZ = new float[] {0F, 0F, -1F, 1F, 0F, 0F};
-	
-	public Tessellator tessellator = null;
 	
 	public boolean hasTexture = true;
 	public boolean hasNormals = true;
@@ -56,12 +53,6 @@ public class CubeRenderer
 	public void setUVD(double minU, double minV, double maxU, double maxV)
 	{ setUV((float) minU, (float) minV, (float) maxU, (float) maxV); }
 	
-	public void setUVFromIcon(IIcon icon)
-	{ setUV(icon.getMinU(), icon.getMinV(), icon.getMaxU(), icon.getMaxV()); }
-	
-	public void setUVFromBlock(Block b, int m, int s)
-	{ setUVFromIcon(b.getIcon(s, m)); }
-	
 	public void renderAll()
 	{
 		renderDown();
@@ -92,38 +83,22 @@ public class CubeRenderer
 		}
 		
 		currentSide = i;
-		if(hasNormals)
-		{
-			if(tessellator == null) GL11.glNormal3f(normalsX[i], normalsY[i], normalsZ[i]);
-			else tessellator.setNormal(normalsX[i], normalsY[i], normalsZ[i]);
-		}
-		
-		if(tessellator == null) GL11.glBegin(GL11.GL_QUADS);
-		else tessellator.startDrawingQuads();
+		if(hasNormals) GL11.glNormal3f(normalsX[i], normalsY[i], normalsZ[i]);
+		GL11.glBegin(GL11.GL_QUADS);
 	}
 	
 	protected void end()
 	{
 		if(currentSide == -1) return;
-		if(tessellator == null) GL11.glEnd();
-		else tessellator.draw();
+		GL11.glEnd();
 		currentSide = -1;
 	}
 	
 	protected void vertex(double x, double y, double z, float u, float v)
 	{
 		if(currentSide == -1) return;
-		
-		if(tessellator == null)
-		{
-			if(hasTexture) GL11.glTexCoord2d(u, v);
-			GL11.glVertex3d(x, y, z);
-		}
-		else
-		{
-			if(hasTexture) tessellator.setTextureUV(u, v);
-			tessellator.addVertex(x, y, z);
-		}
+		if(hasTexture) GL11.glTexCoord2d(u, v);
+		GL11.glVertex3d(x, y, z);
 	}
 	
 	public void renderDown()

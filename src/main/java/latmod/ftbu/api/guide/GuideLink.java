@@ -1,12 +1,12 @@
 package latmod.ftbu.api.guide;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
 import ftb.lib.client.*;
 import ftb.lib.item.ItemStackTypeAdapter;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
+import net.minecraftforge.fml.relauncher.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

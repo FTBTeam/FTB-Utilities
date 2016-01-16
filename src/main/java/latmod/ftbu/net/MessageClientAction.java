@@ -1,8 +1,8 @@
 package latmod.ftbu.net;
 
-import cpw.mods.fml.common.network.simpleimpl.*;
 import latmod.ftbu.world.*;
 import latmod.lib.ByteCount;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
 
 public class MessageClientAction extends MessageFTBU
 {

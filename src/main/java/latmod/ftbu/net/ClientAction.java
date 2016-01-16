@@ -1,9 +1,8 @@
 package latmod.ftbu.net;
 
 import ftb.lib.FTBLib;
-import latmod.ftbu.api.guide.ServerGuideFile;
+import latmod.ftbu.api.guide.*;
 import latmod.ftbu.badges.*;
-import latmod.ftbu.util.LatCoreMC;
 import latmod.ftbu.world.*;
 
 import java.util.HashMap;
@@ -101,7 +100,7 @@ public abstract class ClientAction
 	{
 		public boolean onAction(int extra, LMPlayerServer owner)
 		{
-			LatCoreMC.displayGuide(owner.getPlayer(), new ServerGuideFile(owner));
+			GuideFile.displayGuide(owner.getPlayer(), new ServerGuideFile(owner));
 			return false;
 		}
 	};

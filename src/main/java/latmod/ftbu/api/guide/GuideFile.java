@@ -2,9 +2,12 @@ package latmod.ftbu.api.guide;
 
 import ftb.lib.*;
 import latmod.ftbu.mod.client.gui.guide.GuideLinkSerializer;
+import latmod.ftbu.net.MessageDisplayGuide;
 import latmod.lib.*;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.*;
 import net.minecraft.util.*;
+import net.minecraftforge.common.util.FakePlayer;
 
 import java.io.File;
 import java.util.*;
@@ -100,8 +103,8 @@ public class GuideFile // ServerGuideFile // ClientGuideFile
 			{
 				NBTTagCompound tag1 = linksList.getCompoundTagAt(i);
 				GuideLink l = new GuideLink(LinkType.values()[tag1.getByte("I")], tag1.getString("L"));
-				if(tag1.hasKey("T")) l.title = IChatComponent.Serializer.func_150699_a(tag1.getString("T"));
-				if(tag1.hasKey("H")) l.hover = IChatComponent.Serializer.func_150699_a(tag1.getString("H"));
+				if(tag1.hasKey("T")) l.title = IChatComponent.Serializer.jsonToComponent(tag1.getString("T"));
+				if(tag1.hasKey("H")) l.hover = IChatComponent.Serializer.jsonToComponent(tag1.getString("H"));
 				links.put(tag1.getString("ID"), l);
 			}
 		}
@@ -124,8 +127,8 @@ public class GuideFile // ServerGuideFile // ClientGuideFile
 				tag1.setByte("I", (byte) l.type.ordinal());
 				tag1.setString("ID", e.getKey());
 				if(!l.link.isEmpty()) tag1.setString("L", l.link);
-				if(l.title != null) tag1.setString("T", IChatComponent.Serializer.func_150696_a(l.title));
-				if(l.hover != null) tag1.setString("H", IChatComponent.Serializer.func_150696_a(l.hover));
+				if(l.title != null) tag1.setString("T", IChatComponent.Serializer.componentToJson(l.title));
+				if(l.hover != null) tag1.setString("H", IChatComponent.Serializer.componentToJson(l.hover));
 				
 				linksList.appendTag(tag1);
 			}
@@ -134,5 +137,10 @@ public class GuideFile // ServerGuideFile // ClientGuideFile
 		}
 		
 		main.writeToNBT(tag);
+	}
+	
+	public static void displayGuide(EntityPlayerMP ep, GuideFile file)
+	{
+		if(ep != null && file != null && !(ep instanceof FakePlayer)) new MessageDisplayGuide(file).sendTo(ep);
 	}
 }

@@ -13,7 +13,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 
-import java.io.*;
+import java.io.File;
 import java.util.UUID;
 
 public class CmdPlayerLM extends CommandSubLM
@@ -98,9 +98,9 @@ public class CmdPlayerLM extends CommandSubLM
 			try
 			{
 				EntityPlayerMP ep = p.getPlayer();
-				String filename = ep.getCommandSenderName();
+				String filename = ep.getName();
 				if(args.length == 2) filename = "custom/" + args[1];
-				NBTTagCompound tag = LMNBTUtils.readMap(new FileInputStream(new File(FTBLib.folderLocal, "ftbu/playerinvs/" + filename + ".dat")));
+				NBTTagCompound tag = LMNBTUtils.readMap(new File(FTBLib.folderLocal, "ftbu/playerinvs/" + filename + ".dat"));
 				
 				StringIDInvLoader.readInvFromNBT(ep.inventory, tag, "Inventory");
 				
@@ -143,9 +143,9 @@ public class CmdPlayerLM extends CommandSubLM
 				if(FTBLib.isModInstalled(OtherMods.BAUBLES))
 					StringIDInvLoader.writeInvToNBT(BaublesHelper.getBaubles(ep), tag, "Baubles");
 				
-				String filename = ep.getCommandSenderName();
+				String filename = ep.getName();
 				if(args.length == 2) filename = "custom/" + args[1];
-				LMNBTUtils.writeMap(new FileOutputStream(LMFileUtils.newFile(new File(FTBLib.folderLocal, "ftbu/playerinvs/" + filename + ".dat"))), tag);
+				LMNBTUtils.writeMap(LMFileUtils.newFile(new File(FTBLib.folderLocal, "ftbu/playerinvs/" + filename + ".dat")), tag);
 			}
 			catch(Exception e)
 			{

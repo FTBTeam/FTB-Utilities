@@ -1,10 +1,9 @@
 package latmod.ftbu.util.client;
 
-import cpw.mods.fml.relauncher.*;
-import net.minecraft.block.Block;
+import ftb.lib.client.FTBLibClient;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public abstract class TileRenderer<T extends TileEntity> extends TileEntitySpecialRenderer
@@ -16,8 +15,5 @@ public abstract class TileRenderer<T extends TileEntity> extends TileEntitySpeci
 	public abstract void renderTile(T t, double rx, double ry, double rz, float pt);
 	
 	public final void register(Class<? extends T> c)
-	{ LatCoreMCClient.addTileRenderer(c, this); }
-	
-	public final void registerItemRenderer(Block b)
-	{ if(this instanceof IItemRenderer) LatCoreMCClient.addItemRenderer(b, (IItemRenderer) this); }
+	{ FTBLibClient.addTileRenderer(c, this); }
 }

@@ -1,10 +1,11 @@
 package latmod.ftbu.mod.client.gui.friends;
 
 import ftb.lib.api.PlayerAction;
+import ftb.lib.api.gui.PlayerActionRegistry;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
-import latmod.ftbu.mod.client.FTBUActions;
-import latmod.ftbu.world.LMPlayerClient;
+import latmod.ftbu.world.*;
+import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class GuiFriendsGuiSmall extends GuiLM
 		mainPanel.width = 0;
 		mainPanel.height = 0;
 		
-		List<PlayerAction> list = FTBUActions.getActionsFor(playerLM);
+		List<PlayerAction> list = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.OTHER, LMWorldClient.inst.clientPlayer, playerLM, true);
 		for(int i = 0; i < list.size(); i++)
 		{
 			ButtonPlayerActionSmall b = new ButtonPlayerActionSmall(this, list.get(i));
@@ -65,7 +66,7 @@ public class GuiFriendsGuiSmall extends GuiLM
 		public void onButtonPressed(int b)
 		{
 			gui.container.player.closeScreen();
-			action.onClicked(gui.playerLM.playerID);
+			action.onClicked(LMWorldClient.inst.clientPlayer, gui.playerLM);
 		}
 		
 		public void renderWidget()
@@ -73,11 +74,14 @@ public class GuiFriendsGuiSmall extends GuiLM
 			int ax = getAX();
 			int ay = getAY();
 			
-			GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), width, height, 0x88777777);
+			GlStateManager.color(0.46F, 0.46F, 0.46F, 0.53F);
+			GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), width, height);
 			gui.render(action.icon, ax + 1, ay + 1);
-			gui.getFontRenderer().drawString(title, ax + 20, ay + 6, 0xFFFFFFFF);
 			
-			if(mouseOver(ax, ay)) GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), width, height, 0x33FFFFFF);
+			gui.getFontRenderer().drawString(title, ax + 20, ay + 6, 0xFFFFFFFF);
+			GlStateManager.color(1F, 1F, 1F, 0.2F);
+			if(mouseOver(ax, ay)) GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), width, height);
+			GlStateManager.color(1F, 1F, 1F, 1F);
 		}
 		
 		public void addMouseOverText(List<String> l)

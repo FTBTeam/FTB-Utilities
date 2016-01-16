@@ -13,7 +13,6 @@ public class CmdAdmin extends CommandSubLM
 		add(new CmdInvsee());
 		add(new CmdSetWarp());
 		add(new CmdDelWarp());
-		add(new CmdWorldBorder());
 		add(new CmdUnclaim());
 		add(new CmdUnclaimAll());
 		add(new CmdLoadedChunks());

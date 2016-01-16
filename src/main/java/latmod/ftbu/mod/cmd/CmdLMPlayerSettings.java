@@ -1,8 +1,7 @@
 package latmod.ftbu.mod.cmd;
 
-import ftb.lib.FTBLib;
+import ftb.lib.*;
 import ftb.lib.cmd.*;
-import latmod.ftbu.util.LMSecurityLevel;
 import latmod.ftbu.world.*;
 import net.minecraft.command.*;
 import net.minecraft.util.IChatComponent;
@@ -41,7 +40,7 @@ public class CmdLMPlayerSettings extends CommandSubLM
 		{
 			checkArgs(args, 1);
 			LMPlayerServer p = LMPlayerServer.get(ics);
-			boolean b = parseBoolean(ics, args[0]);
+			boolean b = parseBoolean(args[0]);
 			p.getSettings().set(flag, b);
 			p.sendUpdate();
 			FTBLib.printChat(ics, commandName + " set to " + b);

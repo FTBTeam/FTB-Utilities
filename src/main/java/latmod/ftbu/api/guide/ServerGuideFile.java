@@ -73,7 +73,7 @@ public class ServerGuideFile extends GuideFile
 		{
 			GuideCategory list = categoryServerAdmin.getSub(new ChatComponentText("Entities"));
 			
-			Set<Integer> entityIDset = EntityList.IDtoClassMapping.keySet();
+			Set<Integer> entityIDset = EntityList.idToClassMapping.keySet();
 			for(Integer i : entityIDset)
 				list.println("[" + i + "] " + EntityList.getStringFromID(i.intValue()));
 			
@@ -81,10 +81,11 @@ public class ServerGuideFile extends GuideFile
 			
 			IntList freeIDs = new IntList();
 			
-			for(int i = 0; i < Enchantment.enchantmentsList.length; i++)
+			for(int i = 0; i < 256; i++)
 			{
-				if(Enchantment.enchantmentsList[i] == null) freeIDs.add(i);
-				else list.println("[" + i + "] " + Enchantment.enchantmentsList[i].getTranslatedName(1));
+				Enchantment e = Enchantment.getEnchantmentById(i);
+				if(e == null) freeIDs.add(i);
+				else list.println("[" + i + "] " + e.getTranslatedName(1));
 			}
 			
 			list.println("Empty IDs: " + freeIDs.toString());
@@ -196,7 +197,7 @@ public class ServerGuideFile extends GuideFile
 			sb.append(j + 1);
 			sb.append(']');
 			sb.append(' ');
-			sb.append(p.getName());
+			sb.append(p.getProfile().getName());
 			sb.append(':');
 			sb.append(' ');
 			if(!(data instanceof IChatComponent)) sb.append(data);

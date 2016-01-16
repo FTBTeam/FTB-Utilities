@@ -5,9 +5,7 @@ import net.minecraft.item.ItemStack;
 
 public interface IPainterItem
 {
-	public ItemStack getPaintItem(ItemStack is);
-	
-	public boolean canPaintBlock(ItemStack is);
-	
-	public void damagePainter(ItemStack is, EntityPlayer ep);
+	ItemStack getPaintItem(ItemStack is);
+	boolean canPaintBlock(ItemStack is);
+	void damagePainter(ItemStack is, EntityPlayer ep);
 }

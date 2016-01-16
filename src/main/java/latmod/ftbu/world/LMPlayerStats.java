@@ -49,7 +49,7 @@ public class LMPlayerStats
 	}
 	
 	public int getStat(StatBase s)
-	{ return owner.isOnline() ? owner.getPlayer().func_147099_x().writeStat(s) : 0; }
+	{ return owner.isOnline() ? owner.getPlayer().getStatFile().readStat(s) : 0; }
 	
 	public void refreshStats()
 	{

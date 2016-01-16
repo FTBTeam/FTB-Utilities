@@ -1,8 +1,8 @@
 package latmod.ftbu.api;
 
-import cpw.mods.fml.relauncher.Side;
 import latmod.ftbu.world.*;
 import net.minecraft.util.IChatComponent;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.List;
 

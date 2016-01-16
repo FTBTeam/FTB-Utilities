@@ -1,31 +1,28 @@
 package latmod.ftbu.api.paint;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.*;
 
 public class PaintData
 {
 	public final EntityPlayer player;
 	
-	public final int posX;
-	public final int posY;
-	public final int posZ;
+	public final BlockPos pos;
 	
 	public final float hitX;
 	public final float hitY;
 	public final float hitZ;
 	
-	public final int side;
+	public final EnumFacing side;
 	public final int subHit;
 	
 	public final Paint paint;
 	
-	public PaintData(EntityPlayer ep, Paint p, int x, int y, int z, float hx, float hy, float hz, int s, int sh)
+	public PaintData(EntityPlayer ep, Paint p, BlockPos ps, float hx, float hy, float hz, EnumFacing s, int sh)
 	{
 		player = ep;
 		paint = p;
-		posX = x;
-		posY = y;
-		posZ = z;
+		pos = ps;
 		hitX = hx;
 		hitY = hx;
 		hitZ = hx;

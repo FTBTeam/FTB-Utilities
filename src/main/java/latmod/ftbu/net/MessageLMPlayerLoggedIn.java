@@ -1,11 +1,11 @@
 package latmod.ftbu.net;
 
 import com.mojang.authlib.GameProfile;
-import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.api.EventLMPlayerClient;
 import latmod.ftbu.world.*;
 import latmod.lib.ByteCount;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.UUID;
 
@@ -18,8 +18,8 @@ public class MessageLMPlayerLoggedIn extends MessageFTBU
 		this();
 		
 		io.writeInt(p.playerID);
-		io.writeUUID(p.getUUID());
-		io.writeUTF(p.getName());
+		io.writeUUID(p.getProfile().getId());
+		io.writeUTF(p.getProfile().getName());
 		io.writeBoolean(first);
 		p.writeToNet(io, self);
 	}

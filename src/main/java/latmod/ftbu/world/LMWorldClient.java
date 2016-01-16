@@ -1,12 +1,12 @@
 package latmod.ftbu.world;
 
 import com.mojang.authlib.GameProfile;
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
 import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.api.EventLMPlayerClient;
 import latmod.lib.*;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.io.File;
 import java.util.*;
@@ -44,16 +44,13 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 		return (p == null) ? null : p.toPlayerSP();
 	}
 	
-	public LMPlayerClientSelf getClientPlayer()
-	{ return clientPlayer; }
-	
 	public void readDataFromNet(ByteIOStream io, boolean first)
 	{
 		if(first)
 		{
 			playerMap.clear();
 			
-			GameProfile gp = FTBLibClient.mc.getSession().func_148256_e();
+			GameProfile gp = FTBLibClient.mc.getSession().getProfile();
 			clientPlayer = new LMPlayerClientSelf(this, clientPlayerID, gp);
 			
 			int psize = io.readInt();
@@ -83,7 +80,6 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 			new EventLMPlayerClient.DataLoaded(clientPlayer).post();
 		}
 		
-		settings.readFromNet(io);
 		customCommonData.read(io);
 	}
 }

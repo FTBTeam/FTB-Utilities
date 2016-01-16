@@ -13,7 +13,7 @@ public class Player extends AbstractClientPlayer
 	
 	public Player(LMPlayerClient p)
 	{
-		super(Minecraft.getMinecraft().theWorld, p.gameProfile);
+		super(Minecraft.getMinecraft().theWorld, p.getProfile());
 		playerLM = p;
 		isOwner = playerLM.playerID == LMWorldClient.inst.clientPlayerID;
 	}
@@ -29,8 +29,8 @@ public class Player extends AbstractClientPlayer
 	public boolean canCommandSenderUseCommand(int i, String s)
 	{ return false; }
 	
-	public ChunkCoordinates getPlayerCoordinates()
-	{ return new ChunkCoordinates(0, 0, 0); }
+	public BlockPos getPlayerCoordinates()
+	{ return new BlockPos(0, 0, 0); }
 	
 	public boolean isInvisibleToPlayer(EntityPlayer ep)
 	{ return true; }

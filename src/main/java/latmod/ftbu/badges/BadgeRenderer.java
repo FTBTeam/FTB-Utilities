@@ -1,11 +1,11 @@
 package latmod.ftbu.badges;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.*;
+import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.mod.client.FTBUClient;
-import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class BadgeRenderer
@@ -15,7 +15,7 @@ public class BadgeRenderer
 	@SubscribeEvent
 	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
 	{
-		if(LatCoreMCClient.isPlaying() && FTBUClient.render_badges.get() && !e.entityPlayer.isInvisible())
+		if(FTBLibClient.isPlayingWithFTBU() && FTBUClient.render_badges.get() && !e.entityPlayer.isInvisible())
 		{
 			LMPlayerClient pc = LMWorldClient.inst.getPlayer(e.entityPlayer);
 			

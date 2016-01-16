@@ -1,8 +1,8 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import ftb.lib.client.GlStateManager;
 import ftb.lib.gui.GuiLM;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.*;
 
@@ -38,7 +38,9 @@ public class PanelText extends PanelFriendsGui
 		int ay = getAY();
 		
 		float z = gui.getZLevel();
-		GuiLM.drawBlankRect(ax, ay, z, width, height, 0x33666666);
+		GlStateManager.color(0.4F, 0.4F, 0.4F, 0.2F);
+		GuiLM.drawBlankRect(ax, ay, z, width, height);
+		GlStateManager.color(1F, 1F, 1F, 1F);
 		
 		GlStateManager.translate(0F, 0F, z);
 		for(int i = 0; i < text.size(); i++)

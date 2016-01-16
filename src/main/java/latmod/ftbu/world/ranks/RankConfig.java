@@ -1,11 +1,10 @@
 package latmod.ftbu.world.ranks;
 
-import latmod.ftbu.util.LMSecurityLevel;
+import ftb.lib.LMSecurityLevel;
 import latmod.ftbu.world.claims.ChunkloaderType;
 import latmod.lib.IntList;
 import latmod.lib.config.*;
 import latmod.lib.util.*;
-import net.minecraft.entity.player.EntityPlayer;
 
 public class RankConfig
 {
@@ -24,9 +23,6 @@ public class RankConfig
 	public final ConfigEntryBool show_rank = new ConfigEntryBool("show_rank", true).setInfo("If set to false, playerMap won't be able to see others Rank in FriendsGUI");
 	public final ConfigEntryDouble offline_chunkloader_timer = new ConfigEntryDouble("offline_chunkloader_timer", new DoubleBounds(24D, 0D, Double.POSITIVE_INFINITY)).sync().setInfo("Max hours player can be offline until he's chunks unload. 0 - Disabled, will unload instantly when he disconnects");
 	public final ConfigEntryString badge = new ConfigEntryString("badge", "").setInfo("Badge ID");
-	
-	public boolean allowCreativeInteractSecure(EntityPlayer ep)
-	{ return ep != null && allow_creative_interact_secure.get() && ep.capabilities.isCreativeMode/* && !(ep instanceof FakePlayer)*/; }
 	
 	public ConfigGroup getAsGroup(String id, boolean copy)
 	{

@@ -1,10 +1,10 @@
 package latmod.ftbu.api.guide;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.LMNBTUtils;
 import latmod.lib.*;
 import net.minecraft.nbt.*;
 import net.minecraft.util.*;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
 
@@ -110,13 +110,13 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 	
 	void writeToNBT(NBTTagCompound tag)
 	{
-		tag.setString("N", IChatComponent.Serializer.func_150696_a(title));
+		tag.setString("N", IChatComponent.Serializer.componentToJson(title));
 		
 		if(text.size() > 0)
 		{
 			NBTTagList list = new NBTTagList();
 			for(int i = 0; i < text.size(); i++)
-				list.appendTag(new NBTTagString(IChatComponent.Serializer.func_150696_a(text.get(i))));
+				list.appendTag(new NBTTagString(IChatComponent.Serializer.componentToJson(text.get(i))));
 			tag.setTag("T", list);
 		}
 		
@@ -138,13 +138,13 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 	{
 		clear();
 		
-		title = IChatComponent.Serializer.func_150699_a(tag.getString("N"));
+		title = IChatComponent.Serializer.jsonToComponent(tag.getString("N"));
 		
 		if(tag.hasKey("T"))
 		{
 			NBTTagList list = tag.getTagList("T", LMNBTUtils.STRING);
 			for(int i = 0; i < list.tagCount(); i++)
-				text.add(IChatComponent.Serializer.func_150699_a(list.getStringTagAt(i)));
+				text.add(IChatComponent.Serializer.jsonToComponent(list.getStringTagAt(i)));
 		}
 		
 		if(tag.hasKey("S"))

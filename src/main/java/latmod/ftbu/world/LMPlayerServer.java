@@ -1,7 +1,6 @@
 package latmod.ftbu.world;
 
 import com.mojang.authlib.GameProfile;
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
 import ftb.lib.item.StringIDInvLoader;
 import ftb.lib.notification.*;
@@ -18,6 +17,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
 
@@ -90,7 +90,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	}
 	
 	public boolean isOP()
-	{ return FTBLib.isOP(gameProfile); }
+	{ return FTBLib.isOP(getProfile()); }
 	
 	public EntityPos getPos()
 	{
@@ -127,7 +127,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		if(isOnline())
 		{
 			stats.refreshStats();
-			if(!world.settings.getWB(entityPlayer.dimension).isOutsideD(entityPlayer.posX, entityPlayer.posZ)) getPos();
+			getPos();
 		}
 	}
 	
@@ -249,7 +249,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			
 			for(LMPlayerServer p : world.playerMap.values())
 			{
-				if(p.isFriendRaw(this) && !isFriendRaw(p)) requests.add(p.getName());
+				if(p.isFriendRaw(this) && !isFriendRaw(p)) requests.add(p.getProfile().getName());
 			}
 			
 			if(requests.size() > 0)

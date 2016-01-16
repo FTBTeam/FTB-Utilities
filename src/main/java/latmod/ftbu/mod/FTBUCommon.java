@@ -1,6 +1,6 @@
 package latmod.ftbu.mod;
 
-import latmod.ftbu.tile.TileLM;
+import ftb.lib.api.tile.TileLM;
 import latmod.ftbu.world.LMWorld;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 

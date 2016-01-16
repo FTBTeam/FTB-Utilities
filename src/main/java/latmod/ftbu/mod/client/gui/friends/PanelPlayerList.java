@@ -2,6 +2,7 @@ package latmod.ftbu.mod.client.gui.friends;
 
 import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.world.*;
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Mouse;
 
 import java.util.*;
@@ -28,7 +29,7 @@ public class PanelPlayerList extends PanelFriendsGui
 		tempPlayerList.clear();
 		tempPlayerList.addAll(LMWorldClient.inst.playerMap.values());
 		
-		LMPlayerClient clientPlayer = LMWorldClient.inst.getClientPlayer();
+		LMPlayerClient clientPlayer = LMWorldClient.inst.clientPlayer;
 		
 		tempPlayerList.remove(clientPlayer);
 		
@@ -86,5 +87,7 @@ public class PanelPlayerList extends PanelFriendsGui
 		
 		for(int i = 0; i < size; i++)
 			playerButtons.get(i).renderWidget();
+		
+		GlStateManager.color(1F, 1F, 1F, 1F);
 	}
 }

@@ -1,6 +1,5 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.PanelPopupMenu;
@@ -8,7 +7,9 @@ import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.world.LMWorldClient;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.*;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.List;
 
@@ -47,14 +48,14 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		if(panelPlayerView.selectedPlayer != null)
 		{
 			panelPlayerInfo.text.clear();
-			panelPlayerInfo.text.add(EnumChatFormatting.BOLD + panelPlayerView.selectedPlayer.getCommandSenderName());
+			panelPlayerInfo.text.add(EnumChatFormatting.BOLD + panelPlayerView.selectedPlayer.getName());
 			if(panelPlayerView.selectedPlayer.playerLM.isOnline)
 				panelPlayerInfo.text.add(EnumChatFormatting.GREEN.toString() + '[' + FTBLibLang.label_online() + ']');
 			
 			if(!panelPlayerView.selectedPlayer.isOwner)
 			{
-				boolean raw1 = panelPlayerView.selectedPlayer.playerLM.isFriendRaw(LMWorldClient.inst.getClientPlayer());
-				boolean raw2 = LMWorldClient.inst.getClientPlayer().isFriendRaw(panelPlayerView.selectedPlayer.playerLM);
+				boolean raw1 = panelPlayerView.selectedPlayer.playerLM.isFriendRaw(LMWorldClient.inst.clientPlayer);
+				boolean raw2 = LMWorldClient.inst.clientPlayer.isFriendRaw(panelPlayerView.selectedPlayer.playerLM);
 				
 				if(raw1 && raw2)
 					panelPlayerInfo.text.add(EnumChatFormatting.GREEN.toString() + '[' + FTBU.mod.translateClient("label.friend") + ']');
@@ -94,9 +95,11 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			zLevel = 0;
 		}
 		
-		drawBlankRect(panelPlayerView.posX - 1, 0, zLevel, 1, height, 0xFF000000);
-		drawBlankRect(panelPlayerInfo.posX - 1, 0, zLevel, 1, height, 0xFF000000);
-		drawBlankRect(width - panelPlayerInfo.width, panelPlayerInfo.height, zLevel, panelPlayerInfo.width, 1, 0xFF000000);
+		GlStateManager.color(0F, 0F, 0F, 1F);
+		drawBlankRect(panelPlayerView.posX - 1, 0, zLevel, 1, height);
+		drawBlankRect(panelPlayerInfo.posX - 1, 0, zLevel, 1, height);
+		drawBlankRect(width - panelPlayerInfo.width, panelPlayerInfo.height, zLevel, panelPlayerInfo.width, 1);
+		GlStateManager.color(1F, 1F, 1F, 1F);
 	}
 	
 	public void drawText(List<String> l)

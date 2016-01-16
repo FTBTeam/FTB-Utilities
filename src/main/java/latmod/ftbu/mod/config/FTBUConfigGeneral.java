@@ -1,9 +1,9 @@
 package latmod.ftbu.mod.config;
 
-import cpw.mods.fml.relauncher.Side;
 import latmod.lib.config.*;
 import latmod.lib.util.DoubleBounds;
 import net.minecraft.entity.*;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.ArrayList;
 

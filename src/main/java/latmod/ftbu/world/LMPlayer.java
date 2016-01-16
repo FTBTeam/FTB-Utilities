@@ -1,20 +1,20 @@
 package latmod.ftbu.world;
 
 import com.mojang.authlib.GameProfile;
-import cpw.mods.fml.relauncher.*;
+import ftb.lib.api.ILMPlayer;
 import latmod.ftbu.world.ranks.Rank;
 import latmod.lib.IntList;
 import latmod.lib.json.UUIDTypeAdapterLM;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
 
-public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer // LMPlayerClient
+public abstract class LMPlayer implements ILMPlayer, Comparable<LMPlayer> // LMPlayerServer // LMPlayerClient
 {
 	public final int playerID;
-	public GameProfile gameProfile;
+	private GameProfile gameProfile;
 	
 	public final IntList friends;
 	public final ItemStack[] lastArmor;
@@ -34,37 +34,34 @@ public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer
 	
 	public abstract LMWorld getWorld();
 	
-	public abstract Side getSide();
-	
-	public abstract boolean isOnline();
-	
 	public final String getStringUUID()
-	{ return UUIDTypeAdapterLM.getString(getUUID()); }
+	{ return UUIDTypeAdapterLM.getString(gameProfile.getId()); }
 	
 	public abstract LMPlayerServer toPlayerMP();
 	
 	@SideOnly(Side.CLIENT)
 	public abstract LMPlayerClient toPlayerSP();
 	
-	public abstract EntityPlayer getPlayer();
+	public void setProfile(GameProfile p)
+	{ if(p != null) gameProfile = p; }
 	
-	public final String getName()
-	{ return gameProfile.getName(); }
+	public final int getPlayerID()
+	{ return playerID; }
 	
-	public final UUID getUUID()
-	{ return gameProfile.getId(); }
+	public final GameProfile getProfile()
+	{ return gameProfile; }
 	
-	public boolean isFriendRaw(LMPlayer p)
-	{ return p != null && (playerID == p.playerID || friends.contains(p.playerID)); }
+	public boolean isFriendRaw(ILMPlayer p)
+	{ return p != null && (playerID == p.getPlayerID() || friends.contains(p.getPlayerID())); }
 	
-	public boolean isFriend(LMPlayer p)
+	public boolean isFriend(ILMPlayer p)
 	{ return isFriendRaw(p) && p.isFriendRaw(this); }
 	
 	public final int compareTo(LMPlayer o)
 	{ return Integer.compare(playerID, o.playerID); }
 	
 	public String toString()
-	{ return getName(); }
+	{ return gameProfile.getName(); }
 	
 	public final int hashCode()
 	{ return playerID; }
@@ -115,4 +112,7 @@ public abstract class LMPlayer implements Comparable<LMPlayer> // LMPlayerServer
 	
 	public Rank getRank()
 	{ return null; }
+	
+	public boolean allowCreativeInteractSecure()
+	{ return getPlayer() != null && getPlayer().capabilities.isCreativeMode && getRank().config.allow_creative_interact_secure.get(); }
 }

@@ -1,6 +1,5 @@
 package latmod.ftbu.mod.client.gui.claims;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
@@ -9,14 +8,15 @@ import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
 import latmod.ftbu.net.*;
-import latmod.ftbu.util.client.LatCoreMCClient;
 import latmod.ftbu.world.*;
 import latmod.ftbu.world.claims.ChunkType;
 import latmod.lib.MathHelperLM;
 import net.minecraft.client.gui.*;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.*;
 
@@ -76,7 +76,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		xSize = ySize = tiles_gui * 16;
 		
 		adminToken = token;
-		playerLM = LMWorldClient.inst.getClientPlayer();
+		playerLM = LMWorldClient.inst.clientPlayer;
 		startX = MathHelperLM.chunk(mc.thePlayer.posX) - (int) (tiles_gui * 0.5D);
 		startY = MathHelperLM.chunk(mc.thePlayer.posZ) - (int) (tiles_gui * 0.5D);
 		currentDim = FTBLibClient.getDim();
@@ -173,7 +173,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	
 	public void drawBackground()
 	{
-		if(currentDim != FTBLibClient.getDim() || !LatCoreMCClient.isPlaying())
+		if(currentDim != FTBLibClient.getDim() || !FTBLibClient.isPlayingWithFTBU())
 		{
 			mc.thePlayer.closeScreen();
 			return;
@@ -200,8 +200,10 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			thread = null;
 		}
 		
-		drawBlankRect(guiLeft - 2, guiTop - 2, zLevel, xSize + 4, ySize + 4, 0xFF000000);
-		//drawBlankRect((xSize - 128) / 2, (ySize - 128) / 2, zLevel, 128, 128, 0xFFFF0000);
+		GlStateManager.color(0F, 0F, 0F, 1F);
+		drawBlankRect(guiLeft - 2, guiTop - 2, zLevel, xSize + 4, ySize + 4);
+		//drawBlankRect((xSize - 128) / 2, (ySize - 128) / 2, zLevel, 128, 128);
+		GlStateManager.color(1F, 1F, 1F, 1F);
 		
 		if(textureID != -1 && thread == null)
 		{
@@ -301,7 +303,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 						GlStateManager.color(1F, 1F, 1F, ep.isSneaking() ? 0.4F : 0.7F);
 						GuiLM.drawTexturedRectD(-8, -8, zLevel, 16, 16, 0D, 0D, 1D, 1D);
 						GlStateManager.popMatrix();
-						GuiLM.drawPlayerHead(ep.getCommandSenderName(), -2, -2, 4, 4, zLevel);
+						GuiLM.drawPlayerHead(ep.getName(), -2, -2, 4, 4, zLevel);
 						GlStateManager.popMatrix();
 					}
 				}
@@ -354,8 +356,9 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		{
 			if(mouseOver())
 			{
+				GlStateManager.color(1F, 1F, 1F, 0.27F);
+				drawBlankRect(getAX(), getAY(), gui.getZLevel(), 16, 16);
 				GlStateManager.color(1F, 1F, 1F, 1F);
-				drawBlankRect(getAX(), getAY(), gui.getZLevel(), 16, 16, 0x45FFFFFF);
 			}
 		}
 	}

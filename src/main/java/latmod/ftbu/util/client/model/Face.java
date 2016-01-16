@@ -1,6 +1,6 @@
 package latmod.ftbu.util.client.model;
 
-import cpw.mods.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.opengl.GL11;
 
 /**

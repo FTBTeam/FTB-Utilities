@@ -1,7 +1,6 @@
 package latmod.ftbu.world;
 
 import com.mojang.authlib.GameProfile;
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.LMNBTUtils;
 import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.api.EventLMPlayerClient;
@@ -9,6 +8,7 @@ import latmod.ftbu.world.ranks.*;
 import latmod.lib.*;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.*;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
 
@@ -28,7 +28,7 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 	}
 	
 	public ResourceLocation getSkin()
-	{ return FTBLibClient.getSkinTexture(getName()); }
+	{ return FTBLibClient.getSkinTexture(getProfile().getName()); }
 	
 	public LMWorld getWorld()
 	{ return world; }
@@ -49,7 +49,7 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 	{ return null; }
 	
 	public EntityPlayerSP getPlayer()
-	{ return isOnline() ? FTBLibClient.getPlayerSP(getUUID()) : null; }
+	{ return isOnline() ? FTBLibClient.getPlayerSP(getProfile().getId()) : null; }
 	
 	public Rank getRank()
 	{ return Ranks.PLAYER; }

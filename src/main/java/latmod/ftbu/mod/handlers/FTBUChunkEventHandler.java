@@ -28,7 +28,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 	{
 		if(w == null || player == null) return null;
 		
-		HashMap<Integer, ForgeChunkManager.Ticket> map = ticketMap.get(Integer.valueOf(w.provider.dimensionId));
+		HashMap<Integer, ForgeChunkManager.Ticket> map = ticketMap.get(w.provider.getDimensionId());
 		ForgeChunkManager.Ticket t = (map == null) ? null : map.get(player.playerID);
 		
 		if(t == null)
@@ -42,7 +42,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 				if(map == null)
 				{
 					map = new HashMap<>();
-					ticketMap.put(Integer.valueOf(w.provider.dimensionId), map);
+					ticketMap.put(w.provider.getDimensionId(), map);
 				}
 				
 				map.put(player.playerID, t);
@@ -55,7 +55,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 	public void ticketsLoaded(List<ForgeChunkManager.Ticket> list, World world)
 	{
 		FTBLib.dev_logger.info(LMWorldServer.inst);
-		Integer dim = Integer.valueOf(world.provider.dimensionId);
+		Integer dim = Integer.valueOf(world.provider.getDimensionId());
 		ticketMap.remove(dim);
 		HashMap<Integer, ForgeChunkManager.Ticket> newMap = new HashMap<>();
 		
@@ -64,7 +64,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 			int playerID = t.getModData().getInteger("PlayerID");
 			
 			if(playerID == 0) ForgeChunkManager.releaseTicket(t);
-			else newMap.put(Integer.valueOf(playerID), t);
+			else newMap.put(playerID, t);
 		}
 		
 		ticketMap.put(dim, newMap);
@@ -116,7 +116,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 							{
 								isLoaded = false;
 								if(c.isForced)
-									FTBLib.logger.info("Unloading " + p.getName() + " chunks for being offline for too long");
+									FTBLib.logger.info("Unloading " + p.getProfile().getName() + " chunks for being offline for too long");
 							}
 						}
 					}

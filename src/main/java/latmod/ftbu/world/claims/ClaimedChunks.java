@@ -10,7 +10,7 @@ import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.util.EnumEnabled;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.*;
-import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.*;
@@ -52,7 +52,7 @@ public class ClaimedChunks
 					
 					for(int k = 0; k < chunksList.tagCount(); k++)
 					{
-						int[] ai = chunksList.func_150306_c(k);
+						int[] ai = chunksList.getIntArrayAt(k);
 						ClaimedChunk c = new ClaimedChunk(Integer.parseInt(e1.getKey()), dim, ai[0], ai[1]);
 						if(ai.length >= 3 && ai[2] == 1) c.isChunkloaded = true;
 						map.put(Long.valueOf(Bits.intsToLong(ai[0], ai[1])), c);
@@ -202,14 +202,14 @@ public class ClaimedChunks
 		World w = LMDimUtils.getWorld(dim);
 		if(w == null || !w.getChunkProvider().chunkExists(cx, cz)) return ChunkType.UNLOADED;
 		if(isInSpawn(dim, cx, cz)) return ChunkType.SPAWN;
-		if(LMWorldServer.inst.settings.getWB(dim).isOutside(cx, cz)) return ChunkType.WORLD_BORDER;
+		//TODO: if(LMWorldServer.inst.settings.getWB(dim).isOutside(cx, cz)) return ChunkType.WORLD_BORDER;
 		ClaimedChunk c = getChunk(dim, cx, cz);
 		if(c == null) return ChunkType.WILDERNESS;
 		return new ChunkType.PlayerClaimed(LMWorldServer.inst.getPlayer(c.ownerID));
 	}
 	
-	public ChunkType getTypeD(int dim, double x, double z)
-	{ return getType(dim, MathHelperLM.chunk(x), MathHelperLM.chunk(z)); }
+	public ChunkType getTypeD(int dim, BlockPos pos)
+	{ return getType(dim, MathHelperLM.chunk(pos.getX()), MathHelperLM.chunk(pos.getZ())); }
 	
 	public static ChunkType getChunkTypeFromI(int i)
 	{
@@ -224,11 +224,11 @@ public class ClaimedChunks
 			return false;
 		int radius = FTBLib.getServer().getSpawnProtectionSize();
 		if(radius <= 0) return false;
-		ChunkCoordinates c = LMDimUtils.getSpawnPoint(0);
-		int minX = MathHelperLM.chunk(c.posX + 0.5D - radius);
-		int minZ = MathHelperLM.chunk(c.posZ + 0.5D - radius);
-		int maxX = MathHelperLM.chunk(c.posX + 0.5D + radius);
-		int maxZ = MathHelperLM.chunk(c.posZ + 0.5D + radius);
+		BlockPos c = LMDimUtils.getSpawnPoint(0);
+		int minX = MathHelperLM.chunk(c.getX() + 0.5D - radius);
+		int minZ = MathHelperLM.chunk(c.getZ() + 0.5D - radius);
+		int maxX = MathHelperLM.chunk(c.getX() + 0.5D + radius);
+		int maxZ = MathHelperLM.chunk(c.getZ() + 0.5D + radius);
 		return cx >= minX && cx <= maxX && cz >= minZ && cz <= maxZ;
 	}
 	
@@ -238,7 +238,7 @@ public class ClaimedChunks
 	public boolean allowExplosion(int dim, int cx, int cz)
 	{
 		if(dim == 0 && FTBUConfigGeneral.safe_spawn.get() && isInSpawn(dim, cx, cz)) return false;
-		else if(LMWorldServer.inst.settings.getWB(dim).isOutside(cx, cz)) return false;
+			//TODO: else if(LMWorldServer.inst.settings.getWB(dim).isOutside(cx, cz)) return false;
 		else
 		{
 			ClaimedChunk c = getChunk(dim, cx, cz);
@@ -258,22 +258,22 @@ public class ClaimedChunks
 		return true;
 	}
 	
-	public static boolean canPlayerInteract(EntityPlayer ep, int x, int y, int z, boolean leftClick)
+	public static boolean canPlayerInteract(EntityPlayer ep, BlockPos pos, boolean leftClick)
 	{
 		if(ep == null || ep.worldObj.isRemote) return true;
 		
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
 		
-		if(LMWorldServer.inst.settings.getWB(ep.dimension).isOutsideD(x, z)) return false;
-		else if(!p.isFake() && p.getRank().config.allowCreativeInteractSecure(ep)) return true;
+		//TODO: World border
+		if(!p.isFake() && p.allowCreativeInteractSecure()) return true;
 		
 		if(leftClick)
 		{
-			if(p.getRank().config.break_whitelist.get().contains(LMInvUtils.getRegName(ep.worldObj.getBlock(x, y, z))))
+			if(p.getRank().config.break_whitelist.get().contains(LMInvUtils.getRegName(ep.worldObj.getBlockState(pos).getBlock())))
 				return true;
 		}
 		
-		ChunkType type = LMWorldServer.inst.claimedChunks.getTypeD(ep.dimension, x, z);
+		ChunkType type = LMWorldServer.inst.claimedChunks.getTypeD(ep.dimension, pos);
 		return type.canInteract(p, leftClick);
 	}
 }

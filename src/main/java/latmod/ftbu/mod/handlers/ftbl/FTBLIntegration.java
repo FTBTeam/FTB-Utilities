@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.handlers.ftbl;
 
-import com.google.gson.*;
+import com.google.gson.JsonElement;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.item.LMInvUtils;
@@ -61,23 +61,11 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 		File latmodFolder = new File(FTBLib.folderWorld, "latmod/");
 		if(!latmodFolder.exists()) latmodFolder = new File(FTBLib.folderWorld, "LatMod/");
 		
-		File file = new File(latmodFolder, "LMWorld.dat");
-		
 		LMWorldServer.inst = new LMWorldServer(latmodFolder);
-		JsonElement obj = JsonNull.INSTANCE;
 		
-		if(file.exists())
-		{
-			NBTTagCompound tagWorldData = LMNBTUtils.readMap(file);
-			if(tagWorldData != null) LMWorldServer.inst.load(tagWorldData);
-			LMFileUtils.delete(file);
-		}
-		else
-		{
-			file = new File(latmodFolder, "LMWorld.json");
-			obj = LMJsonUtils.getJsonElement(file);
-			if(obj.isJsonObject()) LMWorldServer.inst.load(obj.getAsJsonObject(), Phase.PRE);
-		}
+		File file = new File(latmodFolder, "LMWorld.json");
+		JsonElement obj = LMJsonUtils.getJsonElement(file);
+		if(obj.isJsonObject()) LMWorldServer.inst.load(obj.getAsJsonObject(), Phase.PRE);
 		
 		new EventLMWorldServer.Loaded(LMWorldServer.inst, Phase.PRE).post();
 		
@@ -119,7 +107,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 	
 	public void onServerTick(World w)
 	{
-		if(w.provider.dimensionId == 0)
+		if(w.provider.getDimensionId() == 0)
 		{
 			FTBUTicks.update();
 			
@@ -166,9 +154,9 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 				LMWorldServer.inst.playerMap.put(p.playerID, p);
 				send_all = true;
 			}
-			else if(!p.getName().equals(p.gameProfile.getName()))
+			else if(!p.getProfile().getName().equals(ep.getName()))
 			{
-				p.gameProfile = ep.getGameProfile();
+				p.setProfile(ep.getGameProfile());
 				send_all = true;
 			}
 			
@@ -202,10 +190,10 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 		}
 	}
 	
-	public int getPlayerID(Object player)
+	public ILMPlayer getLMPlayer(Object player)
 	{
 		LMWorld w = LMWorld.getWorld();
-		return (w == null) ? 0 : w.getPlayerID(player);
+		return (w == null) ? null : w.getPlayer(player);
 	}
 	
 	public String[] getPlayerNames(boolean online)
@@ -220,4 +208,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 	
 	public void readWorldData(ByteIOStream io)
 	{ FTBU.proxy_ftbl_int.readWorldData(io); }
+	
+	public boolean hasClientWorld()
+	{ return FTBU.proxy_ftbl_int.hasClientWorld(); }
 }

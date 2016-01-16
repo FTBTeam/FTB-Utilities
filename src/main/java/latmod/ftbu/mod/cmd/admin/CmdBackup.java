@@ -29,7 +29,7 @@ public class CmdBackup extends CommandSubLM
 			Backups.shouldRun = true;
 			boolean b = Backups.run();
 			Backups.commandOverride = false;
-			if(b) FTBLib.printChat(BroadcastSender.inst, ics.getCommandSenderName() + " launched manual backup!");
+			if(b) FTBLib.printChat(BroadcastSender.inst, ics.getName() + " launched manual backup!");
 			return b ? null : error(new ChatComponentText("Backup in progress!"));
 		}
 	}

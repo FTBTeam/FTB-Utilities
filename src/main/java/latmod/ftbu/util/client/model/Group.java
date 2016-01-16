@@ -1,7 +1,7 @@
 package latmod.ftbu.util.client.model;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.client.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -34,8 +34,8 @@ public class Group
 	{
 		if(listID == -1)
 		{
-			if(parent.texVertices == null) GlStateManager.disableTexture();
-			else GlStateManager.enableTexture();
+			if(parent.texVertices == null) GlStateManager.disableTexture2D();
+			else GlStateManager.enableTexture2D();
 			
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			

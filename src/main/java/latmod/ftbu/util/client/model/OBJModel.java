@@ -1,9 +1,9 @@
 package latmod.ftbu.util.client.model;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
-import ftb.lib.client.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.*;
@@ -127,8 +127,8 @@ public class OBJModel
 			m.sizeV = maxSizeV - minSizeV;
 		}
 		
-		if(m != null && m.texVertices != null) GlStateManager.enableTexture();
-		else GlStateManager.disableTexture();
+		if(m != null && m.texVertices != null) GlStateManager.enableTexture2D();
+		else GlStateManager.disableTexture2D();
 		
 		m.renderAll();
 		
@@ -191,8 +191,8 @@ public class OBJModel
 		
 		if(render)
 		{
-			if(m != null && m.texVertices != null) GlStateManager.enableTexture();
-			else GlStateManager.disableTexture();
+			if(m != null && m.texVertices != null) GlStateManager.enableTexture2D();
+			else GlStateManager.disableTexture2D();
 			
 			m.renderAll();
 		}

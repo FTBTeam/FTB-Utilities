@@ -1,9 +1,5 @@
 package latmod.ftbu.mod;
 
-import cpw.mods.fml.common.*;
-import cpw.mods.fml.common.event.*;
-import cpw.mods.fml.common.network.NetworkCheckHandler;
-import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
 import latmod.ftbu.mod.cmd.*;
 import latmod.ftbu.mod.cmd.admin.CmdAdmin;
@@ -11,14 +7,17 @@ import latmod.ftbu.mod.config.FTBUConfig;
 import latmod.ftbu.mod.handlers.*;
 import latmod.ftbu.mod.handlers.ftbl.*;
 import latmod.ftbu.net.FTBUNetHandler;
-import latmod.ftbu.util.LMMod;
 import latmod.ftbu.world.Backups;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.fml.common.*;
+import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.network.NetworkCheckHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.Map;
 
-@Mod(modid = FTBUFinals.MOD_ID, version = FTBUFinals.MOD_VERSION, name = FTBUFinals.MOD_NAME, dependencies = FTBUFinals.MOD_DEP)
+@Mod(modid = FTBUFinals.MOD_ID, version = FTBUFinals.MOD_VERSION, name = FTBUFinals.MOD_NAME, dependencies = FTBUFinals.MOD_DEP, acceptedMinecraftVersions = "[1.8.8,1.9)")
 public class FTBU
 {
 	@Mod.Instance(FTBUFinals.MOD_ID)
@@ -50,12 +49,6 @@ public class FTBU
 		Backups.init();
 		mod.onPostLoaded();
 		proxy.preInit();
-	}
-	
-	@Mod.EventHandler
-	public void init(FMLInitializationEvent e)
-	{
-		FMLInterModComms.sendMessage("Waila", "register", "latmod.ftbu.core.api.RegisterWailaEvent.registerHandlers");
 	}
 	
 	@Mod.EventHandler

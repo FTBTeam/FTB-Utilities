@@ -34,6 +34,6 @@ public class CmdUnloadAll extends CommandLM
 		for(ClaimedChunk c : LMWorldServer.inst.claimedChunks.getChunks(p, null))
 			c.isChunkloaded = false;
 		if(p.isOnline()) p.sendUpdate();
-		return new ChatComponentText("Unloaded all " + p.getName() + "'s chunks");
+		return new ChatComponentText("Unloaded all " + p.getProfile().getName() + "'s chunks");
 	}
 }

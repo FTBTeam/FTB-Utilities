@@ -1,7 +1,7 @@
 package latmod.ftbu.net;
 
-import cpw.mods.fml.common.network.simpleimpl.*;
 import ftb.lib.api.LMNetworkWrapper;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
 
 public class MessagePing extends MessageFTBU
 {

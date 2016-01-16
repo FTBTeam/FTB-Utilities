@@ -1,6 +1,5 @@
 package latmod.ftbu.mod;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.gui.LMGuiHandler;
 import ftb.lib.gui.ContainerEmpty;
 import latmod.ftbu.mod.client.gui.claims.GuiClaimChunks;
@@ -9,6 +8,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.*;
 
 public class FTBUGuiHandler extends LMGuiHandler
 {

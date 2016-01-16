@@ -1,13 +1,13 @@
 package latmod.ftbu.badges;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.client.*;
+import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.mod.FTBU;
 import latmod.lib.util.FinalIDObject;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.opengl.GL11;
 
 public class Badge extends FinalIDObject
@@ -52,7 +52,7 @@ public class Badge extends FinalIDObject
 		GlStateManager.pushAttrib();
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
-		GlStateManager.enableTexture();
+		GlStateManager.enableTexture2D();
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
@@ -71,14 +71,19 @@ public class Badge extends FinalIDObject
 		double s = 0.2D;
 		GlStateManager.translate(0F, 0F, -1F);
 		GlStateManager.color(1F, 1F, 1F, 1F);
-
-		/*GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2f(0F, 0F); GL11.glVertex3f(0F, 0F, 0F);
-		GL11.glTexCoord2f(1F, 0F); GL11.glVertex3f(s, 0F, 0F);
-		GL11.glTexCoord2f(1F, 1F); GL11.glVertex3f(s, s, 0F);
-		GL11.glTexCoord2f(0F, 1F); GL11.glVertex3f(0F, s, 0F);
-		GL11.glEnd();*/
 		
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0F, 0F);
+		GL11.glVertex3d(0D, 0D, 0D);
+		GL11.glTexCoord2f(1F, 0F);
+		GL11.glVertex3d(s, 0D, 0D);
+		GL11.glTexCoord2f(1F, 1F);
+		GL11.glVertex3d(s, s, 0D);
+		GL11.glTexCoord2f(0F, 1F);
+		GL11.glVertex3d(0D, s, 0D);
+		GL11.glEnd();
+		
+		/*
 		Tessellator t = Tessellator.instance;
 		t.startDrawingQuads();
 		t.addVertexWithUV(0D, 0D, 0D, 0D, 0D);
@@ -86,6 +91,7 @@ public class Badge extends FinalIDObject
 		t.addVertexWithUV(s, s, 0D, 1D, 1D);
 		t.addVertexWithUV(0D, s, 0D, 0D, 1D);
 		t.draw();
+		*/
 		
 		FTBLibClient.popMaxBrightness();
 		GlStateManager.popMatrix();

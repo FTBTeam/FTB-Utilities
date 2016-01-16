@@ -1,13 +1,15 @@
 package latmod.ftbu.mod.client.gui.claims;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.FTBLibClient;
 import latmod.lib.*;
-import net.minecraft.block.Block;
+import net.minecraft.block.*;
 import net.minecraft.block.material.*;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -74,11 +76,13 @@ public class ThreadReloadArea extends Thread
 		short by = getTopY(bx, bz);
 		if(by == defHeight || by > 255) return 0;
 		
-		Block b = worldObj.getBlock(bx, by, bz);
+		BlockPos pos = new BlockPos(bx, by, bz);
 		
-		if(!b.isAir(worldObj, bx, by, bz))
+		IBlockState state = worldObj.getBlockState(pos);
+		
+		if(!state.getBlock().isAir(worldObj, pos))
 		{
-			int col = 0xFF000000 | getBlockColor(bx, by, bz, b);
+			int col = 0xFF000000 | getBlockColor(pos, state);
 			
 			short bw = getTopY(bx - 1, bz);
 			short be = getTopY(bx + 1, bz);
@@ -114,14 +118,14 @@ public class ThreadReloadArea extends Thread
 		}
 		else
 		{
-			c = worldObj.getChunkFromBlockCoords(bx, bz);
+			c = worldObj.getChunkFromChunkCoords(MathHelperLM.chunk(bx), MathHelperLM.chunk(bz));
 			max = (short) Math.max(255, c.getTopFilledSegment() + 15);
 		}
 		
 		for(short y = max; y > 0; --y)
 		{
 			Block block = c.getBlock(x, y, z);
-			if(block == Blocks.tallgrass || block.isAir(worldObj, bx, y, bz)) continue;
+			if(block == Blocks.tallgrass || block.isAir(worldObj, new BlockPos(bx, y, bz))) continue;
 			
 			if(mapValue) heightMap[x + z * 16] = y;
 			return y;
@@ -130,8 +134,9 @@ public class ThreadReloadArea extends Thread
 		return defHeight;
 	}
 	
-	private int getBlockColor(int x, int y, int z, Block b)
+	private int getBlockColor(BlockPos pos, IBlockState state)
 	{
+		Block b = state.getBlock();
 		if(b == Blocks.sandstone) return MapColor.sandColor.colorValue;
 		else if(b == Blocks.fire) return MapColor.redColor.colorValue;
 		else if(b == Blocks.yellow_flower) return MapColor.yellowColor.colorValue;
@@ -141,24 +146,25 @@ public class ThreadReloadArea extends Thread
 		else if(b == Blocks.gravel) return 0xFF8D979B;
 		else if(b == Blocks.glass) return 0x33BCF9FF;
 		else if(b.getMaterial() == Material.water)
-			return LMColorUtils.multiply(MapColor.waterColor.colorValue, b.colorMultiplier(worldObj, x, y, z), 200);
-		
-		int m = worldObj.getBlockMetadata(x, y, z);
+			return LMColorUtils.multiply(MapColor.waterColor.colorValue, b.colorMultiplier(worldObj, pos), 200);
 		
 		if(b == Blocks.red_flower)
 		{
-			if(m == 0) return MapColor.yellowColor.colorValue;
-			else if(m == 1) return MapColor.lightBlueColor.colorValue;
-			else if(m == 2) return MapColor.magentaColor.colorValue;
-			else if(m == 3) return MapColor.silverColor.colorValue;
-			else if(m == 4) return MapColor.redColor.colorValue;
-			else if(m == 5) return MapColor.adobeColor.colorValue;
-			else if(m == 6) return MapColor.snowColor.colorValue;
-			else if(m == 7) return MapColor.pinkColor.colorValue;
-			else if(m == 8) return MapColor.silverColor.colorValue;
+			BlockFlower.EnumFlowerType type = BlockFlower.EnumFlowerType.getType(BlockFlower.EnumFlowerColor.RED, b.getMetaFromState(state));
+			
+			if(type == BlockFlower.EnumFlowerType.POPPY) return MapColor.redColor.colorValue;
+			else if(type == BlockFlower.EnumFlowerType.BLUE_ORCHID) return MapColor.lightBlueColor.colorValue;
+			else if(type == BlockFlower.EnumFlowerType.ALLIUM) return MapColor.magentaColor.colorValue;
+			else if(type == BlockFlower.EnumFlowerType.HOUSTONIA) return MapColor.silverColor.colorValue;
+			else if(type == BlockFlower.EnumFlowerType.RED_TULIP) return MapColor.redColor.colorValue;
+			else if(type == BlockFlower.EnumFlowerType.ORANGE_TULIP) return MapColor.adobeColor.colorValue;
+			else if(type == BlockFlower.EnumFlowerType.WHITE_TULIP) return MapColor.snowColor.colorValue;
+			else if(type == BlockFlower.EnumFlowerType.PINK_TULIP) return MapColor.pinkColor.colorValue;
+			else if(type == BlockFlower.EnumFlowerType.OXEYE_DAISY) return MapColor.silverColor.colorValue;
 		}
 		else if(b == Blocks.planks)
 		{
+			int m = b.getMetaFromState(state);
 			if(m == 0) return 0xFFC69849;
 			else if(m == 1) return 0xFF7C5E2E;
 			else if(m == 2) return 0xFFF2E093;
@@ -168,10 +174,10 @@ public class ThreadReloadArea extends Thread
 		}
 		
 		if(b == Blocks.leaves || b == Blocks.vine || b == Blocks.waterlily)
-			return LMColorUtils.addBrightness(b.colorMultiplier(worldObj, x, y, z), -40);
-		else if(b == Blocks.grass && m == 0)
-			return LMColorUtils.addBrightness(b.colorMultiplier(worldObj, x, y, z), -15);
+			return LMColorUtils.addBrightness(b.colorMultiplier(worldObj, pos), -40);
+		else if(b == Blocks.grass && state.getValue(BlockGrass.SNOWY).booleanValue())
+			return LMColorUtils.addBrightness(b.colorMultiplier(worldObj, pos), -15);
 		
-		return b.getMapColor(m).colorValue;
+		return b.getMapColor(state).colorValue;
 	}
 }

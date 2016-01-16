@@ -1,8 +1,10 @@
 package latmod.ftbu.api.paint;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.*;
 import net.minecraft.world.IBlockAccess;
 
 public interface INoPaintBlock
 {
-	public boolean hasPaint(IBlockAccess iba, int x, int y, int z, int s);
+	boolean hasPaint(IBlockAccess iba, BlockPos pos, IBlockState state, EnumFacing s);
 }

@@ -1,10 +1,10 @@
 package latmod.ftbu.world.claims;
 
-import cpw.mods.fml.relauncher.*;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraftforge.fml.relauncher.*;
 
 public final class ClaimedChunk extends ChunkCoordIntPair
 {

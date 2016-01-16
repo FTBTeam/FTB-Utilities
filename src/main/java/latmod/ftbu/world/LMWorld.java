@@ -1,6 +1,5 @@
 package latmod.ftbu.world;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
 import latmod.ftbu.mod.FTBU;
 import latmod.lib.config.ConfigGroup;
@@ -8,6 +7,7 @@ import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
 
@@ -23,13 +23,11 @@ public abstract class LMWorld // FTBWorld
 	{ return getWorld(FTBLib.getEffectiveSide()); }
 	
 	public final Side side;
-	public final LMWorldSettings settings;
 	public final ConfigGroup customCommonData;
 	
 	public LMWorld(Side s)
 	{
 		side = s;
-		settings = new LMWorldSettings(this);
 		customCommonData = new ConfigGroup("custom_common_data");
 	}
 	
@@ -61,7 +59,7 @@ public abstract class LMWorld // FTBWorld
 			UUID id = (UUID) o;
 			
 			for(LMPlayer p : playerMap.values())
-			{ if(p.getUUID().equals(id)) return p; }
+			{ if(p.getProfile().getId().equals(id)) return p; }
 			
 			return null;
 		}
@@ -82,7 +80,7 @@ public abstract class LMWorld // FTBWorld
 			if(s == null || s.isEmpty()) return null;
 			
 			for(LMPlayer p : playerMap.values())
-			{ if(p.getName().equalsIgnoreCase(s)) return p; }
+			{ if(p.getProfile().getName().equalsIgnoreCase(s)) return p; }
 			
 			return getPlayer(UUIDTypeAdapterLM.getUUID(s));
 		}

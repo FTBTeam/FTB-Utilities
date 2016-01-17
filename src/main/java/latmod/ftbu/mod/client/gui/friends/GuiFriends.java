@@ -1,8 +1,7 @@
 package latmod.ftbu.mod.client.gui.friends;
 
 import ftb.lib.api.gui.*;
-import ftb.lib.gui.GuiLM;
-import ftb.lib.gui.widgets.PanelPopupMenu;
+import ftb.lib.api.gui.widgets.PanelPopupMenu;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.world.LMWorldClient;
 import net.minecraft.client.gui.GuiScreen;

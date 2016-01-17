@@ -1,9 +1,9 @@
 package latmod.ftbu.mod.client.gui.claims;
 
-import ftb.lib.*;
+import ftb.lib.TextureCoords;
+import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.*;
-import ftb.lib.gui.GuiLM;
-import ftb.lib.gui.widgets.*;
+import ftb.lib.api.gui.widgets.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;

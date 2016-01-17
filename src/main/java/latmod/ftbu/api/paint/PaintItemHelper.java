@@ -1,7 +1,7 @@
 package latmod.ftbu.api.paint;
 
 import ftb.lib.*;
-import ftb.lib.item.LMInvUtils;
+import ftb.lib.api.item.LMInvUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;

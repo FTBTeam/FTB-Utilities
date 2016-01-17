@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.cmd.admin;
 
 import com.google.common.collect.ImmutableSetMultimap;
-import ftb.lib.cmd.*;
+import ftb.lib.api.cmd.*;
 import latmod.ftbu.api.guide.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;

@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.cmd;
 
 import ftb.lib.BaublesHelper;
-import ftb.lib.item.LMInvUtils;
+import ftb.lib.api.item.LMInvUtils;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;

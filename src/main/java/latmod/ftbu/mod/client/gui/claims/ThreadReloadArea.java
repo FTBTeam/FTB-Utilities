@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.client.gui.claims;
 
-import ftb.lib.FTBLibClient;
+import ftb.lib.api.client.FTBLibClient;
 import latmod.lib.*;
 import net.minecraft.block.*;
 import net.minecraft.block.material.*;

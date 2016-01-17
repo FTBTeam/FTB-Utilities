@@ -2,6 +2,7 @@ package latmod.ftbu.mod.handlers.ftbl;
 
 import ftb.lib.*;
 import ftb.lib.api.*;
+import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.notification.ClientNotifications;
 import latmod.ftbu.api.EventLMWorldClient;
 import latmod.ftbu.api.guide.ClientGuideFile;

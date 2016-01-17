@@ -2,8 +2,8 @@ package latmod.ftbu.mod.cmd.admin;
 
 import com.mojang.authlib.GameProfile;
 import ftb.lib.*;
-import ftb.lib.cmd.*;
-import ftb.lib.item.StringIDInvLoader;
+import ftb.lib.api.cmd.*;
+import ftb.lib.api.item.StringIDInvLoader;
 import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.world.*;
 import latmod.lib.LMFileUtils;

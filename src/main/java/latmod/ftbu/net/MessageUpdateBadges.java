@@ -1,6 +1,6 @@
 package latmod.ftbu.net;
 
-import ftb.lib.api.LMNetworkWrapper;
+import ftb.lib.api.net.LMNetworkWrapper;
 import latmod.ftbu.badges.*;
 import latmod.lib.ByteCount;
 import net.minecraftforge.fml.common.network.simpleimpl.*;

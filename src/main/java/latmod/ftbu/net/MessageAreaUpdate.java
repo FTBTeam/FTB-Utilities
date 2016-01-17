@@ -1,7 +1,7 @@
 package latmod.ftbu.net;
 
 import ftb.lib.EntityPos;
-import ftb.lib.api.LMNetworkWrapper;
+import ftb.lib.api.net.LMNetworkWrapper;
 import latmod.ftbu.mod.client.gui.claims.ClaimedAreasClient;
 import latmod.ftbu.world.*;
 import latmod.ftbu.world.claims.ChunkType;

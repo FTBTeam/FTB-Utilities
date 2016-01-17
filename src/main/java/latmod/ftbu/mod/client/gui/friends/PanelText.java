@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import ftb.lib.gui.GuiLM;
+import ftb.lib.api.gui.GuiLM;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 

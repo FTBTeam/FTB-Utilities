@@ -1,7 +1,7 @@
 package latmod.ftbu.api.guide;
 
 import ftb.lib.FTBLib;
-import ftb.lib.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLM;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.client.gui.guide.GuideLinkSerializer;
 import latmod.ftbu.mod.config.*;
@@ -19,7 +19,7 @@ public class ServerGuideFile extends GuideFile
 {
 	public static class CachedInfo
 	{
-		public static final GuideCategory main = new GuideCategory(new ChatComponentTranslation(FTBU.mod.assets + "button.server_info"));
+		public static final GuideCategory main = new GuideCategory(new ChatComponentTranslation("player_action.ftbu.server_info"));
 		public static GuideCategory categoryServer, categoryServerAdmin;
 		public static final HashMap<String, GuideLink> links = new HashMap<>();
 		

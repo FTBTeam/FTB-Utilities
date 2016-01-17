@@ -1,7 +1,7 @@
 package latmod.ftbu.net;
 
 import ftb.lib.LMAccessToken;
-import ftb.lib.api.LMNetworkWrapper;
+import ftb.lib.api.net.LMNetworkWrapper;
 import latmod.ftbu.world.*;
 import latmod.ftbu.world.claims.ClaimedChunk;
 import latmod.lib.ByteCount;

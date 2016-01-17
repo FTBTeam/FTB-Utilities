@@ -2,7 +2,7 @@ package latmod.ftbu.world;
 
 import com.mojang.authlib.GameProfile;
 import ftb.lib.*;
-import ftb.lib.item.StringIDInvLoader;
+import ftb.lib.api.item.StringIDInvLoader;
 import ftb.lib.notification.*;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.mod.FTBU;

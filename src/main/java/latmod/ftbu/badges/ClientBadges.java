@@ -1,6 +1,7 @@
 package latmod.ftbu.badges;
 
-import ftb.lib.*;
+import ftb.lib.FTBLib;
+import ftb.lib.api.client.DevConsole;
 import latmod.ftbu.net.ClientAction;
 
 import java.util.HashMap;

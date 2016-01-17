@@ -1,6 +1,7 @@
 package latmod.ftbu.mod.client;
 
-import ftb.lib.*;
+import ftb.lib.JsonHelper;
+import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.LMGuiHandlerRegistry;
 import ftb.lib.api.tile.TileLM;

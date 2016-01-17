@@ -1,6 +1,6 @@
 package latmod.ftbu.badges;
 
-import ftb.lib.FTBLibClient;
+import ftb.lib.api.client.FTBLibClient;
 import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.world.*;
 import net.minecraft.client.entity.AbstractClientPlayer;

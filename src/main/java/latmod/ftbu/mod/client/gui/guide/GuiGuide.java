@@ -1,8 +1,9 @@
 package latmod.ftbu.mod.client.gui.guide;
 
-import ftb.lib.*;
-import ftb.lib.gui.GuiLM;
-import ftb.lib.gui.widgets.*;
+import ftb.lib.TextureCoords;
+import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.widgets.*;
 import ftb.lib.mod.client.gui.GuiViewImage;
 import latmod.ftbu.api.guide.*;
 import latmod.ftbu.mod.FTBU;

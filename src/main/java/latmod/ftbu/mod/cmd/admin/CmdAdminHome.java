@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.cmd.admin;
 
 import ftb.lib.*;
-import ftb.lib.cmd.*;
+import ftb.lib.api.cmd.*;
 import ftb.lib.mod.FTBLibMod;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.world.LMPlayerServer;

@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.client.gui.friends;
 
-import ftb.lib.gui.GuiLM;
-import ftb.lib.gui.widgets.ButtonLM;
+import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.widgets.ButtonLM;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.world.*;
 import net.minecraft.client.renderer.GlStateManager;

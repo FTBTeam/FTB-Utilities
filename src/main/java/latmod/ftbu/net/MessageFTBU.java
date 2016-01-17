@@ -1,6 +1,6 @@
 package latmod.ftbu.net;
 
-import ftb.lib.api.*;
+import ftb.lib.api.net.*;
 import latmod.lib.ByteCount;
 
 abstract class MessageFTBU extends MessageLM

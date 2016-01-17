@@ -2,6 +2,7 @@ package latmod.ftbu.world;
 
 import com.mojang.authlib.GameProfile;
 import ftb.lib.*;
+import ftb.lib.api.client.FTBLibClient;
 import latmod.ftbu.api.EventLMPlayerClient;
 import latmod.lib.*;
 import net.minecraft.world.World;

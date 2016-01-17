@@ -1,6 +1,6 @@
 package latmod.ftbu.net;
 
-import ftb.lib.FTBLibClient;
+import ftb.lib.api.client.FTBLibClient;
 import latmod.ftbu.api.EventLMPlayerClient;
 import latmod.ftbu.world.*;
 import latmod.lib.ByteCount;

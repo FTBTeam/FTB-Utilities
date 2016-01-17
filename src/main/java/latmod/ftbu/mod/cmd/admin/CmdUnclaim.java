@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.cmd.admin;
 
 import ftb.lib.LMAccessToken;
-import ftb.lib.cmd.*;
+import ftb.lib.api.cmd.*;
 import latmod.ftbu.mod.FTBUGuiHandler;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;

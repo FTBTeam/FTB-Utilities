@@ -1,6 +1,6 @@
 package latmod.ftbu.net;
 
-import ftb.lib.api.LMNetworkWrapper;
+import ftb.lib.api.net.LMNetworkWrapper;
 import latmod.ftbu.world.LMWorldServer;
 import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayerMP;

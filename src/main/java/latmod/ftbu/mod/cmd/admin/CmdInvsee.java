@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import ftb.lib.cmd.*;
+import ftb.lib.api.cmd.*;
 import latmod.ftbu.mod.cmd.InvSeeInventory;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;

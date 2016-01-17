@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.cmd;
 
 import ftb.lib.*;
-import ftb.lib.cmd.*;
+import ftb.lib.api.cmd.*;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.config.FTBUConfigCmd;
 import net.minecraft.command.*;

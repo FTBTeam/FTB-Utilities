@@ -1,8 +1,8 @@
 package latmod.ftbu.net;
 
-import ftb.lib.FTBLibClient;
-import ftb.lib.api.LMNetworkWrapper;
-import ftb.lib.item.LMInvUtils;
+import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.item.LMInvUtils;
+import ftb.lib.api.net.LMNetworkWrapper;
 import latmod.ftbu.world.*;
 import latmod.lib.*;
 import net.minecraft.nbt.NBTTagCompound;

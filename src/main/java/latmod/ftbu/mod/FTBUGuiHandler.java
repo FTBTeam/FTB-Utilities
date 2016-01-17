@@ -1,7 +1,6 @@
 package latmod.ftbu.mod;
 
-import ftb.lib.api.gui.LMGuiHandler;
-import ftb.lib.gui.ContainerEmpty;
+import ftb.lib.api.gui.*;
 import latmod.ftbu.mod.client.gui.claims.GuiClaimChunks;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
 import net.minecraft.client.gui.GuiScreen;

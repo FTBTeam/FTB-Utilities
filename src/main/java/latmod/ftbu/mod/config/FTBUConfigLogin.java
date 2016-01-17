@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.config;
 
 import ftb.lib.FTBLib;
-import ftb.lib.item.ItemStackTypeAdapter;
+import ftb.lib.api.item.ItemStackTypeAdapter;
 import latmod.lib.config.ConfigEntryStringArray;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;

@@ -1,7 +1,8 @@
 package latmod.ftbu.world;
 
 import com.mojang.authlib.GameProfile;
-import ftb.lib.*;
+import ftb.lib.LMNBTUtils;
+import ftb.lib.api.client.FTBLibClient;
 import latmod.ftbu.api.EventLMPlayerClient;
 import latmod.ftbu.world.ranks.*;
 import latmod.lib.*;

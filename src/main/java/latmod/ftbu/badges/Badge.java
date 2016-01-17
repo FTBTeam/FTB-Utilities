@@ -1,7 +1,7 @@
 package latmod.ftbu.badges;
 
-import ftb.lib.FTBLibClient;
-import ftb.lib.gui.GuiLM;
+import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.gui.GuiLM;
 import latmod.ftbu.mod.FTBU;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.client.renderer.GlStateManager;

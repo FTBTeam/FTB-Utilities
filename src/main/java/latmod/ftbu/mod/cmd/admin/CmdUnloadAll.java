@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import ftb.lib.cmd.*;
+import ftb.lib.api.cmd.*;
 import latmod.ftbu.world.*;
 import latmod.ftbu.world.claims.ClaimedChunk;
 import net.minecraft.command.*;

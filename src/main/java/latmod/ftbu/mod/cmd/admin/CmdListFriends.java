@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.cmd.admin;
 
-import ftb.lib.cmd.*;
+import ftb.lib.api.cmd.*;
 import latmod.ftbu.world.LMPlayerServer;
 import latmod.lib.LMListUtils;
 import net.minecraft.command.*;

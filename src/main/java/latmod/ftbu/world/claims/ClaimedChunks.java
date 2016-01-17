@@ -2,7 +2,7 @@ package latmod.ftbu.world.claims;
 
 import com.google.gson.*;
 import ftb.lib.*;
-import ftb.lib.item.LMInvUtils;
+import ftb.lib.api.item.LMInvUtils;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.world.*;
 import latmod.lib.*;

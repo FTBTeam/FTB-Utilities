@@ -13,7 +13,7 @@ import java.util.Arrays;
 
 public class ClientGuideFile extends GuideFile
 {
-	public static final ClientGuideFile instance = new ClientGuideFile(new ChatComponentTranslation(FTBU.mod.assets + "button.guide"));
+	public static final ClientGuideFile instance = new ClientGuideFile(new ChatComponentTranslation("player_action.ftbu.guide"));
 	
 	public ClientGuideFile(IChatComponent title)
 	{ super(title); }

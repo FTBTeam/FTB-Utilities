@@ -2,7 +2,7 @@ package latmod.ftbu.mod.client.gui.friends;
 
 import ftb.lib.api.PlayerAction;
 import ftb.lib.api.gui.PlayerActionRegistry;
-import ftb.lib.gui.widgets.*;
+import ftb.lib.api.gui.widgets.*;
 import latmod.ftbu.world.*;
 
 public class PanelPopupPlayerActions extends PanelPopupMenu

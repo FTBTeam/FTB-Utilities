@@ -1,10 +1,9 @@
 package latmod.ftbu.mod.client;
 
-import ftb.lib.DevConsole;
+import ftb.lib.*;
 import ftb.lib.api.PlayerAction;
 import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.gui.*;
-import ftb.lib.client.*;
 import ftb.lib.mod.client.FTBLibActions;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.claims.GuiClaimChunks;
@@ -51,7 +50,7 @@ public class FTBUActions
 		{ return "FriendsGUI"; }
 	};
 	
-	public static final PlayerAction guide = new PlayerAction(PlayerAction.Type.SELF, "ftbu:button.guide", 0, GuiIcons.guide)
+	public static final PlayerAction guide = new PlayerAction(PlayerAction.Type.SELF, "ftbu:button.guide", 0, GuiIcons.book)
 	{
 		public void onClicked(ILMPlayer self, ILMPlayer other)
 		{
@@ -63,7 +62,7 @@ public class FTBUActions
 		{ return FTBLibClient.isIngameWithFTBU() && button_guide.get(); }
 	};
 	
-	public static final PlayerAction info = new PlayerAction(PlayerAction.Type.SELF, "ftbu:button.server_info", 0, GuiIcons.guide_server)
+	public static final PlayerAction info = new PlayerAction(PlayerAction.Type.SELF, "ftbu:button.server_info", 0, GuiIcons.book_red)
 	{
 		public void onClicked(ILMPlayer self, ILMPlayer other)
 		{ ClientAction.REQUEST_SERVER_INFO.send(0); }
@@ -120,7 +119,7 @@ public class FTBUActions
 		{ return DevConsole.enabled(); }
 	};
 	
-	public static final PlayerAction trade = new PlayerAction(PlayerAction.Type.OTHER, "ftbu:button.trade", 0, GuiIcons.moneybag)
+	public static final PlayerAction trade = new PlayerAction(PlayerAction.Type.OTHER, "ftbu:button.trade", 0, GuiIcons.money_bag)
 	{
 		public void onClicked(ILMPlayer owner, ILMPlayer player)
 		{

@@ -1,7 +1,7 @@
 package latmod.ftbu.net;
 
+import ftb.lib.FTBLibClient;
 import ftb.lib.api.LMNetworkWrapper;
-import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.api.guide.GuideFile;
 import latmod.ftbu.mod.client.gui.guide.GuiGuide;
 import latmod.lib.ByteCount;

@@ -1,7 +1,7 @@
 package latmod.ftbu.net;
 
+import ftb.lib.FTBLibClient;
 import ftb.lib.api.LMNetworkWrapper;
-import ftb.lib.client.FTBLibClient;
 import ftb.lib.item.LMInvUtils;
 import latmod.ftbu.world.*;
 import latmod.lib.*;

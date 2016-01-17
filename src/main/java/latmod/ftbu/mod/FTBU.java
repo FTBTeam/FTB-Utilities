@@ -5,7 +5,7 @@ import latmod.ftbu.mod.cmd.*;
 import latmod.ftbu.mod.cmd.admin.CmdAdmin;
 import latmod.ftbu.mod.config.FTBUConfig;
 import latmod.ftbu.mod.handlers.*;
-import latmod.ftbu.mod.handlers.ftbl.*;
+import latmod.ftbu.mod.handlers.ftbl.FTBLIntegration;
 import latmod.ftbu.net.FTBUNetHandler;
 import latmod.ftbu.world.Backups;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -26,8 +26,8 @@ public class FTBU
 	@SidedProxy(clientSide = "latmod.ftbu.mod.client.FTBUClient", serverSide = "latmod.ftbu.mod.FTBUCommon")
 	public static FTBUCommon proxy;
 	
-	@SidedProxy(clientSide = "latmod.ftbu.mod.handlers.ftbl.FTBLIntegrationClient", serverSide = "latmod.ftbu.mod.handlers.ftbl.FTBLIntegrationCommon")
-	public static FTBLIntegrationCommon proxy_ftbl_int;
+	@SidedProxy(clientSide = "latmod.ftbu.mod.handlers.ftbl.FTBLIntegrationClient", serverSide = "latmod.ftbu.mod.handlers.ftbl.FTBLIntegration")
+	public static FTBLIntegration ftbl_int;
 	
 	@LMMod.Instance(FTBUFinals.MOD_ID)
 	public static LMMod mod;
@@ -36,7 +36,7 @@ public class FTBU
 	public void preInit(FMLPreInitializationEvent e)
 	{
 		LMMod.init(this);
-		FTBLib.ftbu = new FTBLIntegration();
+		FTBLib.ftbu = ftbl_int;
 		FTBUConfig.load();
 		
 		EventBusHelper.register(new FTBUPlayerEventHandler());

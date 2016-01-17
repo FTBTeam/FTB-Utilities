@@ -1,7 +1,6 @@
 package latmod.ftbu.api.guide;
 
-import ftb.lib.FTBLib;
-import ftb.lib.client.*;
+import ftb.lib.*;
 import ftb.lib.item.ItemStackTypeAdapter;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.item.ItemStack;

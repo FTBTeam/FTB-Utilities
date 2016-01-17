@@ -1,7 +1,7 @@
 package latmod.ftbu.mod.client.gui.claims;
 
+import ftb.lib.*;
 import ftb.lib.api.gui.*;
-import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
 import latmod.ftbu.mod.FTBU;

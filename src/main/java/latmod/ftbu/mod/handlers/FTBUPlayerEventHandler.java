@@ -1,27 +1,21 @@
 package latmod.ftbu.mod.handlers;
 
 import ftb.lib.*;
-import ftb.lib.api.item.ICreativeSafeItem;
-import ftb.lib.api.tile.ISecureTile;
 import ftb.lib.notification.Notification;
 import latmod.ftbu.api.EventLMPlayerServer;
 import latmod.ftbu.mod.FTBU;
-import latmod.ftbu.mod.config.*;
+import latmod.ftbu.mod.config.FTBUConfigGeneral;
 import latmod.ftbu.net.*;
 import latmod.ftbu.world.*;
 import latmod.ftbu.world.claims.*;
 import latmod.lib.MathHelperLM;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.player.*;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.*;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
@@ -83,73 +77,6 @@ public class FTBUPlayerEventHandler
 			
 			FTBLib.notifyPlayer(ep, n);
 		}
-	}
-	
-	@SubscribeEvent
-	public void onBlockClick(PlayerInteractEvent e)
-	{
-		if(e.entityPlayer instanceof FakePlayer || e.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR) return;
-		else if(!canInteract(e.entityPlayer, e.pos, e.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK))
-			e.setCanceled(true);
-		else if(!e.world.isRemote)
-		{
-			TileEntity te = e.world.getTileEntity(e.pos);
-			
-			if(te != null && !te.isInvalid() && te instanceof TileEntitySign)
-			{
-				TileEntitySign t = (TileEntitySign) te;
-				
-				if(FTBUConfigGeneral.sign_home.get() && t.signText[1].equals("[home]"))
-				{
-					try
-					{
-						FTBLib.runCommand(null, FTBUConfigCmd.name_home.get(), new String[] {t.signText[2].getUnformattedText()});
-					}
-					catch(Exception ex) {}
-					e.setCanceled(true);
-					return;
-				}
-				else if(FTBUConfigGeneral.sign_warp.get() && !t.signText[2].getUnformattedText().isEmpty() && t.signText[1].getUnformattedText().equals("[warp]"))
-				{
-					try
-					{
-						FTBLib.runCommand(e.entityPlayer, FTBUConfigCmd.name_warp.get(), new String[] {t.signText[2].getUnformattedText()});
-					}
-					catch(Exception ex) {}
-					e.setCanceled(true);
-					return;
-				}
-			}
-		}
-	}
-	
-	private boolean canInteract(EntityPlayer ep, BlockPos pos, boolean leftClick)
-	{
-		ItemStack heldItem = ep.getHeldItem();
-		
-		if(ep.capabilities.isCreativeMode && leftClick && heldItem != null && heldItem.getItem() instanceof ICreativeSafeItem)
-		{
-			if(!ep.worldObj.isRemote) ep.worldObj.markBlockRangeForRenderUpdate(pos, pos);
-			else ep.worldObj.markBlockForUpdate(pos);
-			return false;
-		}
-		
-		if(!ep.worldObj.isRemote)
-		{
-			IBlockState state = ep.worldObj.getBlockState(pos);
-			
-			if(state.getBlock().hasTileEntity(state))
-			{
-				TileEntity te = ep.worldObj.getTileEntity(pos);
-				if(te instanceof ISecureTile && !te.isInvalid() && !((ISecureTile) te).canPlayerInteract(ep, leftClick))
-				{
-					((ISecureTile) te).onPlayerNotOwner(ep, leftClick);
-					return false;
-				}
-			}
-		}
-		
-		return ClaimedChunks.canPlayerInteract(ep, pos, leftClick);
 	}
 	
 	@SubscribeEvent

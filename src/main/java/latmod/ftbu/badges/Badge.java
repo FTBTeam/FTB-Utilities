@@ -1,6 +1,6 @@
 package latmod.ftbu.badges;
 
-import ftb.lib.client.FTBLibClient;
+import ftb.lib.FTBLibClient;
 import ftb.lib.gui.GuiLM;
 import latmod.ftbu.mod.FTBU;
 import latmod.lib.util.FinalIDObject;

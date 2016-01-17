@@ -4,7 +4,6 @@ import ftb.lib.*;
 import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.LMGuiHandlerRegistry;
 import ftb.lib.api.tile.TileLM;
-import ftb.lib.client.FTBLibClient;
 import latmod.ftbu.badges.BadgeRenderer;
 import latmod.ftbu.mod.*;
 import latmod.ftbu.mod.cmd.CmdMath;
@@ -46,7 +45,6 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		}
 	}.setExcluded();
 	
-	public static final ConfigEntryBool player_options_shortcut = new ConfigEntryBool("player_options_shortcut", false);
 	public static final ConfigEntryBool sort_friends_az = new ConfigEntryBool("sort_friends_az", false);
 	public static final ConfigEntryBool loaded_chunks_space_key = new ConfigEntryBool("loaded_chunks_space_key", false);
 	public static final ConfigEntryBool guide_unicode = new ConfigEntryBool("guide_unicode", true);
@@ -55,8 +53,6 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public void preInit()
 	{
 		JsonHelper.initClient();
-		EventBusHelper.register(FTBUClientEventHandler.instance);
-		EventBusHelper.register(FTBURenderHandler.instance);
 		
 		ClientConfigRegistry.add(new ConfigGroup("ftbu").addAll(FTBUClient.class, null, false));
 		ClientCommandHandler.instance.registerCommand(new CmdMath());

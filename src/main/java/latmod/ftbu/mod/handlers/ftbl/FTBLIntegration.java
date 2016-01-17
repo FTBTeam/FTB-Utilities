@@ -4,31 +4,37 @@ import com.google.gson.JsonElement;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.friends.ILMPlayer;
+import ftb.lib.api.item.ICreativeSafeItem;
+import ftb.lib.api.tile.ISecureTile;
 import ftb.lib.item.LMInvUtils;
 import ftb.lib.mod.FTBUIntegration;
 import latmod.ftbu.api.*;
 import latmod.ftbu.api.guide.ServerGuideFile;
 import latmod.ftbu.badges.ServerBadges;
-import latmod.ftbu.mod.*;
+import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.mod.config.*;
 import latmod.ftbu.mod.handlers.FTBUChunkEventHandler;
 import latmod.ftbu.net.*;
 import latmod.ftbu.world.*;
+import latmod.ftbu.world.claims.ClaimedChunks;
 import latmod.ftbu.world.ranks.Ranks;
 import latmod.lib.*;
 import latmod.lib.util.Phase;
-import net.minecraft.command.server.CommandSaveOn;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.*;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.event.entity.player.*;
 
 import java.io.File;
 import java.util.List;
 
 public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 {
-	public long nextChunkloaderUpdate = 0L;
 	private static boolean first_login, send_all;
 	
 	public void onReloaded(EventFTBReload e)
@@ -38,8 +44,6 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 		if(e.world.side.isServer())
 		{
 			if(LMWorldServer.inst == null) return;
-			
-			if(FTBUConfigGeneral.restart_timer.get() > 0) FTBUTicks.serverStarted();
 			
 			for(LMPlayerServer p : LMWorldServer.inst.playerMap.values())
 				p.refreshStats();
@@ -51,13 +55,12 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 			if(FTBLib.getServerWorld() != null)
 			{
 				FTBUChunkEventHandler.instance.markDirty(null);
-				ServerBadges.sendToPlayer(null);
+				ServerBadges.updateBadges = true;
 			}
 		}
-		else FTBU.proxy_ftbl_int.onReloadedClient(e);
 	}
 	
-	public void onFTBWorldServer(EventFTBWorldServer e)
+	public final void onFTBWorldServer(EventFTBWorldServer e)
 	{
 		File latmodFolder = new File(FTBLib.folderWorld, "latmod/");
 		if(!latmodFolder.exists()) latmodFolder = new File(FTBLib.folderWorld, "LatMod/");
@@ -92,55 +95,28 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 		
 		new EventLMWorldServer.Loaded(LMWorldServer.inst, Phase.POST).post();
 		
-		nextChunkloaderUpdate = LMUtils.millis() + 10000L;
+		FTBUTicks.nextChunkloaderUpdate = LMUtils.millis() + 10000L;
 	}
 	
 	public void onFTBWorldClient(EventFTBWorldClient e)
 	{
-		FTBU.proxy_ftbl_int.onFTBWorldClient(e);
 	}
 	
-	public void onFTBWorldServerClosed()
+	public final void onFTBWorldServerClosed()
 	{
 		LMWorldServer.inst.close();
 		LMWorldServer.inst = null;
 	}
 	
-	public void onServerTick(World w)
+	public final void onServerTick(World w)
 	{
 		if(w.provider.getDimensionId() == 0)
 		{
 			FTBUTicks.update();
-			
-			long now = LMUtils.millis();
-			if(nextChunkloaderUpdate < now)
-			{
-				nextChunkloaderUpdate = now + 300000L;
-				FTBUChunkEventHandler.instance.markDirty(null);
-			}
-			
-			if(Backups.shouldKillThread)
-			{
-				Backups.shouldKillThread = false;
-				boolean wasBackup = Backups.thread instanceof ThreadBackup;
-				Backups.thread = null;
-				
-				if(wasBackup)
-				{
-					try
-					{
-						new CommandSaveOn().processCommand(FTBLib.getServer(), new String[0]);
-					}
-					catch(Exception ex)
-					{
-						ex.printStackTrace();
-					}
-				}
-			}
 		}
 	}
 	
-	public void onPlayerJoined(EntityPlayerMP ep, Phase phase)
+	public final void onPlayerJoined(EntityPlayerMP ep, Phase phase)
 	{
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
 		
@@ -191,16 +167,16 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 		}
 	}
 	
-	public ILMPlayer getLMPlayer(Object player)
+	public final ILMPlayer getLMPlayer(Object player)
 	{
 		LMWorld w = LMWorld.getWorld();
 		return (w == null) ? null : w.getPlayer(player);
 	}
 	
-	public String[] getPlayerNames(boolean online)
+	public final String[] getPlayerNames(boolean online)
 	{ return LMWorldServer.inst.getAllPlayerNames(Boolean.valueOf(online)); }
 	
-	public void writeWorldData(ByteIOStream io, EntityPlayerMP ep)
+	public final void writeWorldData(ByteIOStream io, EntityPlayerMP ep)
 	{
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
 		io.writeInt(p.playerID);
@@ -208,8 +184,83 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 	}
 	
 	public void readWorldData(ByteIOStream io)
-	{ FTBU.proxy_ftbl_int.readWorldData(io); }
+	{
+		
+	}
 	
 	public boolean hasClientWorld()
-	{ return FTBU.proxy_ftbl_int.hasClientWorld(); }
+	{ return false; }
+	
+	public void renderWorld(float pt)
+	{ }
+	
+	public void onTooltip(ItemTooltipEvent e)
+	{
+	}
+	
+	public void onRightClick(PlayerInteractEvent e)
+	{
+		if(e.entityPlayer instanceof FakePlayer || e.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR) return;
+		else if(!canInteract(e.entityPlayer, e.pos, e.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK))
+			e.setCanceled(true);
+		else if(!e.world.isRemote)
+		{
+			TileEntity te = e.world.getTileEntity(e.pos);
+			
+			if(te != null && !te.isInvalid() && te instanceof TileEntitySign)
+			{
+				TileEntitySign t = (TileEntitySign) te;
+				
+				if(FTBUConfigGeneral.sign_home.get() && t.signText[1].equals("[home]"))
+				{
+					try
+					{
+						FTBLib.runCommand(null, FTBUConfigCmd.name_home.get(), new String[] {t.signText[2].getUnformattedText()});
+					}
+					catch(Exception ex) {}
+					e.setCanceled(true);
+					return;
+				}
+				else if(FTBUConfigGeneral.sign_warp.get() && !t.signText[2].getUnformattedText().isEmpty() && t.signText[1].getUnformattedText().equals("[warp]"))
+				{
+					try
+					{
+						FTBLib.runCommand(e.entityPlayer, FTBUConfigCmd.name_warp.get(), new String[] {t.signText[2].getUnformattedText()});
+					}
+					catch(Exception ex) {}
+					e.setCanceled(true);
+					return;
+				}
+			}
+		}
+	}
+	
+	private boolean canInteract(EntityPlayer ep, BlockPos pos, boolean leftClick)
+	{
+		ItemStack heldItem = ep.getHeldItem();
+		
+		if(ep.capabilities.isCreativeMode && leftClick && heldItem != null && heldItem.getItem() instanceof ICreativeSafeItem)
+		{
+			if(!ep.worldObj.isRemote) ep.worldObj.markBlockRangeForRenderUpdate(pos, pos);
+			else ep.worldObj.markBlockForUpdate(pos);
+			return false;
+		}
+		
+		if(!ep.worldObj.isRemote)
+		{
+			IBlockState state = ep.worldObj.getBlockState(pos);
+			
+			if(state.getBlock().hasTileEntity(state))
+			{
+				TileEntity te = ep.worldObj.getTileEntity(pos);
+				if(te instanceof ISecureTile && !te.isInvalid() && !((ISecureTile) te).canPlayerInteract(ep, leftClick))
+				{
+					((ISecureTile) te).onPlayerNotOwner(ep, leftClick);
+					return false;
+				}
+			}
+		}
+		
+		return ClaimedChunks.canPlayerInteract(ep, pos, leftClick);
+	}
 }

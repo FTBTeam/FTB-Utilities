@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.client.gui.guide;
 
-import ftb.lib.client.TextureCoords;
+import ftb.lib.TextureCoords;
 import latmod.ftbu.api.guide.GuideLink;
 
 public class TextLine

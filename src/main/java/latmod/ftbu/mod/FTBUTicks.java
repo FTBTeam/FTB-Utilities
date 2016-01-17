@@ -1,14 +1,19 @@
 package latmod.ftbu.mod;
 
 import ftb.lib.*;
+import latmod.ftbu.badges.ServerBadges;
 import latmod.ftbu.mod.cmd.admin.CmdRestart;
 import latmod.ftbu.mod.config.FTBUConfigGeneral;
-import latmod.ftbu.world.Backups;
+import latmod.ftbu.mod.handlers.FTBUChunkEventHandler;
+import latmod.ftbu.world.*;
 import latmod.lib.*;
+import net.minecraft.command.server.CommandSaveOn;
 import net.minecraft.util.*;
 
 public class FTBUTicks
 {
+	public static long nextChunkloaderUpdate = 0L;
+	
 	private static long startMillis = 0L;
 	private static long currentMillis = 0L;
 	private static long restartSeconds = 0L;
@@ -65,6 +70,38 @@ public class FTBUTicks
 			}
 			
 			if(secondsLeft > 60 && Backups.getSecondsUntilNextBackup() <= 0L) Backups.run();
+		}
+		
+		long now = LMUtils.millis();
+		if(nextChunkloaderUpdate < now)
+		{
+			nextChunkloaderUpdate = now + 300000L;
+			FTBUChunkEventHandler.instance.markDirty(null);
+		}
+		
+		if(Backups.shouldKillThread)
+		{
+			Backups.shouldKillThread = false;
+			boolean wasBackup = Backups.thread instanceof ThreadBackup;
+			Backups.thread = null;
+			
+			if(wasBackup)
+			{
+				try
+				{
+					new CommandSaveOn().processCommand(FTBLib.getServer(), new String[0]);
+				}
+				catch(Exception ex)
+				{
+					ex.printStackTrace();
+				}
+			}
+		}
+		
+		if(ServerBadges.updateBadges && !ServerBadges.isReloading)
+		{
+			ServerBadges.sendToPlayer(null);
+			ServerBadges.updateBadges = false;
 		}
 	}
 	

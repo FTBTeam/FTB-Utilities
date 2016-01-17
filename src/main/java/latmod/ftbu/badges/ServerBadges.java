@@ -19,8 +19,13 @@ public class ServerBadges
 	private static final HashMap<String, Badge> map = new HashMap<>();
 	private static final HashMap<UUID, Badge> uuid = new HashMap<>();
 	
+	public static boolean updateBadges = true;
+	public static boolean isReloading = false;
+	
 	public static void reload()
 	{
+		isReloading = true;
+		
 		Thread thread = new Thread()
 		{
 			public void run()
@@ -33,6 +38,7 @@ public class ServerBadges
 	
 	private static void reload0()
 	{
+		isReloading = true;
 		long msStarted = LMUtils.millis();
 		
 		map.clear();
@@ -42,7 +48,7 @@ public class ServerBadges
 		
 		try
 		{
-			LMURLConnection connection = new LMURLConnection(RequestMethod.SIMPLE_GET, "http://latvianmodder.github.io/images/badges/global_badges.json");
+			LMURLConnection connection = new LMURLConnection(RequestMethod.SIMPLE_GET, "http://pastebin.com/raw/Mu8McdDR");
 			global = connection.connect().asJson();
 		}
 		catch(Exception ex)
@@ -74,7 +80,8 @@ public class ServerBadges
 		loadBadges(global, Phase.POST);
 		loadBadges(local, Phase.POST);
 		
-		sendToPlayer(null);
+		isReloading = false;
+		updateBadges = true;
 		FTBU.mod.logger.info("Loaded " + map.size() + " badges in " + (LMUtils.millis() - msStarted) + " ms!");
 	}
 	

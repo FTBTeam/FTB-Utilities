@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.client.gui.guide;
 
-import ftb.lib.client.*;
+import ftb.lib.*;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
 import ftb.lib.mod.client.gui.GuiViewImage;

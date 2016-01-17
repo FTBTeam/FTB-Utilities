@@ -43,10 +43,11 @@ public class GuiGuide extends GuiLM
 	
 	public static GuiGuide clientGuideGui = null;
 	
-	public static void openClientGui()
+	public static GuiGuide openClientGui(boolean open)
 	{
 		if(clientGuideGui == null) clientGuideGui = new GuiGuide(null, ClientGuideFile.instance.main);
-		FTBLibClient.mc.displayGuiScreen(clientGuideGui);
+		if(open) FTBLibClient.mc.displayGuiScreen(clientGuideGui);
+		return clientGuideGui;
 	}
 	
 	public GuiGuide(GuiGuide g, GuideCategory c)

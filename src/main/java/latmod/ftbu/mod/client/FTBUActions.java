@@ -2,14 +2,17 @@ package latmod.ftbu.mod.client;
 
 import ftb.lib.TextureCoords;
 import ftb.lib.api.PlayerAction;
-import ftb.lib.api.client.*;
+import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.gui.*;
+import ftb.lib.mod.FTBLibFinals;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.claims.GuiClaimChunks;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
 import latmod.ftbu.mod.client.gui.guide.GuiGuide;
 import latmod.ftbu.net.ClientAction;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.*;
 
 public class FTBUActions
@@ -26,11 +29,48 @@ public class FTBUActions
 		PlayerActionRegistry.add(friend_remove);
 		PlayerActionRegistry.add(friend_deny);
 		
-		if(DevConsole.enabled())
+		if(FTBLibFinals.DEV)
 		{
 			PlayerActionRegistry.add(mail);
 			PlayerActionRegistry.add(trade);
 		}
+		
+		GuiScreenRegistry.register("friends_gui", new GuiScreenRegistry.Entry()
+		{
+			public GuiScreen openGui(EntityPlayer ep)
+			{ return new GuiFriends(FTBLibClient.mc.currentScreen); }
+		});
+		
+		GuiScreenRegistry.register("claimed_chunks", new GuiScreenRegistry.Entry()
+		{
+			public GuiScreen openGui(EntityPlayer ep)
+			{ return new GuiClaimChunks(0L); }
+		});
+		
+		GuiScreenRegistry.register("guide", new GuiScreenRegistry.Entry()
+		{
+			public GuiScreen openGui(EntityPlayer ep)
+			{ return GuiGuide.openClientGui(false); }
+		});
+		
+		GuiScreenRegistry.register("server_info", new GuiScreenRegistry.Entry()
+		{
+			public GuiScreen openGui(EntityPlayer ep)
+			{
+				ClientAction.REQUEST_SERVER_INFO.send(0);
+				return null;
+			}
+		});
+		
+		/*
+		GuiScreenRegistry.register("trade", new GuiScreenRegistry.Entry()
+		{
+			public GuiScreen openGui(EntityPlayer ep)
+			{
+				return FTBLibClient.mc.currentScreen;
+			}
+		});
+		*/
 	}
 	
 	// Self //
@@ -52,7 +92,7 @@ public class FTBUActions
 		public void onClicked(ILMPlayer self, ILMPlayer other)
 		{
 			FTBLibClient.playClickSound();
-			GuiGuide.openClientGui();
+			GuiGuide.openClientGui(true);
 		}
 		
 		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
@@ -93,7 +133,7 @@ public class FTBUActions
 		}
 		
 		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
-		{ return FTBLibClient.isIngameWithFTBU(); }
+		{ return FTBLibFinals.DEV; }
 		
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }
@@ -135,6 +175,6 @@ public class FTBUActions
 		}
 		
 		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
-		{ return FTBLibClient.isIngameWithFTBU(); }
+		{ return FTBLibFinals.DEV; }
 	};
 }

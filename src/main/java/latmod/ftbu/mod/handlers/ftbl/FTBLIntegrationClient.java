@@ -9,7 +9,7 @@ import latmod.ftbu.api.guide.ClientGuideFile;
 import latmod.ftbu.api.paint.IPainterItem;
 import latmod.ftbu.badges.ClientBadges;
 import latmod.ftbu.mod.client.gui.claims.ClaimedAreasClient;
-import latmod.ftbu.world.*;
+import latmod.ftbu.world.LMWorldClient;
 import latmod.lib.ByteIOStream;
 import net.minecraft.item.*;
 import net.minecraft.util.EnumChatFormatting;
@@ -56,7 +56,7 @@ public class FTBLIntegrationClient extends FTBLIntegration
 	}
 	
 	public boolean hasClientWorld()
-	{ return LMWorldServer.inst != null && LMWorldClient.inst.clientPlayerID > 0 && LMWorldClient.inst.clientPlayer != null; }
+	{ return LMWorldClient.inst != null && LMWorldClient.inst.clientPlayerID > 0 && LMWorldClient.inst.clientPlayer != null; }
 	
 	public void renderWorld(float pt)
 	{

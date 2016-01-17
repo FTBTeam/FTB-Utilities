@@ -6,6 +6,7 @@ import ftb.lib.gui.widgets.*;
 import ftb.lib.mod.client.gui.GuiViewImage;
 import latmod.ftbu.api.guide.*;
 import latmod.ftbu.mod.FTBU;
+import latmod.ftbu.mod.client.FTBUClient;
 import latmod.lib.LMUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
@@ -163,7 +164,7 @@ public class GuiGuide extends GuiLM
 		if(s != null && s.length() > 0)
 		{
 			boolean uni = fontRendererObj.getUnicodeFlag();
-			fontRendererObj.setUnicodeFlag(true);
+			fontRendererObj.setUnicodeFlag(FTBUClient.guide_unicode.get());
 			List<String> list = fontRendererObj.listFormattedStringToWidth(s.trim(), textPanel.width);
 			
 			for(int i = 0; i < list.size(); i++)
@@ -277,7 +278,7 @@ public class GuiGuide extends GuiLM
 		fontRendererObj.drawString(category.getTitleComponent().getFormattedText(), getPosX(53), getPosY(14), textColor);
 		
 		boolean uni = fontRendererObj.getUnicodeFlag();
-		fontRendererObj.setUnicodeFlag(true);
+		fontRendererObj.setUnicodeFlag(FTBUClient.guide_unicode.get());
 		for(int i = 0; i < textLines.length; i++)
 			textLines[i].renderWidget();
 		fontRendererObj.setUnicodeFlag(uni);

@@ -1,10 +1,11 @@
 package latmod.ftbu.mod.client;
 
 import ftb.lib.DevConsole;
-import ftb.lib.api.*;
+import ftb.lib.api.PlayerAction;
+import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.gui.*;
 import ftb.lib.client.*;
-import ftb.lib.mod.client.FTBLibGuiEventHandler;
+import ftb.lib.mod.client.FTBLibActions;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.claims.GuiClaimChunks;
 import latmod.ftbu.mod.client.gui.friends.GuiFriends;
@@ -13,15 +14,13 @@ import latmod.ftbu.net.ClientAction;
 import latmod.lib.config.ConfigEntryBool;
 import net.minecraftforge.fml.relauncher.*;
 
-@SideOnly(Side.CLIENT)
 public class FTBUActions
 {
-	public static final FTBUActions instance = new FTBUActions();
-	
 	private static final ConfigEntryBool button_guide = new ConfigEntryBool("guide", true);
 	private static final ConfigEntryBool button_info = new ConfigEntryBool("info", true);
 	private static final ConfigEntryBool button_claims = new ConfigEntryBool("claims", true);
 	
+	@SideOnly(Side.CLIENT)
 	public static void init()
 	{
 		PlayerActionRegistry.add(friends_gui);
@@ -35,18 +34,21 @@ public class FTBUActions
 		PlayerActionRegistry.add(mail);
 		PlayerActionRegistry.add(trade);
 		
-		FTBLibGuiEventHandler.sidebar_buttons_config.addAll(FTBUActions.class, null, false);
+		FTBLibActions.sidebar_buttons_config.addAll(FTBUActions.class, null, false);
 	}
 	
 	// Self //
 	
-	public static final PlayerAction friends_gui = new PlayerAction(PlayerAction.Type.SELF, "ftbu:friends_gui", 950, TextureCoords.getSquareIcon(FTBU.mod.getLocation("textures/gui/friendsbutton.png"), 256))
+	public static final PlayerAction friends_gui = new PlayerAction(PlayerAction.Type.SELF, "ftbu:button.friends_gui", 950, TextureCoords.getSquareIcon(FTBU.mod.getLocation("textures/gui/friendsbutton.png"), 256))
 	{
 		public void onClicked(ILMPlayer self, ILMPlayer other)
 		{ FTBLibClient.mc.displayGuiScreen(new GuiFriends(FTBLibClient.mc.currentScreen)); }
 		
 		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
-		{ return FTBLibClient.isPlayingWithFTBU(); }
+		{ return FTBLibClient.isIngameWithFTBU(); }
+		
+		public String getDisplayName()
+		{ return "FriendsGUI"; }
 	};
 	
 	public static final PlayerAction guide = new PlayerAction(PlayerAction.Type.SELF, "ftbu:button.guide", 0, GuiIcons.guide)
@@ -58,7 +60,7 @@ public class FTBUActions
 		}
 		
 		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
-		{ return FTBLibClient.isPlayingWithFTBU() && button_guide.get(); }
+		{ return FTBLibClient.isIngameWithFTBU() && button_guide.get(); }
 	};
 	
 	public static final PlayerAction info = new PlayerAction(PlayerAction.Type.SELF, "ftbu:button.server_info", 0, GuiIcons.guide_server)
@@ -67,7 +69,7 @@ public class FTBUActions
 		{ ClientAction.REQUEST_SERVER_INFO.send(0); }
 		
 		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
-		{ return FTBLibClient.isPlayingWithFTBU() && button_info.get(); }
+		{ return FTBLibClient.isIngameWithFTBU() && button_info.get(); }
 	};
 	
 	public static final PlayerAction claims = new PlayerAction(PlayerAction.Type.SELF, "ftbu:button.claimed_chunks", 0, GuiIcons.map)
@@ -76,7 +78,7 @@ public class FTBUActions
 		{ FTBLibClient.mc.displayGuiScreen(new GuiClaimChunks(0L)); }
 		
 		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
-		{ return FTBLibClient.isPlayingWithFTBU() && button_claims.get(); }
+		{ return FTBLibClient.isIngameWithFTBU() && button_claims.get(); }
 	};
 	
 	// Other //
@@ -96,7 +98,7 @@ public class FTBUActions
 		{ ClientAction.REM_FRIEND.send(other.getPlayerID()); }
 		
 		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
-		{ return self.isFriend(other); }
+		{ return self.isFriendRaw(other); }
 	};
 	
 	public static final PlayerAction friend_deny = new PlayerAction(PlayerAction.Type.OTHER, "ftbu:button.deny_friend", -1, GuiIcons.remove)

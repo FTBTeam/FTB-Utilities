@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraftforge.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
-/** TODO: Move to FTBLib */ public class LMFrustrumUtils
+public class LMFrustrumUtils
 {
 	public static boolean isFirstPerson;
 	public static int currentDim;

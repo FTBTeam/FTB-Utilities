@@ -2,7 +2,7 @@ package latmod.ftbu.mod.cmd;
 
 import ftb.lib.*;
 import ftb.lib.cmd.*;
-import latmod.ftbu.mod.*;
+import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.config.FTBUConfigCmd;
 import latmod.ftbu.world.LMPlayerServer;
 import net.minecraft.command.*;
@@ -45,25 +45,25 @@ public class CmdHome extends CommandLM
 			
 			int maxHomes = p.getRank().config.max_homes.get();
 			if(maxHomes <= 0 || p.homes.size() >= maxHomes)
-				return error(new ChatComponentTranslation(FTBUFinals.ASSETS + "cmd.home_limit"));
+				return error(new ChatComponentTranslation(FTBU.mod.assets + "cmd.home_limit"));
 			
 			p.homes.set(args[1], p.getPos());
-			return new ChatComponentTranslation(FTBUFinals.ASSETS + "cmd.home_set", args[1]);
+			return new ChatComponentTranslation(FTBU.mod.assets + "cmd.home_set", args[1]);
 		}
 		
 		if(args[0].equals("del"))
 		{
 			checkArgs(args, 2);
 			
-			if(p.homes.rem(args[1])) return new ChatComponentTranslation(FTBUFinals.ASSETS + "cmd.home_del", args[1]);
-			return error(new ChatComponentTranslation(FTBUFinals.ASSETS + "cmd.home_not_set", args[1]));
+			if(p.homes.rem(args[1])) return new ChatComponentTranslation(FTBU.mod.assets + "cmd.home_del", args[1]);
+			return error(new ChatComponentTranslation(FTBU.mod.assets + "cmd.home_not_set", args[1]));
 		}
 		
 		if(args[0].equals("ren"))
 		{
 			checkArgs(args, 3);
 			EntityPos pos = p.homes.get(args[1]);
-			if(pos == null) return error(new ChatComponentTranslation(FTBUFinals.ASSETS + "cmd.home_not_set", args[0]));
+			if(pos == null) return error(new ChatComponentTranslation(FTBU.mod.assets + "cmd.home_not_set", args[0]));
 			
 			pos = pos.clone();
 			p.homes.rem(args[1]);
@@ -80,12 +80,12 @@ public class CmdHome extends CommandLM
 		
 		EntityPos pos = p.homes.get(args[0]);
 		
-		if(pos == null) return error(new ChatComponentTranslation(FTBUFinals.ASSETS + "cmd.home_not_set", args[0]));
+		if(pos == null) return error(new ChatComponentTranslation(FTBU.mod.assets + "cmd.home_not_set", args[0]));
 		
 		if(ep.dimension != pos.dim && !p.getRank().config.cross_dim_homes.get())
 			return error(new ChatComponentTranslation(FTBU.mod.assets + "cmd.home_cross_dim"));
 		
 		LMDimUtils.teleportPlayer(ep, pos);
-		return new ChatComponentTranslation(FTBUFinals.ASSETS + "cmd.warp_tp", args[0]);
+		return new ChatComponentTranslation(FTBU.mod.assets + "cmd.warp_tp", args[0]);
 	}
 }

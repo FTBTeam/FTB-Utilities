@@ -17,6 +17,7 @@ public class MessageLMPlayerUpdate extends MessageFTBU
 	{
 		this();
 		io.writeInt(p.playerID);
+		io.writeBoolean(self);
 		p.writeToNet(io, self);
 	}
 	
@@ -24,7 +25,8 @@ public class MessageLMPlayerUpdate extends MessageFTBU
 	public IMessage onMessage(MessageContext ctx)
 	{
 		LMPlayerClient p = LMWorldClient.inst.getPlayer(io.readInt());
-		p.readFromNet(io, p.getProfile().getId().equals(FTBLibClient.getUUID()));
+		boolean self = io.readBoolean();
+		p.readFromNet(io, self);
 		new EventLMPlayerClient.DataChanged(p).post();
 		FTBLibClient.onGuiClientAction();
 		return null;

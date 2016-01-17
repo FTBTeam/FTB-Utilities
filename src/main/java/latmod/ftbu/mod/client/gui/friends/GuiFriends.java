@@ -3,7 +3,6 @@ package latmod.ftbu.mod.client.gui.friends;
 import ftb.lib.api.gui.*;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.PanelPopupMenu;
-import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.net.ClientAction;
 import latmod.ftbu.world.LMWorldClient;
 import net.minecraft.client.gui.GuiScreen;
@@ -51,17 +50,6 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 			panelPlayerInfo.text.add(EnumChatFormatting.BOLD + panelPlayerView.selectedPlayer.getName());
 			if(panelPlayerView.selectedPlayer.playerLM.isOnline)
 				panelPlayerInfo.text.add(EnumChatFormatting.GREEN.toString() + '[' + FTBLibLang.label_online() + ']');
-			
-			if(!panelPlayerView.selectedPlayer.isOwner)
-			{
-				boolean raw1 = panelPlayerView.selectedPlayer.playerLM.isFriendRaw(LMWorldClient.inst.clientPlayer);
-				boolean raw2 = LMWorldClient.inst.clientPlayer.isFriendRaw(panelPlayerView.selectedPlayer.playerLM);
-				
-				if(raw1 && raw2)
-					panelPlayerInfo.text.add(EnumChatFormatting.GREEN.toString() + '[' + FTBU.mod.translateClient("label.friend") + ']');
-				else if(raw1 || raw2)
-					panelPlayerInfo.text.add("" + (raw1 ? EnumChatFormatting.GOLD : EnumChatFormatting.BLUE) + '[' + FTBU.mod.translateClient("label.pfriend") + ']');
-			}
 			
 			for(IChatComponent c : panelPlayerView.selectedPlayer.playerLM.clientInfo)
 				panelPlayerInfo.text.add(c.getFormattedText());

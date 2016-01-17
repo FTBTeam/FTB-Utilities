@@ -1,34 +1,30 @@
-def version_mod = version_mods;
+def version_mod = version_mods
 
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
         maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
     }
 }
 
-apply plugin: 'forge'
-apply plugin: 'curseforge'
+apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = version_mc + "-" + version_mod
-group = "latmod.ftbu"
 archivesBaseName = "FTBUtilities"
+group = "latmod.ftbu"
+version = version_mc + "-" + version_mod
 sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
 
 minecraft {
     version = version_mc + "-" + version_forge
     runDir = mcp_run_dir
+    mappings = mcp_mappings
 
     replace "@VERSION@", version_mod
     replaceIn "FTBUFinals.java"
@@ -36,7 +32,7 @@ minecraft {
 
 dependencies {
     compile fileTree(dir: project_dir + "DevMods/", include: '*.jar')
-    compile files(project_dir + "/Exported/FTBLib-" + version_mc + "-" + version_mods + "-dev.jar")
+    compile files(project_dir + "/Exported/FTBLib-" + version_mc + "-" + version_mods + "-deobf.jar")
 }
 
 sourceSets {
@@ -54,30 +50,23 @@ tasks.withType(Jar) {
     destinationDir = file(project_dir + "/Exported/")
 }
 
-processResources
-        {
-            inputs.property "version", project.version
-            inputs.property "mcversion", project.minecraft.version
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
 
-            from(sourceSets.main.resources.srcDirs) {
-                include 'mcmod.info'
-                expand 'version': project.version, 'mcversion': project.minecraft.version
-            }
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version': project.version, 'mcversion': project.minecraft.version
+    }
 
-            from(sourceSets.main.resources.srcDirs) {
-                exclude 'mcmod.info'
-            }
-        }
-
-task sourceJar(type: Jar) {
-    from sourceSets.main.java
-    classifier = 'src'
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
 }
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
-    classifier = 'dev'
+    classifier = 'deobf'
 }
 
 build.dependsOn deobfJar
-build.dependsOn sourceJar

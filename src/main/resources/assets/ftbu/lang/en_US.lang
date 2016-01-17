@@ -1,5 +1,4 @@
 #Buttons
-ftbu:button.friends_gui=FriendsGUI
 ftbu:button.add_friend=Add as Friend
 ftbu:button.rem_friend=Remove from Friends
 ftbu:button.deny_friend=Deny Friend Request
@@ -32,6 +31,7 @@ client_config.ftbu.chat_links=Chat Links
 client_config.ftbu.player_options_shortcut=Player Options Shortcut
 client_config.ftbu.sort_friends_az=Sort Friends A-Z
 client_config.ftbu.loaded_chunks_space_key=Use Space key for Loaded Chunks
+client_config.ftbu.guide_unicode=Use Unicode in Guides
 
 claims_config=Claimed Chunks Config
 claims_config.explosions=Explosions
@@ -72,28 +72,6 @@ ftbu:top.last_seen=Last Seen
 ftbu:top.time_played=Time Played
 ftbu:top.deaths=Deaths
 ftbu:top.deaths_ph=Deaths per hour
-
-#Security Mode
-ftbu:security=Security
-ftbu:security.public=Public
-ftbu:security.private=Private
-ftbu:security.friends=Friends
-ftbu:security.group=Group
-ftbu:security.whitelist=Whitelist
-ftbu:security.blacklist=Blacklist
-
-#Redstone Mode
-ftbu:redstonemode=Redstone Mode
-ftbu:redstonemode.disabled=Disabled
-ftbu:redstonemode.high=Active High
-ftbu:redstonemode.low=Active Low
-
-#Inventory Mode
-ftbu:invmode=Automation
-ftbu:invmode.enabled=Enabled
-ftbu:invmode.onlyin=Insert Only
-ftbu:invmode.onlyout=Extract Only
-ftbu:invmode.disabled=Disabled
 
 #Chunktypes
 ftbu:chunktype.unloaded=Chunk not loaded

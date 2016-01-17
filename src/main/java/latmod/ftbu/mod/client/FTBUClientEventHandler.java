@@ -36,7 +36,7 @@ public class FTBUClientEventHandler
 	@SubscribeEvent
 	public void onEntityRightClick(EntityInteractEvent e)
 	{
-		if(e.entity.worldObj.isRemote && FTBLibClient.isPlayingWithFTBU() && FTBUClient.player_options_shortcut.get() && e.entityPlayer.getUniqueID().equals(FTBLibClient.mc.thePlayer.getUniqueID()))
+		if(e.entity.worldObj.isRemote && FTBLibClient.isIngameWithFTBU() && FTBUClient.player_options_shortcut.get() && e.entityPlayer.getUniqueID().equals(FTBLibClient.mc.thePlayer.getUniqueID()))
 		{
 			LMPlayerClient p = LMWorldClient.inst.getPlayer(e.target);
 			if(p != null) FTBLibClient.mc.displayGuiScreen(new GuiFriendsGuiSmall(p));

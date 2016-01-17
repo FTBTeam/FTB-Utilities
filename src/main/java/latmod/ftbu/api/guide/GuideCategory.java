@@ -4,7 +4,6 @@ import ftb.lib.LMNBTUtils;
 import latmod.lib.*;
 import net.minecraft.nbt.*;
 import net.minecraft.util.*;
-import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
 
@@ -54,13 +53,19 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 		int s = text.size();
 		for(int i = 0; i < s; i++)
 		{
-			sb.append(text.get(i).getUnformattedText());
+			try
+			{
+				sb.append(text.get(i).getUnformattedText());
+			}
+			catch(Exception ex)
+			{
+				ex.printStackTrace();
+			}
 			if(i != s - 1) sb.append('\n');
 		}
 		return sb.toString();
 	}
 	
-	@SideOnly(Side.CLIENT)
 	public String getFormattedText()
 	{
 		if(text.isEmpty()) return "";
@@ -68,7 +73,14 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 		int s = text.size();
 		for(int i = 0; i < s; i++)
 		{
-			sb.append(text.get(i).getFormattedText());
+			try
+			{
+				sb.append(text.get(i).getFormattedText());
+			}
+			catch(Exception ex)
+			{
+				ex.printStackTrace();
+			}
 			if(i != s - 1) sb.append('\n');
 		}
 		return sb.toString();

@@ -27,7 +27,6 @@ public class ButtonPlayer extends ButtonLM
 		if(player != null && player.playerLM != null)
 		{
 			panel.gui.panelPlayerView.selectedPlayer = new Player(player.playerLM);
-			//FIXME: panel.gui.panelPlayerView.selectedPlayer.func_152121_a(MinecraftProfileTexture.Type.SKIN, AbstractClientPlayer.getLocationSkin(player.playerLM.getName()));
 			panel.gui.panelPlayerView.selectedPlayer.inventory.currentItem = 0;
 			ClientAction.REQUEST_PLAYER_INFO.send(player.playerLM.playerID);
 			if(b != 0)

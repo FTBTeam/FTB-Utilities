@@ -4,7 +4,6 @@ import ftb.lib.LMSecurity;
 import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.world.*;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.fml.relauncher.*;
 
 public class ChunkType
 {
@@ -75,9 +74,8 @@ public class ChunkType
 	public boolean drawGrid()
 	{ return this != WILDERNESS && this != UNLOADED; }
 	
-	@SideOnly(Side.CLIENT)
 	public String getIDS()
-	{ return FTBU.mod.translateClient(lang); }
+	{ return FTBU.mod.translate(lang); }
 	
 	public int hashCode()
 	{ return ID; }

@@ -110,6 +110,26 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	{
 		refreshStats();
 		long ms = LMUtils.millis();
+		
+		if(!equalsPlayer(owner))
+		{
+			boolean raw1 = isFriendRaw(owner);
+			boolean raw2 = owner.isFriendRaw(this);
+			
+			if(raw1 && raw2)
+			{
+				IChatComponent c = new ChatComponentTranslation(FTBU.mod.assets + "label.friend");
+				c.getChatStyle().setColor(EnumChatFormatting.GREEN);
+				info.add(c);
+			}
+			else if(raw1 || raw2)
+			{
+				IChatComponent c = new ChatComponentTranslation(FTBU.mod.assets + "label.pfriend");
+				c.getChatStyle().setColor(raw1 ? EnumChatFormatting.GOLD : EnumChatFormatting.BLUE);
+				info.add(c);
+			}
+		}
+		
 		new EventLMPlayerServer.CustomInfo(this, info).post();
 		
 		if(owner.getRank().config.show_rank.get())

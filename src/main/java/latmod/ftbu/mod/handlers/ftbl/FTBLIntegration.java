@@ -3,6 +3,7 @@ package latmod.ftbu.mod.handlers.ftbl;
 import com.google.gson.JsonElement;
 import ftb.lib.*;
 import ftb.lib.api.*;
+import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.item.LMInvUtils;
 import ftb.lib.mod.FTBUIntegration;
 import latmod.ftbu.api.*;

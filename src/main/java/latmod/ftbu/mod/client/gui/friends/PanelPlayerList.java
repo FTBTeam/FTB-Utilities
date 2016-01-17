@@ -1,5 +1,6 @@
 package latmod.ftbu.mod.client.gui.friends;
 
+import ftb.lib.api.friends.*;
 import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.world.*;
 import net.minecraft.client.renderer.GlStateManager;
@@ -29,19 +30,13 @@ public class PanelPlayerList extends PanelFriendsGui
 		tempPlayerList.clear();
 		tempPlayerList.addAll(LMWorldClient.inst.playerMap.values());
 		
-		LMPlayerClient clientPlayer = LMWorldClient.inst.clientPlayer;
-		
-		tempPlayerList.remove(clientPlayer);
+		tempPlayerList.remove(LMWorldClient.inst.clientPlayer);
 		
 		if(FTBUClient.sort_friends_az.get()) Collections.sort(tempPlayerList, LMPNameComparator.instance);
-		else
-		{
-			LMPStatusComparator.instance.self = clientPlayer;
-			Collections.sort(tempPlayerList, LMPStatusComparator.instance);
-		}
+		else Collections.sort(tempPlayerList, new LMPStatusComparator(LMWorldClient.inst.clientPlayer));
 		
 		playerButtons.clear();
-		playerButtons.add(new ButtonPlayer(this, clientPlayer));
+		playerButtons.add(new ButtonPlayer(this, LMWorldClient.inst.clientPlayer));
 		
 		width = playerButtons.get(0).width;
 		for(int i = 0; i < tempPlayerList.size(); i++)

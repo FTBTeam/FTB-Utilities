@@ -3,7 +3,7 @@ package latmod.ftbu.api.guide;
 import ftb.lib.FTBLib;
 import ftb.lib.api.*;
 import ftb.lib.mod.FTBLibFinals;
-import latmod.ftbu.mod.*;
+import latmod.ftbu.mod.FTBU;
 import latmod.ftbu.mod.client.gui.guide.GuiGuide;
 import latmod.lib.LMFileUtils;
 import net.minecraft.util.*;
@@ -13,14 +13,14 @@ import java.util.Arrays;
 
 public class ClientGuideFile extends GuideFile
 {
-	public static final ClientGuideFile instance = new ClientGuideFile(new ChatComponentTranslation(FTBUFinals.ASSETS + "button.guide"));
+	public static final ClientGuideFile instance = new ClientGuideFile(new ChatComponentTranslation(FTBU.mod.assets + "button.guide"));
 	
 	public ClientGuideFile(IChatComponent title)
 	{ super(title); }
 	
 	public void reload(EventFTBReload e)
 	{
-		if(FTBLibFinals.DEV) FTBU.mod.logger.info("Guide reloaded @ " + e.world.side);
+		if(FTBLibFinals.DEV) FTBU.mod.logger.info("Guide reloaded @ " + e.world.side + " as " + e.world.getMode());
 		
 		main.clear();
 		

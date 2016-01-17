@@ -13,7 +13,7 @@ public class ButtonAction extends ButtonPopupMenu
 	
 	public ButtonAction(PanelPopupPlayerActions p, PlayerAction a)
 	{
-		super(p, GuiIcons.right, a.getTitle());
+		super(p, GuiIcons.right, a.getDisplayName());
 		action = a;
 		object = action;
 	}

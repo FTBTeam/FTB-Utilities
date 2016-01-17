@@ -59,7 +59,7 @@ public class GuiFriendsGuiSmall extends GuiLM
 			super(g, 0, g.mainPanel.height, 0, 18);
 			gui = g;
 			action = a;
-			title = a.getTitle();
+			title = a.getDisplayName();
 			width = 22 + g.getFontRenderer().getStringWidth(title);
 		}
 		

@@ -1,7 +1,7 @@
 package latmod.ftbu.world;
 
 import com.mojang.authlib.GameProfile;
-import ftb.lib.api.ILMPlayer;
+import ftb.lib.api.friends.ILMPlayer;
 import latmod.ftbu.world.ranks.Rank;
 import latmod.lib.IntList;
 import latmod.lib.json.UUIDTypeAdapterLM;
@@ -55,7 +55,7 @@ public abstract class LMPlayer implements ILMPlayer, Comparable<LMPlayer> // LMP
 	{ return p != null && (playerID == p.getPlayerID() || friends.contains(p.getPlayerID())); }
 	
 	public boolean isFriend(ILMPlayer p)
-	{ return isFriendRaw(p) && p.isFriendRaw(this); }
+	{ return p != null && isFriendRaw(p) && p.isFriendRaw(this); }
 	
 	public final int compareTo(LMPlayer o)
 	{ return Integer.compare(playerID, o.playerID); }
@@ -91,9 +91,6 @@ public abstract class LMPlayer implements ILMPlayer, Comparable<LMPlayer> // LMP
 		}
 		return list;
 	}
-	
-	public FriendStatus getStatus(LMPlayer p)
-	{ return FriendStatus.get(this, p); }
 	
 	public final NBTTagCompound getPublicData()
 	{

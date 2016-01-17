@@ -120,15 +120,15 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			public void onButtonPressed(int b)
 			{
 				gui.playClickSound();
-				String s = isShiftKeyDown() ? FTBU.mod.translateClient("button.claims_unclaim_all_q") : FTBU.mod.translateClient("button.claims_unclaim_all_dim_q", gui.mc.theWorld.provider.getDimensionName());
+				String s = isShiftKeyDown() ? FTBU.mod.translate("button.claims_unclaim_all_q") : FTBU.mod.translate("button.claims_unclaim_all_dim_q", gui.mc.theWorld.provider.getDimensionName());
 				mc.displayGuiScreen(new GuiYesNo(GuiClaimChunks.this, s, "", isShiftKeyDown() ? 1 : 0));
 			}
 			
 			public void addMouseOverText(List<String> l)
 			{
-				if(isShiftKeyDown()) l.add(FTBU.mod.translateClient("button.claims_unclaim_all"));
+				if(isShiftKeyDown()) l.add(FTBU.mod.translate("button.claims_unclaim_all"));
 				else
-					l.add(FTBU.mod.translateClient("button.claims_unclaim_all_dim", gui.mc.theWorld.provider.getDimensionName()));
+					l.add(FTBU.mod.translate("button.claims_unclaim_all_dim", gui.mc.theWorld.provider.getDimensionName()));
 			}
 		};
 		
@@ -173,7 +173,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	
 	public void drawBackground()
 	{
-		if(currentDim != FTBLibClient.getDim() || !FTBLibClient.isPlayingWithFTBU())
+		if(currentDim != FTBLibClient.getDim() || !FTBLibClient.isIngameWithFTBU())
 		{
 			mc.thePlayer.closeScreen();
 			return;
@@ -235,9 +235,9 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	
 	public void drawText(List<String> l)
 	{
-		String s = FTBU.mod.translateClient("label.cchunks_count", (playerLM.claimedChunks + " / " + playerLM.getRank().config.max_claims.get()));
+		String s = FTBU.mod.translate("label.cchunks_count", (playerLM.claimedChunks + " / " + playerLM.getRank().config.max_claims.get()));
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 12, 0xFFFFFFFF);
-		s = FTBU.mod.translateClient("label.lchunks_count", (playerLM.loadedChunks + " / " + playerLM.getRank().config.max_loaded_chunks.get()));
+		s = FTBU.mod.translate("label.lchunks_count", (playerLM.loadedChunks + " / " + playerLM.getRank().config.max_loaded_chunks.get()));
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 24, 0xFFFFFFFF);
 		
 		super.drawText(l);

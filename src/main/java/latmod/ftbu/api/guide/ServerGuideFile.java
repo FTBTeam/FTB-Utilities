@@ -19,7 +19,7 @@ public class ServerGuideFile extends GuideFile
 {
 	public static class CachedInfo
 	{
-		public static final GuideCategory main = new GuideCategory(new ChatComponentTranslation(FTBUFinals.ASSETS + "button.server_info"));
+		public static final GuideCategory main = new GuideCategory(new ChatComponentTranslation(FTBU.mod.assets + "button.server_info"));
 		public static GuideCategory categoryServer, categoryServerAdmin;
 		public static final HashMap<String, GuideLink> links = new HashMap<>();
 		

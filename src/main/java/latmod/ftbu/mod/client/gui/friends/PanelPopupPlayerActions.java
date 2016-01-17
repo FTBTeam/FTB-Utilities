@@ -22,7 +22,7 @@ public class PanelPopupPlayerActions extends PanelPopupMenu
 	
 	public void addItems()
 	{
-		for(PlayerAction a : PlayerActionRegistry.getPlayerActions(PlayerAction.Type.OTHER, LMWorldClient.inst.clientPlayer, playerLM, true))
+		for(PlayerAction a : PlayerActionRegistry.getPlayerActions((LMWorldClient.inst.clientPlayer == playerLM) ? PlayerAction.Type.SELF : PlayerAction.Type.OTHER, LMWorldClient.inst.clientPlayer, playerLM, true))
 			menuButtons.add(new ButtonAction(this, a));
 	}
 	

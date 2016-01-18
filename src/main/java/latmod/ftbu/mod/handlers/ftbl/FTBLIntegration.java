@@ -51,8 +51,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 			Ranks.reload();
 			ServerBadges.reload();
 			
-			if(FTBLib.getServerWorld() != null)
-				FTBUChunkEventHandler.instance.markDirty(null);
+			if(FTBLib.getServerWorld() != null) FTBUChunkEventHandler.instance.markDirty(null);
 		}
 	}
 	

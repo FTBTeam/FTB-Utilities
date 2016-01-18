@@ -1,14 +1,13 @@
 package latmod.ftbu.world;
 
 import com.mojang.authlib.GameProfile;
-import ftb.lib.*;
+import ftb.lib.FTBLib;
 import ftb.lib.api.client.FTBLibClient;
 import latmod.ftbu.api.EventLMPlayerClient;
 import latmod.lib.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.*;
 
-import java.io.File;
 import java.util.*;
 
 @SideOnly(Side.CLIENT)
@@ -17,7 +16,6 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 	public static LMWorldClient inst = null;
 	
 	public final int clientPlayerID;
-	public final File clientDataFolder;
 	public final HashMap<Integer, LMPlayerClient> playerMap;
 	public LMPlayerClientSelf clientPlayer = null;
 	
@@ -25,7 +23,6 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 	{
 		super(Side.CLIENT);
 		clientPlayerID = i;
-		clientDataFolder = new File(FTBLib.folderLocal, "client/" + FTBWorld.client.getWorldIDS());
 		playerMap = new HashMap<>();
 	}
 	

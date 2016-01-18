@@ -23,9 +23,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	
 	public GuiFriends(GuiScreen gui)
 	{
-		super(gui, null, null);
-		hideNEI = true;
-		xSize = ySize = 0;
+		super(gui, null);
 		
 		//PanelPlayerView.selectedPlayer = new 
 		
@@ -36,9 +34,9 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	
 	public void initLMGui()
 	{
+		mainPanel.width = width;
+		mainPanel.height = height;
 		ClientAction.REQUEST_PLAYER_INFO.send(LMWorldClient.inst.clientPlayerID);
-		xSize = width;
-		ySize = height;
 	}
 	
 	public void addWidgets()
@@ -59,13 +57,13 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 		mainPanel.add(panelPlayerInfo);
 		mainPanel.add(panelPopupMenu);
 		
-		panelPlayerList.height = panelPlayerView.height = ySize;
+		panelPlayerList.height = panelPlayerView.height = mainPanel.height;
 		panelPlayerList.posX = 0;
 		
 		panelPlayerInfo.width = Math.max(100, panelPlayerInfo.width);
-		panelPlayerInfo.posX = xSize - panelPlayerInfo.width;
+		panelPlayerInfo.posX = mainPanel.width - panelPlayerInfo.width;
 		
-		panelPlayerView.width = xSize - (panelPlayerList.width + panelPlayerInfo.width) - 2;
+		panelPlayerView.width = mainPanel.width - (panelPlayerList.width + panelPlayerInfo.width) - 2;
 		panelPlayerView.posX = panelPlayerList.width;
 	}
 	

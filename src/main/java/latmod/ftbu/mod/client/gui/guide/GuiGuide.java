@@ -46,7 +46,7 @@ public class GuiGuide extends GuiLM
 	public static GuiGuide openClientGui(boolean open)
 	{
 		if(clientGuideGui == null) clientGuideGui = new GuiGuide(null, ClientGuideFile.instance.main);
-		if(open) FTBLibClient.mc.displayGuiScreen(clientGuideGui);
+		if(open) FTBLibClient.openGui(clientGuideGui);
 		return clientGuideGui;
 	}
 	
@@ -58,14 +58,13 @@ public class GuiGuide extends GuiLM
 		category = c;
 		selectedCategory = category;
 		
-		hideNEI = true;
-		xSize = 328;
-		ySize = 240;
+		mainPanel.width = 328;
+		mainPanel.height = 240;
 		
 		sliderCategories = new SliderLM(this, 11, 14, tex_slider.widthI(), 210, tex_slider.heightI())
 		{
 			public boolean canMouseScroll()
-			{ return gui.mouseX < guiLeft + xSize / 2; }
+			{ return gui.mouse().x < mainPanel.posX + mainPanel.width / 2; }
 			
 			public boolean isEnabled()
 			{ return category.subcategories.size() > maxCategoryButtons; }
@@ -76,7 +75,7 @@ public class GuiGuide extends GuiLM
 		sliderText = new SliderLM(this, 304, 14, tex_slider.widthI(), 210, tex_slider.heightI())
 		{
 			public boolean canMouseScroll()
-			{ return gui.mouseX > guiLeft + xSize / 2; }
+			{ return gui.mouse().x > mainPanel.posX + mainPanel.width / 2; }
 			
 			public boolean isEnabled()
 			{ return allTextLines.size() > maxTextLines; }
@@ -88,7 +87,7 @@ public class GuiGuide extends GuiLM
 		{
 			public void onButtonPressed(int b)
 			{
-				playClickSound();
+				FTBLibClient.playClickSound();
 				
 				if(selectedCategory == category || category.getFormattedText().isEmpty())
 				{
@@ -97,7 +96,7 @@ public class GuiGuide extends GuiLM
 					{
 						parentGui.selectedCategory = parentGui.category;
 						parentGui.sliderText.value = 0F;
-						mc.displayGuiScreen(parentGui);
+						FTBLibClient.openGui(parentGui);
 					}
 				}
 				else
@@ -277,7 +276,7 @@ public class GuiGuide extends GuiLM
 		
 		getFontRenderer();
 		
-		fontRendererObj.drawString(category.getTitleComponent().getFormattedText(), getPosX(53), getPosY(14), textColor);
+		fontRendererObj.drawString(category.getTitleComponent().getFormattedText(), mainPanel.posX + 53, mainPanel.posY + 14, textColor);
 		
 		boolean uni = fontRendererObj.getUnicodeFlag();
 		fontRendererObj.setUnicodeFlag(FTBUClient.guide_unicode.get());
@@ -304,7 +303,7 @@ public class GuiGuide extends GuiLM
 		
 		public void onButtonPressed(int b)
 		{
-			gui.playClickSound();
+			FTBLibClient.playClickSound();
 			
 			if(cat.subcategories.isEmpty())
 			{
@@ -312,7 +311,7 @@ public class GuiGuide extends GuiLM
 				sliderText.value = 0F;
 				initLMGui();
 			}
-			else gui.mc.displayGuiScreen(new GuiGuide(GuiGuide.this, cat));
+			else FTBLibClient.openGui(new GuiGuide(GuiGuide.this, cat));
 		}
 		
 		public boolean isEnabled()
@@ -359,7 +358,7 @@ public class GuiGuide extends GuiLM
 			else if(line.special.type.isImage())
 			{
 				TextureCoords tc = line.special.getTexture();
-				if(tc != null && tc.isValid()) mc.displayGuiScreen(new GuiViewImage(GuiGuide.this, tc));
+				if(tc != null && tc.isValid()) FTBLibClient.openGui(new GuiViewImage(GuiGuide.this, tc));
 			}
 			else if(line.special.type == LinkType.RECIPE)
 			{
@@ -378,9 +377,9 @@ public class GuiGuide extends GuiLM
 			else if(line.special != null && line.special.type.isImage() && line.texture != null && line.texture.isValid())
 			{
 				GlStateManager.color(1F, 1F, 1F, 1F);
-				gui.setTexture(line.texture.texture);
+				FTBLibClient.setTexture(line.texture.texture);
 				double w = Math.min(width, line.texture.width);
-				gui.render(line.texture, ax, ay, w, line.texture.getHeight(w) + 1);
+				GuiLM.render(line.texture, ax, ay, zLevel, w, line.texture.getHeight(w) + 1);
 				//GuiLM.drawTexturedRectD(ax, ay, gui.getZLevel(), w, line.texture.getHeight(w), 0D, line.texture.minU, 1D, line.texture.maxU);
 			}
 		}

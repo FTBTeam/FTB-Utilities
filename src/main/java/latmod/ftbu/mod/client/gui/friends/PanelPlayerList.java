@@ -58,13 +58,13 @@ public class PanelPlayerList extends PanelFriendsGui
 		int size = playerButtons.size();
 		if(size == 0) return;
 		
-		if(gui.mouseX <= getAX() + width)
+		if(gui.mouse().x <= getAX() + width)
 		{
 			int scroll = 0;
 			
-			if(gui.mouseDWheel != 0) scroll = ((gui.mouseDWheel > 0) ? 28 : -28);
+			if(gui.mouse().dwheel != 0) scroll = ((gui.mouse().dwheel > 0) ? 28 : -28);
 			
-			if(Mouse.isButtonDown(0)) scroll += gui.mouseDY;
+			if(Mouse.isButtonDown(0)) scroll += gui.mouse().dy;
 			
 			//if(Mouse.isButtonDown(1))
 			//	scroll -= (int)((gui.mouseY - gui.lastClickY) * 0.1D);

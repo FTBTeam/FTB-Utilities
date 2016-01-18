@@ -30,7 +30,7 @@ public class ButtonPlayer extends ButtonLM
 			panel.gui.panelPlayerView.selectedPlayer.inventory.currentItem = 0;
 			ClientAction.REQUEST_PLAYER_INFO.send(player.playerLM.playerID);
 			if(b != 0)
-				panel.gui.panelPopupMenu = new PanelPopupPlayerActions((GuiFriends) gui, gui.mouseX - gui.mainPanel.getAX() + 3, gui.mouseY - gui.mainPanel.getAY() - 3, player.playerLM);
+				panel.gui.panelPopupMenu = new PanelPopupPlayerActions((GuiFriends) gui, gui.mouse().x - gui.getMainPanel().getAX() + 3, gui.mouse().y - gui.getMainPanel().getAY() - 3, player.playerLM);
 		}
 		
 		gui.refreshWidgets();
@@ -43,7 +43,7 @@ public class ButtonPlayer extends ButtonLM
 	public void renderWidget()
 	{
 		int ay = getAY();
-		if(ay + height < 0 || ay > gui.height) return;
+		if(ay + height < 0 || ay > gui.getGui().height) return;
 		int ax = getAX();
 		double z = gui.getZLevel();
 		

@@ -78,7 +78,7 @@ public class FTBUActions
 	public static final PlayerAction friends_gui = new PlayerAction(PlayerAction.Type.SELF, "ftbu.friends_gui", 950, TextureCoords.getSquareIcon(FTBU.mod.getLocation("textures/gui/friendsbutton.png"), 256))
 	{
 		public void onClicked(ILMPlayer self, ILMPlayer other)
-		{ FTBLibClient.mc.displayGuiScreen(new GuiFriends(FTBLibClient.mc.currentScreen)); }
+		{ FTBLibClient.openGui(new GuiFriends(FTBLibClient.mc.currentScreen)); }
 		
 		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
 		{ return FTBLibClient.isIngameWithFTBU(); }
@@ -117,7 +117,7 @@ public class FTBUActions
 	public static final PlayerAction claims = new PlayerAction(PlayerAction.Type.SELF, "ftbu.claimed_chunks", 0, GuiIcons.map)
 	{
 		public void onClicked(ILMPlayer self, ILMPlayer other)
-		{ FTBLibClient.mc.displayGuiScreen(new GuiClaimChunks(0L)); }
+		{ FTBLibClient.openGui(new GuiClaimChunks(0L)); }
 		
 		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
 		{ return FTBLibClient.isIngameWithFTBU(); }

@@ -1,5 +1,6 @@
 package latmod.ftbu.mod.client.gui.friends;
 
+import ftb.lib.api.client.FTBLibClient;
 import latmod.ftbu.mod.client.FTBUClient;
 import latmod.ftbu.world.LMWorldClient;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -54,9 +55,9 @@ public class PanelPlayerView extends PanelFriendsGui
 		int playerX = getAX() + width / 2;
 		int size = 120;
 		int playerY = height / 2 + size - 4;
-		gui.setTexture(selectedPlayer.getLocationSkin());
+		FTBLibClient.setTexture(selectedPlayer.getLocationSkin());
 		GlStateManager.translate(0F, 0F, 100F);
-		GuiInventory.drawEntityOnScreen(playerX, playerY, size, playerX - gui.mouseX, playerY - (size + (size / 1.625F)) - gui.mouseY, selectedPlayer);
+		GuiInventory.drawEntityOnScreen(playerX, playerY, size, playerX - gui.mouse().x, playerY - (size + (size / 1.625F)) - gui.mouse().y, selectedPlayer);
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.popAttrib();
 		GlStateManager.popMatrix();

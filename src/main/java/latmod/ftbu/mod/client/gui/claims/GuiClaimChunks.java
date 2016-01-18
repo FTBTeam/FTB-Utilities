@@ -72,8 +72,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	public GuiClaimChunks(long token)
 	{
 		super(null, null);
-		hideNEI = true;
-		xSize = ySize = tiles_gui * 16;
+		mainPanel.width = mainPanel.height = tiles_gui * 16;
 		
 		adminToken = token;
 		playerLM = LMWorldClient.inst.clientPlayer;
@@ -85,8 +84,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		{
 			public void onButtonPressed(int b)
 			{
-				gui.playClickSound();
-				mc.displayGuiScreen(new GuiFriends(null));
+				FTBLibClient.playClickSound();
+				FTBLibClient.openGui(new GuiFriends(null));
 			}
 		};
 		
@@ -98,7 +97,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 				thread.start();
 				new MessageAreaRequest(startX, startY, tiles_gui, tiles_gui).sendToServer();
 				ClientAction.REQUEST_SELF_UPDATE.send(0);
-				gui.playClickSound();
+				FTBLibClient.playClickSound();
 			}
 		};
 		
@@ -108,7 +107,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		{
 			public void onButtonPressed(int b)
 			{
-				gui.playClickSound();
+				FTBLibClient.playClickSound();
 				ClientAction.BUTTON_CLAIMED_CHUNKS_SETTINGS.send(0);
 			}
 		};
@@ -119,16 +118,16 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		{
 			public void onButtonPressed(int b)
 			{
-				gui.playClickSound();
-				String s = isShiftKeyDown() ? FTBU.mod.translate("button.claims_unclaim_all_q") : FTBU.mod.translate("button.claims_unclaim_all_dim_q", gui.mc.theWorld.provider.getDimensionName());
-				mc.displayGuiScreen(new GuiYesNo(GuiClaimChunks.this, s, "", isShiftKeyDown() ? 1 : 0));
+				FTBLibClient.playClickSound();
+				String s = isShiftKeyDown() ? FTBU.mod.translate("button.claims_unclaim_all_q") : FTBU.mod.translate("button.claims_unclaim_all_dim_q", FTBLibClient.mc.theWorld.provider.getDimensionName());
+				FTBLibClient.openGui(new GuiYesNo(GuiClaimChunks.this, s, "", isShiftKeyDown() ? 1 : 0));
 			}
 			
 			public void addMouseOverText(List<String> l)
 			{
 				if(isShiftKeyDown()) l.add(FTBU.mod.translate("button.claims_unclaim_all"));
 				else
-					l.add(FTBU.mod.translate("button.claims_unclaim_all_dim", gui.mc.theWorld.provider.getDimensionName()));
+					l.add(FTBU.mod.translate("button.claims_unclaim_all_dim", FTBLibClient.mc.theWorld.provider.getDimensionName()));
 			}
 		};
 		
@@ -149,7 +148,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			}
 			
 			public int getAX()
-			{ return gui.width - 16; }
+			{ return gui.getGui().width - 16; }
 			
 			public int getAY()
 			{ return 0; }
@@ -201,14 +200,14 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		}
 		
 		GlStateManager.color(0F, 0F, 0F, 1F);
-		drawBlankRect(guiLeft - 2, guiTop - 2, zLevel, xSize + 4, ySize + 4);
+		drawBlankRect(mainPanel.posX - 2, mainPanel.posY - 2, zLevel, mainPanel.width + 4, mainPanel.height + 4);
 		//drawBlankRect((xSize - 128) / 2, (ySize - 128) / 2, zLevel, 128, 128);
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		
 		if(textureID != -1 && thread == null)
 		{
 			GlStateManager.bindTexture(textureID);
-			drawTexturedRectD(guiLeft, guiTop, zLevel, tiles_gui * 16, tiles_gui * 16, 0D, 0D, UV, UV);
+			drawTexturedRectD(mainPanel.posX, mainPanel.posY, zLevel, tiles_gui * 16, tiles_gui * 16, 0D, 0D, UV, UV);
 		}
 		
 		super.drawBackground();
@@ -272,7 +271,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 					TextureCoords tc = tex_area_coords[a ? 1 : 0][b ? 1 : 0][c ? 1 : 0][d ? 1 : 0];
 					
 					FTBLibClient.setGLColor(type.getAreaColor(playerLM), 255);
-					GuiLM.drawTexturedRectD(guiLeft + x * 16, guiTop + y * 16, zLevel, 16, 16, tc.minU, tc.minV, tc.maxU, tc.maxV);
+					GuiLM.drawTexturedRectD(mainPanel.posX + x * 16, mainPanel.posY + y * 16, zLevel, 16, 16, tc.minU, tc.minV, tc.maxU, tc.maxV);
 				}
 			}
 		
@@ -295,7 +294,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 						double y = ((cy - startY) * 16D + MathHelperLM.wrap(ep.posZ, 16D));
 						
 						GlStateManager.pushMatrix();
-						GlStateManager.translate(guiLeft + x, guiTop + y, 0D);
+						GlStateManager.translate(mainPanel.posX + x, mainPanel.posY + y, 0D);
 						GlStateManager.pushMatrix();
 						//GlStateManager.rotate((int)((ep.rotationYaw + 180F) / (180F / 8F)) * (180F / 8F), 0F, 0F, 1F);
 						GlStateManager.rotate(ep.rotationYaw + 180F, 0F, 0F, 1F);
@@ -321,7 +320,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			new MessageAreaRequest(startX, startY, tiles_gui, tiles_gui).sendToServer();
 		}
 		
-		mc.displayGuiScreen(this);
+		FTBLibClient.openGui(this);
 		refreshWidgets();
 	}
 	
@@ -346,7 +345,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			if(gui.adminToken != 0L && b == 0) return;
 			boolean ctrl = FTBUClient.loaded_chunks_space_key.get() ? Keyboard.isKeyDown(Keyboard.KEY_SPACE) : isCtrlKeyDown();
 			new MessageClaimChunk(gui.currentDim, gui.adminToken, chunkX, chunkY, (b == 0) ? (ctrl ? MessageClaimChunk.ID_LOAD : MessageClaimChunk.ID_CLAIM) : (ctrl ? MessageClaimChunk.ID_UNLOAD : MessageClaimChunk.ID_UNCLAIM)).sendToServer();
-			gui.playClickSound();
+			FTBLibClient.playClickSound();
 		}
 		
 		public void addMouseOverText(List<String> l)

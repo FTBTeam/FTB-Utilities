@@ -31,7 +31,7 @@ public class MessageDisplayGuide extends MessageFTBU
 		if(data == null) return null;
 		GuideFile file = new GuideFile(null);
 		file.readFromNBT(data);
-		FTBLibClient.mc.displayGuiScreen(new GuiGuide(null, file.main));
+		FTBLibClient.openGui(new GuiGuide(null, file.main));
 		return null;
 	}
 }

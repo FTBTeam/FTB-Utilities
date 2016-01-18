@@ -1,6 +1,6 @@
 package latmod.ftbu.mod.handlers.ftbl;
 
-import ftb.lib.*;
+import ftb.lib.FTBLib;
 import ftb.lib.api.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.notification.ClientNotifications;
@@ -34,16 +34,12 @@ public class FTBLIntegrationClient extends FTBLIntegration
 	public void onFTBWorldClient(EventFTBWorldClient e)
 	{
 		ClientNotifications.init();
+		ClaimedAreasClient.clear();
 		
 		if(e.world == null)
 		{
-			ClaimedAreasClient.clear();
-			new EventLMWorldClient(LMWorldClient.inst, true).post();
+			if(LMWorldClient.inst != null) new EventLMWorldClient(LMWorldClient.inst, true).post();
 			LMWorldClient.inst = null;
-		}
-		else if(e.isFake)
-		{
-			LMWorldClient.inst = new LMWorldClient(0);
 		}
 	}
 	
@@ -51,7 +47,7 @@ public class FTBLIntegrationClient extends FTBLIntegration
 	{
 		LMWorldClient.inst = new LMWorldClient(io.readInt());
 		LMWorldClient.inst.readDataFromNet(io, true);
-		FTBLib.logger.info("Joined the server with PlayerID " + LMWorldClient.inst.clientPlayerID + " on world " + FTBWorld.client.getWorldIDS());
+		FTBLib.logger.info("Joined the server with PlayerID " + LMWorldClient.inst.clientPlayerID);
 		new EventLMWorldClient(LMWorldClient.inst, false).post();
 	}
 	

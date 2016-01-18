@@ -30,7 +30,7 @@ public class ServerGuideFile extends GuideFile
 			categoryServerAdmin = new GuideCategory(new ChatComponentText("Admin"));
 			categoryServerAdmin.setParent(main);
 			
-			//categoryServer.println(new ChatComponentTranslation("ftbl:worldID", FTBWorld.server.getWorldIDS()));
+			//categoryServer.println(new ChatComponentTranslation("ftbl:worldID", FTBWorld.server.getWorldID()));
 			
 			File file = new File(FTBLib.folderLocal, "guide/");
 			if(file.exists() && file.isDirectory())
@@ -156,7 +156,11 @@ public class ServerGuideFile extends GuideFile
 							for(String s1 : usageL)
 								cat.println(s1);
 						}
-						else cat.println(new ChatComponentTranslation(usage));
+						else
+						{
+							if(usage.indexOf('%') != -1) cat.println(new ChatComponentText(usage));
+							else cat.println(new ChatComponentTranslation(usage));
+						}
 					}
 					
 					cat.setParent(commands);

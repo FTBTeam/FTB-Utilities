@@ -50,8 +50,7 @@ public class ThreadBackup extends Thread
 			
 			if(FTBUConfigBackups.compression_level.get() > 0)
 			{
-				out.append(FTBWorld.server.getWorldIDS());
-				out.append(".zip");
+				out.append("backup.zip");
 				dstFile = LMFileUtils.newFile(new File(Backups.backupsFolder, out.toString()));
 				
 				long start = LMUtils.millis();

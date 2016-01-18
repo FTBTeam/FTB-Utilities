@@ -114,10 +114,10 @@ public class ServerGuideFile extends GuideFile
 			players.get(i).refreshStats();
 		
 		if(FTBUConfigGeneral.restart_timer.get() > 0F)
-			main.println(new ChatComponentTranslation(FTBU.mod.assets + "cmd.timer_restart", LMStringUtils.getTimeString(FTBUTicks.getSecondsUntilRestart() * 1000L)));
+			main.println(new ChatComponentTranslation(FTBU.mod.assets + "cmd.timer_restart", LMStringUtils.getTimeString(FTBUTicks.restartMillis - LMUtils.millis())));
 		
 		if(FTBUConfigBackups.enabled.get())
-			main.println(new ChatComponentTranslation(FTBU.mod.assets + "cmd.timer_backup", LMStringUtils.getTimeString(Backups.getSecondsUntilNextBackup() * 1000L)));
+			main.println(new ChatComponentTranslation(FTBU.mod.assets + "cmd.timer_backup", LMStringUtils.getTimeString(Backups.nextBackup - LMUtils.millis())));
 		
 		if(FTBUConfigTops.first_joined.get()) addTop(Top.first_joined);
 		if(FTBUConfigTops.deaths.get()) addTop(Top.deaths);

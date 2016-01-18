@@ -19,70 +19,66 @@ public class ServerBadges
 	private static final HashMap<String, Badge> map = new HashMap<>();
 	private static final HashMap<UUID, Badge> uuid = new HashMap<>();
 	
-	public static boolean updateBadges = true;
-	public static boolean isReloading = false;
+	public static ThreadReloadBadges thread;
 	
 	public static void reload()
 	{
-		isReloading = true;
-		
-		Thread thread = new Thread()
-		{
-			public void run()
-			{ reload0(); }
-		};
-		
+		thread = new ThreadReloadBadges();
 		thread.setDaemon(true);
 		thread.start();
 	}
 	
-	private static void reload0()
+	public static class ThreadReloadBadges extends Thread
 	{
-		isReloading = true;
-		long msStarted = LMUtils.millis();
+		public boolean isDone = false;
 		
-		map.clear();
-		uuid.clear();
-		
-		JsonElement global = null, local = null;
-		
-		try
+		public void run()
 		{
-			LMURLConnection connection = new LMURLConnection(RequestMethod.SIMPLE_GET, "http://pastebin.com/raw/Mu8McdDR");
-			global = connection.connect().asJson();
-		}
-		catch(Exception ex)
-		{
-			ex.printStackTrace();
-		}
-		
-		try
-		{
-			File file = LMFileUtils.newFile(new File(FTBLib.folderLocal, "badges.json"));
-			local = LMJsonUtils.getJsonElement(file);
+			isDone = false;
+			long msStarted = LMUtils.millis();
 			
-			if(local.isJsonNull())
+			map.clear();
+			uuid.clear();
+			
+			JsonElement global = null, local = null;
+			
+			try
 			{
-				local = new JsonObject();
-				((JsonObject) local).add("badges", new JsonObject());
-				((JsonObject) local).add("players", new JsonObject());
-				LMJsonUtils.toJsonFile(file, local);
+				LMURLConnection connection = new LMURLConnection(RequestMethod.SIMPLE_GET, "http://pastebin.com/raw/Mu8McdDR");
+				global = connection.connect().asJson();
 			}
+			catch(Exception ex)
+			{
+				ex.printStackTrace();
+			}
+			
+			try
+			{
+				File file = LMFileUtils.newFile(new File(FTBLib.folderLocal, "badges.json"));
+				local = LMJsonUtils.getJsonElement(file);
+				
+				if(local.isJsonNull())
+				{
+					local = new JsonObject();
+					((JsonObject) local).add("badges", new JsonObject());
+					((JsonObject) local).add("players", new JsonObject());
+					LMJsonUtils.toJsonFile(file, local);
+				}
+			}
+			catch(Exception ex)
+			{
+				ex.printStackTrace();
+			}
+			
+			loadBadges(global, Phase.PRE);
+			loadBadges(local, Phase.PRE);
+			
+			loadBadges(global, Phase.POST);
+			loadBadges(local, Phase.POST);
+			
+			FTBU.mod.logger.info("Loaded " + map.size() + " badges in " + (LMUtils.millis() - msStarted) + " ms!");
+			isDone = true;
 		}
-		catch(Exception ex)
-		{
-			ex.printStackTrace();
-		}
-		
-		loadBadges(global, Phase.PRE);
-		loadBadges(local, Phase.PRE);
-		
-		loadBadges(global, Phase.POST);
-		loadBadges(local, Phase.POST);
-		
-		isReloading = false;
-		updateBadges = true;
-		FTBU.mod.logger.info("Loaded " + map.size() + " badges in " + (LMUtils.millis() - msStarted) + " ms!");
 	}
 	
 	public static void sendToPlayer(EntityPlayerMP ep)

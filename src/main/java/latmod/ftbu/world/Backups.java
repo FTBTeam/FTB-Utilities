@@ -1,9 +1,8 @@
 package latmod.ftbu.world;
 
 import ftb.lib.*;
-import latmod.ftbu.mod.FTBUTicks;
 import latmod.ftbu.mod.config.FTBUConfigBackups;
-import latmod.lib.LMFileUtils;
+import latmod.lib.*;
 import net.minecraft.command.server.*;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
@@ -17,11 +16,9 @@ public class Backups
 	public static final Logger logger = LogManager.getLogger("FTBU Backups");
 	
 	public static File backupsFolder;
-	public static long lastTimeRun = -1;
-	public static boolean shouldRun = false;
-	public static Thread thread;
-	public static boolean commandOverride = false;
-	public static boolean shouldKillThread = false;
+	public static long nextBackup = -1L;
+	public static ThreadBackup thread = null;
+	public static boolean hadPlayer = false;
 	
 	public static void init()
 	{
@@ -32,30 +29,43 @@ public class Backups
 		logger.info("Backups folder created @ " + backupsFolder.getAbsolutePath());
 	}
 	
-	public static boolean enabled()
-	{ return commandOverride || FTBUConfigBackups.enabled.get(); }
-	
-	public static boolean run()
+	public static boolean run(boolean auto)
 	{
-		if(thread != null || !shouldRun || !enabled()) return false;
+		if(thread != null || !FTBUConfigBackups.enabled.get()) return false;
 		World w = FTBLib.getServerWorld();
 		if(w == null) return false;
-		shouldRun = false;
-		thread = new ThreadBackup(w);
-		lastTimeRun = ((ThreadBackup) thread).time.millis;
 		FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Starting server backup, expect lag!");
+		
+		nextBackup = LMUtils.millis() + FTBUConfigBackups.backupMillis();
+		
+		if(FTBUConfigBackups.need_online_players.get())
+		{
+			if(!hadPlayer) return true;
+			hadPlayer = false;
+		}
+		
 		try
 		{
 			new CommandSaveOff().processCommand(FTBLib.getServer(), new String[0]);
-			new CommandSaveAll().processCommand(FTBLib.getServer(), new String[] {"flush"});
+			new CommandSaveAll().processCommand(FTBLib.getServer(), new String[0]);
 		}
-		catch(Exception e) { }
-		thread.start();
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+		if(FTBUConfigBackups.use_separate_thread.get())
+		{
+			thread = new ThreadBackup(w);
+			thread.start();
+		}
+		else
+		{
+			ThreadBackup.doBackup(w.getSaveHandler().getWorldDirectory());
+		}
+		
 		return true;
 	}
-	
-	public static long getSecondsUntilNextBackup()
-	{ return ((lastTimeRun + (long) (FTBUConfigBackups.backup_timer.get() * 3600D * 1000D)) - FTBUTicks.currentMillis()) / 1000L; }
 	
 	public static void clearOldBackups()
 	{
@@ -77,6 +87,18 @@ public class Backups
 					LMFileUtils.delete(f);
 				}
 			}
+		}
+	}
+	
+	public static void postBackup()
+	{
+		try
+		{
+			new CommandSaveOn().processCommand(FTBLib.getServer(), new String[0]);
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
 		}
 	}
 }

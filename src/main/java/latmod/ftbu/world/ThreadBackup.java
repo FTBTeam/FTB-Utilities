@@ -12,18 +12,25 @@ import java.util.zip.*;
 
 public class ThreadBackup extends Thread
 {
-	public final File src;
-	public final Time time;
+	private File src0;
+	public boolean isDone = false;
 	
 	public ThreadBackup(World w)
 	{
-		time = Time.now();
-		src = w.getSaveHandler().getWorldDirectory();
+		src0 = w.getSaveHandler().getWorldDirectory();
 		setPriority(7);
 	}
 	
 	public void run()
 	{
+		isDone = false;
+		doBackup(src0);
+		isDone = true;
+	}
+	
+	public static void doBackup(File src)
+	{
+		Time time = Time.now();
 		File dstFile = null;
 		
 		try
@@ -149,8 +156,6 @@ public class ThreadBackup extends Thread
 			e.printStackTrace();
 			if(dstFile != null) LMFileUtils.delete(dstFile);
 		}
-		
-		Backups.shouldKillThread = true;
 		//System.gc();
 	}
 	

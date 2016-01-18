@@ -52,10 +52,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 			ServerBadges.reload();
 			
 			if(FTBLib.getServerWorld() != null)
-			{
 				FTBUChunkEventHandler.instance.markDirty(null);
-				ServerBadges.updateBadges = true;
-			}
 		}
 	}
 	
@@ -156,7 +153,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 			
 			//new MessageLMPlayerInfo(p.playerID).sendTo(null);
 			FTBUConfigLogin.printMotd(ep);
-			Backups.shouldRun = true;
+			Backups.hadPlayer = true;
 			
 			p.checkNewFriends();
 			new MessageAreaUpdate(p, p.getPos(), 3, 3).sendTo(ep);

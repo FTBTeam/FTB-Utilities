@@ -3,11 +3,10 @@ package latmod.ftbu.mod;
 import ftb.lib.*;
 import latmod.ftbu.badges.ServerBadges;
 import latmod.ftbu.mod.cmd.admin.CmdRestart;
-import latmod.ftbu.mod.config.FTBUConfigGeneral;
+import latmod.ftbu.mod.config.*;
 import latmod.ftbu.mod.handlers.FTBUChunkEventHandler;
-import latmod.ftbu.world.*;
+import latmod.ftbu.world.Backups;
 import latmod.lib.*;
-import net.minecraft.command.server.CommandSaveOn;
 import net.minecraft.util.*;
 
 public class FTBUTicks
@@ -15,112 +14,74 @@ public class FTBUTicks
 	public static long nextChunkloaderUpdate = 0L;
 	
 	private static long startMillis = 0L;
-	private static long currentMillis = 0L;
-	private static long restartSeconds = 0L;
 	private static String lastRestartMessage = "";
+	public static long restartMillis = 0L;
 	
 	public static void serverStarted()
 	{
-		currentMillis = startMillis = Backups.lastTimeRun = LMUtils.millis();
-		restartSeconds = 0;
+		startMillis = LMUtils.millis();
+		Backups.nextBackup = startMillis + FTBUConfigBackups.backupMillis();
 		
 		if(FTBUConfigGeneral.restart_timer.get() > 0)
 		{
-			restartSeconds = (long) (FTBUConfigGeneral.restart_timer.get() * 3600D);
-			FTBU.mod.logger.info("Server restart in " + LMStringUtils.getTimeString(restartSeconds * 1000L));
+			restartMillis = (long) (FTBUConfigGeneral.restart_timer.get() * 3600D * 1000D);
+			FTBU.mod.logger.info("Server restart in " + LMStringUtils.getTimeString(restartMillis));
 		}
 	}
 	
-	@SuppressWarnings("all")
 	public static void serverStopped()
 	{
-		currentMillis = startMillis = restartSeconds = 0L;
+		startMillis = restartMillis = 0L;
 	}
 	
 	public static void update()
 	{
-		long t = LMUtils.millis();
+		long now = LMUtils.millis();
 		
-		if(t - currentMillis >= 750L)
+		if(restartMillis > 0L)
 		{
-			currentMillis = t;
+			int secondsLeft = (int) ((restartMillis - LMUtils.millis()) / 1000L);
 			
-			long secondsLeft = 3600L;
-			
-			if(restartSeconds > 0L)
+			String msg = LMStringUtils.getTimeString(secondsLeft * 1000L);
+			if(msg != null && !lastRestartMessage.equals(msg))
 			{
-				secondsLeft = getSecondsUntilRestart();
-				String msg = LMStringUtils.getTimeString(secondsLeft * 1000L);
-				if(msg != null && !lastRestartMessage.equals(msg))
+				lastRestartMessage = msg;
+				
+				if(secondsLeft <= 0)
 				{
-					lastRestartMessage = msg;
-					
-					if(secondsLeft <= 0)
-					{
-						CmdRestart.restart();
-						return;
-					}
-					else if(secondsLeft <= 10 || secondsLeft == 60 || secondsLeft == 300 || secondsLeft == 600 || secondsLeft == 1800)
-					{
-						IChatComponent c = new ChatComponentTranslation(FTBU.mod.assets + "server_restart", msg);
-						c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE);
-						FTBLib.printChat(BroadcastSender.inst, c);
-					}
+					CmdRestart.restart();
+					return;
+				}
+				else if(secondsLeft <= 10 || secondsLeft == 60 || secondsLeft == 300 || secondsLeft == 600 || secondsLeft == 1800)
+				{
+					IChatComponent c = new ChatComponentTranslation(FTBU.mod.assets + "server_restart", msg);
+					c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE);
+					FTBLib.printChat(BroadcastSender.inst, c);
 				}
 			}
-			
-			if(secondsLeft > 60 && Backups.getSecondsUntilNextBackup() <= 0L) Backups.run();
 		}
 		
-		long now = LMUtils.millis();
+		if(Backups.nextBackup > 0L && Backups.nextBackup <= now)
+		{
+			Backups.run(true);
+		}
+		
 		if(nextChunkloaderUpdate < now)
 		{
-			nextChunkloaderUpdate = now + 300000L;
+			nextChunkloaderUpdate = now + 2L * 3600L;
 			FTBUChunkEventHandler.instance.markDirty(null);
 		}
 		
-		if(Backups.shouldKillThread)
+		if(Backups.thread != null && Backups.thread.isDone)
 		{
-			Backups.shouldKillThread = false;
-			boolean wasBackup = Backups.thread instanceof ThreadBackup;
 			Backups.thread = null;
-			
-			if(wasBackup)
-			{
-				try
-				{
-					new CommandSaveOn().processCommand(FTBLib.getServer(), new String[0]);
-				}
-				catch(Exception ex)
-				{
-					ex.printStackTrace();
-				}
-			}
+			Backups.postBackup();
 		}
 		
-		if(ServerBadges.updateBadges && !ServerBadges.isReloading)
+		if(ServerBadges.thread != null && ServerBadges.thread.isDone)
 		{
+			ServerBadges.thread = null;
 			ServerBadges.sendToPlayer(null);
-			ServerBadges.updateBadges = false;
 		}
 	}
-	
-	public static long getSecondsUntilRestart()
-	{ return Math.max(0L, restartSeconds - (currentSeconds() - startSeconds())); }
-	
-	public static void forceShutdown(int sec)
-	{
-		restartSeconds = Math.max(0, sec) + 1L;
-		//currentMillis = LatCore.millis();
-		//currentSeconds = startSeconds = startMillis / 1000L;
-	}
-	
-	public static long currentMillis()
-	{ return currentMillis; }
-	
-	public static long currentSeconds()
-	{ return currentMillis / 1000L; }
-	
-	public static long startSeconds()
-	{ return startMillis / 1000L; }
 }

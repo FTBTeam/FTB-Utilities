@@ -102,7 +102,9 @@ public class FTBLIntegrationClient extends FTBLIntegration
 		worldBorderRenderer.setSize(minX, 0D, minZ, maxX, 256D, maxZ);
 		worldBorderRenderer.setUV(minX + f, 0D, maxX + f, 256D);
 		
-		float maxA = 0.8F;
+		//GL11.glAlphaFunc();
+		
+		float maxA = 0.6F;
 		
 		GlStateManager.color(1F, 1F, 1F, maxA);
 		

@@ -30,9 +30,6 @@ public abstract class ClientAction
 					owner.sendUpdate();
 					p.sendUpdate();
 					p.checkNewFriends();
-					
-					new MessageLMPlayerInfo(owner, p.playerID).sendTo(owner.getPlayer());
-					new MessageLMPlayerInfo(owner, owner.playerID).sendTo(owner.getPlayer());
 				}
 			}
 			else
@@ -45,12 +42,8 @@ public abstract class ClientAction
 						owner.sendUpdate();
 						p.sendUpdate();
 						p.checkNewFriends();
-						
-						new MessageLMPlayerInfo(owner, p.playerID).sendTo(owner.getPlayer());
 					}
 				}
-				
-				new MessageLMPlayerInfo(owner, owner.playerID).sendTo(owner.getPlayer());
 			}
 			
 			return true;
@@ -70,9 +63,6 @@ public abstract class ClientAction
 				owner.sendUpdate();
 				p.sendUpdate();
 				p.checkNewFriends();
-				
-				new MessageLMPlayerInfo(owner, p.playerID).sendTo(owner.getPlayer());
-				new MessageLMPlayerInfo(owner, owner.playerID).sendTo(owner.getPlayer());
 			}
 			
 			return true;
@@ -91,9 +81,6 @@ public abstract class ClientAction
 				p.friends.removeValue(owner.playerID);
 				owner.sendUpdate();
 				p.sendUpdate();
-				
-				new MessageLMPlayerInfo(owner, p.playerID).sendTo(owner.getPlayer());
-				new MessageLMPlayerInfo(owner, owner.playerID).sendTo(owner.getPlayer());
 			}
 			
 			return true;

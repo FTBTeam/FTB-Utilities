@@ -27,6 +27,8 @@ public class FTBUTicks
 			restartMillis = (long) (FTBUConfigGeneral.restart_timer.get() * 3600D * 1000D);
 			FTBU.mod.logger.info("Server restart in " + LMStringUtils.getTimeString(restartMillis));
 		}
+		
+		nextChunkloaderUpdate = startMillis + 10000L;
 	}
 	
 	public static void serverStopped()
@@ -42,21 +44,24 @@ public class FTBUTicks
 		{
 			int secondsLeft = (int) ((restartMillis - LMUtils.millis()) / 1000L);
 			
-			String msg = LMStringUtils.getTimeString(secondsLeft * 1000L);
-			if(msg != null && !lastRestartMessage.equals(msg))
+			if(secondsLeft <= 0)
 			{
-				lastRestartMessage = msg;
-				
-				if(secondsLeft <= 0)
+				CmdRestart.restart();
+				return;
+			}
+			else
+			{
+				String msg = LMStringUtils.getTimeString(secondsLeft * 1000L);
+				if(msg != null && !lastRestartMessage.equals(msg))
 				{
-					CmdRestart.restart();
-					return;
-				}
-				else if(secondsLeft <= 10 || secondsLeft == 60 || secondsLeft == 300 || secondsLeft == 600 || secondsLeft == 1800)
-				{
-					IChatComponent c = new ChatComponentTranslation(FTBU.mod.assets + "server_restart", msg);
-					c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE);
-					FTBLib.printChat(BroadcastSender.inst, c);
+					lastRestartMessage = msg;
+					
+					if(secondsLeft <= 10 || secondsLeft == 60 || secondsLeft == 300 || secondsLeft == 600 || secondsLeft == 1800)
+					{
+						IChatComponent c = new ChatComponentTranslation(FTBU.mod.assets + "server_restart", msg);
+						c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE);
+						FTBLib.printChat(BroadcastSender.inst, c);
+					}
 				}
 			}
 		}
@@ -68,7 +73,7 @@ public class FTBUTicks
 		
 		if(nextChunkloaderUpdate < now)
 		{
-			nextChunkloaderUpdate = now + 2L * 3600L;
+			nextChunkloaderUpdate = now + 10000L;
 			FTBUChunkEventHandler.instance.markDirty(null);
 		}
 		

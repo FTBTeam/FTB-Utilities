@@ -62,8 +62,10 @@ public class FTBUPlayerEventHandler
 			{
 				ep.motionX = ep.motionY = ep.motionZ = 0D;
 				IChatComponent warning = new ChatComponentTranslation(FTBU.mod.assets + ChunkType.WORLD_BORDER.lang + ".warning");
-				warning.getChatStyle().setColor(EnumChatFormatting.RED);
-				FTBLib.notifyPlayer(ep, new Notification("world_border", warning, 3000));
+				warning.getChatStyle().setColor(EnumChatFormatting.WHITE);
+				Notification n = new Notification("world_border", warning, 3000);
+				n.color = ChunkType.WORLD_BORDER.getAreaColor(player);
+				FTBLib.notifyPlayer(ep, n);
 				
 				if(LMWorldServer.inst.settings.getWB(player.lastPos.dim).isOutsideD(player.lastPos.x, player.lastPos.z))
 				{

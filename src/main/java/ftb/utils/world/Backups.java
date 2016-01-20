@@ -31,16 +31,19 @@ public class Backups
 	
 	public static boolean run(boolean auto)
 	{
-		if(thread != null || !FTBUConfigBackups.enabled.get()) return false;
+		if(thread != null) return false;
+		
+		if(auto && !FTBUConfigBackups.enabled.get()) return false;
+		
 		World w = FTBLib.getServerWorld();
 		if(w == null) return false;
 		FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Starting server backup, expect lag!");
 		
 		nextBackup = LMUtils.millis() + FTBUConfigBackups.backupMillis();
 		
-		if(FTBUConfigBackups.need_online_players.get())
+		if(auto && FTBUConfigBackups.need_online_players.get())
 		{
-			if(!hadPlayer) return true;
+			if(!FTBLib.hasOnlinePlayers() && !hadPlayer) return true;
 			hadPlayer = false;
 		}
 		

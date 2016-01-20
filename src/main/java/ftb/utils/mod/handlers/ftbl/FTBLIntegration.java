@@ -87,7 +87,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 		
 		new EventLMWorldServer.Loaded(LMWorldServer.inst, Phase.POST).post();
 		
-		FTBUTicks.nextChunkloaderUpdate = LMUtils.millis() + 10000L;
+		FTBUTicks.serverStarted();
 	}
 	
 	public void onFTBWorldClient(EventFTBWorldClient e)

@@ -5,6 +5,7 @@ import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
+import ftb.lib.api.cmd.CommandLM;
 import ftb.utils.mod.cmd.*;
 import ftb.utils.mod.cmd.admin.CmdAdmin;
 import ftb.utils.mod.config.FTBUConfig;
@@ -60,16 +61,17 @@ public class FTBU
 	@Mod.EventHandler
 	public void registerCommands(FMLServerStartingEvent e)
 	{
-		FTBUTicks.serverStarted();
-		
-		e.registerServerCommand(new CmdAdmin());
-		e.registerServerCommand(new CmdBack());
-		e.registerServerCommand(new CmdHome());
-		e.registerServerCommand(new CmdSpawn());
-		e.registerServerCommand(new CmdTplast());
-		e.registerServerCommand(new CmdWarp());
-		e.registerServerCommand(new CmdLMPlayerSettings());
+		addCmd(e, new CmdAdmin());
+		addCmd(e, new CmdBack());
+		addCmd(e, new CmdHome());
+		addCmd(e, new CmdSpawn());
+		addCmd(e, new CmdTplast());
+		addCmd(e, new CmdWarp());
+		addCmd(e, new CmdLMPlayerSettings());
 	}
+	
+	private void addCmd(FMLServerStartingEvent e, CommandLM c)
+	{ if(!c.commandName.isEmpty()) e.registerServerCommand(c); }
 	
 	@Mod.EventHandler
 	public void serverStopping(FMLServerStoppingEvent e)

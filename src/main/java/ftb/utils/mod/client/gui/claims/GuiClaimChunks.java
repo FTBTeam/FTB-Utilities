@@ -29,8 +29,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	public static final int tiles_tex = 16;
 	public static final int tiles_gui = 15;
 	public static final double UV = (double) tiles_gui / (double) tiles_tex;
-	public static final ResourceLocation tex_area = FTBU.mod.getLocation("textures/map/minimap_area.png");
-	public static final ResourceLocation tex_map_entity = FTBU.mod.getLocation("textures/map/entity.png");
+	public static final ResourceLocation tex_area = new ResourceLocation("ftbl", "textures/world/minimap_area.png");
+	public static final ResourceLocation tex_map_entity = new ResourceLocation("ftbl", "textures/world/entity.png");
 	public static final TextureCoords[][][][] tex_area_coords = new TextureCoords[2][2][2][2];
 	
 	private static final TextureCoords getAreaCoords(int i)
@@ -255,6 +255,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		FTBLibClient.setTexture(tex_area);
 		
 		for(int y = 0; y < tiles_gui; y++)
+		{
 			for(int x = 0; x < tiles_gui; x++)
 			{
 				int cx = x + startX;
@@ -274,6 +275,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 					GuiLM.drawTexturedRectD(mainPanel.posX + x * 16, mainPanel.posY + y * 16, zLevel, 16, 16, tc.minU, tc.minV, tc.maxU, tc.maxV);
 				}
 			}
+		}
 		
 		if(!FTBLibClient.mc.theWorld.playerEntities.isEmpty())
 		{

@@ -21,6 +21,7 @@ import java.util.Map;
 @SideOnly(Side.CLIENT)
 public class FTBUClient extends FTBUCommon // FTBLibModClient
 {
+	public static final ConfigEntryBool hide_armor_fg = new ConfigEntryBool("hide_armor_fg", false).setHidden();
 	public static final ConfigEntryBool render_badges = new ConfigEntryBool("render_badges", true);
 	
 	public static final ConfigEntryBool render_my_badge = new ConfigEntryBool("render_my_badge", true)
@@ -48,7 +49,6 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public static final ConfigEntryBool sort_friends_az = new ConfigEntryBool("sort_friends_az", false);
 	public static final ConfigEntryBool loaded_chunks_space_key = new ConfigEntryBool("loaded_chunks_space_key", false);
 	public static final ConfigEntryBool guide_unicode = new ConfigEntryBool("guide_unicode", true);
-	public static final ConfigEntryBool hide_armor_fg = new ConfigEntryBool("hide_armor_fg", false).setHidden();
 	
 	public void preInit()
 	{

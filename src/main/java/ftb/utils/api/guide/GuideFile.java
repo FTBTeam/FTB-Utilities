@@ -1,18 +1,18 @@
 package ftb.utils.api.guide;
 
-import ftb.lib.*;
-import ftb.utils.mod.client.gui.guide.GuideLinkSerializer;
+import com.google.gson.*;
+import ftb.lib.FTBLib;
 import ftb.utils.net.MessageDisplayGuide;
 import latmod.lib.*;
+import latmod.lib.json.IJsonObject;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.*;
 import net.minecraft.util.*;
 import net.minecraftforge.common.util.FakePlayer;
 
 import java.io.File;
 import java.util.*;
 
-public class GuideFile // ServerGuideFile // ClientGuideFile
+public class GuideFile implements IJsonObject // ServerGuideFile // ClientGuideFile
 {
 	public final GuideCategory main;
 	public final HashMap<String, GuideLink> links;
@@ -37,11 +37,6 @@ public class GuideFile // ServerGuideFile // ClientGuideFile
 		}
 		
 		return null;
-	}
-	
-	protected static class LinksMap
-	{
-		public Map<String, GuideLink> links;
 	}
 	
 	protected static void loadFromFiles(GuideCategory c, File f)
@@ -77,70 +72,85 @@ public class GuideFile // ServerGuideFile // ClientGuideFile
 		}
 	}
 	
-	protected void loadLinksFromFile(File f)
+	protected static Map<String, GuideLink> loadLinksFromFile(File f)
 	{
-		if(f == null || !f.exists()) return;
-		links.clear();
-		LinksMap linksMap = LMJsonUtils.fromJsonFile(GuideLinkSerializer.gson, LMFileUtils.newFile(f), LinksMap.class);
-		if(linksMap != null && linksMap.links != null) links.putAll(linksMap.links);
-	}
-	
-	public void readFromNBT(NBTTagCompound tag)
-	{
-		links.clear();
+		HashMap<String, GuideLink> map = new HashMap<>();
+		if(f == null || !f.exists()) return map;
+		JsonElement linksMapE = LMJsonUtils.fromJson(LMFileUtils.newFile(f));
 		
-		if(tag == null)
+		if(linksMapE.isJsonObject())
 		{
-			main.clear();
-			return;
-		}
-		
-		if(tag.hasKey("L"))
-		{
-			NBTTagList linksList = tag.getTagList("L", LMNBTUtils.MAP);
+			JsonObject o = linksMapE.getAsJsonObject();
+			JsonObject o1;
+			GuideLink link;
 			
-			for(int i = 0; i < linksList.tagCount(); i++)
+			if(o.has("images"))
 			{
-				NBTTagCompound tag1 = linksList.getCompoundTagAt(i);
-				GuideLink l = new GuideLink(LinkType.values()[tag1.getByte("I")], tag1.getString("L"));
-				if(tag1.hasKey("T")) l.title = IChatComponent.Serializer.jsonToComponent(tag1.getString("T"));
-				if(tag1.hasKey("H")) l.hover = IChatComponent.Serializer.jsonToComponent(tag1.getString("H"));
-				links.put(tag1.getString("ID"), l);
+				for(Map.Entry<String, JsonElement> e : o.get("images").getAsJsonObject().entrySet())
+				{
+					link = GuideLink.newInstance(GuideLink.Type.RECIPE);
+					link.setJson(e.getValue());
+					map.put(e.getKey(), link);
+				}
 			}
 		}
 		
-		main.readFromNBT(tag);
-	}
-	
-	public void writeToNBT(NBTTagCompound tag)
-	{
-		if(links.size() > 0)
-		{
-			NBTTagList linksList = new NBTTagList();
-			
-			for(Map.Entry<String, GuideLink> e : links.entrySet())
-			{
-				GuideLink l = e.getValue();
-				
-				NBTTagCompound tag1 = new NBTTagCompound();
-				
-				tag1.setByte("I", (byte) l.type.ordinal());
-				tag1.setString("ID", e.getKey());
-				if(!l.link.isEmpty()) tag1.setString("L", l.link);
-				if(l.title != null) tag1.setString("T", IChatComponent.Serializer.componentToJson(l.title));
-				if(l.hover != null) tag1.setString("H", IChatComponent.Serializer.componentToJson(l.hover));
-				
-				linksList.appendTag(tag1);
-			}
-			
-			tag.setTag("L", linksList);
-		}
-		
-		main.writeToNBT(tag);
+		return map;
 	}
 	
 	public static void displayGuide(EntityPlayerMP ep, GuideFile file)
 	{
 		if(ep != null && file != null && !(ep instanceof FakePlayer)) new MessageDisplayGuide(file).sendTo(ep);
+	}
+	
+	public JsonElement getJson()
+	{
+		JsonObject o = new JsonObject();
+		
+		if(links.size() > 0)
+		{
+			JsonArray a = new JsonArray();
+			JsonObject o2;
+			
+			for(Map.Entry<String, GuideLink> e : links.entrySet())
+			{
+				GuideLink l = e.getValue();
+				o2 = (JsonObject) l.getJson();
+				o2.add("ID", new JsonPrimitive(l.type.ordinal()));
+				o2.add("key", new JsonPrimitive(e.getKey()));
+				a.add(o2);
+			}
+			
+			o.add("L", a);
+		}
+		
+		o.add("G", main.getJson());
+		
+		return o;
+	}
+	
+	public void setJson(JsonElement e)
+	{
+		links.clear();
+		main.clear();
+		
+		if(e == null || !e.isJsonObject()) return;
+		JsonObject o = e.getAsJsonObject();
+		
+		if(o.has("L"))
+		{
+			JsonArray a = o.get("L").getAsJsonArray();
+			JsonObject o1;
+			
+			for(int i = 0; i < a.size(); i++)
+			{
+				o1 = a.get(i).getAsJsonObject();
+				GuideLink l = GuideLink.newInstance(GuideLink.Type.values()[o1.get("type").getAsInt()]);
+				l.setJson(o1);
+				links.put(o1.get("ID").getAsString(), l);
+			}
+		}
+		
+		main.setJson(o.get("G"));
 	}
 }

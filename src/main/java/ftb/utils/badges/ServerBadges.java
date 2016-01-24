@@ -55,7 +55,7 @@ public class ServerBadges
 			try
 			{
 				File file = LMFileUtils.newFile(new File(FTBLib.folderLocal, "badges.json"));
-				local = LMJsonUtils.getJsonElement(file);
+				local = LMJsonUtils.fromJson(file);
 				
 				if(local.isJsonNull())
 				{

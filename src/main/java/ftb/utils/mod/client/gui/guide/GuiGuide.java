@@ -4,17 +4,12 @@ import ftb.lib.TextureCoords;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.*;
-import ftb.lib.mod.client.gui.GuiViewImage;
 import ftb.utils.api.guide.*;
 import ftb.utils.mod.FTBU;
 import ftb.utils.mod.client.FTBUClient;
-import latmod.lib.LMUtils;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 
-import java.lang.reflect.Method;
-import java.net.URI;
 import java.util.*;
 
 public class GuiGuide extends GuiLM
@@ -179,7 +174,7 @@ public class GuiGuide extends GuiLM
 				{
 					if(l.special.type.isText())
 					{
-						l.text = (l.special.title == null) ? "" : l.special.title.getFormattedText();
+						l.text = l.special.getTitle().getFormattedText();
 						List<String> list1 = fontRendererObj.listFormattedStringToWidth(l.text, textPanel.width);
 						
 						if(list1.size() > 1)
@@ -198,7 +193,7 @@ public class GuiGuide extends GuiLM
 					{
 						try
 						{
-							TextureCoords tex = l.special.getTexture();
+							TextureCoords tex = ((GuideLink.GuideImage) l.special).getTexture();
 							
 							if(tex.isValid())
 							{
@@ -339,31 +334,12 @@ public class GuiGuide extends GuiLM
 		
 		public void addMouseOverText(List<String> l)
 		{
-			if(line != null && line.special != null && line.special.hover != null)
-			{
-				String s = line.special.hover.getFormattedText();
-				if(!s.isEmpty()) l.add(s);
-			}
+			if(line != null && line.special != null) line.special.addHoverText(l);
 		}
 		
 		public void onButtonPressed(int b)
 		{
-			if(line == null || line.special == null) return;
-			
-			if(line.special.type == LinkType.URL)
-			{
-				try { LMUtils.openURI(new URI(line.special.link)); }
-				catch(Exception e) { e.printStackTrace(); }
-			}
-			else if(line.special.type.isImage())
-			{
-				TextureCoords tc = line.special.getTexture();
-				if(tc != null && tc.isValid()) FTBLibClient.openGui(new GuiViewImage(GuiGuide.this, tc));
-			}
-			else if(line.special.type == LinkType.RECIPE)
-			{
-				if(line.special.getItem() != null) NEIIntegration.openRecipe(line.special.getItem());
-			}
+			if(line != null && line.special != null) line.special.onClicked((GuiGuide) gui);
 		}
 		
 		public void renderWidget()
@@ -381,42 +357,6 @@ public class GuiGuide extends GuiLM
 				double w = Math.min(width, line.texture.width);
 				GuiLM.render(line.texture, ax, ay, zLevel, w, line.texture.getHeight(w) + 1);
 				//GuiLM.drawTexturedRectD(ax, ay, gui.getZLevel(), w, line.texture.getHeight(w), 0D, line.texture.minU, 1D, line.texture.maxU);
-			}
-		}
-	}
-	
-	private static class NEIIntegration
-	{
-		private static Boolean hasNEI = null;
-		private static Method method = null;
-		
-		public static void openRecipe(ItemStack is)
-		{
-			if(is == null) return;
-			
-			if(hasNEI == null)
-			{
-				hasNEI = Boolean.FALSE;
-				
-				try
-				{
-					Class<?> c = Class.forName("codechicken.nei.recipe.GuiCraftingRecipe");
-					method = c.getMethod("openRecipeGui", String.class, Object[].class);
-					if(method != null) hasNEI = Boolean.TRUE;
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
-			}
-			
-			if(hasNEI.booleanValue())
-			{
-				try { method.invoke(null, "item", new Object[] {is}); }
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
 			}
 		}
 	}

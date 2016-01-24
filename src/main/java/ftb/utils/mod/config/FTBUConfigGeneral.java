@@ -15,8 +15,6 @@ public class FTBUConfigGeneral
 	private static final ConfigEntryStringArray blocked_entities = new ConfigEntryStringArray("blocked_entities").setInfo("Entity IDs that are banned from world. They will not spawn and existing ones will be destroyed");
 	//public static final ConfigEntryBool ranks_enabled = new ConfigEntryBool("ranks_enabled", false).sync().setInfo("Set info ");
 	//public static final ConfigEntryBool ranks_override_chat = new ConfigEntryBool("ranks_override_chat", true);
-	public static final ConfigEntryBool sign_warp = new ConfigEntryBool("sign_warp", true).setInfo("Enable right-clicking on '[warp]' signs");
-	public static final ConfigEntryBool sign_home = new ConfigEntryBool("sign_home", true).setInfo("Enable right-clicking on '[home]' signs");
 	public static final ConfigEntryBool spawn_area_in_sp = new ConfigEntryBool("spawn_area_in_sp", false).setInfo("Enable spawn area in singleplayer");
 	
 	private static final ArrayList<Class<?>> blockedEntitiesL = new ArrayList<>();

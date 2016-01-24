@@ -3,7 +3,6 @@ package ftb.utils.api.guide;
 import ftb.lib.FTBLib;
 import ftb.lib.api.cmd.CommandLM;
 import ftb.utils.mod.*;
-import ftb.utils.mod.client.gui.guide.GuideLinkSerializer;
 import ftb.utils.mod.config.*;
 import ftb.utils.world.*;
 import latmod.lib.*;
@@ -58,10 +57,8 @@ public class ServerGuideFile extends GuideFile
 				}
 			}
 			
-			file = new File(FTBLib.folderLocal, "guide_links.json");
 			links.clear();
-			LinksMap linksMap = LMJsonUtils.fromJsonFile(GuideLinkSerializer.gson, LMFileUtils.newFile(file), LinksMap.class);
-			if(linksMap != null && linksMap.links != null) links.putAll(linksMap.links);
+			links.putAll(loadLinksFromFile(new File(FTBLib.folderLocal, "guide_links.json")));
 			
 			reloadRegistries();
 			
@@ -158,7 +155,8 @@ public class ServerGuideFile extends GuideFile
 						}
 						else
 						{
-							if(usage.indexOf('%') != -1) cat.println(new ChatComponentText(usage));
+							if(usage.indexOf('%') != -1 || usage.indexOf('/') != -1)
+								cat.println(new ChatComponentText(usage));
 							else cat.println(new ChatComponentTranslation(usage));
 						}
 					}

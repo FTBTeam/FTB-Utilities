@@ -1,7 +1,7 @@
 package ftb.utils.mod.config;
 
 import ftb.lib.FTBLib;
-import ftb.lib.api.item.ItemStackTypeAdapter;
+import ftb.lib.api.item.ItemStackSerializer;
 import latmod.lib.config.ConfigEntryStringArray;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -19,7 +19,7 @@ public class FTBUConfigLogin
 		
 		for(String s : starting_items.get())
 		{
-			ItemStack is = ItemStackTypeAdapter.parseItem(s);
+			ItemStack is = ItemStackSerializer.parseItem(s);
 			if(is != null) list.add(is);
 		}
 		

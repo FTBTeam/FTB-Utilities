@@ -29,11 +29,8 @@ public class FTBUActions
 		PlayerActionRegistry.add(friend_remove);
 		PlayerActionRegistry.add(friend_deny);
 		
-		if(FTBLibFinals.DEV)
-		{
-			PlayerActionRegistry.add(mail);
-			PlayerActionRegistry.add(trade);
-		}
+		//PlayerActionRegistry.add(mail);
+		//PlayerActionRegistry.add(trade);
 		
 		GuiScreenRegistry.register("friends_gui", new GuiScreenRegistry.Entry()
 		{

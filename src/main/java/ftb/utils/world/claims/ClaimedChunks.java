@@ -264,8 +264,9 @@ public class ClaimedChunks
 		
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
 		
+		if(p == null) return true;
+		else if(!p.isFake() && p.allowCreativeInteractSecure()) return true;
 		//TODO: World border
-		if(!p.isFake() && p.allowCreativeInteractSecure()) return true;
 		
 		if(leftClick)
 		{

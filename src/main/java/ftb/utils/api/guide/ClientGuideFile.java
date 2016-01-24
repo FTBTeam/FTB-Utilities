@@ -62,7 +62,8 @@ public class ClientGuideFile extends GuideFile
 			}
 		}
 		
-		loadLinksFromFile(new File(FTBLib.folderModpack, "guide_links.json"));
+		links.clear();
+		links.putAll(loadLinksFromFile(new File(FTBLib.folderModpack, "guide_links.json")));
 		new EventFTBUClientGuide(this).post();
 		
 		main.cleanup();

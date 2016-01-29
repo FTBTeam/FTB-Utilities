@@ -5,7 +5,6 @@ import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.*;
 import ftb.utils.api.guide.*;
-import ftb.utils.mod.FTBU;
 import ftb.utils.mod.client.FTBUClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.*;
@@ -14,7 +13,7 @@ import java.util.*;
 
 public class GuiGuide extends GuiLM
 {
-	public static final ResourceLocation tex = FTBU.mod.getLocation("textures/gui/guide.png");
+	public static final ResourceLocation tex = new ResourceLocation("ftbu", "textures/gui/guide.png");
 	public static final TextureCoords tex_slider = new TextureCoords(tex, 0, 240, 12, 18, 512, 512);
 	public static final TextureCoords tex_back = new TextureCoords(tex, 0, 260, 15, 11, 512, 512);
 	public static final TextureCoords tex_close = new TextureCoords(tex, 0, 271, tex_back.width, tex_back.height, 512, 512);

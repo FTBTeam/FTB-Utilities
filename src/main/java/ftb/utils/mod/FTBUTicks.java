@@ -24,8 +24,8 @@ public class FTBUTicks
 		
 		if(FTBUConfigGeneral.restart_timer.get() > 0)
 		{
-			restartMillis = (long) (FTBUConfigGeneral.restart_timer.get() * 3600D * 1000D);
-			FTBU.mod.logger.info("Server restart in " + LMStringUtils.getTimeString(restartMillis));
+			restartMillis = startMillis + (long) (FTBUConfigGeneral.restart_timer.get() * 3600D * 1000D);
+			FTBU.logger.info("Server restart in " + LMStringUtils.getTimeString(restartMillis));
 		}
 	}
 	

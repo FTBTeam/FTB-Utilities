@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.relauncher.Side;
+import org.apache.logging.log4j.*;
 
 import java.util.Map;
 
@@ -30,13 +31,15 @@ public class FTBU
 	@SidedProxy(clientSide = "ftb.utils.mod.handlers.ftbl.FTBLIntegrationClient", serverSide = "ftb.utils.mod.handlers.ftbl.FTBLIntegration")
 	public static FTBLIntegration ftbl_int;
 	
-	@LMMod.Instance(FTBUFinals.MOD_ID)
 	public static LMMod mod;
+	
+	public static Logger logger;
 	
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
-		LMMod.init(this);
+		logger = LogManager.getLogger("FTBUtilities");
+		mod = LMMod.create(FTBUFinals.MOD_ID);
 		FTBLib.ftbu = ftbl_int;
 		FTBUConfig.load();
 		

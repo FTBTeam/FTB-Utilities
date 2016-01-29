@@ -20,7 +20,7 @@ public class ClientGuideFile extends GuideFile
 	
 	public void reload(EventFTBReload e)
 	{
-		if(FTBLibFinals.DEV) FTBU.mod.logger.info("Guide reloaded @ " + e.world.side + " as " + e.world.getMode());
+		if(FTBLibFinals.DEV) FTBU.logger.info("Guide reloaded @ " + e.world.side + " as " + e.world.getMode());
 		
 		main.clear();
 		

@@ -2,7 +2,6 @@ package ftb.utils.badges;
 
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiLM;
-import ftb.utils.mod.FTBU;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 public class Badge extends FinalIDObject
 {
-	public static final ResourceLocation defTex = FTBU.mod.getLocation("textures/failed_badge.png");
+	public static final ResourceLocation defTex = new ResourceLocation("ftbu", "textures/failed_badge.png");
 	public static final Badge emptyBadge = new Badge("-", null);
 	
 	// -- //
@@ -37,7 +36,7 @@ public class Badge extends FinalIDObject
 		
 		if(textureURL == null)
 		{
-			textureURL = FTBU.mod.getLocation("textures/badges/" + ID);
+			textureURL = new ResourceLocation("ftbu", "textures/badges/" + ID);
 			FTBLibClient.getDownloadImage(textureURL, imageURL, defTex, null);
 		}
 		

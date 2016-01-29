@@ -6,13 +6,13 @@ import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.gui.*;
 import ftb.lib.mod.FTBLibFinals;
-import ftb.utils.mod.FTBU;
 import ftb.utils.mod.client.gui.claims.GuiClaimChunks;
 import ftb.utils.mod.client.gui.friends.GuiFriends;
 import ftb.utils.mod.client.gui.guide.GuiGuide;
 import ftb.utils.net.ClientAction;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.*;
 
 public class FTBUActions
@@ -72,7 +72,7 @@ public class FTBUActions
 	
 	// Self //
 	
-	public static final PlayerAction friends_gui = new PlayerAction(PlayerAction.Type.SELF, "ftbu.friends_gui", 950, TextureCoords.getSquareIcon(FTBU.mod.getLocation("textures/gui/friendsbutton.png"), 256))
+	public static final PlayerAction friends_gui = new PlayerAction(PlayerAction.Type.SELF, "ftbu.friends_gui", 950, TextureCoords.getSquareIcon(new ResourceLocation("ftbu", "textures/gui/friendsbutton.png"), 256))
 	{
 		public void onClicked(ILMPlayer self, ILMPlayer other)
 		{ FTBLibClient.openGui(new GuiFriends(FTBLibClient.mc.currentScreen)); }

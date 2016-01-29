@@ -265,12 +265,11 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	{
 		if(isOnline())
 		{
-			ArrayList<IChatComponent> requests = new ArrayList<>();
+			ArrayList<String> requests = new ArrayList<>();
 			
 			for(LMPlayerServer p : world.playerMap.values())
 			{
-				if(p.isFriendRaw(this) && !isFriendRaw(p))
-					requests.add(new ChatComponentText(p.getProfile().getName()));
+				if(p.isFriendRaw(this) && !isFriendRaw(p)) requests.add(p.getProfile().getName());
 			}
 			
 			if(requests.size() > 0)
@@ -283,7 +282,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 				MouseAction mouse = new MouseAction();
 				mouse.click = new ClickAction(FTBUClickAction.FRIEND_ADD_ALL, null);
 				Collections.sort(requests, null);
-				mouse.hover.addAll(requests);
+				
+				for(String s : requests) mouse.hover.add(new ChatComponentText(s));
 				n.setMouseAction(mouse);
 				
 				FTBLib.notifyPlayer(getPlayer(), n);

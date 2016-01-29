@@ -54,8 +54,16 @@ ftbu:cmd.home_limit=You can't set any more home locations!
 ftbu:cmd.no_dp=You can only go back once!
 ftbu:cmd.timer_backup=Next backup: %s
 ftbu:cmd.timer_restart=Next restart: %s
-ftbu:cmd.rules=[Click here to open rules]
 ftbu:cmd.spawn_tp=Teleported to spawn
+
+ftbu:cmd.backup_start=Server Backup started!
+ftbu:cmd.backup_stop=Server Backup stopped!
+ftbu:cmd.backup_end_1=Server backup done in %s!
+ftbu:cmd.backup_end_2=Server backup done in %s! (%s)
+ftbu:cmd.backup_fail=Failed to save world! (%s)
+ftbu:cmd.backup_manual_launch=%s launched a manual backup!
+ftbu:cmd.backup_already_running=Backup in progress!
+ftbu:cmd.backup_already_not_running=Backup in progress!
 
 ftbu:button.claims_unclaim_all=Unclaim all chunks
 ftbu:button.claims_unclaim_all_dim=Unclaim all chunks in %s

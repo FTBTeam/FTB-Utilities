@@ -55,31 +55,27 @@ public class FTBUPlayerEventHandler
 		LMPlayerServer player = LMWorldServer.inst.getPlayer(ep);
 		if(player == null || !player.isOnline()) return;
 		
-		if(player.lastPos == null) player.lastPos = new EntityPos(ep);
-		else if(!player.lastPos.equalsPos(ep))
+		player.lastPos = new EntityPos(ep).toLinkedPos();
+		
+		if(LMWorldServer.inst.settings.getWB(ep.dimension).isOutsideD(ep.posX, ep.posZ))
 		{
-			if(LMWorldServer.inst.settings.getWB(ep.dimension).isOutsideD(ep.posX, ep.posZ))
-			{
-				ep.motionX = ep.motionY = ep.motionZ = 0D;
-				IChatComponent warning = new ChatComponentTranslation(FTBU.mod.assets + ChunkType.WORLD_BORDER.lang + ".warning");
-				warning.getChatStyle().setColor(EnumChatFormatting.WHITE);
-				Notification n = new Notification("world_border", warning, 3000);
-				n.color = ChunkType.WORLD_BORDER.getAreaColor(player);
-				FTBLib.notifyPlayer(ep, n);
-				
-				if(LMWorldServer.inst.settings.getWB(player.lastPos.dim).isOutsideD(player.lastPos.x, player.lastPos.z))
-				{
-					FTBLib.printChat(ep, new ChatComponentTranslation(FTBU.mod.assets + "cmd.spawn_tp"));
-					World w = LMDimUtils.getWorld(0);
-					Pos2I pos = LMWorldServer.inst.settings.getWB(0).pos;
-					int posY = w.getTopSolidOrLiquidBlock(pos.x, pos.y);
-					LMDimUtils.teleportPlayer(ep, pos.x + 0.5D, posY + 1.25D, pos.y + 0.5D, 0);
-				}
-				else LMDimUtils.teleportPlayer(ep, player.lastPos);
-				ep.worldObj.playSoundAtEntity(ep, "random.fizz", 1F, 1F);
-			}
+			ep.motionX = ep.motionY = ep.motionZ = 0D;
+			IChatComponent warning = new ChatComponentTranslation(FTBU.mod.assets + ChunkType.WORLD_BORDER.lang + ".warning");
+			warning.getChatStyle().setColor(EnumChatFormatting.WHITE);
+			Notification n = new Notification("world_border", warning, 3000);
+			n.color = ChunkType.WORLD_BORDER.getAreaColor(player);
+			FTBLib.notifyPlayer(ep, n);
 			
-			player.lastPos.set(ep);
+			if(LMWorldServer.inst.settings.getWB(player.lastPos.dim).isOutsideD(player.lastPos.x, player.lastPos.z))
+			{
+				FTBLib.printChat(ep, new ChatComponentTranslation(FTBU.mod.assets + "cmd.spawn_tp"));
+				World w = LMDimUtils.getWorld(0);
+				Pos2I pos = LMWorldServer.inst.settings.getWB(0).pos;
+				int posY = w.getTopSolidOrLiquidBlock(pos.x, pos.y);
+				LMDimUtils.teleportPlayer(ep, pos.x + 0.5D, posY + 1.25D, pos.y + 0.5D, 0);
+			}
+			else LMDimUtils.teleportPlayer(ep, player.lastPos);
+			ep.worldObj.playSoundAtEntity(ep, "random.fizz", 1F, 1F);
 		}
 		
 		int currentChunkType = LMWorldServer.inst.claimedChunks.getType(ep.dimension, e.newChunkX, e.newChunkZ).ID;
@@ -111,9 +107,7 @@ public class FTBUPlayerEventHandler
 		if(e.entity instanceof EntityPlayerMP)
 		{
 			LMPlayerServer p = LMWorldServer.inst.getPlayer(e.entity);
-			
-			if(p.lastDeath == null) p.lastDeath = new EntityPos(e.entity);
-			else p.lastDeath.set(e.entity);
+			p.lastDeath = new EntityPos(e.entity).toLinkedPos();
 			
 			p.refreshStats();
 			new MessageLMPlayerDied(p).sendTo(null);

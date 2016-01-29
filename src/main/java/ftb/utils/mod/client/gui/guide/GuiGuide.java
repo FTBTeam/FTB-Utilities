@@ -4,21 +4,16 @@ import ftb.lib.TextureCoords;
 import ftb.lib.api.client.*;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.*;
-import ftb.lib.mod.client.gui.GuiViewImage;
 import ftb.utils.api.guide.*;
-import ftb.utils.mod.FTBU;
 import ftb.utils.mod.client.FTBUClient;
-import latmod.lib.LMUtils;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.*;
 
-import java.lang.reflect.Method;
-import java.net.URI;
 import java.util.*;
 
 public class GuiGuide extends GuiLM
 {
-	public static final ResourceLocation tex = FTBU.mod.getLocation("textures/gui/guide.png");
+	public static final ResourceLocation tex = new ResourceLocation("ftbu", "textures/gui/guide.png");
 	public static final TextureCoords tex_slider = new TextureCoords(tex, 0, 240, 12, 18, 512, 512);
 	public static final TextureCoords tex_back = new TextureCoords(tex, 0, 260, 15, 11, 512, 512);
 	public static final TextureCoords tex_close = new TextureCoords(tex, 0, 271, tex_back.width, tex_back.height, 512, 512);
@@ -41,6 +36,7 @@ public class GuiGuide extends GuiLM
 	public final ButtonTextLine[] textLines; // Max 20
 	
 	public static GuiGuide clientGuideGui = null;
+	private static FontRenderer guideFont = null;
 	
 	public static GuiGuide openClientGui(boolean open)
 	{
@@ -53,9 +49,11 @@ public class GuiGuide extends GuiLM
 	{
 		super(null, tex);
 		parentGui = g;
-		c.cleanup();
 		category = c;
 		selectedCategory = category;
+		
+		if(guideFont == null)
+			guideFont = new FontRenderer(mc.gameSettings, new ResourceLocation("textures/font/ascii.png"), mc.getTextureManager(), true);
 		
 		mainPanel.width = 328;
 		mainPanel.height = 240;
@@ -163,9 +161,9 @@ public class GuiGuide extends GuiLM
 		String s = selectedCategory.getFormattedText();
 		if(s != null && s.length() > 0)
 		{
-			boolean uni = fontRendererObj.getUnicodeFlag();
-			fontRendererObj.setUnicodeFlag(FTBUClient.guide_unicode.get());
-			List<String> list = fontRendererObj.listFormattedStringToWidth(s.trim(), textPanel.width);
+			boolean uni = guideFont.getUnicodeFlag();
+			guideFont.setUnicodeFlag(FTBUClient.guide_unicode.get());
+			List<String> list = guideFont.listFormattedStringToWidth(s.trim(), textPanel.width);
 			
 			for(int i = 0; i < list.size(); i++)
 			{
@@ -178,8 +176,8 @@ public class GuiGuide extends GuiLM
 				{
 					if(l.special.type.isText())
 					{
-						l.text = (l.special.title == null) ? "" : l.special.title.getFormattedText();
-						List<String> list1 = fontRendererObj.listFormattedStringToWidth(l.text, textPanel.width);
+						l.text = l.special.getTitle().getFormattedText();
+						List<String> list1 = guideFont.listFormattedStringToWidth(l.text, textPanel.width);
 						
 						if(list1.size() > 1)
 						{
@@ -197,7 +195,7 @@ public class GuiGuide extends GuiLM
 					{
 						try
 						{
-							TextureCoords tex = l.special.getTexture();
+							TextureCoords tex = ((GuideLink.GuideImage) l.special).getTexture();
 							
 							if(tex.isValid())
 							{
@@ -228,7 +226,7 @@ public class GuiGuide extends GuiLM
 				if(!l.text.isEmpty()) l.text = l.text.replace('\ufffd', '\u00a7');
 			}
 			
-			fontRendererObj.setUnicodeFlag(uni);
+			guideFont.setUnicodeFlag(uni);
 		}
 		
 		refreshText();
@@ -277,11 +275,11 @@ public class GuiGuide extends GuiLM
 		
 		fontRendererObj.drawString(category.getTitleComponent().getFormattedText(), mainPanel.posX + 53, mainPanel.posY + 14, textColor);
 		
-		boolean uni = fontRendererObj.getUnicodeFlag();
-		fontRendererObj.setUnicodeFlag(FTBUClient.guide_unicode.get());
+		boolean uni = guideFont.getUnicodeFlag();
+		guideFont.setUnicodeFlag(FTBUClient.guide_unicode.get());
 		for(int i = 0; i < textLines.length; i++)
 			textLines[i].renderWidget();
-		fontRendererObj.setUnicodeFlag(uni);
+		guideFont.setUnicodeFlag(uni);
 		
 		if(!categoryButtons.isEmpty())
 		{
@@ -338,31 +336,12 @@ public class GuiGuide extends GuiLM
 		
 		public void addMouseOverText(List<String> l)
 		{
-			if(line != null && line.special != null && line.special.hover != null)
-			{
-				String s = line.special.hover.getFormattedText();
-				if(!s.isEmpty()) l.add(s);
-			}
+			if(line != null && line.special != null) line.special.addHoverText(l);
 		}
 		
 		public void onButtonPressed(int b)
 		{
-			if(line == null || line.special == null) return;
-			
-			if(line.special.type == LinkType.URL)
-			{
-				try { LMUtils.openURI(new URI(line.special.link)); }
-				catch(Exception e) { e.printStackTrace(); }
-			}
-			else if(line.special.type.isImage())
-			{
-				TextureCoords tc = line.special.getTexture();
-				if(tc != null && tc.isValid()) FTBLibClient.openGui(new GuiViewImage(GuiGuide.this, tc));
-			}
-			else if(line.special.type == LinkType.RECIPE)
-			{
-				if(line.special.getItem() != null) NEIIntegration.openRecipe(line.special.getItem());
-			}
+			if(line != null && line.special != null) line.special.onClicked((GuiGuide) gui);
 		}
 		
 		public void renderWidget()
@@ -372,7 +351,7 @@ public class GuiGuide extends GuiLM
 			int ax = getAX();
 			int ay = getAY();
 			
-			if(!line.text.isEmpty()) fontRendererObj.drawString(line.text, ax, ay, textColor);
+			if(!line.text.isEmpty()) guideFont.drawString(line.text, ax, ay, textColor);
 			else if(line.special != null && line.special.type.isImage() && line.texture != null && line.texture.isValid())
 			{
 				GlStateManager.color(1F, 1F, 1F, 1F);
@@ -380,42 +359,6 @@ public class GuiGuide extends GuiLM
 				double w = Math.min(width, line.texture.width);
 				GuiLM.render(line.texture, ax, ay, zLevel, w, line.texture.getHeight(w) + 1);
 				//GuiLM.drawTexturedRectD(ax, ay, gui.getZLevel(), w, line.texture.getHeight(w), 0D, line.texture.minU, 1D, line.texture.maxU);
-			}
-		}
-	}
-	
-	private static class NEIIntegration
-	{
-		private static Boolean hasNEI = null;
-		private static Method method = null;
-		
-		public static void openRecipe(ItemStack is)
-		{
-			if(is == null) return;
-			
-			if(hasNEI == null)
-			{
-				hasNEI = Boolean.FALSE;
-				
-				try
-				{
-					Class<?> c = Class.forName("codechicken.nei.recipe.GuiCraftingRecipe");
-					method = c.getMethod("openRecipeGui", String.class, Object[].class);
-					if(method != null) hasNEI = Boolean.TRUE;
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
-			}
-			
-			if(hasNEI.booleanValue())
-			{
-				try { method.invoke(null, "item", new Object[] {is}); }
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
 			}
 		}
 	}

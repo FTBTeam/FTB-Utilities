@@ -28,8 +28,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	public static final int tiles_tex = 16;
 	public static final int tiles_gui = 15;
 	public static final double UV = (double) tiles_gui / (double) tiles_tex;
-	public static final ResourceLocation tex_area = FTBU.mod.getLocation("textures/map/minimap_area.png");
-	public static final ResourceLocation tex_map_entity = FTBU.mod.getLocation("textures/map/entity.png");
+	public static final ResourceLocation tex_area = new ResourceLocation("ftbu", "textures/map/minimap_area.png");
+	public static final ResourceLocation tex_map_entity = new ResourceLocation("ftbu", "textures/map/entity.png");
 	public static final TextureCoords[][][][] tex_area_coords = new TextureCoords[2][2][2][2];
 	
 	private static final TextureCoords getAreaCoords(int i)

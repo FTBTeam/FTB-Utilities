@@ -1,31 +1,27 @@
 package ftb.utils.world;
 
-import com.mojang.authlib.GameProfile;
-import ftb.lib.FTBLib;
 import ftb.utils.world.ranks.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.FakePlayer;
 
-import java.util.*;
+import java.util.List;
 
 public class LMFakeServerPlayer extends LMPlayerServer
 {
-	public static final GameProfile fakeGameProfile = new GameProfile(UUID.nameUUIDFromBytes("FTBU:FakePlayer".getBytes()), "[FakePlayer]");
-	private FakePlayer fakePlayer;
+	public final FakePlayer fakePlayer;
 	
-	public LMFakeServerPlayer(LMWorldServer w)
-	{ super(w, Integer.MAX_VALUE, fakeGameProfile); }
+	public LMFakeServerPlayer(LMWorldServer w, FakePlayer fp)
+	{
+		super(w, Integer.MAX_VALUE, fp.getGameProfile());
+		fakePlayer = fp;
+	}
 	
 	public boolean isOnline()
 	{ return false; }
 	
 	public EntityPlayerMP getPlayer()
-	{
-		if(fakePlayer == null && FTBLib.getServerWorld() != null)
-			fakePlayer = new FakePlayer(FTBLib.getServerWorld(), fakeGameProfile);
-		return fakePlayer;
-	}
+	{ return fakePlayer; }
 	
 	public boolean isFake()
 	{ return true; }

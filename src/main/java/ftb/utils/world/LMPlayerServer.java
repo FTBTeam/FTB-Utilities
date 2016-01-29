@@ -31,7 +31,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public final LMWorldServer world;
 	private final PersonalSettings settings;
 	private NBTTagCompound serverData = null;
-	public EntityPos lastPos, lastDeath;
+	public BlockDimPos lastPos, lastDeath;
 	public final LMPlayerStats stats;
 	private EntityPlayerMP entityPlayer = null;
 	public int lastChunkType = -99;
@@ -100,15 +100,10 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public boolean isOP()
 	{ return FTBLib.isOP(getProfile()); }
 	
-	public EntityPos getPos()
+	public BlockDimPos getPos()
 	{
 		EntityPlayerMP ep = getPlayer();
-		if(ep != null)
-		{
-			if(lastPos == null) lastPos = new EntityPos(ep);
-			else lastPos.set(ep);
-		}
-		
+		if(ep != null) lastPos = new EntityPos(ep).toLinkedPos();
 		return lastPos;
 	}
 	
@@ -175,15 +170,35 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		if(tag.hasKey("LastPos"))
 		{
-			if(lastPos == null) lastPos = new EntityPos();
-			lastPos.readFromNBT(tag.getCompoundTag("LastPos"));
+			if(tag.func_150299_b("LastPos") == LMNBTUtils.INT_ARRAY)
+			{
+				lastPos = new BlockDimPos(tag.getIntArray("LastPos"));
+			}
+			else
+			{
+				double x = tag.getDouble("X");
+				double y = tag.getDouble("Y");
+				double z = tag.getDouble("Z");
+				int dim = tag.getInteger("D");
+				lastPos = new EntityPos(x, y, z, dim).toLinkedPos();
+			}
 		}
 		else lastPos = null;
 		
 		if(tag.hasKey("LastDeath"))
 		{
-			if(lastDeath == null) lastDeath = new EntityPos();
-			lastDeath.readFromNBT(tag.getCompoundTag("LastDeath"));
+			if(tag.func_150299_b("LastDeath") == LMNBTUtils.INT_ARRAY)
+			{
+				lastDeath = new BlockDimPos(tag.getIntArray("LastDeath"));
+			}
+			else
+			{
+				double x = tag.getDouble("X");
+				double y = tag.getDouble("Y");
+				double z = tag.getDouble("Z");
+				int dim = tag.getInteger("D");
+				lastDeath = new EntityPos(x, y, z, dim).toLinkedPos();
+			}
 		}
 		else lastDeath = null;
 		
@@ -209,19 +224,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		if(serverData != null && !serverData.hasNoTags()) tag.setTag("ServerData", serverData);
 		
-		if(lastPos != null)
-		{
-			NBTTagCompound tag1 = new NBTTagCompound();
-			lastPos.writeToNBT(tag1);
-			tag.setTag("LastPos", tag1);
-		}
-		
-		if(lastDeath != null)
-		{
-			NBTTagCompound tag1 = new NBTTagCompound();
-			lastDeath.writeToNBT(tag1);
-			tag.setTag("LastDeath", tag1);
-		}
+		if(lastPos != null) tag.setIntArray("LastPos", lastPos.toIntArray());
+		if(lastDeath != null) tag.setIntArray("LastDeath", lastDeath.toIntArray());
 		
 		NBTTagCompound statsTag = new NBTTagCompound();
 		stats.writeToNBT(statsTag);
@@ -287,11 +291,11 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 				Notification n = new Notification("new_friend_requests", cc, 6000);
 				n.setDesc(new ChatComponentTranslation(FTBU.mod.assets + "label.new_friends_click"));
 				
-				MouseAction mouse = new MouseAction(FTBUClickAction.FRIEND_ADD_ALL, null);
+				MouseAction mouse = new MouseAction();
+				mouse.click = new ClickAction(FTBUClickAction.FRIEND_ADD_ALL, null);
 				Collections.sort(requests, null);
-				mouse.hover = new IChatComponent[requests.size()];
-				for(int i = 0; i < mouse.hover.length; i++)
-					mouse.hover[i] = new ChatComponentText(requests.get(i));
+				
+				for(String s : requests) mouse.hover.add(new ChatComponentText(s));
 				n.setMouseAction(mouse);
 				
 				FTBLib.notifyPlayer(getPlayer(), n);

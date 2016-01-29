@@ -60,7 +60,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 		LMWorldServer.inst = new LMWorldServer(latmodFolder);
 		
 		File file = new File(latmodFolder, "LMWorld.json");
-		JsonElement obj = LMJsonUtils.getJsonElement(file);
+		JsonElement obj = LMJsonUtils.fromJson(file);
 		if(obj.isJsonObject()) LMWorldServer.inst.load(obj.getAsJsonObject(), Phase.PRE);
 		
 		new EventLMWorldServer.Loaded(LMWorldServer.inst, Phase.PRE).post();
@@ -81,7 +81,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 		
 		if(file.exists())
 		{
-			obj = LMJsonUtils.getJsonElement(file);
+			obj = LMJsonUtils.fromJson(file);
 			if(obj.isJsonObject()) LMWorldServer.inst.claimedChunks.load(obj.getAsJsonObject());
 		}
 		

@@ -5,6 +5,7 @@ import ftb.lib.api.cmd.*;
 import ftb.utils.mod.FTBU;
 import ftb.utils.mod.config.FTBUConfigCmd;
 import ftb.utils.world.LMWorldServer;
+import latmod.lib.LMStringUtils;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
@@ -30,11 +31,11 @@ public class CmdWarp extends CommandLM
 		{
 			String[] list = LMWorldServer.inst.warps.list();
 			if(list.length == 0) return new ChatComponentText("-");
-			return new ChatComponentText(joinNiceString(list));
+			return new ChatComponentText(LMStringUtils.strip(list));
 		}
 		
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-		EntityPos p = LMWorldServer.inst.warps.get(args[0]);
+		BlockDimPos p = LMWorldServer.inst.warps.get(args[0]);
 		if(p == null) return error(new ChatComponentTranslation(FTBU.mod.assets + "cmd.warp_not_set", args[0]));
 		LMDimUtils.teleportPlayer(ep, p);
 		return new ChatComponentTranslation(FTBU.mod.assets + "cmd.warp_tp", args[0]);

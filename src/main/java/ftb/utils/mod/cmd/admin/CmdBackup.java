@@ -2,6 +2,7 @@ package ftb.utils.mod.cmd.admin;
 
 import ftb.lib.*;
 import ftb.lib.api.cmd.*;
+import ftb.utils.mod.FTBU;
 import ftb.utils.mod.config.FTBUConfigBackups;
 import ftb.utils.world.Backups;
 import latmod.lib.LMFileUtils;
@@ -25,13 +26,13 @@ public class CmdBackup extends CommandSubLM
 		
 		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 		{
-			boolean b = Backups.run(false);
+			boolean b = Backups.run(ics);
 			if(b)
 			{
-				FTBLib.printChat(BroadcastSender.inst, ics.getCommandSenderName() + " launched manual backup!");
+				FTBLib.printChat(BroadcastSender.inst, FTBU.mod.chatComponent("cmd.backup_manual_launch", ics.getCommandSenderName()));
 				if(!FTBUConfigBackups.use_separate_thread.get()) Backups.postBackup();
 			}
-			return b ? null : error(new ChatComponentText("Backup in progress!"));
+			return b ? null : error(FTBU.mod.chatComponent("cmd.backup_already_running"));
 		}
 	}
 	
@@ -46,7 +47,7 @@ public class CmdBackup extends CommandSubLM
 			{
 				Backups.thread.interrupt();
 				Backups.thread = null;
-				return new ChatComponentText("Backup process stopped!");
+				return FTBU.mod.chatComponent("cmd.backup_stop");
 			}
 			
 			return error(new ChatComponentText("Backup process is not running!"));

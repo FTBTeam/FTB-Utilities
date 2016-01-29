@@ -7,7 +7,7 @@ import ftb.lib.api.net.LMNetworkWrapper;
 import ftb.utils.api.guide.GuideFile;
 import ftb.utils.mod.client.gui.guide.GuiGuide;
 import latmod.lib.ByteCount;
-import net.minecraft.nbt.NBTTagCompound;
+import latmod.lib.json.JsonElementIO;
 
 public class MessageDisplayGuide extends MessageFTBU
 {
@@ -16,9 +16,8 @@ public class MessageDisplayGuide extends MessageFTBU
 	public MessageDisplayGuide(GuideFile file)
 	{
 		this();
-		NBTTagCompound tag = new NBTTagCompound();
-		file.writeToNBT(tag);
-		writeTag(tag);
+		file.main.cleanup();
+		JsonElementIO.write(io, file.getJson());
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -27,10 +26,8 @@ public class MessageDisplayGuide extends MessageFTBU
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{
-		NBTTagCompound data = readTag();
-		if(data == null) return null;
 		GuideFile file = new GuideFile(null);
-		file.readFromNBT(data);
+		file.setJson(JsonElementIO.read(io));
 		FTBLibClient.openGui(new GuiGuide(null, file.main));
 		return null;
 	}

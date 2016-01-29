@@ -77,8 +77,13 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 		
 		if(dim == null)
 		{
-			for(Integer dim1 : ticketMap.keySet())
-				markDirty(dim1);
+			if(!ticketMap.isEmpty())
+			{
+				Integer[] dims = ticketMap.keySet().toArray(new Integer[ticketMap.size()]);
+				for(Integer dim1 : dims)
+					markDirty(dim1);
+			}
+			
 			return;
 		}
 
@@ -156,8 +161,12 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback
 	{
 		if(dim == null)
 		{
-			for(Integer dim1 : ticketMap.keySet())
-				cleanupTickets(dim1);
+			if(!ticketMap.isEmpty())
+			{
+				Integer[] dims = ticketMap.keySet().toArray(new Integer[ticketMap.size()]);
+				for(Integer dim1 : dims)
+					cleanupTickets(dim1);
+			}
 			return;
 		}
 		

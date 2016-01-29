@@ -220,15 +220,14 @@ public class ClaimedChunks
 	
 	public static boolean isInSpawn(int dim, int cx, int cz)
 	{
-		if(dim != 0 || (!FTBLib.getServer().isDedicatedServer() && !FTBUConfigGeneral.spawn_area_in_sp.get()))
-			return false;
+		if(dim != 0 || (!FTBLib.isDedicatedServer() && !FTBUConfigGeneral.spawn_area_in_sp.get())) return false;
 		int radius = FTBLib.getServer().getSpawnProtectionSize();
 		if(radius <= 0) return false;
-		ChunkCoordinates c = LMDimUtils.getSpawnPoint(0);
-		int minX = MathHelperLM.chunk(c.posX + 0.5D - radius);
-		int minZ = MathHelperLM.chunk(c.posZ + 0.5D - radius);
-		int maxX = MathHelperLM.chunk(c.posX + 0.5D + radius);
-		int maxZ = MathHelperLM.chunk(c.posZ + 0.5D + radius);
+		BlockDimPos c = LMDimUtils.getSpawnPoint(0);
+		int minX = MathHelperLM.chunk(c.x + 0.5D - radius);
+		int minZ = MathHelperLM.chunk(c.z + 0.5D - radius);
+		int maxX = MathHelperLM.chunk(c.x + 0.5D + radius);
+		int maxZ = MathHelperLM.chunk(c.z + 0.5D + radius);
 		return cx >= minX && cx <= maxX && cz >= minZ && cz <= maxZ;
 	}
 	
@@ -264,7 +263,8 @@ public class ClaimedChunks
 		
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
 		
-		if(!p.isFake() && p.allowCreativeInteractSecure()) return true;
+		if(p == null) return true;
+		else if(!p.isFake() && p.allowCreativeInteractSecure()) return true;
 		else if(LMWorldServer.inst.settings.getWB(ep.dimension).isOutsideD(pos.posX, pos.posZ)) return false;
 		
 		if(leftClick)

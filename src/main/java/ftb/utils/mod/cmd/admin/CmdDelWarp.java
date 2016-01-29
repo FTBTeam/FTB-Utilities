@@ -23,7 +23,7 @@ public class CmdDelWarp extends CommandLM
 	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
-		if(LMWorldServer.inst.warps.rem(args[0]))
+		if(LMWorldServer.inst.warps.set(args[0], null))
 			return new ChatComponentTranslation(FTBU.mod.assets + "cmd.warp_del", args[0]);
 		return error(new ChatComponentTranslation(FTBU.mod.assets + "cmd.warp_not_set", args[0]));
 	}

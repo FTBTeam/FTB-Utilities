@@ -1,13 +1,14 @@
 package ftb.utils.api.guide;
 
-import ftb.lib.LMNBTUtils;
+import com.google.gson.*;
+import ftb.lib.JsonHelper;
 import latmod.lib.*;
-import net.minecraft.nbt.*;
+import latmod.lib.json.IJsonObject;
 import net.minecraft.util.*;
 
 import java.util.*;
 
-public class GuideCategory implements Comparable<GuideCategory> // GuideFile
+public class GuideCategory implements Comparable<GuideCategory>, IJsonObject // GuideFile
 {
 	private static final RemoveFilter<GuideCategory> cleanupFilter = new RemoveFilter<GuideCategory>()
 	{
@@ -120,60 +121,6 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 		subcategories.clear();
 	}
 	
-	void writeToNBT(NBTTagCompound tag)
-	{
-		tag.setString("N", IChatComponent.Serializer.func_150696_a(title));
-		
-		if(text.size() > 0)
-		{
-			NBTTagList list = new NBTTagList();
-			for(int i = 0; i < text.size(); i++)
-				list.appendTag(new NBTTagString(IChatComponent.Serializer.func_150696_a(text.get(i))));
-			tag.setTag("T", list);
-		}
-		
-		if(!subcategories.isEmpty())
-		{
-			NBTTagList list = new NBTTagList();
-			for(int i = 0; i < subcategories.size(); i++)
-			{
-				NBTTagCompound tag1 = new NBTTagCompound();
-				subcategories.get(i).writeToNBT(tag1);
-				list.appendTag(tag1);
-			}
-			
-			tag.setTag("S", list);
-		}
-	}
-	
-	void readFromNBT(NBTTagCompound tag)
-	{
-		clear();
-		
-		title = IChatComponent.Serializer.func_150699_a(tag.getString("N"));
-		
-		if(tag.hasKey("T"))
-		{
-			NBTTagList list = tag.getTagList("T", LMNBTUtils.STRING);
-			for(int i = 0; i < list.tagCount(); i++)
-				text.add(IChatComponent.Serializer.func_150699_a(list.getStringTagAt(i)));
-		}
-		
-		if(tag.hasKey("S"))
-		{
-			NBTTagList list = tag.getTagList("S", LMNBTUtils.MAP);
-			
-			for(int i = 0; i < list.tagCount(); i++)
-			{
-				NBTTagCompound tag1 = list.getCompoundTagAt(i);
-				GuideCategory c = new GuideCategory(null);
-				c.setParent(this);
-				c.readFromNBT(tag1);
-				subcategories.add(c);
-			}
-		}
-	}
-	
 	public void cleanup()
 	{
 		LMListUtils.removeAll(subcategories, cleanupFilter);
@@ -188,5 +135,65 @@ public class GuideCategory implements Comparable<GuideCategory> // GuideFile
 	{
 		if(parent == null) return this;
 		return parent.getParentTop();
+	}
+	
+	public JsonElement getJson()
+	{
+		JsonObject o = new JsonObject();
+		JsonArray a;
+		
+		o.add("N", JsonHelper.serializeICC(title));
+		
+		if(text.size() > 0)
+		{
+			a = new JsonArray();
+			for(int i = 0; i < text.size(); i++)
+				a.add(JsonHelper.serializeICC(text.get(i)));
+			o.add("T", a);
+		}
+		
+		if(!subcategories.isEmpty())
+		{
+			a = new JsonArray();
+			for(int i = 0; i < subcategories.size(); i++)
+				a.add(subcategories.get(i).getJson());
+			
+			o.add("S", a);
+		}
+		
+		return o;
+	}
+	
+	public void setJson(JsonElement e)
+	{
+		clear();
+		
+		if(e == null || !e.isJsonObject()) return;
+		JsonObject o = e.getAsJsonObject();
+		JsonArray a;
+		
+		title = JsonHelper.deserializeICC(o.get("N"));
+		
+		if(o.has("T"))
+		{
+			a = o.get("T").getAsJsonArray();
+			for(int i = 0; i < a.size(); i++)
+				text.add(JsonHelper.deserializeICC(a.get(i)));
+		}
+		
+		if(o.has("S"))
+		{
+			a = o.get("S").getAsJsonArray();
+			JsonObject o1;
+			
+			for(int i = 0; i < a.size(); i++)
+			{
+				o1 = a.get(i).getAsJsonObject();
+				GuideCategory c = new GuideCategory(null);
+				c.setParent(this);
+				c.setJson(o1);
+				subcategories.add(c);
+			}
+		}
 	}
 }

@@ -146,9 +146,42 @@ public abstract class ClientAction
 	{
 		public boolean onAction(int extra, final LMPlayerServer owner)
 		{
+			/*
+			ConfigGroup group = ConfigRegistry.createTempConfig(owner.getPlayer());
+			group.setName("Settings");
+			
+			group.add(new ConfigEntryBool("explosions", false)
+			{
+				public boolean get()
+				{ return owner.getSettings().get(PersonalSettings.EXPLOSIONS); }
+				
+				public void set(boolean v)
+				{ owner.getSettings().set(PersonalSettings.EXPLOSIONS, v); }
+			}, false);
+			
+			group.add(new ConfigEntryBool("allow_fake_players", false)
+			{
+				public boolean get()
+				{ return owner.getSettings().get(PersonalSettings.FAKE_PLAYERS); }
+				
+				public void set(boolean v)
+				{ owner.getSettings().set(PersonalSettings.FAKE_PLAYERS, v); }
+			}, false);
+			
+			group.add(new ConfigEntryEnum<LMSecurityLevel>("block_security", LMSecurityLevel.class, LMSecurityLevel.VALUES_3, LMSecurityLevel.FRIENDS, false)
+			{
+				public LMSecurityLevel get()
+				{ return owner.getSettings().blocks; }
+				
+				public void set(Object v)
+				{ owner.getSettings().blocks = (LMSecurityLevel) v; }
+			}, false);
+			
+			ConfigRegistry.editTempConfig(owner.getPlayer(), group);
+			
+			//group.setFlag(7, true);
+			*/
 			FTBLib.printChat(owner.getPlayer(), "Settings Gui is temporarily replaced with /lmplayer_settings!");
-			//ConfigRegistry.tempMap.put(provider.getID(), provider);
-			//new MessageEditConfig(LMAccessToken.generate(owner.getPlayer()), true, provider).sendTo(owner.getPlayer());
 			return false;
 		}
 	};

@@ -1,10 +1,10 @@
 package ftb.utils.world;
 
-import ftb.lib.*;
+import ftb.lib.BroadcastSender;
+import ftb.utils.mod.FTBU;
 import ftb.utils.mod.config.FTBUConfigBackups;
 import latmod.lib.*;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.world.World;
+import net.minecraft.util.*;
 
 import java.io.*;
 import java.util.List;
@@ -15,9 +15,9 @@ public class ThreadBackup extends Thread
 	private File src0;
 	public boolean isDone = false;
 	
-	public ThreadBackup(World w)
+	public ThreadBackup(File w)
 	{
-		src0 = w.getSaveHandler().getWorldDirectory();
+		src0 = w;
 		setPriority(7);
 	}
 	
@@ -144,14 +144,24 @@ public class ThreadBackup extends Thread
 			{
 				String sizeB = LMFileUtils.getSizeS(dstFile);
 				String sizeT = LMFileUtils.getSizeS(Backups.backupsFolder);
-				FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(time.millis) + "! (" + (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)) + ")");
+				
+				IChatComponent c = new ChatComponentTranslation(FTBU.mod.assets + "cmd.backup_end_2", getDoneTime(time.millis), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)));
+				c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE);
+				BroadcastSender.inst.addChatMessage(c);
 			}
 			else
-				FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Server backup done in " + getDoneTime(time.millis) + "!");
+			{
+				IChatComponent c = new ChatComponentTranslation(FTBU.mod.assets + "cmd.backup_end_1", getDoneTime(time.millis));
+				c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE);
+				BroadcastSender.inst.addChatMessage(c);
+			}
 		}
 		catch(Exception e)
 		{
-			FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.DARK_RED + "Failed to save world! (" + LMUtils.classpath(e.getClass()) + ")");
+			IChatComponent c = new ChatComponentTranslation(FTBU.mod.assets + "cmd.backup_fail", LMUtils.classpath(e.getClass()));
+			c.getChatStyle().setColor(EnumChatFormatting.DARK_RED);
+			BroadcastSender.inst.addChatMessage(c);
+			
 			e.printStackTrace();
 			if(dstFile != null) LMFileUtils.delete(dstFile);
 		}

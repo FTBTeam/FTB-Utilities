@@ -55,7 +55,7 @@ public class ServerBadges
 			try
 			{
 				File file = LMFileUtils.newFile(new File(FTBLib.folderLocal, "badges.json"));
-				local = LMJsonUtils.getJsonElement(file);
+				local = LMJsonUtils.fromJson(file);
 				
 				if(local.isJsonNull())
 				{
@@ -76,7 +76,7 @@ public class ServerBadges
 			loadBadges(global, Phase.POST);
 			loadBadges(local, Phase.POST);
 			
-			FTBU.mod.logger.info("Loaded " + map.size() + " badges in " + (LMUtils.millis() - msStarted) + " ms!");
+			FTBU.logger.info("Loaded " + map.size() + " badges in " + (LMUtils.millis() - msStarted) + " ms!");
 			isDone = true;
 		}
 	}

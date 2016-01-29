@@ -15,6 +15,7 @@ import ftb.utils.net.FTBUNetHandler;
 import ftb.utils.world.Backups;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.ForgeChunkManager;
+import org.apache.logging.log4j.*;
 
 import java.util.Map;
 
@@ -30,14 +31,17 @@ public class FTBU
 	@SidedProxy(clientSide = "ftb.utils.mod.handlers.ftbl.FTBLIntegrationClient", serverSide = "ftb.utils.mod.handlers.ftbl.FTBLIntegration")
 	public static FTBLIntegration ftbl_int;
 	
-	@LMMod.Instance(FTBUFinals.MOD_ID)
 	public static LMMod mod;
+	
+	public static Logger logger;
 	
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
-		LMMod.init(this);
+		mod = LMMod.create(FTBUFinals.MOD_ID);
 		FTBLib.ftbu = ftbl_int;
+		logger = LogManager.getLogger(FTBUFinals.MOD_ID);
+		
 		FTBUConfig.load();
 		
 		EventBusHelper.register(new FTBUPlayerEventHandler());

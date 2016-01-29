@@ -1,10 +1,13 @@
 package ftb.utils.world;
 
 import ftb.lib.*;
+import ftb.lib.mod.FTBLibMod;
 import ftb.utils.mod.config.FTBUConfigBackups;
 import latmod.lib.*;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.command.server.*;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.*;
 
@@ -29,15 +32,19 @@ public class Backups
 		logger.info("Backups folder created @ " + backupsFolder.getAbsolutePath());
 	}
 	
-	public static boolean run(boolean auto)
+	public static boolean run(ICommandSender ics)
 	{
 		if(thread != null) return false;
+		boolean auto = !(ics instanceof EntityPlayerMP);
 		
 		if(auto && !FTBUConfigBackups.enabled.get()) return false;
 		
 		World w = FTBLib.getServerWorld();
 		if(w == null) return false;
-		FTBLib.printChat(BroadcastSender.inst, EnumChatFormatting.LIGHT_PURPLE + "Starting server backup, expect lag!");
+		
+		IChatComponent c = new ChatComponentTranslation(FTBLibMod.mod.assets + "cmd.backup_start", ics.getCommandSenderName());
+		c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE);
+		BroadcastSender.inst.addChatMessage(c);
 		
 		nextBackup = LMUtils.millis() + FTBUConfigBackups.backupMillis();
 		
@@ -57,14 +64,16 @@ public class Backups
 			ex.printStackTrace();
 		}
 		
+		File wd = w.getSaveHandler().getWorldDirectory();
+		
 		if(FTBUConfigBackups.use_separate_thread.get())
 		{
-			thread = new ThreadBackup(w);
+			thread = new ThreadBackup(wd);
 			thread.start();
 		}
 		else
 		{
-			ThreadBackup.doBackup(w.getSaveHandler().getWorldDirectory());
+			ThreadBackup.doBackup(wd);
 		}
 		
 		return true;

@@ -26,7 +26,6 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	public final HashMap<Integer, LMPlayerServer> playerMap;
 	public final Warps warps;
 	public final ClaimedChunks claimedChunks;
-	private final LMFakeServerPlayer fakePlayer;
 	public final ConfigGroup customServerData;
 	
 	public LMWorldServer(File f)
@@ -36,7 +35,6 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		playerMap = new HashMap<>();
 		warps = new Warps();
 		claimedChunks = new ClaimedChunks();
-		fakePlayer = new LMFakeServerPlayer(this);
 		customServerData = new ConfigGroup("custom_server_data");
 	}
 	
@@ -57,7 +55,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	
 	public LMPlayerServer getPlayer(Object o)
 	{
-		if(o instanceof FakePlayer) return fakePlayer;
+		if(o instanceof FakePlayer) return new LMFakeServerPlayer(this, (FakePlayer) o);
 		LMPlayer p = super.getPlayer(o);
 		return (p == null) ? null : p.toPlayerMP();
 	}

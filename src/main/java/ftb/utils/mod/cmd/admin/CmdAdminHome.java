@@ -38,7 +38,7 @@ public class CmdAdminHome extends CommandSubLM
 		
 		checkArgs(args, 3);
 		
-		EntityPos pos = p.homes.get(args[2]);
+		BlockDimPos pos = p.homes.get(args[2]);
 		if(pos == null) return error(new ChatComponentTranslation(FTBU.mod.assets + "cmd.home_not_set", args[2]));
 		
 		if(args[1].equals("tp"))
@@ -48,7 +48,8 @@ public class CmdAdminHome extends CommandSubLM
 		}
 		else if(args[1].equals("remove"))
 		{
-			if(p.homes.rem(args[2])) return new ChatComponentTranslation(FTBU.mod.assets + "cmd.home_del", args[2]);
+			if(p.homes.set(args[2], null))
+				return new ChatComponentTranslation(FTBU.mod.assets + "cmd.home_del", args[2]);
 		}
 		
 		return error(new ChatComponentTranslation(FTBLibMod.mod.assets + "invalid_subcmd", args[2]));

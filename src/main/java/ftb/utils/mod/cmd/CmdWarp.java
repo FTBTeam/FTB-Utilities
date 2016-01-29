@@ -34,7 +34,7 @@ public class CmdWarp extends CommandLM
 		}
 		
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-		EntityPos p = LMWorldServer.inst.warps.get(args[0]);
+		BlockDimPos p = LMWorldServer.inst.warps.get(args[0]);
 		if(p == null) return error(new ChatComponentTranslation(FTBU.mod.assets + "cmd.warp_not_set", args[0]));
 		LMDimUtils.teleportPlayer(ep, p);
 		return new ChatComponentTranslation(FTBU.mod.assets + "cmd.warp_tp", args[0]);

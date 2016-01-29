@@ -48,7 +48,7 @@ public class CmdTplast extends CommandLM
 			to = LMPlayerServer.get(args[1]);
 		}
 		
-		EntityPos p = to.getPos();
+		BlockDimPos p = to.getPos();
 		if(p == null) return error(new ChatComponentText("No last position!"));
 		LMDimUtils.teleportPlayer(who, p);
 		return new ChatComponentTranslation(FTBU.mod.assets + "cmd.warp_tp", to.getProfile().getName());

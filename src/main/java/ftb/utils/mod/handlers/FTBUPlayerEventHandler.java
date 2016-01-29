@@ -53,8 +53,7 @@ public class FTBUPlayerEventHandler
 		LMPlayerServer player = LMWorldServer.inst.getPlayer(ep);
 		if(player == null || !player.isOnline()) return;
 		
-		if(player.lastPos == null) player.lastPos = new EntityPos(ep);
-		else player.lastPos.set(ep);
+		player.lastPos = new EntityPos(ep).toLinkedPos();
 		
 		int currentChunkType = LMWorldServer.inst.claimedChunks.getType(ep.dimension, e.newChunkX, e.newChunkZ).ID;
 		
@@ -85,9 +84,7 @@ public class FTBUPlayerEventHandler
 		if(e.entity instanceof EntityPlayerMP)
 		{
 			LMPlayerServer p = LMWorldServer.inst.getPlayer(e.entity);
-			
-			if(p.lastDeath == null) p.lastDeath = new EntityPos(e.entity);
-			else p.lastDeath.set(e.entity);
+			p.lastDeath = new EntityPos(e.entity).toLinkedPos();
 			
 			p.refreshStats();
 			new MessageLMPlayerDied(p).sendTo(null);

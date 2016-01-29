@@ -9,7 +9,7 @@ import java.util.*;
 
 public class Warps
 {
-	private final HashMap<String, EntityPos> warps = new HashMap<>();
+	private final HashMap<String, BlockDimPos> warps = new HashMap<>();
 	
 	public void readFromNBT(NBTTagCompound tag, String s)
 	{
@@ -22,7 +22,7 @@ public class Warps
 			for(String s1 : LMNBTUtils.getMapKeys(tag1))
 			{
 				int[] a = tag1.getIntArray(s1);
-				set(s1, a[0], a[1], a[2], a[3]);
+				set(s1, new BlockDimPos(a[0], a[1], a[2], a[3]));
 			}
 		}
 	}
@@ -30,7 +30,7 @@ public class Warps
 	public void writeToNBT(NBTTagCompound tag, String s)
 	{
 		NBTTagCompound tag1 = new NBTTagCompound();
-		for(Map.Entry<String, EntityPos> e : warps.entrySet())
+		for(Map.Entry<String, BlockDimPos> e : warps.entrySet())
 			tag1.setIntArray(e.getKey(), e.getValue().toIntArray());
 		tag.setTag(s, tag1);
 	}
@@ -44,12 +44,12 @@ public class Warps
 			if(e.getValue().isJsonArray())
 			{
 				int[] a = LMJsonUtils.fromArray(e.getValue());
-				set(e.getKey(), a[0], a[1], a[2], a[3]);
+				set(e.getKey(), new BlockDimPos(a[0], a[1], a[2], a[3]));
 			}
 			else
 			{
 				JsonObject o = e.getValue().getAsJsonObject();
-				set(e.getKey(), o.get("dim").getAsInt(), o.get("x").getAsInt(), o.get("y").getAsInt(), o.get("z").getAsInt());
+				set(e.getKey(), new BlockDimPos(o.get("x").getAsInt(), o.get("y").getAsInt(), o.get("z").getAsInt(), o.get("dim").getAsInt()));
 			}
 		}
 	}
@@ -57,14 +57,14 @@ public class Warps
 	public void writeToJson(JsonObject g, String s)
 	{
 		JsonObject g1 = new JsonObject();
-		for(Map.Entry<String, EntityPos> e : warps.entrySet())
+		for(Map.Entry<String, BlockDimPos> e : warps.entrySet())
 		{
-			EntityPos pos = e.getValue();
+			BlockDimPos pos = e.getValue();
 			JsonObject o = new JsonObject();
 			o.add("dim", new JsonPrimitive(pos.dim));
-			o.add("x", new JsonPrimitive(pos.intX()));
-			o.add("y", new JsonPrimitive(pos.intY()));
-			o.add("z", new JsonPrimitive(pos.intZ()));
+			o.add("x", new JsonPrimitive(pos.x));
+			o.add("y", new JsonPrimitive(pos.y));
+			o.add("z", new JsonPrimitive(pos.z));
 			g1.add(e.getKey(), o);
 		}
 		g.add(s, g1);
@@ -76,17 +76,14 @@ public class Warps
 		return warps.keySet().toArray(new String[0]);
 	}
 	
-	public EntityPos get(String s)
+	public BlockDimPos get(String s)
 	{ return warps.get(s); }
 	
-	public boolean set(String s, EntityPos pos)
-	{ return warps.put(s, pos.clone()) == null; }
-	
-	public boolean set(String s, int x, int y, int z, int dim)
-	{ return set(s, new EntityPos(x + 0.5D, y + 0.5D, z + 0.5D, dim)); }
-	
-	public boolean rem(String s)
-	{ return warps.remove(s) != null; }
+	public boolean set(String s, BlockDimPos pos)
+	{
+		if(pos == null) return warps.remove(s) != null;
+		return warps.put(s, pos) == null;
+	}
 	
 	public int size()
 	{ return warps.size(); }

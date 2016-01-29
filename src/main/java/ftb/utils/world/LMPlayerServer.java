@@ -31,7 +31,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public final LMWorldServer world;
 	private final PersonalSettings settings;
 	private NBTTagCompound serverData = null;
-	public EntityPos lastPos, lastDeath;
+	public BlockDimPos lastPos, lastDeath;
 	public final LMPlayerStats stats;
 	private EntityPlayerMP entityPlayer = null;
 	public int lastChunkType = -99;
@@ -92,15 +92,10 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public boolean isOP()
 	{ return FTBLib.isOP(getProfile()); }
 	
-	public EntityPos getPos()
+	public BlockDimPos getPos()
 	{
 		EntityPlayerMP ep = getPlayer();
-		if(ep != null)
-		{
-			if(lastPos == null) lastPos = new EntityPos(ep);
-			else lastPos.set(ep);
-		}
-		
+		if(ep != null) lastPos = new EntityPos(ep).toLinkedPos();
 		return lastPos;
 	}
 	
@@ -165,20 +160,13 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		serverData = tag.hasKey("ServerData") ? tag.getCompoundTag("ServerData") : null;
 		
-		if(tag.hasKey("LastPos"))
-		{
-			if(lastPos == null) lastPos = new EntityPos();
-			lastPos.readFromNBT(tag.getCompoundTag("LastPos"));
-		}
+		if(tag.hasKey("LastPos") && tag.getTagId("LastPos") == LMNBTUtils.INT_ARRAY)
+			lastPos = new BlockDimPos(tag.getIntArray("LastPos"));
 		else lastPos = null;
 		
-		if(tag.hasKey("LastDeath"))
-		{
-			if(lastDeath == null) lastDeath = new EntityPos();
-			lastDeath.readFromNBT(tag.getCompoundTag("LastDeath"));
-		}
+		if(tag.hasKey("LastDeath") && tag.getTagId("LastDeath") == LMNBTUtils.INT_ARRAY)
+			lastDeath = new BlockDimPos(tag.getIntArray("LastDeath"));
 		else lastDeath = null;
-		
 		
 		NBTTagCompound settingsTag = tag.getCompoundTag("Settings");
 		settings.readFromServer(settingsTag);
@@ -201,19 +189,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		if(serverData != null && !serverData.hasNoTags()) tag.setTag("ServerData", serverData);
 		
-		if(lastPos != null)
-		{
-			NBTTagCompound tag1 = new NBTTagCompound();
-			lastPos.writeToNBT(tag1);
-			tag.setTag("LastPos", tag1);
-		}
-		
-		if(lastDeath != null)
-		{
-			NBTTagCompound tag1 = new NBTTagCompound();
-			lastDeath.writeToNBT(tag1);
-			tag.setTag("LastDeath", tag1);
-		}
+		if(lastPos != null) tag.setIntArray("LastPos", lastPos.toIntArray());
+		if(lastDeath != null) tag.setIntArray("LastDeath", lastDeath.toIntArray());
 		
 		NBTTagCompound statsTag = new NBTTagCompound();
 		stats.writeToNBT(statsTag);

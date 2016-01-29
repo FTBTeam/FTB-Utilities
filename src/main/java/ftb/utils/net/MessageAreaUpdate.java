@@ -1,6 +1,6 @@
 package ftb.utils.net;
 
-import ftb.lib.EntityPos;
+import ftb.lib.BlockDimPos;
 import ftb.lib.api.net.LMNetworkWrapper;
 import ftb.utils.mod.client.gui.claims.ClaimedAreasClient;
 import ftb.utils.world.*;
@@ -35,8 +35,8 @@ public class MessageAreaUpdate extends MessageFTBU
 			}
 	}
 	
-	public MessageAreaUpdate(LMPlayerServer p, EntityPos pos, int sx, int sz)
-	{ this(p, MathHelperLM.chunk(pos.x) - (sx / 2 + 1), MathHelperLM.chunk(pos.z) - (sz / 2 + 1), pos.dim, sx, sz); }
+	public MessageAreaUpdate(LMPlayerServer p, BlockDimPos pos, int sx, int sz)
+	{ this(p, pos.chunkX() - (sx / 2 + 1), pos.chunkZ() - (sz / 2 + 1), pos.dim, sx, sz); }
 	
 	public LMNetworkWrapper getWrapper()
 	{ return FTBUNetHandler.NET_WORLD; }

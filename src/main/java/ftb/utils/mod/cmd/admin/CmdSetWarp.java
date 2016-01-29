@@ -1,5 +1,6 @@
 package ftb.utils.mod.cmd.admin;
 
+import ftb.lib.BlockDimPos;
 import ftb.lib.api.cmd.*;
 import ftb.utils.mod.FTBU;
 import ftb.utils.world.LMWorldServer;
@@ -30,7 +31,7 @@ public class CmdSetWarp extends CommandLM
 		}
 		else c = ep.getPosition();
 		
-		LMWorldServer.inst.warps.set(args[0], c.getX(), c.getY(), c.getZ(), ep.dimension);
+		LMWorldServer.inst.warps.set(args[0], new BlockDimPos(c, ep.dimension));
 		return new ChatComponentTranslation(FTBU.mod.assets + "cmd.warp_set", args[0]);
 	}
 }

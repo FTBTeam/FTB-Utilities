@@ -224,11 +224,11 @@ public class ClaimedChunks
 			return false;
 		int radius = FTBLib.getServer().getSpawnProtectionSize();
 		if(radius <= 0) return false;
-		BlockPos c = LMDimUtils.getSpawnPoint(0);
-		int minX = MathHelperLM.chunk(c.getX() + 0.5D - radius);
-		int minZ = MathHelperLM.chunk(c.getZ() + 0.5D - radius);
-		int maxX = MathHelperLM.chunk(c.getX() + 0.5D + radius);
-		int maxZ = MathHelperLM.chunk(c.getZ() + 0.5D + radius);
+		BlockDimPos c = LMDimUtils.getSpawnPoint(0);
+		int minX = MathHelperLM.chunk(c.x + 0.5D - radius);
+		int minZ = MathHelperLM.chunk(c.z + 0.5D - radius);
+		int maxX = MathHelperLM.chunk(c.x + 0.5D + radius);
+		int maxZ = MathHelperLM.chunk(c.z + 0.5D + radius);
 		return cx >= minX && cx <= maxX && cz >= minZ && cz <= maxZ;
 	}
 	

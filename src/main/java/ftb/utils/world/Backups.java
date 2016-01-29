@@ -1,7 +1,7 @@
 package ftb.utils.world;
 
 import ftb.lib.*;
-import ftb.lib.mod.FTBLibMod;
+import ftb.utils.mod.FTBU;
 import ftb.utils.mod.config.FTBUConfigBackups;
 import latmod.lib.*;
 import net.minecraft.command.ICommandSender;
@@ -42,7 +42,7 @@ public class Backups
 		World w = FTBLib.getServerWorld();
 		if(w == null) return false;
 		
-		IChatComponent c = new ChatComponentTranslation(FTBLibMod.mod.assets + "cmd.backup_start", ics.getName());
+		IChatComponent c = new ChatComponentTranslation(FTBU.mod.assets + "cmd.backup_start", ics.getName());
 		c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE);
 		BroadcastSender.inst.addChatMessage(c);
 		

@@ -5,6 +5,7 @@ import ftb.lib.api.cmd.*;
 import ftb.utils.mod.FTBU;
 import ftb.utils.mod.config.FTBUConfigCmd;
 import ftb.utils.world.LMPlayerServer;
+import latmod.lib.LMStringUtils;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
@@ -45,7 +46,10 @@ public class CmdHome extends CommandLM
 			
 			int maxHomes = p.getRank().config.max_homes.get();
 			if(maxHomes <= 0 || p.homes.size() >= maxHomes)
-				return error(new ChatComponentTranslation(FTBU.mod.assets + "cmd.home_limit"));
+			{
+				if(maxHomes > 0 && p.homes.get(args[1]) == null)
+					return error(new ChatComponentTranslation(FTBU.mod.assets + "cmd.home_limit"));
+			}
 			
 			p.homes.set(args[1], p.getPos());
 			return new ChatComponentTranslation(FTBU.mod.assets + "cmd.home_set", args[1]);
@@ -55,18 +59,19 @@ public class CmdHome extends CommandLM
 		{
 			checkArgs(args, 2);
 			
-			if(p.homes.rem(args[1])) return new ChatComponentTranslation(FTBU.mod.assets + "cmd.home_del", args[1]);
+			if(p.homes.set(args[1], null))
+				return new ChatComponentTranslation(FTBU.mod.assets + "cmd.home_del", args[1]);
 			return error(new ChatComponentTranslation(FTBU.mod.assets + "cmd.home_not_set", args[1]));
 		}
 		
 		if(args[0].equals("ren"))
 		{
 			checkArgs(args, 3);
-			EntityPos pos = p.homes.get(args[1]);
+			BlockDimPos pos = p.homes.get(args[1]);
 			if(pos == null) return error(new ChatComponentTranslation(FTBU.mod.assets + "cmd.home_not_set", args[0]));
 			
 			pos = pos.clone();
-			p.homes.rem(args[1]);
+			p.homes.set(args[1], null);
 			p.homes.set(args[2], pos);
 			return new ChatComponentText(args[1] + " => " + args[2]);
 		}
@@ -74,11 +79,11 @@ public class CmdHome extends CommandLM
 		if(args[0].equals("list"))
 		{
 			String[] list = p.homes.list();
-			if(list.length == 0) return new ChatComponentText("-");
-			return new ChatComponentText(joinNiceString(list));
+			ics.addChatMessage(new ChatComponentText(list.length + " / " + p.getRank().config.max_homes.get() + ": "));
+			return (list.length == 0) ? null : new ChatComponentText(LMStringUtils.strip(list));
 		}
 		
-		EntityPos pos = p.homes.get(args[0]);
+		BlockDimPos pos = p.homes.get(args[0]);
 		
 		if(pos == null) return error(new ChatComponentTranslation(FTBU.mod.assets + "cmd.home_not_set", args[0]));
 		

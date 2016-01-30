@@ -7,7 +7,7 @@ import ftb.utils.mod.config.FTBUConfigBackups;
 import ftb.utils.world.Backups;
 import latmod.lib.LMFileUtils;
 import net.minecraft.command.*;
-import net.minecraft.util.*;
+import net.minecraft.util.IChatComponent;
 
 public class CmdBackup extends CommandSubLM
 {
@@ -50,7 +50,7 @@ public class CmdBackup extends CommandSubLM
 				return FTBU.mod.chatComponent("cmd.backup_stop");
 			}
 			
-			return error(new ChatComponentText("Backup process is not running!"));
+			return error(FTBU.mod.chatComponent("cmd.backup_not_running"));
 		}
 	}
 	
@@ -63,7 +63,7 @@ public class CmdBackup extends CommandSubLM
 		{
 			String sizeW = LMFileUtils.getSizeS(ics.getEntityWorld().getSaveHandler().getWorldDirectory());
 			String sizeT = LMFileUtils.getSizeS(Backups.backupsFolder);
-			return new ChatComponentText("Current world size: " + sizeW + ", total backups folder size: " + sizeT);
+			return FTBU.mod.chatComponent("cmd.backup_size", sizeW, sizeT);
 		}
 	}
 }

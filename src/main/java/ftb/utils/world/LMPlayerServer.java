@@ -338,8 +338,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		for(int i = 0; i < size0; i++)
 		{
 			ClaimedChunk c = list.get(i);
-			setLoaded(c.dim, c.chunkXPos, c.chunkZPos, false);
-			world.claimedChunks.remove(c.dim, c.chunkXPos, c.chunkZPos);
+			setLoaded(c.dim, c.posX, c.posZ, false);
+			world.claimedChunks.remove(c.dim, c.posX, c.posZ);
 		}
 		
 		sendUpdate();
@@ -379,13 +379,10 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			}
 			
 			chunk.isChunkloaded = flag;
-			FTBUChunkEventHandler.instance.markDirty(Integer.valueOf(dim));
+			FTBUChunkEventHandler.instance.markDirty(LMDimUtils.getWorld(dim));
 			
-			if(getPlayer() != null)
-			{
-				new MessageAreaUpdate(this, cx, cz, dim, 1, 1).sendTo(getPlayer());
-				sendUpdate();
-			}
+			if(getPlayer() != null) new MessageAreaUpdate(this, cx, cz, dim, 1, 1).sendTo(getPlayer());
+			sendUpdate();
 		}
 	}
 }

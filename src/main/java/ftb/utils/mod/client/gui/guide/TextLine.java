@@ -3,6 +3,9 @@ package ftb.utils.mod.client.gui.guide;
 import ftb.lib.TextureCoords;
 import ftb.utils.api.guide.GuideLink;
 
+/**
+ * Created by LatvianModder on 01.02.2016.
+ */
 public class TextLine
 {
 	public final TextLine parent;

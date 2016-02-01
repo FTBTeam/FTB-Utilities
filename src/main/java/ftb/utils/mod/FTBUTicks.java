@@ -73,7 +73,7 @@ public class FTBUTicks
 		
 		if(nextChunkloaderUpdate < now)
 		{
-			nextChunkloaderUpdate = now + 10000L;
+			nextChunkloaderUpdate = now + 30000L;
 			FTBUChunkEventHandler.instance.markDirty(null);
 		}
 		

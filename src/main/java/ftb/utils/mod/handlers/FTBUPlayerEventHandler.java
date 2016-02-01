@@ -111,8 +111,6 @@ public class FTBUPlayerEventHandler
 			
 			p.refreshStats();
 			new MessageLMPlayerDied(p).sendTo(null);
-			
-			FTBUChunkEventHandler.instance.markDirty(null);
 		}
 	}
 	

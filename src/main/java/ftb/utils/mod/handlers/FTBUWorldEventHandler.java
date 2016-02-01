@@ -24,8 +24,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
 	@SubscribeEvent
 	public void worldLoaded(net.minecraftforge.event.world.WorldEvent.Load e)
 	{
-		if(e.world instanceof WorldServer)
-			FTBUChunkEventHandler.instance.markDirty(Integer.valueOf(e.world.provider.dimensionId));
+		if(e.world instanceof WorldServer) FTBUChunkEventHandler.instance.markDirty(e.world);
 	}
 	
 	@SubscribeEvent

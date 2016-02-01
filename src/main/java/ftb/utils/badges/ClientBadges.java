@@ -1,7 +1,5 @@
 package ftb.utils.badges;
 
-import ftb.lib.FTBLib;
-import ftb.lib.api.client.DevConsole;
 import ftb.utils.net.ClientAction;
 
 import java.util.HashMap;
@@ -43,7 +41,5 @@ public class ClientBadges
 		Badge b = map.get(badge);
 		if(b != null) playerBadges.put(playerID, b);
 		else playerBadges.put(playerID, Badge.emptyBadge);
-		
-		if(DevConsole.enabled()) FTBLib.dev_logger.info("Received " + playerID + "'s badge: " + badge);
 	}
 }

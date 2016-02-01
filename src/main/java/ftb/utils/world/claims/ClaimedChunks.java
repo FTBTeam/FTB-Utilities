@@ -59,7 +59,7 @@ public class ClaimedChunks
 					}
 				}
 				
-				chunks.put(Integer.valueOf(dim), map);
+				chunks.put(dim, map);
 			}
 			catch(Exception ex)
 			{
@@ -105,7 +105,7 @@ public class ClaimedChunks
 				}
 			}
 			
-			chunks.put(Integer.valueOf(dim), map);
+			chunks.put(dim, map);
 		}
 	}
 	
@@ -130,8 +130,8 @@ public class ClaimedChunks
 					JsonArray a = o1.get(id).getAsJsonArray();
 					
 					JsonArray a1 = new JsonArray();
-					a1.add(new JsonPrimitive(c.chunkXPos));
-					a1.add(new JsonPrimitive(c.chunkZPos));
+					a1.add(new JsonPrimitive(c.posX));
+					a1.add(new JsonPrimitive(c.posZ));
 					if(c.isChunkloaded) a1.add(new JsonPrimitive(1));
 					a.add(a1);
 				}
@@ -143,8 +143,8 @@ public class ClaimedChunks
 	
 	public ClaimedChunk getChunk(int dim, int cx, int cz)
 	{
-		if(!chunks.containsKey(Integer.valueOf(dim))) return null;
-		return chunks.get(Integer.valueOf(dim)).get(Long.valueOf(Bits.intsToLong(cx, cz)));
+		if(!chunks.containsKey(dim)) return null;
+		return chunks.get(dim).get(Long.valueOf(Bits.intsToLong(cx, cz)));
 	}
 	
 	public List<ClaimedChunk> getChunks(LMPlayer p, Integer dim)
@@ -163,7 +163,10 @@ public class ClaimedChunks
 		}
 		else
 		{
-			for(ClaimedChunk c : chunks.get(Integer.valueOf(dim)).values())
+			HashMap<Long, ClaimedChunk> map = chunks.get(dim);
+			if(map == null) return list;
+			
+			for(ClaimedChunk c : map.values())
 			{
 				if(c.ownerID == p.playerID) list.add(c);
 			}
@@ -175,21 +178,21 @@ public class ClaimedChunks
 	public boolean put(ClaimedChunk c)
 	{
 		if(c == null) return false;
-		HashMap<Long, ClaimedChunk> map = chunks.get(Integer.valueOf(c.dim));
-		if(map == null) chunks.put(Integer.valueOf(c.dim), map = new HashMap<>());
+		HashMap<Long, ClaimedChunk> map = chunks.get(c.dim);
+		if(map == null) chunks.put(c.dim, map = new HashMap<>());
 		return map.put(c.getLongPos(), c) == null;
 	}
 	
 	public ClaimedChunk remove(int dim, int cx, int cz)
 	{
-		HashMap<Long, ClaimedChunk> map = chunks.get(Integer.valueOf(dim));
+		HashMap<Long, ClaimedChunk> map = chunks.get(dim);
 		if(map != null)
 		{
 			ClaimedChunk chunk = map.remove(Long.valueOf(Bits.intsToLong(cx, cz)));
 			
 			if(chunk != null)
 			{
-				if(map.isEmpty()) chunks.remove(Integer.valueOf(dim));
+				if(map.isEmpty()) chunks.remove(dim);
 				return chunk;
 			}
 		}

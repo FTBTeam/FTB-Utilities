@@ -48,14 +48,13 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 			Ranks.reload();
 			ServerBadges.reload();
 			
-			if(FTBLib.getServerWorld() != null) FTBUChunkEventHandler.instance.markDirty(null);
+			FTBUChunkEventHandler.instance.markDirty(null);
 		}
 	}
 	
 	public final void onFTBWorldServer(EventFTBWorldServer e)
 	{
-		File latmodFolder = new File(FTBLib.folderWorld, "latmod/");
-		if(!latmodFolder.exists()) latmodFolder = new File(FTBLib.folderWorld, "LatMod/");
+		File latmodFolder = new File(FTBLib.folderWorld, "LatMod/");
 		
 		LMWorldServer.inst = new LMWorldServer(latmodFolder);
 		

@@ -7,7 +7,7 @@ import ftb.lib.api.gui.widgets.*;
 import ftb.utils.api.guide.*;
 import ftb.utils.mod.client.FTBUClient;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.*;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.*;
 
@@ -36,7 +36,7 @@ public class GuiGuide extends GuiLM
 	public final ButtonTextLine[] textLines; // Max 20
 	
 	public static GuiGuide clientGuideGui = null;
-	private static FontRenderer guideFont = null;
+	public static FontRenderer guideFont = null;
 	
 	public static GuiGuide openClientGui(boolean open)
 	{
@@ -285,81 +285,6 @@ public class GuiGuide extends GuiLM
 		{
 			for(int i = 0; i < categoryButtons.size(); i++)
 				categoryButtons.get(i).renderWidget();
-		}
-	}
-	
-	public class ButtonCategory extends ButtonLM
-	{
-		public final GuideCategory cat;
-		
-		public ButtonCategory(GuiGuide g, int x, int y, int w, int h, GuideCategory c)
-		{
-			super(g, x, y, w, h);
-			cat = c;
-		}
-		
-		public void onButtonPressed(int b)
-		{
-			FTBLibClient.playClickSound();
-			
-			if(cat.subcategories.isEmpty())
-			{
-				selectedCategory = cat;
-				sliderText.value = 0F;
-				initLMGui();
-			}
-			else FTBLibClient.openGui(new GuiGuide(GuiGuide.this, cat));
-		}
-		
-		public boolean isEnabled()
-		{ return true; }
-		
-		public void renderWidget()
-		{
-			if(!isEnabled()) return;
-			int ax = getAX();
-			int ay = getAY();
-			IChatComponent titleC = cat.getTitleComponent().createCopy();
-			boolean mouseOver = mouseOver(ax, ay);
-			if(mouseOver) titleC.getChatStyle().setUnderlined(true);
-			if(selectedCategory == cat) titleC.getChatStyle().setBold(true);
-			gui.getFontRenderer().drawString(titleC.getFormattedText(), ax + 1, ay + 1, mouseOver ? textColorOver : textColor);
-		}
-	}
-	
-	public class ButtonTextLine extends ButtonLM
-	{
-		public TextLine line = null;
-		
-		public ButtonTextLine(GuiGuide g, int i)
-		{ super(g, 0, i * 11, g.textPanel.width, 11); }
-		
-		public void addMouseOverText(List<String> l)
-		{
-			if(line != null && line.special != null) line.special.addHoverText(l);
-		}
-		
-		public void onButtonPressed(int b)
-		{
-			if(line != null && line.special != null) line.special.onClicked((GuiGuide) gui);
-		}
-		
-		public void renderWidget()
-		{
-			if(line == null) return;
-			
-			int ax = getAX();
-			int ay = getAY();
-			
-			if(!line.text.isEmpty()) guideFont.drawString(line.text, ax, ay, textColor);
-			else if(line.special != null && line.special.type.isImage() && line.texture != null && line.texture.isValid())
-			{
-				GlStateManager.color(1F, 1F, 1F, 1F);
-				FTBLibClient.setTexture(line.texture.texture);
-				double w = Math.min(width, line.texture.width);
-				GuiLM.render(line.texture, ax, ay, zLevel, w, line.texture.getHeight(w) + 1);
-				//GuiLM.drawTexturedRectD(ax, ay, gui.getZLevel(), w, line.texture.getHeight(w), 0D, line.texture.minU, 1D, line.texture.maxU);
-			}
 		}
 	}
 }

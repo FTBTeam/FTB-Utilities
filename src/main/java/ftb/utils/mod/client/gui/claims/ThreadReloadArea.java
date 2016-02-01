@@ -24,6 +24,7 @@ public class ThreadReloadArea extends Thread
 	
 	public Chunk chunkMC;
 	public short maxHeight = 0;
+	public boolean isNether;
 	
 	public ThreadReloadArea(World w, GuiClaimChunks m)
 	{
@@ -33,6 +34,7 @@ public class ThreadReloadArea extends Thread
 		gui = m;
 		Arrays.fill(heightMap, defHeight);
 		Arrays.fill(pixels.pixels, 0);
+		isNether = worldObj.provider.dimensionId == -1;
 	}
 	
 	public void run()
@@ -121,8 +123,9 @@ public class ThreadReloadArea extends Thread
 		for(short y = max; y > 0; --y)
 		{
 			Block block = c.getBlock(x, y, z);
+			if(isNether && (block == Blocks.bedrock || block == Blocks.netherrack)) continue;
+			//isNether = false;
 			if(block == Blocks.tallgrass || block.isAir(worldObj, bx, y, bz)) continue;
-			
 			if(mapValue) heightMap[x + z * 16] = y;
 			return y;
 		}
@@ -140,6 +143,10 @@ public class ThreadReloadArea extends Thread
 		else if(b == Blocks.obsidian) return 0xFF150047;
 		else if(b == Blocks.gravel) return 0xFF8D979B;
 		else if(b == Blocks.glass) return 0x33BCF9FF;
+		else if(b == Blocks.netherrack) return 0xFFA72A40;
+		else if(b == Blocks.bedrock) return 0xFF606060;
+		else if(b == Blocks.soul_sand) return 0xFFA0403A;
+		else if(b == Blocks.glowstone) return 0xFFFFD800;
 		else if(b.getMaterial() == Material.water)
 			return LMColorUtils.multiply(MapColor.waterColor.colorValue, b.colorMultiplier(worldObj, x, y, z), 200);
 		

@@ -14,7 +14,6 @@ import ftb.utils.mod.handlers.ftbl.FTBLIntegration;
 import ftb.utils.net.FTBUNetHandler;
 import ftb.utils.world.Backups;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.common.ForgeChunkManager;
 import org.apache.logging.log4j.*;
 
 import java.util.Map;
@@ -47,8 +46,7 @@ public class FTBU
 		EventBusHelper.register(new FTBUPlayerEventHandler());
 		EventBusHelper.register(new FTBUWorldEventHandler());
 		EventBusHelper.register(new FTBUChatEventHandler());
-		EventBusHelper.register(FTBUChunkEventHandler.instance);
-		FTBUChunkEventHandler.instance.refreshMaxChunksCount();
+		FTBUChunkEventHandler.instance.init();
 		
 		FTBUNetHandler.init();
 		Backups.init();
@@ -59,7 +57,6 @@ public class FTBU
 	public void postInit(FMLPostInitializationEvent e)
 	{
 		proxy.postInit();
-		ForgeChunkManager.setForcedChunkLoadingCallback(inst, FTBUChunkEventHandler.instance);
 	}
 	
 	@Mod.EventHandler
@@ -85,6 +82,12 @@ public class FTBU
 			for(EntityPlayerMP ep : FTBLib.getAllOnlinePlayers(null))
 				FTBUPlayerEventHandler.playerLoggedOut(ep);
 		}
+	}
+	
+	@Mod.EventHandler
+	public void serverStopped(FMLServerStoppedEvent e)
+	{
+		FTBUChunkEventHandler.instance.clear();
 	}
 	
 	@NetworkCheckHandler

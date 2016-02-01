@@ -1,6 +1,6 @@
 package ftb.utils.api.guide;
 
-import ftb.lib.FTBLib;
+import ftb.lib.*;
 import ftb.lib.api.cmd.CommandLM;
 import ftb.utils.mod.*;
 import ftb.utils.mod.config.*;
@@ -111,10 +111,13 @@ public class ServerGuideFile extends GuideFile
 			players.get(i).refreshStats();
 		
 		if(FTBUConfigGeneral.restart_timer.get() > 0F)
-			main.println(new ChatComponentTranslation(FTBU.mod.assets + "cmd.timer_restart", LMStringUtils.getTimeString(FTBUTicks.restartMillis - LMUtils.millis())));
+			main.println(FTBU.mod.chatComponent("cmd.timer_restart", LMStringUtils.getTimeString(FTBUTicks.restartMillis - LMUtils.millis())));
 		
 		if(FTBUConfigBackups.enabled.get())
-			main.println(new ChatComponentTranslation(FTBU.mod.assets + "cmd.timer_backup", LMStringUtils.getTimeString(Backups.nextBackup - LMUtils.millis())));
+			main.println(FTBU.mod.chatComponent("cmd.timer_backup", LMStringUtils.getTimeString(Backups.nextBackup - LMUtils.millis())));
+		
+		main.println(FTBU.mod.chatComponent("cmd.ftb_gamemode", LMStringUtils.firstUppercase(FTBWorld.server.getMode().toString().toLowerCase())));
+		main.println(FTBU.mod.chatComponent("cmd.world_difficulty", LMStringUtils.firstUppercase(pself.getPlayer().worldObj.difficultySetting.toString().toLowerCase())));
 		
 		if(FTBUConfigTops.first_joined.get()) addTop(Top.first_joined);
 		if(FTBUConfigTops.deaths.get()) addTop(Top.deaths);

@@ -1,13 +1,11 @@
 package ftb.utils.net;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.utils.api.EventLMPlayerClient;
 import ftb.utils.world.*;
 import latmod.lib.ByteCount;
-
-import javax.xml.ws.handler.MessageContext;
 
 public class MessageLMPlayerUpdate extends MessageFTBU
 {

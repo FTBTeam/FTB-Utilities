@@ -84,12 +84,6 @@ public class FTBU
 		}
 	}
 	
-	@Mod.EventHandler
-	public void serverStopped(FMLServerStoppedEvent e)
-	{
-		FTBUChunkEventHandler.instance.clear();
-	}
-	
 	@NetworkCheckHandler
 	public boolean checkNetwork(Map<String, String> m, Side side)
 	{

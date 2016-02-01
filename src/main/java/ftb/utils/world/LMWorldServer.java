@@ -5,6 +5,7 @@ import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
 import ftb.utils.api.EventLMPlayerServer;
+import ftb.utils.mod.handlers.FTBUChunkEventHandler;
 import ftb.utils.net.MessageLMWorldUpdate;
 import ftb.utils.world.claims.ClaimedChunks;
 import latmod.lib.*;
@@ -51,6 +52,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	{
 		playerMap.clear();
 		claimedChunks.chunks.clear();
+		FTBUChunkEventHandler.instance.clear();
 	}
 	
 	public LMPlayerServer getPlayer(Object o)

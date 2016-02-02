@@ -80,16 +80,44 @@ public class GuideFile implements IJsonObject // ServerGuideFile // ClientGuideF
 		if(linksMapE.isJsonObject())
 		{
 			JsonObject o = linksMapE.getAsJsonObject();
-			JsonObject o1;
 			GuideLink link;
 			
-			if(o.has("images"))
+			if(o.has("links")) // Old format
 			{
-				for(Map.Entry<String, JsonElement> e : o.get("images").getAsJsonObject().entrySet())
+				JsonObject o1;
+				
+				try
 				{
-					link = GuideLink.newInstance(GuideLink.Type.IMAGE);
-					link.setJson(e.getValue());
-					map.put(e.getKey(), link);
+					for(Map.Entry<String, JsonElement> e : o.get("links").getAsJsonObject().entrySet())
+					{
+						o1 = e.getValue().getAsJsonObject();
+						
+						if(o1.get("type").getAsString().equals("image"))
+						{
+							link = GuideLink.newInstance(GuideLink.Type.IMAGE);
+							link.link = o1.get("link").getAsString();
+							
+							if(o1.has("hover"))
+							{
+								link.hover = new IChatComponent[] {new ChatComponentText(o1.get("hover").getAsString())};
+							}
+							
+							map.put(e.getKey(), link);
+						}
+					}
+				}
+				catch(Exception ex) {}
+			}
+			else
+			{
+				if(o.has("images"))
+				{
+					for(Map.Entry<String, JsonElement> e : o.get("images").getAsJsonObject().entrySet())
+					{
+						link = GuideLink.newInstance(GuideLink.Type.IMAGE);
+						link.setJson(e.getValue());
+						map.put(e.getKey(), link);
+					}
 				}
 			}
 		}

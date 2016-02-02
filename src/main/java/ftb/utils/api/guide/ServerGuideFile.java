@@ -116,8 +116,11 @@ public class ServerGuideFile extends GuideFile
 		if(FTBUConfigBackups.enabled.get())
 			main.println(FTBU.mod.chatComponent("cmd.timer_backup", LMStringUtils.getTimeString(Backups.nextBackup - LMUtils.millis())));
 		
-		main.println(FTBU.mod.chatComponent("cmd.ftb_gamemode", LMStringUtils.firstUppercase(FTBWorld.server.getMode().toString().toLowerCase())));
-		main.println(FTBU.mod.chatComponent("cmd.world_difficulty", LMStringUtils.firstUppercase(pself.getPlayer().worldObj.difficultySetting.toString().toLowerCase())));
+		if(FTBUConfigGeneral.server_info_difficulty.get())
+			main.println(FTBU.mod.chatComponent("cmd.world_difficulty", LMStringUtils.firstUppercase(pself.getPlayer().worldObj.difficultySetting.toString().toLowerCase())));
+		
+		if(FTBUConfigGeneral.server_info_mode.get())
+			main.println(FTBU.mod.chatComponent("cmd.ftb_gamemode", LMStringUtils.firstUppercase(FTBWorld.server.getMode().toString().toLowerCase())));
 		
 		if(FTBUConfigTops.first_joined.get()) addTop(Top.first_joined);
 		if(FTBUConfigTops.deaths.get()) addTop(Top.deaths);
@@ -158,7 +161,8 @@ public class ServerGuideFile extends GuideFile
 						}
 						else
 						{
-							if(usage.indexOf('%') != -1) cat.println(new ChatComponentText(usage));
+							if(usage.indexOf('%') != -1 || usage.indexOf('/') != -1)
+								cat.println(new ChatComponentText(usage));
 							else cat.println(new ChatComponentTranslation(usage));
 						}
 					}

@@ -19,6 +19,8 @@ public class FTBUConfigGeneral
 	public static final ConfigEntryBool sign_home = new ConfigEntryBool("sign_home", true).setInfo("Enable right-clicking on '[home]' signs");
 	public static final ConfigEntryBool spawn_area_in_sp = new ConfigEntryBool("spawn_area_in_sp", false).setInfo("Enable spawn area in singleplayer");
 	public static final ConfigEntryBool disable_chunkloading = new ConfigEntryBool("disable_chunkloading", false);
+	public static final ConfigEntryBool server_info_difficulty = new ConfigEntryBool("server_info_difficulty", true);
+	public static final ConfigEntryBool server_info_mode = new ConfigEntryBool("server_info_mode", true);
 	
 	private static final ArrayList<Class<?>> blockedEntitiesL = new ArrayList<>();
 	

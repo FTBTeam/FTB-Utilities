@@ -34,7 +34,6 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 	{
 		if(w == null || player == null) return null;
 		
-		Integer dim = Integer.valueOf(w.provider.dimensionId);
 		Integer playerID = Integer.valueOf(player.getPlayerID());
 		
 		Map<Integer, ForgeChunkManager.Ticket> map = table.get(w);
@@ -46,7 +45,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 			if(t == null) return null;
 			else
 			{
-				t.getModData().setInteger("PID", playerID);
+				t.getModData().setInteger(PLAYER_ID_TAG, playerID);
 				
 				if(map == null)
 				{
@@ -194,13 +193,13 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 	
 	private void releaseTicket(ForgeChunkManager.Ticket t)
 	{
-		if(t.getModData().hasKey("PID"))
+		if(t.getModData().hasKey(PLAYER_ID_TAG))
 		{
 			Map<Integer, ForgeChunkManager.Ticket> map = table.get(t.world);
 			
 			if(map != null)
 			{
-				map.remove(t.getModData().getInteger("PID"));
+				map.remove(t.getModData().getInteger(PLAYER_ID_TAG));
 				
 				if(map.isEmpty())
 				{

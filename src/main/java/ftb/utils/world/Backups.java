@@ -29,7 +29,7 @@ public class Backups
 		if(!backupsFolder.exists()) backupsFolder.mkdirs();
 		thread = null;
 		clearOldBackups();
-		logger.info("Backups folder created @ " + backupsFolder.getAbsolutePath());
+		logger.info("Backups folder - " + backupsFolder.getAbsolutePath());
 	}
 	
 	public static boolean run(ICommandSender ics)
@@ -42,7 +42,7 @@ public class Backups
 		World w = FTBLib.getServerWorld();
 		if(w == null) return false;
 		
-		IChatComponent c = new ChatComponentTranslation(FTBU.mod.assets + "cmd.backup_start", ics.getName());
+		IChatComponent c = FTBU.mod.chatComponent("cmd.backup_start", ics.getName());
 		c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE);
 		BroadcastSender.inst.addChatMessage(c);
 		

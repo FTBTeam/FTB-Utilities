@@ -55,6 +55,8 @@ ftbu:cmd.no_dp=You can only go back once!
 ftbu:cmd.timer_backup=Next backup: %s
 ftbu:cmd.timer_restart=Next restart: %s
 ftbu:cmd.spawn_tp=Teleported to spawn
+ftbu:cmd.ftb_gamemode=Game mode: %s
+ftbu:cmd.world_difficulty=Difficulty: %s
 
 ftbu:cmd.backup_start=Server Backup started!
 ftbu:cmd.backup_stop=Server Backup stopped!
@@ -63,7 +65,8 @@ ftbu:cmd.backup_end_2=Server backup done in %s! (%s)
 ftbu:cmd.backup_fail=Failed to save world! (%s)
 ftbu:cmd.backup_manual_launch=%s launched a manual backup!
 ftbu:cmd.backup_already_running=Backup in progress!
-ftbu:cmd.backup_already_not_running=Backup in progress!
+ftbu:cmd.backup_not_running=Backup is not running!
+ftbu:cmd.backup_size=Current world size: %s, total backups folder size: %s
 
 ftbu:button.claims_unclaim_all=Unclaim all chunks
 ftbu:button.claims_unclaim_all_dim=Unclaim all chunks in %s

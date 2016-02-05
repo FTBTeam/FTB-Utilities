@@ -21,7 +21,7 @@ public class ChunkType
 		
 		public PlayerClaimed(LMPlayer o)
 		{
-			super(o.playerID, "claimed", null, 0);
+			super(o.getPlayerID(), "claimed", null, 0);
 			chunkOwner = o;
 		}
 		

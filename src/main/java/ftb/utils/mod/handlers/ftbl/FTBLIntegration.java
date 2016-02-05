@@ -119,7 +119,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 			if(first_login)
 			{
 				p = new LMPlayerServer(LMWorldServer.inst, LMPlayerServer.nextPlayerID(), ep.getGameProfile());
-				LMWorldServer.inst.playerMap.put(p.playerID, p);
+				LMWorldServer.inst.playerMap.put(p.getPlayerID(), p);
 				send_all = true;
 			}
 			else if(!p.getProfile().getName().equals(ep.getCommandSenderName()))
@@ -170,7 +170,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 	public final void writeWorldData(ByteIOStream io, EntityPlayerMP ep)
 	{
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
-		io.writeInt(p.playerID);
+		io.writeInt(p.getPlayerID());
 		LMWorldServer.inst.writeDataToNet(io, p, true);
 	}
 	

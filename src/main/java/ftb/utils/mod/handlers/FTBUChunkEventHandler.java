@@ -155,8 +155,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 							if(max > 0D && p.stats.getLastSeenDeltaInHours() > max)
 							{
 								isLoaded = false;
-								if(c.isForced)
-									FTBLib.logger.info("Unloading " + p.getProfile().getName() + " chunks for being offline for too long");
+								//if(c.isForced) unloaded.add(p.getPlayerID());
 							}
 						}
 					}

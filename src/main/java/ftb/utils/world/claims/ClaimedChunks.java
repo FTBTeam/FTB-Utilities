@@ -92,7 +92,7 @@ public class ClaimedChunks
 							
 							if(ai != null)
 							{
-								ClaimedChunk c = new ClaimedChunk(p.playerID, dim, ai[0], ai[1]);
+								ClaimedChunk c = new ClaimedChunk(p.getPlayerID(), dim, ai[0], ai[1]);
 								if(ai.length >= 3 && ai[2] == 1) c.isChunkloaded = true;
 								map.put(Bits.intsToLong(ai[0], ai[1]), c);
 							}
@@ -157,7 +157,7 @@ public class ClaimedChunks
 			{
 				for(ClaimedChunk c : map.values())
 				{
-					if(c.ownerID == p.playerID) list.add(c);
+					if(c.ownerID == p.getPlayerID()) list.add(c);
 				}
 			}
 		}
@@ -168,7 +168,7 @@ public class ClaimedChunks
 			
 			for(ClaimedChunk c : map.values())
 			{
-				if(c.ownerID == p.playerID) list.add(c);
+				if(c.ownerID == p.getPlayerID()) list.add(c);
 			}
 		}
 		

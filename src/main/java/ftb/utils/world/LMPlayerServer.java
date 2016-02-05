@@ -251,7 +251,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		IntList otherFriends = new IntList();
 		
 		for(LMPlayerServer p : world.playerMap.values())
-		{ if(p.friends.contains(playerID)) otherFriends.add(p.playerID); }
+		{ if(p.friends.contains(getPlayerID())) otherFriends.add(p.getPlayerID()); }
 		
 		io.writeIntArray(otherFriends.toArray(), ByteCount.SHORT);
 		LMNBTUtils.writeTag(io, commonPublicData);
@@ -314,7 +314,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		if(getClaimedChunks() >= max) return;
 		
 		ChunkType t = world.claimedChunks.getType(dim, cx, cz);
-		if(!t.isClaimed() && t.isChunkOwner(this) && world.claimedChunks.put(new ClaimedChunk(playerID, dim, cx, cz)))
+		if(!t.isClaimed() && t.isChunkOwner(this) && world.claimedChunks.put(new ClaimedChunk(getPlayerID(), dim, cx, cz)))
 			sendUpdate();
 	}
 	

@@ -23,7 +23,7 @@ public final class ClaimedChunk
 	}
 	
 	public ClaimedChunk(EntityPlayer ep)
-	{ this(LMWorldServer.inst.getPlayer(ep).playerID, ep.dimension, MathHelperLM.chunk(ep.posX), MathHelperLM.chunk(ep.posZ)); }
+	{ this(LMWorldServer.inst.getPlayer(ep).getPlayerID(), ep.dimension, MathHelperLM.chunk(ep.posX), MathHelperLM.chunk(ep.posZ)); }
 	
 	public Long getLongPos()
 	{ return Long.valueOf(Bits.intsToLong(posX, posZ)); }

@@ -21,7 +21,7 @@ public class BadgeRenderer
 			
 			if(pc != null && pc.renderBadge)
 			{
-				Badge b = ClientBadges.getClientBadge(pc.playerID);
+				Badge b = ClientBadges.getClientBadge(pc.getPlayerID());
 				b.onPlayerRender(e.entityPlayer);
 			}
 		}

@@ -13,7 +13,7 @@ public class MessageLMPlayerDied extends MessageFTBU
 	public MessageLMPlayerDied(LMPlayer p)
 	{
 		this();
-		io.writeInt(p.playerID);
+		io.writeInt(p.getPlayerID());
 	}
 	
 	@SideOnly(Side.CLIENT)

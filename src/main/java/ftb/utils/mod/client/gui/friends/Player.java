@@ -15,7 +15,7 @@ public class Player extends AbstractClientPlayer
 	{
 		super(Minecraft.getMinecraft().theWorld, p.getProfile());
 		playerLM = p;
-		isOwner = playerLM.playerID == LMWorldClient.inst.clientPlayerID;
+		isOwner = playerLM.getPlayerID() == LMWorldClient.inst.clientPlayerID;
 	}
 	
 	public boolean equals(Object o)

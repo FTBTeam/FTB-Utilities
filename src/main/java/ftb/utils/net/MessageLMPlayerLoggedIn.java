@@ -17,7 +17,7 @@ public class MessageLMPlayerLoggedIn extends MessageFTBU
 	{
 		this();
 		
-		io.writeInt(p.playerID);
+		io.writeInt(p.getPlayerID());
 		io.writeUUID(p.getProfile().getId());
 		io.writeUTF(p.getProfile().getName());
 		io.writeBoolean(first);
@@ -37,8 +37,8 @@ public class MessageLMPlayerLoggedIn extends MessageFTBU
 		LMPlayerClient p = LMWorldClient.inst.getPlayer(playerID);
 		boolean add = p == null;
 		if(add) p = new LMPlayerClient(LMWorldClient.inst, playerID, new GameProfile(uuid, username));
-		p.readFromNet(io, p.playerID == LMWorldClient.inst.clientPlayerID);
-		LMWorldClient.inst.playerMap.put(p.playerID, p);
+		p.readFromNet(io, p.getPlayerID() == LMWorldClient.inst.clientPlayerID);
+		LMWorldClient.inst.playerMap.put(p.getPlayerID(), p);
 		new EventLMPlayerClient.LoggedIn(p, firstTime).post();
 		new EventLMPlayerClient.DataLoaded(p).post();
 		return null;

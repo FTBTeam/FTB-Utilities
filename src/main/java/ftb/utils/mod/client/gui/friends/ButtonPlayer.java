@@ -28,7 +28,7 @@ public class ButtonPlayer extends ButtonLM
 		{
 			panel.gui.panelPlayerView.selectedPlayer = new Player(player.playerLM);
 			panel.gui.panelPlayerView.selectedPlayer.inventory.currentItem = 0;
-			ClientAction.REQUEST_PLAYER_INFO.send(player.playerLM.playerID);
+			ClientAction.REQUEST_PLAYER_INFO.send(player.playerLM.getPlayerID());
 			if(b != 0)
 				panel.gui.panelPopupMenu = new PanelPopupPlayerActions((GuiFriends) gui, gui.mouse().x - gui.getMainPanel().getAX() + 3, gui.mouse().y - gui.getMainPanel().getAY() - 3, player.playerLM);
 		}

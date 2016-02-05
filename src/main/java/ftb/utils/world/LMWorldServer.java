@@ -96,11 +96,11 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 			
 			for(LMPlayerServer p : playerMap.values())
 			{
-				io.writeInt(p.playerID);
+				io.writeInt(p.getPlayerID());
 				io.writeUUID(p.getProfile().getId());
 				io.writeUTF(p.getProfile().getName());
 				
-				if(p.isOnline() && p.playerID != self.playerID) onlinePlayers.add(p.playerID);
+				if(p.isOnline() && p.getPlayerID() != self.getPlayerID()) onlinePlayers.add(p.getPlayerID());
 			}
 			
 			io.writeIntArray(onlinePlayers.toArray(), ByteCount.INT);
@@ -128,7 +128,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 			new EventLMPlayerServer.DataSaved(p).post();
 			tag1.setString("UUID", p.getStringUUID());
 			tag1.setString("Name", p.getProfile().getName());
-			tag.setTag(Integer.toString(p.playerID), tag1);
+			tag.setTag(Integer.toString(p.getPlayerID()), tag1);
 		}
 	}
 	
@@ -144,7 +144,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 			NBTTagCompound tag1 = e.getValue();
 			LMPlayerServer p = new LMPlayerServer(this, id, new GameProfile(UUIDTypeAdapterLM.getUUID(tag1.getString("UUID")), tag1.getString("Name")));
 			p.readFromServer(tag1);
-			playerMap.put(p.playerID, p);
+			playerMap.put(p.getPlayerID(), p);
 		}
 		
 		for(LMPlayerServer p : playerMap.values())

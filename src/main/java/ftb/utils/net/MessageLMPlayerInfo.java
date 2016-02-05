@@ -20,7 +20,7 @@ public class MessageLMPlayerInfo extends MessageFTBU
 	{
 		this();
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(playerID);
-		io.writeInt(p == null ? 0 : p.playerID);
+		io.writeInt(p == null ? 0 : p.getPlayerID());
 		if(p == null) return;
 		
 		ArrayList<IChatComponent> info = new ArrayList<>();

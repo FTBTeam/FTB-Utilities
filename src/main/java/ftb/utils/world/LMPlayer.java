@@ -11,9 +11,9 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.*;
 
-public abstract class LMPlayer implements ILMPlayer, Comparable<LMPlayer> // LMPlayerServer // LMPlayerClient
+public abstract class LMPlayer implements ILMPlayer, Comparable<ILMPlayer> // LMPlayerServer // LMPlayerClient
 {
-	public final int playerID;
+	private final int playerID;
 	private GameProfile gameProfile;
 	
 	public final IntList friends;
@@ -57,8 +57,8 @@ public abstract class LMPlayer implements ILMPlayer, Comparable<LMPlayer> // LMP
 	public boolean isFriend(ILMPlayer p)
 	{ return p != null && isFriendRaw(p) && p.isFriendRaw(this); }
 	
-	public final int compareTo(LMPlayer o)
-	{ return Integer.compare(playerID, o.playerID); }
+	public final int compareTo(ILMPlayer o)
+	{ return Integer.compare(playerID, o.getPlayerID()); }
 	
 	public String toString()
 	{ return gameProfile.getName(); }

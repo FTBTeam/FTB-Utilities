@@ -21,8 +21,7 @@ public class Warps
 		{
 			for(String s1 : LMNBTUtils.getMapKeys(tag1))
 			{
-				int[] a = tag1.getIntArray(s1);
-				set(s1, new BlockDimPos(a[0], a[1], a[2], a[3]));
+				set(s1, new BlockDimPos(tag1.getIntArray(s1)));
 			}
 		}
 	}
@@ -43,8 +42,7 @@ public class Warps
 		{
 			if(e.getValue().isJsonArray())
 			{
-				int[] a = LMJsonUtils.fromArray(e.getValue());
-				set(e.getKey(), new BlockDimPos(a[0], a[1], a[2], a[3]));
+				set(e.getKey(), new BlockDimPos(LMJsonUtils.fromArray(e.getValue())));
 			}
 			else
 			{

@@ -13,7 +13,7 @@ import java.util.*;
 
 public abstract class LMPlayer implements ILMPlayer, Comparable<LMPlayer> // LMPlayerServer // LMPlayerClient
 {
-	public final int playerID;
+	private final int playerID;
 	private GameProfile gameProfile;
 	
 	public final IntList friends;

@@ -13,7 +13,7 @@ public class MessageLMPlayerLoggedOut extends MessageFTBU
 	public MessageLMPlayerLoggedOut(LMPlayer p)
 	{
 		this();
-		io.writeInt(p.playerID);
+		io.writeInt(p.getPlayerID());
 	}
 	
 	@SideOnly(Side.CLIENT)

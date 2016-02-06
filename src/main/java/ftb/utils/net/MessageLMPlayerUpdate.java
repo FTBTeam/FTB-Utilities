@@ -16,7 +16,7 @@ public class MessageLMPlayerUpdate extends MessageFTBU
 	public MessageLMPlayerUpdate(LMPlayerServer p, boolean self)
 	{
 		this();
-		io.writeInt(p.playerID);
+		io.writeInt(p.getPlayerID());
 		io.writeBoolean(self);
 		p.writeToNet(io, self);
 	}

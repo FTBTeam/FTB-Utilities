@@ -50,7 +50,7 @@ public class CmdPlayerLM extends CommandSubLM
 				return error(new ChatComponentText("Player already exists!"));
 			
 			LMPlayerServer p = new LMPlayerServer(LMWorldServer.inst, LMPlayerServer.nextPlayerID(), new GameProfile(id, args[1]));
-			LMWorldServer.inst.playerMap.put(p.playerID, p);
+			LMWorldServer.inst.playerMap.put(p.getPlayerID(), p);
 			p.refreshStats();
 			
 			return new ChatComponentText("Fake player " + args[1] + " added!");
@@ -73,7 +73,7 @@ public class CmdPlayerLM extends CommandSubLM
 			checkArgs(args, 1);
 			LMPlayerServer p = LMPlayerServer.get(args[0]);
 			if(p.isOnline()) return error(new ChatComponentText("The player must be offline!"));
-			LMWorldServer.inst.playerMap.remove(p.playerID);
+			LMWorldServer.inst.playerMap.remove(p.getPlayerID());
 			return new ChatComponentText("Player removed!");
 		}
 	}

@@ -217,7 +217,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		IntList otherFriends = new IntList();
 		
 		for(LMPlayerServer p : world.playerMap.values())
-		{ if(p.friends.contains(playerID)) otherFriends.add(p.playerID); }
+		{ if(p.friends.contains(getPlayerID())) otherFriends.add(p.getPlayerID()); }
 		
 		io.writeIntArray(otherFriends.toArray(), ByteCount.SHORT);
 		LMNBTUtils.writeTag(io, commonPublicData);
@@ -280,7 +280,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		if(getClaimedChunks() >= max) return;
 		
 		ChunkType t = world.claimedChunks.getType(dim, cx, cz);
-		if(!t.isClaimed() && t.isChunkOwner(this) && world.claimedChunks.put(new ClaimedChunk(playerID, dim, cx, cz)))
+		if(!t.isClaimed() && t.isChunkOwner(this) && world.claimedChunks.put(new ClaimedChunk(getPlayerID(), dim, cx, cz)))
 			sendUpdate();
 	}
 	
@@ -303,8 +303,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		for(int i = 0; i < size0; i++)
 		{
 			ClaimedChunk c = list.get(i);
-			setLoaded(c.dim, c.chunkXPos, c.chunkZPos, false);
-			world.claimedChunks.remove(c.dim, c.chunkXPos, c.chunkZPos);
+			setLoaded(c.dim, c.posX, c.posZ, false);
+			world.claimedChunks.remove(c.dim, c.posX, c.posZ);
 		}
 		
 		sendUpdate();
@@ -344,7 +344,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			}
 			
 			chunk.isChunkloaded = flag;
-			FTBUChunkEventHandler.instance.markDirty(Integer.valueOf(dim));
+			FTBUChunkEventHandler.instance.markDirty(LMDimUtils.getWorld(dim));
 			
 			if(getPlayer() != null)
 			{

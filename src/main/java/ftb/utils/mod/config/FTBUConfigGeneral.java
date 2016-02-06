@@ -16,6 +16,7 @@ public class FTBUConfigGeneral
 	//public static final ConfigEntryBool ranks_enabled = new ConfigEntryBool("ranks_enabled", false).sync().setInfo("Set info ");
 	//public static final ConfigEntryBool ranks_override_chat = new ConfigEntryBool("ranks_override_chat", true);
 	public static final ConfigEntryBool spawn_area_in_sp = new ConfigEntryBool("spawn_area_in_sp", false).setInfo("Enable spawn area in singleplayer");
+	public static final ConfigEntryBool disable_chunkloading = new ConfigEntryBool("disable_chunkloading", false).setInfo("Disabled chunkloading completely");
 	
 	private static final ArrayList<Class<?>> blockedEntitiesL = new ArrayList<>();
 	

@@ -100,7 +100,7 @@ public abstract class LMWorld // FTBWorld
 	{
 		if(o == null) return 0;
 		LMPlayer p = getPlayer(o);
-		return (p == null) ? 0 : p.playerID;
+		return (p == null) ? 0 : p.getPlayerID();
 	}
 	
 	public int[] getAllPlayerIDs()
@@ -108,7 +108,7 @@ public abstract class LMWorld // FTBWorld
 		int[] ai = new int[playerMap().size()];
 		int id = -1;
 		for(LMPlayer p : playerMap().values())
-			ai[++id] = p.playerID;
+			ai[++id] = p.getPlayerID();
 		return ai;
 	}
 	

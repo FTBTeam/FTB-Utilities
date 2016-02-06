@@ -76,10 +76,10 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 			if(!p.equalsPlayer(this))
 			{
 				p.friends.clear();
-				if(otherFriends.contains(p.playerID))
+				if(otherFriends.contains(p.getPlayerID()))
 				{
-					p.friends.add(playerID);
-					otherFriends.removeValue(p.playerID);
+					p.friends.add(getPlayerID());
+					otherFriends.removeValue(p.getPlayerID());
 				}
 			}
 		}

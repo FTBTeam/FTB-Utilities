@@ -24,15 +24,15 @@ public abstract class ClientAction
 				LMPlayerServer p = owner.world.getPlayer(extra);
 				if(p == null || p.equalsPlayer(owner)) return false;
 				
-				if(!owner.friends.contains(p.playerID))
+				if(!owner.friends.contains(p.getPlayerID()))
 				{
-					owner.friends.add(p.playerID);
+					owner.friends.add(p.getPlayerID());
 					owner.sendUpdate();
 					p.sendUpdate();
 					p.checkNewFriends();
 					
-					new MessageLMPlayerInfo(owner, p.playerID).sendTo(owner.getPlayer());
-					new MessageLMPlayerInfo(owner, owner.playerID).sendTo(owner.getPlayer());
+					new MessageLMPlayerInfo(owner, p.getPlayerID()).sendTo(owner.getPlayer());
+					new MessageLMPlayerInfo(owner, owner.getPlayerID()).sendTo(owner.getPlayer());
 				}
 			}
 			else
@@ -41,16 +41,16 @@ public abstract class ClientAction
 				{
 					if(!p.equalsPlayer(owner) && p.isFriendRaw(owner) && !owner.isFriendRaw(p))
 					{
-						owner.friends.add(p.playerID);
+						owner.friends.add(p.getPlayerID());
 						owner.sendUpdate();
 						p.sendUpdate();
 						p.checkNewFriends();
 						
-						new MessageLMPlayerInfo(owner, p.playerID).sendTo(owner.getPlayer());
+						new MessageLMPlayerInfo(owner, p.getPlayerID()).sendTo(owner.getPlayer());
 					}
 				}
 				
-				new MessageLMPlayerInfo(owner, owner.playerID).sendTo(owner.getPlayer());
+				new MessageLMPlayerInfo(owner, owner.getPlayerID()).sendTo(owner.getPlayer());
 			}
 			
 			return true;
@@ -64,15 +64,15 @@ public abstract class ClientAction
 			LMPlayerServer p = owner.world.getPlayer(extra);
 			if(p == null || p.equalsPlayer(owner)) return false;
 			
-			if(owner.friends.contains(p.playerID))
+			if(owner.friends.contains(p.getPlayerID()))
 			{
-				owner.friends.removeValue(p.playerID);
+				owner.friends.removeValue(p.getPlayerID());
 				owner.sendUpdate();
 				p.sendUpdate();
 				p.checkNewFriends();
 				
-				new MessageLMPlayerInfo(owner, p.playerID).sendTo(owner.getPlayer());
-				new MessageLMPlayerInfo(owner, owner.playerID).sendTo(owner.getPlayer());
+				new MessageLMPlayerInfo(owner, p.getPlayerID()).sendTo(owner.getPlayer());
+				new MessageLMPlayerInfo(owner, owner.getPlayerID()).sendTo(owner.getPlayer());
 			}
 			
 			return true;
@@ -86,14 +86,14 @@ public abstract class ClientAction
 			LMPlayerServer p = owner.world.getPlayer(extra);
 			if(p == null || p.equalsPlayer(owner)) return false;
 			
-			if(p.friends.contains(owner.playerID))
+			if(p.friends.contains(owner.getPlayerID()))
 			{
-				p.friends.removeValue(owner.playerID);
+				p.friends.removeValue(owner.getPlayerID());
 				owner.sendUpdate();
 				p.sendUpdate();
 				
-				new MessageLMPlayerInfo(owner, p.playerID).sendTo(owner.getPlayer());
-				new MessageLMPlayerInfo(owner, owner.playerID).sendTo(owner.getPlayer());
+				new MessageLMPlayerInfo(owner, p.getPlayerID()).sendTo(owner.getPlayer());
+				new MessageLMPlayerInfo(owner, owner.getPlayerID()).sendTo(owner.getPlayer());
 			}
 			
 			return true;

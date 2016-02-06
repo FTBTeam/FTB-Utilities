@@ -69,7 +69,7 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 			for(int i = 0; i < onlinePlayers.length; i++)
 			{
 				LMPlayerClient p = playerMap.get(onlinePlayers[i]).toPlayerSP();
-				p.readFromNet(io, p.playerID == clientPlayerID);
+				p.readFromNet(io, p.getPlayerID() == clientPlayerID);
 				new EventLMPlayerClient.DataLoaded(p).post();
 			}
 			

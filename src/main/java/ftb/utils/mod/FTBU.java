@@ -46,8 +46,7 @@ public class FTBU
 		EventBusHelper.register(new FTBUPlayerEventHandler());
 		EventBusHelper.register(new FTBUWorldEventHandler());
 		EventBusHelper.register(new FTBUChatEventHandler());
-		EventBusHelper.register(FTBUChunkEventHandler.instance);
-		FTBUChunkEventHandler.instance.refreshMaxChunksCount();
+		FTBUChunkEventHandler.instance.init();
 		
 		FTBUNetHandler.init();
 		Backups.init();

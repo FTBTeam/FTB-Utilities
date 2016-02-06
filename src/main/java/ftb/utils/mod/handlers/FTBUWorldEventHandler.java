@@ -24,8 +24,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
 	@SubscribeEvent
 	public void worldLoaded(net.minecraftforge.event.world.WorldEvent.Load e)
 	{
-		if(e.world instanceof WorldServer)
-			FTBUChunkEventHandler.instance.markDirty(Integer.valueOf(e.world.provider.getDimensionId()));
+		if(e.world instanceof WorldServer) FTBUChunkEventHandler.instance.markDirty(e.world);
 	}
 	
 	@SubscribeEvent
@@ -65,7 +64,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
 					LMPlayer p = LMWorldServer.inst.getPlayer(list[i]);
 					
 					StringBuilder sb = new StringBuilder();
-					sb.append(LMStringUtils.fillString(Integer.toString(p.playerID), ' ', 6));
+					sb.append(LMStringUtils.fillString(Integer.toString(p.getPlayerID()), ' ', 6));
 					sb.append(LMStringUtils.fillString(p.getProfile().getName(), ' ', 21));
 					sb.append(p.getStringUUID());
 					l.add(sb.toString());

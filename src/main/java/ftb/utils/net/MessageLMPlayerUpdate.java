@@ -1,15 +1,14 @@
 package ftb.utils.net;
 
 import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.net.*;
 import ftb.utils.api.EventLMPlayerClient;
 import ftb.utils.world.*;
 import latmod.lib.ByteCount;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
 import net.minecraftforge.fml.relauncher.*;
 
-import javax.xml.ws.handler.MessageContext;
-
-public class MessageLMPlayerUpdate extends MessageFTBU
+public class MessageLMPlayerUpdate extends MessageLM_IO
 {
 	public MessageLMPlayerUpdate() { super(ByteCount.INT); }
 	
@@ -20,6 +19,9 @@ public class MessageLMPlayerUpdate extends MessageFTBU
 		io.writeBoolean(self);
 		p.writeToNet(io, self);
 	}
+	
+	public LMNetworkWrapper getWrapper()
+	{ return FTBUNetHandler.NET; }
 	
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)

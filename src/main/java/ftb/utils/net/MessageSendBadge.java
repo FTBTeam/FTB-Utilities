@@ -1,31 +1,42 @@
 package ftb.utils.net;
 
-import ftb.lib.api.net.LMNetworkWrapper;
+import ftb.lib.api.net.*;
 import ftb.utils.badges.ClientBadges;
-import latmod.lib.ByteCount;
+import io.netty.buffer.ByteBuf;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
-import net.minecraftforge.fml.relauncher.*;
 
-public class MessageSendBadge extends MessageFTBU
+public class MessageSendBadge extends MessageLM<MessageSendBadge>
 {
-	public MessageSendBadge() { super(ByteCount.BYTE); }
+	public int playerID;
+	public String badgeID;
+	
+	public MessageSendBadge() { }
 	
 	public MessageSendBadge(int player, String id)
 	{
-		this();
-		io.writeInt(player);
-		io.writeUTF(id);
+		playerID = player;
+		badgeID = id;
 	}
 	
 	public LMNetworkWrapper getWrapper()
 	{ return FTBUNetHandler.NET_INFO; }
 	
-	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageContext ctx)
+	public void fromBytes(ByteBuf io)
 	{
-		int player = io.readInt();
-		String badge = io.readUTF();
-		ClientBadges.setClientBadge(player, badge);
+		playerID = io.readInt();
+		badgeID = ByteBufUtils.readUTF8String(io);
+	}
+	
+	public void toBytes(ByteBuf io)
+	{
+		io.writeInt(playerID);
+		ByteBufUtils.writeUTF8String(io, badgeID);
+	}
+	
+	public IMessage onMessage(MessageSendBadge m, MessageContext ctx)
+	{
+		ClientBadges.setClientBadge(m.playerID, m.badgeID);
 		return null;
 	}
 }

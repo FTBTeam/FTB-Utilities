@@ -1,49 +1,66 @@
 package ftb.utils.net;
 
-import ftb.lib.api.net.LMNetworkWrapper;
+import ftb.lib.api.net.*;
 import ftb.utils.badges.*;
-import latmod.lib.ByteCount;
+import io.netty.buffer.ByteBuf;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 import net.minecraftforge.fml.relauncher.*;
 
-import java.util.Collection;
+import java.util.*;
 
-public class MessageUpdateBadges extends MessageFTBU
+public class MessageUpdateBadges extends MessageLM<MessageUpdateBadges>
 {
-	public MessageUpdateBadges() { super(ByteCount.INT); }
+	public Collection<Badge> badges;
 	
-	public MessageUpdateBadges(Collection<Badge> badges)
+	public MessageUpdateBadges() { }
+	
+	public MessageUpdateBadges(Collection<Badge> c)
 	{
-		this();
-		io.writeInt(badges.size());
-		
-		if(!badges.isEmpty())
-		{
-			for(Badge b : badges)
-			{
-				io.writeUTF(b.ID);
-				io.writeUTF(b.imageURL);
-			}
-		}
+		badges = c;
 	}
 	
 	public LMNetworkWrapper getWrapper()
 	{ return FTBUNetHandler.NET_INFO; }
 	
-	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageContext ctx)
+	public void fromBytes(ByteBuf io)
 	{
-		ClientBadges.clear();
+		badges = new ArrayList<>();
 		int s = io.readInt();
 		
 		if(s > 0)
 		{
 			for(int i = 0; i < s; i++)
 			{
-				String id = io.readUTF();
-				String url = io.readUTF();
-				ClientBadges.addBadge(new Badge(id, url));
+				String id = ByteBufUtils.readUTF8String(io);
+				String url = ByteBufUtils.readUTF8String(io);
+				badges.add(new Badge(id, url));
 			}
+		}
+	}
+	
+	public void toBytes(ByteBuf io)
+	{
+		io.writeInt(badges.size());
+		
+		if(!badges.isEmpty())
+		{
+			for(Badge b : badges)
+			{
+				ByteBufUtils.writeUTF8String(io, b.ID);
+				ByteBufUtils.writeUTF8String(io, b.imageURL);
+			}
+		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public IMessage onMessage(MessageUpdateBadges m, MessageContext ctx)
+	{
+		ClientBadges.clear();
+		
+		for(Badge b : m.badges)
+		{
+			ClientBadges.addBadge(b);
 		}
 		
 		return null;

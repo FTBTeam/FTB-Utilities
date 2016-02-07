@@ -318,7 +318,13 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	{
 		if(set && adminToken == 0L)
 		{
-			new MessageClaimChunk(GuiClaimChunks.this.currentDim, GuiClaimChunks.this.adminToken, 0, 0, (id == 1) ? MessageClaimChunk.ID_UNCLAIM_ALL_DIMS : MessageClaimChunk.ID_UNCLAIM_ALL).sendToServer();
+			MessageClaimChunk msg = new MessageClaimChunk();
+			msg.dim = GuiClaimChunks.this.currentDim;
+			msg.token = GuiClaimChunks.this.adminToken;
+			msg.posX = 0;
+			msg.posZ = 0;
+			msg.type = (id == 1) ? MessageClaimChunk.ID_UNCLAIM_ALL_DIMS : MessageClaimChunk.ID_UNCLAIM_ALL;
+			msg.sendToServer();
 			new MessageAreaRequest(startX, startY, tiles_gui, tiles_gui).sendToServer();
 		}
 		
@@ -346,7 +352,14 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			if(gui.panelButtons.mouseOver()) return;
 			if(gui.adminToken != 0L && b == 0) return;
 			boolean ctrl = FTBUClient.loaded_chunks_space_key.get() ? Keyboard.isKeyDown(Keyboard.KEY_SPACE) : isCtrlKeyDown();
-			new MessageClaimChunk(gui.currentDim, gui.adminToken, chunkX, chunkY, (b == 0) ? (ctrl ? MessageClaimChunk.ID_LOAD : MessageClaimChunk.ID_CLAIM) : (ctrl ? MessageClaimChunk.ID_UNLOAD : MessageClaimChunk.ID_UNCLAIM)).sendToServer();
+			
+			MessageClaimChunk msg = new MessageClaimChunk();
+			msg.dim = gui.currentDim;
+			msg.token = gui.adminToken;
+			msg.posX = chunkX;
+			msg.posZ = chunkY;
+			msg.type = (b == 0) ? (ctrl ? MessageClaimChunk.ID_LOAD : MessageClaimChunk.ID_CLAIM) : (ctrl ? MessageClaimChunk.ID_UNLOAD : MessageClaimChunk.ID_UNCLAIM);
+			msg.sendToServer();
 			FTBLibClient.playClickSound();
 		}
 		

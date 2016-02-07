@@ -1,8 +1,9 @@
 package ftb.utils.net;
 
+import ftb.lib.LMNBTUtils;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.item.LMInvUtils;
-import ftb.lib.api.net.LMNetworkWrapper;
+import ftb.lib.api.net.*;
 import ftb.utils.world.*;
 import latmod.lib.*;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,7 +13,7 @@ import net.minecraftforge.fml.relauncher.*;
 
 import java.util.ArrayList;
 
-public class MessageLMPlayerInfo extends MessageFTBU
+public class MessageLMPlayerInfo extends MessageLM_IO
 {
 	public MessageLMPlayerInfo() { super(ByteCount.INT); }
 	
@@ -34,7 +35,7 @@ public class MessageLMPlayerInfo extends MessageFTBU
 		
 		NBTTagCompound tag = new NBTTagCompound();
 		LMInvUtils.writeItemsToNBT(p.lastArmor, tag, "A");
-		writeTag(tag);
+		LMNBTUtils.writeTag(io, tag);
 		
 		io.writeIntArray(LMListUtils.toHashCodeArray(p.getFriends()), ByteCount.SHORT);
 	}
@@ -55,7 +56,7 @@ public class MessageLMPlayerInfo extends MessageFTBU
 			info.add(IChatComponent.Serializer.jsonToComponent(io.readUTF()));
 		p.receiveInfo(info);
 		
-		LMInvUtils.readItemsFromNBT(p.lastArmor, readTag(), "A");
+		LMInvUtils.readItemsFromNBT(p.lastArmor, LMNBTUtils.readTag(io), "A");
 		
 		p.friends.clear();
 		p.friends.addAll(io.readIntArray(ByteCount.SHORT));

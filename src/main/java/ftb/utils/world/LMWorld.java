@@ -52,7 +52,7 @@ public abstract class LMWorld // FTBWorld
 		{
 			int h = o.hashCode();
 			if(h <= 0) return null;
-			return playerMap.get(Integer.valueOf(h));
+			return playerMap.get(h);
 		}
 		else if(o.getClass() == UUID.class)
 		{

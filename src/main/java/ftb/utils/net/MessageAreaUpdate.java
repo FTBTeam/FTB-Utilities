@@ -1,38 +1,44 @@
 package ftb.utils.net;
 
 import ftb.lib.BlockDimPos;
-import ftb.lib.api.net.LMNetworkWrapper;
+import ftb.lib.api.net.*;
 import ftb.utils.mod.client.gui.claims.ClaimedAreasClient;
 import ftb.utils.world.*;
 import ftb.utils.world.claims.ChunkType;
-import latmod.lib.*;
+import io.netty.buffer.ByteBuf;
+import latmod.lib.MathHelperLM;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 import net.minecraftforge.fml.relauncher.*;
 
-public class MessageAreaUpdate extends MessageFTBU
+public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate>
 {
-	public MessageAreaUpdate() { super(ByteCount.INT); }
+	public int chunkX, chunkZ, dim, sizeX, sizeZ;
+	public int types[];
+	
+	public MessageAreaUpdate() { }
 	
 	public MessageAreaUpdate(LMPlayerServer p, int x, int z, int d, int sx, int sz)
 	{
-		this();
-		sx = MathHelperLM.clampInt(sx, 1, 255);
-		sz = MathHelperLM.clampInt(sx, 1, 255);
+		chunkX = x;
+		chunkZ = z;
+		dim = d;
+		sizeX = MathHelperLM.clampInt(sx, 1, 255);
+		sizeZ = MathHelperLM.clampInt(sz, 1, 255);
+		types = new int[sizeX * sizeZ];
 		
-		io.writeInt(x);
-		io.writeInt(z);
-		io.writeInt(d);
-		io.writeByte(sx);
-		io.writeByte(sz);
-		
+		int i = 0;
 		for(int z1 = z; z1 < z + sz; z1++)
+		{
 			for(int x1 = x; x1 < x + sx; x1++)
 			{
 				ChunkType type = LMWorldServer.inst.claimedChunks.getType(d, x1, z1);
 				if(type instanceof ChunkType.PlayerClaimed && type.isChunkOwner(p) && LMWorldServer.inst.claimedChunks.getChunk(d, x1, z1).isChunkloaded)
 					type = ChunkType.LOADED_SELF;
-				io.writeInt(type.ID);
+				
+				types[i] = type.ID;
+				i++;
 			}
+		}
 	}
 	
 	public MessageAreaUpdate(LMPlayerServer p, BlockDimPos pos, int sx, int sz)
@@ -41,20 +47,40 @@ public class MessageAreaUpdate extends MessageFTBU
 	public LMNetworkWrapper getWrapper()
 	{ return FTBUNetHandler.NET_WORLD; }
 	
-	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageContext ctx)
+	public void fromBytes(ByteBuf io)
 	{
-		int chunkX = io.readInt();
-		int chunkZ = io.readInt();
-		int dim = io.readInt();
-		int sx = io.readUnsignedByte();
-		int sz = io.readUnsignedByte();
+		chunkX = io.readInt();
+		chunkZ = io.readInt();
+		dim = io.readInt();
+		sizeX = io.readUnsignedByte();
+		sizeZ = io.readUnsignedByte();
 		
-		int[] types = new int[sx * sz];
+		types = new int[sizeX * sizeZ];
+		
 		for(int i = 0; i < types.length; i++)
+		{
 			types[i] = io.readInt();
+		}
+	}
+	
+	public void toBytes(ByteBuf io)
+	{
+		io.writeInt(chunkX);
+		io.writeInt(chunkZ);
+		io.writeInt(dim);
+		io.writeByte(sizeX);
+		io.writeByte(sizeZ);
 		
-		ClaimedAreasClient.setTypes(dim, chunkX, chunkZ, sx, sz, types);
+		for(int i = 0; i < types.length; i++)
+		{
+			io.writeInt(types[i]);
+		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public IMessage onMessage(MessageAreaUpdate m, MessageContext ctx)
+	{
+		ClaimedAreasClient.setTypes(m.dim, m.chunkX, m.chunkZ, m.sizeX, m.sizeZ, m.types);
 		return null;
 	}
 }

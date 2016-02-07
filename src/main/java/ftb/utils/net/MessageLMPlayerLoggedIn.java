@@ -1,6 +1,7 @@
 package ftb.utils.net;
 
 import com.mojang.authlib.GameProfile;
+import ftb.lib.api.net.*;
 import ftb.utils.api.EventLMPlayerClient;
 import ftb.utils.world.*;
 import latmod.lib.ByteCount;
@@ -9,7 +10,7 @@ import net.minecraftforge.fml.relauncher.*;
 
 import java.util.UUID;
 
-public class MessageLMPlayerLoggedIn extends MessageFTBU
+public class MessageLMPlayerLoggedIn extends MessageLM_IO
 {
 	public MessageLMPlayerLoggedIn() { super(ByteCount.INT); }
 	
@@ -23,6 +24,9 @@ public class MessageLMPlayerLoggedIn extends MessageFTBU
 		io.writeBoolean(first);
 		p.writeToNet(io, self);
 	}
+	
+	public LMNetworkWrapper getWrapper()
+	{ return FTBUNetHandler.NET; }
 	
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)

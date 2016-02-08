@@ -1,8 +1,10 @@
 package ftb.utils.mod.client.gui.claims;
 
+import ftb.utils.mod.client.FTBUClient;
 import ftb.utils.world.*;
 import ftb.utils.world.claims.*;
 import latmod.lib.Bits;
+import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
@@ -36,6 +38,8 @@ public class ClaimedAreasClient
 		for(int z = 0; z < sz; z++)
 			for(int x = 0; x < sx; x++)
 				chunks.put(Bits.intsToLong(x + chunkX, z + chunkZ), Integer.valueOf(types[x + z * sx]));
+		
+		if(FTBUClient.journeyMapHandler != null) FTBUClient.journeyMapHandler.refresh(dim);
 	}
 	
 	public static void getMessage(int x, int z, List<String> l, boolean shift)
@@ -52,5 +56,25 @@ public class ClaimedAreasClient
 			}
 			else l.add(typeE.getChatColor(null) + typeE.getIDS());
 		}
+	}
+	
+	public static Map<ChunkCoordIntPair, Integer> getChunkTypes()
+	{
+		HashMap<ChunkCoordIntPair, Integer> map = new HashMap<>();
+		if(chunks.isEmpty()) return map;
+		
+		for(Map.Entry<Long, Integer> e : chunks.entrySet())
+		{
+			Integer v = e.getValue();
+			
+			if(v != null && v.intValue() != 0)
+			{
+				int x = Bits.intFromLongA(e.getKey().longValue());
+				int z = Bits.intFromLongB(e.getKey().longValue());
+				map.put(new ChunkCoordIntPair(x, z), v);
+			}
+		}
+		
+		return map;
 	}
 }

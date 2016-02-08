@@ -7,6 +7,7 @@ import ftb.lib.api.tile.TileLM;
 import ftb.utils.badges.BadgeRenderer;
 import ftb.utils.mod.*;
 import ftb.utils.mod.cmd.CmdMath;
+import ftb.utils.mod.handlers.jm.IJMPluginHandler;
 import ftb.utils.net.ClientAction;
 import ftb.utils.world.*;
 import latmod.lib.config.*;
@@ -49,6 +50,8 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public static final ConfigEntryBool sort_friends_az = new ConfigEntryBool("sort_friends_az", false);
 	public static final ConfigEntryBool loaded_chunks_space_key = new ConfigEntryBool("loaded_chunks_space_key", false);
 	public static final ConfigEntryBool guide_unicode = new ConfigEntryBool("guide_unicode", true);
+	
+	public static IJMPluginHandler journeyMapHandler = null;
 	
 	public void preInit()
 	{

@@ -1,9 +1,9 @@
 package ftb.utils.mod.client.gui.friends;
 
+import ftb.lib.api.friends.*;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.ButtonLM;
 import ftb.utils.net.ClientAction;
-import ftb.utils.world.*;
 import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.List;
@@ -13,7 +13,7 @@ public class ButtonPlayer extends ButtonLM
 	public final Player player;
 	public final PanelPlayerList panel;
 	
-	public ButtonPlayer(PanelPlayerList pl, LMPlayerClient p)
+	public ButtonPlayer(PanelPlayerList pl, LMPlayerSP p)
 	{
 		super(pl.gui, 0, pl.playerButtons.size() * 21, 34 + pl.gui.getFontRenderer().getStringWidth(p.getProfile().getName()), 20);
 		player = new Player(p);
@@ -51,8 +51,8 @@ public class ButtonPlayer extends ButtonLM
 		else GlStateManager.color(0.4F, 0.4F, 0.4F, 0.4F);
 		GuiLM.drawBlankRect(ax, ay, z, width, height);
 		
-		boolean raw1 = player.playerLM.isFriendRaw(LMWorldClient.inst.clientPlayer);
-		boolean raw2 = LMWorldClient.inst.clientPlayer.isFriendRaw(player.playerLM);
+		boolean raw1 = player.playerLM.isFriendRaw(LMWorldSP.inst.clientPlayer);
+		boolean raw2 = LMWorldSP.inst.clientPlayer.isFriendRaw(player.playerLM);
 		
 		GlStateManager.color(0F, 0F, 0F, 1F);
 		if(raw1 && raw2) GlStateManager.color(0.18F, 0.74F, 0.18F, 1F);

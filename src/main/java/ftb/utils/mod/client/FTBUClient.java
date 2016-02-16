@@ -2,18 +2,15 @@ package ftb.utils.mod.client;
 
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.config.ClientConfigRegistry;
+import ftb.lib.api.friends.LMWorldSP;
 import ftb.lib.api.gui.LMGuiHandlerRegistry;
-import ftb.lib.api.tile.TileLM;
 import ftb.utils.badges.BadgeRenderer;
 import ftb.utils.mod.*;
 import ftb.utils.mod.cmd.CmdMath;
 import ftb.utils.mod.handlers.jm.IJMPluginHandler;
 import ftb.utils.net.ClientAction;
-import ftb.utils.world.*;
 import latmod.lib.config.*;
 import net.minecraft.client.renderer.entity.RenderPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -28,7 +25,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public static final ConfigEntryBool render_my_badge = new ConfigEntryBool("render_my_badge", true)
 	{
 		public boolean get()
-		{ return FTBLibClient.isIngameWithFTBU() && LMWorldClient.inst.clientPlayer.renderBadge; }
+		{ return FTBLibClient.isIngameWithFTBU() && LMWorldSP.inst.clientPlayer.renderBadge; }
 		
 		public void set(boolean b)
 		{
@@ -39,7 +36,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public static final ConfigEntryBool chat_links = new ConfigEntryBool("chat_links", true)
 	{
 		public boolean get()
-		{ return FTBLibClient.isIngameWithFTBU() && LMWorldClient.inst.clientPlayer.getSettings().get(PersonalSettings.CHAT_LINKS); }
+		{ return FTBLibClient.isIngameWithFTBU() && LMWorldSP.inst.clientPlayer.getSettings().get(PersonalSettings.CHAT_LINKS); }
 		
 		public void set(boolean b)
 		{
@@ -63,24 +60,11 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public void postInit()
 	{
 		LMGuiHandlerRegistry.add(FTBUGuiHandler.instance);
-		FTBUClickAction.init();
 		
 		Map<String, RenderPlayer> skinMap = FTBLibClient.mc.getRenderManager().getSkinMap();
 		RenderPlayer render = skinMap.get("default");
 		render.addLayer(BadgeRenderer.instance);
 		render = skinMap.get("slim");
 		render.addLayer(BadgeRenderer.instance);
-	}
-	
-	public LMWorld getClientWorldLM()
-	{ return LMWorldClient.inst; }
-	
-	public void readTileData(TileLM t, S35PacketUpdateTileEntity p)
-	{
-		NBTTagCompound data = p.getNbtCompound();
-		t.readTileData(data);
-		t.readTileClientData(data);
-		t.onUpdatePacket();
-		FTBLibClient.onGuiClientAction();
 	}
 }

@@ -5,7 +5,6 @@ import ftb.lib.*;
 import ftb.lib.api.cmd.*;
 import ftb.lib.api.item.StringIDInvLoader;
 import ftb.lib.mod.FTBLibFinals;
-import ftb.utils.world.*;
 import latmod.lib.LMFileUtils;
 import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.command.*;
@@ -100,7 +99,7 @@ public class CmdPlayerLM extends CommandSubLM
 				EntityPlayerMP ep = p.getPlayer();
 				String filename = ep.getName();
 				if(args.length == 2) filename = "custom/" + args[1];
-				NBTTagCompound tag = LMNBTUtils.readMap(new File(FTBLib.folderLocal, "ftbu/playerinvs/" + filename + ".dat"));
+				NBTTagCompound tag = LMNBTUtils.readTag(new File(FTBLib.folderLocal, "ftbu/playerinvs/" + filename + ".dat"));
 				
 				StringIDInvLoader.readInvFromNBT(ep.inventory, tag, "Inventory");
 				
@@ -145,7 +144,7 @@ public class CmdPlayerLM extends CommandSubLM
 				
 				String filename = ep.getName();
 				if(args.length == 2) filename = "custom/" + args[1];
-				LMNBTUtils.writeMap(LMFileUtils.newFile(new File(FTBLib.folderLocal, "ftbu/playerinvs/" + filename + ".dat")), tag);
+				LMNBTUtils.writeTag(LMFileUtils.newFile(new File(FTBLib.folderLocal, "ftbu/playerinvs/" + filename + ".dat")), tag);
 			}
 			catch(Exception e)
 			{

@@ -2,9 +2,10 @@ package ftb.utils.badges;
 
 import com.google.gson.*;
 import ftb.lib.FTBLib;
+import ftb.lib.api.friends.LMPlayerMP;
 import ftb.utils.mod.FTBU;
+import ftb.utils.mod.handlers.ftbl.FTBUPermissions;
 import ftb.utils.net.MessageUpdateBadges;
-import ftb.utils.world.LMPlayerServer;
 import latmod.lib.*;
 import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.net.*;
@@ -62,7 +63,7 @@ public class ServerBadges
 					local = new JsonObject();
 					((JsonObject) local).add("badges", new JsonObject());
 					((JsonObject) local).add("players", new JsonObject());
-					LMJsonUtils.toJsonFile(file, local);
+					LMJsonUtils.toJson(file, local);
 				}
 			}
 			catch(Exception ex)
@@ -122,7 +123,7 @@ public class ServerBadges
 		}
 	}
 	
-	public static Badge getServerBadge(LMPlayerServer p)
+	public static Badge getServerBadge(LMPlayerMP p)
 	{
 		if(p == null) return Badge.emptyBadge;
 		
@@ -131,7 +132,7 @@ public class ServerBadges
 		
 		if(b == null)
 		{
-			String rank = p.getRank().config.badge.get();
+			String rank = FTBUPermissions.badge.getString(p.getPlayer());
 			if(!rank.isEmpty())
 			{
 				b = map.get(rank);

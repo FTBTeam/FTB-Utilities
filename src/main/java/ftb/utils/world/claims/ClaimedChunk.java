@@ -1,20 +1,21 @@
 package ftb.utils.world.claims;
 
-import ftb.utils.world.*;
+import ftb.lib.api.friends.*;
 import latmod.lib.*;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.ChunkCoordIntPair;
-import net.minecraftforge.fml.relauncher.*;
+
+import java.util.UUID;
 
 public final class ClaimedChunk
 {
 	public final int posX, posZ;
-	public final int ownerID;
+	public final UUID ownerID;
 	public final int dim;
 	public boolean isChunkloaded = false;
 	public boolean isForced = false;
 	
-	public ClaimedChunk(int o, int d, int x, int z)
+	public ClaimedChunk(UUID o, int d, int x, int z)
 	{
 		posX = x;
 		posZ = z;
@@ -22,18 +23,14 @@ public final class ClaimedChunk
 		dim = d;
 	}
 	
-	public ClaimedChunk(EntityPlayer ep)
-	{ this(LMWorldServer.inst.getPlayer(ep).getPlayerID(), ep.dimension, MathHelperLM.chunk(ep.posX), MathHelperLM.chunk(ep.posZ)); }
+	public ClaimedChunk(EntityPlayerMP ep)
+	{ this(LMWorldMP.inst.getPlayer(ep).getProfile().getId(), ep.dimension, MathHelperLM.chunk(ep.posX), MathHelperLM.chunk(ep.posZ)); }
 	
 	public Long getLongPos()
 	{ return Long.valueOf(Bits.intsToLong(posX, posZ)); }
 	
-	public LMPlayerServer getOwnerS()
-	{ return LMWorldServer.inst.getPlayer(ownerID); }
-	
-	@SideOnly(Side.CLIENT)
-	public LMPlayerClient getOwnerC()
-	{ return LMWorldClient.inst.getPlayer(ownerID); }
+	public LMPlayerMP getOwner()
+	{ return LMWorldMP.inst.getPlayer(ownerID); }
 	
 	public boolean equals(Object o)
 	{ return o != null && (o == this || (o instanceof ClaimedChunk && equalsChunk((ClaimedChunk) o))); }

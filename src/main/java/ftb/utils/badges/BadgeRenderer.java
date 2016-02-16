@@ -1,8 +1,9 @@
 package ftb.utils.badges;
 
 import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.friends.*;
 import ftb.utils.mod.client.FTBUClient;
-import ftb.utils.world.*;
+import ftb.utils.mod.handlers.ftbl.FTBUPlayerData;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraftforge.fml.relauncher.*;
@@ -16,9 +17,9 @@ public class BadgeRenderer implements LayerRenderer<AbstractClientPlayer>
 	{
 		if(FTBLibClient.isIngameWithFTBU() && FTBUClient.render_badges.get() && !ep.isInvisible())
 		{
-			LMPlayerClient pc = LMWorldClient.inst.getPlayer(ep);
+			LMPlayerSP pc = LMWorldSP.inst.getPlayer(ep);
 			
-			if(pc != null && pc.renderBadge)
+			if(pc != null && ((FTBUPlayerData) pc.customData.get("ftbu")).getFlag(FTBUPlayerData.RENDER_BADGE))
 			{
 				Badge b = ClientBadges.getClientBadge(pc.getPlayerID());
 				b.onPlayerRender(ep);

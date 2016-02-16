@@ -1,8 +1,8 @@
 package ftb.utils.api.guide;
 
-import ftb.lib.api.EventLM;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
-public class EventFTBUClientGuide extends EventLM
+public class EventFTBUClientGuide extends Event
 {
 	public final ClientGuideFile file;
 	

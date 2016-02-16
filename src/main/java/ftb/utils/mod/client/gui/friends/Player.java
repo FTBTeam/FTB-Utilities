@@ -1,6 +1,6 @@
 package ftb.utils.mod.client.gui.friends;
 
-import ftb.utils.world.*;
+import ftb.lib.api.friends.LMPlayerSP;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,14 +8,14 @@ import net.minecraft.util.*;
 
 public class Player extends AbstractClientPlayer
 {
-	public final LMPlayerClient playerLM;
+	public final LMPlayerSP playerLM;
 	public final boolean isOwner;
 	
-	public Player(LMPlayerClient p)
+	public Player(LMPlayerSP p)
 	{
 		super(Minecraft.getMinecraft().theWorld, p.getProfile());
 		playerLM = p;
-		isOwner = playerLM.getPlayerID() == LMWorldClient.inst.clientPlayerID;
+		isOwner = playerLM.getProfile().equals(Minecraft.getMinecraft().thePlayer.getGameProfile());
 	}
 	
 	public boolean equals(Object o)

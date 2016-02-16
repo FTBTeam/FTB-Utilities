@@ -2,14 +2,14 @@ package ftb.utils.mod;
 
 import ftb.lib.*;
 import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.permissions.ForgePermissionRegistry;
 import ftb.utils.mod.cmd.*;
 import ftb.utils.mod.cmd.admin.CmdAdmin;
 import ftb.utils.mod.config.FTBUConfig;
 import ftb.utils.mod.handlers.*;
-import ftb.utils.mod.handlers.ftbl.FTBLIntegration;
+import ftb.utils.mod.handlers.ftbl.*;
 import ftb.utils.net.FTBUNetHandler;
 import ftb.utils.world.Backups;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.event.*;
@@ -32,7 +32,6 @@ public class FTBU
 	public static FTBLIntegration ftbl_int;
 	
 	public static LMMod mod;
-	
 	public static Logger logger;
 	
 	@Mod.EventHandler
@@ -47,6 +46,7 @@ public class FTBU
 		EventBusHelper.register(new FTBUWorldEventHandler());
 		EventBusHelper.register(new FTBUChatEventHandler());
 		FTBUChunkEventHandler.instance.init();
+		ForgePermissionRegistry.register(FTBUPermissions.class);
 		
 		FTBUNetHandler.init();
 		Backups.init();
@@ -65,8 +65,6 @@ public class FTBU
 	@Mod.EventHandler
 	public void registerCommands(FMLServerStartingEvent e)
 	{
-		FTBUTicks.serverStarted();
-		
 		addCmd(e, new CmdAdmin());
 		addCmd(e, new CmdBack());
 		addCmd(e, new CmdHome());
@@ -79,16 +77,6 @@ public class FTBU
 	
 	private static void addCmd(FMLServerStartingEvent e, CommandLM c)
 	{ if(!c.commandName.isEmpty()) e.registerServerCommand(c); }
-	
-	@Mod.EventHandler
-	public void serverStopping(FMLServerStoppingEvent e)
-	{
-		if(FTBLib.hasOnlinePlayers())
-		{
-			for(EntityPlayerMP ep : FTBLib.getAllOnlinePlayers(null))
-				FTBUPlayerEventHandler.playerLoggedOut(ep);
-		}
-	}
 	
 	@NetworkCheckHandler
 	public boolean checkNetwork(Map<String, String> m, Side side)

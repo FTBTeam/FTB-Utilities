@@ -2,7 +2,8 @@ package ftb.utils.mod.cmd;
 
 import ftb.lib.*;
 import ftb.lib.api.cmd.*;
-import ftb.utils.world.*;
+import ftb.lib.api.friends.LMPlayerMP;
+import ftb.utils.mod.handlers.ftbl.FTBUPlayerData;
 import net.minecraft.command.*;
 import net.minecraft.util.IChatComponent;
 
@@ -14,17 +15,17 @@ public class CmdLMPlayerSettings extends CommandSubLM
 	public CmdLMPlayerSettings()
 	{
 		super("lmplayer_settings", CommandLevel.ALL);
-		add(new CmdSettingBool("chat_links", PersonalSettings.CHAT_LINKS));
-		add(new CmdSettingBool("explosions", PersonalSettings.EXPLOSIONS));
-		add(new CmdSettingBool("fake_players", PersonalSettings.FAKE_PLAYERS));
+		add(new CmdSettingBool("chat_links", FTBUPlayerData.CHAT_LINKS));
+		add(new CmdSettingBool("explosions", FTBUPlayerData.EXPLOSIONS));
+		add(new CmdSettingBool("fake_players", FTBUPlayerData.FAKE_PLAYERS));
 		add(new CmdBlockSecurity("block_security"));
 	}
 	
 	public static class CmdSettingBool extends CommandLM
 	{
-		public final int flag;
+		public final byte flag;
 		
-		public CmdSettingBool(String s, int f)
+		public CmdSettingBool(String s, byte f)
 		{
 			super(s, CommandLevel.ALL);
 			flag = f;
@@ -39,9 +40,9 @@ public class CmdLMPlayerSettings extends CommandSubLM
 		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			checkArgs(args, 1);
-			LMPlayerServer p = LMPlayerServer.get(ics);
+			LMPlayerMP p = LMPlayerMP.get(ics);
 			boolean b = parseBoolean(args[0]);
-			p.getSettings().set(flag, b);
+			FTBUPlayerData.get(p).setFlag(flag, b);
 			p.sendUpdate();
 			FTBLib.printChat(ics, commandName + " set to " + b);
 			return null;
@@ -55,18 +56,18 @@ public class CmdLMPlayerSettings extends CommandSubLM
 		
 		public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
 		{
-			if(i == 0) return LMSecurityLevel.getNames();
+			if(i == 0) return PrivacyLevel.getNames();
 			return null;
 		}
 		
 		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			checkArgs(args, 1);
-			LMPlayerServer p = LMPlayerServer.get(ics);
-			LMSecurityLevel l = LMSecurityLevel.get(args[0]);
+			LMPlayerMP p = LMPlayerMP.get(ics);
+			PrivacyLevel l = PrivacyLevel.get(args[0]);
 			if(l != null)
 			{
-				p.getSettings().blocks = l;
+				FTBUPlayerData.get(p).blocks = l;
 				FTBLib.printChat(ics, commandName + " set to " + l.uname);
 			}
 			return null;

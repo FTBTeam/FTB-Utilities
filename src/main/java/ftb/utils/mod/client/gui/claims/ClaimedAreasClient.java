@@ -1,8 +1,8 @@
 package ftb.utils.mod.client.gui.claims;
 
+import ftb.lib.api.friends.*;
 import ftb.utils.mod.client.FTBUClient;
-import ftb.utils.world.*;
-import ftb.utils.world.claims.*;
+import ftb.utils.world.claims.ChunkType;
 import latmod.lib.Bits;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.fml.relauncher.*;
@@ -12,22 +12,19 @@ import java.util.*;
 @SideOnly(Side.CLIENT)
 public class ClaimedAreasClient
 {
-	private static final HashMap<Long, Integer> chunks = new HashMap<>();
+	public static final HashMap<ChunkCoordIntPair, ChunkType> chunks = new HashMap<>();
 	private static int lastDimension = 0;
 	
 	public static void clear()
 	{ chunks.clear(); }
 	
-	public static int getType(int x, int z)
+	public static ChunkType getType(int x, int z)
 	{
-		Integer i = chunks.get(Bits.intsToLong(x, z));
-		return (i == null) ? 0 : i.intValue();
+		ChunkType i = chunks.get(Bits.intsToLong(x, z));
+		return (i == null) ? ChunkType.UNLOADED : i;
 	}
 	
-	public static ChunkType getTypeE(int x, int z)
-	{ return ClaimedChunks.getChunkTypeFromI(getType(x, z)); }
-	
-	public static void setTypes(int dim, int chunkX, int chunkZ, int sx, int sz, int[] types)
+	public static void setTypes(int dim, Map<ChunkCoordIntPair, ChunkType> types)
 	{
 		if(lastDimension != dim)
 		{
@@ -35,46 +32,23 @@ public class ClaimedAreasClient
 			clear();
 		}
 		
-		for(int z = 0; z < sz; z++)
-			for(int x = 0; x < sx; x++)
-				chunks.put(Bits.intsToLong(x + chunkX, z + chunkZ), Integer.valueOf(types[x + z * sx]));
+		chunks.putAll(types);
 		
 		if(FTBUClient.journeyMapHandler != null) FTBUClient.journeyMapHandler.refresh(dim);
 	}
 	
 	public static void getMessage(int x, int z, List<String> l, boolean shift)
 	{
-		int type = getType(x, z);
-		ChunkType typeE = ClaimedChunks.getChunkTypeFromI(type);
+		ChunkType type = getType(x, z);
 		
-		if(typeE != null)
+		if(type != ChunkType.UNLOADED)
 		{
-			if(typeE.isClaimed())
+			if(type.isClaimed())
 			{
-				LMPlayerClient owner = LMWorldClient.inst.getPlayer(type);
-				if(owner != null) l.add(typeE.getChatColor(owner) + owner.getProfile().getName());
+				LMPlayerSP owner = LMWorldSP.inst.getPlayer(type);
+				if(owner != null) l.add(type.getChatColor(owner) + owner.getProfile().getName());
 			}
-			else l.add(typeE.getChatColor(null) + typeE.getIDS());
+			else l.add(type.getChatColor(null) + type.getIDS());
 		}
-	}
-	
-	public static Map<ChunkCoordIntPair, Integer> getChunkTypes()
-	{
-		HashMap<ChunkCoordIntPair, Integer> map = new HashMap<>();
-		if(chunks.isEmpty()) return map;
-		
-		for(Map.Entry<Long, Integer> e : chunks.entrySet())
-		{
-			Integer v = e.getValue();
-			
-			if(v != null && v.intValue() != 0)
-			{
-				int x = Bits.intFromLongA(e.getKey().longValue());
-				int z = Bits.intFromLongB(e.getKey().longValue());
-				map.put(new ChunkCoordIntPair(x, z), v);
-			}
-		}
-		
-		return map;
 	}
 }

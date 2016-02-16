@@ -1,9 +1,9 @@
 package ftb.utils.mod.client.gui.friends;
 
+import ftb.lib.api.friends.LMWorldSP;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.widgets.PanelPopupMenu;
 import ftb.utils.net.ClientAction;
-import ftb.utils.world.LMWorldClient;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.*;
@@ -36,7 +36,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	{
 		mainPanel.width = width;
 		mainPanel.height = height;
-		ClientAction.REQUEST_PLAYER_INFO.send(LMWorldClient.inst.clientPlayerID);
+		ClientAction.REQUEST_PLAYER_INFO.send(LMWorldSP.inst.clientPlayer.getPlayerID());
 	}
 	
 	public void addWidgets()

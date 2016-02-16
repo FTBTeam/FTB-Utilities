@@ -2,14 +2,17 @@ package ftb.utils.api.guide;
 
 import ftb.lib.FTBLib;
 import ftb.lib.api.cmd.CommandLM;
-import ftb.utils.mod.*;
+import ftb.lib.api.friends.*;
+import ftb.utils.mod.FTBU;
 import ftb.utils.mod.config.*;
-import ftb.utils.world.*;
+import ftb.utils.mod.handlers.ftbl.*;
+import ftb.utils.world.Backups;
 import latmod.lib.*;
 import net.minecraft.command.ICommand;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityList;
 import net.minecraft.util.*;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.io.File;
 import java.util.*;
@@ -89,29 +92,30 @@ public class ServerGuideFile extends GuideFile
 		}
 	}
 	
-	private List<LMPlayerServer> players = null;
-	private LMPlayerServer self;
+	private List<LMPlayerMP> players = null;
+	private LMPlayerMP self;
 	private GuideCategory categoryTops = null;
 	
-	public ServerGuideFile(LMPlayerServer pself)
+	public ServerGuideFile(LMPlayerMP pself)
 	{
 		super(CachedInfo.main.getTitleComponent());
 		
-		if((self = pself) == null) return;
+		if(pself == null) return;
+		self = pself;
 		boolean isDedi = FTBLib.getServer().isDedicatedServer();
-		boolean isOP = !isDedi || self.getRank().config.admin_server_info.get();
+		boolean isOP = !isDedi || FTBUPermissions.admin_server_info.getBoolean(self.toPlayerMP().getPlayer());
 		
 		main.copyFrom(CachedInfo.main);
 		links.putAll(CachedInfo.links);
 		
 		categoryTops = main.getSub(new ChatComponentTranslation(FTBU.mod.assets + "top.title"));
 		
-		players = LMWorldServer.inst.getServerPlayers();
+		players = LMWorldMP.inst.getServerPlayers();
 		for(int i = 0; i < players.size(); i++)
 			players.get(i).refreshStats();
 		
 		if(FTBUConfigGeneral.restart_timer.get() > 0F)
-			main.println(new ChatComponentTranslation(FTBU.mod.assets + "cmd.timer_restart", LMStringUtils.getTimeString(FTBUTicks.restartMillis - LMUtils.millis())));
+			main.println(new ChatComponentTranslation(FTBU.mod.assets + "cmd.timer_restart", LMStringUtils.getTimeString(FTBUWorldData.serverInstance.restartMillis - LMUtils.millis())));
 		
 		if(FTBUConfigBackups.enabled.get())
 			main.println(new ChatComponentTranslation(FTBU.mod.assets + "cmd.timer_backup", LMStringUtils.getTimeString(Backups.nextBackup - LMUtils.millis())));
@@ -122,7 +126,7 @@ public class ServerGuideFile extends GuideFile
 		if(FTBUConfigTops.last_seen.get()) addTop(Top.last_seen);
 		if(FTBUConfigTops.time_played.get()) addTop(Top.time_played);
 		
-		new EventFTBUServerGuide(this, self, isOP).post();
+		MinecraftForge.EVENT_BUS.post(new EventFTBUServerGuide(this, self, isOP));
 		Collections.sort(categoryTops.subcategories, null);
 		if(isOP) main.addSub(CachedInfo.categoryServerAdmin);
 		
@@ -191,7 +195,7 @@ public class ServerGuideFile extends GuideFile
 		
 		for(int j = 0; j < size; j++)
 		{
-			LMPlayerServer p = players.get(j);
+			LMPlayerMP p = players.get(j);
 			
 			Object data = t.getData(p);
 			StringBuilder sb = new StringBuilder();

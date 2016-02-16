@@ -2,7 +2,6 @@ package ftb.utils.mod.client.gui.friends;
 
 import ftb.lib.api.friends.*;
 import ftb.utils.mod.client.FTBUClient;
-import ftb.utils.world.*;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Mouse;
 
@@ -32,8 +31,8 @@ public class PanelPlayerList extends PanelFriendsGui
 		
 		tempPlayerList.remove(LMWorldClient.inst.clientPlayer);
 		
-		if(FTBUClient.sort_friends_az.get()) Collections.sort(tempPlayerList, LMPNameComparator.instance);
-		else Collections.sort(tempPlayerList, new LMPStatusComparator(LMWorldClient.inst.clientPlayer));
+		if(FTBUClient.sort_friends_az.get()) Collections.sort(tempPlayerList, ForgePlayerNameComparator.instance);
+		else Collections.sort(tempPlayerList, new ForgePlayerStatusComparator(LMWorldClient.inst.clientPlayer));
 		
 		playerButtons.clear();
 		playerButtons.add(new ButtonPlayer(this, LMWorldClient.inst.clientPlayer));

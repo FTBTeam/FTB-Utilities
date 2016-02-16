@@ -1,15 +1,15 @@
 package ftb.utils.api.guide;
 
-import ftb.lib.api.EventLM;
-import ftb.utils.world.LMPlayerServer;
+import ftb.lib.api.friends.LMPlayerMP;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
-public class EventFTBUServerGuide extends EventLM
+public class EventFTBUServerGuide extends Event
 {
 	public final ServerGuideFile file;
-	public final LMPlayerServer player;
+	public final LMPlayerMP player;
 	public final boolean isOP;
 	
-	public EventFTBUServerGuide(ServerGuideFile f, LMPlayerServer p, boolean o)
+	public EventFTBUServerGuide(ServerGuideFile f, LMPlayerMP p, boolean o)
 	{
 		file = f;
 		player = p;

@@ -29,20 +29,27 @@ public class Warps
 	public void writeToNBT(NBTTagCompound tag, String s)
 	{
 		NBTTagCompound tag1 = new NBTTagCompound();
+		
 		for(Map.Entry<String, BlockDimPos> e : warps.entrySet())
+		{
 			tag1.setIntArray(e.getKey(), e.getValue().toIntArray());
+		}
+		
 		tag.setTag(s, tag1);
 	}
 	
 	public void readFromJson(JsonObject g, String s)
 	{
+		warps.clear();
+		if(!g.has(s)) return;
+		
 		JsonObject g1 = g.get(s).getAsJsonObject();
 		
 		if(g1 != null) for(Map.Entry<String, JsonElement> e : g1.entrySet())
 		{
 			if(e.getValue().isJsonArray())
 			{
-				set(e.getKey(), new BlockDimPos(LMJsonUtils.fromArray(e.getValue())));
+				set(e.getKey(), new BlockDimPos(LMJsonUtils.fromIntArray(e.getValue())));
 			}
 			else
 			{
@@ -55,6 +62,7 @@ public class Warps
 	public void writeToJson(JsonObject g, String s)
 	{
 		JsonObject g1 = new JsonObject();
+		
 		for(Map.Entry<String, BlockDimPos> e : warps.entrySet())
 		{
 			BlockDimPos pos = e.getValue();
@@ -65,6 +73,7 @@ public class Warps
 			o.add("z", new JsonPrimitive(pos.z));
 			g1.add(e.getKey(), o);
 		}
+		
 		g.add(s, g1);
 	}
 	

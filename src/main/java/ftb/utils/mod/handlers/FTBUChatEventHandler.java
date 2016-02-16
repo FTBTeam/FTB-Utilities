@@ -2,7 +2,7 @@ package ftb.utils.mod.handlers;
 
 import ftb.lib.FTBLib;
 import ftb.lib.api.ServerTickCallback;
-import ftb.utils.world.*;
+import ftb.lib.api.friends.PersonalSettings;
 import net.minecraft.event.*;
 import net.minecraft.util.*;
 import net.minecraftforge.fml.common.eventhandler.*;

@@ -48,8 +48,8 @@ public class JMPluginHandler implements IJMPluginHandler
 		{
 			int color = 0xFF000000 | ClaimedChunks.getChunkTypeFromI(id).getAreaColor(LMWorldClient.inst.clientPlayer);
 			
-			ShapeProperties shapeProps = new ShapeProperties().setStrokeWidth(2.0F).setStrokeColor(color).setStrokeOpacity(0.7F).setFillColor(color).setFillOpacity(0.4F);
-			MapPolygon polygon = PolygonHelper.createChunkPolygon(pos.chunkXPos, 70, pos.chunkZPos);
+			ShapeProperties shapeProps = new ShapeProperties().setStrokeWidth(2F).setStrokeColor(color).setStrokeOpacity(0.7F).setFillColor(color).setFillOpacity(0.4F);
+			MapPolygon polygon = PolygonHelper.createChunkPolygon(pos.chunkXPos, 0, pos.chunkZPos);
 			PolygonOverlay chunkOverlay = new PolygonOverlay(FTBUFinals.MOD_ID, "claimed_" + pos, dim, shapeProps, polygon);
 			chunkOverlay.setOverlayGroupName("Claimed Chunks").setTitle("Claimed Chunk");
 			clientAPI.show(chunkOverlay);

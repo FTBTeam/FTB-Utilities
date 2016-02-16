@@ -1,10 +1,8 @@
 package ftb.utils.badges;
 
-import ftb.lib.FTBLib;
-import ftb.lib.api.client.DevConsole;
 import ftb.utils.net.ClientAction;
 
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Created by LatvianModder on 07.01.2016.
@@ -12,7 +10,7 @@ import java.util.HashMap;
 public class ClientBadges
 {
 	private static final HashMap<String, Badge> map = new HashMap<>();
-	private static final HashMap<Integer, Badge> playerBadges = new HashMap<>();
+	private static final HashMap<UUID, Badge> playerBadges = new HashMap<>();
 	
 	public static void clear()
 	{
@@ -20,7 +18,7 @@ public class ClientBadges
 		playerBadges.clear();
 	}
 	
-	public static Badge getClientBadge(int playerID)
+	public static Badge getClientBadge(UUID playerID)
 	{
 		Badge b = playerBadges.get(playerID);
 		if(b == null)
@@ -36,14 +34,12 @@ public class ClientBadges
 	public static void addBadge(Badge b)
 	{ if(b != null && !b.equals(Badge.emptyBadge)) map.put(b.ID, b); }
 	
-	public static void setClientBadge(int playerID, String badge)
+	public static void setClientBadge(UUID playerID, String badge)
 	{
-		if(playerID <= 0 || badge == null || badge.isEmpty() || badge.equalsIgnoreCase(Badge.emptyBadge.ID)) return;
+		if(playerID == null || badge == null || badge.isEmpty() || badge.equalsIgnoreCase(Badge.emptyBadge.ID)) return;
 		
 		Badge b = map.get(badge);
 		if(b != null) playerBadges.put(playerID, b);
 		else playerBadges.put(playerID, Badge.emptyBadge);
-		
-		if(DevConsole.enabled()) FTBLib.dev_logger.info("Received " + playerID + "'s badge: " + badge);
 	}
 }

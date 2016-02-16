@@ -19,9 +19,9 @@ public class FTBU_JMPlugin implements IClientPlugin
 	
 	public void onEvent(ClientEvent event)
 	{
-		if(event.type == ClientEvent.Type.DISPLAY_STARTED)
+		if(event.type == ClientEvent.Type.DISPLAY_STARTED && FTBUClient.journeyMapHandler != null)
 		{
-			if(FTBUClient.journeyMapHandler != null) FTBUClient.journeyMapHandler.refresh(event.dimension);
+			FTBUClient.journeyMapHandler.refresh(event.dimension);
 		}
 	}
 }

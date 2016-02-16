@@ -2,9 +2,9 @@ package ftb.utils.mod.cmd;
 
 import ftb.lib.*;
 import ftb.lib.api.cmd.*;
+import ftb.lib.api.friends.LMPlayerMP;
 import ftb.utils.mod.FTBU;
 import ftb.utils.mod.config.FTBUConfigCmd;
-import ftb.utils.world.LMPlayerServer;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -20,7 +20,7 @@ public class CmdHome extends CommandLM
 	
 	public String[] getTabStrings(ICommandSender ics, String[] args, int i) throws CommandException
 	{
-		if(i == 0 || (i == 1 && isArg(args, 0, "set", "del", "ren"))) return LMPlayerServer.get(ics).homes.list();
+		if(i == 0 || (i == 1 && isArg(args, 0, "set", "del", "ren"))) return LMPlayerMP.get(ics).homes.list();
 		return super.getTabStrings(ics, args, i);
 	}
 	
@@ -38,7 +38,7 @@ public class CmdHome extends CommandLM
 			return null;
 		}
 		
-		LMPlayerServer p = LMPlayerServer.get(ep);
+		LMPlayerMP p = LMPlayerMP.get(ep);
 		
 		if(args[0].equals("set"))
 		{

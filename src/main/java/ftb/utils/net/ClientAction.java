@@ -1,9 +1,9 @@
 package ftb.utils.net;
 
 import ftb.lib.FTBLib;
-import ftb.utils.api.guide.*;
-import ftb.utils.badges.*;
-import ftb.utils.world.*;
+import ftb.lib.api.friends.LMPlayerMP;
+import ftb.utils.mod.handlers.ftbl.FTBUPlayerData;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.HashMap;
 
@@ -11,153 +11,40 @@ public abstract class ClientAction
 {
 	public static final ClientAction NULL = new ClientAction()
 	{
-		public boolean onAction(int extra, LMPlayerServer owner)
+		public boolean onAction(NBTTagCompound extra, LMPlayerMP owner)
 		{ return false; }
-	};
-	
-	public static final ClientAction ADD_FRIEND = new ClientAction()
-	{
-		public boolean onAction(int extra, LMPlayerServer owner)
-		{
-			if(extra > 0)
-			{
-				LMPlayerServer p = owner.world.getPlayer(extra);
-				if(p == null || p.equalsPlayer(owner)) return false;
-				
-				if(!owner.friends.contains(p.getPlayerID()))
-				{
-					owner.friends.add(p.getPlayerID());
-					owner.sendUpdate();
-					p.sendUpdate();
-					p.checkNewFriends();
-					
-					new MessageLMPlayerInfo(owner, p.getPlayerID()).sendTo(owner.getPlayer());
-					new MessageLMPlayerInfo(owner, owner.getPlayerID()).sendTo(owner.getPlayer());
-				}
-			}
-			else
-			{
-				for(LMPlayerServer p : owner.world.playerMap.values())
-				{
-					if(!p.equalsPlayer(owner) && p.isFriendRaw(owner) && !owner.isFriendRaw(p))
-					{
-						owner.friends.add(p.getPlayerID());
-						owner.sendUpdate();
-						p.sendUpdate();
-						p.checkNewFriends();
-						
-						new MessageLMPlayerInfo(owner, p.getPlayerID()).sendTo(owner.getPlayer());
-					}
-				}
-				
-				new MessageLMPlayerInfo(owner, owner.getPlayerID()).sendTo(owner.getPlayer());
-			}
-			
-			return true;
-		}
-	};
-	
-	public static final ClientAction REM_FRIEND = new ClientAction()
-	{
-		public boolean onAction(int extra, LMPlayerServer owner)
-		{
-			LMPlayerServer p = owner.world.getPlayer(extra);
-			if(p == null || p.equalsPlayer(owner)) return false;
-			
-			if(owner.friends.contains(p.getPlayerID()))
-			{
-				owner.friends.removeValue(p.getPlayerID());
-				owner.sendUpdate();
-				p.sendUpdate();
-				p.checkNewFriends();
-				
-				new MessageLMPlayerInfo(owner, p.getPlayerID()).sendTo(owner.getPlayer());
-				new MessageLMPlayerInfo(owner, owner.getPlayerID()).sendTo(owner.getPlayer());
-			}
-			
-			return true;
-		}
-	};
-	
-	public static final ClientAction DENY_FRIEND = new ClientAction()
-	{
-		public boolean onAction(int extra, LMPlayerServer owner)
-		{
-			LMPlayerServer p = owner.world.getPlayer(extra);
-			if(p == null || p.equalsPlayer(owner)) return false;
-			
-			if(p.friends.contains(owner.getPlayerID()))
-			{
-				p.friends.removeValue(owner.getPlayerID());
-				owner.sendUpdate();
-				p.sendUpdate();
-				
-				new MessageLMPlayerInfo(owner, p.getPlayerID()).sendTo(owner.getPlayer());
-				new MessageLMPlayerInfo(owner, owner.getPlayerID()).sendTo(owner.getPlayer());
-			}
-			
-			return true;
-		}
-	};
-	
-	public static final ClientAction REQUEST_PLAYER_INFO = new ClientAction()
-	{
-		public boolean onAction(int extra, LMPlayerServer owner)
-		{
-			new MessageLMPlayerInfo(owner, extra).sendTo(owner.getPlayer());
-			return false;
-		}
-	};
-	
-	public static final ClientAction REQUEST_SERVER_INFO = new ClientAction()
-	{
-		public boolean onAction(int extra, LMPlayerServer owner)
-		{
-			GuideFile.displayGuide(owner.getPlayer(), new ServerGuideFile(owner));
-			return false;
-		}
 	};
 	
 	public static final ClientAction REQUEST_SELF_UPDATE = new ClientAction()
 	{
-		public boolean onAction(int extra, LMPlayerServer owner)
+		public boolean onAction(NBTTagCompound extra, LMPlayerMP owner)
 		{
-			new MessageLMPlayerUpdate(owner, true).sendTo(owner.getPlayer());
-			return false;
-		}
-	};
-	
-	public static final ClientAction REQUEST_BADGE = new ClientAction()
-	{
-		public boolean onAction(int extra, LMPlayerServer owner)
-		{
-			Badge b = ServerBadges.getServerBadge(owner.world.getPlayer(extra));
-			if(b != Badge.emptyBadge) new MessageSendBadge(extra, b.ID).sendTo(owner.getPlayer());
+			.sendTo(owner.getPlayer());
 			return false;
 		}
 	};
 	
 	public static final ClientAction BUTTON_RENDER_BADGE = new ClientAction()
 	{
-		public boolean onAction(int extra, LMPlayerServer owner)
+		public boolean onAction(NBTTagCompound extra, LMPlayerMP owner)
 		{
-			owner.renderBadge = extra == 1;
+			//owner.renderBadge = extra == 1;
 			return true;
 		}
 	};
 	
 	public static final ClientAction BUTTON_CHAT_LINKS = new ClientAction()
 	{
-		public boolean onAction(int extra, LMPlayerServer owner)
+		public boolean onAction(NBTTagCompound extra, LMPlayerMP owner)
 		{
-			owner.getSettings().set(PersonalSettings.CHAT_LINKS, extra == 1);
+			FTBUPlayerData.get(owner).setFlag(FTBUPlayerData.CHAT_LINKS, extra.getBoolean("CL"));
 			return true;
 		}
 	};
 	
 	public static final ClientAction BUTTON_CLAIMED_CHUNKS_SETTINGS = new ClientAction()
 	{
-		public boolean onAction(int extra, final LMPlayerServer owner)
+		public boolean onAction(NBTTagCompound extra, final LMPlayerMP owner)
 		{
 			FTBLib.printChat(owner.getPlayer(), "Settings Gui is temporarily replaced with /lmplayer_settings!");
 			//ConfigRegistry.tempMap.put(provider.getID(), provider);
@@ -196,9 +83,9 @@ public abstract class ClientAction
 	public byte getID()
 	{ return ID; }
 	
-	public abstract boolean onAction(int extra, LMPlayerServer owner);
+	public abstract boolean onAction(NBTTagCompound extra, LMPlayerMP owner);
 	
-	public void send(int extra)
+	public void send(NBTTagCompound extra)
 	{ new MessageClientAction(this, extra).sendToServer(); }
 	
 	public static ClientAction get(byte id)

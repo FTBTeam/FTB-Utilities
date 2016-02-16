@@ -1,7 +1,7 @@
 package ftb.utils.net;
 
+import ftb.lib.api.friends.LMWorldMP;
 import ftb.lib.api.net.*;
-import ftb.utils.world.LMWorldServer;
 import io.netty.buffer.ByteBuf;
 import latmod.lib.MathHelperLM;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -43,6 +43,6 @@ public class MessageAreaRequest extends MessageLM<MessageAreaRequest>
 	public IMessage onMessage(MessageAreaRequest m, MessageContext ctx)
 	{
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
-		return new MessageAreaUpdate(LMWorldServer.inst.getPlayer(ep), m.chunkX, m.chunkY, ep.dimension, m.sizeX, m.sizeY);
+		return new MessageAreaUpdate(LMWorldMP.inst.getPlayer(ep), m.chunkX, m.chunkY, ep.dimension, m.sizeX, m.sizeY);
 	}
 }

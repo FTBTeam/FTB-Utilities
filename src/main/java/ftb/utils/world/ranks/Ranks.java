@@ -1,8 +1,7 @@
 package ftb.utils.world.ranks;
 
-import ftb.utils.world.LMPlayerServer;
+import ftb.lib.api.friends.LMPlayerMP;
 import latmod.lib.config.*;
-import net.minecraft.util.EnumChatFormatting;
 
 import java.util.*;
 
@@ -19,7 +18,7 @@ public class Ranks
 	private static final HashMap<String, Rank> ranks = new HashMap<>();
 	private static final HashMap<UUID, Rank> playerMap = new HashMap<>();
 	
-	public static Rank getRankFor(LMPlayerServer p)
+	public static Rank getRankFor(LMPlayerMP p)
 	{
 		boolean enabled = false; //FTBUConfigGeneral.ranks_enabled.get();
 		
@@ -34,26 +33,6 @@ public class Ranks
 			if(p == null || p.isFake()) return PLAYER;
 			return p.isOP() ? ADMIN : PLAYER;
 		}
-	}
-	
-	public static void load(ConfigFile file)
-	{
-		/*
-		file = new ConfigFile("ranks", new File(FTBLib.folderLocal, "ftbu/ranks.json"));
-		file.add(default_rank);
-		file.add(ranks_group);
-		*/
-		
-		Ranks.ADMIN.setDefaults();
-		Ranks.ADMIN.color.set(EnumChatFormatting.DARK_GREEN);
-		
-		Ranks.PLAYER.setDefaults();
-		Ranks.PLAYER.color.set(EnumChatFormatting.WHITE);
-		
-		file.add(Ranks.ADMIN.config.getAsGroup("permissions_admin", false));
-		file.add(Ranks.PLAYER.config.getAsGroup("permissions_player", false));
-		
-		reload();
 	}
 	
 	public static void reload()

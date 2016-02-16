@@ -1,8 +1,8 @@
 package ftb.utils.mod.client.gui.friends;
 
 import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.friends.LMWorldSP;
 import ftb.utils.mod.client.FTBUClient;
-import ftb.utils.world.LMWorldClient;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,7 +15,7 @@ public class PanelPlayerView extends PanelFriendsGui
 	public PanelPlayerView(GuiFriends g)
 	{
 		super(g);
-		selectedPlayer = new Player(LMWorldClient.inst.clientPlayer);
+		selectedPlayer = new Player(LMWorldSP.inst.clientPlayer);
 	}
 	
 	public void addWidgets()
@@ -44,8 +44,8 @@ public class PanelPlayerView extends PanelFriendsGui
 			else
 			{
 				for(int i = 0; i < 4; i++)
-					selectedPlayer.inventory.armorInventory[i] = selectedPlayer.playerLM.lastArmor[i];
-				selectedPlayer.inventory.mainInventory[0] = selectedPlayer.playerLM.lastArmor[4];
+					selectedPlayer.inventory.armorInventory[i] = selectedPlayer.playerLM.lastArmor.get(i);
+				selectedPlayer.inventory.mainInventory[0] = selectedPlayer.playerLM.lastArmor.get(4);
 				selectedPlayer.inventory.currentItem = 0;
 			}
 		}

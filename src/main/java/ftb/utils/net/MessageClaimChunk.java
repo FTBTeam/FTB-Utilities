@@ -1,8 +1,9 @@
 package ftb.utils.net;
 
 import ftb.lib.LMAccessToken;
+import ftb.lib.api.friends.*;
 import ftb.lib.api.net.*;
-import ftb.utils.world.*;
+import ftb.utils.mod.handlers.ftbl.*;
 import ftb.utils.world.claims.ClaimedChunk;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
@@ -44,30 +45,32 @@ public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 	
 	public IMessage onMessage(MessageClaimChunk m, MessageContext ctx)
 	{
-		LMPlayerServer p = LMWorldServer.inst.getPlayer(ctx.getServerHandler().playerEntity);
+		LMPlayerMP p = LMWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);
+		FTBUPlayerData d = FTBUPlayerData.get(p);
 		if(m.type == ID_CLAIM)
 		{
-			p.claimChunk(m.dim, m.posX, m.posZ);
+			d.claimChunk(m.dim, m.posX, m.posZ);
 			return new MessageAreaUpdate(p, m.posX, m.posZ, m.dim, 1, 1);
 		}
 		else if(m.type == ID_UNCLAIM)
 		{
 			if(m.token != 0L && LMAccessToken.equals(p.getPlayer(), m.token, false))
 			{
-				ClaimedChunk c = LMWorldServer.inst.claimedChunks.getChunk(m.dim, m.posX, m.posZ);
+				ClaimedChunk c = FTBUWorldData.serverInstance.getChunk(m.dim, m.posX, m.posZ);
 				if(c != null)
 				{
-					LMPlayerServer p1 = LMWorldServer.inst.getPlayer(c.ownerID);
-					p1.unclaimChunk(m.dim, m.posX, m.posZ);
+					LMPlayerMP p1 = LMWorldMP.inst.getPlayer(c.ownerID);
+					FTBUPlayerData d1 = FTBUPlayerData.get(p);
+					d1.unclaimChunk(m.dim, m.posX, m.posZ);
 				}
 			}
-			else p.unclaimChunk(m.dim, m.posX, m.posZ);
+			else d.unclaimChunk(m.dim, m.posX, m.posZ);
 			return new MessageAreaUpdate(p, m.posX, m.posZ, m.dim, 1, 1);
 		}
-		else if(m.type == ID_UNCLAIM_ALL) p.unclaimAllChunks(m.dim);
-		else if(m.type == ID_UNCLAIM_ALL_DIMS) p.unclaimAllChunks(null);
-		else if(m.type == ID_LOAD) p.setLoaded(m.dim, m.posX, m.posZ, true);
-		else if(m.type == ID_UNLOAD) p.setLoaded(m.dim, m.posX, m.posZ, false);
+		else if(m.type == ID_UNCLAIM_ALL) d.unclaimAllChunks(m.dim);
+		else if(m.type == ID_UNCLAIM_ALL_DIMS) d.unclaimAllChunks(null);
+		else if(m.type == ID_LOAD) d.setLoaded(m.dim, m.posX, m.posZ, true);
+		else if(m.type == ID_UNLOAD) d.setLoaded(m.dim, m.posX, m.posZ, false);
 		return null;
 	}
 }

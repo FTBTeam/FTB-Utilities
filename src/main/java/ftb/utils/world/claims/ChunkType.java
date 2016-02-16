@@ -1,17 +1,18 @@
 package ftb.utils.world.claims;
 
-import ftb.lib.LMSecurity;
+import ftb.lib.PrivacyLevel;
+import ftb.lib.api.friends.*;
 import ftb.utils.mod.FTBU;
-import ftb.utils.world.*;
+import ftb.utils.mod.handlers.ftbl.*;
 import net.minecraft.util.EnumChatFormatting;
 
 public class ChunkType
 {
 	public static final ChunkType UNLOADED = new ChunkType(0, "unloaded", EnumChatFormatting.DARK_GRAY, 0xFF000000);
-	public static final ChunkType SPAWN = new ChunkType(-1, "spawn", EnumChatFormatting.AQUA, 0xFF00EFDF);
-	public static final ChunkType WORLD_BORDER = new ChunkType(-2, "world_border", EnumChatFormatting.RED, 0xFFFF0000);
-	public static final ChunkType WILDERNESS = new ChunkType(-3, "wilderness", EnumChatFormatting.DARK_GREEN, 0xFF2F9E00);
-	public static final ChunkType LOADED_SELF = new ChunkType(-4, "chunkloaded", EnumChatFormatting.RED, 0xFFFF0000);
+	public static final ChunkType SPAWN = new ChunkType(1, "spawn", EnumChatFormatting.AQUA, 0xFF00EFDF);
+	public static final ChunkType WORLD_BORDER = new ChunkType(2, "world_border", EnumChatFormatting.RED, 0xFFFF0000);
+	public static final ChunkType WILDERNESS = new ChunkType(3, "wilderness", EnumChatFormatting.DARK_GREEN, 0xFF2F9E00);
+	public static final ChunkType LOADED_SELF = new ChunkType(4, "chunkloaded", EnumChatFormatting.RED, 0xFFFF0000);
 	
 	public static final ChunkType[] UNCLAIMED_VALUES = new ChunkType[] {UNLOADED, SPAWN, WORLD_BORDER, WILDERNESS, LOADED_SELF,};
 	
@@ -21,7 +22,7 @@ public class ChunkType
 		
 		public PlayerClaimed(LMPlayer o)
 		{
-			super(o.getPlayerID(), "claimed", null, 0);
+			super(99, "claimed", null, 0);
 			chunkOwner = o;
 		}
 		
@@ -40,15 +41,14 @@ public class ChunkType
 		public int getAreaColor(LMPlayer p)
 		{ return isFriendly(p) ? 0xFF00FF21 : 0xFF0094FF; }
 		
-		public boolean canInteract(LMPlayerServer p, boolean leftClick)
+		public boolean canInteract(LMPlayerMP p, boolean leftClick)
 		{
 			if(chunkOwner.equals(p)) return true;
-			else if(p.isFake()) return chunkOwner.getSettings().get(PersonalSettings.FAKE_PLAYERS);
+			else if(p.isFake()) return FTBUPlayerData.get(chunkOwner).getFlag(FTBUPlayerData.FAKE_PLAYERS);
 			
-			LMSecurity s = new LMSecurity(chunkOwner);
-			s.level = p.getRank().config.forced_chunk_security.get();
-			if(s.level == null) s.level = chunkOwner.getSettings().blocks;
-			return s.canInteract(p);
+			PrivacyLevel level = FTBUPermissions.forced_chunk_security.getEnum(p.getPlayer());
+			if(level == null) level = FTBUPlayerData.get(chunkOwner).blocks;
+			return level.canInteract(chunkOwner, p);
 		}
 	}
 	
@@ -89,6 +89,6 @@ public class ChunkType
 	public int getAreaColor(LMPlayer p)
 	{ return areaColor; }
 	
-	public boolean canInteract(LMPlayerServer p, boolean leftClick)
+	public boolean canInteract(LMPlayerMP p, boolean leftClick)
 	{ return this == WILDERNESS || this == SPAWN; }
 }

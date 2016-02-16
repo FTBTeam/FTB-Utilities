@@ -1,16 +1,12 @@
 package ftb.utils.mod.handlers.ftbl;
 
-import ftb.lib.FTBLib;
-import ftb.lib.api.*;
+import ftb.lib.api.EventFTBReload;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.notification.ClientNotifications;
-import ftb.utils.api.EventLMWorldClient;
 import ftb.utils.api.guide.ClientGuideFile;
 import ftb.utils.api.paint.IPainterItem;
 import ftb.utils.badges.ClientBadges;
 import ftb.utils.mod.client.gui.claims.ClaimedAreasClient;
-import ftb.utils.world.LMWorldClient;
-import latmod.lib.ByteIOStream;
 import net.minecraft.item.*;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -31,28 +27,11 @@ public class FTBLIntegrationClient extends FTBLIntegration
 		}
 	}
 	
-	public void onFTBWorldClient(EventFTBWorldClient e)
+	public void onFTBWorldClient()
 	{
 		ClientNotifications.init();
 		ClaimedAreasClient.clear();
-		
-		if(e.world == null)
-		{
-			if(LMWorldClient.inst != null) new EventLMWorldClient(LMWorldClient.inst, true).post();
-			LMWorldClient.inst = null;
-		}
 	}
-	
-	public void readWorldData(ByteIOStream io)
-	{
-		LMWorldClient.inst = new LMWorldClient(io.readInt());
-		LMWorldClient.inst.readDataFromNet(io, true);
-		FTBLib.logger.info("Joined the server with PlayerID " + LMWorldClient.inst.clientPlayerID);
-		new EventLMWorldClient(LMWorldClient.inst, false).post();
-	}
-	
-	public boolean hasClientWorld()
-	{ return LMWorldClient.inst != null && LMWorldClient.inst.clientPlayerID > 0 && LMWorldClient.inst.clientPlayer != null; }
 	
 	public void renderWorld(float pt)
 	{

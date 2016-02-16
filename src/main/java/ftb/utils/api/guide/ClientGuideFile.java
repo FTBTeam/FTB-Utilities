@@ -7,6 +7,7 @@ import ftb.utils.mod.FTBU;
 import ftb.utils.mod.client.gui.guide.GuiGuide;
 import latmod.lib.LMFileUtils;
 import net.minecraft.util.*;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.io.File;
 import java.util.Arrays;
@@ -64,7 +65,7 @@ public class ClientGuideFile extends GuideFile
 		
 		links.clear();
 		links.putAll(loadLinksFromFile(new File(FTBLib.folderModpack, "guide_links.json")));
-		new EventFTBUClientGuide(this).post();
+		MinecraftForge.EVENT_BUS.post(new EventFTBUClientGuide(this));
 		
 		main.cleanup();
 		GuiGuide.clientGuideGui = null;

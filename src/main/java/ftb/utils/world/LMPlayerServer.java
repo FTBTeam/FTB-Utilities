@@ -6,7 +6,7 @@ import ftb.lib.*;
 import ftb.lib.api.item.StringIDInvLoader;
 import ftb.lib.notification.*;
 import ftb.utils.api.EventLMPlayerServer;
-import ftb.utils.mod.FTBU;
+import ftb.utils.mod.*;
 import ftb.utils.mod.client.FTBUClickAction;
 import ftb.utils.mod.handlers.FTBUChunkEventHandler;
 import ftb.utils.net.*;
@@ -103,7 +103,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	{
 		EntityPlayerMP ep = getPlayer();
 		if(ep != null) lastPos = new EntityPos(ep).toLinkedPos();
-		return lastPos;
+		return lastPos.clone();
 	}
 	
 	// Reading / Writing //
@@ -134,11 +134,11 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		new EventLMPlayerServer.CustomInfo(this, info).post();
 		
-		if(owner.getRank().config.show_rank.get())
+		if(FTBUPermissions.show_rank.getBoolean(owner.getProfile()))
 		{
-			Rank rank = getRank();
+			Rank rank = Ranks.instance().getRankOf(getProfile());
 			IChatComponent rankC = new ChatComponentText("[" + rank.ID + "]");
-			rankC.getChatStyle().setColor(rank.color.get());
+			rankC.getChatStyle().setColor(rank.color);
 			info.add(rankC);
 		}
 		stats.getInfo(info, ms);
@@ -242,7 +242,6 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	{
 		refreshStats();
 		new EventLMPlayerServer.DataSaved(this).post();
-		Rank rank = getRank();
 		
 		io.writeBoolean(isOnline());
 		io.writeBoolean(renderBadge);
@@ -263,9 +262,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			LMNBTUtils.writeTag(io, commonPrivateData);
 			io.writeShort(getClaimedChunks());
 			io.writeShort(getLoadedChunks(true));
-			
-			io.writeUTF(rank.ID);
-			rank.writeToIO(io);
+			io.writeShort(FTBUPermissions.max_claims.getNumber(getProfile()).shortValue());
+			io.writeShort(FTBUPermissions.max_loaded_chunks.getNumber(getProfile()).shortValue());
 		}
 	}
 	
@@ -302,14 +300,10 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		}
 	}
 	
-	public Rank getRank()
-	{ return Ranks.getRankFor(this); }
-	
 	public void claimChunk(int dim, int cx, int cz)
 	{
-		RankConfig c = getRank().config;
-		if(c.dimension_blacklist.get().contains(dim)) return;
-		int max = c.max_claims.get();
+		if(FTBUPermissions.dimension_blacklist.getNumberList(getProfile()).contains(dim)) return;
+		int max = FTBUPermissions.max_claims.getNumber(getProfile()).intValue();
 		if(max == 0) return;
 		if(getClaimedChunks() >= max) return;
 		
@@ -370,9 +364,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		{
 			if(flag)
 			{
-				RankConfig c = getRank().config;
-				if(c.dimension_blacklist.get().contains(dim)) return;
-				int max = c.max_loaded_chunks.get();
+				if(FTBUPermissions.dimension_blacklist.getNumberList(getProfile()).contains(dim)) return;
+				int max = FTBUPermissions.max_loaded_chunks.getNumber(getProfile()).intValue();
 				if(max == 0) return;
 				if(getLoadedChunks(false) >= max) return;
 			}

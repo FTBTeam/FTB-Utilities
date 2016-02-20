@@ -1,6 +1,6 @@
 package ftb.utils.world;
 
-import ftb.lib.LMSecurityLevel;
+import ftb.lib.PrivacyLevel;
 import latmod.lib.*;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -8,17 +8,17 @@ public class PersonalSettings
 {
 	public final LMPlayer owner;
 	
-	public static final int CHAT_LINKS = 0;
-	public static final int EXPLOSIONS = 1;
-	public static final int FAKE_PLAYERS = 2;
+	public static final byte CHAT_LINKS = 0;
+	public static final byte EXPLOSIONS = 1;
+	public static final byte FAKE_PLAYERS = 2;
 	
 	public byte flags = 0;
-	public LMSecurityLevel blocks;
+	public PrivacyLevel blocks;
 	
 	public PersonalSettings(LMPlayer p)
 	{
 		owner = p;
-		blocks = LMSecurityLevel.FRIENDS;
+		blocks = PrivacyLevel.FRIENDS;
 		setDefaultFlags();
 	}
 	
@@ -29,7 +29,7 @@ public class PersonalSettings
 		set(FAKE_PLAYERS, true);
 	}
 	
-	public boolean set(int flag, boolean v)
+	public boolean set(byte flag, boolean v)
 	{
 		if(get(flag) != v)
 		{
@@ -39,7 +39,7 @@ public class PersonalSettings
 		return false;
 	}
 	
-	public boolean get(int flag)
+	public boolean get(byte flag)
 	{ return Bits.getBit(flags, flag); }
 	
 	public void readFromServer(NBTTagCompound tag)
@@ -50,7 +50,7 @@ public class PersonalSettings
 			setDefaultFlags();
 		}
 		else flags = tag.getByte("Flags");
-		blocks = tag.hasKey("Blocks") ? blocks = LMSecurityLevel.VALUES_3[tag.getByte("Blocks")] : LMSecurityLevel.FRIENDS;
+		blocks = tag.hasKey("Blocks") ? blocks = PrivacyLevel.VALUES_3[tag.getByte("Blocks")] : PrivacyLevel.FRIENDS;
 	}
 	
 	public void writeToServer(NBTTagCompound tag)
@@ -62,7 +62,7 @@ public class PersonalSettings
 	public void readFromNet(ByteIOStream io)
 	{
 		flags = io.readByte();
-		blocks = LMSecurityLevel.VALUES_3[io.readUnsignedByte()];
+		blocks = PrivacyLevel.VALUES_3[io.readUnsignedByte()];
 	}
 	
 	public void writeToNet(ByteIOStream io)

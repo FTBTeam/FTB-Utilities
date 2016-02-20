@@ -39,6 +39,8 @@ player_action.ftbu.mail=Mail
 ftbu:label.new_friends=New friend requests!
 ftbu:label.new_friends_click=Click to accept all requests
 ftbu:server_restart=Server will restart in %s
+ftbu:commands=Commands
+ftbu:my_permissions=My Permissions
 
 ftbu:cmd.warp_set=Warp '%s' set!
 ftbu:cmd.warp_del=Warp '%s' deleted!

@@ -119,6 +119,26 @@ public class GuideFile implements IJsonObject // ServerGuideFile // ClientGuideF
 						map.put(e.getKey(), link);
 					}
 				}
+				
+				if(o.has("urls"))
+				{
+					for(Map.Entry<String, JsonElement> e : o.get("urls").getAsJsonObject().entrySet())
+					{
+						link = GuideLink.newInstance(GuideLink.Type.URL);
+						link.setJson(e.getValue());
+						map.put(e.getKey(), link);
+					}
+				}
+				
+				if(o.has("recipes"))
+				{
+					for(Map.Entry<String, JsonElement> e : o.get("recipes").getAsJsonObject().entrySet())
+					{
+						link = GuideLink.newInstance(GuideLink.Type.RECIPE);
+						link.setJson(e.getValue());
+						map.put(e.getKey(), link);
+					}
+				}
 			}
 		}
 		

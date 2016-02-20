@@ -116,16 +116,13 @@ public class GuideCategory implements Comparable<GuideCategory>, IJsonObject // 
 	public void clear()
 	{
 		text.clear();
-		for(int i = 0; i < subcategories.size(); i++)
-			subcategories.get(i).clear();
 		subcategories.clear();
 	}
 	
 	public void cleanup()
 	{
+		for(GuideCategory c : subcategories) c.cleanup();
 		LMListUtils.removeAll(subcategories, cleanupFilter);
-		for(GuideCategory c : subcategories)
-			c.cleanup();
 	}
 	
 	public void copyFrom(GuideCategory c)
@@ -195,5 +192,12 @@ public class GuideCategory implements Comparable<GuideCategory>, IJsonObject // 
 				subcategories.add(c);
 			}
 		}
+	}
+	
+	public void sortAll()
+	{
+		if(subcategories.isEmpty()) return;
+		Collections.sort(subcategories, null);
+		for(GuideCategory c : subcategories) c.sortAll();
 	}
 }

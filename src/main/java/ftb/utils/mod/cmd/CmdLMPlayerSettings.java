@@ -22,9 +22,9 @@ public class CmdLMPlayerSettings extends CommandSubLM
 	
 	public static class CmdSettingBool extends CommandLM
 	{
-		public final int flag;
+		public final byte flag;
 		
-		public CmdSettingBool(String s, int f)
+		public CmdSettingBool(String s, byte f)
 		{
 			super(s, CommandLevel.ALL);
 			flag = f;
@@ -55,7 +55,7 @@ public class CmdLMPlayerSettings extends CommandSubLM
 		
 		public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
 		{
-			if(i == 0) return LMSecurityLevel.getNames();
+			if(i == 0) return PrivacyLevel.getNames();
 			return null;
 		}
 		
@@ -63,7 +63,7 @@ public class CmdLMPlayerSettings extends CommandSubLM
 		{
 			checkArgs(args, 1);
 			LMPlayerServer p = LMPlayerServer.get(ics);
-			LMSecurityLevel l = LMSecurityLevel.get(args[0]);
+			PrivacyLevel l = PrivacyLevel.get(args[0]);
 			if(l != null)
 			{
 				p.getSettings().blocks = l;

@@ -1,12 +1,11 @@
 package ftb.utils.mod.client;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.TextureCoords;
+import ftb.lib.*;
 import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.gui.*;
-import ftb.lib.mod.FTBLibFinals;
 import ftb.utils.mod.client.gui.claims.GuiClaimChunks;
 import ftb.utils.mod.client.gui.friends.GuiFriends;
 import ftb.utils.mod.client.gui.guide.GuiGuide;
@@ -29,7 +28,7 @@ public class FTBUActions
 		PlayerActionRegistry.add(friend_remove);
 		PlayerActionRegistry.add(friend_deny);
 		
-		if(FTBLibFinals.DEV)
+		if(FTBLib.DEV_ENV)
 		{
 			PlayerActionRegistry.add(mail);
 			PlayerActionRegistry.add(trade);
@@ -133,7 +132,7 @@ public class FTBUActions
 		}
 		
 		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
-		{ return FTBLibFinals.DEV; }
+		{ return FTBLib.DEV_ENV; }
 		
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }
@@ -175,6 +174,6 @@ public class FTBUActions
 		}
 		
 		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
-		{ return FTBLibFinals.DEV; }
+		{ return FTBLib.DEV_ENV; }
 	};
 }

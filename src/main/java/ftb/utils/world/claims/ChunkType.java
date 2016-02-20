@@ -1,7 +1,7 @@
 package ftb.utils.world.claims;
 
 import ftb.lib.LMSecurity;
-import ftb.utils.mod.FTBU;
+import ftb.utils.mod.*;
 import ftb.utils.world.*;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -46,7 +46,7 @@ public class ChunkType
 			else if(p.isFake()) return chunkOwner.getSettings().get(PersonalSettings.FAKE_PLAYERS);
 			
 			LMSecurity s = new LMSecurity(chunkOwner);
-			s.level = p.getRank().config.forced_chunk_security.get();
+			s.level = FTBUPermissions.forced_chunk_security.getEnum(p.getProfile());
 			if(s.level == null) s.level = chunkOwner.getSettings().blocks;
 			return s.canInteract(p);
 		}

@@ -1,6 +1,5 @@
 package ftb.utils.world;
 
-import ftb.utils.world.ranks.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.FakePlayer;
@@ -38,9 +37,6 @@ public class LMFakeServerPlayer extends LMPlayerServer
 	public void onPostLoaded() { }
 	
 	public void checkNewFriends() { }
-	
-	public Rank getRank()
-	{ return Ranks.PLAYER; }
 	
 	public void claimChunk(int dim, int cx, int cz) { }
 	

@@ -3,7 +3,6 @@ package ftb.utils.mod.cmd;
 import ftb.lib.*;
 import ftb.lib.api.cmd.*;
 import ftb.utils.mod.FTBU;
-import ftb.utils.mod.config.FTBUConfigCmd;
 import ftb.utils.world.LMWorldServer;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.*;
@@ -13,7 +12,7 @@ import net.minecraft.util.*;
 public class CmdWarp extends CommandLM
 {
 	public CmdWarp()
-	{ super(FTBUConfigCmd.name_warp.get(), CommandLevel.ALL); }
+	{ super("warp", CommandLevel.ALL); }
 	
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <ID>"; }
@@ -36,8 +35,8 @@ public class CmdWarp extends CommandLM
 		
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		BlockDimPos p = LMWorldServer.inst.warps.get(args[0]);
-		if(p == null) return error(new ChatComponentTranslation(FTBU.mod.assets + "cmd.warp_not_set", args[0]));
+		if(p == null) return error(FTBU.mod.chatComponent("cmd.warp_not_set", args[0]));
 		LMDimUtils.teleportPlayer(ep, p);
-		return new ChatComponentTranslation(FTBU.mod.assets + "cmd.warp_tp", args[0]);
+		return FTBU.mod.chatComponent("cmd.warp_tp", args[0]);
 	}
 }

@@ -35,7 +35,7 @@ minecraft {
 }
 
 dependencies {
-    compile fileTree(dir: project_dir + "DevMods/", include: '*.jar')
+    compile fileTree(dir: "eclipse/mods", include: '*.jar')
     compile files(project_dir + "/Exported/FTBLib-" + version_mc + "-" + version_mods + "-dev.jar")
 }
 

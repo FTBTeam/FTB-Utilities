@@ -2,6 +2,7 @@ package ftb.utils.mod.config;
 
 import ftb.lib.FTBLib;
 import ftb.lib.api.item.ItemStackSerializer;
+import latmod.lib.Info;
 import latmod.lib.config.ConfigEntryStringArray;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -10,8 +11,11 @@ import java.util.*;
 
 public class FTBUConfigLogin
 {
-	private static final ConfigEntryStringArray motd = new ConfigEntryStringArray("motd", "Welcome to the server!").setInfo("Message of the day. This will be displayed when player joins the server");
-	private static final ConfigEntryStringArray starting_items = new ConfigEntryStringArray("starting_items", "minecraft:apple 16 0").setInfo("Items to give player when he first joins the server\nFormat: StringID Size Metadata\nDoes not support NBT yet");
+	@Info("Message of the day. This will be displayed when player joins the server")
+	private static final ConfigEntryStringArray motd = new ConfigEntryStringArray("motd", "Welcome to the server!");
+	
+	@Info({"Items to give player when he first joins the server", "Format: StringID Size Metadata", "Now supports NBT, still not recommended"})
+	private static final ConfigEntryStringArray starting_items = new ConfigEntryStringArray("starting_items", "minecraft:apple 16 0");
 	
 	public static List<ItemStack> getStartingItems(UUID id)
 	{

@@ -45,7 +45,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 				p.refreshStats();
 			
 			ServerGuideFile.CachedInfo.reload();
-			Ranks.reload();
+			Ranks.instance().reload();
 			ServerBadges.reload();
 			
 			FTBUChunkEventHandler.instance.markDirty(null);

@@ -5,14 +5,15 @@ import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
-import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.permission.ForgePermissionRegistry;
 import ftb.utils.mod.cmd.*;
 import ftb.utils.mod.cmd.admin.CmdAdmin;
-import ftb.utils.mod.config.FTBUConfig;
+import ftb.utils.mod.config.*;
 import ftb.utils.mod.handlers.*;
 import ftb.utils.mod.handlers.ftbl.FTBLIntegration;
 import ftb.utils.net.FTBUNetHandler;
 import ftb.utils.world.Backups;
+import ftb.utils.world.ranks.Ranks;
 import net.minecraft.entity.player.EntityPlayerMP;
 import org.apache.logging.log4j.*;
 
@@ -51,6 +52,9 @@ public class FTBU
 		FTBUNetHandler.init();
 		Backups.init();
 		proxy.preInit();
+		
+		ForgePermissionRegistry.register(FTBUPermissions.class);
+		ForgePermissionRegistry.setHandler(Ranks.instance());
 	}
 	
 	@Mod.EventHandler
@@ -62,17 +66,21 @@ public class FTBU
 	@Mod.EventHandler
 	public void registerCommands(FMLServerStartingEvent e)
 	{
-		addCmd(e, new CmdAdmin());
-		addCmd(e, new CmdBack());
-		addCmd(e, new CmdHome());
-		addCmd(e, new CmdSpawn());
-		addCmd(e, new CmdTplast());
-		addCmd(e, new CmdWarp());
-		addCmd(e, new CmdLMPlayerSettings());
+		FTBLib.addCommand(e, new CmdAdmin());
+		if(FTBUConfigCmd.back.get()) FTBLib.addCommand(e, new CmdBack());
+		if(FTBUConfigCmd.home.get())
+		{
+			FTBLib.addCommand(e, new CmdHome());
+			FTBLib.addCommand(e, new CmdSetHome());
+			FTBLib.addCommand(e, new CmdDelHome());
+		}
+		if(FTBUConfigCmd.spawn.get()) FTBLib.addCommand(e, new CmdSpawn());
+		FTBLib.addCommand(e, new CmdTplast());
+		if(FTBUConfigCmd.warp.get()) FTBLib.addCommand(e, new CmdWarp());
+		FTBLib.addCommand(e, new CmdLMPlayerSettings());
+		
+		if(FTBUConfigCmd.player_spawnpoint.get()) FTBLib.addCommand(e, new CmdSpawnpointOverride());
 	}
-	
-	private void addCmd(FMLServerStartingEvent e, CommandLM c)
-	{ if(!c.commandName.isEmpty()) e.registerServerCommand(c); }
 	
 	@Mod.EventHandler
 	public void serverStopping(FMLServerStoppingEvent e)

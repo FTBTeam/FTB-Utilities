@@ -5,6 +5,7 @@ import ftb.lib.FTBLib;
 import ftb.utils.mod.FTBU;
 import ftb.utils.net.MessageUpdateBadges;
 import ftb.utils.world.LMPlayerServer;
+import ftb.utils.world.ranks.Ranks;
 import latmod.lib.*;
 import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.net.*;
@@ -62,7 +63,7 @@ public class ServerBadges
 					local = new JsonObject();
 					((JsonObject) local).add("badges", new JsonObject());
 					((JsonObject) local).add("players", new JsonObject());
-					LMJsonUtils.toJsonFile(file, local);
+					LMJsonUtils.toJson(file, local);
 				}
 			}
 			catch(Exception ex)
@@ -131,7 +132,7 @@ public class ServerBadges
 		
 		if(b == null)
 		{
-			String rank = p.getRank().config.badge.get();
+			String rank = Ranks.instance().getRankOf(p.getProfile()).badge;
 			if(!rank.isEmpty())
 			{
 				b = map.get(rank);

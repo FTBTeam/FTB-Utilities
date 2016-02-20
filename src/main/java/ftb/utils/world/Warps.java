@@ -36,13 +36,16 @@ public class Warps
 	
 	public void readFromJson(JsonObject g, String s)
 	{
+		warps.clear();
+		if(!g.has(s)) return;
+		
 		JsonObject g1 = g.get(s).getAsJsonObject();
 		
 		if(g1 != null) for(Map.Entry<String, JsonElement> e : g1.entrySet())
 		{
 			if(e.getValue().isJsonArray())
 			{
-				set(e.getKey(), new BlockDimPos(LMJsonUtils.fromArray(e.getValue())));
+				set(e.getKey(), new BlockDimPos(LMJsonUtils.fromIntArray(e.getValue())));
 			}
 			else
 			{

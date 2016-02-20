@@ -45,11 +45,11 @@ public class FTBUWorldEventHandler // FTBLIntegration
 			LMNBTUtils.writeMap(new File(LMWorldServer.inst.latmodFolder, "LMPlayers.dat"), tag);
 			
 			LMWorldServer.inst.save(group, Phase.POST);
-			LMJsonUtils.toJsonFile(new File(LMWorldServer.inst.latmodFolder, "LMWorld.json"), group);
+			LMJsonUtils.toJson(new File(LMWorldServer.inst.latmodFolder, "LMWorld.json"), group);
 			
 			group = new JsonObject();
 			LMWorldServer.inst.claimedChunks.save(group);
-			LMJsonUtils.toJsonFile(new File(LMWorldServer.inst.latmodFolder, "ClaimedChunks.json"), group);
+			LMJsonUtils.toJson(new File(LMWorldServer.inst.latmodFolder, "ClaimedChunks.json"), group);
 			
 			// Export player list //
 			

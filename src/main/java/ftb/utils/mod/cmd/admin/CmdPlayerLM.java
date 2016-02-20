@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 import ftb.lib.*;
 import ftb.lib.api.cmd.*;
 import ftb.lib.api.item.StringIDInvLoader;
-import ftb.lib.mod.FTBLibFinals;
 import ftb.utils.world.*;
 import latmod.lib.LMFileUtils;
 import latmod.lib.json.UUIDTypeAdapterLM;
@@ -22,7 +21,7 @@ public class CmdPlayerLM extends CommandSubLM
 	{
 		super("player_lm", CommandLevel.OP);
 		
-		if(FTBLibFinals.DEV) add(new CmdAddFake("add_fake"));
+		if(FTBLib.DEV_ENV) add(new CmdAddFake("add_fake"));
 		add(new CmdDelete("delete"));
 		add(new CmdLoadInv("load_inv"));
 		add(new CmdSaveInv("save_inv"));
@@ -109,7 +108,7 @@ public class CmdPlayerLM extends CommandSubLM
 			}
 			catch(Exception e)
 			{
-				if(FTBLibFinals.DEV) e.printStackTrace();
+				if(FTBLib.DEV_ENV) e.printStackTrace();
 				return error(new ChatComponentText("Failed to load inventory!"));
 			}
 			
@@ -149,7 +148,7 @@ public class CmdPlayerLM extends CommandSubLM
 			}
 			catch(Exception e)
 			{
-				if(FTBLibFinals.DEV) e.printStackTrace();
+				if(FTBLib.DEV_ENV) e.printStackTrace();
 				return error(new ChatComponentText("Failed to save inventory!"));
 			}
 			

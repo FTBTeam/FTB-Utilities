@@ -127,7 +127,7 @@ public class FTBUPlayerEventHandler
 		if(entity != null && (entity instanceof EntityPlayerMP || entity instanceof IMob))
 		{
 			if(entity instanceof FakePlayer) return;
-			else if(entity instanceof EntityPlayerMP && LMWorldServer.inst.getPlayer(entity).allowCreativeInteractSecure())
+			else if(entity instanceof EntityPlayerMP && LMWorldServer.inst.getPlayer(entity).allowInteractSecure())
 				return;
 			
 			int cx = MathHelperLM.chunk(e.entity.posX);

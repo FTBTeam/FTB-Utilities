@@ -1,7 +1,9 @@
 package ftb.utils.api.guide;
 
+import com.google.gson.JsonElement;
 import ftb.lib.*;
 import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.permission.*;
 import ftb.utils.mod.*;
 import ftb.utils.mod.config.*;
 import ftb.utils.world.*;
@@ -99,7 +101,7 @@ public class ServerGuideFile extends GuideFile
 		
 		if((self = pself) == null) return;
 		boolean isDedi = FTBLib.getServer().isDedicatedServer();
-		boolean isOP = !isDedi || self.getRank().config.admin_server_info.get();
+		boolean isOP = !isDedi || FTBUPermissions.admin_server_info.getBoolean(self.getProfile());
 		
 		main.copyFrom(CachedInfo.main);
 		links.putAll(CachedInfo.links);
@@ -132,7 +134,7 @@ public class ServerGuideFile extends GuideFile
 		Collections.sort(categoryTops.subcategories, null);
 		if(isOP) main.addSub(CachedInfo.categoryServerAdmin);
 		
-		GuideCategory commands = main.getSub(new ChatComponentText("Commands"));
+		GuideCategory commands = main.getSub(FTBU.mod.chatComponent("commands"));
 		commands.clear();
 		
 		CommandLM.extendedUsageInfo = true;
@@ -183,8 +185,30 @@ public class ServerGuideFile extends GuideFile
 		CommandLM.extendedUsageInfo = false;
 		Collections.sort(commands.subcategories, null);
 		
+		List<ForgePermission> permissionList = new ArrayList<>();
+		permissionList.addAll(ForgePermissionRegistry.values(null));
+		Collections.sort(permissionList);
+		
+		GuideCategory permissions = main.getSub(FTBU.mod.chatComponent("my_permissions"));
+		permissions.clear();
+		
+		for(ForgePermission p : permissionList)
+		{
+			JsonElement e = p.getElement(self.getProfile());
+			GuideCategory c = getPermissionCategory(permissions, p.ID);
+			c.println(e.toString());
+		}
+		
 		main.cleanup();
-		Collections.sort(main.subcategories, null);
+		main.sortAll();
+	}
+	
+	private static GuideCategory getPermissionCategory(GuideCategory parent, String ID)
+	{
+		int index = ID.indexOf('.');
+		if(index == -1) return parent.getSub(new ChatComponentText(ID));
+		String ID1 = ID.substring(index + 1);
+		return getPermissionCategory(parent.getSub(new ChatComponentText(ID.substring(0, index))), ID1);
 	}
 	
 	public void addTop(Top t)

@@ -2,7 +2,6 @@ package ftb.utils.api.guide;
 
 import ftb.lib.FTBLib;
 import ftb.lib.api.*;
-import ftb.lib.mod.FTBLibFinals;
 import ftb.utils.mod.FTBU;
 import ftb.utils.mod.client.gui.guide.GuiGuide;
 import latmod.lib.LMFileUtils;
@@ -20,7 +19,7 @@ public class ClientGuideFile extends GuideFile
 	
 	public void reload(EventFTBReload e)
 	{
-		if(FTBLibFinals.DEV) FTBU.logger.info("Guide reloaded @ " + e.world.side + " as " + e.world.getMode());
+		if(FTBLib.DEV_ENV) FTBU.logger.info("Guide reloaded @ " + e.world.side + " as " + e.world.getMode());
 		
 		main.clear();
 		

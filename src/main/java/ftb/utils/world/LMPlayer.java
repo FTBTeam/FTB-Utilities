@@ -3,7 +3,7 @@ package ftb.utils.world;
 import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.friends.ILMPlayer;
-import ftb.utils.world.ranks.Rank;
+import ftb.utils.mod.FTBUPermissions;
 import latmod.lib.IntList;
 import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.item.ItemStack;
@@ -25,7 +25,7 @@ public abstract class LMPlayer implements ILMPlayer, Comparable<ILMPlayer> // LM
 	public LMPlayer(int i, GameProfile gp)
 	{
 		playerID = i;
-		gameProfile = gp;
+		gameProfile = new GameProfile(gp.getId(), gp.getName());
 		
 		friends = new IntList();
 		lastArmor = new ItemStack[5];
@@ -107,9 +107,6 @@ public abstract class LMPlayer implements ILMPlayer, Comparable<ILMPlayer> // LM
 	public PersonalSettings getSettings()
 	{ return null; }
 	
-	public Rank getRank()
-	{ return null; }
-	
-	public boolean allowCreativeInteractSecure()
-	{ return getPlayer() != null && getPlayer().capabilities.isCreativeMode && getRank().config.allow_creative_interact_secure.get(); }
+	public boolean allowInteractSecure()
+	{ return FTBUPermissions.allow_interact_secure.getBoolean(getProfile()); }
 }

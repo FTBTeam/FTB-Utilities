@@ -80,8 +80,9 @@ public abstract class GuideLink implements IJsonObject
 			return;
 		}
 		else if(!e.isJsonObject()) return;
-		JsonObject o = e.getAsJsonObject();
 		
+		JsonObject o = e.getAsJsonObject();
+		link = o.get("link").getAsString();
 		title = JsonHelper.deserializeICC(o.get("title"));
 		
 		if(o.has("hover"))
@@ -217,18 +218,11 @@ public abstract class GuideLink implements IJsonObject
 		private static Boolean hasNEI = null;
 		private static Method method = null;
 		
-		private ItemStack itemStack = null;
+		public ItemStack itemStack = null;
 		
 		public GuideRecipe()
 		{
 			super(Type.RECIPE);
-		}
-		
-		public ItemStack getItem()
-		{
-			itemStack = ItemStackSerializer.parseItem(link);
-			if(itemStack != null) title = new ChatComponentText(itemStack.getDisplayName());
-			return itemStack;
 		}
 		
 		public void getJsonObj(JsonObject o)
@@ -237,12 +231,17 @@ public abstract class GuideLink implements IJsonObject
 		
 		public void setJsonObj(JsonObject o)
 		{
+			itemStack = ItemStackSerializer.parseItem(link);
+			
+			if(itemStack != null && !o.has("title"))
+			{
+				title = new ChatComponentText(itemStack.getDisplayName());
+			}
 		}
 		
 		public void onClicked(GuiGuide gui)
 		{
-			ItemStack is = getItem();
-			if(is != null)
+			if(itemStack != null)
 			{
 				if(hasNEI == null)
 				{
@@ -262,7 +261,7 @@ public abstract class GuideLink implements IJsonObject
 				
 				if(hasNEI.booleanValue())
 				{
-					try { method.invoke(null, "item", new Object[] {is}); }
+					try { method.invoke(null, "item", new Object[] {itemStack}); }
 					catch(Exception e)
 					{
 						e.printStackTrace();

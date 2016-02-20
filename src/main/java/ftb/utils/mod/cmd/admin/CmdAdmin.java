@@ -11,6 +11,7 @@ public class CmdAdmin extends CommandSubLM
 		add(new CmdPlayerLM());
 		add(new CmdRestart());
 		add(new CmdInvsee());
+		add(new CmdInvseeEnderchest());
 		add(new CmdSetWarp());
 		add(new CmdDelWarp());
 		add(new CmdUnclaim());

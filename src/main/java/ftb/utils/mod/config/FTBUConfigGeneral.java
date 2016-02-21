@@ -26,6 +26,8 @@ public class FTBUConfigGeneral
 	public static final ConfigEntryBool ranks_enabled = new ConfigEntryBool("ranks_enabled", false);
 	//public static final ConfigEntryBool ranks_override_chat = new ConfigEntryBool("ranks_override_chat", true);
 	
+	public static final ConfigEntryBool ranks_override_commands = new ConfigEntryBool("ranks_override_commands", true);
+	
 	@Info("Enable right-clicking on '[warp]' signs")
 	public static final ConfigEntryBool sign_warp = new ConfigEntryBool("sign_warp", true);
 	

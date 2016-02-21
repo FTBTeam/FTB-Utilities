@@ -251,7 +251,7 @@ public class ClaimedChunks
 				
 				if(p != null)
 				{
-					EnumEnabled fe = FTBUPermissions.forced_explosions.getEnum(p.getProfile());
+					EnumEnabled fe = FTBUPermissions.claims_forced_explosions.getEnum(p.getProfile());
 					if(fe == null) return p.getSettings().get(PersonalSettings.EXPLOSIONS);
 					else return fe.isEnabled();
 				}
@@ -273,7 +273,7 @@ public class ClaimedChunks
 		
 		if(leftClick)
 		{
-			if(FTBUPermissions.break_whitelist.getStringList(p.getProfile()).contains(LMInvUtils.getRegName(ep.worldObj.getBlock(pos.posX, pos.posY, pos.posZ))))
+			if(FTBUPermissions.claims_break_whitelist.getStringList(p.getProfile()).contains(LMInvUtils.getRegName(ep.worldObj.getBlock(pos.posX, pos.posY, pos.posZ))))
 				return true;
 		}
 		

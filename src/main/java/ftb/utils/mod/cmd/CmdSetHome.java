@@ -27,7 +27,7 @@ public class CmdSetHome extends CommandLM
 		LMPlayerServer p = LMPlayerServer.get(ep);
 		checkArgs(args, 1);
 		
-		int maxHomes = FTBUPermissions.max_homes.getNumber(ep.getGameProfile()).intValue();
+		int maxHomes = FTBUPermissions.homes_max.getNumber(ep.getGameProfile()).intValue();
 		
 		if(maxHomes <= 0 || p.homes.size() >= maxHomes)
 		{

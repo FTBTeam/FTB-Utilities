@@ -150,7 +150,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 					{
 						if(!p.isOnline())
 						{
-							double max = FTBUPermissions.offline_chunkloader_timer.getNumber(p.getProfile()).doubleValue();
+							double max = FTBUPermissions.chunkloader_offline_timer.getNumber(p.getProfile()).doubleValue();
 							
 							if(max > 0D && p.stats.getLastSeenDeltaInHours() > max)
 							{

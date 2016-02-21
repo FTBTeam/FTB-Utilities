@@ -46,7 +46,7 @@ public class ChunkType
 			else if(p.isFake()) return chunkOwner.getSettings().get(PersonalSettings.FAKE_PLAYERS);
 			
 			LMSecurity s = new LMSecurity(chunkOwner);
-			s.level = FTBUPermissions.forced_chunk_security.getEnum(p.getProfile());
+			s.level = FTBUPermissions.claims_forced_security.getEnum(p.getProfile());
 			if(s.level == null) s.level = chunkOwner.getSettings().blocks;
 			return s.canInteract(p);
 		}

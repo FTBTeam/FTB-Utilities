@@ -101,7 +101,7 @@ public class ServerGuideFile extends GuideFile
 		
 		if((self = pself) == null) return;
 		boolean isDedi = FTBLib.getServer().isDedicatedServer();
-		boolean isOP = !isDedi || FTBUPermissions.admin_server_info.getBoolean(self.getProfile());
+		boolean isOP = !isDedi || FTBUPermissions.display_admin_info.getBoolean(self.getProfile());
 		
 		main.copyFrom(CachedInfo.main);
 		links.putAll(CachedInfo.links);

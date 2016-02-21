@@ -15,28 +15,34 @@ public class FTBUPermissions
 	// Misc //
 	
 	@ConfigType(PrimitiveType.BOOLEAN)
-	@Info("Display server admin guide information (IDs etc.)")
-	public static final ForgePermission admin_server_info = new ForgePermission("ftbu.misc.display.admin_server_info", false, true);
-	
-	@ConfigType(PrimitiveType.BOOLEAN)
-	@Info("If set to false, playerMap won't be able to see others Rank in FriendsGUI")
-	public static final ForgePermission show_rank = new ForgePermission("ftbu.misc.display.rank", true, true);
-	
-	@ConfigType(PrimitiveType.BOOLEAN)
-	@Info("If set to true, creative players will be able to access protected chests / chunks")
+	@Info("Enabled access to protected chests / chunks")
 	public static final ForgePermission allow_interact_secure = new ForgePermission("ftbu.misc.allow_interact_secure", false, true);
+	
+	// Display //
+	
+	@ConfigType(PrimitiveType.BOOLEAN)
+	@Info("Display 'Admin' in Server Info")
+	public static final ForgePermission display_admin_info = new ForgePermission("ftbu.display.admin_info", false, true);
+	
+	@ConfigType(PrimitiveType.BOOLEAN)
+	@Info("Display Rank in FriendsGUI")
+	public static final ForgePermission display_rank = new ForgePermission("ftbu.display.rank", true, true);
+	
+	@ConfigType(PrimitiveType.BOOLEAN)
+	@Info("Display 'My Permissions' in Server Info")
+	public static final ForgePermission display_permissions = new ForgePermission("ftbu.display.permissions", true, true);
 	
 	// Homes //
 	
 	@ConfigType(PrimitiveType.BOOLEAN)
 	@Info("Can use /home to teleport to/from another dimension")
-	public static final ForgePermission cross_dim_homes = new ForgePermission("ftbu.homes.cross_dim", true, true);
+	public static final ForgePermission homes_cross_dim = new ForgePermission("ftbu.homes.cross_dim", true, true);
 	
 	@MinValue(0)
 	@MaxValue(30000)
 	@ConfigType(PrimitiveType.INT)
 	@Info("Max home count")
-	public static final ForgePermission max_homes = new ForgePermission("ftbu.homes.max", 1, 100);
+	public static final ForgePermission homes_max = new ForgePermission("ftbu.homes.max", 1, 100);
 	
 	// Claims //
 	
@@ -44,37 +50,37 @@ public class FTBUPermissions
 	@MaxValue(30000)
 	@ConfigType(PrimitiveType.INT)
 	@Info({"Max amount of chunks that player can claim", "0 - Disabled"})
-	public static final ForgePermission max_claims = new ForgePermission("ftbu.claims.max_chunks", 100, 1000);
+	public static final ForgePermission claims_max_chunks = new ForgePermission("ftbu.claims.max_chunks", 100, 1000);
 	
 	@ConfigType(PrimitiveType.ENUM)
-	@Info({"'-' - Player setting", "'disabled' - Explosions will never happen in claimed chunks", "'enabled' - Explosions will always happen in claimed chunks"})
-	public static final ForgePermissionEnum<EnumEnabled> forced_explosions = new ForgePermissionEnum<>("ftbu.claims.forced_explosions", null, null, EnumEnabled.VALUES, true);
+	@Info({"-: Player setting", "disabled: Explosions will never happen in claimed chunks", "enabled: Explosions will always happen in claimed chunks"})
+	public static final ForgePermissionEnum<EnumEnabled> claims_forced_explosions = new ForgePermissionEnum<>("ftbu.claims.forced_explosions", null, null, EnumEnabled.VALUES, true);
 	
 	@ConfigType(PrimitiveType.ENUM)
-	public static final ForgePermissionEnum<PrivacyLevel> forced_chunk_security = new ForgePermissionEnum<>("ftbu.claims.forced_security", null, null, PrivacyLevel.VALUES_3, true);
+	public static final ForgePermissionEnum<PrivacyLevel> claims_forced_security = new ForgePermissionEnum<>("ftbu.claims.forced_security", null, null, PrivacyLevel.VALUES_3, true);
 	
 	@ConfigType(PrimitiveType.STRING_ARRAY)
-	@Info("Block IDs that you can break in claimed chunks")
-	public static final ForgePermission break_whitelist = new ForgePermission("ftbu.claims.break_whitelist", new String[] {"OpenBlocks:grave"}, new String[0]);
+	@Info("Block IDs that player can break in claimed chunks")
+	public static final ForgePermission claims_break_whitelist = new ForgePermission("ftbu.claims.break_whitelist", new String[] {"OpenBlocks:grave"}, new String[] {"*"});
 	
 	@ConfigType(PrimitiveType.INT_ARRAY)
-	@Info("Dimensions where playerMap can't claim")
-	public static final ForgePermission dimension_blacklist = new ForgePermission("ftbu.claims.dimension_blacklist", new Number[] {1}, new Number[0]);
+	@Info("Dimensions where players can't claim")
+	public static final ForgePermission claims_dimension_blacklist = new ForgePermission("ftbu.claims.dimension_blacklist", new Number[] {1}, new Number[0]);
 	
 	// Chunkloader //
 	
 	@ConfigType(PrimitiveType.ENUM)
-	@Info({"disabled - Players won't be able to chunkload", "normal - Chunks stay loaded when player loggs off", "playerMap - Chunks only stay loaded while owner is online"})
+	@Info({"disabled: Players won't be able to chunkload", "offline: Chunks stay loaded when player loggs off", "online: Chunks only stay loaded while owner is online"})
 	public static final ForgePermissionEnum<ChunkloaderType> chunkloader_type = new ForgePermissionEnum<>("ftbu.chunkloader.type", ChunkloaderType.OFFLINE, ChunkloaderType.OFFLINE, ChunkloaderType.values(), false);
 	
 	@MinValue(0)
 	@MaxValue(30000)
 	@ConfigType(PrimitiveType.INT)
-	@Info("Max amount of chunks that player can chunkload.\n" + "0 - Disabled")
-	public static final ForgePermission max_loaded_chunks = new ForgePermission("ftbu.chunkloader.max_chunks", 50, 5000);
+	@Info({"Max amount of chunks that player can load", "0 - Disabled"})
+	public static final ForgePermission chunkloader_max_chunks = new ForgePermission("ftbu.chunkloader.max_chunks", 50, 5000);
 	
 	@MinValue(-1D)
 	@ConfigType(PrimitiveType.DOUBLE)
 	@Info({"Max hours player can be offline until he's chunks unload", "0 - Disabled, will unload instantly when he disconnects", "-1 - Disabled (will never unload)"})
-	public static final ForgePermission offline_chunkloader_timer = new ForgePermission("ftbu.chunkloader.offline_timer", 24D, -1D);
+	public static final ForgePermission chunkloader_offline_timer = new ForgePermission("ftbu.chunkloader.offline_timer", 24D, -1D);
 }

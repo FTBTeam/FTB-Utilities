@@ -10,8 +10,8 @@ import ftb.utils.mod.*;
 import ftb.utils.mod.client.FTBUClickAction;
 import ftb.utils.mod.handlers.FTBUChunkEventHandler;
 import ftb.utils.net.*;
+import ftb.utils.ranks.*;
 import ftb.utils.world.claims.*;
-import ftb.utils.world.ranks.*;
 import latmod.lib.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -134,7 +134,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		new EventLMPlayerServer.CustomInfo(this, info).post();
 		
-		if(FTBUPermissions.show_rank.getBoolean(owner.getProfile()))
+		if(FTBUPermissions.display_rank.getBoolean(owner.getProfile()))
 		{
 			Rank rank = Ranks.instance().getRankOf(getProfile());
 			IChatComponent rankC = new ChatComponentText("[" + rank.ID + "]");
@@ -262,8 +262,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			LMNBTUtils.writeTag(io, commonPrivateData);
 			io.writeShort(getClaimedChunks());
 			io.writeShort(getLoadedChunks(true));
-			io.writeShort(FTBUPermissions.max_claims.getNumber(getProfile()).shortValue());
-			io.writeShort(FTBUPermissions.max_loaded_chunks.getNumber(getProfile()).shortValue());
+			io.writeShort(FTBUPermissions.claims_max_chunks.getNumber(getProfile()).shortValue());
+			io.writeShort(FTBUPermissions.chunkloader_max_chunks.getNumber(getProfile()).shortValue());
 		}
 	}
 	
@@ -302,8 +302,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public void claimChunk(int dim, int cx, int cz)
 	{
-		if(FTBUPermissions.dimension_blacklist.getNumberList(getProfile()).contains(dim)) return;
-		int max = FTBUPermissions.max_claims.getNumber(getProfile()).intValue();
+		if(FTBUPermissions.claims_dimension_blacklist.getNumberList(getProfile()).contains(dim)) return;
+		int max = FTBUPermissions.claims_max_chunks.getNumber(getProfile()).intValue();
 		if(max == 0) return;
 		if(getClaimedChunks() >= max) return;
 		
@@ -364,8 +364,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		{
 			if(flag)
 			{
-				if(FTBUPermissions.dimension_blacklist.getNumberList(getProfile()).contains(dim)) return;
-				int max = FTBUPermissions.max_loaded_chunks.getNumber(getProfile()).intValue();
+				if(FTBUPermissions.claims_dimension_blacklist.getNumberList(getProfile()).contains(dim)) return;
+				int max = FTBUPermissions.chunkloader_max_chunks.getNumber(getProfile()).intValue();
 				if(max == 0) return;
 				if(getLoadedChunks(false) >= max) return;
 			}

@@ -4,12 +4,13 @@ import ftb.lib.TextureCoords;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.widgets.*;
+import ftb.lib.api.players.*;
+import ftb.lib.mod.client.gui.friends.GuiFriends;
+import ftb.lib.mod.net.MessageRequestSelfUpdate;
 import ftb.utils.mod.FTBU;
 import ftb.utils.mod.client.FTBUClient;
-import ftb.utils.mod.client.gui.friends.GuiFriends;
 import ftb.utils.net.*;
 import ftb.utils.world.*;
-import ftb.utils.world.claims.ChunkType;
 import latmod.lib.MathHelperLM;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.GlStateManager;
@@ -33,7 +34,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	public static final ResourceLocation tex_map_entity = new ResourceLocation("ftbl", "textures/world/entity.png");
 	public static final TextureCoords[][][][] tex_area_coords = new TextureCoords[2][2][2][2];
 	
-	private static final TextureCoords getAreaCoords(int i)
+	private static TextureCoords getAreaCoords(int i)
 	{ return new TextureCoords(tex_area, (i % 4) * 64, (i / 4) * 64, 64, 64); }
 	
 	static
@@ -60,7 +61,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	public static ByteBuffer pixelBuffer = null;
 	
 	public final long adminToken;
-	public final LMPlayerClientSelf playerLM;
+	public final LMPlayerSPSelf playerLM;
 	public final int currentDim, startX, startY;
 	
 	public final ButtonLM buttonRefresh, buttonClose, buttonSettings, buttonUnclaimAll;
@@ -75,7 +76,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		mainPanel.width = mainPanel.height = tiles_gui * 16;
 		
 		adminToken = token;
-		playerLM = LMWorldClient.inst.clientPlayer;
+		playerLM = LMWorldSP.inst.clientPlayer;
 		startX = MathHelperLM.chunk(mc.thePlayer.posX) - (int) (tiles_gui * 0.5D);
 		startY = MathHelperLM.chunk(mc.thePlayer.posZ) - (int) (tiles_gui * 0.5D);
 		currentDim = FTBLibClient.getDim();
@@ -96,7 +97,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 				thread = new ThreadReloadArea(mc.theWorld, GuiClaimChunks.this);
 				thread.start();
 				new MessageAreaRequest(startX, startY, tiles_gui, tiles_gui).sendToServer();
-				ClientAction.REQUEST_SELF_UPDATE.send(0);
+				new MessageRequestSelfUpdate().sendToServer();
 				FTBLibClient.playClickSound();
 			}
 		};
@@ -108,7 +109,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			public void onButtonPressed(int b)
 			{
 				FTBLibClient.playClickSound();
-				ClientAction.BUTTON_CLAIMED_CHUNKS_SETTINGS.send(0);
+				new MessageButtonPressed(MessageButtonPressed.CLAIMED_CHUNKS_SETTINGS, 0).sendToServer();
 			}
 		};
 		
@@ -172,7 +173,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	
 	public void drawBackground()
 	{
-		if(currentDim != FTBLibClient.getDim() || !FTBLibClient.isIngameWithFTBU())
+		if(currentDim != FTBLibClient.getDim())
 		{
 			mc.thePlayer.closeScreen();
 			return;
@@ -218,8 +219,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		renderMinimap();
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		for(int i = 0; i < mapButtons.length; i++)
-			mapButtons[i].renderWidget();
+		for(MapButton mapButton : mapButtons) mapButton.renderWidget();
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		
 		buttonRefresh.render(GuiIcons.refresh);
@@ -234,9 +234,10 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	
 	public void drawText(List<String> l)
 	{
-		String s = FTBU.mod.translate("label.cchunks_count", (playerLM.claimedChunks + " / " + playerLM.getRank().config.max_claims.get()));
+		FTBUPlayerDataSP d = FTBUPlayerDataSP.get(LMWorldSP.inst.clientPlayer);
+		String s = FTBU.mod.translate("label.cchunks_count", (d.claimedChunks + " / " + d.maxClaimedChunks));
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 12, 0xFFFFFFFF);
-		s = FTBU.mod.translate("label.lchunks_count", (playerLM.loadedChunks + " / " + playerLM.getRank().config.max_loaded_chunks.get()));
+		s = FTBU.mod.translate("label.lchunks_count", (d.loadedChunks + " / " + d.maxLoadedChunks));
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 24, 0xFFFFFFFF);
 		
 		super.drawText(l);
@@ -247,7 +248,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	}
 	
 	private ChunkType getType(int cx, int cy)
-	{ return ClaimedAreasClient.getTypeE(cx, cy); }
+	{ return FTBUWorldDataSP.inst.getType(cx, cy); }
 	
 	@SuppressWarnings("unchecked")
 	public void renderMinimap()
@@ -282,9 +283,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			ArrayList<EntityPlayer> list = new ArrayList<>();
 			list.addAll(FTBLibClient.mc.theWorld.playerEntities);
 			
-			for(int i = 0; i < list.size(); i++)
+			for(EntityPlayer ep : list)
 			{
-				EntityPlayer ep = list.get(i);
 				if(ep.dimension == currentDim && !ep.isInvisible())
 				{
 					int cx = MathHelperLM.chunk(ep.posX);
@@ -364,7 +364,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		}
 		
 		public void addMouseOverText(List<String> l)
-		{ ClaimedAreasClient.getMessage(chunkX, chunkY, l, isShiftKeyDown()); }
+		{ FTBUWorldDataSP.inst.getMessage(chunkX, chunkY, l, isShiftKeyDown()); }
 		
 		public void renderWidget()
 		{

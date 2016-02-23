@@ -59,7 +59,7 @@ public class Badge extends FinalIDObject
 		FTBLibClient.pushMaxBrightness();
 		GlStateManager.pushMatrix();
 		
-		if(ep.isSneaking()) GlStateManager.rotate(25F, 1F, 0F, 0F);
+		//TODO: Check if(ep.isSneaking()) GlStateManager.rotate(25F, 1F, 0F, 0F);
 		
 		GlStateManager.translate(0.04F, 0.01F, 0.86F);
 		

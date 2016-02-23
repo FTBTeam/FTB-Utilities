@@ -7,7 +7,6 @@ import ftb.utils.mod.cmd.*;
 import ftb.utils.mod.cmd.admin.CmdAdmin;
 import ftb.utils.mod.config.FTBUConfig;
 import ftb.utils.mod.handlers.*;
-import ftb.utils.mod.handlers.ftbl.*;
 import ftb.utils.net.FTBUNetHandler;
 import ftb.utils.world.Backups;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -28,7 +27,7 @@ public class FTBU
 	@SidedProxy(clientSide = "ftb.utils.mod.client.FTBUClient", serverSide = "ftb.utils.mod.FTBUCommon")
 	public static FTBUCommon proxy;
 	
-	@SidedProxy(clientSide = "ftb.utils.mod.handlers.ftbl.FTBLIntegrationClient", serverSide = "ftb.utils.mod.handlers.ftbl.FTBLIntegration")
+	@SidedProxy(clientSide = "ftb.utils.mod.handlers.FTBLIntegrationClient", serverSide = "ftb.utils.mod.handlers.FTBLIntegration")
 	public static FTBLIntegration ftbl_int;
 	
 	public static LMMod mod;

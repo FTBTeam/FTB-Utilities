@@ -1,9 +1,9 @@
 package ftb.utils.mod.handlers;
 
 import ftb.lib.api.*;
+import ftb.utils.mod.FTBU;
 import ftb.utils.mod.config.FTBUConfigGeneral;
-import ftb.utils.mod.handlers.ftbl.*;
-import ftb.utils.world.claims.ClaimedChunks;
+import ftb.utils.world.FTBUWorldDataMP;
 import latmod.lib.MathHelperLM;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
@@ -16,13 +16,13 @@ public class FTBUWorldEventHandler // FTBLIntegration
 	@SubscribeEvent
 	public void addWorldData(ForgeWorldDataEvent event)
 	{
-		event.add(new FTBUWorldData("FTBU", event.LMWorld));
+		FTBU.proxy.addWorldData(event);
 	}
 	
 	@SubscribeEvent
 	public void addPlayerData(ForgePlayerDataEvent event)
 	{
-		event.add(new FTBUPlayerData("FTBU", event.LMPlayer));
+		FTBU.proxy.addPlayerData(event);
 	}
 	
 	@SubscribeEvent
@@ -41,7 +41,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
 		
 		if(FTBUConfigGeneral.isEntityBanned(e.getClass())) return false;
 		
-		if(FTBUConfigGeneral.safe_spawn.get() && ClaimedChunks.isInSpawnD(e.dimension, e.posX, e.posZ))
+		if(FTBUConfigGeneral.safe_spawn.get() && FTBUWorldDataMP.isInSpawnD(e.dimension, e.posX, e.posZ))
 		{
 			if(e instanceof IMob) return false;
 			else if(e instanceof EntityChicken && e.riddenByEntity != null) return false;
@@ -57,7 +57,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
 		int dim = e.world.provider.getDimensionId();
 		int cx = MathHelperLM.chunk(e.explosion.getPosition().xCoord);
 		int cz = MathHelperLM.chunk(e.explosion.getPosition().yCoord);
-		if(!ClaimedChunks.instance.allowExplosion(dim, cx, cz)) e.setCanceled(true);
+		if(!FTBUWorldDataMP.allowExplosion(dim, cx, cz)) e.setCanceled(true);
 	}
 	
 }

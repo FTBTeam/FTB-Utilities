@@ -21,7 +21,7 @@ public class MessageSendBadge extends MessageLM<MessageSendBadge>
 	}
 	
 	public LMNetworkWrapper getWrapper()
-	{ return FTBUNetHandler.NET_INFO; }
+	{ return FTBUNetHandler.NET; }
 	
 	public void fromBytes(ByteBuf io)
 	{

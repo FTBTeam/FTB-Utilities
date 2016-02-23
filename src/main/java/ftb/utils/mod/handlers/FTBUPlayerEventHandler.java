@@ -1,12 +1,11 @@
 package ftb.utils.mod.handlers;
 
 import ftb.lib.*;
-import ftb.lib.api.friends.*;
-import ftb.lib.notification.Notification;
+import ftb.lib.api.notification.Notification;
+import ftb.lib.api.players.*;
 import ftb.utils.mod.FTBU;
 import ftb.utils.mod.config.FTBUConfigGeneral;
-import ftb.utils.mod.handlers.ftbl.FTBUWorldData;
-import ftb.utils.world.claims.ChunkType;
+import ftb.utils.world.*;
 import latmod.lib.MathHelperLM;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
@@ -30,25 +29,22 @@ public class FTBUPlayerEventHandler
 		
 		player.lastPos = new EntityPos(ep).toBlockDimPos();
 		
-		int currentChunkType = FTBUWorldData.serverInstance.getType(ep.dimension, e.newChunkX, e.newChunkZ).ID;
+		ChunkType type = FTBUWorldDataMP.inst.getType(player, ep.dimension, e.newChunkX, e.newChunkZ);
+		FTBUPlayerDataMP d = FTBUPlayerDataMP.get(player);
 		
-		if(player.lastChunkType == -99 || player.lastChunkType != currentChunkType)
+		if(d.lastChunkType == null || !d.lastChunkType.equals(type))
 		{
-			player.lastChunkType = currentChunkType;
-			
-			ChunkType type = FTBUWorldData.getChunkTypeFromI(currentChunkType);
+			d.lastChunkType = type;
 			IChatComponent msg;
 			
-			if(type.isClaimed())
-				msg = new ChatComponentText(String.valueOf(LMWorldMP.inst.getPlayer(currentChunkType)));
-			else msg = new ChatComponentTranslation(FTBU.mod.assets + type.lang);
+			if(type.asClaimed() != null) msg = new ChatComponentText(String.valueOf(type.asClaimed().chunk.getOwner()));
+			else msg = FTBU.mod.chatComponent(type.lang);
 			
 			msg.getChatStyle().setColor(EnumChatFormatting.WHITE);
 			msg.getChatStyle().setBold(true);
 			
 			Notification n = new Notification("chunk_changed", msg, 3000);
 			n.setColor(type.getAreaColor(player));
-			
 			FTBLib.notifyPlayer(ep, n);
 		}
 	}
@@ -72,7 +68,7 @@ public class FTBUPlayerEventHandler
 			int cx = MathHelperLM.chunk(e.entity.posX);
 			int cz = MathHelperLM.chunk(e.entity.posZ);
 			
-			if((FTBUConfigGeneral.safe_spawn.get() && FTBUWorldData.isInSpawn(dim, cx, cz))) e.setCanceled(true);
+			if((FTBUConfigGeneral.safe_spawn.get() && FTBUWorldDataMP.isInSpawn(dim, cx, cz))) e.setCanceled(true);
 			/*else
 			{
 				ClaimedChunk c = Claims.get(dim, cx, cz);

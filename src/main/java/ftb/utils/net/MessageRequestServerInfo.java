@@ -1,7 +1,7 @@
 package ftb.utils.net;
 
-import ftb.lib.api.friends.*;
 import ftb.lib.api.net.*;
+import ftb.lib.api.players.*;
 import ftb.utils.api.guide.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
@@ -11,7 +11,7 @@ public class MessageRequestServerInfo extends MessageLM<MessageRequestServerInfo
 	public MessageRequestServerInfo() { }
 	
 	public LMNetworkWrapper getWrapper()
-	{ return FTBUNetHandler.NET_INFO; }
+	{ return FTBUNetHandler.NET; }
 	
 	public void fromBytes(ByteBuf io)
 	{

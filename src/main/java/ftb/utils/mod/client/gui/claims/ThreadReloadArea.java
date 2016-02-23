@@ -11,7 +11,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.relauncher.*;
 
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 @SideOnly(Side.CLIENT)
@@ -62,8 +61,7 @@ public class ThreadReloadArea extends Thread
 					}
 				}
 			
-			ByteBuffer buffer = FTBLibClient.toByteBuffer(pixels.pixels, false);
-			GuiClaimChunks.pixelBuffer = buffer;
+			GuiClaimChunks.pixelBuffer = FTBLibClient.toByteBuffer(pixels.pixels, false);
 		}
 		catch(Exception e)
 		{
@@ -175,7 +173,7 @@ public class ThreadReloadArea extends Thread
 		
 		if(b == Blocks.leaves || b == Blocks.vine || b == Blocks.waterlily)
 			return LMColorUtils.addBrightness(b.colorMultiplier(worldObj, pos), -40);
-		else if(b == Blocks.grass && state.getValue(BlockGrass.SNOWY).booleanValue())
+		else if(b == Blocks.grass && state.getValue(BlockGrass.SNOWY))
 			return LMColorUtils.addBrightness(b.colorMultiplier(worldObj, pos), -15);
 		
 		return b.getMapColor(state).colorValue;

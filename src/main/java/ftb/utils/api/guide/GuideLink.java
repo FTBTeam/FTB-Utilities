@@ -57,8 +57,7 @@ public abstract class GuideLink implements IJsonObject
 			else
 			{
 				JsonArray a = new JsonArray();
-				for(int i = 0; i < hover.length; i++)
-					a.add(JsonHelper.serializeICC(hover[i]));
+				for(IChatComponent aHover : hover) a.add(JsonHelper.serializeICC(aHover));
 				o.add("hover", a);
 			}
 		}
@@ -192,8 +191,7 @@ public abstract class GuideLink implements IJsonObject
 		
 		public void getJsonObj(JsonObject o)
 		{
-			if(o.has("isURL")) isURL = o.get("isURL").getAsBoolean();
-			else isURL = false;
+			isURL = o.has("isURL") && o.get("isURL").getAsBoolean();
 		}
 		
 		public void setJsonObj(JsonObject o)
@@ -260,9 +258,9 @@ public abstract class GuideLink implements IJsonObject
 					}
 				}
 				
-				if(hasNEI.booleanValue())
+				if(hasNEI)
 				{
-					try { method.invoke(null, "item", new Object[] {is}); }
+					try { method.invoke(null, "item", is); }
 					catch(Exception e)
 					{
 						e.printStackTrace();

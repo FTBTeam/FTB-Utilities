@@ -105,7 +105,7 @@ public class InvSeeInventory implements IInventory
 	{
 		int j = slotMapping[i];
 		IInventory inv = getInv(j);
-		return (inv == null) ? false : inv.isItemValidForSlot(getSlot(j), is);
+		return inv != null && inv.isItemValidForSlot(getSlot(j), is);
 	}
 	
 	public int getField(int id)

@@ -1,9 +1,8 @@
 package ftb.utils.mod.handlers.jm;
 
+import ftb.lib.api.players.LMWorldSP;
 import ftb.utils.mod.FTBUFinals;
-import ftb.utils.mod.client.gui.claims.ClaimedAreasClient;
-import ftb.utils.world.LMWorldClient;
-import ftb.utils.world.claims.ClaimedChunks;
+import ftb.utils.world.*;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.display.*;
 import journeymap.client.api.model.*;
@@ -30,23 +29,21 @@ public class JMPluginHandler implements IJMPluginHandler
 	{
 		clientAPI.removeAll(FTBUFinals.MOD_ID);
 		
-		if(clientAPI.playerAccepts(FTBUFinals.MOD_ID, DisplayType.Polygon))
+		if(FTBUWorldDataSP.inst != null && clientAPI.playerAccepts(FTBUFinals.MOD_ID, DisplayType.Polygon))
 		{
-			Map<ChunkCoordIntPair, Integer> chunkTypes = ClaimedAreasClient.getChunkTypes();
-			
-			if(!chunkTypes.isEmpty())
+			if(!FTBUWorldDataSP.inst.chunks.isEmpty())
 			{
-				for(Map.Entry<ChunkCoordIntPair, Integer> e : chunkTypes.entrySet())
-					set(e.getKey(), e.getValue().intValue(), dim);
+				for(Map.Entry<ChunkCoordIntPair, ChunkType> e : FTBUWorldDataSP.inst.chunks.entrySet())
+					set(e.getKey(), e.getValue(), dim);
 			}
 		}
 	}
 	
-	public void set(ChunkCoordIntPair pos, int id, int dim)
+	public void set(ChunkCoordIntPair pos, ChunkType type, int dim)
 	{
 		try
 		{
-			int color = 0xFF000000 | ClaimedChunks.getChunkTypeFromI(id).getAreaColor(LMWorldClient.inst.clientPlayer);
+			int color = 0xFF000000 | type.getAreaColor(LMWorldSP.inst.clientPlayer);
 			
 			ShapeProperties shapeProps = new ShapeProperties().setStrokeWidth(2F).setStrokeColor(color).setStrokeOpacity(0.7F).setFillColor(color).setFillOpacity(0.4F);
 			MapPolygon polygon = PolygonHelper.createChunkPolygon(pos.chunkXPos, 0, pos.chunkZPos);

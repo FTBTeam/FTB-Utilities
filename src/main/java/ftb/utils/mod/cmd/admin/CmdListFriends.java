@@ -1,7 +1,7 @@
 package ftb.utils.mod.cmd.admin;
 
 import ftb.lib.api.cmd.*;
-import ftb.utils.world.LMPlayerServer;
+import ftb.lib.api.players.LMPlayerMP;
 import latmod.lib.LMListUtils;
 import net.minecraft.command.*;
 import net.minecraft.util.*;
@@ -20,7 +20,7 @@ public class CmdListFriends extends CommandLM
 	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
-		LMPlayerServer p = LMPlayerServer.get(args[0]);
+		LMPlayerMP p = LMPlayerMP.get(args[0]);
 		return new ChatComponentText(joinNiceString(LMListUtils.toStringArray(p.getFriends())));
 	}
 }

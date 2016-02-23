@@ -2,26 +2,24 @@ package ftb.utils.mod.config;
 
 import ftb.lib.FTBLib;
 import ftb.lib.api.config.ConfigRegistry;
-import ftb.utils.world.ranks.Ranks;
-import latmod.lib.config.*;
+import latmod.lib.config.ConfigFile;
 
 import java.io.File;
 
 public class FTBUConfig // FTBU
 {
-	private static ConfigFile configFile;
+	public static final ConfigFile configFile = new ConfigFile("ftbu");
 	
 	public static void load()
 	{
-		configFile = new ConfigFile("ftbu", new File(FTBLib.folderLocal, "ftbu/config.json"));
-		configFile.configGroup.setName("FTBUtilities");
-		
-		configFile.add(new ConfigGroup("backups").addAll(FTBUConfigBackups.class, null, false));
-		configFile.add(new ConfigGroup("commands").addAll(FTBUConfigCmd.class, null, false));
-		configFile.add(new ConfigGroup("general").addAll(FTBUConfigGeneral.class, null, false));
-		configFile.add(new ConfigGroup("login").addAll(FTBUConfigLogin.class, null, false));
-		configFile.add(new ConfigGroup("tops").addAll(FTBUConfigTops.class, null, false));
-		Ranks.load(configFile);
+		configFile.setFile(new File(FTBLib.folderLocal, "ftbu/config.json"));
+		configFile.setDisplayName("FTBUtilities");
+		configFile.addGroup("backups", FTBUConfigBackups.class);
+		configFile.addGroup("commands", FTBUConfigCmd.class);
+		configFile.addGroup("general", FTBUConfigGeneral.class);
+		configFile.addGroup("login", FTBUConfigLogin.class);
+		configFile.addGroup("tops", FTBUConfigTops.class);
+		//Ranks.instance().reload();
 		
 		ConfigRegistry.add(configFile);
 		configFile.load();

@@ -116,16 +116,21 @@ public class GuideCategory implements Comparable<GuideCategory>, IJsonObject // 
 	public void clear()
 	{
 		text.clear();
-		for(int i = 0; i < subcategories.size(); i++)
-			subcategories.get(i).clear();
+		for(GuideCategory subcategory : subcategories) subcategory.clear();
 		subcategories.clear();
 	}
 	
 	public void cleanup()
 	{
+		for(GuideCategory c : subcategories) c.cleanup();
 		LMListUtils.removeAll(subcategories, cleanupFilter);
-		for(GuideCategory c : subcategories)
-			c.cleanup();
+	}
+	
+	public void sortAll()
+	{
+		if(subcategories.isEmpty()) return;
+		Collections.sort(subcategories, null);
+		for(GuideCategory c : subcategories) c.sortAll();
 	}
 	
 	public void copyFrom(GuideCategory c)
@@ -147,16 +152,14 @@ public class GuideCategory implements Comparable<GuideCategory>, IJsonObject // 
 		if(text.size() > 0)
 		{
 			a = new JsonArray();
-			for(int i = 0; i < text.size(); i++)
-				a.add(JsonHelper.serializeICC(text.get(i)));
+			for(IChatComponent aText : text) a.add(JsonHelper.serializeICC(aText));
 			o.add("T", a);
 		}
 		
 		if(!subcategories.isEmpty())
 		{
 			a = new JsonArray();
-			for(int i = 0; i < subcategories.size(); i++)
-				a.add(subcategories.get(i).getJson());
+			for(GuideCategory subcategory : subcategories) a.add(subcategory.getJson());
 			
 			o.add("S", a);
 		}

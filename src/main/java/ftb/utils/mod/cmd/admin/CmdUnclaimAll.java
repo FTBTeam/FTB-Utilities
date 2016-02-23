@@ -1,7 +1,8 @@
 package ftb.utils.mod.cmd.admin;
 
 import ftb.lib.api.cmd.*;
-import ftb.utils.world.*;
+import ftb.lib.api.players.*;
+import ftb.utils.world.FTBUPlayerDataMP;
 import net.minecraft.command.*;
 import net.minecraft.util.*;
 
@@ -22,13 +23,13 @@ public class CmdUnclaimAll extends CommandLM
 		
 		if(args[0].equals("@a"))
 		{
-			for(LMPlayerServer p : LMWorldServer.inst.playerMap.values())
-				p.unclaimAllChunks(null);
+			for(LMPlayer p : LMWorldMP.inst.playerMap.values())
+				FTBUPlayerDataMP.get(p.toPlayerMP()).unclaimAllChunks(null);
 			return new ChatComponentText("Unclaimed all chunks");
 		}
 		
-		LMPlayerServer p = LMPlayerServer.get(args[0]);
-		p.unclaimAllChunks(null);
+		LMPlayerMP p = LMPlayerMP.get(args[0]);
+		FTBUPlayerDataMP.get(p).unclaimAllChunks(null);
 		return new ChatComponentText("Unclaimed all " + p.getProfile().getName() + "'s chunks");
 	}
 }

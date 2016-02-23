@@ -1,12 +1,10 @@
-package ftb.utils.mod.handlers.ftbl;
+package ftb.utils.mod.handlers;
 
 import ftb.lib.api.EventFTBReload;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.notification.ClientNotifications;
+import ftb.lib.api.paint.IPainterItem;
 import ftb.utils.api.guide.ClientGuideFile;
-import ftb.utils.api.paint.IPainterItem;
 import ftb.utils.badges.ClientBadges;
-import ftb.utils.mod.client.gui.claims.ClaimedAreasClient;
 import net.minecraft.item.*;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -25,12 +23,6 @@ public class FTBLIntegrationClient extends FTBLIntegration
 			ClientBadges.clear();
 			ClientGuideFile.instance.reload(e);
 		}
-	}
-	
-	public void onFTBWorldClient()
-	{
-		ClientNotifications.init();
-		ClaimedAreasClient.clear();
 	}
 	
 	public void renderWorld(float pt)

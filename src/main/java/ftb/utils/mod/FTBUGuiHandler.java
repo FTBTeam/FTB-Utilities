@@ -1,8 +1,8 @@
 package ftb.utils.mod;
 
 import ftb.lib.api.gui.*;
+import ftb.lib.mod.client.gui.friends.GuiFriends;
 import ftb.utils.mod.client.gui.claims.GuiClaimChunks;
-import ftb.utils.mod.client.gui.friends.GuiFriends;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;

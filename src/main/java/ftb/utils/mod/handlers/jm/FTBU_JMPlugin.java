@@ -1,6 +1,7 @@
 package ftb.utils.mod.handlers.jm;
 
 import ftb.lib.FTBLib;
+import ftb.utils.mod.FTBUFinals;
 import ftb.utils.mod.client.FTBUClient;
 import journeymap.client.api.*;
 import journeymap.client.api.event.ClientEvent;
@@ -17,9 +18,12 @@ public class FTBU_JMPlugin implements IClientPlugin
 		FTBLib.logger.info("FTBUtilities <-> JourneyMap Integration loaded");
 	}
 	
+	public String getModId()
+	{ return FTBUFinals.MOD_ID; }
+	
 	public void onEvent(ClientEvent event)
 	{
-		if(event.type == ClientEvent.Type.DISPLAY_STARTED && FTBUClient.journeyMapHandler != null)
+		if(event.type == ClientEvent.Type.DISPLAY_UPDATE && FTBUClient.journeyMapHandler != null)
 		{
 			FTBUClient.journeyMapHandler.refresh(event.dimension);
 		}

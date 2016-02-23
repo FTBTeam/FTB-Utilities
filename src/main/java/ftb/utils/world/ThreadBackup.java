@@ -76,15 +76,7 @@ public class ThreadBackup extends Thread
 					if(i == 0 || millis > logMillis || i == allFiles - 1)
 					{
 						logMillis = millis + 5000L;
-						
-						StringBuilder log = new StringBuilder();
-						log.append('[');
-						log.append(i);
-						log.append(" | ");
-						log.append(MathHelperLM.toSmallDouble((i / (double) allFiles) * 100D));
-						log.append("%]: ");
-						log.append(ze.getName());
-						Backups.logger.info(log.toString());
+						Backups.logger.info("[" + i + " | " + MathHelperLM.toSmallDouble((i / (double) allFiles) * 100D) + "%]: " + ze.getName());
 					}
 					
 					zos.putNextEntry(ze);
@@ -120,15 +112,7 @@ public class ThreadBackup extends Thread
 					if(i == 0 || millis > logMillis || i == allFiles - 1)
 					{
 						logMillis = millis + 2000L;
-						
-						StringBuilder log = new StringBuilder();
-						log.append('[');
-						log.append(i);
-						log.append(" | ");
-						log.append(MathHelperLM.toSmallDouble((i / (double) allFiles) * 100D));
-						log.append("%]: ");
-						log.append(file.getName());
-						Backups.logger.info(log.toString());
+						Backups.logger.info("[" + i + " | " + MathHelperLM.toSmallDouble((i / (double) allFiles) * 100D) + "%]: " + file.getName());
 					}
 					
 					File dst1 = new File(dstPath + (file.getAbsolutePath().replace(srcPath, "")));

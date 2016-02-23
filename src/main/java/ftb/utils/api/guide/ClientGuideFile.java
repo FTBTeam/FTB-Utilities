@@ -32,8 +32,7 @@ public class ClientGuideFile extends GuideFile
 			if(f != null && f.length > 0)
 			{
 				Arrays.sort(f, LMFileUtils.fileComparator);
-				for(int i = 0; i < f.length; i++)
-					loadFromFiles(main, f[i]);
+				for(File aF : f) loadFromFiles(main, aF);
 			}
 		}
 		
@@ -44,8 +43,7 @@ public class ClientGuideFile extends GuideFile
 			if(f != null && f.length > 0)
 			{
 				Arrays.sort(f, LMFileUtils.fileComparator);
-				for(int i = 0; i < f.length; i++)
-					loadFromFiles(main, f[i]);
+				for(File aF : f) loadFromFiles(main, aF);
 			}
 		}
 		

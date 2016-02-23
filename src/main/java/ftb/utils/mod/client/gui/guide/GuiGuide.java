@@ -162,10 +162,10 @@ public class GuiGuide extends GuiLM
 			fontRendererObj.setUnicodeFlag(FTBUClient.guide_unicode.get());
 			List<String> list = fontRendererObj.listFormattedStringToWidth(s.trim(), textPanel.width);
 			
-			for(int i = 0; i < list.size(); i++)
+			for(String aList : list)
 			{
 				TextLine l = new TextLine(null);
-				l.text = list.get(i);
+				l.text = aList;
 				l.special = file.getGuideLink(l.text);
 				allTextLines.add(l);
 				
@@ -231,8 +231,7 @@ public class GuiGuide extends GuiLM
 	
 	public void refreshText()
 	{
-		for(int i = 0; i < textLines.length; i++)
-			textLines[i].line = null;
+		for(ButtonTextLine textLine : textLines) textLine.line = null;
 		
 		int lines = allTextLines.size();
 		int off = 0;
@@ -274,14 +273,12 @@ public class GuiGuide extends GuiLM
 		
 		boolean uni = fontRendererObj.getUnicodeFlag();
 		fontRendererObj.setUnicodeFlag(FTBUClient.guide_unicode.get());
-		for(int i = 0; i < textLines.length; i++)
-			textLines[i].renderWidget();
+		for(ButtonTextLine textLine : textLines) textLine.renderWidget();
 		fontRendererObj.setUnicodeFlag(uni);
 		
 		if(!categoryButtons.isEmpty())
 		{
-			for(int i = 0; i < categoryButtons.size(); i++)
-				categoryButtons.get(i).renderWidget();
+			for(ButtonCategory categoryButton : categoryButtons) categoryButton.renderWidget();
 		}
 	}
 	

@@ -2,9 +2,9 @@ package ftb.utils.mod.cmd;
 
 import ftb.lib.*;
 import ftb.lib.api.cmd.*;
+import ftb.lib.api.players.LMPlayerMP;
 import ftb.utils.mod.FTBU;
 import ftb.utils.mod.config.FTBUConfigCmd;
-import ftb.utils.world.LMPlayerServer;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
@@ -35,17 +35,17 @@ public class CmdTplast extends CommandLM
 		}
 		
 		EntityPlayerMP who;
-		LMPlayerServer to;
+		LMPlayerMP to;
 		
 		if(args.length == 1)
 		{
 			who = getCommandSenderAsPlayer(ics);
-			to = LMPlayerServer.get(args[0]);
+			to = LMPlayerMP.get(args[0]);
 		}
 		else
 		{
 			who = getPlayer(ics, args[0]);
-			to = LMPlayerServer.get(args[1]);
+			to = LMPlayerMP.get(args[1]);
 		}
 		
 		BlockDimPos p = to.getPos();

@@ -1,86 +1,69 @@
 package ftb.utils.net;
 
 import ftb.lib.BlockDimPos;
-import ftb.lib.api.friends.LMPlayerMP;
 import ftb.lib.api.net.*;
-import ftb.utils.mod.client.gui.claims.ClaimedAreasClient;
-import ftb.utils.world.claims.*;
+import ftb.lib.api.players.LMPlayerMP;
+import ftb.utils.world.*;
 import io.netty.buffer.ByteBuf;
-import latmod.lib.MathHelperLM;
+import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 import net.minecraftforge.fml.relauncher.*;
 
+import java.util.*;
+
 public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate>
 {
-	public int chunkX, chunkZ, dim, sizeX, sizeZ;
-	public int types[];
+	public int dim;
+	public Map<ChunkCoordIntPair, ChunkType> types;
 	
 	public MessageAreaUpdate() { }
 	
 	public MessageAreaUpdate(LMPlayerMP p, int x, int z, int d, int sx, int sz)
 	{
-		chunkX = x;
-		chunkZ = z;
 		dim = d;
-		sizeX = MathHelperLM.clampInt(sx, 1, 255);
-		sizeZ = MathHelperLM.clampInt(sz, 1, 255);
-		types = new int[sizeX * sizeZ];
-		
-		int i = 0;
-		for(int z1 = z; z1 < z + sz; z1++)
-		{
-			for(int x1 = x; x1 < x + sx; x1++)
-			{
-				ChunkType type = ClaimedChunks.instance.getType(d, x1, z1);
-				if(type instanceof ChunkType.PlayerClaimed && type.isChunkOwner(p) && ClaimedChunks.instance.getChunk(d, x1, z1).isChunkloaded)
-					type = ChunkType.LOADED_SELF;
-				
-				types[i] = type.ID;
-				i++;
-			}
-		}
+		types = FTBUWorldDataMP.inst.getChunkTypes(p, x, z, d, sx, sz);
 	}
 	
-	public MessageAreaUpdate(LMPlayerMP p, BlockDimPos pos, int sx, int sz)
-	{ this(p, pos.chunkX() - (sx / 2 + 1), pos.chunkZ() - (sz / 2 + 1), pos.dim, sx, sz); }
+	public MessageAreaUpdate(LMPlayerMP p, BlockDimPos pos, int radius)
+	{ this(p, pos.chunkX() - radius, pos.chunkZ() - radius, pos.dim, radius * 2 + 1, radius * 2 + 1); }
 	
 	public LMNetworkWrapper getWrapper()
 	{ return FTBUNetHandler.NET_WORLD; }
 	
 	public void fromBytes(ByteBuf io)
 	{
-		chunkX = io.readInt();
-		chunkZ = io.readInt();
 		dim = io.readInt();
-		sizeX = io.readUnsignedByte();
-		sizeZ = io.readUnsignedByte();
+		int size = io.readInt();
+		types = new HashMap<>(size);
 		
-		types = new int[sizeX * sizeZ];
-		
-		for(int i = 0; i < types.length; i++)
+		for(int i = 0; i < size; i++)
 		{
-			types[i] = io.readInt();
+			int x = io.readInt();
+			int z = io.readInt();
+			ChunkCoordIntPair pos = new ChunkCoordIntPair(x, z);
+			ChunkType type = ChunkType.read(dim, pos, io);
+			types.put(pos, type);
 		}
 	}
 	
 	public void toBytes(ByteBuf io)
 	{
-		io.writeInt(chunkX);
-		io.writeInt(chunkZ);
 		io.writeInt(dim);
-		io.writeByte(sizeX);
-		io.writeByte(sizeZ);
+		io.writeInt(types.size());
 		
-		for(int i = 0; i < types.length; i++)
+		for(Map.Entry<ChunkCoordIntPair, ChunkType> e : types.entrySet())
 		{
-			io.writeInt(types[i]);
+			io.writeInt(e.getKey().chunkXPos);
+			io.writeInt(e.getKey().chunkZPos);
+			e.getValue().write(io);
 		}
 	}
 	
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageAreaUpdate m, MessageContext ctx)
 	{
-		ClaimedAreasClient.setTypes(m.dim, m.chunkX, m.chunkZ, m.sizeX, m.sizeZ, m.types);
+		if(FTBUWorldDataSP.inst == null) return null;
+		FTBUWorldDataSP.inst.setTypes(m.dim, m.types);
 		return null;
 	}
 }

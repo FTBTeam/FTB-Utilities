@@ -1,19 +1,16 @@
 package ftb.utils.mod.client;
 
-import ftb.lib.*;
 import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.friends.LMPlayer;
 import ftb.lib.api.gui.*;
+import ftb.lib.api.players.LMPlayer;
 import ftb.lib.mod.FTBLibFinals;
+import ftb.lib.mod.client.gui.friends.GuiFriends;
 import ftb.utils.mod.client.gui.claims.GuiClaimChunks;
-import ftb.utils.mod.client.gui.friends.GuiFriends;
 import ftb.utils.mod.client.gui.guide.GuiGuide;
-import ftb.utils.net.ClientAction;
+import ftb.utils.net.MessageRequestServerInfo;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.*;
 
 public class FTBUActions
@@ -21,14 +18,9 @@ public class FTBUActions
 	@SideOnly(Side.CLIENT)
 	public static void init()
 	{
-		PlayerActionRegistry.add(friends_gui);
 		PlayerActionRegistry.add(guide);
 		PlayerActionRegistry.add(info);
 		PlayerActionRegistry.add(claims);
-		
-		PlayerActionRegistry.add(friend_add);
-		PlayerActionRegistry.add(friend_remove);
-		PlayerActionRegistry.add(friend_deny);
 		
 		//PlayerActionRegistry.add(mail);
 		//PlayerActionRegistry.add(trade);
@@ -55,7 +47,7 @@ public class FTBUActions
 		{
 			public GuiScreen openGui(EntityPlayer ep)
 			{
-				ClientAction.REQUEST_SERVER_INFO.send(null);
+				new MessageRequestServerInfo().sendToServer();
 				return null;
 			}
 		});
@@ -73,18 +65,6 @@ public class FTBUActions
 	
 	// Self //
 	
-	public static final PlayerAction friends_gui = new PlayerAction(PlayerAction.Type.SELF, "ftbu.friends_gui", 950, TextureCoords.getSquareIcon(new ResourceLocation("ftbu", "textures/gui/friendsbutton.png"), 256))
-	{
-		public void onClicked(LMPlayer self, LMPlayer other)
-		{ FTBLibClient.openGui(new GuiFriends(FTBLibClient.mc.currentScreen)); }
-		
-		public boolean isVisibleFor(LMPlayer self, LMPlayer other)
-		{ return FTBLibClient.isIngameWithFTBU(); }
-		
-		public String getDisplayName()
-		{ return "FriendsGUI"; }
-	};
-	
 	public static final PlayerAction guide = new PlayerAction(PlayerAction.Type.SELF, "ftbu.guide", 0, GuiIcons.book)
 	{
 		public void onClicked(LMPlayer self, LMPlayer other)
@@ -94,7 +74,7 @@ public class FTBUActions
 		}
 		
 		public boolean isVisibleFor(LMPlayer self, LMPlayer other)
-		{ return FTBLibClient.isIngameWithFTBU(); }
+		{ return FTBUClient.hasServerMod(); }
 		
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }
@@ -103,10 +83,10 @@ public class FTBUActions
 	public static final PlayerAction info = new PlayerAction(PlayerAction.Type.SELF, "ftbu.server_info", 0, GuiIcons.book_red)
 	{
 		public void onClicked(LMPlayer self, LMPlayer other)
-		{ ClientAction.REQUEST_SERVER_INFO.send(null); }
+		{ new MessageRequestServerInfo().sendToServer(); }
 		
 		public boolean isVisibleFor(LMPlayer self, LMPlayer other)
-		{ return FTBLibClient.isIngameWithFTBU(); }
+		{ return FTBUClient.hasServerMod(); }
 		
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }
@@ -118,7 +98,7 @@ public class FTBUActions
 		{ FTBLibClient.openGui(new GuiClaimChunks(0L)); }
 		
 		public boolean isVisibleFor(LMPlayer self, LMPlayer other)
-		{ return FTBLibClient.isIngameWithFTBU(); }
+		{ return FTBUClient.hasServerMod(); }
 		
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }
@@ -138,40 +118,6 @@ public class FTBUActions
 	};
 	
 	// Other //
-	
-	private static NBTTagCompound getPlayerID(LMPlayer p)
-	{
-		NBTTagCompound tag = new NBTTagCompound();
-		LMNBTUtils.setUUID(tag, "ID", p.getProfile().getId());
-		return tag;
-	}
-	
-	public static final PlayerAction friend_add = new PlayerAction(PlayerAction.Type.OTHER, "ftbu.add_friend", 1, GuiIcons.add)
-	{
-		public void onClicked(LMPlayer self, LMPlayer other)
-		{ ClientAction.ADD_FRIEND.send(getPlayerID(other)); }
-		
-		public boolean isVisibleFor(LMPlayer self, LMPlayer other)
-		{ return FTBLibClient.isIngameWithFTBU() && !self.isFriendRaw(other); }
-	};
-	
-	public static final PlayerAction friend_remove = new PlayerAction(PlayerAction.Type.OTHER, "ftbu.rem_friend", -1, GuiIcons.remove)
-	{
-		public void onClicked(LMPlayer self, LMPlayer other)
-		{ ClientAction.REM_FRIEND.send(getPlayerID(other)); }
-		
-		public boolean isVisibleFor(LMPlayer self, LMPlayer other)
-		{ return FTBLibClient.isIngameWithFTBU() && self.isFriendRaw(other); }
-	};
-	
-	public static final PlayerAction friend_deny = new PlayerAction(PlayerAction.Type.OTHER, "ftbu.deny_friend", -1, GuiIcons.remove)
-	{
-		public void onClicked(LMPlayer self, LMPlayer other)
-		{ ClientAction.DENY_FRIEND.send(getPlayerID(other)); }
-		
-		public boolean isVisibleFor(LMPlayer self, LMPlayer other)
-		{ return FTBLibClient.isIngameWithFTBU() && !self.isFriendRaw(other) && other.isFriendRaw(self); }
-	};
 	
 	public static final PlayerAction mail = new PlayerAction(PlayerAction.Type.OTHER, "ftbu.mail", 0, GuiIcons.feather)
 	{

@@ -2,10 +2,10 @@ package ftb.utils.badges;
 
 import com.google.gson.*;
 import ftb.lib.FTBLib;
-import ftb.lib.api.friends.LMPlayerMP;
+import ftb.lib.api.players.LMPlayerMP;
 import ftb.utils.mod.FTBU;
-import ftb.utils.mod.handlers.ftbl.FTBUPermissions;
 import ftb.utils.net.MessageUpdateBadges;
+import ftb.utils.ranks.Ranks;
 import latmod.lib.*;
 import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.net.*;
@@ -130,14 +130,11 @@ public class ServerBadges
 		Badge b = uuid.get(p.getProfile().getId());
 		if(b != null) return b;
 		
-		if(b == null)
+		String rank = Ranks.instance().getRankOf(p.getProfile()).badge;
+		if(!rank.isEmpty())
 		{
-			String rank = FTBUPermissions.badge.getString(p.getPlayer());
-			if(!rank.isEmpty())
-			{
-				b = map.get(rank);
-				if(b != null) return b;
-			}
+			b = map.get(rank);
+			if(b != null) return b;
 		}
 		
 		return Badge.emptyBadge;

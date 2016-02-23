@@ -1,6 +1,6 @@
 package ftb.utils.api.guide;
 
-import ftb.lib.api.friends.LMPlayerMP;
+import ftb.lib.api.players.LMPlayerMP;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class EventFTBUServerGuide extends Event

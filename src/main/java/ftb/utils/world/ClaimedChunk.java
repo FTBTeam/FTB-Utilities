@@ -1,6 +1,6 @@
-package ftb.utils.world.claims;
+package ftb.utils.world;
 
-import ftb.lib.api.friends.*;
+import ftb.lib.api.players.*;
 import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.ChunkCoordIntPair;
@@ -27,7 +27,7 @@ public final class ClaimedChunk
 	{ this(LMWorldMP.inst.getPlayer(ep).getProfile().getId(), ep.dimension, MathHelperLM.chunk(ep.posX), MathHelperLM.chunk(ep.posZ)); }
 	
 	public Long getLongPos()
-	{ return Long.valueOf(Bits.intsToLong(posX, posZ)); }
+	{ return Bits.intsToLong(posX, posZ); }
 	
 	public LMPlayerMP getOwner()
 	{ return LMWorldMP.inst.getPlayer(ownerID); }

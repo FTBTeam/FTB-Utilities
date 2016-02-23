@@ -1,7 +1,7 @@
 package ftb.utils.net;
 
-import ftb.lib.api.friends.LMWorldMP;
 import ftb.lib.api.net.*;
+import ftb.lib.api.players.LMWorldMP;
 import io.netty.buffer.ByteBuf;
 import latmod.lib.MathHelperLM;
 import net.minecraft.entity.player.EntityPlayerMP;

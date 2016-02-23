@@ -1,16 +1,14 @@
-package ftb.utils.mod.handlers.ftbl;
+package ftb.utils.world;
 
 import com.google.gson.*;
 import ftb.lib.*;
-import ftb.lib.api.friends.*;
 import ftb.lib.api.item.LMInvUtils;
+import ftb.lib.api.players.*;
 import ftb.utils.badges.ServerBadges;
-import ftb.utils.mod.FTBU;
+import ftb.utils.mod.*;
 import ftb.utils.mod.cmd.admin.CmdRestart;
 import ftb.utils.mod.config.*;
 import ftb.utils.mod.handlers.FTBUChunkEventHandler;
-import ftb.utils.world.*;
-import ftb.utils.world.claims.*;
 import latmod.lib.*;
 import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.util.EnumEnabled;
@@ -18,54 +16,50 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.world.*;
-import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.*;
 
 /**
- * Created by LatvianModder on 11.02.2016.
+ * Created by LatvianModder on 23.02.2016.
  */
-public class FTBUWorldData extends ForgeWorldData implements ITickingLMWorld
+public class FTBUWorldDataMP extends ForgeWorldData
 {
-	public static FTBUWorldData serverInstance = null;
+	public static FTBUWorldDataMP inst = null;
 	
-	public HashMap<Integer, HashMap<Long, ClaimedChunk>> chunks;
+	public Map<Integer, Map<ChunkCoordIntPair, ClaimedChunk>> chunks;
 	public Warps warps;
 	public long nextChunkloaderUpdate;
 	private long startMillis;
 	private String lastRestartMessage;
 	public long restartMillis;
 	
-	public FTBUWorldData(String id, LMWorld w)
+	public FTBUWorldDataMP(LMWorldMP w)
 	{
-		super(id, w);
+		super(FTBUFinals.MOD_ID, w);
 	}
 	
 	public void init()
 	{
-		if(world.side.isServer())
+		inst = this;
+		
+		chunks = new HashMap<>();
+		warps = new Warps();
+		
+		startMillis = LMUtils.millis();
+		Backups.nextBackup = startMillis + FTBUConfigBackups.backupMillis();
+		lastRestartMessage = "";
+		
+		if(FTBUConfigGeneral.restart_timer.get() > 0)
 		{
-			serverInstance = this;
-			
-			chunks = new HashMap<>();
-			warps = new Warps();
-			
-			startMillis = LMUtils.millis();
-			Backups.nextBackup = startMillis + FTBUConfigBackups.backupMillis();
-			lastRestartMessage = "";
-			
-			if(FTBUConfigGeneral.restart_timer.get() > 0)
-			{
-				restartMillis = startMillis + (long) (FTBUConfigGeneral.restart_timer.get() * 3600D * 1000D);
-				FTBU.logger.info("Server restart in " + LMStringUtils.getTimeString(restartMillis));
-			}
+			restartMillis = startMillis + (long) (FTBUConfigGeneral.restart_timer.get() * 3600D * 1000D);
+			FTBU.logger.info("Server restart in " + LMStringUtils.getTimeString(restartMillis));
 		}
 	}
 	
 	public List<ClaimedChunk> getAllChunks()
 	{
 		ArrayList<ClaimedChunk> l = new ArrayList<>();
-		for(HashMap<Long, ClaimedChunk> m : chunks.values())
+		for(Map<ChunkCoordIntPair, ClaimedChunk> m : chunks.values())
 			l.addAll(m.values());
 		return l;
 	}
@@ -93,7 +87,7 @@ public class FTBUWorldData extends ForgeWorldData implements ITickingLMWorld
 			{
 				int dim = Integer.parseInt(e.getKey());
 				
-				HashMap<Long, ClaimedChunk> map = new HashMap<>();
+				HashMap<ChunkCoordIntPair, ClaimedChunk> map = new HashMap<>();
 				
 				for(Map.Entry<String, JsonElement> e1 : e.getValue().getAsJsonObject().entrySet())
 				{
@@ -113,7 +107,7 @@ public class FTBUWorldData extends ForgeWorldData implements ITickingLMWorld
 								{
 									ClaimedChunk c = new ClaimedChunk(id, dim, ai[0], ai[1]);
 									if(ai.length >= 3 && ai[2] == 1) c.isChunkloaded = true;
-									map.put(Bits.intsToLong(ai[0], ai[1]), c);
+									map.put(new ChunkCoordIntPair(ai[0], ai[1]), c);
 								}
 							}
 						}
@@ -137,16 +131,13 @@ public class FTBUWorldData extends ForgeWorldData implements ITickingLMWorld
 		
 		JsonObject claimedChunksGroup = new JsonObject();
 		
-		Comparator<Map.Entry<Integer, HashMap<Long, ClaimedChunk>>> comparator = LMMapUtils.byKeyNumbers();
-		Comparator<Map.Entry<Long, ClaimedChunk>> comparator2 = LMMapUtils.byKeyNumbers();
-		
-		for(Map.Entry<Integer, HashMap<Long, ClaimedChunk>> e : LMMapUtils.sortedEntryList(chunks, comparator))
+		for(Map.Entry<Integer, Map<ChunkCoordIntPair, ClaimedChunk>> e : chunks.entrySet())
 		{
 			JsonObject o1 = new JsonObject();
 			
-			for(ClaimedChunk c : LMMapUtils.values(e.getValue(), comparator2))
+			for(ClaimedChunk c : e.getValue().values())
 			{
-				LMPlayer p = c.getOwner(Side.SERVER);
+				LMPlayerMP p = c.getOwner();
 				
 				if(p != null)
 				{
@@ -179,11 +170,8 @@ public class FTBUWorldData extends ForgeWorldData implements ITickingLMWorld
 	
 	public void onClosed()
 	{
-		if(world.side.isServer())
-		{
-			startMillis = restartMillis = 0L;
-			serverInstance = null;
-		}
+		startMillis = restartMillis = 0L;
+		inst = null;
 	}
 	
 	public void onTick(WorldServer w, long now)
@@ -251,7 +239,7 @@ public class FTBUWorldData extends ForgeWorldData implements ITickingLMWorld
 		
 		if(dim == null)
 		{
-			for(HashMap<Long, ClaimedChunk> map : chunks.values())
+			for(Map<ChunkCoordIntPair, ClaimedChunk> map : chunks.values())
 			{
 				for(ClaimedChunk c : map.values())
 				{
@@ -273,17 +261,17 @@ public class FTBUWorldData extends ForgeWorldData implements ITickingLMWorld
 	public boolean put(ClaimedChunk c)
 	{
 		if(c == null) return false;
-		HashMap<Long, ClaimedChunk> map = chunks.get(c.dim);
+		Map<ChunkCoordIntPair, ClaimedChunk> map = chunks.get(c.dim);
 		if(map == null) chunks.put(c.dim, map = new HashMap<>());
-		return map.put(c.getLongPos(), c) == null;
+		return map.put(c.getPos(), c) == null;
 	}
 	
 	public ClaimedChunk remove(int dim, int cx, int cz)
 	{
-		HashMap<Long, ClaimedChunk> map = chunks.get(dim);
+		Map<ChunkCoordIntPair, ClaimedChunk> map = chunks.get(dim);
 		if(map != null)
 		{
-			ClaimedChunk chunk = map.remove(Bits.intsToLong(cx, cz));
+			ClaimedChunk chunk = map.remove(new ChunkCoordIntPair(cx, cz));
 			
 			if(chunk != null)
 			{
@@ -295,7 +283,7 @@ public class FTBUWorldData extends ForgeWorldData implements ITickingLMWorld
 		return null;
 	}
 	
-	public ChunkType getType(int dim, int cx, int cz)
+	public ChunkType getType(LMPlayerMP p, int dim, int cx, int cz)
 	{
 		World w = LMDimUtils.getWorld(dim);
 		if(w == null || !w.getChunkProvider().chunkExists(cx, cz)) return ChunkType.UNLOADED;
@@ -303,11 +291,11 @@ public class FTBUWorldData extends ForgeWorldData implements ITickingLMWorld
 		//TODO: if(LMWorldMP.inst.settings.getWB(dim).isOutside(cx, cz)) return ChunkType.WORLD_BORDER;
 		ClaimedChunk c = getChunk(dim, cx, cz);
 		if(c == null) return ChunkType.WILDERNESS;
-		return new ChunkType.PlayerClaimed(LMWorldMP.inst.getPlayer(c.ownerID));
+		return new ChunkType.PlayerClaimed(c);
 	}
 	
-	public ChunkType getTypeD(int dim, BlockPos pos)
-	{ return getType(dim, MathHelperLM.chunk(pos.getX()), MathHelperLM.chunk(pos.getZ())); }
+	public ChunkType getTypeD(LMPlayerMP p, int dim, BlockPos pos)
+	{ return getType(p, dim, MathHelperLM.chunk(pos.getX()), MathHelperLM.chunk(pos.getZ())); }
 	
 	public static boolean isInSpawn(int dim, int cx, int cz)
 	{
@@ -326,21 +314,21 @@ public class FTBUWorldData extends ForgeWorldData implements ITickingLMWorld
 	public static boolean isInSpawnD(int dim, double x, double z)
 	{ return dim == 0 && isInSpawn(dim, MathHelperLM.chunk(x), MathHelperLM.chunk(z)); }
 	
-	public boolean allowExplosion(int dim, int cx, int cz)
+	public static boolean allowExplosion(int dim, int cx, int cz)
 	{
 		if(dim == 0 && FTBUConfigGeneral.safe_spawn.get() && isInSpawn(dim, cx, cz)) return false;
 			//TODO: else if(LMWorldMP.inst.settings.getWB(dim).isOutside(cx, cz)) return false;
 		else
 		{
-			ClaimedChunk c = getChunk(dim, cx, cz);
+			ClaimedChunk c = inst.getChunk(dim, cx, cz);
 			if(c != null)
 			{
-				LMPlayer p = c.getOwner(Side.SERVER);
+				LMPlayerMP p = c.getOwner();
 				
 				if(p != null)
 				{
-					EnumEnabled fe = FTBUPermissions.forced_explosions.getEnum(p.toPlayerMP().getPlayer());
-					if(fe == null) return FTBUPlayerData.get(p).getFlag(FTBUPlayerData.EXPLOSIONS);
+					EnumEnabled fe = FTBUPermissions.claims_forced_explosions.getEnum(p.getProfile());
+					if(fe == null) return FTBUPlayerDataMP.get(p).getFlag(FTBUPlayerData.EXPLOSIONS);
 					else return fe.isEnabled();
 				}
 			}
@@ -361,11 +349,30 @@ public class FTBUWorldData extends ForgeWorldData implements ITickingLMWorld
 		
 		if(leftClick)
 		{
-			if(FTBUPermissions.break_whitelist.getStringList(ep).contains(LMInvUtils.getRegName(ep.worldObj.getBlockState(pos).getBlock())))
+			if(FTBUPermissions.claims_break_whitelist.getStringList(p.getProfile()).contains(LMInvUtils.getRegName(ep.worldObj.getBlockState(pos).getBlock())))
 				return true;
 		}
 		
-		ChunkType type = serverInstance.getTypeD(ep.dimension, pos);
+		ChunkType type = inst.getTypeD(p, ep.dimension, pos);
 		return type.canInteract(p.toPlayerMP(), leftClick);
+	}
+	
+	public Map<ChunkCoordIntPair, ChunkType> getChunkTypes(LMPlayerMP p, int x, int z, int d, int sx, int sz)
+	{
+		Map<ChunkCoordIntPair, ChunkType> map = new HashMap<>();
+		
+		for(int x1 = x; x1 < x + sx; x1++)
+		{
+			for(int z1 = z; z1 < z + sz; z1++)
+			{
+				ChunkType type = getType(p, d, x1, z1);
+				if(type != ChunkType.UNLOADED)
+				{
+					map.put(new ChunkCoordIntPair(x1, z1), type);
+				}
+			}
+		}
+		
+		return map;
 	}
 }

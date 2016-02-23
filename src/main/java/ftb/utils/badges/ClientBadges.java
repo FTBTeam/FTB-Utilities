@@ -1,6 +1,6 @@
 package ftb.utils.badges;
 
-import ftb.utils.net.ClientAction;
+import ftb.utils.net.MessageRequestBadge;
 
 import java.util.*;
 
@@ -25,7 +25,7 @@ public class ClientBadges
 		{
 			b = Badge.emptyBadge;
 			playerBadges.put(playerID, b);
-			ClientAction.REQUEST_BADGE.send(playerID);
+			new MessageRequestBadge(playerID).sendToServer();
 		}
 		
 		return b;

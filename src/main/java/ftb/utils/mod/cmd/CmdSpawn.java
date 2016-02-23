@@ -3,7 +3,6 @@ package ftb.utils.mod.cmd;
 import ftb.lib.*;
 import ftb.lib.api.cmd.*;
 import ftb.utils.mod.FTBU;
-import ftb.utils.mod.config.FTBUConfigCmd;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
@@ -12,7 +11,7 @@ import net.minecraft.world.World;
 public class CmdSpawn extends CommandLM
 {
 	public CmdSpawn()
-	{ super(FTBUConfigCmd.name_spawn.get(), CommandLevel.ALL); }
+	{ super("spawn", CommandLevel.ALL); }
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 	{

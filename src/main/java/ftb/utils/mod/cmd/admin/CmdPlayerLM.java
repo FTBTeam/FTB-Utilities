@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import ftb.lib.*;
 import ftb.lib.api.cmd.*;
 import ftb.lib.api.item.StringIDInvLoader;
+import ftb.lib.api.players.*;
 import ftb.lib.mod.FTBLibFinals;
 import latmod.lib.LMFileUtils;
 import latmod.lib.json.UUIDTypeAdapterLM;
@@ -45,11 +46,11 @@ public class CmdPlayerLM extends CommandSubLM
 			UUID id = UUIDTypeAdapterLM.getUUID(args[0]);
 			if(id == null) return error(new ChatComponentText("Invalid UUID!"));
 			
-			if(LMWorldServer.inst.getPlayer(id) != null || LMWorldServer.inst.getPlayer(args[1]) != null)
+			if(LMWorldMP.inst.getPlayer(id) != null || LMWorldMP.inst.getPlayer(args[1]) != null)
 				return error(new ChatComponentText("Player already exists!"));
 			
-			LMPlayerServer p = new LMPlayerServer(LMWorldServer.inst, LMPlayerServer.nextPlayerID(), new GameProfile(id, args[1]));
-			LMWorldServer.inst.playerMap.put(p.getPlayerID(), p);
+			LMPlayerMP p = new LMPlayerMP(new GameProfile(id, args[1]));
+			LMWorldMP.inst.playerMap.put(p.getProfile().getId(), p);
 			p.refreshStats();
 			
 			return new ChatComponentText("Fake player " + args[1] + " added!");
@@ -70,9 +71,9 @@ public class CmdPlayerLM extends CommandSubLM
 		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			checkArgs(args, 1);
-			LMPlayerServer p = LMPlayerServer.get(args[0]);
+			LMPlayerMP p = LMPlayerMP.get(args[0]);
 			if(p.isOnline()) return error(new ChatComponentText("The player must be offline!"));
-			LMWorldServer.inst.playerMap.remove(p.getPlayerID());
+			LMWorldMP.inst.playerMap.remove(p.getProfile().getId());
 			return new ChatComponentText("Player removed!");
 		}
 	}
@@ -91,7 +92,7 @@ public class CmdPlayerLM extends CommandSubLM
 		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			checkArgs(args, 1);
-			LMPlayerServer p = LMPlayerServer.get(args[0]);
+			LMPlayerMP p = LMPlayerMP.get(args[0]);
 			if(!p.isOnline()) error(new ChatComponentText("The player must be online!"));
 			
 			try
@@ -130,7 +131,7 @@ public class CmdPlayerLM extends CommandSubLM
 		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			checkArgs(args, 1);
-			LMPlayerServer p = LMPlayerServer.get(args[0]);
+			LMPlayerMP p = LMPlayerMP.get(args[0]);
 			if(!p.isOnline()) error(new ChatComponentText("The player must be online!"));
 			
 			try

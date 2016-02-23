@@ -2,8 +2,8 @@ package ftb.utils.mod.cmd;
 
 import ftb.lib.*;
 import ftb.lib.api.cmd.*;
-import ftb.lib.api.friends.LMPlayerMP;
-import ftb.utils.mod.handlers.ftbl.FTBUPlayerData;
+import ftb.lib.api.players.LMPlayerMP;
+import ftb.utils.world.*;
 import net.minecraft.command.*;
 import net.minecraft.util.IChatComponent;
 
@@ -42,7 +42,7 @@ public class CmdLMPlayerSettings extends CommandSubLM
 			checkArgs(args, 1);
 			LMPlayerMP p = LMPlayerMP.get(ics);
 			boolean b = parseBoolean(args[0]);
-			FTBUPlayerData.get(p).setFlag(flag, b);
+			FTBUPlayerDataMP.get(p).setFlag(flag, b);
 			p.sendUpdate();
 			FTBLib.printChat(ics, commandName + " set to " + b);
 			return null;
@@ -67,7 +67,7 @@ public class CmdLMPlayerSettings extends CommandSubLM
 			PrivacyLevel l = PrivacyLevel.get(args[0]);
 			if(l != null)
 			{
-				FTBUPlayerData.get(p).blocks = l;
+				FTBUPlayerDataMP.get(p).blocks = l;
 				FTBLib.printChat(ics, commandName + " set to " + l.uname);
 			}
 			return null;

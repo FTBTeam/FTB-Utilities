@@ -2,7 +2,8 @@ package ftb.utils.mod.handlers;
 
 import ftb.lib.FTBLib;
 import ftb.lib.api.ServerTickCallback;
-import ftb.lib.api.friends.PersonalSettings;
+import ftb.lib.api.players.*;
+import ftb.utils.world.*;
 import net.minecraft.event.*;
 import net.minecraft.util.*;
 import net.minecraftforge.fml.common.eventhandler.*;
@@ -47,8 +48,13 @@ public class FTBUChatEventHandler
 			{
 				public void onCallback()
 				{
-					for(LMPlayer p : LMWorldServer.inst.getAllOnlinePlayers())
-					{ if(p.getSettings().get(PersonalSettings.CHAT_LINKS)) FTBLib.printChat(p.getPlayer(), line); }
+					for(LMPlayer p : LMWorldMP.inst.getOnlinePlayers())
+					{
+						if(FTBUPlayerDataMP.get(p.toPlayerMP()).getFlag(FTBUPlayerData.CHAT_LINKS))
+						{
+							p.getPlayer().addChatMessage(line);
+						}
+					}
 				}
 			});
 		}
@@ -56,9 +62,9 @@ public class FTBUChatEventHandler
 	
 	private static int getFirstLinkIndex(String s)
 	{
-		for(int i = 0; i < LINK_PREFIXES.length; i++)
+		for(String s1 : LINK_PREFIXES)
 		{
-			int idx = s.indexOf(LINK_PREFIXES[i]);
+			int idx = s.indexOf(s1);
 			if(idx != -1) return idx;
 		}
 		

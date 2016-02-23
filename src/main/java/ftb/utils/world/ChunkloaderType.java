@@ -1,8 +1,8 @@
-package ftb.utils.world.claims;
+package ftb.utils.world;
 
 public enum ChunkloaderType
 {
 	DISABLED,
 	OFFLINE,
-	ONLINE;
+	ONLINE
 }

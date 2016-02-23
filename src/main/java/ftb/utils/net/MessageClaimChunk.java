@@ -1,10 +1,9 @@
 package ftb.utils.net;
 
 import ftb.lib.LMAccessToken;
-import ftb.lib.api.friends.*;
 import ftb.lib.api.net.*;
-import ftb.utils.mod.handlers.ftbl.*;
-import ftb.utils.world.claims.ClaimedChunk;
+import ftb.lib.api.players.*;
+import ftb.utils.world.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 
@@ -46,7 +45,7 @@ public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 	public IMessage onMessage(MessageClaimChunk m, MessageContext ctx)
 	{
 		LMPlayerMP p = LMWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);
-		FTBUPlayerData d = FTBUPlayerData.get(p);
+		FTBUPlayerDataMP d = FTBUPlayerDataMP.get(p);
 		if(m.type == ID_CLAIM)
 		{
 			d.claimChunk(m.dim, m.posX, m.posZ);
@@ -56,11 +55,11 @@ public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 		{
 			if(m.token != 0L && LMAccessToken.equals(p.getPlayer(), m.token, false))
 			{
-				ClaimedChunk c = FTBUWorldData.serverInstance.getChunk(m.dim, m.posX, m.posZ);
+				ClaimedChunk c = FTBUWorldDataMP.inst.getChunk(m.dim, m.posX, m.posZ);
 				if(c != null)
 				{
 					LMPlayerMP p1 = LMWorldMP.inst.getPlayer(c.ownerID);
-					FTBUPlayerData d1 = FTBUPlayerData.get(p);
+					FTBUPlayerDataMP d1 = FTBUPlayerDataMP.get(p1);
 					d1.unclaimChunk(m.dim, m.posX, m.posZ);
 				}
 			}

@@ -20,7 +20,7 @@ public class MessageDisplayGuide extends MessageLM_IO
 	}
 	
 	public LMNetworkWrapper getWrapper()
-	{ return FTBUNetHandler.NET_INFO; }
+	{ return FTBUNetHandler.NET; }
 	
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)

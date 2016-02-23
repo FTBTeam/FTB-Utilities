@@ -80,7 +80,7 @@ public class Warps
 	public String[] list()
 	{
 		if(warps.isEmpty()) return new String[0];
-		return warps.keySet().toArray(new String[0]);
+		return warps.keySet().toArray(new String[warps.size()]);
 	}
 	
 	public BlockDimPos get(String s)
@@ -89,7 +89,7 @@ public class Warps
 	public boolean set(String s, BlockDimPos pos)
 	{
 		if(pos == null) return warps.remove(s) != null;
-		return warps.put(s, pos) == null;
+		return warps.put(s, pos.copy()) == null;
 	}
 	
 	public int size()

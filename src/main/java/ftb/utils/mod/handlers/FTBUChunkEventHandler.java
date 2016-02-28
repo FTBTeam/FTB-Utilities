@@ -90,10 +90,9 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 			
 			if(playerID > 0)
 			{
-				
 				List<ClaimedChunk> chunks = LMWorldServer.inst.claimedChunks.getChunks(LMWorldServer.inst.getPlayer(playerID), world.provider.dimensionId);
 				
-				if(chunks != null) for(ClaimedChunk c : chunks)
+				if(chunks != null && !chunks.isEmpty()) for(ClaimedChunk c : chunks)
 				{
 					if(c.isChunkloaded)
 					{

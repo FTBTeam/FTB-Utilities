@@ -17,7 +17,7 @@ import java.util.*;
 
 public class ClaimedChunks
 {
-	public final HashMap<Integer, HashMap<Long, ClaimedChunk>> chunks;
+	public final Map<Integer, Map<Long, ClaimedChunk>> chunks;
 	
 	public ClaimedChunks()
 	{ chunks = new HashMap<>(); }
@@ -25,7 +25,7 @@ public class ClaimedChunks
 	public List<ClaimedChunk> getAllChunks()
 	{
 		ArrayList<ClaimedChunk> l = new ArrayList<>();
-		for(HashMap<Long, ClaimedChunk> m : chunks.values())
+		for(Map<Long, ClaimedChunk> m : chunks.values())
 			l.addAll(m.values());
 		return l;
 	}
@@ -41,9 +41,7 @@ public class ClaimedChunks
 			try
 			{
 				int dim = Integer.parseInt(e.getKey());
-				
-				HashMap<Long, ClaimedChunk> map = new HashMap<>();
-				
+				Map<Long, ClaimedChunk> map = new HashMap<>();
 				Map<String, NBTTagList> tag2 = LMNBTUtils.toMapWithType(e.getValue());
 				
 				for(Map.Entry<String, NBTTagList> e1 : tag2.entrySet())
@@ -74,7 +72,7 @@ public class ClaimedChunks
 		{
 			int dim = Integer.parseInt(e.getKey());
 			
-			HashMap<Long, ClaimedChunk> map = new HashMap<>();
+			Map<Long, ClaimedChunk> map = new HashMap<>();
 			
 			for(Map.Entry<String, JsonElement> e1 : e.getValue().getAsJsonObject().entrySet())
 			{
@@ -111,10 +109,10 @@ public class ClaimedChunks
 	
 	public void save(JsonObject group)
 	{
-		Comparator<Map.Entry<Integer, HashMap<Long, ClaimedChunk>>> comparator = LMMapUtils.byKeyNumbers();
+		Comparator<Map.Entry<Integer, Map<Long, ClaimedChunk>>> comparator = LMMapUtils.byKeyNumbers();
 		Comparator<Map.Entry<Long, ClaimedChunk>> comparator2 = LMMapUtils.byKeyNumbers();
 		
-		for(Map.Entry<Integer, HashMap<Long, ClaimedChunk>> e : LMMapUtils.sortedEntryList(chunks, comparator))
+		for(Map.Entry<Integer, Map<Long, ClaimedChunk>> e : LMMapUtils.sortedEntryList(chunks, comparator))
 		{
 			JsonObject o1 = new JsonObject();
 			
@@ -149,22 +147,22 @@ public class ClaimedChunks
 	
 	public List<ClaimedChunk> getChunks(LMPlayerServer p, Integer dim)
 	{
-		ArrayList<ClaimedChunk> list = new ArrayList<>();
+		List<ClaimedChunk> list = new ArrayList<>();
 		if(p == null || p.isFake()) return list;
 		
 		if(dim == null)
 		{
-			for(HashMap<Long, ClaimedChunk> map : chunks.values())
+			for(Map<Long, ClaimedChunk> map : chunks.values())
 			{
 				for(ClaimedChunk c : map.values())
 				{
-					if(c.ownerID == p.getPlayerID()) list.add(c);
+					if(c != null && c.ownerID == p.getPlayerID()) list.add(c);
 				}
 			}
 		}
 		else
 		{
-			HashMap<Long, ClaimedChunk> map = chunks.get(dim);
+			Map<Long, ClaimedChunk> map = chunks.get(dim);
 			if(map == null) return list;
 			
 			for(ClaimedChunk c : map.values())
@@ -179,14 +177,14 @@ public class ClaimedChunks
 	public boolean put(ClaimedChunk c)
 	{
 		if(c == null) return false;
-		HashMap<Long, ClaimedChunk> map = chunks.get(c.dim);
+		Map<Long, ClaimedChunk> map = chunks.get(c.dim);
 		if(map == null) chunks.put(c.dim, map = new HashMap<>());
 		return map.put(c.getLongPos(), c) == null;
 	}
 	
 	public ClaimedChunk remove(int dim, int cx, int cz)
 	{
-		HashMap<Long, ClaimedChunk> map = chunks.get(dim);
+		Map<Long, ClaimedChunk> map = chunks.get(dim);
 		if(map != null)
 		{
 			ClaimedChunk chunk = map.remove(Long.valueOf(Bits.intsToLong(cx, cz)));

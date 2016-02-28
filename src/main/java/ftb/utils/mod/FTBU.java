@@ -85,7 +85,9 @@ public class FTBU
 		if(FTBLib.hasOnlinePlayers())
 		{
 			for(EntityPlayerMP ep : FTBLib.getAllOnlinePlayers(null))
+			{
 				FTBUPlayerEventHandler.playerLoggedOut(ep);
+			}
 		}
 	}
 	

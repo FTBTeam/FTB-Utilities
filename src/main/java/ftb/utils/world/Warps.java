@@ -83,7 +83,7 @@ public class Warps
 	public boolean set(String s, BlockDimPos pos)
 	{
 		if(pos == null) return warps.remove(s) != null;
-		return warps.put(s, pos) == null;
+		return warps.put(s, pos.clone()) == null;
 	}
 	
 	public int size()

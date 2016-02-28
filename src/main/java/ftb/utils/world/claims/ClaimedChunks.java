@@ -3,7 +3,6 @@ package ftb.utils.world.claims;
 import com.google.gson.*;
 import ftb.lib.*;
 import ftb.lib.api.item.LMInvUtils;
-import ftb.utils.mod.FTBUPermissions;
 import ftb.utils.mod.config.FTBUConfigGeneral;
 import ftb.utils.world.*;
 import latmod.lib.*;
@@ -148,9 +147,10 @@ public class ClaimedChunks
 		return chunks.get(dim).get(Long.valueOf(Bits.intsToLong(cx, cz)));
 	}
 	
-	public List<ClaimedChunk> getChunks(LMPlayer p, Integer dim)
+	public List<ClaimedChunk> getChunks(LMPlayerServer p, Integer dim)
 	{
 		ArrayList<ClaimedChunk> list = new ArrayList<>();
+		if(p == null || p.isFake()) return list;
 		
 		if(dim == null)
 		{
@@ -169,7 +169,7 @@ public class ClaimedChunks
 			
 			for(ClaimedChunk c : map.values())
 			{
-				if(c.ownerID == p.getPlayerID()) list.add(c);
+				if(c != null && c.ownerID == p.getPlayerID()) list.add(c);
 			}
 		}
 		
@@ -251,7 +251,7 @@ public class ClaimedChunks
 				
 				if(p != null)
 				{
-					EnumEnabled fe = FTBUPermissions.claims_forced_explosions.getEnum(p.getProfile());
+					EnumEnabled fe = p.getRank().config.forced_explosions.get();
 					if(fe == null) return p.getSettings().get(PersonalSettings.EXPLOSIONS);
 					else return fe.isEnabled();
 				}
@@ -273,7 +273,7 @@ public class ClaimedChunks
 		
 		if(leftClick)
 		{
-			if(FTBUPermissions.claims_break_whitelist.getStringList(p.getProfile()).contains(LMInvUtils.getRegName(ep.worldObj.getBlock(pos.posX, pos.posY, pos.posZ))))
+			if(p.getRank().config.break_whitelist.get().contains(LMInvUtils.getRegName(ep.worldObj.getBlock(pos.posX, pos.posY, pos.posZ))))
 				return true;
 		}
 		

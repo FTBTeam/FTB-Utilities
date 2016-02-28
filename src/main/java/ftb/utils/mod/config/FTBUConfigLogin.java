@@ -14,7 +14,7 @@ public class FTBUConfigLogin
 	@Info("Message of the day. This will be displayed when player joins the server")
 	private static final ConfigEntryStringArray motd = new ConfigEntryStringArray("motd", "Welcome to the server!");
 	
-	@Info({"Items to give player when he first joins the server", "Format: StringID Size Metadata", "Now supports NBT, still not recommended"})
+	@Info({"Items to give player when he first joins the server", "Format: StringID Size Metadata", "Does not support NBT yet"})
 	private static final ConfigEntryStringArray starting_items = new ConfigEntryStringArray("starting_items", "minecraft:apple 16 0");
 	
 	public static List<ItemStack> getStartingItems(UUID id)

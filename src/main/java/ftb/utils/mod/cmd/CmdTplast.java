@@ -3,7 +3,6 @@ package ftb.utils.mod.cmd;
 import ftb.lib.*;
 import ftb.lib.api.cmd.*;
 import ftb.utils.mod.FTBU;
-import ftb.utils.mod.config.FTBUConfigCmd;
 import ftb.utils.world.LMPlayerServer;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -12,7 +11,7 @@ import net.minecraft.util.*;
 public class CmdTplast extends CommandLM
 {
 	public CmdTplast()
-	{ super(FTBUConfigCmd.name_tplast.get(), CommandLevel.OP); }
+	{ super("tpl", CommandLevel.OP); }
 	
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " [who] <to>"; }
@@ -51,6 +50,6 @@ public class CmdTplast extends CommandLM
 		BlockDimPos p = to.getPos();
 		if(p == null) return error(new ChatComponentText("No last position!"));
 		LMDimUtils.teleportPlayer(who, p);
-		return FTBU.mod.chatComponent("cmd.warp_tp", to.getProfile().getName());
+		return new ChatComponentTranslation(FTBU.mod.assets + "cmd.warp_tp", to.getProfile().getName());
 	}
 }

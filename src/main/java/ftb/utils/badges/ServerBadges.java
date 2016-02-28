@@ -4,7 +4,6 @@ import com.google.gson.*;
 import ftb.lib.FTBLib;
 import ftb.utils.mod.FTBU;
 import ftb.utils.net.MessageUpdateBadges;
-import ftb.utils.ranks.Ranks;
 import ftb.utils.world.LMPlayerServer;
 import latmod.lib.*;
 import latmod.lib.json.UUIDTypeAdapterLM;
@@ -132,7 +131,7 @@ public class ServerBadges
 		
 		if(b == null)
 		{
-			String rank = Ranks.instance().getRankOf(p.getProfile()).badge;
+			String rank = p.getRank().config.badge.get();
 			if(!rank.isEmpty())
 			{
 				b = map.get(rank);

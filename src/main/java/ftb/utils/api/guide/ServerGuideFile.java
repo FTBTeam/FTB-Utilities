@@ -1,9 +1,7 @@
 package ftb.utils.api.guide;
 
-import com.google.gson.JsonElement;
 import ftb.lib.*;
-import ftb.lib.api.cmd.CommandLM;
-import ftb.lib.api.permission.*;
+import ftb.lib.api.cmd.ICustomCommandInfo;
 import ftb.utils.mod.*;
 import ftb.utils.mod.config.*;
 import ftb.utils.world.*;
@@ -20,7 +18,7 @@ public class ServerGuideFile extends GuideFile
 {
 	public static class CachedInfo
 	{
-		public static final GuideCategory main = new GuideCategory(new ChatComponentTranslation("player_action.ftbu.server_info"));
+		public static final GuideCategory main = new GuideCategory("ServerInfo").setTitle(new ChatComponentTranslation("player_action.ftbu.server_info"));
 		public static GuideCategory categoryServer, categoryServerAdmin;
 		public static final HashMap<String, GuideLink> links = new HashMap<>();
 		
@@ -28,7 +26,7 @@ public class ServerGuideFile extends GuideFile
 		{
 			main.clear();
 			
-			categoryServerAdmin = new GuideCategory(new ChatComponentText("Admin"));
+			categoryServerAdmin = new GuideCategory("Admin"); //LANG
 			categoryServerAdmin.setParent(main);
 			
 			//categoryServer.println(new ChatComponentTranslation("ftbl:worldID", FTBWorld.server.getWorldID()));
@@ -51,7 +49,7 @@ public class ServerGuideFile extends GuideFile
 				try
 				{
 					String text = LMFileUtils.loadAsText(file);
-					if(text != null && !text.isEmpty()) main.println(text.replace("\r", ""));
+					if(text != null && !text.isEmpty()) main.printlnText(text.replace("\r", ""));
 				}
 				catch(Exception ex)
 				{
@@ -70,13 +68,13 @@ public class ServerGuideFile extends GuideFile
 		@SuppressWarnings("all")
 		public static void reloadRegistries()
 		{
-			GuideCategory list = categoryServerAdmin.getSub(new ChatComponentText("Entities"));
+			GuideCategory list = categoryServerAdmin.getSub("Entities"); //LANG
 			
 			Set<Integer> entityIDset = EntityList.IDtoClassMapping.keySet();
 			for(Integer i : entityIDset)
-				list.println("[" + i + "] " + EntityList.getStringFromID(i.intValue()));
+				list.printlnText("[" + i + "] " + EntityList.getStringFromID(i.intValue()));
 			
-			list = categoryServerAdmin.getSub(new ChatComponentText("Enchantments"));
+			list = categoryServerAdmin.getSub("Enchantments"); //LANG
 			
 			IntList freeIDs = new IntList();
 			
@@ -84,10 +82,10 @@ public class ServerGuideFile extends GuideFile
 			{
 				Enchantment e = Enchantment.enchantmentsList[i];
 				if(e == null) freeIDs.add(i);
-				else list.println("[" + i + "] " + e.getTranslatedName(1));
+				else list.printlnText("[" + i + "] " + e.getTranslatedName(1));
 			}
 			
-			list.println("Empty IDs: " + freeIDs.toString());
+			list.printlnText("Empty IDs: " + freeIDs.toString());
 		}
 	}
 	
@@ -97,16 +95,17 @@ public class ServerGuideFile extends GuideFile
 	
 	public ServerGuideFile(LMPlayerServer pself)
 	{
-		super(CachedInfo.main.getTitleComponent());
+		super(CachedInfo.main.ID);
+		main.setTitle(CachedInfo.main.getTitleComponent());
 		
 		if((self = pself) == null) return;
 		boolean isDedi = FTBLib.getServer().isDedicatedServer();
-		boolean isOP = !isDedi || FTBUPermissions.display_admin_info.getBoolean(self.getProfile());
+		boolean isOP = !isDedi || self.getRank().config.admin_server_info.get();
 		
 		main.copyFrom(CachedInfo.main);
 		links.putAll(CachedInfo.links);
 		
-		categoryTops = main.getSub(new ChatComponentTranslation(FTBU.mod.assets + "top.title"));
+		categoryTops = main.getSub("Tops").setTitle(FTBU.mod.chatComponent("top.title"));
 		
 		players = LMWorldServer.inst.getServerPlayers();
 		for(int i = 0; i < players.size(); i++)
@@ -131,13 +130,10 @@ public class ServerGuideFile extends GuideFile
 		if(FTBUConfigTops.time_played.get()) addTop(Top.time_played);
 		
 		new EventFTBUServerGuide(this, self, isOP).post();
-		Collections.sort(categoryTops.subcategories, null);
 		if(isOP) main.addSub(CachedInfo.categoryServerAdmin);
 		
-		GuideCategory commands = main.getSub(FTBU.mod.chatComponent("commands"));
+		GuideCategory commands = main.getSub("Commands"); //LANG
 		commands.clear();
-		
-		CommandLM.extendedUsageInfo = true;
 		
 		try
 		{
@@ -145,27 +141,40 @@ public class ServerGuideFile extends GuideFile
 			{
 				try
 				{
-					GuideCategory cat = new GuideCategory(new ChatComponentText('/' + c.getCommandName()));
+					GuideCategory cat = new GuideCategory('/' + c.getCommandName());
 					
 					@SuppressWarnings("unchecked") List<String> al = c.getCommandAliases();
 					if(al != null && !al.isEmpty()) for(String s : al)
-						cat.println('/' + s);
+						cat.printlnText('/' + s);
 					
-					String usage = c.getCommandUsage(self.getPlayer());
-					
-					if(usage != null)
+					if(c instanceof ICustomCommandInfo)
 					{
-						if(usage.indexOf('\n') != -1)
+						List<IChatComponent> list = new ArrayList<>();
+						((ICustomCommandInfo) c).addInfo(list, self.getPlayer());
+						
+						for(IChatComponent c1 : list)
 						{
-							String[] usageL = usage.split("\n");
-							for(String s1 : usageL)
-								cat.println(s1);
+							cat.println(c1);
 						}
-						else
+					}
+					else
+					{
+						String usage = c.getCommandUsage(self.getPlayer());
+						
+						if(usage != null)
 						{
-							if(usage.indexOf('%') != -1 || usage.indexOf('/') != -1)
-								cat.println(new ChatComponentText(usage));
-							else cat.println(new ChatComponentTranslation(usage));
+							if(usage.indexOf('\n') != -1)
+							{
+								String[] usageL = usage.split("\n");
+								for(String s1 : usageL)
+									cat.printlnText(s1);
+							}
+							else
+							{
+								if(usage.indexOf('%') != -1 || usage.indexOf('/') != -1)
+									cat.println(new ChatComponentText(usage));
+								else cat.println(new ChatComponentTranslation(usage));
+							}
 						}
 					}
 					
@@ -176,44 +185,21 @@ public class ServerGuideFile extends GuideFile
 				{
 					IChatComponent cc = new ChatComponentText('/' + c.getCommandName());
 					cc.getChatStyle().setColor(EnumChatFormatting.DARK_RED);
-					commands.getSub(cc).println("Errored");
+					commands.getSub('/' + c.getCommandName()).setTitle(cc).printlnText("Errored");
+					
+					if(FTBLib.DEV_ENV) ex1.printStackTrace();
 				}
 			}
 		}
 		catch(Exception ex) { }
 		
-		CommandLM.extendedUsageInfo = false;
-		Collections.sort(commands.subcategories, null);
-		
-		List<ForgePermission> permissionList = new ArrayList<>();
-		permissionList.addAll(ForgePermissionRegistry.values(null));
-		Collections.sort(permissionList);
-		
-		GuideCategory permissions = main.getSub(FTBU.mod.chatComponent("my_permissions"));
-		permissions.clear();
-		
-		for(ForgePermission p : permissionList)
-		{
-			JsonElement e = p.getElement(self.getProfile());
-			GuideCategory c = getPermissionCategory(permissions, p.ID);
-			c.println(e.toString());
-		}
-		
 		main.cleanup();
 		main.sortAll();
 	}
 	
-	private static GuideCategory getPermissionCategory(GuideCategory parent, String ID)
-	{
-		int index = ID.indexOf('.');
-		if(index == -1) return parent.getSub(new ChatComponentText(ID));
-		String ID1 = ID.substring(index + 1);
-		return getPermissionCategory(parent.getSub(new ChatComponentText(ID.substring(0, index))), ID1);
-	}
-	
 	public void addTop(Top t)
 	{
-		GuideCategory thisTop = categoryTops.getSub(t.ID);
+		GuideCategory thisTop = categoryTops.getSub(t.ID).setTitle(t.title);
 		
 		Collections.sort(players, t);
 		

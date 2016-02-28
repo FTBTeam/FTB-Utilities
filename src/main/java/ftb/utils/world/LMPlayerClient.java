@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.LMNBTUtils;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.utils.api.EventLMPlayerClient;
+import ftb.utils.world.ranks.*;
 import latmod.lib.*;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.*;
@@ -49,6 +50,9 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 	
 	public EntityPlayerSP getPlayer()
 	{ return isOnline() ? FTBLibClient.getPlayerSP(getProfile().getId()) : null; }
+	
+	public Rank getRank()
+	{ return Ranks.PLAYER; }
 	
 	public void receiveInfo(List<IChatComponent> info)
 	{

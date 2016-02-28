@@ -4,29 +4,36 @@ import com.google.gson.*;
 import ftb.lib.JsonHelper;
 import latmod.lib.*;
 import latmod.lib.json.IJsonObject;
+import latmod.lib.util.FinalIDObject;
 import net.minecraft.util.*;
 
 import java.util.*;
 
-public class GuideCategory implements Comparable<GuideCategory>, IJsonObject // GuideFile
+public class GuideCategory extends FinalIDObject implements IJsonObject // GuideFile
 {
-	private static final RemoveFilter<GuideCategory> cleanupFilter = new RemoveFilter<GuideCategory>()
+	private static final RemoveFilter<Map.Entry<String, GuideCategory>> cleanupFilter = new RemoveFilter<Map.Entry<String, GuideCategory>>()
 	{
-		public boolean remove(GuideCategory c)
-		{ return c.subcategories.isEmpty() && c.getUnformattedText().trim().isEmpty(); }
+		public boolean remove(Map.Entry<String, GuideCategory> entry)
+		{ return entry.getValue().subcategories.isEmpty() && entry.getValue().getUnformattedText().trim().isEmpty(); }
 	};
 	
 	public GuideCategory parent = null;
 	private IChatComponent title;
-	private ArrayList<IChatComponent> text;
-	public final List<GuideCategory> subcategories;
+	public final ArrayList<IChatComponent> text;
+	public final Map<String, GuideCategory> subcategories;
 	GuideFile file = null;
 	
-	public GuideCategory(IChatComponent s)
+	public GuideCategory(String id)
 	{
-		title = s;
+		super(id);
 		text = new ArrayList<>();
-		subcategories = new ArrayList<>();
+		subcategories = new LinkedHashMap<>();
+	}
+	
+	public GuideCategory setTitle(IChatComponent c)
+	{
+		title = c;
+		return this;
 	}
 	
 	public GuideCategory setParent(GuideCategory c)
@@ -44,8 +51,8 @@ public class GuideCategory implements Comparable<GuideCategory>, IJsonObject // 
 	public void println(IChatComponent c)
 	{ text.add(c); }
 	
-	public void println(String s)
-	{ if(s != null) println(new ChatComponentText(s)); }
+	public void printlnText(String s)
+	{ println((s == null || s.isEmpty()) ? null : new ChatComponentText(s)); }
 	
 	public String getUnformattedText()
 	{
@@ -88,30 +95,23 @@ public class GuideCategory implements Comparable<GuideCategory>, IJsonObject // 
 	}
 	
 	public void addSub(GuideCategory c)
-	{ subcategories.add(c); }
+	{ subcategories.put(c.ID, c); }
 	
 	public IChatComponent getTitleComponent()
-	{ return title; }
+	{ return title == null ? new ChatComponentText(ID) : title; }
 	
-	public String toString()
-	{ return title.getUnformattedText().trim(); }
-	
-	public boolean equals(Object o)
-	{ return o != null && (o == this || toString().equals(o.toString())); }
-	
-	public GuideCategory getSub(IChatComponent s)
+	public GuideCategory getSub(String id)
 	{
-		for(GuideCategory c : subcategories)
-		{ if(c.toString().equalsIgnoreCase(s.getUnformattedText().trim())) return c; }
+		GuideCategory c = subcategories.get(id);
+		if(c == null)
+		{
+			c = new GuideCategory(id);
+			c.setParent(this);
+			subcategories.put(id, c);
+		}
 		
-		GuideCategory c = new GuideCategory(s);
-		c.setParent(this);
-		subcategories.add(c);
 		return c;
 	}
-	
-	public int compareTo(GuideCategory o)
-	{ return toString().compareToIgnoreCase(o.toString()); }
 	
 	public void clear()
 	{
@@ -121,8 +121,14 @@ public class GuideCategory implements Comparable<GuideCategory>, IJsonObject // 
 	
 	public void cleanup()
 	{
-		for(GuideCategory c : subcategories) c.cleanup();
-		LMListUtils.removeAll(subcategories, cleanupFilter);
+		for(GuideCategory c : subcategories.values()) c.cleanup();
+		LMMapUtils.removeAll(subcategories, cleanupFilter);
+	}
+	
+	public void sortAll()
+	{
+		//TODO: sort
+		for(GuideCategory c : subcategories.values()) c.sortAll();
 	}
 	
 	public void copyFrom(GuideCategory c)
@@ -137,25 +143,23 @@ public class GuideCategory implements Comparable<GuideCategory>, IJsonObject // 
 	public JsonElement getJson()
 	{
 		JsonObject o = new JsonObject();
-		JsonArray a;
 		
-		o.add("N", JsonHelper.serializeICC(title));
+		if(title != null) o.add("N", JsonHelper.serializeICC(title));
 		
-		if(text.size() > 0)
+		if(!text.isEmpty())
 		{
-			a = new JsonArray();
-			for(int i = 0; i < text.size(); i++)
-				a.add(JsonHelper.serializeICC(text.get(i)));
+			JsonArray a = new JsonArray();
+			for(IChatComponent c : text)
+				a.add(JsonHelper.serializeICC(c));
 			o.add("T", a);
 		}
 		
 		if(!subcategories.isEmpty())
 		{
-			a = new JsonArray();
-			for(int i = 0; i < subcategories.size(); i++)
-				a.add(subcategories.get(i).getJson());
-			
-			o.add("S", a);
+			JsonObject o1 = new JsonObject();
+			for(GuideCategory c : subcategories.values())
+				o1.add(c.ID, c.getJson());
+			o.add("S", o1);
 		}
 		
 		return o;
@@ -167,37 +171,27 @@ public class GuideCategory implements Comparable<GuideCategory>, IJsonObject // 
 		
 		if(e == null || !e.isJsonObject()) return;
 		JsonObject o = e.getAsJsonObject();
-		JsonArray a;
 		
-		title = JsonHelper.deserializeICC(o.get("N"));
+		title = o.has("N") ? JsonHelper.deserializeICC(o.get("N")) : null;
 		
 		if(o.has("T"))
 		{
-			a = o.get("T").getAsJsonArray();
+			JsonArray a = o.get("T").getAsJsonArray();
 			for(int i = 0; i < a.size(); i++)
 				text.add(JsonHelper.deserializeICC(a.get(i)));
 		}
 		
 		if(o.has("S"))
 		{
-			a = o.get("S").getAsJsonArray();
-			JsonObject o1;
+			JsonObject o1 = o.get("S").getAsJsonObject();
 			
-			for(int i = 0; i < a.size(); i++)
+			for(Map.Entry<String, JsonElement> entry : o1.entrySet())
 			{
-				o1 = a.get(i).getAsJsonObject();
-				GuideCategory c = new GuideCategory(null);
+				GuideCategory c = new GuideCategory(entry.getKey());
 				c.setParent(this);
-				c.setJson(o1);
-				subcategories.add(c);
+				c.setJson(entry.getValue());
+				subcategories.put(c.ID, c);
 			}
 		}
-	}
-	
-	public void sortAll()
-	{
-		if(subcategories.isEmpty()) return;
-		Collections.sort(subcategories, null);
-		for(GuideCategory c : subcategories) c.sortAll();
 	}
 }

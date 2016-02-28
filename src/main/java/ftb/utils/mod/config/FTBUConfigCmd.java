@@ -8,7 +8,7 @@ public class FTBUConfigCmd
 	public static final ConfigEntryBool back = new ConfigEntryBool("back", true);
 	public static final ConfigEntryBool home = new ConfigEntryBool("home", true);
 	public static final ConfigEntryBool spawn = new ConfigEntryBool("spawn", true);
-	public static final ConfigEntryString name_tplast = new ConfigEntryString("name_tplast", "tpl");
+	public static final ConfigEntryBool tplast = new ConfigEntryBool("tplast", true);
 	public static final ConfigEntryBool warp = new ConfigEntryBool("warp", true);
-	public static final ConfigEntryBool player_spawnpoint = new ConfigEntryBool("player_spawnpoint", false);
+	public static final ConfigEntryBool player_can_use_spawnpoint = new ConfigEntryBool("player_can_use_spawnpoint", false);
 }

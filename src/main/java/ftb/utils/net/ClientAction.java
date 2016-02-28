@@ -168,13 +168,13 @@ public abstract class ClientAction
 				{ owner.getSettings().set(PersonalSettings.FAKE_PLAYERS, v); }
 			}, false);
 			
-			group.add(new ConfigEntryEnum<PrivacyLevel>("block_security", PrivacyLevel.class, PrivacyLevel.VALUES_3, PrivacyLevel.FRIENDS, false)
+			group.add(new ConfigEntryEnum<LMSecurityLevel>("block_security", LMSecurityLevel.class, LMSecurityLevel.VALUES_3, LMSecurityLevel.FRIENDS, false)
 			{
-				public PrivacyLevel get()
+				public LMSecurityLevel get()
 				{ return owner.getSettings().blocks; }
 				
 				public void set(Object v)
-				{ owner.getSettings().blocks = (PrivacyLevel) v; }
+				{ owner.getSettings().blocks = (LMSecurityLevel) v; }
 			}, false);
 			
 			ConfigRegistry.editTempConfig(owner.getPlayer(), group);

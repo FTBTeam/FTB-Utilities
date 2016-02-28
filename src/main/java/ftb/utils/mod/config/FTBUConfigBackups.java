@@ -5,7 +5,6 @@ import latmod.lib.config.*;
 
 public class FTBUConfigBackups
 {
-	@Info("true enables backups")
 	public static final ConfigEntryBool enabled = new ConfigEntryBool("enabled", true);
 	
 	@MinValue(0)
@@ -15,7 +14,7 @@ public class FTBUConfigBackups
 	
 	@MinValue(0.05D)
 	@MaxValue(600D)
-	@Info({"Timer in hours", "1.0 - backups every hour", "6.0 - backups every 6 hours", "0.5 - backups every 30 minutes"})
+	@Info({"Timer in hours.", "1.0 - backups every hour", "6.0 - backups every 6 hours", "0.5 - backups every 30 minutes"})
 	public static final ConfigEntryDouble backup_timer = new ConfigEntryDouble("backup_timer", 2D);
 	
 	@MinValue(0)

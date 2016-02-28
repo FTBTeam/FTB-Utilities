@@ -9,10 +9,14 @@ import java.util.Comparator;
 
 public abstract class Top implements Comparator<LMPlayerServer>
 {
-	public final IChatComponent ID;
+	public final String ID;
+	public final IChatComponent title;
 	
 	public Top(String s)
-	{ ID = new ChatComponentTranslation(FTBU.mod.assets + "top." + s); }
+	{
+		ID = s;
+		title = FTBU.mod.chatComponent("top." + s);
+	}
 	
 	public abstract Object getData(LMPlayerServer p);
 	

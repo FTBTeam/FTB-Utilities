@@ -17,15 +17,12 @@ public class GuideFile implements IJsonObject // ServerGuideFile // ClientGuideF
 	public final GuideCategory main;
 	public final HashMap<String, GuideLink> links;
 	
-	public GuideFile(IChatComponent title)
+	public GuideFile(String id)
 	{
-		main = new GuideCategory(title);
+		main = new GuideCategory(id);
 		main.file = this;
 		links = new HashMap<>();
 	}
-	
-	public GuideCategory getMod(String s)
-	{ return main.getSub(new ChatComponentText("Mods")).getSub(new ChatComponentText(s)); }
 	
 	public GuideLink getGuideLink(String s)
 	{
@@ -50,7 +47,7 @@ public class GuideFile implements IJsonObject // ServerGuideFile // ClientGuideF
 			if(f1 != null && f1.length > 0)
 			{
 				Arrays.sort(f1, LMFileUtils.fileComparator);
-				GuideCategory c1 = c.getSub(new ChatComponentText(f.getName()));
+				GuideCategory c1 = c.getSub(f.getName());
 				for(File f2 : f1) loadFromFiles(c1, f2);
 			}
 		}
@@ -60,9 +57,9 @@ public class GuideFile implements IJsonObject // ServerGuideFile // ClientGuideF
 			{
 				try
 				{
-					GuideCategory c1 = c.getSub(new ChatComponentText(LMFileUtils.getRawFileName(f)));
+					GuideCategory c1 = c.getSub(LMFileUtils.getRawFileName(f));
 					String txt = LMFileUtils.loadAsText(f);
-					if(txt != null && !txt.isEmpty()) c1.println(txt.replace("\r", ""));
+					if(txt != null && !txt.isEmpty()) c1.printlnText(txt.replace("\r", ""));
 				}
 				catch(Exception e)
 				{

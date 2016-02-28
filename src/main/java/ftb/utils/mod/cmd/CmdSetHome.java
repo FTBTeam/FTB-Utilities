@@ -1,7 +1,7 @@
 package ftb.utils.mod.cmd;
 
 import ftb.lib.api.cmd.*;
-import ftb.utils.mod.*;
+import ftb.utils.mod.FTBU;
 import ftb.utils.world.LMPlayerServer;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -27,7 +27,7 @@ public class CmdSetHome extends CommandLM
 		LMPlayerServer p = LMPlayerServer.get(ep);
 		checkArgs(args, 1);
 		
-		int maxHomes = FTBUPermissions.homes_max.getNumber(ep.getGameProfile()).intValue();
+		int maxHomes = p.getRank().config.max_homes.get();
 		
 		if(maxHomes <= 0 || p.homes.size() >= maxHomes)
 		{

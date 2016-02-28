@@ -5,17 +5,20 @@ import ftb.lib.api.*;
 import ftb.utils.mod.FTBU;
 import ftb.utils.mod.client.gui.guide.GuiGuide;
 import latmod.lib.LMFileUtils;
-import net.minecraft.util.*;
+import net.minecraft.util.ChatComponentTranslation;
 
 import java.io.File;
 import java.util.Arrays;
 
 public class ClientGuideFile extends GuideFile
 {
-	public static final ClientGuideFile instance = new ClientGuideFile(new ChatComponentTranslation("player_action.ftbu.guide"));
+	public static final ClientGuideFile instance = new ClientGuideFile("ClientConfig");
 	
-	public ClientGuideFile(IChatComponent title)
-	{ super(title); }
+	public ClientGuideFile(String id)
+	{
+		super(id);
+		main.setTitle(new ChatComponentTranslation("player_action.ftbu.guide"));
+	}
 	
 	public void reload(EventFTBReload e)
 	{
@@ -53,7 +56,7 @@ public class ClientGuideFile extends GuideFile
 			try
 			{
 				String text = LMFileUtils.loadAsText(file);
-				if(text != null && !text.isEmpty()) main.println(text.replace("\r", ""));
+				if(text != null && !text.isEmpty()) main.printlnText(text.replace("\r", ""));
 			}
 			catch(Exception ex)
 			{

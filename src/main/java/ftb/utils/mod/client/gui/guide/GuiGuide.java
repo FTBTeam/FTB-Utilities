@@ -139,16 +139,21 @@ public class GuiGuide extends GuiLM
 			sliderCategories.scrollStep = 1F / (catl - 1 - maxCategoryButtons);
 		}
 		
+		List<GuideCategory> categoryList = new ArrayList<>();
+		categoryList.addAll(category.subcategories.values());
+		Collections.sort(categoryList);
+		
 		for(int i = 0; i < maxCategoryButtons; i++)
 		{
 			if(i + off < catl)
-				categoryButtons.add(new ButtonCategory(GuiGuide.this, categoriesPanel.posX, categoriesPanel.posY + i * 13, categoriesPanel.width, 13, category.subcategories.get(i + off)));
+			{
+				categoryButtons.add(new ButtonCategory(GuiGuide.this, categoriesPanel.posX, categoriesPanel.posY + i * 13, categoriesPanel.width, 13, categoryList.get(off + i)));
+			}
 		}
 		
 		mainPanel.addAll(categoryButtons);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void initLMGui()
 	{
 		if(category.getParentTop() == ClientGuideFile.instance.main) clientGuideGui = this;

@@ -2,7 +2,7 @@ package ftb.utils.mod.config;
 
 import ftb.lib.FTBLib;
 import ftb.lib.api.config.ConfigRegistry;
-import ftb.utils.ranks.Ranks;
+import ftb.utils.world.ranks.Ranks;
 import latmod.lib.config.ConfigFile;
 
 import java.io.File;
@@ -20,7 +20,7 @@ public class FTBUConfig // FTBU
 		configFile.addGroup("general", FTBUConfigGeneral.class);
 		configFile.addGroup("login", FTBUConfigLogin.class);
 		configFile.addGroup("tops", FTBUConfigTops.class);
-		Ranks.instance().reload();
+		Ranks.load(configFile);
 		
 		ConfigRegistry.add(configFile);
 		configFile.load();

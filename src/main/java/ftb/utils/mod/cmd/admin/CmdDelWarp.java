@@ -4,7 +4,7 @@ import ftb.lib.api.cmd.*;
 import ftb.utils.mod.FTBU;
 import ftb.utils.world.FTBUWorldDataMP;
 import net.minecraft.command.*;
-import net.minecraft.util.*;
+import net.minecraft.util.IChatComponent;
 
 public class CmdDelWarp extends CommandLM
 {
@@ -23,8 +23,7 @@ public class CmdDelWarp extends CommandLM
 	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
-		if(FTBUWorldDataMP.inst.warps.set(args[0], null))
-			return new ChatComponentTranslation(FTBU.mod.assets + "cmd.warp_del", args[0]);
-		return error(new ChatComponentTranslation(FTBU.mod.assets + "cmd.warp_not_set", args[0]));
+		if(FTBUWorldDataMP.inst.warps.set(args[0], null)) return FTBU.mod.chatComponent("cmd.warp_del", args[0]);
+		return error(FTBU.mod.chatComponent("cmd.warp_not_set", args[0]));
 	}
 }

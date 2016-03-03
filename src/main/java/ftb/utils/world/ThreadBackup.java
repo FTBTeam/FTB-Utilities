@@ -129,20 +129,20 @@ public class ThreadBackup extends Thread
 				String sizeB = LMFileUtils.getSizeS(dstFile);
 				String sizeT = LMFileUtils.getSizeS(Backups.backupsFolder);
 				
-				IChatComponent c = new ChatComponentTranslation(FTBU.mod.assets + "cmd.backup_end_2", getDoneTime(time.millis), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)));
+				IChatComponent c = FTBU.mod.chatComponent("cmd.backup_end_2", getDoneTime(time.millis), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)));
 				c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE);
 				BroadcastSender.inst.addChatMessage(c);
 			}
 			else
 			{
-				IChatComponent c = new ChatComponentTranslation(FTBU.mod.assets + "cmd.backup_end_1", getDoneTime(time.millis));
+				IChatComponent c = FTBU.mod.chatComponent("cmd.backup_end_1", getDoneTime(time.millis));
 				c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE);
 				BroadcastSender.inst.addChatMessage(c);
 			}
 		}
 		catch(Exception e)
 		{
-			IChatComponent c = new ChatComponentTranslation(FTBU.mod.assets + "cmd.backup_fail", LMUtils.classpath(e.getClass()));
+			IChatComponent c = FTBU.mod.chatComponent("cmd.backup_fail", LMUtils.classpath(e.getClass()));
 			c.getChatStyle().setColor(EnumChatFormatting.DARK_RED);
 			BroadcastSender.inst.addChatMessage(c);
 			

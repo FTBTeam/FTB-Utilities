@@ -15,25 +15,37 @@ public final class Rank extends FinalIDObject implements IJsonObject
 	public EnumChatFormatting color = EnumChatFormatting.WHITE;
 	public String prefix = "";
 	public String badge = "";
-	public final Map<ForgePermission, JsonElement> permissions;
-	
-	private final Map<String, Boolean> commandPermissions;
-	private int commands = 0;
+	public final Map<String, Boolean> permissions;
+	public final Map<RankConfig, JsonElement> config;
 	
 	public Rank(String id)
 	{
 		super(id);
 		permissions = new LinkedHashMap<>();
-		commandPermissions = new HashMap<>();
+		config = new LinkedHashMap<>();
 	}
 	
-	public JsonElement handlePermission(ForgePermission permission)
+	public Boolean handlePermission(String permission)
+	{
+		if(permissions.containsKey("*"))
+		{
+			return permissions.get("*");
+		}
+		
+		for(Map.Entry<String, Boolean> e : permissions.entrySet())
+		{
+		}
+		
+		return null;
+	}
+	
+	public JsonElement handleRankConfig(RankConfig permission)
 	{
 		if(this == Ranks.PLAYER) return permission.getDefaultPlayerValue();
 		else if(this == Ranks.ADMIN) return permission.getDefaultOPValue();
 		
-		JsonElement e = permissions.get(permission);
-		return (e == null) ? ((parent != null) ? parent.handlePermission(permission) : null) : e;
+		JsonElement e = config.get(permission);
+		return (e == null) ? ((parent != null) ? parent.handleRankConfig(permission) : null) : e;
 	}
 	
 	public JsonElement getJson()
@@ -45,14 +57,29 @@ public final class Rank extends FinalIDObject implements IJsonObject
 		o.add("prefix", new JsonPrimitive(prefix));
 		o.add("badge", new JsonPrimitive(badge));
 		
-		JsonObject o1 = new JsonObject();
-		
-		for(Map.Entry<ForgePermission, JsonElement> e : permissions.entrySet())
+		if(!permissions.isEmpty())
 		{
-			o1.add(e.getKey().ID, e.getValue());
+			JsonArray a1 = new JsonArray();
+			
+			for(Map.Entry<String, Boolean> e : permissions.entrySet())
+			{
+				a1.add(new JsonPrimitive((e.getValue().booleanValue() ? "+" : "-") + e.getKey()));
+			}
+			
+			o.add("permissions", a1);
 		}
 		
-		o.add("permissions", o1);
+		if(!config.isEmpty())
+		{
+			JsonObject o1 = new JsonObject();
+			
+			for(Map.Entry<RankConfig, JsonElement> e : config.entrySet())
+			{
+				o1.add(e.getKey().ID, e.getValue());
+			}
+			
+			o.add("config", o1);
+		}
 		
 		return o;
 	}
@@ -65,40 +92,40 @@ public final class Rank extends FinalIDObject implements IJsonObject
 		prefix = o.has("prefix") ? o.get("prefix").getAsString() : "";
 		badge = o.has("badge") ? o.get("badge").getAsString() : "";
 		permissions.clear();
-		commandPermissions.clear();
+		config.clear();
 		
 		if(o.has("permissions"))
 		{
-			for(Map.Entry<String, JsonElement> entry : o.get("permissions").getAsJsonObject().entrySet())
+			JsonArray a = o.get("permissions").getAsJsonArray();
+			
+			for(int i = 0; i < a.size(); i++)
 			{
-				String id = entry.getKey();
-				
-				if(id.startsWith("command."))
-				{
-					commandPermissions.put(id.substring(8), entry.getValue().getAsBoolean());
-					permissions.put(new CommandPermission(id), entry.getValue());
-				}
-				else
-				{
-					for(ForgePermission p : ForgePermissionRegistry.values(entry.getKey()))
-					{
-						permissions.put(p, entry.getValue());
-					}
-				}
+				String id = a.get(i).getAsString();
+				char firstChar = id.charAt(0);
+				boolean b = firstChar == '-';
+				permissions.put((firstChar == '-' || firstChar == '+') ? id.substring(1) : id, b);
 			}
 		}
 		
-		commands = 0;
-		if(commandPermissions.containsKey("**")) commands = 2;
-		else if(commandPermissions.containsKey("*")) commands = 1;
+		if(o.has("config"))
+		{
+			for(Map.Entry<String, JsonElement> entry : o.get("config").getAsJsonObject().entrySet())
+			{
+				RankConfig c = ForgePermissionRegistry.getConfig(entry.getKey());
+				
+				if(c != null && !entry.getValue().isJsonNull())
+				{
+					config.put(c, entry.getValue());
+				}
+			}
+		}
 	}
 	
 	public boolean allowCommand(ICommand cmd, ICommandSender sender)
 	{
-		if(commands == 2) return true;
-		else if(commands == 1) return cmd.canCommandSenderUseCommand(sender);
-		Boolean b = commandPermissions.get(cmd.getCommandName());
+		Boolean b = handlePermission("command." + cmd.getCommandName());
 		if(b != null) return b.booleanValue();
-		return parent != null && parent.allowCommand(cmd, sender);
+		if(parent == null) return cmd.canCommandSenderUseCommand(sender);
+		return parent.allowCommand(cmd, sender);
 	}
 }

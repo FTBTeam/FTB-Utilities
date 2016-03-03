@@ -6,7 +6,7 @@ import ftb.lib.api.players.LMPlayerMP;
 import ftb.utils.mod.FTBU;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.*;
+import net.minecraft.util.IChatComponent;
 
 public class CmdBack extends CommandLM
 {
@@ -17,7 +17,7 @@ public class CmdBack extends CommandLM
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		LMPlayerMP p = LMPlayerMP.get(ep);
-		if(p.lastDeath == null) return error(new ChatComponentTranslation(FTBU.mod.assets + "cmd.no_dp"));
+		if(p.lastDeath == null) return error(FTBU.mod.chatComponent("cmd.no_dp"));
 		LMDimUtils.teleportPlayer(ep, p.lastDeath);
 		p.lastDeath = null;
 		

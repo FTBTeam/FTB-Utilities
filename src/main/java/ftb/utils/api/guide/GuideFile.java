@@ -17,15 +17,12 @@ public class GuideFile implements IJsonObject // ServerGuideFile // ClientGuideF
 	public final GuideCategory main;
 	public final HashMap<String, GuideLink> links;
 	
-	public GuideFile(IChatComponent title)
+	public GuideFile(String id)
 	{
-		main = new GuideCategory(title);
+		main = new GuideCategory(id);
 		main.file = this;
 		links = new HashMap<>();
 	}
-	
-	public GuideCategory getMod(String s)
-	{ return main.getSub(new ChatComponentText("Mods")).getSub(new ChatComponentText(s)); }
 	
 	public GuideLink getGuideLink(String s)
 	{
@@ -50,7 +47,7 @@ public class GuideFile implements IJsonObject // ServerGuideFile // ClientGuideF
 			if(f1 != null && f1.length > 0)
 			{
 				Arrays.sort(f1, LMFileUtils.fileComparator);
-				GuideCategory c1 = c.getSub(new ChatComponentText(f.getName()));
+				GuideCategory c1 = c.getSub(f.getName());
 				for(File f2 : f1) loadFromFiles(c1, f2);
 			}
 		}
@@ -60,9 +57,9 @@ public class GuideFile implements IJsonObject // ServerGuideFile // ClientGuideF
 			{
 				try
 				{
-					GuideCategory c1 = c.getSub(new ChatComponentText(LMFileUtils.getRawFileName(f)));
+					GuideCategory c1 = c.getSub(LMFileUtils.getRawFileName(f));
 					String txt = LMFileUtils.loadAsText(f);
-					if(txt != null && !txt.isEmpty()) c1.println(txt.replace("\r", ""));
+					if(txt != null && !txt.isEmpty()) c1.printlnText(txt.replace("\r", ""));
 				}
 				catch(Exception e)
 				{
@@ -75,22 +72,69 @@ public class GuideFile implements IJsonObject // ServerGuideFile // ClientGuideF
 	protected static Map<String, GuideLink> loadLinksFromFile(File f)
 	{
 		HashMap<String, GuideLink> map = new HashMap<>();
-		if(f == null || !f.exists()) return map;
 		JsonElement linksMapE = LMJsonUtils.fromJson(LMFileUtils.newFile(f));
 		
 		if(linksMapE.isJsonObject())
 		{
 			JsonObject o = linksMapE.getAsJsonObject();
-			JsonObject o1;
 			GuideLink link;
 			
-			if(o.has("images"))
+			if(o.has("links")) // Old format
 			{
-				for(Map.Entry<String, JsonElement> e : o.get("images").getAsJsonObject().entrySet())
+				JsonObject o1;
+				
+				try
 				{
-					link = GuideLink.newInstance(GuideLink.Type.RECIPE);
-					link.setJson(e.getValue());
-					map.put(e.getKey(), link);
+					for(Map.Entry<String, JsonElement> e : o.get("links").getAsJsonObject().entrySet())
+					{
+						o1 = e.getValue().getAsJsonObject();
+						
+						if(o1.get("type").getAsString().equals("image"))
+						{
+							link = GuideLink.newInstance(GuideLink.Type.IMAGE);
+							link.link = o1.get("link").getAsString();
+							
+							if(o1.has("hover"))
+							{
+								link.hover = new IChatComponent[] {new ChatComponentText(o1.get("hover").getAsString())};
+							}
+							
+							map.put(e.getKey(), link);
+						}
+					}
+				}
+				catch(Exception ex) {}
+			}
+			else
+			{
+				if(o.has("images"))
+				{
+					for(Map.Entry<String, JsonElement> e : o.get("images").getAsJsonObject().entrySet())
+					{
+						link = GuideLink.newInstance(GuideLink.Type.IMAGE);
+						link.setJson(e.getValue());
+						map.put(e.getKey(), link);
+					}
+				}
+				
+				if(o.has("urls"))
+				{
+					for(Map.Entry<String, JsonElement> e : o.get("urls").getAsJsonObject().entrySet())
+					{
+						link = GuideLink.newInstance(GuideLink.Type.URL);
+						link.setJson(e.getValue());
+						map.put(e.getKey(), link);
+					}
+				}
+				
+				if(o.has("recipes"))
+				{
+					for(Map.Entry<String, JsonElement> e : o.get("recipes").getAsJsonObject().entrySet())
+					{
+						link = GuideLink.newInstance(GuideLink.Type.RECIPE);
+						link.setJson(e.getValue());
+						map.put(e.getKey(), link);
+					}
 				}
 			}
 		}

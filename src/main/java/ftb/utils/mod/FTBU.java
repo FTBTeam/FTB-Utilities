@@ -1,13 +1,13 @@
 package ftb.utils.mod;
 
 import ftb.lib.*;
-import ftb.lib.api.cmd.CommandLM;
 import ftb.lib.api.permissions.ForgePermissionRegistry;
 import ftb.utils.mod.cmd.*;
-import ftb.utils.mod.cmd.admin.CmdAdmin;
-import ftb.utils.mod.config.FTBUConfig;
+import ftb.utils.mod.cmd.admin.*;
+import ftb.utils.mod.config.*;
 import ftb.utils.mod.handlers.*;
 import ftb.utils.net.FTBUNetHandler;
+import ftb.utils.ranks.Ranks;
 import ftb.utils.world.Backups;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fml.common.*;
@@ -62,20 +62,36 @@ public class FTBU
 	}
 	
 	@Mod.EventHandler
-	public void registerCommands(FMLServerStartingEvent e)
+	public void serverStarting(FMLServerStartingEvent e)
 	{
-		addCmd(e, new CmdAdmin());
-		addCmd(e, new CmdBack());
-		addCmd(e, new CmdHome());
-		addCmd(e, new CmdSpawn());
-		addCmd(e, new CmdTplast());
-		addCmd(e, new CmdWarp());
-		addCmd(e, new CmdLMPlayerSettings());
-		addCmd(e, new CmdTrashCan());
+		FTBLib.addCommand(e, new CmdAdmin());
+		FTBLib.addCommand(e, new CmdTplast());
+		FTBLib.addCommand(e, new CmdLMPlayerSettings());
+		
+		if(FTBUConfigCmd.trash_can.get()) FTBLib.addCommand(e, new CmdTrashCan());
+		if(FTBUConfigCmd.back.get()) FTBLib.addCommand(e, new CmdBack());
+		if(FTBUConfigCmd.spawn.get()) FTBLib.addCommand(e, new CmdSpawn());
+		if(FTBUConfigCmd.warp.get()) FTBLib.addCommand(e, new CmdWarp());
+		
+		if(FTBUConfigCmd.home.get())
+		{
+			FTBLib.addCommand(e, new CmdHome());
+			FTBLib.addCommand(e, new CmdSetHome());
+			FTBLib.addCommand(e, new CmdDelHome());
+		}
+		
+		if(FTBUConfigGeneral.ranks_enabled.get())
+		{
+			FTBLib.addCommand(e, new CmdGetRank());
+			FTBLib.addCommand(e, new CmdSetRank());
+		}
 	}
 	
-	private static void addCmd(FMLServerStartingEvent e, CommandLM c)
-	{ if(!c.commandName.isEmpty()) e.registerServerCommand(c); }
+	@Mod.EventHandler
+	public void serverStarted(FMLServerStartedEvent e)
+	{
+		Ranks.instance().generateExampleFiles();
+	}
 	
 	@NetworkCheckHandler
 	public boolean checkNetwork(Map<String, String> m, Side side)

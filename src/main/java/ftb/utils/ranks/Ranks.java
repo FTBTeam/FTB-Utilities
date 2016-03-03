@@ -144,6 +144,14 @@ public class Ranks implements IPermissionHandler
 	
 	public void generateExampleFiles()
 	{
+		List<RankConfig> sortedRankConfigs = new ArrayList<>();
+		sortedRankConfigs.addAll(ForgePermissionRegistry.getRegistredConfig());
+		Collections.sort(sortedRankConfigs);
+		
+		List<ForgePermissionContainer> sortedPermissions = new ArrayList<>();
+		sortedPermissions.addAll(ForgePermissionRegistry.getRegistredPermissions());
+		Collections.sort(sortedPermissions);
+		
 		try
 		{
 			List<String> list = new ArrayList<>();
@@ -151,11 +159,26 @@ public class Ranks implements IPermissionHandler
 			list.add("Modifying this file won't do anything, it just shows all available permission IDs. See ranks_example.json");
 			list.add("");
 			
-			List<ForgePermission> sortedPermissions = new ArrayList<>();
-			sortedPermissions.addAll(ForgePermissionRegistry.values(null));
-			Collections.sort(sortedPermissions);
+			list.add("-- Permissions --");
+			list.add("");
 			
-			for(ForgePermission p : sortedPermissions)
+			for(ForgePermissionContainer p : sortedPermissions)
+			{
+				list.add(p.ID);
+				
+				if(p.info != null)
+				{
+					for(String s : p.info)
+						list.add("  " + s);
+				}
+				
+				list.add("");
+			}
+			
+			list.add("-- Config --");
+			list.add("");
+			
+			for(RankConfig p : sortedRankConfigs)
 			{
 				list.add(p.ID);
 				
@@ -200,18 +223,21 @@ public class Ranks implements IPermissionHandler
 			
 			o.add("default_rank", new JsonPrimitive("Player"));
 			
-			List<ForgePermission> sortedPermissions = new ArrayList<>();
-			sortedPermissions.addAll(ForgePermissionRegistry.values(null));
-			Collections.sort(sortedPermissions);
-			
 			JsonObject o1 = new JsonObject();
 			
 			Rank rankPlayer = new Rank(PLAYER.ID);
 			rankPlayer.setJson(PLAYER.getJson());
 			
-			for(ForgePermission p : sortedPermissions)
+			for(RankConfig p : sortedRankConfigs)
 			{
-				rankPlayer.permissions.put(p, p.getDefaultPlayerValue());
+				rankPlayer.config.put(p, p.getDefaultPlayerValue());
+			}
+			
+			rankPlayer.permissions.clear();
+			
+			for(ForgePermissionContainer c : sortedPermissions)
+			{
+				rankPlayer.permissions.put(c.ID, c.playerValue);
 			}
 			
 			o1.add(rankPlayer.ID, rankPlayer.getJson());
@@ -220,11 +246,13 @@ public class Ranks implements IPermissionHandler
 			rankAdmin.parent = rankPlayer;
 			rankAdmin.setJson(ADMIN.getJson());
 			
-			for(ForgePermission p : sortedPermissions)
+			for(RankConfig p : sortedRankConfigs)
 			{
-				rankAdmin.permissions.put(p, p.getDefaultOPValue());
+				if(!p.getDefaultPlayerValue().toString().equals(p.getDefaultOPValue().toString()))
+					rankAdmin.config.put(p, p.getDefaultOPValue());
 			}
 			
+			rankAdmin.permissions.put("*", true);
 			o1.add(rankAdmin.ID, rankAdmin.getJson());
 			
 			o.add("ranks", o1);
@@ -261,6 +289,13 @@ public class Ranks implements IPermissionHandler
 		}
 	}
 	
-	public JsonElement handlePermission(ForgePermission permission, GameProfile profile)
-	{ return getRankOf(profile).handlePermission(permission); }
+	public Boolean handlePermission(String permission, GameProfile profile)
+	{
+		return getRankOf(profile).handlePermission(permission);
+	}
+	
+	public JsonElement handleRankConfig(RankConfig config, GameProfile profile)
+	{
+		return getRankOf(profile).handleRankConfig(config);
+	}
 }

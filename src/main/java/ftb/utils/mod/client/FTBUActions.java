@@ -1,10 +1,10 @@
 package ftb.utils.mod.client;
 
+import ftb.lib.FTBLib;
 import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.players.LMPlayer;
-import ftb.lib.mod.FTBLibFinals;
 import ftb.lib.mod.client.gui.friends.GuiFriends;
 import ftb.utils.mod.client.gui.claims.GuiClaimChunks;
 import ftb.utils.mod.client.gui.guide.GuiGuide;
@@ -111,7 +111,7 @@ public class FTBUActions
 		}
 		
 		public boolean isVisibleFor(LMPlayer self, LMPlayer other)
-		{ return FTBLibFinals.DEV; }
+		{ return FTBLib.DEV_ENV; }
 		
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }
@@ -126,6 +126,6 @@ public class FTBUActions
 		}
 		
 		public boolean isVisibleFor(LMPlayer self, LMPlayer other)
-		{ return FTBLibFinals.DEV; }
+		{ return FTBLib.DEV_ENV; }
 	};
 }

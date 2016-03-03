@@ -1,5 +1,6 @@
 package ftb.utils.world;
 
+import com.google.gson.JsonArray;
 import ftb.lib.*;
 import ftb.lib.api.item.LMInvUtils;
 import ftb.lib.api.players.LMPlayerMP;
@@ -115,20 +116,32 @@ public class FTBUPlayerDataMP extends FTBUPlayerData
 	}
 	
 	public short getMaxClaimedChunks()
-	{ return FTBUPermissions.claims_max_chunks.getNumber(player.getProfile()).shortValue(); }
+	{ return FTBUPermissions.claims_max_chunks.get(player.getProfile()).getAsShort(); }
 	
 	public short getMaxLoadedChunks()
-	{ return FTBUPermissions.chunkloader_max_chunks.getNumber(player.getProfile()).shortValue(); }
+	{ return FTBUPermissions.chunkloader_max_chunks.get(player.getProfile()).getAsShort(); }
+	
+	public boolean isDimensionBlacklisted(int dim)
+	{
+		JsonArray a = FTBUPermissions.claims_dimension_blacklist.get(player.getProfile()).getAsJsonArray();
+		
+		for(int i = 0; i < a.size(); i++)
+		{
+			if(a.get(i).getAsInt() == dim) return true;
+		}
+		
+		return false;
+	}
 	
 	public void claimChunk(int dim, int cx, int cz)
 	{
-		if(FTBUPermissions.claims_dimension_blacklist.getNumberList(player.getProfile()).contains(dim)) return;
+		if(isDimensionBlacklisted(dim)) return;
 		short max = getMaxClaimedChunks();
 		if(max == 0) return;
 		if(getClaimedChunks() >= max) return;
 		
 		ChunkType t = FTBUWorldDataMP.inst.getType(player.toPlayerMP(), dim, cx, cz);
-		if(t.asClaimed() != null && t.isChunkOwner(player.toPlayerMP()) && FTBUWorldDataMP.inst.put(new ClaimedChunk(player.getProfile().getId(), dim, cx, cz)))
+		if(t.asClaimed() == null && t.isChunkOwner(player.toPlayerMP()) && FTBUWorldDataMP.inst.put(new ClaimedChunk(player.getProfile().getId(), dim, cx, cz)))
 		{
 			player.sendUpdate();
 		}
@@ -168,7 +181,7 @@ public class FTBUPlayerDataMP extends FTBUPlayerData
 		{
 			if(flag)
 			{
-				if(FTBUPermissions.claims_dimension_blacklist.getNumberList(player.getProfile()).contains(dim)) return;
+				if(isDimensionBlacklisted(dim)) return;
 				short max = getMaxLoadedChunks();
 				if(max == 0) return;
 				if(getLoadedChunks(false) >= max) return;

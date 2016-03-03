@@ -2,6 +2,7 @@ package ftb.utils.mod.cmd;
 
 import ftb.lib.*;
 import ftb.lib.api.cmd.*;
+import ftb.lib.api.permissions.ForgePermissionRegistry;
 import ftb.lib.api.players.LMPlayerMP;
 import ftb.utils.mod.*;
 import ftb.utils.world.FTBUPlayerDataMP;
@@ -33,7 +34,7 @@ public class CmdHome extends CommandLM
 		if(args[0].equals("list"))
 		{
 			String[] list = d.homes.list();
-			ics.addChatMessage(new ChatComponentText(list.length + " / " + FTBUPermissions.homes_max.getNumber(ep.getGameProfile()).shortValue() + ": "));
+			ics.addChatMessage(new ChatComponentText(list.length + " / " + FTBUPermissions.homes_max.get(ep.getGameProfile()).getAsShort() + ": "));
 			return (list.length == 0) ? null : new ChatComponentText(LMStringUtils.strip(list));
 		}
 		
@@ -41,7 +42,7 @@ public class CmdHome extends CommandLM
 		
 		if(pos == null) return error(FTBU.mod.chatComponent("cmd.home_not_set", args[0]));
 		
-		if(ep.dimension != pos.dim && !FTBUPermissions.homes_cross_dim.getBoolean(ep.getGameProfile()))
+		if(ep.dimension != pos.dim && !ForgePermissionRegistry.hasPermission(FTBUPermissions.homes_cross_dim, ep.getGameProfile()))
 			return error(FTBU.mod.chatComponent("cmd.home_cross_dim"));
 		
 		LMDimUtils.teleportPlayer(ep, pos);

@@ -46,6 +46,7 @@ public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 	{
 		LMPlayerMP p = LMWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);
 		FTBUPlayerDataMP d = FTBUPlayerDataMP.get(p);
+		
 		if(m.type == ID_CLAIM)
 		{
 			d.claimChunk(m.dim, m.posX, m.posZ);

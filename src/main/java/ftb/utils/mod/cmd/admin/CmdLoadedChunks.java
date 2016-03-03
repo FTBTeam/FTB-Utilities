@@ -5,7 +5,7 @@ import ftb.lib.api.cmd.*;
 import ftb.utils.api.guide.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.*;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.*;
 import net.minecraftforge.common.*;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
@@ -21,7 +21,7 @@ public class CmdLoadedChunks extends CommandLM
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		
-		GuideFile file = new GuideFile(new ChatComponentText("Loaded Chunks"));
+		GuideFile file = new GuideFile("Loaded Chunks");
 		
 		for(WorldServer w : DimensionManager.getWorlds())
 		{
@@ -37,13 +37,13 @@ public class CmdLoadedChunks extends CommandLM
 					if(!list.contains(c)) list.add(c);
 			}
 			
-			GuideCategory dim = file.main.getSub(new ChatComponentText(w.provider.getDimensionName()));
+			GuideCategory dim = file.main.getSub(w.provider.getDimensionName());
 			
 			for(Map.Entry<String, ArrayList<ChunkCoordIntPair>> e1 : chunksMap.entrySet())
 			{
-				GuideCategory mod = dim.getSub(new ChatComponentText(e1.getKey() + " [" + e1.getValue().size() + "]"));
+				GuideCategory mod = dim.getSub(e1.getKey() + " [" + e1.getValue().size() + "]");
 				for(ChunkCoordIntPair c : e1.getValue())
-					mod.println(c.chunkXPos + ", " + c.chunkZPos + " [ " + c.getCenterXPos() + ", " + c.getCenterZPosition() + " ]");
+					mod.printlnText(c.chunkXPos + ", " + c.chunkZPos + " [ " + c.getCenterXPos() + ", " + c.getCenterZPosition() + " ]");
 			}
 		}
 		

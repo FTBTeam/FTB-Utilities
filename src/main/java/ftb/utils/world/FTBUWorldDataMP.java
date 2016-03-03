@@ -22,7 +22,7 @@ import java.util.*;
 /**
  * Created by LatvianModder on 23.02.2016.
  */
-public class FTBUWorldDataMP extends ForgeWorldData
+public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTicking
 {
 	public static FTBUWorldDataMP inst = null;
 	
@@ -194,7 +194,7 @@ public class FTBUWorldDataMP extends ForgeWorldData
 					}
 					else if(secondsLeft <= 10 || secondsLeft == 60 || secondsLeft == 300 || secondsLeft == 600 || secondsLeft == 1800)
 					{
-						IChatComponent c = new ChatComponentTranslation(FTBU.mod.assets + "server_restart", msg);
+						IChatComponent c = FTBU.mod.chatComponent("server_restart", msg);
 						c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE);
 						BroadcastSender.inst.addChatMessage(c);
 					}
@@ -349,8 +349,13 @@ public class FTBUWorldDataMP extends ForgeWorldData
 		
 		if(leftClick)
 		{
-			if(FTBUPermissions.claims_break_whitelist.getStringList(p.getProfile()).contains(LMInvUtils.getRegName(ep.worldObj.getBlockState(pos).getBlock())))
-				return true;
+			JsonArray a = FTBUPermissions.claims_break_whitelist.get(p.getProfile()).getAsJsonArray();
+			
+			for(int i = 0; i < a.size(); i++)
+			{
+				if(a.get(i).getAsString().equals(LMInvUtils.getRegName(ep.worldObj.getBlockState(pos).getBlock())))
+					return true;
+			}
 		}
 		
 		ChunkType type = inst.getTypeD(p, ep.dimension, pos);

@@ -61,7 +61,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	public static ByteBuffer pixelBuffer = null;
 	
 	public final long adminToken;
-	public final LMPlayerSPSelf playerLM;
+	public final ForgePlayerSPSelf playerLM;
 	public final int currentDim, startX, startY;
 	
 	public final ButtonLM buttonRefresh, buttonClose, buttonSettings, buttonUnclaimAll;
@@ -76,7 +76,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		mainPanel.width = mainPanel.height = tiles_gui * 16;
 		
 		adminToken = token;
-		playerLM = LMWorldSP.inst.clientPlayer;
+		playerLM = ForgeWorldSP.inst.clientPlayer;
 		startX = MathHelperLM.chunk(mc.thePlayer.posX) - (int) (tiles_gui * 0.5D);
 		startY = MathHelperLM.chunk(mc.thePlayer.posZ) - (int) (tiles_gui * 0.5D);
 		currentDim = FTBLibClient.getDim();
@@ -234,7 +234,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	
 	public void drawText(List<String> l)
 	{
-		FTBUPlayerDataSP d = FTBUPlayerDataSP.get(LMWorldSP.inst.clientPlayer);
+		FTBUPlayerDataSP d = FTBUPlayerDataSP.get(ForgeWorldSP.inst.clientPlayer);
 		String s = FTBU.mod.translate("label.cchunks_count", (d.claimedChunks + " / " + d.maxClaimedChunks));
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 12, 0xFFFFFFFF);
 		s = FTBU.mod.translate("label.lchunks_count", (d.loadedChunks + " / " + d.maxLoadedChunks));

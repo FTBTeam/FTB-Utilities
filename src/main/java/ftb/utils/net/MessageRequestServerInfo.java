@@ -23,7 +23,7 @@ public class MessageRequestServerInfo extends MessageLM<MessageRequestServerInfo
 	
 	public IMessage onMessage(MessageRequestServerInfo m, MessageContext ctx)
 	{
-		LMPlayerMP owner = LMWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);
+		ForgePlayerMP owner = ForgeWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);
 		GuideFile.displayGuide(owner.getPlayer(), new ServerGuideFile(owner));
 		return null;
 	}

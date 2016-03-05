@@ -42,7 +42,7 @@ public class MessageButtonPressed extends MessageLM<MessageButtonPressed>
 	
 	public IMessage onMessage(MessageButtonPressed m, MessageContext ctx)
 	{
-		LMPlayerMP p = LMWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);
+		ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);
 		FTBUPlayerDataMP d = FTBUPlayerDataMP.get(p);
 		
 		if(m.buttonID == RENDER_BADGE)

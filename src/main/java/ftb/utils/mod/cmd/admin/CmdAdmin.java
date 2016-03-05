@@ -8,7 +8,6 @@ public class CmdAdmin extends CommandSubLM
 	public CmdAdmin()
 	{
 		super(FTBUConfigCmd.name_admin.get(), CommandLevel.OP);
-		add(new CmdPlayerLM());
 		add(new CmdRestart());
 		add(new CmdInvsee());
 		add(new CmdSetWarp());

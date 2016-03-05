@@ -20,7 +20,7 @@ public class BadgeRenderer implements LayerRenderer<AbstractClientPlayer>
 			
 			if(b != Badge.emptyBadge)
 			{
-				LMPlayerSP pc = LMWorldSP.inst.getPlayer(ep);
+				ForgePlayerSP pc = ForgeWorldSP.inst.getPlayer(ep);
 				
 				if(pc != null && ((FTBUPlayerData) pc.customData.get("ftbu")).getFlag(FTBUPlayerData.RENDER_BADGE))
 				{

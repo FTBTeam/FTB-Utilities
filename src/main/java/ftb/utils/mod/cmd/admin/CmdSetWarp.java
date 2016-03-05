@@ -6,7 +6,7 @@ import ftb.utils.mod.FTBU;
 import ftb.utils.world.FTBUWorldDataMP;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.*;
+import net.minecraft.util.BlockPos;
 
 public class CmdSetWarp extends CommandLM
 {
@@ -16,7 +16,7 @@ public class CmdSetWarp extends CommandLM
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <ID> [x] [y] [z]"; }
 	
-	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
@@ -32,6 +32,6 @@ public class CmdSetWarp extends CommandLM
 		else c = ep.getPosition();
 		
 		FTBUWorldDataMP.inst.warps.set(args[0], new BlockDimPos(c, ep.dimension));
-		return FTBU.mod.chatComponent("cmd.warp_set", args[0]);
+		ics.addChatMessage(FTBU.mod.chatComponent("cmd.warp_set", args[0]));
 	}
 }

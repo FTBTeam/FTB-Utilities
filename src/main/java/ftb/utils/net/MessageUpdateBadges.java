@@ -47,7 +47,7 @@ public class MessageUpdateBadges extends MessageLM<MessageUpdateBadges>
 		{
 			for(Badge b : badges)
 			{
-				ByteBufUtils.writeUTF8String(io, b.ID);
+				ByteBufUtils.writeUTF8String(io, b.getID());
 				ByteBufUtils.writeUTF8String(io, b.imageURL);
 			}
 		}

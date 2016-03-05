@@ -77,10 +77,10 @@ public class Warps
 		g.add(s, g1);
 	}
 	
-	public String[] list()
+	public Collection<String> list()
 	{
-		if(warps.isEmpty()) return new String[0];
-		return warps.keySet().toArray(new String[warps.size()]);
+		if(warps.isEmpty()) return new ArrayList<>();
+		return warps.keySet();
 	}
 	
 	public BlockDimPos get(String s)

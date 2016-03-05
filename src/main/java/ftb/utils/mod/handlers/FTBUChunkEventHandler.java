@@ -31,7 +31,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 		ForgeChunkManager.setForcedChunkLoadingCallback(FTBU.inst, this);
 	}
 	
-	private ForgeChunkManager.Ticket request(World w, LMPlayerMP player)
+	private ForgeChunkManager.Ticket request(World w, ForgePlayerMP player)
 	{
 		if(w == null || player == null) return null;
 		
@@ -112,7 +112,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 	
 	public void markDirty(World w)
 	{
-		if(LMWorldMP.inst == null || FTBLib.getServerWorld() == null) return;
+		if(ForgeWorldMP.inst == null || FTBLib.getServerWorld() == null) return;
 		if(w != null) markDirty0(w);
 		
 		if(!table.isEmpty())
@@ -141,7 +141,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 			
 			if(c.isChunkloaded)
 			{
-				LMPlayerMP p = c.getOwner();
+				ForgePlayerMP p = c.getOwner();
 				if(p == null) isLoaded = false;
 				else
 				{

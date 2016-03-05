@@ -48,7 +48,7 @@ public class FTBUChatEventHandler
 			{
 				public void onCallback()
 				{
-					for(LMPlayer p : LMWorldMP.inst.getOnlinePlayers())
+					for(ForgePlayer p : ForgeWorldMP.inst.getOnlinePlayers())
 					{
 						if(FTBUPlayerDataMP.get(p.toPlayerMP()).getFlag(FTBUPlayerData.CHAT_LINKS))
 						{

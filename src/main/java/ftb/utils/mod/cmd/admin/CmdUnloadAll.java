@@ -4,7 +4,7 @@ import ftb.lib.api.cmd.*;
 import ftb.lib.api.players.*;
 import ftb.utils.world.*;
 import net.minecraft.command.*;
-import net.minecraft.util.*;
+import net.minecraft.util.ChatComponentText;
 
 public class CmdUnloadAll extends CommandLM
 {
@@ -14,10 +14,10 @@ public class CmdUnloadAll extends CommandLM
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <player | @a>"; }
 	
-	public Boolean getUsername(String[] args, int i)
-	{ return (i == 0) ? Boolean.FALSE : null; }
+	public boolean isUsernameIndex(String[] args, int i)
+	{ return i == 0; }
 	
-	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
 		
@@ -25,15 +25,16 @@ public class CmdUnloadAll extends CommandLM
 		{
 			for(ClaimedChunk c : FTBUWorldDataMP.inst.getAllChunks())
 				c.isChunkloaded = false;
-			for(LMPlayer p : LMWorldMP.inst.getOnlinePlayers())
+			for(ForgePlayer p : ForgeWorldMP.inst.getOnlinePlayers())
 				p.toPlayerMP().sendUpdate();
-			return new ChatComponentText("Unloaded all chunks");
+			ics.addChatMessage(new ChatComponentText("Unloaded all chunks"));
+			return;
 		}
 		
-		LMPlayerMP p = LMPlayerMP.get(args[0]);
+		ForgePlayerMP p = ForgePlayerMP.get(args[0]);
 		for(ClaimedChunk c : FTBUWorldDataMP.inst.getChunks(p.getProfile().getId(), null))
 			c.isChunkloaded = false;
 		if(p.isOnline()) p.sendUpdate();
-		return new ChatComponentText("Unloaded all " + p.getProfile().getName() + "'s chunks");
+		ics.addChatMessage(new ChatComponentText("Unloaded all " + p.getProfile().getName() + "'s chunks"));
 	}
 }

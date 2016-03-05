@@ -24,13 +24,13 @@ public final class ClaimedChunk
 	}
 	
 	public ClaimedChunk(EntityPlayerMP ep)
-	{ this(LMWorldMP.inst.getPlayer(ep).getProfile().getId(), ep.dimension, MathHelperLM.chunk(ep.posX), MathHelperLM.chunk(ep.posZ)); }
+	{ this(ForgeWorldMP.inst.getPlayer(ep).getProfile().getId(), ep.dimension, MathHelperLM.chunk(ep.posX), MathHelperLM.chunk(ep.posZ)); }
 	
 	public Long getLongPos()
 	{ return Bits.intsToLong(posX, posZ); }
 	
-	public LMPlayerMP getOwner()
-	{ return LMWorldMP.inst.getPlayer(ownerID); }
+	public ForgePlayerMP getOwner()
+	{ return ForgeWorldMP.inst.getPlayer(ownerID); }
 	
 	public boolean equals(Object o)
 	{ return o != null && (o == this || (o instanceof ClaimedChunk && equalsChunk((ClaimedChunk) o))); }

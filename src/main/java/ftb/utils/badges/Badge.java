@@ -27,7 +27,7 @@ public class Badge extends FinalIDObject
 	}
 	
 	public String toString()
-	{ return ID + " : " + imageURL; }
+	{ return getID() + " : " + imageURL; }
 	
 	@SideOnly(Side.CLIENT)
 	public ResourceLocation getTexture()
@@ -36,7 +36,7 @@ public class Badge extends FinalIDObject
 		
 		if(textureURL == null)
 		{
-			textureURL = new ResourceLocation("ftbu", "textures/badges/" + ID);
+			textureURL = new ResourceLocation("ftbu", "textures/badges/" + getID());
 			FTBLibClient.getDownloadImage(textureURL, imageURL, defTex, null);
 		}
 		

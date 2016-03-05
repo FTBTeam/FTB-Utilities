@@ -41,7 +41,7 @@ public class MessageAreaRequest extends MessageLM<MessageAreaRequest>
 	
 	public IMessage onMessage(MessageAreaRequest m, MessageContext ctx)
 	{
-		LMPlayerMP p = LMWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);
+		ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);
 		return new MessageAreaUpdate(p, m.chunkX, m.chunkY, p.getPlayer().dimension, m.sizeX, m.sizeY);
 	}
 }

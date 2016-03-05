@@ -53,18 +53,18 @@ public class ChunkType
 		public PlayerClaimed asClaimed()
 		{ return this; }
 		
-		public boolean isChunkOwner(LMPlayerMP p)
+		public boolean isChunkOwner(ForgePlayerMP p)
 		{ return chunk.getOwner().equalsPlayer(p); }
 		
-		public EnumChatFormatting getChatColor(LMPlayer p)
+		public EnumChatFormatting getChatColor(ForgePlayer p)
 		{ return p.getWorld().getPlayer(chunk.ownerID).isFriend(p) ? EnumChatFormatting.GREEN : EnumChatFormatting.BLUE; }
 		
-		public int getAreaColor(LMPlayer p)
+		public int getAreaColor(ForgePlayer p)
 		{ return p.getWorld().getPlayer(chunk.ownerID).isFriend(p) ? 0xFF00FF21 : 0xFF0094FF; }
 		
-		public boolean canInteract(LMPlayerMP p, boolean leftClick)
+		public boolean canInteract(ForgePlayerMP p, boolean leftClick)
 		{
-			LMPlayerMP chunkOwner = chunk.getOwner();
+			ForgePlayerMP chunkOwner = chunk.getOwner();
 			
 			if(chunkOwner.equals(p)) return true;
 			else if(p.isFake()) return FTBUPlayerDataMP.get(chunkOwner).getFlag(FTBUPlayerData.FAKE_PLAYERS);
@@ -104,7 +104,7 @@ public class ChunkType
 	public PlayerClaimed asClaimed()
 	{ return null; }
 	
-	public boolean isChunkOwner(LMPlayerMP p)
+	public boolean isChunkOwner(ForgePlayerMP p)
 	{ return this == WILDERNESS; }
 	
 	public boolean drawGrid()
@@ -119,12 +119,12 @@ public class ChunkType
 	public boolean equals(Object o)
 	{ return o == this || ID == o.hashCode(); }
 	
-	public EnumChatFormatting getChatColor(LMPlayer p)
+	public EnumChatFormatting getChatColor(ForgePlayer p)
 	{ return chatColor; }
 	
-	public int getAreaColor(LMPlayer p)
+	public int getAreaColor(ForgePlayer p)
 	{ return areaColor; }
 	
-	public boolean canInteract(LMPlayerMP p, boolean leftClick)
+	public boolean canInteract(ForgePlayerMP p, boolean leftClick)
 	{ return this == WILDERNESS || this == SPAWN; }
 }

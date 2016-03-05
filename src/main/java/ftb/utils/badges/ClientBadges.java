@@ -32,11 +32,14 @@ public class ClientBadges
 	}
 	
 	public static void addBadge(Badge b)
-	{ if(b != null && !b.equals(Badge.emptyBadge)) map.put(b.ID, b); }
+	{ if(b != null && !b.equals(Badge.emptyBadge)) map.put(b.getID(), b); }
 	
 	public static void setClientBadge(UUID playerID, String badge)
 	{
-		if(playerID == null || badge == null || badge.isEmpty() || badge.equalsIgnoreCase(Badge.emptyBadge.ID)) return;
+		if(playerID == null || badge == null || badge.isEmpty() || badge.equalsIgnoreCase(Badge.emptyBadge.getID()))
+		{
+			return;
+		}
 		
 		Badge b = map.get(badge);
 		if(b != null) playerBadges.put(playerID, b);

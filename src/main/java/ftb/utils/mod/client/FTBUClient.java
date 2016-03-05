@@ -4,7 +4,7 @@ import ftb.lib.api.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.LMGuiHandlerRegistry;
-import ftb.lib.api.players.LMWorldSP;
+import ftb.lib.api.players.ForgeWorldSP;
 import ftb.utils.badges.BadgeRenderer;
 import ftb.utils.mod.*;
 import ftb.utils.mod.cmd.CmdMath;
@@ -27,7 +27,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public static final ConfigEntryBool render_my_badge = new ConfigEntryBool("render_my_badge", true)
 	{
 		public boolean get()
-		{ return hasServerMod() && FTBUPlayerDataSP.get(LMWorldSP.inst.clientPlayer).getFlag(FTBUPlayerData.RENDER_BADGE); }
+		{ return hasServerMod() && FTBUPlayerDataSP.get(ForgeWorldSP.inst.clientPlayer).getFlag(FTBUPlayerData.RENDER_BADGE); }
 		
 		public void set(boolean b)
 		{
@@ -42,7 +42,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public static final ConfigEntryBool chat_links = new ConfigEntryBool("chat_links", true)
 	{
 		public boolean get()
-		{ return hasServerMod() && FTBUPlayerDataSP.get(LMWorldSP.inst.clientPlayer).getFlag(FTBUPlayerData.CHAT_LINKS); }
+		{ return hasServerMod() && FTBUPlayerDataSP.get(ForgeWorldSP.inst.clientPlayer).getFlag(FTBUPlayerData.CHAT_LINKS); }
 		
 		public void set(boolean b)
 		{

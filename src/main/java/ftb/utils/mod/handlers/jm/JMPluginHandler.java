@@ -1,6 +1,6 @@
 package ftb.utils.mod.handlers.jm;
 
-import ftb.lib.api.players.LMWorldSP;
+import ftb.lib.api.players.ForgeWorldSP;
 import ftb.utils.mod.FTBUFinals;
 import ftb.utils.world.*;
 import journeymap.client.api.IClientAPI;
@@ -43,7 +43,7 @@ public class JMPluginHandler implements IJMPluginHandler
 	{
 		try
 		{
-			int color = 0xFF000000 | type.getAreaColor(LMWorldSP.inst.clientPlayer);
+			int color = 0xFF000000 | type.getAreaColor(ForgeWorldSP.inst.clientPlayer);
 			
 			ShapeProperties shapeProps = new ShapeProperties().setStrokeWidth(2F).setStrokeColor(color).setStrokeOpacity(0.7F).setFillColor(color).setFillOpacity(0.4F);
 			MapPolygon polygon = PolygonHelper.createChunkPolygon(pos.chunkXPos, 0, pos.chunkZPos);

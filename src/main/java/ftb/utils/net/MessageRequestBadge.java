@@ -1,7 +1,7 @@
 package ftb.utils.net;
 
 import ftb.lib.api.net.*;
-import ftb.lib.api.players.LMWorldMP;
+import ftb.lib.api.players.ForgeWorldMP;
 import ftb.utils.badges.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
@@ -34,8 +34,8 @@ public class MessageRequestBadge extends MessageLM<MessageRequestBadge>
 	
 	public IMessage onMessage(MessageRequestBadge m, MessageContext ctx)
 	{
-		Badge b = ServerBadges.getServerBadge(LMWorldMP.inst.getPlayer(m.playerID));
-		if(b != Badge.emptyBadge) return new MessageSendBadge(m.playerID, b.ID);
+		Badge b = ServerBadges.getServerBadge(ForgeWorldMP.inst.getPlayer(m.playerID));
+		if(b != Badge.emptyBadge) return new MessageSendBadge(m.playerID, b.getID());
 		return null;
 	}
 }

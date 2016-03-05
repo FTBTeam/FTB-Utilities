@@ -2,10 +2,12 @@ package ftb.utils.mod.cmd;
 
 import ftb.lib.*;
 import ftb.lib.api.cmd.*;
-import ftb.lib.api.players.LMPlayerMP;
+import ftb.lib.api.players.ForgePlayerMP;
 import ftb.utils.world.*;
 import net.minecraft.command.*;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.BlockPos;
+
+import java.util.List;
 
 /**
  * Created by LatvianModder on 14.01.2016.
@@ -31,21 +33,20 @@ public class CmdLMPlayerSettings extends CommandSubLM
 			flag = f;
 		}
 		
-		public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
+		public List<String> addTabCompletionOptions(ICommandSender ics, String[] args, BlockPos pos)
 		{
-			if(i == 0) return new String[] {"true", "false"};
+			if(args.length == 1) return getListOfStringsMatchingLastWord(args, "true", "false");
 			return null;
 		}
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			checkArgs(args, 1);
-			LMPlayerMP p = LMPlayerMP.get(ics);
+			ForgePlayerMP p = ForgePlayerMP.get(ics);
 			boolean b = parseBoolean(args[0]);
 			FTBUPlayerDataMP.get(p).setFlag(flag, b);
 			p.sendUpdate();
 			FTBLib.printChat(ics, commandName + " set to " + b);
-			return null;
 		}
 	}
 	
@@ -54,23 +55,22 @@ public class CmdLMPlayerSettings extends CommandSubLM
 		public CmdBlockSecurity(String s)
 		{ super(s, CommandLevel.ALL); }
 		
-		public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
+		public List<String> addTabCompletionOptions(ICommandSender ics, String[] args, BlockPos pos)
 		{
-			if(i == 0) return PrivacyLevel.getNames();
+			if(args.length == 1) return getListOfStringsMatchingLastWord(args, PrivacyLevel.getNames());
 			return null;
 		}
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			checkArgs(args, 1);
-			LMPlayerMP p = LMPlayerMP.get(ics);
+			ForgePlayerMP p = ForgePlayerMP.get(ics);
 			PrivacyLevel l = PrivacyLevel.get(args[0]);
 			if(l != null)
 			{
 				FTBUPlayerDataMP.get(p).blocks = l;
 				FTBLib.printChat(ics, commandName + " set to " + l.uname);
 			}
-			return null;
 		}
 	}
 }

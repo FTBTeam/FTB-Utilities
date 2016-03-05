@@ -2,7 +2,7 @@ package ftb.utils.badges;
 
 import com.google.gson.*;
 import ftb.lib.FTBLib;
-import ftb.lib.api.players.LMPlayerMP;
+import ftb.lib.api.players.ForgePlayerMP;
 import ftb.utils.mod.FTBU;
 import ftb.utils.net.MessageUpdateBadges;
 import ftb.utils.ranks.Ranks;
@@ -100,7 +100,7 @@ public class ServerBadges
 				for(Map.Entry<String, JsonElement> entry : o1.entrySet())
 				{
 					Badge b = new Badge(entry.getKey(), entry.getValue().getAsString());
-					map.put(b.ID, b);
+					map.put(b.getID(), b);
 				}
 			}
 		}
@@ -123,7 +123,7 @@ public class ServerBadges
 		}
 	}
 	
-	public static Badge getServerBadge(LMPlayerMP p)
+	public static Badge getServerBadge(ForgePlayerMP p)
 	{
 		if(p == null) return Badge.emptyBadge;
 		

@@ -22,7 +22,7 @@ import java.util.*;
 /**
  * Created by LatvianModder on 23.02.2016.
  */
-public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTicking
+public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 {
 	public static FTBUWorldDataMP inst = null;
 	
@@ -33,7 +33,7 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTicking
 	private String lastRestartMessage;
 	public long restartMillis;
 	
-	public FTBUWorldDataMP(LMWorldMP w)
+	public FTBUWorldDataMP(ForgeWorldMP w)
 	{
 		super(FTBUFinals.MOD_ID, w);
 	}
@@ -95,7 +95,7 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTicking
 					{
 						UUID id = UUIDTypeAdapterLM.getUUID(e1.getKey());
 						
-						if(LMWorldMP.inst.playerMap.containsKey(id))
+						if(ForgeWorldMP.inst.playerMap.containsKey(id))
 						{
 							JsonArray chunksList = e1.getValue().getAsJsonArray();
 							
@@ -137,7 +137,7 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTicking
 			
 			for(ClaimedChunk c : e.getValue().values())
 			{
-				LMPlayerMP p = c.getOwner();
+				ForgePlayerMP p = c.getOwner();
 				
 				if(p != null)
 				{
@@ -283,18 +283,18 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTicking
 		return null;
 	}
 	
-	public ChunkType getType(LMPlayerMP p, int dim, int cx, int cz)
+	public ChunkType getType(ForgePlayerMP p, int dim, int cx, int cz)
 	{
 		World w = LMDimUtils.getWorld(dim);
 		if(w == null || !w.getChunkProvider().chunkExists(cx, cz)) return ChunkType.UNLOADED;
 		if(isInSpawn(dim, cx, cz)) return ChunkType.SPAWN;
-		//TODO: if(LMWorldMP.inst.settings.getWB(dim).isOutside(cx, cz)) return ChunkType.WORLD_BORDER;
+		//TODO: if(ForgeWorldMP.inst.settings.getWB(dim).isOutside(cx, cz)) return ChunkType.WORLD_BORDER;
 		ClaimedChunk c = getChunk(dim, cx, cz);
 		if(c == null) return ChunkType.WILDERNESS;
 		return new ChunkType.PlayerClaimed(c);
 	}
 	
-	public ChunkType getTypeD(LMPlayerMP p, int dim, BlockPos pos)
+	public ChunkType getTypeD(ForgePlayerMP p, int dim, BlockPos pos)
 	{ return getType(p, dim, MathHelperLM.chunk(pos.getX()), MathHelperLM.chunk(pos.getZ())); }
 	
 	public static boolean isInSpawn(int dim, int cx, int cz)
@@ -317,13 +317,13 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTicking
 	public static boolean allowExplosion(int dim, int cx, int cz)
 	{
 		if(dim == 0 && FTBUConfigGeneral.safe_spawn.get() && isInSpawn(dim, cx, cz)) return false;
-			//TODO: else if(LMWorldMP.inst.settings.getWB(dim).isOutside(cx, cz)) return false;
+			//TODO: else if(ForgeWorldMP.inst.settings.getWB(dim).isOutside(cx, cz)) return false;
 		else
 		{
 			ClaimedChunk c = inst.getChunk(dim, cx, cz);
 			if(c != null)
 			{
-				LMPlayerMP p = c.getOwner();
+				ForgePlayerMP p = c.getOwner();
 				
 				if(p != null)
 				{
@@ -341,7 +341,7 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTicking
 	{
 		if(ep == null) return true;
 		
-		LMPlayerMP p = LMWorldMP.inst.getPlayer(ep);
+		ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ep);
 		
 		if(p == null) return true;
 		else if(!p.isFake() && p.allowCreativeInteractSecure()) return true;
@@ -362,7 +362,7 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTicking
 		return type.canInteract(p.toPlayerMP(), leftClick);
 	}
 	
-	public Map<ChunkCoordIntPair, ChunkType> getChunkTypes(LMPlayerMP p, int x, int z, int d, int sx, int sz)
+	public Map<ChunkCoordIntPair, ChunkType> getChunkTypes(ForgePlayerMP p, int x, int z, int d, int sx, int sz)
 	{
 		Map<ChunkCoordIntPair, ChunkType> map = new HashMap<>();
 		

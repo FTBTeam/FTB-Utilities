@@ -95,10 +95,10 @@ public class GuideCategory extends FinalIDObject implements IJsonObject // Guide
 	}
 	
 	public void addSub(GuideCategory c)
-	{ subcategories.put(c.ID, c); }
+	{ subcategories.put(c.getID(), c); }
 	
 	public IChatComponent getTitleComponent()
-	{ return title == null ? new ChatComponentText(ID) : title; }
+	{ return title == null ? new ChatComponentText(getID()) : title; }
 	
 	public GuideCategory getSub(String id)
 	{
@@ -158,7 +158,7 @@ public class GuideCategory extends FinalIDObject implements IJsonObject // Guide
 		{
 			JsonObject o1 = new JsonObject();
 			for(GuideCategory c : subcategories.values())
-				o1.add(c.ID, c.getJson());
+				o1.add(c.getID(), c.getJson());
 			o.add("S", o1);
 		}
 		
@@ -190,7 +190,7 @@ public class GuideCategory extends FinalIDObject implements IJsonObject // Guide
 				GuideCategory c = new GuideCategory(entry.getKey());
 				c.setParent(this);
 				c.setJson(entry.getValue());
-				subcategories.put(c.ID, c);
+				subcategories.put(c.getID(), c);
 			}
 		}
 	}

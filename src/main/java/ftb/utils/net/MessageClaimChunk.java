@@ -44,7 +44,7 @@ public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 	
 	public IMessage onMessage(MessageClaimChunk m, MessageContext ctx)
 	{
-		LMPlayerMP p = LMWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);
+		ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);
 		FTBUPlayerDataMP d = FTBUPlayerDataMP.get(p);
 		
 		if(m.type == ID_CLAIM)
@@ -59,7 +59,7 @@ public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 				ClaimedChunk c = FTBUWorldDataMP.inst.getChunk(m.dim, m.posX, m.posZ);
 				if(c != null)
 				{
-					LMPlayerMP p1 = LMWorldMP.inst.getPlayer(c.ownerID);
+					ForgePlayerMP p1 = ForgeWorldMP.inst.getPlayer(c.ownerID);
 					FTBUPlayerDataMP d1 = FTBUPlayerDataMP.get(p1);
 					d1.unclaimChunk(m.dim, m.posX, m.posZ);
 				}

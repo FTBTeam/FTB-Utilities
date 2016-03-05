@@ -5,7 +5,6 @@ import ftb.lib.api.cmd.*;
 import ftb.utils.api.guide.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.world.*;
 import net.minecraftforge.common.*;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
@@ -17,7 +16,7 @@ public class CmdLoadedChunks extends CommandLM
 	public CmdLoadedChunks()
 	{ super("loaded_chunks", CommandLevel.OP); }
 	
-	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		
@@ -48,6 +47,5 @@ public class CmdLoadedChunks extends CommandLM
 		}
 		
 		GuideFile.displayGuide(ep, file);
-		return null;
 	}
 }

@@ -5,7 +5,7 @@ import ftb.lib.api.cmd.*;
 import ftb.utils.mod.FTBU;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.*;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 public class CmdSpawn extends CommandLM
@@ -13,7 +13,7 @@ public class CmdSpawn extends CommandLM
 	public CmdSpawn()
 	{ super("spawn", CommandLevel.ALL); }
 	
-	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		World w = LMDimUtils.getWorld(0);
@@ -22,6 +22,6 @@ public class CmdSpawn extends CommandLM
 		while(w.getBlockState(spawnpoint).getBlock().isOpaqueCube()) spawnpoint = spawnpoint.up(2);
 		
 		LMDimUtils.teleportPlayer(ep, new BlockDimPos(spawnpoint, 0));
-		return FTBU.mod.chatComponent("cmd.spawn_tp");
+		ics.addChatMessage(FTBU.mod.chatComponent("cmd.spawn_tp"));
 	}
 }

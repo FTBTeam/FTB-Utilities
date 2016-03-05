@@ -4,7 +4,9 @@ import ftb.lib.api.cmd.*;
 import ftb.utils.mod.FTBU;
 import ftb.utils.world.FTBUWorldDataMP;
 import net.minecraft.command.*;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.BlockPos;
+
+import java.util.List;
 
 public class CmdDelWarp extends CommandLM
 {
@@ -14,16 +16,20 @@ public class CmdDelWarp extends CommandLM
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <ID>"; }
 	
-	public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
+	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args, BlockPos pos)
 	{
-		if(i == 0) return FTBUWorldDataMP.inst.warps.list();
-		return super.getTabStrings(ics, args, i);
+		if(args.length == 1) return getListOfStringsMatchingLastWord(args, FTBUWorldDataMP.inst.warps.list());
+		return null;
 	}
 	
-	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
-		if(FTBUWorldDataMP.inst.warps.set(args[0], null)) return FTBU.mod.chatComponent("cmd.warp_del", args[0]);
-		return error(FTBU.mod.chatComponent("cmd.warp_not_set", args[0]));
+		if(FTBUWorldDataMP.inst.warps.set(args[0], null))
+		{
+			ics.addChatMessage(FTBU.mod.chatComponent("cmd.warp_del", args[0]));
+			return;
+		}
+		throw new CommandException("ftbu.cmd.warp_not_set", args[0]);
 	}
 }

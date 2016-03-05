@@ -24,7 +24,7 @@ public class FTBUPlayerEventHandler
 		if(e.entity.worldObj.isRemote || !(e.entity instanceof EntityPlayerMP)) return;
 		
 		EntityPlayerMP ep = (EntityPlayerMP) e.entity;
-		LMPlayerMP player = LMWorldMP.inst.getPlayer(ep);
+		ForgePlayerMP player = ForgeWorldMP.inst.getPlayer(ep);
 		if(player == null || !player.isOnline()) return;
 		
 		player.lastPos = new EntityPos(ep).toBlockDimPos();
@@ -62,7 +62,7 @@ public class FTBUPlayerEventHandler
 		if(entity != null && (entity instanceof EntityPlayerMP || entity instanceof IMob))
 		{
 			if(entity instanceof FakePlayer) return;
-			else if(entity instanceof EntityPlayerMP && LMWorldMP.inst.getPlayer(entity).allowCreativeInteractSecure())
+			else if(entity instanceof EntityPlayerMP && ForgeWorldMP.inst.getPlayer(entity).allowCreativeInteractSecure())
 				return;
 			
 			int cx = MathHelperLM.chunk(e.entity.posX);

@@ -3,7 +3,7 @@ package ftb.utils.mod.cmd;
 import ftb.lib.api.cmd.*;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.*;
-import net.minecraft.util.*;
+import net.minecraft.util.ChatComponentText;
 
 import javax.script.*;
 
@@ -15,7 +15,7 @@ public class CmdMath extends CommandLM
 	public CmdMath()
 	{ super("math", CommandLevel.ALL); }
 	
-	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
 		
@@ -37,7 +37,8 @@ public class CmdMath extends CommandLM
 			{
 				String s = LMStringUtils.unsplit(args, " ").trim();
 				Object o = engine.eval(s);
-				return new ChatComponentText(String.valueOf(o));
+				ics.addChatMessage(new ChatComponentText(String.valueOf(o)));
+				return;
 			}
 			catch(Exception ex)
 			{
@@ -46,9 +47,9 @@ public class CmdMath extends CommandLM
 		}
 		else
 		{
-			return error(new ChatComponentText("JavaScript Engine not found!"));
+			throw new RawCommandException("JavaScript Engine not found!");
 		}
 		
-		return error(new ChatComponentText("Error"));
+		throw new RawCommandException("Error");
 	}
 }

@@ -6,8 +6,9 @@ import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.*;
 import ftb.utils.api.guide.*;
 import ftb.utils.mod.client.FTBUClient;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.*;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.*;
 
@@ -36,6 +37,7 @@ public class GuiGuide extends GuiLM
 	public final ButtonTextLine[] textLines; // Max 20
 	
 	public static GuiGuide clientGuideGui = null;
+	public static FontRenderer guideFont = null;
 	
 	public static GuiGuide openClientGui(boolean open)
 	{
@@ -48,9 +50,11 @@ public class GuiGuide extends GuiLM
 	{
 		super(null, tex);
 		parentGui = g;
-		c.cleanup();
 		category = c;
 		selectedCategory = category;
+		
+		if(guideFont == null)
+			guideFont = new FontRenderer(mc.gameSettings, new ResourceLocation("textures/font/ascii.png"), mc.getTextureManager(), true);
 		
 		mainPanel.width = 328;
 		mainPanel.height = 240;
@@ -136,16 +140,21 @@ public class GuiGuide extends GuiLM
 			sliderCategories.scrollStep = 1F / (catl - 1 - maxCategoryButtons);
 		}
 		
+		List<GuideCategory> categoryList = new ArrayList<>();
+		categoryList.addAll(category.subcategories.values());
+		Collections.sort(categoryList);
+		
 		for(int i = 0; i < maxCategoryButtons; i++)
 		{
 			if(i + off < catl)
-				categoryButtons.add(new ButtonCategory(GuiGuide.this, categoriesPanel.posX, categoriesPanel.posY + i * 13, categoriesPanel.width, 13, category.subcategories.get(i + off)));
+			{
+				categoryButtons.add(new ButtonCategory(GuiGuide.this, categoriesPanel.posX, categoriesPanel.posY + i * 13, categoriesPanel.width, 13, categoryList.get(off + i)));
+			}
 		}
 		
 		mainPanel.addAll(categoryButtons);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void initLMGui()
 	{
 		if(category.getParentTop() == ClientGuideFile.instance.main) clientGuideGui = this;
@@ -158,14 +167,14 @@ public class GuiGuide extends GuiLM
 		String s = selectedCategory.getFormattedText();
 		if(s != null && s.length() > 0)
 		{
-			boolean uni = fontRendererObj.getUnicodeFlag();
-			fontRendererObj.setUnicodeFlag(FTBUClient.guide_unicode.get());
-			List<String> list = fontRendererObj.listFormattedStringToWidth(s.trim(), textPanel.width);
+			boolean uni = guideFont.getUnicodeFlag();
+			guideFont.setUnicodeFlag(FTBUClient.guide_unicode.get());
+			List<String> list = guideFont.listFormattedStringToWidth(s.trim(), textPanel.width);
 			
-			for(String aList : list)
+			for(int i = 0; i < list.size(); i++)
 			{
 				TextLine l = new TextLine(null);
-				l.text = aList;
+				l.text = list.get(i);
 				l.special = file.getGuideLink(l.text);
 				allTextLines.add(l);
 				
@@ -174,7 +183,7 @@ public class GuiGuide extends GuiLM
 					if(l.special.type.isText())
 					{
 						l.text = l.special.getTitle().getFormattedText();
-						List<String> list1 = fontRendererObj.listFormattedStringToWidth(l.text, textPanel.width);
+						List<String> list1 = guideFont.listFormattedStringToWidth(l.text, textPanel.width);
 						
 						if(list1.size() > 1)
 						{
@@ -223,7 +232,7 @@ public class GuiGuide extends GuiLM
 				if(!l.text.isEmpty()) l.text = l.text.replace('\ufffd', '\u00a7');
 			}
 			
-			fontRendererObj.setUnicodeFlag(uni);
+			guideFont.setUnicodeFlag(uni);
 		}
 		
 		refreshText();
@@ -231,7 +240,8 @@ public class GuiGuide extends GuiLM
 	
 	public void refreshText()
 	{
-		for(ButtonTextLine textLine : textLines) textLine.line = null;
+		for(int i = 0; i < textLines.length; i++)
+			textLines[i].line = null;
 		
 		int lines = allTextLines.size();
 		int off = 0;
@@ -271,89 +281,16 @@ public class GuiGuide extends GuiLM
 		
 		fontRendererObj.drawString(category.getTitleComponent().getFormattedText(), mainPanel.posX + 53, mainPanel.posY + 14, textColor);
 		
-		boolean uni = fontRendererObj.getUnicodeFlag();
-		fontRendererObj.setUnicodeFlag(FTBUClient.guide_unicode.get());
-		for(ButtonTextLine textLine : textLines) textLine.renderWidget();
-		fontRendererObj.setUnicodeFlag(uni);
+		boolean uni = guideFont.getUnicodeFlag();
+		guideFont.setUnicodeFlag(FTBUClient.guide_unicode.get());
+		for(int i = 0; i < textLines.length; i++)
+			textLines[i].renderWidget();
+		guideFont.setUnicodeFlag(uni);
 		
 		if(!categoryButtons.isEmpty())
 		{
-			for(ButtonCategory categoryButton : categoryButtons) categoryButton.renderWidget();
-		}
-	}
-	
-	public class ButtonCategory extends ButtonLM
-	{
-		public final GuideCategory cat;
-		
-		public ButtonCategory(GuiGuide g, int x, int y, int w, int h, GuideCategory c)
-		{
-			super(g, x, y, w, h);
-			cat = c;
-		}
-		
-		public void onButtonPressed(int b)
-		{
-			FTBLibClient.playClickSound();
-			
-			if(cat.subcategories.isEmpty())
-			{
-				selectedCategory = cat;
-				sliderText.value = 0F;
-				initLMGui();
-			}
-			else FTBLibClient.openGui(new GuiGuide(GuiGuide.this, cat));
-		}
-		
-		public boolean isEnabled()
-		{ return true; }
-		
-		public void renderWidget()
-		{
-			if(!isEnabled()) return;
-			int ax = getAX();
-			int ay = getAY();
-			IChatComponent titleC = cat.getTitleComponent().createCopy();
-			boolean mouseOver = mouseOver(ax, ay);
-			if(mouseOver) titleC.getChatStyle().setUnderlined(true);
-			if(selectedCategory == cat) titleC.getChatStyle().setBold(true);
-			gui.getFontRenderer().drawString(titleC.getFormattedText(), ax + 1, ay + 1, mouseOver ? textColorOver : textColor);
-		}
-	}
-	
-	public class ButtonTextLine extends ButtonLM
-	{
-		public TextLine line = null;
-		
-		public ButtonTextLine(GuiGuide g, int i)
-		{ super(g, 0, i * 11, g.textPanel.width, 11); }
-		
-		public void addMouseOverText(List<String> l)
-		{
-			if(line != null && line.special != null) line.special.addHoverText(l);
-		}
-		
-		public void onButtonPressed(int b)
-		{
-			if(line != null && line.special != null) line.special.onClicked((GuiGuide) gui);
-		}
-		
-		public void renderWidget()
-		{
-			if(line == null) return;
-			
-			int ax = getAX();
-			int ay = getAY();
-			
-			if(!line.text.isEmpty()) fontRendererObj.drawString(line.text, ax, ay, textColor);
-			else if(line.special != null && line.special.type.isImage() && line.texture != null && line.texture.isValid())
-			{
-				GlStateManager.color(1F, 1F, 1F, 1F);
-				FTBLibClient.setTexture(line.texture.texture);
-				double w = Math.min(width, line.texture.width);
-				GuiLM.render(line.texture, ax, ay, zLevel, w, line.texture.getHeight(w) + 1);
-				//GuiLM.drawTexturedRectD(ax, ay, gui.getZLevel(), w, line.texture.getHeight(w), 0D, line.texture.minU, 1D, line.texture.maxU);
-			}
+			for(int i = 0; i < categoryButtons.size(); i++)
+				categoryButtons.get(i).renderWidget();
 		}
 	}
 }

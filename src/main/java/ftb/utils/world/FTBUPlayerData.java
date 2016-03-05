@@ -17,7 +17,7 @@ public abstract class FTBUPlayerData extends ForgePlayerData
 	protected byte flags = 0;
 	public PrivacyLevel blocks;
 	
-	FTBUPlayerData(String id, LMPlayer p)
+	FTBUPlayerData(String id, ForgePlayer p)
 	{
 		super(id, p);
 		blocks = PrivacyLevel.FRIENDS;

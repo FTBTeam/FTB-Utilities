@@ -67,10 +67,10 @@ public class Ranks implements IPermissionHandler
 			else
 			{
 				JsonObject o = new JsonObject();
-				o.add("default_rank", new JsonPrimitive(PLAYER.ID));
+				o.add("default_rank", new JsonPrimitive(PLAYER.getID()));
 				JsonObject o1 = new JsonObject();
-				o1.add(PLAYER.ID, PLAYER.getJson());
-				o1.add(ADMIN.ID, ADMIN.getJson());
+				o1.add(PLAYER.getID(), PLAYER.getJson());
+				o1.add(ADMIN.getID(), ADMIN.getJson());
 				o.add("ranks", o1);
 				LMJsonUtils.toJson(fileRanks, o);
 			}
@@ -122,12 +122,12 @@ public class Ranks implements IPermissionHandler
 		if(defaultRank != null)
 		{
 			JsonObject o = new JsonObject();
-			o.add("default_rank", new JsonPrimitive(defaultRank.ID));
+			o.add("default_rank", new JsonPrimitive(defaultRank.getID()));
 			JsonObject o1 = new JsonObject();
 			
 			for(Rank r : ranks.values())
 			{
-				o1.add(r.ID, r.getJson());
+				o1.add(r.getID(), r.getJson());
 			}
 			
 			o.add("ranks", o1);
@@ -136,7 +136,7 @@ public class Ranks implements IPermissionHandler
 			o = new JsonObject();
 			for(Map.Entry<UUID, Rank> entry : playerMap.entrySet())
 			{
-				o.add(UUIDTypeAdapterLM.getString(entry.getKey()), new JsonPrimitive(entry.getValue().ID));
+				o.add(UUIDTypeAdapterLM.getString(entry.getKey()), new JsonPrimitive(entry.getValue().getID()));
 			}
 			LMJsonUtils.toJson(filePlayers, o);
 		}
@@ -164,7 +164,7 @@ public class Ranks implements IPermissionHandler
 			
 			for(ForgePermissionContainer p : sortedPermissions)
 			{
-				list.add(p.ID);
+				list.add(p.getID());
 				
 				if(p.info != null)
 				{
@@ -180,7 +180,7 @@ public class Ranks implements IPermissionHandler
 			
 			for(RankConfig p : sortedRankConfigs)
 			{
-				list.add(p.ID);
+				list.add(p.getID());
 				
 				if(p.configData.info != null)
 				{
@@ -225,7 +225,7 @@ public class Ranks implements IPermissionHandler
 			
 			JsonObject o1 = new JsonObject();
 			
-			Rank rankPlayer = new Rank(PLAYER.ID);
+			Rank rankPlayer = new Rank(PLAYER.getID());
 			rankPlayer.setJson(PLAYER.getJson());
 			
 			for(RankConfig p : sortedRankConfigs)
@@ -237,12 +237,12 @@ public class Ranks implements IPermissionHandler
 			
 			for(ForgePermissionContainer c : sortedPermissions)
 			{
-				rankPlayer.permissions.put(c.ID, c.playerValue);
+				rankPlayer.permissions.put(c.getID(), c.playerValue);
 			}
 			
-			o1.add(rankPlayer.ID, rankPlayer.getJson());
+			o1.add(rankPlayer.getID(), rankPlayer.getJson());
 			
-			Rank rankAdmin = new Rank(ADMIN.ID);
+			Rank rankAdmin = new Rank(ADMIN.getID());
 			rankAdmin.parent = rankPlayer;
 			rankAdmin.setJson(ADMIN.getJson());
 			
@@ -253,7 +253,7 @@ public class Ranks implements IPermissionHandler
 			}
 			
 			rankAdmin.permissions.put("*", true);
-			o1.add(rankAdmin.ID, rankAdmin.getJson());
+			o1.add(rankAdmin.getID(), rankAdmin.getJson());
 			
 			o.add("ranks", o1);
 			

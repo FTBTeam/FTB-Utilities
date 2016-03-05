@@ -52,7 +52,7 @@ public final class Rank extends FinalIDObject implements IJsonObject
 	{
 		JsonObject o = new JsonObject();
 		
-		o.add("parent", new JsonPrimitive(parent == null ? "" : parent.ID));
+		o.add("parent", new JsonPrimitive(parent == null ? "" : parent.getID()));
 		o.add("color", new JsonPrimitive(color.getFriendlyName()));
 		o.add("prefix", new JsonPrimitive(prefix));
 		o.add("badge", new JsonPrimitive(badge));
@@ -75,7 +75,7 @@ public final class Rank extends FinalIDObject implements IJsonObject
 			
 			for(Map.Entry<RankConfig, JsonElement> e : config.entrySet())
 			{
-				o1.add(e.getKey().ID, e.getValue());
+				o1.add(e.getKey().getID(), e.getValue());
 			}
 			
 			o.add("config", o1);

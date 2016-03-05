@@ -3,7 +3,7 @@ package ftb.utils.world;
 import com.google.gson.JsonArray;
 import ftb.lib.*;
 import ftb.lib.api.item.LMInvUtils;
-import ftb.lib.api.players.LMPlayerMP;
+import ftb.lib.api.players.ForgePlayerMP;
 import ftb.utils.badges.ServerBadges;
 import ftb.utils.mod.*;
 import ftb.utils.mod.config.FTBUConfigLogin;
@@ -20,13 +20,13 @@ import java.util.List;
  */
 public class FTBUPlayerDataMP extends FTBUPlayerData
 {
-	public static FTBUPlayerDataMP get(LMPlayerMP p)
+	public static FTBUPlayerDataMP get(ForgePlayerMP p)
 	{ return (FTBUPlayerDataMP) p.getData("ftbu"); }
 	
 	public Warps homes;
 	public ChunkType lastChunkType;
 	
-	public FTBUPlayerDataMP(LMPlayerMP p)
+	public FTBUPlayerDataMP(ForgePlayerMP p)
 	{
 		super(FTBUFinals.MOD_ID, p);
 		homes = new Warps();

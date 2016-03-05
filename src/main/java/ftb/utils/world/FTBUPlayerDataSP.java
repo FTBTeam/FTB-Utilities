@@ -12,12 +12,12 @@ import net.minecraftforge.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class FTBUPlayerDataSP extends FTBUPlayerData
 {
-	public static FTBUPlayerDataSP get(LMPlayer p)
+	public static FTBUPlayerDataSP get(ForgePlayer p)
 	{ return (FTBUPlayerDataSP) p.getData("ftbu"); }
 	
 	public short claimedChunks, loadedChunks, maxClaimedChunks, maxLoadedChunks;
 	
-	public FTBUPlayerDataSP(LMPlayerSP p)
+	public FTBUPlayerDataSP(ForgePlayerSP p)
 	{
 		super(FTBUFinals.MOD_ID, p);
 	}

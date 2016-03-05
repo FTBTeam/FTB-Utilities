@@ -2,7 +2,7 @@ package ftb.utils.net;
 
 import ftb.lib.BlockDimPos;
 import ftb.lib.api.net.*;
-import ftb.lib.api.players.LMPlayerMP;
+import ftb.lib.api.players.ForgePlayerMP;
 import ftb.utils.world.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.world.ChunkCoordIntPair;
@@ -18,13 +18,13 @@ public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate>
 	
 	public MessageAreaUpdate() { }
 	
-	public MessageAreaUpdate(LMPlayerMP p, int x, int z, int d, int sx, int sz)
+	public MessageAreaUpdate(ForgePlayerMP p, int x, int z, int d, int sx, int sz)
 	{
 		dim = d;
 		types = FTBUWorldDataMP.inst.getChunkTypes(p, x, z, d, sx, sz);
 	}
 	
-	public MessageAreaUpdate(LMPlayerMP p, BlockDimPos pos, int radius)
+	public MessageAreaUpdate(ForgePlayerMP p, BlockDimPos pos, int radius)
 	{ this(p, pos.chunkX() - radius, pos.chunkZ() - radius, pos.dim, radius * 2 + 1, radius * 2 + 1); }
 	
 	public LMNetworkWrapper getWrapper()

@@ -4,9 +4,12 @@ import ftb.lib.*;
 import ftb.lib.api.cmd.*;
 import ftb.utils.mod.FTBU;
 import ftb.utils.world.FTBUWorldDataMP;
+import latmod.lib.LMStringUtils;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
+
+import java.util.*;
 
 public class CmdWarp extends CommandLM
 {
@@ -16,26 +19,25 @@ public class CmdWarp extends CommandLM
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <ID>"; }
 	
-	public String[] getTabStrings(ICommandSender ics, String[] args, int i) throws CommandException
+	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args, BlockPos pos)
 	{
-		if(i == 0) return FTBUWorldDataMP.inst.warps.list();
-		return super.getTabStrings(ics, args, i);
+		if(args.length == 1) return getListOfStringsMatchingLastWord(args, FTBUWorldDataMP.inst.warps.list());
+		return null;
 	}
 	
-	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
 		if(args[0].equals("list"))
 		{
-			String[] list = FTBUWorldDataMP.inst.warps.list();
-			if(list.length == 0) return new ChatComponentText("-");
-			return new ChatComponentText(joinNiceString(list));
+			Collection<String> list = FTBUWorldDataMP.inst.warps.list();
+			ics.addChatMessage(new ChatComponentText(list.isEmpty() ? "-" : LMStringUtils.strip(list)));
 		}
 		
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		BlockDimPos p = FTBUWorldDataMP.inst.warps.get(args[0]);
-		if(p == null) return error(FTBU.mod.chatComponent("cmd.warp_not_set", args[0]));
+		if(p == null) throw new CommandException("ftbu.cmd.warp_not_set", args[0]);
 		LMDimUtils.teleportPlayer(ep, p);
-		return FTBU.mod.chatComponent("cmd.warp_tp", args[0]);
+		ics.addChatMessage(FTBU.mod.chatComponent("cmd.warp_tp", args[0]));
 	}
 }

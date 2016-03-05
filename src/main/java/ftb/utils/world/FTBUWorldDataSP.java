@@ -20,7 +20,7 @@ public class FTBUWorldDataSP extends ForgeWorldData
 	public final Map<ChunkCoordIntPair, ChunkType> chunks;
 	private int lastDimension = 0;
 	
-	public FTBUWorldDataSP(LMWorldSP w)
+	public FTBUWorldDataSP(ForgeWorldSP w)
 	{
 		super(FTBUFinals.MOD_ID, w);
 		chunks = new HashMap<>();
@@ -28,7 +28,7 @@ public class FTBUWorldDataSP extends ForgeWorldData
 	
 	public void init()
 	{
-		inst = LMWorldSP.inst.serverDataIDs.contains(FTBUFinals.MOD_ID) ? this : null;
+		inst = ForgeWorldSP.inst.serverDataIDs.contains(FTBUFinals.MOD_ID) ? this : null;
 	}
 	
 	public void onClosed()
@@ -63,7 +63,7 @@ public class FTBUWorldDataSP extends ForgeWorldData
 		{
 			if(type.asClaimed() != null)
 			{
-				LMPlayerSP owner = LMWorldSP.inst.getPlayer(type);
+				ForgePlayerSP owner = ForgeWorldSP.inst.getPlayer(type);
 				if(owner != null) l.add(type.getChatColor(owner) + owner.getProfile().getName());
 			}
 			else l.add(type.getChatColor(null) + type.getIDS());

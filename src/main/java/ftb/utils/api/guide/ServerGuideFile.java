@@ -92,13 +92,13 @@ public class ServerGuideFile extends GuideFile
 		}
 	}
 	
-	private List<LMPlayerMP> players = null;
-	private LMPlayerMP self;
+	private List<ForgePlayerMP> players = null;
+	private ForgePlayerMP self;
 	private GuideCategory categoryTops = null;
 	
-	public ServerGuideFile(LMPlayerMP pself)
+	public ServerGuideFile(ForgePlayerMP pself)
 	{
-		super(CachedInfo.main.ID);
+		super(CachedInfo.main.getID());
 		main.setTitle(CachedInfo.main.getTitleComponent());
 		
 		if((self = pself) == null) return;
@@ -110,7 +110,7 @@ public class ServerGuideFile extends GuideFile
 		
 		categoryTops = main.getSub("Tops").setTitle(FTBU.mod.chatComponent("top.title"));
 		
-		players = LMWorldMP.inst.getServerPlayers();
+		players = ForgeWorldMP.inst.getServerPlayers();
 		for(int i = 0; i < players.size(); i++)
 			players.get(i).refreshStats();
 		
@@ -124,7 +124,7 @@ public class ServerGuideFile extends GuideFile
 			main.println(FTBU.mod.chatComponent("cmd.world_difficulty", LMStringUtils.firstUppercase(pself.getPlayer().worldObj.getDifficulty().toString().toLowerCase())));
 		
 		if(FTBUConfigGeneral.server_info_mode.get())
-			main.println(FTBU.mod.chatComponent("cmd.ftb_gamemode", LMStringUtils.firstUppercase(LMWorldMP.inst.getMode().toString().toLowerCase())));
+			main.println(FTBU.mod.chatComponent("cmd.ftb_gamemode", LMStringUtils.firstUppercase(ForgeWorldMP.inst.getMode().toString().toLowerCase())));
 		
 		if(FTBUConfigTops.first_joined.get()) addTop(Top.first_joined);
 		if(FTBUConfigTops.deaths.get()) addTop(Top.deaths);
@@ -210,7 +210,7 @@ public class ServerGuideFile extends GuideFile
 		
 		for(int j = 0; j < size; j++)
 		{
-			LMPlayerMP p = players.get(j);
+			ForgePlayerMP p = players.get(j);
 			
 			Object data = t.getData(p);
 			StringBuilder sb = new StringBuilder();

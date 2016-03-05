@@ -19,5 +19,6 @@ public class CmdAdmin extends CommandSubLM
 		add(new CmdListFriends());
 		add(new CmdUnloadAll());
 		add(new CmdAdminHome());
+		add(new CmdDisplayNBT());
 	}
 }

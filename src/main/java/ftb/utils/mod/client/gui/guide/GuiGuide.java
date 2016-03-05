@@ -53,9 +53,6 @@ public class GuiGuide extends GuiLM
 		category = c;
 		selectedCategory = category;
 		
-		if(guideFont == null)
-			guideFont = new FontRenderer(mc.gameSettings, new ResourceLocation("textures/font/ascii.png"), mc.getTextureManager(), true);
-		
 		mainPanel.width = 328;
 		mainPanel.height = 240;
 		
@@ -124,6 +121,9 @@ public class GuiGuide extends GuiLM
 	
 	public void addWidgets()
 	{
+		if(guideFont == null)
+			guideFont = new FontRenderer(mc.gameSettings, new ResourceLocation("textures/font/ascii.png"), mc.getTextureManager(), true);
+		
 		mainPanel.add(sliderCategories);
 		mainPanel.add(sliderText);
 		mainPanel.add(buttonBack);

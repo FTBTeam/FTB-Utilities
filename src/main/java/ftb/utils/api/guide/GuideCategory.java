@@ -61,14 +61,15 @@ public class GuideCategory extends FinalIDObject implements IJsonObject // Guide
 		int s = text.size();
 		for(int i = 0; i < s; i++)
 		{
-			try
+			IChatComponent c = text.get(i);
+			
+			if(c == null) sb.append('\n');
+			else
 			{
-				sb.append(text.get(i).getUnformattedText());
+				try { sb.append(text.get(i).getUnformattedText()); }
+				catch(Exception ex) { ex.printStackTrace(); }
 			}
-			catch(Exception ex)
-			{
-				ex.printStackTrace();
-			}
+			
 			if(i != s - 1) sb.append('\n');
 		}
 		return sb.toString();

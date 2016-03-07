@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.*;
@@ -248,9 +249,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	}
 	
 	private ChunkType getType(int cx, int cy)
-	{ return FTBUWorldDataSP.inst.getType(cx, cy); }
+	{ return FTBUWorldDataSP.inst.getType(new ChunkCoordIntPair(cx, cy)); }
 	
-	@SuppressWarnings("unchecked")
 	public void renderMinimap()
 	{
 		FTBLibClient.setTexture(tex_area);
@@ -335,7 +335,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	public static class MapButton extends ButtonLM
 	{
 		public final GuiClaimChunks gui;
-		public final int chunkX, chunkY;
+		public final ChunkCoordIntPair chunk;
 		
 		public MapButton(GuiClaimChunks g, int x, int y, int i)
 		{
@@ -343,8 +343,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			gui = g;
 			posX += (i % tiles_gui) * width;
 			posY += (i / tiles_gui) * height;
-			chunkX = g.startX + (i % tiles_gui);
-			chunkY = g.startY + (i / tiles_gui);
+			chunk = new ChunkCoordIntPair(g.startX + (i % tiles_gui), g.startY + (i / tiles_gui));
 		}
 		
 		public void onButtonPressed(int b)
@@ -356,15 +355,15 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			MessageClaimChunk msg = new MessageClaimChunk();
 			msg.dim = gui.currentDim;
 			msg.token = gui.adminToken;
-			msg.posX = chunkX;
-			msg.posZ = chunkY;
+			msg.posX = chunk.chunkXPos;
+			msg.posZ = chunk.chunkZPos;
 			msg.type = (b == 0) ? (ctrl ? MessageClaimChunk.ID_LOAD : MessageClaimChunk.ID_CLAIM) : (ctrl ? MessageClaimChunk.ID_UNLOAD : MessageClaimChunk.ID_UNCLAIM);
 			msg.sendToServer();
 			FTBLibClient.playClickSound();
 		}
 		
 		public void addMouseOverText(List<String> l)
-		{ FTBUWorldDataSP.inst.getMessage(chunkX, chunkY, l, isShiftKeyDown()); }
+		{ FTBUWorldDataSP.inst.getMessage(chunk, l, isShiftKeyDown()); }
 		
 		public void renderWidget()
 		{

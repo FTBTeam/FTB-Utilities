@@ -3,7 +3,6 @@ package ftb.utils.world;
 import ftb.lib.api.players.*;
 import ftb.utils.mod.FTBUFinals;
 import ftb.utils.mod.client.FTBUClient;
-import latmod.lib.Bits;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -36,9 +35,10 @@ public class FTBUWorldDataSP extends ForgeWorldData
 		inst = null;
 	}
 	
-	public ChunkType getType(int x, int z)
+	public ChunkType getType(ChunkCoordIntPair pos)
 	{
-		ChunkType i = chunks.get(Bits.intsToLong(x, z));
+		if(pos == null) return ChunkType.UNLOADED;
+		ChunkType i = chunks.get(pos);
 		return (i == null) ? ChunkType.UNLOADED : i;
 	}
 	
@@ -55,9 +55,9 @@ public class FTBUWorldDataSP extends ForgeWorldData
 		if(FTBUClient.journeyMapHandler != null) FTBUClient.journeyMapHandler.refresh(dim);
 	}
 	
-	public void getMessage(int x, int z, List<String> l, boolean shift)
+	public void getMessage(ChunkCoordIntPair pos, List<String> l, boolean shift)
 	{
-		ChunkType type = getType(x, z);
+		ChunkType type = getType(pos);
 		
 		if(type != ChunkType.UNLOADED)
 		{

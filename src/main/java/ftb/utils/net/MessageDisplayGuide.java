@@ -25,7 +25,7 @@ public class MessageDisplayGuide extends MessageLM_IO
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{
-		GuideFile file = new GuideFile(null);
+		GuideFile file = new GuideFile("guide");
 		JsonElementIO.read(io, file);
 		FTBLibClient.openGui(new GuiGuide(null, file.main));
 		return null;

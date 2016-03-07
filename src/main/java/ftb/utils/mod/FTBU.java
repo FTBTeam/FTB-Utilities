@@ -30,13 +30,12 @@ public class FTBU
 	@SidedProxy(clientSide = "ftb.utils.mod.handlers.FTBLIntegrationClient", serverSide = "ftb.utils.mod.handlers.FTBLIntegration")
 	public static FTBLIntegration ftbl_int;
 	
+	public static final Logger logger = LogManager.getLogger("FTBUtilities");
 	public static LMMod mod;
-	public static Logger logger;
 	
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
-		logger = LogManager.getLogger("FTBUtilities");
 		mod = LMMod.create(FTBUFinals.MOD_ID);
 		FTBLib.ftbu = ftbl_int;
 		FTBUConfig.load();

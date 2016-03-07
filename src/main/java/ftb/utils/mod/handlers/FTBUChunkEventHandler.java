@@ -160,7 +160,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 								isLoaded = false;
 								if(c.isForced)
 								{
-									FTBLib.logger.info("Unloading " + p.getProfile().getName() + " chunks for being offline for too long");
+									FTBU.logger.info("Unloading " + p.getProfile().getName() + " chunks for being offline for too long");
 								}
 							}
 						}

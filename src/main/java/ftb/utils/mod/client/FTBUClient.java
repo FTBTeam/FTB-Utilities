@@ -1,10 +1,10 @@
 package ftb.utils.mod.client;
 
-import ftb.lib.api.*;
+import ftb.lib.api.ForgeWorldSP;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.config.ClientConfigRegistry;
+import ftb.lib.api.events.*;
 import ftb.lib.api.gui.LMGuiHandlerRegistry;
-import ftb.lib.api.players.ForgeWorldSP;
 import ftb.utils.badges.BadgeRenderer;
 import ftb.utils.mod.*;
 import ftb.utils.mod.cmd.CmdMath;
@@ -27,11 +27,11 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public static final ConfigEntryBool render_my_badge = new ConfigEntryBool("render_my_badge", true)
 	{
 		public boolean get()
-		{ return hasServerMod() && FTBUPlayerDataSP.get(ForgeWorldSP.inst.clientPlayer).getFlag(FTBUPlayerData.RENDER_BADGE); }
+		{ return FTBUWorldDataSP.exists() && FTBUPlayerDataSP.get(ForgeWorldSP.inst.clientPlayer).getFlag(FTBUPlayerData.RENDER_BADGE); }
 		
 		public void set(boolean b)
 		{
-			if(hasServerMod())
+			if(FTBUWorldDataSP.exists())
 			{
 				new MessageButtonPressed(MessageButtonPressed.RENDER_BADGE, b ? 1 : 0).sendToServer();
 			}
@@ -42,11 +42,11 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public static final ConfigEntryBool chat_links = new ConfigEntryBool("chat_links", true)
 	{
 		public boolean get()
-		{ return hasServerMod() && FTBUPlayerDataSP.get(ForgeWorldSP.inst.clientPlayer).getFlag(FTBUPlayerData.CHAT_LINKS); }
+		{ return FTBUWorldDataSP.exists() && FTBUPlayerDataSP.get(ForgeWorldSP.inst.clientPlayer).getFlag(FTBUPlayerData.CHAT_LINKS); }
 		
 		public void set(boolean b)
 		{
-			if(hasServerMod())
+			if(FTBUWorldDataSP.exists())
 			{
 				new MessageButtonPressed(MessageButtonPressed.CHAT_LINKS, b ? 1 : 0).sendToServer();
 			}
@@ -57,9 +57,6 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public static final ConfigEntryBool guide_unicode = new ConfigEntryBool("guide_unicode", true);
 	
 	public static IJMPluginHandler journeyMapHandler = null;
-	
-	public static boolean hasServerMod()
-	{ return FTBUWorldDataSP.inst != null; }
 	
 	public void preInit()
 	{

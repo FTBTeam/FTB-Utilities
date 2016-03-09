@@ -1,7 +1,7 @@
 package ftb.utils.net;
 
+import ftb.lib.api.*;
 import ftb.lib.api.net.*;
-import ftb.lib.api.players.*;
 import io.netty.buffer.ByteBuf;
 import latmod.lib.MathHelperLM;
 import net.minecraftforge.fml.common.network.simpleimpl.*;

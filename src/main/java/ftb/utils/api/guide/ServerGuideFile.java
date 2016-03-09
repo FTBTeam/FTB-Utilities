@@ -1,9 +1,9 @@
 package ftb.utils.api.guide;
 
 import ftb.lib.FTBLib;
+import ftb.lib.api.*;
 import ftb.lib.api.cmd.ICustomCommandInfo;
 import ftb.lib.api.permissions.ForgePermissionRegistry;
-import ftb.lib.api.players.*;
 import ftb.utils.mod.*;
 import ftb.utils.mod.config.*;
 import ftb.utils.world.*;
@@ -115,7 +115,7 @@ public class ServerGuideFile extends GuideFile
 			players.get(i).refreshStats();
 		
 		if(FTBUConfigGeneral.restart_timer.get() > 0F)
-			main.println(FTBU.mod.chatComponent("cmd.timer_restart", LMStringUtils.getTimeString(FTBUWorldDataMP.inst.restartMillis - LMUtils.millis())));
+			main.println(FTBU.mod.chatComponent("cmd.timer_restart", LMStringUtils.getTimeString(FTBUWorldDataMP.get().restartMillis - LMUtils.millis())));
 		
 		if(FTBUConfigBackups.enabled.get())
 			main.println(FTBU.mod.chatComponent("cmd.timer_backup", LMStringUtils.getTimeString(Backups.nextBackup - LMUtils.millis())));

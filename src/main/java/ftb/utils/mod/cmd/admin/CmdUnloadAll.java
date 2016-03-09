@@ -1,7 +1,7 @@
 package ftb.utils.mod.cmd.admin;
 
+import ftb.lib.api.*;
 import ftb.lib.api.cmd.*;
-import ftb.lib.api.players.*;
 import ftb.utils.world.*;
 import net.minecraft.command.*;
 import net.minecraft.util.ChatComponentText;
@@ -23,7 +23,7 @@ public class CmdUnloadAll extends CommandLM
 		
 		if(args[0].equals("@a"))
 		{
-			for(ClaimedChunk c : FTBUWorldDataMP.inst.getAllChunks())
+			for(ClaimedChunk c : FTBUWorldDataMP.get().getAllChunks())
 				c.isChunkloaded = false;
 			for(ForgePlayer p : ForgeWorldMP.inst.getOnlinePlayers())
 				p.toPlayerMP().sendUpdate();
@@ -32,7 +32,7 @@ public class CmdUnloadAll extends CommandLM
 		}
 		
 		ForgePlayerMP p = ForgePlayerMP.get(args[0]);
-		for(ClaimedChunk c : FTBUWorldDataMP.inst.getChunks(p.getProfile().getId(), null))
+		for(ClaimedChunk c : FTBUWorldDataMP.get().getChunks(p.getProfile().getId(), null))
 			c.isChunkloaded = false;
 		if(p.isOnline()) p.sendUpdate();
 		ics.addChatMessage(new ChatComponentText("Unloaded all " + p.getProfile().getName() + "'s chunks"));

@@ -2,8 +2,8 @@ package ftb.utils.world;
 
 import com.google.gson.JsonArray;
 import ftb.lib.*;
+import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.item.LMInvUtils;
-import ftb.lib.api.players.ForgePlayerMP;
 import ftb.utils.badges.ServerBadges;
 import ftb.utils.mod.*;
 import ftb.utils.mod.config.FTBUConfigLogin;
@@ -12,6 +12,7 @@ import ftb.utils.net.MessageAreaUpdate;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.ChunkCoordIntPair;
 
 import java.util.List;
 
@@ -99,12 +100,12 @@ public class FTBUPlayerDataMP extends FTBUPlayerData
 	}
 	
 	public int getClaimedChunks()
-	{ return FTBUWorldDataMP.inst.getChunks(player.getProfile().getId(), null).size(); }
+	{ return FTBUWorldDataMP.get().getChunks(player.getProfile().getId(), null).size(); }
 	
 	public int getLoadedChunks(boolean forced)
 	{
 		int loaded = 0;
-		for(ClaimedChunk c : FTBUWorldDataMP.inst.getChunks(player.getProfile().getId(), null))
+		for(ClaimedChunk c : FTBUWorldDataMP.get().getChunks(player.getProfile().getId(), null))
 		{
 			if(c.isChunkloaded && (!forced || c.isForced))
 			{
@@ -133,48 +134,48 @@ public class FTBUPlayerDataMP extends FTBUPlayerData
 		return false;
 	}
 	
-	public void claimChunk(int dim, int cx, int cz)
+	public void claimChunk(int dim, ChunkCoordIntPair pos)
 	{
 		if(isDimensionBlacklisted(dim)) return;
 		short max = getMaxClaimedChunks();
 		if(max == 0) return;
 		if(getClaimedChunks() >= max) return;
 		
-		ChunkType t = FTBUWorldDataMP.inst.getType(player.toPlayerMP(), dim, cx, cz);
-		if(t.asClaimed() == null && t.isChunkOwner(player.toPlayerMP()) && FTBUWorldDataMP.inst.put(new ClaimedChunk(player.getProfile().getId(), dim, cx, cz)))
+		ChunkType t = FTBUWorldDataMP.get().getType(player.toPlayerMP(), dim, pos);
+		if(t.asClaimed() == null && t.isChunkOwner(player.toPlayerMP()) && FTBUWorldDataMP.get().put(new ClaimedChunk(player.getProfile().getId(), dim, pos)))
 		{
 			player.sendUpdate();
 		}
 	}
 	
-	public void unclaimChunk(int dim, int cx, int cz)
+	public void unclaimChunk(int dim, ChunkCoordIntPair pos)
 	{
-		if(FTBUWorldDataMP.inst.getType(player.toPlayerMP(), dim, cx, cz).isChunkOwner(player.toPlayerMP()))
+		if(FTBUWorldDataMP.get().getType(player.toPlayerMP(), dim, pos).isChunkOwner(player.toPlayerMP()))
 		{
-			setLoaded(dim, cx, cz, false);
-			FTBUWorldDataMP.inst.remove(dim, cx, cz);
+			setLoaded(dim, pos, false);
+			FTBUWorldDataMP.get().remove(dim, pos);
 			player.sendUpdate();
 		}
 	}
 	
 	public void unclaimAllChunks(Integer dim)
 	{
-		List<ClaimedChunk> list = FTBUWorldDataMP.inst.getChunks(player.getProfile().getId(), dim);
+		List<ClaimedChunk> list = FTBUWorldDataMP.get().getChunks(player.getProfile().getId(), dim);
 		int size0 = list.size();
 		if(size0 == 0) return;
 		
 		for(ClaimedChunk c : list)
 		{
-			setLoaded(c.dim, c.posX, c.posZ, false);
-			FTBUWorldDataMP.inst.remove(c.dim, c.posX, c.posZ);
+			setLoaded(c.dim, c.pos, false);
+			FTBUWorldDataMP.get().remove(c.dim, c.pos);
 		}
 		
 		player.sendUpdate();
 	}
 	
-	public void setLoaded(int dim, int cx, int cz, boolean flag)
+	public void setLoaded(int dim, ChunkCoordIntPair pos, boolean flag)
 	{
-		ClaimedChunk chunk = FTBUWorldDataMP.inst.getChunk(dim, cx, cz);
+		ClaimedChunk chunk = FTBUWorldDataMP.get().getChunk(dim, pos);
 		if(chunk == null) return;
 		
 		if(flag != chunk.isChunkloaded && player.equalsPlayer(chunk.getOwner()))
@@ -192,7 +193,7 @@ public class FTBUPlayerDataMP extends FTBUPlayerData
 			
 			if(player.getPlayer() != null)
 			{
-				new MessageAreaUpdate(player.toPlayerMP(), cx, cz, dim, 1, 1).sendTo(player.toPlayerMP().getPlayer());
+				new MessageAreaUpdate(player.toPlayerMP(), pos.chunkXPos, pos.chunkZPos, dim, 1, 1).sendTo(player.toPlayerMP().getPlayer());
 				player.sendUpdate();
 			}
 		}

@@ -1,8 +1,8 @@
 package ftb.utils.mod.cmd;
 
 import ftb.lib.LMDimUtils;
+import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.cmd.*;
-import ftb.lib.api.players.ForgePlayerMP;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 

@@ -1,7 +1,7 @@
 package ftb.utils.mod.cmd.admin;
 
+import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.cmd.*;
-import ftb.lib.api.players.ForgePlayerMP;
 import ftb.utils.ranks.*;
 import net.minecraft.command.*;
 import net.minecraft.util.BlockPos;

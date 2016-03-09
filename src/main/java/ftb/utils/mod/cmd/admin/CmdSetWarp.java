@@ -31,7 +31,7 @@ public class CmdSetWarp extends CommandLM
 		}
 		else c = ep.getPosition();
 		
-		FTBUWorldDataMP.inst.warps.set(args[0], new BlockDimPos(c, ep.dimension));
+		FTBUWorldDataMP.get().warps.set(args[0], new BlockDimPos(c, ep.dimension));
 		ics.addChatMessage(FTBU.mod.chatComponent("cmd.warp_set", args[0]));
 	}
 }

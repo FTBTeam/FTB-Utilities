@@ -1,10 +1,10 @@
 package ftb.utils.mod.client.gui.claims;
 
 import ftb.lib.TextureCoords;
+import ftb.lib.api.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.widgets.*;
-import ftb.lib.api.players.*;
 import ftb.lib.mod.client.gui.friends.GuiFriends;
 import ftb.lib.mod.net.MessageRequestSelfUpdate;
 import ftb.utils.mod.FTBU;
@@ -248,8 +248,20 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	{
 	}
 	
-	private ChunkType getType(int cx, int cy)
-	{ return FTBUWorldDataSP.inst.getType(new ChunkCoordIntPair(cx, cy)); }
+	public static Map.Entry<TextureCoords, ChunkType> getForChunk(ChunkCoordIntPair pos)
+	{
+		ChunkType type = FTBUWorldDataSP.get().getType(pos);
+		if(type.drawGrid())
+		{
+			boolean a = type.equals(FTBUWorldDataSP.get().getType(new ChunkCoordIntPair(pos.chunkXPos, pos.chunkZPos - 1)));
+			boolean b = type.equals(FTBUWorldDataSP.get().getType(new ChunkCoordIntPair(pos.chunkXPos + 1, pos.chunkZPos)));
+			boolean c = type.equals(FTBUWorldDataSP.get().getType(new ChunkCoordIntPair(pos.chunkXPos, pos.chunkZPos + 1)));
+			boolean d = type.equals(FTBUWorldDataSP.get().getType(new ChunkCoordIntPair(pos.chunkXPos - 1, pos.chunkZPos)));
+			return new AbstractMap.SimpleEntry<>(tex_area_coords[a ? 1 : 0][b ? 1 : 0][c ? 1 : 0][d ? 1 : 0], type);
+		}
+		
+		return null;
+	}
 	
 	public void renderMinimap()
 	{
@@ -262,17 +274,12 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 				int cx = x + startX;
 				int cy = y + startY;
 				
-				ChunkType type = getType(cx, cy);
-				if(type.drawGrid())
+				Map.Entry<TextureCoords, ChunkType> type = getForChunk(new ChunkCoordIntPair(cx, cy));
+				
+				if(type != null)
 				{
-					boolean a = type.equals(getType(cx, cy - 1));
-					boolean b = type.equals(getType(cx + 1, cy));
-					boolean c = type.equals(getType(cx, cy + 1));
-					boolean d = type.equals(getType(cx - 1, cy));
-					
-					TextureCoords tc = tex_area_coords[a ? 1 : 0][b ? 1 : 0][c ? 1 : 0][d ? 1 : 0];
-					
-					FTBLibClient.setGLColor(type.getAreaColor(playerLM), 255);
+					TextureCoords tc = type.getKey();
+					FTBLibClient.setGLColor(type.getValue().getAreaColor(playerLM), 255);
 					GuiLM.drawTexturedRectD(mainPanel.posX + x * 16, mainPanel.posY + y * 16, zLevel, 16, 16, tc.minU, tc.minV, tc.maxU, tc.maxV);
 				}
 			}
@@ -321,8 +328,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			MessageClaimChunk msg = new MessageClaimChunk();
 			msg.dim = GuiClaimChunks.this.currentDim;
 			msg.token = GuiClaimChunks.this.adminToken;
-			msg.posX = 0;
-			msg.posZ = 0;
+			msg.pos = new ChunkCoordIntPair(0, 0);
 			msg.type = (id == 1) ? MessageClaimChunk.ID_UNCLAIM_ALL_DIMS : MessageClaimChunk.ID_UNCLAIM_ALL;
 			msg.sendToServer();
 			new MessageAreaRequest(startX, startY, tiles_gui, tiles_gui).sendToServer();
@@ -355,15 +361,14 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			MessageClaimChunk msg = new MessageClaimChunk();
 			msg.dim = gui.currentDim;
 			msg.token = gui.adminToken;
-			msg.posX = chunk.chunkXPos;
-			msg.posZ = chunk.chunkZPos;
+			msg.pos = chunk;
 			msg.type = (b == 0) ? (ctrl ? MessageClaimChunk.ID_LOAD : MessageClaimChunk.ID_CLAIM) : (ctrl ? MessageClaimChunk.ID_UNLOAD : MessageClaimChunk.ID_UNCLAIM);
 			msg.sendToServer();
 			FTBLibClient.playClickSound();
 		}
 		
 		public void addMouseOverText(List<String> l)
-		{ FTBUWorldDataSP.inst.getMessage(chunk, l, isShiftKeyDown()); }
+		{ FTBUWorldDataSP.get().getType(chunk).getMessage(l, isShiftKeyDown()); }
 		
 		public void renderWidget()
 		{

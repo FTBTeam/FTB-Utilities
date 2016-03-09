@@ -1,7 +1,7 @@
 package ftb.utils.net;
 
+import ftb.lib.api.ForgeWorldMP;
 import ftb.lib.api.net.*;
-import ftb.lib.api.players.ForgeWorldMP;
 import ftb.utils.badges.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.*;

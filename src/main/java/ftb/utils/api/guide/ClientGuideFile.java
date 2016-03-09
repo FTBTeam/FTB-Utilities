@@ -1,7 +1,8 @@
 package ftb.utils.api.guide;
 
 import ftb.lib.FTBLib;
-import ftb.lib.api.*;
+import ftb.lib.api.GameModes;
+import ftb.lib.api.events.ReloadEvent;
 import ftb.utils.mod.FTBU;
 import ftb.utils.mod.client.gui.guide.GuiGuide;
 import latmod.lib.LMFileUtils;
@@ -21,7 +22,7 @@ public class ClientGuideFile extends GuideFile
 		main.setTitle(new ChatComponentTranslation("player_action.ftbu.guide"));
 	}
 	
-	public void reload(EventFTBReload e)
+	public void reload(ReloadEvent e)
 	{
 		if(FTBLib.DEV_ENV) FTBU.logger.info("Guide reloaded @ " + e.world.side + " as " + e.world.getMode());
 		

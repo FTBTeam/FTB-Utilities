@@ -1,7 +1,7 @@
 package ftb.utils.mod.handlers;
 
 import ftb.lib.FTBLib;
-import ftb.lib.api.EventFTBReload;
+import ftb.lib.api.events.ReloadEvent;
 import ftb.lib.mod.FTBUIntegration;
 import ftb.utils.api.guide.ServerGuideFile;
 import ftb.utils.badges.ServerBadges;
@@ -13,7 +13,7 @@ import net.minecraftforge.event.entity.player.*;
 
 public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 {
-	public void onReloaded(EventFTBReload e)
+	public void onReloaded(ReloadEvent e)
 	{
 		FTBUConfigGeneral.onReloaded(e.world.side);
 		

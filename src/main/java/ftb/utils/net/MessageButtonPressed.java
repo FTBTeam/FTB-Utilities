@@ -1,8 +1,8 @@
 package ftb.utils.net;
 
 import ftb.lib.FTBLib;
+import ftb.lib.api.*;
 import ftb.lib.api.net.*;
-import ftb.lib.api.players.*;
 import ftb.lib.mod.net.MessageLMPlayerUpdate;
 import ftb.utils.world.*;
 import io.netty.buffer.ByteBuf;

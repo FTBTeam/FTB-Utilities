@@ -2,13 +2,14 @@ package ftb.utils.mod.handlers;
 
 import com.google.common.collect.MapMaker;
 import ftb.lib.*;
-import ftb.lib.api.players.*;
+import ftb.lib.api.*;
 import ftb.utils.mod.*;
 import ftb.utils.mod.config.FTBUConfigGeneral;
 import ftb.utils.world.*;
 import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.world.*;
 import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.*;
 
@@ -70,7 +71,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 		
 		for(ForgeChunkManager.Ticket t : tickets)
 		{
-			if(t.getModData().getTagId(PLAYER_ID_TAG) == LMNBTUtils.STRING)
+			if(t.getModData().getTagId(PLAYER_ID_TAG) == Constants.NBT.TAG_STRING)
 			{
 				UUID playerID = UUIDTypeAdapterLM.getUUID(t.getModData().getString(PLAYER_ID_TAG));
 				
@@ -94,13 +95,13 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 			
 			if(playerID != null)
 			{
-				List<ClaimedChunk> chunks = FTBUWorldDataMP.inst.getChunks(playerID, world.provider.getDimensionId());
+				List<ClaimedChunk> chunks = FTBUWorldDataMP.get().getChunks(playerID, world.provider.getDimensionId());
 				
 				if(chunks != null) for(ClaimedChunk c : chunks)
 				{
 					if(c.isChunkloaded)
 					{
-						ForgeChunkManager.forceChunk(t, c.getPos());
+						ForgeChunkManager.forceChunk(t, c.pos);
 					}
 				}
 			}
@@ -131,7 +132,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 		int loaded = 0;
 		int unloaded = 0;*/
 		
-		Map<ChunkCoordIntPair, ClaimedChunk> chunksMap = FTBUWorldDataMP.inst.chunks.get(w.provider.getDimensionId());
+		Map<ChunkCoordIntPair, ClaimedChunk> chunksMap = FTBUWorldDataMP.get().chunks.get(w.provider.getDimensionId());
 		
 		if(chunksMap != null) for(ClaimedChunk c : chunksMap.values())
 		{
@@ -179,12 +180,12 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 				{
 					if(isLoaded)
 					{
-						ForgeChunkManager.forceChunk(ticket, c.getPos());
+						ForgeChunkManager.forceChunk(ticket, c.pos);
 						//loaded++;
 					}
 					else
 					{
-						ForgeChunkManager.unforceChunk(ticket, c.getPos());
+						ForgeChunkManager.unforceChunk(ticket, c.pos);
 						//unloaded++;
 					}
 					

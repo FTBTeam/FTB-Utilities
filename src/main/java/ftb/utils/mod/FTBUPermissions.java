@@ -12,12 +12,6 @@ import latmod.lib.util.EnumEnabled;
  */
 public class FTBUPermissions
 {
-	// Misc //
-	
-	@ForgePermission(false)
-	@Info("Enabled access to protected chests / chunks")
-	public static final String allow_interact_secure = "ftbu.misc.allow_interact_secure";
-	
 	// Display //
 	
 	@ForgePermission(false)

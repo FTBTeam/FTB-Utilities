@@ -2,7 +2,7 @@ package ftb.utils.badges;
 
 import com.google.gson.*;
 import ftb.lib.FTBLib;
-import ftb.lib.api.players.ForgePlayerMP;
+import ftb.lib.api.ForgePlayerMP;
 import ftb.utils.mod.FTBU;
 import ftb.utils.net.MessageUpdateBadges;
 import ftb.utils.ranks.Ranks;

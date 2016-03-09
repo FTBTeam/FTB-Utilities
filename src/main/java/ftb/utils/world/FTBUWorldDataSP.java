@@ -1,8 +1,9 @@
 package ftb.utils.world;
 
-import ftb.lib.api.players.*;
+import ftb.lib.api.*;
 import ftb.utils.mod.FTBUFinals;
 import ftb.utils.mod.client.FTBUClient;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -14,20 +15,34 @@ import java.util.*;
 @SideOnly(Side.CLIENT)
 public class FTBUWorldDataSP extends ForgeWorldData
 {
-	public static FTBUWorldDataSP inst;
+	private static FTBUWorldDataSP inst = null;
+	
+	public static boolean exists()
+	{ return inst != null || (ForgeWorldSP.inst != null && ForgeWorldSP.inst.serverDataIDs.contains(FTBUFinals.MOD_ID_LC)); }
+	
+	public static FTBUWorldDataSP get()
+	{
+		if(inst == null) inst = (FTBUWorldDataSP) ForgeWorldSP.inst.getData(FTBUFinals.MOD_ID_LC);
+		return inst;
+	}
 	
 	public final Map<ChunkCoordIntPair, ChunkType> chunks;
 	private int lastDimension = 0;
 	
 	public FTBUWorldDataSP(ForgeWorldSP w)
 	{
-		super(FTBUFinals.MOD_ID, w);
+		super(FTBUFinals.MOD_ID_LC, w);
 		chunks = new HashMap<>();
 	}
 	
 	public void init()
 	{
-		inst = ForgeWorldSP.inst.serverDataIDs.contains(FTBUFinals.MOD_ID) ? this : null;
+		get();
+		//inst = ForgeWorldSP.inst.serverDataIDs.contains(FTBUFinals.MOD_ID) ? this : null;
+	}
+	
+	public void readFromNet(NBTTagCompound tag)
+	{
 	}
 	
 	public void onClosed()
@@ -53,20 +68,5 @@ public class FTBUWorldDataSP extends ForgeWorldData
 		chunks.putAll(types);
 		
 		if(FTBUClient.journeyMapHandler != null) FTBUClient.journeyMapHandler.refresh(dim);
-	}
-	
-	public void getMessage(ChunkCoordIntPair pos, List<String> l, boolean shift)
-	{
-		ChunkType type = getType(pos);
-		
-		if(type != ChunkType.UNLOADED)
-		{
-			if(type.asClaimed() != null)
-			{
-				ForgePlayerSP owner = ForgeWorldSP.inst.getPlayer(type);
-				if(owner != null) l.add(type.getChatColor(owner) + owner.getProfile().getName());
-			}
-			else l.add(type.getChatColor(null) + type.getIDS());
-		}
 	}
 }

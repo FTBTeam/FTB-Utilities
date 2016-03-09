@@ -1,6 +1,6 @@
 package ftb.utils.api.guide;
 
-import ftb.lib.api.players.ForgePlayerMP;
+import ftb.lib.api.ForgePlayerMP;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class EventFTBUServerGuide extends Event

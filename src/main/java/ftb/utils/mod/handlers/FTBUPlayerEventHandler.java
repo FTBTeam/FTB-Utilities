@@ -1,16 +1,18 @@
 package ftb.utils.mod.handlers;
 
 import ftb.lib.*;
+import ftb.lib.api.*;
 import ftb.lib.api.notification.Notification;
-import ftb.lib.api.players.*;
+import ftb.lib.api.permissions.ForgePermissionRegistry;
+import ftb.lib.mod.FTBLibPermissions;
 import ftb.utils.mod.FTBU;
 import ftb.utils.mod.config.FTBUConfigGeneral;
 import ftb.utils.world.*;
-import latmod.lib.MathHelperLM;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
+import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -29,7 +31,7 @@ public class FTBUPlayerEventHandler
 		
 		player.lastPos = new EntityPos(ep).toBlockDimPos();
 		
-		ChunkType type = FTBUWorldDataMP.inst.getType(player, ep.dimension, e.newChunkX, e.newChunkZ);
+		ChunkType type = FTBUWorldDataMP.get().getType(player, ep.dimension, new ChunkCoordIntPair(e.newChunkX, e.newChunkZ));
 		FTBUPlayerDataMP d = FTBUPlayerDataMP.get(player);
 		
 		if(d.lastChunkType == null || !d.lastChunkType.equals(type))
@@ -62,13 +64,15 @@ public class FTBUPlayerEventHandler
 		if(entity != null && (entity instanceof EntityPlayerMP || entity instanceof IMob))
 		{
 			if(entity instanceof FakePlayer) return;
-			else if(entity instanceof EntityPlayerMP && ForgeWorldMP.inst.getPlayer(entity).allowCreativeInteractSecure())
+			else if(entity instanceof EntityPlayerMP && ForgePermissionRegistry.hasPermission(FTBLibPermissions.interact_secure, ((EntityPlayerMP) entity).getGameProfile()))
+			{
 				return;
+			}
 			
-			int cx = MathHelperLM.chunk(e.entity.posX);
-			int cz = MathHelperLM.chunk(e.entity.posZ);
-			
-			if((FTBUConfigGeneral.safe_spawn.get() && FTBUWorldDataMP.isInSpawn(dim, cx, cz))) e.setCanceled(true);
+			if((FTBUConfigGeneral.safe_spawn.get() && FTBUWorldDataMP.isInSpawnD(dim, e.entity.posX, e.entity.posZ)))
+			{
+				e.setCanceled(true);
+			}
 			/*else
 			{
 				ClaimedChunk c = Claims.get(dim, cx, cz);

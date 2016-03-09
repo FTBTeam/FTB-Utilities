@@ -2,8 +2,10 @@ package ftb.utils.world;
 
 import com.google.gson.*;
 import ftb.lib.*;
+import ftb.lib.api.*;
 import ftb.lib.api.item.LMInvUtils;
-import ftb.lib.api.players.*;
+import ftb.lib.api.permissions.ForgePermissionRegistry;
+import ftb.lib.mod.FTBLibPermissions;
 import ftb.utils.badges.ServerBadges;
 import ftb.utils.mod.*;
 import ftb.utils.mod.cmd.admin.CmdRestart;
@@ -24,7 +26,8 @@ import java.util.*;
  */
 public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 {
-	public static FTBUWorldDataMP inst = null;
+	public static FTBUWorldDataMP get()
+	{ return (FTBUWorldDataMP) ForgeWorldMP.inst.getData(FTBUFinals.MOD_ID_LC); }
 	
 	public Map<Integer, Map<ChunkCoordIntPair, ClaimedChunk>> chunks;
 	public Warps warps;
@@ -35,13 +38,11 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 	
 	public FTBUWorldDataMP(ForgeWorldMP w)
 	{
-		super(FTBUFinals.MOD_ID, w);
+		super(FTBUFinals.MOD_ID_LC, w);
 	}
 	
 	public void init()
 	{
-		inst = this;
-		
 		chunks = new HashMap<>();
 		warps = new Warps();
 		
@@ -87,7 +88,7 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 			{
 				int dim = Integer.parseInt(e.getKey());
 				
-				HashMap<ChunkCoordIntPair, ClaimedChunk> map = new HashMap<>();
+				Map<ChunkCoordIntPair, ClaimedChunk> map = new HashMap<>();
 				
 				for(Map.Entry<String, JsonElement> e1 : e.getValue().getAsJsonObject().entrySet())
 				{
@@ -105,9 +106,10 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 								
 								if(ai != null)
 								{
-									ClaimedChunk c = new ClaimedChunk(id, dim, ai[0], ai[1]);
+									
+									ClaimedChunk c = new ClaimedChunk(id, dim, new ChunkCoordIntPair(ai[0], ai[1]));
 									if(ai.length >= 3 && ai[2] == 1) c.isChunkloaded = true;
-									map.put(new ChunkCoordIntPair(ai[0], ai[1]), c);
+									map.put(c.pos, c);
 								}
 							}
 						}
@@ -147,8 +149,8 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 					JsonArray a = o1.get(id).getAsJsonArray();
 					
 					JsonArray a1 = new JsonArray();
-					a1.add(new JsonPrimitive(c.posX));
-					a1.add(new JsonPrimitive(c.posZ));
+					a1.add(new JsonPrimitive(c.pos.chunkXPos));
+					a1.add(new JsonPrimitive(c.pos.chunkZPos));
 					if(c.isChunkloaded) a1.add(new JsonPrimitive(1));
 					a.add(a1);
 				}
@@ -160,10 +162,6 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 		o.add("claimed_chunks", claimedChunksGroup);
 	}
 	
-	public void readFromNet(NBTTagCompound tag)
-	{
-	}
-	
 	public void writeToNet(NBTTagCompound tag)
 	{
 	}
@@ -171,7 +169,6 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 	public void onClosed()
 	{
 		startMillis = restartMillis = 0L;
-		inst = null;
 	}
 	
 	public void onTick(WorldServer w, long now)
@@ -226,10 +223,10 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 		}
 	}
 	
-	public ClaimedChunk getChunk(int dim, int cx, int cz)
+	public ClaimedChunk getChunk(int dim, ChunkCoordIntPair pos)
 	{
 		if(!chunks.containsKey(dim)) return null;
-		return chunks.get(dim).get(Bits.intsToLong(cx, cz));
+		return chunks.get(dim).get(pos);
 	}
 	
 	public List<ClaimedChunk> getChunks(UUID playerID, Integer dim)
@@ -249,9 +246,15 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 		}
 		else
 		{
-			for(ClaimedChunk c : chunks.get(dim).values())
+			Map<ChunkCoordIntPair, ClaimedChunk> chunks1 = chunks.get(dim);
+			
+			if(chunks1 != null)
 			{
-				if(c.ownerID.equals(playerID)) list.add(c);
+				for(ClaimedChunk c : chunks1.values())
+				{
+					if(c.ownerID.equals(playerID)) list.add(c);
+				}
+				
 			}
 		}
 		
@@ -263,15 +266,15 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 		if(c == null) return false;
 		Map<ChunkCoordIntPair, ClaimedChunk> map = chunks.get(c.dim);
 		if(map == null) chunks.put(c.dim, map = new HashMap<>());
-		return map.put(c.getPos(), c) == null;
+		return map.put(c.pos, c) == null;
 	}
 	
-	public ClaimedChunk remove(int dim, int cx, int cz)
+	public ClaimedChunk remove(int dim, ChunkCoordIntPair pos)
 	{
 		Map<ChunkCoordIntPair, ClaimedChunk> map = chunks.get(dim);
 		if(map != null)
 		{
-			ClaimedChunk chunk = map.remove(new ChunkCoordIntPair(cx, cz));
+			ClaimedChunk chunk = map.remove(pos);
 			
 			if(chunk != null)
 			{
@@ -283,21 +286,21 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 		return null;
 	}
 	
-	public ChunkType getType(ForgePlayerMP p, int dim, int cx, int cz)
+	public ChunkType getType(ForgePlayerMP p, int dim, ChunkCoordIntPair pos)
 	{
 		World w = LMDimUtils.getWorld(dim);
-		if(w == null || !w.getChunkProvider().chunkExists(cx, cz)) return ChunkType.UNLOADED;
-		if(isInSpawn(dim, cx, cz)) return ChunkType.SPAWN;
+		if(w == null || !w.getChunkProvider().chunkExists(pos.chunkXPos, pos.chunkZPos)) return ChunkType.UNLOADED;
+		if(isInSpawn(dim, pos)) return ChunkType.SPAWN;
 		//TODO: if(ForgeWorldMP.inst.settings.getWB(dim).isOutside(cx, cz)) return ChunkType.WORLD_BORDER;
-		ClaimedChunk c = getChunk(dim, cx, cz);
+		ClaimedChunk c = getChunk(dim, pos);
 		if(c == null) return ChunkType.WILDERNESS;
 		return new ChunkType.PlayerClaimed(c);
 	}
 	
 	public ChunkType getTypeD(ForgePlayerMP p, int dim, BlockPos pos)
-	{ return getType(p, dim, MathHelperLM.chunk(pos.getX()), MathHelperLM.chunk(pos.getZ())); }
+	{ return getType(p, dim, new ChunkCoordIntPair(MathHelperLM.chunk(pos.getX()), MathHelperLM.chunk(pos.getZ()))); }
 	
-	public static boolean isInSpawn(int dim, int cx, int cz)
+	public static boolean isInSpawn(int dim, ChunkCoordIntPair pos)
 	{
 		if(dim != 0 || (!FTBLib.getServer().isDedicatedServer() && !FTBUConfigGeneral.spawn_area_in_sp.get()))
 			return false;
@@ -308,19 +311,19 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 		int minZ = MathHelperLM.chunk(c.z + 0.5D - radius);
 		int maxX = MathHelperLM.chunk(c.x + 0.5D + radius);
 		int maxZ = MathHelperLM.chunk(c.z + 0.5D + radius);
-		return cx >= minX && cx <= maxX && cz >= minZ && cz <= maxZ;
+		return pos.chunkXPos >= minX && pos.chunkXPos <= maxX && pos.chunkZPos >= minZ && pos.chunkZPos <= maxZ;
 	}
 	
 	public static boolean isInSpawnD(int dim, double x, double z)
-	{ return dim == 0 && isInSpawn(dim, MathHelperLM.chunk(x), MathHelperLM.chunk(z)); }
+	{ return dim == 0 && isInSpawn(dim, new ChunkCoordIntPair(MathHelperLM.chunk(x), MathHelperLM.chunk(z))); }
 	
-	public static boolean allowExplosion(int dim, int cx, int cz)
+	public static boolean allowExplosion(int dim, ChunkCoordIntPair pos)
 	{
-		if(dim == 0 && FTBUConfigGeneral.safe_spawn.get() && isInSpawn(dim, cx, cz)) return false;
+		if(dim == 0 && FTBUConfigGeneral.safe_spawn.get() && isInSpawn(dim, pos)) return false;
 			//TODO: else if(ForgeWorldMP.inst.settings.getWB(dim).isOutside(cx, cz)) return false;
 		else
 		{
-			ClaimedChunk c = inst.getChunk(dim, cx, cz);
+			ClaimedChunk c = get().getChunk(dim, pos);
 			if(c != null)
 			{
 				ForgePlayerMP p = c.getOwner();
@@ -344,7 +347,11 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 		ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ep);
 		
 		if(p == null) return true;
-		else if(!p.isFake() && p.allowCreativeInteractSecure()) return true;
+		else if(!p.isFake() && ForgePermissionRegistry.hasPermission(FTBLibPermissions.interact_secure, ep.getGameProfile()))
+		{
+			return true;
+		}
+		
 		//TODO: World border
 		
 		if(leftClick)
@@ -358,7 +365,7 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 			}
 		}
 		
-		ChunkType type = inst.getTypeD(p, ep.dimension, pos);
+		ChunkType type = get().getTypeD(p, ep.dimension, pos);
 		return type.canInteract(p.toPlayerMP(), leftClick);
 	}
 	
@@ -370,10 +377,11 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 		{
 			for(int z1 = z; z1 < z + sz; z1++)
 			{
-				ChunkType type = getType(p, d, x1, z1);
+				ChunkCoordIntPair pos = new ChunkCoordIntPair(x1, z1);
+				ChunkType type = getType(p, d, pos);
 				if(type != ChunkType.UNLOADED)
 				{
-					map.put(new ChunkCoordIntPair(x1, z1), type);
+					map.put(pos, type);
 				}
 			}
 		}

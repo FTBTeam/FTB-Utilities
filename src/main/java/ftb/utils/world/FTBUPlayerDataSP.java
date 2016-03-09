@@ -1,7 +1,7 @@
 package ftb.utils.world;
 
 import ftb.lib.PrivacyLevel;
-import ftb.lib.api.players.*;
+import ftb.lib.api.*;
 import ftb.utils.mod.FTBUFinals;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.*;
@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.*;
 public class FTBUPlayerDataSP extends FTBUPlayerData
 {
 	public static FTBUPlayerDataSP get(ForgePlayer p)
-	{ return (FTBUPlayerDataSP) p.getData("ftbu"); }
+	{ return (FTBUPlayerDataSP) p.getData(FTBUFinals.MOD_ID_LC); }
 	
 	public short claimedChunks, loadedChunks, maxClaimedChunks, maxLoadedChunks;
 	

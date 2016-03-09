@@ -1,14 +1,14 @@
 package ftb.utils.world;
 
 import ftb.lib.PrivacyLevel;
+import ftb.lib.api.*;
 import ftb.lib.api.net.MessageLM;
-import ftb.lib.api.players.*;
 import ftb.utils.mod.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.ChunkCoordIntPair;
 
-import java.util.UUID;
+import java.util.*;
 
 public class ChunkType
 {
@@ -32,12 +32,20 @@ public class ChunkType
 		else if(id == 99)
 		{
 			UUID owner = MessageLM.readUUID(io);
-			ClaimedChunk chunk = new ClaimedChunk(owner, dim, pos.chunkXPos, pos.chunkZPos);
+			ClaimedChunk chunk = new ClaimedChunk(owner, dim, pos);
 			chunk.isChunkloaded = io.readBoolean();
 			return new PlayerClaimed(chunk);
 		}
 		
 		return UNLOADED;
+	}
+	
+	public void getMessage(List<String> l, boolean shift)
+	{
+		if(this != ChunkType.UNLOADED)
+		{
+			l.add(getChatColor(null) + getIDS());
+		}
 	}
 	
 	public static final class PlayerClaimed extends ChunkType
@@ -83,8 +91,17 @@ public class ChunkType
 		
 		public boolean equals(Object o)
 		{
-			return super.equals(o) && ((PlayerClaimed) o).chunk.equalsChunk(chunk);
-			
+			return super.equals(o) && ((PlayerClaimed) o).chunk.ownerID.equals(chunk.ownerID);
+		}
+		
+		public void getMessage(List<String> l, boolean shift)
+		{
+			ForgePlayerSP owner = ForgeWorldSP.inst.getPlayer(chunk.ownerID);
+			if(owner != null)
+			{
+				l.add(getChatColor(owner) + owner.getProfile().getName());
+				if(chunk.isChunkloaded) l.add(FTBU.mod.translate("chunktype.chunkloaded"));
+			}
 		}
 	}
 	

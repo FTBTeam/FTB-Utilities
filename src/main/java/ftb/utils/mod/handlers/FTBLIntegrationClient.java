@@ -1,7 +1,7 @@
 package ftb.utils.mod.handlers;
 
-import ftb.lib.api.EventFTBReload;
 import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.events.ReloadEvent;
 import ftb.lib.api.paint.IPainterItem;
 import ftb.utils.api.guide.ClientGuideFile;
 import ftb.utils.badges.ClientBadges;
@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class FTBLIntegrationClient extends FTBLIntegration
 {
-	public void onReloaded(EventFTBReload e)
+	public void onReloaded(ReloadEvent e)
 	{
 		super.onReloaded(e);
 		

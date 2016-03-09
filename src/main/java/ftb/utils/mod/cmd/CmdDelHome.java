@@ -1,7 +1,7 @@
 package ftb.utils.mod.cmd;
 
+import ftb.lib.api.*;
 import ftb.lib.api.cmd.*;
-import ftb.lib.api.players.*;
 import ftb.utils.mod.FTBU;
 import ftb.utils.world.FTBUPlayerDataMP;
 import net.minecraft.command.*;

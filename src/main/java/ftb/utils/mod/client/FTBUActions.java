@@ -1,14 +1,14 @@
 package ftb.utils.mod.client;
 
 import ftb.lib.FTBLib;
-import ftb.lib.api.PlayerAction;
+import ftb.lib.api.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.*;
-import ftb.lib.api.players.ForgePlayer;
 import ftb.lib.mod.client.gui.friends.GuiFriends;
 import ftb.utils.mod.client.gui.claims.GuiClaimChunks;
 import ftb.utils.mod.client.gui.guide.GuiGuide;
 import ftb.utils.net.MessageRequestServerInfo;
+import ftb.utils.world.FTBUWorldDataSP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.*;
@@ -74,7 +74,7 @@ public class FTBUActions
 		}
 		
 		public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
-		{ return FTBUClient.hasServerMod(); }
+		{ return FTBUWorldDataSP.exists(); }
 		
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }
@@ -86,7 +86,7 @@ public class FTBUActions
 		{ new MessageRequestServerInfo().sendToServer(); }
 		
 		public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
-		{ return FTBUClient.hasServerMod(); }
+		{ return FTBUWorldDataSP.exists(); }
 		
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }
@@ -98,7 +98,7 @@ public class FTBUActions
 		{ FTBLibClient.openGui(new GuiClaimChunks(0L)); }
 		
 		public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
-		{ return FTBUClient.hasServerMod(); }
+		{ return FTBUWorldDataSP.exists(); }
 		
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }

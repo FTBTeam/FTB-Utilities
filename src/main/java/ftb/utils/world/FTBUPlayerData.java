@@ -1,7 +1,7 @@
 package ftb.utils.world;
 
 import ftb.lib.PrivacyLevel;
-import ftb.lib.api.players.*;
+import ftb.lib.api.*;
 import latmod.lib.Bits;
 
 /**

@@ -1,6 +1,6 @@
 package ftb.utils.mod.handlers.jm;
 
-import ftb.utils.mod.*;
+import ftb.utils.mod.FTBUFinals;
 import ftb.utils.mod.client.FTBUClient;
 import journeymap.client.api.*;
 import journeymap.client.api.event.ClientEvent;
@@ -14,7 +14,6 @@ public class FTBU_JMPlugin implements IClientPlugin
 	public void initialize(IClientAPI api)
 	{
 		FTBUClient.journeyMapHandler = new JMPluginHandler(api);
-		FTBU.logger.info("FTBUtilities <-> JourneyMap Integration loaded");
 	}
 	
 	public String getModId()

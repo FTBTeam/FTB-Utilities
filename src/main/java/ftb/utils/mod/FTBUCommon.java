@@ -1,6 +1,6 @@
 package ftb.utils.mod;
 
-import ftb.lib.api.*;
+import ftb.lib.api.events.*;
 import ftb.utils.world.*;
 
 public class FTBUCommon // FTBUClient

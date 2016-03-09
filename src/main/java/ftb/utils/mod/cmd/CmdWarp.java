@@ -21,7 +21,7 @@ public class CmdWarp extends CommandLM
 	
 	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args, BlockPos pos)
 	{
-		if(args.length == 1) return getListOfStringsMatchingLastWord(args, FTBUWorldDataMP.inst.warps.list());
+		if(args.length == 1) return getListOfStringsMatchingLastWord(args, FTBUWorldDataMP.get().warps.list());
 		return null;
 	}
 	
@@ -30,12 +30,13 @@ public class CmdWarp extends CommandLM
 		checkArgs(args, 1);
 		if(args[0].equals("list"))
 		{
-			Collection<String> list = FTBUWorldDataMP.inst.warps.list();
+			Collection<String> list = FTBUWorldDataMP.get().warps.list();
 			ics.addChatMessage(new ChatComponentText(list.isEmpty() ? "-" : LMStringUtils.strip(list)));
+			return;
 		}
 		
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-		BlockDimPos p = FTBUWorldDataMP.inst.warps.get(args[0]);
+		BlockDimPos p = FTBUWorldDataMP.get().warps.get(args[0]);
 		if(p == null) throw new CommandException("ftbu.cmd.warp_not_set", args[0]);
 		LMDimUtils.teleportPlayer(ep, p);
 		ics.addChatMessage(FTBU.mod.chatComponent("cmd.warp_tp", args[0]));

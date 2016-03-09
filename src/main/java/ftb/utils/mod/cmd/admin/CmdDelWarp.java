@@ -18,14 +18,14 @@ public class CmdDelWarp extends CommandLM
 	
 	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args, BlockPos pos)
 	{
-		if(args.length == 1) return getListOfStringsMatchingLastWord(args, FTBUWorldDataMP.inst.warps.list());
+		if(args.length == 1) return getListOfStringsMatchingLastWord(args, FTBUWorldDataMP.get().warps.list());
 		return null;
 	}
 	
 	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
-		if(FTBUWorldDataMP.inst.warps.set(args[0], null))
+		if(FTBUWorldDataMP.get().warps.set(args[0], null))
 		{
 			ics.addChatMessage(FTBU.mod.chatComponent("cmd.warp_del", args[0]));
 			return;

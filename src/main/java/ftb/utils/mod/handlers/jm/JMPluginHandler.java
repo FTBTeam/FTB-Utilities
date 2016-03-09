@@ -30,7 +30,7 @@ public class JMPluginHandler implements IJMPluginHandler
 	{
 		clientAPI.removeAll(FTBUFinals.MOD_ID);
 		
-		if(FTBUWorldDataSP.exists() && FTBUWorldDataSP.get().chunks.isEmpty() && clientAPI.playerAccepts(FTBUFinals.MOD_ID, DisplayType.Polygon))
+		if(FTBUWorldDataSP.exists() && !FTBUWorldDataSP.get().chunks.isEmpty() && clientAPI.playerAccepts(FTBUFinals.MOD_ID, DisplayType.Polygon))
 		{
 			for(ChunkCoordIntPair pos : FTBUWorldDataSP.get().chunks.keySet())
 			{
@@ -46,17 +46,14 @@ public class JMPluginHandler implements IJMPluginHandler
 						int color = LMColorUtils.getRGBA(type.getAreaColor(ForgeWorldSP.inst.clientPlayer), 0);
 						
 						BlockPos start = new BlockPos(MathHelperLM.unchunk(pos.chunkXPos), 0, MathHelperLM.unchunk(pos.chunkZPos));
-						BlockPos end = start.add(15, 0, 15);
-						
-						if(e1 != null)
-						{
-							//FIXME: 
-						}
+						BlockPos end = new BlockPos(MathHelperLM.unchunk(pos.chunkXPos + 1), 0, MathHelperLM.unchunk(pos.chunkZPos + 1));
 						
 						//GuiLM.drawTexturedRectD(mainPanel.posX + x * 16, mainPanel.posY + y * 16, zLevel, 16, 16, tc.minU, tc.minV, tc.maxU, tc.maxV);
 						
 						//public MapImage(ResourceLocation imageLocation, int textureX, int textureY, int textureWidth, int textureHeight, int color, float opacity)
-						MapImage image = new MapImage(tc.texture, tc.posXI(), tc.posYI(), (int) tc.textureW, (int) tc.textureH, 0xFF0000, 1F);
+						MapImage image = new MapImage(tc.texture, tc.posXI(), tc.posYI(), (int) tc.width, (int) tc.height, color, 1F);
+						image.setDisplayWidth(tc.textureW);
+						image.setDisplayHeight(tc.textureH);
 						ImageOverlay chunkOverlay = new ImageOverlay(FTBUFinals.MOD_ID, "claimed_" + pos.chunkXPos + "_" + pos.chunkZPos, start, end, image);
 						
 						StringBuilder sb = new StringBuilder(type.getIDS());

@@ -266,6 +266,9 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	public void renderMinimap()
 	{
 		FTBLibClient.setTexture(tex_area);
+		int filter = GL11.GL_NEAREST;
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, filter);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, filter);
 		
 		for(int y = 0; y < tiles_gui; y++)
 		{

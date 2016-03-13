@@ -1,11 +1,10 @@
 package ftb.utils.net;
 
-import ftb.lib.BlockDimPos;
+import ftb.lib.*;
 import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.net.*;
 import ftb.utils.world.*;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -14,7 +13,7 @@ import java.util.*;
 public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate>
 {
 	public int dim;
-	public Map<ChunkCoordIntPair, ChunkType> types;
+	public Map<ChunkDimPos, ChunkType> types;
 	
 	public MessageAreaUpdate() { }
 	
@@ -40,8 +39,8 @@ public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate>
 		{
 			int x = io.readInt();
 			int z = io.readInt();
-			ChunkCoordIntPair pos = new ChunkCoordIntPair(x, z);
-			ChunkType type = ChunkType.read(dim, pos, io);
+			ChunkDimPos pos = new ChunkDimPos(dim, x, z);
+			ChunkType type = ChunkType.read(pos, io);
 			types.put(pos, type);
 		}
 	}
@@ -51,7 +50,7 @@ public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate>
 		io.writeInt(dim);
 		io.writeInt(types.size());
 		
-		for(Map.Entry<ChunkCoordIntPair, ChunkType> e : types.entrySet())
+		for(Map.Entry<ChunkDimPos, ChunkType> e : types.entrySet())
 		{
 			io.writeInt(e.getKey().chunkXPos);
 			io.writeInt(e.getKey().chunkZPos);

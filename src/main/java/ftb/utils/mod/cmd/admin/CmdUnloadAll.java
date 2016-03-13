@@ -23,7 +23,7 @@ public class CmdUnloadAll extends CommandLM
 		
 		if(args[0].equals("@a"))
 		{
-			for(ClaimedChunk c : FTBUWorldDataMP.get().getAllChunks())
+			for(ClaimedChunk c : FTBUWorldDataMP.get().getAllChunks(null))
 				c.isChunkloaded = false;
 			for(ForgePlayer p : ForgeWorldMP.inst.getOnlinePlayers())
 				p.toPlayerMP().sendUpdate();

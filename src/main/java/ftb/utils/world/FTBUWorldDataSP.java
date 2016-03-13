@@ -1,5 +1,6 @@
 package ftb.utils.world;
 
+import ftb.lib.ChunkDimPos;
 import ftb.lib.api.*;
 import ftb.utils.mod.FTBUFinals;
 import ftb.utils.mod.client.FTBUClient;
@@ -26,8 +27,7 @@ public class FTBUWorldDataSP extends ForgeWorldData
 		return inst;
 	}
 	
-	public final Map<ChunkCoordIntPair, ChunkType> chunks;
-	private int lastDimension = 0;
+	public final Map<ChunkDimPos, ChunkType> chunks;
 	
 	public FTBUWorldDataSP(ForgeWorldSP w)
 	{
@@ -57,16 +57,9 @@ public class FTBUWorldDataSP extends ForgeWorldData
 		return (i == null) ? ChunkType.UNLOADED : i;
 	}
 	
-	public void setTypes(int dim, Map<ChunkCoordIntPair, ChunkType> types)
+	public void setTypes(int dim, Map<ChunkDimPos, ChunkType> types)
 	{
-		if(lastDimension != dim)
-		{
-			lastDimension = dim;
-			chunks.clear();
-		}
-		
 		chunks.putAll(types);
-		
 		if(FTBUClient.journeyMapHandler != null) FTBUClient.journeyMapHandler.refresh(dim);
 	}
 }

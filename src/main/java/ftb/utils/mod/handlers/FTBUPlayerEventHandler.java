@@ -12,7 +12,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
-import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -31,7 +30,7 @@ public class FTBUPlayerEventHandler
 		
 		player.lastPos = new EntityPos(ep).toBlockDimPos();
 		
-		ChunkType type = FTBUWorldDataMP.get().getType(player, ep.dimension, new ChunkCoordIntPair(e.newChunkX, e.newChunkZ));
+		ChunkType type = FTBUWorldDataMP.get().getType(player, new ChunkDimPos(ep.dimension, e.newChunkX, e.newChunkZ));
 		FTBUPlayerDataMP d = FTBUPlayerDataMP.get(player);
 		
 		if(d.lastChunkType == null || !d.lastChunkType.equals(type))

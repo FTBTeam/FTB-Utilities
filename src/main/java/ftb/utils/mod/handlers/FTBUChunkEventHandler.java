@@ -7,7 +7,7 @@ import ftb.utils.mod.*;
 import ftb.utils.mod.config.FTBUConfigGeneral;
 import ftb.utils.world.*;
 import latmod.lib.json.UUIDTypeAdapterLM;
-import net.minecraft.world.*;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.util.Constants;
 
@@ -132,9 +132,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 		int loaded = 0;
 		int unloaded = 0;*/
 		
-		Map<ChunkCoordIntPair, ClaimedChunk> chunksMap = FTBUWorldDataMP.get().chunks.get(w.provider.getDimensionId());
-		
-		if(chunksMap != null) for(ClaimedChunk c : chunksMap.values())
+		for(ClaimedChunk c : FTBUWorldDataMP.get().getAllChunks(w.provider.getDimensionId()))
 		{
 			//total++;
 			
@@ -174,7 +172,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 			
 			if(c.isForced != isLoaded)
 			{
-				ForgeChunkManager.Ticket ticket = request(LMDimUtils.getWorld(c.dim), c.getOwner());
+				ForgeChunkManager.Ticket ticket = request(LMDimUtils.getWorld(c.pos.dim), c.getOwner());
 				
 				if(ticket != null)
 				{

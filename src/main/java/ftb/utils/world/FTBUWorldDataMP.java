@@ -19,6 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.world.*;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -29,7 +30,7 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 	public static FTBUWorldDataMP get()
 	{ return (FTBUWorldDataMP) ForgeWorldMP.inst.getData(FTBUFinals.MOD_ID_LC); }
 	
-	public Map<Integer, Map<ChunkCoordIntPair, ClaimedChunk>> chunks;
+	public Map<ChunkDimPos, ClaimedChunk> chunks;
 	public Warps warps;
 	public long nextChunkloaderUpdate;
 	private long startMillis;
@@ -57,12 +58,20 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 		}
 	}
 	
-	public List<ClaimedChunk> getAllChunks()
+	public Collection<ClaimedChunk> getAllChunks(Integer dim)
 	{
-		ArrayList<ClaimedChunk> l = new ArrayList<>();
-		for(Map<ChunkCoordIntPair, ClaimedChunk> m : chunks.values())
-			l.addAll(m.values());
-		return l;
+		if(dim == null) return chunks.values();
+		else
+		{
+			ArrayList<ClaimedChunk> l = new ArrayList<>();
+			
+			for(ClaimedChunk c : chunks.values())
+			{
+				if(c.pos.dim == dim) l.add(c);
+			}
+			
+			return l;
+		}
 	}
 	
 	/*
@@ -79,16 +88,15 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 		warps.readFromJson(o, "warps");
 		
 		chunks.clear();
+		JsonElement claimsFile = LMJsonUtils.fromJson(new File(((ForgeWorldMP) world).latmodFolder, "ClaimedChunks.json"));
 		
-		if(o.has("claimed_chunks"))
+		if(claimsFile.isJsonObject())
 		{
-			JsonObject claimedChunksGroup = o.get("claimed_chunks").getAsJsonObject();
+			JsonObject claimedChunksGroup = claimsFile.getAsJsonObject();
 			
 			for(Map.Entry<String, JsonElement> e : claimedChunksGroup.entrySet())
 			{
 				int dim = Integer.parseInt(e.getKey());
-				
-				Map<ChunkCoordIntPair, ClaimedChunk> map = new HashMap<>();
 				
 				for(Map.Entry<String, JsonElement> e1 : e.getValue().getAsJsonObject().entrySet())
 				{
@@ -106,10 +114,9 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 								
 								if(ai != null)
 								{
-									
-									ClaimedChunk c = new ClaimedChunk(id, dim, new ChunkCoordIntPair(ai[0], ai[1]));
+									ClaimedChunk c = new ClaimedChunk(id, new ChunkDimPos(dim, ai[0], ai[1]));
 									if(ai.length >= 3 && ai[2] == 1) c.isChunkloaded = true;
-									map.put(c.pos, c);
+									chunks.put(c.pos, c);
 								}
 							}
 						}
@@ -119,8 +126,6 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 						ex.printStackTrace();
 					}
 				}
-				
-				chunks.put(dim, map);
 			}
 		}
 		
@@ -133,36 +138,34 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 		
 		JsonObject claimedChunksGroup = new JsonObject();
 		
-		for(Map.Entry<Integer, Map<ChunkCoordIntPair, ClaimedChunk>> e : chunks.entrySet())
+		for(Map.Entry<ChunkDimPos, ClaimedChunk> e : chunks.entrySet())
 		{
 			JsonObject o1 = new JsonObject();
 			
-			for(ClaimedChunk c : e.getValue().values())
+			ClaimedChunk c = e.getValue();
+			ForgePlayerMP p = e.getValue().getOwner();
+			
+			if(p != null)
 			{
-				ForgePlayerMP p = c.getOwner();
+				String id = p.getStringUUID();
+				if(!o1.has(id)) o1.add(id, new JsonArray());
 				
-				if(p != null)
-				{
-					String id = p.getStringUUID();
-					if(!o1.has(id)) o1.add(id, new JsonArray());
-					
-					JsonArray a = o1.get(id).getAsJsonArray();
-					
-					JsonArray a1 = new JsonArray();
-					a1.add(new JsonPrimitive(c.pos.chunkXPos));
-					a1.add(new JsonPrimitive(c.pos.chunkZPos));
-					if(c.isChunkloaded) a1.add(new JsonPrimitive(1));
-					a.add(a1);
-				}
+				JsonArray a = o1.get(id).getAsJsonArray();
+				
+				JsonArray a1 = new JsonArray();
+				a1.add(new JsonPrimitive(c.pos.chunkXPos));
+				a1.add(new JsonPrimitive(c.pos.chunkZPos));
+				if(c.isChunkloaded) a1.add(new JsonPrimitive(1));
+				a.add(a1);
 			}
 			
 			claimedChunksGroup.add(e.getKey().toString(), o1);
 		}
 		
-		o.add("claimed_chunks", claimedChunksGroup);
+		LMJsonUtils.toJson(new File(((ForgeWorldMP) world).latmodFolder, "ClaimedChunks.json"), claimedChunksGroup);
 	}
 	
-	public void writeToNet(NBTTagCompound tag)
+	public void writeToNet(NBTTagCompound tag, EntityPlayerMP to)
 	{
 	}
 	
@@ -223,39 +226,17 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 		}
 	}
 	
-	public ClaimedChunk getChunk(int dim, ChunkCoordIntPair pos)
-	{
-		if(!chunks.containsKey(dim)) return null;
-		return chunks.get(dim).get(pos);
-	}
+	public ClaimedChunk getChunk(ChunkDimPos pos)
+	{ return chunks.get(pos); }
 	
 	public List<ClaimedChunk> getChunks(UUID playerID, Integer dim)
 	{
 		ArrayList<ClaimedChunk> list = new ArrayList<>();
 		if(playerID == null) return list;
 		
-		if(dim == null)
+		for(ClaimedChunk c : chunks.values())
 		{
-			for(Map<ChunkCoordIntPair, ClaimedChunk> map : chunks.values())
-			{
-				for(ClaimedChunk c : map.values())
-				{
-					if(c.ownerID.equals(playerID)) list.add(c);
-				}
-			}
-		}
-		else
-		{
-			Map<ChunkCoordIntPair, ClaimedChunk> chunks1 = chunks.get(dim);
-			
-			if(chunks1 != null)
-			{
-				for(ClaimedChunk c : chunks1.values())
-				{
-					if(c.ownerID.equals(playerID)) list.add(c);
-				}
-				
-			}
+			if((dim == null || c.pos.dim == dim) && c.ownerID.equals(playerID)) list.add(c);
 		}
 		
 		return list;
@@ -264,45 +245,29 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 	public boolean put(ClaimedChunk c)
 	{
 		if(c == null) return false;
-		Map<ChunkCoordIntPair, ClaimedChunk> map = chunks.get(c.dim);
-		if(map == null) chunks.put(c.dim, map = new HashMap<>());
-		return map.put(c.pos, c) == null;
+		return chunks.put(c.pos, c) == null;
 	}
 	
-	public ClaimedChunk remove(int dim, ChunkCoordIntPair pos)
-	{
-		Map<ChunkCoordIntPair, ClaimedChunk> map = chunks.get(dim);
-		if(map != null)
-		{
-			ClaimedChunk chunk = map.remove(pos);
-			
-			if(chunk != null)
-			{
-				if(map.isEmpty()) chunks.remove(dim);
-				return chunk;
-			}
-		}
-		
-		return null;
-	}
+	public ClaimedChunk remove(ChunkDimPos pos)
+	{ return chunks.remove(pos); }
 	
-	public ChunkType getType(ForgePlayerMP p, int dim, ChunkCoordIntPair pos)
+	public ChunkType getType(ForgePlayerMP p, ChunkDimPos pos)
 	{
-		World w = LMDimUtils.getWorld(dim);
+		World w = LMDimUtils.getWorld(pos.dim);
 		if(w == null || !w.getChunkProvider().chunkExists(pos.chunkXPos, pos.chunkZPos)) return ChunkType.UNLOADED;
-		if(isInSpawn(dim, pos)) return ChunkType.SPAWN;
+		if(isInSpawn(pos)) return ChunkType.SPAWN;
 		//TODO: if(ForgeWorldMP.inst.settings.getWB(dim).isOutside(cx, cz)) return ChunkType.WORLD_BORDER;
-		ClaimedChunk c = getChunk(dim, pos);
+		ClaimedChunk c = getChunk(pos);
 		if(c == null) return ChunkType.WILDERNESS;
 		return new ChunkType.PlayerClaimed(c);
 	}
 	
 	public ChunkType getTypeD(ForgePlayerMP p, int dim, BlockPos pos)
-	{ return getType(p, dim, new ChunkCoordIntPair(MathHelperLM.chunk(pos.getX()), MathHelperLM.chunk(pos.getZ()))); }
+	{ return getType(p, new ChunkDimPos(dim, MathHelperLM.chunk(pos.getX()), MathHelperLM.chunk(pos.getZ()))); }
 	
-	public static boolean isInSpawn(int dim, ChunkCoordIntPair pos)
+	public static boolean isInSpawn(ChunkDimPos pos)
 	{
-		if(dim != 0 || (!FTBLib.getServer().isDedicatedServer() && !FTBUConfigGeneral.spawn_area_in_sp.get()))
+		if(pos.dim != 0 || (!FTBLib.getServer().isDedicatedServer() && !FTBUConfigGeneral.spawn_area_in_sp.get()))
 			return false;
 		int radius = FTBLib.getServer().getSpawnProtectionSize();
 		if(radius <= 0) return false;
@@ -315,15 +280,15 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 	}
 	
 	public static boolean isInSpawnD(int dim, double x, double z)
-	{ return dim == 0 && isInSpawn(dim, new ChunkCoordIntPair(MathHelperLM.chunk(x), MathHelperLM.chunk(z))); }
+	{ return dim == 0 && isInSpawn(new ChunkDimPos(dim, MathHelperLM.chunk(x), MathHelperLM.chunk(z))); }
 	
-	public static boolean allowExplosion(int dim, ChunkCoordIntPair pos)
+	public static boolean allowExplosion(ChunkDimPos pos)
 	{
-		if(dim == 0 && FTBUConfigGeneral.safe_spawn.get() && isInSpawn(dim, pos)) return false;
+		if(pos.dim == 0 && FTBUConfigGeneral.safe_spawn.get() && isInSpawn(pos)) return false;
 			//TODO: else if(ForgeWorldMP.inst.settings.getWB(dim).isOutside(cx, cz)) return false;
 		else
 		{
-			ClaimedChunk c = get().getChunk(dim, pos);
+			ClaimedChunk c = get().getChunk(pos);
 			if(c != null)
 			{
 				ForgePlayerMP p = c.getOwner();
@@ -369,16 +334,16 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 		return type.canInteract(p.toPlayerMP(), leftClick);
 	}
 	
-	public Map<ChunkCoordIntPair, ChunkType> getChunkTypes(ForgePlayerMP p, int x, int z, int d, int sx, int sz)
+	public Map<ChunkDimPos, ChunkType> getChunkTypes(ForgePlayerMP p, int x, int z, int d, int sx, int sz)
 	{
-		Map<ChunkCoordIntPair, ChunkType> map = new HashMap<>();
+		Map<ChunkDimPos, ChunkType> map = new HashMap<>();
 		
 		for(int x1 = x; x1 < x + sx; x1++)
 		{
 			for(int z1 = z; z1 < z + sz; z1++)
 			{
-				ChunkCoordIntPair pos = new ChunkCoordIntPair(x1, z1);
-				ChunkType type = getType(p, d, pos);
+				ChunkDimPos pos = new ChunkDimPos(d, x1, z1);
+				ChunkType type = getType(p, pos);
 				if(type != ChunkType.UNLOADED)
 				{
 					map.put(pos, type);

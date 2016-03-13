@@ -1,6 +1,6 @@
 package ftb.utils.mod.client.gui.claims;
 
-import ftb.lib.TextureCoords;
+import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.*;
@@ -329,9 +329,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		if(set && adminToken == 0L)
 		{
 			MessageClaimChunk msg = new MessageClaimChunk();
-			msg.dim = GuiClaimChunks.this.currentDim;
 			msg.token = GuiClaimChunks.this.adminToken;
-			msg.pos = new ChunkCoordIntPair(0, 0);
+			msg.pos = new ChunkDimPos(GuiClaimChunks.this.currentDim, 0, 0);
 			msg.type = (id == 1) ? MessageClaimChunk.ID_UNCLAIM_ALL_DIMS : MessageClaimChunk.ID_UNCLAIM_ALL;
 			msg.sendToServer();
 			new MessageAreaRequest(startX, startY, tiles_gui, tiles_gui).sendToServer();
@@ -344,7 +343,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	public static class MapButton extends ButtonLM
 	{
 		public final GuiClaimChunks gui;
-		public final ChunkCoordIntPair chunk;
+		public final ChunkDimPos chunk;
 		
 		public MapButton(GuiClaimChunks g, int x, int y, int i)
 		{
@@ -352,7 +351,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			gui = g;
 			posX += (i % tiles_gui) * width;
 			posY += (i / tiles_gui) * height;
-			chunk = new ChunkCoordIntPair(g.startX + (i % tiles_gui), g.startY + (i / tiles_gui));
+			chunk = new ChunkDimPos(gui.currentDim, g.startX + (i % tiles_gui), g.startY + (i / tiles_gui));
 		}
 		
 		public void onButtonPressed(int b)
@@ -362,7 +361,6 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			boolean ctrl = FTBUClient.loaded_chunks_space_key.get() ? Keyboard.isKeyDown(Keyboard.KEY_SPACE) : isCtrlKeyDown();
 			
 			MessageClaimChunk msg = new MessageClaimChunk();
-			msg.dim = gui.currentDim;
 			msg.token = gui.adminToken;
 			msg.pos = chunk;
 			msg.type = (b == 0) ? (ctrl ? MessageClaimChunk.ID_LOAD : MessageClaimChunk.ID_CLAIM) : (ctrl ? MessageClaimChunk.ID_UNLOAD : MessageClaimChunk.ID_UNCLAIM);

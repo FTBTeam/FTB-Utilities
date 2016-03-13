@@ -1,11 +1,10 @@
 package ftb.utils.net;
 
-import ftb.lib.LMAccessToken;
+import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.net.*;
 import ftb.utils.world.*;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 
 public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
@@ -17,8 +16,8 @@ public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 	public static final int ID_LOAD = 4;
 	public static final int ID_UNLOAD = 5;
 	
-	public int dim, type;
-	public ChunkCoordIntPair pos;
+	public int type;
+	public ChunkDimPos pos;
 	public long token;
 	
 	public MessageClaimChunk() { }
@@ -30,15 +29,14 @@ public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 	{
 		type = io.readUnsignedByte();
 		token = io.readLong();
-		dim = io.readInt();
-		pos = new ChunkCoordIntPair(io.readInt(), io.readInt());
+		pos = new ChunkDimPos(io.readInt(), io.readInt(), io.readInt());
 	}
 	
 	public void toBytes(ByteBuf io)
 	{
 		io.writeByte(type);
 		io.writeLong(token);
-		io.writeInt(dim);
+		io.writeInt(pos.dim);
 		io.writeInt(pos.chunkXPos);
 		io.writeInt(pos.chunkZPos);
 	}
@@ -50,28 +48,28 @@ public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 		
 		if(m.type == ID_CLAIM)
 		{
-			d.claimChunk(m.dim, m.pos);
-			return new MessageAreaUpdate(p, m.pos.chunkXPos, m.pos.chunkZPos, m.dim, 1, 1);
+			d.claimChunk(m.pos);
+			return new MessageAreaUpdate(p, m.pos.chunkXPos, m.pos.chunkZPos, m.pos.dim, 1, 1);
 		}
 		else if(m.type == ID_UNCLAIM)
 		{
 			if(m.token != 0L && LMAccessToken.equals(p.getPlayer(), m.token, false))
 			{
-				ClaimedChunk c = FTBUWorldDataMP.get().getChunk(m.dim, m.pos);
+				ClaimedChunk c = FTBUWorldDataMP.get().getChunk(m.pos);
 				if(c != null)
 				{
 					ForgePlayerMP p1 = ForgeWorldMP.inst.getPlayer(c.ownerID);
 					FTBUPlayerDataMP d1 = FTBUPlayerDataMP.get(p1);
-					d1.unclaimChunk(m.dim, m.pos);
+					d1.unclaimChunk(m.pos);
 				}
 			}
-			else d.unclaimChunk(m.dim, m.pos);
-			return new MessageAreaUpdate(p, m.pos.chunkXPos, m.pos.chunkZPos, m.dim, 1, 1);
+			else d.unclaimChunk(m.pos);
+			return new MessageAreaUpdate(p, m.pos.chunkXPos, m.pos.chunkZPos, m.pos.dim, 1, 1);
 		}
-		else if(m.type == ID_UNCLAIM_ALL) d.unclaimAllChunks(m.dim);
+		else if(m.type == ID_UNCLAIM_ALL) d.unclaimAllChunks(m.pos.dim);
 		else if(m.type == ID_UNCLAIM_ALL_DIMS) d.unclaimAllChunks(null);
-		else if(m.type == ID_LOAD) d.setLoaded(m.dim, m.pos, true);
-		else if(m.type == ID_UNLOAD) d.setLoaded(m.dim, m.pos, false);
+		else if(m.type == ID_LOAD) d.setLoaded(m.pos, true);
+		else if(m.type == ID_UNLOAD) d.setLoaded(m.pos, false);
 		return null;
 	}
 }

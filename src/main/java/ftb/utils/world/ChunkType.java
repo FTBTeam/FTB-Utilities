@@ -1,12 +1,11 @@
 package ftb.utils.world;
 
-import ftb.lib.PrivacyLevel;
+import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.net.MessageLM;
 import ftb.utils.mod.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.world.ChunkCoordIntPair;
 
 import java.util.*;
 
@@ -24,7 +23,7 @@ public class ChunkType
 		io.writeByte(ID);
 	}
 	
-	public static ChunkType read(int dim, ChunkCoordIntPair pos, ByteBuf io)
+	public static ChunkType read(ChunkDimPos pos, ByteBuf io)
 	{
 		byte id = io.readByte();
 		
@@ -32,7 +31,7 @@ public class ChunkType
 		else if(id == 99)
 		{
 			UUID owner = MessageLM.readUUID(io);
-			ClaimedChunk chunk = new ClaimedChunk(owner, dim, pos);
+			ClaimedChunk chunk = new ClaimedChunk(owner, pos);
 			chunk.isChunkloaded = io.readBoolean();
 			return new PlayerClaimed(chunk);
 		}

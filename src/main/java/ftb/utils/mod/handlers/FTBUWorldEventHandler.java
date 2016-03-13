@@ -1,5 +1,6 @@
 package ftb.utils.mod.handlers;
 
+import ftb.lib.ChunkDimPos;
 import ftb.lib.api.events.*;
 import ftb.utils.mod.FTBU;
 import ftb.utils.mod.config.FTBUConfigGeneral;
@@ -9,7 +10,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class FTBUWorldEventHandler // FTBLIntegration
@@ -58,7 +58,11 @@ public class FTBUWorldEventHandler // FTBLIntegration
 		int dim = e.world.provider.getDimensionId();
 		int cx = MathHelperLM.chunk(e.explosion.getPosition().xCoord);
 		int cz = MathHelperLM.chunk(e.explosion.getPosition().yCoord);
-		if(!FTBUWorldDataMP.allowExplosion(dim, new ChunkCoordIntPair(cx, cz))) e.setCanceled(true);
+		
+		if(!FTBUWorldDataMP.allowExplosion(new ChunkDimPos(dim, cx, cz)))
+		{
+			e.setCanceled(true);
+		}
 	}
 	
 }

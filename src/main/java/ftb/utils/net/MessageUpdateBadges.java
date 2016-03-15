@@ -21,7 +21,7 @@ public class MessageUpdateBadges extends MessageFTBU
 		{
 			for(Badge b : badges)
 			{
-				io.writeUTF(b.ID);
+				io.writeUTF(b.getID());
 				io.writeUTF(b.imageURL);
 			}
 		}

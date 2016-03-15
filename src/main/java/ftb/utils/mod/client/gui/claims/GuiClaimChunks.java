@@ -233,9 +233,9 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	
 	public void drawText(List<String> l)
 	{
-		String s = FTBU.mod.translate("label.cchunks_count", (playerLM.claimedChunks + " / " + playerLM.getRank().config.max_claims.get()));
+		String s = FTBU.mod.translate("label.cchunks_count", (playerLM.claimedChunks + " / " + playerLM.maxClaimedChunks));
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 12, 0xFFFFFFFF);
-		s = FTBU.mod.translate("label.lchunks_count", (playerLM.loadedChunks + " / " + playerLM.getRank().config.max_loaded_chunks.get()));
+		s = FTBU.mod.translate("label.lchunks_count", (playerLM.loadedChunks + " / " + playerLM.maxLoadedChunks));
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 24, 0xFFFFFFFF);
 		
 		super.drawText(l);

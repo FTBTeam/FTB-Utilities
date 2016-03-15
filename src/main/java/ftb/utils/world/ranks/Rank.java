@@ -1,7 +1,7 @@
 package ftb.utils.world.ranks;
 
 import ftb.lib.FTBLib;
-import latmod.lib.*;
+import latmod.lib.IntList;
 import latmod.lib.config.*;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.util.EnumChatFormatting;
@@ -45,22 +45,5 @@ public class Rank extends FinalIDObject
 			config.dimension_blacklist.defValue.clear();
 			config.dimension_blacklist.defValue.addAll(config.dimension_blacklist.get());
 		}
-	}
-	
-	public void writeToIO(ByteIOStream io)
-	{
-		io.writeByte(color.get().ordinal());
-		io.writeUTF(prefix.get());
-		config.getAsGroup(null, false).generateSynced(true).write(io);
-	}
-	
-	public void readFromIO(ByteIOStream io)
-	{
-		color.set(EnumChatFormatting.values()[io.readUnsignedByte()]);
-		prefix.set(io.readUTF());
-		
-		ConfigGroup group = new ConfigGroup(null);
-		group.read(io);
-		config.getAsGroup(null, false).loadFromGroup(group);
 	}
 }

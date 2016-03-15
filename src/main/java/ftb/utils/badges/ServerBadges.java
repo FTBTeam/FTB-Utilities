@@ -99,7 +99,7 @@ public class ServerBadges
 				for(Map.Entry<String, JsonElement> entry : o1.entrySet())
 				{
 					Badge b = new Badge(entry.getKey(), entry.getValue().getAsString());
-					map.put(b.ID, b);
+					map.put(b.getID(), b);
 				}
 			}
 		}

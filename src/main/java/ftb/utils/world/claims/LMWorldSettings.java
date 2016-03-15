@@ -25,7 +25,7 @@ public class LMWorldSettings
 	
 	public void readFromJson(JsonObject group)
 	{
-		border_enabled.setJson(group.get(border_enabled.ID));
+		border_enabled.setJson(group.get(border_enabled.getID()));
 		worldBorder.clear();
 		worldBorder0.size = 0;
 		
@@ -47,7 +47,7 @@ public class LMWorldSettings
 	
 	public void writeToJson(JsonObject group)
 	{
-		group.add(border_enabled.ID, border_enabled.getJson());
+		group.add(border_enabled.getID(), border_enabled.getJson());
 		
 		JsonArray a = new JsonArray();
 		

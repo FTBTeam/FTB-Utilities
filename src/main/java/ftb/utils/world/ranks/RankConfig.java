@@ -10,7 +10,6 @@ public class RankConfig
 {
 	public final ConfigGroup custom = new ConfigGroup("custom_config");
 	
-	@Sync
 	@MinValue(0)
 	@MaxValue(30000)
 	@Info({"Max amount of chunks that player can claim", "0 - Disabled"})
@@ -50,7 +49,6 @@ public class RankConfig
 	@Info({"disabled - Players won't be able to chunkload", "normal - Chunks stay loaded when player loggs off", "playerMap - Chunks only stay loaded while owner is online"})
 	public final ConfigEntryEnum<ChunkloaderType> chunkloader_type = new ConfigEntryEnum<>("chunkloader_type", ChunkloaderType.values(), ChunkloaderType.OFFLINE, false);
 	
-	@Sync
 	@MinValue(0)
 	@MaxValue(30000)
 	@Info({"Max amount of chunks that player can chunkload", "0 - Disabled"})

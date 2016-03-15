@@ -1,10 +1,10 @@
 package ftb.utils.mod.handlers.ftbl;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.FTBLib;
 import ftb.lib.api.*;
 import ftb.lib.api.client.*;
 import ftb.lib.api.client.model.CubeRenderer;
+import ftb.lib.mod.FTBLibMod;
 import ftb.lib.notification.ClientNotifications;
 import ftb.utils.api.EventLMWorldClient;
 import ftb.utils.api.guide.ClientGuideFile;
@@ -53,7 +53,7 @@ public class FTBLIntegrationClient extends FTBLIntegration
 	{
 		LMWorldClient.inst = new LMWorldClient(io.readInt());
 		LMWorldClient.inst.readDataFromNet(io, true);
-		FTBLib.logger.info("Joined the server with PlayerID " + LMWorldClient.inst.clientPlayerID);
+		FTBLibMod.logger.info("Joined the server with PlayerID " + LMWorldClient.inst.clientPlayerID);
 		new EventLMWorldClient(LMWorldClient.inst, false).post();
 	}
 	

@@ -119,7 +119,7 @@ public abstract class ClientAction
 		public boolean onAction(int extra, LMPlayerServer owner)
 		{
 			Badge b = ServerBadges.getServerBadge(owner.world.getPlayer(extra));
-			if(b != Badge.emptyBadge) new MessageSendBadge(extra, b.ID).sendTo(owner.getPlayer());
+			if(b != Badge.emptyBadge) new MessageSendBadge(extra, b.getID()).sendTo(owner.getPlayer());
 			return false;
 		}
 	};

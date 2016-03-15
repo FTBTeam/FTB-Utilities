@@ -137,7 +137,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		if(owner.getRank().config.show_rank.get())
 		{
 			Rank rank = getRank();
-			IChatComponent rankC = new ChatComponentText("[" + rank.ID + "]");
+			IChatComponent rankC = new ChatComponentText("[" + rank.getID() + "]");
 			rankC.getChatStyle().setColor(rank.color.get());
 			info.add(rankC);
 		}
@@ -263,9 +263,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			LMNBTUtils.writeTag(io, commonPrivateData);
 			io.writeShort(getClaimedChunks());
 			io.writeShort(getLoadedChunks(true));
-			
-			io.writeUTF(rank.ID);
-			rank.writeToIO(io);
+			io.writeShort(rank.config.max_claims.get());
+			io.writeShort(rank.config.max_loaded_chunks.get());
 		}
 	}
 	
@@ -384,4 +383,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			sendUpdate();
 		}
 	}
+	
+	public boolean allowInteractSecure()
+	{ return getPlayer() != null && isOP(); }
 }

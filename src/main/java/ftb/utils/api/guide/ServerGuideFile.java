@@ -95,7 +95,7 @@ public class ServerGuideFile extends GuideFile
 	
 	public ServerGuideFile(LMPlayerServer pself)
 	{
-		super(CachedInfo.main.ID);
+		super(CachedInfo.main.getID());
 		main.setTitle(CachedInfo.main.getTitleComponent());
 		
 		if((self = pself) == null) return;

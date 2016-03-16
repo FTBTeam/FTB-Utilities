@@ -4,10 +4,10 @@ import com.google.gson.JsonArray;
 import ftb.lib.*;
 import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.item.LMInvUtils;
+import ftb.utils.*;
 import ftb.utils.badges.ServerBadges;
-import ftb.utils.mod.*;
-import ftb.utils.mod.config.FTBUConfigLogin;
-import ftb.utils.mod.handlers.FTBUChunkEventHandler;
+import ftb.utils.config.FTBUConfigLogin;
+import ftb.utils.handlers.FTBUChunkEventHandler;
 import ftb.utils.net.MessageAreaUpdate;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -21,7 +21,7 @@ import java.util.List;
 public class FTBUPlayerDataMP extends FTBUPlayerData
 {
 	public static FTBUPlayerDataMP get(ForgePlayerMP p)
-	{ return (FTBUPlayerDataMP) p.getData("ftbu"); }
+	{ return (FTBUPlayerDataMP) p.getData(FTBUFinals.MOD_ID); }
 	
 	public Warps homes;
 	public ChunkType lastChunkType;

@@ -2,8 +2,8 @@ package ftb.utils.world;
 
 import ftb.lib.ChunkDimPos;
 import ftb.lib.api.*;
-import ftb.utils.mod.FTBUFinals;
-import ftb.utils.mod.client.FTBUClient;
+import ftb.utils.FTBUFinals;
+import ftb.utils.client.FTBUClient;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.fml.relauncher.*;
@@ -19,11 +19,11 @@ public class FTBUWorldDataSP extends ForgeWorldData
 	private static FTBUWorldDataSP inst = null;
 	
 	public static boolean exists()
-	{ return inst != null || (ForgeWorldSP.inst != null && ForgeWorldSP.inst.serverDataIDs.contains(FTBUFinals.MOD_ID_LC)); }
+	{ return inst != null || (ForgeWorldSP.inst != null && ForgeWorldSP.inst.serverDataIDs.contains(FTBUFinals.MOD_ID)); }
 	
 	public static FTBUWorldDataSP get()
 	{
-		if(inst == null) inst = (FTBUWorldDataSP) ForgeWorldSP.inst.getData(FTBUFinals.MOD_ID_LC);
+		if(inst == null) inst = (FTBUWorldDataSP) ForgeWorldSP.inst.getData(FTBUFinals.MOD_ID);
 		return inst;
 	}
 	
@@ -31,7 +31,7 @@ public class FTBUWorldDataSP extends ForgeWorldData
 	
 	public FTBUWorldDataSP(ForgeWorldSP w)
 	{
-		super(FTBUFinals.MOD_ID_LC, w);
+		super(FTBUFinals.MOD_ID, w);
 		chunks = new HashMap<>();
 	}
 	

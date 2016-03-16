@@ -3,7 +3,7 @@ package ftb.utils.world;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.net.MessageLM;
-import ftb.utils.mod.*;
+import ftb.utils.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.EnumChatFormatting;
 

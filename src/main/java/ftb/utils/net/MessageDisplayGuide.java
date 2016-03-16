@@ -3,7 +3,7 @@ package ftb.utils.net;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.net.*;
 import ftb.utils.api.guide.GuideFile;
-import ftb.utils.mod.client.gui.guide.GuiGuide;
+import ftb.utils.client.gui.GuiGuide;
 import latmod.lib.ByteCount;
 import latmod.lib.json.JsonElementIO;
 import net.minecraftforge.fml.common.network.simpleimpl.*;

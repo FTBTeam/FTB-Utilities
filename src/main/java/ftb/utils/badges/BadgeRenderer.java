@@ -1,7 +1,7 @@
 package ftb.utils.badges;
 
 import ftb.lib.api.*;
-import ftb.utils.mod.client.FTBUClient;
+import ftb.utils.client.FTBUClient;
 import ftb.utils.world.*;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;

@@ -1,7 +1,7 @@
 package ftb.utils.api.guide;
 
 import ftb.lib.api.ForgePlayerMP;
-import ftb.utils.mod.FTBU;
+import ftb.utils.FTBU;
 import latmod.lib.*;
 import net.minecraft.util.*;
 

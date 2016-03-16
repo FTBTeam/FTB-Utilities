@@ -1,8 +1,8 @@
 package ftb.utils.world;
 
 import ftb.lib.*;
-import ftb.utils.mod.FTBU;
-import ftb.utils.mod.config.FTBUConfigBackups;
+import ftb.utils.FTBU;
+import ftb.utils.config.FTBUConfigBackups;
 import latmod.lib.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.server.*;

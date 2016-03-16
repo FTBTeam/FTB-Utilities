@@ -5,7 +5,7 @@ import ftb.lib.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.item.ItemStackSerializer;
 import ftb.lib.mod.client.gui.GuiViewImage;
-import ftb.utils.mod.client.gui.guide.GuiGuide;
+import ftb.utils.client.gui.GuiGuide;
 import latmod.lib.LMUtils;
 import latmod.lib.json.IJsonObject;
 import net.minecraft.client.renderer.texture.DynamicTexture;

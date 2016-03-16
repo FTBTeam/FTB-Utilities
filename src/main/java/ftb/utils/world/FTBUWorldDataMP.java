@@ -6,11 +6,11 @@ import ftb.lib.api.*;
 import ftb.lib.api.item.LMInvUtils;
 import ftb.lib.api.permissions.ForgePermissionRegistry;
 import ftb.lib.mod.FTBLibPermissions;
+import ftb.utils.*;
 import ftb.utils.badges.ServerBadges;
-import ftb.utils.mod.*;
-import ftb.utils.mod.cmd.admin.CmdRestart;
-import ftb.utils.mod.config.*;
-import ftb.utils.mod.handlers.FTBUChunkEventHandler;
+import ftb.utils.cmd.admin.CmdRestart;
+import ftb.utils.config.*;
+import ftb.utils.handlers.FTBUChunkEventHandler;
 import latmod.lib.*;
 import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.util.EnumEnabled;
@@ -28,7 +28,7 @@ import java.util.*;
 public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 {
 	public static FTBUWorldDataMP get()
-	{ return (FTBUWorldDataMP) ForgeWorldMP.inst.getData(FTBUFinals.MOD_ID_LC); }
+	{ return (FTBUWorldDataMP) ForgeWorldMP.inst.getData(FTBUFinals.MOD_ID); }
 	
 	public Map<ChunkDimPos, ClaimedChunk> chunks;
 	public Warps warps;
@@ -39,7 +39,7 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 	
 	public FTBUWorldDataMP(ForgeWorldMP w)
 	{
-		super(FTBUFinals.MOD_ID_LC, w);
+		super(FTBUFinals.MOD_ID, w);
 	}
 	
 	public void init()

@@ -24,10 +24,10 @@ public class FTBU
 	@Mod.Instance(FTBUFinals.MOD_ID)
 	public static FTBU inst;
 	
-	@SidedProxy(clientSide = "ftb.utils.mod.client.FTBUClient", serverSide = "ftb.utils.mod.FTBUCommon")
+	@SidedProxy(clientSide = "ftb.utils.client.FTBUClient", serverSide = "ftb.utils.FTBUCommon")
 	public static FTBUCommon proxy;
 	
-	@SidedProxy(clientSide = "FTBLIntegrationClient", serverSide = "FTBLIntegration")
+	@SidedProxy(clientSide = "ftb.utils.handlers.FTBLIntegrationClient", serverSide = "ftb.utils.handlers.FTBLIntegration")
 	public static FTBLIntegration ftbl_int;
 	
 	public static final Logger logger = LogManager.getLogger("FTBUtilities");

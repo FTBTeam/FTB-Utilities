@@ -38,7 +38,7 @@ public class GuideButtonTextLine extends ButtonLM
 		int ax = getAX();
 		int ay = getAY();
 		
-		if(!line.text.isEmpty()) GuiGuide.guideFont.drawString(line.text, ax, ay, GuiGuide.textColor);
+		if(!line.text.isEmpty()) gui.getFontRenderer().drawString(line.text, ax, ay, GuiGuide.textColor);
 		else if(line.special != null && line.special.type.isImage() && line.texture != null && line.texture.isValid())
 		{
 			GlStateManager.color(1F, 1F, 1F, 1F);

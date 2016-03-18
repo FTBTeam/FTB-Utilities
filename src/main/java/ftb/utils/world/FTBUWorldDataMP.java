@@ -96,12 +96,13 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 			
 			for(Map.Entry<String, JsonElement> e : claimedChunksGroup.entrySet())
 			{
-				int dim = Integer.parseInt(e.getKey());
-				
-				for(Map.Entry<String, JsonElement> e1 : e.getValue().getAsJsonObject().entrySet())
+				try
 				{
-					try
+					int dim = Integer.parseInt(e.getKey());
+					
+					for(Map.Entry<String, JsonElement> e1 : e.getValue().getAsJsonObject().entrySet())
 					{
+						
 						UUID id = UUIDTypeAdapterLM.getUUID(e1.getKey());
 						
 						if(ForgeWorldMP.inst.playerMap.containsKey(id))
@@ -120,11 +121,12 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 								}
 							}
 						}
+						
 					}
-					catch(Exception ex)
-					{
-						ex.printStackTrace();
-					}
+				}
+				catch(Exception ex)
+				{
+					ex.printStackTrace();
 				}
 			}
 		}

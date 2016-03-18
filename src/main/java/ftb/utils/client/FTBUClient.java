@@ -6,6 +6,7 @@ import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.events.*;
 import ftb.lib.api.gui.LMGuiHandlerRegistry;
 import ftb.utils.*;
+import ftb.utils.api.guide.GuideRepoList;
 import ftb.utils.badges.BadgeRenderer;
 import ftb.utils.cmd.CmdMath;
 import ftb.utils.journeymap.IJMPluginHandler;
@@ -74,6 +75,8 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		render.addLayer(BadgeRenderer.instance);
 		render = skinMap.get("slim");
 		render.addLayer(BadgeRenderer.instance);
+		
+		GuideRepoList.refresh();
 	}
 	
 	public void addWorldData(ForgeWorldDataEvent event)

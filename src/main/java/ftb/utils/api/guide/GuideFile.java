@@ -24,6 +24,12 @@ public class GuideFile implements IJsonObject // ServerGuideFile // ClientGuideF
 		links = new HashMap<>();
 	}
 	
+	public GuideFile(String id, IChatComponent c)
+	{
+		this(id);
+		main.setTitle(c);
+	}
+	
 	public GuideLink getGuideLink(String s)
 	{
 		if(s != null)

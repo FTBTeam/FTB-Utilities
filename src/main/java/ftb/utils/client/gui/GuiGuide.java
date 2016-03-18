@@ -6,7 +6,6 @@ import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.*;
 import ftb.utils.api.guide.*;
 import ftb.utils.client.FTBUClient;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -37,11 +36,10 @@ public class GuiGuide extends GuiLM
 	public final GuideButtonTextLine[] textLines; // Max 20
 	
 	public static GuiGuide clientGuideGui = null;
-	public static FontRenderer guideFont = null;
 	
 	public static GuiGuide openClientGui(boolean open)
 	{
-		if(clientGuideGui == null) clientGuideGui = new GuiGuide(null, ClientGuideFile.instance.main);
+		if(clientGuideGui == null) clientGuideGui = new GuiGuide(null, GuideRepoList.clientGuideFile.main);
 		if(open) FTBLibClient.openGui(clientGuideGui);
 		return clientGuideGui;
 	}
@@ -121,9 +119,6 @@ public class GuiGuide extends GuiLM
 	
 	public void addWidgets()
 	{
-		if(guideFont == null)
-			guideFont = new FontRenderer(mc.gameSettings, new ResourceLocation("textures/font/ascii.png"), mc.getTextureManager(), true);
-		
 		mainPanel.add(sliderCategories);
 		mainPanel.add(sliderText);
 		mainPanel.add(buttonBack);
@@ -157,7 +152,7 @@ public class GuiGuide extends GuiLM
 	
 	public void initLMGui()
 	{
-		if(category.getParentTop() == ClientGuideFile.instance.main) clientGuideGui = this;
+		if(category.getParentTop() == GuideRepoList.clientGuideFile.main) clientGuideGui = this;
 		
 		allTextLines.clear();
 		
@@ -167,9 +162,9 @@ public class GuiGuide extends GuiLM
 		String s = selectedCategory.getFormattedText();
 		if(s != null && s.length() > 0)
 		{
-			boolean uni = guideFont.getUnicodeFlag();
-			guideFont.setUnicodeFlag(FTBUClient.guide_unicode.get());
-			List<String> list = guideFont.listFormattedStringToWidth(s.trim(), textPanel.width);
+			boolean uni = fontRendererObj.getUnicodeFlag();
+			fontRendererObj.setUnicodeFlag(FTBUClient.guide_unicode.get());
+			List<String> list = fontRendererObj.listFormattedStringToWidth(s.trim(), textPanel.width);
 			
 			for(int i = 0; i < list.size(); i++)
 			{
@@ -183,7 +178,7 @@ public class GuiGuide extends GuiLM
 					if(l.special.type.isText())
 					{
 						l.text = l.special.getTitle().getFormattedText();
-						List<String> list1 = guideFont.listFormattedStringToWidth(l.text, textPanel.width);
+						List<String> list1 = fontRendererObj.listFormattedStringToWidth(l.text, textPanel.width);
 						
 						if(list1.size() > 1)
 						{
@@ -232,7 +227,7 @@ public class GuiGuide extends GuiLM
 				if(!l.text.isEmpty()) l.text = l.text.replace('\ufffd', '\u00a7');
 			}
 			
-			guideFont.setUnicodeFlag(uni);
+			fontRendererObj.setUnicodeFlag(uni);
 		}
 		
 		refreshText();
@@ -277,15 +272,13 @@ public class GuiGuide extends GuiLM
 		buttonBack.render((parentGui == null) ? tex_close : tex_back);
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		
-		getFontRenderer();
-		
 		fontRendererObj.drawString(category.getTitleComponent().getFormattedText(), mainPanel.posX + 53, mainPanel.posY + 14, textColor);
 		
-		boolean uni = guideFont.getUnicodeFlag();
-		guideFont.setUnicodeFlag(FTBUClient.guide_unicode.get());
+		boolean uni = fontRendererObj.getUnicodeFlag();
+		fontRendererObj.setUnicodeFlag(FTBUClient.guide_unicode.get());
 		for(int i = 0; i < textLines.length; i++)
 			textLines[i].renderWidget();
-		guideFont.setUnicodeFlag(uni);
+		fontRendererObj.setUnicodeFlag(uni);
 		
 		if(!categoryButtons.isEmpty())
 		{

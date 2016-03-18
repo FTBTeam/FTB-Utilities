@@ -3,7 +3,7 @@ package ftb.utils.handlers;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.events.ReloadEvent;
 import ftb.lib.api.paint.IPainterItem;
-import ftb.utils.api.guide.ClientGuideFile;
+import ftb.utils.api.guide.GuideRepoList;
 import ftb.utils.badges.ClientBadges;
 import net.minecraft.item.*;
 import net.minecraft.util.EnumChatFormatting;
@@ -21,7 +21,11 @@ public class FTBLIntegrationClient extends FTBLIntegration
 		{
 			FTBLibClient.clearCachedData();
 			ClientBadges.clear();
-			ClientGuideFile.instance.reload(e);
+			
+			if(e.modeChanged)
+			{
+				GuideRepoList.reloadFromFolder(e.world.getMode());
+			}
 		}
 	}
 	

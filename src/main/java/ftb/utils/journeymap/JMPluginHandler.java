@@ -50,10 +50,14 @@ public class JMPluginHandler implements IJMPluginHandler
 						
 						//GuiLM.drawTexturedRectD(mainPanel.posX + x * 16, mainPanel.posY + y * 16, zLevel, 16, 16, tc.minU, tc.minV, tc.maxU, tc.maxV);
 						
-						//public MapImage(ResourceLocation imageLocation, int textureX, int textureY, int textureWidth, int textureHeight, int color, float opacity)
-						MapImage image = new MapImage(tc.texture, tc.posXI(), tc.posYI(), (int) tc.textureW, (int) tc.textureH, color, 1F);
-						image.setDisplayWidth(tc.width);
-						image.setDisplayHeight(tc.height);
+						//						MapImage image = new MapImage(tc.texture, tc.posXI(), tc.posYI(), (int) tc.textureW, (int) tc.textureH, color, 1F);
+						//						image.setDisplayWidth(tc.width);
+						//						image.setDisplayHeight(tc.height);
+						
+						MapImage image = new MapImage(tc.texture, tc.posXI(), tc.posYI(), (int) tc.width, (int) tc.height, color, 1F);
+						image.setDisplayWidth(tc.textureW);
+						image.setDisplayHeight(tc.textureH);
+						
 						ImageOverlay chunkOverlay = new ImageOverlay(FTBUFinals.MOD_ID, "claimed_" + pos.chunkXPos + "_" + pos.chunkZPos, start, end, image);
 						
 						StringBuilder sb = new StringBuilder(type.getIDS());

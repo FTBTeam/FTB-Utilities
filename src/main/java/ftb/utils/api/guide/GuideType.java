@@ -7,6 +7,8 @@ public enum GuideType
 {
 	MOD,
 	MODPACK,
+	SERVER,
+	WORLD,
 	CUSTOM;
 	
 	public static GuideType get(String name)
@@ -19,6 +21,12 @@ public enum GuideType
 				return MODPACK;
 			case "pack":
 				return MODPACK;
+			case "server":
+				return SERVER;
+			case "world":
+				return WORLD;
+			case "map":
+				return WORLD;
 			default:
 				return CUSTOM;
 		}

@@ -2,7 +2,7 @@ package ftb.utils.cmd.admin;
 
 import com.google.common.collect.ImmutableSetMultimap;
 import ftb.lib.api.cmd.*;
-import ftb.utils.api.guide.*;
+import ftb.utils.api.guide.GuidePage;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.*;
@@ -20,7 +20,7 @@ public class CmdLoadedChunks extends CommandLM
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		
-		GuideFile file = new GuideFile("Loaded Chunks");
+		GuidePage file = new GuidePage("Loaded Chunks");
 		
 		for(WorldServer w : DimensionManager.getWorlds())
 		{
@@ -36,16 +36,16 @@ public class CmdLoadedChunks extends CommandLM
 					if(!list.contains(c)) list.add(c);
 			}
 			
-			GuideCategory dim = file.main.getSub(w.provider.getDimensionName());
+			GuidePage dim = file.getSub(w.provider.getDimensionName());
 			
 			for(Map.Entry<String, ArrayList<ChunkCoordIntPair>> e1 : chunksMap.entrySet())
 			{
-				GuideCategory mod = dim.getSub(e1.getKey() + " [" + e1.getValue().size() + "]");
+				GuidePage mod = dim.getSub(e1.getKey() + " [" + e1.getValue().size() + "]");
 				for(ChunkCoordIntPair c : e1.getValue())
 					mod.printlnText(c.chunkXPos + ", " + c.chunkZPos + " [ " + c.getCenterXPos() + ", " + c.getCenterZPosition() + " ]");
 			}
 		}
 		
-		GuideFile.displayGuide(ep, file);
+		file.displayGuide(ep);
 	}
 }

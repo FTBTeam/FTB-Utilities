@@ -2,7 +2,7 @@ package ftb.utils.client.gui;
 
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.widgets.ButtonLM;
-import ftb.utils.api.guide.GuideCategory;
+import ftb.utils.api.guide.GuidePage;
 import net.minecraft.util.IChatComponent;
 
 /**
@@ -11,11 +11,11 @@ import net.minecraft.util.IChatComponent;
 public class GuideButtonCategory extends ButtonLM
 {
 	public final GuiGuide gui;
-	public final GuideCategory cat;
+	public final GuidePage cat;
 	
-	public GuideButtonCategory(GuiGuide g, int x, int y, int w, int h, GuideCategory c)
+	public GuideButtonCategory(GuiGuide g, GuidePage c)
 	{
-		super(g, x, y, w, h);
+		super(g, 0, g.panelCategories.height, g.panelWidth - 36, 13);
 		gui = g;
 		cat = c;
 	}
@@ -24,11 +24,11 @@ public class GuideButtonCategory extends ButtonLM
 	{
 		FTBLibClient.playClickSound();
 		
-		if(cat.subcategories.isEmpty())
+		if(cat.childPages.isEmpty())
 		{
 			gui.selectedCategory = cat;
 			gui.sliderText.value = 0F;
-			gui.initLMGui();
+			gui.panelText.refreshWidgets();
 		}
 		else FTBLibClient.openGui(new GuiGuide(gui, cat));
 	}
@@ -38,7 +38,6 @@ public class GuideButtonCategory extends ButtonLM
 	
 	public void renderWidget()
 	{
-		if(!isEnabled()) return;
 		int ax = getAX();
 		int ay = getAY();
 		IChatComponent titleC = cat.getTitleComponent().createCopy();

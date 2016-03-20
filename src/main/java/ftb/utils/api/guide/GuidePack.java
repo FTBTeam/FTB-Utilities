@@ -3,19 +3,16 @@ package ftb.utils.api.guide;
 import com.google.gson.JsonObject;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.utils.FTBU;
-import latmod.lib.*;
+import latmod.lib.LMUtils;
 import latmod.lib.github.GitHubAPI;
 import latmod.lib.net.*;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.util.ResourceLocation;
 
-import java.io.*;
-import java.util.zip.*;
-
 /**
  * Created by LatvianModder on 18.03.2016.
  */
-public class GuideRepo extends FinalIDObject
+public class GuidePack extends FinalIDObject
 {
 	public final String owner;
 	public final String repoID;
@@ -23,7 +20,7 @@ public class GuideRepo extends FinalIDObject
 	public final GuideInfo info;
 	private ResourceLocation icon;
 	
-	public GuideRepo(String oID, String rID, String bID) throws Exception
+	public GuidePack(String oID, String rID, String bID) throws Exception
 	{
 		super(oID + '/' + rID + '/' + bID);
 		owner = oID;
@@ -41,18 +38,14 @@ public class GuideRepo extends FinalIDObject
 	public void downloadPack() throws Exception
 	{
 		long start = LMUtils.millis();
-		LMURLConnection c = new LMURLConnection(RequestMethod.SIMPLE_GET, "https://github.com/" + owner + "/" + repoID + "/archive/" + branchID + ".zip");
 		
-		ZipInputStream in = new ZipInputStream(new BufferedInputStream(c.connect().stream));
-		File file = new File(GuideRepoList.getFolder(), info.file_name);
-		LMFileUtils.delete(file);
-		
-		ZipEntry e;
+		JsonObject o = new LMURLConnection(RequestMethod.SIMPLE_GET, GitHubAPI.RAW_CONTENT + getID() + "/pages.json").connect().asJson().getAsJsonObject();
+		System.out.println(o);
 		
 		int len;
 		byte[] buffer = new byte[2048];
-		int startIndex = (repoID + '-' + branchID).length() + 1;
 		
+		/*
 		while((e = in.getNextEntry()) != null)
 		{
 			if(!e.isDirectory())
@@ -67,11 +60,9 @@ public class GuideRepo extends FinalIDObject
 					out.close();
 				}
 			}
-			
-			in.closeEntry();
 		}
 		
-		in.close();
+		in.close();*/
 		
 		FTBU.logger.info("Done in " + (LMUtils.millis() - start) + " ms!");
 	}

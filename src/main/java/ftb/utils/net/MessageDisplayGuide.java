@@ -2,7 +2,7 @@ package ftb.utils.net;
 
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.net.*;
-import ftb.utils.api.guide.GuideFile;
+import ftb.utils.api.guide.GuidePage;
 import ftb.utils.client.gui.GuiGuide;
 import latmod.lib.ByteCount;
 import latmod.lib.json.JsonElementIO;
@@ -13,9 +13,10 @@ public class MessageDisplayGuide extends MessageLM_IO
 {
 	public MessageDisplayGuide() { super(ByteCount.INT); }
 	
-	public MessageDisplayGuide(GuideFile file)
+	public MessageDisplayGuide(GuidePage file)
 	{
 		this();
+		io.writeUTF(file.getID());
 		JsonElementIO.write(io, file);
 	}
 	
@@ -25,9 +26,9 @@ public class MessageDisplayGuide extends MessageLM_IO
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{
-		GuideFile file = new GuideFile("guide");
+		GuidePage file = new GuidePage(io.readUTF());
 		JsonElementIO.read(io, file);
-		FTBLibClient.openGui(new GuiGuide(null, file.main));
+		FTBLibClient.openGui(new GuiGuide(null, file));
 		return null;
 	}
 }

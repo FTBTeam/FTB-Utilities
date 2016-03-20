@@ -5,6 +5,7 @@ import ftb.lib.FTBLib;
 import ftb.lib.api.GameMode;
 import ftb.utils.FTBU;
 import ftb.utils.client.gui.GuiGuide;
+import latmod.lib.LMJsonUtils;
 import latmod.lib.github.GitHubAPI;
 import latmod.lib.net.*;
 import net.minecraft.util.ChatComponentTranslation;
@@ -18,9 +19,9 @@ import java.util.*;
 public class GuideRepoList
 {
 	public static final String REPOSITORIES_JSON = GitHubAPI.RAW_CONTENT + "Slowpoke101/FTBGuides/master/repositories.json";
-	public static final List<GuideRepo> repos = new ArrayList<>();
+	public static final List<GuidePack> repos = new ArrayList<>();
 	private static Thread thread = null;
-	public static final GuideFile clientGuideFile = new GuideFile("guide", new ChatComponentTranslation("player_action.ftbu.guide"));
+	public static final GuidePage clientGuideFile = new GuidePage("guide").setTitle(new ChatComponentTranslation("player_action.ftbu.guide"));
 	
 	public static File getFolder()
 	{
@@ -41,7 +42,7 @@ public class GuideRepoList
 			{
 				FTBU.logger.info("Connecting to " + REPOSITORIES_JSON);
 				
-				List<GuideRepo> repos1 = new ArrayList<>();
+				List<GuidePack> repos1 = new ArrayList<>();
 				
 				try
 				{
@@ -52,12 +53,12 @@ public class GuideRepoList
 						try
 						{
 							String[] s1 = e.getAsString().split("/");
-							GuideRepo r = new GuideRepo(s1[0], s1[1], s1[2]);
+							GuidePack r = new GuidePack(s1[0], s1[1], s1[2]);
 							repos1.add(r);
 						}
 						catch(Exception ex)
 						{
-							ex.printStackTrace();
+							FTBU.logger.warn("Failed to load GuidePack " + e.getAsString() + ": " + ex.toString());
 						}
 					}
 				}
@@ -77,7 +78,42 @@ public class GuideRepoList
 	
 	public static void reloadFromFolder(GameMode mode)
 	{
-		clientGuideFile.main.clear();
+		clientGuideFile.clear();
+		
+		File[] f = getFolder().listFiles();
+		
+		if(f != null && f.length > 0)
+		{
+			for(File f1 : f)
+			{
+				if(f1.isDirectory())
+				{
+					File f2 = new File(f1, "guide.json");
+					
+					if(f2.exists())
+					{
+						try
+						{
+							GuideInfo info = new GuideInfo(LMJsonUtils.fromJson(f2).getAsJsonObject());
+							
+							GuidePage category = clientGuideFile.getSub(info.name);
+							
+							File f3 = new File(f1, "guide");
+							
+							if(f3.exists() && f3.isDirectory())
+							{
+								category.loadFromFiles(f3);
+							}
+						}
+						catch(Exception ex)
+						{
+							ex.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+		
 		/*
 		
 		File file = GameModes.getGameModes().commonMode.getFile("guide/");
@@ -120,7 +156,7 @@ public class GuideRepoList
 		clientGuideFile.links.putAll(clientGuideFile.loadLinksFromFile(new File(FTBLib.folderModpack, "guide_links.json")));
 		*/
 		
-		clientGuideFile.main.cleanup();
+		clientGuideFile.cleanup();
 		GuiGuide.clientGuideGui = null;
 	}
 }

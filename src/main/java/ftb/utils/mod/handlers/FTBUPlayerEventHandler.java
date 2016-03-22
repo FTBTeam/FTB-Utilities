@@ -3,7 +3,7 @@ package ftb.utils.mod.handlers;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import ftb.lib.*;
-import ftb.lib.notification.Notification;
+import ftb.lib.api.notification.Notification;
 import ftb.utils.api.EventLMPlayerServer;
 import ftb.utils.mod.FTBU;
 import ftb.utils.mod.config.FTBUConfigGeneral;

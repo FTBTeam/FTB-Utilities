@@ -4,7 +4,7 @@ import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
 import ftb.lib.api.item.StringIDInvLoader;
-import ftb.lib.notification.*;
+import ftb.lib.api.notification.*;
 import ftb.utils.api.EventLMPlayerServer;
 import ftb.utils.mod.FTBU;
 import ftb.utils.mod.client.FTBUClickAction;

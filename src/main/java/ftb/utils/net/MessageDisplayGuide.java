@@ -4,8 +4,8 @@ import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.utils.api.guide.GuideFile;
-import ftb.utils.mod.client.gui.guide.GuiGuide;
+import ftb.utils.api.guide.GuidePage;
+import ftb.utils.mod.client.gui.GuiGuide;
 import latmod.lib.ByteCount;
 import latmod.lib.json.JsonElementIO;
 
@@ -13,10 +13,11 @@ public class MessageDisplayGuide extends MessageFTBU
 {
 	public MessageDisplayGuide() { super(ByteCount.INT); }
 	
-	public MessageDisplayGuide(GuideFile file)
+	public MessageDisplayGuide(GuidePage file)
 	{
 		this();
-		file.main.cleanup();
+		file.cleanup();
+		io.writeUTF(file.getID());
 		JsonElementIO.write(io, file.getJson());
 	}
 	
@@ -26,9 +27,9 @@ public class MessageDisplayGuide extends MessageFTBU
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{
-		GuideFile file = new GuideFile("guide");
+		GuidePage file = new GuidePage(io.readUTF());
 		file.setJson(JsonElementIO.read(io));
-		FTBLibClient.openGui(new GuiGuide(null, file.main));
+		FTBLibClient.openGui(new GuiGuide(null, file));
 		return null;
 	}
 }

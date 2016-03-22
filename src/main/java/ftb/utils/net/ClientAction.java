@@ -1,7 +1,7 @@
 package ftb.utils.net;
 
 import ftb.lib.FTBLib;
-import ftb.utils.api.guide.*;
+import ftb.utils.api.guide.ServerGuideFile;
 import ftb.utils.badges.*;
 import ftb.utils.world.*;
 
@@ -100,7 +100,7 @@ public abstract class ClientAction
 	{
 		public boolean onAction(int extra, LMPlayerServer owner)
 		{
-			GuideFile.displayGuide(owner.getPlayer(), new ServerGuideFile(owner));
+			new ServerGuideFile(owner).displayGuide(owner.getPlayer());
 			return false;
 		}
 	};

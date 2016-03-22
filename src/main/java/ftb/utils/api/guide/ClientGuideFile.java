@@ -3,28 +3,28 @@ package ftb.utils.api.guide;
 import ftb.lib.FTBLib;
 import ftb.lib.api.*;
 import ftb.utils.mod.FTBU;
-import ftb.utils.mod.client.gui.guide.GuiGuide;
+import ftb.utils.mod.client.gui.GuiGuide;
 import latmod.lib.LMFileUtils;
 import net.minecraft.util.ChatComponentTranslation;
 
 import java.io.File;
 import java.util.Arrays;
 
-public class ClientGuideFile extends GuideFile
+public class ClientGuideFile extends GuidePage
 {
 	public static final ClientGuideFile instance = new ClientGuideFile("ClientConfig");
 	
 	public ClientGuideFile(String id)
 	{
 		super(id);
-		main.setTitle(new ChatComponentTranslation("player_action.ftbu.guide"));
+		setTitle(new ChatComponentTranslation("player_action.ftbu.guide"));
 	}
 	
 	public void reload(EventFTBReload e)
 	{
 		if(FTBLib.DEV_ENV) FTBU.logger.info("Guide reloaded @ " + e.world.side + " as " + e.world.getMode());
 		
-		main.clear();
+		clear();
 		
 		File file = GameModes.getGameModes().commonMode.getFile("guide/");
 		if(file.exists() && file.isDirectory())
@@ -34,7 +34,7 @@ public class ClientGuideFile extends GuideFile
 			{
 				Arrays.sort(f, LMFileUtils.fileComparator);
 				for(int i = 0; i < f.length; i++)
-					loadFromFiles(main, f[i]);
+					loadFromFiles(this, f[i]);
 			}
 		}
 		
@@ -46,7 +46,7 @@ public class ClientGuideFile extends GuideFile
 			{
 				Arrays.sort(f, LMFileUtils.fileComparator);
 				for(int i = 0; i < f.length; i++)
-					loadFromFiles(main, f[i]);
+					loadFromFiles(this, f[i]);
 			}
 		}
 		
@@ -56,7 +56,7 @@ public class ClientGuideFile extends GuideFile
 			try
 			{
 				String text = LMFileUtils.loadAsText(file);
-				if(text != null && !text.isEmpty()) main.printlnText(text.replace("\r", ""));
+				if(text != null && !text.isEmpty()) printlnText(text.replace("\r", ""));
 			}
 			catch(Exception ex)
 			{
@@ -64,11 +64,9 @@ public class ClientGuideFile extends GuideFile
 			}
 		}
 		
-		links.clear();
-		links.putAll(loadLinksFromFile(new File(FTBLib.folderModpack, "guide_links.json")));
 		new EventFTBUClientGuide(this).post();
 		
-		main.cleanup();
+		cleanup();
 		GuiGuide.clientGuideGui = null;
 	}
 }

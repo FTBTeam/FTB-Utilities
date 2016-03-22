@@ -75,8 +75,6 @@ public class FTBU
 			FTBLib.addCommand(e, new CmdHome());
 			FTBLib.addCommand(e, new CmdDelHome());
 		}
-		
-		if(FTBUConfigCmd.player_can_use_spawnpoint.get()) FTBLib.addCommand(e, new CmdSpawnpointOverride());
 	}
 	
 	@Mod.EventHandler

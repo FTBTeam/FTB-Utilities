@@ -2,7 +2,7 @@ package ftb.utils.mod.client;
 
 import com.google.gson.JsonElement;
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.notification.*;
+import ftb.lib.api.notification.*;
 import ftb.utils.net.ClientAction;
 
 public class FTBUClickAction

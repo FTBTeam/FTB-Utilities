@@ -10,5 +10,4 @@ public class FTBUConfigCmd
 	public static final ConfigEntryBool spawn = new ConfigEntryBool("spawn", true);
 	public static final ConfigEntryBool tplast = new ConfigEntryBool("tplast", true);
 	public static final ConfigEntryBool warp = new ConfigEntryBool("warp", true);
-	public static final ConfigEntryBool player_can_use_spawnpoint = new ConfigEntryBool("player_can_use_spawnpoint", false);
 }

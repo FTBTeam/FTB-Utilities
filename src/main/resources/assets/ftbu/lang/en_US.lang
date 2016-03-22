@@ -17,12 +17,17 @@ client_config.ftbu.options_button=Options Button
 client_config.ftbu.chat_links=Chat Links
 client_config.ftbu.sort_friends_az=Sort Friends A-Z
 client_config.ftbu.loaded_chunks_space_key=Use Space key for Loaded Chunks
-client_config.ftbu.guide_unicode=Use Unicode in Guides
 
-claims_config=Claimed Chunks Config
-claims_config.explosions=Explosions
-claims_config.security_level=Block Security Level
-claims_config.fake_players=Allow Fake Players
+client_config.ftbu_guide=FTBUtilities: Guide
+client_config.ftbu_guide.unicode=Use Unicode
+client_config.ftbu_guide.text_color=Text Color
+client_config.ftbu_guide.bg_color=Background Color
+client_config.ftbu_guide.transparency=Transparency
+
+client_config.ftbu_claims=FTBUtilities: Claimed Chunks
+client_config.ftbu_claims.explosions=Explosions
+client_config.ftbu_claims.security_level=Block Security Level
+client_config.ftbu_claims.fake_players=Allow Fake Players
 
 #PlayerActions
 player_action.ftbu.guide=Guide

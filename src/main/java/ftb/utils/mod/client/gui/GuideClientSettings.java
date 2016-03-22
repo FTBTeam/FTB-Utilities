@@ -1,4 +1,4 @@
-package ftb.utils.api.guide;
+package ftb.utils.mod.client.gui;
 
 import latmod.lib.LMColor;
 import latmod.lib.config.*;

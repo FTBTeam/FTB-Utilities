@@ -16,7 +16,7 @@ public class LMPlayerClientSelf extends LMPlayerClient
 	{
 		super(w, i, gp);
 		
-		settings = new PersonalSettings(this);
+		settings = new PersonalSettings();
 	}
 	
 	public LMPlayerClientSelf toPlayerSPSelf()

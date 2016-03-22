@@ -48,7 +48,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	{
 		super(i, gp);
 		world = w;
-		settings = new PersonalSettings(this);
+		settings = new PersonalSettings();
 		stats = new LMPlayerStats(this);
 		homes = new Warps();
 	}

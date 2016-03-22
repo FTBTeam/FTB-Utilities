@@ -6,8 +6,6 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class PersonalSettings
 {
-	public final LMPlayer owner;
-	
 	public static final byte CHAT_LINKS = 0;
 	public static final byte EXPLOSIONS = 1;
 	public static final byte FAKE_PLAYERS = 2;
@@ -15,9 +13,8 @@ public class PersonalSettings
 	public byte flags = 0;
 	public PrivacyLevel blocks;
 	
-	public PersonalSettings(LMPlayer p)
+	public PersonalSettings()
 	{
-		owner = p;
 		blocks = PrivacyLevel.FRIENDS;
 		setDefaultFlags();
 	}
@@ -70,7 +67,4 @@ public class PersonalSettings
 		io.writeByte(flags);
 		io.writeByte(blocks.ID);
 	}
-	
-	public void sendUpdate()
-	{ if(owner.getSide().isServer()) owner.toPlayerMP().sendUpdate(); }
 }

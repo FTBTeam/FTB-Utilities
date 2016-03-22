@@ -15,8 +15,6 @@ public class GuiGuide extends GuiLM
 	public static final TextureCoords tex_slider = new TextureCoords(tex, 0, 30, 12, 18, 64, 64);
 	public static final TextureCoords tex_back = new TextureCoords(tex, 13, 30, 14, 11, 64, 64);
 	public static final TextureCoords tex_close = new TextureCoords(tex, 13, 41, 14, 11, 64, 64);
-	public static final TextureCoords tex_back_on = new TextureCoords(tex, 27, 30, 14, 11, 64, 64);
-	public static final TextureCoords tex_close_on = new TextureCoords(tex, 27, 41, 14, 11, 64, 64);
 	public static final TextureCoords tex_bullet = new TextureCoords(tex, 0, 49, 6, 6, 64, 64);
 	
 	public static final TextureCoords tex_bg_MU = new TextureCoords(tex, 14, 0, 1, 13, 64, 64);
@@ -247,10 +245,15 @@ public class GuiGuide extends GuiLM
 		renderFilling(0, 0, panelWidth, 36, 255);
 		renderBorders(0, 0, panelWidth, 36);
 		
+		int textColor = GuideClientSettings.text_color.getAsInt();
+		
 		sliderPages.renderSlider(tex_slider);
 		sliderText.renderSlider(tex_slider);
-		buttonBack.render((parentGui == null) ? (buttonBack.mouseOver() ? tex_close_on : tex_close) : (buttonBack.mouseOver() ? tex_back_on : tex_back));
-		fontRendererObj.drawString(pageTitle, buttonBack.getAX() + buttonBack.width + 5, mainPanel.posY + 14, GuideClientSettings.text_color.getAsInt());
+		FTBLibClient.setGLColor(textColor, 255);
+		buttonBack.render((parentGui == null) ? tex_close : tex_back);
+		
+		GlStateManager.color(1F, 1F, 1F, 1F);
+		fontRendererObj.drawString(pageTitle, buttonBack.getAX() + buttonBack.width + 5, mainPanel.posY + 14, textColor);
 	}
 	
 	public void drawDefaultBackground()

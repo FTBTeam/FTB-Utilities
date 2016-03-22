@@ -1,9 +1,11 @@
 package ftb.utils.net;
 
-import ftb.lib.FTBLib;
+import ftb.lib.PrivacyLevel;
+import ftb.lib.api.config.ConfigRegistry;
 import ftb.utils.api.guide.ServerGuideFile;
 import ftb.utils.badges.*;
 import ftb.utils.world.*;
+import latmod.lib.config.*;
 
 import java.util.HashMap;
 
@@ -146,11 +148,10 @@ public abstract class ClientAction
 	{
 		public boolean onAction(int extra, final LMPlayerServer owner)
 		{
-			/*
-			ConfigGroup group = ConfigRegistry.createTempConfig(owner.getPlayer());
-			group.setName("Settings");
+			ConfigFile file = ConfigRegistry.createTempConfig(owner.getPlayer());
+			file.setDisplayName("Settings");
 			
-			group.add(new ConfigEntryBool("explosions", false)
+			file.add(new ConfigEntryBool("explosions", true)
 			{
 				public boolean get()
 				{ return owner.getSettings().get(PersonalSettings.EXPLOSIONS); }
@@ -159,7 +160,7 @@ public abstract class ClientAction
 				{ owner.getSettings().set(PersonalSettings.EXPLOSIONS, v); }
 			}, false);
 			
-			group.add(new ConfigEntryBool("allow_fake_players", false)
+			file.add(new ConfigEntryBool("allow_fake_players", false)
 			{
 				public boolean get()
 				{ return owner.getSettings().get(PersonalSettings.FAKE_PLAYERS); }
@@ -168,20 +169,16 @@ public abstract class ClientAction
 				{ owner.getSettings().set(PersonalSettings.FAKE_PLAYERS, v); }
 			}, false);
 			
-			group.add(new ConfigEntryEnum<LMSecurityLevel>("block_security", LMSecurityLevel.class, LMSecurityLevel.VALUES_3, LMSecurityLevel.FRIENDS, false)
+			file.add(new ConfigEntryEnum<PrivacyLevel>("block_security", PrivacyLevel.VALUES_3, PrivacyLevel.FRIENDS, false)
 			{
-				public LMSecurityLevel get()
+				public PrivacyLevel get()
 				{ return owner.getSettings().blocks; }
 				
 				public void set(Object v)
-				{ owner.getSettings().blocks = (LMSecurityLevel) v; }
+				{ owner.getSettings().blocks = (PrivacyLevel) v; }
 			}, false);
 			
-			ConfigRegistry.editTempConfig(owner.getPlayer(), group);
-			
-			//group.setFlag(7, true);
-			*/
-			FTBLib.printChat(owner.getPlayer(), "Settings Gui is temporarily replaced with /lmplayer_settings!");
+			ConfigRegistry.editTempConfig(owner.getPlayer(), file, false);
 			return false;
 		}
 	};

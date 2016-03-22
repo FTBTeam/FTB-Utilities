@@ -1,7 +1,9 @@
 package ftb.utils.api.guide;
 
+import com.google.gson.JsonPrimitive;
 import ftb.lib.*;
 import ftb.lib.api.cmd.ICustomCommandInfo;
+import ftb.lib.api.notification.*;
 import ftb.utils.mod.*;
 import ftb.utils.mod.config.*;
 import ftb.utils.world.*;
@@ -127,8 +129,8 @@ public class ServerGuideFile extends GuidePage
 		new EventFTBUServerGuide(this, self, isOP).post();
 		if(isOP) addSub(CachedInfo.categoryServerAdmin);
 		
-		GuidePage commands = getSub("Commands"); //LANG
-		commands.clear();
+		GuidePage page = getSub("Commands"); //LANG
+		page.clear();
 		
 		try
 		{
@@ -173,20 +175,39 @@ public class ServerGuideFile extends GuidePage
 						}
 					}
 					
-					cat.setParent(commands);
-					commands.addSub(cat);
+					cat.setParent(page);
+					page.addSub(cat);
 				}
 				catch(Exception ex1)
 				{
 					IChatComponent cc = new ChatComponentText('/' + c.getCommandName());
 					cc.getChatStyle().setColor(EnumChatFormatting.DARK_RED);
-					commands.getSub('/' + c.getCommandName()).setTitle(cc).printlnText("Errored");
+					page.getSub('/' + c.getCommandName()).setTitle(cc).printlnText("Errored");
 					
 					if(FTBLib.DEV_ENV) ex1.printStackTrace();
 				}
 			}
 		}
 		catch(Exception ex) { }
+		
+		page = getSub("Warps"); //LANG
+		GuideExtendedTextLine line;
+		
+		for(String s : LMWorldServer.inst.warps.list())
+		{
+			line = new GuideExtendedTextLine(page, new ChatComponentText(s));
+			line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("warp " + s)));
+			page.text.add(line);
+		}
+		
+		page = getSub("Homes"); //LANG
+		
+		for(String s : self.homes.list())
+		{
+			line = new GuideExtendedTextLine(page, new ChatComponentText(s));
+			line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("home " + s)));
+			page.text.add(line);
+		}
 		
 		cleanup();
 		sortAll();

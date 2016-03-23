@@ -16,7 +16,7 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 	public static LMWorldClient inst = null;
 	
 	public final int clientPlayerID;
-	public final HashMap<Integer, LMPlayerClient> playerMap;
+	public final Map<Integer, LMPlayerClient> playerMap;
 	public LMPlayerClientSelf clientPlayer = null;
 	
 	public LMWorldClient(int i)
@@ -26,7 +26,7 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 		playerMap = new HashMap<>();
 	}
 	
-	public HashMap<Integer, ? extends LMPlayer> playerMap()
+	public Map<Integer, ? extends LMPlayer> playerMap()
 	{ return playerMap; }
 	
 	public World getMCWorld()

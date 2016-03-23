@@ -5,7 +5,7 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.net.LMNetworkWrapper;
 import ftb.utils.api.guide.GuidePage;
-import ftb.utils.mod.client.gui.GuiGuide;
+import ftb.utils.mod.client.gui.guide.GuiGuide;
 import latmod.lib.ByteCount;
 import latmod.lib.json.JsonElementIO;
 

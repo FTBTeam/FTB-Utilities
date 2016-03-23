@@ -4,6 +4,7 @@ import com.google.gson.JsonPrimitive;
 import ftb.lib.*;
 import ftb.lib.api.cmd.ICustomCommandInfo;
 import ftb.lib.api.notification.*;
+import ftb.utils.api.guide.lines.GuideExtendedTextLine;
 import ftb.utils.mod.*;
 import ftb.utils.mod.config.*;
 import ftb.utils.world.*;

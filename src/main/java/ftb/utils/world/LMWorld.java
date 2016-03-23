@@ -34,7 +34,7 @@ public abstract class LMWorld // FTBWorld
 		settings = new LMWorldSettings(this);
 	}
 	
-	public abstract HashMap<Integer, ? extends LMPlayer> playerMap();
+	public abstract Map<Integer, ? extends LMPlayer> playerMap();
 	
 	public abstract World getMCWorld();
 	
@@ -49,7 +49,7 @@ public abstract class LMWorld // FTBWorld
 	{
 		if(o == null || o instanceof FakePlayer) return null;
 		
-		HashMap<Integer, ? extends LMPlayer> playerMap = playerMap();
+		Map<Integer, ? extends LMPlayer> playerMap = playerMap();
 		
 		if(o instanceof Number || o instanceof LMPlayer)
 		{

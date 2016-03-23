@@ -70,7 +70,7 @@ public class ButtonPlayer extends ButtonLM
 			GuiLM.drawBlankRect(ax + width - 9, ay, z, 8, 8);
 			GlStateManager.color(0F, 1F, 0F, 1F);
 			GuiLM.drawBlankRect(ax + width - 8, ay + 1, z, 6, 6);
-			//GuiIcons.online.render(gui, ax + width - 17, ay, 16, 16);
+			//GuiIcons.online.render(guiGuide, ax + width - 17, ay, 16, 16);
 		}
 		
 		gui.getFontRenderer().drawString(player.playerLM.getProfile().getName(), ax + 22, ay + 6, 0xFFFFFFFF);

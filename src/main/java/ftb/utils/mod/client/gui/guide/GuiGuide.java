@@ -1,10 +1,12 @@
-package ftb.utils.mod.client.gui;
+package ftb.utils.mod.client.gui.guide;
 
 import ftb.lib.TextureCoords;
 import ftb.lib.api.client.*;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.*;
 import ftb.utils.api.guide.*;
+import ftb.utils.api.guide.lines.GuideTextLine;
+import latmod.lib.LMColor;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.*;
@@ -38,6 +40,7 @@ public class GuiGuide extends GuiLM
 	public final ButtonLM buttonBack;
 	
 	public final PanelLM panelPages, panelText;
+	public int colorText, colorBackground;
 	
 	public static GuiGuide clientGuideGui = null;
 	
@@ -136,9 +139,13 @@ public class GuiGuide extends GuiLM
 				
 				for(GuideTextLine line : selectedPage.text)
 				{
-					GuideWidget l = new GuideWidget(GuiGuide.this, line);
-					height += l.height;
-					add(l);
+					ButtonGuideTextLine l = line == null ? new ButtonGuideTextLine(GuiGuide.this, null) : line.createWidget(GuiGuide.this);
+					
+					if(l != null && l.height > 0)
+					{
+						height += l.height;
+						add(l);
+					}
 				}
 				
 				fontRendererObj.setUnicodeFlag(uni);
@@ -182,6 +189,14 @@ public class GuiGuide extends GuiLM
 		
 		buttonBack.posX = 12;
 		buttonBack.posY = 12;
+		
+		LMColor c = page.getTextColor();
+		if(c == null) c = GuideClientSettings.text_color.value;
+		colorText = 0xFF000000 | c.color();
+		
+		c = page.getBackgroundColor();
+		if(c == null) c = GuideClientSettings.bg_color.value;
+		colorBackground = 0xFF000000 | c.color();
 		
 		//
 		
@@ -245,15 +260,13 @@ public class GuiGuide extends GuiLM
 		renderFilling(0, 0, panelWidth, 36, 255);
 		renderBorders(0, 0, panelWidth, 36);
 		
-		int textColor = GuideClientSettings.text_color.getAsInt();
-		
 		sliderPages.renderSlider(tex_slider);
 		sliderText.renderSlider(tex_slider);
-		FTBLibClient.setGLColor(textColor, 255);
+		FTBLibClient.setGLColor(colorText, 255);
 		buttonBack.render((parentGui == null) ? tex_close : tex_back);
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		fontRendererObj.drawString(pageTitle, buttonBack.getAX() + buttonBack.width + 5, mainPanel.posY + 14, textColor);
+		fontRendererObj.drawString(pageTitle, buttonBack.getAX() + buttonBack.width + 5, mainPanel.posY + 14, colorText);
 	}
 	
 	public void drawDefaultBackground()
@@ -276,7 +289,7 @@ public class GuiGuide extends GuiLM
 	
 	private void renderFilling(int px, int py, int w, int h, int a)
 	{
-		FTBLibClient.setGLColor(GuideClientSettings.bg_color.getAsInt(), a);
+		FTBLibClient.setGLColor(colorBackground, a);
 		drawBlankRect(px + 4, py + 4, zLevel, w - 8, h - 8);
 	}
 }

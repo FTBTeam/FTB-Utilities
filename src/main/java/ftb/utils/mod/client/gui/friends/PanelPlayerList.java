@@ -35,15 +35,21 @@ public class PanelPlayerList extends PanelFriendsGui
 		if(FTBUClient.sort_friends_az.get()) Collections.sort(tempPlayerList, LMPNameComparator.instance);
 		else Collections.sort(tempPlayerList, new LMPStatusComparator(LMWorldClient.inst.clientPlayer));
 		
-		playerButtons.clear();
-		playerButtons.add(new ButtonPlayer(this, LMWorldClient.inst.clientPlayer));
+		String name = gui.searchBox.getText().toLowerCase();
+		if(name.trim().isEmpty()) name = null;
 		
-		width = playerButtons.get(0).width;
-		for(int i = 0; i < tempPlayerList.size(); i++)
+		playerButtons.clear();
+		if(name == null) playerButtons.add(new ButtonPlayer(this, LMWorldClient.inst.clientPlayer));
+		width = (name == null) ? playerButtons.get(0).width : 0;
+		
+		for(LMPlayer p : tempPlayerList)
 		{
-			ButtonPlayer b = new ButtonPlayer(this, tempPlayerList.get(i).toPlayerSP());
-			playerButtons.add(b);
-			width = Math.max(width, b.width);
+			if(name == null || p.getProfile().getName().toLowerCase().contains(name))
+			{
+				ButtonPlayer b = new ButtonPlayer(this, p.toPlayerSP());
+				playerButtons.add(b);
+				width = Math.max(width, b.width);
+			}
 		}
 		
 		for(ButtonPlayer b : playerButtons)
@@ -67,7 +73,7 @@ public class PanelPlayerList extends PanelFriendsGui
 			if(Mouse.isButtonDown(0)) scroll += gui.mouse().dy;
 			
 			//if(Mouse.isButtonDown(1))
-			//	scroll -= (int)((gui.mouseY - gui.lastClickY) * 0.1D);
+			//	scroll -= (int)((guiGuide.mouseY - guiGuide.lastClickY) * 0.1D);
 			
 			if(scroll != 0)
 			{

@@ -39,7 +39,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		customServerData = new ConfigGroup("custom_server_data");
 	}
 	
-	public HashMap<Integer, ? extends LMPlayer> playerMap()
+	public Map<Integer, ? extends LMPlayer> playerMap()
 	{ return playerMap; }
 	
 	public World getMCWorld()

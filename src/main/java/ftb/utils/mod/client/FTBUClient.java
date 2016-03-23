@@ -7,7 +7,7 @@ import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.LMGuiHandlerRegistry;
 import ftb.utils.badges.BadgeRenderer;
 import ftb.utils.mod.*;
-import ftb.utils.mod.client.gui.GuideClientSettings;
+import ftb.utils.mod.client.gui.guide.GuideClientSettings;
 import ftb.utils.mod.cmd.CmdMath;
 import ftb.utils.net.ClientAction;
 import ftb.utils.world.*;

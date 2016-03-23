@@ -3,7 +3,7 @@ package ftb.utils.api.guide;
 import ftb.lib.FTBLib;
 import ftb.lib.api.*;
 import ftb.utils.mod.FTBU;
-import ftb.utils.mod.client.gui.GuiGuide;
+import ftb.utils.mod.client.gui.guide.GuiGuide;
 import latmod.lib.LMFileUtils;
 import net.minecraft.util.ChatComponentTranslation;
 

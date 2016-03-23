@@ -1,17 +1,13 @@
-package ftb.utils.api.guide;
+package ftb.utils.api.guide.lines;
 
 import com.google.gson.*;
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.*;
-import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.JsonHelper;
 import ftb.lib.api.notification.*;
-import latmod.lib.LMUtils;
-import net.minecraft.client.renderer.texture.DynamicTexture;
+import ftb.utils.api.guide.GuidePage;
+import ftb.utils.mod.client.gui.guide.*;
 import net.minecraft.util.*;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.*;
 
 /**
@@ -19,11 +15,9 @@ import java.util.*;
  */
 public class GuideExtendedTextLine extends GuideTextLine
 {
-	private IChatComponent text;
+	protected IChatComponent text;
 	private ClickAction clickAction;
 	private List<IChatComponent> hover;
-	private String imageURL;
-	private GuideImage image;
 	
 	public GuideExtendedTextLine(GuidePage c, IChatComponent cc)
 	{
@@ -34,38 +28,24 @@ public class GuideExtendedTextLine extends GuideTextLine
 	public IChatComponent getText()
 	{ return text; }
 	
-	public ClickAction getClickAction()
-	{ return clickAction; }
+	@SideOnly(Side.CLIENT)
+	public ButtonGuideTextLine createWidget(GuiGuide gui)
+	{ return new ButtonGuideExtendedTextLine(gui, this); }
 	
 	public List<IChatComponent> getHover()
 	{ return hover; }
 	
 	@SideOnly(Side.CLIENT)
-	public GuideImage getImage()
+	public boolean hasClickAction()
+	{ return clickAction != null; }
+	
+	@SideOnly(Side.CLIENT)
+	public void onClicked()
 	{
-		if(imageURL == null) return null;
-		
-		if(image != null && image.width > 0) return image;
-		else if(image == null) image = new GuideImage();
-		
-		try
+		if(clickAction != null)
 		{
-			File file = new File(FTBLib.folderModpack, "images/" + imageURL);
-			if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Loading Guide image: " + file.getAbsolutePath());
-			BufferedImage img = ImageIO.read(file);
-			image.texture = FTBLibClient.mc.getTextureManager().getDynamicTextureLocation("ftbu_guide/" + imageURL, new DynamicTexture(img));
-			image.width = img.getWidth();
-			image.height = img.getHeight();
+			clickAction.onClicked();
 		}
-		catch(Exception e)
-		{
-			image.texture = null;
-			image.width = 1;
-			image.height = 1;
-			e.printStackTrace();
-		}
-		
-		return image;
 	}
 	
 	public void setJson(JsonElement e)
@@ -99,31 +79,6 @@ public class GuideExtendedTextLine extends GuideTextLine
 			if(hover.isEmpty()) hover = null;
 		}
 		else hover = null;
-		
-		setImage(o.has("image") ? o.get("image").getAsString() : null);
-		
-		if(imageURL != null)
-		{
-			if(o.has("scale"))
-			{
-				if(image == null) image = new GuideImage();
-				image.displayScale = o.get("scale").getAsDouble();
-			}
-			else
-			{
-				if(o.has("width"))
-				{
-					if(image == null) image = new GuideImage();
-					image.displayWidth = o.get("width").getAsDouble();
-				}
-				
-				if(o.has("height"))
-				{
-					if(image == null) image = new GuideImage();
-					image.displayHeight = o.get("height").getAsDouble();
-				}
-			}
-		}
 	}
 	
 	public JsonElement getJson()
@@ -154,7 +109,6 @@ public class GuideExtendedTextLine extends GuideTextLine
 			}
 		}
 		
-		if(imageURL != null && !imageURL.isEmpty()) o.add("image", new JsonPrimitive(imageURL));
 		return o;
 	}
 	
@@ -175,13 +129,12 @@ public class GuideExtendedTextLine extends GuideTextLine
 	}
 	
 	public void setHover(List<IChatComponent> h)
-	{ hover = h; }
-	
-	public void setImage(String img)
 	{
-		String imageURL0 = imageURL == null ? null : (imageURL + "");
-		imageURL = img;
-		if(!LMUtils.areObjectsEqual(imageURL0, imageURL, true)) image = null;
-		if(imageURL != null) text = null;
+		if(h == null || h.isEmpty()) hover = null;
+		else
+		{
+			hover = new ArrayList<>(h.size());
+			hover.addAll(h);
+		}
 	}
 }

@@ -24,6 +24,6 @@ public class MessageRequestBadge extends MessageFTBU
 	{
 		UUID id = io.readUUID();
 		Badge b = ServerBadges.getServerBadge(id);
-		return (b == null) ? null : new MessageSendBadge(id, b.getID());
+		return (b == null || b == Badge.emptyBadge) ? null : new MessageSendBadge(id, b.getID());
 	}
 }

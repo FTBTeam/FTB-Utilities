@@ -104,7 +104,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	{
 		EntityPlayerMP ep = getPlayer();
 		if(ep != null) lastPos = new EntityPos(ep).toLinkedPos();
-		return lastPos.clone();
+		return lastPos.copy();
 	}
 	
 	// Reading / Writing //

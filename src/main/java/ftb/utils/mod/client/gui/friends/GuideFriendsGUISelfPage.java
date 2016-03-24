@@ -29,6 +29,11 @@ public class GuideFriendsGUISelfPage extends GuideFriendsGUIPage
 	{
 		clear();
 		
+		for(PlayerAction a : PlayerActionRegistry.getPlayerActions(PlayerAction.Type.SELF, LMWorldClient.inst.clientPlayer, LMWorldClient.inst.clientPlayer, true, true))
+		{
+			text.add(new GuidePlayerActionLine(this, playerLM, a));
+		}
+		
 		GuidePage page = getSub("info").setTitle(new ChatComponentTranslation("ftbl.button.info"));
 		
 		page.text.add(new GuidePlayerViewLine(this, playerLM));
@@ -39,11 +44,6 @@ public class GuideFriendsGUISelfPage extends GuideFriendsGUIPage
 				page.printlnText(s);
 			
 			page.text.add(null);
-		}
-		
-		for(PlayerAction a : PlayerActionRegistry.getPlayerActions(PlayerAction.Type.SELF, LMWorldClient.inst.clientPlayer, LMWorldClient.inst.clientPlayer, true, true))
-		{
-			page.text.add(new GuidePlayerActionLine(this, playerLM, a));
 		}
 		
 		page = new GuidePage("settings")

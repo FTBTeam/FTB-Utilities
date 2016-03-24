@@ -26,7 +26,7 @@ public class FTBUNetHandler
 		NET_INFO.register(MessageDisplayGuide.class, 4, Side.CLIENT);
 		NET_INFO.register(MessageSendBadge.class, 5, Side.CLIENT);
 		NET_INFO.register(MessageUpdateBadges.class, 6, Side.CLIENT);
-		NET_INFO.register(MessageRequestBadge.class, 7, Side.CLIENT);
+		NET_INFO.register(MessageRequestBadge.class, 7, Side.SERVER);
 		
 		NET_WORLD.register(MessageAreaUpdate.class, 1, Side.CLIENT);
 		NET_WORLD.register(MessageAreaRequest.class, 2, Side.SERVER);

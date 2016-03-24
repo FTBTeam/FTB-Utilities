@@ -1,9 +1,10 @@
 package ftb.utils.api.guide;
 
+import ftb.lib.mod.FTBLibMod;
 import ftb.utils.mod.FTBU;
 import ftb.utils.world.LMPlayerServer;
 import latmod.lib.*;
-import net.minecraft.util.*;
+import net.minecraft.util.IChatComponent;
 
 import java.util.Comparator;
 
@@ -56,7 +57,7 @@ public abstract class Top implements Comparator<LMPlayerServer>
 		
 		public Object getData(LMPlayerServer p)
 		{
-			if(p.isOnline()) return new ChatComponentTranslation("ftbl:label.online");
+			if(p.isOnline()) return FTBLibMod.mod.chatComponent("label.online");
 			return LMStringUtils.getTimeString(LMUtils.millis() - p.stats.lastSeen);
 		}
 	};

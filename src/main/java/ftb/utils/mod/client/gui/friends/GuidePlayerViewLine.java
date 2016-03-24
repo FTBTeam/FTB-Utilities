@@ -63,16 +63,12 @@ public class GuidePlayerViewLine extends GuideTextLine
 				if(ep1 != null)
 				{
 					player.inventory.mainInventory[0] = ep1.inventory.mainInventory[ep1.inventory.currentItem];
-					player.inventory.armorInventory = ep1.inventory.armorInventory.clone();
+					System.arraycopy(ep1.inventory.armorInventory, 0, player.inventory.armorInventory, 0, 4);
 					player.inventory.currentItem = 0;
 				}
 				else
 				{
-					for(int i = 0; i < 4; i++)
-					{
-						player.inventory.armorInventory[i] = playerLM.lastArmor[i];
-					}
-					
+					System.arraycopy(playerLM.lastArmor, 0, player.inventory.armorInventory, 0, 4);
 					player.inventory.mainInventory[0] = playerLM.lastArmor[4];
 					player.inventory.currentItem = 0;
 				}

@@ -21,7 +21,7 @@ public class Warps
 		{
 			for(String s1 : LMNBTUtils.getMapKeys(tag1))
 			{
-				set(s1, new BlockDimPos(tag1.getIntArray(s1)));
+				warps.put(s1, new BlockDimPos(tag1.getIntArray(s1)));
 			}
 		}
 	}
@@ -58,6 +58,7 @@ public class Warps
 	public void writeToJson(JsonObject g, String s)
 	{
 		JsonObject g1 = new JsonObject();
+		
 		for(Map.Entry<String, BlockDimPos> e : warps.entrySet())
 		{
 			BlockDimPos pos = e.getValue();
@@ -68,6 +69,7 @@ public class Warps
 			o.add("z", new JsonPrimitive(pos.z));
 			g1.add(e.getKey(), o);
 		}
+		
 		g.add(s, g1);
 	}
 	
@@ -83,7 +85,7 @@ public class Warps
 	public boolean set(String s, BlockDimPos pos)
 	{
 		if(pos == null) return warps.remove(s) != null;
-		return warps.put(s, pos.clone()) == null;
+		return warps.put(s, pos.copy()) == null;
 	}
 	
 	public int size()

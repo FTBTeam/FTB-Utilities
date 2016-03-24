@@ -7,7 +7,6 @@ import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.widgets.*;
 import ftb.utils.mod.FTBU;
 import ftb.utils.mod.client.FTBUClient;
-import ftb.utils.mod.client.gui.friends.GuiFriends;
 import ftb.utils.net.*;
 import ftb.utils.world.*;
 import ftb.utils.world.claims.ChunkType;
@@ -84,7 +83,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			public void onButtonPressed(int b)
 			{
 				FTBLibClient.playClickSound();
-				FTBLibClient.openGui(new GuiFriends(null));
+				gui.close(null);
 			}
 		};
 		

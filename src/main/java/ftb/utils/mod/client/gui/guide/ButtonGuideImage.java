@@ -1,5 +1,6 @@
 package ftb.utils.mod.client.gui.guide;
 
+import cpw.mods.fml.relauncher.*;
 import ftb.lib.TextureCoords;
 import ftb.lib.api.client.*;
 import ftb.lib.api.gui.GuiLM;
@@ -8,6 +9,7 @@ import ftb.utils.api.guide.lines.GuideImageLine;
 /**
  * Created by LatvianModder on 04.03.2016.
  */
+@SideOnly(Side.CLIENT)
 public class ButtonGuideImage extends ButtonGuideExtendedTextLine
 {
 	public TextureCoords texture;
@@ -28,10 +30,10 @@ public class ButtonGuideImage extends ButtonGuideExtendedTextLine
 	
 	public void renderWidget()
 	{
-		int ax = getAX();
 		int ay = getAY();
-		
 		if(ay < -height || ay > guiGuide.mainPanel.height) return;
+		int ax = getAX();
+		
 		boolean mouseOver = mouseOver();
 		
 		if(texture != null)

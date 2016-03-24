@@ -2,16 +2,14 @@ package ftb.utils.mod.client.gui.guide;
 
 import ftb.lib.TextureCoords;
 import ftb.lib.api.client.*;
-import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.widgets.*;
 import ftb.utils.api.guide.*;
 import ftb.utils.api.guide.lines.GuideTextLine;
 import latmod.lib.LMColor;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.*;
-
-public class GuiGuide extends GuiLM
+public class GuiGuide extends GuiLM implements IClientActionGui
 {
 	public static final ResourceLocation tex = new ResourceLocation("ftbu", "textures/gui/guide.png");
 	public static final TextureCoords tex_slider = new TextureCoords(tex, 0, 30, 12, 18, 64, 64);
@@ -41,6 +39,7 @@ public class GuiGuide extends GuiLM
 	
 	public final PanelLM panelPages, panelText;
 	public int colorText, colorBackground;
+	public boolean useUnicodeFont;
 	
 	public static GuiGuide clientGuideGui = null;
 	
@@ -115,15 +114,15 @@ public class GuiGuide extends GuiLM
 			{
 				height = 0;
 				
-				List<GuidePage> categoryList = new ArrayList<>();
-				categoryList.addAll(page.childPages.values());
-				Collections.sort(categoryList);
-				
-				for(GuidePage c : categoryList)
+				for(GuidePage c : page.childPages.values())
 				{
-					GuideButtonCategory b = new GuideButtonCategory(GuiGuide.this, c);
-					add(b);
-					height += b.height;
+					ButtonGuidePage b = c.createButton(GuiGuide.this);
+					
+					if(b != null && b.height > 0)
+					{
+						add(b);
+						height += b.height;
+					}
 				}
 			}
 		};
@@ -135,7 +134,7 @@ public class GuiGuide extends GuiLM
 				height = 0;
 				
 				boolean uni = fontRendererObj.getUnicodeFlag();
-				fontRendererObj.setUnicodeFlag(GuideClientSettings.unicode.get());
+				fontRendererObj.setUnicodeFlag(useUnicodeFont);
 				
 				for(GuideTextLine line : selectedPage.text)
 				{
@@ -191,12 +190,15 @@ public class GuiGuide extends GuiLM
 		buttonBack.posY = 12;
 		
 		LMColor c = page.getTextColor();
-		if(c == null) c = GuideClientSettings.text_color.value;
+		if(c == null) c = ClientSettings.text_color.value;
 		colorText = 0xFF000000 | c.color();
 		
 		c = page.getBackgroundColor();
-		if(c == null) c = GuideClientSettings.bg_color.value;
+		if(c == null) c = ClientSettings.bg_color.value;
 		colorBackground = 0xFF000000 | c.color();
+		
+		Boolean b = page.useUnicodeFont();
+		useUnicodeFont = (b == null) ? ClientSettings.unicode.get() : b.booleanValue();
 		
 		//
 		
@@ -241,11 +243,11 @@ public class GuiGuide extends GuiLM
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		
-		renderFilling(panelWidth, 0, mainPanel.width - panelWidth, mainPanel.height, GuideClientSettings.transparency.getAsInt());
+		renderFilling(panelWidth, 0, mainPanel.width - panelWidth, mainPanel.height, ClientSettings.transparency.getAsInt());
 		renderFilling(0, 36, panelWidth, mainPanel.height - 32, 255);
 		
 		boolean uni = fontRendererObj.getUnicodeFlag();
-		fontRendererObj.setUnicodeFlag(GuideClientSettings.unicode.get());
+		fontRendererObj.setUnicodeFlag(useUnicodeFont);
 		
 		panelText.renderWidget();
 		
@@ -291,5 +293,14 @@ public class GuiGuide extends GuiLM
 	{
 		FTBLibClient.setGLColor(colorBackground, a);
 		drawBlankRect(px + 4, py + 4, zLevel, w - 8, h - 8);
+	}
+	
+	public void onClientDataChanged()
+	{
+		if(selectedPage instanceof IClientActionGui)
+		{
+			((IClientActionGui) selectedPage).onClientDataChanged();
+			refreshWidgets();
+		}
 	}
 }

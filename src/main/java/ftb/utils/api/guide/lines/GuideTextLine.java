@@ -43,10 +43,10 @@ public class GuideTextLine implements IJsonObject
 	public final GuidePage page;
 	private String text;
 	
-	public GuideTextLine(GuidePage c, String cc)
+	public GuideTextLine(GuidePage c, String s)
 	{
 		page = c;
-		text = cc;
+		text = s;
 	}
 	
 	public IChatComponent getText()

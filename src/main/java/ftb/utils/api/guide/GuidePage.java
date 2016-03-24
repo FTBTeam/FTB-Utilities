@@ -4,6 +4,7 @@ import com.google.gson.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.JsonHelper;
 import ftb.utils.api.guide.lines.*;
+import ftb.utils.mod.client.gui.guide.*;
 import ftb.utils.net.MessageDisplayGuide;
 import latmod.lib.*;
 import latmod.lib.json.IJsonObject;
@@ -254,8 +255,10 @@ public class GuidePage extends FinalIDObject implements IJsonObject // GuideFile
 	public LMColor getTextColor()
 	{ return (parent == null) ? null : parent.getTextColor(); }
 	
+	public Boolean useUnicodeFont()
+	{ return (parent == null) ? null : parent.useUnicodeFont(); }
+	
 	@SideOnly(Side.CLIENT)
-	public void onPageClicked()
-	{
-	}
+	public ButtonGuidePage createButton(GuiGuide gui)
+	{ return new ButtonGuidePage(gui, this); }
 }

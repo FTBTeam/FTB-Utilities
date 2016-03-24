@@ -7,7 +7,7 @@ import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.LMGuiHandlerRegistry;
 import ftb.utils.badges.BadgeRenderer;
 import ftb.utils.mod.*;
-import ftb.utils.mod.client.gui.guide.GuideClientSettings;
+import ftb.utils.mod.client.gui.guide.ClientSettings;
 import ftb.utils.mod.cmd.CmdMath;
 import ftb.utils.net.ClientAction;
 import ftb.utils.world.*;
@@ -46,13 +46,10 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public static final ConfigEntryBool sort_friends_az = new ConfigEntryBool("sort_friends_az", false);
 	public static final ConfigEntryBool loaded_chunks_space_key = new ConfigEntryBool("loaded_chunks_space_key", false);
 	
-	@Hidden
-	public static final ConfigEntryBool hide_armor_fg = new ConfigEntryBool("hide_armor_fg", false);
-	
 	public void preInit()
 	{
 		ClientConfigRegistry.addGroup("ftbu", FTBUClient.class);
-		ClientConfigRegistry.addGroup("ftbu_guide", GuideClientSettings.class);
+		ClientConfigRegistry.addGroup("ftbu_guide", ClientSettings.class);
 		ClientCommandHandler.instance.registerCommand(new CmdMath());
 		FTBUActions.init();
 	}

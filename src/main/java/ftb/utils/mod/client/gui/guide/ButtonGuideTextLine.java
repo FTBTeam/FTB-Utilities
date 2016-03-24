@@ -1,5 +1,6 @@
 package ftb.utils.mod.client.gui.guide;
 
+import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.client.GlStateManager;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.ButtonLM;
@@ -11,6 +12,7 @@ import java.util.List;
 /**
  * Created by LatvianModder on 04.03.2016.
  */
+@SideOnly(Side.CLIENT)
 public class ButtonGuideTextLine extends ButtonLM
 {
 	public final GuiGuide guiGuide;
@@ -28,6 +30,7 @@ public class ButtonGuideTextLine extends ButtonLM
 			if(c != null)
 			{
 				text = guiGuide.getFontRenderer().listFormattedStringToWidth(c.getFormattedText(), g.panelText.width);
+				if(text.isEmpty()) text = null;
 			}
 		}
 		
@@ -54,13 +57,13 @@ public class ButtonGuideTextLine extends ButtonLM
 	
 	public void renderWidget()
 	{
-		int ax = getAX();
 		int ay = getAY();
-		
 		if(ay < -height || ay > guiGuide.mainPanel.height) return;
+		int ax = getAX();
+		
 		boolean mouseOver = mouseOver();
 		
-		if(text != null && !text.isEmpty())
+		if(text != null)
 		{
 			for(int i = 0; i < text.size(); i++)
 			{

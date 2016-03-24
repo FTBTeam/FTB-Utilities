@@ -7,7 +7,7 @@ import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.gui.*;
 import ftb.utils.mod.client.gui.claims.GuiClaimChunks;
-import ftb.utils.mod.client.gui.friends.GuiFriends;
+import ftb.utils.mod.client.gui.friends.GuideFriendsGUI;
 import ftb.utils.mod.client.gui.guide.GuiGuide;
 import ftb.utils.net.ClientAction;
 import net.minecraft.client.gui.GuiScreen;
@@ -37,7 +37,7 @@ public class FTBUActions
 		GuiScreenRegistry.register("friends_gui", new GuiScreenRegistry.Entry()
 		{
 			public GuiScreen openGui(EntityPlayer ep)
-			{ return new GuiFriends(FTBLibClient.mc.currentScreen); }
+			{ return new GuiGuide(null, new GuideFriendsGUI()); }
 		});
 		
 		GuiScreenRegistry.register("claimed_chunks", new GuiScreenRegistry.Entry()
@@ -77,7 +77,7 @@ public class FTBUActions
 	public static final PlayerAction friends_gui = new PlayerAction(PlayerAction.Type.SELF, "ftbu.friends_gui", 950, TextureCoords.getSquareIcon(new ResourceLocation("ftbu", "textures/gui/friendsbutton.png"), 256))
 	{
 		public void onClicked(ILMPlayer self, ILMPlayer other)
-		{ FTBLibClient.openGui(new GuiFriends(FTBLibClient.mc.currentScreen)); }
+		{ FTBLibClient.openGui(new GuiGuide(null, new GuideFriendsGUI())); }
 		
 		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
 		{ return FTBLibClient.isIngameWithFTBU(); }

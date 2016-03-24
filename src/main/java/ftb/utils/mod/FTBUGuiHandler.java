@@ -3,7 +3,8 @@ package ftb.utils.mod;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.gui.*;
 import ftb.utils.mod.client.gui.claims.GuiClaimChunks;
-import ftb.utils.mod.client.gui.friends.GuiFriends;
+import ftb.utils.mod.client.gui.friends.GuideFriendsGUI;
+import ftb.utils.mod.client.gui.guide.GuiGuide;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -28,7 +29,7 @@ public class FTBUGuiHandler extends LMGuiHandler
 	@SideOnly(Side.CLIENT)
 	public GuiScreen getGui(EntityPlayer ep, int id, NBTTagCompound data)
 	{
-		if(id == FRIENDS) return new GuiFriends(null);
+		if(id == FRIENDS) return new GuiGuide(null, new GuideFriendsGUI());
 		else if(id == ADMIN_CLAIMS) return new GuiClaimChunks(data.getLong("T"));
 		return null;
 	}

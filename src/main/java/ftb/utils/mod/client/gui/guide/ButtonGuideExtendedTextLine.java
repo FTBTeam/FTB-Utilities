@@ -1,5 +1,6 @@
 package ftb.utils.mod.client.gui.guide;
 
+import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.client.GlStateManager;
 import ftb.lib.api.gui.GuiLM;
 import ftb.utils.api.guide.lines.GuideExtendedTextLine;
@@ -10,6 +11,7 @@ import java.util.*;
 /**
  * Created by LatvianModder on 04.03.2016.
  */
+@SideOnly(Side.CLIENT)
 public class ButtonGuideExtendedTextLine extends ButtonGuideTextLine
 {
 	public final GuideExtendedTextLine line;
@@ -51,10 +53,10 @@ public class ButtonGuideExtendedTextLine extends ButtonGuideTextLine
 	
 	public void renderWidget()
 	{
-		int ax = getAX();
 		int ay = getAY();
-		
 		if(ay < -height || ay > guiGuide.mainPanel.height) return;
+		int ax = getAX();
+		
 		boolean mouseOver = mouseOver();
 		
 		if(text != null && !text.isEmpty())

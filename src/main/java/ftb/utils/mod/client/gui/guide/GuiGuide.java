@@ -131,6 +131,11 @@ public class GuiGuide extends GuiLM implements IClientActionGui
 		{
 			public void addWidgets()
 			{
+				for(WidgetLM w : panelPages.widgets)
+				{
+					((ButtonGuidePage) w).updateTitle();
+				}
+				
 				height = 0;
 				
 				boolean uni = fontRendererObj.getUnicodeFlag();

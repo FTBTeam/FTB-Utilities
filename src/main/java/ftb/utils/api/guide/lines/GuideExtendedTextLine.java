@@ -3,6 +3,7 @@ package ftb.utils.api.guide.lines;
 import com.google.gson.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.JsonHelper;
+import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.notification.ClickAction;
 import ftb.utils.api.guide.GuidePage;
 import ftb.utils.mod.client.gui.guide.*;
@@ -44,6 +45,7 @@ public class GuideExtendedTextLine extends GuideTextLine
 	{
 		if(clickAction != null)
 		{
+			FTBLibClient.playClickSound();
 			clickAction.onClicked();
 		}
 	}

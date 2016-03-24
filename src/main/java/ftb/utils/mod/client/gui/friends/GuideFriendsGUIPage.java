@@ -60,7 +60,18 @@ public class GuideFriendsGUIPage extends GuidePage
 		{
 			super(g, p);
 			height = 20;
+		}
+		
+		public void updateTitle()
+		{
 			title = playerLM.getProfile().getName();
+			hover = null;
+			
+			if(gui.getFontRenderer().getStringWidth(title) > width - 24)
+			{
+				hover = title + "";
+				title = gui.getFontRenderer().trimStringToWidth(title, width - 22) + "...";
+			}
 		}
 		
 		public void onButtonPressed(int b)

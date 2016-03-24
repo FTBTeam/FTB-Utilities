@@ -64,12 +64,21 @@ public class CmdLMPlayerSettings extends CommandSubLM
 		{
 			checkArgs(args, 1);
 			LMPlayerServer p = LMPlayerServer.get(ics);
+			
+			if(args[0].equals("toggle"))
+			{
+				p.getSettings().blocks = PrivacyLevel.VALUES_3[(p.getSettings().blocks.ID + 1) % 3];
+				p.sendUpdate();
+				return null;
+			}
+			
 			PrivacyLevel l = PrivacyLevel.get(args[0]);
 			if(l != null)
 			{
 				p.getSettings().blocks = l;
 				FTBLib.printChat(ics, commandName + " set to " + l.uname);
 			}
+			
 			return null;
 		}
 	}

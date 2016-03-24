@@ -18,6 +18,7 @@ public class CmdLMPlayerSettings extends CommandSubLM
 		add(new CmdSettingBool("explosions", PersonalSettings.EXPLOSIONS));
 		add(new CmdSettingBool("fake_players", PersonalSettings.FAKE_PLAYERS));
 		add(new CmdBlockSecurity("block_security"));
+		add(new CmdRenderBadge("render_badge"));
 	}
 	
 	public static class CmdSettingBool extends CommandLM
@@ -40,10 +41,10 @@ public class CmdLMPlayerSettings extends CommandSubLM
 		{
 			checkArgs(args, 1);
 			LMPlayerServer p = LMPlayerServer.get(ics);
-			boolean b = parseBoolean(ics, args[0]);
+			boolean b = args[0].equals("toggle") ? !p.getSettings().get(flag) : parseBoolean(ics, args[0]);
 			p.getSettings().set(flag, b);
 			p.sendUpdate();
-			FTBLib.printChat(ics, commandName + " set to " + b);
+			if(!args[0].equals("toggle")) FTBLib.printChat(ics, commandName + " set to " + b);
 			return null;
 		}
 	}
@@ -69,6 +70,31 @@ public class CmdLMPlayerSettings extends CommandSubLM
 				p.getSettings().blocks = l;
 				FTBLib.printChat(ics, commandName + " set to " + l.uname);
 			}
+			return null;
+		}
+	}
+	
+	public static class CmdRenderBadge extends CommandLM
+	{
+		public CmdRenderBadge(String s)
+		{
+			super(s, CommandLevel.ALL);
+		}
+		
+		public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
+		{
+			if(i == 0) return new String[] {"true", "false"};
+			return null;
+		}
+		
+		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+		{
+			checkArgs(args, 1);
+			LMPlayerServer p = LMPlayerServer.get(ics);
+			boolean b = args[0].equals("toggle") ? !p.renderBadge : parseBoolean(ics, args[0]);
+			p.renderBadge = b;
+			p.sendUpdate();
+			if(!args[0].equals("toggle")) FTBLib.printChat(ics, commandName + " set to " + b);
 			return null;
 		}
 	}

@@ -3,10 +3,10 @@ package ftb.utils.api.guide.lines;
 import com.google.gson.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.JsonHelper;
-import ftb.lib.api.notification.*;
+import ftb.lib.api.notification.ClickAction;
 import ftb.utils.api.guide.GuidePage;
 import ftb.utils.mod.client.gui.guide.*;
-import net.minecraft.util.*;
+import net.minecraft.util.IChatComponent;
 
 import java.util.*;
 
@@ -113,20 +113,7 @@ public class GuideExtendedTextLine extends GuideTextLine
 	}
 	
 	public void setClickAction(ClickAction a)
-	{
-		clickAction = a;
-		if(hover == null)
-		{
-			if(a.type == ClickActionType.FILE || a.type == ClickActionType.URL)
-			{
-				hover = Collections.singletonList((IChatComponent) new ChatComponentText(a.data.getAsString()));
-			}
-			else if(a.type == ClickActionType.CMD)
-			{
-				hover = Collections.singletonList((IChatComponent) new ChatComponentText("/" + a.data.getAsString()));
-			}
-		}
-	}
+	{ clickAction = a; }
 	
 	public void setHover(List<IChatComponent> h)
 	{

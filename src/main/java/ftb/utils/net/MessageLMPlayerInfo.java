@@ -10,7 +10,7 @@ import latmod.lib.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IChatComponent;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class MessageLMPlayerInfo extends MessageFTBU
 {
@@ -19,11 +19,13 @@ public class MessageLMPlayerInfo extends MessageFTBU
 	public MessageLMPlayerInfo(LMPlayerServer owner, int playerID)
 	{
 		this();
+		
+		NBTTagCompound tag = new NBTTagCompound();
+		
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(playerID);
 		io.writeInt(p == null ? 0 : p.getPlayerID());
-		if(p == null) return;
 		
-		ArrayList<IChatComponent> info = new ArrayList<>();
+		List<IChatComponent> info = new ArrayList<>();
 		p.getInfo(owner, info);
 		
 		int s = Math.min(255, info.size());
@@ -32,7 +34,6 @@ public class MessageLMPlayerInfo extends MessageFTBU
 		for(int i = 0; i < s; i++)
 			io.writeUTF(IChatComponent.Serializer.func_150696_a(info.get(i)));
 		
-		NBTTagCompound tag = new NBTTagCompound();
 		LMInvUtils.writeItemsToNBT(p.lastArmor, tag, "A");
 		writeTag(tag);
 		
@@ -50,7 +51,7 @@ public class MessageLMPlayerInfo extends MessageFTBU
 		if(p == null) return null;
 		
 		int s = io.readUnsignedByte();
-		ArrayList<IChatComponent> info = new ArrayList<>();
+		List<IChatComponent> info = new ArrayList<>();
 		for(int i = 0; i < s; i++)
 			info.add(IChatComponent.Serializer.func_150699_a(io.readUTF()));
 		p.receiveInfo(info);

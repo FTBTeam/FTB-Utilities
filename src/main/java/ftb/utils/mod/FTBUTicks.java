@@ -58,7 +58,7 @@ public class FTBUTicks
 					
 					if(secondsLeft <= 10 || secondsLeft == 30 || secondsLeft == 60 || secondsLeft == 300 || secondsLeft == 600 || secondsLeft == 1800)
 					{
-						IChatComponent c = new ChatComponentTranslation(FTBU.mod.assets + "server_restart", msg);
+						IChatComponent c = FTBU.mod.chatComponent("server_restart", msg);
 						c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE);
 						FTBLib.printChat(BroadcastSender.inst, c);
 					}

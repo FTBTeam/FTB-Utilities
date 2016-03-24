@@ -8,13 +8,12 @@ import ftb.utils.api.guide.GuidePage;
 import ftb.utils.mod.client.gui.guide.*;
 import ftb.utils.net.ClientAction;
 import ftb.utils.world.*;
-import net.minecraft.util.IChatComponent;
 
 /**
  * Created by LatvianModder on 24.03.2016.
  */
 @SideOnly(Side.CLIENT)
-public class GuideFriendsGUIPage extends GuidePage implements IClientActionGui
+public class GuideFriendsGUIPage extends GuidePage
 {
 	public final LMPlayerClient playerLM;
 	
@@ -30,25 +29,26 @@ public class GuideFriendsGUIPage extends GuidePage implements IClientActionGui
 		
 		text.add(new GuidePlayerViewLine(this, playerLM));
 		
-		
 		if(!playerLM.clientInfo.isEmpty())
 		{
-			for(IChatComponent c : playerLM.clientInfo)
-				printlnText(c.getFormattedText());
+			for(String s : playerLM.clientInfo)
+				printlnText(s);
 			
 			text.add(null);
 		}
 		
-		for(PlayerAction a : PlayerActionRegistry.getPlayerActions(LMWorldClient.inst.clientPlayer.equalsPlayer(playerLM) ? PlayerAction.Type.SELF : PlayerAction.Type.OTHER, LMWorldClient.inst.clientPlayer, playerLM, true, true))
+		for(PlayerAction a : PlayerActionRegistry.getPlayerActions(PlayerAction.Type.OTHER, LMWorldClient.inst.clientPlayer, playerLM, true, true))
 		{
 			text.add(new GuidePlayerActionLine(this, playerLM, a));
 		}
 		
+		/*
 		if(LMWorldClient.inst.clientPlayer.isFriend(playerLM))
 		{
 			text.add(null);
 			text.add(new GuidePlayerInventoryLine(this, playerLM));
 		}
+		*/
 	}
 	
 	public ButtonGuidePage createButton(GuiGuide gui)
@@ -60,13 +60,12 @@ public class GuideFriendsGUIPage extends GuidePage implements IClientActionGui
 		{
 			super(g, p);
 			height = 20;
-			
 			title = playerLM.getProfile().getName();
 		}
 		
 		public void onButtonPressed(int b)
 		{
-			ClientAction.REQUEST_PLAYER_INFO.send(LMWorldClient.inst.clientPlayerID);
+			ClientAction.REQUEST_PLAYER_INFO.send(playerLM.getPlayerID());
 			super.onButtonPressed(b);
 		}
 		

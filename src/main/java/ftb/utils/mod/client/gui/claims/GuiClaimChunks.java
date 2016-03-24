@@ -61,7 +61,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	public final LMPlayerClientSelf playerLM;
 	public final int currentDim, startX, startY;
 	
-	public final ButtonLM buttonRefresh, buttonClose, buttonSettings, buttonUnclaimAll;
+	public final ButtonLM buttonRefresh, buttonClose, buttonUnclaimAll;
 	public final MapButton mapButtons[];
 	public final PanelLM panelButtons;
 	
@@ -101,18 +101,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		
 		buttonRefresh.title = FTBLibLang.button_refresh();
 		
-		buttonSettings = new ButtonLM(this, 0, 32, 16, 16)
-		{
-			public void onButtonPressed(int b)
-			{
-				FTBLibClient.playClickSound();
-				ClientAction.BUTTON_CLAIMED_CHUNKS_SETTINGS.send(0);
-			}
-		};
-		
-		buttonSettings.title = FTBLibLang.button_settings();
-		
-		buttonUnclaimAll = new ButtonLM(this, 0, 48, 16, 16)
+		buttonUnclaimAll = new ButtonLM(this, 0, 32, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
@@ -138,7 +127,6 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 				
 				if(adminToken == 0L)
 				{
-					add(buttonSettings);
 					add(buttonUnclaimAll);
 				}
 				
@@ -225,7 +213,6 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		
 		if(adminToken == 0L)
 		{
-			buttonSettings.render(GuiIcons.settings);
 			buttonUnclaimAll.render(GuiIcons.remove);
 		}
 	}

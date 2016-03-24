@@ -29,7 +29,7 @@ public class GuideFriendsGUI extends GuidePage
 		if(FTBUClient.sort_friends_az.get()) Collections.sort(tempPlayerList, LMPNameComparator.instance);
 		else Collections.sort(tempPlayerList, new LMPStatusComparator(LMWorldClient.inst.clientPlayer));
 		
-		addSub(new GuideFriendsGUIPage(LMWorldClient.inst.clientPlayer));
+		addSub(new GuideFriendsGUISelfPage());
 		
 		for(LMPlayer p : tempPlayerList)
 		{

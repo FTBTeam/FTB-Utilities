@@ -60,7 +60,7 @@ public class FTBUPlayerEventHandler
 		if(LMWorldServer.inst.settings.getWB(ep.dimension).isOutsideD(ep.posX, ep.posZ))
 		{
 			ep.motionX = ep.motionY = ep.motionZ = 0D;
-			IChatComponent warning = new ChatComponentTranslation(FTBU.mod.assets + ChunkType.WORLD_BORDER.lang + ".warning");
+			IChatComponent warning = FTBU.mod.chatComponent(ChunkType.WORLD_BORDER.lang + ".warning");
 			warning.getChatStyle().setColor(EnumChatFormatting.WHITE);
 			Notification n = new Notification("world_border", warning, 3000);
 			n.color = ChunkType.WORLD_BORDER.getAreaColor(player);
@@ -68,7 +68,7 @@ public class FTBUPlayerEventHandler
 			
 			if(LMWorldServer.inst.settings.getWB(player.lastPos.dim).isOutsideD(player.lastPos.x, player.lastPos.z))
 			{
-				FTBLib.printChat(ep, new ChatComponentTranslation(FTBU.mod.assets + "cmd.spawn_tp"));
+				FTBLib.printChat(ep, FTBU.mod.chatComponent("cmd.spawn_tp"));
 				World w = LMDimUtils.getWorld(0);
 				Pos2I pos = LMWorldServer.inst.settings.getWB(0).pos;
 				int posY = w.getTopSolidOrLiquidBlock(pos.x, pos.y);
@@ -89,7 +89,7 @@ public class FTBUPlayerEventHandler
 			
 			if(type.isClaimed())
 				msg = new ChatComponentText(String.valueOf(LMWorldServer.inst.getPlayer(currentChunkType)));
-			else msg = new ChatComponentTranslation(FTBU.mod.assets + type.lang);
+			else msg = FTBU.mod.chatComponent(type.lang);
 			
 			msg.getChatStyle().setColor(EnumChatFormatting.WHITE);
 			msg.getChatStyle().setBold(true);

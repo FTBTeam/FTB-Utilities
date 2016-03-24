@@ -61,11 +61,9 @@ public class ButtonGuideExtendedTextLine extends ButtonGuideTextLine
 		
 		if(text != null && !text.isEmpty())
 		{
-			int color = line.hasClickAction() ? 0xFF0000FF : guiGuide.colorText;
-			
 			for(int i = 0; i < text.size(); i++)
 			{
-				gui.getFontRenderer().drawString(text.get(i), ax, ay + i * 10, color);
+				gui.getFontRenderer().drawString(text.get(i), ax, ay + i * 10, guiGuide.colorText);
 			}
 		}
 		

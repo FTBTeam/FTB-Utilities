@@ -1,11 +1,7 @@
 package ftb.utils.net;
 
-import ftb.lib.PrivacyLevel;
-import ftb.lib.api.config.ConfigRegistry;
 import ftb.utils.api.guide.ServerGuideFile;
-import ftb.utils.badges.*;
 import ftb.utils.world.*;
-import latmod.lib.config.*;
 
 import java.util.HashMap;
 
@@ -116,16 +112,6 @@ public abstract class ClientAction
 		}
 	};
 	
-	public static final ClientAction REQUEST_BADGE = new ClientAction()
-	{
-		public boolean onAction(int extra, LMPlayerServer owner)
-		{
-			Badge b = ServerBadges.getServerBadge(owner.world.getPlayer(extra));
-			if(b != Badge.emptyBadge) new MessageSendBadge(extra, b.getID()).sendTo(owner.getPlayer());
-			return false;
-		}
-	};
-	
 	public static final ClientAction BUTTON_RENDER_BADGE = new ClientAction()
 	{
 		public boolean onAction(int extra, LMPlayerServer owner)
@@ -141,45 +127,6 @@ public abstract class ClientAction
 		{
 			owner.getSettings().set(PersonalSettings.CHAT_LINKS, extra == 1);
 			return true;
-		}
-	};
-	
-	public static final ClientAction BUTTON_CLAIMED_CHUNKS_SETTINGS = new ClientAction()
-	{
-		public boolean onAction(int extra, final LMPlayerServer owner)
-		{
-			ConfigFile file = ConfigRegistry.createTempConfig(owner.getPlayer());
-			file.setDisplayName("Settings");
-			
-			file.add(new ConfigEntryBool("explosions", true)
-			{
-				public boolean get()
-				{ return owner.getSettings().get(PersonalSettings.EXPLOSIONS); }
-				
-				public void set(boolean v)
-				{ owner.getSettings().set(PersonalSettings.EXPLOSIONS, v); }
-			}, false);
-			
-			file.add(new ConfigEntryBool("allow_fake_players", false)
-			{
-				public boolean get()
-				{ return owner.getSettings().get(PersonalSettings.FAKE_PLAYERS); }
-				
-				public void set(boolean v)
-				{ owner.getSettings().set(PersonalSettings.FAKE_PLAYERS, v); }
-			}, false);
-			
-			file.add(new ConfigEntryEnum<PrivacyLevel>("block_security", PrivacyLevel.VALUES_3, PrivacyLevel.FRIENDS, false)
-			{
-				public PrivacyLevel get()
-				{ return owner.getSettings().blocks; }
-				
-				public void set(Object v)
-				{ owner.getSettings().blocks = (PrivacyLevel) v; }
-			}, false);
-			
-			ConfigRegistry.editTempConfig(owner.getPlayer(), file, false);
-			return false;
 		}
 	};
 	
@@ -200,10 +147,9 @@ public abstract class ClientAction
 		register(4, REQUEST_PLAYER_INFO);
 		register(5, REQUEST_SERVER_INFO);
 		register(6, REQUEST_SELF_UPDATE);
-		register(7, REQUEST_BADGE);
+		//register(7, REQUEST_BADGE);
 		register(8, BUTTON_RENDER_BADGE);
 		register(9, BUTTON_CHAT_LINKS);
-		register(10, BUTTON_CLAIMED_CHUNKS_SETTINGS);
 	}
 	
 	private byte ID;

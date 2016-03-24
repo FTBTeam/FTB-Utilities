@@ -16,6 +16,7 @@ import latmod.lib.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.stats.StatisticsFile;
 import net.minecraft.util.*;
 import net.minecraftforge.common.util.FakePlayer;
 
@@ -49,7 +50,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		super(i, gp);
 		world = w;
 		settings = new PersonalSettings();
-		stats = new LMPlayerStats(this);
+		stats = new LMPlayerStats();
 		homes = new Warps();
 	}
 	
@@ -120,13 +121,13 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			
 			if(raw1 && raw2)
 			{
-				IChatComponent c = new ChatComponentTranslation(FTBU.mod.assets + "label.friend");
+				IChatComponent c = FTBU.mod.chatComponent("label.friend");
 				c.getChatStyle().setColor(EnumChatFormatting.GREEN);
 				info.add(c);
 			}
 			else if(raw1 || raw2)
 			{
-				IChatComponent c = new ChatComponentTranslation(FTBU.mod.assets + "label.pfriend");
+				IChatComponent c = FTBU.mod.chatComponent("label.pfriend");
 				c.getChatStyle().setColor(raw1 ? EnumChatFormatting.GOLD : EnumChatFormatting.BLUE);
 				info.add(c);
 			}
@@ -141,14 +142,15 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			rankC.getChatStyle().setColor(rank.color.get());
 			info.add(rankC);
 		}
-		stats.getInfo(info, ms);
+		
+		stats.getInfo(this, info, ms);
 	}
 	
 	public void refreshStats()
 	{
 		if(isOnline())
 		{
-			stats.refreshStats();
+			stats.refresh(this, false);
 			getPos();
 		}
 	}
@@ -284,10 +286,10 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			
 			if(requests.size() > 0)
 			{
-				IChatComponent cc = new ChatComponentTranslation(FTBU.mod.assets + "label.new_friends");
+				IChatComponent cc = FTBU.mod.chatComponent("label.new_friends");
 				cc.getChatStyle().setColor(EnumChatFormatting.GREEN);
 				Notification n = new Notification("new_friend_requests", cc, 6000);
-				n.setDesc(new ChatComponentTranslation(FTBU.mod.assets + "label.new_friends_click"));
+				n.setDesc(FTBU.mod.chatComponent("label.new_friends_click"));
 				
 				MouseAction mouse = new MouseAction();
 				mouse.click = new ClickAction(FTBUClickAction.FRIEND_ADD_ALL, null);
@@ -386,4 +388,10 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public boolean allowInteractSecure()
 	{ return getPlayer() != null && isOP(); }
+	
+	public StatisticsFile getStatFile(boolean force)
+	{
+		if(isOnline()) return getPlayer().func_147099_x();
+		return force ? FTBLib.getServer().getConfigurationManager().func_152602_a(new FakePlayer(FTBLib.getServerWorld(), getProfile())) : null;
+	}
 }

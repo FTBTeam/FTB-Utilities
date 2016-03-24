@@ -21,11 +21,12 @@ public class FTBUNetHandler
 		//NET.register(MessageLMPlayerUpdateSettings.class, 8, Side.SERVER);
 		
 		NET_INFO.register(MessageLMPlayerInfo.class, 1, Side.CLIENT);
-		NET_INFO.register(MessagePing.class, 2, Side.SERVER);
-		NET_INFO.register(MessagePingResponse.class, 3, Side.CLIENT);
+		//NET_INFO.register(MessagePing.class, 2, Side.SERVER);
+		//NET_INFO.register(MessagePingResponse.class, 3, Side.CLIENT);
 		NET_INFO.register(MessageDisplayGuide.class, 4, Side.CLIENT);
 		NET_INFO.register(MessageSendBadge.class, 5, Side.CLIENT);
 		NET_INFO.register(MessageUpdateBadges.class, 6, Side.CLIENT);
+		NET_INFO.register(MessageRequestBadge.class, 7, Side.CLIENT);
 		
 		NET_WORLD.register(MessageAreaUpdate.class, 1, Side.CLIENT);
 		NET_WORLD.register(MessageAreaRequest.class, 2, Side.SERVER);

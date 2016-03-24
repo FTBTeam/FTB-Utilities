@@ -151,7 +151,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 						{
 							double max = p.getRank().config.offline_chunkloader_timer.get();
 							
-							if(max > 0D && p.stats.getLastSeenDeltaInHours() > max)
+							if(max > 0D && p.stats.getLastSeenDeltaInHours(p) > max)
 							{
 								isLoaded = false;
 								//if(c.isForced) unloaded.add(p.getPlayerID());

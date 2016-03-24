@@ -3,6 +3,7 @@ package ftb.utils.api.guide;
 import com.google.gson.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.JsonHelper;
+import ftb.lib.api.gui.IClientActionGui;
 import ftb.utils.api.guide.lines.*;
 import ftb.utils.mod.client.gui.guide.*;
 import ftb.utils.net.MessageDisplayGuide;
@@ -16,7 +17,7 @@ import net.minecraftforge.common.util.FakePlayer;
 import java.io.File;
 import java.util.*;
 
-public class GuidePage extends FinalIDObject implements IJsonObject // GuideFile
+public class GuidePage extends FinalIDObject implements IJsonObject, IClientActionGui // GuideFile
 {
 	private static final RemoveFilter<Map.Entry<String, GuidePage>> cleanupFilter = new RemoveFilter<Map.Entry<String, GuidePage>>()
 	{
@@ -103,7 +104,10 @@ public class GuidePage extends FinalIDObject implements IJsonObject // GuideFile
 	}
 	
 	public void addSub(GuidePage c)
-	{ childPages.put(c.getID(), c); }
+	{
+		childPages.put(c.getID(), c);
+		c.setParent(this);
+	}
 	
 	public IChatComponent getTitleComponent()
 	{ return title == null ? new ChatComponentText(getID()) : title; }
@@ -229,7 +233,7 @@ public class GuidePage extends FinalIDObject implements IJsonObject // GuideFile
 					for(String s : LMFileUtils.load(f))
 					{
 						if(s.isEmpty()) c1.text.add(null);
-						else if(s.startsWith("{") && s.endsWith("}"))
+						else if(s.length() > 2 && s.charAt(0) == '{' && s.charAt(s.length() - 1) == '}')
 						{
 							c1.text.add(GuideTextLine.get(c1, LMJsonUtils.fromJson(s)));
 						}
@@ -261,4 +265,14 @@ public class GuidePage extends FinalIDObject implements IJsonObject // GuideFile
 	@SideOnly(Side.CLIENT)
 	public ButtonGuidePage createButton(GuiGuide gui)
 	{ return new ButtonGuidePage(gui, this); }
+	
+	public String getFullID()
+	{
+		if(parent == null) return getID();
+		return parent.getFullID() + '.' + getID();
+	}
+	
+	public void onClientDataChanged()
+	{
+	}
 }

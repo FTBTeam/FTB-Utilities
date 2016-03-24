@@ -50,6 +50,6 @@ public class CmdTplast extends CommandLM
 		BlockDimPos p = to.getPos();
 		if(p == null) return error(new ChatComponentText("No last position!"));
 		LMDimUtils.teleportPlayer(who, p);
-		return new ChatComponentTranslation(FTBU.mod.assets + "cmd.warp_tp", to.getProfile().getName());
+		return FTBU.mod.chatComponent("cmd.warp_tp", to.getProfile().getName());
 	}
 }

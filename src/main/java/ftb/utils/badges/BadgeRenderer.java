@@ -17,12 +17,16 @@ public class BadgeRenderer
 	{
 		if(FTBLibClient.isIngameWithFTBU() && FTBUClient.render_badges.get() && !e.entityPlayer.isInvisible())
 		{
-			LMPlayerClient pc = LMWorldClient.inst.getPlayer(e.entityPlayer);
+			Badge b = ClientBadges.getClientBadge(e.entityPlayer.getGameProfile().getId());
 			
-			if(pc != null && pc.renderBadge)
+			if(b != null && b != Badge.emptyBadge)
 			{
-				Badge b = ClientBadges.getClientBadge(pc.getPlayerID());
-				b.onPlayerRender(e.entityPlayer);
+				LMPlayerClient pc = LMWorldClient.inst.getPlayer(e.entityPlayer);
+				
+				if(pc != null && pc.renderBadge)
+				{
+					b.onPlayerRender(e.entityPlayer);
+				}
 			}
 		}
 	}

@@ -15,7 +15,7 @@ import java.util.*;
 public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClientSelf
 {
 	public final LMWorldClient world;
-	public final List<IChatComponent> clientInfo;
+	public final List<String> clientInfo;
 	public boolean isOnline;
 	
 	public LMPlayerClient(LMWorldClient w, int i, GameProfile gp)
@@ -53,7 +53,12 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 	public void receiveInfo(List<IChatComponent> info)
 	{
 		clientInfo.clear();
-		clientInfo.addAll(info);
+		
+		for(IChatComponent c : info)
+		{
+			clientInfo.add(c.getFormattedText());
+		}
+		
 		new EventLMPlayerClient.CustomInfo(this, clientInfo).post();
 	}
 	

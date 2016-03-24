@@ -2,7 +2,6 @@ package ftb.utils.api;
 
 import cpw.mods.fml.relauncher.Side;
 import ftb.utils.world.*;
-import net.minecraft.util.IChatComponent;
 
 import java.util.List;
 
@@ -52,9 +51,9 @@ public abstract class EventLMPlayerClient extends EventLMPlayer
 	
 	public static class CustomInfo extends EventLMPlayerClient
 	{
-		public final List<IChatComponent> info;
+		public final List<String> info;
 		
-		public CustomInfo(LMPlayerClient p, List<IChatComponent> l)
+		public CustomInfo(LMPlayerClient p, List<String> l)
 		{
 			super(p);
 			info = l;

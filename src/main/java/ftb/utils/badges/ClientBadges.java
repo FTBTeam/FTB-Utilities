@@ -1,16 +1,16 @@
 package ftb.utils.badges;
 
-import ftb.utils.net.ClientAction;
+import ftb.utils.net.MessageRequestBadge;
 
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Created by LatvianModder on 07.01.2016.
  */
 public class ClientBadges
 {
-	private static final HashMap<String, Badge> map = new HashMap<>();
-	private static final HashMap<Integer, Badge> playerBadges = new HashMap<>();
+	private static final Map<String, Badge> map = new HashMap<>();
+	private static final Map<UUID, Badge> playerBadges = new HashMap<>();
 	
 	public static void clear()
 	{
@@ -18,14 +18,14 @@ public class ClientBadges
 		playerBadges.clear();
 	}
 	
-	public static Badge getClientBadge(int playerID)
+	public static Badge getClientBadge(UUID playerID)
 	{
 		Badge b = playerBadges.get(playerID);
 		if(b == null)
 		{
 			b = Badge.emptyBadge;
 			playerBadges.put(playerID, b);
-			ClientAction.REQUEST_BADGE.send(playerID);
+			new MessageRequestBadge(playerID).sendToServer();
 		}
 		
 		return b;
@@ -34,9 +34,9 @@ public class ClientBadges
 	public static void addBadge(Badge b)
 	{ if(b != null && !b.equals(Badge.emptyBadge)) map.put(b.getID(), b); }
 	
-	public static void setClientBadge(int playerID, String badge)
+	public static void setClientBadge(UUID playerID, String badge)
 	{
-		if(playerID <= 0 || badge == null || badge.isEmpty() || badge.equalsIgnoreCase(Badge.emptyBadge.getID()))
+		if(playerID == null || badge == null || badge.isEmpty() || badge.equalsIgnoreCase(Badge.emptyBadge.getID()))
 			return;
 		
 		Badge b = map.get(badge);

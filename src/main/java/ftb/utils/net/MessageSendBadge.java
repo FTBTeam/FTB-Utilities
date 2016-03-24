@@ -6,14 +6,16 @@ import ftb.lib.api.net.LMNetworkWrapper;
 import ftb.utils.badges.ClientBadges;
 import latmod.lib.ByteCount;
 
+import java.util.UUID;
+
 public class MessageSendBadge extends MessageFTBU
 {
 	public MessageSendBadge() { super(ByteCount.BYTE); }
 	
-	public MessageSendBadge(int player, String id)
+	public MessageSendBadge(UUID player, String id)
 	{
 		this();
-		io.writeInt(player);
+		io.writeUUID(player);
 		io.writeUTF(id);
 	}
 	
@@ -23,7 +25,7 @@ public class MessageSendBadge extends MessageFTBU
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{
-		int player = io.readInt();
+		UUID player = io.readUUID();
 		String badge = io.readUTF();
 		ClientBadges.setClientBadge(player, badge);
 		return null;

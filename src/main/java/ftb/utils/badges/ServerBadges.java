@@ -4,7 +4,7 @@ import com.google.gson.*;
 import ftb.lib.FTBLib;
 import ftb.utils.mod.FTBU;
 import ftb.utils.net.MessageUpdateBadges;
-import ftb.utils.world.LMPlayerServer;
+import ftb.utils.world.*;
 import latmod.lib.*;
 import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.net.*;
@@ -122,15 +122,16 @@ public class ServerBadges
 		}
 	}
 	
-	public static Badge getServerBadge(LMPlayerServer p)
+	public static Badge getServerBadge(UUID id)
 	{
-		if(p == null) return Badge.emptyBadge;
+		if(id == null) return Badge.emptyBadge;
 		
-		Badge b = uuid.get(p.getProfile().getId());
+		Badge b = uuid.get(id);
 		if(b != null) return b;
 		
 		if(b == null)
 		{
+			LMPlayerServer p = LMWorldServer.inst.getPlayer(id);
 			String rank = p.getRank().config.badge.get();
 			if(!rank.isEmpty())
 			{

@@ -3,13 +3,13 @@ package ftb.utils.mod.client;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.EventBusHelper;
 import ftb.lib.api.config.ClientConfigRegistry;
+import ftb.lib.api.config.old.ConfigEntryBool;
 import ftb.lib.api.gui.LMGuiHandlerRegistry;
 import ftb.utils.badges.BadgeRenderer;
 import ftb.utils.mod.*;
 import ftb.utils.mod.client.gui.guide.ClientSettings;
 import ftb.utils.mod.cmd.CmdMath;
 import ftb.utils.world.*;
-import latmod.lib.config.ConfigEntryBool;
 import net.minecraftforge.client.ClientCommandHandler;
 
 @SideOnly(Side.CLIENT)

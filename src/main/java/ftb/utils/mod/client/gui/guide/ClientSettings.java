@@ -1,7 +1,7 @@
 package ftb.utils.mod.client.gui.guide;
 
+import ftb.lib.api.config.old.*;
 import latmod.lib.LMColor;
-import latmod.lib.config.*;
 
 /**
  * Created by LatvianModder on 22.03.2016.

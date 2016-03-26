@@ -2,9 +2,9 @@ package ftb.utils.world;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
+import ftb.lib.api.config.old.ConfigGroup;
 import ftb.utils.mod.FTBU;
 import ftb.utils.world.claims.LMWorldSettings;
-import latmod.lib.config.ConfigGroup;
 import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;

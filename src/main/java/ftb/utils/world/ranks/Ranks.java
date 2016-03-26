@@ -1,7 +1,7 @@
 package ftb.utils.world.ranks;
 
+import ftb.lib.api.config.old.*;
 import ftb.utils.world.LMPlayerServer;
-import latmod.lib.config.*;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.util.*;

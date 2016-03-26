@@ -1,6 +1,6 @@
 package ftb.utils.mod.config;
 
-import latmod.lib.config.ConfigEntryBool;
+import ftb.lib.api.config.old.ConfigEntryBool;
 
 public class FTBUConfigTops // Top
 {

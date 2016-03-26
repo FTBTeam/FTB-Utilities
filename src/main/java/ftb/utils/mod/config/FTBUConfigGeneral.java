@@ -1,8 +1,8 @@
 package ftb.utils.mod.config;
 
 import cpw.mods.fml.relauncher.Side;
+import ftb.lib.api.config.old.*;
 import latmod.lib.Info;
-import latmod.lib.config.*;
 import net.minecraft.entity.*;
 
 import java.util.ArrayList;

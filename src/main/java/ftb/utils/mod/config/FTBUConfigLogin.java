@@ -1,9 +1,9 @@
 package ftb.utils.mod.config;
 
 import ftb.lib.FTBLib;
+import ftb.lib.api.config.old.ConfigEntryStringArray;
 import ftb.lib.api.item.ItemStackSerializer;
 import latmod.lib.Info;
-import latmod.lib.config.ConfigEntryStringArray;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 

@@ -2,8 +2,8 @@ package ftb.utils.mod.config;
 
 import ftb.lib.FTBLib;
 import ftb.lib.api.config.ConfigRegistry;
+import ftb.lib.api.config.old.ConfigFile;
 import ftb.utils.world.ranks.Ranks;
-import latmod.lib.config.ConfigFile;
 
 import java.io.File;
 

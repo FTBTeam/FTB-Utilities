@@ -1,7 +1,7 @@
 package ftb.utils.mod.config;
 
+import ftb.lib.api.config.old.*;
 import latmod.lib.Info;
-import latmod.lib.config.*;
 
 public class FTBUConfigBackups
 {

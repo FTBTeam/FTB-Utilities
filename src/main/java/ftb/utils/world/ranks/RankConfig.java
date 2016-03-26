@@ -1,9 +1,9 @@
 package ftb.utils.world.ranks;
 
 import ftb.lib.PrivacyLevel;
+import ftb.lib.api.config.old.*;
 import ftb.utils.world.claims.ChunkloaderType;
 import latmod.lib.*;
-import latmod.lib.config.*;
 import latmod.lib.util.EnumEnabled;
 
 public class RankConfig

@@ -3,7 +3,7 @@ package ftb.utils.journeymap;
 import ftb.lib.TextureCoords;
 import ftb.lib.api.*;
 import ftb.utils.*;
-import ftb.utils.client.gui.GuiClaimChunks;
+import ftb.utils.client.gui.claims.GuiClaimChunks;
 import ftb.utils.world.*;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.display.*;
@@ -30,7 +30,7 @@ public class JMPluginHandler implements IJMPluginHandler
 	{
 		clientAPI.removeAll(FTBUFinals.MOD_ID);
 		
-		if(FTBUWorldDataSP.exists() && !FTBUWorldDataSP.get().chunks.isEmpty() && clientAPI.playerAccepts(FTBUFinals.MOD_ID, DisplayType.Polygon))
+		if(FTBUWorldDataSP.get().isLoaded() && !FTBUWorldDataSP.get().chunks.isEmpty() && clientAPI.playerAccepts(FTBUFinals.MOD_ID, DisplayType.Polygon))
 		{
 			for(ChunkCoordIntPair pos : FTBUWorldDataSP.get().chunks.keySet())
 			{

@@ -5,7 +5,6 @@ import com.mojang.authlib.GameProfile;
 import ftb.lib.FTBLib;
 import ftb.lib.api.permissions.*;
 import latmod.lib.*;
-import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.io.File;
@@ -59,7 +58,7 @@ public class Ranks implements IPermissionHandler
 				
 				for(Map.Entry<String, JsonElement> entry : o.get("ranks").getAsJsonObject().entrySet())
 				{
-					ranks.get(entry.getKey()).setJson(entry.getValue().getAsJsonObject());
+					ranks.get(entry.getKey()).fromJson(entry.getValue().getAsJsonObject());
 				}
 				
 				defaultRank = ranks.get(o.get("default_rank").getAsString());
@@ -69,8 +68,8 @@ public class Ranks implements IPermissionHandler
 				JsonObject o = new JsonObject();
 				o.add("default_rank", new JsonPrimitive(PLAYER.getID()));
 				JsonObject o1 = new JsonObject();
-				o1.add(PLAYER.getID(), PLAYER.getJson());
-				o1.add(ADMIN.getID(), ADMIN.getJson());
+				o1.add(PLAYER.getID(), PLAYER.getSerializableElement());
+				o1.add(ADMIN.getID(), ADMIN.getSerializableElement());
 				o.add("ranks", o1);
 				LMJsonUtils.toJson(fileRanks, o);
 			}
@@ -89,7 +88,7 @@ public class Ranks implements IPermissionHandler
 			{
 				for(Map.Entry<String, JsonElement> entry : e.getAsJsonObject().entrySet())
 				{
-					UUID id = UUIDTypeAdapterLM.getUUID(entry.getKey());
+					UUID id = LMUtils.fromString(entry.getKey());
 					if(id != null)
 					{
 						String s = entry.getValue().getAsString();
@@ -127,7 +126,7 @@ public class Ranks implements IPermissionHandler
 			
 			for(Rank r : ranks.values())
 			{
-				o1.add(r.getID(), r.getJson());
+				o1.add(r.getID(), r.getSerializableElement());
 			}
 			
 			o.add("ranks", o1);
@@ -136,7 +135,7 @@ public class Ranks implements IPermissionHandler
 			o = new JsonObject();
 			for(Map.Entry<UUID, Rank> entry : playerMap.entrySet())
 			{
-				o.add(UUIDTypeAdapterLM.getString(entry.getKey()), new JsonPrimitive(entry.getValue().getID()));
+				o.add(LMUtils.fromUUID(entry.getKey()), new JsonPrimitive(entry.getValue().getID()));
 			}
 			LMJsonUtils.toJson(filePlayers, o);
 		}
@@ -166,10 +165,14 @@ public class Ranks implements IPermissionHandler
 			{
 				list.add(p.getID());
 				
-				if(p.info != null)
+				String[] info = p.getInfo();
+				
+				if(info != null && info.length > 0)
 				{
-					for(String s : p.info)
+					for(String s : info)
+					{
 						list.add("  " + s);
+					}
 				}
 				
 				list.add("");
@@ -178,34 +181,40 @@ public class Ranks implements IPermissionHandler
 			list.add("-- Config --");
 			list.add("");
 			
+			String[] info;
+			
 			for(RankConfig p : sortedRankConfigs)
 			{
 				list.add(p.getID());
 				
-				if(p.configData.info != null)
+				info = p.getInfo();
+				
+				if(info != null && info.length > 0)
 				{
-					for(String s : p.configData.info)
+					for(String s : info)
+					{
 						list.add("  " + s);
+					}
 				}
 				
-				if(!PrimitiveType.isNull(p.configData.type))
+				/*FIXME: if(!PrimitiveType.isNull(p.configData.type))
 				{
 					list.add("  Type: " + p.configData.type);
 				}
 				
-				if(p.configData.min() != Double.NEGATIVE_INFINITY)
+				if(p.getMin() != Double.NEGATIVE_INFINITY)
 				{
 					if(p.configData.type == PrimitiveType.DOUBLE || p.configData.type == PrimitiveType.FLOAT)
-						list.add("  Min: " + p.configData.min());
-					else list.add("  Min: " + (long) p.configData.min());
+						list.add("  Min: " + p.getMin());
+					else list.add("  Min: " + (long) p.getMin());
 				}
 				
-				if(p.configData.max() != Double.POSITIVE_INFINITY)
+				if(p.getMax() != Double.POSITIVE_INFINITY)
 				{
 					if(p.configData.type == PrimitiveType.DOUBLE || p.configData.type == PrimitiveType.FLOAT)
-						list.add("  Max: " + p.configData.max());
-					else list.add("  Max: " + (long) p.configData.max());
-				}
+						list.add("  Max: " + p.getMax());
+					else list.add("  Max: " + (long) p.getMax());
+				}*/
 				
 				list.add("");
 			}
@@ -226,7 +235,7 @@ public class Ranks implements IPermissionHandler
 			JsonObject o1 = new JsonObject();
 			
 			Rank rankPlayer = new Rank(PLAYER.getID());
-			rankPlayer.setJson(PLAYER.getJson());
+			rankPlayer.fromJson(PLAYER.getSerializableElement());
 			
 			for(RankConfig p : sortedRankConfigs)
 			{
@@ -240,11 +249,11 @@ public class Ranks implements IPermissionHandler
 				rankPlayer.permissions.put(c.getID(), c.playerValue);
 			}
 			
-			o1.add(rankPlayer.getID(), rankPlayer.getJson());
+			o1.add(rankPlayer.getID(), rankPlayer.getSerializableElement());
 			
 			Rank rankAdmin = new Rank(ADMIN.getID());
 			rankAdmin.parent = rankPlayer;
-			rankAdmin.setJson(ADMIN.getJson());
+			rankAdmin.fromJson(ADMIN.getSerializableElement());
 			
 			for(RankConfig p : sortedRankConfigs)
 			{
@@ -253,7 +262,7 @@ public class Ranks implements IPermissionHandler
 			}
 			
 			rankAdmin.permissions.put("*", true);
-			o1.add(rankAdmin.getID(), rankAdmin.getJson());
+			o1.add(rankAdmin.getID(), rankAdmin.getSerializableElement());
 			
 			o.add("ranks", o1);
 			

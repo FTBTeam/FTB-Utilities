@@ -67,19 +67,19 @@ public class FTBU
 		FTBLib.addCommand(e, new CmdTplast());
 		FTBLib.addCommand(e, new CmdLMPlayerSettings());
 		
-		if(FTBUConfigCmd.trash_can.get()) FTBLib.addCommand(e, new CmdTrashCan());
-		if(FTBUConfigCmd.back.get()) FTBLib.addCommand(e, new CmdBack());
-		if(FTBUConfigCmd.spawn.get()) FTBLib.addCommand(e, new CmdSpawn());
-		if(FTBUConfigCmd.warp.get()) FTBLib.addCommand(e, new CmdWarp());
+		if(FTBUConfigCmd.trash_can.getAsBoolean()) FTBLib.addCommand(e, new CmdTrashCan());
+		if(FTBUConfigCmd.back.getAsBoolean()) FTBLib.addCommand(e, new CmdBack());
+		if(FTBUConfigCmd.spawn.getAsBoolean()) FTBLib.addCommand(e, new CmdSpawn());
+		if(FTBUConfigCmd.warp.getAsBoolean()) FTBLib.addCommand(e, new CmdWarp());
 		
-		if(FTBUConfigCmd.home.get())
+		if(FTBUConfigCmd.home.getAsBoolean())
 		{
 			FTBLib.addCommand(e, new CmdHome());
 			FTBLib.addCommand(e, new CmdSetHome());
 			FTBLib.addCommand(e, new CmdDelHome());
 		}
 		
-		if(FTBUConfigGeneral.ranks_enabled.get())
+		if(FTBUConfigGeneral.ranks_enabled.getAsBoolean())
 		{
 			FTBLib.addCommand(e, new CmdGetRank());
 			FTBLib.addCommand(e, new CmdSetRank());

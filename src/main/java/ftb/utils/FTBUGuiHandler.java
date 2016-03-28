@@ -1,8 +1,7 @@
 package ftb.utils;
 
 import ftb.lib.api.gui.*;
-import ftb.lib.mod.client.gui.friends.GuiFriends;
-import ftb.utils.client.gui.GuiClaimChunks;
+import ftb.utils.client.gui.claims.GuiClaimChunks;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -13,9 +12,7 @@ public class FTBUGuiHandler extends LMGuiHandler
 {
 	public static final FTBUGuiHandler instance = new FTBUGuiHandler(FTBUFinals.MOD_ID);
 	
-	public static final int FRIENDS = 1;
-	public static final int SECURITY = 2;
-	public static final int ADMIN_CLAIMS = 3;
+	public static final int ADMIN_CLAIMS = 1;
 	
 	public FTBUGuiHandler(String s)
 	{ super(s); }
@@ -28,8 +25,7 @@ public class FTBUGuiHandler extends LMGuiHandler
 	@SideOnly(Side.CLIENT)
 	public GuiScreen getGui(EntityPlayer ep, int id, NBTTagCompound data)
 	{
-		if(id == FRIENDS) return new GuiFriends(null);
-		else if(id == ADMIN_CLAIMS) return new GuiClaimChunks(data.getLong("T"));
+		if(id == ADMIN_CLAIMS) return new GuiClaimChunks(data.getLong("T"));
 		return null;
 	}
 }

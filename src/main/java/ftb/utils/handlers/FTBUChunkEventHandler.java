@@ -6,7 +6,7 @@ import ftb.lib.api.*;
 import ftb.utils.*;
 import ftb.utils.config.FTBUConfigGeneral;
 import ftb.utils.world.*;
-import latmod.lib.json.UUIDTypeAdapterLM;
+import latmod.lib.LMUtils;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.util.Constants;
@@ -47,7 +47,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 			if(t == null) return null;
 			else
 			{
-				t.getModData().setString(PLAYER_ID_TAG, UUIDTypeAdapterLM.getString(playerID));
+				t.getModData().setString(PLAYER_ID_TAG, LMUtils.fromUUID(playerID));
 				
 				if(map == null)
 				{
@@ -66,14 +66,14 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 	{
 		table.remove(world);
 		List<ForgeChunkManager.Ticket> tickets1 = new ArrayList<>();
-		if(tickets.isEmpty() || FTBUConfigGeneral.disable_chunkloading.get()) return tickets1;
+		if(tickets.isEmpty() || FTBUConfigGeneral.disable_chunkloading.getAsBoolean()) return tickets1;
 		Map<UUID, ForgeChunkManager.Ticket> map = new HashMap<>();
 		
 		for(ForgeChunkManager.Ticket t : tickets)
 		{
 			if(t.getModData().getTagId(PLAYER_ID_TAG) == Constants.NBT.TAG_STRING)
 			{
-				UUID playerID = UUIDTypeAdapterLM.getUUID(t.getModData().getString(PLAYER_ID_TAG));
+				UUID playerID = LMUtils.fromString(t.getModData().getString(PLAYER_ID_TAG));
 				
 				if(playerID != null)
 				{
@@ -91,7 +91,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 	{
 		for(ForgeChunkManager.Ticket t : tickets)
 		{
-			UUID playerID = UUIDTypeAdapterLM.getUUID(t.getModData().getString(PLAYER_ID_TAG));
+			UUID playerID = LMUtils.fromString(t.getModData().getString(PLAYER_ID_TAG));
 			
 			if(playerID != null)
 			{
@@ -203,7 +203,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 			
 			if(map != null)
 			{
-				map.remove(UUIDTypeAdapterLM.getUUID(t.getModData().getString(PLAYER_ID_TAG)));
+				map.remove(LMUtils.fromString(t.getModData().getString(PLAYER_ID_TAG)));
 				
 				if(map.isEmpty())
 				{

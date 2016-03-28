@@ -1,7 +1,7 @@
 package ftb.utils.config;
 
-import latmod.lib.Info;
-import latmod.lib.config.*;
+import ftb.lib.api.config.*;
+import latmod.lib.annotations.*;
 import net.minecraft.entity.*;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -9,8 +9,7 @@ import java.util.ArrayList;
 
 public class FTBUConfigGeneral
 {
-	@MinValue(0)
-	@MaxValue(720)
+	@NumberBounds(min = 0, max = 720)
 	@Info({"Server will automatically shut down after X hours", "0 - Disabled", "0.5 - 30 minutes", "1 - 1 Hour", "24 - 1 Day", "168 - 1 Week", "720 - 1 Month"})
 	public static final ConfigEntryDouble restart_timer = new ConfigEntryDouble("restart_timer", 0D);
 	
@@ -21,7 +20,7 @@ public class FTBUConfigGeneral
 	public static final ConfigEntryBool spawn_pvp = new ConfigEntryBool("spawn_pvp", true);
 	
 	@Info("Entity IDs that are banned from world. They will not spawn and existing ones will be destroyed")
-	private static final ConfigEntryStringArray blocked_entities = new ConfigEntryStringArray("blocked_entities");
+	private static final ConfigEntryStringList blocked_entities = new ConfigEntryStringList("blocked_entities");
 	
 	public static final ConfigEntryBool ranks_enabled = new ConfigEntryBool("ranks_enabled", false);
 	//public static final ConfigEntryBool ranks_override_chat = new ConfigEntryBool("ranks_override_chat", true);
@@ -49,7 +48,7 @@ public class FTBUConfigGeneral
 		{
 			blockedEntitiesL.clear();
 			
-			for(String s : blocked_entities.get())
+			for(String s : blocked_entities.getAsStringList())
 			{
 				try
 				{

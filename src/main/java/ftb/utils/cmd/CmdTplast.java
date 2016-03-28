@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 public class CmdTplast extends CommandLM
 {
 	public CmdTplast()
-	{ super(FTBUConfigCmd.name_tplast.get(), CommandLevel.OP); }
+	{ super(FTBUConfigCmd.name_tplast.getAsString(), CommandLevel.OP); }
 	
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " [who] <to>"; }

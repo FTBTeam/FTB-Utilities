@@ -1,8 +1,6 @@
 package ftb.utils.world;
 
-import com.google.gson.*;
 import ftb.lib.*;
-import latmod.lib.LMJsonUtils;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.*;
@@ -36,45 +34,6 @@ public class Warps
 		}
 		
 		tag.setTag(s, tag1);
-	}
-	
-	public void readFromJson(JsonObject g, String s)
-	{
-		warps.clear();
-		if(!g.has(s)) return;
-		
-		JsonObject g1 = g.get(s).getAsJsonObject();
-		
-		if(g1 != null) for(Map.Entry<String, JsonElement> e : g1.entrySet())
-		{
-			if(e.getValue().isJsonArray())
-			{
-				set(e.getKey(), new BlockDimPos(LMJsonUtils.fromIntArray(e.getValue())));
-			}
-			else
-			{
-				JsonObject o = e.getValue().getAsJsonObject();
-				set(e.getKey(), new BlockDimPos(o.get("x").getAsInt(), o.get("y").getAsInt(), o.get("z").getAsInt(), o.get("dim").getAsInt()));
-			}
-		}
-	}
-	
-	public void writeToJson(JsonObject g, String s)
-	{
-		JsonObject g1 = new JsonObject();
-		
-		for(Map.Entry<String, BlockDimPos> e : warps.entrySet())
-		{
-			BlockDimPos pos = e.getValue();
-			JsonObject o = new JsonObject();
-			o.add("dim", new JsonPrimitive(pos.dim));
-			o.add("x", new JsonPrimitive(pos.x));
-			o.add("y", new JsonPrimitive(pos.y));
-			o.add("z", new JsonPrimitive(pos.z));
-			g1.add(e.getKey(), o);
-		}
-		
-		g.add(s, g1);
 	}
 	
 	public Collection<String> list()

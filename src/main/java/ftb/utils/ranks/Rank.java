@@ -2,14 +2,13 @@ package ftb.utils.ranks;
 
 import com.google.gson.*;
 import ftb.lib.api.permissions.*;
-import latmod.lib.json.IJsonObject;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.command.*;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.*;
 
 import java.util.*;
 
-public final class Rank extends FinalIDObject implements IJsonObject
+public final class Rank extends FinalIDObject implements IJsonSerializable
 {
 	public Rank parent = null;
 	public EnumChatFormatting color = EnumChatFormatting.WHITE;
@@ -48,7 +47,7 @@ public final class Rank extends FinalIDObject implements IJsonObject
 		return (e == null) ? ((parent != null) ? parent.handleRankConfig(permission) : null) : e;
 	}
 	
-	public JsonElement getJson()
+	public JsonElement getSerializableElement()
 	{
 		JsonObject o = new JsonObject();
 		
@@ -84,7 +83,7 @@ public final class Rank extends FinalIDObject implements IJsonObject
 		return o;
 	}
 	
-	public void setJson(JsonElement e)
+	public void fromJson(JsonElement e)
 	{
 		JsonObject o = e.getAsJsonObject();
 		parent = o.has("parent") ? Ranks.instance().ranks.get(o.get("parent").getAsString()) : null;

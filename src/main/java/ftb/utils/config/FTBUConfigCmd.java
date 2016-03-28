@@ -1,6 +1,6 @@
 package ftb.utils.config;
 
-import latmod.lib.config.*;
+import ftb.lib.api.config.*;
 
 public class FTBUConfigCmd
 {

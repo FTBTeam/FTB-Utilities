@@ -7,7 +7,6 @@ import ftb.utils.FTBU;
 import ftb.utils.net.MessageUpdateBadges;
 import ftb.utils.ranks.Ranks;
 import latmod.lib.*;
-import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.net.*;
 import latmod.lib.util.Phase;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -112,7 +111,7 @@ public class ServerBadges
 				
 				for(Map.Entry<String, JsonElement> entry : o1.entrySet())
 				{
-					UUID id = UUIDTypeAdapterLM.getUUID(entry.getKey());
+					UUID id = LMUtils.fromString(entry.getKey());
 					if(id != null)
 					{
 						Badge b = map.get(entry.getValue().getAsString());

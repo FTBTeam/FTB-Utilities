@@ -1,8 +1,11 @@
 package ftb.utils.api.guide;
 
+import com.google.gson.JsonPrimitive;
 import ftb.lib.FTBLib;
 import ftb.lib.api.*;
 import ftb.lib.api.cmd.ICustomCommandInfo;
+import ftb.lib.api.info.*;
+import ftb.lib.api.notification.*;
 import ftb.lib.api.permissions.ForgePermissionRegistry;
 import ftb.utils.*;
 import ftb.utils.config.*;
@@ -17,18 +20,18 @@ import net.minecraftforge.common.MinecraftForge;
 import java.io.File;
 import java.util.*;
 
-public class ServerGuideFile extends GuidePage
+public class ServerGuideFile extends InfoPage
 {
 	public static class CachedInfo
 	{
-		public static final GuidePage main = new GuidePage("ServerInfo").setTitle(new ChatComponentTranslation("player_action.ftbu.server_info"));
-		public static GuidePage categoryServer, categoryServerAdmin;
+		public static final InfoPage main = new InfoPage("ServerInfo").setTitle(new ChatComponentTranslation("player_action.ftbu.server_info"));
+		public static InfoPage categoryServer, categoryServerAdmin;
 		
 		public static void reload()
 		{
 			main.clear();
 			
-			categoryServerAdmin = new GuidePage("Admin"); //LANG
+			categoryServerAdmin = new InfoPage("Admin"); //LANG
 			categoryServerAdmin.setParent(main);
 			
 			//categoryServer.println(new ChatComponentTranslation("ftbl:worldID", FTBWorld.server.getWorldID()));
@@ -36,13 +39,12 @@ public class ServerGuideFile extends GuidePage
 			File file = new File(FTBLib.folderLocal, "guide/");
 			if(file.exists() && file.isDirectory())
 			{
-				try
+				File[] f = file.listFiles();
+				if(f != null && f.length > 0)
 				{
-					main.loadFromFiles(file);
-				}
-				catch(Exception ex)
-				{
-					ex.printStackTrace();
+					Arrays.sort(f, LMFileUtils.fileComparator);
+					for(int i = 0; i < f.length; i++)
+						loadFromFiles(main, f[i]);
 				}
 			}
 			
@@ -68,10 +70,9 @@ public class ServerGuideFile extends GuidePage
 		@SuppressWarnings("all")
 		public static void reloadRegistries()
 		{
-			GuidePage list = categoryServerAdmin.getSub("Entities"); //LANG
+			InfoPage list = categoryServerAdmin.getSub("Entities"); //LANG
 			
-			Set<Integer> entityIDset = EntityList.idToClassMapping.keySet();
-			for(Integer i : entityIDset)
+			for(Integer i : EntityList.idToClassMapping.keySet())
 				list.printlnText("[" + i + "] " + EntityList.getStringFromID(i.intValue()));
 			
 			list = categoryServerAdmin.getSub("Enchantments"); //LANG
@@ -91,7 +92,7 @@ public class ServerGuideFile extends GuidePage
 	
 	private List<ForgePlayerMP> players = null;
 	private ForgePlayerMP self;
-	private GuidePage categoryTops = null;
+	private InfoPage categoryTops = null;
 	
 	public ServerGuideFile(ForgePlayerMP pself)
 	{
@@ -107,32 +108,33 @@ public class ServerGuideFile extends GuidePage
 		categoryTops = getSub("Tops").setTitle(FTBU.mod.chatComponent("top.title"));
 		
 		players = ForgeWorldMP.inst.getServerPlayers();
-		for(int i = 0; i < players.size(); i++)
-			players.get(i).refreshStats();
 		
-		if(FTBUConfigGeneral.restart_timer.get() > 0F)
+		for(ForgePlayerMP p : players)
+			p.refreshStats();
+		
+		if(FTBUConfigGeneral.restart_timer.getAsDouble() > 0D)
 			println(FTBU.mod.chatComponent("cmd.timer_restart", LMStringUtils.getTimeString(FTBUWorldDataMP.get().restartMillis - LMUtils.millis())));
 		
-		if(FTBUConfigBackups.enabled.get())
+		if(FTBUConfigBackups.enabled.getAsBoolean())
 			println(FTBU.mod.chatComponent("cmd.timer_backup", LMStringUtils.getTimeString(Backups.nextBackup - LMUtils.millis())));
 		
-		if(FTBUConfigGeneral.server_info_difficulty.get())
+		if(FTBUConfigGeneral.server_info_difficulty.getAsBoolean())
 			println(FTBU.mod.chatComponent("cmd.world_difficulty", LMStringUtils.firstUppercase(pself.getPlayer().worldObj.getDifficulty().toString().toLowerCase())));
 		
-		if(FTBUConfigGeneral.server_info_mode.get())
+		if(FTBUConfigGeneral.server_info_mode.getAsBoolean())
 			println(FTBU.mod.chatComponent("cmd.ftb_gamemode", LMStringUtils.firstUppercase(ForgeWorldMP.inst.getMode().toString().toLowerCase())));
 		
-		if(FTBUConfigTops.first_joined.get()) addTop(Top.first_joined);
-		if(FTBUConfigTops.deaths.get()) addTop(Top.deaths);
-		if(FTBUConfigTops.deaths_ph.get()) addTop(Top.deaths_ph);
-		if(FTBUConfigTops.last_seen.get()) addTop(Top.last_seen);
-		if(FTBUConfigTops.time_played.get()) addTop(Top.time_played);
+		if(FTBUConfigTops.first_joined.getAsBoolean()) addTop(Top.first_joined);
+		if(FTBUConfigTops.deaths.getAsBoolean()) addTop(Top.deaths);
+		if(FTBUConfigTops.deaths_ph.getAsBoolean()) addTop(Top.deaths_ph);
+		if(FTBUConfigTops.last_seen.getAsBoolean()) addTop(Top.last_seen);
+		if(FTBUConfigTops.time_played.getAsBoolean()) addTop(Top.time_played);
 		
 		MinecraftForge.EVENT_BUS.post(new EventFTBUServerGuide(this, self, isOP));
 		if(isOP) addSub(CachedInfo.categoryServerAdmin);
 		
-		GuidePage commands = getSub("Commands"); //LANG
-		commands.clear();
+		InfoPage page = getSub("Commands"); //LANG
+		page.clear();
 		
 		try
 		{
@@ -140,9 +142,9 @@ public class ServerGuideFile extends GuidePage
 			{
 				try
 				{
-					GuidePage cat = new GuidePage('/' + c.getCommandName());
+					InfoPage cat = new InfoPage('/' + c.getCommandName());
 					
-					List<String> al = c.getCommandAliases();
+					@SuppressWarnings("unchecked") List<String> al = c.getCommandAliases();
 					if(al != null && !al.isEmpty()) for(String s : al)
 						cat.printlnText('/' + s);
 					
@@ -177,14 +179,14 @@ public class ServerGuideFile extends GuidePage
 						}
 					}
 					
-					cat.setParent(commands);
-					commands.addSub(cat);
+					cat.setParent(page);
+					page.addSub(cat);
 				}
 				catch(Exception ex1)
 				{
 					IChatComponent cc = new ChatComponentText('/' + c.getCommandName());
 					cc.getChatStyle().setColor(EnumChatFormatting.DARK_RED);
-					commands.getSub('/' + c.getCommandName()).setTitle(cc).printlnText("Errored");
+					page.getSub('/' + c.getCommandName()).setTitle(cc).printlnText("Errored");
 					
 					if(FTBLib.DEV_ENV) ex1.printStackTrace();
 				}
@@ -192,13 +194,32 @@ public class ServerGuideFile extends GuidePage
 		}
 		catch(Exception ex) { }
 		
+		page = getSub("Warps"); //LANG
+		InfoExtendedTextLine line;
+		
+		for(String s : FTBUWorldDataMP.get().warps.list())
+		{
+			line = new InfoExtendedTextLine(page, new ChatComponentText(s));
+			line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("warp " + s)));
+			page.text.add(line);
+		}
+		
+		page = getSub("Homes"); //LANG
+		
+		for(String s : FTBUPlayerDataMP.get(self).homes.list())
+		{
+			line = new InfoExtendedTextLine(page, new ChatComponentText(s));
+			line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("home " + s)));
+			page.text.add(line);
+		}
+		
 		cleanup();
 		sortAll();
 	}
 	
 	public void addTop(Top t)
 	{
-		GuidePage thisTop = categoryTops.getSub(t.ID).setTitle(t.title);
+		InfoPage thisTop = categoryTops.getSub(t.ID).setTitle(t.title);
 		
 		Collections.sort(players, t);
 		

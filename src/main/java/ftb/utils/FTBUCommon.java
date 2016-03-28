@@ -17,7 +17,7 @@ public class FTBUCommon // FTBUClient
 	{
 		if(event.world.side.isServer())
 		{
-			event.add(new FTBUWorldDataMP(event.world.toWorldMP()));
+			event.add(FTBUWorldDataMP.get());
 		}
 	}
 	

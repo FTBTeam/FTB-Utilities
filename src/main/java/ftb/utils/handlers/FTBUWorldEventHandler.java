@@ -42,7 +42,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
 		
 		if(FTBUConfigGeneral.isEntityBanned(e.getClass())) return false;
 		
-		if(FTBUConfigGeneral.safe_spawn.get() && FTBUWorldDataMP.isInSpawnD(e.dimension, e.posX, e.posZ))
+		if(FTBUConfigGeneral.safe_spawn.getAsBoolean() && FTBUWorldDataMP.isInSpawnD(e.dimension, e.posX, e.posZ))
 		{
 			if(e instanceof IMob) return false;
 			else if(e instanceof EntityChicken && e.riddenByEntity != null) return false;
@@ -59,7 +59,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
 		int cx = MathHelperLM.chunk(e.explosion.getPosition().xCoord);
 		int cz = MathHelperLM.chunk(e.explosion.getPosition().yCoord);
 		
-		if(!FTBUWorldDataMP.allowExplosion(new ChunkDimPos(dim, cx, cz)))
+		if(!FTBUWorldDataMP.get().allowExplosion(new ChunkDimPos(dim, cx, cz)))
 		{
 			e.setCanceled(true);
 		}

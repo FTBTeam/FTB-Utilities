@@ -4,8 +4,8 @@ import ftb.lib.FTBLib;
 import ftb.lib.api.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.*;
-import ftb.lib.mod.client.gui.friends.GuiFriends;
-import ftb.utils.client.gui.*;
+import ftb.utils.api.guide.ClientGuideFile;
+import ftb.utils.client.gui.claims.GuiClaimChunks;
 import ftb.utils.net.MessageRequestServerInfo;
 import ftb.utils.world.FTBUWorldDataSP;
 import net.minecraft.client.gui.GuiScreen;
@@ -24,12 +24,6 @@ public class FTBUActions
 		//PlayerActionRegistry.add(mail);
 		//PlayerActionRegistry.add(trade);
 		
-		GuiScreenRegistry.register("friends_gui", new GuiScreenRegistry.Entry()
-		{
-			public GuiScreen openGui(EntityPlayer ep)
-			{ return new GuiFriends(FTBLibClient.mc.currentScreen); }
-		});
-		
 		GuiScreenRegistry.register("claimed_chunks", new GuiScreenRegistry.Entry()
 		{
 			public GuiScreen openGui(EntityPlayer ep)
@@ -39,7 +33,7 @@ public class FTBUActions
 		GuiScreenRegistry.register("guide", new GuiScreenRegistry.Entry()
 		{
 			public GuiScreen openGui(EntityPlayer ep)
-			{ return GuiGuide.openClientGui(false); }
+			{ return ClientGuideFile.openClientGui(false); }
 		});
 		
 		GuiScreenRegistry.register("server_info", new GuiScreenRegistry.Entry()
@@ -69,11 +63,11 @@ public class FTBUActions
 		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{
 			FTBLibClient.playClickSound();
-			GuiGuide.openClientGui(true);
+			ClientGuideFile.openClientGui(true);
 		}
 		
 		public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
-		{ return FTBUWorldDataSP.exists(); }
+		{ return FTBUWorldDataSP.get().isLoaded(); }
 		
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }
@@ -85,7 +79,7 @@ public class FTBUActions
 		{ new MessageRequestServerInfo().sendToServer(); }
 		
 		public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
-		{ return FTBUWorldDataSP.exists(); }
+		{ return FTBUWorldDataSP.get().isLoaded(); }
 		
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }
@@ -97,7 +91,7 @@ public class FTBUActions
 		{ FTBLibClient.openGui(new GuiClaimChunks(0L)); }
 		
 		public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
-		{ return FTBUWorldDataSP.exists(); }
+		{ return FTBUWorldDataSP.get().isLoaded(); }
 		
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }

@@ -61,7 +61,7 @@ public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate>
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageAreaUpdate m, MessageContext ctx)
 	{
-		if(!FTBUWorldDataSP.exists()) return null;
+		if(!FTBUWorldDataSP.get().isLoaded()) return null;
 		FTBUWorldDataSP.get().setTypes(m.dim, m.types);
 		return null;
 	}

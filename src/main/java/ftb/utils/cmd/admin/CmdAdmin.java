@@ -7,7 +7,7 @@ public class CmdAdmin extends CommandSubLM
 {
 	public CmdAdmin()
 	{
-		super(FTBUConfigCmd.name_admin.get(), CommandLevel.OP);
+		super(FTBUConfigCmd.name_admin.getAsString(), CommandLevel.OP);
 		add(new CmdRestart());
 		add(new CmdInvsee());
 		add(new CmdSetWarp());

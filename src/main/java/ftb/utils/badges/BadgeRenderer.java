@@ -14,7 +14,7 @@ public class BadgeRenderer implements LayerRenderer<AbstractClientPlayer>
 	
 	public void doRenderLayer(AbstractClientPlayer ep, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scale)
 	{
-		if(FTBUWorldDataSP.exists() && FTBUClient.render_badges.get() && !ep.isInvisible())
+		if(FTBUWorldDataSP.get().isLoaded() && FTBUClient.render_badges.getAsBoolean() && !ep.isInvisible())
 		{
 			Badge b = ClientBadges.getClientBadge(ep.getGameProfile().getId());
 			

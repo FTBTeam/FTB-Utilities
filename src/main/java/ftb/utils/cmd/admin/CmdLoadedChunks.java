@@ -2,7 +2,7 @@ package ftb.utils.cmd.admin;
 
 import com.google.common.collect.ImmutableSetMultimap;
 import ftb.lib.api.cmd.*;
-import ftb.utils.api.guide.GuidePage;
+import ftb.lib.api.info.InfoPage;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.*;
@@ -20,7 +20,7 @@ public class CmdLoadedChunks extends CommandLM
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		
-		GuidePage file = new GuidePage("Loaded Chunks");
+		InfoPage file = new InfoPage("Loaded Chunks");
 		
 		for(WorldServer w : DimensionManager.getWorlds())
 		{
@@ -36,11 +36,11 @@ public class CmdLoadedChunks extends CommandLM
 					if(!list.contains(c)) list.add(c);
 			}
 			
-			GuidePage dim = file.getSub(w.provider.getDimensionName());
+			InfoPage dim = file.getSub(w.provider.getDimensionName());
 			
 			for(Map.Entry<String, ArrayList<ChunkCoordIntPair>> e1 : chunksMap.entrySet())
 			{
-				GuidePage mod = dim.getSub(e1.getKey() + " [" + e1.getValue().size() + "]");
+				InfoPage mod = dim.getSub(e1.getKey() + " [" + e1.getValue().size() + "]");
 				for(ChunkCoordIntPair c : e1.getValue())
 					mod.printlnText(c.chunkXPos + ", " + c.chunkZPos + " [ " + c.getCenterXPos() + ", " + c.getCenterZPosition() + " ]");
 			}

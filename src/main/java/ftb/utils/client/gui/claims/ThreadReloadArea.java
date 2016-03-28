@@ -1,4 +1,4 @@
-package ftb.utils.client.gui;
+package ftb.utils.client.gui.claims;
 
 import ftb.lib.api.client.FTBLibClient;
 import latmod.lib.*;

@@ -1,7 +1,7 @@
 package ftb.utils.cmd.admin;
 
 import ftb.lib.api.cmd.*;
-import ftb.utils.api.guide.GuidePage;
+import ftb.lib.api.info.InfoPage;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -17,7 +17,7 @@ public class CmdDisplayNBT extends CommandLM
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		
-		GuidePage file = new GuidePage("NBT");
+		InfoPage file = new InfoPage("NBT");
 		
 		ItemStack is = ep.inventory.getCurrentItem();
 		if(is == null) is = new ItemStack(Blocks.air);
@@ -28,7 +28,7 @@ public class CmdDisplayNBT extends CommandLM
 		file.displayGuide(ep);
 	}
 	
-	private void writeToGuide(GuidePage cat, NBTBase tag)
+	private void writeToGuide(InfoPage cat, NBTBase tag)
 	{
 		if(tag == null) return;
 		else if(tag instanceof NBTTagCompound)

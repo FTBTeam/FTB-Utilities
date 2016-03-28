@@ -39,7 +39,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 	{
 		if(e.entityPlayer instanceof EntityPlayerMP)
 		{
-			if(!FTBUWorldDataMP.canPlayerInteract((EntityPlayerMP) e.entityPlayer, e.pos, e.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK))
+			if(!FTBUWorldDataMP.get().canPlayerInteract((EntityPlayerMP) e.entityPlayer, e.pos, e.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK))
 				e.setCanceled(true);
 		}
 	}

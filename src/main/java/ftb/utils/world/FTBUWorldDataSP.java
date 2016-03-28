@@ -16,37 +16,37 @@ import java.util.*;
 @SideOnly(Side.CLIENT)
 public class FTBUWorldDataSP extends ForgeWorldData
 {
-	private static FTBUWorldDataSP inst = null;
-	
-	public static boolean exists()
-	{ return inst != null || (ForgeWorldSP.inst != null && ForgeWorldSP.inst.serverDataIDs.contains(FTBUFinals.MOD_ID)); }
+	private static FTBUWorldDataSP inst;
 	
 	public static FTBUWorldDataSP get()
 	{
-		if(inst == null) inst = (FTBUWorldDataSP) ForgeWorldSP.inst.getData(FTBUFinals.MOD_ID);
+		if(inst == null)
+		{
+			inst = new FTBUWorldDataSP();
+		}
+		
 		return inst;
 	}
 	
-	public final Map<ChunkDimPos, ChunkType> chunks;
+	public Map<ChunkDimPos, ChunkType> chunks;
 	
-	public FTBUWorldDataSP(ForgeWorldSP w)
+	private FTBUWorldDataSP()
 	{
-		super(FTBUFinals.MOD_ID, w);
+		super(FTBUFinals.MOD_ID);
+	}
+	
+	public void onLoaded(ForgeWorld w)
+	{
 		chunks = new HashMap<>();
 	}
 	
-	public void init()
-	{
-		get();
-		//inst = ForgeWorldSP.inst.serverDataIDs.contains(FTBUFinals.MOD_ID) ? this : null;
-	}
-	
-	public void readFromNet(NBTTagCompound tag)
+	public void readFromNet(NBTTagCompound tag, boolean login)
 	{
 	}
 	
 	public void onClosed()
 	{
+		chunks = null;
 		inst = null;
 	}
 	

@@ -1,11 +1,10 @@
-package ftb.utils.client.gui;
+package ftb.utils.client.gui.claims;
 
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.widgets.*;
-import ftb.lib.mod.client.gui.friends.GuiFriends;
 import ftb.lib.mod.net.MessageRequestSelfUpdate;
 import ftb.utils.FTBU;
 import ftb.utils.client.FTBUClient;
@@ -15,7 +14,6 @@ import latmod.lib.MathHelperLM;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.fml.relauncher.*;
@@ -31,31 +29,22 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	public static final int tiles_tex = 16;
 	public static final int tiles_gui = 15;
 	public static final double UV = (double) tiles_gui / (double) tiles_tex;
-	public static final ResourceLocation tex_area = new ResourceLocation("ftbl", "textures/world/minimap_area.png");
 	public static final ResourceLocation tex_map_entity = new ResourceLocation("ftbl", "textures/world/entity.png");
-	public static final TextureCoords[][][][] tex_area_coords = new TextureCoords[2][2][2][2];
-	
-	private static TextureCoords getAreaCoords(int i)
-	{ return new TextureCoords(tex_area, (i % 4) * 64, (i / 4) * 64, 64, 64); }
+	public static final TextureCoords[] tex_area_coords = new TextureCoords[16];
 	
 	static
 	{
-		tex_area_coords[0][0][0][0] = getAreaCoords(0);
-		tex_area_coords[1][1][1][1] = getAreaCoords(1);
-		tex_area_coords[1][0][1][0] = getAreaCoords(2);
-		tex_area_coords[0][1][0][1] = getAreaCoords(3);
-		tex_area_coords[1][0][0][0] = getAreaCoords(4);
-		tex_area_coords[0][1][0][0] = getAreaCoords(5);
-		tex_area_coords[0][0][1][0] = getAreaCoords(6);
-		tex_area_coords[0][0][0][1] = getAreaCoords(7);
-		tex_area_coords[1][1][0][0] = getAreaCoords(8);
-		tex_area_coords[0][1][1][0] = getAreaCoords(9);
-		tex_area_coords[0][0][1][1] = getAreaCoords(10);
-		tex_area_coords[1][0][0][1] = getAreaCoords(11);
-		tex_area_coords[0][1][1][1] = getAreaCoords(12);
-		tex_area_coords[1][0][1][1] = getAreaCoords(13);
-		tex_area_coords[1][1][0][1] = getAreaCoords(14);
-		tex_area_coords[1][1][1][0] = getAreaCoords(15);
+		for(int i = 0; i < tex_area_coords.length; i++)
+		{
+			int[] a = MathHelperMC.connectedTextureMap[i];
+			StringBuilder sb = new StringBuilder("textures/world/area_");
+			sb.append(a[0]);
+			sb.append(a[1]);
+			sb.append(a[2]);
+			sb.append(a[3]);
+			sb.append(".png");
+			tex_area_coords[i] = new TextureCoords(new ResourceLocation("ftbl", sb.toString()), 0, 0, 16, 16, 16, 16);
+		}
 	}
 	
 	public static int textureID = -1;
@@ -87,7 +76,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			public void onButtonPressed(int b)
 			{
 				FTBLibClient.playClickSound();
-				FTBLibClient.openGui(new GuiFriends(null));
+				FTBLibClient.openGui(null);
 			}
 		};
 		
@@ -257,7 +246,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			boolean b = type.equals(FTBUWorldDataSP.get().getType(new ChunkCoordIntPair(pos.chunkXPos + 1, pos.chunkZPos)));
 			boolean c = type.equals(FTBUWorldDataSP.get().getType(new ChunkCoordIntPair(pos.chunkXPos, pos.chunkZPos + 1)));
 			boolean d = type.equals(FTBUWorldDataSP.get().getType(new ChunkCoordIntPair(pos.chunkXPos - 1, pos.chunkZPos)));
-			return new AbstractMap.SimpleEntry<>(tex_area_coords[a ? 1 : 0][b ? 1 : 0][c ? 1 : 0][d ? 1 : 0], type);
+			return new AbstractMap.SimpleEntry<>(tex_area_coords[MathHelperMC.getConnectedTextureIndex(a ? 1 : 0, b ? 1 : 0, c ? 1 : 0, d ? 1 : 0)], type);
 		}
 		
 		return null;
@@ -265,11 +254,6 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	
 	public void renderMinimap()
 	{
-		FTBLibClient.setTexture(tex_area);
-		int filter = GL11.GL_NEAREST;
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, filter);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, filter);
-		
 		for(int y = 0; y < tiles_gui; y++)
 		{
 			for(int x = 0; x < tiles_gui; x++)
@@ -281,47 +265,39 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 				
 				if(type != null)
 				{
-					TextureCoords tc = type.getKey();
+					FTBLibClient.setTexture(type.getKey());
+					
+					GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+					GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+					
 					FTBLibClient.setGLColor(type.getValue().getAreaColor(playerLM), 255);
-					GuiLM.drawTexturedRectD(mainPanel.posX + x * 16, mainPanel.posY + y * 16, zLevel, 16, 16, tc.minU, tc.minV, tc.maxU, tc.maxV);
+					GuiLM.drawTexturedRectD(mainPanel.getAX() + x * 16, mainPanel.getAY() + y * 16, zLevel, 16, 16, 0D, 0D, 1D, 1D);
 				}
 			}
 		}
 		
-		if(!FTBLibClient.mc.theWorld.playerEntities.isEmpty())
+		int cx = MathHelperLM.chunk(mc.thePlayer.posX);
+		int cy = MathHelperLM.chunk(mc.thePlayer.posZ);
+		
+		if(cx >= startX && cy >= startY && cx < startX + tiles_gui && cy < startY + tiles_gui)
 		{
-			ArrayList<EntityPlayer> list = new ArrayList<>();
-			list.addAll(FTBLibClient.mc.theWorld.playerEntities);
+			double x = ((cx - startX) * 16D + MathHelperLM.wrap(mc.thePlayer.posX, 16D));
+			double y = ((cy - startY) * 16D + MathHelperLM.wrap(mc.thePlayer.posZ, 16D));
 			
-			for(EntityPlayer ep : list)
-			{
-				if(ep.dimension == currentDim && !ep.isInvisible())
-				{
-					int cx = MathHelperLM.chunk(ep.posX);
-					int cy = MathHelperLM.chunk(ep.posZ);
-					
-					if(cx >= startX && cy >= startY && cx < startX + tiles_gui && cy < startY + tiles_gui)
-					{
-						double x = ((cx - startX) * 16D + MathHelperLM.wrap(ep.posX, 16D));
-						double y = ((cy - startY) * 16D + MathHelperLM.wrap(ep.posZ, 16D));
-						
-						GlStateManager.pushMatrix();
-						GlStateManager.translate(mainPanel.posX + x, mainPanel.posY + y, 0D);
-						GlStateManager.pushMatrix();
-						//GlStateManager.rotate((int)((ep.rotationYaw + 180F) / (180F / 8F)) * (180F / 8F), 0F, 0F, 1F);
-						GlStateManager.rotate(ep.rotationYaw + 180F, 0F, 0F, 1F);
-						FTBLibClient.setTexture(tex_map_entity);
-						GlStateManager.color(1F, 1F, 1F, ep.isSneaking() ? 0.4F : 0.7F);
-						GuiLM.drawTexturedRectD(-8, -8, zLevel, 16, 16, 0D, 0D, 1D, 1D);
-						GlStateManager.popMatrix();
-						GuiLM.drawPlayerHead(ep.getName(), -2, -2, 4, 4, zLevel);
-						GlStateManager.popMatrix();
-					}
-				}
-			}
-			
-			GlStateManager.color(1F, 1F, 1F, 1F);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(mainPanel.posX + x, mainPanel.posY + y, 0D);
+			GlStateManager.pushMatrix();
+			//GlStateManager.rotate((int)((ep.rotationYaw + 180F) / (180F / 8F)) * (180F / 8F), 0F, 0F, 1F);
+			GlStateManager.rotate(mc.thePlayer.rotationYaw + 180F, 0F, 0F, 1F);
+			FTBLibClient.setTexture(tex_map_entity);
+			GlStateManager.color(1F, 1F, 1F, mc.thePlayer.isSneaking() ? 0.4F : 0.7F);
+			GuiLM.drawTexturedRectD(-8, -8, zLevel, 16, 16, 0D, 0D, 1D, 1D);
+			GlStateManager.popMatrix();
+			GuiLM.drawPlayerHead(mc.thePlayer.getName(), -2, -2, 4, 4, zLevel);
+			GlStateManager.popMatrix();
 		}
+		
+		GlStateManager.color(1F, 1F, 1F, 1F);
 	}
 	
 	public void confirmClicked(boolean set, int id)
@@ -358,7 +334,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		{
 			if(gui.panelButtons.mouseOver()) return;
 			if(gui.adminToken != 0L && b == 0) return;
-			boolean ctrl = FTBUClient.loaded_chunks_space_key.get() ? Keyboard.isKeyDown(Keyboard.KEY_SPACE) : isCtrlKeyDown();
+			boolean ctrl = FTBUClient.loaded_chunks_space_key.getAsBoolean() ? Keyboard.isKeyDown(Keyboard.KEY_SPACE) : isCtrlKeyDown();
 			
 			MessageClaimChunk msg = new MessageClaimChunk();
 			msg.token = gui.adminToken;

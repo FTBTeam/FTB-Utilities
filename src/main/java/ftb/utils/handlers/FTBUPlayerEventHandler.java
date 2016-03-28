@@ -68,7 +68,7 @@ public class FTBUPlayerEventHandler
 				return;
 			}
 			
-			if((FTBUConfigGeneral.safe_spawn.get() && FTBUWorldDataMP.isInSpawnD(dim, e.entity.posX, e.entity.posZ)))
+			if((FTBUConfigGeneral.safe_spawn.getAsBoolean() && FTBUWorldDataMP.isInSpawnD(dim, e.entity.posX, e.entity.posZ)))
 			{
 				e.setCanceled(true);
 			}

@@ -11,11 +11,10 @@ public class FTBUNetHandler
 	public static void init()
 	{
 		NET.register(MessageButtonPressed.class, 1, Side.SERVER);
-		NET.register(MessageDisplayGuide.class, 2, Side.CLIENT);
-		NET.register(MessageSendBadge.class, 3, Side.CLIENT);
-		NET.register(MessageUpdateBadges.class, 4, Side.CLIENT);
-		NET.register(MessageRequestBadge.class, 5, Side.SERVER);
-		NET.register(MessageRequestServerInfo.class, 6, Side.SERVER);
+		NET.register(MessageSendBadge.class, 2, Side.CLIENT);
+		NET.register(MessageUpdateBadges.class, 3, Side.CLIENT);
+		NET.register(MessageRequestBadge.class, 4, Side.SERVER);
+		NET.register(MessageRequestServerInfo.class, 5, Side.SERVER);
 		
 		NET_WORLD.register(MessageAreaUpdate.class, 1, Side.CLIENT);
 		NET_WORLD.register(MessageAreaRequest.class, 2, Side.SERVER);

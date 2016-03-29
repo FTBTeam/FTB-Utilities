@@ -1,24 +1,22 @@
 package ftb.utils.mod.config;
 
-import ftb.lib.api.config.old.*;
-import latmod.lib.Info;
+
+import ftb.lib.api.config.*;
+import latmod.lib.annotations.*;
 
 public class FTBUConfigBackups
 {
 	public static final ConfigEntryBool enabled = new ConfigEntryBool("enabled", true);
 	
-	@MinValue(0)
-	@MaxValue(100)
+	@NumberBounds(min = 0, max = 100)
 	@Info({"The number of backup files to keep", "More backups = more space used", "0 - Disabled"})
 	public static final ConfigEntryInt backups_to_keep = new ConfigEntryInt("backups_to_keep", 12);
 	
-	@MinValue(0.05D)
-	@MaxValue(600D)
+	@NumberBounds(min = 0.05D, max = 600D)
 	@Info({"Timer in hours.", "1.0 - backups every hour", "6.0 - backups every 6 hours", "0.5 - backups every 30 minutes"})
 	public static final ConfigEntryDouble backup_timer = new ConfigEntryDouble("backup_timer", 2D);
 	
-	@MinValue(0)
-	@MaxValue(9)
+	@NumberBounds(min = 0, max = 9)
 	@Info({"0 - Disabled (output = folders)", "1 - Best speed", "9 - Smallest file size"})
 	public static final ConfigEntryInt compression_level = new ConfigEntryInt("compression_level", 1);
 	

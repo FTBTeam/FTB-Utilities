@@ -6,7 +6,6 @@ import ftb.lib.PrivacyLevel;
 import ftb.lib.api.PlayerAction;
 import ftb.lib.api.gui.PlayerActionRegistry;
 import ftb.lib.api.notification.*;
-import ftb.lib.mod.FTBLibMod;
 import ftb.utils.api.guide.GuidePage;
 import ftb.utils.api.guide.lines.GuideExtendedTextLine;
 import ftb.utils.mod.FTBU;
@@ -59,7 +58,7 @@ public class GuideFriendsGUISelfPage extends GuideFriendsGUIPage
 				booleanCommand("explosions", ps.get(PersonalSettings.EXPLOSIONS));
 				booleanCommand("fake_players", ps.get(PersonalSettings.FAKE_PLAYERS));
 				
-				IChatComponent text1 = FTBLibMod.mod.chatComponent("security." + ps.blocks.uname);
+				IChatComponent text1 = ps.blocks.lang.chatComponent();
 				text1.getChatStyle().setColor(ps.blocks == PrivacyLevel.FRIENDS ? EnumChatFormatting.BLUE : (ps.blocks == PrivacyLevel.PUBLIC ? EnumChatFormatting.GREEN : EnumChatFormatting.RED));
 				GuideExtendedTextLine line = new GuideExtendedTextLine(this, FTBU.mod.chatComponent("player_setting.security_level").appendText(": ").appendSibling(text1));
 				line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("lmplayer_settings block_security toggle")));

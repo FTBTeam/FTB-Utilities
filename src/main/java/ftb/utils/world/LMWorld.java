@@ -2,10 +2,10 @@ package ftb.utils.world;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
-import ftb.lib.api.config.old.ConfigGroup;
+import ftb.lib.api.config.ConfigGroup;
 import ftb.utils.mod.FTBU;
 import ftb.utils.world.claims.LMWorldSettings;
-import latmod.lib.json.UUIDTypeAdapterLM;
+import latmod.lib.LMUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
@@ -85,7 +85,7 @@ public abstract class LMWorld // FTBWorld
 			for(LMPlayer p : playerMap.values())
 			{ if(p.getProfile().getName().equalsIgnoreCase(s)) return p; }
 			
-			return getPlayer(UUIDTypeAdapterLM.getUUID(s));
+			return getPlayer(LMUtils.fromString(s));
 		}
 		
 		return null;

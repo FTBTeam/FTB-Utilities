@@ -5,8 +5,7 @@ import ftb.lib.*;
 import ftb.lib.api.cmd.*;
 import ftb.lib.api.item.StringIDInvLoader;
 import ftb.utils.world.*;
-import latmod.lib.LMFileUtils;
-import latmod.lib.json.UUIDTypeAdapterLM;
+import latmod.lib.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -42,7 +41,7 @@ public class CmdPlayerLM extends CommandSubLM
 		{
 			checkArgs(args, 2);
 			
-			UUID id = UUIDTypeAdapterLM.getUUID(args[0]);
+			UUID id = LMUtils.fromString(args[0]);
 			if(id == null) return error(new ChatComponentText("Invalid UUID!"));
 			
 			if(LMWorldServer.inst.getPlayer(id) != null || LMWorldServer.inst.getPlayer(args[1]) != null)

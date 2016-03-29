@@ -4,13 +4,12 @@ import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
-import ftb.lib.api.config.old.ConfigGroup;
+import ftb.lib.api.config.ConfigGroup;
 import ftb.utils.api.EventLMPlayerServer;
 import ftb.utils.mod.handlers.FTBUChunkEventHandler;
 import ftb.utils.net.MessageLMWorldUpdate;
 import ftb.utils.world.claims.ClaimedChunks;
 import latmod.lib.*;
-import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.util.Phase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -64,7 +63,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	
 	public void load(JsonObject group, Phase p)
 	{
-		if(p.isPre())
+		if(p == Phase.PRE)
 		{
 			warps.readFromJson(group, "warps");
 			customServerData.setJson(group.get(customServerData.getID()));
@@ -75,7 +74,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	
 	public void save(JsonObject group, Phase p)
 	{
-		if(p.isPre())
+		if(p == Phase.PRE)
 		{
 			warps.writeToJson(group, "warps");
 			group.add(customServerData.getID(), customServerData.getJson());
@@ -142,7 +141,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		{
 			int id = Integer.parseInt(e.getKey());
 			NBTTagCompound tag1 = e.getValue();
-			LMPlayerServer p = new LMPlayerServer(this, id, new GameProfile(UUIDTypeAdapterLM.getUUID(tag1.getString("UUID")), tag1.getString("Name")));
+			LMPlayerServer p = new LMPlayerServer(this, id, new GameProfile(LMUtils.fromString(tag1.getString("UUID")), tag1.getString("Name")));
 			p.readFromServer(tag1);
 			playerMap.put(p.getPlayerID(), p);
 		}

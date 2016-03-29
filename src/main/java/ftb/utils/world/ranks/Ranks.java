@@ -1,6 +1,6 @@
 package ftb.utils.world.ranks;
 
-import ftb.lib.api.config.old.*;
+import ftb.lib.api.config.*;
 import ftb.utils.world.LMPlayerServer;
 import net.minecraft.util.EnumChatFormatting;
 

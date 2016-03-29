@@ -50,7 +50,7 @@ public class GuideExtendedTextLine extends GuideTextLine
 		}
 	}
 	
-	public void setJson(JsonElement e)
+	public void func_152753_a(JsonElement e)
 	{
 		JsonObject o = e.getAsJsonObject();
 		
@@ -59,7 +59,7 @@ public class GuideExtendedTextLine extends GuideTextLine
 		if(o.has("click"))
 		{
 			clickAction = new ClickAction();
-			clickAction.setJson(o.get("click"));
+			clickAction.func_152753_a(o.get("click"));
 		}
 		else clickAction = null;
 		
@@ -83,14 +83,14 @@ public class GuideExtendedTextLine extends GuideTextLine
 		else hover = null;
 	}
 	
-	public JsonElement getJson()
+	public JsonElement getSerializableElement()
 	{
 		JsonObject o = new JsonObject();
 		if(text != null) o.add("text", JsonHelper.serializeICC(text));
 		
 		if(clickAction != null)
 		{
-			o.add("click", clickAction.getJson());
+			o.add("click", clickAction.getSerializableElement());
 		}
 		
 		if(hover != null && !hover.isEmpty())

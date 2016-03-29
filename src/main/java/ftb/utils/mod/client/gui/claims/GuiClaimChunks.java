@@ -2,6 +2,7 @@ package ftb.utils.mod.client.gui.claims;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.TextureCoords;
+import ftb.lib.api.FTBLibLang;
 import ftb.lib.api.client.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.widgets.*;
@@ -99,7 +100,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			}
 		};
 		
-		buttonRefresh.title = FTBLibLang.button_refresh();
+		buttonRefresh.title = FTBLibLang.button_refresh.format();
 		
 		buttonUnclaimAll = new ButtonLM(this, 0, 32, 16, 16)
 		{

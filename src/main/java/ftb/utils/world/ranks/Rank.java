@@ -1,7 +1,7 @@
 package ftb.utils.world.ranks;
 
 import ftb.lib.FTBLib;
-import ftb.lib.api.config.old.*;
+import ftb.lib.api.config.*;
 import latmod.lib.IntList;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.util.EnumChatFormatting;

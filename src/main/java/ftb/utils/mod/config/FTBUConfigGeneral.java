@@ -1,16 +1,15 @@
 package ftb.utils.mod.config;
 
 import cpw.mods.fml.relauncher.Side;
-import ftb.lib.api.config.old.*;
-import latmod.lib.Info;
+import ftb.lib.api.config.*;
+import latmod.lib.annotations.*;
 import net.minecraft.entity.*;
 
 import java.util.ArrayList;
 
 public class FTBUConfigGeneral
 {
-	@MinValue(0D)
-	@MaxValue(720D)
+	@NumberBounds(min = 0D, max = 720D)
 	@Info({"Server will automatically shut down after X hours", "0 - Disabled", "0.5 - 30 minutes", "1 - 1 Hour", "24 - 1 Day", "168 - 1 Week", "720 - 1 Month"})
 	public static final ConfigEntryDouble restart_timer = new ConfigEntryDouble("restart_timer", 0D);
 	

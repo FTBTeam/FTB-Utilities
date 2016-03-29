@@ -8,7 +8,6 @@ import ftb.utils.api.guide.lines.*;
 import ftb.utils.mod.client.gui.guide.*;
 import ftb.utils.net.MessageDisplayGuide;
 import latmod.lib.*;
-import latmod.lib.json.IJsonObject;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
@@ -17,7 +16,7 @@ import net.minecraftforge.common.util.FakePlayer;
 import java.io.File;
 import java.util.*;
 
-public class GuidePage extends FinalIDObject implements IJsonObject, IClientActionGui // GuideFile
+public class GuidePage extends FinalIDObject implements IJsonSerializable, IClientActionGui // GuideFile
 {
 	private static final RemoveFilter<Map.Entry<String, GuidePage>> cleanupFilter = new RemoveFilter<Map.Entry<String, GuidePage>>()
 	{
@@ -152,7 +151,7 @@ public class GuidePage extends FinalIDObject implements IJsonObject, IClientActi
 		return parent.getParentTop();
 	}
 	
-	public JsonElement getJson()
+	public JsonElement getSerializableElement()
 	{
 		JsonObject o = new JsonObject();
 		
@@ -162,7 +161,7 @@ public class GuidePage extends FinalIDObject implements IJsonObject, IClientActi
 		{
 			JsonArray a = new JsonArray();
 			for(GuideTextLine c : text)
-				a.add(c == null ? JsonNull.INSTANCE : c.getJson());
+				a.add(c == null ? JsonNull.INSTANCE : c.getSerializableElement());
 			o.add("T", a);
 		}
 		
@@ -170,14 +169,14 @@ public class GuidePage extends FinalIDObject implements IJsonObject, IClientActi
 		{
 			JsonObject o1 = new JsonObject();
 			for(GuidePage c : childPages.values())
-				o1.add(c.getID(), c.getJson());
+				o1.add(c.getID(), c.getSerializableElement());
 			o.add("S", o1);
 		}
 		
 		return o;
 	}
 	
-	public void setJson(JsonElement e)
+	public void func_152753_a(JsonElement e)
 	{
 		clear();
 		
@@ -201,7 +200,7 @@ public class GuidePage extends FinalIDObject implements IJsonObject, IClientActi
 			{
 				GuidePage c = new GuidePage(entry.getKey());
 				c.setParent(this);
-				c.setJson(entry.getValue());
+				c.func_152753_a(entry.getValue());
 				childPages.put(c.getID(), c);
 			}
 		}

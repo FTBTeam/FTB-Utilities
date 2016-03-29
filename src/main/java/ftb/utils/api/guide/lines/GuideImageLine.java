@@ -85,9 +85,9 @@ public class GuideImageLine extends GuideExtendedTextLine
 		return new ButtonGuideImage(gui, this);
 	}
 	
-	public void setJson(JsonElement e)
+	public void func_152753_a(JsonElement e)
 	{
-		super.setJson(e);
+		super.func_152753_a(e);
 		
 		displayW = displayH = displayS = 0D;
 		
@@ -113,9 +113,9 @@ public class GuideImageLine extends GuideExtendedTextLine
 		}
 	}
 	
-	public JsonElement getJson()
+	public JsonElement getSerializableElement()
 	{
-		JsonObject o = (JsonObject) super.getJson();
+		JsonObject o = (JsonObject) super.getSerializableElement();
 		
 		if(imageURL != null && !imageURL.isEmpty()) o.add("image", new JsonPrimitive(imageURL));
 		

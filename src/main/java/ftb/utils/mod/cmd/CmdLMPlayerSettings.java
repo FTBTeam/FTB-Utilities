@@ -76,7 +76,7 @@ public class CmdLMPlayerSettings extends CommandSubLM
 			if(l != null)
 			{
 				p.getSettings().blocks = l;
-				FTBLib.printChat(ics, commandName + " set to " + l.uname);
+				FTBLib.printChat(ics, commandName + " set to " + l.name().toLowerCase());
 			}
 			
 			return null;

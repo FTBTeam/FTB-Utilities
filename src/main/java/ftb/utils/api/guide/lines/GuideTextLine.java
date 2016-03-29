@@ -4,13 +4,12 @@ import com.google.gson.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.utils.api.guide.GuidePage;
 import ftb.utils.mod.client.gui.guide.*;
-import latmod.lib.json.IJsonObject;
 import net.minecraft.util.*;
 
 /**
  * Created by LatvianModder on 20.03.2016.
  */
-public class GuideTextLine implements IJsonObject
+public class GuideTextLine implements IJsonSerializable
 {
 	public static GuideTextLine get(GuidePage c, JsonElement e)
 	{
@@ -35,7 +34,7 @@ public class GuideTextLine implements IJsonObject
 				l = new GuideExtendedTextLine(c, null);
 			}
 			
-			l.setJson(o);
+			l.func_152753_a(o);
 			return l;
 		}
 	}
@@ -56,9 +55,9 @@ public class GuideTextLine implements IJsonObject
 	public ButtonGuideTextLine createWidget(GuiGuide gui)
 	{ return new ButtonGuideTextLine(gui, this); }
 	
-	public void setJson(JsonElement e)
+	public void func_152753_a(JsonElement e)
 	{ text = e.getAsString(); }
 	
-	public JsonElement getJson()
+	public JsonElement getSerializableElement()
 	{ return new JsonPrimitive(text); }
 }

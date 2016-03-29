@@ -6,7 +6,6 @@ import ftb.lib.api.item.LMInvUtils;
 import ftb.utils.mod.config.FTBUConfigGeneral;
 import ftb.utils.world.*;
 import latmod.lib.*;
-import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.util.EnumEnabled;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.*;
@@ -78,7 +77,7 @@ public class ClaimedChunks
 			{
 				try
 				{
-					LMPlayerServer p = LMWorldServer.inst.getPlayer(UUIDTypeAdapterLM.getUUID(e1.getKey()));
+					LMPlayerServer p = LMWorldServer.inst.getPlayer(LMUtils.fromString(e1.getKey()));
 					
 					if(p != null)
 					{

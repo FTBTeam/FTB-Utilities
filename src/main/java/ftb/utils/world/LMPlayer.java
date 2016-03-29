@@ -3,8 +3,7 @@ package ftb.utils.world;
 import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.friends.ILMPlayer;
-import latmod.lib.IntList;
-import latmod.lib.json.UUIDTypeAdapterLM;
+import latmod.lib.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -34,7 +33,7 @@ public abstract class LMPlayer implements ILMPlayer, Comparable<ILMPlayer> // LM
 	public abstract LMWorld getWorld();
 	
 	public final String getStringUUID()
-	{ return UUIDTypeAdapterLM.getString(gameProfile.getId()); }
+	{ return LMUtils.fromUUID(gameProfile.getId()); }
 	
 	public abstract LMPlayerServer toPlayerMP();
 	

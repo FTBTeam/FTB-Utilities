@@ -18,7 +18,7 @@ public class MessageDisplayGuide extends MessageFTBU
 		this();
 		file.cleanup();
 		io.writeUTF(file.getID());
-		JsonElementIO.write(io, file.getJson());
+		JsonElementIO.write(io, file.getSerializableElement());
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -28,7 +28,7 @@ public class MessageDisplayGuide extends MessageFTBU
 	public IMessage onMessage(MessageContext ctx)
 	{
 		GuidePage file = new GuidePage(io.readUTF());
-		file.setJson(JsonElementIO.read(io));
+		file.func_152753_a(JsonElementIO.read(io));
 		FTBLibClient.openGui(new GuiGuide(null, file));
 		return null;
 	}

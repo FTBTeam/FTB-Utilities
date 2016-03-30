@@ -10,8 +10,6 @@ import ftb.utils.mod.config.*;
 import ftb.utils.world.*;
 import latmod.lib.*;
 import net.minecraft.command.ICommand;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.EntityList;
 import net.minecraft.util.*;
 
 import java.io.File;
@@ -22,16 +20,11 @@ public class ServerGuideFile extends GuidePage
 	public static class CachedInfo
 	{
 		public static final GuidePage main = new GuidePage("ServerInfo").setTitle(new ChatComponentTranslation("player_action.ftbu.server_info"));
-		public static GuidePage categoryServer, categoryServerAdmin;
+		public static GuidePage categoryServer;
 		
 		public static void reload()
 		{
 			main.clear();
-			
-			categoryServerAdmin = new GuidePage("Admin"); //LANG
-			categoryServerAdmin.setParent(main);
-			
-			//categoryServer.println(new ChatComponentTranslation("ftbl:worldID", FTBWorld.server.getWorldID()));
 			
 			File file = new File(FTBLib.folderLocal, "guide/");
 			if(file.exists() && file.isDirectory())
@@ -59,32 +52,7 @@ public class ServerGuideFile extends GuidePage
 				}
 			}
 			
-			reloadRegistries();
-			
 			main.cleanup();
-		}
-		
-		@SuppressWarnings("all")
-		public static void reloadRegistries()
-		{
-			GuidePage list = categoryServerAdmin.getSub("Entities"); //LANG
-			
-			Set<Integer> entityIDset = EntityList.IDtoClassMapping.keySet();
-			for(Integer i : entityIDset)
-				list.printlnText("[" + i + "] " + EntityList.getStringFromID(i.intValue()));
-			
-			list = categoryServerAdmin.getSub("Enchantments"); //LANG
-			
-			IntList freeIDs = new IntList();
-			
-			for(int i = 0; i < 256; i++)
-			{
-				Enchantment e = Enchantment.enchantmentsList[i];
-				if(e == null) freeIDs.add(i);
-				else list.printlnText("[" + i + "] " + e.getTranslatedName(1));
-			}
-			
-			list.printlnText("Empty IDs: " + freeIDs.toString());
 		}
 	}
 	
@@ -99,7 +67,6 @@ public class ServerGuideFile extends GuidePage
 		
 		if((self = pself) == null) return;
 		boolean isDedi = FTBLib.getServer().isDedicatedServer();
-		boolean isOP = !isDedi || self.getRank().config.admin_server_info.get();
 		
 		copyFrom(CachedInfo.main);
 		
@@ -127,8 +94,7 @@ public class ServerGuideFile extends GuidePage
 		if(FTBUConfigTops.last_seen.get()) addTop(Top.last_seen);
 		if(FTBUConfigTops.time_played.get()) addTop(Top.time_played);
 		
-		new EventFTBUServerGuide(this, self, isOP).post();
-		if(isOP) addSub(CachedInfo.categoryServerAdmin);
+		new EventFTBUServerGuide(this, self).post();
 		
 		GuidePage page = getSub("Commands"); //LANG
 		page.clear();

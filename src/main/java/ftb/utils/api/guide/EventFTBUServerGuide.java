@@ -9,10 +9,10 @@ public class EventFTBUServerGuide extends EventLM
 	public final LMPlayerServer player;
 	public final boolean isOP;
 	
-	public EventFTBUServerGuide(ServerGuideFile f, LMPlayerServer p, boolean o)
+	public EventFTBUServerGuide(ServerGuideFile f, LMPlayerServer p)
 	{
 		file = f;
 		player = p;
-		isOP = o;
+		isOP = p.isOP();
 	}
 }

@@ -2,7 +2,6 @@ package ftb.utils.world.ranks;
 
 import ftb.lib.PrivacyLevel;
 import ftb.lib.api.config.*;
-import ftb.utils.world.claims.ChunkloaderType;
 import latmod.lib.IntList;
 import latmod.lib.annotations.*;
 import latmod.lib.util.EnumEnabled;
@@ -22,31 +21,24 @@ public class RankConfig
 	@Info("Can use /home to teleport to/from another dimension")
 	public final ConfigEntryBool cross_dim_homes = new ConfigEntryBool("cross_dim_homes", true);
 	
-	@Flags(Flag.SYNC)
+	@Flags(Flags.SYNC)
 	@Info({"'-' - Player setting", "'disabled' - Explosions will never happen in claimed chunks\", \"'enabled' - Explosions will always happen in claimed chunks"})
 	public final ConfigEntryEnum<EnumEnabled> forced_explosions = new ConfigEntryEnum<>("forced_explosions", EnumEnabled.VALUES, null, true);
 	
-	@Flags(Flag.SYNC)
+	@Flags(Flags.SYNC)
 	@Info({ })
 	public final ConfigEntryEnum<PrivacyLevel> forced_chunk_security = new ConfigEntryEnum<>("forced_chunk_security", PrivacyLevel.VALUES_3, null, true);
 	
 	@Info("Block IDs that you can break in claimed chunks")
 	public final ConfigEntryStringArray break_whitelist = new ConfigEntryStringArray("break_whitelist", "OpenBlocks:grave");
 	
-	@Flags(Flag.SYNC)
+	@Flags(Flags.SYNC)
 	@Info("Dimensions where players can't claim")
 	public final ConfigEntryIntArray dimension_blacklist = new ConfigEntryIntArray("dimension_blacklist", IntList.asList());
 	
-	@Info("Display server admin guide information (IDs etc.)")
-	public final ConfigEntryBool admin_server_info = new ConfigEntryBool("admin_server_info", false);
-	
-	@Flags(Flag.SYNC)
+	@Flags(Flags.SYNC)
 	@Info("Allow creative players access protected chests / chunks")
 	public final ConfigEntryBool allow_creative_interact_secure = new ConfigEntryBool("allow_creative_interact_secure", false);
-	
-	@Flags(Flag.SYNC)
-	@Info({"disabled - Players won't be able to chunkload", "normal - Chunks stay loaded when player loggs off", "playerMap - Chunks only stay loaded while owner is online"})
-	public final ConfigEntryEnum<ChunkloaderType> chunkloader_type = new ConfigEntryEnum<>("chunkloader_type", ChunkloaderType.values(), ChunkloaderType.OFFLINE, false);
 	
 	@NumberBounds(min = 0, max = 30000)
 	@Info({"Max amount of chunks that player can chunkload", "0 - Disabled"})
@@ -54,11 +46,6 @@ public class RankConfig
 	
 	@Info("If set to false, players won't be able to see others Rank in FriendsGUI")
 	public final ConfigEntryBool show_rank = new ConfigEntryBool("show_rank", true);
-	
-	@Flags(Flag.SYNC)
-	@NumberBounds(min = -1D)
-	@Info({"Max hours player can be offline until he's chunks unload", "0 - Disabled, will unload instantly when he disconnects"})
-	public final ConfigEntryDouble offline_chunkloader_timer = new ConfigEntryDouble("offline_chunkloader_timer", 24D);
 	
 	@Info("Badge ID")
 	public final ConfigEntryString badge = new ConfigEntryString("badge", "");

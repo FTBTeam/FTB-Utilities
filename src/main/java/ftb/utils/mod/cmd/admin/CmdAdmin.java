@@ -16,11 +16,11 @@ public class CmdAdmin extends CommandSubLM
 		add(new CmdDelWarp());
 		add(new CmdUnclaim());
 		add(new CmdUnclaimAll());
-		add(new CmdLoadedChunks());
 		add(new CmdBackup());
 		add(new CmdListFriends());
 		add(new CmdUnloadAll());
 		add(new CmdAdminHome());
 		add(new CmdWorldBorder());
+		add(new CmdServerInfo());
 	}
 }

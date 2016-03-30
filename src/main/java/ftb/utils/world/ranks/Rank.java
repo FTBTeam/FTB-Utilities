@@ -33,10 +33,7 @@ public class Rank extends FinalIDObject
 		{
 			config.max_claims.set(1000);
 			config.max_homes.set(100);
-			config.admin_server_info.set(true);
 			config.allow_creative_interact_secure.set(true);
-			
-			config.admin_server_info.defValue = true;
 			config.allow_creative_interact_secure.defValue = true;
 		}
 		else if(this == Ranks.PLAYER)

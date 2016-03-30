@@ -3,9 +3,9 @@ package ftb.utils.mod.handlers;
 import com.google.common.collect.MapMaker;
 import ftb.lib.*;
 import ftb.utils.mod.*;
-import ftb.utils.mod.config.FTBUConfigGeneral;
+import ftb.utils.mod.config.FTBUConfigChunkloading;
 import ftb.utils.world.*;
-import ftb.utils.world.claims.*;
+import ftb.utils.world.claims.ClaimedChunk;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 
@@ -64,7 +64,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 	{
 		table.remove(world);
 		List<ForgeChunkManager.Ticket> tickets1 = new ArrayList<>();
-		if(tickets.isEmpty() || FTBUConfigGeneral.disable_chunkloading.get()) return tickets1;
+		if(tickets.isEmpty() || !FTBUConfigChunkloading.enabled.get()) return tickets1;
 		Map<Integer, ForgeChunkManager.Ticket> map = new HashMap<>();
 		
 		for(ForgeChunkManager.Ticket t : tickets)
@@ -129,6 +129,8 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 		
 		Map<Long, ClaimedChunk> chunksMap = LMWorldServer.inst.claimedChunks.chunks.get(w.provider.dimensionId);
 		
+		double max = FTBUConfigChunkloading.enabled.get() ? FTBUConfigChunkloading.max_player_offline_hours.get() : -2D;
+		
 		if(chunksMap != null) for(ClaimedChunk c : chunksMap.values())
 		{
 			//total++;
@@ -141,16 +143,13 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 				if(p == null) isLoaded = false;
 				else
 				{
-					ChunkloaderType type = p.getRank().config.chunkloader_type.get();
-					
-					if(type == ChunkloaderType.DISABLED) isLoaded = false;
-					else if(type == ChunkloaderType.ONLINE) isLoaded = p.isOnline();
-					else if(type == ChunkloaderType.OFFLINE)
+					if(max == -2D) isLoaded = false;
+					else if(max == -1D) isLoaded = true;
+					else if(max == 0D) isLoaded = p.isOnline();
+					else if(max > 0D)
 					{
 						if(!p.isOnline())
 						{
-							double max = p.getRank().config.offline_chunkloader_timer.get();
-							
 							if(max > 0D && p.stats.getLastSeenDeltaInHours(p) > max)
 							{
 								isLoaded = false;

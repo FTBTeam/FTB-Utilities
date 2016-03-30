@@ -19,6 +19,7 @@ public class FTBUConfig // FTBU
 		configFile.addGroup("general", FTBUConfigGeneral.class);
 		configFile.addGroup("login", FTBUConfigLogin.class);
 		configFile.addGroup("tops", FTBUConfigTops.class);
+		configFile.addGroup("chunkloading", FTBUConfigChunkloading.class);
 		Ranks.load(configFile);
 		
 		ConfigRegistry.add(configFile);

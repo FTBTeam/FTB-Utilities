@@ -5,7 +5,7 @@ import ftb.lib.api.client.*;
 import ftb.utils.api.guide.GuidePage;
 import ftb.utils.api.guide.lines.GuideTextLine;
 import ftb.utils.mod.client.gui.guide.*;
-import ftb.utils.world.*;
+import ftb.utils.world.LMPlayerClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -47,7 +47,7 @@ public class GuidePlayerViewLine extends GuideTextLine
 			if(ay < -height || ay > guiGuide.mainPanel.height) return;
 			int ax = getAX();
 			
-			if(player == null) player = new Player(LMWorldClient.inst.clientPlayer);
+			if(player == null) player = new Player(playerLM);
 			
 			if(mouseOver() && Mouse.isButtonDown(1))
 			{

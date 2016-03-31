@@ -66,8 +66,8 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		if(p == Phase.PRE)
 		{
 			warps.readFromJson(group, "warps");
-			customServerData.setJson(group.get(customServerData.getID()));
-			customCommonData.setJson(group.get(customCommonData.getID()));
+			customServerData.func_152753_a(group.get(customServerData.getID()));
+			customCommonData.func_152753_a(group.get(customCommonData.getID()));
 			settings.readFromJson(group.get("settings").getAsJsonObject());
 		}
 	}
@@ -77,8 +77,8 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		if(p == Phase.PRE)
 		{
 			warps.writeToJson(group, "warps");
-			group.add(customServerData.getID(), customServerData.getJson());
-			group.add(customCommonData.getID(), customCommonData.getJson());
+			group.add(customServerData.getID(), customServerData.getSerializableElement());
+			group.add(customCommonData.getID(), customCommonData.getSerializableElement());
 			JsonObject settingsGroup = new JsonObject();
 			settings.writeToJson(settingsGroup);
 			group.add("settings", settingsGroup);

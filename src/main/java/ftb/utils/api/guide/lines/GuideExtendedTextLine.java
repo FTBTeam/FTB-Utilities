@@ -7,6 +7,7 @@ import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.notification.ClickAction;
 import ftb.utils.api.guide.GuidePage;
 import ftb.utils.mod.client.gui.guide.*;
+import net.minecraft.event.*;
 import net.minecraft.util.IChatComponent;
 
 import java.util.*;
@@ -24,6 +25,21 @@ public class GuideExtendedTextLine extends GuideTextLine
 	{
 		super(c, null);
 		text = cc;
+		
+		if(text != null)
+		{
+			ClickEvent clickEvent = text.getChatStyle().getChatClickEvent();
+			if(clickEvent != null)
+			{
+				clickAction = ClickAction.from(clickEvent);
+			}
+			
+			HoverEvent hoverEvent = text.getChatStyle().getChatHoverEvent();
+			if(hoverEvent != null && hoverEvent.getAction() == HoverEvent.Action.SHOW_TEXT)
+			{
+				hover = Collections.singletonList(hoverEvent.getValue());
+			}
+		}
 	}
 	
 	public IChatComponent getText()

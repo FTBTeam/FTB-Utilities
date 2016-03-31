@@ -19,7 +19,7 @@ public class ServerGuideFile extends GuidePage
 {
 	public static class CachedInfo
 	{
-		public static final GuidePage main = new GuidePage("ServerInfo").setTitle(new ChatComponentTranslation("player_action.ftbu.server_info"));
+		public static final GuidePage main = new GuidePage("server_info").setTitle(new ChatComponentTranslation("player_action.ftbu.server_info"));
 		public static GuidePage categoryServer;
 		
 		public static void reload()
@@ -68,13 +68,26 @@ public class ServerGuideFile extends GuidePage
 		if((self = pself) == null) return;
 		boolean isDedi = FTBLib.getServer().isDedicatedServer();
 		
+		if(!FTBUConfigLogin.motd.components.isEmpty())
+		{
+			for(IChatComponent c : FTBUConfigLogin.motd.components)
+			{
+				println(c);
+			}
+			
+			text.add(null);
+		}
+		
 		copyFrom(CachedInfo.main);
 		
-		categoryTops = getSub("Tops").setTitle(FTBU.mod.chatComponent("top.title"));
+		categoryTops = getSub("tops").setTitle(FTBU.mod.chatComponent("top.title"));
 		
 		players = LMWorldServer.inst.getServerPlayers();
-		for(int i = 0; i < players.size(); i++)
-			players.get(i).refreshStats();
+		
+		for(LMPlayerServer p : players)
+		{
+			p.refreshStats();
+		}
 		
 		if(FTBUConfigGeneral.restart_timer.get() > 0F)
 			println(FTBU.mod.chatComponent("cmd.timer_restart", LMStringUtils.getTimeString(FTBUTicks.restartMillis - LMUtils.millis())));
@@ -96,7 +109,7 @@ public class ServerGuideFile extends GuidePage
 		
 		new EventFTBUServerGuide(this, self).post();
 		
-		GuidePage page = getSub("Commands"); //LANG
+		GuidePage page = getSub("commands").setTitle(new ChatComponentText("Commands")); //LANG
 		page.clear();
 		
 		try
@@ -109,7 +122,9 @@ public class ServerGuideFile extends GuidePage
 					
 					@SuppressWarnings("unchecked") List<String> al = c.getCommandAliases();
 					if(al != null && !al.isEmpty()) for(String s : al)
+					{
 						cat.printlnText('/' + s);
+					}
 					
 					if(c instanceof ICustomCommandInfo)
 					{
@@ -155,9 +170,12 @@ public class ServerGuideFile extends GuidePage
 				}
 			}
 		}
-		catch(Exception ex) { }
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
 		
-		page = getSub("Warps"); //LANG
+		page = getSub("warps").setTitle(new ChatComponentText("Warps")); //LANG
 		GuideExtendedTextLine line;
 		
 		for(String s : LMWorldServer.inst.warps.list())
@@ -167,7 +185,7 @@ public class ServerGuideFile extends GuidePage
 			page.text.add(line);
 		}
 		
-		page = getSub("Homes"); //LANG
+		page = getSub("homes").setTitle(new ChatComponentText("Homes")); //LANG
 		
 		for(String s : self.homes.list())
 		{

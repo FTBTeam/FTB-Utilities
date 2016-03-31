@@ -21,13 +21,12 @@ import latmod.lib.util.Phase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.player.*;
 
 import java.io.File;
-import java.util.List;
 
 public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 {
@@ -141,13 +140,19 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 			
 			if(first_login)
 			{
-				List<ItemStack> items = FTBUConfigLogin.getStartingItems(ep.getUniqueID());
-				if(items != null && !items.isEmpty()) for(ItemStack is : items)
+				for(ItemStack is : FTBUConfigLogin.starting_items.items)
+				{
 					LMInvUtils.giveItem(ep, is);
+				}
 			}
 			
 			//new MessageLMPlayerInfo(p.playerID).sendTo(null);
-			FTBUConfigLogin.printMotd(ep);
+			
+			for(IChatComponent c : FTBUConfigLogin.motd.components)
+			{
+				ep.addChatMessage(c);
+			}
+			
 			Backups.hadPlayer = true;
 			
 			p.checkNewFriends();

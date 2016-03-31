@@ -27,7 +27,7 @@ public class GuidePage extends FinalIDObject implements IJsonSerializable, IClie
 	public GuidePage parent = null;
 	private IChatComponent title;
 	public final List<GuideTextLine> text;
-	public final Map<String, GuidePage> childPages;
+	public final LinkedHashMap<String, GuidePage> childPages;
 	
 	public GuidePage(String id)
 	{
@@ -81,27 +81,6 @@ public class GuidePage extends FinalIDObject implements IJsonSerializable, IClie
 		return sb.toString();
 	}
 	
-	public String getFormattedText()
-	{
-		if(text.isEmpty()) return "";
-		StringBuilder sb = new StringBuilder();
-		int s = text.size();
-		for(int i = 0; i < s; i++)
-		{
-			GuideTextLine c = text.get(i);
-			
-			if(c == null || c.getText() == null) sb.append('\n');
-			else
-			{
-				try { sb.append(c.getText().getFormattedText()); }
-				catch(Exception ex) { ex.printStackTrace(); }
-			}
-			
-			if(i != s - 1) sb.append('\n');
-		}
-		return sb.toString();
-	}
-	
 	public void addSub(GuidePage c)
 	{
 		childPages.put(c.getID(), c);
@@ -138,12 +117,29 @@ public class GuidePage extends FinalIDObject implements IJsonSerializable, IClie
 	
 	public void sortAll()
 	{
-		//TODO: sort
+		LMMapUtils.sortMap(childPages, new Comparator<Map.Entry<String, GuidePage>>()
+		{
+			public int compare(Map.Entry<String, GuidePage> o1, Map.Entry<String, GuidePage> o2)
+			{ return o1.getValue().compareTo(o2.getValue()); }
+		});
+		
 		for(GuidePage c : childPages.values()) c.sortAll();
 	}
 	
 	public void copyFrom(GuidePage c)
-	{ for(int i = 0; i < c.childPages.size(); i++) addSub(c.setParent(this)); }
+	{
+		for(GuidePage p : c.childPages.values())
+		{
+			addSub(p.copy().setParent(this));
+		}
+	}
+	
+	public GuidePage copy()
+	{
+		GuidePage page = new GuidePage(getID());
+		page.func_152753_a(getSerializableElement());
+		return page;
+	}
 	
 	public GuidePage getParentTop()
 	{

@@ -86,7 +86,7 @@ public class GuiGuide extends GuiLM implements IClientActionGui
 			{
 				FTBLibClient.playClickSound();
 				
-				if(selectedPage == page || page.getFormattedText().isEmpty())
+				if(selectedPage == page || page.getUnformattedText().isEmpty())
 				{
 					if(parentGui == null) mc.thePlayer.closeScreen();
 					else

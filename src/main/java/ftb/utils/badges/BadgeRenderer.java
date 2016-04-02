@@ -15,7 +15,7 @@ public class BadgeRenderer
 	@SubscribeEvent
 	public void onPlayerRender(RenderPlayerEvent.Specials.Post e)
 	{
-		if(FTBLibClient.isIngameWithFTBU() && FTBUClient.render_badges.get() && !e.entityPlayer.isInvisible())
+		if(FTBLibClient.isIngameWithFTBU() && FTBUClient.render_badges.getAsBoolean() && !e.entityPlayer.isInvisible())
 		{
 			Badge b = ClientBadges.getClientBadge(e.entityPlayer.getGameProfile().getId());
 			

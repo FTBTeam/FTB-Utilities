@@ -6,6 +6,8 @@ import latmod.lib.IntList;
 import latmod.lib.annotations.*;
 import latmod.lib.util.EnumEnabled;
 
+import java.util.Collections;
+
 public class RankConfig
 {
 	public final ConfigGroup custom = new ConfigGroup("custom_config");
@@ -30,11 +32,11 @@ public class RankConfig
 	public final ConfigEntryEnum<PrivacyLevel> forced_chunk_security = new ConfigEntryEnum<>("forced_chunk_security", PrivacyLevel.VALUES_3, null, true);
 	
 	@Info("Block IDs that you can break in claimed chunks")
-	public final ConfigEntryStringArray break_whitelist = new ConfigEntryStringArray("break_whitelist", "OpenBlocks:grave");
+	public final ConfigEntryStringList break_whitelist = new ConfigEntryStringList("break_whitelist", Collections.singletonList("OpenBlocks:grave"));
 	
 	@Flags(Flags.SYNC)
 	@Info("Dimensions where players can't claim")
-	public final ConfigEntryIntArray dimension_blacklist = new ConfigEntryIntArray("dimension_blacklist", IntList.asList());
+	public final ConfigEntryIntList dimension_blacklist = new ConfigEntryIntList("dimension_blacklist", IntList.asList());
 	
 	@Flags(Flags.SYNC)
 	@Info("Allow creative players access protected chests / chunks")

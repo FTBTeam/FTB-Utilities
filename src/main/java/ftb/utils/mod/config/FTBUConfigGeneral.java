@@ -19,8 +19,9 @@ public class FTBUConfigGeneral
 	@Info("If set to false, players won't be able to attack each other in spawn area")
 	public static final ConfigEntryBool spawn_pvp = new ConfigEntryBool("spawn_pvp", true);
 	
+	//TODO: Replace me with a custom entry
 	@Info("Entity IDs that are banned from world. They will not spawn and existing ones will be destroyed")
-	private static final ConfigEntryStringArray blocked_entities = new ConfigEntryStringArray("blocked_entities");
+	private static final ConfigEntryStringList blocked_entities = new ConfigEntryStringList("blocked_entities", null);
 	
 	@Info("Enable spawn area in singleplayer")
 	public static final ConfigEntryBool spawn_area_in_sp = new ConfigEntryBool("spawn_area_in_sp", false);
@@ -37,7 +38,7 @@ public class FTBUConfigGeneral
 		{
 			blockedEntitiesL.clear();
 			
-			for(String s : blocked_entities.get())
+			for(String s : blocked_entities.getAsStringList())
 			{
 				try
 				{

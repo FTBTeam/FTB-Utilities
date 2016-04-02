@@ -22,9 +22,9 @@ public class FTBUTicks
 		startMillis = LMUtils.millis();
 		Backups.nextBackup = startMillis + FTBUConfigBackups.backupMillis();
 		
-		if(FTBUConfigGeneral.restart_timer.get() > 0)
+		if(FTBUConfigGeneral.restart_timer.getAsDouble() > 0D)
 		{
-			restartMillis = startMillis + (long) (FTBUConfigGeneral.restart_timer.get() * 3600D * 1000D);
+			restartMillis = startMillis + (long) (FTBUConfigGeneral.restart_timer.getAsDouble() * 3600D * 1000D);
 			FTBU.logger.info("Server restart in " + LMStringUtils.getTimeString(restartMillis));
 		}
 		

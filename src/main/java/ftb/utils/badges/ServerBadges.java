@@ -15,8 +15,8 @@ import java.util.*;
 
 public class ServerBadges
 {
-	private static final HashMap<String, Badge> map = new HashMap<>();
-	private static final HashMap<UUID, Badge> uuid = new HashMap<>();
+	private static final Map<String, Badge> map = new HashMap<>();
+	private static final Map<UUID, Badge> uuid = new HashMap<>();
 	
 	public static ThreadReloadBadges thread;
 	
@@ -128,15 +128,20 @@ public class ServerBadges
 		Badge b = uuid.get(id);
 		if(b != null) return b;
 		
-		if(b == null)
+		uuid.put(id, Badge.emptyBadge);
+		
+		try
 		{
 			LMPlayerServer p = LMWorldServer.inst.getPlayer(id);
-			String rank = p.getRank().config.badge.get();
+			String rank = p.getRank().config.badge.getAsString();
 			if(!rank.isEmpty())
 			{
 				b = map.get(rank);
 				if(b != null) return b;
 			}
+		}
+		catch(Exception ex)
+		{
 		}
 		
 		return Badge.emptyBadge;

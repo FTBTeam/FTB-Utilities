@@ -221,7 +221,8 @@ public class ClaimedChunks
 	
 	public static boolean isInSpawn(int dim, int cx, int cz)
 	{
-		if(dim != 0 || (!FTBLib.isDedicatedServer() && !FTBUConfigGeneral.spawn_area_in_sp.get())) return false;
+		if(dim != 0 || (!FTBLib.isDedicatedServer() && !FTBUConfigGeneral.spawn_area_in_sp.getAsBoolean()))
+			return false;
 		int radius = FTBLib.getServer().getSpawnProtectionSize();
 		if(radius <= 0) return false;
 		BlockDimPos c = LMDimUtils.getSpawnPoint(0);
@@ -237,7 +238,7 @@ public class ClaimedChunks
 	
 	public boolean allowExplosion(int dim, int cx, int cz)
 	{
-		if(dim == 0 && FTBUConfigGeneral.safe_spawn.get() && isInSpawn(dim, cx, cz)) return false;
+		if(dim == 0 && FTBUConfigGeneral.safe_spawn.getAsBoolean() && isInSpawn(dim, cx, cz)) return false;
 		else if(LMWorldServer.inst.settings.getWB(dim).isOutside(cx, cz)) return false;
 		else
 		{
@@ -270,7 +271,7 @@ public class ClaimedChunks
 		
 		if(leftClick)
 		{
-			if(p.getRank().config.break_whitelist.get().contains(LMInvUtils.getRegName(ep.worldObj.getBlock(pos.posX, pos.posY, pos.posZ))))
+			if(p.getRank().config.break_whitelist.getAsStringList().contains(LMInvUtils.getRegName(ep.worldObj.getBlock(pos.posX, pos.posY, pos.posZ))))
 				return true;
 		}
 		

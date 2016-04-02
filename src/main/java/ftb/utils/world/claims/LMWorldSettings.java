@@ -64,7 +64,7 @@ public class LMWorldSettings
 	public void readFromNet(ByteIOStream io)
 	{
 		border_enabled.set(io.readBoolean());
-		if(!border_enabled.get()) return;
+		if(!border_enabled.getAsBoolean()) return;
 		
 		worldBorder0.pos.x = io.readInt();
 		worldBorder0.pos.y = io.readInt();
@@ -84,8 +84,8 @@ public class LMWorldSettings
 	
 	public void writeToNet(ByteIOStream io)
 	{
-		io.writeBoolean(border_enabled.get());
-		if(!border_enabled.get()) return;
+		io.writeBoolean(border_enabled.getAsBoolean());
+		if(!border_enabled.getAsBoolean()) return;
 		
 		io.writeInt(worldBorder0.pos.x);
 		io.writeInt(worldBorder0.pos.y);

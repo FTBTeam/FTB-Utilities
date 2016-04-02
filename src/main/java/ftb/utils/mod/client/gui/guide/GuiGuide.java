@@ -203,7 +203,7 @@ public class GuiGuide extends GuiLM implements IClientActionGui
 		colorBackground = 0xFF000000 | c.color();
 		
 		Boolean b = page.useUnicodeFont();
-		useUnicodeFont = (b == null) ? ClientSettings.unicode.get() : b.booleanValue();
+		useUnicodeFont = (b == null) ? ClientSettings.unicode.getAsBoolean() : b.booleanValue();
 		
 		//
 		

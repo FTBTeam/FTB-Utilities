@@ -89,23 +89,23 @@ public class ServerGuideFile extends GuidePage
 			p.refreshStats();
 		}
 		
-		if(FTBUConfigGeneral.restart_timer.get() > 0F)
+		if(FTBUConfigGeneral.restart_timer.getAsDouble() > 0D)
 			println(FTBU.mod.chatComponent("cmd.timer_restart", LMStringUtils.getTimeString(FTBUTicks.restartMillis - LMUtils.millis())));
 		
-		if(FTBUConfigBackups.enabled.get())
+		if(FTBUConfigBackups.enabled.getAsBoolean())
 			println(FTBU.mod.chatComponent("cmd.timer_backup", LMStringUtils.getTimeString(Backups.nextBackup - LMUtils.millis())));
 		
-		if(FTBUConfigGeneral.server_info_difficulty.get())
+		if(FTBUConfigGeneral.server_info_difficulty.getAsBoolean())
 			println(FTBU.mod.chatComponent("cmd.world_difficulty", LMStringUtils.firstUppercase(pself.getPlayer().worldObj.difficultySetting.toString().toLowerCase())));
 		
-		if(FTBUConfigGeneral.server_info_mode.get())
+		if(FTBUConfigGeneral.server_info_mode.getAsBoolean())
 			println(FTBU.mod.chatComponent("cmd.ftb_gamemode", LMStringUtils.firstUppercase(FTBWorld.server.getMode().toString().toLowerCase())));
 		
-		if(FTBUConfigTops.first_joined.get()) addTop(Top.first_joined);
-		if(FTBUConfigTops.deaths.get()) addTop(Top.deaths);
-		if(FTBUConfigTops.deaths_ph.get()) addTop(Top.deaths_ph);
-		if(FTBUConfigTops.last_seen.get()) addTop(Top.last_seen);
-		if(FTBUConfigTops.time_played.get()) addTop(Top.time_played);
+		if(FTBUConfigTops.first_joined.getAsBoolean()) addTop(Top.first_joined);
+		if(FTBUConfigTops.deaths.getAsBoolean()) addTop(Top.deaths);
+		if(FTBUConfigTops.deaths_ph.getAsBoolean()) addTop(Top.deaths_ph);
+		if(FTBUConfigTops.last_seen.getAsBoolean()) addTop(Top.last_seen);
+		if(FTBUConfigTops.time_played.getAsBoolean()) addTop(Top.time_played);
 		
 		new EventFTBUServerGuide(this, self).post();
 		

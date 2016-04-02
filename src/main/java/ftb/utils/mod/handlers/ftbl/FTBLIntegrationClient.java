@@ -32,7 +32,7 @@ public class FTBLIntegrationClient extends FTBLIntegration
 		if(e.world.side.isClient())
 		{
 			FTBLibClient.clearCachedData();
-			ClientBadges.clear();
+			ClientBadges.clearPlayerBadges();
 			ClientGuideFile.instance.reload(e);
 		}
 	}
@@ -62,7 +62,7 @@ public class FTBLIntegrationClient extends FTBLIntegration
 	
 	public void renderWorld(float pt)
 	{
-		if(!FTBLibClient.isIngameWithFTBU() || !LMWorldClient.inst.settings.border_enabled.get()) return;
+		if(!FTBLibClient.isIngameWithFTBU() || !LMWorldClient.inst.settings.border_enabled.getAsBoolean()) return;
 		
 		WorldBorder wb = LMWorldClient.inst.settings.getWB(FTBLibClient.getDim());
 		int s = wb.getSize();

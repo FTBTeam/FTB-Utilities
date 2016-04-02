@@ -22,7 +22,7 @@ public class Rank extends FinalIDObject
 	
 	public Rank getParentRank()
 	{
-		String s = parent.get();
+		String s = parent.getAsString();
 		if(s.isEmpty() || s.equals("-")) return null;
 		return Ranks.getRankFor(s);
 	}
@@ -40,7 +40,7 @@ public class Rank extends FinalIDObject
 		{
 			config.dimension_blacklist.set(IntList.asList(1));
 			config.dimension_blacklist.defValue.clear();
-			config.dimension_blacklist.defValue.addAll(config.dimension_blacklist.get());
+			config.dimension_blacklist.defValue.addAll(config.dimension_blacklist.getAsIntList());
 		}
 	}
 }

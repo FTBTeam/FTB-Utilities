@@ -2,7 +2,7 @@ package ftb.utils.world;
 
 import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.FTBLib;
+import ftb.lib.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.utils.api.EventLMPlayerClient;
 import latmod.lib.*;
@@ -77,7 +77,8 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 			new EventLMPlayerClient.DataLoaded(clientPlayer).post();
 		}
 		
-		customCommonData.read(io);
+		customCommonData.readFromNBT(LMNBTUtils.readTag(io), false);
+		
 		settings.readFromNet(io);
 	}
 }

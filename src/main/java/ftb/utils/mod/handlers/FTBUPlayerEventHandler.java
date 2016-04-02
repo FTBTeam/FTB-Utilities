@@ -133,7 +133,8 @@ public class FTBUPlayerEventHandler
 			int cx = MathHelperLM.chunk(e.entity.posX);
 			int cz = MathHelperLM.chunk(e.entity.posZ);
 			
-			if((FTBUConfigGeneral.safe_spawn.get() && ClaimedChunks.isInSpawn(dim, cx, cz))) e.setCanceled(true);
+			if((FTBUConfigGeneral.safe_spawn.getAsBoolean() && ClaimedChunks.isInSpawn(dim, cx, cz)))
+				e.setCanceled(true);
 			/*else
 			{
 				ClaimedChunk c = Claims.get(dim, cx, cz);

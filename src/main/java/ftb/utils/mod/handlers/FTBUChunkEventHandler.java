@@ -64,7 +64,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 	{
 		table.remove(world);
 		List<ForgeChunkManager.Ticket> tickets1 = new ArrayList<>();
-		if(tickets.isEmpty() || !FTBUConfigChunkloading.enabled.get()) return tickets1;
+		if(tickets.isEmpty() || !FTBUConfigChunkloading.enabled.getAsBoolean()) return tickets1;
 		Map<Integer, ForgeChunkManager.Ticket> map = new HashMap<>();
 		
 		for(ForgeChunkManager.Ticket t : tickets)
@@ -129,7 +129,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 		
 		Map<Long, ClaimedChunk> chunksMap = LMWorldServer.inst.claimedChunks.chunks.get(w.provider.dimensionId);
 		
-		double max = FTBUConfigChunkloading.enabled.get() ? FTBUConfigChunkloading.max_player_offline_hours.get() : -2D;
+		double max = FTBUConfigChunkloading.enabled.getAsBoolean() ? FTBUConfigChunkloading.max_player_offline_hours.getAsDouble() : -2D;
 		
 		if(chunksMap != null) for(ClaimedChunk c : chunksMap.values())
 		{

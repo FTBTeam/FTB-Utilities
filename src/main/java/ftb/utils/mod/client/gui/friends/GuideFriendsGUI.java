@@ -26,7 +26,7 @@ public class GuideFriendsGUI extends GuidePage
 		
 		tempPlayerList.remove(LMWorldClient.inst.clientPlayer);
 		
-		if(FTBUClient.sort_friends_az.get()) Collections.sort(tempPlayerList, LMPNameComparator.instance);
+		if(FTBUClient.sort_friends_az.getAsBoolean()) Collections.sort(tempPlayerList, LMPNameComparator.instance);
 		else Collections.sort(tempPlayerList, new LMPStatusComparator(LMWorldClient.inst.clientPlayer));
 		
 		addSub(new GuideFriendsGUISelfPage());

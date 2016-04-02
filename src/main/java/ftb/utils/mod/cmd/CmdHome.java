@@ -32,7 +32,7 @@ public class CmdHome extends CommandLM
 		if(args[0].equals("list"))
 		{
 			String[] list = p.homes.list();
-			ics.addChatMessage(new ChatComponentText(list.length + " / " + p.getRank().config.max_homes.get() + ": "));
+			ics.addChatMessage(new ChatComponentText(list.length + " / " + p.getRank().config.max_homes.getAsInt() + ": "));
 			return (list.length == 0) ? null : new ChatComponentText(LMStringUtils.strip(list));
 		}
 		
@@ -40,7 +40,7 @@ public class CmdHome extends CommandLM
 		
 		if(pos == null) return error(FTBU.mod.chatComponent("cmd.home_not_set", args[0]));
 		
-		if(ep.dimension != pos.dim && !p.getRank().config.cross_dim_homes.get())
+		if(ep.dimension != pos.dim && !p.getRank().config.cross_dim_homes.getAsBoolean())
 			return error(FTBU.mod.chatComponent("cmd.home_cross_dim"));
 		
 		LMDimUtils.teleportPlayer(ep, pos);

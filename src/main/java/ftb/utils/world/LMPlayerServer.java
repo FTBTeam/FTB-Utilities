@@ -18,7 +18,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatisticsFile;
 import net.minecraft.util.*;
-import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.*;
 
 import java.util.*;
 
@@ -135,7 +135,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		new EventLMPlayerServer.CustomInfo(this, info).post();
 		
-		if(owner.getRank().config.show_rank.get())
+		if(owner.getRank().config.show_rank.getAsBoolean())
 		{
 			Rank rank = getRank();
 			IChatComponent rankC = new ChatComponentText("[" + rank.getID() + "]");
@@ -171,7 +171,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		if(tag.hasKey("LastPos"))
 		{
-			if(tag.func_150299_b("LastPos") == LMNBTUtils.INT_ARRAY)
+			if(tag.func_150299_b("LastPos") == Constants.NBT.TAG_INT_ARRAY)
 			{
 				lastPos = new BlockDimPos(tag.getIntArray("LastPos"));
 			}
@@ -188,7 +188,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		if(tag.hasKey("LastDeath"))
 		{
-			if(tag.func_150299_b("LastDeath") == LMNBTUtils.INT_ARRAY)
+			if(tag.func_150299_b("LastDeath") == Constants.NBT.TAG_INT_ARRAY)
 			{
 				lastDeath = new BlockDimPos(tag.getIntArray("LastDeath"));
 			}
@@ -265,8 +265,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			LMNBTUtils.writeTag(io, commonPrivateData);
 			io.writeShort(getClaimedChunks());
 			io.writeShort(getLoadedChunks(true));
-			io.writeShort(rank.config.max_claims.get());
-			io.writeShort(rank.config.max_loaded_chunks.get());
+			io.writeShort(rank.config.max_claims.getAsInt());
+			io.writeShort(rank.config.max_loaded_chunks.getAsInt());
 		}
 	}
 	
@@ -309,8 +309,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public void claimChunk(int dim, int cx, int cz)
 	{
 		RankConfig c = getRank().config;
-		if(c.dimension_blacklist.get().contains(dim)) return;
-		int max = c.max_claims.get();
+		if(c.dimension_blacklist.getAsIntList().contains(dim)) return;
+		int max = c.max_claims.getAsInt();
 		if(max == 0) return;
 		if(getClaimedChunks() >= max) return;
 		
@@ -372,8 +372,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			if(flag)
 			{
 				RankConfig c = getRank().config;
-				if(c.dimension_blacklist.get().contains(dim)) return;
-				int max = c.max_loaded_chunks.get();
+				if(c.dimension_blacklist.getAsIntList().contains(dim)) return;
+				int max = c.max_loaded_chunks.getAsInt();
 				if(max == 0) return;
 				if(getLoadedChunks(false) >= max) return;
 			}

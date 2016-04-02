@@ -27,7 +27,7 @@ public class CmdSetHome extends CommandLM
 		LMPlayerServer p = LMPlayerServer.get(ep);
 		checkArgs(args, 1);
 		
-		int maxHomes = p.getRank().config.max_homes.get();
+		int maxHomes = p.getRank().config.max_homes.getAsInt();
 		
 		if(maxHomes <= 0 || p.homes.size() >= maxHomes)
 		{

@@ -25,7 +25,7 @@ public class Backups
 	
 	public static void init()
 	{
-		backupsFolder = FTBUConfigBackups.folder.get().isEmpty() ? new File(FTBLib.folderMinecraft, "/backups/") : new File(FTBUConfigBackups.folder.get());
+		backupsFolder = FTBUConfigBackups.folder.getAsString().isEmpty() ? new File(FTBLib.folderMinecraft, "/backups/") : new File(FTBUConfigBackups.folder.getAsString());
 		if(!backupsFolder.exists()) backupsFolder.mkdirs();
 		thread = null;
 		clearOldBackups();
@@ -37,7 +37,7 @@ public class Backups
 		if(thread != null) return false;
 		boolean auto = !(ics instanceof EntityPlayerMP);
 		
-		if(auto && !FTBUConfigBackups.enabled.get()) return false;
+		if(auto && !FTBUConfigBackups.enabled.getAsBoolean()) return false;
 		
 		World w = FTBLib.getServerWorld();
 		if(w == null) return false;
@@ -48,7 +48,7 @@ public class Backups
 		
 		nextBackup = LMUtils.millis() + FTBUConfigBackups.backupMillis();
 		
-		if(auto && FTBUConfigBackups.need_online_players.get())
+		if(auto && FTBUConfigBackups.need_online_players.getAsBoolean())
 		{
 			if(!FTBLib.hasOnlinePlayers() && !hadPlayer) return true;
 			hadPlayer = false;
@@ -66,7 +66,7 @@ public class Backups
 		
 		File wd = w.getSaveHandler().getWorldDirectory();
 		
-		if(FTBUConfigBackups.use_separate_thread.get())
+		if(FTBUConfigBackups.use_separate_thread.getAsBoolean())
 		{
 			thread = new ThreadBackup(wd);
 			thread.start();
@@ -83,11 +83,11 @@ public class Backups
 	{
 		String[] s = backupsFolder.list();
 		
-		if(s.length > FTBUConfigBackups.backups_to_keep.get())
+		if(s.length > FTBUConfigBackups.backups_to_keep.getAsInt())
 		{
 			Arrays.sort(s);
 			
-			int j = s.length - FTBUConfigBackups.backups_to_keep.get();
+			int j = s.length - FTBUConfigBackups.backups_to_keep.getAsInt();
 			logger.info("Deleting " + j + " old backups");
 			
 			for(int i = 0; i < j; i++)

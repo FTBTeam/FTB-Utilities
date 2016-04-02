@@ -113,7 +113,10 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 			self.writeToNet(io, true);
 		}
 		
-		customCommonData.write(io);
+		NBTTagCompound tag = new NBTTagCompound();
+		customCommonData.writeToNBT(tag, false);
+		LMNBTUtils.writeTag(io, tag);
+		
 		settings.writeToNet(io);
 	}
 	

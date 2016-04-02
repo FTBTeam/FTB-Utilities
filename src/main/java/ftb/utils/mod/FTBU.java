@@ -64,12 +64,12 @@ public class FTBU
 		FTBLib.addCommand(e, new CmdAdmin());
 		FTBLib.addCommand(e, new CmdLMPlayerSettings());
 		
-		if(FTBUConfigCmd.back.get()) FTBLib.addCommand(e, new CmdBack());
-		if(FTBUConfigCmd.spawn.get()) FTBLib.addCommand(e, new CmdSpawn());
-		if(FTBUConfigCmd.tplast.get()) FTBLib.addCommand(e, new CmdTplast());
-		if(FTBUConfigCmd.warp.get()) FTBLib.addCommand(e, new CmdWarp());
+		if(FTBUConfigCmd.back.getAsBoolean()) FTBLib.addCommand(e, new CmdBack());
+		if(FTBUConfigCmd.spawn.getAsBoolean()) FTBLib.addCommand(e, new CmdSpawn());
+		if(FTBUConfigCmd.tplast.getAsBoolean()) FTBLib.addCommand(e, new CmdTplast());
+		if(FTBUConfigCmd.warp.getAsBoolean()) FTBLib.addCommand(e, new CmdWarp());
 		
-		if(FTBUConfigCmd.home.get())
+		if(FTBUConfigCmd.home.getAsBoolean())
 		{
 			FTBLib.addCommand(e, new CmdSetHome());
 			FTBLib.addCommand(e, new CmdHome());

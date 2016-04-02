@@ -15,6 +15,11 @@ public class ClientBadges
 	public static void clear()
 	{
 		map.clear();
+		clearPlayerBadges();
+	}
+	
+	public static void clearPlayerBadges()
+	{
 		playerBadges.clear();
 	}
 	

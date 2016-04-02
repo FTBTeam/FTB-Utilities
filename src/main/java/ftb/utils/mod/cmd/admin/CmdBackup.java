@@ -30,7 +30,7 @@ public class CmdBackup extends CommandSubLM
 			if(b)
 			{
 				FTBLib.printChat(BroadcastSender.inst, FTBU.mod.chatComponent("cmd.backup_manual_launch", ics.getCommandSenderName()));
-				if(!FTBUConfigBackups.use_separate_thread.get()) Backups.postBackup();
+				if(!FTBUConfigBackups.use_separate_thread.getAsBoolean()) Backups.postBackup();
 			}
 			return b ? null : error(FTBU.mod.chatComponent("cmd.backup_already_running"));
 		}

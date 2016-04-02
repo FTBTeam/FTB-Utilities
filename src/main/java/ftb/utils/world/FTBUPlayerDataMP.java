@@ -12,6 +12,7 @@ import ftb.utils.net.MessageAreaUpdate;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IChatComponent;
 
 import java.util.List;
 
@@ -74,13 +75,17 @@ public class FTBUPlayerDataMP extends FTBUPlayerData
 		
 		if(firstTime)
 		{
-			for(ItemStack is : FTBUConfigLogin.getStartingItems(player.getProfile().getId()))
+			for(ItemStack is : FTBUConfigLogin.starting_items.items)
 			{
 				LMInvUtils.giveItem(ep, is);
 			}
 		}
 		
-		FTBUConfigLogin.printMotd(ep);
+		for(IChatComponent c : FTBUConfigLogin.motd.components)
+		{
+			ep.addChatMessage(c);
+		}
+		
 		Backups.hadPlayer = true;
 		ServerBadges.sendToPlayer(ep);
 		

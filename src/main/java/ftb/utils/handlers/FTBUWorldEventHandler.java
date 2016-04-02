@@ -40,7 +40,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
 	{
 		if(e instanceof EntityPlayer) return true;
 		
-		if(FTBUConfigGeneral.isEntityBanned(e.getClass())) return false;
+		if(FTBUConfigGeneral.blocked_entities.isEntityBanned(e.getClass())) return false;
 		
 		if(FTBUConfigGeneral.safe_spawn.getAsBoolean() && FTBUWorldDataMP.isInSpawnD(e.dimension, e.posX, e.posZ))
 		{

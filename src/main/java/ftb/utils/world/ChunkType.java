@@ -6,6 +6,7 @@ import ftb.lib.api.net.MessageLM;
 import ftb.utils.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
 
@@ -39,11 +40,12 @@ public class ChunkType
 		return UNLOADED;
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public void getMessage(List<String> l, boolean shift)
 	{
 		if(this != ChunkType.UNLOADED)
 		{
-			l.add(getChatColor(null) + getIDS());
+			l.add(getChatColor(null) + FTBU.mod.format(lang));
 		}
 	}
 	
@@ -93,13 +95,14 @@ public class ChunkType
 			return super.equals(o) && ((PlayerClaimed) o).chunk.ownerID.equals(chunk.ownerID);
 		}
 		
+		@SideOnly(Side.CLIENT)
 		public void getMessage(List<String> l, boolean shift)
 		{
 			ForgePlayerSP owner = ForgeWorldSP.inst.getPlayer(chunk.ownerID);
 			if(owner != null)
 			{
 				l.add(getChatColor(owner) + owner.getProfile().getName());
-				if(chunk.isChunkloaded) l.add(FTBU.mod.translate("chunktype.chunkloaded"));
+				if(chunk.isChunkloaded) l.add(FTBU.mod.format("chunktype.chunkloaded"));
 			}
 		}
 	}
@@ -125,9 +128,6 @@ public class ChunkType
 	
 	public boolean drawGrid()
 	{ return this != WILDERNESS && this != UNLOADED; }
-	
-	public String getIDS()
-	{ return FTBU.mod.translate(lang); }
 	
 	public int hashCode()
 	{ return ID; }

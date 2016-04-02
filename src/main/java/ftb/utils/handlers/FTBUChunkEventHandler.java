@@ -4,7 +4,7 @@ import com.google.common.collect.MapMaker;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.utils.*;
-import ftb.utils.config.FTBUConfigGeneral;
+import ftb.utils.config.FTBUConfigChunkloading;
 import ftb.utils.world.*;
 import latmod.lib.LMUtils;
 import net.minecraft.world.World;
@@ -66,7 +66,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 	{
 		table.remove(world);
 		List<ForgeChunkManager.Ticket> tickets1 = new ArrayList<>();
-		if(tickets.isEmpty() || FTBUConfigGeneral.disable_chunkloading.getAsBoolean()) return tickets1;
+		if(tickets.isEmpty() || !FTBUConfigChunkloading.enabled.getAsBoolean()) return tickets1;
 		Map<UUID, ForgeChunkManager.Ticket> map = new HashMap<>();
 		
 		for(ForgeChunkManager.Ticket t : tickets)

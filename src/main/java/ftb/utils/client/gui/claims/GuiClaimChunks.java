@@ -110,15 +110,15 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			public void onButtonPressed(int b)
 			{
 				FTBLibClient.playClickSound();
-				String s = isShiftKeyDown() ? FTBU.mod.translate("button.claims_unclaim_all_q") : FTBU.mod.translate("button.claims_unclaim_all_dim_q", FTBLibClient.mc.theWorld.provider.getDimensionName());
+				String s = isShiftKeyDown() ? FTBU.mod.format("button.claims_unclaim_all_q") : FTBU.mod.format("button.claims_unclaim_all_dim_q", FTBLibClient.mc.theWorld.provider.getDimensionName());
 				FTBLibClient.openGui(new GuiYesNo(GuiClaimChunks.this, s, "", isShiftKeyDown() ? 1 : 0));
 			}
 			
 			public void addMouseOverText(List<String> l)
 			{
-				if(isShiftKeyDown()) l.add(FTBU.mod.translate("button.claims_unclaim_all"));
+				if(isShiftKeyDown()) l.add(FTBU.mod.format("button.claims_unclaim_all"));
 				else
-					l.add(FTBU.mod.translate("button.claims_unclaim_all_dim", FTBLibClient.mc.theWorld.provider.getDimensionName()));
+					l.add(FTBU.mod.format("button.claims_unclaim_all_dim", FTBLibClient.mc.theWorld.provider.getDimensionName()));
 			}
 		};
 		
@@ -225,9 +225,9 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	public void drawText(List<String> l)
 	{
 		FTBUPlayerDataSP d = FTBUPlayerDataSP.get(ForgeWorldSP.inst.clientPlayer);
-		String s = FTBU.mod.translate("label.cchunks_count", (d.claimedChunks + " / " + d.maxClaimedChunks));
+		String s = FTBU.mod.format("label.cchunks_count", (d.claimedChunks + " / " + d.maxClaimedChunks));
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 12, 0xFFFFFFFF);
-		s = FTBU.mod.translate("label.lchunks_count", (d.loadedChunks + " / " + d.maxLoadedChunks));
+		s = FTBU.mod.format("label.lchunks_count", (d.loadedChunks + " / " + d.maxLoadedChunks));
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 24, 0xFFFFFFFF);
 		
 		super.drawText(l);

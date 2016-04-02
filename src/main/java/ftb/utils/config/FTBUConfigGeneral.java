@@ -1,11 +1,12 @@
 package ftb.utils.config;
 
+import com.google.gson.*;
 import ftb.lib.api.config.*;
 import latmod.lib.annotations.*;
 import net.minecraft.entity.*;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class FTBUConfigGeneral
 {
@@ -20,7 +21,7 @@ public class FTBUConfigGeneral
 	public static final ConfigEntryBool spawn_pvp = new ConfigEntryBool("spawn_pvp", true);
 	
 	@Info("Entity IDs that are banned from world. They will not spawn and existing ones will be destroyed")
-	private static final ConfigEntryStringList blocked_entities = new ConfigEntryStringList("blocked_entities");
+	public static final ConfigEntryBannedEntityList blocked_entities = new ConfigEntryBannedEntityList("blocked_entities");
 	
 	public static final ConfigEntryBool ranks_enabled = new ConfigEntryBool("ranks_enabled", false);
 	//public static final ConfigEntryBool ranks_override_chat = new ConfigEntryBool("ranks_override_chat", true);
@@ -36,32 +37,11 @@ public class FTBUConfigGeneral
 	@Info("Enable spawn area in singleplayer")
 	public static final ConfigEntryBool spawn_area_in_sp = new ConfigEntryBool("spawn_area_in_sp", false);
 	
-	public static final ConfigEntryBool disable_chunkloading = new ConfigEntryBool("disable_chunkloading", false);
 	public static final ConfigEntryBool server_info_difficulty = new ConfigEntryBool("server_info_difficulty", true);
 	public static final ConfigEntryBool server_info_mode = new ConfigEntryBool("server_info_mode", true);
 	
-	private static final ArrayList<Class<?>> blockedEntitiesL = new ArrayList<>();
-	
 	public static void onReloaded(Side side)
 	{
-		if(side.isServer())
-		{
-			blockedEntitiesL.clear();
-			
-			for(String s : blocked_entities.getAsStringList())
-			{
-				try
-				{
-					Class<?> c = EntityList.stringToClassMapping.get(s);
-					if(c != null && Entity.class.isAssignableFrom(c)) blockedEntitiesL.add(c);
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
-			}
-		}
-		
 		/*
 		blockedItemsL.removeAll();
 		
@@ -78,13 +58,58 @@ public class FTBUConfigGeneral
 		*/
 	}
 	
-	public static boolean isEntityBanned(Class<?> c)
+	public static class ConfigEntryBannedEntityList extends ConfigEntryCustom
 	{
-		for(Class<?> c1 : blockedEntitiesL)
+		public final List<Class<?>> list;
+		
+		public ConfigEntryBannedEntityList(String id)
 		{
-			if(c1.isAssignableFrom(c)) return true;
+			super(id);
+			list = new ArrayList<>();
 		}
 		
-		return false;
+		public void func_152753_a(JsonElement o)
+		{
+			list.clear();
+			
+			if(o.isJsonArray())
+			{
+				for(JsonElement e : o.getAsJsonArray())
+				{
+					Class<?> c = EntityList.stringToClassMapping.get(e.getAsString());
+					if(c != null && Entity.class.isAssignableFrom(c))
+					{
+						list.add(c);
+					}
+				}
+			}
+		}
+		
+		public JsonElement getSerializableElement()
+		{
+			JsonArray a = new JsonArray();
+			
+			for(Class<?> c1 : list)
+			{
+				String s = EntityList.classToStringMapping.get(c1);
+				
+				if(s != null)
+				{
+					a.add(new JsonPrimitive(s));
+				}
+			}
+			
+			return a;
+		}
+		
+		public boolean isEntityBanned(Class<?> c)
+		{
+			for(Class<?> c1 : list)
+			{
+				if(c1.isAssignableFrom(c)) return true;
+			}
+			
+			return false;
+		}
 	}
 }

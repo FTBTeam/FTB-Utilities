@@ -7,7 +7,7 @@ import ftb.utils.world.*;
 import net.minecraft.command.*;
 import net.minecraft.util.BlockPos;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by LatvianModder on 14.01.2016.
@@ -57,7 +57,11 @@ public class CmdLMPlayerSettings extends CommandSubLM
 		
 		public List<String> addTabCompletionOptions(ICommandSender ics, String[] args, BlockPos pos)
 		{
-			if(args.length == 1) return getListOfStringsMatchingLastWord(args, PrivacyLevel.getNames());
+			if(args.length == 1)
+			{
+				return getListOfStringsMatchingLastWord(args, Arrays.asList(PrivacyLevel.PUBLIC, PrivacyLevel.PRIVATE, PrivacyLevel.FRIENDS));
+			}
+			
 			return null;
 		}
 		
@@ -69,7 +73,7 @@ public class CmdLMPlayerSettings extends CommandSubLM
 			if(l != null)
 			{
 				FTBUPlayerDataMP.get(p).blocks = l;
-				FTBLib.printChat(ics, commandName + " set to " + l.uname);
+				FTBLib.printChat(ics, commandName + " set to " + args[0]);
 			}
 		}
 	}

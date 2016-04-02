@@ -19,9 +19,7 @@ import java.util.Map;
 public class FTBUClient extends FTBUCommon // FTBLibModClient
 {
 	public static final ConfigEntryBool render_badges = new ConfigEntryBool("render_badges", true);
-	
 	public static final ConfigEntryBool loaded_chunks_space_key = new ConfigEntryBool("loaded_chunks_space_key", false);
-	public static final ConfigEntryBool guide_unicode = new ConfigEntryBool("guide_unicode", true);
 	
 	public static IJMPluginHandler journeyMapHandler = null;
 	

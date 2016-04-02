@@ -32,6 +32,8 @@ public class JMPluginHandler implements IJMPluginHandler
 		
 		if(FTBUWorldDataSP.get().isLoaded() && !FTBUWorldDataSP.get().chunks.isEmpty() && clientAPI.playerAccepts(FTBUFinals.MOD_ID, DisplayType.Polygon))
 		{
+			MapImage image;
+			
 			for(ChunkCoordIntPair pos : FTBUWorldDataSP.get().chunks.keySet())
 			{
 				Map.Entry<TextureCoords, ChunkType> e1 = GuiClaimChunks.getForChunk(pos);
@@ -44,9 +46,8 @@ public class JMPluginHandler implements IJMPluginHandler
 						ChunkType type = e1.getValue();
 						
 						int color = LMColorUtils.getRGBA(type.getAreaColor(ForgeWorldSP.inst.clientPlayer), 0);
-						
-						BlockPos start = new BlockPos(MathHelperLM.unchunk(pos.chunkXPos), 0, MathHelperLM.unchunk(pos.chunkZPos));
-						BlockPos end = new BlockPos(MathHelperLM.unchunk(pos.chunkXPos + 1), 0, MathHelperLM.unchunk(pos.chunkZPos + 1));
+						int x = MathHelperLM.unchunk(pos.chunkXPos);
+						int z = MathHelperLM.unchunk(pos.chunkZPos);
 						
 						//GuiLM.drawTexturedRectD(mainPanel.posX + x * 16, mainPanel.posY + y * 16, zLevel, 16, 16, tc.minU, tc.minV, tc.maxU, tc.maxV);
 						
@@ -54,13 +55,12 @@ public class JMPluginHandler implements IJMPluginHandler
 						//						image.setDisplayWidth(tc.width);
 						//						image.setDisplayHeight(tc.height);
 						
-						MapImage image = new MapImage(tc.texture, tc.posXI(), tc.posYI(), (int) tc.width, (int) tc.height, color, 1F);
-						image.setDisplayWidth(tc.textureW);
-						image.setDisplayHeight(tc.textureH);
+						image = new MapImage(tc.texture, 16, 16);
+						image.setColor(color);
 						
-						ImageOverlay chunkOverlay = new ImageOverlay(FTBUFinals.MOD_ID, "claimed_" + pos.chunkXPos + "_" + pos.chunkZPos, start, end, image);
+						ImageOverlay chunkOverlay = new ImageOverlay(FTBUFinals.MOD_ID, "claimed_" + pos.chunkXPos + "_" + pos.chunkZPos, new BlockPos(x, 0, z), new BlockPos(x + 16, 0, z + 16), image);
 						
-						StringBuilder sb = new StringBuilder(type.getIDS());
+						StringBuilder sb = new StringBuilder(FTBU.mod.format(type.lang));
 						
 						if(type.asClaimed() != null)
 						{
@@ -73,7 +73,7 @@ public class JMPluginHandler implements IJMPluginHandler
 							if(type.asClaimed().chunk.isChunkloaded)
 							{
 								sb.append('\n');
-								sb.append(FTBU.mod.translate("chunktype.chunkloaded"));
+								sb.append(FTBU.mod.format("chunktype.chunkloaded"));
 							}
 						}
 						

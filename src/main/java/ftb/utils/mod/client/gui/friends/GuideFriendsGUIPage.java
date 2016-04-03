@@ -23,7 +23,7 @@ public class GuideFriendsGUIPage extends GuidePage
 		playerLM = p;
 	}
 	
-	public void onClientDataChanged()
+	public void refreshGui(GuiGuide gui)
 	{
 		clear();
 		
@@ -58,7 +58,7 @@ public class GuideFriendsGUIPage extends GuidePage
 	{
 		public Button(GuiGuide g, GuideFriendsGUIPage p)
 		{
-			super(g, p);
+			super(g, p, null);
 			height = 20;
 		}
 		

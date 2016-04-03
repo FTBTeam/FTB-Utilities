@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.friends.*;
 import ftb.utils.api.guide.GuidePage;
 import ftb.utils.mod.client.FTBUClient;
+import ftb.utils.mod.client.gui.guide.GuiGuide;
 import ftb.utils.world.*;
 import latmod.lib.LMColor;
 import net.minecraft.util.ChatComponentText;
@@ -20,6 +21,14 @@ public class GuideFriendsGUI extends GuidePage
 	{
 		super("friends_gui");
 		setTitle(new ChatComponentText("FriendsGUI"));
+		backgroundColor = new LMColor.RGB(30, 30, 30);
+		textColor = new LMColor.RGB(200, 200, 200);
+		useUnicodeFont = Boolean.FALSE;
+	}
+	
+	public void refreshGui(GuiGuide gui)
+	{
+		clear();
 		
 		List<LMPlayer> tempPlayerList = new ArrayList<>();
 		tempPlayerList.addAll(LMWorldClient.inst.playerMap.values());
@@ -36,13 +45,4 @@ public class GuideFriendsGUI extends GuidePage
 			addSub(new GuideFriendsGUIPage(p.toPlayerSP()));
 		}
 	}
-	
-	public LMColor getBackgroundColor()
-	{ return new LMColor.RGB(30, 30, 30); }
-	
-	public LMColor getTextColor()
-	{ return new LMColor.RGB(200, 200, 200); }
-	
-	public Boolean useUnicodeFont()
-	{ return Boolean.FALSE; }
 }

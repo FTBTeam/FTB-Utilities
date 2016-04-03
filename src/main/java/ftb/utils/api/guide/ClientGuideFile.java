@@ -1,9 +1,14 @@
 package ftb.utils.api.guide;
 
+import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
 import ftb.lib.api.*;
+import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.gui.GuiIcons;
+import ftb.lib.api.gui.widgets.ButtonLM;
 import ftb.utils.mod.FTBU;
 import ftb.utils.mod.client.gui.guide.GuiGuide;
+import ftb.utils.mod.client.gui.guide.repos.ReposPage;
 import latmod.lib.LMFileUtils;
 import net.minecraft.util.ChatComponentTranslation;
 
@@ -12,12 +17,41 @@ import java.util.Arrays;
 
 public class ClientGuideFile extends GuidePage
 {
-	public static final ClientGuideFile instance = new ClientGuideFile("ClientConfig");
+	public static final ClientGuideFile instance = new ClientGuideFile("client_config");
+	
+	public static GuiGuide clientGuideGui = null;
+	
+	public static GuiGuide openClientGui(boolean open)
+	{
+		if(clientGuideGui == null) clientGuideGui = new GuiGuide(null, ClientGuideFile.instance);
+		if(open) FTBLibClient.openGui(clientGuideGui);
+		return clientGuideGui;
+	}
 	
 	public ClientGuideFile(String id)
 	{
 		super(id);
 		setTitle(new ChatComponentTranslation("player_action.ftbu.guide"));
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public ButtonLM createSpecialButton(GuiGuide gui)
+	{
+		ButtonLM button = new ButtonLM(gui, 0, 0, 16, 16)
+		{
+			public void onButtonPressed(int b)
+			{
+				FTBLibClient.openGui(new GuiGuide(null, new ReposPage()));
+			}
+			
+			public void renderWidget()
+			{
+				render(GuiIcons.globe);
+			}
+		};
+		
+		button.title = "Manage Guides";
+		return button;
 	}
 	
 	public void reload(EventFTBReload e)
@@ -67,6 +101,6 @@ public class ClientGuideFile extends GuidePage
 		new EventFTBUClientGuide(this).post();
 		
 		cleanup();
-		GuiGuide.clientGuideGui = null;
+		clientGuideGui = null;
 	}
 }

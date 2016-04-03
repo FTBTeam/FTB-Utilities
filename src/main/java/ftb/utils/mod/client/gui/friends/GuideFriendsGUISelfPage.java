@@ -9,6 +9,7 @@ import ftb.lib.api.notification.*;
 import ftb.utils.api.guide.GuidePage;
 import ftb.utils.api.guide.lines.GuideExtendedTextLine;
 import ftb.utils.mod.FTBU;
+import ftb.utils.mod.client.gui.guide.GuiGuide;
 import ftb.utils.world.*;
 import net.minecraft.util.*;
 
@@ -21,10 +22,9 @@ public class GuideFriendsGUISelfPage extends GuideFriendsGUIPage
 	public GuideFriendsGUISelfPage()
 	{
 		super(LMWorldClient.inst.clientPlayer);
-		onClientDataChanged();
 	}
 	
-	public void onClientDataChanged()
+	public void refreshGui(GuiGuide gui)
 	{
 		clear();
 		
@@ -47,7 +47,7 @@ public class GuideFriendsGUISelfPage extends GuideFriendsGUIPage
 		
 		page = new GuidePage("settings")
 		{
-			public void onClientDataChanged()
+			public void refreshGui(GuiGuide gui)
 			{
 				clear();
 				
@@ -76,7 +76,6 @@ public class GuideFriendsGUISelfPage extends GuideFriendsGUIPage
 		};
 		
 		page.setTitle(new ChatComponentTranslation("ftbl.button.settings"));
-		page.onClientDataChanged();
 		addSub(page);
 	}
 }

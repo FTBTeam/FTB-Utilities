@@ -1,10 +1,12 @@
 package ftb.utils.api.guide.repos;
 
-import ftb.lib.FTBLib;
+import ftb.lib.*;
+import ftb.lib.api.client.FTBLibClient;
 import latmod.lib.LMFileUtils;
 import latmod.lib.github.GitHubAPI;
 import latmod.lib.net.*;
 import latmod.lib.util.FinalIDObject;
+import net.minecraft.util.ResourceLocation;
 
 import java.io.File;
 import java.util.*;
@@ -16,6 +18,7 @@ public class GuideOnlineRepo extends FinalIDObject implements IGuide
 {
 	private final GuideInfo info;
 	private Map<String, GuideMode> modes;
+	private TextureCoords icon;
 	
 	public GuideOnlineRepo(String id) throws Exception
 	{
@@ -64,4 +67,15 @@ public class GuideOnlineRepo extends FinalIDObject implements IGuide
 	
 	public String toString()
 	{ return info.name; }
+	
+	public TextureCoords getIcon()
+	{
+		if(icon == null)
+		{
+			icon = new TextureCoords(new ResourceLocation("ftbu_guidepacks", getID()), 0, 0, 16, 16, 16, 16);
+			FTBLibClient.getDownloadImage(icon.texture, GitHubAPI.RAW_CONTENT + getID() + "/icon.png", new ResourceLocation("textures/misc/unknown_pack.png"), null);
+		}
+		
+		return icon;
+	}
 }

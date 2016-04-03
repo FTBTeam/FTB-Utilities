@@ -1,10 +1,11 @@
 package ftb.utils.mod.client.gui.guide;
 
 import ftb.lib.TextureCoords;
+import ftb.lib.api.FTBLibLang;
 import ftb.lib.api.client.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.widgets.*;
-import ftb.utils.api.guide.*;
+import ftb.utils.api.guide.GuidePage;
 import ftb.utils.api.guide.lines.GuideTextLine;
 import latmod.lib.LMColor;
 import net.minecraft.util.ResourceLocation;
@@ -35,20 +36,11 @@ public class GuiGuide extends GuiLM implements IClientActionGui
 	public GuidePage selectedPage;
 	
 	public final SliderLM sliderPages, sliderText;
-	public final ButtonLM buttonBack;
+	public final ButtonLM buttonBack, buttonSpecial;
 	
 	public final PanelLM panelPages, panelText;
 	public int colorText, colorBackground;
 	public boolean useUnicodeFont;
-	
-	public static GuiGuide clientGuideGui = null;
-	
-	public static GuiGuide openClientGui(boolean open)
-	{
-		if(clientGuideGui == null) clientGuideGui = new GuiGuide(null, ClientGuideFile.instance);
-		if(open) FTBLibClient.openGui(clientGuideGui);
-		return clientGuideGui;
-	}
 	
 	public GuiGuide(GuiGuide g, GuidePage c)
 	{
@@ -112,6 +104,8 @@ public class GuiGuide extends GuiLM implements IClientActionGui
 		{
 			public void addWidgets()
 			{
+				page.refreshGui(GuiGuide.this);
+				
 				height = 0;
 				
 				for(GuidePage c : page.childPages.values())
@@ -131,6 +125,8 @@ public class GuiGuide extends GuiLM implements IClientActionGui
 		{
 			public void addWidgets()
 			{
+				page.refreshGui(GuiGuide.this);
+				
 				for(WidgetLM w : panelPages.widgets)
 				{
 					((ButtonGuidePage) w).updateTitle();
@@ -156,6 +152,8 @@ public class GuiGuide extends GuiLM implements IClientActionGui
 				sliderText.scrollStep = 30F / (float) height;
 			}
 		};
+		
+		buttonSpecial = page.createSpecialButton(this);
 	}
 	
 	public void addWidgets()
@@ -165,6 +163,9 @@ public class GuiGuide extends GuiLM implements IClientActionGui
 		mainPanel.add(buttonBack);
 		mainPanel.add(panelPages);
 		mainPanel.add(panelText);
+		mainPanel.add(buttonSpecial);
+		
+		buttonBack.title = (parentGui == null) ? FTBLibLang.button_close.format() : FTBLibLang.button_back.format();
 	}
 	
 	public void initLMGui()
@@ -205,11 +206,10 @@ public class GuiGuide extends GuiLM implements IClientActionGui
 		Boolean b = page.useUnicodeFont();
 		useUnicodeFont = (b == null) ? ClientSettings.unicode.getAsBoolean() : b.booleanValue();
 		
-		//
-		
-		if(page.getParentTop() == ClientGuideFile.instance)
+		if(buttonSpecial != null)
 		{
-			clientGuideGui = this;
+			buttonSpecial.posX = panelWidth - 24;
+			buttonSpecial.posY = 10;
 		}
 	}
 	
@@ -273,6 +273,8 @@ public class GuiGuide extends GuiLM implements IClientActionGui
 		buttonBack.render((parentGui == null) ? tex_close : tex_back);
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
+		if(buttonSpecial != null) buttonSpecial.renderWidget();
+		
 		fontRendererObj.drawString(pageTitle, buttonBack.getAX() + buttonBack.width + 5, mainPanel.posY + 14, colorText);
 	}
 	

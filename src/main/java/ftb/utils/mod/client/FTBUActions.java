@@ -6,6 +6,7 @@ import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.gui.*;
+import ftb.utils.api.guide.ClientGuideFile;
 import ftb.utils.mod.client.gui.claims.GuiClaimChunks;
 import ftb.utils.mod.client.gui.friends.GuideFriendsGUI;
 import ftb.utils.mod.client.gui.guide.GuiGuide;
@@ -49,7 +50,7 @@ public class FTBUActions
 		GuiScreenRegistry.register("guide", new GuiScreenRegistry.Entry()
 		{
 			public GuiScreen openGui(EntityPlayer ep)
-			{ return GuiGuide.openClientGui(false); }
+			{ return ClientGuideFile.openClientGui(false); }
 		});
 		
 		GuiScreenRegistry.register("server_info", new GuiScreenRegistry.Entry()
@@ -91,7 +92,7 @@ public class FTBUActions
 		public void onClicked(ILMPlayer self, ILMPlayer other)
 		{
 			FTBLibClient.playClickSound();
-			GuiGuide.openClientGui(true);
+			ClientGuideFile.openClientGui(true);
 		}
 		
 		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)

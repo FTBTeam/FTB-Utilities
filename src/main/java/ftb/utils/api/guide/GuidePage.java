@@ -3,7 +3,7 @@ package ftb.utils.api.guide;
 import com.google.gson.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.JsonHelper;
-import ftb.lib.api.gui.IClientActionGui;
+import ftb.lib.api.gui.widgets.ButtonLM;
 import ftb.utils.api.guide.lines.*;
 import ftb.utils.mod.client.gui.guide.*;
 import ftb.utils.net.MessageDisplayGuide;
@@ -16,7 +16,7 @@ import net.minecraftforge.common.util.FakePlayer;
 import java.io.File;
 import java.util.*;
 
-public class GuidePage extends FinalIDObject implements IJsonSerializable, IClientActionGui // GuideFile
+public class GuidePage extends FinalIDObject implements IJsonSerializable // GuideFile
 {
 	private static final RemoveFilter<Map.Entry<String, GuidePage>> cleanupFilter = new RemoveFilter<Map.Entry<String, GuidePage>>()
 	{
@@ -28,6 +28,8 @@ public class GuidePage extends FinalIDObject implements IJsonSerializable, IClie
 	private IChatComponent title;
 	public final List<GuideTextLine> text;
 	public final LinkedHashMap<String, GuidePage> childPages;
+	public LMColor backgroundColor, textColor;
+	public Boolean useUnicodeFont;
 	
 	public GuidePage(String id)
 	{
@@ -169,6 +171,10 @@ public class GuidePage extends FinalIDObject implements IJsonSerializable, IClie
 			o.add("S", o1);
 		}
 		
+		if(backgroundColor != null) o.add("CBG", new JsonPrimitive(backgroundColor.color()));
+		if(textColor != null) o.add("CT", new JsonPrimitive(textColor.color()));
+		if(useUnicodeFont != null) o.add("UUF", new JsonPrimitive(useUnicodeFont));
+		
 		return o;
 	}
 	
@@ -200,6 +206,10 @@ public class GuidePage extends FinalIDObject implements IJsonSerializable, IClie
 				childPages.put(c.getID(), c);
 			}
 		}
+		
+		backgroundColor = o.has("CBG") ? new LMColor.ImmutableColor(o.get("CBG").getAsInt()) : null;
+		textColor = o.has("CT") ? new LMColor.ImmutableColor(o.get("CT").getAsInt()) : null;
+		useUnicodeFont = o.has("UUF") ? o.get("UUF").getAsBoolean() : null;
 	}
 	
 	protected static void loadFromFiles(GuidePage c, File f)
@@ -248,26 +258,31 @@ public class GuidePage extends FinalIDObject implements IJsonSerializable, IClie
 		if(ep != null && !(ep instanceof FakePlayer)) new MessageDisplayGuide(this).sendTo(ep);
 	}
 	
-	public LMColor getBackgroundColor()
-	{ return (parent == null) ? null : parent.getBackgroundColor(); }
+	public final LMColor getBackgroundColor()
+	{ return (backgroundColor == null) ? ((parent == null) ? null : parent.getBackgroundColor()) : backgroundColor; }
 	
-	public LMColor getTextColor()
-	{ return (parent == null) ? null : parent.getTextColor(); }
+	public final LMColor getTextColor()
+	{ return (textColor == null) ? ((parent == null) ? null : parent.getTextColor()) : textColor; }
 	
-	public Boolean useUnicodeFont()
-	{ return (parent == null) ? null : parent.useUnicodeFont(); }
+	public final Boolean useUnicodeFont()
+	{ return (useUnicodeFont == null) ? ((parent == null) ? null : parent.useUnicodeFont()) : useUnicodeFont; }
+	
+	@SideOnly(Side.CLIENT)
+	public void refreshGui(GuiGuide gui)
+	{
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public ButtonLM createSpecialButton(GuiGuide gui)
+	{ return null; }
 	
 	@SideOnly(Side.CLIENT)
 	public ButtonGuidePage createButton(GuiGuide gui)
-	{ return new ButtonGuidePage(gui, this); }
+	{ return new ButtonGuidePage(gui, this, null); }
 	
 	public String getFullID()
 	{
 		if(parent == null) return getID();
 		return parent.getFullID() + '.' + getID();
-	}
-	
-	public void onClientDataChanged()
-	{
 	}
 }

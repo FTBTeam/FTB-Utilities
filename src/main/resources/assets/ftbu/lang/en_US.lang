@@ -14,12 +14,6 @@ client_config.ftbu.render_badges=Show Badges
 client_config.ftbu.sort_friends_az=Sort Friends A-Z
 client_config.ftbu.loaded_chunks_space_key=Use Space key for Loaded Chunks
 
-client_config.ftbu_guide=FTBUtilities: Guide
-client_config.ftbu_guide.unicode=Use Unicode
-client_config.ftbu_guide.text_color=Text Color
-client_config.ftbu_guide.bg_color=Background Color
-client_config.ftbu_guide.transparency=Transparency
-
 ftbu.player_setting.chat_links=Chat Links
 ftbu.player_setting.render_badge=Show My Badge
 ftbu.player_setting.explosions=Claimed Chunk Explosions

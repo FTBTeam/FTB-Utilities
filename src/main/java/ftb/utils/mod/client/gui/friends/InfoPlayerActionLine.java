@@ -4,9 +4,9 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.*;
 import ftb.lib.api.gui.GuiLM;
-import ftb.utils.api.guide.GuidePage;
-import ftb.utils.api.guide.lines.GuideTextLine;
-import ftb.utils.mod.client.gui.guide.*;
+import ftb.lib.api.info.InfoPage;
+import ftb.lib.api.info.lines.InfoTextLine;
+import ftb.lib.mod.client.gui.info.*;
 import ftb.utils.world.*;
 
 import java.util.List;
@@ -15,12 +15,12 @@ import java.util.List;
  * Created by LatvianModder on 23.03.2016.
  */
 @SideOnly(Side.CLIENT)
-public class GuidePlayerActionLine extends GuideTextLine
+public class InfoPlayerActionLine extends InfoTextLine
 {
 	public final LMPlayerClient playerLM;
 	public final PlayerAction action;
 	
-	public GuidePlayerActionLine(GuidePage c, LMPlayerClient p, PlayerAction a)
+	public InfoPlayerActionLine(InfoPage c, LMPlayerClient p, PlayerAction a)
 	{
 		super(c, null);
 		playerLM = p;
@@ -28,12 +28,12 @@ public class GuidePlayerActionLine extends GuideTextLine
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public ButtonGuideTextLine createWidget(GuiGuide gui)
-	{ return new ButtonGuidePlayerAction(gui, this); }
+	public ButtonInfoTextLine createWidget(GuiInfo gui)
+	{ return new ButtonInfoPlayerAction(gui, this); }
 	
-	public class ButtonGuidePlayerAction extends ButtonGuideTextLine
+	public class ButtonInfoPlayerAction extends ButtonInfoTextLine
 	{
-		public ButtonGuidePlayerAction(GuiGuide g, GuidePlayerActionLine w)
+		public ButtonInfoPlayerAction(GuiInfo g, InfoPlayerActionLine w)
 		{
 			super(g, null);
 			height = 18;
@@ -54,7 +54,7 @@ public class GuidePlayerActionLine extends GuideTextLine
 		public void renderWidget()
 		{
 			int ay = getAY();
-			if(ay < -height || ay > guiGuide.mainPanel.height) return;
+			if(ay < -height || ay > guiInfo.mainPanel.height) return;
 			int ax = getAX();
 			float z = gui.getZLevel();
 			
@@ -68,7 +68,7 @@ public class GuidePlayerActionLine extends GuideTextLine
 			
 			if(action.icon != null) action.render(ax + 1, ay + 1, z);
 			
-			gui.getFontRenderer().drawString(title, ax + (action.icon == null ? 4 : 20), ay + 5, guiGuide.colorText);
+			gui.getFontRenderer().drawString(title, ax + (action.icon == null ? 4 : 20), ay + 5, guiInfo.colorText);
 		}
 	}
 }

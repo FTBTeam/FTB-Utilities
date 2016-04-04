@@ -27,4 +27,7 @@ public enum GuideType
 		
 		return CUSTOM;
 	}
+	
+	public boolean useModes()
+	{ return this == MODPACK || this == SERVER; }
 }

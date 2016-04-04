@@ -62,6 +62,13 @@ public class GuideOnlineRepo extends FinalIDObject implements IGuide
 		return modes;
 	}
 	
+	public GuideMode getMergedMode(String id)
+	{
+		GuideMode mode = getModes().get("default");
+		if(mode == null) return getModes().get(id);
+		else return mode.mergeWith(getModes().get(id));
+	}
+	
 	public Response getFile(String path) throws Exception
 	{ return new LMURLConnection(RequestMethod.SIMPLE_GET, GitHubAPI.RAW_CONTENT + getID() + '/' + path).connect(); }
 	

@@ -2,9 +2,9 @@ package ftb.utils.mod.client.gui.friends;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.client.*;
-import ftb.utils.api.guide.GuidePage;
-import ftb.utils.api.guide.lines.GuideTextLine;
-import ftb.utils.mod.client.gui.guide.*;
+import ftb.lib.api.info.InfoPage;
+import ftb.lib.api.info.lines.InfoTextLine;
+import ftb.lib.mod.client.gui.info.*;
 import ftb.utils.world.LMPlayerClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -17,25 +17,25 @@ import org.lwjgl.input.Mouse;
  * Created by LatvianModder on 23.03.2016.
  */
 @SideOnly(Side.CLIENT)
-public class GuidePlayerViewLine extends GuideTextLine
+public class InfoPlayerViewLine extends InfoTextLine
 {
 	public final LMPlayerClient playerLM;
 	
-	public GuidePlayerViewLine(GuidePage c, LMPlayerClient p)
+	public InfoPlayerViewLine(InfoPage c, LMPlayerClient p)
 	{
 		super(c, null);
 		playerLM = p;
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public ButtonGuideTextLine createWidget(GuiGuide gui)
-	{ return new ButtonGuidePlayerView(gui, this); }
+	public ButtonInfoTextLine createWidget(GuiInfo gui)
+	{ return new ButtonInfoPlayerView(gui, this); }
 	
-	public class ButtonGuidePlayerView extends ButtonGuideTextLine
+	public class ButtonInfoPlayerView extends ButtonInfoTextLine
 	{
 		private Player player;
 		
-		public ButtonGuidePlayerView(GuiGuide g, GuidePlayerViewLine w)
+		public ButtonInfoPlayerView(GuiInfo g, InfoPlayerViewLine w)
 		{
 			super(g, null);
 			height = 1;
@@ -44,7 +44,7 @@ public class GuidePlayerViewLine extends GuideTextLine
 		public void renderWidget()
 		{
 			int ay = getAY();
-			if(ay < -height || ay > guiGuide.mainPanel.height) return;
+			if(ay < -height || ay > guiInfo.mainPanel.height) return;
 			int ax = getAX();
 			
 			if(player == null) player = new Player(playerLM);
@@ -80,7 +80,7 @@ public class GuidePlayerViewLine extends GuideTextLine
 			int pheight = 120;
 			int pwidth = (int) (pheight / 1.625F);
 			
-			int playerX = guiGuide.mainPanel.width - pwidth / 2 - 30;
+			int playerX = guiInfo.mainPanel.width - pwidth / 2 - 30;
 			int playerY = ay + pheight + 10;
 			
 			pheight = pheight / 2;

@@ -5,11 +5,11 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.PrivacyLevel;
 import ftb.lib.api.PlayerAction;
 import ftb.lib.api.gui.PlayerActionRegistry;
+import ftb.lib.api.info.InfoPage;
+import ftb.lib.api.info.lines.InfoExtendedTextLine;
 import ftb.lib.api.notification.*;
-import ftb.utils.api.guide.GuidePage;
-import ftb.utils.api.guide.lines.GuideExtendedTextLine;
+import ftb.lib.mod.client.gui.info.GuiInfo;
 import ftb.utils.mod.FTBU;
-import ftb.utils.mod.client.gui.guide.GuiGuide;
 import ftb.utils.world.*;
 import net.minecraft.util.*;
 
@@ -17,25 +17,25 @@ import net.minecraft.util.*;
  * Created by LatvianModder on 24.03.2016.
  */
 @SideOnly(Side.CLIENT)
-public class GuideFriendsGUISelfPage extends GuideFriendsGUIPage
+public class InfoFriendsGUISelfPage extends InfoFriendsGUIPage
 {
-	public GuideFriendsGUISelfPage()
+	public InfoFriendsGUISelfPage()
 	{
 		super(LMWorldClient.inst.clientPlayer);
 	}
 	
-	public void refreshGui(GuiGuide gui)
+	public void refreshGui(GuiInfo gui)
 	{
 		clear();
 		
 		for(PlayerAction a : PlayerActionRegistry.getPlayerActions(PlayerAction.Type.SELF, LMWorldClient.inst.clientPlayer, LMWorldClient.inst.clientPlayer, true, true))
 		{
-			text.add(new GuidePlayerActionLine(this, playerLM, a));
+			text.add(new InfoPlayerActionLine(this, playerLM, a));
 		}
 		
-		GuidePage page = getSub("info").setTitle(new ChatComponentTranslation("ftbl.button.info"));
+		InfoPage page = getSub("info").setTitle(new ChatComponentTranslation("ftbl.button.info"));
 		
-		page.text.add(new GuidePlayerViewLine(this, playerLM));
+		page.text.add(new InfoPlayerViewLine(this, playerLM));
 		
 		if(!playerLM.clientInfo.isEmpty())
 		{
@@ -45,9 +45,9 @@ public class GuideFriendsGUISelfPage extends GuideFriendsGUIPage
 			page.text.add(null);
 		}
 		
-		page = new GuidePage("settings")
+		page = new InfoPage("settings")
 		{
-			public void refreshGui(GuiGuide gui)
+			public void refreshGui(GuiInfo gui)
 			{
 				clear();
 				
@@ -60,7 +60,7 @@ public class GuideFriendsGUISelfPage extends GuideFriendsGUIPage
 				
 				IChatComponent text1 = ps.blocks.lang.chatComponent();
 				text1.getChatStyle().setColor(ps.blocks == PrivacyLevel.FRIENDS ? EnumChatFormatting.BLUE : (ps.blocks == PrivacyLevel.PUBLIC ? EnumChatFormatting.GREEN : EnumChatFormatting.RED));
-				GuideExtendedTextLine line = new GuideExtendedTextLine(this, FTBU.mod.chatComponent("player_setting.security_level").appendText(": ").appendSibling(text1));
+				InfoExtendedTextLine line = new InfoExtendedTextLine(this, FTBU.mod.chatComponent("player_setting.security_level").appendText(": ").appendSibling(text1));
 				line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("lmplayer_settings block_security toggle")));
 				text.add(line);
 			}
@@ -69,7 +69,7 @@ public class GuideFriendsGUISelfPage extends GuideFriendsGUIPage
 			{
 				ChatComponentText text1 = new ChatComponentText(Boolean.toString(current));
 				text1.getChatStyle().setColor(current ? EnumChatFormatting.GREEN : EnumChatFormatting.RED);
-				GuideExtendedTextLine line = new GuideExtendedTextLine(this, FTBU.mod.chatComponent("player_setting." + s).appendText(": ").appendSibling(text1));
+				InfoExtendedTextLine line = new InfoExtendedTextLine(this, FTBU.mod.chatComponent("player_setting." + s).appendText(": ").appendSibling(text1));
 				line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("lmplayer_settings " + s + " toggle")));
 				text.add(line);
 			}

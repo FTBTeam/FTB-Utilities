@@ -69,4 +69,7 @@ public class GuideRepoPage extends FinalIDObject
 		}
 		return o;
 	}
+	
+	public GuideRepoPage copy()
+	{ return new GuideRepoPage(getID(), getJson()); }
 }

@@ -1,12 +1,12 @@
-package ftb.utils.mod.client.gui.guide.repos;
+package ftb.utils.mod.client.gui.guide;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.FTBLibLang;
 import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.api.gui.widgets.ButtonLM;
-import ftb.utils.api.guide.GuidePage;
+import ftb.lib.api.info.InfoPage;
+import ftb.lib.mod.client.gui.info.GuiInfo;
 import ftb.utils.api.guide.repos.*;
-import ftb.utils.mod.client.gui.guide.GuiGuide;
 import latmod.lib.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumChatFormatting;
@@ -17,7 +17,7 @@ import java.util.*;
  * Created by LatvianModder on 03.04.2016.
  */
 @SideOnly(Side.CLIENT)
-public class ReposPage extends GuidePage
+public class ReposPage extends InfoPage
 {
 	public static boolean refreshedFirst = false;
 	private static Thread thread;
@@ -37,12 +37,15 @@ public class ReposPage extends GuidePage
 		}
 	}
 	
-	public ButtonLM createSpecialButton(GuiGuide gui)
+	public ButtonLM createSpecialButton(final GuiInfo guiInfo)
 	{
-		ButtonLM button = new ButtonLM(gui, 0, 0, 16, 16)
+		ButtonLM button = new ButtonLM(guiInfo, 0, 0, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
+				clear();
+				addSub(new InfoPage("Loading..."));
+				gui.refreshWidgets();
 				runRefreshThread();
 			}
 			
@@ -56,7 +59,7 @@ public class ReposPage extends GuidePage
 		return button;
 	}
 	
-	public void refreshGui(GuiGuide gui)
+	public void refreshGui(GuiInfo gui)
 	{
 		clear();
 		
@@ -80,14 +83,10 @@ public class ReposPage extends GuidePage
 		{
 			public void run()
 			{
-				clear();
-				addSub(new GuidePage("Loading..."));
-				((GuiGuide) Minecraft.getMinecraft().currentScreen).refreshWidgets();
-				
 				GuideRepoList.refresh();
 				
-				if(Minecraft.getMinecraft().currentScreen instanceof GuiGuide)
-					((GuiGuide) Minecraft.getMinecraft().currentScreen).refreshWidgets();
+				if(Minecraft.getMinecraft().currentScreen instanceof GuiInfo)
+					((GuiInfo) Minecraft.getMinecraft().currentScreen).refreshWidgets();
 			}
 		};
 		

@@ -1,6 +1,6 @@
 package ftb.utils.net;
 
-import ftb.utils.api.guide.ServerGuideFile;
+import ftb.utils.api.guide.ServerInfoFile;
 import ftb.utils.world.*;
 
 import java.util.HashMap;
@@ -98,7 +98,7 @@ public abstract class ClientAction
 	{
 		public boolean onAction(int extra, LMPlayerServer owner)
 		{
-			new ServerGuideFile(owner).displayGuide(owner.getPlayer());
+			new ServerInfoFile(owner).displayGuide(owner.getPlayer());
 			return false;
 		}
 	};

@@ -4,8 +4,8 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.GlStateManager;
 import ftb.lib.api.gui.*;
-import ftb.utils.api.guide.GuidePage;
-import ftb.utils.mod.client.gui.guide.*;
+import ftb.lib.api.info.InfoPage;
+import ftb.lib.mod.client.gui.info.*;
 import ftb.utils.net.ClientAction;
 import ftb.utils.world.*;
 
@@ -13,21 +13,21 @@ import ftb.utils.world.*;
  * Created by LatvianModder on 24.03.2016.
  */
 @SideOnly(Side.CLIENT)
-public class GuideFriendsGUIPage extends GuidePage
+public class InfoFriendsGUIPage extends InfoPage
 {
 	public final LMPlayerClient playerLM;
 	
-	public GuideFriendsGUIPage(LMPlayerClient p)
+	public InfoFriendsGUIPage(LMPlayerClient p)
 	{
 		super(p.getProfile().getName());
 		playerLM = p;
 	}
 	
-	public void refreshGui(GuiGuide gui)
+	public void refreshGui(GuiInfo gui)
 	{
 		clear();
 		
-		text.add(new GuidePlayerViewLine(this, playerLM));
+		text.add(new InfoPlayerViewLine(this, playerLM));
 		
 		if(!playerLM.clientInfo.isEmpty())
 		{
@@ -39,24 +39,24 @@ public class GuideFriendsGUIPage extends GuidePage
 		
 		for(PlayerAction a : PlayerActionRegistry.getPlayerActions(PlayerAction.Type.OTHER, LMWorldClient.inst.clientPlayer, playerLM, true, true))
 		{
-			text.add(new GuidePlayerActionLine(this, playerLM, a));
+			text.add(new InfoPlayerActionLine(this, playerLM, a));
 		}
 		
 		/*
 		if(LMWorldClient.inst.clientPlayer.isFriend(playerLM))
 		{
 			text.add(null);
-			text.add(new GuidePlayerInventoryLine(this, playerLM));
+			text.add(new InfoPlayerInventoryLine(this, playerLM));
 		}
 		*/
 	}
 	
-	public ButtonGuidePage createButton(GuiGuide gui)
+	public ButtonInfoPage createButton(GuiInfo gui)
 	{ return new Button(gui, this); }
 	
-	private class Button extends ButtonGuidePage
+	private class Button extends ButtonInfoPage
 	{
-		public Button(GuiGuide g, GuideFriendsGUIPage p)
+		public Button(GuiInfo g, InfoFriendsGUIPage p)
 		{
 			super(g, p, null);
 			height = 20;
@@ -83,7 +83,7 @@ public class GuideFriendsGUIPage extends GuidePage
 		public void renderWidget()
 		{
 			int ay = getAY();
-			if(ay < -height || ay > guiGuide.mainPanel.height) return;
+			if(ay < -height || ay > guiInfo.mainPanel.height) return;
 			int ax = getAX();
 			
 			double z = gui.getZLevel();

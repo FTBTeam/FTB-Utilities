@@ -6,7 +6,6 @@ import ftb.lib.api.config.*;
 import ftb.lib.api.gui.LMGuiHandlerRegistry;
 import ftb.utils.badges.BadgeRenderer;
 import ftb.utils.mod.*;
-import ftb.utils.mod.client.gui.guide.ClientSettings;
 import ftb.utils.mod.cmd.CmdMath;
 import ftb.utils.world.*;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -22,7 +21,6 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public void preInit()
 	{
 		ClientConfigRegistry.addGroup("ftbu", FTBUClient.class);
-		ClientConfigRegistry.addGroup("ftbu_guide", ClientSettings.class);
 		ClientCommandHandler.instance.registerCommand(new CmdMath());
 		FTBUActions.init();
 	}

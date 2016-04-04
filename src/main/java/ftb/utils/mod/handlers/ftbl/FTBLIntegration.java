@@ -7,7 +7,7 @@ import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.item.LMInvUtils;
 import ftb.lib.mod.FTBUIntegration;
 import ftb.utils.api.*;
-import ftb.utils.api.guide.ServerGuideFile;
+import ftb.utils.api.guide.ServerInfoFile;
 import ftb.utils.badges.ServerBadges;
 import ftb.utils.mod.FTBUTicks;
 import ftb.utils.mod.config.*;
@@ -43,7 +43,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 			for(LMPlayerServer p : LMWorldServer.inst.playerMap.values())
 				p.refreshStats();
 			
-			ServerGuideFile.CachedInfo.reload();
+			ServerInfoFile.CachedInfo.reload();
 			Ranks.reload();
 			ServerBadges.reload();
 			

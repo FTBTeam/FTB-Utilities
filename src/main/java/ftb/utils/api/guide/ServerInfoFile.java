@@ -3,8 +3,9 @@ package ftb.utils.api.guide;
 import com.google.gson.JsonPrimitive;
 import ftb.lib.*;
 import ftb.lib.api.cmd.ICustomCommandInfo;
+import ftb.lib.api.info.InfoPage;
+import ftb.lib.api.info.lines.InfoExtendedTextLine;
 import ftb.lib.api.notification.*;
-import ftb.utils.api.guide.lines.GuideExtendedTextLine;
 import ftb.utils.mod.*;
 import ftb.utils.mod.config.*;
 import ftb.utils.world.*;
@@ -15,12 +16,12 @@ import net.minecraft.util.*;
 import java.io.File;
 import java.util.*;
 
-public class ServerGuideFile extends GuidePage
+public class ServerInfoFile extends InfoPage
 {
 	public static class CachedInfo
 	{
-		public static final GuidePage main = new GuidePage("server_info").setTitle(new ChatComponentTranslation("player_action.ftbu.server_info"));
-		public static GuidePage categoryServer;
+		public static final InfoPage main = new InfoPage("server_info").setTitle(new ChatComponentTranslation("player_action.ftbu.server_info"));
+		public static InfoPage categoryServer;
 		
 		public static void reload()
 		{
@@ -58,9 +59,9 @@ public class ServerGuideFile extends GuidePage
 	
 	private List<LMPlayerServer> players = null;
 	private LMPlayerServer self;
-	private GuidePage categoryTops = null;
+	private InfoPage categoryTops = null;
 	
-	public ServerGuideFile(LMPlayerServer pself)
+	public ServerInfoFile(LMPlayerServer pself)
 	{
 		super(CachedInfo.main.getID());
 		setTitle(CachedInfo.main.getTitleComponent());
@@ -109,7 +110,7 @@ public class ServerGuideFile extends GuidePage
 		
 		new EventFTBUServerGuide(this, self).post();
 		
-		GuidePage page = getSub("commands").setTitle(new ChatComponentText("Commands")); //LANG
+		InfoPage page = getSub("commands").setTitle(new ChatComponentText("Commands")); //LANG
 		page.clear();
 		
 		try
@@ -118,7 +119,7 @@ public class ServerGuideFile extends GuidePage
 			{
 				try
 				{
-					GuidePage cat = new GuidePage('/' + c.getCommandName());
+					InfoPage cat = new InfoPage('/' + c.getCommandName());
 					
 					@SuppressWarnings("unchecked") List<String> al = c.getCommandAliases();
 					if(al != null && !al.isEmpty()) for(String s : al)
@@ -176,11 +177,11 @@ public class ServerGuideFile extends GuidePage
 		}
 		
 		page = getSub("warps").setTitle(new ChatComponentText("Warps")); //LANG
-		GuideExtendedTextLine line;
+		InfoExtendedTextLine line;
 		
 		for(String s : LMWorldServer.inst.warps.list())
 		{
-			line = new GuideExtendedTextLine(page, new ChatComponentText(s));
+			line = new InfoExtendedTextLine(page, new ChatComponentText(s));
 			line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("warp " + s)));
 			page.text.add(line);
 		}
@@ -189,7 +190,7 @@ public class ServerGuideFile extends GuidePage
 		
 		for(String s : self.homes.list())
 		{
-			line = new GuideExtendedTextLine(page, new ChatComponentText(s));
+			line = new InfoExtendedTextLine(page, new ChatComponentText(s));
 			line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("home " + s)));
 			page.text.add(line);
 		}
@@ -200,7 +201,7 @@ public class ServerGuideFile extends GuidePage
 	
 	public void addTop(Top t)
 	{
-		GuidePage thisTop = categoryTops.getSub(t.ID).setTitle(t.title);
+		InfoPage thisTop = categoryTops.getSub(t.ID).setTitle(t.title);
 		
 		Collections.sort(players, t);
 		

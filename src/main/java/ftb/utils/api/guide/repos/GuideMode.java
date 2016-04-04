@@ -16,4 +16,9 @@ public class GuideMode extends FinalIDObject
 		guide = g;
 		page = new GuideRepoPage(id, g.getFile("guide/" + id + "/pages.json").asJson().getAsJsonObject());
 	}
+	
+	public GuideMode mergeWith(GuideMode mode)
+	{
+		return null;
+	}
 }

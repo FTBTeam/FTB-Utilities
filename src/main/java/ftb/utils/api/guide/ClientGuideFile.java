@@ -6,24 +6,25 @@ import ftb.lib.api.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.api.gui.widgets.ButtonLM;
+import ftb.lib.api.info.InfoPage;
+import ftb.lib.mod.client.gui.info.GuiInfo;
 import ftb.utils.mod.FTBU;
-import ftb.utils.mod.client.gui.guide.GuiGuide;
-import ftb.utils.mod.client.gui.guide.repos.ReposPage;
+import ftb.utils.mod.client.gui.guide.ReposPage;
 import latmod.lib.LMFileUtils;
 import net.minecraft.util.ChatComponentTranslation;
 
 import java.io.File;
 import java.util.Arrays;
 
-public class ClientGuideFile extends GuidePage
+public class ClientGuideFile extends InfoPage
 {
 	public static final ClientGuideFile instance = new ClientGuideFile("client_config");
 	
-	public static GuiGuide clientGuideGui = null;
+	public static GuiInfo clientGuideGui = null;
 	
-	public static GuiGuide openClientGui(boolean open)
+	public static GuiInfo openClientGui(boolean open)
 	{
-		if(clientGuideGui == null) clientGuideGui = new GuiGuide(null, ClientGuideFile.instance);
+		if(clientGuideGui == null) clientGuideGui = new GuiInfo(null, ClientGuideFile.instance);
 		if(open) FTBLibClient.openGui(clientGuideGui);
 		return clientGuideGui;
 	}
@@ -35,13 +36,13 @@ public class ClientGuideFile extends GuidePage
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public ButtonLM createSpecialButton(GuiGuide gui)
+	public ButtonLM createSpecialButton(GuiInfo gui)
 	{
 		ButtonLM button = new ButtonLM(gui, 0, 0, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
-				FTBLibClient.openGui(new GuiGuide(null, new ReposPage()));
+				FTBLibClient.openGui(new GuiInfo(null, new ReposPage()));
 			}
 			
 			public void renderWidget()

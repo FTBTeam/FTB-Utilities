@@ -2,7 +2,7 @@ package ftb.utils.mod.cmd.admin;
 
 import com.google.common.collect.ImmutableSetMultimap;
 import ftb.lib.api.cmd.*;
-import ftb.utils.api.guide.GuidePage;
+import ftb.lib.api.info.InfoPage;
 import latmod.lib.IntList;
 import net.minecraft.command.*;
 import net.minecraft.enchantment.Enchantment;
@@ -23,9 +23,9 @@ public class CmdServerInfo extends CommandLM
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		
-		GuidePage file = new GuidePage("server_info").setTitle(new ChatComponentText("Server Info"));//LANG
+		InfoPage file = new InfoPage("server_info").setTitle(new ChatComponentText("Server Info"));//LANG
 		
-		GuidePage page = file.getSub("Entities"); //LANG
+		InfoPage page = file.getSub("Entities"); //LANG
 		
 		Set<Integer> entityIDset = EntityList.IDtoClassMapping.keySet();
 		for(Integer i : entityIDset)
@@ -60,11 +60,11 @@ public class CmdServerInfo extends CommandLM
 					if(!list.contains(c)) list.add(c);
 			}
 			
-			GuidePage dim = page.getSub(w.provider.getDimensionName());
+			InfoPage dim = page.getSub(w.provider.getDimensionName());
 			
 			for(Map.Entry<String, List<ChunkCoordIntPair>> e1 : chunksMap.entrySet())
 			{
-				GuidePage mod = dim.getSub(e1.getKey() + " [" + e1.getValue().size() + "]");
+				InfoPage mod = dim.getSub(e1.getKey() + " [" + e1.getValue().size() + "]");
 				for(ChunkCoordIntPair c : e1.getValue())
 					mod.printlnText(c.chunkXPos + ", " + c.chunkZPos + " [ " + c.getCenterXPos() + ", " + c.getCenterZPosition() + " ]");
 			}

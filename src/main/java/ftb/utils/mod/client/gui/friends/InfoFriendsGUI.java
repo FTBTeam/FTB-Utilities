@@ -2,9 +2,9 @@ package ftb.utils.mod.client.gui.friends;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.friends.*;
-import ftb.utils.api.guide.GuidePage;
+import ftb.lib.api.info.InfoPage;
+import ftb.lib.mod.client.gui.info.GuiInfo;
 import ftb.utils.mod.client.FTBUClient;
-import ftb.utils.mod.client.gui.guide.GuiGuide;
 import ftb.utils.world.*;
 import latmod.lib.LMColor;
 import net.minecraft.util.ChatComponentText;
@@ -15,9 +15,9 @@ import java.util.*;
  * Created by LatvianModder on 23.03.2016.
  */
 @SideOnly(Side.CLIENT)
-public class GuideFriendsGUI extends GuidePage
+public class InfoFriendsGUI extends InfoPage
 {
-	public GuideFriendsGUI()
+	public InfoFriendsGUI()
 	{
 		super("friends_gui");
 		setTitle(new ChatComponentText("FriendsGUI"));
@@ -26,7 +26,7 @@ public class GuideFriendsGUI extends GuidePage
 		useUnicodeFont = Boolean.FALSE;
 	}
 	
-	public void refreshGui(GuiGuide gui)
+	public void refreshGui(GuiInfo gui)
 	{
 		clear();
 		
@@ -38,11 +38,11 @@ public class GuideFriendsGUI extends GuidePage
 		if(FTBUClient.sort_friends_az.getAsBoolean()) Collections.sort(tempPlayerList, LMPNameComparator.instance);
 		else Collections.sort(tempPlayerList, new LMPStatusComparator(LMWorldClient.inst.clientPlayer));
 		
-		addSub(new GuideFriendsGUISelfPage());
+		addSub(new InfoFriendsGUISelfPage());
 		
 		for(LMPlayer p : tempPlayerList)
 		{
-			addSub(new GuideFriendsGUIPage(p.toPlayerSP()));
+			addSub(new InfoFriendsGUIPage(p.toPlayerSP()));
 		}
 	}
 }

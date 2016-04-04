@@ -20,17 +20,17 @@ public class GuideRepoList
 		
 		try
 		{
-			for(JsonElement e : new LMURLConnection(RequestMethod.SIMPLE_GET, "https://raw.githubusercontent.com/Slowpoke101/FTBGuides/master/repositories.json").connect().asJson().getAsJsonArray())
+			for(Map.Entry<String, JsonElement> e : new LMURLConnection(RequestMethod.SIMPLE_GET, "https://raw.githubusercontent.com/Slowpoke101/FTBGuides/master/repositories.json").connect().asJson().getAsJsonObject().entrySet())
 			{
 				try
 				{
-					GuideOnlineRepo repo = new GuideOnlineRepo(e.getAsString());
+					GuideOnlineRepo repo = new GuideOnlineRepo(e.getKey(), e.getValue().getAsString());
 					repos.put(repo.getID(), repo);
 					System.out.println("Loaded repo " + repo.getID());
 				}
 				catch(Exception ex2)
 				{
-					System.err.println("Failed to load repo " + e.getAsString());
+					System.err.println("Failed to load repo " + e.getKey());
 					//ex2.printStackTrace();
 				}
 			}

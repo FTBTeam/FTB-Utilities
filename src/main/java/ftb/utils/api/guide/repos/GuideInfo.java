@@ -15,7 +15,6 @@ public final class GuideInfo
 	public final List<String> authors;
 	public final List<String> modes;
 	public final GuideFormat format;
-	public final String file_name;
 	
 	public GuideInfo(JsonObject o)
 	{
@@ -50,6 +49,5 @@ public final class GuideInfo
 		modes = Collections.unmodifiableList(list);
 		
 		format = o.has("format") ? GuideFormat.getFromID(o.get("format").getAsString()) : GuideFormat.TXT;
-		file_name = o.has("file_name") ? o.get("file_name").getAsString() : name;
 	}
 }

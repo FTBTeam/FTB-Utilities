@@ -1,14 +1,11 @@
 package ftb.utils.api.guide.repos;
 
-import ftb.lib.*;
+import ftb.lib.TextureCoords;
 import ftb.lib.api.client.FTBLibClient;
-import latmod.lib.LMFileUtils;
-import latmod.lib.github.GitHubAPI;
 import latmod.lib.net.*;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.util.ResourceLocation;
 
-import java.io.File;
 import java.util.*;
 
 /**
@@ -16,23 +13,16 @@ import java.util.*;
  */
 public class GuideOnlineRepo extends FinalIDObject implements IGuide
 {
+	public final String homePath;
 	private final GuideInfo info;
 	private Map<String, GuideMode> modes;
 	private TextureCoords icon;
 	
-	public GuideOnlineRepo(String id) throws Exception
+	public GuideOnlineRepo(String id, String path) throws Exception
 	{
 		super(id);
+		homePath = path;
 		info = new GuideInfo(getFile("guide.json").asJson().getAsJsonObject());
-	}
-	
-	public void download() throws Exception
-	{
-		File file = new File(FTBLib.folderLocal, "guidepacks/" + info.file_name);
-		if(file.exists()) LMFileUtils.delete(file);
-		file.mkdirs();
-		
-		//TODO: Finish me
 	}
 	
 	public GuideInfo getInfo()
@@ -70,7 +60,7 @@ public class GuideOnlineRepo extends FinalIDObject implements IGuide
 	}
 	
 	public Response getFile(String path) throws Exception
-	{ return new LMURLConnection(RequestMethod.SIMPLE_GET, GitHubAPI.RAW_CONTENT + getID() + '/' + path).connect(); }
+	{ return new LMURLConnection(RequestMethod.SIMPLE_GET, homePath + path).connect(); }
 	
 	public String toString()
 	{ return info.name; }
@@ -80,7 +70,7 @@ public class GuideOnlineRepo extends FinalIDObject implements IGuide
 		if(icon == null)
 		{
 			icon = new TextureCoords(new ResourceLocation("ftbu_guidepacks", getID()), 0, 0, 16, 16, 16, 16);
-			FTBLibClient.getDownloadImage(icon.texture, GitHubAPI.RAW_CONTENT + getID() + "/icon.png", new ResourceLocation("textures/misc/unknown_pack.png"), null);
+			FTBLibClient.getDownloadImage(icon.texture, homePath + "icon.png", new ResourceLocation("textures/misc/unknown_pack.png"), null);
 		}
 		
 		return icon;

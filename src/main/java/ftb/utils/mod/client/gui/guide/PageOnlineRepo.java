@@ -1,14 +1,17 @@
 package ftb.utils.mod.client.gui.guide;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.FTBLib;
 import ftb.lib.api.client.GlStateManager;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.info.InfoPage;
 import ftb.lib.api.info.lines.*;
 import ftb.lib.mod.client.gui.info.*;
 import ftb.utils.api.guide.repos.GuideOnlineRepo;
-import latmod.lib.LMStringUtils;
+import latmod.lib.*;
 import net.minecraft.util.*;
+
+import java.io.File;
 
 /**
  * Created by LatvianModder on 03.04.2016.
@@ -56,6 +59,8 @@ public class PageOnlineRepo extends InfoPage
 	
 	public class ButtonDownloadLine extends ButtonInfoTextLine
 	{
+		private Thread thread;
+		
 		public ButtonDownloadLine(GuiInfo g, InfoTextLine l)
 		{
 			super(g, l);
@@ -67,6 +72,31 @@ public class PageOnlineRepo extends InfoPage
 		
 		public void onButtonPressed(int b)
 		{
+			if(thread != null) return;
+			
+			thread = new Thread()
+			{
+				public void run()
+				{
+					try
+					{
+						title = "Downloading...";
+						
+						File file = new File(FTBLib.folderLocal, "guidepacks/" + repo.getID());
+						if(file.exists()) LMFileUtils.delete(file);
+						file.mkdirs();
+					}
+					catch(Exception ex)
+					{
+						ex.printStackTrace();
+					}
+					
+					thread = null;
+				}
+			};
+			
+			thread.setDaemon(true);
+			thread.start();
 		}
 		
 		public void renderWidget()

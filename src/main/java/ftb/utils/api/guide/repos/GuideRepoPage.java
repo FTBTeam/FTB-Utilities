@@ -2,6 +2,8 @@ package ftb.utils.api.guide.repos;
 
 import com.google.gson.*;
 import ftb.lib.JsonHelper;
+import ftb.lib.api.info.InfoPage;
+import latmod.lib.LMStringUtils;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.util.*;
 
@@ -12,13 +14,15 @@ import java.util.*;
  */
 public class GuideRepoPage extends FinalIDObject
 {
+	public final GuideRepoPage parent;
 	public final IChatComponent name;
 	public final String page;
 	public final Map<String, GuideRepoPage> pages;
 	
-	public GuideRepoPage(String s, JsonElement e)
+	public GuideRepoPage(GuideRepoPage p, String s, JsonElement e)
 	{
 		super(s);
+		parent = p;
 		
 		Map<String, GuideRepoPage> map = new LinkedHashMap<>();
 		
@@ -30,15 +34,15 @@ public class GuideRepoPage extends FinalIDObject
 		else
 		{
 			JsonObject o = e.getAsJsonObject();
-			name = o.has("name") ? JsonHelper.deserializeICC(o.get("name")) : new ChatComponentText(s);
+			name = o.has("name") ? JsonHelper.deserializeICC(o.get("name")) : null;
 			page = o.has("page") ? o.get("page").getAsString() : "";
 			
 			if(o.has("pages"))
 			{
 				for(Map.Entry<String, JsonElement> entry : o.get("pages").getAsJsonObject().entrySet())
 				{
-					GuideRepoPage p = new GuideRepoPage(entry.getKey(), entry.getValue());
-					map.put(p.getID(), p);
+					GuideRepoPage p1 = new GuideRepoPage(this, entry.getKey(), entry.getValue());
+					map.put(p1.getID(), p1);
 				}
 			}
 		}
@@ -50,11 +54,11 @@ public class GuideRepoPage extends FinalIDObject
 	{
 		if(page.isEmpty() && pages.isEmpty())
 		{
-			return JsonHelper.serializeICC(name);
+			return JsonHelper.serializeICC(getName());
 		}
 		
 		JsonObject o = new JsonObject();
-		o.add("name", JsonHelper.serializeICC(name));
+		if(name != null) o.add("name", JsonHelper.serializeICC(name));
 		if(!page.isEmpty()) o.add("page", new JsonPrimitive(page));
 		if(!pages.isEmpty())
 		{
@@ -71,5 +75,57 @@ public class GuideRepoPage extends FinalIDObject
 	}
 	
 	public GuideRepoPage copy()
-	{ return new GuideRepoPage(getID(), getJson()); }
+	{ return new GuideRepoPage(parent == null ? null : parent.copy(), getID(), getJson()); }
+	
+	public String getPath()
+	{ return (parent == null) ? getID() : (parent.getPath() + '/' + getID()); }
+	
+	public String getPagePath()
+	{
+		if(page.isEmpty()) return page;
+		else if(page.charAt(0) == '/') return page.substring(1);
+		else return getPath() + '/' + page;
+	}
+	
+	public IChatComponent getName()
+	{
+		if(name != null) return name;
+		return new ChatComponentText(getID());
+	}
+	
+	public InfoPage createInfoPage(GuideRepo guide)
+	{
+		InfoPage infoPage = new InfoPage(getID());
+		
+		if(name != null)
+		{
+			infoPage.setTitle(name);
+		}
+		
+		String path = getPagePath();
+		if(!path.isEmpty())
+		{
+			try
+			{
+				for(String s : LMStringUtils.readStringList(guide.getFile(path).stream)) ;
+				{
+					
+				}
+			}
+			catch(Exception ex)
+			{
+				ex.printStackTrace();
+			}
+		}
+		
+		if(!pages.isEmpty())
+		{
+			for(GuideRepoPage p : pages.values())
+			{
+				infoPage.addSub(p.createInfoPage(guide));
+			}
+		}
+		
+		return infoPage;
+	}
 }

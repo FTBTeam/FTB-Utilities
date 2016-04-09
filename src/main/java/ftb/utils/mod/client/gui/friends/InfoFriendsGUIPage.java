@@ -83,7 +83,6 @@ public class InfoFriendsGUIPage extends InfoPage
 		public void renderWidget()
 		{
 			int ay = getAY();
-			if(ay < -height || ay > guiInfo.mainPanel.height) return;
 			int ax = getAX();
 			
 			double z = gui.getZLevel();

@@ -79,7 +79,7 @@ public class ServerInfoFile extends InfoPage
 			text.add(null);
 		}
 		
-		copyFrom(CachedInfo.main);
+		copyChildPagesFrom(CachedInfo.main);
 		
 		categoryTops = getSub("tops").setTitle(FTBU.mod.chatComponent("top.title"));
 		

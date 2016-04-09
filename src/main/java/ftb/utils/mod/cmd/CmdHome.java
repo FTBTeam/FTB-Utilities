@@ -43,7 +43,7 @@ public class CmdHome extends CommandLM
 		if(ep.dimension != pos.dim && !p.getRank().config.cross_dim_homes.getAsBoolean())
 			return error(FTBU.mod.chatComponent("cmd.home_cross_dim"));
 		
-		LMDimUtils.teleportPlayer(ep, pos);
+		LMDimUtils.teleportEntity(ep, pos);
 		return FTBU.mod.chatComponent("cmd.warp_tp", args[0]);
 	}
 }

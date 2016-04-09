@@ -1,10 +1,11 @@
 package ftb.utils.mod.config;
 
-import cpw.mods.fml.relauncher.Side;
+import ftb.lib.FTBLib;
 import ftb.lib.api.config.*;
 import latmod.lib.annotations.*;
 import net.minecraft.entity.*;
 
+import java.io.File;
 import java.util.*;
 
 public class FTBUConfigGeneral
@@ -19,26 +20,19 @@ public class FTBUConfigGeneral
 	@Info("If set to false, players won't be able to attack each other in spawn area")
 	public static final ConfigEntryBool spawn_pvp = new ConfigEntryBool("spawn_pvp", true);
 	
-	//TODO: Replace me with a custom entry
-	@Info("Entity IDs that are banned from world. They will not spawn and existing ones will be destroyed")
-	private static final ConfigEntryStringList blocked_entities = new ConfigEntryStringList("blocked_entities", null);
-	
-	@Info("Enable spawn area in singleplayer")
-	public static final ConfigEntryBool spawn_area_in_sp = new ConfigEntryBool("spawn_area_in_sp", false);
-	
-	public static final ConfigEntryBool server_info_difficulty = new ConfigEntryBool("server_info_difficulty", true);
-	
-	public static final ConfigEntryBool server_info_mode = new ConfigEntryBool("server_info_mode", true);
-	
 	private static final List<Class<?>> blockedEntitiesL = new ArrayList<>();
 	
-	public static void onReloaded(Side side)
+	//TODO: Replace me with a custom entry
+	@Info("Entity IDs that are banned from world. They will not spawn and existing ones will be destroyed")
+	private static final ConfigEntryStringList blocked_entities = new ConfigEntryStringList("blocked_entities", null)
 	{
-		if(side.isServer())
+		public void set(List<String> l)
 		{
+			super.set(l);
+			
 			blockedEntitiesL.clear();
 			
-			for(String s : blocked_entities.getAsStringList())
+			for(String s : getAsStringList())
 			{
 				try
 				{
@@ -47,26 +41,28 @@ public class FTBUConfigGeneral
 				}
 				catch(Exception e)
 				{
-					e.printStackTrace();
 				}
 			}
 		}
-		
-		/*
-		blockedItemsL.removeAll();
-		
-		list = blockedItems.get();
-		
-		if(list != null && list.length > 0)
+	};
+	
+	@Info("Enable spawn area in singleplayer")
+	public static final ConfigEntryBool spawn_area_in_sp = new ConfigEntryBool("spawn_area_in_sp", false);
+	
+	public static final ConfigEntryBool server_info_difficulty = new ConfigEntryBool("server_info_difficulty", true);
+	
+	public static final ConfigEntryBool server_info_mode = new ConfigEntryBool("server_info_mode", true);
+	
+	public static File guidepacksFolderFile;
+	
+	private static final ConfigEntryString guidepacks_folder = new ConfigEntryString("guidepacks_folder", "")
+	{
+		public void set(Object o)
 		{
-			for(String s : list)
-			{
-				ItemStack is = ItemStackTypeAdapter.parseItem(s);
-				if(is != null && !LMInvUtils.isAir(is.getItem())) blockedItemsL.add(is);
-			}
+			super.set(o);
+			guidepacksFolderFile = getAsString().isEmpty() ? new File(FTBLib.folderLocal, "guidepacks") : new File(getAsString());
 		}
-		*/
-	}
+	};
 	
 	public static boolean isEntityBanned(Class<?> c)
 	{

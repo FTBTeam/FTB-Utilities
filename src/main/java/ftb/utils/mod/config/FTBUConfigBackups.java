@@ -21,7 +21,7 @@ public class FTBUConfigBackups
 	public static final ConfigEntryInt compression_level = new ConfigEntryInt("compression_level", 1);
 	
 	@Info("Absolute path to backups folder")
-	public static final ConfigEntryString folder = new ConfigEntryString("folder", "./backups/");
+	public static final ConfigEntryString folder = new ConfigEntryString("folder", "");
 	
 	@Info("Prints (current size | total size) when backup is done")
 	public static final ConfigEntryBool display_file_size = new ConfigEntryBool("display_file_size", true);

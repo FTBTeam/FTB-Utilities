@@ -63,7 +63,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	public final int currentDim, startX, startY;
 	
 	public final ButtonLM buttonRefresh, buttonClose, buttonUnclaimAll;
-	public final MapButton mapButtons[];
+	public final List<MapButton> mapButtons;
 	public final PanelLM panelButtons;
 	
 	public ThreadReloadArea thread = null;
@@ -141,9 +141,9 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			{ return 0; }
 		};
 		
-		mapButtons = new MapButton[tiles_gui * tiles_gui];
-		for(int i = 0; i < mapButtons.length; i++)
-			mapButtons[i] = new MapButton(this, 0, 0, i);
+		mapButtons = new ArrayList<>(tiles_gui * tiles_gui);
+		for(int i = 0; i < tiles_gui * tiles_gui; i++)
+			mapButtons.add(new MapButton(this, 0, 0, i));
 	}
 	
 	public void initLMGui()
@@ -204,8 +204,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		renderMinimap();
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		for(int i = 0; i < mapButtons.length; i++)
-			mapButtons[i].renderWidget();
+		for(MapButton b : mapButtons)
+			b.renderWidget();
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		
 		buttonRefresh.render(GuiIcons.refresh);

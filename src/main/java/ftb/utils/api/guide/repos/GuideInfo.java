@@ -14,7 +14,6 @@ public final class GuideInfo
 	public final String version;
 	public final List<String> authors;
 	public final List<String> modes;
-	public final GuideFormat format;
 	
 	public GuideInfo(JsonObject o)
 	{
@@ -44,10 +43,8 @@ public final class GuideInfo
 			}
 		}
 		
-		if(!list.contains("default")) list.add("default");
+		if(!list.contains("common")) list.add("common");
 		
 		modes = Collections.unmodifiableList(list);
-		
-		format = o.has("format") ? GuideFormat.getFromID(o.get("format").getAsString()) : GuideFormat.TXT;
 	}
 }

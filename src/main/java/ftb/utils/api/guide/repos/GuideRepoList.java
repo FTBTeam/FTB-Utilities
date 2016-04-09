@@ -1,9 +1,11 @@
 package ftb.utils.api.guide.repos;
 
 import com.google.gson.JsonElement;
+import ftb.utils.mod.config.FTBUConfigGeneral;
 import latmod.lib.LMUtils;
 import latmod.lib.net.*;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -11,11 +13,12 @@ import java.util.*;
  */
 public class GuideRepoList
 {
-	public static final Map<String, GuideOnlineRepo> repos = new HashMap<>();
+	public static final Map<String, GuideOnlineRepo> onlineRepos = new HashMap<>();
+	public static final Map<String, GuideLocalRepo> localRepos = new HashMap<>();
 	
-	public static void refresh()
+	public static void refreshOnlineRepos()
 	{
-		repos.clear();
+		onlineRepos.clear();
 		long ms = LMUtils.millis();
 		
 		try
@@ -25,12 +28,11 @@ public class GuideRepoList
 				try
 				{
 					GuideOnlineRepo repo = new GuideOnlineRepo(e.getKey(), e.getValue().getAsString());
-					repos.put(repo.getID(), repo);
-					System.out.println("Loaded repo " + repo.getID());
+					onlineRepos.put(repo.getID(), repo);
 				}
 				catch(Exception ex2)
 				{
-					System.err.println("Failed to load repo " + e.getKey());
+					System.err.println("Failed to load online repo " + e.getKey());
 					//ex2.printStackTrace();
 				}
 			}
@@ -40,6 +42,43 @@ public class GuideRepoList
 			ex.printStackTrace();
 		}
 		
-		System.out.println("Loaded " + repos.size() + " repos after " + (LMUtils.millis() - ms) + " ms: " + repos.values());
+		System.out.println("Loaded " + onlineRepos.size() + " online repos after " + (LMUtils.millis() - ms) + " ms: " + onlineRepos.values());
+	}
+	
+	public static void refreshLocalRepos()
+	{
+		localRepos.clear();
+		long ms = LMUtils.millis();
+		
+		try
+		{
+			File[] folders = FTBUConfigGeneral.guidepacksFolderFile.listFiles();
+			
+			if(folders != null && folders.length > 0)
+			{
+				for(File f : folders)
+				{
+					if(f.isDirectory())
+					{
+						try
+						{
+							GuideLocalRepo repo = new GuideLocalRepo(f);
+							localRepos.put(repo.getID(), repo);
+						}
+						catch(Exception ex2)
+						{
+							System.err.println("Failed to load local repo " + f.getName());
+							//ex2.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+		System.out.println("Loaded " + onlineRepos.size() + " local repos after " + (LMUtils.millis() - ms) + " ms: " + onlineRepos.values());
 	}
 }

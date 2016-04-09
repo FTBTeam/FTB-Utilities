@@ -29,7 +29,7 @@ public class CmdTplast extends CommandLM
 			double x = func_110665_a(ics, ep.posX, args[0], -30000000, 30000000);
 			double y = func_110665_a(ics, ep.posY, args[1], -30000000, 30000000);
 			double z = func_110665_a(ics, ep.posZ, args[2], -30000000, 30000000);
-			LMDimUtils.teleportPlayer(ep, x, y, z, ep.dimension);
+			LMDimUtils.teleportEntity(ep, x, y, z, ep.dimension);
 			return null;
 		}
 		
@@ -49,7 +49,7 @@ public class CmdTplast extends CommandLM
 		
 		BlockDimPos p = to.getPos();
 		if(p == null) return error(new ChatComponentText("No last position!"));
-		LMDimUtils.teleportPlayer(who, p);
+		LMDimUtils.teleportEntity(who, p);
 		return FTBU.mod.chatComponent("cmd.warp_tp", to.getProfile().getName());
 	}
 }

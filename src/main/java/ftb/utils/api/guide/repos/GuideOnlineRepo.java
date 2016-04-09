@@ -1,22 +1,25 @@
 package ftb.utils.api.guide.repos;
 
-import ftb.lib.TextureCoords;
 import ftb.lib.api.client.FTBLibClient;
+import ftb.utils.mod.config.FTBUConfigGeneral;
+import latmod.lib.LMFileUtils;
 import latmod.lib.net.*;
-import latmod.lib.util.FinalIDObject;
 import net.minecraft.util.ResourceLocation;
 
+import java.io.*;
+import java.net.URL;
+import java.nio.channels.*;
 import java.util.*;
 
 /**
  * Created by LatvianModder on 03.04.2016.
  */
-public class GuideOnlineRepo extends FinalIDObject implements IGuide
+public class GuideOnlineRepo extends GuideRepo
 {
 	public final String homePath;
 	private final GuideInfo info;
 	private Map<String, GuideMode> modes;
-	private TextureCoords icon;
+	private ResourceLocation icon;
 	
 	public GuideOnlineRepo(String id, String path) throws Exception
 	{
@@ -52,27 +55,59 @@ public class GuideOnlineRepo extends FinalIDObject implements IGuide
 		return modes;
 	}
 	
-	public GuideMode getMergedMode(String id)
-	{
-		GuideMode mode = getModes().get("default");
-		if(mode == null) return getModes().get(id);
-		else return mode.mergeWith(getModes().get(id));
-	}
-	
 	public Response getFile(String path) throws Exception
 	{ return new LMURLConnection(RequestMethod.SIMPLE_GET, homePath + path).connect(); }
 	
-	public String toString()
-	{ return info.name; }
-	
-	public TextureCoords getIcon()
+	public ResourceLocation getIcon()
 	{
 		if(icon == null)
 		{
-			icon = new TextureCoords(new ResourceLocation("ftbu_guidepacks", getID()), 0, 0, 16, 16, 16, 16);
-			FTBLibClient.getDownloadImage(icon.texture, homePath + "icon.png", new ResourceLocation("textures/misc/unknown_pack.png"), null);
+			icon = new ResourceLocation("ftbu_guidepacks", getID());
+			FTBLibClient.getDownloadImage(icon, homePath + "icon.png", new ResourceLocation("textures/misc/unknown_pack.png"), null);
 		}
 		
 		return icon;
+	}
+	
+	public GuideLocalRepo getLocalRepo()
+	{ return GuideRepoList.localRepos.get(getID()); }
+	
+	public boolean isLocal()
+	{ return getLocalRepo() != null; }
+	
+	public boolean needsUpdate()
+	{
+		GuideLocalRepo r = getLocalRepo();
+		return r == null || !r.getInfo().version.equals(getInfo().version);
+	}
+	
+	public GuideLocalRepo download() throws Exception
+	{
+		File file = new File(FTBUConfigGeneral.guidepacksFolderFile, getID());
+		if(file.exists()) LMFileUtils.delete(file);
+		file.mkdirs();
+		
+		Set<String> filesToDownload = new HashSet<>();
+		
+		for(GuideMode m : getModes().values())
+		{
+			
+		}
+		
+		ReadableByteChannel rbc;
+		FileOutputStream fos;
+		
+		for(String s : filesToDownload)
+		{
+			System.out.println("Downloading " + s);
+			
+			rbc = Channels.newChannel(new URL(s).openStream());
+			fos = new FileOutputStream(LMFileUtils.newFile(new File(file, s)));
+			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+		}
+		
+		GuideLocalRepo r = new GuideLocalRepo(file);
+		GuideRepoList.localRepos.put(r.getID(), r);
+		return r;
 	}
 }

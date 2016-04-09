@@ -10,7 +10,7 @@ import ftb.utils.api.*;
 import ftb.utils.api.guide.ServerInfoFile;
 import ftb.utils.badges.ServerBadges;
 import ftb.utils.mod.FTBUTicks;
-import ftb.utils.mod.config.*;
+import ftb.utils.mod.config.FTBUConfigLogin;
 import ftb.utils.mod.handlers.FTBUChunkEventHandler;
 import ftb.utils.net.*;
 import ftb.utils.world.*;
@@ -34,8 +34,6 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 	
 	public void onReloaded(EventFTBReload e)
 	{
-		FTBUConfigGeneral.onReloaded(e.world.side);
-		
 		if(e.world.side.isServer())
 		{
 			if(LMWorldServer.inst == null) return;

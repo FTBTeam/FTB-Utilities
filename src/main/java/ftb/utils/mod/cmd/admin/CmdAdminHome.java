@@ -42,7 +42,7 @@ public class CmdAdminHome extends CommandSubLM
 		
 		if(args[1].equals("tp"))
 		{
-			LMDimUtils.teleportPlayer(getCommandSenderAsPlayer(ics), pos);
+			LMDimUtils.teleportEntity(getCommandSenderAsPlayer(ics), pos);
 			return FTBU.mod.chatComponent("cmd.warp_tp", args[2]);
 		}
 		else if(args[1].equals("remove"))

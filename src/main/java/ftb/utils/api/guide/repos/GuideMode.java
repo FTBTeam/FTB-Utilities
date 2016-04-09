@@ -1,5 +1,6 @@
 package ftb.utils.api.guide.repos;
 
+import ftb.lib.api.info.InfoPage;
 import latmod.lib.util.FinalIDObject;
 
 /**
@@ -7,18 +8,14 @@ import latmod.lib.util.FinalIDObject;
  */
 public class GuideMode extends FinalIDObject
 {
-	public final IGuide guide;
+	public final GuideRepo guide;
 	public final GuideRepoPage page;
+	private InfoPage infoPage;
 	
-	public GuideMode(IGuide g, String id) throws Exception
+	public GuideMode(GuideRepo g, String id) throws Exception
 	{
 		super(id);
 		guide = g;
-		page = new GuideRepoPage(id, g.getFile("guide/" + id + "/pages.json").asJson().getAsJsonObject());
-	}
-	
-	public GuideMode mergeWith(GuideMode mode)
-	{
-		return null;
+		page = new GuideRepoPage(null, id, g.getFile("guide/" + id + "/pages.json").asJson().getAsJsonObject());
 	}
 }

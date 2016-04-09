@@ -64,7 +64,7 @@ public class ReposPage extends InfoPage
 		clear();
 		
 		List<GuideOnlineRepo> list = new ArrayList<>();
-		list.addAll(GuideRepoList.repos.values());
+		list.addAll(GuideRepoList.onlineRepos.values());
 		Collections.sort(list, LMStringUtils.ignoreCaseComparator);
 		
 		for(GuideOnlineRepo r : list)
@@ -83,7 +83,7 @@ public class ReposPage extends InfoPage
 		{
 			public void run()
 			{
-				GuideRepoList.refresh();
+				GuideRepoList.refreshOnlineRepos();
 				
 				if(Minecraft.getMinecraft().currentScreen instanceof GuiInfo)
 					((GuiInfo) Minecraft.getMinecraft().currentScreen).refreshWidgets();

@@ -72,9 +72,9 @@ public class FTBUPlayerEventHandler
 				World w = LMDimUtils.getWorld(0);
 				Pos2I pos = LMWorldServer.inst.settings.getWB(0).pos;
 				int posY = w.getTopSolidOrLiquidBlock(pos.x, pos.y);
-				LMDimUtils.teleportPlayer(ep, pos.x + 0.5D, posY + 1.25D, pos.y + 0.5D, 0);
+				LMDimUtils.teleportEntity(ep, pos.x + 0.5D, posY + 1.25D, pos.y + 0.5D, 0);
 			}
-			else LMDimUtils.teleportPlayer(ep, player.lastPos);
+			else LMDimUtils.teleportEntity(ep, player.lastPos);
 			ep.worldObj.playSoundAtEntity(ep, "random.fizz", 1F, 1F);
 		}
 		
@@ -117,7 +117,7 @@ public class FTBUPlayerEventHandler
 	@SubscribeEvent
 	public void onPlayerAttacked(LivingAttackEvent e)
 	{
-		if(e.entity.worldObj.isRemote) return;
+		if(e.entity == null || e.entity.worldObj == null || e.entity.worldObj.isRemote) return;
 		
 		int dim = e.entity.dimension;
 		if(dim != 0 || !(e.entity instanceof EntityPlayerMP) || e.entity instanceof FakePlayer) return;

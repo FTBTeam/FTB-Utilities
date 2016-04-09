@@ -1,4 +1,4 @@
-#Buttons
+# Buttons
 ftbu.label.friend=Friend
 ftbu.label.pfriend=Pending Friend
 ftbu.label.joined=Joined %s ago
@@ -8,19 +8,21 @@ ftbu.button.block_security=Block Security
 ftbu.label.cchunks_count=Claimed Chunks: %s
 ftbu.label.lchunks_count=Loaded Chunks: %s
 
-#ClientConfig
+# Client Config
 client_config.ftbu=FTBUtilities
 client_config.ftbu.render_badges=Show Badges
 client_config.ftbu.sort_friends_az=Sort Friends A-Z
 client_config.ftbu.loaded_chunks_space_key=Use Space key for Loaded Chunks
+client_config.ftbu.guidepacks_folder=Custom guidepacks folder location
 
+# Player Settings
 ftbu.player_setting.chat_links=Chat Links
 ftbu.player_setting.render_badge=Show My Badge
 ftbu.player_setting.explosions=Claimed Chunk Explosions
 ftbu.player_setting.security_level=Claimed Chunk Security Level
 ftbu.player_setting.fake_players=Claimed Chunk Fake Players
 
-#PlayerActions
+# Player Actions
 player_action.ftbu.guide=Guide
 player_action.ftbu.server_info=Server Info
 player_action.ftbu.claimed_chunks=Claimed Chunks
@@ -31,13 +33,16 @@ player_action.ftbu.rem_friend=Remove from Friends
 player_action.ftbu.deny_friend=Deny Friend Request
 player_action.ftbu.mail=Mail
 
-#Misc
+# Misc
 ftbu.label.new_friends=New friend requests!
 ftbu.label.new_friends_click=Click to accept all requests
 ftbu.server_restart=Server will restart in %s
 ftbu.commands=Commands
 ftbu.my_permissions=My Permissions
+ftbu.ftb_gamemode=Game mode: %s
+ftbu.world_difficulty=Difficulty: %s
 
+# Teleportation
 ftbu.cmd.warp_set=Warp '%s' set!
 ftbu.cmd.warp_del=Warp '%s' deleted!
 ftbu.cmd.warp_not_set=Unknown Warp: '%s'!
@@ -53,9 +58,8 @@ ftbu.cmd.no_dp=You can only go back once!
 ftbu.cmd.timer_backup=Next backup: %s
 ftbu.cmd.timer_restart=Next restart: %s
 ftbu.cmd.spawn_tp=Teleported to spawn
-ftbu.cmd.ftb_gamemode=Game mode: %s
-ftbu.cmd.world_difficulty=Difficulty: %s
 
+# Backups
 ftbu.cmd.backup_start=Server Backup started!
 ftbu.cmd.backup_stop=Server Backup stopped!
 ftbu.cmd.backup_end_1=Server backup done in %s!
@@ -66,12 +70,14 @@ ftbu.cmd.backup_already_running=Backup in progress!
 ftbu.cmd.backup_not_running=Backup is not running!
 ftbu.cmd.backup_size=Current world size: %s, total backups folder size: %s
 
+# Claiming
 ftbu.button.claims_unclaim_all=Unclaim all chunks
 ftbu.button.claims_unclaim_all_dim=Unclaim all chunks in %s
 ftbu.button.claims_unclaim_all_q=Unclaim all chunks?
 ftbu.button.claims_unclaim_all_dim_q=Unclaim all chunks in %s?
 ftbu.label.claims_invalid_dim=Can't claim chunks in this dimension
 
+# Tops
 ftbu.top.title=Server Tops
 ftbu.top.first_joined=First Seen
 ftbu.top.last_seen=Last Seen
@@ -79,7 +85,7 @@ ftbu.top.time_played=Time Played
 ftbu.top.deaths=Deaths
 ftbu.top.deaths_ph=Deaths per hour
 
-#Chunktypes
+# Chunktypes
 ftbu.chunktype.unloaded=Chunk not loaded
 ftbu.chunktype.spawn=Spawn Area
 ftbu.chunktype.world_border=World Border
@@ -87,3 +93,9 @@ ftbu.chunktype.world_border.warning=You have reached the world border!
 ftbu.chunktype.wilderness=Wilderness
 ftbu.chunktype.claimed=Claimed Area
 ftbu.chunktype.chunkloaded=Chunkloaded
+
+# Pack States
+ftbu.pack_state.download=Download
+ftbu.pack_state.downloading=Downloading...
+ftbu.pack_state.remove=Remove
+ftbu.pack_state.update=Update

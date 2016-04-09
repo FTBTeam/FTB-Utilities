@@ -21,7 +21,7 @@ public class CmdSpawn extends CommandLM
 		
 		while(w.getBlock(spawnpoint.posX, spawnpoint.posY, spawnpoint.posZ).isOpaqueCube()) spawnpoint.posY += 2;
 		
-		LMDimUtils.teleportPlayer(ep, new BlockDimPos(spawnpoint, 0));
+		LMDimUtils.teleportEntity(ep, new BlockDimPos(spawnpoint, 0));
 		return FTBU.mod.chatComponent("cmd.spawn_tp");
 	}
 }

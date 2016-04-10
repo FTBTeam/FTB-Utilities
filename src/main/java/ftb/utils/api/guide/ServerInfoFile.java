@@ -65,6 +65,7 @@ public class ServerInfoFile extends InfoPage
 	{
 		super(CachedInfo.main.getID());
 		setTitle(CachedInfo.main.getTitleComponent());
+		useUnicodeFont = Boolean.FALSE;
 		
 		if((self = pself) == null) return;
 		boolean isDedi = FTBLib.getServer().isDedicatedServer();
@@ -97,10 +98,10 @@ public class ServerInfoFile extends InfoPage
 			println(FTBU.mod.chatComponent("cmd.timer_backup", LMStringUtils.getTimeString(Backups.nextBackup - LMUtils.millis())));
 		
 		if(FTBUConfigGeneral.server_info_difficulty.getAsBoolean())
-			println(FTBU.mod.chatComponent("cmd.world_difficulty", LMStringUtils.firstUppercase(pself.getPlayer().worldObj.difficultySetting.toString().toLowerCase())));
+			println(FTBU.mod.chatComponent("world_difficulty", LMStringUtils.firstUppercase(pself.getPlayer().worldObj.difficultySetting.toString().toLowerCase())));
 		
 		if(FTBUConfigGeneral.server_info_mode.getAsBoolean())
-			println(FTBU.mod.chatComponent("cmd.ftb_gamemode", LMStringUtils.firstUppercase(FTBWorld.server.getMode().toString().toLowerCase())));
+			println(FTBU.mod.chatComponent("ftb_gamemode", LMStringUtils.firstUppercase(FTBWorld.server.getMode().toString().toLowerCase())));
 		
 		if(FTBUConfigTops.first_joined.getAsBoolean()) addTop(Top.first_joined);
 		if(FTBUConfigTops.deaths.getAsBoolean()) addTop(Top.deaths);

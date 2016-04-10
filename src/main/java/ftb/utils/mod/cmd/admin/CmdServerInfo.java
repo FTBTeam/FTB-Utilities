@@ -23,15 +23,16 @@ public class CmdServerInfo extends CommandLM
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		
-		InfoPage file = new InfoPage("server_info").setTitle(new ChatComponentText("Server Info"));//LANG
+		InfoPage file = new InfoPage("server_info").setTitle(new ChatComponentTranslation("player_action.ftbu.server_info"));
+		file.useUnicodeFont = Boolean.FALSE;
 		
-		InfoPage page = file.getSub("Entities"); //LANG
+		InfoPage page = file.getSub("Entities");
 		
 		Set<Integer> entityIDset = EntityList.IDtoClassMapping.keySet();
 		for(Integer i : entityIDset)
 			page.printlnText("[" + i + "] " + EntityList.getStringFromID(i.intValue()));
 		
-		page = file.getSub("Enchantments"); //LANG
+		page = file.getSub("Enchantments");
 		
 		IntList freeIDs = new IntList();
 		

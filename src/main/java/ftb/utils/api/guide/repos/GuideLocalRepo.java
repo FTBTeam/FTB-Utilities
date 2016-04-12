@@ -48,7 +48,7 @@ public class GuideLocalRepo extends GuideRepo
 	{ return modes; }
 	
 	public Response getFile(String path) throws Exception
-	{ return new Response(0L, 200, new FileInputStream(new File(folder, path))); }
+	{ return new Response(new FileInputStream(new File(folder, path))); }
 	
 	public ResourceLocation getIcon()
 	{

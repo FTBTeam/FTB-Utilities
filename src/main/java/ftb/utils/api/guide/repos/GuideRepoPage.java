@@ -2,8 +2,6 @@ package ftb.utils.api.guide.repos;
 
 import com.google.gson.*;
 import ftb.lib.JsonHelper;
-import ftb.lib.api.info.InfoPage;
-import latmod.lib.LMStringUtils;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.util.*;
 
@@ -93,39 +91,5 @@ public class GuideRepoPage extends FinalIDObject
 		return new ChatComponentText(getID());
 	}
 	
-	public InfoPage createInfoPage(GuideRepo guide)
-	{
-		InfoPage infoPage = new InfoPage(getID());
-		
-		if(name != null)
-		{
-			infoPage.setTitle(name);
-		}
-		
-		String path = getPagePath();
-		if(!path.isEmpty())
-		{
-			try
-			{
-				for(String s : LMStringUtils.readStringList(guide.getFile(path).stream)) ;
-				{
-					
-				}
-			}
-			catch(Exception ex)
-			{
-				ex.printStackTrace();
-			}
-		}
-		
-		if(!pages.isEmpty())
-		{
-			for(GuideRepoPage p : pages.values())
-			{
-				infoPage.addSub(p.createInfoPage(guide));
-			}
-		}
-		
-		return infoPage;
-	}
+	
 }

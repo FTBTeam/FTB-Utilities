@@ -57,6 +57,38 @@ public class ServerInfoFile extends InfoPage
 		}
 	}
 	
+	public static void loadFromFiles(InfoPage c, File f)
+	{
+		if(f == null || !f.exists()) return;
+		
+		if(f.isDirectory())
+		{
+			File[] f1 = f.listFiles();
+			
+			if(f1 != null && f1.length > 0)
+			{
+				Arrays.sort(f1, LMFileUtils.fileComparator);
+				InfoPage c1 = c.getSub(f.getName());
+				for(File f2 : f1) loadFromFiles(c1, f2);
+			}
+		}
+		else if(f.isFile())
+		{
+			if(f.getName().endsWith(".txt"))
+			{
+				try
+				{
+					InfoPage c1 = c.getSub(LMFileUtils.getRawFileName(f));
+					c1.loadText(LMFileUtils.load(f));
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
 	private List<LMPlayerServer> players = null;
 	private LMPlayerServer self;
 	private InfoPage categoryTops = null;
@@ -80,7 +112,7 @@ public class ServerInfoFile extends InfoPage
 			text.add(null);
 		}
 		
-		copyChildPagesFrom(CachedInfo.main);
+		copyFrom(CachedInfo.main);
 		
 		categoryTops = getSub("tops").setTitle(FTBU.mod.chatComponent("top.title"));
 		

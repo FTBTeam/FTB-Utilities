@@ -1,6 +1,7 @@
 package ftb.utils.api.guide.repos;
 
 import com.google.gson.JsonElement;
+import ftb.lib.FTBLib;
 import ftb.utils.mod.config.FTBUConfigGeneral;
 import latmod.lib.LMUtils;
 import latmod.lib.net.*;
@@ -42,7 +43,7 @@ public class GuideRepoList
 			ex.printStackTrace();
 		}
 		
-		System.out.println("Loaded " + onlineRepos.size() + " online repos after " + (LMUtils.millis() - ms) + " ms: " + onlineRepos.values());
+		FTBLib.dev_logger.info("Loaded " + onlineRepos.size() + " online repos after " + (LMUtils.millis() - ms) + " ms: " + onlineRepos.values());
 	}
 	
 	public static void refreshLocalRepos()
@@ -79,6 +80,6 @@ public class GuideRepoList
 			ex.printStackTrace();
 		}
 		
-		System.out.println("Loaded " + onlineRepos.size() + " local repos after " + (LMUtils.millis() - ms) + " ms: " + onlineRepos.values());
+		FTBLib.dev_logger.info("Loaded " + onlineRepos.size() + " local repos after " + (LMUtils.millis() - ms) + " ms: " + onlineRepos.values());
 	}
 }

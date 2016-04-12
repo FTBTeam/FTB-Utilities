@@ -33,7 +33,7 @@ public class FTBLIntegrationClient extends FTBLIntegration
 		{
 			FTBLibClient.clearCachedData();
 			ClientBadges.clearPlayerBadges();
-			ClientGuideFile.instance.reload(e);
+			ClientGuideFile.instance.reload();
 		}
 	}
 	

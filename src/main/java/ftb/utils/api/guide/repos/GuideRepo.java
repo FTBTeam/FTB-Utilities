@@ -34,18 +34,16 @@ public abstract class GuideRepo extends FinalIDObject
 		GuideMode mode = getModes().get("common");
 		if(mode != null)
 		{
-			page1 = mode.page.createInfoPage(this);
-			page.copyTextFrom(page1);
-			page.copyChildPagesFrom(page1);
+			page1 = mode.getInfoPage();
+			page.copyFrom(page1);
 		}
 		
 		mode = getModes().get(id);
 		
 		if(mode != null)
 		{
-			page1 = mode.page.createInfoPage(this);
-			page.copyTextFrom(page1);
-			page.copyChildPagesFrom(page1);
+			page1 = mode.getInfoPage();
+			page.copyFrom(page1);
 		}
 		
 		return page;

@@ -25,7 +25,7 @@ public class RankConfig
 	
 	@Flags(Flags.SYNC)
 	@Info({"'-' - Player setting", "'disabled' - Explosions will never happen in claimed chunks\", \"'enabled' - Explosions will always happen in claimed chunks"})
-	public final ConfigEntryEnum<EnumEnabled> forced_explosions = new ConfigEntryEnum<>("forced_explosions", EnumEnabled.VALUES, null, true);
+	public final ConfigEntryEnum<EnumEnabled> forced_explosions = new ConfigEntryEnum<>("forced_explosions", EnumEnabled.values(), null, true);
 	
 	@Flags(Flags.SYNC)
 	@Info({ })

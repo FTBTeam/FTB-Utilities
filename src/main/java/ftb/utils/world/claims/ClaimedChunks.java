@@ -251,7 +251,7 @@ public class ClaimedChunks
 				{
 					EnumEnabled fe = p.getRank().config.forced_explosions.get();
 					if(fe == null) return p.getSettings().get(PersonalSettings.EXPLOSIONS);
-					else return fe.isEnabled();
+					else return fe == EnumEnabled.ENABLED;
 				}
 			}
 		}

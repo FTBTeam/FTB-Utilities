@@ -50,7 +50,7 @@ public class ClaimedAreasClient
 				LMPlayerClient owner = LMWorldClient.inst.getPlayer(type);
 				if(owner != null) l.add(typeE.getChatColor(owner) + owner.getProfile().getName());
 			}
-			else l.add(typeE.getChatColor(null) + typeE.getIDS());
+			else l.add(typeE.getChatColor(null) + typeE.langKey.format());
 		}
 	}
 }

@@ -1,6 +1,5 @@
 package ftb.utils.world;
 
-import ftb.utils.mod.FTBU;
 import latmod.lib.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.*;
@@ -32,10 +31,14 @@ public class LMPlayerStats
 	public void getInfo(LMPlayerServer owner, List<IChatComponent> info, long ms)
 	{
 		if(lastSeen > 0L && !owner.isOnline())
-			info.add(FTBU.mod.chatComponent("label.last_seen", LMStringUtils.getTimeString(ms - lastSeen)));
+			info.add(new ChatComponentTranslation("ftbu.top.last_seen").appendText(": " + LMStringUtils.getTimeString(ms - lastSeen)));
+		
 		if(firstJoined > 0L)
-			info.add(FTBU.mod.chatComponent("label.joined", LMStringUtils.getTimeString(ms - firstJoined)));
-		if(deaths > 0) info.add(FTBU.mod.chatComponent("label.deaths", String.valueOf(deaths)));
+			info.add(new ChatComponentTranslation("ftbu.top.first_joined").appendText(": " + LMStringUtils.getTimeString(ms - firstJoined)));
+		
+		if(deaths > 0)
+			info.add(new ChatComponentTranslation("ftbu.top.deaths").appendText(": " + String.valueOf(deaths)));
+		
 		if(timePlayed > 0L)
 			info.add(new ChatComponentTranslation("stat.playOneMinute").appendSibling(new ChatComponentText(": " + LMStringUtils.getTimeString(timePlayed))));
 	}

@@ -2,7 +2,7 @@ package ftb.utils.mod.cmd.admin;
 
 import ftb.lib.BlockDimPos;
 import ftb.lib.api.cmd.*;
-import ftb.utils.mod.FTBU;
+import ftb.utils.mod.FTBULang;
 import ftb.utils.world.LMWorldServer;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -32,6 +32,6 @@ public class CmdSetWarp extends CommandLM
 		else c = ep.getPlayerCoordinates();
 		
 		LMWorldServer.inst.warps.set(args[0], new BlockDimPos(c, ep.dimension));
-		return FTBU.mod.chatComponent("cmd.warp_set", args[0]);
+		return FTBULang.warp_set.chatComponent(args[0]);
 	}
 }

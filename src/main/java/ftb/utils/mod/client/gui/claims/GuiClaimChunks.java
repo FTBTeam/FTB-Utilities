@@ -2,11 +2,11 @@ package ftb.utils.mod.client.gui.claims;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.TextureCoords;
-import ftb.lib.api.FTBLibLang;
+import ftb.lib.api.GuiLang;
 import ftb.lib.api.client.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.widgets.*;
-import ftb.utils.mod.FTBU;
+import ftb.utils.mod.FTBULang;
 import ftb.utils.mod.client.FTBUClient;
 import ftb.utils.net.*;
 import ftb.utils.world.*;
@@ -100,22 +100,22 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			}
 		};
 		
-		buttonRefresh.title = FTBLibLang.button_refresh.format();
+		buttonRefresh.title = GuiLang.button_refresh.format();
 		
 		buttonUnclaimAll = new ButtonLM(this, 0, 32, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
 				FTBLibClient.playClickSound();
-				String s = isShiftKeyDown() ? FTBU.mod.translate("button.claims_unclaim_all_q") : FTBU.mod.translate("button.claims_unclaim_all_dim_q", FTBLibClient.mc.theWorld.provider.getDimensionName());
+				String s = isShiftKeyDown() ? FTBULang.button_claims_unclaim_all_q.format() : FTBULang.button_claims_unclaim_all_dim_q.format(FTBLibClient.mc.theWorld.provider.getDimensionName());
 				FTBLibClient.openGui(new GuiYesNo(GuiClaimChunks.this, s, "", isShiftKeyDown() ? 1 : 0));
 			}
 			
 			public void addMouseOverText(List<String> l)
 			{
-				if(isShiftKeyDown()) l.add(FTBU.mod.translate("button.claims_unclaim_all"));
+				if(isShiftKeyDown()) l.add(FTBULang.button_claims_unclaim_all.format());
 				else
-					l.add(FTBU.mod.translate("button.claims_unclaim_all_dim", FTBLibClient.mc.theWorld.provider.getDimensionName()));
+					l.add(FTBULang.button_claims_unclaim_all_dim.format(FTBLibClient.mc.theWorld.provider.getDimensionName()));
 			}
 		};
 		
@@ -219,9 +219,9 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	
 	public void drawText(List<String> l)
 	{
-		String s = FTBU.mod.translate("label.cchunks_count", (playerLM.claimedChunks + " / " + playerLM.maxClaimedChunks));
+		String s = FTBULang.label_cchunks_count.format(playerLM.claimedChunks + " / " + playerLM.maxClaimedChunks);
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 12, 0xFFFFFFFF);
-		s = FTBU.mod.translate("label.lchunks_count", (playerLM.loadedChunks + " / " + playerLM.maxLoadedChunks));
+		s = FTBULang.label_lchunks_count.format(playerLM.loadedChunks + " / " + playerLM.maxLoadedChunks);
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 24, 0xFFFFFFFF);
 		
 		super.drawText(l);

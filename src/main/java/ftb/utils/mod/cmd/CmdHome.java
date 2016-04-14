@@ -2,7 +2,7 @@ package ftb.utils.mod.cmd;
 
 import ftb.lib.*;
 import ftb.lib.api.cmd.*;
-import ftb.utils.mod.FTBU;
+import ftb.utils.mod.FTBULang;
 import ftb.utils.world.LMPlayerServer;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.*;
@@ -38,12 +38,12 @@ public class CmdHome extends CommandLM
 		
 		BlockDimPos pos = p.homes.get(args[0]);
 		
-		if(pos == null) return error(FTBU.mod.chatComponent("cmd.home_not_set", args[0]));
+		if(pos == null) return error(FTBULang.home_not_set.chatComponent(args[0]));
 		
 		if(ep.dimension != pos.dim && !p.getRank().config.cross_dim_homes.getAsBoolean())
-			return error(FTBU.mod.chatComponent("cmd.home_cross_dim"));
+			return error(FTBULang.home_cross_dim.chatComponent());
 		
 		LMDimUtils.teleportEntity(ep, pos);
-		return FTBU.mod.chatComponent("cmd.warp_tp", args[0]);
+		return FTBULang.warp_tp.chatComponent(args[0]);
 	}
 }

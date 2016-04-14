@@ -3,13 +3,12 @@ package ftb.utils.mod.client.gui.friends;
 import com.google.gson.JsonPrimitive;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.PrivacyLevel;
-import ftb.lib.api.PlayerAction;
+import ftb.lib.api.*;
 import ftb.lib.api.gui.PlayerActionRegistry;
 import ftb.lib.api.info.InfoPage;
 import ftb.lib.api.info.lines.InfoExtendedTextLine;
 import ftb.lib.api.notification.*;
 import ftb.lib.mod.client.gui.info.GuiInfo;
-import ftb.utils.mod.FTBU;
 import ftb.utils.world.*;
 import net.minecraft.util.*;
 
@@ -60,7 +59,7 @@ public class InfoFriendsGUISelfPage extends InfoFriendsGUIPage
 				
 				IChatComponent text1 = ps.blocks.lang.chatComponent();
 				text1.getChatStyle().setColor(ps.blocks == PrivacyLevel.FRIENDS ? EnumChatFormatting.BLUE : (ps.blocks == PrivacyLevel.PUBLIC ? EnumChatFormatting.GREEN : EnumChatFormatting.RED));
-				InfoExtendedTextLine line = new InfoExtendedTextLine(this, FTBU.mod.chatComponent("player_setting.security_level").appendText(": ").appendSibling(text1));
+				InfoExtendedTextLine line = new InfoExtendedTextLine(this, new ChatComponentTranslation("ftbu.player_setting.security_level").appendText(": ").appendSibling(text1));
 				line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("lmplayer_settings block_security toggle")));
 				text.add(line);
 			}
@@ -69,13 +68,13 @@ public class InfoFriendsGUISelfPage extends InfoFriendsGUIPage
 			{
 				ChatComponentText text1 = new ChatComponentText(Boolean.toString(current));
 				text1.getChatStyle().setColor(current ? EnumChatFormatting.GREEN : EnumChatFormatting.RED);
-				InfoExtendedTextLine line = new InfoExtendedTextLine(this, FTBU.mod.chatComponent("player_setting." + s).appendText(": ").appendSibling(text1));
+				InfoExtendedTextLine line = new InfoExtendedTextLine(this, new ChatComponentTranslation("ftbu.player_setting." + s).appendText(": ").appendSibling(text1));
 				line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("lmplayer_settings " + s + " toggle")));
 				text.add(line);
 			}
 		};
 		
-		page.setTitle(new ChatComponentTranslation("ftbl.button.settings"));
+		page.setTitle(GuiLang.button_settings.chatComponent());
 		addSub(page);
 	}
 }

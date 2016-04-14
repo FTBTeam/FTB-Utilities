@@ -1,22 +1,27 @@
 package ftb.utils.api.guide;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.FTBWorld;
+import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.api.gui.widgets.ButtonLM;
 import ftb.lib.api.info.InfoPage;
 import ftb.lib.mod.client.gui.info.GuiInfo;
-import ftb.utils.api.guide.repos.*;
+import ftb.utils.api.guide.repos.GuideLocalRepo;
+import ftb.utils.mod.FTBU;
 import ftb.utils.mod.client.gui.guide.ReposPage;
+import ftb.utils.mod.config.FTBUConfigGeneral;
+import latmod.lib.LMUtils;
 import net.minecraft.util.ChatComponentTranslation;
 
 import java.io.File;
+import java.util.*;
 
 public class ClientGuideFile extends InfoPage
 {
 	public static final ClientGuideFile instance = new ClientGuideFile("client_config");
+	public final Map<String, GuideLocalRepo> localRepos;
 	
 	public static GuiInfo clientGuideGui = null;
 	
@@ -31,6 +36,7 @@ public class ClientGuideFile extends InfoPage
 	{
 		super(id);
 		setTitle(new ChatComponentTranslation("player_action.ftbu.guide"));
+		localRepos = new HashMap<>();
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -79,8 +85,43 @@ public class ClientGuideFile extends InfoPage
 			ServerInfoFile.loadFromFiles(depPage, file);
 		}
 		
-		GuideRepoList.refreshLocalRepos();
-		for(GuideLocalRepo r : GuideRepoList.localRepos.values())
+		localRepos.clear();
+		long ms = LMUtils.millis();
+		
+		try
+		{
+			FTBU.logger.info("Reloading guides from " + FTBUConfigGeneral.guidepacksFolderFile);
+			
+			File[] folders = FTBUConfigGeneral.guidepacksFolderFile.listFiles();
+			
+			if(folders != null && folders.length > 0)
+			{
+				for(File f : folders)
+				{
+					if(f.isDirectory())
+					{
+						try
+						{
+							GuideLocalRepo repo = new GuideLocalRepo(f);
+							localRepos.put(repo.getID(), repo);
+						}
+						catch(Exception ex2)
+						{
+							FTBU.logger.error("Failed to load local repo " + f.getName());
+							//ex2.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+		FTBLib.dev_logger.info("Loaded " + localRepos.size() + " local repos after " + (LMUtils.millis() - ms) + " ms: " + localRepos.values());
+		
+		for(GuideLocalRepo r : localRepos.values())
 		{
 			addSub(r.getInfoPage(mode.getID()));
 		}

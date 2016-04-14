@@ -1,6 +1,7 @@
 package ftb.utils.api.guide.repos;
 
 import ftb.lib.api.client.FTBLibClient;
+import ftb.utils.api.guide.ClientGuideFile;
 import ftb.utils.mod.config.FTBUConfigGeneral;
 import latmod.lib.LMFileUtils;
 import latmod.lib.net.*;
@@ -70,7 +71,7 @@ public class GuideOnlineRepo extends GuideRepo
 	}
 	
 	public GuideLocalRepo getLocalRepo()
-	{ return GuideRepoList.localRepos.get(getID()); }
+	{ return ClientGuideFile.instance.localRepos.get(getID()); }
 	
 	public boolean isLocal()
 	{ return getLocalRepo() != null; }
@@ -107,7 +108,7 @@ public class GuideOnlineRepo extends GuideRepo
 		}
 		
 		GuideLocalRepo r = new GuideLocalRepo(file);
-		GuideRepoList.localRepos.put(r.getID(), r);
+		ClientGuideFile.instance.localRepos.put(r.getID(), r);
 		return r;
 	}
 }

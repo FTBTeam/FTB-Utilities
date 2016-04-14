@@ -1,7 +1,7 @@
 package ftb.utils.mod.client.gui.guide;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.FTBLibLang;
+import ftb.lib.api.GuiLang;
 import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.api.gui.widgets.ButtonLM;
 import ftb.lib.api.info.InfoPage;
@@ -55,7 +55,7 @@ public class ReposPage extends InfoPage
 			}
 		};
 		
-		button.title = EnumChatFormatting.GREEN + FTBLibLang.button_refresh.format();
+		button.title = EnumChatFormatting.GREEN + GuiLang.button_refresh.format();
 		return button;
 	}
 	

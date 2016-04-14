@@ -1,7 +1,7 @@
 package ftb.utils.mod.cmd;
 
 import ftb.lib.api.cmd.*;
-import ftb.utils.mod.FTBU;
+import ftb.utils.mod.FTBULang;
 import ftb.utils.world.LMPlayerServer;
 import net.minecraft.command.*;
 import net.minecraft.util.IChatComponent;
@@ -25,7 +25,7 @@ public class CmdDelHome extends CommandLM
 		LMPlayerServer p = LMPlayerServer.get(ics);
 		checkArgs(args, 1);
 		
-		if(p.homes.set(args[0], null)) return FTBU.mod.chatComponent("cmd.home_del", args[0]);
-		return error(FTBU.mod.chatComponent("cmd.home_not_set", args[0]));
+		if(p.homes.set(args[0], null)) return FTBULang.home_del.chatComponent(args[0]);
+		return error(FTBULang.home_not_set.chatComponent(args[0]));
 	}
 }

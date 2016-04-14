@@ -5,6 +5,7 @@ import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
+import ftb.utils.api.guide.Top;
 import ftb.utils.mod.cmd.*;
 import ftb.utils.mod.cmd.admin.CmdAdmin;
 import ftb.utils.mod.config.*;
@@ -49,6 +50,7 @@ public class FTBU
 		
 		FTBUNetHandler.init();
 		Backups.init();
+		Top.init();
 		proxy.preInit();
 	}
 	

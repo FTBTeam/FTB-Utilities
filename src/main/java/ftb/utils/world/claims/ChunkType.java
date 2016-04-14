@@ -1,7 +1,7 @@
 package ftb.utils.world.claims;
 
 import ftb.lib.LMSecurity;
-import ftb.utils.mod.FTBU;
+import ftb.lib.api.LangKey;
 import ftb.utils.world.*;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -53,14 +53,14 @@ public class ChunkType
 	}
 	
 	public final int ID;
-	public final String lang;
+	public final LangKey langKey;
 	private final EnumChatFormatting chatColor;
 	private final int areaColor;
 	
 	public ChunkType(int id, String s, EnumChatFormatting c, int col)
 	{
 		ID = id;
-		lang = "chunktype." + s;
+		langKey = new LangKey("ftbu.chunktype." + s);
 		chatColor = c;
 		areaColor = col;
 	}
@@ -73,9 +73,6 @@ public class ChunkType
 	
 	public boolean drawGrid()
 	{ return this != WILDERNESS && this != UNLOADED; }
-	
-	public String getIDS()
-	{ return FTBU.mod.translate(lang); }
 	
 	public int hashCode()
 	{ return ID; }

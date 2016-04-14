@@ -1,7 +1,7 @@
 package ftb.utils.world;
 
 import ftb.lib.BroadcastSender;
-import ftb.utils.mod.FTBU;
+import ftb.utils.mod.FTBULang;
 import ftb.utils.mod.config.FTBUConfigBackups;
 import latmod.lib.*;
 import net.minecraft.util.*;
@@ -145,20 +145,20 @@ public class ThreadBackup extends Thread
 				String sizeB = LMFileUtils.getSizeS(dstFile);
 				String sizeT = LMFileUtils.getSizeS(Backups.backupsFolder);
 				
-				IChatComponent c = FTBU.mod.chatComponent("cmd.backup_end_2", getDoneTime(time.millis), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)));
+				IChatComponent c = FTBULang.backup_end_2.chatComponent(getDoneTime(time.millis), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)));
 				c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE);
 				BroadcastSender.inst.addChatMessage(c);
 			}
 			else
 			{
-				IChatComponent c = FTBU.mod.chatComponent("cmd.backup_end_1", getDoneTime(time.millis));
+				IChatComponent c = FTBULang.backup_end_1.chatComponent(getDoneTime(time.millis));
 				c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE);
 				BroadcastSender.inst.addChatMessage(c);
 			}
 		}
 		catch(Exception e)
 		{
-			IChatComponent c = FTBU.mod.chatComponent("cmd.backup_fail", LMUtils.classpath(e.getClass()));
+			IChatComponent c = FTBULang.backup_fail.chatComponent(LMUtils.classpath(e.getClass()));
 			c.getChatStyle().setColor(EnumChatFormatting.DARK_RED);
 			BroadcastSender.inst.addChatMessage(c);
 			

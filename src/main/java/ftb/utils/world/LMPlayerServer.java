@@ -6,7 +6,7 @@ import ftb.lib.*;
 import ftb.lib.api.item.StringIDInvLoader;
 import ftb.lib.api.notification.*;
 import ftb.utils.api.EventLMPlayerServer;
-import ftb.utils.mod.FTBU;
+import ftb.utils.mod.FTBULang;
 import ftb.utils.mod.client.FTBUClickAction;
 import ftb.utils.mod.handlers.FTBUChunkEventHandler;
 import ftb.utils.net.*;
@@ -121,13 +121,13 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			
 			if(raw1 && raw2)
 			{
-				IChatComponent c = FTBU.mod.chatComponent("label.friend");
+				IChatComponent c = FTBULang.label_friend.chatComponent();
 				c.getChatStyle().setColor(EnumChatFormatting.GREEN);
 				info.add(c);
 			}
 			else if(raw1 || raw2)
 			{
-				IChatComponent c = FTBU.mod.chatComponent("label.pfriend");
+				IChatComponent c = FTBULang.label_pfriend.chatComponent();
 				c.getChatStyle().setColor(raw1 ? EnumChatFormatting.GOLD : EnumChatFormatting.BLUE);
 				info.add(c);
 			}
@@ -286,10 +286,10 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			
 			if(requests.size() > 0)
 			{
-				IChatComponent cc = FTBU.mod.chatComponent("label.new_friends");
+				IChatComponent cc = FTBULang.label_new_friends.chatComponent();
 				cc.getChatStyle().setColor(EnumChatFormatting.GREEN);
 				Notification n = new Notification("new_friend_requests", cc, 6000);
-				n.setDesc(FTBU.mod.chatComponent("label.new_friends_click"));
+				n.setDesc(FTBULang.label_new_friends_click.chatComponent());
 				
 				MouseAction mouse = new MouseAction();
 				mouse.click = new ClickAction(FTBUClickAction.FRIEND_ADD_ALL, null);

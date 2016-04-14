@@ -2,7 +2,7 @@ package ftb.utils.mod.cmd.admin;
 
 import ftb.lib.*;
 import ftb.lib.api.cmd.*;
-import ftb.utils.mod.FTBU;
+import ftb.utils.mod.FTBULang;
 import ftb.utils.world.LMPlayerServer;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.*;
@@ -38,18 +38,18 @@ public class CmdAdminHome extends CommandSubLM
 		checkArgs(args, 3);
 		
 		BlockDimPos pos = p.homes.get(args[2]);
-		if(pos == null) return error(FTBU.mod.chatComponent("cmd.home_not_set", args[2]));
+		if(pos == null) return error(FTBULang.home_not_set.chatComponent(args[2]));
 		
 		if(args[1].equals("tp"))
 		{
 			LMDimUtils.teleportEntity(getCommandSenderAsPlayer(ics), pos);
-			return FTBU.mod.chatComponent("cmd.warp_tp", args[2]);
+			return FTBULang.warp_tp.chatComponent(args[2]);
 		}
 		else if(args[1].equals("remove"))
 		{
-			if(p.homes.set(args[2], null)) return FTBU.mod.chatComponent("cmd.home_del", args[2]);
+			if(p.homes.set(args[2], null)) return FTBULang.home_del.chatComponent(args[2]);
 		}
 		
-		return error(FTBU.mod.chatComponent("invalid_subcmd", args[2]));
+		throw new InvalidSubCommandException(args[2]);
 	}
 }

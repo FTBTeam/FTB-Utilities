@@ -1,13 +1,3 @@
-# Buttons
-ftbu.label.friend=Friend
-ftbu.label.pfriend=Pending Friend
-ftbu.label.joined=Joined %s ago
-ftbu.label.last_seen=Last seen %s ago
-ftbu.label.deaths=Deaths: %s
-ftbu.button.block_security=Block Security
-ftbu.label.cchunks_count=Claimed Chunks: %s
-ftbu.label.lchunks_count=Loaded Chunks: %s
-
 # Client Config
 client_config.ftbu=FTBUtilities
 client_config.ftbu.render_badges=Show Badges
@@ -34,48 +24,46 @@ player_action.ftbu.deny_friend=Deny Friend Request
 player_action.ftbu.mail=Mail
 
 # Misc
-ftbu.label.new_friends=New friend requests!
-ftbu.label.new_friends_click=Click to accept all requests
-ftbu.server_restart=Server will restart in %s
-ftbu.commands=Commands
-ftbu.my_permissions=My Permissions
-ftbu.ftb_gamemode=Game mode: %s
-ftbu.world_difficulty=Difficulty: %s
-
-# Teleportation
-ftbu.cmd.warp_set=Warp '%s' set!
-ftbu.cmd.warp_del=Warp '%s' deleted!
-ftbu.cmd.warp_not_set=Unknown Warp: '%s'!
-ftbu.cmd.warp_tp=Teleported to '%s'!
-
-ftbu.cmd.home_set=Home '%s' set!
-ftbu.cmd.home_del=Home '%s' deleted!
-ftbu.cmd.home_not_set=Unknown Home: '%s'!
-ftbu.cmd.home_cross_dim=You can't teleport to another dimension!
-ftbu.cmd.home_limit=You can't set any more home locations!
-
-ftbu.cmd.no_dp=You can only go back once!
-ftbu.cmd.timer_backup=Next backup: %s
-ftbu.cmd.timer_restart=Next restart: %s
-ftbu.cmd.spawn_tp=Teleported to spawn
-
-# Backups
-ftbu.cmd.backup_start=Server Backup started!
-ftbu.cmd.backup_stop=Server Backup stopped!
-ftbu.cmd.backup_end_1=Server backup done in %s!
-ftbu.cmd.backup_end_2=Server backup done in %s! (%s)
-ftbu.cmd.backup_fail=Failed to save world! (%s)
-ftbu.cmd.backup_manual_launch=%s launched a manual backup!
-ftbu.cmd.backup_already_running=Backup in progress!
-ftbu.cmd.backup_not_running=Backup is not running!
-ftbu.cmd.backup_size=Current world size: %s, total backups folder size: %s
-
-# Claiming
+ftbu.lang.timer_restart=Server restarts in %s
+ftbu.lang.timer_backup=Server backup in: %s
 ftbu.button.claims_unclaim_all=Unclaim all chunks
 ftbu.button.claims_unclaim_all_dim=Unclaim all chunks in %s
 ftbu.button.claims_unclaim_all_q=Unclaim all chunks?
 ftbu.button.claims_unclaim_all_dim_q=Unclaim all chunks in %s?
 ftbu.label.claims_invalid_dim=Can't claim chunks in this dimension
+ftbu.label.cchunks_count=Claimed Chunks: %s
+ftbu.label.lchunks_count=Loaded Chunks: %s
+ftbu.label.friend=Friend
+ftbu.label.pfriend=Pending Friend
+ftbu.label.new_friends=New friend requests!
+ftbu.label.new_friends_click=Click to accept all requests
+ftbu.button.block_security=Block Security
+
+# Warps
+ftbu.warp.set=Warp '%s' set!
+ftbu.warp.del=Warp '%s' deleted!
+ftbu.warp.not_set=Unknown Warp: '%s'!
+ftbu.warp.tp=Teleported to '%s'!
+ftbu.warp.no_dp=You can only go back once!
+ftbu.warp.spawn=Teleported to spawn
+
+# Homes
+ftbu.home.set=Home '%s' set!
+ftbu.home.del=Home '%s' deleted!
+ftbu.home.not_set=Unknown Home: '%s'!
+ftbu.home.cross_dim=You can't teleport to another dimension!
+ftbu.home.limit=You can't set any more home locations!
+
+# Backups
+ftbu.backup.start=Server Backup started!
+ftbu.backup.stop=Server Backup stopped!
+ftbu.backup.end_1=Server backup done in %s!
+ftbu.backup.end_2=Server backup done in %s! (%s)
+ftbu.backup.fail=Failed to save world! (%s)
+ftbu.backup.manual_launch=%s launched a manual backup!
+ftbu.backup.already_running=Backup in progress!
+ftbu.backup.not_running=Backup is not running!
+ftbu.backup.size=Current world size: %s, total backups folder size: %s
 
 # Tops
 ftbu.top.title=Server Tops
@@ -83,7 +71,7 @@ ftbu.top.first_joined=First Seen
 ftbu.top.last_seen=Last Seen
 ftbu.top.time_played=Time Played
 ftbu.top.deaths=Deaths
-ftbu.top.deaths_ph=Deaths per hour
+ftbu.top.deaths_per_hour=Deaths per hour
 
 # Chunktypes
 ftbu.chunktype.unloaded=Chunk not loaded

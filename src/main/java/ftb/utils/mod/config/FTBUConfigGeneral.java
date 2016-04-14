@@ -64,6 +64,8 @@ public class FTBUConfigGeneral
 		}
 	};
 	
+	public static final ConfigEntryStringList blocked_tops = new ConfigEntryStringList("blocked_tops", null);
+	
 	public static boolean isEntityBanned(Class<?> c)
 	{
 		for(int i = 0; i < blockedEntitiesL.size(); i++)

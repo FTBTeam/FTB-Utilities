@@ -6,6 +6,7 @@ import ftb.lib.api.cmd.ICustomCommandInfo;
 import ftb.lib.api.info.InfoPage;
 import ftb.lib.api.info.lines.InfoExtendedTextLine;
 import ftb.lib.api.notification.*;
+import ftb.lib.mod.FTBLibLang;
 import ftb.utils.mod.*;
 import ftb.utils.mod.config.*;
 import ftb.utils.world.*;
@@ -114,7 +115,7 @@ public class ServerInfoFile extends InfoPage
 		
 		copyFrom(CachedInfo.main);
 		
-		categoryTops = getSub("tops").setTitle(FTBU.mod.chatComponent("top.title"));
+		categoryTops = getSub("tops").setTitle(Top.langTopTitle.chatComponent());
 		
 		players = LMWorldServer.inst.getServerPlayers();
 		
@@ -124,26 +125,56 @@ public class ServerInfoFile extends InfoPage
 		}
 		
 		if(FTBUConfigGeneral.restart_timer.getAsDouble() > 0D)
-			println(FTBU.mod.chatComponent("cmd.timer_restart", LMStringUtils.getTimeString(FTBUTicks.restartMillis - LMUtils.millis())));
+			println(FTBULang.timer_restart.chatComponent(LMStringUtils.getTimeString(FTBUTicks.restartMillis - LMUtils.millis())));
 		
 		if(FTBUConfigBackups.enabled.getAsBoolean())
-			println(FTBU.mod.chatComponent("cmd.timer_backup", LMStringUtils.getTimeString(Backups.nextBackup - LMUtils.millis())));
+			println(FTBULang.timer_backup.chatComponent(LMStringUtils.getTimeString(Backups.nextBackup - LMUtils.millis())));
 		
 		if(FTBUConfigGeneral.server_info_difficulty.getAsBoolean())
-			println(FTBU.mod.chatComponent("world_difficulty", LMStringUtils.firstUppercase(pself.getPlayer().worldObj.difficultySetting.toString().toLowerCase())));
+			println(FTBLibLang.difficulty.chatComponent(LMStringUtils.firstUppercase(pself.getPlayer().worldObj.difficultySetting.toString().toLowerCase())));
 		
 		if(FTBUConfigGeneral.server_info_mode.getAsBoolean())
-			println(FTBU.mod.chatComponent("ftb_gamemode", LMStringUtils.firstUppercase(FTBWorld.server.getMode().toString().toLowerCase())));
+			println(FTBLibLang.mode_current.chatComponent(LMStringUtils.firstUppercase(FTBWorld.server.getMode().toString().toLowerCase())));
 		
-		if(FTBUConfigTops.first_joined.getAsBoolean()) addTop(Top.first_joined);
-		if(FTBUConfigTops.deaths.getAsBoolean()) addTop(Top.deaths);
-		if(FTBUConfigTops.deaths_ph.getAsBoolean()) addTop(Top.deaths_ph);
-		if(FTBUConfigTops.last_seen.getAsBoolean()) addTop(Top.last_seen);
-		if(FTBUConfigTops.time_played.getAsBoolean()) addTop(Top.time_played);
+		List<String> blocked_tops = FTBUConfigGeneral.blocked_tops.getAsStringList();
+		
+		for(Top t : Top.registry.values())
+		{
+			if(!blocked_tops.contains(t.getID()))
+			{
+				InfoPage thisTop = categoryTops.getSub(t.getID()).setTitle(t.langKey.chatComponent());
+				
+				Collections.sort(players, t);
+				
+				int size = Math.min(players.size(), 250);
+				
+				for(int j = 0; j < size; j++)
+				{
+					LMPlayerServer p = players.get(j);
+					
+					Object data = t.getData(p);
+					StringBuilder sb = new StringBuilder();
+					sb.append('[');
+					sb.append(j + 1);
+					sb.append(']');
+					sb.append(' ');
+					sb.append(p.getProfile().getName());
+					sb.append(':');
+					sb.append(' ');
+					if(!(data instanceof IChatComponent)) sb.append(data);
+					
+					IChatComponent c = new ChatComponentText(sb.toString());
+					if(p == self) c.getChatStyle().setColor(EnumChatFormatting.DARK_GREEN);
+					else if(j < 3) c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE);
+					if(data instanceof IChatComponent) c.appendSibling(FTBLib.getChatComponent(data));
+					thisTop.println(c);
+				}
+			}
+		}
 		
 		new EventFTBUServerGuide(this, self).post();
 		
-		InfoPage page = getSub("commands").setTitle(new ChatComponentText("Commands")); //LANG
+		InfoPage page = getSub("commands").setTitle(new ChatComponentText("Commands")); //TODO: Lang
 		page.clear();
 		
 		try
@@ -209,7 +240,7 @@ public class ServerInfoFile extends InfoPage
 			ex.printStackTrace();
 		}
 		
-		page = getSub("warps").setTitle(new ChatComponentText("Warps")); //LANG
+		page = getSub("warps").setTitle(new ChatComponentText("Warps")); //TODO: Lang
 		InfoExtendedTextLine line;
 		
 		for(String s : LMWorldServer.inst.warps.list())
@@ -219,7 +250,7 @@ public class ServerInfoFile extends InfoPage
 			page.text.add(line);
 		}
 		
-		page = getSub("homes").setTitle(new ChatComponentText("Homes")); //LANG
+		page = getSub("homes").setTitle(new ChatComponentText("Homes")); //TODO: Lang
 		
 		for(String s : self.homes.list())
 		{
@@ -230,36 +261,5 @@ public class ServerInfoFile extends InfoPage
 		
 		cleanup();
 		sortAll();
-	}
-	
-	public void addTop(Top t)
-	{
-		InfoPage thisTop = categoryTops.getSub(t.ID).setTitle(t.title);
-		
-		Collections.sort(players, t);
-		
-		int size = Math.min(players.size(), 250);
-		
-		for(int j = 0; j < size; j++)
-		{
-			LMPlayerServer p = players.get(j);
-			
-			Object data = t.getData(p);
-			StringBuilder sb = new StringBuilder();
-			sb.append('[');
-			sb.append(j + 1);
-			sb.append(']');
-			sb.append(' ');
-			sb.append(p.getProfile().getName());
-			sb.append(':');
-			sb.append(' ');
-			if(!(data instanceof IChatComponent)) sb.append(data);
-			
-			IChatComponent c = new ChatComponentText(sb.toString());
-			if(p == self) c.getChatStyle().setColor(EnumChatFormatting.DARK_GREEN);
-			else if(j < 3) c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE);
-			if(data instanceof IChatComponent) c.appendSibling(FTBLib.getChatComponent(data));
-			thisTop.println(c);
-		}
 	}
 }

@@ -2,7 +2,7 @@ package ftb.utils.mod.cmd;
 
 import ftb.lib.*;
 import ftb.lib.api.cmd.*;
-import ftb.utils.mod.FTBU;
+import ftb.utils.mod.FTBULang;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
@@ -22,6 +22,6 @@ public class CmdSpawn extends CommandLM
 		while(w.getBlock(spawnpoint.posX, spawnpoint.posY, spawnpoint.posZ).isOpaqueCube()) spawnpoint.posY += 2;
 		
 		LMDimUtils.teleportEntity(ep, new BlockDimPos(spawnpoint, 0));
-		return FTBU.mod.chatComponent("cmd.spawn_tp");
+		return FTBULang.warp_spawn.chatComponent();
 	}
 }

@@ -15,9 +15,9 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
+@SideOnly(Side.CLIENT)
 public class FTBUActions
 {
-	@SideOnly(Side.CLIENT)
 	public static void init()
 	{
 		PlayerActionRegistry.add(friends_gui);

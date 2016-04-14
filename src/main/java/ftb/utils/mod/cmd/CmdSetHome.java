@@ -1,7 +1,7 @@
 package ftb.utils.mod.cmd;
 
 import ftb.lib.api.cmd.*;
-import ftb.utils.mod.FTBU;
+import ftb.utils.mod.FTBULang;
 import ftb.utils.world.LMPlayerServer;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -31,10 +31,13 @@ public class CmdSetHome extends CommandLM
 		
 		if(maxHomes <= 0 || p.homes.size() >= maxHomes)
 		{
-			if(maxHomes == 0 || p.homes.get(args[0]) == null) return error(FTBU.mod.chatComponent("cmd.home_limit"));
+			if(maxHomes == 0 || p.homes.get(args[0]) == null)
+			{
+				return error(FTBULang.home_limit.chatComponent());
+			}
 		}
 		
 		p.homes.set(args[0], p.getPos());
-		return FTBU.mod.chatComponent("cmd.home_set", args[0]);
+		return FTBULang.home_set.chatComponent(args[0]);
 	}
 }

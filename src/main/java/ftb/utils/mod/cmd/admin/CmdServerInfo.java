@@ -45,7 +45,7 @@ public class CmdServerInfo extends CommandLM
 		
 		page.printlnText("Empty IDs: " + freeIDs.toString());
 		
-		page = file.getSub("loaded_chunks").setTitle(new ChatComponentText("Loaded Chunks"));//LANG
+		page = file.getSub("loaded_chunks").setTitle(new ChatComponentText("Loaded Chunks"));//TODO: Lang
 		
 		for(WorldServer w : DimensionManager.getWorlds())
 		{

@@ -28,7 +28,6 @@ public class RankConfig
 	public final ConfigEntryEnum<EnumEnabled> forced_explosions = new ConfigEntryEnum<>("forced_explosions", EnumEnabled.values(), null, true);
 	
 	@Flags(Flags.SYNC)
-	@Info({ })
 	public final ConfigEntryEnum<PrivacyLevel> forced_chunk_security = new ConfigEntryEnum<>("forced_chunk_security", PrivacyLevel.VALUES_3, null, true);
 	
 	@Info("Block IDs that you can break in claimed chunks")

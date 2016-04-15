@@ -2,7 +2,7 @@ package ftb.utils.mod.client.gui.friends;
 
 import com.google.gson.JsonPrimitive;
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.PrivacyLevel;
+import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.gui.PlayerActionRegistry;
 import ftb.lib.api.info.InfoPage;
@@ -32,7 +32,7 @@ public class InfoFriendsGUISelfPage extends InfoFriendsGUIPage
 			text.add(new InfoPlayerActionLine(this, playerLM, a));
 		}
 		
-		InfoPage page = getSub("info").setTitle(new ChatComponentTranslation("ftbl.button.info"));
+		InfoPage page = getSub("info").setTitle(GuiLang.button_info.chatComponent());
 		
 		page.text.add(new InfoPlayerViewLine(this, playerLM));
 		
@@ -49,6 +49,7 @@ public class InfoFriendsGUISelfPage extends InfoFriendsGUIPage
 			public void refreshGui(GuiInfo gui)
 			{
 				clear();
+				if(FTBLib.DEV_ENV) FTBLib.printChat(null, "Refresh!");
 				
 				PersonalSettings ps = LMWorldClient.inst.clientPlayer.getSettings();
 				

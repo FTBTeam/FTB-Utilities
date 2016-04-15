@@ -8,6 +8,8 @@ import latmod.lib.LMStringUtils;
 import net.minecraft.command.*;
 import net.minecraft.util.*;
 
+import java.util.List;
+
 public class CmdAdminHome extends CommandSubLM
 {
 	public CmdAdminHome()
@@ -16,16 +18,13 @@ public class CmdAdminHome extends CommandSubLM
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <ID> [x] [y] [z]"; }
 	
-	public Boolean getUsername(String[] args, int i)
-	{
-		if(i == 0) return Boolean.FALSE;
-		return null;
-	}
+	public boolean isUsernameIndex(String[] args, int i)
+	{ return i == 0; }
 	
-	public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
+	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 	{
-		if(i == 1) return new String[] {"list", "tp", "remove"};
-		return super.getTabStrings(ics, args, i);
+		if(args.length == 2) return getListOfStringsMatchingLastWord(args, "list", "tp", "remove");
+		return super.addTabCompletionOptions(ics, args);
 	}
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
@@ -38,7 +37,7 @@ public class CmdAdminHome extends CommandSubLM
 		checkArgs(args, 3);
 		
 		BlockDimPos pos = p.homes.get(args[2]);
-		if(pos == null) return error(FTBULang.home_not_set.chatComponent(args[2]));
+		if(pos == null) FTBULang.home_not_set.commandError(args[2]);
 		
 		if(args[1].equals("tp"))
 		{

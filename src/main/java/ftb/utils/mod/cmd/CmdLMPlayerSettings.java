@@ -4,7 +4,8 @@ import ftb.lib.*;
 import ftb.lib.api.cmd.*;
 import ftb.utils.world.*;
 import net.minecraft.command.*;
-import net.minecraft.util.IChatComponent;
+
+import java.util.List;
 
 /**
  * Created by LatvianModder on 14.01.2016.
@@ -31,13 +32,13 @@ public class CmdLMPlayerSettings extends CommandSubLM
 			flag = f;
 		}
 		
-		public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
+		public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 		{
-			if(i == 0) return new String[] {"true", "false"};
+			if(args.length == 1) return getListOfStringsMatchingLastWord(args, "true", "false");
 			return null;
 		}
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			checkArgs(args, 1);
 			LMPlayerServer p = LMPlayerServer.get(ics);
@@ -45,7 +46,6 @@ public class CmdLMPlayerSettings extends CommandSubLM
 			p.getSettings().set(flag, b);
 			p.sendUpdate();
 			if(!args[0].equals("toggle")) FTBLib.printChat(ics, commandName + " set to " + b);
-			return null;
 		}
 	}
 	
@@ -54,13 +54,13 @@ public class CmdLMPlayerSettings extends CommandSubLM
 		public CmdBlockSecurity(String s)
 		{ super(s, CommandLevel.ALL); }
 		
-		public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
+		public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 		{
-			if(i == 0) return PrivacyLevel.getNames();
+			if(args.length == 1) return getListOfStringsMatchingLastWord(args, PrivacyLevel.getNames());
 			return null;
 		}
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			checkArgs(args, 1);
 			LMPlayerServer p = LMPlayerServer.get(ics);
@@ -69,7 +69,7 @@ public class CmdLMPlayerSettings extends CommandSubLM
 			{
 				p.getSettings().blocks = PrivacyLevel.VALUES_3[(p.getSettings().blocks.ID + 1) % 3];
 				p.sendUpdate();
-				return null;
+				return;
 			}
 			
 			PrivacyLevel l = PrivacyLevel.get(args[0]);
@@ -78,8 +78,6 @@ public class CmdLMPlayerSettings extends CommandSubLM
 				p.getSettings().blocks = l;
 				FTBLib.printChat(ics, commandName + " set to " + l.name().toLowerCase());
 			}
-			
-			return null;
 		}
 	}
 	
@@ -90,13 +88,13 @@ public class CmdLMPlayerSettings extends CommandSubLM
 			super(s, CommandLevel.ALL);
 		}
 		
-		public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
+		public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 		{
-			if(i == 0) return new String[] {"true", "false"};
+			if(args.length == 1) return getListOfStringsMatchingLastWord(args, "true", "false");
 			return null;
 		}
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			checkArgs(args, 1);
 			LMPlayerServer p = LMPlayerServer.get(ics);
@@ -104,7 +102,6 @@ public class CmdLMPlayerSettings extends CommandSubLM
 			p.renderBadge = b;
 			p.sendUpdate();
 			if(!args[0].equals("toggle")) FTBLib.printChat(ics, commandName + " set to " + b);
-			return null;
 		}
 	}
 }

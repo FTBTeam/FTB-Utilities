@@ -4,7 +4,8 @@ import ftb.lib.api.cmd.*;
 import ftb.utils.mod.FTBULang;
 import ftb.utils.world.LMWorldServer;
 import net.minecraft.command.*;
-import net.minecraft.util.IChatComponent;
+
+import java.util.List;
 
 public class CmdDelWarp extends CommandLM
 {
@@ -14,16 +15,16 @@ public class CmdDelWarp extends CommandLM
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <ID>"; }
 	
-	public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
+	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 	{
-		if(i == 0) return LMWorldServer.inst.warps.list();
-		return super.getTabStrings(ics, args, i);
+		if(args.length == 1) return getListOfStringsFromIterableMatchingLastWord(args, LMWorldServer.inst.warps.list());
+		return null;
 	}
 	
-	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
-		if(LMWorldServer.inst.warps.set(args[0], null)) return FTBULang.warp_del.chatComponent(args[0]);
-		return error(FTBULang.warp_not_set.chatComponent(args[0]));
+		if(LMWorldServer.inst.warps.set(args[0], null)) FTBULang.warp_del.printChat(ics, args[0]);
+		else FTBULang.warp_not_set.commandError(args[0]);
 	}
 }

@@ -3,7 +3,7 @@ package ftb.utils.mod.cmd.admin;
 import ftb.lib.api.cmd.*;
 import ftb.utils.world.*;
 import net.minecraft.command.*;
-import net.minecraft.util.*;
+import net.minecraft.util.ChatComponentText;
 
 public class CmdUnclaimAll extends CommandLM
 {
@@ -13,10 +13,10 @@ public class CmdUnclaimAll extends CommandLM
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <player | @a>"; }
 	
-	public Boolean getUsername(String[] args, int i)
-	{ return (i == 0) ? Boolean.FALSE : null; }
+	public boolean isUsernameIndex(String[] args, int i)
+	{ return i == 0; }
 	
-	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
 		
@@ -24,11 +24,13 @@ public class CmdUnclaimAll extends CommandLM
 		{
 			for(LMPlayerServer p : LMWorldServer.inst.playerMap.values())
 				p.unclaimAllChunks(null);
-			return new ChatComponentText("Unclaimed all chunks");
+			ics.addChatMessage(new ChatComponentText("Unclaimed all chunks"));
 		}
-		
-		LMPlayerServer p = LMPlayerServer.get(args[0]);
-		p.unclaimAllChunks(null);
-		return new ChatComponentText("Unclaimed all " + p.getProfile().getName() + "'s chunks");
+		else
+		{
+			LMPlayerServer p = LMPlayerServer.get(args[0]);
+			p.unclaimAllChunks(null);
+			ics.addChatMessage(new ChatComponentText("Unclaimed all " + p.getProfile().getName() + "'s chunks"));
+		}
 	}
 }

@@ -19,13 +19,13 @@ public class CmdResetPos extends CommandLM
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <player>"; }
 	
-	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
 		LMPlayerServer p = LMPlayerServer.get(args[0]);
 		if(p.isOnline())
 		{
-			return error(new ChatComponentText("Player can't be online!"));
+			error("Player can't be online!");
 		}
 		
 		double x, y, z;
@@ -49,12 +49,11 @@ public class CmdResetPos extends CommandLM
 		
 		if(!file.exists())
 		{
-			return error(new ChatComponentText("Cannot load the file!"));
+			error("Cannot load the file!");
 		}
 		
 		NBTTagCompound data = LMNBTUtils.readMap(file);
 		LMNBTUtils.writeMap(file, data);
-		
-		return new ChatComponentText("Reset position of " + p.getProfile().getName());
+		ics.addChatMessage(new ChatComponentText("Reset position of " + p.getProfile().getName()));
 	}
 }

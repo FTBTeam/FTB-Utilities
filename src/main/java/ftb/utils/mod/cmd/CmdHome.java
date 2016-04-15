@@ -7,7 +7,9 @@ import ftb.utils.world.LMPlayerServer;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.*;
+import net.minecraft.util.ChatComponentText;
+
+import java.util.*;
 
 public class CmdHome extends CommandLM
 {
@@ -17,13 +19,17 @@ public class CmdHome extends CommandLM
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <ID>"; }
 	
-	public String[] getTabStrings(ICommandSender ics, String[] args, int i) throws CommandException
+	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 	{
-		if(i == 0) return LMPlayerServer.get(ics).homes.list();
+		if(args.length == 1)
+		{
+			return getListOfStringsFromIterableMatchingLastWord(args, LMPlayerServer.get(ics).homes.list());
+		}
+		
 		return null;
 	}
 	
-	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		LMPlayerServer p = LMPlayerServer.get(ep);
@@ -31,19 +37,19 @@ public class CmdHome extends CommandLM
 		
 		if(args[0].equals("list"))
 		{
-			String[] list = p.homes.list();
-			ics.addChatMessage(new ChatComponentText(list.length + " / " + p.getRank().config.max_homes.getAsInt() + ": "));
-			return (list.length == 0) ? null : new ChatComponentText(LMStringUtils.strip(list));
+			Set<String> list = p.homes.list();
+			ics.addChatMessage(new ChatComponentText(list.size() + " / " + p.getRank().config.max_homes.getAsInt() + ": "));
+			ics.addChatMessage(new ChatComponentText(LMStringUtils.strip(list)));
 		}
 		
 		BlockDimPos pos = p.homes.get(args[0]);
 		
-		if(pos == null) return error(FTBULang.home_not_set.chatComponent(args[0]));
+		if(pos == null) FTBULang.home_not_set.commandError(args[0]);
 		
 		if(ep.dimension != pos.dim && !p.getRank().config.cross_dim_homes.getAsBoolean())
-			return error(FTBULang.home_cross_dim.chatComponent());
+			FTBULang.home_cross_dim.commandError();
 		
 		LMDimUtils.teleportEntity(ep, pos);
-		return FTBULang.warp_tp.chatComponent(args[0]);
+		FTBULang.warp_tp.printChat(ics, args[0]);
 	}
 }

@@ -5,7 +5,8 @@ import ftb.utils.mod.FTBULang;
 import ftb.utils.world.LMPlayerServer;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.IChatComponent;
+
+import java.util.List;
 
 public class CmdSetHome extends CommandLM
 {
@@ -15,13 +16,17 @@ public class CmdSetHome extends CommandLM
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <ID>"; }
 	
-	public String[] getTabStrings(ICommandSender ics, String[] args, int i) throws CommandException
+	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 	{
-		if(i == 0) return LMPlayerServer.get(ics).homes.list();
+		if(args.length == 1)
+		{
+			return getListOfStringsFromIterableMatchingLastWord(args, LMPlayerServer.get(ics).homes.list());
+		}
+		
 		return null;
 	}
 	
-	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		LMPlayerServer p = LMPlayerServer.get(ep);
@@ -33,11 +38,11 @@ public class CmdSetHome extends CommandLM
 		{
 			if(maxHomes == 0 || p.homes.get(args[0]) == null)
 			{
-				return error(FTBULang.home_limit.chatComponent());
+				FTBULang.home_limit.commandError();
 			}
 		}
 		
 		p.homes.set(args[0], p.getPos());
-		return FTBULang.home_set.chatComponent(args[0]);
+		FTBULang.home_set.printChat(ics, args[0]);
 	}
 }

@@ -7,7 +7,6 @@ import ftb.utils.mod.config.FTBUConfigBackups;
 import ftb.utils.world.Backups;
 import latmod.lib.LMFileUtils;
 import net.minecraft.command.*;
-import net.minecraft.util.IChatComponent;
 
 public class CmdBackup extends CommandSubLM
 {
@@ -24,7 +23,7 @@ public class CmdBackup extends CommandSubLM
 		public CmdBackupStart(String s)
 		{ super(s, CommandLevel.OP); }
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			boolean b = Backups.run(ics);
 			if(b)
@@ -32,7 +31,7 @@ public class CmdBackup extends CommandSubLM
 				FTBLib.printChat(BroadcastSender.inst, FTBULang.backup_manual_launch.chatComponent(ics.getCommandSenderName()));
 				if(!FTBUConfigBackups.use_separate_thread.getAsBoolean()) Backups.postBackup();
 			}
-			return b ? null : error(FTBULang.backup_already_running.chatComponent());
+			else FTBULang.backup_already_running.commandError();
 		}
 	}
 	
@@ -41,16 +40,15 @@ public class CmdBackup extends CommandSubLM
 		public CmdBackupStop(String s)
 		{ super(s, CommandLevel.OP); }
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			if(Backups.thread != null)
 			{
 				Backups.thread.interrupt();
 				Backups.thread = null;
-				return FTBULang.backup_stop.chatComponent();
+				FTBULang.backup_stop.printChat(ics);
 			}
-			
-			return error(FTBULang.backup_not_running.chatComponent());
+			else FTBULang.backup_not_running.commandError();
 		}
 	}
 	
@@ -59,11 +57,11 @@ public class CmdBackup extends CommandSubLM
 		public CmdBackupGetSize(String s)
 		{ super(s, CommandLevel.OP); }
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			String sizeW = LMFileUtils.getSizeS(ics.getEntityWorld().getSaveHandler().getWorldDirectory());
 			String sizeT = LMFileUtils.getSizeS(Backups.backupsFolder);
-			return FTBULang.backup_size.chatComponent(sizeW, sizeT);
+			FTBULang.backup_size.printChat(ics, sizeW, sizeT);
 		}
 	}
 }

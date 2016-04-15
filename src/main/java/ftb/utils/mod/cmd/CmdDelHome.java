@@ -4,7 +4,8 @@ import ftb.lib.api.cmd.*;
 import ftb.utils.mod.FTBULang;
 import ftb.utils.world.LMPlayerServer;
 import net.minecraft.command.*;
-import net.minecraft.util.IChatComponent;
+
+import java.util.List;
 
 public class CmdDelHome extends CommandLM
 {
@@ -14,18 +15,22 @@ public class CmdDelHome extends CommandLM
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <ID>"; }
 	
-	public String[] getTabStrings(ICommandSender ics, String[] args, int i) throws CommandException
+	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 	{
-		if(i == 0) return LMPlayerServer.get(ics).homes.list();
+		if(args.length == 1)
+		{
+			return getListOfStringsFromIterableMatchingLastWord(args, LMPlayerServer.get(ics).homes.list());
+		}
+		
 		return null;
 	}
 	
-	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		LMPlayerServer p = LMPlayerServer.get(ics);
 		checkArgs(args, 1);
 		
-		if(p.homes.set(args[0], null)) return FTBULang.home_del.chatComponent(args[0]);
-		return error(FTBULang.home_not_set.chatComponent(args[0]));
+		if(p.homes.set(args[0], null)) FTBULang.home_del.printChat(ics, args[0]);
+		else FTBULang.home_not_set.commandError(args[0]);
 	}
 }

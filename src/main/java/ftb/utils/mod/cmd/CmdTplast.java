@@ -6,7 +6,6 @@ import ftb.utils.mod.FTBULang;
 import ftb.utils.world.LMPlayerServer;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.*;
 
 public class CmdTplast extends CommandLM
 {
@@ -16,10 +15,10 @@ public class CmdTplast extends CommandLM
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " [who] <to>"; }
 	
-	public Boolean getUsername(String[] args, int i)
-	{ return (i == 0 || i == 1) ? Boolean.FALSE : null; }
+	public boolean isUsernameIndex(String[] args, int i)
+	{ return i == 0 || i == 1; }
 	
-	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
 		
@@ -30,7 +29,7 @@ public class CmdTplast extends CommandLM
 			double y = func_110665_a(ics, ep.posY, args[1], -30000000, 30000000);
 			double z = func_110665_a(ics, ep.posZ, args[2], -30000000, 30000000);
 			LMDimUtils.teleportEntity(ep, x, y, z, ep.dimension);
-			return null;
+			return;
 		}
 		
 		EntityPlayerMP who;
@@ -48,8 +47,11 @@ public class CmdTplast extends CommandLM
 		}
 		
 		BlockDimPos p = to.getPos();
-		if(p == null) return error(new ChatComponentText("No last position!"));
-		LMDimUtils.teleportEntity(who, p);
-		return FTBULang.warp_tp.chatComponent(to.getProfile().getName());
+		if(p == null) error("No last position!"); //TODO: Lang
+		else
+		{
+			LMDimUtils.teleportEntity(who, p);
+			FTBULang.warp_tp.printChat(ics, to.getProfile().getName());
+		}
 	}
 }

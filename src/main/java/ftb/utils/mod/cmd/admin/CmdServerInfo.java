@@ -19,7 +19,7 @@ public class CmdServerInfo extends CommandLM
 	public CmdServerInfo()
 	{ super("server_info", CommandLevel.OP); }
 	
-	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		
@@ -72,6 +72,5 @@ public class CmdServerInfo extends CommandLM
 		}
 		
 		file.displayGuide(ep);
-		return null;
 	}
 }

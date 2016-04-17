@@ -10,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.DimensionType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class FTBUWorldEventHandler // FTBLIntegration
@@ -29,9 +30,9 @@ public class FTBUWorldEventHandler // FTBLIntegration
 	@SubscribeEvent
 	public void onMobSpawned(net.minecraftforge.event.entity.EntityJoinWorldEvent e)
 	{
-		if(!e.world.isRemote && !isEntityAllowed(e.entity))
+		if(!e.getWorld().isRemote && !isEntityAllowed(e.getEntity()))
 		{
-			e.entity.setDead();
+			e.getEntity().setDead();
 			e.setCanceled(true);
 		}
 	}
@@ -42,10 +43,10 @@ public class FTBUWorldEventHandler // FTBLIntegration
 		
 		if(FTBUConfigGeneral.blocked_entities.isEntityBanned(e.getClass())) return false;
 		
-		if(FTBUConfigGeneral.safe_spawn.getAsBoolean() && FTBUWorldDataMP.isInSpawnD(e.dimension, e.posX, e.posZ))
+		if(FTBUConfigGeneral.safe_spawn.getAsBoolean() && FTBUWorldDataMP.isInSpawnD(DimensionType.getById(e.dimension), e.posX, e.posZ))
 		{
 			if(e instanceof IMob) return false;
-			else if(e instanceof EntityChicken && e.riddenByEntity != null) return false;
+			else if(e instanceof EntityChicken && !e.getPassengers().isEmpty()) return false;
 		}
 		
 		return true;
@@ -54,10 +55,10 @@ public class FTBUWorldEventHandler // FTBLIntegration
 	@SubscribeEvent
 	public void onExplosionStart(net.minecraftforge.event.world.ExplosionEvent.Start e)
 	{
-		if(e.world.isRemote) return;
-		int dim = e.world.provider.getDimensionId();
-		int cx = MathHelperLM.chunk(e.explosion.getPosition().xCoord);
-		int cz = MathHelperLM.chunk(e.explosion.getPosition().yCoord);
+		if(e.getWorld().isRemote) return;
+		DimensionType dim = e.getWorld().provider.getDimensionType();
+		int cx = MathHelperLM.chunk(e.getExplosion().getPosition().xCoord);
+		int cz = MathHelperLM.chunk(e.getExplosion().getPosition().yCoord);
 		
 		if(!FTBUWorldDataMP.get().allowExplosion(new ChunkDimPos(dim, cx, cz)))
 		{

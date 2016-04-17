@@ -7,13 +7,14 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
+import net.minecraft.server.MinecraftServer;
 
 public class CmdDisplayNBT extends CommandLM
 {
 	public CmdDisplayNBT()
 	{ super("display_nbt", CommandLevel.OP); }
 	
-	public void processCommand(ICommandSender ics, String[] args) throws CommandException
+	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		

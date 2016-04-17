@@ -4,7 +4,8 @@ import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.cmd.*;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.*;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextComponentString;
 
 public class CmdListFriends extends CommandLM
 {
@@ -17,10 +18,10 @@ public class CmdListFriends extends CommandLM
 	public boolean isUsernameIndex(String[] args, int i)
 	{ return i == 0; }
 	
-	public void processCommand(ICommandSender ics, String[] args) throws CommandException
+	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
 		ForgePlayerMP p = ForgePlayerMP.get(args[0]);
-		ics.addChatMessage(new ChatComponentText(LMStringUtils.strip(p.getFriends())));
+		ics.addChatMessage(new TextComponentString(LMStringUtils.strip(p.getFriends())));
 	}
 }

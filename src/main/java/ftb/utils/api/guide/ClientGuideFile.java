@@ -8,7 +8,7 @@ import ftb.lib.api.info.InfoPage;
 import ftb.lib.mod.client.gui.info.GuiInfo;
 import ftb.utils.FTBU;
 import latmod.lib.LMFileUtils;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -32,7 +32,7 @@ public class ClientGuideFile extends InfoPage
 	public ClientGuideFile(String id)
 	{
 		super(id);
-		setTitle(new ChatComponentTranslation("player_action.ftbu.guide"));
+		setTitle(new TextComponentTranslation("player_action.ftbu.guide"));
 	}
 	
 	public void reload(ReloadEvent e)

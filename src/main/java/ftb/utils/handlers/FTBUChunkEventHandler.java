@@ -95,7 +95,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 			
 			if(playerID != null)
 			{
-				List<ClaimedChunk> chunks = FTBUWorldDataMP.get().getChunks(playerID, world.provider.getDimensionId());
+				List<ClaimedChunk> chunks = FTBUWorldDataMP.get().getChunks(playerID, world.provider.getDimensionType());
 				
 				if(chunks != null) for(ClaimedChunk c : chunks)
 				{
@@ -132,7 +132,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 		int loaded = 0;
 		int unloaded = 0;*/
 		
-		for(ClaimedChunk c : FTBUWorldDataMP.get().getAllChunks(w.provider.getDimensionId()))
+		for(ClaimedChunk c : FTBUWorldDataMP.get().getAllChunks(w.provider.getDimensionType()))
 		{
 			//total++;
 			

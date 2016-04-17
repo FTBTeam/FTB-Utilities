@@ -4,7 +4,8 @@ import ftb.lib.api.*;
 import ftb.lib.api.cmd.*;
 import ftb.utils.world.FTBUPlayerDataMP;
 import net.minecraft.command.*;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextComponentString;
 
 public class CmdUnclaimAll extends CommandLM
 {
@@ -17,7 +18,7 @@ public class CmdUnclaimAll extends CommandLM
 	public boolean isUsernameIndex(String[] args, int i)
 	{ return i == 0; }
 	
-	public void processCommand(ICommandSender ics, String[] args) throws CommandException
+	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
 		
@@ -25,12 +26,12 @@ public class CmdUnclaimAll extends CommandLM
 		{
 			for(ForgePlayer p : ForgeWorldMP.inst.playerMap.values())
 				FTBUPlayerDataMP.get(p.toPlayerMP()).unclaimAllChunks(null);
-			ics.addChatMessage(new ChatComponentText("Unclaimed all chunks"));
+			ics.addChatMessage(new TextComponentString("Unclaimed all chunks"));
 			return;
 		}
 		
 		ForgePlayerMP p = ForgePlayerMP.get(args[0]);
 		FTBUPlayerDataMP.get(p).unclaimAllChunks(null);
-		ics.addChatMessage(new ChatComponentText("Unclaimed all " + p.getProfile().getName() + "'s chunks"));
+		ics.addChatMessage(new TextComponentString("Unclaimed all " + p.getProfile().getName() + "'s chunks"));
 	}
 }

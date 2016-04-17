@@ -5,6 +5,7 @@ import ftb.lib.api.gui.GuiLM;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.*;
@@ -63,8 +64,9 @@ public class Badge extends FinalIDObject
 		
 		GlStateManager.translate(0.04F, 0.01F, 0.86F);
 		
-		ItemStack armor = ep.getEquipmentInSlot(3);
-		if(armor != null && armor.getItem().isValidArmor(armor, 1, ep)) GlStateManager.translate(0F, 0F, -0.0625F);
+		ItemStack armor = ep.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+		if(armor != null && armor.getItem().isValidArmor(armor, EntityEquipmentSlot.CHEST, ep))
+			GlStateManager.translate(0F, 0F, -0.0625F);
 		
 		GlStateManager.translate(0F, 0F, -1F);
 		GlStateManager.color(1F, 1F, 1F, 1F);

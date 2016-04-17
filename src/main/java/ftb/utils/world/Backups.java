@@ -7,7 +7,7 @@ import latmod.lib.*;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.server.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.*;
+import net.minecraft.util.text.*;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.*;
 
@@ -42,8 +42,8 @@ public class Backups
 		World w = FTBLib.getServerWorld();
 		if(w == null) return false;
 		
-		IChatComponent c = FTBU.mod.chatComponent("cmd.backup_start", ics.getName());
-		c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE);
+		ITextComponent c = FTBU.mod.chatComponent("cmd.backup_start", ics.getName());
+		c.getChatStyle().setColor(TextFormatting.LIGHT_PURPLE);
 		BroadcastSender.inst.addChatMessage(c);
 		
 		nextBackup = LMUtils.millis() + FTBUConfigBackups.backupMillis();
@@ -56,8 +56,8 @@ public class Backups
 		
 		try
 		{
-			new CommandSaveOff().processCommand(FTBLib.getServer(), new String[0]);
-			new CommandSaveAll().processCommand(FTBLib.getServer(), new String[0]);
+			new CommandSaveOff().execute(FTBLib.getServer(), FTBLib.getServer(), new String[0]);
+			new CommandSaveAll().execute(FTBLib.getServer(), FTBLib.getServer(), new String[0]);
 		}
 		catch(Exception ex)
 		{
@@ -106,7 +106,7 @@ public class Backups
 	{
 		try
 		{
-			new CommandSaveOn().processCommand(FTBLib.getServer(), new String[0]);
+			new CommandSaveOn().execute(FTBLib.getServer(), FTBLib.getServer(), new String[0]);
 		}
 		catch(Exception ex)
 		{

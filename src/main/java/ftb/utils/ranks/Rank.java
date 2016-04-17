@@ -4,14 +4,16 @@ import com.google.gson.*;
 import ftb.lib.api.permissions.*;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.command.*;
-import net.minecraft.util.*;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.IJsonSerializable;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.*;
 
 public final class Rank extends FinalIDObject implements IJsonSerializable
 {
 	public Rank parent = null;
-	public EnumChatFormatting color = EnumChatFormatting.WHITE;
+	public TextFormatting color = TextFormatting.WHITE;
 	public String prefix = "";
 	public String badge = "";
 	public final Map<String, Boolean> permissions;
@@ -87,7 +89,7 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
 	{
 		JsonObject o = e.getAsJsonObject();
 		parent = o.has("parent") ? Ranks.instance().ranks.get(o.get("parent").getAsString()) : null;
-		color = o.has("color") ? EnumChatFormatting.getValueByName(o.get("color").getAsString()) : EnumChatFormatting.WHITE;
+		color = o.has("color") ? TextFormatting.getValueByName(o.get("color").getAsString()) : TextFormatting.WHITE;
 		prefix = o.has("prefix") ? o.get("prefix").getAsString() : "";
 		badge = o.has("badge") ? o.get("badge").getAsString() : "";
 		permissions.clear();
@@ -120,11 +122,11 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
 		}
 	}
 	
-	public boolean allowCommand(ICommand cmd, ICommandSender sender)
+	public boolean allowCommand(MinecraftServer server, ICommandSender sender, ICommand command)
 	{
-		Boolean b = handlePermission("command." + cmd.getCommandName());
+		Boolean b = handlePermission("command." + command.getCommandName());
 		if(b != null) return b.booleanValue();
-		if(parent == null) return cmd.canCommandSenderUseCommand(sender);
-		return parent.allowCommand(cmd, sender);
+		if(parent == null) return command.checkPermission(server, sender);
+		return parent.allowCommand(server, sender, command);
 	}
 }

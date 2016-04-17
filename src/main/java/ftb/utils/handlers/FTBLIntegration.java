@@ -1,15 +1,22 @@
 package ftb.utils.handlers;
 
+import com.google.gson.JsonArray;
 import ftb.lib.FTBLib;
+import ftb.lib.api.*;
 import ftb.lib.api.events.ReloadEvent;
-import ftb.lib.mod.FTBUIntegration;
+import ftb.lib.api.item.LMInvUtils;
+import ftb.lib.api.permissions.ForgePermissionRegistry;
+import ftb.lib.mod.*;
+import ftb.utils.FTBUPermissions;
 import ftb.utils.api.guide.ServerGuideFile;
 import ftb.utils.badges.ServerBadges;
 import ftb.utils.config.FTBUConfigGeneral;
 import ftb.utils.ranks.Ranks;
-import ftb.utils.world.FTBUWorldDataMP;
+import ftb.utils.world.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.event.entity.player.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.DimensionType;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 {
@@ -35,12 +42,30 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 	{
 	}
 	
-	public void onRightClick(PlayerInteractEvent e)
+	public boolean canPlayerInteract(EntityPlayerMP ep, BlockPos pos, boolean leftClick)
 	{
-		if(e.entityPlayer instanceof EntityPlayerMP)
+		ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ep);
+		
+		if(p == null) return true;
+		else if(!p.isFake() && ForgePermissionRegistry.hasPermission(FTBLibPermissions.interact_secure, ep.getGameProfile()))
 		{
-			if(!FTBUWorldDataMP.get().canPlayerInteract((EntityPlayerMP) e.entityPlayer, e.pos, e.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK))
-				e.setCanceled(true);
+			return true;
 		}
+		
+		//TODO: World border
+		
+		if(leftClick)
+		{
+			JsonArray a = FTBUPermissions.claims_break_whitelist.get(p.getProfile()).getAsJsonArray();
+			
+			for(int i = 0; i < a.size(); i++)
+			{
+				if(a.get(i).getAsString().equals(LMInvUtils.getRegName(ep.worldObj.getBlockState(pos).getBlock())))
+					return true;
+			}
+		}
+		
+		ChunkType type = FTBUWorldDataMP.get().getTypeD(p, DimensionType.getById(ep.dimension), pos);
+		return type.canInteract(p.toPlayerMP(), leftClick);
 	}
 }

@@ -5,6 +5,7 @@ import ftb.lib.api.cmd.*;
 import ftb.lib.api.info.InfoPage;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.*;
 import net.minecraftforge.common.*;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
@@ -16,7 +17,7 @@ public class CmdLoadedChunks extends CommandLM
 	public CmdLoadedChunks()
 	{ super("loaded_chunks", CommandLevel.OP); }
 	
-	public void processCommand(ICommandSender ics, String[] args) throws CommandException
+	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		
@@ -36,7 +37,7 @@ public class CmdLoadedChunks extends CommandLM
 					if(!list.contains(c)) list.add(c);
 			}
 			
-			InfoPage dim = file.getSub(w.provider.getDimensionName());
+			InfoPage dim = file.getSub(w.provider.getDimensionType().getName());
 			
 			for(Map.Entry<String, ArrayList<ChunkCoordIntPair>> e1 : chunksMap.entrySet())
 			{

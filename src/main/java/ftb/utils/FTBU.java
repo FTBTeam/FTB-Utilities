@@ -18,7 +18,7 @@ import org.apache.logging.log4j.*;
 
 import java.util.Map;
 
-@Mod(modid = FTBUFinals.MOD_ID, version = FTBUFinals.MOD_VERSION, name = FTBUFinals.MOD_NAME, dependencies = FTBUFinals.MOD_DEP, acceptedMinecraftVersions = "[1.8.8,1.9)")
+@Mod(modid = FTBUFinals.MOD_ID, version = FTBUFinals.MOD_VERSION, name = FTBUFinals.MOD_NAME, dependencies = FTBUFinals.MOD_DEP, acceptedMinecraftVersions = "[1.9,1.10)")
 public class FTBU
 {
 	@Mod.Instance(FTBUFinals.MOD_ID)

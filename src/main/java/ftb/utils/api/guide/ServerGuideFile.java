@@ -14,7 +14,7 @@ import latmod.lib.*;
 import net.minecraft.command.ICommand;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityList;
-import net.minecraft.util.*;
+import net.minecraft.util.text.*;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.File;
@@ -24,7 +24,7 @@ public class ServerGuideFile extends InfoPage
 {
 	public static class CachedInfo
 	{
-		public static final InfoPage main = new InfoPage("ServerInfo").setTitle(new ChatComponentTranslation("player_action.ftbu.server_info"));
+		public static final InfoPage main = new InfoPage("ServerInfo").setTitle(new TextComponentTranslation("player_action.ftbu.server_info"));
 		public static InfoPage categoryServer, categoryServerAdmin;
 		
 		public static void reload()
@@ -67,26 +67,19 @@ public class ServerGuideFile extends InfoPage
 			main.cleanup();
 		}
 		
-		@SuppressWarnings("all")
 		public static void reloadRegistries()
 		{
 			InfoPage list = categoryServerAdmin.getSub("Entities"); //LANG
 			
-			for(Integer i : EntityList.idToClassMapping.keySet())
-				list.printlnText("[" + i + "] " + EntityList.getStringFromID(i.intValue()));
+			for(String s : EntityList.stringToClassMapping.keySet())
+				list.printlnText("[" + EntityList.getIDFromString(s) + "] " + s);
 			
 			list = categoryServerAdmin.getSub("Enchantments"); //LANG
 			
-			IntList freeIDs = new IntList();
-			
-			for(int i = 0; i < 256; i++)
+			for(Enchantment e : Enchantment.enchantmentRegistry)
 			{
-				Enchantment e = Enchantment.getEnchantmentById(i);
-				if(e == null) freeIDs.add(i);
-				else list.printlnText("[" + i + "] " + e.getTranslatedName(1));
+				list.printlnText("[" + e.getRegistryName() + "] " + e.getTranslatedName(1));
 			}
-			
-			list.printlnText("Empty IDs: " + freeIDs.toString());
 		}
 	}
 	
@@ -150,10 +143,10 @@ public class ServerGuideFile extends InfoPage
 					
 					if(c instanceof ICustomCommandInfo)
 					{
-						List<IChatComponent> list = new ArrayList<>();
+						List<ITextComponent> list = new ArrayList<>();
 						((ICustomCommandInfo) c).addInfo(list, self.getPlayer());
 						
-						for(IChatComponent c1 : list)
+						for(ITextComponent c1 : list)
 						{
 							cat.println(c1);
 						}
@@ -173,8 +166,8 @@ public class ServerGuideFile extends InfoPage
 							else
 							{
 								if(usage.indexOf('%') != -1 || usage.indexOf('/') != -1)
-									cat.println(new ChatComponentText(usage));
-								else cat.println(new ChatComponentTranslation(usage));
+									cat.println(new TextComponentString(usage));
+								else cat.println(new TextComponentTranslation(usage));
 							}
 						}
 					}
@@ -184,8 +177,8 @@ public class ServerGuideFile extends InfoPage
 				}
 				catch(Exception ex1)
 				{
-					IChatComponent cc = new ChatComponentText('/' + c.getCommandName());
-					cc.getChatStyle().setColor(EnumChatFormatting.DARK_RED);
+					ITextComponent cc = new TextComponentString('/' + c.getCommandName());
+					cc.getChatStyle().setColor(TextFormatting.DARK_RED);
 					page.getSub('/' + c.getCommandName()).setTitle(cc).printlnText("Errored");
 					
 					if(FTBLib.DEV_ENV) ex1.printStackTrace();
@@ -199,7 +192,7 @@ public class ServerGuideFile extends InfoPage
 		
 		for(String s : FTBUWorldDataMP.get().warps.list())
 		{
-			line = new InfoExtendedTextLine(page, new ChatComponentText(s));
+			line = new InfoExtendedTextLine(page, new TextComponentString(s));
 			line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("warp " + s)));
 			page.text.add(line);
 		}
@@ -208,7 +201,7 @@ public class ServerGuideFile extends InfoPage
 		
 		for(String s : FTBUPlayerDataMP.get(self).homes.list())
 		{
-			line = new InfoExtendedTextLine(page, new ChatComponentText(s));
+			line = new InfoExtendedTextLine(page, new TextComponentString(s));
 			line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("home " + s)));
 			page.text.add(line);
 		}
@@ -238,12 +231,12 @@ public class ServerGuideFile extends InfoPage
 			sb.append(p.getProfile().getName());
 			sb.append(':');
 			sb.append(' ');
-			if(!(data instanceof IChatComponent)) sb.append(data);
+			if(!(data instanceof ITextComponent)) sb.append(data);
 			
-			IChatComponent c = new ChatComponentText(sb.toString());
-			if(p == self) c.getChatStyle().setColor(EnumChatFormatting.DARK_GREEN);
-			else if(j < 3) c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE);
-			if(data instanceof IChatComponent) c.appendSibling(FTBLib.getChatComponent(data));
+			ITextComponent c = new TextComponentString(sb.toString());
+			if(p == self) c.getChatStyle().setColor(TextFormatting.DARK_GREEN);
+			else if(j < 3) c.getChatStyle().setColor(TextFormatting.LIGHT_PURPLE);
+			if(data instanceof ITextComponent) c.appendSibling(FTBLib.getChatComponent(data));
 			thisTop.println(c);
 		}
 	}

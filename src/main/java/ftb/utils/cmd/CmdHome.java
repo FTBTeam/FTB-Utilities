@@ -9,7 +9,9 @@ import ftb.utils.world.FTBUPlayerDataMP;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.*;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 
 import java.util.*;
 
@@ -21,16 +23,17 @@ public class CmdHome extends CommandLM
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <ID>"; }
 	
-	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args, BlockPos pos)
+	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
 	{
 		if(args.length == 1)
 		{
 			return getListOfStringsMatchingLastWord(args, FTBUPlayerDataMP.get(ForgeWorldMP.inst.getPlayer(ics)).homes.list());
 		}
-		return null;
+		
+		return getTabCompletionOptions(server, ics, args, pos);
 	}
 	
-	public void processCommand(ICommandSender ics, String[] args) throws CommandException
+	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		FTBUPlayerDataMP d = FTBUPlayerDataMP.get(ForgePlayerMP.get(ep));
@@ -39,8 +42,8 @@ public class CmdHome extends CommandLM
 		if(args[0].equals("list"))
 		{
 			Collection<String> list = d.homes.list();
-			ics.addChatMessage(new ChatComponentText(list.size() + " / " + FTBUPermissions.homes_max.get(ep.getGameProfile()).getAsShort() + ": "));
-			if(!list.isEmpty()) ics.addChatMessage(new ChatComponentText(LMStringUtils.strip(list)));
+			ics.addChatMessage(new TextComponentString(list.size() + " / " + FTBUPermissions.homes_max.get(ep.getGameProfile()).getAsShort() + ": "));
+			if(!list.isEmpty()) ics.addChatMessage(new TextComponentString(LMStringUtils.strip(list)));
 			return;
 		}
 		
@@ -48,7 +51,7 @@ public class CmdHome extends CommandLM
 		
 		if(pos == null) throw new CommandException("ftbu.cmd.home_not_set", args[0]);
 		
-		if(ep.dimension != pos.dim && !ForgePermissionRegistry.hasPermission(FTBUPermissions.homes_cross_dim, ep.getGameProfile()))
+		if(ep.dimension != pos.dim.getId() && !ForgePermissionRegistry.hasPermission(FTBUPermissions.homes_cross_dim, ep.getGameProfile()))
 			throw new CommandException("ftbu.cmd.home_cross_dim");
 		
 		LMDimUtils.teleportPlayer(ep, pos);

@@ -7,7 +7,9 @@ import ftb.utils.world.FTBUWorldDataMP;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.*;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 
 import java.util.*;
 
@@ -19,19 +21,23 @@ public class CmdWarp extends CommandLM
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <ID>"; }
 	
-	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args, BlockPos pos)
+	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
 	{
-		if(args.length == 1) return getListOfStringsMatchingLastWord(args, FTBUWorldDataMP.get().warps.list());
-		return null;
+		if(args.length == 1)
+		{
+			return getListOfStringsMatchingLastWord(args, FTBUWorldDataMP.get().warps.list());
+		}
+		
+		return super.getTabCompletionOptions(server, ics, args, pos);
 	}
 	
-	public void processCommand(ICommandSender ics, String[] args) throws CommandException
+	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
 		if(args[0].equals("list"))
 		{
 			Collection<String> list = FTBUWorldDataMP.get().warps.list();
-			ics.addChatMessage(new ChatComponentText(list.isEmpty() ? "-" : LMStringUtils.strip(list)));
+			ics.addChatMessage(new TextComponentString(list.isEmpty() ? "-" : LMStringUtils.strip(list)));
 			return;
 		}
 		

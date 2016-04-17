@@ -6,6 +6,8 @@ import ftb.lib.api.cmd.*;
 import ftb.utils.config.FTBUConfigCmd;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.DimensionType;
 
 public class CmdTplast extends CommandLM
 {
@@ -18,7 +20,7 @@ public class CmdTplast extends CommandLM
 	public boolean isUsernameIndex(String[] args, int i)
 	{ return i == 0; }
 	
-	public void processCommand(ICommandSender ics, String[] args) throws CommandException
+	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
 		
@@ -28,7 +30,7 @@ public class CmdTplast extends CommandLM
 			double x = parseDouble(ep.posX, args[0], -30000000, 30000000, true);
 			double y = parseDouble(ep.posY, args[1], -30000000, 30000000, true);
 			double z = parseDouble(ep.posZ, args[2], -30000000, 30000000, true);
-			LMDimUtils.teleportPlayer(ep, x, y, z, ep.dimension);
+			LMDimUtils.teleportPlayer(ep, x, y, z, DimensionType.getById(ep.dimension));
 			return;
 		}
 		
@@ -42,7 +44,7 @@ public class CmdTplast extends CommandLM
 		}
 		else
 		{
-			who = getPlayer(ics, args[0]);
+			who = getPlayer(server, ics, args[0]);
 			to = ForgePlayerMP.get(args[1]);
 		}
 		

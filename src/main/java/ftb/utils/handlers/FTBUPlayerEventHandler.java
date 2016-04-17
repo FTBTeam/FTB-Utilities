@@ -11,7 +11,8 @@ import ftb.utils.world.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.*;
+import net.minecraft.util.text.*;
+import net.minecraft.world.DimensionType;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -22,26 +23,27 @@ public class FTBUPlayerEventHandler
 	@SubscribeEvent
 	public void onChunkChanged(EntityEvent.EnteringChunk e)
 	{
-		if(e.entity.worldObj.isRemote || !(e.entity instanceof EntityPlayerMP)) return;
+		if(e.getEntity().worldObj.isRemote || !(e.getEntity() instanceof EntityPlayerMP)) return;
 		
-		EntityPlayerMP ep = (EntityPlayerMP) e.entity;
+		EntityPlayerMP ep = (EntityPlayerMP) e.getEntity();
 		ForgePlayerMP player = ForgeWorldMP.inst.getPlayer(ep);
 		if(player == null || !player.isOnline()) return;
 		
 		player.lastPos = new EntityPos(ep).toBlockDimPos();
 		
-		ChunkType type = FTBUWorldDataMP.get().getType(player, new ChunkDimPos(ep.dimension, e.newChunkX, e.newChunkZ));
+		ChunkType type = FTBUWorldDataMP.get().getType(player, new ChunkDimPos(DimensionType.getById(ep.dimension), e.getNewChunkX(), e.getNewChunkZ()));
 		FTBUPlayerDataMP d = FTBUPlayerDataMP.get(player);
 		
 		if(d.lastChunkType == null || !d.lastChunkType.equals(type))
 		{
 			d.lastChunkType = type;
-			IChatComponent msg;
+			ITextComponent msg;
 			
-			if(type.asClaimed() != null) msg = new ChatComponentText(String.valueOf(type.asClaimed().chunk.getOwner()));
+			if(type.asClaimed() != null)
+				msg = new TextComponentString(String.valueOf(type.asClaimed().chunk.getOwner()));
 			else msg = FTBU.mod.chatComponent(type.lang);
 			
-			msg.getChatStyle().setColor(EnumChatFormatting.WHITE);
+			msg.getChatStyle().setColor(TextFormatting.WHITE);
 			msg.getChatStyle().setBold(true);
 			
 			Notification n = new Notification("chunk_changed", msg, 3000);
@@ -53,12 +55,13 @@ public class FTBUPlayerEventHandler
 	@SubscribeEvent
 	public void onPlayerAttacked(LivingAttackEvent e)
 	{
-		if(e.entity.worldObj.isRemote) return;
+		if(e.getEntity().worldObj.isRemote) return;
 		
-		int dim = e.entity.dimension;
-		if(dim != 0 || !(e.entity instanceof EntityPlayerMP) || e.entity instanceof FakePlayer) return;
+		DimensionType dim = DimensionType.getById(e.getEntity().dimension);
+		if(dim != DimensionType.OVERWORLD || !(e.getEntity() instanceof EntityPlayerMP) || e.getEntity() instanceof FakePlayer)
+			return;
 		
-		Entity entity = e.source.getSourceOfDamage();
+		Entity entity = e.getSource().getSourceOfDamage();
 		
 		if(entity != null && (entity instanceof EntityPlayerMP || entity instanceof IMob))
 		{
@@ -68,7 +71,7 @@ public class FTBUPlayerEventHandler
 				return;
 			}
 			
-			if((FTBUConfigGeneral.safe_spawn.getAsBoolean() && FTBUWorldDataMP.isInSpawnD(dim, e.entity.posX, e.entity.posZ)))
+			if((FTBUConfigGeneral.safe_spawn.getAsBoolean() && FTBUWorldDataMP.isInSpawnD(dim, e.getEntity().posX, e.getEntity().posZ)))
 			{
 				e.setCanceled(true);
 			}

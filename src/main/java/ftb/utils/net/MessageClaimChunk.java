@@ -5,6 +5,7 @@ import ftb.lib.api.*;
 import ftb.lib.api.net.*;
 import ftb.utils.world.*;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.world.DimensionType;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 
 public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
@@ -29,14 +30,14 @@ public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 	{
 		type = io.readUnsignedByte();
 		token = io.readLong();
-		pos = new ChunkDimPos(io.readInt(), io.readInt(), io.readInt());
+		pos = new ChunkDimPos(DimensionType.getById(io.readInt()), io.readInt(), io.readInt());
 	}
 	
 	public void toBytes(ByteBuf io)
 	{
 		io.writeByte(type);
 		io.writeLong(token);
-		io.writeInt(pos.dim);
+		io.writeInt(pos.dim.getId());
 		io.writeInt(pos.chunkXPos);
 		io.writeInt(pos.chunkZPos);
 	}

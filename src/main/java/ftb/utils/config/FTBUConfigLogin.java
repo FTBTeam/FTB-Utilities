@@ -7,7 +7,7 @@ import ftb.lib.api.item.ItemStackSerializer;
 import latmod.lib.annotations.Info;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.util.text.*;
 
 import java.util.*;
 
@@ -21,13 +21,13 @@ public class FTBUConfigLogin
 	
 	public static class ConfigEntryChatComponentList extends ConfigEntryCustom
 	{
-		public final List<IChatComponent> components;
+		public final List<ITextComponent> components;
 		
 		public ConfigEntryChatComponentList(String id)
 		{
 			super(id);
 			components = new ArrayList<>();
-			components.add(new ChatComponentText("Welcome to the server!"));
+			components.add(new TextComponentString("Welcome to the server!"));
 		}
 		
 		public void func_152753_a(JsonElement o)
@@ -38,7 +38,7 @@ public class FTBUConfigLogin
 			{
 				for(JsonElement e : o.getAsJsonArray())
 				{
-					IChatComponent c = JsonHelper.deserializeICC(e);
+					ITextComponent c = JsonHelper.deserializeICC(e);
 					
 					if(c != null)
 					{
@@ -52,7 +52,7 @@ public class FTBUConfigLogin
 		{
 			JsonArray a = new JsonArray();
 			
-			for(IChatComponent c : components)
+			for(ITextComponent c : components)
 			{
 				a.add(JsonHelper.serializeICC(c));
 			}

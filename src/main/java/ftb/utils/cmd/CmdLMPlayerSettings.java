@@ -5,7 +5,8 @@ import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.cmd.*;
 import ftb.utils.world.*;
 import net.minecraft.command.*;
-import net.minecraft.util.BlockPos;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.*;
 
@@ -33,13 +34,17 @@ public class CmdLMPlayerSettings extends CommandSubLM
 			flag = f;
 		}
 		
-		public List<String> addTabCompletionOptions(ICommandSender ics, String[] args, BlockPos pos)
+		public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
 		{
-			if(args.length == 1) return getListOfStringsMatchingLastWord(args, "true", "false");
-			return null;
+			if(args.length == 1)
+			{
+				return getListOfStringsMatchingLastWord(args, "true", "false");
+			}
+			
+			return super.getTabCompletionOptions(server, ics, args, pos);
 		}
 		
-		public void processCommand(ICommandSender ics, String[] args) throws CommandException
+		public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 		{
 			checkArgs(args, 1);
 			ForgePlayerMP p = ForgePlayerMP.get(ics);
@@ -55,17 +60,17 @@ public class CmdLMPlayerSettings extends CommandSubLM
 		public CmdBlockSecurity(String s)
 		{ super(s, CommandLevel.ALL); }
 		
-		public List<String> addTabCompletionOptions(ICommandSender ics, String[] args, BlockPos pos)
+		public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
 		{
 			if(args.length == 1)
 			{
 				return getListOfStringsMatchingLastWord(args, Arrays.asList(PrivacyLevel.PUBLIC, PrivacyLevel.PRIVATE, PrivacyLevel.FRIENDS));
 			}
 			
-			return null;
+			return super.getTabCompletionOptions(server, ics, args, pos);
 		}
 		
-		public void processCommand(ICommandSender ics, String[] args) throws CommandException
+		public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 		{
 			checkArgs(args, 1);
 			ForgePlayerMP p = ForgePlayerMP.get(ics);

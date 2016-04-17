@@ -5,13 +5,14 @@ import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.cmd.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 
 public class CmdBack extends CommandLM
 {
 	public CmdBack()
 	{ super("back", CommandLevel.ALL); }
 	
-	public void processCommand(ICommandSender ics, String[] args) throws CommandException
+	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		ForgePlayerMP p = ForgePlayerMP.get(ep);

@@ -5,7 +5,7 @@ import ftb.lib.api.events.ReloadEvent;
 import ftb.lib.api.paint.IPainterItem;
 import ftb.utils.badges.ClientBadges;
 import net.minecraft.item.*;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -34,19 +34,19 @@ public class FTBLIntegrationClient extends FTBLIntegration
 	
 	public void onTooltip(ItemTooltipEvent e)
 	{
-		Item item = e.itemStack.getItem();
+		Item item = e.getItemStack().getItem();
 		
 		if(item instanceof IPainterItem)
 		{
-			ItemStack paint = ((IPainterItem) item).getPaintItem(e.itemStack);
+			ItemStack paint = ((IPainterItem) item).getPaintItem(e.getItemStack());
 			if(paint != null)
 			{
 				StringBuilder sb = new StringBuilder();
-				sb.append(EnumChatFormatting.WHITE);
-				sb.append(EnumChatFormatting.BOLD);
+				sb.append(TextFormatting.WHITE);
+				sb.append(TextFormatting.BOLD);
 				sb.append(paint.getDisplayName());
-				sb.append(EnumChatFormatting.RESET);
-				e.toolTip.add(sb.toString());
+				sb.append(TextFormatting.RESET);
+				e.getToolTip().add(sb.toString());
 			}
 		}
 		

@@ -9,7 +9,8 @@ import journeymap.client.api.IClientAPI;
 import journeymap.client.api.display.*;
 import journeymap.client.api.model.MapImage;
 import latmod.lib.*;
-import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.ChunkCoordIntPair;
 
 import java.util.Map;
@@ -65,10 +66,10 @@ public class JMPluginHandler implements IJMPluginHandler
 						if(type.asClaimed() != null)
 						{
 							sb.append('\n');
-							sb.append(EnumChatFormatting.GREEN.toString());
+							sb.append(TextFormatting.GREEN.toString());
 							
 							ForgePlayer player = type.asClaimed().chunk.getOwner();
-							sb.append((ForgeWorldSP.inst.clientPlayer.isFriend(player) ? EnumChatFormatting.GREEN : EnumChatFormatting.BLUE) + player.getProfile().getName());
+							sb.append((ForgeWorldSP.inst.clientPlayer.isFriend(player) ? TextFormatting.GREEN : TextFormatting.BLUE) + player.getProfile().getName());
 							
 							if(type.asClaimed().chunk.isChunkloaded)
 							{

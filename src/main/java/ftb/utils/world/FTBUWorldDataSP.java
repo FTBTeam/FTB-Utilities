@@ -5,7 +5,7 @@ import ftb.lib.api.*;
 import ftb.utils.FTBUFinals;
 import ftb.utils.client.FTBUClient;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.*;
 import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
@@ -57,9 +57,9 @@ public class FTBUWorldDataSP extends ForgeWorldData
 		return (i == null) ? ChunkType.UNLOADED : i;
 	}
 	
-	public void setTypes(int dim, Map<ChunkDimPos, ChunkType> types)
+	public void setTypes(DimensionType dim, Map<ChunkDimPos, ChunkType> types)
 	{
 		chunks.putAll(types);
-		if(FTBUClient.journeyMapHandler != null) FTBUClient.journeyMapHandler.refresh(dim);
+		if(FTBUClient.journeyMapHandler != null) FTBUClient.journeyMapHandler.refresh(dim.getId());
 	}
 }

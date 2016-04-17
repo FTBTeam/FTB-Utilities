@@ -4,7 +4,8 @@ import ftb.lib.api.*;
 import ftb.lib.api.cmd.*;
 import ftb.utils.world.*;
 import net.minecraft.command.*;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextComponentString;
 
 public class CmdUnloadAll extends CommandLM
 {
@@ -17,7 +18,7 @@ public class CmdUnloadAll extends CommandLM
 	public boolean isUsernameIndex(String[] args, int i)
 	{ return i == 0; }
 	
-	public void processCommand(ICommandSender ics, String[] args) throws CommandException
+	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
 		
@@ -27,7 +28,7 @@ public class CmdUnloadAll extends CommandLM
 				c.isChunkloaded = false;
 			for(ForgePlayer p : ForgeWorldMP.inst.getOnlinePlayers())
 				p.toPlayerMP().sendUpdate();
-			ics.addChatMessage(new ChatComponentText("Unloaded all chunks"));
+			ics.addChatMessage(new TextComponentString("Unloaded all chunks"));
 			return;
 		}
 		
@@ -35,6 +36,6 @@ public class CmdUnloadAll extends CommandLM
 		for(ClaimedChunk c : FTBUWorldDataMP.get().getChunks(p.getProfile().getId(), null))
 			c.isChunkloaded = false;
 		if(p.isOnline()) p.sendUpdate();
-		ics.addChatMessage(new ChatComponentText("Unloaded all " + p.getProfile().getName() + "'s chunks"));
+		ics.addChatMessage(new TextComponentString("Unloaded all " + p.getProfile().getName() + "'s chunks"));
 	}
 }

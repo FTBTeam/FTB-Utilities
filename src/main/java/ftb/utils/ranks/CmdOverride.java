@@ -3,7 +3,8 @@ package ftb.utils.ranks;
 import ftb.lib.FTBLib;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.BlockPos;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
 
@@ -29,31 +30,31 @@ public class CmdOverride implements ICommand
 		return parent.getCommandName();
 	}
 	
-	public List getCommandAliases()
+	public List<String> getCommandAliases()
 	{
 		return parent.getCommandAliases();
 	}
 	
-	public void processCommand(ICommandSender ics, String[] args) throws CommandException
+	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
-		parent.processCommand(ics, args);
+		parent.execute(server, ics, args);
 	}
 	
-	public boolean canCommandSenderUseCommand(ICommandSender ics)
+	public boolean checkPermission(MinecraftServer server, ICommandSender ics)
 	{
 		FTBLib.dev_logger.info("FTBU: Checking permission for " + parent.getCommandName());
 		if(ics instanceof EntityPlayerMP)
 		{
 			Rank r = Ranks.instance().getRankOf(((EntityPlayerMP) ics).getGameProfile());
-			return r.allowCommand(parent, ics);
+			return r.allowCommand(server, ics, parent);
 		}
 		
-		return parent.canCommandSenderUseCommand(ics);
+		return parent.checkPermission(server, ics);
 	}
 	
-	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args, BlockPos pos)
+	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
 	{
-		return parent.addTabCompletionOptions(ics, args, pos);
+		return parent.getTabCompletionOptions(server, ics, args, pos);
 	}
 	
 	public boolean isUsernameIndex(String[] args, int i)

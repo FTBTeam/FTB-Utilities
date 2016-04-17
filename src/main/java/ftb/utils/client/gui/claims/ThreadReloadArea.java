@@ -3,10 +3,10 @@ package ftb.utils.client.gui.claims;
 import ftb.lib.api.client.FTBLibClient;
 import latmod.lib.*;
 import net.minecraft.block.*;
-import net.minecraft.block.material.*;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.relauncher.*;
@@ -43,7 +43,7 @@ public class ThreadReloadArea extends Thread
 			for(int cz = 0; cz < GuiClaimChunks.tiles_gui; cz++)
 				for(int cx = 0; cx < GuiClaimChunks.tiles_gui; cx++)
 				{
-					if(worldObj.getChunkProvider().chunkExists(gui.startX, gui.startY))
+					if(worldObj.getChunkProvider().getLoadedChunk(gui.startX, gui.startY) != null)
 					{
 						chunkMC = worldObj.getChunkFromChunkCoords(gui.startX, gui.startY);
 						maxHeight = (short) Math.max(255, chunkMC.getTopFilledSegment() + 15);
@@ -78,7 +78,7 @@ public class ThreadReloadArea extends Thread
 		
 		IBlockState state = worldObj.getBlockState(pos);
 		
-		if(!state.getBlock().isAir(worldObj, pos))
+		if(worldObj.isAirBlock(pos))
 		{
 			int col = 0xFF000000 | getBlockColor(pos, state);
 			
@@ -122,8 +122,8 @@ public class ThreadReloadArea extends Thread
 		
 		for(short y = max; y > 0; --y)
 		{
-			Block block = c.getBlock(x, y, z);
-			if(block == Blocks.tallgrass || block.isAir(worldObj, new BlockPos(bx, y, bz))) continue;
+			IBlockState state = c.getBlockState(x, y, z);
+			if(state.getBlock() == Blocks.tallgrass || worldObj.isAirBlock(new BlockPos(bx, y, bz))) continue;
 			
 			if(mapValue) heightMap[x + z * 16] = y;
 			return y;
@@ -143,8 +143,8 @@ public class ThreadReloadArea extends Thread
 		else if(b == Blocks.obsidian) return 0xFF150047;
 		else if(b == Blocks.gravel) return 0xFF8D979B;
 		else if(b == Blocks.glass) return 0x33BCF9FF;
-		else if(b.getMaterial() == Material.water)
-			return LMColorUtils.multiply(MapColor.waterColor.colorValue, b.colorMultiplier(worldObj, pos), 200);
+		//else if(b.getMaterial(state) == Material.water)
+		//	return LMColorUtils.multiply(MapColor.waterColor.colorValue, b.colorMultiplier(worldObj, pos), 200);
 		
 		if(b == Blocks.red_flower)
 		{
@@ -171,10 +171,10 @@ public class ThreadReloadArea extends Thread
 			else if(m == 5) return 0xFF512D14;
 		}
 		
-		if(b == Blocks.leaves || b == Blocks.vine || b == Blocks.waterlily)
-			return LMColorUtils.addBrightness(b.colorMultiplier(worldObj, pos), -40);
-		else if(b == Blocks.grass && state.getValue(BlockGrass.SNOWY))
-			return LMColorUtils.addBrightness(b.colorMultiplier(worldObj, pos), -15);
+		//if(b == Blocks.leaves || b == Blocks.vine || b == Blocks.waterlily)
+		//	return LMColorUtils.addBrightness(b.colorMultiplier(worldObj, pos), -40);
+		//else if(b == Blocks.grass && state.getValue(BlockGrass.SNOWY))
+		//	return LMColorUtils.addBrightness(b.colorMultiplier(worldObj, pos), -15);
 		
 		return b.getMapColor(state).colorValue;
 	}

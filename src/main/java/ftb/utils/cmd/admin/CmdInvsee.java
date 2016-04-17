@@ -4,6 +4,7 @@ import ftb.lib.api.cmd.*;
 import ftb.utils.cmd.InvSeeInventory;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 
 public class CmdInvsee extends CommandLM
 {
@@ -16,11 +17,11 @@ public class CmdInvsee extends CommandLM
 	public boolean isUsernameIndex(String[] args, int i)
 	{ return i == 0; }
 	
-	public void processCommand(ICommandSender ics, String[] args) throws CommandException
+	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
 		EntityPlayerMP ep0 = getCommandSenderAsPlayer(ics);
-		EntityPlayerMP ep = getPlayer(ics, args[0]);
+		EntityPlayerMP ep = getPlayer(server, ics, args[0]);
 		ep0.displayGUIChest(new InvSeeInventory(ep));
 	}
 }

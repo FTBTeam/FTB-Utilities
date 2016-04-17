@@ -5,6 +5,7 @@ import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.net.*;
 import ftb.utils.world.*;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.world.DimensionType;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -12,12 +13,12 @@ import java.util.*;
 
 public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate>
 {
-	public int dim;
+	public DimensionType dim;
 	public Map<ChunkDimPos, ChunkType> types;
 	
 	public MessageAreaUpdate() { }
 	
-	public MessageAreaUpdate(ForgePlayerMP p, int x, int z, int d, int sx, int sz)
+	public MessageAreaUpdate(ForgePlayerMP p, int x, int z, DimensionType d, int sx, int sz)
 	{
 		dim = d;
 		types = FTBUWorldDataMP.get().getChunkTypes(p, x, z, d, sx, sz);
@@ -31,7 +32,7 @@ public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate>
 	
 	public void fromBytes(ByteBuf io)
 	{
-		dim = io.readInt();
+		dim = DimensionType.getById(io.readInt());
 		int size = io.readInt();
 		types = new HashMap<>(size);
 		
@@ -47,7 +48,7 @@ public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate>
 	
 	public void toBytes(ByteBuf io)
 	{
-		io.writeInt(dim);
+		io.writeInt(dim.getId());
 		io.writeInt(types.size());
 		
 		for(Map.Entry<ChunkDimPos, ChunkType> e : types.entrySet())

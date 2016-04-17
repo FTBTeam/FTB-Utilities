@@ -3,7 +3,8 @@ package ftb.utils.cmd;
 import ftb.lib.api.cmd.*;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.*;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextComponentString;
 
 import javax.script.*;
 
@@ -15,7 +16,7 @@ public class CmdMath extends CommandLM
 	public CmdMath()
 	{ super("math", CommandLevel.ALL); }
 	
-	public void processCommand(ICommandSender ics, String[] args) throws CommandException
+	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
 		
@@ -37,7 +38,7 @@ public class CmdMath extends CommandLM
 			{
 				String s = LMStringUtils.unsplit(args, " ").trim();
 				Object o = engine.eval(s);
-				ics.addChatMessage(new ChatComponentText(String.valueOf(o)));
+				ics.addChatMessage(new TextComponentString(String.valueOf(o)));
 				return;
 			}
 			catch(Exception ex)

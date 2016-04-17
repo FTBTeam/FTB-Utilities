@@ -3,8 +3,8 @@ package ftb.utils.handlers;
 import ftb.lib.FTBLib;
 import ftb.lib.api.*;
 import ftb.utils.world.*;
-import net.minecraft.event.*;
-import net.minecraft.util.*;
+import net.minecraft.util.text.*;
+import net.minecraft.util.text.event.*;
 import net.minecraftforge.fml.common.eventhandler.*;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class FTBUChatEventHandler
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onChatEvent(net.minecraftforge.event.ServerChatEvent e)
 	{
-		String[] msg = FTBLib.removeFormatting(e.message).split(" "); // https://github.com/LatvianModder
+		String[] msg = FTBLib.removeFormatting(e.getMessage()).split(" "); // https://github.com/LatvianModder
 		
 		ArrayList<String> links = new ArrayList<>();
 		
@@ -28,20 +28,20 @@ public class FTBUChatEventHandler
 		
 		if(!links.isEmpty())
 		{
-			final IChatComponent line = new ChatComponentText("");
+			final ITextComponent line = new TextComponentString("");
 			boolean oneLink = links.size() == 1;
 			
 			for(int i = 0; i < links.size(); i++)
 			{
 				String link = links.get(i);
-				IChatComponent c = new ChatComponentText(oneLink ? "[ Link ]" : ("[ Link #" + (i + 1) + " ]"));
-				c.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(link)));
+				ITextComponent c = new TextComponentString(oneLink ? "[ Link ]" : ("[ Link #" + (i + 1) + " ]"));
+				c.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(link)));
 				c.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, link));
 				line.appendSibling(c);
-				if(!oneLink) line.appendSibling(new ChatComponentText(" "));
+				if(!oneLink) line.appendSibling(new TextComponentString(" "));
 			}
 			
-			line.getChatStyle().setColor(EnumChatFormatting.GOLD);
+			line.getChatStyle().setColor(TextFormatting.GOLD);
 			
 			FTBLib.addCallback(new ServerTickCallback()
 			{

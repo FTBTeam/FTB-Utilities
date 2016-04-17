@@ -5,17 +5,17 @@ import ftb.lib.api.*;
 import ftb.lib.api.net.MessageLM;
 import ftb.utils.*;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
 
 public class ChunkType
 {
-	public static final ChunkType UNLOADED = new ChunkType(0, "unloaded", EnumChatFormatting.DARK_GRAY, 0xFF000000);
-	public static final ChunkType SPAWN = new ChunkType(1, "spawn", EnumChatFormatting.AQUA, 0xFF00EFDF);
-	public static final ChunkType WILDERNESS = new ChunkType(2, "wilderness", EnumChatFormatting.DARK_GREEN, 0xFF2F9E00);
-	public static final ChunkType WORLD_BORDER = new ChunkType(3, "world_border", EnumChatFormatting.RED, 0xFFFF0000);
+	public static final ChunkType UNLOADED = new ChunkType(0, "unloaded", TextFormatting.DARK_GRAY, 0xFF000000);
+	public static final ChunkType SPAWN = new ChunkType(1, "spawn", TextFormatting.AQUA, 0xFF00EFDF);
+	public static final ChunkType WILDERNESS = new ChunkType(2, "wilderness", TextFormatting.DARK_GREEN, 0xFF2F9E00);
+	public static final ChunkType WORLD_BORDER = new ChunkType(3, "world_border", TextFormatting.RED, 0xFFFF0000);
 	
 	public static final ChunkType[] UNCLAIMED_VALUES = new ChunkType[] {UNLOADED, SPAWN, WILDERNESS, WORLD_BORDER};
 	
@@ -65,8 +65,8 @@ public class ChunkType
 		public boolean isChunkOwner(ForgePlayerMP p)
 		{ return chunk.getOwner().equalsPlayer(p); }
 		
-		public EnumChatFormatting getChatColor(ForgePlayer p)
-		{ return p.getWorld().getPlayer(chunk.ownerID).isFriend(p) ? EnumChatFormatting.GREEN : EnumChatFormatting.BLUE; }
+		public TextFormatting getChatColor(ForgePlayer p)
+		{ return p.getWorld().getPlayer(chunk.ownerID).isFriend(p) ? TextFormatting.GREEN : TextFormatting.BLUE; }
 		
 		public int getAreaColor(ForgePlayer p)
 		{ return p.getWorld().getPlayer(chunk.ownerID).isFriend(p) ? 0xFF00FF21 : 0xFF0094FF; }
@@ -109,10 +109,10 @@ public class ChunkType
 	
 	public final int ID;
 	public final String lang;
-	private final EnumChatFormatting chatColor;
+	private final TextFormatting chatColor;
 	private final int areaColor;
 	
-	public ChunkType(int id, String s, EnumChatFormatting c, int col)
+	public ChunkType(int id, String s, TextFormatting c, int col)
 	{
 		ID = id;
 		lang = "chunktype." + s;
@@ -135,7 +135,7 @@ public class ChunkType
 	public boolean equals(Object o)
 	{ return o == this || ID == o.hashCode(); }
 	
-	public EnumChatFormatting getChatColor(ForgePlayer p)
+	public TextFormatting getChatColor(ForgePlayer p)
 	{ return chatColor; }
 	
 	public int getAreaColor(ForgePlayer p)

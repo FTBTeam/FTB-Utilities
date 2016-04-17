@@ -4,14 +4,14 @@ import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.mod.FTBLibMod;
 import ftb.utils.FTBU;
 import latmod.lib.*;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 
 import java.util.Comparator;
 
 public abstract class Top implements Comparator<ForgePlayerMP>
 {
 	public final String ID;
-	public final IChatComponent title;
+	public final ITextComponent title;
 	
 	public Top(String s)
 	{

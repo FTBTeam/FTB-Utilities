@@ -2,8 +2,6 @@ package ftb.utils.world;
 
 import ftb.lib.ChunkDimPos;
 import ftb.lib.api.*;
-import latmod.lib.MathHelperLM;
-import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.util.UUID;
 
@@ -19,9 +17,6 @@ public final class ClaimedChunk
 		pos = p;
 		ownerID = o;
 	}
-	
-	public ClaimedChunk(EntityPlayerMP ep)
-	{ this(ForgeWorldMP.inst.getPlayer(ep).getProfile().getId(), new ChunkDimPos(ep.dimension, MathHelperLM.chunk(ep.posX), MathHelperLM.chunk(ep.posZ))); }
 	
 	public ForgePlayerMP getOwner()
 	{ return ForgeWorldMP.inst.getPlayer(ownerID); }

@@ -7,7 +7,9 @@ import ftb.utils.FTBU;
 import ftb.utils.world.FTBUPlayerDataMP;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.*;
-import net.minecraft.util.*;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 
 import java.util.List;
 
@@ -22,20 +24,20 @@ public class CmdAdminHome extends CommandLM //FIXME: SubCommand
 	public boolean isUsernameIndex(String[] args, int i)
 	{ return i == 0; }
 	
-	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args, BlockPos pos)
+	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
 	{
 		if(args.length == 2) return getListOfStringsMatchingLastWord(args, "list", "tp", "remove");
-		return super.addTabCompletionOptions(ics, args, pos);
+		return super.getTabCompletionOptions(server, ics, args, pos);
 	}
 	
-	public void processCommand(ICommandSender ics, String[] args) throws CommandException
+	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 2);
 		FTBUPlayerDataMP d = FTBUPlayerDataMP.get(ForgePlayerMP.get(args[0]));
 		
 		if(args[1].equals("list"))
 		{
-			ics.addChatMessage(new ChatComponentText(LMStringUtils.strip(d.homes.list())));
+			ics.addChatMessage(new TextComponentString(LMStringUtils.strip(d.homes.list())));
 			return;
 		}
 		

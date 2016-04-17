@@ -4,7 +4,8 @@ import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.cmd.*;
 import ftb.utils.ranks.*;
 import net.minecraft.command.*;
-import net.minecraft.util.BlockPos;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
 
@@ -19,13 +20,17 @@ public class CmdSetRank extends CommandLM
 	public boolean isUsernameIndex(String[] args, int i)
 	{ return i == 0; }
 	
-	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args, BlockPos pos)
+	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
 	{
-		if(args.length == 2) return getListOfStringsMatchingLastWord(args, Ranks.instance().ranks.keySet());
-		return super.addTabCompletionOptions(ics, args, pos);
+		if(args.length == 2)
+		{
+			return getListOfStringsMatchingLastWord(args, Ranks.instance().ranks.keySet());
+		}
+		
+		return super.getTabCompletionOptions(server, ics, args, pos);
 	}
 	
-	public void processCommand(ICommandSender ics, String[] args) throws CommandException
+	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 2);
 		ForgePlayerMP player = ForgePlayerMP.get(args[0]);

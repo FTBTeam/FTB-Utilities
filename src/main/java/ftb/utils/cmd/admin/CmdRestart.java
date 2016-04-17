@@ -4,6 +4,7 @@ import ftb.lib.FTBLib;
 import ftb.lib.api.cmd.*;
 import latmod.lib.LMFileUtils;
 import net.minecraft.command.*;
+import net.minecraft.server.MinecraftServer;
 
 import java.io.File;
 
@@ -12,7 +13,7 @@ public class CmdRestart extends CommandLM
 	public CmdRestart()
 	{ super("restart", CommandLevel.OP); }
 	
-	public void processCommand(ICommandSender ics, String[] args) throws CommandException
+	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		restart();
 	}

@@ -15,7 +15,7 @@ import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.*;
 import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.*;
@@ -52,7 +52,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	
 	public final long adminToken;
 	public final ForgePlayerSPSelf playerLM;
-	public final int currentDim, startX, startY;
+	public final int startX, startY;
+	public final DimensionType currentDim;
 	
 	public final ButtonLM buttonRefresh, buttonClose, buttonSettings, buttonUnclaimAll;
 	public final MapButton mapButtons[];
@@ -110,15 +111,14 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			public void onButtonPressed(int b)
 			{
 				FTBLibClient.playClickSound();
-				String s = isShiftKeyDown() ? FTBU.mod.format("button.claims_unclaim_all_q") : FTBU.mod.format("button.claims_unclaim_all_dim_q", FTBLibClient.mc.theWorld.provider.getDimensionName());
+				String s = isShiftKeyDown() ? FTBU.mod.format("button.claims_unclaim_all_q") : FTBU.mod.format("button.claims_unclaim_all_dim_q", currentDim.getName());
 				FTBLibClient.openGui(new GuiYesNo(GuiClaimChunks.this, s, "", isShiftKeyDown() ? 1 : 0));
 			}
 			
 			public void addMouseOverText(List<String> l)
 			{
 				if(isShiftKeyDown()) l.add(FTBU.mod.format("button.claims_unclaim_all"));
-				else
-					l.add(FTBU.mod.format("button.claims_unclaim_all_dim", FTBLibClient.mc.theWorld.provider.getDimensionName()));
+				else l.add(FTBU.mod.format("button.claims_unclaim_all_dim", currentDim.getName()));
 			}
 		};
 		

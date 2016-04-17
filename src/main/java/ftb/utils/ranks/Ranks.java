@@ -5,7 +5,7 @@ import com.mojang.authlib.GameProfile;
 import ftb.lib.FTBLib;
 import ftb.lib.api.permissions.*;
 import latmod.lib.*;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 import java.io.File;
 import java.util.*;
@@ -32,8 +32,8 @@ public class Ranks implements IPermissionHandler
 	{
 		fileRanks = new File(FTBLib.folderLocal, "ftbu/ranks.json");
 		filePlayers = new File(FTBLib.folderLocal, "ftbu/player_ranks.json");
-		ADMIN.color = EnumChatFormatting.DARK_GREEN;
-		PLAYER.color = EnumChatFormatting.WHITE;
+		ADMIN.color = TextFormatting.DARK_GREEN;
+		PLAYER.color = TextFormatting.WHITE;
 		ADMIN.parent = PLAYER;
 	}
 	

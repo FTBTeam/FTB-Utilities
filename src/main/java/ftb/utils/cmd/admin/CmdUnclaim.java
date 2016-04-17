@@ -6,13 +6,14 @@ import ftb.utils.FTBUGuiHandler;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 
 public class CmdUnclaim extends CommandLM
 {
 	public CmdUnclaim()
 	{ super("unclaim", CommandLevel.OP); }
 	
-	public void processCommand(ICommandSender ics, String[] args) throws CommandException
+	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		NBTTagCompound data = new NBTTagCompound();

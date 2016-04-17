@@ -12,7 +12,8 @@ import ftb.utils.net.MessageAreaUpdate;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.DimensionType;
 
 import java.util.List;
 
@@ -35,10 +36,10 @@ public class FTBUPlayerDataMP extends FTBUPlayerData
 	
 	public void readFromServer(NBTTagCompound tag)
 	{
-		setFlag(RENDER_BADGE, tag.hasKey("Badge") ? tag.getBoolean("Badge") : true);
-		setFlag(CHAT_LINKS, tag.hasKey("ChatLinks") ? tag.getBoolean("ChatLinks") : false);
-		setFlag(EXPLOSIONS, tag.hasKey("Explosions") ? tag.getBoolean("Explosions") : true);
-		setFlag(FAKE_PLAYERS, tag.hasKey("FakePlayers") ? tag.getBoolean("FakePlayers") : true);
+		setFlag(RENDER_BADGE, !tag.hasKey("Badge") || tag.getBoolean("Badge"));
+		setFlag(CHAT_LINKS, tag.hasKey("ChatLinks") && tag.getBoolean("ChatLinks"));
+		setFlag(EXPLOSIONS, !tag.hasKey("Explosions") || tag.getBoolean("Explosions"));
+		setFlag(FAKE_PLAYERS, !tag.hasKey("FakePlayers") || tag.getBoolean("FakePlayers"));
 		blocks = PrivacyLevel.VALUES_3[tag.getByte("BlockSecurity")];
 		
 		homes.readFromNBT(tag, "Homes");
@@ -81,7 +82,7 @@ public class FTBUPlayerDataMP extends FTBUPlayerData
 			}
 		}
 		
-		for(IChatComponent c : FTBUConfigLogin.motd.components)
+		for(ITextComponent c : FTBUConfigLogin.motd.components)
 		{
 			ep.addChatMessage(c);
 		}
@@ -126,13 +127,13 @@ public class FTBUPlayerDataMP extends FTBUPlayerData
 	public short getMaxLoadedChunks()
 	{ return FTBUPermissions.chunkloader_max_chunks.get(player.getProfile()).getAsShort(); }
 	
-	public boolean isDimensionBlacklisted(int dim)
+	public boolean isDimensionBlacklisted(DimensionType dim)
 	{
 		JsonArray a = FTBUPermissions.claims_dimension_blacklist.get(player.getProfile()).getAsJsonArray();
 		
 		for(int i = 0; i < a.size(); i++)
 		{
-			if(a.get(i).getAsInt() == dim) return true;
+			if(a.get(i).getAsInt() == dim.getId()) return true;
 		}
 		
 		return false;
@@ -162,7 +163,7 @@ public class FTBUPlayerDataMP extends FTBUPlayerData
 		}
 	}
 	
-	public void unclaimAllChunks(Integer dim)
+	public void unclaimAllChunks(DimensionType dim)
 	{
 		List<ClaimedChunk> list = FTBUWorldDataMP.get().getChunks(player.getProfile().getId(), dim);
 		int size0 = list.size();

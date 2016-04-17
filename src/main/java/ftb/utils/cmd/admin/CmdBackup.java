@@ -7,6 +7,7 @@ import ftb.utils.config.FTBUConfigBackups;
 import ftb.utils.world.Backups;
 import latmod.lib.LMFileUtils;
 import net.minecraft.command.*;
+import net.minecraft.server.MinecraftServer;
 
 public class CmdBackup extends CommandSubLM
 {
@@ -23,7 +24,7 @@ public class CmdBackup extends CommandSubLM
 		public CmdBackupStart(String s)
 		{ super(s, CommandLevel.OP); }
 		
-		public void processCommand(ICommandSender ics, String[] args) throws CommandException
+		public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 		{
 			boolean b = Backups.run(ics);
 			if(b)
@@ -44,7 +45,7 @@ public class CmdBackup extends CommandSubLM
 		public CmdBackupStop(String s)
 		{ super(s, CommandLevel.OP); }
 		
-		public void processCommand(ICommandSender ics, String[] args) throws CommandException
+		public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 		{
 			if(Backups.thread != null)
 			{
@@ -63,7 +64,7 @@ public class CmdBackup extends CommandSubLM
 		public CmdBackupGetSize(String s)
 		{ super(s, CommandLevel.OP); }
 		
-		public void processCommand(ICommandSender ics, String[] args) throws CommandException
+		public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 		{
 			String sizeW = LMFileUtils.getSizeS(ics.getEntityWorld().getSaveHandler().getWorldDirectory());
 			String sizeT = LMFileUtils.getSizeS(Backups.backupsFolder);

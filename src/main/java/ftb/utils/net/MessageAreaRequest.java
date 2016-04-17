@@ -4,6 +4,7 @@ import ftb.lib.api.*;
 import ftb.lib.api.net.*;
 import io.netty.buffer.ByteBuf;
 import latmod.lib.MathHelperLM;
+import net.minecraft.world.DimensionType;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 
 public class MessageAreaRequest extends MessageLM<MessageAreaRequest>
@@ -42,6 +43,6 @@ public class MessageAreaRequest extends MessageLM<MessageAreaRequest>
 	public IMessage onMessage(MessageAreaRequest m, MessageContext ctx)
 	{
 		ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);
-		return new MessageAreaUpdate(p, m.chunkX, m.chunkY, p.getPlayer().dimension, m.sizeX, m.sizeY);
+		return new MessageAreaUpdate(p, m.chunkX, m.chunkY, DimensionType.getById(p.getPlayer().dimension), m.sizeX, m.sizeY);
 	}
 }

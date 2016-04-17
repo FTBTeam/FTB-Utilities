@@ -45,7 +45,7 @@ public class FTBUPermissions
 	
 	//@ConfigType(PrimitiveType.ENUM)
 	@Info({"-: Player setting", "disabled: Explosions will never happen in claimed chunks", "enabled: Explosions will always happen in claimed chunks"})
-	public static final RankConfigEnum<EnumEnabled> claims_forced_explosions = new RankConfigEnum<>("ftbu.claims.forced_explosions", null, null, EnumEnabled.VALUES, true);
+	public static final RankConfigEnum<EnumEnabled> claims_forced_explosions = new RankConfigEnum<>("ftbu.claims.forced_explosions", null, null, EnumEnabled.values(), true);
 	
 	//@ConfigType(PrimitiveType.ENUM)
 	public static final RankConfigEnum<PrivacyLevel> claims_forced_security = new RankConfigEnum<>("ftbu.claims.forced_security", null, null, PrivacyLevel.VALUES_3, true);

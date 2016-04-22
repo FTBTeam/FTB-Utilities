@@ -12,6 +12,7 @@ public class BadgeRenderer implements LayerRenderer<AbstractClientPlayer>
 {
 	public static final BadgeRenderer instance = new BadgeRenderer();
 	
+	@Override
 	public void doRenderLayer(AbstractClientPlayer ep, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scale)
 	{
 		if(FTBUWorldDataSP.get().isLoaded() && FTBUClient.render_badges.getAsBoolean() && !ep.isInvisible())
@@ -30,6 +31,7 @@ public class BadgeRenderer implements LayerRenderer<AbstractClientPlayer>
 		}
 	}
 	
+	@Override
 	public boolean shouldCombineTextures()
 	{ return false; }
 }

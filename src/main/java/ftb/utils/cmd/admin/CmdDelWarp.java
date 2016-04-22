@@ -14,9 +14,11 @@ public class CmdDelWarp extends CommandLM
 	public CmdDelWarp()
 	{ super("delwarp", CommandLevel.OP); }
 	
+	@Override
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <ID>"; }
 	
+	@Override
 	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
 	{
 		if(args.length == 1) return getListOfStringsMatchingLastWord(args, FTBUWorldDataMP.get().warps.list());
@@ -24,6 +26,7 @@ public class CmdDelWarp extends CommandLM
 		return super.getTabCompletionOptions(server, ics, args, pos);
 	}
 	
+	@Override
 	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);

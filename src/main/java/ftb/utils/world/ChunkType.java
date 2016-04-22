@@ -59,18 +59,23 @@ public class ChunkType
 			chunk = o;
 		}
 		
+		@Override
 		public PlayerClaimed asClaimed()
 		{ return this; }
 		
+		@Override
 		public boolean isChunkOwner(ForgePlayerMP p)
 		{ return chunk.getOwner().equalsPlayer(p); }
 		
+		@Override
 		public TextFormatting getChatColor(ForgePlayer p)
 		{ return p.getWorld().getPlayer(chunk.ownerID).isFriend(p) ? TextFormatting.GREEN : TextFormatting.BLUE; }
 		
+		@Override
 		public int getAreaColor(ForgePlayer p)
 		{ return p.getWorld().getPlayer(chunk.ownerID).isFriend(p) ? 0xFF00FF21 : 0xFF0094FF; }
 		
+		@Override
 		public boolean canInteract(ForgePlayerMP p, boolean leftClick)
 		{
 			ForgePlayerMP chunkOwner = chunk.getOwner();
@@ -83,6 +88,7 @@ public class ChunkType
 			return level.canInteract(chunkOwner, p);
 		}
 		
+		@Override
 		public void write(ByteBuf io)
 		{
 			super.write(io);
@@ -90,11 +96,13 @@ public class ChunkType
 			io.writeBoolean(chunk.isChunkloaded);
 		}
 		
+		@Override
 		public boolean equals(Object o)
 		{
 			return super.equals(o) && ((PlayerClaimed) o).chunk.ownerID.equals(chunk.ownerID);
 		}
 		
+		@Override
 		@SideOnly(Side.CLIENT)
 		public void getMessage(List<String> l, boolean shift)
 		{
@@ -132,6 +140,7 @@ public class ChunkType
 	public int hashCode()
 	{ return ID; }
 	
+	@Override
 	public boolean equals(Object o)
 	{ return o == this || ID == o.hashCode(); }
 	

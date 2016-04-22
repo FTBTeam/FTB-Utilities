@@ -15,9 +15,11 @@ public class CmdGetRank extends CommandLM
 	public CmdGetRank()
 	{ super("getrank", CommandLevel.OP); }
 	
+	@Override
 	public boolean isUsernameIndex(String[] args, int i)
 	{ return i == 0; }
 	
+	@Override
 	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);

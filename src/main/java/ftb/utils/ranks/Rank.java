@@ -49,6 +49,7 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
 		return (e == null) ? ((parent != null) ? parent.handleRankConfig(permission) : null) : e;
 	}
 	
+	@Override
 	public JsonElement getSerializableElement()
 	{
 		JsonObject o = new JsonObject();
@@ -85,6 +86,7 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
 		return o;
 	}
 	
+	@Override
 	public void fromJson(JsonElement e)
 	{
 		JsonObject o = e.getAsJsonObject();

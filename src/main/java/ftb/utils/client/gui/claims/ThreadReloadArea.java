@@ -36,6 +36,7 @@ public class ThreadReloadArea extends Thread
 		Arrays.fill(pixels.pixels, 0);
 	}
 	
+	@Override
 	public void run()
 	{
 		try

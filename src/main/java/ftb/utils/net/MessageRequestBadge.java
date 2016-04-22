@@ -19,19 +19,23 @@ public class MessageRequestBadge extends MessageLM<MessageRequestBadge>
 		playerID = player;
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBUNetHandler.NET; }
 	
+	@Override
 	public void fromBytes(ByteBuf io)
 	{
 		playerID = readUUID(io);
 	}
 	
+	@Override
 	public void toBytes(ByteBuf io)
 	{
 		writeUUID(io, playerID);
 	}
 	
+	@Override
 	public IMessage onMessage(MessageRequestBadge m, MessageContext ctx)
 	{
 		Badge b = ServerBadges.getServerBadge(ForgeWorldMP.inst.getPlayer(m.playerID));

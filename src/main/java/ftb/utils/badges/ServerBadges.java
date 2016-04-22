@@ -32,6 +32,7 @@ public class ServerBadges
 	{
 		public boolean isDone = false;
 		
+		@Override
 		public void run()
 		{
 			isDone = false;

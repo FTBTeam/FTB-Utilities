@@ -21,12 +21,15 @@ public final class ClaimedChunk
 	public ForgePlayerMP getOwner()
 	{ return ForgeWorldMP.inst.getPlayer(ownerID); }
 	
+	@Override
 	public boolean equals(Object o)
 	{ return o != null && (o == this || (o instanceof ClaimedChunk && pos.equalsChunk(((ClaimedChunk) o).pos))); }
 	
+	@Override
 	public String toString()
 	{ return pos.toString(); }
 	
+	@Override
 	public int hashCode()
 	{ return pos.hashCode(); }
 }

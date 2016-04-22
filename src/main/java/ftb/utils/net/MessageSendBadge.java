@@ -20,21 +20,25 @@ public class MessageSendBadge extends MessageLM<MessageSendBadge>
 		badgeID = id;
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBUNetHandler.NET; }
 	
+	@Override
 	public void fromBytes(ByteBuf io)
 	{
 		playerID = readUUID(io);
 		badgeID = readString(io);
 	}
 	
+	@Override
 	public void toBytes(ByteBuf io)
 	{
 		writeUUID(io, playerID);
 		writeString(io, badgeID);
 	}
 	
+	@Override
 	public IMessage onMessage(MessageSendBadge m, MessageContext ctx)
 	{
 		ClientBadges.setClientBadge(m.playerID, m.badgeID);

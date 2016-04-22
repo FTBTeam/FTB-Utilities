@@ -23,6 +23,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	
 	public static IJMPluginHandler journeyMapHandler = null;
 	
+	@Override
 	public void preInit()
 	{
 		ClientConfigRegistry.addGroup("ftbu", FTBUClient.class);
@@ -30,6 +31,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		FTBUActions.init();
 	}
 	
+	@Override
 	public void postInit()
 	{
 		LMGuiHandlerRegistry.add(FTBUGuiHandler.instance);
@@ -43,6 +45,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		//GuideRepoList.refresh();
 	}
 	
+	@Override
 	public void addWorldData(ForgeWorldDataEvent event)
 	{
 		if(event.world.side.isClient())
@@ -52,6 +55,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		else super.addWorldData(event);
 	}
 	
+	@Override
 	public void addPlayerData(ForgePlayerDataEvent event)
 	{
 		if(event.player.getSide().isClient())

@@ -14,6 +14,7 @@ public class CmdDisplayNBT extends CommandLM
 	public CmdDisplayNBT()
 	{ super("display_nbt", CommandLevel.OP); }
 	
+	@Override
 	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);

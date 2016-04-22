@@ -27,8 +27,9 @@ public class Badge extends FinalIDObject
 		imageURL = url;
 	}
 	
+	@Override
 	public String toString()
-	{ return getID() + " : " + imageURL; }
+	{ return getID() + '=' + imageURL; }
 	
 	@SideOnly(Side.CLIENT)
 	public ResourceLocation getTexture()

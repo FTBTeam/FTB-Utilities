@@ -22,6 +22,7 @@ public class InvSeeInventory implements IInventory
 		baubles = BaublesHelper.getBaubles(ep);
 	}
 	
+	@Override
 	public int getSizeInventory()
 	{ return 9 * 5; }
 	
@@ -35,6 +36,7 @@ public class InvSeeInventory implements IInventory
 	public int getSlot(int slot)
 	{ return (slot == -1) ? -1 : (slot % 40); }
 	
+	@Override
 	public ItemStack getStackInSlot(int i)
 	{
 		int j = slotMapping[i];
@@ -42,6 +44,7 @@ public class InvSeeInventory implements IInventory
 		return (inv == null) ? null : inv.getStackInSlot(getSlot(j));
 	}
 	
+	@Override
 	public ItemStack decrStackSize(int i, int k)
 	{
 		int j = slotMapping[i];
@@ -49,6 +52,7 @@ public class InvSeeInventory implements IInventory
 		return (inv == null) ? null : inv.decrStackSize(getSlot(j), k);
 	}
 	
+	@Override
 	public ItemStack removeStackFromSlot(int i)
 	{
 		int j = slotMapping[i];
@@ -56,6 +60,7 @@ public class InvSeeInventory implements IInventory
 		return (inv == null) ? null : inv.removeStackFromSlot(getSlot(j));
 	}
 	
+	@Override
 	public void setInventorySlotContents(int i, ItemStack is)
 	{
 		int j = slotMapping[i];
@@ -68,9 +73,11 @@ public class InvSeeInventory implements IInventory
 		}
 	}
 	
+	@Override
 	public String getName()
 	{ return player.getName(); }
 	
+	@Override
 	public boolean hasCustomName()
 	{ return true; }
 	
@@ -80,9 +87,11 @@ public class InvSeeInventory implements IInventory
 		return null;
 	}
 	
+	@Override
 	public int getInventoryStackLimit()
 	{ return 64; }
 	
+	@Override
 	public void markDirty()
 	{
 		invPlayer.markDirty();
@@ -90,17 +99,21 @@ public class InvSeeInventory implements IInventory
 		if(baubles != null) baubles.markDirty();
 	}
 	
+	@Override
 	public boolean isUseableByPlayer(EntityPlayer ep)
 	{ return true; }
 	
+	@Override
 	public void openInventory(EntityPlayer ep)
 	{
 	}
 	
+	@Override
 	public void closeInventory(EntityPlayer ep)
 	{
 	}
 	
+	@Override
 	public boolean isItemValidForSlot(int i, ItemStack is)
 	{
 		int j = slotMapping[i];
@@ -108,16 +121,20 @@ public class InvSeeInventory implements IInventory
 		return inv != null && inv.isItemValidForSlot(getSlot(j), is);
 	}
 	
+	@Override
 	public int getField(int id)
 	{ return 0; }
 	
+	@Override
 	public void setField(int id, int value)
 	{
 	}
 	
+	@Override
 	public int getFieldCount()
 	{ return 0; }
 	
+	@Override
 	public void clear()
 	{
 		LMInvUtils.clear(invPlayer);

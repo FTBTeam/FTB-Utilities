@@ -17,6 +17,7 @@ public class CmdLoadedChunks extends CommandLM
 	public CmdLoadedChunks()
 	{ super("loaded_chunks", CommandLevel.OP); }
 	
+	@Override
 	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
@@ -27,7 +28,7 @@ public class CmdLoadedChunks extends CommandLM
 		{
 			ImmutableSetMultimap<ChunkCoordIntPair, Ticket> map = ForgeChunkManager.getPersistentChunksFor(w);
 			
-			HashMap<String, ArrayList<ChunkCoordIntPair>> chunksMap = new HashMap<>();
+			Map<String, ArrayList<ChunkCoordIntPair>> chunksMap = new HashMap<>();
 			
 			for(Ticket t : map.values())
 			{

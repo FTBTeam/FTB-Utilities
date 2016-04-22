@@ -10,17 +10,21 @@ public class MessageRequestServerInfo extends MessageLM<MessageRequestServerInfo
 {
 	public MessageRequestServerInfo() { }
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBUNetHandler.NET; }
 	
+	@Override
 	public void fromBytes(ByteBuf io)
 	{
 	}
 	
+	@Override
 	public void toBytes(ByteBuf io)
 	{
 	}
 	
+	@Override
 	public IMessage onMessage(MessageRequestServerInfo m, MessageContext ctx)
 	{
 		ForgePlayerMP owner = ForgeWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);

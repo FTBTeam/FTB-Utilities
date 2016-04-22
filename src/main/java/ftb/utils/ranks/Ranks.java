@@ -298,11 +298,13 @@ public class Ranks implements IPermissionHandler
 		}
 	}
 	
+	@Override
 	public Boolean handlePermission(String permission, GameProfile profile)
 	{
 		return getRankOf(profile).handlePermission(permission);
 	}
 	
+	@Override
 	public JsonElement handleRankConfig(RankConfig config, GameProfile profile)
 	{
 		return getRankOf(profile).handleRankConfig(config);

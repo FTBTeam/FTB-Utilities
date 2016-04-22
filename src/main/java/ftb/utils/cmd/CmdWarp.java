@@ -18,9 +18,11 @@ public class CmdWarp extends CommandLM
 	public CmdWarp()
 	{ super("warp", CommandLevel.ALL); }
 	
+	@Override
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <ID>"; }
 	
+	@Override
 	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
 	{
 		if(args.length == 1)
@@ -31,6 +33,7 @@ public class CmdWarp extends CommandLM
 		return super.getTabCompletionOptions(server, ics, args, pos);
 	}
 	
+	@Override
 	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);

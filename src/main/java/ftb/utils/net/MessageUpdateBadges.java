@@ -20,9 +20,11 @@ public class MessageUpdateBadges extends MessageLM<MessageUpdateBadges>
 		badges = c;
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBUNetHandler.NET; }
 	
+	@Override
 	public void fromBytes(ByteBuf io)
 	{
 		badges = new ArrayList<>();
@@ -39,6 +41,7 @@ public class MessageUpdateBadges extends MessageLM<MessageUpdateBadges>
 		}
 	}
 	
+	@Override
 	public void toBytes(ByteBuf io)
 	{
 		io.writeInt(badges.size());
@@ -53,6 +56,7 @@ public class MessageUpdateBadges extends MessageLM<MessageUpdateBadges>
 		}
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageUpdateBadges m, MessageContext ctx)
 	{

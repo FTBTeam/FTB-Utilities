@@ -85,6 +85,7 @@ public class ClientGuideFile extends InfoPage
 		clientGuideGui = null;
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void initGUI(GuiInfo gui)
 	{

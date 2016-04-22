@@ -11,14 +11,17 @@ import journeymap.client.api.event.ClientEvent;
 @ClientPlugin
 public class FTBU_JMPlugin implements IClientPlugin
 {
+	@Override
 	public void initialize(IClientAPI api)
 	{
 		FTBUClient.journeyMapHandler = new JMPluginHandler(api);
 	}
 	
+	@Override
 	public String getModId()
 	{ return FTBUFinals.MOD_ID; }
 	
+	@Override
 	public void onEvent(ClientEvent event)
 	{
 		if(event.type == ClientEvent.Type.DISPLAY_UPDATE && FTBUClient.journeyMapHandler != null)

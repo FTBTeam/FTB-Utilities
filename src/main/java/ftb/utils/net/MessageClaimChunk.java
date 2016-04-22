@@ -23,9 +23,11 @@ public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 	
 	public MessageClaimChunk() { }
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBUNetHandler.NET_WORLD; }
 	
+	@Override
 	public void fromBytes(ByteBuf io)
 	{
 		type = io.readUnsignedByte();
@@ -33,6 +35,7 @@ public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 		pos = new ChunkDimPos(DimensionType.getById(io.readInt()), io.readInt(), io.readInt());
 	}
 	
+	@Override
 	public void toBytes(ByteBuf io)
 	{
 		io.writeByte(type);
@@ -42,6 +45,7 @@ public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 		io.writeInt(pos.chunkZPos);
 	}
 	
+	@Override
 	public IMessage onMessage(MessageClaimChunk m, MessageContext ctx)
 	{
 		ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);

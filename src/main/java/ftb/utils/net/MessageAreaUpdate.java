@@ -27,9 +27,11 @@ public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate>
 	public MessageAreaUpdate(ForgePlayerMP p, BlockDimPos pos, int radius)
 	{ this(p, pos.chunkX() - radius, pos.chunkZ() - radius, pos.dim, radius * 2 + 1, radius * 2 + 1); }
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBUNetHandler.NET_WORLD; }
 	
+	@Override
 	public void fromBytes(ByteBuf io)
 	{
 		dim = DimensionType.getById(io.readInt());
@@ -46,6 +48,7 @@ public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate>
 		}
 	}
 	
+	@Override
 	public void toBytes(ByteBuf io)
 	{
 		io.writeInt(dim.getId());
@@ -59,6 +62,7 @@ public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate>
 		}
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageAreaUpdate m, MessageContext ctx)
 	{

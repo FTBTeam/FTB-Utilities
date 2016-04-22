@@ -12,6 +12,7 @@ import net.minecraftforge.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class FTBLIntegrationClient extends FTBLIntegration
 {
+	@Override
 	public void onReloaded(ReloadEvent e)
 	{
 		super.onReloaded(e);
@@ -28,10 +29,12 @@ public class FTBLIntegrationClient extends FTBLIntegration
 		}
 	}
 	
+	@Override
 	public void renderWorld(float pt)
 	{
 	}
 	
+	@Override
 	public void onTooltip(ItemTooltipEvent e)
 	{
 		Item item = e.getItemStack().getItem();

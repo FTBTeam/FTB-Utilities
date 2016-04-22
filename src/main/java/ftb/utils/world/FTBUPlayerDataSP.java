@@ -22,6 +22,7 @@ public class FTBUPlayerDataSP extends FTBUPlayerData
 		super(FTBUFinals.MOD_ID, p);
 	}
 	
+	@Override
 	public void readFromNet(NBTTagCompound tag, boolean self)
 	{
 		flags = tag.getByte("F");

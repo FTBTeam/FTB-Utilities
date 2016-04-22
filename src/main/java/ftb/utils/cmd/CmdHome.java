@@ -20,9 +20,11 @@ public class CmdHome extends CommandLM
 	public CmdHome()
 	{ super("home", CommandLevel.ALL); }
 	
+	@Override
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <ID>"; }
 	
+	@Override
 	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
 	{
 		if(args.length == 1)
@@ -30,9 +32,10 @@ public class CmdHome extends CommandLM
 			return getListOfStringsMatchingLastWord(args, FTBUPlayerDataMP.get(ForgeWorldMP.inst.getPlayer(ics)).homes.list());
 		}
 		
-		return getTabCompletionOptions(server, ics, args, pos);
+		return super.getTabCompletionOptions(server, ics, args, pos);
 	}
 	
+	@Override
 	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);

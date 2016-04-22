@@ -27,6 +27,7 @@ public class JMPluginHandler implements IJMPluginHandler
 		clientAPI = api;
 	}
 	
+	@Override
 	public void refresh(int dim)
 	{
 		clientAPI.removeAll(FTBUFinals.MOD_ID);

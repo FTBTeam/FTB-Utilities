@@ -1,6 +1,7 @@
 package ftb.utils.mod.client.gui.friends;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.api.MouseButton;
 import ftb.lib.api.client.GlStateManager;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.info.InfoPage;
@@ -45,7 +46,7 @@ public class InfoPlayerInventoryLine extends InfoTextLine
 		}
 		
 		@Override
-		public void onButtonPressed(int b)
+		public void onClicked(MouseButton button)
 		{
 		}
 		

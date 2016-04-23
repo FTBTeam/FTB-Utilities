@@ -2,7 +2,7 @@ package ftb.utils.mod.client.gui.guide;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.TextureCoords;
-import ftb.lib.api.LangKey;
+import ftb.lib.api.*;
 import ftb.lib.api.client.GlStateManager;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.info.InfoPage;
@@ -80,7 +80,7 @@ public class PageOnlineRepo extends InfoPage
 		}
 		
 		@Override
-		public void onButtonPressed(int b)
+		public void onClicked(MouseButton button)
 		{
 			if(thread != null) return;
 			

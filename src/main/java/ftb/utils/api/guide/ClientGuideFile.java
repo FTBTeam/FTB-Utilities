@@ -46,7 +46,7 @@ public class ClientGuideFile extends InfoPage
 		ButtonLM button = new ButtonLM(gui, 0, 0, 16, 16)
 		{
 			@Override
-			public void onButtonPressed(int b)
+			public void onClicked(MouseButton button)
 			{
 				FTBLibClient.openGui(new GuiInfo(null, new ReposPage()));
 			}

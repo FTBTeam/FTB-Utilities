@@ -1,7 +1,7 @@
 package ftb.utils.mod.client.gui.friends;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.PlayerAction;
+import ftb.lib.api.*;
 import ftb.lib.api.client.GlStateManager;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.info.InfoPage;
@@ -78,10 +78,10 @@ public class InfoFriendsGUIPage extends InfoPage
 		}
 		
 		@Override
-		public void onButtonPressed(int b)
+		public void onClicked(MouseButton button)
 		{
 			ClientAction.REQUEST_PLAYER_INFO.send(playerLM.getPlayerID());
-			super.onButtonPressed(b);
+			super.onClicked(button);
 		}
 		
 		@Override

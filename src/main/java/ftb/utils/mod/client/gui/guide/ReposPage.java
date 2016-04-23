@@ -1,7 +1,7 @@
 package ftb.utils.mod.client.gui.guide;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.GuiLang;
+import ftb.lib.api.*;
 import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.api.gui.widgets.ButtonLM;
 import ftb.lib.api.info.InfoPage;
@@ -43,7 +43,7 @@ public class ReposPage extends InfoPage
 		ButtonLM button = new ButtonLM(guiInfo, 0, 0, 16, 16)
 		{
 			@Override
-			public void onButtonPressed(int b)
+			public void onClicked(MouseButton button)
 			{
 				clear();
 				addSub(new InfoPage("Loading..."));

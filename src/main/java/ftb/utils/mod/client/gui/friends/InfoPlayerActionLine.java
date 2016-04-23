@@ -1,7 +1,7 @@
 package ftb.utils.mod.client.gui.friends;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.PlayerAction;
+import ftb.lib.api.*;
 import ftb.lib.api.client.*;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.info.InfoPage;
@@ -48,7 +48,7 @@ public class InfoPlayerActionLine extends InfoTextLine
 		}
 		
 		@Override
-		public void onButtonPressed(int b)
+		public void onClicked(MouseButton button)
 		{
 			FTBLibClient.playClickSound();
 			action.onClicked(LMWorldClient.inst.clientPlayer, playerLM);

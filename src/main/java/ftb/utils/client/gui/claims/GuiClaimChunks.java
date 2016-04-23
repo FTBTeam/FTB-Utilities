@@ -75,7 +75,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		buttonClose = new ButtonLM(this, 0, 0, 16, 16)
 		{
 			@Override
-			public void onButtonPressed(int b)
+			public void onClicked(boolean leftClick)
 			{
 				FTBLibClient.playClickSound();
 				FTBLibClient.openGui(null);
@@ -85,7 +85,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		buttonRefresh = new ButtonLM(this, 0, 16, 16, 16)
 		{
 			@Override
-			public void onButtonPressed(int b)
+			public void onClicked(boolean leftClick)
 			{
 				thread = new ThreadReloadArea(mc.theWorld, GuiClaimChunks.this);
 				thread.start();
@@ -100,7 +100,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		buttonSettings = new ButtonLM(this, 0, 32, 16, 16)
 		{
 			@Override
-			public void onButtonPressed(int b)
+			public void onClicked(boolean leftClick)
 			{
 				FTBLibClient.playClickSound();
 				new MessageButtonPressed(MessageButtonPressed.CLAIMED_CHUNKS_SETTINGS, 0).sendToServer();
@@ -112,7 +112,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		buttonUnclaimAll = new ButtonLM(this, 0, 48, 16, 16)
 		{
 			@Override
-			public void onButtonPressed(int b)
+			public void onClicked(boolean leftClick)
 			{
 				FTBLibClient.playClickSound();
 				String s = isShiftKeyDown() ? FTBU.mod.format("button.claims_unclaim_all_q") : FTBU.mod.format("button.claims_unclaim_all_dim_q", currentDim.getName());
@@ -161,7 +161,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	@Override
 	public void initLMGui()
 	{
-		buttonRefresh.onButtonPressed(0);
+		buttonRefresh.onClicked(true);
 	}
 	
 	@Override
@@ -345,16 +345,16 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		}
 		
 		@Override
-		public void onButtonPressed(int b)
+		public void onClicked(boolean leftClick)
 		{
 			if(gui.panelButtons.mouseOver()) return;
-			if(gui.adminToken != 0L && b == 0) return;
+			if(gui.adminToken != 0L && leftClick) return;
 			boolean ctrl = FTBUClient.loaded_chunks_space_key.getAsBoolean() ? Keyboard.isKeyDown(Keyboard.KEY_SPACE) : isCtrlKeyDown();
 			
 			MessageClaimChunk msg = new MessageClaimChunk();
 			msg.token = gui.adminToken;
 			msg.pos = chunk;
-			msg.type = (b == 0) ? (ctrl ? MessageClaimChunk.ID_LOAD : MessageClaimChunk.ID_CLAIM) : (ctrl ? MessageClaimChunk.ID_UNLOAD : MessageClaimChunk.ID_UNCLAIM);
+			msg.type = leftClick ? (ctrl ? MessageClaimChunk.ID_LOAD : MessageClaimChunk.ID_CLAIM) : (ctrl ? MessageClaimChunk.ID_UNLOAD : MessageClaimChunk.ID_UNCLAIM);
 			msg.sendToServer();
 			FTBLibClient.playClickSound();
 		}

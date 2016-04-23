@@ -212,7 +212,7 @@ public class ServerGuideFile extends InfoPage
 	
 	public void addTop(Top t)
 	{
-		InfoPage thisTop = categoryTops.getSub(t.ID).setTitle(t.title);
+		InfoPage thisTop = categoryTops.getSub(t.ID).setTitle(t.langKey.chatComponent());
 		
 		Collections.sort(players, t);
 		

@@ -23,6 +23,7 @@ public class CmdBackup extends CommandSubLM
 		public CmdBackupStart(String s)
 		{ super(s, CommandLevel.OP); }
 		
+		@Override
 		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			boolean b = Backups.run(ics);
@@ -40,6 +41,7 @@ public class CmdBackup extends CommandSubLM
 		public CmdBackupStop(String s)
 		{ super(s, CommandLevel.OP); }
 		
+		@Override
 		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			if(Backups.thread != null)
@@ -57,6 +59,7 @@ public class CmdBackup extends CommandSubLM
 		public CmdBackupGetSize(String s)
 		{ super(s, CommandLevel.OP); }
 		
+		@Override
 		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			String sizeW = LMFileUtils.getSizeS(ics.getEntityWorld().getSaveHandler().getWorldDirectory());

@@ -54,28 +54,35 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		homes = new Warps();
 	}
 	
+	@Override
 	public LMWorld getWorld()
 	{ return world; }
 	
+	@Override
 	public Side getSide()
 	{ return Side.SERVER; }
 	
+	@Override
 	public boolean isOnline()
 	{ return entityPlayer != null; }
 	
+	@Override
 	public LMPlayerServer toPlayerMP()
 	{ return this; }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public LMPlayerClient toPlayerSP()
 	{ return null; }
 	
+	@Override
 	public EntityPlayerMP getPlayer()
 	{ return entityPlayer; }
 	
 	public void setPlayer(EntityPlayerMP ep)
 	{ entityPlayer = ep; }
 	
+	@Override
 	public PersonalSettings getSettings()
 	{ return settings; }
 	
@@ -206,7 +213,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		
 		NBTTagCompound settingsTag = tag.getCompoundTag("Settings");
 		settings.readFromServer(settingsTag);
-		renderBadge = settingsTag.hasKey("Badge") ? settingsTag.getBoolean("Badge") : true;
+		renderBadge = !settingsTag.hasKey("Badge") || settingsTag.getBoolean("Badge");
 		
 		homes.readFromNBT(tag, "Homes");
 	}
@@ -386,6 +393,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		}
 	}
 	
+	@Override
 	public boolean allowInteractSecure()
 	{ return getPlayer() != null && isOP(); }
 	

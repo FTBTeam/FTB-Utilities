@@ -15,6 +15,7 @@ public class CmdMath extends CommandLM
 	public CmdMath()
 	{ super("math", CommandLevel.ALL); }
 	
+	@Override
 	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);

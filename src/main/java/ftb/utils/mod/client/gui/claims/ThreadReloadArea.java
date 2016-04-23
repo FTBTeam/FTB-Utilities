@@ -37,6 +37,7 @@ public class ThreadReloadArea extends Thread
 		isNether = worldObj.provider.dimensionId == -1;
 	}
 	
+	@Override
 	public void run()
 	{
 		try

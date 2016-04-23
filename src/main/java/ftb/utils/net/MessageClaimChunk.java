@@ -28,9 +28,11 @@ public class MessageClaimChunk extends MessageFTBU
 		io.writeInt(z);
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBUNetHandler.NET_WORLD; }
 	
+	@Override
 	public IMessage onMessage(MessageContext ctx)
 	{
 		int type = io.readUnsignedByte();

@@ -41,15 +41,19 @@ public class GuideLocalRepo extends GuideRepo
 		modes = Collections.unmodifiableMap(map);
 	}
 	
+	@Override
 	public GuideInfo getInfo()
 	{ return info; }
 	
+	@Override
 	public Map<String, GuideMode> getModes()
 	{ return modes; }
 	
+	@Override
 	public Response getFile(String path) throws Exception
 	{ return new Response(new FileInputStream(new File(folder, path))); }
 	
+	@Override
 	public ResourceLocation getIcon()
 	{
 		if(icon == null)
@@ -61,6 +65,7 @@ public class GuideLocalRepo extends GuideRepo
 		return icon;
 	}
 	
+	@Override
 	public boolean isLocal()
 	{ return true; }
 	

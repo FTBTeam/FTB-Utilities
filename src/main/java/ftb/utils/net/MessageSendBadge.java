@@ -19,9 +19,11 @@ public class MessageSendBadge extends MessageFTBU
 		io.writeUTF(id);
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBUNetHandler.NET_INFO; }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{

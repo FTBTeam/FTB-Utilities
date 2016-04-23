@@ -12,9 +12,11 @@ public abstract class EventLMPlayerClient extends EventLMPlayer
 	public EventLMPlayerClient(LMPlayerClient p)
 	{ player = p; }
 	
+	@Override
 	public LMPlayer getPlayer()
 	{ return player; }
 	
+	@Override
 	public Side getSide()
 	{ return Side.CLIENT; }
 	

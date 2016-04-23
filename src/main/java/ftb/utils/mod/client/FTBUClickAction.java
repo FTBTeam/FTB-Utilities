@@ -15,6 +15,7 @@ public class FTBUClickAction
 	
 	public static final ClickActionType FRIEND_ADD = new ClickActionType("friend_add")
 	{
+		@Override
 		@SideOnly(Side.CLIENT)
 		public void onClicked(JsonElement data)
 		{ ClientAction.ADD_FRIEND.send(data.getAsInt()); }
@@ -22,6 +23,7 @@ public class FTBUClickAction
 	
 	public static final ClickActionType FRIEND_ADD_ALL = new ClickActionType("friend_add_all")
 	{
+		@Override
 		@SideOnly(Side.CLIENT)
 		public void onClicked(JsonElement data)
 		{ ClientAction.ADD_FRIEND.send(0); }

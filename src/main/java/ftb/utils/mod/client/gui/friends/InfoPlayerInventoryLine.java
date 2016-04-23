@@ -25,6 +25,7 @@ public class InfoPlayerInventoryLine extends InfoTextLine
 		playerLM = p;
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public ButtonInfoTextLine createWidget(GuiInfo gui)
 	{ return new ButtonInfoPlayerInventory(gui, this); }
@@ -38,14 +39,17 @@ public class InfoPlayerInventoryLine extends InfoTextLine
 			height = 18 * 4 + 4;
 		}
 		
+		@Override
 		public void addMouseOverText(List<String> l)
 		{
 		}
 		
+		@Override
 		public void onButtonPressed(int b)
 		{
 		}
 		
+		@Override
 		public void renderWidget()
 		{
 			int ay = getAY();

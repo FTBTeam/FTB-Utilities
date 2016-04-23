@@ -15,12 +15,15 @@ public class CmdAdminHome extends CommandSubLM
 	public CmdAdminHome()
 	{ super("home", CommandLevel.OP); }
 	
+	@Override
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <ID> [x] [y] [z]"; }
 	
+	@Override
 	public boolean isUsernameIndex(String[] args, int i)
 	{ return i == 0; }
 	
+	@Override
 	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 	{
 		if(args.length == 2) return getListOfStringsMatchingLastWord(args, "list", "tp", "remove");

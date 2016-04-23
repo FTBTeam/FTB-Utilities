@@ -19,9 +19,11 @@ public class MessageAreaRequest extends MessageFTBU
 		io.writeInt(MathHelperLM.clampInt(h, 1, 255));
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBUNetHandler.NET_WORLD; }
 	
+	@Override
 	public IMessage onMessage(MessageContext ctx)
 	{
 		int chunkX = io.readInt();

@@ -29,9 +29,11 @@ public class GuideOnlineRepo extends GuideRepo
 		info = new GuideInfo(getFile("guide.json").asJson().getAsJsonObject());
 	}
 	
+	@Override
 	public GuideInfo getInfo()
 	{ return info; }
 	
+	@Override
 	public Map<String, GuideMode> getModes()
 	{
 		if(modes == null)
@@ -56,9 +58,11 @@ public class GuideOnlineRepo extends GuideRepo
 		return modes;
 	}
 	
+	@Override
 	public Response getFile(String path) throws Exception
 	{ return new LMURLConnection(RequestMethod.SIMPLE_GET, homePath + path).connect(); }
 	
+	@Override
 	public ResourceLocation getIcon()
 	{
 		if(icon == null)
@@ -73,6 +77,7 @@ public class GuideOnlineRepo extends GuideRepo
 	public GuideLocalRepo getLocalRepo()
 	{ return ClientGuideFile.instance.localRepos.get(getID()); }
 	
+	@Override
 	public boolean isLocal()
 	{ return getLocalRepo() != null; }
 	

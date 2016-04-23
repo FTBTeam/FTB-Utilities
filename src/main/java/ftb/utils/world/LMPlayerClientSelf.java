@@ -19,12 +19,15 @@ public class LMPlayerClientSelf extends LMPlayerClient
 		settings = new PersonalSettings();
 	}
 	
+	@Override
 	public LMPlayerClientSelf toPlayerSPSelf()
 	{ return this; }
 	
+	@Override
 	public PersonalSettings getSettings()
 	{ return settings; }
 	
+	@Override
 	public void readFromNet(ByteIOStream io, boolean self) // LMPlayerServer
 	{
 		super.readFromNet(io, self);

@@ -12,15 +12,18 @@ public class CmdDelWarp extends CommandLM
 	public CmdDelWarp()
 	{ super("delwarp", CommandLevel.OP); }
 	
+	@Override
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <ID>"; }
 	
+	@Override
 	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 	{
 		if(args.length == 1) return getListOfStringsFromIterableMatchingLastWord(args, LMWorldServer.inst.warps.list());
 		return null;
 	}
 	
+	@Override
 	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);

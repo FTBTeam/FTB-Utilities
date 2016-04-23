@@ -19,6 +19,7 @@ public class MessageLMPlayerUpdate extends MessageFTBU
 		p.writeToNet(io, self);
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{

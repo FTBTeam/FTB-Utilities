@@ -27,9 +27,11 @@ public class MessageUpdateBadges extends MessageFTBU
 		}
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBUNetHandler.NET_INFO; }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{

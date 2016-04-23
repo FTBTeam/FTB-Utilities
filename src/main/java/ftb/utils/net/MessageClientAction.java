@@ -15,6 +15,7 @@ public class MessageClientAction extends MessageFTBU
 		io.writeInt(e);
 	}
 	
+	@Override
 	public IMessage onMessage(MessageContext ctx)
 	{
 		ClientAction action = ClientAction.get(io.readByte());

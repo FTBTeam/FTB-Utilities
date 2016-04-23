@@ -35,6 +35,7 @@ public final class ClaimedChunk
 	public LMPlayerClient getOwnerC()
 	{ return LMWorldClient.inst.getPlayer(ownerID); }
 	
+	@Override
 	public boolean equals(Object o)
 	{ return o != null && (o == this || (o instanceof ClaimedChunk && equalsChunk((ClaimedChunk) o))); }
 	
@@ -44,9 +45,11 @@ public final class ClaimedChunk
 	public boolean equalsChunk(ClaimedChunk c)
 	{ return equalsChunk(c.dim, c.posX, c.posZ); }
 	
+	@Override
 	public String toString()
 	{ return "[" + dim + ',' + posX + ',' + posZ + ']'; }
 	
+	@Override
 	public int hashCode()
 	{ return LMUtils.hashCode(dim, posX, posZ); }
 	

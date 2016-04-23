@@ -26,6 +26,7 @@ public class FTBUConfigGeneral
 	@Info("Entity IDs that are banned from world. They will not spawn and existing ones will be destroyed")
 	private static final ConfigEntryStringList blocked_entities = new ConfigEntryStringList("blocked_entities", null)
 	{
+		@Override
 		public void set(List<String> l)
 		{
 			super.set(l);
@@ -57,6 +58,7 @@ public class FTBUConfigGeneral
 	
 	private static final ConfigEntryString guidepacks_folder = new ConfigEntryString("guidepacks_folder", "")
 	{
+		@Override
 		public void set(Object o)
 		{
 			super.set(o);

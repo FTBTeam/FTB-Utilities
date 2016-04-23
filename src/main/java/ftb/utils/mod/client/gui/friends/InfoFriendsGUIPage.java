@@ -23,6 +23,7 @@ public class InfoFriendsGUIPage extends InfoPage
 		playerLM = p;
 	}
 	
+	@Override
 	public void refreshGui(GuiInfo gui)
 	{
 		clear();
@@ -51,6 +52,7 @@ public class InfoFriendsGUIPage extends InfoPage
 		*/
 	}
 	
+	@Override
 	public ButtonInfoPage createButton(GuiInfo gui)
 	{ return new Button(gui, this); }
 	
@@ -62,6 +64,7 @@ public class InfoFriendsGUIPage extends InfoPage
 			height = 20;
 		}
 		
+		@Override
 		public void updateTitle()
 		{
 			title = playerLM.getProfile().getName();
@@ -74,12 +77,14 @@ public class InfoFriendsGUIPage extends InfoPage
 			}
 		}
 		
+		@Override
 		public void onButtonPressed(int b)
 		{
 			ClientAction.REQUEST_PLAYER_INFO.send(playerLM.getPlayerID());
 			super.onButtonPressed(b);
 		}
 		
+		@Override
 		public void renderWidget()
 		{
 			int ay = getAY();

@@ -28,18 +28,23 @@ public class ChunkType
 		public boolean isFriendly(LMPlayer p)
 		{ return chunkOwner.equalsPlayer(p) || chunkOwner.isFriend(p); }
 		
+		@Override
 		public boolean isClaimed()
 		{ return true; }
 		
+		@Override
 		public boolean isChunkOwner(LMPlayer p)
 		{ return chunkOwner.equals(p); }
 		
+		@Override
 		public EnumChatFormatting getChatColor(LMPlayer p)
 		{ return isFriendly(p) ? EnumChatFormatting.GREEN : EnumChatFormatting.BLUE; }
 		
+		@Override
 		public int getAreaColor(LMPlayer p)
 		{ return isFriendly(p) ? 0xFF00FF21 : 0xFF0094FF; }
 		
+		@Override
 		public boolean canInteract(LMPlayerServer p, boolean leftClick)
 		{
 			if(chunkOwner.equals(p)) return true;
@@ -74,9 +79,11 @@ public class ChunkType
 	public boolean drawGrid()
 	{ return this != WILDERNESS && this != UNLOADED; }
 	
+	@Override
 	public int hashCode()
 	{ return ID; }
 	
+	@Override
 	public boolean equals(Object o)
 	{ return hashCode() == o.hashCode(); }
 	

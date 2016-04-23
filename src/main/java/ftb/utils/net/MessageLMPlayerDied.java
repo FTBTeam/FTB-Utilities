@@ -16,6 +16,7 @@ public class MessageLMPlayerDied extends MessageFTBU
 		io.writeInt(p.getPlayerID());
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{

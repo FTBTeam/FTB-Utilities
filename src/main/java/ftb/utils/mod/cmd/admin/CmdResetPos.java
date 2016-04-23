@@ -16,9 +16,11 @@ public class CmdResetPos extends CommandLM
 	public CmdResetPos()
 	{ super("reset_pos", CommandLevel.OP); }
 	
+	@Override
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <player>"; }
 	
+	@Override
 	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);

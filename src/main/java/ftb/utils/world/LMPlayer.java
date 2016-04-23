@@ -43,27 +43,35 @@ public abstract class LMPlayer implements ILMPlayer, Comparable<ILMPlayer> // LM
 	public void setProfile(GameProfile p)
 	{ if(p != null) gameProfile = p; }
 	
+	@Override
 	public final int getPlayerID()
 	{ return playerID; }
 	
+	@Override
 	public final GameProfile getProfile()
 	{ return gameProfile; }
 	
+	@Override
 	public boolean isFriendRaw(ILMPlayer p)
 	{ return p != null && (playerID == p.getPlayerID() || friends.contains(p.getPlayerID())); }
 	
+	@Override
 	public boolean isFriend(ILMPlayer p)
 	{ return p != null && isFriendRaw(p) && p.isFriendRaw(this); }
 	
+	@Override
 	public final int compareTo(ILMPlayer o)
 	{ return Integer.compare(playerID, o.getPlayerID()); }
 	
+	@Override
 	public String toString()
 	{ return gameProfile.getName(); }
 	
+	@Override
 	public final int hashCode()
 	{ return playerID; }
 	
+	@Override
 	public boolean equals(Object o)
 	{
 		if(o == null) return false;
@@ -71,7 +79,7 @@ public abstract class LMPlayer implements ILMPlayer, Comparable<ILMPlayer> // LM
 		else if(o instanceof Integer || o instanceof LMPlayer)
 		{
 			int h = o.hashCode();
-			return (h <= 0) ? false : h == playerID;
+			return h > 0 && h == playerID;
 		}
 		return o != null && (o == this || equalsPlayer(getWorld().getPlayer(o)));
 	}
@@ -105,6 +113,7 @@ public abstract class LMPlayer implements ILMPlayer, Comparable<ILMPlayer> // LM
 	public PersonalSettings getSettings()
 	{ return null; }
 	
+	@Override
 	public boolean allowInteractSecure()
 	{ return false; }
 }

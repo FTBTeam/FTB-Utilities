@@ -26,15 +26,19 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 		playerMap = new HashMap<>();
 	}
 	
+	@Override
 	public Map<Integer, ? extends LMPlayer> playerMap()
 	{ return playerMap; }
 	
+	@Override
 	public World getMCWorld()
 	{ return FTBLibClient.mc.theWorld; }
 	
+	@Override
 	public LMWorldClient getClientWorld()
 	{ return this; }
 	
+	@Override
 	public LMPlayerClient getPlayer(Object o)
 	{
 		LMPlayer p = super.getPlayer(o);

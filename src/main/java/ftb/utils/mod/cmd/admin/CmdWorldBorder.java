@@ -24,6 +24,7 @@ public class CmdWorldBorder extends CommandSubLM
 		public CmdOn(String s)
 		{ super(s, CommandLevel.OP); }
 		
+		@Override
 		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			LMWorldServer.inst.settings.border_enabled.set(true);
@@ -37,6 +38,7 @@ public class CmdWorldBorder extends CommandSubLM
 		public CmdOff(String s)
 		{ super(s, CommandLevel.OP); }
 		
+		@Override
 		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			LMWorldServer.inst.settings.border_enabled.set(false);
@@ -50,6 +52,7 @@ public class CmdWorldBorder extends CommandSubLM
 		public CmdSet(String s)
 		{ super(s, CommandLevel.OP); }
 		
+		@Override
 		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			checkArgs(args, 2);
@@ -67,6 +70,7 @@ public class CmdWorldBorder extends CommandSubLM
 		public CmdGet(String s)
 		{ super(s, CommandLevel.OP); }
 		
+		@Override
 		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			checkArgs(args, 1);
@@ -80,6 +84,7 @@ public class CmdWorldBorder extends CommandSubLM
 		public CmdCenter(String s)
 		{ super(s, CommandLevel.OP); }
 		
+		@Override
 		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			int x, z, dim;

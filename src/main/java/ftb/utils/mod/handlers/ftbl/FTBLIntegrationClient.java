@@ -25,6 +25,7 @@ public class FTBLIntegrationClient extends FTBLIntegration
 	public static final ResourceLocation world_border_tex = new ResourceLocation("ftbu", "textures/map/world_border.png");
 	private static final CubeRenderer worldBorderRenderer = new CubeRenderer();
 	
+	@Override
 	public void onReloaded(EventFTBReload e)
 	{
 		super.onReloaded(e);
@@ -37,6 +38,7 @@ public class FTBLIntegrationClient extends FTBLIntegration
 		}
 	}
 	
+	@Override
 	public void onFTBWorldClient(EventFTBWorldClient e)
 	{
 		ClientNotifications.init();
@@ -49,6 +51,7 @@ public class FTBLIntegrationClient extends FTBLIntegration
 		}
 	}
 	
+	@Override
 	public void readWorldData(ByteIOStream io)
 	{
 		LMWorldClient.inst = new LMWorldClient(io.readInt());
@@ -57,9 +60,11 @@ public class FTBLIntegrationClient extends FTBLIntegration
 		new EventLMWorldClient(LMWorldClient.inst, false).post();
 	}
 	
+	@Override
 	public boolean hasClientWorld()
 	{ return LMWorldClient.inst != null && LMWorldClient.inst.clientPlayerID > 0 && LMWorldClient.inst.clientPlayer != null; }
 	
+	@Override
 	public void renderWorld(float pt)
 	{
 		if(!FTBLibClient.isIngameWithFTBU() || !LMWorldClient.inst.settings.border_enabled.getAsBoolean()) return;
@@ -139,6 +144,7 @@ public class FTBLIntegrationClient extends FTBLIntegration
 		GlStateManager.popAttrib();
 	}
 	
+	@Override
 	public void onTooltip(ItemTooltipEvent e)
 	{
 	}

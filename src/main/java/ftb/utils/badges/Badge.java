@@ -25,6 +25,7 @@ public class Badge extends FinalIDObject
 		imageURL = url;
 	}
 	
+	@Override
 	public String toString()
 	{ return getID() + " : " + imageURL; }
 	

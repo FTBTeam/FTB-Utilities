@@ -15,6 +15,7 @@ public class MessageLMWorldUpdate extends MessageFTBU
 		w.writeDataToNet(io, self, false);
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{

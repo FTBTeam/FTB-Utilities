@@ -12,6 +12,7 @@ public class CmdUnclaim extends CommandLM
 	public CmdUnclaim()
 	{ super("unclaim", CommandLevel.OP); }
 	
+	@Override
 	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);

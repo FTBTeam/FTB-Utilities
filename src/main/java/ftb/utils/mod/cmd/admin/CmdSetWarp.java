@@ -13,9 +13,11 @@ public class CmdSetWarp extends CommandLM
 	public CmdSetWarp()
 	{ super("setwarp", CommandLevel.OP); }
 	
+	@Override
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <ID> [x] [y] [z]"; }
 	
+	@Override
 	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);

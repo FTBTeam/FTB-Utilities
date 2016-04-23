@@ -16,9 +16,11 @@ public class CmdHome extends CommandLM
 	public CmdHome()
 	{ super("home", CommandLevel.ALL); }
 	
+	@Override
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <ID>"; }
 	
+	@Override
 	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 	{
 		if(args.length == 1)
@@ -29,6 +31,7 @@ public class CmdHome extends CommandLM
 		return null;
 	}
 	
+	@Override
 	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);

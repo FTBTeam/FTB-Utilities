@@ -12,6 +12,7 @@ public class CmdRestart extends CommandLM
 	public CmdRestart()
 	{ super("restart", CommandLevel.OP); }
 	
+	@Override
 	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		restart();

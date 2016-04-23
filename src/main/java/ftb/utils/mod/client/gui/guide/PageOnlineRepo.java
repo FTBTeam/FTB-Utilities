@@ -29,9 +29,11 @@ public class PageOnlineRepo extends InfoPage
 		getTitleComponent().getChatStyle().setColor(EnumChatFormatting.GREEN);
 	}
 	
+	@Override
 	public ButtonInfoPage createButton(GuiInfo g)
 	{ return new ButtonInfoPage(g, this, new TextureCoords(repo.getIcon(), 0, 0, 16, 16, 16, 16)).setIconBlur(); }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void refreshGui(GuiInfo gui)
 	{
@@ -52,6 +54,7 @@ public class PageOnlineRepo extends InfoPage
 		public LineDownload(InfoPage c)
 		{ super(c, "download"); }
 		
+		@Override
 		public ButtonInfoTextLine createWidget(GuiInfo gui)
 		{ return new ButtonDownloadLine(gui, this); }
 	}
@@ -76,12 +79,14 @@ public class PageOnlineRepo extends InfoPage
 			width = gui.getFontRenderer().getStringWidth(title) + 20;
 		}
 		
+		@Override
 		public void onButtonPressed(int b)
 		{
 			if(thread != null) return;
 			
 			thread = new Thread()
 			{
+				@Override
 				public void run()
 				{
 					try
@@ -103,6 +108,7 @@ public class PageOnlineRepo extends InfoPage
 			thread.start();
 		}
 		
+		@Override
 		public void renderWidget()
 		{
 			int ay = getAY();

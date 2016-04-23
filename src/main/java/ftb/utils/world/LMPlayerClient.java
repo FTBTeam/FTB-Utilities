@@ -29,24 +29,30 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 	public ResourceLocation getSkin()
 	{ return FTBLibClient.getSkinTexture(getProfile().getName()); }
 	
+	@Override
 	public LMWorld getWorld()
 	{ return world; }
 	
+	@Override
 	public Side getSide()
 	{ return Side.CLIENT; }
 	
+	@Override
 	public boolean isOnline()
 	{ return isOnline; }
 	
+	@Override
 	public LMPlayerServer toPlayerMP()
 	{ return null; }
 	
+	@Override
 	public LMPlayerClient toPlayerSP()
 	{ return this; }
 	
 	public LMPlayerClientSelf toPlayerSPSelf()
 	{ return null; }
 	
+	@Override
 	public EntityPlayerSP getPlayer()
 	{ return isOnline() ? FTBLibClient.getPlayerSP(getProfile().getId()) : null; }
 	

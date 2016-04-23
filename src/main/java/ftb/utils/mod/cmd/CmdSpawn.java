@@ -13,6 +13,7 @@ public class CmdSpawn extends CommandLM
 	public CmdSpawn()
 	{ super("spawn", CommandLevel.ALL); }
 	
+	@Override
 	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);

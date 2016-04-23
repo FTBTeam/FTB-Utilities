@@ -60,6 +60,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 		return t;
 	}
 	
+	@Override
 	public List<ForgeChunkManager.Ticket> ticketsLoaded(List<ForgeChunkManager.Ticket> tickets, World world, int maxTicketCount)
 	{
 		table.remove(world);
@@ -82,6 +83,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 		return tickets1;
 	}
 	
+	@Override
 	public void ticketsLoaded(List<ForgeChunkManager.Ticket> tickets, World world)
 	{
 		for(ForgeChunkManager.Ticket t : tickets)

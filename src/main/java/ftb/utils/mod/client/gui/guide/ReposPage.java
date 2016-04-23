@@ -37,10 +37,12 @@ public class ReposPage extends InfoPage
 		}
 	}
 	
+	@Override
 	public ButtonLM createSpecialButton(final GuiInfo guiInfo)
 	{
 		ButtonLM button = new ButtonLM(guiInfo, 0, 0, 16, 16)
 		{
+			@Override
 			public void onButtonPressed(int b)
 			{
 				clear();
@@ -49,6 +51,7 @@ public class ReposPage extends InfoPage
 				runRefreshThread();
 			}
 			
+			@Override
 			public void renderWidget()
 			{
 				render(GuiIcons.refresh);
@@ -59,6 +62,7 @@ public class ReposPage extends InfoPage
 		return button;
 	}
 	
+	@Override
 	public void refreshGui(GuiInfo gui)
 	{
 		clear();
@@ -81,6 +85,7 @@ public class ReposPage extends InfoPage
 		
 		thread = new Thread()
 		{
+			@Override
 			public void run()
 			{
 				GuideRepoList.refreshOnlineRepos();

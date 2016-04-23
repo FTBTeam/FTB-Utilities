@@ -45,6 +45,7 @@ public class FTBUChatEventHandler
 			
 			FTBLib.addCallback(new ServerTickCallback()
 			{
+				@Override
 				public void onCallback()
 				{
 					for(LMPlayer p : LMWorldServer.inst.getAllOnlinePlayers())

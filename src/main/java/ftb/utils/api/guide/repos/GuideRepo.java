@@ -23,6 +23,7 @@ public abstract class GuideRepo extends FinalIDObject
 	public abstract ResourceLocation getIcon();
 	public abstract boolean isLocal();
 	
+	@Override
 	public String toString()
 	{ return getInfo().name; }
 	

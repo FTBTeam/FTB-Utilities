@@ -21,6 +21,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public static final ConfigEntryBool sort_friends_az = new ConfigEntryBool("sort_friends_az", false);
 	public static final ConfigEntryBool loaded_chunks_space_key = new ConfigEntryBool("loaded_chunks_space_key", false);
 	
+	@Override
 	public void preInit()
 	{
 		ClientConfigRegistry.addGroup("ftbu", FTBUClient.class);
@@ -28,6 +29,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		FTBUActions.init();
 	}
 	
+	@Override
 	public void postInit()
 	{
 		LMGuiHandlerRegistry.add(FTBUGuiHandler.instance);
@@ -52,6 +54,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		}
 	}
 	
+	@Override
 	public LMWorld getClientWorldLM()
 	{ return LMWorldClient.inst; }
 }

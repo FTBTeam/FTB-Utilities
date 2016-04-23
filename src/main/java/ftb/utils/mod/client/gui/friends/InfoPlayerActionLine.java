@@ -27,6 +27,7 @@ public class InfoPlayerActionLine extends InfoTextLine
 		action = a;
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public ButtonInfoTextLine createWidget(GuiInfo gui)
 	{ return new ButtonInfoPlayerAction(gui, this); }
@@ -41,16 +42,19 @@ public class InfoPlayerActionLine extends InfoTextLine
 			width = (action.icon == null ? 8 : 24) + g.getFontRenderer().getStringWidth(title);
 		}
 		
+		@Override
 		public void addMouseOverText(List<String> l)
 		{
 		}
 		
+		@Override
 		public void onButtonPressed(int b)
 		{
 			FTBLibClient.playClickSound();
 			action.onClicked(LMWorldClient.inst.clientPlayer, playerLM);
 		}
 		
+		@Override
 		public void renderWidget()
 		{
 			int ay = getAY();

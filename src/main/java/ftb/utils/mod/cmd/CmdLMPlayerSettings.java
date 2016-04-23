@@ -32,12 +32,14 @@ public class CmdLMPlayerSettings extends CommandSubLM
 			flag = f;
 		}
 		
+		@Override
 		public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 		{
 			if(args.length == 1) return getListOfStringsMatchingLastWord(args, "true", "false");
 			return null;
 		}
 		
+		@Override
 		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			checkArgs(args, 1);
@@ -54,12 +56,14 @@ public class CmdLMPlayerSettings extends CommandSubLM
 		public CmdBlockSecurity(String s)
 		{ super(s, CommandLevel.ALL); }
 		
+		@Override
 		public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 		{
 			if(args.length == 1) return getListOfStringsMatchingLastWord(args, PrivacyLevel.getNames());
 			return null;
 		}
 		
+		@Override
 		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			checkArgs(args, 1);
@@ -88,12 +92,14 @@ public class CmdLMPlayerSettings extends CommandSubLM
 			super(s, CommandLevel.ALL);
 		}
 		
+		@Override
 		public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 		{
 			if(args.length == 1) return getListOfStringsMatchingLastWord(args, "true", "false");
 			return null;
 		}
 		
+		@Override
 		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			checkArgs(args, 1);

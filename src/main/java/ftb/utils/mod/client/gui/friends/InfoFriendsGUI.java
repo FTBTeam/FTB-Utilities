@@ -26,6 +26,7 @@ public class InfoFriendsGUI extends InfoPage
 		useUnicodeFont = Boolean.FALSE;
 	}
 	
+	@Override
 	public void refreshGui(GuiInfo gui)
 	{
 		clear();

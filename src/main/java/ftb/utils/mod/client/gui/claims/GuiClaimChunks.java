@@ -81,6 +81,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		
 		buttonClose = new ButtonLM(this, 0, 0, 16, 16)
 		{
+			@Override
 			public void onButtonPressed(int b)
 			{
 				FTBLibClient.playClickSound();
@@ -90,6 +91,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		
 		buttonRefresh = new ButtonLM(this, 0, 16, 16, 16)
 		{
+			@Override
 			public void onButtonPressed(int b)
 			{
 				thread = new ThreadReloadArea(mc.theWorld, GuiClaimChunks.this);
@@ -104,6 +106,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		
 		buttonUnclaimAll = new ButtonLM(this, 0, 32, 16, 16)
 		{
+			@Override
 			public void onButtonPressed(int b)
 			{
 				FTBLibClient.playClickSound();
@@ -111,6 +114,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 				FTBLibClient.openGui(new GuiYesNo(GuiClaimChunks.this, s, "", isShiftKeyDown() ? 1 : 0));
 			}
 			
+			@Override
 			public void addMouseOverText(List<String> l)
 			{
 				if(isShiftKeyDown()) l.add(FTBULang.button_claims_unclaim_all.format());
@@ -121,6 +125,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		
 		panelButtons = new PanelLM(this, 0, 0, 16, 0)
 		{
+			@Override
 			public void addWidgets()
 			{
 				add(buttonClose);
@@ -134,9 +139,11 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 				height = widgets.size() * 16;
 			}
 			
+			@Override
 			public int getAX()
 			{ return gui.getGui().width - 16; }
 			
+			@Override
 			public int getAY()
 			{ return 0; }
 		};
@@ -146,17 +153,20 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			mapButtons.add(new MapButton(this, 0, 0, i));
 	}
 	
+	@Override
 	public void initLMGui()
 	{
 		buttonRefresh.onButtonPressed(0);
 	}
 	
+	@Override
 	public void addWidgets()
 	{
 		mainPanel.addAll(mapButtons);
 		mainPanel.add(panelButtons);
 	}
 	
+	@Override
 	public void drawBackground()
 	{
 		if(currentDim != FTBLibClient.getDim() || !FTBLibClient.isIngameWithFTBU())
@@ -217,6 +227,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		}
 	}
 	
+	@Override
 	public void drawText(List<String> l)
 	{
 		String s = FTBULang.label_cchunks_count.format(playerLM.claimedChunks + " / " + playerLM.maxClaimedChunks);
@@ -227,6 +238,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		super.drawText(l);
 	}
 	
+	@Override
 	public void onLMGuiClosed()
 	{
 	}
@@ -297,6 +309,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		}
 	}
 	
+	@Override
 	public void confirmClicked(boolean set, int id)
 	{
 		if(set && adminToken == 0L)
@@ -324,6 +337,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			chunkY = g.startY + (i / tiles_gui);
 		}
 		
+		@Override
 		public void onButtonPressed(int b)
 		{
 			if(gui.panelButtons.mouseOver()) return;
@@ -333,9 +347,11 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			FTBLibClient.playClickSound();
 		}
 		
+		@Override
 		public void addMouseOverText(List<String> l)
 		{ ClaimedAreasClient.getMessage(chunkX, chunkY, l, isShiftKeyDown()); }
 		
+		@Override
 		public void renderWidget()
 		{
 			if(mouseOver())

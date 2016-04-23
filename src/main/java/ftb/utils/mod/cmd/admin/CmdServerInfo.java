@@ -19,6 +19,7 @@ public class CmdServerInfo extends CommandLM
 	public CmdServerInfo()
 	{ super("server_info", CommandLevel.OP); }
 	
+	@Override
 	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);

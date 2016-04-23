@@ -23,6 +23,7 @@ public class InfoFriendsGUISelfPage extends InfoFriendsGUIPage
 		super(LMWorldClient.inst.clientPlayer);
 	}
 	
+	@Override
 	public void refreshGui(GuiInfo gui)
 	{
 		clear();
@@ -46,6 +47,7 @@ public class InfoFriendsGUISelfPage extends InfoFriendsGUIPage
 		
 		page = new InfoPage("settings")
 		{
+			@Override
 			public void refreshGui(GuiInfo gui)
 			{
 				clear();

@@ -17,9 +17,11 @@ public class MessageRequestBadge extends MessageFTBU
 		io.writeUUID(id);
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBUNetHandler.NET_INFO; }
 	
+	@Override
 	public IMessage onMessage(MessageContext ctx)
 	{
 		UUID id = io.readUUID();

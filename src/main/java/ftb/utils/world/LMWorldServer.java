@@ -38,12 +38,15 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		customServerData = new ConfigGroup("custom_server_data");
 	}
 	
+	@Override
 	public Map<Integer, ? extends LMPlayer> playerMap()
 	{ return playerMap; }
 	
+	@Override
 	public World getMCWorld()
 	{ return FTBLib.getServerWorld(); }
 	
+	@Override
 	public LMWorldServer getServerWorld()
 	{ return this; }
 	
@@ -54,6 +57,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		FTBUChunkEventHandler.instance.clear();
 	}
 	
+	@Override
 	public LMPlayerServer getPlayer(Object o)
 	{
 		if(o instanceof FakePlayer) return new LMFakeServerPlayer(this, (FakePlayer) o);
@@ -156,6 +160,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	public void update(LMPlayerServer self)
 	{ new MessageLMWorldUpdate(this, self).sendTo(null); }
 	
+	@Override
 	public List<LMPlayerServer> getAllOnlinePlayers()
 	{
 		ArrayList<LMPlayerServer> l = new ArrayList<>();
@@ -171,6 +176,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		
 		Collections.sort(list, new Comparator<LMPlayerServer>()
 		{
+			@Override
 			public int compare(LMPlayerServer o1, LMPlayerServer o2)
 			{
 				if(o1.isOnline() == o2.isOnline())

@@ -21,11 +21,13 @@ public class FTBUGuiHandler extends LMGuiHandler
 	public FTBUGuiHandler(String s)
 	{ super(s); }
 	
+	@Override
 	public Container getContainer(EntityPlayer ep, int id, NBTTagCompound data)
 	{
 		return new ContainerEmpty(ep, null);
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public GuiScreen getGui(EntityPlayer ep, int id, NBTTagCompound data)
 	{

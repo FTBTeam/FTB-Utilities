@@ -9,12 +9,14 @@ public abstract class ClientAction
 {
 	public static final ClientAction NULL = new ClientAction()
 	{
+		@Override
 		public boolean onAction(int extra, LMPlayerServer owner)
 		{ return false; }
 	};
 	
 	public static final ClientAction ADD_FRIEND = new ClientAction()
 	{
+		@Override
 		public boolean onAction(int extra, LMPlayerServer owner)
 		{
 			if(extra > 0)
@@ -50,6 +52,7 @@ public abstract class ClientAction
 	
 	public static final ClientAction REM_FRIEND = new ClientAction()
 	{
+		@Override
 		public boolean onAction(int extra, LMPlayerServer owner)
 		{
 			LMPlayerServer p = owner.world.getPlayer(extra);
@@ -69,6 +72,7 @@ public abstract class ClientAction
 	
 	public static final ClientAction DENY_FRIEND = new ClientAction()
 	{
+		@Override
 		public boolean onAction(int extra, LMPlayerServer owner)
 		{
 			LMPlayerServer p = owner.world.getPlayer(extra);
@@ -87,6 +91,7 @@ public abstract class ClientAction
 	
 	public static final ClientAction REQUEST_PLAYER_INFO = new ClientAction()
 	{
+		@Override
 		public boolean onAction(int extra, LMPlayerServer owner)
 		{
 			new MessageLMPlayerInfo(owner, extra).sendTo(owner.getPlayer());
@@ -96,6 +101,7 @@ public abstract class ClientAction
 	
 	public static final ClientAction REQUEST_SERVER_INFO = new ClientAction()
 	{
+		@Override
 		public boolean onAction(int extra, LMPlayerServer owner)
 		{
 			new ServerInfoFile(owner).displayGuide(owner.getPlayer());
@@ -105,6 +111,7 @@ public abstract class ClientAction
 	
 	public static final ClientAction REQUEST_SELF_UPDATE = new ClientAction()
 	{
+		@Override
 		public boolean onAction(int extra, LMPlayerServer owner)
 		{
 			new MessageLMPlayerUpdate(owner, true).sendTo(owner.getPlayer());
@@ -114,6 +121,7 @@ public abstract class ClientAction
 	
 	public static final ClientAction BUTTON_RENDER_BADGE = new ClientAction()
 	{
+		@Override
 		public boolean onAction(int extra, LMPlayerServer owner)
 		{
 			owner.renderBadge = extra == 1;
@@ -123,6 +131,7 @@ public abstract class ClientAction
 	
 	public static final ClientAction BUTTON_CHAT_LINKS = new ClientAction()
 	{
+		@Override
 		public boolean onAction(int extra, LMPlayerServer owner)
 		{
 			owner.getSettings().set(PersonalSettings.CHAT_LINKS, extra == 1);

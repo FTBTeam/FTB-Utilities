@@ -30,6 +30,7 @@ public class FTBUConfigLogin
 			components.add(new ChatComponentText("Welcome to the server!"));
 		}
 		
+		@Override
 		public void func_152753_a(JsonElement o)
 		{
 			components.clear();
@@ -48,6 +49,7 @@ public class FTBUConfigLogin
 			}
 		}
 		
+		@Override
 		public JsonElement getSerializableElement()
 		{
 			JsonArray a = new JsonArray();
@@ -72,6 +74,7 @@ public class FTBUConfigLogin
 			items.add(new ItemStack(Items.apple, 16));
 		}
 		
+		@Override
 		public void func_152753_a(JsonElement o)
 		{
 			items.clear();
@@ -90,6 +93,7 @@ public class FTBUConfigLogin
 			}
 		}
 		
+		@Override
 		public JsonElement getSerializableElement()
 		{
 			JsonArray a = new JsonArray();

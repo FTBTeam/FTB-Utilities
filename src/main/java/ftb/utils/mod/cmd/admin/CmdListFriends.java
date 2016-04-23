@@ -1,9 +1,11 @@
 package ftb.utils.mod.cmd.admin;
 
-import ftb.lib.api.cmd.*;
+import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLevel;
 import ftb.utils.world.LMPlayerServer;
 import latmod.lib.LMStringUtils;
-import net.minecraft.command.*;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 
 public class CmdListFriends extends CommandLM

@@ -1,9 +1,14 @@
 package ftb.utils.mod.cmd;
 
-import ftb.lib.*;
-import ftb.lib.api.cmd.*;
-import ftb.utils.world.*;
-import net.minecraft.command.*;
+import ftb.lib.FTBLib;
+import ftb.lib.PrivacyLevel;
+import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLevel;
+import ftb.lib.api.cmd.CommandSubLM;
+import ftb.utils.world.LMPlayerServer;
+import ftb.utils.world.PersonalSettings;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 
 import java.util.List;
 

@@ -1,15 +1,18 @@
 package ftb.utils.mod.config;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import ftb.lib.JsonHelper;
 import ftb.lib.api.config.ConfigEntryCustom;
 import ftb.lib.api.item.ItemStackSerializer;
 import latmod.lib.annotations.Info;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FTBUConfigLogin
 {

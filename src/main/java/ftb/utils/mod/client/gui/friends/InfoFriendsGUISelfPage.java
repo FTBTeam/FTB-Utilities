@@ -1,16 +1,24 @@
 package ftb.utils.mod.client.gui.friends;
 
 import com.google.gson.JsonPrimitive;
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.*;
-import ftb.lib.api.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.FTBLib;
+import ftb.lib.PrivacyLevel;
+import ftb.lib.api.GuiLang;
+import ftb.lib.api.PlayerAction;
 import ftb.lib.api.gui.PlayerActionRegistry;
 import ftb.lib.api.info.InfoPage;
 import ftb.lib.api.info.lines.InfoExtendedTextLine;
-import ftb.lib.api.notification.*;
+import ftb.lib.api.notification.ClickAction;
+import ftb.lib.api.notification.ClickActionType;
 import ftb.lib.mod.client.gui.info.GuiInfo;
-import ftb.utils.world.*;
-import net.minecraft.util.*;
+import ftb.utils.world.LMWorldClient;
+import ftb.utils.world.PersonalSettings;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 
 /**
  * Created by LatvianModder on 24.03.2016.

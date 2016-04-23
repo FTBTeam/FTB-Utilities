@@ -1,11 +1,16 @@
 package ftb.utils.api.guide;
 
-import ftb.lib.api.*;
+import ftb.lib.api.GuiLang;
+import ftb.lib.api.LangKey;
 import ftb.utils.world.LMPlayerServer;
-import latmod.lib.*;
+import latmod.lib.LMStringUtils;
+import latmod.lib.LMUtils;
+import latmod.lib.MathHelperLM;
 import latmod.lib.util.FinalIDObject;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class Top extends FinalIDObject implements Comparator<LMPlayerServer>
 {

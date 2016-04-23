@@ -1,11 +1,16 @@
 package ftb.utils.api.guide.repos;
 
-import com.google.gson.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import ftb.lib.JsonHelper;
 import latmod.lib.util.FinalIDObject;
-import net.minecraft.util.*;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by LatvianModder on 03.04.2016.

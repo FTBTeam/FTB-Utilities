@@ -1,8 +1,12 @@
 package ftb.utils.net;
 
-import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.*;
-import ftb.utils.world.*;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ftb.utils.world.LMPlayerServer;
+import ftb.utils.world.LMWorldClient;
+import ftb.utils.world.LMWorldServer;
 import latmod.lib.ByteCount;
 
 public class MessageLMWorldUpdate extends MessageFTBU

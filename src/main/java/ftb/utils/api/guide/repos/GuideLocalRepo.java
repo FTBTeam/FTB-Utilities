@@ -4,8 +4,11 @@ import ftb.lib.api.client.FTBLibClient;
 import latmod.lib.net.Response;
 import net.minecraft.util.ResourceLocation;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by LatvianModder on 03.04.2016.

@@ -1,7 +1,9 @@
 package ftb.utils.mod;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.gui.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.api.gui.ContainerEmpty;
+import ftb.lib.api.gui.LMGuiHandler;
 import ftb.lib.mod.client.gui.info.GuiInfo;
 import ftb.utils.mod.client.gui.claims.GuiClaimChunks;
 import ftb.utils.mod.client.gui.friends.InfoFriendsGUI;

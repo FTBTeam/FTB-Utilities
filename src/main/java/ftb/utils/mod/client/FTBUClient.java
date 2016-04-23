@@ -1,16 +1,21 @@
 package ftb.utils.mod.client;
 
 import com.google.gson.JsonElement;
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.EventBusHelper;
 import ftb.lib.api.GameModes;
-import ftb.lib.api.config.*;
+import ftb.lib.api.config.ClientConfigRegistry;
+import ftb.lib.api.config.ConfigEntryBool;
 import ftb.lib.api.gui.LMGuiHandlerRegistry;
-import ftb.utils.api.guide.repos.*;
+import ftb.utils.api.guide.repos.GuideOnlineRepo;
+import ftb.utils.api.guide.repos.GuideRepoList;
 import ftb.utils.badges.BadgeRenderer;
-import ftb.utils.mod.*;
+import ftb.utils.mod.FTBUCommon;
+import ftb.utils.mod.FTBUGuiHandler;
 import ftb.utils.mod.cmd.CmdMath;
-import ftb.utils.world.*;
+import ftb.utils.world.LMWorld;
+import ftb.utils.world.LMWorldClient;
 import net.minecraftforge.client.ClientCommandHandler;
 
 @SideOnly(Side.CLIENT)

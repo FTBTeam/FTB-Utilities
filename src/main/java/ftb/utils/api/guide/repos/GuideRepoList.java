@@ -3,9 +3,11 @@ package ftb.utils.api.guide.repos;
 import com.google.gson.JsonElement;
 import ftb.lib.FTBLib;
 import latmod.lib.LMUtils;
-import latmod.lib.net.*;
+import latmod.lib.net.LMURLConnection;
+import latmod.lib.net.RequestMethod;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by LatvianModder on 03.04.2016.

@@ -1,11 +1,17 @@
 package ftb.utils.mod.handlers;
 
-import cpw.mods.fml.common.eventhandler.*;
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ftb.lib.FTBLib;
 import ftb.lib.api.ServerTickCallback;
-import ftb.utils.world.*;
-import net.minecraft.event.*;
-import net.minecraft.util.*;
+import ftb.utils.world.LMPlayer;
+import ftb.utils.world.LMWorldServer;
+import ftb.utils.world.PersonalSettings;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.event.HoverEvent;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 
 import java.util.ArrayList;
 

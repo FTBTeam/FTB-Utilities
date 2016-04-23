@@ -1,6 +1,7 @@
 package ftb.utils.mod.cmd.admin;
 
-import ftb.lib.api.cmd.*;
+import ftb.lib.api.cmd.CommandLevel;
+import ftb.lib.api.cmd.CommandSubLM;
 import ftb.utils.mod.config.FTBUConfigCmd;
 
 public class CmdAdmin extends CommandSubLM

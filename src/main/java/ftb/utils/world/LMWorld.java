@@ -1,6 +1,7 @@
 package ftb.utils.world;
 
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.FTBLib;
 import ftb.lib.api.config.ConfigGroup;
 import ftb.utils.mod.FTBU;
@@ -10,7 +11,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public abstract class LMWorld // FTBWorld
 {

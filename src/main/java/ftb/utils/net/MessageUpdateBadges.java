@@ -1,9 +1,12 @@
 package ftb.utils.net;
 
-import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.utils.badges.*;
+import ftb.utils.badges.Badge;
+import ftb.utils.badges.ClientBadges;
 import latmod.lib.ByteCount;
 
 import java.util.Collection;

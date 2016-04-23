@@ -1,14 +1,19 @@
 package ftb.utils.world;
 
 import com.mojang.authlib.GameProfile;
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.FTBLib;
+import ftb.lib.LMNBTUtils;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.utils.api.EventLMPlayerClient;
-import latmod.lib.*;
+import latmod.lib.ByteCount;
+import latmod.lib.ByteIOStream;
 import net.minecraft.world.World;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @SideOnly(Side.CLIENT)
 public class LMWorldClient extends LMWorld // LMWorldServer

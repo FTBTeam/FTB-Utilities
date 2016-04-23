@@ -1,10 +1,12 @@
 package ftb.utils.badges;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.utils.mod.client.FTBUClient;
-import ftb.utils.world.*;
+import ftb.utils.world.LMPlayerClient;
+import ftb.utils.world.LMWorldClient;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
 @SideOnly(Side.CLIENT)

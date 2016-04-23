@@ -2,7 +2,9 @@ package ftb.utils.world.claims;
 
 import ftb.lib.LMSecurity;
 import ftb.lib.api.LangKey;
-import ftb.utils.world.*;
+import ftb.utils.world.LMPlayer;
+import ftb.utils.world.LMPlayerServer;
+import ftb.utils.world.PersonalSettings;
 import net.minecraft.util.EnumChatFormatting;
 
 public class ChunkType

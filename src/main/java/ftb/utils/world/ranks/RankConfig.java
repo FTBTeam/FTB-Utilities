@@ -1,9 +1,17 @@
 package ftb.utils.world.ranks;
 
 import ftb.lib.PrivacyLevel;
-import ftb.lib.api.config.*;
+import ftb.lib.api.config.ConfigEntryBool;
+import ftb.lib.api.config.ConfigEntryEnum;
+import ftb.lib.api.config.ConfigEntryInt;
+import ftb.lib.api.config.ConfigEntryIntList;
+import ftb.lib.api.config.ConfigEntryString;
+import ftb.lib.api.config.ConfigEntryStringList;
+import ftb.lib.api.config.ConfigGroup;
 import latmod.lib.IntList;
-import latmod.lib.annotations.*;
+import latmod.lib.annotations.Flags;
+import latmod.lib.annotations.Info;
+import latmod.lib.annotations.NumberBounds;
 import latmod.lib.util.EnumEnabled;
 
 import java.util.Collections;

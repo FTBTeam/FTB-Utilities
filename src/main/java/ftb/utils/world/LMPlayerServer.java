@@ -1,26 +1,46 @@
 package ftb.utils.world;
 
 import com.mojang.authlib.GameProfile;
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.BlockDimPos;
+import ftb.lib.EntityPos;
+import ftb.lib.FTBLib;
+import ftb.lib.LMDimUtils;
+import ftb.lib.LMNBTUtils;
 import ftb.lib.api.item.StringIDInvLoader;
-import ftb.lib.api.notification.*;
+import ftb.lib.api.notification.ClickAction;
+import ftb.lib.api.notification.MouseAction;
+import ftb.lib.api.notification.Notification;
 import ftb.utils.api.EventLMPlayerServer;
 import ftb.utils.mod.FTBULang;
 import ftb.utils.mod.client.FTBUClickAction;
 import ftb.utils.mod.handlers.FTBUChunkEventHandler;
-import ftb.utils.net.*;
-import ftb.utils.world.claims.*;
-import ftb.utils.world.ranks.*;
-import latmod.lib.*;
-import net.minecraft.command.*;
+import ftb.utils.net.MessageAreaUpdate;
+import ftb.utils.net.MessageLMPlayerUpdate;
+import ftb.utils.world.claims.ChunkType;
+import ftb.utils.world.claims.ClaimedChunk;
+import ftb.utils.world.ranks.Rank;
+import ftb.utils.world.ranks.RankConfig;
+import ftb.utils.world.ranks.Ranks;
+import latmod.lib.ByteCount;
+import latmod.lib.ByteIOStream;
+import latmod.lib.IntList;
+import latmod.lib.LMUtils;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatisticsFile;
-import net.minecraft.util.*;
-import net.minecraftforge.common.util.*;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
+import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.FakePlayer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class LMPlayerServer extends LMPlayer // LMPlayerClient
 {

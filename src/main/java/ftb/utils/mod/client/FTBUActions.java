@@ -1,11 +1,15 @@
 package ftb.utils.mod.client;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.FTBLib;
+import ftb.lib.TextureCoords;
 import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.friends.ILMPlayer;
-import ftb.lib.api.gui.*;
+import ftb.lib.api.gui.GuiIcons;
+import ftb.lib.api.gui.GuiScreenRegistry;
+import ftb.lib.api.gui.PlayerActionRegistry;
 import ftb.lib.mod.client.gui.info.GuiInfo;
 import ftb.utils.api.guide.ClientGuideFile;
 import ftb.utils.mod.client.gui.claims.GuiClaimChunks;

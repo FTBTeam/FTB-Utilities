@@ -1,16 +1,21 @@
 package ftb.utils.mod.client.gui.friends;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.client.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.client.GlStateManager;
 import ftb.lib.api.info.InfoPage;
 import ftb.lib.api.info.lines.InfoTextLine;
-import ftb.lib.mod.client.gui.info.*;
+import ftb.lib.mod.client.gui.info.ButtonInfoTextLine;
+import ftb.lib.mod.client.gui.info.GuiInfo;
 import ftb.utils.world.LMPlayerClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.*;
+import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 
 /**

@@ -1,7 +1,8 @@
 package ftb.utils.api;
 
 import cpw.mods.fml.relauncher.Side;
-import ftb.utils.world.*;
+import ftb.utils.world.LMPlayer;
+import ftb.utils.world.LMPlayerServer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IChatComponent;
 

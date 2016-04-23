@@ -4,13 +4,21 @@ import ftb.lib.api.client.FTBLibClient;
 import ftb.utils.api.guide.ClientGuideFile;
 import ftb.utils.mod.config.FTBUConfigGeneral;
 import latmod.lib.LMFileUtils;
-import latmod.lib.net.*;
+import latmod.lib.net.LMURLConnection;
+import latmod.lib.net.RequestMethod;
+import latmod.lib.net.Response;
 import net.minecraft.util.ResourceLocation;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.net.URL;
-import java.nio.channels.*;
-import java.util.*;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by LatvianModder on 03.04.2016.

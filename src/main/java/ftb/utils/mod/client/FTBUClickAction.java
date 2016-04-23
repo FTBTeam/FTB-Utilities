@@ -1,8 +1,10 @@
 package ftb.utils.mod.client;
 
 import com.google.gson.JsonElement;
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.notification.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.api.notification.ClickActionRegistry;
+import ftb.lib.api.notification.ClickActionType;
 import ftb.utils.net.ClientAction;
 
 public class FTBUClickAction

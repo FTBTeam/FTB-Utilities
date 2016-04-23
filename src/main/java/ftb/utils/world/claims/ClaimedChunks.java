@@ -1,18 +1,37 @@
 package ftb.utils.world.claims;
 
-import com.google.gson.*;
-import ftb.lib.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import ftb.lib.BlockDimPos;
+import ftb.lib.FTBLib;
+import ftb.lib.LMDimUtils;
+import ftb.lib.LMNBTUtils;
 import ftb.lib.api.item.LMInvUtils;
 import ftb.utils.mod.config.FTBUConfigGeneral;
-import ftb.utils.world.*;
-import latmod.lib.*;
+import ftb.utils.world.LMPlayer;
+import ftb.utils.world.LMPlayerServer;
+import ftb.utils.world.LMWorld;
+import ftb.utils.world.LMWorldServer;
+import ftb.utils.world.PersonalSettings;
+import latmod.lib.Bits;
+import latmod.lib.LMJsonUtils;
+import latmod.lib.LMMapUtils;
+import latmod.lib.LMUtils;
+import latmod.lib.MathHelperLM;
 import latmod.lib.util.EnumEnabled;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ClaimedChunks
 {

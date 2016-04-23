@@ -1,15 +1,20 @@
 package ftb.utils.mod.client.gui.friends;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.friends.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.api.friends.LMPNameComparator;
+import ftb.lib.api.friends.LMPStatusComparator;
 import ftb.lib.api.info.InfoPage;
 import ftb.lib.mod.client.gui.info.GuiInfo;
 import ftb.utils.mod.client.FTBUClient;
-import ftb.utils.world.*;
+import ftb.utils.world.LMPlayer;
+import ftb.utils.world.LMWorldClient;
 import latmod.lib.LMColor;
 import net.minecraft.util.ChatComponentText;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by LatvianModder on 23.03.2016.

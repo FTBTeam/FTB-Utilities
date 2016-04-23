@@ -1,7 +1,9 @@
 package ftb.utils.badges;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.client.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.client.GlStateManager;
 import ftb.lib.api.gui.GuiLM;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.entity.player.EntityPlayer;

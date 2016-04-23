@@ -1,26 +1,37 @@
 package ftb.utils.mod.client.gui.claims;
 
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.TextureCoords;
-import ftb.lib.api.*;
-import ftb.lib.api.client.*;
-import ftb.lib.api.gui.*;
-import ftb.lib.api.gui.widgets.*;
+import ftb.lib.api.GuiLang;
+import ftb.lib.api.MouseButton;
+import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.client.GlStateManager;
+import ftb.lib.api.gui.GuiIcons;
+import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.widgets.ButtonLM;
+import ftb.lib.api.gui.widgets.PanelLM;
 import ftb.utils.mod.FTBULang;
 import ftb.utils.mod.client.FTBUClient;
-import ftb.utils.net.*;
-import ftb.utils.world.*;
+import ftb.utils.net.ClientAction;
+import ftb.utils.net.MessageAreaRequest;
+import ftb.utils.net.MessageClaimChunk;
+import ftb.utils.world.LMPlayerClientSelf;
+import ftb.utils.world.LMWorldClient;
 import ftb.utils.world.claims.ChunkType;
 import latmod.lib.MathHelperLM;
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import java.nio.ByteBuffer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // implements IClientActionGui

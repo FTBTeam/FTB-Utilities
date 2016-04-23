@@ -1,10 +1,14 @@
 package ftb.utils.mod.client.gui.claims;
 
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.client.FTBLibClient;
-import latmod.lib.*;
+import latmod.lib.LMColorUtils;
+import latmod.lib.MathHelperLM;
+import latmod.lib.PixelBuffer;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.*;
+import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;

@@ -1,15 +1,20 @@
 package ftb.utils.world;
 
 import com.mojang.authlib.GameProfile;
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.LMNBTUtils;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.utils.api.EventLMPlayerClient;
-import latmod.lib.*;
+import latmod.lib.ByteCount;
+import latmod.lib.ByteIOStream;
+import latmod.lib.IntList;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.util.*;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ResourceLocation;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClientSelf

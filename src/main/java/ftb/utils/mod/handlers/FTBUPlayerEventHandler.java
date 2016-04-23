@@ -2,24 +2,32 @@ package ftb.utils.mod.handlers;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
-import ftb.lib.*;
+import ftb.lib.EntityPos;
+import ftb.lib.FTBLib;
+import ftb.lib.LMDimUtils;
 import ftb.lib.api.notification.Notification;
 import ftb.utils.api.EventLMPlayerServer;
 import ftb.utils.mod.FTBULang;
 import ftb.utils.mod.config.FTBUConfigGeneral;
-import ftb.utils.net.*;
-import ftb.utils.world.*;
-import ftb.utils.world.claims.*;
+import ftb.utils.net.MessageLMPlayerDied;
+import ftb.utils.net.MessageLMPlayerLoggedOut;
+import ftb.utils.world.LMPlayerServer;
+import ftb.utils.world.LMWorldServer;
+import ftb.utils.world.claims.ChunkType;
+import ftb.utils.world.claims.ClaimedChunks;
 import latmod.lib.MathHelperLM;
 import latmod.lib.util.Pos2I;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.*;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
 public class FTBUPlayerEventHandler
 {

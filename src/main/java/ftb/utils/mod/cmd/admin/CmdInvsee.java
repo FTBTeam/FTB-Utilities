@@ -1,8 +1,10 @@
 package ftb.utils.mod.cmd.admin;
 
-import ftb.lib.api.cmd.*;
+import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLevel;
 import ftb.utils.mod.cmd.InvSeeInventory;
-import net.minecraft.command.*;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class CmdInvsee extends CommandLM

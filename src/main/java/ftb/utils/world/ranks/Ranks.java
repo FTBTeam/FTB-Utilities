@@ -1,10 +1,13 @@
 package ftb.utils.world.ranks;
 
-import ftb.lib.api.config.*;
+import ftb.lib.api.config.ConfigEntryString;
+import ftb.lib.api.config.ConfigFile;
+import ftb.lib.api.config.ConfigGroup;
 import ftb.utils.world.LMPlayerServer;
 import net.minecraft.util.EnumChatFormatting;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class Ranks
 {

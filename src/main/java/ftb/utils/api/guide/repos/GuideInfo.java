@@ -1,8 +1,11 @@
 package ftb.utils.api.guide.repos;
 
-import com.google.gson.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by LatvianModder on 03.04.2016.

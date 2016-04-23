@@ -1,8 +1,12 @@
 package ftb.utils.api.guide;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.*;
-import ftb.lib.api.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.FTBLib;
+import ftb.lib.FTBWorld;
+import ftb.lib.api.GameMode;
+import ftb.lib.api.GameModes;
+import ftb.lib.api.MouseButton;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.api.gui.widgets.ButtonLM;
@@ -16,7 +20,8 @@ import latmod.lib.LMUtils;
 import net.minecraft.util.ChatComponentTranslation;
 
 import java.io.File;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ClientGuideFile extends InfoPage
 {

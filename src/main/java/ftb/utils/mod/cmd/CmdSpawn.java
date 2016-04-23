@@ -1,9 +1,12 @@
 package ftb.utils.mod.cmd;
 
-import ftb.lib.*;
-import ftb.lib.api.cmd.*;
+import ftb.lib.BlockDimPos;
+import ftb.lib.LMDimUtils;
+import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLevel;
 import ftb.utils.mod.FTBULang;
-import net.minecraft.command.*;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;

@@ -1,8 +1,14 @@
 package ftb.utils.world.claims;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.utils.world.*;
-import latmod.lib.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ftb.utils.world.LMPlayerClient;
+import ftb.utils.world.LMPlayerServer;
+import ftb.utils.world.LMWorldClient;
+import ftb.utils.world.LMWorldServer;
+import latmod.lib.Bits;
+import latmod.lib.LMUtils;
+import latmod.lib.MathHelperLM;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.ChunkCoordIntPair;
 

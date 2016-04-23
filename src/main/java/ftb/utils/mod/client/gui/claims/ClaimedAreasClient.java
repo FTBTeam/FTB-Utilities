@@ -1,11 +1,15 @@
 package ftb.utils.mod.client.gui.claims;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.utils.world.*;
-import ftb.utils.world.claims.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ftb.utils.world.LMPlayerClient;
+import ftb.utils.world.LMWorldClient;
+import ftb.utils.world.claims.ChunkType;
+import ftb.utils.world.claims.ClaimedChunks;
 import latmod.lib.Bits;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class ClaimedAreasClient

@@ -1,13 +1,18 @@
 package ftb.utils.mod.client.gui.friends;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.api.MouseButton;
+import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.GlStateManager;
-import ftb.lib.api.gui.*;
+import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.PlayerActionRegistry;
 import ftb.lib.api.info.InfoPage;
-import ftb.lib.mod.client.gui.info.*;
+import ftb.lib.mod.client.gui.info.ButtonInfoPage;
+import ftb.lib.mod.client.gui.info.GuiInfo;
 import ftb.utils.net.ClientAction;
-import ftb.utils.world.*;
+import ftb.utils.world.LMPlayerClient;
+import ftb.utils.world.LMWorldClient;
 
 /**
  * Created by LatvianModder on 24.03.2016.

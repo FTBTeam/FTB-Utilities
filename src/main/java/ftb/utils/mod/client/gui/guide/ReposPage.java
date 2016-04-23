@@ -1,17 +1,23 @@
 package ftb.utils.mod.client.gui.guide;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.api.GuiLang;
+import ftb.lib.api.MouseButton;
 import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.api.gui.widgets.ButtonLM;
 import ftb.lib.api.info.InfoPage;
 import ftb.lib.mod.client.gui.info.GuiInfo;
-import ftb.utils.api.guide.repos.*;
-import latmod.lib.*;
+import ftb.utils.api.guide.repos.GuideOnlineRepo;
+import ftb.utils.api.guide.repos.GuideRepoList;
+import latmod.lib.LMColor;
+import latmod.lib.LMStringUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumChatFormatting;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by LatvianModder on 03.04.2016.

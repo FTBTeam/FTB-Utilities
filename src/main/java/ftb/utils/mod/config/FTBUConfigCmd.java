@@ -1,6 +1,7 @@
 package ftb.utils.mod.config;
 
-import ftb.lib.api.config.*;
+import ftb.lib.api.config.ConfigEntryBool;
+import ftb.lib.api.config.ConfigEntryString;
 
 public class FTBUConfigCmd
 {

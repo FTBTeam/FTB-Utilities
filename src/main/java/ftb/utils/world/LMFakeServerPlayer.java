@@ -1,6 +1,7 @@
 package ftb.utils.world;
 
-import ftb.utils.world.ranks.*;
+import ftb.utils.world.ranks.Rank;
+import ftb.utils.world.ranks.Ranks;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.FakePlayer;

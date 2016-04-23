@@ -1,12 +1,18 @@
 package ftb.utils.mod.config;
 
 import ftb.lib.FTBLib;
-import ftb.lib.api.config.*;
-import latmod.lib.annotations.*;
-import net.minecraft.entity.*;
+import ftb.lib.api.config.ConfigEntryBool;
+import ftb.lib.api.config.ConfigEntryDouble;
+import ftb.lib.api.config.ConfigEntryString;
+import ftb.lib.api.config.ConfigEntryStringList;
+import latmod.lib.annotations.Info;
+import latmod.lib.annotations.NumberBounds;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FTBUConfigGeneral
 {

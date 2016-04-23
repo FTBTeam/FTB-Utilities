@@ -1,7 +1,8 @@
 package ftb.utils.net;
 
 import ftb.utils.api.guide.ServerInfoFile;
-import ftb.utils.world.*;
+import ftb.utils.world.LMPlayerServer;
+import ftb.utils.world.PersonalSettings;
 
 import java.util.HashMap;
 

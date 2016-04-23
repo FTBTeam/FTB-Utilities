@@ -5,9 +5,14 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ftb.lib.LMNBTUtils;
 import ftb.utils.api.EventLMWorldServer;
 import ftb.utils.mod.config.FTBUConfigGeneral;
-import ftb.utils.world.*;
+import ftb.utils.world.LMPlayer;
+import ftb.utils.world.LMPlayerServer;
+import ftb.utils.world.LMWorldServer;
 import ftb.utils.world.claims.ClaimedChunks;
-import latmod.lib.*;
+import latmod.lib.LMFileUtils;
+import latmod.lib.LMJsonUtils;
+import latmod.lib.LMStringUtils;
+import latmod.lib.MathHelperLM;
 import latmod.lib.util.Phase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
@@ -17,7 +22,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldServer;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class FTBUWorldEventHandler // FTBLIntegration
 {

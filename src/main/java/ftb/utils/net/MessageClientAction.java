@@ -1,7 +1,9 @@
 package ftb.utils.net;
 
-import cpw.mods.fml.common.network.simpleimpl.*;
-import ftb.utils.world.*;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import ftb.utils.world.LMPlayerServer;
+import ftb.utils.world.LMWorldServer;
 import latmod.lib.ByteCount;
 
 public class MessageClientAction extends MessageFTBU

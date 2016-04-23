@@ -1,13 +1,16 @@
 package ftb.utils.world;
 
 import com.mojang.authlib.GameProfile;
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.friends.ILMPlayer;
-import latmod.lib.*;
+import latmod.lib.IntList;
+import latmod.lib.LMUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class LMPlayer implements ILMPlayer, Comparable<ILMPlayer> // LMPlayerServer // LMPlayerClient
 {

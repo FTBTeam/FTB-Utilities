@@ -1,6 +1,7 @@
 package ftb.utils.world.claims;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import ftb.lib.api.config.ConfigEntryBool;
 import ftb.utils.world.LMWorld;
 import latmod.lib.ByteIOStream;

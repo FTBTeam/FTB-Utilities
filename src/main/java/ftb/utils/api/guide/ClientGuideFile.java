@@ -6,15 +6,12 @@ import ftb.lib.FTBLib;
 import ftb.lib.FTBWorld;
 import ftb.lib.api.GameMode;
 import ftb.lib.api.GameModes;
-import ftb.lib.api.MouseButton;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.api.gui.widgets.ButtonLM;
 import ftb.lib.api.info.InfoPage;
 import ftb.lib.mod.client.gui.info.GuiInfo;
 import ftb.utils.api.guide.repos.GuideLocalRepo;
 import ftb.utils.mod.FTBU;
-import ftb.utils.mod.client.gui.guide.ReposPage;
 import ftb.utils.mod.config.FTBUConfigGeneral;
 import latmod.lib.LMUtils;
 import net.minecraft.util.ChatComponentTranslation;
@@ -48,6 +45,7 @@ public class ClientGuideFile extends InfoPage
 	@SideOnly(Side.CLIENT)
 	public ButtonLM createSpecialButton(GuiInfo gui)
 	{
+		/* FIXME: Online guides too WIP
 		ButtonLM button = new ButtonLM(gui, 0, 0, 16, 16)
 		{
 			@Override
@@ -65,6 +63,9 @@ public class ClientGuideFile extends InfoPage
 		
 		button.title = "Manage Guides";
 		return button;
+		*/
+		
+		return null;
 	}
 	
 	public void reload()

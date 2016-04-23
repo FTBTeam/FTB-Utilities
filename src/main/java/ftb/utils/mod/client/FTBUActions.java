@@ -1,8 +1,10 @@
 package ftb.utils.mod.client;
 
+import com.google.gson.JsonPrimitive;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.FTBLib;
+import ftb.lib.PrivacyLevel;
 import ftb.lib.TextureCoords;
 import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.FTBLibClient;
@@ -10,13 +12,24 @@ import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.api.gui.GuiScreenRegistry;
 import ftb.lib.api.gui.PlayerActionRegistry;
+import ftb.lib.api.info.InfoPage;
+import ftb.lib.api.info.lines.InfoExtendedTextLine;
+import ftb.lib.api.notification.ClickAction;
+import ftb.lib.api.notification.ClickActionType;
 import ftb.lib.mod.client.gui.info.GuiInfo;
 import ftb.utils.api.guide.ClientGuideFile;
 import ftb.utils.mod.client.gui.claims.GuiClaimChunks;
 import ftb.utils.mod.client.gui.friends.InfoFriendsGUI;
 import ftb.utils.net.ClientAction;
+import ftb.utils.world.LMWorldClient;
+import ftb.utils.world.PersonalSettings;
+import latmod.lib.LMColor;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
@@ -28,6 +41,7 @@ public class FTBUActions
 		PlayerActionRegistry.add(guide);
 		PlayerActionRegistry.add(info);
 		PlayerActionRegistry.add(claims);
+		PlayerActionRegistry.add(my_server_settings);
 		
 		PlayerActionRegistry.add(friend_add);
 		PlayerActionRegistry.add(friend_remove);
@@ -160,6 +174,53 @@ public class FTBUActions
 		@Override
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }
+	};
+	
+	public static final PlayerAction my_server_settings = new PlayerAction(PlayerAction.Type.SELF, "ftbu.my_server_settings", -1000, GuiIcons.settings)
+	{
+		@Override
+		public void onClicked(ILMPlayer self, ILMPlayer other)
+		{
+			InfoPage page = new InfoPage("my_server_settings")
+			{
+				@Override
+				public void refreshGui(GuiInfo gui)
+				{
+					clear();
+					PersonalSettings ps = LMWorldClient.inst.clientPlayer.getSettings();
+					
+					booleanCommand("chat_links", ps.get(PersonalSettings.CHAT_LINKS));
+					booleanCommand("render_badge", LMWorldClient.inst.clientPlayer.renderBadge);
+					booleanCommand("explosions", ps.get(PersonalSettings.EXPLOSIONS));
+					booleanCommand("fake_players", ps.get(PersonalSettings.FAKE_PLAYERS));
+					
+					IChatComponent text1 = ps.blocks.lang.chatComponent();
+					text1.getChatStyle().setColor(ps.blocks == PrivacyLevel.FRIENDS ? EnumChatFormatting.BLUE : (ps.blocks == PrivacyLevel.PUBLIC ? EnumChatFormatting.GREEN : EnumChatFormatting.RED));
+					InfoExtendedTextLine line = new InfoExtendedTextLine(this, new ChatComponentTranslation("ftbu.player_setting.security_level").appendText(": ").appendSibling(text1));
+					line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("lmplayer_settings block_security toggle")));
+					text.add(line);
+				}
+				
+				private void booleanCommand(String s, boolean current)
+				{
+					ChatComponentText text1 = new ChatComponentText(Boolean.toString(current));
+					text1.getChatStyle().setColor(current ? EnumChatFormatting.GREEN : EnumChatFormatting.RED);
+					InfoExtendedTextLine line = new InfoExtendedTextLine(this, new ChatComponentTranslation("ftbu.player_setting." + s).appendText(": ").appendSibling(text1));
+					line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("lmplayer_settings " + s + " toggle")));
+					text.add(line);
+				}
+			};
+			
+			page.setTitle(new ChatComponentTranslation("player_action.ftbu.my_server_settings"));
+			page.backgroundColor = new LMColor.RGB(30, 30, 30);
+			page.textColor = new LMColor.RGB(200, 200, 200);
+			page.useUnicodeFont = Boolean.FALSE;
+			FTBLibClient.openGui(new GuiInfo(null, page));
+		}
+		
+		@Override
+		public Boolean configDefault()
+		{ return Boolean.FALSE; }
 	};
 	
 	// Other //

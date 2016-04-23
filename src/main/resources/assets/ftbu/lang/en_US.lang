@@ -22,6 +22,7 @@ player_action.ftbu.add_friend=Add as Friend
 player_action.ftbu.rem_friend=Remove from Friends
 player_action.ftbu.deny_friend=Deny Friend Request
 player_action.ftbu.mail=Mail
+player_action.ftbu.my_server_settings=My Server Settings
 
 # Misc
 ftbu.lang.timer_restart=Server restarts in %s

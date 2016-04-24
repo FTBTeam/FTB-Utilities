@@ -13,9 +13,9 @@ import ftb.lib.api.gui.widgets.ButtonLM;
 import ftb.lib.api.gui.widgets.PanelLM;
 import ftb.utils.mod.FTBULang;
 import ftb.utils.mod.client.FTBUClient;
-import ftb.utils.net.ClientAction;
 import ftb.utils.net.MessageAreaRequest;
 import ftb.utils.net.MessageClaimChunk;
+import ftb.utils.net.MessageRequestSelfUpdate;
 import ftb.utils.world.LMPlayerClientSelf;
 import ftb.utils.world.LMWorldClient;
 import ftb.utils.world.claims.ChunkType;
@@ -108,7 +108,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 				thread = new ThreadReloadArea(mc.theWorld, GuiClaimChunks.this);
 				thread.start();
 				new MessageAreaRequest(startX, startY, tiles_gui, tiles_gui).sendToServer();
-				ClientAction.REQUEST_SELF_UPDATE.send(0);
+				new MessageRequestSelfUpdate().sendToServer();
 				FTBLibClient.playClickSound();
 			}
 		};

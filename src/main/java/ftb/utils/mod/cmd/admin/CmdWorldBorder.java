@@ -1,5 +1,6 @@
 package ftb.utils.mod.cmd.admin;
 
+import ftb.lib.FTBWorld;
 import ftb.lib.api.cmd.CommandLM;
 import ftb.lib.api.cmd.CommandLevel;
 import ftb.lib.api.cmd.CommandSubLM;
@@ -31,7 +32,7 @@ public class CmdWorldBorder extends CommandSubLM
 		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			LMWorldServer.inst.settings.border_enabled.set(true);
-			LMWorldServer.inst.update(LMWorldServer.inst.getPlayer(ics));
+			FTBWorld.server.syncData(null);
 			ics.addChatMessage(new ChatComponentText("World border enabled"));
 		}
 	}
@@ -45,7 +46,7 @@ public class CmdWorldBorder extends CommandSubLM
 		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			LMWorldServer.inst.settings.border_enabled.set(false);
-			LMWorldServer.inst.update(LMWorldServer.inst.getPlayer(ics));
+			FTBWorld.server.syncData(null);
 			ics.addChatMessage(new ChatComponentText("World border disabled"));
 		}
 	}
@@ -108,7 +109,7 @@ public class CmdWorldBorder extends CommandSubLM
 			}
 			
 			LMWorldServer.inst.settings.getAndSet(dim).setPos(x, z);
-			LMWorldServer.inst.update(LMWorldServer.inst.getPlayer(ics));
+			FTBWorld.server.syncData(null);
 			ics.addChatMessage(new ChatComponentText("World center for dimension " + dim + " set to " + x + " : " + z));
 		}
 	}

@@ -7,7 +7,6 @@ import ftb.lib.BlockDimPos;
 import ftb.lib.EntityPos;
 import ftb.lib.FTBLib;
 import ftb.lib.LMDimUtils;
-import ftb.lib.LMNBTUtils;
 import ftb.lib.api.item.StringIDInvLoader;
 import ftb.lib.api.notification.ClickAction;
 import ftb.lib.api.notification.MouseAction;
@@ -23,14 +22,15 @@ import ftb.utils.world.claims.ClaimedChunk;
 import ftb.utils.world.ranks.Rank;
 import ftb.utils.world.ranks.RankConfig;
 import ftb.utils.world.ranks.Ranks;
-import latmod.lib.ByteCount;
-import latmod.lib.ByteIOStream;
-import latmod.lib.IntList;
+import latmod.lib.Bits;
+import latmod.lib.IntMap;
 import latmod.lib.LMUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.stats.StatisticsFile;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
@@ -41,15 +41,13 @@ import net.minecraftforge.common.util.FakePlayer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class LMPlayerServer extends LMPlayer // LMPlayerClient
 {
-	public static int lastPlayerID = 0;
+	public static Map<Integer, UUID> tempPlayerIDMap;
 	
-	public static final int nextPlayerID()
-	{ return ++lastPlayerID; }
-	
-	public final LMWorldServer world;
 	private final PersonalSettings settings;
 	private NBTTagCompound serverData = null;
 	public BlockDimPos lastPos, lastDeath;
@@ -65,18 +63,17 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		return p;
 	}
 	
-	public LMPlayerServer(LMWorldServer w, int i, GameProfile gp)
+	public LMPlayerServer(GameProfile gp)
 	{
-		super(i, gp);
-		world = w;
+		super(gp);
 		settings = new PersonalSettings();
 		stats = new LMPlayerStats();
 		homes = new Warps();
 	}
 	
 	@Override
-	public LMWorld getWorld()
-	{ return world; }
+	public LMWorldServer getWorld()
+	{ return LMWorldServer.inst; }
 	
 	@Override
 	public Side getSide()
@@ -184,8 +181,37 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public void readFromServer(NBTTagCompound tag)
 	{
-		friends.clear();
-		friends.addAll(tag.getIntArray("Friends"));
+		friendsList.clear();
+		
+		if(tag.func_150299_b("Friends") == Constants.NBT.TAG_INT_ARRAY)
+		{
+			if(tempPlayerIDMap != null)
+			{
+				for(int id : tag.getIntArray("Friends"))
+				{
+					UUID uuid = tempPlayerIDMap.get(id);
+					
+					if(uuid != null)
+					{
+						friendsList.add(uuid);
+					}
+				}
+			}
+		}
+		else
+		{
+			NBTTagList list = tag.getTagList("Friends", Constants.NBT.TAG_STRING);
+			
+			for(int i = 0; i < list.tagCount(); i++)
+			{
+				UUID id = LMUtils.fromString(list.getStringTagAt(i));
+				
+				if(id != null)
+				{
+					friendsList.add(id);
+				}
+			}
+		}
 		
 		commonPublicData = tag.getCompoundTag("CustomData");
 		commonPrivateData = tag.getCompoundTag("CustomPrivateData");
@@ -242,7 +268,17 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	{
 		refreshStats();
 		
-		if(!friends.isEmpty()) tag.setIntArray("Friends", friends.toArray());
+		if(!friendsList.isEmpty())
+		{
+			NBTTagList list = new NBTTagList();
+			
+			for(UUID id : friendsList)
+			{
+				list.appendTag(new NBTTagString(LMUtils.fromUUID(id)));
+			}
+			
+			tag.setTag("Friends", list);
+		}
 		
 		if(commonPublicData != null && !commonPublicData.hasNoTags()) tag.setTag("CustomData", commonPublicData);
 		if(commonPrivateData != null && !commonPrivateData.hasNoTags())
@@ -267,33 +303,74 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		homes.writeToNBT(tag, "Homes");
 	}
 	
-	public void writeToNet(ByteIOStream io, boolean self)
+	public void writeToNet(NBTTagCompound tag, boolean self)
 	{
 		refreshStats();
 		new EventLMPlayerServer.DataSaved(this).post();
 		Rank rank = getRank();
 		
-		io.writeBoolean(isOnline());
-		io.writeBoolean(renderBadge);
-		io.writeIntArray(friends.toArray(), ByteCount.SHORT);
+		IntMap map = new IntMap();
 		
-		IntList otherFriends = new IntList();
+		map.put(0, isOnline() ? 1 : 0);
+		map.put(1, renderBadge ? 1 : 0);
 		
-		for(LMPlayerServer p : world.playerMap.values())
-		{ if(p.friends.contains(getPlayerID())) otherFriends.add(p.getPlayerID()); }
+		tag.setIntArray("S", map.toArray());
 		
-		io.writeIntArray(otherFriends.toArray(), ByteCount.SHORT);
-		LMNBTUtils.writeTag(io, commonPublicData);
+		if(!friendsList.isEmpty())
+		{
+			byte[] ba = new byte[friendsList.size() * 16];
+			int idx = 0;
+			
+			for(UUID id : friendsList)
+			{
+				Bits.fromUUID(ba, idx * 16, id);
+				idx++;
+			}
+			
+			tag.setByteArray("F", ba);
+		}
+		
+		List<UUID> otherFriends = new ArrayList<>();
+		
+		for(LMPlayerServer p : LMWorldServer.inst.playerMap.values())
+		{
+			if(p.friendsList.contains(getProfile().getId()))
+			{
+				otherFriends.add(p.getProfile().getId());
+			}
+		}
+		
+		if(!otherFriends.isEmpty())
+		{
+			byte[] ba = new byte[otherFriends.size() * 16];
+			int idx = 0;
+			
+			for(UUID id : otherFriends)
+			{
+				Bits.fromUUID(ba, idx * 16, id);
+				idx++;
+			}
+			
+			tag.setByteArray("OF", ba);
+		}
+		
+		tag.setTag("CPUD", commonPublicData);
 		
 		if(self)
 		{
-			settings.writeToNet(io);
+			map = new IntMap();
 			
-			LMNBTUtils.writeTag(io, commonPrivateData);
-			io.writeShort(getClaimedChunks());
-			io.writeShort(getLoadedChunks(true));
-			io.writeShort(rank.config.max_claims.getAsInt());
-			io.writeShort(rank.config.max_loaded_chunks.getAsInt());
+			map.put(0, settings.flags);
+			map.put(1, settings.blocks.ID);
+			
+			map.put(2, getClaimedChunks());
+			map.put(3, getLoadedChunks(true));
+			map.put(4, rank.config.max_claims.getAsInt());
+			map.put(5, rank.config.max_loaded_chunks.getAsInt());
+			
+			tag.setIntArray("SP", map.toArray());
+			
+			tag.setTag("CPRD", commonPrivateData);
 		}
 	}
 	
@@ -306,7 +383,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		{
 			ArrayList<String> requests = new ArrayList<>();
 			
-			for(LMPlayerServer p : world.playerMap.values())
+			for(LMPlayerServer p : LMWorldServer.inst.playerMap.values())
 			{
 				if(p.isFriendRaw(this) && !isFriendRaw(p)) requests.add(p.getProfile().getName());
 			}
@@ -341,24 +418,24 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		if(max == 0) return;
 		if(getClaimedChunks() >= max) return;
 		
-		ChunkType t = world.claimedChunks.getType(dim, cx, cz);
-		if(!t.isClaimed() && t.isChunkOwner(this) && world.claimedChunks.put(new ClaimedChunk(getPlayerID(), dim, cx, cz)))
+		ChunkType t = LMWorldServer.inst.claimedChunks.getType(dim, cx, cz);
+		if(!t.isClaimed() && t.isChunkOwner(this) && LMWorldServer.inst.claimedChunks.put(new ClaimedChunk(getProfile().getId(), dim, cx, cz)))
 			sendUpdate();
 	}
 	
 	public void unclaimChunk(int dim, int cx, int cz)
 	{
-		if(world.claimedChunks.getType(dim, cx, cz).isChunkOwner(this))
+		if(LMWorldServer.inst.claimedChunks.getType(dim, cx, cz).isChunkOwner(this))
 		{
 			setLoaded(dim, cx, cz, false);
-			world.claimedChunks.remove(dim, cx, cz);
+			LMWorldServer.inst.claimedChunks.remove(dim, cx, cz);
 			sendUpdate();
 		}
 	}
 	
 	public void unclaimAllChunks(Integer dim)
 	{
-		List<ClaimedChunk> list = world.claimedChunks.getChunks(this, dim);
+		List<ClaimedChunk> list = LMWorldServer.inst.claimedChunks.getChunks(this, dim);
 		int size0 = list.size();
 		if(size0 == 0) return;
 		
@@ -366,19 +443,19 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 		{
 			ClaimedChunk c = list.get(i);
 			setLoaded(c.dim, c.posX, c.posZ, false);
-			world.claimedChunks.remove(c.dim, c.posX, c.posZ);
+			LMWorldServer.inst.claimedChunks.remove(c.dim, c.posX, c.posZ);
 		}
 		
 		sendUpdate();
 	}
 	
 	public int getClaimedChunks()
-	{ return world.claimedChunks.getChunks(this, null).size(); }
+	{ return LMWorldServer.inst.claimedChunks.getChunks(this, null).size(); }
 	
 	public int getLoadedChunks(boolean forced)
 	{
 		int loaded = 0;
-		for(ClaimedChunk c : world.claimedChunks.getChunks(this, null))
+		for(ClaimedChunk c : LMWorldServer.inst.claimedChunks.getChunks(this, null))
 		{ if(c.isChunkloaded && (!forced || c.isForced)) loaded++; }
 		return loaded;
 	}
@@ -391,7 +468,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	
 	public void setLoaded(int dim, int cx, int cz, boolean flag)
 	{
-		ClaimedChunk chunk = world.claimedChunks.getChunk(dim, cx, cz);
+		ClaimedChunk chunk = LMWorldServer.inst.claimedChunks.getChunk(dim, cx, cz);
 		if(chunk == null) return;
 		
 		if(flag != chunk.isChunkloaded && equalsPlayer(chunk.getOwnerS()))

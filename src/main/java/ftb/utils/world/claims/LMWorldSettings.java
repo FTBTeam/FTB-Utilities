@@ -4,7 +4,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import ftb.lib.api.config.ConfigEntryBool;
 import ftb.utils.world.LMWorld;
-import latmod.lib.ByteIOStream;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagIntArray;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.HashMap;
 
@@ -62,45 +65,58 @@ public class LMWorldSettings
 		group.add("world_border", a);
 	}
 	
-	public void readFromNet(ByteIOStream io)
+	public void readFromNet(NBTTagCompound tag)
 	{
-		border_enabled.set(io.readBoolean());
+		NBTTagCompound tag1 = tag.getCompoundTag("WB");
+		border_enabled.set(tag.getBoolean("E"));
 		if(!border_enabled.getAsBoolean()) return;
 		
-		worldBorder0.pos.x = io.readInt();
-		worldBorder0.pos.y = io.readInt();
-		worldBorder0.size = io.readInt();
-		
-		int s = io.readInt();
 		worldBorder.clear();
-		for(int i = 0; i < s; i++)
+		
+		NBTTagList list = tag1.getTagList("L", Constants.NBT.TAG_INT_ARRAY);
+		
+		for(int i = 0; i < list.tagCount(); i++)
 		{
-			WorldBorder wb = new WorldBorder(this, io.readInt());
-			wb.pos.x = io.readInt();
-			wb.pos.y = io.readInt();
-			wb.size = io.readInt();
-			worldBorder.put(Integer.valueOf(wb.dim), wb);
+			int[] ai = list.func_150306_c(i);
+			
+			if(ai[0] == 0)
+			{
+				worldBorder0.pos.x = ai[1];
+				worldBorder0.pos.y = ai[2];
+				worldBorder0.size = ai[3];
+			}
+			else
+			{
+				WorldBorder wb = new WorldBorder(this, ai[0]);
+				wb.pos.x = ai[1];
+				wb.pos.y = ai[2];
+				wb.size = ai[3];
+				worldBorder.put(wb.dim, wb);
+			}
 		}
 	}
 	
-	public void writeToNet(ByteIOStream io)
+	public void writeToNet(NBTTagCompound tag)
 	{
-		io.writeBoolean(border_enabled.getAsBoolean());
-		if(!border_enabled.getAsBoolean()) return;
+		NBTTagCompound tag1 = new NBTTagCompound();
 		
-		io.writeInt(worldBorder0.pos.x);
-		io.writeInt(worldBorder0.pos.y);
-		io.writeInt(worldBorder0.size);
+		tag1.setBoolean("E", border_enabled.getAsBoolean());
 		
-		io.writeInt(worldBorder.size());
-		
-		for(WorldBorder wb : worldBorder.values())
+		if(border_enabled.getAsBoolean())
 		{
-			io.writeInt(wb.dim);
-			io.writeInt(wb.pos.x);
-			io.writeInt(wb.pos.y);
-			io.writeInt(wb.size);
+			NBTTagList list = new NBTTagList();
+			
+			list.appendTag(new NBTTagIntArray(new int[] {0, worldBorder0.pos.x, worldBorder0.pos.y, worldBorder0.size}));
+			
+			for(WorldBorder wb : worldBorder.values())
+			{
+				list.appendTag(new NBTTagIntArray(new int[] {wb.dim, wb.pos.x, wb.pos.y, wb.size}));
+			}
+			
+			tag1.setTag("L", list);
 		}
+		
+		tag.setTag("WB", tag1);
 	}
 	
 	public WorldBorder getWB(int dim)

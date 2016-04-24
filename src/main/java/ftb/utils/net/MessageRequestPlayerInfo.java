@@ -4,17 +4,16 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import ftb.lib.api.net.LMNetworkWrapper;
 import ftb.lib.api.net.MessageLM;
-import ftb.utils.badges.Badge;
-import ftb.utils.badges.ServerBadges;
+import ftb.utils.world.LMWorldServer;
 import latmod.lib.ByteCount;
 
 import java.util.UUID;
 
-public class MessageRequestBadge extends MessageLM
+public class MessageRequestPlayerInfo extends MessageLM
 {
-	public MessageRequestBadge() { super(ByteCount.BYTE); }
+	public MessageRequestPlayerInfo() { super(ByteCount.BYTE); }
 	
-	public MessageRequestBadge(UUID id)
+	public MessageRequestPlayerInfo(UUID id)
 	{
 		this();
 		io.writeUUID(id);
@@ -26,9 +25,5 @@ public class MessageRequestBadge extends MessageLM
 	
 	@Override
 	public IMessage onMessage(MessageContext ctx)
-	{
-		UUID id = io.readUUID();
-		Badge b = ServerBadges.getServerBadge(id);
-		return (b == null || b == Badge.emptyBadge) ? null : new MessageSendBadge(id, b.getID());
-	}
+	{ return new MessageLMPlayerInfo(LMWorldServer.inst.getPlayer(ctx.getServerHandler().playerEntity), io.readUUID()); }
 }

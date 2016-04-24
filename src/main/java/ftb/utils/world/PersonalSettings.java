@@ -2,7 +2,6 @@ package ftb.utils.world;
 
 import ftb.lib.PrivacyLevel;
 import latmod.lib.Bits;
-import latmod.lib.ByteIOStream;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class PersonalSettings
@@ -55,17 +54,5 @@ public class PersonalSettings
 	{
 		tag.setByte("Flags", flags);
 		tag.setByte("Blocks", (byte) blocks.ID);
-	}
-	
-	public void readFromNet(ByteIOStream io)
-	{
-		flags = io.readByte();
-		blocks = PrivacyLevel.VALUES_3[io.readUnsignedByte()];
-	}
-	
-	public void writeToNet(ByteIOStream io)
-	{
-		io.writeByte(flags);
-		io.writeByte(blocks.ID);
 	}
 }

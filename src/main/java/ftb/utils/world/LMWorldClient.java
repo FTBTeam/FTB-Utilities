@@ -3,12 +3,13 @@ package ftb.utils.world;
 import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ftb.lib.FTBLib;
 import ftb.lib.LMNBTUtils;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.utils.api.EventLMPlayerClient;
-import latmod.lib.ByteCount;
-import latmod.lib.ByteIOStream;
+import latmod.lib.LMUtils;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
@@ -20,19 +21,18 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 {
 	public static LMWorldClient inst = null;
 	
-	public final int clientPlayerID;
-	public final Map<Integer, LMPlayerClient> playerMap;
-	public LMPlayerClientSelf clientPlayer = null;
+	public final Map<UUID, LMPlayerClient> playerMap;
+	public final LMPlayerClientSelf clientPlayer;
 	
-	public LMWorldClient(int i)
+	public LMWorldClient()
 	{
 		super(Side.CLIENT);
-		clientPlayerID = i;
 		playerMap = new HashMap<>();
+		clientPlayer = new LMPlayerClientSelf(FTBLibClient.mc.getSession().func_148256_e());
 	}
 	
 	@Override
-	public Map<Integer, ? extends LMPlayer> playerMap()
+	public Map<UUID, ? extends LMPlayer> playerMap()
 	{ return playerMap; }
 	
 	@Override
@@ -50,44 +50,42 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 		return (p == null) ? null : p.toPlayerSP();
 	}
 	
-	public void readDataFromNet(ByteIOStream io, boolean first)
+	public void readDataFromNet(NBTTagCompound tag, boolean first)
 	{
 		if(first)
 		{
 			playerMap.clear();
 			
-			GameProfile gp = FTBLibClient.mc.getSession().func_148256_e();
-			clientPlayer = new LMPlayerClientSelf(this, clientPlayerID, gp);
+			NBTTagCompound playerData = tag.getCompoundTag("PD");
 			
-			int psize = io.readInt();
+			NBTTagCompound tag1 = playerData.getCompoundTag(clientPlayer.getStringUUID());
+			clientPlayer.readFromNet(tag1, true);
+			playerMap.put(clientPlayer.getProfile().getId(), clientPlayer);
+			playerData.removeTag(clientPlayer.getStringUUID());
+			LMPlayerClient p;
 			
-			for(int i = 0; i < psize; i++)
+			for(Map.Entry<String, NBTBase> e : LMNBTUtils.entrySet(playerData))
 			{
-				int id = io.readInt();
-				UUID uuid = io.readUUID();
-				String name = io.readUTF();
+				UUID uuid = LMUtils.fromString(e.getKey());
 				
-				if(id == clientPlayerID) playerMap.put(id, clientPlayer);
-				else playerMap.put(id, new LMPlayerClient(this, id, new GameProfile(uuid, name)));
+				if(e.getValue() instanceof NBTTagString)
+				{
+					p = new LMPlayerClient(new GameProfile(uuid, ((NBTTagString) e.getValue()).func_150285_a_()));
+				}
+				else
+				{
+					NBTTagCompound tag2 = (NBTTagCompound) e.getValue();
+					p = new LMPlayerClient(new GameProfile(uuid, tag2.getString("N")));
+					p.readFromNet(tag2, false);
+					new EventLMPlayerClient.DataLoaded(p).post();
+				}
+				
+				playerMap.put(uuid, p);
 			}
 			
-			FTBLib.dev_logger.info("Client player ID: " + clientPlayerID);
-			
-			int[] onlinePlayers = io.readIntArray(ByteCount.INT);
-			
-			for(int i = 0; i < onlinePlayers.length; i++)
-			{
-				LMPlayerClient p = playerMap.get(onlinePlayers[i]).toPlayerSP();
-				p.readFromNet(io, p.getPlayerID() == clientPlayerID);
-				new EventLMPlayerClient.DataLoaded(p).post();
-			}
-			
-			clientPlayer.readFromNet(io, true);
 			new EventLMPlayerClient.DataLoaded(clientPlayer).post();
 		}
 		
-		customCommonData.readFromNBT(LMNBTUtils.readTag(io), false);
-		
-		settings.readFromNet(io);
+		settings.readFromNet(tag);
 	}
 }

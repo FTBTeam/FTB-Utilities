@@ -5,15 +5,18 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.api.net.LMNetworkWrapper;
+import ftb.lib.api.net.MessageLM;
 import ftb.utils.api.EventLMPlayerClient;
 import ftb.utils.world.LMPlayerClient;
 import ftb.utils.world.LMPlayerServer;
 import ftb.utils.world.LMWorldClient;
 import latmod.lib.ByteCount;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.UUID;
 
-public class MessageLMPlayerLoggedIn extends MessageFTBU
+public class MessageLMPlayerLoggedIn extends MessageLM
 {
 	public MessageLMPlayerLoggedIn() { super(ByteCount.INT); }
 	
@@ -21,12 +24,16 @@ public class MessageLMPlayerLoggedIn extends MessageFTBU
 	{
 		this();
 		
-		io.writeInt(p.getPlayerID());
 		io.writeUUID(p.getProfile().getId());
 		io.writeUTF(p.getProfile().getName());
 		io.writeBoolean(first);
-		p.writeToNet(io, self);
+		NBTTagCompound tag = new NBTTagCompound();
+		p.writeToNet(tag, self);
 	}
+	
+	@Override
+	public LMNetworkWrapper getWrapper()
+	{ return FTBUNetHandler.NET; }
 	
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -34,17 +41,20 @@ public class MessageLMPlayerLoggedIn extends MessageFTBU
 	{
 		if(LMWorldClient.inst == null) return null;
 		
-		int playerID = io.readInt();
 		UUID uuid = io.readUUID();
 		String username = io.readUTF();
 		boolean firstTime = io.readBoolean();
+		boolean isSelf = uuid.equals(LMWorldClient.inst.clientPlayer.getProfile().getId());
 		
-		LMPlayerClient p = LMWorldClient.inst.getPlayer(playerID);
+		LMPlayerClient p = LMWorldClient.inst.getPlayer(uuid);
 		boolean add = p == null;
-		if(add) p = new LMPlayerClient(LMWorldClient.inst, playerID, new GameProfile(uuid, username));
-		p.readFromNet(io, p.getPlayerID() == LMWorldClient.inst.clientPlayerID);
-		LMWorldClient.inst.playerMap.put(p.getPlayerID(), p);
+		if(add) p = new LMPlayerClient(new GameProfile(uuid, username));
+		p.readFromNet(readTag(), isSelf);
+		LMWorldClient.inst.playerMap.put(uuid, p);
+		
+		//if(isSelf)
 		new EventLMPlayerClient.LoggedIn(p, firstTime).post();
+		
 		new EventLMPlayerClient.DataLoaded(p).post();
 		return null;
 	}

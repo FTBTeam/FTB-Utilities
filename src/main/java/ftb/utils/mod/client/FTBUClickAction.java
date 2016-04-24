@@ -5,7 +5,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.notification.ClickActionRegistry;
 import ftb.lib.api.notification.ClickActionType;
-import ftb.utils.net.ClientAction;
+import ftb.utils.net.MessageManageFriends;
+import latmod.lib.LMUtils;
 
 public class FTBUClickAction
 {
@@ -20,7 +21,7 @@ public class FTBUClickAction
 		@Override
 		@SideOnly(Side.CLIENT)
 		public void onClicked(JsonElement data)
-		{ ClientAction.ADD_FRIEND.send(data.getAsInt()); }
+		{ new MessageManageFriends(MessageManageFriends.ID_ADD, LMUtils.fromString(data.getAsString())).sendToServer(); }
 	};
 	
 	public static final ClickActionType FRIEND_ADD_ALL = new ClickActionType("friend_add_all")
@@ -28,6 +29,6 @@ public class FTBUClickAction
 		@Override
 		@SideOnly(Side.CLIENT)
 		public void onClicked(JsonElement data)
-		{ ClientAction.ADD_FRIEND.send(0); }
+		{ new MessageManageFriends(MessageManageFriends.ID_ADD_ALL, null).sendToServer(); }
 	};
 }

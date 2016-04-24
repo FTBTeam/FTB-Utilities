@@ -1,9 +1,10 @@
 package ftb.utils.world;
 
+import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.FTBLib;
-import ftb.lib.api.config.ConfigGroup;
+import ftb.lib.api.friends.ILMPlayer;
 import ftb.utils.mod.FTBU;
 import ftb.utils.world.claims.LMWorldSettings;
 import latmod.lib.LMUtils;
@@ -28,17 +29,15 @@ public abstract class LMWorld // FTBWorld
 	{ return getWorld(FTBLib.getEffectiveSide()); }
 	
 	public final Side side;
-	public final ConfigGroup customCommonData;
 	public final LMWorldSettings settings;
 	
 	public LMWorld(Side s)
 	{
 		side = s;
-		customCommonData = new ConfigGroup("custom_common_data");
 		settings = new LMWorldSettings(this);
 	}
 	
-	public abstract Map<Integer, ? extends LMPlayer> playerMap();
+	public abstract Map<UUID, ? extends LMPlayer> playerMap();
 	
 	public abstract World getMCWorld();
 	
@@ -53,31 +52,22 @@ public abstract class LMWorld // FTBWorld
 	{
 		if(o == null || o instanceof FakePlayer) return null;
 		
-		Map<Integer, ? extends LMPlayer> playerMap = playerMap();
+		Map<UUID, ? extends LMPlayer> playerMap = playerMap();
 		
-		if(o instanceof Number || o instanceof LMPlayer)
+		if(o.getClass() == UUID.class)
 		{
-			int h = o.hashCode();
-			if(h <= 0) return null;
-			return playerMap.get(Integer.valueOf(h));
+			return playerMap.get(o);
 		}
-		else if(o.getClass() == UUID.class)
+		else if(o instanceof GameProfile)
 		{
-			UUID id = (UUID) o;
-			
-			for(LMPlayer p : playerMap.values())
-			{ if(p.getProfile().getId().equals(id)) return p; }
-			
-			return null;
+			return playerMap.get(((GameProfile) o).getId());
+		}
+		else if(o instanceof ILMPlayer)
+		{
+			return playerMap.get(((ILMPlayer) o).getProfile().getId());
 		}
 		else if(o instanceof EntityPlayer)
 		{
-			if(side.isServer())
-			{
-				for(LMPlayer p : playerMap.values())
-				{ if(p.isOnline() && p.getPlayer() == o) return p; }
-			}
-			
 			return getPlayer(((EntityPlayer) o).getGameProfile().getId());
 		}
 		else if(o instanceof CharSequence)
@@ -101,22 +91,6 @@ public abstract class LMWorld // FTBWorld
 		for(LMPlayer p : playerMap().values())
 		{ if(p.isOnline()) l.add(p); }
 		return l;
-	}
-	
-	public int getPlayerID(Object o)
-	{
-		if(o == null) return 0;
-		LMPlayer p = getPlayer(o);
-		return (p == null) ? 0 : p.getPlayerID();
-	}
-	
-	public int[] getAllPlayerIDs()
-	{
-		int[] ai = new int[playerMap().size()];
-		int id = -1;
-		for(LMPlayer p : playerMap().values())
-			ai[++id] = p.getPlayerID();
-		return ai;
 	}
 	
 	public List<LMPlayerServer> getServerPlayers()

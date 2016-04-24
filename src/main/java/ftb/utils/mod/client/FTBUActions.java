@@ -20,7 +20,8 @@ import ftb.lib.mod.client.gui.info.GuiInfo;
 import ftb.utils.api.guide.ClientGuideFile;
 import ftb.utils.mod.client.gui.claims.GuiClaimChunks;
 import ftb.utils.mod.client.gui.friends.InfoFriendsGUI;
-import ftb.utils.net.ClientAction;
+import ftb.utils.net.MessageManageFriends;
+import ftb.utils.net.MessageRequestServerInfo;
 import ftb.utils.world.LMWorldClient;
 import ftb.utils.world.PersonalSettings;
 import latmod.lib.LMColor;
@@ -79,7 +80,7 @@ public class FTBUActions
 			@Override
 			public GuiScreen openGui(EntityPlayer ep)
 			{
-				ClientAction.REQUEST_SERVER_INFO.send(0);
+				new MessageRequestServerInfo().sendToServer();
 				return null;
 			}
 		});
@@ -134,7 +135,7 @@ public class FTBUActions
 	{
 		@Override
 		public void onClicked(ILMPlayer self, ILMPlayer other)
-		{ ClientAction.REQUEST_SERVER_INFO.send(0); }
+		{ new MessageRequestServerInfo().sendToServer(); }
 		
 		@Override
 		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
@@ -229,7 +230,7 @@ public class FTBUActions
 	{
 		@Override
 		public void onClicked(ILMPlayer self, ILMPlayer other)
-		{ ClientAction.ADD_FRIEND.send(other.getPlayerID()); }
+		{ new MessageManageFriends(MessageManageFriends.ID_ADD, other.getProfile().getId()).sendToServer(); }
 		
 		@Override
 		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
@@ -240,7 +241,7 @@ public class FTBUActions
 	{
 		@Override
 		public void onClicked(ILMPlayer self, ILMPlayer other)
-		{ ClientAction.REM_FRIEND.send(other.getPlayerID()); }
+		{ new MessageManageFriends(MessageManageFriends.ID_REMOVE, other.getProfile().getId()).sendToServer(); }
 		
 		@Override
 		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
@@ -251,7 +252,7 @@ public class FTBUActions
 	{
 		@Override
 		public void onClicked(ILMPlayer self, ILMPlayer other)
-		{ ClientAction.DENY_FRIEND.send(other.getPlayerID()); }
+		{ new MessageManageFriends(MessageManageFriends.ID_DENY, other.getProfile().getId()).sendToServer(); }
 		
 		@Override
 		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)

@@ -2,31 +2,112 @@ package ftb.utils.mod.handlers;
 
 import com.google.gson.JsonObject;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import ftb.lib.FTBLib;
 import ftb.lib.LMNBTUtils;
+import ftb.lib.api.EventFTBSync;
+import ftb.lib.api.item.LMInvUtils;
+import ftb.utils.api.EventLMPlayerServer;
 import ftb.utils.api.EventLMWorldServer;
+import ftb.utils.badges.ServerBadges;
+import ftb.utils.mod.FTBU;
 import ftb.utils.mod.config.FTBUConfigGeneral;
+import ftb.utils.mod.config.FTBUConfigLogin;
+import ftb.utils.net.MessageAreaUpdate;
+import ftb.utils.net.MessageLMPlayerLoggedIn;
+import ftb.utils.world.Backups;
 import ftb.utils.world.LMPlayer;
 import ftb.utils.world.LMPlayerServer;
 import ftb.utils.world.LMWorldServer;
 import ftb.utils.world.claims.ClaimedChunks;
 import latmod.lib.LMFileUtils;
 import latmod.lib.LMJsonUtils;
-import latmod.lib.LMStringUtils;
 import latmod.lib.MathHelperLM;
 import latmod.lib.util.Phase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.WorldServer;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 
 public class FTBUWorldEventHandler // FTBLIntegration
 {
+	@SubscribeEvent
+	public void syncData(EventFTBSync e)
+	{
+		if(e.side.isServer())
+		{
+			EntityPlayerMP ep = (EntityPlayerMP) e.player;
+			LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
+			
+			boolean first_login = (p == null);
+			boolean send_all = false;
+			
+			if(first_login)
+			{
+				p = new LMPlayerServer(ep.getGameProfile());
+				LMWorldServer.inst.playerMap.put(p.getProfile().getId(), p);
+				send_all = true;
+			}
+			else if(!p.getProfile().getName().equals(ep.getGameProfile().getName()))
+			{
+				p.setProfile(ep.getGameProfile());
+				send_all = true;
+			}
+			
+			p.setPlayer(ep);
+			
+			// post
+			
+			p.refreshStats();
+			
+			new EventLMPlayerServer.LoggedIn(p, ep, first_login).post();
+			new MessageLMPlayerLoggedIn(p, first_login, true).sendTo(send_all ? null : ep);
+			for(EntityPlayerMP ep1 : FTBLib.getAllOnlinePlayers(ep))
+				new MessageLMPlayerLoggedIn(p, first_login, false).sendTo(ep1);
+			
+			if(first_login)
+			{
+				for(ItemStack is : FTBUConfigLogin.starting_items.items)
+				{
+					LMInvUtils.giveItem(ep, is);
+				}
+			}
+			
+			//new MessageLMPlayerInfo(p.playerID).sendTo(null);
+			
+			for(IChatComponent c : FTBUConfigLogin.motd.components)
+			{
+				ep.addChatMessage(c);
+			}
+			
+			Backups.hadPlayer = true;
+			
+			p.checkNewFriends();
+			new MessageAreaUpdate(p, p.getPos(), 3, 3).sendTo(ep);
+			ServerBadges.sendToPlayer(ep);
+			
+			FTBUChunkEventHandler.instance.markDirty(null);
+			
+			// sync data //
+			
+			NBTTagCompound tag = new NBTTagCompound();
+			LMWorldServer.inst.writeDataToNet(tag, p, e.login);
+			e.syncData.setTag("FTBU", tag);
+		}
+		else
+		{
+			FTBU.proxy.syncData(e);
+		}
+	}
+	
 	@SubscribeEvent
 	public void worldLoaded(net.minecraftforge.event.world.WorldEvent.Load e)
 	{
@@ -47,7 +128,6 @@ public class FTBUWorldEventHandler // FTBLIntegration
 			NBTTagCompound players = new NBTTagCompound();
 			LMWorldServer.inst.writePlayersToServer(players);
 			tag.setTag("Players", players);
-			tag.setInteger("LastID", LMPlayerServer.lastPlayerID);
 			LMNBTUtils.writeMap(new File(LMWorldServer.inst.latmodFolder, "LMPlayers.dat"), tag);
 			
 			LMWorldServer.inst.save(group, Phase.POST);
@@ -62,19 +142,18 @@ public class FTBUWorldEventHandler // FTBLIntegration
 			try
 			{
 				ArrayList<String> l = new ArrayList<>();
-				int[] list = LMWorldServer.inst.getAllPlayerIDs();
-				Arrays.sort(list);
 				
-				for(int i = 0; i < list.length; i++)
+				for(LMPlayer p : LMWorldServer.inst.playerMap.values())
 				{
-					LMPlayer p = LMWorldServer.inst.getPlayer(list[i]);
-					
 					StringBuilder sb = new StringBuilder();
-					sb.append(LMStringUtils.fillString(Integer.toString(p.getPlayerID()), ' ', 6));
-					sb.append(LMStringUtils.fillString(p.getProfile().getName(), ' ', 21));
 					sb.append(p.getStringUUID());
+					sb.append(':');
+					sb.append(' ');
+					sb.append(p.getProfile().getName());
 					l.add(sb.toString());
 				}
+				
+				Collections.sort(l);
 				
 				LMFileUtils.save(new File(e.world.getSaveHandler().getWorldDirectory(), "latmod/LMPlayers.txt"), l);
 			}

@@ -3,30 +3,28 @@ package ftb.utils.world;
 import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ftb.lib.LMNBTUtils;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.utils.api.EventLMPlayerClient;
-import latmod.lib.ByteCount;
-import latmod.lib.ByteIOStream;
-import latmod.lib.IntList;
+import latmod.lib.Bits;
+import latmod.lib.IntMap;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @SideOnly(Side.CLIENT)
 public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClientSelf
 {
-	public final LMWorldClient world;
 	public final List<String> clientInfo;
 	public boolean isOnline;
 	
-	public LMPlayerClient(LMWorldClient w, int i, GameProfile gp)
+	public LMPlayerClient(GameProfile gp)
 	{
-		super(i, gp);
-		world = w;
+		super(gp);
 		clientInfo = new ArrayList<>();
 		isOnline = false;
 	}
@@ -35,8 +33,8 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 	{ return FTBLibClient.getSkinTexture(getProfile().getName()); }
 	
 	@Override
-	public LMWorld getWorld()
-	{ return world; }
+	public LMWorldClient getWorld()
+	{ return LMWorldClient.inst; }
 	
 	@Override
 	public Side getSide()
@@ -61,6 +59,7 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 	public EntityPlayerSP getPlayer()
 	{ return isOnline() ? FTBLibClient.getPlayerSP(getProfile().getId()) : null; }
 	
+	@SideOnly(Side.CLIENT)
 	public void receiveInfo(List<IChatComponent> info)
 	{
 		clientInfo.clear();
@@ -73,29 +72,32 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 		new EventLMPlayerClient.CustomInfo(this, clientInfo).post();
 	}
 	
-	public void readFromNet(ByteIOStream io, boolean self)
+	public void readFromNet(NBTTagCompound tag, boolean self)
 	{
-		isOnline = io.readBoolean();
-		renderBadge = io.readBoolean();
+		IntMap map = new IntMap();
+		map.list.addAll(tag.getIntArray("S"));
 		
-		friends.clear();
-		friends.addAll(io.readIntArray(ByteCount.SHORT));
+		isOnline = map.get(0) != 0;
+		renderBadge = map.get(1) != 0;
 		
-		IntList otherFriends = IntList.asList(io.readIntArray(ByteCount.SHORT));
+		friendsList.clear();
+		friendsList.addAll(Bits.toUUIDList(tag.getByteArray("F")));
 		
-		for(LMPlayerClient p : world.playerMap.values())
+		List<UUID> otherFriends = Bits.toUUIDList(tag.getByteArray("OF"));
+		
+		for(LMPlayerClient p : LMWorldClient.inst.playerMap.values())
 		{
 			if(!p.equalsPlayer(this))
 			{
-				p.friends.clear();
-				if(otherFriends.contains(p.getPlayerID()))
+				p.friendsList.clear();
+				if(otherFriends.contains(p.getProfile().getId()))
 				{
-					p.friends.add(getPlayerID());
-					otherFriends.removeValue(p.getPlayerID());
+					p.friendsList.add(getProfile().getId());
+					otherFriends.remove(p.getProfile().getId());
 				}
 			}
 		}
 		
-		commonPublicData = LMNBTUtils.readTag(io);
+		commonPublicData = tag.getCompoundTag("CPUD");
 	}
 }

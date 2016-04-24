@@ -1,5 +1,6 @@
 package ftb.utils.mod;
 
+import ftb.lib.api.EventFTBSync;
 import ftb.utils.world.LMWorld;
 
 public class FTBUCommon // FTBUClient
@@ -14,4 +15,8 @@ public class FTBUCommon // FTBUClient
 	
 	public LMWorld getClientWorldLM()
 	{ return null; }
+	
+	public void syncData(EventFTBSync e)
+	{
+	}
 }

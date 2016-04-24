@@ -32,6 +32,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class ClaimedChunks
 {
@@ -68,10 +69,15 @@ public class ClaimedChunks
 					
 					for(int k = 0; k < chunksList.tagCount(); k++)
 					{
-						int[] ai = chunksList.func_150306_c(k);
-						ClaimedChunk c = new ClaimedChunk(Integer.parseInt(e1.getKey()), dim, ai[0], ai[1]);
-						if(ai.length >= 3 && ai[2] == 1) c.isChunkloaded = true;
-						map.put(Long.valueOf(Bits.intsToLong(ai[0], ai[1])), c);
+						UUID id = LMUtils.fromString(e1.getKey());
+						
+						if(id != null)
+						{
+							int[] ai = chunksList.func_150306_c(k);
+							ClaimedChunk c = new ClaimedChunk(id, dim, ai[0], ai[1]);
+							if(ai.length >= 3 && ai[2] == 1) c.isChunkloaded = true;
+							map.put(Long.valueOf(Bits.intsToLong(ai[0], ai[1])), c);
+						}
 					}
 				}
 				
@@ -108,7 +114,7 @@ public class ClaimedChunks
 							
 							if(ai != null)
 							{
-								ClaimedChunk c = new ClaimedChunk(p.getPlayerID(), dim, ai[0], ai[1]);
+								ClaimedChunk c = new ClaimedChunk(p.getProfile().getId(), dim, ai[0], ai[1]);
 								if(ai.length >= 3 && ai[2] == 1) c.isChunkloaded = true;
 								map.put(Bits.intsToLong(ai[0], ai[1]), c);
 							}
@@ -174,7 +180,10 @@ public class ClaimedChunks
 			{
 				for(ClaimedChunk c : map.values())
 				{
-					if(c != null && c.ownerID == p.getPlayerID()) list.add(c);
+					if(c != null && c.ownerID.equals(p.getProfile().getId()))
+					{
+						list.add(c);
+					}
 				}
 			}
 		}
@@ -185,7 +194,10 @@ public class ClaimedChunks
 			
 			for(ClaimedChunk c : map.values())
 			{
-				if(c != null && c.ownerID == p.getPlayerID()) list.add(c);
+				if(c != null && c.ownerID.equals(p.getProfile().getId()))
+				{
+					list.add(c);
+				}
 			}
 		}
 		

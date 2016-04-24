@@ -3,6 +3,7 @@ package ftb.utils.world.claims;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import ftb.lib.FTBWorld;
 import ftb.lib.LMDimUtils;
 import latmod.lib.MathHelperLM;
 import latmod.lib.util.Pos2I;
@@ -57,7 +58,7 @@ public class WorldBorder
 			if(size != s)
 			{
 				size = s;
-				settings.world.getServerWorld().update(null);
+				FTBWorld.server.syncData(null);
 			}
 		}
 	}
@@ -69,7 +70,7 @@ public class WorldBorder
 			if(pos.x != x || pos.y != z)
 			{
 				pos.set(x, z);
-				settings.world.getServerWorld().update(null);
+				FTBWorld.server.syncData(null);
 			}
 		}
 	}

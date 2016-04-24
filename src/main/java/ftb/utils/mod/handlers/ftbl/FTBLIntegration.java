@@ -7,31 +7,21 @@ import ftb.lib.api.EventFTBReload;
 import ftb.lib.api.EventFTBWorldClient;
 import ftb.lib.api.EventFTBWorldServer;
 import ftb.lib.api.friends.ILMPlayer;
-import ftb.lib.api.item.LMInvUtils;
 import ftb.lib.mod.FTBUIntegration;
-import ftb.utils.api.EventLMPlayerServer;
 import ftb.utils.api.EventLMWorldServer;
 import ftb.utils.api.guide.ServerInfoFile;
 import ftb.utils.badges.ServerBadges;
 import ftb.utils.mod.FTBUTicks;
-import ftb.utils.mod.config.FTBUConfigLogin;
 import ftb.utils.mod.handlers.FTBUChunkEventHandler;
-import ftb.utils.net.MessageAreaUpdate;
-import ftb.utils.net.MessageLMPlayerLoggedIn;
-import ftb.utils.world.Backups;
 import ftb.utils.world.LMPlayerServer;
 import ftb.utils.world.LMWorld;
 import ftb.utils.world.LMWorldServer;
 import ftb.utils.world.claims.ClaimedChunks;
 import ftb.utils.world.ranks.Ranks;
-import latmod.lib.ByteIOStream;
 import latmod.lib.LMJsonUtils;
 import latmod.lib.util.Phase;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -41,8 +31,6 @@ import java.io.File;
 
 public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 {
-	private static boolean first_login, send_all;
-	
 	@Override
 	public void onReloaded(EventFTBReload e)
 	{
@@ -77,7 +65,6 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 		NBTTagCompound tagPlayers = LMNBTUtils.readMap(new File(latmodFolder, "LMPlayers.dat"));
 		if(tagPlayers != null && tagPlayers.hasKey("Players"))
 		{
-			LMPlayerServer.lastPlayerID = tagPlayers.getInteger("LastID");
 			LMWorldServer.inst.readPlayersFromServer(tagPlayers.getCompoundTag("Players"));
 		}
 		
@@ -121,64 +108,6 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 	}
 	
 	@Override
-	public final void onPlayerJoined(EntityPlayerMP ep, Phase phase)
-	{
-		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
-		
-		if(phase == Phase.PRE)
-		{
-			first_login = (p == null);
-			send_all = false;
-			
-			if(first_login)
-			{
-				p = new LMPlayerServer(LMWorldServer.inst, LMPlayerServer.nextPlayerID(), ep.getGameProfile());
-				LMWorldServer.inst.playerMap.put(p.getPlayerID(), p);
-				send_all = true;
-			}
-			else if(!p.getProfile().getName().equals(ep.getCommandSenderName()))
-			{
-				p.setProfile(ep.getGameProfile());
-				send_all = true;
-			}
-			
-			p.setPlayer(ep);
-		}
-		else
-		{
-			p.refreshStats();
-			
-			new EventLMPlayerServer.LoggedIn(p, ep, first_login).post();
-			new MessageLMPlayerLoggedIn(p, first_login, true).sendTo(send_all ? null : ep);
-			for(EntityPlayerMP ep1 : FTBLib.getAllOnlinePlayers(ep))
-				new MessageLMPlayerLoggedIn(p, first_login, false).sendTo(ep1);
-			
-			if(first_login)
-			{
-				for(ItemStack is : FTBUConfigLogin.starting_items.items)
-				{
-					LMInvUtils.giveItem(ep, is);
-				}
-			}
-			
-			//new MessageLMPlayerInfo(p.playerID).sendTo(null);
-			
-			for(IChatComponent c : FTBUConfigLogin.motd.components)
-			{
-				ep.addChatMessage(c);
-			}
-			
-			Backups.hadPlayer = true;
-			
-			p.checkNewFriends();
-			new MessageAreaUpdate(p, p.getPos(), 3, 3).sendTo(ep);
-			ServerBadges.sendToPlayer(ep);
-			
-			FTBUChunkEventHandler.instance.markDirty(null);
-		}
-	}
-	
-	@Override
 	public final ILMPlayer getLMPlayer(Object player)
 	{
 		LMWorld w = LMWorld.getWorld();
@@ -188,20 +117,6 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 	@Override
 	public final String[] getPlayerNames(boolean online)
 	{ return LMWorldServer.inst.getAllPlayerNames(Boolean.valueOf(online)); }
-	
-	@Override
-	public final void writeWorldData(ByteIOStream io, EntityPlayerMP ep)
-	{
-		LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);
-		io.writeInt(p.getPlayerID());
-		LMWorldServer.inst.writeDataToNet(io, p, true);
-	}
-	
-	@Override
-	public void readWorldData(ByteIOStream io)
-	{
-		
-	}
 	
 	@Override
 	public boolean hasClientWorld()

@@ -12,9 +12,9 @@ public class LMFakeServerPlayer extends LMPlayerServer
 {
 	public final FakePlayer fakePlayer;
 	
-	public LMFakeServerPlayer(LMWorldServer w, FakePlayer fp)
+	public LMFakeServerPlayer(FakePlayer fp)
 	{
-		super(w, Integer.MAX_VALUE, fp.getGameProfile());
+		super(fp.getGameProfile());
 		fakePlayer = fp;
 	}
 	

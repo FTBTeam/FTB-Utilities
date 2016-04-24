@@ -10,7 +10,7 @@ import ftb.lib.api.gui.PlayerActionRegistry;
 import ftb.lib.api.info.InfoPage;
 import ftb.lib.mod.client.gui.info.ButtonInfoPage;
 import ftb.lib.mod.client.gui.info.GuiInfo;
-import ftb.utils.net.ClientAction;
+import ftb.utils.net.MessageRequestPlayerInfo;
 import ftb.utils.world.LMPlayerClient;
 import ftb.utils.world.LMWorldClient;
 
@@ -85,7 +85,7 @@ public class InfoFriendsGUIPage extends InfoPage
 		@Override
 		public void onClicked(MouseButton button)
 		{
-			ClientAction.REQUEST_PLAYER_INFO.send(playerLM.getPlayerID());
+			new MessageRequestPlayerInfo(playerLM.getProfile().getId()).sendToServer();
 			super.onClicked(button);
 		}
 		

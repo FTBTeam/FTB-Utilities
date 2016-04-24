@@ -7,30 +7,30 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.item.LMInvUtils;
 import ftb.lib.api.net.LMNetworkWrapper;
+import ftb.lib.api.net.MessageLM;
 import ftb.utils.world.LMPlayerClient;
 import ftb.utils.world.LMPlayerServer;
 import ftb.utils.world.LMWorldClient;
 import ftb.utils.world.LMWorldServer;
 import latmod.lib.ByteCount;
-import latmod.lib.LMListUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IChatComponent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-public class MessageLMPlayerInfo extends MessageFTBU
+public class MessageLMPlayerInfo extends MessageLM
 {
 	public MessageLMPlayerInfo() { super(ByteCount.INT); }
 	
-	public MessageLMPlayerInfo(LMPlayerServer owner, int playerID)
+	public MessageLMPlayerInfo(LMPlayerServer owner, UUID playerID)
 	{
 		this();
 		
 		NBTTagCompound tag = new NBTTagCompound();
 		
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(playerID);
-		io.writeInt(p == null ? 0 : p.getPlayerID());
 		
 		List<IChatComponent> info = new ArrayList<>();
 		p.getInfo(owner, info);
@@ -39,12 +39,19 @@ public class MessageLMPlayerInfo extends MessageFTBU
 		io.writeByte(s);
 		
 		for(int i = 0; i < s; i++)
+		{
 			io.writeUTF(IChatComponent.Serializer.func_150696_a(info.get(i)));
+		}
 		
 		LMInvUtils.writeItemsToNBT(p.lastArmor, tag, "A");
 		writeTag(tag);
 		
-		io.writeIntArray(LMListUtils.toHashCodeArray(p.getFriends()), ByteCount.SHORT);
+		io.writeShort(p.friendsList.size());
+		
+		for(UUID id : p.friendsList)
+		{
+			io.writeUUID(id);
+		}
 	}
 	
 	@Override
@@ -62,13 +69,21 @@ public class MessageLMPlayerInfo extends MessageFTBU
 		int s = io.readUnsignedByte();
 		List<IChatComponent> info = new ArrayList<>();
 		for(int i = 0; i < s; i++)
+		{
 			info.add(IChatComponent.Serializer.func_150699_a(io.readUTF()));
+		}
+		
 		p.receiveInfo(info);
 		
 		LMInvUtils.readItemsFromNBT(p.lastArmor, readTag(), "A");
 		
-		p.friends.clear();
-		p.friends.addAll(io.readIntArray(ByteCount.SHORT));
+		p.friendsList.clear();
+		s = io.readUnsignedShort();
+		
+		for(int i = 0; i < s; i++)
+		{
+			p.friendsList.add(io.readUUID());
+		}
 		
 		FTBLibClient.onGuiClientAction();
 		return null;

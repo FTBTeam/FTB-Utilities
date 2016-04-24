@@ -1,8 +1,9 @@
 package ftb.utils.world;
 
 import com.mojang.authlib.GameProfile;
-import ftb.lib.LMNBTUtils;
-import latmod.lib.ByteIOStream;
+import ftb.lib.PrivacyLevel;
+import latmod.lib.IntMap;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class LMPlayerClientSelf extends LMPlayerClient
 {
@@ -12,10 +13,9 @@ public class LMPlayerClientSelf extends LMPlayerClient
 	public int maxClaimedChunks;
 	public int maxLoadedChunks;
 	
-	public LMPlayerClientSelf(LMWorldClient w, int i, GameProfile gp)
+	public LMPlayerClientSelf(GameProfile gp)
 	{
-		super(w, i, gp);
-		
+		super(gp);
 		settings = new PersonalSettings();
 	}
 	
@@ -28,19 +28,24 @@ public class LMPlayerClientSelf extends LMPlayerClient
 	{ return settings; }
 	
 	@Override
-	public void readFromNet(ByteIOStream io, boolean self) // LMPlayerServer
+	public void readFromNet(NBTTagCompound tag, boolean self) // LMPlayerServer
 	{
-		super.readFromNet(io, self);
+		super.readFromNet(tag, self);
 		
 		if(self)
 		{
-			settings.readFromNet(io);
+			IntMap map = new IntMap();
+			map.list.addAll(tag.getIntArray("SP"));
 			
-			commonPrivateData = LMNBTUtils.readTag(io);
-			claimedChunks = io.readUnsignedShort();
-			loadedChunks = io.readUnsignedShort();
-			maxClaimedChunks = io.readUnsignedShort();
-			maxLoadedChunks = io.readUnsignedShort();
+			settings.flags = (byte) map.get(0);
+			settings.blocks = PrivacyLevel.VALUES_3[map.get(1)];
+			
+			claimedChunks = map.get(2);
+			loadedChunks = map.get(3);
+			maxClaimedChunks = map.get(4);
+			maxLoadedChunks = map.get(5);
+			
+			commonPrivateData = tag.getCompoundTag("CPRD");
 		}
 	}
 }

@@ -46,7 +46,7 @@ public class FTBUPlayerEventHandler
 		p.lastArmor[4] = ep.inventory.getCurrentItem();
 		
 		new EventLMPlayerServer.LoggedOut(p, ep).post();
-		new MessageLMPlayerLoggedOut(p).sendTo(null);
+		new MessageLMPlayerLoggedOut(p).sendTo(ep);
 		
 		p.setPlayer(null);
 		//Backups.shouldRun = true;
@@ -118,7 +118,7 @@ public class FTBUPlayerEventHandler
 			p.lastDeath = new EntityPos(e.entity).toLinkedPos();
 			
 			p.refreshStats();
-			new MessageLMPlayerDied(p).sendTo(null);
+			new MessageLMPlayerDied(p).sendTo((EntityPlayerMP) e.entity);
 		}
 	}
 	

@@ -5,14 +5,9 @@ import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.FTBLib;
 import ftb.lib.LMNBTUtils;
-import ftb.lib.api.config.ConfigGroup;
 import ftb.utils.api.EventLMPlayerServer;
 import ftb.utils.mod.handlers.FTBUChunkEventHandler;
-import ftb.utils.net.MessageLMWorldUpdate;
 import ftb.utils.world.claims.ClaimedChunks;
-import latmod.lib.ByteCount;
-import latmod.lib.ByteIOStream;
-import latmod.lib.IntList;
 import latmod.lib.LMListUtils;
 import latmod.lib.LMMapUtils;
 import latmod.lib.LMUtils;
@@ -28,16 +23,16 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class LMWorldServer extends LMWorld // LMWorldClient
 {
 	public static LMWorldServer inst = null;
 	
 	public final File latmodFolder;
-	public final HashMap<Integer, LMPlayerServer> playerMap;
+	public final Map<UUID, LMPlayerServer> playerMap;
 	public final Warps warps;
 	public final ClaimedChunks claimedChunks;
-	public final ConfigGroup customServerData;
 	
 	public LMWorldServer(File f)
 	{
@@ -46,11 +41,10 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		playerMap = new HashMap<>();
 		warps = new Warps();
 		claimedChunks = new ClaimedChunks();
-		customServerData = new ConfigGroup("custom_server_data");
 	}
 	
 	@Override
-	public Map<Integer, ? extends LMPlayer> playerMap()
+	public Map<UUID, ? extends LMPlayer> playerMap()
 	{ return playerMap; }
 	
 	@Override
@@ -71,7 +65,7 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 	@Override
 	public LMPlayerServer getPlayer(Object o)
 	{
-		if(o instanceof FakePlayer) return new LMFakeServerPlayer(this, (FakePlayer) o);
+		if(o instanceof FakePlayer) return new LMFakeServerPlayer((FakePlayer) o);
 		LMPlayer p = super.getPlayer(o);
 		return (p == null) ? null : p.toPlayerMP();
 	}
@@ -81,8 +75,6 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		if(p == Phase.PRE)
 		{
 			warps.readFromJson(group, "warps");
-			customServerData.func_152753_a(group.get(customServerData.getID()));
-			customCommonData.func_152753_a(group.get(customCommonData.getID()));
 			settings.readFromJson(group.get("settings").getAsJsonObject());
 		}
 	}
@@ -92,47 +84,37 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		if(p == Phase.PRE)
 		{
 			warps.writeToJson(group, "warps");
-			group.add(customServerData.getID(), customServerData.getSerializableElement());
-			group.add(customCommonData.getID(), customCommonData.getSerializableElement());
 			JsonObject settingsGroup = new JsonObject();
 			settings.writeToJson(settingsGroup);
 			group.add("settings", settingsGroup);
 		}
 	}
 	
-	public void writeDataToNet(ByteIOStream io, LMPlayerServer self, boolean first)
+	public void writeDataToNet(NBTTagCompound tag, LMPlayerServer self, boolean first)
 	{
 		if(first)
 		{
-			IntList onlinePlayers = new IntList();
-			
-			io.writeInt(playerMap.size());
+			NBTTagCompound playerMapTag = new NBTTagCompound();
 			
 			for(LMPlayerServer p : playerMap.values())
 			{
-				io.writeInt(p.getPlayerID());
-				io.writeUUID(p.getProfile().getId());
-				io.writeUTF(p.getProfile().getName());
-				
-				if(p.isOnline() && p.getPlayerID() != self.getPlayerID()) onlinePlayers.add(p.getPlayerID());
+				if(p.isOnline())
+				{
+					NBTTagCompound tag1 = new NBTTagCompound();
+					p.writeToNet(tag1, p.equalsPlayer(self));
+					tag1.setString("N", p.getProfile().getName());
+					playerMapTag.setTag(LMUtils.fromUUID(p.getProfile().getId()), tag1);
+				}
+				else
+				{
+					playerMapTag.setString(LMUtils.fromUUID(p.getProfile().getId()), p.getProfile().getName());
+				}
 			}
 			
-			io.writeIntArray(onlinePlayers.toArray(), ByteCount.INT);
-			
-			for(int i = 0; i < onlinePlayers.size(); i++)
-			{
-				LMPlayerServer p = playerMap.get(onlinePlayers.get(i));
-				p.writeToNet(io, false);
-			}
-			
-			self.writeToNet(io, true);
+			tag.setTag("PM", playerMapTag);
 		}
 		
-		NBTTagCompound tag = new NBTTagCompound();
-		customCommonData.writeToNBT(tag, false);
-		LMNBTUtils.writeTag(io, tag);
-		
-		settings.writeToNet(io);
+		settings.writeToNet(tag);
 	}
 	
 	public void writePlayersToServer(NBTTagCompound tag)
@@ -143,33 +125,51 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 			
 			p.writeToServer(tag1);
 			new EventLMPlayerServer.DataSaved(p).post();
-			tag1.setString("UUID", p.getStringUUID());
 			tag1.setString("Name", p.getProfile().getName());
-			tag.setTag(Integer.toString(p.getPlayerID()), tag1);
+			tag.setTag(p.getStringUUID(), tag1);
 		}
 	}
 	
 	public void readPlayersFromServer(NBTTagCompound tag)
 	{
 		playerMap.clear();
+		LMPlayerServer.tempPlayerIDMap = null;
 		
 		Map<String, NBTTagCompound> map = LMNBTUtils.toMapWithType(tag);
 		
 		for(Map.Entry<String, NBTTagCompound> e : map.entrySet())
 		{
-			int id = Integer.parseInt(e.getKey());
 			NBTTagCompound tag1 = e.getValue();
-			LMPlayerServer p = new LMPlayerServer(this, id, new GameProfile(LMUtils.fromString(tag1.getString("UUID")), tag1.getString("Name")));
-			p.readFromServer(tag1);
-			playerMap.put(p.getPlayerID(), p);
+			
+			if(LMPlayerServer.tempPlayerIDMap == null && tag1.hasKey("UUID"))
+			{
+				LMPlayerServer.tempPlayerIDMap = new HashMap<>();
+				
+				for(Map.Entry<String, NBTTagCompound> e1 : map.entrySet())
+				{
+					LMPlayerServer.tempPlayerIDMap.put(Integer.parseInt(e.getKey()), LMUtils.fromString(e1.getValue().getString("UUID")));
+				}
+				
+				FTBLib.dev_logger.info("Old LMPlayers.dat found:" + LMPlayerServer.tempPlayerIDMap);
+			}
+			
+			if(LMPlayerServer.tempPlayerIDMap == null)
+			{
+				LMPlayerServer p = new LMPlayerServer(new GameProfile(LMUtils.fromString(e.getKey()), tag1.getString("Name")));
+				p.readFromServer(tag1);
+				playerMap.put(p.getProfile().getId(), p);
+			}
+			else
+			{
+				LMPlayerServer p = new LMPlayerServer(new GameProfile(LMUtils.fromString(tag1.getString("UUID")), tag1.getString("Name")));
+				p.readFromServer(tag1);
+				playerMap.put(p.getProfile().getId(), p);
+			}
 		}
 		
 		for(LMPlayerServer p : playerMap.values())
 			p.onPostLoaded();
 	}
-	
-	public void update(LMPlayerServer self)
-	{ new MessageLMWorldUpdate(this, self).sendTo(null); }
 	
 	@Override
 	public List<LMPlayerServer> getAllOnlinePlayers()

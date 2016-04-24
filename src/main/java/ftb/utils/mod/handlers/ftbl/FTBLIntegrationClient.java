@@ -9,14 +9,12 @@ import ftb.lib.api.client.GlStateManager;
 import ftb.lib.api.client.LMFrustrumUtils;
 import ftb.lib.api.client.model.CubeRenderer;
 import ftb.lib.api.notification.ClientNotifications;
-import ftb.lib.mod.FTBLibMod;
 import ftb.utils.api.EventLMWorldClient;
 import ftb.utils.api.guide.ClientGuideFile;
 import ftb.utils.badges.ClientBadges;
 import ftb.utils.mod.client.gui.claims.ClaimedAreasClient;
 import ftb.utils.world.LMWorldClient;
 import ftb.utils.world.claims.WorldBorder;
-import latmod.lib.ByteIOStream;
 import latmod.lib.MathHelperLM;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
@@ -57,17 +55,8 @@ public class FTBLIntegrationClient extends FTBLIntegration
 	}
 	
 	@Override
-	public void readWorldData(ByteIOStream io)
-	{
-		LMWorldClient.inst = new LMWorldClient(io.readInt());
-		LMWorldClient.inst.readDataFromNet(io, true);
-		FTBLibMod.logger.info("Joined the server with PlayerID " + LMWorldClient.inst.clientPlayerID);
-		new EventLMWorldClient(LMWorldClient.inst, false).post();
-	}
-	
-	@Override
 	public boolean hasClientWorld()
-	{ return LMWorldClient.inst != null && LMWorldClient.inst.clientPlayerID > 0 && LMWorldClient.inst.clientPlayer != null; }
+	{ return LMWorldClient.inst != null; }
 	
 	@Override
 	public void renderWorld(float pt)

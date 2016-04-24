@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.BlockDimPos;
 import ftb.lib.api.net.LMNetworkWrapper;
+import ftb.lib.api.net.MessageLM;
 import ftb.utils.mod.client.gui.claims.ClaimedAreasClient;
 import ftb.utils.world.LMPlayerServer;
 import ftb.utils.world.LMWorldServer;
@@ -13,7 +14,7 @@ import ftb.utils.world.claims.ChunkType;
 import latmod.lib.ByteCount;
 import latmod.lib.MathHelperLM;
 
-public class MessageAreaUpdate extends MessageFTBU
+public class MessageAreaUpdate extends MessageLM
 {
 	public MessageAreaUpdate() { super(ByteCount.INT); }
 	
@@ -44,7 +45,7 @@ public class MessageAreaUpdate extends MessageFTBU
 	
 	@Override
 	public LMNetworkWrapper getWrapper()
-	{ return FTBUNetHandler.NET_WORLD; }
+	{ return FTBUNetHandler.NET_INFO; }
 	
 	@Override
 	@SideOnly(Side.CLIENT)

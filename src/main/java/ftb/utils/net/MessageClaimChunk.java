@@ -4,12 +4,13 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import ftb.lib.LMAccessToken;
 import ftb.lib.api.net.LMNetworkWrapper;
+import ftb.lib.api.net.MessageLM;
 import ftb.utils.world.LMPlayerServer;
 import ftb.utils.world.LMWorldServer;
 import ftb.utils.world.claims.ClaimedChunk;
 import latmod.lib.ByteCount;
 
-public class MessageClaimChunk extends MessageFTBU
+public class MessageClaimChunk extends MessageLM
 {
 	public static final int ID_CLAIM = 0;
 	public static final int ID_UNCLAIM = 1;
@@ -32,7 +33,7 @@ public class MessageClaimChunk extends MessageFTBU
 	
 	@Override
 	public LMNetworkWrapper getWrapper()
-	{ return FTBUNetHandler.NET_WORLD; }
+	{ return FTBUNetHandler.NET_INFO; }
 	
 	@Override
 	public IMessage onMessage(MessageContext ctx)

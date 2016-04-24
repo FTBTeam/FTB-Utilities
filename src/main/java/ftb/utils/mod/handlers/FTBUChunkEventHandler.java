@@ -1,6 +1,5 @@
 package ftb.utils.mod.handlers;
 
-import com.google.common.collect.MapMaker;
 import ftb.lib.EventBusHelper;
 import ftb.lib.FTBLib;
 import ftb.lib.LMDimUtils;
@@ -10,6 +9,7 @@ import ftb.utils.mod.config.FTBUConfigChunkloading;
 import ftb.utils.world.LMPlayerServer;
 import ftb.utils.world.LMWorldServer;
 import ftb.utils.world.claims.ClaimedChunk;
+import latmod.lib.LMUtils;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 
@@ -17,12 +17,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback, ForgeChunkManager.OrderedLoadingCallback
 {
 	public static final FTBUChunkEventHandler instance = new FTBUChunkEventHandler();
-	private final Map<World, Map<Integer, ForgeChunkManager.Ticket>> table = new MapMaker().weakKeys().makeMap();
-	private static final String PLAYER_ID_TAG = "PID";
+	private final Map<Integer, Map<UUID, ForgeChunkManager.Ticket>> table = new HashMap<>();
 	
 	public void init()
 	{
@@ -41,10 +41,8 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 	{
 		if(w == null || player == null) return null;
 		
-		Integer playerID = Integer.valueOf(player.getPlayerID());
-		
-		Map<Integer, ForgeChunkManager.Ticket> map = table.get(w);
-		ForgeChunkManager.Ticket t = (map == null) ? null : map.get(playerID);
+		Map<UUID, ForgeChunkManager.Ticket> map = table.get(w.provider.dimensionId);
+		ForgeChunkManager.Ticket t = (map == null) ? null : map.get(player.getProfile().getId());
 		
 		if(t == null)
 		{
@@ -52,15 +50,15 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 			if(t == null) return null;
 			else
 			{
-				t.getModData().setInteger(PLAYER_ID_TAG, playerID);
+				t.getModData().setString("UUID", player.getStringUUID());
 				
 				if(map == null)
 				{
 					map = new HashMap<>();
-					table.put(w, map);
+					table.put(w.provider.dimensionId, map);
 				}
 				
-				map.put(playerID, t);
+				map.put(player.getProfile().getId(), t);
 			}
 		}
 		
@@ -70,23 +68,32 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 	@Override
 	public List<ForgeChunkManager.Ticket> ticketsLoaded(List<ForgeChunkManager.Ticket> tickets, World world, int maxTicketCount)
 	{
-		table.remove(world);
+		table.remove(world.provider.dimensionId);
 		List<ForgeChunkManager.Ticket> tickets1 = new ArrayList<>();
 		if(tickets.isEmpty() || !FTBUConfigChunkloading.enabled.getAsBoolean()) return tickets1;
-		Map<Integer, ForgeChunkManager.Ticket> map = new HashMap<>();
+		Map<UUID, ForgeChunkManager.Ticket> map = new HashMap<>();
 		
 		for(ForgeChunkManager.Ticket t : tickets)
 		{
-			int playerID = t.getModData().getInteger(PLAYER_ID_TAG);
+			UUID id;
 			
-			if(playerID > 0)
+			if(t.getModData().hasKey("PID"))
 			{
-				map.put(playerID, t);
+				id = LMPlayerServer.tempPlayerIDMap == null ? null : LMPlayerServer.tempPlayerIDMap.get(t.getModData().getInteger("PID"));
+			}
+			else
+			{
+				id = LMUtils.fromString(t.getModData().getString("UUID"));
+			}
+			
+			if(id != null)
+			{
+				map.put(id, t);
 				tickets1.add(t);
 			}
 		}
 		
-		table.put(world, map);
+		table.put(world.provider.dimensionId, map);
 		return tickets1;
 	}
 	
@@ -95,9 +102,9 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 	{
 		for(ForgeChunkManager.Ticket t : tickets)
 		{
-			int playerID = t.getModData().getInteger(PLAYER_ID_TAG);
+			UUID playerID = LMUtils.fromString(t.getModData().getString("UUID"));
 			
-			if(playerID > 0)
+			if(playerID != null)
 			{
 				List<ClaimedChunk> chunks = LMWorldServer.inst.claimedChunks.getChunks(LMWorldServer.inst.getPlayer(playerID), world.provider.dimensionId);
 				
@@ -122,6 +129,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 		
 		if(!table.isEmpty())
 		{
+			//To avoid java.util.ConcurrentModificationException
 			World[] worlds = table.keySet().toArray(new World[table.size()]);
 			for(World w1 : worlds)
 				markDirty0(w1);
@@ -199,17 +207,17 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 	
 	private void releaseTicket(ForgeChunkManager.Ticket t)
 	{
-		if(t.getModData().hasKey(PLAYER_ID_TAG))
+		if(t.getModData().hasKey("UUID"))
 		{
-			Map<Integer, ForgeChunkManager.Ticket> map = table.get(t.world);
+			Map<UUID, ForgeChunkManager.Ticket> map = table.get(t.world.provider.dimensionId);
 			
 			if(map != null)
 			{
-				map.remove(t.getModData().getInteger(PLAYER_ID_TAG));
+				map.remove(LMUtils.fromString(t.getModData().getString("UUID")));
 				
 				if(map.isEmpty())
 				{
-					table.remove(t.world);
+					table.remove(t.world.provider.dimensionId);
 				}
 			}
 		}

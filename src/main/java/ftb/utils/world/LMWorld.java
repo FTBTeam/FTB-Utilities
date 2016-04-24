@@ -52,19 +52,17 @@ public abstract class LMWorld // FTBWorld
 	{
 		if(o == null || o instanceof FakePlayer) return null;
 		
-		Map<UUID, ? extends LMPlayer> playerMap = playerMap();
-		
 		if(o.getClass() == UUID.class)
 		{
-			return playerMap.get(o);
+			return playerMap().get(o);
 		}
 		else if(o instanceof GameProfile)
 		{
-			return playerMap.get(((GameProfile) o).getId());
+			return playerMap().get(((GameProfile) o).getId());
 		}
 		else if(o instanceof ILMPlayer)
 		{
-			return playerMap.get(((ILMPlayer) o).getProfile().getId());
+			return playerMap().get(((ILMPlayer) o).getProfile().getId());
 		}
 		else if(o instanceof EntityPlayer)
 		{
@@ -76,8 +74,13 @@ public abstract class LMWorld // FTBWorld
 			
 			if(s == null || s.isEmpty()) return null;
 			
-			for(LMPlayer p : playerMap.values())
-			{ if(p.getProfile().getName().equalsIgnoreCase(s)) return p; }
+			for(LMPlayer p : playerMap().values())
+			{
+				if(p.getProfile().getName().equalsIgnoreCase(s))
+				{
+					return p;
+				}
+			}
 			
 			return getPlayer(LMUtils.fromString(s));
 		}
@@ -85,19 +88,18 @@ public abstract class LMWorld // FTBWorld
 		return null;
 	}
 	
-	public List<? extends LMPlayer> getAllOnlinePlayers()
+	public List<LMPlayer> getAllOnlinePlayers()
 	{
-		ArrayList<LMPlayer> l = new ArrayList<>();
+		List<LMPlayer> l = new ArrayList<>();
+		
 		for(LMPlayer p : playerMap().values())
-		{ if(p.isOnline()) l.add(p); }
-		return l;
-	}
-	
-	public List<LMPlayerServer> getServerPlayers()
-	{
-		ArrayList<LMPlayerServer> l = new ArrayList<>();
-		for(LMPlayer p : playerMap().values())
-			l.add(p.toPlayerMP());
+		{
+			if(p.isOnline())
+			{
+				l.add(p);
+			}
+		}
+		
 		return l;
 	}
 }

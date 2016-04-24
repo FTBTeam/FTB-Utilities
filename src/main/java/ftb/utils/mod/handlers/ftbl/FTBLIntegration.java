@@ -24,7 +24,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 import java.io.File;
@@ -115,21 +114,12 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 	}
 	
 	@Override
-	public final String[] getPlayerNames(boolean online)
-	{ return LMWorldServer.inst.getAllPlayerNames(Boolean.valueOf(online)); }
-	
-	@Override
 	public boolean hasClientWorld()
 	{ return false; }
 	
 	@Override
 	public void renderWorld(float pt)
 	{ }
-	
-	@Override
-	public void onTooltip(ItemTooltipEvent e)
-	{
-	}
 	
 	@Override
 	public void onRightClick(PlayerInteractEvent e)

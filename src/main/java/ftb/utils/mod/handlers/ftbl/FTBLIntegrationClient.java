@@ -19,7 +19,6 @@ import latmod.lib.MathHelperLM;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
@@ -136,10 +135,5 @@ public class FTBLIntegrationClient extends FTBLIntegration
 		FTBLibClient.popMaxBrightness();
 		GlStateManager.depthMask(true);
 		GlStateManager.popAttrib();
-	}
-	
-	@Override
-	public void onTooltip(ItemTooltipEvent e)
-	{
 	}
 }

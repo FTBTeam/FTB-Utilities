@@ -132,7 +132,8 @@ public class ServerInfoFile extends InfoPage
 		
 		categoryTops = getSub("tops").setTitle(Top.langTopTitle.chatComponent());
 		
-		players = LMWorldServer.inst.getServerPlayers();
+		players = new ArrayList<>();
+		players.addAll(LMWorldServer.inst.playerMap.values());
 		
 		for(LMPlayerServer p : players)
 		{

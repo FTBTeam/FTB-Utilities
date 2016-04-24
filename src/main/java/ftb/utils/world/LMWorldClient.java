@@ -50,9 +50,9 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 		return (p == null) ? null : p.toPlayerSP();
 	}
 	
-	public void readDataFromNet(NBTTagCompound tag, boolean first)
+	public void readDataFromNet(NBTTagCompound tag, boolean login)
 	{
-		if(first)
+		if(login)
 		{
 			playerMap.clear();
 			
@@ -63,6 +63,8 @@ public class LMWorldClient extends LMWorld // LMWorldServer
 			playerMap.put(clientPlayer.getProfile().getId(), clientPlayer);
 			playerData.removeTag(clientPlayer.getStringUUID());
 			LMPlayerClient p;
+			
+			System.out.println(playerData);
 			
 			for(Map.Entry<String, NBTBase> e : LMNBTUtils.entrySet(playerData))
 			{

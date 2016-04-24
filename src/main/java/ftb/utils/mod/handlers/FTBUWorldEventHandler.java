@@ -42,7 +42,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
 	@SubscribeEvent
 	public void syncData(EventFTBSync e)
 	{
-		if(e.side.isServer())
+		if(e.world.side.isServer())
 		{
 			EntityPlayerMP ep = (EntityPlayerMP) e.player;
 			LMPlayerServer p = LMWorldServer.inst.getPlayer(ep);

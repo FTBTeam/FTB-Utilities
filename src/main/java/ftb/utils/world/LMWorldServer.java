@@ -8,7 +8,6 @@ import ftb.lib.LMNBTUtils;
 import ftb.utils.api.EventLMPlayerServer;
 import ftb.utils.mod.handlers.FTBUChunkEventHandler;
 import ftb.utils.world.claims.ClaimedChunks;
-import latmod.lib.LMListUtils;
 import latmod.lib.LMMapUtils;
 import latmod.lib.LMUtils;
 import latmod.lib.util.Phase;
@@ -17,11 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -169,33 +164,5 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		
 		for(LMPlayerServer p : playerMap.values())
 			p.onPostLoaded();
-	}
-	
-	@Override
-	public List<LMPlayerServer> getAllOnlinePlayers()
-	{
-		ArrayList<LMPlayerServer> l = new ArrayList<>();
-		for(LMPlayerServer p : playerMap.values())
-		{ if(p.isOnline()) l.add(p); }
-		return l;
-	}
-	
-	public String[] getAllPlayerNames(Boolean online)
-	{
-		if(online == null) return new String[0];
-		List<LMPlayerServer> list = (online == Boolean.TRUE) ? getAllOnlinePlayers() : LMListUtils.clone(playerMap.values());
-		
-		Collections.sort(list, new Comparator<LMPlayerServer>()
-		{
-			@Override
-			public int compare(LMPlayerServer o1, LMPlayerServer o2)
-			{
-				if(o1.isOnline() == o2.isOnline())
-					return o1.getProfile().getName().compareToIgnoreCase(o2.getProfile().getName());
-				return Boolean.compare(o2.isOnline(), o1.isOnline());
-			}
-		});
-		
-		return LMListUtils.toStringArray(list);
 	}
 }

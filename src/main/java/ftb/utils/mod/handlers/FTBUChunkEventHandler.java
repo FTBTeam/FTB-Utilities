@@ -130,9 +130,12 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 		if(!table.isEmpty())
 		{
 			//To avoid java.util.ConcurrentModificationException
-			World[] worlds = table.keySet().toArray(new World[table.size()]);
-			for(World w1 : worlds)
-				markDirty0(w1);
+			Integer[] worlds = table.keySet().toArray(new Integer[table.size()]);
+			for(Integer w1 : worlds)
+			{
+				World ws = LMDimUtils.getWorld(w1);
+				if(ws != null) markDirty0(ws);
+			}
 		}
 	}
 	

@@ -7,7 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.item.LMInvUtils;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageLM_IO;
 import ftb.utils.world.LMPlayerClient;
 import ftb.utils.world.LMPlayerServer;
 import ftb.utils.world.LMWorldClient;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class MessageLMPlayerInfo extends MessageLM
+public class MessageLMPlayerInfo extends MessageLM_IO
 {
 	public MessageLMPlayerInfo() { super(ByteCount.INT); }
 	

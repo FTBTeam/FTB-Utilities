@@ -5,13 +5,13 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageLM_IO;
 import ftb.utils.badges.ClientBadges;
 import latmod.lib.ByteCount;
 
 import java.util.UUID;
 
-public class MessageSendBadge extends MessageLM
+public class MessageSendBadge extends MessageLM_IO
 {
 	public MessageSendBadge() { super(ByteCount.BYTE); }
 	

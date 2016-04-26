@@ -4,13 +4,13 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import ftb.lib.LMAccessToken;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageLM_IO;
 import ftb.utils.world.LMPlayerServer;
 import ftb.utils.world.LMWorldServer;
 import ftb.utils.world.claims.ClaimedChunk;
 import latmod.lib.ByteCount;
 
-public class MessageClaimChunk extends MessageLM
+public class MessageClaimChunk extends MessageLM_IO
 {
 	public static final int ID_CLAIM = 0;
 	public static final int ID_UNCLAIM = 1;

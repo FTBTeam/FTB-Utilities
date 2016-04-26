@@ -3,13 +3,13 @@ package ftb.utils.net;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageLM_IO;
 import ftb.utils.world.LMWorldServer;
 import latmod.lib.ByteCount;
 import latmod.lib.MathHelperLM;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-public class MessageAreaRequest extends MessageLM
+public class MessageAreaRequest extends MessageLM_IO
 {
 	public MessageAreaRequest() { super(ByteCount.BYTE); }
 	

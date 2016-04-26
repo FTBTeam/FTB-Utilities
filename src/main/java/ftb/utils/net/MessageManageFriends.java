@@ -3,13 +3,13 @@ package ftb.utils.net;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageLM_IO;
 import ftb.utils.world.LMPlayerServer;
 import ftb.utils.world.LMWorldServer;
 
 import java.util.UUID;
 
-public class MessageManageFriends extends MessageLM
+public class MessageManageFriends extends MessageLM_IO
 {
 	public static final byte ID_ADD = 0;
 	public static final byte ID_ADD_ALL = 1;

@@ -6,7 +6,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageLM_IO;
 import ftb.utils.api.EventLMPlayerClient;
 import ftb.utils.world.LMPlayerClient;
 import ftb.utils.world.LMPlayerServer;
@@ -16,7 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.UUID;
 
-public class MessageLMPlayerLoggedIn extends MessageLM
+public class MessageLMPlayerLoggedIn extends MessageLM_IO
 {
 	public MessageLMPlayerLoggedIn() { super(ByteCount.INT); }
 	

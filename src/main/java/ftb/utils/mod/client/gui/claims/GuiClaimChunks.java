@@ -43,7 +43,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	public static final ResourceLocation tex_map_entity = new ResourceLocation("ftbu", "textures/map/entity.png");
 	public static final TextureCoords[][][][] tex_area_coords = new TextureCoords[2][2][2][2];
 	
-	private static final TextureCoords getAreaCoords(int i)
+	private static TextureCoords getAreaCoords(int i)
 	{ return new TextureCoords(tex_area, (i % 4) * 64, (i / 4) * 64, 64, 64); }
 	
 	static

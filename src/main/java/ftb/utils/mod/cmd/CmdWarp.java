@@ -27,7 +27,11 @@ public class CmdWarp extends CommandLM
 	@Override
 	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 	{
-		if(args.length == 1) return getListOfStringsFromIterableMatchingLastWord(args, LMWorldServer.inst.warps.list());
+		if(args.length == 1)
+		{
+			return getListOfStringsFromIterableMatchingLastWord(args, LMWorldServer.inst.warps.list());
+		}
+		
 		return super.addTabCompletionOptions(ics, args);
 	}
 	

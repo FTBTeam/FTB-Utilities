@@ -40,8 +40,12 @@ public class CmdLMPlayerSettings extends CommandSubLM
 		@Override
 		public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 		{
-			if(args.length == 1) return getListOfStringsMatchingLastWord(args, "true", "false");
-			return null;
+			if(args.length == 1)
+			{
+				return getListOfStringsMatchingLastWord(args, "true", "false");
+			}
+			
+			return super.addTabCompletionOptions(ics, args);
 		}
 		
 		@Override
@@ -64,8 +68,12 @@ public class CmdLMPlayerSettings extends CommandSubLM
 		@Override
 		public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 		{
-			if(args.length == 1) return getListOfStringsMatchingLastWord(args, PrivacyLevel.getNames());
-			return null;
+			if(args.length == 1)
+			{
+				return getListOfStringsMatchingLastWord(args, PrivacyLevel.getNames());
+			}
+			
+			return super.addTabCompletionOptions(ics, args);
 		}
 		
 		@Override
@@ -100,8 +108,12 @@ public class CmdLMPlayerSettings extends CommandSubLM
 		@Override
 		public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 		{
-			if(args.length == 1) return getListOfStringsMatchingLastWord(args, "true", "false");
-			return null;
+			if(args.length == 1)
+			{
+				return getListOfStringsMatchingLastWord(args, "true", "false");
+			}
+			
+			return super.addTabCompletionOptions(ics, args);
 		}
 		
 		@Override

@@ -19,7 +19,6 @@ import ftb.utils.mod.FTBUGuiHandler;
 import ftb.utils.mod.cmd.CmdMath;
 import ftb.utils.world.LMWorld;
 import ftb.utils.world.LMWorldClient;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.client.ClientCommandHandler;
 
 @SideOnly(Side.CLIENT)
@@ -70,9 +69,8 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	@Override
 	public void syncData(EventFTBSync e)
 	{
-		NBTTagCompound tag = e.syncData.getCompoundTag("FTBU");
 		LMWorldClient.inst = new LMWorldClient();
-		LMWorldClient.inst.readDataFromNet(tag, e.login);
+		LMWorldClient.inst.readDataFromNet(e.syncData.getCompoundTag("FTBU"), e.login);
 		FTBLibMod.logger.info("Joined the server");
 		new EventLMWorldClient(LMWorldClient.inst, false).post();
 	}

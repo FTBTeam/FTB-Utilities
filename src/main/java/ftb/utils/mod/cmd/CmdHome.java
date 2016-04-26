@@ -32,7 +32,7 @@ public class CmdHome extends CommandLM
 			return getListOfStringsFromIterableMatchingLastWord(args, LMPlayerServer.get(ics).homes.list());
 		}
 		
-		return null;
+		return super.addTabCompletionOptions(ics, args);
 	}
 	
 	@Override

@@ -85,9 +85,9 @@ public class LMWorldServer extends LMWorld // LMWorldClient
 		}
 	}
 	
-	public void writeDataToNet(NBTTagCompound tag, LMPlayerServer self, boolean first)
+	public void writeDataToNet(NBTTagCompound tag, LMPlayerServer self, boolean login)
 	{
-		if(first)
+		if(login)
 		{
 			NBTTagCompound playerMapTag = new NBTTagCompound();
 			

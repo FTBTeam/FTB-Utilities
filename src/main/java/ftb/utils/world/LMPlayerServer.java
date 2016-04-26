@@ -127,7 +127,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public BlockDimPos getPos()
 	{
 		EntityPlayerMP ep = getPlayer();
-		if(ep != null) lastPos = new EntityPos(ep).toLinkedPos();
+		if(ep != null) lastPos = new EntityPos(ep).toBlockPos();
 		return lastPos.copy();
 	}
 	
@@ -234,7 +234,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 				double y = tag.getDouble("Y");
 				double z = tag.getDouble("Z");
 				int dim = tag.getInteger("D");
-				lastPos = new EntityPos(x, y, z, dim).toLinkedPos();
+				lastPos = new EntityPos(x, y, z, dim).toBlockPos();
 			}
 		}
 		else lastPos = null;
@@ -251,7 +251,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 				double y = tag.getDouble("Y");
 				double z = tag.getDouble("Z");
 				int dim = tag.getInteger("D");
-				lastDeath = new EntityPos(x, y, z, dim).toLinkedPos();
+				lastDeath = new EntityPos(x, y, z, dim).toBlockPos();
 			}
 		}
 		else lastDeath = null;

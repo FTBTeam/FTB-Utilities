@@ -31,7 +31,11 @@ public class CmdAdminHome extends CommandSubLM
 	@Override
 	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 	{
-		if(args.length == 2) return getListOfStringsMatchingLastWord(args, "list", "tp", "remove");
+		if(args.length == 2)
+		{
+			return getListOfStringsMatchingLastWord(args, "list", "tp", "remove");
+		}
+		
 		return super.addTabCompletionOptions(ics, args);
 	}
 	

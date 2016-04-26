@@ -63,7 +63,7 @@ public class FTBUPlayerEventHandler
 		LMPlayerServer player = LMWorldServer.inst.getPlayer(ep);
 		if(player == null || !player.isOnline()) return;
 		
-		player.lastPos = new EntityPos(ep).toLinkedPos();
+		player.lastPos = new EntityPos(ep).toBlockPos();
 		
 		if(LMWorldServer.inst.settings.getWB(ep.dimension).isOutsideD(ep.posX, ep.posZ))
 		{
@@ -115,7 +115,7 @@ public class FTBUPlayerEventHandler
 		if(e.entity instanceof EntityPlayerMP)
 		{
 			LMPlayerServer p = LMWorldServer.inst.getPlayer(e.entity);
-			p.lastDeath = new EntityPos(e.entity).toLinkedPos();
+			p.lastDeath = new EntityPos(e.entity).toBlockPos();
 			
 			p.refreshStats();
 			new MessageLMPlayerDied(p).sendTo((EntityPlayerMP) e.entity);

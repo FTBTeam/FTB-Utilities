@@ -20,7 +20,6 @@ import latmod.lib.util.Pos2I;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
@@ -86,24 +85,18 @@ public class FTBUPlayerEventHandler
 			ep.worldObj.playSoundAtEntity(ep, "random.fizz", 1F, 1F);
 		}
 		
-		int currentChunkType = LMWorldServer.inst.claimedChunks.getType(ep.dimension, e.newChunkX, e.newChunkZ).ID;
+		ChunkType currentChunkType = LMWorldServer.inst.claimedChunks.getType(ep.dimension, e.newChunkX, e.newChunkZ);
 		
-		if(player.lastChunkType == -99 || player.lastChunkType != currentChunkType)
+		if(player.lastChunkType == null || !player.lastChunkType.equals(currentChunkType))
 		{
 			player.lastChunkType = currentChunkType;
 			
-			ChunkType type = ClaimedChunks.getChunkTypeFromI(currentChunkType);
-			IChatComponent msg = null;
-			
-			if(type.isClaimed())
-				msg = new ChatComponentText(String.valueOf(LMWorldServer.inst.getPlayer(currentChunkType)));
-			else msg = type.langKey.chatComponent();
-			
+			IChatComponent msg = currentChunkType.getChatComponent();
 			msg.getChatStyle().setColor(EnumChatFormatting.WHITE);
 			msg.getChatStyle().setBold(true);
 			
 			Notification n = new Notification("chunk_changed", msg, 3000);
-			n.setColor(type.getAreaColor(player));
+			n.setColor(currentChunkType.getAreaColor(player));
 			
 			FTBLib.notifyPlayer(ep, n);
 		}

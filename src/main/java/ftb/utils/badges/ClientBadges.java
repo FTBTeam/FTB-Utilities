@@ -38,8 +38,18 @@ public class ClientBadges
 		return b;
 	}
 	
-	public static void addBadge(Badge b)
-	{ if(b != null && !b.equals(Badge.emptyBadge)) map.put(b.getID(), b); }
+	public static void addBadges(Map<String, String> m)
+	{
+		for(Map.Entry<String, String> e : m.entrySet())
+		{
+			Badge b = new Badge(e.getKey(), e.getValue());
+			
+			if(!b.equals(Badge.emptyBadge))
+			{
+				map.put(b.getID(), b);
+			}
+		}
+	}
 	
 	public static void setClientBadge(UUID playerID, String badge)
 	{

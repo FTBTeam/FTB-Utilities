@@ -98,6 +98,6 @@ public class LMPlayerClient extends LMPlayer // LMPlayerServer // LMPlayerClient
 			}
 		}
 		
-		commonPublicData = tag.getCompoundTag("CPUD");
+		commonPublicData = tag.hasKey("CPUD") ? tag.getCompoundTag("CPUD") : null;
 	}
 }

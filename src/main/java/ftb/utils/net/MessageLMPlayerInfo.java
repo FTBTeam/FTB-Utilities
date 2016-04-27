@@ -1,57 +1,58 @@
 package ftb.utils.net;
 
+import com.google.gson.JsonElement;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.JsonHelper;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.item.LMInvUtils;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM_IO;
+import ftb.lib.api.net.MessageLM;
 import ftb.utils.world.LMPlayerClient;
 import ftb.utils.world.LMPlayerServer;
 import ftb.utils.world.LMWorldClient;
 import ftb.utils.world.LMWorldServer;
-import latmod.lib.ByteCount;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IChatComponent;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-public class MessageLMPlayerInfo extends MessageLM_IO
+public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo>
 {
-	public MessageLMPlayerInfo() { super(ByteCount.INT); }
+	public UUID playerID;
+	public List<JsonElement> info;
+	public NBTTagCompound armor;
+	public Collection<UUID> friends;
 	
-	public MessageLMPlayerInfo(LMPlayerServer owner, UUID playerID)
+	public MessageLMPlayerInfo() { }
+	
+	public MessageLMPlayerInfo(LMPlayerServer owner, UUID id)
 	{
-		this();
-		
-		NBTTagCompound tag = new NBTTagCompound();
-		
+		playerID = id;
 		LMPlayerServer p = LMWorldServer.inst.getPlayer(playerID);
 		
-		List<IChatComponent> info = new ArrayList<>();
-		p.getInfo(owner, info);
+		List<IChatComponent> info0 = new ArrayList<>();
+		p.getInfo(owner, info0);
+		int s = Math.min(255, info0.size());
 		
-		int s = Math.min(255, info.size());
-		io.writeByte(s);
+		info = new ArrayList<>();
 		
-		for(int i = 0; i < s; i++)
+		for(IChatComponent c : info0)
 		{
-			io.writeUTF(IChatComponent.Serializer.func_150696_a(info.get(i)));
+			info.add(JsonHelper.serializeICC(c));
+			if((--s) <= 0) break;
 		}
 		
-		LMInvUtils.writeItemsToNBT(p.lastArmor, tag, "A");
-		writeTag(tag);
+		armor = new NBTTagCompound();
+		LMInvUtils.writeItemsToNBT(p.lastArmor, armor, "A");
 		
-		io.writeShort(p.friendsList.size());
-		
-		for(UUID id : p.friendsList)
-		{
-			io.writeUUID(id);
-		}
+		friends = p.friendsList;
 	}
 	
 	@Override
@@ -59,31 +60,74 @@ public class MessageLMPlayerInfo extends MessageLM_IO
 	{ return FTBUNetHandler.NET_INFO; }
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageContext ctx)
+	public void fromBytes(ByteBuf io)
 	{
-		if(LMWorldClient.inst == null) return null;
-		LMPlayerClient p = LMWorldClient.inst.getPlayer(io.readInt());
-		if(p == null) return null;
+		playerID = readUUID(io);
 		
-		int s = io.readUnsignedByte();
-		List<IChatComponent> info = new ArrayList<>();
+		int s = io.readUnsignedShort();
+		
+		info = new ArrayList<>();
+		
 		for(int i = 0; i < s; i++)
 		{
-			info.add(IChatComponent.Serializer.func_150699_a(io.readUTF()));
+			info.add(readJsonElement(io));
+		}
+		
+		s = io.readUnsignedShort();
+		
+		friends = new ArrayList<>();
+		
+		for(int i = 0; i < s; i++)
+		{
+			friends.add(readUUID(io));
+		}
+		
+		armor = readTag(io);
+	}
+	
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		writeUUID(io, playerID);
+		
+		io.writeShort(info.size());
+		
+		for(JsonElement e : info)
+		{
+			writeJsonElement(io, e);
+		}
+		
+		io.writeShort(friends.size());
+		
+		for(UUID id : friends)
+		{
+			writeUUID(io, id);
+		}
+		
+		writeTag(io, armor);
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IMessage onMessage(MessageLMPlayerInfo m, MessageContext ctx)
+	{
+		if(LMWorldClient.inst == null) return null;
+		LMPlayerClient p = LMWorldClient.inst.getPlayer(m.playerID);
+		if(p == null) return null;
+		
+		List<IChatComponent> info = new ArrayList<>();
+		
+		for(JsonElement e : m.info)
+		{
+			info.add(JsonHelper.deserializeICC(e));
 		}
 		
 		p.receiveInfo(info);
 		
-		LMInvUtils.readItemsFromNBT(p.lastArmor, readTag(), "A");
-		
 		p.friendsList.clear();
-		s = io.readUnsignedShort();
+		p.friendsList.addAll(m.friends);
 		
-		for(int i = 0; i < s; i++)
-		{
-			p.friendsList.add(io.readUUID());
-		}
+		LMInvUtils.readItemsFromNBT(p.lastArmor, m.armor, "A");
 		
 		FTBLibClient.onGuiClientAction();
 		return null;

@@ -53,7 +53,7 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 	public BlockDimPos lastPos, lastDeath;
 	public final LMPlayerStats stats;
 	private EntityPlayerMP entityPlayer = null;
-	public int lastChunkType = -99;
+	public ChunkType lastChunkType = null;
 	public final Warps homes;
 	
 	public static LMPlayerServer get(Object o) throws CommandException
@@ -213,8 +213,8 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			}
 		}
 		
-		commonPublicData = tag.getCompoundTag("CustomData");
-		commonPrivateData = tag.getCompoundTag("CustomPrivateData");
+		commonPublicData = tag.hasKey("CustomData") ? tag.getCompoundTag("CustomData") : null;
+		commonPrivateData = tag.hasKey("CustomPrivateData") ? tag.getCompoundTag("CustomPrivateData") : null;
 		
 		StringIDInvLoader.readItemsFromNBT(lastArmor, tag, "LastItems");
 		
@@ -280,9 +280,15 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			tag.setTag("Friends", list);
 		}
 		
-		if(commonPublicData != null && !commonPublicData.hasNoTags()) tag.setTag("CustomData", commonPublicData);
+		if(commonPublicData != null && !commonPublicData.hasNoTags())
+		{
+			tag.setTag("CustomData", commonPublicData);
+		}
+		
 		if(commonPrivateData != null && !commonPrivateData.hasNoTags())
+		{
 			tag.setTag("CustomPrivateData", commonPrivateData);
+		}
 		
 		StringIDInvLoader.writeItemsToNBT(lastArmor, tag, "LastItems");
 		
@@ -354,7 +360,10 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			tag.setByteArray("OF", ba);
 		}
 		
-		tag.setTag("CPUD", commonPublicData);
+		if(commonPublicData != null && !commonPublicData.hasNoTags())
+		{
+			tag.setTag("CPUD", commonPublicData);
+		}
 		
 		if(self)
 		{
@@ -370,7 +379,10 @@ public class LMPlayerServer extends LMPlayer // LMPlayerClient
 			
 			tag.setIntArray("SP", map.toArray());
 			
-			tag.setTag("CPRD", commonPrivateData);
+			if(commonPrivateData != null && !commonPrivateData.hasNoTags())
+			{
+				tag.setTag("CPRD", commonPrivateData);
+			}
 		}
 	}
 	

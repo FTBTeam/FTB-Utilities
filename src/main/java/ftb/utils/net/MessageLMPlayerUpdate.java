@@ -6,26 +6,30 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM_IO;
+import ftb.lib.api.net.MessageLM;
 import ftb.utils.api.EventLMPlayerClient;
 import ftb.utils.world.LMPlayerClient;
 import ftb.utils.world.LMPlayerServer;
 import ftb.utils.world.LMWorldClient;
-import latmod.lib.ByteCount;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class MessageLMPlayerUpdate extends MessageLM_IO
+import java.util.UUID;
+
+public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate>
 {
-	public MessageLMPlayerUpdate() { super(ByteCount.INT); }
+	public UUID playerID;
+	public boolean self;
+	public NBTTagCompound tag;
 	
-	public MessageLMPlayerUpdate(LMPlayerServer p, boolean self)
+	public MessageLMPlayerUpdate() { }
+	
+	public MessageLMPlayerUpdate(LMPlayerServer p, boolean s)
 	{
-		this();
-		io.writeUUID(p.getProfile().getId());
-		io.writeBoolean(self);
-		NBTTagCompound tag = new NBTTagCompound();
+		playerID = p.getProfile().getId();
+		self = s;
+		tag = new NBTTagCompound();
 		p.writeToNet(tag, self);
-		writeTag(tag);
 	}
 	
 	@Override
@@ -33,12 +37,27 @@ public class MessageLMPlayerUpdate extends MessageLM_IO
 	{ return FTBUNetHandler.NET; }
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageContext ctx)
+	public void fromBytes(ByteBuf io)
 	{
-		LMPlayerClient p = LMWorldClient.inst.getPlayer(io.readUUID());
-		boolean self = io.readBoolean();
-		p.readFromNet(readTag(), self);
+		playerID = readUUID(io);
+		self = io.readBoolean();
+		tag = readTag(io);
+	}
+	
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		writeUUID(io, playerID);
+		io.writeBoolean(self);
+		writeTag(io, tag);
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IMessage onMessage(MessageLMPlayerUpdate m, MessageContext ctx)
+	{
+		LMPlayerClient p = LMWorldClient.inst.getPlayer(m.playerID);
+		p.readFromNet(m.tag, m.self);
 		new EventLMPlayerClient.DataChanged(p).post();
 		FTBLibClient.onGuiClientAction();
 		return null;

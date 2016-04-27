@@ -5,29 +5,28 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM_IO;
+import ftb.lib.api.net.MessageLM;
 import ftb.utils.badges.Badge;
 import ftb.utils.badges.ClientBadges;
-import latmod.lib.ByteCount;
+import io.netty.buffer.ByteBuf;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
-public class MessageUpdateBadges extends MessageLM_IO
+public class MessageUpdateBadges extends MessageLM<MessageUpdateBadges>
 {
-	public MessageUpdateBadges() { super(ByteCount.INT); }
+	public Map<String, String> badges;
 	
-	public MessageUpdateBadges(Collection<Badge> badges)
+	public MessageUpdateBadges() { }
+	
+	public MessageUpdateBadges(Collection<Badge> b)
 	{
-		this();
-		io.writeInt(badges.size());
+		badges = new HashMap<>();
 		
-		if(!badges.isEmpty())
+		for(Badge badge : b)
 		{
-			for(Badge b : badges)
-			{
-				io.writeUTF(b.getID());
-				io.writeUTF(b.imageURL);
-			}
+			badges.put(badge.getID(), badge.imageURL);
 		}
 	}
 	
@@ -36,22 +35,41 @@ public class MessageUpdateBadges extends MessageLM_IO
 	{ return FTBUNetHandler.NET_INFO; }
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageContext ctx)
+	public void fromBytes(ByteBuf io)
 	{
-		ClientBadges.clear();
+		badges = new HashMap<>();
+		
 		int s = io.readInt();
 		
-		if(s > 0)
+		for(int i = 0; i < s; i++)
 		{
-			for(int i = 0; i < s; i++)
+			String id = readString(io);
+			String url = readString(io);
+			badges.put(id, url);
+		}
+	}
+	
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		io.writeInt(badges.size());
+		
+		if(!badges.isEmpty())
+		{
+			for(Map.Entry<String, String> e : badges.entrySet())
 			{
-				String id = io.readUTF();
-				String url = io.readUTF();
-				ClientBadges.addBadge(new Badge(id, url));
+				writeString(io, e.getKey());
+				writeString(io, e.getValue());
 			}
 		}
-		
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IMessage onMessage(MessageUpdateBadges m, MessageContext ctx)
+	{
+		ClientBadges.clear();
+		ClientBadges.addBadges(m.badges);
 		return null;
 	}
 }

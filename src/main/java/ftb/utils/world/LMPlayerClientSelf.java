@@ -45,7 +45,7 @@ public class LMPlayerClientSelf extends LMPlayerClient
 			maxClaimedChunks = map.get(4);
 			maxLoadedChunks = map.get(5);
 			
-			commonPrivateData = tag.getCompoundTag("CPRD");
+			commonPrivateData = tag.hasKey("CPRD") ? tag.getCompoundTag("CPRD") : null;
 		}
 	}
 }

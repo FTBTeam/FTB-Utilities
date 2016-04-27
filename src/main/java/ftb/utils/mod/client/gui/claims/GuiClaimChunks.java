@@ -16,6 +16,7 @@ import ftb.utils.mod.client.FTBUClient;
 import ftb.utils.net.MessageAreaRequest;
 import ftb.utils.net.MessageClaimChunk;
 import ftb.utils.net.MessageRequestSelfUpdate;
+import ftb.utils.world.LMPlayerClient;
 import ftb.utils.world.LMPlayerClientSelf;
 import ftb.utils.world.LMWorldClient;
 import ftb.utils.world.claims.ChunkType;
@@ -23,6 +24,7 @@ import latmod.lib.MathHelperLM;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
@@ -254,9 +256,6 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	{
 	}
 	
-	private ChunkType getType(int cx, int cy)
-	{ return ClaimedAreasClient.getTypeE(cx, cy); }
-	
 	@SuppressWarnings("unchecked")
 	public void renderMinimap()
 	{
@@ -268,13 +267,13 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 				int cx = x + startX;
 				int cy = y + startY;
 				
-				ChunkType type = getType(cx, cy);
+				ChunkType type = ClaimedAreasClient.getType(cx, cy);
 				if(type.drawGrid())
 				{
-					boolean a = type.equals(getType(cx, cy - 1));
-					boolean b = type.equals(getType(cx + 1, cy));
-					boolean c = type.equals(getType(cx, cy + 1));
-					boolean d = type.equals(getType(cx - 1, cy));
+					boolean a = type.equals(ClaimedAreasClient.getType(cx, cy - 1));
+					boolean b = type.equals(ClaimedAreasClient.getType(cx + 1, cy));
+					boolean c = type.equals(ClaimedAreasClient.getType(cx, cy + 1));
+					boolean d = type.equals(ClaimedAreasClient.getType(cx - 1, cy));
 					
 					TextureCoords tc = tex_area_coords[a ? 1 : 0][b ? 1 : 0][c ? 1 : 0][d ? 1 : 0];
 					
@@ -325,7 +324,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	{
 		if(set && adminToken == 0L)
 		{
-			new MessageClaimChunk(GuiClaimChunks.this.currentDim, GuiClaimChunks.this.adminToken, 0, 0, (id == 1) ? MessageClaimChunk.ID_UNCLAIM_ALL_DIMS : MessageClaimChunk.ID_UNCLAIM_ALL).sendToServer();
+			new MessageClaimChunk((id == 1) ? MessageClaimChunk.ID.UNCLAIM_ALL_DIMS : MessageClaimChunk.ID.UNCLAIM_ALL, GuiClaimChunks.this.adminToken, GuiClaimChunks.this.currentDim, 0, 0).sendToServer();
 			new MessageAreaRequest(startX, startY, tiles_gui, tiles_gui).sendToServer();
 		}
 		
@@ -354,13 +353,36 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			if(gui.panelButtons.mouseOver()) return;
 			if(gui.adminToken != 0L && button.isLeft()) return;
 			boolean ctrl = FTBUClient.loaded_chunks_space_key.getAsBoolean() ? Keyboard.isKeyDown(Keyboard.KEY_SPACE) : isCtrlKeyDown();
-			new MessageClaimChunk(gui.currentDim, gui.adminToken, chunkX, chunkY, button.isLeft() ? (ctrl ? MessageClaimChunk.ID_LOAD : MessageClaimChunk.ID_CLAIM) : (ctrl ? MessageClaimChunk.ID_UNLOAD : MessageClaimChunk.ID_UNCLAIM)).sendToServer();
+			new MessageClaimChunk(button.isLeft() ? (ctrl ? MessageClaimChunk.ID.LOAD : MessageClaimChunk.ID.CLAIM) : (ctrl ? MessageClaimChunk.ID.UNLOAD : MessageClaimChunk.ID.UNCLAIM), gui.adminToken, gui.currentDim, chunkX, chunkY).sendToServer();
 			FTBLibClient.playClickSound();
 		}
 		
 		@Override
 		public void addMouseOverText(List<String> l)
-		{ ClaimedAreasClient.getMessage(chunkX, chunkY, l, isShiftKeyDown()); }
+		{
+			ChunkType type = ClaimedAreasClient.getType(chunkX, chunkY);
+			
+			if(type != null)
+			{
+				l.add(type.getChatColor(null) + type.langKey.format());
+				
+				if(type.isClaimed())
+				{
+					ChunkType.PlayerClaimed pc = (ChunkType.PlayerClaimed) type;
+					
+					LMPlayerClient owner = pc.chunk.getOwnerC();
+					
+					if(owner != null)
+					{
+						l.add(type.getChatColor(owner) + owner.getProfile().getName());
+						if(pc.chunk.isChunkloaded)
+						{
+							l.add(I18n.format("ftbu.chunktype.chunkloaded"));
+						}
+					}
+				}
+			}
+		}
 		
 		@Override
 		public void renderWidget()

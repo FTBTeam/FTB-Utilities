@@ -89,7 +89,9 @@ public class ServerBadges
 	}
 	
 	public static void sendToPlayer(EntityPlayerMP ep)
-	{ new MessageUpdateBadges(map.values()).sendTo(ep); }
+	{
+		new MessageUpdateBadges(map.values()).sendTo(ep);
+	}
 	
 	private static void loadBadges(JsonElement e, Phase p)
 	{

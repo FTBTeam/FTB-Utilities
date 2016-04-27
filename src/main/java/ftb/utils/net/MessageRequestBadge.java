@@ -3,21 +3,22 @@ package ftb.utils.net;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM_IO;
+import ftb.lib.api.net.MessageLM;
 import ftb.utils.badges.Badge;
 import ftb.utils.badges.ServerBadges;
-import latmod.lib.ByteCount;
+import io.netty.buffer.ByteBuf;
 
 import java.util.UUID;
 
-public class MessageRequestBadge extends MessageLM_IO
+public class MessageRequestBadge extends MessageLM<MessageRequestBadge>
 {
-	public MessageRequestBadge() { super(ByteCount.BYTE); }
+	public UUID playerID;
+	
+	public MessageRequestBadge() { }
 	
 	public MessageRequestBadge(UUID id)
 	{
-		this();
-		io.writeUUID(id);
+		playerID = id;
 	}
 	
 	@Override
@@ -25,10 +26,21 @@ public class MessageRequestBadge extends MessageLM_IO
 	{ return FTBUNetHandler.NET_INFO; }
 	
 	@Override
-	public IMessage onMessage(MessageContext ctx)
+	public void fromBytes(ByteBuf io)
 	{
-		UUID id = io.readUUID();
-		Badge b = ServerBadges.getServerBadge(id);
-		return (b == null || b == Badge.emptyBadge) ? null : new MessageSendBadge(id, b.getID());
+		playerID = readUUID(io);
+	}
+	
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		writeUUID(io, playerID);
+	}
+	
+	@Override
+	public IMessage onMessage(MessageRequestBadge m, MessageContext ctx)
+	{
+		Badge b = ServerBadges.getServerBadge(m.playerID);
+		return (b == null || b == Badge.emptyBadge) ? null : new MessageSendBadge(m.playerID, b.getID());
 	}
 }

@@ -5,21 +5,24 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM_IO;
+import ftb.lib.api.net.MessageLM;
 import ftb.utils.api.EventLMPlayerClient;
 import ftb.utils.world.LMPlayer;
 import ftb.utils.world.LMPlayerClient;
 import ftb.utils.world.LMWorldClient;
-import latmod.lib.ByteCount;
+import io.netty.buffer.ByteBuf;
 
-public class MessageLMPlayerDied extends MessageLM_IO
+import java.util.UUID;
+
+public class MessageLMPlayerDied extends MessageLM<MessageLMPlayerDied>
 {
-	public MessageLMPlayerDied() { super(ByteCount.BYTE); }
+	public UUID playerID;
+	
+	public MessageLMPlayerDied() { }
 	
 	public MessageLMPlayerDied(LMPlayer p)
 	{
-		this();
-		io.writeUUID(p.getProfile().getId());
+		playerID = p.getProfile().getId();
 	}
 	
 	@Override
@@ -27,10 +30,22 @@ public class MessageLMPlayerDied extends MessageLM_IO
 	{ return FTBUNetHandler.NET; }
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageContext ctx)
+	public void fromBytes(ByteBuf io)
 	{
-		LMPlayerClient p = LMWorldClient.inst.getPlayer(io.readUUID());
+		playerID = readUUID(io);
+	}
+	
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		writeUUID(io, playerID);
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IMessage onMessage(MessageLMPlayerDied m, MessageContext ctx)
+	{
+		LMPlayerClient p = LMWorldClient.inst.getPlayer(m.playerID);
 		if(p != null) new EventLMPlayerClient.PlayerDied(p).post();
 		return null;
 	}

@@ -10,9 +10,7 @@ import ftb.lib.LMDimUtils;
 import ftb.lib.LMNBTUtils;
 import ftb.lib.api.item.LMInvUtils;
 import ftb.utils.mod.config.FTBUConfigGeneral;
-import ftb.utils.world.LMPlayer;
 import ftb.utils.world.LMPlayerServer;
-import ftb.utils.world.LMWorld;
 import ftb.utils.world.LMWorldServer;
 import ftb.utils.world.PersonalSettings;
 import latmod.lib.Bits;
@@ -237,18 +235,11 @@ public class ClaimedChunks
 		if(LMWorldServer.inst.settings.getWB(dim).isOutside(cx, cz)) return ChunkType.WORLD_BORDER;
 		ClaimedChunk c = getChunk(dim, cx, cz);
 		if(c == null) return ChunkType.WILDERNESS;
-		return new ChunkType.PlayerClaimed(LMWorldServer.inst.getPlayer(c.ownerID));
+		return new ChunkType.PlayerClaimed(c);
 	}
 	
 	public ChunkType getTypeD(int dim, ChunkCoordinates pos)
 	{ return getType(dim, MathHelperLM.chunk(pos.posX), MathHelperLM.chunk(pos.posZ)); }
-	
-	public static ChunkType getChunkTypeFromI(int i)
-	{
-		if(i <= 0) return ChunkType.UNCLAIMED_VALUES[-i];
-		LMPlayer p = LMWorld.getWorld().getPlayer(i);
-		return (p == null) ? ChunkType.WILDERNESS : new ChunkType.PlayerClaimed(p);
-	}
 	
 	public static boolean isInSpawn(int dim, int cx, int cz)
 	{

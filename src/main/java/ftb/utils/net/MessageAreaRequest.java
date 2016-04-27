@@ -3,23 +3,24 @@ package ftb.utils.net;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM_IO;
+import ftb.lib.api.net.MessageLM;
 import ftb.utils.world.LMWorldServer;
-import latmod.lib.ByteCount;
+import io.netty.buffer.ByteBuf;
 import latmod.lib.MathHelperLM;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-public class MessageAreaRequest extends MessageLM_IO
+public class MessageAreaRequest extends MessageLM<MessageAreaRequest>
 {
-	public MessageAreaRequest() { super(ByteCount.BYTE); }
+	public int chunkX, chunkZ, sizeX, sizeZ;
+	
+	public MessageAreaRequest() { }
 	
 	public MessageAreaRequest(int x, int y, int w, int h)
 	{
-		this();
-		io.writeInt(x);
-		io.writeInt(y);
-		io.writeInt(MathHelperLM.clampInt(w, 1, 255));
-		io.writeInt(MathHelperLM.clampInt(h, 1, 255));
+		chunkX = x;
+		chunkZ = y;
+		sizeX = MathHelperLM.clampInt(w, 1, 255);
+		sizeZ = MathHelperLM.clampInt(h, 1, 255);
 	}
 	
 	@Override
@@ -27,14 +28,27 @@ public class MessageAreaRequest extends MessageLM_IO
 	{ return FTBUNetHandler.NET_INFO; }
 	
 	@Override
-	public IMessage onMessage(MessageContext ctx)
+	public void fromBytes(ByteBuf io)
 	{
-		int chunkX = io.readInt();
-		int chunkY = io.readInt();
-		int sizeX = io.readInt();
-		int sizeY = io.readInt();
-		
+		chunkX = io.readInt();
+		chunkZ = io.readInt();
+		sizeX = io.readInt();
+		sizeZ = io.readInt();
+	}
+	
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		io.writeInt(chunkX);
+		io.writeInt(chunkZ);
+		io.writeInt(sizeX);
+		io.writeInt(sizeZ);
+	}
+	
+	@Override
+	public IMessage onMessage(MessageAreaRequest m, MessageContext ctx)
+	{
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
-		return new MessageAreaUpdate(LMWorldServer.inst.getPlayer(ep), chunkX, chunkY, ep.dimension, sizeX, sizeY);
+		return new MessageAreaUpdate(LMWorldServer.inst.getPlayer(ep), m.chunkX, m.chunkZ, ep.dimension, m.sizeX, m.sizeZ);
 	}
 }

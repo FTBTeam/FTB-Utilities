@@ -5,7 +5,13 @@ import ftb.lib.api.LangKey;
 import ftb.utils.world.LMPlayer;
 import ftb.utils.world.LMPlayerServer;
 import ftb.utils.world.PersonalSettings;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.world.ChunkCoordIntPair;
+
+import java.util.UUID;
 
 public class ChunkType
 {
@@ -13,30 +19,29 @@ public class ChunkType
 	public static final ChunkType SPAWN = new ChunkType(1, "spawn", EnumChatFormatting.AQUA, 0xFF00EFDF);
 	public static final ChunkType WORLD_BORDER = new ChunkType(2, "world_border", EnumChatFormatting.RED, 0xFFFF0000);
 	public static final ChunkType WILDERNESS = new ChunkType(3, "wilderness", EnumChatFormatting.DARK_GREEN, 0xFF2F9E00);
-	public static final ChunkType LOADED_SELF = new ChunkType(4, "chunkloaded", EnumChatFormatting.RED, 0xFFFF0000);
 	
-	public static final ChunkType[] UNCLAIMED_VALUES = new ChunkType[] {UNLOADED, SPAWN, WORLD_BORDER, WILDERNESS, LOADED_SELF,};
+	public static final ChunkType[] VALUES = new ChunkType[] {UNLOADED, SPAWN, WORLD_BORDER, WILDERNESS};
 	
 	public static final class PlayerClaimed extends ChunkType
 	{
-		public LMPlayer chunkOwner;
+		public ClaimedChunk chunk;
 		
-		public PlayerClaimed(LMPlayer o)
+		public PlayerClaimed(ClaimedChunk c)
 		{
 			super(5, "claimed", null, 0);
-			chunkOwner = o;
+			chunk = c;
 		}
 		
 		public boolean isFriendly(LMPlayer p)
-		{ return chunkOwner.equalsPlayer(p) || chunkOwner.isFriend(p); }
+		{ return isChunkOwner(p) || p.getWorld().getPlayer(chunk.ownerID).isFriend(p); }
 		
 		@Override
 		public boolean isClaimed()
-		{ return true; }
+		{ return chunk != null; }
 		
 		@Override
 		public boolean isChunkOwner(LMPlayer p)
-		{ return chunkOwner.equals(p); }
+		{ return p != null && p.getProfile().getId().equals(chunk.ownerID); }
 		
 		@Override
 		public EnumChatFormatting getChatColor(LMPlayer p)
@@ -49,14 +54,38 @@ public class ChunkType
 		@Override
 		public boolean canInteract(LMPlayerServer p, boolean leftClick)
 		{
-			if(chunkOwner.equals(p)) return true;
-			else if(p.isFake()) return chunkOwner.getSettings().get(PersonalSettings.FAKE_PLAYERS);
+			if(isChunkOwner(p)) return true;
+			LMPlayerServer chunkOwner = chunk.getOwnerS();
+			if(p.isFake()) return chunkOwner.getSettings().get(PersonalSettings.FAKE_PLAYERS);
 			
 			LMSecurity s = new LMSecurity(chunkOwner);
 			s.level = p.getRank().config.forced_chunk_security.get();
 			if(s.level == null) s.level = chunkOwner.getSettings().blocks;
 			return s.canInteract(p);
 		}
+		
+		@Override
+		public void writeToNBT(NBTTagCompound tag, LMPlayerServer to)
+		{
+			tag.setLong("OM", chunk.ownerID.getMostSignificantBits());
+			tag.setLong("OL", chunk.ownerID.getLeastSignificantBits());
+			
+			if(chunk.isChunkloaded && isFriendly(to))
+			{
+				tag.setBoolean("L", chunk.isChunkloaded);
+			}
+		}
+		
+		@Override
+		public void readFromNBT(NBTTagCompound tag, int dim, ChunkCoordIntPair pos)
+		{
+			chunk = new ClaimedChunk(new UUID(tag.getLong("OM"), tag.getLong("OL")), dim, pos.chunkXPos, pos.chunkZPos);
+			chunk.isChunkloaded = tag.getBoolean("L");
+		}
+		
+		@Override
+		public IChatComponent getChatComponent()
+		{ return new ChatComponentText(chunk.getOwnerS().getProfile().getName()); }
 	}
 	
 	public final int ID;
@@ -97,4 +126,15 @@ public class ChunkType
 	
 	public boolean canInteract(LMPlayerServer p, boolean leftClick)
 	{ return this == WILDERNESS || this == SPAWN; }
+	
+	public void writeToNBT(NBTTagCompound tag, LMPlayerServer to)
+	{
+	}
+	
+	public void readFromNBT(NBTTagCompound tag, int dim, ChunkCoordIntPair pos)
+	{
+	}
+	
+	public IChatComponent getChatComponent()
+	{ return langKey.chatComponent(); }
 }

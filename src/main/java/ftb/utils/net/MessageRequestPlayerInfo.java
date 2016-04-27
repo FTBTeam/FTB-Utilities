@@ -3,20 +3,21 @@ package ftb.utils.net;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM_IO;
+import ftb.lib.api.net.MessageLM;
 import ftb.utils.world.LMWorldServer;
-import latmod.lib.ByteCount;
+import io.netty.buffer.ByteBuf;
 
 import java.util.UUID;
 
-public class MessageRequestPlayerInfo extends MessageLM_IO
+public class MessageRequestPlayerInfo extends MessageLM<MessageRequestPlayerInfo>
 {
-	public MessageRequestPlayerInfo() { super(ByteCount.BYTE); }
+	public UUID playerID;
+	
+	public MessageRequestPlayerInfo() { }
 	
 	public MessageRequestPlayerInfo(UUID id)
 	{
-		this();
-		io.writeUUID(id);
+		playerID = id;
 	}
 	
 	@Override
@@ -24,6 +25,20 @@ public class MessageRequestPlayerInfo extends MessageLM_IO
 	{ return FTBUNetHandler.NET_INFO; }
 	
 	@Override
-	public IMessage onMessage(MessageContext ctx)
-	{ return new MessageLMPlayerInfo(LMWorldServer.inst.getPlayer(ctx.getServerHandler().playerEntity), io.readUUID()); }
+	public void fromBytes(ByteBuf io)
+	{
+		playerID = readUUID(io);
+	}
+	
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		writeUUID(io, playerID);
+	}
+	
+	@Override
+	public IMessage onMessage(MessageRequestPlayerInfo m, MessageContext ctx)
+	{
+		return new MessageLMPlayerInfo(LMWorldServer.inst.getPlayer(ctx.getServerHandler().playerEntity), m.playerID);
+	}
 }

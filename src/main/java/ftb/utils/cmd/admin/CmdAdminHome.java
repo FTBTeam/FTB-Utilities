@@ -1,12 +1,16 @@
 package ftb.utils.cmd.admin;
 
-import ftb.lib.*;
+import ftb.lib.BlockDimPos;
+import ftb.lib.LMDimUtils;
 import ftb.lib.api.ForgePlayerMP;
-import ftb.lib.api.cmd.*;
-import ftb.utils.FTBU;
+import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLevel;
+import ftb.lib.mod.FTBLibLang;
+import ftb.utils.FTBULang;
 import ftb.utils.world.FTBUPlayerDataMP;
 import latmod.lib.LMStringUtils;
-import net.minecraft.command.*;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -56,18 +60,18 @@ public class CmdAdminHome extends CommandLM //FIXME: SubCommand
 		if(args[1].equals("tp"))
 		{
 			LMDimUtils.teleportPlayer(getCommandSenderAsPlayer(ics), pos);
-			ics.addChatMessage(FTBU.mod.chatComponent("cmd.warp_tp", args[2]));
+			FTBULang.warp_tp.printChat(ics, args[2]);
 			return;
 		}
 		else if(args[1].equals("remove"))
 		{
 			if(d.homes.set(args[2], null))
 			{
-				ics.addChatMessage(FTBU.mod.chatComponent("cmd.home_del", args[2]));
+				FTBULang.home_del.printChat(ics, args[2]);
 				return;
 			}
 		}
 		
-		throw new InvalidSubCommandException(args[2]);
+		throw FTBLibLang.invalid_subcmd.commandError(args[2]);
 	}
 }

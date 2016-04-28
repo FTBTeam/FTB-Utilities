@@ -1,12 +1,15 @@
 package ftb.utils.cmd.admin;
 
-import ftb.lib.*;
-import ftb.lib.api.cmd.*;
-import ftb.utils.FTBU;
+import ftb.lib.BroadcastSender;
+import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLevel;
+import ftb.lib.api.cmd.CommandSubLM;
+import ftb.utils.FTBULang;
 import ftb.utils.config.FTBUConfigBackups;
 import ftb.utils.world.Backups;
 import latmod.lib.LMFileUtils;
-import net.minecraft.command.*;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 
 public class CmdBackup extends CommandSubLM
@@ -30,14 +33,17 @@ public class CmdBackup extends CommandSubLM
 			boolean b = Backups.run(ics);
 			if(b)
 			{
-				FTBLib.printChat(BroadcastSender.inst, FTBU.mod.chatComponent("cmd.backup_manual_launch", ics.getName()));
+				FTBULang.backup_manual_launch.printChat(BroadcastSender.inst, ics.getName());
+				
 				if(!FTBUConfigBackups.use_separate_thread.getAsBoolean())
 				{
 					Backups.postBackup();
 				}
 			}
-			
-			if(b) ics.addChatMessage(FTBU.mod.chatComponent("cmd.backup_already_running"));
+			else
+			{
+				FTBULang.backup_already_running.printChat(ics);
+			}
 		}
 	}
 	
@@ -53,11 +59,11 @@ public class CmdBackup extends CommandSubLM
 			{
 				Backups.thread.interrupt();
 				Backups.thread = null;
-				ics.addChatMessage(FTBU.mod.chatComponent("cmd.backup_stop"));
+				FTBULang.backup_stop.printChat(ics);
 				return;
 			}
 			
-			throw new CommandException("ftbu.cmd.backup_not_running");
+			throw FTBULang.backup_not_running.commandError();
 		}
 	}
 	
@@ -71,7 +77,7 @@ public class CmdBackup extends CommandSubLM
 		{
 			String sizeW = LMFileUtils.getSizeS(ics.getEntityWorld().getSaveHandler().getWorldDirectory());
 			String sizeT = LMFileUtils.getSizeS(Backups.backupsFolder);
-			ics.addChatMessage(FTBU.mod.chatComponent("cmd.backup_size", sizeW, sizeT));
+			FTBULang.backup_size.printChat(ics, sizeW, sizeT);
 		}
 	}
 }

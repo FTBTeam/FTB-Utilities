@@ -1,14 +1,20 @@
 package ftb.utils.ranks;
 
-import com.google.gson.*;
-import ftb.lib.api.permissions.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import ftb.lib.api.permissions.ForgePermissionRegistry;
+import ftb.lib.api.permissions.RankConfig;
 import latmod.lib.util.FinalIDObject;
-import net.minecraft.command.*;
+import net.minecraft.command.ICommand;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.text.TextFormatting;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public final class Rank extends FinalIDObject implements IJsonSerializable
 {

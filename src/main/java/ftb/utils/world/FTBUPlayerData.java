@@ -1,7 +1,8 @@
 package ftb.utils.world;
 
 import ftb.lib.PrivacyLevel;
-import ftb.lib.api.*;
+import ftb.lib.api.ForgePlayer;
+import ftb.lib.api.ForgePlayerData;
 import latmod.lib.Bits;
 
 /**

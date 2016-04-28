@@ -1,14 +1,19 @@
 package ftb.utils.journeymap;
 
 import ftb.lib.TextureCoords;
-import ftb.lib.api.*;
-import ftb.utils.*;
+import ftb.lib.api.ForgePlayer;
+import ftb.lib.api.ForgeWorldSP;
+import ftb.utils.FTBUFinals;
 import ftb.utils.client.gui.claims.GuiClaimChunks;
-import ftb.utils.world.*;
+import ftb.utils.world.ChunkType;
+import ftb.utils.world.FTBUWorldDataSP;
 import journeymap.client.api.IClientAPI;
-import journeymap.client.api.display.*;
+import journeymap.client.api.display.DisplayType;
+import journeymap.client.api.display.ImageOverlay;
 import journeymap.client.api.model.MapImage;
-import latmod.lib.*;
+import latmod.lib.LMColorUtils;
+import latmod.lib.MathHelperLM;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.ChunkCoordIntPair;
@@ -62,7 +67,7 @@ public class JMPluginHandler implements IJMPluginHandler
 						
 						ImageOverlay chunkOverlay = new ImageOverlay(FTBUFinals.MOD_ID, "claimed_" + pos.chunkXPos + "_" + pos.chunkZPos, new BlockPos(x, 0, z), new BlockPos(x + 16, 0, z + 16), image);
 						
-						StringBuilder sb = new StringBuilder(FTBU.mod.format(type.lang));
+						StringBuilder sb = new StringBuilder(type.langKey.format());
 						
 						if(type.asClaimed() != null)
 						{
@@ -75,7 +80,7 @@ public class JMPluginHandler implements IJMPluginHandler
 							if(type.asClaimed().chunk.isChunkloaded)
 							{
 								sb.append('\n');
-								sb.append(FTBU.mod.format("chunktype.chunkloaded"));
+								sb.append(I18n.format("ftbu.chunktype.chunkloaded"));
 							}
 						}
 						

@@ -1,9 +1,12 @@
 package ftb.utils;
 
 import ftb.lib.PrivacyLevel;
-import ftb.lib.api.permissions.*;
+import ftb.lib.api.permissions.ForgePermission;
+import ftb.lib.api.permissions.RankConfig;
+import ftb.lib.api.permissions.RankConfigEnum;
 import ftb.utils.world.ChunkloaderType;
-import latmod.lib.annotations.*;
+import latmod.lib.annotations.Info;
+import latmod.lib.annotations.NumberBounds;
 import latmod.lib.util.EnumEnabled;
 
 /**

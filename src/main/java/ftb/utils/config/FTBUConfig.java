@@ -1,7 +1,8 @@
 package ftb.utils.config;
 
 import ftb.lib.FTBLib;
-import ftb.lib.api.config.*;
+import ftb.lib.api.config.ConfigFile;
+import ftb.lib.api.config.ConfigRegistry;
 
 import java.io.File;
 
@@ -17,7 +18,6 @@ public class FTBUConfig // FTBU
 		configFile.addGroup("commands", FTBUConfigCmd.class);
 		configFile.addGroup("general", FTBUConfigGeneral.class);
 		configFile.addGroup("login", FTBUConfigLogin.class);
-		configFile.addGroup("tops", FTBUConfigTops.class);
 		configFile.addGroup("chunkloading", FTBUConfigChunkloading.class);
 		//Ranks.instance().reload();
 		

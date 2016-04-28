@@ -1,14 +1,22 @@
 package ftb.utils.world;
 
 import ftb.lib.BroadcastSender;
-import ftb.utils.FTBU;
+import ftb.utils.FTBULang;
 import ftb.utils.config.FTBUConfigBackups;
-import latmod.lib.*;
-import net.minecraft.util.text.*;
+import latmod.lib.LMFileUtils;
+import latmod.lib.LMStringUtils;
+import latmod.lib.LMUtils;
+import latmod.lib.MathHelperLM;
+import latmod.lib.Time;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.List;
-import java.util.zip.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class ThreadBackup extends Thread
 {
@@ -130,24 +138,24 @@ public class ThreadBackup extends Thread
 				String sizeB = LMFileUtils.getSizeS(dstFile);
 				String sizeT = LMFileUtils.getSizeS(Backups.backupsFolder);
 				
-				ITextComponent c = FTBU.mod.chatComponent("cmd.backup_end_2", getDoneTime(time.millis), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)));
+				ITextComponent c = FTBULang.backup_end_2.textComponent(getDoneTime(time.millis), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)));
 				c.getChatStyle().setColor(TextFormatting.LIGHT_PURPLE);
 				BroadcastSender.inst.addChatMessage(c);
 			}
 			else
 			{
-				ITextComponent c = FTBU.mod.chatComponent("cmd.backup_end_1", getDoneTime(time.millis));
+				ITextComponent c = FTBULang.backup_end_1.textComponent(getDoneTime(time.millis));
 				c.getChatStyle().setColor(TextFormatting.LIGHT_PURPLE);
 				BroadcastSender.inst.addChatMessage(c);
 			}
 		}
-		catch(Exception e)
+		catch(Exception ex)
 		{
-			ITextComponent c = FTBU.mod.chatComponent("cmd.backup_fail", LMUtils.classpath(e.getClass()));
+			ITextComponent c = FTBULang.backup_fail.textComponent(LMUtils.classpath(ex.getClass()));
 			c.getChatStyle().setColor(TextFormatting.DARK_RED);
 			BroadcastSender.inst.addChatMessage(c);
 			
-			e.printStackTrace();
+			ex.printStackTrace();
 			if(dstFile != null) LMFileUtils.delete(dstFile);
 		}
 		//System.gc();

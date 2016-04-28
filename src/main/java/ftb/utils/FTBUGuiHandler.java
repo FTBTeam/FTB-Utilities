@@ -1,12 +1,14 @@
 package ftb.utils;
 
-import ftb.lib.api.gui.*;
+import ftb.lib.api.gui.ContainerEmpty;
+import ftb.lib.api.gui.LMGuiHandler;
 import ftb.utils.client.gui.claims.GuiClaimChunks;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class FTBUGuiHandler extends LMGuiHandler
 {

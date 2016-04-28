@@ -1,19 +1,25 @@
 package ftb.utils.cmd;
 
-import ftb.lib.*;
-import ftb.lib.api.*;
-import ftb.lib.api.cmd.*;
+import ftb.lib.BlockDimPos;
+import ftb.lib.LMDimUtils;
+import ftb.lib.api.ForgePlayerMP;
+import ftb.lib.api.ForgeWorldMP;
+import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLevel;
 import ftb.lib.api.permissions.ForgePermissionRegistry;
-import ftb.utils.*;
+import ftb.utils.FTBULang;
+import ftb.utils.FTBUPermissions;
 import ftb.utils.world.FTBUPlayerDataMP;
 import latmod.lib.LMStringUtils;
-import net.minecraft.command.*;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 
 public class CmdHome extends CommandLM
 {
@@ -58,6 +64,6 @@ public class CmdHome extends CommandLM
 			throw new CommandException("ftbu.cmd.home_cross_dim");
 		
 		LMDimUtils.teleportPlayer(ep, pos);
-		ics.addChatMessage(FTBU.mod.chatComponent("cmd.warp_tp", args[0]));
+		FTBULang.warp_tp.printChat(ics, args[0]);
 	}
 }

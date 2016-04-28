@@ -1,10 +1,13 @@
 package ftb.utils.net;
 
-import ftb.lib.api.*;
-import ftb.lib.api.net.*;
+import ftb.lib.api.ForgePlayerMP;
+import ftb.lib.api.ForgeWorldMP;
+import ftb.lib.api.net.LMNetworkWrapper;
+import ftb.lib.api.net.MessageLM;
 import ftb.utils.api.guide.ServerGuideFile;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.simpleimpl.*;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageRequestServerInfo extends MessageLM<MessageRequestServerInfo>
 {

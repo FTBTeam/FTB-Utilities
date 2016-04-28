@@ -1,11 +1,18 @@
 package ftb.utils.handlers;
 
 import ftb.lib.FTBLib;
-import ftb.lib.api.*;
-import ftb.utils.world.*;
-import net.minecraft.util.text.*;
-import net.minecraft.util.text.event.*;
-import net.minecraftforge.fml.common.eventhandler.*;
+import ftb.lib.api.ForgePlayer;
+import ftb.lib.api.ForgeWorldMP;
+import ftb.lib.api.ServerTickCallback;
+import ftb.utils.world.FTBUPlayerData;
+import ftb.utils.world.FTBUPlayerDataMP;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
 

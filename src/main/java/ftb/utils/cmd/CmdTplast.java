@@ -1,10 +1,14 @@
 package ftb.utils.cmd;
 
-import ftb.lib.*;
+import ftb.lib.BlockDimPos;
+import ftb.lib.LMDimUtils;
 import ftb.lib.api.ForgePlayerMP;
-import ftb.lib.api.cmd.*;
+import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLevel;
+import ftb.lib.mod.FTBLibLang;
 import ftb.utils.config.FTBUConfigCmd;
-import net.minecraft.command.*;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.DimensionType;
@@ -54,7 +58,7 @@ public class CmdTplast extends CommandLM
 		BlockDimPos p = to.getPos();
 		if(p == null)
 		{
-			throw new RawCommandException("No last position!");
+			throw FTBLibLang.raw.commandError("No last position!");
 		}
 		
 		LMDimUtils.teleportPlayer(who, p);

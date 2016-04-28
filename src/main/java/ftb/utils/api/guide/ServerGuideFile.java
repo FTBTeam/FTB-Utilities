@@ -2,37 +2,46 @@ package ftb.utils.api.guide;
 
 import com.google.gson.JsonPrimitive;
 import ftb.lib.FTBLib;
-import ftb.lib.api.*;
+import ftb.lib.api.ForgePlayerMP;
+import ftb.lib.api.ForgeWorldMP;
 import ftb.lib.api.cmd.ICustomCommandInfo;
-import ftb.lib.api.info.*;
-import ftb.lib.api.notification.*;
+import ftb.lib.api.info.InfoExtendedTextLine;
+import ftb.lib.api.info.InfoPage;
+import ftb.lib.api.notification.ClickAction;
+import ftb.lib.api.notification.ClickActionType;
 import ftb.lib.api.permissions.ForgePermissionRegistry;
-import ftb.utils.*;
-import ftb.utils.config.*;
-import ftb.utils.world.*;
-import latmod.lib.*;
+import ftb.lib.mod.FTBLibLang;
+import ftb.utils.FTBUPermissions;
+import ftb.utils.config.FTBUConfigBackups;
+import ftb.utils.config.FTBUConfigGeneral;
+import ftb.utils.world.Backups;
+import ftb.utils.world.FTBUPlayerDataMP;
+import ftb.utils.world.FTBUWorldDataMP;
+import latmod.lib.LMFileUtils;
+import latmod.lib.LMStringUtils;
+import latmod.lib.LMUtils;
 import net.minecraft.command.ICommand;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.EntityList;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class ServerGuideFile extends InfoPage
 {
 	public static class CachedInfo
 	{
 		public static final InfoPage main = new InfoPage("ServerInfo").setTitle(new TextComponentTranslation("player_action.ftbu.server_info"));
-		public static InfoPage categoryServer, categoryServerAdmin;
 		
 		public static void reload()
 		{
 			main.clear();
-			
-			categoryServerAdmin = new InfoPage("Admin"); //LANG
-			categoryServerAdmin.setParent(main);
 			
 			//categoryServer.println(new ChatComponentTranslation("ftbl:worldID", FTBWorld.server.getWorldID()));
 			
@@ -62,24 +71,7 @@ public class ServerGuideFile extends InfoPage
 				}
 			}
 			
-			reloadRegistries();
-			
 			main.cleanup();
-		}
-		
-		public static void reloadRegistries()
-		{
-			InfoPage list = categoryServerAdmin.getSub("Entities"); //LANG
-			
-			for(String s : EntityList.stringToClassMapping.keySet())
-				list.printlnText("[" + EntityList.getIDFromString(s) + "] " + s);
-			
-			list = categoryServerAdmin.getSub("Enchantments"); //LANG
-			
-			for(Enchantment e : Enchantment.enchantmentRegistry)
-			{
-				list.printlnText("[" + e.getRegistryName() + "] " + e.getTranslatedName(1));
-			}
 		}
 	}
 	
@@ -98,7 +90,7 @@ public class ServerGuideFile extends InfoPage
 		
 		copyFrom(CachedInfo.main);
 		
-		categoryTops = getSub("Tops").setTitle(FTBU.mod.chatComponent("top.title"));
+		categoryTops = getSub("Tops").setTitle(Top.langTopTitle.textComponent());
 		
 		players = ForgeWorldMP.inst.getServerPlayers();
 		
@@ -106,27 +98,51 @@ public class ServerGuideFile extends InfoPage
 			p.refreshStats();
 		
 		if(FTBUConfigGeneral.restart_timer.getAsDouble() > 0D)
-			println(FTBU.mod.chatComponent("cmd.timer_restart", LMStringUtils.getTimeString(FTBUWorldDataMP.get().restartMillis - LMUtils.millis())));
+			println(new TextComponentTranslation("cmd.timer_restart", LMStringUtils.getTimeString(FTBUWorldDataMP.get().restartMillis - LMUtils.millis())));
 		
 		if(FTBUConfigBackups.enabled.getAsBoolean())
-			println(FTBU.mod.chatComponent("cmd.timer_backup", LMStringUtils.getTimeString(Backups.nextBackup - LMUtils.millis())));
+			println(new TextComponentTranslation("cmd.timer_backup", LMStringUtils.getTimeString(Backups.nextBackup - LMUtils.millis())));
 		
 		if(FTBUConfigGeneral.server_info_difficulty.getAsBoolean())
-			println(FTBU.mod.chatComponent("cmd.world_difficulty", LMStringUtils.firstUppercase(pself.getPlayer().worldObj.getDifficulty().toString().toLowerCase())));
+			println(FTBLibLang.difficulty.textComponent(LMStringUtils.firstUppercase(pself.getPlayer().worldObj.getDifficulty().toString().toLowerCase())));
 		
 		if(FTBUConfigGeneral.server_info_mode.getAsBoolean())
-			println(FTBU.mod.chatComponent("cmd.ftb_gamemode", LMStringUtils.firstUppercase(ForgeWorldMP.inst.getMode().toString().toLowerCase())));
+			println(FTBLibLang.mode_current.textComponent(LMStringUtils.firstUppercase(ForgeWorldMP.inst.getMode().toString().toLowerCase())));
 		
-		if(FTBUConfigTops.first_joined.getAsBoolean()) addTop(Top.first_joined);
-		if(FTBUConfigTops.deaths.getAsBoolean()) addTop(Top.deaths);
-		if(FTBUConfigTops.deaths_ph.getAsBoolean()) addTop(Top.deaths_ph);
-		if(FTBUConfigTops.last_seen.getAsBoolean()) addTop(Top.last_seen);
-		if(FTBUConfigTops.time_played.getAsBoolean()) addTop(Top.time_played);
+		for(Top t : Top.registry.values())
+		{
+			InfoPage thisTop = categoryTops.getSub(t.getID()).setTitle(t.langKey.textComponent());
+			
+			Collections.sort(players, t);
+			
+			int size = Math.min(players.size(), 250);
+			
+			for(int j = 0; j < size; j++)
+			{
+				ForgePlayerMP p = players.get(j);
+				
+				Object data = t.getData(p);
+				StringBuilder sb = new StringBuilder();
+				sb.append('[');
+				sb.append(j + 1);
+				sb.append(']');
+				sb.append(' ');
+				sb.append(p.getProfile().getName());
+				sb.append(':');
+				sb.append(' ');
+				if(!(data instanceof ITextComponent)) sb.append(data);
+				
+				ITextComponent c = new TextComponentString(sb.toString());
+				if(p == self) c.getChatStyle().setColor(TextFormatting.DARK_GREEN);
+				else if(j < 3) c.getChatStyle().setColor(TextFormatting.LIGHT_PURPLE);
+				if(data instanceof ITextComponent) c.appendSibling(FTBLib.getChatComponent(data));
+				thisTop.println(c);
+			}
+		}
 		
 		MinecraftForge.EVENT_BUS.post(new EventFTBUServerGuide(this, self, isOP));
-		if(isOP) addSub(CachedInfo.categoryServerAdmin);
 		
-		InfoPage page = getSub("Commands"); //LANG
+		InfoPage page = getSub("commands").setTitle(FTBLibLang.commands.textComponent()); //TODO: Lang
 		page.clear();
 		
 		try
@@ -137,7 +153,7 @@ public class ServerGuideFile extends InfoPage
 				{
 					InfoPage cat = new InfoPage('/' + c.getCommandName());
 					
-					@SuppressWarnings("unchecked") List<String> al = c.getCommandAliases();
+					List<String> al = c.getCommandAliases();
 					if(al != null && !al.isEmpty()) for(String s : al)
 						cat.printlnText('/' + s);
 					
@@ -208,36 +224,5 @@ public class ServerGuideFile extends InfoPage
 		
 		cleanup();
 		sortAll();
-	}
-	
-	public void addTop(Top t)
-	{
-		InfoPage thisTop = categoryTops.getSub(t.ID).setTitle(t.langKey.chatComponent());
-		
-		Collections.sort(players, t);
-		
-		int size = Math.min(players.size(), 250);
-		
-		for(int j = 0; j < size; j++)
-		{
-			ForgePlayerMP p = players.get(j);
-			
-			Object data = t.getData(p);
-			StringBuilder sb = new StringBuilder();
-			sb.append('[');
-			sb.append(j + 1);
-			sb.append(']');
-			sb.append(' ');
-			sb.append(p.getProfile().getName());
-			sb.append(':');
-			sb.append(' ');
-			if(!(data instanceof ITextComponent)) sb.append(data);
-			
-			ITextComponent c = new TextComponentString(sb.toString());
-			if(p == self) c.getChatStyle().setColor(TextFormatting.DARK_GREEN);
-			else if(j < 3) c.getChatStyle().setColor(TextFormatting.LIGHT_PURPLE);
-			if(data instanceof ITextComponent) c.appendSibling(FTBLib.getChatComponent(data));
-			thisTop.println(c);
-		}
 	}
 }

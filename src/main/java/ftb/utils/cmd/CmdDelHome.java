@@ -1,10 +1,13 @@
 package ftb.utils.cmd;
 
-import ftb.lib.api.*;
-import ftb.lib.api.cmd.*;
-import ftb.utils.FTBU;
+import ftb.lib.api.ForgePlayerMP;
+import ftb.lib.api.ForgeWorldMP;
+import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLevel;
+import ftb.utils.FTBULang;
 import ftb.utils.world.FTBUPlayerDataMP;
-import net.minecraft.command.*;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
@@ -37,7 +40,9 @@ public class CmdDelHome extends CommandLM
 		checkArgs(args, 1);
 		
 		if(FTBUPlayerDataMP.get(p).homes.set(args[0], null))
-			ics.addChatMessage(FTBU.mod.chatComponent("cmd.home_del", args[0]));
+		{
+			FTBULang.home_del.printChat(ics, args[0]);
+		}
 		
 		throw new CommandException("ftbu.cmd.home_not_set", args[0]);
 	}

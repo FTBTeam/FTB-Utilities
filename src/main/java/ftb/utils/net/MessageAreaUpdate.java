@@ -1,15 +1,23 @@
 package ftb.utils.net;
 
-import ftb.lib.*;
+import ftb.lib.BlockDimPos;
+import ftb.lib.ChunkDimPos;
 import ftb.lib.api.ForgePlayerMP;
-import ftb.lib.api.net.*;
-import ftb.utils.world.*;
+import ftb.lib.api.net.LMNetworkWrapper;
+import ftb.lib.api.net.MessageLM;
+import ftb.utils.world.ChunkType;
+import ftb.utils.world.FTBUWorldDataMP;
+import ftb.utils.world.FTBUWorldDataSP;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.DimensionType;
-import net.minecraftforge.fml.common.network.simpleimpl.*;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate>
 {
@@ -64,10 +72,20 @@ public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate>
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageAreaUpdate m, MessageContext ctx)
+	public IMessage onMessage(final MessageAreaUpdate m, MessageContext ctx)
 	{
-		if(!FTBUWorldDataSP.get().isLoaded()) return null;
-		FTBUWorldDataSP.get().setTypes(m.dim, m.types);
+		Minecraft.getMinecraft().addScheduledTask(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				if(FTBUWorldDataSP.get().isLoaded())
+				{
+					FTBUWorldDataSP.get().setTypes(m.dim, m.types);
+				}
+			}
+		});
+		
 		return null;
 	}
 }

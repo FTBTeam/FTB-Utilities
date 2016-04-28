@@ -1,10 +1,12 @@
 package ftb.utils.cmd.admin;
 
 import ftb.lib.BlockDimPos;
-import ftb.lib.api.cmd.*;
-import ftb.utils.FTBU;
+import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLevel;
+import ftb.utils.FTBULang;
 import ftb.utils.world.FTBUWorldDataMP;
-import net.minecraft.command.*;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -36,6 +38,6 @@ public class CmdSetWarp extends CommandLM
 		else c = ep.getPosition();
 		
 		FTBUWorldDataMP.get().warps.set(args[0], new BlockDimPos(c, DimensionType.getById(ep.dimension)));
-		ics.addChatMessage(FTBU.mod.chatComponent("cmd.warp_set", args[0]));
+		FTBULang.warp_set.printChat(ics, args[0]);
 	}
 }

@@ -1,14 +1,27 @@
 package ftb.utils.ranks;
 
-import com.google.gson.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
 import ftb.lib.FTBLib;
-import ftb.lib.api.permissions.*;
-import latmod.lib.*;
+import ftb.lib.api.permissions.ForgePermissionContainer;
+import ftb.lib.api.permissions.ForgePermissionRegistry;
+import ftb.lib.api.permissions.IPermissionHandler;
+import ftb.lib.api.permissions.RankConfig;
+import latmod.lib.LMFileUtils;
+import latmod.lib.LMJsonUtils;
+import latmod.lib.LMUtils;
 import net.minecraft.util.text.TextFormatting;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class Ranks implements IPermissionHandler
 {

@@ -1,15 +1,18 @@
 package ftb.utils.config;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import ftb.lib.JsonHelper;
 import ftb.lib.api.config.ConfigEntryCustom;
 import ftb.lib.api.item.ItemStackSerializer;
 import latmod.lib.annotations.Info;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FTBUConfigLogin
 {
@@ -48,6 +51,7 @@ public class FTBUConfigLogin
 			}
 		}
 		
+		@Override
 		public JsonElement getSerializableElement()
 		{
 			JsonArray a = new JsonArray();
@@ -90,6 +94,7 @@ public class FTBUConfigLogin
 			}
 		}
 		
+		@Override
 		public JsonElement getSerializableElement()
 		{
 			JsonArray a = new JsonArray();

@@ -1,11 +1,15 @@
 package ftb.utils.badges;
 
-import ftb.lib.api.*;
+import ftb.lib.api.ForgePlayerSP;
+import ftb.lib.api.ForgeWorldSP;
 import ftb.utils.client.FTBUClient;
-import ftb.utils.world.*;
+import ftb.utils.world.FTBUPlayerData;
+import ftb.utils.world.FTBUPlayerDataSP;
+import ftb.utils.world.FTBUWorldDataSP;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class BadgeRenderer implements LayerRenderer<AbstractClientPlayer>

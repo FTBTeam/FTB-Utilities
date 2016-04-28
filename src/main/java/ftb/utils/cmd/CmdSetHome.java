@@ -1,10 +1,14 @@
 package ftb.utils.cmd;
 
-import ftb.lib.api.*;
-import ftb.lib.api.cmd.*;
-import ftb.utils.*;
+import ftb.lib.api.ForgePlayerMP;
+import ftb.lib.api.ForgeWorldMP;
+import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLevel;
+import ftb.utils.FTBULang;
+import ftb.utils.FTBUPermissions;
 import ftb.utils.world.FTBUPlayerDataMP;
-import net.minecraft.command.*;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
@@ -46,6 +50,6 @@ public class CmdSetHome extends CommandLM
 		}
 		
 		d.homes.set(args[0], d.player.toPlayerMP().getPos());
-		ics.addChatMessage(FTBU.mod.chatComponent("cmd.home_set", args[0]));
+		FTBULang.home_set.printChat(ics, args[0]);
 	}
 }

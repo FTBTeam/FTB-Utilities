@@ -1,17 +1,22 @@
 package ftb.utils.client;
 
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.config.*;
-import ftb.lib.api.events.*;
+import ftb.lib.api.config.ClientConfigRegistry;
+import ftb.lib.api.config.ConfigEntryBool;
+import ftb.lib.api.events.ForgePlayerDataEvent;
+import ftb.lib.api.events.ForgeWorldDataEvent;
 import ftb.lib.api.gui.LMGuiHandlerRegistry;
-import ftb.utils.*;
+import ftb.utils.FTBUCommon;
+import ftb.utils.FTBUGuiHandler;
 import ftb.utils.badges.BadgeRenderer;
 import ftb.utils.cmd.CmdMath;
 import ftb.utils.journeymap.IJMPluginHandler;
-import ftb.utils.world.*;
+import ftb.utils.world.FTBUPlayerDataSP;
+import ftb.utils.world.FTBUWorldDataSP;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Map;
 

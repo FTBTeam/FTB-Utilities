@@ -1,7 +1,11 @@
 package ftb.utils.config;
 
-import ftb.lib.api.config.*;
-import latmod.lib.annotations.*;
+import ftb.lib.api.config.ConfigEntryBool;
+import ftb.lib.api.config.ConfigEntryDouble;
+import ftb.lib.api.config.ConfigEntryInt;
+import ftb.lib.api.config.ConfigEntryString;
+import latmod.lib.annotations.Info;
+import latmod.lib.annotations.NumberBounds;
 
 public class FTBUConfigBackups
 {

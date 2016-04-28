@@ -1,9 +1,4 @@
 #Buttons
-ftbu.label.friend=Friend
-ftbu.label.pfriend=Pending Friend
-ftbu.label.joined=Joined %s ago
-ftbu.label.last_seen=Last seen %s ago
-ftbu.label.deaths=Deaths: %s
 ftbu.button.explosions=Explosions
 ftbu.button.block_security=Block Security
 ftbu.label.cchunks_count=Claimed Chunks: %s
@@ -34,11 +29,6 @@ player_action.ftbu.rem_friend=Remove from Friends
 player_action.ftbu.deny_friend=Deny Friend Request
 player_action.ftbu.mail=Mail
 
-#Misc
-ftbu.label.new_friends=New friend requests!
-ftbu.label.new_friends_click=Click to accept all requests
-ftbu.server_restart=Server will restart in %s
-
 ftbu.cmd.warp_set=Warp '%s' set!
 ftbu.cmd.warp_del=Warp '%s' deleted!
 ftbu.cmd.warp_not_set=Unknown Warp: '%s'!
@@ -54,8 +44,7 @@ ftbu.cmd.no_dp=You can only go back once!
 ftbu.cmd.timer_backup=Next backup: %s
 ftbu.cmd.timer_restart=Next restart: %s
 ftbu.cmd.spawn_tp=Teleported to spawn
-ftbu.cmd.ftb_gamemode=Game mode: %s
-ftbu.cmd.world_difficulty=Difficulty: %s
+ftbu.server_restart=Server will restart in %s
 
 ftbu.cmd.backup_start=Server Backup started!
 ftbu.cmd.backup_stop=Server Backup stopped!

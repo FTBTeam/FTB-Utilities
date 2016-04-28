@@ -1,12 +1,19 @@
 package ftb.utils.config;
 
-import com.google.gson.*;
-import ftb.lib.api.config.*;
-import latmod.lib.annotations.*;
-import net.minecraft.entity.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import ftb.lib.api.config.ConfigEntryBool;
+import ftb.lib.api.config.ConfigEntryCustom;
+import ftb.lib.api.config.ConfigEntryDouble;
+import latmod.lib.annotations.Info;
+import latmod.lib.annotations.NumberBounds;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FTBUConfigGeneral
 {
@@ -85,6 +92,7 @@ public class FTBUConfigGeneral
 			}
 		}
 		
+		@Override
 		public JsonElement getSerializableElement()
 		{
 			JsonArray a = new JsonArray();

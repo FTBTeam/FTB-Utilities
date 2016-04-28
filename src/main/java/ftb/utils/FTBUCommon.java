@@ -1,7 +1,9 @@
 package ftb.utils;
 
-import ftb.lib.api.events.*;
-import ftb.utils.world.*;
+import ftb.lib.api.events.ForgePlayerDataEvent;
+import ftb.lib.api.events.ForgeWorldDataEvent;
+import ftb.utils.world.FTBUPlayerDataMP;
+import ftb.utils.world.FTBUWorldDataMP;
 
 public class FTBUCommon // FTBUClient
 {

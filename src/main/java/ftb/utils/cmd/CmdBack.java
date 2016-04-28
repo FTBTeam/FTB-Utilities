@@ -2,8 +2,10 @@ package ftb.utils.cmd;
 
 import ftb.lib.LMDimUtils;
 import ftb.lib.api.ForgePlayerMP;
-import ftb.lib.api.cmd.*;
-import net.minecraft.command.*;
+import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLevel;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 

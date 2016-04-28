@@ -1,14 +1,20 @@
 package ftb.utils.cmd;
 
-import ftb.lib.*;
+import ftb.lib.FTBLib;
+import ftb.lib.PrivacyLevel;
 import ftb.lib.api.ForgePlayerMP;
-import ftb.lib.api.cmd.*;
-import ftb.utils.world.*;
-import net.minecraft.command.*;
+import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLevel;
+import ftb.lib.api.cmd.CommandSubLM;
+import ftb.utils.world.FTBUPlayerData;
+import ftb.utils.world.FTBUPlayerDataMP;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by LatvianModder on 14.01.2016.

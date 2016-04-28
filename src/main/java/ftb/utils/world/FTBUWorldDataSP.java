@@ -1,14 +1,18 @@
 package ftb.utils.world;
 
 import ftb.lib.ChunkDimPos;
-import ftb.lib.api.*;
+import ftb.lib.api.ForgeWorld;
+import ftb.lib.api.ForgeWorldData;
 import ftb.utils.FTBUFinals;
 import ftb.utils.client.FTBUClient;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.*;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.DimensionType;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by LatvianModder on 23.02.2016.

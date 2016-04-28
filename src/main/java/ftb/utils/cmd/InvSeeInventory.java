@@ -2,7 +2,8 @@ package ftb.utils.cmd;
 
 import ftb.lib.BaublesHelper;
 import ftb.lib.api.item.LMInvUtils;
-import net.minecraft.entity.player.*;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;

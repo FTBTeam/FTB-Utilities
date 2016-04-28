@@ -1,10 +1,13 @@
 package ftb.utils.net;
 
 import ftb.lib.api.ForgeWorldMP;
-import ftb.lib.api.net.*;
-import ftb.utils.badges.*;
+import ftb.lib.api.net.LMNetworkWrapper;
+import ftb.lib.api.net.MessageLM;
+import ftb.utils.badges.Badge;
+import ftb.utils.badges.ServerBadges;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.simpleimpl.*;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.util.UUID;
 

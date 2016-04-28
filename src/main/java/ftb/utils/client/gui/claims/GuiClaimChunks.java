@@ -1,27 +1,44 @@
 package ftb.utils.client.gui.claims;
 
-import ftb.lib.*;
-import ftb.lib.api.*;
+import ftb.lib.ChunkDimPos;
+import ftb.lib.MathHelperMC;
+import ftb.lib.TextureCoords;
+import ftb.lib.api.ForgePlayerSPSelf;
+import ftb.lib.api.ForgeWorldSP;
+import ftb.lib.api.GuiLang;
+import ftb.lib.api.MouseButton;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.gui.*;
-import ftb.lib.api.gui.widgets.*;
+import ftb.lib.api.gui.GuiIcons;
+import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.widgets.ButtonLM;
+import ftb.lib.api.gui.widgets.PanelLM;
 import ftb.lib.mod.net.MessageRequestSelfUpdate;
-import ftb.utils.FTBU;
+import ftb.utils.FTBULang;
 import ftb.utils.client.FTBUClient;
-import ftb.utils.net.*;
-import ftb.utils.world.*;
+import ftb.utils.net.MessageAreaRequest;
+import ftb.utils.net.MessageButtonPressed;
+import ftb.utils.net.MessageClaimChunk;
+import ftb.utils.world.ChunkType;
+import ftb.utils.world.FTBUPlayerDataSP;
+import ftb.utils.world.FTBUWorldDataSP;
 import latmod.lib.MathHelperLM;
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.*;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.DimensionType;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import java.nio.ByteBuffer;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.List;
+import java.util.Map;
 
 @SideOnly(Side.CLIENT)
 public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // implements IClientActionGui
@@ -75,7 +92,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		buttonClose = new ButtonLM(this, 0, 0, 16, 16)
 		{
 			@Override
-			public void onClicked(boolean leftClick)
+			public void onClicked(MouseButton button)
 			{
 				FTBLibClient.playClickSound();
 				FTBLibClient.openGui(null);
@@ -85,7 +102,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		buttonRefresh = new ButtonLM(this, 0, 16, 16, 16)
 		{
 			@Override
-			public void onClicked(boolean leftClick)
+			public void onClicked(MouseButton button)
 			{
 				thread = new ThreadReloadArea(mc.theWorld, GuiClaimChunks.this);
 				thread.start();
@@ -95,35 +112,34 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			}
 		};
 		
-		buttonRefresh.title = FTBLibLang.button_refresh();
+		buttonRefresh.title = GuiLang.button_refresh.format();
 		
 		buttonSettings = new ButtonLM(this, 0, 32, 16, 16)
 		{
 			@Override
-			public void onClicked(boolean leftClick)
+			public void onClicked(MouseButton button)
 			{
 				FTBLibClient.playClickSound();
 				new MessageButtonPressed(MessageButtonPressed.CLAIMED_CHUNKS_SETTINGS, 0).sendToServer();
 			}
 		};
 		
-		buttonSettings.title = FTBLibLang.button_settings();
+		buttonSettings.title = GuiLang.button_settings.format();
 		
 		buttonUnclaimAll = new ButtonLM(this, 0, 48, 16, 16)
 		{
 			@Override
-			public void onClicked(boolean leftClick)
+			public void onClicked(MouseButton button)
 			{
 				FTBLibClient.playClickSound();
-				String s = isShiftKeyDown() ? FTBU.mod.format("button.claims_unclaim_all_q") : FTBU.mod.format("button.claims_unclaim_all_dim_q", currentDim.getName());
+				String s = isShiftKeyDown() ? FTBULang.button_claims_unclaim_all_q.format() : FTBULang.button_claims_unclaim_all_dim_q.format(currentDim.getName());
 				FTBLibClient.openGui(new GuiYesNo(GuiClaimChunks.this, s, "", isShiftKeyDown() ? 1 : 0));
 			}
 			
 			@Override
 			public void addMouseOverText(List<String> l)
 			{
-				if(isShiftKeyDown()) l.add(FTBU.mod.format("button.claims_unclaim_all"));
-				else l.add(FTBU.mod.format("button.claims_unclaim_all_dim", currentDim.getName()));
+				l.add(isShiftKeyDown() ? FTBULang.button_claims_unclaim_all.format() : FTBULang.button_claims_unclaim_all_dim.format(currentDim.getName()));
 			}
 		};
 		
@@ -161,7 +177,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	@Override
 	public void initLMGui()
 	{
-		buttonRefresh.onClicked(true);
+		buttonRefresh.onClicked(MouseButton.LEFT);
 	}
 	
 	@Override
@@ -237,9 +253,9 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	public void drawText(List<String> l)
 	{
 		FTBUPlayerDataSP d = FTBUPlayerDataSP.get(ForgeWorldSP.inst.clientPlayer);
-		String s = FTBU.mod.format("label.cchunks_count", (d.claimedChunks + " / " + d.maxClaimedChunks));
+		String s = FTBULang.label_cchunks_count.format(d.claimedChunks + " / " + d.maxClaimedChunks);
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 12, 0xFFFFFFFF);
-		s = FTBU.mod.format("label.lchunks_count", (d.loadedChunks + " / " + d.maxLoadedChunks));
+		s = FTBULang.label_lchunks_count.format(d.loadedChunks + " / " + d.maxLoadedChunks);
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 24, 0xFFFFFFFF);
 		
 		super.drawText(l);
@@ -345,16 +361,16 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		}
 		
 		@Override
-		public void onClicked(boolean leftClick)
+		public void onClicked(MouseButton button)
 		{
 			if(gui.panelButtons.mouseOver()) return;
-			if(gui.adminToken != 0L && leftClick) return;
+			if(gui.adminToken != 0L && button.isLeft()) return;
 			boolean ctrl = FTBUClient.loaded_chunks_space_key.getAsBoolean() ? Keyboard.isKeyDown(Keyboard.KEY_SPACE) : isCtrlKeyDown();
 			
 			MessageClaimChunk msg = new MessageClaimChunk();
 			msg.token = gui.adminToken;
 			msg.pos = chunk;
-			msg.type = leftClick ? (ctrl ? MessageClaimChunk.ID_LOAD : MessageClaimChunk.ID_CLAIM) : (ctrl ? MessageClaimChunk.ID_UNLOAD : MessageClaimChunk.ID_UNCLAIM);
+			msg.type = button.isLeft() ? (ctrl ? MessageClaimChunk.ID_LOAD : MessageClaimChunk.ID_CLAIM) : (ctrl ? MessageClaimChunk.ID_UNLOAD : MessageClaimChunk.ID_UNCLAIM);
 			msg.sendToServer();
 			FTBLibClient.playClickSound();
 		}

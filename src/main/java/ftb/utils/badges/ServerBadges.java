@@ -1,18 +1,24 @@
 package ftb.utils.badges;
 
-import com.google.gson.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import ftb.lib.FTBLib;
 import ftb.lib.api.ForgePlayerMP;
 import ftb.utils.FTBU;
 import ftb.utils.net.MessageUpdateBadges;
 import ftb.utils.ranks.Ranks;
-import latmod.lib.*;
-import latmod.lib.net.*;
+import latmod.lib.LMFileUtils;
+import latmod.lib.LMJsonUtils;
+import latmod.lib.LMUtils;
+import latmod.lib.net.LMURLConnection;
+import latmod.lib.net.RequestMethod;
 import latmod.lib.util.Phase;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.io.File;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class ServerBadges
 {

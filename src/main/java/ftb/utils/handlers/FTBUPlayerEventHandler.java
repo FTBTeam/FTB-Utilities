@@ -1,17 +1,22 @@
 package ftb.utils.handlers;
 
-import ftb.lib.*;
-import ftb.lib.api.*;
+import ftb.lib.ChunkDimPos;
+import ftb.lib.EntityPos;
+import ftb.lib.FTBLib;
+import ftb.lib.api.ForgePlayerMP;
+import ftb.lib.api.ForgeWorldMP;
 import ftb.lib.api.notification.Notification;
 import ftb.lib.api.permissions.ForgePermissionRegistry;
 import ftb.lib.mod.FTBLibPermissions;
-import ftb.utils.FTBU;
 import ftb.utils.config.FTBUConfigGeneral;
-import ftb.utils.world.*;
+import ftb.utils.world.ChunkType;
+import ftb.utils.world.FTBUPlayerDataMP;
+import ftb.utils.world.FTBUWorldDataMP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.DimensionType;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
@@ -37,15 +42,10 @@ public class FTBUPlayerEventHandler
 		if(d.lastChunkType == null || !d.lastChunkType.equals(type))
 		{
 			d.lastChunkType = type;
-			ITextComponent msg;
 			
-			if(type.asClaimed() != null)
-				msg = new TextComponentString(String.valueOf(type.asClaimed().chunk.getOwner()));
-			else msg = FTBU.mod.chatComponent(type.lang);
-			
+			ITextComponent msg = type.getTitleComponent();
 			msg.getChatStyle().setColor(TextFormatting.WHITE);
 			msg.getChatStyle().setBold(true);
-			
 			Notification n = new Notification("chunk_changed", msg, 3000);
 			n.setColor(type.getAreaColor(player));
 			FTBLib.notifyPlayer(ep, n);

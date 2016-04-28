@@ -1,7 +1,10 @@
 package ftb.utils.config;
 
-import ftb.lib.api.config.*;
-import latmod.lib.annotations.*;
+import ftb.lib.api.config.ConfigEntryBool;
+import ftb.lib.api.config.ConfigEntryDouble;
+import latmod.lib.annotations.Flags;
+import latmod.lib.annotations.Info;
+import latmod.lib.annotations.NumberBounds;
 
 public class FTBUConfigChunkloading
 {

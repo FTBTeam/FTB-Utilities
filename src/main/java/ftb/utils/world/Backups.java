@@ -1,15 +1,21 @@
 package ftb.utils.world;
 
-import ftb.lib.*;
-import ftb.utils.FTBU;
+import ftb.lib.BroadcastSender;
+import ftb.lib.FTBLib;
+import ftb.utils.FTBULang;
 import ftb.utils.config.FTBUConfigBackups;
-import latmod.lib.*;
+import latmod.lib.LMFileUtils;
+import latmod.lib.LMUtils;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.server.*;
+import net.minecraft.command.server.CommandSaveAll;
+import net.minecraft.command.server.CommandSaveOff;
+import net.minecraft.command.server.CommandSaveOn;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.util.Arrays;
@@ -42,7 +48,7 @@ public class Backups
 		World w = FTBLib.getServerWorld();
 		if(w == null) return false;
 		
-		ITextComponent c = FTBU.mod.chatComponent("cmd.backup_start", ics.getName());
+		ITextComponent c = FTBULang.backup_start.textComponent(ics.getName());
 		c.getChatStyle().setColor(TextFormatting.LIGHT_PURPLE);
 		BroadcastSender.inst.addChatMessage(c);
 		

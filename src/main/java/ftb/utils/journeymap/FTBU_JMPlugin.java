@@ -2,7 +2,9 @@ package ftb.utils.journeymap;
 
 import ftb.utils.FTBUFinals;
 import ftb.utils.client.FTBUClient;
-import journeymap.client.api.*;
+import journeymap.client.api.ClientPlugin;
+import journeymap.client.api.IClientAPI;
+import journeymap.client.api.IClientPlugin;
 import journeymap.client.api.event.ClientEvent;
 
 /**

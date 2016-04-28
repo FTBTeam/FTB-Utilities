@@ -1,10 +1,12 @@
 package ftb.utils.world;
 
 import ftb.lib.PrivacyLevel;
-import ftb.lib.api.*;
+import ftb.lib.api.ForgePlayer;
+import ftb.lib.api.ForgePlayerSP;
 import ftb.utils.FTBUFinals;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by LatvianModder on 23.02.2016.

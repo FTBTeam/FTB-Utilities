@@ -1,9 +1,11 @@
 package ftb.utils.cmd.admin;
 
-import ftb.lib.api.cmd.*;
-import ftb.utils.FTBU;
+import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLevel;
+import ftb.utils.FTBULang;
 import ftb.utils.world.FTBUWorldDataMP;
-import net.minecraft.command.*;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
@@ -30,11 +32,14 @@ public class CmdDelWarp extends CommandLM
 	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
+		
 		if(FTBUWorldDataMP.get().warps.set(args[0], null))
 		{
-			ics.addChatMessage(FTBU.mod.chatComponent("cmd.warp_del", args[0]));
-			return;
+			FTBULang.warp_del.printChat(ics, args[0]);
 		}
-		throw new CommandException("ftbu.cmd.warp_not_set", args[0]);
+		else
+		{
+			throw FTBULang.warp_not_set.commandError(args[0]);
+		}
 	}
 }

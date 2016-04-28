@@ -2,7 +2,8 @@ package ftb.utils.badges;
 
 import ftb.utils.net.MessageRequestBadge;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.UUID;
 
 /**
  * Created by LatvianModder on 07.01.2016.

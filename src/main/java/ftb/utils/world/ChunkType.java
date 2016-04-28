@@ -1,14 +1,24 @@
 package ftb.utils.world;
 
-import ftb.lib.*;
-import ftb.lib.api.*;
+import ftb.lib.ChunkDimPos;
+import ftb.lib.PrivacyLevel;
+import ftb.lib.api.ForgePlayer;
+import ftb.lib.api.ForgePlayerMP;
+import ftb.lib.api.ForgePlayerSP;
+import ftb.lib.api.ForgeWorldSP;
+import ftb.lib.api.LangKey;
 import ftb.lib.api.net.MessageLM;
-import ftb.utils.*;
+import ftb.utils.FTBUPermissions;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 public class ChunkType
 {
@@ -45,9 +55,12 @@ public class ChunkType
 	{
 		if(this != ChunkType.UNLOADED)
 		{
-			l.add(getChatColor(null) + FTBU.mod.format(lang));
+			l.add(getChatColor(null) + langKey.format());
 		}
 	}
+	
+	public ITextComponent getTitleComponent()
+	{ return langKey.textComponent(); }
 	
 	public static final class PlayerClaimed extends ChunkType
 	{
@@ -103,6 +116,10 @@ public class ChunkType
 		}
 		
 		@Override
+		public ITextComponent getTitleComponent()
+		{ return new TextComponentString(String.valueOf(chunk.getOwner())); }
+		
+		@Override
 		@SideOnly(Side.CLIENT)
 		public void getMessage(List<String> l, boolean shift)
 		{
@@ -110,20 +127,20 @@ public class ChunkType
 			if(owner != null)
 			{
 				l.add(getChatColor(owner) + owner.getProfile().getName());
-				if(chunk.isChunkloaded) l.add(FTBU.mod.format("chunktype.chunkloaded"));
+				if(chunk.isChunkloaded) l.add(I18n.format("ftbu.chunktype.chunkloaded"));
 			}
 		}
 	}
 	
 	public final int ID;
-	public final String lang;
+	public final LangKey langKey;
 	private final TextFormatting chatColor;
 	private final int areaColor;
 	
 	public ChunkType(int id, String s, TextFormatting c, int col)
 	{
 		ID = id;
-		lang = "chunktype." + s;
+		langKey = new LangKey("ftbu.chunktype." + s);
 		chatColor = c;
 		areaColor = col;
 	}

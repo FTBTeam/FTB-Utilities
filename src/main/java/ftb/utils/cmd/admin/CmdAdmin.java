@@ -1,6 +1,7 @@
 package ftb.utils.cmd.admin;
 
-import ftb.lib.api.cmd.*;
+import ftb.lib.api.cmd.CommandLevel;
+import ftb.lib.api.cmd.CommandSubLM;
 import ftb.utils.config.FTBUConfigCmd;
 
 public class CmdAdmin extends CommandSubLM
@@ -14,11 +15,11 @@ public class CmdAdmin extends CommandSubLM
 		add(new CmdDelWarp());
 		add(new CmdUnclaim());
 		add(new CmdUnclaimAll());
-		add(new CmdLoadedChunks());
 		add(new CmdBackup());
 		add(new CmdListFriends());
 		add(new CmdUnloadAll());
 		add(new CmdAdminHome());
 		add(new CmdDisplayNBT());
+		add(new CmdServerInfo());
 	}
 }

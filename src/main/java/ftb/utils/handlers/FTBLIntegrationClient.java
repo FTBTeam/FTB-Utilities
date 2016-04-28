@@ -4,10 +4,12 @@ import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.events.ReloadEvent;
 import ftb.lib.api.paint.IPainterItem;
 import ftb.utils.badges.ClientBadges;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class FTBLIntegrationClient extends FTBLIntegration

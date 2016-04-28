@@ -1,22 +1,49 @@
 package ftb.utils.world;
 
-import com.google.gson.*;
-import ftb.lib.*;
-import ftb.lib.api.*;
-import ftb.utils.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import ftb.lib.BlockDimPos;
+import ftb.lib.BroadcastSender;
+import ftb.lib.ChunkDimPos;
+import ftb.lib.FTBLib;
+import ftb.lib.LMDimUtils;
+import ftb.lib.api.ForgePlayerMP;
+import ftb.lib.api.ForgeWorld;
+import ftb.lib.api.ForgeWorldData;
+import ftb.lib.api.ForgeWorldMP;
+import ftb.lib.api.IWorldTick;
+import ftb.utils.FTBU;
+import ftb.utils.FTBUFinals;
+import ftb.utils.FTBULang;
+import ftb.utils.FTBUPermissions;
 import ftb.utils.badges.ServerBadges;
 import ftb.utils.cmd.admin.CmdRestart;
-import ftb.utils.config.*;
+import ftb.utils.config.FTBUConfigBackups;
+import ftb.utils.config.FTBUConfigGeneral;
 import ftb.utils.handlers.FTBUChunkEventHandler;
-import latmod.lib.*;
-import latmod.lib.util.*;
+import latmod.lib.LMJsonUtils;
+import latmod.lib.LMStringUtils;
+import latmod.lib.LMUtils;
+import latmod.lib.MathHelperLM;
+import latmod.lib.util.EnumEnabled;
+import latmod.lib.util.Phase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.*;
-import net.minecraft.world.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.DimensionType;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by LatvianModder on 23.02.2016.
@@ -253,7 +280,7 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 					}
 					else if(secondsLeft <= 10 || secondsLeft == 60 || secondsLeft == 300 || secondsLeft == 600 || secondsLeft == 1800)
 					{
-						ITextComponent c = FTBU.mod.chatComponent("server_restart", msg);
+						ITextComponent c = FTBULang.timer_restart.textComponent(msg);
 						c.getChatStyle().setColor(TextFormatting.LIGHT_PURPLE);
 						BroadcastSender.inst.addChatMessage(c);
 					}

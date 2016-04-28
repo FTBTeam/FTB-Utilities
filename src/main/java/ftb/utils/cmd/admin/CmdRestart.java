@@ -1,9 +1,11 @@
 package ftb.utils.cmd.admin;
 
 import ftb.lib.FTBLib;
-import ftb.lib.api.cmd.*;
+import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLevel;
 import latmod.lib.LMFileUtils;
-import net.minecraft.command.*;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 
 import java.io.File;

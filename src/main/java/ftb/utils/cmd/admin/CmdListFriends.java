@@ -1,9 +1,11 @@
 package ftb.utils.cmd.admin;
 
 import ftb.lib.api.ForgePlayerMP;
-import ftb.lib.api.cmd.*;
+import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLevel;
 import latmod.lib.LMStringUtils;
-import net.minecraft.command.*;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 

@@ -4,6 +4,7 @@ import ftb.lib.PrivacyLevel;
 import ftb.lib.api.ForgePlayer;
 import ftb.lib.api.ForgePlayerSP;
 import ftb.utils.FTBUFinals;
+import latmod.lib.IntMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -27,15 +28,19 @@ public class FTBUPlayerDataSP extends FTBUPlayerData
 	@Override
 	public void readFromNet(NBTTagCompound tag, boolean self)
 	{
-		flags = tag.getByte("F");
-		blocks = PrivacyLevel.VALUES_3[tag.getByte("B")];
+		IntMap map = new IntMap();
+		map.list.setDefVal(0);
+		map.list.addAll(tag.getIntArray("F"));
+		
+		flags = (byte) map.get(0);
+		blocks = PrivacyLevel.VALUES_3[map.get(1)];
 		
 		if(self)
 		{
-			claimedChunks = tag.getShort("CC");
-			loadedChunks = tag.getShort("LC");
-			maxClaimedChunks = tag.getShort("MCC");
-			maxLoadedChunks = tag.getShort("MLC");
+			claimedChunks = (short) map.get(10);
+			loadedChunks = (short) map.get(11);
+			maxClaimedChunks = (short) map.get(12);
+			maxLoadedChunks = (short) map.get(13);
 		}
 	}
 }

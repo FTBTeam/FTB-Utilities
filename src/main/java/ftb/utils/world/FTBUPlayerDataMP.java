@@ -12,6 +12,7 @@ import ftb.utils.badges.ServerBadges;
 import ftb.utils.config.FTBUConfigLogin;
 import ftb.utils.handlers.FTBUChunkEventHandler;
 import ftb.utils.net.MessageAreaUpdate;
+import latmod.lib.IntMap;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -64,16 +65,20 @@ public class FTBUPlayerDataMP extends FTBUPlayerData
 	@Override
 	public void writeToNet(NBTTagCompound tag, boolean self)
 	{
-		tag.setByte("F", flags);
-		tag.setByte("B", (byte) blocks.ordinal());
+		IntMap map = new IntMap();
+		
+		map.putIfNot0(0, flags);
+		map.putIfNot0(1, blocks.ordinal());
 		
 		if(self)
 		{
-			tag.setInteger("CC", getClaimedChunks());
-			tag.setInteger("LC", getLoadedChunks(true));
-			tag.setInteger("MCC", getMaxClaimedChunks());
-			tag.setInteger("MLC", getMaxLoadedChunks());
+			map.putIfNot0(10, getClaimedChunks());
+			map.putIfNot0(11, getLoadedChunks(true));
+			map.putIfNot0(12, getMaxClaimedChunks());
+			map.putIfNot0(13, getMaxLoadedChunks());
 		}
+		
+		tag.setIntArray("F", map.toArray());
 	}
 	
 	@Override

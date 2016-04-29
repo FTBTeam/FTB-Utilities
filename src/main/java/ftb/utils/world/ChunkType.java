@@ -68,7 +68,7 @@ public class ChunkType
 		
 		public PlayerClaimed(ClaimedChunk o)
 		{
-			super(99, "claimed", null, 0);
+			super(4, "claimed", null, 0);
 			chunk = o;
 		}
 		
@@ -154,6 +154,7 @@ public class ChunkType
 	public boolean drawGrid()
 	{ return this != WILDERNESS && this != UNLOADED; }
 	
+	@Override
 	public int hashCode()
 	{ return ID; }
 	

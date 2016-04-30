@@ -1,7 +1,7 @@
 package ftb.utils.handlers;
 
 import ftb.lib.ChunkDimPos;
-import ftb.lib.EntityPos;
+import ftb.lib.EntityDimPos;
 import ftb.lib.FTBLib;
 import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.ForgeWorldMP;
@@ -34,7 +34,7 @@ public class FTBUPlayerEventHandler
 		ForgePlayerMP player = ForgeWorldMP.inst.getPlayer(ep);
 		if(player == null || !player.isOnline()) return;
 		
-		player.lastPos = new EntityPos(ep).toBlockDimPos();
+		player.lastPos = new EntityDimPos(ep).toBlockDimPos();
 		
 		ChunkType type = FTBUWorldDataMP.get().getType(player, new ChunkDimPos(DimensionType.getById(ep.dimension), e.getNewChunkX(), e.getNewChunkZ()));
 		FTBUPlayerDataMP d = FTBUPlayerDataMP.get(player);

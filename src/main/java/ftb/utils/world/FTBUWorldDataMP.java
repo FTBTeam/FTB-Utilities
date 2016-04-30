@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import ftb.lib.BlockDimPos;
 import ftb.lib.BroadcastSender;
 import ftb.lib.ChunkDimPos;
 import ftb.lib.FTBLib;
@@ -358,11 +357,11 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 			return false;
 		int radius = FTBLib.getServer().getSpawnProtectionSize();
 		if(radius <= 0) return false;
-		BlockDimPos c = LMDimUtils.getSpawnPoint(DimensionType.OVERWORLD);
-		int minX = MathHelperLM.chunk(c.x + 0.5D - radius);
-		int minZ = MathHelperLM.chunk(c.z + 0.5D - radius);
-		int maxX = MathHelperLM.chunk(c.x + 0.5D + radius);
-		int maxZ = MathHelperLM.chunk(c.z + 0.5D + radius);
+		BlockPos c = FTBLib.getServer().getEntityWorld().getSpawnPoint();
+		int minX = MathHelperLM.chunk(c.getX() + 0.5D - radius);
+		int minZ = MathHelperLM.chunk(c.getZ() + 0.5D - radius);
+		int maxX = MathHelperLM.chunk(c.getX() + 0.5D + radius);
+		int maxZ = MathHelperLM.chunk(c.getZ() + 0.5D + radius);
 		return pos.chunkXPos >= minX && pos.chunkXPos <= maxX && pos.chunkZPos >= minZ && pos.chunkZPos <= maxZ;
 	}
 	

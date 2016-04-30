@@ -11,7 +11,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.DimensionType;
+import net.minecraft.util.math.Vec3d;
 
 public class CmdTplast extends CommandLM
 {
@@ -37,7 +37,7 @@ public class CmdTplast extends CommandLM
 			double x = parseDouble(ep.posX, args[0], -30000000, 30000000, true);
 			double y = parseDouble(ep.posY, args[1], -30000000, 30000000, true);
 			double z = parseDouble(ep.posZ, args[2], -30000000, 30000000, true);
-			LMDimUtils.teleportPlayer(ep, x, y, z, DimensionType.getById(ep.dimension));
+			LMDimUtils.teleportPlayer(ep, new Vec3d(x, y, z), ep.dimension);
 			return;
 		}
 		

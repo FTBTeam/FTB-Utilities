@@ -50,7 +50,7 @@ public class CmdWarp extends CommandLM
 		
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		BlockDimPos p = FTBUWorldDataMP.get().warps.get(args[0]);
-		if(p == null) throw new CommandException("ftbu.cmd.warp_not_set", args[0]);
+		if(p == null) { throw new CommandException("ftbu.cmd.warp_not_set", args[0]); }
 		LMDimUtils.teleportPlayer(ep, p);
 		FTBULang.warp_tp.printChat(ics, args[0]);
 	}

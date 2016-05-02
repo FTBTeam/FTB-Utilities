@@ -26,7 +26,10 @@ public class CmdDisplayNBT extends CommandLM
 		InfoPage file = new InfoPage("NBT");
 		
 		ItemStack is = ep.inventory.getCurrentItem();
-		if(is == null) is = new ItemStack(Blocks.air);
+		if(is == null)
+		{
+			is = new ItemStack(Blocks.AIR);
+		}
 		
 		NBTTagCompound tag = new NBTTagCompound();
 		is.writeToNBT(tag);
@@ -36,7 +39,7 @@ public class CmdDisplayNBT extends CommandLM
 	
 	private void writeToGuide(InfoPage cat, NBTBase tag)
 	{
-		if(tag == null) return;
+		if(tag == null) { return; }
 		else if(tag instanceof NBTTagCompound)
 		{
 			NBTTagCompound tag1 = (NBTTagCompound) tag;

@@ -363,8 +363,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		@Override
 		public void onClicked(MouseButton button)
 		{
-			if(gui.panelButtons.mouseOver()) return;
-			if(gui.adminToken != 0L && button.isLeft()) return;
+			if(gui.panelButtons.mouseOver()) { return; }
+			if(gui.adminToken != 0L && button.isLeft()) { return; }
 			boolean ctrl = FTBUClient.loaded_chunks_space_key.getAsBoolean() ? Keyboard.isKeyDown(Keyboard.KEY_SPACE) : isCtrlKeyDown();
 			
 			MessageClaimChunk msg = new MessageClaimChunk();

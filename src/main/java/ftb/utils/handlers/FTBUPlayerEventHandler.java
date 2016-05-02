@@ -28,11 +28,11 @@ public class FTBUPlayerEventHandler
 	@SubscribeEvent
 	public void onChunkChanged(EntityEvent.EnteringChunk e)
 	{
-		if(e.getEntity().worldObj.isRemote || !(e.getEntity() instanceof EntityPlayerMP)) return;
+		if(e.getEntity().worldObj.isRemote || !(e.getEntity() instanceof EntityPlayerMP)) { return; }
 		
 		EntityPlayerMP ep = (EntityPlayerMP) e.getEntity();
 		ForgePlayerMP player = ForgeWorldMP.inst.getPlayer(ep);
-		if(player == null || !player.isOnline()) return;
+		if(player == null || !player.isOnline()) { return; }
 		
 		player.lastPos = new EntityDimPos(ep).toBlockDimPos();
 		
@@ -44,8 +44,8 @@ public class FTBUPlayerEventHandler
 			d.lastChunkType = type;
 			
 			ITextComponent msg = type.getTitleComponent();
-			msg.getChatStyle().setColor(TextFormatting.WHITE);
-			msg.getChatStyle().setBold(true);
+			msg.getStyle().setColor(TextFormatting.WHITE);
+			msg.getStyle().setBold(true);
 			Notification n = new Notification("chunk_changed", msg, 3000);
 			n.setColor(type.getAreaColor(player));
 			FTBLib.notifyPlayer(ep, n);
@@ -55,17 +55,17 @@ public class FTBUPlayerEventHandler
 	@SubscribeEvent
 	public void onPlayerAttacked(LivingAttackEvent e)
 	{
-		if(e.getEntity().worldObj.isRemote) return;
+		if(e.getEntity().worldObj.isRemote) { return; }
 		
 		DimensionType dim = DimensionType.getById(e.getEntity().dimension);
 		if(dim != DimensionType.OVERWORLD || !(e.getEntity() instanceof EntityPlayerMP) || e.getEntity() instanceof FakePlayer)
-			return;
+		{ return; }
 		
 		Entity entity = e.getSource().getSourceOfDamage();
 		
 		if(entity != null && (entity instanceof EntityPlayerMP || entity instanceof IMob))
 		{
-			if(entity instanceof FakePlayer) return;
+			if(entity instanceof FakePlayer) { return; }
 			else if(entity instanceof EntityPlayerMP && ForgePermissionRegistry.hasPermission(FTBLibPermissions.interact_secure, ((EntityPlayerMP) entity).getGameProfile()))
 			{
 				return;

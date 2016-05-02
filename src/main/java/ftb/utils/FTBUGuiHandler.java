@@ -29,7 +29,7 @@ public class FTBUGuiHandler extends LMGuiHandler
 	@SideOnly(Side.CLIENT)
 	public GuiScreen getGui(EntityPlayer ep, int id, NBTTagCompound data)
 	{
-		if(id == ADMIN_CLAIMS) return new GuiClaimChunks(data.getLong("T"));
+		if(id == ADMIN_CLAIMS) { return new GuiClaimChunks(data.getLong("T")); }
 		return null;
 	}
 }

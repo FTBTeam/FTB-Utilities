@@ -48,8 +48,8 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
 	
 	public JsonElement handleRankConfig(RankConfig permission)
 	{
-		if(this == Ranks.PLAYER) return permission.getDefaultPlayerValue();
-		else if(this == Ranks.ADMIN) return permission.getDefaultOPValue();
+		if(this == Ranks.PLAYER) { return permission.getDefaultPlayerValue(); }
+		else if(this == Ranks.ADMIN) { return permission.getDefaultOPValue(); }
 		
 		JsonElement e = config.get(permission);
 		return (e == null) ? ((parent != null) ? parent.handleRankConfig(permission) : null) : e;
@@ -133,8 +133,8 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
 	public boolean allowCommand(MinecraftServer server, ICommandSender sender, ICommand command)
 	{
 		Boolean b = handlePermission("command." + command.getCommandName());
-		if(b != null) return b.booleanValue();
-		if(parent == null) return command.checkPermission(server, sender);
+		if(b != null) { return b.booleanValue(); }
+		if(parent == null) { return command.checkPermission(server, sender); }
 		return parent.allowCommand(server, sender, command);
 	}
 }

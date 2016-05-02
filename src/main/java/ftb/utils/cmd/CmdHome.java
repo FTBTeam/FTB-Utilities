@@ -52,16 +52,16 @@ public class CmdHome extends CommandLM
 		{
 			Collection<String> list = d.homes.list();
 			ics.addChatMessage(new TextComponentString(list.size() + " / " + FTBUPermissions.homes_max.get(ep.getGameProfile()).getAsShort() + ": "));
-			if(!list.isEmpty()) ics.addChatMessage(new TextComponentString(LMStringUtils.strip(list)));
+			if(!list.isEmpty()) { ics.addChatMessage(new TextComponentString(LMStringUtils.strip(list))); }
 			return;
 		}
 		
 		BlockDimPos pos = d.homes.get(args[0]);
 		
-		if(pos == null) throw new CommandException("ftbu.cmd.home_not_set", args[0]);
+		if(pos == null) { throw new CommandException("ftbu.cmd.home_not_set", args[0]); }
 		
 		if(ep.dimension != pos.dim.getId() && !ForgePermissionRegistry.hasPermission(FTBUPermissions.homes_cross_dim, ep.getGameProfile()))
-			throw new CommandException("ftbu.cmd.home_cross_dim");
+		{ throw new CommandException("ftbu.cmd.home_cross_dim"); }
 		
 		LMDimUtils.teleportPlayer(ep, pos);
 		FTBULang.warp_tp.printChat(ics, args[0]);

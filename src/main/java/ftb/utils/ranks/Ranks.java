@@ -29,7 +29,7 @@ public class Ranks implements IPermissionHandler
 	
 	public static Ranks instance()
 	{
-		if(instance == null) instance = new Ranks();
+		if(instance == null) { instance = new Ranks(); }
 		return instance;
 	}
 	
@@ -271,7 +271,7 @@ public class Ranks implements IPermissionHandler
 			for(RankConfig p : sortedRankConfigs)
 			{
 				if(!p.getDefaultPlayerValue().toString().equals(p.getDefaultOPValue().toString()))
-					rankAdmin.config.put(p, p.getDefaultOPValue());
+				{ rankAdmin.config.put(p, p.getDefaultOPValue()); }
 			}
 			
 			rankAdmin.permissions.put("*", true);

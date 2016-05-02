@@ -30,7 +30,7 @@ public class FTBUChatEventHandler
 		for(String s : msg)
 		{
 			int index = getFirstLinkIndex(s);
-			if(index != -1) links.add(s.substring(index).trim());
+			if(index != -1) { links.add(s.substring(index).trim()); }
 		}
 		
 		if(!links.isEmpty())
@@ -42,13 +42,13 @@ public class FTBUChatEventHandler
 			{
 				String link = links.get(i);
 				ITextComponent c = new TextComponentString(oneLink ? "[ Link ]" : ("[ Link #" + (i + 1) + " ]"));
-				c.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(link)));
-				c.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, link));
+				c.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(link)));
+				c.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, link));
 				line.appendSibling(c);
-				if(!oneLink) line.appendSibling(new TextComponentString(" "));
+				if(!oneLink) { line.appendSibling(new TextComponentString(" ")); }
 			}
 			
-			line.getChatStyle().setColor(TextFormatting.GOLD);
+			line.getStyle().setColor(TextFormatting.GOLD);
 			
 			FTBLib.addCallback(new ServerTickCallback()
 			{
@@ -72,7 +72,7 @@ public class FTBUChatEventHandler
 		for(String s1 : LINK_PREFIXES)
 		{
 			int idx = s.indexOf(s1);
-			if(idx != -1) return idx;
+			if(idx != -1) { return idx; }
 		}
 		
 		return -1;

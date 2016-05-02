@@ -30,7 +30,7 @@ public class CmdGetRank extends CommandLM
 		ForgePlayerMP p = ForgePlayerMP.get(args[0]);
 		Rank r = Ranks.instance().getRankOf(p.getProfile());
 		ITextComponent c = new TextComponentString(r.getID());
-		c.getChatStyle().setColor(r.color);
+		c.getStyle().setColor(r.color);
 		ics.addChatMessage(c);
 	}
 }

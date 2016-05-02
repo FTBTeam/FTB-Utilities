@@ -23,7 +23,7 @@ public class CmdDelWarp extends CommandLM
 	@Override
 	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
 	{
-		if(args.length == 1) return getListOfStringsMatchingLastWord(args, FTBUWorldDataMP.get().warps.list());
+		if(args.length == 1) { return getListOfStringsMatchingLastWord(args, FTBUWorldDataMP.get().warps.list()); }
 		
 		return super.getTabCompletionOptions(server, ics, args, pos);
 	}

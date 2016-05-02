@@ -35,7 +35,7 @@ public class Badge extends FinalIDObject
 	@SideOnly(Side.CLIENT)
 	public ResourceLocation getTexture()
 	{
-		if(imageURL == null) return null;
+		if(imageURL == null) { return null; }
 		
 		if(textureURL == null)
 		{
@@ -50,7 +50,7 @@ public class Badge extends FinalIDObject
 	public void onPlayerRender(EntityPlayer ep)
 	{
 		ResourceLocation texture = getTexture();
-		if(texture == null) return;
+		if(texture == null) { return; }
 		
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
@@ -68,7 +68,7 @@ public class Badge extends FinalIDObject
 		
 		ItemStack armor = ep.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 		if(armor != null && armor.getItem().isValidArmor(armor, EntityEquipmentSlot.CHEST, ep))
-			GlStateManager.translate(0F, 0F, -0.0625F);
+		{ GlStateManager.translate(0F, 0F, -0.0625F); }
 		
 		GlStateManager.translate(0F, 0F, -1F);
 		GlStateManager.color(1F, 1F, 1F, 1F);

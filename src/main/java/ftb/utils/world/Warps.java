@@ -42,7 +42,7 @@ public class Warps
 	
 	public Collection<String> list()
 	{
-		if(warps.isEmpty()) return new ArrayList<>();
+		if(warps.isEmpty()) { return new ArrayList<>(); }
 		return warps.keySet();
 	}
 	
@@ -51,7 +51,7 @@ public class Warps
 	
 	public boolean set(String s, BlockDimPos pos)
 	{
-		if(pos == null) return warps.remove(s) != null;
+		if(pos == null) { return warps.remove(s) != null; }
 		return warps.put(s, pos.copy()) == null;
 	}
 	

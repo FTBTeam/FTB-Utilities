@@ -47,7 +47,7 @@ public class CmdServerInfo extends CommandLM
 			for(ForgeChunkManager.Ticket t : map.values())
 			{
 				Collection<ChunkCoordIntPair> list = chunksMap.get(t.getModId());
-				if(list == null) chunksMap.put(t.getModId(), list = new HashSet<>());
+				if(list == null) { chunksMap.put(t.getModId(), list = new HashSet<>()); }
 				for(ChunkCoordIntPair c : t.getChunkList())
 				{
 					if(!list.contains(c))
@@ -69,14 +69,14 @@ public class CmdServerInfo extends CommandLM
 		
 		InfoPage list = serverInfo.getSub("entities"); //LANG
 		
-		for(String s : EntityList.stringToClassMapping.keySet())
+		for(String s : EntityList.NAME_TO_CLASS.keySet())
 		{
 			list.printlnText("[" + EntityList.getIDFromString(s) + "] " + s);
 		}
 		
 		list = serverInfo.getSub("enchantments"); //LANG
 		
-		for(Enchantment e : Enchantment.enchantmentRegistry)
+		for(Enchantment e : Enchantment.REGISTRY)
 		{
 			list.printlnText("[" + e.getRegistryName() + "] " + e.getTranslatedName(1));
 		}

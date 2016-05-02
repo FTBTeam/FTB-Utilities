@@ -38,7 +38,7 @@ public class ChunkType
 	{
 		byte id = io.readByte();
 		
-		if(id >= 0 && id <= UNCLAIMED_VALUES.length) return UNCLAIMED_VALUES[id];
+		if(id >= 0 && id <= UNCLAIMED_VALUES.length) { return UNCLAIMED_VALUES[id]; }
 		else if(id == 99)
 		{
 			UUID owner = MessageLM.readUUID(io);
@@ -93,11 +93,11 @@ public class ChunkType
 		{
 			ForgePlayerMP chunkOwner = chunk.getOwner();
 			
-			if(chunkOwner.equals(p)) return true;
-			else if(p.isFake()) return FTBUPlayerDataMP.get(chunkOwner).getFlag(FTBUPlayerData.FAKE_PLAYERS);
+			if(chunkOwner.equals(p)) { return true; }
+			else if(p.isFake()) { return FTBUPlayerDataMP.get(chunkOwner).getFlag(FTBUPlayerData.FAKE_PLAYERS); }
 			
 			PrivacyLevel level = FTBUPermissions.claims_forced_security.getEnum(p.getProfile());
-			if(level == null) level = FTBUPlayerDataMP.get(chunkOwner).blocks;
+			if(level == null) { level = FTBUPlayerDataMP.get(chunkOwner).blocks; }
 			return level.canInteract(chunkOwner, p);
 		}
 		
@@ -127,7 +127,7 @@ public class ChunkType
 			if(owner != null)
 			{
 				l.add(getChatColor(owner) + owner.getProfile().getName());
-				if(chunk.isChunkloaded) l.add(I18n.format("ftbu.chunktype.chunkloaded"));
+				if(chunk.isChunkloaded) { l.add(I18n.format("ftbu.chunktype.chunkloaded")); }
 			}
 		}
 	}

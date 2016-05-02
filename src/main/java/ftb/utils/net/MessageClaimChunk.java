@@ -74,13 +74,13 @@ public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 					d1.unclaimChunk(m.pos);
 				}
 			}
-			else d.unclaimChunk(m.pos);
+			else { d.unclaimChunk(m.pos); }
 			return new MessageAreaUpdate(p, m.pos.chunkXPos, m.pos.chunkZPos, m.pos.dim, 1, 1);
 		}
-		else if(m.type == ID_UNCLAIM_ALL) d.unclaimAllChunks(m.pos.dim);
-		else if(m.type == ID_UNCLAIM_ALL_DIMS) d.unclaimAllChunks(null);
-		else if(m.type == ID_LOAD) d.setLoaded(m.pos, true);
-		else if(m.type == ID_UNLOAD) d.setLoaded(m.pos, false);
+		else if(m.type == ID_UNCLAIM_ALL) { d.unclaimAllChunks(m.pos.dim); }
+		else if(m.type == ID_UNCLAIM_ALL_DIMS) { d.unclaimAllChunks(null); }
+		else if(m.type == ID_LOAD) { d.setLoaded(m.pos, true); }
+		else if(m.type == ID_UNLOAD) { d.setLoaded(m.pos, false); }
 		return null;
 	}
 }

@@ -35,7 +35,7 @@ public class CmdSetWarp extends CommandLM
 			int z = parseInt(args[3]);
 			c = new BlockPos(x, y, z);
 		}
-		else c = ep.getPosition();
+		else { c = ep.getPosition(); }
 		
 		FTBUWorldDataMP.get().warps.set(args[0], new BlockDimPos(c, DimensionType.getById(ep.dimension)));
 		FTBULang.warp_set.printChat(ics, args[0]);

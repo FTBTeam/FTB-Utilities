@@ -19,7 +19,7 @@ public class CmdBack extends CommandLM
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		ForgePlayerMP p = ForgePlayerMP.get(ep);
-		if(p.lastDeath == null) throw new CommandException("ftbu.cmd.no_dp");
+		if(p.lastDeath == null) { throw new CommandException("ftbu.cmd.no_dp"); }
 		LMDimUtils.teleportPlayer(ep, p.lastDeath);
 		p.lastDeath = null;
 	}

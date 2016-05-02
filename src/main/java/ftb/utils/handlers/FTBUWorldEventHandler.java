@@ -40,14 +40,14 @@ public class FTBUWorldEventHandler // FTBLIntegration
 	
 	private boolean isEntityAllowed(Entity e)
 	{
-		if(e instanceof EntityPlayer) return true;
+		if(e instanceof EntityPlayer) { return true; }
 		
-		if(FTBUConfigGeneral.blocked_entities.isEntityBanned(e.getClass())) return false;
+		if(FTBUConfigGeneral.blocked_entities.isEntityBanned(e.getClass())) { return false; }
 		
 		if(FTBUConfigGeneral.safe_spawn.getAsBoolean() && FTBUWorldDataMP.isInSpawnD(DimensionType.getById(e.dimension), e.posX, e.posZ))
 		{
-			if(e instanceof IMob) return false;
-			else if(e instanceof EntityChicken && !e.getPassengers().isEmpty()) return false;
+			if(e instanceof IMob) { return false; }
+			else if(e instanceof EntityChicken && !e.getPassengers().isEmpty()) { return false; }
 		}
 		
 		return true;
@@ -56,7 +56,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
 	@SubscribeEvent
 	public void onExplosionStart(net.minecraftforge.event.world.ExplosionEvent.Start e)
 	{
-		if(e.getWorld().isRemote) return;
+		if(e.getWorld().isRemote) { return; }
 		DimensionType dim = e.getWorld().provider.getDimensionType();
 		int cx = MathHelperLM.chunk(e.getExplosion().getPosition().xCoord);
 		int cz = MathHelperLM.chunk(e.getExplosion().getPosition().yCoord);

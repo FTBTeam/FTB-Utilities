@@ -147,7 +147,7 @@ public class FTBUPlayerDataMP extends FTBUPlayerData
 		
 		for(int i = 0; i < a.size(); i++)
 		{
-			if(a.get(i).getAsInt() == dim.getId()) return true;
+			if(a.get(i).getAsInt() == dim.getId()) { return true; }
 		}
 		
 		return false;
@@ -155,10 +155,10 @@ public class FTBUPlayerDataMP extends FTBUPlayerData
 	
 	public void claimChunk(ChunkDimPos pos)
 	{
-		if(isDimensionBlacklisted(pos.dim)) return;
+		if(isDimensionBlacklisted(pos.dim)) { return; }
 		short max = getMaxClaimedChunks();
-		if(max == 0) return;
-		if(getClaimedChunks() >= max) return;
+		if(max == 0) { return; }
+		if(getClaimedChunks() >= max) { return; }
 		
 		ChunkType t = FTBUWorldDataMP.get().getType(player.toPlayerMP(), pos);
 		if(t.asClaimed() == null && t.isChunkOwner(player.toPlayerMP()) && FTBUWorldDataMP.get().put(new ClaimedChunk(player.getProfile().getId(), pos)))
@@ -181,7 +181,7 @@ public class FTBUPlayerDataMP extends FTBUPlayerData
 	{
 		List<ClaimedChunk> list = FTBUWorldDataMP.get().getChunks(player.getProfile().getId(), dim);
 		int size0 = list.size();
-		if(size0 == 0) return;
+		if(size0 == 0) { return; }
 		
 		for(ClaimedChunk c : list)
 		{
@@ -195,16 +195,16 @@ public class FTBUPlayerDataMP extends FTBUPlayerData
 	public void setLoaded(ChunkDimPos pos, boolean flag)
 	{
 		ClaimedChunk chunk = FTBUWorldDataMP.get().getChunk(pos);
-		if(chunk == null) return;
+		if(chunk == null) { return; }
 		
 		if(flag != chunk.isChunkloaded && player.equalsPlayer(chunk.getOwner()))
 		{
 			if(flag)
 			{
-				if(isDimensionBlacklisted(pos.dim)) return;
+				if(isDimensionBlacklisted(pos.dim)) { return; }
 				short max = getMaxLoadedChunks();
-				if(max == 0) return;
-				if(getLoadedChunks(false) >= max) return;
+				if(max == 0) { return; }
+				if(getLoadedChunks(false) >= max) { return; }
 			}
 			
 			chunk.isChunkloaded = flag;

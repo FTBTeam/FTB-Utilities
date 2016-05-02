@@ -73,7 +73,7 @@ public class FTBUConfigLogin
 		{
 			super(id);
 			items = new ArrayList<>();
-			items.add(new ItemStack(Items.apple, 16));
+			items.add(new ItemStack(Items.APPLE, 16));
 		}
 		
 		public void func_152753_a(JsonElement o)

@@ -63,7 +63,7 @@ public class ServerGuideFile extends InfoPage
 				try
 				{
 					String text = LMFileUtils.loadAsText(file);
-					if(text != null && !text.isEmpty()) main.printlnText(text.replace("\r", ""));
+					if(text != null && !text.isEmpty()) { main.printlnText(text.replace("\r", "")); }
 				}
 				catch(Exception ex)
 				{
@@ -84,7 +84,7 @@ public class ServerGuideFile extends InfoPage
 		super(CachedInfo.main.getID());
 		setTitle(CachedInfo.main.getTitleComponent());
 		
-		if((self = pself) == null) return;
+		if((self = pself) == null) { return; }
 		boolean isDedi = FTBLib.getServer().isDedicatedServer();
 		boolean isOP = !isDedi || ForgePermissionRegistry.hasPermission(FTBUPermissions.display_admin_info, self.getProfile());
 		
@@ -98,16 +98,16 @@ public class ServerGuideFile extends InfoPage
 			p.refreshStats();
 		
 		if(FTBUConfigGeneral.restart_timer.getAsDouble() > 0D)
-			println(new TextComponentTranslation("cmd.timer_restart", LMStringUtils.getTimeString(FTBUWorldDataMP.get().restartMillis - LMUtils.millis())));
+		{ println(new TextComponentTranslation("cmd.timer_restart", LMStringUtils.getTimeString(FTBUWorldDataMP.get().restartMillis - LMUtils.millis()))); }
 		
 		if(FTBUConfigBackups.enabled.getAsBoolean())
-			println(new TextComponentTranslation("cmd.timer_backup", LMStringUtils.getTimeString(Backups.nextBackup - LMUtils.millis())));
+		{ println(new TextComponentTranslation("cmd.timer_backup", LMStringUtils.getTimeString(Backups.nextBackup - LMUtils.millis()))); }
 		
 		if(FTBUConfigGeneral.server_info_difficulty.getAsBoolean())
-			println(FTBLibLang.difficulty.textComponent(LMStringUtils.firstUppercase(pself.getPlayer().worldObj.getDifficulty().toString().toLowerCase())));
+		{ println(FTBLibLang.difficulty.textComponent(LMStringUtils.firstUppercase(pself.getPlayer().worldObj.getDifficulty().toString().toLowerCase()))); }
 		
 		if(FTBUConfigGeneral.server_info_mode.getAsBoolean())
-			println(FTBLibLang.mode_current.textComponent(LMStringUtils.firstUppercase(ForgeWorldMP.inst.getMode().toString().toLowerCase())));
+		{ println(FTBLibLang.mode_current.textComponent(LMStringUtils.firstUppercase(ForgeWorldMP.inst.getMode().toString().toLowerCase()))); }
 		
 		for(Top t : Top.registry.values())
 		{
@@ -130,12 +130,12 @@ public class ServerGuideFile extends InfoPage
 				sb.append(p.getProfile().getName());
 				sb.append(':');
 				sb.append(' ');
-				if(!(data instanceof ITextComponent)) sb.append(data);
+				if(!(data instanceof ITextComponent)) { sb.append(data); }
 				
 				ITextComponent c = new TextComponentString(sb.toString());
-				if(p == self) c.getChatStyle().setColor(TextFormatting.DARK_GREEN);
-				else if(j < 3) c.getChatStyle().setColor(TextFormatting.LIGHT_PURPLE);
-				if(data instanceof ITextComponent) c.appendSibling(FTBLib.getChatComponent(data));
+				if(p == self) { c.getStyle().setColor(TextFormatting.DARK_GREEN); }
+				else if(j < 3) { c.getStyle().setColor(TextFormatting.LIGHT_PURPLE); }
+				if(data instanceof ITextComponent) { c.appendSibling(FTBLib.getChatComponent(data)); }
 				thisTop.println(c);
 			}
 		}
@@ -154,8 +154,11 @@ public class ServerGuideFile extends InfoPage
 					InfoPage cat = new InfoPage('/' + c.getCommandName());
 					
 					List<String> al = c.getCommandAliases();
-					if(al != null && !al.isEmpty()) for(String s : al)
-						cat.printlnText('/' + s);
+					if(al != null && !al.isEmpty())
+					{
+						for(String s : al)
+							cat.printlnText('/' + s);
+					}
 					
 					if(c instanceof ICustomCommandInfo)
 					{
@@ -182,8 +185,8 @@ public class ServerGuideFile extends InfoPage
 							else
 							{
 								if(usage.indexOf('%') != -1 || usage.indexOf('/') != -1)
-									cat.println(new TextComponentString(usage));
-								else cat.println(new TextComponentTranslation(usage));
+								{ cat.println(new TextComponentString(usage)); }
+								else { cat.println(new TextComponentTranslation(usage)); }
 							}
 						}
 					}
@@ -194,10 +197,10 @@ public class ServerGuideFile extends InfoPage
 				catch(Exception ex1)
 				{
 					ITextComponent cc = new TextComponentString('/' + c.getCommandName());
-					cc.getChatStyle().setColor(TextFormatting.DARK_RED);
+					cc.getStyle().setColor(TextFormatting.DARK_RED);
 					page.getSub('/' + c.getCommandName()).setTitle(cc).printlnText("Errored");
 					
-					if(FTBLib.DEV_ENV) ex1.printStackTrace();
+					if(FTBLib.DEV_ENV) { ex1.printStackTrace(); }
 				}
 			}
 		}

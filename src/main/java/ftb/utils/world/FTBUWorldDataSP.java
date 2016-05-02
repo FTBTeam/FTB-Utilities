@@ -59,7 +59,7 @@ public class FTBUWorldDataSP extends ForgeWorldData
 	
 	public ChunkType getType(ChunkCoordIntPair pos)
 	{
-		if(pos == null) return ChunkType.UNLOADED;
+		if(pos == null) { return ChunkType.UNLOADED; }
 		ChunkType i = chunks.get(pos);
 		return (i == null) ? ChunkType.UNLOADED : i;
 	}
@@ -67,6 +67,6 @@ public class FTBUWorldDataSP extends ForgeWorldData
 	public void setTypes(DimensionType dim, Map<ChunkDimPos, ChunkType> types)
 	{
 		chunks.putAll(types);
-		if(FTBUClient.journeyMapHandler != null) FTBUClient.journeyMapHandler.refresh(dim.getId());
+		if(FTBUClient.journeyMapHandler != null) { FTBUClient.journeyMapHandler.refresh(dim.getId()); }
 	}
 }

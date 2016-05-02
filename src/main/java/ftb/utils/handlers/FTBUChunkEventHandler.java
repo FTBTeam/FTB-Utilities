@@ -45,7 +45,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 	
 	private ForgeChunkManager.Ticket request(World w, ForgePlayerMP player)
 	{
-		if(w == null || player == null) return null;
+		if(w == null || player == null) { return null; }
 		
 		UUID playerID = player.getProfile().getId();
 		
@@ -55,7 +55,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 		if(t == null)
 		{
 			t = ForgeChunkManager.requestTicket(FTBU.inst, w, ForgeChunkManager.Type.NORMAL);
-			if(t == null) return null;
+			if(t == null) { return null; }
 			else
 			{
 				t.getModData().setString(PLAYER_ID_TAG, LMUtils.fromUUID(playerID));
@@ -78,7 +78,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 	{
 		table.remove(world);
 		List<ForgeChunkManager.Ticket> tickets1 = new ArrayList<>();
-		if(tickets.isEmpty() || !FTBUConfigChunkloading.enabled.getAsBoolean()) return tickets1;
+		if(tickets.isEmpty() || !FTBUConfigChunkloading.enabled.getAsBoolean()) { return tickets1; }
 		Map<UUID, ForgeChunkManager.Ticket> map = new HashMap<>();
 		
 		for(ForgeChunkManager.Ticket t : tickets)
@@ -110,11 +110,14 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 			{
 				List<ClaimedChunk> chunks = FTBUWorldDataMP.get().getChunks(playerID, world.provider.getDimensionType());
 				
-				if(chunks != null) for(ClaimedChunk c : chunks)
+				if(chunks != null)
 				{
-					if(c.isChunkloaded)
+					for(ClaimedChunk c : chunks)
 					{
-						ForgeChunkManager.forceChunk(t, c.pos);
+						if(c.isChunkloaded)
+						{
+							ForgeChunkManager.forceChunk(t, c.pos);
+						}
 					}
 				}
 			}
@@ -126,8 +129,8 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 	
 	public void markDirty(World w)
 	{
-		if(ForgeWorldMP.inst == null || FTBLib.getServerWorld() == null) return;
-		if(w != null) markDirty0(w);
+		if(ForgeWorldMP.inst == null || FTBLib.getServerWorld() == null) { return; }
+		if(w != null) { markDirty0(w); }
 		
 		if(!table.isEmpty())
 		{
@@ -154,13 +157,13 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 			if(c.isChunkloaded)
 			{
 				ForgePlayerMP p = c.getOwner();
-				if(p == null) isLoaded = false;
+				if(p == null) { isLoaded = false; }
 				else
 				{
 					ChunkloaderType type = FTBUPermissions.chunkloader_type.getEnum(p.getProfile());
 					
-					if(type == ChunkloaderType.DISABLED) isLoaded = false;
-					else if(type == ChunkloaderType.ONLINE) isLoaded = p.isOnline();
+					if(type == ChunkloaderType.DISABLED) { isLoaded = false; }
+					else if(type == ChunkloaderType.ONLINE) { isLoaded = p.isOnline(); }
 					else if(type == ChunkloaderType.OFFLINE)
 					{
 						if(!p.isOnline())

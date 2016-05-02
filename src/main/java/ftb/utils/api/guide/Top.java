@@ -61,7 +61,7 @@ public abstract class Top extends FinalIDObject implements Comparator<ForgePlaye
 			@Override
 			public Object getData(ForgePlayerMP p)
 			{
-				if(p.isOnline()) return GuiLang.label_online.textComponent();
+				if(p.isOnline()) { return GuiLang.label_online.textComponent(); }
 				return LMStringUtils.getTimeString(LMUtils.millis() - p.stats.lastSeen);
 			}
 		});

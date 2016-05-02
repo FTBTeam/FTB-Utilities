@@ -29,8 +29,8 @@ public class InvSeeInventory implements IInventory
 	
 	public IInventory getInv(int slot)
 	{
-		if(slot == -1) return null;
-		if(slot >= 40) return baubles;
+		if(slot == -1) { return null; }
+		if(slot >= 40) { return baubles; }
 		return invPlayer;
 	}
 	
@@ -97,7 +97,7 @@ public class InvSeeInventory implements IInventory
 	{
 		invPlayer.markDirty();
 		player.openContainer.detectAndSendChanges();
-		if(baubles != null) baubles.markDirty();
+		if(baubles != null) { baubles.markDirty(); }
 	}
 	
 	@Override

@@ -83,7 +83,7 @@ public class FTBUConfigGeneral
 			{
 				for(JsonElement e : o.getAsJsonArray())
 				{
-					Class<?> c = EntityList.stringToClassMapping.get(e.getAsString());
+					Class<?> c = EntityList.NAME_TO_CLASS.get(e.getAsString());
 					if(c != null && Entity.class.isAssignableFrom(c))
 					{
 						list.add(c);
@@ -99,7 +99,7 @@ public class FTBUConfigGeneral
 			
 			for(Class<?> c1 : list)
 			{
-				String s = EntityList.classToStringMapping.get(c1);
+				String s = EntityList.CLASS_TO_NAME.get(c1);
 				
 				if(s != null)
 				{
@@ -114,7 +114,7 @@ public class FTBUConfigGeneral
 		{
 			for(Class<?> c1 : list)
 			{
-				if(c1.isAssignableFrom(c)) return true;
+				if(c1.isAssignableFrom(c)) { return true; }
 			}
 			
 			return false;

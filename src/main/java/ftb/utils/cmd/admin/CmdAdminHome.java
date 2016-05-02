@@ -33,7 +33,7 @@ public class CmdAdminHome extends CommandLM //FIXME: SubCommand
 	@Override
 	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
 	{
-		if(args.length == 2) return getListOfStringsMatchingLastWord(args, "list", "tp", "remove");
+		if(args.length == 2) { return getListOfStringsMatchingLastWord(args, "list", "tp", "remove"); }
 		return super.getTabCompletionOptions(server, ics, args, pos);
 	}
 	

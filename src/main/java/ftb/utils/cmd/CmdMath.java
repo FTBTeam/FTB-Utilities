@@ -32,7 +32,7 @@ public class CmdMath extends CommandLM
 			try
 			{
 				engine = new ScriptEngineManager().getEngineByName("JavaScript");
-				if(engine != null) hasEngine = Boolean.TRUE;
+				if(engine != null) { hasEngine = Boolean.TRUE; }
 			}
 			catch(Exception e) { e.printStackTrace(); }
 		}

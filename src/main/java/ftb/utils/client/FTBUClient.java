@@ -57,7 +57,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		{
 			event.add(FTBUWorldDataSP.get());
 		}
-		else super.addWorldData(event);
+		else { super.addWorldData(event); }
 	}
 	
 	@Override
@@ -67,6 +67,6 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		{
 			event.add(new FTBUPlayerDataSP(event.player.toPlayerSP()));
 		}
-		else super.addPlayerData(event);
+		else { super.addPlayerData(event); }
 	}
 }

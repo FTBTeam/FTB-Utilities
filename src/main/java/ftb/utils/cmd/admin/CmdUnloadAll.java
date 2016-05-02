@@ -43,7 +43,7 @@ public class CmdUnloadAll extends CommandLM
 		ForgePlayerMP p = ForgePlayerMP.get(args[0]);
 		for(ClaimedChunk c : FTBUWorldDataMP.get().getChunks(p.getProfile().getId(), null))
 			c.isChunkloaded = false;
-		if(p.isOnline()) p.sendUpdate();
+		if(p.isOnline()) { p.sendUpdate(); }
 		ics.addChatMessage(new TextComponentString("Unloaded all " + p.getProfile().getName() + "'s chunks"));
 	}
 }

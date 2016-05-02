@@ -42,7 +42,7 @@ public class MessageRequestBadge extends MessageLM<MessageRequestBadge>
 	public IMessage onMessage(MessageRequestBadge m, MessageContext ctx)
 	{
 		Badge b = ServerBadges.getServerBadge(ForgeWorldMP.inst.getPlayer(m.playerID));
-		if(b != Badge.emptyBadge) return new MessageSendBadge(m.playerID, b.getID());
+		if(b != Badge.emptyBadge) { return new MessageSendBadge(m.playerID, b.getID()); }
 		return null;
 	}
 }

@@ -42,7 +42,7 @@ public class CmdSetRank extends CommandLM
 		checkArgs(args, 2);
 		ForgePlayerMP player = ForgePlayerMP.get(args[0]);
 		Rank r = Ranks.instance().ranks.get(args[1]);
-		if(r == null) throw FTBLibLang.raw.commandError("Rank '" + args[1] + "' not found!");
+		if(r == null) { throw FTBLibLang.raw.commandError("Rank '" + args[1] + "' not found!"); }
 		Ranks.instance().playerMap.put(player.getProfile().getId(), r);
 		Ranks.instance().saveRanks();
 	}

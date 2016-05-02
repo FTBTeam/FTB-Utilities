@@ -5,7 +5,7 @@ import latmod.lib.LMColorUtils;
 import latmod.lib.MathHelperLM;
 import latmod.lib.PixelBuffer;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFlower;
+import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -77,13 +77,13 @@ public class ThreadReloadArea extends Thread
 	public int getBlockColor(int bx, int bz)
 	{
 		short by = getTopY(bx, bz);
-		if(by == defHeight || by > 255) return 0;
+		if(by == defHeight || by > 255) { return 0; }
 		
 		BlockPos pos = new BlockPos(bx, by, bz);
 		
 		IBlockState state = worldObj.getBlockState(pos);
 		
-		if(worldObj.isAirBlock(pos))
+		if(state.getBlock().isAir(state, worldObj, pos))
 		{
 			int col = 0xFF000000 | getBlockColor(pos, state);
 			
@@ -92,9 +92,12 @@ public class ThreadReloadArea extends Thread
 			short bn = getTopY(bx, bz - 1);
 			short bs = getTopY(bx, bz + 1);
 			
-			if((bw != defHeight && bw < by) || (bn != defHeight && bn < by)) return LMColorUtils.addBrightness(col, 25);
+			if((bw != defHeight && bw < by) || (bn != defHeight && bn < by))
+			{
+				return LMColorUtils.addBrightness(col, 25);
+			}
 			else if((be != defHeight && be < by) || (bs != defHeight && bs < by))
-				return LMColorUtils.addBrightness(col, -25);
+			{ return LMColorUtils.addBrightness(col, -25); }
 			
 			return col;
 		}
@@ -117,7 +120,7 @@ public class ThreadReloadArea extends Thread
 		if(cx == gui.startX && cz == gui.startY)
 		{
 			mapValue = true;
-			if(heightMap[x + z * 16] != defHeight) return heightMap[x + z * 16];
+			if(heightMap[x + z * 16] != defHeight) { return heightMap[x + z * 16]; }
 		}
 		else
 		{
@@ -128,9 +131,9 @@ public class ThreadReloadArea extends Thread
 		for(short y = max; y > 0; --y)
 		{
 			IBlockState state = c.getBlockState(x, y, z);
-			if(state.getBlock() == Blocks.tallgrass || worldObj.isAirBlock(new BlockPos(bx, y, bz))) continue;
+			if(state.getBlock() == Blocks.TALLGRASS || worldObj.isAirBlock(new BlockPos(bx, y, bz))) { continue; }
 			
-			if(mapValue) heightMap[x + z * 16] = y;
+			if(mapValue) { heightMap[x + z * 16] = y; }
 			return y;
 		}
 		
@@ -140,40 +143,58 @@ public class ThreadReloadArea extends Thread
 	private int getBlockColor(BlockPos pos, IBlockState state)
 	{
 		Block b = state.getBlock();
-		if(b == Blocks.sandstone) return MapColor.sandColor.colorValue;
-		else if(b == Blocks.fire) return MapColor.redColor.colorValue;
-		else if(b == Blocks.yellow_flower) return MapColor.yellowColor.colorValue;
-		else if(b == Blocks.lava) return MapColor.adobeColor.colorValue;
-		else if(b == Blocks.end_stone) return MapColor.sandColor.colorValue;
-		else if(b == Blocks.obsidian) return 0xFF150047;
-		else if(b == Blocks.gravel) return 0xFF8D979B;
-		else if(b == Blocks.glass) return 0x33BCF9FF;
+		
+		if(b == Blocks.SANDSTONE) { return MapColor.SAND.colorValue; }
+		else if(b == Blocks.FIRE) { return MapColor.RED.colorValue; }
+		else if(b == Blocks.YELLOW_FLOWER) { return MapColor.YELLOW.colorValue; }
+		else if(b == Blocks.LAVA) { return MapColor.ADOBE.colorValue; }
+		else if(b == Blocks.END_STONE) { return MapColor.SAND.colorValue; }
+		else if(b == Blocks.OBSIDIAN) { return 0xFF150047; }
+		else if(b == Blocks.GRAVEL) { return 0xFF8D979B; }
+		else if(b == Blocks.GRASS) { return 0x33BCF9FF; }
 		//else if(b.getMaterial(state) == Material.water)
 		//	return LMColorUtils.multiply(MapColor.waterColor.colorValue, b.colorMultiplier(worldObj, pos), 200);
-		
-		if(b == Blocks.red_flower)
+		else if(b == Blocks.RED_FLOWER)
 		{
-			BlockFlower.EnumFlowerType type = BlockFlower.EnumFlowerType.getType(BlockFlower.EnumFlowerColor.RED, b.getMetaFromState(state));
-			
-			if(type == BlockFlower.EnumFlowerType.POPPY) return MapColor.redColor.colorValue;
-			else if(type == BlockFlower.EnumFlowerType.BLUE_ORCHID) return MapColor.lightBlueColor.colorValue;
-			else if(type == BlockFlower.EnumFlowerType.ALLIUM) return MapColor.magentaColor.colorValue;
-			else if(type == BlockFlower.EnumFlowerType.HOUSTONIA) return MapColor.silverColor.colorValue;
-			else if(type == BlockFlower.EnumFlowerType.RED_TULIP) return MapColor.redColor.colorValue;
-			else if(type == BlockFlower.EnumFlowerType.ORANGE_TULIP) return MapColor.adobeColor.colorValue;
-			else if(type == BlockFlower.EnumFlowerType.WHITE_TULIP) return MapColor.snowColor.colorValue;
-			else if(type == BlockFlower.EnumFlowerType.PINK_TULIP) return MapColor.pinkColor.colorValue;
-			else if(type == BlockFlower.EnumFlowerType.OXEYE_DAISY) return MapColor.silverColor.colorValue;
+			switch(state.getValue(Blocks.RED_FLOWER.getTypeProperty()))
+			{
+				case POPPY:
+					return MapColor.RED.colorValue;
+				case BLUE_ORCHID:
+					return MapColor.LIGHT_BLUE.colorValue;
+				case ALLIUM:
+					return MapColor.MAGENTA.colorValue;
+				case HOUSTONIA:
+					return MapColor.SILVER.colorValue;
+				case RED_TULIP:
+					return MapColor.RED.colorValue;
+				case ORANGE_TULIP:
+					return MapColor.ADOBE.colorValue;
+				case WHITE_TULIP:
+					return MapColor.SNOW.colorValue;
+				case PINK_TULIP:
+					return MapColor.PINK.colorValue;
+				case OXEYE_DAISY:
+					return MapColor.SILVER.colorValue;
+			}
 		}
-		else if(b == Blocks.planks)
+		else if(b == Blocks.PLANKS)
 		{
-			int m = b.getMetaFromState(state);
-			if(m == 0) return 0xFFC69849;
-			else if(m == 1) return 0xFF7C5E2E;
-			else if(m == 2) return 0xFFF2E093;
-			else if(m == 3) return 0xFFC67653;
-			else if(m == 4) return 0xFFE07F3E;
-			else if(m == 5) return 0xFF512D14;
+			switch(state.getValue(BlockPlanks.VARIANT))
+			{
+				case OAK:
+					return 0xFFC69849;
+				case SPRUCE:
+					return 0xFF7C5E2E;
+				case BIRCH:
+					return 0xFFF2E093;
+				case JUNGLE:
+					return 0xFFC67653;
+				case ACACIA:
+					return 0xFFE07F3E;
+				case DARK_OAK:
+					return 0xFF512D14;
+			}
 		}
 		
 		//if(b == Blocks.leaves || b == Blocks.vine || b == Blocks.waterlily)

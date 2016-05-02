@@ -34,7 +34,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 			Ranks.instance().reload();
 			ServerBadges.reload();
 			
-			if(FTBLib.getServerWorld() != null) FTBUChunkEventHandler.instance.markDirty(null);
+			if(FTBLib.getServerWorld() != null) { FTBUChunkEventHandler.instance.markDirty(null); }
 		}
 	}
 	
@@ -53,7 +53,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 	{
 		ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ep);
 		
-		if(p == null) return true;
+		if(p == null) { return true; }
 		else if(!p.isFake() && ForgePermissionRegistry.hasPermission(FTBLibPermissions.interact_secure, ep.getGameProfile()))
 		{
 			return true;
@@ -68,7 +68,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 			for(int i = 0; i < a.size(); i++)
 			{
 				if(a.get(i).getAsString().equals(LMInvUtils.getRegName(ep.worldObj.getBlockState(pos).getBlock())))
-					return true;
+				{ return true; }
 			}
 		}
 		

@@ -90,14 +90,14 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 	
 	public Collection<ClaimedChunk> getAllChunks(DimensionType dim)
 	{
-		if(dim == null) return chunks.values();
+		if(dim == null) { return chunks.values(); }
 		else
 		{
 			List<ClaimedChunk> l = new ArrayList<>();
 			
 			for(ClaimedChunk c : chunks.values())
 			{
-				if(c.pos.dim == dim) l.add(c);
+				if(c.pos.dim == dim) { l.add(c); }
 			}
 			
 			return l;
@@ -174,7 +174,7 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 									if(ai != null)
 									{
 										ClaimedChunk c = new ClaimedChunk(id, new ChunkDimPos(dim, ai[0], ai[1]));
-										if(ai.length >= 3 && ai[2] == 1) c.isChunkloaded = true;
+										if(ai.length >= 3 && ai[2] == 1) { c.isChunkloaded = true; }
 										chunks.put(c.pos, c);
 									}
 								}
@@ -280,7 +280,7 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 					else if(secondsLeft <= 10 || secondsLeft == 60 || secondsLeft == 300 || secondsLeft == 600 || secondsLeft == 1800)
 					{
 						ITextComponent c = FTBULang.timer_restart.textComponent(msg);
-						c.getChatStyle().setColor(TextFormatting.LIGHT_PURPLE);
+						c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
 						BroadcastSender.inst.addChatMessage(c);
 					}
 				}
@@ -317,11 +317,11 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 	public List<ClaimedChunk> getChunks(UUID playerID, DimensionType dim)
 	{
 		ArrayList<ClaimedChunk> list = new ArrayList<>();
-		if(playerID == null) return list;
+		if(playerID == null) { return list; }
 		
 		for(ClaimedChunk c : chunks.values())
 		{
-			if((dim == null || c.pos.dim == dim) && c.ownerID.equals(playerID)) list.add(c);
+			if((dim == null || c.pos.dim == dim) && c.ownerID.equals(playerID)) { list.add(c); }
 		}
 		
 		return list;
@@ -329,7 +329,7 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 	
 	public boolean put(ClaimedChunk c)
 	{
-		if(c == null) return false;
+		if(c == null) { return false; }
 		return chunks.put(c.pos, c) == null;
 	}
 	
@@ -340,11 +340,11 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 	{
 		World w = LMDimUtils.getWorld(pos.dim);
 		if(w == null || w.getChunkProvider().getLoadedChunk(pos.chunkXPos, pos.chunkZPos) == null)
-			return ChunkType.UNLOADED;
-		if(isInSpawn(pos)) return ChunkType.SPAWN;
+		{ return ChunkType.UNLOADED; }
+		if(isInSpawn(pos)) { return ChunkType.SPAWN; }
 		//TODO: if(ForgeWorldMP.inst.settings.getWB(dim).isOutside(cx, cz)) return ChunkType.WORLD_BORDER;
 		ClaimedChunk c = getChunk(pos);
-		if(c == null) return ChunkType.WILDERNESS;
+		if(c == null) { return ChunkType.WILDERNESS; }
 		return new ChunkType.PlayerClaimed(c);
 	}
 	
@@ -354,9 +354,9 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 	public static boolean isInSpawn(ChunkDimPos pos)
 	{
 		if(pos.dim != DimensionType.OVERWORLD || (!FTBLib.getServer().isDedicatedServer() && !FTBUConfigGeneral.spawn_area_in_sp.getAsBoolean()))
-			return false;
+		{ return false; }
 		int radius = FTBLib.getServer().getSpawnProtectionSize();
-		if(radius <= 0) return false;
+		if(radius <= 0) { return false; }
 		BlockPos c = FTBLib.getServer().getEntityWorld().getSpawnPoint();
 		int minX = MathHelperLM.chunk(c.getX() + 0.5D - radius);
 		int minZ = MathHelperLM.chunk(c.getZ() + 0.5D - radius);
@@ -371,8 +371,8 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 	public boolean allowExplosion(ChunkDimPos pos)
 	{
 		if(pos.dim == DimensionType.OVERWORLD && FTBUConfigGeneral.safe_spawn.getAsBoolean() && isInSpawn(pos))
-			return false;
-			//TODO: else if(ForgeWorldMP.inst.settings.getWB(dim).isOutside(cx, cz)) return false;
+		{ return false; }
+		//TODO: else if(ForgeWorldMP.inst.settings.getWB(dim).isOutside(cx, cz)) return false;
 		else
 		{
 			ClaimedChunk c = getChunk(pos);
@@ -383,8 +383,8 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 				if(p != null)
 				{
 					EnumEnabled fe = FTBUPermissions.claims_forced_explosions.getEnum(p.getProfile());
-					if(fe == null) return FTBUPlayerDataMP.get(p).getFlag(FTBUPlayerData.EXPLOSIONS);
-					else return fe == EnumEnabled.ENABLED;
+					if(fe == null) { return FTBUPlayerDataMP.get(p).getFlag(FTBUPlayerData.EXPLOSIONS); }
+					else { return fe == EnumEnabled.ENABLED; }
 				}
 			}
 		}

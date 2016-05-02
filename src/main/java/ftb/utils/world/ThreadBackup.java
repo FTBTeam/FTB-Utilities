@@ -139,24 +139,24 @@ public class ThreadBackup extends Thread
 				String sizeT = LMFileUtils.getSizeS(Backups.backupsFolder);
 				
 				ITextComponent c = FTBULang.backup_end_2.textComponent(getDoneTime(time.millis), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)));
-				c.getChatStyle().setColor(TextFormatting.LIGHT_PURPLE);
+				c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
 				BroadcastSender.inst.addChatMessage(c);
 			}
 			else
 			{
 				ITextComponent c = FTBULang.backup_end_1.textComponent(getDoneTime(time.millis));
-				c.getChatStyle().setColor(TextFormatting.LIGHT_PURPLE);
+				c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
 				BroadcastSender.inst.addChatMessage(c);
 			}
 		}
 		catch(Exception ex)
 		{
 			ITextComponent c = FTBULang.backup_fail.textComponent(LMUtils.classpath(ex.getClass()));
-			c.getChatStyle().setColor(TextFormatting.DARK_RED);
+			c.getStyle().setColor(TextFormatting.DARK_RED);
 			BroadcastSender.inst.addChatMessage(c);
 			
 			ex.printStackTrace();
-			if(dstFile != null) LMFileUtils.delete(dstFile);
+			if(dstFile != null) { LMFileUtils.delete(dstFile); }
 		}
 		//System.gc();
 	}
@@ -166,8 +166,8 @@ public class ThreadBackup extends Thread
 	
 	private static void appendNum(StringBuilder sb, int num, char c)
 	{
-		if(num < 10) sb.append('0');
+		if(num < 10) { sb.append('0'); }
 		sb.append(num);
-		if(c != 0) sb.append(c);
+		if(c != 0) { sb.append(c); }
 	}
 }

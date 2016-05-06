@@ -12,7 +12,6 @@ import ftb.lib.mod.FTBUIntegration;
 import ftb.utils.FTBUPermissions;
 import ftb.utils.api.guide.ServerGuideFile;
 import ftb.utils.badges.ServerBadges;
-import ftb.utils.config.FTBUConfigGeneral;
 import ftb.utils.ranks.Ranks;
 import ftb.utils.world.ChunkType;
 import ftb.utils.world.FTBUWorldDataMP;
@@ -26,8 +25,6 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 	@Override
 	public void onReloaded(ReloadEvent e)
 	{
-		FTBUConfigGeneral.onReloaded(e.world.side);
-		
 		if(e.world.side.isServer())
 		{
 			ServerGuideFile.CachedInfo.reload();
@@ -67,7 +64,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 			
 			for(int i = 0; i < a.size(); i++)
 			{
-				if(a.get(i).getAsString().equals(LMInvUtils.getRegName(ep.worldObj.getBlockState(pos).getBlock())))
+				if(a.get(i).getAsString().equals(LMInvUtils.getRegName(ep.worldObj.getBlockState(pos).getBlock()).toString()))
 				{ return true; }
 			}
 		}

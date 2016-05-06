@@ -4,6 +4,7 @@ import ftb.lib.BroadcastSender;
 import ftb.lib.FTBLib;
 import ftb.utils.FTBULang;
 import ftb.utils.config.FTBUConfigBackups;
+import ftb.utils.config.FTBUConfigModules;
 import latmod.lib.LMFileUtils;
 import latmod.lib.LMUtils;
 import net.minecraft.command.ICommandSender;
@@ -43,7 +44,7 @@ public class Backups
 		if(thread != null) { return false; }
 		boolean auto = !(ics instanceof EntityPlayerMP);
 		
-		if(auto && !FTBUConfigBackups.enabled.getAsBoolean()) { return false; }
+		if(auto && !FTBUConfigModules.backups.getAsBoolean()) { return false; }
 		
 		World w = FTBLib.getServerWorld();
 		if(w == null) { return false; }

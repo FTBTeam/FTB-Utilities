@@ -3,7 +3,6 @@ package ftb.utils;
 import ftb.lib.EventBusHelper;
 import ftb.lib.FTBLib;
 import ftb.lib.LMMod;
-import ftb.lib.api.permissions.ForgePermissionRegistry;
 import ftb.utils.cmd.CmdBack;
 import ftb.utils.cmd.CmdDelHome;
 import ftb.utils.cmd.CmdHome;
@@ -67,7 +66,7 @@ public class FTBU
 		EventBusHelper.register(new FTBUWorldEventHandler());
 		EventBusHelper.register(new FTBUChatEventHandler());
 		FTBUChunkEventHandler.instance.init();
-		ForgePermissionRegistry.register(FTBUPermissions.class);
+		FTBUPermissions.init();
 		
 		FTBUNetHandler.init();
 		Backups.init();

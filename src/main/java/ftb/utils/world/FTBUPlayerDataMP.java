@@ -10,13 +10,13 @@ import ftb.utils.FTBUFinals;
 import ftb.utils.FTBUPermissions;
 import ftb.utils.badges.ServerBadges;
 import ftb.utils.config.FTBUConfigLogin;
+import ftb.utils.config.FTBUConfigModules;
 import ftb.utils.handlers.FTBUChunkEventHandler;
 import ftb.utils.net.MessageAreaUpdate;
 import latmod.lib.IntMap;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.DimensionType;
 
 import java.util.List;
@@ -88,15 +88,18 @@ public class FTBUPlayerDataMP extends FTBUPlayerData
 		
 		if(firstTime)
 		{
-			for(ItemStack is : FTBUConfigLogin.starting_items.items)
+			if(FTBUConfigModules.starting_items.getAsBoolean())
 			{
-				LMInvUtils.giveItem(ep, is);
+				for(ItemStack is : FTBUConfigLogin.starting_items.items)
+				{
+					LMInvUtils.giveItem(ep, is);
+				}
 			}
 		}
 		
-		for(ITextComponent c : FTBUConfigLogin.motd.components)
+		if(FTBUConfigModules.motd.getAsBoolean())
 		{
-			ep.addChatMessage(c);
+			FTBUConfigLogin.motd.components.forEach(ep::addChatMessage);
 		}
 		
 		Backups.hadPlayer = true;

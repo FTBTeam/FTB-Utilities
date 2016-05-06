@@ -5,15 +5,16 @@ import ftb.lib.FTBLib;
 import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.ForgeWorldMP;
 import ftb.lib.api.cmd.ICustomCommandInfo;
-import ftb.lib.api.info.InfoExtendedTextLine;
 import ftb.lib.api.info.InfoPage;
+import ftb.lib.api.info.lines.InfoExtendedTextLine;
 import ftb.lib.api.notification.ClickAction;
 import ftb.lib.api.notification.ClickActionType;
 import ftb.lib.api.permissions.ForgePermissionRegistry;
 import ftb.lib.mod.FTBLibLang;
 import ftb.utils.FTBUPermissions;
-import ftb.utils.config.FTBUConfigBackups;
+import ftb.utils.api.EventFTBUServerGuide;
 import ftb.utils.config.FTBUConfigGeneral;
+import ftb.utils.config.FTBUConfigModules;
 import ftb.utils.world.Backups;
 import ftb.utils.world.FTBUPlayerDataMP;
 import ftb.utils.world.FTBUWorldDataMP;
@@ -53,7 +54,9 @@ public class ServerGuideFile extends InfoPage
 				{
 					Arrays.sort(f, LMFileUtils.fileComparator);
 					for(int i = 0; i < f.length; i++)
-						loadFromFiles(main, f[i]);
+					{
+						//FIXME: loadFromFiles(main, f[i]);
+					}
 				}
 			}
 			
@@ -97,10 +100,10 @@ public class ServerGuideFile extends InfoPage
 		for(ForgePlayerMP p : players)
 			p.refreshStats();
 		
-		if(FTBUConfigGeneral.restart_timer.getAsDouble() > 0D)
+		if(FTBUConfigModules.auto_restart.getAsBoolean())
 		{ println(new TextComponentTranslation("cmd.timer_restart", LMStringUtils.getTimeString(FTBUWorldDataMP.get().restartMillis - LMUtils.millis()))); }
 		
-		if(FTBUConfigBackups.enabled.getAsBoolean())
+		if(FTBUConfigModules.backups.getAsBoolean())
 		{ println(new TextComponentTranslation("cmd.timer_backup", LMStringUtils.getTimeString(Backups.nextBackup - LMUtils.millis()))); }
 		
 		if(FTBUConfigGeneral.server_info_difficulty.getAsBoolean())

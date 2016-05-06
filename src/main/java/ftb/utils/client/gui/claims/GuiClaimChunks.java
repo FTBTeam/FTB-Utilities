@@ -54,13 +54,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		for(int i = 0; i < tex_area_coords.length; i++)
 		{
 			int[] a = MathHelperMC.connectedTextureMap[i];
-			StringBuilder sb = new StringBuilder("textures/world/area_");
-			sb.append(a[0]);
-			sb.append(a[1]);
-			sb.append(a[2]);
-			sb.append(a[3]);
-			sb.append(".png");
-			tex_area_coords[i] = new TextureCoords(new ResourceLocation("ftbl", sb.toString()), 0, 0, 16, 16, 16, 16);
+			tex_area_coords[i] = new TextureCoords(new ResourceLocation("ftbl", "textures/world/area_" + a[0] + a[1] + a[2] + a[3] + ".png"), 0, 0, 16, 16, 16, 16);
 		}
 	}
 	

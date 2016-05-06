@@ -39,17 +39,13 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
 			return permissions.get("*");
 		}
 		
-		for(Map.Entry<String, Boolean> e : permissions.entrySet())
-		{
-		}
-		
-		return null;
+		return permissions.get(permission);
 	}
 	
 	public JsonElement handleRankConfig(RankConfig permission)
 	{
-		if(this == Ranks.PLAYER) { return permission.getDefaultPlayerValue(); }
-		else if(this == Ranks.ADMIN) { return permission.getDefaultOPValue(); }
+		if(this == Ranks.PLAYER) { return permission.getDefaultValue(false); }
+		else if(this == Ranks.ADMIN) { return permission.getDefaultValue(true); }
 		
 		JsonElement e = config.get(permission);
 		return (e == null) ? ((parent != null) ? parent.handleRankConfig(permission) : null) : e;
@@ -83,7 +79,7 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
 			
 			for(Map.Entry<RankConfig, JsonElement> e : config.entrySet())
 			{
-				o1.add(e.getKey().getID(), e.getValue());
+				o1.add(e.getKey().getID().toString(), e.getValue());
 			}
 			
 			o.add("config", o1);

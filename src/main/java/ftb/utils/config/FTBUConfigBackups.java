@@ -9,9 +9,6 @@ import latmod.lib.annotations.NumberBounds;
 
 public class FTBUConfigBackups
 {
-	@Info("true enables backups")
-	public static final ConfigEntryBool enabled = new ConfigEntryBool("enabled", true);
-	
 	@NumberBounds(min = 0, max = 100)
 	@Info({"The number of backup files to keep", "More backups = more space used", "0 - Disabled"})
 	public static final ConfigEntryInt backups_to_keep = new ConfigEntryInt("backups_to_keep", 12);

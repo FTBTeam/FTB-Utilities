@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
 import ftb.lib.FTBLib;
-import ftb.lib.api.permissions.ForgePermissionContainer;
 import ftb.lib.api.permissions.ForgePermissionRegistry;
 import ftb.lib.api.permissions.IPermissionHandler;
 import ftb.lib.api.permissions.RankConfig;
@@ -160,7 +159,7 @@ public class Ranks implements IPermissionHandler
 		sortedRankConfigs.addAll(ForgePermissionRegistry.getRegistredConfig());
 		Collections.sort(sortedRankConfigs);
 		
-		List<ForgePermissionContainer> sortedPermissions = new ArrayList<>();
+		List<String> sortedPermissions = new ArrayList<>();
 		sortedPermissions.addAll(ForgePermissionRegistry.getRegistredPermissions());
 		Collections.sort(sortedPermissions);
 		
@@ -174,10 +173,11 @@ public class Ranks implements IPermissionHandler
 			list.add("-- Permissions --");
 			list.add("");
 			
-			for(ForgePermissionContainer p : sortedPermissions)
+			for(String p : sortedPermissions)
 			{
-				list.add(p.getID());
+				list.add(p);
 				
+				/*
 				String[] info = p.getInfo();
 				
 				if(info != null && info.length > 0)
@@ -187,6 +187,7 @@ public class Ranks implements IPermissionHandler
 						list.add("  " + s);
 					}
 				}
+				*/
 				
 				list.add("");
 			}
@@ -198,8 +199,8 @@ public class Ranks implements IPermissionHandler
 			
 			for(RankConfig p : sortedRankConfigs)
 			{
-				list.add(p.getID());
-				
+				list.add(p.getID().toString());
+				/*
 				info = p.getInfo();
 				
 				if(info != null && info.length > 0)
@@ -210,7 +211,7 @@ public class Ranks implements IPermissionHandler
 					}
 				}
 				
-				/*FIXME: if(!PrimitiveType.isNull(p.configData.type))
+				FIXME: if(!PrimitiveType.isNull(p.configData.type))
 				{
 					list.add("  Type: " + p.configData.type);
 				}
@@ -252,14 +253,14 @@ public class Ranks implements IPermissionHandler
 			
 			for(RankConfig p : sortedRankConfigs)
 			{
-				rankPlayer.config.put(p, p.getDefaultPlayerValue());
+				rankPlayer.config.put(p, p.getDefaultValue(false));
 			}
 			
 			rankPlayer.permissions.clear();
 			
-			for(ForgePermissionContainer c : sortedPermissions)
+			for(String c : sortedPermissions)
 			{
-				rankPlayer.permissions.put(c.getID(), c.playerValue);
+				rankPlayer.permissions.put(c, ForgePermissionRegistry.getDefaultPlayerValue(c));
 			}
 			
 			o1.add(rankPlayer.getID(), rankPlayer.getSerializableElement());
@@ -270,8 +271,10 @@ public class Ranks implements IPermissionHandler
 			
 			for(RankConfig p : sortedRankConfigs)
 			{
-				if(!p.getDefaultPlayerValue().toString().equals(p.getDefaultOPValue().toString()))
-				{ rankAdmin.config.put(p, p.getDefaultOPValue()); }
+				if(!p.getDefaultValue(false).toString().equals(p.getDefaultValue(true).toString()))
+				{
+					rankAdmin.config.put(p, p.getDefaultValue(true));
+				}
 			}
 			
 			rankAdmin.permissions.put("*", true);

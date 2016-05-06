@@ -9,7 +9,7 @@ import ftb.lib.api.ForgeWorldMP;
 import ftb.utils.FTBU;
 import ftb.utils.FTBUFinals;
 import ftb.utils.FTBUPermissions;
-import ftb.utils.config.FTBUConfigChunkloading;
+import ftb.utils.config.FTBUConfigModules;
 import ftb.utils.world.ChunkloaderType;
 import ftb.utils.world.ClaimedChunk;
 import ftb.utils.world.FTBUWorldDataMP;
@@ -78,7 +78,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 	{
 		table.remove(world);
 		List<ForgeChunkManager.Ticket> tickets1 = new ArrayList<>();
-		if(tickets.isEmpty() || !FTBUConfigChunkloading.enabled.getAsBoolean()) { return tickets1; }
+		if(tickets.isEmpty() || !FTBUConfigModules.chunk_loading.getAsBoolean()) { return tickets1; }
 		Map<UUID, ForgeChunkManager.Ticket> map = new HashMap<>();
 		
 		for(ForgeChunkManager.Ticket t : tickets)

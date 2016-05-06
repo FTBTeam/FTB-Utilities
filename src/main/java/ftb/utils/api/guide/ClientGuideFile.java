@@ -9,7 +9,6 @@ import ftb.lib.mod.client.gui.info.GuiInfo;
 import ftb.utils.FTBU;
 import latmod.lib.LMFileUtils;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -50,7 +49,9 @@ public class ClientGuideFile extends InfoPage
 			{
 				Arrays.sort(f, LMFileUtils.fileComparator);
 				for(int i = 0; i < f.length; i++)
-					loadFromFiles(this, f[i]);
+				{
+					//FIXME: loadFromFiles(this, f[i]);
+				}
 			}
 		}
 		
@@ -62,7 +63,9 @@ public class ClientGuideFile extends InfoPage
 			{
 				Arrays.sort(f, LMFileUtils.fileComparator);
 				for(int i = 0; i < f.length; i++)
-					loadFromFiles(this, f[i]);
+				{
+					//FIXME: loadFromFiles(this, f[i]);
+				}
 			}
 		}
 		
@@ -80,15 +83,13 @@ public class ClientGuideFile extends InfoPage
 			}
 		}
 		
-		MinecraftForge.EVENT_BUS.post(new EventFTBUClientGuide(this));
-		
 		cleanup();
 		clientGuideGui = null;
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void initGUI(GuiInfo gui)
+	public void refreshGui(GuiInfo gui)
 	{
 		clientGuideGui = gui;
 	}

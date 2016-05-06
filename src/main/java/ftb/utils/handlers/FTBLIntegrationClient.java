@@ -46,12 +46,7 @@ public class FTBLIntegrationClient extends FTBLIntegration
 			ItemStack paint = ((IPainterItem) item).getPaintItem(e.getItemStack());
 			if(paint != null)
 			{
-				StringBuilder sb = new StringBuilder();
-				sb.append(TextFormatting.WHITE);
-				sb.append(TextFormatting.BOLD);
-				sb.append(paint.getDisplayName());
-				sb.append(TextFormatting.RESET);
-				e.getToolTip().add(sb.toString());
+				e.getToolTip().add(String.valueOf(TextFormatting.WHITE) + TextFormatting.BOLD + paint.getDisplayName() + TextFormatting.RESET);
 			}
 		}
 		

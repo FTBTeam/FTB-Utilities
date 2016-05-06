@@ -10,7 +10,6 @@ import latmod.lib.annotations.Info;
 import latmod.lib.annotations.NumberBounds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,37 +32,13 @@ public class FTBUConfigGeneral
 	public static final ConfigEntryBool ranks_enabled = new ConfigEntryBool("ranks_enabled", false);
 	//public static final ConfigEntryBool ranks_override_chat = new ConfigEntryBool("ranks_override_chat", true);
 	
-	public static final ConfigEntryBool ranks_override_commands = new ConfigEntryBool("ranks_override_commands", true);
-	
-	@Info("Enable right-clicking on '[warp]' signs")
-	public static final ConfigEntryBool sign_warp = new ConfigEntryBool("sign_warp", true);
-	
-	@Info("Enable right-clicking on '[home]' signs")
-	public static final ConfigEntryBool sign_home = new ConfigEntryBool("sign_home", true);
+	//public static final ConfigEntryBool ranks_override_commands = new ConfigEntryBool("ranks_override_commands", true);
 	
 	@Info("Enable spawn area in singleplayer")
 	public static final ConfigEntryBool spawn_area_in_sp = new ConfigEntryBool("spawn_area_in_sp", false);
 	
 	public static final ConfigEntryBool server_info_difficulty = new ConfigEntryBool("server_info_difficulty", true);
 	public static final ConfigEntryBool server_info_mode = new ConfigEntryBool("server_info_mode", true);
-	
-	public static void onReloaded(Side side)
-	{
-		/*
-		blockedItemsL.removeAll();
-		
-		list = blockedItems.get();
-		
-		if(list != null && list.length > 0)
-		{
-			for(String s : list)
-			{
-				ItemStack is = ItemStackTypeAdapter.parseItem(s);
-				if(is != null && !LMInvUtils.isAir(is.getItem())) blockedItemsL.add(is);
-			}
-		}
-		*/
-	}
 	
 	public static class ConfigEntryBannedEntityList extends ConfigEntryCustom
 	{
@@ -75,7 +50,8 @@ public class FTBUConfigGeneral
 			list = new ArrayList<>();
 		}
 		
-		public void func_152753_a(JsonElement o)
+		@Override
+		public void fromJson(JsonElement o)
 		{
 			list.clear();
 			

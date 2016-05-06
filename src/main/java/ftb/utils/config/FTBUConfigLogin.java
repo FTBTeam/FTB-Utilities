@@ -33,7 +33,8 @@ public class FTBUConfigLogin
 			components.add(new TextComponentString("Welcome to the server!"));
 		}
 		
-		public void func_152753_a(JsonElement o)
+		@Override
+		public void fromJson(JsonElement o)
 		{
 			components.clear();
 			

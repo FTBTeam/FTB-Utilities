@@ -5,8 +5,8 @@ import ftb.lib.FTBLib;
 import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.ForgeWorldMP;
 import ftb.lib.api.cmd.ICustomCommandInfo;
+import ftb.lib.api.info.InfoExtendedTextLine;
 import ftb.lib.api.info.InfoPage;
-import ftb.lib.api.info.lines.InfoExtendedTextLine;
 import ftb.lib.api.notification.ClickAction;
 import ftb.lib.api.notification.ClickActionType;
 import ftb.lib.api.permissions.ForgePermissionRegistry;
@@ -20,7 +20,6 @@ import ftb.utils.world.FTBUPlayerDataMP;
 import ftb.utils.world.FTBUWorldDataMP;
 import latmod.lib.LMFileUtils;
 import latmod.lib.LMStringUtils;
-import latmod.lib.LMUtils;
 import net.minecraft.command.ICommand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -101,10 +100,10 @@ public class ServerGuideFile extends InfoPage
 			p.refreshStats();
 		
 		if(FTBUConfigModules.auto_restart.getAsBoolean())
-		{ println(new TextComponentTranslation("cmd.timer_restart", LMStringUtils.getTimeString(FTBUWorldDataMP.get().restartMillis - LMUtils.millis()))); }
+		{ println(new TextComponentTranslation("cmd.timer_restart", LMStringUtils.getTimeString(FTBUWorldDataMP.get().restartMillis - System.currentTimeMillis()))); }
 		
 		if(FTBUConfigModules.backups.getAsBoolean())
-		{ println(new TextComponentTranslation("cmd.timer_backup", LMStringUtils.getTimeString(Backups.nextBackup - LMUtils.millis()))); }
+		{ println(new TextComponentTranslation("cmd.timer_backup", LMStringUtils.getTimeString(Backups.nextBackup - System.currentTimeMillis()))); }
 		
 		if(FTBUConfigGeneral.server_info_difficulty.getAsBoolean())
 		{ println(FTBLibLang.difficulty.textComponent(LMStringUtils.firstUppercase(pself.getPlayer().worldObj.getDifficulty().toString().toLowerCase()))); }

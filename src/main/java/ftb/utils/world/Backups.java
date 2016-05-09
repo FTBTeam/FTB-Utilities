@@ -6,7 +6,6 @@ import ftb.utils.FTBULang;
 import ftb.utils.config.FTBUConfigBackups;
 import ftb.utils.config.FTBUConfigModules;
 import latmod.lib.LMFileUtils;
-import latmod.lib.LMUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.server.CommandSaveAll;
 import net.minecraft.command.server.CommandSaveOff;
@@ -53,7 +52,7 @@ public class Backups
 		c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
 		BroadcastSender.inst.addChatMessage(c);
 		
-		nextBackup = LMUtils.millis() + FTBUConfigBackups.backupMillis();
+		nextBackup = System.currentTimeMillis() + FTBUConfigBackups.backupMillis();
 		
 		if(auto && FTBUConfigBackups.need_online_players.getAsBoolean())
 		{

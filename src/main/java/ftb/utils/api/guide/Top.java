@@ -4,7 +4,6 @@ import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.GuiLang;
 import ftb.lib.api.LangKey;
 import latmod.lib.LMStringUtils;
-import latmod.lib.LMUtils;
 import latmod.lib.MathHelperLM;
 import latmod.lib.util.FinalIDObject;
 
@@ -27,7 +26,7 @@ public abstract class Top extends FinalIDObject implements Comparator<ForgePlaye
 			
 			@Override
 			public Object getData(ForgePlayerMP p)
-			{ return LMStringUtils.getTimeString(LMUtils.millis() - p.stats.firstJoined); }
+			{ return LMStringUtils.getTimeString(System.currentTimeMillis() - p.stats.firstJoined); }
 		});
 		
 		add(new Top("deaths")
@@ -62,7 +61,7 @@ public abstract class Top extends FinalIDObject implements Comparator<ForgePlaye
 			public Object getData(ForgePlayerMP p)
 			{
 				if(p.isOnline()) { return GuiLang.label_online.textComponent(); }
-				return LMStringUtils.getTimeString(LMUtils.millis() - p.stats.lastSeen);
+				return LMStringUtils.getTimeString(System.currentTimeMillis() - p.stats.lastSeen);
 			}
 		});
 		

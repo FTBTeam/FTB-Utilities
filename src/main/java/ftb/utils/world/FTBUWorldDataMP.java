@@ -77,7 +77,7 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 		chunks = new HashMap<>();
 		warps = new Warps();
 		
-		startMillis = LMUtils.millis();
+		startMillis = System.currentTimeMillis();
 		Backups.nextBackup = startMillis + FTBUConfigBackups.backupMillis();
 		lastRestartMessage = "";
 		
@@ -190,7 +190,7 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 			}
 		}
 		
-		nextChunkloaderUpdate = LMUtils.millis() + 10000L;
+		nextChunkloaderUpdate = System.currentTimeMillis() + 10000L;
 	}
 	
 	@Override
@@ -265,7 +265,7 @@ public class FTBUWorldDataMP extends ForgeWorldData implements IWorldTick
 		{
 			if(restartMillis > 0L)
 			{
-				int secondsLeft = (int) ((restartMillis - LMUtils.millis()) / 1000L);
+				int secondsLeft = (int) ((restartMillis - System.currentTimeMillis()) / 1000L);
 				
 				String msg = LMStringUtils.getTimeString(secondsLeft * 1000L);
 				if(!lastRestartMessage.equals(msg))

@@ -62,13 +62,13 @@ public class ThreadBackup extends Thread
 				out.append("backup.zip");
 				dstFile = LMFileUtils.newFile(new File(Backups.backupsFolder, out.toString()));
 				
-				long start = LMUtils.millis();
+				long start = System.currentTimeMillis();
 				
 				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(dstFile));
 				//zos.setLevel(9);
 				zos.setLevel(FTBUConfigBackups.compression_level.getAsInt());
 				
-				long logMillis = LMUtils.millis() + 5000L;
+				long logMillis = System.currentTimeMillis() + 5000L;
 				
 				byte[] buffer = new byte[4096];
 				
@@ -80,7 +80,7 @@ public class ThreadBackup extends Thread
 					String filePath = file.getAbsolutePath();
 					ZipEntry ze = new ZipEntry(src.getName() + File.separator + filePath.substring(src.getAbsolutePath().length() + 1, filePath.length()));
 					
-					long millis = LMUtils.millis();
+					long millis = System.currentTimeMillis();
 					
 					if(i == 0 || millis > logMillis || i == allFiles - 1)
 					{
@@ -110,13 +110,13 @@ public class ThreadBackup extends Thread
 				String dstPath = dstFile.getAbsolutePath() + File.separator;
 				String srcPath = src.getAbsolutePath();
 				
-				long logMillis = LMUtils.millis() + 2000L;
+				long logMillis = System.currentTimeMillis() + 2000L;
 				
 				for(int i = 0; i < allFiles; i++)
 				{
 					File file = files.get(i);
 					
-					long millis = LMUtils.millis();
+					long millis = System.currentTimeMillis();
 					
 					if(i == 0 || millis > logMillis || i == allFiles - 1)
 					{
@@ -162,7 +162,7 @@ public class ThreadBackup extends Thread
 	}
 	
 	private static String getDoneTime(long l)
-	{ return LMStringUtils.getTimeString(LMUtils.millis() - l); }
+	{ return LMStringUtils.getTimeString(System.currentTimeMillis() - l); }
 	
 	private static void appendNum(StringBuilder sb, int num, char c)
 	{

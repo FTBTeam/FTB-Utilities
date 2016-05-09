@@ -10,7 +10,7 @@ import ftb.utils.ranks.Ranks;
 import latmod.lib.LMFileUtils;
 import latmod.lib.LMJsonUtils;
 import latmod.lib.LMUtils;
-import latmod.lib.net.LMURLConnection;
+import latmod.lib.net.LMConnection;
 import latmod.lib.net.RequestMethod;
 import latmod.lib.util.Phase;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -42,16 +42,17 @@ public class ServerBadges
 		public void run()
 		{
 			isDone = false;
-			long msStarted = LMUtils.millis();
+			long msStarted = System.currentTimeMillis();
 			
 			map.clear();
 			uuid.clear();
+			
 			
 			JsonElement global = null, local = null;
 			
 			try
 			{
-				LMURLConnection connection = new LMURLConnection(RequestMethod.SIMPLE_GET, "http://pastebin.com/raw/Mu8McdDR");
+				LMConnection connection = new LMConnection(RequestMethod.SIMPLE_GET, "http://pastebin.com/raw/Mu8McdDR");
 				global = connection.connect().asJson();
 			}
 			catch(Exception ex)
@@ -83,7 +84,7 @@ public class ServerBadges
 			loadBadges(global, Phase.POST);
 			loadBadges(local, Phase.POST);
 			
-			FTBU.logger.info("Loaded " + map.size() + " badges in " + (LMUtils.millis() - msStarted) + " ms!");
+			FTBU.logger.info("Loaded " + map.size() + " badges in " + (System.currentTimeMillis() - msStarted) + " ms!");
 			isDone = true;
 		}
 	}

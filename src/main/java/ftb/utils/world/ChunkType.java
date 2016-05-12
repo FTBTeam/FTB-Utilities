@@ -55,7 +55,7 @@ public class ChunkType
 	{
 		if(this != ChunkType.UNLOADED)
 		{
-			l.add(getChatColor(null) + langKey.format());
+			l.add(getChatColor(null) + langKey.translate());
 		}
 	}
 	

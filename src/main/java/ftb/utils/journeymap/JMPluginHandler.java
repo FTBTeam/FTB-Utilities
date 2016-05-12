@@ -67,7 +67,7 @@ public class JMPluginHandler implements IJMPluginHandler
 						
 						ImageOverlay chunkOverlay = new ImageOverlay(FTBUFinals.MOD_ID, "claimed_" + pos.chunkXPos + "_" + pos.chunkZPos, new BlockPos(x, 0, z), new BlockPos(x + 16, 0, z + 16), image);
 						
-						StringBuilder sb = new StringBuilder(type.langKey.format());
+						StringBuilder sb = new StringBuilder(type.langKey.translate());
 						
 						if(type.asClaimed() != null)
 						{

@@ -106,7 +106,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			}
 		};
 		
-		buttonRefresh.title = GuiLang.button_refresh.format();
+		buttonRefresh.title = GuiLang.button_refresh.translate();
 		
 		buttonSettings = new ButtonLM(this, 0, 32, 16, 16)
 		{
@@ -118,7 +118,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			}
 		};
 		
-		buttonSettings.title = GuiLang.button_settings.format();
+		buttonSettings.title = GuiLang.button_settings.translate();
 		
 		buttonUnclaimAll = new ButtonLM(this, 0, 48, 16, 16)
 		{
@@ -126,14 +126,14 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 			public void onClicked(MouseButton button)
 			{
 				FTBLibClient.playClickSound();
-				String s = isShiftKeyDown() ? FTBULang.button_claims_unclaim_all_q.format() : FTBULang.button_claims_unclaim_all_dim_q.format(currentDim.getName());
+				String s = isShiftKeyDown() ? FTBULang.button_claims_unclaim_all_q.translate() : FTBULang.button_claims_unclaim_all_dim_q.translateFormatted(currentDim.getName());
 				FTBLibClient.openGui(new GuiYesNo(GuiClaimChunks.this, s, "", isShiftKeyDown() ? 1 : 0));
 			}
 			
 			@Override
 			public void addMouseOverText(List<String> l)
 			{
-				l.add(isShiftKeyDown() ? FTBULang.button_claims_unclaim_all.format() : FTBULang.button_claims_unclaim_all_dim.format(currentDim.getName()));
+				l.add(isShiftKeyDown() ? FTBULang.button_claims_unclaim_all.translate() : FTBULang.button_claims_unclaim_all_dim.translateFormatted(currentDim.getName()));
 			}
 		};
 		
@@ -247,9 +247,9 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	public void drawText(List<String> l)
 	{
 		FTBUPlayerDataSP d = FTBUPlayerDataSP.get(ForgeWorldSP.inst.clientPlayer);
-		String s = FTBULang.label_cchunks_count.format(d.claimedChunks + " / " + d.maxClaimedChunks);
+		String s = FTBULang.label_cchunks_count.translateFormatted(d.claimedChunks + " / " + d.maxClaimedChunks);
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 12, 0xFFFFFFFF);
-		s = FTBULang.label_lchunks_count.format(d.loadedChunks + " / " + d.maxLoadedChunks);
+		s = FTBULang.label_lchunks_count.translateFormatted(d.loadedChunks + " / " + d.maxLoadedChunks);
 		fontRendererObj.drawString(s, width - fontRendererObj.getStringWidth(s) - 4, height - 24, 0xFFFFFFFF);
 		
 		super.drawText(l);

@@ -4,22 +4,20 @@ import ftb.lib.BlockDimPos;
 import ftb.lib.ChunkDimPos;
 import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageToClient;
 import ftb.utils.world.ChunkType;
 import ftb.utils.world.FTBUWorldDataMP;
 import ftb.utils.world.FTBUWorldDataSP;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.DimensionType;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate>
+public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
 {
 	public DimensionType dim;
 	public Map<ChunkDimPos, ChunkType> types;
@@ -37,7 +35,7 @@ public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate>
 	
 	@Override
 	public LMNetworkWrapper getWrapper()
-	{ return FTBUNetHandler.NET_WORLD; }
+	{ return FTBUNetHandler.NET; }
 	
 	@Override
 	public void fromBytes(ByteBuf io)
@@ -72,20 +70,11 @@ public class MessageAreaUpdate extends MessageLM<MessageAreaUpdate>
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(final MessageAreaUpdate m, MessageContext ctx)
+	public void onMessage(final MessageAreaUpdate m, Minecraft mc)
 	{
-		Minecraft.getMinecraft().addScheduledTask(new Runnable()
+		if(FTBUWorldDataSP.get().isLoaded())
 		{
-			@Override
-			public void run()
-			{
-				if(FTBUWorldDataSP.get().isLoaded())
-				{
-					FTBUWorldDataSP.get().setTypes(m.dim, m.types);
-				}
-			}
-		});
-		
-		return null;
+			FTBUWorldDataSP.get().setTypes(m.dim, m.types);
+		}
 	}
 }

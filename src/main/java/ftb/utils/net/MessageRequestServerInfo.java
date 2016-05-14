@@ -3,13 +3,12 @@ package ftb.utils.net;
 import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.ForgeWorldMP;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageToServer;
 import ftb.utils.api.guide.ServerGuideFile;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.entity.player.EntityPlayerMP;
 
-public class MessageRequestServerInfo extends MessageLM<MessageRequestServerInfo>
+public class MessageRequestServerInfo extends MessageToServer<MessageRequestServerInfo>
 {
 	public MessageRequestServerInfo() { }
 	
@@ -28,10 +27,9 @@ public class MessageRequestServerInfo extends MessageLM<MessageRequestServerInfo
 	}
 	
 	@Override
-	public IMessage onMessage(MessageRequestServerInfo m, MessageContext ctx)
+	public void onMessage(MessageRequestServerInfo m, EntityPlayerMP ep)
 	{
-		ForgePlayerMP owner = ForgeWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);
+		ForgePlayerMP owner = ForgeWorldMP.inst.getPlayer(ep);
 		new ServerGuideFile(owner).displayGuide(owner.getPlayer());
-		return null;
 	}
 }

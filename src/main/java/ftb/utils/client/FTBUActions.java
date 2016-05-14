@@ -1,6 +1,7 @@
 package ftb.utils.client;
 
 import ftb.lib.FTBLib;
+import ftb.lib.api.EnumSelf;
 import ftb.lib.api.ForgePlayer;
 import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.FTBLibClient;
@@ -66,7 +67,7 @@ public class FTBUActions
 	
 	// Self //
 	
-	public static final PlayerAction guide = new PlayerAction(PlayerAction.Type.SELF, "ftbu.guide", 0, GuiIcons.book)
+	public static final PlayerAction guide = new PlayerAction(EnumSelf.SELF, "ftbu.guide", 0, GuiIcons.book)
 	{
 		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
@@ -84,7 +85,7 @@ public class FTBUActions
 		{ return Boolean.TRUE; }
 	};
 	
-	public static final PlayerAction info = new PlayerAction(PlayerAction.Type.SELF, "ftbu.server_info", 0, GuiIcons.book_red)
+	public static final PlayerAction info = new PlayerAction(EnumSelf.SELF, "ftbu.server_info", 0, GuiIcons.book_red)
 	{
 		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
@@ -99,7 +100,7 @@ public class FTBUActions
 		{ return Boolean.TRUE; }
 	};
 	
-	public static final PlayerAction claims = new PlayerAction(PlayerAction.Type.SELF, "ftbu.claimed_chunks", 0, GuiIcons.map)
+	public static final PlayerAction claims = new PlayerAction(EnumSelf.SELF, "ftbu.claimed_chunks", 0, GuiIcons.map)
 	{
 		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
@@ -114,7 +115,7 @@ public class FTBUActions
 		{ return Boolean.TRUE; }
 	};
 	
-	public static final PlayerAction trade = new PlayerAction(PlayerAction.Type.SELF, "ftbu.trade", 0, GuiIcons.money_bag)
+	public static final PlayerAction trade = new PlayerAction(EnumSelf.SELF, "ftbu.trade", 0, GuiIcons.money_bag)
 	{
 		@Override
 		public void onClicked(ForgePlayer owner, ForgePlayer player)
@@ -132,7 +133,7 @@ public class FTBUActions
 	
 	// Other //
 	
-	public static final PlayerAction mail = new PlayerAction(PlayerAction.Type.OTHER, "ftbu.mail", 0, GuiIcons.feather)
+	public static final PlayerAction mail = new PlayerAction(EnumSelf.OTHER, "ftbu.mail", 0, GuiIcons.feather)
 	{
 		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)

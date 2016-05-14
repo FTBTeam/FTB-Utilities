@@ -1,20 +1,19 @@
 package ftb.utils.net;
 
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageToClient;
 import ftb.utils.badges.Badge;
 import ftb.utils.badges.ClientBadges;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class MessageUpdateBadges extends MessageLM<MessageUpdateBadges>
+public class MessageUpdateBadges extends MessageToClient<MessageUpdateBadges>
 {
 	public Collection<Badge> badges;
 	
@@ -63,7 +62,7 @@ public class MessageUpdateBadges extends MessageLM<MessageUpdateBadges>
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageUpdateBadges m, MessageContext ctx)
+	public void onMessage(MessageUpdateBadges m, Minecraft mc)
 	{
 		ClientBadges.clear();
 		
@@ -71,7 +70,5 @@ public class MessageUpdateBadges extends MessageLM<MessageUpdateBadges>
 		{
 			ClientBadges.addBadge(b);
 		}
-		
-		return null;
 	}
 }

@@ -5,16 +5,15 @@ import ftb.lib.LMAccessToken;
 import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.ForgeWorldMP;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageToServer;
 import ftb.utils.world.ClaimedChunk;
 import ftb.utils.world.FTBUPlayerDataMP;
 import ftb.utils.world.FTBUWorldDataMP;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.DimensionType;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
+public class MessageClaimChunk extends MessageToServer<MessageClaimChunk>
 {
 	public static final int ID_CLAIM = 0;
 	public static final int ID_UNCLAIM = 1;
@@ -31,7 +30,7 @@ public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 	
 	@Override
 	public LMNetworkWrapper getWrapper()
-	{ return FTBUNetHandler.NET_WORLD; }
+	{ return FTBUNetHandler.NET; }
 	
 	@Override
 	public void fromBytes(ByteBuf io)
@@ -52,15 +51,15 @@ public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 	}
 	
 	@Override
-	public IMessage onMessage(MessageClaimChunk m, MessageContext ctx)
+	public void onMessage(MessageClaimChunk m, EntityPlayerMP ep)
 	{
-		ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);
+		ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ep);
 		FTBUPlayerDataMP d = FTBUPlayerDataMP.get(p);
 		
 		if(m.type == ID_CLAIM)
 		{
 			d.claimChunk(m.pos);
-			return new MessageAreaUpdate(p, m.pos.chunkXPos, m.pos.chunkZPos, m.pos.dim, 1, 1);
+			new MessageAreaUpdate(p, m.pos.chunkXPos, m.pos.chunkZPos, m.pos.dim, 1, 1).sendTo(ep);
 		}
 		else if(m.type == ID_UNCLAIM)
 		{
@@ -75,12 +74,11 @@ public class MessageClaimChunk extends MessageLM<MessageClaimChunk>
 				}
 			}
 			else { d.unclaimChunk(m.pos); }
-			return new MessageAreaUpdate(p, m.pos.chunkXPos, m.pos.chunkZPos, m.pos.dim, 1, 1);
+			new MessageAreaUpdate(p, m.pos.chunkXPos, m.pos.chunkZPos, m.pos.dim, 1, 1).sendTo(ep);
 		}
 		else if(m.type == ID_UNCLAIM_ALL) { d.unclaimAllChunks(m.pos.dim); }
 		else if(m.type == ID_UNCLAIM_ALL_DIMS) { d.unclaimAllChunks(null); }
 		else if(m.type == ID_LOAD) { d.setLoaded(m.pos, true); }
 		else if(m.type == ID_UNLOAD) { d.setLoaded(m.pos, false); }
-		return null;
 	}
 }

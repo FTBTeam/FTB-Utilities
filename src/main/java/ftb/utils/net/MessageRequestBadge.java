@@ -2,16 +2,15 @@ package ftb.utils.net;
 
 import ftb.lib.api.ForgeWorldMP;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageToServer;
 import ftb.utils.badges.Badge;
 import ftb.utils.badges.ServerBadges;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.util.UUID;
 
-public class MessageRequestBadge extends MessageLM<MessageRequestBadge>
+public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
 {
 	public UUID playerID;
 	
@@ -39,10 +38,13 @@ public class MessageRequestBadge extends MessageLM<MessageRequestBadge>
 	}
 	
 	@Override
-	public IMessage onMessage(MessageRequestBadge m, MessageContext ctx)
+	public void onMessage(MessageRequestBadge m, EntityPlayerMP ep)
 	{
 		Badge b = ServerBadges.getServerBadge(ForgeWorldMP.inst.getPlayer(m.playerID));
-		if(b != Badge.emptyBadge) { return new MessageSendBadge(m.playerID, b.getID()); }
-		return null;
+		
+		if(b != Badge.emptyBadge)
+		{
+			new MessageSendBadge(m.playerID, b.getID()).sendTo(ep);
+		}
 	}
 }

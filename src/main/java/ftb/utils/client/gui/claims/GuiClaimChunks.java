@@ -16,7 +16,6 @@ import ftb.lib.mod.net.MessageRequestSelfUpdate;
 import ftb.utils.FTBULang;
 import ftb.utils.client.FTBUClient;
 import ftb.utils.net.MessageAreaRequest;
-import ftb.utils.net.MessageButtonPressed;
 import ftb.utils.net.MessageClaimChunk;
 import ftb.utils.world.ChunkType;
 import ftb.utils.world.FTBUPlayerDataSP;
@@ -66,7 +65,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 	public final int startX, startY;
 	public final DimensionType currentDim;
 	
-	public final ButtonLM buttonRefresh, buttonClose, buttonSettings, buttonUnclaimAll;
+	public final ButtonLM buttonRefresh, buttonClose, buttonUnclaimAll;
 	public final MapButton mapButtons[];
 	public final PanelLM panelButtons;
 	
@@ -108,19 +107,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		
 		buttonRefresh.title = GuiLang.button_refresh.translate();
 		
-		buttonSettings = new ButtonLM(this, 0, 32, 16, 16)
-		{
-			@Override
-			public void onClicked(MouseButton button)
-			{
-				FTBLibClient.playClickSound();
-				new MessageButtonPressed(MessageButtonPressed.CLAIMED_CHUNKS_SETTINGS, 0).sendToServer();
-			}
-		};
-		
-		buttonSettings.title = GuiLang.button_settings.translate();
-		
-		buttonUnclaimAll = new ButtonLM(this, 0, 48, 16, 16)
+		buttonUnclaimAll = new ButtonLM(this, 0, 32, 16, 16)
 		{
 			@Override
 			public void onClicked(MouseButton button)
@@ -147,7 +134,6 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 				
 				if(adminToken == 0L)
 				{
-					add(buttonSettings);
 					add(buttonUnclaimAll);
 				}
 				
@@ -238,7 +224,6 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 		
 		if(adminToken == 0L)
 		{
-			buttonSettings.render(GuiIcons.settings);
 			buttonUnclaimAll.render(GuiIcons.remove);
 		}
 	}

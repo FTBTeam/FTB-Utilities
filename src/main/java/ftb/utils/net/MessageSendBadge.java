@@ -1,15 +1,16 @@
 package ftb.utils.net;
 
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageToClient;
 import ftb.utils.badges.ClientBadges;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.UUID;
 
-public class MessageSendBadge extends MessageLM<MessageSendBadge>
+public class MessageSendBadge extends MessageToClient<MessageSendBadge>
 {
 	public UUID playerID;
 	public String badgeID;
@@ -41,9 +42,9 @@ public class MessageSendBadge extends MessageLM<MessageSendBadge>
 	}
 	
 	@Override
-	public IMessage onMessage(MessageSendBadge m, MessageContext ctx)
+	@SideOnly(Side.CLIENT)
+	public void onMessage(MessageSendBadge m, Minecraft ctx)
 	{
 		ClientBadges.setClientBadge(m.playerID, m.badgeID);
-		return null;
 	}
 }

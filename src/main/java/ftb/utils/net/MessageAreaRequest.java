@@ -3,14 +3,13 @@ package ftb.utils.net;
 import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.ForgeWorldMP;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageToServer;
 import io.netty.buffer.ByteBuf;
 import latmod.lib.MathHelperLM;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.DimensionType;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageAreaRequest extends MessageLM<MessageAreaRequest>
+public class MessageAreaRequest extends MessageToServer<MessageAreaRequest>
 {
 	public int chunkX, chunkY, sizeX, sizeY;
 	
@@ -26,7 +25,7 @@ public class MessageAreaRequest extends MessageLM<MessageAreaRequest>
 	
 	@Override
 	public LMNetworkWrapper getWrapper()
-	{ return FTBUNetHandler.NET_WORLD; }
+	{ return FTBUNetHandler.NET; }
 	
 	@Override
 	public void fromBytes(ByteBuf io)
@@ -47,18 +46,9 @@ public class MessageAreaRequest extends MessageLM<MessageAreaRequest>
 	}
 	
 	@Override
-	public IMessage onMessage(final MessageAreaRequest m, final MessageContext ctx)
+	public void onMessage(MessageAreaRequest m, EntityPlayerMP ep)
 	{
-		ctx.getServerHandler().playerEntity.mcServer.addScheduledTask(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);
-				new MessageAreaUpdate(p, m.chunkX, m.chunkY, DimensionType.getById(p.getPlayer().dimension), m.sizeX, m.sizeY).sendTo(ctx.getServerHandler().playerEntity);
-			}
-		});
-		
-		return null;
+		ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ep);
+		new MessageAreaUpdate(p, m.chunkX, m.chunkY, DimensionType.getById(p.getPlayer().dimension), m.sizeX, m.sizeY).sendTo(ep);
 	}
 }

@@ -24,7 +24,7 @@ public class FTBLIntegrationClient extends FTBLIntegration
 			FTBLibClient.clearCachedData();
 			ClientBadges.clear();
 			
-			if(e.modeChanged)
+			//if(e.modeChanged)
 			{
 				//FIXME: GuideRepoList.reloadFromFolder(e.world.getMode());
 			}

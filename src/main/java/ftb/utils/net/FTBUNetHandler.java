@@ -8,12 +8,12 @@ public class FTBUNetHandler
 	
 	public static void init()
 	{
-		new MessageSendBadge().register(1);
-		new MessageUpdateBadges().register(2);
-		new MessageRequestBadge().register(3);
-		new MessageRequestServerInfo().register(4);
-		new MessageAreaUpdate().register(5);
-		new MessageAreaRequest().register(6);
-		new MessageClaimChunk().register(7);
+		NET.register(1, new MessageSendBadge());
+		NET.register(2, new MessageUpdateBadges());
+		NET.register(3, new MessageRequestBadge());
+		NET.register(4, new MessageRequestServerInfo());
+		NET.register(5, new MessageAreaUpdate());
+		NET.register(6, new MessageAreaRequest());
+		NET.register(7, new MessageClaimChunk());
 	}
 }

@@ -46,10 +46,10 @@ public class FTBU
 	@Mod.Instance(FTBUFinals.MOD_ID)
 	public static FTBU inst;
 	
-	@SidedProxy(clientSide = "FTBUClient", serverSide = "FTBUCommon")
+	@SidedProxy(serverSide = "com.feed_the_beast.ftbu.FTBUCommon", clientSide = "com.feed_the_beast.ftbu.client.FTBUClient")
 	public static FTBUCommon proxy;
 	
-	@SidedProxy(clientSide = "FTBLIntegrationClient", serverSide = "FTBLIntegration")
+	@SidedProxy(serverSide = "com.feed_the_beast.ftbu.handlers.FTBLIntegration", clientSide = "com.feed_the_beast.ftbu.handlers.FTBLIntegrationClient")
 	public static FTBLIntegration ftbl_int;
 	
 	public static final Logger logger = LogManager.getLogger("FTBUtilities");

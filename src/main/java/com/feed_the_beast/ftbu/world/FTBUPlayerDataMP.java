@@ -1,45 +1,43 @@
 package com.feed_the_beast.ftbu.world;
 
+import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbl.api.item.LMInvUtils;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbl.util.LMDimUtils;
 import com.feed_the_beast.ftbl.util.PrivacyLevel;
-import com.feed_the_beast.ftbu.FTBUFinals;
+import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.badges.ServerBadges;
-import com.feed_the_beast.ftbu.config.FTBUConfigLogin;
-import com.feed_the_beast.ftbu.config.FTBUConfigModules;
 import com.feed_the_beast.ftbu.handlers.FTBUChunkEventHandler;
 import com.feed_the_beast.ftbu.net.MessageAreaUpdate;
 import com.google.gson.JsonArray;
 import latmod.lib.IntMap;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.DimensionType;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.List;
 
 /**
  * Created by LatvianModder on 23.02.2016.
  */
-public class FTBUPlayerDataMP extends FTBUPlayerData
+public class FTBUPlayerDataMP extends FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 {
 	public static FTBUPlayerDataMP get(ForgePlayerMP p)
-	{ return (FTBUPlayerDataMP) p.getData(FTBUFinals.MOD_ID); }
+	{
+		return p.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null) ? (FTBUPlayerDataMP) p.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null) : null;
+	}
 	
 	public Warps homes;
 	public ChunkType lastChunkType;
 	
-	public FTBUPlayerDataMP(ForgePlayerMP p)
+	public FTBUPlayerDataMP(ForgePlayer p)
 	{
-		super(FTBUFinals.MOD_ID, p);
+		super(p);
 		homes = new Warps();
 	}
 	
 	@Override
-	public void readFromServer(NBTTagCompound tag)
+	public void deserializeNBT(NBTTagCompound tag)
 	{
 		setFlag(RENDER_BADGE, !tag.hasKey("Badge") || tag.getBoolean("Badge"));
 		setFlag(CHAT_LINKS, tag.hasKey("ChatLinks") && tag.getBoolean("ChatLinks"));
@@ -51,8 +49,10 @@ public class FTBUPlayerDataMP extends FTBUPlayerData
 	}
 	
 	@Override
-	public void writeToServer(NBTTagCompound tag)
+	public NBTTagCompound serializeNBT()
 	{
+		NBTTagCompound tag = new NBTTagCompound();
+		
 		tag.setBoolean("Badge", getFlag(RENDER_BADGE));
 		tag.setBoolean("ChatLinks", getFlag(CHAT_LINKS));
 		tag.setBoolean("Explosions", getFlag(EXPLOSIONS));
@@ -60,10 +60,12 @@ public class FTBUPlayerDataMP extends FTBUPlayerData
 		tag.setByte("BlockSecurity", (byte) blocks.ordinal());
 		
 		homes.writeToNBT(tag, "Homes");
+		
+		return tag;
 	}
 	
 	@Override
-	public void writeToNet(NBTTagCompound tag, boolean self)
+	public void writeSyncData(NBTTagCompound tag, boolean self)
 	{
 		IntMap map = new IntMap();
 		
@@ -79,46 +81,6 @@ public class FTBUPlayerDataMP extends FTBUPlayerData
 		}
 		
 		tag.setIntArray("F", map.toArray());
-	}
-	
-	@Override
-	public void onLoggedIn(boolean firstTime)
-	{
-		EntityPlayerMP ep = player.toPlayerMP().getPlayer();
-		
-		if(firstTime)
-		{
-			if(FTBUConfigModules.starting_items.getAsBoolean())
-			{
-				for(ItemStack is : FTBUConfigLogin.starting_items.items)
-				{
-					LMInvUtils.giveItem(ep, is);
-				}
-			}
-		}
-		
-		if(FTBUConfigModules.motd.getAsBoolean())
-		{
-			FTBUConfigLogin.motd.components.forEach(ep::addChatMessage);
-		}
-		
-		Backups.hadPlayer = true;
-		ServerBadges.sendToPlayer(ep);
-		
-		new MessageAreaUpdate(player.toPlayerMP(), player.toPlayerMP().getPos(), 1).sendTo(ep);
-		FTBUChunkEventHandler.instance.markDirty(null);
-	}
-	
-	@Override
-	public void onLoggedOut()
-	{
-		//Backups.shouldRun = true;
-		FTBUChunkEventHandler.instance.markDirty(null);
-	}
-	
-	@Override
-	public void onDeath()
-	{
 	}
 	
 	public int getClaimedChunks()

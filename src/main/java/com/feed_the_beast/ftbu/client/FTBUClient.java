@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbu.client;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
-import com.feed_the_beast.ftbl.api.events.ForgePlayerDataEvent;
 import com.feed_the_beast.ftbl.api.events.ForgeWorldDataEvent;
 import com.feed_the_beast.ftbl.api.gui.LMGuiHandlerRegistry;
 import com.feed_the_beast.ftbu.FTBUCommon;
@@ -11,7 +10,6 @@ import com.feed_the_beast.ftbu.FTBUGuiHandler;
 import com.feed_the_beast.ftbu.badges.BadgeRenderer;
 import com.feed_the_beast.ftbu.cmd.CmdMath;
 import com.feed_the_beast.ftbu.journeymap.IJMPluginHandler;
-import com.feed_the_beast.ftbu.world.FTBUPlayerDataSP;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataSP;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -58,15 +56,5 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 			event.add(FTBUWorldDataSP.get());
 		}
 		else { super.addWorldData(event); }
-	}
-	
-	@Override
-	public void addPlayerData(ForgePlayerDataEvent event)
-	{
-		if(event.player.getSide().isClient())
-		{
-			event.add(new FTBUPlayerDataSP(event.player.toPlayerSP()));
-		}
-		else { super.addPlayerData(event); }
 	}
 }

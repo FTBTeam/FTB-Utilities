@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.handlers;
 
-import com.feed_the_beast.ftbl.api.events.ForgePlayerDataEvent;
 import com.feed_the_beast.ftbl.api.events.ForgeWorldDataEvent;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbu.FTBU;
@@ -20,12 +19,6 @@ public class FTBUWorldEventHandler // FTBLIntegration
 	public void addWorldData(ForgeWorldDataEvent event)
 	{
 		FTBU.proxy.addWorldData(event);
-	}
-	
-	@SubscribeEvent
-	public void addPlayerData(ForgePlayerDataEvent event)
-	{
-		FTBU.proxy.addPlayerData(event);
 	}
 	
 	@SubscribeEvent

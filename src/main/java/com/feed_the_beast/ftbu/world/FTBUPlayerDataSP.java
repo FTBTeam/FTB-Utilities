@@ -3,30 +3,29 @@ package com.feed_the_beast.ftbu.world;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgePlayerSP;
 import com.feed_the_beast.ftbl.util.PrivacyLevel;
-import com.feed_the_beast.ftbu.FTBUFinals;
+import com.feed_the_beast.ftbu.FTBUCapabilities;
 import latmod.lib.IntMap;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by LatvianModder on 23.02.2016.
  */
-@SideOnly(Side.CLIENT)
 public class FTBUPlayerDataSP extends FTBUPlayerData
 {
-	public static FTBUPlayerDataSP get(ForgePlayer p)
-	{ return (FTBUPlayerDataSP) p.getData(FTBUFinals.MOD_ID); }
+	public static FTBUPlayerDataSP get(ForgePlayerSP p)
+	{
+		return p.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null) ? (FTBUPlayerDataSP) p.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null) : null;
+	}
 	
 	public short claimedChunks, loadedChunks, maxClaimedChunks, maxLoadedChunks;
 	
-	public FTBUPlayerDataSP(ForgePlayerSP p)
+	public FTBUPlayerDataSP(ForgePlayer p)
 	{
-		super(FTBUFinals.MOD_ID, p);
+		super(p);
 	}
 	
 	@Override
-	public void readFromNet(NBTTagCompound tag, boolean self)
+	public void readSyncData(NBTTagCompound tag, boolean self)
 	{
 		IntMap map = new IntMap();
 		map.list.setDefVal(0);

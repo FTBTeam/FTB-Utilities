@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbl.util.LMDimUtils;
+import com.feed_the_beast.ftbu.FTBULang;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -19,7 +20,10 @@ public class CmdBack extends CommandLM
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 		ForgePlayerMP p = ForgePlayerMP.get(ep);
-		if(p.lastDeath == null) { throw new CommandException("ftbu.cmd.no_dp"); }
+		if(p.lastDeath == null)
+		{
+			throw FTBULang.warp_no_dp.commandError();
+		}
 		LMDimUtils.teleportPlayer(ep, p.lastDeath);
 		p.lastDeath = null;
 	}

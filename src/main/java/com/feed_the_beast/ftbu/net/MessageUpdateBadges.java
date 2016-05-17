@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.badges.ClientBadges;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -38,8 +37,8 @@ public class MessageUpdateBadges extends MessageToClient<MessageUpdateBadges>
 		{
 			for(int i = 0; i < s; i++)
 			{
-				String id = ByteBufUtils.readUTF8String(io);
-				String url = ByteBufUtils.readUTF8String(io);
+				String id = readString(io);
+				String url = readString(io);
 				badges.add(new Badge(id, url));
 			}
 		}
@@ -54,8 +53,8 @@ public class MessageUpdateBadges extends MessageToClient<MessageUpdateBadges>
 		{
 			for(Badge b : badges)
 			{
-				ByteBufUtils.writeUTF8String(io, b.getID());
-				ByteBufUtils.writeUTF8String(io, b.imageURL);
+				writeString(io, b.getID());
+				writeString(io, b.imageURL);
 			}
 		}
 	}

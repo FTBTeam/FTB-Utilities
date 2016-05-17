@@ -45,7 +45,7 @@ public class CmdSetHome extends CommandLM
 		{
 			if(maxHomes == 0 || d.homes.get(args[0]) == null)
 			{
-				throw new CommandException("ftbu.cmd.home_limit");
+				throw FTBULang.home_limit.commandError();
 			}
 		}
 		

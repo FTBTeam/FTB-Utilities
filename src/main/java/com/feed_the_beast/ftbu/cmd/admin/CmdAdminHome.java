@@ -54,7 +54,7 @@ public class CmdAdminHome extends CommandLM //FIXME: SubCommand
 		BlockDimPos pos = d.homes.get(args[2]);
 		if(pos == null)
 		{
-			throw new CommandException("ftbu.cmd.home_not_set", args[2]);
+			throw FTBULang.home_not_set.commandError(args[2]);
 		}
 		
 		if(args[1].equals("tp"))

@@ -157,7 +157,7 @@ public class Ranks implements IPermissionHandler
 	{
 		List<RankConfig> sortedRankConfigs = new ArrayList<>();
 		sortedRankConfigs.addAll(ForgePermissionRegistry.getRegistredConfig());
-		Collections.sort(sortedRankConfigs);
+		Collections.sort(sortedRankConfigs, LMUtils.ID_COMPARATOR);
 		
 		List<String> sortedPermissions = new ArrayList<>();
 		sortedPermissions.addAll(ForgePermissionRegistry.getRegistredPermissions());

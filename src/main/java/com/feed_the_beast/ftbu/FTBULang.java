@@ -19,10 +19,6 @@ public class FTBULang
 	public static final LangKey button_claims_invalid_dim = get("button.claims_invalid_dim");
 	public static final LangKey label_cchunks_count = get("label.cchunks_count");
 	public static final LangKey label_lchunks_count = get("label.lchunks_count");
-	public static final LangKey label_friend = get("label.friend");
-	public static final LangKey label_pfriend = get("label.pfriend");
-	public static final LangKey label_new_friends = get("label.new_friends");
-	public static final LangKey label_new_friends_click = get("label.new_friends_click");
 	
 	public static final LangKey warp_set = get("warp.set");
 	public static final LangKey warp_del = get("warp.del");

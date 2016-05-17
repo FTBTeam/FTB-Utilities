@@ -8,7 +8,7 @@ import com.feed_the_beast.ftbl.api.item.LMInvUtils;
 import com.feed_the_beast.ftbl.api.permissions.ForgePermissionRegistry;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api.guide.ServerGuideFile;
+import com.feed_the_beast.ftbu.api.guide.ServerInfoFile;
 import com.feed_the_beast.ftbu.badges.ServerBadges;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.ChunkType;
@@ -25,7 +25,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 	{
 		if(e.world.side.isServer())
 		{
-			ServerGuideFile.CachedInfo.reload();
+			ServerInfoFile.CachedInfo.reload();
 			Ranks.instance().reload();
 			ServerBadges.reload();
 			

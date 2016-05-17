@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToServer;
-import com.feed_the_beast.ftbu.api.guide.ServerGuideFile;
+import com.feed_the_beast.ftbu.api.guide.ServerInfoFile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -30,6 +30,6 @@ public class MessageRequestServerInfo extends MessageToServer<MessageRequestServ
 	public void onMessage(MessageRequestServerInfo m, EntityPlayerMP ep)
 	{
 		ForgePlayerMP owner = ForgeWorldMP.inst.getPlayer(ep);
-		new ServerGuideFile(owner).displayGuide(owner.getPlayer());
+		new ServerInfoFile(owner).displayGuide(owner.getPlayer());
 	}
 }

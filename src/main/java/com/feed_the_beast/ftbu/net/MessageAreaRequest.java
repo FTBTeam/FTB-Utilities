@@ -32,8 +32,8 @@ public class MessageAreaRequest extends MessageToServer<MessageAreaRequest>
 	{
 		chunkX = io.readInt();
 		chunkY = io.readInt();
-		sizeX = io.readInt();
-		sizeY = io.readInt();
+		sizeX = io.readUnsignedByte();
+		sizeY = io.readUnsignedByte();
 	}
 	
 	@Override
@@ -41,8 +41,8 @@ public class MessageAreaRequest extends MessageToServer<MessageAreaRequest>
 	{
 		io.writeInt(chunkX);
 		io.writeInt(chunkY);
-		io.writeInt(sizeX);
-		io.writeInt(sizeY);
+		io.writeByte(sizeX);
+		io.writeByte(sizeY);
 	}
 	
 	@Override

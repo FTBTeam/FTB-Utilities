@@ -10,8 +10,9 @@ import com.feed_the_beast.ftbl.api.notification.ClickAction;
 import com.feed_the_beast.ftbl.api.notification.ClickActionType;
 import com.feed_the_beast.ftbl.api.permissions.ForgePermissionRegistry;
 import com.feed_the_beast.ftbl.util.FTBLib;
+import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api.EventFTBUServerGuide;
+import com.feed_the_beast.ftbu.api.EventFTBUServerInfo;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigModules;
 import com.feed_the_beast.ftbu.world.Backups;
@@ -33,11 +34,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class ServerGuideFile extends InfoPage
+public class ServerInfoFile extends InfoPage
 {
 	public static class CachedInfo
 	{
-		public static final InfoPage main = new InfoPage("ServerInfo").setTitle(new TextComponentTranslation("player_action.ftbu.server_info"));
+		public static final InfoPage main = new InfoPage("ServerInfo").setTitle(new TextComponentTranslation("player_action.ftbu:server_info"));
 		
 		public static void reload()
 		{
@@ -65,7 +66,10 @@ public class ServerGuideFile extends InfoPage
 				try
 				{
 					String text = LMFileUtils.loadAsText(file);
-					if(text != null && !text.isEmpty()) { main.printlnText(text.replace("\r", "")); }
+					if(text != null && !text.isEmpty())
+					{
+						main.printlnText(text.replace("\r", ""));
+					}
 				}
 				catch(Exception ex)
 				{
@@ -81,7 +85,7 @@ public class ServerGuideFile extends InfoPage
 	private ForgePlayerMP self;
 	private InfoPage categoryTops = null;
 	
-	public ServerGuideFile(ForgePlayerMP pself)
+	public ServerInfoFile(ForgePlayerMP pself)
 	{
 		super(CachedInfo.main.getID());
 		setTitle(CachedInfo.main.getTitleComponent());
@@ -97,13 +101,13 @@ public class ServerGuideFile extends InfoPage
 		players = ForgeWorldMP.inst.getServerPlayers();
 		
 		for(ForgePlayerMP p : players)
-			p.refreshStats();
+		{ p.refreshStats(); }
 		
 		if(FTBUConfigModules.auto_restart.getAsBoolean())
-		{ println(new TextComponentTranslation("cmd.timer_restart", LMStringUtils.getTimeString(FTBUWorldDataMP.get().restartMillis - System.currentTimeMillis()))); }
+		{ println(FTBULang.timer_restart.textComponent(LMStringUtils.getTimeString(FTBUWorldDataMP.get().restartMillis - System.currentTimeMillis()))); }
 		
 		if(FTBUConfigModules.backups.getAsBoolean())
-		{ println(new TextComponentTranslation("cmd.timer_backup", LMStringUtils.getTimeString(Backups.nextBackup - System.currentTimeMillis()))); }
+		{ println(FTBULang.timer_backup.textComponent(LMStringUtils.getTimeString(Backups.nextBackup - System.currentTimeMillis()))); }
 		
 		if(FTBUConfigGeneral.server_info_difficulty.getAsBoolean())
 		{ println(FTBLibLang.difficulty.textComponent(LMStringUtils.firstUppercase(pself.getPlayer().worldObj.getDifficulty().toString().toLowerCase()))); }
@@ -142,9 +146,9 @@ public class ServerGuideFile extends InfoPage
 			}
 		}
 		
-		MinecraftForge.EVENT_BUS.post(new EventFTBUServerGuide(this, self, isOP));
+		MinecraftForge.EVENT_BUS.post(new EventFTBUServerInfo(this, self, isOP));
 		
-		InfoPage page = getSub("commands").setTitle(FTBLibLang.commands.textComponent()); //TODO: Lang
+		InfoPage page = getSub("commands").setTitle(FTBLibLang.commands.textComponent());
 		page.clear();
 		
 		try

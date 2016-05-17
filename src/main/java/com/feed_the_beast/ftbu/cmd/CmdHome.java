@@ -58,10 +58,15 @@ public class CmdHome extends CommandLM
 		
 		BlockDimPos pos = d.homes.get(args[0]);
 		
-		if(pos == null) { throw new CommandException("ftbu.cmd.home_not_set", args[0]); }
+		if(pos == null)
+		{
+			throw FTBULang.home_not_set.commandError(args[0]);
+		}
 		
 		if(ep.dimension != pos.dim.getId() && !ForgePermissionRegistry.hasPermission(FTBUPermissions.homes_cross_dim, ep.getGameProfile()))
-		{ throw new CommandException("ftbu.cmd.home_cross_dim"); }
+		{
+			throw FTBULang.home_cross_dim.commandError();
+		}
 		
 		LMDimUtils.teleportPlayer(ep, pos);
 		FTBULang.warp_tp.printChat(ics, args[0]);

@@ -17,7 +17,7 @@ public class FTBUWorldDataSP extends FTBUWorldData
 {
     public static boolean isLoaded()
     {
-        return ForgeWorldSP.inst.hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null);
+        return ForgeWorldSP.inst != null && ForgeWorldSP.inst.hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null);
     }
     
     public static FTBUWorldDataSP get()

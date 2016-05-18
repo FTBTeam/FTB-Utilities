@@ -49,7 +49,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements IWorldTick, INBTSe
 {
     public static boolean isLoaded()
     {
-        return ForgeWorldMP.inst.hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null);
+        return ForgeWorldMP.inst != null && ForgeWorldMP.inst.hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null);
     }
     
     public static FTBUWorldDataMP get()

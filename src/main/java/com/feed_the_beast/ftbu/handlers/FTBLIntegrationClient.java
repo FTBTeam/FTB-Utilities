@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.handlers;
 
-import com.feed_the_beast.ftbl.FTBLibCapabilities;
+import com.feed_the_beast.ftbl.api.FTBLibCapabilities;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbu.badges.ClientBadges;

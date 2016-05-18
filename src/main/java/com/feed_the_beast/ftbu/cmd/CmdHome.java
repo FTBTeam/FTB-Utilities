@@ -23,52 +23,52 @@ import java.util.List;
 
 public class CmdHome extends CommandLM
 {
-	public CmdHome()
-	{ super("home", CommandLevel.ALL); }
-	
-	@Override
-	public String getCommandUsage(ICommandSender ics)
-	{ return '/' + commandName + " <ID>"; }
-	
-	@Override
-	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
-	{
-		if(args.length == 1)
-		{
-			return getListOfStringsMatchingLastWord(args, FTBUPlayerDataMP.get(ForgeWorldMP.inst.getPlayer(ics)).homes.list());
-		}
-		
-		return super.getTabCompletionOptions(server, ics, args, pos);
-	}
-	
-	@Override
-	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
-	{
-		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-		FTBUPlayerDataMP d = FTBUPlayerDataMP.get(ForgePlayerMP.get(ep));
-		checkArgs(args, 1);
-		
-		if(args[0].equals("list"))
-		{
-			Collection<String> list = d.homes.list();
-			ics.addChatMessage(new TextComponentString(list.size() + " / " + FTBUPermissions.homes_max.get(ep.getGameProfile()).getAsShort() + ": "));
-			if(!list.isEmpty()) { ics.addChatMessage(new TextComponentString(LMStringUtils.strip(list))); }
-			return;
-		}
-		
-		BlockDimPos pos = d.homes.get(args[0]);
-		
-		if(pos == null)
-		{
-			throw FTBULang.home_not_set.commandError(args[0]);
-		}
-		
-		if(ep.dimension != pos.dim.getId() && !ForgePermissionRegistry.hasPermission(FTBUPermissions.homes_cross_dim, ep.getGameProfile()))
-		{
-			throw FTBULang.home_cross_dim.commandError();
-		}
-		
-		LMDimUtils.teleportPlayer(ep, pos);
-		FTBULang.warp_tp.printChat(ics, args[0]);
-	}
+    public CmdHome()
+    { super("home", CommandLevel.ALL); }
+    
+    @Override
+    public String getCommandUsage(ICommandSender ics)
+    { return '/' + commandName + " <ID>"; }
+    
+    @Override
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
+    {
+        if(args.length == 1)
+        {
+            return getListOfStringsMatchingLastWord(args, FTBUPlayerDataMP.get(ForgeWorldMP.inst.getPlayer(ics)).homes.list());
+        }
+        
+        return super.getTabCompletionOptions(server, ics, args, pos);
+    }
+    
+    @Override
+    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    {
+        EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
+        FTBUPlayerDataMP d = FTBUPlayerDataMP.get(ForgePlayerMP.get(ep));
+        checkArgs(args, 1);
+        
+        if(args[0].equals("list"))
+        {
+            Collection<String> list = d.homes.list();
+            ics.addChatMessage(new TextComponentString(list.size() + " / " + FTBUPermissions.homes_max.get(ep.getGameProfile()).getAsShort() + ": "));
+            if(!list.isEmpty()) { ics.addChatMessage(new TextComponentString(LMStringUtils.strip(list))); }
+            return;
+        }
+        
+        BlockDimPos pos = d.homes.get(args[0]);
+        
+        if(pos == null)
+        {
+            throw FTBULang.home_not_set.commandError(args[0]);
+        }
+        
+        if(ep.dimension != pos.dim.getId() && !ForgePermissionRegistry.hasPermission(FTBUPermissions.homes_cross_dim, ep.getGameProfile()))
+        {
+            throw FTBULang.home_cross_dim.commandError();
+        }
+        
+        LMDimUtils.teleportPlayer(ep, pos);
+        FTBULang.warp_tp.printChat(ics, args[0]);
+    }
 }

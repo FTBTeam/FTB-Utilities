@@ -16,21 +16,21 @@ import net.minecraft.util.text.TextComponentString;
  */
 public class CmdGetRank extends CommandLM
 {
-	public CmdGetRank()
-	{ super("getrank", CommandLevel.OP); }
-	
-	@Override
-	public boolean isUsernameIndex(String[] args, int i)
-	{ return i == 0; }
-	
-	@Override
-	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
-	{
-		checkArgs(args, 1);
-		ForgePlayerMP p = ForgePlayerMP.get(args[0]);
-		Rank r = Ranks.instance().getRankOf(p.getProfile());
-		ITextComponent c = new TextComponentString(r.getID());
-		c.getStyle().setColor(r.color);
-		ics.addChatMessage(c);
-	}
+    public CmdGetRank()
+    { super("getrank", CommandLevel.OP); }
+    
+    @Override
+    public boolean isUsernameIndex(String[] args, int i)
+    { return i == 0; }
+    
+    @Override
+    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    {
+        checkArgs(args, 1);
+        ForgePlayerMP p = ForgePlayerMP.get(args[0]);
+        Rank r = Ranks.instance().getRankOf(p.getProfile());
+        ITextComponent c = new TextComponentString(r.getID());
+        c.getStyle().setColor(r.color);
+        ics.addChatMessage(c);
+    }
 }

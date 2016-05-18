@@ -5,5 +5,5 @@ package com.feed_the_beast.ftbu.journeymap;
  */
 public interface IJMPluginHandler
 {
-	void refresh(int dim);
+    void refresh(int dim);
 }

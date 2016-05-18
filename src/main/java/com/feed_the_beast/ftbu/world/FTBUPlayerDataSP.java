@@ -12,34 +12,29 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class FTBUPlayerDataSP extends FTBUPlayerData
 {
-	public static FTBUPlayerDataSP get(ForgePlayerSP p)
-	{
-		return p.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null) ? (FTBUPlayerDataSP) p.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null) : null;
-	}
-	
-	public short claimedChunks, loadedChunks, maxClaimedChunks, maxLoadedChunks;
-	
-	public FTBUPlayerDataSP(ForgePlayer p)
-	{
-		super(p);
-	}
-	
-	@Override
-	public void readSyncData(NBTTagCompound tag, boolean self)
-	{
-		IntMap map = new IntMap();
-		map.list.setDefVal(0);
-		map.list.addAll(tag.getIntArray("F"));
-		
-		flags = (byte) map.get(0);
-		blocks = PrivacyLevel.VALUES_3[map.get(1)];
-		
-		if(self)
-		{
-			claimedChunks = (short) map.get(10);
-			loadedChunks = (short) map.get(11);
-			maxClaimedChunks = (short) map.get(12);
-			maxLoadedChunks = (short) map.get(13);
-		}
-	}
+    public static FTBUPlayerDataSP get(ForgePlayerSP p)
+    {
+        return p.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null) ? (FTBUPlayerDataSP) p.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null) : null;
+    }
+    
+    public short claimedChunks, loadedChunks, maxClaimedChunks, maxLoadedChunks;
+    
+    @Override
+    public void readSyncData(ForgePlayer player, NBTTagCompound tag, boolean self)
+    {
+        IntMap map = new IntMap();
+        map.list.setDefVal(0);
+        map.list.addAll(tag.getIntArray("F"));
+        
+        flags = (byte) map.get(0);
+        blocks = PrivacyLevel.VALUES_3[map.get(1)];
+        
+        if(self)
+        {
+            claimedChunks = (short) map.get(10);
+            loadedChunks = (short) map.get(11);
+            maxClaimedChunks = (short) map.get(12);
+            maxLoadedChunks = (short) map.get(13);
+        }
+    }
 }

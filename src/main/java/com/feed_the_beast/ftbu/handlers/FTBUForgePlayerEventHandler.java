@@ -20,76 +20,69 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class FTBUForgePlayerEventHandler
 {
-	@SubscribeEvent
-	public void addPlayerData(ForgePlayerEvent.AttachCapabilities event)
-	{
-		if(event.player.getSide().isServer())
-		{
-			event.addCapability(new ResourceLocation(FTBUFinals.MOD_ID, "data"), new FTBUPlayerDataMP(event.player));
-		}
-		else
-		{
-			event.addCapability(new ResourceLocation(FTBUFinals.MOD_ID, "data"), new FTBUPlayerDataSP(event.player));
-		}
-	}
-	
-	@SubscribeEvent
-	public void onDataSynced(ForgePlayerEvent.Sync event)
-	{
-		if(event.player.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
-		{
-			FTBUPlayerData data = event.player.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
-			
-			if(event.player.getSide().isServer())
-			{
-				NBTTagCompound tag = new NBTTagCompound();
-				data.writeSyncData(tag, event.self);
-				event.data.setTag("FTBU", tag);
-			}
-			else
-			{
-				data.readSyncData(event.data.getCompoundTag("FTBU"), event.self);
-			}
-		}
-	}
-	
-	@SubscribeEvent
-	public void onLoggedIn(ForgePlayerEvent.LoggedIn event)
-	{
-		if(event.player.getSide().isServer() && event.player.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
-		{
-			EntityPlayerMP ep = event.player.toPlayerMP().getPlayer();
-			
-			if(event.first)
-			{
-				if(FTBUConfigModules.starting_items.getAsBoolean())
-				{
-					for(ItemStack is : FTBUConfigLogin.starting_items.items)
-					{
-						LMInvUtils.giveItem(ep, is);
-					}
-				}
-			}
-			
-			if(FTBUConfigModules.motd.getAsBoolean())
-			{
-				FTBUConfigLogin.motd.components.forEach(ep::addChatMessage);
-			}
-			
-			Backups.hadPlayer = true;
-			ServerBadges.sendToPlayer(ep);
-			
-			new MessageAreaUpdate(event.player.toPlayerMP(), event.player.toPlayerMP().getPos(), 1).sendTo(ep);
-			FTBUChunkEventHandler.instance.markDirty(null);
-		}
-	}
-	
-	@SubscribeEvent
-	public void onLoggedOut(ForgePlayerEvent.LoggedOut event)
-	{
-		if(event.player.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
-		{
-			FTBUChunkEventHandler.instance.markDirty(null);
-		}
-	}
+    @SubscribeEvent
+    public void addPlayerData(ForgePlayerEvent.AttachCapabilities event)
+    {
+        event.addCapability(new ResourceLocation(FTBUFinals.MOD_ID, "data"), event.player.getSide().isServer() ? new FTBUPlayerDataMP() : new FTBUPlayerDataSP());
+    }
+    
+    @SubscribeEvent
+    public void onDataSynced(ForgePlayerEvent.Sync event)
+    {
+        if(event.player.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
+        {
+            FTBUPlayerData data = event.player.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
+            
+            if(event.player.getSide().isServer())
+            {
+                NBTTagCompound tag = new NBTTagCompound();
+                data.writeSyncData(event.player, tag, event.self);
+                event.data.setTag("FTBU", tag);
+            }
+            else
+            {
+                data.readSyncData(event.player, event.data.getCompoundTag("FTBU"), event.self);
+            }
+        }
+    }
+    
+    @SubscribeEvent
+    public void onLoggedIn(ForgePlayerEvent.LoggedIn event)
+    {
+        if(event.player.getSide().isServer() && event.player.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
+        {
+            EntityPlayerMP ep = event.player.toPlayerMP().getPlayer();
+            
+            if(event.first)
+            {
+                if(FTBUConfigModules.starting_items.getAsBoolean())
+                {
+                    for(ItemStack is : FTBUConfigLogin.starting_items.items)
+                    {
+                        LMInvUtils.giveItem(ep, is);
+                    }
+                }
+            }
+            
+            if(FTBUConfigModules.motd.getAsBoolean())
+            {
+                FTBUConfigLogin.motd.components.forEach(ep::addChatMessage);
+            }
+            
+            Backups.hadPlayer = true;
+            ServerBadges.sendToPlayer(ep);
+            
+            new MessageAreaUpdate(event.player.toPlayerMP(), event.player.toPlayerMP().getPos(), 1).sendTo(ep);
+            FTBUChunkEventHandler.instance.markDirty(null);
+        }
+    }
+    
+    @SubscribeEvent
+    public void onLoggedOut(ForgePlayerEvent.LoggedOut event)
+    {
+        if(event.player.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
+        {
+            FTBUChunkEventHandler.instance.markDirty(null);
+        }
+    }
 }

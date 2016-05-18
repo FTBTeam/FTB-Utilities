@@ -15,19 +15,19 @@ import net.minecraft.world.World;
 
 public class CmdSpawn extends CommandLM
 {
-	public CmdSpawn()
-	{ super("spawn", CommandLevel.ALL); }
-	
-	@Override
-	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
-	{
-		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-		World w = LMDimUtils.getWorld(DimensionType.OVERWORLD);
-		BlockPos spawnpoint = w.getSpawnPoint();
-		
-		while(w.getBlockState(spawnpoint).isFullCube()) spawnpoint = spawnpoint.up(2);
-		
-		LMDimUtils.teleportPlayer(ep, new BlockDimPos(spawnpoint, DimensionType.OVERWORLD));
-		FTBULang.warp_spawn.printChat(ics);
-	}
+    public CmdSpawn()
+    { super("spawn", CommandLevel.ALL); }
+    
+    @Override
+    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    {
+        EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
+        World w = LMDimUtils.getWorld(DimensionType.OVERWORLD);
+        BlockPos spawnpoint = w.getSpawnPoint();
+        
+        while(w.getBlockState(spawnpoint).isFullCube()) spawnpoint = spawnpoint.up(2);
+        
+        LMDimUtils.teleportPlayer(ep, new BlockDimPos(spawnpoint, DimensionType.OVERWORLD));
+        FTBULang.warp_spawn.printChat(ics);
+    }
 }

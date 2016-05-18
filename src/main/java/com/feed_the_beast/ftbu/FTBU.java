@@ -44,83 +44,83 @@ import java.util.Map;
 @Mod(modid = FTBUFinals.MOD_ID, version = FTBUFinals.MOD_VERSION, name = FTBUFinals.MOD_NAME, dependencies = FTBUFinals.MOD_DEP, acceptedMinecraftVersions = "[1.9,1.10)")
 public class FTBU
 {
-	@Mod.Instance(FTBUFinals.MOD_ID)
-	public static FTBU inst;
-	
-	@SidedProxy(serverSide = "com.feed_the_beast.ftbu.FTBUCommon", clientSide = "com.feed_the_beast.ftbu.client.FTBUClient")
-	public static FTBUCommon proxy;
-	
-	@SidedProxy(serverSide = "com.feed_the_beast.ftbu.handlers.FTBLIntegration", clientSide = "com.feed_the_beast.ftbu.handlers.FTBLIntegrationClient")
-	public static FTBLIntegration ftbl_int;
-	
-	public static final Logger logger = LogManager.getLogger("FTBUtilities");
-	public static LMMod mod;
-	
-	@Mod.EventHandler
-	public void preInit(FMLPreInitializationEvent e)
-	{
-		mod = LMMod.create(FTBUFinals.MOD_ID);
-		FTBLib.ftbu = ftbl_int;
-		FTBUConfig.load();
-		
-		EventBusHelper.register(new FTBUPlayerEventHandler());
-		EventBusHelper.register(new FTBUWorldEventHandler());
-		EventBusHelper.register(new FTBUChatEventHandler());
-		EventBusHelper.register(new FTBUForgePlayerEventHandler());
-		FTBUChunkEventHandler.instance.init();
-		FTBUPermissions.init();
-		FTBUCapabilities.enable();
-		
-		FTBUNetHandler.init();
-		Backups.init();
-		mod.onPostLoaded();
-		proxy.preInit();
-	}
-	
-	@Mod.EventHandler
-	public void postInit(FMLPostInitializationEvent e)
-	{
-		mod.loadRecipes();
-		proxy.postInit();
-		ForgeChunkManager.setForcedChunkLoadingCallback(inst, FTBUChunkEventHandler.instance);
-	}
-	
-	@Mod.EventHandler
-	public void serverStarting(FMLServerStartingEvent e)
-	{
-		FTBLib.addCommand(e, new CmdAdmin());
-		FTBLib.addCommand(e, new CmdTplast());
-		FTBLib.addCommand(e, new CmdLMPlayerSettings());
-		
-		if(FTBUConfigCmd.trash_can.getAsBoolean()) { FTBLib.addCommand(e, new CmdTrashCan()); }
-		if(FTBUConfigCmd.back.getAsBoolean()) { FTBLib.addCommand(e, new CmdBack()); }
-		if(FTBUConfigCmd.spawn.getAsBoolean()) { FTBLib.addCommand(e, new CmdSpawn()); }
-		if(FTBUConfigCmd.warp.getAsBoolean()) { FTBLib.addCommand(e, new CmdWarp()); }
-		
-		if(FTBUConfigCmd.home.getAsBoolean())
-		{
-			FTBLib.addCommand(e, new CmdHome());
-			FTBLib.addCommand(e, new CmdSetHome());
-			FTBLib.addCommand(e, new CmdDelHome());
-		}
-		
-		if(FTBUConfigGeneral.ranks_enabled.getAsBoolean())
-		{
-			FTBLib.addCommand(e, new CmdGetRank());
-			FTBLib.addCommand(e, new CmdSetRank());
-		}
-	}
-	
-	@Mod.EventHandler
-	public void serverStarted(FMLServerStartedEvent e)
-	{
-		Ranks.instance().generateExampleFiles();
-	}
-	
-	@NetworkCheckHandler
-	public boolean checkNetwork(Map<String, String> m, Side side)
-	{
-		String s = m.get(FTBUFinals.MOD_ID);
-		return s == null || s.equals(FTBUFinals.MOD_VERSION);
-	}
+    @Mod.Instance(FTBUFinals.MOD_ID)
+    public static FTBU inst;
+    
+    @SidedProxy(serverSide = "com.feed_the_beast.ftbu.FTBUCommon", clientSide = "com.feed_the_beast.ftbu.client.FTBUClient")
+    public static FTBUCommon proxy;
+    
+    @SidedProxy(serverSide = "com.feed_the_beast.ftbu.handlers.FTBLIntegration", clientSide = "com.feed_the_beast.ftbu.handlers.FTBLIntegrationClient")
+    public static FTBLIntegration ftbl_int;
+    
+    public static final Logger logger = LogManager.getLogger("FTBUtilities");
+    public static LMMod mod;
+    
+    @Mod.EventHandler
+    public void preInit(FMLPreInitializationEvent e)
+    {
+        mod = LMMod.create(FTBUFinals.MOD_ID);
+        FTBLib.ftbu = ftbl_int;
+        FTBUConfig.load();
+        
+        EventBusHelper.register(new FTBUPlayerEventHandler());
+        EventBusHelper.register(new FTBUWorldEventHandler());
+        EventBusHelper.register(new FTBUChatEventHandler());
+        EventBusHelper.register(new FTBUForgePlayerEventHandler());
+        FTBUChunkEventHandler.instance.init();
+        FTBUPermissions.init();
+        FTBUCapabilities.enable();
+        
+        FTBUNetHandler.init();
+        Backups.init();
+        mod.onPostLoaded();
+        proxy.preInit();
+    }
+    
+    @Mod.EventHandler
+    public void postInit(FMLPostInitializationEvent e)
+    {
+        mod.loadRecipes();
+        proxy.postInit();
+        ForgeChunkManager.setForcedChunkLoadingCallback(inst, FTBUChunkEventHandler.instance);
+    }
+    
+    @Mod.EventHandler
+    public void serverStarting(FMLServerStartingEvent e)
+    {
+        FTBLib.addCommand(e, new CmdAdmin());
+        FTBLib.addCommand(e, new CmdTplast());
+        FTBLib.addCommand(e, new CmdLMPlayerSettings());
+        
+        if(FTBUConfigCmd.trash_can.getAsBoolean()) { FTBLib.addCommand(e, new CmdTrashCan()); }
+        if(FTBUConfigCmd.back.getAsBoolean()) { FTBLib.addCommand(e, new CmdBack()); }
+        if(FTBUConfigCmd.spawn.getAsBoolean()) { FTBLib.addCommand(e, new CmdSpawn()); }
+        if(FTBUConfigCmd.warp.getAsBoolean()) { FTBLib.addCommand(e, new CmdWarp()); }
+        
+        if(FTBUConfigCmd.home.getAsBoolean())
+        {
+            FTBLib.addCommand(e, new CmdHome());
+            FTBLib.addCommand(e, new CmdSetHome());
+            FTBLib.addCommand(e, new CmdDelHome());
+        }
+        
+        if(FTBUConfigGeneral.ranks_enabled.getAsBoolean())
+        {
+            FTBLib.addCommand(e, new CmdGetRank());
+            FTBLib.addCommand(e, new CmdSetRank());
+        }
+    }
+    
+    @Mod.EventHandler
+    public void serverStarted(FMLServerStartedEvent e)
+    {
+        Ranks.instance().generateExampleFiles();
+    }
+    
+    @NetworkCheckHandler
+    public boolean checkNetwork(Map<String, String> m, Side side)
+    {
+        String s = m.get(FTBUFinals.MOD_ID);
+        return s == null || s.equals(FTBUFinals.MOD_VERSION);
+    }
 }

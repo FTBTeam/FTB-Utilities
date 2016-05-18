@@ -14,44 +14,42 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
  */
 public abstract class FTBUPlayerData implements ICapabilityProvider
 {
-	public static final byte RENDER_BADGE = 1;
-	public static final byte CHAT_LINKS = 2;
-	public static final byte EXPLOSIONS = 3;
-	public static final byte FAKE_PLAYERS = 4;
-	
-	public final ForgePlayer player;
-	protected byte flags = 0;
-	public PrivacyLevel blocks;
-	
-	public FTBUPlayerData(ForgePlayer p)
-	{
-		player = p;
-		blocks = PrivacyLevel.FRIENDS;
-	}
-	
-	public boolean getFlag(byte f)
-	{ return Bits.getBit(flags, f); }
-	
-	public void setFlag(byte f, boolean b)
-	{ flags = Bits.setBit(flags, f, b); }
-	
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
-	{
-		return capability == FTBUCapabilities.FTBU_PLAYER_DATA;
-	}
-	
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
-	{
-		return (T) this;
-	}
-	
-	public void writeSyncData(NBTTagCompound tag, boolean self)
-	{
-	}
-	
-	public void readSyncData(NBTTagCompound tag, boolean self)
-	{
-	}
+    public static final byte RENDER_BADGE = 1;
+    public static final byte CHAT_LINKS = 2;
+    public static final byte EXPLOSIONS = 3;
+    public static final byte FAKE_PLAYERS = 4;
+    
+    protected byte flags = 0;
+    public PrivacyLevel blocks;
+    
+    public FTBUPlayerData()
+    {
+        blocks = PrivacyLevel.FRIENDS;
+    }
+    
+    public boolean getFlag(byte f)
+    { return Bits.getBit(flags, f); }
+    
+    public void setFlag(byte f, boolean b)
+    { flags = Bits.setBit(flags, f, b); }
+    
+    @Override
+    public final boolean hasCapability(Capability<?> capability, EnumFacing facing)
+    {
+        return capability == FTBUCapabilities.FTBU_PLAYER_DATA;
+    }
+    
+    @Override
+    public final <T> T getCapability(Capability<T> capability, EnumFacing facing)
+    {
+        return (T) this;
+    }
+    
+    public void writeSyncData(ForgePlayer player, NBTTagCompound tag, boolean self)
+    {
+    }
+    
+    public void readSyncData(ForgePlayer player, NBTTagCompound tag, boolean self)
+    {
+    }
 }

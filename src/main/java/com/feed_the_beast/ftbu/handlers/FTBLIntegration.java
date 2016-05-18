@@ -20,52 +20,52 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 {
-	@Override
-	public void onReloaded(ReloadEvent e)
-	{
-		if(e.world.side.isServer())
-		{
-			ServerInfoFile.CachedInfo.reload();
-			Ranks.instance().reload();
-			ServerBadges.reload();
-			
-			if(FTBLib.getServerWorld() != null) { FTBUChunkEventHandler.instance.markDirty(null); }
-		}
-	}
-	
-	@Override
-	public void renderWorld(float pt)
-	{
-	}
-	
-	@Override
-	public void onTooltip(ItemTooltipEvent e)
-	{
-	}
-	
-	@Override
-	public boolean canPlayerInteract(ForgePlayerMP player, BlockPos pos, boolean leftClick)
-	{
-		if(player == null) { return true; }
-		else if(!player.isFake() && ForgePermissionRegistry.hasPermission(FTBLibPermissions.interact_secure, player.getProfile()))
-		{
-			return true;
-		}
-		
-		//TODO: World border
-		
-		if(leftClick)
-		{
-			for(JsonElement e : FTBUPermissions.claims_break_whitelist.get(player.getProfile()).getAsJsonArray())
-			{
-				if(e.getAsString().equals(LMInvUtils.getRegName(player.getPlayer().worldObj.getBlockState(pos).getBlock()).toString()))
-				{
-					return true;
-				}
-			}
-		}
-		
-		ChunkType type = FTBUWorldDataMP.get().getTypeD(player, DimensionType.getById(player.getPlayer().dimension), pos);
-		return type.canInteract(player, leftClick);
-	}
+    @Override
+    public void onReloaded(ReloadEvent e)
+    {
+        if(e.world.getSide().isServer())
+        {
+            ServerInfoFile.CachedInfo.reload();
+            Ranks.instance().reload();
+            ServerBadges.reload();
+            
+            if(FTBLib.getServerWorld() != null) { FTBUChunkEventHandler.instance.markDirty(null); }
+        }
+    }
+    
+    @Override
+    public void renderWorld(float pt)
+    {
+    }
+    
+    @Override
+    public void onTooltip(ItemTooltipEvent e)
+    {
+    }
+    
+    @Override
+    public boolean canPlayerInteract(ForgePlayerMP player, BlockPos pos, boolean leftClick)
+    {
+        if(player == null) { return true; }
+        else if(!player.isFake() && ForgePermissionRegistry.hasPermission(FTBLibPermissions.interact_secure, player.getProfile()))
+        {
+            return true;
+        }
+        
+        //TODO: World border
+        
+        if(leftClick)
+        {
+            for(JsonElement e : FTBUPermissions.claims_break_whitelist.get(player.getProfile()).getAsJsonArray())
+            {
+                if(e.getAsString().equals(LMInvUtils.getRegName(player.getPlayer().worldObj.getBlockState(pos).getBlock()).toString()))
+                {
+                    return true;
+                }
+            }
+        }
+        
+        ChunkType type = FTBUWorldDataMP.get().getTypeD(player, DimensionType.getById(player.getPlayer().dimension), pos);
+        return type.canInteract(player, leftClick);
+    }
 }

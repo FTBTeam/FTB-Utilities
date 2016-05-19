@@ -19,25 +19,36 @@ import java.util.ArrayList;
 public class FTBUChatEventHandler
 {
     private static final String[] LINK_PREFIXES = {"http://", "https://"};
-    
+
+    private static int getFirstLinkIndex(String s)
+    {
+        for(String s1 : LINK_PREFIXES)
+        {
+            int idx = s.indexOf(s1);
+            if(idx != -1) { return idx; }
+        }
+
+        return -1;
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatEvent(net.minecraftforge.event.ServerChatEvent e)
     {
         String[] msg = FTBLib.removeFormatting(e.getMessage()).split(" "); // https://github.com/LatvianModder
-        
+
         ArrayList<String> links = new ArrayList<>();
-        
+
         for(String s : msg)
         {
             int index = getFirstLinkIndex(s);
             if(index != -1) { links.add(s.substring(index).trim()); }
         }
-        
+
         if(!links.isEmpty())
         {
             final ITextComponent line = new TextComponentString("");
             boolean oneLink = links.size() == 1;
-            
+
             for(int i = 0; i < links.size(); i++)
             {
                 String link = links.get(i);
@@ -47,9 +58,9 @@ public class FTBUChatEventHandler
                 line.appendSibling(c);
                 if(!oneLink) { line.appendSibling(new TextComponentString(" ")); }
             }
-            
+
             line.getStyle().setColor(TextFormatting.GOLD);
-            
+
             FTBLib.addCallback(new ServerTickCallback()
             {
                 @Override
@@ -65,16 +76,5 @@ public class FTBUChatEventHandler
                 }
             });
         }
-    }
-    
-    private static int getFirstLinkIndex(String s)
-    {
-        for(String s1 : LINK_PREFIXES)
-        {
-            int idx = s.indexOf(s1);
-            if(idx != -1) { return idx; }
-        }
-        
-        return -1;
     }
 }

@@ -39,13 +39,13 @@ public class ServerInfoFile extends InfoPage
     public static class CachedInfo
     {
         public static final InfoPage main = new InfoPage("ServerInfo").setTitle(new TextComponentTranslation("player_action.ftbu:server_info"));
-        
+
         public static void reload()
         {
             main.clear();
-            
+
             //categoryServer.println(new ChatComponentTranslation("ftbl:worldID", FTBWorld.server.getWorldID()));
-            
+
             File file = new File(FTBLib.folderLocal, "guide/");
             if(file.exists() && file.isDirectory())
             {
@@ -59,7 +59,7 @@ public class ServerInfoFile extends InfoPage
                     }
                 }
             }
-            
+
             file = new File(FTBLib.folderLocal, "guide_cover.txt");
             if(file.exists() && file.isFile())
             {
@@ -76,57 +76,57 @@ public class ServerInfoFile extends InfoPage
                     ex.printStackTrace();
                 }
             }
-            
+
             main.cleanup();
         }
     }
-    
+
     private List<ForgePlayerMP> players = null;
     private ForgePlayerMP self;
     private InfoPage categoryTops = null;
-    
+
     public ServerInfoFile(ForgePlayerMP pself)
     {
         super(CachedInfo.main.getID());
         setTitle(CachedInfo.main.getTitleComponent());
-        
+
         if((self = pself) == null) { return; }
         boolean isDedi = FTBLib.getServer().isDedicatedServer();
         boolean isOP = !isDedi || ForgePermissionRegistry.hasPermission(FTBUPermissions.display_admin_info, self.getProfile());
-        
+
         copyFrom(CachedInfo.main);
-        
+
         categoryTops = getSub("Tops").setTitle(Top.langTopTitle.textComponent());
-        
+
         players = ForgeWorldMP.inst.getServerPlayers();
-        
+
         for(ForgePlayerMP p : players)
         { p.refreshStats(); }
-        
+
         if(FTBUConfigModules.auto_restart.getAsBoolean())
         { println(FTBULang.timer_restart.textComponent(LMStringUtils.getTimeString(FTBUWorldDataMP.get().restartMillis - System.currentTimeMillis()))); }
-        
+
         if(FTBUConfigModules.backups.getAsBoolean())
         { println(FTBULang.timer_backup.textComponent(LMStringUtils.getTimeString(Backups.nextBackup - System.currentTimeMillis()))); }
-        
+
         if(FTBUConfigGeneral.server_info_difficulty.getAsBoolean())
         { println(FTBLibLang.difficulty.textComponent(LMStringUtils.firstUppercase(pself.getPlayer().worldObj.getDifficulty().toString().toLowerCase()))); }
-        
+
         if(FTBUConfigGeneral.server_info_mode.getAsBoolean())
         { println(FTBLibLang.mode_current.textComponent(LMStringUtils.firstUppercase(ForgeWorldMP.inst.getMode().toString().toLowerCase()))); }
-        
+
         for(Top t : Top.registry.values())
         {
             InfoPage thisTop = categoryTops.getSub(t.getID()).setTitle(t.langKey.textComponent());
-            
+
             Collections.sort(players, t);
-            
+
             int size = Math.min(players.size(), 250);
-            
+
             for(int j = 0; j < size; j++)
             {
                 ForgePlayerMP p = players.get(j);
-                
+
                 Object data = t.getData(p);
                 StringBuilder sb = new StringBuilder();
                 sb.append('[');
@@ -137,7 +137,7 @@ public class ServerInfoFile extends InfoPage
                 sb.append(':');
                 sb.append(' ');
                 if(!(data instanceof ITextComponent)) { sb.append(data); }
-                
+
                 ITextComponent c = new TextComponentString(sb.toString());
                 if(p == self) { c.getStyle().setColor(TextFormatting.DARK_GREEN); }
                 else if(j < 3) { c.getStyle().setColor(TextFormatting.LIGHT_PURPLE); }
@@ -145,12 +145,12 @@ public class ServerInfoFile extends InfoPage
                 thisTop.println(c);
             }
         }
-        
+
         MinecraftForge.EVENT_BUS.post(new EventFTBUServerInfo(this, self, isOP));
-        
+
         InfoPage page = getSub("commands").setTitle(FTBLibLang.commands.textComponent());
         page.clear();
-        
+
         try
         {
             for(ICommand c : FTBLib.getAllCommands(self.getPlayer()))
@@ -158,19 +158,19 @@ public class ServerInfoFile extends InfoPage
                 try
                 {
                     InfoPage cat = new InfoPage('/' + c.getCommandName());
-                    
+
                     List<String> al = c.getCommandAliases();
                     if(al != null && !al.isEmpty())
                     {
                         for(String s : al)
-                            cat.printlnText('/' + s);
+                        { cat.printlnText('/' + s); }
                     }
-                    
+
                     if(c instanceof ICustomCommandInfo)
                     {
                         List<ITextComponent> list = new ArrayList<>();
                         ((ICustomCommandInfo) c).addInfo(list, self.getPlayer());
-                        
+
                         for(ITextComponent c1 : list)
                         {
                             cat.println(c1);
@@ -179,14 +179,14 @@ public class ServerInfoFile extends InfoPage
                     else
                     {
                         String usage = c.getCommandUsage(self.getPlayer());
-                        
+
                         if(usage != null)
                         {
                             if(usage.indexOf('\n') != -1)
                             {
                                 String[] usageL = usage.split("\n");
                                 for(String s1 : usageL)
-                                    cat.printlnText(s1);
+                                { cat.printlnText(s1); }
                             }
                             else
                             {
@@ -196,7 +196,7 @@ public class ServerInfoFile extends InfoPage
                             }
                         }
                     }
-                    
+
                     cat.setParent(page);
                     page.addSub(cat);
                 }
@@ -205,32 +205,32 @@ public class ServerInfoFile extends InfoPage
                     ITextComponent cc = new TextComponentString('/' + c.getCommandName());
                     cc.getStyle().setColor(TextFormatting.DARK_RED);
                     page.getSub('/' + c.getCommandName()).setTitle(cc).printlnText("Errored");
-                    
+
                     if(FTBLib.DEV_ENV) { ex1.printStackTrace(); }
                 }
             }
         }
         catch(Exception ex) { }
-        
+
         page = getSub("Warps"); //LANG
         InfoExtendedTextLine line;
-        
+
         for(String s : FTBUWorldDataMP.get().warps.list())
         {
             line = new InfoExtendedTextLine(page, new TextComponentString(s));
             line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("warp " + s)));
             page.text.add(line);
         }
-        
+
         page = getSub("Homes"); //LANG
-        
+
         for(String s : FTBUPlayerDataMP.get(self).homes.list())
         {
             line = new InfoExtendedTextLine(page, new TextComponentString(s));
             line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("home " + s)));
             page.text.add(line);
         }
-        
+
         cleanup();
         sortAll();
     }

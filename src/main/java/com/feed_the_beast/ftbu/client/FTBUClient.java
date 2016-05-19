@@ -21,9 +21,9 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 {
     public static final ConfigEntryBool render_badges = new ConfigEntryBool("render_badges", true);
     public static final ConfigEntryBool loaded_chunks_space_key = new ConfigEntryBool("loaded_chunks_space_key", false);
-    
+
     public static IJMPluginHandler journeyMapHandler = null;
-    
+
     @Override
     public void preInit()
     {
@@ -31,18 +31,18 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
         ClientCommandHandler.instance.registerCommand(new CmdMath());
         FTBUActions.init();
     }
-    
+
     @Override
     public void postInit()
     {
         LMGuiHandlerRegistry.add(FTBUGuiHandler.instance);
-        
+
         Map<String, RenderPlayer> skinMap = FTBLibClient.mc.getRenderManager().getSkinMap();
         RenderPlayer render = skinMap.get("default");
         render.addLayer(BadgeRenderer.instance);
         render = skinMap.get("slim");
         render.addLayer(BadgeRenderer.instance);
-        
+
         //GuideRepoList.refresh();
     }
 }

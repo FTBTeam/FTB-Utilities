@@ -15,31 +15,31 @@ import java.util.Map;
  */
 public class FTBUWorldDataSP extends FTBUWorldData
 {
+    public Map<ChunkDimPos, ChunkType> chunks;
+
     public static boolean isLoaded()
     {
         return ForgeWorldSP.inst != null && ForgeWorldSP.inst.hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null);
     }
-    
+
     public static FTBUWorldDataSP get()
     {
         return isLoaded() ? (FTBUWorldDataSP) ForgeWorldSP.inst.getCapability(FTBUCapabilities.FTBU_WORLD_DATA, null) : null;
     }
-    
-    public Map<ChunkDimPos, ChunkType> chunks;
-    
+
     @Override
     public void onLoaded()
     {
         chunks = new HashMap<>();
     }
-    
+
     public ChunkType getType(ChunkCoordIntPair pos)
     {
         if(pos == null) { return ChunkType.UNLOADED; }
         ChunkType i = chunks.get(pos);
         return (i == null) ? ChunkType.UNLOADED : i;
     }
-    
+
     public void setTypes(DimensionType dim, Map<ChunkDimPos, ChunkType> types)
     {
         chunks.putAll(types);

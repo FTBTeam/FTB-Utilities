@@ -21,42 +21,42 @@ public class CmdAdminHome extends CommandLM //FIXME: SubCommand
 {
     public CmdAdminHome()
     { super("home", CommandLevel.OP); }
-    
+
     @Override
     public String getCommandUsage(ICommandSender ics)
     { return '/' + commandName + " <player> <sub> [ID]"; }
-    
+
     @Override
     public boolean isUsernameIndex(String[] args, int i)
     { return i == 0; }
-    
+
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
     {
         if(args.length == 2) { return getListOfStringsMatchingLastWord(args, "list", "tp", "remove"); }
         return super.getTabCompletionOptions(server, ics, args, pos);
     }
-    
+
     @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         checkArgs(args, 2);
         FTBUPlayerDataMP d = FTBUPlayerDataMP.get(ForgePlayerMP.get(args[0]));
-        
+
         if(args[1].equals("list"))
         {
             ics.addChatMessage(new TextComponentString(LMStringUtils.strip(d.homes.list())));
             return;
         }
-        
+
         checkArgs(args, 3);
-        
+
         BlockDimPos pos = d.homes.get(args[2]);
         if(pos == null)
         {
             throw FTBULang.home_not_set.commandError(args[2]);
         }
-        
+
         if(args[1].equals("tp"))
         {
             LMDimUtils.teleportPlayer(getCommandSenderAsPlayer(ics), pos);
@@ -71,7 +71,7 @@ public class CmdAdminHome extends CommandLM //FIXME: SubCommand
                 return;
             }
         }
-        
+
         throw FTBLibLang.invalid_subcmd.commandError(args[2]);
     }
 }

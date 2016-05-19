@@ -15,24 +15,24 @@ import java.util.Collection;
 public class MessageUpdateBadges extends MessageToClient<MessageUpdateBadges>
 {
     public Collection<Badge> badges;
-    
+
     public MessageUpdateBadges() { }
-    
+
     public MessageUpdateBadges(Collection<Badge> c)
     {
         badges = c;
     }
-    
+
     @Override
     public LMNetworkWrapper getWrapper()
     { return FTBUNetHandler.NET; }
-    
+
     @Override
     public void fromBytes(ByteBuf io)
     {
         badges = new ArrayList<>();
         int s = io.readInt();
-        
+
         if(s > 0)
         {
             for(int i = 0; i < s; i++)
@@ -43,12 +43,12 @@ public class MessageUpdateBadges extends MessageToClient<MessageUpdateBadges>
             }
         }
     }
-    
+
     @Override
     public void toBytes(ByteBuf io)
     {
         io.writeInt(badges.size());
-        
+
         if(!badges.isEmpty())
         {
             for(Badge b : badges)
@@ -58,13 +58,13 @@ public class MessageUpdateBadges extends MessageToClient<MessageUpdateBadges>
             }
         }
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageUpdateBadges m, Minecraft mc)
     {
         ClientBadges.clear();
-        
+
         for(Badge b : m.badges)
         {
             ClientBadges.addBadge(b);

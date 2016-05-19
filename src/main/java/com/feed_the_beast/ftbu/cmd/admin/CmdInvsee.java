@@ -12,15 +12,15 @@ public class CmdInvsee extends CommandLM
 {
     public CmdInvsee()
     { super("invsee", CommandLevel.OP); }
-    
+
     @Override
     public String getCommandUsage(ICommandSender ics)
     { return '/' + commandName + " <player>"; }
-    
+
     @Override
     public boolean isUsernameIndex(String[] args, int i)
     { return i == 0; }
-    
+
     @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {

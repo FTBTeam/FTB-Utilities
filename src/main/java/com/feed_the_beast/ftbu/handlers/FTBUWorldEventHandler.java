@@ -24,7 +24,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
         ResourceLocation r = new ResourceLocation(FTBUFinals.MOD_ID, "data");
         event.addCapability(r, event.world.getSide().isServer() ? new FTBUWorldDataMP() : new FTBUWorldDataSP());
     }
-    
+
     @SubscribeEvent
     public void onWorldLoaded(ForgeWorldEvent.OnLoaded event)
     {
@@ -33,7 +33,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
             event.world.getCapability(FTBUCapabilities.FTBU_WORLD_DATA, null).onLoaded();
         }
     }
-    
+
     @SubscribeEvent
     public void onMobSpawned(net.minecraftforge.event.entity.EntityJoinWorldEvent e)
     {
@@ -43,22 +43,22 @@ public class FTBUWorldEventHandler // FTBLIntegration
             e.setCanceled(true);
         }
     }
-    
+
     private boolean isEntityAllowed(Entity e)
     {
         if(e instanceof EntityPlayer) { return true; }
-        
+
         if(FTBUConfigGeneral.blocked_entities.isEntityBanned(e.getClass())) { return false; }
-        
+
         if(FTBUConfigGeneral.safe_spawn.getAsBoolean() && FTBUWorldDataMP.isInSpawnD(DimensionType.getById(e.dimension), e.posX, e.posZ))
         {
             if(e instanceof IMob) { return false; }
             else if(e instanceof EntityChicken && !e.getPassengers().isEmpty()) { return false; }
         }
-        
+
         return true;
     }
-    
+
     @SubscribeEvent
     public void onExplosionStart(net.minecraftforge.event.world.ExplosionEvent.Start e)
     {
@@ -66,11 +66,11 @@ public class FTBUWorldEventHandler // FTBLIntegration
         DimensionType dim = e.getWorld().provider.getDimensionType();
         int cx = MathHelperLM.chunk(e.getExplosion().getPosition().xCoord);
         int cz = MathHelperLM.chunk(e.getExplosion().getPosition().yCoord);
-        
+
         if(!FTBUWorldDataMP.get().allowExplosion(new ChunkDimPos(dim, cx, cz)))
         {
             e.setCanceled(true);
         }
     }
-    
+
 }

@@ -21,29 +21,29 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
 {
     public DimensionType dim;
     public Map<ChunkDimPos, ChunkType> types;
-    
+
     public MessageAreaUpdate() { }
-    
+
     public MessageAreaUpdate(ForgePlayerMP p, int x, int z, DimensionType d, int sx, int sz)
     {
         dim = d;
         types = FTBUWorldDataMP.get().getChunkTypes(p, x, z, d, sx, sz);
     }
-    
+
     public MessageAreaUpdate(ForgePlayerMP p, BlockDimPos pos, int radius)
     { this(p, pos.chunkX() - radius, pos.chunkZ() - radius, pos.dim, radius * 2 + 1, radius * 2 + 1); }
-    
+
     @Override
     public LMNetworkWrapper getWrapper()
     { return FTBUNetHandler.NET; }
-    
+
     @Override
     public void fromBytes(ByteBuf io)
     {
         dim = DimensionType.getById(io.readInt());
         int size = io.readInt();
         types = new HashMap<>(size);
-        
+
         for(int i = 0; i < size; i++)
         {
             int x = io.readInt();
@@ -53,13 +53,13 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
             types.put(pos, type);
         }
     }
-    
+
     @Override
     public void toBytes(ByteBuf io)
     {
         io.writeInt(dim.getId());
         io.writeInt(types.size());
-        
+
         for(Map.Entry<ChunkDimPos, ChunkType> e : types.entrySet())
         {
             io.writeInt(e.getKey().chunkXPos);
@@ -67,7 +67,7 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
             e.getValue().write(io);
         }
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageAreaUpdate m, Minecraft mc)

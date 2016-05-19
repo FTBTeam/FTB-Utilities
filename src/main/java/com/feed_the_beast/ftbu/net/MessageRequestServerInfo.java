@@ -11,21 +11,21 @@ import net.minecraft.entity.player.EntityPlayerMP;
 public class MessageRequestServerInfo extends MessageToServer<MessageRequestServerInfo>
 {
     public MessageRequestServerInfo() { }
-    
+
     @Override
     public LMNetworkWrapper getWrapper()
     { return FTBUNetHandler.NET; }
-    
+
     @Override
     public void fromBytes(ByteBuf io)
     {
     }
-    
+
     @Override
     public void toBytes(ByteBuf io)
     {
     }
-    
+
     @Override
     public void onMessage(MessageRequestServerInfo m, EntityPlayerMP ep)
     {

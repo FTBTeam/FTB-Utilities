@@ -13,13 +13,13 @@ public abstract class FTBUWorldData implements ICapabilityProvider
     public void onLoaded()
     {
     }
-    
+
     @Override
     public final boolean hasCapability(Capability<?> capability, EnumFacing facing)
     {
         return capability == FTBUCapabilities.FTBU_WORLD_DATA;
     }
-    
+
     @Override
     public final <T> T getCapability(Capability<T> capability, EnumFacing facing)
     {

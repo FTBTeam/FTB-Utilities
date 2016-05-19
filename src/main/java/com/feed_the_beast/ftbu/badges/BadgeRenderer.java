@@ -15,18 +15,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BadgeRenderer implements LayerRenderer<AbstractClientPlayer>
 {
     public static final BadgeRenderer instance = new BadgeRenderer();
-    
+
     @Override
     public void doRenderLayer(AbstractClientPlayer ep, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scale)
     {
         if(FTBUWorldDataSP.isLoaded() && FTBUClient.render_badges.getAsBoolean() && !ep.isInvisible())
         {
             Badge b = ClientBadges.getClientBadge(ep.getGameProfile().getId());
-            
+
             if(b != Badge.emptyBadge)
             {
                 ForgePlayerSP pc = ForgeWorldSP.inst.getPlayer(ep);
-                
+
                 if(pc != null && FTBUPlayerDataSP.get(pc).getFlag(FTBUPlayerData.RENDER_BADGE))
                 {
                     b.onPlayerRender(ep);
@@ -34,7 +34,7 @@ public class BadgeRenderer implements LayerRenderer<AbstractClientPlayer>
             }
         }
     }
-    
+
     @Override
     public boolean shouldCombineTextures()
     { return false; }

@@ -16,23 +16,21 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
  */
 public class FTBUCapabilities
 {
-    private static boolean enabled = false;
-    
     @CapabilityInject(FTBUPlayerData.class)
     public static Capability<FTBUPlayerData> FTBU_PLAYER_DATA = null;
-    
     @CapabilityInject(FTBUWorldData.class)
     public static Capability<FTBUWorldData> FTBU_WORLD_DATA = null;
-    
+    private static boolean enabled = false;
+
     public static void enable()
     {
         if(enabled)
         {
             return;
         }
-        
+
         enabled = true;
-        
+
         CapabilityManager.INSTANCE.register(FTBUPlayerData.class, new Capability.IStorage<FTBUPlayerData>()
         {
             @Override
@@ -40,14 +38,14 @@ public class FTBUCapabilities
             {
                 return ((FTBUPlayerDataMP) instance).serializeNBT();
             }
-            
+
             @Override
             public void readNBT(Capability<FTBUPlayerData> capability, FTBUPlayerData instance, EnumFacing side, NBTBase base)
             {
                 ((FTBUPlayerDataMP) instance).deserializeNBT((NBTTagCompound) base);
             }
         }, () -> new FTBUPlayerData() { });
-        
+
         CapabilityManager.INSTANCE.register(FTBUWorldData.class, new Capability.IStorage<FTBUWorldData>()
         {
             @Override
@@ -55,7 +53,7 @@ public class FTBUCapabilities
             {
                 return ((FTBUWorldDataMP) instance).serializeNBT();
             }
-            
+
             @Override
             public void readNBT(Capability<FTBUWorldData> capability, FTBUWorldData instance, EnumFacing side, NBTBase base)
             {

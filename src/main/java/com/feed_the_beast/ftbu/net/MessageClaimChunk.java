@@ -21,17 +21,17 @@ public class MessageClaimChunk extends MessageToServer<MessageClaimChunk>
     public static final byte ID_UNCLAIM_ALL_DIMS = 3;
     public static final byte ID_LOAD = 4;
     public static final byte ID_UNLOAD = 5;
-    
+
     public byte type;
     public ChunkDimPos pos;
     public long token;
-    
+
     public MessageClaimChunk() { }
-    
+
     @Override
     public LMNetworkWrapper getWrapper()
     { return FTBUNetHandler.NET; }
-    
+
     @Override
     public void fromBytes(ByteBuf io)
     {
@@ -39,7 +39,7 @@ public class MessageClaimChunk extends MessageToServer<MessageClaimChunk>
         token = io.readLong();
         pos = new ChunkDimPos(DimensionType.getById(io.readInt()), io.readInt(), io.readInt());
     }
-    
+
     @Override
     public void toBytes(ByteBuf io)
     {
@@ -49,12 +49,12 @@ public class MessageClaimChunk extends MessageToServer<MessageClaimChunk>
         io.writeInt(pos.chunkXPos);
         io.writeInt(pos.chunkZPos);
     }
-    
+
     @Override
     public void onMessage(MessageClaimChunk m, EntityPlayerMP ep)
     {
         ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ep);
-        
+
         switch(m.type)
         {
             case ID_CLAIM:

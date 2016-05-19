@@ -12,9 +12,9 @@ import net.minecraft.world.DimensionType;
 public class MessageAreaRequest extends MessageToServer<MessageAreaRequest>
 {
     public int chunkX, chunkY, sizeX, sizeY;
-    
+
     public MessageAreaRequest() { }
-    
+
     public MessageAreaRequest(int x, int y, int w, int h)
     {
         chunkX = x;
@@ -22,11 +22,11 @@ public class MessageAreaRequest extends MessageToServer<MessageAreaRequest>
         sizeX = MathHelperLM.clampInt(w, 1, 255);
         sizeY = MathHelperLM.clampInt(h, 1, 255);
     }
-    
+
     @Override
     public LMNetworkWrapper getWrapper()
     { return FTBUNetHandler.NET; }
-    
+
     @Override
     public void fromBytes(ByteBuf io)
     {
@@ -35,7 +35,7 @@ public class MessageAreaRequest extends MessageToServer<MessageAreaRequest>
         sizeX = io.readUnsignedByte();
         sizeY = io.readUnsignedByte();
     }
-    
+
     @Override
     public void toBytes(ByteBuf io)
     {
@@ -44,7 +44,7 @@ public class MessageAreaRequest extends MessageToServer<MessageAreaRequest>
         io.writeByte(sizeX);
         io.writeByte(sizeY);
     }
-    
+
     @Override
     public void onMessage(MessageAreaRequest m, EntityPlayerMP ep)
     {

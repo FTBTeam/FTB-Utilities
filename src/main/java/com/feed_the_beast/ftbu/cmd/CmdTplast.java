@@ -17,20 +17,20 @@ public class CmdTplast extends CommandLM
 {
     public CmdTplast()
     { super(FTBUConfigCmd.name_tplast.getAsString(), CommandLevel.OP); }
-    
+
     @Override
     public String getCommandUsage(ICommandSender ics)
     { return '/' + commandName + " [who] <to>"; }
-    
+
     @Override
     public boolean isUsernameIndex(String[] args, int i)
     { return i == 0; }
-    
+
     @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         checkArgs(args, 1);
-        
+
         if(args.length == 3)
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
@@ -40,10 +40,10 @@ public class CmdTplast extends CommandLM
             LMDimUtils.teleportPlayer(ep, new Vec3d(x, y, z), ep.dimension);
             return;
         }
-        
+
         EntityPlayerMP who;
         ForgePlayerMP to;
-        
+
         if(args.length == 1)
         {
             who = getCommandSenderAsPlayer(ics);
@@ -54,13 +54,13 @@ public class CmdTplast extends CommandLM
             who = getPlayer(server, ics, args[0]);
             to = ForgePlayerMP.get(args[1]);
         }
-        
+
         BlockDimPos p = to.getPos();
         if(p == null)
         {
             throw FTBLibLang.raw.commandError("No last position!");
         }
-        
+
         LMDimUtils.teleportPlayer(who, p);
     }
 }

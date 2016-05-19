@@ -20,28 +20,28 @@ import java.util.Arrays;
 public class ClientGuideFile extends InfoPage
 {
     public static final ClientGuideFile instance = new ClientGuideFile("ClientConfig");
-    
+
     public static GuiInfo clientGuideGui = null;
-    
+
+    public ClientGuideFile(String id)
+    {
+        super(id);
+        setTitle(new TextComponentTranslation(FTBUActions.GUIDE.getLangKey()));
+    }
+
     public static GuiInfo openClientGui(boolean open)
     {
         if(clientGuideGui == null) { clientGuideGui = new GuiInfo(null, ClientGuideFile.instance); }
         if(open) { FTBLibClient.openGui(clientGuideGui); }
         return clientGuideGui;
     }
-    
-    public ClientGuideFile(String id)
-    {
-        super(id);
-        setTitle(new TextComponentTranslation(FTBUActions.GUIDE.getLangKey()));
-    }
-    
+
     public void reload(ReloadEvent e)
     {
         if(FTBLib.DEV_ENV) { FTBU.logger.info("Guide reloaded @ " + e.world.getSide() + " as " + e.world.getMode()); }
-        
+
         clear();
-        
+
         File file = GameModes.instance().commonMode.getFile("guide/");
         if(file.exists() && file.isDirectory())
         {
@@ -55,7 +55,7 @@ public class ClientGuideFile extends InfoPage
                 }
             }
         }
-        
+
         file = e.world.getMode().getFile("guide/");
         if(file.exists() && file.isDirectory())
         {
@@ -69,7 +69,7 @@ public class ClientGuideFile extends InfoPage
                 }
             }
         }
-        
+
         file = e.world.getMode().getFile("guide_intro.txt");
         if(file.exists() && file.isFile())
         {
@@ -83,11 +83,11 @@ public class ClientGuideFile extends InfoPage
                 ex.printStackTrace();
             }
         }
-        
+
         cleanup();
         clientGuideGui = null;
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void refreshGui(GuiInfo gui)

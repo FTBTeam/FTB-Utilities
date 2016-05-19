@@ -16,19 +16,19 @@ public class CmdMath extends CommandLM
 {
     private static Boolean hasEngine = null;
     private static ScriptEngine engine = null;
-    
+
     public CmdMath()
     { super("math", CommandLevel.ALL); }
-    
+
     @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         checkArgs(args, 1);
-        
+
         if(hasEngine == null)
         {
             hasEngine = Boolean.FALSE;
-            
+
             try
             {
                 engine = new ScriptEngineManager().getEngineByName("JavaScript");
@@ -36,7 +36,7 @@ public class CmdMath extends CommandLM
             }
             catch(Exception e) { e.printStackTrace(); }
         }
-        
+
         if(hasEngine == Boolean.TRUE)
         {
             try
@@ -55,7 +55,7 @@ public class CmdMath extends CommandLM
         {
             throw FTBLibLang.raw.commandError("JavaScript Engine not found!");
         }
-        
+
         throw FTBLibLang.raw.commandError("Error");
     }
 }

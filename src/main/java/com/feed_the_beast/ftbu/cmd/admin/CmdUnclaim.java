@@ -14,7 +14,7 @@ public class CmdUnclaim extends CommandLM
 {
     public CmdUnclaim()
     { super("unclaim", CommandLevel.OP); }
-    
+
     @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {

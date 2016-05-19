@@ -21,25 +21,16 @@ import java.util.List;
  */
 public class CmdLMPlayerSettings extends CommandSubLM
 {
-    public CmdLMPlayerSettings()
-    {
-        super("lmplayer_settings", CommandLevel.ALL);
-        add(new CmdSettingBool("chat_links", FTBUPlayerData.CHAT_LINKS));
-        add(new CmdSettingBool("explosions", FTBUPlayerData.EXPLOSIONS));
-        add(new CmdSettingBool("fake_players", FTBUPlayerData.FAKE_PLAYERS));
-        add(new CmdBlockSecurity("block_security"));
-    }
-    
     public static class CmdSettingBool extends CommandLM
     {
         public final byte flag;
-        
+
         public CmdSettingBool(String s, byte f)
         {
             super(s, CommandLevel.ALL);
             flag = f;
         }
-        
+
         @Override
         public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
         {
@@ -47,10 +38,10 @@ public class CmdLMPlayerSettings extends CommandSubLM
             {
                 return getListOfStringsMatchingLastWord(args, "true", "false");
             }
-            
+
             return super.getTabCompletionOptions(server, ics, args, pos);
         }
-        
+
         @Override
         public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
@@ -62,12 +53,12 @@ public class CmdLMPlayerSettings extends CommandSubLM
             FTBLib.printChat(ics, commandName + " set to " + b);
         }
     }
-    
+
     public static class CmdBlockSecurity extends CommandLM
     {
         public CmdBlockSecurity(String s)
         { super(s, CommandLevel.ALL); }
-        
+
         @Override
         public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
         {
@@ -75,10 +66,10 @@ public class CmdLMPlayerSettings extends CommandSubLM
             {
                 return getListOfStringsMatchingLastWord(args, Arrays.asList(PrivacyLevel.PUBLIC, PrivacyLevel.PRIVATE, PrivacyLevel.FRIENDS));
             }
-            
+
             return super.getTabCompletionOptions(server, ics, args, pos);
         }
-        
+
         @Override
         public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
@@ -91,5 +82,14 @@ public class CmdLMPlayerSettings extends CommandSubLM
                 FTBLib.printChat(ics, commandName + " set to " + args[0]);
             }
         }
+    }
+
+    public CmdLMPlayerSettings()
+    {
+        super("lmplayer_settings", CommandLevel.ALL);
+        add(new CmdSettingBool("chat_links", FTBUPlayerData.CHAT_LINKS));
+        add(new CmdSettingBool("explosions", FTBUPlayerData.EXPLOSIONS));
+        add(new CmdSettingBool("fake_players", FTBUPlayerData.FAKE_PLAYERS));
+        add(new CmdBlockSecurity("block_security"));
     }
 }

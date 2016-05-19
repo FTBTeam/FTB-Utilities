@@ -14,19 +14,11 @@ import net.minecraft.server.MinecraftServer;
 
 public class CmdBackup extends CommandSubLM
 {
-    public CmdBackup()
-    {
-        super("backup", CommandLevel.OP);
-        add(new CmdBackupStart("start"));
-        add(new CmdBackupStop("stop"));
-        add(new CmdBackupGetSize("getsize"));
-    }
-    
     public static class CmdBackupStart extends CommandLM
     {
         public CmdBackupStart(String s)
         { super(s, CommandLevel.OP); }
-        
+
         @Override
         public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
@@ -34,7 +26,7 @@ public class CmdBackup extends CommandSubLM
             if(b)
             {
                 FTBULang.backup_manual_launch.printChat(BroadcastSender.inst, ics.getName());
-                
+
                 if(!FTBUConfigBackups.use_separate_thread.getAsBoolean())
                 {
                     Backups.postBackup();
@@ -46,12 +38,12 @@ public class CmdBackup extends CommandSubLM
             }
         }
     }
-    
+
     public static class CmdBackupStop extends CommandLM
     {
         public CmdBackupStop(String s)
         { super(s, CommandLevel.OP); }
-        
+
         @Override
         public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
@@ -62,16 +54,16 @@ public class CmdBackup extends CommandSubLM
                 FTBULang.backup_stop.printChat(ics);
                 return;
             }
-            
+
             throw FTBULang.backup_not_running.commandError();
         }
     }
-    
+
     public static class CmdBackupGetSize extends CommandLM
     {
         public CmdBackupGetSize(String s)
         { super(s, CommandLevel.OP); }
-        
+
         @Override
         public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
@@ -79,5 +71,13 @@ public class CmdBackup extends CommandSubLM
             String sizeT = LMFileUtils.getSizeS(Backups.backupsFolder);
             FTBULang.backup_size.printChat(ics, sizeW, sizeT);
         }
+    }
+
+    public CmdBackup()
+    {
+        super("backup", CommandLevel.OP);
+        add(new CmdBackupStart("start"));
+        add(new CmdBackupStop("stop"));
+        add(new CmdBackupGetSize("getsize"));
     }
 }

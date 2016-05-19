@@ -13,35 +13,35 @@ import java.util.UUID;
 public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
 {
     public UUID playerID;
-    
+
     public MessageRequestBadge() { }
-    
+
     public MessageRequestBadge(UUID player)
     {
         playerID = player;
     }
-    
+
     @Override
     public LMNetworkWrapper getWrapper()
     { return FTBUNetHandler.NET; }
-    
+
     @Override
     public void fromBytes(ByteBuf io)
     {
         playerID = readUUID(io);
     }
-    
+
     @Override
     public void toBytes(ByteBuf io)
     {
         writeUUID(io, playerID);
     }
-    
+
     @Override
     public void onMessage(MessageRequestBadge m, EntityPlayerMP ep)
     {
         Badge b = ServerBadges.getServerBadge(ForgeWorldMP.inst.getPlayer(m.playerID));
-        
+
         if(b != Badge.emptyBadge)
         {
             new MessageSendBadge(m.playerID, b.getID()).sendTo(ep);

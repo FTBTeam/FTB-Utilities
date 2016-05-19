@@ -13,18 +13,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class FTBUGuiHandler extends LMGuiHandler
 {
     public static final FTBUGuiHandler instance = new FTBUGuiHandler(FTBUFinals.MOD_ID);
-    
+
     public static final int ADMIN_CLAIMS = 1;
-    
+
     public FTBUGuiHandler(String s)
     { super(s); }
-    
+
     @Override
     public Container getContainer(EntityPlayer ep, int id, NBTTagCompound data)
     {
         return new ContainerEmpty(ep, null);
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer ep, int id, NBTTagCompound data)

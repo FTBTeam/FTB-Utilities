@@ -18,11 +18,11 @@ public class FTBU_JMPlugin implements IClientPlugin
     {
         FTBUClient.journeyMapHandler = new JMPluginHandler(api);
     }
-    
+
     @Override
     public String getModId()
     { return FTBUFinals.MOD_ID; }
-    
+
     @Override
     public void onEvent(ClientEvent event)
     {

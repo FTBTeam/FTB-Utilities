@@ -1,9 +1,7 @@
 package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.api.ForgePlayer;
-import com.feed_the_beast.ftbl.api.ForgePlayerSP;
 import com.feed_the_beast.ftbl.util.PrivacyLevel;
-import com.feed_the_beast.ftbu.FTBUCapabilities;
 import latmod.lib.IntMap;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -14,9 +12,10 @@ public class FTBUPlayerDataSP extends FTBUPlayerData
 {
     public short claimedChunks, loadedChunks, maxClaimedChunks, maxLoadedChunks;
 
-    public static FTBUPlayerDataSP get(ForgePlayerSP p)
+    @Override
+    public FTBUPlayerDataSP toSP()
     {
-        return p.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null) ? (FTBUPlayerDataSP) p.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null) : null;
+        return this;
     }
 
     @Override

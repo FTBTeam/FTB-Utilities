@@ -11,7 +11,7 @@ import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.config.FTBUConfigModules;
 import com.feed_the_beast.ftbu.world.ChunkloaderType;
 import com.feed_the_beast.ftbu.world.ClaimedChunk;
-import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
+import com.feed_the_beast.ftbu.world.ClaimedChunks;
 import com.google.common.collect.MapMaker;
 import latmod.lib.LMUtils;
 import net.minecraft.world.World;
@@ -19,6 +19,7 @@ import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,7 +109,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 
             if(playerID != null)
             {
-                List<ClaimedChunk> chunks = FTBUWorldDataMP.get().getChunks(playerID, world.provider.getDimensionType());
+                Collection<ClaimedChunk> chunks = ClaimedChunks.inst.getChunks(playerID, world.provider.getDimension());
 
                 if(chunks != null)
                 {
@@ -148,7 +149,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 		int loaded = 0;
 		int unloaded = 0;*/
 
-        for(ClaimedChunk c : FTBUWorldDataMP.get().getAllChunks(w.provider.getDimensionType()))
+        for(ClaimedChunk c : ClaimedChunks.inst.getAllChunks(w.provider.getDimension()))
         {
             //total++;
 

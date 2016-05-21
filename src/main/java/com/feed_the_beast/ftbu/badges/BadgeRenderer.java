@@ -4,8 +4,7 @@ import com.feed_the_beast.ftbl.api.ForgePlayerSP;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
-import com.feed_the_beast.ftbu.world.FTBUPlayerDataSP;
-import com.feed_the_beast.ftbu.world.FTBUWorldDataSP;
+import com.feed_the_beast.ftbu.world.FTBUWorldData;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraftforge.fml.relauncher.Side;
@@ -19,7 +18,7 @@ public class BadgeRenderer implements LayerRenderer<AbstractClientPlayer>
     @Override
     public void doRenderLayer(AbstractClientPlayer ep, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scale)
     {
-        if(FTBUWorldDataSP.isLoaded() && FTBUClient.render_badges.getAsBoolean() && !ep.isInvisible())
+        if(FTBUWorldData.isLoadedW(ForgeWorldSP.inst) && FTBUClient.render_badges.getAsBoolean() && !ep.isInvisible())
         {
             Badge b = ClientBadges.getClientBadge(ep.getGameProfile().getId());
 
@@ -27,7 +26,7 @@ public class BadgeRenderer implements LayerRenderer<AbstractClientPlayer>
             {
                 ForgePlayerSP pc = ForgeWorldSP.inst.getPlayer(ep);
 
-                if(pc != null && FTBUPlayerDataSP.get(pc).getFlag(FTBUPlayerData.RENDER_BADGE))
+                if(pc != null && FTBUPlayerData.get(pc).getFlag(FTBUPlayerData.RENDER_BADGE))
                 {
                     b.onPlayerRender(ep);
                 }

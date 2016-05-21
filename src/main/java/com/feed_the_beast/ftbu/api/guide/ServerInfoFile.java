@@ -16,8 +16,8 @@ import com.feed_the_beast.ftbu.api.EventFTBUServerInfo;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigModules;
 import com.feed_the_beast.ftbu.world.Backups;
-import com.feed_the_beast.ftbu.world.FTBUPlayerDataMP;
-import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
+import com.feed_the_beast.ftbu.world.FTBUPlayerData;
+import com.feed_the_beast.ftbu.world.FTBUWorldData;
 import com.google.gson.JsonPrimitive;
 import latmod.lib.LMFileUtils;
 import latmod.lib.LMStringUtils;
@@ -104,7 +104,7 @@ public class ServerInfoFile extends InfoPage
         { p.refreshStats(); }
 
         if(FTBUConfigModules.auto_restart.getAsBoolean())
-        { println(FTBULang.timer_restart.textComponent(LMStringUtils.getTimeString(FTBUWorldDataMP.get().restartMillis - System.currentTimeMillis()))); }
+        { println(FTBULang.timer_restart.textComponent(LMStringUtils.getTimeString(FTBUWorldData.getW(ForgeWorldMP.inst).toMP().restartMillis - System.currentTimeMillis()))); }
 
         if(FTBUConfigModules.backups.getAsBoolean())
         { println(FTBULang.timer_backup.textComponent(LMStringUtils.getTimeString(Backups.nextBackup - System.currentTimeMillis()))); }
@@ -212,19 +212,19 @@ public class ServerInfoFile extends InfoPage
         }
         catch(Exception ex) { }
 
-        page = getSub("Warps"); //LANG
+        page = getSub("warps").setTitle(new TextComponentString("Warps")); //TODO: LANG
         InfoExtendedTextLine line;
 
-        for(String s : FTBUWorldDataMP.get().warps.list())
+        for(String s : FTBUWorldData.getW(ForgeWorldMP.inst).toMP().warps.list())
         {
             line = new InfoExtendedTextLine(page, new TextComponentString(s));
             line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("warp " + s)));
             page.text.add(line);
         }
 
-        page = getSub("Homes"); //LANG
+        page = getSub("homes").setTitle(new TextComponentString("Homes")); //TODO: LANG
 
-        for(String s : FTBUPlayerDataMP.get(self).homes.list())
+        for(String s : FTBUPlayerData.get(self).toMP().homes.list())
         {
             line = new InfoExtendedTextLine(page, new TextComponentString(s));
             line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("home " + s)));

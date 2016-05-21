@@ -26,11 +26,30 @@ public abstract class FTBUPlayerData implements ICapabilityProvider
         blocks = PrivacyLevel.FRIENDS;
     }
 
+    public static FTBUPlayerData get(ForgePlayer p)
+    {
+        return p.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null) ? p.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null) : null;
+    }
+
     public boolean getFlag(byte f)
-    { return Bits.getBit(flags, f); }
+    {
+        return Bits.getBit(flags, f);
+    }
 
     public void setFlag(byte f, boolean b)
-    { flags = Bits.setBit(flags, f, b); }
+    {
+        flags = Bits.setBit(flags, f, b);
+    }
+
+    public FTBUPlayerDataMP toMP()
+    {
+        return null;
+    }
+
+    public FTBUPlayerDataSP toSP()
+    {
+        return null;
+    }
 
     @Override
     public final boolean hasCapability(Capability<?> capability, EnumFacing facing)

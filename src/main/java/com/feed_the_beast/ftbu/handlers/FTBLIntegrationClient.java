@@ -39,9 +39,9 @@ public class FTBLIntegrationClient extends FTBLIntegration
     @Override
     public void onTooltip(ItemTooltipEvent e)
     {
-        if(e.getItemStack().hasCapability(FTBLibCapabilities.PAINTER_ITEM_CAPABILITY, null))
+        if(e.getItemStack().hasCapability(FTBLibCapabilities.PAINTER_ITEM, null))
         {
-            IBlockState paint = e.getItemStack().getCapability(FTBLibCapabilities.PAINTER_ITEM_CAPABILITY, null).getPaint();
+            IBlockState paint = e.getItemStack().getCapability(FTBLibCapabilities.PAINTER_ITEM, null).getPaint();
 
             if(paint != null)
             {

@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbu.FTBULang;
-import com.feed_the_beast.ftbu.world.FTBUPlayerDataMP;
+import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -27,7 +27,7 @@ public class CmdDelHome extends CommandLM
     {
         if(args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, FTBUPlayerDataMP.get(ForgeWorldMP.inst.getPlayer(ics)).homes.list());
+            return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(ForgeWorldMP.inst.getPlayer(ics)).toMP().homes.list());
         }
 
         return super.getTabCompletionOptions(server, ics, args, pos);
@@ -39,7 +39,7 @@ public class CmdDelHome extends CommandLM
         ForgePlayerMP p = ForgePlayerMP.get(ics);
         checkArgs(args, 1);
 
-        if(FTBUPlayerDataMP.get(p).homes.set(args[0], null))
+        if(FTBUPlayerData.get(p).toMP().homes.set(args[0], null))
         {
             FTBULang.home_del.printChat(ics, args[0]);
         }

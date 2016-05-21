@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
-import com.feed_the_beast.ftbu.world.FTBUPlayerDataMP;
+import com.feed_the_beast.ftbu.world.ClaimedChunks;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -32,13 +32,13 @@ public class CmdUnclaimAll extends CommandLM
         if(args[0].equals("@a"))
         {
             for(ForgePlayer p : ForgeWorldMP.inst.playerMap.values())
-            { FTBUPlayerDataMP.unclaimAllChunks(p.toPlayerMP(), null); }
+            { ClaimedChunks.inst.unclaimAllChunks(p.toPlayerMP(), null); }
             ics.addChatMessage(new TextComponentString("Unclaimed all chunks"));
             return;
         }
 
         ForgePlayerMP p = ForgePlayerMP.get(args[0]);
-        FTBUPlayerDataMP.unclaimAllChunks(p, null);
+        ClaimedChunks.inst.unclaimAllChunks(p, null);
         ics.addChatMessage(new TextComponentString("Unclaimed all " + p.getProfile().getName() + "'s chunks"));
     }
 }

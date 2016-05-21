@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.FTBUPermissions;
+import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUPlayerDataMP;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -28,7 +29,7 @@ public class CmdSetHome extends CommandLM
     {
         if(args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, FTBUPlayerDataMP.get(ForgeWorldMP.inst.getPlayer(ics)).homes.list());
+            return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(ForgeWorldMP.inst.getPlayer(ics)).toMP().homes.list());
         }
         return null;
     }
@@ -37,7 +38,7 @@ public class CmdSetHome extends CommandLM
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         ForgePlayerMP p = ForgePlayerMP.get(ics);
-        FTBUPlayerDataMP d = FTBUPlayerDataMP.get(p);
+        FTBUPlayerDataMP d = FTBUPlayerData.get(p).toMP();
         checkArgs(args, 1);
 
         int maxHomes = FTBUPermissions.homes_max.get(p.getProfile()).getAsShort();

@@ -7,7 +7,6 @@ import com.feed_the_beast.ftbl.api.cmd.CommandSubLM;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.PrivacyLevel;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
-import com.feed_the_beast.ftbu.world.FTBUPlayerDataMP;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -48,7 +47,7 @@ public class CmdLMPlayerSettings extends CommandSubLM
             checkArgs(args, 1);
             ForgePlayerMP p = ForgePlayerMP.get(ics);
             boolean b = parseBoolean(args[0]);
-            FTBUPlayerDataMP.get(p).setFlag(flag, b);
+            FTBUPlayerData.get(p).setFlag(flag, b);
             p.sendUpdate();
             FTBLib.printChat(ics, commandName + " set to " + b);
         }
@@ -78,7 +77,7 @@ public class CmdLMPlayerSettings extends CommandSubLM
             PrivacyLevel l = PrivacyLevel.get(args[0]);
             if(l != null)
             {
-                FTBUPlayerDataMP.get(p).blocks = l;
+                FTBUPlayerData.get(p).blocks = l;
                 FTBLib.printChat(ics, commandName + " set to " + args[0]);
             }
         }

@@ -5,7 +5,6 @@ import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.ServerTickCallback;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
-import com.feed_the_beast.ftbu.world.FTBUPlayerDataMP;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -68,7 +67,7 @@ public class FTBUChatEventHandler
                 {
                     for(ForgePlayer p : ForgeWorldMP.inst.getOnlinePlayers())
                     {
-                        if(FTBUPlayerDataMP.get(p.toPlayerMP()).getFlag(FTBUPlayerData.CHAT_LINKS))
+                        if(FTBUPlayerData.get(p.toPlayerMP()).getFlag(FTBUPlayerData.CHAT_LINKS))
                         {
                             p.getPlayer().addChatMessage(line);
                         }

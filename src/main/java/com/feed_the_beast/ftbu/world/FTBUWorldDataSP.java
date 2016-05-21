@@ -1,11 +1,9 @@
 package com.feed_the_beast.ftbu.world;
 
-import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
-import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.client.FTBUClient;
-import net.minecraft.world.ChunkCoordIntPair;
-import net.minecraft.world.DimensionType;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,16 +13,30 @@ import java.util.Map;
  */
 public class FTBUWorldDataSP extends FTBUWorldData
 {
-    public Map<ChunkDimPos, ChunkType> chunks;
+    public static Map<ChunkDimPos, ChunkType> chunks;
 
-    public static boolean isLoaded()
+    public static ChunkType getType(ChunkDimPos pos)
     {
-        return ForgeWorldSP.inst != null && ForgeWorldSP.inst.hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null);
+        return (pos != null && chunks != null && chunks.containsKey(pos)) ? chunks.get(pos) : ChunkType.UNLOADED;
     }
 
-    public static FTBUWorldDataSP get()
+    @SideOnly(Side.CLIENT)
+    public static void setTypes(Map<ChunkDimPos, ChunkType> types)
     {
-        return isLoaded() ? (FTBUWorldDataSP) ForgeWorldSP.inst.getCapability(FTBUCapabilities.FTBU_WORLD_DATA, null) : null;
+        if(chunks == null)
+        {
+            return;
+        }
+
+        chunks.putAll(types);
+
+        if(FTBUClient.journeyMapHandler != null)
+        {
+            for(Map.Entry<ChunkDimPos, ChunkType> e : types.entrySet())
+            {
+                FTBUClient.journeyMapHandler.chunkChanged(e.getKey(), e.getValue());
+            }
+        }
     }
 
     @Override
@@ -33,16 +45,9 @@ public class FTBUWorldDataSP extends FTBUWorldData
         chunks = new HashMap<>();
     }
 
-    public ChunkType getType(ChunkCoordIntPair pos)
+    @Override
+    public void onClosed()
     {
-        if(pos == null) { return ChunkType.UNLOADED; }
-        ChunkType i = chunks.get(pos);
-        return (i == null) ? ChunkType.UNLOADED : i;
-    }
-
-    public void setTypes(DimensionType dim, Map<ChunkDimPos, ChunkType> types)
-    {
-        chunks.putAll(types);
-        if(FTBUClient.journeyMapHandler != null) { FTBUClient.journeyMapHandler.refresh(dim.getId()); }
+        chunks = null;
     }
 }

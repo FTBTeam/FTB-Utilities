@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.api.guide;
 
-import com.feed_the_beast.ftbl.api.GameModes;
+import com.feed_the_beast.ftbl.api.PackModes;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
@@ -42,7 +42,7 @@ public class ClientGuideFile extends InfoPage
 
         clear();
 
-        File file = GameModes.instance().commonMode.getFile("guide/");
+        File file = PackModes.instance().getCommon().getFile("guide/");
         if(file.exists() && file.isDirectory())
         {
             File[] f = file.listFiles();

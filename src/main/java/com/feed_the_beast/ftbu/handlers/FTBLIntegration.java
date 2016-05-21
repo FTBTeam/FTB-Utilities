@@ -12,10 +12,9 @@ import com.feed_the_beast.ftbu.api.guide.ServerInfoFile;
 import com.feed_the_beast.ftbu.badges.ServerBadges;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.ChunkType;
-import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
+import com.feed_the_beast.ftbu.world.ClaimedChunks;
 import com.google.gson.JsonElement;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DimensionType;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
@@ -29,7 +28,10 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
             Ranks.instance().reload();
             ServerBadges.reload();
 
-            if(FTBLib.getServerWorld() != null) { FTBUChunkEventHandler.instance.markDirty(null); }
+            if(FTBLib.getServerWorld() != null)
+            {
+                FTBUChunkEventHandler.instance.markDirty(null);
+            }
         }
     }
 
@@ -46,7 +48,10 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
     @Override
     public boolean canPlayerInteract(ForgePlayerMP player, BlockPos pos, boolean leftClick)
     {
-        if(player == null) { return true; }
+        if(player == null)
+        {
+            return true;
+        }
         else if(!player.isFake() && ForgePermissionRegistry.hasPermission(FTBLibPermissions.interact_secure, player.getProfile()))
         {
             return true;
@@ -65,7 +70,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
             }
         }
 
-        ChunkType type = FTBUWorldDataMP.get().getTypeD(player, DimensionType.getById(player.getPlayer().dimension), pos);
+        ChunkType type = ClaimedChunks.inst.getTypeD(player, player.getPlayer().dimension, pos);
         return type.canInteract(player, leftClick);
     }
 }

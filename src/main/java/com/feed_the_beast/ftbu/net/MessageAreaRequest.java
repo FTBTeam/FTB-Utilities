@@ -7,7 +7,6 @@ import com.feed_the_beast.ftbl.api.net.MessageToServer;
 import io.netty.buffer.ByteBuf;
 import latmod.lib.MathHelperLM;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.world.DimensionType;
 
 public class MessageAreaRequest extends MessageToServer<MessageAreaRequest>
 {
@@ -49,6 +48,6 @@ public class MessageAreaRequest extends MessageToServer<MessageAreaRequest>
     public void onMessage(MessageAreaRequest m, EntityPlayerMP ep)
     {
         ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ep);
-        new MessageAreaUpdate(p, m.chunkX, m.chunkY, DimensionType.getById(p.getPlayer().dimension), m.sizeX, m.sizeY).sendTo(ep);
+        new MessageAreaUpdate(p, m.chunkX, m.chunkY, p.getPlayer().dimension, m.sizeX, m.sizeY).sendTo(ep);
     }
 }

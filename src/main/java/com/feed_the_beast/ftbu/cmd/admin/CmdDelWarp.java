@@ -1,9 +1,10 @@
 package com.feed_the_beast.ftbu.cmd.admin;
 
+import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbu.FTBULang;
-import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
+import com.feed_the_beast.ftbu.world.FTBUWorldData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -23,7 +24,10 @@ public class CmdDelWarp extends CommandLM
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
     {
-        if(args.length == 1) { return getListOfStringsMatchingLastWord(args, FTBUWorldDataMP.get().warps.list()); }
+        if(args.length == 1)
+        {
+            return getListOfStringsMatchingLastWord(args, FTBUWorldData.getW(ForgeWorldMP.inst).toMP().warps.list());
+        }
 
         return super.getTabCompletionOptions(server, ics, args, pos);
     }
@@ -33,7 +37,7 @@ public class CmdDelWarp extends CommandLM
     {
         checkArgs(args, 1);
 
-        if(FTBUWorldDataMP.get().warps.set(args[0], null))
+        if(FTBUWorldData.getW(ForgeWorldMP.inst).toMP().warps.set(args[0], null))
         {
             FTBULang.warp_del.printChat(ics, args[0]);
         }

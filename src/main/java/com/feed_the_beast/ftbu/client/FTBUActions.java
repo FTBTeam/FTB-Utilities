@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbu.client;
 
 import com.feed_the_beast.ftbl.api.EnumSelf;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
+import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.PlayerAction;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
@@ -12,7 +13,7 @@ import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.guide.ClientGuideFile;
 import com.feed_the_beast.ftbu.client.gui.claims.GuiClaimChunks;
 import com.feed_the_beast.ftbu.net.MessageRequestServerInfo;
-import com.feed_the_beast.ftbu.world.FTBUWorldDataSP;
+import com.feed_the_beast.ftbu.world.FTBUWorldData;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -30,7 +31,7 @@ public class FTBUActions
 
         @Override
         public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
-        { return FTBUWorldDataSP.isLoaded(); }
+        { return FTBUWorldData.isLoadedW(ForgeWorldSP.inst); }
 
         @Override
         public Boolean configDefault()
@@ -46,7 +47,7 @@ public class FTBUActions
 
         @Override
         public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
-        { return FTBUWorldDataSP.isLoaded(); }
+        { return FTBUWorldData.isLoadedW(ForgeWorldSP.inst); }
 
         @Override
         public Boolean configDefault()
@@ -60,7 +61,7 @@ public class FTBUActions
 
         @Override
         public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
-        { return FTBUWorldDataSP.isLoaded(); }
+        { return FTBUWorldData.isLoadedW(ForgeWorldSP.inst); }
 
         @Override
         public Boolean configDefault()

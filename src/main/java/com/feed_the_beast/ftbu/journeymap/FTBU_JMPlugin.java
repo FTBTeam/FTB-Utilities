@@ -7,14 +7,17 @@ import journeymap.client.api.IClientAPI;
 import journeymap.client.api.IClientPlugin;
 import journeymap.client.api.event.ClientEvent;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Created by LatvianModder on 17.01.2016.
  */
+@ParametersAreNonnullByDefault
 @ClientPlugin
 public class FTBU_JMPlugin implements IClientPlugin
 {
     @Override
-    public void initialize(IClientAPI api)
+    public void initialize(final IClientAPI api)
     {
         FTBUClient.journeyMapHandler = new JMPluginHandler(api);
     }
@@ -26,9 +29,17 @@ public class FTBU_JMPlugin implements IClientPlugin
     @Override
     public void onEvent(ClientEvent event)
     {
-        if(event.type == ClientEvent.Type.DISPLAY_UPDATE && FTBUClient.journeyMapHandler != null)
+        if(FTBUClient.journeyMapHandler != null)
         {
-            FTBUClient.journeyMapHandler.refresh(event.dimension);
+            switch(event.type)
+            {
+                case MAPPING_STARTED:
+                    FTBUClient.journeyMapHandler.mappingStarted();
+                    break;
+                case MAPPING_STOPPED:
+                    FTBUClient.journeyMapHandler.mappingStopped();
+                    break;
+            }
         }
     }
 }

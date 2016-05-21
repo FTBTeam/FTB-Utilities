@@ -1,16 +1,16 @@
 package com.feed_the_beast.ftbu.cmd.admin;
 
+import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbu.FTBULang;
-import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
+import com.feed_the_beast.ftbu.world.FTBUWorldData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DimensionType;
 
 public class CmdSetWarp extends CommandLM
 {
@@ -37,7 +37,7 @@ public class CmdSetWarp extends CommandLM
         }
         else { c = ep.getPosition(); }
 
-        FTBUWorldDataMP.get().warps.set(args[0], new BlockDimPos(c, DimensionType.getById(ep.dimension)));
+        FTBUWorldData.getW(ForgeWorldMP.inst).toMP().warps.set(args[0], new BlockDimPos(c, ep.dimension));
         FTBULang.warp_set.printChat(ics, args[0]);
     }
 }

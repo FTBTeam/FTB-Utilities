@@ -21,7 +21,6 @@ import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.handlers.FTBLIntegration;
 import com.feed_the_beast.ftbu.handlers.FTBUChatEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUChunkEventHandler;
-import com.feed_the_beast.ftbu.handlers.FTBUForgePlayerEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUWorldEventHandler;
 import com.feed_the_beast.ftbu.net.FTBUNetHandler;
@@ -63,7 +62,6 @@ public class FTBU
         EventBusHelper.register(new FTBUPlayerEventHandler());
         EventBusHelper.register(new FTBUWorldEventHandler());
         EventBusHelper.register(new FTBUChatEventHandler());
-        EventBusHelper.register(new FTBUForgePlayerEventHandler());
         FTBUChunkEventHandler.instance.init();
         FTBUPermissions.init();
         FTBUCapabilities.enable();

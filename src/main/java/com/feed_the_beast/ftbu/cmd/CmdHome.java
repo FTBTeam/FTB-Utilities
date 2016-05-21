@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.LMDimUtils;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.FTBUPermissions;
+import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUPlayerDataMP;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.CommandException;
@@ -35,7 +36,7 @@ public class CmdHome extends CommandLM
     {
         if(args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, FTBUPlayerDataMP.get(ForgeWorldMP.inst.getPlayer(ics)).homes.list());
+            return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(ForgeWorldMP.inst.getPlayer(ics)).toMP().homes.list());
         }
 
         return super.getTabCompletionOptions(server, ics, args, pos);
@@ -45,7 +46,7 @@ public class CmdHome extends CommandLM
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-        FTBUPlayerDataMP d = FTBUPlayerDataMP.get(ForgePlayerMP.get(ep));
+        FTBUPlayerDataMP d = FTBUPlayerData.get(ForgePlayerMP.get(ep)).toMP();
         checkArgs(args, 1);
 
         if(args[0].equals("list"))
@@ -63,7 +64,7 @@ public class CmdHome extends CommandLM
             throw FTBULang.home_not_set.commandError(args[0]);
         }
 
-        if(ep.dimension != pos.dim.getId() && !ForgePermissionRegistry.hasPermission(FTBUPermissions.homes_cross_dim, ep.getGameProfile()))
+        if(ep.dimension != pos.dim && !ForgePermissionRegistry.hasPermission(FTBUPermissions.homes_cross_dim, ep.getGameProfile()))
         {
             throw FTBULang.home_cross_dim.commandError();
         }

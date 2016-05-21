@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.LMDimUtils;
 import com.feed_the_beast.ftbu.FTBULang;
+import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUPlayerDataMP;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.CommandException;
@@ -41,7 +42,7 @@ public class CmdAdminHome extends CommandLM //FIXME: SubCommand
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         checkArgs(args, 2);
-        FTBUPlayerDataMP d = FTBUPlayerDataMP.get(ForgePlayerMP.get(args[0]));
+        FTBUPlayerDataMP d = FTBUPlayerData.get(ForgePlayerMP.get(args[0])).toMP();
 
         if(args[1].equals("list"))
         {

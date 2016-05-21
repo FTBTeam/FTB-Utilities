@@ -7,11 +7,9 @@ import com.feed_the_beast.ftbl.api.net.MessageToServer;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbl.util.LMAccessToken;
 import com.feed_the_beast.ftbu.world.ClaimedChunk;
-import com.feed_the_beast.ftbu.world.FTBUPlayerDataMP;
-import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
+import com.feed_the_beast.ftbu.world.ClaimedChunks;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.world.DimensionType;
 
 public class MessageClaimChunk extends MessageToServer<MessageClaimChunk>
 {
@@ -37,7 +35,7 @@ public class MessageClaimChunk extends MessageToServer<MessageClaimChunk>
     {
         type = io.readByte();
         token = io.readLong();
-        pos = new ChunkDimPos(DimensionType.getById(io.readInt()), io.readInt(), io.readInt());
+        pos = new ChunkDimPos(io.readInt(), io.readInt(), io.readInt());
     }
 
     @Override
@@ -45,7 +43,7 @@ public class MessageClaimChunk extends MessageToServer<MessageClaimChunk>
     {
         io.writeByte(type);
         io.writeLong(token);
-        io.writeInt(pos.dim.getId());
+        io.writeInt(pos.dim);
         io.writeInt(pos.chunkXPos);
         io.writeInt(pos.chunkZPos);
     }
@@ -58,41 +56,36 @@ public class MessageClaimChunk extends MessageToServer<MessageClaimChunk>
         switch(m.type)
         {
             case ID_CLAIM:
-            {
-                FTBUPlayerDataMP.claimChunk(p, m.pos);
+                ClaimedChunks.inst.claimChunk(p, m.pos);
                 new MessageAreaUpdate(p, m.pos.chunkXPos, m.pos.chunkZPos, m.pos.dim, 1, 1).sendTo(ep);
-            }
+                return;
             case ID_UNCLAIM:
-            {
                 if(m.token != 0L && LMAccessToken.equals(p.getPlayer(), m.token, false))
                 {
-                    ClaimedChunk c = FTBUWorldDataMP.get().getChunk(m.pos);
+                    ClaimedChunk c = ClaimedChunks.inst.getChunk(m.pos);
                     if(c != null)
                     {
-                        ForgePlayerMP p1 = ForgeWorldMP.inst.getPlayer(c.ownerID);
-                        FTBUPlayerDataMP d1 = FTBUPlayerDataMP.get(p1);
-                        FTBUPlayerDataMP.unclaimChunk(p, m.pos);
+                        ClaimedChunks.inst.unclaimChunk(p, m.pos);
                     }
                 }
-                else { FTBUPlayerDataMP.unclaimChunk(p, m.pos); }
+                else
+                {
+                    ClaimedChunks.inst.unclaimChunk(p, m.pos);
+                }
                 new MessageAreaUpdate(p, m.pos.chunkXPos, m.pos.chunkZPos, m.pos.dim, 1, 1).sendTo(ep);
-            }
+                return;
             case ID_UNCLAIM_ALL:
-            {
-                FTBUPlayerDataMP.unclaimAllChunks(p, m.pos.dim);
-            }
+                ClaimedChunks.inst.unclaimAllChunks(p, m.pos.dim);
+                return;
             case ID_UNCLAIM_ALL_DIMS:
-            {
-                FTBUPlayerDataMP.unclaimAllChunks(p, null);
-            }
+                ClaimedChunks.inst.unclaimAllChunks(p, null);
+                return;
             case ID_LOAD:
-            {
-                FTBUPlayerDataMP.setLoaded(p, m.pos, true);
-            }
+                ClaimedChunks.inst.setLoaded(p, m.pos, true);
+                return;
             case ID_UNLOAD:
-            {
-                FTBUPlayerDataMP.setLoaded(p, m.pos, false);
-            }
+                ClaimedChunks.inst.setLoaded(p, m.pos, false);
+                return;
         }
     }
 }

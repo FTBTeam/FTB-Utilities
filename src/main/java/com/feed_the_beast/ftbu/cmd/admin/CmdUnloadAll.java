@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbu.world.ClaimedChunk;
-import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
+import com.feed_the_beast.ftbu.world.ClaimedChunks;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -32,18 +32,27 @@ public class CmdUnloadAll extends CommandLM
 
         if(args[0].equals("@a"))
         {
-            for(ClaimedChunk c : FTBUWorldDataMP.get().getAllChunks(null))
-            { c.isChunkloaded = false; }
+            for(ClaimedChunk c : ClaimedChunks.inst.getAllChunks(null))
+            {
+                c.isChunkloaded = false;
+            }
             for(ForgePlayer p : ForgeWorldMP.inst.getOnlinePlayers())
-            { p.toPlayerMP().sendUpdate(); }
-            ics.addChatMessage(new TextComponentString("Unloaded all chunks"));
+            {
+                p.toPlayerMP().sendUpdate();
+            }
+            ics.addChatMessage(new TextComponentString("Unloaded all chunks")); //TODO: Lang
             return;
         }
 
         ForgePlayerMP p = ForgePlayerMP.get(args[0]);
-        for(ClaimedChunk c : FTBUWorldDataMP.get().getChunks(p.getProfile().getId(), null))
-        { c.isChunkloaded = false; }
-        if(p.isOnline()) { p.sendUpdate(); }
-        ics.addChatMessage(new TextComponentString("Unloaded all " + p.getProfile().getName() + "'s chunks"));
+        for(ClaimedChunk c : ClaimedChunks.inst.getChunks(p.getProfile().getId(), null))
+        {
+            c.isChunkloaded = false;
+        }
+        if(p.isOnline())
+        {
+            p.sendUpdate();
+        }
+        ics.addChatMessage(new TextComponentString("Unloaded all " + p.getProfile().getName() + "'s chunks")); //TODO: Lang
     }
 }

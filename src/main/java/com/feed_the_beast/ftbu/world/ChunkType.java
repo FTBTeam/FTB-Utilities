@@ -57,7 +57,7 @@ public class ChunkType
         @Override
         public int getAreaColor(ForgePlayer p)
         {
-            return isFriendly(p) ? (chunk.isChunkloaded ? 0xFFBE00 : 0x00FF21) : 0x0094FF;
+            return isFriendly(p) ? (chunk.getFlag(ClaimedChunk.CHUNKLOADED) ? 0xFFBE00 : 0x00FF21) : 0x0094FF;
         }
 
         @Override
@@ -101,9 +101,9 @@ public class ChunkType
             tag.setLong("OM", chunk.ownerID.getMostSignificantBits());
             tag.setLong("OL", chunk.ownerID.getLeastSignificantBits());
 
-            if(chunk.isChunkloaded && isFriendly(to))
+            if(chunk.getFlag(ClaimedChunk.CHUNKLOADED) && isFriendly(to))
             {
-                tag.setBoolean("L", chunk.isChunkloaded);
+                tag.setBoolean("L", true);
             }
         }
 
@@ -111,7 +111,7 @@ public class ChunkType
         public void readFromNBT(NBTTagCompound tag, ChunkDimPos pos)
         {
             chunk = new ClaimedChunk(new UUID(tag.getLong("OM"), tag.getLong("OL")), pos);
-            chunk.isChunkloaded = tag.getBoolean("L");
+            chunk.setFlag(ClaimedChunk.CHUNKLOADED, tag.getBoolean("L"));
         }
     }
 

@@ -115,7 +115,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
                 {
                     for(ClaimedChunk c : chunks)
                     {
-                        if(c.isChunkloaded)
+                        if(c.getFlag(ClaimedChunk.CHUNKLOADED))
                         {
                             ForgeChunkManager.forceChunk(t, c.pos);
                         }
@@ -153,18 +153,27 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
         {
             //total++;
 
-            boolean isLoaded = c.isChunkloaded;
+            boolean isLoaded = c.getFlag(ClaimedChunk.CHUNKLOADED);
 
-            if(c.isChunkloaded)
+            if(isLoaded)
             {
                 ForgePlayerMP p = c.getOwner();
-                if(p == null) { isLoaded = false; }
+                if(p == null)
+                {
+                    isLoaded = false;
+                }
                 else
                 {
                     ChunkloaderType type = FTBUPermissions.chunkloader_type.getEnum(p.getProfile());
 
-                    if(type == ChunkloaderType.DISABLED) { isLoaded = false; }
-                    else if(type == ChunkloaderType.ONLINE) { isLoaded = p.isOnline(); }
+                    if(type == ChunkloaderType.DISABLED)
+                    {
+                        isLoaded = false;
+                    }
+                    else if(type == ChunkloaderType.ONLINE)
+                    {
+                        isLoaded = p.isOnline();
+                    }
                     else if(type == ChunkloaderType.OFFLINE)
                     {
                         if(!p.isOnline())

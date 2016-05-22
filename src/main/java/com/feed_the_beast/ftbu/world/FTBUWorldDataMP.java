@@ -56,6 +56,12 @@ public class FTBUWorldDataMP extends FTBUWorldData implements IWorldTick, INBTSe
     }
 
     @Override
+    public void onLoadedBeforePlayers()
+    {
+        ClaimedChunks.inst.chunks.clear();
+    }
+
+    @Override
     public void onClosed()
     {
         ClaimedChunks.inst = null;
@@ -118,17 +124,15 @@ public class FTBUWorldDataMP extends FTBUWorldData implements IWorldTick, INBTSe
     @Override
     public NBTTagCompound serializeNBT()
     {
-        ClaimedChunks.inst.save();
         NBTTagCompound tag = new NBTTagCompound();
-        warps.readFromNBT(tag, "warps");
+        warps.writeToNBT(tag, "Warps");
         return tag;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound tag)
     {
-        ClaimedChunks.inst.load();
         nextChunkloaderUpdate = System.currentTimeMillis() + 10000L;
-        warps.writeToNBT(tag, "warps");
+        warps.readFromNBT(tag, "Warps");
     }
 }

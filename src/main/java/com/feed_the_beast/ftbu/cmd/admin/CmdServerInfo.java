@@ -12,12 +12,13 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,7 +33,7 @@ public class CmdServerInfo extends CommandLM
     { super("server_info", CommandLevel.OP); }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
 
@@ -42,15 +43,18 @@ public class CmdServerInfo extends CommandLM
 
         for(WorldServer w : DimensionManager.getWorlds())
         {
-            ImmutableSetMultimap<ChunkCoordIntPair, ForgeChunkManager.Ticket> map = ForgeChunkManager.getPersistentChunksFor(w);
+            ImmutableSetMultimap<ChunkPos, ForgeChunkManager.Ticket> map = ForgeChunkManager.getPersistentChunksFor(w);
 
-            Map<String, Collection<ChunkCoordIntPair>> chunksMap = new HashMap<>();
+            Map<String, Collection<ChunkPos>> chunksMap = new HashMap<>();
 
             for(ForgeChunkManager.Ticket t : map.values())
             {
-                Collection<ChunkCoordIntPair> list = chunksMap.get(t.getModId());
-                if(list == null) { chunksMap.put(t.getModId(), list = new HashSet<>()); }
-                for(ChunkCoordIntPair c : t.getChunkList())
+                Collection<ChunkPos> list = chunksMap.get(t.getModId());
+                if(list == null)
+                {
+                    chunksMap.put(t.getModId(), list = new HashSet<>());
+                }
+                for(ChunkPos c : t.getChunkList())
                 {
                     if(!list.contains(c))
                     {
@@ -61,11 +65,13 @@ public class CmdServerInfo extends CommandLM
 
             InfoPage dim = page.getSub(w.provider.getDimensionType().getName());
 
-            for(Map.Entry<String, Collection<ChunkCoordIntPair>> e1 : chunksMap.entrySet())
+            for(Map.Entry<String, Collection<ChunkPos>> e1 : chunksMap.entrySet())
             {
                 InfoPage mod = dim.getSub(e1.getKey() + " [" + e1.getValue().size() + "]");
-                for(ChunkCoordIntPair c : e1.getValue())
-                { mod.printlnText(c.chunkXPos + ", " + c.chunkZPos + " [ " + c.getCenterXPos() + ", " + c.getCenterZPosition() + " ]"); }
+                for(ChunkPos c : e1.getValue())
+                {
+                    mod.printlnText(c.chunkXPos + ", " + c.chunkZPos + " [ " + c.getCenterXPos() + ", " + c.getCenterZPosition() + " ]");
+                }
             }
         }
 

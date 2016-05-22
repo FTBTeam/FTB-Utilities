@@ -17,6 +17,7 @@ import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.net.MessageAreaRequest;
 import com.feed_the_beast.ftbu.net.MessageClaimChunk;
 import com.feed_the_beast.ftbu.world.ChunkType;
+import com.feed_the_beast.ftbu.world.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUPlayerDataSP;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataSP;
@@ -93,7 +94,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
                     if(owner != null)
                     {
                         l.add(type.getChatColor(owner) + owner.getProfile().getName());
-                        if(pc.chunk.isChunkloaded)
+                        if(pc.chunk.getFlag(ClaimedChunk.CHUNKLOADED))
                         {
                             l.add(TextFormatting.GOLD + I18n.format("ftbu.chunktype.chunkloaded"));
                         }

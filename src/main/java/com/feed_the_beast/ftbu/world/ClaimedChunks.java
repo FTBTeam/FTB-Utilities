@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.LMDimUtils;
@@ -11,18 +10,12 @@ import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.handlers.FTBUChunkEventHandler;
 import com.feed_the_beast.ftbu.net.MessageAreaUpdate;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
-import latmod.lib.LMJsonUtils;
-import latmod.lib.LMUtils;
 import latmod.lib.MathHelperLM;
 import latmod.lib.util.EnumEnabled;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -65,143 +58,6 @@ public class ClaimedChunks
     public static boolean isInSpawnD(int dim, double x, double z)
     {
         return dim == 0 && isInSpawn(new ChunkDimPos(dim, MathHelperLM.chunk(x), MathHelperLM.chunk(z)));
-    }
-
-    public void save()
-    {
-        Map<UUID, JsonArray> map = new HashMap<>();
-
-        for(Map.Entry<ChunkDimPos, ClaimedChunk> e : chunks.entrySet())
-        {
-            ForgePlayerMP p = e.getValue().getOwner();
-
-            if(p != null)
-            {
-                ClaimedChunk c = e.getValue();
-
-                JsonArray a = map.get(p.getProfile().getId());
-
-                if(a == null)
-                {
-                    a = new JsonArray();
-                    map.put(p.getProfile().getId(), a);
-                }
-
-                StringBuilder sb = new StringBuilder();
-
-                sb.append(c.pos.dim);
-                sb.append(',');
-
-                sb.append(c.pos.chunkXPos);
-                sb.append(',');
-
-                sb.append(c.pos.chunkZPos);
-
-                if(c.isChunkloaded)
-                {
-                    sb.append(',');
-                    sb.append('L');
-                }
-
-                a.add(new JsonPrimitive(sb.toString()));
-            }
-        }
-
-        JsonObject claimedChunksGroup = new JsonObject();
-
-        for(Map.Entry<UUID, JsonArray> entry : map.entrySet())
-        {
-            claimedChunksGroup.add(LMUtils.fromUUID(entry.getKey()), entry.getValue());
-        }
-
-        LMJsonUtils.toJson(new File(ForgeWorldMP.inst.latmodFolder, "claimed_chunks.json"), claimedChunksGroup);
-    }
-
-    public void load()
-    {
-        chunks.clear();
-        JsonElement claimsFile = LMJsonUtils.fromJson(new File(ForgeWorldMP.inst.latmodFolder, "claimed_chunks.json"));
-
-        if(claimsFile.isJsonObject())
-        {
-            JsonObject claimedChunksGroup = claimsFile.getAsJsonObject();
-
-            for(Map.Entry<String, JsonElement> e : claimedChunksGroup.entrySet())
-            {
-                try
-                {
-                    UUID id = LMUtils.fromString(e.getKey());
-
-                    if(id != null)
-                    {
-                        if(ForgeWorldMP.inst.playerMap.containsKey(id))
-                        {
-                            for(JsonElement e1 : e.getValue().getAsJsonArray())
-                            {
-                                String[] s = e1.getAsString().split(",");
-
-                                if(s.length >= 3)
-                                {
-                                    ClaimedChunk c = new ClaimedChunk(id, new ChunkDimPos(Integer.parseInt(s[0]), Integer.parseInt(s[1]), Integer.parseInt(s[2])));
-
-                                    if(s.length > 3)
-                                    {
-                                        for(int i = 3; i < s.length; i++)
-                                        {
-                                            switch(s[i].charAt(0))
-                                            {
-                                                case 'L':
-                                                {
-                                                    c.isChunkloaded = true;
-                                                    break;
-                                                }
-                                                //Possible other chunk properties
-                                            }
-                                        }
-                                    }
-
-                                    chunks.put(c.pos, c);
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        int dim = Integer.parseInt(e.getKey());
-
-                        for(Map.Entry<String, JsonElement> e1 : e.getValue().getAsJsonObject().entrySet())
-                        {
-                            id = LMUtils.fromString(e1.getKey());
-
-                            if(ForgeWorldMP.inst.playerMap.containsKey(id))
-                            {
-                                JsonArray chunksList = e1.getValue().getAsJsonArray();
-
-                                for(int k = 0; k < chunksList.size(); k++)
-                                {
-                                    int[] ai = LMJsonUtils.fromIntArray(chunksList.get(k));
-
-                                    if(ai != null)
-                                    {
-                                        ClaimedChunk c = new ClaimedChunk(id, new ChunkDimPos(dim, ai[0], ai[1]));
-                                        if(ai.length >= 3 && ai[2] == 1)
-                                        {
-                                            c.isChunkloaded = true;
-                                        }
-                                        chunks.put(c.pos, c);
-                                    }
-                                }
-                            }
-
-                        }
-                    }
-                }
-                catch(Exception ex)
-                {
-                    ex.printStackTrace();
-                }
-            }
-        }
     }
 
     public Collection<ClaimedChunk> getAllChunks(Integer dim)
@@ -329,7 +185,7 @@ public class ClaimedChunks
         int loaded = 0;
         for(ClaimedChunk c : getChunks(id, null))
         {
-            if(c.isChunkloaded && (!forced || c.isForced))
+            if(c.getFlag(ClaimedChunk.CHUNKLOADED) && (!forced || c.isForced))
             {
                 loaded++;
             }
@@ -360,8 +216,8 @@ public class ClaimedChunks
         if(max == 0) { return; }
         if(getClaimedChunks(player.getProfile().getId()) >= max) { return; }
 
-        ChunkType t = getType(player.toPlayerMP(), pos);
-        if(t.asClaimed() == null && t.isChunkOwner(player.toPlayerMP()) && put(new ClaimedChunk(player.getProfile().getId(), pos)))
+        ChunkType t = getType(player.toMP(), pos);
+        if(t.asClaimed() == null && t.isChunkOwner(player.toMP()) && put(new ClaimedChunk(player.getProfile().getId(), pos)))
         {
             player.sendUpdate();
         }
@@ -369,7 +225,7 @@ public class ClaimedChunks
 
     public void unclaimChunk(ForgePlayer player, ChunkDimPos pos)
     {
-        if(getType(player.toPlayerMP(), pos).isChunkOwner(player.toPlayerMP()))
+        if(getType(player.toMP(), pos).isChunkOwner(player.toMP()))
         {
             setLoaded(player, pos, false);
             remove(pos);
@@ -403,7 +259,7 @@ public class ClaimedChunks
             return;
         }
 
-        if(flag != chunk.isChunkloaded && player.equalsPlayer(chunk.getOwner()))
+        if(flag != chunk.getFlag(ClaimedChunk.CHUNKLOADED) && player.equalsPlayer(chunk.getOwner()))
         {
             if(flag)
             {
@@ -424,12 +280,12 @@ public class ClaimedChunks
                 }
             }
 
-            chunk.isChunkloaded = flag;
+            chunk.setFlag(ClaimedChunk.CHUNKLOADED, flag);
             FTBUChunkEventHandler.instance.markDirty(LMDimUtils.getWorld(pos.dim));
 
             if(player.getPlayer() != null)
             {
-                new MessageAreaUpdate(player.toPlayerMP(), pos.chunkXPos, pos.chunkZPos, pos.dim, 1, 1).sendTo(player.toPlayerMP().getPlayer());
+                new MessageAreaUpdate(player.toMP(), pos.chunkXPos, pos.chunkZPos, pos.dim, 1, 1).sendTo(player.toMP().getPlayer());
                 player.sendUpdate();
             }
         }

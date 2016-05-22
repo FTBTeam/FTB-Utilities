@@ -5,21 +5,24 @@ import com.feed_the_beast.ftbl.api.item.ItemStackSerializer;
 import com.feed_the_beast.ftbl.util.JsonHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import latmod.lib.annotations.Info;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class FTBUConfigLogin
 {
     @Info("Message of the day. This will be displayed when player joins the server")
     public static final ConfigEntryChatComponentList motd = new ConfigEntryChatComponentList("motd");
 
-    @Info({"Items to give player when he first joins the server", "Format: StringID Size Metadata", "Does not support NBT yet"})
+    @Info({"Items to give player when he first joins the server", "Format: \"StringID Size Metadata\" or {nbt}"})
     public static final ConfigEntryItemStackList starting_items = new ConfigEntryItemStackList("starting_items");
 
     public static class ConfigEntryChatComponentList extends ConfigEntryCustom
@@ -68,16 +71,17 @@ public class FTBUConfigLogin
 
     public static class ConfigEntryItemStackList extends ConfigEntryCustom
     {
-        public final List<ItemStack> items;
+        private final List<Map.Entry<ItemStack, JsonElement>> items;
 
         public ConfigEntryItemStackList(String id)
         {
             super(id);
             items = new ArrayList<>();
-            items.add(new ItemStack(Items.APPLE, 16));
+            items.add(new AbstractMap.SimpleEntry<>(new ItemStack(Items.APPLE, 16), new JsonPrimitive("minecraft:apple 16 0")));
         }
 
-        public void func_152753_a(JsonElement o)
+        @Override
+        public void fromJson(JsonElement o)
         {
             items.clear();
 
@@ -89,7 +93,7 @@ public class FTBUConfigLogin
 
                     if(is != null)
                     {
-                        items.add(is);
+                        items.add(new AbstractMap.SimpleEntry<>(is, e));
                     }
                 }
             }
@@ -100,12 +104,20 @@ public class FTBUConfigLogin
         {
             JsonArray a = new JsonArray();
 
-            for(ItemStack is : items)
+            for(Map.Entry<ItemStack, JsonElement> e : items)
             {
-                a.add(ItemStackSerializer.serialize(is));
+                a.add(e.getValue());
             }
 
             return a;
+        }
+
+        public List<ItemStack> getItems()
+        {
+            List<ItemStack> list = new ArrayList<>();
+
+
+            return list;
         }
     }
 }

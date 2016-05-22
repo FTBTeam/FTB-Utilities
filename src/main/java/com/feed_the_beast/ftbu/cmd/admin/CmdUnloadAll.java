@@ -34,11 +34,11 @@ public class CmdUnloadAll extends CommandLM
         {
             for(ClaimedChunk c : ClaimedChunks.inst.getAllChunks(null))
             {
-                c.isChunkloaded = false;
+                c.setFlag(ClaimedChunk.CHUNKLOADED, false);
             }
             for(ForgePlayer p : ForgeWorldMP.inst.getOnlinePlayers())
             {
-                p.toPlayerMP().sendUpdate();
+                p.toMP().sendUpdate();
             }
             ics.addChatMessage(new TextComponentString("Unloaded all chunks")); //TODO: Lang
             return;
@@ -47,7 +47,7 @@ public class CmdUnloadAll extends CommandLM
         ForgePlayerMP p = ForgePlayerMP.get(args[0]);
         for(ClaimedChunk c : ClaimedChunks.inst.getChunks(p.getProfile().getId(), null))
         {
-            c.isChunkloaded = false;
+            c.setFlag(ClaimedChunk.CHUNKLOADED, false);
         }
         if(p.isOnline())
         {

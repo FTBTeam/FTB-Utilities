@@ -3,15 +3,20 @@ package com.feed_the_beast.ftbu.world;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
+import latmod.lib.Bits;
+import latmod.lib.annotations.IFlagContainer;
 
 import java.util.UUID;
 
-public final class ClaimedChunk
+public final class ClaimedChunk implements IFlagContainer
 {
+    public static final byte CHUNKLOADED = 0;
+    public static final byte FORCED = 1;
+
     public final ChunkDimPos pos;
     public final UUID ownerID;
-    public boolean isChunkloaded = false;
     public boolean isForced = false;
+    public byte flags = 0;
 
     public ClaimedChunk(UUID o, ChunkDimPos p)
     {
@@ -33,4 +38,16 @@ public final class ClaimedChunk
     @Override
     public int hashCode()
     { return pos.hashCode(); }
+
+    @Override
+    public void setFlag(byte flag, boolean b)
+    {
+        flags = Bits.setBit(flags, flag, b);
+    }
+
+    @Override
+    public boolean getFlag(byte flag)
+    {
+        return Bits.getBit(flags, flag);
+    }
 }

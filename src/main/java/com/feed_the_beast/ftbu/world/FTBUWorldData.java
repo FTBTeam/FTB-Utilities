@@ -25,6 +25,10 @@ public abstract class FTBUWorldData implements ICapabilityProvider
     {
     }
 
+    public void onLoadedBeforePlayers()
+    {
+    }
+
     public void onClosed()
     {
     }
@@ -38,7 +42,12 @@ public abstract class FTBUWorldData implements ICapabilityProvider
     @Override
     public final <T> T getCapability(Capability<T> capability, EnumFacing facing)
     {
-        return (T) this;
+        if(capability == FTBUCapabilities.FTBU_WORLD_DATA)
+        {
+            return (T) this;
+        }
+
+        return null;
     }
 
     public FTBUWorldDataMP toMP()

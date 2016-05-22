@@ -11,8 +11,8 @@ import latmod.lib.annotations.NumberBounds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
 
 public class FTBUConfigGeneral
 {
@@ -20,11 +20,8 @@ public class FTBUConfigGeneral
     @Info({"Server will automatically shut down after X hours", "0 - Disabled", "0.5 - 30 minutes", "1 - 1 Hour", "24 - 1 Day", "168 - 1 Week", "720 - 1 Month"})
     public static final ConfigEntryDouble restart_timer = new ConfigEntryDouble("restart_timer", 0D);
 
-    @Info("If set to true, explosions and hostile mobs in spawn area will be disabled")
+    @Info("If set to true, explosions and hostile mobs in spawn area will be disabled, players won't be able to attack each other in spawn area")
     public static final ConfigEntryBool safe_spawn = new ConfigEntryBool("safe_spawn", false);
-
-    @Info("If set to false, playerMap won't be able to attack each other in spawn area")
-    public static final ConfigEntryBool spawn_pvp = new ConfigEntryBool("spawn_pvp", true);
 
     @Info("Entity IDs that are banned from world. They will not spawn and existing ones will be destroyed")
     public static final ConfigEntryBannedEntityList blocked_entities = new ConfigEntryBannedEntityList("blocked_entities");
@@ -42,12 +39,12 @@ public class FTBUConfigGeneral
 
     public static class ConfigEntryBannedEntityList extends ConfigEntryCustom
     {
-        public final List<Class<?>> list;
+        public final Collection<Class<?>> list;
 
         public ConfigEntryBannedEntityList(String id)
         {
             super(id);
-            list = new ArrayList<>();
+            list = new HashSet<>();
         }
 
         @Override
@@ -90,7 +87,10 @@ public class FTBUConfigGeneral
         {
             for(Class<?> c1 : list)
             {
-                if(c1.isAssignableFrom(c)) { return true; }
+                if(c1.isAssignableFrom(c))
+                {
+                    return true;
+                }
             }
 
             return false;

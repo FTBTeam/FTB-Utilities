@@ -60,7 +60,12 @@ public abstract class FTBUPlayerData implements ICapabilityProvider
     @Override
     public final <T> T getCapability(Capability<T> capability, EnumFacing facing)
     {
-        return (T) this;
+        if(capability == FTBUCapabilities.FTBU_PLAYER_DATA)
+        {
+            return (T) this;
+        }
+
+        return null;
     }
 
     public void writeSyncData(ForgePlayer player, NBTTagCompound tag, boolean self)

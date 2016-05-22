@@ -67,7 +67,7 @@ public class FTBUChatEventHandler
                 {
                     for(ForgePlayer p : ForgeWorldMP.inst.getOnlinePlayers())
                     {
-                        if(FTBUPlayerData.get(p.toPlayerMP()).getFlag(FTBUPlayerData.CHAT_LINKS))
+                        if(FTBUPlayerData.get(p.toMP()).getFlag(FTBUPlayerData.CHAT_LINKS))
                         {
                             p.getPlayer().addChatMessage(line);
                         }

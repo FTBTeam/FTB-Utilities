@@ -69,13 +69,13 @@ public class FTBUPlayerEventHandler
     {
         if(event.player.getSide().isServer() && event.player.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
         {
-            EntityPlayerMP ep = event.player.toPlayerMP().getPlayer();
+            EntityPlayerMP ep = event.player.toMP().getPlayer();
 
             if(event.first)
             {
                 if(FTBUConfigModules.starting_items.getAsBoolean())
                 {
-                    for(ItemStack is : FTBUConfigLogin.starting_items.items)
+                    for(ItemStack is : FTBUConfigLogin.starting_items.getItems())
                     {
                         LMInvUtils.giveItem(ep, is);
                     }
@@ -90,7 +90,7 @@ public class FTBUPlayerEventHandler
             Backups.hadPlayer = true;
             ServerBadges.sendToPlayer(ep);
 
-            new MessageAreaUpdate(event.player.toPlayerMP(), event.player.toPlayerMP().getPos(), 1).sendTo(ep);
+            new MessageAreaUpdate(event.player.toMP(), event.player.toMP().getPos(), 1).sendTo(ep);
             FTBUChunkEventHandler.instance.markDirty(null);
         }
     }

@@ -35,11 +35,31 @@ public class FTBUWorldEventHandler // FTBLIntegration
     }
 
     @SubscribeEvent
+    public void onWorldLoadedBeforePlayers(ForgeWorldEvent.OnLoadedBeforePlayers event)
+    {
+        if(event.world.hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null))
+        {
+            event.world.getCapability(FTBUCapabilities.FTBU_WORLD_DATA, null).onLoadedBeforePlayers();
+        }
+    }
+
+    @SubscribeEvent
     public void onWorldClosed(ForgeWorldEvent.OnClosed event)
     {
         if(event.world.hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null))
         {
             event.world.getCapability(FTBUCapabilities.FTBU_WORLD_DATA, null).onClosed();
+        }
+    }
+
+    @SubscribeEvent
+    public void onDataSynced(ForgeWorldEvent.Sync event)
+    {
+        if(event.world.getSide().isServer())
+        {
+        }
+        else
+        {
         }
     }
 

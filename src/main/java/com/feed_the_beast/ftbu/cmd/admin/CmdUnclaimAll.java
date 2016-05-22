@@ -32,7 +32,7 @@ public class CmdUnclaimAll extends CommandLM
         if(args[0].equals("@a"))
         {
             for(ForgePlayer p : ForgeWorldMP.inst.playerMap.values())
-            { ClaimedChunks.inst.unclaimAllChunks(p.toPlayerMP(), null); }
+            { ClaimedChunks.inst.unclaimAllChunks(p.toMP(), null); }
             ics.addChatMessage(new TextComponentString("Unclaimed all chunks"));
             return;
         }

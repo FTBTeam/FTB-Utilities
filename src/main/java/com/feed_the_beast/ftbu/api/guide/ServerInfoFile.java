@@ -98,22 +98,33 @@ public class ServerInfoFile extends InfoPage
 
         categoryTops = getSub("Tops").setTitle(Top.langTopTitle.textComponent());
 
-        players = ForgeWorldMP.inst.getServerPlayers();
+        players = new ArrayList<>();
+        players.addAll(ForgeWorldMP.inst.getServerPlayers());
 
         for(ForgePlayerMP p : players)
-        { p.refreshStats(); }
+        {
+            p.refreshStats();
+        }
 
         if(FTBUConfigModules.auto_restart.getAsBoolean())
-        { println(FTBULang.timer_restart.textComponent(LMStringUtils.getTimeString(FTBUWorldData.getW(ForgeWorldMP.inst).toMP().restartMillis - System.currentTimeMillis()))); }
+        {
+            println(FTBULang.timer_restart.textComponent(LMStringUtils.getTimeString(FTBUWorldData.getW(ForgeWorldMP.inst).toMP().restartMillis - System.currentTimeMillis())));
+        }
 
         if(FTBUConfigModules.backups.getAsBoolean())
-        { println(FTBULang.timer_backup.textComponent(LMStringUtils.getTimeString(Backups.nextBackup - System.currentTimeMillis()))); }
+        {
+            println(FTBULang.timer_backup.textComponent(LMStringUtils.getTimeString(Backups.nextBackup - System.currentTimeMillis())));
+        }
 
         if(FTBUConfigGeneral.server_info_difficulty.getAsBoolean())
-        { println(FTBLibLang.difficulty.textComponent(LMStringUtils.firstUppercase(pself.getPlayer().worldObj.getDifficulty().toString().toLowerCase()))); }
+        {
+            println(FTBLibLang.difficulty.textComponent(LMStringUtils.firstUppercase(pself.getPlayer().worldObj.getDifficulty().toString().toLowerCase())));
+        }
 
         if(FTBUConfigGeneral.server_info_mode.getAsBoolean())
-        { println(FTBLibLang.mode_current.textComponent(LMStringUtils.firstUppercase(ForgeWorldMP.inst.getMode().toString().toLowerCase()))); }
+        {
+            println(FTBLibLang.mode_current.textComponent(LMStringUtils.firstUppercase(ForgeWorldMP.inst.getMode().toString().toLowerCase())));
+        }
 
         for(Top t : Top.registry.values())
         {

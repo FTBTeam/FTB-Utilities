@@ -221,7 +221,11 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
     @Override
     public void addWidgets()
     {
-        mainPanel.addAll(mapButtons);
+        for(int i = 0; i < mapButtons.length; i++)
+        {
+            mainPanel.add(mapButtons[i]);
+        }
+
         mainPanel.add(panelButtons);
     }
 
@@ -287,7 +291,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
                     GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 
                     FTBLibClient.setGLColor(type.getAreaColor(playerLM), 180);
-                    GuiLM.drawTexturedRectD(mainPanel.getAX() + x * 16, mainPanel.getAY() + y * 16, zLevel, 16, 16, 0D, 0D, 1D, 1D);
+                    drawTexturedRectD(mainPanel.getAX() + x * 16, mainPanel.getAY() + y * 16, zLevel, 16, 16, 0D, 0D, 1D, 1D);
                 }
             }
         }
@@ -309,9 +313,9 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             GlStateManager.rotate(mc.thePlayer.rotationYaw + 180F, 0F, 0F, 1F);
             FTBLibClient.setTexture(tex_map_entity);
             GlStateManager.color(1F, 1F, 1F, mc.thePlayer.isSneaking() ? 0.4F : 0.7F);
-            GuiLM.drawTexturedRectD(-8, -8, zLevel, 16, 16, 0D, 0D, 1D, 1D);
+            drawTexturedRectD(-8, -8, zLevel, 16, 16, 0D, 0D, 1D, 1D);
             GlStateManager.popMatrix();
-            GuiLM.drawPlayerHead(mc.thePlayer.getName(), -2, -2, 4, 4, zLevel);
+            drawPlayerHead(mc.thePlayer.getName(), -2, -2, 4, 4, zLevel);
             GlStateManager.popMatrix();
         }
 

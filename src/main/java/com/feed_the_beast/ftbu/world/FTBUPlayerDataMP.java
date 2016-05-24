@@ -2,6 +2,9 @@ package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
+import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
+import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
+import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbl.util.PrivacyLevel;
 import com.feed_the_beast.ftbu.FTBUPermissions;
@@ -33,6 +36,88 @@ public class FTBUPlayerDataMP extends FTBUPlayerData implements INBTSerializable
     public FTBUPlayerDataMP toMP()
     {
         return this;
+    }
+
+    public ConfigGroup addMyServerSettings()
+    {
+        ConfigGroup group = new ConfigGroup("ftbu");
+
+        group.add(new ConfigEntryBool("render_badge", false)
+        {
+            @Override
+            public boolean getAsBoolean()
+            {
+                return getFlag(RENDER_BADGE);
+            }
+
+            @Override
+            public void set(boolean b)
+            {
+                setFlag(RENDER_BADGE, b);
+            }
+        }, false);
+
+        group.add(new ConfigEntryBool("chat_links", false)
+        {
+            @Override
+            public boolean getAsBoolean()
+            {
+                return getFlag(CHAT_LINKS);
+            }
+
+            @Override
+            public void set(boolean b)
+            {
+                setFlag(CHAT_LINKS, b);
+            }
+        }, false);
+
+        group.add(new ConfigEntryBool("explosions", false)
+        {
+            @Override
+            public boolean getAsBoolean()
+            {
+                return getFlag(EXPLOSIONS);
+            }
+
+            @Override
+            public void set(boolean b)
+            {
+                setFlag(EXPLOSIONS, b);
+            }
+        }, false);
+
+        group.add(new ConfigEntryBool("fake_players", false)
+        {
+            @Override
+            public boolean getAsBoolean()
+            {
+                return getFlag(FAKE_PLAYERS);
+            }
+
+            @Override
+            public void set(boolean b)
+            {
+                setFlag(FAKE_PLAYERS, b);
+            }
+        }, false);
+
+        group.add(new ConfigEntryEnum<PrivacyLevel>("block_security", PrivacyLevel.VALUES_3, PrivacyLevel.FRIENDS, false)
+        {
+            @Override
+            public PrivacyLevel get()
+            {
+                return blocks;
+            }
+
+            @Override
+            public void set(Object b)
+            {
+                blocks = (PrivacyLevel) b;
+            }
+        }, false);
+
+        return group;
     }
 
     @Override

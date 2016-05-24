@@ -233,6 +233,6 @@ public class ThreadReloadArea extends Thread
         //else if(b == Blocks.grass && state.getValue(BlockGrass.SNOWY))
         //	return LMColorUtils.addBrightness(b.colorMultiplier(worldObj, pos), -15);
 
-        return b.getMapColor(state).colorValue;
+        return state.getMapColor().colorValue;
     }
 }

@@ -12,9 +12,8 @@ import journeymap.client.api.display.DisplayType;
 import journeymap.client.api.display.PolygonOverlay;
 import journeymap.client.api.model.MapPolygon;
 import journeymap.client.api.model.ShapeProperties;
-import latmod.lib.MathHelperLM;
+import journeymap.client.api.util.PolygonHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.HashMap;
@@ -38,13 +37,14 @@ public class JMPluginHandler implements IJMPluginHandler
     public void mappingStarted()
     {
         polygons.clear();
+        clientAPI.removeAll(FTBUFinals.MOD_ID);
     }
 
     @Override
     public void mappingStopped()
     {
-        clientAPI.removeAll(FTBUFinals.MOD_ID);
         polygons.clear();
+        clientAPI.removeAll(FTBUFinals.MOD_ID);
     }
 
     @Override
@@ -56,11 +56,12 @@ public class JMPluginHandler implements IJMPluginHandler
             {
                 if(type.drawGrid())
                 {
-                    int x = MathHelperLM.unchunk(pos.chunkXPos);
-                    int z = MathHelperLM.unchunk(pos.chunkZPos);
-
-                    MapPolygon poly = new MapPolygon(new BlockPos(x, 0, z), new BlockPos(x + 16, 0, z), new BlockPos(x + 16, 0, z + 16), new BlockPos(x, 0, z + 16));
-                    PolygonOverlay chunkOverlay = new PolygonOverlay(FTBUFinals.MOD_ID, "claimed_" + pos.dim + '_' + pos.chunkXPos + '_' + pos.chunkZPos, pos.dim, new ShapeProperties().setFillColor(type.getAreaColor(ForgeWorldSP.inst.clientPlayer)).setFillOpacity(1F), poly);
+                    MapPolygon poly = PolygonHelper.createChunkPolygon(pos.chunkXPos, 100, pos.chunkZPos);
+                    ShapeProperties shapeProperties = new ShapeProperties();
+                    shapeProperties.setFillColor(type.getAreaColor(ForgeWorldSP.inst.clientPlayer));
+                    shapeProperties.setFillOpacity(0.3F);
+                    shapeProperties.setStrokeOpacity(0.2F);
+                    PolygonOverlay chunkOverlay = new PolygonOverlay(FTBUFinals.MOD_ID, "claimed_" + pos.dim + '_' + pos.chunkXPos + '_' + pos.chunkZPos, pos.dim, shapeProperties, poly);
 
                     StringBuilder sb = new StringBuilder(type.getChatColor(ForgeWorldSP.inst.clientPlayer) + type.langKey.translate());
 
@@ -79,7 +80,7 @@ public class JMPluginHandler implements IJMPluginHandler
                         }
                     }
 
-                    chunkOverlay.setOverlayGroupName("Claimed_Chunks").setTitle(sb.toString());
+                    chunkOverlay.setOverlayGroupName("Claimed Chunks").setTitle(sb.toString());
                     polygons.put(pos, chunkOverlay);
                     clientAPI.show(chunkOverlay);
                 }

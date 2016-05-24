@@ -17,7 +17,9 @@ public class FTBUGuiHandler extends LMGuiHandler
     public static final int ADMIN_CLAIMS = 1;
 
     public FTBUGuiHandler(String s)
-    { super(s); }
+    {
+        super(s);
+    }
 
     @Override
     public Container getContainer(EntityPlayer ep, int id, NBTTagCompound data)
@@ -29,7 +31,11 @@ public class FTBUGuiHandler extends LMGuiHandler
     @SideOnly(Side.CLIENT)
     public GuiScreen getGui(EntityPlayer ep, int id, NBTTagCompound data)
     {
-        if(id == ADMIN_CLAIMS) { return new GuiClaimChunks(data.getLong("T")); }
+        if(id == ADMIN_CLAIMS)
+        {
+            return new GuiClaimChunks(data.getLong("T"));
+        }
+
         return null;
     }
 }

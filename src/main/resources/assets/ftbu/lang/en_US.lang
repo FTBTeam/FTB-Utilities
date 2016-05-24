@@ -4,19 +4,18 @@ ftbu.button.block_security=Block Security
 ftbu.label.cchunks_count=Claimed Chunks: %s
 ftbu.label.lchunks_count=Loaded Chunks: %s
 
-# ClientConfig
+# Client Settings
 client_config.ftbu=FTBUtilities
 client_config.ftbu.render_badges=Show Badges
-client_config.ftbu.render_my_badge=Show My Badge
-client_config.ftbu.options_button=Options Button
-client_config.ftbu.chat_links=Chat Links
 client_config.ftbu.loaded_chunks_space_key=Use Space key for Loaded Chunks
-client_config.ftbu.guide_unicode=Use Unicode in Guides
 
-claims_config=Claimed Chunks Config
-claims_config.explosions=Explosions
-claims_config.security_level=Block Security Level
-claims_config.fake_players=Allow Fake Players
+# Server Settings
+my_server_settings.ftbu=FTBUtilities
+my_server_settings.ftbu.render_badge=Render My Badge
+my_server_settings.ftbu.chat_links=Chat Links
+my_server_settings.ftbu.explosions=Explosions
+my_server_settings.ftbu.fake_players=Allow Fake Players
+my_server_settings.ftbu.security_level=Block Security Level
 
 # PlayerActions
 player_action.ftbu:guide=Guide

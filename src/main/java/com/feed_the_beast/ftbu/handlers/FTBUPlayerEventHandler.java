@@ -105,6 +105,15 @@ public class FTBUPlayerEventHandler
     }
 
     @SubscribeEvent
+    public void onMyServerSettings(ForgePlayerEvent.MyServerSettings event)
+    {
+        if(event.player.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
+        {
+            event.settings.add(event.player.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null).toMP().addMyServerSettings(), false);
+        }
+    }
+
+    @SubscribeEvent
     public void onChunkChanged(EntityEvent.EnteringChunk e)
     {
         if(e.getEntity().worldObj.isRemote || !(e.getEntity() instanceof EntityPlayerMP))

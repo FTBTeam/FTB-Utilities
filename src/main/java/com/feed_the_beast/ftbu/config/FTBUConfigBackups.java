@@ -34,5 +34,7 @@ public class FTBUConfigBackups
     public static final ConfigEntryBool need_online_players = new ConfigEntryBool("need_online_players", true);
 
     public static long backupMillis()
-    { return (long) (backup_timer.getAsInt() * 3600D * 1000D); }
+    {
+        return (long) (backup_timer.getAsInt() * 3600D * 1000D);
+    }
 }

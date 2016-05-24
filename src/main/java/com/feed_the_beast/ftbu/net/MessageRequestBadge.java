@@ -14,7 +14,9 @@ public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
 {
     public UUID playerID;
 
-    public MessageRequestBadge() { }
+    public MessageRequestBadge()
+    {
+    }
 
     public MessageRequestBadge(UUID player)
     {
@@ -23,7 +25,9 @@ public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
 
     @Override
     public LMNetworkWrapper getWrapper()
-    { return FTBUNetHandler.NET; }
+    {
+        return FTBUNetHandler.NET;
+    }
 
     @Override
     public void fromBytes(ByteBuf io)

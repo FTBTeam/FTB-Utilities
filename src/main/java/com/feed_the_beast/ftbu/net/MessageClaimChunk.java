@@ -24,11 +24,15 @@ public class MessageClaimChunk extends MessageToServer<MessageClaimChunk>
     public ChunkDimPos pos;
     public long token;
 
-    public MessageClaimChunk() { }
+    public MessageClaimChunk()
+    {
+    }
 
     @Override
     public LMNetworkWrapper getWrapper()
-    { return FTBUNetHandler.NET; }
+    {
+        return FTBUNetHandler.NET;
+    }
 
     @Override
     public void fromBytes(ByteBuf io)

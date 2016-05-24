@@ -31,14 +31,23 @@ public class ClientGuideFile extends InfoPage
 
     public static GuiInfo openClientGui(boolean open)
     {
-        if(clientGuideGui == null) { clientGuideGui = new GuiInfo(null, ClientGuideFile.instance); }
-        if(open) { FTBLibClient.openGui(clientGuideGui); }
+        if(clientGuideGui == null)
+        {
+            clientGuideGui = new GuiInfo(null, ClientGuideFile.instance);
+        }
+        if(open)
+        {
+            FTBLibClient.openGui(clientGuideGui);
+        }
         return clientGuideGui;
     }
 
     public void reload(ReloadEvent e)
     {
-        if(FTBLib.DEV_ENV) { FTBU.logger.info("Guide reloaded @ " + e.world.getSide() + " as " + e.world.getMode()); }
+        if(FTBLib.DEV_ENV)
+        {
+            FTBU.logger.info("Guide reloaded @ " + e.world.getSide() + " as " + e.world.getMode());
+        }
 
         clear();
 
@@ -76,7 +85,10 @@ public class ClientGuideFile extends InfoPage
             try
             {
                 String text = LMFileUtils.loadAsText(file);
-                if(text != null && !text.isEmpty()) { printlnText(text.replace("\r", "")); }
+                if(text != null && !text.isEmpty())
+                {
+                    printlnText(text.replace("\r", ""));
+                }
             }
             catch(Exception ex)
             {

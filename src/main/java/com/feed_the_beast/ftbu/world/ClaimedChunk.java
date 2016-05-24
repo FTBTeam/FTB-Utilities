@@ -25,19 +25,27 @@ public final class ClaimedChunk implements IFlagContainer
     }
 
     public ForgePlayerMP getOwner()
-    { return ForgeWorldMP.inst.getPlayer(ownerID); }
+    {
+        return ForgeWorldMP.inst.getPlayer(ownerID);
+    }
 
     @Override
     public boolean equals(Object o)
-    { return o != null && (o == this || (o instanceof ClaimedChunk && pos.equalsChunk(((ClaimedChunk) o).pos))); }
+    {
+        return o != null && (o == this || (o instanceof ClaimedChunk && pos.equalsChunk(((ClaimedChunk) o).pos)));
+    }
 
     @Override
     public String toString()
-    { return pos.toString(); }
+    {
+        return pos.toString();
+    }
 
     @Override
     public int hashCode()
-    { return pos.hashCode(); }
+    {
+        return pos.hashCode();
+    }
 
     @Override
     public void setFlag(byte flag, boolean b)

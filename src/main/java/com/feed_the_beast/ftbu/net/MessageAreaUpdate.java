@@ -23,7 +23,9 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
     //Only on server side
     private ForgePlayerMP player;
 
-    public MessageAreaUpdate() { }
+    public MessageAreaUpdate()
+    {
+    }
 
     public MessageAreaUpdate(ForgePlayerMP p, int x, int z, int d, int sx, int sz)
     {

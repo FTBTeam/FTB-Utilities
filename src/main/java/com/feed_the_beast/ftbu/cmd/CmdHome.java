@@ -25,11 +25,15 @@ import java.util.List;
 public class CmdHome extends CommandLM
 {
     public CmdHome()
-    { super("home", CommandLevel.ALL); }
+    {
+        super("home", CommandLevel.ALL);
+    }
 
     @Override
     public String getCommandUsage(ICommandSender ics)
-    { return '/' + commandName + " <ID>"; }
+    {
+        return '/' + commandName + " <ID>";
+    }
 
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
@@ -53,7 +57,10 @@ public class CmdHome extends CommandLM
         {
             Collection<String> list = d.homes.list();
             ics.addChatMessage(new TextComponentString(list.size() + " / " + FTBUPermissions.homes_max.get(ep.getGameProfile()).getAsShort() + ": "));
-            if(!list.isEmpty()) { ics.addChatMessage(new TextComponentString(LMStringUtils.strip(list))); }
+            if(!list.isEmpty())
+            {
+                ics.addChatMessage(new TextComponentString(LMStringUtils.strip(list)));
+            }
             return;
         }
 

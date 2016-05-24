@@ -18,11 +18,15 @@ import java.util.List;
 public class CmdSetHome extends CommandLM
 {
     public CmdSetHome()
-    { super("sethome", CommandLevel.ALL); }
+    {
+        super("sethome", CommandLevel.ALL);
+    }
 
     @Override
     public String getCommandUsage(ICommandSender ics)
-    { return '/' + commandName + " <ID>"; }
+    {
+        return '/' + commandName + " <ID>";
+    }
 
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)

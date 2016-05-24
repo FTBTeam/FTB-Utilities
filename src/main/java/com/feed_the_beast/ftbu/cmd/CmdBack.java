@@ -13,7 +13,9 @@ import net.minecraft.server.MinecraftServer;
 public class CmdBack extends CommandLM
 {
     public CmdBack()
-    { super("back", CommandLevel.ALL); }
+    {
+        super("back", CommandLevel.ALL);
+    }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException

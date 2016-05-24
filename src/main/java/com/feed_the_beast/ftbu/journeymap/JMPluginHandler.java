@@ -68,7 +68,7 @@ public class JMPluginHandler implements IJMPluginHandler
                     if(type.asClaimed() != null)
                     {
                         sb.append('\n');
-                        sb.append(TextFormatting.GREEN.toString());
+                        sb.append(TextFormatting.GREEN);
 
                         ForgePlayer player = type.asClaimed().chunk.getOwner();
                         sb.append(ForgeWorldSP.inst.clientPlayer.isFriend(player) ? TextFormatting.GREEN : TextFormatting.BLUE).append(player.getProfile().getName());

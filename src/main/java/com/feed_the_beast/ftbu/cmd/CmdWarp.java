@@ -21,11 +21,15 @@ import java.util.List;
 public class CmdWarp extends CommandLM
 {
     public CmdWarp()
-    { super("warp", CommandLevel.ALL); }
+    {
+        super("warp", CommandLevel.ALL);
+    }
 
     @Override
     public String getCommandUsage(ICommandSender ics)
-    { return '/' + commandName + " <ID>"; }
+    {
+        return '/' + commandName + " <ID>";
+    }
 
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
@@ -51,7 +55,10 @@ public class CmdWarp extends CommandLM
 
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
         BlockDimPos p = FTBUWorldData.getW(ForgeWorldMP.inst).toMP().warps.get(args[0]);
-        if(p == null) { throw new CommandException("ftbu.cmd.warp_not_set", args[0]); }
+        if(p == null)
+        {
+            throw new CommandException("ftbu.cmd.warp_not_set", args[0]);
+        }
         LMDimUtils.teleportPlayer(ep, p);
         FTBULang.warp_tp.printChat(ics, args[0]);
     }

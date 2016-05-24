@@ -46,7 +46,10 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 
     private ForgeChunkManager.Ticket request(World w, ForgePlayerMP player)
     {
-        if(w == null || player == null) { return null; }
+        if(w == null || player == null)
+        {
+            return null;
+        }
 
         UUID playerID = player.getProfile().getId();
 
@@ -56,7 +59,10 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
         if(t == null)
         {
             t = ForgeChunkManager.requestTicket(FTBU.inst, w, ForgeChunkManager.Type.NORMAL);
-            if(t == null) { return null; }
+            if(t == null)
+            {
+                return null;
+            }
             else
             {
                 t.getModData().setString(PLAYER_ID_TAG, LMUtils.fromUUID(playerID));
@@ -79,7 +85,10 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
     {
         table.remove(world);
         List<ForgeChunkManager.Ticket> tickets1 = new ArrayList<>();
-        if(tickets.isEmpty() || !FTBUConfigModules.chunk_loading.getAsBoolean()) { return tickets1; }
+        if(tickets.isEmpty() || !FTBUConfigModules.chunk_loading.getAsBoolean())
+        {
+            return tickets1;
+        }
         Map<UUID, ForgeChunkManager.Ticket> map = new HashMap<>();
 
         for(ForgeChunkManager.Ticket t : tickets)
@@ -130,14 +139,22 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 
     public void markDirty(World w)
     {
-        if(ForgeWorldMP.inst == null || FTBLib.getServerWorld() == null) { return; }
-        if(w != null) { markDirty0(w); }
+        if(ForgeWorldMP.inst == null || FTBLib.getServerWorld() == null)
+        {
+            return;
+        }
+        if(w != null)
+        {
+            markDirty0(w);
+        }
 
         if(!table.isEmpty())
         {
             World[] worlds = table.keySet().toArray(new World[table.size()]);
             for(World w1 : worlds)
-            { markDirty0(w1); }
+            {
+                markDirty0(w1);
+            }
         }
     }
 

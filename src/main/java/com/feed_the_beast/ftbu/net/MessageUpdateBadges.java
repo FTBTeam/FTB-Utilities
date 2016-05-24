@@ -16,7 +16,9 @@ public class MessageUpdateBadges extends MessageToClient<MessageUpdateBadges>
 {
     public Collection<Badge> badges;
 
-    public MessageUpdateBadges() { }
+    public MessageUpdateBadges()
+    {
+    }
 
     public MessageUpdateBadges(Collection<Badge> c)
     {
@@ -25,7 +27,9 @@ public class MessageUpdateBadges extends MessageToClient<MessageUpdateBadges>
 
     @Override
     public LMNetworkWrapper getWrapper()
-    { return FTBUNetHandler.NET; }
+    {
+        return FTBUNetHandler.NET;
+    }
 
     @Override
     public void fromBytes(ByteBuf io)

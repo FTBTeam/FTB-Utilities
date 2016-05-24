@@ -31,6 +31,7 @@ public class Ranks implements IPermissionHandler
     public final Map<String, Rank> ranks = new LinkedHashMap<>();
     public final Map<UUID, Rank> playerMap = new HashMap<>();
     public Rank defaultRank;
+
     private Ranks()
     {
         fileRanks = new File(FTBLib.folderLocal, "ftbu/ranks.json");
@@ -42,7 +43,10 @@ public class Ranks implements IPermissionHandler
 
     public static Ranks instance()
     {
-        if(instance == null) { instance = new Ranks(); }
+        if(instance == null)
+        {
+            instance = new Ranks();
+        }
         return instance;
     }
 
@@ -197,8 +201,8 @@ public class Ranks implements IPermissionHandler
             for(RankConfig p : sortedRankConfigs)
             {
                 list.add(p.getID().toString());
-				/*
-				info = p.getInfo();
+                /*
+                info = p.getInfo();
 				
 				if(info != null && info.length > 0)
 				{

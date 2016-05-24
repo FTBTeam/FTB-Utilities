@@ -16,15 +16,21 @@ import net.minecraft.util.math.Vec3d;
 public class CmdTplast extends CommandLM
 {
     public CmdTplast()
-    { super(FTBUConfigCmd.name_tplast.getAsString(), CommandLevel.OP); }
+    {
+        super(FTBUConfigCmd.name_tplast.getAsString(), CommandLevel.OP);
+    }
 
     @Override
     public String getCommandUsage(ICommandSender ics)
-    { return '/' + commandName + " [who] <to>"; }
+    {
+        return '/' + commandName + " [who] <to>";
+    }
 
     @Override
     public boolean isUsernameIndex(String[] args, int i)
-    { return i == 0; }
+    {
+        return i == 0;
+    }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException

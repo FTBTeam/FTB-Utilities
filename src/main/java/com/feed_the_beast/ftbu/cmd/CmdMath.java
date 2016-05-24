@@ -18,7 +18,9 @@ public class CmdMath extends CommandLM
     private static ScriptEngine engine = null;
 
     public CmdMath()
-    { super("math", CommandLevel.ALL); }
+    {
+        super("math", CommandLevel.ALL);
+    }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
@@ -32,9 +34,15 @@ public class CmdMath extends CommandLM
             try
             {
                 engine = new ScriptEngineManager().getEngineByName("JavaScript");
-                if(engine != null) { hasEngine = Boolean.TRUE; }
+                if(engine != null)
+                {
+                    hasEngine = Boolean.TRUE;
+                }
             }
-            catch(Exception e) { e.printStackTrace(); }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
         }
 
         if(hasEngine == Boolean.TRUE)

@@ -150,7 +150,10 @@ public class FTBUPlayerEventHandler
     @SubscribeEvent
     public void onPlayerAttacked(LivingAttackEvent e)
     {
-        if(e.getEntity().worldObj.isRemote) { return; }
+        if(e.getEntity().worldObj.isRemote)
+        {
+            return;
+        }
 
         int dim = e.getEntity().dimension;
         if(dim != 0 || !(e.getEntity() instanceof EntityPlayerMP) || e.getEntity() instanceof FakePlayer)

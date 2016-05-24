@@ -12,7 +12,9 @@ public class MessageAreaRequest extends MessageToServer<MessageAreaRequest>
 {
     public int chunkX, chunkY, sizeX, sizeY;
 
-    public MessageAreaRequest() { }
+    public MessageAreaRequest()
+    {
+    }
 
     public MessageAreaRequest(int x, int y, int w, int h)
     {
@@ -24,7 +26,9 @@ public class MessageAreaRequest extends MessageToServer<MessageAreaRequest>
 
     @Override
     public LMNetworkWrapper getWrapper()
-    { return FTBUNetHandler.NET; }
+    {
+        return FTBUNetHandler.NET;
+    }
 
     @Override
     public void fromBytes(ByteBuf io)

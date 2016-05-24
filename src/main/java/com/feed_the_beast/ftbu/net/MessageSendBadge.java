@@ -15,7 +15,9 @@ public class MessageSendBadge extends MessageToClient<MessageSendBadge>
     public UUID playerID;
     public String badgeID;
 
-    public MessageSendBadge() { }
+    public MessageSendBadge()
+    {
+    }
 
     public MessageSendBadge(UUID player, String id)
     {
@@ -25,7 +27,9 @@ public class MessageSendBadge extends MessageToClient<MessageSendBadge>
 
     @Override
     public LMNetworkWrapper getWrapper()
-    { return FTBUNetHandler.NET; }
+    {
+        return FTBUNetHandler.NET;
+    }
 
     @Override
     public void fromBytes(ByteBuf io)

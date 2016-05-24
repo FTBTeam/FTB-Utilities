@@ -56,7 +56,9 @@ public class CmdLMPlayerSettings extends CommandSubLM
     public static class CmdBlockSecurity extends CommandLM
     {
         public CmdBlockSecurity(String s)
-        { super(s, CommandLevel.ALL); }
+        {
+            super(s, CommandLevel.ALL);
+        }
 
         @Override
         public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)

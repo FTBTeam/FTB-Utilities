@@ -38,5 +38,7 @@ public class FTBULang
     public static final LangKey backup_size = get("backup.size");
 
     public static LangKey get(String s)
-    { return new LangKey("ftbu." + s); }
+    {
+        return new LangKey("ftbu." + s);
+    }
 }

@@ -84,7 +84,10 @@ public class ThreadBackup extends Thread
                     FileInputStream fis = new FileInputStream(file);
 
                     int len;
-                    while((len = fis.read(buffer)) > 0) { zos.write(buffer, 0, len); }
+                    while((len = fis.read(buffer)) > 0)
+                    {
+                        zos.write(buffer, 0, len);
+                    }
                     zos.closeEntry();
                     fis.close();
                 }
@@ -148,19 +151,30 @@ public class ThreadBackup extends Thread
             BroadcastSender.inst.addChatMessage(c);
 
             ex.printStackTrace();
-            if(dstFile != null) { LMFileUtils.delete(dstFile); }
+            if(dstFile != null)
+            {
+                LMFileUtils.delete(dstFile);
+            }
         }
         //System.gc();
     }
 
     private static String getDoneTime(long l)
-    { return LMStringUtils.getTimeString(System.currentTimeMillis() - l); }
+    {
+        return LMStringUtils.getTimeString(System.currentTimeMillis() - l);
+    }
 
     private static void appendNum(StringBuilder sb, int num, char c)
     {
-        if(num < 10) { sb.append('0'); }
+        if(num < 10)
+        {
+            sb.append('0');
+        }
         sb.append(num);
-        if(c != 0) { sb.append(c); }
+        if(c != 0)
+        {
+            sb.append(c);
+        }
     }
 
     @Override

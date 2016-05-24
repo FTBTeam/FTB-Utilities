@@ -24,7 +24,10 @@ public class FTBUChatEventHandler
         for(String s1 : LINK_PREFIXES)
         {
             int idx = s.indexOf(s1);
-            if(idx != -1) { return idx; }
+            if(idx != -1)
+            {
+                return idx;
+            }
         }
 
         return -1;
@@ -40,7 +43,10 @@ public class FTBUChatEventHandler
         for(String s : msg)
         {
             int index = getFirstLinkIndex(s);
-            if(index != -1) { links.add(s.substring(index).trim()); }
+            if(index != -1)
+            {
+                links.add(s.substring(index).trim());
+            }
         }
 
         if(!links.isEmpty())
@@ -55,7 +61,10 @@ public class FTBUChatEventHandler
                 c.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(link)));
                 c.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, link));
                 line.appendSibling(c);
-                if(!oneLink) { line.appendSibling(new TextComponentString(" ")); }
+                if(!oneLink)
+                {
+                    line.appendSibling(new TextComponentString(" "));
+                }
             }
 
             line.getStyle().setColor(TextFormatting.GOLD);

@@ -4,14 +4,14 @@ import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.LMNBTUtils;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Warps
 {
-    private final HashMap<String, BlockDimPos> warps = new HashMap<>();
+    private final Map<String, BlockDimPos> warps = new HashMap<>();
 
     public void readFromNBT(NBTTagCompound tag, String s)
     {
@@ -42,19 +42,31 @@ public class Warps
 
     public Collection<String> list()
     {
-        if(warps.isEmpty()) { return new ArrayList<>(); }
+        if(warps.isEmpty())
+        {
+            return Collections.EMPTY_SET;
+        }
+
         return warps.keySet();
     }
 
     public BlockDimPos get(String s)
-    { return warps.get(s); }
+    {
+        return warps.get(s);
+    }
 
     public boolean set(String s, BlockDimPos pos)
     {
-        if(pos == null) { return warps.remove(s) != null; }
+        if(pos == null)
+        {
+            return warps.remove(s) != null;
+        }
+
         return warps.put(s, pos.copy()) == null;
     }
 
     public int size()
-    { return warps.size(); }
+    {
+        return warps.size();
+    }
 }

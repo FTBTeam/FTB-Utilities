@@ -40,7 +40,9 @@ public class FTBUPermissions
     {
         @Override
         public JsonElement getDefaultValue(boolean op)
-        { return new JsonPrimitive(op ? 100 : 1); }
+        {
+            return new JsonPrimitive(op ? 100 : 1);
+        }
     });
 
     // Claims //
@@ -52,7 +54,9 @@ public class FTBUPermissions
     {
         @Override
         public JsonElement getDefaultValue(boolean op)
-        { return new JsonPrimitive(op ? 1000 : 100); }
+        {
+            return new JsonPrimitive(op ? 1000 : 100);
+        }
     });
 
     //@ConfigType(PrimitiveType.ENUM)
@@ -113,7 +117,9 @@ public class FTBUPermissions
     {
         @Override
         public JsonElement getDefaultValue(boolean op)
-        { return new JsonPrimitive(op ? 5000 : 50); }
+        {
+            return new JsonPrimitive(op ? 5000 : 50);
+        }
     });
 
     @NumberBounds(min = -1D)
@@ -122,7 +128,9 @@ public class FTBUPermissions
     {
         @Override
         public JsonElement getDefaultValue(boolean op)
-        { return new JsonPrimitive(op ? -1D : 24D); }
+        {
+            return new JsonPrimitive(op ? -1D : 24D);
+        }
     });
 
     public static void init()

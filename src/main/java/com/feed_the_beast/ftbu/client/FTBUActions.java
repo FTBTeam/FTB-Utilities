@@ -31,11 +31,15 @@ public class FTBUActions
 
         @Override
         public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
-        { return FTBUWorldData.isLoadedW(ForgeWorldSP.inst); }
+        {
+            return FTBUWorldData.isLoadedW(ForgeWorldSP.inst);
+        }
 
         @Override
         public Boolean configDefault()
-        { return Boolean.TRUE; }
+        {
+            return Boolean.TRUE;
+        }
     });
 
     // Self //
@@ -43,29 +47,41 @@ public class FTBUActions
     {
         @Override
         public void onClicked(ForgePlayer self, ForgePlayer other)
-        { new MessageRequestServerInfo().sendToServer(); }
+        {
+            new MessageRequestServerInfo().sendToServer();
+        }
 
         @Override
         public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
-        { return FTBUWorldData.isLoadedW(ForgeWorldSP.inst); }
+        {
+            return FTBUWorldData.isLoadedW(ForgeWorldSP.inst);
+        }
 
         @Override
         public Boolean configDefault()
-        { return Boolean.TRUE; }
+        {
+            return Boolean.TRUE;
+        }
     });
     public static final PlayerAction CLAIMS = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBUFinals.MOD_ID, "claimed_chunks"), 0, GuiIcons.map)
     {
         @Override
         public void onClicked(ForgePlayer self, ForgePlayer other)
-        { FTBLibClient.openGui(new GuiClaimChunks(0L)); }
+        {
+            FTBLibClient.openGui(new GuiClaimChunks(0L));
+        }
 
         @Override
         public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
-        { return FTBUWorldData.isLoadedW(ForgeWorldSP.inst); }
+        {
+            return FTBUWorldData.isLoadedW(ForgeWorldSP.inst);
+        }
 
         @Override
         public Boolean configDefault()
-        { return Boolean.TRUE; }
+        {
+            return Boolean.TRUE;
+        }
     });
     public static final PlayerAction TRADE = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBUFinals.MOD_ID, "trade"), 0, GuiIcons.money_bag)
     {
@@ -76,11 +92,15 @@ public class FTBUActions
 
         @Override
         public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
-        { return FTBLib.DEV_ENV; }
+        {
+            return FTBLib.DEV_ENV;
+        }
 
         @Override
         public Boolean configDefault()
-        { return Boolean.TRUE; }
+        {
+            return Boolean.TRUE;
+        }
     });
     public static final PlayerAction MAIL = PlayerActionRegistry.add(new PlayerAction(EnumSelf.OTHER, new ResourceLocation(FTBUFinals.MOD_ID, "mail"), 0, GuiIcons.feather)
     {
@@ -91,7 +111,9 @@ public class FTBUActions
 
         @Override
         public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
-        { return FTBLib.DEV_ENV; }
+        {
+            return FTBLib.DEV_ENV;
+        }
     });
 
     // Other //

@@ -15,7 +15,9 @@ import net.minecraft.world.World;
 public class CmdSpawn extends CommandLM
 {
     public CmdSpawn()
-    { super("spawn", CommandLevel.ALL); }
+    {
+        super("spawn", CommandLevel.ALL);
+    }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException

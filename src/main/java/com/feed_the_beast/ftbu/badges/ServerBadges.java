@@ -90,11 +90,16 @@ public class ServerBadges
     }
 
     public static void sendToPlayer(EntityPlayerMP ep)
-    { new MessageUpdateBadges(map.values()).sendTo(ep); }
+    {
+        new MessageUpdateBadges(map.values()).sendTo(ep);
+    }
 
     private static void loadBadges(JsonElement e, Phase p)
     {
-        if(e == null || !e.isJsonObject()) { return; }
+        if(e == null || !e.isJsonObject())
+        {
+            return;
+        }
 
         JsonObject o = e.getAsJsonObject();
 
@@ -123,7 +128,10 @@ public class ServerBadges
                     if(id != null)
                     {
                         Badge b = map.get(entry.getValue().getAsString());
-                        if(b != null) { uuid.put(id, b); }
+                        if(b != null)
+                        {
+                            uuid.put(id, b);
+                        }
                     }
                 }
             }
@@ -132,16 +140,25 @@ public class ServerBadges
 
     public static Badge getServerBadge(ForgePlayerMP p)
     {
-        if(p == null) { return Badge.emptyBadge; }
+        if(p == null)
+        {
+            return Badge.emptyBadge;
+        }
 
         Badge b = uuid.get(p.getProfile().getId());
-        if(b != null) { return b; }
+        if(b != null)
+        {
+            return b;
+        }
 
         String rank = Ranks.instance().getRankOf(p.getProfile()).badge;
         if(!rank.isEmpty())
         {
             b = map.get(rank);
-            if(b != null) { return b; }
+            if(b != null)
+            {
+                return b;
+            }
         }
 
         return Badge.emptyBadge;

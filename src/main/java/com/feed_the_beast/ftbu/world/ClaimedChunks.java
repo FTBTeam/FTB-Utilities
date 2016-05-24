@@ -195,7 +195,9 @@ public class ClaimedChunks
     }
 
     public short getMaxLoadedChunks(GameProfile profile)
-    { return FTBUPermissions.chunkloader_max_chunks.get(profile).getAsShort(); }
+    {
+        return FTBUPermissions.chunkloader_max_chunks.get(profile).getAsShort();
+    }
 
     public boolean isDimensionBlacklisted(GameProfile profile, int dim)
     {
@@ -203,7 +205,10 @@ public class ClaimedChunks
 
         for(int i = 0; i < a.size(); i++)
         {
-            if(a.get(i).getAsInt() == dim) { return true; }
+            if(a.get(i).getAsInt() == dim)
+            {
+                return true;
+            }
         }
 
         return false;
@@ -211,10 +216,19 @@ public class ClaimedChunks
 
     public void claimChunk(ForgePlayer player, ChunkDimPos pos)
     {
-        if(isDimensionBlacklisted(player.getProfile(), pos.dim)) { return; }
+        if(isDimensionBlacklisted(player.getProfile(), pos.dim))
+        {
+            return;
+        }
         short max = FTBUPermissions.claims_max_chunks.get(player.getProfile()).getAsShort();
-        if(max == 0) { return; }
-        if(getClaimedChunks(player.getProfile().getId()) >= max) { return; }
+        if(max == 0)
+        {
+            return;
+        }
+        if(getClaimedChunks(player.getProfile().getId()) >= max)
+        {
+            return;
+        }
 
         ChunkType t = getType(player.toMP(), pos);
         if(t.asClaimed() == null && t.isChunkOwner(player.toMP()) && put(new ClaimedChunk(player.getProfile().getId(), pos)))

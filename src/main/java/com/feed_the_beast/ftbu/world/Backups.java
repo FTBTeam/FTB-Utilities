@@ -32,7 +32,10 @@ public class Backups
     public static void init()
     {
         backupsFolder = FTBUConfigBackups.folder.getAsString().isEmpty() ? new File(FTBLib.folderMinecraft, "/backups/") : new File(FTBUConfigBackups.folder.getAsString());
-        if(!backupsFolder.exists()) { backupsFolder.mkdirs(); }
+        if(!backupsFolder.exists())
+        {
+            backupsFolder.mkdirs();
+        }
         thread = null;
         clearOldBackups();
         logger.info("Backups folder - " + backupsFolder.getAbsolutePath());
@@ -40,13 +43,22 @@ public class Backups
 
     public static boolean run(ICommandSender ics)
     {
-        if(thread != null) { return false; }
+        if(thread != null)
+        {
+            return false;
+        }
         boolean auto = !(ics instanceof EntityPlayerMP);
 
-        if(auto && !FTBUConfigModules.backups.getAsBoolean()) { return false; }
+        if(auto && !FTBUConfigModules.backups.getAsBoolean())
+        {
+            return false;
+        }
 
         World w = FTBLib.getServerWorld();
-        if(w == null) { return false; }
+        if(w == null)
+        {
+            return false;
+        }
 
         ITextComponent c = FTBULang.backup_start.textComponent(ics.getName());
         c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
@@ -56,7 +68,10 @@ public class Backups
 
         if(auto && FTBUConfigBackups.need_online_players.getAsBoolean())
         {
-            if(!FTBLib.hasOnlinePlayers() && !hadPlayer) { return true; }
+            if(!FTBLib.hasOnlinePlayers() && !hadPlayer)
+            {
+                return true;
+            }
             hadPlayer = false;
         }
 

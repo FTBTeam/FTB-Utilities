@@ -87,10 +87,22 @@ public class FTBU
         FTBLib.addCommand(e, new CmdTplast());
         FTBLib.addCommand(e, new CmdLMPlayerSettings());
 
-        if(FTBUConfigCmd.trash_can.getAsBoolean()) { FTBLib.addCommand(e, new CmdTrashCan()); }
-        if(FTBUConfigCmd.back.getAsBoolean()) { FTBLib.addCommand(e, new CmdBack()); }
-        if(FTBUConfigCmd.spawn.getAsBoolean()) { FTBLib.addCommand(e, new CmdSpawn()); }
-        if(FTBUConfigCmd.warp.getAsBoolean()) { FTBLib.addCommand(e, new CmdWarp()); }
+        if(FTBUConfigCmd.trash_can.getAsBoolean())
+        {
+            FTBLib.addCommand(e, new CmdTrashCan());
+        }
+        if(FTBUConfigCmd.back.getAsBoolean())
+        {
+            FTBLib.addCommand(e, new CmdBack());
+        }
+        if(FTBUConfigCmd.spawn.getAsBoolean())
+        {
+            FTBLib.addCommand(e, new CmdSpawn());
+        }
+        if(FTBUConfigCmd.warp.getAsBoolean())
+        {
+            FTBLib.addCommand(e, new CmdWarp());
+        }
 
         if(FTBUConfigCmd.home.getAsBoolean())
         {

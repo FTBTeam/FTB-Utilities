@@ -16,11 +16,15 @@ import java.util.List;
 public class CmdDelHome extends CommandLM
 {
     public CmdDelHome()
-    { super("delhome", CommandLevel.ALL); }
+    {
+        super("delhome", CommandLevel.ALL);
+    }
 
     @Override
     public String getCommandUsage(ICommandSender ics)
-    { return '/' + commandName + " <ID>"; }
+    {
+        return '/' + commandName + " <ID>";
+    }
 
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)

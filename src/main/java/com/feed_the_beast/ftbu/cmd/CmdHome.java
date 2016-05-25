@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
-import com.feed_the_beast.ftbl.api.permissions.ForgePermissionRegistry;
+import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.LMDimUtils;
 import com.feed_the_beast.ftbu.FTBULang;
@@ -56,7 +56,7 @@ public class CmdHome extends CommandLM
         if(args[0].equals("list"))
         {
             Collection<String> list = d.homes.list();
-            ics.addChatMessage(new TextComponentString(list.size() + " / " + FTBUPermissions.homes_max.get(ep.getGameProfile()).getAsShort() + ": "));
+            ics.addChatMessage(new TextComponentString(list.size() + " / " + FTBUPermissions.homes_max.get(ep.getGameProfile()) + ": "));
             if(!list.isEmpty())
             {
                 ics.addChatMessage(new TextComponentString(LMStringUtils.strip(list)));
@@ -71,7 +71,7 @@ public class CmdHome extends CommandLM
             throw FTBULang.home_not_set.commandError(args[0]);
         }
 
-        if(ep.dimension != pos.dim && !ForgePermissionRegistry.hasPermission(FTBUPermissions.homes_cross_dim, ep.getGameProfile()))
+        if(ep.dimension != pos.dim && !PermissionAPI.hasPermission(ep.getGameProfile(), FTBUPermissions.homes_cross_dim, true))
         {
             throw FTBULang.home_cross_dim.commandError();
         }

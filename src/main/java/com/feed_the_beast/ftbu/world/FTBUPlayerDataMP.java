@@ -211,8 +211,8 @@ public class FTBUPlayerDataMP extends FTBUPlayerData implements INBTSerializable
         {
             map.putIfNot0(10, ClaimedChunks.inst.getClaimedChunks(player.getProfile().getId()));
             map.putIfNot0(11, ClaimedChunks.inst.getLoadedChunks(player.getProfile().getId(), true));
-            map.putIfNot0(12, FTBUPermissions.claims_max_chunks.get(player.getProfile()).getAsShort());
-            map.putIfNot0(13, FTBUPermissions.chunkloader_max_chunks.get(player.getProfile()).getAsShort());
+            map.putIfNot0(12, FTBUPermissions.claims_max_chunks.get(player.getProfile()));
+            map.putIfNot0(13, FTBUPermissions.chunkloader_max_chunks.get(player.getProfile()));
         }
 
         tag.setIntArray("F", map.toArray());

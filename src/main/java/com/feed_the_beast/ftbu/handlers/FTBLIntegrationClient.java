@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbu.handlers;
 import com.feed_the_beast.ftbl.api.FTBLibCapabilities;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
-import com.feed_the_beast.ftbu.badges.ClientBadges;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
@@ -22,7 +21,6 @@ public class FTBLIntegrationClient extends FTBLIntegration
         if(e.world.getSide().isClient())
         {
             FTBLibClient.clearCachedData();
-            ClientBadges.clear();
 
             //if(e.modeChanged)
             {

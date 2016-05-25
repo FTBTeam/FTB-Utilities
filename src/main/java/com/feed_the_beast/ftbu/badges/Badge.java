@@ -15,7 +15,6 @@ import org.lwjgl.opengl.GL11;
 public class Badge extends FinalIDObject
 {
     public static final ResourceLocation defTex = new ResourceLocation("ftbu", "textures/failed_badge.png");
-    public static final Badge emptyBadge = new Badge("-", null);
 
     // -- //
 

@@ -181,7 +181,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
                 }
                 else
                 {
-                    ChunkloaderType type = FTBUPermissions.chunkloader_type.getEnum(p.getProfile());
+                    ChunkloaderType type = FTBUPermissions.chunkloader_type.get(p.getProfile());
 
                     if(type == ChunkloaderType.DISABLED)
                     {
@@ -195,7 +195,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
                     {
                         if(!p.isOnline())
                         {
-                            double max = FTBUPermissions.chunkloader_offline_timer.get(p.getProfile()).getAsDouble();
+                            double max = FTBUPermissions.chunkloader_offline_timer.get(p.getProfile());
 
                             if(max > 0D && p.stats.getLastSeenDeltaInHours(p) > max)
                             {

@@ -5,14 +5,14 @@ import com.feed_the_beast.ftbl.FTBUIntegration;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
-import com.feed_the_beast.ftbl.api.permissions.ForgePermissionRegistry;
+import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.guide.ServerInfoFile;
-import com.feed_the_beast.ftbu.badges.ServerBadges;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.ChunkType;
 import com.feed_the_beast.ftbu.world.ClaimedChunks;
+import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
 import com.google.gson.JsonElement;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -26,7 +26,8 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
         {
             ServerInfoFile.CachedInfo.reload();
             Ranks.instance().reload();
-            ServerBadges.reload();
+
+            FTBUWorldDataMP.reloadServerBadges();
 
             if(FTBLib.getServerWorld() != null)
             {
@@ -52,7 +53,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
         {
             return true;
         }
-        else if(!player.isFake() && ForgePermissionRegistry.hasPermission(FTBLibPermissions.interact_secure, player.getProfile()))
+        else if(!player.isFake() && PermissionAPI.hasPermission(player.getProfile(), FTBLibPermissions.interact_secure, false))
         {
             return true;
         }
@@ -61,7 +62,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 
         if(leftClick)
         {
-            for(JsonElement e : FTBUPermissions.claims_break_whitelist.get(player.getProfile()).getAsJsonArray())
+            for(JsonElement e : FTBUPermissions.claims_break_whitelist.getJson(player.getProfile()).getAsJsonArray())
             {
                 if(e.getAsString().equals(LMInvUtils.getRegName(player.getPlayer().worldObj.getBlockState(pos).getBlock()).toString()))
                 {

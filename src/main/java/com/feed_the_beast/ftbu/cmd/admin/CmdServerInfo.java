@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbu.badges.Badge;
-import com.feed_the_beast.ftbu.badges.ServerBadges;
+import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
 import com.google.common.collect.ImmutableSetMultimap;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -30,7 +30,9 @@ import java.util.Map;
 public class CmdServerInfo extends CommandLM
 {
     public CmdServerInfo()
-    { super("server_info", CommandLevel.OP); }
+    {
+        super("server_info", CommandLevel.OP);
+    }
 
     @Override
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
@@ -91,7 +93,7 @@ public class CmdServerInfo extends CommandLM
 
         list = serverInfo.getSub("loaded_badges"); //LANG
 
-        for(Badge b : ServerBadges.map.values())
+        for(Badge b : FTBUWorldDataMP.localBadges.badgeMap.values())
         {
             list.printlnText(b.getID() + ": " + b.imageURL);
         }

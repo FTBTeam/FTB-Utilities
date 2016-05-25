@@ -74,7 +74,7 @@ public class ChunkType
                 return FTBUPlayerData.get(chunkOwner).getFlag(FTBUPlayerData.FAKE_PLAYERS);
             }
 
-            PrivacyLevel level = FTBUPermissions.claims_forced_security.getEnum(p.getProfile());
+            PrivacyLevel level = FTBUPermissions.claims_forced_security.get(p.getProfile());
             if(level == null)
             {
                 level = FTBUPlayerData.get(chunkOwner).blocks;

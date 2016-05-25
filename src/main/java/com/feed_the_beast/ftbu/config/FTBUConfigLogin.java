@@ -5,12 +5,9 @@ import com.feed_the_beast.ftbl.api.item.ItemStackSerializer;
 import com.feed_the_beast.ftbl.util.JsonHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 import latmod.lib.annotations.Info;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -33,7 +30,6 @@ public class FTBUConfigLogin
         {
             super(id);
             components = new ArrayList<>();
-            components.add(new TextComponentString("Welcome to the server!"));
         }
 
         @Override
@@ -77,7 +73,6 @@ public class FTBUConfigLogin
         {
             super(id);
             items = new ArrayList<>();
-            items.add(new AbstractMap.SimpleEntry<>(new ItemStack(Items.APPLE, 16), new JsonPrimitive("minecraft:apple 16 0")));
         }
 
         @Override

@@ -6,13 +6,12 @@ import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
 import com.feed_the_beast.ftbl.api.notification.Notification;
-import com.feed_the_beast.ftbl.api.permissions.ForgePermissionRegistry;
+import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbl.util.EntityDimPos;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.badges.ServerBadges;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigLogin;
 import com.feed_the_beast.ftbu.config.FTBUConfigModules;
@@ -88,9 +87,8 @@ public class FTBUPlayerEventHandler
             }
 
             Backups.hadPlayer = true;
-            ServerBadges.sendToPlayer(ep);
 
-            new MessageAreaUpdate(event.player.toMP(), event.player.toMP().getPos(), 1).sendTo(ep);
+            new MessageAreaUpdate(event.player.toMP(), event.player.toMP().getPos(), 4).sendTo(ep);
             FTBUChunkEventHandler.instance.markDirty(null);
         }
     }
@@ -169,7 +167,7 @@ public class FTBUPlayerEventHandler
             {
                 return;
             }
-            else if(entity instanceof EntityPlayerMP && ForgePermissionRegistry.hasPermission(FTBLibPermissions.interact_secure, ((EntityPlayerMP) entity).getGameProfile()))
+            else if(entity instanceof EntityPlayerMP && PermissionAPI.hasPermission(((EntityPlayerMP) entity).getGameProfile(), FTBLibPermissions.interact_secure, false))
             {
                 return;
             }

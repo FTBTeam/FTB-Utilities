@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToServer;
 import com.feed_the_beast.ftbu.badges.Badge;
-import com.feed_the_beast.ftbu.badges.ServerBadges;
+import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -44,9 +44,9 @@ public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
     @Override
     public void onMessage(MessageRequestBadge m, EntityPlayerMP ep)
     {
-        Badge b = ServerBadges.getServerBadge(ForgeWorldMP.inst.getPlayer(m.playerID));
+        Badge b = FTBUWorldDataMP.getServerBadge(ForgeWorldMP.inst.getPlayer(m.playerID));
 
-        if(b != Badge.emptyBadge)
+        if(b != null)
         {
             new MessageSendBadge(m.playerID, b.getID()).sendTo(ep);
         }

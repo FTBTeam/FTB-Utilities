@@ -159,7 +159,7 @@ public class ClaimedChunks
 
                 if(p != null)
                 {
-                    EnumEnabled fe = FTBUPermissions.claims_forced_explosions.getEnum(p.getProfile());
+                    EnumEnabled fe = FTBUPermissions.claims_forced_explosions.get(p.getProfile());
                     if(fe == null)
                     {
                         return FTBUPlayerData.get(p).getFlag(FTBUPlayerData.EXPLOSIONS);
@@ -194,14 +194,9 @@ public class ClaimedChunks
         return loaded;
     }
 
-    public short getMaxLoadedChunks(GameProfile profile)
-    {
-        return FTBUPermissions.chunkloader_max_chunks.get(profile).getAsShort();
-    }
-
     public boolean isDimensionBlacklisted(GameProfile profile, int dim)
     {
-        JsonArray a = FTBUPermissions.claims_dimension_blacklist.get(profile).getAsJsonArray();
+        JsonArray a = FTBUPermissions.claims_dimension_blacklist.getJson(profile).getAsJsonArray();
 
         for(int i = 0; i < a.size(); i++)
         {
@@ -220,11 +215,13 @@ public class ClaimedChunks
         {
             return;
         }
-        short max = FTBUPermissions.claims_max_chunks.get(player.getProfile()).getAsShort();
+
+        int max = FTBUPermissions.claims_max_chunks.get(player.getProfile());
         if(max == 0)
         {
             return;
         }
+
         if(getClaimedChunks(player.getProfile().getId()) >= max)
         {
             return;
@@ -282,7 +279,7 @@ public class ClaimedChunks
                     return;
                 }
 
-                short max = getMaxLoadedChunks(player.getProfile());
+                int max = FTBUPermissions.chunkloader_max_chunks.get(player.getProfile());
                 if(max == 0)
                 {
                     return;

@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbu.net;
 
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
-import com.feed_the_beast.ftbu.badges.ClientBadges;
+import com.feed_the_beast.ftbu.world.FTBUWorldDataSP;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
@@ -49,6 +49,6 @@ public class MessageSendBadge extends MessageToClient<MessageSendBadge>
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageSendBadge m, Minecraft ctx)
     {
-        ClientBadges.setClientBadge(m.playerID, m.badgeID);
+        FTBUWorldDataSP.localBadges.badgePlayerMap.put(m.playerID, FTBUWorldDataSP.localBadges.badgeMap.get(m.badgeID));
     }
 }

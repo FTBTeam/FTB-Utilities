@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.ranks;
 
-import com.feed_the_beast.ftbl.api.permissions.ForgePermissionRegistry;
 import com.feed_the_beast.ftbl.api.permissions.RankConfig;
+import com.feed_the_beast.ftbl.api.permissions.RankConfigAPI;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -12,6 +12,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,14 +33,19 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
         config = new LinkedHashMap<>();
     }
 
-    public Boolean handlePermission(String permission)
+    public Event.Result handlePermission(String permission)
     {
         if(permissions.containsKey("*"))
         {
-            return permissions.get("*");
+            return permissions.get("*") ? Event.Result.ALLOW : Event.Result.DENY;
         }
 
-        return permissions.get(permission);
+        if(permissions.containsKey(permission))
+        {
+            return permissions.get(permission) ? Event.Result.ALLOW : Event.Result.DENY;
+        }
+
+        return Event.Result.DEFAULT;
     }
 
     public JsonElement handleRankConfig(RankConfig permission)
@@ -85,7 +91,7 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
 
             for(Map.Entry<RankConfig, JsonElement> e : config.entrySet())
             {
-                o1.add(e.getKey().getID().toString(), e.getValue());
+                o1.add(e.getKey().getID(), e.getValue());
             }
 
             o.add("config", o1);
@@ -122,7 +128,7 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
         {
             for(Map.Entry<String, JsonElement> entry : o.get("config").getAsJsonObject().entrySet())
             {
-                RankConfig c = ForgePermissionRegistry.getConfig(entry.getKey());
+                RankConfig c = RankConfigAPI.getRankConfig(entry.getKey());
 
                 if(c != null && !entry.getValue().isJsonNull())
                 {
@@ -134,10 +140,10 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
 
     public boolean allowCommand(MinecraftServer server, ICommandSender sender, ICommand command)
     {
-        Boolean b = handlePermission("command." + command.getCommandName());
-        if(b != null)
+        Event.Result b = handlePermission("command." + command.getCommandName());
+        if(b != Event.Result.DEFAULT)
         {
-            return b.booleanValue();
+            return b == Event.Result.ALLOW;
         }
         if(parent == null)
         {

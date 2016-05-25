@@ -1,16 +1,20 @@
 package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.FTBLibEventHandler;
+import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.IWorldTick;
 import com.feed_the_beast.ftbl.util.BroadcastSender;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBULang;
-import com.feed_the_beast.ftbu.badges.ServerBadges;
+import com.feed_the_beast.ftbu.badges.Badge;
+import com.feed_the_beast.ftbu.badges.BadgeStorage;
 import com.feed_the_beast.ftbu.cmd.admin.CmdRestart;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.handlers.FTBUChunkEventHandler;
+import com.feed_the_beast.ftbu.ranks.Ranks;
+import latmod.lib.LMJsonUtils;
 import latmod.lib.LMStringUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
@@ -19,16 +23,59 @@ import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.INBTSerializable;
 
+import java.io.File;
+
 /**
  * Created by LatvianModder on 23.02.2016.
  */
 public class FTBUWorldDataMP extends FTBUWorldData implements IWorldTick, INBTSerializable<NBTTagCompound>
 {
+    public static final BadgeStorage localBadges = new BadgeStorage();
+
     public Warps warps;
     public long nextChunkloaderUpdate;
     public long restartMillis;
     private long startMillis;
     private String lastRestartMessage;
+
+    public static Badge getServerBadge(ForgePlayerMP p)
+    {
+        if(p == null)
+        {
+            return null;
+        }
+
+        Badge b = localBadges.badgePlayerMap.get(p.getProfile().getId());
+        if(b != null)
+        {
+            return b;
+        }
+
+        String rank = Ranks.instance().getRankOf(p.getProfile()).badge;
+        if(!rank.isEmpty())
+        {
+            b = localBadges.badgeMap.get(rank);
+            if(b != null)
+            {
+                return b;
+            }
+        }
+
+        return null;
+    }
+
+    public static void reloadServerBadges()
+    {
+        try
+        {
+            localBadges.clear();
+            localBadges.loadBadges(LMJsonUtils.fromJson(new File(FTBLib.folderLocal, "ftbu/badges.json")));
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
 
     @Override
     public FTBUWorldDataMP toMP()
@@ -53,6 +100,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements IWorldTick, INBTSe
         }
 
         FTBLibEventHandler.ticking.add(this);
+        localBadges.clear();
     }
 
     @Override
@@ -66,6 +114,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements IWorldTick, INBTSe
     {
         ClaimedChunks.inst = null;
         FTBLibEventHandler.ticking.remove(this);
+        localBadges.clear();
     }
 
     @Override
@@ -111,12 +160,6 @@ public class FTBUWorldDataMP extends FTBUWorldData implements IWorldTick, INBTSe
             {
                 Backups.thread = null;
                 Backups.postBackup();
-            }
-
-            if(ServerBadges.thread != null && ServerBadges.thread.isDone)
-            {
-                ServerBadges.thread = null;
-                ServerBadges.sendToPlayer(null);
             }
         }
     }

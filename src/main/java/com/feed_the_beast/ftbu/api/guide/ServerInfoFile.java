@@ -8,7 +8,7 @@ import com.feed_the_beast.ftbl.api.info.InfoExtendedTextLine;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.api.notification.ClickAction;
 import com.feed_the_beast.ftbl.api.notification.ClickActionType;
-import com.feed_the_beast.ftbl.api.permissions.ForgePermissionRegistry;
+import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.FTBUPermissions;
@@ -92,7 +92,7 @@ public class ServerInfoFile extends InfoPage
 
         if((self = pself) == null) { return; }
         boolean isDedi = FTBLib.getServer().isDedicatedServer();
-        boolean isOP = !isDedi || ForgePermissionRegistry.hasPermission(FTBUPermissions.display_admin_info, self.getProfile());
+        boolean isOP = !isDedi || PermissionAPI.hasPermission(self.getProfile(), FTBUPermissions.display_admin_info, false);
 
         copyFrom(CachedInfo.main);
 

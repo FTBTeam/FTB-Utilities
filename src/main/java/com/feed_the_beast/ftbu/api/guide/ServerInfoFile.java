@@ -8,6 +8,7 @@ import com.feed_the_beast.ftbl.api.info.InfoExtendedTextLine;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.api.notification.ClickAction;
 import com.feed_the_beast.ftbl.api.notification.ClickActionType;
+import com.feed_the_beast.ftbl.api.permissions.Context;
 import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBULang;
@@ -90,9 +91,12 @@ public class ServerInfoFile extends InfoPage
         super(CachedInfo.main.getID());
         setTitle(CachedInfo.main.getTitleComponent());
 
-        if((self = pself) == null) { return; }
+        if((self = pself) == null)
+        {
+            return;
+        }
         boolean isDedi = FTBLib.getServer().isDedicatedServer();
-        boolean isOP = !isDedi || PermissionAPI.hasPermission(self.getProfile(), FTBUPermissions.display_admin_info, false);
+        boolean isOP = !isDedi || PermissionAPI.hasPermission(self.getProfile(), FTBUPermissions.display_admin_info, false, Context.EMPTY);
 
         copyFrom(CachedInfo.main);
 
@@ -147,12 +151,24 @@ public class ServerInfoFile extends InfoPage
                 sb.append(p.getProfile().getName());
                 sb.append(':');
                 sb.append(' ');
-                if(!(data instanceof ITextComponent)) { sb.append(data); }
+                if(!(data instanceof ITextComponent))
+                {
+                    sb.append(data);
+                }
 
                 ITextComponent c = new TextComponentString(sb.toString());
-                if(p == self) { c.getStyle().setColor(TextFormatting.DARK_GREEN); }
-                else if(j < 3) { c.getStyle().setColor(TextFormatting.LIGHT_PURPLE); }
-                if(data instanceof ITextComponent) { c.appendSibling(FTBLib.getChatComponent(data)); }
+                if(p == self)
+                {
+                    c.getStyle().setColor(TextFormatting.DARK_GREEN);
+                }
+                else if(j < 3)
+                {
+                    c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
+                }
+                if(data instanceof ITextComponent)
+                {
+                    c.appendSibling(FTBLib.getChatComponent(data));
+                }
                 thisTop.println(c);
             }
         }
@@ -174,7 +190,9 @@ public class ServerInfoFile extends InfoPage
                     if(al != null && !al.isEmpty())
                     {
                         for(String s : al)
-                        { cat.printlnText('/' + s); }
+                        {
+                            cat.printlnText('/' + s);
+                        }
                     }
 
                     if(c instanceof ICustomCommandInfo)
@@ -197,13 +215,20 @@ public class ServerInfoFile extends InfoPage
                             {
                                 String[] usageL = usage.split("\n");
                                 for(String s1 : usageL)
-                                { cat.printlnText(s1); }
+                                {
+                                    cat.printlnText(s1);
+                                }
                             }
                             else
                             {
                                 if(usage.indexOf('%') != -1 || usage.indexOf('/') != -1)
-                                { cat.println(new TextComponentString(usage)); }
-                                else { cat.println(new TextComponentTranslation(usage)); }
+                                {
+                                    cat.println(new TextComponentString(usage));
+                                }
+                                else
+                                {
+                                    cat.println(new TextComponentTranslation(usage));
+                                }
                             }
                         }
                     }
@@ -217,11 +242,16 @@ public class ServerInfoFile extends InfoPage
                     cc.getStyle().setColor(TextFormatting.DARK_RED);
                     page.getSub('/' + c.getCommandName()).setTitle(cc).printlnText("Errored");
 
-                    if(FTBLib.DEV_ENV) { ex1.printStackTrace(); }
+                    if(FTBLib.DEV_ENV)
+                    {
+                        ex1.printStackTrace();
+                    }
                 }
             }
         }
-        catch(Exception ex) { }
+        catch(Exception ex)
+        {
+        }
 
         page = getSub("warps").setTitle(new TextComponentString("Warps")); //TODO: LANG
         InfoExtendedTextLine line;

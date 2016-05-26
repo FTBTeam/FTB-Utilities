@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbu.ranks;
 
-import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
+import com.feed_the_beast.ftbl.api.permissions.Context;
+import com.feed_the_beast.ftbl.api.permissions.PermissionHandler;
 import com.feed_the_beast.ftbl.api.permissions.RankConfig;
 import com.feed_the_beast.ftbl.api.permissions.RankConfigAPI;
 import com.feed_the_beast.ftbl.util.FTBLib;
@@ -23,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class Ranks implements PermissionAPI.Handler, RankConfigAPI.Handler
+public class Ranks implements PermissionHandler, RankConfigAPI.Handler
 {
     public static final Rank PLAYER = new Rank("Player");
     public static final Rank ADMIN = new Rank("Admin");
@@ -288,7 +289,7 @@ public class Ranks implements PermissionAPI.Handler, RankConfigAPI.Handler
     }
 
     @Override
-    public Event.Result hasPermission(GameProfile profile, String permission)
+    public Event.Result hasPermission(GameProfile profile, String permission, Context context)
     {
         return getRankOf(profile).handlePermission(permission);
     }

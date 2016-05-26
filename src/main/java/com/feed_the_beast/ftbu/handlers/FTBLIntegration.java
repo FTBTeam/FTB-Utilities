@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.FTBUIntegration;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
+import com.feed_the_beast.ftbl.api.permissions.Context;
 import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBUPermissions;
@@ -47,13 +48,13 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
     }
 
     @Override
-    public boolean canPlayerInteract(ForgePlayerMP player, BlockPos pos, boolean leftClick)
+    public boolean canPlayerInteract(ForgePlayerMP player, boolean leftClick, BlockPos pos)
     {
         if(player == null)
         {
             return true;
         }
-        else if(!player.isFake() && PermissionAPI.hasPermission(player.getProfile(), FTBLibPermissions.interact_secure, false))
+        else if(!player.isFake() && PermissionAPI.hasPermission(player.getProfile(), FTBLibPermissions.interact_secure, false, new Context(player.getPlayer(), pos)))
         {
             return true;
         }
@@ -72,6 +73,6 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
         }
 
         ChunkType type = ClaimedChunks.inst.getTypeD(player, player.getPlayer().dimension, pos);
-        return type.canInteract(player, leftClick);
+        return type.canInteract(player, leftClick, pos);
     }
 }

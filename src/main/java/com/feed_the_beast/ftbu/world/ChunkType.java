@@ -3,10 +3,12 @@ package com.feed_the_beast.ftbu.world;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.LangKey;
+import com.feed_the_beast.ftbl.api.permissions.Context;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbl.util.PrivacyLevel;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -61,7 +63,7 @@ public class ChunkType
         }
 
         @Override
-        public boolean canInteract(ForgePlayerMP p, boolean leftClick)
+        public boolean canInteract(ForgePlayerMP p, boolean leftClick, BlockPos pos)
         {
             ForgePlayerMP chunkOwner = chunk.getOwner();
 
@@ -80,7 +82,7 @@ public class ChunkType
                 level = FTBUPlayerData.get(chunkOwner).blocks;
             }
 
-            return level.canInteract(chunkOwner, p);
+            return level.canInteract(chunkOwner, p, new Context(p.getPlayer(), pos));
         }
 
         @Override
@@ -170,7 +172,7 @@ public class ChunkType
         return areaColor;
     }
 
-    public boolean canInteract(ForgePlayerMP p, boolean leftClick)
+    public boolean canInteract(ForgePlayerMP p, boolean leftClick, BlockPos pos)
     {
         return this == WILDERNESS || this == SPAWN;
     }

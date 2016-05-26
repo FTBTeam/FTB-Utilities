@@ -13,7 +13,9 @@ import java.io.File;
 public class CmdRestart extends CommandLM
 {
     public CmdRestart()
-    { super("restart", CommandLevel.OP); }
+    {
+        super("restart", CommandLevel.OP);
+    }
 
     public static void restart()
     {

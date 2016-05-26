@@ -15,11 +15,15 @@ import java.util.List;
 public class CmdDelWarp extends CommandLM
 {
     public CmdDelWarp()
-    { super("delwarp", CommandLevel.OP); }
+    {
+        super("delwarp", CommandLevel.OP);
+    }
 
     @Override
     public String getCommandUsage(ICommandSender ics)
-    { return '/' + commandName + " <ID>"; }
+    {
+        return '/' + commandName + " <ID>";
+    }
 
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)

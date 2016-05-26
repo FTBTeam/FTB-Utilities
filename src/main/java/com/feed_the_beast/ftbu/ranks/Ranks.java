@@ -2,8 +2,8 @@ package com.feed_the_beast.ftbu.ranks;
 
 import com.feed_the_beast.ftbl.api.permissions.Context;
 import com.feed_the_beast.ftbl.api.permissions.PermissionHandler;
-import com.feed_the_beast.ftbl.api.permissions.RankConfig;
-import com.feed_the_beast.ftbl.api.permissions.RankConfigAPI;
+import com.feed_the_beast.ftbl.api.permissions.rankconfig.RankConfig;
+import com.feed_the_beast.ftbl.api.permissions.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

@@ -15,11 +15,15 @@ import net.minecraft.util.math.BlockPos;
 public class CmdSetWarp extends CommandLM
 {
     public CmdSetWarp()
-    { super("setwarp", CommandLevel.OP); }
+    {
+        super("setwarp", CommandLevel.OP);
+    }
 
     @Override
     public String getCommandUsage(ICommandSender ics)
-    { return '/' + commandName + " <ID> [x] [y] [z]"; }
+    {
+        return '/' + commandName + " <ID> [x] [y] [z]";
+    }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
@@ -35,7 +39,10 @@ public class CmdSetWarp extends CommandLM
             int z = parseInt(args[3]);
             c = new BlockPos(x, y, z);
         }
-        else { c = ep.getPosition(); }
+        else
+        {
+            c = ep.getPosition();
+        }
 
         FTBUWorldData.getW(ForgeWorldMP.inst).toMP().warps.set(args[0], new BlockDimPos(c, ep.dimension));
         FTBULang.warp_set.printChat(ics, args[0]);

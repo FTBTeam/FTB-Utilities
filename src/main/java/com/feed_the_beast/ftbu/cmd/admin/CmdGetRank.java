@@ -17,11 +17,15 @@ import net.minecraft.util.text.TextComponentString;
 public class CmdGetRank extends CommandLM
 {
     public CmdGetRank()
-    { super("getrank", CommandLevel.OP); }
+    {
+        super("getrank", CommandLevel.OP);
+    }
 
     @Override
     public boolean isUsernameIndex(String[] args, int i)
-    { return i == 0; }
+    {
+        return i == 0;
+    }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException

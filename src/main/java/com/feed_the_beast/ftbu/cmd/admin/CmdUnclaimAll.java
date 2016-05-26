@@ -14,15 +14,21 @@ import net.minecraft.util.text.TextComponentString;
 public class CmdUnclaimAll extends CommandLM
 {
     public CmdUnclaimAll()
-    { super("unclaim_all", CommandLevel.OP); }
+    {
+        super("unclaim_all", CommandLevel.OP);
+    }
 
     @Override
     public String getCommandUsage(ICommandSender ics)
-    { return '/' + commandName + " <player | @a>"; }
+    {
+        return '/' + commandName + " <player | @a>";
+    }
 
     @Override
     public boolean isUsernameIndex(String[] args, int i)
-    { return i == 0; }
+    {
+        return i == 0;
+    }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
@@ -32,7 +38,9 @@ public class CmdUnclaimAll extends CommandLM
         if(args[0].equals("@a"))
         {
             for(ForgePlayer p : ForgeWorldMP.inst.playerMap.values())
-            { ClaimedChunks.inst.unclaimAllChunks(p.toMP(), null); }
+            {
+                ClaimedChunks.inst.unclaimAllChunks(p.toMP(), null);
+            }
             ics.addChatMessage(new TextComponentString("Unclaimed all chunks"));
             return;
         }

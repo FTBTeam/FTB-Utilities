@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbu;
 
-import com.feed_the_beast.ftbl.api.permissions.RankConfig;
-import com.feed_the_beast.ftbl.api.permissions.RankConfigAPI;
-import com.feed_the_beast.ftbl.api.permissions.RankConfigDouble;
-import com.feed_the_beast.ftbl.api.permissions.RankConfigEnum;
-import com.feed_the_beast.ftbl.api.permissions.RankConfigInt;
+import com.feed_the_beast.ftbl.api.permissions.rankconfig.RankConfig;
+import com.feed_the_beast.ftbl.api.permissions.rankconfig.RankConfigAPI;
+import com.feed_the_beast.ftbl.api.permissions.rankconfig.RankConfigDouble;
+import com.feed_the_beast.ftbl.api.permissions.rankconfig.RankConfigEnum;
+import com.feed_the_beast.ftbl.api.permissions.rankconfig.RankConfigInt;
 import com.feed_the_beast.ftbl.util.PrivacyLevel;
 import com.feed_the_beast.ftbu.world.ChunkloaderType;
 import latmod.lib.LMJsonUtils;

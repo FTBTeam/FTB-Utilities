@@ -21,20 +21,29 @@ import java.util.List;
 public class CmdAdminHome extends CommandLM //FIXME: SubCommand
 {
     public CmdAdminHome()
-    { super("home", CommandLevel.OP); }
+    {
+        super("home", CommandLevel.OP);
+    }
 
     @Override
     public String getCommandUsage(ICommandSender ics)
-    { return '/' + commandName + " <player> <sub> [ID]"; }
+    {
+        return '/' + commandName + " <player> <sub> [ID]";
+    }
 
     @Override
     public boolean isUsernameIndex(String[] args, int i)
-    { return i == 0; }
+    {
+        return i == 0;
+    }
 
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
     {
-        if(args.length == 2) { return getListOfStringsMatchingLastWord(args, "list", "tp", "remove"); }
+        if(args.length == 2)
+        {
+            return getListOfStringsMatchingLastWord(args, "list", "tp", "remove");
+        }
         return super.getTabCompletionOptions(server, ics, args, pos);
     }
 

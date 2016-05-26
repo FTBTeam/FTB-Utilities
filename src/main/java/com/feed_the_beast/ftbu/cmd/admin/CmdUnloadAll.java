@@ -15,15 +15,21 @@ import net.minecraft.util.text.TextComponentString;
 public class CmdUnloadAll extends CommandLM
 {
     public CmdUnloadAll()
-    { super("unload_all", CommandLevel.OP); }
+    {
+        super("unload_all", CommandLevel.OP);
+    }
 
     @Override
     public String getCommandUsage(ICommandSender ics)
-    { return '/' + commandName + " <player | @a>"; }
+    {
+        return '/' + commandName + " <player | @a>";
+    }
 
     @Override
     public boolean isUsernameIndex(String[] args, int i)
-    { return i == 0; }
+    {
+        return i == 0;
+    }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException

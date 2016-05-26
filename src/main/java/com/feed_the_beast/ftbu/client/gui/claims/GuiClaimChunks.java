@@ -65,8 +65,14 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         @Override
         public void onClicked(MouseButton button)
         {
-            if(gui.panelButtons.mouseOver()) { return; }
-            if(gui.adminToken != 0L && button.isLeft()) { return; }
+            if(gui.panelButtons.mouseOver())
+            {
+                return;
+            }
+            if(gui.adminToken != 0L && button.isLeft())
+            {
+                return;
+            }
             boolean ctrl = FTBUClient.loaded_chunks_space_key.getAsBoolean() ? Keyboard.isKeyDown(Keyboard.KEY_SPACE) : isCtrlKeyDown();
 
             MessageClaimChunk msg = new MessageClaimChunk();
@@ -198,11 +204,15 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 
             @Override
             public int getAX()
-            { return gui.getGui().width - 16; }
+            {
+                return gui.getGui().width - 16;
+            }
 
             @Override
             public int getAY()
-            { return 0; }
+            {
+                return 0;
+            }
         };
 
         mapButtons = new MapButton[tiles_gui * tiles_gui];
@@ -322,7 +332,10 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         GlStateManager.color(1F, 1F, 1F, 1F);
 
         GlStateManager.color(1F, 1F, 1F, 1F);
-        for(MapButton mapButton : mapButtons) { mapButton.renderWidget(); }
+        for(MapButton mapButton : mapButtons)
+        {
+            mapButton.renderWidget();
+        }
         GlStateManager.color(1F, 1F, 1F, 1F);
 
         buttonRefresh.render(GuiIcons.refresh);

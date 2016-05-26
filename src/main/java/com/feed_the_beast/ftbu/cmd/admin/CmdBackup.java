@@ -17,7 +17,9 @@ public class CmdBackup extends CommandSubLM
     public static class CmdBackupStart extends CommandLM
     {
         public CmdBackupStart(String s)
-        { super(s, CommandLevel.OP); }
+        {
+            super(s, CommandLevel.OP);
+        }
 
         @Override
         public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
@@ -42,7 +44,9 @@ public class CmdBackup extends CommandSubLM
     public static class CmdBackupStop extends CommandLM
     {
         public CmdBackupStop(String s)
-        { super(s, CommandLevel.OP); }
+        {
+            super(s, CommandLevel.OP);
+        }
 
         @Override
         public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
@@ -62,7 +66,9 @@ public class CmdBackup extends CommandSubLM
     public static class CmdBackupGetSize extends CommandLM
     {
         public CmdBackupGetSize(String s)
-        { super(s, CommandLevel.OP); }
+        {
+            super(s, CommandLevel.OP);
+        }
 
         @Override
         public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException

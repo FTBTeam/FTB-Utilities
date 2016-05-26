@@ -24,7 +24,9 @@ public class FTBU_JMPlugin implements IClientPlugin
 
     @Override
     public String getModId()
-    { return FTBUFinals.MOD_ID; }
+    {
+        return FTBUFinals.MOD_ID;
+    }
 
     @Override
     public void onEvent(ClientEvent event)

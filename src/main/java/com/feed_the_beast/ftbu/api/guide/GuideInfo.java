@@ -45,11 +45,15 @@ public class GuideInfo extends FinalIDObject
 
         @Override
         public int hashCode()
-        { return index; }
+        {
+            return index;
+        }
 
         @Override
         public String toString()
-        { return ID; }
+        {
+            return ID;
+        }
 
         @Override
         public boolean equals(Object o)
@@ -64,8 +68,11 @@ public class GuideInfo extends FinalIDObject
 
         @Override
         public String getID()
-        { return ID; }
+        {
+            return ID;
+        }
     }
+
     public final boolean isLocal;
     public final String name;
     public final List<String> authors;

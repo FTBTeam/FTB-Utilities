@@ -175,14 +175,38 @@ public class ThreadReloadArea extends Thread
     {
         Block b = state.getBlock();
 
-        if(b == Blocks.SANDSTONE) { return MapColor.SAND.colorValue; }
-        else if(b == Blocks.FIRE) { return MapColor.RED.colorValue; }
-        else if(b == Blocks.YELLOW_FLOWER) { return MapColor.YELLOW.colorValue; }
-        else if(b == Blocks.LAVA) { return MapColor.ADOBE.colorValue; }
-        else if(b == Blocks.END_STONE) { return MapColor.SAND.colorValue; }
-        else if(b == Blocks.OBSIDIAN) { return 0x150047; }
-        else if(b == Blocks.GRAVEL) { return 0x8D979B; }
-        else if(b == Blocks.GRASS) { return 0x74BC7C; }
+        if(b == Blocks.SANDSTONE)
+        {
+            return MapColor.SAND.colorValue;
+        }
+        else if(b == Blocks.FIRE)
+        {
+            return MapColor.RED.colorValue;
+        }
+        else if(b == Blocks.YELLOW_FLOWER)
+        {
+            return MapColor.YELLOW.colorValue;
+        }
+        else if(b == Blocks.LAVA)
+        {
+            return MapColor.ADOBE.colorValue;
+        }
+        else if(b == Blocks.END_STONE)
+        {
+            return MapColor.SAND.colorValue;
+        }
+        else if(b == Blocks.OBSIDIAN)
+        {
+            return 0x150047;
+        }
+        else if(b == Blocks.GRAVEL)
+        {
+            return 0x8D979B;
+        }
+        else if(b == Blocks.GRASS)
+        {
+            return 0x74BC7C;
+        }
         //else if(b.getMaterial(state) == Material.water)
         //	return LMColorUtils.multiply(MapColor.waterColor.colorValue, b.colorMultiplier(worldObj, pos), 200);
         else if(b == Blocks.RED_FLOWER)

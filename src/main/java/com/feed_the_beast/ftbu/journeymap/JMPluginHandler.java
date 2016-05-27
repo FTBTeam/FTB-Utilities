@@ -1,8 +1,9 @@
 package com.feed_the_beast.ftbu.journeymap;
 
-import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
+import com.feed_the_beast.ftbl.api.Team;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
+import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.world.ChunkType;
 import com.feed_the_beast.ftbu.world.ClaimedChunk;
@@ -70,8 +71,8 @@ public class JMPluginHandler implements IJMPluginHandler
                         sb.append('\n');
                         sb.append(TextFormatting.GREEN);
 
-                        ForgePlayer player = type.asClaimed().chunk.getOwner();
-                        sb.append(ForgeWorldSP.inst.clientPlayer.isFriend(player) ? TextFormatting.GREEN : TextFormatting.BLUE).append(player.getProfile().getName());
+                        Team team = type.asClaimed().chunk.getOwner().getTeam();
+                        sb.append(FTBLib.getFromDyeColor(team.getColor())).append(team.getTitle());
 
                         if(type.asClaimed().chunk.getFlag(ClaimedChunk.CHUNKLOADED))
                         {

@@ -41,7 +41,7 @@ public class FTBUPlayerEventHandler
     @SubscribeEvent
     public void addPlayerData(ForgePlayerEvent.AttachCapabilities event)
     {
-        event.addCapability(new ResourceLocation(FTBUFinals.MOD_ID, "data"), event.player.getSide().isServer() ? new FTBUPlayerDataMP() : new FTBUPlayerDataSP());
+        event.addCapability(new ResourceLocation(FTBUFinals.MOD_ID, "data"), event.player.getWorld().getSide().isServer() ? new FTBUPlayerDataMP() : new FTBUPlayerDataSP());
     }
 
     @SubscribeEvent
@@ -51,7 +51,7 @@ public class FTBUPlayerEventHandler
         {
             FTBUPlayerData data = event.player.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
 
-            if(event.player.getSide().isServer())
+            if(event.player.getWorld().getSide().isServer())
             {
                 NBTTagCompound tag = new NBTTagCompound();
                 data.writeSyncData(event.player, tag, event.self);
@@ -67,7 +67,7 @@ public class FTBUPlayerEventHandler
     @SubscribeEvent
     public void onLoggedIn(ForgePlayerEvent.LoggedIn event)
     {
-        if(event.player.getSide().isServer() && event.player.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
+        if(event.player.getWorld().getSide().isServer() && event.player.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
         {
             EntityPlayerMP ep = event.player.toMP().getPlayer();
 
@@ -109,6 +109,23 @@ public class FTBUPlayerEventHandler
         if(event.player.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
         {
             event.settings.add(event.player.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null).toMP().addMyServerSettings(), false);
+        }
+    }
+
+    @SubscribeEvent
+    public void addInfo(ForgePlayerEvent.AddInfo event)
+    {
+        if(event.player.getWorld().getSide().isServer())
+        {
+            /*
+            if(owner.getRank().config.show_rank.getMode())
+		    {
+			    Rank rank = getRank();
+			    IChatComponent rankC = new ChatComponentText("[" + rank.ID + "]");
+			    rankC.getChatStyle().setColor(rank.color.getMode());
+			    info.add(rankC);
+		    }
+		    */
         }
     }
 

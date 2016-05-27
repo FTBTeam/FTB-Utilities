@@ -65,7 +65,7 @@ public class CmdLMPlayerSettings extends CommandSubLM
         {
             if(args.length == 1)
             {
-                return getListOfStringsMatchingLastWord(args, Arrays.asList(PrivacyLevel.PUBLIC, PrivacyLevel.PRIVATE, PrivacyLevel.FRIENDS));
+                return getListOfStringsMatchingLastWord(args, Arrays.asList(PrivacyLevel.PUBLIC, PrivacyLevel.PRIVATE, PrivacyLevel.TEAM));
             }
 
             return super.getTabCompletionOptions(server, ics, args, pos);

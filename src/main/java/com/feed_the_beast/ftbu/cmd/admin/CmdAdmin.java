@@ -16,7 +16,6 @@ public class CmdAdmin extends CommandSubLM
         add(new CmdUnclaim());
         add(new CmdUnclaimAll());
         add(new CmdBackup());
-        add(new CmdListFriends());
         add(new CmdUnloadAll());
         add(new CmdAdminHome());
         add(new CmdServerInfo());

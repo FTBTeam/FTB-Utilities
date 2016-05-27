@@ -102,7 +102,7 @@ public class FTBUPlayerDataMP extends FTBUPlayerData implements INBTSerializable
             }
         }, false);
 
-        group.add(new ConfigEntryEnum<PrivacyLevel>("block_security", PrivacyLevel.VALUES_3, PrivacyLevel.FRIENDS, false)
+        group.add(new ConfigEntryEnum<PrivacyLevel>("block_security", PrivacyLevel.VALUES_3, PrivacyLevel.TEAM, false)
         {
             @Override
             public PrivacyLevel get()
@@ -124,7 +124,7 @@ public class FTBUPlayerDataMP extends FTBUPlayerData implements INBTSerializable
     public void deserializeNBT(NBTTagCompound tag)
     {
         flags = tag.getByte("Flags");
-        blocks = tag.hasKey("BlockSecurity") ? PrivacyLevel.VALUES_3[tag.getByte("BlockSecurity")] : PrivacyLevel.FRIENDS;
+        blocks = tag.hasKey("BlockSecurity") ? PrivacyLevel.VALUES_3[tag.getByte("BlockSecurity")] : PrivacyLevel.TEAM;
         homes.readFromNBT(tag, "Homes");
 
         if(tag.hasKey("ClaimedChunks"))
@@ -162,7 +162,7 @@ public class FTBUPlayerDataMP extends FTBUPlayerData implements INBTSerializable
             tag.setByte("Flags", flags);
         }
 
-        if(blocks != PrivacyLevel.FRIENDS)
+        if(blocks != PrivacyLevel.TEAM)
         {
             tag.setByte("BlockSecurity", (byte) blocks.ordinal());
         }

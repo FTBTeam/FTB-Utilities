@@ -23,7 +23,7 @@ public abstract class FTBUPlayerData implements ICapabilityProvider
 
     public FTBUPlayerData()
     {
-        blocks = PrivacyLevel.FRIENDS;
+        blocks = PrivacyLevel.TEAM;
     }
 
     public static FTBUPlayerData get(ForgePlayer p)

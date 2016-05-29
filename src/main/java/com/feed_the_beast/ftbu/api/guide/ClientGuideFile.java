@@ -37,7 +37,7 @@ public class ClientGuideFile extends InfoPage
         }
         if(open)
         {
-            FTBLibClient.openGui(clientGuideGui);
+            FTBLibClient.mc().displayGuiScreen(clientGuideGui);
         }
         return clientGuideGui;
     }

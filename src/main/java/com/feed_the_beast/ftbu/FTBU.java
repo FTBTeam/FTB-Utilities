@@ -12,7 +12,6 @@ import com.feed_the_beast.ftbu.cmd.CmdSpawn;
 import com.feed_the_beast.ftbu.cmd.CmdTplast;
 import com.feed_the_beast.ftbu.cmd.CmdTrashCan;
 import com.feed_the_beast.ftbu.cmd.CmdWarp;
-import com.feed_the_beast.ftbu.cmd.admin.CmdAdmin;
 import com.feed_the_beast.ftbu.cmd.admin.CmdGetRank;
 import com.feed_the_beast.ftbu.cmd.admin.CmdSetRank;
 import com.feed_the_beast.ftbu.config.FTBUConfig;
@@ -83,7 +82,6 @@ public class FTBU
     @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent e)
     {
-        FTBLib.addCommand(e, new CmdAdmin());
         FTBLib.addCommand(e, new CmdTplast());
         FTBLib.addCommand(e, new CmdLMPlayerSettings());
 

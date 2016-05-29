@@ -1,7 +1,8 @@
 package com.feed_the_beast.ftbu.journeymap;
 
+import com.feed_the_beast.ftbl.api.ForgePlayer;
+import com.feed_the_beast.ftbl.api.ForgeTeam;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
-import com.feed_the_beast.ftbl.api.Team;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBUFinals;
@@ -71,13 +72,18 @@ public class JMPluginHandler implements IJMPluginHandler
                         sb.append('\n');
                         sb.append(TextFormatting.GREEN);
 
-                        Team team = type.asClaimed().chunk.getOwner().getTeam();
-                        sb.append(FTBLib.getFromDyeColor(team.getColor())).append(team.getTitle());
+                        ForgePlayer owner = type.asClaimed().chunk.getOwner();
 
-                        if(type.asClaimed().chunk.getFlag(ClaimedChunk.CHUNKLOADED))
+                        if(owner != null && owner.hasTeam())
                         {
-                            sb.append('\n');
-                            sb.append(TextFormatting.GOLD + I18n.format("ftbu.chunktype.chunkloaded"));
+                            ForgeTeam team = owner.getTeam();
+                            sb.append(FTBLib.getFromDyeColor(team.getColor())).append(team.getTitle());
+
+                            if(type.asClaimed().chunk.getFlag(ClaimedChunk.CHUNKLOADED))
+                            {
+                                sb.append('\n');
+                                sb.append(TextFormatting.GOLD + I18n.format("ftbu.chunktype.chunkloaded"));
+                            }
                         }
                     }
 

@@ -180,7 +180,7 @@ public class ServerInfoFile extends InfoPage
 
         try
         {
-            for(ICommand c : FTBLib.getAllCommands(self.getPlayer()))
+            for(ICommand c : FTBLib.getAllCommands(FTBLib.getServer(), self.getPlayer()))
             {
                 try
                 {

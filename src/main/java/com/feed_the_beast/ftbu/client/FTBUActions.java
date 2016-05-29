@@ -3,10 +3,10 @@ package com.feed_the_beast.ftbu.client;
 import com.feed_the_beast.ftbl.api.EnumSelf;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
-import com.feed_the_beast.ftbl.api.PlayerAction;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.gui.GuiScreenRegistry;
+import com.feed_the_beast.ftbl.api.gui.PlayerAction;
 import com.feed_the_beast.ftbl.api.gui.PlayerActionRegistry;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBUFinals;
@@ -63,12 +63,13 @@ public class FTBUActions
             return Boolean.TRUE;
         }
     });
+
     public static final PlayerAction CLAIMS = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBUFinals.MOD_ID, "claimed_chunks"), 0, GuiIcons.map)
     {
         @Override
         public void onClicked(ForgePlayer self, ForgePlayer other)
         {
-            FTBLibClient.openGui(new GuiClaimChunks(0L));
+            FTBLibClient.mc().displayGuiScreen(new GuiClaimChunks(0L));
         }
 
         @Override
@@ -83,6 +84,7 @@ public class FTBUActions
             return Boolean.TRUE;
         }
     });
+
     public static final PlayerAction TRADE = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBUFinals.MOD_ID, "trade"), 0, GuiIcons.money_bag)
     {
         @Override
@@ -102,6 +104,7 @@ public class FTBUActions
             return Boolean.TRUE;
         }
     });
+
     public static final PlayerAction MAIL = PlayerActionRegistry.add(new PlayerAction(EnumSelf.OTHER, new ResourceLocation(FTBUFinals.MOD_ID, "mail"), 0, GuiIcons.feather)
     {
         @Override

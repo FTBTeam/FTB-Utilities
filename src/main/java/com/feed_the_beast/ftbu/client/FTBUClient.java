@@ -40,7 +40,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
     {
         LMGuiHandlerRegistry.add(FTBUGuiHandler.instance);
 
-        Map<String, RenderPlayer> skinMap = FTBLibClient.mc.getRenderManager().getSkinMap();
+        Map<String, RenderPlayer> skinMap = FTBLibClient.mc().getRenderManager().getSkinMap();
         RenderPlayer render = skinMap.get("default");
         render.addLayer(BadgeRenderer.instance);
         render = skinMap.get("slim");

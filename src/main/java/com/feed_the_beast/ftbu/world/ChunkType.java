@@ -41,7 +41,19 @@ public class ChunkType
 
         public boolean isFriendly(ForgePlayer p)
         {
-            return p != null && (isChunkOwner(p) || p.getWorld().getPlayer(chunk.ownerID).getTeam().getStatusOf(p).isAlly());
+            if(p == null)
+            {
+                return false;
+            }
+            else if(isChunkOwner(p))
+            {
+                return true;
+            }
+            else
+            {
+                ForgePlayer owner = p.getWorld().getPlayer(chunk.ownerID);
+                return owner.hasTeam() && owner.getTeam().getStatus(p).isAlly();
+            }
         }
 
         @Override

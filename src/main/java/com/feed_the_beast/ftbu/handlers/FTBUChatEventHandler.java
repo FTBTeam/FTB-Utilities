@@ -3,13 +3,25 @@ package com.feed_the_beast.ftbu.handlers;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.ServerTickCallback;
+import com.feed_the_beast.ftbl.api.events.RegisterAdminCommandsEvent;
 import com.feed_the_beast.ftbl.util.FTBLib;
+import com.feed_the_beast.ftbu.cmd.admin.CmdAdminHome;
+import com.feed_the_beast.ftbu.cmd.admin.CmdBackup;
+import com.feed_the_beast.ftbu.cmd.admin.CmdDelWarp;
+import com.feed_the_beast.ftbu.cmd.admin.CmdInvsee;
+import com.feed_the_beast.ftbu.cmd.admin.CmdRestart;
+import com.feed_the_beast.ftbu.cmd.admin.CmdServerInfo;
+import com.feed_the_beast.ftbu.cmd.admin.CmdSetWarp;
+import com.feed_the_beast.ftbu.cmd.admin.CmdUnclaim;
+import com.feed_the_beast.ftbu.cmd.admin.CmdUnclaimAll;
+import com.feed_the_beast.ftbu.cmd.admin.CmdUnloadAll;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
+import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -33,8 +45,23 @@ public class FTBUChatEventHandler
         return -1;
     }
 
+    @SubscribeEvent
+    public void registerAdminCmds(RegisterAdminCommandsEvent event)
+    {
+        event.add(new CmdRestart());
+        event.add(new CmdInvsee());
+        event.add(new CmdSetWarp());
+        event.add(new CmdDelWarp());
+        event.add(new CmdUnclaim());
+        event.add(new CmdUnclaimAll());
+        event.add(new CmdBackup());
+        event.add(new CmdUnloadAll());
+        event.add(new CmdAdminHome());
+        event.add(new CmdServerInfo());
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChatEvent(net.minecraftforge.event.ServerChatEvent e)
+    public void onChatEvent(ServerChatEvent e)
     {
         String[] msg = FTBLib.removeFormatting(e.getMessage()).split(" "); // https://github.com/LatvianModder
 

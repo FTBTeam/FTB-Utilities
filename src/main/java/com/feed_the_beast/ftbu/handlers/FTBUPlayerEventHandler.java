@@ -185,7 +185,7 @@ public class FTBUPlayerEventHandler
             {
                 return;
             }
-            else if(entity instanceof EntityPlayerMP && PermissionAPI.hasPermission(((EntityPlayerMP) entity).getGameProfile(), FTBLibPermissions.interact_secure, false, new Context(entity)))
+            else if(entity instanceof EntityPlayerMP && PermissionAPI.hasPermission(((EntityPlayerMP) entity).getGameProfile(), FTBLibPermissions.INTERACT_SECURE, false, new Context(entity)))
             {
                 return;
             }

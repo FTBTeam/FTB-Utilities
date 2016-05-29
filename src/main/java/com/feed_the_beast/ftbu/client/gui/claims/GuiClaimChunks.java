@@ -3,11 +3,11 @@ package com.feed_the_beast.ftbu.client.gui.claims;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgePlayerSPSelf;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
-import com.feed_the_beast.ftbl.api.GuiLang;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiLang;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.PanelLM;
 import com.feed_the_beast.ftbl.net.MessageRequestSelfUpdate;
@@ -150,7 +150,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             public void onClicked(MouseButton button)
             {
                 FTBLibClient.playClickSound();
-                FTBLibClient.openGui(null);
+                FTBLibClient.mc().displayGuiScreen(null);
             }
         };
 
@@ -176,7 +176,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             {
                 FTBLibClient.playClickSound();
                 String s = isShiftKeyDown() ? FTBULang.button_claims_unclaim_all_q.translate() : FTBULang.button_claims_unclaim_all_dim_q.translateFormatted(currentDimName);
-                FTBLibClient.openGui(new GuiYesNo(GuiClaimChunks.this, s, "", isShiftKeyDown() ? 1 : 0));
+                FTBLibClient.mc().displayGuiScreen(new GuiYesNo(GuiClaimChunks.this, s, "", isShiftKeyDown() ? 1 : 0));
             }
 
             @Override
@@ -378,7 +378,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             new MessageAreaRequest(startX, startY, tiles_gui, tiles_gui).sendToServer();
         }
 
-        FTBLibClient.openGui(this);
+        FTBLibClient.mc().displayGuiScreen(this);
         refreshWidgets();
     }
 }

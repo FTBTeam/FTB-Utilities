@@ -54,7 +54,7 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
         {
             return true;
         }
-        else if(!player.isFake() && PermissionAPI.hasPermission(player.getProfile(), FTBLibPermissions.interact_secure, false, new Context(player.getPlayer(), pos)))
+        else if(!player.isFake() && PermissionAPI.hasPermission(player.getProfile(), FTBLibPermissions.INTERACT_SECURE, false, new Context(player.getPlayer(), pos)))
         {
             return true;
         }

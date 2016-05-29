@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.api.guide;
 
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbl.api.GuiLang;
 import com.feed_the_beast.ftbl.api.LangKey;
+import com.feed_the_beast.ftbl.api.gui.GuiLang;
 import latmod.lib.LMStringUtils;
 import latmod.lib.MathHelperLM;
 import latmod.lib.util.FinalIDObject;

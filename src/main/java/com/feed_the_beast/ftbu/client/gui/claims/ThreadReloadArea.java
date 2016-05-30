@@ -156,9 +156,6 @@ public class ThreadReloadArea extends Thread
 
     private int getBlockColor(IBlockState state)
     {
-        return 0xFF000000 | getBlockColor0(state);
-        
-        /*
         Integer col = colorCache.get(state);
 
         if(col == null)
@@ -168,7 +165,6 @@ public class ThreadReloadArea extends Thread
         }
 
         return col;
-        */
     }
 
     private int getBlockColor0(IBlockState state)

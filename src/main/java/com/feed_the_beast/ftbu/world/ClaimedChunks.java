@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.api.ForgePlayer;
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.LMDimUtils;
@@ -14,7 +13,6 @@ import com.mojang.authlib.GameProfile;
 import latmod.lib.MathHelperLM;
 import latmod.lib.util.EnumEnabled;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -87,6 +85,11 @@ public class ClaimedChunks
         return chunks.get(pos);
     }
 
+    public ClaimedChunk getChunkD(int dim, BlockPos pos)
+    {
+        return getChunk(new ChunkDimPos(dim, MathHelperLM.chunk(pos.getX()), MathHelperLM.chunk(pos.getZ())));
+    }
+
     public Collection<ClaimedChunk> getChunks(UUID playerID, Integer dim)
     {
         Collection<ClaimedChunk> list = new HashSet<>();
@@ -116,33 +119,6 @@ public class ClaimedChunks
         return chunks.remove(pos);
     }
 
-    public ChunkType getType(ForgePlayerMP p, ChunkDimPos pos)
-    {
-        World w = LMDimUtils.getWorld(pos.dim);
-        if(w == null || w.getChunkProvider().getLoadedChunk(pos.chunkXPos, pos.chunkZPos) == null)
-        {
-            return ChunkType.UNLOADED;
-        }
-        if(isInSpawn(pos))
-        {
-            return ChunkType.SPAWN;
-        }
-        //TODO: if(ForgeWorldMP.inst.settings.getWB(dim).isOutside(cx, cz)) return ChunkType.WORLD_BORDER;
-        ClaimedChunk c = getChunk(pos);
-        if(c == null)
-        {
-            return ChunkType.WILDERNESS;
-        }
-        ChunkType.PlayerClaimed type = new ChunkType.PlayerClaimed();
-        type.chunk = c;
-        return type;
-    }
-
-    public ChunkType getTypeD(ForgePlayerMP p, int dim, BlockPos pos)
-    {
-        return getType(p, new ChunkDimPos(dim, MathHelperLM.chunk(pos.getX()), MathHelperLM.chunk(pos.getZ())));
-    }
-
     public boolean allowExplosion(ChunkDimPos pos)
     {
         if(pos.dim == 0 && FTBUConfigGeneral.safe_spawn.getAsBoolean() && isInSpawn(pos))
@@ -155,7 +131,7 @@ public class ClaimedChunks
             ClaimedChunk c = getChunk(pos);
             if(c != null)
             {
-                ForgePlayerMP p = c.getOwner();
+                ForgePlayer p = c.getOwner();
 
                 if(p != null)
                 {
@@ -185,7 +161,7 @@ public class ClaimedChunks
         int loaded = 0;
         for(ClaimedChunk c : getChunks(id, null))
         {
-            if(c.getFlag(ClaimedChunk.CHUNKLOADED) && (!forced || c.isForced))
+            if(c.loaded && (!forced || c.forced))
             {
                 loaded++;
             }
@@ -227,8 +203,9 @@ public class ClaimedChunks
             return;
         }
 
-        ChunkType t = getType(player.toMP(), pos);
-        if(t.asClaimed() == null && t.isChunkOwner(player.toMP()) && put(new ClaimedChunk(player.getProfile().getId(), pos)))
+        ClaimedChunk chunk = getChunk(pos);
+
+        if(chunk == null && put(new ClaimedChunk(player.getWorld(), player.getProfile().getId(), pos)))
         {
             player.sendUpdate();
         }
@@ -236,7 +213,7 @@ public class ClaimedChunks
 
     public void unclaimChunk(ForgePlayer player, ChunkDimPos pos)
     {
-        if(getType(player.toMP(), pos).isChunkOwner(player.toMP()))
+        if(getChunk(pos).isChunkOwner(player))
         {
             setLoaded(player, pos, false);
             remove(pos);
@@ -270,7 +247,7 @@ public class ClaimedChunks
             return;
         }
 
-        if(flag != chunk.getFlag(ClaimedChunk.CHUNKLOADED) && player.equalsPlayer(chunk.getOwner()))
+        if(flag != chunk.loaded && player.equalsPlayer(chunk.getOwner()))
         {
             if(flag)
             {
@@ -291,12 +268,12 @@ public class ClaimedChunks
                 }
             }
 
-            chunk.setFlag(ClaimedChunk.CHUNKLOADED, flag);
+            chunk.loaded = flag;
             FTBUChunkEventHandler.instance.markDirty(LMDimUtils.getWorld(pos.dim));
 
             if(player.getPlayer() != null)
             {
-                new MessageAreaUpdate(player.toMP(), pos.chunkXPos, pos.chunkZPos, pos.dim, 1, 1).sendTo(player.toMP().getPlayer());
+                new MessageAreaUpdate(pos.chunkXPos, pos.chunkZPos, pos.dim, 1, 1).sendTo(player.toMP().getPlayer());
                 player.sendUpdate();
             }
         }

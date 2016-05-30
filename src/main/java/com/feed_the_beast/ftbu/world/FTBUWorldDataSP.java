@@ -10,6 +10,7 @@ import latmod.lib.net.RequestMethod;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -21,7 +22,7 @@ public class FTBUWorldDataSP extends FTBUWorldData
 {
     public static final BadgeStorage globalBadges = new BadgeStorage();
     public static final BadgeStorage localBadges = new BadgeStorage();
-    public static Map<ChunkDimPos, ChunkType> chunks;
+    public static Map<ChunkDimPos, ClaimedChunk> chunks;
 
     public static void reloadGlobalBadges()
     {
@@ -48,26 +49,37 @@ public class FTBUWorldDataSP extends FTBUWorldData
         thread.start();
     }
 
-    public static ChunkType getType(ChunkDimPos pos)
+    @Nullable
+    public static ClaimedChunk getChunk(ChunkDimPos pos)
     {
-        return (pos != null && chunks != null && chunks.containsKey(pos)) ? chunks.get(pos) : ChunkType.UNLOADED;
+        return (pos != null && chunks != null) ? chunks.get(pos) : null;
     }
 
     @SideOnly(Side.CLIENT)
-    public static void setTypes(Map<ChunkDimPos, ChunkType> types)
+    public static void setTypes(Map<ChunkDimPos, ClaimedChunk> types)
     {
         if(chunks == null)
         {
             return;
         }
 
-        chunks.putAll(types);
-
-        if(FTBUClient.journeyMapHandler != null)
+        for(Map.Entry<ChunkDimPos, ClaimedChunk> e : types.entrySet())
         {
-            for(Map.Entry<ChunkDimPos, ChunkType> e : types.entrySet())
+            ChunkDimPos pos = e.getKey();
+            ClaimedChunk chunk = e.getValue();
+
+            if(chunk == null)
             {
-                FTBUClient.journeyMapHandler.chunkChanged(e.getKey(), e.getValue());
+                chunks.remove(pos);
+            }
+            else
+            {
+                chunks.put(pos, chunk);
+            }
+
+            if(FTBUClient.journeyMapHandler != null)
+            {
+                FTBUClient.journeyMapHandler.chunkChanged(pos, chunk);
             }
         }
     }

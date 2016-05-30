@@ -1,32 +1,38 @@
 package com.feed_the_beast.ftbu.world;
 
+import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
+import com.feed_the_beast.ftbl.api.ForgeWorld;
+import com.feed_the_beast.ftbl.api.LangKey;
+import com.feed_the_beast.ftbl.api.permissions.Context;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
-import latmod.lib.Bits;
-import latmod.lib.annotations.IFlagContainer;
+import com.feed_the_beast.ftbl.util.PrivacyLevel;
+import com.feed_the_beast.ftbu.FTBUPermissions;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.UUID;
 
-public final class ClaimedChunk implements IFlagContainer
+public final class ClaimedChunk
 {
-    public static final byte CHUNKLOADED = 0;
-    public static final byte FORCED = 1;
+    public static final LangKey LANG_WILDERNESS = new LangKey("ftbu.chunktype.wilderness");
+    public static final LangKey LANG_CLAIMED = new LangKey("ftbu.chunktype.claimed");
+    public static final LangKey LANG_LOADED = new LangKey("ftbu.chunktype.loaded");
 
+    public final ForgeWorld world;
     public final ChunkDimPos pos;
     public final UUID ownerID;
-    public boolean isForced = false;
-    public byte flags = 0;
+    public boolean loaded, forced;
 
-    public ClaimedChunk(UUID o, ChunkDimPos p)
+    public ClaimedChunk(ForgeWorld w, UUID o, ChunkDimPos p)
     {
+        world = w;
         pos = p;
         ownerID = o;
     }
 
-    public ForgePlayerMP getOwner()
+    public ForgePlayer getOwner()
     {
-        return ForgeWorldMP.inst.getPlayer(ownerID);
+        return world.getPlayer(ownerID);
     }
 
     @Override
@@ -47,15 +53,30 @@ public final class ClaimedChunk implements IFlagContainer
         return pos.hashCode();
     }
 
-    @Override
-    public void setFlag(byte flag, boolean b)
+    public boolean isChunkOwner(ForgePlayer p)
     {
-        flags = Bits.setBit(flags, flag, b);
+        return p != null && p.equalsPlayer(getOwner());
     }
 
-    @Override
-    public boolean getFlag(byte flag)
+    public boolean canInteract(ForgePlayerMP p, boolean leftClick, BlockPos pos)
     {
-        return Bits.getBit(flags, flag);
+        ForgePlayer chunkOwner = getOwner();
+
+        if(chunkOwner.equals(p))
+        {
+            return true;
+        }
+        else if(p.isFake())
+        {
+            return FTBUPlayerData.get(chunkOwner).getFlag(FTBUPlayerData.FAKE_PLAYERS);
+        }
+
+        PrivacyLevel level = FTBUPermissions.claims_forced_security.get(p.getProfile());
+        if(level == null)
+        {
+            level = FTBUPlayerData.get(chunkOwner).blocks;
+        }
+
+        return level.canInteract(chunkOwner, p, new Context(p.getPlayer(), pos));
     }
 }

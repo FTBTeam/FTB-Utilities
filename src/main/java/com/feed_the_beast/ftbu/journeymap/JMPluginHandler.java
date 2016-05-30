@@ -1,12 +1,10 @@
 package com.feed_the_beast.ftbu.journeymap;
 
-import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgeTeam;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.world.ChunkType;
 import com.feed_the_beast.ftbu.world.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.FTBUWorldData;
 import journeymap.client.api.IClientAPI;
@@ -15,7 +13,6 @@ import journeymap.client.api.display.PolygonOverlay;
 import journeymap.client.api.model.MapPolygon;
 import journeymap.client.api.model.ShapeProperties;
 import journeymap.client.api.util.PolygonHelper;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.HashMap;
@@ -38,8 +35,6 @@ public class JMPluginHandler implements IJMPluginHandler
     @Override
     public void mappingStarted()
     {
-        polygons.clear();
-        clientAPI.removeAll(FTBUFinals.MOD_ID);
     }
 
     @Override
@@ -50,43 +45,50 @@ public class JMPluginHandler implements IJMPluginHandler
     }
 
     @Override
-    public void chunkChanged(ChunkDimPos pos, ChunkType type)
+    public void chunkChanged(ChunkDimPos pos, ClaimedChunk chunk)
     {
         try
         {
             if(FTBUWorldData.isLoadedW(ForgeWorldSP.inst) && clientAPI.playerAccepts(FTBUFinals.MOD_ID, DisplayType.Polygon))
             {
-                if(type.drawGrid())
+                if(chunk != null)
                 {
+                    ForgeTeam team = chunk.getOwner().getTeam();
+
                     MapPolygon poly = PolygonHelper.createChunkPolygon(pos.chunkXPos, 100, pos.chunkZPos);
                     ShapeProperties shapeProperties = new ShapeProperties();
-                    shapeProperties.setFillColor(type.getAreaColor(ForgeWorldSP.inst.clientPlayer));
+
                     shapeProperties.setFillOpacity(0.3F);
                     shapeProperties.setStrokeOpacity(0.2F);
-                    PolygonOverlay chunkOverlay = new PolygonOverlay(FTBUFinals.MOD_ID, "claimed_" + pos.dim + '_' + pos.chunkXPos + '_' + pos.chunkZPos, pos.dim, shapeProperties, poly);
 
-                    StringBuilder sb = new StringBuilder(type.getChatColor(ForgeWorldSP.inst.clientPlayer) + type.langKey.translate());
+                    StringBuilder sb = new StringBuilder();
 
-                    if(type.asClaimed() != null)
+                    if(team != null)
                     {
+                        shapeProperties.setFillColor(0x00FFFFFF & team.getColor().getMapColor().colorValue);
+
+                        sb.append(FTBLib.getFromDyeColor(team.getColor()));
+                        sb.append(team.getTitle());
+
                         sb.append('\n');
                         sb.append(TextFormatting.GREEN);
+                        sb.append(ClaimedChunk.LANG_CLAIMED.translate());
 
-                        ForgePlayer owner = type.asClaimed().chunk.getOwner();
-
-                        if(owner != null && owner.hasTeam())
+                        if(chunk.loaded)
                         {
-                            ForgeTeam team = owner.getTeam();
-                            sb.append(FTBLib.getFromDyeColor(team.getColor())).append(team.getTitle());
-
-                            if(type.asClaimed().chunk.getFlag(ClaimedChunk.CHUNKLOADED))
-                            {
-                                sb.append('\n');
-                                sb.append(TextFormatting.GOLD + I18n.format("ftbu.chunktype.chunkloaded"));
-                            }
+                            sb.append('\n');
+                            sb.append(TextFormatting.GOLD);
+                            sb.append(ClaimedChunk.LANG_LOADED.translate());
                         }
                     }
+                    else
+                    {
+                        shapeProperties.setFillColor(0x000000);
+                    }
 
+                    shapeProperties.setStrokeColor(chunk.loaded ? 0xFF0000 : 0x000000);
+
+                    PolygonOverlay chunkOverlay = new PolygonOverlay(FTBUFinals.MOD_ID, "claimed_" + pos.dim + '_' + pos.chunkXPos + '_' + pos.chunkZPos, pos.dim, shapeProperties, poly);
                     chunkOverlay.setOverlayGroupName("Claimed Chunks").setTitle(sb.toString());
                     polygons.put(pos, chunkOverlay);
                     clientAPI.show(chunkOverlay);

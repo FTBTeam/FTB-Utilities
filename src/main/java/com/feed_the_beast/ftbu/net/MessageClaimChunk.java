@@ -61,7 +61,7 @@ public class MessageClaimChunk extends MessageToServer<MessageClaimChunk>
         {
             case ID_CLAIM:
                 ClaimedChunks.inst.claimChunk(p, m.pos);
-                new MessageAreaUpdate(p, m.pos.chunkXPos, m.pos.chunkZPos, m.pos.dim, 1, 1).sendTo(ep);
+                new MessageAreaUpdate(m.pos.chunkXPos, m.pos.chunkZPos, m.pos.dim, 1, 1).sendTo(ep);
                 return;
             case ID_UNCLAIM:
                 if(m.token != 0L && LMAccessToken.equals(p.getPlayer(), m.token, false))
@@ -76,7 +76,7 @@ public class MessageClaimChunk extends MessageToServer<MessageClaimChunk>
                 {
                     ClaimedChunks.inst.unclaimChunk(p, m.pos);
                 }
-                new MessageAreaUpdate(p, m.pos.chunkXPos, m.pos.chunkZPos, m.pos.dim, 1, 1).sendTo(ep);
+                new MessageAreaUpdate(m.pos.chunkXPos, m.pos.chunkZPos, m.pos.dim, 1, 1).sendTo(ep);
                 return;
             case ID_UNCLAIM_ALL:
                 ClaimedChunks.inst.unclaimAllChunks(p, m.pos.dim);

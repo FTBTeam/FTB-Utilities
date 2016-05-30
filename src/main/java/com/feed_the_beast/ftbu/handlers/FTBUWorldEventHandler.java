@@ -28,7 +28,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
     }
 
     @SubscribeEvent
-    public void onWorldLoaded(ForgeWorldEvent.OnLoaded event)
+    public void onWorldLoaded(ForgeWorldEvent.Loaded event)
     {
         if(event.world.hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null))
         {
@@ -37,7 +37,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
     }
 
     @SubscribeEvent
-    public void onWorldLoadedBeforePlayers(ForgeWorldEvent.OnLoadedBeforePlayers event)
+    public void onWorldLoadedBeforePlayers(ForgeWorldEvent.LoadedBeforePlayers event)
     {
         if(event.world.hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null))
         {
@@ -46,7 +46,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
     }
 
     @SubscribeEvent
-    public void onWorldClosed(ForgeWorldEvent.OnClosed event)
+    public void onWorldClosed(ForgeWorldEvent.Closed event)
     {
         if(event.world.hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null))
         {

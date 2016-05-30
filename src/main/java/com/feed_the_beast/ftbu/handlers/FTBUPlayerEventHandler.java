@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.FTBLibPermissions;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
+import com.feed_the_beast.ftbl.api.ForgeTeam;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
@@ -18,7 +19,7 @@ import com.feed_the_beast.ftbu.config.FTBUConfigLogin;
 import com.feed_the_beast.ftbu.config.FTBUConfigModules;
 import com.feed_the_beast.ftbu.net.MessageAreaUpdate;
 import com.feed_the_beast.ftbu.world.Backups;
-import com.feed_the_beast.ftbu.world.ChunkType;
+import com.feed_the_beast.ftbu.world.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.ClaimedChunks;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUPlayerDataMP;
@@ -30,7 +31,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -89,7 +90,7 @@ public class FTBUPlayerEventHandler
 
             Backups.hadPlayer = true;
 
-            new MessageAreaUpdate(event.player.toMP(), event.player.toMP().getPos(), 4).sendTo(ep);
+            new MessageAreaUpdate(event.player.toMP().getPos(), 4).sendTo(ep);
             FTBUChunkEventHandler.instance.markDirty(null);
         }
     }
@@ -100,6 +101,7 @@ public class FTBUPlayerEventHandler
         if(event.player.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
         {
             FTBUChunkEventHandler.instance.markDirty(null);
+            Backups.hadPlayer = true;
         }
     }
 
@@ -147,19 +149,42 @@ public class FTBUPlayerEventHandler
 
         player.lastPos = new EntityDimPos(ep).toBlockDimPos();
 
-        ChunkType type = ClaimedChunks.inst.getType(player, new ChunkDimPos(ep.dimension, e.getNewChunkX(), e.getNewChunkZ()));
+        ClaimedChunk chunk = ClaimedChunks.inst.getChunk(new ChunkDimPos(ep.dimension, e.getNewChunkX(), e.getNewChunkZ()));
+
         FTBUPlayerDataMP d = FTBUPlayerData.get(player).toMP();
 
-        if(d.lastChunkType == null || !d.lastChunkType.equals(type))
-        {
-            d.lastChunkType = type;
+        int newTeamID = (chunk == null || !chunk.getOwner().hasTeam()) ? 0 : chunk.getOwner().getTeamID();
 
-            ITextComponent msg = type.getTitleComponent();
-            msg.getStyle().setColor(TextFormatting.WHITE);
-            msg.getStyle().setBold(true);
-            Notification n = new Notification("chunk_changed", msg, 3000);
-            n.setColor(0xFF000000 | type.getAreaColor(player));
-            FTBLib.notifyPlayer(ep, n);
+        if(d.lastChunksTeamID != newTeamID)
+        {
+            d.lastChunksTeamID = newTeamID;
+
+            if(newTeamID > 0)
+            {
+                ForgeTeam team = chunk.getOwner().getTeam();
+
+                ITextComponent msg = new TextComponentString(team.getTitle());
+                msg.getStyle().setBold(true);
+                Notification n = new Notification("chunk_changed", msg, 3000);
+
+                if(team.getDesc() != null)
+                {
+                    msg = new TextComponentString(team.getDesc());
+                    msg.getStyle().setItalic(true);
+                    n.setDesc(msg);
+                }
+
+                n.setColor(0xFF000000 | team.getColor().getMapColor().colorValue);
+                FTBLib.notifyPlayer(ep, n);
+            }
+            else
+            {
+                ITextComponent msg = ClaimedChunk.LANG_WILDERNESS.textComponent();
+                msg.getStyle().setBold(true);
+                Notification n = new Notification("chunk_changed", msg, 3000);
+                n.setColor(0xFF00A010);
+                FTBLib.notifyPlayer(ep, n);
+            }
         }
     }
 

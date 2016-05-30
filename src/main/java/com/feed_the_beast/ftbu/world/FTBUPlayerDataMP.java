@@ -8,7 +8,6 @@ import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbl.util.PrivacyLevel;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import latmod.lib.Bits;
 import latmod.lib.IntMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
@@ -25,7 +24,7 @@ import java.util.UUID;
 public class FTBUPlayerDataMP extends FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 {
     public Warps homes;
-    public ChunkType lastChunkType;
+    public int lastChunksTeamID = -1;
 
     public FTBUPlayerDataMP()
     {
@@ -139,11 +138,11 @@ public class FTBUPlayerDataMP extends FTBUPlayerData implements INBTSerializable
 
                 if(ai.length >= 3)
                 {
-                    ClaimedChunk chunk = new ClaimedChunk(id, new ChunkDimPos(ai[0], ai[1], ai[2]));
+                    ClaimedChunk chunk = new ClaimedChunk(ForgeWorldMP.inst, id, new ChunkDimPos(ai[0], ai[1], ai[2]));
 
                     if(ai.length >= 4)
                     {
-                        chunk.flags = (byte) ai[3];
+                        chunk.loaded = ai[3] != 0;
                     }
 
                     ClaimedChunks.inst.chunks.put(chunk.pos, chunk);
@@ -177,15 +176,13 @@ public class FTBUPlayerDataMP extends FTBUPlayerData implements INBTSerializable
 
             for(ClaimedChunk c : chunks)
             {
-                byte flags = Bits.setBit(c.flags, ClaimedChunk.FORCED, false);
-
-                int ai[] = (flags == 0) ? new int[3] : new int[4];
+                int ai[] = c.loaded ? new int[4] : new int[3];
 
                 ai[0] = c.pos.dim;
                 ai[1] = c.pos.chunkXPos;
                 ai[2] = c.pos.chunkZPos;
 
-                if(flags != 0)
+                if(c.loaded)
                 {
                     ai[3] = flags & 0xFF;
                 }

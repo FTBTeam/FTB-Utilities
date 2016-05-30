@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbu.api.guide;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
+import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.ICustomCommandInfo;
@@ -29,6 +30,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -86,15 +88,12 @@ public class ServerInfoFile extends InfoPage
     private ForgePlayerMP self;
     private InfoPage categoryTops = null;
 
-    public ServerInfoFile(ForgePlayerMP pself)
+    public ServerInfoFile(@Nonnull ForgePlayerMP pself)
     {
         super(CachedInfo.main.getID());
         setTitle(CachedInfo.main.getTitleComponent());
+        self = pself;
 
-        if((self = pself) == null)
-        {
-            return;
-        }
         boolean isDedi = FTBLib.getServer().isDedicatedServer();
         boolean isOP = !isDedi || PermissionAPI.hasPermission(self.getProfile(), FTBUPermissions.display_admin_info, false, Context.EMPTY);
 
@@ -102,12 +101,13 @@ public class ServerInfoFile extends InfoPage
 
         categoryTops = getSub("Tops").setTitle(Top.langTopTitle.textComponent());
 
-        players = new ArrayList<>();
-        players.addAll(ForgeWorldMP.inst.getServerPlayers());
+        players = new ArrayList<>(ForgeWorldMP.inst.playerMap.size());
 
-        for(ForgePlayerMP p : players)
+        for(ForgePlayer p : ForgeWorldMP.inst.playerMap.values())
         {
-            p.refreshStats();
+            ForgePlayerMP p1 = p.toMP();
+            players.add(p1);
+            p1.refreshStats();
         }
 
         if(FTBUConfigModules.auto_restart.getAsBoolean())

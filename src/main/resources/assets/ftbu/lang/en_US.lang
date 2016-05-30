@@ -76,13 +76,9 @@ ftbu.top.deaths=Deaths
 ftbu.top.deaths_per_hour=Deaths per hour
 
 # Chunktypes
-ftbu.chunktype.unloaded=Chunk not loaded
-ftbu.chunktype.spawn=Spawn Area
-ftbu.chunktype.world_border=World Border
-ftbu.chunktype.world_border.warning=You have reached the world border!
 ftbu.chunktype.wilderness=Wilderness
 ftbu.chunktype.claimed=Claimed Area
-ftbu.chunktype.chunkloaded=Chunkloaded
+ftbu.chunktype.loaded=Chunkloaded
 
 # Pack States
 ftbu.pack_state.download=Download

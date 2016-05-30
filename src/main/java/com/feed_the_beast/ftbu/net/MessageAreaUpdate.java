@@ -1,35 +1,31 @@
 package com.feed_the_beast.ftbu.net;
 
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
+import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
-import com.feed_the_beast.ftbu.world.ChunkType;
+import com.feed_the_beast.ftbu.world.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.ClaimedChunks;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataSP;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
 {
     public int dim;
-    public Map<ChunkDimPos, ChunkType> types;
-
-    //Only on server side
-    private ForgePlayerMP player;
+    public Map<ChunkDimPos, ClaimedChunk> types;
 
     public MessageAreaUpdate()
     {
     }
 
-    public MessageAreaUpdate(ForgePlayerMP p, int x, int z, int d, int sx, int sz)
+    public MessageAreaUpdate(int x, int z, int d, int sx, int sz)
     {
-        player = p;
         dim = d;
 
         types = new HashMap<>();
@@ -39,19 +35,14 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
             for(int z1 = z; z1 < z + sz; z1++)
             {
                 ChunkDimPos pos = new ChunkDimPos(d, x1, z1);
-                ChunkType type = ClaimedChunks.inst.getType(player, pos);
-
-                if(type != ChunkType.UNLOADED)
-                {
-                    types.put(pos, type);
-                }
+                types.put(pos, ClaimedChunks.inst.getChunk(pos));
             }
         }
     }
 
-    public MessageAreaUpdate(ForgePlayerMP p, BlockDimPos pos, int radius)
+    public MessageAreaUpdate(BlockDimPos pos, int radius)
     {
-        this(p, pos.chunkX() - radius, pos.chunkZ() - radius, pos.dim, radius * 2 + 1, radius * 2 + 1);
+        this(pos.chunkX() - radius, pos.chunkZ() - radius, pos.dim, radius * 2 + 1, radius * 2 + 1);
     }
 
     @Override
@@ -73,17 +64,17 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
             int x = io.readInt();
             int z = io.readInt();
             ChunkDimPos pos = new ChunkDimPos(dim, x, z);
-            int id = io.readUnsignedByte();
+            boolean b = io.readBoolean();
 
-            if(id == 99)
+            if(b)
             {
-                ChunkType.PlayerClaimed type = new ChunkType.PlayerClaimed();
-                type.readFromNBT(readTag(io), pos);
-                types.put(pos, type);
+                UUID owner = readUUID(io);
+                ClaimedChunk chunk = new ClaimedChunk(ForgeWorldSP.inst, owner, pos);
+                chunk.loaded = io.readBoolean();
             }
             else
             {
-                types.put(pos, ChunkType.VALUES[id]);
+                types.put(pos, null);
             }
         }
     }
@@ -94,21 +85,20 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
         io.writeInt(dim);
         io.writeInt(types.size());
 
-        NBTTagCompound tag;
-
-        for(Map.Entry<ChunkDimPos, ChunkType> e : types.entrySet())
+        for(Map.Entry<ChunkDimPos, ClaimedChunk> e : types.entrySet())
         {
             io.writeInt(e.getKey().chunkXPos);
             io.writeInt(e.getKey().chunkZPos);
 
-            ChunkType t = e.getValue();
-            io.writeByte(t.ID);
-
-            if(t.ID == 99)
+            if(e.getValue() == null)
             {
-                tag = new NBTTagCompound();
-                t.writeToNBT(tag, player);
-                writeTag(io, tag);
+                io.writeBoolean(false);
+            }
+            else
+            {
+                io.writeBoolean(true);
+                writeUUID(io, e.getValue().ownerID);
+                io.writeBoolean(e.getValue().loaded);
             }
         }
     }

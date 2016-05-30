@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.client.gui.claims;
 
-import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgePlayerSPSelf;
+import com.feed_the_beast.ftbl.api.ForgeTeam;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
@@ -12,11 +12,11 @@ import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.PanelLM;
 import com.feed_the_beast.ftbl.net.MessageRequestSelfUpdate;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
+import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.net.MessageAreaRequest;
 import com.feed_the_beast.ftbu.net.MessageClaimChunk;
-import com.feed_the_beast.ftbu.world.ChunkType;
 import com.feed_the_beast.ftbu.world.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUPlayerDataSP;
@@ -26,7 +26,6 @@ import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
@@ -86,36 +85,54 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         @Override
         public void addMouseOverText(List<String> l)
         {
-            ChunkType type = FTBUWorldDataSP.getType(chunkPos);
+            ClaimedChunk chunk = FTBUWorldDataSP.getChunk(chunkPos);
 
-            if(type != ChunkType.UNLOADED)
+            if(chunk != null)
             {
-                l.add(type.getChatColor(null) + type.langKey.translate());
-                ChunkType.PlayerClaimed pc = type.asClaimed();
+                ForgeTeam team = chunk.getOwner().getTeam();
 
-                if(pc != null)
+                if(team != null)
                 {
-                    ForgePlayer owner = pc.chunk.getOwner();
-
-                    if(owner != null)
-                    {
-                        l.add(type.getChatColor(owner) + owner.getProfile().getName());
-                        if(pc.chunk.getFlag(ClaimedChunk.CHUNKLOADED))
-                        {
-                            l.add(TextFormatting.GOLD + I18n.format("ftbu.chunktype.chunkloaded"));
-                        }
-                    }
+                    l.add(FTBLib.getFromDyeColor(team.getColor()) + team.getTitle());
                 }
+
+                l.add(TextFormatting.GREEN + ClaimedChunk.LANG_CLAIMED.translate());
+
+                if(chunk.loaded)
+                {
+                    l.add(TextFormatting.RED + ClaimedChunk.LANG_LOADED.translate());
+                }
+            }
+            else
+            {
+                l.add(TextFormatting.DARK_GREEN + ClaimedChunk.LANG_WILDERNESS.translate());
             }
         }
 
         @Override
         public void renderWidget()
         {
+            ClaimedChunk chunk = FTBUWorldDataSP.getChunk(chunkPos);
+
+            int ax = getAX();
+            int ay = getAY();
+
+            if(chunk != null)
+            {
+                ForgeTeam team = chunk.getOwner().getTeam();
+
+                if(team != null)
+                {
+                    FTBLibClient.setGLColor(team.getColor().getMapColor().colorValue, 180);
+                }
+
+                drawBlankRect(ax, ay, gui.getZLevel(), 16, 16);
+            }
+
             if(mouseOver())
             {
                 GlStateManager.color(1F, 1F, 1F, 0.27F);
-                drawBlankRect(getAX(), getAY(), gui.getZLevel(), 16, 16);
+                drawBlankRect(ax, ay, gui.getZLevel(), 16, 16);
                 GlStateManager.color(1F, 1F, 1F, 1F);
             }
         }
@@ -284,30 +301,6 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         GlStateManager.color(1F, 1F, 1F, 1F);
         //setTexture(tex);
 
-        GlStateManager.disableTexture2D();
-
-        for(int y = 0; y < tiles_gui; y++)
-        {
-            for(int x = 0; x < tiles_gui; x++)
-            {
-                int cx = x + startX;
-                int cy = y + startY;
-
-                ChunkType type = FTBUWorldDataSP.getType(new ChunkDimPos(currentDim, cx, cy));
-
-                if(type.drawGrid())
-                {
-                    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-                    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-
-                    FTBLibClient.setGLColor(type.getAreaColor(playerLM), 180);
-                    drawTexturedRectD(mainPanel.getAX() + x * 16, mainPanel.getAY() + y * 16, zLevel, 16, 16, 0D, 0D, 1D, 1D);
-                }
-            }
-        }
-
-        GlStateManager.enableTexture2D();
-
         int cx = MathHelperLM.chunk(mc.thePlayer.posX);
         int cy = MathHelperLM.chunk(mc.thePlayer.posZ);
 
@@ -329,13 +322,11 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             GlStateManager.popMatrix();
         }
 
-        GlStateManager.color(1F, 1F, 1F, 1F);
-
-        GlStateManager.color(1F, 1F, 1F, 1F);
         for(MapButton mapButton : mapButtons)
         {
             mapButton.renderWidget();
         }
+
         GlStateManager.color(1F, 1F, 1F, 1F);
 
         buttonRefresh.render(GuiIcons.refresh);

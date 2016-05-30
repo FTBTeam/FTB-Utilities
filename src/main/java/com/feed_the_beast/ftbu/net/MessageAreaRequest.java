@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbu.net;
 
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToServer;
 import io.netty.buffer.ByteBuf;
@@ -51,7 +49,6 @@ public class MessageAreaRequest extends MessageToServer<MessageAreaRequest>
     @Override
     public void onMessage(MessageAreaRequest m, EntityPlayerMP ep)
     {
-        ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ep);
-        new MessageAreaUpdate(p, m.chunkX, m.chunkY, p.getPlayer().dimension, m.sizeX, m.sizeY).sendTo(ep);
+        new MessageAreaUpdate(m.chunkX, m.chunkY, ep.dimension, m.sizeX, m.sizeY).sendTo(ep);
     }
 }

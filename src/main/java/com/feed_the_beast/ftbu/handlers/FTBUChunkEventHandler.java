@@ -124,7 +124,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
                 {
                     for(ClaimedChunk c : chunks)
                     {
-                        if(c.getFlag(ClaimedChunk.CHUNKLOADED))
+                        if(c.loaded)
                         {
                             ForgeChunkManager.forceChunk(t, c.pos);
                         }
@@ -170,11 +170,12 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
         {
             //total++;
 
-            boolean isLoaded = c.getFlag(ClaimedChunk.CHUNKLOADED);
+            boolean isLoaded = c.loaded;
 
             if(isLoaded)
             {
-                ForgePlayerMP p = c.getOwner();
+                ForgePlayerMP p = c.getOwner().toMP();
+
                 if(p == null)
                 {
                     isLoaded = false;
@@ -200,7 +201,8 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
                             if(max > 0D && p.stats.getLastSeenDeltaInHours(p) > max)
                             {
                                 isLoaded = false;
-                                if(c.isForced)
+
+                                if(c.forced)
                                 {
                                     FTBU.logger.info("Unloading " + p.getProfile().getName() + " chunks for being offline for too long");
                                 }
@@ -213,9 +215,9 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
             //if(isLoaded) totalLoaded++;
             //if(c.isChunkloaded) markedLoaded++;
 
-            if(c.isForced != isLoaded)
+            if(c.forced != isLoaded)
             {
-                ForgeChunkManager.Ticket ticket = request(LMDimUtils.getWorld(c.pos.dim), c.getOwner());
+                ForgeChunkManager.Ticket ticket = request(LMDimUtils.getWorld(c.pos.dim), c.getOwner().toMP());
 
                 if(ticket != null)
                 {
@@ -230,7 +232,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
                         //unloaded++;
                     }
 
-                    c.isForced = isLoaded;
+                    c.forced = isLoaded;
                 }
             }
         }

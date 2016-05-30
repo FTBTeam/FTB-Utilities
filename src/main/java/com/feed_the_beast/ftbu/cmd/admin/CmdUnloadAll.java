@@ -40,7 +40,7 @@ public class CmdUnloadAll extends CommandLM
         {
             for(ClaimedChunk c : ClaimedChunks.inst.getAllChunks(null))
             {
-                c.setFlag(ClaimedChunk.CHUNKLOADED, false);
+                c.loaded = false;
             }
             for(ForgePlayer p : ForgeWorldMP.inst.getOnlinePlayers())
             {
@@ -53,7 +53,7 @@ public class CmdUnloadAll extends CommandLM
         ForgePlayerMP p = ForgePlayerMP.get(args[0]);
         for(ClaimedChunk c : ClaimedChunks.inst.getChunks(p.getProfile().getId(), null))
         {
-            c.setFlag(ClaimedChunk.CHUNKLOADED, false);
+            c.loaded = false;
         }
         if(p.isOnline())
         {

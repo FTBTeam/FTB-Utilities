@@ -5,7 +5,6 @@ import com.feed_the_beast.ftbl.api.permissions.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbl.api.permissions.rankconfig.RankConfigDouble;
 import com.feed_the_beast.ftbl.api.permissions.rankconfig.RankConfigEnum;
 import com.feed_the_beast.ftbl.api.permissions.rankconfig.RankConfigInt;
-import com.feed_the_beast.ftbl.util.PrivacyLevel;
 import com.feed_the_beast.ftbu.world.ChunkloaderType;
 import latmod.lib.LMJsonUtils;
 import latmod.lib.annotations.Info;
@@ -43,8 +42,6 @@ public class FTBUPermissions
 
     @Info({"-: Player setting", "disabled: Explosions will never happen in claimed chunks", "enabled: Explosions will always happen in claimed chunks"})
     public static final RankConfigEnum<EnumEnabled> claims_forced_explosions = new RankConfigEnum<>("ftbu.claims.forced_explosions", null, null, EnumEnabled.values(), true);
-
-    public static final RankConfigEnum<PrivacyLevel> claims_forced_security = new RankConfigEnum<>("ftbu.claims.forced_security", null, null, PrivacyLevel.VALUES_3, true);
 
     @Info("Block IDs that player can break in claimed chunks")
     public static final RankConfig claims_break_whitelist = RankConfigAPI.register(new RankConfig("ftbu.claims.break_whitelist", LMJsonUtils.toStringArray("OpenBlocks:grave"), LMJsonUtils.toStringArray("*")));

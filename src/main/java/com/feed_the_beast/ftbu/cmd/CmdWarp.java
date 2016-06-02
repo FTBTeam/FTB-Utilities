@@ -36,7 +36,7 @@ public class CmdWarp extends CommandLM
     {
         if(args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, FTBUWorldData.getW(ForgeWorldMP.inst).toMP().warps.list());
+            return getListOfStringsMatchingLastWord(args, FTBUWorldData.getW(ForgeWorldMP.inst).toMP().listWarps());
         }
 
         return super.getTabCompletionOptions(server, ics, args, pos);
@@ -48,13 +48,13 @@ public class CmdWarp extends CommandLM
         checkArgs(args, 1);
         if(args[0].equals("list"))
         {
-            Collection<String> list = FTBUWorldData.getW(ForgeWorldMP.inst).toMP().warps.list();
+            Collection<String> list = FTBUWorldData.getW(ForgeWorldMP.inst).toMP().listWarps();
             ics.addChatMessage(new TextComponentString(list.isEmpty() ? "-" : LMStringUtils.strip(list)));
             return;
         }
 
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-        BlockDimPos p = FTBUWorldData.getW(ForgeWorldMP.inst).toMP().warps.get(args[0]);
+        BlockDimPos p = FTBUWorldData.getW(ForgeWorldMP.inst).toMP().getWarp(args[0]);
         if(p == null)
         {
             throw new CommandException("ftbu.cmd.warp_not_set", args[0]);

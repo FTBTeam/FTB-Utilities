@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.util.LMMod;
 import com.feed_the_beast.ftbu.cmd.CmdBack;
 import com.feed_the_beast.ftbu.cmd.CmdDelHome;
 import com.feed_the_beast.ftbu.cmd.CmdHome;
-import com.feed_the_beast.ftbu.cmd.CmdLMPlayerSettings;
 import com.feed_the_beast.ftbu.cmd.CmdSetHome;
 import com.feed_the_beast.ftbu.cmd.CmdSpawn;
 import com.feed_the_beast.ftbu.cmd.CmdTplast;
@@ -21,6 +20,7 @@ import com.feed_the_beast.ftbu.handlers.FTBLIntegration;
 import com.feed_the_beast.ftbu.handlers.FTBUChatEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUChunkEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
+import com.feed_the_beast.ftbu.handlers.FTBUTeamEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUWorldEventHandler;
 import com.feed_the_beast.ftbu.net.FTBUNetHandler;
 import com.feed_the_beast.ftbu.ranks.Ranks;
@@ -60,6 +60,7 @@ public class FTBU
 
         EventBusHelper.register(new FTBUPlayerEventHandler());
         EventBusHelper.register(new FTBUWorldEventHandler());
+        EventBusHelper.register(new FTBUTeamEventHandler());
         EventBusHelper.register(new FTBUChatEventHandler());
         FTBUChunkEventHandler.instance.init();
         FTBUPermissions.init();
@@ -83,7 +84,6 @@ public class FTBU
     public void serverStarting(FMLServerStartingEvent e)
     {
         FTBLib.addCommand(e, new CmdTplast());
-        FTBLib.addCommand(e, new CmdLMPlayerSettings());
 
         if(FTBUConfigCmd.trash_can.getAsBoolean())
         {

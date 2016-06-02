@@ -26,6 +26,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FTBUChatEventHandler
 {
@@ -65,7 +66,7 @@ public class FTBUChatEventHandler
     {
         String[] msg = FTBLib.removeFormatting(e.getMessage()).split(" "); // https://github.com/LatvianModder
 
-        ArrayList<String> links = new ArrayList<>();
+        List<String> links = new ArrayList<>();
 
         for(String s : msg)
         {
@@ -103,7 +104,7 @@ public class FTBUChatEventHandler
                 {
                     for(ForgePlayer p : ForgeWorldMP.inst.getOnlinePlayers())
                     {
-                        if(FTBUPlayerData.get(p.toMP()).getFlag(FTBUPlayerData.CHAT_LINKS))
+                        if(FTBUPlayerData.get(p).toMP().chatLinks.getAsBoolean())
                         {
                             p.getPlayer().addChatMessage(line);
                         }

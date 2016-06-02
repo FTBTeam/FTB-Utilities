@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.FTBLibPermissions;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeTeam;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
+import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
 import com.feed_the_beast.ftbl.api.notification.Notification;
@@ -37,8 +38,14 @@ import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 public class FTBUPlayerEventHandler
 {
+    private static Map<UUID, Integer> lastChunksTeamIDMap = new HashMap<>();
+
     @SubscribeEvent
     public void addPlayerData(ForgePlayerEvent.AttachCapabilities event)
     {
@@ -103,14 +110,22 @@ public class FTBUPlayerEventHandler
             FTBUChunkEventHandler.instance.markDirty(null);
             Backups.hadPlayer = true;
         }
+
+        lastChunksTeamIDMap.remove(event.player.getProfile().getId());
     }
 
     @SubscribeEvent
-    public void onMyServerSettings(ForgePlayerEvent.MyServerSettings event)
+    public void getSettings(ForgePlayerEvent.GetSettings event)
     {
         if(event.player.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
         {
-            event.settings.add(event.player.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null).toMP().addMyServerSettings(), false);
+            FTBUPlayerDataMP data = event.player.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null).toMP();
+            ConfigGroup group = new ConfigGroup("ftbu");
+
+            group.add(data.renderBadge, false);
+            group.add(data.chatLinks, false);
+
+            event.settings.add(group, false);
         }
     }
 
@@ -151,17 +166,20 @@ public class FTBUPlayerEventHandler
 
         ClaimedChunk chunk = ClaimedChunks.inst.getChunk(new ChunkDimPos(ep.dimension, e.getNewChunkX(), e.getNewChunkZ()));
 
-        FTBUPlayerDataMP d = FTBUPlayerData.get(player).toMP();
+        int newTeamID = (chunk == null || !chunk.owner.hasTeam()) ? 0 : chunk.owner.getTeamID();
 
-        int newTeamID = (chunk == null || !chunk.getOwner().hasTeam()) ? 0 : chunk.getOwner().getTeamID();
-
-        if(d.lastChunksTeamID != newTeamID)
+        if(!lastChunksTeamIDMap.containsKey(player.getProfile().getId()) || lastChunksTeamIDMap.get(player.getProfile().getId()) != newTeamID)
         {
-            d.lastChunksTeamID = newTeamID;
+            lastChunksTeamIDMap.put(player.getProfile().getId(), newTeamID);
 
             if(newTeamID > 0)
             {
-                ForgeTeam team = chunk.getOwner().getTeam();
+                ForgeTeam team = chunk.owner.getTeam();
+
+                if(team == null)
+                {
+                    return;
+                }
 
                 ITextComponent msg = new TextComponentString(team.getTitle());
                 msg.getStyle().setBold(true);

@@ -33,7 +33,7 @@ public class CmdSetHome extends CommandLM
     {
         if(args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(ForgeWorldMP.inst.getPlayer(ics)).toMP().homes.list());
+            return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(ForgeWorldMP.inst.getPlayer(ics)).toMP().listHomes());
         }
         return null;
     }
@@ -47,15 +47,15 @@ public class CmdSetHome extends CommandLM
 
         int maxHomes = FTBUPermissions.homes_max.get(p.getProfile());
 
-        if(maxHomes <= 0 || d.homes.size() >= maxHomes)
+        if(maxHomes <= 0 || d.homesSize() >= maxHomes)
         {
-            if(maxHomes == 0 || d.homes.get(args[0]) == null)
+            if(maxHomes == 0 || d.getHome(args[0]) == null)
             {
                 throw FTBULang.home_limit.commandError();
             }
         }
 
-        d.homes.set(args[0], p.getPos());
+        d.setHome(args[0], p.getPos());
         FTBULang.home_set.printChat(ics, args[0]);
     }
 }

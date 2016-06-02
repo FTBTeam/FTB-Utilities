@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu.net;
 
+import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
@@ -13,7 +14,6 @@ import net.minecraft.client.Minecraft;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
 {
@@ -68,9 +68,14 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
 
             if(b)
             {
-                UUID owner = readUUID(io);
-                ClaimedChunk chunk = new ClaimedChunk(ForgeWorldSP.inst, owner, pos);
-                chunk.loaded = io.readBoolean();
+                ForgePlayer owner = ForgeWorldSP.inst == null ? null : ForgeWorldSP.inst.getPlayer(readUUID(io));
+
+                if(owner != null)
+                {
+                    ClaimedChunk chunk = new ClaimedChunk(ForgeWorldSP.inst, owner, pos);
+                    chunk.loaded = io.readBoolean();
+                    types.put(pos, chunk);
+                }
             }
             else
             {
@@ -97,7 +102,7 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
             else
             {
                 io.writeBoolean(true);
-                writeUUID(io, e.getValue().ownerID);
+                writeUUID(io, e.getValue().owner.getProfile().getId());
                 io.writeBoolean(e.getValue().loaded);
             }
         }
@@ -106,6 +111,9 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
     @Override
     public void onMessage(MessageAreaUpdate m, Minecraft mc)
     {
-        FTBUWorldDataSP.setTypes(m.types);
+        if(ForgeWorldSP.inst != null)
+        {
+            FTBUWorldDataSP.setTypes(m.types);
+        }
     }
 }

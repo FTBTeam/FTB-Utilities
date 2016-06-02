@@ -27,7 +27,7 @@ public class ClaimedChunks
 {
     public static ClaimedChunks inst;
 
-    public final Map<ChunkDimPos, ClaimedChunk> chunks;
+    private final Map<ChunkDimPos, ClaimedChunk> chunks;
 
     public ClaimedChunks()
     {
@@ -85,6 +85,11 @@ public class ClaimedChunks
         return chunks.get(pos);
     }
 
+    public ClaimedChunk putChunk(ClaimedChunk c)
+    {
+        return chunks.put(c.pos, c);
+    }
+
     public ClaimedChunk getChunkD(int dim, BlockPos pos)
     {
         return getChunk(new ChunkDimPos(dim, MathHelperLM.chunk(pos.getX()), MathHelperLM.chunk(pos.getZ())));
@@ -100,7 +105,7 @@ public class ClaimedChunks
 
         for(ClaimedChunk c : chunks.values())
         {
-            if((dim == null || c.pos.dim == dim.intValue()) && c.ownerID.equals(playerID))
+            if((dim == null || c.pos.dim == dim.intValue()) && c.owner.equals(playerID))
             {
                 list.add(c);
             }
@@ -125,25 +130,21 @@ public class ClaimedChunks
         {
             return false;
         }
-        //TODO: else if(ForgeWorldMP.inst.settings.getWB(dim).isOutside(cx, cz)) return false;
         else
         {
             ClaimedChunk c = getChunk(pos);
+
             if(c != null)
             {
-                ForgePlayer p = c.getOwner();
+                EnumEnabled fe = FTBUPermissions.claims_forced_explosions.get(c.owner.getProfile());
 
-                if(p != null)
+                if(fe == null)
                 {
-                    EnumEnabled fe = FTBUPermissions.claims_forced_explosions.get(p.getProfile());
-                    if(fe == null)
-                    {
-                        return FTBUPlayerData.get(p).getFlag(FTBUPlayerData.EXPLOSIONS);
-                    }
-                    else
-                    {
-                        return fe == EnumEnabled.ENABLED;
-                    }
+                    return !c.owner.hasTeam() || FTBUTeamData.get(c.owner.getTeam()).toMP().explosions.getAsBoolean();
+                }
+                else
+                {
+                    return fe == EnumEnabled.ENABLED;
                 }
             }
         }
@@ -205,7 +206,7 @@ public class ClaimedChunks
 
         ClaimedChunk chunk = getChunk(pos);
 
-        if(chunk == null && put(new ClaimedChunk(player.getWorld(), player.getProfile().getId(), pos)))
+        if(chunk == null && put(new ClaimedChunk(player.getWorld(), player, pos)))
         {
             player.sendUpdate();
         }
@@ -247,7 +248,7 @@ public class ClaimedChunks
             return;
         }
 
-        if(flag != chunk.loaded && player.equalsPlayer(chunk.getOwner()))
+        if(flag != chunk.loaded && player.equalsPlayer(chunk.owner))
         {
             if(flag)
             {

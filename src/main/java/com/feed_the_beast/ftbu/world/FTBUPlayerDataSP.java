@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.api.ForgePlayer;
-import com.feed_the_beast.ftbl.util.PrivacyLevel;
 import latmod.lib.IntMap;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -25,8 +24,7 @@ public class FTBUPlayerDataSP extends FTBUPlayerData
         map.list.setDefVal(0);
         map.list.addAll(tag.getIntArray("F"));
 
-        flags = (byte) map.get(0);
-        blocks = PrivacyLevel.VALUES_3[map.get(1)];
+        renderBadge.set(map.get(0) == 1);
 
         if(self)
         {

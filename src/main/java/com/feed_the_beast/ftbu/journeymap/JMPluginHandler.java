@@ -53,7 +53,7 @@ public class JMPluginHandler implements IJMPluginHandler
             {
                 if(chunk != null)
                 {
-                    ForgeTeam team = chunk.getOwner().getTeam();
+                    ForgeTeam team = chunk.owner.getTeam();
 
                     MapPolygon poly = PolygonHelper.createChunkPolygon(pos.chunkXPos, 100, pos.chunkZPos);
                     ShapeProperties shapeProperties = new ShapeProperties();

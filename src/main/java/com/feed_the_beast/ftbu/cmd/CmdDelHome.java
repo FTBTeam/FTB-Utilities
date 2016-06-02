@@ -31,7 +31,7 @@ public class CmdDelHome extends CommandLM
     {
         if(args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(ForgeWorldMP.inst.getPlayer(ics)).toMP().homes.list());
+            return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(ForgeWorldMP.inst.getPlayer(ics)).toMP().listHomes());
         }
 
         return super.getTabCompletionOptions(server, ics, args, pos);
@@ -43,7 +43,7 @@ public class CmdDelHome extends CommandLM
         ForgePlayerMP p = ForgePlayerMP.get(ics);
         checkArgs(args, 1);
 
-        if(FTBUPlayerData.get(p).toMP().homes.set(args[0], null))
+        if(FTBUPlayerData.get(p).toMP().setHome(args[0], null))
         {
             FTBULang.home_del.printChat(ics, args[0]);
         }

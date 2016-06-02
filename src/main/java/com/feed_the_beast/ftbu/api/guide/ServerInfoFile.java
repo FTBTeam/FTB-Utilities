@@ -256,7 +256,7 @@ public class ServerInfoFile extends InfoPage
         page = getSub("warps").setTitle(new TextComponentString("Warps")); //TODO: LANG
         InfoExtendedTextLine line;
 
-        for(String s : FTBUWorldData.getW(ForgeWorldMP.inst).toMP().warps.list())
+        for(String s : FTBUWorldData.getW(ForgeWorldMP.inst).toMP().listWarps())
         {
             line = new InfoExtendedTextLine(page, new TextComponentString(s));
             line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("warp " + s)));
@@ -265,7 +265,7 @@ public class ServerInfoFile extends InfoPage
 
         page = getSub("homes").setTitle(new TextComponentString("Homes")); //TODO: LANG
 
-        for(String s : FTBUPlayerData.get(self).toMP().homes.list())
+        for(String s : FTBUPlayerData.get(self).toMP().listHomes())
         {
             line = new InfoExtendedTextLine(page, new TextComponentString(s));
             line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("home " + s)));

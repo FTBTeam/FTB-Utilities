@@ -89,7 +89,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 
             if(chunk != null)
             {
-                ForgeTeam team = chunk.getOwner().getTeam();
+                ForgeTeam team = chunk.owner.getTeam();
 
                 if(team != null)
                 {
@@ -119,7 +119,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 
             if(chunk != null)
             {
-                ForgeTeam team = chunk.getOwner().getTeam();
+                ForgeTeam team = chunk.owner.getTeam();
 
                 if(team != null)
                 {

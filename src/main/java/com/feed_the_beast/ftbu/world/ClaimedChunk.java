@@ -1,16 +1,14 @@
 package com.feed_the_beast.ftbu.world;
 
+import com.feed_the_beast.ftbl.FTBLibPermissions;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorld;
 import com.feed_the_beast.ftbl.api.LangKey;
 import com.feed_the_beast.ftbl.api.permissions.Context;
+import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
-import com.feed_the_beast.ftbl.util.PrivacyLevel;
-import com.feed_the_beast.ftbu.FTBUPermissions;
 import net.minecraft.util.math.BlockPos;
-
-import java.util.UUID;
 
 public final class ClaimedChunk
 {
@@ -20,19 +18,14 @@ public final class ClaimedChunk
 
     public final ForgeWorld world;
     public final ChunkDimPos pos;
-    public final UUID ownerID;
+    public final ForgePlayer owner;
     public boolean loaded, forced;
 
-    public ClaimedChunk(ForgeWorld w, UUID o, ChunkDimPos p)
+    public ClaimedChunk(ForgeWorld w, ForgePlayer o, ChunkDimPos p)
     {
         world = w;
         pos = p;
-        ownerID = o;
-    }
-
-    public ForgePlayer getOwner()
-    {
-        return world.getPlayer(ownerID);
+        owner = o;
     }
 
     @Override
@@ -55,28 +48,28 @@ public final class ClaimedChunk
 
     public boolean isChunkOwner(ForgePlayer p)
     {
-        return p != null && p.equalsPlayer(getOwner());
+        return p != null && p.equalsPlayer(owner);
     }
 
     public boolean canInteract(ForgePlayerMP p, boolean leftClick, BlockPos pos)
     {
-        ForgePlayer chunkOwner = getOwner();
-
-        if(chunkOwner.equals(p))
+        if(owner.equalsPlayer(p))
+        {
+            return true;
+        }
+        else if(!owner.hasTeam())
         {
             return true;
         }
         else if(p.isFake())
         {
-            return FTBUPlayerData.get(chunkOwner).getFlag(FTBUPlayerData.FAKE_PLAYERS);
+            return FTBUTeamData.get(owner.getTeam()).toMP().fakePlayers.getAsBoolean();
         }
-
-        PrivacyLevel level = FTBUPermissions.claims_forced_security.get(p.getProfile());
-        if(level == null)
+        else if(p.isOnline() && PermissionAPI.hasPermission(p.getProfile(), FTBLibPermissions.INTERACT_SECURE, false, new Context(p.getPlayer(), pos)))
         {
-            level = FTBUPlayerData.get(chunkOwner).blocks;
+            return true;
         }
 
-        return level.canInteract(chunkOwner, p, new Context(p.getPlayer(), pos));
+        return owner.getTeam().getStatus(p).isAlly();
     }
 }

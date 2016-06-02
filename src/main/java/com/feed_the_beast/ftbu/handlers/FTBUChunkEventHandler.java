@@ -174,7 +174,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 
             if(isLoaded)
             {
-                ForgePlayerMP p = c.getOwner().toMP();
+                ForgePlayerMP p = c.owner.toMP();
 
                 if(p == null)
                 {
@@ -217,7 +217,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 
             if(c.forced != isLoaded)
             {
-                ForgeChunkManager.Ticket ticket = request(LMDimUtils.getWorld(c.pos.dim), c.getOwner().toMP());
+                ForgeChunkManager.Ticket ticket = request(LMDimUtils.getWorld(c.pos.dim), c.owner.toMP());
 
                 if(ticket != null)
                 {

@@ -30,7 +30,7 @@ public class CmdDelWarp extends CommandLM
     {
         if(args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, FTBUWorldData.getW(ForgeWorldMP.inst).toMP().warps.list());
+            return getListOfStringsMatchingLastWord(args, FTBUWorldData.getW(ForgeWorldMP.inst).toMP().listWarps());
         }
 
         return super.getTabCompletionOptions(server, ics, args, pos);
@@ -41,7 +41,7 @@ public class CmdDelWarp extends CommandLM
     {
         checkArgs(args, 1);
 
-        if(FTBUWorldData.getW(ForgeWorldMP.inst).toMP().warps.set(args[0], null))
+        if(FTBUWorldData.getW(ForgeWorldMP.inst).toMP().setWarp(args[0], null))
         {
             FTBULang.warp_del.printChat(ics, args[0]);
         }

@@ -27,7 +27,7 @@ public class BadgeRenderer implements LayerRenderer<AbstractClientPlayer>
             {
                 ForgePlayerSP pc = ForgeWorldSP.inst.getPlayer(ep);
 
-                if(pc != null && FTBUPlayerData.get(pc).getFlag(FTBUPlayerData.RENDER_BADGE))
+                if(pc != null && FTBUPlayerData.get(pc).renderBadge.getAsBoolean())
                 {
                     b.onPlayerRender(ep);
                 }

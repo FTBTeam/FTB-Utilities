@@ -55,13 +55,13 @@ public class CmdAdminHome extends CommandLM //FIXME: SubCommand
 
         if(args[1].equals("list"))
         {
-            ics.addChatMessage(new TextComponentString(LMStringUtils.strip(d.homes.list())));
+            ics.addChatMessage(new TextComponentString(LMStringUtils.strip(d.listHomes())));
             return;
         }
 
         checkArgs(args, 3);
 
-        BlockDimPos pos = d.homes.get(args[2]);
+        BlockDimPos pos = d.getHome(args[2]);
         if(pos == null)
         {
             throw FTBULang.home_not_set.commandError(args[2]);
@@ -75,7 +75,7 @@ public class CmdAdminHome extends CommandLM //FIXME: SubCommand
         }
         else if(args[1].equals("remove"))
         {
-            if(d.homes.set(args[2], null))
+            if(d.setHome(args[2], null))
             {
                 FTBULang.home_del.printChat(ics, args[2]);
                 return;

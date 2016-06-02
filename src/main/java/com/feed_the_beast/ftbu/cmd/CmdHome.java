@@ -41,7 +41,7 @@ public class CmdHome extends CommandLM
     {
         if(args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(ForgeWorldMP.inst.getPlayer(ics)).toMP().homes.list());
+            return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(ForgeWorldMP.inst.getPlayer(ics)).toMP().listHomes());
         }
 
         return super.getTabCompletionOptions(server, ics, args, pos);
@@ -56,7 +56,7 @@ public class CmdHome extends CommandLM
 
         if(args[0].equals("list"))
         {
-            Collection<String> list = d.homes.list();
+            Collection<String> list = d.listHomes();
             ics.addChatMessage(new TextComponentString(list.size() + " / " + FTBUPermissions.homes_max.get(ep.getGameProfile()) + ": "));
             if(!list.isEmpty())
             {
@@ -65,7 +65,7 @@ public class CmdHome extends CommandLM
             return;
         }
 
-        BlockDimPos pos = d.homes.get(args[0]);
+        BlockDimPos pos = d.getHome(args[0]);
 
         if(pos == null)
         {

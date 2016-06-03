@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.client.gui.claims;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import latmod.lib.LMColorUtils;
 import latmod.lib.MathHelperLM;
 import latmod.lib.PixelBuffer;
 import net.minecraft.block.Block;
@@ -23,13 +22,11 @@ import java.util.Map;
 public class ThreadReloadArea extends Thread
 {
     public static final PixelBuffer pixels = new PixelBuffer(GuiClaimChunks.tiles_tex * 16, GuiClaimChunks.tiles_tex * 16);
-    public static final short[] heightMap = new short[pixels.pixels.length];
-    private static final short defHeight = -1;
     private static final Map<IBlockState, Integer> colorCache = new HashMap<>();
+    private static BlockPos.MutableBlockPos currentBlockPos = new BlockPos.MutableBlockPos(0, 0, 0);
     public final World worldObj;
     public final GuiClaimChunks gui;
-    public Chunk chunkMC;
-    public short maxHeight = 0;
+    private Chunk currentChunk;
 
     public ThreadReloadArea(World w, GuiClaimChunks m)
     {
@@ -37,7 +34,6 @@ public class ThreadReloadArea extends Thread
         setDaemon(true);
         worldObj = w;
         gui = m;
-        Arrays.fill(heightMap, defHeight);
         Arrays.fill(pixels.pixels, 0);
     }
 
@@ -50,11 +46,10 @@ public class ThreadReloadArea extends Thread
             {
                 for(int cx = 0; cx < GuiClaimChunks.tiles_gui; cx++)
                 {
-                    //if(worldObj.getChunkProvider().getLoadedChunk(gui.startX, gui.startY) != null)
-                    {
-                        chunkMC = worldObj.getChunkFromChunkCoords(gui.startX, gui.startY);
-                        maxHeight = (short) Math.max(255, chunkMC.getTopFilledSegment() + 15);
+                    currentChunk = worldObj.getChunkProvider().getLoadedChunk(gui.startX + cx, gui.startY + cz);
 
+                    if(currentChunk != null)
+                    {
                         int x = (gui.startX + cx) * 16;
                         int y = (gui.startY + cz) * 16;
 
@@ -76,82 +71,22 @@ public class ThreadReloadArea extends Thread
 
     public int getBlockColor(int bx, int bz)
     {
-        short by = getTopY(bx, bz);
-        if(by == defHeight || by > 255)
+        int wx = MathHelperLM.wrap(bx, 16);
+        int wz = MathHelperLM.wrap(bz, 16);
+
+        for(int y = Math.max(255, currentChunk.getTopFilledSegment() + 15); y > 0; --y)
         {
-            return 0;
-        }
+            IBlockState state = currentChunk.getBlockState(wx, y, wz);
 
-        BlockPos pos = new BlockPos(bx, by, bz);
+            currentBlockPos.setPos(bx, y, bz);
 
-        IBlockState state = worldObj.getBlockState(pos);
-
-        if(!state.getBlock().isAir(state, worldObj, pos))
-        {
-            int col = getBlockColor(state);
-
-            short bw = getTopY(bx - 1, bz);
-            short be = getTopY(bx + 1, bz);
-            short bn = getTopY(bx, bz - 1);
-            short bs = getTopY(bx, bz + 1);
-
-            if((bw != defHeight && bw < by) || (bn != defHeight && bn < by))
+            if(state.getBlock() != Blocks.TALLGRASS && !worldObj.isAirBlock(currentBlockPos))
             {
-                return LMColorUtils.addBrightness(col, 25);
+                return getBlockColor(state);
             }
-            else if((be != defHeight && be < by) || (bs != defHeight && bs < by))
-            {
-                return LMColorUtils.addBrightness(col, -25);
-            }
-
-            return col;
         }
 
         return 0;
-    }
-
-    private short getTopY(int bx, int bz)
-    {
-        int x = MathHelperLM.wrap(bx, 16);
-        int z = MathHelperLM.wrap(bz, 16);
-
-        Chunk c = chunkMC;
-        short max = maxHeight;
-        boolean mapValue = false;
-
-        int cx = MathHelperLM.chunk(bx);
-        int cz = MathHelperLM.chunk(bz);
-
-        if(cx == gui.startX && cz == gui.startY)
-        {
-            mapValue = true;
-            if(heightMap[x + z * 16] != defHeight)
-            {
-                return heightMap[x + z * 16];
-            }
-        }
-        else
-        {
-            c = worldObj.getChunkFromChunkCoords(MathHelperLM.chunk(bx), MathHelperLM.chunk(bz));
-            max = (short) Math.max(255, c.getTopFilledSegment() + 15);
-        }
-
-        for(short y = max; y > 0; --y)
-        {
-            IBlockState state = c.getBlockState(x, y, z);
-            if(state.getBlock() == Blocks.TALLGRASS || worldObj.isAirBlock(new BlockPos(bx, y, bz)))
-            {
-                continue;
-            }
-
-            if(mapValue)
-            {
-                heightMap[x + z * 16] = y;
-            }
-            return y;
-        }
-
-        return defHeight;
     }
 
     private int getBlockColor(IBlockState state)

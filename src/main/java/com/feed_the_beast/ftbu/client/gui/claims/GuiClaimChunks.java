@@ -5,11 +5,11 @@ import com.feed_the_beast.ftbl.api.ForgeTeam;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.gui.GuiIcons;
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.gui.GuiLang;
-import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
-import com.feed_the_beast.ftbl.api.gui.widgets.PanelLM;
+import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
+import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
+import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
+import com.feed_the_beast.ftbl.api.client.gui.widgets.PanelLM;
 import com.feed_the_beast.ftbl.net.MessageRequestSelfUpdate;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbl.util.FTBLib;
@@ -124,6 +124,10 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
                 if(team != null)
                 {
                     FTBLibClient.setGLColor(team.getColor().getMapColor().colorValue, 180);
+                }
+                else
+                {
+                    GlStateManager.color(0F, 0F, 0F, 180F / 255F);
                 }
 
                 drawBlankRect(ax, ay, gui.getZLevel(), 16, 16);

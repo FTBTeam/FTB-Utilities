@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbu.journeymap;
 import com.feed_the_beast.ftbl.api.ForgeTeam;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
-import com.feed_the_beast.ftbl.util.FTBLib;
+import com.feed_the_beast.ftbl.util.FTBLibReflection;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.world.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.FTBUWorldData;
@@ -67,7 +67,7 @@ public class JMPluginHandler implements IJMPluginHandler
                     {
                         shapeProperties.setFillColor(0x00FFFFFF & team.getColor().getMapColor().colorValue);
 
-                        sb.append(FTBLib.getFromDyeColor(team.getColor()));
+                        sb.append(FTBLibReflection.getFromDyeColor(team.getColor()));
                         sb.append(team.getTitle());
 
                         sb.append('\n');

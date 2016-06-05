@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu.client.gui.claims;
 
+import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.ForgePlayerSPSelf;
 import com.feed_the_beast.ftbl.api.ForgeTeam;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
@@ -12,7 +13,7 @@ import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.PanelLM;
 import com.feed_the_beast.ftbl.net.MessageRequestSelfUpdate;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
-import com.feed_the_beast.ftbl.util.FTBLib;
+import com.feed_the_beast.ftbl.util.FTBLibReflection;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.net.MessageAreaRequest;
@@ -43,7 +44,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
     public static final int tiles_tex = 16;
     public static final int tiles_gui = 15;
     public static final double UV = (double) tiles_gui / (double) tiles_tex;
-    public static final ResourceLocation tex_map_entity = new ResourceLocation("ftbl", "textures/world/entity.png");
+    public static final ResourceLocation tex_map_entity = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/world/entity.png");
     public static int textureID = -1;
     public static ByteBuffer pixelBuffer = null;
 
@@ -58,7 +59,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             gui = g;
             posX += (i % tiles_gui) * width;
             posY += (i / tiles_gui) * height;
-            chunkPos = new ChunkDimPos(gui.currentDim, g.startX + (i % tiles_gui), g.startY + (i / tiles_gui));
+            chunkPos = new ChunkDimPos(gui.currentDim, g.startX + (i % tiles_gui), g.startZ + (i / tiles_gui));
         }
 
         @Override
@@ -93,7 +94,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 
                 if(team != null)
                 {
-                    l.add(FTBLib.getFromDyeColor(team.getColor()) + team.getTitle());
+                    l.add(FTBLibReflection.getFromDyeColor(team.getColor()) + team.getTitle());
                 }
 
                 l.add(TextFormatting.GREEN + ClaimedChunk.LANG_CLAIMED.translate());
@@ -123,7 +124,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 
                 if(team != null)
                 {
-                    FTBLibClient.setGLColor(team.getColor().getMapColor().colorValue, 180);
+                    FTBLibClient.setGLColor(FTBLibReflection.getDyeColor(team.getColor(), true), 180);
                 }
                 else
                 {
@@ -144,7 +145,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 
     public final long adminToken;
     public final ForgePlayerSPSelf playerLM;
-    public final int startX, startY;
+    public final int startX, startZ;
     public final int currentDim;
     public final ButtonLM buttonRefresh, buttonClose, buttonUnclaimAll;
     public final MapButton mapButtons[];
@@ -160,7 +161,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         adminToken = token;
         playerLM = ForgeWorldSP.inst.clientPlayer;
         startX = MathHelperLM.chunk(mc.thePlayer.posX) - (int) (tiles_gui * 0.5D);
-        startY = MathHelperLM.chunk(mc.thePlayer.posZ) - (int) (tiles_gui * 0.5D);
+        startZ = MathHelperLM.chunk(mc.thePlayer.posZ) - (int) (tiles_gui * 0.5D);
         currentDim = FTBLibClient.getDim();
 
         currentDimName = mc.theWorld.provider.getDimensionType().getName();
@@ -182,7 +183,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             {
                 thread = new ThreadReloadArea(mc.theWorld, GuiClaimChunks.this);
                 thread.start();
-                new MessageAreaRequest(startX, startY, tiles_gui, tiles_gui).sendToServer();
+                new MessageAreaRequest(startX, startZ, tiles_gui, tiles_gui).sendToServer();
                 new MessageRequestSelfUpdate().sendToServer();
                 FTBLibClient.playClickSound();
             }
@@ -274,7 +275,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         if(textureID == -1)
         {
             textureID = TextureUtil.glGenTextures();
-            new MessageAreaRequest(startX, startY, tiles_gui, tiles_gui).sendToServer();
+            new MessageAreaRequest(startX, startZ, tiles_gui, tiles_gui).sendToServer();
         }
 
         if(pixelBuffer != null)
@@ -305,13 +306,18 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         GlStateManager.color(1F, 1F, 1F, 1F);
         //setTexture(tex);
 
+        for(MapButton mapButton : mapButtons)
+        {
+            mapButton.renderWidget();
+        }
+
         int cx = MathHelperLM.chunk(mc.thePlayer.posX);
         int cy = MathHelperLM.chunk(mc.thePlayer.posZ);
 
-        if(cx >= startX && cy >= startY && cx < startX + tiles_gui && cy < startY + tiles_gui)
+        if(cx >= startX && cy >= startZ && cx < startX + tiles_gui && cy < startZ + tiles_gui)
         {
             double x = ((cx - startX) * 16D + MathHelperLM.wrap(mc.thePlayer.posX, 16D));
-            double y = ((cy - startY) * 16D + MathHelperLM.wrap(mc.thePlayer.posZ, 16D));
+            double y = ((cy - startZ) * 16D + MathHelperLM.wrap(mc.thePlayer.posZ, 16D));
 
             GlStateManager.pushMatrix();
             GlStateManager.translate(mainPanel.posX + x, mainPanel.posY + y, 0D);
@@ -324,11 +330,6 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             GlStateManager.popMatrix();
             drawPlayerHead(mc.thePlayer.getName(), -2, -2, 4, 4, zLevel);
             GlStateManager.popMatrix();
-        }
-
-        for(MapButton mapButton : mapButtons)
-        {
-            mapButton.renderWidget();
         }
 
         GlStateManager.color(1F, 1F, 1F, 1F);
@@ -370,7 +371,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             msg.pos = new ChunkDimPos(GuiClaimChunks.this.currentDim, 0, 0);
             msg.type = (id == 1) ? MessageClaimChunk.ID_UNCLAIM_ALL_DIMS : MessageClaimChunk.ID_UNCLAIM_ALL;
             msg.sendToServer();
-            new MessageAreaRequest(startX, startY, tiles_gui, tiles_gui).sendToServer();
+            new MessageAreaRequest(startX, startZ, tiles_gui, tiles_gui).sendToServer();
         }
 
         FTBLibClient.mc().displayGuiScreen(this);

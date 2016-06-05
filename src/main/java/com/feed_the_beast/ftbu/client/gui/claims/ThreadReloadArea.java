@@ -1,12 +1,14 @@
 package com.feed_the_beast.ftbu.client.gui.claims;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
+import latmod.lib.LMColorUtils;
 import latmod.lib.MathHelperLM;
 import latmod.lib.PixelBuffer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -26,7 +28,6 @@ public class ThreadReloadArea extends Thread
     private static BlockPos.MutableBlockPos currentBlockPos = new BlockPos.MutableBlockPos(0, 0, 0);
     public final World worldObj;
     public final GuiClaimChunks gui;
-    private Chunk currentChunk;
 
     public ThreadReloadArea(World w, GuiClaimChunks m)
     {
@@ -34,62 +35,9 @@ public class ThreadReloadArea extends Thread
         setDaemon(true);
         worldObj = w;
         gui = m;
-        Arrays.fill(pixels.pixels, 0);
     }
 
-    @Override
-    public void run()
-    {
-        try
-        {
-            for(int cz = 0; cz < GuiClaimChunks.tiles_gui; cz++)
-            {
-                for(int cx = 0; cx < GuiClaimChunks.tiles_gui; cx++)
-                {
-                    currentChunk = worldObj.getChunkProvider().getLoadedChunk(gui.startX + cx, gui.startY + cz);
-
-                    if(currentChunk != null)
-                    {
-                        int x = (gui.startX + cx) * 16;
-                        int y = (gui.startY + cz) * 16;
-
-                        for(int i = 0; i < 256; i++)
-                        {
-                            pixels.setRGB(cx * 16 + (i % 16), cz * 16 + (i / 16), getBlockColor(x + (i % 16), y + (i / 16)));
-                        }
-                    }
-                }
-            }
-
-            GuiClaimChunks.pixelBuffer = FTBLibClient.toByteBuffer(pixels.pixels, false);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public int getBlockColor(int bx, int bz)
-    {
-        int wx = MathHelperLM.wrap(bx, 16);
-        int wz = MathHelperLM.wrap(bz, 16);
-
-        for(int y = Math.max(255, currentChunk.getTopFilledSegment() + 15); y > 0; --y)
-        {
-            IBlockState state = currentChunk.getBlockState(wx, y, wz);
-
-            currentBlockPos.setPos(bx, y, bz);
-
-            if(state.getBlock() != Blocks.TALLGRASS && !worldObj.isAirBlock(currentBlockPos))
-            {
-                return getBlockColor(state);
-            }
-        }
-
-        return 0;
-    }
-
-    private int getBlockColor(IBlockState state)
+    private static int getBlockColor(IBlockState state)
     {
         Integer col = colorCache.get(state);
 
@@ -102,7 +50,7 @@ public class ThreadReloadArea extends Thread
         return col;
     }
 
-    private int getBlockColor0(IBlockState state)
+    private static int getBlockColor0(IBlockState state)
     {
         Block b = state.getBlock();
 
@@ -189,5 +137,61 @@ public class ThreadReloadArea extends Thread
         //	return LMColorUtils.addBrightness(b.colorMultiplier(worldObj, pos), -15);
 
         return state.getMapColor().colorValue;
+    }
+
+    @Override
+    public void run()
+    {
+        Arrays.fill(pixels.pixels, 0);
+        Chunk chunk;
+        int cx, cz, x, z, wx, wz, by, color;
+
+        int startY = Minecraft.getMinecraft().thePlayer.getPosition().getY();
+
+        try
+        {
+            for(cz = 0; cz < GuiClaimChunks.tiles_gui; cz++)
+            {
+                for(cx = 0; cx < GuiClaimChunks.tiles_gui; cx++)
+                {
+                    chunk = worldObj.getChunkProvider().getLoadedChunk(gui.startX + cx, gui.startZ + cz);
+
+                    if(chunk != null)
+                    {
+                        x = (gui.startX + cx) * 16;
+                        z = (gui.startZ + cz) * 16;
+
+                        for(wz = 0; wz < 16; wz++)
+                        {
+                            for(wx = 0; wx < 16; wx++)
+                            {
+                                for(by = Math.max(255, chunk.getTopFilledSegment() + 15); by > 0; --by)
+                                {
+                                    IBlockState state = chunk.getBlockState(wx, by, wz);
+
+                                    currentBlockPos.setPos(x + wx, by, z + wz);
+
+                                    if(state.getBlock() != Blocks.TALLGRASS && !worldObj.isAirBlock(currentBlockPos))
+                                    {
+                                        color = getBlockColor(state);
+                                        color = LMColorUtils.addBrightness(color, MathHelperLM.clampInt(by - startY, -30, 30) * 5);
+                                        pixels.setRGB(cx * 16 + wx, cz * 16 + wz, color);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    GuiClaimChunks.pixelBuffer = FTBLibClient.toByteBuffer(pixels.pixels, false);
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        GuiClaimChunks.pixelBuffer = FTBLibClient.toByteBuffer(pixels.pixels, false);
     }
 }

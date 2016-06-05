@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu;
 
-import com.feed_the_beast.ftbl.util.EventBusHelper;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.LMMod;
 import com.feed_the_beast.ftbu.cmd.CmdBack;
@@ -26,6 +25,7 @@ import com.feed_the_beast.ftbu.net.FTBUNetHandler;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.Backups;
 import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -58,11 +58,12 @@ public class FTBU
         FTBLib.ftbu = ftbl_int;
         FTBUConfig.load();
 
-        EventBusHelper.register(new FTBUPlayerEventHandler());
-        EventBusHelper.register(new FTBUWorldEventHandler());
-        EventBusHelper.register(new FTBUTeamEventHandler());
-        EventBusHelper.register(new FTBUChatEventHandler());
+        MinecraftForge.EVENT_BUS.register(new FTBUPlayerEventHandler());
+        MinecraftForge.EVENT_BUS.register(new FTBUWorldEventHandler());
+        MinecraftForge.EVENT_BUS.register(new FTBUTeamEventHandler());
+        MinecraftForge.EVENT_BUS.register(new FTBUChatEventHandler());
         FTBUChunkEventHandler.instance.init();
+        MinecraftForge.EVENT_BUS.register(FTBUChunkEventHandler.instance);
         FTBUPermissions.init();
         FTBUCapabilities.enable();
 

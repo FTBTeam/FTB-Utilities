@@ -7,11 +7,10 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.FTBUGuiHandler;
 import com.feed_the_beast.ftbu.badges.BadgeRenderer;
-import com.feed_the_beast.ftbu.cmd.CmdMath;
 import com.feed_the_beast.ftbu.journeymap.IJMPluginHandler;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataSP;
 import net.minecraft.client.renderer.entity.RenderPlayer;
-import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -29,10 +28,11 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
     public void preInit()
     {
         ClientConfigRegistry.addGroup("ftbu", FTBUClient.class);
-        ClientCommandHandler.instance.registerCommand(new CmdMath());
         FTBUActions.init();
 
         FTBUWorldDataSP.reloadGlobalBadges();
+
+        MinecraftForge.EVENT_BUS.register(new FTBUClientEventHandler());
     }
 
     @Override

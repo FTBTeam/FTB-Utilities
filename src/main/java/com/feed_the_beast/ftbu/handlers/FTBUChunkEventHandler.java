@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
-import com.feed_the_beast.ftbl.util.EventBusHelper;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.LMDimUtils;
 import com.feed_the_beast.ftbu.FTBU;
@@ -40,7 +39,6 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
             ForgeChunkManager.getConfig().save();
         }
 
-        EventBusHelper.register(this);
         ForgeChunkManager.setForcedChunkLoadingCallback(FTBU.inst, this);
     }
 

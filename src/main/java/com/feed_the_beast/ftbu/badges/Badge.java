@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbu.badges;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
+import com.feed_the_beast.ftbu.FTBUFinals;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,7 +15,7 @@ import org.lwjgl.opengl.GL11;
 
 public class Badge extends FinalIDObject
 {
-    public static final ResourceLocation defTex = new ResourceLocation("ftbu", "textures/failed_badge.png");
+    public static final ResourceLocation defTex = new ResourceLocation(FTBUFinals.MOD_ID, "textures/failed_badge.png");
 
     // -- //
 
@@ -43,7 +44,7 @@ public class Badge extends FinalIDObject
 
         if(textureURL == null)
         {
-            textureURL = new ResourceLocation("ftbu_badges", getID() + ".png");
+            textureURL = new ResourceLocation(FTBUFinals.MOD_ID, "badges/" + getID() + ".png");
             FTBLibClient.getDownloadImage(textureURL, imageURL, defTex, null);
         }
 

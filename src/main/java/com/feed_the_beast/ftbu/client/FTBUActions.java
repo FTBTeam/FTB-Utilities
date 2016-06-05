@@ -1,13 +1,14 @@
 package com.feed_the_beast.ftbu.client;
 
-import com.feed_the_beast.ftbl.api.EnumSelf;
-import com.feed_the_beast.ftbl.api.ForgePlayer;
+import com.feed_the_beast.ftbl.api.ForgePlayerSP;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.client.gui.GuiScreenRegistry;
-import com.feed_the_beast.ftbl.api.client.gui.PlayerAction;
-import com.feed_the_beast.ftbl.api.client.gui.PlayerActionRegistry;
+import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButton;
+import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
+import com.feed_the_beast.ftbl.api.client.gui.guibuttons.PlayerAction;
+import com.feed_the_beast.ftbl.api.client.gui.guibuttons.SidebarButton;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.guide.ClientGuideFile;
@@ -20,102 +21,78 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class FTBUActions
 {
-    public static final PlayerAction GUIDE = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBUFinals.MOD_ID, "guide"), 0, GuiIcons.book)
+    public static final ActionButton GUIDE = ActionButtonRegistry.add(new SidebarButton(new ResourceLocation(FTBUFinals.MOD_ID, "guide"), 0, GuiIcons.book, true)
     {
         @Override
-        public void onClicked(ForgePlayer self, ForgePlayer other)
+        public void onClicked(ForgePlayerSP player)
         {
             FTBLibClient.playClickSound();
             ClientGuideFile.openClientGui(true);
         }
 
         @Override
-        public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
+        public boolean isVisibleFor(ForgePlayerSP player)
         {
-            return FTBUWorldData.isLoadedW(ForgeWorldSP.inst);
-        }
-
-        @Override
-        public Boolean configDefault()
-        {
-            return Boolean.TRUE;
+            return super.isVisibleFor(player) && FTBUWorldData.isLoadedW(ForgeWorldSP.inst);
         }
     });
 
     // Self //
-    public static final PlayerAction SERVER_INFO = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBUFinals.MOD_ID, "server_info"), 0, GuiIcons.book_red)
+    public static final ActionButton SERVER_INFO = ActionButtonRegistry.add(new SidebarButton(new ResourceLocation(FTBUFinals.MOD_ID, "server_info"), 0, GuiIcons.book_red, true)
     {
         @Override
-        public void onClicked(ForgePlayer self, ForgePlayer other)
+        public void onClicked(ForgePlayerSP player)
         {
             new MessageRequestServerInfo().sendToServer();
         }
 
         @Override
-        public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
+        public boolean isVisibleFor(ForgePlayerSP player)
         {
-            return FTBUWorldData.isLoadedW(ForgeWorldSP.inst);
-        }
-
-        @Override
-        public Boolean configDefault()
-        {
-            return Boolean.TRUE;
+            return super.isVisibleFor(player) && FTBUWorldData.isLoadedW(ForgeWorldSP.inst);
         }
     });
 
-    public static final PlayerAction CLAIMS = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBUFinals.MOD_ID, "claimed_chunks"), 0, GuiIcons.map)
+    public static final ActionButton CLAIMS = ActionButtonRegistry.add(new SidebarButton(new ResourceLocation(FTBUFinals.MOD_ID, "claimed_chunks"), 0, GuiIcons.map, true)
     {
         @Override
-        public void onClicked(ForgePlayer self, ForgePlayer other)
+        public void onClicked(ForgePlayerSP player)
         {
             FTBLibClient.mc().displayGuiScreen(new GuiClaimChunks(0L));
         }
 
         @Override
-        public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
+        public boolean isVisibleFor(ForgePlayerSP player)
         {
-            return FTBUWorldData.isLoadedW(ForgeWorldSP.inst);
-        }
-
-        @Override
-        public Boolean configDefault()
-        {
-            return Boolean.TRUE;
+            return super.isVisibleFor(player) && FTBUWorldData.isLoadedW(ForgeWorldSP.inst);
         }
     });
 
-    public static final PlayerAction TRADE = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBUFinals.MOD_ID, "trade"), 0, GuiIcons.money_bag)
+    public static final ActionButton SHOP = ActionButtonRegistry.add(new SidebarButton(new ResourceLocation(FTBUFinals.MOD_ID, "shop"), 0, GuiIcons.money_bag, true)
     {
         @Override
-        public void onClicked(ForgePlayer owner, ForgePlayer player)
+        public void onClicked(ForgePlayerSP player)
         {
         }
 
         @Override
-        public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
+        public boolean isVisibleFor(ForgePlayerSP player)
         {
-            return FTBLib.DEV_ENV;
-        }
-
-        @Override
-        public Boolean configDefault()
-        {
-            return Boolean.TRUE;
+            return FTBLib.DEV_ENV && super.isVisibleFor(player);
         }
     });
 
-    public static final PlayerAction MAIL = PlayerActionRegistry.add(new PlayerAction(EnumSelf.OTHER, new ResourceLocation(FTBUFinals.MOD_ID, "mail"), 0, GuiIcons.feather)
+    public static final ActionButton MAIL = ActionButtonRegistry.add(new PlayerAction(new ResourceLocation(FTBUFinals.MOD_ID, "mail"), 0, GuiIcons.feather)
     {
         @Override
-        public void onClicked(ForgePlayer self, ForgePlayer other)
+        public void onClicked(ForgePlayerSP player)
         {
         }
 
         @Override
-        public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
+        public boolean isVisibleFor(ForgePlayerSP player)
         {
-            return FTBLib.DEV_ENV;
+            return FTBLib.DEV_ENV && super.isVisibleFor(player);
         }
     });
 

@@ -1,12 +1,9 @@
 package com.feed_the_beast.ftbu.handlers;
 
-import com.feed_the_beast.ftbl.FTBLibPermissions;
 import com.feed_the_beast.ftbl.FTBUIntegration;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
-import com.feed_the_beast.ftbl.api.permissions.Context;
-import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBUPermissions;
@@ -18,7 +15,6 @@ import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
 import com.google.gson.JsonElement;
 import latmod.lib.MathHelperLM;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
 {
@@ -40,23 +36,9 @@ public class FTBLIntegration implements FTBUIntegration // FTBLIntegrationClient
     }
 
     @Override
-    public void renderWorld(float pt)
-    {
-    }
-
-    @Override
-    public void onTooltip(ItemTooltipEvent e)
-    {
-    }
-
-    @Override
     public boolean canPlayerInteract(ForgePlayerMP player, boolean leftClick, BlockPos pos)
     {
         if(player == null)
-        {
-            return true;
-        }
-        else if(!player.isFake() && PermissionAPI.hasPermission(player.getProfile(), FTBLibPermissions.INTERACT_SECURE, false, new Context(player.getPlayer(), pos)))
         {
             return true;
         }

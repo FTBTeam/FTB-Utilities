@@ -15,6 +15,7 @@ import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.EventFTBUServerInfo;
+import com.feed_the_beast.ftbu.client.FTBUActions;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigModules;
 import com.feed_the_beast.ftbu.world.Backups;
@@ -41,7 +42,7 @@ public class ServerInfoFile extends InfoPage
 {
     public static class CachedInfo
     {
-        public static final InfoPage main = new InfoPage("ServerInfo").setTitle(new TextComponentTranslation("player_action.ftbu:server_info"));
+        public static final InfoPage main = new InfoPage("ServerInfo").setTitle(new TextComponentTranslation(FTBUActions.SERVER_INFO.getLangKey()));
 
         public static void reload()
         {

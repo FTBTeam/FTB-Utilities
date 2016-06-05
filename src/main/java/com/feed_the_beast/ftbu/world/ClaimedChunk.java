@@ -1,12 +1,9 @@
 package com.feed_the_beast.ftbu.world;
 
-import com.feed_the_beast.ftbl.FTBLibPermissions;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorld;
 import com.feed_the_beast.ftbl.api.LangKey;
-import com.feed_the_beast.ftbl.api.permissions.Context;
-import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import net.minecraft.util.math.BlockPos;
 
@@ -65,10 +62,10 @@ public final class ClaimedChunk
         {
             return FTBUTeamData.get(owner.getTeam()).toMP().fakePlayers.getAsBoolean();
         }
-        else if(p.isOnline() && PermissionAPI.hasPermission(p.getProfile(), FTBLibPermissions.INTERACT_SECURE, false, new Context(p.getPlayer(), pos)))
+        /*else if(p.isOnline() && PermissionAPI.hasPermission(p.getProfile(), FTBLibPermissions.INTERACT_SECURE, false, new Context(p.getPlayer(), pos)))
         {
             return true;
-        }
+        }*/
 
         return owner.getTeam().getStatus(p).isAlly();
     }

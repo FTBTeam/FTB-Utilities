@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.client.gui.claims;
 
-import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.ForgePlayerSPSelf;
 import com.feed_the_beast.ftbl.api.ForgeTeam;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
@@ -13,7 +12,7 @@ import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.PanelLM;
 import com.feed_the_beast.ftbl.net.MessageRequestSelfUpdate;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
-import com.feed_the_beast.ftbl.util.FTBLibReflection;
+import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.net.MessageAreaRequest;
@@ -44,7 +43,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
     public static final int tiles_tex = 16;
     public static final int tiles_gui = 15;
     public static final double UV = (double) tiles_gui / (double) tiles_tex;
-    public static final ResourceLocation tex_map_entity = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/world/entity.png");
+    public static final ResourceLocation tex_map_entity = new ResourceLocation(FTBUFinals.MOD_ID, "textures/world/entity.png");
     public static int textureID = -1;
     public static ByteBuffer pixelBuffer = null;
 
@@ -94,7 +93,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 
                 if(team != null)
                 {
-                    l.add(FTBLibReflection.getFromDyeColor(team.getColor()) + team.getTitle());
+                    l.add(team.getColor().textFormatting + team.getTitle());
                 }
 
                 l.add(TextFormatting.GREEN + ClaimedChunk.LANG_CLAIMED.translate());
@@ -124,7 +123,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 
                 if(team != null)
                 {
-                    FTBLibClient.setGLColor(FTBLibReflection.getDyeColor(team.getColor(), true), 180);
+                    FTBLibClient.setGLColor(team.getColor().color, 180);
                 }
                 else
                 {

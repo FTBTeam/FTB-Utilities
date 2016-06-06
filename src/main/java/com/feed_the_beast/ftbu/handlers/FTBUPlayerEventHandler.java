@@ -15,15 +15,17 @@ import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigLogin;
 import com.feed_the_beast.ftbu.config.FTBUConfigModules;
-import com.feed_the_beast.ftbu.net.MessageAreaUpdate;
+import com.feed_the_beast.ftbu.net.MessageAreaRequest;
 import com.feed_the_beast.ftbu.world.Backups;
 import com.feed_the_beast.ftbu.world.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.ClaimedChunks;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUPlayerDataMP;
 import com.feed_the_beast.ftbu.world.FTBUPlayerDataSP;
+import latmod.lib.MathHelperLM;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -72,30 +74,37 @@ public class FTBUPlayerEventHandler
     @SubscribeEvent
     public void onLoggedIn(ForgePlayerEvent.LoggedIn event)
     {
-        if(event.player.getWorld().getSide().isServer() && event.player.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
+        if(event.player.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
         {
-            EntityPlayerMP ep = event.player.toMP().getPlayer();
-
-            if(event.first)
+            if(event.player.getWorld().getSide().isServer())
             {
-                if(FTBUConfigModules.starting_items.getAsBoolean())
+                EntityPlayerMP ep = event.player.toMP().getPlayer();
+
+                if(event.first)
                 {
-                    for(ItemStack is : FTBUConfigLogin.starting_items.getItems())
+                    if(FTBUConfigModules.starting_items.getAsBoolean())
                     {
-                        LMInvUtils.giveItem(ep, is);
+                        for(ItemStack is : FTBUConfigLogin.starting_items.getItems())
+                        {
+                            LMInvUtils.giveItem(ep, is);
+                        }
                     }
                 }
-            }
 
-            if(FTBUConfigModules.motd.getAsBoolean())
+                if(FTBUConfigModules.motd.getAsBoolean())
+                {
+                    FTBUConfigLogin.motd.components.forEach(ep::addChatMessage);
+                }
+
+                Backups.hadPlayer = true;
+
+                FTBUChunkEventHandler.instance.markDirty(null);
+            }
+            else
             {
-                FTBUConfigLogin.motd.components.forEach(ep::addChatMessage);
+                EntityPlayer ep = event.player.getPlayer();
+                new MessageAreaRequest(MathHelperLM.chunk(ep.posX) - 3, MathHelperLM.chunk(ep.posZ) - 3, 7, 7).sendToServer();
             }
-
-            Backups.hadPlayer = true;
-
-            new MessageAreaUpdate(event.player.toMP().getPos(), 4).sendTo(ep);
-            FTBUChunkEventHandler.instance.markDirty(null);
         }
     }
 
@@ -189,7 +198,7 @@ public class FTBUPlayerEventHandler
                     n.setDesc(msg);
                 }
 
-                n.setColor(0xFF000000 | team.getColor().getMapColor().colorValue);
+                n.setColor(0xFF000000 | team.getColor().color);
                 FTBLib.notifyPlayer(ep, n);
             }
             else
@@ -211,8 +220,7 @@ public class FTBUPlayerEventHandler
             return;
         }
 
-        int dim = e.getEntity().dimension;
-        if(dim != 0 || !(e.getEntity() instanceof EntityPlayerMP) || e.getEntity() instanceof FakePlayer)
+        if(e.getEntity().dimension != 0 || !(e.getEntity() instanceof EntityPlayerMP) || e.getEntity() instanceof FakePlayer)
         {
             return;
         }
@@ -230,7 +238,7 @@ public class FTBUPlayerEventHandler
                 return;
             }*/
 
-            if((FTBUConfigGeneral.safe_spawn.getAsBoolean() && ClaimedChunks.isInSpawnD(dim, e.getEntity().posX, e.getEntity().posZ)))
+            if((FTBUConfigGeneral.safe_spawn.getAsBoolean() && ClaimedChunks.isInSpawnD(e.getEntity().dimension, e.getEntity().posX, e.getEntity().posZ)))
             {
                 e.setCanceled(true);
             }

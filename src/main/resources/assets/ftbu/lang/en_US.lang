@@ -25,6 +25,12 @@ sidebar_button.ftbu:shop=Shop
 sidebar_button.ftbu:notes=Notes
 sidebar_button.ftbu:mail=Mail
 
+# Keys
+key.categories.ftbu=FTBMods
+key.ftbu.guide=Open Guide
+key.ftbu.chunk_border=Toggle Chunk Border
+key.ftbu.light_values=Toggle Light Values
+
 # Misc
 ftbu.lang.timer_restart=Server restarts in %s
 ftbu.lang.timer_backup=Server backup in: %s

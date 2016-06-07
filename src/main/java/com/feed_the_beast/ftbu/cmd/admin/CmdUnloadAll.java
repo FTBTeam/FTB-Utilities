@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbu.world.ClaimedChunk;
-import com.feed_the_beast.ftbu.world.ClaimedChunks;
+import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -38,7 +38,7 @@ public class CmdUnloadAll extends CommandLM
 
         if(args[0].equals("@a"))
         {
-            for(ClaimedChunk c : ClaimedChunks.inst.getAllChunks(null))
+            for(ClaimedChunk c : FTBUWorldDataMP.chunks.getAllChunks())
             {
                 c.loaded = false;
             }
@@ -51,7 +51,7 @@ public class CmdUnloadAll extends CommandLM
         }
 
         ForgePlayerMP p = ForgePlayerMP.get(args[0]);
-        for(ClaimedChunk c : ClaimedChunks.inst.getChunks(p.getProfile().getId(), null))
+        for(ClaimedChunk c : FTBUWorldDataMP.chunks.getChunks(p.getProfile().getId()))
         {
             c.loaded = false;
         }

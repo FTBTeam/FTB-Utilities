@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbl.api.net.MessageToServer;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbl.util.LMAccessToken;
 import com.feed_the_beast.ftbu.world.ClaimedChunk;
-import com.feed_the_beast.ftbu.world.ClaimedChunks;
+import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -60,35 +60,35 @@ public class MessageClaimChunk extends MessageToServer<MessageClaimChunk>
         switch(m.type)
         {
             case ID_CLAIM:
-                ClaimedChunks.inst.claimChunk(p, m.pos);
+                FTBUWorldDataMP.claimChunk(p, m.pos);
                 new MessageAreaUpdate(m.pos.chunkXPos, m.pos.chunkZPos, m.pos.dim, 1, 1).sendTo(ep);
                 return;
             case ID_UNCLAIM:
                 if(m.token != 0L && LMAccessToken.equals(p.getPlayer(), m.token, false))
                 {
-                    ClaimedChunk c = ClaimedChunks.inst.getChunk(m.pos);
+                    ClaimedChunk c = FTBUWorldDataMP.chunks.getChunk(m.pos);
                     if(c != null)
                     {
-                        ClaimedChunks.inst.unclaimChunk(p, m.pos);
+                        FTBUWorldDataMP.unclaimChunk(p, m.pos);
                     }
                 }
                 else
                 {
-                    ClaimedChunks.inst.unclaimChunk(p, m.pos);
+                    FTBUWorldDataMP.unclaimChunk(p, m.pos);
                 }
                 new MessageAreaUpdate(m.pos.chunkXPos, m.pos.chunkZPos, m.pos.dim, 1, 1).sendTo(ep);
                 return;
             case ID_UNCLAIM_ALL:
-                ClaimedChunks.inst.unclaimAllChunks(p, m.pos.dim);
+                FTBUWorldDataMP.unclaimAllChunks(p, m.pos.dim);
                 return;
             case ID_UNCLAIM_ALL_DIMS:
-                ClaimedChunks.inst.unclaimAllChunks(p, null);
+                FTBUWorldDataMP.unclaimAllChunks(p, null);
                 return;
             case ID_LOAD:
-                ClaimedChunks.inst.setLoaded(p, m.pos, true);
+                FTBUWorldDataMP.setLoaded(p, m.pos, true);
                 return;
             case ID_UNLOAD:
-                ClaimedChunks.inst.setLoaded(p, m.pos, false);
+                FTBUWorldDataMP.setLoaded(p, m.pos, false);
                 return;
         }
     }

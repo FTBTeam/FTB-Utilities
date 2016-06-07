@@ -18,10 +18,10 @@ import com.feed_the_beast.ftbu.config.FTBUConfigModules;
 import com.feed_the_beast.ftbu.net.MessageAreaRequest;
 import com.feed_the_beast.ftbu.world.Backups;
 import com.feed_the_beast.ftbu.world.ClaimedChunk;
-import com.feed_the_beast.ftbu.world.ClaimedChunks;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUPlayerDataMP;
 import com.feed_the_beast.ftbu.world.FTBUPlayerDataSP;
+import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
 import latmod.lib.MathHelperLM;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
@@ -46,7 +46,7 @@ public class FTBUPlayerEventHandler
     private static Map<UUID, Integer> lastChunksTeamIDMap = new HashMap<>();
 
     @SubscribeEvent
-    public void addPlayerData(ForgePlayerEvent.AttachCapabilities event)
+    public void attachCapabilities(ForgePlayerEvent.AttachCapabilities event)
     {
         event.addCapability(new ResourceLocation(FTBUFinals.MOD_ID, "data"), event.player.getWorld().getSide().isServer() ? new FTBUPlayerDataMP() : new FTBUPlayerDataSP());
     }
@@ -170,7 +170,7 @@ public class FTBUPlayerEventHandler
 
         player.lastPos = new EntityDimPos(ep).toBlockDimPos();
 
-        ClaimedChunk chunk = ClaimedChunks.inst.getChunk(new ChunkDimPos(ep.dimension, e.getNewChunkX(), e.getNewChunkZ()));
+        ClaimedChunk chunk = FTBUWorldDataMP.chunks.getChunk(new ChunkDimPos(ep.dimension, e.getNewChunkX(), e.getNewChunkZ()));
 
         int newTeamID = (chunk == null || !chunk.owner.hasTeam()) ? 0 : chunk.owner.getTeamID();
 
@@ -238,7 +238,7 @@ public class FTBUPlayerEventHandler
                 return;
             }*/
 
-            if((FTBUConfigGeneral.safe_spawn.getAsBoolean() && ClaimedChunks.isInSpawnD(e.getEntity().dimension, e.getEntity().posX, e.getEntity().posZ)))
+            if((FTBUConfigGeneral.safe_spawn.getAsBoolean() && FTBUWorldDataMP.isInSpawnD(e.getEntity().dimension, e.getEntity().posX, e.getEntity().posZ)))
             {
                 e.setCanceled(true);
             }

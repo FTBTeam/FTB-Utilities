@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
+import latmod.lib.Bits;
 import latmod.lib.IntMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
@@ -27,7 +28,7 @@ public class FTBUTeamDataMP extends FTBUTeamData implements INBTSerializable<NBT
 
     public FTBUTeamDataMP()
     {
-        blocks = new ConfigEntryEnum<>("blocks", EnumTeamPrivacyLevel.values(), EnumTeamPrivacyLevel.ALLIES, false);
+        blocks = new ConfigEntryEnum<>("blocks", EnumTeamPrivacyLevel.ALLIES, EnumTeamPrivacyLevel.NAME_MAP);
         explosions = new ConfigEntryBool("explosions", true);
         fakePlayers = new ConfigEntryBool("fake_players", false);
     }
@@ -63,7 +64,11 @@ public class FTBUTeamDataMP extends FTBUTeamData implements INBTSerializable<NBT
     @Override
     public void deserializeNBT(NBTTagCompound tag)
     {
-        byte flags = tag.getByte("flags");
+        byte flags = tag.getByte("Flags");
+
+        explosions.set(Bits.getBit(flags, (byte) 0));
+        fakePlayers.set(Bits.getBit(flags, (byte) 1));
+
         blocks.setIndex(tag.hasKey("BlockSecurity") ? tag.getByte("BlockSecurity") : blocks.defValue);
 
         if(tag.hasKey("ClaimedChunks"))
@@ -83,7 +88,7 @@ public class FTBUTeamDataMP extends FTBUTeamData implements INBTSerializable<NBT
                         chunk.loaded = ai[3] != 0;
                     }
 
-                    ClaimedChunks.inst.putChunk(chunk);
+                    FTBUWorldDataMP.chunks.put(chunk.pos, chunk);
                 }
             }
         }
@@ -96,6 +101,9 @@ public class FTBUTeamDataMP extends FTBUTeamData implements INBTSerializable<NBT
 
         byte flags = 0;
 
+        flags = Bits.setBit(flags, (byte) 0, explosions.getAsBoolean());
+        flags = Bits.setBit(flags, (byte) 0, fakePlayers.getAsBoolean());
+
         if(flags != 0)
         {
             tag.setByte("Flags", flags);
@@ -106,7 +114,7 @@ public class FTBUTeamDataMP extends FTBUTeamData implements INBTSerializable<NBT
             tag.setByte("BlockSecurity", (byte) blocks.getIndex());
         }
 
-        Collection<ClaimedChunk> chunks = ClaimedChunks.inst.getChunks(ForgeWorldMP.currentPlayer.getProfile().getId(), null);
+        Collection<ClaimedChunk> chunks = FTBUWorldDataMP.chunks.getChunks(ForgeWorldMP.currentPlayer.getProfile().getId());
 
         if(!chunks.isEmpty())
         {

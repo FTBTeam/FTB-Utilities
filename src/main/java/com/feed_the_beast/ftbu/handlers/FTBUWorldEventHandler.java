@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
-import com.feed_the_beast.ftbu.world.ClaimedChunks;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataSP;
 import latmod.lib.MathHelperLM;
@@ -21,7 +20,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class FTBUWorldEventHandler // FTBLIntegration
 {
     @SubscribeEvent
-    public void addWorldData(ForgeWorldEvent.AttachCapabilities event)
+    public void attachCapabilities(ForgeWorldEvent.AttachCapabilities event)
     {
         ResourceLocation r = new ResourceLocation(FTBUFinals.MOD_ID, "data");
         event.addCapability(r, event.world.getSide().isServer() ? new FTBUWorldDataMP() : new FTBUWorldDataSP());
@@ -110,7 +109,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
             return false;
         }
 
-        if(FTBUConfigGeneral.safe_spawn.getAsBoolean() && ClaimedChunks.isInSpawnD(e.dimension, e.posX, e.posZ))
+        if(FTBUConfigGeneral.safe_spawn.getAsBoolean() && FTBUWorldDataMP.isInSpawnD(e.dimension, e.posX, e.posZ))
         {
             if(e instanceof IMob)
             {
@@ -135,7 +134,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
         int cx = MathHelperLM.chunk(e.getExplosion().getPosition().xCoord);
         int cz = MathHelperLM.chunk(e.getExplosion().getPosition().yCoord);
 
-        if(!ClaimedChunks.inst.allowExplosion(new ChunkDimPos(e.getWorld().provider.getDimension(), cx, cz)))
+        if(!FTBUWorldDataMP.allowExplosion(new ChunkDimPos(e.getWorld().provider.getDimension(), cx, cz)))
         {
             e.setCanceled(true);
         }

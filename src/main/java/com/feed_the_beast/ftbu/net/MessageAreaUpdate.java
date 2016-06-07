@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbu.world.ClaimedChunk;
-import com.feed_the_beast.ftbu.world.ClaimedChunks;
+import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataSP;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -35,7 +35,7 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
             for(int z1 = z; z1 < z + sz; z1++)
             {
                 ChunkDimPos pos = new ChunkDimPos(d, x1, z1);
-                types.put(pos, ClaimedChunks.inst.getChunk(pos));
+                types.put(pos, FTBUWorldDataMP.chunks.getChunk(pos));
             }
         }
     }

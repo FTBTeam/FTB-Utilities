@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class FTBUTeamEventHandler
 {
     @SubscribeEvent
-    public void addPlayerData(ForgeTeamEvent.AttachCapabilities event)
+    public void attachCapabilities(ForgeTeamEvent.AttachCapabilities event)
     {
         event.addCapability(new ResourceLocation(FTBUFinals.MOD_ID, "data"), event.team.world.getSide().isServer() ? new FTBUTeamDataMP() : new FTBUTeamDataSP());
     }

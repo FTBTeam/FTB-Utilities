@@ -11,7 +11,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -22,7 +21,7 @@ public class FTBUWorldDataSP extends FTBUWorldData
 {
     public static final BadgeStorage globalBadges = new BadgeStorage();
     public static final BadgeStorage localBadges = new BadgeStorage();
-    public static Map<ChunkDimPos, ClaimedChunk> chunks;
+    public static ClaimedChunkStorage chunks;
 
     public static void reloadGlobalBadges()
     {
@@ -52,7 +51,7 @@ public class FTBUWorldDataSP extends FTBUWorldData
     @Nullable
     public static ClaimedChunk getChunk(ChunkDimPos pos)
     {
-        return (pos != null && chunks != null) ? chunks.get(pos) : null;
+        return (pos != null && chunks != null) ? chunks.getChunk(pos) : null;
     }
 
     @SideOnly(Side.CLIENT)
@@ -68,14 +67,7 @@ public class FTBUWorldDataSP extends FTBUWorldData
             ChunkDimPos pos = e.getKey();
             ClaimedChunk chunk = e.getValue();
 
-            if(chunk == null)
-            {
-                chunks.remove(pos);
-            }
-            else
-            {
-                chunks.put(pos, chunk);
-            }
+            chunks.put(pos, chunk);
 
             if(FTBUClient.journeyMapHandler != null)
             {
@@ -99,7 +91,7 @@ public class FTBUWorldDataSP extends FTBUWorldData
     @Override
     public void onLoaded()
     {
-        chunks = new HashMap<>();
+        chunks = new ClaimedChunkStorage();
     }
 
     @Override

@@ -3,14 +3,24 @@ package com.feed_the_beast.ftbu.handlers;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.ServerTickCallback;
-import com.feed_the_beast.ftbl.api.events.RegisterAdminCommandsEvent;
+import com.feed_the_beast.ftbl.api.events.RegisterFTBCommandsEvent;
 import com.feed_the_beast.ftbl.util.FTBLib;
+import com.feed_the_beast.ftbu.cmd.CmdBack;
+import com.feed_the_beast.ftbu.cmd.CmdDelHome;
+import com.feed_the_beast.ftbu.cmd.CmdHome;
+import com.feed_the_beast.ftbu.cmd.CmdSetHome;
+import com.feed_the_beast.ftbu.cmd.CmdSpawn;
+import com.feed_the_beast.ftbu.cmd.CmdTplast;
+import com.feed_the_beast.ftbu.cmd.CmdTrashCan;
+import com.feed_the_beast.ftbu.cmd.CmdWarp;
 import com.feed_the_beast.ftbu.cmd.admin.CmdAdminHome;
 import com.feed_the_beast.ftbu.cmd.admin.CmdBackup;
 import com.feed_the_beast.ftbu.cmd.admin.CmdDelWarp;
+import com.feed_the_beast.ftbu.cmd.admin.CmdGetRank;
 import com.feed_the_beast.ftbu.cmd.admin.CmdInvsee;
 import com.feed_the_beast.ftbu.cmd.admin.CmdRestart;
 import com.feed_the_beast.ftbu.cmd.admin.CmdServerInfo;
+import com.feed_the_beast.ftbu.cmd.admin.CmdSetRank;
 import com.feed_the_beast.ftbu.cmd.admin.CmdSetWarp;
 import com.feed_the_beast.ftbu.cmd.admin.CmdUnclaim;
 import com.feed_the_beast.ftbu.cmd.admin.CmdUnclaimAll;
@@ -47,7 +57,7 @@ public class FTBUChatEventHandler
     }
 
     @SubscribeEvent
-    public void registerAdminCmds(RegisterAdminCommandsEvent event)
+    public void registerAdminCmds(RegisterFTBCommandsEvent event)
     {
         event.add(new CmdRestart());
         event.add(new CmdInvsee());
@@ -59,6 +69,16 @@ public class FTBUChatEventHandler
         event.add(new CmdUnloadAll());
         event.add(new CmdAdminHome());
         event.add(new CmdServerInfo());
+        event.add(new CmdTplast());
+        event.add(new CmdTrashCan());
+        event.add(new CmdBack());
+        event.add(new CmdSpawn());
+        event.add(new CmdWarp());
+        event.add(new CmdHome());
+        event.add(new CmdSetHome());
+        event.add(new CmdDelHome());
+        event.add(new CmdGetRank());
+        event.add(new CmdSetRank());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

@@ -16,7 +16,6 @@ public class FTBUConfig // FTBU
         configFile.setFile(new File(FTBLib.folderLocal, "ftbu/config.json"));
         configFile.setDisplayName(new TextComponentString("FTBUtilities"));
         configFile.addGroup("backups", FTBUConfigBackups.class);
-        configFile.addGroup("commands", FTBUConfigCmd.class);
         configFile.addGroup("general", FTBUConfigGeneral.class);
         configFile.addGroup("login", FTBUConfigLogin.class);
         configFile.addGroup("modules", FTBUConfigModules.class);

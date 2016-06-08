@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.cmd.admin;
 
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
@@ -31,7 +30,7 @@ public class CmdServerInfo extends CommandLM
 {
     public CmdServerInfo()
     {
-        super("server_info", CommandLevel.OP);
+        super("server_info");
     }
 
     @Override

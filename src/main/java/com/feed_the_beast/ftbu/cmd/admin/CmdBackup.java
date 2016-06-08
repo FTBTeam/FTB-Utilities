@@ -1,8 +1,7 @@
 package com.feed_the_beast.ftbu.cmd.admin;
 
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
-import com.feed_the_beast.ftbl.api.cmd.CommandSubLM;
+import com.feed_the_beast.ftbl.api.cmd.CommandSubBase;
 import com.feed_the_beast.ftbl.util.BroadcastSender;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
@@ -12,13 +11,13 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 
-public class CmdBackup extends CommandSubLM
+public class CmdBackup extends CommandSubBase
 {
     public static class CmdBackupStart extends CommandLM
     {
-        public CmdBackupStart(String s)
+        public CmdBackupStart()
         {
-            super(s, CommandLevel.OP);
+            super("start");
         }
 
         @Override
@@ -43,9 +42,9 @@ public class CmdBackup extends CommandSubLM
 
     public static class CmdBackupStop extends CommandLM
     {
-        public CmdBackupStop(String s)
+        public CmdBackupStop()
         {
-            super(s, CommandLevel.OP);
+            super("stop");
         }
 
         @Override
@@ -65,9 +64,9 @@ public class CmdBackup extends CommandSubLM
 
     public static class CmdBackupGetSize extends CommandLM
     {
-        public CmdBackupGetSize(String s)
+        public CmdBackupGetSize()
         {
-            super(s, CommandLevel.OP);
+            super("getsize");
         }
 
         @Override
@@ -81,9 +80,9 @@ public class CmdBackup extends CommandSubLM
 
     public CmdBackup()
     {
-        super("backup", CommandLevel.OP);
-        add(new CmdBackupStart("start"));
-        add(new CmdBackupStop("stop"));
-        add(new CmdBackupGetSize("getsize"));
+        super("backup");
+        add(new CmdBackupStart());
+        add(new CmdBackupStop());
+        add(new CmdBackupGetSize());
     }
 }

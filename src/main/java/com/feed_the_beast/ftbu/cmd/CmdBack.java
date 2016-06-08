@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbl.util.LMDimUtils;
 import com.feed_the_beast.ftbu.FTBULang;
 import net.minecraft.command.CommandException;
@@ -14,7 +13,13 @@ public class CmdBack extends CommandLM
 {
     public CmdBack()
     {
-        super("back", CommandLevel.ALL);
+        super("back");
+    }
+
+    @Override
+    public int getRequiredPermissionLevel()
+    {
+        return 0;
     }
 
     @Override

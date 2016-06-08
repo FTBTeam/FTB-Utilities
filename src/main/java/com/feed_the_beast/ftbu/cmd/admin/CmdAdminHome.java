@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbu.cmd.admin;
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.LMDimUtils;
 import com.feed_the_beast.ftbu.FTBULang;
@@ -22,7 +21,7 @@ public class CmdAdminHome extends CommandLM //FIXME: SubCommand
 {
     public CmdAdminHome()
     {
-        super("home", CommandLevel.OP);
+        super("admin_home");
     }
 
     @Override

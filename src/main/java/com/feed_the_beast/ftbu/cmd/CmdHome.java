@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbu.cmd;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbl.api.permissions.Context;
 import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
@@ -27,7 +26,13 @@ public class CmdHome extends CommandLM
 {
     public CmdHome()
     {
-        super("home", CommandLevel.ALL);
+        super("home");
+    }
+
+    @Override
+    public int getRequiredPermissionLevel()
+    {
+        return 0;
     }
 
     @Override

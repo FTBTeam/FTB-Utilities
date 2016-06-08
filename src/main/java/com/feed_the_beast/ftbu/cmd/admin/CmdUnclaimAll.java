@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -15,7 +14,7 @@ public class CmdUnclaimAll extends CommandLM
 {
     public CmdUnclaimAll()
     {
-        super("unclaim_all", CommandLevel.OP);
+        super("unclaim_all_chunks");
     }
 
     @Override

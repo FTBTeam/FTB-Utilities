@@ -3,10 +3,8 @@ package com.feed_the_beast.ftbu.cmd;
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.LMDimUtils;
-import com.feed_the_beast.ftbu.config.FTBUConfigCmd;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -17,7 +15,7 @@ public class CmdTplast extends CommandLM
 {
     public CmdTplast()
     {
-        super(FTBUConfigCmd.name_tplast.getAsString(), CommandLevel.OP);
+        super("tpl");
     }
 
     @Override

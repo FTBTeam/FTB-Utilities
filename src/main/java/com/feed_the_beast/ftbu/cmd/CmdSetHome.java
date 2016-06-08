@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbu.cmd;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
@@ -19,7 +18,13 @@ public class CmdSetHome extends CommandLM
 {
     public CmdSetHome()
     {
-        super("sethome", CommandLevel.ALL);
+        super("sethome");
+    }
+
+    @Override
+    public int getRequiredPermissionLevel()
+    {
+        return 0;
     }
 
     @Override

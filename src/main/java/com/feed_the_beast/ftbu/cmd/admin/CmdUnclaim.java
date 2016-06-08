@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.cmd.admin;
 
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbl.util.LMAccessToken;
 import com.feed_the_beast.ftbu.FTBUGuiHandler;
 import net.minecraft.command.CommandException;
@@ -14,7 +13,7 @@ public class CmdUnclaim extends CommandLM
 {
     public CmdUnclaim()
     {
-        super("unclaim", CommandLevel.OP);
+        super("unclaim");
     }
 
     @Override

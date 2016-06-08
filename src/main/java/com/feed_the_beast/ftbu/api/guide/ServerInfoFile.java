@@ -25,6 +25,7 @@ import com.google.gson.JsonPrimitive;
 import latmod.lib.LMFileUtils;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.ICommand;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -95,7 +96,9 @@ public class ServerInfoFile extends InfoPage
         setTitle(CachedInfo.main.getTitleComponent());
         self = pself;
 
-        boolean isDedi = FTBLib.getServer().isDedicatedServer();
+        MinecraftServer server = FTBLib.getServer();
+
+        boolean isDedi = server.isDedicatedServer();
         boolean isOP = !isDedi || PermissionAPI.hasPermission(self.getProfile(), FTBUPermissions.display_admin_info, false, Context.EMPTY);
 
         copyFrom(CachedInfo.main);
@@ -181,7 +184,7 @@ public class ServerInfoFile extends InfoPage
 
         try
         {
-            for(ICommand c : FTBLib.getAllCommands(FTBLib.getServer(), self.getPlayer()))
+            for(ICommand c : FTBLib.getAllCommands(server, self.getPlayer()))
             {
                 try
                 {
@@ -199,7 +202,7 @@ public class ServerInfoFile extends InfoPage
                     if(c instanceof ICustomCommandInfo)
                     {
                         List<ITextComponent> list = new ArrayList<>();
-                        ((ICustomCommandInfo) c).addInfo(list, self.getPlayer());
+                        ((ICustomCommandInfo) c).addInfo(server, self.getPlayer(), list);
 
                         for(ITextComponent c1 : list)
                         {

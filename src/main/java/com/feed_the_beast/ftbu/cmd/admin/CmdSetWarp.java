@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbu.cmd.admin;
 
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.world.FTBUWorldData;
@@ -16,7 +15,7 @@ public class CmdSetWarp extends CommandLM
 {
     public CmdSetWarp()
     {
-        super("setwarp", CommandLevel.OP);
+        super("setwarp");
     }
 
     @Override

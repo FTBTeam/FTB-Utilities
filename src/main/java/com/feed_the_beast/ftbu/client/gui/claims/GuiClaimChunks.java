@@ -25,7 +25,10 @@ import latmod.lib.MathHelperLM;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
@@ -94,13 +97,18 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
                 if(team != null)
                 {
                     l.add(team.getColor().textFormatting + team.getTitle());
-                }
 
-                l.add(TextFormatting.GREEN + ClaimedChunk.LANG_CLAIMED.translate());
+                    l.add(TextFormatting.GREEN + ClaimedChunk.LANG_CLAIMED.translate());
 
-                if(chunk.loaded)
-                {
-                    l.add(TextFormatting.RED + ClaimedChunk.LANG_LOADED.translate());
+                    if(team.getStatus(ForgeWorldSP.inst.clientPlayer).isAlly())
+                    {
+                        l.add(chunk.owner.getProfile().getName());
+
+                        if(chunk.loaded)
+                        {
+                            l.add(TextFormatting.RED + ClaimedChunk.LANG_LOADED.translate());
+                        }
+                    }
                 }
             }
             else
@@ -131,6 +139,23 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
                 }
 
                 drawBlankRect(ax, ay, gui.getZLevel(), 16, 16);
+
+                GlStateManager.disableTexture2D();
+                GlStateManager.color(1F, 1F, 1F, 1F);
+
+                Tessellator tessellator = Tessellator.getInstance();
+                VertexBuffer vertexBuffer = tessellator.getBuffer();
+
+                int red = (chunk.loaded && team.getStatus(ForgeWorldSP.inst.clientPlayer).isAlly()) ? 255 : 0;
+                int green = chunk.isChunkOwner(ForgeWorldSP.inst.clientPlayer) ? 70 : 0;
+
+                vertexBuffer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR);
+                vertexBuffer.pos(ax, ay, 0D).color(red, green, 0, 200).endVertex();
+                vertexBuffer.pos(ax + 16D, ay, 0D).color(red, green, 0, 200).endVertex();
+                vertexBuffer.pos(ax + 16D, ay + 16D, 0D).color(red, green, 0, 200).endVertex();
+                vertexBuffer.pos(ax, ay + 16D, 0D).color(red, green, 0, 200).endVertex();
+                vertexBuffer.pos(ax, ay, 0D).color(red, green, 0, 200).endVertex();
+                tessellator.draw();
             }
 
             if(mouseOver())
@@ -174,6 +199,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
                 FTBLibClient.mc().displayGuiScreen(null);
             }
         };
+
+        buttonClose.title = GuiLang.button_close.translate();
 
         buttonRefresh = new ButtonLM(this, 0, 16, 16, 16)
         {
@@ -310,6 +337,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             mapButton.renderWidget();
         }
 
+        GlStateManager.enableTexture2D();
+
         int cx = MathHelperLM.chunk(mc.thePlayer.posX);
         int cy = MathHelperLM.chunk(mc.thePlayer.posZ);
 
@@ -325,7 +354,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             GlStateManager.rotate(mc.thePlayer.rotationYaw + 180F, 0F, 0F, 1F);
             FTBLibClient.setTexture(tex_map_entity);
             GlStateManager.color(1F, 1F, 1F, mc.thePlayer.isSneaking() ? 0.4F : 0.7F);
-            drawTexturedRectD(-8, -8, zLevel, 16, 16, 0D, 0D, 1D, 1D);
+            drawTexturedRectD(-8D, -8D, zLevel, 16D, 16D, 0D, 0D, 1D, 1D);
             GlStateManager.popMatrix();
             drawPlayerHead(mc.thePlayer.getName(), -2, -2, 4, 4, zLevel);
             GlStateManager.popMatrix();

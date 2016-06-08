@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.cmd.admin;
 
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import latmod.lib.LMFileUtils;
 import net.minecraft.command.CommandException;
@@ -14,7 +13,7 @@ public class CmdRestart extends CommandLM
 {
     public CmdRestart()
     {
-        super("restart", CommandLevel.OP);
+        super("restart");
     }
 
     public static void restart()

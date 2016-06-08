@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.cmd.admin;
 
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbu.cmd.InvSeeInventory;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -12,7 +11,7 @@ public class CmdInvsee extends CommandLM
 {
     public CmdInvsee()
     {
-        super("invsee", CommandLevel.OP);
+        super("invsee");
     }
 
     @Override

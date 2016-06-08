@@ -72,20 +72,13 @@ public class JMPluginHandler implements IJMPluginHandler
                         sb.append('\n');
                         sb.append(TextFormatting.GREEN);
                         sb.append(ClaimedChunk.LANG_CLAIMED.translate());
-
-                        if(chunk.loaded)
-                        {
-                            sb.append('\n');
-                            sb.append(TextFormatting.GOLD);
-                            sb.append(ClaimedChunk.LANG_LOADED.translate());
-                        }
                     }
                     else
                     {
                         shapeProperties.setFillColor(0x000000);
                     }
 
-                    shapeProperties.setStrokeColor(chunk.loaded ? 0xFF0000 : 0x000000);
+                    shapeProperties.setStrokeColor(0x000000);
 
                     PolygonOverlay chunkOverlay = new PolygonOverlay(FTBUFinals.MOD_ID, "claimed_" + pos.dim + '_' + pos.chunkXPos + '_' + pos.chunkZPos, pos.dim, shapeProperties, poly);
                     chunkOverlay.setOverlayGroupName("Claimed Chunks").setTitle(sb.toString());

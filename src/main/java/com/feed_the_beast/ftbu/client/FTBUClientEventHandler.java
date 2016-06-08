@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.FTBLibCapabilities;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.client.CubeRenderer;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.client.LMFrustrumUtils;
+import com.feed_the_beast.ftbl.api.client.LMFrustumUtils;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBUFinals;
@@ -142,13 +142,13 @@ public class FTBUClientEventHandler
             Minecraft mc = FTBLibClient.mc();
 
             GlStateManager.pushMatrix();
-            GlStateManager.translate(-LMFrustrumUtils.renderX, -LMFrustrumUtils.renderY, -LMFrustrumUtils.renderZ);
+            GlStateManager.translate(-LMFrustumUtils.renderX, -LMFrustumUtils.renderY, -LMFrustumUtils.renderZ);
 
             FTBLibClient.pushMaxBrightness();
 
             GlStateManager.enableBlend();
             GlStateManager.shadeModel(GL11.GL_SMOOTH);
-            GlStateManager.disableCull();
+            GlStateManager.enableCull();
             GlStateManager.depthMask(false);
             GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             GlStateManager.enableTexture2D();
@@ -157,8 +157,10 @@ public class FTBUClientEventHandler
 
             if(renderChunkBounds)
             {
-                int x = MathHelperLM.chunk(LMFrustrumUtils.playerX);
-                int z = MathHelperLM.chunk(LMFrustrumUtils.playerZ);
+                GlStateManager.cullFace(GlStateManager.CullFace.FRONT);
+
+                int x = MathHelperLM.chunk(LMFrustumUtils.playerX);
+                int z = MathHelperLM.chunk(LMFrustumUtils.playerZ);
                 double d = 0.007D;
 
                 FTBLibClient.setTexture(chunkBorderTexture);
@@ -185,11 +187,13 @@ public class FTBUClientEventHandler
                         chunkBorderRenderer.renderSides();
                     }
                 }
+
+                GlStateManager.cullFace(GlStateManager.CullFace.BACK);
             }
 
-            if(renderLightValues && LMFrustrumUtils.playerY >= 0D)
+            if(renderLightValues && LMFrustumUtils.playerY >= 0D)
             {
-                if(lastY == -1D || MathHelperLM.distSq(LMFrustrumUtils.playerX, LMFrustrumUtils.playerY, LMFrustrumUtils.playerZ, lastX + 0.5D, lastY + 0.5D, lastZ + 0.5D) >= MathHelperLM.SQRT_2 * 2D)
+                if(lastY == -1D || MathHelperLM.distSq(LMFrustumUtils.playerX, LMFrustumUtils.playerY, LMFrustumUtils.playerZ, lastX + 0.5D, lastY + 0.5D, lastZ + 0.5D) >= MathHelperLM.SQRT_2 * 2D)
                 {
                     needsLightUpdate = true;
                 }
@@ -199,9 +203,9 @@ public class FTBUClientEventHandler
                     needsLightUpdate = false;
                     lightList.clear();
 
-                    lastX = MathHelperLM.floor(LMFrustrumUtils.playerX);
-                    lastY = MathHelperLM.floor(LMFrustrumUtils.playerY);
-                    lastZ = MathHelperLM.floor(LMFrustrumUtils.playerZ);
+                    lastX = MathHelperLM.floor(LMFrustumUtils.playerX);
+                    lastY = MathHelperLM.floor(LMFrustumUtils.playerY);
+                    lastZ = MathHelperLM.floor(LMFrustumUtils.playerZ);
 
                     for(int by = lastY - 16; by <= lastY + 16; by++)
                     {
@@ -227,7 +231,6 @@ public class FTBUClientEventHandler
 
                 if(!lightList.isEmpty())
                 {
-                    GlStateManager.enableCull();
                     GlStateManager.color(1F, 1F, 1F, 1F);
                     FTBLibClient.setTexture(FTBUClient.light_value_texture_x.getAsBoolean() ? textureLightValueX : textureLightValueO);
 
@@ -261,11 +264,11 @@ public class FTBUClientEventHandler
                             double by = pos.pos.getY() + 0.14D;
                             double bz = pos.pos.getZ() + 0.5D;
 
-                            if(MathHelperLM.distSq(LMFrustrumUtils.playerX, LMFrustrumUtils.playerY, LMFrustrumUtils.playerZ, bx, by, bz) <= 144D)
+                            if(MathHelperLM.distSq(LMFrustumUtils.playerX, LMFrustumUtils.playerY, LMFrustumUtils.playerZ, bx, by, bz) <= 144D)
                             {
                                 GlStateManager.pushMatrix();
                                 GlStateManager.translate(bx, by, bz);
-                                GlStateManager.rotate((float) (-Math.atan2(bz - LMFrustrumUtils.playerZ, bx - LMFrustrumUtils.playerX) * 180D / Math.PI) + 90F, 0F, 1F, 0F);
+                                GlStateManager.rotate((float) (-Math.atan2(bz - LMFrustumUtils.playerZ, bx - LMFrustumUtils.playerX) * 180D / Math.PI) + 90F, 0F, 1F, 0F);
                                 GlStateManager.rotate(40F, 1F, 0F, 0F);
 
                                 float scale = 1F / 32F;
@@ -282,7 +285,6 @@ public class FTBUClientEventHandler
 
             GlStateManager.color(1F, 1F, 1F, 1F);
 
-            GlStateManager.enableCull();
             GlStateManager.depthMask(true);
             GlStateManager.shadeModel(GL11.GL_FLAT);
 

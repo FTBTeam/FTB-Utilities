@@ -42,7 +42,7 @@ public class ServerInfoFile extends InfoPage
 {
     public static class CachedInfo
     {
-        public static final InfoPage main = new InfoPage("ServerInfo").setTitle(new TextComponentTranslation(FTBUActions.SERVER_INFO.getLangKey()));
+        public static final InfoPage main = new InfoPage("server_info").setTitle(FTBUActions.SERVER_INFO.displayName);
 
         public static void reload()
         {

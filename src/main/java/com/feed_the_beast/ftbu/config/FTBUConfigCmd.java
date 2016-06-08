@@ -5,10 +5,10 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryString;
 
 public class FTBUConfigCmd
 {
-    public static final ConfigEntryBool back = new ConfigEntryBool("back", true);
-    public static final ConfigEntryBool home = new ConfigEntryBool("home", true);
-    public static final ConfigEntryBool spawn = new ConfigEntryBool("spawn", true);
-    public static final ConfigEntryString name_tplast = new ConfigEntryString("name_tplast", "tpl");
-    public static final ConfigEntryBool warp = new ConfigEntryBool("warp", true);
-    public static final ConfigEntryBool trash_can = new ConfigEntryBool("trash_can", true);
+    public static final ConfigEntryBool back = new ConfigEntryBool(true);
+    public static final ConfigEntryBool home = new ConfigEntryBool(true);
+    public static final ConfigEntryBool spawn = new ConfigEntryBool(true);
+    public static final ConfigEntryString name_tplast = new ConfigEntryString("tpl");
+    public static final ConfigEntryBool warp = new ConfigEntryBool(true);
+    public static final ConfigEntryBool trash_can = new ConfigEntryBool(true);
 }

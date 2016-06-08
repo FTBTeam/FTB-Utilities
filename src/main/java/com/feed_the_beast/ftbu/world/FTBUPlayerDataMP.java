@@ -25,7 +25,7 @@ public class FTBUPlayerDataMP extends FTBUPlayerData implements INBTSerializable
 
     public FTBUPlayerDataMP()
     {
-        chatLinks = new ConfigEntryBool("chat_links", true);
+        chatLinks = new ConfigEntryBool(true);
     }
 
     @Override

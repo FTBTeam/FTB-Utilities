@@ -9,7 +9,6 @@ import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.client.FTBUActions;
 import latmod.lib.LMFileUtils;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -26,7 +25,7 @@ public class ClientGuideFile extends InfoPage
     public ClientGuideFile(String id)
     {
         super(id);
-        setTitle(new TextComponentTranslation(FTBUActions.GUIDE.getLangKey()));
+        setTitle(FTBUActions.GUIDE.displayName);
     }
 
     public static GuiInfo openClientGui(boolean open)

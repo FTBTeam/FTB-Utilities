@@ -17,7 +17,7 @@ public abstract class FTBUPlayerData implements ICapabilityProvider
 
     public FTBUPlayerData()
     {
-        renderBadge = new ConfigEntryBool("render_badge", true);
+        renderBadge = new ConfigEntryBool(true);
     }
 
     public static FTBUPlayerData get(ForgePlayer p)

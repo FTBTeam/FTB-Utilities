@@ -48,13 +48,13 @@ public class FTBUTeamEventHandler
         if(event.team.hasCapability(FTBUCapabilities.FTBU_TEAM_DATA, null))
         {
             FTBUTeamDataMP data = event.team.getCapability(FTBUCapabilities.FTBU_TEAM_DATA, null).toMP();
-            ConfigGroup group = new ConfigGroup("ftbu");
+            ConfigGroup group = new ConfigGroup();
 
-            group.add(data.blocks);
-            group.add(data.explosions);
-            group.add(data.fakePlayers);
+            group.add("blocks", data.blocks);
+            group.add("explosions", data.explosions);
+            group.add("fake_players", data.fakePlayers);
 
-            event.settings.add(group);
+            event.settings.add("ftbu", group);
         }
     }
 }

@@ -50,11 +50,11 @@ public class FTBUTeamEventHandler
             FTBUTeamDataMP data = event.team.getCapability(FTBUCapabilities.FTBU_TEAM_DATA, null).toMP();
             ConfigGroup group = new ConfigGroup("ftbu");
 
-            group.add(data.blocks, false);
-            group.add(data.explosions, false);
-            group.add(data.fakePlayers, false);
+            group.add(data.blocks);
+            group.add(data.explosions);
+            group.add(data.fakePlayers);
 
-            event.settings.add(group, false);
+            event.settings.add(group);
         }
     }
 }

@@ -84,11 +84,18 @@ public final class ClaimedChunkStorage
 
     public int getLoadedChunks(@Nonnull UUID playerID)
     {
+        Collection<ClaimedChunk> c = invertedMap.get(playerID);
+
+        if(c == null || c.isEmpty())
+        {
+            return 0;
+        }
+
         int loaded = 0;
 
-        for(ClaimedChunk c : getChunks(playerID))
+        for(ClaimedChunk chunk : c)
         {
-            if(c.loaded)
+            if(chunk.loaded)
             {
                 loaded++;
             }

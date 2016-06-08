@@ -128,10 +128,10 @@ public class FTBUPlayerEventHandler
             FTBUPlayerDataMP data = event.player.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null).toMP();
             ConfigGroup group = new ConfigGroup("ftbu");
 
-            group.add(data.renderBadge, false);
-            group.add(data.chatLinks, false);
+            group.add(data.renderBadge);
+            group.add(data.chatLinks);
 
-            event.settings.add(group, false);
+            event.settings.add(group);
         }
     }
 

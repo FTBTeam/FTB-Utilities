@@ -33,7 +33,7 @@ public class FTBUGuiHandler extends LMGuiHandler
     {
         if(id == ADMIN_CLAIMS)
         {
-            return new GuiClaimChunks(data.getLong("T"));
+            return new GuiClaimChunks(data.getLong("T")).getWrapper();
         }
 
         return null;

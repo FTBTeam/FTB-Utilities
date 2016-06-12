@@ -43,7 +43,7 @@ public class FTBUActions
         @Override
         public void onClicked(ForgePlayerSP player)
         {
-            new MessageRequestServerInfo().sendToServer();
+            new MessageRequestServerInfo().openGui();
         }
 
         @Override
@@ -58,7 +58,7 @@ public class FTBUActions
         @Override
         public void onClicked(ForgePlayerSP player)
         {
-            FTBLibClient.mc().displayGuiScreen(new GuiClaimChunks(0L));
+            new GuiClaimChunks(0L).openGui();
         }
 
         @Override
@@ -101,13 +101,9 @@ public class FTBUActions
     @SideOnly(Side.CLIENT)
     public static void init()
     {
-        GuiScreenRegistry.register(new ResourceLocation(FTBUFinals.MOD_ID, "claimed_chunks"), ep -> new GuiClaimChunks(0L));
-        GuiScreenRegistry.register(new ResourceLocation(FTBUFinals.MOD_ID, "guide"), ep -> ClientGuideFile.openClientGui(false));
-        GuiScreenRegistry.register(new ResourceLocation(FTBUFinals.MOD_ID, "server_info"), ep -> {
-            new MessageRequestServerInfo().sendToServer();
-            return null;
-        });
-
-        //GuiScreenRegistry.register(new ResourceLocation("ftbu", "trade"), ep -> FTBLibClient.mc.currentScreen);
+        GuiScreenRegistry.register(new ResourceLocation(FTBUFinals.MOD_ID, "claimed_chunks"), () -> new GuiClaimChunks(0L).getWrapper());
+        GuiScreenRegistry.register(new ResourceLocation(FTBUFinals.MOD_ID, "guide"), () -> ClientGuideFile.openClientGui(false));
+        GuiScreenRegistry.register(new ResourceLocation(FTBUFinals.MOD_ID, "server_info"), () -> new MessageRequestServerInfo().openGui());
+        //GuiScreenRegistry.register(new ResourceLocation(FTBUFinals.MOD_ID, "shop"), () -> new GuiShop());
     }
 }

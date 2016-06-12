@@ -82,7 +82,7 @@ public class Badge extends FinalIDObject
 
         GlStateManager.translate(0F, 0F, -1F);
         GlStateManager.color(1F, 1F, 1F, 1F);
-        GuiLM.drawTexturedRectD(0D, 0D, 0D, 0.2D, 0.2D, 0D, 0D, 1D, 1D);
+        GuiLM.drawTexturedRect(0D, 0D, 0.2D, 0.2D, 0D, 0D, 1D, 1D);
 
         FTBLibClient.popMaxBrightness();
         GlStateManager.popMatrix();

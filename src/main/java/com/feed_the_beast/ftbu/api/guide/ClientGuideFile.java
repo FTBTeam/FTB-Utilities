@@ -9,18 +9,20 @@ import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.client.FTBUActions;
 import latmod.lib.LMFileUtils;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.File;
 import java.util.Arrays;
 
+//FIXME
 @SideOnly(Side.CLIENT)
 public class ClientGuideFile extends InfoPage
 {
     public static final ClientGuideFile instance = new ClientGuideFile("ClientConfig");
 
-    public static GuiInfo clientGuideGui = null;
+    public static GuiScreen clientGuideGui = null;
 
     public ClientGuideFile(String id)
     {
@@ -28,16 +30,17 @@ public class ClientGuideFile extends InfoPage
         setTitle(FTBUActions.GUIDE.displayName);
     }
 
-    public static GuiInfo openClientGui(boolean open)
+    public static GuiScreen openClientGui(boolean open)
     {
         if(clientGuideGui == null)
         {
-            clientGuideGui = new GuiInfo(null, ClientGuideFile.instance);
+            clientGuideGui = new GuiInfo(null, ClientGuideFile.instance).getWrapper();
         }
         if(open)
         {
             FTBLibClient.mc().displayGuiScreen(clientGuideGui);
         }
+
         return clientGuideGui;
     }
 
@@ -103,6 +106,6 @@ public class ClientGuideFile extends InfoPage
     @SideOnly(Side.CLIENT)
     public void refreshGui(GuiInfo gui)
     {
-        clientGuideGui = gui;
+        //clientGuideGui = gui;
     }
 }

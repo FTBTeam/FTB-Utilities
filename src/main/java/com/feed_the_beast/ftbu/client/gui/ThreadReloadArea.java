@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbu.client.gui.claims;
+package com.feed_the_beast.ftbu.client.gui;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import latmod.lib.LMColorUtils;

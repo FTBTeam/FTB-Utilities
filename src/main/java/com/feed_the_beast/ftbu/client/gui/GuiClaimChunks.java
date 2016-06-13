@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbu.client.gui.claims;
+package com.feed_the_beast.ftbu.client.gui;
 
 import com.feed_the_beast.ftbl.api.ForgePlayerSPSelf;
 import com.feed_the_beast.ftbl.api.ForgeTeam;
@@ -12,6 +12,7 @@ import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.PanelLM;
 import com.feed_the_beast.ftbl.net.MessageRequestSelfUpdate;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
+import com.feed_the_beast.ftbl.util.TextureCoords;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.client.FTBUClient;
@@ -26,10 +27,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureUtil;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
@@ -47,7 +45,11 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
     public static final int tiles_tex = 16;
     public static final int tiles_gui = 15;
     public static final double UV = (double) tiles_gui / (double) tiles_tex;
-    public static final ResourceLocation tex_map_entity = new ResourceLocation(FTBUFinals.MOD_ID, "textures/world/entity.png");
+    public static final ResourceLocation TEX_ENTITY = new ResourceLocation(FTBUFinals.MOD_ID, "textures/gui/entity.png");
+    public static final ResourceLocation TEX_CHUNK_CLAIMING = new ResourceLocation(FTBUFinals.MOD_ID, "textures/gui/chunk_claiming.png");
+    public static final TextureCoords TEX_FILLED = new TextureCoords(TEX_CHUNK_CLAIMING, 0D, 0D, 0.5D, 1D);
+    public static final TextureCoords TEX_BORDER = new TextureCoords(TEX_CHUNK_CLAIMING, 0.5D, 0D, 1D, 1D);
+
     public static int textureID = -1;
     public static ByteBuffer pixelBuffer = null;
 
@@ -58,8 +60,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         public MapButton(int x, int y, int i)
         {
             super(x, y, 16, 16);
-            posX += (i % tiles_gui) * widthW;
-            posY += (i / tiles_gui) * heightW;
+            posX += (i % tiles_gui) * width;
+            posY += (i / tiles_gui) * height;
             chunkPos = new ChunkDimPos(currentDim, startX + (i % tiles_gui), startZ + (i / tiles_gui));
         }
 
@@ -126,6 +128,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 
             if(chunk != null)
             {
+                FTBLibClient.setTexture(TEX_CHUNK_CLAIMING);
+                
                 ForgeTeam team = chunk.owner.getTeam();
 
                 if(team != null)
@@ -137,24 +141,10 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
                     GlStateManager.color(0F, 0F, 0F, 180F / 255F);
                 }
 
-                drawBlankRect(ax, ay, 16, 16);
+                drawTexturedRect(ax, ay, 16, 16, TEX_FILLED.minU, TEX_FILLED.minV, TEX_FILLED.maxU, TEX_FILLED.maxV);
 
-                GlStateManager.disableTexture2D();
-                GlStateManager.color(1F, 1F, 1F, 1F);
-
-                Tessellator tessellator = Tessellator.getInstance();
-                VertexBuffer vertexBuffer = tessellator.getBuffer();
-
-                int red = (chunk.loaded && team.getStatus(ForgeWorldSP.inst.clientPlayer).isAlly()) ? 255 : 0;
-                int green = chunk.isChunkOwner(ForgeWorldSP.inst.clientPlayer) ? 70 : 0;
-
-                vertexBuffer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR);
-                vertexBuffer.pos(ax, ay, 0D).color(red, green, 0, 200).endVertex();
-                vertexBuffer.pos(ax + 16D, ay, 0D).color(red, green, 0, 200).endVertex();
-                vertexBuffer.pos(ax + 16D, ay + 16D, 0D).color(red, green, 0, 200).endVertex();
-                vertexBuffer.pos(ax, ay + 16D, 0D).color(red, green, 0, 200).endVertex();
-                vertexBuffer.pos(ax, ay, 0D).color(red, green, 0, 200).endVertex();
-                tessellator.draw();
+                GlStateManager.color((chunk.loaded && team.getStatus(ForgeWorldSP.inst.clientPlayer).isAlly()) ? 1F : 0F, chunk.isChunkOwner(ForgeWorldSP.inst.clientPlayer) ? 0.27F : 0F, 0F, 0.78F);
+                drawTexturedRect(ax, ay, 16, 16, TEX_BORDER.minU, TEX_BORDER.minV, TEX_BORDER.maxU, TEX_BORDER.maxV);
             }
 
             if(gui.isMouseOver(this))
@@ -178,7 +168,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 
     public GuiClaimChunks(long token)
     {
-        widthW = heightW = tiles_gui * 16;
+        width = height = tiles_gui * 16;
 
         adminToken = token;
         playerLM = ForgeWorldSP.inst.clientPlayer;
@@ -245,7 +235,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
                     add(buttonUnclaimAll);
                 }
 
-                heightW = widgets.size() * 16;
+                height = widgets.size() * 16;
             }
 
             @Override
@@ -317,7 +307,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         }
 
         GlStateManager.color(0F, 0F, 0F, 1F);
-        drawBlankRect(posX - 2, posY - 2, widthW + 4, heightW + 4);
+        drawBlankRect(posX - 2, posY - 2, width + 4, height + 4);
         //drawBlankRect((xSize - 128) / 2, (ySize - 128) / 2, zLevel, 128, 128);
         GlStateManager.color(1F, 1F, 1F, 1F);
 
@@ -328,14 +318,13 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         }
 
         GlStateManager.color(1F, 1F, 1F, 1F);
-        //setTexture(tex);
+        GlStateManager.enableTexture2D();
+        FTBLibClient.setTexture(TEX_CHUNK_CLAIMING);
 
         for(MapButton mapButton : mapButtons)
         {
             mapButton.renderWidget(this);
         }
-
-        GlStateManager.enableTexture2D();
 
         int cx = MathHelperLM.chunk(mc.thePlayer.posX);
         int cy = MathHelperLM.chunk(mc.thePlayer.posZ);
@@ -350,7 +339,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             GlStateManager.pushMatrix();
             //GlStateManager.rotate((int)((ep.rotationYaw + 180F) / (180F / 8F)) * (180F / 8F), 0F, 0F, 1F);
             GlStateManager.rotate(mc.thePlayer.rotationYaw + 180F, 0F, 0F, 1F);
-            FTBLibClient.setTexture(tex_map_entity);
+            FTBLibClient.setTexture(TEX_ENTITY);
             GlStateManager.color(1F, 1F, 1F, mc.thePlayer.isSneaking() ? 0.4F : 0.7F);
             drawTexturedRect(-8D, -8D, 16D, 16D, 0D, 0D, 1D, 1D);
             GlStateManager.popMatrix();

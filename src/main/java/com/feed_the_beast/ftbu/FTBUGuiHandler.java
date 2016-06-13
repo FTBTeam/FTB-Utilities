@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.api.client.gui.ContainerEmpty;
 import com.feed_the_beast.ftbl.api.client.gui.LMGuiHandler;
-import com.feed_the_beast.ftbu.client.gui.claims.GuiClaimChunks;
+import com.feed_the_beast.ftbu.client.gui.GuiClaimChunks;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;

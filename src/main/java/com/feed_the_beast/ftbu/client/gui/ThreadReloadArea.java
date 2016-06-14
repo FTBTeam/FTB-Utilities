@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.client.gui;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import latmod.lib.LMColorUtils;
-import latmod.lib.MathHelperLM;
 import latmod.lib.PixelBuffer;
+import latmod.lib.math.MathHelperLM;
+import latmod.lib.util.LMColorUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.material.MapColor;
@@ -92,6 +92,8 @@ public class ThreadReloadArea extends Thread
         {
             switch(state.getValue(Blocks.RED_FLOWER.getTypeProperty()))
             {
+                case DANDELION:
+                    return MapColor.YELLOW.colorValue;
                 case POPPY:
                     return MapColor.RED.colorValue;
                 case BLUE_ORCHID:

@@ -11,7 +11,7 @@ import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUPlayerDataMP;
-import latmod.lib.LMStringUtils;
+import latmod.lib.util.LMStringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -19,6 +19,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 
@@ -35,12 +36,14 @@ public class CmdHome extends CommandLM
         return 0;
     }
 
+    @Nonnull
     @Override
-    public String getCommandUsage(ICommandSender ics)
+    public String getCommandUsage(@Nonnull ICommandSender ics)
     {
         return '/' + commandName + " <ID>";
     }
 
+    @Nonnull
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
     {
@@ -53,7 +56,7 @@ public class CmdHome extends CommandLM
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
         FTBUPlayerDataMP d = FTBUPlayerData.get(ForgePlayerMP.get(ep)).toMP();

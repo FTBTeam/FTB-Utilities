@@ -9,12 +9,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
-import latmod.lib.LMFileUtils;
-import latmod.lib.LMJsonUtils;
-import latmod.lib.LMUtils;
+import latmod.lib.json.LMJsonUtils;
+import latmod.lib.util.LMFileUtils;
+import latmod.lib.util.LMUtils;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -289,13 +290,13 @@ public class Ranks implements PermissionHandler, RankConfigAPI.Handler
     }
 
     @Override
-    public Event.Result hasPermission(GameProfile profile, String permission, Context context)
+    public Event.Result hasPermission(@Nonnull GameProfile profile, @Nonnull String permission, @Nonnull Context context)
     {
         return getRankOf(profile).handlePermission(permission);
     }
 
     @Override
-    public JsonElement getRankConfig(GameProfile profile, RankConfig config)
+    public JsonElement getRankConfig(@Nonnull GameProfile profile, @Nonnull RankConfig config)
     {
         return getRankOf(profile).handleRankConfig(config);
     }

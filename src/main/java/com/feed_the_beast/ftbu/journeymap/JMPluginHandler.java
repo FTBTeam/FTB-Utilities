@@ -64,7 +64,7 @@ public class JMPluginHandler implements IJMPluginHandler
 
                     if(team != null)
                     {
-                        shapeProperties.setFillColor(0x00FFFFFF & team.getColor().color);
+                        shapeProperties.setFillColor(team.getColor().color);
 
                         sb.append(team.getColor().textFormatting);
                         sb.append(team.getTitle());

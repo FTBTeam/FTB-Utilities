@@ -10,6 +10,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by LatvianModder on 21.02.2016.
  */
@@ -27,7 +29,7 @@ public class CmdGetRank extends CommandLM
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
         checkArgs(args, 1);
         ForgePlayerMP p = ForgePlayerMP.get(args[0]);

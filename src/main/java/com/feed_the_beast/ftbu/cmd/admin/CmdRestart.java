@@ -2,11 +2,12 @@ package com.feed_the_beast.ftbu.cmd.admin;
 
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.util.FTBLib;
-import latmod.lib.LMFileUtils;
+import latmod.lib.util.LMFileUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 
 public class CmdRestart extends CommandLM
@@ -23,7 +24,7 @@ public class CmdRestart extends CommandLM
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
         restart();
     }

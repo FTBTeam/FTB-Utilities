@@ -11,6 +11,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.Vec3d;
 
+import javax.annotation.Nonnull;
+
 public class CmdTplast extends CommandLM
 {
     public CmdTplast()
@@ -18,8 +20,9 @@ public class CmdTplast extends CommandLM
         super("tpl");
     }
 
+    @Nonnull
     @Override
-    public String getCommandUsage(ICommandSender ics)
+    public String getCommandUsage(@Nonnull ICommandSender ics)
     {
         return '/' + commandName + " [who] <to>";
     }
@@ -31,7 +34,7 @@ public class CmdTplast extends CommandLM
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
         checkArgs(args, 1);
 

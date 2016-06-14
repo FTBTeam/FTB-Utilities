@@ -10,6 +10,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 public class FTBUGuiHandler extends LMGuiHandler
 {
     public static final FTBUGuiHandler instance = new FTBUGuiHandler(FTBUFinals.MOD_ID);
@@ -22,14 +24,14 @@ public class FTBUGuiHandler extends LMGuiHandler
     }
 
     @Override
-    public Container getContainer(EntityPlayer ep, int id, NBTTagCompound data)
+    public Container getContainer(@Nonnull EntityPlayer ep, int id, NBTTagCompound data)
     {
         return new ContainerEmpty(ep, null);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public GuiScreen getGui(EntityPlayer ep, int id, NBTTagCompound data)
+    public GuiScreen getGui(@Nonnull EntityPlayer ep, int id, NBTTagCompound data)
     {
         if(id == ADMIN_CLAIMS)
         {

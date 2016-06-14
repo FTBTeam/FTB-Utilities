@@ -1,12 +1,13 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
-import com.feed_the_beast.ftbl.util.BaublesHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
+
+import javax.annotation.Nonnull;
 
 public class InvSeeInventory implements IInventory
 {
@@ -20,7 +21,7 @@ public class InvSeeInventory implements IInventory
     {
         player = ep;
         invPlayer = ep.inventory;
-        baubles = BaublesHelper.getBaubles(ep);
+        baubles = LMInvUtils.getBaubles(ep);
     }
 
     @Override
@@ -84,6 +85,7 @@ public class InvSeeInventory implements IInventory
         }
     }
 
+    @Nonnull
     @Override
     public String getName()
     {
@@ -96,6 +98,7 @@ public class InvSeeInventory implements IInventory
         return true;
     }
 
+    @Nonnull
     @Override
     public ITextComponent getDisplayName()
     {
@@ -120,23 +123,23 @@ public class InvSeeInventory implements IInventory
     }
 
     @Override
-    public boolean isUseableByPlayer(EntityPlayer ep)
+    public boolean isUseableByPlayer(@Nonnull EntityPlayer ep)
     {
         return true;
     }
 
     @Override
-    public void openInventory(EntityPlayer ep)
+    public void openInventory(@Nonnull EntityPlayer ep)
     {
     }
 
     @Override
-    public void closeInventory(EntityPlayer ep)
+    public void closeInventory(@Nonnull EntityPlayer ep)
     {
     }
 
     @Override
-    public boolean isItemValidForSlot(int i, ItemStack is)
+    public boolean isItemValidForSlot(int i, @Nonnull ItemStack is)
     {
         int j = slotMapping[i];
         IInventory inv = getInv(j);

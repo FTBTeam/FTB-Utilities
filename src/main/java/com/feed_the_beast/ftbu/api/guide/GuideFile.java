@@ -5,9 +5,9 @@ import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.util.JsonHelper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import latmod.lib.net.LMConnection;
-import latmod.lib.net.RequestMethod;
-import latmod.lib.util.FinalIDObject;
+import latmod.lib.FinalIDObject;
+import latmod.lib.io.LMConnection;
+import latmod.lib.io.RequestMethod;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 

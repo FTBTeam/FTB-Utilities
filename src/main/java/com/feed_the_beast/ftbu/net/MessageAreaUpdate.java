@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
-import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbu.world.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
@@ -38,11 +37,6 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
                 types.put(pos, FTBUWorldDataMP.chunks.getChunk(pos));
             }
         }
-    }
-
-    public MessageAreaUpdate(BlockDimPos pos, int radius)
-    {
-        this(pos.chunkX() - radius, pos.chunkZ() - radius, pos.dim, radius * 2 + 1, radius * 2 + 1);
     }
 
     @Override

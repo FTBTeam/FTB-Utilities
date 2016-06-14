@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbu.badges;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import latmod.lib.LMUtils;
+import latmod.lib.util.LMUtils;
 
 import java.util.HashMap;
 import java.util.Map;

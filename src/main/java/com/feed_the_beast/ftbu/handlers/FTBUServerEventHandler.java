@@ -4,7 +4,10 @@ import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.ServerTickCallback;
 import com.feed_the_beast.ftbl.api.events.RegisterFTBCommandsEvent;
+import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.util.FTBLib;
+import com.feed_the_beast.ftbu.FTBU;
+import com.feed_the_beast.ftbu.api.guide.ServerInfoFile;
 import com.feed_the_beast.ftbu.cmd.CmdBack;
 import com.feed_the_beast.ftbu.cmd.CmdDelHome;
 import com.feed_the_beast.ftbu.cmd.CmdHome;
@@ -25,7 +28,9 @@ import com.feed_the_beast.ftbu.cmd.admin.CmdSetWarp;
 import com.feed_the_beast.ftbu.cmd.admin.CmdUnclaim;
 import com.feed_the_beast.ftbu.cmd.admin.CmdUnclaimAll;
 import com.feed_the_beast.ftbu.cmd.admin.CmdUnloadAll;
+import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
+import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -38,7 +43,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FTBUChatEventHandler
+public class FTBUServerEventHandler
 {
     private static final String[] LINK_PREFIXES = {"http://", "https://"};
 
@@ -54,6 +59,27 @@ public class FTBUChatEventHandler
         }
 
         return -1;
+    }
+
+    @SubscribeEvent
+    public void onReloaded(ReloadEvent e)
+    {
+        if(e.world.getSide().isServer())
+        {
+            ServerInfoFile.CachedInfo.reload();
+            Ranks.instance().reload();
+
+            FTBUWorldDataMP.reloadServerBadges();
+
+            if(FTBLib.getServerWorld() != null)
+            {
+                FTBUChunkEventHandler.instance.markDirty(null);
+            }
+        }
+        else
+        {
+            FTBU.proxy.onReloadedClient();
+        }
     }
 
     @SubscribeEvent

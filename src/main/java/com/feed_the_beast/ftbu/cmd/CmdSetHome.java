@@ -12,6 +12,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class CmdSetHome extends CommandLM
@@ -27,12 +28,14 @@ public class CmdSetHome extends CommandLM
         return 0;
     }
 
+    @Nonnull
     @Override
-    public String getCommandUsage(ICommandSender ics)
+    public String getCommandUsage(@Nonnull ICommandSender ics)
     {
         return '/' + commandName + " <ID>";
     }
 
+    @Nonnull
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
     {
@@ -44,7 +47,7 @@ public class CmdSetHome extends CommandLM
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
         ForgePlayerMP p = ForgePlayerMP.get(ics);
         FTBUPlayerDataMP d = FTBUPlayerData.get(p).toMP();

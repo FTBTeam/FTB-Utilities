@@ -3,11 +3,10 @@ package com.feed_the_beast.ftbu.world;
 import com.feed_the_beast.ftbl.util.BroadcastSender;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
-import latmod.lib.LMFileUtils;
-import latmod.lib.LMStringUtils;
-import latmod.lib.LMUtils;
-import latmod.lib.MathHelperLM;
 import latmod.lib.Time;
+import latmod.lib.math.MathHelperLM;
+import latmod.lib.util.LMFileUtils;
+import latmod.lib.util.LMStringUtils;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
@@ -120,7 +119,7 @@ public class ThreadBackup extends Thread
                     }
 
                     File dst1 = new File(dstPath + (file.getAbsolutePath().replace(srcPath, "")));
-                    LMUtils.throwException(LMFileUtils.copyFile(file, dst1));
+                    LMFileUtils.copyFile(file, dst1);
                 }
             }
 
@@ -146,7 +145,7 @@ public class ThreadBackup extends Thread
         }
         catch(Exception ex)
         {
-            ITextComponent c = FTBULang.backup_fail.textComponent(LMUtils.classpath(ex.getClass()));
+            ITextComponent c = FTBULang.backup_fail.textComponent(ex.getClass().getName());
             c.getStyle().setColor(TextFormatting.DARK_RED);
             BroadcastSender.inst.addChatMessage(c);
 

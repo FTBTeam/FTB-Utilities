@@ -7,11 +7,12 @@ import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
 import com.feed_the_beast.ftbl.api.notification.Notification;
+import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbl.util.EntityDimPos;
-import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUFinals;
+import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigLogin;
 import com.feed_the_beast.ftbu.config.FTBUConfigModules;
@@ -22,7 +23,8 @@ import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUPlayerDataMP;
 import com.feed_the_beast.ftbu.world.FTBUPlayerDataSP;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
-import latmod.lib.MathHelperLM;
+import com.google.gson.JsonElement;
+import latmod.lib.math.MathHelperLM;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,6 +37,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.HashMap;
@@ -189,25 +192,30 @@ public class FTBUPlayerEventHandler
 
                 ITextComponent msg = new TextComponentString(team.getTitle());
                 msg.getStyle().setBold(true);
-                Notification n = new Notification("chunk_changed", msg, 3000);
+                Notification n = new Notification("chunk_changed");
+                n.addText(msg);
 
                 if(team.getDesc() != null)
                 {
                     msg = new TextComponentString(team.getDesc());
                     msg.getStyle().setItalic(true);
-                    n.setDesc(msg);
+                    n.addText(msg);
                 }
 
+                n.setTimer(3000);
                 n.setColor(0xFF000000 | team.getColor().color);
-                FTBLib.notifyPlayer(ep, n);
+                n.sendTo(ep);
             }
             else
             {
                 ITextComponent msg = ClaimedChunk.LANG_WILDERNESS.textComponent();
                 msg.getStyle().setBold(true);
-                Notification n = new Notification("chunk_changed", msg, 3000);
+
+                Notification n = new Notification("chunk_changed");
+                n.addText(msg);
+                n.setTimer(3000);
                 n.setColor(0xFF00A010);
-                FTBLib.notifyPlayer(ep, n);
+                n.sendTo(ep);
             }
         }
     }
@@ -247,6 +255,39 @@ public class FTBUPlayerEventHandler
 				ClaimedChunk c = Claims.getMode(dim, cx, cz);
 				if(c != null && c.claims.settings.isSafe()) e.setCanceled(true);
 			}*/
+        }
+    }
+
+    //FIXME: Right click / left click needs a rewrite
+    @SubscribeEvent
+    public void onPlayerInteract(PlayerInteractEvent event)
+    {
+        if(event.getEntityPlayer() instanceof EntityPlayerMP && !(event instanceof PlayerInteractEvent.RightClickEmpty))
+        {
+            ForgePlayerMP player = ForgeWorldMP.inst.getPlayer(event.getEntityPlayer());
+
+            if(player != null)
+            {
+                boolean leftClick = event instanceof PlayerInteractEvent.LeftClickBlock;
+
+                if(leftClick)
+                {
+                    for(JsonElement e : FTBUPermissions.claims_break_whitelist.getJson(player.getProfile()).getAsJsonArray())
+                    {
+                        if(e.getAsString().equals(LMInvUtils.getRegName(player.getPlayer().worldObj.getBlockState(event.getPos()).getBlock()).toString()))
+                        {
+                            return;
+                        }
+                    }
+                }
+
+                ClaimedChunk chunk = FTBUWorldDataMP.chunks.getChunk(new BlockDimPos(event.getPos(), player.getPlayer().dimension, false).toChunkPos());
+
+                if(chunk != null && !chunk.canInteract(player, leftClick, event.getPos()))
+                {
+                    event.setCanceled(true);
+                }
+            }
         }
     }
 }

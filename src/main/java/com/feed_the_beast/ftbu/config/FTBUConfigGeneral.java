@@ -11,6 +11,7 @@ import latmod.lib.annotations.NumberBounds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -47,7 +48,7 @@ public class FTBUConfigGeneral
         }
 
         @Override
-        public void fromJson(JsonElement o)
+        public void fromJson(@Nonnull JsonElement o)
         {
             list.clear();
 
@@ -64,6 +65,7 @@ public class FTBUConfigGeneral
             }
         }
 
+        @Nonnull
         @Override
         public JsonElement getSerializableElement()
         {

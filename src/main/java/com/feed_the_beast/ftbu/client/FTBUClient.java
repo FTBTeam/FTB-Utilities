@@ -58,4 +58,15 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 
         //GuideRepoList.refresh();
     }
+
+    @Override
+    public void onReloadedClient()
+    {
+        FTBLibClient.clearCachedData();
+
+        //if(e.modeChanged)
+        {
+            //FIXME: GuideRepoList.reloadFromFolder(e.world.getMode());
+        }
+    }
 }

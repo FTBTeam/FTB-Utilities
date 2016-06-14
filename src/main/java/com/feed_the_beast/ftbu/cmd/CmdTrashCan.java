@@ -7,6 +7,8 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 
+import javax.annotation.Nonnull;
+
 public class CmdTrashCan extends CommandLM
 {
     public CmdTrashCan()
@@ -21,12 +23,13 @@ public class CmdTrashCan extends CommandLM
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 
         ep.displayGUIChest(new BasicInventory(18)
         {
+            @Nonnull
             @Override
             public String getName()
             {

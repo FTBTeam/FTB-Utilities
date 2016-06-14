@@ -9,6 +9,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 
+import javax.annotation.Nonnull;
+
 public class CmdUnclaim extends CommandLM
 {
     public CmdUnclaim()
@@ -17,7 +19,7 @@ public class CmdUnclaim extends CommandLM
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
         NBTTagCompound data = new NBTTagCompound();

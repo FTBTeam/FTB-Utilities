@@ -5,8 +5,10 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.LMNBTUtils;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import latmod.lib.Bits;
-import latmod.lib.IntMap;
+import gnu.trove.map.TIntIntMap;
+import gnu.trove.map.hash.TIntIntHashMap;
+import latmod.lib.io.Bits;
+import latmod.lib.util.LMTroveUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -95,7 +97,7 @@ public class FTBUPlayerDataMP extends FTBUPlayerData implements INBTSerializable
     @Override
     public void writeSyncData(ForgePlayer player, NBTTagCompound tag, boolean self)
     {
-        IntMap map = new IntMap();
+        TIntIntMap map = new TIntIntHashMap();
 
         if(renderBadge.getAsBoolean())
         {
@@ -104,15 +106,15 @@ public class FTBUPlayerDataMP extends FTBUPlayerData implements INBTSerializable
 
         if(self)
         {
-            map.putIfNot0(10, FTBUWorldDataMP.chunks.getClaimedChunks(player.getProfile().getId()));
-            map.putIfNot0(11, FTBUWorldDataMP.chunks.getLoadedChunks(player.getProfile().getId()));
-            map.putIfNot0(12, FTBUPermissions.claims_max_chunks.get(player.getProfile()));
-            map.putIfNot0(13, FTBUPermissions.chunkloader_max_chunks.get(player.getProfile()));
+            LMTroveUtils.put(map, 10, FTBUWorldDataMP.chunks.getClaimedChunks(player.getProfile().getId()), 0);
+            LMTroveUtils.put(map, 11, FTBUWorldDataMP.chunks.getLoadedChunks(player.getProfile().getId()), 0);
+            LMTroveUtils.put(map, 12, FTBUPermissions.claims_max_chunks.get(player.getProfile()), 0);
+            LMTroveUtils.put(map, 13, FTBUPermissions.chunkloader_max_chunks.get(player.getProfile()), 0);
         }
 
-        if(!map.list.isEmpty())
+        if(!map.isEmpty())
         {
-            tag.setIntArray("F", map.toArray());
+            tag.setIntArray("F", LMTroveUtils.toIntList(map).toArray());
         }
     }
 

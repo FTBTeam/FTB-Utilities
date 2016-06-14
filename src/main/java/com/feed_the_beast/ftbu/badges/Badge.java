@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbu.badges;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import latmod.lib.util.FinalIDObject;
+import latmod.lib.FinalIDObject;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -12,6 +12,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
+
+import javax.annotation.Nonnull;
 
 public class Badge extends FinalIDObject
 {
@@ -28,6 +30,7 @@ public class Badge extends FinalIDObject
         imageURL = url;
     }
 
+    @Nonnull
     @Override
     public String toString()
     {
@@ -70,7 +73,10 @@ public class Badge extends FinalIDObject
         FTBLibClient.pushMaxBrightness();
         GlStateManager.pushMatrix();
 
-        //TODO: Check if(ep.isSneaking()) GlStateManager.rotate(25F, 1F, 0F, 0F);
+        if(ep.isSneaking())
+        {
+            GlStateManager.rotate(25F, 1F, 0F, 0F);
+        }
 
         GlStateManager.translate(0.04F, 0.01F, 0.86F);
 

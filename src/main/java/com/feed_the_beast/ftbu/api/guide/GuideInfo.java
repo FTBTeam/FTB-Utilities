@@ -3,12 +3,13 @@ package com.feed_the_beast.ftbu.api.guide;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import latmod.lib.FinalIDObject;
 import latmod.lib.IIDObject;
-import latmod.lib.LMUtils;
-import latmod.lib.net.LMConnection;
-import latmod.lib.net.RequestMethod;
-import latmod.lib.util.FinalIDObject;
+import latmod.lib.io.LMConnection;
+import latmod.lib.io.RequestMethod;
+import latmod.lib.util.LMUtils;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -66,6 +67,7 @@ public class GuideInfo extends FinalIDObject
             return LMUtils.getID(o).equals(ID);
         }
 
+        @Nonnull
         @Override
         public String getID()
         {

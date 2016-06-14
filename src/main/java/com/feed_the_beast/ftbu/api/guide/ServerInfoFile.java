@@ -22,8 +22,7 @@ import com.feed_the_beast.ftbu.world.Backups;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUWorldData;
 import com.google.gson.JsonPrimitive;
-import latmod.lib.LMFileUtils;
-import latmod.lib.LMStringUtils;
+import latmod.lib.util.LMStringUtils;
 import net.minecraft.command.ICommand;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
@@ -33,9 +32,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -48,41 +45,16 @@ public class ServerInfoFile extends InfoPage
         public static void reload()
         {
             main.clear();
-
+            
+            /*
             //categoryServer.println(new ChatComponentTranslation("ftbl:worldID", FTBWorld.server.getWorldID()));
-
             File file = new File(FTBLib.folderLocal, "guide/");
-            if(file.exists() && file.isDirectory())
+            if(file.exists())
             {
-                File[] f = file.listFiles();
-                if(f != null && f.length > 0)
-                {
-                    Arrays.sort(f, LMFileUtils.fileComparator);
-                    for(int i = 0; i < f.length; i++)
-                    {
-                        //FIXME: loadFromFiles(main, f[i]);
-                    }
-                }
             }
-
-            file = new File(FTBLib.folderLocal, "guide_cover.txt");
-            if(file.exists() && file.isFile())
-            {
-                try
-                {
-                    String text = LMFileUtils.loadAsText(file);
-                    if(text != null && !text.isEmpty())
-                    {
-                        main.printlnText(text.replace("\r", ""));
-                    }
-                }
-                catch(Exception ex)
-                {
-                    ex.printStackTrace();
-                }
-            }
-
+            
             main.cleanup();
+            */
         }
     }
 

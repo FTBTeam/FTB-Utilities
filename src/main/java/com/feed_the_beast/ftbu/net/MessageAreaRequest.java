@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbu.net;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToServer;
 import io.netty.buffer.ByteBuf;
-import latmod.lib.MathHelperLM;
+import latmod.lib.math.MathHelperLM;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class MessageAreaRequest extends MessageToServer<MessageAreaRequest>

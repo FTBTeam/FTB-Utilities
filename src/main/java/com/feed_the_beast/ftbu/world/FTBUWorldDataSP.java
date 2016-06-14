@@ -5,8 +5,8 @@ import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.badges.BadgeStorage;
 import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.net.MessageRequestBadge;
-import latmod.lib.net.LMConnection;
-import latmod.lib.net.RequestMethod;
+import latmod.lib.io.LMConnection;
+import latmod.lib.io.RequestMethod;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 

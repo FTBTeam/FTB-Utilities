@@ -1,86 +1,115 @@
 package com.feed_the_beast.ftbu.cmd.admin;
 
-import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
+import com.feed_the_beast.ftbl.api.cmd.CommandSubBase;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.LMDimUtils;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUPlayerDataMP;
-import latmod.lib.LMStringUtils;
+import latmod.lib.util.LMStringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 
-import java.util.List;
+import javax.annotation.Nonnull;
 
-public class CmdAdminHome extends CommandLM //FIXME: SubCommand
+public class CmdAdminHome extends CommandSubBase
 {
+    public static class CmdTP extends CommandLM
+    {
+        public CmdTP()
+        {
+            super("tp");
+        }
+
+        @Override
+        public boolean isUsernameIndex(String[] args, int i)
+        {
+            return i == 0;
+        }
+
+        @Override
+        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
+        {
+            EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+            checkArgs(args, 2);
+            FTBUPlayerDataMP d = FTBUPlayerData.get(ForgePlayerMP.get(args[0])).toMP();
+
+            BlockDimPos pos = d.getHome(args[1]);
+
+            if(pos != null)
+            {
+                LMDimUtils.teleportPlayer(ep, pos);
+                FTBULang.warp_tp.printChat(sender, args[2]);
+            }
+
+            throw FTBULang.home_not_set.commandError(args[1]);
+        }
+    }
+
+    public static class CmdList extends CommandLM
+    {
+        public CmdList()
+        {
+            super("list");
+        }
+
+        @Override
+        public boolean isUsernameIndex(String[] args, int i)
+        {
+            return i == 0;
+        }
+
+        @Override
+        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
+        {
+            checkArgs(args, 1);
+            FTBUPlayerDataMP d = FTBUPlayerData.get(ForgePlayerMP.get(args[0])).toMP();
+            sender.addChatMessage(new TextComponentString(LMStringUtils.strip(d.listHomes())));
+        }
+    }
+
+    public static class CmdRem extends CommandLM
+    {
+        public CmdRem()
+        {
+            super("remove");
+        }
+
+        @Override
+        public boolean isUsernameIndex(String[] args, int i)
+        {
+            return i == 0;
+        }
+
+        @Override
+        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
+        {
+            checkArgs(args, 2);
+            FTBUPlayerDataMP d = FTBUPlayerData.get(ForgePlayerMP.get(args[0])).toMP();
+            BlockDimPos pos = d.getHome(args[1]);
+
+            if(pos != null)
+            {
+                if(d.setHome(args[1], null))
+                {
+                    FTBULang.home_del.printChat(sender, args[1]);
+                }
+            }
+
+            throw FTBULang.home_not_set.commandError(args[1]);
+        }
+    }
+
     public CmdAdminHome()
     {
         super("admin_home");
-    }
-
-    @Override
-    public String getCommandUsage(ICommandSender ics)
-    {
-        return '/' + commandName + " <player> <sub> [ID]";
-    }
-
-    @Override
-    public boolean isUsernameIndex(String[] args, int i)
-    {
-        return i == 0;
-    }
-
-    @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
-    {
-        if(args.length == 2)
-        {
-            return getListOfStringsMatchingLastWord(args, "list", "tp", "remove");
-        }
-        return super.getTabCompletionOptions(server, ics, args, pos);
-    }
-
-    @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
-    {
-        checkArgs(args, 2);
-        FTBUPlayerDataMP d = FTBUPlayerData.get(ForgePlayerMP.get(args[0])).toMP();
-
-        if(args[1].equals("list"))
-        {
-            ics.addChatMessage(new TextComponentString(LMStringUtils.strip(d.listHomes())));
-            return;
-        }
-
-        checkArgs(args, 3);
-
-        BlockDimPos pos = d.getHome(args[2]);
-        if(pos == null)
-        {
-            throw FTBULang.home_not_set.commandError(args[2]);
-        }
-
-        if(args[1].equals("tp"))
-        {
-            LMDimUtils.teleportPlayer(getCommandSenderAsPlayer(ics), pos);
-            FTBULang.warp_tp.printChat(ics, args[2]);
-            return;
-        }
-        else if(args[1].equals("remove"))
-        {
-            if(d.setHome(args[2], null))
-            {
-                FTBULang.home_del.printChat(ics, args[2]);
-                return;
-            }
-        }
-
-        throw FTBLibLang.invalid_subcmd.commandError(args[2]);
+        add(new CmdTP());
+        add(new CmdList());
+        add(new CmdRem());
     }
 }

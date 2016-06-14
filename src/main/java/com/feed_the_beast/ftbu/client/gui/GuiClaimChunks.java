@@ -22,7 +22,7 @@ import com.feed_the_beast.ftbu.world.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUPlayerDataSP;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataSP;
-import latmod.lib.MathHelperLM;
+import latmod.lib.math.MathHelperLM;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
@@ -36,6 +36,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import javax.annotation.Nonnull;
 import java.nio.ByteBuffer;
 import java.util.List;
 
@@ -66,7 +67,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         }
 
         @Override
-        public void onClicked(GuiLM gui, MouseButton button)
+        public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
         {
             if(gui.isMouseOver(panelButtons))
             {
@@ -181,7 +182,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         buttonClose = new ButtonLM(0, 0, 16, 16)
         {
             @Override
-            public void onClicked(GuiLM gui, MouseButton button)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
             {
                 FTBLibClient.playClickSound();
                 closeGui();
@@ -193,7 +194,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         buttonRefresh = new ButtonLM(0, 16, 16, 16)
         {
             @Override
-            public void onClicked(GuiLM gui, MouseButton button)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
             {
                 thread = new ThreadReloadArea(mc.theWorld, GuiClaimChunks.this);
                 thread.start();
@@ -208,7 +209,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         buttonUnclaimAll = new ButtonLM(0, 32, 16, 16)
         {
             @Override
-            public void onClicked(GuiLM gui, MouseButton button)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
             {
                 FTBLibClient.playClickSound();
                 String s = GuiScreen.isShiftKeyDown() ? FTBULang.button_claims_unclaim_all_q.translate() : FTBULang.button_claims_unclaim_all_dim_q.translateFormatted(currentDimName);
@@ -267,9 +268,9 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
     @Override
     public void addWidgets()
     {
-        for(int i = 0; i < mapButtons.length; i++)
+        for(MapButton b : mapButtons)
         {
-            add(mapButtons[i]);
+            add(b);
         }
 
         add(panelButtons);

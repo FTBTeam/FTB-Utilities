@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -22,18 +23,21 @@ public class CmdOverride implements ICommand
         parent = c;
     }
 
+    @Nonnull
     @Override
     public String getCommandName()
     {
         return parent.getCommandName();
     }
 
+    @Nonnull
     @Override
-    public String getCommandUsage(ICommandSender p_71518_1_)
+    public String getCommandUsage(@Nonnull ICommandSender p_71518_1_)
     {
         return parent.getCommandName();
     }
 
+    @Nonnull
     @Override
     public List<String> getCommandAliases()
     {
@@ -41,13 +45,13 @@ public class CmdOverride implements ICommand
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
         parent.execute(server, ics, args);
     }
 
     @Override
-    public boolean checkPermission(MinecraftServer server, ICommandSender ics)
+    public boolean checkPermission(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics)
     {
         FTBLib.dev_logger.info("FTBU: Checking permission for " + parent.getCommandName());
         if(ics instanceof EntityPlayerMP)
@@ -59,20 +63,21 @@ public class CmdOverride implements ICommand
         return parent.checkPermission(server, ics);
     }
 
+    @Nonnull
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
+    public List<String> getTabCompletionOptions(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args, BlockPos pos)
     {
         return parent.getTabCompletionOptions(server, ics, args, pos);
     }
 
     @Override
-    public boolean isUsernameIndex(String[] args, int i)
+    public boolean isUsernameIndex(@Nonnull String[] args, int i)
     {
         return parent.isUsernameIndex(args, i);
     }
 
     @Override
-    public int compareTo(ICommand o)
+    public int compareTo(@Nonnull ICommand o)
     {
         return getCommandName().compareToIgnoreCase(o.getCommandName());
     }

@@ -9,6 +9,7 @@ import latmod.lib.annotations.Info;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 
+import javax.annotation.Nonnull;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class FTBUConfigLogin
         }
 
         @Override
-        public void fromJson(JsonElement o)
+        public void fromJson(@Nonnull JsonElement o)
         {
             components.clear();
 
@@ -50,6 +51,7 @@ public class FTBUConfigLogin
             }
         }
 
+        @Nonnull
         @Override
         public JsonElement getSerializableElement()
         {
@@ -74,7 +76,7 @@ public class FTBUConfigLogin
         }
 
         @Override
-        public void fromJson(JsonElement o)
+        public void fromJson(@Nonnull JsonElement o)
         {
             items.clear();
 
@@ -92,6 +94,7 @@ public class FTBUConfigLogin
             }
         }
 
+        @Nonnull
         @Override
         public JsonElement getSerializableElement()
         {

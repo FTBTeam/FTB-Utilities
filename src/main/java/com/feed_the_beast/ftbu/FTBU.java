@@ -1,12 +1,10 @@
 package com.feed_the_beast.ftbu;
 
-import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.LMMod;
 import com.feed_the_beast.ftbu.config.FTBUConfig;
-import com.feed_the_beast.ftbu.handlers.FTBLIntegration;
-import com.feed_the_beast.ftbu.handlers.FTBUChatEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUChunkEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
+import com.feed_the_beast.ftbu.handlers.FTBUServerEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUTeamEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUWorldEventHandler;
 import com.feed_the_beast.ftbu.net.FTBUNetHandler;
@@ -30,25 +28,25 @@ import java.util.Map;
 public class FTBU
 {
     public static final Logger logger = LogManager.getLogger("FTBUtilities");
+
     @Mod.Instance(FTBUFinals.MOD_ID)
     public static FTBU inst;
+
     @SidedProxy(serverSide = "com.feed_the_beast.ftbu.FTBUCommon", clientSide = "com.feed_the_beast.ftbu.client.FTBUClient")
     public static FTBUCommon proxy;
-    @SidedProxy(serverSide = "com.feed_the_beast.ftbu.handlers.FTBLIntegration", clientSide = "com.feed_the_beast.ftbu.handlers.FTBLIntegrationClient")
-    public static FTBLIntegration ftbl_int;
+
     public static LMMod mod;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent e)
     {
         mod = LMMod.create(FTBUFinals.MOD_ID);
-        FTBLib.ftbu = ftbl_int;
         FTBUConfig.load();
 
         MinecraftForge.EVENT_BUS.register(new FTBUPlayerEventHandler());
         MinecraftForge.EVENT_BUS.register(new FTBUWorldEventHandler());
         MinecraftForge.EVENT_BUS.register(new FTBUTeamEventHandler());
-        MinecraftForge.EVENT_BUS.register(new FTBUChatEventHandler());
+        MinecraftForge.EVENT_BUS.register(new FTBUServerEventHandler());
         FTBUChunkEventHandler.instance.init();
         MinecraftForge.EVENT_BUS.register(FTBUChunkEventHandler.instance);
         FTBUPermissions.init();

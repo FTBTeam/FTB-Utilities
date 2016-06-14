@@ -1,7 +1,9 @@
 package com.feed_the_beast.ftbu.world;
 
+import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
+import com.feed_the_beast.ftbl.api.notification.Notification;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.BroadcastSender;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
@@ -21,10 +23,11 @@ import com.feed_the_beast.ftbu.net.MessageAreaUpdate;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.google.gson.JsonArray;
 import com.mojang.authlib.GameProfile;
-import latmod.lib.LMJsonUtils;
-import latmod.lib.LMStringUtils;
-import latmod.lib.MathHelperLM;
-import latmod.lib.util.EnumEnabled;
+import latmod.lib.EnumEnabled;
+import latmod.lib.json.LMJsonUtils;
+import latmod.lib.math.MathHelperLM;
+import latmod.lib.util.LMStringUtils;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
@@ -47,10 +50,9 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
 {
     public static final BadgeStorage localBadges = new BadgeStorage();
     public static ClaimedChunkStorage chunks;
-    public long nextChunkloaderUpdate;
     public long restartMillis;
+    private long nextChunkloaderUpdate;
     private Map<String, BlockDimPos> warps;
-    private long startMillis;
     private String lastRestartMessage;
 
     public static Badge getServerBadge(ForgePlayerMP p)
@@ -159,10 +161,22 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         return true;
     }
 
-    public static void claimChunk(ForgePlayer player, ChunkDimPos pos)
+    public static void claimChunk(ForgePlayerMP player, ChunkDimPos pos)
     {
         if(isDimensionBlacklisted(player.getProfile(), pos.dim))
         {
+            return;
+        }
+
+        if(!player.hasTeam())
+        {
+            EntityPlayerMP ep = player.getPlayer();
+
+            if(ep != null)
+            {
+                Notification.error("no_team", FTBLibLang.team_no_team.textComponent()).sendTo(ep);
+            }
+
             return;
         }
 
@@ -188,7 +202,9 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
 
     public static void unclaimChunk(@Nonnull ForgePlayer player, @Nonnull ChunkDimPos pos)
     {
-        if(chunks.getChunk(pos).isChunkOwner(player))
+        ClaimedChunk chunk = chunks.getChunk(pos);
+
+        if(chunk != null && chunk.isChunkOwner(player))
         {
             setLoaded(player, pos, false);
             chunks.put(pos, null);
@@ -218,12 +234,8 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
     public static void setLoaded(@Nonnull ForgePlayer player, @Nonnull ChunkDimPos pos, boolean flag)
     {
         ClaimedChunk chunk = chunks.getChunk(pos);
-        if(chunk == null)
-        {
-            return;
-        }
 
-        if(flag != chunk.loaded && player.equalsPlayer(chunk.owner))
+        if(chunk != null && flag != chunk.loaded && player.equalsPlayer(chunk.owner))
         {
             if(flag)
             {
@@ -233,12 +245,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
                 }
 
                 int max = FTBUPermissions.chunkloader_max_chunks.get(player.getProfile());
-                if(max == 0)
-                {
-                    return;
-                }
-
-                if(chunks.getLoadedChunks(player.getProfile().getId()) >= max)
+                if(max == 0 || chunks.getLoadedChunks(player.getProfile().getId()) >= max)
                 {
                     return;
                 }
@@ -266,7 +273,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
     {
         chunks = new ClaimedChunkStorage();
 
-        startMillis = System.currentTimeMillis();
+        long startMillis = System.currentTimeMillis();
         Backups.nextBackup = startMillis + FTBUConfigBackups.backupMillis();
         lastRestartMessage = "";
 

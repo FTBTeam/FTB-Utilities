@@ -9,4 +9,8 @@ public class FTBUCommon // FTBUClient
     public void postInit()
     {
     }
+
+    public void onReloadedClient()
+    {
+    }
 }

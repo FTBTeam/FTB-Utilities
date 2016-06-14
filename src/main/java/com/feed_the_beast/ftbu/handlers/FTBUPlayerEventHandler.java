@@ -29,6 +29,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -215,6 +216,7 @@ public class FTBUPlayerEventHandler
                 n.addText(msg);
                 n.setTimer(3000);
                 n.setColor(0xFF00A010);
+                n.setItem(new ItemStack(Blocks.VINE));
                 n.sendTo(ep);
             }
         }

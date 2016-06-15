@@ -1,5 +1,6 @@
-def version_mod = version_mods
+def version_mod = "2.0.0"
 
+// For those who want the bleeding edge
 buildscript {
     repositories {
         jcenter()
@@ -9,56 +10,65 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
-
 apply plugin: 'net.minecraftforge.gradle.forge'
 
+/*
+// for people who want stable - not yet functional for MC 1.8.8 - we require the forgegradle 2.1 snapshot
+plugins {
+    id "net.minecraftforge.gradle.forge" version "2.0.2"
+}
+*/
+
+version = "1.9.4-" + version_mod
+group = "com.feed_the_beast.ftbu"
 archivesBaseName = "FTBUtilities"
-group = "latmod.ftbu"
-version = version_mc + "-" + version_mod
-sourceCompatibility = JavaVersion.VERSION_1_7
-targetCompatibility = JavaVersion.VERSION_1_7
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 minecraft {
-    version = version_mc + "-" + version_forge
-    runDir = mcp_run_dir
-    mappings = mcp_mappings
-
+    version = "1.9.4-12.17.0.1963"
+    runDir = "run"
+    mappings = "snapshot_20160518"
+    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     replace "@VERSION@", version_mod
     replaceIn "FTBUFinals.java"
 }
 
-dependencies {
-    compile fileTree(dir: project_dir + "DevMods/", include: '*.jar')
-    compile files(project_dir + "/Exported/FTBLib-" + version_mc + "-" + version_mods + "-deobf.jar")
-}
-
-sourceSets {
-    main {
-        java {
-            srcDir project_dir + archivesBaseName + "/src/main/java"
-        }
-        resources {
-            srcDir project_dir + archivesBaseName + "/src/main/resources"
-        }
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://oss.sonatype.org/content/groups/public/'
     }
 }
 
-tasks.withType(Jar) {
-    destinationDir = file(project_dir + "/Exported/")
+configurations.all {
+    // Check for snapshots more frequently than Gradle's default of 1 day. 0 = every build.
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
-processResources {
+dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+    compile group: "info.journeymap", name: "journeymap-api", version: '1.9.4-1.2', changing: true
+}
+
+processResources
+        {
+            // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
+            // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
+
+        // replace version and mcversion
         expand 'version': project.version, 'mcversion': project.minecraft.version
     }
 
+            // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }

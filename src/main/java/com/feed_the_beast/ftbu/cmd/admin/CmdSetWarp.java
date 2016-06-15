@@ -34,6 +34,8 @@ public class CmdSetWarp extends CommandLM
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
         BlockPos c;
 
+        args[0] = args[0].toLowerCase();
+
         if(args.length >= 4)
         {
             int x = parseInt(args[1]);

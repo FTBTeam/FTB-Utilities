@@ -43,6 +43,8 @@ public class CmdDelWarp extends CommandLM
     {
         checkArgs(args, 1);
 
+        args[0] = args[0].toLowerCase();
+
         if(FTBUWorldData.getW(ForgeWorldMP.inst).toMP().setWarp(args[0], null))
         {
             FTBULang.warp_del.printChat(ics, args[0]);

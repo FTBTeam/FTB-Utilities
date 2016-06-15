@@ -54,6 +54,9 @@ public class CmdWarp extends CommandLM
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
         checkArgs(args, 1);
+
+        args[0] = args[0].toLowerCase();
+
         if(args[0].equals("list"))
         {
             Collection<String> list = FTBUWorldData.getW(ForgeWorldMP.inst).toMP().listWarps();
@@ -65,7 +68,7 @@ public class CmdWarp extends CommandLM
         BlockDimPos p = FTBUWorldData.getW(ForgeWorldMP.inst).toMP().getWarp(args[0]);
         if(p == null)
         {
-            throw new CommandException("ftbu.cmd.warp_not_set", args[0]);
+            throw FTBULang.warp_not_set.commandError(args[0]);
         }
         LMDimUtils.teleportPlayer(ep, p);
         FTBULang.warp_tp.printChat(ics, args[0]);

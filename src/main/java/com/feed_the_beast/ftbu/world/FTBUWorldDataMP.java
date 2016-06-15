@@ -336,7 +336,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
             {
                 for(String s1 : LMNBTUtils.getMapKeys(tag1))
                 {
-                    setWarp(s1, new BlockDimPos(tag1.getIntArray(s1)));
+                    setWarp(s1.toLowerCase(), new BlockDimPos(tag1.getIntArray(s1)));
                 }
             }
         }

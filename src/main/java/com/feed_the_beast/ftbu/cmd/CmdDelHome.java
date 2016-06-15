@@ -51,6 +51,8 @@ public class CmdDelHome extends CommandLM
         ForgePlayerMP p = ForgePlayerMP.get(ics);
         checkArgs(args, 1);
 
+        args[0] = args[0].toLowerCase();
+
         if(FTBUPlayerData.get(p).toMP().setHome(args[0], null))
         {
             FTBULang.home_del.printChat(ics, args[0]);

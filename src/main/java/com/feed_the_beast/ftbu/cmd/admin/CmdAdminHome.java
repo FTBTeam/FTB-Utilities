@@ -37,6 +37,7 @@ public class CmdAdminHome extends CommandSubBase
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
             checkArgs(args, 2);
+            args[1] = args[1].toLowerCase();
             FTBUPlayerDataMP d = FTBUPlayerData.get(ForgePlayerMP.get(args[0])).toMP();
 
             BlockDimPos pos = d.getHome(args[1]);
@@ -44,7 +45,7 @@ public class CmdAdminHome extends CommandSubBase
             if(pos != null)
             {
                 LMDimUtils.teleportPlayer(ep, pos);
-                FTBULang.warp_tp.printChat(sender, args[2]);
+                FTBULang.warp_tp.printChat(sender, args[1]);
             }
 
             throw FTBULang.home_not_set.commandError(args[1]);
@@ -91,6 +92,7 @@ public class CmdAdminHome extends CommandSubBase
         {
             checkArgs(args, 2);
             FTBUPlayerDataMP d = FTBUPlayerData.get(ForgePlayerMP.get(args[0])).toMP();
+            args[1] = args[1].toLowerCase();
             BlockDimPos pos = d.getHome(args[1]);
 
             if(pos != null)

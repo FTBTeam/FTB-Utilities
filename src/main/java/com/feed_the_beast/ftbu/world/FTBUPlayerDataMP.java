@@ -54,7 +54,7 @@ public class FTBUPlayerDataMP extends FTBUPlayerData implements INBTSerializable
             {
                 for(String s1 : LMNBTUtils.getMapKeys(tag1))
                 {
-                    setHome(s1, new BlockDimPos(tag1.getIntArray(s1)));
+                    setHome(s1.toLowerCase(), new BlockDimPos(tag1.getIntArray(s1)));
                 }
             }
         }
@@ -130,7 +130,7 @@ public class FTBUPlayerDataMP extends FTBUPlayerData implements INBTSerializable
 
     public BlockDimPos getHome(String s)
     {
-        return homes == null ? null : homes.get(s);
+        return homes == null ? null : homes.get(s.toLowerCase());
     }
 
     public boolean setHome(String s, BlockDimPos pos)

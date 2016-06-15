@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.notification.Notification;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
@@ -200,7 +199,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         }
     }
 
-    public static void unclaimChunk(@Nonnull ForgePlayer player, @Nonnull ChunkDimPos pos)
+    public static void unclaimChunk(@Nonnull ForgePlayerMP player, @Nonnull ChunkDimPos pos)
     {
         ClaimedChunk chunk = chunks.getChunk(pos);
 
@@ -212,7 +211,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         }
     }
 
-    public static void unclaimAllChunks(@Nonnull ForgePlayer player, @Nullable Integer dim)
+    public static void unclaimAllChunks(@Nonnull ForgePlayerMP player, @Nullable Integer dim)
     {
         Collection<ClaimedChunk> ch = chunks.getChunks(player.getProfile().getId());
 
@@ -231,7 +230,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         }
     }
 
-    public static void setLoaded(@Nonnull ForgePlayer player, @Nonnull ChunkDimPos pos, boolean flag)
+    public static void setLoaded(@Nonnull ForgePlayerMP player, @Nonnull ChunkDimPos pos, boolean flag)
     {
         ClaimedChunk chunk = chunks.getChunk(pos);
 
@@ -239,6 +238,18 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         {
             if(flag)
             {
+                if(!player.hasTeam())
+                {
+                    EntityPlayerMP ep = player.getPlayer();
+
+                    if(ep != null)
+                    {
+                        Notification.error("no_team", FTBLibLang.team_no_team.textComponent()).sendTo(ep);
+                    }
+
+                    return;
+                }
+
                 if(isDimensionBlacklisted(player.getProfile(), pos.dim))
                 {
                     return;

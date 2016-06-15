@@ -130,7 +130,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             if(chunk != null)
             {
                 FTBLibClient.setTexture(TEX_CHUNK_CLAIMING);
-                
+
                 ForgeTeam team = chunk.owner.getTeam();
 
                 if(team != null)
@@ -144,7 +144,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 
                 drawTexturedRect(ax, ay, 16, 16, TEX_FILLED.minU, TEX_FILLED.minV, TEX_FILLED.maxU, TEX_FILLED.maxV);
 
-                GlStateManager.color((chunk.loaded && team.getStatus(ForgeWorldSP.inst.clientPlayer).isAlly()) ? 1F : 0F, chunk.isChunkOwner(ForgeWorldSP.inst.clientPlayer) ? 0.27F : 0F, 0F, 0.78F);
+                GlStateManager.color((chunk.loaded && team != null && team.getStatus(ForgeWorldSP.inst.clientPlayer).isAlly()) ? 1F : 0F, chunk.isChunkOwner(ForgeWorldSP.inst.clientPlayer) ? 0.27F : 0F, 0F, 0.78F);
                 drawTexturedRect(ax, ay, 16, 16, TEX_BORDER.minU, TEX_BORDER.minV, TEX_BORDER.maxU, TEX_BORDER.maxV);
             }
 

@@ -12,11 +12,11 @@ import net.minecraft.util.text.TextComponentString;
 
 import javax.annotation.Nonnull;
 
-public class CmdUnclaimAll extends CommandLM
+public class CmdAdminUnclaimAll extends CommandLM
 {
-    public CmdUnclaimAll()
+    public CmdAdminUnclaimAll()
     {
-        super("unclaim_all_chunks");
+        super("admin_unclaim_all_chunks");
     }
 
     @Nonnull

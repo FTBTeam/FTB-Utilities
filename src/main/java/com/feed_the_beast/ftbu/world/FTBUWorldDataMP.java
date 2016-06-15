@@ -160,11 +160,11 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         return true;
     }
 
-    public static void claimChunk(ForgePlayerMP player, ChunkDimPos pos)
+    public static boolean claimChunk(ForgePlayerMP player, ChunkDimPos pos)
     {
         if(isDimensionBlacklisted(player.getProfile(), pos.dim))
         {
-            return;
+            return false;
         }
 
         if(!player.hasTeam())
@@ -176,30 +176,34 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
                 Notification.error("no_team", FTBLibLang.team_no_team.textComponent()).sendTo(ep);
             }
 
-            return;
+            return false;
         }
 
         int max = FTBUPermissions.claims_max_chunks.get(player.getProfile());
         if(max == 0)
         {
-            return;
+            return false;
         }
 
         if(chunks.getClaimedChunks(player.getProfile().getId()) >= max)
         {
-            return;
+            return false;
         }
 
         ClaimedChunk chunk = chunks.getChunk(pos);
 
-        if(chunk == null)
+        if(chunk != null)
         {
-            chunks.put(pos, new ClaimedChunk(player.getWorld(), player, pos));
-            player.sendUpdate();
+            return false;
         }
+
+        chunks.put(pos, new ClaimedChunk(player.getWorld(), player, pos));
+        player.sendUpdate();
+
+        return true;
     }
 
-    public static void unclaimChunk(@Nonnull ForgePlayerMP player, @Nonnull ChunkDimPos pos)
+    public static boolean unclaimChunk(@Nonnull ForgePlayerMP player, @Nonnull ChunkDimPos pos)
     {
         ClaimedChunk chunk = chunks.getChunk(pos);
 
@@ -208,7 +212,10 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
             setLoaded(player, pos, false);
             chunks.put(pos, null);
             player.sendUpdate();
+            return true;
         }
+
+        return false;
     }
 
     public static void unclaimAllChunks(@Nonnull ForgePlayerMP player, @Nullable Integer dim)

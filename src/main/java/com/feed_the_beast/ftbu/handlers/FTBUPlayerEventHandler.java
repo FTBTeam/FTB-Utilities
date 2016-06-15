@@ -39,6 +39,7 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.HashMap;
@@ -260,32 +261,50 @@ public class FTBUPlayerEventHandler
         }
     }
 
-    //FIXME: Right click / left click needs a rewrite
     @SubscribeEvent
-    public void onPlayerInteract(PlayerInteractEvent event)
+    public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event)
     {
-        if(event.getEntityPlayer() instanceof EntityPlayerMP && !(event instanceof PlayerInteractEvent.RightClickEmpty))
+        if(event.getEntityPlayer() instanceof EntityPlayerMP)
         {
             ForgePlayerMP player = ForgeWorldMP.inst.getPlayer(event.getEntityPlayer());
 
             if(player != null)
             {
-                boolean leftClick = event instanceof PlayerInteractEvent.LeftClickBlock;
+                ClaimedChunk chunk = FTBUWorldDataMP.chunks.getChunk(new BlockDimPos(event.getPos(), player.getPlayer().dimension, false).toChunkPos());
 
-                if(leftClick)
+                if(chunk != null && !chunk.canInteract(player, false, event.getPos()))
                 {
-                    for(JsonElement e : FTBUPermissions.claims_break_whitelist.getJson(player.getProfile()).getAsJsonArray())
+                    event.setCanceled(true);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onRightClickItem(PlayerInteractEvent.RightClickItem event)
+    {
+    }
+
+    @SubscribeEvent
+    public void onBlockBreak(BlockEvent.BreakEvent event)
+    {
+        if(event.getPlayer() instanceof EntityPlayerMP)
+        {
+            ForgePlayerMP player = ForgeWorldMP.inst.getPlayer(event.getPlayer());
+
+            if(player != null)
+            {
+                for(JsonElement e : FTBUPermissions.claims_break_whitelist.getJson(player.getProfile()).getAsJsonArray())
+                {
+                    if(e.getAsString().equals(LMInvUtils.getRegName(player.getPlayer().worldObj.getBlockState(event.getPos()).getBlock()).toString()))
                     {
-                        if(e.getAsString().equals(LMInvUtils.getRegName(player.getPlayer().worldObj.getBlockState(event.getPos()).getBlock()).toString()))
-                        {
-                            return;
-                        }
+                        return;
                     }
                 }
 
                 ClaimedChunk chunk = FTBUWorldDataMP.chunks.getChunk(new BlockDimPos(event.getPos(), player.getPlayer().dimension, false).toChunkPos());
 
-                if(chunk != null && !chunk.canInteract(player, leftClick, event.getPos()))
+                if(chunk != null && !chunk.canInteract(player, true, event.getPos()))
                 {
                     event.setCanceled(true);
                 }

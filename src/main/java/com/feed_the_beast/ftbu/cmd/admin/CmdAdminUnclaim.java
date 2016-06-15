@@ -11,11 +11,11 @@ import net.minecraft.server.MinecraftServer;
 
 import javax.annotation.Nonnull;
 
-public class CmdUnclaim extends CommandLM
+public class CmdAdminUnclaim extends CommandLM
 {
-    public CmdUnclaim()
+    public CmdAdminUnclaim()
     {
-        super("unclaim");
+        super("admin_unclaim");
     }
 
     @Override

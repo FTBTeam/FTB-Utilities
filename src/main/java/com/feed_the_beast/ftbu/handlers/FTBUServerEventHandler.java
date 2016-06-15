@@ -9,14 +9,18 @@ import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.api.guide.ServerInfoFile;
 import com.feed_the_beast.ftbu.cmd.CmdBack;
+import com.feed_the_beast.ftbu.cmd.CmdClaimChunk;
 import com.feed_the_beast.ftbu.cmd.CmdDelHome;
 import com.feed_the_beast.ftbu.cmd.CmdHome;
 import com.feed_the_beast.ftbu.cmd.CmdSetHome;
 import com.feed_the_beast.ftbu.cmd.CmdSpawn;
 import com.feed_the_beast.ftbu.cmd.CmdTplast;
 import com.feed_the_beast.ftbu.cmd.CmdTrashCan;
+import com.feed_the_beast.ftbu.cmd.CmdUnclaimChunk;
 import com.feed_the_beast.ftbu.cmd.CmdWarp;
 import com.feed_the_beast.ftbu.cmd.admin.CmdAdminHome;
+import com.feed_the_beast.ftbu.cmd.admin.CmdAdminUnclaim;
+import com.feed_the_beast.ftbu.cmd.admin.CmdAdminUnclaimAll;
 import com.feed_the_beast.ftbu.cmd.admin.CmdBackup;
 import com.feed_the_beast.ftbu.cmd.admin.CmdDelWarp;
 import com.feed_the_beast.ftbu.cmd.admin.CmdGetRank;
@@ -25,8 +29,6 @@ import com.feed_the_beast.ftbu.cmd.admin.CmdRestart;
 import com.feed_the_beast.ftbu.cmd.admin.CmdServerInfo;
 import com.feed_the_beast.ftbu.cmd.admin.CmdSetRank;
 import com.feed_the_beast.ftbu.cmd.admin.CmdSetWarp;
-import com.feed_the_beast.ftbu.cmd.admin.CmdUnclaim;
-import com.feed_the_beast.ftbu.cmd.admin.CmdUnclaimAll;
 import com.feed_the_beast.ftbu.cmd.admin.CmdUnloadAll;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
@@ -89,8 +91,8 @@ public class FTBUServerEventHandler
         event.add(new CmdInvsee());
         event.add(new CmdSetWarp());
         event.add(new CmdDelWarp());
-        event.add(new CmdUnclaim());
-        event.add(new CmdUnclaimAll());
+        event.add(new CmdAdminUnclaim());
+        event.add(new CmdAdminUnclaimAll());
         event.add(new CmdBackup());
         event.add(new CmdUnloadAll());
         event.add(new CmdAdminHome());
@@ -105,6 +107,8 @@ public class FTBUServerEventHandler
         event.add(new CmdDelHome());
         event.add(new CmdGetRank());
         event.add(new CmdSetRank());
+        event.add(new CmdClaimChunk());
+        event.add(new CmdUnclaimChunk());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

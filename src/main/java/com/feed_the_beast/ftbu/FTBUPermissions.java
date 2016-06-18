@@ -6,10 +6,10 @@ import com.feed_the_beast.ftbl.api.permissions.rankconfig.RankConfigDouble;
 import com.feed_the_beast.ftbl.api.permissions.rankconfig.RankConfigEnum;
 import com.feed_the_beast.ftbl.api.permissions.rankconfig.RankConfigInt;
 import com.feed_the_beast.ftbu.world.ChunkloaderType;
-import latmod.lib.EnumEnabled;
-import latmod.lib.annotations.Info;
-import latmod.lib.annotations.NumberBounds;
-import latmod.lib.json.LMJsonUtils;
+import com.latmod.lib.EnumEnabled;
+import com.latmod.lib.annotations.Info;
+import com.latmod.lib.annotations.NumberBounds;
+import com.latmod.lib.json.LMJsonUtils;
 
 /**
  * Created by LatvianModder on 14.02.2016.

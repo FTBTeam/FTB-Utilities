@@ -8,7 +8,7 @@ import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataSP;
-import latmod.lib.math.MathHelperLM;
+import com.latmod.lib.math.MathHelperLM;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityChicken;

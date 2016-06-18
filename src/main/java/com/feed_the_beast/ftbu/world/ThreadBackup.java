@@ -3,10 +3,10 @@ package com.feed_the_beast.ftbu.world;
 import com.feed_the_beast.ftbl.util.BroadcastSender;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
-import latmod.lib.Time;
-import latmod.lib.math.MathHelperLM;
-import latmod.lib.util.LMFileUtils;
-import latmod.lib.util.LMStringUtils;
+import com.latmod.lib.Time;
+import com.latmod.lib.math.MathHelperLM;
+import com.latmod.lib.util.LMFileUtils;
+import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 

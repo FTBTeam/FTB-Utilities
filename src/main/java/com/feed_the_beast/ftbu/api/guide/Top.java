@@ -3,9 +3,9 @@ package com.feed_the_beast.ftbu.api.guide;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.LangKey;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
-import latmod.lib.FinalIDObject;
-import latmod.lib.math.MathHelperLM;
-import latmod.lib.util.LMStringUtils;
+import com.latmod.lib.FinalIDObject;
+import com.latmod.lib.math.MathHelperLM;
+import com.latmod.lib.util.LMStringUtils;
 
 import java.util.Comparator;
 import java.util.HashMap;

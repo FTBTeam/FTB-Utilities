@@ -7,8 +7,8 @@ import com.feed_the_beast.ftbl.util.LMNBTUtils;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.hash.TIntIntHashMap;
-import latmod.lib.io.Bits;
-import latmod.lib.util.LMTroveUtils;
+import com.latmod.lib.io.Bits;
+import com.latmod.lib.util.LMTroveUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
 

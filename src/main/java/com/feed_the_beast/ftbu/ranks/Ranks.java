@@ -9,9 +9,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
-import latmod.lib.json.LMJsonUtils;
-import latmod.lib.util.LMFileUtils;
-import latmod.lib.util.LMUtils;
+import com.latmod.lib.json.LMJsonUtils;
+import com.latmod.lib.util.LMFileUtils;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.eventhandler.Event;
 

@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.client.gui;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import latmod.lib.PixelBuffer;
-import latmod.lib.math.MathHelperLM;
-import latmod.lib.util.LMColorUtils;
+import com.latmod.lib.PixelBuffer;
+import com.latmod.lib.math.MathHelperLM;
+import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.material.MapColor;

@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.item.ItemStackSerializer;
 import com.feed_the_beast.ftbl.util.JsonHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import latmod.lib.annotations.Info;
+import com.latmod.lib.annotations.Info;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 

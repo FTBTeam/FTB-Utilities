@@ -6,8 +6,8 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryDouble;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import latmod.lib.annotations.Info;
-import latmod.lib.annotations.NumberBounds;
+import com.latmod.lib.annotations.Info;
+import com.latmod.lib.annotations.NumberBounds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 

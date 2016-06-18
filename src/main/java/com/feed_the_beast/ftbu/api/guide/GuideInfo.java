@@ -3,11 +3,11 @@ package com.feed_the_beast.ftbu.api.guide;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import latmod.lib.FinalIDObject;
-import latmod.lib.IIDObject;
-import latmod.lib.io.LMConnection;
-import latmod.lib.io.RequestMethod;
-import latmod.lib.util.LMUtils;
+import com.latmod.lib.FinalIDObject;
+import com.latmod.lib.IIDObject;
+import com.latmod.lib.io.LMConnection;
+import com.latmod.lib.io.RequestMethod;
+import com.latmod.lib.util.LMUtils;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

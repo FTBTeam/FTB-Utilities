@@ -24,7 +24,7 @@ import com.feed_the_beast.ftbu.world.FTBUPlayerDataMP;
 import com.feed_the_beast.ftbu.world.FTBUPlayerDataSP;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
 import com.google.gson.JsonElement;
-import latmod.lib.math.MathHelperLM;
+import com.latmod.lib.math.MathHelperLM;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;

@@ -22,7 +22,7 @@ import com.feed_the_beast.ftbu.world.Backups;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUWorldData;
 import com.google.gson.JsonPrimitive;
-import latmod.lib.util.LMStringUtils;
+import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.command.ICommand;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;

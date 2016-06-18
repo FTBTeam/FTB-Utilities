@@ -15,10 +15,11 @@ public class FTBUConfig // FTBU
     {
         configFile.setFile(new File(FTBLib.folderLocal, "ftbu/config.json"));
         configFile.setDisplayName(new TextComponentString("FTBUtilities"));
+        configFile.addGroup("modules", FTBUConfigModules.class);
         configFile.addGroup("backups", FTBUConfigBackups.class);
         configFile.addGroup("general", FTBUConfigGeneral.class);
         configFile.addGroup("login", FTBUConfigLogin.class);
-        configFile.addGroup("modules", FTBUConfigModules.class);
+        configFile.addGroup("webapi", FTBUConfigWebAPI.class);
         //Ranks.instance().reload();
 
         ConfigRegistry.add("ftbu", configFile);

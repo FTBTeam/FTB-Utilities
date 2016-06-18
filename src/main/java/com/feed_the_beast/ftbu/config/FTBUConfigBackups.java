@@ -4,8 +4,8 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryDouble;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryInt;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryString;
-import latmod.lib.annotations.Info;
-import latmod.lib.annotations.NumberBounds;
+import com.latmod.lib.annotations.Info;
+import com.latmod.lib.annotations.NumberBounds;
 
 public class FTBUConfigBackups
 {

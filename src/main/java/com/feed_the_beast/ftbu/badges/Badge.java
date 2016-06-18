@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbu.badges;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import latmod.lib.FinalIDObject;
+import com.latmod.lib.FinalIDObject;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;

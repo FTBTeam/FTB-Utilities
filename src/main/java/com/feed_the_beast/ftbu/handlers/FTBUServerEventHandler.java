@@ -30,6 +30,8 @@ import com.feed_the_beast.ftbu.cmd.admin.CmdServerInfo;
 import com.feed_the_beast.ftbu.cmd.admin.CmdSetRank;
 import com.feed_the_beast.ftbu.cmd.admin.CmdSetWarp;
 import com.feed_the_beast.ftbu.cmd.admin.CmdUnloadAll;
+import com.feed_the_beast.ftbu.config.FTBUConfig;
+import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
@@ -87,7 +89,11 @@ public class FTBUServerEventHandler
     @SubscribeEvent
     public void registerAdminCmds(RegisterFTBCommandsEvent event)
     {
-        event.add(new CmdRestart());
+        if(FTBUConfigGeneral.sp_restart_cmd.getAsBoolean() || event.isDedi)
+        {
+            event.add(new CmdRestart());
+        }
+        
         event.add(new CmdInvsee());
         event.add(new CmdSetWarp());
         event.add(new CmdDelWarp());

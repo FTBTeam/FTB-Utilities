@@ -1,5 +1,9 @@
 package com.feed_the_beast.ftbu.webapi;
 
+import com.feed_the_beast.ftbl.api.ForgePlayer;
+import com.feed_the_beast.ftbl.api.ForgePlayerStats;
+import com.feed_the_beast.ftbl.api.ForgeWorldMP;
+import com.feed_the_beast.ftbu.config.FTBUConfigModules;
 import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.json.LMJsonUtils;
@@ -8,19 +12,12 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Random;
-import java.util.UUID;
 
 /**
  * Created by LatvianModder on 18.06.2016.
  */
 public class WebAPI extends Thread
 {
-    public static void main(String[] args) throws Exception // Runs fake WebAPI
-    {
-        WebAPI.INST.startAPI();
-    }
-
     public static final WebAPI INST = new WebAPI();
     private ServerSocket serverSocket;
 
@@ -55,15 +52,75 @@ public class WebAPI extends Thread
                     table.setTitle("dph", "Deaths per hour");
                     table.setTitle("last_seen", "Last time seen");
 
-                    Random random = new Random();
-
-                    for(int y = 0; y < 20; y++)
+                    for(ForgePlayer player : ForgeWorldMP.inst.playerMap.values())
                     {
+                        ForgePlayerStats stats = player.toMP().stats;
+
                         JsonTable.TableEntry tableEntry = new JsonTable.TableEntry();
-                        tableEntry.set("name", new JsonPrimitive(UUID.randomUUID().toString().split("-")[0]));
-                        tableEntry.set("deaths", new JsonPrimitive(random.nextInt(200)));
-                        tableEntry.set("dph", new JsonPrimitive(((long) ((random.nextFloat() * 30F) * 100F)) / 100F));
-                        tableEntry.set("last_seen", new JsonPrimitive(random.nextInt(20) == 0 ? "Online" : (random.nextInt(60) + "h ago")));
+                        tableEntry.set("name", new JsonPrimitive(player.getProfile().getName()));
+                        tableEntry.set("deaths", new JsonPrimitive(stats.deaths));
+                        tableEntry.set("dph", new JsonPrimitive(stats.getDeathsPerHour()));
+                        tableEntry.set("last_seen", new JsonPrimitive(player.isOnline() ? 0 : stats.lastSeen));
+                        table.addEntry(tableEntry);
+                    }
+
+                    String outputData = LMJsonUtils.toJson(LMJsonUtils.GSON, table.toJson());
+                    out.print(outputData);
+
+                    out.flush();
+                    socket.close();
+
+                    System.out.println("Sent data: " + outputData);
+                }
+                catch(Exception ex)
+                {
+                    ex.printStackTrace();
+                }
+            }
+
+            System.out.println(getName() + " closed");
+        }
+        catch(Exception ex0)
+        {
+            ex0.printStackTrace();
+        }
+    }
+
+    public void run()
+    {
+        try
+        {
+            serverSocket = new ServerSocket(FTBUConfigWebAPI.port.getAsInt());
+
+            System.out.println(getName() + " started");
+
+            while(isAPIRunning())
+            {
+                try
+                {
+                    Socket socket = serverSocket.accept();
+
+                    PrintWriter out = new PrintWriter(socket.getOutputStream());
+                    out.println("HTTP/1.0 200 OK");
+                    out.println("Content-Type: application/json");
+                    out.println("Server: Bot");
+                    out.println("");
+
+                    JsonTable table = new JsonTable();
+                    table.setTitle("name", "Name");
+                    table.setTitle("deaths", "Deaths");
+                    table.setTitle("dph", "Deaths per hour");
+                    table.setTitle("last_seen", "Last time seen");
+
+                    for(ForgePlayer player : ForgeWorldMP.inst.playerMap.values())
+                    {
+                        ForgePlayerStats stats = player.toMP().stats;
+
+                        JsonTable.TableEntry tableEntry = new JsonTable.TableEntry();
+                        tableEntry.set("name", new JsonPrimitive(player.getProfile().getName()));
+                        tableEntry.set("deaths", new JsonPrimitive(stats.deaths));
+                        tableEntry.set("dph", new JsonPrimitive(stats.getDeathsPerHour()));
+                        tableEntry.set("last_seen", new JsonPrimitive(player.isOnline() ? 0 : stats.lastSeen));
                         table.addEntry(tableEntry);
                     }
 
@@ -115,12 +172,12 @@ public class WebAPI extends Thread
 
     public boolean isAPIRunning()
     {
-        return serverSocket != null && !serverSocket.isClosed();
+        return FTBUConfigModules.web_api.getAsBoolean() && ForgeWorldMP.inst != null && serverSocket != null && !serverSocket.isClosed();
     }
 
     public void startAPI()
     {
-        if(!isAPIRunning())
+        if(FTBUConfigModules.web_api.getAsBoolean() && !isAPIRunning())
         {
             start();
         }

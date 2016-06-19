@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.util.LMMod;
 import com.feed_the_beast.ftbu.config.FTBUConfig;
+import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
 import com.feed_the_beast.ftbu.handlers.FTBUChunkEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUServerEventHandler;
@@ -9,6 +10,7 @@ import com.feed_the_beast.ftbu.handlers.FTBUTeamEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUWorldEventHandler;
 import com.feed_the_beast.ftbu.net.FTBUNetHandler;
 import com.feed_the_beast.ftbu.ranks.Ranks;
+import com.feed_the_beast.ftbu.webapi.WebAPI;
 import com.feed_the_beast.ftbu.world.Backups;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -17,6 +19,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
@@ -70,6 +73,17 @@ public class FTBU
     public void serverStarted(FMLServerStartedEvent e)
     {
         Ranks.instance().generateExampleFiles();
+
+        if(FTBUConfigWebAPI.autostart.getAsBoolean())
+        {
+            WebAPI.INST.startAPI();
+        }
+    }
+
+    @Mod.EventHandler
+    public void serverStopped(FMLServerStoppedEvent e)
+    {
+        WebAPI.INST.stopAPI();
     }
 
     @NetworkCheckHandler

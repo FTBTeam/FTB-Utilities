@@ -5,10 +5,10 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.LMNBTUtils;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import gnu.trove.map.TIntIntMap;
-import gnu.trove.map.hash.TIntIntHashMap;
 import com.latmod.lib.io.Bits;
 import com.latmod.lib.util.LMTroveUtils;
+import gnu.trove.map.TIntIntMap;
+import gnu.trove.map.hash.TIntIntHashMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -137,7 +137,12 @@ public class FTBUPlayerDataMP extends FTBUPlayerData implements INBTSerializable
     {
         if(pos == null)
         {
-            return homes.remove(s) != null;
+            return homes != null && homes.remove(s) != null;
+        }
+
+        if(homes == null)
+        {
+            homes = new HashMap<>();
         }
 
         return homes.put(s, pos.copy()) == null;

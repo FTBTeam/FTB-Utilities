@@ -7,11 +7,11 @@ import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
-import gnu.trove.map.TIntIntMap;
-import gnu.trove.map.hash.TIntIntHashMap;
 import com.latmod.lib.io.Bits;
 import com.latmod.lib.util.LMTroveUtils;
 import com.latmod.lib.util.LMUtils;
+import gnu.trove.map.TIntIntMap;
+import gnu.trove.map.hash.TIntIntHashMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
@@ -82,7 +82,7 @@ public class FTBUTeamDataMP extends FTBUTeamData implements INBTSerializable<NBT
             {
                 ForgePlayer player = ForgeWorldMP.inst.getPlayer(LMUtils.fromString(s));
 
-                if(player != null && player.getTeamID() == ForgeWorldMP.currentTeam.teamID)
+                if(player != null && player.isMemberOf(ForgeWorldMP.currentTeam))
                 {
                     NBTTagList list = tag1.getTagList(s, Constants.NBT.TAG_INT_ARRAY);
 

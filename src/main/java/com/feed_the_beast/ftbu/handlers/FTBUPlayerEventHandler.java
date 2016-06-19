@@ -48,7 +48,7 @@ import java.util.UUID;
 
 public class FTBUPlayerEventHandler
 {
-    private static Map<UUID, Integer> lastChunksTeamIDMap = new HashMap<>();
+    private static Map<UUID, String> lastChunksTeamIDMap = new HashMap<>();
 
     @SubscribeEvent
     public void attachCapabilities(ForgePlayerEvent.AttachCapabilities event)
@@ -177,13 +177,13 @@ public class FTBUPlayerEventHandler
 
         ClaimedChunk chunk = FTBUWorldDataMP.chunks.getChunk(new ChunkDimPos(ep.dimension, e.getNewChunkX(), e.getNewChunkZ()));
 
-        int newTeamID = (chunk == null || !chunk.owner.hasTeam()) ? 0 : chunk.owner.getTeamID();
+        String newTeamID = (chunk == null || !chunk.owner.hasTeam()) ? "" : chunk.owner.getTeamID();
 
-        if(!lastChunksTeamIDMap.containsKey(player.getProfile().getId()) || lastChunksTeamIDMap.get(player.getProfile().getId()) != newTeamID)
+        if(!lastChunksTeamIDMap.containsKey(player.getProfile().getId()) || !lastChunksTeamIDMap.get(player.getProfile().getId()).equals(newTeamID))
         {
             lastChunksTeamIDMap.put(player.getProfile().getId(), newTeamID);
 
-            if(newTeamID > 0)
+            if(!newTeamID.isEmpty())
             {
                 ForgeTeam team = chunk.owner.getTeam();
 

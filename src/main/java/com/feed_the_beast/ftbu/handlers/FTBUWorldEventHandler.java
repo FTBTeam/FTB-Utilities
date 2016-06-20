@@ -1,20 +1,19 @@
 package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.events.ForgeWorldEvent;
-import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataSP;
-import com.latmod.lib.math.MathHelperLM;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class FTBUWorldEventHandler // FTBLIntegration
@@ -125,16 +124,9 @@ public class FTBUWorldEventHandler // FTBLIntegration
     }
 
     @SubscribeEvent
-    public void onExplosionStart(net.minecraftforge.event.world.ExplosionEvent.Start e)
+    public void onExplosionStart(ExplosionEvent.Start e)
     {
-        if(e.getWorld().isRemote)
-        {
-            return;
-        }
-        int cx = MathHelperLM.chunk(e.getExplosion().getPosition().xCoord);
-        int cz = MathHelperLM.chunk(e.getExplosion().getPosition().yCoord);
-
-        if(!FTBUWorldDataMP.allowExplosion(new ChunkDimPos(e.getWorld().provider.getDimension(), cx, cz)))
+        if(!e.getWorld().isRemote && !FTBUWorldDataMP.allowExplosion(e.getWorld(), e.getExplosion()))
         {
             e.setCanceled(true);
         }

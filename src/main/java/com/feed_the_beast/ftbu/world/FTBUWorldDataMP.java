@@ -32,6 +32,8 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.Explosion;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
@@ -132,8 +134,10 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         return false;
     }
 
-    public static boolean allowExplosion(ChunkDimPos pos)
+    public static boolean allowExplosion(World world, Explosion explosion)
     {
+        ChunkDimPos pos = new ChunkDimPos(world.provider.getDimension(), MathHelperLM.chunk(explosion.getPosition().xCoord), MathHelperLM.chunk(explosion.getPosition().zCoord));
+
         if(pos.dim == 0 && FTBUConfigGeneral.safe_spawn.getAsBoolean() && FTBUWorldDataMP.isInSpawn(pos))
         {
             return false;
@@ -148,16 +152,17 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
 
                 if(fe == null)
                 {
-                    return !c.owner.hasTeam() || FTBUTeamData.get(c.owner.getTeam()).toMP().explosions.getAsBoolean();
+
+                    return !c.owner.hasTeam() || !FTBUTeamData.get(c.owner.getTeam()).toMP().disable_explosions.getAsBoolean();
                 }
                 else
                 {
                     return fe == EnumEnabled.ENABLED;
                 }
             }
-        }
 
-        return true;
+            return true;
+        }
     }
 
     public static boolean claimChunk(ForgePlayerMP player, ChunkDimPos pos)

@@ -51,7 +51,7 @@ public class FTBUTeamEventHandler
             ConfigGroup group = new ConfigGroup();
 
             group.add("blocks", data.blocks);
-            group.add("explosions", data.explosions);
+            group.add("disable_explosions", data.disable_explosions);
             group.add("fake_players", data.fakePlayers);
 
             event.settings.add("ftbu", group);

@@ -26,13 +26,13 @@ import java.util.Collection;
 public class FTBUTeamDataMP extends FTBUTeamData implements INBTSerializable<NBTTagCompound>
 {
     public final ConfigEntryEnum<EnumTeamPrivacyLevel> blocks;
-    public final ConfigEntryBool explosions;
+    public final ConfigEntryBool disable_explosions;
     public final ConfigEntryBool fakePlayers;
 
     public FTBUTeamDataMP()
     {
         blocks = new ConfigEntryEnum<>(EnumTeamPrivacyLevel.ALLIES, EnumTeamPrivacyLevel.NAME_MAP);
-        explosions = new ConfigEntryBool(true);
+        disable_explosions = new ConfigEntryBool(false);
         fakePlayers = new ConfigEntryBool(false);
     }
 
@@ -46,7 +46,7 @@ public class FTBUTeamDataMP extends FTBUTeamData implements INBTSerializable<NBT
     {
         TIntIntMap map = new TIntIntHashMap();
 
-        if(explosions.getAsBoolean())
+        if(disable_explosions.getAsBoolean())
         {
             map.put(0, 1);
         }
@@ -69,7 +69,7 @@ public class FTBUTeamDataMP extends FTBUTeamData implements INBTSerializable<NBT
     {
         byte flags = tag.getByte("Flags");
 
-        explosions.set(Bits.getBit(flags, (byte) 0));
+        disable_explosions.set(Bits.getBit(flags, (byte) 0));
         fakePlayers.set(Bits.getBit(flags, (byte) 1));
 
         blocks.setIndex(tag.hasKey("BlockSecurity") ? tag.getByte("BlockSecurity") : blocks.defValue);
@@ -114,7 +114,7 @@ public class FTBUTeamDataMP extends FTBUTeamData implements INBTSerializable<NBT
 
         byte flags = 0;
 
-        flags = Bits.setBit(flags, (byte) 0, explosions.getAsBoolean());
+        flags = Bits.setBit(flags, (byte) 0, disable_explosions.getAsBoolean());
         flags = Bits.setBit(flags, (byte) 0, fakePlayers.getAsBoolean());
 
         if(flags != 0)

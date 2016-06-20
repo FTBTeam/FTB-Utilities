@@ -11,7 +11,6 @@ import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.world.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataSP;
 import com.latmod.lib.math.MathHelperLM;
-import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -68,7 +67,7 @@ public class FTBUClientEventHandler
     }
 
     public boolean renderChunkBounds = false;
-    private CubeRenderer chunkBorderRenderer = new CubeRenderer().setHasTexture().setHasNormals().setHasColor();
+    private CubeRenderer chunkBorderRenderer = new CubeRenderer(true, true);
     private Collection<MobSpawnPos> lightList = new HashSet<>();
     private boolean renderLightValues = false, needsLightUpdate = true;
     private int lastX, lastY = -1, lastZ;
@@ -140,6 +139,8 @@ public class FTBUClientEventHandler
         if(renderChunkBounds || renderLightValues)
         {
             Minecraft mc = FTBLibClient.mc();
+            Tessellator tessellator = Tessellator.getInstance();
+            VertexBuffer buffer = tessellator.getBuffer();
 
             GlStateManager.pushMatrix();
             GlStateManager.translate(-LMFrustumUtils.renderX, -LMFrustumUtils.renderY, -LMFrustumUtils.renderZ);
@@ -164,31 +165,35 @@ public class FTBUClientEventHandler
                 double d = 0.007D;
 
                 FTBLibClient.setTexture(chunkBorderTexture);
-                chunkBorderRenderer.setTessellator(Tessellator.getInstance());
+                chunkBorderRenderer.setTessellator(tessellator);
                 chunkBorderRenderer.setUV(0D, 0D, 16D, 256D);
 
-                for(int cz = z - 1; cz <= z + 1; cz++)
+                ClaimedChunk chunk = FTBUWorldDataSP.getChunk(new ChunkDimPos(mc.thePlayer.dimension, x, z));
+
+                chunkBorderRenderer.setSize(x * 16D + d, 0D, z * 16D + d, x * 16D + 16D - d, 256D, z * 16D + 16D - d);
+                chunkBorderRenderer.color.setF((chunk == null) ? 0xFF00A010 : (chunk.owner.hasTeam() ? chunk.owner.getTeam().getColor().color : 0), 0.6F);
+                chunkBorderRenderer.renderSides();
+
+                GlStateManager.cullFace(GlStateManager.CullFace.BACK);
+                GlStateManager.disableCull();
+                GlStateManager.disableTexture2D();
+
+                for(int cz = z - 2; cz <= z + 2; cz++)
                 {
-                    for(int cx = x - 1; cx <= x + 1; cx++)
+                    for(int cx = x - 2; cx <= x + 2; cx++)
                     {
-                        ClaimedChunk chunk = FTBUWorldDataSP.getChunk(new ChunkDimPos(0, cx, cz));
-                        chunkBorderRenderer.setSize(cx * 16D + d, 0D, cz * 16D + d, cx * 16D + 16D - d, 256D, cz * 16D + 16D - d);
+                        chunk = FTBUWorldDataSP.getChunk(new ChunkDimPos(mc.thePlayer.dimension, cx, cz));
+                        chunkBorderRenderer.color.setF((chunk == null) ? 0xFF00A010 : (chunk.owner.hasTeam() ? chunk.owner.getTeam().getColor().color : 0), 1F);
 
-                        if(chunk == null)
-                        {
-                            chunkBorderRenderer.color.setRGBA(0, 160, 16, (cx == x && cz == z) ? 200 : 100);
-                        }
-                        else
-                        {
-                            int col = chunk.owner.hasTeam() ? chunk.owner.getTeam().getColor().color : 0;
-                            chunkBorderRenderer.color.setRGBA(LMColorUtils.getRed(col), LMColorUtils.getGreen(col), LMColorUtils.getBlue(col), (cx == x && cz == z) ? 200 : 100);
-                        }
-
-                        chunkBorderRenderer.renderSides();
+                        buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+                        buffer.pos(cx * 16D + 8D, 0D, cz * 16D + 8D).color(chunkBorderRenderer.color.red, chunkBorderRenderer.color.green, chunkBorderRenderer.color.blue, 1F).endVertex();
+                        buffer.pos(cx * 16D + 8D, 256D, cz * 16D + 8D).color(chunkBorderRenderer.color.red, chunkBorderRenderer.color.green, chunkBorderRenderer.color.blue, 1F).endVertex();
+                        tessellator.draw();
                     }
                 }
 
-                GlStateManager.cullFace(GlStateManager.CullFace.BACK);
+                GlStateManager.enableCull();
+                GlStateManager.enableTexture2D();
             }
 
             if(renderLightValues && LMFrustumUtils.playerY >= 0D)
@@ -207,7 +212,7 @@ public class FTBUClientEventHandler
                     lastY = MathHelperLM.floor(LMFrustumUtils.playerY);
                     lastZ = MathHelperLM.floor(LMFrustumUtils.playerZ);
 
-                    for(int by = lastY - 16; by <= lastY + 16; by++)
+                    for(int by = lastY - 20; by <= lastY + 3; by++)
                     {
                         for(int bx = lastX - 16; bx <= lastX + 16; bx++)
                         {
@@ -233,9 +238,6 @@ public class FTBUClientEventHandler
                 {
                     GlStateManager.color(1F, 1F, 1F, 1F);
                     FTBLibClient.setTexture(FTBUClient.light_value_texture_x.getAsBoolean() ? textureLightValueX : textureLightValueO);
-
-                    Tessellator tessellator = Tessellator.getInstance();
-                    VertexBuffer buffer = tessellator.getBuffer();
 
                     buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 

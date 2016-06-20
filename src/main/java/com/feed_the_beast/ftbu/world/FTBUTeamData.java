@@ -6,6 +6,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by LatvianModder on 11.02.2016.
  */
@@ -27,13 +29,13 @@ public abstract class FTBUTeamData implements ICapabilityProvider
     }
 
     @Override
-    public final boolean hasCapability(Capability<?> capability, EnumFacing facing)
+    public final boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
     {
         return capability == FTBUCapabilities.FTBU_TEAM_DATA;
     }
 
     @Override
-    public final <T> T getCapability(Capability<T> capability, EnumFacing facing)
+    public final <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
     {
         if(capability == FTBUCapabilities.FTBU_TEAM_DATA)
         {

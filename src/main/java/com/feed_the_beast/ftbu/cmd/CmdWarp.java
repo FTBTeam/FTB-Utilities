@@ -40,14 +40,14 @@ public class CmdWarp extends CommandLM
 
     @Nonnull
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
     {
         if(args.length == 1)
         {
             return getListOfStringsMatchingLastWord(args, FTBUWorldData.getW(ForgeWorldMP.inst).toMP().listWarps());
         }
 
-        return super.getTabCompletionOptions(server, ics, args, pos);
+        return super.getTabCompletionOptions(server, sender, args, pos);
     }
 
     @Override

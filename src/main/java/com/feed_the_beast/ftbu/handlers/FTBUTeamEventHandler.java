@@ -4,10 +4,8 @@ import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.events.ForgeTeamEvent;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.world.FTBUTeamData;
 import com.feed_the_beast.ftbu.world.FTBUTeamDataMP;
 import com.feed_the_beast.ftbu.world.FTBUTeamDataSP;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -22,7 +20,7 @@ public class FTBUTeamEventHandler
         event.addCapability(new ResourceLocation(FTBUFinals.MOD_ID, "data"), event.team.world.getSide().isServer() ? new FTBUTeamDataMP() : new FTBUTeamDataSP());
     }
 
-    @SubscribeEvent
+    /*@SubscribeEvent
     public void onDataSynced(ForgeTeamEvent.Sync event)
     {
         if(event.team.hasCapability(FTBUCapabilities.FTBU_TEAM_DATA, null))
@@ -40,7 +38,7 @@ public class FTBUTeamEventHandler
                 data.toSP().readSyncData(event.team, event.data.getCompoundTag("FTBU"), event.player);
             }
         }
-    }
+    }*/
 
     @SubscribeEvent
     public void getSettings(ForgeTeamEvent.GetSettings event)

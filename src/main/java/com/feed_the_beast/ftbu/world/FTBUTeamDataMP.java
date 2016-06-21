@@ -2,16 +2,12 @@ package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.api.EnumTeamPrivacyLevel;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
-import com.feed_the_beast.ftbl.api.ForgeTeam;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.latmod.lib.io.Bits;
-import com.latmod.lib.util.LMTroveUtils;
 import com.latmod.lib.util.LMUtils;
-import gnu.trove.map.TIntIntMap;
-import gnu.trove.map.hash.TIntIntHashMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
@@ -42,27 +38,9 @@ public class FTBUTeamDataMP extends FTBUTeamData implements INBTSerializable<NBT
         return this;
     }
 
-    public void writeSyncData(ForgeTeam team, NBTTagCompound tag, ForgePlayer player)
-    {
-        TIntIntMap map = new TIntIntHashMap();
-
-        if(disable_explosions.getAsBoolean())
-        {
-            map.put(0, 1);
-        }
-
-        if(fakePlayers.getAsBoolean())
-        {
-            map.put(1, 1);
-        }
-
-        map.put(2, blocks.getIndex());
-
-        if(!map.isEmpty())
-        {
-            tag.setIntArray("F", LMTroveUtils.toIntList(map).toArray());
-        }
-    }
+    //public void writeSyncData(ForgeTeam team, NBTTagCompound tag, ForgePlayer player)
+    //{
+    //}
 
     @Override
     public void deserializeNBT(NBTTagCompound tag)
@@ -115,7 +93,7 @@ public class FTBUTeamDataMP extends FTBUTeamData implements INBTSerializable<NBT
         byte flags = 0;
 
         flags = Bits.setBit(flags, (byte) 0, disable_explosions.getAsBoolean());
-        flags = Bits.setBit(flags, (byte) 0, fakePlayers.getAsBoolean());
+        flags = Bits.setBit(flags, (byte) 1, fakePlayers.getAsBoolean());
 
         if(flags != 0)
         {

@@ -34,8 +34,8 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
     {
         if(!ForgeChunkManager.getConfig().hasCategory(FTBUFinals.MOD_ID))
         {
-            ForgeChunkManager.getConfig().get(FTBUFinals.MOD_ID, "maximumTicketCount", 2000).setMinValue(0);
-            ForgeChunkManager.getConfig().get(FTBUFinals.MOD_ID, "maximumChunksPerTicket", 30000).setMinValue(0);
+            ForgeChunkManager.getConfig().get(FTBUFinals.MOD_ID, "maximumTicketCount", 100).setMinValue(0);
+            ForgeChunkManager.getConfig().get(FTBUFinals.MOD_ID, "maximumChunksPerTicket", 1000000).setMinValue(0);
             ForgeChunkManager.getConfig().save();
         }
 

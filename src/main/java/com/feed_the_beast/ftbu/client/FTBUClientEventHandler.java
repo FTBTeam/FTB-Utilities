@@ -1,13 +1,13 @@
 package com.feed_the_beast.ftbu.client;
 
 import com.feed_the_beast.ftbl.api.FTBLibCapabilities;
-import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.client.CubeRenderer;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.LMFrustumUtils;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBUFinals;
+import com.feed_the_beast.ftbu.api.guide.ClientGuideFile;
 import com.feed_the_beast.ftbu.world.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataSP;
 import com.latmod.lib.math.MathHelperLM;
@@ -110,7 +110,7 @@ public class FTBUClientEventHandler
     {
         if(FTBUClient.KEY_GUIDE.isPressed())
         {
-            FTBUActions.GUIDE.onClicked(ForgeWorldSP.inst.clientPlayer);
+            ClientGuideFile.openClientGui(true);
         }
 
         if(FTBUClient.KEY_CHUNK_BORDER.isPressed())

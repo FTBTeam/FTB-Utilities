@@ -419,7 +419,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
     {
         if(warps == null || warps.isEmpty())
         {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
 
         return warps.keySet();
@@ -434,7 +434,12 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
     {
         if(pos == null)
         {
-            return warps.remove(s) != null;
+            return warps != null && warps.remove(s) != null;
+        }
+
+        if(warps == null)
+        {
+            warps = new HashMap<>();
         }
 
         return warps.put(s, pos.copy()) == null;

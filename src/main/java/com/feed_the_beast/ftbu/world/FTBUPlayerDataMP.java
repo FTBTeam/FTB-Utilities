@@ -122,7 +122,7 @@ public class FTBUPlayerDataMP extends FTBUPlayerData implements INBTSerializable
     {
         if(homes == null || homes.isEmpty())
         {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
 
         return homes.keySet();

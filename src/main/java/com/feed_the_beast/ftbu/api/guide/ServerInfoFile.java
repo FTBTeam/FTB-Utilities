@@ -71,7 +71,7 @@ public class ServerInfoFile extends InfoPage
         MinecraftServer server = FTBLib.getServer();
 
         boolean isDedi = server.isDedicatedServer();
-        boolean isOP = !isDedi || PermissionAPI.hasPermission(self.getProfile(), FTBUPermissions.display_admin_info, false, Context.EMPTY);
+        boolean isOP = !isDedi || PermissionAPI.hasPermission(self.getProfile(), FTBUPermissions.display_admin_info, false, new Context(self.getPlayer()));
 
         copyFrom(CachedInfo.main);
 

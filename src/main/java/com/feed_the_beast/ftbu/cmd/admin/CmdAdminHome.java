@@ -36,7 +36,7 @@ public class CmdAdminHome extends CommandSubBase
         public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-            checkArgs(args, 2);
+            checkArgs(args, 2, "<player> <home>");
             args[1] = args[1].toLowerCase();
             FTBUPlayerDataMP d = FTBUPlayerData.get(ForgePlayerMP.get(args[0])).toMP();
 
@@ -68,7 +68,7 @@ public class CmdAdminHome extends CommandSubBase
         @Override
         public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
         {
-            checkArgs(args, 1);
+            checkArgs(args, 1, "<player>");
             FTBUPlayerDataMP d = FTBUPlayerData.get(ForgePlayerMP.get(args[0])).toMP();
             sender.addChatMessage(new TextComponentString(LMStringUtils.strip(d.listHomes())));
         }
@@ -90,7 +90,7 @@ public class CmdAdminHome extends CommandSubBase
         @Override
         public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
         {
-            checkArgs(args, 2);
+            checkArgs(args, 2, "<player> <home>");
             FTBUPlayerDataMP d = FTBUPlayerData.get(ForgePlayerMP.get(args[0])).toMP();
             args[1] = args[1].toLowerCase();
             BlockDimPos pos = d.getHome(args[1]);

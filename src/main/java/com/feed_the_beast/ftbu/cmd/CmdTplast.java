@@ -36,7 +36,7 @@ public class CmdTplast extends CommandLM
     @Override
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
-        checkArgs(args, 1);
+        checkArgs(args, 1, "(<x> <y> <z>) | ([who] <player>)");
 
         if(args.length == 3)
         {

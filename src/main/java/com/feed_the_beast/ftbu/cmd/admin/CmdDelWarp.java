@@ -41,7 +41,7 @@ public class CmdDelWarp extends CommandLM
     @Override
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
-        checkArgs(args, 1);
+        checkArgs(args, 1, "<warp>");
 
         args[0] = args[0].toLowerCase();
 

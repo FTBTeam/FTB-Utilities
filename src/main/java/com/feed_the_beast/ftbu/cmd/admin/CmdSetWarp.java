@@ -20,17 +20,10 @@ public class CmdSetWarp extends CommandLM
         super("setwarp");
     }
 
-    @Nonnull
-    @Override
-    public String getCommandUsage(@Nonnull ICommandSender ics)
-    {
-        return '/' + commandName + " <ID> [x] [y] [z]";
-    }
-
     @Override
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
-        checkArgs(args, 1);
+        checkArgs(args, 1, "<warp> [x] [y] [z]");
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
         BlockPos c;
 

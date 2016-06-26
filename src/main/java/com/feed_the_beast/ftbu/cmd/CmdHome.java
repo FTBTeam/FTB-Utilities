@@ -60,7 +60,7 @@ public class CmdHome extends CommandLM
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
         FTBUPlayerDataMP d = FTBUPlayerData.get(ForgePlayerMP.get(ep)).toMP();
-        checkArgs(args, 1);
+        checkArgs(args, 1, "<home>");
 
         if(args[0].equals("list"))
         {

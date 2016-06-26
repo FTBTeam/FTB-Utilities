@@ -51,7 +51,7 @@ public class CmdSetHome extends CommandLM
     {
         ForgePlayerMP p = ForgePlayerMP.get(ics);
         FTBUPlayerDataMP d = FTBUPlayerData.get(p).toMP();
-        checkArgs(args, 1);
+        checkArgs(args, 1, "<home>");
 
         args[0] = args[0].toLowerCase();
 

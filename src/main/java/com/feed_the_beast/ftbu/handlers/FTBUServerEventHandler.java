@@ -16,6 +16,7 @@ import com.feed_the_beast.ftbu.cmd.CmdSetHome;
 import com.feed_the_beast.ftbu.cmd.CmdSpawn;
 import com.feed_the_beast.ftbu.cmd.CmdTplast;
 import com.feed_the_beast.ftbu.cmd.CmdTrashCan;
+import com.feed_the_beast.ftbu.cmd.CmdUnclaimAllChunks;
 import com.feed_the_beast.ftbu.cmd.CmdUnclaimChunk;
 import com.feed_the_beast.ftbu.cmd.CmdWarp;
 import com.feed_the_beast.ftbu.cmd.admin.CmdAdminHome;
@@ -24,13 +25,12 @@ import com.feed_the_beast.ftbu.cmd.admin.CmdAdminUnclaimAll;
 import com.feed_the_beast.ftbu.cmd.admin.CmdBackup;
 import com.feed_the_beast.ftbu.cmd.admin.CmdDelWarp;
 import com.feed_the_beast.ftbu.cmd.admin.CmdGetRank;
-import com.feed_the_beast.ftbu.cmd.admin.CmdInvsee;
+import com.feed_the_beast.ftbu.cmd.admin.CmdInv;
 import com.feed_the_beast.ftbu.cmd.admin.CmdRestart;
 import com.feed_the_beast.ftbu.cmd.admin.CmdServerInfo;
 import com.feed_the_beast.ftbu.cmd.admin.CmdSetRank;
 import com.feed_the_beast.ftbu.cmd.admin.CmdSetWarp;
 import com.feed_the_beast.ftbu.cmd.admin.CmdUnloadAll;
-import com.feed_the_beast.ftbu.config.FTBUConfig;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
@@ -93,8 +93,8 @@ public class FTBUServerEventHandler
         {
             event.add(new CmdRestart());
         }
-        
-        event.add(new CmdInvsee());
+
+        event.add(new CmdInv());
         event.add(new CmdSetWarp());
         event.add(new CmdDelWarp());
         event.add(new CmdAdminUnclaim());
@@ -115,6 +115,7 @@ public class FTBUServerEventHandler
         event.add(new CmdSetRank());
         event.add(new CmdClaimChunk());
         event.add(new CmdUnclaimChunk());
+        event.add(new CmdUnclaimAllChunks());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

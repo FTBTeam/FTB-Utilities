@@ -44,7 +44,7 @@ public class CmdSetRank extends CommandLM
     @Override
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
-        checkArgs(args, 2);
+        checkArgs(args, 2, "<player> <rank>");
         ForgePlayerMP player = ForgePlayerMP.get(args[0]);
         Rank r = Ranks.instance().ranks.get(args[1]);
         if(r == null)

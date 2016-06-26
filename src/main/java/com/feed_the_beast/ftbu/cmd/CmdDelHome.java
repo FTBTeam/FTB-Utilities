@@ -49,7 +49,7 @@ public class CmdDelHome extends CommandLM
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
         ForgePlayerMP p = ForgePlayerMP.get(ics);
-        checkArgs(args, 1);
+        checkArgs(args, 1, "<home>");
 
         args[0] = args[0].toLowerCase();
 

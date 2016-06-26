@@ -20,13 +20,6 @@ public class CmdUnloadAll extends CommandLM
         super("unload_all_chunks");
     }
 
-    @Nonnull
-    @Override
-    public String getCommandUsage(@Nonnull ICommandSender ics)
-    {
-        return '/' + commandName + " <player | @a>";
-    }
-
     @Override
     public boolean isUsernameIndex(String[] args, int i)
     {
@@ -36,7 +29,7 @@ public class CmdUnloadAll extends CommandLM
     @Override
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
-        checkArgs(args, 1);
+        checkArgs(args, 1, "<player>");
 
         if(args[0].equals("@a"))
         {

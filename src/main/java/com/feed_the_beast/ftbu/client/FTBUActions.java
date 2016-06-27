@@ -24,6 +24,7 @@ public class FTBUActions
     public static final ActionButton GUIDE = new SidebarButton(new ResourceLocation(FTBUFinals.MOD_ID, "guide"), 0, GuiIcons.book, true)
     {
         @Override
+        @SideOnly(Side.CLIENT)
         public void onClicked(ForgePlayerSP player)
         {
             FTBLibClient.playClickSound();
@@ -31,9 +32,10 @@ public class FTBUActions
         }
 
         @Override
+        @SideOnly(Side.CLIENT)
         public boolean isVisibleFor(ForgePlayerSP player)
         {
-            return super.isVisibleFor(player) && FTBUWorldData.isLoadedW(ForgeWorldSP.inst);
+            return super.isVisibleFor(player);
         }
     };
 
@@ -41,12 +43,14 @@ public class FTBUActions
     public static final ActionButton SERVER_INFO = new SidebarButton(new ResourceLocation(FTBUFinals.MOD_ID, "server_info"), 0, GuiIcons.book_red, true)
     {
         @Override
+        @SideOnly(Side.CLIENT)
         public void onClicked(ForgePlayerSP player)
         {
             FTBLibClient.mc().displayGuiScreen(new MessageRequestServerInfo().openGui());
         }
 
         @Override
+        @SideOnly(Side.CLIENT)
         public boolean isVisibleFor(ForgePlayerSP player)
         {
             return super.isVisibleFor(player) && FTBUWorldData.isLoadedW(ForgeWorldSP.inst);
@@ -56,12 +60,14 @@ public class FTBUActions
     public static final ActionButton CLAIMS = new SidebarButton(new ResourceLocation(FTBUFinals.MOD_ID, "claimed_chunks"), 0, GuiIcons.map, true)
     {
         @Override
+        @SideOnly(Side.CLIENT)
         public void onClicked(ForgePlayerSP player)
         {
             new GuiClaimChunks(0L).openGui();
         }
 
         @Override
+        @SideOnly(Side.CLIENT)
         public boolean isVisibleFor(ForgePlayerSP player)
         {
             return super.isVisibleFor(player) && FTBUWorldData.isLoadedW(ForgeWorldSP.inst);
@@ -71,12 +77,14 @@ public class FTBUActions
     public static final ActionButton TRASH_CAN = new SidebarButton(new ResourceLocation(FTBUFinals.MOD_ID, "trash_can"), 0, GuiIcons.bin, true)
     {
         @Override
+        @SideOnly(Side.CLIENT)
         public void onClicked(ForgePlayerSP player)
         {
             FTBLibClient.execClientCommand("/ftb trash_can", false);
         }
 
         @Override
+        @SideOnly(Side.CLIENT)
         public boolean isVisibleFor(ForgePlayerSP player)
         {
             return FTBLib.DEV_ENV && super.isVisibleFor(player);
@@ -86,12 +94,14 @@ public class FTBUActions
     public static final ActionButton SHOP = new SidebarButton(new ResourceLocation(FTBUFinals.MOD_ID, "shop"), 0, GuiIcons.money_bag, true)
     {
         @Override
+        @SideOnly(Side.CLIENT)
         public void onClicked(ForgePlayerSP player)
         {
             FTBLibClient.execClientCommand("/ftb shop", false);
         }
 
         @Override
+        @SideOnly(Side.CLIENT)
         public boolean isVisibleFor(ForgePlayerSP player)
         {
             return FTBLib.DEV_ENV && super.isVisibleFor(player);
@@ -101,11 +111,13 @@ public class FTBUActions
     public static final ActionButton MAIL = new PlayerAction(new ResourceLocation(FTBUFinals.MOD_ID, "mail"), 0, GuiIcons.feather)
     {
         @Override
+        @SideOnly(Side.CLIENT)
         public void onClicked(ForgePlayerSP player)
         {
         }
 
         @Override
+        @SideOnly(Side.CLIENT)
         public boolean isVisibleFor(ForgePlayerSP player)
         {
             return FTBLib.DEV_ENV && super.isVisibleFor(player);

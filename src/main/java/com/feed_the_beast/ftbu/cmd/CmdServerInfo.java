@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbu.cmd;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbu.badges.Badge;
+import com.feed_the_beast.ftbu.client.FTBUActions;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
 import com.google.common.collect.ImmutableSetMultimap;
 import net.minecraft.command.CommandException;
@@ -12,7 +13,6 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -38,7 +38,7 @@ public class CmdServerInfo extends CommandLM
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
 
-        InfoPage serverInfo = new InfoPage("server_info").setTitle(new TextComponentTranslation(""));
+        InfoPage serverInfo = new InfoPage("server_info").setTitle(FTBUActions.SERVER_INFO.displayName);
 
         InfoPage page = serverInfo.getSub("loaded_chunks"); // TODO: Lang
 

@@ -14,6 +14,5 @@ public class FTBUNetHandler
         NET.register(4, new MessageRequestServerInfo());
         NET.register(5, new MessageAreaUpdate());
         NET.register(6, new MessageAreaRequest());
-        NET.register(7, new MessageClaimChunk());
     }
 }

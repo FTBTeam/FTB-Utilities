@@ -71,7 +71,7 @@ public class ServerInfoFile extends InfoPage
         MinecraftServer server = FTBLib.getServer();
 
         boolean isDedi = server.isDedicatedServer();
-        boolean isOP = !isDedi || PermissionAPI.hasPermission(self.getProfile(), FTBUPermissions.display_admin_info, false, new Context(self.getPlayer()));
+        boolean isOP = !isDedi || PermissionAPI.hasPermission(self.getProfile(), FTBUPermissions.DISPLAY_ADMIN_INFO, false, new Context(self.getPlayer()));
 
         copyFrom(CachedInfo.main);
 
@@ -235,7 +235,7 @@ public class ServerInfoFile extends InfoPage
         for(String s : FTBUWorldData.getW(ForgeWorldMP.inst).toMP().listWarps())
         {
             line = new InfoExtendedTextLine(page, new TextComponentString(s));
-            line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("warp " + s)));
+            line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("ftb warp " + s)));
             page.text.add(line);
         }
 
@@ -244,7 +244,7 @@ public class ServerInfoFile extends InfoPage
         for(String s : FTBUPlayerData.get(self).toMP().listHomes())
         {
             line = new InfoExtendedTextLine(page, new TextComponentString(s));
-            line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("home " + s)));
+            line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("ftb home " + s)));
             page.text.add(line);
         }
 

@@ -15,9 +15,7 @@ import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbl.util.TextureCoords;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBULang;
-import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.net.MessageAreaRequest;
-import com.feed_the_beast.ftbu.net.MessageClaimChunk;
 import com.feed_the_beast.ftbu.world.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUPlayerDataSP;
@@ -32,7 +30,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -73,17 +70,30 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             {
                 return;
             }
-            if(adminToken != 0L && button.isLeft())
-            {
-                return;
-            }
-            boolean ctrl = FTBUClient.loaded_chunks_space_key.getAsBoolean() ? Keyboard.isKeyDown(Keyboard.KEY_SPACE) : GuiScreen.isCtrlKeyDown();
 
-            MessageClaimChunk msg = new MessageClaimChunk();
-            msg.token = adminToken;
-            msg.pos = chunkPos;
-            msg.type = button.isLeft() ? (ctrl ? MessageClaimChunk.ID_LOAD : MessageClaimChunk.ID_CLAIM) : (ctrl ? MessageClaimChunk.ID_UNLOAD : MessageClaimChunk.ID_UNCLAIM);
-            msg.sendToServer();
+            if(button.isLeft())
+            {
+                if(GuiScreen.isShiftKeyDown())
+                {
+                    FTBLibClient.execClientCommand("/ftb chunks load " + chunkPos.chunkXPos + ' ' + chunkPos.chunkZPos, false);
+                }
+                else
+                {
+                    FTBLibClient.execClientCommand("/ftb chunks claim " + chunkPos.chunkXPos + ' ' + chunkPos.chunkZPos, false);
+                }
+            }
+            else if(button.isRight())
+            {
+                if(GuiScreen.isShiftKeyDown())
+                {
+                    FTBLibClient.execClientCommand("/ftb chunks unload " + chunkPos.chunkXPos + ' ' + chunkPos.chunkZPos, false);
+                }
+                else
+                {
+                    FTBLibClient.execClientCommand("/ftb chunks unclaim " + chunkPos.chunkXPos + ' ' + chunkPos.chunkZPos, false);
+                }
+            }
+
             FTBLibClient.playClickSound();
         }
 
@@ -157,7 +167,6 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         }
     }
 
-    public final long adminToken;
     public final ForgePlayerSPSelf playerLM;
     public final int startX, startZ;
     public final int currentDim;
@@ -171,7 +180,6 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
     {
         width = height = tiles_gui * 16;
 
-        adminToken = token;
         playerLM = ForgeWorldSP.inst.clientPlayer;
         startX = MathHelperLM.chunk(mc.thePlayer.posX) - (int) (tiles_gui * 0.5D);
         startZ = MathHelperLM.chunk(mc.thePlayer.posZ) - (int) (tiles_gui * 0.5D);
@@ -230,11 +238,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             {
                 add(buttonClose);
                 add(buttonRefresh);
-
-                if(adminToken == 0L)
-                {
-                    add(buttonUnclaimAll);
-                }
+                add(buttonUnclaimAll);
 
                 height = widgets.size() * 16;
             }
@@ -352,11 +356,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 
         buttonRefresh.render(GuiIcons.refresh);
         buttonClose.render(GuiIcons.accept);
-
-        if(adminToken == 0L)
-        {
-            buttonUnclaimAll.render(GuiIcons.remove);
-        }
+        buttonUnclaimAll.render(GuiIcons.remove);
     }
 
     @Override
@@ -375,13 +375,17 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
     @Override
     public void confirmClicked(boolean set, int id)
     {
-        if(set && adminToken == 0L)
+        if(set)
         {
-            MessageClaimChunk msg = new MessageClaimChunk();
-            msg.token = GuiClaimChunks.this.adminToken;
-            msg.pos = new ChunkDimPos(GuiClaimChunks.this.currentDim, 0, 0);
-            msg.type = (id == 1) ? MessageClaimChunk.ID_UNCLAIM_ALL_DIMS : MessageClaimChunk.ID_UNCLAIM_ALL;
-            msg.sendToServer();
+            if(id == 1)
+            {
+                FTBLibClient.execClientCommand("/ftb chunks unclaim_all true", false);
+            }
+            else
+            {
+                FTBLibClient.execClientCommand("/ftb chunks unclaim_all false", false);
+            }
+
             new MessageAreaRequest(startX, startZ, tiles_gui, tiles_gui).sendToServer();
         }
 

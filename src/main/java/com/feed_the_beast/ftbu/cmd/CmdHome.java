@@ -65,7 +65,7 @@ public class CmdHome extends CommandLM
         if(args[0].equals("list"))
         {
             Collection<String> list = d.listHomes();
-            ics.addChatMessage(new TextComponentString(list.size() + " / " + FTBUPermissions.homes_max.get(ep.getGameProfile()) + ": "));
+            ics.addChatMessage(new TextComponentString(list.size() + " / " + FTBUPermissions.HOMES_MAX.get(ep.getGameProfile()) + ": "));
             if(!list.isEmpty())
             {
                 ics.addChatMessage(new TextComponentString(LMStringUtils.strip(list)));
@@ -80,7 +80,7 @@ public class CmdHome extends CommandLM
             throw FTBULang.home_not_set.commandError(args[0]);
         }
 
-        if(ep.dimension != pos.dim && !PermissionAPI.hasPermission(ep.getGameProfile(), FTBUPermissions.homes_cross_dim, true, new Context(ep)))
+        if(ep.dimension != pos.dim && !PermissionAPI.hasPermission(ep.getGameProfile(), FTBUPermissions.HOMES_CROSS_DIM, true, new Context(ep)))
         {
             throw FTBULang.home_cross_dim.commandError();
         }

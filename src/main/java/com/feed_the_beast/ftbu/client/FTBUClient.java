@@ -24,7 +24,6 @@ import java.util.Map;
 public class FTBUClient extends FTBUCommon // FTBLibModClient
 {
     public static final ConfigEntryBool render_badges = new ConfigEntryBool(true);
-    public static final ConfigEntryBool loaded_chunks_space_key = new ConfigEntryBool(false);
     public static final ConfigEntryBool light_value_texture_x = new ConfigEntryBool(false);
 
     public static final String KEY_CATEGORY = "key.categories.ftbu";

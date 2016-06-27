@@ -6,9 +6,13 @@ import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandSubBase;
 import com.feed_the_beast.ftbl.api.notification.Notification;
+import com.feed_the_beast.ftbl.api.permissions.Context;
+import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbl.util.LMAccessToken;
 import com.feed_the_beast.ftbu.FTBUGuiHandler;
+import com.feed_the_beast.ftbu.FTBUPermissions;
+import com.feed_the_beast.ftbu.net.MessageAreaUpdate;
 import com.feed_the_beast.ftbu.world.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
 import net.minecraft.command.CommandException;
@@ -55,9 +59,14 @@ public class CmdChunks extends CommandSubBase
                 pos = p.getPos().toChunkPos();
             }
 
-            if(!FTBUWorldDataMP.claimChunk(p, pos))
+            if(FTBUWorldDataMP.claimChunk(p, pos))
             {
-                Notification.error("modify_chunk", new TextComponentString("Can't claim this chunk!")).sendTo(ep); //TODO: Lang
+                new Notification("modify_chunk").addText(new TextComponentString("Chunk Claimed")); //TODO: Lang
+                new MessageAreaUpdate(pos.chunkXPos, pos.chunkZPos, pos.dim, 1, 1).sendTo(ep);
+            }
+            else
+            {
+                Notification.error("modify_chunk", new TextComponentString("Can't modify this chunk!")).sendTo(ep);
             }
         }
     }
@@ -92,9 +101,14 @@ public class CmdChunks extends CommandSubBase
                 pos = p.getPos().toChunkPos();
             }
 
-            if(!FTBUWorldDataMP.unclaimChunk(p, pos))
+            if(FTBUWorldDataMP.unclaimChunk(p, pos))
             {
-                Notification.error("modify_chunk", new TextComponentString("Can't unclaim this chunk!")).sendTo(ep); //TODO: Lang
+                new Notification("modify_chunk").addText(new TextComponentString("Chunk Unclaimed")); //TODO: Lang
+                new MessageAreaUpdate(pos.chunkXPos, pos.chunkZPos, pos.dim, 1, 1).sendTo(ep);
+            }
+            else
+            {
+                Notification.error("modify_chunk", new TextComponentString("Can't modify this chunk!")).sendTo(ep);
             }
         }
     }
@@ -118,24 +132,25 @@ public class CmdChunks extends CommandSubBase
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
             ForgePlayerMP p = ForgePlayerMP.get(ep);
 
-            checkArgs(args, 1, "<loaded> [x] [z]");
-
-            boolean loaded = parseBoolean(args[0]);
-
             ChunkDimPos pos;
 
-            if(args.length >= 3)
+            if(args.length >= 2)
             {
-                pos = new ChunkDimPos(ep.dimension, parseInt(args[1]), parseInt(args[2]));
+                pos = new ChunkDimPos(ep.dimension, parseInt(args[0]), parseInt(args[1]));
             }
             else
             {
                 pos = p.getPos().toChunkPos();
             }
 
-            if(FTBUWorldDataMP.setLoaded(p, pos, loaded))
+            if(FTBUWorldDataMP.setLoaded(p, pos, true))
             {
-                new Notification("chunk_modified").addText(new TextComponentString(loaded ? "Chunk Loaded" : "Chunk Unloaded")); //TODO: Lang
+                new Notification("modify_chunk").addText(new TextComponentString("Chunk Loaded")); //TODO: Lang
+                new MessageAreaUpdate(pos.chunkXPos, pos.chunkZPos, pos.dim, 1, 1).sendTo(ep);
+            }
+            else
+            {
+                Notification.error("modify_chunk", new TextComponentString("Can't modify this chunk!")).sendTo(ep); //TODO: Lang
             }
         }
     }
@@ -159,24 +174,25 @@ public class CmdChunks extends CommandSubBase
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
             ForgePlayerMP p = ForgePlayerMP.get(ep);
 
-            checkArgs(args, 1, "<loaded> [x] [z]");
-
-            boolean loaded = parseBoolean(args[0]);
-
             ChunkDimPos pos;
 
-            if(args.length >= 3)
+            if(args.length >= 2)
             {
-                pos = new ChunkDimPos(ep.dimension, parseInt(args[1]), parseInt(args[2]));
+                pos = new ChunkDimPos(ep.dimension, parseInt(args[0]), parseInt(args[1]));
             }
             else
             {
                 pos = p.getPos().toChunkPos();
             }
 
-            if(FTBUWorldDataMP.setLoaded(p, pos, loaded))
+            if(FTBUWorldDataMP.setLoaded(p, pos, false))
             {
-                new Notification("chunk_modified").addText(new TextComponentString(loaded ? "Chunk Loaded" : "Chunk Unloaded")); //TODO: Lang
+                new Notification("modify_chunk").addText(new TextComponentString("Chunk Unloaded")); //TODO: Lang
+                new MessageAreaUpdate(pos.chunkXPos, pos.chunkZPos, pos.dim, 1, 1).sendTo(ep);
+            }
+            else
+            {
+                Notification.error("modify_chunk", new TextComponentString("Can't modify this chunk!")).sendTo(ep); //TODO: Lang
             }
         }
     }
@@ -198,9 +214,25 @@ public class CmdChunks extends CommandSubBase
         public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-            ForgePlayerMP p = ForgePlayerMP.get(ep);
 
-            checkArgs(args, 1, "<all_dimensions>");
+            checkArgs(args, 1, "<all_dimensions> [player]");
+
+            ForgePlayerMP p;
+
+            if(args.length >= 2)
+            {
+                if(!PermissionAPI.hasPermission(ep.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, false, new Context(ep)))
+                {
+                    throw new CommandException("commands.generic.permission");
+                }
+
+                p = ForgePlayerMP.get(args[1]);
+            }
+            else
+            {
+                p = ForgePlayerMP.get(ep);
+            }
+
             FTBUWorldDataMP.unclaimAllChunks(p, parseBoolean(args[0]) ? null : ep.dimension);
             new Notification("unclaimed_all").addText(new TextComponentString("Unclaimed all chunks")).sendTo(ep); //TODO: Lang
         }

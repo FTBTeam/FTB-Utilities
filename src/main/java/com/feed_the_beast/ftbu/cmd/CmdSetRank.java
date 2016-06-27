@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbu.cmd.admin;
+package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;

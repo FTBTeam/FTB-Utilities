@@ -13,7 +13,6 @@ public class FTBULang
     public static final LangKey button_claims_unclaim_all_dim_q = get("button.claims_unclaim_all_dim_q");
     public static final LangKey button_claims_unclaim_all = get("button.claims_unclaim_all");
     public static final LangKey button_claims_unclaim_all_dim = get("button.claims_unclaim_all_dim");
-    public static final LangKey button_claims_invalid_dim = get("button.claims_invalid_dim");
     public static final LangKey label_cchunks_count = get("label.cchunks_count");
     public static final LangKey label_lchunks_count = get("label.lchunks_count");
     public static final LangKey warp_set = get("warp.set");

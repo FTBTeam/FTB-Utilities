@@ -14,7 +14,7 @@ import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.badges.BadgeStorage;
-import com.feed_the_beast.ftbu.cmd.admin.CmdRestart;
+import com.feed_the_beast.ftbu.cmd.CmdRestart;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.handlers.FTBUChunkEventHandler;
@@ -42,6 +42,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 /**
@@ -121,7 +122,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
 
     public static boolean isDimensionBlacklisted(GameProfile profile, int dim)
     {
-        JsonArray a = FTBUPermissions.claims_dimension_blacklist.getJson(profile).getAsJsonArray();
+        JsonArray a = FTBUPermissions.CLAIMS_DIMENSION_BLACKLIST.getJson(profile).getAsJsonArray();
 
         for(int i = 0; i < a.size(); i++)
         {
@@ -148,7 +149,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
 
             if(c != null)
             {
-                EnumEnabled fe = FTBUPermissions.claims_forced_explosions.get(c.owner.getProfile());
+                EnumEnabled fe = FTBUPermissions.CLAIMS_FORCED_EXPLOSIONS.get(c.owner.getProfile());
 
                 if(fe == null)
                 {
@@ -184,7 +185,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
             return false;
         }
 
-        int max = FTBUPermissions.claims_max_chunks.get(player.getProfile());
+        int max = FTBUPermissions.CLAIMS_MAX_CHUNKS.get(player.getProfile());
         if(max == 0)
         {
             return false;
@@ -225,7 +226,8 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
 
     public static void unclaimAllChunks(@Nonnull ForgePlayerMP player, @Nullable Integer dim)
     {
-        Collection<ClaimedChunk> ch = chunks.getChunks(player.getProfile().getId());
+        Collection<ClaimedChunk> ch = new HashSet<>();
+        ch.addAll(chunks.getChunks(player.getProfile().getId()));
 
         if(!ch.isEmpty())
         {
@@ -267,7 +269,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
                     return false;
                 }
 
-                int max = FTBUPermissions.chunkloader_max_chunks.get(player.getProfile());
+                int max = FTBUPermissions.CHUNKLOADER_MAX_CHUNKS.get(player.getProfile());
                 if(max == 0 || chunks.getLoadedChunks(player.getProfile().getId()) >= max)
                 {
                     return false;

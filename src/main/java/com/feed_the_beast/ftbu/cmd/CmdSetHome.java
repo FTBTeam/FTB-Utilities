@@ -55,7 +55,7 @@ public class CmdSetHome extends CommandLM
 
         args[0] = args[0].toLowerCase();
 
-        int maxHomes = FTBUPermissions.homes_max.get(p.getProfile());
+        int maxHomes = FTBUPermissions.HOMES_MAX.get(p.getProfile());
 
         if(maxHomes <= 0 || d.homesSize() >= maxHomes)
         {

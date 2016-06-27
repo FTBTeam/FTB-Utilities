@@ -242,7 +242,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         }
     }
 
-    public static void setLoaded(@Nonnull ForgePlayerMP player, @Nonnull ChunkDimPos pos, boolean flag)
+    public static boolean setLoaded(@Nonnull ForgePlayerMP player, @Nonnull ChunkDimPos pos, boolean flag)
     {
         ClaimedChunk chunk = chunks.getChunk(pos);
 
@@ -259,18 +259,18 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
                         Notification.error("no_team", FTBLibLang.team_no_team.textComponent()).sendTo(ep);
                     }
 
-                    return;
+                    return false;
                 }
 
                 if(isDimensionBlacklisted(player.getProfile(), pos.dim))
                 {
-                    return;
+                    return false;
                 }
 
                 int max = FTBUPermissions.chunkloader_max_chunks.get(player.getProfile());
                 if(max == 0 || chunks.getLoadedChunks(player.getProfile().getId()) >= max)
                 {
-                    return;
+                    return false;
                 }
             }
 
@@ -282,7 +282,11 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
                 new MessageAreaUpdate(pos.chunkXPos, pos.chunkZPos, pos.dim, 1, 1).sendTo(player.toMP().getPlayer());
                 player.sendUpdate();
             }
+
+            return true;
         }
+
+        return false;
     }
 
     @Override

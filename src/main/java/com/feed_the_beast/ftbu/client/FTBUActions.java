@@ -43,7 +43,7 @@ public class FTBUActions
         @Override
         public void onClicked(ForgePlayerSP player)
         {
-            new MessageRequestServerInfo().openGui();
+            FTBLibClient.mc().displayGuiScreen(new MessageRequestServerInfo().openGui());
         }
 
         @Override

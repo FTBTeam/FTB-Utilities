@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryDouble;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import com.latmod.lib.annotations.ID;
 import com.latmod.lib.annotations.Info;
 import com.latmod.lib.annotations.NumberBounds;
 import net.minecraft.entity.Entity;
@@ -38,9 +37,6 @@ public class FTBUConfigGeneral
 
     public static final ConfigEntryBool server_info_difficulty = new ConfigEntryBool(true);
     public static final ConfigEntryBool server_info_mode = new ConfigEntryBool(true);
-
-    @ID("enable_restart_cmd_on_sp")
-    public static final ConfigEntryBool sp_restart_cmd = new ConfigEntryBool(false);
 
     public static class ConfigEntryBannedEntityList extends ConfigEntryCustom
     {

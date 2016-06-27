@@ -21,7 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class FTBUActions
 {
-    public static final ActionButton GUIDE = ActionButtonRegistry.add(new SidebarButton(new ResourceLocation(FTBUFinals.MOD_ID, "guide"), 0, GuiIcons.book, true)
+    public static final ActionButton GUIDE = new SidebarButton(new ResourceLocation(FTBUFinals.MOD_ID, "guide"), 0, GuiIcons.book, true)
     {
         @Override
         public void onClicked(ForgePlayerSP player)
@@ -35,10 +35,10 @@ public class FTBUActions
         {
             return super.isVisibleFor(player) && FTBUWorldData.isLoadedW(ForgeWorldSP.inst);
         }
-    });
+    };
 
     // Self //
-    public static final ActionButton SERVER_INFO = ActionButtonRegistry.add(new SidebarButton(new ResourceLocation(FTBUFinals.MOD_ID, "server_info"), 0, GuiIcons.book_red, true)
+    public static final ActionButton SERVER_INFO = new SidebarButton(new ResourceLocation(FTBUFinals.MOD_ID, "server_info"), 0, GuiIcons.book_red, true)
     {
         @Override
         public void onClicked(ForgePlayerSP player)
@@ -51,9 +51,9 @@ public class FTBUActions
         {
             return super.isVisibleFor(player) && FTBUWorldData.isLoadedW(ForgeWorldSP.inst);
         }
-    });
+    };
 
-    public static final ActionButton CLAIMS = ActionButtonRegistry.add(new SidebarButton(new ResourceLocation(FTBUFinals.MOD_ID, "claimed_chunks"), 0, GuiIcons.map, true)
+    public static final ActionButton CLAIMS = new SidebarButton(new ResourceLocation(FTBUFinals.MOD_ID, "claimed_chunks"), 0, GuiIcons.map, true)
     {
         @Override
         public void onClicked(ForgePlayerSP player)
@@ -66,9 +66,39 @@ public class FTBUActions
         {
             return super.isVisibleFor(player) && FTBUWorldData.isLoadedW(ForgeWorldSP.inst);
         }
-    });
+    };
 
-    public static final ActionButton SHOP = ActionButtonRegistry.add(new SidebarButton(new ResourceLocation(FTBUFinals.MOD_ID, "shop"), 0, GuiIcons.money_bag, true)
+    public static final ActionButton TRASH_CAN = new SidebarButton(new ResourceLocation(FTBUFinals.MOD_ID, "trash_can"), 0, GuiIcons.bin, true)
+    {
+        @Override
+        public void onClicked(ForgePlayerSP player)
+        {
+            FTBLibClient.execClientCommand("/ftb trash_can", false);
+        }
+
+        @Override
+        public boolean isVisibleFor(ForgePlayerSP player)
+        {
+            return FTBLib.DEV_ENV && super.isVisibleFor(player);
+        }
+    };
+
+    public static final ActionButton SHOP = new SidebarButton(new ResourceLocation(FTBUFinals.MOD_ID, "shop"), 0, GuiIcons.money_bag, true)
+    {
+        @Override
+        public void onClicked(ForgePlayerSP player)
+        {
+            FTBLibClient.execClientCommand("/ftb shop", false);
+        }
+
+        @Override
+        public boolean isVisibleFor(ForgePlayerSP player)
+        {
+            return FTBLib.DEV_ENV && super.isVisibleFor(player);
+        }
+    };
+
+    public static final ActionButton MAIL = new PlayerAction(new ResourceLocation(FTBUFinals.MOD_ID, "mail"), 0, GuiIcons.feather)
     {
         @Override
         public void onClicked(ForgePlayerSP player)
@@ -80,27 +110,19 @@ public class FTBUActions
         {
             return FTBLib.DEV_ENV && super.isVisibleFor(player);
         }
-    });
-
-    public static final ActionButton MAIL = ActionButtonRegistry.add(new PlayerAction(new ResourceLocation(FTBUFinals.MOD_ID, "mail"), 0, GuiIcons.feather)
-    {
-        @Override
-        public void onClicked(ForgePlayerSP player)
-        {
-        }
-
-        @Override
-        public boolean isVisibleFor(ForgePlayerSP player)
-        {
-            return FTBLib.DEV_ENV && super.isVisibleFor(player);
-        }
-    });
+    };
 
     // Other //
 
     @SideOnly(Side.CLIENT)
     public static void init()
     {
+        ActionButtonRegistry.add(GUIDE);
+        ActionButtonRegistry.add(SERVER_INFO);
+        ActionButtonRegistry.add(CLAIMS);
+        ActionButtonRegistry.add(TRASH_CAN);
+        ActionButtonRegistry.add(SHOP);
+
         GuiScreenRegistry.register(new ResourceLocation(FTBUFinals.MOD_ID, "claimed_chunks"), () -> new GuiClaimChunks(0L).getWrapper());
         GuiScreenRegistry.register(new ResourceLocation(FTBUFinals.MOD_ID, "guide"), () -> ClientGuideFile.openClientGui(false));
         GuiScreenRegistry.register(new ResourceLocation(FTBUFinals.MOD_ID, "server_info"), () -> new MessageRequestServerInfo().openGui());

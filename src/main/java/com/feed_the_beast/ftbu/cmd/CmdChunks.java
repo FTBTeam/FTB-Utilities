@@ -9,8 +9,6 @@ import com.feed_the_beast.ftbl.api.notification.Notification;
 import com.feed_the_beast.ftbl.api.permissions.Context;
 import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
-import com.feed_the_beast.ftbl.util.LMAccessToken;
-import com.feed_the_beast.ftbu.FTBUGuiHandler;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.net.MessageAreaUpdate;
 import com.feed_the_beast.ftbu.world.ClaimedChunk;
@@ -18,7 +16,6 @@ import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 
@@ -172,7 +169,22 @@ public class CmdChunks extends CommandSubBase
         public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-            ForgePlayerMP p = ForgePlayerMP.get(ep);
+
+            ForgePlayerMP p;
+
+            if(args.length >= 2)
+            {
+                if(!PermissionAPI.hasPermission(ep.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, false, new Context(ep)))
+                {
+                    throw new CommandException("commands.generic.permission");
+                }
+
+                p = ForgePlayerMP.get(args[1]);
+            }
+            else
+            {
+                p = ForgePlayerMP.get(ep);
+            }
 
             ChunkDimPos pos;
 
@@ -242,7 +254,7 @@ public class CmdChunks extends CommandSubBase
     {
         public CmdUnloadAll()
         {
-            super("admin_unload_all_chunks");
+            super("admin_unload_all");
         }
 
         @Override
@@ -283,28 +295,11 @@ public class CmdChunks extends CommandSubBase
         }
     }
 
-    public class CmdAdminUnclaim extends CommandLM
-    {
-        public CmdAdminUnclaim()
-        {
-            super("admin_unclaim");
-        }
-
-        @Override
-        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
-        {
-            EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-            NBTTagCompound data = new NBTTagCompound();
-            data.setLong("T", LMAccessToken.generate(ep));
-            FTBUGuiHandler.instance.openGui(ep, FTBUGuiHandler.ADMIN_CLAIMS, data);
-        }
-    }
-
     public class CmdAdminUnclaimAll extends CommandLM
     {
         public CmdAdminUnclaimAll()
         {
-            super("admin_unclaim_all_chunks");
+            super("admin_unclaim_all");
         }
 
         @Nonnull
@@ -340,7 +335,6 @@ public class CmdChunks extends CommandSubBase
 
         add(new CmdUnclaimAll());
         add(new CmdUnloadAll());
-        add(new CmdAdminUnclaim());
         add(new CmdAdminUnclaimAll());
     }
 

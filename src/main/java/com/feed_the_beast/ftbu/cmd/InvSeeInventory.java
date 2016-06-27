@@ -102,7 +102,7 @@ public class InvSeeInventory implements IInventory
     @Override
     public ITextComponent getDisplayName()
     {
-        return null;
+        return player.getDisplayName();
     }
 
     @Override

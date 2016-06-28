@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.api.ForgePlayerStats;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbu.config.FTBUConfigModules;
 import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.json.LMJsonUtils;
 
@@ -50,6 +51,7 @@ public class WebAPI extends Thread
         return null;
     }
 
+    @Override
     public void run()
     {
         try
@@ -88,7 +90,11 @@ public class WebAPI extends Thread
                         table.addEntry(tableEntry);
                     }
 
-                    String outputData = LMJsonUtils.toJson(LMJsonUtils.GSON, table.toJson());
+                    JsonObject json = new JsonObject();
+                    json.add("time", new JsonPrimitive(System.currentTimeMillis()));
+                    json.add("stats", table.toJson());
+
+                    String outputData = LMJsonUtils.toJson(LMJsonUtils.GSON, json);
                     out.print(outputData);
 
                     out.flush();

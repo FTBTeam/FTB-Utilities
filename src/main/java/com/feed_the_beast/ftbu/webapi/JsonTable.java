@@ -40,6 +40,41 @@ public class JsonTable
         }
     }
 
+    public static final class CellID
+    {
+        public final String x, y;
+
+        public CellID(String px, String py)
+        {
+            x = px;
+            y = py;
+        }
+
+        @Override
+        public String toString()
+        {
+            return x + ':' + y;
+        }
+
+        @Override
+        public boolean equals(Object o)
+        {
+            if(o instanceof CellID)
+            {
+                CellID id = (CellID) o;
+                return id.x.equals(x) && id.y.equals(y);
+            }
+
+            return false;
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return 31 * x.hashCode() + y.hashCode();
+        }
+    }
+
     private final Map<String, String> ids;
     private final List<TableEntry> entries;
 
@@ -69,7 +104,7 @@ public class JsonTable
     {
         JsonObject o = new JsonObject();
         String[] ids1 = ids.keySet().toArray(new String[ids.size()]);
-        
+
         o.add("columns", new JsonPrimitive(ids1.length));
         o.add("rows", new JsonPrimitive(entries.size()));
 
@@ -139,43 +174,9 @@ public class JsonTable
         return o;
     }
 
+    @Override
     public String toString()
     {
         return toJson().toString();
-    }
-
-    public static final class CellID
-    {
-        public final String x, y;
-
-        public CellID(String px, String py)
-        {
-            x = px;
-            y = py;
-        }
-
-        @Override
-        public String toString()
-        {
-            return x + ':' + y;
-        }
-
-        @Override
-        public boolean equals(Object o)
-        {
-            if(o instanceof CellID)
-            {
-                CellID id = (CellID) o;
-                return id.x.equals(x) && id.y.equals(y);
-            }
-
-            return false;
-        }
-
-        @Override
-        public int hashCode()
-        {
-            return 31 * x.hashCode() + y.hashCode();
-        }
     }
 }

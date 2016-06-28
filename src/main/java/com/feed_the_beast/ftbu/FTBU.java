@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.util.LMMod;
+import com.feed_the_beast.ftbu.api.guide.Top;
 import com.feed_the_beast.ftbu.config.FTBUConfig;
 import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
 import com.feed_the_beast.ftbu.handlers.FTBUChunkEventHandler;
@@ -52,11 +53,13 @@ public class FTBU
         MinecraftForge.EVENT_BUS.register(new FTBUServerEventHandler());
         FTBUChunkEventHandler.instance.init();
         MinecraftForge.EVENT_BUS.register(FTBUChunkEventHandler.instance);
+
         FTBUPermissions.init();
         FTBUCapabilities.enable();
-
         FTBUNetHandler.init();
         Backups.init();
+        Top.init();
+
         mod.onPostLoaded();
         proxy.preInit();
     }

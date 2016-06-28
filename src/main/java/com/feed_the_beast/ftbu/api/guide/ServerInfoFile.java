@@ -58,15 +58,10 @@ public class ServerInfoFile extends InfoPage
         }
     }
 
-    private List<ForgePlayerMP> players = null;
-    private ForgePlayerMP self;
-    private InfoPage categoryTops = null;
-
-    public ServerInfoFile(@Nonnull ForgePlayerMP pself)
+    public ServerInfoFile(@Nonnull ForgePlayerMP self)
     {
         super(CachedInfo.main.getID());
         setTitle(CachedInfo.main.getTitleComponent());
-        self = pself;
 
         MinecraftServer server = FTBLib.getServer();
 
@@ -75,9 +70,7 @@ public class ServerInfoFile extends InfoPage
 
         copyFrom(CachedInfo.main);
 
-        categoryTops = getSub("Tops").setTitle(Top.langTopTitle.textComponent());
-
-        players = new ArrayList<>(ForgeWorldMP.inst.playerMap.size());
+        List<ForgePlayerMP> players = new ArrayList<>(ForgeWorldMP.inst.playerMap.size());
 
         for(ForgePlayer p : ForgeWorldMP.inst.playerMap.values())
         {
@@ -98,7 +91,7 @@ public class ServerInfoFile extends InfoPage
 
         if(FTBUConfigGeneral.server_info_difficulty.getAsBoolean())
         {
-            println(FTBLibLang.difficulty.textComponent(LMStringUtils.firstUppercase(pself.getPlayer().worldObj.getDifficulty().toString().toLowerCase())));
+            println(FTBLibLang.difficulty.textComponent(LMStringUtils.firstUppercase(self.getPlayer().worldObj.getDifficulty().toString().toLowerCase())));
         }
 
         if(FTBUConfigGeneral.server_info_mode.getAsBoolean())
@@ -106,9 +99,11 @@ public class ServerInfoFile extends InfoPage
             println(FTBLibLang.mode_current.textComponent(LMStringUtils.firstUppercase(ForgeWorldMP.inst.getMode().toString().toLowerCase())));
         }
 
+        InfoPage topsPage = getSub("tops").setTitle(Top.langTopTitle.textComponent());
+
         for(Top t : Top.registry.values())
         {
-            InfoPage thisTop = categoryTops.getSub(t.getID()).setTitle(t.langKey.textComponent());
+            InfoPage thisTop = topsPage.getSub(t.getID()).setTitle(t.langKey.textComponent());
 
             Collections.sort(players, t);
 
@@ -145,6 +140,7 @@ public class ServerInfoFile extends InfoPage
                 {
                     c.appendSibling(FTBLib.getChatComponent(data));
                 }
+
                 thisTop.println(c);
             }
         }
@@ -163,7 +159,7 @@ public class ServerInfoFile extends InfoPage
                     InfoPage cat = new InfoPage('/' + c.getCommandName());
 
                     List<String> al = c.getCommandAliases();
-                    if(al != null && !al.isEmpty())
+                    if(!al.isEmpty())
                     {
                         for(String s : al)
                         {
@@ -185,26 +181,23 @@ public class ServerInfoFile extends InfoPage
                     {
                         String usage = c.getCommandUsage(self.getPlayer());
 
-                        if(usage != null)
+                        if(usage.indexOf('\n') != -1)
                         {
-                            if(usage.indexOf('\n') != -1)
+                            String[] usageL = usage.split("\n");
+                            for(String s1 : usageL)
                             {
-                                String[] usageL = usage.split("\n");
-                                for(String s1 : usageL)
-                                {
-                                    cat.printlnText(s1);
-                                }
+                                cat.printlnText(s1);
+                            }
+                        }
+                        else
+                        {
+                            if(usage.indexOf('%') != -1 || usage.indexOf('/') != -1)
+                            {
+                                cat.println(new TextComponentString(usage));
                             }
                             else
                             {
-                                if(usage.indexOf('%') != -1 || usage.indexOf('/') != -1)
-                                {
-                                    cat.println(new TextComponentString(usage));
-                                }
-                                else
-                                {
-                                    cat.println(new TextComponentTranslation(usage));
-                                }
+                                cat.println(new TextComponentTranslation(usage));
                             }
                         }
                     }

@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.util.LMMod;
-import com.feed_the_beast.ftbu.api.guide.Top;
 import com.feed_the_beast.ftbu.config.FTBUConfig;
 import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
+import com.feed_the_beast.ftbu.guide.FTBUTops;
 import com.feed_the_beast.ftbu.handlers.FTBUChunkEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUServerEventHandler;
@@ -58,7 +58,7 @@ public class FTBU
         FTBUCapabilities.enable();
         FTBUNetHandler.init();
         Backups.init();
-        Top.init();
+        FTBUTops.init();
 
         mod.onPostLoaded();
         proxy.preInit();

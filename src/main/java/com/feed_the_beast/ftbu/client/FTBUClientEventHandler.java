@@ -36,33 +36,20 @@ import java.util.HashSet;
 @SideOnly(Side.CLIENT)
 public class FTBUClientEventHandler
 {
-    public static final ResourceLocation chunkBorderTexture = new ResourceLocation(FTBUFinals.MOD_ID, "textures/world/chunk_border.png");
-    public static final ResourceLocation textureLightValueX = new ResourceLocation(FTBUFinals.MOD_ID, "textures/world/light_value_x.png");
-    public static final ResourceLocation textureLightValueO = new ResourceLocation(FTBUFinals.MOD_ID, "textures/world/light_value_o.png");
+    public static final ResourceLocation CHUNK_BORDER_TEXTURE = new ResourceLocation(FTBUFinals.MOD_ID, "textures/world/chunk_border.png");
+    public static final ResourceLocation TEXTURE_LIGHT_VALUE_X = new ResourceLocation(FTBUFinals.MOD_ID, "textures/world/light_value_x.png");
+    public static final ResourceLocation TEXTURE_LIGHT_VALUE_O = new ResourceLocation(FTBUFinals.MOD_ID, "textures/world/light_value_o.png");
 
-    private static class MobSpawnPos
+    private static class MobSpawnPos extends BlockPos
     {
-        public final BlockPos pos;
         public final boolean alwaysSpawns;
         public final int lightValue;
 
         public MobSpawnPos(BlockPos p, boolean b, int lv)
         {
-            pos = p;
+            super(p);
             alwaysSpawns = b;
             lightValue = lv;
-        }
-
-        @Override
-        public int hashCode()
-        {
-            return pos.hashCode();
-        }
-
-        @Override
-        public boolean equals(Object o)
-        {
-            return o == this || ((MobSpawnPos) o).pos.equals(pos);
         }
     }
 
@@ -164,7 +151,7 @@ public class FTBUClientEventHandler
                 int z = MathHelperLM.chunk(LMFrustumUtils.playerZ);
                 double d = 0.007D;
 
-                FTBLibClient.setTexture(chunkBorderTexture);
+                FTBLibClient.setTexture(CHUNK_BORDER_TEXTURE);
                 chunkBorderRenderer.setTessellator(tessellator);
                 chunkBorderRenderer.setUV(0D, 0D, 16D, 256D);
 
@@ -237,15 +224,15 @@ public class FTBUClientEventHandler
                 if(!lightList.isEmpty())
                 {
                     GlStateManager.color(1F, 1F, 1F, 1F);
-                    FTBLibClient.setTexture(FTBUClient.light_value_texture_x.getAsBoolean() ? textureLightValueX : textureLightValueO);
+                    FTBLibClient.setTexture(FTBUClient.light_value_texture_x.getAsBoolean() ? TEXTURE_LIGHT_VALUE_X : TEXTURE_LIGHT_VALUE_O);
 
                     buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 
                     for(MobSpawnPos pos : lightList)
                     {
-                        double bx = pos.pos.getX();
-                        double by = pos.pos.getY() + 0.03D;
-                        double bz = pos.pos.getZ();
+                        double bx = pos.getX();
+                        double by = pos.getY() + 0.03D;
+                        double bz = pos.getZ();
 
                         float green = pos.alwaysSpawns ? 0.2F : 1F;
                         buffer.pos(bx, by, bz).tex(0D, 0D).color(1F, green, 0.2F, 1F).endVertex();
@@ -262,9 +249,9 @@ public class FTBUClientEventHandler
                     {
                         for(MobSpawnPos pos : lightList)
                         {
-                            double bx = pos.pos.getX() + 0.5D;
-                            double by = pos.pos.getY() + 0.14D;
-                            double bz = pos.pos.getZ() + 0.5D;
+                            double bx = pos.getX() + 0.5D;
+                            double by = pos.getY() + 0.14D;
+                            double bz = pos.getZ() + 0.5D;
 
                             if(MathHelperLM.distSq(LMFrustumUtils.playerX, LMFrustumUtils.playerY, LMFrustumUtils.playerZ, bx, by, bz) <= 144D)
                             {

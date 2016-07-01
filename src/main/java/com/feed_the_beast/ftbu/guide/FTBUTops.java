@@ -1,31 +1,19 @@
-package com.feed_the_beast.ftbu.api.guide;
+package com.feed_the_beast.ftbu.guide;
 
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbl.api.LangKey;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
-import com.latmod.lib.FinalIDObject;
+import com.feed_the_beast.ftbu.api.Top;
 import com.latmod.lib.math.MathHelperLM;
 import com.latmod.lib.util.LMStringUtils;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-
-public abstract class Top extends FinalIDObject implements Comparator<ForgePlayerMP>
+/**
+ * Created by LatvianModder on 28.06.2016.
+ */
+public class FTBUTops
 {
-    public static final LangKey langTopTitle = new LangKey("ftbu.top.title");
-    static final Map<String, Top> registry = new HashMap<>();
-    public final LangKey langKey;
-
-    public Top(String s)
-    {
-        super(s);
-        langKey = new LangKey("ftbu.top." + getID());
-    }
-
     public static void init()
     {
-        add(new Top("first_joined")
+        Top.register(new Top("first_joined")
         {
             @Override
             public int compare(ForgePlayerMP o1, ForgePlayerMP o2)
@@ -40,7 +28,7 @@ public abstract class Top extends FinalIDObject implements Comparator<ForgePlaye
             }
         });
 
-        add(new Top("deaths")
+        Top.register(new Top("deaths")
         {
             @Override
             public int compare(ForgePlayerMP o1, ForgePlayerMP o2)
@@ -55,7 +43,7 @@ public abstract class Top extends FinalIDObject implements Comparator<ForgePlaye
             }
         });
 
-        add(new Top("deaths_per_hour")
+        Top.register(new Top("deaths_per_hour")
         {
             @Override
             public int compare(ForgePlayerMP o1, ForgePlayerMP o2)
@@ -70,7 +58,7 @@ public abstract class Top extends FinalIDObject implements Comparator<ForgePlaye
             }
         });
 
-        add(new Top("last_seen")
+        Top.register(new Top("last_seen")
         {
             @Override
             public int compare(ForgePlayerMP o1, ForgePlayerMP o2)
@@ -89,7 +77,7 @@ public abstract class Top extends FinalIDObject implements Comparator<ForgePlaye
             }
         });
 
-        add(new Top("time_played")
+        Top.register(new Top("time_played")
         {
             @Override
             public int compare(ForgePlayerMP o1, ForgePlayerMP o2)
@@ -104,11 +92,4 @@ public abstract class Top extends FinalIDObject implements Comparator<ForgePlaye
             }
         });
     }
-
-    public static void add(Top t)
-    {
-        registry.put(t.getID(), t);
-    }
-
-    public abstract Object getData(ForgePlayerMP p);
 }

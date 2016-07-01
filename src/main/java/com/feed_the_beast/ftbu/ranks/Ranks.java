@@ -8,10 +8,10 @@ import com.feed_the_beast.ftbl.util.FTBLib;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.mojang.authlib.GameProfile;
 import com.latmod.lib.json.LMJsonUtils;
 import com.latmod.lib.util.LMFileUtils;
 import com.latmod.lib.util.LMUtils;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
@@ -289,6 +289,7 @@ public class Ranks implements PermissionHandler, RankConfigAPI.Handler
         }
     }
 
+    @Nonnull
     @Override
     public Event.Result hasPermission(@Nonnull GameProfile profile, @Nonnull String permission, @Nonnull Context context)
     {

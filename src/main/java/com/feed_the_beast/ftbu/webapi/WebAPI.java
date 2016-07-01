@@ -86,7 +86,7 @@ public class WebAPI extends Thread
                         tableEntry.set("name", new JsonPrimitive(player.getProfile().getName()));
                         tableEntry.set("deaths", new JsonPrimitive(stats.deaths));
                         tableEntry.set("dph", new JsonPrimitive(stats.getDeathsPerHour()));
-                        tableEntry.set("last_seen", new JsonPrimitive(player.isOnline() ? 0 : stats.lastSeen));
+                        tableEntry.set("last_seen", new JsonPrimitive(player.toMP().isOnline() ? 0 : stats.lastSeen));
                         table.addEntry(tableEntry);
                     }
 

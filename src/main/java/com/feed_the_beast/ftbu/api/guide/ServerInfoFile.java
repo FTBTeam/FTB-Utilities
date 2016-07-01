@@ -15,6 +15,7 @@ import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.EventFTBUServerInfo;
+import com.feed_the_beast.ftbu.api.Top;
 import com.feed_the_beast.ftbu.client.FTBUActions;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigModules;
@@ -99,9 +100,9 @@ public class ServerInfoFile extends InfoPage
             println(FTBLibLang.mode_current.textComponent(LMStringUtils.firstUppercase(ForgeWorldMP.inst.getMode().toString().toLowerCase())));
         }
 
-        InfoPage topsPage = getSub("tops").setTitle(Top.langTopTitle.textComponent());
+        InfoPage topsPage = getSub("tops").setTitle(Top.LANG_TOP_TITLE.textComponent());
 
-        for(Top t : Top.registry.values())
+        for(Top t : Top.REGISTRY.values())
         {
             InfoPage thisTop = topsPage.getSub(t.getID()).setTitle(t.langKey.textComponent());
 

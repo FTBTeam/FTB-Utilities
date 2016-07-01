@@ -82,13 +82,6 @@ public class FTBUActions
         {
             FTBLibClient.execClientCommand("/ftb trash_can", false);
         }
-
-        @Override
-        @SideOnly(Side.CLIENT)
-        public boolean isVisibleFor(ForgePlayerSP player)
-        {
-            return FTBLib.DEV_ENV && super.isVisibleFor(player);
-        }
     };
 
     public static final ActionButton SHOP = new SidebarButton(new ResourceLocation(FTBUFinals.MOD_ID, "shop"), 0, GuiIcons.money_bag, true)

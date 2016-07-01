@@ -270,7 +270,7 @@ public class FTBUPlayerEventHandler
 
             if(player != null)
             {
-                ClaimedChunk chunk = FTBUWorldDataMP.chunks.getChunk(new BlockDimPos(event.getPos(), player.getPlayer().dimension, false).toChunkPos());
+                ClaimedChunk chunk = FTBUWorldDataMP.chunks.getChunk(new BlockDimPos(event.getPos(), player.getPlayer().dimension).toChunkPos());
 
                 if(chunk != null && !chunk.canInteract(player, false, event.getPos()))
                 {
@@ -302,7 +302,7 @@ public class FTBUPlayerEventHandler
                     }
                 }
 
-                ClaimedChunk chunk = FTBUWorldDataMP.chunks.getChunk(new BlockDimPos(event.getPos(), player.getPlayer().dimension, false).toChunkPos());
+                ClaimedChunk chunk = FTBUWorldDataMP.chunks.getChunk(new BlockDimPos(event.getPos(), player.getPlayer().dimension).toChunkPos());
 
                 if(chunk != null && !chunk.canInteract(player, true, event.getPos()))
                 {

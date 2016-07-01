@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu.world;
 
+import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 
 import javax.annotation.Nonnull;
@@ -102,5 +103,11 @@ public final class ClaimedChunkStorage
         }
 
         return loaded;
+    }
+
+    public ForgePlayer getOwnerPlayer(ChunkDimPos pos)
+    {
+        ClaimedChunk c = map.get(pos);
+        return (c == null) ? null : c.owner;
     }
 }

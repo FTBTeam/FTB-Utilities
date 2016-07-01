@@ -58,7 +58,7 @@ public class CmdChunks extends CommandSubBase
 
             if(FTBUWorldDataMP.claimChunk(p, pos))
             {
-                new Notification("modify_chunk").addText(new TextComponentString("Chunk Claimed")); //TODO: Lang
+                new Notification("modify_chunk").addText(new TextComponentString("Chunk Claimed")).sendTo(ep); //TODO: Lang
                 new MessageAreaUpdate(pos.chunkXPos, pos.chunkZPos, pos.dim, 1, 1).sendTo(ep);
             }
             else
@@ -98,9 +98,14 @@ public class CmdChunks extends CommandSubBase
                 pos = p.getPos().toChunkPos();
             }
 
+            if(!p.equalsPlayer(FTBUWorldDataMP.chunks.getOwnerPlayer(pos)) && !PermissionAPI.hasPermission(ep.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, false, new Context(ep).setCustomObject(Context.CHUNK, pos)))
+            {
+                throw new CommandException("commands.generic.permission");
+            }
+
             if(FTBUWorldDataMP.unclaimChunk(p, pos))
             {
-                new Notification("modify_chunk").addText(new TextComponentString("Chunk Unclaimed")); //TODO: Lang
+                new Notification("modify_chunk").addText(new TextComponentString("Chunk Unclaimed")).sendTo(ep); //TODO: Lang
                 new MessageAreaUpdate(pos.chunkXPos, pos.chunkZPos, pos.dim, 1, 1).sendTo(ep);
             }
             else
@@ -142,7 +147,7 @@ public class CmdChunks extends CommandSubBase
 
             if(FTBUWorldDataMP.setLoaded(p, pos, true))
             {
-                new Notification("modify_chunk").addText(new TextComponentString("Chunk Loaded")); //TODO: Lang
+                new Notification("modify_chunk").addText(new TextComponentString("Chunk Loaded")).sendTo(ep); //TODO: Lang
                 new MessageAreaUpdate(pos.chunkXPos, pos.chunkZPos, pos.dim, 1, 1).sendTo(ep);
             }
             else
@@ -170,22 +175,7 @@ public class CmdChunks extends CommandSubBase
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
 
-            ForgePlayerMP p;
-
-            if(args.length >= 2)
-            {
-                if(!PermissionAPI.hasPermission(ep.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, false, new Context(ep)))
-                {
-                    throw new CommandException("commands.generic.permission");
-                }
-
-                p = ForgePlayerMP.get(args[1]);
-            }
-            else
-            {
-                p = ForgePlayerMP.get(ep);
-            }
-
+            ForgePlayerMP p = ForgePlayerMP.get(ep);
             ChunkDimPos pos;
 
             if(args.length >= 2)
@@ -199,7 +189,7 @@ public class CmdChunks extends CommandSubBase
 
             if(FTBUWorldDataMP.setLoaded(p, pos, false))
             {
-                new Notification("modify_chunk").addText(new TextComponentString("Chunk Unloaded")); //TODO: Lang
+                new Notification("modify_chunk").addText(new TextComponentString("Chunk Unloaded")).sendTo(ep); //TODO: Lang
                 new MessageAreaUpdate(pos.chunkXPos, pos.chunkZPos, pos.dim, 1, 1).sendTo(ep);
             }
             else

@@ -125,7 +125,7 @@ public class FTBUTeamDataMP extends FTBUTeamData implements INBTSerializable<NBT
 
                     if(c.loaded)
                     {
-                        ai[3] = flags & 0xFF;
+                        ai[3] = 1;
                     }
 
                     tag1.appendTag(new NBTTagIntArray(ai));

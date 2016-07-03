@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbu.api.guide;
+package com.feed_the_beast.ftbu.guide;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

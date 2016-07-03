@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToServer;
 import com.feed_the_beast.ftbl.gui.GuiLoading;
-import com.feed_the_beast.ftbu.api.guide.ServerInfoFile;
+import com.feed_the_beast.ftbu.guide.ServerInfoFile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayerMP;

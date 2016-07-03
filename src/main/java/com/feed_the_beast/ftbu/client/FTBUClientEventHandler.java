@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbl.api.client.LMFrustumUtils;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.api.guide.ClientGuideFile;
+import com.feed_the_beast.ftbu.guide.ClientGuideFile;
 import com.feed_the_beast.ftbu.world.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataSP;
 import com.latmod.lib.math.MathHelperLM;

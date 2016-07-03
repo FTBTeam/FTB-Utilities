@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbu.api.guide;
+package com.feed_the_beast.ftbu.guide;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.info.InfoPage;

@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu.handlers;
 
+import com.feed_the_beast.ftbl.FTBLibStats;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.util.FTBLib;
@@ -202,7 +203,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
                             {
                                 double max = FTBUPermissions.CHUNKLOADER_OFFLINE_TIMER.get(p.getProfile());
 
-                                if(max > 0D && p.stats.getLastSeenDeltaInHours(p) > max)
+                                if(max > 0D && FTBLibStats.getLastSeenDeltaInHours(p) > max)
                                 {
                                     isLoaded = false;
 

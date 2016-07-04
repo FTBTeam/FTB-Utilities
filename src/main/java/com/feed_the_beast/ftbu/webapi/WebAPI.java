@@ -1,13 +1,15 @@
 package com.feed_the_beast.ftbu.webapi;
 
+import com.feed_the_beast.ftbl.FTBLibStats;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
-import com.feed_the_beast.ftbl.api.ForgePlayerStats;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbu.config.FTBUConfigModules;
 import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.json.LMJsonUtils;
+import net.minecraft.stats.StatList;
+import net.minecraft.stats.StatisticsManagerServer;
 
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -80,13 +82,13 @@ public class WebAPI extends Thread
 
                     for(ForgePlayer player : ForgeWorldMP.inst.playerMap.values())
                     {
-                        ForgePlayerStats stats = player.toMP().stats;
+                        StatisticsManagerServer stats = player.toMP().stats();
 
                         JsonTable.TableEntry tableEntry = new JsonTable.TableEntry();
                         tableEntry.set("name", new JsonPrimitive(player.getProfile().getName()));
-                        tableEntry.set("deaths", new JsonPrimitive(stats.deaths));
-                        tableEntry.set("dph", new JsonPrimitive(stats.getDeathsPerHour()));
-                        tableEntry.set("last_seen", new JsonPrimitive(player.toMP().isOnline() ? 0 : stats.lastSeen));
+                        tableEntry.set("deaths", new JsonPrimitive(stats.readStat(StatList.DEATHS)));
+                        tableEntry.set("dph", new JsonPrimitive(FTBLibStats.getDeathsPerHour(stats)));
+                        tableEntry.set("last_seen", new JsonPrimitive(player.toMP().isOnline() ? 0 : FTBLibStats.getLastSeen(player.toMP())));
                         table.addEntry(tableEntry);
                     }
 

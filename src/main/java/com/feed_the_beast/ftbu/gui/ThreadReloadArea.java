@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbu.client.gui;
+package com.feed_the_beast.ftbu.gui;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.latmod.lib.PixelBuffer;

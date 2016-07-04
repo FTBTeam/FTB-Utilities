@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbu.guide;
+package com.feed_the_beast.ftbu.gui.guide;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
@@ -14,8 +14,9 @@ import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.FTBUPermissions;
+import com.feed_the_beast.ftbu.FTBUTops;
 import com.feed_the_beast.ftbu.api.EventFTBUServerInfo;
-import com.feed_the_beast.ftbu.api.Top;
+import com.feed_the_beast.ftbu.api.TopRegistry;
 import com.feed_the_beast.ftbu.client.FTBUActions;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigModules;
@@ -26,6 +27,7 @@ import com.google.gson.JsonPrimitive;
 import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.command.ICommand;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.stats.StatBase;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -75,9 +77,7 @@ public class ServerInfoFile extends InfoPage
 
         for(ForgePlayer p : ForgeWorldMP.inst.playerMap.values())
         {
-            ForgePlayerMP p1 = p.toMP();
-            players.add(p1);
-            p1.refreshStats();
+            players.add(p.toMP());
         }
 
         if(FTBUConfigModules.auto_restart.getAsBoolean())
@@ -100,21 +100,32 @@ public class ServerInfoFile extends InfoPage
             println(FTBLibLang.mode_current.textComponent(LMStringUtils.firstUppercase(ForgeWorldMP.inst.getMode().toString().toLowerCase())));
         }
 
-        InfoPage topsPage = getSub("tops").setTitle(Top.LANG_TOP_TITLE.textComponent());
+        InfoPage topsPage = getSub("tops").setTitle(FTBUTops.LANG_TOP_TITLE.textComponent());
 
-        for(Top t : Top.REGISTRY.values())
+        for(StatBase stat : TopRegistry.getKeys())
         {
-            InfoPage thisTop = topsPage.getSub(t.getID()).setTitle(t.langKey.textComponent());
+            InfoPage thisTop = topsPage.getSub(stat.statId).setTitle(stat.getStatName());
 
-            Collections.sort(players, t);
+            Collections.sort(players, TopRegistry.getComparator(stat));
 
             int size = Math.min(players.size(), 250);
 
             for(int j = 0; j < size; j++)
             {
                 ForgePlayerMP p = players.get(j);
+                Object data = null;
+                TopRegistry.DataSupplier dataSupplier = TopRegistry.getDataSuppier(stat);
 
-                Object data = t.getData(p);
+                if(dataSupplier != null)
+                {
+                    data = dataSupplier.getData(p);
+                }
+
+                if(data == null)
+                {
+                    data = "[null]";
+                }
+
                 StringBuilder sb = new StringBuilder();
                 sb.append('[');
                 sb.append(j + 1);

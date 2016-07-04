@@ -25,7 +25,7 @@ import com.feed_the_beast.ftbu.cmd.CmdSpawn;
 import com.feed_the_beast.ftbu.cmd.CmdTplast;
 import com.feed_the_beast.ftbu.cmd.CmdTrashCan;
 import com.feed_the_beast.ftbu.cmd.CmdWarp;
-import com.feed_the_beast.ftbu.guide.ServerInfoFile;
+import com.feed_the_beast.ftbu.gui.guide.ServerInfoFile;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;

@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbu.api;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import net.minecraft.stats.StatBase;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -67,7 +68,7 @@ public class TopRegistry
     @Nonnull
     public ITextComponent getName(StatBase stat)
     {
-        ITextComponent c = NAME_REGISTRY.containsKey(stat) ? NAME_REGISTRY.get(stat) : stat.getStatName();
+        ITextComponent c = NAME_REGISTRY.containsKey(stat) ? NAME_REGISTRY.get(stat) : new TextComponentTranslation(stat.statId);
         c = c.createCopy();
         c.getStyle().setColor(null);
         return c;

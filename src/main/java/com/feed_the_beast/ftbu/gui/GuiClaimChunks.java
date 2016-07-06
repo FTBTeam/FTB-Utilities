@@ -187,7 +187,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 
         currentDimName = mc.theWorld.provider.getDimensionType().getName();
 
-        buttonClose = new ButtonLM(0, 0, 16, 16)
+        buttonClose = new ButtonLM(0, 0, 16, 16, GuiLang.button_close.translate())
         {
             @Override
             public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
@@ -197,9 +197,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             }
         };
 
-        buttonClose.title = GuiLang.button_close.translate();
-
-        buttonRefresh = new ButtonLM(0, 16, 16, 16)
+        buttonRefresh = new ButtonLM(0, 16, 16, 16, GuiLang.button_refresh.translate())
         {
             @Override
             public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
@@ -211,8 +209,6 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
                 FTBLibClient.playClickSound();
             }
         };
-
-        buttonRefresh.title = GuiLang.button_refresh.translate();
 
         buttonUnclaimAll = new ButtonLM(0, 32, 16, 16)
         {

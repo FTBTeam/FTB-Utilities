@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbu.world;
+package com.feed_the_beast.ftbu.world.data;
 
 /**
  * Created by LatvianModder on 01.06.2016.

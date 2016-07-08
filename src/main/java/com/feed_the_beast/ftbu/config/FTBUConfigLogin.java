@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu.config;
 
+import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryCustom;
 import com.feed_the_beast.ftbl.api.item.ItemStackSerializer;
 import com.feed_the_beast.ftbl.util.JsonHelper;
@@ -17,6 +18,9 @@ import java.util.Map;
 
 public class FTBUConfigLogin
 {
+    public static final ConfigEntryBool enable_motd = new ConfigEntryBool(true);
+    public static final ConfigEntryBool enable_starting_items = new ConfigEntryBool(true);
+    
     @Info("Message of the day. This will be displayed when player joins the server")
     public static final ConfigEntryChatComponentList motd = new ConfigEntryChatComponentList();
 

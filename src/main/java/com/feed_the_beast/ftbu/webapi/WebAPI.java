@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbu.webapi;
 import com.feed_the_beast.ftbl.FTBLibStats;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
-import com.feed_the_beast.ftbu.config.FTBUConfigModules;
 import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -120,12 +119,12 @@ public class WebAPI extends Thread
 
     public boolean isAPIRunning()
     {
-        return FTBUConfigModules.web_api.getAsBoolean() && ForgeWorldMP.inst != null && serverSocket != null && !serverSocket.isClosed();
+        return FTBUConfigWebAPI.enabled.getAsBoolean() && ForgeWorldMP.inst != null && serverSocket != null && !serverSocket.isClosed();
     }
 
     public void startAPI()
     {
-        if(FTBUConfigModules.web_api.getAsBoolean() && !isAPIRunning())
+        if(FTBUConfigWebAPI.enabled.getAsBoolean() && !isAPIRunning())
         {
             start();
         }

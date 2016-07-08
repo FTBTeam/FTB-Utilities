@@ -8,10 +8,10 @@ import com.feed_the_beast.ftbl.util.LMDimUtils;
 import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.config.FTBUConfigModules;
-import com.feed_the_beast.ftbu.world.ChunkloaderType;
-import com.feed_the_beast.ftbu.world.ClaimedChunk;
-import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
+import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
+import com.feed_the_beast.ftbu.world.chunks.ChunkloaderType;
+import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
+import com.feed_the_beast.ftbu.world.data.FTBUWorldDataMP;
 import com.google.common.collect.MapMaker;
 import com.latmod.lib.util.LMUtils;
 import net.minecraft.world.World;
@@ -84,7 +84,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
     {
         table.remove(world);
         List<ForgeChunkManager.Ticket> tickets1 = new ArrayList<>();
-        if(tickets.isEmpty() || !FTBUConfigModules.chunk_loading.getAsBoolean())
+        if(tickets.isEmpty() || !FTBUConfigWorld.chunk_loading.getAsBoolean())
         {
             return tickets1;
         }

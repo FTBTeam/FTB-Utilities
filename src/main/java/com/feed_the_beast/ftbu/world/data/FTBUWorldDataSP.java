@@ -1,10 +1,12 @@
-package com.feed_the_beast.ftbu.world;
+package com.feed_the_beast.ftbu.world.data;
 
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.badges.BadgeStorage;
 import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.net.MessageRequestBadge;
+import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
+import com.feed_the_beast.ftbu.world.chunks.ClaimedChunkStorage;
 import com.latmod.lib.io.LMConnection;
 import com.latmod.lib.io.RequestMethod;
 import net.minecraftforge.fml.relauncher.Side;

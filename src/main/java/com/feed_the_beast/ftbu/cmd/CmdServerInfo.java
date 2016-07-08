@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.client.FTBUActions;
-import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
+import com.feed_the_beast.ftbu.world.data.FTBUWorldDataMP;
 import com.google.common.collect.ImmutableSetMultimap;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;

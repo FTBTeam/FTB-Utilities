@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.permissions.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbl.api.permissions.rankconfig.RankConfigDouble;
 import com.feed_the_beast.ftbl.api.permissions.rankconfig.RankConfigEnum;
 import com.feed_the_beast.ftbl.api.permissions.rankconfig.RankConfigInt;
-import com.feed_the_beast.ftbu.world.ChunkloaderType;
+import com.feed_the_beast.ftbu.world.chunks.ChunkloaderType;
 import com.latmod.lib.EnumEnabled;
 import com.latmod.lib.json.LMJsonUtils;
 

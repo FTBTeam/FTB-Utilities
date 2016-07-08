@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbu.world;
+package com.feed_the_beast.ftbu.world.data;
 
 import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;

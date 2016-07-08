@@ -4,8 +4,8 @@ import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.events.ForgeTeamEvent;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.world.FTBUTeamDataMP;
-import com.feed_the_beast.ftbu.world.FTBUTeamDataSP;
+import com.feed_the_beast.ftbu.world.data.FTBUTeamDataMP;
+import com.feed_the_beast.ftbu.world.data.FTBUTeamDataSP;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 

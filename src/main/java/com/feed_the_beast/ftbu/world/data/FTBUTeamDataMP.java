@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbu.world;
+package com.feed_the_beast.ftbu.world.data;
 
 import com.feed_the_beast.ftbl.api.EnumTeamPrivacyLevel;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
+import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
 import com.latmod.lib.io.Bits;
 import com.latmod.lib.util.LMUtils;
 import net.minecraft.nbt.NBTTagCompound;

@@ -15,14 +15,13 @@ import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigLogin;
-import com.feed_the_beast.ftbu.config.FTBUConfigModules;
 import com.feed_the_beast.ftbu.net.MessageAreaRequest;
-import com.feed_the_beast.ftbu.world.Backups;
-import com.feed_the_beast.ftbu.world.ClaimedChunk;
-import com.feed_the_beast.ftbu.world.FTBUPlayerData;
-import com.feed_the_beast.ftbu.world.FTBUPlayerDataMP;
-import com.feed_the_beast.ftbu.world.FTBUPlayerDataSP;
-import com.feed_the_beast.ftbu.world.FTBUWorldDataMP;
+import com.feed_the_beast.ftbu.world.backups.Backups;
+import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
+import com.feed_the_beast.ftbu.world.data.FTBUPlayerData;
+import com.feed_the_beast.ftbu.world.data.FTBUPlayerDataMP;
+import com.feed_the_beast.ftbu.world.data.FTBUPlayerDataSP;
+import com.feed_the_beast.ftbu.world.data.FTBUWorldDataMP;
 import com.google.gson.JsonElement;
 import com.latmod.lib.math.MathHelperLM;
 import net.minecraft.entity.Entity;
@@ -87,7 +86,7 @@ public class FTBUPlayerEventHandler
 
                 if(event.first)
                 {
-                    if(FTBUConfigModules.starting_items.getAsBoolean())
+                    if(FTBUConfigLogin.enable_starting_items.getAsBoolean())
                     {
                         for(ItemStack is : FTBUConfigLogin.starting_items.getItems())
                         {
@@ -96,7 +95,7 @@ public class FTBUPlayerEventHandler
                     }
                 }
 
-                if(FTBUConfigModules.motd.getAsBoolean())
+                if(FTBUConfigLogin.enable_motd.getAsBoolean())
                 {
                     FTBUConfigLogin.motd.components.forEach(ep::addChatMessage);
                 }

@@ -1,10 +1,9 @@
-package com.feed_the_beast.ftbu.world;
+package com.feed_the_beast.ftbu.world.backups;
 
 import com.feed_the_beast.ftbl.util.BroadcastSender;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
-import com.feed_the_beast.ftbu.config.FTBUConfigModules;
 import com.latmod.lib.util.LMFileUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.server.CommandSaveAll;
@@ -49,7 +48,7 @@ public class Backups
         }
         boolean auto = !(ics instanceof EntityPlayerMP);
 
-        if(auto && !FTBUConfigModules.backups.getAsBoolean())
+        if(auto && !FTBUConfigBackups.enabled.getAsBoolean())
         {
             return false;
         }

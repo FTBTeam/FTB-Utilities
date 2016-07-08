@@ -1,10 +1,11 @@
-package com.feed_the_beast.ftbu.world;
+package com.feed_the_beast.ftbu.world.chunks;
 
 import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorld;
 import com.feed_the_beast.ftbl.api.LangKey;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
+import com.feed_the_beast.ftbu.world.data.FTBUTeamData;
 import net.minecraft.util.math.BlockPos;
 
 public final class ClaimedChunk

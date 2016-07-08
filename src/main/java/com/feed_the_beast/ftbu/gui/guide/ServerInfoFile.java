@@ -18,11 +18,12 @@ import com.feed_the_beast.ftbu.FTBUTops;
 import com.feed_the_beast.ftbu.api.EventFTBUServerInfo;
 import com.feed_the_beast.ftbu.api.TopRegistry;
 import com.feed_the_beast.ftbu.client.FTBUActions;
+import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
-import com.feed_the_beast.ftbu.config.FTBUConfigModules;
-import com.feed_the_beast.ftbu.world.Backups;
-import com.feed_the_beast.ftbu.world.FTBUPlayerData;
-import com.feed_the_beast.ftbu.world.FTBUWorldData;
+import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
+import com.feed_the_beast.ftbu.world.backups.Backups;
+import com.feed_the_beast.ftbu.world.data.FTBUPlayerData;
+import com.feed_the_beast.ftbu.world.data.FTBUWorldData;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.command.ICommand;
@@ -80,12 +81,12 @@ public class ServerInfoFile extends InfoPage
             players.add(p.toMP());
         }
 
-        if(FTBUConfigModules.auto_restart.getAsBoolean())
+        if(FTBUConfigWorld.auto_restart.getAsBoolean())
         {
             println(FTBULang.timer_restart.textComponent(LMStringUtils.getTimeString(FTBUWorldData.getW(ForgeWorldMP.inst).toMP().restartMillis - System.currentTimeMillis())));
         }
 
-        if(FTBUConfigModules.backups.getAsBoolean())
+        if(FTBUConfigBackups.enabled.getAsBoolean())
         {
             println(FTBULang.timer_backup.textComponent(LMStringUtils.getTimeString(Backups.nextBackup - System.currentTimeMillis())));
         }

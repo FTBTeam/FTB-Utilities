@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.util.LMMod;
 import com.feed_the_beast.ftbu.config.FTBUConfig;
-import com.feed_the_beast.ftbu.config.FTBUConfigModules;
 import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
 import com.feed_the_beast.ftbu.handlers.FTBUChunkEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
@@ -12,7 +11,7 @@ import com.feed_the_beast.ftbu.handlers.FTBUWorldEventHandler;
 import com.feed_the_beast.ftbu.net.FTBUNetHandler;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.webapi.WebAPI;
-import com.feed_the_beast.ftbu.world.Backups;
+import com.feed_the_beast.ftbu.world.backups.Backups;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -77,7 +76,7 @@ public class FTBU
     {
         Ranks.instance().generateExampleFiles();
 
-        if(FTBUConfigModules.web_api.getAsBoolean() && FTBUConfigWebAPI.autostart.getAsBoolean())
+        if(FTBUConfigWebAPI.enabled.getAsBoolean() && FTBUConfigWebAPI.autostart.getAsBoolean())
         {
             WebAPI.INST.startAPI();
         }

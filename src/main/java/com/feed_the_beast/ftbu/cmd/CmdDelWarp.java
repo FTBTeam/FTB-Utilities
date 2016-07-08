@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbu.cmd;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbu.FTBULang;
-import com.feed_the_beast.ftbu.world.FTBUWorldData;
+import com.feed_the_beast.ftbu.world.data.FTBUWorldData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;

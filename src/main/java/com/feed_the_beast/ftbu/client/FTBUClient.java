@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.badges.BadgeRenderer;
 import com.feed_the_beast.ftbu.journeymap.IJMPluginHandler;
-import com.feed_the_beast.ftbu.world.FTBUWorldDataSP;
+import com.feed_the_beast.ftbu.world.data.FTBUWorldDataSP;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.settings.KeyConflictContext;

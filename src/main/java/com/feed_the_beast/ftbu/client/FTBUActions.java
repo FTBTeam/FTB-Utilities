@@ -14,7 +14,7 @@ import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.gui.GuiClaimChunks;
 import com.feed_the_beast.ftbu.gui.guide.ClientGuideFile;
 import com.feed_the_beast.ftbu.net.MessageRequestServerInfo;
-import com.feed_the_beast.ftbu.world.FTBUWorldData;
+import com.feed_the_beast.ftbu.world.data.FTBUWorldData;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

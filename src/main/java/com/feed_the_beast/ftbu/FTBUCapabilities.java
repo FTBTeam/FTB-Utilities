@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu;
 
-import com.feed_the_beast.ftbu.world.FTBUPlayerData;
-import com.feed_the_beast.ftbu.world.FTBUTeamData;
-import com.feed_the_beast.ftbu.world.FTBUWorldData;
+import com.feed_the_beast.ftbu.world.data.FTBUPlayerData;
+import com.feed_the_beast.ftbu.world.data.FTBUTeamData;
+import com.feed_the_beast.ftbu.world.data.FTBUWorldData;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;

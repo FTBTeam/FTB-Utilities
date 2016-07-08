@@ -1,8 +1,8 @@
-package com.feed_the_beast.ftbu.world;
+package com.feed_the_beast.ftbu.world.data;
 
 import com.feed_the_beast.ftbl.api.ForgePlayer;
-import gnu.trove.map.TIntIntMap;
 import com.latmod.lib.util.LMTroveUtils;
+import gnu.trove.map.TIntIntMap;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**

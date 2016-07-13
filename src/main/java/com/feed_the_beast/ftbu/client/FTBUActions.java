@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.ForgePlayerSP;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
+import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.GuiScreenRegistry;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButton;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
@@ -15,6 +16,7 @@ import com.feed_the_beast.ftbu.gui.GuiClaimChunks;
 import com.feed_the_beast.ftbu.gui.guide.ClientGuideFile;
 import com.feed_the_beast.ftbu.net.MessageRequestServerInfo;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldData;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -27,7 +29,7 @@ public class FTBUActions
         @SideOnly(Side.CLIENT)
         public void onClicked(ForgePlayerSP player)
         {
-            FTBLibClient.playClickSound();
+            GuiLM.playClickSound();
             ClientGuideFile.openClientGui(true);
         }
 
@@ -46,7 +48,7 @@ public class FTBUActions
         @SideOnly(Side.CLIENT)
         public void onClicked(ForgePlayerSP player)
         {
-            FTBLibClient.mc().displayGuiScreen(new MessageRequestServerInfo().openGui());
+            Minecraft.getMinecraft().displayGuiScreen(new MessageRequestServerInfo().openGui());
         }
 
         @Override

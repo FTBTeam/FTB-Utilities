@@ -1,13 +1,13 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
 import com.feed_the_beast.ftbu.client.FTBUActions;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
@@ -38,7 +38,7 @@ public class ClientGuideFile extends InfoPage
         }
         if(open)
         {
-            FTBLibClient.mc().displayGuiScreen(clientGuideGui);
+            Minecraft.getMinecraft().displayGuiScreen(clientGuideGui);
         }
 
         return clientGuideGui;

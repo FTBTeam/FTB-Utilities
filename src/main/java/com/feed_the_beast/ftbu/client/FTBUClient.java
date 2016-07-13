@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.badges.BadgeRenderer;
 import com.feed_the_beast.ftbu.journeymap.IJMPluginHandler;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldDataSP;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.settings.KeyConflictContext;
@@ -45,7 +46,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
     @Override
     public void postInit()
     {
-        Map<String, RenderPlayer> skinMap = FTBLibClient.mc().getRenderManager().getSkinMap();
+        Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
         RenderPlayer render = skinMap.get("default");
         render.addLayer(BadgeRenderer.instance);
         render = skinMap.get("slim");

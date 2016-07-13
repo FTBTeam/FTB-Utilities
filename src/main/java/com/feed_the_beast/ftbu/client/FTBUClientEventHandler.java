@@ -125,7 +125,7 @@ public class FTBUClientEventHandler
     {
         if(renderChunkBounds || renderLightValues)
         {
-            Minecraft mc = FTBLibClient.mc();
+            Minecraft mc = Minecraft.getMinecraft();
             Tessellator tessellator = Tessellator.getInstance();
             VertexBuffer buffer = tessellator.getBuffer();
 

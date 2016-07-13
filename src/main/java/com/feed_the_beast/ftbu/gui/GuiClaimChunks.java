@@ -21,6 +21,7 @@ import com.feed_the_beast.ftbu.world.data.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.data.FTBUPlayerDataSP;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldDataSP;
 import com.latmod.lib.math.MathHelperLM;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
@@ -94,7 +95,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
                 }
             }
 
-            FTBLibClient.playClickSound();
+            GuiLM.playClickSound();
         }
 
         @Override
@@ -192,7 +193,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             @Override
             public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
             {
-                FTBLibClient.playClickSound();
+                GuiLM.playClickSound();
                 closeGui();
             }
         };
@@ -206,7 +207,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
                 thread.start();
                 new MessageAreaRequest(startX, startZ, tiles_gui, tiles_gui).sendToServer();
                 new MessageRequestSelfUpdate().sendToServer();
-                FTBLibClient.playClickSound();
+                GuiLM.playClickSound();
             }
         };
 
@@ -215,9 +216,9 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             @Override
             public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
             {
-                FTBLibClient.playClickSound();
+                GuiLM.playClickSound();
                 String s = GuiScreen.isShiftKeyDown() ? FTBULang.button_claims_unclaim_all_q.translate() : FTBULang.button_claims_unclaim_all_dim_q.translateFormatted(currentDimName);
-                FTBLibClient.mc().displayGuiScreen(new GuiYesNo(GuiClaimChunks.this, s, "", GuiScreen.isShiftKeyDown() ? 1 : 0));
+                Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo(GuiClaimChunks.this, s, "", GuiScreen.isShiftKeyDown() ? 1 : 0));
             }
 
             @Override
@@ -279,12 +280,6 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
     @Override
     public void drawBackground()
     {
-        if(currentDim != FTBLibClient.getDim())
-        {
-            mc.thePlayer.closeScreen();
-            return;
-        }
-
         super.drawBackground();
 
         if(textureID == -1)

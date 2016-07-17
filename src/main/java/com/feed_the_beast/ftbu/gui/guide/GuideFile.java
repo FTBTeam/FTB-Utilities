@@ -19,13 +19,13 @@ import java.util.Map;
  */
 public class GuideFile extends FinalIDObject implements IResourceProvider
 {
-    public final GuideInfo info;
+    public final Guide info;
     public final String resource_path;
     public final Map<String, LMConnection> resources;
     public final Map<Item, String> item_map;
     public final InfoPage guide;
 
-    public GuideFile(GuideInfo i, JsonObject o)
+    public GuideFile(Guide i, JsonObject o)
     {
         super(i.getID());
         info = i;

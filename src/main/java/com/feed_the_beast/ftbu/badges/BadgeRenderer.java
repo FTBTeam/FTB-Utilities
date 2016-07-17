@@ -14,9 +14,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 
 @SideOnly(Side.CLIENT)
-public class BadgeRenderer implements LayerRenderer<AbstractClientPlayer>
+public enum BadgeRenderer implements LayerRenderer<AbstractClientPlayer>
 {
-    public static final BadgeRenderer instance = new BadgeRenderer();
+    INSTANCE;
 
     @Override
     public void doRenderLayer(@Nonnull AbstractClientPlayer ep, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)

@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 @SideOnly(Side.CLIENT)
 public class ClientGuideFile extends InfoPage
 {
-    public static final ClientGuideFile instance = new ClientGuideFile("ClientConfig");
+    public static final ClientGuideFile INSTANCE = new ClientGuideFile("ClientConfig");
 
     public static GuiScreen clientGuideGui = null;
 
@@ -33,8 +33,8 @@ public class ClientGuideFile extends InfoPage
     {
         if(clientGuideGui == null)
         {
-            instance.reload();
-            clientGuideGui = new GuiInfo(null, ClientGuideFile.instance).getWrapper();
+            INSTANCE.reload();
+            clientGuideGui = new GuiInfo(null, ClientGuideFile.INSTANCE).getWrapper();
         }
         if(open)
         {
@@ -66,8 +66,8 @@ public class ClientGuideFile extends InfoPage
 
     public void reload()
     {
-        instance.clear();
-        instance.printlnText("WIP!");
+        INSTANCE.clear();
+        INSTANCE.printlnText("WIP!");
     }
 
     /*

@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.api;
 
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbu.gui.guide.ServerInfoFile;
+import com.feed_the_beast.ftbu.world.ServerInfoFile;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class EventFTBUServerInfo extends Event

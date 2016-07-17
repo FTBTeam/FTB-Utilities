@@ -37,9 +37,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
     {
         ClientConfigRegistry.addGroup("ftbu", FTBUClient.class);
         FTBUActions.init();
-
         FTBUWorldDataSP.reloadGlobalBadges();
-
         MinecraftForge.EVENT_BUS.register(new FTBUClientEventHandler());
     }
 
@@ -48,10 +46,9 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
     {
         Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
         RenderPlayer render = skinMap.get("default");
-        render.addLayer(BadgeRenderer.instance);
+        render.addLayer(BadgeRenderer.INSTANCE);
         render = skinMap.get("slim");
-        render.addLayer(BadgeRenderer.instance);
-
+        render.addLayer(BadgeRenderer.INSTANCE);
         //GuideRepoList.refresh();
     }
 

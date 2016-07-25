@@ -23,7 +23,7 @@ plugins {
 */
 
 version = "1.9.4-" + version_mod
-group = "com.feed_the_beast.ftbu"
+group = "com.feed_the_beast.ftbutilities"
 archivesBaseName = "FTBUtilities"
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8

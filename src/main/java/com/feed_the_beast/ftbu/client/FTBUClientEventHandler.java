@@ -158,7 +158,7 @@ public class FTBUClientEventHandler
                 ClaimedChunk chunk = FTBUWorldDataSP.getChunk(new ChunkDimPos(mc.thePlayer.dimension, x, z));
 
                 chunkBorderRenderer.setSize(x * 16D + d, 0D, z * 16D + d, x * 16D + 16D - d, 256D, z * 16D + 16D - d);
-                chunkBorderRenderer.color.setF((chunk == null) ? 0xFF00A010 : (chunk.owner.hasTeam() ? chunk.owner.getTeam().getColor().color : 0), 0.6F);
+                chunkBorderRenderer.color.set((chunk == null) ? 0xFF00A010 : (chunk.owner.hasTeam() ? chunk.owner.getTeam().getColor().color : 0), 0.6F);
                 chunkBorderRenderer.renderSides();
 
                 GlStateManager.cullFace(GlStateManager.CullFace.BACK);
@@ -170,7 +170,7 @@ public class FTBUClientEventHandler
                     for(int cx = x - 2; cx <= x + 2; cx++)
                     {
                         chunk = FTBUWorldDataSP.getChunk(new ChunkDimPos(mc.thePlayer.dimension, cx, cz));
-                        chunkBorderRenderer.color.setF((chunk == null) ? 0xFF00A010 : (chunk.owner.hasTeam() ? chunk.owner.getTeam().getColor().color : 0), 1F);
+                        chunkBorderRenderer.color.set((chunk == null) ? 0xFF00A010 : (chunk.owner.hasTeam() ? chunk.owner.getTeam().getColor().color : 0), 1F);
 
                         buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
                         buffer.pos(cx * 16D + 8D, 0D, cz * 16D + 8D).color(chunkBorderRenderer.color.red, chunkBorderRenderer.color.green, chunkBorderRenderer.color.blue, 1F).endVertex();

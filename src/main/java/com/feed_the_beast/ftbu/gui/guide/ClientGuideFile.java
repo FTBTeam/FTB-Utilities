@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
-import com.feed_the_beast.ftbu.client.FTBUActions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -26,7 +25,7 @@ public class ClientGuideFile extends InfoPage
     public ClientGuideFile(String id)
     {
         super(id);
-        setTitle(FTBUActions.GUIDE.displayName);
+        //setTitle(FTBUActions.GUIDE.displayName);
     }
 
     public static GuiScreen openClientGui(boolean open)

@@ -8,7 +8,7 @@ import com.feed_the_beast.ftbl.api.cmd.ICustomCommandInfo;
 import com.feed_the_beast.ftbl.api.info.InfoExtendedTextLine;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.api.notification.ClickAction;
-import com.feed_the_beast.ftbl.api.notification.ClickActionType;
+import com.feed_the_beast.ftbl.api.notification.ClickActionTypeRegistry;
 import com.feed_the_beast.ftbl.api.permissions.Context;
 import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.util.FTBLib;
@@ -17,7 +17,6 @@ import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.FTBUTops;
 import com.feed_the_beast.ftbu.api.EventFTBUServerInfo;
 import com.feed_the_beast.ftbu.api.TopRegistry;
-import com.feed_the_beast.ftbu.client.FTBUActions;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
@@ -44,7 +43,7 @@ public class ServerInfoFile extends InfoPage
 {
     public static class CachedInfo
     {
-        public static final InfoPage main = new InfoPage("server_info").setTitle(FTBUActions.SERVER_INFO.displayName);
+        public static final InfoPage main = new InfoPage("server_info"); //TODO: Lang
 
         public static void reload()
         {
@@ -241,7 +240,7 @@ public class ServerInfoFile extends InfoPage
         for(String s : FTBUWorldData.getW(ForgeWorldMP.inst).toMP().listWarps())
         {
             line = new InfoExtendedTextLine(page, new TextComponentString(s));
-            line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("ftb warp " + s)));
+            line.setClickAction(new ClickAction(ClickActionTypeRegistry.CMD, new JsonPrimitive("ftb warp " + s)));
             page.text.add(line);
         }
 
@@ -250,7 +249,7 @@ public class ServerInfoFile extends InfoPage
         for(String s : FTBUPlayerData.get(self).toMP().listHomes())
         {
             line = new InfoExtendedTextLine(page, new TextComponentString(s));
-            line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("ftb home " + s)));
+            line.setClickAction(new ClickAction(ClickActionTypeRegistry.CMD, new JsonPrimitive("ftb home " + s)));
             page.text.add(line);
         }
 

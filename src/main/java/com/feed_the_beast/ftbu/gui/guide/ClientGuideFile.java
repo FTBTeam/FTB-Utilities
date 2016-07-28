@@ -54,7 +54,7 @@ public class ClientGuideFile extends InfoPage
             }
 
             @Override
-            public void renderWidget(GuiLM gui)
+            public void renderWidget(@Nonnull GuiLM gui)
             {
                 GlStateManager.enableTexture2D();
                 GlStateManager.color(1F, 1F, 1F, 1F);

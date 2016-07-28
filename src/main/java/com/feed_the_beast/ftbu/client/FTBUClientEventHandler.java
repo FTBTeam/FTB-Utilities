@@ -1,9 +1,7 @@
 package com.feed_the_beast.ftbu.client;
 
-import com.feed_the_beast.ftbl.api.FTBLibCapabilities;
 import com.feed_the_beast.ftbl.api.client.CubeRenderer;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.client.LMFrustumUtils;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBUFinals;
@@ -11,18 +9,14 @@ import com.feed_the_beast.ftbu.gui.guide.ClientGuideFile;
 import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldDataSP;
 import com.latmod.lib.math.MathHelperLM;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -71,26 +65,16 @@ public class FTBUClientEventHandler
         }
     }
 
+    /*
     @SubscribeEvent
     public void onTooltip(ItemTooltipEvent e)
     {
-        if(e.getItemStack().hasCapability(FTBLibCapabilities.PAINTER_ITEM, null))
-        {
-            IBlockState paint = e.getItemStack().getCapability(FTBLibCapabilities.PAINTER_ITEM, null).getPaint();
-
-            if(paint != null)
-            {
-                e.getToolTip().add(String.valueOf(TextFormatting.WHITE) + TextFormatting.BOLD + new ItemStack(paint.getBlock(), 1, paint.getBlock().getMetaFromState(paint)).getDisplayName() + TextFormatting.RESET);
-            }
-        }
-
-        /*
         if(FTBUConfigGeneral.isItemBanned(item, e.itemStack.getItemDamage()))
         {
             e.toolTip.add(EnumChatFormatting.RED + "Banned item");
         }
-        */
     }
+    */
 
     @SubscribeEvent
     public void onKeyEvent(InputEvent.KeyInputEvent event)
@@ -130,7 +114,7 @@ public class FTBUClientEventHandler
             VertexBuffer buffer = tessellator.getBuffer();
 
             GlStateManager.pushMatrix();
-            GlStateManager.translate(-LMFrustumUtils.renderX, -LMFrustumUtils.renderY, -LMFrustumUtils.renderZ);
+            GlStateManager.translate(-FTBLibClient.renderX, -FTBLibClient.renderY, -FTBLibClient.renderZ);
 
             FTBLibClient.pushMaxBrightness();
 
@@ -147,8 +131,8 @@ public class FTBUClientEventHandler
             {
                 GlStateManager.cullFace(GlStateManager.CullFace.FRONT);
 
-                int x = MathHelperLM.chunk(LMFrustumUtils.playerX);
-                int z = MathHelperLM.chunk(LMFrustumUtils.playerZ);
+                int x = MathHelperLM.chunk(FTBLibClient.playerX);
+                int z = MathHelperLM.chunk(FTBLibClient.playerZ);
                 double d = 0.007D;
 
                 FTBLibClient.setTexture(CHUNK_BORDER_TEXTURE);
@@ -183,9 +167,9 @@ public class FTBUClientEventHandler
                 GlStateManager.enableTexture2D();
             }
 
-            if(renderLightValues && LMFrustumUtils.playerY >= 0D)
+            if(renderLightValues && FTBLibClient.playerY >= 0D)
             {
-                if(lastY == -1D || MathHelperLM.distSq(LMFrustumUtils.playerX, LMFrustumUtils.playerY, LMFrustumUtils.playerZ, lastX + 0.5D, lastY + 0.5D, lastZ + 0.5D) >= MathHelperLM.SQRT_2 * 2D)
+                if(lastY == -1D || MathHelperLM.distSq(FTBLibClient.playerX, FTBLibClient.playerY, FTBLibClient.playerZ, lastX + 0.5D, lastY + 0.5D, lastZ + 0.5D) >= MathHelperLM.SQRT_2 * 2D)
                 {
                     needsLightUpdate = true;
                 }
@@ -195,9 +179,9 @@ public class FTBUClientEventHandler
                     needsLightUpdate = false;
                     lightList.clear();
 
-                    lastX = MathHelperLM.floor(LMFrustumUtils.playerX);
-                    lastY = MathHelperLM.floor(LMFrustumUtils.playerY);
-                    lastZ = MathHelperLM.floor(LMFrustumUtils.playerZ);
+                    lastX = MathHelperLM.floor(FTBLibClient.playerX);
+                    lastY = MathHelperLM.floor(FTBLibClient.playerY);
+                    lastZ = MathHelperLM.floor(FTBLibClient.playerZ);
 
                     for(int by = lastY - 20; by <= lastY + 3; by++)
                     {
@@ -253,11 +237,11 @@ public class FTBUClientEventHandler
                             double by = pos.getY() + 0.14D;
                             double bz = pos.getZ() + 0.5D;
 
-                            if(MathHelperLM.distSq(LMFrustumUtils.playerX, LMFrustumUtils.playerY, LMFrustumUtils.playerZ, bx, by, bz) <= 144D)
+                            if(MathHelperLM.distSq(FTBLibClient.playerX, FTBLibClient.playerY, FTBLibClient.playerZ, bx, by, bz) <= 144D)
                             {
                                 GlStateManager.pushMatrix();
                                 GlStateManager.translate(bx, by, bz);
-                                GlStateManager.rotate((float) (-Math.atan2(bz - LMFrustumUtils.playerZ, bx - LMFrustumUtils.playerX) * 180D / Math.PI) + 90F, 0F, 1F, 0F);
+                                GlStateManager.rotate((float) (-Math.atan2(bz - FTBLibClient.playerZ, bx - FTBLibClient.playerX) * 180D / Math.PI) + 90F, 0F, 1F, 0F);
                                 GlStateManager.rotate(40F, 1F, 0F, 0F);
 
                                 float scale = 1F / 32F;

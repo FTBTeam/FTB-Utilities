@@ -64,6 +64,10 @@ public final class ClaimedChunk
         {
             return true;
         }*/
+        else if(p.isOnline() && p.getPlayer().capabilities.isCreativeMode)
+        {
+            return true;
+        }
 
         return owner.getTeam().getStatus(p).isAlly();
     }

@@ -13,13 +13,11 @@ import com.feed_the_beast.ftbu.cmd.CmdBackup;
 import com.feed_the_beast.ftbu.cmd.CmdChunks;
 import com.feed_the_beast.ftbu.cmd.CmdDelHome;
 import com.feed_the_beast.ftbu.cmd.CmdDelWarp;
-import com.feed_the_beast.ftbu.cmd.CmdGetRank;
 import com.feed_the_beast.ftbu.cmd.CmdHome;
 import com.feed_the_beast.ftbu.cmd.CmdInv;
 import com.feed_the_beast.ftbu.cmd.CmdRestart;
 import com.feed_the_beast.ftbu.cmd.CmdServerInfo;
 import com.feed_the_beast.ftbu.cmd.CmdSetHome;
-import com.feed_the_beast.ftbu.cmd.CmdSetRank;
 import com.feed_the_beast.ftbu.cmd.CmdSetWarp;
 import com.feed_the_beast.ftbu.cmd.CmdSpawn;
 import com.feed_the_beast.ftbu.cmd.CmdTplast;
@@ -60,7 +58,7 @@ public class FTBUServerEventHandler
     }
 
     @SubscribeEvent
-    public void onReloaded(ReloadEvent e)
+    public void onReloadEvent(ReloadEvent e)
     {
         if(e.world.getSide().isServer())
         {
@@ -81,7 +79,7 @@ public class FTBUServerEventHandler
     }
 
     @SubscribeEvent
-    public void registerAdminCmds(RegisterFTBCommandsEvent event)
+    public void onRegisterFTBCommandsEvent(RegisterFTBCommandsEvent event)
     {
         if(event.isDedi)
         {
@@ -102,13 +100,13 @@ public class FTBUServerEventHandler
         event.add(new CmdHome());
         event.add(new CmdSetHome());
         event.add(new CmdDelHome());
-        event.add(new CmdGetRank());
-        event.add(new CmdSetRank());
+        //event.add(new CmdGetRank());
+        //event.add(new CmdSetRank());
         event.add(new CmdChunks());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChatEvent(ServerChatEvent e)
+    public void onServerChatEvent(ServerChatEvent e)
     {
         String[] msg = FTBLib.removeFormatting(e.getMessage()).split(" "); // https://github.com/LatvianModder
 

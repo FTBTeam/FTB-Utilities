@@ -71,7 +71,7 @@ public class FTBUTeamDataMP extends FTBUTeamData implements INBTSerializable<NBT
 
                         if(ai.length >= 3)
                         {
-                            ClaimedChunk chunk = new ClaimedChunk(ForgeWorldMP.inst, player, new ChunkDimPos(ai[0], ai[1], ai[2]));
+                            ClaimedChunk chunk = new ClaimedChunk(player, new ChunkDimPos(ai[1], ai[2], ai[0]));
 
                             if(ai.length >= 4)
                             {
@@ -121,8 +121,8 @@ public class FTBUTeamDataMP extends FTBUTeamData implements INBTSerializable<NBT
                     int ai[] = c.loaded ? new int[4] : new int[3];
 
                     ai[0] = c.pos.dim;
-                    ai[1] = c.pos.chunkXPos;
-                    ai[2] = c.pos.chunkZPos;
+                    ai[1] = c.pos.posX;
+                    ai[2] = c.pos.posZ;
 
                     if(c.loaded)
                     {

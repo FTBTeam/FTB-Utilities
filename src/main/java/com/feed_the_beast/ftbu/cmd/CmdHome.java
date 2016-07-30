@@ -80,7 +80,7 @@ public class CmdHome extends CommandLM
             throw FTBULang.home_not_set.commandError(args[0]);
         }
 
-        if(ep.dimension != pos.getDim() && !PermissionAPI.hasPermission(ep.getGameProfile(), FTBUPermissions.HOMES_CROSS_DIM, true, new Context(ep)))
+        if(ep.dimension != pos.dim && !PermissionAPI.hasPermission(ep.getGameProfile(), FTBUPermissions.HOMES_CROSS_DIM, true, new Context(ep)))
         {
             throw FTBULang.home_cross_dim.commandError();
         }

@@ -59,7 +59,7 @@ public class CmdChunks extends CommandSubBase
             if(FTBUWorldDataMP.claimChunk(p, pos))
             {
                 new Notification("modify_chunk").addText(new TextComponentString("Chunk Claimed")).sendTo(ep); //TODO: Lang
-                new MessageAreaUpdate(pos.chunkXPos, pos.chunkZPos, pos.dim, 1, 1).sendTo(ep);
+                new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
             }
             else
             {
@@ -91,7 +91,7 @@ public class CmdChunks extends CommandSubBase
 
             if(args.length >= 2)
             {
-                pos = new ChunkDimPos(ep.dimension, parseInt(args[0]), parseInt(args[1]));
+                pos = new ChunkDimPos(parseInt(args[0]), parseInt(args[1]), ep.dimension);
             }
             else
             {
@@ -106,7 +106,7 @@ public class CmdChunks extends CommandSubBase
             if(FTBUWorldDataMP.unclaimChunk(p, pos))
             {
                 new Notification("modify_chunk").addText(new TextComponentString("Chunk Unclaimed")).sendTo(ep); //TODO: Lang
-                new MessageAreaUpdate(pos.chunkXPos, pos.chunkZPos, pos.dim, 1, 1).sendTo(ep);
+                new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
             }
             else
             {
@@ -138,7 +138,7 @@ public class CmdChunks extends CommandSubBase
 
             if(args.length >= 2)
             {
-                pos = new ChunkDimPos(ep.dimension, parseInt(args[0]), parseInt(args[1]));
+                pos = new ChunkDimPos(parseInt(args[0]), parseInt(args[1]), ep.dimension);
             }
             else
             {
@@ -148,7 +148,7 @@ public class CmdChunks extends CommandSubBase
             if(FTBUWorldDataMP.setLoaded(p, pos, true))
             {
                 new Notification("modify_chunk").addText(new TextComponentString("Chunk Loaded")).sendTo(ep); //TODO: Lang
-                new MessageAreaUpdate(pos.chunkXPos, pos.chunkZPos, pos.dim, 1, 1).sendTo(ep);
+                new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
             }
             else
             {
@@ -180,7 +180,7 @@ public class CmdChunks extends CommandSubBase
 
             if(args.length >= 2)
             {
-                pos = new ChunkDimPos(ep.dimension, parseInt(args[0]), parseInt(args[1]));
+                pos = new ChunkDimPos(parseInt(args[0]), parseInt(args[1]), ep.dimension);
             }
             else
             {
@@ -190,7 +190,7 @@ public class CmdChunks extends CommandSubBase
             if(FTBUWorldDataMP.setLoaded(p, pos, false))
             {
                 new Notification("modify_chunk").addText(new TextComponentString("Chunk Unloaded")).sendTo(ep); //TODO: Lang
-                new MessageAreaUpdate(pos.chunkXPos, pos.chunkZPos, pos.dim, 1, 1).sendTo(ep);
+                new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
             }
             else
             {

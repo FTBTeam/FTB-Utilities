@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbu.world.chunks;
 
 import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbl.api.ForgeWorld;
 import com.feed_the_beast.ftbl.api.LangKey;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbu.world.data.FTBUTeamData;
@@ -14,22 +13,20 @@ public final class ClaimedChunk
     public static final LangKey LANG_CLAIMED = new LangKey("ftbu.chunktype.claimed");
     public static final LangKey LANG_LOADED = new LangKey("ftbu.chunktype.loaded");
 
-    public final ForgeWorld world;
     public final ChunkDimPos pos;
     public final ForgePlayer owner;
     public boolean loaded, forced;
 
-    public ClaimedChunk(ForgeWorld w, ForgePlayer o, ChunkDimPos p)
+    public ClaimedChunk(ForgePlayer o, ChunkDimPos p)
     {
-        world = w;
-        pos = p;
         owner = o;
+        pos = p;
     }
 
     @Override
     public boolean equals(Object o)
     {
-        return o != null && (o == this || (o instanceof ClaimedChunk && pos.equalsChunk(((ClaimedChunk) o).pos)));
+        return o != null && (o == this || (o instanceof ClaimedChunk && pos.equalsChunkDimPos(((ClaimedChunk) o).pos)));
     }
 
     @Override

@@ -115,12 +115,12 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         int minZ = MathHelperLM.chunk(c.getZ() + 0.5D - radius);
         int maxX = MathHelperLM.chunk(c.getX() + 0.5D + radius);
         int maxZ = MathHelperLM.chunk(c.getZ() + 0.5D + radius);
-        return pos.chunkXPos >= minX && pos.chunkXPos <= maxX && pos.chunkZPos >= minZ && pos.chunkZPos <= maxZ;
+        return pos.posX >= minX && pos.posX <= maxX && pos.posZ >= minZ && pos.posZ <= maxZ;
     }
 
     public static boolean isInSpawnD(int dim, double x, double z)
     {
-        return dim == 0 && isInSpawn(new ChunkDimPos(dim, MathHelperLM.chunk(x), MathHelperLM.chunk(z)));
+        return dim == 0 && isInSpawn(new ChunkDimPos(MathHelperLM.chunk(x), MathHelperLM.chunk(z), dim));
     }
 
     public static boolean isDimensionBlacklisted(GameProfile profile, int dim)
@@ -140,7 +140,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
 
     public static boolean allowExplosion(World world, Explosion explosion)
     {
-        ChunkDimPos pos = new ChunkDimPos(world.provider.getDimension(), MathHelperLM.chunk(explosion.getPosition().xCoord), MathHelperLM.chunk(explosion.getPosition().zCoord));
+        ChunkDimPos pos = new ChunkDimPos(MathHelperLM.chunk(explosion.getPosition().xCoord), MathHelperLM.chunk(explosion.getPosition().zCoord), world.provider.getDimension());
 
         if(pos.dim == 0 && FTBUConfigGeneral.safe_spawn.getAsBoolean() && FTBUWorldDataMP.isInSpawn(pos))
         {
@@ -206,7 +206,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
             return false;
         }
 
-        chunks.put(pos, new ClaimedChunk(player.getWorld(), player, pos));
+        chunks.put(pos, new ClaimedChunk(player, pos));
         player.sendUpdate();
 
         return true;
@@ -284,7 +284,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
 
             if(player.getPlayer() != null)
             {
-                new MessageAreaUpdate(pos.chunkXPos, pos.chunkZPos, pos.dim, 1, 1).sendTo(player.toMP().getPlayer());
+                new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(player.toMP().getPlayer());
                 player.sendUpdate();
             }
 

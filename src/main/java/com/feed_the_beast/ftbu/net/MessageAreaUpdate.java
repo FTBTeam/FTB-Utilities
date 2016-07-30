@@ -33,7 +33,7 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
         {
             for(int z1 = z; z1 < z + sz; z1++)
             {
-                ChunkDimPos pos = new ChunkDimPos(d, x1, z1);
+                ChunkDimPos pos = new ChunkDimPos(x1, z1, d);
                 types.put(pos, FTBUWorldDataMP.chunks.getChunk(pos));
             }
         }
@@ -57,7 +57,7 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
         {
             int x = io.readInt();
             int z = io.readInt();
-            ChunkDimPos pos = new ChunkDimPos(dim, x, z);
+            ChunkDimPos pos = new ChunkDimPos(x, z, dim);
             boolean b = io.readBoolean();
 
             if(b)
@@ -66,7 +66,7 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
 
                 if(owner != null)
                 {
-                    ClaimedChunk chunk = new ClaimedChunk(ForgeWorldSP.inst, owner, pos);
+                    ClaimedChunk chunk = new ClaimedChunk(owner, pos);
                     chunk.loaded = io.readBoolean();
                     types.put(pos, chunk);
                 }
@@ -86,8 +86,8 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
 
         for(Map.Entry<ChunkDimPos, ClaimedChunk> e : types.entrySet())
         {
-            io.writeInt(e.getKey().chunkXPos);
-            io.writeInt(e.getKey().chunkZPos);
+            io.writeInt(e.getKey().posX);
+            io.writeInt(e.getKey().posZ);
 
             if(e.getValue() == null)
             {

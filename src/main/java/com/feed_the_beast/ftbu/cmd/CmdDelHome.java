@@ -57,7 +57,9 @@ public class CmdDelHome extends CommandLM
         {
             FTBULang.home_del.printChat(ics, args[0]);
         }
-
-        throw FTBULang.home_not_set.commandError(args[0]);
+        else
+        {
+            throw FTBULang.home_not_set.commandError(args[0]);
+        }
     }
 }

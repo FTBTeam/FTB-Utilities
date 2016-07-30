@@ -54,7 +54,7 @@ public class JMPluginHandler implements IJMPluginHandler
                 {
                     ForgeTeam team = chunk.owner.getTeam();
 
-                    MapPolygon poly = PolygonHelper.createChunkPolygon(pos.chunkXPos, 100, pos.chunkZPos);
+                    MapPolygon poly = PolygonHelper.createChunkPolygon(pos.posX, 100, pos.posZ);
                     ShapeProperties shapeProperties = new ShapeProperties();
 
                     shapeProperties.setFillOpacity(0.3F);
@@ -80,7 +80,7 @@ public class JMPluginHandler implements IJMPluginHandler
 
                     shapeProperties.setStrokeColor(0x000000);
 
-                    PolygonOverlay chunkOverlay = new PolygonOverlay(FTBUFinals.MOD_ID, "claimed_" + pos.dim + '_' + pos.chunkXPos + '_' + pos.chunkZPos, pos.dim, shapeProperties, poly);
+                    PolygonOverlay chunkOverlay = new PolygonOverlay(FTBUFinals.MOD_ID, "claimed_" + pos.dim + '_' + pos.posX + '_' + pos.posZ, pos.dim, shapeProperties, poly);
                     chunkOverlay.setOverlayGroupName("Claimed Chunks").setTitle(sb.toString());
                     polygons.put(pos, chunkOverlay);
                     clientAPI.show(chunkOverlay);

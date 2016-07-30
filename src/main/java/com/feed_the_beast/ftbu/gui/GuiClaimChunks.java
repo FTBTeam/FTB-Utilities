@@ -61,7 +61,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             super(x, y, 16, 16);
             posX += (i % tiles_gui) * width;
             posY += (i / tiles_gui) * height;
-            chunkPos = new ChunkDimPos(currentDim, startX + (i % tiles_gui), startZ + (i / tiles_gui));
+            chunkPos = new ChunkDimPos(startX + (i % tiles_gui), startZ + (i / tiles_gui), currentDim);
         }
 
         @Override
@@ -76,22 +76,22 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             {
                 if(GuiScreen.isShiftKeyDown())
                 {
-                    FTBLibClient.execClientCommand("/ftb chunks load " + chunkPos.chunkXPos + ' ' + chunkPos.chunkZPos, false);
+                    FTBLibClient.execClientCommand("/ftb chunks load " + chunkPos.posX + ' ' + chunkPos.posZ, false);
                 }
                 else
                 {
-                    FTBLibClient.execClientCommand("/ftb chunks claim " + chunkPos.chunkXPos + ' ' + chunkPos.chunkZPos, false);
+                    FTBLibClient.execClientCommand("/ftb chunks claim " + chunkPos.posX + ' ' + chunkPos.posZ, false);
                 }
             }
             else if(button.isRight())
             {
                 if(GuiScreen.isShiftKeyDown())
                 {
-                    FTBLibClient.execClientCommand("/ftb chunks unload " + chunkPos.chunkXPos + ' ' + chunkPos.chunkZPos, false);
+                    FTBLibClient.execClientCommand("/ftb chunks unload " + chunkPos.posX + ' ' + chunkPos.posZ, false);
                 }
                 else
                 {
-                    FTBLibClient.execClientCommand("/ftb chunks unclaim " + chunkPos.chunkXPos + ' ' + chunkPos.chunkZPos, false);
+                    FTBLibClient.execClientCommand("/ftb chunks unclaim " + chunkPos.posX + ' ' + chunkPos.posZ, false);
                 }
             }
 

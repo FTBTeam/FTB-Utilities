@@ -127,7 +127,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
                     {
                         if(c.loaded && c.pos.dim == dim)
                         {
-                            ForgeChunkManager.forceChunk(t, c.pos);
+                            ForgeChunkManager.forceChunk(t, c.pos.getChunkPos());
                         }
                     }
                 }
@@ -228,12 +228,12 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
                     {
                         if(isLoaded)
                         {
-                            ForgeChunkManager.forceChunk(ticket, c.pos);
+                            ForgeChunkManager.forceChunk(ticket, c.pos.getChunkPos());
                             //loaded++;
                         }
                         else
                         {
-                            ForgeChunkManager.unforceChunk(ticket, c.pos);
+                            ForgeChunkManager.unforceChunk(ticket, c.pos.getChunkPos());
                             //unloaded++;
                         }
 

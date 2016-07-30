@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 
 @SideOnly(Side.CLIENT)
-public enum BadgeRenderer implements LayerRenderer<AbstractClientPlayer>
+public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
 {
     INSTANCE;
 

@@ -55,14 +55,14 @@ public class GuideFile extends FinalIDObject implements IResourceProvider
             }
         }
 
-        guide = createPage(i.getID(), o.get("guide").getAsJsonObject());
+        guide = createPage(o.get("guide").getAsJsonObject());
         guide.cleanup();
         guide.resourceProvider = this;
     }
 
-    private InfoPage createPage(String id, JsonObject o)
+    private InfoPage createPage(JsonObject o)
     {
-        InfoPage page = new InfoPage(id);
+        InfoPage page = new InfoPage();
 
         if(o.has("name"))
         {
@@ -81,7 +81,7 @@ public class GuideFile extends FinalIDObject implements IResourceProvider
         {
             for(Map.Entry<String, JsonElement> e : o.get("pages").getAsJsonObject().entrySet())
             {
-                page.addSub(createPage(e.getKey(), e.getValue().getAsJsonObject()));
+                page.addSub(e.getKey(), createPage(e.getValue().getAsJsonObject()));
             }
         }
 

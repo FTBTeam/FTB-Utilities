@@ -42,6 +42,6 @@ public class MessageRequestServerInfo extends MessageToServer<MessageRequestServ
     public void onMessage(MessageRequestServerInfo m, EntityPlayerMP ep)
     {
         ForgePlayerMP owner = ForgeWorldMP.inst.getPlayer(ep);
-        new ServerInfoFile(owner).displayGuide(owner.getPlayer());
+        new ServerInfoFile(owner).displayGuide(owner.getPlayer(), "server_info");
     }
 }

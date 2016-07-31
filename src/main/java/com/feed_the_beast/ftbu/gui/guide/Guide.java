@@ -74,7 +74,7 @@ public abstract class Guide extends FinalIDObject
 
         if(mode == null)
         {
-            page = new InfoPage(".");
+            page = new InfoPage();
             generatePage(page);
         }
 

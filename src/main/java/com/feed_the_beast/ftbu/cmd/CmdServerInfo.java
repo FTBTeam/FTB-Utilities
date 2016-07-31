@@ -37,7 +37,7 @@ public class CmdServerInfo extends CommandLM
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
 
-        InfoPage serverInfo = new InfoPage("server_info"); //TODO: Lang
+        InfoPage serverInfo = new InfoPage(); //TODO: Lang
 
         InfoPage page = serverInfo.getSub("loaded_chunks"); // TODO: Lang
 
@@ -96,6 +96,6 @@ public class CmdServerInfo extends CommandLM
             list.printlnText(b.getID() + ": " + b.imageURL);
         }
 
-        serverInfo.displayGuide(ep);
+        serverInfo.displayGuide(ep, "server_info");
     }
 }

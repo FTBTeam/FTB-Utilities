@@ -43,7 +43,7 @@ public class ServerInfoFile extends InfoPage
 {
     public static class CachedInfo
     {
-        public static final InfoPage main = new InfoPage("server_info"); //TODO: Lang
+        public static final InfoPage main = new InfoPage(); //TODO: Lang
 
         public static void reload()
         {
@@ -63,8 +63,7 @@ public class ServerInfoFile extends InfoPage
 
     public ServerInfoFile(@Nonnull ForgePlayerMP self)
     {
-        super(CachedInfo.main.getID());
-        setTitle(CachedInfo.main.getTitleComponent());
+        setTitle(CachedInfo.main.getTitleComponent("server_info"));
 
         MinecraftServer server = FTBLib.getServer();
 
@@ -168,7 +167,7 @@ public class ServerInfoFile extends InfoPage
             {
                 try
                 {
-                    InfoPage cat = new InfoPage('/' + c.getCommandName());
+                    InfoPage cat = new InfoPage();
 
                     List<String> al = c.getCommandAliases();
                     if(!al.isEmpty())
@@ -215,7 +214,7 @@ public class ServerInfoFile extends InfoPage
                     }
 
                     cat.setParent(page);
-                    page.addSub(cat);
+                    page.addSub('/' + c.getCommandName(), cat);
                 }
                 catch(Exception ex1)
                 {

@@ -13,18 +13,18 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import java.util.AbstractMap;
 
 //FIXME
 @SideOnly(Side.CLIENT)
 public class ClientGuideFile extends InfoPage
 {
-    public static final ClientGuideFile INSTANCE = new ClientGuideFile("ClientConfig");
+    public static final ClientGuideFile INSTANCE = new ClientGuideFile();
 
     public static GuiScreen clientGuideGui = null;
 
-    public ClientGuideFile(String id)
+    public ClientGuideFile()
     {
-        super(id);
         //setTitle(FTBUActions.GUIDE.displayName);
     }
 
@@ -33,7 +33,7 @@ public class ClientGuideFile extends InfoPage
         if(clientGuideGui == null)
         {
             INSTANCE.reload();
-            clientGuideGui = new GuiInfo(null, ClientGuideFile.INSTANCE).getWrapper();
+            clientGuideGui = new GuiInfo(null, new AbstractMap.SimpleEntry<>("client_guide", ClientGuideFile.INSTANCE)).getWrapper();
         }
         if(open)
         {

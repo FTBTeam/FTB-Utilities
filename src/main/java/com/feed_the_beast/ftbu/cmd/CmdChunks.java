@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbl.api.notification.Notification;
 import com.feed_the_beast.ftbl.api.permissions.Context;
 import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
+import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.net.MessageAreaUpdate;
 import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
@@ -58,12 +59,12 @@ public class CmdChunks extends CommandSubBase
 
             if(FTBUWorldDataMP.claimChunk(p, pos))
             {
-                new Notification("modify_chunk").addText(new TextComponentString("Chunk Claimed")).sendTo(ep); //TODO: Lang
+                new Notification(FTBUNotifications.MODIFY_CHUNK).addText(new TextComponentString("Chunk Claimed")).sendTo(ep); //TODO: Lang
                 new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
             }
             else
             {
-                Notification.error("modify_chunk", new TextComponentString("Can't modify this chunk!")).sendTo(ep);
+                Notification.error(FTBUNotifications.MODIFY_CHUNK, new TextComponentString("Can't modify this chunk!")).sendTo(ep);
             }
         }
     }
@@ -105,12 +106,12 @@ public class CmdChunks extends CommandSubBase
 
             if(FTBUWorldDataMP.unclaimChunk(p, pos))
             {
-                new Notification("modify_chunk").addText(new TextComponentString("Chunk Unclaimed")).sendTo(ep); //TODO: Lang
+                new Notification(FTBUNotifications.MODIFY_CHUNK).addText(new TextComponentString("Chunk Unclaimed")).sendTo(ep); //TODO: Lang
                 new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
             }
             else
             {
-                Notification.error("modify_chunk", new TextComponentString("Can't modify this chunk!")).sendTo(ep);
+                Notification.error(FTBUNotifications.MODIFY_CHUNK, new TextComponentString("Can't modify this chunk!")).sendTo(ep);
             }
         }
     }
@@ -147,12 +148,12 @@ public class CmdChunks extends CommandSubBase
 
             if(FTBUWorldDataMP.setLoaded(p, pos, true))
             {
-                new Notification("modify_chunk").addText(new TextComponentString("Chunk Loaded")).sendTo(ep); //TODO: Lang
+                new Notification(FTBUNotifications.MODIFY_CHUNK).addText(new TextComponentString("Chunk Loaded")).sendTo(ep); //TODO: Lang
                 new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
             }
             else
             {
-                Notification.error("modify_chunk", new TextComponentString("Can't modify this chunk!")).sendTo(ep); //TODO: Lang
+                Notification.error(FTBUNotifications.MODIFY_CHUNK, new TextComponentString("Can't modify this chunk!")).sendTo(ep); //TODO: Lang
             }
         }
     }
@@ -189,12 +190,12 @@ public class CmdChunks extends CommandSubBase
 
             if(FTBUWorldDataMP.setLoaded(p, pos, false))
             {
-                new Notification("modify_chunk").addText(new TextComponentString("Chunk Unloaded")).sendTo(ep); //TODO: Lang
+                new Notification(FTBUNotifications.MODIFY_CHUNK).addText(new TextComponentString("Chunk Unloaded")).sendTo(ep); //TODO: Lang
                 new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
             }
             else
             {
-                Notification.error("modify_chunk", new TextComponentString("Can't modify this chunk!")).sendTo(ep); //TODO: Lang
+                Notification.error(FTBUNotifications.MODIFY_CHUNK, new TextComponentString("Can't modify this chunk!")).sendTo(ep); //TODO: Lang
             }
         }
     }
@@ -236,7 +237,7 @@ public class CmdChunks extends CommandSubBase
             }
 
             FTBUWorldDataMP.unclaimAllChunks(p, parseBoolean(args[0]) ? null : ep.dimension);
-            new Notification("unclaimed_all").addText(new TextComponentString("Unclaimed all chunks")).sendTo(ep); //TODO: Lang
+            new Notification(FTBUNotifications.UNCLAIMED_ALL).addText(new TextComponentString("Unclaimed all chunks")).sendTo(ep); //TODO: Lang
         }
     }
 

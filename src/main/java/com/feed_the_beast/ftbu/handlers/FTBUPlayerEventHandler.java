@@ -12,6 +12,7 @@ import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbl.util.EntityDimPos;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUFinals;
+import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigLogin;
@@ -193,7 +194,7 @@ public class FTBUPlayerEventHandler
 
                 ITextComponent msg = new TextComponentString(team.getTitle());
                 msg.getStyle().setBold(true);
-                Notification n = new Notification("chunk_changed");
+                Notification n = new Notification(FTBUNotifications.CHUNK_CHANGED);
                 n.addText(msg);
 
                 if(team.getDesc() != null)
@@ -212,7 +213,7 @@ public class FTBUPlayerEventHandler
                 ITextComponent msg = ClaimedChunk.LANG_WILDERNESS.textComponent();
                 msg.getStyle().setBold(true);
 
-                Notification n = new Notification("chunk_changed");
+                Notification n = new Notification(FTBUNotifications.CHUNK_CHANGED);
                 n.addText(msg);
                 n.setTimer(3000);
                 n.setColor(0xFF00A010);

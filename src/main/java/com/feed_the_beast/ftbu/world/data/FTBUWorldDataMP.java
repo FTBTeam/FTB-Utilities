@@ -11,6 +11,7 @@ import com.feed_the_beast.ftbl.util.LMDimUtils;
 import com.feed_the_beast.ftbl.util.LMNBTUtils;
 import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBULang;
+import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.badges.BadgeStorage;
@@ -182,7 +183,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
 
             if(ep != null)
             {
-                Notification.error("no_team", FTBLibLang.team_no_team.textComponent()).sendTo(ep);
+                Notification.error(FTBUNotifications.NO_TEAM, FTBLibLang.team_no_team.textComponent()).sendTo(ep);
             }
 
             return false;
@@ -261,7 +262,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
 
                     if(ep != null)
                     {
-                        Notification.error("no_team", FTBLibLang.team_no_team.textComponent()).sendTo(ep);
+                        Notification.error(FTBUNotifications.NO_TEAM, FTBLibLang.team_no_team.textComponent()).sendTo(ep);
                     }
 
                     return false;

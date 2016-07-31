@@ -2,8 +2,8 @@ package com.feed_the_beast.ftbu.net;
 
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToServer;
-import io.netty.buffer.ByteBuf;
 import com.latmod.lib.math.MathHelperLM;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class MessageAreaRequest extends MessageToServer<MessageAreaRequest>
@@ -47,8 +47,8 @@ public class MessageAreaRequest extends MessageToServer<MessageAreaRequest>
     }
 
     @Override
-    public void onMessage(MessageAreaRequest m, EntityPlayerMP ep)
+    public void onMessage(MessageAreaRequest m, EntityPlayerMP player)
     {
-        new MessageAreaUpdate(m.chunkX, m.chunkY, ep.dimension, m.sizeX, m.sizeY).sendTo(ep);
+        new MessageAreaUpdate(m.chunkX, m.chunkY, player.dimension, m.sizeX, m.sizeY).sendTo(player);
     }
 }

@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
+import com.feed_the_beast.ftbl.util.LMNetUtils;
 import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldDataMP;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldDataSP;
@@ -62,7 +63,7 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
 
             if(b)
             {
-                ForgePlayer owner = ForgeWorldSP.inst == null ? null : ForgeWorldSP.inst.getPlayer(readUUID(io));
+                ForgePlayer owner = ForgeWorldSP.inst == null ? null : ForgeWorldSP.inst.getPlayer(LMNetUtils.readUUID(io));
 
                 if(owner != null)
                 {
@@ -96,7 +97,7 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
             else
             {
                 io.writeBoolean(true);
-                writeUUID(io, e.getValue().owner.getProfile().getId());
+                LMNetUtils.writeUUID(io, e.getValue().owner.getProfile().getId());
                 io.writeBoolean(e.getValue().loaded);
             }
         }

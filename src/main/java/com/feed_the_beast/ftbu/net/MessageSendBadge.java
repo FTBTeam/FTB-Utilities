@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbu.net;
 
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
+import com.feed_the_beast.ftbl.util.LMNetUtils;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldDataSP;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -34,15 +35,15 @@ public class MessageSendBadge extends MessageToClient<MessageSendBadge>
     @Override
     public void fromBytes(ByteBuf io)
     {
-        playerID = readUUID(io);
-        badgeID = readString(io);
+        playerID = LMNetUtils.readUUID(io);
+        badgeID = LMNetUtils.readString(io);
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
-        writeUUID(io, playerID);
-        writeString(io, badgeID);
+        LMNetUtils.writeUUID(io, playerID);
+        LMNetUtils.writeString(io, badgeID);
     }
 
     @Override

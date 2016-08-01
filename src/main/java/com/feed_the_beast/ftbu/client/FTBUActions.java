@@ -65,7 +65,7 @@ public class FTBUActions
             @SideOnly(Side.CLIENT)
             public void onClicked(ForgePlayerSP player)
             {
-                new GuiClaimChunks(0L).openGui();
+                new GuiClaimChunks().openGui();
             }
 
             @Override
@@ -119,7 +119,7 @@ public class FTBUActions
             }
         });*/
 
-        GuiScreenRegistry.register(new ResourceLocation(FTBUFinals.MOD_ID, "claimed_chunks"), () -> new GuiClaimChunks(0L).getWrapper());
+        GuiScreenRegistry.register(new ResourceLocation(FTBUFinals.MOD_ID, "claimed_chunks"), () -> new GuiClaimChunks().getWrapper());
         GuiScreenRegistry.register(new ResourceLocation(FTBUFinals.MOD_ID, "guide"), () -> ClientGuideFile.openClientGui(false));
         GuiScreenRegistry.register(new ResourceLocation(FTBUFinals.MOD_ID, "server_info"), () -> new MessageRequestServerInfo().openGui());
         //GuiScreenRegistry.register(new ResourceLocation(FTBUFinals.MOD_ID, "shop"), () -> new GuiShop());

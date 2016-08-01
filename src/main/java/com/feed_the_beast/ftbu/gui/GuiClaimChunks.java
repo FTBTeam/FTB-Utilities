@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.gui;
 
-import com.feed_the_beast.ftbl.api.ForgePlayerSPSelf;
 import com.feed_the_beast.ftbl.api.ForgeTeam;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.MouseButton;
@@ -35,28 +34,29 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.nio.ByteBuffer;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
+@ParametersAreNonnullByDefault
 public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // implements IClientActionGui
 {
-    public static final int tiles_tex = 16;
-    public static final int tiles_gui = 15;
-    public static final double UV = (double) tiles_gui / (double) tiles_tex;
-    public static final ResourceLocation TEX_ENTITY = new ResourceLocation(FTBUFinals.MOD_ID, "textures/gui/entity.png");
-    public static final ResourceLocation TEX_CHUNK_CLAIMING = new ResourceLocation(FTBUFinals.MOD_ID, "textures/gui/chunk_claiming.png");
-    public static final TextureCoords TEX_FILLED = new TextureCoords(TEX_CHUNK_CLAIMING, 0D, 0D, 0.5D, 1D);
-    public static final TextureCoords TEX_BORDER = new TextureCoords(TEX_CHUNK_CLAIMING, 0.5D, 0D, 1D, 1D);
+    static final int tiles_tex = 16;
+    static final int tiles_gui = 15;
+    private static final double UV = (double) tiles_gui / (double) tiles_tex;
+    private static final ResourceLocation TEX_ENTITY = new ResourceLocation(FTBUFinals.MOD_ID, "textures/gui/entity.png");
+    private static final ResourceLocation TEX_CHUNK_CLAIMING = new ResourceLocation(FTBUFinals.MOD_ID, "textures/gui/chunk_claiming.png");
+    private static final TextureCoords TEX_FILLED = new TextureCoords(TEX_CHUNK_CLAIMING, 0D, 0D, 0.5D, 1D);
+    private static final TextureCoords TEX_BORDER = new TextureCoords(TEX_CHUNK_CLAIMING, 0.5D, 0D, 1D, 1D);
+    static ByteBuffer pixelBuffer = null;
+    private static int textureID = -1;
 
-    public static int textureID = -1;
-    public static ByteBuffer pixelBuffer = null;
-
-    public class MapButton extends ButtonLM
+    private class MapButton extends ButtonLM
     {
-        public final ChunkDimPos chunkPos;
+        private final ChunkDimPos chunkPos;
 
-        public MapButton(int x, int y, int i)
+        private MapButton(int x, int y, int i)
         {
             super(x, y, 16, 16);
             posX += (i % tiles_gui) * width;
@@ -168,20 +168,18 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         }
     }
 
-    public final ForgePlayerSPSelf playerLM;
-    public final int startX, startZ;
-    public final int currentDim;
-    public final ButtonLM buttonRefresh, buttonClose, buttonUnclaimAll;
-    public final MapButton mapButtons[];
-    public final PanelLM panelButtons;
+    final int startX, startZ;
+    private final int currentDim;
+    private final ButtonLM buttonRefresh, buttonClose, buttonUnclaimAll;
+    private final MapButton mapButtons[];
+    private final PanelLM panelButtons;
     public ThreadReloadArea thread = null;
-    public String currentDimName;
+    private String currentDimName;
 
-    public GuiClaimChunks(long token)
+    public GuiClaimChunks()
     {
-        width = height = tiles_gui * 16;
+        super(tiles_gui * 16, tiles_gui * 16);
 
-        playerLM = ForgeWorldSP.inst.clientPlayer;
         startX = MathHelperLM.chunk(mc.thePlayer.posX) - (int) (tiles_gui * 0.5D);
         startZ = MathHelperLM.chunk(mc.thePlayer.posZ) - (int) (tiles_gui * 0.5D);
         currentDim = FTBLibClient.getDim();
@@ -241,15 +239,15 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             }
 
             @Override
-            public double getAX()
+            public int getAX()
             {
-                return screen.getScaledWidth_double() - 16D;
+                return screen.getScaledWidth() - 16;
             }
 
             @Override
-            public double getAY()
+            public int getAY()
             {
-                return 0D;
+                return 0;
             }
         };
 

@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
-import com.feed_the_beast.ftbl.api.info.InfoPage;
+import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -66,7 +66,7 @@ public class ClientGuideFile extends InfoPage
     public void reload()
     {
         INSTANCE.clear();
-        INSTANCE.printlnText("WIP!");
+        INSTANCE.println("WIP!");
     }
 
     /*

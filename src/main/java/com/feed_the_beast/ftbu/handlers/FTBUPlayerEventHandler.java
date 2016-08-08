@@ -17,7 +17,6 @@ import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigLogin;
 import com.feed_the_beast.ftbu.net.MessageAreaRequest;
-import com.feed_the_beast.ftbu.world.backups.Backups;
 import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.data.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.data.FTBUPlayerDataMP;
@@ -101,8 +100,6 @@ public class FTBUPlayerEventHandler
                     FTBUConfigLogin.motd.components.forEach(ep::addChatMessage);
                 }
 
-                Backups.hadPlayer = true;
-
                 FTBUChunkEventHandler.instance.markDirty(null);
             }
             else
@@ -119,7 +116,6 @@ public class FTBUPlayerEventHandler
         if(event.player.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
         {
             FTBUChunkEventHandler.instance.markDirty(null);
-            Backups.hadPlayer = true;
         }
 
         lastChunksTeamIDMap.remove(event.player.getProfile().getId());

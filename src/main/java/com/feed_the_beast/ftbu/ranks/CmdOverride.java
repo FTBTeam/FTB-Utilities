@@ -56,7 +56,7 @@ public class CmdOverride implements ICommand
         FTBLib.dev_logger.info("FTBU: Checking permission for " + parent.getCommandName());
         if(ics instanceof EntityPlayerMP)
         {
-            Rank r = Ranks.instance().getRankOf(((EntityPlayerMP) ics).getGameProfile());
+            Rank r = Ranks.INSTANCE.getRankOf(((EntityPlayerMP) ics).getGameProfile());
             return r.allowCommand(server, ics, parent);
         }
 

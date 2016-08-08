@@ -56,7 +56,7 @@ public class FTBU
         FTBUPermissions.init();
         FTBUCapabilities.enable();
         FTBUNetHandler.init();
-        Backups.init();
+        Backups.INSTANCE.init();
         FTBUTops.init();
 
         mod.onPostLoaded();
@@ -74,7 +74,7 @@ public class FTBU
     @Mod.EventHandler
     public void serverStarted(FMLServerStartedEvent e)
     {
-        Ranks.instance().generateExampleFiles();
+        Ranks.INSTANCE.generateExampleFiles();
 
         if(FTBUConfigWebAPI.enabled.getAsBoolean() && FTBUConfigWebAPI.autostart.getAsBoolean())
         {

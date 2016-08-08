@@ -25,14 +25,14 @@ public class CmdBackup extends CommandSubBase
         @Override
         public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
         {
-            boolean b = Backups.run(ics);
+            boolean b = Backups.INSTANCE.run(ics);
             if(b)
             {
                 FTBULang.backup_manual_launch.printChat(BroadcastSender.inst, ics.getName());
 
                 if(!FTBUConfigBackups.use_separate_thread.getAsBoolean())
                 {
-                    Backups.postBackup();
+                    Backups.INSTANCE.postBackup();
                 }
             }
             else
@@ -52,10 +52,10 @@ public class CmdBackup extends CommandSubBase
         @Override
         public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
         {
-            if(Backups.thread != null)
+            if(Backups.INSTANCE.thread != null)
             {
-                Backups.thread.interrupt();
-                Backups.thread = null;
+                Backups.INSTANCE.thread.interrupt();
+                Backups.INSTANCE.thread = null;
                 FTBULang.backup_stop.printChat(ics);
                 return;
             }
@@ -75,7 +75,7 @@ public class CmdBackup extends CommandSubBase
         public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
         {
             String sizeW = LMFileUtils.getSizeS(ics.getEntityWorld().getSaveHandler().getWorldDirectory());
-            String sizeT = LMFileUtils.getSizeS(Backups.backupsFolder);
+            String sizeT = LMFileUtils.getSizeS(Backups.INSTANCE.backupsFolder);
             FTBULang.backup_size.printChat(ics, sizeW, sizeT);
         }
     }

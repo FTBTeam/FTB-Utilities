@@ -20,7 +20,7 @@ public class FTBUConfigLogin
 {
     public static final ConfigEntryBool enable_motd = new ConfigEntryBool(true);
     public static final ConfigEntryBool enable_starting_items = new ConfigEntryBool(true);
-    
+
     @Info("Message of the day. This will be displayed when player joins the server")
     public static final ConfigEntryChatComponentList motd = new ConfigEntryChatComponentList();
 

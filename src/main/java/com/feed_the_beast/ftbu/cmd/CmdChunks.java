@@ -6,8 +6,9 @@ import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandSubBase;
 import com.feed_the_beast.ftbl.api.notification.Notification;
-import com.feed_the_beast.ftbl.api.permissions.Context;
 import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
+import com.feed_the_beast.ftbl.api.permissions.context.ContextKey;
+import com.feed_the_beast.ftbl.api.permissions.context.PlayerContext;
 import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
@@ -99,7 +100,7 @@ public class CmdChunks extends CommandSubBase
                 pos = p.getPos().toChunkPos();
             }
 
-            if(!p.equalsPlayer(FTBUWorldDataMP.chunks.getOwnerPlayer(pos)) && !PermissionAPI.hasPermission(ep.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, false, new Context(ep).setCustomObject(Context.CHUNK, pos)))
+            if(!p.equalsPlayer(FTBUWorldDataMP.chunks.getOwnerPlayer(pos)) && !PermissionAPI.hasPermission(ep.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, false, new PlayerContext(ep).set(ContextKey.CHUNK, pos.getChunkPos())))
             {
                 throw new CommandException("commands.generic.permission");
             }
@@ -224,7 +225,7 @@ public class CmdChunks extends CommandSubBase
 
             if(args.length >= 2)
             {
-                if(!PermissionAPI.hasPermission(ep.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, false, new Context(ep)))
+                if(!PermissionAPI.hasPermission(ep.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, false, new PlayerContext(ep)))
                 {
                     throw new CommandException("commands.generic.permission");
                 }

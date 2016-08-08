@@ -32,17 +32,17 @@ public class ThreadBackup extends Thread
     {
         Time time = Time.now();
         File dstFile = null;
+        boolean success = false;
+        StringBuilder out = new StringBuilder();
+        appendNum(out, time.year, '-');
+        appendNum(out, time.month, '-');
+        appendNum(out, time.day, '-');
+        appendNum(out, time.hours, '-');
+        appendNum(out, time.minutes, '-');
+        appendNum(out, time.seconds, File.separatorChar);
 
         try
         {
-            StringBuilder out = new StringBuilder();
-            appendNum(out, time.year, '-');
-            appendNum(out, time.month, '-');
-            appendNum(out, time.day, '-');
-            appendNum(out, time.hours, '-');
-            appendNum(out, time.minutes, '-');
-            appendNum(out, time.seconds, File.separatorChar);
-
             List<File> files = LMFileUtils.listAll(src);
             int allFiles = files.size();
 
@@ -51,7 +51,7 @@ public class ThreadBackup extends Thread
             if(FTBUConfigBackups.compression_level.getAsInt() > 0)
             {
                 out.append("backup.zip");
-                dstFile = LMFileUtils.newFile(new File(Backups.backupsFolder, out.toString()));
+                dstFile = LMFileUtils.newFile(new File(Backups.INSTANCE.backupsFolder, out.toString()));
 
                 long start = System.currentTimeMillis();
 
@@ -98,7 +98,7 @@ public class ThreadBackup extends Thread
             else
             {
                 out.append(src.getName());
-                dstFile = new File(Backups.backupsFolder, out.toString());
+                dstFile = new File(Backups.INSTANCE.backupsFolder, out.toString());
                 dstFile.mkdirs();
 
                 String dstPath = dstFile.getAbsolutePath() + File.separator;
@@ -124,13 +124,12 @@ public class ThreadBackup extends Thread
             }
 
             Backups.logger.info("Created " + dstFile.getAbsolutePath() + " from " + src.getAbsolutePath());
-
-            Backups.clearOldBackups();
+            success = true;
 
             if(FTBUConfigBackups.display_file_size.getAsBoolean())
             {
                 String sizeB = LMFileUtils.getSizeS(dstFile);
-                String sizeT = LMFileUtils.getSizeS(Backups.backupsFolder);
+                String sizeT = LMFileUtils.getSizeS(Backups.INSTANCE.backupsFolder);
 
                 ITextComponent c = FTBULang.backup_end_2.textComponent(getDoneTime(time.millis), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)));
                 c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
@@ -155,7 +154,9 @@ public class ThreadBackup extends Thread
                 LMFileUtils.delete(dstFile);
             }
         }
-        //System.gc();
+
+        Backups.INSTANCE.backups.add(new Backup(time.millis, out.toString().replace('\\', '/'), Backups.INSTANCE.getLastIndex() + 1, success));
+        Backups.INSTANCE.cleanupAndSave();
     }
 
     private static String getDoneTime(long l)

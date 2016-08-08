@@ -4,7 +4,9 @@ import com.feed_the_beast.ftbl.util.BroadcastSender;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
-import com.latmod.lib.util.LMFileUtils;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.latmod.lib.json.LMJsonUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.server.CommandSaveAll;
 import net.minecraft.command.server.CommandSaveOff;
@@ -17,30 +19,83 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 
-public class Backups
+public enum Backups
 {
-    public static final Logger logger = LogManager.getLogger("FTBU Backups");
+    INSTANCE;
 
-    public static File backupsFolder;
-    public static long nextBackup = -1L;
-    public static ThreadBackup thread = null;
-    public static boolean hadPlayer = false;
+    public static final Logger logger = LogManager.getLogger("FTBU_Backups");
+    public final List<Backup> backups = new ArrayList<>();
+    public File backupsFolder;
+    public long nextBackup = -1L;
+    public ThreadBackup thread;
 
-    public static void init()
+    public void init()
     {
         backupsFolder = FTBUConfigBackups.folder.getAsString().isEmpty() ? new File(FTBLib.folderMinecraft, "/backups/") : new File(FTBUConfigBackups.folder.getAsString());
-        if(!backupsFolder.exists())
-        {
-            backupsFolder.mkdirs();
-        }
         thread = null;
-        clearOldBackups();
+
+        backups.clear();
+
+        JsonElement element = LMJsonUtils.fromJson(new File(backupsFolder, "backups.json"));
+
+        if(element.isJsonArray())
+        {
+            try
+            {
+                for(JsonElement e : element.getAsJsonArray())
+                {
+                    backups.add(new Backup(e.getAsJsonObject()));
+                }
+            }
+            catch(Exception ex)
+            {
+                ex.printStackTrace();
+            }
+        }
+        else if(backupsFolder.exists())
+        {
+            String[] files = backupsFolder.list();
+            int index = 0;
+
+            if(files != null)
+            {
+                for(String s : files)
+                {
+                    String[] s1 = s.split("-");
+
+                    if(s1.length >= 6)
+                    {
+                        int year = Integer.parseInt(s1[0]);
+                        int month = Integer.parseInt(s1[1]);
+                        int day = Integer.parseInt(s1[2]);
+                        int hours = Integer.parseInt(s1[3]);
+                        int minutes = Integer.parseInt(s1[4]);
+                        int seconds = Integer.parseInt(s1[5]);
+
+                        Calendar c = Calendar.getInstance();
+                        c.set(year, month, day, hours, minutes, seconds);
+
+                        if(FTBUConfigBackups.compression_level.getAsInt() > 0)
+                        {
+                            s += "/backup.zip";
+                        }
+
+                        backups.add(new Backup(c.getTimeInMillis(), s, ++index, true));
+                    }
+                }
+            }
+        }
+
+        cleanupAndSave();
         logger.info("Backups folder - " + backupsFolder.getAbsolutePath());
     }
 
-    public static boolean run(ICommandSender ics)
+    public boolean run(ICommandSender ics)
     {
         if(thread != null)
         {
@@ -64,15 +119,6 @@ public class Backups
         BroadcastSender.inst.addChatMessage(c);
 
         nextBackup = System.currentTimeMillis() + FTBUConfigBackups.backupMillis();
-
-        if(auto && FTBUConfigBackups.need_online_players.getAsBoolean())
-        {
-            if(!FTBLib.hasOnlinePlayers() && !hadPlayer)
-            {
-                return true;
-            }
-            hadPlayer = false;
-        }
 
         try
         {
@@ -99,30 +145,39 @@ public class Backups
         return true;
     }
 
-    public static void clearOldBackups()
+    public void cleanupAndSave()
     {
-        String[] s = backupsFolder.list();
+        JsonArray a = new JsonArray();
 
-        if(s.length > FTBUConfigBackups.backups_to_keep.getAsInt())
+        if(!backups.isEmpty())
         {
-            Arrays.sort(s);
+            Collections.sort(backups, Backup.COMPARATOR);
 
-            int j = s.length - FTBUConfigBackups.backups_to_keep.getAsInt();
-            logger.info("Deleting " + j + " old backups");
+            int size = FTBUConfigBackups.backups_to_keep.getAsInt() - backups.size();
 
-            for(int i = 0; i < j; i++)
+            for(int i = 0; i < backups.size(); i++)
             {
-                File f = new File(backupsFolder, s[i]);
-                if(f.isDirectory())
+                System.out.println(backups.get(i).time + ": " + backups.get(i).fileID);
+            }
+
+            if(size > 0)
+            {
+                for(int i = 0; i < size; i++)
                 {
-                    logger.info("Deleted old backup: " + f.getPath());
-                    LMFileUtils.delete(f);
+                    System.out.println("Deleting " + backups.get(i).fileID);
                 }
             }
+
+            for(Backup t : backups)
+            {
+                a.add(t.toJsonObject());
+            }
         }
+
+        LMJsonUtils.toJson(new File(backupsFolder, "backups.json"), a);
     }
 
-    public static void postBackup()
+    public void postBackup()
     {
         try
         {
@@ -132,5 +187,17 @@ public class Backups
         {
             ex.printStackTrace();
         }
+    }
+
+    int getLastIndex()
+    {
+        int i = 0;
+
+        for(Backup b : backups)
+        {
+            i = Math.max(i, b.index);
+        }
+
+        return i;
     }
 }

@@ -63,7 +63,7 @@ public class FTBUServerEventHandler
         if(e.world.getSide().isServer())
         {
             ServerInfoFile.CachedInfo.reload();
-            Ranks.instance().reload();
+            Ranks.INSTANCE.reload();
 
             FTBUWorldDataMP.reloadServerBadges();
 

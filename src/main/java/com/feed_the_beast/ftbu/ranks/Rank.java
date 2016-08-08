@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.ranks;
 
-import com.feed_the_beast.ftbl.api.permissions.rankconfig.RankConfig;
-import com.feed_the_beast.ftbl.api.permissions.rankconfig.RankConfigAPI;
+import com.feed_the_beast.ftbl.api.rankconfig.RankConfig;
+import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -51,11 +51,11 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
 
     public JsonElement handleRankConfig(RankConfig permission)
     {
-        if(this == Ranks.PLAYER)
+        if(this == Ranks.INSTANCE.PLAYER)
         {
             return permission.getDefaultValue(false);
         }
-        else if(this == Ranks.ADMIN)
+        else if(this == Ranks.INSTANCE.ADMIN)
         {
             return permission.getDefaultValue(true);
         }
@@ -106,7 +106,7 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
     public void fromJson(@Nonnull JsonElement e)
     {
         JsonObject o = e.getAsJsonObject();
-        parent = o.has("parent") ? Ranks.instance().ranks.get(o.get("parent").getAsString()) : null;
+        parent = o.has("parent") ? Ranks.INSTANCE.ranks.get(o.get("parent").getAsString()) : null;
         color = o.has("color") ? TextFormatting.getValueByName(o.get("color").getAsString()) : TextFormatting.WHITE;
         prefix = o.has("prefix") ? o.get("prefix").getAsString() : "";
         badge = o.has("badge") ? o.get("badge").getAsString() : "";

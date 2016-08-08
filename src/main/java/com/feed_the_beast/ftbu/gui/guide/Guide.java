@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
 import com.feed_the_beast.ftbl.api.info.IResourceProvider;
-import com.feed_the_beast.ftbl.api.info.InfoPage;
+import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.latmod.lib.FinalIDObject;

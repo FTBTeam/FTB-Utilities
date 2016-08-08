@@ -32,9 +32,6 @@ public class FTBUConfigBackups
     @Info("Run backup in a separated Thread (recommended)")
     public static final ConfigEntryBool use_separate_thread = new ConfigEntryBool(true);
 
-    @Info("Backups won't run if no players had been online")
-    public static final ConfigEntryBool need_online_players = new ConfigEntryBool(true);
-
     public static long backupMillis()
     {
         return (long) (backup_timer.getAsInt() * 3600D * 1000D);

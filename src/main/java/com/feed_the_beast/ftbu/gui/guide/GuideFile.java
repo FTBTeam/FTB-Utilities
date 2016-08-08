@@ -1,7 +1,8 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
 import com.feed_the_beast.ftbl.api.info.IResourceProvider;
-import com.feed_the_beast.ftbl.api.info.InfoPage;
+import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
+import com.feed_the_beast.ftbl.api.info.impl.InfoPageHelper;
 import com.feed_the_beast.ftbl.util.JsonHelper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -73,7 +74,7 @@ public class GuideFile extends FinalIDObject implements IResourceProvider
         {
             for(JsonElement e : o.get("text").getAsJsonArray())
             {
-                page.text.add(page.createLine(e));
+                page.println(InfoPageHelper.createLine(page, e));
             }
         }
 

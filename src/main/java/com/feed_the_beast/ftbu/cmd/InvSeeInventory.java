@@ -166,7 +166,11 @@ public class InvSeeInventory implements IInventory
     @Override
     public void clear()
     {
-        LMInvUtils.clear(invPlayer);
-        LMInvUtils.clear(baubles);
+        invPlayer.clear();
+
+        if(baubles != null)
+        {
+            baubles.clear();
+        }
     }
 }

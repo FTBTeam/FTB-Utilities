@@ -8,7 +8,7 @@ import com.latmod.lib.annotations.NumberBounds;
 public class FTBUConfigWebAPI
 {
     public static final ConfigEntryBool enabled = new ConfigEntryBool(false);
-    
+
     @NumberBounds(min = 1000, max = 65535)
     @Info("Port for the WebAPI server")
     public static final ConfigEntryInt port = new ConfigEntryInt(4509);

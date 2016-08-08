@@ -5,12 +5,13 @@ import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.ICustomCommandInfo;
-import com.feed_the_beast.ftbl.api.info.InfoExtendedTextLine;
-import com.feed_the_beast.ftbl.api.info.InfoPage;
+import com.feed_the_beast.ftbl.api.info.impl.InfoExtendedTextLine;
+import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
+import com.feed_the_beast.ftbl.api.info.impl.InfoPageHelper;
 import com.feed_the_beast.ftbl.api.notification.ClickAction;
 import com.feed_the_beast.ftbl.api.notification.ClickActionTypeRegistry;
-import com.feed_the_beast.ftbl.api.permissions.Context;
 import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
+import com.feed_the_beast.ftbl.api.permissions.context.PlayerContext;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.FTBUPermissions;
@@ -63,12 +64,12 @@ public class ServerInfoFile extends InfoPage
 
     public ServerInfoFile(@Nonnull ForgePlayerMP self)
     {
-        setTitle(CachedInfo.main.getTitleComponent("server_info"));
+        setTitle(InfoPageHelper.getTitleComponent(CachedInfo.main, "server_info"));
 
         MinecraftServer server = FTBLib.getServer();
 
         boolean isDedi = server.isDedicatedServer();
-        boolean isOP = !isDedi || PermissionAPI.hasPermission(self.getProfile(), FTBUPermissions.DISPLAY_ADMIN_INFO, false, new Context(self.getPlayer()));
+        boolean isOP = !isDedi || PermissionAPI.hasPermission(self.getProfile(), FTBUPermissions.DISPLAY_ADMIN_INFO, false, new PlayerContext(self.getPlayer()));
 
         copyFrom(CachedInfo.main);
 
@@ -86,7 +87,7 @@ public class ServerInfoFile extends InfoPage
 
         if(FTBUConfigBackups.enabled.getAsBoolean())
         {
-            println(FTBULang.timer_backup.textComponent(LMStringUtils.getTimeString(Backups.nextBackup - System.currentTimeMillis())));
+            println(FTBULang.timer_backup.textComponent(LMStringUtils.getTimeString(Backups.INSTANCE.nextBackup - System.currentTimeMillis())));
         }
 
         if(FTBUConfigGeneral.server_info_difficulty.getAsBoolean())
@@ -174,7 +175,7 @@ public class ServerInfoFile extends InfoPage
                     {
                         for(String s : al)
                         {
-                            cat.printlnText('/' + s);
+                            cat.println('/' + s);
                         }
                     }
 
@@ -197,7 +198,7 @@ public class ServerInfoFile extends InfoPage
                             String[] usageL = usage.split("\n");
                             for(String s1 : usageL)
                             {
-                                cat.printlnText(s1);
+                                cat.println(s1);
                             }
                         }
                         else
@@ -220,7 +221,7 @@ public class ServerInfoFile extends InfoPage
                 {
                     ITextComponent cc = new TextComponentString('/' + c.getCommandName());
                     cc.getStyle().setColor(TextFormatting.DARK_RED);
-                    page.getSub('/' + c.getCommandName()).setTitle(cc).printlnText("Errored");
+                    page.getSub('/' + c.getCommandName()).setTitle(cc).println("Errored");
 
                     if(FTBLib.DEV_ENV)
                     {
@@ -238,18 +239,18 @@ public class ServerInfoFile extends InfoPage
 
         for(String s : FTBUWorldData.getW(ForgeWorldMP.inst).toMP().listWarps())
         {
-            line = new InfoExtendedTextLine(page, new TextComponentString(s));
+            line = new InfoExtendedTextLine(new TextComponentString(s));
             line.setClickAction(new ClickAction(ClickActionTypeRegistry.CMD, new JsonPrimitive("ftb warp " + s)));
-            page.text.add(line);
+            page.println(line);
         }
 
         page = getSub("homes").setTitle(new TextComponentString("Homes")); //TODO: LANG
 
         for(String s : FTBUPlayerData.get(self).toMP().listHomes())
         {
-            line = new InfoExtendedTextLine(page, new TextComponentString(s));
+            line = new InfoExtendedTextLine(new TextComponentString(s));
             line.setClickAction(new ClickAction(ClickActionTypeRegistry.CMD, new JsonPrimitive("ftb home " + s)));
-            page.text.add(line);
+            page.println(line);
         }
 
         cleanup();

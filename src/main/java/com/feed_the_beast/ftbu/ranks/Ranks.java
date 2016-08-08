@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.ranks;
 
-import com.feed_the_beast.ftbl.api.permissions.Context;
-import com.feed_the_beast.ftbl.api.permissions.PermissionHandler;
-import com.feed_the_beast.ftbl.api.permissions.rankconfig.RankConfig;
-import com.feed_the_beast.ftbl.api.permissions.rankconfig.RankConfigAPI;
+import com.feed_the_beast.ftbl.api.permissions.IPermissionHandler;
+import com.feed_the_beast.ftbl.api.permissions.context.IContext;
+import com.feed_the_beast.ftbl.api.rankconfig.RankConfig;
+import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -13,7 +13,6 @@ import com.latmod.lib.util.LMFileUtils;
 import com.latmod.lib.util.LMUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -25,32 +24,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class Ranks implements PermissionHandler, RankConfigAPI.Handler
+public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
 {
-    public static final Rank PLAYER = new Rank("Player");
-    public static final Rank ADMIN = new Rank("Admin");
-    private static Ranks instance;
+    INSTANCE;
+
+    public final Rank PLAYER = new Rank("Player");
+    public final Rank ADMIN = new Rank("Admin");
     public final File fileRanks, filePlayers;
     public final Map<String, Rank> ranks = new LinkedHashMap<>();
     public final Map<UUID, Rank> playerMap = new HashMap<>();
     public Rank defaultRank;
 
-    private Ranks()
+    Ranks()
     {
         fileRanks = new File(FTBLib.folderLocal, "ftbu/ranks.json");
         filePlayers = new File(FTBLib.folderLocal, "ftbu/player_ranks.json");
         ADMIN.color = TextFormatting.DARK_GREEN;
         PLAYER.color = TextFormatting.WHITE;
         ADMIN.parent = PLAYER;
-    }
-
-    public static Ranks instance()
-    {
-        if(instance == null)
-        {
-            instance = new Ranks();
-        }
-        return instance;
     }
 
     public void reload()
@@ -289,11 +280,18 @@ public class Ranks implements PermissionHandler, RankConfigAPI.Handler
         }
     }
 
-    @Nonnull
     @Override
-    public Event.Result hasPermission(@Nonnull GameProfile profile, @Nonnull String permission, @Nonnull Context context)
+    public boolean hasPermission(@Nonnull GameProfile profile, @Nonnull String permission, boolean defaultForPlayer, @Nonnull IContext context)
     {
-        return getRankOf(profile).handlePermission(permission);
+        switch(getRankOf(profile).handlePermission(permission))
+        {
+            case ALLOW:
+                return true;
+            case DENY:
+                return false;
+            default:
+                return defaultForPlayer;
+        }
     }
 
     @Override

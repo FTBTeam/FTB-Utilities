@@ -74,7 +74,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
             return b;
         }
 
-        String rank = Ranks.instance().getRankOf(p.getProfile()).badge;
+        String rank = Ranks.INSTANCE.getRankOf(p.getProfile()).badge;
         if(!rank.isEmpty())
         {
             b = localBadges.badgeMap.get(rank);
@@ -307,7 +307,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         chunks = new ClaimedChunkStorage();
 
         long startMillis = System.currentTimeMillis();
-        Backups.nextBackup = startMillis + FTBUConfigBackups.backupMillis();
+        Backups.INSTANCE.nextBackup = startMillis + FTBUConfigBackups.backupMillis();
         lastRestartMessage = "";
 
         if(FTBUConfigGeneral.restart_timer.getAsInt() > 0)
@@ -407,9 +407,9 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
             }
         }
 
-        if(Backups.nextBackup > 0L && Backups.nextBackup <= now)
+        if(Backups.INSTANCE.nextBackup > 0L && Backups.INSTANCE.nextBackup <= now)
         {
-            Backups.run(FTBLib.getServer());
+            Backups.INSTANCE.run(FTBLib.getServer());
         }
 
         if(nextChunkloaderUpdate < now)
@@ -418,10 +418,10 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
             FTBUChunkEventHandler.instance.markDirty(null);
         }
 
-        if(Backups.thread != null && Backups.thread.isDone)
+        if(Backups.INSTANCE.thread != null && Backups.INSTANCE.thread.isDone)
         {
-            Backups.thread = null;
-            Backups.postBackup();
+            Backups.INSTANCE.thread = null;
+            Backups.INSTANCE.postBackup();
         }
     }
 

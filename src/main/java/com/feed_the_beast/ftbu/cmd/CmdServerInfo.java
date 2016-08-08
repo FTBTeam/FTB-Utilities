@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.info.InfoPage;
+import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldDataMP;
 import com.google.common.collect.ImmutableSetMultimap;
@@ -70,7 +70,7 @@ public class CmdServerInfo extends CommandLM
                 InfoPage mod = dim.getSub(e1.getKey() + " [" + e1.getValue().size() + "]");
                 for(ChunkPos c : e1.getValue())
                 {
-                    mod.printlnText(c.chunkXPos + ", " + c.chunkZPos + " [ " + c.getCenterXPos() + ", " + c.getCenterZPosition() + " ]");
+                    mod.println(c.chunkXPos + ", " + c.chunkZPos + " [ " + c.getCenterXPos() + ", " + c.getCenterZPosition() + " ]");
                 }
             }
         }
@@ -79,21 +79,21 @@ public class CmdServerInfo extends CommandLM
 
         for(String s : EntityList.NAME_TO_CLASS.keySet())
         {
-            list.printlnText("[" + EntityList.getIDFromString(s) + "] " + s);
+            list.println("[" + EntityList.getIDFromString(s) + "] " + s);
         }
 
         list = serverInfo.getSub("enchantments"); //LANG
 
         for(Enchantment e : Enchantment.REGISTRY)
         {
-            list.printlnText("[" + e.getRegistryName() + "] " + e.getTranslatedName(1));
+            list.println("[" + e.getRegistryName() + "] " + e.getTranslatedName(1));
         }
 
         list = serverInfo.getSub("loaded_badges"); //LANG
 
         for(Badge b : FTBUWorldDataMP.localBadges.badgeMap.values())
         {
-            list.printlnText(b.getID() + ": " + b.imageURL);
+            list.println(b.getID() + ": " + b.imageURL);
         }
 
         serverInfo.displayGuide(ep, "server_info");

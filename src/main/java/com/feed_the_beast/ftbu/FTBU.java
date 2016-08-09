@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu;
 
-import com.feed_the_beast.ftbl.util.LMMod;
 import com.feed_the_beast.ftbu.config.FTBUConfig;
 import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
 import com.feed_the_beast.ftbu.handlers.FTBUChunkEventHandler;
@@ -38,12 +37,9 @@ public class FTBU
     @SidedProxy(serverSide = "com.feed_the_beast.ftbu.FTBUCommon", clientSide = "com.feed_the_beast.ftbu.client.FTBUClient")
     public static FTBUCommon proxy;
 
-    public static LMMod mod;
-
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent e)
     {
-        mod = LMMod.create(FTBUFinals.MOD_ID);
         FTBUConfig.load();
 
         MinecraftForge.EVENT_BUS.register(new FTBUPlayerEventHandler());
@@ -59,14 +55,12 @@ public class FTBU
         Backups.INSTANCE.init();
         FTBUTops.init();
 
-        mod.onPostLoaded();
         proxy.preInit();
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent e)
     {
-        mod.loadRecipes();
         proxy.postInit();
         ForgeChunkManager.setForcedChunkLoadingCallback(inst, FTBUChunkEventHandler.instance);
     }

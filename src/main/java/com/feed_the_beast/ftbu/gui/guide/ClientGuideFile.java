@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
-import com.feed_the_beast.ftbl.gui.info.GuiInfo;
+import com.feed_the_beast.ftbl.gui.GuiInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -13,7 +13,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
-import java.util.AbstractMap;
 
 //FIXME
 @SideOnly(Side.CLIENT)
@@ -33,7 +32,7 @@ public class ClientGuideFile extends InfoPage
         if(clientGuideGui == null)
         {
             INSTANCE.reload();
-            clientGuideGui = new GuiInfo(null, new AbstractMap.SimpleEntry<>("client_guide", ClientGuideFile.INSTANCE)).getWrapper();
+            clientGuideGui = new GuiInfo("client_guide", ClientGuideFile.INSTANCE).getWrapper();
         }
         if(open)
         {

@@ -2,10 +2,10 @@ package com.feed_the_beast.ftbu.world.data;
 
 import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
-import com.feed_the_beast.ftbl.util.BlockDimPos;
-import com.feed_the_beast.ftbl.util.LMNBTUtils;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.latmod.lib.io.Bits;
+import com.latmod.lib.math.BlockDimPos;
+import com.latmod.lib.util.LMNBTUtils;
 import com.latmod.lib.util.LMTroveUtils;
 import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.hash.TIntIntHashMap;

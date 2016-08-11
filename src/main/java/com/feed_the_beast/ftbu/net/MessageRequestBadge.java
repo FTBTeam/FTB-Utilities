@@ -3,9 +3,9 @@ package com.feed_the_beast.ftbu.net;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToServer;
-import com.feed_the_beast.ftbl.util.LMNetUtils;
 import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldDataMP;
+import com.latmod.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 

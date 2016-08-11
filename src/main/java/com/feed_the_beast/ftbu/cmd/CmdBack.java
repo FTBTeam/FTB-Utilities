@@ -2,8 +2,8 @@ package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.util.LMDimUtils;
 import com.feed_the_beast.ftbu.FTBULang;
+import com.latmod.lib.util.LMDimUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;

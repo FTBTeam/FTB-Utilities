@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.world.chunks;
 
 import com.feed_the_beast.ftbl.api.ForgePlayer;
-import com.feed_the_beast.ftbl.util.ChunkDimPos;
+import com.latmod.lib.math.ChunkDimPos;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

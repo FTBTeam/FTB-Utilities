@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.journeymap;
 
-import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
+import com.latmod.lib.math.ChunkDimPos;
 
 /**
  * Created by LatvianModder on 07.02.2016.

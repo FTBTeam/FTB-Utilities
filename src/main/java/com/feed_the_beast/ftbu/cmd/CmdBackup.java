@@ -2,10 +2,10 @@ package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandSubBase;
-import com.feed_the_beast.ftbl.util.BroadcastSender;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.world.backups.Backups;
+import com.latmod.lib.BroadcastSender;
 import com.latmod.lib.util.LMFileUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -28,7 +28,7 @@ public class CmdBackup extends CommandSubBase
             boolean b = Backups.INSTANCE.run(ics);
             if(b)
             {
-                FTBULang.backup_manual_launch.printChat(BroadcastSender.inst, ics.getName());
+                FTBULang.backup_manual_launch.printChat(BroadcastSender.INSTANCE, ics.getName());
 
                 if(!FTBUConfigBackups.use_separate_thread.getAsBoolean())
                 {

@@ -5,8 +5,7 @@ import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandSubBase;
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
 import com.feed_the_beast.ftbl.util.FTBLib;
-import com.feed_the_beast.ftbl.util.LMNBTUtils;
-import com.feed_the_beast.ftbl.util.OtherMods;
+import com.latmod.lib.util.LMNBTUtils;
 import com.latmod.lib.util.LMUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -82,7 +81,7 @@ public class CmdInv extends CommandSubBase
                 NBTTagCompound tag = new NBTTagCompound();
                 LMInvUtils.writeItemsToNBT(ep.inventory, tag, "Inventory");
 
-                if(Loader.isModLoaded(OtherMods.BAUBLES))
+                if(Loader.isModLoaded("Baubles"))
                 {
                     LMInvUtils.writeItemsToNBT(LMInvUtils.getBaubles(ep), tag, "Baubles");
                 }
@@ -133,7 +132,7 @@ public class CmdInv extends CommandSubBase
 
                 LMInvUtils.readItemsFromNBT(ep.inventory, tag, "Inventory");
 
-                if(Loader.isModLoaded(OtherMods.BAUBLES))
+                if(Loader.isModLoaded("Baubles"))
                 {
                     LMInvUtils.readItemsFromNBT(LMInvUtils.getBaubles(ep), tag, "Baubles");
                 }

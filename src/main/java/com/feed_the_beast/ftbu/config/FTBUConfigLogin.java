@@ -3,10 +3,10 @@ package com.feed_the_beast.ftbu.config;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryCustom;
 import com.feed_the_beast.ftbl.api.item.ItemStackSerializer;
-import com.feed_the_beast.ftbl.util.JsonHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.latmod.lib.annotations.Info;
+import com.latmod.lib.json.LMJsonUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 
@@ -45,7 +45,7 @@ public class FTBUConfigLogin
             {
                 for(JsonElement e : o.getAsJsonArray())
                 {
-                    ITextComponent c = JsonHelper.deserializeICC(e);
+                    ITextComponent c = LMJsonUtils.deserializeTextComponent(e);
 
                     if(c != null)
                     {
@@ -63,7 +63,7 @@ public class FTBUConfigLogin
 
             for(ITextComponent c : components)
             {
-                a.add(JsonHelper.serializeICC(c));
+                a.add(LMJsonUtils.serializeTextComponent(c));
             }
 
             return a;

@@ -3,12 +3,7 @@ package com.feed_the_beast.ftbu.world.data;
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.notification.Notification;
-import com.feed_the_beast.ftbl.util.BlockDimPos;
-import com.feed_the_beast.ftbl.util.BroadcastSender;
-import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbl.util.FTBLib;
-import com.feed_the_beast.ftbl.util.LMDimUtils;
-import com.feed_the_beast.ftbl.util.LMNBTUtils;
 import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.FTBUNotifications;
@@ -25,9 +20,14 @@ import com.feed_the_beast.ftbu.world.backups.Backups;
 import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.chunks.ClaimedChunkStorage;
 import com.google.gson.JsonArray;
+import com.latmod.lib.BroadcastSender;
 import com.latmod.lib.EnumEnabled;
 import com.latmod.lib.json.LMJsonUtils;
+import com.latmod.lib.math.BlockDimPos;
+import com.latmod.lib.math.ChunkDimPos;
 import com.latmod.lib.math.MathHelperLM;
+import com.latmod.lib.util.LMDimUtils;
+import com.latmod.lib.util.LMNBTUtils;
 import com.latmod.lib.util.LMStringUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -402,7 +402,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
                 {
                     ITextComponent c = FTBULang.timer_restart.textComponent(msg);
                     c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
-                    BroadcastSender.inst.addChatMessage(c);
+                    BroadcastSender.INSTANCE.addChatMessage(c);
                 }
             }
         }

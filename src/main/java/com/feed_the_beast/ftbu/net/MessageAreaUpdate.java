@@ -4,11 +4,11 @@ import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
-import com.feed_the_beast.ftbl.util.ChunkDimPos;
-import com.feed_the_beast.ftbl.util.LMNetUtils;
 import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldDataMP;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldDataSP;
+import com.latmod.lib.math.ChunkDimPos;
+import com.latmod.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 

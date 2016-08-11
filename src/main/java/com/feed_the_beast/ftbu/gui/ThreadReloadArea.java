@@ -23,7 +23,7 @@ import java.util.Map;
 @SideOnly(Side.CLIENT)
 public class ThreadReloadArea extends Thread
 {
-    public static final PixelBuffer pixels = new PixelBuffer(GuiClaimChunks.tiles_tex * 16, GuiClaimChunks.tiles_tex * 16);
+    public static final PixelBuffer pixels = new PixelBuffer(GuiClaimChunks.TILES_TEX * 16, GuiClaimChunks.TILES_TEX * 16);
     private static final Map<IBlockState, Integer> colorCache = new HashMap<>();
     private static BlockPos.MutableBlockPos currentBlockPos = new BlockPos.MutableBlockPos(0, 0, 0);
     public final World worldObj;
@@ -152,9 +152,9 @@ public class ThreadReloadArea extends Thread
 
         try
         {
-            for(cz = 0; cz < GuiClaimChunks.tiles_gui; cz++)
+            for(cz = 0; cz < GuiClaimChunks.TILES_GUI; cz++)
             {
-                for(cx = 0; cx < GuiClaimChunks.tiles_gui; cx++)
+                for(cx = 0; cx < GuiClaimChunks.TILES_GUI; cx++)
                 {
                     chunk = worldObj.getChunkProvider().getLoadedChunk(gui.startX + cx, gui.startZ + cz);
 

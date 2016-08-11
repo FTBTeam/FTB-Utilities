@@ -1,9 +1,8 @@
 package com.feed_the_beast.ftbu.world.backups;
 
-import com.feed_the_beast.ftbl.util.BroadcastSender;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
-import com.latmod.lib.Time;
+import com.latmod.lib.BroadcastSender;
 import com.latmod.lib.math.MathHelperLM;
 import com.latmod.lib.util.LMFileUtils;
 import com.latmod.lib.util.LMStringUtils;
@@ -13,6 +12,7 @@ import net.minecraft.util.text.TextFormatting;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.Calendar;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -30,16 +30,16 @@ public class ThreadBackup extends Thread
 
     public static void doBackup(File src)
     {
-        Time time = Time.now();
+        Calendar time = Calendar.getInstance();
         File dstFile = null;
         boolean success = false;
         StringBuilder out = new StringBuilder();
-        appendNum(out, time.year, '-');
-        appendNum(out, time.month, '-');
-        appendNum(out, time.day, '-');
-        appendNum(out, time.hours, '-');
-        appendNum(out, time.minutes, '-');
-        appendNum(out, time.seconds, File.separatorChar);
+        appendNum(out, time.get(Calendar.YEAR), '-');
+        appendNum(out, time.get(Calendar.MONTH) + 1, '-');
+        appendNum(out, time.get(Calendar.DAY_OF_MONTH), '-');
+        appendNum(out, time.get(Calendar.HOUR_OF_DAY), '-');
+        appendNum(out, time.get(Calendar.MINUTE), '-');
+        appendNum(out, time.get(Calendar.SECOND), File.separatorChar);
 
         try
         {
@@ -131,22 +131,22 @@ public class ThreadBackup extends Thread
                 String sizeB = LMFileUtils.getSizeS(dstFile);
                 String sizeT = LMFileUtils.getSizeS(Backups.INSTANCE.backupsFolder);
 
-                ITextComponent c = FTBULang.backup_end_2.textComponent(getDoneTime(time.millis), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)));
+                ITextComponent c = FTBULang.backup_end_2.textComponent(getDoneTime(time.getTimeInMillis()), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)));
                 c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
-                BroadcastSender.inst.addChatMessage(c);
+                BroadcastSender.INSTANCE.addChatMessage(c);
             }
             else
             {
-                ITextComponent c = FTBULang.backup_end_1.textComponent(getDoneTime(time.millis));
+                ITextComponent c = FTBULang.backup_end_1.textComponent(getDoneTime(time.getTimeInMillis()));
                 c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
-                BroadcastSender.inst.addChatMessage(c);
+                BroadcastSender.INSTANCE.addChatMessage(c);
             }
         }
         catch(Exception ex)
         {
             ITextComponent c = FTBULang.backup_fail.textComponent(ex.getClass().getName());
             c.getStyle().setColor(TextFormatting.DARK_RED);
-            BroadcastSender.inst.addChatMessage(c);
+            BroadcastSender.INSTANCE.addChatMessage(c);
 
             ex.printStackTrace();
             if(dstFile != null)
@@ -155,7 +155,7 @@ public class ThreadBackup extends Thread
             }
         }
 
-        Backups.INSTANCE.backups.add(new Backup(time.millis, out.toString().replace('\\', '/'), Backups.INSTANCE.getLastIndex() + 1, success));
+        Backups.INSTANCE.backups.add(new Backup(time.getTimeInMillis(), out.toString().replace('\\', '/'), Backups.INSTANCE.getLastIndex() + 1, success));
         Backups.INSTANCE.cleanupAndSave();
     }
 

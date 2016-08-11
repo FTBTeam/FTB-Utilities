@@ -2,10 +2,10 @@ package com.feed_the_beast.ftbu.journeymap;
 
 import com.feed_the_beast.ftbl.api.ForgeTeam;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
-import com.feed_the_beast.ftbl.util.ChunkDimPos;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldData;
+import com.latmod.lib.math.ChunkDimPos;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.display.DisplayType;
 import journeymap.client.api.display.PolygonOverlay;

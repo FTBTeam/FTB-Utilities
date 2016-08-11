@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbu.world.backups;
 
-import com.feed_the_beast.ftbl.util.BroadcastSender;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.latmod.lib.BroadcastSender;
 import com.latmod.lib.json.LMJsonUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.server.CommandSaveAll;
@@ -116,7 +116,7 @@ public enum Backups
 
         ITextComponent c = FTBULang.backup_start.textComponent(ics.getName());
         c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
-        BroadcastSender.inst.addChatMessage(c);
+        BroadcastSender.INSTANCE.addChatMessage(c);
 
         nextBackup = System.currentTimeMillis() + FTBUConfigBackups.backupMillis();
 

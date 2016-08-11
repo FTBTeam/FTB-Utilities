@@ -3,12 +3,12 @@ package com.feed_the_beast.ftbu.gui.guide;
 import com.feed_the_beast.ftbl.api.info.IResourceProvider;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPageHelper;
-import com.feed_the_beast.ftbl.util.JsonHelper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.latmod.lib.FinalIDObject;
 import com.latmod.lib.io.LMConnection;
 import com.latmod.lib.io.RequestMethod;
+import com.latmod.lib.json.LMJsonUtils;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 
@@ -67,7 +67,7 @@ public class GuideFile extends FinalIDObject implements IResourceProvider
 
         if(o.has("name"))
         {
-            page.setTitle(JsonHelper.deserializeICC(o.get("name")));
+            page.setTitle(LMJsonUtils.deserializeTextComponent(o.get("name")));
         }
 
         if(o.has("text"))

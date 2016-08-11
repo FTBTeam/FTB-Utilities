@@ -17,12 +17,13 @@ import java.util.Map;
  */
 public class OnlineGuideRepoList extends GuideRepoList
 {
+    public static final String URL = "http://guides.latmod.com/repos.json";
     public static final OnlineGuideRepoList INSTANCE = new OnlineGuideRepoList();
 
     @Override
     protected void onReload(Map<GuideType, List<Guide>> m) throws Exception
     {
-        JsonObject o = new LMConnection(RequestMethod.SIMPLE_GET, "http://latv.sigmahost.co.uk/guides/repos.json").connect().asJson().getAsJsonObject();
+        JsonObject o = new LMConnection(RequestMethod.SIMPLE_GET, URL).connect().asJson().getAsJsonObject();
 
         for(GuideType t : GuideType.values())
         {

@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.world.data;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.notification.Notification;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBU;
@@ -61,7 +61,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
     private Map<String, BlockDimPos> warps;
     private String lastRestartMessage;
 
-    public static Badge getServerBadge(ForgePlayerMP p)
+    public static Badge getServerBadge(IForgePlayer p)
     {
         if(p == null)
         {
@@ -158,7 +158,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
                 if(fe == null)
                 {
 
-                    return !c.owner.hasTeam() || !FTBUTeamData.get(c.owner.getTeam()).toMP().disable_explosions.getAsBoolean();
+                    return c.owner.getTeam() == null || !FTBUTeamData.get(c.owner.getTeam()).disable_explosions.getAsBoolean();
                 }
                 else
                 {
@@ -170,14 +170,14 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         }
     }
 
-    public static boolean claimChunk(ForgePlayerMP player, ChunkDimPos pos)
+    public static boolean claimChunk(IForgePlayer player, ChunkDimPos pos)
     {
         if(isDimensionBlacklisted(player.getProfile(), pos.dim))
         {
             return false;
         }
 
-        if(!player.hasTeam())
+        if(player.getTeam() == null)
         {
             EntityPlayerMP ep = player.getPlayer();
 
@@ -208,12 +208,11 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         }
 
         chunks.put(pos, new ClaimedChunk(player, pos));
-        player.sendUpdate();
 
         return true;
     }
 
-    public static boolean unclaimChunk(@Nonnull ForgePlayerMP player, @Nonnull ChunkDimPos pos)
+    public static boolean unclaimChunk(@Nonnull IForgePlayer player, @Nonnull ChunkDimPos pos)
     {
         ClaimedChunk chunk = chunks.getChunk(pos);
 
@@ -221,14 +220,13 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         {
             setLoaded(player, pos, false);
             chunks.put(pos, null);
-            player.sendUpdate();
             return true;
         }
 
         return false;
     }
 
-    public static void unclaimAllChunks(@Nonnull ForgePlayerMP player, @Nullable Integer dim)
+    public static void unclaimAllChunks(@Nonnull IForgePlayer player, @Nullable Integer dim)
     {
         Collection<ClaimedChunk> ch = new HashSet<>();
         ch.addAll(chunks.getChunks(player.getProfile().getId()));
@@ -243,12 +241,10 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
                     chunks.put(c.pos, null);
                 }
             }
-
-            player.sendUpdate();
         }
     }
 
-    public static boolean setLoaded(@Nonnull ForgePlayerMP player, @Nonnull ChunkDimPos pos, boolean flag)
+    public static boolean setLoaded(@Nonnull IForgePlayer player, @Nonnull ChunkDimPos pos, boolean flag)
     {
         ClaimedChunk chunk = chunks.getChunk(pos);
 
@@ -256,7 +252,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         {
             if(flag)
             {
-                if(!player.hasTeam())
+                if(player.getTeam() == null)
                 {
                     EntityPlayerMP ep = player.getPlayer();
 
@@ -285,8 +281,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
 
             if(player.getPlayer() != null)
             {
-                new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(player.toMP().getPlayer());
-                player.sendUpdate();
+                new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(player.getPlayer());
             }
 
             return true;

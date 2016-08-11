@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.net;
 
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToServer;
 import com.feed_the_beast.ftbl.gui.GuiLoading;
@@ -41,7 +41,7 @@ public class MessageRequestServerInfo extends MessageToServer<MessageRequestServ
     @Override
     public void onMessage(MessageRequestServerInfo m, EntityPlayerMP player)
     {
-        ForgePlayerMP owner = ForgeWorldMP.inst.getPlayer(player);
+        IForgePlayer owner = FTBLibAPI.INSTANCE.getWorld().getPlayer(player);
         new ServerInfoFile(owner).displayGuide(owner.getPlayer(), "server_info");
     }
 }

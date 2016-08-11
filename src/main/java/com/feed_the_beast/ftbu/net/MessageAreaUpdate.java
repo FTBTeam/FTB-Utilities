@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.net;
 
-import com.feed_the_beast.ftbl.api.ForgePlayer;
-import com.feed_the_beast.ftbl.api.ForgeWorldSP;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
@@ -63,7 +62,7 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
 
             if(b)
             {
-                ForgePlayer owner = ForgeWorldSP.inst == null ? null : ForgeWorldSP.inst.getPlayer(LMNetUtils.readUUID(io));
+                IForgePlayer owner = null;//FIXME: FTBLibAPI.INSTANCE.getWorld() == null ? null : ForgeWorldSP.inst.getPlayer(LMNetUtils.readUUID(io));
 
                 if(owner != null)
                 {
@@ -106,9 +105,6 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
     @Override
     public void onMessage(MessageAreaUpdate m, Minecraft mc)
     {
-        if(ForgeWorldSP.inst != null)
-        {
-            FTBUWorldDataSP.setTypes(m.types);
-        }
+        FTBUWorldDataSP.setTypes(m.types);
     }
 }

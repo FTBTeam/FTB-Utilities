@@ -1,14 +1,12 @@
 package com.feed_the_beast.ftbu.cmd;
 
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.api.permissions.context.PlayerContext;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.world.data.FTBUPlayerData;
-import com.feed_the_beast.ftbu.world.data.FTBUPlayerDataMP;
 import com.latmod.lib.math.BlockDimPos;
 import com.latmod.lib.util.LMDimUtils;
 import com.latmod.lib.util.LMStringUtils;
@@ -49,7 +47,7 @@ public class CmdHome extends CommandLM
     {
         if(args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(ForgeWorldMP.inst.getPlayer(sender)).toMP().listHomes());
+            return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(FTBLibAPI.INSTANCE.getWorld().getPlayer(sender)).listHomes());
         }
 
         return super.getTabCompletionOptions(server, sender, args, pos);
@@ -59,7 +57,7 @@ public class CmdHome extends CommandLM
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-        FTBUPlayerDataMP d = FTBUPlayerData.get(ForgePlayerMP.get(ep)).toMP();
+        FTBUPlayerData d = FTBUPlayerData.get(getForgePlayer(ep));
         checkArgs(args, 1, "<home>");
 
         if(args[0].equals("list"))

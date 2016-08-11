@@ -1,6 +1,10 @@
 package com.feed_the_beast.ftbu.handlers;
 
-import com.feed_the_beast.ftbl.api.events.ForgeWorldEvent;
+import com.feed_the_beast.ftbl.api.events.SyncDataEvent;
+import com.feed_the_beast.ftbl.api.events.world.AttachWorldCapabilitiesEvent;
+import com.feed_the_beast.ftbl.api.events.world.ForgeWorldClosedEvent;
+import com.feed_the_beast.ftbl.api.events.world.ForgeWorldLoadedBeforePlayersEvent;
+import com.feed_the_beast.ftbl.api.events.world.ForgeWorldLoadedEvent;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.badges.Badge;
@@ -19,43 +23,42 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class FTBUWorldEventHandler // FTBLIntegration
 {
     @SubscribeEvent
-    public void attachCapabilities(ForgeWorldEvent.AttachCapabilities event)
+    public void attachCapabilities(AttachWorldCapabilitiesEvent event)
     {
-        ResourceLocation r = new ResourceLocation(FTBUFinals.MOD_ID, "data");
-        event.addCapability(r, event.world.getSide().isServer() ? new FTBUWorldDataMP() : new FTBUWorldDataSP());
+        event.addCapability(new ResourceLocation(FTBUFinals.MOD_ID, "data"), new FTBUWorldDataMP());
     }
 
     @SubscribeEvent
-    public void onWorldLoaded(ForgeWorldEvent.Loaded event)
+    public void onWorldLoaded(ForgeWorldLoadedEvent event)
     {
-        if(event.world.hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null))
+        if(event.getWorld().hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null))
         {
-            event.world.getCapability(FTBUCapabilities.FTBU_WORLD_DATA, null).onLoaded();
+            event.getWorld().getCapability(FTBUCapabilities.FTBU_WORLD_DATA, null).onLoaded();
         }
     }
 
     @SubscribeEvent
-    public void onWorldLoadedBeforePlayers(ForgeWorldEvent.LoadedBeforePlayers event)
+    public void onWorldLoadedBeforePlayers(ForgeWorldLoadedBeforePlayersEvent event)
     {
-        if(event.world.hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null))
+        if(event.getWorld().hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null))
         {
-            event.world.getCapability(FTBUCapabilities.FTBU_WORLD_DATA, null).onLoadedBeforePlayers();
+            event.getWorld().getCapability(FTBUCapabilities.FTBU_WORLD_DATA, null).onLoadedBeforePlayers();
         }
     }
 
     @SubscribeEvent
-    public void onWorldClosed(ForgeWorldEvent.Closed event)
+    public void onWorldClosed(ForgeWorldClosedEvent event)
     {
-        if(event.world.hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null))
+        if(event.getWorld().hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null))
         {
-            event.world.getCapability(FTBUCapabilities.FTBU_WORLD_DATA, null).onClosed();
+            event.getWorld().getCapability(FTBUCapabilities.FTBU_WORLD_DATA, null).onClosed();
         }
     }
 
     @SubscribeEvent
-    public void onDataSynced(ForgeWorldEvent.Sync event)
+    public void onDataSynced(SyncDataEvent event)
     {
-        if(event.world.getSide().isServer())
+        if(event.getSide().isServer())
         {
             NBTTagCompound tag = new NBTTagCompound();
 
@@ -68,11 +71,11 @@ public class FTBUWorldEventHandler // FTBLIntegration
 
             tag.setTag("B", tag1);
 
-            event.syncData.setTag("FTBU", tag);
+            event.getData().setTag("FTBU", tag);
         }
         else
         {
-            NBTTagCompound tag = event.syncData.getCompoundTag("FTBU");
+            NBTTagCompound tag = event.getData().getCompoundTag("FTBU");
 
             NBTTagCompound tag1 = tag.getCompoundTag("B");
 

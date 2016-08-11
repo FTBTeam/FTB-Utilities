@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.world.chunks;
 
-import com.feed_the_beast.ftbl.api.ForgePlayer;
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.LangKey;
 import com.feed_the_beast.ftbu.world.data.FTBUTeamData;
 import com.latmod.lib.math.ChunkDimPos;
@@ -14,10 +13,10 @@ public final class ClaimedChunk
     public static final LangKey LANG_LOADED = new LangKey("ftbu.chunktype.loaded");
 
     public final ChunkDimPos pos;
-    public final ForgePlayer owner;
+    public final IForgePlayer owner;
     public boolean loaded, forced;
 
-    public ClaimedChunk(ForgePlayer o, ChunkDimPos p)
+    public ClaimedChunk(IForgePlayer o, ChunkDimPos p)
     {
         owner = o;
         pos = p;
@@ -41,24 +40,24 @@ public final class ClaimedChunk
         return pos.hashCode();
     }
 
-    public boolean isChunkOwner(ForgePlayer p)
+    public boolean isChunkOwner(IForgePlayer p)
     {
         return p != null && p.equalsPlayer(owner);
     }
 
-    public boolean canInteract(ForgePlayerMP p, boolean leftClick, BlockPos pos)
+    public boolean canInteract(IForgePlayer p, boolean leftClick, BlockPos pos)
     {
         if(owner.equalsPlayer(p))
         {
             return true;
         }
-        else if(!owner.hasTeam())
+        else if(owner.getTeam() == null)
         {
             return true;
         }
         else if(p.isFake())
         {
-            return FTBUTeamData.get(owner.getTeam()).toMP().fakePlayers.getAsBoolean();
+            return FTBUTeamData.get(owner.getTeam()).fakePlayers.getAsBoolean();
         }
         /*else if(p.isOnline() && PermissionAPI.hasPermission(p.getProfile(), FTBLibPermissions.INTERACT_SECURE, false, new Context(p.getPlayer(), pos)))
         {

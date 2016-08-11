@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
-import com.feed_the_beast.ftbl.api.events.ForgeTeamEvent;
+import com.feed_the_beast.ftbl.api.events.team.AttachTeamCapabilitiesEvent;
+import com.feed_the_beast.ftbl.api.events.team.ForgeTeamSettingsEvent;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.world.data.FTBUTeamDataMP;
-import com.feed_the_beast.ftbu.world.data.FTBUTeamDataSP;
+import com.feed_the_beast.ftbu.world.data.FTBUTeamData;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -15,9 +15,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class FTBUTeamEventHandler
 {
     @SubscribeEvent
-    public void attachCapabilities(ForgeTeamEvent.AttachCapabilities event)
+    public void attachCapabilities(AttachTeamCapabilitiesEvent event)
     {
-        event.addCapability(new ResourceLocation(FTBUFinals.MOD_ID, "data"), event.team.world.getSide().isServer() ? new FTBUTeamDataMP() : new FTBUTeamDataSP());
+        event.addCapability(new ResourceLocation(FTBUFinals.MOD_ID, "data"), new FTBUTeamData());
     }
 
     /*@SubscribeEvent
@@ -41,18 +41,18 @@ public class FTBUTeamEventHandler
     }*/
 
     @SubscribeEvent
-    public void getSettings(ForgeTeamEvent.GetSettings event)
+    public void getSettings(ForgeTeamSettingsEvent event)
     {
-        if(event.team.hasCapability(FTBUCapabilities.FTBU_TEAM_DATA, null))
+        if(event.getTeam().hasCapability(FTBUCapabilities.FTBU_TEAM_DATA, null))
         {
-            FTBUTeamDataMP data = event.team.getCapability(FTBUCapabilities.FTBU_TEAM_DATA, null).toMP();
+            FTBUTeamData data = event.getTeam().getCapability(FTBUCapabilities.FTBU_TEAM_DATA, null);
             ConfigGroup group = new ConfigGroup();
 
             group.add("blocks", data.blocks);
             group.add("disable_explosions", data.disable_explosions);
             group.add("fake_players", data.fakePlayers);
 
-            event.settings.add("ftbu", group);
+            event.getSettings().add("ftbu", group);
         }
     }
 }

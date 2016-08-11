@@ -13,6 +13,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -26,15 +27,19 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
     public static final ConfigEntryBool light_value_texture_x = new ConfigEntryBool(false);
 
     public static final String KEY_CATEGORY = "key.categories.ftbu";
-    public static final KeyBinding KEY_GUIDE = FTBLibClient.addKeyBinding(new KeyBinding("key.ftbu.guide", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_NONE, KEY_CATEGORY));
-    public static final KeyBinding KEY_LIGHT_VALUES = FTBLibClient.addKeyBinding(new KeyBinding("key.ftbu.light_values", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_F7, KEY_CATEGORY));
-    public static final KeyBinding KEY_CHUNK_BORDER = FTBLibClient.addKeyBinding(new KeyBinding("key.ftbu.chunk_border", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_F9, KEY_CATEGORY));
+    public static final KeyBinding KEY_GUIDE = new KeyBinding("key.ftbu.guide", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_NONE, KEY_CATEGORY);
+    public static final KeyBinding KEY_LIGHT_VALUES = new KeyBinding("key.ftbu.light_values", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_F7, KEY_CATEGORY);
+    public static final KeyBinding KEY_CHUNK_BORDER = new KeyBinding("key.ftbu.chunk_border", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_F9, KEY_CATEGORY);
 
     public static IJMPluginHandler journeyMapHandler = null;
 
     @Override
     public void preInit()
     {
+        ClientRegistry.registerKeyBinding(KEY_GUIDE);
+        ClientRegistry.registerKeyBinding(KEY_LIGHT_VALUES);
+        ClientRegistry.registerKeyBinding(KEY_CHUNK_BORDER);
+
         ClientConfigRegistry.addGroup("ftbu", FTBUClient.class);
         FTBUActions.init();
         FTBUWorldDataSP.reloadGlobalBadges();

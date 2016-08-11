@@ -1,8 +1,6 @@
 package com.feed_the_beast.ftbu.cmd;
 
-import com.feed_the_beast.ftbl.api.ForgePlayer;
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandSubBase;
 import com.feed_the_beast.ftbl.api.notification.Notification;
@@ -15,6 +13,7 @@ import com.feed_the_beast.ftbu.net.MessageAreaUpdate;
 import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldDataMP;
 import com.latmod.lib.math.ChunkDimPos;
+import com.latmod.lib.math.EntityDimPos;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -45,7 +44,7 @@ public class CmdChunks extends CommandSubBase
         public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-            ForgePlayerMP p = ForgePlayerMP.get(ep);
+            IForgePlayer p = getForgePlayer(ep);
 
             ChunkDimPos pos;
 
@@ -55,7 +54,7 @@ public class CmdChunks extends CommandSubBase
             }
             else
             {
-                pos = p.getPos().toChunkPos();
+                pos = new EntityDimPos(ep).toBlockDimPos().toChunkPos();
             }
 
             if(FTBUWorldDataMP.claimChunk(p, pos))
@@ -87,7 +86,7 @@ public class CmdChunks extends CommandSubBase
         public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-            ForgePlayerMP p = ForgePlayerMP.get(ep);
+            IForgePlayer p = getForgePlayer(ep);
 
             ChunkDimPos pos;
 
@@ -97,7 +96,7 @@ public class CmdChunks extends CommandSubBase
             }
             else
             {
-                pos = p.getPos().toChunkPos();
+                pos = new EntityDimPos(ep).toBlockDimPos().toChunkPos();
             }
 
             if(!p.equalsPlayer(FTBUWorldDataMP.chunks.getOwnerPlayer(pos)) && !PermissionAPI.hasPermission(ep.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, false, new PlayerContext(ep).set(ContextKey.CHUNK, pos.getChunkPos())))
@@ -134,7 +133,7 @@ public class CmdChunks extends CommandSubBase
         public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-            ForgePlayerMP p = ForgePlayerMP.get(ep);
+            IForgePlayer p = getForgePlayer(ep);
 
             ChunkDimPos pos;
 
@@ -144,7 +143,7 @@ public class CmdChunks extends CommandSubBase
             }
             else
             {
-                pos = p.getPos().toChunkPos();
+                pos = new EntityDimPos(ep).toBlockDimPos().toChunkPos();
             }
 
             if(FTBUWorldDataMP.setLoaded(p, pos, true))
@@ -176,8 +175,7 @@ public class CmdChunks extends CommandSubBase
         public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-
-            ForgePlayerMP p = ForgePlayerMP.get(ep);
+            IForgePlayer p = getForgePlayer(ep);
             ChunkDimPos pos;
 
             if(args.length >= 2)
@@ -186,7 +184,7 @@ public class CmdChunks extends CommandSubBase
             }
             else
             {
-                pos = p.getPos().toChunkPos();
+                pos = new EntityDimPos(ep).toBlockDimPos().toChunkPos();
             }
 
             if(FTBUWorldDataMP.setLoaded(p, pos, false))
@@ -221,7 +219,7 @@ public class CmdChunks extends CommandSubBase
 
             checkArgs(args, 1, "<all_dimensions> [player]");
 
-            ForgePlayerMP p;
+            IForgePlayer p;
 
             if(args.length >= 2)
             {
@@ -230,11 +228,11 @@ public class CmdChunks extends CommandSubBase
                     throw new CommandException("commands.generic.permission");
                 }
 
-                p = ForgePlayerMP.get(args[1]);
+                p = getForgePlayer(args[1]);
             }
             else
             {
-                p = ForgePlayerMP.get(ep);
+                p = getForgePlayer(ep);
             }
 
             FTBUWorldDataMP.unclaimAllChunks(p, parseBoolean(args[0]) ? null : ep.dimension);
@@ -266,23 +264,17 @@ public class CmdChunks extends CommandSubBase
                 {
                     c.loaded = false;
                 }
-                for(ForgePlayer p : ForgeWorldMP.inst.getOnlinePlayers())
-                {
-                    p.toMP().sendUpdate();
-                }
+
                 ics.addChatMessage(new TextComponentString("Unloaded all chunks")); //TODO: Lang
                 return;
             }
 
-            ForgePlayerMP p = ForgePlayerMP.get(args[0]);
+            IForgePlayer p = getForgePlayer(args[0]);
             for(ClaimedChunk c : FTBUWorldDataMP.chunks.getChunks(p.getProfile().getId()))
             {
                 c.loaded = false;
             }
-            if(p.isOnline())
-            {
-                p.sendUpdate();
-            }
+
             ics.addChatMessage(new TextComponentString("Unloaded all " + p.getProfile().getName() + "'s chunks")); //TODO: Lang
         }
     }
@@ -311,7 +303,7 @@ public class CmdChunks extends CommandSubBase
         public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
         {
             checkArgs(args, 1, "<player>");
-            ForgePlayerMP p = ForgePlayerMP.get(args[0]);
+            IForgePlayer p = getForgePlayer(args[0]);
             FTBUWorldDataMP.unclaimAllChunks(p, null);
             ics.addChatMessage(new TextComponentString("Unclaimed all " + p.getProfile().getName() + "'s chunks")); //TODO: Lang
         }

@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.net;
 
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToServer;
 import com.feed_the_beast.ftbu.badges.Badge;
@@ -45,7 +45,7 @@ public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
     @Override
     public void onMessage(MessageRequestBadge m, EntityPlayerMP player)
     {
-        Badge b = FTBUWorldDataMP.getServerBadge(ForgeWorldMP.inst.getPlayer(m.playerID));
+        Badge b = FTBUWorldDataMP.getServerBadge(FTBLibAPI.INSTANCE.getWorld().getPlayer(m.playerID));
 
         if(b != null)
         {

@@ -1,8 +1,7 @@
 package com.feed_the_beast.ftbu.handlers;
 
-import com.feed_the_beast.ftbl.api.ForgePlayer;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
-import com.feed_the_beast.ftbl.api.ServerTickCallback;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.events.RegisterFTBCommandsEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.util.FTBLib;
@@ -58,9 +57,9 @@ public class FTBUServerEventHandler
     }
 
     @SubscribeEvent
-    public void onReloadEvent(ReloadEvent e)
+    public void onReloadEvent(ReloadEvent event)
     {
-        if(e.world.getSide().isServer())
+        if(event.getSide().isServer())
         {
             ServerInfoFile.CachedInfo.reload();
             Ranks.INSTANCE.reload();
@@ -81,7 +80,7 @@ public class FTBUServerEventHandler
     @SubscribeEvent
     public void onRegisterFTBCommandsEvent(RegisterFTBCommandsEvent event)
     {
-        if(event.isDedi)
+        if(event.isDedicatedServer())
         {
             event.add(new CmdRestart());
         }
@@ -141,17 +140,13 @@ public class FTBUServerEventHandler
 
             line.getStyle().setColor(TextFormatting.GOLD);
 
-            FTBLib.addCallback(new ServerTickCallback()
+            FTBLibAPI.INSTANCE.addServerCallback(1, () ->
             {
-                @Override
-                public void onCallback()
+                for(IForgePlayer p : FTBLibAPI.INSTANCE.getWorld().getPlayers())
                 {
-                    for(ForgePlayer p : ForgeWorldMP.inst.getOnlinePlayers())
+                    if(p.isOnline() && FTBUPlayerData.get(p).chatLinks.getAsBoolean())
                     {
-                        if(FTBUPlayerData.get(p).toMP().chatLinks.getAsBoolean())
-                        {
-                            p.getPlayer().addChatMessage(line);
-                        }
+                        p.getPlayer().addChatMessage(line);
                     }
                 }
             });

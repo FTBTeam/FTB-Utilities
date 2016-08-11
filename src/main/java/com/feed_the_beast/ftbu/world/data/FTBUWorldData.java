@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.world.data;
 
-import com.feed_the_beast.ftbl.api.ForgeWorld;
+import com.feed_the_beast.ftbl.api.IForgeWorld;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -13,12 +13,12 @@ import javax.annotation.Nullable;
  */
 public abstract class FTBUWorldData implements ICapabilityProvider
 {
-    public static boolean isLoadedW(ForgeWorld world)
+    public static boolean isLoadedW(IForgeWorld world)
     {
         return world != null && world.hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null);
     }
 
-    public static FTBUWorldData getW(ForgeWorld world)
+    public static FTBUWorldData getW(IForgeWorld world)
     {
         return isLoadedW(world) ? world.getCapability(FTBUCapabilities.FTBU_WORLD_DATA, null) : null;
     }

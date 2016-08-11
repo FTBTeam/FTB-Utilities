@@ -1,16 +1,16 @@
 package com.feed_the_beast.ftbu.api;
 
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbu.world.ServerInfoFile;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class EventFTBUServerInfo extends Event
 {
     private final ServerInfoFile file;
-    private final ForgePlayerMP player;
+    private final IForgePlayer player;
     private final boolean isOP;
 
-    public EventFTBUServerInfo(ServerInfoFile f, ForgePlayerMP p, boolean o)
+    public EventFTBUServerInfo(ServerInfoFile f, IForgePlayer p, boolean o)
     {
         file = f;
         player = p;
@@ -22,7 +22,7 @@ public class EventFTBUServerInfo extends Event
         return file;
     }
 
-    public ForgePlayerMP getPlayer()
+    public IForgePlayer getPlayer()
     {
         return player;
     }

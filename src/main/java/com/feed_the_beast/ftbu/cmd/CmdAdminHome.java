@@ -1,11 +1,9 @@
 package com.feed_the_beast.ftbu.cmd;
 
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandSubBase;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.world.data.FTBUPlayerData;
-import com.feed_the_beast.ftbu.world.data.FTBUPlayerDataMP;
 import com.latmod.lib.math.BlockDimPos;
 import com.latmod.lib.util.LMDimUtils;
 import com.latmod.lib.util.LMStringUtils;
@@ -38,7 +36,7 @@ public class CmdAdminHome extends CommandSubBase
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
             checkArgs(args, 2, "<player> <home>");
             args[1] = args[1].toLowerCase();
-            FTBUPlayerDataMP d = FTBUPlayerData.get(ForgePlayerMP.get(args[0])).toMP();
+            FTBUPlayerData d = FTBUPlayerData.get(getForgePlayer(args[0]));
 
             BlockDimPos pos = d.getHome(args[1]);
 
@@ -69,7 +67,7 @@ public class CmdAdminHome extends CommandSubBase
         public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
         {
             checkArgs(args, 1, "<player>");
-            FTBUPlayerDataMP d = FTBUPlayerData.get(ForgePlayerMP.get(args[0])).toMP();
+            FTBUPlayerData d = FTBUPlayerData.get(getForgePlayer(args[0]));
             sender.addChatMessage(new TextComponentString(LMStringUtils.strip(d.listHomes())));
         }
     }
@@ -91,7 +89,7 @@ public class CmdAdminHome extends CommandSubBase
         public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
         {
             checkArgs(args, 2, "<player> <home>");
-            FTBUPlayerDataMP d = FTBUPlayerData.get(ForgePlayerMP.get(args[0])).toMP();
+            FTBUPlayerData d = FTBUPlayerData.get(getForgePlayer(args[0]));
             args[1] = args[1].toLowerCase();
             BlockDimPos pos = d.getHome(args[1]);
 

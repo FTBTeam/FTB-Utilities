@@ -19,29 +19,44 @@ public abstract class GuideRepoList
         return (l != null && !l.isEmpty()) ? l : Collections.emptyList();
     }
 
-    public final void reload()
+    public final void reload(boolean useThread)
     {
         map.clear();
 
         thread = null;
-        thread = new Thread()
-        {
-            @Override
-            public void run()
-            {
-                try
-                {
-                    onReload(map);
-                }
-                catch(Exception ex)
-                {
-                    ex.printStackTrace();
-                }
-            }
-        };
 
-        thread.setDaemon(true);
-        thread.start();
+        if(useThread)
+        {
+            thread = new Thread()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        onReload(map);
+                    }
+                    catch(Exception ex)
+                    {
+                        ex.printStackTrace();
+                    }
+                }
+            };
+
+            thread.setDaemon(true);
+            thread.start();
+        }
+        else
+        {
+            try
+            {
+                onReload(map);
+            }
+            catch(Exception ex)
+            {
+                ex.printStackTrace();
+            }
+        }
     }
 
     protected abstract void onReload(Map<GuideType, List<Guide>> m) throws Exception;

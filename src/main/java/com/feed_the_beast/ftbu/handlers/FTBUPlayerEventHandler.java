@@ -1,10 +1,15 @@
 package com.feed_the_beast.ftbu.handlers;
 
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbl.api.ForgeTeam;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
-import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
+import com.feed_the_beast.ftbl.api.events.player.AttachPlayerCapabilitiesEvent;
+import com.feed_the_beast.ftbl.api.events.player.ForgePlayerDeathEvent;
+import com.feed_the_beast.ftbl.api.events.player.ForgePlayerInfoEvent;
+import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
+import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
+import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
 import com.feed_the_beast.ftbl.api.notification.Notification;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
@@ -13,24 +18,18 @@ import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigLogin;
-import com.feed_the_beast.ftbu.net.MessageAreaRequest;
 import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.data.FTBUPlayerData;
-import com.feed_the_beast.ftbu.world.data.FTBUPlayerDataMP;
-import com.feed_the_beast.ftbu.world.data.FTBUPlayerDataSP;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldDataMP;
 import com.google.gson.JsonElement;
 import com.latmod.lib.math.BlockDimPos;
 import com.latmod.lib.math.ChunkDimPos;
 import com.latmod.lib.math.EntityDimPos;
-import com.latmod.lib.math.MathHelperLM;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -41,116 +40,87 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 public class FTBUPlayerEventHandler
 {
-    private static Map<UUID, String> lastChunksTeamIDMap = new HashMap<>();
-
     @SubscribeEvent
-    public void attachCapabilities(ForgePlayerEvent.AttachCapabilities event)
+    public void attachCapabilities(AttachPlayerCapabilitiesEvent event)
     {
-        event.addCapability(new ResourceLocation(FTBUFinals.MOD_ID, "data"), event.player.getWorld().getSide().isServer() ? new FTBUPlayerDataMP() : new FTBUPlayerDataSP());
+        event.addCapability(new ResourceLocation(FTBUFinals.MOD_ID, "data"), new FTBUPlayerData());
     }
 
     @SubscribeEvent
-    public void onDataSynced(ForgePlayerEvent.Sync event)
+    public void onLoggedIn(ForgePlayerLoggedInEvent event)
     {
-        if(event.player.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
+        if(event.getPlayer().hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
         {
-            FTBUPlayerData data = event.player.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
+            EntityPlayerMP ep = event.getPlayer().getPlayer();
 
-            if(event.player.getWorld().getSide().isServer())
+            if(event.isFirstLogin())
             {
-                NBTTagCompound tag = new NBTTagCompound();
-                data.writeSyncData(event.player, tag, event.self);
-                event.data.setTag("FTBU", tag);
-            }
-            else
-            {
-                data.readSyncData(event.player, event.data.getCompoundTag("FTBU"), event.self);
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void onLoggedIn(ForgePlayerEvent.LoggedIn event)
-    {
-        if(event.player.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
-        {
-            if(event.player.getWorld().getSide().isServer())
-            {
-                EntityPlayerMP ep = event.player.toMP().getPlayer();
-
-                if(event.first)
+                if(FTBUConfigLogin.enable_starting_items.getAsBoolean())
                 {
-                    if(FTBUConfigLogin.enable_starting_items.getAsBoolean())
+                    for(ItemStack is : FTBUConfigLogin.starting_items.getItems())
                     {
-                        for(ItemStack is : FTBUConfigLogin.starting_items.getItems())
-                        {
-                            LMInvUtils.giveItem(ep, is);
-                        }
+                        LMInvUtils.giveItem(ep, is);
                     }
                 }
-
-                if(FTBUConfigLogin.enable_motd.getAsBoolean())
-                {
-                    FTBUConfigLogin.motd.components.forEach(ep::addChatMessage);
-                }
-
-                FTBUChunkEventHandler.instance.markDirty(null);
             }
-            else
+
+            if(FTBUConfigLogin.enable_motd.getAsBoolean())
             {
-                EntityPlayer ep = event.player.getPlayer();
-                new MessageAreaRequest(MathHelperLM.chunk(ep.posX) - 3, MathHelperLM.chunk(ep.posZ) - 3, 7, 7).sendToServer();
+                FTBUConfigLogin.motd.components.forEach(ep::addChatMessage);
             }
+
+            FTBUChunkEventHandler.instance.markDirty(null);
         }
     }
 
     @SubscribeEvent
-    public void onLoggedOut(ForgePlayerEvent.LoggedOut event)
+    public void onLoggedOut(ForgePlayerLoggedOutEvent event)
     {
-        if(event.player.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
+        if(event.getPlayer().hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
         {
             FTBUChunkEventHandler.instance.markDirty(null);
         }
-
-        lastChunksTeamIDMap.remove(event.player.getProfile().getId());
     }
 
     @SubscribeEvent
-    public void getSettings(ForgePlayerEvent.GetSettings event)
+    public void onDeath(ForgePlayerDeathEvent event)
     {
-        if(event.player.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
+        if(event.getPlayer().hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
         {
-            FTBUPlayerDataMP data = event.player.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null).toMP();
+            FTBUPlayerData data = event.getPlayer().getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
+            data.lastDeath = new EntityDimPos(event.getPlayer().getPlayer()).toBlockDimPos();
+        }
+    }
+
+    @SubscribeEvent
+    public void getSettings(ForgePlayerSettingsEvent event)
+    {
+        if(event.getPlayer().hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
+        {
+            FTBUPlayerData data = event.getPlayer().getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
             ConfigGroup group = new ConfigGroup();
 
             group.add("render_badge", data.renderBadge);
             group.add("chat_links", data.chatLinks);
 
-            event.settings.add("ftbu", group);
+            event.getSettings().add("ftbu", group);
         }
     }
 
     @SubscribeEvent
-    public void addInfo(ForgePlayerEvent.AddInfo event)
+    public void addInfo(ForgePlayerInfoEvent event)
     {
-        if(event.player.getWorld().getSide().isServer())
-        {
-            /*
-            if(owner.getRank().config.show_rank.getMode())
-		    {
-			    Rank rank = getRank();
-			    IChatComponent rankC = new ChatComponentText("[" + rank.ID + "]");
-			    rankC.getChatStyle().setColor(rank.color.getMode());
-			    info.add(rankC);
-		    }
-		    */
-        }
+        /*
+        if(owner.getRank().config.show_rank.getMode())
+		{
+		    Rank rank = getRank();
+		    IChatComponent rankC = new ChatComponentText("[" + rank.ID + "]");
+		    rankC.getChatStyle().setColor(rank.color.getMode());
+		    info.add(rankC);
+		}
+		*/
     }
 
     @SubscribeEvent
@@ -162,26 +132,27 @@ public class FTBUPlayerEventHandler
         }
 
         EntityPlayerMP ep = (EntityPlayerMP) e.getEntity();
-        ForgePlayerMP player = ForgeWorldMP.inst.getPlayer(ep);
+        IForgePlayer player = FTBLibAPI.INSTANCE.getWorld().getPlayer(ep);
 
         if(player == null || !player.isOnline())
         {
             return;
         }
 
-        player.lastPos = new EntityDimPos(ep).toBlockDimPos();
+        FTBUPlayerData data = player.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
+        data.lastPos = new EntityDimPos(ep).toBlockDimPos();
 
         ClaimedChunk chunk = FTBUWorldDataMP.chunks.getChunk(new ChunkDimPos(ep.dimension, e.getNewChunkX(), e.getNewChunkZ()));
 
-        String newTeamID = (chunk == null || !chunk.owner.hasTeam()) ? "" : chunk.owner.getTeamID();
+        String newTeamID = (chunk == null || chunk.owner.getTeam() == null) ? "" : chunk.owner.getTeamID();
 
-        if(!lastChunksTeamIDMap.containsKey(player.getProfile().getId()) || !lastChunksTeamIDMap.get(player.getProfile().getId()).equals(newTeamID))
+        if(data.lastChunkID == null || !data.lastChunkID.equals(newTeamID))
         {
-            lastChunksTeamIDMap.put(player.getProfile().getId(), newTeamID);
+            data.lastChunkID = newTeamID;
 
             if(!newTeamID.isEmpty())
             {
-                ForgeTeam team = chunk.owner.getTeam();
+                IForgeTeam team = chunk.owner.getTeam();
 
                 if(team == null)
                 {
@@ -201,7 +172,7 @@ public class FTBUPlayerEventHandler
                 }
 
                 n.setTimer(3000);
-                n.setColor(0xFF000000 | team.getColor().color);
+                n.setColor(0xFF000000 | team.getColor().getColor());
                 n.sendTo(ep);
             }
             else
@@ -262,7 +233,7 @@ public class FTBUPlayerEventHandler
     {
         if(event.getEntityPlayer() instanceof EntityPlayerMP)
         {
-            ForgePlayerMP player = ForgeWorldMP.inst.getPlayer(event.getEntityPlayer());
+            IForgePlayer player = FTBLibAPI.INSTANCE.getWorld().getPlayer(event.getEntityPlayer());
 
             if(player != null)
             {
@@ -286,7 +257,7 @@ public class FTBUPlayerEventHandler
     {
         if(event.getPlayer() instanceof EntityPlayerMP)
         {
-            ForgePlayerMP player = ForgeWorldMP.inst.getPlayer(event.getPlayer());
+            IForgePlayer player = FTBLibAPI.INSTANCE.getWorld().getPlayer(event.getPlayer());
 
             if(player != null)
             {

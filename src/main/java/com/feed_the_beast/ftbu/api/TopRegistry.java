@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.api;
 
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import net.minecraft.stats.StatBase;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -19,17 +19,17 @@ import java.util.Set;
 @ParametersAreNonnullByDefault
 public class TopRegistry
 {
-    private static final Map<StatBase, Comparator<ForgePlayerMP>> COMPARATOR_REGISTRY = new HashMap<>();
+    private static final Map<StatBase, Comparator<IForgePlayer>> COMPARATOR_REGISTRY = new HashMap<>();
     private static final Map<StatBase, DataSupplier> DATA_REGISTRY = new HashMap<>();
     private static final Map<StatBase, ITextComponent> NAME_REGISTRY = new HashMap<>();
 
     public interface DataSupplier
     {
         @Nonnull
-        Object getData(@Nonnull ForgePlayerMP player);
+        Object getData(@Nonnull IForgePlayer player);
     }
 
-    public static void register(StatBase stat, @Nullable Comparator<ForgePlayerMP> comparator, @Nullable DataSupplier data)
+    public static void register(StatBase stat, @Nullable Comparator<IForgePlayer> comparator, @Nullable DataSupplier data)
     {
         if(comparator != null)
         {
@@ -54,7 +54,7 @@ public class TopRegistry
     }
 
     @Nullable
-    public static Comparator<ForgePlayerMP> getComparator(StatBase stat)
+    public static Comparator<IForgePlayer> getComparator(StatBase stat)
     {
         return COMPARATOR_REGISTRY.get(stat);
     }
@@ -68,6 +68,7 @@ public class TopRegistry
     @Nonnull
     public ITextComponent getName(StatBase stat)
     {
+        //FIXME: Gray stat name
         ITextComponent c = NAME_REGISTRY.containsKey(stat) ? NAME_REGISTRY.get(stat) : new TextComponentTranslation(stat.statId);
         c = c.createCopy();
         c.getStyle().setColor(null);

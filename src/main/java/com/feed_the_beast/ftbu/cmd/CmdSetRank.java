@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbu.ranks.Rank;
 import com.feed_the_beast.ftbu.ranks.Ranks;
@@ -45,7 +45,7 @@ public class CmdSetRank extends CommandLM
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
         checkArgs(args, 2, "<player> <rank>");
-        ForgePlayerMP player = ForgePlayerMP.get(args[0]);
+        IForgePlayer player = getForgePlayer(args[0]);
         Rank r = Ranks.INSTANCE.ranks.get(args[1]);
         if(r == null)
         {

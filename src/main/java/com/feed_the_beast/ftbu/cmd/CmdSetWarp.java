@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.cmd;
 
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldData;
@@ -41,7 +41,7 @@ public class CmdSetWarp extends CommandLM
             c = ep.getPosition();
         }
 
-        FTBUWorldData.getW(ForgeWorldMP.inst).toMP().setWarp(args[0], new BlockDimPos(c, ep.dimension));
+        FTBUWorldData.getW(FTBLibAPI.INSTANCE.getWorld()).toMP().setWarp(args[0], new BlockDimPos(c, ep.dimension));
         FTBULang.warp_set.printChat(ics, args[0]);
     }
 }

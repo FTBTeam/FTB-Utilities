@@ -1,9 +1,8 @@
 package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api.ForgePlayer;
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.cmd.ICustomCommandInfo;
 import com.feed_the_beast.ftbl.api.info.impl.InfoExtendedTextLine;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
@@ -34,6 +33,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ public class ServerInfoFile extends InfoPage
         }
     }
 
-    public ServerInfoFile(@Nonnull ForgePlayerMP self)
+    public ServerInfoFile(@Nonnull IForgePlayer self)
     {
         setTitle(InfoPageHelper.getTitleComponent(CachedInfo.main, "server_info"));
 
@@ -73,16 +73,12 @@ public class ServerInfoFile extends InfoPage
 
         copyFrom(CachedInfo.main);
 
-        List<ForgePlayerMP> players = new ArrayList<>(ForgeWorldMP.inst.playerMap.size());
-
-        for(ForgePlayer p : ForgeWorldMP.inst.playerMap.values())
-        {
-            players.add(p.toMP());
-        }
+        List<IForgePlayer> players = new ArrayList<>();
+        players.addAll(FTBLibAPI.INSTANCE.getWorld().getPlayers());
 
         if(FTBUConfigWorld.auto_restart.getAsBoolean())
         {
-            println(FTBULang.timer_restart.textComponent(LMStringUtils.getTimeString(FTBUWorldData.getW(ForgeWorldMP.inst).toMP().restartMillis - System.currentTimeMillis())));
+            println(FTBULang.timer_restart.textComponent(LMStringUtils.getTimeString(FTBUWorldData.getW(self.getWorld()).toMP().restartMillis - System.currentTimeMillis())));
         }
 
         if(FTBUConfigBackups.enabled.getAsBoolean())
@@ -97,7 +93,7 @@ public class ServerInfoFile extends InfoPage
 
         if(FTBUConfigGeneral.server_info_mode.getAsBoolean())
         {
-            println(FTBLibLang.mode_current.textComponent(LMStringUtils.firstUppercase(ForgeWorldMP.inst.getMode().toString().toLowerCase())));
+            println(FTBLibLang.mode_current.textComponent(LMStringUtils.firstUppercase(FTBLibAPI.INSTANCE.getSharedData(Side.SERVER).getMode().getID())));
         }
 
         InfoPage topsPage = getSub("tops").setTitle(FTBUTops.LANG_TOP_TITLE.textComponent());
@@ -112,7 +108,7 @@ public class ServerInfoFile extends InfoPage
 
             for(int j = 0; j < size; j++)
             {
-                ForgePlayerMP p = players.get(j);
+                IForgePlayer p = players.get(j);
                 Object data = null;
                 TopRegistry.DataSupplier dataSupplier = TopRegistry.getDataSuppier(stat);
 
@@ -237,7 +233,7 @@ public class ServerInfoFile extends InfoPage
         page = getSub("warps").setTitle(new TextComponentString("Warps")); //TODO: LANG
         InfoExtendedTextLine line;
 
-        for(String s : FTBUWorldData.getW(ForgeWorldMP.inst).toMP().listWarps())
+        for(String s : FTBUWorldData.getW(self.getWorld()).toMP().listWarps())
         {
             line = new InfoExtendedTextLine(new TextComponentString(s));
             line.setClickAction(new ClickAction(ClickActionTypeRegistry.CMD, new JsonPrimitive("ftb warp " + s)));
@@ -246,7 +242,7 @@ public class ServerInfoFile extends InfoPage
 
         page = getSub("homes").setTitle(new TextComponentString("Homes")); //TODO: LANG
 
-        for(String s : FTBUPlayerData.get(self).toMP().listHomes())
+        for(String s : FTBUPlayerData.get(self).listHomes())
         {
             line = new InfoExtendedTextLine(new TextComponentString(s));
             line.setClickAction(new ClickAction(ClickActionTypeRegistry.CMD, new JsonPrimitive("ftb home " + s)));

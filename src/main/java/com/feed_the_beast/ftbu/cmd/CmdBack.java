@@ -1,8 +1,10 @@
 package com.feed_the_beast.ftbu.cmd;
 
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
+import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBULang;
+import com.feed_the_beast.ftbu.world.data.FTBUPlayerData;
 import com.latmod.lib.util.LMDimUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -28,12 +30,20 @@ public class CmdBack extends CommandLM
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-        ForgePlayerMP p = ForgePlayerMP.get(ep);
-        if(p.lastDeath == null)
+        IForgePlayer p = getForgePlayer(ep);
+
+        if(p.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
         {
-            throw FTBULang.warp_no_dp.commandError();
+            FTBUPlayerData d = p.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
+
+            if(d.lastDeath == null)
+            {
+                throw FTBULang.warp_no_dp.commandError();
+            }
+
+            LMDimUtils.teleportPlayer(ep, d.lastDeath);
+            //TODO: Add config for infinite times
+            d.lastDeath = null;
         }
-        LMDimUtils.teleportPlayer(ep, p.lastDeath);
-        p.lastDeath = null;
     }
 }

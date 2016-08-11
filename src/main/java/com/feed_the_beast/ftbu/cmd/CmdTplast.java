@@ -1,8 +1,9 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
+import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.latmod.lib.math.BlockDimPos;
 import com.latmod.lib.util.LMDimUtils;
 import net.minecraft.command.CommandException;
@@ -49,20 +50,20 @@ public class CmdTplast extends CommandLM
         }
 
         EntityPlayerMP who;
-        ForgePlayerMP to;
+        IForgePlayer to;
 
         if(args.length == 1)
         {
             who = getCommandSenderAsPlayer(ics);
-            to = ForgePlayerMP.get(args[0]);
+            to = getForgePlayer(args[0]);
         }
         else
         {
             who = getPlayer(server, ics, args[0]);
-            to = ForgePlayerMP.get(args[1]);
+            to = getForgePlayer(args[1]);
         }
 
-        BlockDimPos p = to.getPos();
+        BlockDimPos p = to.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null) ? to.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null).lastPos : null;
         if(p == null)
         {
             throw FTBLibLang.raw.commandError("No last position!");

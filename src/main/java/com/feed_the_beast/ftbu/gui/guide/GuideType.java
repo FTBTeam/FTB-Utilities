@@ -7,6 +7,7 @@ public enum GuideType
 {
     MODPACK("modpack"),
     MOD("mod"),
+    MODDING_TUTORIALS("modding_tutorials"),
     OTHER("other");
 
     public final String group;

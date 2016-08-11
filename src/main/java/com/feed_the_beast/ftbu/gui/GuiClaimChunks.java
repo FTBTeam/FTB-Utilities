@@ -1,21 +1,18 @@
 package com.feed_the_beast.ftbu.gui;
 
-import com.feed_the_beast.ftbl.api.ForgeTeam;
-import com.feed_the_beast.ftbl.api.ForgeWorldSP;
-import com.feed_the_beast.ftbl.api.MouseButton;
+import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
-import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
-import com.feed_the_beast.ftbl.api.client.gui.widgets.PanelLM;
-import com.feed_the_beast.ftbl.net.MessageRequestSelfUpdate;
+import com.feed_the_beast.ftbl.api.gui.GuiIcons;
+import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiLang;
+import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
+import com.feed_the_beast.ftbl.api.gui.widgets.PanelLM;
+import com.feed_the_beast.ftbl.api_impl.MouseButton;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.net.MessageAreaRequest;
 import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
-import com.feed_the_beast.ftbu.world.data.FTBUPlayerData;
-import com.feed_the_beast.ftbu.world.data.FTBUPlayerDataSP;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldDataSP;
 import com.latmod.lib.TextureCoords;
 import com.latmod.lib.math.ChunkDimPos;
@@ -65,7 +62,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         }
 
         @Override
-        public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
+        public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
         {
             if(gui.isMouseOver(panelButtons))
             {
@@ -105,15 +102,15 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 
             if(chunk != null)
             {
-                ForgeTeam team = chunk.owner.getTeam();
+                IForgeTeam team = chunk.owner.getTeam();
 
                 if(team != null)
                 {
-                    l.add(team.getColor().textFormatting + team.getTitle());
+                    l.add(team.getColor().getTextFormatting() + team.getTitle());
 
                     l.add(TextFormatting.GREEN + ClaimedChunk.LANG_CLAIMED.translate());
 
-                    if(team.getStatus(ForgeWorldSP.inst.clientPlayer).isAlly())
+                    /*if(team.getStatus(ForgeWorldSP.inst.clientPlayer).isAlly())
                     {
                         l.add(chunk.owner.getProfile().getName());
 
@@ -121,7 +118,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
                         {
                             l.add(TextFormatting.RED + ClaimedChunk.LANG_LOADED.translate());
                         }
-                    }
+                    }*/
                 }
             }
             else
@@ -142,11 +139,11 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             {
                 FTBLibClient.setTexture(TEX_CHUNK_CLAIMING);
 
-                ForgeTeam team = chunk.owner.getTeam();
+                IForgeTeam team = chunk.owner.getTeam();
 
                 if(team != null)
                 {
-                    FTBLibClient.setGLColor(team.getColor().color, 180);
+                    FTBLibClient.setGLColor(team.getColor().getColor(), 180);
                 }
                 else
                 {
@@ -155,7 +152,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 
                 drawTexturedRect(ax, ay, 16, 16, TEX_FILLED.minU, TEX_FILLED.minV, TEX_FILLED.maxU, TEX_FILLED.maxV);
 
-                GlStateManager.color((chunk.loaded && team != null && team.getStatus(ForgeWorldSP.inst.clientPlayer).isAlly()) ? 1F : 0F, chunk.isChunkOwner(ForgeWorldSP.inst.clientPlayer) ? 0.27F : 0F, 0F, 0.78F);
+                //GlStateManager.color((chunk.loaded && team != null && team.getStatus(ForgeWorldSP.inst.clientPlayer).isAlly()) ? 1F : 0F, chunk.isChunkOwner(ForgeWorldSP.inst.clientPlayer) ? 0.27F : 0F, 0F, 0.78F);
                 drawTexturedRect(ax, ay, 16, 16, TEX_BORDER.minU, TEX_BORDER.minV, TEX_BORDER.maxU, TEX_BORDER.maxV);
             }
 
@@ -189,7 +186,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         buttonClose = new ButtonLM(0, 0, 16, 16, GuiLang.button_close.translate())
         {
             @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
             {
                 GuiLM.playClickSound();
                 closeGui();
@@ -199,12 +196,11 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         buttonRefresh = new ButtonLM(0, 16, 16, 16, GuiLang.button_refresh.translate())
         {
             @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
             {
                 thread = new ThreadReloadArea(mc.theWorld, GuiClaimChunks.this);
                 thread.start();
                 new MessageAreaRequest(startX, startZ, TILES_GUI, TILES_GUI).sendToServer();
-                new MessageRequestSelfUpdate().sendToServer();
                 GuiLM.playClickSound();
             }
         };
@@ -212,7 +208,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         buttonUnclaimAll = new ButtonLM(0, 32, 16, 16)
         {
             @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
             {
                 GuiLM.playClickSound();
                 String s = GuiScreen.isShiftKeyDown() ? FTBULang.button_claims_unclaim_all_q.translate() : FTBULang.button_claims_unclaim_all_dim_q.translateFormatted(currentDimName);
@@ -351,6 +347,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
     @Override
     public void drawForeground()
     {
+        /*
         if(ForgeWorldSP.inst != null && ForgeWorldSP.inst.clientPlayer != null)
         {
             FTBUPlayerDataSP d = FTBUPlayerData.get(ForgeWorldSP.inst.clientPlayer).toSP();
@@ -360,6 +357,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             s = FTBULang.label_lchunks_count.translateFormatted(d.loadedChunks + " / " + d.maxLoadedChunks);
             font.drawString(s, screen.getScaledWidth() - font.getStringWidth(s) - 4, screen.getScaledHeight() - 24, 0xFFFFFFFF);
         }
+        */
 
         super.drawForeground();
     }

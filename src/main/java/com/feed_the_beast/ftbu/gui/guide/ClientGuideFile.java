@@ -1,9 +1,10 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
-import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
+import com.feed_the_beast.ftbl.api.gui.GuiIcons;
+import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
 import net.minecraft.client.Minecraft;
@@ -34,6 +35,7 @@ public class ClientGuideFile extends InfoPage
             INSTANCE.reload();
             clientGuideGui = new GuiInfo("client_guide", ClientGuideFile.INSTANCE).getWrapper();
         }
+
         if(open)
         {
             Minecraft.getMinecraft().displayGuiScreen(clientGuideGui);
@@ -43,12 +45,12 @@ public class ClientGuideFile extends InfoPage
     }
 
     @Override
-    public ButtonLM createSpecialButton(GuiInfo gui)
+    public ButtonLM createSpecialButton(GuiInfo gui, IGuiInfoPageTree page)
     {
         return new ButtonLM(0, 0, 16, 16, "Browse Guides") //TODO: Lang
         {
             @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton b)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton b)
             {
             }
 

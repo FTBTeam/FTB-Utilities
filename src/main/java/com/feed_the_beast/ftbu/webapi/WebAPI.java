@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.webapi;
 
 import com.feed_the_beast.ftbl.FTBLibStats;
-import com.feed_the_beast.ftbl.api.ForgePlayer;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -79,15 +79,15 @@ public class WebAPI extends Thread
                     table.setTitle("dph", "Deaths per hour");
                     table.setTitle("last_seen", "Last time seen");
 
-                    for(ForgePlayer player : ForgeWorldMP.inst.playerMap.values())
+                    for(IForgePlayer player : FTBLibAPI.INSTANCE.getWorld().getPlayers())
                     {
-                        StatisticsManagerServer stats = player.toMP().stats();
+                        StatisticsManagerServer stats = player.stats();
 
                         JsonTable.TableEntry tableEntry = new JsonTable.TableEntry();
                         tableEntry.set("name", new JsonPrimitive(player.getProfile().getName()));
                         tableEntry.set("deaths", new JsonPrimitive(stats.readStat(StatList.DEATHS)));
                         tableEntry.set("dph", new JsonPrimitive(FTBLibStats.getDeathsPerHour(stats)));
-                        tableEntry.set("last_seen", new JsonPrimitive(player.toMP().isOnline() ? 0 : FTBLibStats.getLastSeen(stats, false)));
+                        tableEntry.set("last_seen", new JsonPrimitive(player.isOnline() ? 0 : FTBLibStats.getLastSeen(stats, false)));
                         table.addEntry(tableEntry);
                     }
 
@@ -119,7 +119,7 @@ public class WebAPI extends Thread
 
     public boolean isAPIRunning()
     {
-        return FTBUConfigWebAPI.enabled.getAsBoolean() && ForgeWorldMP.inst != null && serverSocket != null && !serverSocket.isClosed();
+        return FTBUConfigWebAPI.enabled.getAsBoolean() && FTBLibAPI.INSTANCE.getWorld() != null && serverSocket != null && !serverSocket.isClosed();
     }
 
     public void startAPI()

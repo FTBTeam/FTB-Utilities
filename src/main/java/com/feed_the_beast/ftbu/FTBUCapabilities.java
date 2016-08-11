@@ -40,15 +40,15 @@ public class FTBUCapabilities
             @Override
             public NBTBase writeNBT(Capability<FTBUPlayerData> capability, FTBUPlayerData instance, EnumFacing side)
             {
-                return instance.toMP().serializeNBT();
+                return instance.serializeNBT();
             }
 
             @Override
             public void readNBT(Capability<FTBUPlayerData> capability, FTBUPlayerData instance, EnumFacing side, NBTBase base)
             {
-                instance.toMP().deserializeNBT((NBTTagCompound) base);
+                instance.deserializeNBT((NBTTagCompound) base);
             }
-        }, () -> new FTBUPlayerData() { });
+        }, () -> new FTBUPlayerData());
 
         CapabilityManager.INSTANCE.register(FTBUWorldData.class, new Capability.IStorage<FTBUWorldData>()
         {
@@ -70,14 +70,14 @@ public class FTBUCapabilities
             @Override
             public NBTBase writeNBT(Capability<FTBUTeamData> capability, FTBUTeamData instance, EnumFacing side)
             {
-                return instance.toMP().serializeNBT();
+                return instance.serializeNBT();
             }
 
             @Override
             public void readNBT(Capability<FTBUTeamData> capability, FTBUTeamData instance, EnumFacing side, NBTBase base)
             {
-                instance.toMP().deserializeNBT((NBTTagCompound) base);
+                instance.deserializeNBT((NBTTagCompound) base);
             }
-        }, () -> new FTBUTeamData() { });
+        }, () -> new FTBUTeamData());
     }
 }

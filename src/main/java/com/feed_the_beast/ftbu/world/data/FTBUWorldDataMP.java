@@ -1,8 +1,7 @@
 package com.feed_the_beast.ftbu.world.data;
 
-import com.feed_the_beast.ftbl.FTBLibLang;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.notification.Notification;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBULang;
@@ -183,7 +182,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
 
             if(ep != null)
             {
-                Notification.error(FTBUNotifications.NO_TEAM, FTBLibLang.team_no_team.textComponent()).sendTo(ep);
+                FTBLibAPI.get().sendNotification(ep, FTBUNotifications.NO_TEAM);
             }
 
             return false;
@@ -258,7 +257,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
 
                     if(ep != null)
                     {
-                        Notification.error(FTBUNotifications.NO_TEAM, FTBLibLang.team_no_team.textComponent()).sendTo(ep);
+                        FTBLibAPI.get().sendNotification(ep, FTBUNotifications.NO_TEAM);
                     }
 
                     return false;

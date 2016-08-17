@@ -6,9 +6,6 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.cmd.ICustomCommandInfo;
 import com.feed_the_beast.ftbl.api.info.impl.InfoExtendedTextLine;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
-import com.feed_the_beast.ftbl.api.info.impl.InfoPageHelper;
-import com.feed_the_beast.ftbl.api.notification.ClickAction;
-import com.feed_the_beast.ftbl.api.notification.ClickActionTypeRegistry;
 import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.api.permissions.context.PlayerContext;
 import com.feed_the_beast.ftbl.util.FTBLib;
@@ -23,7 +20,6 @@ import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.world.backups.Backups;
 import com.feed_the_beast.ftbu.world.data.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldData;
-import com.google.gson.JsonPrimitive;
 import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.command.ICommand;
 import net.minecraft.server.MinecraftServer;
@@ -32,6 +28,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -44,7 +41,7 @@ public class ServerInfoFile extends InfoPage
 {
     public static class CachedInfo
     {
-        public static final InfoPage main = new InfoPage(); //TODO: Lang
+        public static final InfoPage main = new InfoPage("server_info"); //TODO: Lang
 
         public static void reload()
         {
@@ -64,7 +61,8 @@ public class ServerInfoFile extends InfoPage
 
     public ServerInfoFile(@Nonnull IForgePlayer self)
     {
-        setTitle(InfoPageHelper.getTitleComponent(CachedInfo.main, "server_info"));
+        super(CachedInfo.main.getID());
+        setTitle(CachedInfo.main.getName());
 
         MinecraftServer server = FTBLib.getServer();
 
@@ -74,7 +72,7 @@ public class ServerInfoFile extends InfoPage
         copyFrom(CachedInfo.main);
 
         List<IForgePlayer> players = new ArrayList<>();
-        players.addAll(FTBLibAPI.INSTANCE.getWorld().getPlayers());
+        players.addAll(FTBLibAPI.get().getWorld().getPlayers());
 
         if(FTBUConfigWorld.auto_restart.getAsBoolean())
         {
@@ -93,16 +91,16 @@ public class ServerInfoFile extends InfoPage
 
         if(FTBUConfigGeneral.server_info_mode.getAsBoolean())
         {
-            println(FTBLibLang.mode_current.textComponent(LMStringUtils.firstUppercase(FTBLibAPI.INSTANCE.getSharedData(Side.SERVER).getMode().getID())));
+            println(FTBLibLang.mode_current.textComponent(LMStringUtils.firstUppercase(FTBLibAPI.get().getSharedData(Side.SERVER).getMode().getID())));
         }
 
         InfoPage topsPage = getSub("tops").setTitle(FTBUTops.LANG_TOP_TITLE.textComponent());
 
-        for(StatBase stat : TopRegistry.getKeys())
+        for(StatBase stat : TopRegistry.INSTANCE.getKeys())
         {
-            InfoPage thisTop = topsPage.getSub(stat.statId).setTitle(stat.getStatName());
+            InfoPage thisTop = topsPage.getSub(stat.statId).setTitle(TopRegistry.INSTANCE.getName(stat));
 
-            Collections.sort(players, TopRegistry.getComparator(stat));
+            Collections.sort(players, TopRegistry.INSTANCE.getComparator(stat));
 
             int size = Math.min(players.size(), 250);
 
@@ -110,7 +108,7 @@ public class ServerInfoFile extends InfoPage
             {
                 IForgePlayer p = players.get(j);
                 Object data = null;
-                TopRegistry.DataSupplier dataSupplier = TopRegistry.getDataSuppier(stat);
+                TopRegistry.DataSupplier dataSupplier = TopRegistry.INSTANCE.getDataSuppier(stat);
 
                 if(dataSupplier != null)
                 {
@@ -164,7 +162,7 @@ public class ServerInfoFile extends InfoPage
             {
                 try
                 {
-                    InfoPage cat = new InfoPage();
+                    InfoPage cat = page.getSub('/' + c.getCommandName());
 
                     List<String> al = c.getCommandAliases();
                     if(!al.isEmpty())
@@ -209,9 +207,6 @@ public class ServerInfoFile extends InfoPage
                             }
                         }
                     }
-
-                    cat.setParent(page);
-                    page.addSub('/' + c.getCommandName(), cat);
                 }
                 catch(Exception ex1)
                 {
@@ -232,21 +227,22 @@ public class ServerInfoFile extends InfoPage
 
         page = getSub("warps").setTitle(new TextComponentString("Warps")); //TODO: LANG
         InfoExtendedTextLine line;
+        ITextComponent t;
 
         for(String s : FTBUWorldData.getW(self.getWorld()).toMP().listWarps())
         {
-            line = new InfoExtendedTextLine(new TextComponentString(s));
-            line.setClickAction(new ClickAction(ClickActionTypeRegistry.CMD, new JsonPrimitive("ftb warp " + s)));
-            page.println(line);
+            t = new TextComponentString(s);
+            t.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb warp " + s));
+            page.println(t);
         }
 
         page = getSub("homes").setTitle(new TextComponentString("Homes")); //TODO: LANG
 
         for(String s : FTBUPlayerData.get(self).listHomes())
         {
-            line = new InfoExtendedTextLine(new TextComponentString(s));
-            line.setClickAction(new ClickAction(ClickActionTypeRegistry.CMD, new JsonPrimitive("ftb home " + s)));
-            page.println(line);
+            t = new TextComponentString(s);
+            t.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb home " + s));
+            page.println(t);
         }
 
         cleanup();

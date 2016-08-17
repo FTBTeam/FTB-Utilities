@@ -1,37 +1,71 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
 import com.feed_the_beast.ftbl.api.info.IResourceProvider;
-import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.latmod.lib.FinalIDObject;
+import com.google.gson.JsonPrimitive;
+import com.latmod.lib.IIDObject;
+import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by LatvianModder on 06.05.2016.
  */
-public abstract class Guide extends FinalIDObject
+@SideOnly(Side.CLIENT)
+public abstract class Guide implements IIDObject, IJsonSerializable
 {
-    public final GuideType type;
-    public final String url;
-    public final String name;
-    public final List<String> authors;
-    public final List<String> guide_authors;
-    public final Map<String, InfoPage> modes;
+    private final String ID;
+    private final GuideType type;
+    private String name;
+    private List<String> authors;
+    private List<String> guideAuthors;
+    private List<String> modes;
 
-    public Guide(GuideType t, String u, JsonObject o)
+    public Guide(String id, GuideType t)
     {
-        super(o.get("id").getAsString());
+        ID = id;
         type = t;
-        url = u;
+    }
+
+    @Override
+    @Nonnull
+    public String getID()
+    {
+        return ID;
+    }
+
+    public GuideType getType()
+    {
+        return type;
+    }
+
+    public List<String> getAuthors()
+    {
+        return authors;
+    }
+
+    public List<String> getGuideAuthors()
+    {
+        return guideAuthors;
+    }
+
+    public List<String> getModes()
+    {
+        return modes;
+    }
+
+    @Override
+    public void fromJson(@Nonnull JsonElement json)
+    {
+        JsonObject o = json.getAsJsonObject();
 
         name = o.get("name").getAsString();
 
@@ -51,37 +85,66 @@ public abstract class Guide extends FinalIDObject
             l.add(e.getAsString());
         }
 
-        guide_authors = Collections.unmodifiableList(l);
+        guideAuthors = Collections.unmodifiableList(l);
 
-        modes = new HashMap<>();
+        l = new ArrayList<>();
 
         for(JsonElement e : o.get("modes").getAsJsonArray())
         {
-            modes.put(e.getAsString(), null);
+            l.add(e.getAsString());
         }
+
+        modes = Collections.unmodifiableList(l);
+    }
+
+    @Override
+    @Nonnull
+    public JsonElement getSerializableElement()
+    {
+        JsonObject o = new JsonObject();
+
+        o.add("id", new JsonPrimitive(getID()));
+        o.add("name", new JsonPrimitive(name));
+
+        JsonArray a = new JsonArray();
+
+        for(String s : authors)
+        {
+            a.add(new JsonPrimitive(s));
+        }
+
+        o.add("authors", a);
+
+        a = new JsonArray();
+
+        for(String s : guideAuthors)
+        {
+            a.add(new JsonPrimitive(s));
+        }
+
+        o.add("guide_authors", a);
+
+        a = new JsonArray();
+
+        for(String s : modes)
+        {
+            a.add(new JsonPrimitive(s));
+        }
+
+        o.add("modes", a);
+
+        return o;
+    }
+
+    public String toString()
+    {
+        return getSerializableElement().toString();
     }
 
     public abstract boolean isLocal();
 
-    public abstract IResourceProvider getResourceProvider(String path);
+    public abstract IResourceProvider getResourceProvider();
 
     @SideOnly(Side.CLIENT)
     public abstract ResourceLocation getIcon();
-
-    public InfoPage loadPage(String mode) throws Exception
-    {
-        InfoPage page = modes.get(mode);
-
-        if(mode == null)
-        {
-            page = new InfoPage();
-            generatePage(page);
-        }
-
-        return page;
-    }
-
-    private void generatePage(InfoPage page)
-    {
-    }
 }

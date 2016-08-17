@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.cmd;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandSubBase;
-import com.feed_the_beast.ftbl.api.notification.Notification;
 import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.api.permissions.context.ContextKey;
 import com.feed_the_beast.ftbl.api.permissions.context.PlayerContext;
@@ -59,12 +59,12 @@ public class CmdChunks extends CommandSubBase
 
             if(FTBUWorldDataMP.claimChunk(p, pos))
             {
-                new Notification(FTBUNotifications.MODIFY_CHUNK).addText(new TextComponentString("Chunk Claimed")).sendTo(ep); //TODO: Lang
+                FTBLibAPI.get().sendNotification(ep, FTBUNotifications.CHUNK_CLAIMED);
                 new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
             }
             else
             {
-                Notification.error(FTBUNotifications.MODIFY_CHUNK, new TextComponentString("Can't modify this chunk!")).sendTo(ep);
+                FTBLibAPI.get().sendNotification(ep, FTBUNotifications.CANT_MODIFY_CHUNK);
             }
         }
     }
@@ -106,12 +106,12 @@ public class CmdChunks extends CommandSubBase
 
             if(FTBUWorldDataMP.unclaimChunk(p, pos))
             {
-                new Notification(FTBUNotifications.MODIFY_CHUNK).addText(new TextComponentString("Chunk Unclaimed")).sendTo(ep); //TODO: Lang
+                FTBLibAPI.get().sendNotification(ep, FTBUNotifications.CHUNK_UNCLAIMED);
                 new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
             }
             else
             {
-                Notification.error(FTBUNotifications.MODIFY_CHUNK, new TextComponentString("Can't modify this chunk!")).sendTo(ep);
+                FTBLibAPI.get().sendNotification(ep, FTBUNotifications.CANT_MODIFY_CHUNK);
             }
         }
     }
@@ -148,12 +148,12 @@ public class CmdChunks extends CommandSubBase
 
             if(FTBUWorldDataMP.setLoaded(p, pos, true))
             {
-                new Notification(FTBUNotifications.MODIFY_CHUNK).addText(new TextComponentString("Chunk Loaded")).sendTo(ep); //TODO: Lang
+                FTBLibAPI.get().sendNotification(ep, FTBUNotifications.CHUNK_LOADED);
                 new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
             }
             else
             {
-                Notification.error(FTBUNotifications.MODIFY_CHUNK, new TextComponentString("Can't modify this chunk!")).sendTo(ep); //TODO: Lang
+                FTBLibAPI.get().sendNotification(ep, FTBUNotifications.CANT_MODIFY_CHUNK);
             }
         }
     }
@@ -189,12 +189,12 @@ public class CmdChunks extends CommandSubBase
 
             if(FTBUWorldDataMP.setLoaded(p, pos, false))
             {
-                new Notification(FTBUNotifications.MODIFY_CHUNK).addText(new TextComponentString("Chunk Unloaded")).sendTo(ep); //TODO: Lang
+                FTBLibAPI.get().sendNotification(ep, FTBUNotifications.CHUNK_UNLOADED);
                 new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
             }
             else
             {
-                Notification.error(FTBUNotifications.MODIFY_CHUNK, new TextComponentString("Can't modify this chunk!")).sendTo(ep); //TODO: Lang
+                FTBLibAPI.get().sendNotification(ep, FTBUNotifications.CANT_MODIFY_CHUNK);
             }
         }
     }
@@ -236,7 +236,7 @@ public class CmdChunks extends CommandSubBase
             }
 
             FTBUWorldDataMP.unclaimAllChunks(p, parseBoolean(args[0]) ? null : ep.dimension);
-            new Notification(FTBUNotifications.UNCLAIMED_ALL).addText(new TextComponentString("Unclaimed all chunks")).sendTo(ep); //TODO: Lang
+            FTBLibAPI.get().sendNotification(ep, FTBUNotifications.UNCLAIMED_ALL);
         }
     }
 

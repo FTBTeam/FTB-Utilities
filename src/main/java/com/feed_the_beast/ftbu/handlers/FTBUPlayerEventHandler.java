@@ -11,7 +11,6 @@ import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
-import com.feed_the_beast.ftbl.api.notification.Notification;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUNotifications;
@@ -28,11 +27,8 @@ import com.latmod.lib.math.EntityDimPos;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -132,7 +128,7 @@ public class FTBUPlayerEventHandler
         }
 
         EntityPlayerMP ep = (EntityPlayerMP) e.getEntity();
-        IForgePlayer player = FTBLibAPI.INSTANCE.getWorld().getPlayer(ep);
+        IForgePlayer player = FTBLibAPI.get().getWorld().getPlayer(ep);
 
         if(player == null || !player.isOnline())
         {
@@ -154,38 +150,14 @@ public class FTBUPlayerEventHandler
             {
                 IForgeTeam team = chunk.owner.getTeam();
 
-                if(team == null)
+                if(team != null)
                 {
-                    return;
+                    FTBLibAPI.get().sendNotification(ep, FTBUNotifications.chunkChanged(team));
                 }
-
-                ITextComponent msg = new TextComponentString(team.getTitle());
-                msg.getStyle().setBold(true);
-                Notification n = new Notification(FTBUNotifications.CHUNK_CHANGED);
-                n.addText(msg);
-
-                if(team.getDesc() != null)
-                {
-                    msg = new TextComponentString(team.getDesc());
-                    msg.getStyle().setItalic(true);
-                    n.addText(msg);
-                }
-
-                n.setTimer(3000);
-                n.setColor(0xFF000000 | team.getColor().getColor());
-                n.sendTo(ep);
             }
             else
             {
-                ITextComponent msg = ClaimedChunk.LANG_WILDERNESS.textComponent();
-                msg.getStyle().setBold(true);
-
-                Notification n = new Notification(FTBUNotifications.CHUNK_CHANGED);
-                n.addText(msg);
-                n.setTimer(3000);
-                n.setColor(0xFF00A010);
-                n.setItem(new ItemStack(Blocks.VINE));
-                n.sendTo(ep);
+                FTBLibAPI.get().sendNotification(ep, FTBUNotifications.chunkChanged(null));
             }
         }
     }
@@ -233,7 +205,7 @@ public class FTBUPlayerEventHandler
     {
         if(event.getEntityPlayer() instanceof EntityPlayerMP)
         {
-            IForgePlayer player = FTBLibAPI.INSTANCE.getWorld().getPlayer(event.getEntityPlayer());
+            IForgePlayer player = FTBLibAPI.get().getWorld().getPlayer(event.getEntityPlayer());
 
             if(player != null)
             {
@@ -257,7 +229,7 @@ public class FTBUPlayerEventHandler
     {
         if(event.getPlayer() instanceof EntityPlayerMP)
         {
-            IForgePlayer player = FTBLibAPI.INSTANCE.getWorld().getPlayer(event.getPlayer());
+            IForgePlayer player = FTBLibAPI.get().getWorld().getPlayer(event.getPlayer());
 
             if(player != null)
             {

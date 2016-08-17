@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.client.CubeRenderer;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.gui.guide.ClientGuideFile;
+import com.feed_the_beast.ftbu.gui.guide.local.InfoPageLocalGuideRepoList;
 import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldDataSP;
 import com.latmod.lib.math.ChunkDimPos;
@@ -81,7 +81,7 @@ public class FTBUClientEventHandler
     {
         if(FTBUClient.KEY_GUIDE.isPressed())
         {
-            ClientGuideFile.openClientGui(true);
+            InfoPageLocalGuideRepoList.getGui().openGui();
         }
 
         if(FTBUClient.KEY_CHUNK_BORDER.isPressed())

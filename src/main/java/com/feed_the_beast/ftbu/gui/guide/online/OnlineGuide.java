@@ -5,23 +5,32 @@ import com.feed_the_beast.ftbl.api.info.IResourceProvider;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.gui.guide.Guide;
 import com.feed_the_beast.ftbu.gui.guide.GuideType;
-import com.google.gson.JsonObject;
 import com.latmod.lib.io.LMConnection;
 import com.latmod.lib.io.RequestMethod;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 /**
- * Created by PC on 17.07.2016.
+ * Created by LatvianModder on 17.07.2016.
  */
+@SideOnly(Side.CLIENT)
 public class OnlineGuide extends Guide
 {
+    private final String url;
     private ResourceLocation icon;
 
-    public OnlineGuide(GuideType t, String u, JsonObject o)
+    public OnlineGuide(String id, GuideType t, String u)
     {
-        super(t, u, o);
+        super(id, t);
+        url = u;
+    }
+
+    public String getURL()
+    {
+        return url;
     }
 
     @Override
@@ -31,9 +40,10 @@ public class OnlineGuide extends Guide
     }
 
     @Override
-    public IResourceProvider getResourceProvider(String path)
+    @Nonnull
+    public IResourceProvider getResourceProvider()
     {
-        return s -> new LMConnection(RequestMethod.FILE, url + '/' + path);
+        return s -> new LMConnection(RequestMethod.FILE, url + '/' + s);
     }
 
     @SideOnly(Side.CLIENT)

@@ -132,8 +132,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         {
             ClaimedChunk chunk = FTBUWorldDataSP.getChunk(chunkPos);
 
-            double ax = getAX();
-            double ay = getAY();
+            int ax = getAX();
+            int ay = getAY();
 
             if(chunk != null)
             {
@@ -331,7 +331,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             GlStateManager.rotate(mc.thePlayer.rotationYaw + 180F, 0F, 0F, 1F);
             FTBLibClient.setTexture(TEX_ENTITY);
             GlStateManager.color(1F, 1F, 1F, mc.thePlayer.isSneaking() ? 0.4F : 0.7F);
-            drawTexturedRect(-8D, -8D, 16D, 16D, 0D, 0D, 1D, 1D);
+            drawTexturedRect(-8, -8, 16, 16, 0D, 0D, 1D, 1D);
             GlStateManager.popMatrix();
             drawPlayerHead(mc.thePlayer.getName(), -2, -2, 4, 4);
             GlStateManager.popMatrix();

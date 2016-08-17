@@ -76,9 +76,9 @@ public class FTBUTeamData implements ICapabilitySerializable<NBTTagCompound>
 
             for(String s : tag1.getKeySet())
             {
-                IForgePlayer player = FTBLibAPI.INSTANCE.getWorld().getPlayer(LMUtils.fromString(s));
+                IForgePlayer player = FTBLibAPI.get().getWorld().getPlayer(LMUtils.fromString(s));
 
-                if(player != null && player.isMemberOf(FTBLibAPI.INSTANCE.getWorld().getCurrentTeam()))
+                if(player != null && player.isMemberOf(FTBLibAPI.get().getWorld().getCurrentTeam()))
                 {
                     NBTTagList list = tag1.getTagList(s, Constants.NBT.TAG_INT_ARRAY);
 
@@ -125,7 +125,7 @@ public class FTBUTeamData implements ICapabilitySerializable<NBTTagCompound>
 
         NBTTagCompound chunksTag = new NBTTagCompound();
 
-        for(IForgePlayer player : FTBLibAPI.INSTANCE.getWorld().getCurrentTeam().getMembers())
+        for(IForgePlayer player : FTBLibAPI.get().getWorld().getCurrentTeam().getMembers())
         {
             Collection<ClaimedChunk> chunks = FTBUWorldDataMP.chunks.getChunks(player.getProfile().getId());
 

@@ -53,7 +53,7 @@ public class CmdOverride implements ICommand
     @Override
     public boolean checkPermission(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics)
     {
-        FTBLib.dev_logger.info("FTBU: Checking permission for " + parent.getCommandName());
+        FTBLib.DEV_LOGGER.info("FTBU: Checking permission for " + parent.getCommandName());
         if(ics instanceof EntityPlayerMP)
         {
             Rank r = Ranks.INSTANCE.getRankOf(((EntityPlayerMP) ics).getGameProfile());

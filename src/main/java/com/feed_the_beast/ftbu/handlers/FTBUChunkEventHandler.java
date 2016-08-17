@@ -140,7 +140,7 @@ public class FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback,
 
     public void markDirty(World w)
     {
-        if(FTBLibAPI.INSTANCE.getWorld() == null || FTBLib.getServerWorld() == null)
+        if(FTBLibAPI.get().getWorld() == null || FTBLib.getServerWorld() == null)
         {
             return;
         }

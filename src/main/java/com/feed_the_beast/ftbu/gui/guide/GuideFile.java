@@ -11,6 +11,8 @@ import com.latmod.lib.io.RequestMethod;
 import com.latmod.lib.json.LMJsonUtils;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +20,7 @@ import java.util.Map;
 /**
  * Created by LatvianModder on 06.05.2016.
  */
+@SideOnly(Side.CLIENT)
 public class GuideFile extends FinalIDObject implements IResourceProvider
 {
     public final Guide info;
@@ -56,14 +59,14 @@ public class GuideFile extends FinalIDObject implements IResourceProvider
             }
         }
 
-        guide = createPage(o.get("guide").getAsJsonObject());
+        guide = createPage("guide", o.get("guide").getAsJsonObject());
         guide.cleanup();
         guide.resourceProvider = this;
     }
 
-    private InfoPage createPage(JsonObject o)
+    private InfoPage createPage(String id, JsonObject o)
     {
-        InfoPage page = new InfoPage();
+        InfoPage page = new InfoPage(id);
 
         if(o.has("name"))
         {
@@ -82,7 +85,7 @@ public class GuideFile extends FinalIDObject implements IResourceProvider
         {
             for(Map.Entry<String, JsonElement> e : o.get("pages").getAsJsonObject().entrySet())
             {
-                page.addSub(e.getKey(), createPage(e.getValue().getAsJsonObject()));
+                page.addSub(createPage(e.getKey(), e.getValue().getAsJsonObject()));
             }
         }
 

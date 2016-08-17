@@ -5,8 +5,8 @@ package com.feed_the_beast.ftbu.gui.guide;
  */
 public enum GuideType
 {
-    MODPACK("modpack"),
-    MOD("mod"),
+    MODS("mods"),
+    MODPACKS("modpacks"),
     MODDING_TUTORIALS("modding_tutorials"),
     OTHER("other");
 
@@ -15,5 +15,20 @@ public enum GuideType
     GuideType(String s)
     {
         group = s;
+    }
+
+    public static GuideType getFromString(String s)
+    {
+        switch(s.toLowerCase())
+        {
+            case "mods":
+                return MODS;
+            case "modpacks":
+                return MODPACKS;
+            case "modding_tutorials":
+                return MODDING_TUTORIALS;
+            default:
+                return OTHER;
+        }
     }
 }

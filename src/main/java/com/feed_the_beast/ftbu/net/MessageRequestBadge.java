@@ -45,7 +45,7 @@ public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
     @Override
     public void onMessage(MessageRequestBadge m, EntityPlayerMP player)
     {
-        Badge b = FTBUWorldDataMP.getServerBadge(FTBLibAPI.INSTANCE.getWorld().getPlayer(m.playerID));
+        Badge b = FTBUWorldDataMP.getServerBadge(FTBLibAPI.get().getWorld().getPlayer(m.playerID));
 
         if(b != null)
         {

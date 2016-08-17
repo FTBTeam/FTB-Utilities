@@ -1,17 +1,17 @@
 package com.feed_the_beast.ftbu.client;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.gui.GuiScreenRegistry;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.gui.guibuttons.SidebarButton;
-import com.feed_the_beast.ftbl.api.gui.guibuttons.SidebarButtonRegistry;
+import com.feed_the_beast.ftbl.api_impl.SidebarButton;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.gui.GuiClaimChunks;
-import com.feed_the_beast.ftbu.gui.guide.ClientGuideFile;
+import com.feed_the_beast.ftbu.gui.guide.local.InfoPageLocalGuideRepoList;
 import com.feed_the_beast.ftbu.net.MessageRequestServerInfo;
+import com.latmod.lib.EnumEnabled;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -22,18 +22,18 @@ public class FTBUActions
     @SideOnly(Side.CLIENT)
     public static void init()
     {
-        SidebarButtonRegistry.add(new ResourceLocation(FTBUFinals.MOD_ID, "guide"), new SidebarButton(0, GuiIcons.book, true)
+        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "guide"), new SidebarButton(0, GuiIcons.book, EnumEnabled.ENABLED)
         {
             @Override
             @SideOnly(Side.CLIENT)
             public void onClicked(IMouseButton button)
             {
                 GuiLM.playClickSound();
-                ClientGuideFile.openClientGui(true);
+                InfoPageLocalGuideRepoList.getGui().openGui();
             }
         });
 
-        SidebarButtonRegistry.add(new ResourceLocation(FTBUFinals.MOD_ID, "server_info"), new SidebarButton(0, GuiIcons.book_red, true)
+        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "server_info"), new SidebarButton(0, GuiIcons.book_red, EnumEnabled.ENABLED)
         {
             @Override
             @SideOnly(Side.CLIENT)
@@ -51,7 +51,7 @@ public class FTBUActions
             }
         });
 
-        SidebarButtonRegistry.add(new ResourceLocation(FTBUFinals.MOD_ID, "claimed_chunks"), new SidebarButton(0, GuiIcons.map, true)
+        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "claimed_chunks"), new SidebarButton(0, GuiIcons.map, EnumEnabled.ENABLED)
         {
             @Override
             @SideOnly(Side.CLIENT)
@@ -69,7 +69,7 @@ public class FTBUActions
             }
         });
 
-        SidebarButtonRegistry.add(new ResourceLocation(FTBUFinals.MOD_ID, "trash_can"), new SidebarButton(0, GuiIcons.bin, true)
+        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "trash_can"), new SidebarButton(0, GuiIcons.bin, EnumEnabled.ENABLED)
         {
             @Override
             @SideOnly(Side.CLIENT)
@@ -79,7 +79,7 @@ public class FTBUActions
             }
         });
 
-        SidebarButtonRegistry.add(new ResourceLocation(FTBUFinals.MOD_ID, "shop"), new SidebarButton(0, GuiIcons.money_bag, true)
+        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "shop"), new SidebarButton(0, GuiIcons.money_bag, EnumEnabled.ENABLED)
         {
             @Override
             @SideOnly(Side.CLIENT)
@@ -96,7 +96,7 @@ public class FTBUActions
             }
         });
 
-        /*ActionButtonRegistry.add(new ResourceLocation(FTBUFinals.MOD_ID, "mail"), new PlayerAction(0, GuiIcons.feather)
+        /*FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "mail"), new PlayerAction(0, GuiIcons.feather)
         {
             @Override
             @SideOnly(Side.CLIENT)
@@ -111,10 +111,5 @@ public class FTBUActions
                 return FTBLib.DEV_ENV && super.isVisibleFor(player);
             }
         });*/
-
-        GuiScreenRegistry.register(new ResourceLocation(FTBUFinals.MOD_ID, "claimed_chunks"), () -> new GuiClaimChunks().getWrapper());
-        GuiScreenRegistry.register(new ResourceLocation(FTBUFinals.MOD_ID, "guide"), () -> ClientGuideFile.openClientGui(false));
-        GuiScreenRegistry.register(new ResourceLocation(FTBUFinals.MOD_ID, "server_info"), () -> new MessageRequestServerInfo().openGui());
-        //GuiScreenRegistry.register(new ResourceLocation(FTBUFinals.MOD_ID, "shop"), () -> new GuiShop());
     }
 }

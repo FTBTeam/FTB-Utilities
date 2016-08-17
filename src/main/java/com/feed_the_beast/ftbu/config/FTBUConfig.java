@@ -22,7 +22,7 @@ public class FTBUConfig // FTBU
         configFile.addGroup("webapi", FTBUConfigWebAPI.class);
         //Ranks.instance().reload();
 
-        FTBLibAPI.INSTANCE.registerConfigFile("ftbu", configFile);
+        FTBLibAPI.get().getRegistries().configFiles().register("ftbu", configFile);
         configFile.load();
     }
 }

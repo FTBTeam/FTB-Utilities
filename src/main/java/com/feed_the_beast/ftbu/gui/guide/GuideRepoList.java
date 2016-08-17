@@ -1,27 +1,28 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
-import java.util.Collections;
-import java.util.EnumMap;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by PC on 17.07.2016.
  */
+@SideOnly(Side.CLIENT)
 public abstract class GuideRepoList
 {
-    private final Map<GuideType, List<Guide>> map = new EnumMap<>(GuideType.class);
+    private final List<Guide> list = new ArrayList<>();
     private Thread thread;
 
-    public List<Guide> getList(GuideType type)
+    public List<Guide> getList()
     {
-        List<Guide> l = map.get(type);
-        return (l != null && !l.isEmpty()) ? l : Collections.emptyList();
+        return list;
     }
 
     public final void reload(boolean useThread)
     {
-        map.clear();
+        list.clear();
 
         thread = null;
 
@@ -34,7 +35,8 @@ public abstract class GuideRepoList
                 {
                     try
                     {
-                        onReload(map);
+                        onReload(list);
+                        thread = null;
                     }
                     catch(Exception ex)
                     {
@@ -50,7 +52,7 @@ public abstract class GuideRepoList
         {
             try
             {
-                onReload(map);
+                onReload(list);
             }
             catch(Exception ex)
             {
@@ -59,5 +61,5 @@ public abstract class GuideRepoList
         }
     }
 
-    protected abstract void onReload(Map<GuideType, List<Guide>> m) throws Exception;
+    protected abstract void onReload(List<Guide> guides) throws Exception;
 }

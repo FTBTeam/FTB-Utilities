@@ -140,9 +140,9 @@ public class FTBUServerEventHandler
 
             line.getStyle().setColor(TextFormatting.GOLD);
 
-            FTBLibAPI.INSTANCE.addServerCallback(1, () ->
+            FTBLibAPI.get().addServerCallback(1, () ->
             {
-                for(IForgePlayer p : FTBLibAPI.INSTANCE.getWorld().getPlayers())
+                for(IForgePlayer p : FTBLibAPI.get().getWorld().getPlayers())
                 {
                     if(p.isOnline() && FTBUPlayerData.get(p).chatLinks.getAsBoolean())
                     {

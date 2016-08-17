@@ -17,11 +17,9 @@ import java.util.Set;
  * Created by LatvianModder on 04.07.2016.
  */
 @ParametersAreNonnullByDefault
-public class TopRegistry
+public enum TopRegistry
 {
-    private static final Map<StatBase, Comparator<IForgePlayer>> COMPARATOR_REGISTRY = new HashMap<>();
-    private static final Map<StatBase, DataSupplier> DATA_REGISTRY = new HashMap<>();
-    private static final Map<StatBase, ITextComponent> NAME_REGISTRY = new HashMap<>();
+    INSTANCE;
 
     public interface DataSupplier
     {
@@ -29,7 +27,11 @@ public class TopRegistry
         Object getData(@Nonnull IForgePlayer player);
     }
 
-    public static void register(StatBase stat, @Nullable Comparator<IForgePlayer> comparator, @Nullable DataSupplier data)
+    private final Map<StatBase, Comparator<IForgePlayer>> COMPARATOR_REGISTRY = new HashMap<>();
+    private final Map<StatBase, DataSupplier> DATA_REGISTRY = new HashMap<>();
+    private final Map<StatBase, ITextComponent> NAME_REGISTRY = new HashMap<>();
+
+    public void register(StatBase stat, @Nullable Comparator<IForgePlayer> comparator, @Nullable DataSupplier data)
     {
         if(comparator != null)
         {
@@ -42,25 +44,25 @@ public class TopRegistry
         }
     }
 
-    public static void registerCustomName(StatBase stat, ITextComponent component)
+    public void registerCustomName(StatBase stat, ITextComponent component)
     {
         NAME_REGISTRY.put(stat, component);
     }
 
     @Nonnull
-    public static Set<StatBase> getKeys()
+    public Set<StatBase> getKeys()
     {
         return DATA_REGISTRY.keySet();
     }
 
     @Nullable
-    public static Comparator<IForgePlayer> getComparator(StatBase stat)
+    public Comparator<IForgePlayer> getComparator(StatBase stat)
     {
         return COMPARATOR_REGISTRY.get(stat);
     }
 
     @Nullable
-    public static DataSupplier getDataSuppier(StatBase stat)
+    public DataSupplier getDataSuppier(StatBase stat)
     {
         return DATA_REGISTRY.get(stat);
     }

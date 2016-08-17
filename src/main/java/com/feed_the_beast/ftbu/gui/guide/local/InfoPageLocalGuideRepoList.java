@@ -1,57 +1,48 @@
-package com.feed_the_beast.ftbu.gui.guide;
+package com.feed_the_beast.ftbu.gui.guide.local;
 
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
+import com.feed_the_beast.ftbu.gui.guide.online.InfoPageOnlineGuideRepoList;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 
-//FIXME
 @SideOnly(Side.CLIENT)
-public class ClientGuideFile extends InfoPage
+public class InfoPageLocalGuideRepoList extends InfoPage
 {
-    public static final ClientGuideFile INSTANCE = new ClientGuideFile();
+    private static GuiInfo cachedGui = null;
 
-    public static GuiScreen clientGuideGui = null;
-
-    public ClientGuideFile()
+    private InfoPageLocalGuideRepoList()
     {
-        //setTitle(FTBUActions.GUIDE.displayName);
+        super("local_guide_repo_list");
     }
 
-    public static GuiScreen openClientGui(boolean open)
+    public static GuiInfo getGui()
     {
-        if(clientGuideGui == null)
+        if(cachedGui == null)
         {
-            INSTANCE.reload();
-            clientGuideGui = new GuiInfo("client_guide", ClientGuideFile.INSTANCE).getWrapper();
+            cachedGui = new GuiInfo(new InfoPageLocalGuideRepoList());
         }
 
-        if(open)
-        {
-            Minecraft.getMinecraft().displayGuiScreen(clientGuideGui);
-        }
-
-        return clientGuideGui;
+        return cachedGui;
     }
 
     @Override
-    public ButtonLM createSpecialButton(GuiInfo gui, IGuiInfoPageTree page)
+    public ButtonLM createSpecialButton(GuiInfo gui)
     {
         return new ButtonLM(0, 0, 16, 16, "Browse Guides") //TODO: Lang
         {
             @Override
             public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton b)
             {
+                GuiLM.playClickSound();
+                InfoPageOnlineGuideRepoList.getGui().openGui();
             }
 
             @Override
@@ -64,17 +55,9 @@ public class ClientGuideFile extends InfoPage
         };
     }
 
-    public void reload()
-    {
-        INSTANCE.clear();
-        INSTANCE.println("WIP!");
-    }
-
-    /*
     @Override
-    public void refreshGui(GuiInfo gui)
+    public void refreshGui(@Nonnull GuiInfo gui)
     {
-        clientGuideGui = gui;
+        LocalGuideRepoList.INSTANCE.reload(true);
     }
-    */
 }

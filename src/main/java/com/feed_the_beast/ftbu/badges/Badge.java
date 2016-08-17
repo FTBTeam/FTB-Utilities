@@ -1,10 +1,12 @@
 package com.feed_the_beast.ftbu.badges;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.latmod.lib.FinalIDObject;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -88,7 +90,14 @@ public class Badge extends FinalIDObject
 
         GlStateManager.translate(0F, 0F, -1F);
         GlStateManager.color(1F, 1F, 1F, 1F);
-        GuiLM.drawTexturedRect(0D, 0D, 0.2D, 0.2D, 0D, 0D, 1D, 1D);
+        Tessellator tessellator = Tessellator.getInstance();
+        VertexBuffer buffer = tessellator.getBuffer();
+        buffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+        buffer.pos(0D, 0.2D, 0D).tex(0D, 1D).endVertex();
+        buffer.pos(0.2D, 0.2D, 0D).tex(1D, 1D).endVertex();
+        buffer.pos(0.2D, 0D, 0D).tex(1D, 0D).endVertex();
+        buffer.pos(0D, 0D, 0D).tex(0D, 0D).endVertex();
+        tessellator.draw();
 
         FTBLibClient.popMaxBrightness();
         GlStateManager.popMatrix();

@@ -162,6 +162,8 @@ public enum Backups
 
             if(size > 0)
             {
+                size = Math.min(size, backups.size());
+
                 for(int i = 0; i < size; i++)
                 {
                     System.out.println("Deleting " + backups.get(i).fileID);

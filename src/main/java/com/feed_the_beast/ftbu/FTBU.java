@@ -49,8 +49,8 @@ public class FTBU
         MinecraftForge.EVENT_BUS.register(new FTBUWorldEventHandler());
         MinecraftForge.EVENT_BUS.register(new FTBUTeamEventHandler());
         MinecraftForge.EVENT_BUS.register(new FTBUServerEventHandler());
-        FTBUChunkEventHandler.instance.init();
-        MinecraftForge.EVENT_BUS.register(FTBUChunkEventHandler.instance);
+        FTBUChunkEventHandler.INSTANCE.init();
+        MinecraftForge.EVENT_BUS.register(FTBUChunkEventHandler.INSTANCE);
 
         FTBUPermissions.init();
         FTBUCapabilities.enable();
@@ -69,7 +69,7 @@ public class FTBU
     public void postInit(FMLPostInitializationEvent e)
     {
         proxy.postInit();
-        ForgeChunkManager.setForcedChunkLoadingCallback(inst, FTBUChunkEventHandler.instance);
+        ForgeChunkManager.setForcedChunkLoadingCallback(inst, FTBUChunkEventHandler.INSTANCE);
     }
 
     @Mod.EventHandler

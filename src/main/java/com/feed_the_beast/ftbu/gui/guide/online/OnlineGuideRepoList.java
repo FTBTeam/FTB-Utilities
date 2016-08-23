@@ -25,13 +25,13 @@ public class OnlineGuideRepoList extends GuideRepoList
     @Override
     protected void onReload(List<Guide> guides) throws Exception
     {
-        for(JsonElement e : new LMConnection(RequestMethod.SIMPLE_GET, URL).connect().asJson().getAsJsonArray())
+        for(JsonElement e : new LMConnection(RequestMethod.GET, URL).connect().asJson().getAsJsonArray())
         {
             try
             {
                 JsonObject o = e.getAsJsonObject();
                 String url = o.get("url").getAsString();
-                JsonElement json = new LMConnection(RequestMethod.SIMPLE_GET, url + "/info.json").connect().asJson().getAsJsonObject();
+                JsonElement json = new LMConnection(RequestMethod.GET, url + "/info.json").connect().asJson().getAsJsonObject();
                 Guide g = new OnlineGuide(o.get("id").getAsString(), GuideType.getFromString(o.get("type").getAsString()), url);
                 g.fromJson(json);
                 guides.add(g);

@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu;
 
-import com.feed_the_beast.ftbl.api.LangKey;
+import com.latmod.lib.LangKey;
 
 /**
  * Created by LatvianModder on 13.04.2016.

@@ -9,8 +9,8 @@ import com.feed_the_beast.ftbl.api.permissions.context.ContextKey;
 import com.feed_the_beast.ftbl.api.permissions.context.PlayerContext;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
+import com.feed_the_beast.ftbu.api.IClaimedChunk;
 import com.feed_the_beast.ftbu.net.MessageAreaUpdate;
-import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldDataMP;
 import com.latmod.lib.math.ChunkDimPos;
 import com.latmod.lib.math.EntityDimPos;
@@ -260,9 +260,9 @@ public class CmdChunks extends CommandSubBase
 
             if(args[0].equals("@a"))
             {
-                for(ClaimedChunk c : FTBUWorldDataMP.chunks.getAllChunks())
+                for(IClaimedChunk c : FTBUWorldDataMP.chunks.getAllChunks())
                 {
-                    c.loaded = false;
+                    c.setLoaded(false);
                 }
 
                 ics.addChatMessage(new TextComponentString("Unloaded all chunks")); //TODO: Lang
@@ -270,9 +270,9 @@ public class CmdChunks extends CommandSubBase
             }
 
             IForgePlayer p = getForgePlayer(args[0]);
-            for(ClaimedChunk c : FTBUWorldDataMP.chunks.getChunks(p.getProfile().getId()))
+            for(IClaimedChunk c : FTBUWorldDataMP.chunks.getChunks(p.getProfile().getId()))
             {
-                c.loaded = false;
+                c.setLoaded(false);
             }
 
             ics.addChatMessage(new TextComponentString("Unloaded all " + p.getProfile().getName() + "'s chunks")); //TODO: Lang

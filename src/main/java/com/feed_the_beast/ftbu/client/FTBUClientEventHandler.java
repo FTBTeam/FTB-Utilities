@@ -4,8 +4,8 @@ import com.feed_the_beast.ftbl.api.client.CubeRenderer;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBUFinals;
+import com.feed_the_beast.ftbu.api.IClaimedChunk;
 import com.feed_the_beast.ftbu.gui.guide.local.InfoPageLocalGuideRepoList;
-import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldDataSP;
 import com.latmod.lib.math.ChunkDimPos;
 import com.latmod.lib.math.MathHelperLM;
@@ -139,10 +139,10 @@ public class FTBUClientEventHandler
                 chunkBorderRenderer.setTessellator(tessellator);
                 chunkBorderRenderer.setUV(0D, 0D, 16D, 256D);
 
-                ClaimedChunk chunk = FTBUWorldDataSP.getChunk(new ChunkDimPos(x, z, mc.thePlayer.dimension));
+                IClaimedChunk chunk = FTBUWorldDataSP.getChunk(new ChunkDimPos(x, z, mc.thePlayer.dimension));
 
                 chunkBorderRenderer.setSize(x * 16D + d, 0D, z * 16D + d, x * 16D + 16D - d, 256D, z * 16D + 16D - d);
-                chunkBorderRenderer.color.set((chunk == null) ? 0xFF00A010 : (chunk.owner.getTeam() != null ? chunk.owner.getTeam().getColor().getColor() : 0), 0.6F);
+                chunkBorderRenderer.color.set((chunk == null) ? 0xFF00A010 : (chunk.getOwner().getTeam() != null ? chunk.getOwner().getTeam().getColor().getColor() : 0), 0.6F);
                 chunkBorderRenderer.renderSides();
 
                 GlStateManager.cullFace(GlStateManager.CullFace.BACK);
@@ -154,7 +154,7 @@ public class FTBUClientEventHandler
                     for(int cx = x - 2; cx <= x + 2; cx++)
                     {
                         chunk = FTBUWorldDataSP.getChunk(new ChunkDimPos(cx, cz, mc.thePlayer.dimension));
-                        chunkBorderRenderer.color.set((chunk == null) ? 0xFF00A010 : (chunk.owner.getTeam() != null ? chunk.owner.getTeam().getColor().getColor() : 0), 1F);
+                        chunkBorderRenderer.color.set((chunk == null) ? 0xFF00A010 : (chunk.getOwner().getTeam() != null ? chunk.getOwner().getTeam().getColor().getColor() : 0), 1F);
 
                         buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
                         buffer.pos(cx * 16D + 8D, 0D, cz * 16D + 8D).color(chunkBorderRenderer.color.red, chunkBorderRenderer.color.green, chunkBorderRenderer.color.blue, 1F).endVertex();

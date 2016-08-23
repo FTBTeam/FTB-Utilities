@@ -10,7 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.json.LMJsonUtils;
 import com.latmod.lib.util.LMFileUtils;
-import com.latmod.lib.util.LMUtils;
+import com.latmod.lib.util.LMStringUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.util.text.TextFormatting;
 
@@ -95,7 +95,7 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
             {
                 for(Map.Entry<String, JsonElement> entry : e.getAsJsonObject().entrySet())
                 {
-                    UUID id = LMUtils.fromString(entry.getKey());
+                    UUID id = LMStringUtils.fromString(entry.getKey());
                     if(id != null)
                     {
                         String s = entry.getValue().getAsString();
@@ -142,7 +142,7 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
             o = new JsonObject();
             for(Map.Entry<UUID, Rank> entry : playerMap.entrySet())
             {
-                o.add(LMUtils.fromUUID(entry.getKey()), new JsonPrimitive(entry.getValue().getID()));
+                o.add(LMStringUtils.fromUUID(entry.getKey()), new JsonPrimitive(entry.getValue().getID()));
             }
             LMJsonUtils.toJson(filePlayers, o);
         }
@@ -152,7 +152,7 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
     {
         List<RankConfig> sortedRankConfigs = new ArrayList<>();
         sortedRankConfigs.addAll(RankConfigAPI.getRankConfigValues());
-        Collections.sort(sortedRankConfigs, LMUtils.ID_COMPARATOR);
+        Collections.sort(sortedRankConfigs, LMStringUtils.ID_COMPARATOR);
 
         try
         {

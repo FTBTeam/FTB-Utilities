@@ -1,14 +1,15 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbu.FTBUCapabilities;
+import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.latmod.lib.math.BlockDimPos;
+import com.latmod.lib.math.EntityDimPos;
 import com.latmod.lib.util.LMDimUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.Vec3d;
 
@@ -50,7 +51,7 @@ public class CmdTplast extends CommandLM
         }
 
         EntityPlayerMP who;
-        IForgePlayer to;
+        ForgePlayer to;
 
         if(args.length == 1)
         {
@@ -63,7 +64,17 @@ public class CmdTplast extends CommandLM
             to = getForgePlayer(args[1]);
         }
 
-        BlockDimPos p = to.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null) ? to.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null).lastPos : null;
+        BlockDimPos p = null;
+
+        if(to.isOnline())
+        {
+            p = new EntityDimPos(to.getPlayer()).toBlockDimPos();
+        }
+        else
+        {
+            NBTTagCompound tag = to.getPlayerNBT();
+        }
+
         if(p == null)
         {
             throw FTBLibLang.raw.commandError("No last position!");

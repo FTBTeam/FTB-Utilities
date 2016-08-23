@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbu.journeymap;
 
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbu.FTBUFinals;
+import com.feed_the_beast.ftbu.api.IClaimedChunk;
 import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
 import com.latmod.lib.math.ChunkDimPos;
 import journeymap.client.api.IClientAPI;
@@ -42,7 +43,7 @@ public class JMPluginHandler implements IJMPluginHandler
     }
 
     @Override
-    public void chunkChanged(ChunkDimPos pos, ClaimedChunk chunk)
+    public void chunkChanged(ChunkDimPos pos, IClaimedChunk chunk)
     {
         try
         {
@@ -50,7 +51,7 @@ public class JMPluginHandler implements IJMPluginHandler
             {
                 if(chunk != null)
                 {
-                    IForgeTeam team = chunk.owner.getTeam();
+                    IForgeTeam team = chunk.getOwner().getTeam();
 
                     MapPolygon poly = PolygonHelper.createChunkPolygon(pos.posX, 100, pos.posZ);
                     ShapeProperties shapeProperties = new ShapeProperties();

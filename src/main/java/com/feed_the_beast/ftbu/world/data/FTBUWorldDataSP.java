@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbu.world.data;
 
+import com.feed_the_beast.ftbu.api.IClaimedChunk;
 import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.badges.BadgeStorage;
 import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.net.MessageRequestBadge;
-import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.chunks.ClaimedChunkStorage;
 import com.latmod.lib.io.LMConnection;
 import com.latmod.lib.io.RequestMethod;
@@ -36,7 +36,7 @@ public class FTBUWorldDataSP extends FTBUWorldData
             {
                 try
                 {
-                    LMConnection connection = new LMConnection(RequestMethod.SIMPLE_GET, "http://pastebin.com/raw/Mu8McdDR");
+                    LMConnection connection = new LMConnection(RequestMethod.GET, "http://pastebin.com/raw/Mu8McdDR");
                     globalBadges.loadBadges(connection.connect().asJson());
                 }
                 catch(Exception ex)
@@ -51,23 +51,23 @@ public class FTBUWorldDataSP extends FTBUWorldData
     }
 
     @Nullable
-    public static ClaimedChunk getChunk(ChunkDimPos pos)
+    public static IClaimedChunk getChunk(ChunkDimPos pos)
     {
         return (pos != null && chunks != null) ? chunks.getChunk(pos) : null;
     }
 
     @SideOnly(Side.CLIENT)
-    public static void setTypes(Map<ChunkDimPos, ClaimedChunk> types)
+    public static void setTypes(Map<ChunkDimPos, IClaimedChunk> types)
     {
         if(chunks == null)
         {
             return;
         }
 
-        for(Map.Entry<ChunkDimPos, ClaimedChunk> e : types.entrySet())
+        for(Map.Entry<ChunkDimPos, IClaimedChunk> e : types.entrySet())
         {
             ChunkDimPos pos = e.getKey();
-            ClaimedChunk chunk = e.getValue();
+            IClaimedChunk chunk = e.getValue();
 
             chunks.put(pos, chunk);
 

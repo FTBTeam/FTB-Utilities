@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.cmd.ICustomCommandInfo;
-import com.feed_the_beast.ftbl.api.info.impl.InfoExtendedTextLine;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.api.permissions.context.PlayerContext;
@@ -46,7 +45,7 @@ public class ServerInfoFile extends InfoPage
         public static void reload()
         {
             main.clear();
-            
+
             /*
             //categoryServer.println(new ChatComponentTranslation("ftbl:worldID", FTBWorld.server.getWorldID()));
             File file = new File(FTBLib.folderLocal, "guide/");
@@ -223,10 +222,10 @@ public class ServerInfoFile extends InfoPage
         }
         catch(Exception ex)
         {
+            page.println("Failed to load commands");
         }
 
         page = getSub("warps").setTitle(new TextComponentString("Warps")); //TODO: LANG
-        InfoExtendedTextLine line;
         ITextComponent t;
 
         for(String s : FTBUWorldData.getW(self.getWorld()).toMP().listWarps())

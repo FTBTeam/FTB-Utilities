@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.FTBLibStats;
-import com.feed_the_beast.ftbl.api.LangKey;
 import com.feed_the_beast.ftbl.api.gui.GuiLang;
 import com.feed_the_beast.ftbu.api.TopRegistry;
+import com.latmod.lib.LangKey;
 import com.latmod.lib.math.MathHelperLM;
 import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.stats.StatBase;

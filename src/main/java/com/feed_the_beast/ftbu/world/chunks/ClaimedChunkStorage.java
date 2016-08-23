@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbu.world.chunks;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbu.api.IClaimedChunk;
 import com.latmod.lib.math.ChunkDimPos;
 
 import javax.annotation.Nonnull;
@@ -17,8 +18,8 @@ import java.util.UUID;
  */
 public final class ClaimedChunkStorage
 {
-    private final Map<ChunkDimPos, ClaimedChunk> map;
-    private final Map<UUID, Collection<ClaimedChunk>> invertedMap;
+    private final Map<ChunkDimPos, IClaimedChunk> map;
+    private final Map<UUID, Collection<IClaimedChunk>> invertedMap;
 
     public ClaimedChunkStorage()
     {
@@ -27,26 +28,26 @@ public final class ClaimedChunkStorage
     }
 
     @Nonnull
-    public Collection<ClaimedChunk> getAllChunks()
+    public Collection<IClaimedChunk> getAllChunks()
     {
         return map.values();
     }
 
     @Nullable
-    public ClaimedChunk getChunk(@Nonnull ChunkDimPos pos)
+    public IClaimedChunk getChunk(@Nonnull ChunkDimPos pos)
     {
         return map.get(pos);
     }
 
-    public void put(@Nonnull ChunkDimPos pos, @Nullable ClaimedChunk c)
+    public void put(@Nonnull ChunkDimPos pos, @Nullable IClaimedChunk c)
     {
         if(c == null)
         {
-            ClaimedChunk chunk = map.remove(pos);
+            IClaimedChunk chunk = map.remove(pos);
 
             if(chunk != null)
             {
-                Collection<ClaimedChunk> ch = invertedMap.get(chunk.owner.getProfile().getId());
+                Collection<IClaimedChunk> ch = invertedMap.get(chunk.getOwner().getProfile().getId());
 
                 if(ch != null)
                 {
@@ -56,14 +57,14 @@ public final class ClaimedChunkStorage
         }
         else
         {
-            map.put(c.pos, c);
+            map.put(c.getPos(), c);
 
-            Collection<ClaimedChunk> ch = invertedMap.get(c.owner.getProfile().getId());
+            Collection<IClaimedChunk> ch = invertedMap.get(c.getOwner().getProfile().getId());
 
             if(ch == null)
             {
                 ch = new HashSet<>();
-                invertedMap.put(c.owner.getProfile().getId(), ch);
+                invertedMap.put(c.getOwner().getProfile().getId(), ch);
             }
 
             ch.add(c);
@@ -71,21 +72,21 @@ public final class ClaimedChunkStorage
     }
 
     @Nonnull
-    public Collection<ClaimedChunk> getChunks(@Nonnull UUID playerID)
+    public Collection<IClaimedChunk> getChunks(@Nonnull UUID playerID)
     {
-        Collection<ClaimedChunk> c = invertedMap.get(playerID);
+        Collection<IClaimedChunk> c = invertedMap.get(playerID);
         return (c == null) ? Collections.EMPTY_SET : c;
     }
 
     public int getClaimedChunks(@Nonnull UUID playerID)
     {
-        Collection<ClaimedChunk> c = invertedMap.get(playerID);
+        Collection<IClaimedChunk> c = invertedMap.get(playerID);
         return (c == null) ? 0 : c.size();
     }
 
     public int getLoadedChunks(@Nonnull UUID playerID)
     {
-        Collection<ClaimedChunk> c = invertedMap.get(playerID);
+        Collection<IClaimedChunk> c = invertedMap.get(playerID);
 
         if(c == null || c.isEmpty())
         {
@@ -94,9 +95,9 @@ public final class ClaimedChunkStorage
 
         int loaded = 0;
 
-        for(ClaimedChunk chunk : c)
+        for(IClaimedChunk chunk : c)
         {
-            if(chunk.loaded)
+            if(chunk.isLoaded())
             {
                 loaded++;
             }
@@ -107,7 +108,7 @@ public final class ClaimedChunkStorage
 
     public IForgePlayer getOwnerPlayer(ChunkDimPos pos)
     {
-        ClaimedChunk c = map.get(pos);
-        return (c == null) ? null : c.owner;
+        IClaimedChunk c = map.get(pos);
+        return (c == null) ? null : c.getOwner();
     }
 }

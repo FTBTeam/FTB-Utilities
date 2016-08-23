@@ -6,11 +6,14 @@ import com.feed_the_beast.ftbl.api.cmd.CommandSubBase;
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.latmod.lib.util.LMNBTUtils;
-import com.latmod.lib.util.LMUtils;
+import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.Loader;
 
@@ -74,16 +77,16 @@ public class CmdInv extends CommandSubBase
         {
             checkArgs(args, 2, "<player> <ID>");
             EntityPlayerMP ep = getPlayer(server, ics, args[0]);
-            File file = new File(FTBLib.folderLocal, "ftbu/playerinvs/" + LMUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
+            File file = new File(FTBLib.folderLocal, "ftbu/playerinvs/" + LMStringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
 
             try
             {
                 NBTTagCompound tag = new NBTTagCompound();
-                LMInvUtils.writeItemsToNBT(ep.inventory, tag, "Inventory");
+                writeItemsToNBT(ep.inventory, tag, "Inventory");
 
                 if(Loader.isModLoaded("Baubles"))
                 {
-                    LMInvUtils.writeItemsToNBT(LMInvUtils.getBaubles(ep), tag, "Baubles");
+                    writeItemsToNBT(LMInvUtils.getBaubles(ep), tag, "Baubles");
                 }
 
                 LMNBTUtils.writeTag(file, tag);
@@ -96,6 +99,26 @@ public class CmdInv extends CommandSubBase
                 }
                 throw FTBLibLang.raw.commandError("Failed to load inventory!");
             }
+        }
+
+        private static void writeItemsToNBT(IInventory inv, NBTTagCompound compound, String s)
+        {
+            NBTTagList nbttaglist = new NBTTagList();
+
+            for(int i = 0; i < inv.getSizeInventory(); ++i)
+            {
+                ItemStack is = inv.getStackInSlot(i);
+
+                if(is != null)
+                {
+                    NBTTagCompound nbttagcompound = new NBTTagCompound();
+                    nbttagcompound.setByte("Slot", (byte) i);
+                    is.writeToNBT(nbttagcompound);
+                    nbttaglist.appendTag(nbttagcompound);
+                }
+            }
+
+            compound.setTag(s, nbttaglist);
         }
     }
 
@@ -124,17 +147,17 @@ public class CmdInv extends CommandSubBase
         {
             checkArgs(args, 2, "<player> <ID>");
             EntityPlayerMP ep = getPlayer(server, ics, args[0]);
-            File file = new File(FTBLib.folderLocal, "ftbu/playerinvs/" + LMUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
+            File file = new File(FTBLib.folderLocal, "ftbu/playerinvs/" + LMStringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
 
             try
             {
                 NBTTagCompound tag = LMNBTUtils.readTag(file);
 
-                LMInvUtils.readItemsFromNBT(ep.inventory, tag, "Inventory");
+                readItemsFromNBT(ep.inventory, tag, "Inventory");
 
                 if(Loader.isModLoaded("Baubles"))
                 {
-                    LMInvUtils.readItemsFromNBT(LMInvUtils.getBaubles(ep), tag, "Baubles");
+                    readItemsFromNBT(LMInvUtils.getBaubles(ep), tag, "Baubles");
                 }
             }
             catch(Exception e)
@@ -144,6 +167,22 @@ public class CmdInv extends CommandSubBase
                     e.printStackTrace();
                 }
                 throw FTBLibLang.raw.commandError("Failed to load inventory!");
+            }
+        }
+
+        private static void readItemsFromNBT(IInventory inv, NBTTagCompound compound, String s)
+        {
+            NBTTagList nbttaglist = compound.getTagList(s, 10);
+
+            for(int i = 0; i < nbttaglist.tagCount(); ++i)
+            {
+                NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
+                int j = nbttagcompound.getByte("Slot") & 255;
+
+                if(j >= 0 && j < inv.getSizeInventory())
+                {
+                    inv.setInventorySlotContents(j, ItemStack.loadItemStackFromNBT(nbttagcompound));
+                }
             }
         }
     }

@@ -1,7 +1,9 @@
 package com.feed_the_beast.ftbu.world.data;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.config.ConfigEntry;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
+import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.latmod.lib.io.Bits;
 import com.latmod.lib.math.BlockDimPos;
@@ -22,9 +24,9 @@ import java.util.Map;
  */
 public class FTBUPlayerData implements ICapabilitySerializable<NBTTagCompound>
 {
-    public final ConfigEntryBool renderBadge;
-    public final ConfigEntryBool chatLinks;
-    public BlockDimPos lastPos, lastDeath;
+    private final ConfigEntryBool renderBadge;
+    private final ConfigEntryBool chatLinks;
+    public BlockDimPos lastDeath, lastSafePos;
     public String lastChunkID;
     private Map<String, BlockDimPos> homes;
 
@@ -61,8 +63,8 @@ public class FTBUPlayerData implements ICapabilitySerializable<NBTTagCompound>
     {
         byte flags = tag.getByte("Flags");
 
-        renderBadge.set(Bits.getBit(flags, (byte) 0));
-        chatLinks.set(Bits.getBit(flags, (byte) 1));
+        renderBadge.set(Bits.getFlag(flags, (byte) 1));
+        chatLinks.set(Bits.getFlag(flags, (byte) 2));
 
         if(tag.hasKey("Homes"))
         {
@@ -83,13 +85,6 @@ public class FTBUPlayerData implements ICapabilitySerializable<NBTTagCompound>
             homes = null;
         }
 
-        lastPos = null;
-        if(tag.hasKey("Pos"))
-        {
-            int[] ai = tag.getIntArray("LastPos");
-            lastPos = (ai.length == 4) ? new BlockDimPos(ai) : null;
-        }
-
         lastDeath = null;
         if(tag.hasKey("LastDeath"))
         {
@@ -103,14 +98,14 @@ public class FTBUPlayerData implements ICapabilitySerializable<NBTTagCompound>
     {
         NBTTagCompound tag = new NBTTagCompound();
 
-        byte flags = 0;
+        int flags = 0;
 
-        flags = Bits.setBit(flags, (byte) 0, renderBadge.getAsBoolean());
-        flags = Bits.setBit(flags, (byte) 1, chatLinks.getAsBoolean());
+        flags = Bits.setFlag(flags, 1, renderBadge.getAsBoolean());
+        flags = Bits.setFlag(flags, 2, chatLinks.getAsBoolean());
 
         if(flags != 0)
         {
-            tag.setByte("Flags", flags);
+            tag.setByte("Flags", (byte) flags);
         }
 
         if(homes != null && !homes.isEmpty())
@@ -123,11 +118,6 @@ public class FTBUPlayerData implements ICapabilitySerializable<NBTTagCompound>
             }
 
             tag.setTag("Homes", tag1);
-        }
-
-        if(lastPos != null)
-        {
-            tag.setIntArray("Pos", lastPos.toIntArray());
         }
 
         if(lastDeath != null)
@@ -171,5 +161,23 @@ public class FTBUPlayerData implements ICapabilitySerializable<NBTTagCompound>
     public int homesSize()
     {
         return homes == null ? 0 : homes.size();
+    }
+
+    public boolean renderBadge()
+    {
+        return renderBadge.getAsBoolean();
+    }
+
+    public boolean chatLinks()
+    {
+        return chatLinks.getAsBoolean();
+    }
+
+    public ConfigEntry createConfigGroup()
+    {
+        ConfigGroup group = new ConfigGroup();
+        group.add("render_badge", renderBadge);
+        group.add("chat_links", chatLinks);
+        return group;
     }
 }

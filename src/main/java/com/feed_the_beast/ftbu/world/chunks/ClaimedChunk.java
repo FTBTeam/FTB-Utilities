@@ -1,20 +1,16 @@
 package com.feed_the_beast.ftbu.world.chunks;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.LangKey;
+import com.feed_the_beast.ftbu.api.IClaimedChunk;
 import com.feed_the_beast.ftbu.world.data.FTBUTeamData;
 import com.latmod.lib.math.ChunkDimPos;
 import net.minecraft.util.math.BlockPos;
 
-public final class ClaimedChunk
+public final class ClaimedChunk implements IClaimedChunk
 {
-    public static final LangKey LANG_WILDERNESS = new LangKey("ftbu.chunktype.wilderness");
-    public static final LangKey LANG_CLAIMED = new LangKey("ftbu.chunktype.claimed");
-    public static final LangKey LANG_LOADED = new LangKey("ftbu.chunktype.loaded");
-
-    public final ChunkDimPos pos;
-    public final IForgePlayer owner;
-    public boolean loaded, forced;
+    private final ChunkDimPos pos;
+    private final IForgePlayer owner;
+    private boolean loaded, forced;
 
     public ClaimedChunk(IForgePlayer o, ChunkDimPos p)
     {
@@ -40,6 +36,36 @@ public final class ClaimedChunk
         return pos.hashCode();
     }
 
+    public ChunkDimPos getPos()
+    {
+        return pos;
+    }
+
+    public IForgePlayer getOwner()
+    {
+        return owner;
+    }
+
+    public boolean isLoaded()
+    {
+        return loaded;
+    }
+
+    public void setLoaded(boolean loaded)
+    {
+        this.loaded = loaded;
+    }
+
+    public boolean isForced()
+    {
+        return forced;
+    }
+
+    public void setForced(boolean forced)
+    {
+        this.forced = forced;
+    }
+
     public boolean isChunkOwner(IForgePlayer p)
     {
         return p != null && p.equalsPlayer(owner);
@@ -57,7 +83,7 @@ public final class ClaimedChunk
         }
         else if(p.isFake())
         {
-            return FTBUTeamData.get(owner.getTeam()).fakePlayers.getAsBoolean();
+            return FTBUTeamData.get(owner.getTeam()).allowFakePlayers();
         }
         /*else if(p.isOnline() && PermissionAPI.hasPermission(p.getProfile(), FTBLibPermissions.INTERACT_SECURE, false, new Context(p.getPlayer(), pos)))
         {

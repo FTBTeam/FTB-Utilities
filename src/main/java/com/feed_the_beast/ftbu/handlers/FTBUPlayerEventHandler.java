@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbu.handlers;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.events.player.AttachPlayerCapabilitiesEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerDeathEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerInfoEvent;
@@ -15,15 +14,16 @@ import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
+import com.feed_the_beast.ftbu.api.IClaimedChunk;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigLogin;
-import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.data.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldDataMP;
 import com.google.gson.JsonElement;
 import com.latmod.lib.math.BlockDimPos;
 import com.latmod.lib.math.ChunkDimPos;
 import com.latmod.lib.math.EntityDimPos;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -67,7 +67,7 @@ public class FTBUPlayerEventHandler
                 FTBUConfigLogin.motd.components.forEach(ep::addChatMessage);
             }
 
-            FTBUChunkEventHandler.instance.markDirty(null);
+            FTBUChunkEventHandler.INSTANCE.markDirty(null);
         }
     }
 
@@ -76,7 +76,7 @@ public class FTBUPlayerEventHandler
     {
         if(event.getPlayer().hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
         {
-            FTBUChunkEventHandler.instance.markDirty(null);
+            FTBUChunkEventHandler.INSTANCE.markDirty(null);
         }
     }
 
@@ -96,12 +96,7 @@ public class FTBUPlayerEventHandler
         if(event.getPlayer().hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
         {
             FTBUPlayerData data = event.getPlayer().getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
-            ConfigGroup group = new ConfigGroup();
-
-            group.add("render_badge", data.renderBadge);
-            group.add("chat_links", data.chatLinks);
-
-            event.getSettings().add("ftbu", group);
+            event.getSettings().add("ftbu", data.createConfigGroup());
         }
     }
 
@@ -136,11 +131,11 @@ public class FTBUPlayerEventHandler
         }
 
         FTBUPlayerData data = player.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
-        data.lastPos = new EntityDimPos(ep).toBlockDimPos();
+        IClaimedChunk chunk = FTBUWorldDataMP.chunks.getChunk(new ChunkDimPos(ep.dimension, e.getNewChunkX(), e.getNewChunkZ()));
 
-        ClaimedChunk chunk = FTBUWorldDataMP.chunks.getChunk(new ChunkDimPos(ep.dimension, e.getNewChunkX(), e.getNewChunkZ()));
+        data.lastSafePos = new EntityDimPos(ep).toBlockDimPos();
 
-        String newTeamID = (chunk == null || chunk.owner.getTeam() == null) ? "" : chunk.owner.getTeamID();
+        String newTeamID = (chunk == null || chunk.getOwner().getTeam() == null) ? "" : chunk.getOwner().getTeamID();
 
         if(data.lastChunkID == null || !data.lastChunkID.equals(newTeamID))
         {
@@ -148,7 +143,7 @@ public class FTBUPlayerEventHandler
 
             if(!newTeamID.isEmpty())
             {
-                IForgeTeam team = chunk.owner.getTeam();
+                IForgeTeam team = chunk.getOwner().getTeam();
 
                 if(team != null)
                 {
@@ -209,7 +204,7 @@ public class FTBUPlayerEventHandler
 
             if(player != null)
             {
-                ClaimedChunk chunk = FTBUWorldDataMP.chunks.getChunk(new BlockDimPos(event.getPos(), player.getPlayer().dimension).toChunkPos());
+                IClaimedChunk chunk = FTBUWorldDataMP.chunks.getChunk(new BlockDimPos(event.getPos(), player.getPlayer().dimension).toChunkPos());
 
                 if(chunk != null && !chunk.canInteract(player, false, event.getPos()))
                 {
@@ -235,13 +230,13 @@ public class FTBUPlayerEventHandler
             {
                 for(JsonElement e : FTBUPermissions.CLAIMS_BREAK_WHITELIST.getJson(player.getProfile()).getAsJsonArray())
                 {
-                    if(e.getAsString().equals(LMInvUtils.getRegName(player.getPlayer().worldObj.getBlockState(event.getPos()).getBlock()).toString()))
+                    if(e.getAsString().equals(Block.REGISTRY.getNameForObject(player.getPlayer().worldObj.getBlockState(event.getPos()).getBlock()).toString()))
                     {
                         return;
                     }
                 }
 
-                ClaimedChunk chunk = FTBUWorldDataMP.chunks.getChunk(new BlockDimPos(event.getPos(), player.getPlayer().dimension).toChunkPos());
+                IClaimedChunk chunk = FTBUWorldDataMP.chunks.getChunk(new BlockDimPos(event.getPos(), player.getPlayer().dimension).toChunkPos());
 
                 if(chunk != null && !chunk.canInteract(player, true, event.getPos()))
                 {

@@ -100,6 +100,6 @@ public class GuideFile extends FinalIDObject implements IResourceProvider
             return resources.get(s);
         }
 
-        return new LMConnection(RequestMethod.SIMPLE_GET, s);
+        return new LMConnection(RequestMethod.GET, s);
     }
 }

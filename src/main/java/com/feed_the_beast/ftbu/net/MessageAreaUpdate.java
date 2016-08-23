@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbu.net;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
+import com.feed_the_beast.ftbu.api.IClaimedChunk;
 import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldDataMP;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldDataSP;
@@ -17,7 +18,7 @@ import java.util.Map;
 public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
 {
     public int dim;
-    public Map<ChunkDimPos, ClaimedChunk> types;
+    public Map<ChunkDimPos, IClaimedChunk> types;
 
     public MessageAreaUpdate()
     {
@@ -67,7 +68,7 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
                 if(owner != null)
                 {
                     ClaimedChunk chunk = new ClaimedChunk(owner, pos);
-                    chunk.loaded = io.readBoolean();
+                    chunk.setLoaded(io.readBoolean());
                     types.put(pos, chunk);
                 }
             }
@@ -84,7 +85,7 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
         io.writeInt(dim);
         io.writeInt(types.size());
 
-        for(Map.Entry<ChunkDimPos, ClaimedChunk> e : types.entrySet())
+        for(Map.Entry<ChunkDimPos, IClaimedChunk> e : types.entrySet())
         {
             io.writeInt(e.getKey().posX);
             io.writeInt(e.getKey().posZ);
@@ -96,8 +97,8 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
             else
             {
                 io.writeBoolean(true);
-                LMNetUtils.writeUUID(io, e.getValue().owner.getProfile().getId());
-                io.writeBoolean(e.getValue().loaded);
+                LMNetUtils.writeUUID(io, e.getValue().getOwner().getProfile().getId());
+                io.writeBoolean(e.getValue().isLoaded());
             }
         }
     }

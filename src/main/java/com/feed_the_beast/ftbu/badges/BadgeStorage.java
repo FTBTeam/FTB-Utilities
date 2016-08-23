@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbu.badges;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.latmod.lib.util.LMUtils;
+import com.latmod.lib.util.LMStringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +51,7 @@ public class BadgeStorage
 
             for(Map.Entry<String, JsonElement> entry : o1.entrySet())
             {
-                UUID id = LMUtils.fromString(entry.getKey());
+                UUID id = LMStringUtils.fromString(entry.getKey());
                 if(id != null)
                 {
                     Badge b = badgeMap.get(entry.getValue().getAsString());

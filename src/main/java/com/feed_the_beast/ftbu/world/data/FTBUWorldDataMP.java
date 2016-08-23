@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
+import com.feed_the_beast.ftbu.api.IClaimedChunk;
 import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.badges.BadgeStorage;
 import com.feed_the_beast.ftbu.cmd.CmdRestart;
@@ -148,16 +149,16 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         }
         else
         {
-            ClaimedChunk c = FTBUWorldDataMP.chunks.getChunk(pos);
+            IClaimedChunk c = FTBUWorldDataMP.chunks.getChunk(pos);
 
             if(c != null)
             {
-                EnumEnabled fe = FTBUPermissions.CLAIMS_FORCED_EXPLOSIONS.get(c.owner.getProfile());
+                EnumEnabled fe = FTBUPermissions.CLAIMS_FORCED_EXPLOSIONS.get(c.getOwner().getProfile());
 
                 if(fe == null)
                 {
 
-                    return c.owner.getTeam() == null || !FTBUTeamData.get(c.owner.getTeam()).disable_explosions.getAsBoolean();
+                    return c.getOwner().getTeam() == null || !FTBUTeamData.get(c.getOwner().getTeam()).disableExplosions();
                 }
                 else
                 {
@@ -199,7 +200,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
             return false;
         }
 
-        ClaimedChunk chunk = chunks.getChunk(pos);
+        IClaimedChunk chunk = chunks.getChunk(pos);
 
         if(chunk != null)
         {
@@ -213,7 +214,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
 
     public static boolean unclaimChunk(@Nonnull IForgePlayer player, @Nonnull ChunkDimPos pos)
     {
-        ClaimedChunk chunk = chunks.getChunk(pos);
+        IClaimedChunk chunk = chunks.getChunk(pos);
 
         if(chunk != null && chunk.isChunkOwner(player))
         {
@@ -227,17 +228,17 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
 
     public static void unclaimAllChunks(@Nonnull IForgePlayer player, @Nullable Integer dim)
     {
-        Collection<ClaimedChunk> ch = new HashSet<>();
+        Collection<IClaimedChunk> ch = new HashSet<>();
         ch.addAll(chunks.getChunks(player.getProfile().getId()));
 
         if(!ch.isEmpty())
         {
-            for(ClaimedChunk c : ch)
+            for(IClaimedChunk c : ch)
             {
-                if(dim == null || dim.intValue() == c.pos.dim)
+                if(dim == null || dim.intValue() == c.getPos().dim)
                 {
-                    setLoaded(player, c.pos, false);
-                    chunks.put(c.pos, null);
+                    setLoaded(player, c.getPos(), false);
+                    chunks.put(c.getPos(), null);
                 }
             }
         }
@@ -245,9 +246,9 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
 
     public static boolean setLoaded(@Nonnull IForgePlayer player, @Nonnull ChunkDimPos pos, boolean flag)
     {
-        ClaimedChunk chunk = chunks.getChunk(pos);
+        IClaimedChunk chunk = chunks.getChunk(pos);
 
-        if(chunk != null && flag != chunk.loaded && player.equalsPlayer(chunk.owner))
+        if(chunk != null && flag != chunk.isLoaded() && player.equalsPlayer(chunk.getOwner()))
         {
             if(flag)
             {
@@ -275,8 +276,8 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
                 }
             }
 
-            chunk.loaded = flag;
-            FTBUChunkEventHandler.instance.markDirty(LMDimUtils.getWorld(pos.dim));
+            chunk.setLoaded(flag);
+            FTBUChunkEventHandler.INSTANCE.markDirty(LMDimUtils.getWorld(pos.dim));
 
             if(player.getPlayer() != null)
             {
@@ -409,7 +410,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         if(nextChunkloaderUpdate < now)
         {
             nextChunkloaderUpdate = now + 2L * 3600L;
-            FTBUChunkEventHandler.instance.markDirty(null);
+            FTBUChunkEventHandler.INSTANCE.markDirty(null);
         }
 
         if(Backups.INSTANCE.thread != null && Backups.INSTANCE.thread.isDone)

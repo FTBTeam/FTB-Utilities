@@ -68,7 +68,7 @@ public class FTBUServerEventHandler
 
             if(FTBLib.getServerWorld() != null)
             {
-                FTBUChunkEventHandler.instance.markDirty(null);
+                FTBUChunkEventHandler.INSTANCE.markDirty(null);
             }
         }
         else
@@ -144,7 +144,7 @@ public class FTBUServerEventHandler
             {
                 for(IForgePlayer p : FTBLibAPI.get().getWorld().getPlayers())
                 {
-                    if(p.isOnline() && FTBUPlayerData.get(p).chatLinks.getAsBoolean())
+                    if(p.isOnline() && FTBUPlayerData.get(p).chatLinks())
                     {
                         p.getPlayer().addChatMessage(line);
                     }

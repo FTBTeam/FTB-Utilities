@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.handlers;
 
-import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.events.team.AttachTeamCapabilitiesEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamSettingsEvent;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
@@ -46,13 +45,7 @@ public class FTBUTeamEventHandler
         if(event.getTeam().hasCapability(FTBUCapabilities.FTBU_TEAM_DATA, null))
         {
             FTBUTeamData data = event.getTeam().getCapability(FTBUCapabilities.FTBU_TEAM_DATA, null);
-            ConfigGroup group = new ConfigGroup();
-
-            group.add("blocks", data.blocks);
-            group.add("disable_explosions", data.disable_explosions);
-            group.add("fake_players", data.fakePlayers);
-
-            event.getSettings().add("ftbu", group);
+            event.getSettings().add("ftbu", data.createConfigGroup());
         }
     }
 }

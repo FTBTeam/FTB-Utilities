@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.journeymap;
 
-import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
+import com.feed_the_beast.ftbu.api.IClaimedChunk;
 import com.latmod.lib.math.ChunkDimPos;
 
 /**
@@ -12,5 +12,5 @@ public interface IJMPluginHandler
 
     void mappingStopped();
 
-    void chunkChanged(ChunkDimPos pos, ClaimedChunk chunk);
+    void chunkChanged(ChunkDimPos pos, IClaimedChunk chunk);
 }

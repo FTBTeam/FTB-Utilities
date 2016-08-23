@@ -5,12 +5,14 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
+import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.security.EnumTeamPrivacyLevel;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
+import com.feed_the_beast.ftbu.api.IClaimedChunk;
 import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
 import com.latmod.lib.io.Bits;
 import com.latmod.lib.math.ChunkDimPos;
-import com.latmod.lib.util.LMUtils;
+import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
@@ -27,14 +29,14 @@ import java.util.Collection;
  */
 public class FTBUTeamData implements ICapabilitySerializable<NBTTagCompound>
 {
-    public final ConfigEntryEnum<EnumTeamPrivacyLevel> blocks;
-    public final ConfigEntryBool disable_explosions;
-    public final ConfigEntryBool fakePlayers;
+    private final ConfigEntryEnum<EnumTeamPrivacyLevel> blocks;
+    private final ConfigEntryBool disableExplosions;
+    private final ConfigEntryBool fakePlayers;
 
     public FTBUTeamData()
     {
         blocks = new ConfigEntryEnum<>(EnumTeamPrivacyLevel.ALLIES, EnumTeamPrivacyLevel.NAME_MAP);
-        disable_explosions = new ConfigEntryBool(false);
+        disableExplosions = new ConfigEntryBool(false);
         fakePlayers = new ConfigEntryBool(false);
     }
 
@@ -65,8 +67,8 @@ public class FTBUTeamData implements ICapabilitySerializable<NBTTagCompound>
     {
         byte flags = tag.getByte("Flags");
 
-        disable_explosions.set(Bits.getBit(flags, (byte) 0));
-        fakePlayers.set(Bits.getBit(flags, (byte) 1));
+        disableExplosions.set(Bits.getFlag(flags, 1));
+        fakePlayers.set(Bits.getFlag(flags, 2));
 
         blocks.setIndex(tag.hasKey("BlockSecurity") ? tag.getByte("BlockSecurity") : blocks.defValue);
 
@@ -76,7 +78,7 @@ public class FTBUTeamData implements ICapabilitySerializable<NBTTagCompound>
 
             for(String s : tag1.getKeySet())
             {
-                IForgePlayer player = FTBLibAPI.get().getWorld().getPlayer(LMUtils.fromString(s));
+                IForgePlayer player = FTBLibAPI.get().getWorld().getPlayer(LMStringUtils.fromString(s));
 
                 if(player != null && player.isMemberOf(FTBLibAPI.get().getWorld().getCurrentTeam()))
                 {
@@ -92,10 +94,10 @@ public class FTBUTeamData implements ICapabilitySerializable<NBTTagCompound>
 
                             if(ai.length >= 4)
                             {
-                                chunk.loaded = ai[3] != 0;
+                                chunk.setLoaded(ai[3] != 0);
                             }
 
-                            FTBUWorldDataMP.chunks.put(chunk.pos, chunk);
+                            FTBUWorldDataMP.chunks.put(chunk.getPos(), chunk);
                         }
                     }
                 }
@@ -108,14 +110,14 @@ public class FTBUTeamData implements ICapabilitySerializable<NBTTagCompound>
     {
         NBTTagCompound tag = new NBTTagCompound();
 
-        byte flags = 0;
+        int flags = 0;
 
-        flags = Bits.setBit(flags, (byte) 0, disable_explosions.getAsBoolean());
-        flags = Bits.setBit(flags, (byte) 1, fakePlayers.getAsBoolean());
+        flags = Bits.setFlag(flags, (byte) 1, disableExplosions.getAsBoolean());
+        flags = Bits.setFlag(flags, (byte) 2, fakePlayers.getAsBoolean());
 
         if(flags != 0)
         {
-            tag.setByte("Flags", flags);
+            tag.setByte("Flags", (byte) flags);
         }
 
         if(!blocks.isDefault())
@@ -127,21 +129,21 @@ public class FTBUTeamData implements ICapabilitySerializable<NBTTagCompound>
 
         for(IForgePlayer player : FTBLibAPI.get().getWorld().getCurrentTeam().getMembers())
         {
-            Collection<ClaimedChunk> chunks = FTBUWorldDataMP.chunks.getChunks(player.getProfile().getId());
+            Collection<IClaimedChunk> chunks = FTBUWorldDataMP.chunks.getChunks(player.getProfile().getId());
 
             if(!chunks.isEmpty())
             {
                 NBTTagList tag1 = new NBTTagList();
 
-                for(ClaimedChunk c : chunks)
+                for(IClaimedChunk c : chunks)
                 {
-                    int ai[] = c.loaded ? new int[4] : new int[3];
+                    int ai[] = c.isLoaded() ? new int[4] : new int[3];
 
-                    ai[0] = c.pos.dim;
-                    ai[1] = c.pos.posX;
-                    ai[2] = c.pos.posZ;
+                    ai[0] = c.getPos().dim;
+                    ai[1] = c.getPos().posX;
+                    ai[2] = c.getPos().posZ;
 
-                    if(c.loaded)
+                    if(c.isLoaded())
                     {
                         ai[3] = 1;
                     }
@@ -149,7 +151,7 @@ public class FTBUTeamData implements ICapabilitySerializable<NBTTagCompound>
                     tag1.appendTag(new NBTTagIntArray(ai));
                 }
 
-                chunksTag.setTag(LMUtils.fromUUID(player.getProfile().getId()), tag1);
+                chunksTag.setTag(LMStringUtils.fromUUID(player.getProfile().getId()), tag1);
             }
         }
 
@@ -159,5 +161,29 @@ public class FTBUTeamData implements ICapabilitySerializable<NBTTagCompound>
         }
 
         return tag;
+    }
+
+    public EnumTeamPrivacyLevel getBlocks()
+    {
+        return blocks.get();
+    }
+
+    public boolean disableExplosions()
+    {
+        return disableExplosions.getAsBoolean();
+    }
+
+    public boolean allowFakePlayers()
+    {
+        return fakePlayers.getAsBoolean();
+    }
+
+    public ConfigGroup createConfigGroup()
+    {
+        ConfigGroup group = new ConfigGroup();
+        group.add("blocks", blocks);
+        group.add("disable_explosions", disableExplosions);
+        group.add("fake_players", fakePlayers);
+        return group;
     }
 }

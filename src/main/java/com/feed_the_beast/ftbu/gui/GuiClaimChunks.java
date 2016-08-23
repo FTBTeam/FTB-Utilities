@@ -11,6 +11,7 @@ import com.feed_the_beast.ftbl.api.gui.widgets.PanelLM;
 import com.feed_the_beast.ftbl.api_impl.MouseButton;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBULang;
+import com.feed_the_beast.ftbu.api.IClaimedChunk;
 import com.feed_the_beast.ftbu.net.MessageAreaRequest;
 import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
 import com.feed_the_beast.ftbu.world.data.FTBUWorldDataSP;
@@ -98,11 +99,11 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         @Override
         public void addMouseOverText(GuiLM gui, List<String> l)
         {
-            ClaimedChunk chunk = FTBUWorldDataSP.getChunk(chunkPos);
+            IClaimedChunk chunk = FTBUWorldDataSP.getChunk(chunkPos);
 
             if(chunk != null)
             {
-                IForgeTeam team = chunk.owner.getTeam();
+                IForgeTeam team = chunk.getOwner().getTeam();
 
                 if(team != null)
                 {
@@ -130,7 +131,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         @Override
         public void renderWidget(GuiLM gui)
         {
-            ClaimedChunk chunk = FTBUWorldDataSP.getChunk(chunkPos);
+            IClaimedChunk chunk = FTBUWorldDataSP.getChunk(chunkPos);
 
             int ax = getAX();
             int ay = getAY();
@@ -139,7 +140,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             {
                 FTBLibClient.setTexture(TEX_CHUNK_CLAIMING);
 
-                IForgeTeam team = chunk.owner.getTeam();
+                IForgeTeam team = chunk.getOwner().getTeam();
 
                 if(team != null)
                 {

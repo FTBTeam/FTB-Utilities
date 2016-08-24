@@ -311,7 +311,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
             FTBU.logger.info("Server restart in " + LMStringUtils.getTimeString(restartMillis));
         }
 
-        FTBLib.registerServerTickable(FTBLib.getServer(), this);
+        FTBLibAPI.get().getRegistries().tickables().add(this);
 
         localBadges.clear();
     }

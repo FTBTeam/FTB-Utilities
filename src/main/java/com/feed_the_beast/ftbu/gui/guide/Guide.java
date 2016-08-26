@@ -5,8 +5,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.latmod.lib.IIDObject;
 import net.minecraft.util.IJsonSerializable;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -20,7 +20,7 @@ import java.util.List;
  * Created by LatvianModder on 06.05.2016.
  */
 @SideOnly(Side.CLIENT)
-public abstract class Guide implements IIDObject, IJsonSerializable
+public abstract class Guide implements IStringSerializable, IJsonSerializable
 {
     private final String ID;
     private final GuideType type;
@@ -37,7 +37,7 @@ public abstract class Guide implements IIDObject, IJsonSerializable
 
     @Override
     @Nonnull
-    public String getID()
+    public String getName()
     {
         return ID;
     }
@@ -103,7 +103,7 @@ public abstract class Guide implements IIDObject, IJsonSerializable
     {
         JsonObject o = new JsonObject();
 
-        o.add("id", new JsonPrimitive(getID()));
+        o.add("id", new JsonPrimitive(getName()));
         o.add("name", new JsonPrimitive(name));
 
         JsonArray a = new JsonArray();

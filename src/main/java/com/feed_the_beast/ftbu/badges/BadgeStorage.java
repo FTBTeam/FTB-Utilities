@@ -44,7 +44,7 @@ public class BadgeStorage
             for(Map.Entry<String, JsonElement> entry : o1.entrySet())
             {
                 Badge b = new Badge(entry.getKey(), entry.getValue().getAsString());
-                badgeMap.put(b.getID(), b);
+                badgeMap.put(b.getName(), b);
             }
 
             o1 = o.get("players").getAsJsonObject();

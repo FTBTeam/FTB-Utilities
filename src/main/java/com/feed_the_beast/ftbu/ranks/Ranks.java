@@ -73,10 +73,10 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
             else
             {
                 JsonObject o = new JsonObject();
-                o.add("default_rank", new JsonPrimitive(PLAYER.getID()));
+                o.add("default_rank", new JsonPrimitive(PLAYER.getName()));
                 JsonObject o1 = new JsonObject();
-                o1.add(PLAYER.getID(), PLAYER.getSerializableElement());
-                o1.add(ADMIN.getID(), ADMIN.getSerializableElement());
+                o1.add(PLAYER.getName(), PLAYER.getSerializableElement());
+                o1.add(ADMIN.getName(), ADMIN.getSerializableElement());
                 o.add("ranks", o1);
                 LMJsonUtils.toJson(fileRanks, o);
             }
@@ -128,12 +128,12 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
         if(defaultRank != null)
         {
             JsonObject o = new JsonObject();
-            o.add("default_rank", new JsonPrimitive(defaultRank.getID()));
+            o.add("default_rank", new JsonPrimitive(defaultRank.getName()));
             JsonObject o1 = new JsonObject();
 
             for(Rank r : ranks.values())
             {
-                o1.add(r.getID(), r.getSerializableElement());
+                o1.add(r.getName(), r.getSerializableElement());
             }
 
             o.add("ranks", o1);
@@ -142,7 +142,7 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
             o = new JsonObject();
             for(Map.Entry<UUID, Rank> entry : playerMap.entrySet())
             {
-                o.add(LMStringUtils.fromUUID(entry.getKey()), new JsonPrimitive(entry.getValue().getID()));
+                o.add(LMStringUtils.fromUUID(entry.getKey()), new JsonPrimitive(entry.getValue().getName()));
             }
             LMJsonUtils.toJson(filePlayers, o);
         }
@@ -171,7 +171,7 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
 
             for(RankConfig p : sortedRankConfigs)
             {
-                list.add(p.getID());
+                list.add(p.getName());
                 /*
                 info = p.getInfo();
 				
@@ -220,7 +220,7 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
 
             JsonObject o1 = new JsonObject();
 
-            Rank rankPlayer = new Rank(PLAYER.getID());
+            Rank rankPlayer = new Rank(PLAYER.getName());
             rankPlayer.fromJson(PLAYER.getSerializableElement());
 
             for(RankConfig p : sortedRankConfigs)
@@ -229,9 +229,9 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
             }
 
             rankPlayer.permissions.clear();
-            o1.add(rankPlayer.getID(), rankPlayer.getSerializableElement());
+            o1.add(rankPlayer.getName(), rankPlayer.getSerializableElement());
 
-            Rank rankAdmin = new Rank(ADMIN.getID());
+            Rank rankAdmin = new Rank(ADMIN.getName());
             rankAdmin.parent = rankPlayer;
             rankAdmin.fromJson(ADMIN.getSerializableElement());
 
@@ -244,7 +244,7 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
             }
 
             rankAdmin.permissions.put("*", true);
-            o1.add(rankAdmin.getID(), rankAdmin.getSerializableElement());
+            o1.add(rankAdmin.getName(), rankAdmin.getSerializableElement());
 
             o.add("ranks", o1);
 

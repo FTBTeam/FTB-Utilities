@@ -93,7 +93,7 @@ public class CmdServerInfo extends CommandLM
 
         for(Badge b : FTBUWorldDataMP.localBadges.badgeMap.values())
         {
-            list.println(b.getID() + ": " + b.imageURL);
+            list.println(b.getName() + ": " + b.imageURL);
         }
 
         serverInfo.displayGuide(ep);

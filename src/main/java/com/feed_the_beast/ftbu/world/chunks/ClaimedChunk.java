@@ -36,41 +36,49 @@ public final class ClaimedChunk implements IClaimedChunk
         return pos.hashCode();
     }
 
+    @Override
     public ChunkDimPos getPos()
     {
         return pos;
     }
 
+    @Override
     public IForgePlayer getOwner()
     {
         return owner;
     }
 
+    @Override
     public boolean isLoaded()
     {
         return loaded;
     }
 
+    @Override
     public void setLoaded(boolean loaded)
     {
         this.loaded = loaded;
     }
 
+    @Override
     public boolean isForced()
     {
         return forced;
     }
 
+    @Override
     public void setForced(boolean forced)
     {
         this.forced = forced;
     }
 
+    @Override
     public boolean isChunkOwner(IForgePlayer p)
     {
         return p != null && p.equalsPlayer(owner);
     }
 
+    @Override
     public boolean canInteract(IForgePlayer p, boolean leftClick, BlockPos pos)
     {
         if(owner.equalsPlayer(p))

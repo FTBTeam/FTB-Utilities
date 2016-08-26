@@ -36,7 +36,7 @@ public class Badge extends FinalIDObject
     @Override
     public String toString()
     {
-        return getID() + '=' + imageURL;
+        return getName() + '=' + imageURL;
     }
 
     @SideOnly(Side.CLIENT)
@@ -49,7 +49,7 @@ public class Badge extends FinalIDObject
 
         if(textureURL == null)
         {
-            textureURL = new ResourceLocation(FTBUFinals.MOD_ID, "badges/" + getID() + ".png");
+            textureURL = new ResourceLocation(FTBUFinals.MOD_ID, "badges/" + getName() + ".png");
             FTBLibClient.getDownloadImage(textureURL, imageURL, defTex, null);
         }
 

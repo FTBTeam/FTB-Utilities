@@ -18,7 +18,7 @@ public class SyncBadges implements INBTSerializable<NBTTagCompound>
 
         for(Badge b : FTBUWorldDataMP.localBadges.badgeMap.values())
         {
-            nbt.setString(b.getID(), b.imageURL);
+            nbt.setString(b.getName(), b.imageURL);
         }
 
         return nbt;

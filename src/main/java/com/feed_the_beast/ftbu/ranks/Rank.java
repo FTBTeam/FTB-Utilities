@@ -70,7 +70,7 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
     {
         JsonObject o = new JsonObject();
 
-        o.add("parent", new JsonPrimitive(parent == null ? "" : parent.getID()));
+        o.add("parent", new JsonPrimitive(parent == null ? "" : parent.getName()));
         o.add("color", new JsonPrimitive(color.getFriendlyName()));
         o.add("prefix", new JsonPrimitive(prefix));
         o.add("badge", new JsonPrimitive(badge));
@@ -93,7 +93,7 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
 
             for(Map.Entry<RankConfig, JsonElement> e : config.entrySet())
             {
-                o1.add(e.getKey().getID(), e.getValue());
+                o1.add(e.getKey().getName(), e.getValue());
             }
 
             o.add("config", o1);

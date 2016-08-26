@@ -25,11 +25,14 @@ plugins {
 version = "1.9.4-" + version_mod
 group = "com.feed_the_beast.ftbutilities"
 archivesBaseName = "FTBUtilities"
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+
+sourceCompatibility = targetCompatibility = "1.8"
+compileJava {
+    sourceCompatibility = targetCompatibility = "1.8"
+}
 
 minecraft {
-    version = "1.9.4-12.17.0.1987"
+    version = "1.10.2-12.18.1.2073"
     runDir = "run"
     mappings = "snapshot_20160518"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.

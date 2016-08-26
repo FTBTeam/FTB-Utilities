@@ -49,7 +49,7 @@ public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
 
         if(b != null)
         {
-            new MessageSendBadge(m.playerID, b.getID()).sendTo(player);
+            new MessageSendBadge(m.playerID, b.getName()).sendTo(player);
         }
     }
 }

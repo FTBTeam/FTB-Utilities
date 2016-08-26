@@ -31,7 +31,7 @@ public class GuideFile extends FinalIDObject implements IResourceProvider
 
     public GuideFile(Guide i, JsonObject o)
     {
-        super(i.getID());
+        super(i.getName());
         info = i;
         resource_path = o.has("resource_path") ? o.get("resource_path").getAsString() : "";
         resources = new HashMap<>();

@@ -61,7 +61,7 @@ public class LocalGuide extends Guide
             try
             {
                 BufferedImage img = new LMConnection(RequestMethod.FILE, new File(folder, "icon.png").getAbsolutePath()).connect().asImage();
-                icon = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation("ftbu_guide/" + getID() + ".png", new DynamicTexture(img));
+                icon = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation("ftbu_guide/" + getName() + ".png", new DynamicTexture(img));
             }
             catch(Exception e)
             {

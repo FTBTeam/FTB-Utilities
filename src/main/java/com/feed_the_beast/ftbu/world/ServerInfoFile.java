@@ -60,8 +60,8 @@ public class ServerInfoFile extends InfoPage
 
     public ServerInfoFile(@Nonnull IForgePlayer self)
     {
-        super(CachedInfo.main.getID());
-        setTitle(CachedInfo.main.getName());
+        super(CachedInfo.main.getName());
+        setTitle(CachedInfo.main.getTitle());
 
         MinecraftServer server = FTBLib.getServer();
 

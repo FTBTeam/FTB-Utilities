@@ -46,12 +46,13 @@ public class OnlineGuide extends Guide
         return s -> new LMConnection(RequestMethod.FILE, url + '/' + s);
     }
 
+    @Override
     @SideOnly(Side.CLIENT)
     public ResourceLocation getIcon()
     {
         if(icon == null)
         {
-            icon = new ResourceLocation(FTBUFinals.MOD_ID, "textures/guide/icons/" + getID() + ".png");
+            icon = new ResourceLocation(FTBUFinals.MOD_ID, "textures/guide/icons/" + getName() + ".png");
             FTBLibClient.getDownloadImage(icon, url + "/icon.png", new ResourceLocation("textures/misc/unknown_pack.png"), null);
         }
 

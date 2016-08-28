@@ -142,7 +142,7 @@ public class FTBUServerEventHandler
 
             FTBLibAPI.get().addServerCallback(1, () ->
             {
-                for(IForgePlayer p : FTBLibAPI.get().getWorld().getPlayers())
+                for(IForgePlayer p : FTBLibAPI.get().getUniverse().getPlayers())
                 {
                     if(p.isOnline() && FTBUPlayerData.get(p).chatLinks())
                     {

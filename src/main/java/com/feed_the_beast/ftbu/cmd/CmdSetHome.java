@@ -39,7 +39,7 @@ public class CmdSetHome extends CommandLM
     {
         if(args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(FTBLibAPI.get().getWorld().getPlayer(sender)).listHomes());
+            return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(FTBLibAPI.get().getUniverse().getPlayer(sender)).listHomes());
         }
         return null;
     }

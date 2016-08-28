@@ -79,7 +79,7 @@ public class WebAPI extends Thread
                     table.setTitle("dph", "Deaths per hour");
                     table.setTitle("last_seen", "Last time seen");
 
-                    for(IForgePlayer player : FTBLibAPI.get().getWorld().getPlayers())
+                    for(IForgePlayer player : FTBLibAPI.get().getUniverse().getPlayers())
                     {
                         StatisticsManagerServer stats = player.stats();
 
@@ -119,7 +119,7 @@ public class WebAPI extends Thread
 
     public boolean isAPIRunning()
     {
-        return FTBUConfigWebAPI.enabled.getAsBoolean() && FTBLibAPI.get().getWorld() != null && serverSocket != null && !serverSocket.isClosed();
+        return FTBUConfigWebAPI.enabled.getAsBoolean() && FTBLibAPI.get().getUniverse() != null && serverSocket != null && !serverSocket.isClosed();
     }
 
     public void startAPI()

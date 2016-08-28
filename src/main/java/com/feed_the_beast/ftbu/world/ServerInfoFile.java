@@ -70,11 +70,11 @@ public class ServerInfoFile extends InfoPage
         copyFrom(CachedInfo.main);
 
         List<IForgePlayer> players = new ArrayList<>();
-        players.addAll(FTBLibAPI.get().getWorld().getPlayers());
+        players.addAll(FTBLibAPI.get().getUniverse().getPlayers());
 
         if(FTBUConfigWorld.auto_restart.getAsBoolean())
         {
-            println(FTBULang.TIMER_RESTART.textComponent(LMStringUtils.getTimeString(FTBUWorldData.getW(self.getWorld()).toMP().restartMillis - System.currentTimeMillis())));
+            println(FTBULang.TIMER_RESTART.textComponent(LMStringUtils.getTimeString(FTBUWorldData.getW(self.getUniverse()).toMP().restartMillis - System.currentTimeMillis())));
         }
 
         if(FTBUConfigBackups.enabled.getAsBoolean())
@@ -89,7 +89,7 @@ public class ServerInfoFile extends InfoPage
 
         if(FTBUConfigGeneral.server_info_mode.getAsBoolean())
         {
-            println(FTBLibLang.MODE_CURRENT.textComponent(LMStringUtils.firstUppercase(FTBLibAPI.get().getSharedData(Side.SERVER).getMode().getID())));
+            println(FTBLibLang.MODE_CURRENT.textComponent(LMStringUtils.firstUppercase(FTBLibAPI.get().getSharedData(Side.SERVER).getPackMode().getID())));
         }
 
         InfoPage topsPage = getSub("tops").setTitle(FTBUTops.LANG_TOP_TITLE.textComponent());
@@ -227,7 +227,7 @@ public class ServerInfoFile extends InfoPage
         page = getSub("warps").setTitle(new TextComponentString("Warps")); //TODO: LANG
         ITextComponent t;
 
-        for(String s : FTBUWorldData.getW(self.getWorld()).toMP().listWarps())
+        for(String s : FTBUWorldData.getW(self.getUniverse()).toMP().listWarps())
         {
             t = new TextComponentString(s);
             t.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb warp " + s));

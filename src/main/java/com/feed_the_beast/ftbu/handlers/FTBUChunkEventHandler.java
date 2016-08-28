@@ -141,7 +141,7 @@ public enum FTBUChunkEventHandler implements ForgeChunkManager.LoadingCallback, 
 
     public void markDirty(World w)
     {
-        if(FTBLibAPI.get().getWorld() == null || FTBLib.getServerWorld() == null)
+        if(FTBLibAPI.get().getUniverse() == null || FTBLib.getServerWorld() == null)
         {
             return;
         }

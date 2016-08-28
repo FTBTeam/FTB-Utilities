@@ -41,7 +41,7 @@ public class MessageRequestServerInfo extends MessageToServer<MessageRequestServ
     @Override
     public void onMessage(MessageRequestServerInfo m, EntityPlayerMP player)
     {
-        IForgePlayer owner = FTBLibAPI.get().getWorld().getPlayer(player);
+        IForgePlayer owner = FTBLibAPI.get().getUniverse().getPlayer(player);
         new ServerInfoFile(owner).displayGuide(owner.getPlayer());
     }
 }

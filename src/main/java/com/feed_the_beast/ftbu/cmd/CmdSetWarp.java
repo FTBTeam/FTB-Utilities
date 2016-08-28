@@ -39,7 +39,7 @@ public class CmdSetWarp extends CommandLM
             c = ep.getPosition();
         }
 
-        FTBUWorldData.getW(FTBLibAPI.get().getWorld()).toMP().setWarp(args[0], new BlockDimPos(c, ep.dimension));
+        FTBUWorldData.getW(FTBLibAPI.get().getUniverse()).toMP().setWarp(args[0], new BlockDimPos(c, ep.dimension));
         FTBULang.WARP_SET.printChat(ics, args[0]);
     }
 }

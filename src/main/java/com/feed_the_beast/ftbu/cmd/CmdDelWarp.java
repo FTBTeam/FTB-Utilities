@@ -30,7 +30,7 @@ public class CmdDelWarp extends CommandLM
     {
         if(args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, FTBUWorldData.getW(FTBLibAPI.get().getWorld()).toMP().listWarps());
+            return getListOfStringsMatchingLastWord(args, FTBUWorldData.getW(FTBLibAPI.get().getUniverse()).toMP().listWarps());
         }
 
         return super.getTabCompletionOptions(server, sender, args, pos);
@@ -43,7 +43,7 @@ public class CmdDelWarp extends CommandLM
 
         args[0] = args[0].toLowerCase();
 
-        if(FTBUWorldData.getW(FTBLibAPI.get().getWorld()).toMP().setWarp(args[0], null))
+        if(FTBUWorldData.getW(FTBLibAPI.get().getUniverse()).toMP().setWarp(args[0], null))
         {
             FTBULang.WARP_DEL.printChat(ics, args[0]);
         }

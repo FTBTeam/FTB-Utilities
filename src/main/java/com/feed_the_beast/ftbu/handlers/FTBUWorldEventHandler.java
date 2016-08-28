@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.handlers;
 
-import com.feed_the_beast.ftbl.api.events.world.AttachWorldCapabilitiesEvent;
-import com.feed_the_beast.ftbl.api.events.world.ForgeWorldClosedEvent;
-import com.feed_the_beast.ftbl.api.events.world.ForgeWorldLoadedBeforePlayersEvent;
-import com.feed_the_beast.ftbl.api.events.world.ForgeWorldLoadedEvent;
+import com.feed_the_beast.ftbl.api.events.universe.AttachUniverseCapabilitiesEvent;
+import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseClosedEvent;
+import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedBeforePlayersEvent;
+import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
@@ -19,13 +19,13 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class FTBUWorldEventHandler // FTBLIntegration
 {
     @SubscribeEvent
-    public void attachCapabilities(AttachWorldCapabilitiesEvent event)
+    public void attachCapabilities(AttachUniverseCapabilitiesEvent event)
     {
         event.addCapability(new ResourceLocation(FTBUFinals.MOD_ID, "data"), new FTBUWorldDataMP());
     }
 
     @SubscribeEvent
-    public void onWorldLoaded(ForgeWorldLoadedEvent event)
+    public void onWorldLoaded(ForgeUniverseLoadedEvent event)
     {
         if(event.getWorld().hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null))
         {
@@ -34,7 +34,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
     }
 
     @SubscribeEvent
-    public void onWorldLoadedBeforePlayers(ForgeWorldLoadedBeforePlayersEvent event)
+    public void onWorldLoadedBeforePlayers(ForgeUniverseLoadedBeforePlayersEvent event)
     {
         if(event.getWorld().hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null))
         {
@@ -43,7 +43,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
     }
 
     @SubscribeEvent
-    public void onWorldClosed(ForgeWorldClosedEvent event)
+    public void onWorldClosed(ForgeUniverseClosedEvent event)
     {
         if(event.getWorld().hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null))
         {

@@ -123,7 +123,7 @@ public class FTBUPlayerEventHandler
         }
 
         EntityPlayerMP ep = (EntityPlayerMP) e.getEntity();
-        IForgePlayer player = FTBLibAPI.get().getWorld().getPlayer(ep);
+        IForgePlayer player = FTBLibAPI.get().getUniverse().getPlayer(ep);
 
         if(player == null || !player.isOnline())
         {
@@ -200,7 +200,7 @@ public class FTBUPlayerEventHandler
     {
         if(event.getEntityPlayer() instanceof EntityPlayerMP)
         {
-            IForgePlayer player = FTBLibAPI.get().getWorld().getPlayer(event.getEntityPlayer());
+            IForgePlayer player = FTBLibAPI.get().getUniverse().getPlayer(event.getEntityPlayer());
 
             if(player != null)
             {
@@ -224,7 +224,7 @@ public class FTBUPlayerEventHandler
     {
         if(event.getPlayer() instanceof EntityPlayerMP)
         {
-            IForgePlayer player = FTBLibAPI.get().getWorld().getPlayer(event.getPlayer());
+            IForgePlayer player = FTBLibAPI.get().getUniverse().getPlayer(event.getPlayer());
 
             if(player != null)
             {

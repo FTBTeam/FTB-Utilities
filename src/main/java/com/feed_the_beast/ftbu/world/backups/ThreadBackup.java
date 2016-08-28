@@ -131,20 +131,20 @@ public class ThreadBackup extends Thread
                 String sizeB = LMFileUtils.getSizeS(dstFile);
                 String sizeT = LMFileUtils.getSizeS(Backups.INSTANCE.backupsFolder);
 
-                ITextComponent c = FTBULang.backup_end_2.textComponent(getDoneTime(time.getTimeInMillis()), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)));
+                ITextComponent c = FTBULang.BACKUP_END_2.textComponent(getDoneTime(time.getTimeInMillis()), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)));
                 c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
                 BroadcastSender.INSTANCE.addChatMessage(c);
             }
             else
             {
-                ITextComponent c = FTBULang.backup_end_1.textComponent(getDoneTime(time.getTimeInMillis()));
+                ITextComponent c = FTBULang.BACKUP_END_1.textComponent(getDoneTime(time.getTimeInMillis()));
                 c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
                 BroadcastSender.INSTANCE.addChatMessage(c);
             }
         }
         catch(Exception ex)
         {
-            ITextComponent c = FTBULang.backup_fail.textComponent(ex.getClass().getName());
+            ITextComponent c = FTBULang.BACKUP_FAIL.textComponent(ex.getClass().getName());
             c.getStyle().setColor(TextFormatting.DARK_RED);
             BroadcastSender.INSTANCE.addChatMessage(c);
 

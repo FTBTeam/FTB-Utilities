@@ -20,8 +20,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 
-import javax.annotation.Nonnull;
-
 /**
  * Created by LatvianModder on 27.06.2016.
  */
@@ -41,7 +39,7 @@ public class CmdChunks extends CommandSubBase
         }
 
         @Override
-        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
             IForgePlayer p = getForgePlayer(ep);
@@ -83,7 +81,7 @@ public class CmdChunks extends CommandSubBase
         }
 
         @Override
-        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
             IForgePlayer p = getForgePlayer(ep);
@@ -130,7 +128,7 @@ public class CmdChunks extends CommandSubBase
         }
 
         @Override
-        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
             IForgePlayer p = getForgePlayer(ep);
@@ -172,7 +170,7 @@ public class CmdChunks extends CommandSubBase
         }
 
         @Override
-        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
             IForgePlayer p = getForgePlayer(ep);
@@ -213,7 +211,7 @@ public class CmdChunks extends CommandSubBase
         }
 
         @Override
-        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
 
@@ -254,7 +252,7 @@ public class CmdChunks extends CommandSubBase
         }
 
         @Override
-        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
             checkArgs(args, 1, "<player>");
 
@@ -286,9 +284,8 @@ public class CmdChunks extends CommandSubBase
             super("admin_unclaim_all");
         }
 
-        @Nonnull
         @Override
-        public String getCommandUsage(@Nonnull ICommandSender ics)
+        public String getCommandUsage(ICommandSender ics)
         {
             return '/' + commandName + " <player | @a>";
         }
@@ -300,7 +297,7 @@ public class CmdChunks extends CommandSubBase
         }
 
         @Override
-        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
             checkArgs(args, 1, "<player>");
             IForgePlayer p = getForgePlayer(args[0]);

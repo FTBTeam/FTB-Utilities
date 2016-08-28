@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbl.api.rankconfig.RankConfigEnum;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigInt;
 import com.feed_the_beast.ftbu.world.chunks.ChunkloaderType;
 import com.latmod.lib.EnumEnabled;
-import com.latmod.lib.json.LMJsonUtils;
+import com.latmod.lib.util.LMJsonUtils;
 
 /**
  * Created by LatvianModder on 14.02.2016.

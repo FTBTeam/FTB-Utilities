@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.gui.guide.online;
 
+import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbu.gui.guide.Guide;
 import com.feed_the_beast.ftbu.gui.guide.GuideRepoList;
-import com.feed_the_beast.ftbu.gui.guide.GuideType;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.latmod.lib.io.LMConnection;
@@ -23,7 +23,7 @@ public class OnlineGuideRepoList extends GuideRepoList
     }
 
     @Override
-    protected void onReload(List<Guide> guides) throws Exception
+    protected void onReload(InfoPage infoPage, List<Guide> guides) throws Exception
     {
         for(JsonElement e : new LMConnection(RequestMethod.GET, URL).connect().asJson().getAsJsonArray())
         {
@@ -32,7 +32,7 @@ public class OnlineGuideRepoList extends GuideRepoList
                 JsonObject o = e.getAsJsonObject();
                 String url = o.get("url").getAsString();
                 JsonElement json = new LMConnection(RequestMethod.GET, url + "/info.json").connect().asJson().getAsJsonObject();
-                Guide g = new OnlineGuide(o.get("id").getAsString(), GuideType.getFromString(o.get("type").getAsString()), url);
+                Guide g = new OnlineGuide(o, url);
                 g.fromJson(json);
                 guides.add(g);
             }

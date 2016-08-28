@@ -11,8 +11,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 
-import javax.annotation.Nonnull;
-
 public class CmdBack extends CommandLM
 {
     public CmdBack()
@@ -27,7 +25,7 @@ public class CmdBack extends CommandLM
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
         IForgePlayer p = getForgePlayer(ep);
@@ -38,7 +36,7 @@ public class CmdBack extends CommandLM
 
             if(d.lastDeath == null)
             {
-                throw FTBULang.warp_no_dp.commandError();
+                throw FTBULang.WARP_NO_DP.commandError();
             }
 
             LMDimUtils.teleportPlayer(ep, d.lastDeath);

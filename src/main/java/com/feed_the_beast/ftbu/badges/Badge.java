@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class Badge extends FinalIDObject
 {
@@ -32,7 +32,6 @@ public class Badge extends FinalIDObject
         imageURL = url;
     }
 
-    @Nonnull
     @Override
     public String toString()
     {
@@ -40,6 +39,7 @@ public class Badge extends FinalIDObject
     }
 
     @SideOnly(Side.CLIENT)
+    @Nullable
     public ResourceLocation getTexture()
     {
         if(imageURL == null)

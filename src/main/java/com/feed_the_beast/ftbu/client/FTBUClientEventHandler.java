@@ -1,13 +1,9 @@
 package com.feed_the_beast.ftbu.client;
 
-import com.feed_the_beast.ftbl.api.client.CubeRenderer;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.api.IClaimedChunk;
 import com.feed_the_beast.ftbu.gui.guide.local.InfoPageLocalGuideRepoList;
-import com.feed_the_beast.ftbu.world.data.FTBUWorldDataSP;
-import com.latmod.lib.math.ChunkDimPos;
 import com.latmod.lib.math.MathHelperLM;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -16,6 +12,10 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -24,20 +24,20 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.HashSet;
 
 @SideOnly(Side.CLIENT)
 public class FTBUClientEventHandler
 {
-    public static final ResourceLocation CHUNK_BORDER_TEXTURE = new ResourceLocation(FTBUFinals.MOD_ID, "textures/world/chunk_border.png");
-    public static final ResourceLocation TEXTURE_LIGHT_VALUE_X = new ResourceLocation(FTBUFinals.MOD_ID, "textures/world/light_value_x.png");
-    public static final ResourceLocation TEXTURE_LIGHT_VALUE_O = new ResourceLocation(FTBUFinals.MOD_ID, "textures/world/light_value_o.png");
+    private static final ResourceLocation TEXTURE_LIGHT_VALUE_X = new ResourceLocation(FTBUFinals.MOD_ID, "textures/world/light_value_x.png");
+    private static final ResourceLocation TEXTURE_LIGHT_VALUE_O = new ResourceLocation(FTBUFinals.MOD_ID, "textures/world/light_value_o.png");
 
     private static class MobSpawnPos extends BlockPos
     {
-        public final boolean alwaysSpawns;
-        public final int lightValue;
+        private final boolean alwaysSpawns;
+        private final int lightValue;
 
         public MobSpawnPos(BlockPos p, boolean b, int lv)
         {
@@ -47,8 +47,6 @@ public class FTBUClientEventHandler
         }
     }
 
-    public boolean renderChunkBounds = false;
-    private CubeRenderer chunkBorderRenderer = new CubeRenderer(true, true);
     private Collection<MobSpawnPos> lightList = new HashSet<>();
     private boolean renderLightValues = false, needsLightUpdate = true;
     private int lastX, lastY = -1, lastZ;
@@ -86,7 +84,8 @@ public class FTBUClientEventHandler
 
         if(FTBUClient.KEY_CHUNK_BORDER.isPressed())
         {
-            renderChunkBounds = !renderChunkBounds;
+            boolean flag = Minecraft.getMinecraft().debugRenderer.func_190075_b();
+            Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new TextComponentString("")).appendSibling((new TextComponentString("[Debug]: ")).setStyle((new Style()).setColor(TextFormatting.YELLOW).setBold(true))).appendText(MessageFormat.format("Chunk borders: {0}", flag ? "shown" : "hidden")));
         }
 
         if(FTBUClient.KEY_LIGHT_VALUES.isPressed())
@@ -107,7 +106,7 @@ public class FTBUClientEventHandler
     @SubscribeEvent
     public void renderWorld(RenderWorldLastEvent e)
     {
-        if(renderChunkBounds || renderLightValues)
+        if(Minecraft.getMinecraft().debugRenderer.func_190074_a() || renderLightValues)
         {
             Minecraft mc = Minecraft.getMinecraft();
             Tessellator tessellator = Tessellator.getInstance();
@@ -127,42 +126,17 @@ public class FTBUClientEventHandler
             GlStateManager.color(1F, 1F, 1F, 1F);
             GlStateManager.alphaFunc(GL11.GL_GREATER, 0.01F);
 
-            if(renderChunkBounds)
+            if(Minecraft.getMinecraft().debugRenderer.func_190074_a())
             {
-                GlStateManager.cullFace(GlStateManager.CullFace.FRONT);
-
                 int x = MathHelperLM.chunk(FTBLibClient.playerX);
                 int z = MathHelperLM.chunk(FTBLibClient.playerZ);
-                double d = 0.007D;
-
-                FTBLibClient.setTexture(CHUNK_BORDER_TEXTURE);
-                chunkBorderRenderer.setTessellator(tessellator);
-                chunkBorderRenderer.setUV(0D, 0D, 16D, 256D);
-
-                IClaimedChunk chunk = FTBUWorldDataSP.getChunk(new ChunkDimPos(x, z, mc.thePlayer.dimension));
-
-                chunkBorderRenderer.setSize(x * 16D + d, 0D, z * 16D + d, x * 16D + 16D - d, 256D, z * 16D + 16D - d);
-                chunkBorderRenderer.color.set((chunk == null) ? 0xFF00A010 : (chunk.getOwner().getTeam() != null ? chunk.getOwner().getTeam().getColor().getColor() : 0), 0.6F);
-                chunkBorderRenderer.renderSides();
-
                 GlStateManager.cullFace(GlStateManager.CullFace.BACK);
                 GlStateManager.disableCull();
                 GlStateManager.disableTexture2D();
-
-                for(int cz = z - 2; cz <= z + 2; cz++)
-                {
-                    for(int cx = x - 2; cx <= x + 2; cx++)
-                    {
-                        chunk = FTBUWorldDataSP.getChunk(new ChunkDimPos(cx, cz, mc.thePlayer.dimension));
-                        chunkBorderRenderer.color.set((chunk == null) ? 0xFF00A010 : (chunk.getOwner().getTeam() != null ? chunk.getOwner().getTeam().getColor().getColor() : 0), 1F);
-
-                        buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
-                        buffer.pos(cx * 16D + 8D, 0D, cz * 16D + 8D).color(chunkBorderRenderer.color.red, chunkBorderRenderer.color.green, chunkBorderRenderer.color.blue, 1F).endVertex();
-                        buffer.pos(cx * 16D + 8D, 256D, cz * 16D + 8D).color(chunkBorderRenderer.color.red, chunkBorderRenderer.color.green, chunkBorderRenderer.color.blue, 1F).endVertex();
-                        tessellator.draw();
-                    }
-                }
-
+                buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+                buffer.pos(x * 16D + 8D, 0D, z * 16D + 8D).color(0F, 0.63F, 0.06F, 1F).endVertex();
+                buffer.pos(x * 16D + 8D, 256D, z * 16D + 8D).color(0F, 0.63F, 0.06F, 1F).endVertex();
+                tessellator.draw();
                 GlStateManager.enableCull();
                 GlStateManager.enableTexture2D();
             }
@@ -179,9 +153,9 @@ public class FTBUClientEventHandler
                     needsLightUpdate = false;
                     lightList.clear();
 
-                    lastX = MathHelperLM.floor(FTBLibClient.playerX);
-                    lastY = MathHelperLM.floor(FTBLibClient.playerY);
-                    lastZ = MathHelperLM.floor(FTBLibClient.playerZ);
+                    lastX = MathHelper.floor_double(FTBLibClient.playerX);
+                    lastY = MathHelper.floor_double(FTBLibClient.playerY);
+                    lastZ = MathHelper.floor_double(FTBLibClient.playerZ);
 
                     for(int by = lastY - 20; by <= lastY + 3; by++)
                     {

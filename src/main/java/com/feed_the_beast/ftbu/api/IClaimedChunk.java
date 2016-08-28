@@ -5,6 +5,8 @@ import com.latmod.lib.LangKey;
 import com.latmod.lib.math.ChunkDimPos;
 import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by LatvianModder on 23.08.2016.
  */
@@ -26,7 +28,7 @@ public interface IClaimedChunk
 
     void setForced(boolean flag);
 
-    boolean isChunkOwner(IForgePlayer p);
+    boolean isChunkOwner(@Nullable IForgePlayer p);
 
     boolean canInteract(IForgePlayer p, boolean leftClick, BlockPos pos);
 }

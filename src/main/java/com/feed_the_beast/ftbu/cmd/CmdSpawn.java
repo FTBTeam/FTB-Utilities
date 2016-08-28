@@ -11,8 +11,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
-
 public class CmdSpawn extends CommandLM
 {
     public CmdSpawn()
@@ -27,7 +25,7 @@ public class CmdSpawn extends CommandLM
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
         World w = LMDimUtils.getWorld(0);
@@ -39,6 +37,6 @@ public class CmdSpawn extends CommandLM
         }
 
         LMDimUtils.teleportPlayer(ep, new BlockDimPos(spawnpoint, 0));
-        FTBULang.warp_spawn.printChat(ics);
+        FTBULang.WARP_SPAWN.printChat(ics);
     }
 }

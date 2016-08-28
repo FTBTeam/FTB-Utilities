@@ -8,13 +8,12 @@ import com.feed_the_beast.ftbl.util.FTBLib;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.latmod.lib.json.LMJsonUtils;
 import com.latmod.lib.util.LMFileUtils;
+import com.latmod.lib.util.LMJsonUtils;
 import com.latmod.lib.util.LMStringUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.util.text.TextFormatting;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -281,7 +280,7 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
     }
 
     @Override
-    public boolean hasPermission(@Nonnull GameProfile profile, @Nonnull String permission, boolean defaultForPlayer, @Nonnull IContext context)
+    public boolean hasPermission(GameProfile profile, String permission, boolean defaultForPlayer, IContext context)
     {
         switch(getRankOf(profile).handlePermission(permission))
         {
@@ -295,7 +294,7 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
     }
 
     @Override
-    public JsonElement getRankConfig(@Nonnull GameProfile profile, @Nonnull RankConfig config)
+    public JsonElement getRankConfig(GameProfile profile, RankConfig config)
     {
         return getRankOf(profile).handleRankConfig(config);
     }

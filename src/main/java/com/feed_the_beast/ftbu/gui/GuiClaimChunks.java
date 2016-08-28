@@ -31,13 +31,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.nio.ByteBuffer;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-@ParametersAreNonnullByDefault
 public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // implements IClientActionGui
 {
     static final int TILES_TEX = 16;
@@ -63,7 +60,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         }
 
         @Override
-        public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
+        public void onClicked(GuiLM gui, IMouseButton button)
         {
             if(gui.isMouseOver(panelButtons))
             {
@@ -184,20 +181,20 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 
         currentDimName = mc.theWorld.provider.getDimensionType().getName();
 
-        buttonClose = new ButtonLM(0, 0, 16, 16, GuiLang.button_close.translate())
+        buttonClose = new ButtonLM(0, 0, 16, 16, GuiLang.BUTTON_CLOSE.translate())
         {
             @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
+            public void onClicked(GuiLM gui, IMouseButton button)
             {
                 GuiLM.playClickSound();
                 closeGui();
             }
         };
 
-        buttonRefresh = new ButtonLM(0, 16, 16, 16, GuiLang.button_refresh.translate())
+        buttonRefresh = new ButtonLM(0, 16, 16, 16, GuiLang.BUTTON_REFRESH.translate())
         {
             @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
+            public void onClicked(GuiLM gui, IMouseButton button)
             {
                 thread = new ThreadReloadArea(mc.theWorld, GuiClaimChunks.this);
                 thread.start();
@@ -209,17 +206,17 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         buttonUnclaimAll = new ButtonLM(0, 32, 16, 16)
         {
             @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
+            public void onClicked(GuiLM gui, IMouseButton button)
             {
                 GuiLM.playClickSound();
-                String s = GuiScreen.isShiftKeyDown() ? FTBULang.button_claims_unclaim_all_q.translate() : FTBULang.button_claims_unclaim_all_dim_q.translateFormatted(currentDimName);
+                String s = GuiScreen.isShiftKeyDown() ? FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_Q.translate() : FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_DIM_Q.translate(currentDimName);
                 Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo(GuiClaimChunks.this, s, "", GuiScreen.isShiftKeyDown() ? 1 : 0));
             }
 
             @Override
             public void addMouseOverText(GuiLM gui, List<String> l)
             {
-                l.add(GuiScreen.isShiftKeyDown() ? FTBULang.button_claims_unclaim_all.translate() : FTBULang.button_claims_unclaim_all_dim.translateFormatted(currentDimName));
+                l.add(GuiScreen.isShiftKeyDown() ? FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL.translate() : FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_DIM.translate(currentDimName));
             }
         };
 
@@ -340,9 +337,9 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 
         GlStateManager.color(1F, 1F, 1F, 1F);
 
-        buttonRefresh.render(GuiIcons.refresh);
-        buttonClose.render(GuiIcons.accept);
-        buttonUnclaimAll.render(GuiIcons.remove);
+        buttonRefresh.render(GuiIcons.REFRESH);
+        buttonClose.render(GuiIcons.ACCEPT);
+        buttonUnclaimAll.render(GuiIcons.REMOVE);
     }
 
     @Override

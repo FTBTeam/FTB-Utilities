@@ -7,15 +7,15 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class InvSeeInventory implements IInventory
 {
-    public static final int slotMapping[] = {39, 38, 37, 36, -1, 40, 41, 42, 43, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 0, 1, 2, 3, 4, 5, 6, 7, 8,};
+    private static final int slotMapping[] = {39, 38, 37, 36, -1, 40, 41, 42, 43, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 0, 1, 2, 3, 4, 5, 6, 7, 8,};
 
-    public final EntityPlayerMP player;
-    public final IInventory invPlayer;
-    public final IInventory baubles;
+    private final EntityPlayerMP player;
+    private final IInventory invPlayer;
+    private final IInventory baubles;
 
     public InvSeeInventory(EntityPlayerMP ep)
     {
@@ -30,7 +30,8 @@ public class InvSeeInventory implements IInventory
         return 9 * 5;
     }
 
-    public IInventory getInv(int slot)
+    @Nullable
+    private IInventory getInv(int slot)
     {
         if(slot == -1)
         {
@@ -73,7 +74,7 @@ public class InvSeeInventory implements IInventory
     }
 
     @Override
-    public void setInventorySlotContents(int i, ItemStack is)
+    public void setInventorySlotContents(int i, @Nullable ItemStack is)
     {
         int j = slotMapping[i];
         IInventory inv = getInv(j);
@@ -85,7 +86,6 @@ public class InvSeeInventory implements IInventory
         }
     }
 
-    @Nonnull
     @Override
     public String getName()
     {
@@ -95,10 +95,9 @@ public class InvSeeInventory implements IInventory
     @Override
     public boolean hasCustomName()
     {
-        return true;
+        return player.hasCustomName();
     }
 
-    @Nonnull
     @Override
     public ITextComponent getDisplayName()
     {
@@ -123,23 +122,23 @@ public class InvSeeInventory implements IInventory
     }
 
     @Override
-    public boolean isUseableByPlayer(@Nonnull EntityPlayer ep)
+    public boolean isUseableByPlayer(EntityPlayer ep)
     {
         return true;
     }
 
     @Override
-    public void openInventory(@Nonnull EntityPlayer ep)
+    public void openInventory(EntityPlayer ep)
     {
     }
 
     @Override
-    public void closeInventory(@Nonnull EntityPlayer ep)
+    public void closeInventory(EntityPlayer ep)
     {
     }
 
     @Override
-    public boolean isItemValidForSlot(int i, @Nonnull ItemStack is)
+    public boolean isItemValidForSlot(int i, ItemStack is)
     {
         int j = slotMapping[i];
         IInventory inv = getInv(j);

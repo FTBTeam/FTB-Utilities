@@ -7,12 +7,9 @@ import journeymap.client.api.IClientAPI;
 import journeymap.client.api.IClientPlugin;
 import journeymap.client.api.event.ClientEvent;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 /**
  * Created by LatvianModder on 17.01.2016.
  */
-@ParametersAreNonnullByDefault
 @ClientPlugin
 public class FTBU_JMPlugin implements IClientPlugin
 {

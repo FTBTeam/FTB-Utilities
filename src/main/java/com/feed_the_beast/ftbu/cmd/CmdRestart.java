@@ -7,7 +7,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 
 public class CmdRestart extends CommandLM
@@ -24,7 +23,7 @@ public class CmdRestart extends CommandLM
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         restart();
     }

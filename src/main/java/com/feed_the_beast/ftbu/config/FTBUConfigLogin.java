@@ -6,11 +6,10 @@ import com.feed_the_beast.ftbl.api.item.ItemStackSerializer;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.latmod.lib.annotations.Info;
-import com.latmod.lib.json.LMJsonUtils;
+import com.latmod.lib.util.LMJsonUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 
-import javax.annotation.Nonnull;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +36,7 @@ public class FTBUConfigLogin
         }
 
         @Override
-        public void fromJson(@Nonnull JsonElement o)
+        public void fromJson(JsonElement o)
         {
             components.clear();
 
@@ -55,7 +54,6 @@ public class FTBUConfigLogin
             }
         }
 
-        @Nonnull
         @Override
         public JsonElement getSerializableElement()
         {
@@ -80,7 +78,7 @@ public class FTBUConfigLogin
         }
 
         @Override
-        public void fromJson(@Nonnull JsonElement o)
+        public void fromJson(JsonElement o)
         {
             items.clear();
 
@@ -98,7 +96,6 @@ public class FTBUConfigLogin
             }
         }
 
-        @Nonnull
         @Override
         public JsonElement getSerializableElement()
         {

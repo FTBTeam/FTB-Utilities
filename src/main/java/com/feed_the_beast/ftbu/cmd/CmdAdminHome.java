@@ -13,8 +13,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 
-import javax.annotation.Nonnull;
-
 public class CmdAdminHome extends CommandSubBase
 {
     public static class CmdTP extends CommandLM
@@ -31,7 +29,7 @@ public class CmdAdminHome extends CommandSubBase
         }
 
         @Override
-        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
             checkArgs(args, 2, "<player> <home>");
@@ -43,10 +41,10 @@ public class CmdAdminHome extends CommandSubBase
             if(pos != null)
             {
                 LMDimUtils.teleportPlayer(ep, pos);
-                FTBULang.warp_tp.printChat(sender, args[1]);
+                FTBULang.WARP_TP.printChat(sender, args[1]);
             }
 
-            throw FTBULang.home_not_set.commandError(args[1]);
+            throw FTBULang.HOME_NOT_SET.commandError(args[1]);
         }
     }
 
@@ -64,7 +62,7 @@ public class CmdAdminHome extends CommandSubBase
         }
 
         @Override
-        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
             checkArgs(args, 1, "<player>");
             FTBUPlayerData d = FTBUPlayerData.get(getForgePlayer(args[0]));
@@ -86,7 +84,7 @@ public class CmdAdminHome extends CommandSubBase
         }
 
         @Override
-        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
             checkArgs(args, 2, "<player> <home>");
             FTBUPlayerData d = FTBUPlayerData.get(getForgePlayer(args[0]));
@@ -97,11 +95,11 @@ public class CmdAdminHome extends CommandSubBase
             {
                 if(d.setHome(args[1], null))
                 {
-                    FTBULang.home_del.printChat(sender, args[1]);
+                    FTBULang.HOME_DEL.printChat(sender, args[1]);
                 }
             }
 
-            throw FTBULang.home_not_set.commandError(args[1]);
+            throw FTBULang.HOME_NOT_SET.commandError(args[1]);
         }
     }
 

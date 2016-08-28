@@ -6,8 +6,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.server.MinecraftServer;
 
-import javax.annotation.Nonnull;
-
 public class CmdTrashCan extends CommandLM
 {
     public CmdTrashCan()
@@ -22,7 +20,7 @@ public class CmdTrashCan extends CommandLM
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         getCommandSenderAsPlayer(ics).displayGUIChest(new InventoryBasic("Trash Can", true, 18));
     }

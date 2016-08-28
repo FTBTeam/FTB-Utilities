@@ -22,7 +22,7 @@ public class FTBUActions
     @SideOnly(Side.CLIENT)
     public static void init()
     {
-        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "guide"), new SidebarButton(0, GuiIcons.book, EnumEnabled.ENABLED)
+        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "guide"), new SidebarButton(0, GuiIcons.BOOK, EnumEnabled.ENABLED)
         {
             @Override
             @SideOnly(Side.CLIENT)
@@ -33,7 +33,7 @@ public class FTBUActions
             }
         });
 
-        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "server_info"), new SidebarButton(0, GuiIcons.book_red, EnumEnabled.ENABLED)
+        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "server_info"), new SidebarButton(0, GuiIcons.BOOK_RED, EnumEnabled.ENABLED)
         {
             @Override
             @SideOnly(Side.CLIENT)
@@ -51,7 +51,7 @@ public class FTBUActions
             }
         });
 
-        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "claimed_chunks"), new SidebarButton(0, GuiIcons.map, EnumEnabled.ENABLED)
+        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "claimed_chunks"), new SidebarButton(0, GuiIcons.MAP, EnumEnabled.ENABLED)
         {
             @Override
             @SideOnly(Side.CLIENT)
@@ -69,7 +69,7 @@ public class FTBUActions
             }
         });
 
-        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "trash_can"), new SidebarButton(0, GuiIcons.bin, EnumEnabled.ENABLED)
+        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "trash_can"), new SidebarButton(0, GuiIcons.BIN, EnumEnabled.ENABLED)
         {
             @Override
             @SideOnly(Side.CLIENT)
@@ -79,7 +79,7 @@ public class FTBUActions
             }
         });
 
-        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "shop"), new SidebarButton(0, GuiIcons.money_bag, EnumEnabled.ENABLED)
+        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "shop"), new SidebarButton(0, GuiIcons.MONEY_BAG, EnumEnabled.ENABLED)
         {
             @Override
             @SideOnly(Side.CLIENT)

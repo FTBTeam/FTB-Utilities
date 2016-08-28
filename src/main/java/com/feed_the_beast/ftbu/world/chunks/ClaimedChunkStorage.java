@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbu.api.IClaimedChunk;
 import com.latmod.lib.math.ChunkDimPos;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,19 +26,18 @@ public final class ClaimedChunkStorage
         invertedMap = new HashMap<>();
     }
 
-    @Nonnull
     public Collection<IClaimedChunk> getAllChunks()
     {
         return map.values();
     }
 
     @Nullable
-    public IClaimedChunk getChunk(@Nonnull ChunkDimPos pos)
+    public IClaimedChunk getChunk(ChunkDimPos pos)
     {
         return map.get(pos);
     }
 
-    public void put(@Nonnull ChunkDimPos pos, @Nullable IClaimedChunk c)
+    public void put(ChunkDimPos pos, @Nullable IClaimedChunk c)
     {
         if(c == null)
         {
@@ -71,20 +69,19 @@ public final class ClaimedChunkStorage
         }
     }
 
-    @Nonnull
-    public Collection<IClaimedChunk> getChunks(@Nonnull UUID playerID)
+    public Collection<IClaimedChunk> getChunks(UUID playerID)
     {
         Collection<IClaimedChunk> c = invertedMap.get(playerID);
         return (c == null) ? Collections.EMPTY_SET : c;
     }
 
-    public int getClaimedChunks(@Nonnull UUID playerID)
+    public int getClaimedChunks(UUID playerID)
     {
         Collection<IClaimedChunk> c = invertedMap.get(playerID);
         return (c == null) ? 0 : c.size();
     }
 
-    public int getLoadedChunks(@Nonnull UUID playerID)
+    public int getLoadedChunks(UUID playerID)
     {
         Collection<IClaimedChunk> c = invertedMap.get(playerID);
 

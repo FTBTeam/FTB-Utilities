@@ -10,7 +10,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -29,7 +28,6 @@ public class CmdSetRank extends CommandLM
         return i == 0;
     }
 
-    @Nonnull
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
     {
@@ -42,14 +40,14 @@ public class CmdSetRank extends CommandLM
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         checkArgs(args, 2, "<player> <rank>");
         IForgePlayer player = getForgePlayer(args[0]);
         Rank r = Ranks.INSTANCE.ranks.get(args[1]);
         if(r == null)
         {
-            throw FTBLibLang.raw.commandError("Rank '" + args[1] + "' not found!");
+            throw FTBLibLang.RAW.commandError("Rank '" + args[1] + "' not found!");
         }
         Ranks.INSTANCE.playerMap.put(player.getProfile().getId(), r);
         Ranks.INSTANCE.saveRanks();

@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbu.gui;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.latmod.lib.PixelBuffer;
-import com.latmod.lib.math.MathHelperLM;
 import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
@@ -11,6 +10,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.relauncher.Side;
@@ -176,7 +176,7 @@ public class ThreadReloadArea extends Thread
                                     if(state.getBlock() != Blocks.TALLGRASS && !worldObj.isAirBlock(currentBlockPos))
                                     {
                                         color = getBlockColor(state);
-                                        color = LMColorUtils.addBrightness(color, MathHelperLM.clampInt(by - startY, -30, 30) * 5);
+                                        color = LMColorUtils.addBrightness(color, MathHelper.clamp_int(by - startY, -30, 30) * 5);
                                         pixels.setRGB(cx * 16 + wx, cz * 16 + wz, color);
                                         break;
                                     }

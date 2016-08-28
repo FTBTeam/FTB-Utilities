@@ -17,7 +17,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
@@ -34,16 +34,14 @@ public class CmdHome extends CommandLM
         return 0;
     }
 
-    @Nonnull
     @Override
-    public String getCommandUsage(@Nonnull ICommandSender ics)
+    public String getCommandUsage(ICommandSender ics)
     {
         return '/' + commandName + " <ID>";
     }
 
-    @Nonnull
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
         if(args.length == 1)
         {
@@ -54,7 +52,7 @@ public class CmdHome extends CommandLM
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
         FTBUPlayerData d = FTBUPlayerData.get(getForgePlayer(ep));
@@ -75,15 +73,15 @@ public class CmdHome extends CommandLM
 
         if(pos == null)
         {
-            throw FTBULang.home_not_set.commandError(args[0]);
+            throw FTBULang.HOME_NOT_SET.commandError(args[0]);
         }
 
         if(ep.dimension != pos.dim && !PermissionAPI.hasPermission(ep.getGameProfile(), FTBUPermissions.HOMES_CROSS_DIM, true, new PlayerContext(ep)))
         {
-            throw FTBULang.home_cross_dim.commandError();
+            throw FTBULang.HOME_CROSS_DIM.commandError();
         }
 
         LMDimUtils.teleportPlayer(ep, pos);
-        FTBULang.warp_tp.printChat(ics, args[0]);
+        FTBULang.WARP_TP.printChat(ics, args[0]);
     }
 }

@@ -2,13 +2,13 @@ package com.feed_the_beast.ftbu.net;
 
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToServer;
-import com.latmod.lib.math.MathHelperLM;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.math.MathHelper;
 
 public class MessageAreaRequest extends MessageToServer<MessageAreaRequest>
 {
-    public int chunkX, chunkY, sizeX, sizeY;
+    private int chunkX, chunkY, sizeX, sizeY;
 
     public MessageAreaRequest()
     {
@@ -18,8 +18,8 @@ public class MessageAreaRequest extends MessageToServer<MessageAreaRequest>
     {
         chunkX = x;
         chunkY = y;
-        sizeX = MathHelperLM.clampInt(w, 1, 255);
-        sizeY = MathHelperLM.clampInt(h, 1, 255);
+        sizeX = MathHelper.clamp_int(w, 1, 255);
+        sizeY = MathHelper.clamp_int(h, 1, 255);
     }
 
     @Override

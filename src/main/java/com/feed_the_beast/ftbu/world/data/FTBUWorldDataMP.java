@@ -22,11 +22,11 @@ import com.feed_the_beast.ftbu.world.chunks.ClaimedChunkStorage;
 import com.google.gson.JsonArray;
 import com.latmod.lib.BroadcastSender;
 import com.latmod.lib.EnumEnabled;
-import com.latmod.lib.json.LMJsonUtils;
 import com.latmod.lib.math.BlockDimPos;
 import com.latmod.lib.math.ChunkDimPos;
 import com.latmod.lib.math.MathHelperLM;
 import com.latmod.lib.util.LMDimUtils;
+import com.latmod.lib.util.LMJsonUtils;
 import com.latmod.lib.util.LMNBTUtils;
 import com.latmod.lib.util.LMStringUtils;
 import com.mojang.authlib.GameProfile;
@@ -40,7 +40,6 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collection;
@@ -100,7 +99,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         }
     }
 
-    public static boolean isInSpawn(@Nonnull ChunkDimPos pos)
+    public static boolean isInSpawn(ChunkDimPos pos)
     {
         if(pos.dim != 0 || (!FTBLib.getServer().isDedicatedServer() && !FTBUConfigGeneral.spawn_area_in_sp.getAsBoolean()))
         {
@@ -212,7 +211,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         return true;
     }
 
-    public static boolean unclaimChunk(@Nonnull IForgePlayer player, @Nonnull ChunkDimPos pos)
+    public static boolean unclaimChunk(IForgePlayer player, ChunkDimPos pos)
     {
         IClaimedChunk chunk = chunks.getChunk(pos);
 
@@ -226,7 +225,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         return false;
     }
 
-    public static void unclaimAllChunks(@Nonnull IForgePlayer player, @Nullable Integer dim)
+    public static void unclaimAllChunks(IForgePlayer player, @Nullable Integer dim)
     {
         Collection<IClaimedChunk> ch = new HashSet<>();
         ch.addAll(chunks.getChunks(player.getProfile().getId()));
@@ -244,7 +243,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         }
     }
 
-    public static boolean setLoaded(@Nonnull IForgePlayer player, @Nonnull ChunkDimPos pos, boolean flag)
+    public static boolean setLoaded(IForgePlayer player, ChunkDimPos pos, boolean flag)
     {
         IClaimedChunk chunk = chunks.getChunk(pos);
 
@@ -395,7 +394,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
                 }
                 else if(secondsLeft <= 10 || secondsLeft == 60 || secondsLeft == 300 || secondsLeft == 600 || secondsLeft == 1800)
                 {
-                    ITextComponent c = FTBULang.timer_restart.textComponent(msg);
+                    ITextComponent c = FTBULang.TIMER_RESTART.textComponent(msg);
                     c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
                     BroadcastSender.INSTANCE.addChatMessage(c);
                 }

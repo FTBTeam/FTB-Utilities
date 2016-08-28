@@ -31,7 +31,6 @@ import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -58,7 +57,7 @@ public class ServerInfoFile extends InfoPage
         }
     }
 
-    public ServerInfoFile(@Nonnull IForgePlayer self)
+    public ServerInfoFile(IForgePlayer self)
     {
         super(CachedInfo.main.getName());
         setTitle(CachedInfo.main.getTitle());
@@ -75,22 +74,22 @@ public class ServerInfoFile extends InfoPage
 
         if(FTBUConfigWorld.auto_restart.getAsBoolean())
         {
-            println(FTBULang.timer_restart.textComponent(LMStringUtils.getTimeString(FTBUWorldData.getW(self.getWorld()).toMP().restartMillis - System.currentTimeMillis())));
+            println(FTBULang.TIMER_RESTART.textComponent(LMStringUtils.getTimeString(FTBUWorldData.getW(self.getWorld()).toMP().restartMillis - System.currentTimeMillis())));
         }
 
         if(FTBUConfigBackups.enabled.getAsBoolean())
         {
-            println(FTBULang.timer_backup.textComponent(LMStringUtils.getTimeString(Backups.INSTANCE.nextBackup - System.currentTimeMillis())));
+            println(FTBULang.TIMER_BACKUP.textComponent(LMStringUtils.getTimeString(Backups.INSTANCE.nextBackup - System.currentTimeMillis())));
         }
 
         if(FTBUConfigGeneral.server_info_difficulty.getAsBoolean())
         {
-            println(FTBLibLang.difficulty.textComponent(LMStringUtils.firstUppercase(self.getPlayer().worldObj.getDifficulty().toString().toLowerCase())));
+            println(FTBLibLang.DIFFICULTY.textComponent(LMStringUtils.firstUppercase(self.getPlayer().worldObj.getDifficulty().toString().toLowerCase())));
         }
 
         if(FTBUConfigGeneral.server_info_mode.getAsBoolean())
         {
-            println(FTBLibLang.mode_current.textComponent(LMStringUtils.firstUppercase(FTBLibAPI.get().getSharedData(Side.SERVER).getMode().getID())));
+            println(FTBLibLang.MODE_CURRENT.textComponent(LMStringUtils.firstUppercase(FTBLibAPI.get().getSharedData(Side.SERVER).getMode().getID())));
         }
 
         InfoPage topsPage = getSub("tops").setTitle(FTBUTops.LANG_TOP_TITLE.textComponent());
@@ -152,7 +151,7 @@ public class ServerInfoFile extends InfoPage
 
         MinecraftForge.EVENT_BUS.post(new EventFTBUServerInfo(this, self, isOP));
 
-        InfoPage page = getSub("commands").setTitle(FTBLibLang.commands.textComponent());
+        InfoPage page = getSub("commands").setTitle(FTBLibLang.COMMANDS.textComponent());
         page.clear();
 
         try

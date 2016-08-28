@@ -10,7 +10,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class CmdDelHome extends CommandLM
@@ -26,16 +26,14 @@ public class CmdDelHome extends CommandLM
         return 0;
     }
 
-    @Nonnull
     @Override
-    public String getCommandUsage(@Nonnull ICommandSender ics)
+    public String getCommandUsage(ICommandSender ics)
     {
         return '/' + commandName + " <ID>";
     }
 
-    @Nonnull
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
         if(args.length == 1)
         {
@@ -46,7 +44,7 @@ public class CmdDelHome extends CommandLM
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         IForgePlayer p = getForgePlayer(ics);
         checkArgs(args, 1, "<home>");
@@ -55,11 +53,11 @@ public class CmdDelHome extends CommandLM
 
         if(FTBUPlayerData.get(p).setHome(args[0], null))
         {
-            FTBULang.home_del.printChat(ics, args[0]);
+            FTBULang.HOME_DEL.printChat(ics, args[0]);
         }
         else
         {
-            throw FTBULang.home_not_set.commandError(args[0]);
+            throw FTBULang.HOME_NOT_SET.commandError(args[0]);
         }
     }
 }

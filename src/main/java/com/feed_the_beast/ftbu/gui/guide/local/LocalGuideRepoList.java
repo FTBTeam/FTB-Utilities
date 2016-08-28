@@ -1,11 +1,12 @@
 package com.feed_the_beast.ftbu.gui.guide.local;
 
+import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.gui.guide.Guide;
 import com.feed_the_beast.ftbu.gui.guide.GuideRepoList;
 import com.feed_the_beast.ftbu.gui.guide.GuideType;
 import com.google.gson.JsonElement;
-import com.latmod.lib.json.LMJsonUtils;
+import com.latmod.lib.util.LMJsonUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -25,7 +26,7 @@ public class LocalGuideRepoList extends GuideRepoList
     }
 
     @Override
-    protected void onReload(List<Guide> guides) throws Exception
+    protected void onReload(InfoPage infoPage, List<Guide> guides) throws Exception
     {
         File folder = new File(FTBLib.folderLocal, "guidepacks");
 

@@ -7,15 +7,13 @@ import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
-
 @SideOnly(Side.CLIENT)
 public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
 {
     INSTANCE;
 
     @Override
-    public void doRenderLayer(@Nonnull AbstractClientPlayer ep, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
+    public void doRenderLayer(AbstractClientPlayer ep, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
     {
         if(FTBUClient.render_badges.getAsBoolean() && !ep.isInvisible())
         {

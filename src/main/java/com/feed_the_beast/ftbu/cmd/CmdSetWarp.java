@@ -11,8 +11,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
-import javax.annotation.Nonnull;
-
 public class CmdSetWarp extends CommandLM
 {
     public CmdSetWarp()
@@ -21,7 +19,7 @@ public class CmdSetWarp extends CommandLM
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         checkArgs(args, 1, "<warp> [x] [y] [z]");
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
@@ -42,6 +40,6 @@ public class CmdSetWarp extends CommandLM
         }
 
         FTBUWorldData.getW(FTBLibAPI.get().getWorld()).toMP().setWarp(args[0], new BlockDimPos(c, ep.dimension));
-        FTBULang.warp_set.printChat(ics, args[0]);
+        FTBULang.WARP_SET.printChat(ics, args[0]);
     }
 }

@@ -13,8 +13,8 @@ import java.util.UUID;
 
 public class MessageSendBadge extends MessageToClient<MessageSendBadge>
 {
-    public UUID playerID;
-    public String badgeID;
+    private UUID playerID;
+    private String badgeID;
 
     public MessageSendBadge()
     {

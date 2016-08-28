@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
+import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -20,7 +21,7 @@ public abstract class GuideRepoList
         return list;
     }
 
-    public final void reload(boolean useThread)
+    public final void reload(final InfoPage infoPage, boolean useThread)
     {
         list.clear();
 
@@ -35,7 +36,7 @@ public abstract class GuideRepoList
                 {
                     try
                     {
-                        onReload(list);
+                        onReload(infoPage, list);
                         thread = null;
                     }
                     catch(Exception ex)
@@ -52,7 +53,7 @@ public abstract class GuideRepoList
         {
             try
             {
-                onReload(list);
+                onReload(infoPage, list);
             }
             catch(Exception ex)
             {
@@ -61,5 +62,5 @@ public abstract class GuideRepoList
         }
     }
 
-    protected abstract void onReload(List<Guide> guides) throws Exception;
+    protected abstract void onReload(InfoPage infoPage, List<Guide> guides) throws Exception;
 }

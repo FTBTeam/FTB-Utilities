@@ -14,7 +14,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
@@ -31,16 +31,14 @@ public class CmdWarp extends CommandLM
         return 0;
     }
 
-    @Nonnull
     @Override
-    public String getCommandUsage(@Nonnull ICommandSender ics)
+    public String getCommandUsage(ICommandSender ics)
     {
         return '/' + commandName + " <ID>";
     }
 
-    @Nonnull
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
         if(args.length == 1)
         {
@@ -51,7 +49,7 @@ public class CmdWarp extends CommandLM
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         checkArgs(args, 1, "<warp>");
 
@@ -68,9 +66,9 @@ public class CmdWarp extends CommandLM
         BlockDimPos p = FTBUWorldData.getW(FTBLibAPI.get().getWorld()).toMP().getWarp(args[0]);
         if(p == null)
         {
-            throw FTBULang.warp_not_set.commandError(args[0]);
+            throw FTBULang.WARP_NOT_SET.commandError(args[0]);
         }
         LMDimUtils.teleportPlayer(ep, p);
-        FTBULang.warp_tp.printChat(ics, args[0]);
+        FTBULang.WARP_TP.printChat(ics, args[0]);
     }
 }

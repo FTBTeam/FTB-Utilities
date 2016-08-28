@@ -5,9 +5,7 @@ import net.minecraft.stats.StatBase;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,15 +14,13 @@ import java.util.Set;
 /**
  * Created by LatvianModder on 04.07.2016.
  */
-@ParametersAreNonnullByDefault
 public enum TopRegistry
 {
     INSTANCE;
 
     public interface DataSupplier
     {
-        @Nonnull
-        Object getData(@Nonnull IForgePlayer player);
+        Object getData(IForgePlayer player);
     }
 
     private final Map<StatBase, Comparator<IForgePlayer>> COMPARATOR_REGISTRY = new HashMap<>();
@@ -49,7 +45,6 @@ public enum TopRegistry
         NAME_REGISTRY.put(stat, component);
     }
 
-    @Nonnull
     public Set<StatBase> getKeys()
     {
         return DATA_REGISTRY.keySet();
@@ -67,7 +62,6 @@ public enum TopRegistry
         return DATA_REGISTRY.get(stat);
     }
 
-    @Nonnull
     public ITextComponent getName(StatBase stat)
     {
         //FIXME: Gray stat name

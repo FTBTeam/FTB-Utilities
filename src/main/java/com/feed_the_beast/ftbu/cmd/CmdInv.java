@@ -17,7 +17,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.Loader;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 
 public class CmdInv extends CommandSubBase
@@ -29,9 +28,8 @@ public class CmdInv extends CommandSubBase
             super("view");
         }
 
-        @Nonnull
         @Override
-        public String getCommandUsage(@Nonnull ICommandSender ics)
+        public String getCommandUsage(ICommandSender ics)
         {
             return '/' + commandName + " <player>";
         }
@@ -43,7 +41,7 @@ public class CmdInv extends CommandSubBase
         }
 
         @Override
-        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
             checkArgs(args, 1, "<player>");
             EntityPlayerMP ep0 = getCommandSenderAsPlayer(ics);
@@ -59,9 +57,8 @@ public class CmdInv extends CommandSubBase
             super("save");
         }
 
-        @Nonnull
         @Override
-        public String getCommandUsage(@Nonnull ICommandSender ics)
+        public String getCommandUsage(ICommandSender ics)
         {
             return '/' + commandName + " <player> <file_id>";
         }
@@ -73,7 +70,7 @@ public class CmdInv extends CommandSubBase
         }
 
         @Override
-        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
             checkArgs(args, 2, "<player> <ID>");
             EntityPlayerMP ep = getPlayer(server, ics, args[0]);
@@ -97,7 +94,7 @@ public class CmdInv extends CommandSubBase
                 {
                     e.printStackTrace();
                 }
-                throw FTBLibLang.raw.commandError("Failed to load inventory!");
+                throw FTBLibLang.RAW.commandError("Failed to load inventory!");
             }
         }
 
@@ -129,9 +126,8 @@ public class CmdInv extends CommandSubBase
             super("load");
         }
 
-        @Nonnull
         @Override
-        public String getCommandUsage(@Nonnull ICommandSender ics)
+        public String getCommandUsage(ICommandSender ics)
         {
             return '/' + commandName + " <player> <file_id>";
         }
@@ -143,7 +139,7 @@ public class CmdInv extends CommandSubBase
         }
 
         @Override
-        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
             checkArgs(args, 2, "<player> <ID>");
             EntityPlayerMP ep = getPlayer(server, ics, args[0]);
@@ -166,7 +162,7 @@ public class CmdInv extends CommandSubBase
                 {
                     e.printStackTrace();
                 }
-                throw FTBLibLang.raw.commandError("Failed to load inventory!");
+                throw FTBLibLang.RAW.commandError("Failed to load inventory!");
             }
         }
 
@@ -195,7 +191,7 @@ public class CmdInv extends CommandSubBase
         }
 
         @Override
-        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
         }
     }

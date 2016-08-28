@@ -8,7 +8,7 @@ import com.google.gson.JsonObject;
 import com.latmod.lib.FinalIDObject;
 import com.latmod.lib.io.LMConnection;
 import com.latmod.lib.io.RequestMethod;
-import com.latmod.lib.json.LMJsonUtils;
+import com.latmod.lib.util.LMJsonUtils;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;

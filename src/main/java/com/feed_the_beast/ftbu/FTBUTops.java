@@ -30,7 +30,7 @@ public class FTBUTops
         {
             if(player.isOnline())
             {
-                return GuiLang.label_online.textComponent();
+                return GuiLang.LABEL_ONLINE.textComponent();
             }
 
             return LMStringUtils.getTimeString(System.currentTimeMillis() - FTBLibStats.getLastSeen(player.stats(), player.isOnline()));

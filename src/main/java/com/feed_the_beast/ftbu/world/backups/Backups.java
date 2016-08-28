@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.latmod.lib.BroadcastSender;
-import com.latmod.lib.json.LMJsonUtils;
+import com.latmod.lib.util.LMJsonUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.server.CommandSaveAll;
 import net.minecraft.command.server.CommandSaveOff;
@@ -114,7 +114,7 @@ public enum Backups
             return false;
         }
 
-        ITextComponent c = FTBULang.backup_start.textComponent(ics.getName());
+        ITextComponent c = FTBULang.BACKUP_START.textComponent(ics.getName());
         c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
         BroadcastSender.INSTANCE.addChatMessage(c);
 

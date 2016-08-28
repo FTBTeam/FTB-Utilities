@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
 {
-    public UUID playerID;
+    private UUID playerID;
 
     public MessageRequestBadge()
     {

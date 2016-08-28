@@ -14,7 +14,6 @@ import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
-import javax.annotation.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -64,7 +63,6 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
         return (e == null) ? ((parent != null) ? parent.handleRankConfig(permission) : null) : e;
     }
 
-    @Nonnull
     @Override
     public JsonElement getSerializableElement()
     {
@@ -103,7 +101,7 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
     }
 
     @Override
-    public void fromJson(@Nonnull JsonElement e)
+    public void fromJson(JsonElement e)
     {
         JsonObject o = e.getAsJsonObject();
         parent = o.has("parent") ? Ranks.INSTANCE.ranks.get(o.get("parent").getAsString()) : null;

@@ -13,7 +13,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 public class CmdSetHome extends CommandLM
@@ -29,14 +28,12 @@ public class CmdSetHome extends CommandLM
         return 0;
     }
 
-    @Nonnull
     @Override
-    public String getCommandUsage(@Nonnull ICommandSender ics)
+    public String getCommandUsage(ICommandSender ics)
     {
         return '/' + commandName + " <ID>";
     }
 
-    @Nonnull
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
     {
@@ -48,7 +45,7 @@ public class CmdSetHome extends CommandLM
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
         IForgePlayer p = getForgePlayer(ep);
@@ -63,11 +60,11 @@ public class CmdSetHome extends CommandLM
         {
             if(maxHomes == 0 || d.getHome(args[0]) == null)
             {
-                throw FTBULang.home_limit.commandError();
+                throw FTBULang.HOME_LIMIT.commandError();
             }
         }
 
         d.setHome(args[0], new EntityDimPos(ep).toBlockDimPos());
-        FTBULang.home_set.printChat(ics, args[0]);
+        FTBULang.HOME_SET.printChat(ics, args[0]);
     }
 }

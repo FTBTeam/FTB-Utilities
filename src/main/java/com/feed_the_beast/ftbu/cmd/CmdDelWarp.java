@@ -9,7 +9,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class CmdDelWarp extends CommandLM
@@ -19,16 +19,14 @@ public class CmdDelWarp extends CommandLM
         super("delwarp");
     }
 
-    @Nonnull
     @Override
-    public String getCommandUsage(@Nonnull ICommandSender ics)
+    public String getCommandUsage(ICommandSender ics)
     {
         return '/' + commandName + " <ID>";
     }
 
-    @Nonnull
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
         if(args.length == 1)
         {
@@ -39,7 +37,7 @@ public class CmdDelWarp extends CommandLM
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         checkArgs(args, 1, "<warp>");
 
@@ -47,11 +45,11 @@ public class CmdDelWarp extends CommandLM
 
         if(FTBUWorldData.getW(FTBLibAPI.get().getWorld()).toMP().setWarp(args[0], null))
         {
-            FTBULang.warp_del.printChat(ics, args[0]);
+            FTBULang.WARP_DEL.printChat(ics, args[0]);
         }
         else
         {
-            throw FTBULang.warp_not_set.commandError(args[0]);
+            throw FTBULang.WARP_NOT_SET.commandError(args[0]);
         }
     }
 }

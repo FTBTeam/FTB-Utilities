@@ -17,8 +17,8 @@ import java.util.Map;
 
 public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
 {
-    public int dim;
-    public Map<ChunkDimPos, IClaimedChunk> types;
+    private int dim;
+    private Map<ChunkDimPos, IClaimedChunk> types;
 
     public MessageAreaUpdate()
     {

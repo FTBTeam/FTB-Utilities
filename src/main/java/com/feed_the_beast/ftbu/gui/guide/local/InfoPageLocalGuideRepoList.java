@@ -11,8 +11,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
-
 @SideOnly(Side.CLIENT)
 public class InfoPageLocalGuideRepoList extends InfoPage
 {
@@ -39,25 +37,26 @@ public class InfoPageLocalGuideRepoList extends InfoPage
         return new ButtonLM(0, 0, 16, 16, "Browse Guides") //TODO: Lang
         {
             @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton b)
+            public void onClicked(GuiLM gui, IMouseButton b)
             {
                 GuiLM.playClickSound();
-                InfoPageOnlineGuideRepoList.getGui().openGui();
+                new GuiInfo(new InfoPageOnlineGuideRepoList()).openGui();
             }
 
             @Override
-            public void renderWidget(@Nonnull GuiLM gui)
+            public void renderWidget(GuiLM gui)
             {
                 GlStateManager.enableTexture2D();
                 GlStateManager.color(1F, 1F, 1F, 1F);
-                render(GuiIcons.globe);
+                render(GuiIcons.GLOBE);
             }
         };
     }
 
     @Override
-    public void refreshGui(@Nonnull GuiInfo gui)
+    public void refreshGui(GuiInfo gui)
     {
-        LocalGuideRepoList.INSTANCE.reload(true);
+        clear();
+        LocalGuideRepoList.INSTANCE.reload(this, true);
     }
 }

@@ -11,7 +11,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +35,6 @@ public abstract class Guide implements IStringSerializable, IJsonSerializable
     }
 
     @Override
-    @Nonnull
     public String getName()
     {
         return ID;
@@ -63,7 +61,7 @@ public abstract class Guide implements IStringSerializable, IJsonSerializable
     }
 
     @Override
-    public void fromJson(@Nonnull JsonElement json)
+    public void fromJson(JsonElement json)
     {
         JsonObject o = json.getAsJsonObject();
 
@@ -98,7 +96,6 @@ public abstract class Guide implements IStringSerializable, IJsonSerializable
     }
 
     @Override
-    @Nonnull
     public JsonElement getSerializableElement()
     {
         JsonObject o = new JsonObject();

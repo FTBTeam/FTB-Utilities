@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
  */
 public class FTBUNotifications
 {
-    public static final INotification NO_TEAM = Notification.error(register("no_team"), FTBLibLang.team_no_team.textComponent());
+    public static final INotification NO_TEAM = Notification.error(register("no_team"), FTBLibLang.TEAM_NO_TEAM.textComponent());
     public static final INotification CANT_MODIFY_CHUNK = Notification.error(register("cant_modify_chunk"), new TextComponentString("Can't modify this chunk!"));
     public static final INotification UNCLAIMED_ALL = new Notification(register("unclaimed_all")).addText(new TextComponentString("Unclaimed all chunks"));
     private static final int CHUNK_MODIFIED = register("chunk_modified");

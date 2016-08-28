@@ -13,8 +13,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.Vec3d;
 
-import javax.annotation.Nonnull;
-
 public class CmdTplast extends CommandLM
 {
     public CmdTplast()
@@ -22,9 +20,8 @@ public class CmdTplast extends CommandLM
         super("tpl");
     }
 
-    @Nonnull
     @Override
-    public String getCommandUsage(@Nonnull ICommandSender ics)
+    public String getCommandUsage(ICommandSender ics)
     {
         return '/' + commandName + " [who] <to>";
     }
@@ -36,7 +33,7 @@ public class CmdTplast extends CommandLM
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         checkArgs(args, 1, "(<x> <y> <z>) | ([who] <player>)");
 
@@ -77,7 +74,7 @@ public class CmdTplast extends CommandLM
 
         if(p == null)
         {
-            throw FTBLibLang.raw.commandError("No last position!");
+            throw FTBLibLang.RAW.commandError("No last position!");
         }
 
         LMDimUtils.teleportPlayer(who, p);

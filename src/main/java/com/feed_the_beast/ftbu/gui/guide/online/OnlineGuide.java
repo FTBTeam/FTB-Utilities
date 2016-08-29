@@ -1,13 +1,13 @@
 package com.feed_the_beast.ftbu.gui.guide.online;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
+import com.feed_the_beast.ftbl.api.info.IImageProvider;
 import com.feed_the_beast.ftbl.api.info.IResourceProvider;
+import com.feed_the_beast.ftbl.api.info.impl.URLImageProvider;
 import com.feed_the_beast.ftbu.gui.guide.Guide;
 import com.feed_the_beast.ftbu.gui.guide.GuideType;
 import com.google.gson.JsonObject;
 import com.latmod.lib.io.LMConnection;
 import com.latmod.lib.io.RequestMethod;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -19,18 +19,33 @@ public class OnlineGuide extends Guide
 {
     private final String url;
     private final int priority;
-    private ResourceLocation icon;
+    private final IImageProvider icon;
+
+    private final IResourceProvider RESOURCE_PROVIDER = new IResourceProvider()
+    {
+        @Override
+        public LMConnection getConnection(String s)
+        {
+            return new LMConnection(RequestMethod.FILE, url + '/' + s);
+        }
+    };
 
     public OnlineGuide(JsonObject o, String u)
     {
         super(o.get("id").getAsString(), GuideType.getFromString(o.get("type").getAsString()));
         url = u;
         priority = o.has("priority") ? o.get("priority").getAsInt() : 0;
+        icon = new URLImageProvider(url + "/icon.png");
     }
 
     public String getURL()
     {
         return url;
+    }
+
+    public int getPriority()
+    {
+        return priority;
     }
 
     @Override
@@ -42,19 +57,12 @@ public class OnlineGuide extends Guide
     @Override
     public IResourceProvider getResourceProvider()
     {
-        return s -> new LMConnection(RequestMethod.FILE, url + '/' + s);
+        return RESOURCE_PROVIDER;
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public ResourceLocation getIcon()
+    public IImageProvider getIcon()
     {
-        if(icon == null)
-        {
-            icon = new ResourceLocation("ftbu_guide/" + getName() + ".png");
-            FTBLibClient.getDownloadImage(icon, url + "/icon.png", new ResourceLocation("textures/misc/unknown_pack.png"), null);
-        }
-
         return icon;
     }
 }

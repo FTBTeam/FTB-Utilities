@@ -144,7 +144,7 @@ public class ThreadReloadArea extends Thread
     @Override
     public void run()
     {
-        Arrays.fill(pixels.pixels, 0);
+        Arrays.fill(pixels.getPixels(), 0);
         Chunk chunk;
         int cx, cz, x, z, wx, wz, by, color;
 
@@ -185,7 +185,7 @@ public class ThreadReloadArea extends Thread
                         }
                     }
 
-                    GuiClaimChunks.pixelBuffer = FTBLibClient.toByteBuffer(pixels.pixels, false);
+                    GuiClaimChunks.pixelBuffer = FTBLibClient.toByteBuffer(pixels.getPixels(), false);
                 }
             }
         }
@@ -194,6 +194,6 @@ public class ThreadReloadArea extends Thread
             e.printStackTrace();
         }
 
-        GuiClaimChunks.pixelBuffer = FTBLibClient.toByteBuffer(pixels.pixels, false);
+        GuiClaimChunks.pixelBuffer = FTBLibClient.toByteBuffer(pixels.getPixels(), false);
     }
 }

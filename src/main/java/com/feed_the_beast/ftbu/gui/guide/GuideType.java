@@ -1,14 +1,18 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
+import com.latmod.lib.EnumNameMap;
+
 /**
  * Created by PC on 17.07.2016.
  */
 public enum GuideType
 {
-    MODS("mods"),
-    MODPACKS("modpacks"),
-    MODDING_TUTORIALS("modding_tutorials"),
+    MOD("mod"),
+    MODPACK("modpack"),
+    MODDING_TUTORIAL("modding_tutorial"),
     OTHER("other");
+
+    private static final EnumNameMap<GuideType> NAME_MAP = new EnumNameMap<>(false, values());
 
     public final String group;
 
@@ -19,16 +23,7 @@ public enum GuideType
 
     public static GuideType getFromString(String s)
     {
-        switch(s.toLowerCase())
-        {
-            case "mods":
-                return MODS;
-            case "modpacks":
-                return MODPACKS;
-            case "modding_tutorials":
-                return MODDING_TUTORIALS;
-            default:
-                return OTHER;
-        }
+        GuideType type = NAME_MAP.get(s);
+        return (type == null) ? OTHER : type;
     }
 }

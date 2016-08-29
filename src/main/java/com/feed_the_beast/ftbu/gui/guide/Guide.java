@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
+import com.feed_the_beast.ftbl.api.info.IImageProvider;
 import com.feed_the_beast.ftbl.api.info.IResourceProvider;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -7,7 +8,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -38,6 +38,11 @@ public abstract class Guide implements IStringSerializable, IJsonSerializable
     public String getName()
     {
         return ID;
+    }
+
+    public String getDisplayName()
+    {
+        return name;
     }
 
     public GuideType getType()
@@ -142,6 +147,5 @@ public abstract class Guide implements IStringSerializable, IJsonSerializable
 
     public abstract IResourceProvider getResourceProvider();
 
-    @SideOnly(Side.CLIENT)
-    public abstract ResourceLocation getIcon();
+    public abstract IImageProvider getIcon();
 }

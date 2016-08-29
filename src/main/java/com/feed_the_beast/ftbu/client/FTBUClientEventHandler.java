@@ -79,7 +79,7 @@ public class FTBUClientEventHandler
     {
         if(FTBUClient.KEY_GUIDE.isPressed())
         {
-            InfoPageLocalGuideRepoList.getGui().openGui();
+            InfoPageLocalGuideRepoList.openGui();
         }
 
         if(FTBUClient.KEY_CHUNK_BORDER.isPressed())

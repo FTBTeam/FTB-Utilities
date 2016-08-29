@@ -11,6 +11,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,8 +27,10 @@ public class LocalGuideRepoList extends GuideRepoList
     }
 
     @Override
-    protected void onReload(InfoPage infoPage, List<Guide> guides) throws Exception
+    protected void onReload(InfoPage infoPage) throws Exception
     {
+        List<Guide> guides = new ArrayList<>();
+
         File folder = new File(FTBLib.folderLocal, "guidepacks");
 
         if(folder.exists() && folder.isDirectory())
@@ -72,5 +75,7 @@ public class LocalGuideRepoList extends GuideRepoList
                 }
             }
         }
+
+
     }
 }

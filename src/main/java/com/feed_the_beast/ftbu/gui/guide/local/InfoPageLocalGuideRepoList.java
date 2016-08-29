@@ -6,7 +6,9 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
+import com.feed_the_beast.ftbl.gui.GuiLoading;
 import com.feed_the_beast.ftbu.gui.guide.online.InfoPageOnlineGuideRepoList;
+import com.feed_the_beast.ftbu.gui.guide.online.OnlineGuideRepoList;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -21,14 +23,34 @@ public class InfoPageLocalGuideRepoList extends InfoPage
         super("local_guide_repo_list");
     }
 
-    public static GuiInfo getGui()
+    public static void openGui()
     {
         if(cachedGui == null)
         {
+            new GuiLoading()
+            {
+                private InfoPageOnlineGuideRepoList infoPage;
+
+                @Override
+                public void startLoading()
+                {
+                    infoPage = new InfoPageOnlineGuideRepoList();
+                    OnlineGuideRepoList.INSTANCE.reload(infoPage, this);
+                }
+
+                @Override
+                public void finishLoading()
+                {
+                    new GuiInfo(infoPage).openGui();
+                }
+            }.openGui();
+
             cachedGui = new GuiInfo(new InfoPageLocalGuideRepoList());
         }
-
-        return cachedGui;
+        else
+        {
+            cachedGui.openGui();
+        }
     }
 
     @Override
@@ -40,7 +62,23 @@ public class InfoPageLocalGuideRepoList extends InfoPage
             public void onClicked(GuiLM gui, IMouseButton b)
             {
                 GuiLM.playClickSound();
-                new GuiInfo(new InfoPageOnlineGuideRepoList()).openGui();
+                new GuiLoading()
+                {
+                    private InfoPageOnlineGuideRepoList infoPage;
+
+                    @Override
+                    public void startLoading()
+                    {
+                        infoPage = new InfoPageOnlineGuideRepoList();
+                        OnlineGuideRepoList.INSTANCE.reload(infoPage, this);
+                    }
+
+                    @Override
+                    public void finishLoading()
+                    {
+                        new GuiInfo(infoPage).openGui();
+                    }
+                }.openGui();
             }
 
             @Override
@@ -51,12 +89,5 @@ public class InfoPageLocalGuideRepoList extends InfoPage
                 render(GuiIcons.GLOBE);
             }
         };
-    }
-
-    @Override
-    public void refreshGui(GuiInfo gui)
-    {
-        clear();
-        LocalGuideRepoList.INSTANCE.reload(this, true);
     }
 }

@@ -1,17 +1,15 @@
 package com.feed_the_beast.ftbu.gui.guide.local;
 
+import com.feed_the_beast.ftbl.api.info.IImageProvider;
 import com.feed_the_beast.ftbl.api.info.IResourceProvider;
+import com.feed_the_beast.ftbl.api.info.impl.URLImageProvider;
 import com.feed_the_beast.ftbu.gui.guide.Guide;
 import com.feed_the_beast.ftbu.gui.guide.GuideType;
 import com.latmod.lib.io.LMConnection;
 import com.latmod.lib.io.RequestMethod;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.List;
 
@@ -27,7 +25,16 @@ public class LocalGuide extends Guide
     private List<String> authors;
     private List<String> guide_authors;
     private List<String> modes;
-    private ResourceLocation icon;
+    private IImageProvider icon;
+
+    private final IResourceProvider RESOURCE_PROVIDER = new IResourceProvider()
+    {
+        @Override
+        public LMConnection getConnection(String s)
+        {
+            return new LMConnection(RequestMethod.FILE, new File(folder, s).getAbsolutePath());
+        }
+    };
 
     public LocalGuide(String id, GuideType t, File f)
     {
@@ -49,19 +56,19 @@ public class LocalGuide extends Guide
     @Override
     public IResourceProvider getResourceProvider()
     {
-        return s -> new LMConnection(RequestMethod.FILE, new File(folder, s).getAbsolutePath());
+        return RESOURCE_PROVIDER;
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public ResourceLocation getIcon()
+    public IImageProvider getIcon()
     {
         if(icon == null)
         {
             try
             {
-                BufferedImage img = new LMConnection(RequestMethod.FILE, new File(folder, "icon.png").getAbsolutePath()).connect().asImage();
-                icon = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation("ftbu_guide/" + getName() + ".png", new DynamicTexture(img));
+                //BufferedImage img = new LMConnection(RequestMethod.FILE, new File().getAbsolutePath()).connect().asImage();
+                //icon = new WrappedImageProvider(Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation("ftbu_guide/" + getName() + ".png", new DynamicTexture(img));
+                icon = new URLImageProvider(new File(folder, "icon.png").toURI().toURL().getPath());
             }
             catch(Exception e)
             {

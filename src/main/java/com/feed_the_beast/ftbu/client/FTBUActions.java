@@ -29,7 +29,7 @@ public class FTBUActions
             public void onClicked(IMouseButton button)
             {
                 GuiLM.playClickSound();
-                InfoPageLocalGuideRepoList.getGui().openGui();
+                InfoPageLocalGuideRepoList.openGui();
             }
         });
 

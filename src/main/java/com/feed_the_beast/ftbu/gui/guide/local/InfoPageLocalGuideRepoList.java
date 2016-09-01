@@ -25,17 +25,20 @@ public class InfoPageLocalGuideRepoList extends InfoPage
 
     public static void openGui()
     {
+        cachedGui = null;
+
         if(cachedGui == null)
         {
+            GuiLM.playClickSound();
             new GuiLoading()
             {
-                private InfoPageOnlineGuideRepoList infoPage;
+                private InfoPageLocalGuideRepoList infoPage;
 
                 @Override
                 public void startLoading()
                 {
-                    infoPage = new InfoPageOnlineGuideRepoList();
-                    OnlineGuideRepoList.INSTANCE.reload(infoPage, this);
+                    infoPage = new InfoPageLocalGuideRepoList();
+                    LocalGuideRepoList.INSTANCE.reload(infoPage, this);
                 }
 
                 @Override

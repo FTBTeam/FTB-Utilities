@@ -1,64 +1,90 @@
-package com.feed_the_beast.ftbu.world.data;
+package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBU;
-import com.feed_the_beast.ftbu.FTBULang;
+import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api.IClaimedChunk;
+import com.feed_the_beast.ftbu.api.FTBULang;
+import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
+import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.badges.BadgeStorage;
 import com.feed_the_beast.ftbu.cmd.CmdRestart;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
-import com.feed_the_beast.ftbu.handlers.FTBUChunkEventHandler;
+import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.net.MessageAreaUpdate;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.backups.Backups;
-import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
-import com.feed_the_beast.ftbu.world.chunks.ClaimedChunkStorage;
 import com.google.gson.JsonArray;
 import com.latmod.lib.BroadcastSender;
 import com.latmod.lib.EnumEnabled;
 import com.latmod.lib.math.BlockDimPos;
 import com.latmod.lib.math.ChunkDimPos;
 import com.latmod.lib.math.MathHelperLM;
-import com.latmod.lib.util.LMDimUtils;
 import com.latmod.lib.util.LMJsonUtils;
 import com.latmod.lib.util.LMNBTUtils;
 import com.latmod.lib.util.LMStringUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 /**
- * Created by LatvianModder on 23.02.2016.
+ * Created by LatvianModder on 18.05.2016.
  */
-public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSerializable<NBTTagCompound>
+public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>, ITickable
 {
-    public static final BadgeStorage localBadges = new BadgeStorage();
-    public static ClaimedChunkStorage chunks;
+    public static final BadgeStorage LOCAL_BADGES = new BadgeStorage();
     public long restartMillis;
     private long nextChunkloaderUpdate;
     private Map<String, BlockDimPos> warps;
     private String lastRestartMessage;
+
+    public static FTBUUniverseData get(IUniverse u)
+    {
+        return u.hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null) ? u.getCapability(FTBUCapabilities.FTBU_WORLD_DATA, null) : null;
+    }
+
+    @Override
+    public final boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+    {
+        return capability == FTBUCapabilities.FTBU_WORLD_DATA;
+    }
+
+    @Override
+    public final <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+    {
+        if(capability == FTBUCapabilities.FTBU_WORLD_DATA)
+        {
+            return (T) this;
+        }
+
+        return null;
+    }
+
+    // Override //
 
     public static Badge getServerBadge(IForgePlayer p)
     {
@@ -67,7 +93,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
             return null;
         }
 
-        Badge b = localBadges.badgePlayerMap.get(p.getProfile().getId());
+        Badge b = LOCAL_BADGES.badgePlayerMap.get(p.getProfile().getId());
         if(b != null)
         {
             return b;
@@ -76,7 +102,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         String rank = Ranks.INSTANCE.getRankOf(p.getProfile()).badge;
         if(!rank.isEmpty())
         {
-            b = localBadges.badgeMap.get(rank);
+            b = LOCAL_BADGES.badgeMap.get(rank);
             if(b != null)
             {
                 return b;
@@ -90,8 +116,8 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
     {
         try
         {
-            localBadges.clear();
-            localBadges.loadBadges(LMJsonUtils.fromJson(new File(FTBLib.folderLocal, "ftbu/badges.json")));
+            LOCAL_BADGES.clear();
+            LOCAL_BADGES.loadBadges(LMJsonUtils.fromJson(new File(FTBLib.folderLocal, "ftbu/badges.json")));
         }
         catch(Exception ex)
         {
@@ -101,20 +127,24 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
 
     public static boolean isInSpawn(ChunkDimPos pos)
     {
-        if(pos.dim != 0 || (!FTBLib.getServer().isDedicatedServer() && !FTBUConfigGeneral.spawn_area_in_sp.getAsBoolean()))
+        MinecraftServer server = FTBLib.getServer();
+
+        if(server == null || pos.dim != 0 || (!server.isDedicatedServer() && !FTBUConfigWorld.spawn_area_in_sp.getAsBoolean()))
         {
             return false;
         }
-        int radius = FTBLib.getServer().getSpawnProtectionSize();
+
+        int radius = server.getSpawnProtectionSize();
         if(radius <= 0)
         {
             return false;
         }
-        BlockPos c = FTBLib.getServer().getEntityWorld().getSpawnPoint();
-        int minX = MathHelperLM.chunk(c.getX() + 0.5D - radius);
-        int minZ = MathHelperLM.chunk(c.getZ() + 0.5D - radius);
-        int maxX = MathHelperLM.chunk(c.getX() + 0.5D + radius);
-        int maxZ = MathHelperLM.chunk(c.getZ() + 0.5D + radius);
+
+        BlockPos c = server.getEntityWorld().getSpawnPoint();
+        int minX = MathHelperLM.chunk(c.getX() - radius);
+        int minZ = MathHelperLM.chunk(c.getZ() - radius);
+        int maxX = MathHelperLM.chunk(c.getX() + radius);
+        int maxZ = MathHelperLM.chunk(c.getZ() + radius);
         return pos.posX >= minX && pos.posX <= maxX && pos.posZ >= minZ && pos.posZ <= maxZ;
     }
 
@@ -142,22 +172,21 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
     {
         ChunkDimPos pos = new ChunkDimPos(MathHelperLM.chunk(explosion.getPosition().xCoord), MathHelperLM.chunk(explosion.getPosition().zCoord), world.provider.getDimension());
 
-        if(pos.dim == 0 && FTBUConfigGeneral.safe_spawn.getAsBoolean() && FTBUWorldDataMP.isInSpawn(pos))
+        if(pos.dim == 0 && FTBUConfigWorld.safe_spawn.getAsBoolean() && isInSpawn(pos))
         {
             return false;
         }
         else
         {
-            IClaimedChunk c = FTBUWorldDataMP.chunks.getChunk(pos);
+            IForgePlayer owner = FTBUtilitiesAPI.get().getClaimedChunks().getChunkOwner(pos);
 
-            if(c != null)
+            if(owner != null)
             {
-                EnumEnabled fe = FTBUPermissions.CLAIMS_FORCED_EXPLOSIONS.get(c.getOwner().getProfile());
+                EnumEnabled fe = FTBUPermissions.CLAIMS_FORCED_EXPLOSIONS.get(owner.getProfile());
 
                 if(fe == null)
                 {
-
-                    return c.getOwner().getTeam() == null || !FTBUTeamData.get(c.getOwner().getTeam()).disableExplosions();
+                    return owner.getTeam() == null || !FTBUTeamData.get(owner.getTeam()).disableExplosions();
                 }
                 else
                 {
@@ -194,31 +223,30 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
             return false;
         }
 
-        if(chunks.getClaimedChunks(player.getProfile().getId()) >= max)
+        if(FTBUtilitiesAPI.get().getClaimedChunks().getClaimedChunks(player) >= max)
         {
             return false;
         }
 
-        IClaimedChunk chunk = chunks.getChunk(pos);
+        IForgePlayer chunkOwner = FTBUtilitiesAPI.get().getClaimedChunks().getChunkOwner(pos);
 
-        if(chunk != null)
+        if(chunkOwner != null)
         {
             return false;
         }
 
-        chunks.put(pos, new ClaimedChunk(player, pos));
-
+        FTBUtilitiesAPI.get().getClaimedChunks().setOwner(pos, player);
         return true;
     }
 
     public static boolean unclaimChunk(IForgePlayer player, ChunkDimPos pos)
     {
-        IClaimedChunk chunk = chunks.getChunk(pos);
+        IForgePlayer chunkOwner = FTBUtilitiesAPI.get().getClaimedChunks().getChunkOwner(pos);
 
-        if(chunk != null && chunk.isChunkOwner(player))
+        if(chunkOwner != null && chunkOwner.equalsPlayer(player))
         {
             setLoaded(player, pos, false);
-            chunks.put(pos, null);
+            FTBUtilitiesAPI.get().getClaimedChunks().setOwner(pos, null);
             return true;
         }
 
@@ -227,27 +255,19 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
 
     public static void unclaimAllChunks(IForgePlayer player, @Nullable Integer dim)
     {
-        Collection<IClaimedChunk> ch = new HashSet<>();
-        ch.addAll(chunks.getChunks(player.getProfile().getId()));
-
-        if(!ch.isEmpty())
+        for(ChunkDimPos chunk : FTBUtilitiesAPI.get().getClaimedChunks().getChunks(player))
         {
-            for(IClaimedChunk c : ch)
+            if(dim == null || dim.intValue() == chunk.dim)
             {
-                if(dim == null || dim.intValue() == c.getPos().dim)
-                {
-                    setLoaded(player, c.getPos(), false);
-                    chunks.put(c.getPos(), null);
-                }
+                setLoaded(player, chunk, false);
+                FTBUtilitiesAPI.get().getClaimedChunks().setOwner(chunk, null);
             }
         }
     }
 
     public static boolean setLoaded(IForgePlayer player, ChunkDimPos pos, boolean flag)
     {
-        IClaimedChunk chunk = chunks.getChunk(pos);
-
-        if(chunk != null && flag != chunk.isLoaded() && player.equalsPlayer(chunk.getOwner()))
+        if(flag ? !FTBUtilitiesAPI.get().getLoadedChunks().isLoaded(pos, null) : FTBUtilitiesAPI.get().getLoadedChunks().isLoaded(pos, player))
         {
             if(flag)
             {
@@ -269,14 +289,14 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
                 }
 
                 int max = FTBUPermissions.CHUNKLOADER_MAX_CHUNKS.get(player.getProfile());
-                if(max == 0 || chunks.getLoadedChunks(player.getProfile().getId()) >= max)
+                if(max == 0 || FTBUtilitiesAPI.get().getLoadedChunks().getLoadedChunks(player) >= max)
                 {
                     return false;
                 }
             }
 
-            chunk.setLoaded(flag);
-            FTBUChunkEventHandler.INSTANCE.markDirty(LMDimUtils.getWorld(pos.dim));
+            FTBUtilitiesAPI.get().getLoadedChunks().setLoaded(pos, flag ? player : null);
+            FTBUtilitiesAPI.get().getLoadedChunks().checkUnloaded(pos.dim);
 
             if(player.getPlayer() != null)
             {
@@ -289,22 +309,41 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         return false;
     }
 
-    @Override
-    public FTBUWorldDataMP toMP()
+    public static boolean canInteract(IForgePlayer owner, IForgePlayer player, boolean leftClick, BlockPos blockPos)
     {
-        return this;
+        if(owner.equalsPlayer(player))
+        {
+            return true;
+        }
+        else if(owner.getTeam() == null)
+        {
+            return true;
+        }
+        else if(player.isFake())
+        {
+            return FTBUTeamData.get(owner.getTeam()).allowFakePlayers();
+        }
+        /*else if(p.isOnline() && PermissionAPI.hasPermission(p.getProfile(), FTBLibPermissions.INTERACT_SECURE, false, new Context(p.getPlayer(), pos)))
+        {
+            return true;
+        }*/
+        else if(player.isOnline() && player.getPlayer().capabilities.isCreativeMode)
+        {
+            return true;
+        }
+
+        return owner.getTeam().getStatus(player).isAlly();
     }
 
-    @Override
     public void onLoaded()
     {
-        chunks = new ClaimedChunkStorage();
+        ClaimedChunkStorage.INSTANCE = new ClaimedChunkStorage();
 
         long startMillis = System.currentTimeMillis();
         Backups.INSTANCE.nextBackup = startMillis + FTBUConfigBackups.backupMillis();
         lastRestartMessage = "";
 
-        if(FTBUConfigGeneral.restart_timer.getAsInt() > 0)
+        if(FTBUConfigGeneral.auto_restart.getAsBoolean() && FTBUConfigGeneral.restart_timer.getAsInt() > 0)
         {
             restartMillis = startMillis + (long) (FTBUConfigGeneral.restart_timer.getAsInt() * 3600D * 1000D);
             FTBU.logger.info("Server restart in " + LMStringUtils.getTimeString(restartMillis));
@@ -312,20 +351,18 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
 
         FTBLibAPI.get().getRegistries().tickables().add(this);
 
-        localBadges.clear();
+        LOCAL_BADGES.clear();
     }
 
-    @Override
     public void onLoadedBeforePlayers()
     {
         //ClaimedChunks.inst.chunks.clear();
     }
 
-    @Override
     public void onClosed()
     {
-        chunks = null;
-        localBadges.clear();
+        ClaimedChunkStorage.INSTANCE = null;
+        LOCAL_BADGES.clear();
     }
 
     @Override
@@ -344,6 +381,8 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
 
             tag.setTag("Warps", tag1);
         }
+
+        tag.setTag("Chunks", FTBUtilitiesAPI.get().getClaimedChunks().serializeNBT());
 
         return tag;
     }
@@ -371,6 +410,8 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         {
             warps = null;
         }
+
+        FTBUtilitiesAPI.get().getClaimedChunks().deserializeNBT(tag.getTagList("Chunks", Constants.NBT.TAG_INT_ARRAY));
     }
 
     @Override
@@ -409,7 +450,7 @@ public class FTBUWorldDataMP extends FTBUWorldData implements ITickable, INBTSer
         if(nextChunkloaderUpdate < now)
         {
             nextChunkloaderUpdate = now + 2L * 3600L;
-            FTBUChunkEventHandler.INSTANCE.markDirty(null);
+            FTBUtilitiesAPI.get().getLoadedChunks().checkUnloaded(null);
         }
 
         if(Backups.INSTANCE.thread != null && Backups.INSTANCE.thread.isDone)

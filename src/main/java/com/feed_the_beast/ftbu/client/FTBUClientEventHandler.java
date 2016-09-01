@@ -13,9 +13,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -24,7 +21,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -84,8 +80,7 @@ public class FTBUClientEventHandler
 
         if(FTBUClient.KEY_CHUNK_BORDER.isPressed())
         {
-            boolean flag = Minecraft.getMinecraft().debugRenderer.func_190075_b();
-            Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage((new TextComponentString("")).appendSibling((new TextComponentString("[Debug]: ")).setStyle((new Style()).setColor(TextFormatting.YELLOW).setBold(true))).appendText(MessageFormat.format("Chunk borders: {0}", flag ? "shown" : "hidden")));
+            Minecraft.getMinecraft().debugRenderer.func_190075_b();
         }
 
         if(FTBUClient.KEY_LIGHT_VALUES.isPressed())
@@ -133,10 +128,12 @@ public class FTBUClientEventHandler
                 GlStateManager.cullFace(GlStateManager.CullFace.BACK);
                 GlStateManager.disableCull();
                 GlStateManager.disableTexture2D();
+                GlStateManager.glLineWidth(2F);
                 buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
                 buffer.pos(x * 16D + 8D, 0D, z * 16D + 8D).color(0F, 0.63F, 0.06F, 1F).endVertex();
                 buffer.pos(x * 16D + 8D, 256D, z * 16D + 8D).color(0F, 0.63F, 0.06F, 1F).endVertex();
                 tessellator.draw();
+                GlStateManager.glLineWidth(1F);
                 GlStateManager.enableCull();
                 GlStateManager.enableTexture2D();
             }

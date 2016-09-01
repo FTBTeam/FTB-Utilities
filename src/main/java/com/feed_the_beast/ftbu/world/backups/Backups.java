@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.world.backups;
 
 import com.feed_the_beast.ftbl.util.FTBLib;
-import com.feed_the_beast.ftbu.FTBULang;
+import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

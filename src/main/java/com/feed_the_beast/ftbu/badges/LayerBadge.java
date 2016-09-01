@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.badges;
 
+import com.feed_the_beast.ftbu.client.CachedClientData;
 import com.feed_the_beast.ftbu.client.FTBUClient;
-import com.feed_the_beast.ftbu.world.data.FTBUWorldDataSP;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraftforge.fml.relauncher.Side;
@@ -17,7 +17,7 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
     {
         if(FTBUClient.render_badges.getAsBoolean() && !ep.isInvisible())
         {
-            Badge b = FTBUWorldDataSP.getClientBadge(ep.getGameProfile().getId());
+            Badge b = CachedClientData.getClientBadge(ep.getGameProfile().getId());
 
             if(b != null)
             {

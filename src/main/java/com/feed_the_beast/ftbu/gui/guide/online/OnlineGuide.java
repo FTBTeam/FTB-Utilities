@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Created by LatvianModder on 17.07.2016.
  */
 @SideOnly(Side.CLIENT)
-public class OnlineGuide extends Guide
+public class OnlineGuide extends Guide implements Comparable<OnlineGuide>
 {
     private final String url;
     private final int priority;
@@ -64,5 +64,18 @@ public class OnlineGuide extends Guide
     public IImageProvider getIcon()
     {
         return icon;
+    }
+
+    @Override
+    public int compareTo(OnlineGuide o)
+    {
+        int i = Integer.compare(o.getPriority(), getPriority());
+
+        if(i == 0)
+        {
+            i = getDisplayName().compareToIgnoreCase(o.getDisplayName());
+        }
+
+        return i;
     }
 }

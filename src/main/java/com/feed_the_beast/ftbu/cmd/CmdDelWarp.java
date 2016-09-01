@@ -2,8 +2,8 @@ package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbu.FTBULang;
-import com.feed_the_beast.ftbu.world.data.FTBUWorldData;
+import com.feed_the_beast.ftbu.api.FTBULang;
+import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -30,7 +30,7 @@ public class CmdDelWarp extends CommandLM
     {
         if(args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, FTBUWorldData.getW(FTBLibAPI.get().getUniverse()).toMP().listWarps());
+            return getListOfStringsMatchingLastWord(args, FTBUUniverseData.get(FTBLibAPI.get().getUniverse()).listWarps());
         }
 
         return super.getTabCompletionOptions(server, sender, args, pos);
@@ -43,7 +43,7 @@ public class CmdDelWarp extends CommandLM
 
         args[0] = args[0].toLowerCase();
 
-        if(FTBUWorldData.getW(FTBLibAPI.get().getUniverse()).toMP().setWarp(args[0], null))
+        if(FTBUUniverseData.get(FTBLibAPI.get().getUniverse()).setWarp(args[0], null))
         {
             FTBULang.WARP_DEL.printChat(ics, args[0]);
         }

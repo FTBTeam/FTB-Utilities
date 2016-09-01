@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbu.net;
 
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
-import com.feed_the_beast.ftbu.world.data.FTBUWorldDataSP;
+import com.feed_the_beast.ftbu.client.CachedClientData;
 import com.latmod.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -50,6 +50,6 @@ public class MessageSendBadge extends MessageToClient<MessageSendBadge>
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageSendBadge m, Minecraft ctx)
     {
-        FTBUWorldDataSP.localBadges.badgePlayerMap.put(m.playerID, FTBUWorldDataSP.localBadges.badgeMap.get(m.badgeID));
+        CachedClientData.LOCAL_BADGES.badgePlayerMap.put(m.playerID, CachedClientData.LOCAL_BADGES.badgeMap.get(m.badgeID));
     }
 }

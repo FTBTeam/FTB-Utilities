@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.handlers.sync;
 
 import com.feed_the_beast.ftbu.badges.Badge;
-import com.feed_the_beast.ftbu.world.data.FTBUWorldDataMP;
-import com.feed_the_beast.ftbu.world.data.FTBUWorldDataSP;
+import com.feed_the_beast.ftbu.client.CachedClientData;
+import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -16,7 +16,7 @@ public class SyncBadges implements INBTSerializable<NBTTagCompound>
     {
         NBTTagCompound nbt = new NBTTagCompound();
 
-        for(Badge b : FTBUWorldDataMP.localBadges.badgeMap.values())
+        for(Badge b : FTBUUniverseData.LOCAL_BADGES.badgeMap.values())
         {
             nbt.setString(b.getName(), b.imageURL);
         }
@@ -27,12 +27,12 @@ public class SyncBadges implements INBTSerializable<NBTTagCompound>
     @Override
     public void deserializeNBT(NBTTagCompound nbt)
     {
-        FTBUWorldDataSP.localBadges.clear();
-        FTBUWorldDataSP.localBadges.copyFrom(FTBUWorldDataSP.globalBadges);
+        CachedClientData.LOCAL_BADGES.clear();
+        CachedClientData.LOCAL_BADGES.copyFrom(CachedClientData.GLOBAL_BADGES);
 
         for(String key : nbt.getKeySet())
         {
-            FTBUWorldDataSP.localBadges.badgeMap.put(key, new Badge(key, nbt.getString(key)));
+            CachedClientData.LOCAL_BADGES.badgeMap.put(key, new Badge(key, nbt.getString(key)));
         }
     }
 }

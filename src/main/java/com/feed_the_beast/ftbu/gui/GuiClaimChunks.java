@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.gui;
 
-import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
@@ -10,11 +9,9 @@ import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.PanelLM;
 import com.feed_the_beast.ftbl.api_impl.MouseButton;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.FTBULang;
-import com.feed_the_beast.ftbu.api.IClaimedChunk;
+import com.feed_the_beast.ftbu.api.FTBULang;
+import com.feed_the_beast.ftbu.client.CachedClientData;
 import com.feed_the_beast.ftbu.net.MessageAreaRequest;
-import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
-import com.feed_the_beast.ftbu.world.data.FTBUWorldDataSP;
 import com.latmod.lib.TextureCoords;
 import com.latmod.lib.math.ChunkDimPos;
 import com.latmod.lib.math.MathHelperLM;
@@ -50,6 +47,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
     private class MapButton extends ButtonLM
     {
         private final ChunkDimPos chunkPos;
+        private final CachedClientData.ChunkData chunkData;
 
         private MapButton(int x, int y, int i)
         {
@@ -57,6 +55,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             posX += (i % TILES_GUI) * width;
             posY += (i / TILES_GUI) * height;
             chunkPos = new ChunkDimPos(startX + (i % TILES_GUI), startZ + (i / TILES_GUI), currentDim);
+            chunkData = CachedClientData.CHUNKS.get(chunkPos);
         }
 
         @Override
@@ -96,17 +95,13 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         @Override
         public void addMouseOverText(GuiLM gui, List<String> l)
         {
-            IClaimedChunk chunk = FTBUWorldDataSP.getChunk(chunkPos);
-
-            if(chunk != null)
+            if(chunkData != null)
             {
-                IForgeTeam team = chunk.getOwner().getTeam();
-
-                if(team != null)
+                if(chunkData.team != null)
                 {
-                    l.add(team.getColor().getTextFormatting() + team.getTitle());
+                    l.add(chunkData.team.formattedName);
 
-                    l.add(TextFormatting.GREEN + ClaimedChunk.LANG_CLAIMED.translate());
+                    l.add(TextFormatting.GREEN + FTBULang.CHUNKTYPE_CLAIMED.translate());
 
                     /*if(team.getStatus(ForgeWorldSP.inst.clientPlayer).isAlly())
                     {
@@ -121,27 +116,23 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             }
             else
             {
-                l.add(TextFormatting.DARK_GREEN + ClaimedChunk.LANG_WILDERNESS.translate());
+                l.add(TextFormatting.DARK_GREEN + FTBULang.CHUNKTYPE_WILDERNESS.translate());
             }
         }
 
         @Override
         public void renderWidget(GuiLM gui)
         {
-            IClaimedChunk chunk = FTBUWorldDataSP.getChunk(chunkPos);
-
             int ax = getAX();
             int ay = getAY();
 
-            if(chunk != null)
+            if(chunkData != null)
             {
                 FTBLibClient.setTexture(TEX_CHUNK_CLAIMING);
 
-                IForgeTeam team = chunk.getOwner().getTeam();
-
-                if(team != null)
+                if(chunkData.team != null)
                 {
-                    FTBLibClient.setGLColor(team.getColor().getColor(), 180);
+                    FTBLibClient.setGLColor(chunkData.team.color.getColor(), 180);
                 }
                 else
                 {

@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu;
 
-import com.feed_the_beast.ftbu.world.data.FTBUPlayerData;
-import com.feed_the_beast.ftbu.world.data.FTBUTeamData;
-import com.feed_the_beast.ftbu.world.data.FTBUWorldData;
+import com.feed_the_beast.ftbu.world.FTBUPlayerData;
+import com.feed_the_beast.ftbu.world.FTBUTeamData;
+import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -18,8 +18,8 @@ public class FTBUCapabilities
     @CapabilityInject(FTBUPlayerData.class)
     public static Capability<FTBUPlayerData> FTBU_PLAYER_DATA = null;
 
-    @CapabilityInject(FTBUWorldData.class)
-    public static Capability<FTBUWorldData> FTBU_WORLD_DATA = null;
+    @CapabilityInject(FTBUUniverseData.class)
+    public static Capability<FTBUUniverseData> FTBU_WORLD_DATA = null;
 
     @CapabilityInject(FTBUTeamData.class)
     public static Capability<FTBUTeamData> FTBU_TEAM_DATA = null;
@@ -50,20 +50,20 @@ public class FTBUCapabilities
             }
         }, () -> new FTBUPlayerData());
 
-        CapabilityManager.INSTANCE.register(FTBUWorldData.class, new Capability.IStorage<FTBUWorldData>()
+        CapabilityManager.INSTANCE.register(FTBUUniverseData.class, new Capability.IStorage<FTBUUniverseData>()
         {
             @Override
-            public NBTBase writeNBT(Capability<FTBUWorldData> capability, FTBUWorldData instance, EnumFacing side)
+            public NBTBase writeNBT(Capability<FTBUUniverseData> capability, FTBUUniverseData instance, EnumFacing side)
             {
-                return instance.toMP().serializeNBT();
+                return instance.serializeNBT();
             }
 
             @Override
-            public void readNBT(Capability<FTBUWorldData> capability, FTBUWorldData instance, EnumFacing side, NBTBase base)
+            public void readNBT(Capability<FTBUUniverseData> capability, FTBUUniverseData instance, EnumFacing side, NBTBase base)
             {
-                instance.toMP().deserializeNBT((NBTTagCompound) base);
+                instance.deserializeNBT((NBTTagCompound) base);
             }
-        }, () -> new FTBUWorldData() { });
+        }, () -> new FTBUUniverseData() { });
 
         CapabilityManager.INSTANCE.register(FTBUTeamData.class, new Capability.IStorage<FTBUTeamData>()
         {

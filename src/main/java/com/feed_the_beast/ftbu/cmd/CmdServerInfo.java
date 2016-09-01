@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbu.cmd;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbu.badges.Badge;
-import com.feed_the_beast.ftbu.world.data.FTBUWorldDataMP;
+import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import com.google.common.collect.ImmutableSetMultimap;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -90,7 +90,7 @@ public class CmdServerInfo extends CommandLM
 
         list = serverInfo.getSub("loaded_badges"); //LANG
 
-        for(Badge b : FTBUWorldDataMP.localBadges.badgeMap.values())
+        for(Badge b : FTBUUniverseData.LOCAL_BADGES.badgeMap.values())
         {
             list.println(b.getName() + ": " + b.imageURL);
         }

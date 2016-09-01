@@ -1,9 +1,8 @@
 package com.feed_the_beast.ftbu.journeymap;
 
-import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.api.IClaimedChunk;
-import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
+import com.feed_the_beast.ftbu.api.FTBULang;
+import com.feed_the_beast.ftbu.client.CachedClientData;
 import com.latmod.lib.math.ChunkDimPos;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.display.DisplayType;
@@ -12,13 +11,17 @@ import journeymap.client.api.model.MapPolygon;
 import journeymap.client.api.model.ShapeProperties;
 import journeymap.client.api.util.PolygonHelper;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by LatvianModder on 07.02.2016.
  */
+@SideOnly(Side.CLIENT)
 public class JMPluginHandler implements IJMPluginHandler
 {
     private final IClientAPI clientAPI;
@@ -43,7 +46,7 @@ public class JMPluginHandler implements IJMPluginHandler
     }
 
     @Override
-    public void chunkChanged(ChunkDimPos pos, IClaimedChunk chunk)
+    public void chunkChanged(ChunkDimPos pos, @Nullable CachedClientData.ChunkData chunk)
     {
         try
         {
@@ -51,8 +54,6 @@ public class JMPluginHandler implements IJMPluginHandler
             {
                 if(chunk != null)
                 {
-                    IForgeTeam team = chunk.getOwner().getTeam();
-
                     MapPolygon poly = PolygonHelper.createChunkPolygon(pos.posX, 100, pos.posZ);
                     ShapeProperties shapeProperties = new ShapeProperties();
 
@@ -61,16 +62,15 @@ public class JMPluginHandler implements IJMPluginHandler
 
                     StringBuilder sb = new StringBuilder();
 
-                    if(team != null)
+                    if(chunk.team != null)
                     {
-                        shapeProperties.setFillColor(team.getColor().getColor());
+                        shapeProperties.setFillColor(chunk.team.color.getColor());
 
-                        sb.append(team.getColor().getTextFormatting());
-                        sb.append(team.getTitle());
+                        sb.append(chunk.team.formattedName);
 
                         sb.append('\n');
                         sb.append(TextFormatting.GREEN);
-                        sb.append(ClaimedChunk.LANG_CLAIMED.translate());
+                        sb.append(FTBULang.CHUNKTYPE_CLAIMED.translate());
                     }
                     else
                     {

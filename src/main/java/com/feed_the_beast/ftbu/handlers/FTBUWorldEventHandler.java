@@ -6,8 +6,8 @@ import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedBeforePlay
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
-import com.feed_the_beast.ftbu.world.data.FTBUWorldDataMP;
+import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
+import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityChicken;
@@ -21,7 +21,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
     @SubscribeEvent
     public void attachCapabilities(AttachUniverseCapabilitiesEvent event)
     {
-        event.addCapability(new ResourceLocation(FTBUFinals.MOD_ID, "data"), new FTBUWorldDataMP());
+        event.addCapability(new ResourceLocation(FTBUFinals.MOD_ID, "data"), new FTBUUniverseData());
     }
 
     @SubscribeEvent
@@ -68,12 +68,12 @@ public class FTBUWorldEventHandler // FTBLIntegration
             return true;
         }
 
-        if(FTBUConfigGeneral.blocked_entities.isEntityBanned(e.getClass()))
+        if(FTBUConfigWorld.blocked_entities.isEntityBanned(e.getClass()))
         {
             return false;
         }
 
-        if(FTBUConfigGeneral.safe_spawn.getAsBoolean() && FTBUWorldDataMP.isInSpawnD(e.dimension, e.posX, e.posZ))
+        if(FTBUConfigWorld.safe_spawn.getAsBoolean() && FTBUUniverseData.isInSpawnD(e.dimension, e.posX, e.posZ))
         {
             if(e instanceof IMob)
             {
@@ -91,7 +91,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
     @SubscribeEvent
     public void onExplosionStart(ExplosionEvent.Start e)
     {
-        if(!e.getWorld().isRemote && !FTBUWorldDataMP.allowExplosion(e.getWorld(), e.getExplosion()))
+        if(!e.getWorld().isRemote && !FTBUUniverseData.allowExplosion(e.getWorld(), e.getExplosion()))
         {
             e.setCanceled(true);
         }

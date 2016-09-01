@@ -19,7 +19,6 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class LocalGuide extends Guide
 {
-    private final File folder;
     private GuideType type;
     private String name;
     private List<String> authors;
@@ -27,24 +26,11 @@ public class LocalGuide extends Guide
     private List<String> modes;
     private IImageProvider icon;
 
-    private final IResourceProvider RESOURCE_PROVIDER = new IResourceProvider()
-    {
-        @Override
-        public LMConnection getConnection(String s)
-        {
-            return new LMConnection(RequestMethod.FILE, new File(folder, s).getAbsolutePath());
-        }
-    };
+    private final IResourceProvider RESOURCE_PROVIDER = s -> new LMConnection(RequestMethod.FILE, new File(s).getAbsolutePath());
 
-    public LocalGuide(String id, GuideType t, File f)
+    public LocalGuide(String id, GuideType t)
     {
         super(id, t);
-        folder = f;
-    }
-
-    public File getFolder()
-    {
-        return folder;
     }
 
     @Override
@@ -68,7 +54,7 @@ public class LocalGuide extends Guide
             {
                 //BufferedImage img = new LMConnection(RequestMethod.FILE, new File().getAbsolutePath()).connect().asImage();
                 //icon = new WrappedImageProvider(Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation("ftbu_guide/" + getName() + ".png", new DynamicTexture(img));
-                icon = new URLImageProvider(new File(folder, "icon.png").toURI().toURL().getPath());
+                icon = new URLImageProvider(new File("icon.png").toURI().toURL().getPath());
             }
             catch(Exception e)
             {

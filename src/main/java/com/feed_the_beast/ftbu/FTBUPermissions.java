@@ -5,8 +5,9 @@ import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigDouble;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigEnum;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigInt;
-import com.feed_the_beast.ftbu.world.chunks.ChunkloaderType;
+import com.feed_the_beast.ftbu.api_impl.ChunkloaderType;
 import com.latmod.lib.EnumEnabled;
+import com.latmod.lib.EnumNameMap;
 import com.latmod.lib.util.LMJsonUtils;
 
 /**
@@ -60,7 +61,7 @@ public class FTBUPermissions
      * disabled: Explosions will never happen in claimed chunks
      * enabled: Explosions will always happen in claimed chunks
      */
-    public static final RankConfigEnum<EnumEnabled> CLAIMS_FORCED_EXPLOSIONS = new RankConfigEnum<>("ftbu.claims.forced_explosions", null, null, EnumEnabled.values(), true);
+    public static final RankConfigEnum<EnumEnabled> CLAIMS_FORCED_EXPLOSIONS = new RankConfigEnum<>("ftbu.claims.forced_explosions", null, null, new EnumNameMap<>(true, EnumEnabled.values()));
 
     /**
      * Block IDs that player can break in claimed chunks
@@ -79,7 +80,7 @@ public class FTBUPermissions
      * offline: Chunks stay loaded when player loggs off
      * online: Chunks only stay loaded while owner is online
      */
-    public static final RankConfigEnum<ChunkloaderType> CHUNKLOADER_TYPE = new RankConfigEnum<>("ftbu.chunkloader.type", ChunkloaderType.OFFLINE, ChunkloaderType.OFFLINE, ChunkloaderType.values(), false);
+    public static final RankConfigEnum<ChunkloaderType> CHUNKLOADER_TYPE = new RankConfigEnum<>("ftbu.chunkloader.type", ChunkloaderType.OFFLINE, ChunkloaderType.OFFLINE, new EnumNameMap<>(false, ChunkloaderType.values()));
 
     /**
      * Max amount of chunks that player can load

@@ -14,6 +14,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -49,6 +50,8 @@ public class OnlineGuideRepoList extends GuideRepoList
                 ex.printStackTrace();
             }
         }
+
+        Collections.sort(guides, null);
 
         for(final OnlineGuide guide : guides)
         {

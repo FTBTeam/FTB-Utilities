@@ -57,6 +57,18 @@ dependencies {
     compile group: "info.journeymap", name: "journeymap-api", version: '1.9.4-1.2', changing: true
 }
 
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+            srcDir 'src/main/api'
+        }
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+}
+
 processResources
         {
             // this will ensure that this task is redone when the versions change.

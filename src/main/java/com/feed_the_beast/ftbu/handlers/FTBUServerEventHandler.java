@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.api.events.RegisterFTBCommandsEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBU;
+import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.cmd.CmdAdminHome;
 import com.feed_the_beast.ftbu.cmd.CmdBack;
 import com.feed_the_beast.ftbu.cmd.CmdBackup;
@@ -23,9 +24,9 @@ import com.feed_the_beast.ftbu.cmd.CmdTplast;
 import com.feed_the_beast.ftbu.cmd.CmdTrashCan;
 import com.feed_the_beast.ftbu.cmd.CmdWarp;
 import com.feed_the_beast.ftbu.ranks.Ranks;
+import com.feed_the_beast.ftbu.world.FTBUPlayerData;
+import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import com.feed_the_beast.ftbu.world.ServerInfoFile;
-import com.feed_the_beast.ftbu.world.data.FTBUPlayerData;
-import com.feed_the_beast.ftbu.world.data.FTBUWorldDataMP;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -64,11 +65,11 @@ public class FTBUServerEventHandler
             ServerInfoFile.CachedInfo.reload();
             Ranks.INSTANCE.reload();
 
-            FTBUWorldDataMP.reloadServerBadges();
+            FTBUUniverseData.reloadServerBadges();
 
             if(FTBLib.getServerWorld() != null)
             {
-                FTBUChunkEventHandler.INSTANCE.markDirty(null);
+                FTBUtilitiesAPI.get().getLoadedChunks().checkUnloaded(null);
             }
         }
         else

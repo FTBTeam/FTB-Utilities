@@ -1,28 +1,18 @@
-package com.feed_the_beast.ftbu.world.data;
+package com.feed_the_beast.ftbu.world;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.security.EnumTeamPrivacyLevel;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
-import com.feed_the_beast.ftbu.api.IClaimedChunk;
-import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
 import com.latmod.lib.io.Bits;
-import com.latmod.lib.math.ChunkDimPos;
-import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagIntArray;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
 
 /**
  * Created by LatvianModder on 11.02.2016.
@@ -71,38 +61,6 @@ public class FTBUTeamData implements ICapabilitySerializable<NBTTagCompound>
         fakePlayers.set(Bits.getFlag(flags, 2));
 
         blocks.setIndex(tag.hasKey("BlockSecurity") ? tag.getByte("BlockSecurity") : blocks.defValue);
-
-        if(tag.hasKey("ClaimedChunks"))
-        {
-            NBTTagCompound tag1 = tag.getCompoundTag("ClaimedChunks");
-
-            for(String s : tag1.getKeySet())
-            {
-                IForgePlayer player = FTBLibAPI.get().getUniverse().getPlayer(LMStringUtils.fromString(s));
-
-                if(player != null && player.isMemberOf(FTBLibAPI.get().getUniverse().getCurrentTeam()))
-                {
-                    NBTTagList list = tag1.getTagList(s, Constants.NBT.TAG_INT_ARRAY);
-
-                    for(int i = 0; i < list.tagCount(); i++)
-                    {
-                        int[] ai = list.getIntArrayAt(i);
-
-                        if(ai.length >= 3)
-                        {
-                            ClaimedChunk chunk = new ClaimedChunk(player, new ChunkDimPos(ai[1], ai[2], ai[0]));
-
-                            if(ai.length >= 4)
-                            {
-                                chunk.setLoaded(ai[3] != 0);
-                            }
-
-                            FTBUWorldDataMP.chunks.put(chunk.getPos(), chunk);
-                        }
-                    }
-                }
-            }
-        }
     }
 
     @Override
@@ -123,41 +81,6 @@ public class FTBUTeamData implements ICapabilitySerializable<NBTTagCompound>
         if(!blocks.isDefault())
         {
             tag.setByte("BlockSecurity", (byte) blocks.getIndex());
-        }
-
-        NBTTagCompound chunksTag = new NBTTagCompound();
-
-        for(IForgePlayer player : FTBLibAPI.get().getUniverse().getCurrentTeam().getMembers())
-        {
-            Collection<IClaimedChunk> chunks = FTBUWorldDataMP.chunks.getChunks(player.getProfile().getId());
-
-            if(!chunks.isEmpty())
-            {
-                NBTTagList tag1 = new NBTTagList();
-
-                for(IClaimedChunk c : chunks)
-                {
-                    int ai[] = c.isLoaded() ? new int[4] : new int[3];
-
-                    ai[0] = c.getPos().dim;
-                    ai[1] = c.getPos().posX;
-                    ai[2] = c.getPos().posZ;
-
-                    if(c.isLoaded())
-                    {
-                        ai[3] = 1;
-                    }
-
-                    tag1.appendTag(new NBTTagIntArray(ai));
-                }
-
-                chunksTag.setTag(LMStringUtils.fromUUID(player.getProfile().getId()), tag1);
-            }
-        }
-
-        if(!chunksTag.hasNoTags())
-        {
-            tag.setTag("ClaimedChunks", chunksTag);
         }
 
         return tag;

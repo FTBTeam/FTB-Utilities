@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandSubBase;
-import com.feed_the_beast.ftbu.FTBULang;
+import com.feed_the_beast.ftbl.api.cmd.CommandTreeBase;
+import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.world.backups.Backups;
 import com.latmod.lib.BroadcastSender;
@@ -11,7 +11,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 
-public class CmdBackup extends CommandSubBase
+public class CmdBackup extends CommandTreeBase
 {
     public static class CmdBackupStart extends CommandLM
     {

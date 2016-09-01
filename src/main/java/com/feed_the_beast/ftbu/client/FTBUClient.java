@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.badges.LayerBadge;
 import com.feed_the_beast.ftbu.journeymap.IJMPluginHandler;
-import com.feed_the_beast.ftbu.world.data.FTBUWorldDataSP;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.settings.KeyBinding;
@@ -42,7 +41,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 
         ClientConfigRegistry.addGroup("ftbu", FTBUClient.class);
         FTBUActions.init();
-        FTBUWorldDataSP.reloadGlobalBadges();
+        CachedClientData.reloadGlobalBadges();
         MinecraftForge.EVENT_BUS.register(new FTBUClientEventHandler());
     }
 

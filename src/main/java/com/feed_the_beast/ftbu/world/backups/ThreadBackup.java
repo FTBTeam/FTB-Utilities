@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.world.backups;
 
-import com.feed_the_beast.ftbu.FTBULang;
+import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.latmod.lib.BroadcastSender;
 import com.latmod.lib.math.MathHelperLM;

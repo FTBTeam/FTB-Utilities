@@ -1,16 +1,21 @@
 package com.feed_the_beast.ftbu.gui.guide.local;
 
+import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
-import com.feed_the_beast.ftbl.util.FTBLib;
-import com.feed_the_beast.ftbu.gui.guide.Guide;
+import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.feed_the_beast.ftbu.gui.guide.GuideRepoList;
 import com.feed_the_beast.ftbu.gui.guide.GuideType;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.latmod.lib.util.LMJsonUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.io.File;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,53 +34,59 @@ public class LocalGuideRepoList extends GuideRepoList
     @Override
     protected void onReload(InfoPage infoPage) throws Exception
     {
-        List<Guide> guides = new ArrayList<>();
+        List<LocalGuide> guides = new ArrayList<>();
 
-        File folder = new File(FTBLib.folderLocal, "guidepacks");
-
-        if(folder.exists() && folder.isDirectory())
+        for(String domain : Minecraft.getMinecraft().getResourceManager().getResourceDomains())
         {
-            File[] guideTypes = folder.listFiles();
+            System.out.print(domain + ": ");
 
-            if(guideTypes != null && guideTypes.length > 0)
+            try
             {
-                for(File f : guideTypes)
+                for(IResource resource : Minecraft.getMinecraft().getResourceManager().getAllResources(new ResourceLocation(domain, "guide/")))
                 {
-                    if(f.isDirectory())
-                    {
-                        GuideType type = GuideType.getFromString(f.getName());
-
-                        File[] guideFolders = f.listFiles();
-
-                        if(guideFolders != null && guideFolders.length > 0)
-                        {
-                            for(File f1 : guideFolders)
-                            {
-                                if(f1.isDirectory())
-                                {
-                                    try
-                                    {
-                                        JsonElement infoFile = LMJsonUtils.fromJson(new File(f1, "info.json"));
-
-                                        if(infoFile.isJsonObject())
-                                        {
-                                            Guide g = new LocalGuide(f1.getName(), type, f1);
-                                            g.fromJson(infoFile);
-                                            guides.add(g);
-                                        }
-                                    }
-                                    catch(Exception ex)
-                                    {
-                                        ex.printStackTrace();
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    System.out.print(resource.getResourceLocation() + ", ");
                 }
+            }
+            catch(Exception ex)
+            {
+            }
+
+            System.out.println();
+
+            try
+            {
+                IResource resource = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(domain, "guide/info.json"));
+                JsonElement infoFile = LMJsonUtils.fromJson(new InputStreamReader(resource.getInputStream()));
+
+                if(infoFile.isJsonObject())
+                {
+                    JsonObject o = infoFile.getAsJsonObject();
+                    LocalGuide g = new LocalGuide(domain, o.has("type") ? GuideType.getFromString(o.get("type").getAsString()) : GuideType.OTHER);
+                    g.fromJson(infoFile);
+                    guides.add(g);
+                }
+            }
+            catch(Exception ex)
+            {
             }
         }
 
-
+        for(LocalGuide guide : guides)
+        {
+            InfoPage page = new InfoPage(guide.getName())
+            {
+                @Override
+                @SideOnly(Side.CLIENT)
+                public ButtonInfoPage createButton(GuiInfo gui)
+                {
+                    return new ButtonInfoPage(gui, this, guide.getIcon());
+                }
+            };
+            page.setTitle(new TextComponentString(guide.getDisplayName()));
+            page.println("Yo");
+            infoPage.addSub(page);
+        }
     }
+
+
 }

@@ -2,7 +2,8 @@ package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.FTBLibStats;
 import com.feed_the_beast.ftbl.api.gui.GuiLang;
-import com.feed_the_beast.ftbu.api.TopRegistry;
+import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
+import com.feed_the_beast.ftbu.api.ILeaderboardRegistry;
 import com.latmod.lib.LangKey;
 import com.latmod.lib.math.MathHelperLM;
 import com.latmod.lib.util.LMStringUtils;
@@ -17,16 +18,16 @@ import net.minecraft.util.text.TextComponentTranslation;
 public class FTBUTops
 {
     public static final LangKey LANG_TOP_TITLE = new LangKey("ftbu.top.title");
-
     public static final StatBase DEATHS_PER_HOUR = (new StatBasic("ftbu.stat.dph", new TextComponentTranslation("ftbu.stat.dph")));
 
     public static void init()
     {
-        TopRegistry.INSTANCE.register(StatList.DEATHS, (o1, o2) -> Integer.compare(o2.stats().readStat(StatList.DEATHS), o1.stats().readStat(StatList.DEATHS)), player -> Integer.toString(player.stats().readStat(StatList.DEATHS)));
-        TopRegistry.INSTANCE.register(StatList.MOB_KILLS, (o1, o2) -> Integer.compare(o2.stats().readStat(StatList.MOB_KILLS), o1.stats().readStat(StatList.MOB_KILLS)), player -> Integer.toString(player.stats().readStat(StatList.MOB_KILLS)));
-        TopRegistry.INSTANCE.register(DEATHS_PER_HOUR, (o1, o2) -> Double.compare(FTBLibStats.getDeathsPerHour(o2.stats()), FTBLibStats.getDeathsPerHour(o1.stats())), player -> MathHelperLM.toSmallDouble(FTBLibStats.getDeathsPerHour(player.stats())));
+        ILeaderboardRegistry reg = FTBUtilitiesAPI.get().getLeaderboardRegistry();
+        reg.register(StatList.DEATHS, (o1, o2) -> Integer.compare(o2.stats().readStat(StatList.DEATHS), o1.stats().readStat(StatList.DEATHS)), player -> Integer.toString(player.stats().readStat(StatList.DEATHS)));
+        reg.register(StatList.MOB_KILLS, (o1, o2) -> Integer.compare(o2.stats().readStat(StatList.MOB_KILLS), o1.stats().readStat(StatList.MOB_KILLS)), player -> Integer.toString(player.stats().readStat(StatList.MOB_KILLS)));
+        reg.register(DEATHS_PER_HOUR, (o1, o2) -> Double.compare(FTBLibStats.getDeathsPerHour(o2.stats()), FTBLibStats.getDeathsPerHour(o1.stats())), player -> MathHelperLM.toSmallDouble(FTBLibStats.getDeathsPerHour(player.stats())));
 
-        TopRegistry.INSTANCE.register(FTBLibStats.LAST_SEEN, (o1, o2) -> Long.compare(FTBLibStats.getLastSeen(o2.stats(), o2.isOnline()), FTBLibStats.getLastSeen(o1.stats(), o1.isOnline())), player ->
+        reg.register(FTBLibStats.LAST_SEEN, (o1, o2) -> Long.compare(FTBLibStats.getLastSeen(o2.stats(), o2.isOnline()), FTBLibStats.getLastSeen(o1.stats(), o1.isOnline())), player ->
         {
             if(player.isOnline())
             {
@@ -36,8 +37,8 @@ public class FTBUTops
             return LMStringUtils.getTimeString(System.currentTimeMillis() - FTBLibStats.getLastSeen(player.stats(), player.isOnline()));
         });
 
-        TopRegistry.INSTANCE.register(StatList.PLAY_ONE_MINUTE, (o1, o2) -> Long.compare(o2.stats().readStat(StatList.PLAY_ONE_MINUTE), o1.stats().readStat(StatList.PLAY_ONE_MINUTE)), player -> LMStringUtils.getTimeString(player.stats().readStat(StatList.PLAY_ONE_MINUTE)) + " [" + (player.stats().readStat(StatList.PLAY_ONE_MINUTE) / 72000L) + "h]");
+        reg.register(StatList.PLAY_ONE_MINUTE, (o1, o2) -> Long.compare(o2.stats().readStat(StatList.PLAY_ONE_MINUTE), o1.stats().readStat(StatList.PLAY_ONE_MINUTE)), player -> LMStringUtils.getTimeString(player.stats().readStat(StatList.PLAY_ONE_MINUTE)) + " [" + (player.stats().readStat(StatList.PLAY_ONE_MINUTE) / 72000L) + "h]");
 
-        TopRegistry.INSTANCE.registerCustomName(StatList.PLAY_ONE_MINUTE, FTBLibStats.TIME_PLAYED_LANG.textComponent());
+        reg.registerCustomName(StatList.PLAY_ONE_MINUTE, FTBLibStats.TIME_PLAYED_LANG.textComponent());
     }
 }

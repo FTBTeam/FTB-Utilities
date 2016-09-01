@@ -1,9 +1,12 @@
 package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
+import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
+import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
 import com.feed_the_beast.ftbu.config.FTBUConfig;
 import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
-import com.feed_the_beast.ftbu.handlers.FTBUChunkEventHandler;
+import com.feed_the_beast.ftbu.dims.FTBUDimConfig;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUServerEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUTeamEventHandler;
@@ -18,6 +21,7 @@ import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
@@ -41,16 +45,15 @@ public class FTBU
     public static FTBUCommon proxy;
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent e)
+    public void preInit(FMLPreInitializationEvent event)
     {
+        FTBUtilitiesAPI.setAPI(new FTBUtilitiesAPI_Impl());
         FTBUConfig.load();
 
         MinecraftForge.EVENT_BUS.register(new FTBUPlayerEventHandler());
         MinecraftForge.EVENT_BUS.register(new FTBUWorldEventHandler());
         MinecraftForge.EVENT_BUS.register(new FTBUTeamEventHandler());
         MinecraftForge.EVENT_BUS.register(new FTBUServerEventHandler());
-        FTBUChunkEventHandler.INSTANCE.init();
-        MinecraftForge.EVENT_BUS.register(FTBUChunkEventHandler.INSTANCE);
 
         FTBUPermissions.init();
         FTBUCapabilities.enable();
@@ -66,14 +69,20 @@ public class FTBU
     }
 
     @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent e)
+    public void init(FMLInitializationEvent event)
     {
-        proxy.postInit();
-        ForgeChunkManager.setForcedChunkLoadingCallback(inst, FTBUChunkEventHandler.INSTANCE);
+        FTBUDimConfig.load();
     }
 
     @Mod.EventHandler
-    public void serverStarted(FMLServerStartedEvent e)
+    public void postInit(FMLPostInitializationEvent event)
+    {
+        proxy.postInit();
+        ForgeChunkManager.setForcedChunkLoadingCallback(inst, LoadedChunkStorage.INSTANCE);
+    }
+
+    @Mod.EventHandler
+    public void serverStarted(FMLServerStartedEvent event)
     {
         Ranks.INSTANCE.generateExampleFiles();
 
@@ -84,7 +93,7 @@ public class FTBU
     }
 
     @Mod.EventHandler
-    public void serverStopped(FMLServerStoppedEvent e)
+    public void serverStopped(FMLServerStoppedEvent event)
     {
         WebAPI.INST.stopAPI();
     }

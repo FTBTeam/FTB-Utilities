@@ -10,15 +10,17 @@ import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
+import com.feed_the_beast.ftbl.api_impl.MouseButton;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api.IClaimedChunk;
-import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
+import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.config.FTBUConfigLogin;
-import com.feed_the_beast.ftbu.world.data.FTBUPlayerData;
-import com.feed_the_beast.ftbu.world.data.FTBUWorldDataMP;
+import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
+import com.feed_the_beast.ftbu.world.FTBUPlayerData;
+import com.feed_the_beast.ftbu.world.FTBUUniverseData;
+import com.google.common.base.Objects;
 import com.google.gson.JsonElement;
 import com.latmod.lib.math.BlockDimPos;
 import com.latmod.lib.math.ChunkDimPos;
@@ -67,7 +69,7 @@ public class FTBUPlayerEventHandler
                 FTBUConfigLogin.motd.components.forEach(ep::addChatMessage);
             }
 
-            FTBUChunkEventHandler.INSTANCE.markDirty(null);
+            FTBUtilitiesAPI.get().getLoadedChunks().checkUnloaded(null);
         }
     }
 
@@ -76,7 +78,7 @@ public class FTBUPlayerEventHandler
     {
         if(event.getPlayer().hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
         {
-            FTBUChunkEventHandler.INSTANCE.markDirty(null);
+            FTBUtilitiesAPI.get().getLoadedChunks().checkUnloaded(null);
         }
     }
 
@@ -131,28 +133,34 @@ public class FTBUPlayerEventHandler
         }
 
         FTBUPlayerData data = player.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
-        IClaimedChunk chunk = FTBUWorldDataMP.chunks.getChunk(new ChunkDimPos(ep.dimension, e.getNewChunkX(), e.getNewChunkZ()));
-
         data.lastSafePos = new EntityDimPos(ep).toBlockDimPos();
+        updateChunkMessage(ep, new ChunkDimPos(ep.dimension, e.getNewChunkX(), e.getNewChunkZ()));
+    }
 
-        String newTeamID = (chunk == null || chunk.getOwner().getTeam() == null) ? "" : chunk.getOwner().getTeamID();
+    public static void updateChunkMessage(EntityPlayerMP player, ChunkDimPos pos)
+    {
+        IForgePlayer chunkOwner = FTBUtilitiesAPI.get().getClaimedChunks().getChunkOwner(pos);
 
-        if(data.lastChunkID == null || !data.lastChunkID.equals(newTeamID))
+        String newTeamID = (chunkOwner == null || chunkOwner.getTeam() == null) ? null : chunkOwner.getTeamID();
+
+        FTBUPlayerData data = FTBLibAPI.get().getUniverse().getPlayer(player).getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
+
+        if(data.lastChunkID == null || !Objects.equal(data.lastChunkID, newTeamID))
         {
             data.lastChunkID = newTeamID;
 
-            if(!newTeamID.isEmpty())
+            if(newTeamID != null)
             {
-                IForgeTeam team = chunk.getOwner().getTeam();
+                IForgeTeam team = chunkOwner.getTeam();
 
                 if(team != null)
                 {
-                    FTBLibAPI.get().sendNotification(ep, FTBUNotifications.chunkChanged(team));
+                    FTBLibAPI.get().sendNotification(player, FTBUNotifications.chunkChanged(team));
                 }
             }
             else
             {
-                FTBLibAPI.get().sendNotification(ep, FTBUNotifications.chunkChanged(null));
+                FTBLibAPI.get().sendNotification(player, FTBUNotifications.chunkChanged(null));
             }
         }
     }
@@ -183,7 +191,7 @@ public class FTBUPlayerEventHandler
                 return;
             }*/
 
-            if((FTBUConfigGeneral.safe_spawn.getAsBoolean() && FTBUWorldDataMP.isInSpawnD(e.getEntity().dimension, e.getEntity().posX, e.getEntity().posZ)))
+            if((FTBUConfigWorld.safe_spawn.getAsBoolean() && FTBUUniverseData.isInSpawnD(e.getEntity().dimension, e.getEntity().posX, e.getEntity().posZ)))
             {
                 e.setCanceled(true);
             }
@@ -200,16 +208,10 @@ public class FTBUPlayerEventHandler
     {
         if(event.getEntityPlayer() instanceof EntityPlayerMP)
         {
-            IForgePlayer player = FTBLibAPI.get().getUniverse().getPlayer(event.getEntityPlayer());
-
-            if(player != null)
+            EntityPlayerMP player = (EntityPlayerMP) event.getEntityPlayer();
+            if(!FTBUtilitiesAPI.get().getClaimedChunks().canPlayerInteract(player, new BlockDimPos(event.getPos(), player.dimension).toChunkPos(), MouseButton.RIGHT))
             {
-                IClaimedChunk chunk = FTBUWorldDataMP.chunks.getChunk(new BlockDimPos(event.getPos(), player.getPlayer().dimension).toChunkPos());
-
-                if(chunk != null && !chunk.canInteract(player, false, event.getPos()))
-                {
-                    event.setCanceled(true);
-                }
+                event.setCanceled(true);
             }
         }
     }
@@ -224,24 +226,18 @@ public class FTBUPlayerEventHandler
     {
         if(event.getPlayer() instanceof EntityPlayerMP)
         {
-            IForgePlayer player = FTBLibAPI.get().getUniverse().getPlayer(event.getPlayer());
-
-            if(player != null)
+            EntityPlayerMP player = (EntityPlayerMP) event.getPlayer();
+            if(!FTBUtilitiesAPI.get().getClaimedChunks().canPlayerInteract(player, new BlockDimPos(event.getPos(), player.dimension).toChunkPos(), MouseButton.LEFT))
             {
-                for(JsonElement e : FTBUPermissions.CLAIMS_BREAK_WHITELIST.getJson(player.getProfile()).getAsJsonArray())
+                for(JsonElement e : FTBUPermissions.CLAIMS_BREAK_WHITELIST.getJson(player.getGameProfile()).getAsJsonArray())
                 {
-                    if(e.getAsString().equals(Block.REGISTRY.getNameForObject(player.getPlayer().worldObj.getBlockState(event.getPos()).getBlock()).toString()))
+                    if(e.getAsString().equals(Block.REGISTRY.getNameForObject(player.worldObj.getBlockState(event.getPos()).getBlock()).toString()))
                     {
                         return;
                     }
                 }
 
-                IClaimedChunk chunk = FTBUWorldDataMP.chunks.getChunk(new BlockDimPos(event.getPos(), player.getPlayer().dimension).toChunkPos());
-
-                if(chunk != null && !chunk.canInteract(player, true, event.getPos()))
-                {
-                    event.setCanceled(true);
-                }
+                event.setCanceled(true);
             }
         }
     }

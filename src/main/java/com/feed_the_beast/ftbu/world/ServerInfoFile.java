@@ -3,24 +3,24 @@ package com.feed_the_beast.ftbu.world;
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.cmd.ICustomCommandInfo;
+import com.feed_the_beast.ftbl.api.cmd.ITreeCommand;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.api.permissions.context.PlayerContext;
 import com.feed_the_beast.ftbl.util.FTBLib;
-import com.feed_the_beast.ftbu.FTBULang;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.FTBUTops;
 import com.feed_the_beast.ftbu.api.EventFTBUServerInfo;
-import com.feed_the_beast.ftbu.api.TopRegistry;
+import com.feed_the_beast.ftbu.api.FTBULang;
+import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
+import com.feed_the_beast.ftbu.api.ILeaderboardDataProvider;
+import com.feed_the_beast.ftbu.api.ILeaderboardRegistry;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
-import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.world.backups.Backups;
-import com.feed_the_beast.ftbu.world.data.FTBUPlayerData;
-import com.feed_the_beast.ftbu.world.data.FTBUWorldData;
 import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.command.ICommand;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.stats.StatBase;
 import net.minecraft.util.text.ITextComponent;
@@ -32,6 +32,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -72,9 +73,9 @@ public class ServerInfoFile extends InfoPage
         List<IForgePlayer> players = new ArrayList<>();
         players.addAll(FTBLibAPI.get().getUniverse().getPlayers());
 
-        if(FTBUConfigWorld.auto_restart.getAsBoolean())
+        if(FTBUConfigGeneral.auto_restart.getAsBoolean())
         {
-            println(FTBULang.TIMER_RESTART.textComponent(LMStringUtils.getTimeString(FTBUWorldData.getW(self.getUniverse()).toMP().restartMillis - System.currentTimeMillis())));
+            println(FTBULang.TIMER_RESTART.textComponent(LMStringUtils.getTimeString(FTBUUniverseData.get(self.getUniverse()).restartMillis - System.currentTimeMillis())));
         }
 
         if(FTBUConfigBackups.enabled.getAsBoolean())
@@ -94,11 +95,13 @@ public class ServerInfoFile extends InfoPage
 
         InfoPage topsPage = getSub("tops").setTitle(FTBUTops.LANG_TOP_TITLE.textComponent());
 
-        for(StatBase stat : TopRegistry.INSTANCE.getKeys())
-        {
-            InfoPage thisTop = topsPage.getSub(stat.statId).setTitle(TopRegistry.INSTANCE.getName(stat));
+        ILeaderboardRegistry leaderboardRegistry = FTBUtilitiesAPI.get().getLeaderboardRegistry();
 
-            Collections.sort(players, TopRegistry.INSTANCE.getComparator(stat));
+        for(StatBase stat : leaderboardRegistry.getRegistred())
+        {
+            InfoPage thisTop = topsPage.getSub(stat.statId).setTitle(leaderboardRegistry.getName(stat));
+
+            Collections.sort(players, leaderboardRegistry.getComparator(stat));
 
             int size = Math.min(players.size(), 250);
 
@@ -106,7 +109,7 @@ public class ServerInfoFile extends InfoPage
             {
                 IForgePlayer p = players.get(j);
                 Object data = null;
-                TopRegistry.DataSupplier dataSupplier = TopRegistry.INSTANCE.getDataSuppier(stat);
+                ILeaderboardDataProvider dataSupplier = leaderboardRegistry.getDataProvider(stat);
 
                 if(dataSupplier != null)
                 {
@@ -171,10 +174,12 @@ public class ServerInfoFile extends InfoPage
                         }
                     }
 
-                    if(c instanceof ICustomCommandInfo)
+                    if(c instanceof ITreeCommand)
                     {
                         List<ITextComponent> list = new ArrayList<>();
-                        ((ICustomCommandInfo) c).addInfo(server, self.getPlayer(), list);
+                        list.add(new TextComponentString('/' + c.getCommandName()));
+                        list.add(null);
+                        addCommandUsage(server, self.getPlayer(), list, 0, (ITreeCommand) c);
 
                         for(ITextComponent c1 : list)
                         {
@@ -227,7 +232,7 @@ public class ServerInfoFile extends InfoPage
         page = getSub("warps").setTitle(new TextComponentString("Warps")); //TODO: LANG
         ITextComponent t;
 
-        for(String s : FTBUWorldData.getW(self.getUniverse()).toMP().listWarps())
+        for(String s : FTBUUniverseData.get(self.getUniverse()).listWarps())
         {
             t = new TextComponentString(s);
             t.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb warp " + s));
@@ -245,5 +250,40 @@ public class ServerInfoFile extends InfoPage
 
         cleanup();
         sortAll();
+    }
+
+    private void addCommandUsage(MinecraftServer server, ICommandSender sender, List<ITextComponent> list, int level, ITreeCommand treeCommand)
+    {
+        for(ICommand c : treeCommand.getSubCommands())
+        {
+            if(c instanceof ITreeCommand)
+            {
+                list.add(tree(new TextComponentString('/' + c.getCommandName()), level));
+                addCommandUsage(server, sender, list, level + 1, (ITreeCommand) c);
+            }
+            else
+            {
+                String usage = c.getCommandUsage(sender);
+                if(usage.indexOf('/') != -1 || usage.indexOf('%') != -1)
+                {
+                    list.add(tree(new TextComponentString(usage), level));
+                }
+                else
+                {
+                    list.add(tree(new TextComponentTranslation(usage), level));
+                }
+            }
+        }
+    }
+
+    private ITextComponent tree(ITextComponent sibling, int level)
+    {
+        if(level == 0)
+        {
+            return sibling;
+        }
+        char[] chars = new char[level * 2];
+        Arrays.fill(chars, ' ');
+        return new TextComponentString(new String(chars)).appendSibling(sibling);
     }
 }

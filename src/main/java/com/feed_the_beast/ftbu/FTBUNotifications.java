@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api_impl.Notification;
-import com.feed_the_beast.ftbu.world.chunks.ClaimedChunk;
+import com.feed_the_beast.ftbu.api.FTBULang;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -38,7 +38,7 @@ public class FTBUNotifications
     {
         if(team == null)
         {
-            ITextComponent msg = ClaimedChunk.LANG_WILDERNESS.textComponent();
+            ITextComponent msg = FTBULang.CHUNKTYPE_WILDERNESS.textComponent();
             msg.getStyle().setBold(true);
 
             Notification n = new Notification(CHUNK_CHANGED);

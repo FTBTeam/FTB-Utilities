@@ -1,3 +1,3 @@
 @javax.annotation.ParametersAreNonnullByDefault
 @mcp.MethodsReturnNonnullByDefault
-package com.feed_the_beast.ftbu.world.data;
+package com.feed_the_beast.ftbu.dims.mining_dim;

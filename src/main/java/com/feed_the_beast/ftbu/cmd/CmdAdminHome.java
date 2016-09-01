@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandSubBase;
-import com.feed_the_beast.ftbu.FTBULang;
-import com.feed_the_beast.ftbu.world.data.FTBUPlayerData;
+import com.feed_the_beast.ftbl.api.cmd.CommandTreeBase;
+import com.feed_the_beast.ftbu.api.FTBULang;
+import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.latmod.lib.math.BlockDimPos;
 import com.latmod.lib.util.LMDimUtils;
 import com.latmod.lib.util.LMStringUtils;
@@ -13,7 +13,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 
-public class CmdAdminHome extends CommandSubBase
+public class CmdAdminHome extends CommandTreeBase
 {
     public static class CmdTP extends CommandLM
     {

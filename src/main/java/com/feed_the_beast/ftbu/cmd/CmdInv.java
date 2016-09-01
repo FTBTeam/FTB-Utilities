@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandSubBase;
+import com.feed_the_beast.ftbl.api.cmd.CommandTreeBase;
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.latmod.lib.util.LMNBTUtils;
@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.Loader;
 
 import java.io.File;
 
-public class CmdInv extends CommandSubBase
+public class CmdInv extends CommandTreeBase
 {
     public static class CmdView extends CommandLM
     {

@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbu.config;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.config.ConfigFile;
 import com.feed_the_beast.ftbl.util.FTBLib;
+import com.feed_the_beast.ftbu.dims.FTBUDimConfig;
 import net.minecraft.util.text.TextComponentString;
 
 import java.io.File;
@@ -24,5 +25,7 @@ public class FTBUConfig // FTBU
 
         FTBLibAPI.get().getRegistries().configFiles().register("ftbu", configFile);
         configFile.load();
+
+        FTBUDimConfig.load();
     }
 }

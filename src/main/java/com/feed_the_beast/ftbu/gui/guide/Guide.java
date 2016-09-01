@@ -83,18 +83,29 @@ public abstract class Guide implements IStringSerializable, IJsonSerializable
 
         l = new ArrayList<>();
 
-        for(JsonElement e : o.get("guide_authors").getAsJsonArray())
+        if(o.has("guide_authors"))
         {
-            l.add(e.getAsString());
+            for(JsonElement e : o.get("guide_authors").getAsJsonArray())
+            {
+                l.add(e.getAsString());
+            }
         }
 
         guideAuthors = Collections.unmodifiableList(l);
 
         l = new ArrayList<>();
 
-        for(JsonElement e : o.get("modes").getAsJsonArray())
+        if(o.has("modes"))
         {
-            l.add(e.getAsString());
+            for(JsonElement e : o.get("modes").getAsJsonArray())
+            {
+                l.add(e.getAsString());
+            }
+        }
+
+        if(l.isEmpty())
+        {
+            l.add("common");
         }
 
         modes = Collections.unmodifiableList(l);

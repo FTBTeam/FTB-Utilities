@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbu.gui.guide.local;
 import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
+import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.gui.guide.GuideRepoList;
 import com.feed_the_beast.ftbu.gui.guide.GuideType;
 import com.google.gson.JsonElement;
@@ -36,23 +37,10 @@ public class LocalGuideRepoList extends GuideRepoList
     {
         List<LocalGuide> guides = new ArrayList<>();
 
+        FTBLib.DEV_LOGGER.info("Reloading guides...");
+
         for(String domain : Minecraft.getMinecraft().getResourceManager().getResourceDomains())
         {
-            System.out.print(domain + ": ");
-
-            try
-            {
-                for(IResource resource : Minecraft.getMinecraft().getResourceManager().getAllResources(new ResourceLocation(domain, "guide/")))
-                {
-                    System.out.print(resource.getResourceLocation() + ", ");
-                }
-            }
-            catch(Exception ex)
-            {
-            }
-
-            System.out.println();
-
             try
             {
                 IResource resource = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(domain, "guide/info.json"));
@@ -65,6 +53,8 @@ public class LocalGuideRepoList extends GuideRepoList
                     g.fromJson(infoFile);
                     guides.add(g);
                 }
+
+                FTBLib.DEV_LOGGER.info("Guide found in domain '" + domain + "'");
             }
             catch(Exception ex)
             {

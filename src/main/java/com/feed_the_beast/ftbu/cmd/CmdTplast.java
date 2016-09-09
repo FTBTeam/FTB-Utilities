@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.latmod.lib.math.BlockDimPos;
 import com.latmod.lib.math.EntityDimPos;
-import com.latmod.lib.util.LMDimUtils;
+import com.latmod.lib.util.LMServerUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -43,7 +43,7 @@ public class CmdTplast extends CommandLM
             double x = parseDouble(ep.posX, args[0], -30000000, 30000000, true);
             double y = parseDouble(ep.posY, args[1], -30000000, 30000000, true);
             double z = parseDouble(ep.posZ, args[2], -30000000, 30000000, true);
-            LMDimUtils.teleportPlayer(ep, new Vec3d(x, y, z), ep.dimension);
+            LMServerUtils.teleportPlayer(ep, new Vec3d(x, y, z), ep.dimension);
             return;
         }
 
@@ -77,6 +77,6 @@ public class CmdTplast extends CommandLM
             throw FTBLibLang.RAW.commandError("No last position!");
         }
 
-        LMDimUtils.teleportPlayer(who, p);
+        LMServerUtils.teleportPlayer(who, p);
     }
 }

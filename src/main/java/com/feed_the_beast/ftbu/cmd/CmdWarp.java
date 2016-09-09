@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import com.latmod.lib.math.BlockDimPos;
-import com.latmod.lib.util.LMDimUtils;
+import com.latmod.lib.util.LMServerUtils;
 import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -68,7 +68,8 @@ public class CmdWarp extends CommandLM
         {
             throw FTBULang.WARP_NOT_SET.commandError(args[0]);
         }
-        LMDimUtils.teleportPlayer(ep, p);
+
+        LMServerUtils.teleportPlayer(ep, p);
         FTBULang.WARP_TP.printChat(ics, args[0]);
     }
 }

@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
-import com.latmod.lib.util.LMDimUtils;
+import com.latmod.lib.util.LMServerUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -39,7 +39,7 @@ public class CmdBack extends CommandLM
                 throw FTBULang.WARP_NO_DP.commandError();
             }
 
-            LMDimUtils.teleportPlayer(ep, d.lastDeath);
+            LMServerUtils.teleportPlayer(ep, d.lastDeath);
             //TODO: Add config for infinite times
             d.lastDeath = null;
         }

@@ -5,7 +5,6 @@ import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbu.client.CachedClientData;
 import com.latmod.lib.math.ChunkDimPos;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -105,7 +104,7 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
     }
 
     @Override
-    public void onMessage(MessageAreaUpdate m, Minecraft mc)
+    public void onMessage(MessageAreaUpdate m)
     {
         //FTBUWorldDataSP.setTypes(m.types);
     }

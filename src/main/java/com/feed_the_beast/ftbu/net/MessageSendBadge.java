@@ -5,9 +5,6 @@ import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbu.client.CachedClientData;
 import com.latmod.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.UUID;
 
@@ -47,8 +44,7 @@ public class MessageSendBadge extends MessageToClient<MessageSendBadge>
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void onMessage(MessageSendBadge m, Minecraft ctx)
+    public void onMessage(MessageSendBadge m)
     {
         CachedClientData.LOCAL_BADGES.badgePlayerMap.put(m.playerID, CachedClientData.LOCAL_BADGES.badgeMap.get(m.badgeID));
     }

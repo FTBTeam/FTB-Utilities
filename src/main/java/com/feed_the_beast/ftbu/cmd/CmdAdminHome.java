@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.cmd.CommandTreeBase;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.latmod.lib.math.BlockDimPos;
-import com.latmod.lib.util.LMDimUtils;
+import com.latmod.lib.util.LMServerUtils;
 import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -40,7 +40,7 @@ public class CmdAdminHome extends CommandTreeBase
 
             if(pos != null)
             {
-                LMDimUtils.teleportPlayer(ep, pos);
+                LMServerUtils.teleportPlayer(ep, pos);
                 FTBULang.WARP_TP.printChat(sender, args[1]);
             }
 

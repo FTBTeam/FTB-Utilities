@@ -1,15 +1,15 @@
 package com.feed_the_beast.ftbu.gui.guide.local;
 
+import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
+import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
+import com.feed_the_beast.ftbl.api.info.impl.SpecialInfoButton;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.feed_the_beast.ftbl.gui.GuiLoading;
 import com.feed_the_beast.ftbu.gui.guide.online.InfoPageOnlineGuideRepoList;
 import com.feed_the_beast.ftbu.gui.guide.online.OnlineGuideRepoList;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -29,7 +29,7 @@ public class InfoPageLocalGuideRepoList extends InfoPage
 
         if(cachedGui == null)
         {
-            GuiLM.playClickSound();
+            GuiHelper.playClickSound();
             new GuiLoading()
             {
                 private InfoPageLocalGuideRepoList infoPage;
@@ -57,14 +57,14 @@ public class InfoPageLocalGuideRepoList extends InfoPage
     }
 
     @Override
-    public ButtonLM createSpecialButton(GuiInfo gui)
+    public ISpecialInfoButton createSpecialButton(GuiInfo gui)
     {
-        return new ButtonLM(0, 0, 16, 16, "Browse Guides") //TODO: Lang
+        return new SpecialInfoButton("Browse Guides", GuiIcons.GLOBE) //TODO: Lang
         {
             @Override
-            public void onClicked(GuiLM gui, IMouseButton b)
+            public void onClicked(IMouseButton b)
             {
-                GuiLM.playClickSound();
+                GuiHelper.playClickSound();
                 new GuiLoading()
                 {
                     private InfoPageOnlineGuideRepoList infoPage;
@@ -82,14 +82,6 @@ public class InfoPageLocalGuideRepoList extends InfoPage
                         new GuiInfo(infoPage).openGui();
                     }
                 }.openGui();
-            }
-
-            @Override
-            public void renderWidget(GuiLM gui)
-            {
-                GlStateManager.enableTexture2D();
-                GlStateManager.color(1F, 1F, 1F, 1F);
-                render(GuiIcons.GLOBE);
             }
         };
     }

@@ -1,9 +1,11 @@
 package com.feed_the_beast.ftbu.gui;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
+import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.GuiLang;
+import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.PanelLM;
@@ -52,14 +54,14 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         private MapButton(int x, int y, int i)
         {
             super(x, y, 16, 16);
-            posX += (i % TILES_GUI) * width;
-            posY += (i / TILES_GUI) * height;
+            posX += (i % TILES_GUI) * getWidth();
+            posY += (i / TILES_GUI) * getHeight();
             chunkPos = new ChunkDimPos(startX + (i % TILES_GUI), startZ + (i / TILES_GUI), currentDim);
             chunkData = CachedClientData.CHUNKS.get(chunkPos);
         }
 
         @Override
-        public void onClicked(GuiLM gui, IMouseButton button)
+        public void onClicked(IGui gui, IMouseButton button)
         {
             if(gui.isMouseOver(panelButtons))
             {
@@ -89,11 +91,11 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
                 }
             }
 
-            GuiLM.playClickSound();
+            GuiHelper.playClickSound();
         }
 
         @Override
-        public void addMouseOverText(GuiLM gui, List<String> l)
+        public void addMouseOverText(IGui gui, List<String> l)
         {
             if(chunkData != null)
             {
@@ -121,7 +123,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         }
 
         @Override
-        public void renderWidget(GuiLM gui)
+        public void renderWidget(IGui gui)
         {
             int ax = getAX();
             int ay = getAY();
@@ -139,16 +141,16 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
                     GlStateManager.color(0F, 0F, 0F, 180F / 255F);
                 }
 
-                drawTexturedRect(ax, ay, 16, 16, TEX_FILLED.getMinU(), TEX_FILLED.getMinV(), TEX_FILLED.getMaxU(), TEX_FILLED.getMaxV());
+                GuiHelper.drawTexturedRect(ax, ay, 16, 16, TEX_FILLED.getMinU(), TEX_FILLED.getMinV(), TEX_FILLED.getMaxU(), TEX_FILLED.getMaxV());
 
                 //GlStateManager.color((chunk.loaded && team != null && team.getStatus(ForgeWorldSP.inst.clientPlayer).isAlly()) ? 1F : 0F, chunk.isChunkOwner(ForgeWorldSP.inst.clientPlayer) ? 0.27F : 0F, 0F, 0.78F);
-                drawTexturedRect(ax, ay, 16, 16, TEX_BORDER.getMinU(), TEX_BORDER.getMinV(), TEX_BORDER.getMaxU(), TEX_BORDER.getMaxV());
+                GuiHelper.drawTexturedRect(ax, ay, 16, 16, TEX_BORDER.getMinU(), TEX_BORDER.getMinV(), TEX_BORDER.getMaxU(), TEX_BORDER.getMaxV());
             }
 
             if(gui.isMouseOver(this))
             {
                 GlStateManager.color(1F, 1F, 1F, 0.27F);
-                drawBlankRect(ax, ay, 16, 16);
+                GuiHelper.drawBlankRect(ax, ay, 16, 16);
                 GlStateManager.color(1F, 1F, 1F, 1F);
             }
         }
@@ -175,9 +177,9 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         buttonClose = new ButtonLM(0, 0, 16, 16, GuiLang.BUTTON_CLOSE.translate())
         {
             @Override
-            public void onClicked(GuiLM gui, IMouseButton button)
+            public void onClicked(IGui gui, IMouseButton button)
             {
-                GuiLM.playClickSound();
+                GuiHelper.playClickSound();
                 closeGui();
             }
         };
@@ -185,27 +187,27 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         buttonRefresh = new ButtonLM(0, 16, 16, 16, GuiLang.BUTTON_REFRESH.translate())
         {
             @Override
-            public void onClicked(GuiLM gui, IMouseButton button)
+            public void onClicked(IGui gui, IMouseButton button)
             {
                 thread = new ThreadReloadArea(mc.theWorld, GuiClaimChunks.this);
                 thread.start();
                 new MessageAreaRequest(startX, startZ, TILES_GUI, TILES_GUI).sendToServer();
-                GuiLM.playClickSound();
+                GuiHelper.playClickSound();
             }
         };
 
         buttonUnclaimAll = new ButtonLM(0, 32, 16, 16)
         {
             @Override
-            public void onClicked(GuiLM gui, IMouseButton button)
+            public void onClicked(IGui gui, IMouseButton button)
             {
-                GuiLM.playClickSound();
+                GuiHelper.playClickSound();
                 String s = GuiScreen.isShiftKeyDown() ? FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_Q.translate() : FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_DIM_Q.translate(currentDimName);
                 Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo(GuiClaimChunks.this, s, "", GuiScreen.isShiftKeyDown() ? 1 : 0));
             }
 
             @Override
-            public void addMouseOverText(GuiLM gui, List<String> l)
+            public void addMouseOverText(IGui gui, List<String> l)
             {
                 l.add(GuiScreen.isShiftKeyDown() ? FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL.translate() : FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_DIM.translate(currentDimName));
             }
@@ -220,13 +222,13 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
                 add(buttonRefresh);
                 add(buttonUnclaimAll);
 
-                height = widgets.size() * 16;
+                setHeight(widgets.size() * 16);
             }
 
             @Override
             public int getAX()
             {
-                return screen.getScaledWidth() - 16;
+                return getScreenWidth() - 16;
             }
 
             @Override
@@ -286,14 +288,14 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         }
 
         GlStateManager.color(0F, 0F, 0F, 1F);
-        drawBlankRect(posX - 2, posY - 2, width + 4, height + 4);
+        GuiHelper.drawBlankRect(posX - 2, posY - 2, getWidth() + 4, getHeight() + 4);
         //drawBlankRect((xSize - 128) / 2, (ySize - 128) / 2, zLevel, 128, 128);
         GlStateManager.color(1F, 1F, 1F, 1F);
 
         if(thread == null)
         {
             GlStateManager.bindTexture(textureID);
-            drawTexturedRect(posX, posY, TILES_GUI * 16, TILES_GUI * 16, 0D, 0D, UV, UV);
+            GuiHelper.drawTexturedRect(posX, posY, TILES_GUI * 16, TILES_GUI * 16, 0D, 0D, UV, UV);
         }
 
         GlStateManager.color(1F, 1F, 1F, 1F);
@@ -320,9 +322,9 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             GlStateManager.rotate(mc.thePlayer.rotationYaw + 180F, 0F, 0F, 1F);
             FTBLibClient.setTexture(TEX_ENTITY);
             GlStateManager.color(1F, 1F, 1F, mc.thePlayer.isSneaking() ? 0.4F : 0.7F);
-            drawTexturedRect(-8, -8, 16, 16, 0D, 0D, 1D, 1D);
+            GuiHelper.drawTexturedRect(-8, -8, 16, 16, 0D, 0D, 1D, 1D);
             GlStateManager.popMatrix();
-            drawPlayerHead(mc.thePlayer.getName(), -2, -2, 4, 4);
+            GuiHelper.drawPlayerHead(mc.thePlayer.getName(), -2, -2, 4, 4);
             GlStateManager.popMatrix();
         }
 
@@ -341,9 +343,9 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         {
             FTBUPlayerDataSP d = FTBUPlayerData.get(ForgeWorldSP.inst.clientPlayer).toSP();
 
-            String s = FTBULang.label_cchunks_count.translateFormatted(d.claimedChunks + " / " + d.maxClaimedChunks);
+            String s = FTBULang.label_cchunks_count.translateFormatted(d.claimedChunks, d.maxClaimedChunks);
             font.drawString(s, screen.getScaledWidth() - font.getStringWidth(s) - 4, screen.getScaledHeight() - 12, 0xFFFFFFFF);
-            s = FTBULang.label_lchunks_count.translateFormatted(d.loadedChunks + " / " + d.maxLoadedChunks);
+            s = FTBULang.label_lchunks_count.translateFormatted(d.loadedChunks, d.maxLoadedChunks);
             font.drawString(s, screen.getScaledWidth() - font.getStringWidth(s) - 4, screen.getScaledHeight() - 24, 0xFFFFFFFF);
         }
         */

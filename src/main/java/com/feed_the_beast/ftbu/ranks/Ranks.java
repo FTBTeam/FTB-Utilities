@@ -4,13 +4,14 @@ import com.feed_the_beast.ftbl.api.permissions.IPermissionHandler;
 import com.feed_the_beast.ftbl.api.permissions.context.IContext;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfig;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
-import com.feed_the_beast.ftbl.util.FTBLib;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.util.LMFileUtils;
 import com.latmod.lib.util.LMJsonUtils;
+import com.latmod.lib.util.LMServerUtils;
 import com.latmod.lib.util.LMStringUtils;
+import com.latmod.lib.util.LMUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.util.text.TextFormatting;
 
@@ -36,8 +37,8 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
 
     Ranks()
     {
-        fileRanks = new File(FTBLib.folderLocal, "ftbu/ranks.json");
-        filePlayers = new File(FTBLib.folderLocal, "ftbu/player_ranks.json");
+        fileRanks = new File(LMUtils.folderLocal, "ftbu/ranks.json");
+        filePlayers = new File(LMUtils.folderLocal, "ftbu/player_ranks.json");
         ADMIN.color = TextFormatting.DARK_GREEN;
         PLAYER.color = TextFormatting.WHITE;
         ADMIN.parent = PLAYER;
@@ -204,7 +205,7 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
                 list.add("");
             }
 
-            LMFileUtils.save(new File(FTBLib.folderLocal, "ftbu/all_permissions.txt"), list);
+            LMFileUtils.save(new File(LMUtils.folderLocal, "ftbu/all_permissions.txt"), list);
         }
         catch(Exception ex)
         {
@@ -247,7 +248,7 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
 
             o.add("ranks", o1);
 
-            LMJsonUtils.toJson(new File(FTBLib.folderLocal, "ftbu/ranks_example.json"), o);
+            LMJsonUtils.toJson(new File(LMUtils.folderLocal, "ftbu/ranks_example.json"), o);
         }
         catch(Exception ex)
         {
@@ -268,7 +269,7 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
             return (r == null) ? defaultRank : r;
         }
 
-        return FTBLib.isOP(profile) ? ADMIN : PLAYER;
+        return LMServerUtils.isOP(profile) ? ADMIN : PLAYER;
     }
 
     public void setRank(UUID player, Rank rank)

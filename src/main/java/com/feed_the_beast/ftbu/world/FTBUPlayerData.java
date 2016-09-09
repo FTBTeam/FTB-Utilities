@@ -7,7 +7,6 @@ import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.latmod.lib.io.Bits;
 import com.latmod.lib.math.BlockDimPos;
-import com.latmod.lib.util.LMNBTUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -74,7 +73,7 @@ public class FTBUPlayerData implements ICapabilitySerializable<NBTTagCompound>
 
             if(tag1 != null && !tag1.hasNoTags())
             {
-                for(String s1 : LMNBTUtils.getMapKeys(tag1))
+                for(String s1 : tag1.getKeySet())
                 {
                     setHome(s1.toLowerCase(), new BlockDimPos(tag1.getIntArray(s1)));
                 }

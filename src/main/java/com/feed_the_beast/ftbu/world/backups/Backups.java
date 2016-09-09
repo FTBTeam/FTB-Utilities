@@ -1,17 +1,19 @@
 package com.feed_the_beast.ftbu.world.backups;
 
-import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.latmod.lib.BroadcastSender;
 import com.latmod.lib.util.LMJsonUtils;
+import com.latmod.lib.util.LMServerUtils;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.server.CommandSaveAll;
 import net.minecraft.command.server.CommandSaveOff;
 import net.minecraft.command.server.CommandSaveOn;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -36,7 +38,7 @@ public enum Backups
 
     public void init()
     {
-        backupsFolder = FTBUConfigBackups.folder.getAsString().isEmpty() ? new File(FTBLib.folderMinecraft, "/backups/") : new File(FTBUConfigBackups.folder.getAsString());
+        backupsFolder = FTBUConfigBackups.folder.getAsString().isEmpty() ? new File(LMUtils.folderMinecraft, "/backups/") : new File(FTBUConfigBackups.folder.getAsString());
         thread = null;
 
         backups.clear();
@@ -108,11 +110,8 @@ public enum Backups
             return false;
         }
 
-        World w = FTBLib.getServerWorld();
-        if(w == null)
-        {
-            return false;
-        }
+        MinecraftServer server = LMServerUtils.getServer();
+        World w = server.getEntityWorld();
 
         ITextComponent c = FTBULang.BACKUP_START.textComponent(ics.getName());
         c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
@@ -122,8 +121,8 @@ public enum Backups
 
         try
         {
-            new CommandSaveOff().execute(FTBLib.getServer(), FTBLib.getServer(), new String[0]);
-            new CommandSaveAll().execute(FTBLib.getServer(), FTBLib.getServer(), new String[0]);
+            new CommandSaveOff().execute(server, server, new String[0]);
+            new CommandSaveAll().execute(server, server, new String[0]);
         }
         catch(Exception ex)
         {
@@ -183,7 +182,8 @@ public enum Backups
     {
         try
         {
-            new CommandSaveOn().execute(FTBLib.getServer(), FTBLib.getServer(), new String[0]);
+            MinecraftServer server = LMServerUtils.getServer();
+            new CommandSaveOn().execute(server, server, new String[0]);
         }
         catch(Exception ex)
         {

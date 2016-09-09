@@ -3,10 +3,10 @@ package com.feed_the_beast.ftbu.cmd;
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandTreeBase;
-import com.feed_the_beast.ftbl.api.item.LMInvUtils;
-import com.feed_the_beast.ftbl.util.FTBLib;
+import com.latmod.lib.util.LMInvUtils;
 import com.latmod.lib.util.LMNBTUtils;
 import com.latmod.lib.util.LMStringUtils;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -74,7 +74,7 @@ public class CmdInv extends CommandTreeBase
         {
             checkArgs(args, 2, "<player> <ID>");
             EntityPlayerMP ep = getPlayer(server, ics, args[0]);
-            File file = new File(FTBLib.folderLocal, "ftbu/playerinvs/" + LMStringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
+            File file = new File(LMUtils.folderLocal, "ftbu/playerinvs/" + LMStringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
 
             try
             {
@@ -90,7 +90,7 @@ public class CmdInv extends CommandTreeBase
             }
             catch(Exception e)
             {
-                if(FTBLib.DEV_ENV)
+                if(LMUtils.DEV_ENV)
                 {
                     e.printStackTrace();
                 }
@@ -143,7 +143,7 @@ public class CmdInv extends CommandTreeBase
         {
             checkArgs(args, 2, "<player> <ID>");
             EntityPlayerMP ep = getPlayer(server, ics, args[0]);
-            File file = new File(FTBLib.folderLocal, "ftbu/playerinvs/" + LMStringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
+            File file = new File(LMUtils.folderLocal, "ftbu/playerinvs/" + LMStringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
 
             try
             {
@@ -158,7 +158,7 @@ public class CmdInv extends CommandTreeBase
             }
             catch(Exception e)
             {
-                if(FTBLib.DEV_ENV)
+                if(LMUtils.DEV_ENV)
                 {
                     e.printStackTrace();
                 }

@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.events.RegisterFTBCommandsEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
-import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.cmd.CmdAdminHome;
@@ -27,6 +26,7 @@ import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import com.feed_the_beast.ftbu.world.ServerInfoFile;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -66,11 +66,7 @@ public class FTBUServerEventHandler
             Ranks.INSTANCE.reload();
 
             FTBUUniverseData.reloadServerBadges();
-
-            if(FTBLib.getServerWorld() != null)
-            {
-                FTBUtilitiesAPI.get().getLoadedChunks().checkUnloaded(null);
-            }
+            FTBUtilitiesAPI.get().getLoadedChunks().checkUnloaded(null);
         }
         else
         {
@@ -108,7 +104,7 @@ public class FTBUServerEventHandler
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onServerChatEvent(ServerChatEvent e)
     {
-        String[] msg = FTBLib.removeFormatting(e.getMessage()).split(" "); // https://github.com/LatvianModder
+        String[] msg = LMUtils.removeFormatting(e.getMessage()).split(" "); // https://github.com/LatvianModder
 
         List<String> links = new ArrayList<>();
 

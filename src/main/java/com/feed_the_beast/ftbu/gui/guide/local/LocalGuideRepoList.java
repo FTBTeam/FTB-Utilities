@@ -3,12 +3,12 @@ package com.feed_the_beast.ftbu.gui.guide.local;
 import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
-import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.gui.guide.GuideRepoList;
 import com.feed_the_beast.ftbu.gui.guide.GuideType;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.latmod.lib.util.LMJsonUtils;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
@@ -37,7 +37,7 @@ public class LocalGuideRepoList extends GuideRepoList
     {
         List<LocalGuide> guides = new ArrayList<>();
 
-        FTBLib.DEV_LOGGER.info("Reloading guides...");
+        LMUtils.DEV_LOGGER.info("Reloading guides...");
 
         for(String domain : Minecraft.getMinecraft().getResourceManager().getResourceDomains())
         {
@@ -54,7 +54,7 @@ public class LocalGuideRepoList extends GuideRepoList
                     guides.add(g);
                 }
 
-                FTBLib.DEV_LOGGER.info("Guide found in domain '" + domain + "'");
+                LMUtils.DEV_LOGGER.info("Guide found in domain '" + domain + "'");
             }
             catch(Exception ex)
             {
@@ -77,6 +77,4 @@ public class LocalGuideRepoList extends GuideRepoList
             infoPage.addSub(page);
         }
     }
-
-
 }

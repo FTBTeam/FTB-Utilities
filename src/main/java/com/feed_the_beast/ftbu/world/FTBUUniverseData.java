@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbu.world;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IUniverse;
-import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUNotifications;
@@ -27,8 +26,9 @@ import com.latmod.lib.math.BlockDimPos;
 import com.latmod.lib.math.ChunkDimPos;
 import com.latmod.lib.math.MathHelperLM;
 import com.latmod.lib.util.LMJsonUtils;
-import com.latmod.lib.util.LMNBTUtils;
+import com.latmod.lib.util.LMServerUtils;
 import com.latmod.lib.util.LMStringUtils;
+import com.latmod.lib.util.LMUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -117,7 +117,7 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
         try
         {
             LOCAL_BADGES.clear();
-            LOCAL_BADGES.loadBadges(LMJsonUtils.fromJson(new File(FTBLib.folderLocal, "ftbu/badges.json")));
+            LOCAL_BADGES.loadBadges(LMJsonUtils.fromJson(new File(LMUtils.folderLocal, "ftbu/badges.json")));
         }
         catch(Exception ex)
         {
@@ -127,9 +127,9 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
 
     public static boolean isInSpawn(ChunkDimPos pos)
     {
-        MinecraftServer server = FTBLib.getServer();
+        MinecraftServer server = LMServerUtils.getServer();
 
-        if(server == null || pos.dim != 0 || (!server.isDedicatedServer() && !FTBUConfigWorld.spawn_area_in_sp.getAsBoolean()))
+        if(pos.dim != 0 || (!server.isDedicatedServer() && !FTBUConfigWorld.spawn_area_in_sp.getAsBoolean()))
         {
             return false;
         }
@@ -400,7 +400,7 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
 
             if(tag1 != null && !tag1.hasNoTags())
             {
-                for(String s1 : LMNBTUtils.getMapKeys(tag1))
+                for(String s1 : tag1.getKeySet())
                 {
                     setWarp(s1.toLowerCase(), new BlockDimPos(tag1.getIntArray(s1)));
                 }
@@ -444,7 +444,7 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
 
         if(Backups.INSTANCE.nextBackup > 0L && Backups.INSTANCE.nextBackup <= now)
         {
-            Backups.INSTANCE.run(FTBLib.getServer());
+            Backups.INSTANCE.run(LMServerUtils.getServer());
         }
 
         if(nextChunkloaderUpdate < now)

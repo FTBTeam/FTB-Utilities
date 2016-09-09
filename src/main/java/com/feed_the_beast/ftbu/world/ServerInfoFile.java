@@ -7,7 +7,6 @@ import com.feed_the_beast.ftbl.api.cmd.ITreeCommand;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.api.permissions.context.PlayerContext;
-import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.FTBUTops;
 import com.feed_the_beast.ftbu.api.EventFTBUServerInfo;
@@ -18,7 +17,9 @@ import com.feed_the_beast.ftbu.api.ILeaderboardRegistry;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.world.backups.Backups;
+import com.latmod.lib.util.LMServerUtils;
 import com.latmod.lib.util.LMStringUtils;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -63,7 +64,7 @@ public class ServerInfoFile extends InfoPage
         super(CachedInfo.main.getName());
         setTitle(CachedInfo.main.getTitle());
 
-        MinecraftServer server = FTBLib.getServer();
+        MinecraftServer server = LMServerUtils.getServer();
 
         boolean isDedi = server.isDedicatedServer();
         boolean isOP = !isDedi || PermissionAPI.hasPermission(self.getProfile(), FTBUPermissions.DISPLAY_ADMIN_INFO, false, new PlayerContext(self.getPlayer()));
@@ -145,7 +146,7 @@ public class ServerInfoFile extends InfoPage
                 }
                 if(data instanceof ITextComponent)
                 {
-                    c.appendSibling(FTBLib.getChatComponent(data));
+                    c.appendSibling(LMServerUtils.getChatComponent(data));
                 }
 
                 thisTop.println(c);
@@ -159,7 +160,7 @@ public class ServerInfoFile extends InfoPage
 
         try
         {
-            for(ICommand c : FTBLib.getAllCommands(server, self.getPlayer()))
+            for(ICommand c : LMServerUtils.getAllCommands(server, self.getPlayer()))
             {
                 try
                 {
@@ -217,7 +218,7 @@ public class ServerInfoFile extends InfoPage
                     cc.getStyle().setColor(TextFormatting.DARK_RED);
                     page.getSub('/' + c.getCommandName()).setTitle(cc).println("Errored");
 
-                    if(FTBLib.DEV_ENV)
+                    if(LMUtils.DEV_ENV)
                     {
                         ex1.printStackTrace();
                     }

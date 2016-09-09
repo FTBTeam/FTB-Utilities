@@ -9,7 +9,7 @@ import com.feed_the_beast.ftbu.dims.mining_dim.DimConfigMining;
 import com.feed_the_beast.ftbu.dims.void_dim.DimConfigVoid;
 import com.latmod.lib.EnumNameMap;
 import com.latmod.lib.math.BlockDimPos;
-import com.latmod.lib.util.LMDimUtils;
+import com.latmod.lib.util.LMServerUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -99,7 +99,7 @@ public class CmdSpawn extends CommandLM
             spawnpoint = spawnpoint.up(2);
         }
 
-        LMDimUtils.teleportPlayer(player, new BlockDimPos(spawnpoint, ed.getDimension()));
+        LMServerUtils.teleportPlayer(player, new BlockDimPos(spawnpoint, ed.getDimension()));
         FTBULang.WARP_SPAWN.printChat(ics);
     }
 }

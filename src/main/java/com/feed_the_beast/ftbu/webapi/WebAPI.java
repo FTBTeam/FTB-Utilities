@@ -10,7 +10,6 @@ import com.latmod.lib.util.LMJsonUtils;
 import net.minecraft.stats.StatList;
 import net.minecraft.stats.StatisticsManagerServer;
 
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -26,30 +25,6 @@ public class WebAPI extends Thread
     private WebAPI()
     {
         super("FTBU_WebAPI");
-    }
-
-    public static String readArgs(InputStream is) throws Exception
-    {
-        if(is != null)
-        {
-            int a = is.available();
-
-            if(a <= 0)
-            {
-                return Integer.toString(a);
-            }
-
-            StringBuilder sb = new StringBuilder();
-
-            for(int i = 0; i < a; i++)
-            {
-                sb.append((char) is.read());
-            }
-
-            return sb.toString();
-        }
-
-        return null;
     }
 
     @Override

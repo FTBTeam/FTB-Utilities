@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ public class CmdOverride implements ICommand
     }
 
     @Override
-    public String getCommandUsage(ICommandSender p_71518_1_)
+    public String getCommandUsage(ICommandSender sender)
     {
         return parent.getCommandName();
     }
@@ -41,34 +42,34 @@ public class CmdOverride implements ICommand
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        parent.execute(server, ics, args);
+        parent.execute(server, sender, args);
     }
 
     @Override
-    public boolean checkPermission(MinecraftServer server, ICommandSender ics)
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender)
     {
         LMUtils.DEV_LOGGER.info("FTBU: Checking permission for " + parent.getCommandName());
-        if(ics instanceof EntityPlayerMP)
+        if(sender instanceof EntityPlayerMP)
         {
-            Rank r = Ranks.INSTANCE.getRankOf(((EntityPlayerMP) ics).getGameProfile());
-            return r.allowCommand(server, ics, parent);
+            Rank r = Ranks.INSTANCE.getRankOf(((EntityPlayerMP) sender).getGameProfile());
+            return r.allowCommand(server, sender, parent);
         }
 
-        return parent.checkPermission(server, ics);
+        return parent.checkPermission(server, sender);
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
-        return parent.getTabCompletionOptions(server, ics, args, pos);
+        return parent.getTabCompletionOptions(server, sender, args, pos);
     }
 
     @Override
-    public boolean isUsernameIndex(String[] args, int i)
+    public boolean isUsernameIndex(String[] args, int index)
     {
-        return parent.isUsernameIndex(args, i);
+        return parent.isUsernameIndex(args, index);
     }
 
     @Override

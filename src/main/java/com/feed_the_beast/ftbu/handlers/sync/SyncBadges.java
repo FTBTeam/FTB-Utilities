@@ -1,18 +1,20 @@
 package com.feed_the_beast.ftbu.handlers.sync;
 
+import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.client.CachedClientData;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.INBTSerializable;
 
 /**
  * Created by LatvianModder on 17.08.2016.
  */
-public class SyncBadges implements INBTSerializable<NBTTagCompound>
+public class SyncBadges implements ISyncData
 {
     @Override
-    public NBTTagCompound serializeNBT()
+    public NBTTagCompound writeSyncData(EntityPlayerMP player, IForgePlayer forgePlayer)
     {
         NBTTagCompound nbt = new NBTTagCompound();
 
@@ -25,7 +27,7 @@ public class SyncBadges implements INBTSerializable<NBTTagCompound>
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt)
+    public void readSyncData(NBTTagCompound nbt)
     {
         CachedClientData.LOCAL_BADGES.clear();
         CachedClientData.LOCAL_BADGES.copyFrom(CachedClientData.GLOBAL_BADGES);

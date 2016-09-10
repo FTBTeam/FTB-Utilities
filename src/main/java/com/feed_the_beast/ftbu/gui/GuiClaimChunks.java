@@ -22,7 +22,10 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
@@ -306,6 +309,33 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         {
             mapButton.renderWidget(this);
         }
+
+        GlStateManager.disableTexture2D();
+        GlStateManager.glLineWidth(1F);
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        int gridR = 128, gridG = 128, gridB = 128, gridA = 50;
+
+        Tessellator tessellator = Tessellator.getInstance();
+        VertexBuffer buffer = tessellator.getBuffer();
+        buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+
+        int gridX = mapButtons[0].getAX();
+        int gridY = mapButtons[0].getAY();
+
+        for(int x = 0; x <= TILES_GUI; x++)
+        {
+            buffer.pos(gridX + x * 16, gridY, 0D).color(gridR, gridG, gridB, gridA).endVertex();
+            buffer.pos(gridX + x * 16, gridY + TILES_GUI * 16, 0D).color(gridR, gridG, gridB, gridA).endVertex();
+        }
+
+        for(int y = 0; y <= TILES_GUI; y++)
+        {
+            buffer.pos(gridX, gridY + y * 16, 0D).color(gridR, gridG, gridB, gridA).endVertex();
+            buffer.pos(gridX + TILES_GUI * 16, gridY + y * 16, 0D).color(gridR, gridG, gridB, gridA).endVertex();
+        }
+
+        tessellator.draw();
+        GlStateManager.enableTexture2D();
 
         int cx = MathHelperLM.chunk(mc.thePlayer.posX);
         int cy = MathHelperLM.chunk(mc.thePlayer.posZ);

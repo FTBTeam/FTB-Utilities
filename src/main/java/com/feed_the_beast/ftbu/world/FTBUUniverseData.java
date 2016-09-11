@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
+import com.feed_the_beast.ftbu.api.events.ModifyChunkEvent;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.badges.BadgeStorage;
@@ -40,6 +41,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.Constants;
@@ -236,6 +238,7 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
         }
 
         FTBUtilitiesAPI.get().getClaimedChunks().setOwner(pos, player);
+        MinecraftForge.EVENT_BUS.post(new ModifyChunkEvent.Claimed(pos, player));
         return true;
     }
 
@@ -246,6 +249,7 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
         if(chunkOwner != null && chunkOwner.equalsPlayer(player))
         {
             setLoaded(player, pos, false);
+            MinecraftForge.EVENT_BUS.post(new ModifyChunkEvent.Unclaimed(pos, player));
             FTBUtilitiesAPI.get().getClaimedChunks().setOwner(pos, null);
             return true;
         }
@@ -255,12 +259,13 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
 
     public static void unclaimAllChunks(IForgePlayer player, @Nullable Integer dim)
     {
-        for(ChunkDimPos chunk : FTBUtilitiesAPI.get().getClaimedChunks().getChunks(player))
+        for(ChunkDimPos pos : FTBUtilitiesAPI.get().getClaimedChunks().getChunks(player))
         {
-            if(dim == null || dim.intValue() == chunk.dim)
+            if(dim == null || dim.intValue() == pos.dim)
             {
-                setLoaded(player, chunk, false);
-                FTBUtilitiesAPI.get().getClaimedChunks().setOwner(chunk, null);
+                setLoaded(player, pos, false);
+                MinecraftForge.EVENT_BUS.post(new ModifyChunkEvent.Unclaimed(pos, player));
+                FTBUtilitiesAPI.get().getClaimedChunks().setOwner(pos, null);
             }
         }
     }
@@ -295,8 +300,18 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
                 }
             }
 
+            if(!flag)
+            {
+                MinecraftForge.EVENT_BUS.post(new ModifyChunkEvent.Unloaded(pos, player));
+            }
+
             FTBUtilitiesAPI.get().getLoadedChunks().setLoaded(pos, flag ? player : null);
             FTBUtilitiesAPI.get().getLoadedChunks().checkUnloaded(pos.dim);
+
+            if(flag)
+            {
+                MinecraftForge.EVENT_BUS.post(new ModifyChunkEvent.Loaded(pos, player));
+            }
 
             if(player.getPlayer() != null)
             {
@@ -307,32 +322,6 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
         }
 
         return false;
-    }
-
-    public static boolean canInteract(IForgePlayer owner, IForgePlayer player, boolean leftClick, BlockPos blockPos)
-    {
-        if(owner.equalsPlayer(player))
-        {
-            return true;
-        }
-        else if(owner.getTeam() == null)
-        {
-            return true;
-        }
-        else if(player.isFake())
-        {
-            return FTBUTeamData.get(owner.getTeam()).allowFakePlayers();
-        }
-        /*else if(p.isOnline() && PermissionAPI.hasPermission(p.getProfile(), FTBLibPermissions.INTERACT_SECURE, false, new Context(p.getPlayer(), pos)))
-        {
-            return true;
-        }*/
-        else if(player.isOnline() && player.getPlayer().capabilities.isCreativeMode)
-        {
-            return true;
-        }
-
-        return owner.getTeam().getStatus(player).isAlly();
     }
 
     public void onLoaded()

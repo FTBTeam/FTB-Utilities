@@ -3,11 +3,16 @@ package com.feed_the_beast.ftbu.api_impl;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunkStorage;
 import com.feed_the_beast.ftbu.world.FTBUTeamData;
+import com.google.gson.JsonElement;
+import com.latmod.lib.math.BlockDimPos;
 import com.latmod.lib.math.ChunkDimPos;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -97,14 +102,27 @@ public class ClaimedChunkStorage implements IClaimedChunkStorage
     }
 
     @Override
-    public boolean canPlayerInteract(EntityPlayerMP entityPlayer, ChunkDimPos pos, IMouseButton button)
+    public boolean canPlayerInteract(EntityPlayerMP entityPlayer, BlockPos pos, IMouseButton button)
     {
         if(entityPlayer.capabilities.isCreativeMode)
         {
             return true;
         }
 
-        IForgePlayer owner = getChunkOwner(pos);
+        if(button.isLeft())
+        {
+            for(JsonElement e : FTBUPermissions.CLAIMS_BREAK_WHITELIST.getJson(entityPlayer.getGameProfile()).getAsJsonArray())
+            {
+                if(e.getAsString().equals(Block.REGISTRY.getNameForObject(entityPlayer.worldObj.getBlockState(pos).getBlock()).toString()))
+                {
+                    return true;
+                }
+            }
+        }
+
+        ChunkDimPos chunkDimPos = new BlockDimPos(pos, entityPlayer.dimension).toChunkPos();
+
+        IForgePlayer owner = getChunkOwner(chunkDimPos);
 
         if(owner == null)
         {

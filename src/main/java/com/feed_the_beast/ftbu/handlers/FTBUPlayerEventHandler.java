@@ -13,19 +13,15 @@ import com.feed_the_beast.ftbl.api_impl.MouseButton;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUNotifications;
-import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.config.FTBUConfigLogin;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import com.google.common.base.Objects;
-import com.google.gson.JsonElement;
-import com.latmod.lib.math.BlockDimPos;
 import com.latmod.lib.math.ChunkDimPos;
 import com.latmod.lib.math.EntityDimPos;
 import com.latmod.lib.util.LMInvUtils;
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -209,7 +205,7 @@ public class FTBUPlayerEventHandler
         if(event.getEntityPlayer() instanceof EntityPlayerMP)
         {
             EntityPlayerMP player = (EntityPlayerMP) event.getEntityPlayer();
-            if(!FTBUtilitiesAPI.get().getClaimedChunks().canPlayerInteract(player, new BlockDimPos(event.getPos(), player.dimension).toChunkPos(), MouseButton.RIGHT))
+            if(!FTBUtilitiesAPI.get().getClaimedChunks().canPlayerInteract(player, event.getPos(), MouseButton.RIGHT))
             {
                 event.setCanceled(true);
             }
@@ -227,16 +223,8 @@ public class FTBUPlayerEventHandler
         if(event.getPlayer() instanceof EntityPlayerMP)
         {
             EntityPlayerMP player = (EntityPlayerMP) event.getPlayer();
-            if(!FTBUtilitiesAPI.get().getClaimedChunks().canPlayerInteract(player, new BlockDimPos(event.getPos(), player.dimension).toChunkPos(), MouseButton.LEFT))
+            if(!FTBUtilitiesAPI.get().getClaimedChunks().canPlayerInteract(player, event.getPos(), MouseButton.LEFT))
             {
-                for(JsonElement e : FTBUPermissions.CLAIMS_BREAK_WHITELIST.getJson(player.getGameProfile()).getAsJsonArray())
-                {
-                    if(e.getAsString().equals(Block.REGISTRY.getNameForObject(player.worldObj.getBlockState(event.getPos()).getBlock()).toString()))
-                    {
-                        return;
-                    }
-                }
-
                 event.setCanceled(true);
             }
         }

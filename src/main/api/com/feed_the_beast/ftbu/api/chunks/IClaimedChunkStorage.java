@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.latmod.lib.math.ChunkDimPos;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
@@ -27,5 +28,5 @@ public interface IClaimedChunkStorage extends INBTSerializable<NBTTagList>
 
     int getClaimedChunks(IForgePlayer playerID);
 
-    boolean canPlayerInteract(EntityPlayerMP player, ChunkDimPos pos, IMouseButton button);
+    boolean canPlayerInteract(EntityPlayerMP player, BlockPos pos, IMouseButton button);
 }

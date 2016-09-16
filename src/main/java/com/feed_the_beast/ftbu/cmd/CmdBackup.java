@@ -28,7 +28,7 @@ public class CmdBackup extends CommandTreeBase
             {
                 FTBULang.BACKUP_MANUAL_LAUNCH.printChat(BroadcastSender.INSTANCE, ics.getName());
 
-                if(!FTBUConfigBackups.use_separate_thread.getAsBoolean())
+                if(!FTBUConfigBackups.USE_SEPARATE_THREAD.getBoolean())
                 {
                     Backups.INSTANCE.postBackup();
                 }

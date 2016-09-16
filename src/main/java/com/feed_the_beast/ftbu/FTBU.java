@@ -86,7 +86,7 @@ public class FTBU
     {
         Ranks.INSTANCE.generateExampleFiles();
 
-        if(FTBUConfigWebAPI.enabled.getAsBoolean() && FTBUConfigWebAPI.autostart.getAsBoolean())
+        if(FTBUConfigWebAPI.ENABLED.getBoolean() && FTBUConfigWebAPI.AUTOSTART.getBoolean())
         {
             WebAPI.INST.startAPI();
         }
@@ -99,9 +99,9 @@ public class FTBU
     }
 
     @NetworkCheckHandler
-    public boolean checkNetwork(Map<String, String> m, Side side)
+    public boolean checkNetwork(Map<String, String> map, Side side)
     {
-        String s = m.get(FTBUFinals.MOD_ID);
+        String s = map.get(FTBUFinals.MOD_ID);
         return s == null || s.equals(FTBUFinals.MOD_VERSION);
     }
 }

@@ -3,10 +3,10 @@ package com.feed_the_beast.ftbu.api_impl;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunkStorage;
 import com.feed_the_beast.ftbu.world.FTBUTeamData;
-import com.google.gson.JsonElement;
 import com.latmod.lib.math.BlockDimPos;
 import com.latmod.lib.math.ChunkDimPos;
 import net.minecraft.block.Block;
@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -111,9 +112,9 @@ public class ClaimedChunkStorage implements IClaimedChunkStorage
 
         if(button.isLeft())
         {
-            for(JsonElement e : FTBUPermissions.CLAIMS_BREAK_WHITELIST.getJson(entityPlayer.getGameProfile()).getAsJsonArray())
+            for(String e : (List<String>) RankConfigAPI.getRankConfig(entityPlayer, FTBUPermissions.CLAIMS_BREAK_WHITELIST).getValue())
             {
-                if(e.getAsString().equals(Block.REGISTRY.getNameForObject(entityPlayer.worldObj.getBlockState(pos).getBlock()).toString()))
+                if(e.equals(Block.REGISTRY.getNameForObject(entityPlayer.worldObj.getBlockState(pos).getBlock()).toString()))
                 {
                     return true;
                 }

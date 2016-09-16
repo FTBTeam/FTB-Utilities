@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftbu.ranks;
 
-import com.feed_the_beast.ftbl.api.rankconfig.RankConfig;
+import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyNull;
+import com.feed_the_beast.ftbl.api.rankconfig.IRankConfig;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -20,7 +22,7 @@ import java.util.Map;
 public final class Rank extends FinalIDObject implements IJsonSerializable
 {
     public final Map<String, Boolean> permissions;
-    public final Map<RankConfig, JsonElement> config;
+    public final Map<IRankConfig, IConfigValue> config;
     public Rank parent = null;
     public TextFormatting color = TextFormatting.WHITE;
     public String prefix = "";
@@ -48,19 +50,19 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
         return Event.Result.DEFAULT;
     }
 
-    public JsonElement handleRankConfig(RankConfig permission)
+    public IConfigValue handleRankConfig(IRankConfig id)
     {
         if(this == Ranks.INSTANCE.PLAYER)
         {
-            return permission.getDefaultValue(false);
+            return id.getDefaultValue();
         }
         else if(this == Ranks.INSTANCE.ADMIN)
         {
-            return permission.getDefaultValue(true);
+            return id.getDefaultOPValue();
         }
 
-        JsonElement e = config.get(permission);
-        return (e == null) ? ((parent != null) ? parent.handleRankConfig(permission) : null) : e;
+        IConfigValue e = config.get(id);
+        return (e == null) ? ((parent != null) ? parent.handleRankConfig(id) : PropertyNull.INSTANCE) : e;
     }
 
     @Override
@@ -89,9 +91,9 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
         {
             JsonObject o1 = new JsonObject();
 
-            for(Map.Entry<RankConfig, JsonElement> e : config.entrySet())
+            for(Map.Entry<IRankConfig, IConfigValue> e : config.entrySet())
             {
-                o1.add(e.getKey().getName(), e.getValue());
+                o1.add(e.getKey().getName(), e.getValue().getSerializableElement());
             }
 
             o.add("config", o1);
@@ -104,7 +106,7 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
     public void fromJson(JsonElement e)
     {
         JsonObject o = e.getAsJsonObject();
-        parent = o.has("parent") ? Ranks.INSTANCE.ranks.get(o.get("parent").getAsString()) : null;
+        parent = o.has("parent") ? Ranks.INSTANCE.RANKS.get(o.get("parent").getAsString()) : null;
         color = o.has("color") ? TextFormatting.getValueByName(o.get("color").getAsString()) : TextFormatting.WHITE;
         prefix = o.has("prefix") ? o.get("prefix").getAsString() : "";
         badge = o.has("badge") ? o.get("badge").getAsString() : "";
@@ -128,11 +130,13 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
         {
             for(Map.Entry<String, JsonElement> entry : o.get("config").getAsJsonObject().entrySet())
             {
-                RankConfig c = RankConfigAPI.getRankConfig(entry.getKey());
+                IRankConfig c = RankConfigAPI.getRegistredRankConfigs().get(entry.getKey());
 
                 if(c != null && !entry.getValue().isJsonNull())
                 {
-                    config.put(c, entry.getValue());
+                    IConfigValue value = c.getDefaultValue().copy();
+                    value.fromJson(entry.getValue());
+                    config.put(c, value);
                 }
             }
         }

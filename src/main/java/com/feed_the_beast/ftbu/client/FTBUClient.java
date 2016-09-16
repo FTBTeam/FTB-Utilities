@@ -1,8 +1,6 @@
 package com.feed_the_beast.ftbu.client;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
-import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.badges.LayerBadge;
 import com.feed_the_beast.ftbu.journeymap.IJMPluginHandler;
@@ -22,9 +20,6 @@ import java.util.Map;
 @SideOnly(Side.CLIENT)
 public class FTBUClient extends FTBUCommon // FTBLibModClient
 {
-    public static final ConfigEntryBool render_badges = new ConfigEntryBool(true);
-    public static final ConfigEntryBool light_value_texture_x = new ConfigEntryBool(false);
-
     public static final String KEY_CATEGORY = "key.categories.ftbu";
     public static final KeyBinding KEY_GUIDE = new KeyBinding("key.ftbu.guide", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_NONE, KEY_CATEGORY);
     public static final KeyBinding KEY_LIGHT_VALUES = new KeyBinding("key.ftbu.light_values", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_F7, KEY_CATEGORY);
@@ -39,7 +34,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
         ClientRegistry.registerKeyBinding(KEY_LIGHT_VALUES);
         ClientRegistry.registerKeyBinding(KEY_CHUNK_BORDER);
 
-        ClientConfigRegistry.addGroup("ftbu", FTBUClient.class);
+        FTBUClientConfig.init();
         FTBUActions.init();
         CachedClientData.reloadGlobalBadges();
         MinecraftForge.EVENT_BUS.register(new FTBUClientEventHandler());

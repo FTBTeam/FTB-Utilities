@@ -38,7 +38,7 @@ public enum Backups
 
     public void init()
     {
-        backupsFolder = FTBUConfigBackups.folder.getAsString().isEmpty() ? new File(LMUtils.folderMinecraft, "/backups/") : new File(FTBUConfigBackups.folder.getAsString());
+        backupsFolder = FTBUConfigBackups.FOLDER.getString().isEmpty() ? new File(LMUtils.folderMinecraft, "/backups/") : new File(FTBUConfigBackups.FOLDER.getString());
         thread = null;
 
         backups.clear();
@@ -82,7 +82,7 @@ public enum Backups
                         Calendar c = Calendar.getInstance();
                         c.set(year, month, day, hours, minutes, seconds);
 
-                        if(FTBUConfigBackups.compression_level.getAsInt() > 0)
+                        if(FTBUConfigBackups.COMPRESSION_LEVEL.getInt() > 0)
                         {
                             s += "/backup.zip";
                         }
@@ -105,7 +105,7 @@ public enum Backups
         }
         boolean auto = !(ics instanceof EntityPlayerMP);
 
-        if(auto && !FTBUConfigBackups.enabled.getAsBoolean())
+        if(auto && !FTBUConfigBackups.ENABLED.getBoolean())
         {
             return false;
         }
@@ -131,7 +131,7 @@ public enum Backups
 
         File wd = w.getSaveHandler().getWorldDirectory();
 
-        if(FTBUConfigBackups.use_separate_thread.getAsBoolean())
+        if(FTBUConfigBackups.USE_SEPARATE_THREAD.getBoolean())
         {
             thread = new ThreadBackup(wd);
             thread.start();
@@ -152,7 +152,7 @@ public enum Backups
         {
             Collections.sort(backups, Backup.COMPARATOR);
 
-            int size = FTBUConfigBackups.backups_to_keep.getAsInt() - backups.size();
+            int size = FTBUConfigBackups.BACKUPS_TO_KEEP.getInt() - backups.size();
 
             for(int i = 0; i < backups.size(); i++)
             {

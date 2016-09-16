@@ -1,9 +1,10 @@
 package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.config.ConfigEntry;
-import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
-import com.feed_the_beast.ftbl.api.config.ConfigGroup;
+import com.feed_the_beast.ftbl.api.config.ConfigKey;
+import com.feed_the_beast.ftbl.api.config.IConfigKey;
+import com.feed_the_beast.ftbl.api.config.IConfigTree;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyBool;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.latmod.lib.io.Bits;
 import com.latmod.lib.math.BlockDimPos;
@@ -23,17 +24,15 @@ import java.util.Map;
  */
 public class FTBUPlayerData implements ICapabilitySerializable<NBTTagCompound>
 {
-    private final ConfigEntryBool renderBadge;
-    private final ConfigEntryBool chatLinks;
+    private static final IConfigKey RENDER_BADGE = new ConfigKey("ftbu.render_badge", new PropertyBool(true), null);
+    private static final IConfigKey CHAT_LINKS = new ConfigKey("ftbu.chat_links", new PropertyBool(true), null);
+    private static final byte FLAG_RENDER_BADGE = 1;
+    private static final byte FLAG_CHAT_LINKS = 2;
+
+    private byte flags = FLAG_RENDER_BADGE | FLAG_CHAT_LINKS;
     public BlockDimPos lastDeath, lastSafePos;
     public String lastChunkID;
     private Map<String, BlockDimPos> homes;
-
-    public FTBUPlayerData()
-    {
-        renderBadge = new ConfigEntryBool(true);
-        chatLinks = new ConfigEntryBool(true);
-    }
 
     public static FTBUPlayerData get(IForgePlayer p)
     {
@@ -60,10 +59,7 @@ public class FTBUPlayerData implements ICapabilitySerializable<NBTTagCompound>
     @Override
     public void deserializeNBT(NBTTagCompound tag)
     {
-        byte flags = tag.getByte("Flags");
-
-        renderBadge.set(Bits.getFlag(flags, (byte) 1));
-        chatLinks.set(Bits.getFlag(flags, (byte) 2));
+        flags = tag.getByte("Flags");
 
         if(tag.hasKey("Homes"))
         {
@@ -97,14 +93,9 @@ public class FTBUPlayerData implements ICapabilitySerializable<NBTTagCompound>
     {
         NBTTagCompound tag = new NBTTagCompound();
 
-        int flags = 0;
-
-        flags = Bits.setFlag(flags, 1, renderBadge.getAsBoolean());
-        flags = Bits.setFlag(flags, 2, chatLinks.getAsBoolean());
-
         if(flags != 0)
         {
-            tag.setByte("Flags", (byte) flags);
+            tag.setByte("Flags", flags);
         }
 
         if(homes != null && !homes.isEmpty())
@@ -164,19 +155,44 @@ public class FTBUPlayerData implements ICapabilitySerializable<NBTTagCompound>
 
     public boolean renderBadge()
     {
-        return renderBadge.getAsBoolean();
+        return Bits.getFlag(flags, FLAG_RENDER_BADGE);
     }
 
     public boolean chatLinks()
     {
-        return chatLinks.getAsBoolean();
+        return Bits.getFlag(flags, FLAG_CHAT_LINKS);
     }
 
-    public ConfigEntry createConfigGroup()
+    public void addConfig(IConfigTree tree)
     {
-        ConfigGroup group = new ConfigGroup();
-        group.add("render_badge", renderBadge);
-        group.add("chat_links", chatLinks);
-        return group;
+        tree.add(RENDER_BADGE, new PropertyBool(true)
+        {
+            @Override
+            public boolean getBoolean()
+            {
+                return renderBadge();
+            }
+
+            @Override
+            public void set(boolean v)
+            {
+                flags = (byte) Bits.setFlag(flags, FLAG_RENDER_BADGE, v);
+            }
+        });
+
+        tree.add(CHAT_LINKS, new PropertyBool(true)
+        {
+            @Override
+            public boolean getBoolean()
+            {
+                return chatLinks();
+            }
+
+            @Override
+            public void set(boolean v)
+            {
+                flags = (byte) Bits.setFlag(flags, FLAG_CHAT_LINKS, v);
+            }
+        });
     }
 }

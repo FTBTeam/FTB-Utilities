@@ -113,6 +113,6 @@ class WorldProviderVoid extends WorldProvider
     @Override
     public BlockPos getSpawnPoint()
     {
-        return new BlockPos(0, DimConfigVoid.platform_y.getAsInt() + 1, 0);
+        return new BlockPos(0, DimConfigVoid.PLATFORM_Y.getInt() + 1, 0);
     }
 }

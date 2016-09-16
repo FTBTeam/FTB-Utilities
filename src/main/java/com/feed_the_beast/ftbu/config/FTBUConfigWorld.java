@@ -1,38 +1,40 @@
 package com.feed_the_beast.ftbu.config;
 
-import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
-import com.feed_the_beast.ftbl.api.config.ConfigEntryCustom;
+import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyBool;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyCustom;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.annotations.Info;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.nbt.NBTBase;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 
 public class FTBUConfigWorld
 {
-    public static final ConfigEntryBool chunk_claiming = new ConfigEntryBool(true);
-    public static final ConfigEntryBool chunk_loading = new ConfigEntryBool(true);
+    public static final PropertyBool CHUNK_CLAIMING = new PropertyBool(true);
+    public static final PropertyBool CHUNK_LOADING = new PropertyBool(true);
 
     @Info("If set to true, explosions and hostile mobs in spawn area will be disabled, players won't be able to attack each other in spawn area")
-    public static final ConfigEntryBool safe_spawn = new ConfigEntryBool(false);
+    public static final PropertyBool SAFE_SPAWN = new PropertyBool(false);
 
     @Info("Entity IDs that are banned from world. They will not spawn and existing ones will be destroyed")
-    public static final ConfigEntryBannedEntityList blocked_entities = new ConfigEntryBannedEntityList();
+    public static final ConfigEntryBannedEntityList BLOCKED_ENTITIES = new ConfigEntryBannedEntityList(new ArrayList<>());
 
     @Info("Enable spawn area in singleplayer")
-    public static final ConfigEntryBool spawn_area_in_sp = new ConfigEntryBool(false);
+    public static final PropertyBool SPAWN_AREA_IN_SP = new PropertyBool(false);
 
-    public static class ConfigEntryBannedEntityList extends ConfigEntryCustom
+    public static class ConfigEntryBannedEntityList extends PropertyCustom
     {
         public final Collection<Class<?>> list;
 
-        public ConfigEntryBannedEntityList()
+        public ConfigEntryBannedEntityList(Collection<Class<?>> c)
         {
-            list = new HashSet<>();
+            list = c;
         }
 
         @Override
@@ -71,9 +73,26 @@ public class FTBUConfigWorld
             return a;
         }
 
+        @Override
+        public IConfigValue copy()
+        {
+            return new ConfigEntryBannedEntityList(new ArrayList<>(list));
+        }
+
+        @Override
+        public NBTBase serializeNBT()
+        {
+            return null;
+        }
+
+        @Override
+        public void deserializeNBT(NBTBase nbt)
+        {
+        }
+
         public boolean isEntityBanned(Class<?> c)
         {
-            for(Class<?> c1 : list)
+            for(Class<?> c1 : BLOCKED_ENTITIES.list)
             {
                 if(c1.isAssignableFrom(c))
                 {

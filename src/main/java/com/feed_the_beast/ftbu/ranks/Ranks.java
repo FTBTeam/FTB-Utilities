@@ -1,8 +1,12 @@
 package com.feed_the_beast.ftbu.ranks;
 
+import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.api.permissions.DefaultPermissionHandler;
 import com.feed_the_beast.ftbl.api.permissions.IPermissionHandler;
+import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.api.permissions.context.IContext;
-import com.feed_the_beast.ftbl.api.rankconfig.RankConfig;
+import com.feed_the_beast.ftbl.api.rankconfig.IRankConfig;
+import com.feed_the_beast.ftbl.api.rankconfig.IRankConfigHandler;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -15,6 +19,7 @@ import com.latmod.lib.util.LMUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.util.text.TextFormatting;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,15 +29,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
+public enum Ranks implements IPermissionHandler, IRankConfigHandler
 {
     INSTANCE;
 
     public final Rank PLAYER = new Rank("Player");
     public final Rank ADMIN = new Rank("Admin");
     public final File fileRanks, filePlayers;
-    public final Map<String, Rank> ranks = new LinkedHashMap<>();
-    public final Map<UUID, Rank> playerMap = new HashMap<>();
+    public final Map<String, Rank> RANKS = new LinkedHashMap<>();
+    public final Map<UUID, Rank> PLAYER_MAP = new HashMap<>();
     public Rank defaultRank;
 
     Ranks()
@@ -46,8 +51,8 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
 
     public void reload()
     {
-        ranks.clear();
-        playerMap.clear();
+        RANKS.clear();
+        PLAYER_MAP.clear();
         defaultRank = null;
 
         try
@@ -60,15 +65,15 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
 
                 for(Map.Entry<String, JsonElement> entry : o.get("ranks").getAsJsonObject().entrySet())
                 {
-                    ranks.put(entry.getKey(), new Rank(entry.getKey()));
+                    RANKS.put(entry.getKey(), new Rank(entry.getKey()));
                 }
 
                 for(Map.Entry<String, JsonElement> entry : o.get("ranks").getAsJsonObject().entrySet())
                 {
-                    ranks.get(entry.getKey()).fromJson(entry.getValue().getAsJsonObject());
+                    RANKS.get(entry.getKey()).fromJson(entry.getValue().getAsJsonObject());
                 }
 
-                defaultRank = ranks.get(o.get("default_rank").getAsString());
+                defaultRank = RANKS.get(o.get("default_rank").getAsString());
             }
             else
             {
@@ -100,9 +105,9 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
                     {
                         String s = entry.getValue().getAsString();
 
-                        if(ranks.containsKey(s))
+                        if(RANKS.containsKey(s))
                         {
-                            playerMap.put(id, ranks.get(s));
+                            PLAYER_MAP.put(id, RANKS.get(s));
                         }
                     }
                 }
@@ -131,7 +136,7 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
             o.add("default_rank", new JsonPrimitive(defaultRank.getName()));
             JsonObject o1 = new JsonObject();
 
-            for(Rank r : ranks.values())
+            for(Rank r : RANKS.values())
             {
                 o1.add(r.getName(), r.getSerializableElement());
             }
@@ -140,7 +145,7 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
             LMJsonUtils.toJson(fileRanks, o);
 
             o = new JsonObject();
-            for(Map.Entry<UUID, Rank> entry : playerMap.entrySet())
+            for(Map.Entry<UUID, Rank> entry : PLAYER_MAP.entrySet())
             {
                 o.add(LMStringUtils.fromUUID(entry.getKey()), new JsonPrimitive(entry.getValue().getName()));
             }
@@ -150,57 +155,63 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
 
     public void generateExampleFiles()
     {
-        List<RankConfig> sortedRankConfigs = new ArrayList<>();
-        sortedRankConfigs.addAll(RankConfigAPI.getRankConfigValues());
+        List<IRankConfig> sortedRankConfigs = new ArrayList<>();
+        sortedRankConfigs.addAll(RankConfigAPI.getRegistredRankConfigs().values());
         Collections.sort(sortedRankConfigs, LMStringUtils.ID_COMPARATOR);
 
         try
         {
             List<String> list = new ArrayList<>();
 
+            list.add("# Permissions and RankConfigs");
+            list.add("");
             list.add("Modifying this file won't do anything, it just shows all available permission IDs. See ranks_example.json");
             list.add("");
 
-            list.add("-- Permissions --");
+            list.add("## Permissions");
             list.add("");
 
-            list.add("-- Config --");
-            list.add("");
-
-            String[] info;
-
-            for(RankConfig p : sortedRankConfigs)
+            for(String s : PermissionAPI.getRegistredPermissionNodes())
             {
-                list.add(p.getName());
-                /*
-                info = p.getInfo();
-				
-				if(info != null && info.length > 0)
-				{
-					for(String s : info)
-					{
-						list.add("  " + s);
-					}
-				}
-				
-				FIXME: if(!PrimitiveType.isNull(p.configData.type))
-				{
-					list.add("  Type: " + p.configData.type);
-				}
-				
-				if(p.getMin() != Double.NEGATIVE_INFINITY)
-				{
-					if(p.configData.type == PrimitiveType.DOUBLE || p.configData.type == PrimitiveType.FLOAT)
-						list.add("  Min: " + p.getMin());
-					else list.add("  Min: " + (long) p.getMin());
-				}
-				
-				if(p.getMax() != Double.POSITIVE_INFINITY)
-				{
-					if(p.configData.type == PrimitiveType.DOUBLE || p.configData.type == PrimitiveType.FLOAT)
-						list.add("  Max: " + p.getMax());
-					else list.add("  Max: " + (long) p.getMax());
-				}*/
+                list.add("> " + s + " | Default Permission Level: " + PermissionAPI.getDefaultPermissionLevel(s));
+
+                for(String s1 : PermissionAPI.getPermissionDescription(s))
+                {
+                    list.add("| " + s1);
+                }
+
+                list.add("");
+            }
+
+            list.add("");
+            list.add("## RankConfigs");
+            list.add("");
+
+            for(IRankConfig p : sortedRankConfigs)
+            {
+                IConfigValue value = p.getDefaultValue();
+                list.add("> " + p.getName() + " | Default Player Value: " + value + " | Default OP Value: " + p.getDefaultOPValue());
+
+                for(String s1 : p.getDescription())
+                {
+                    list.add("| " + s1);
+                }
+
+                list.add(": Type: " + value.getID().getResourcePath());
+
+                String s = value.getMinValueString();
+
+                if(s != null)
+                {
+                    list.add(": Min: " + s);
+                }
+
+                s = value.getMaxValueString();
+
+                if(s != null)
+                {
+                    list.add(": Max: " + s);
+                }
 
                 list.add("");
             }
@@ -223,9 +234,9 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
             Rank rankPlayer = new Rank(PLAYER.getName());
             rankPlayer.fromJson(PLAYER.getSerializableElement());
 
-            for(RankConfig p : sortedRankConfigs)
+            for(IRankConfig p : sortedRankConfigs)
             {
-                rankPlayer.config.put(p, p.getDefaultValue(false));
+                rankPlayer.config.put(p, p.getDefaultValue());
             }
 
             rankPlayer.permissions.clear();
@@ -235,11 +246,11 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
             rankAdmin.parent = rankPlayer;
             rankAdmin.fromJson(ADMIN.getSerializableElement());
 
-            for(RankConfig p : sortedRankConfigs)
+            for(IRankConfig p : sortedRankConfigs)
             {
-                if(!p.getDefaultValue(false).toString().equals(p.getDefaultValue(true).toString()))
+                if(!p.getDefaultValue().equalsValue(p.getDefaultOPValue()))
                 {
-                    rankAdmin.config.put(p, p.getDefaultValue(true));
+                    rankAdmin.config.put(p, p.getDefaultOPValue());
                 }
             }
 
@@ -258,14 +269,14 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
 
     public Rank getRank(String s)
     {
-        return ranks.get(s);
+        return RANKS.get(s);
     }
 
     public Rank getRankOf(GameProfile profile)
     {
         if(defaultRank != null)
         {
-            Rank r = playerMap.get(profile.getId());
+            Rank r = PLAYER_MAP.get(profile.getId());
             return (r == null) ? defaultRank : r;
         }
 
@@ -276,12 +287,12 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
     {
         if(defaultRank != null)
         {
-            playerMap.put(player, rank);
+            PLAYER_MAP.put(player, rank);
         }
     }
 
     @Override
-    public boolean hasPermission(GameProfile profile, String permission, boolean defaultForPlayer, IContext context)
+    public boolean hasPermission(GameProfile profile, String permission, @Nullable IContext context)
     {
         switch(getRankOf(profile).handlePermission(permission))
         {
@@ -290,13 +301,13 @@ public enum Ranks implements IPermissionHandler, RankConfigAPI.Handler
             case DENY:
                 return false;
             default:
-                return defaultForPlayer;
+                return DefaultPermissionHandler.INSTANCE.hasPermission(profile, permission, context);
         }
     }
 
     @Override
-    public JsonElement getRankConfig(GameProfile profile, RankConfig config)
+    public IConfigValue getRankConfig(GameProfile profile, IRankConfig id)
     {
-        return getRankOf(profile).handleRankConfig(config);
+        return getRankOf(profile).handleRankConfig(id);
     }
 }

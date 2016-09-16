@@ -1,11 +1,15 @@
 package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
-import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
-import com.feed_the_beast.ftbl.api.config.ConfigGroup;
+import com.feed_the_beast.ftbl.api.config.ConfigKey;
+import com.feed_the_beast.ftbl.api.config.IConfigKey;
+import com.feed_the_beast.ftbl.api.config.IConfigTree;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyBool;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyEnum;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyEnumAbstract;
 import com.feed_the_beast.ftbl.api.security.EnumTeamPrivacyLevel;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
+import com.latmod.lib.EnumNameMap;
 import com.latmod.lib.io.Bits;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -19,15 +23,45 @@ import javax.annotation.Nullable;
  */
 public class FTBUTeamData implements ICapabilitySerializable<NBTTagCompound>
 {
-    private final ConfigEntryEnum<EnumTeamPrivacyLevel> blocks;
-    private final ConfigEntryBool disableExplosions;
-    private final ConfigEntryBool fakePlayers;
+    private static final EnumTeamPrivacyLevel DEF_BLOCKS_LEVEL = EnumTeamPrivacyLevel.ALLIES;
+    private static final IConfigKey DISABLE_EXPLOSIONS = new ConfigKey("ftbu.disable_explosions", new PropertyBool(false), null);
+    private static final IConfigKey FAKE_PLAYERS = new ConfigKey("ftbu.fake_players", new PropertyBool(false), null);
+    private static final IConfigKey BLOCKS = new ConfigKey("ftbu.blocks", new PropertyEnum<>(EnumTeamPrivacyLevel.NAME_MAP, DEF_BLOCKS_LEVEL), null);
+    private static final byte FLAG_DISABLE_EXPLOSIONS = 1;
+    private static final byte FLAG_FAKE_PLAYERS = 2;
+
+    private byte flags = (byte) (DEF_BLOCKS_LEVEL.ordinal() << 2);
+    private final PropertyEnumAbstract<EnumTeamPrivacyLevel> blocks;
 
     public FTBUTeamData()
     {
-        blocks = new ConfigEntryEnum<>(EnumTeamPrivacyLevel.ALLIES, EnumTeamPrivacyLevel.NAME_MAP);
-        disableExplosions = new ConfigEntryBool(false);
-        fakePlayers = new ConfigEntryBool(false);
+        blocks = new PropertyEnumAbstract<EnumTeamPrivacyLevel>()
+        {
+            @Override
+            public EnumNameMap<EnumTeamPrivacyLevel> getNameMap()
+            {
+                return EnumTeamPrivacyLevel.NAME_MAP;
+            }
+
+            @Nullable
+            @Override
+            public EnumTeamPrivacyLevel get()
+            {
+                return EnumTeamPrivacyLevel.VALUES[(flags >> 2) & 3];
+            }
+
+            @Override
+            public void set(@Nullable EnumTeamPrivacyLevel enumLevel)
+            {
+                if(enumLevel == null)
+                {
+                    enumLevel = DEF_BLOCKS_LEVEL;
+                }
+
+                flags &= 0xFFFF00FF;
+                flags |= enumLevel.ordinal() << 2;
+            }
+        };
     }
 
     public static FTBUTeamData get(IForgeTeam t)
@@ -55,12 +89,7 @@ public class FTBUTeamData implements ICapabilitySerializable<NBTTagCompound>
     @Override
     public void deserializeNBT(NBTTagCompound tag)
     {
-        byte flags = tag.getByte("Flags");
-
-        disableExplosions.set(Bits.getFlag(flags, 1));
-        fakePlayers.set(Bits.getFlag(flags, 2));
-
-        blocks.setIndex(tag.hasKey("BlockSecurity") ? tag.getByte("BlockSecurity") : blocks.defValue);
+        flags = tag.getByte("Flags");
     }
 
     @Override
@@ -68,19 +97,9 @@ public class FTBUTeamData implements ICapabilitySerializable<NBTTagCompound>
     {
         NBTTagCompound tag = new NBTTagCompound();
 
-        int flags = 0;
-
-        flags = Bits.setFlag(flags, (byte) 1, disableExplosions.getAsBoolean());
-        flags = Bits.setFlag(flags, (byte) 2, fakePlayers.getAsBoolean());
-
         if(flags != 0)
         {
-            tag.setByte("Flags", (byte) flags);
-        }
-
-        if(!blocks.isDefault())
-        {
-            tag.setByte("BlockSecurity", (byte) blocks.getIndex());
+            tag.setByte("Flags", flags);
         }
 
         return tag;
@@ -88,25 +107,55 @@ public class FTBUTeamData implements ICapabilitySerializable<NBTTagCompound>
 
     public EnumTeamPrivacyLevel getBlocks()
     {
-        return blocks.get();
+        return (EnumTeamPrivacyLevel) blocks.getValue();
     }
 
     public boolean disableExplosions()
     {
-        return disableExplosions.getAsBoolean();
+        return Bits.getFlag(flags, FLAG_DISABLE_EXPLOSIONS);
     }
 
     public boolean allowFakePlayers()
     {
-        return fakePlayers.getAsBoolean();
+        return Bits.getFlag(flags, FLAG_FAKE_PLAYERS);
     }
 
-    public ConfigGroup createConfigGroup()
+    public void addConfig(IConfigTree tree)
     {
-        ConfigGroup group = new ConfigGroup();
-        group.add("blocks", blocks);
-        group.add("disable_explosions", disableExplosions);
-        group.add("fake_players", fakePlayers);
-        return group;
+        tree.add(DISABLE_EXPLOSIONS, new PropertyBool(true)
+        {
+            @Override
+            public boolean getBoolean()
+            {
+                return disableExplosions();
+            }
+
+            @Override
+            public void set(boolean v)
+            {
+                flags = (byte) Bits.setFlag(flags, FLAG_DISABLE_EXPLOSIONS, v);
+            }
+        });
+
+        tree.add(FAKE_PLAYERS, new PropertyBool(true)
+        {
+            @Override
+            public boolean getBoolean()
+            {
+                return allowFakePlayers();
+            }
+
+            @Override
+            public void set(boolean v)
+            {
+                flags = (byte) Bits.setFlag(flags, FLAG_FAKE_PLAYERS, v);
+            }
+        });
+
+        tree.add(BLOCKS, blocks);
+
+        //tree.add("ftbu.blocks", blocks);
+        //tree.add("ftbu.disable_explosions", disableExplosions);
+        //tree.add("ftbu.fake_players", fakePlayers);
     }
 }

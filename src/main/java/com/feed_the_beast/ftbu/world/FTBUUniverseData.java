@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbu.world;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IUniverse;
+import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUNotifications;
@@ -20,7 +21,6 @@ import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.net.MessageAreaUpdate;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.backups.Backups;
-import com.google.gson.JsonArray;
 import com.latmod.lib.BroadcastSender;
 import com.latmod.lib.EnumEnabled;
 import com.latmod.lib.math.BlockDimPos;
@@ -31,6 +31,7 @@ import com.latmod.lib.util.LMServerUtils;
 import com.latmod.lib.util.LMStringUtils;
 import com.latmod.lib.util.LMUtils;
 import com.mojang.authlib.GameProfile;
+import gnu.trove.list.TIntList;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -131,7 +132,7 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
     {
         MinecraftServer server = LMServerUtils.getServer();
 
-        if(pos.dim != 0 || (!server.isDedicatedServer() && !FTBUConfigWorld.spawn_area_in_sp.getAsBoolean()))
+        if(pos.dim != 0 || (!server.isDedicatedServer() && !FTBUConfigWorld.SPAWN_AREA_IN_SP.getBoolean()))
         {
             return false;
         }
@@ -157,24 +158,14 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
 
     public static boolean isDimensionBlacklisted(GameProfile profile, int dim)
     {
-        JsonArray a = FTBUPermissions.CLAIMS_DIMENSION_BLACKLIST.getJson(profile).getAsJsonArray();
-
-        for(int i = 0; i < a.size(); i++)
-        {
-            if(a.get(i).getAsInt() == dim)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return ((TIntList) RankConfigAPI.getRankConfig(profile, FTBUPermissions.CLAIMS_DIMENSION_BLACKLIST).getValue()).contains(dim);
     }
 
     public static boolean allowExplosion(World world, Explosion explosion)
     {
         ChunkDimPos pos = new ChunkDimPos(MathHelperLM.chunk(explosion.getPosition().xCoord), MathHelperLM.chunk(explosion.getPosition().zCoord), world.provider.getDimension());
 
-        if(pos.dim == 0 && FTBUConfigWorld.safe_spawn.getAsBoolean() && isInSpawn(pos))
+        if(pos.dim == 0 && FTBUConfigWorld.SAFE_SPAWN.getBoolean() && isInSpawn(pos))
         {
             return false;
         }
@@ -184,7 +175,7 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
 
             if(owner != null)
             {
-                EnumEnabled fe = FTBUPermissions.CLAIMS_FORCED_EXPLOSIONS.get(owner.getProfile());
+                EnumEnabled fe = (EnumEnabled) RankConfigAPI.getRankConfig(owner.getProfile(), FTBUPermissions.CLAIMS_FORCED_EXPLOSIONS).getValue();
 
                 if(fe == null)
                 {
@@ -219,7 +210,7 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
             return false;
         }
 
-        int max = FTBUPermissions.CLAIMS_MAX_CHUNKS.get(player.getProfile());
+        int max = RankConfigAPI.getRankConfig(player.getProfile(), FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
         if(max == 0)
         {
             return false;
@@ -293,7 +284,7 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
                     return false;
                 }
 
-                int max = FTBUPermissions.CHUNKLOADER_MAX_CHUNKS.get(player.getProfile());
+                int max = RankConfigAPI.getRankConfig(player.getProfile(), FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
                 if(max == 0 || FTBUtilitiesAPI.get().getLoadedChunks().getLoadedChunks(player) >= max)
                 {
                     return false;
@@ -332,9 +323,9 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
         Backups.INSTANCE.nextBackup = startMillis + FTBUConfigBackups.backupMillis();
         lastRestartMessage = "";
 
-        if(FTBUConfigGeneral.auto_restart.getAsBoolean() && FTBUConfigGeneral.restart_timer.getAsInt() > 0)
+        if(FTBUConfigGeneral.AUTO_RESTART.getBoolean() && FTBUConfigGeneral.RESTART_TIMER.getInt() > 0)
         {
-            restartMillis = startMillis + (long) (FTBUConfigGeneral.restart_timer.getAsInt() * 3600D * 1000D);
+            restartMillis = startMillis + (long) (FTBUConfigGeneral.RESTART_TIMER.getInt() * 3600D * 1000D);
             FTBU.logger.info("Server restart in " + LMStringUtils.getTimeString(restartMillis));
         }
 

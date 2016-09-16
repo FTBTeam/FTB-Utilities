@@ -32,7 +32,7 @@ public class WebAPI extends Thread
     {
         try
         {
-            serverSocket = new ServerSocket(FTBUConfigWebAPI.port.getAsInt());
+            serverSocket = new ServerSocket(FTBUConfigWebAPI.PORT.getInt());
 
             System.out.println(getName() + " started");
 
@@ -94,12 +94,12 @@ public class WebAPI extends Thread
 
     public boolean isAPIRunning()
     {
-        return FTBUConfigWebAPI.enabled.getAsBoolean() && FTBLibAPI.get().getUniverse() != null && serverSocket != null && !serverSocket.isClosed();
+        return FTBUConfigWebAPI.ENABLED.getBoolean() && FTBLibAPI.get().getUniverse() != null && serverSocket != null && !serverSocket.isClosed();
     }
 
     public void startAPI()
     {
-        if(FTBUConfigWebAPI.enabled.getAsBoolean() && !isAPIRunning())
+        if(FTBUConfigWebAPI.ENABLED.getBoolean() && !isAPIRunning())
         {
             start();
         }

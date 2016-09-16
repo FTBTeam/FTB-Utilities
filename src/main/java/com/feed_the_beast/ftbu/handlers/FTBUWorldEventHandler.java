@@ -68,12 +68,12 @@ public class FTBUWorldEventHandler // FTBLIntegration
             return true;
         }
 
-        if(FTBUConfigWorld.blocked_entities.isEntityBanned(e.getClass()))
+        if(FTBUConfigWorld.BLOCKED_ENTITIES.isEntityBanned(e.getClass()))
         {
             return false;
         }
 
-        if(FTBUConfigWorld.safe_spawn.getAsBoolean() && FTBUUniverseData.isInSpawnD(e.dimension, e.posX, e.posZ))
+        if(FTBUConfigWorld.SAFE_SPAWN.getBoolean() && FTBUUniverseData.isInSpawnD(e.dimension, e.posX, e.posZ))
         {
             if(e instanceof IMob)
             {

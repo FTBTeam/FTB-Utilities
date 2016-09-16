@@ -45,7 +45,7 @@ public class FTBUTeamEventHandler
         if(event.getTeam().hasCapability(FTBUCapabilities.FTBU_TEAM_DATA, null))
         {
             FTBUTeamData data = event.getTeam().getCapability(FTBUCapabilities.FTBU_TEAM_DATA, null);
-            event.getSettings().add("ftbu", data.createConfigGroup());
+            data.addConfig(event.getSettings());
         }
     }
 }

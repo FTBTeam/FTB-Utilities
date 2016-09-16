@@ -1,13 +1,18 @@
 package com.feed_the_beast.ftbu.config;
 
-import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
-import com.feed_the_beast.ftbl.api.config.ConfigEntryCustom;
+import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyBool;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyCustom;
 import com.feed_the_beast.ftbl.api.item.ItemStackSerializer;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.latmod.lib.annotations.Info;
 import com.latmod.lib.util.LMJsonUtils;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.AbstractMap;
@@ -17,22 +22,22 @@ import java.util.Map;
 
 public class FTBUConfigLogin
 {
-    public static final ConfigEntryBool enable_motd = new ConfigEntryBool(true);
-    public static final ConfigEntryBool enable_starting_items = new ConfigEntryBool(true);
+    public static final PropertyBool ENABLE_MOTD = new PropertyBool(true);
+    public static final PropertyBool ENABLE_STARTING_ITEMS = new PropertyBool(true);
 
     @Info("Message of the day. This will be displayed when player joins the server")
-    public static final ConfigEntryChatComponentList motd = new ConfigEntryChatComponentList();
+    public static final ConfigEntryChatComponentList MOTD = new ConfigEntryChatComponentList(new ArrayList<>());
 
     @Info({"Items to give player when he first joins the server", "Format: \"StringID Size Metadata\" or {nbt}"})
-    public static final ConfigEntryItemStackList starting_items = new ConfigEntryItemStackList();
+    public static final ConfigEntryItemStackList STARTING_ITEMS = new ConfigEntryItemStackList(new ArrayList<>());
 
-    public static class ConfigEntryChatComponentList extends ConfigEntryCustom
+    public static class ConfigEntryChatComponentList extends PropertyCustom
     {
         public final List<ITextComponent> components;
 
-        public ConfigEntryChatComponentList()
+        public ConfigEntryChatComponentList(List<ITextComponent> l)
         {
-            components = new ArrayList<>();
+            components = l;
         }
 
         @Override
@@ -66,15 +71,46 @@ public class FTBUConfigLogin
 
             return a;
         }
+
+        @Override
+        public IConfigValue copy()
+        {
+            return new ConfigEntryChatComponentList(new ArrayList<>(components));
+        }
+
+        @Override
+        public NBTBase serializeNBT()
+        {
+            NBTTagList list = new NBTTagList();
+
+            for(ITextComponent c : components)
+            {
+                list.appendTag(new NBTTagString(ITextComponent.Serializer.componentToJson(c)));
+            }
+
+            return list;
+        }
+
+        @Override
+        public void deserializeNBT(NBTBase nbt)
+        {
+            components.clear();
+            NBTTagList list = (NBTTagList) nbt;
+
+            for(int i = 0; i < list.tagCount(); i++)
+            {
+                components.add(ITextComponent.Serializer.jsonToComponent(list.getStringTagAt(i)));
+            }
+        }
     }
 
-    public static class ConfigEntryItemStackList extends ConfigEntryCustom
+    public static class ConfigEntryItemStackList extends PropertyCustom
     {
         private final List<Map.Entry<ItemStack, JsonElement>> items;
 
-        public ConfigEntryItemStackList()
+        public ConfigEntryItemStackList(List<Map.Entry<ItemStack, JsonElement>> l)
         {
-            items = new ArrayList<>();
+            items = l;
         }
 
         @Override
@@ -113,8 +149,44 @@ public class FTBUConfigLogin
         {
             List<ItemStack> list = new ArrayList<>();
 
+            for(Map.Entry<ItemStack, JsonElement> e : items)
+            {
+                list.add(e.getKey());
+            }
 
             return list;
+        }
+
+        @Override
+        public IConfigValue copy()
+        {
+            return new ConfigEntryItemStackList(new ArrayList<>(items));
+        }
+
+        @Override
+        public NBTBase serializeNBT()
+        {
+            NBTTagList list = new NBTTagList();
+
+            for(Map.Entry<ItemStack, JsonElement> entry : items)
+            {
+                list.appendTag(entry.getKey().serializeNBT());
+            }
+
+            return list;
+        }
+
+        @Override
+        public void deserializeNBT(NBTBase nbt)
+        {
+            items.clear();
+            NBTTagList list = (NBTTagList) nbt;
+
+            for(int i = 0; i < list.tagCount(); i++)
+            {
+                ItemStack is = ItemStack.loadItemStackFromNBT(list.getCompoundTagAt(i));
+                items.add(new AbstractMap.SimpleEntry<>(is, JsonNull.INSTANCE)); //FIXME?
+            }
         }
     }
 }

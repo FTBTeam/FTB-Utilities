@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbu.api_impl;
 import com.feed_the_beast.ftbl.FTBLibStats;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUPermissions;
@@ -73,7 +74,7 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, ILo
         int dim = world.provider.getDimension();
         ticketContainers.remove(dim);
 
-        if(tickets.size() != 1 || !FTBUConfigWorld.chunk_loading.getAsBoolean())
+        if(tickets.size() != 1 || !FTBUConfigWorld.CHUNK_LOADING.getBoolean())
         {
             return;
         }
@@ -192,7 +193,7 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, ILo
             if(isForced)
             {
                 IForgePlayer owner = FTBLibAPI.get().getUniverse().getPlayer(loadedChunk.getOwner());
-                ChunkloaderType type = FTBUPermissions.CHUNKLOADER_TYPE.get(owner.getProfile());
+                ChunkloaderType type = (ChunkloaderType) RankConfigAPI.getRankConfig(owner.getProfile(), FTBUPermissions.CHUNKLOADER_TYPE).getValue();
 
                 if(type == ChunkloaderType.DISABLED)
                 {
@@ -209,7 +210,7 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, ILo
                 {
                     if(!owner.isOnline())
                     {
-                        double max = FTBUPermissions.CHUNKLOADER_OFFLINE_TIMER.get(owner.getProfile());
+                        double max = RankConfigAPI.getRankConfig(owner.getProfile(), FTBUPermissions.CHUNKLOADER_OFFLINE_TIMER).getDouble();
 
                         if(max > 0D && FTBLibStats.getLastSeenDeltaInHours(owner.stats(), false) > max)
                         {

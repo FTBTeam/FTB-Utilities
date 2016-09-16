@@ -33,7 +33,7 @@ public class CmdSetRank extends CommandLM
     {
         if(args.length == 2)
         {
-            return getListOfStringsMatchingLastWord(args, Ranks.INSTANCE.ranks.keySet());
+            return getListOfStringsMatchingLastWord(args, Ranks.INSTANCE.RANKS.keySet());
         }
 
         return super.getTabCompletionOptions(server, sender, args, pos);
@@ -44,12 +44,12 @@ public class CmdSetRank extends CommandLM
     {
         checkArgs(args, 2, "<player> <rank>");
         IForgePlayer player = getForgePlayer(args[0]);
-        Rank r = Ranks.INSTANCE.ranks.get(args[1]);
+        Rank r = Ranks.INSTANCE.RANKS.get(args[1]);
         if(r == null)
         {
             throw FTBLibLang.RAW.commandError("Rank '" + args[1] + "' not found!");
         }
-        Ranks.INSTANCE.playerMap.put(player.getProfile().getId(), r);
+        Ranks.INSTANCE.PLAYER_MAP.put(player.getProfile().getId(), r);
         Ranks.INSTANCE.saveRanks();
     }
 }

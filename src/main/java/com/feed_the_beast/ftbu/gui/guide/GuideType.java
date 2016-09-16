@@ -12,7 +12,7 @@ public enum GuideType
     MODDING_TUTORIAL("modding_tutorial"),
     OTHER("other");
 
-    private static final EnumNameMap<GuideType> NAME_MAP = new EnumNameMap<>(false, values());
+    private static final EnumNameMap<GuideType> NAME_MAP = new EnumNameMap<>(values(), false);
 
     public final String group;
 

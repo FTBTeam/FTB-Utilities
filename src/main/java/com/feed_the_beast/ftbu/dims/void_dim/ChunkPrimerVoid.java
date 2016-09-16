@@ -15,17 +15,17 @@ class ChunkPrimerVoid extends ChunkPrimer
     @Override
     public IBlockState getBlockState(int x, int y, int z)
     {
-        if(y == DimConfigVoid.platform_y.getAsInt())
+        if(y == DimConfigVoid.PLATFORM_Y.getInt())
         {
-            int r = DimConfigVoid.platform_radius.getAsInt();
+            int r = DimConfigVoid.PLATFORM_RADIUS.getInt();
 
             if(x <= r && x >= -r && z <= r && z >= -r)
             {
-                return DimConfigVoid.platform_block.getBlockState();
+                return DimConfigVoid.PLATFORM_BLOCK.getBlockState();
             }
         }
 
-        return y == 0 ? DimConfigVoid.bottom_layer.getBlockState() : AIR;
+        return y == 0 ? DimConfigVoid.BOTTOM_LAYER.getBlockState() : AIR;
     }
 
     @Override
@@ -36,11 +36,11 @@ class ChunkPrimerVoid extends ChunkPrimer
     @Override
     public int findGroundBlockIdx(int x, int z)
     {
-        int r = DimConfigVoid.platform_radius.getAsInt();
+        int r = DimConfigVoid.PLATFORM_RADIUS.getInt();
 
         if(x <= r && x >= -r && z <= r && z >= -r)
         {
-            return DimConfigVoid.platform_y.getAsInt();
+            return DimConfigVoid.PLATFORM_Y.getInt();
         }
 
         return 0;

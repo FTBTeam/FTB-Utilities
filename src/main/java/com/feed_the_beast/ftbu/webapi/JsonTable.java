@@ -110,7 +110,7 @@ public class JsonTable
 
         JsonArray a = new JsonArray();
 
-        if(FTBUConfigWebAPI.output_map.getAsBoolean())
+        if(FTBUConfigWebAPI.OUTPUT_MAP.getBoolean())
         {
             JsonObject o1 = new JsonObject();
 

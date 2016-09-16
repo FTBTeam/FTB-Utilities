@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.cmd.ITreeCommand;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
-import com.feed_the_beast.ftbl.api.permissions.context.PlayerContext;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.FTBUTops;
 import com.feed_the_beast.ftbu.api.EventFTBUServerInfo;
@@ -67,29 +66,29 @@ public class ServerInfoFile extends InfoPage
         MinecraftServer server = LMServerUtils.getServer();
 
         boolean isDedi = server.isDedicatedServer();
-        boolean isOP = !isDedi || PermissionAPI.hasPermission(self.getProfile(), FTBUPermissions.DISPLAY_ADMIN_INFO, false, new PlayerContext(self.getPlayer()));
+        boolean isOP = !isDedi || PermissionAPI.hasPermission(self.getPlayer(), FTBUPermissions.DISPLAY_ADMIN_INFO);
 
         copyFrom(CachedInfo.main);
 
         List<IForgePlayer> players = new ArrayList<>();
         players.addAll(FTBLibAPI.get().getUniverse().getPlayers());
 
-        if(FTBUConfigGeneral.auto_restart.getAsBoolean())
+        if(FTBUConfigGeneral.AUTO_RESTART.getBoolean())
         {
             println(FTBULang.TIMER_RESTART.textComponent(LMStringUtils.getTimeString(FTBUUniverseData.get(self.getUniverse()).restartMillis - System.currentTimeMillis())));
         }
 
-        if(FTBUConfigBackups.enabled.getAsBoolean())
+        if(FTBUConfigBackups.ENABLED.getBoolean())
         {
             println(FTBULang.TIMER_BACKUP.textComponent(LMStringUtils.getTimeString(Backups.INSTANCE.nextBackup - System.currentTimeMillis())));
         }
 
-        if(FTBUConfigGeneral.server_info_difficulty.getAsBoolean())
+        if(FTBUConfigGeneral.SERVER_INFO_DIFFICULTY.getBoolean())
         {
             println(FTBLibLang.DIFFICULTY.textComponent(LMStringUtils.firstUppercase(self.getPlayer().worldObj.getDifficulty().toString().toLowerCase())));
         }
 
-        if(FTBUConfigGeneral.server_info_mode.getAsBoolean())
+        if(FTBUConfigGeneral.SERVER_INFO_MODE.getBoolean())
         {
             println(FTBLibLang.MODE_CURRENT.textComponent(LMStringUtils.firstUppercase(FTBLibAPI.get().getSharedData(Side.SERVER).getPackMode().getID())));
         }

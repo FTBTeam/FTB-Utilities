@@ -48,7 +48,7 @@ public class ThreadBackup extends Thread
 
             Backups.logger.info("Backing up " + files.size() + " files...");
 
-            if(FTBUConfigBackups.compression_level.getAsInt() > 0)
+            if(FTBUConfigBackups.COMPRESSION_LEVEL.getInt() > 0)
             {
                 out.append("backup.zip");
                 dstFile = LMFileUtils.newFile(new File(Backups.INSTANCE.backupsFolder, out.toString()));
@@ -57,7 +57,7 @@ public class ThreadBackup extends Thread
 
                 ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(dstFile));
                 //zos.setLevel(9);
-                zos.setLevel(FTBUConfigBackups.compression_level.getAsInt());
+                zos.setLevel(FTBUConfigBackups.COMPRESSION_LEVEL.getInt());
 
                 long logMillis = System.currentTimeMillis() + 5000L;
 
@@ -126,7 +126,7 @@ public class ThreadBackup extends Thread
             Backups.logger.info("Created " + dstFile.getAbsolutePath() + " from " + src.getAbsolutePath());
             success = true;
 
-            if(FTBUConfigBackups.display_file_size.getAsBoolean())
+            if(FTBUConfigBackups.DISPLAY_FILE_SIZE.getBoolean())
             {
                 String sizeB = LMFileUtils.getSizeS(dstFile);
                 String sizeT = LMFileUtils.getSizeS(Backups.INSTANCE.backupsFolder);

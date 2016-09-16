@@ -1,14 +1,17 @@
 package com.feed_the_beast.ftbu;
 
-import com.feed_the_beast.ftbl.api.rankconfig.RankConfig;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyDouble;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyEnum;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyInt;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyIntList;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyStringList;
+import com.feed_the_beast.ftbl.api.permissions.DefaultPermissionLevel;
+import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
+import com.feed_the_beast.ftbl.api.rankconfig.IRankConfig;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
-import com.feed_the_beast.ftbl.api.rankconfig.RankConfigDouble;
-import com.feed_the_beast.ftbl.api.rankconfig.RankConfigEnum;
-import com.feed_the_beast.ftbl.api.rankconfig.RankConfigInt;
 import com.feed_the_beast.ftbu.api_impl.ChunkloaderType;
 import com.latmod.lib.EnumEnabled;
-import com.latmod.lib.EnumNameMap;
-import com.latmod.lib.util.LMJsonUtils;
+import net.minecraftforge.common.util.Constants;
 
 /**
  * Created by LatvianModder on 14.02.2016.
@@ -17,86 +20,62 @@ public class FTBUPermissions
 {
     // Display //
 
-    //Display 'Admin' in Server Info
-    /***/
-    public static final String DISPLAY_ADMIN_INFO = "ftbu.display.admin_info";
-
-    /**
-     * Display Rank in FriendsGUI
-     */
-    public static final String DISPLAY_RANK = "ftbu.display.rank"; // true
-
-    /**
-     * Display 'My Permissions' in Server Info
-     */
-    public static final String DISPLAY_PERMISSIONS = "ftbu.display.permissions"; // true
+    public static final String DISPLAY_ADMIN_INFO = PermissionAPI.registerPermission("ftbu.display.admin_info", DefaultPermissionLevel.OP, "Display 'Admin' in Server Info");
+    public static final String DISPLAY_RANK = PermissionAPI.registerPermission("ftbu.display.rank", DefaultPermissionLevel.ALL, "Display Rank in FriendsGUI");
+    public static final String DISPLAY_PERMISSIONS = PermissionAPI.registerPermission("ftbu.display.permissions", DefaultPermissionLevel.ALL, "Display 'My Permissions' in Server Info");
 
     // Homes //
 
-    /**
-     * Can use /home to teleport to/from another dimension
-     */
-    public static final String HOMES_CROSS_DIM = "ftbu.homes.cross_dim";
+    public static final String HOMES_CROSS_DIM = PermissionAPI.registerPermission("ftbu.homes.cross_dim", DefaultPermissionLevel.ALL, "Can use /home to teleport to/from another dimension");
 
-    /**
-     * Max home count
-     */
-    public static final RankConfigInt HOMES_MAX = new RankConfigInt("ftbu.homes.max", 1, 100, 0, 30000);
+    public static final IRankConfig HOMES_MAX = RankConfigAPI.register("ftbu.homes.max",
+            new PropertyInt(Constants.NBT.TAG_SHORT, 1, 0, 30000), new PropertyInt(100),
+            "Max home count");
 
     // Claims //
 
-    /**
-     * Allow player to edit other player's chunks
-     */
-    public static final String CLAIMS_MODIFY_OTHER_CHUNKS = "ftbu.claims.modify_other_chunks"; // false
+    public static final String CLAIMS_MODIFY_OTHER_CHUNKS = PermissionAPI.registerPermission("ftbu.claims.modify_other_chunks", DefaultPermissionLevel.OP, "Allow player to edit other player's chunks");
 
-    /**
-     * "Max amount of chunks that player can claim
-     * 0 - Disabled
-     */
-    public static final RankConfigInt CLAIMS_MAX_CHUNKS = new RankConfigInt("ftbu.claims.max_chunks", 100, 1000, 0, 30000);
+    public static final IRankConfig CLAIMS_MAX_CHUNKS = RankConfigAPI.register("ftbu.claims.max_chunks",
+            new PropertyInt(Constants.NBT.TAG_SHORT, 100, 0, 30000), new PropertyInt(1000),
+            "Max amount of chunks that player can claim",
+            "0 - Disabled");
 
-    /**
-     * -: Player setting
-     * disabled: Explosions will never happen in claimed chunks
-     * enabled: Explosions will always happen in claimed chunks
-     */
-    public static final RankConfigEnum<EnumEnabled> CLAIMS_FORCED_EXPLOSIONS = new RankConfigEnum<>("ftbu.claims.forced_explosions", null, null, new EnumNameMap<>(true, EnumEnabled.values()));
+    public static final IRankConfig CLAIMS_FORCED_EXPLOSIONS = RankConfigAPI.register("ftbu.claims.forced_explosions",
+            new PropertyEnum<>(EnumEnabled.NAME_MAP_WITH_NULL, null), new PropertyEnum<>(EnumEnabled.NAME_MAP_WITH_NULL, null),
+            "-: Player setting",
+            "disabled: Explosions will never happen in claimed chunks",
+            "enabled: Explosions will always happen in claimed chunks");
 
-    /**
-     * Block IDs that player can break in claimed chunks
-     */
-    public static final RankConfig CLAIMS_BREAK_WHITELIST = new RankConfig("ftbu.claims.break_whitelist", LMJsonUtils.toStringArray("OpenBlocks:grave"), LMJsonUtils.toStringArray("*"));
+    public static final IRankConfig CLAIMS_BREAK_WHITELIST = RankConfigAPI.register("ftbu.claims.break_whitelist",
+            new PropertyStringList("OpenBlocks:grave"), new PropertyStringList("*"),
+            "Block IDs that player can break in claimed chunks");
 
-    /**
-     * Dimensions where players can't claim
-     */
-    public static final RankConfig CLAIMS_DIMENSION_BLACKLIST = new RankConfig("ftbu.claims.dimension_blacklist", LMJsonUtils.toIntArray(1), LMJsonUtils.toIntArray());
+    public static final IRankConfig CLAIMS_DIMENSION_BLACKLIST = RankConfigAPI.register("ftbu.claims.dimension_blacklist",
+            new PropertyIntList(1), new PropertyIntList(),
+            "Dimensions where players can't claim");
 
     // Chunkloader //
 
-    /**
-     * disabled: Players won't be able to chunkload
-     * offline: Chunks stay loaded when player loggs off
-     * online: Chunks only stay loaded while owner is online
-     */
-    public static final RankConfigEnum<ChunkloaderType> CHUNKLOADER_TYPE = new RankConfigEnum<>("ftbu.chunkloader.type", ChunkloaderType.OFFLINE, ChunkloaderType.OFFLINE, new EnumNameMap<>(false, ChunkloaderType.values()));
+    public static final IRankConfig CHUNKLOADER_TYPE = RankConfigAPI.register("ftbu.chunkloader.type",
+            new PropertyEnum<>(ChunkloaderType.NAME_MAP, ChunkloaderType.OFFLINE),
+            new PropertyEnum<>(ChunkloaderType.NAME_MAP, ChunkloaderType.OFFLINE),
+            "disabled: Players won't be able to chunkload",
+            "offline: Chunks stay loaded when player loggs off",
+            "online: Chunks only stay loaded while owner is online");
 
-    /**
-     * Max amount of chunks that player can load
-     * 0 - Disabled
-     */
-    public static final RankConfigInt CHUNKLOADER_MAX_CHUNKS = new RankConfigInt("ftbu.chunkloader.max_chunks", 50, 5000, 0, 30000);
+    public static final IRankConfig CHUNKLOADER_MAX_CHUNKS = RankConfigAPI.register("ftbu.chunkloader.max_chunks",
+            new PropertyInt(Constants.NBT.TAG_SHORT, 50, 0, 30000), new PropertyInt(5000),
+            "Max amount of chunks that player can load",
+            "0 - Disabled");
 
-    /**
-     * Max hours player can be offline until he's chunks unload
-     * 0 - Disabled, will unload instantly when he disconnects
-     * -1 - Chunk will always be loaded
-     */
-    public static final RankConfigDouble CHUNKLOADER_OFFLINE_TIMER = new RankConfigDouble("ftbu.chunkloader.offline_timer", 24D, -1D, -1D, null);
+    public static final IRankConfig CHUNKLOADER_OFFLINE_TIMER = RankConfigAPI.register("ftbu.chunkloader.offline_timer",
+            new PropertyDouble(24D).setMin(-1D), new PropertyDouble(-1D),
+            "Max hours player can be offline until he's chunks unload",
+            "0 - Disabled, will unload instantly when he disconnects",
+            "-1 - Chunk will always be loaded");
 
     public static void init()
     {
-        RankConfigAPI.registerAll(FTBUPermissions.class);
     }
 }

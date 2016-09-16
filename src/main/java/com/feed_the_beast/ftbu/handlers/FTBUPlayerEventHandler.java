@@ -51,18 +51,18 @@ public class FTBUPlayerEventHandler
 
             if(event.isFirstLogin())
             {
-                if(FTBUConfigLogin.enable_starting_items.getAsBoolean())
+                if(FTBUConfigLogin.ENABLE_STARTING_ITEMS.getBoolean())
                 {
-                    for(ItemStack is : FTBUConfigLogin.starting_items.getItems())
+                    for(ItemStack is : FTBUConfigLogin.STARTING_ITEMS.getItems())
                     {
                         LMInvUtils.giveItem(ep, is);
                     }
                 }
             }
 
-            if(FTBUConfigLogin.enable_motd.getAsBoolean())
+            if(FTBUConfigLogin.ENABLE_MOTD.getBoolean())
             {
-                FTBUConfigLogin.motd.components.forEach(ep::addChatMessage);
+                FTBUConfigLogin.MOTD.components.forEach(ep::addChatMessage);
             }
 
             FTBUtilitiesAPI.get().getLoadedChunks().checkUnloaded(null);
@@ -94,7 +94,7 @@ public class FTBUPlayerEventHandler
         if(event.getPlayer().hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
         {
             FTBUPlayerData data = event.getPlayer().getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
-            event.getSettings().add("ftbu", data.createConfigGroup());
+            data.addConfig(event.getSettings());
         }
     }
 
@@ -187,7 +187,7 @@ public class FTBUPlayerEventHandler
                 return;
             }*/
 
-            if((FTBUConfigWorld.safe_spawn.getAsBoolean() && FTBUUniverseData.isInSpawnD(e.getEntity().dimension, e.getEntity().posX, e.getEntity().posZ)))
+            if((FTBUConfigWorld.SAFE_SPAWN.getBoolean() && FTBUUniverseData.isInSpawnD(e.getEntity().dimension, e.getEntity().posX, e.getEntity().posZ)))
             {
                 e.setCanceled(true);
             }

@@ -1,21 +1,20 @@
 package com.feed_the_beast.ftbu.config;
 
-import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
-import com.feed_the_beast.ftbl.api.config.ConfigEntryInt;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyBool;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyInt;
 import com.latmod.lib.annotations.Info;
-import com.latmod.lib.annotations.NumberBounds;
+import net.minecraftforge.common.util.Constants;
 
 public class FTBUConfigWebAPI
 {
-    public static final ConfigEntryBool enabled = new ConfigEntryBool(false);
+    public static final PropertyBool ENABLED = new PropertyBool(false);
 
-    @NumberBounds(min = 1000, max = 65535)
     @Info("Port for the WebAPI server")
-    public static final ConfigEntryInt port = new ConfigEntryInt(4509);
+    public static final PropertyInt PORT = new PropertyInt(Constants.NBT.TAG_SHORT, 4509).setMin(1000).setMax(65535);
 
     @Info("Starts server automatically with world")
-    public static final ConfigEntryBool autostart = new ConfigEntryBool(true);
+    public static final PropertyBool AUTOSTART = new PropertyBool(true);
 
     @Info("true - map, false - table")
-    public static final ConfigEntryBool output_map = new ConfigEntryBool(false);
+    public static final PropertyBool OUTPUT_MAP = new PropertyBool(false);
 }

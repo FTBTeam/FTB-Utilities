@@ -179,7 +179,7 @@ public class FTBUClientEventHandler
                 if(!lightList.isEmpty())
                 {
                     GlStateManager.color(1F, 1F, 1F, 1F);
-                    FTBLibClient.setTexture(FTBUClient.light_value_texture_x.getAsBoolean() ? TEXTURE_LIGHT_VALUE_X : TEXTURE_LIGHT_VALUE_O);
+                    FTBLibClient.setTexture(FTBUClientConfig.lightValueTextureX() ? TEXTURE_LIGHT_VALUE_X : TEXTURE_LIGHT_VALUE_O);
 
                     buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 

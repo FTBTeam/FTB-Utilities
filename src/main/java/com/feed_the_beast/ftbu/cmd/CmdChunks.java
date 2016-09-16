@@ -5,8 +5,7 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandTreeBase;
 import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
-import com.feed_the_beast.ftbl.api.permissions.context.ContextKeys;
-import com.feed_the_beast.ftbl.api.permissions.context.PlayerContext;
+import com.feed_the_beast.ftbl.api.permissions.context.BlockPosContext;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
@@ -97,7 +96,7 @@ public class CmdChunks extends CommandTreeBase
                 pos = new EntityDimPos(ep).toBlockDimPos().toChunkPos();
             }
 
-            if(!p.equalsPlayer(FTBUtilitiesAPI.get().getClaimedChunks().getChunkOwner(pos)) && !PermissionAPI.hasPermission(ep.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, new PlayerContext(ep).set(ContextKeys.CHUNK, pos.getChunkPos())))
+            if(!p.equalsPlayer(FTBUtilitiesAPI.get().getClaimedChunks().getChunkOwner(pos)) && !PermissionAPI.hasPermission(ep.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, new BlockPosContext(ep, pos.getChunkPos())))
             {
                 throw new CommandException("commands.generic.permission");
             }

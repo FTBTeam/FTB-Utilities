@@ -1,13 +1,13 @@
 package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.config.ConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
-import com.feed_the_beast.ftbl.api.config.impl.PropertyBool;
-import com.feed_the_beast.ftbl.api.config.impl.PropertyEnum;
-import com.feed_the_beast.ftbl.api.config.impl.PropertyEnumAbstract;
 import com.feed_the_beast.ftbl.api.security.EnumTeamPrivacyLevel;
+import com.feed_the_beast.ftbl.api_impl.config.ConfigKey;
+import com.feed_the_beast.ftbl.api_impl.config.PropertyBool;
+import com.feed_the_beast.ftbl.api_impl.config.PropertyEnum;
+import com.feed_the_beast.ftbl.api_impl.config.PropertyEnumAbstract;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.latmod.lib.EnumNameMap;
 import com.latmod.lib.io.Bits;
@@ -24,9 +24,9 @@ import javax.annotation.Nullable;
 public class FTBUTeamData implements ICapabilitySerializable<NBTTagCompound>
 {
     private static final EnumTeamPrivacyLevel DEF_BLOCKS_LEVEL = EnumTeamPrivacyLevel.ALLIES;
-    private static final IConfigKey DISABLE_EXPLOSIONS = new ConfigKey("ftbu.disable_explosions", new PropertyBool(false), null);
-    private static final IConfigKey FAKE_PLAYERS = new ConfigKey("ftbu.fake_players", new PropertyBool(false), null);
-    private static final IConfigKey BLOCKS = new ConfigKey("ftbu.blocks", new PropertyEnum<>(EnumTeamPrivacyLevel.NAME_MAP, DEF_BLOCKS_LEVEL), null);
+    private static final IConfigKey DISABLE_EXPLOSIONS = new ConfigKey("ftbu.disable_explosions", new PropertyBool(false));
+    private static final IConfigKey FAKE_PLAYERS = new ConfigKey("ftbu.fake_players", new PropertyBool(false));
+    private static final IConfigKey BLOCKS = new ConfigKey("ftbu.blocks", new PropertyEnum<>(EnumTeamPrivacyLevel.NAME_MAP, DEF_BLOCKS_LEVEL));
     private static final byte FLAG_DISABLE_EXPLOSIONS = 1;
     private static final byte FLAG_FAKE_PLAYERS = 2;
 

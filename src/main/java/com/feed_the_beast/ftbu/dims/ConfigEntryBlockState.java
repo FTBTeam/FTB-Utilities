@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.dims;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.impl.PropertyCustom;
+import com.feed_the_beast.ftbl.api_impl.config.PropertyCustom;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.block.Block;

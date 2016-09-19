@@ -15,7 +15,7 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
     @Override
     public void doRenderLayer(AbstractClientPlayer ep, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
     {
-        if(FTBUClientConfig.renderBadges() && !ep.isInvisible())
+        if(FTBUClientConfig.RENDER_BADGES.getBoolean() && !ep.isInvisible())
         {
             Badge b = CachedClientData.getClientBadge(ep.getGameProfile().getId());
 

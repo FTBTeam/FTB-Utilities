@@ -1,14 +1,14 @@
 package com.feed_the_beast.ftbu;
 
-import com.feed_the_beast.ftbl.api.config.impl.PropertyDouble;
-import com.feed_the_beast.ftbl.api.config.impl.PropertyEnum;
-import com.feed_the_beast.ftbl.api.config.impl.PropertyInt;
-import com.feed_the_beast.ftbl.api.config.impl.PropertyIntList;
-import com.feed_the_beast.ftbl.api.config.impl.PropertyStringList;
 import com.feed_the_beast.ftbl.api.permissions.DefaultPermissionLevel;
 import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.api.rankconfig.IRankConfig;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
+import com.feed_the_beast.ftbl.api_impl.config.PropertyDouble;
+import com.feed_the_beast.ftbl.api_impl.config.PropertyEnum;
+import com.feed_the_beast.ftbl.api_impl.config.PropertyInt;
+import com.feed_the_beast.ftbl.api_impl.config.PropertyIntList;
+import com.feed_the_beast.ftbl.api_impl.config.PropertyStringList;
 import com.feed_the_beast.ftbu.api_impl.ChunkloaderType;
 import com.latmod.lib.EnumEnabled;
 import net.minecraftforge.common.util.Constants;
@@ -38,14 +38,11 @@ public class FTBUPermissions
 
     public static final IRankConfig CLAIMS_MAX_CHUNKS = RankConfigAPI.register("ftbu.claims.max_chunks",
             new PropertyInt(Constants.NBT.TAG_SHORT, 100, 0, 30000), new PropertyInt(1000),
-            "Max amount of chunks that player can claim",
-            "0 - Disabled");
+            "Max amount of chunks that player can claim\n0 - Disabled");
 
     public static final IRankConfig CLAIMS_FORCED_EXPLOSIONS = RankConfigAPI.register("ftbu.claims.forced_explosions",
             new PropertyEnum<>(EnumEnabled.NAME_MAP_WITH_NULL, null), new PropertyEnum<>(EnumEnabled.NAME_MAP_WITH_NULL, null),
-            "-: Player setting",
-            "disabled: Explosions will never happen in claimed chunks",
-            "enabled: Explosions will always happen in claimed chunks");
+            "-: Player setting\ndisabled: Explosions will never happen in claimed chunks\nenabled: Explosions will always happen in claimed chunks");
 
     public static final IRankConfig CLAIMS_BREAK_WHITELIST = RankConfigAPI.register("ftbu.claims.break_whitelist",
             new PropertyStringList("OpenBlocks:grave"), new PropertyStringList("*"),
@@ -60,20 +57,15 @@ public class FTBUPermissions
     public static final IRankConfig CHUNKLOADER_TYPE = RankConfigAPI.register("ftbu.chunkloader.type",
             new PropertyEnum<>(ChunkloaderType.NAME_MAP, ChunkloaderType.OFFLINE),
             new PropertyEnum<>(ChunkloaderType.NAME_MAP, ChunkloaderType.OFFLINE),
-            "disabled: Players won't be able to chunkload",
-            "offline: Chunks stay loaded when player loggs off",
-            "online: Chunks only stay loaded while owner is online");
+            "disabled: Players won't be able to chunkload\noffline: Chunks stay loaded when player loggs off\nonline: Chunks only stay loaded while owner is online");
 
     public static final IRankConfig CHUNKLOADER_MAX_CHUNKS = RankConfigAPI.register("ftbu.chunkloader.max_chunks",
             new PropertyInt(Constants.NBT.TAG_SHORT, 50, 0, 30000), new PropertyInt(5000),
-            "Max amount of chunks that player can load",
-            "0 - Disabled");
+            "Max amount of chunks that player can load\n0 - Disabled");
 
     public static final IRankConfig CHUNKLOADER_OFFLINE_TIMER = RankConfigAPI.register("ftbu.chunkloader.offline_timer",
             new PropertyDouble(24D).setMin(-1D), new PropertyDouble(-1D),
-            "Max hours player can be offline until he's chunks unload",
-            "0 - Disabled, will unload instantly when he disconnects",
-            "-1 - Chunk will always be loaded");
+            "Max hours player can be offline until he's chunks unload\n0 - Disabled, will unload instantly when he disconnects\n-1 - Chunk will always be loaded");
 
     public static void init()
     {

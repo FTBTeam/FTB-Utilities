@@ -191,13 +191,8 @@ public enum Ranks implements IPermissionHandler, IRankConfigHandler
             {
                 IConfigValue value = p.getDefaultValue();
                 list.add("> " + p.getName() + " | Default Player Value: " + value + " | Default OP Value: " + p.getDefaultOPValue());
-
-                for(String s1 : p.getDescription())
-                {
-                    list.add("| " + s1);
-                }
-
-                list.add(": Type: " + value.getID().getResourcePath());
+                list.add("| " + p.getDescription());
+                list.add(": Type: " + value.getID());
 
                 String s = value.getMinValueString();
 

@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.config.ConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
-import com.feed_the_beast.ftbl.api.config.impl.PropertyBool;
+import com.feed_the_beast.ftbl.api_impl.config.ConfigKey;
+import com.feed_the_beast.ftbl.api_impl.config.PropertyBool;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.latmod.lib.io.Bits;
 import com.latmod.lib.math.BlockDimPos;
@@ -24,8 +24,8 @@ import java.util.Map;
  */
 public class FTBUPlayerData implements ICapabilitySerializable<NBTTagCompound>
 {
-    private static final IConfigKey RENDER_BADGE = new ConfigKey("ftbu.render_badge", new PropertyBool(true), null);
-    private static final IConfigKey CHAT_LINKS = new ConfigKey("ftbu.chat_links", new PropertyBool(true), null);
+    private static final IConfigKey RENDER_BADGE = new ConfigKey("ftbu.render_badge", new PropertyBool(true));
+    private static final IConfigKey CHAT_LINKS = new ConfigKey("ftbu.chat_links", new PropertyBool(true));
     private static final byte FLAG_RENDER_BADGE = 1;
     private static final byte FLAG_CHAT_LINKS = 2;
 

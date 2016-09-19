@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.dims.mining_dim;
 
-import com.feed_the_beast.ftbl.api.config.impl.PropertyBool;
-import com.feed_the_beast.ftbl.api.config.impl.PropertyInt;
+import com.feed_the_beast.ftbl.api_impl.config.PropertyBool;
+import com.feed_the_beast.ftbl.api_impl.config.PropertyInt;
 import net.minecraft.world.DimensionType;
 import net.minecraftforge.common.DimensionManager;
 

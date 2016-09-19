@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
-import com.feed_the_beast.ftbu.config.FTBUConfig;
 import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
 import com.feed_the_beast.ftbu.dims.FTBUDimConfig;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
@@ -48,7 +47,6 @@ public class FTBU
     public void preInit(FMLPreInitializationEvent event)
     {
         FTBUtilitiesAPI.setAPI(new FTBUtilitiesAPI_Impl());
-        FTBUConfig.load();
 
         MinecraftForge.EVENT_BUS.register(new FTBUPlayerEventHandler());
         MinecraftForge.EVENT_BUS.register(new FTBUWorldEventHandler());

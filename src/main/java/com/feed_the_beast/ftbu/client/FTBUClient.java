@@ -34,7 +34,6 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
         ClientRegistry.registerKeyBinding(KEY_LIGHT_VALUES);
         ClientRegistry.registerKeyBinding(KEY_CHUNK_BORDER);
 
-        FTBUClientConfig.init();
         FTBUActions.init();
         CachedClientData.reloadGlobalBadges();
         MinecraftForge.EVENT_BUS.register(new FTBUClientEventHandler());

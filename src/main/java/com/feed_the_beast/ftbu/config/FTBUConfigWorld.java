@@ -1,12 +1,13 @@
 package com.feed_the_beast.ftbu.config;
 
+import com.feed_the_beast.ftbl.api.config.ConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.impl.PropertyBool;
-import com.feed_the_beast.ftbl.api.config.impl.PropertyCustom;
+import com.feed_the_beast.ftbl.api_impl.config.PropertyBool;
+import com.feed_the_beast.ftbl.api_impl.config.PropertyCustom;
+import com.feed_the_beast.ftbu.FTBUFinals;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import com.latmod.lib.annotations.Info;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.nbt.NBTBase;
@@ -16,16 +17,19 @@ import java.util.Collection;
 
 public class FTBUConfigWorld
 {
+    @ConfigValue(id = "world.chunk_claiming", file = FTBUFinals.MOD_ID)
     public static final PropertyBool CHUNK_CLAIMING = new PropertyBool(true);
+
+    @ConfigValue(id = "world.chunk_loading", file = FTBUFinals.MOD_ID)
     public static final PropertyBool CHUNK_LOADING = new PropertyBool(true);
 
-    @Info("If set to true, explosions and hostile mobs in spawn area will be disabled, players won't be able to attack each other in spawn area")
+    @ConfigValue(id = "world.safe_spawn", file = FTBUFinals.MOD_ID, info = "If set to true, explosions and hostile mobs in spawn area will be disabled, players won't be able to attack each other in spawn area")
     public static final PropertyBool SAFE_SPAWN = new PropertyBool(false);
 
-    @Info("Entity IDs that are banned from world. They will not spawn and existing ones will be destroyed")
+    @ConfigValue(id = "world.blocked_entities", file = FTBUFinals.MOD_ID, info = "Entity IDs that are banned from world. They will not spawn and existing ones will be destroyed")
     public static final ConfigEntryBannedEntityList BLOCKED_ENTITIES = new ConfigEntryBannedEntityList(new ArrayList<>());
 
-    @Info("Enable spawn area in singleplayer")
+    @ConfigValue(id = "world.spawn_area_in_sp", file = FTBUFinals.MOD_ID, info = "Enable spawn area in singleplayer")
     public static final PropertyBool SPAWN_AREA_IN_SP = new PropertyBool(false);
 
     public static class ConfigEntryBannedEntityList extends PropertyCustom

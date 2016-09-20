@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandTreeBase;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.world.backups.Backups;
@@ -10,6 +9,7 @@ import com.latmod.lib.util.LMFileUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.server.command.CommandTreeBase;
 
 public class CmdBackup extends CommandTreeBase
 {
@@ -80,9 +80,20 @@ public class CmdBackup extends CommandTreeBase
 
     public CmdBackup()
     {
-        super("backup");
-        add(new CmdBackupStart());
-        add(new CmdBackupStop());
-        add(new CmdBackupGetSize());
+        addSubcommand(new CmdBackupStart());
+        addSubcommand(new CmdBackupStop());
+        addSubcommand(new CmdBackupGetSize());
+    }
+
+    @Override
+    public String getCommandName()
+    {
+        return "backup";
+    }
+
+    @Override
+    public String getCommandUsage(ICommandSender sender)
+    {
+        return "command.ftb.backup.usage";
     }
 }

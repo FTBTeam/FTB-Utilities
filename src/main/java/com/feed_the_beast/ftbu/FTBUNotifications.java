@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api_impl.Notification;
@@ -31,7 +30,7 @@ public class FTBUNotifications
 
     private static int register(String s)
     {
-        return FTBLibAPI.get().getRegistries().notifications().getOrCreateIDFromKey(new ResourceLocation(FTBUFinals.MOD_ID, s));
+        return FTBLibIntegration.API.getRegistries().notifications().getOrCreateIDFromKey(new ResourceLocation(FTBUFinals.MOD_ID, s));
     }
 
     public static INotification chunkChanged(@Nullable IForgeTeam team)

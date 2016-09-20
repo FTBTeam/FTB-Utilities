@@ -1,13 +1,12 @@
 package com.feed_the_beast.ftbu.api_impl;
 
 import com.feed_the_beast.ftbl.FTBLibStats;
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
+import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.chunks.ILoadedChunk;
 import com.feed_the_beast.ftbu.api.chunks.ILoadedChunkStorage;
 import com.feed_the_beast.ftbu.api.chunks.ITicketContainer;
@@ -86,7 +85,7 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, ILo
 
         for(ILoadedChunk loadedChunk : ticketContainer.getChunks().valueCollection())
         {
-            if(Objects.equal(loadedChunk.getOwner(), FTBUtilitiesAPI.get().getClaimedChunks().getChunkOwner(new ChunkDimPos(loadedChunk.getPos().chunkXPos, loadedChunk.getPos().chunkZPos, dim))))
+            if(Objects.equal(loadedChunk.getOwner(), FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().getChunkOwner(new ChunkDimPos(loadedChunk.getPos().chunkXPos, loadedChunk.getPos().chunkZPos, dim))))
             {
                 ForgeChunkManager.forceChunk(ticket, loadedChunk.getPos());
             }
@@ -192,7 +191,7 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, ILo
 
             if(isForced)
             {
-                IForgePlayer owner = FTBLibAPI.get().getUniverse().getPlayer(loadedChunk.getOwner());
+                IForgePlayer owner = FTBLibIntegration.API.getUniverse().getPlayer(loadedChunk.getOwner());
                 ChunkloaderType type = (ChunkloaderType) RankConfigAPI.getRankConfig(owner.getProfile(), FTBUPermissions.CHUNKLOADER_TYPE).getValue();
 
                 if(type == ChunkloaderType.DISABLED)
@@ -244,7 +243,7 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, ILo
     @Override
     public int getLoadedChunks(@Nullable IForgePlayer player)
     {
-        Collection<ChunkDimPos> c = FTBUtilitiesAPI.get().getClaimedChunks().getChunks(player);
+        Collection<ChunkDimPos> c = FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().getChunks(player);
 
         if(c.isEmpty())
         {

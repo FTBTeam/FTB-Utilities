@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.net;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToServer;
+import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import com.latmod.lib.util.LMNetUtils;
@@ -45,7 +45,7 @@ public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
     @Override
     public void onMessage(MessageRequestBadge m, EntityPlayerMP player)
     {
-        Badge b = FTBUUniverseData.getServerBadge(FTBLibAPI.get().getUniverse().getPlayer(m.playerID));
+        Badge b = FTBUUniverseData.getServerBadge(FTBLibIntegration.API.getUniverse().getPlayer(m.playerID));
 
         if(b != null)
         {

@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.gui;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.latmod.lib.PixelBuffer;
 import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.block.Block;
@@ -185,7 +184,7 @@ public class ThreadReloadArea extends Thread
                         }
                     }
 
-                    GuiClaimChunks.pixelBuffer = FTBLibClient.toByteBuffer(pixels.getPixels(), false);
+                    GuiClaimChunks.pixelBuffer = LMColorUtils.toByteBuffer(pixels.getPixels(), false);
                 }
             }
         }
@@ -194,6 +193,6 @@ public class ThreadReloadArea extends Thread
             e.printStackTrace();
         }
 
-        GuiClaimChunks.pixelBuffer = FTBLibClient.toByteBuffer(pixels.getPixels(), false);
+        GuiClaimChunks.pixelBuffer = LMColorUtils.toByteBuffer(pixels.getPixels(), false);
     }
 }

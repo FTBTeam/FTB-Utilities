@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.client;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.api.IFTBLibRegistries;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
@@ -17,9 +17,9 @@ import net.minecraft.util.ResourceLocation;
 
 public class FTBUActions
 {
-    public static void init()
+    public static void init(IFTBLibRegistries reg)
     {
-        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "guide"), new SidebarButton(0, GuiIcons.BOOK, EnumEnabled.ENABLED)
+        reg.sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "guide"), new SidebarButton(0, GuiIcons.BOOK, EnumEnabled.ENABLED)
         {
             @Override
             public void onClicked(IMouseButton button)
@@ -29,7 +29,7 @@ public class FTBUActions
             }
         });
 
-        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "server_info"), new SidebarButton(0, GuiIcons.BOOK_RED, EnumEnabled.ENABLED)
+        reg.sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "server_info"), new SidebarButton(0, GuiIcons.BOOK_RED, EnumEnabled.ENABLED)
         {
             @Override
             public void onClicked(IMouseButton button)
@@ -45,7 +45,7 @@ public class FTBUActions
             }
         });
 
-        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "claimed_chunks"), new SidebarButton(0, GuiIcons.MAP, EnumEnabled.ENABLED)
+        reg.sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "claimed_chunks"), new SidebarButton(0, GuiIcons.MAP, EnumEnabled.ENABLED)
         {
             @Override
             public void onClicked(IMouseButton button)
@@ -61,7 +61,7 @@ public class FTBUActions
             }
         });
 
-        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "trash_can"), new SidebarButton(0, GuiIcons.BIN, EnumEnabled.ENABLED)
+        reg.sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "trash_can"), new SidebarButton(0, GuiIcons.BIN, EnumEnabled.ENABLED)
         {
             @Override
             public void onClicked(IMouseButton button)
@@ -70,7 +70,7 @@ public class FTBUActions
             }
         });
 
-        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "shop"), new SidebarButton(0, GuiIcons.MONEY_BAG, EnumEnabled.ENABLED)
+        reg.sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "shop"), new SidebarButton(0, GuiIcons.MONEY_BAG, EnumEnabled.ENABLED)
         {
             @Override
             public void onClicked(IMouseButton button)
@@ -85,7 +85,7 @@ public class FTBUActions
             }
         });
 
-        /*FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "mail"), new PlayerAction(0, GuiIcons.feather)
+        /*reg.sidebarButtons().register(new ResourceLocation(FTBUFinals.MOD_ID, "mail"), new PlayerAction(0, GuiIcons.feather)
         {
             @Override
             @SideOnly(Side.CLIENT)

@@ -17,6 +17,7 @@ import com.feed_the_beast.ftbu.net.MessageAreaRequest;
 import com.latmod.lib.TextureCoords;
 import com.latmod.lib.math.ChunkDimPos;
 import com.latmod.lib.math.MathHelperLM;
+import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
@@ -137,7 +138,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 
                 if(chunkData.team != null)
                 {
-                    FTBLibClient.setGLColor(chunkData.team.color.getColor(), 180);
+                    LMColorUtils.setGLColor(chunkData.team.color.getColor(), 180);
                 }
                 else
                 {

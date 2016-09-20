@@ -11,13 +11,10 @@ import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import java.util.Map;
 
-@SideOnly(Side.CLIENT)
 public class FTBUClient extends FTBUCommon // FTBLibModClient
 {
     public static final String KEY_CATEGORY = "key.categories.ftbu";
@@ -34,7 +31,6 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
         ClientRegistry.registerKeyBinding(KEY_LIGHT_VALUES);
         ClientRegistry.registerKeyBinding(KEY_CHUNK_BORDER);
 
-        FTBUActions.init();
         CachedClientData.reloadGlobalBadges();
         MinecraftForge.EVENT_BUS.register(new FTBUClientEventHandler());
     }
@@ -43,10 +39,8 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
     public void postInit()
     {
         Map<String, RenderPlayer> skinMap = Minecraft.getMinecraft().getRenderManager().getSkinMap();
-        RenderPlayer render = skinMap.get("default");
-        render.addLayer(LayerBadge.INSTANCE);
-        render = skinMap.get("slim");
-        render.addLayer(LayerBadge.INSTANCE);
+        skinMap.get("default").addLayer(LayerBadge.INSTANCE);
+        skinMap.get("slim").addLayer(LayerBadge.INSTANCE);
         //GuideRepoList.refresh();
     }
 
@@ -54,10 +48,6 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
     public void onReloadedClient()
     {
         FTBLibClient.clearCachedData();
-
-        //if(e.modeChanged)
-        {
-            //FIXME: GuideRepoList.reloadFromFolder(e.world.getMode());
-        }
+        //FIXME: GuideRepoList.reloadFromFolder(e.world.getMode());
     }
 }

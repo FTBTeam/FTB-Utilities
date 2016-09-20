@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.webapi;
 
 import com.feed_the_beast.ftbl.FTBLibStats;
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -54,7 +54,7 @@ public class WebAPI extends Thread
                     table.setTitle("dph", "Deaths per hour");
                     table.setTitle("last_seen", "Last time seen");
 
-                    for(IForgePlayer player : FTBLibAPI.get().getUniverse().getPlayers())
+                    for(IForgePlayer player : FTBLibIntegration.API.getUniverse().getPlayers())
                     {
                         StatisticsManagerServer stats = player.stats();
 
@@ -94,7 +94,7 @@ public class WebAPI extends Thread
 
     public boolean isAPIRunning()
     {
-        return FTBUConfigWebAPI.ENABLED.getBoolean() && FTBLibAPI.get().getUniverse() != null && serverSocket != null && !serverSocket.isClosed();
+        return FTBUConfigWebAPI.ENABLED.getBoolean() && FTBLibIntegration.API.getUniverse() != null && serverSocket != null && !serverSocket.isClosed();
     }
 
     public void startAPI()

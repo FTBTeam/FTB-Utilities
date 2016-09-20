@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.api_impl;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunkStorage;
 import com.feed_the_beast.ftbu.world.FTBUTeamData;
 import com.latmod.lib.math.BlockDimPos;
@@ -115,7 +115,7 @@ public class ClaimedChunkStorage implements IClaimedChunkStorage
             return true;
         }
 
-        IForgePlayer player = FTBLibAPI.get().getUniverse().getPlayer(entityPlayer);
+        IForgePlayer player = FTBLibIntegration.API.getUniverse().getPlayer(entityPlayer);
 
         if(owner.equalsPlayer(player))
         {

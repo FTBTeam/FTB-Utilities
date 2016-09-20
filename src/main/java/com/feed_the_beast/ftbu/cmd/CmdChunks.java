@@ -1,14 +1,13 @@
 package com.feed_the_beast.ftbu.cmd;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandTreeBase;
 import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.api.permissions.context.BlockPosContext;
+import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
+import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.net.MessageAreaUpdate;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import com.latmod.lib.math.ChunkDimPos;
@@ -18,6 +17,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.server.command.CommandTreeBase;
 
 /**
  * Created by LatvianModder on 27.06.2016.
@@ -56,12 +56,12 @@ public class CmdChunks extends CommandTreeBase
 
             if(FTBUUniverseData.claimChunk(p, pos))
             {
-                FTBLibAPI.get().sendNotification(ep, FTBUNotifications.CHUNK_CLAIMED);
+                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CHUNK_CLAIMED);
                 new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
             }
             else
             {
-                FTBLibAPI.get().sendNotification(ep, FTBUNotifications.CANT_MODIFY_CHUNK);
+                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CANT_MODIFY_CHUNK);
             }
         }
     }
@@ -96,19 +96,19 @@ public class CmdChunks extends CommandTreeBase
                 pos = new EntityDimPos(ep).toBlockDimPos().toChunkPos();
             }
 
-            if(!p.equalsPlayer(FTBUtilitiesAPI.get().getClaimedChunks().getChunkOwner(pos)) && !PermissionAPI.hasPermission(ep.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, new BlockPosContext(ep, pos.getChunkPos())))
+            if(!p.equalsPlayer(FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().getChunkOwner(pos)) && !PermissionAPI.hasPermission(ep.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, new BlockPosContext(ep, pos.getChunkPos())))
             {
                 throw new CommandException("commands.generic.permission");
             }
 
             if(FTBUUniverseData.unclaimChunk(p, pos))
             {
-                FTBLibAPI.get().sendNotification(ep, FTBUNotifications.CHUNK_UNCLAIMED);
+                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CHUNK_UNCLAIMED);
                 new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
             }
             else
             {
-                FTBLibAPI.get().sendNotification(ep, FTBUNotifications.CANT_MODIFY_CHUNK);
+                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CANT_MODIFY_CHUNK);
             }
         }
     }
@@ -145,12 +145,12 @@ public class CmdChunks extends CommandTreeBase
 
             if(FTBUUniverseData.setLoaded(p, pos, true))
             {
-                FTBLibAPI.get().sendNotification(ep, FTBUNotifications.CHUNK_LOADED);
+                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CHUNK_LOADED);
                 new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
             }
             else
             {
-                FTBLibAPI.get().sendNotification(ep, FTBUNotifications.CANT_MODIFY_CHUNK);
+                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CANT_MODIFY_CHUNK);
             }
         }
     }
@@ -186,12 +186,12 @@ public class CmdChunks extends CommandTreeBase
 
             if(FTBUUniverseData.setLoaded(p, pos, false))
             {
-                FTBLibAPI.get().sendNotification(ep, FTBUNotifications.CHUNK_UNLOADED);
+                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CHUNK_UNLOADED);
                 new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
             }
             else
             {
-                FTBLibAPI.get().sendNotification(ep, FTBUNotifications.CANT_MODIFY_CHUNK);
+                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CANT_MODIFY_CHUNK);
             }
         }
     }
@@ -233,7 +233,7 @@ public class CmdChunks extends CommandTreeBase
             }
 
             FTBUUniverseData.unclaimAllChunks(p, parseBoolean(args[0]) ? null : ep.dimension);
-            FTBLibAPI.get().sendNotification(ep, FTBUNotifications.UNCLAIMED_ALL);
+            FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.UNCLAIMED_ALL);
         }
     }
 
@@ -256,9 +256,9 @@ public class CmdChunks extends CommandTreeBase
             checkArgs(args, 1, "<player>");
             IForgePlayer p = getForgePlayer(args[0]);
 
-            for(ChunkDimPos chunk : FTBUtilitiesAPI.get().getLoadedChunks().getChunks(p))
+            for(ChunkDimPos chunk : FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().getChunks(p))
             {
-                FTBUtilitiesAPI.get().getLoadedChunks().setLoaded(chunk, null);
+                FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().setLoaded(chunk, null);
             }
 
             ics.addChatMessage(new TextComponentString("Unloaded all " + p.getProfile().getName() + "'s chunks")); //TODO: Lang
@@ -296,20 +296,31 @@ public class CmdChunks extends CommandTreeBase
 
     public CmdChunks()
     {
-        super("chunks");
-        add(new CmdClaim());
-        add(new CmdUnclaim());
-        add(new CmdLoad());
-        add(new CmdUnload());
+        addSubcommand(new CmdClaim());
+        addSubcommand(new CmdUnclaim());
+        addSubcommand(new CmdLoad());
+        addSubcommand(new CmdUnload());
 
-        add(new CmdUnclaimAll());
-        add(new CmdUnloadAll());
-        add(new CmdAdminUnclaimAll());
+        addSubcommand(new CmdUnclaimAll());
+        addSubcommand(new CmdUnloadAll());
+        addSubcommand(new CmdAdminUnclaimAll());
+    }
+
+    @Override
+    public String getCommandName()
+    {
+        return "chunks";
     }
 
     @Override
     public int getRequiredPermissionLevel()
     {
         return 0;
+    }
+
+    @Override
+    public String getCommandUsage(ICommandSender sender)
+    {
+        return "command.ftb.chunks.usage";
     }
 }

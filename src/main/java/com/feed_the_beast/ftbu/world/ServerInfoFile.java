@@ -1,18 +1,17 @@
 package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.cmd.ITreeCommand;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
+import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.FTBUTops;
 import com.feed_the_beast.ftbu.api.EventFTBUServerInfo;
 import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.ILeaderboardDataProvider;
 import com.feed_the_beast.ftbu.api.ILeaderboardRegistry;
+import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.world.backups.Backups;
@@ -30,6 +29,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.server.command.CommandTreeBase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,7 +71,7 @@ public class ServerInfoFile extends InfoPage
         copyFrom(CachedInfo.main);
 
         List<IForgePlayer> players = new ArrayList<>();
-        players.addAll(FTBLibAPI.get().getUniverse().getPlayers());
+        players.addAll(FTBLibIntegration.API.getUniverse().getPlayers());
 
         if(FTBUConfigGeneral.AUTO_RESTART.getBoolean())
         {
@@ -90,12 +90,12 @@ public class ServerInfoFile extends InfoPage
 
         if(FTBUConfigGeneral.SERVER_INFO_MODE.getBoolean())
         {
-            println(FTBLibLang.MODE_CURRENT.textComponent(LMStringUtils.firstUppercase(FTBLibAPI.get().getSharedData(Side.SERVER).getPackMode().getID())));
+            println(FTBLibLang.MODE_CURRENT.textComponent(LMStringUtils.firstUppercase(FTBLibIntegration.API.getSharedData(Side.SERVER).getPackMode().getID())));
         }
 
         InfoPage topsPage = getSub("tops").setTitle(FTBUTops.LANG_TOP_TITLE.textComponent());
 
-        ILeaderboardRegistry leaderboardRegistry = FTBUtilitiesAPI.get().getLeaderboardRegistry();
+        ILeaderboardRegistry leaderboardRegistry = FTBUtilitiesAPI_Impl.INSTANCE.getLeaderboardRegistry();
 
         for(StatBase stat : leaderboardRegistry.getRegistred())
         {
@@ -174,12 +174,12 @@ public class ServerInfoFile extends InfoPage
                         }
                     }
 
-                    if(c instanceof ITreeCommand)
+                    if(c instanceof CommandTreeBase)
                     {
                         List<ITextComponent> list = new ArrayList<>();
                         list.add(new TextComponentString('/' + c.getCommandName()));
                         list.add(null);
-                        addCommandUsage(server, self.getPlayer(), list, 0, (ITreeCommand) c);
+                        addCommandUsage(self.getPlayer(), list, 0, (CommandTreeBase) c);
 
                         for(ITextComponent c1 : list)
                         {
@@ -252,14 +252,14 @@ public class ServerInfoFile extends InfoPage
         sortAll();
     }
 
-    private void addCommandUsage(MinecraftServer server, ICommandSender sender, List<ITextComponent> list, int level, ITreeCommand treeCommand)
+    private void addCommandUsage(ICommandSender sender, List<ITextComponent> list, int level, CommandTreeBase treeCommand)
     {
         for(ICommand c : treeCommand.getSubCommands())
         {
-            if(c instanceof ITreeCommand)
+            if(c instanceof CommandTreeBase)
             {
                 list.add(tree(new TextComponentString('/' + c.getCommandName()), level));
-                addCommandUsage(server, sender, list, level + 1, (ITreeCommand) c);
+                addCommandUsage(sender, list, level + 1, (CommandTreeBase) c);
             }
             else
             {

@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.api_impl;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.chunks.ILoadedChunk;
 import com.feed_the_beast.ftbu.api.chunks.ITicketContainer;
 import com.latmod.lib.io.Bits;
@@ -61,7 +61,7 @@ public final class TicketContainer implements ITicketContainer
 
             if(ai.length >= 7)
             {
-                IForgePlayer player = FTBLibAPI.get().getUniverse().getPlayer(new UUID(Bits.intsToLong(ai[2], ai[3]), Bits.intsToLong(ai[4], ai[5])));
+                IForgePlayer player = FTBLibIntegration.API.getUniverse().getPlayer(new UUID(Bits.intsToLong(ai[2], ai[3]), Bits.intsToLong(ai[4], ai[5])));
 
                 if(player != null)
                 {

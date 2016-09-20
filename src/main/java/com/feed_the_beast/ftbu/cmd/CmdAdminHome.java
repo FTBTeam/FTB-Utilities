@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandTreeBase;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.latmod.lib.math.BlockDimPos;
@@ -12,6 +11,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.server.command.CommandTreeBase;
 
 public class CmdAdminHome extends CommandTreeBase
 {
@@ -105,9 +105,20 @@ public class CmdAdminHome extends CommandTreeBase
 
     public CmdAdminHome()
     {
-        super("admin_home");
-        add(new CmdTP());
-        add(new CmdList());
-        add(new CmdRem());
+        addSubcommand(new CmdTP());
+        addSubcommand(new CmdList());
+        addSubcommand(new CmdRem());
+    }
+
+    @Override
+    public String getCommandName()
+    {
+        return "admin_home";
+    }
+
+    @Override
+    public String getCommandUsage(ICommandSender sender)
+    {
+        return "command.ftb.admin_home.usage";
     }
 }

@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbu.handlers;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.events.RegisterFTBCommandsEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
+import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBU;
-import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
+import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.cmd.CmdAdminHome;
 import com.feed_the_beast.ftbu.cmd.CmdBack;
 import com.feed_the_beast.ftbu.cmd.CmdBackup;
@@ -66,7 +66,7 @@ public class FTBUServerEventHandler
             Ranks.INSTANCE.reload();
 
             FTBUUniverseData.reloadServerBadges();
-            FTBUtilitiesAPI.get().getLoadedChunks().checkUnloaded(null);
+            FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().checkUnloaded(null);
         }
         else
         {
@@ -137,9 +137,9 @@ public class FTBUServerEventHandler
 
             line.getStyle().setColor(TextFormatting.GOLD);
 
-            FTBLibAPI.get().addServerCallback(1, () ->
+            FTBLibIntegration.API.addServerCallback(1, () ->
             {
-                for(IForgePlayer p : FTBLibAPI.get().getUniverse().getPlayers())
+                for(IForgePlayer p : FTBLibIntegration.API.getUniverse().getPlayers())
                 {
                     if(p.isOnline() && FTBUPlayerData.get(p).chatLinks())
                     {

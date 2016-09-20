@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.cmd;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
+import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import com.latmod.lib.math.BlockDimPos;
@@ -39,7 +39,7 @@ public class CmdSetWarp extends CommandLM
             c = ep.getPosition();
         }
 
-        FTBUUniverseData.get(FTBLibAPI.get().getUniverse()).setWarp(args[0], new BlockDimPos(c, ep.dimension));
+        FTBUUniverseData.get(FTBLibIntegration.API.getUniverse()).setWarp(args[0], new BlockDimPos(c, ep.dimension));
         FTBULang.WARP_SET.printChat(ics, args[0]);
     }
 }

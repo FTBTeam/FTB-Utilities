@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.cmd;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
+import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import com.latmod.lib.math.BlockDimPos;
@@ -42,7 +42,7 @@ public class CmdWarp extends CommandLM
     {
         if(args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, FTBUUniverseData.get(FTBLibAPI.get().getUniverse()).listWarps());
+            return getListOfStringsMatchingLastWord(args, FTBUUniverseData.get(FTBLibIntegration.API.getUniverse()).listWarps());
         }
 
         return super.getTabCompletionOptions(server, sender, args, pos);
@@ -57,13 +57,13 @@ public class CmdWarp extends CommandLM
 
         if(args[0].equals("list"))
         {
-            Collection<String> list = FTBUUniverseData.get(FTBLibAPI.get().getUniverse()).listWarps();
+            Collection<String> list = FTBUUniverseData.get(FTBLibIntegration.API.getUniverse()).listWarps();
             ics.addChatMessage(new TextComponentString(list.isEmpty() ? "-" : LMStringUtils.strip(list)));
             return;
         }
 
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-        BlockDimPos p = FTBUUniverseData.get(FTBLibAPI.get().getUniverse()).getWarp(args[0]);
+        BlockDimPos p = FTBUUniverseData.get(FTBLibIntegration.API.getUniverse()).getWarp(args[0]);
         if(p == null)
         {
             throw FTBULang.WARP_NOT_SET.commandError(args[0]);

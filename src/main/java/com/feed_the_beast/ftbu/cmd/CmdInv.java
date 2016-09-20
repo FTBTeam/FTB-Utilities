@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandTreeBase;
 import com.latmod.lib.util.LMInvUtils;
 import com.latmod.lib.util.LMNBTUtils;
 import com.latmod.lib.util.LMStringUtils;
@@ -16,6 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.server.command.CommandTreeBase;
 
 import java.io.File;
 
@@ -198,10 +198,21 @@ public class CmdInv extends CommandTreeBase
 
     public CmdInv()
     {
-        super("inv");
-        add(new CmdView());
-        add(new CmdSave());
-        add(new CmdLoad());
-        add(new CmdList());
+        addSubcommand(new CmdView());
+        addSubcommand(new CmdSave());
+        addSubcommand(new CmdLoad());
+        addSubcommand(new CmdList());
+    }
+
+    @Override
+    public String getCommandName()
+    {
+        return "inv";
+    }
+
+    @Override
+    public String getCommandUsage(ICommandSender sender)
+    {
+        return "command.ftb.inv.usage";
     }
 }

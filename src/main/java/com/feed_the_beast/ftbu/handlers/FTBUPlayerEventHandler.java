@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.handlers;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.events.player.AttachPlayerCapabilitiesEvent;
@@ -13,11 +12,12 @@ import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.api.permissions.context.ContextKeys;
 import com.feed_the_beast.ftbl.api.permissions.context.PlayerContext;
 import com.feed_the_beast.ftbl.api_impl.MouseButton;
+import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
+import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.config.FTBUConfigLogin;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
@@ -71,7 +71,7 @@ public class FTBUPlayerEventHandler
                 FTBUConfigLogin.MOTD.components.forEach(ep::addChatMessage);
             }
 
-            FTBUtilitiesAPI.get().getLoadedChunks().checkUnloaded(null);
+            FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().checkUnloaded(null);
         }
     }
 
@@ -80,7 +80,7 @@ public class FTBUPlayerEventHandler
     {
         if(event.getPlayer().hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
         {
-            FTBUtilitiesAPI.get().getLoadedChunks().checkUnloaded(null);
+            FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().checkUnloaded(null);
         }
     }
 
@@ -127,7 +127,7 @@ public class FTBUPlayerEventHandler
         }
 
         EntityPlayerMP ep = (EntityPlayerMP) e.getEntity();
-        IForgePlayer player = FTBLibAPI.get().getUniverse().getPlayer(ep);
+        IForgePlayer player = FTBLibIntegration.API.getUniverse().getPlayer(ep);
 
         if(player == null || !player.isOnline())
         {
@@ -141,11 +141,11 @@ public class FTBUPlayerEventHandler
 
     public static void updateChunkMessage(EntityPlayerMP player, ChunkDimPos pos)
     {
-        IForgePlayer chunkOwner = FTBUtilitiesAPI.get().getClaimedChunks().getChunkOwner(pos);
+        IForgePlayer chunkOwner = FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().getChunkOwner(pos);
 
         String newTeamID = (chunkOwner == null || chunkOwner.getTeam() == null) ? null : chunkOwner.getTeamID();
 
-        FTBUPlayerData data = FTBLibAPI.get().getUniverse().getPlayer(player).getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
+        FTBUPlayerData data = FTBLibIntegration.API.getUniverse().getPlayer(player).getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
 
         if(data.lastChunkID == null || !Objects.equal(data.lastChunkID, newTeamID))
         {
@@ -157,12 +157,12 @@ public class FTBUPlayerEventHandler
 
                 if(team != null)
                 {
-                    FTBLibAPI.get().sendNotification(player, FTBUNotifications.chunkChanged(team));
+                    FTBLibIntegration.API.sendNotification(player, FTBUNotifications.chunkChanged(team));
                 }
             }
             else
             {
-                FTBLibAPI.get().sendNotification(player, FTBUNotifications.chunkChanged(null));
+                FTBLibIntegration.API.sendNotification(player, FTBUNotifications.chunkChanged(null));
             }
         }
     }
@@ -211,7 +211,7 @@ public class FTBUPlayerEventHandler
         if(event.getEntityPlayer() instanceof EntityPlayerMP)
         {
             EntityPlayerMP player = (EntityPlayerMP) event.getEntityPlayer();
-            if(!FTBUtilitiesAPI.get().getClaimedChunks().canPlayerInteract(player, event.getPos(), MouseButton.RIGHT))
+            if(!FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().canPlayerInteract(player, event.getPos(), MouseButton.RIGHT))
             {
                 event.setCanceled(true);
             }
@@ -231,7 +231,7 @@ public class FTBUPlayerEventHandler
             EntityPlayerMP player = (EntityPlayerMP) event.getPlayer();
             IBlockState state = player.worldObj.getBlockState(event.getPos());
 
-            if(!FTBUtilitiesAPI.get().getClaimedChunks().canPlayerInteract(player, event.getPos(), MouseButton.LEFT))
+            if(!FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().canPlayerInteract(player, event.getPos(), MouseButton.LEFT))
             {
                 if(!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_BLOCK_BREAK_PREFIX + FTBUPermissions.formatBlock(state.getBlock()), new PlayerContext(player).set(ContextKeys.POS, event.getPos()).set(ContextKeys.BLOCK_STATE, state)))
                 {
@@ -248,7 +248,7 @@ public class FTBUPlayerEventHandler
         if(event.getPlayer() instanceof EntityPlayerMP)
         {
             EntityPlayerMP player = (EntityPlayerMP) event.getPlayer();
-            if(!FTBUtilitiesAPI.get().getClaimedChunks().canPlayerInteract(player, event.getPos(), event.isPlacing() ? MouseButton.RIGHT : MouseButton.LEFT))
+            if(!FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().canPlayerInteract(player, event.getPos(), event.isPlacing() ? MouseButton.RIGHT : MouseButton.LEFT))
             {
                 event.setCanceled(true);
             }

@@ -9,10 +9,14 @@ import com.feed_the_beast.ftbl.api.events.player.ForgePlayerInfoEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
+import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
+import com.feed_the_beast.ftbl.api.permissions.context.ContextKeys;
+import com.feed_the_beast.ftbl.api.permissions.context.PlayerContext;
 import com.feed_the_beast.ftbl.api_impl.MouseButton;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUNotifications;
+import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.config.FTBUConfigLogin;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
@@ -22,6 +26,7 @@ import com.google.common.base.Objects;
 import com.latmod.lib.math.ChunkDimPos;
 import com.latmod.lib.math.EntityDimPos;
 import com.latmod.lib.util.LMInvUtils;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -32,6 +37,7 @@ import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class FTBUPlayerEventHandler
@@ -223,7 +229,26 @@ public class FTBUPlayerEventHandler
         if(event.getPlayer() instanceof EntityPlayerMP)
         {
             EntityPlayerMP player = (EntityPlayerMP) event.getPlayer();
+            IBlockState state = player.worldObj.getBlockState(event.getPos());
+
             if(!FTBUtilitiesAPI.get().getClaimedChunks().canPlayerInteract(player, event.getPos(), MouseButton.LEFT))
+            {
+                if(!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_BLOCK_BREAK_PREFIX + FTBUPermissions.formatBlock(state.getBlock()), new PlayerContext(player).set(ContextKeys.POS, event.getPos()).set(ContextKeys.BLOCK_STATE, state)))
+                {
+                    event.setCanceled(true);
+                }
+            }
+        }
+    }
+
+    @Optional.Method(modid = "chiselsandbits")
+    @SubscribeEvent
+    public void onChiselEvent(mod.chiselsandbits.api.EventBlockBitModification event)
+    {
+        if(event.getPlayer() instanceof EntityPlayerMP)
+        {
+            EntityPlayerMP player = (EntityPlayerMP) event.getPlayer();
+            if(!FTBUtilitiesAPI.get().getClaimedChunks().canPlayerInteract(player, event.getPos(), event.isPlacing() ? MouseButton.RIGHT : MouseButton.LEFT))
             {
                 event.setCanceled(true);
             }

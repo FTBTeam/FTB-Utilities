@@ -53,7 +53,6 @@ public class FTBU
         MinecraftForge.EVENT_BUS.register(new FTBUTeamEventHandler());
         MinecraftForge.EVENT_BUS.register(new FTBUServerEventHandler());
 
-        FTBUPermissions.init();
         FTBUCapabilities.enable();
         FTBUNetHandler.init();
         Backups.INSTANCE.init();
@@ -69,6 +68,7 @@ public class FTBU
     @Mod.EventHandler
     public void init(FMLInitializationEvent event)
     {
+        FTBUPermissions.init();
         FTBUDimConfig.load();
     }
 

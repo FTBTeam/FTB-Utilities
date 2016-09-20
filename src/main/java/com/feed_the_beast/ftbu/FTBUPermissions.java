@@ -7,11 +7,15 @@ import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbl.api_impl.config.PropertyDouble;
 import com.feed_the_beast.ftbl.api_impl.config.PropertyEnum;
 import com.feed_the_beast.ftbl.api_impl.config.PropertyInt;
-import com.feed_the_beast.ftbl.api_impl.config.PropertyIntList;
-import com.feed_the_beast.ftbl.api_impl.config.PropertyStringList;
 import com.feed_the_beast.ftbu.api_impl.ChunkloaderType;
 import com.latmod.lib.EnumEnabled;
+import net.minecraft.block.Block;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.Constants;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by LatvianModder on 14.02.2016.
@@ -44,13 +48,9 @@ public class FTBUPermissions
             new PropertyEnum<>(EnumEnabled.NAME_MAP_WITH_NULL, null), new PropertyEnum<>(EnumEnabled.NAME_MAP_WITH_NULL, null),
             "-: Player setting\ndisabled: Explosions will never happen in claimed chunks\nenabled: Explosions will always happen in claimed chunks");
 
-    public static final IRankConfig CLAIMS_BREAK_WHITELIST = RankConfigAPI.register("ftbu.claims.break_whitelist",
-            new PropertyStringList("OpenBlocks:grave"), new PropertyStringList("*"),
-            "Block IDs that player can break in claimed chunks");
+    public static final String CLAIMS_BLOCK_BREAK_PREFIX = "ftbu.claims.block.break.";
 
-    public static final IRankConfig CLAIMS_DIMENSION_BLACKLIST = RankConfigAPI.register("ftbu.claims.dimension_blacklist",
-            new PropertyIntList(1), new PropertyIntList(),
-            "Dimensions where players can't claim");
+    public static final String CLAIMS_DIMENSION_ALLOWED_PREFIX = "ftbu.claims.dimension_allowed.";
 
     // Chunkloader //
 
@@ -69,5 +69,28 @@ public class FTBUPermissions
 
     public static void init()
     {
+        final Map<String, DefaultPermissionLevel> levels = new HashMap<>();
+
+        Block.REGISTRY.iterator().forEachRemaining(block ->
+        {
+            levels.put(CLAIMS_BLOCK_BREAK_PREFIX + formatBlock(block), DefaultPermissionLevel.OP);
+        });
+
+        levels.put(CLAIMS_BLOCK_BREAK_PREFIX + "openblocks.grave", DefaultPermissionLevel.ALL);
+
+        //"Dimensions where players can't claim"
+        for(int i : DimensionManager.getStaticDimensionIDs())
+        {
+            levels.put(CLAIMS_DIMENSION_ALLOWED_PREFIX + i, DefaultPermissionLevel.ALL);
+        }
+
+        levels.put(CLAIMS_DIMENSION_ALLOWED_PREFIX + "1", DefaultPermissionLevel.OP);
+
+        levels.forEach((key, value) -> PermissionAPI.registerPermission(key, value, ""));
+    }
+
+    public static String formatBlock(Block block)
+    {
+        return block.getRegistryName().toString().toLowerCase(Locale.ENGLISH).replace(':', '.');
     }
 }

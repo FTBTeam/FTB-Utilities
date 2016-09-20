@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbu.world;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IUniverse;
+import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
@@ -31,7 +32,6 @@ import com.latmod.lib.util.LMServerUtils;
 import com.latmod.lib.util.LMStringUtils;
 import com.latmod.lib.util.LMUtils;
 import com.mojang.authlib.GameProfile;
-import gnu.trove.list.TIntList;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -158,7 +158,7 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
 
     public static boolean isDimensionBlacklisted(GameProfile profile, int dim)
     {
-        return ((TIntList) RankConfigAPI.getRankConfig(profile, FTBUPermissions.CLAIMS_DIMENSION_BLACKLIST).getValue()).contains(dim);
+        return PermissionAPI.hasPermission(profile, FTBUPermissions.CLAIMS_DIMENSION_ALLOWED_PREFIX + dim, null);
     }
 
     public static boolean allowExplosion(World world, Explosion explosion)

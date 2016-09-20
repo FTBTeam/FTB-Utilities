@@ -3,13 +3,10 @@ package com.feed_the_beast.ftbu.api_impl;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
-import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunkStorage;
 import com.feed_the_beast.ftbu.world.FTBUTeamData;
 import com.latmod.lib.math.BlockDimPos;
 import com.latmod.lib.math.ChunkDimPos;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
@@ -19,7 +16,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -108,17 +104,6 @@ public class ClaimedChunkStorage implements IClaimedChunkStorage
         if(entityPlayer.capabilities.isCreativeMode)
         {
             return true;
-        }
-
-        if(button.isLeft())
-        {
-            for(String e : (List<String>) RankConfigAPI.getRankConfig(entityPlayer, FTBUPermissions.CLAIMS_BREAK_WHITELIST).getValue())
-            {
-                if(e.equals(Block.REGISTRY.getNameForObject(entityPlayer.worldObj.getBlockState(pos).getBlock()).toString()))
-                {
-                    return true;
-                }
-            }
         }
 
         ChunkDimPos chunkDimPos = new BlockDimPos(pos, entityPlayer.dimension).toChunkPos();

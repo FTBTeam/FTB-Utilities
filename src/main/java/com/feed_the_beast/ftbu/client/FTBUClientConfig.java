@@ -14,4 +14,7 @@ public class FTBUClientConfig
 
     @ConfigValue(id = "light_value_texture_x", file = FTBUFinals.MOD_ID, client = true)
     public static final PropertyBool LIGHT_VALUE_TEXTURE_X = new PropertyBool(true);
+
+    @ConfigValue(id = "journeymap_overlay", file = FTBUFinals.MOD_ID, client = true)
+    public static final PropertyBool JOURNEYMAP_OVERLAY = new PropertyBool(true);
 }

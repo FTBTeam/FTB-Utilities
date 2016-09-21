@@ -69,22 +69,6 @@ public class CachedClientData
         thread.start();
     }
 
-    public static void setTypes(Map<ChunkDimPos, ChunkData> types)
-    {
-        for(Map.Entry<ChunkDimPos, ChunkData> e : types.entrySet())
-        {
-            ChunkDimPos pos = e.getKey();
-            ChunkData chunk = e.getValue();
-
-            CHUNKS.put(pos, chunk);
-
-            if(FTBUClient.journeyMapHandler != null)
-            {
-                FTBUClient.journeyMapHandler.chunkChanged(pos, chunk);
-            }
-        }
-    }
-
     public static Badge getClientBadge(UUID playerID)
     {
         if(LOCAL_BADGES.badgePlayerMap.containsKey(playerID))

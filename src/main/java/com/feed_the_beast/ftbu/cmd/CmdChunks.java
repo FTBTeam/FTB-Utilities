@@ -8,7 +8,7 @@ import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
-import com.feed_the_beast.ftbu.net.MessageAreaUpdate;
+import com.feed_the_beast.ftbu.net.MessageUpdateJM;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import com.latmod.lib.math.ChunkDimPos;
 import com.latmod.lib.math.EntityDimPos;
@@ -57,7 +57,7 @@ public class CmdChunks extends CommandTreeBase
             if(FTBUUniverseData.claimChunk(p, pos))
             {
                 FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CHUNK_CLAIMED);
-                new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
+                new MessageUpdateJM(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
             }
             else
             {
@@ -104,7 +104,7 @@ public class CmdChunks extends CommandTreeBase
             if(FTBUUniverseData.unclaimChunk(p, pos))
             {
                 FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CHUNK_UNCLAIMED);
-                new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
+                new MessageUpdateJM(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
             }
             else
             {
@@ -146,7 +146,7 @@ public class CmdChunks extends CommandTreeBase
             if(FTBUUniverseData.setLoaded(p, pos, true))
             {
                 FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CHUNK_LOADED);
-                new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
+                new MessageUpdateJM(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
             }
             else
             {
@@ -187,7 +187,7 @@ public class CmdChunks extends CommandTreeBase
             if(FTBUUniverseData.setLoaded(p, pos, false))
             {
                 FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CHUNK_UNLOADED);
-                new MessageAreaUpdate(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
+                new MessageUpdateJM(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
             }
             else
             {

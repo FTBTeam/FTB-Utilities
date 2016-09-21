@@ -6,15 +6,15 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.MathHelper;
 
-public class MessageAreaRequest extends MessageToServer<MessageAreaRequest>
+public class MessageRequestJM extends MessageToServer<MessageRequestJM>
 {
     private int chunkX, chunkY, sizeX, sizeY;
 
-    public MessageAreaRequest()
+    public MessageRequestJM()
     {
     }
 
-    public MessageAreaRequest(int x, int y, int w, int h)
+    public MessageRequestJM(int x, int y, int w, int h)
     {
         chunkX = x;
         chunkY = y;
@@ -47,8 +47,8 @@ public class MessageAreaRequest extends MessageToServer<MessageAreaRequest>
     }
 
     @Override
-    public void onMessage(MessageAreaRequest m, EntityPlayerMP player)
+    public void onMessage(MessageRequestJM m, EntityPlayerMP player)
     {
-        new MessageAreaUpdate(m.chunkX, m.chunkY, player.dimension, m.sizeX, m.sizeY).sendTo(player);
+        new MessageUpdateJM(m.chunkX, m.chunkY, player.dimension, m.sizeX, m.sizeY).sendTo(player);
     }
 }

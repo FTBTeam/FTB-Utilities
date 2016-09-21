@@ -13,7 +13,7 @@ import com.feed_the_beast.ftbl.api_impl.MouseButton;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.client.CachedClientData;
-import com.feed_the_beast.ftbu.net.MessageAreaRequest;
+import com.feed_the_beast.ftbu.net.MessageRequestJM;
 import com.latmod.lib.TextureCoords;
 import com.latmod.lib.math.ChunkDimPos;
 import com.latmod.lib.math.MathHelperLM;
@@ -195,7 +195,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             {
                 thread = new ThreadReloadArea(mc.theWorld, GuiClaimChunks.this);
                 thread.start();
-                new MessageAreaRequest(startX, startZ, TILES_GUI, TILES_GUI).sendToServer();
+                new MessageRequestJM(startX, startZ, TILES_GUI, TILES_GUI).sendToServer();
                 GuiHelper.playClickSound();
             }
         };
@@ -274,7 +274,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         if(textureID == -1)
         {
             textureID = TextureUtil.glGenTextures();
-            new MessageAreaRequest(startX, startZ, TILES_GUI, TILES_GUI).sendToServer();
+            new MessageRequestJM(startX, startZ, TILES_GUI, TILES_GUI).sendToServer();
         }
 
         if(pixelBuffer != null)
@@ -398,7 +398,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
                 FTBLibClient.execClientCommand("/ftb chunks unclaim_all false", false);
             }
 
-            new MessageAreaRequest(startX, startZ, TILES_GUI, TILES_GUI).sendToServer();
+            new MessageRequestJM(startX, startZ, TILES_GUI, TILES_GUI).sendToServer();
         }
 
         openGui();

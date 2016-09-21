@@ -2,26 +2,25 @@ package com.feed_the_beast.ftbu.net;
 
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
+import com.feed_the_beast.ftbu.JourneyMapIntegration;
 import com.feed_the_beast.ftbu.client.CachedClientData;
-import com.latmod.lib.math.ChunkDimPos;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.util.math.ChunkPos;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
+public class MessageUpdateJM extends MessageToClient<MessageUpdateJM>
 {
-    private int dim;
-    private Map<ChunkDimPos, CachedClientData.ChunkData> types;
 
-    public MessageAreaUpdate()
+    private Map<ChunkPos, CachedClientData.ChunkData> types;
+
+    public MessageUpdateJM()
     {
     }
 
-    public MessageAreaUpdate(int x, int z, int d, int sx, int sz)
+    public MessageUpdateJM(int x, int z, int d, int sx, int sz)
     {
-        dim = d;
-
         types = new HashMap<>();
 
         for(int x1 = x; x1 < x + sx; x1++)
@@ -104,8 +103,17 @@ public class MessageAreaUpdate extends MessageToClient<MessageAreaUpdate>
     }
 
     @Override
-    public void onMessage(MessageAreaUpdate m)
+    public void onMessage(MessageUpdateJM m)
     {
-        //FTBUWorldDataSP.setTypes(m.types);
+        if(JourneyMapIntegration.INST != null)
+        {
+            for(Map.Entry<ChunkPos, CachedClientData.ChunkData> e : m.types.entrySet())
+            {
+                ChunkPos pos = e.getKey();
+                CachedClientData.ChunkData chunk = e.getValue();
+
+                JourneyMapIntegration.INST.chunkChanged(pos, chunk);
+            }
+        }
     }
 }

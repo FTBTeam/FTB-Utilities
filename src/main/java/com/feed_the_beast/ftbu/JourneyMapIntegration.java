@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.client.CachedClientData;
+import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.client.FTBUClientConfig;
 import com.latmod.lib.io.Bits;
 import com.latmod.lib.util.LMUtils;
@@ -15,7 +16,6 @@ import journeymap.client.api.event.ClientEvent;
 import journeymap.client.api.model.MapPolygon;
 import journeymap.client.api.model.ShapeProperties;
 import journeymap.client.api.util.PolygonHelper;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
@@ -31,10 +31,11 @@ public class JourneyMapIntegration implements IClientPlugin
     private TLongObjectHashMap<PolygonOverlay> polygons = new TLongObjectHashMap<>();
 
     @Override
-    public void initialize(final IClientAPI api)
+    public void initialize(IClientAPI api)
     {
         INST = this;
         clientAPI = api;
+        FTBUClient.HAS_JM = true;
     }
 
     @Override
@@ -55,23 +56,38 @@ public class JourneyMapIntegration implements IClientPlugin
                 }
                 break;
             case MAPPING_STOPPED:
-                polygons.clear();
-                clientAPI.removeAll(FTBUFinals.MOD_ID);
+                clearData();
                 break;
         }
     }
 
-    public void chunkChanged(ChunkPos pos, @Nullable CachedClientData.ChunkData chunk)
+    public void clearData()
     {
+        if(!polygons.isEmpty())
+        {
+            polygons.clear();
+            clientAPI.removeAll(FTBUFinals.MOD_ID);
+        }
+    }
+
+    public void chunkChanged(long posLong, @Nullable CachedClientData.ChunkData chunk)
+    {
+        if(!polygons.isEmpty() && (!FTBUClientConfig.JOURNEYMAP_OVERLAY.getBoolean() || !clientAPI.playerAccepts(FTBUFinals.MOD_ID, DisplayType.Polygon)))
+        {
+            clearData();
+            return;
+        }
+
         try
         {
-            long posLong = Bits.intsToLong(pos.chunkXPos, pos.chunkZPos);
+            int cx = Bits.intFromLongA(posLong);
+            int cz = Bits.intFromLongB(posLong);
 
-            if(chunk != null && FTBUClientConfig.JOURNEYMAP_OVERLAY.getBoolean() && clientAPI.playerAccepts(FTBUFinals.MOD_ID, DisplayType.Polygon))
+            if(chunk != null)
             {
                 int dim = 0;
 
-                MapPolygon poly = PolygonHelper.createChunkPolygon(pos.chunkXPos, 100, pos.chunkZPos);
+                MapPolygon poly = PolygonHelper.createChunkPolygon(cx, 100, cz);
                 ShapeProperties shapeProperties = new ShapeProperties();
 
                 shapeProperties.setFillOpacity(0.3F);
@@ -96,7 +112,7 @@ public class JourneyMapIntegration implements IClientPlugin
 
                 shapeProperties.setStrokeColor(0x000000);
 
-                PolygonOverlay chunkOverlay = new PolygonOverlay(FTBUFinals.MOD_ID, "claimed_" + dim + '_' + pos.chunkXPos + '_' + pos.chunkZPos, dim, shapeProperties, poly);
+                PolygonOverlay chunkOverlay = new PolygonOverlay(FTBUFinals.MOD_ID, "claimed_" + dim + '_' + cx + '_' + cz, dim, shapeProperties, poly);
                 chunkOverlay.setOverlayGroupName("Claimed Chunks").setTitle(sb.toString());
                 polygons.put(posLong, chunkOverlay);
                 clientAPI.show(chunkOverlay);

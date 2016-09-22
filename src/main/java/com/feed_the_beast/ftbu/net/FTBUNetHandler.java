@@ -12,7 +12,7 @@ public class FTBUNetHandler
         //2
         NET.register(3, new MessageRequestBadge());
         NET.register(4, new MessageRequestServerInfo());
-        NET.register(5, new MessageUpdateJM());
-        NET.register(6, new MessageRequestJM());
+        NET.register(5, new MessageUpdateChunkData());
+        NET.register(6, new MessageRequestChunkData());
     }
 }

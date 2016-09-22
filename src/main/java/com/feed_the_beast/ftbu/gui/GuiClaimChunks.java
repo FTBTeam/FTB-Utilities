@@ -13,9 +13,9 @@ import com.feed_the_beast.ftbl.api_impl.MouseButton;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.client.CachedClientData;
-import com.feed_the_beast.ftbu.net.MessageRequestJM;
-import com.latmod.lib.TextureCoords;
-import com.latmod.lib.math.ChunkDimPos;
+import com.feed_the_beast.ftbu.net.MessageRequestChunkData;
+import com.latmod.lib.client.TextureCoords;
+import com.latmod.lib.io.Bits;
 import com.latmod.lib.math.MathHelperLM;
 import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.client.Minecraft;
@@ -52,16 +52,15 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 
     private class MapButton extends ButtonLM
     {
-        private final ChunkDimPos chunkPos;
-        private final CachedClientData.ChunkData chunkData;
+        private final long chunkPos;
+        private CachedClientData.ChunkData chunkData;
 
         private MapButton(int x, int y, int i)
         {
             super(x, y, 16, 16);
             posX += (i % TILES_GUI) * getWidth();
             posY += (i / TILES_GUI) * getHeight();
-            chunkPos = new ChunkDimPos(startX + (i % TILES_GUI), startZ + (i / TILES_GUI), currentDim);
-            chunkData = CachedClientData.CHUNKS.get(chunkPos);
+            chunkPos = Bits.intsToLong(startX + (i % TILES_GUI), startZ + (i / TILES_GUI));
         }
 
         @Override
@@ -76,22 +75,22 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             {
                 if(GuiScreen.isShiftKeyDown())
                 {
-                    FTBLibClient.execClientCommand("/ftb chunks load " + chunkPos.posX + ' ' + chunkPos.posZ, false);
+                    FTBLibClient.execClientCommand("/ftb chunks load " + Bits.intFromLongA(chunkPos) + ' ' + Bits.intFromLongB(chunkPos), false);
                 }
                 else
                 {
-                    FTBLibClient.execClientCommand("/ftb chunks claim " + chunkPos.posX + ' ' + chunkPos.posZ, false);
+                    FTBLibClient.execClientCommand("/ftb chunks claim " + Bits.intFromLongA(chunkPos) + ' ' + Bits.intFromLongB(chunkPos), false);
                 }
             }
             else if(button.isRight())
             {
                 if(GuiScreen.isShiftKeyDown())
                 {
-                    FTBLibClient.execClientCommand("/ftb chunks unload " + chunkPos.posX + ' ' + chunkPos.posZ, false);
+                    FTBLibClient.execClientCommand("/ftb chunks unload " + Bits.intFromLongA(chunkPos) + ' ' + Bits.intFromLongB(chunkPos), false);
                 }
                 else
                 {
-                    FTBLibClient.execClientCommand("/ftb chunks unclaim " + chunkPos.posX + ' ' + chunkPos.posZ, false);
+                    FTBLibClient.execClientCommand("/ftb chunks unclaim " + Bits.intFromLongA(chunkPos) + ' ' + Bits.intFromLongB(chunkPos), false);
                 }
             }
 
@@ -132,6 +131,8 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             int ax = getAX();
             int ay = getAY();
 
+            chunkData = CachedClientData.CHUNKS.get(chunkPos);
+
             if(chunkData != null)
             {
                 FTBLibClient.setTexture(TEX_CHUNK_CLAIMING);
@@ -161,7 +162,6 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
     }
 
     final int startX, startZ;
-    private final int currentDim;
     private final ButtonLM buttonRefresh, buttonClose, buttonUnclaimAll;
     private final MapButton mapButtons[];
     private final PanelLM panelButtons;
@@ -174,7 +174,6 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 
         startX = MathHelperLM.chunk(mc.thePlayer.posX) - (int) (TILES_GUI * 0.5D);
         startZ = MathHelperLM.chunk(mc.thePlayer.posZ) - (int) (TILES_GUI * 0.5D);
-        currentDim = FTBLibClient.getDim();
 
         currentDimName = mc.theWorld.provider.getDimensionType().getName();
 
@@ -195,7 +194,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             {
                 thread = new ThreadReloadArea(mc.theWorld, GuiClaimChunks.this);
                 thread.start();
-                new MessageRequestJM(startX, startZ, TILES_GUI, TILES_GUI).sendToServer();
+                new MessageRequestChunkData(startX, startZ, TILES_GUI, TILES_GUI).sendToServer();
                 GuiHelper.playClickSound();
             }
         };
@@ -274,7 +273,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         if(textureID == -1)
         {
             textureID = TextureUtil.glGenTextures();
-            new MessageRequestJM(startX, startZ, TILES_GUI, TILES_GUI).sendToServer();
+            new MessageRequestChunkData(startX, startZ, TILES_GUI, TILES_GUI).sendToServer();
         }
 
         if(pixelBuffer != null)
@@ -398,7 +397,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
                 FTBLibClient.execClientCommand("/ftb chunks unclaim_all false", false);
             }
 
-            new MessageRequestJM(startX, startZ, TILES_GUI, TILES_GUI).sendToServer();
+            new MessageRequestChunkData(startX, startZ, TILES_GUI, TILES_GUI).sendToServer();
         }
 
         openGui();

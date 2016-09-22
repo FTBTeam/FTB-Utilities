@@ -8,7 +8,7 @@ import com.feed_the_beast.ftbu.gui.guide.GuideType;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.latmod.lib.InvalidTextureCoords;
+import com.latmod.lib.client.InvalidTextureCoords;
 import com.latmod.lib.io.LMConnection;
 import com.latmod.lib.io.RequestMethod;
 import net.minecraft.util.ResourceLocation;

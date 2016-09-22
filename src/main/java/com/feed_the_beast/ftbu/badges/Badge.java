@@ -11,11 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
-
-import javax.annotation.Nullable;
 
 public class Badge extends FinalIDObject
 {
@@ -38,15 +34,8 @@ public class Badge extends FinalIDObject
         return getName() + '=' + imageURL;
     }
 
-    @SideOnly(Side.CLIENT)
-    @Nullable
     public ResourceLocation getTexture()
     {
-        if(imageURL == null)
-        {
-            return null;
-        }
-
         if(textureURL == null)
         {
             textureURL = new ResourceLocation(FTBUFinals.MOD_ID, "badges/" + getName() + ".png");
@@ -56,22 +45,15 @@ public class Badge extends FinalIDObject
         return textureURL;
     }
 
-    @SideOnly(Side.CLIENT)
     public void onPlayerRender(EntityPlayer ep)
     {
-        ResourceLocation texture = getTexture();
-        if(texture == null)
-        {
-            return;
-        }
-
         GlStateManager.disableLighting();
         GlStateManager.disableCull();
         GlStateManager.enableTexture2D();
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-        FTBLibClient.setTexture(texture);
+        FTBLibClient.setTexture(getTexture());
         FTBLibClient.pushMaxBrightness();
         GlStateManager.pushMatrix();
 

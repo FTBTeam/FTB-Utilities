@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.gui;
 
-import com.latmod.lib.PixelBuffer;
+import com.latmod.lib.client.PixelBuffer;
 import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
@@ -145,7 +145,7 @@ public class ThreadReloadArea extends Thread
     {
         Arrays.fill(pixels.getPixels(), 0);
         Chunk chunk;
-        int cx, cz, x, z, wx, wz, by, color;
+        int cx, cz, x, z, wx, wz, by, color, topY;
 
         int startY = Minecraft.getMinecraft().thePlayer.getPosition().getY();
 
@@ -161,12 +161,13 @@ public class ThreadReloadArea extends Thread
                     {
                         x = (gui.startX + cx) * 16;
                         z = (gui.startZ + cz) * 16;
+                        topY = Math.max(255, chunk.getTopFilledSegment() + 15);
 
                         for(wz = 0; wz < 16; wz++)
                         {
                             for(wx = 0; wx < 16; wx++)
                             {
-                                for(by = Math.max(255, chunk.getTopFilledSegment() + 15); by > 0; --by)
+                                for(by = topY; by > 0; --by)
                                 {
                                     IBlockState state = chunk.getBlockState(wx, by, wz);
 

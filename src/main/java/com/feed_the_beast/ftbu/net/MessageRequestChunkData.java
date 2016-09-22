@@ -3,18 +3,19 @@ package com.feed_the_beast.ftbu.net;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToServer;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageRequestJM extends MessageToServer<MessageRequestJM>
+public class MessageRequestChunkData extends MessageToServer<MessageRequestChunkData>
 {
     private int chunkX, chunkY, sizeX, sizeY;
 
-    public MessageRequestJM()
+    public MessageRequestChunkData()
     {
     }
 
-    public MessageRequestJM(int x, int y, int w, int h)
+    public MessageRequestChunkData(int x, int y, int w, int h)
     {
         chunkX = x;
         chunkY = y;
@@ -47,8 +48,8 @@ public class MessageRequestJM extends MessageToServer<MessageRequestJM>
     }
 
     @Override
-    public void onMessage(MessageRequestJM m, EntityPlayerMP player)
+    public IMessage onMessage(final MessageRequestChunkData m, MessageContext ctx)
     {
-        new MessageUpdateJM(m.chunkX, m.chunkY, player.dimension, m.sizeX, m.sizeY).sendTo(player);
+        return new MessageUpdateChunkData(ctx.getServerHandler().playerEntity, m.chunkX, m.chunkY, m.sizeX, m.sizeY);
     }
 }

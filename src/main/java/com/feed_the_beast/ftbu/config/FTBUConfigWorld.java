@@ -2,12 +2,12 @@ package com.feed_the_beast.ftbu.config;
 
 import com.feed_the_beast.ftbl.api.config.ConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api_impl.config.PropertyBool;
-import com.feed_the_beast.ftbl.api_impl.config.PropertyCustom;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import com.latmod.lib.config.PropertyBool;
+import com.latmod.lib.config.PropertyCustom;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.nbt.NBTBase;

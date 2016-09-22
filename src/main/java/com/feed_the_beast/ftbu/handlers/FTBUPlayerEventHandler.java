@@ -141,19 +141,17 @@ public class FTBUPlayerEventHandler
 
     public static void updateChunkMessage(EntityPlayerMP player, ChunkDimPos pos)
     {
-        IForgePlayer chunkOwner = FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().getChunkOwner(pos);
-
-        String newTeamID = (chunkOwner == null || chunkOwner.getTeam() == null) ? null : chunkOwner.getTeamID();
+        IForgePlayer newTeamOwner = FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().getChunkOwner(pos);
 
         FTBUPlayerData data = FTBLibIntegration.API.getUniverse().getPlayer(player).getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
 
-        if(data.lastChunkID == null || !Objects.equal(data.lastChunkID, newTeamID))
+        if(!Objects.equal(data.lastChunkOwner, newTeamOwner))
         {
-            data.lastChunkID = newTeamID;
+            data.lastChunkOwner = newTeamOwner;
 
-            if(newTeamID != null)
+            if(newTeamOwner != null)
             {
-                IForgeTeam team = chunkOwner.getTeam();
+                IForgeTeam team = newTeamOwner.getTeam();
 
                 if(team != null)
                 {

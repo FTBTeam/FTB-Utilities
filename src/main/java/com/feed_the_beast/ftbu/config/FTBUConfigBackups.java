@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbu.config;
 
 import com.feed_the_beast.ftbl.api.config.ConfigValue;
-import com.feed_the_beast.ftbl.api_impl.config.PropertyBool;
-import com.feed_the_beast.ftbl.api_impl.config.PropertyDouble;
-import com.feed_the_beast.ftbl.api_impl.config.PropertyInt;
-import com.feed_the_beast.ftbl.api_impl.config.PropertyString;
 import com.feed_the_beast.ftbu.FTBUFinals;
+import com.latmod.lib.config.PropertyBool;
+import com.latmod.lib.config.PropertyDouble;
+import com.latmod.lib.config.PropertyInt;
+import com.latmod.lib.config.PropertyString;
 import net.minecraftforge.common.util.Constants;
 
 public class FTBUConfigBackups

@@ -8,7 +8,8 @@ import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
-import com.feed_the_beast.ftbu.net.MessageUpdateJM;
+import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
+import com.feed_the_beast.ftbu.net.MessageUpdateChunkData;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import com.latmod.lib.math.ChunkDimPos;
 import com.latmod.lib.math.EntityDimPos;
@@ -24,6 +25,12 @@ import net.minecraftforge.server.command.CommandTreeBase;
  */
 public class CmdChunks extends CommandTreeBase
 {
+    public static void updateChunk(EntityPlayerMP ep, int x, int z)
+    {
+        FTBUPlayerEventHandler.updateChunkMessage(ep, new ChunkDimPos(x, z, ep.dimension));
+        new MessageUpdateChunkData(ep, x, z, 1, 1).sendTo(ep);
+    }
+
     public class CmdClaim extends CommandLM
     {
         public CmdClaim()
@@ -57,7 +64,7 @@ public class CmdChunks extends CommandTreeBase
             if(FTBUUniverseData.claimChunk(p, pos))
             {
                 FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CHUNK_CLAIMED);
-                new MessageUpdateJM(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
+                updateChunk(ep, pos.posX, pos.posZ);
             }
             else
             {
@@ -104,7 +111,7 @@ public class CmdChunks extends CommandTreeBase
             if(FTBUUniverseData.unclaimChunk(p, pos))
             {
                 FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CHUNK_UNCLAIMED);
-                new MessageUpdateJM(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
+                updateChunk(ep, pos.posX, pos.posZ);
             }
             else
             {
@@ -146,7 +153,7 @@ public class CmdChunks extends CommandTreeBase
             if(FTBUUniverseData.setLoaded(p, pos, true))
             {
                 FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CHUNK_LOADED);
-                new MessageUpdateJM(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
+                updateChunk(ep, pos.posX, pos.posZ);
             }
             else
             {
@@ -187,7 +194,7 @@ public class CmdChunks extends CommandTreeBase
             if(FTBUUniverseData.setLoaded(p, pos, false))
             {
                 FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CHUNK_UNLOADED);
-                new MessageUpdateJM(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(ep);
+                updateChunk(ep, pos.posX, pos.posZ);
             }
             else
             {

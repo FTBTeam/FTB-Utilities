@@ -4,11 +4,13 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToServer;
 import com.feed_the_beast.ftbl.gui.GuiLoading;
+import com.feed_the_beast.ftbl.net.MessageDisplayInfo;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.world.ServerInfoFile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageRequestServerInfo extends MessageToServer<MessageRequestServerInfo>
 {
@@ -39,9 +41,9 @@ public class MessageRequestServerInfo extends MessageToServer<MessageRequestServ
     }
 
     @Override
-    public void onMessage(MessageRequestServerInfo m, EntityPlayerMP player)
+    public IMessage onMessage(MessageRequestServerInfo m, MessageContext ctx)
     {
-        IForgePlayer owner = FTBLibIntegration.API.getUniverse().getPlayer(player);
-        new ServerInfoFile(owner).displayGuide(owner.getPlayer());
+        IForgePlayer owner = FTBLibIntegration.API.getUniverse().getPlayer(ctx.getServerHandler().playerEntity);
+        return new MessageDisplayInfo(new ServerInfoFile(owner));
     }
 }

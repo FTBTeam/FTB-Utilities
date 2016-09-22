@@ -1,12 +1,14 @@
 package com.feed_the_beast.ftbu.client;
 
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
+import com.feed_the_beast.ftbl.api.IForgeTeam;
+import com.feed_the_beast.ftbu.JourneyMapIntegration;
 import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.badges.BadgeStorage;
 import com.feed_the_beast.ftbu.net.MessageRequestBadge;
 import com.latmod.lib.io.LMConnection;
 import com.latmod.lib.io.RequestMethod;
-import com.latmod.lib.math.ChunkDimPos;
+import gnu.trove.map.hash.TLongObjectHashMap;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,21 +21,41 @@ public class CachedClientData
 {
     public static class TeamData
     {
+        public UUID ownerID;
         public EnumTeamColor color;
         public String formattedName;
+
+        public TeamData(IForgeTeam team)
+        {
+            ownerID = team.getOwner().getProfile().getId();
+            color = team.getColor();
+            formattedName = team.getTitle();
+        }
+
+        public TeamData()
+        {
+        }
     }
 
     public static class ChunkData
     {
-        public static final int OWNER = 1;
-        public static final int LOADED = 2;
+        public static final byte NULL = 1;
+        public static final byte OWNER = 2;
+        public static final byte LOADED = 4;
 
         public TeamData team;
         public byte flags;
+
+        public ChunkData(TeamData t, byte f)
+        {
+            team = t;
+            flags = f;
+        }
     }
 
-    public static final Map<String, TeamData> TEAMS = new HashMap<>();
-    public static final Map<ChunkDimPos, ChunkData> CHUNKS = new HashMap<>();
+    private static int currentDim = 0;
+    public static final Map<UUID, TeamData> TEAMS = new HashMap<>();
+    public static final TLongObjectHashMap<ChunkData> CHUNKS = new TLongObjectHashMap<>();
     public static final BadgeStorage GLOBAL_BADGES = new BadgeStorage();
     public static final BadgeStorage LOCAL_BADGES = new BadgeStorage();
 
@@ -79,5 +101,33 @@ public class CachedClientData
         LOCAL_BADGES.badgePlayerMap.put(playerID, null);
         new MessageRequestBadge(playerID).sendToServer();
         return null;
+    }
+
+    public static void updateChunkData(int dim, Map<UUID, TeamData> teamData, TLongObjectHashMap<ChunkData> chunkData)
+    {
+        if(currentDim != dim)
+        {
+            currentDim = dim;
+
+            TEAMS.clear();
+            CHUNKS.clear();
+
+            if(FTBUClient.HAS_JM)
+            {
+                JourneyMapIntegration.INST.clearData();
+            }
+        }
+
+        TEAMS.putAll(teamData);
+        CHUNKS.putAll(chunkData);
+
+        if(FTBUClient.HAS_JM)
+        {
+            chunkData.forEachEntry((key, value) ->
+            {
+                JourneyMapIntegration.INST.chunkChanged(key, value);
+                return true;
+            });
+        }
     }
 }

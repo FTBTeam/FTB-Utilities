@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbu;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
 import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
-import com.feed_the_beast.ftbu.dims.FTBUDimConfig;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUServerEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUTeamEventHandler;
@@ -62,7 +61,6 @@ public class FTBU
     public void init(FMLInitializationEvent event)
     {
         FTBUPermissions.init();
-        FTBUDimConfig.load();
     }
 
     @Mod.EventHandler

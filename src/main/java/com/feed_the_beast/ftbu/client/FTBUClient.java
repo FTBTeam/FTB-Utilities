@@ -21,6 +21,8 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
     public static final KeyBinding KEY_LIGHT_VALUES = new KeyBinding("key.ftbu.light_values", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_F7, KEY_CATEGORY);
     public static final KeyBinding KEY_CHUNK_BORDER = new KeyBinding("key.ftbu.chunk_border", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_F9, KEY_CATEGORY);
 
+    public static boolean HAS_JM = false;
+
     @Override
     public void preInit()
     {

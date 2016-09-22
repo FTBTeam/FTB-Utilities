@@ -19,7 +19,7 @@ import com.feed_the_beast.ftbu.cmd.CmdRestart;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
-import com.feed_the_beast.ftbu.net.MessageUpdateJM;
+import com.feed_the_beast.ftbu.net.MessageUpdateChunkData;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.backups.Backups;
 import com.latmod.lib.BroadcastSender;
@@ -158,7 +158,7 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
 
     public static boolean isDimensionBlacklisted(GameProfile profile, int dim)
     {
-        return PermissionAPI.hasPermission(profile, FTBUPermissions.CLAIMS_DIMENSION_ALLOWED_PREFIX + dim, null);
+        return !PermissionAPI.hasPermission(profile, FTBUPermissions.CLAIMS_DIMENSION_ALLOWED_PREFIX + dim, null);
     }
 
     public static boolean allowExplosion(World world, Explosion explosion)
@@ -306,7 +306,7 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
 
             if(player.getPlayer() != null)
             {
-                new MessageUpdateJM(pos.posX, pos.posZ, pos.dim, 1, 1).sendTo(player.getPlayer());
+                new MessageUpdateChunkData(player.getPlayer(), pos.posX, pos.posZ, 1, 1).sendTo(player.getPlayer());
             }
 
             return true;

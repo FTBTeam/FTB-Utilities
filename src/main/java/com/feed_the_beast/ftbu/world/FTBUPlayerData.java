@@ -3,9 +3,9 @@ package com.feed_the_beast.ftbu.world;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
-import com.feed_the_beast.ftbl.api_impl.config.ConfigKey;
-import com.feed_the_beast.ftbl.api_impl.config.PropertyBool;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
+import com.latmod.lib.config.ConfigKey;
+import com.latmod.lib.config.PropertyBool;
 import com.latmod.lib.io.Bits;
 import com.latmod.lib.math.BlockDimPos;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,7 +31,7 @@ public class FTBUPlayerData implements ICapabilitySerializable<NBTTagCompound>
 
     private byte flags = FLAG_RENDER_BADGE | FLAG_CHAT_LINKS;
     public BlockDimPos lastDeath, lastSafePos;
-    public String lastChunkID;
+    public IForgePlayer lastChunkOwner;
     private Map<String, BlockDimPos> homes;
 
     public static FTBUPlayerData get(IForgePlayer p)

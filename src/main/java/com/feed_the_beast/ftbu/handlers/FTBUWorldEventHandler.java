@@ -68,7 +68,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
             return true;
         }
 
-        if(FTBUConfigWorld.BLOCKED_ENTITIES.isEntityBanned(e.getClass()))
+        if(FTBUConfigWorld.BLOCKED_ENTITIES.containsEntity(e.getClass(), true))
         {
             return false;
         }

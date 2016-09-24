@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbu;
 
-import com.feed_the_beast.ftbl.api.permissions.DefaultPermissionLevel;
-import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.api.rankconfig.IRankConfig;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbu.api_impl.ChunkloaderType;
@@ -12,6 +10,8 @@ import com.latmod.lib.config.PropertyInt;
 import net.minecraft.block.Block;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.server.permission.DefaultPermissionLevel;
+import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -24,13 +24,13 @@ public class FTBUPermissions
 {
     // Display //
 
-    public static final String DISPLAY_ADMIN_INFO = PermissionAPI.registerPermission("ftbu.display.admin_info", DefaultPermissionLevel.OP, "Display 'Admin' in Server Info");
-    public static final String DISPLAY_RANK = PermissionAPI.registerPermission("ftbu.display.rank", DefaultPermissionLevel.ALL, "Display Rank in FriendsGUI");
-    public static final String DISPLAY_PERMISSIONS = PermissionAPI.registerPermission("ftbu.display.permissions", DefaultPermissionLevel.ALL, "Display 'My Permissions' in Server Info");
+    public static final String DISPLAY_ADMIN_INFO = PermissionAPI.registerNode("ftbu.display.admin_info", DefaultPermissionLevel.OP, "Display 'Admin' in Server Info");
+    public static final String DISPLAY_RANK = PermissionAPI.registerNode("ftbu.display.rank", DefaultPermissionLevel.ALL, "Display Rank in FriendsGUI");
+    public static final String DISPLAY_PERMISSIONS = PermissionAPI.registerNode("ftbu.display.permissions", DefaultPermissionLevel.ALL, "Display 'My Permissions' in Server Info");
 
     // Homes //
 
-    public static final String HOMES_CROSS_DIM = PermissionAPI.registerPermission("ftbu.homes.cross_dim", DefaultPermissionLevel.ALL, "Can use /home to teleport to/from another dimension");
+    public static final String HOMES_CROSS_DIM = PermissionAPI.registerNode("ftbu.homes.cross_dim", DefaultPermissionLevel.ALL, "Can use /home to teleport to/from another dimension");
 
     public static final IRankConfig HOMES_MAX = RankConfigAPI.register("ftbu.homes.max",
             new PropertyInt(Constants.NBT.TAG_SHORT, 1, 0, 30000), new PropertyInt(100),
@@ -38,7 +38,7 @@ public class FTBUPermissions
 
     // Claims //
 
-    public static final String CLAIMS_MODIFY_OTHER_CHUNKS = PermissionAPI.registerPermission("ftbu.claims.modify_other_chunks", DefaultPermissionLevel.OP, "Allow player to edit other player's chunks");
+    public static final String CLAIMS_MODIFY_OTHER_CHUNKS = PermissionAPI.registerNode("ftbu.claims.modify_other_chunks", DefaultPermissionLevel.OP, "Allow player to edit other player's chunks");
 
     public static final IRankConfig CLAIMS_MAX_CHUNKS = RankConfigAPI.register("ftbu.claims.max_chunks",
             new PropertyInt(Constants.NBT.TAG_SHORT, 100, 0, 30000), new PropertyInt(1000),
@@ -86,7 +86,7 @@ public class FTBUPermissions
 
         levels.put(CLAIMS_DIMENSION_ALLOWED_PREFIX + "1", DefaultPermissionLevel.OP);
 
-        levels.forEach((key, value) -> PermissionAPI.registerPermission(key, value, ""));
+        levels.forEach((key, value) -> PermissionAPI.registerNode(key, value, ""));
     }
 
     public static String formatBlock(Block block)

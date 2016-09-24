@@ -1,10 +1,6 @@
 package com.feed_the_beast.ftbu.ranks;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.permissions.DefaultPermissionHandler;
-import com.feed_the_beast.ftbl.api.permissions.IPermissionHandler;
-import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
-import com.feed_the_beast.ftbl.api.permissions.context.IContext;
 import com.feed_the_beast.ftbl.api.rankconfig.IRankConfig;
 import com.feed_the_beast.ftbl.api.rankconfig.IRankConfigHandler;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
@@ -18,10 +14,15 @@ import com.latmod.lib.util.LMStringUtils;
 import com.latmod.lib.util.LMUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.server.permission.DefaultPermissionHandler;
+import net.minecraftforge.server.permission.DefaultPermissionLevel;
+import net.minecraftforge.server.permission.IPermissionHandler;
+import net.minecraftforge.server.permission.context.IContext;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -155,9 +156,11 @@ public enum Ranks implements IPermissionHandler, IRankConfigHandler
 
     public void generateExampleFiles()
     {
-        List<IRankConfig> sortedRankConfigs = new ArrayList<>();
-        sortedRankConfigs.addAll(RankConfigAPI.getRegistredRankConfigs().values());
+        List<IRankConfig> sortedRankConfigs = new ArrayList<>(RankConfigAPI.getRegistredRankConfigs().values());
         Collections.sort(sortedRankConfigs, LMStringUtils.ID_COMPARATOR);
+
+        List<String> nodes = new ArrayList<>(getRegisteredNodes());
+        Collections.sort(sortedRankConfigs, LMStringUtils.IGNORE_CASE_COMPARATOR);
 
         try
         {
@@ -171,16 +174,20 @@ public enum Ranks implements IPermissionHandler, IRankConfigHandler
             list.add("## Permissions");
             list.add("");
 
-            for(String s : PermissionAPI.getRegistredPermissionNodes())
+            for(String s : nodes)
             {
-                list.add("> " + s + " | Default Permission Level: " + PermissionAPI.getDefaultPermissionLevel(s));
+                list.add("> " + s + " | Default Permission Level: " + DefaultPermissionHandler.INSTANCE.getDefaultPermissionLevel(s));
+                String desc = getNodeDescription(s);
 
-                for(String s1 : PermissionAPI.getPermissionDescription(s))
+                if(!desc.isEmpty())
                 {
-                    list.add("| " + s1);
-                }
+                    for(String s1 : desc.split("\n"))
+                    {
+                        list.add("| " + s1);
+                    }
 
-                list.add("");
+                    list.add("");
+                }
             }
 
             list.add("");
@@ -191,7 +198,12 @@ public enum Ranks implements IPermissionHandler, IRankConfigHandler
             {
                 IConfigValue value = p.getDefaultValue();
                 list.add("> " + p.getName() + " | Default Player Value: " + value + " | Default OP Value: " + p.getDefaultOPValue());
-                list.add("| " + p.getDescription());
+
+                if(!p.getDescription().isEmpty())
+                {
+                    list.add("| " + p.getDescription());
+                }
+
                 list.add(": Type: " + value.getID());
 
                 String s = value.getMinValueString();
@@ -284,6 +296,24 @@ public enum Ranks implements IPermissionHandler, IRankConfigHandler
         {
             PLAYER_MAP.put(player, rank);
         }
+    }
+
+    @Override
+    public void registerNode(String s, DefaultPermissionLevel defaultPermissionLevel, String s1)
+    {
+        DefaultPermissionHandler.INSTANCE.registerNode(s, defaultPermissionLevel, s1);
+    }
+
+    @Override
+    public Collection<String> getRegisteredNodes()
+    {
+        return DefaultPermissionHandler.INSTANCE.getRegisteredNodes();
+    }
+
+    @Override
+    public String getNodeDescription(String s)
+    {
+        return DefaultPermissionHandler.INSTANCE.getNodeDescription(s);
     }
 
     @Override

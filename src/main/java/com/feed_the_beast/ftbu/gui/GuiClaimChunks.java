@@ -139,7 +139,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 
                 if(chunkData.team != null)
                 {
-                    LMColorUtils.setGLColor(chunkData.team.color.getColor(), 180);
+                    LMColorUtils.setGLColor(LMColorUtils.getColorFromID(chunkData.team.color.getColorID()), 180);
                 }
                 else
                 {

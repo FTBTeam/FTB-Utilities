@@ -52,7 +52,6 @@ public class FTBU
         FTBUNetHandler.init();
         Backups.INSTANCE.init();
         FTBUTops.init();
-        FTBUNotifications.init();
 
         proxy.preInit();
     }

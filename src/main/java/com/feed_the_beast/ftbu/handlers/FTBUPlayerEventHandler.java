@@ -8,9 +8,6 @@ import com.feed_the_beast.ftbl.api.events.player.ForgePlayerInfoEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
-import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
-import com.feed_the_beast.ftbl.api.permissions.context.ContextKeys;
-import com.feed_the_beast.ftbl.api.permissions.context.PlayerContext;
 import com.feed_the_beast.ftbl.api_impl.MouseButton;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
@@ -30,7 +27,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
@@ -39,6 +35,9 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.server.permission.PermissionAPI;
+import net.minecraftforge.server.permission.context.ContextKeys;
+import net.minecraftforge.server.permission.context.PlayerContext;
 
 public class FTBUPlayerEventHandler
 {
@@ -59,16 +58,13 @@ public class FTBUPlayerEventHandler
             {
                 if(FTBUConfigLogin.ENABLE_STARTING_ITEMS.getBoolean())
                 {
-                    for(ItemStack is : FTBUConfigLogin.STARTING_ITEMS.getItems())
-                    {
-                        LMInvUtils.giveItem(ep, is);
-                    }
+                    FTBUConfigLogin.STARTING_ITEMS.getItems().forEach(is -> LMInvUtils.giveItem(ep, is));
                 }
             }
 
             if(FTBUConfigLogin.ENABLE_MOTD.getBoolean())
             {
-                FTBUConfigLogin.MOTD.components.forEach(ep::addChatMessage);
+                FTBUConfigLogin.MOTD.getText().forEach(ep::addChatMessage);
             }
 
             FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().checkUnloaded(null);

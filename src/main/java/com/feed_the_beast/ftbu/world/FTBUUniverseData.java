@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IUniverse;
-import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBU;
@@ -46,6 +45,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -89,7 +89,8 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
 
     // Override //
 
-    public static Badge getServerBadge(IForgePlayer p)
+    @Nullable
+    public static Badge getServerBadge(@Nullable IForgePlayer p)
     {
         if(p == null)
         {

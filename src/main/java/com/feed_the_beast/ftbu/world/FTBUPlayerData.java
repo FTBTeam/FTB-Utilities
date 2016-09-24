@@ -174,7 +174,7 @@ public class FTBUPlayerData implements ICapabilitySerializable<NBTTagCompound>
             }
 
             @Override
-            public void set(boolean v)
+            public void setBoolean(boolean v)
             {
                 flags = (byte) Bits.setFlag(flags, FLAG_RENDER_BADGE, v);
             }
@@ -189,7 +189,7 @@ public class FTBUPlayerData implements ICapabilitySerializable<NBTTagCompound>
             }
 
             @Override
-            public void set(boolean v)
+            public void setBoolean(boolean v)
             {
                 flags = (byte) Bits.setFlag(flags, FLAG_CHAT_LINKS, v);
             }

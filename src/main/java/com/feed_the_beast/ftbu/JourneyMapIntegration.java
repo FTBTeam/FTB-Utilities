@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbu.client.CachedClientData;
 import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.client.FTBUClientConfig;
 import com.latmod.lib.io.Bits;
+import com.latmod.lib.util.LMColorUtils;
 import com.latmod.lib.util.LMUtils;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import journeymap.client.api.ClientPlugin;
@@ -97,7 +98,7 @@ public class JourneyMapIntegration implements IClientPlugin
 
                 if(chunk.team != null)
                 {
-                    shapeProperties.setFillColor(chunk.team.color.getColor());
+                    shapeProperties.setFillColor(0x00FFFFFF | LMColorUtils.getColorFromID(chunk.team.color.getColorID()));
 
                     sb.append(chunk.team.formattedName);
 

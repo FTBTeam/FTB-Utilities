@@ -160,7 +160,7 @@ public enum Ranks implements IPermissionHandler, IRankConfigHandler
         Collections.sort(sortedRankConfigs, LMStringUtils.ID_COMPARATOR);
 
         List<String> nodes = new ArrayList<>(getRegisteredNodes());
-        Collections.sort(sortedRankConfigs, LMStringUtils.IGNORE_CASE_COMPARATOR);
+        Collections.sort(nodes, LMStringUtils.IGNORE_CASE_COMPARATOR);
 
         try
         {

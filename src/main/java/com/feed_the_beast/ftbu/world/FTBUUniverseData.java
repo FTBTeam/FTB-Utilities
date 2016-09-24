@@ -330,7 +330,7 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
             FTBU.logger.info("Server restart in " + LMStringUtils.getTimeString(restartMillis));
         }
 
-        FTBLibIntegration.API.getRegistries().tickables().add(this);
+        FTBLibIntegration.API.ticking().add(this);
 
         LOCAL_BADGES.clear();
     }

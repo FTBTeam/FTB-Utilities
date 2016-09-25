@@ -6,10 +6,9 @@ import com.feed_the_beast.ftbu.api_impl.ChunkloaderType;
 import com.latmod.lib.EnumEnabled;
 import com.latmod.lib.config.PropertyDouble;
 import com.latmod.lib.config.PropertyEnum;
-import com.latmod.lib.config.PropertyInt;
+import com.latmod.lib.config.PropertyShort;
 import net.minecraft.block.Block;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
 
@@ -33,7 +32,7 @@ public class FTBUPermissions
     public static final String HOMES_CROSS_DIM = PermissionAPI.registerNode("ftbu.homes.cross_dim", DefaultPermissionLevel.ALL, "Can use /home to teleport to/from another dimension");
 
     public static final IRankConfig HOMES_MAX = RankConfigAPI.register("ftbu.homes.max",
-            new PropertyInt(Constants.NBT.TAG_SHORT, 1, 0, 30000), new PropertyInt(100),
+            new PropertyShort(1, 0, 30000), new PropertyShort(100),
             "Max home count");
 
     // Claims //
@@ -41,7 +40,7 @@ public class FTBUPermissions
     public static final String CLAIMS_MODIFY_OTHER_CHUNKS = PermissionAPI.registerNode("ftbu.claims.modify_other_chunks", DefaultPermissionLevel.OP, "Allow player to edit other player's chunks");
 
     public static final IRankConfig CLAIMS_MAX_CHUNKS = RankConfigAPI.register("ftbu.claims.max_chunks",
-            new PropertyInt(Constants.NBT.TAG_SHORT, 100, 0, 30000), new PropertyInt(1000),
+            new PropertyShort(100, 0, 30000), new PropertyShort(1000),
             "Max amount of chunks that player can claim\n0 - Disabled");
 
     public static final IRankConfig CLAIMS_FORCED_EXPLOSIONS = RankConfigAPI.register("ftbu.claims.forced_explosions",
@@ -60,7 +59,7 @@ public class FTBUPermissions
             "disabled: Players won't be able to chunkload\noffline: Chunks stay loaded when player loggs off\nonline: Chunks only stay loaded while owner is online");
 
     public static final IRankConfig CHUNKLOADER_MAX_CHUNKS = RankConfigAPI.register("ftbu.chunkloader.max_chunks",
-            new PropertyInt(Constants.NBT.TAG_SHORT, 50, 0, 30000), new PropertyInt(5000),
+            new PropertyShort(50, 0, 30000), new PropertyShort(5000),
             "Max amount of chunks that player can load\n0 - Disabled");
 
     public static final IRankConfig CHUNKLOADER_OFFLINE_TIMER = RankConfigAPI.register("ftbu.chunkloader.offline_timer",

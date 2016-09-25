@@ -46,7 +46,7 @@ public class ThreadBackup extends Thread
             List<File> files = LMFileUtils.listAll(src);
             int allFiles = files.size();
 
-            Backups.logger.info("Backing up " + files.size() + " files...");
+            Backups.LOGGER.info("Backing up " + files.size() + " files...");
 
             if(FTBUConfigBackups.COMPRESSION_LEVEL.getInt() > 0)
             {
@@ -63,7 +63,7 @@ public class ThreadBackup extends Thread
 
                 byte[] buffer = new byte[4096];
 
-                Backups.logger.info("Compressing " + allFiles + " files!");
+                Backups.LOGGER.info("Compressing " + allFiles + " files!");
 
                 for(int i = 0; i < allFiles; i++)
                 {
@@ -76,7 +76,7 @@ public class ThreadBackup extends Thread
                     if(i == 0 || millis > logMillis || i == allFiles - 1)
                     {
                         logMillis = millis + 5000L;
-                        Backups.logger.info("[" + i + " | " + MathHelperLM.toSmallDouble((i / (double) allFiles) * 100D) + "%]: " + ze.getName());
+                        Backups.LOGGER.info("[" + i + " | " + MathHelperLM.toSmallDouble((i / (double) allFiles) * 100D) + "%]: " + ze.getName());
                     }
 
                     zos.putNextEntry(ze);
@@ -93,7 +93,7 @@ public class ThreadBackup extends Thread
 
                 zos.close();
 
-                Backups.logger.info("Done compressing in " + getDoneTime(start) + " seconds (" + LMFileUtils.getSizeS(dstFile) + ")!");
+                Backups.LOGGER.info("Done compressing in " + getDoneTime(start) + " seconds (" + LMFileUtils.getSizeS(dstFile) + ")!");
             }
             else
             {
@@ -115,7 +115,7 @@ public class ThreadBackup extends Thread
                     if(i == 0 || millis > logMillis || i == allFiles - 1)
                     {
                         logMillis = millis + 2000L;
-                        Backups.logger.info("[" + i + " | " + MathHelperLM.toSmallDouble((i / (double) allFiles) * 100D) + "%]: " + file.getName());
+                        Backups.LOGGER.info("[" + i + " | " + MathHelperLM.toSmallDouble((i / (double) allFiles) * 100D) + "%]: " + file.getName());
                     }
 
                     File dst1 = new File(dstPath + (file.getAbsolutePath().replace(srcPath, "")));
@@ -123,7 +123,7 @@ public class ThreadBackup extends Thread
                 }
             }
 
-            Backups.logger.info("Created " + dstFile.getAbsolutePath() + " from " + src.getAbsolutePath());
+            Backups.LOGGER.info("Created " + dstFile.getAbsolutePath() + " from " + src.getAbsolutePath());
             success = true;
 
             if(FTBUConfigBackups.DISPLAY_FILE_SIZE.getBoolean())

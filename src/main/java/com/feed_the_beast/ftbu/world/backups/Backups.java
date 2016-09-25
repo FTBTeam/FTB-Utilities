@@ -30,7 +30,7 @@ public enum Backups
 {
     INSTANCE;
 
-    public static final Logger logger = LogManager.getLogger("FTBU_Backups");
+    public static final Logger LOGGER = LogManager.getLogger("FTBU_Backups");
     public final List<Backup> backups = new ArrayList<>();
     public File backupsFolder;
     public long nextBackup = -1L;
@@ -94,7 +94,7 @@ public enum Backups
         }
 
         cleanupAndSave();
-        logger.info("Backups folder - " + backupsFolder.getAbsolutePath());
+        LOGGER.info("Backups folder - " + backupsFolder.getAbsolutePath());
     }
 
     public boolean run(ICommandSender ics)
@@ -153,11 +153,7 @@ public enum Backups
             Collections.sort(backups, Backup.COMPARATOR);
 
             int size = FTBUConfigBackups.BACKUPS_TO_KEEP.getInt() - backups.size();
-
-            for(int i = 0; i < backups.size(); i++)
-            {
-                System.out.println(backups.get(i).time + ": " + backups.get(i).fileID);
-            }
+            backups.forEach(b -> LOGGER.info(b.time + ": " + b.fileID));
 
             if(size > 0)
             {
@@ -165,7 +161,7 @@ public enum Backups
 
                 for(int i = 0; i < size; i++)
                 {
-                    System.out.println("Deleting " + backups.get(i).fileID);
+                    LOGGER.info("Deleting " + backups.get(i).fileID);
                 }
             }
 

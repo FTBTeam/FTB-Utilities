@@ -18,7 +18,7 @@ public class FTBUConfigGeneral
     @ConfigValue(id = "general.auto_restart", file = FTBUFinals.MOD_ID)
     public static final PropertyBool AUTO_RESTART = new PropertyBool(true);
 
-    @ConfigValue(id = "general.restart_timer", file = FTBUFinals.MOD_ID, info = "Server will automatically shut down after X hours\n0 - Disabled\n0.5 - 30 minutes\n1 - 1 Hour\n4 - 1 Day\n168 - 1 Week\n720 - 1 Month")
+    @ConfigValue(id = "general.restart_timer", file = FTBUFinals.MOD_ID, info = {"Server will automatically shut down after X hours", "0 - Disabled", "0.5 - 30 minutes", "1 - 1 Hour", "4 - 1 Day", "168 - 1 Week", "720 - 1 Month"})
     public static final PropertyDouble RESTART_TIMER = new PropertyDouble(0D).setMin(0D).setMax(720);
 
     //public static final PropertyBool RANKS_ENABLED = new PropertyBool(false);

@@ -19,6 +19,6 @@ public class FTBUConfigLogin
     @ConfigValue(id = "login.motd", file = FTBUFinals.MOD_ID, info = "Message of the day. This will be displayed when player joins the server")
     public static final PropertyTextComponentList MOTD = new PropertyTextComponentList(new ArrayList<>());
 
-    @ConfigValue(id = "login.starting_items", file = FTBUFinals.MOD_ID, info = "Items to give player when he first joins the server\nFormat: \"StringID Size Metadata\" or {nbt}")
+    @ConfigValue(id = "login.starting_items", file = FTBUFinals.MOD_ID, info = {"Items to give player when he first joins the server", "Format: \"StringID Size Metadata\" or {nbt}"})
     public static final PropertyItemStackList STARTING_ITEMS = new PropertyItemStackList(new ArrayList<>());
 }

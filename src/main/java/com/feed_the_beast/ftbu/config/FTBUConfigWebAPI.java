@@ -16,6 +16,6 @@ public class FTBUConfigWebAPI
     @ConfigValue(id = "webapi.autostart", file = FTBUFinals.MOD_ID, info = "Starts server automatically with world")
     public static final PropertyBool AUTOSTART = new PropertyBool(true);
 
-    @ConfigValue(id = "webapi.output_map", file = FTBUFinals.MOD_ID, info = "true - map, false - table")
+    @ConfigValue(id = "webapi.output_map", file = FTBUFinals.MOD_ID, info = {"true - Map", "false - Table"})
     public static final PropertyBool OUTPUT_MAP = new PropertyBool(false);
 }

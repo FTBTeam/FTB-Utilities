@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu.gui;
 
+import com.feed_the_beast.ftbu.client.FTBUClientConfig;
 import com.latmod.lib.client.PixelBuffer;
 import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.block.Block;
@@ -85,6 +86,10 @@ public class ThreadReloadArea extends Thread
         {
             return 0x74BC7C;
         }
+        else if(b == Blocks.TORCH)
+        {
+            return 0xFFA530;
+        }
         //else if(b.getMaterial(state) == Material.water)
         //	return LMColorUtils.multiply(MapColor.waterColor.colorValue, b.colorMultiplier(worldObj, pos), 200);
         else if(b == Blocks.RED_FLOWER)
@@ -144,8 +149,11 @@ public class ThreadReloadArea extends Thread
     public void run()
     {
         Arrays.fill(pixels.getPixels(), 0);
+        GuiClaimChunks.pixelBuffer = LMColorUtils.toByteBuffer(pixels.getPixels(), false);
+
         Chunk chunk;
         int cx, cz, x, z, wx, wz, by, color, topY;
+        boolean depth = FTBUClientConfig.ENABLE_CHUNK_SELECTOR_DEPTH.getBoolean();
 
         int startY = Minecraft.getMinecraft().thePlayer.getPosition().getY();
 
@@ -176,7 +184,12 @@ public class ThreadReloadArea extends Thread
                                     if(state.getBlock() != Blocks.TALLGRASS && !worldObj.isAirBlock(currentBlockPos))
                                     {
                                         color = getBlockColor(state);
-                                        color = LMColorUtils.addBrightness(color, MathHelper.clamp_int(by - startY, -30, 30) * 5);
+
+                                        if(depth)
+                                        {
+                                            color = LMColorUtils.addBrightness(color, MathHelper.clamp_int(by - startY, -30, 30) * 5);
+                                        }
+
                                         pixels.setRGB(cx * 16 + wx, cz * 16 + wz, color);
                                         break;
                                     }

@@ -13,6 +13,7 @@ import com.feed_the_beast.ftbl.api_impl.MouseButton;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.client.CachedClientData;
+import com.feed_the_beast.ftbu.client.FTBUClientConfig;
 import com.feed_the_beast.ftbu.net.MessageRequestChunkData;
 import com.latmod.lib.client.TextureCoords;
 import com.latmod.lib.io.Bits;
@@ -162,7 +163,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
     }
 
     final int startX, startZ;
-    private final ButtonLM buttonRefresh, buttonClose, buttonUnclaimAll;
+    private final ButtonLM buttonRefresh, buttonClose, buttonUnclaimAll, buttonDepth;
     private final MapButton mapButtons[];
     private final PanelLM panelButtons;
     public ThreadReloadArea thread = null;
@@ -192,6 +193,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             @Override
             public void onClicked(IGui gui, IMouseButton button)
             {
+                thread = null;
                 thread = new ThreadReloadArea(mc.theWorld, GuiClaimChunks.this);
                 thread.start();
                 new MessageRequestChunkData(startX, startZ, TILES_GUI, TILES_GUI).sendToServer();
@@ -216,6 +218,18 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             }
         };
 
+        buttonDepth = new ButtonLM(0, 48, 16, 16)
+        {
+            @Override
+            public void onClicked(IGui gui, IMouseButton button)
+            {
+                FTBUClientConfig.ENABLE_CHUNK_SELECTOR_DEPTH.setBoolean(!FTBUClientConfig.ENABLE_CHUNK_SELECTOR_DEPTH.getBoolean());
+                buttonRefresh.onClicked(gui, button);
+            }
+        };
+
+        buttonDepth.setTitle("Map Depth"); //TODO: Lang
+
         panelButtons = new PanelLM(0, 0, 16, 0)
         {
             @Override
@@ -224,6 +238,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
                 add(buttonClose);
                 add(buttonRefresh);
                 add(buttonUnclaimAll);
+                add(buttonDepth);
 
                 setHeight(widgets.size() * 16);
             }
@@ -363,6 +378,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         buttonRefresh.render(GuiIcons.REFRESH);
         buttonClose.render(GuiIcons.ACCEPT);
         buttonUnclaimAll.render(GuiIcons.REMOVE);
+        buttonDepth.render(FTBUClientConfig.ENABLE_CHUNK_SELECTOR_DEPTH.getBoolean() ? GuiIcons.ACCEPT : GuiIcons.ACCEPT_GRAY);
     }
 
     @Override

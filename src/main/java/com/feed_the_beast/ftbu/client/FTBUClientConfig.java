@@ -15,6 +15,9 @@ public class FTBUClientConfig
     @ConfigValue(id = "light_value_texture_x", file = FTBUFinals.MOD_ID, client = true)
     public static final PropertyBool LIGHT_VALUE_TEXTURE_X = new PropertyBool(true);
 
+    @ConfigValue(id = "enable_chunk_selector_depth", file = FTBUFinals.MOD_ID, client = true, isHidden = true)
+    public static final PropertyBool ENABLE_CHUNK_SELECTOR_DEPTH = new PropertyBool(false);
+
     @ConfigValue(id = "journeymap_overlay", file = FTBUFinals.MOD_ID, client = true)
     public static final PropertyBool JOURNEYMAP_OVERLAY = new PropertyBool(true);
 }

@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.config;
 
 import com.feed_the_beast.ftbl.api.config.ConfigValue;
+import com.feed_the_beast.ftbl.lib.config.PropertyBool;
+import com.feed_the_beast.ftbl.lib.config.PropertyInt;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.latmod.lib.config.PropertyBool;
-import com.latmod.lib.config.PropertyInt;
 
 public class FTBUConfigWebAPI
 {

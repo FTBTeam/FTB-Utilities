@@ -3,66 +3,94 @@ package com.feed_the_beast.ftbu.ranks;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.rankconfig.IRankConfig;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
+import com.feed_the_beast.ftbl.lib.FinalIDObject;
+import com.feed_the_beast.ftbl.lib.config.PropertyNull;
+import com.feed_the_beast.ftbu.api.IRank;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.latmod.lib.FinalIDObject;
-import com.latmod.lib.config.PropertyNull;
-import net.minecraft.command.ICommand;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IJsonSerializable;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
+import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public final class Rank extends FinalIDObject implements IJsonSerializable
+public final class Rank extends FinalIDObject implements IRank, IJsonSerializable
 {
-    public final Map<String, Boolean> permissions;
-    public final Map<IRankConfig, IConfigValue> config;
-    public Rank parent = null;
-    public TextFormatting color = TextFormatting.WHITE;
-    public String prefix = "";
-    public String badge = "";
+    private IRank parent;
+    private Boolean allPermissions;
+    final Map<String, Boolean> permissions;
+    private final Map<String, Event.Result> cachedPermissions;
+    final Map<IRankConfig, IConfigValue> config;
+    private final Map<IRankConfig, IConfigValue> cachedConfig;
 
     public Rank(String id)
     {
         super(id);
         permissions = new LinkedHashMap<>();
+        cachedPermissions = new HashMap<>();
         config = new LinkedHashMap<>();
+        cachedConfig = new HashMap<>();
     }
 
-    public Event.Result handlePermission(String permission)
+    @Override
+    @Nullable
+    public IRank getParent()
     {
-        if(permissions.containsKey("*"))
+        return parent;
+    }
+
+    public void setParent(IRank r)
+    {
+        parent = r;
+    }
+
+    @Override
+    public Event.Result hasPermission(String permission)
+    {
+        if(allPermissions != null)
         {
-            return permissions.get("*") ? Event.Result.ALLOW : Event.Result.DENY;
+            return allPermissions ? Event.Result.ALLOW : Event.Result.DENY;
         }
 
+        Event.Result r = cachedPermissions.get(permission);
+
+        if(r != null)
+        {
+            return r;
+        }
+
+        //TODO: Allow '*' values
         if(permissions.containsKey(permission))
         {
-            return permissions.get(permission) ? Event.Result.ALLOW : Event.Result.DENY;
+            r = permissions.get(permission) ? Event.Result.ALLOW : Event.Result.DENY;
         }
 
-        return Event.Result.DEFAULT;
+        if(r == null)
+        {
+            r = parent != null ? parent.hasPermission(permission) : Event.Result.DEFAULT;
+        }
+
+        cachedPermissions.put(permission, r);
+        return r;
     }
 
-    public IConfigValue handleRankConfig(IRankConfig id)
+    @Override
+    public IConfigValue getConfig(IRankConfig id)
     {
-        if(this == Ranks.INSTANCE.PLAYER)
+        IConfigValue e = cachedConfig.get(id);
+
+        if(e == null)
         {
-            return id.getDefaultValue();
-        }
-        else if(this == Ranks.INSTANCE.ADMIN)
-        {
-            return id.getDefaultOPValue();
+            e = config.get(id);
+            e = (e == null) ? ((parent != null) ? parent.getConfig(id) : PropertyNull.INSTANCE) : e;
         }
 
-        IConfigValue e = config.get(id);
-        return (e == null) ? ((parent != null) ? parent.handleRankConfig(id) : PropertyNull.INSTANCE) : e;
+        cachedConfig.put(id, e);
+        return e;
     }
 
     @Override
@@ -71,9 +99,6 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
         JsonObject o = new JsonObject();
 
         o.add("parent", new JsonPrimitive(parent == null ? "" : parent.getName()));
-        o.add("color", new JsonPrimitive(color.getFriendlyName()));
-        o.add("prefix", new JsonPrimitive(prefix));
-        o.add("badge", new JsonPrimitive(badge));
 
         if(!permissions.isEmpty())
         {
@@ -107,11 +132,10 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
     {
         JsonObject o = e.getAsJsonObject();
         parent = o.has("parent") ? Ranks.INSTANCE.RANKS.get(o.get("parent").getAsString()) : null;
-        color = o.has("color") ? TextFormatting.getValueByName(o.get("color").getAsString()) : TextFormatting.WHITE;
-        prefix = o.has("prefix") ? o.get("prefix").getAsString() : "";
-        badge = o.has("badge") ? o.get("badge").getAsString() : "";
         permissions.clear();
         config.clear();
+        cachedPermissions.clear();
+        cachedConfig.clear();
 
         if(o.has("permissions"))
         {
@@ -125,6 +149,8 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
                 permissions.put((firstChar == '-' || firstChar == '+') ? id.substring(1) : id, b);
             }
         }
+
+        allPermissions = permissions.get("*");
 
         if(o.has("config"))
         {
@@ -140,19 +166,5 @@ public final class Rank extends FinalIDObject implements IJsonSerializable
                 }
             }
         }
-    }
-
-    public boolean allowCommand(MinecraftServer server, ICommandSender sender, ICommand command)
-    {
-        Event.Result b = handlePermission("command." + command.getCommandName());
-        if(b != Event.Result.DEFAULT)
-        {
-            return b == Event.Result.ALLOW;
-        }
-        if(parent == null)
-        {
-            return command.checkPermission(server, sender);
-        }
-        return parent.allowCommand(server, sender, command);
     }
 }

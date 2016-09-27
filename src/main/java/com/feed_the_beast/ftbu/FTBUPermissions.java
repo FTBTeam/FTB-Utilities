@@ -2,12 +2,15 @@ package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.api.rankconfig.IRankConfig;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
+import com.feed_the_beast.ftbl.lib.EnumEnabled;
+import com.feed_the_beast.ftbl.lib.config.PropertyDouble;
+import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
+import com.feed_the_beast.ftbl.lib.config.PropertyShort;
+import com.feed_the_beast.ftbl.lib.config.PropertyString;
+import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbu.api_impl.ChunkloaderType;
-import com.latmod.lib.EnumEnabled;
-import com.latmod.lib.config.PropertyDouble;
-import com.latmod.lib.config.PropertyEnum;
-import com.latmod.lib.config.PropertyShort;
 import net.minecraft.block.Block;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -26,6 +29,10 @@ public class FTBUPermissions
     public static final String DISPLAY_ADMIN_INFO = PermissionAPI.registerNode("ftbu.display.admin_info", DefaultPermissionLevel.OP, "Display 'Admin' in Server Info");
     public static final String DISPLAY_RANK = PermissionAPI.registerNode("ftbu.display.rank", DefaultPermissionLevel.ALL, "Display Rank in FriendsGUI");
     public static final String DISPLAY_PERMISSIONS = PermissionAPI.registerNode("ftbu.display.permissions", DefaultPermissionLevel.ALL, "Display 'My Permissions' in Server Info");
+
+    public static final IRankConfig DISPLAY_COLOR = RankConfigAPI.register("display.color", new PropertyEnum<>(LMServerUtils.TEXT_FORMATTING_NAME_MAP, TextFormatting.WHITE), new PropertyEnum<>(LMServerUtils.TEXT_FORMATTING_NAME_MAP, TextFormatting.GREEN), "Color of player's nickname");
+    public static final IRankConfig DISPLAY_PREFIX = RankConfigAPI.register("display.prefix", new PropertyString(""), new PropertyString(""), "Prefix of player's nidkname");
+    public static final IRankConfig DISPLAY_BADGE = RankConfigAPI.register("display.badge", new PropertyString(""), new PropertyString(""), "Prefix of player's nidkname");
 
     // Homes //
 

@@ -3,6 +3,15 @@ package com.feed_the_beast.ftbu.world;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
+import com.feed_the_beast.ftbl.lib.BroadcastSender;
+import com.feed_the_beast.ftbl.lib.EnumEnabled;
+import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
+import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
+import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
+import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
+import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
+import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUCapabilities;
@@ -19,17 +28,7 @@ import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.net.MessageUpdateChunkData;
-import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.backups.Backups;
-import com.latmod.lib.BroadcastSender;
-import com.latmod.lib.EnumEnabled;
-import com.latmod.lib.math.BlockDimPos;
-import com.latmod.lib.math.ChunkDimPos;
-import com.latmod.lib.math.MathHelperLM;
-import com.latmod.lib.util.LMJsonUtils;
-import com.latmod.lib.util.LMServerUtils;
-import com.latmod.lib.util.LMStringUtils;
-import com.latmod.lib.util.LMUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -103,7 +102,8 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
             return b;
         }
 
-        String rank = Ranks.INSTANCE.getRankOf(p.getProfile()).badge;
+        String rank = RankConfigAPI.getRankConfig(p.getProfile(), FTBUPermissions.DISPLAY_BADGE).getString();
+
         if(!rank.isEmpty())
         {
             b = LOCAL_BADGES.badgeMap.get(rank);

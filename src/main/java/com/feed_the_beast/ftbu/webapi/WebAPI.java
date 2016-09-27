@@ -2,11 +2,11 @@ package com.feed_the_beast.ftbu.webapi;
 
 import com.feed_the_beast.ftbl.FTBLibStats;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.latmod.lib.util.LMJsonUtils;
 import net.minecraft.stats.StatList;
 import net.minecraft.stats.StatisticsManagerServer;
 

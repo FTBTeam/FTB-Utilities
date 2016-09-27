@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbu.api_impl;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.chunks.ILoadedChunk;
 import com.feed_the_beast.ftbu.api.chunks.ITicketContainer;
-import com.latmod.lib.io.Bits;
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import net.minecraft.nbt.NBTTagIntArray;

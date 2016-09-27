@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbu.client;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
+import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.gui.guide.local.InfoPageLocalGuideRepoList;
-import com.latmod.lib.math.MathHelperLM;
-import com.latmod.lib.util.LMServerUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;

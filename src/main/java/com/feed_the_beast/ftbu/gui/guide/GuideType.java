@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
-import com.latmod.lib.EnumNameMap;
+import com.feed_the_beast.ftbl.lib.EnumNameMap;
 
 /**
  * Created by PC on 17.07.2016.

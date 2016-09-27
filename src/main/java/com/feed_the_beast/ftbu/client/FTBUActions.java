@@ -1,20 +1,20 @@
 package com.feed_the_beast.ftbu.client;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.gui.GuiHelper;
-import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api.gui.SidebarButton;
+import com.feed_the_beast.ftbl.lib.SidebarButtonInst;
+import com.feed_the_beast.ftbl.lib.config.PropertyBool;
+import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
+import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.gui.GuiClaimChunks;
 import com.feed_the_beast.ftbu.gui.guide.local.InfoPageLocalGuideRepoList;
 import com.feed_the_beast.ftbu.net.MessageRequestChunkData;
 import com.feed_the_beast.ftbu.net.MessageRequestServerInfo;
-import com.latmod.lib.SidebarButtonInst;
-import com.latmod.lib.config.PropertyBool;
-import com.latmod.lib.math.MathHelperLM;
-import com.latmod.lib.util.LMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;

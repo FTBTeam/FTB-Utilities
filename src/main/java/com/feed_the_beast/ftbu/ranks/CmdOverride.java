@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.ranks;
 
-import com.latmod.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -51,10 +51,10 @@ public class CmdOverride implements ICommand
     public boolean checkPermission(MinecraftServer server, ICommandSender sender)
     {
         LMUtils.DEV_LOGGER.info("FTBU: Checking permission for " + parent.getCommandName());
+
         if(sender instanceof EntityPlayerMP)
         {
-            Rank r = Ranks.INSTANCE.getRankOf(((EntityPlayerMP) sender).getGameProfile());
-            return r.allowCommand(server, sender, parent);
+            return Ranks.INSTANCE.getRankOf(((EntityPlayerMP) sender).getGameProfile()).allowCommand(server, sender, parent);
         }
 
         return parent.checkPermission(server, sender);

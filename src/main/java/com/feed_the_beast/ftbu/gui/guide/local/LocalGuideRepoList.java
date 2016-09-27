@@ -1,14 +1,14 @@
 package com.feed_the_beast.ftbu.gui.guide.local;
 
-import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoPage;
-import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
+import com.feed_the_beast.ftbl.lib.info.ButtonInfoPage;
+import com.feed_the_beast.ftbl.lib.info.InfoPage;
+import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.gui.guide.GuideRepoList;
 import com.feed_the_beast.ftbu.gui.guide.GuideType;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.latmod.lib.util.LMJsonUtils;
-import com.latmod.lib.util.LMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;

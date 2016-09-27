@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
-import com.latmod.lib.math.BlockDimPos;
-import com.latmod.lib.math.EntityDimPos;
-import com.latmod.lib.util.LMServerUtils;
+import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
+import com.feed_the_beast.ftbl.lib.math.EntityDimPos;
+import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;

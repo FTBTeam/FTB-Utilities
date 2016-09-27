@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.badges;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.latmod.lib.FinalIDObject;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;

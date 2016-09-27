@@ -2,12 +2,12 @@ package com.feed_the_beast.ftbu.client;
 
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
+import com.feed_the_beast.ftbl.lib.io.LMConnection;
+import com.feed_the_beast.ftbl.lib.io.RequestMethod;
 import com.feed_the_beast.ftbu.JourneyMapIntegration;
 import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.badges.BadgeStorage;
 import com.feed_the_beast.ftbu.net.MessageRequestBadge;
-import com.latmod.lib.io.LMConnection;
-import com.latmod.lib.io.RequestMethod;
 import gnu.trove.map.hash.TLongObjectHashMap;
 
 import java.util.HashMap;

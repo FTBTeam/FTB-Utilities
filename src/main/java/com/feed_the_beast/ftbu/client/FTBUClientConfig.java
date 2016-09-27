@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.client;
 
 import com.feed_the_beast.ftbl.api.config.ConfigValue;
+import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.latmod.lib.config.PropertyBool;
 
 /**
  * Created by LatvianModder on 13.09.2016.

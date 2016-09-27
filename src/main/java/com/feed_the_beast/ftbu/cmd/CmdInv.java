@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.latmod.lib.util.LMInvUtils;
-import com.latmod.lib.util.LMNBTUtils;
-import com.latmod.lib.util.LMStringUtils;
-import com.latmod.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.util.LMInvUtils;
+import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
+import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;

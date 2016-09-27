@@ -1,13 +1,13 @@
 package com.feed_the_beast.ftbu.gui.guide.local;
 
-import com.feed_the_beast.ftbl.api.gui.GuiHelper;
-import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
-import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
-import com.feed_the_beast.ftbl.api.info.impl.SpecialInfoButton;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.feed_the_beast.ftbl.gui.GuiLoading;
+import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
+import com.feed_the_beast.ftbl.lib.info.InfoPage;
+import com.feed_the_beast.ftbl.lib.info.SpecialInfoButton;
 import com.feed_the_beast.ftbu.gui.guide.online.InfoPageOnlineGuideRepoList;
 import com.feed_the_beast.ftbu.gui.guide.online.OnlineGuideRepoList;
 import net.minecraftforge.fml.relauncher.Side;

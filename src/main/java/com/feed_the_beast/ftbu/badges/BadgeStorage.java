@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.badges;
 
+import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.latmod.lib.util.LMStringUtils;
 
 import java.util.HashMap;
 import java.util.Map;

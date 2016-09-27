@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.net;
 
-import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
-import com.feed_the_beast.ftbl.api.net.MessageToServer;
+import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
+import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

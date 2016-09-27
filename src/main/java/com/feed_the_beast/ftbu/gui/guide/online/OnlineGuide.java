@@ -2,12 +2,12 @@ package com.feed_the_beast.ftbu.gui.guide.online;
 
 import com.feed_the_beast.ftbl.api.info.IImageProvider;
 import com.feed_the_beast.ftbl.api.info.IResourceProvider;
-import com.feed_the_beast.ftbl.api.info.impl.URLImageProvider;
+import com.feed_the_beast.ftbl.lib.info.URLImageProvider;
+import com.feed_the_beast.ftbl.lib.io.LMConnection;
+import com.feed_the_beast.ftbl.lib.io.RequestMethod;
 import com.feed_the_beast.ftbu.gui.guide.Guide;
 import com.feed_the_beast.ftbu.gui.guide.GuideType;
 import com.google.gson.JsonObject;
-import com.latmod.lib.io.LMConnection;
-import com.latmod.lib.io.RequestMethod;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 

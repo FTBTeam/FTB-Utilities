@@ -1,12 +1,12 @@
 package com.feed_the_beast.ftbu;
 
+import com.feed_the_beast.ftbl.lib.io.Bits;
+import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.client.CachedClientData;
 import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.client.FTBUClientConfig;
-import com.latmod.lib.io.Bits;
-import com.latmod.lib.util.LMColorUtils;
-import com.latmod.lib.util.LMUtils;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import journeymap.client.api.ClientPlugin;
 import journeymap.client.api.IClientAPI;

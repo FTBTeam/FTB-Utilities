@@ -7,20 +7,19 @@ import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
+import com.feed_the_beast.ftbu.FTBULeaderboards;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.FTBUTops;
-import com.feed_the_beast.ftbu.api.EventFTBUServerInfo;
 import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.api.ILeaderboardDataProvider;
-import com.feed_the_beast.ftbu.api.ILeaderboardRegistry;
+import com.feed_the_beast.ftbu.api.events.EventFTBUServerInfo;
+import com.feed_the_beast.ftbu.api.leaderboard.ILeaderboard;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.world.backups.Backups;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.stats.StatBase;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -58,15 +57,16 @@ public class ServerInfoFile extends InfoPage
         }
     }
 
-    public ServerInfoFile(IForgePlayer self)
+    public ServerInfoFile(EntityPlayerMP ep)
     {
         super(CachedInfo.main.getName());
         setTitle(CachedInfo.main.getTitle());
+        IForgePlayer self = FTBLibIntegration.API.getUniverse().getPlayer(ep);
 
         MinecraftServer server = LMServerUtils.getServer();
 
         boolean isDedi = server.isDedicatedServer();
-        boolean isOP = !isDedi || PermissionAPI.hasPermission(self.getPlayer(), FTBUPermissions.DISPLAY_ADMIN_INFO);
+        boolean isOP = !isDedi || PermissionAPI.hasPermission(ep, FTBUPermissions.DISPLAY_ADMIN_INFO);
 
         copyFrom(CachedInfo.main);
 
@@ -85,7 +85,7 @@ public class ServerInfoFile extends InfoPage
 
         if(FTBUConfigGeneral.SERVER_INFO_DIFFICULTY.getBoolean())
         {
-            println(FTBLibLang.DIFFICULTY.textComponent(LMStringUtils.firstUppercase(self.getPlayer().worldObj.getDifficulty().toString().toLowerCase())));
+            println(FTBLibLang.DIFFICULTY.textComponent(LMStringUtils.firstUppercase(ep.worldObj.getDifficulty().toString().toLowerCase())));
         }
 
         if(FTBUConfigGeneral.SERVER_INFO_MODE.getBoolean())
@@ -93,28 +93,19 @@ public class ServerInfoFile extends InfoPage
             println(FTBLibLang.MODE_CURRENT.textComponent(LMStringUtils.firstUppercase(FTBLibIntegration.API.getSharedData(Side.SERVER).getPackMode().getID())));
         }
 
-        InfoPage topsPage = getSub("tops").setTitle(FTBUTops.LANG_TOP_TITLE.textComponent());
+        InfoPage topsPage = getSub("tops").setTitle(FTBULeaderboards.LANG_TOP_TITLE.textComponent());
 
-        ILeaderboardRegistry leaderboardRegistry = FTBUtilitiesAPI_Impl.INSTANCE.getLeaderboardRegistry();
-
-        for(StatBase stat : leaderboardRegistry.getRegistred())
+        for(ILeaderboard leaderboard : FTBUtilitiesAPI_Impl.INSTANCE.LEADERBOARDS.values())
         {
-            InfoPage thisTop = topsPage.getSub(stat.statId).setTitle(leaderboardRegistry.getName(stat));
-
-            Collections.sort(players, leaderboardRegistry.getComparator(stat));
+            InfoPage thisTop = topsPage.getSub(leaderboard.getStat().statId).setTitle(leaderboard.getName());
+            Collections.sort(players, leaderboard.getComparator());
 
             int size = Math.min(players.size(), 250);
 
             for(int j = 0; j < size; j++)
             {
                 IForgePlayer p = players.get(j);
-                Object data = null;
-                ILeaderboardDataProvider dataSupplier = leaderboardRegistry.getDataProvider(stat);
-
-                if(dataSupplier != null)
-                {
-                    data = dataSupplier.getData(p);
-                }
+                Object data = leaderboard.getData(p);
 
                 if(data == null)
                 {
@@ -159,7 +150,7 @@ public class ServerInfoFile extends InfoPage
 
         try
         {
-            for(ICommand c : LMServerUtils.getAllCommands(server, self.getPlayer()))
+            for(ICommand c : LMServerUtils.getAllCommands(server, ep))
             {
                 try
                 {
@@ -179,7 +170,7 @@ public class ServerInfoFile extends InfoPage
                         List<ITextComponent> list = new ArrayList<>();
                         list.add(new TextComponentString('/' + c.getCommandName()));
                         list.add(null);
-                        addCommandUsage(self.getPlayer(), list, 0, (CommandTreeBase) c);
+                        addCommandUsage(ep, list, 0, (CommandTreeBase) c);
 
                         for(ITextComponent c1 : list)
                         {
@@ -188,7 +179,7 @@ public class ServerInfoFile extends InfoPage
                     }
                     else
                     {
-                        String usage = c.getCommandUsage(self.getPlayer());
+                        String usage = c.getCommandUsage(ep);
 
                         if(usage.indexOf('\n') != -1)
                         {

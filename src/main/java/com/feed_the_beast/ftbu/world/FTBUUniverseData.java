@@ -363,7 +363,7 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
             tag.setTag("Warps", tag1);
         }
 
-        tag.setTag("Chunks", FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().serializeNBT());
+        tag.setTag("Chunks", ClaimedChunkStorage.INSTANCE.serializeNBT());
 
         return tag;
     }
@@ -392,7 +392,10 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
             warps = null;
         }
 
-        FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().deserializeNBT(tag.getTagList("Chunks", Constants.NBT.TAG_INT_ARRAY));
+        if(tag.hasKey("Chunks", Constants.NBT.TAG_COMPOUND))
+        {
+            ClaimedChunkStorage.INSTANCE.deserializeNBT(tag.getCompoundTag("Chunks"));
+        }
     }
 
     @Override

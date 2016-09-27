@@ -50,8 +50,6 @@ public class FTBU
 
         FTBUCapabilities.enable();
         FTBUNetHandler.init();
-        Backups.INSTANCE.init();
-        FTBUTops.init();
 
         proxy.preInit();
     }
@@ -72,6 +70,7 @@ public class FTBU
     @Mod.EventHandler
     public void serverStarted(FMLServerStartedEvent event)
     {
+        Backups.INSTANCE.init();
         Ranks.INSTANCE.generateExampleFiles();
 
         if(FTBUConfigWebAPI.ENABLED.getBoolean() && FTBUConfigWebAPI.AUTOSTART.getBoolean())

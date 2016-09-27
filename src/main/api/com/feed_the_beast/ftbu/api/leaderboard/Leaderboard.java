@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbu.api;
+package com.feed_the_beast.ftbu.api.leaderboard;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * Created by LatvianModder on 20.09.2016.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.METHOD})
-public @interface FTBUtilitiesAddon
+@Target(ElementType.FIELD)
+public @interface Leaderboard
 {
 }

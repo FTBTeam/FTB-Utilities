@@ -8,8 +8,6 @@ import com.feed_the_beast.ftbu.api.chunks.ILoadedChunkStorage;
  */
 public interface FTBUtilitiesAPI
 {
-    ILeaderboardRegistry getLeaderboardRegistry();
-
     IClaimedChunkStorage getClaimedChunks();
 
     ILoadedChunkStorage getLoadedChunks();

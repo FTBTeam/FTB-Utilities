@@ -10,6 +10,7 @@ import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.gui.GuiClaimChunks;
 import com.feed_the_beast.ftbu.gui.guide.local.InfoPageLocalGuideRepoList;
@@ -102,6 +103,12 @@ public class FTBUActions
         {
             FTBLibClient.execClientCommand("/ftb heal", false);
         }
+
+        @Override
+        public boolean isVisible()
+        {
+            return FTBLibIntegration.API.isClientPlayerOP();
+        }
     };
 
     @SidebarButton
@@ -112,6 +119,12 @@ public class FTBUActions
         {
             int i = Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode ? 0 : 1;
             FTBLibClient.execClientCommand("/gamemode " + i, false);
+        }
+
+        @Override
+        public boolean isVisible()
+        {
+            return FTBLibIntegration.API.isClientPlayerOP();
         }
     };
 
@@ -130,6 +143,12 @@ public class FTBUActions
                 FTBLibClient.execClientCommand("/weather clear 1000000", false);
             }
         }
+
+        @Override
+        public boolean isVisible()
+        {
+            return FTBLibIntegration.API.isClientPlayerOP();
+        }
     };
 
     @SidebarButton
@@ -140,6 +159,12 @@ public class FTBUActions
         {
             FTBLibClient.execClientCommand("/time set 6000", false);
         }
+
+        @Override
+        public boolean isVisible()
+        {
+            return FTBLibIntegration.API.isClientPlayerOP();
+        }
     };
 
     @SidebarButton
@@ -149,6 +174,12 @@ public class FTBUActions
         public void onClicked(IMouseButton button)
         {
             FTBLibClient.execClientCommand("/time set 18000", false);
+        }
+
+        @Override
+        public boolean isVisible()
+        {
+            return FTBLibIntegration.API.isClientPlayerOP();
         }
     };
 }

@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbu.api;
+package com.feed_the_beast.ftbu.api.events;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbu.world.ServerInfoFile;

@@ -75,7 +75,7 @@ public class FTBUPermissions
             levels.put(CLAIMS_BLOCK_BREAK_PREFIX + formatBlock(block), DefaultPermissionLevel.OP);
         });
 
-        levels.put(CLAIMS_BLOCK_BREAK_PREFIX + "openblocks.grave", DefaultPermissionLevel.ALL);
+        levels.put(CLAIMS_BLOCK_BREAK_PREFIX + "gravestone.gravestone", DefaultPermissionLevel.ALL);
 
         //"Dimensions where players can't claim"
         for(int i : DimensionManager.getStaticDimensionIDs())

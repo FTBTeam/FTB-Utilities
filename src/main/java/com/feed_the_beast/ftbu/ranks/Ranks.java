@@ -173,10 +173,12 @@ public enum Ranks implements IPermissionHandler, IRankConfigHandler
 
             list.add("## Permissions");
             list.add("");
+            list.add("> permission.node | Default Permission Level");
+            list.add("");
 
             for(String s : nodes)
             {
-                list.add("> " + s + " | Default Permission Level: " + DefaultPermissionHandler.INSTANCE.getDefaultPermissionLevel(s));
+                list.add("> " + s + " | " + DefaultPermissionHandler.INSTANCE.getDefaultPermissionLevel(s));
                 String desc = getNodeDescription(s);
 
                 if(!desc.isEmpty())

@@ -16,10 +16,10 @@ public class FTBUConfigGeneral
     public static final IConfigFileProvider FILE = () -> new File(LMUtils.folderLocal, "ftbu/config.json");
 
     @ConfigValue(id = "general.auto_restart", file = FTBUFinals.MOD_ID)
-    public static final PropertyBool AUTO_RESTART = new PropertyBool(true);
+    public static final PropertyBool AUTO_RESTART = new PropertyBool(false);
 
     @ConfigValue(id = "general.restart_timer", file = FTBUFinals.MOD_ID, info = {"Server will automatically shut down after X hours", "0 - Disabled", "0.5 - 30 minutes", "1 - 1 Hour", "4 - 1 Day", "168 - 1 Week", "720 - 1 Month"})
-    public static final PropertyDouble RESTART_TIMER = new PropertyDouble(0D).setMin(0D).setMax(720);
+    public static final PropertyDouble RESTART_TIMER = new PropertyDouble(12D).setMin(0D).setMax(720);
 
     //public static final PropertyBool RANKS_ENABLED = new PropertyBool(false);
     //public static final PropertyBool RANKS_OVERRIDE_CHAT = new PropertyBool(true);

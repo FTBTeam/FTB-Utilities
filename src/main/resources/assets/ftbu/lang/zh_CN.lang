@@ -16,12 +16,17 @@ my_server_settings.ftbu.fake_players=允许Fake Players
 my_server_settings.ftbu.security_level=方块的安全等级
 
 # Action Buttons
-sidebar_button.ftbu:guide=指南
-sidebar_button.ftbu:server_info=服务器信息
-sidebar_button.ftbu:claimed_chunks=认领区块
-sidebar_button.ftbu:trash_can=垃圾桶
-sidebar_button.ftbu:shop=商店
-sidebar_button.ftbu:mail=邮箱
+sidebar_button.ftbu.toggle.gamemode=切换游戏模式
+sidebar_button.ftbu.toggle.rain=切换天气
+sidebar_button.ftbu.toggle.day=设置为白天
+sidebar_button.ftbu.toggle.night=设置为黑夜
+sidebar_button.ftbu.heal=治疗
+sidebar_button.ftbu.guide=指南
+sidebar_button.ftbu.server_info=服务器信息
+sidebar_button.ftbu.claimed_chunks=认领区块
+sidebar_button.ftbu.trash_can=垃圾桶
+sidebar_button.ftbu.shop=商店
+sidebar_button.ftbu.mail=邮箱
 
 # Keys
 key.categories.ftbu=FTBMods

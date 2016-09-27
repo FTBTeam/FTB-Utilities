@@ -16,12 +16,17 @@ my_server_settings.ftbu.fake_players=Allow Fake Players
 my_server_settings.ftbu.security_level=Block Security Level
 
 # Action Buttons
-sidebar_button.ftbu:guide=Guide
-sidebar_button.ftbu:server_info=Server Info
-sidebar_button.ftbu:claimed_chunks=Claimed Chunks
-sidebar_button.ftbu:trash_can=Trash Can
-sidebar_button.ftbu:shop=Shop
-sidebar_button.ftbu:mail=Mail
+sidebar_button.ftbu.toggle.gamemode=Toggle Gamemode
+sidebar_button.ftbu.toggle.rain=Toggle Rain
+sidebar_button.ftbu.toggle.day=Set time to Day
+sidebar_button.ftbu.toggle.night=Set time to Night
+sidebar_button.ftbu.heal=Heal
+sidebar_button.ftbu.guide=Guide
+sidebar_button.ftbu.server_info=Server Info
+sidebar_button.ftbu.claimed_chunks=Claimed Chunks
+sidebar_button.ftbu.trash_can=Trash Can
+sidebar_button.ftbu.shop=Shop
+sidebar_button.ftbu.mail=Mail
 
 # Keys
 key.categories.ftbu=FTBMods

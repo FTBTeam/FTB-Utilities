@@ -13,7 +13,7 @@ public class FTBUClientConfig
     public static final PropertyBool RENDER_BADGES = new PropertyBool(true);
 
     @ConfigValue(id = "light_value_texture_x", file = FTBUFinals.MOD_ID, client = true)
-    public static final PropertyBool LIGHT_VALUE_TEXTURE_X = new PropertyBool(true);
+    public static final PropertyBool LIGHT_VALUE_TEXTURE_X = new PropertyBool(false);
 
     @ConfigValue(id = "enable_chunk_selector_depth", file = FTBUFinals.MOD_ID, client = true, isHidden = true)
     public static final PropertyBool ENABLE_CHUNK_SELECTOR_DEPTH = new PropertyBool(false);

@@ -11,7 +11,6 @@ import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.PanelLM;
-import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
@@ -29,6 +28,7 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -53,7 +53,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
 
     private class MapButton extends ButtonLM
     {
-        private final long chunkPos;
+        private final ChunkPos chunkPos;
         private CachedClientData.ChunkData chunkData;
 
         private MapButton(int x, int y, int i)
@@ -61,37 +61,32 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             super(x, y, 16, 16);
             posX += (i % TILES_GUI) * getWidth();
             posY += (i / TILES_GUI) * getHeight();
-            chunkPos = Bits.intsToLong(startX + (i % TILES_GUI), startZ + (i / TILES_GUI));
+            chunkPos = new ChunkPos(startX + (i % TILES_GUI), startZ + (i / TILES_GUI));
         }
 
         @Override
         public void onClicked(IGui gui, IMouseButton button)
         {
-            if(gui.isMouseOver(panelButtons))
-            {
-                return;
-            }
-
             if(button.isLeft())
             {
                 if(GuiScreen.isShiftKeyDown())
                 {
-                    FTBLibClient.execClientCommand("/ftb chunks load " + Bits.intFromLongA(chunkPos) + ' ' + Bits.intFromLongB(chunkPos), false);
+                    FTBLibClient.execClientCommand("/ftb chunks load " + chunkPos.chunkXPos + ' ' + chunkPos.chunkZPos, false);
                 }
                 else
                 {
-                    FTBLibClient.execClientCommand("/ftb chunks claim " + Bits.intFromLongA(chunkPos) + ' ' + Bits.intFromLongB(chunkPos), false);
+                    FTBLibClient.execClientCommand("/ftb chunks claim " + chunkPos.chunkXPos + ' ' + chunkPos.chunkZPos, false);
                 }
             }
             else if(button.isRight())
             {
                 if(GuiScreen.isShiftKeyDown())
                 {
-                    FTBLibClient.execClientCommand("/ftb chunks unload " + Bits.intFromLongA(chunkPos) + ' ' + Bits.intFromLongB(chunkPos), false);
+                    FTBLibClient.execClientCommand("/ftb chunks unload " + chunkPos.chunkXPos + ' ' + chunkPos.chunkZPos, false);
                 }
                 else
                 {
-                    FTBLibClient.execClientCommand("/ftb chunks unclaim " + Bits.intFromLongA(chunkPos) + ' ' + Bits.intFromLongB(chunkPos), false);
+                    FTBLibClient.execClientCommand("/ftb chunks unclaim " + chunkPos.chunkXPos + ' ' + chunkPos.chunkZPos, false);
                 }
             }
 
@@ -106,7 +101,6 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
                 if(chunkData.team != null)
                 {
                     l.add(chunkData.team.formattedName);
-
                     l.add(TextFormatting.GREEN + FTBULang.CHUNKTYPE_CLAIMED.translate());
 
                     /*if(team.getStatus(ForgeWorldSP.inst.clientPlayer).isAlly())

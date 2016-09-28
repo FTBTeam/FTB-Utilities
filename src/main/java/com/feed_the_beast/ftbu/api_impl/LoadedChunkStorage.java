@@ -124,7 +124,18 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, ILo
         {
             if(ticketContainer != null)
             {
+                ILoadedChunk loadedChunk = ticketContainer.getChunks().get(Bits.intsToLong(pos.posX, pos.posZ));
 
+                if(loadedChunk != null)
+                {
+                    if(loadedChunk.isForced())
+                    {
+                        ForgeChunkManager.unforceChunk(ticketContainer.getTicket(), loadedChunk.getPos());
+                    }
+
+                    ticketContainer.getChunks().remove(Bits.intsToLong(pos.posX, pos.posZ));
+                    ticketContainer.save();
+                }
             }
         }
         else
@@ -183,7 +194,7 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, ILo
         }
     }
 
-    private void checkUnloaded0(TicketContainer ticketContainer)
+    private void checkUnloaded0(ITicketContainer ticketContainer)
     {
         for(ILoadedChunk loadedChunk : ticketContainer.getChunks().values(new ILoadedChunk[ticketContainer.getChunks().size()]))
         {

@@ -8,7 +8,7 @@ import com.feed_the_beast.ftbu.JourneyMapIntegration;
 import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.badges.BadgeStorage;
 import com.feed_the_beast.ftbu.net.MessageRequestBadge;
-import gnu.trove.map.hash.TLongObjectHashMap;
+import net.minecraft.util.math.ChunkPos;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +55,7 @@ public class CachedClientData
 
     private static int currentDim = 0;
     public static final Map<UUID, TeamData> TEAMS = new HashMap<>();
-    public static final TLongObjectHashMap<ChunkData> CHUNKS = new TLongObjectHashMap<>();
+    public static final Map<ChunkPos, ChunkData> CHUNKS = new HashMap<>();
     public static final BadgeStorage GLOBAL_BADGES = new BadgeStorage();
     public static final BadgeStorage LOCAL_BADGES = new BadgeStorage();
 
@@ -103,7 +103,7 @@ public class CachedClientData
         return null;
     }
 
-    public static void updateChunkData(int dim, Map<UUID, TeamData> teamData, TLongObjectHashMap<ChunkData> chunkData)
+    public static void updateChunkData(int dim, Map<UUID, TeamData> teamData, Map<ChunkPos, ChunkData> chunkData)
     {
         if(currentDim != dim)
         {
@@ -123,11 +123,7 @@ public class CachedClientData
 
         if(FTBUClient.HAS_JM)
         {
-            chunkData.forEachEntry((key, value) ->
-            {
-                JourneyMapIntegration.INST.chunkChanged(key, value);
-                return true;
-            });
+            chunkData.forEach((key, value) -> JourneyMapIntegration.INST.chunkChanged(key, value));
         }
     }
 }

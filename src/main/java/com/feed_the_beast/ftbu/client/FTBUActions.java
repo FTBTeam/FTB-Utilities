@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api.gui.SidebarButton;
+import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.lib.SidebarButtonInst;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -45,8 +46,7 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            //FIXME: return FTBUWorldData.isLoadedW(ForgeWorldSP.inst);
-            return true;
+            return FTBLibAPI_Impl.INSTANCE.hasServer(FTBUFinals.MOD_ID);
         }
     };
 
@@ -64,8 +64,7 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            //FIXME: return FTBUWorldData.isLoadedW(ForgeWorldSP.inst);
-            return true;
+            return FTBLibAPI_Impl.INSTANCE.hasServer(FTBUFinals.MOD_ID);
         }
     };
 
@@ -76,6 +75,12 @@ public class FTBUActions
         public void onClicked(IMouseButton button)
         {
             FTBLibClient.execClientCommand("/ftb trash_can", false);
+        }
+
+        @Override
+        public boolean isVisible()
+        {
+            return FTBLibAPI_Impl.INSTANCE.hasServer(FTBUFinals.MOD_ID);
         }
     };
 
@@ -91,7 +96,7 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            return LMUtils.DEV_ENV;
+            return LMUtils.DEV_ENV && FTBLibAPI_Impl.INSTANCE.hasServer(FTBUFinals.MOD_ID);
         }
     };
 
@@ -107,7 +112,7 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            return FTBLibIntegration.API.isClientPlayerOP();
+            return FTBLibIntegration.API.isClientPlayerOP() && FTBLibAPI_Impl.INSTANCE.hasServer(FTBUFinals.MOD_ID);
         }
     };
 

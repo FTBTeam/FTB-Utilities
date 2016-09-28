@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
  */
 public class FTBULeaderboards
 {
-    public static final LangKey LANG_TOP_TITLE = new LangKey("ftbu.top.title");
+    public static final LangKey LANG_TITLE = new LangKey("ftbu.leaderboard.title");
     public static final StatBase DEATHS_PER_HOUR = (new StatBasic("ftbu.stat.dph", new TextComponentTranslation("ftbu.stat.dph")));
 
     @Leaderboard

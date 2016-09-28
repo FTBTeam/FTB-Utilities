@@ -23,7 +23,5 @@ public interface IClaimedChunkStorage
 
     Collection<ChunkDimPos> getChunks(@Nullable IForgePlayer player);
 
-    int getClaimedChunks(IForgePlayer playerID);
-
     boolean canPlayerInteract(EntityPlayerMP player, BlockPos pos, IMouseButton button);
 }

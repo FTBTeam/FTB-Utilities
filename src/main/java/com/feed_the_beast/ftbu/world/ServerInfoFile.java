@@ -93,7 +93,7 @@ public class ServerInfoFile extends InfoPage
             println(FTBLibLang.MODE_CURRENT.textComponent(LMStringUtils.firstUppercase(FTBLibIntegration.API.getSharedData(Side.SERVER).getPackMode().getID())));
         }
 
-        InfoPage topsPage = getSub("tops").setTitle(FTBULeaderboards.LANG_TOP_TITLE.textComponent());
+        InfoPage topsPage = getSub("leaderboards").setTitle(FTBULeaderboards.LANG_TITLE.textComponent());
 
         for(ILeaderboard leaderboard : FTBUtilitiesAPI_Impl.INSTANCE.LEADERBOARDS.values())
         {

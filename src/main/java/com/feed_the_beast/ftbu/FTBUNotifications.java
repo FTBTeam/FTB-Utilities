@@ -41,7 +41,7 @@ public class FTBUNotifications
     public static final INotification CHUNK_UNLOADED = create("chunk_modified", 3).addText(new TextComponentString("Chunk unloaded"));
 
     @NotificationVariant
-    public static final Notification WILDERNESS = create("chunk_changed", (byte) 0).setTimer(3000).setColorID((byte) 40).setItem(new ItemStack(Blocks.VINE));
+    public static final Notification WILDERNESS = create("chunk_changed", (byte) 0).setTimer(3000).setColorID((byte) 38).setItem(new ItemStack(Blocks.VINE));
 
     static
     {

@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbu.net;
 
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
@@ -10,9 +9,9 @@ import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.client.CachedClientData;
-import gnu.trove.map.hash.TLongObjectHashMap;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.math.ChunkPos;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +21,7 @@ public class MessageUpdateChunkData extends MessageToClient<MessageUpdateChunkDa
 {
     private int dim;
     private Map<UUID, CachedClientData.TeamData> teamData;
-    private TLongObjectHashMap<CachedClientData.ChunkData> chunkData;
+    private Map<ChunkPos, CachedClientData.ChunkData> chunkData;
 
     public MessageUpdateChunkData()
     {
@@ -32,7 +31,7 @@ public class MessageUpdateChunkData extends MessageToClient<MessageUpdateChunkDa
     {
         dim = player.dimension;
         teamData = new HashMap<>();
-        chunkData = new TLongObjectHashMap<>();
+        chunkData = new HashMap<>();
         IForgePlayer player1 = FTBLibIntegration.API.getUniverse().getPlayer(player);
 
         for(int x1 = x; x1 < x + sx; x1++)
@@ -64,11 +63,11 @@ public class MessageUpdateChunkData extends MessageToClient<MessageUpdateChunkDa
                         }
                     }
 
-                    chunkData.put(Bits.intsToLong(pos.posX, pos.posZ), new CachedClientData.ChunkData(team, flags));
+                    chunkData.put(pos.getChunkPos(), new CachedClientData.ChunkData(team, flags));
                 }
                 else
                 {
-                    chunkData.put(Bits.intsToLong(pos.posX, pos.posZ), null);
+                    chunkData.put(pos.getChunkPos(), null);
                 }
             }
         }
@@ -85,9 +84,9 @@ public class MessageUpdateChunkData extends MessageToClient<MessageUpdateChunkDa
     {
         dim = io.readInt();
         teamData = new HashMap<>();
-        chunkData = new TLongObjectHashMap<>();
+        chunkData = new HashMap<>();
 
-        int s = io.readInt();
+        int s = io.readUnsignedShort();
 
         while(--s >= 0)
         {
@@ -98,11 +97,13 @@ public class MessageUpdateChunkData extends MessageToClient<MessageUpdateChunkDa
             teamData.put(team.ownerID, team);
         }
 
-        s = io.readInt();
+        s = io.readUnsignedShort();
 
         while(--s >= 0)
         {
-            long pos = io.readLong();
+            int x = io.readInt();
+            int z = io.readInt();
+            ChunkPos pos = new ChunkPos(x, z);
             byte flags = io.readByte();
 
             if((flags & CachedClientData.ChunkData.NULL) != 0)
@@ -121,7 +122,7 @@ public class MessageUpdateChunkData extends MessageToClient<MessageUpdateChunkDa
     public void toBytes(ByteBuf io)
     {
         io.writeInt(dim);
-        io.writeInt(teamData.size());
+        io.writeShort(teamData.size());
 
         for(CachedClientData.TeamData data : teamData.values())
         {
@@ -130,11 +131,12 @@ public class MessageUpdateChunkData extends MessageToClient<MessageUpdateChunkDa
             LMNetUtils.writeString(io, data.formattedName);
         }
 
-        io.writeInt(chunkData.size());
+        io.writeShort(chunkData.size());
 
-        chunkData.forEachEntry((key, value) ->
+        chunkData.forEach((key, value) ->
         {
-            io.writeLong(key);
+            io.writeInt(key.chunkXPos);
+            io.writeInt(key.chunkZPos);
 
             if(value == null)
             {
@@ -145,8 +147,6 @@ public class MessageUpdateChunkData extends MessageToClient<MessageUpdateChunkDa
                 io.writeByte(value.flags);
                 LMNetUtils.writeUUID(io, value.team.ownerID);
             }
-
-            return true;
         });
     }
 

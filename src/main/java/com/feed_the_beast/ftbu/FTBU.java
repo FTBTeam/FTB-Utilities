@@ -19,7 +19,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
@@ -77,12 +76,6 @@ public class FTBU
         {
             WebAPI.INST.startAPI();
         }
-    }
-
-    @Mod.EventHandler
-    public void serverStopped(FMLServerStoppedEvent event)
-    {
-        WebAPI.INST.stopAPI();
     }
 
     @NetworkCheckHandler

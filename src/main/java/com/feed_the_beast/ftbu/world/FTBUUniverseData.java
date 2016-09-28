@@ -21,6 +21,7 @@ import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.events.ModifyChunkEvent;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
+import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
 import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.badges.BadgeStorage;
 import com.feed_the_beast.ftbu.cmd.CmdRestart;
@@ -28,6 +29,7 @@ import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.net.MessageUpdateChunkData;
+import com.feed_the_beast.ftbu.webapi.WebAPI;
 import com.feed_the_beast.ftbu.world.backups.Backups;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -217,7 +219,7 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
             return false;
         }
 
-        if(FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().getClaimedChunks(player) >= max)
+        if(ClaimedChunkStorage.INSTANCE.getChunks(player).size() >= max)
         {
             return false;
         }
@@ -251,7 +253,7 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
 
     public static void unclaimAllChunks(IForgePlayer player, @Nullable Integer dim)
     {
-        for(ChunkDimPos pos : FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().getChunks(player))
+        for(ChunkDimPos pos : ClaimedChunkStorage.INSTANCE.getChunks(player))
         {
             if(dim == null || dim.intValue() == pos.dim)
             {
@@ -342,8 +344,11 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
 
     public void onClosed()
     {
+        ClaimedChunkStorage.INSTANCE.clear();
         ClaimedChunkStorage.INSTANCE = null;
+        LoadedChunkStorage.INSTANCE.clear();
         LOCAL_BADGES.clear();
+        WebAPI.INST.stopAPI();
     }
 
     @Override

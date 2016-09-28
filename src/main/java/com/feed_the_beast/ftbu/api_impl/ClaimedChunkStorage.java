@@ -17,12 +17,11 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by LatvianModder on 07.06.2016.
@@ -33,7 +32,11 @@ public class ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializab
 
     private final Map<ChunkDimPos, IForgePlayer> map = new HashMap<>();
     private final Map<ChunkDimPos, IForgePlayer> mapMirror = Collections.unmodifiableMap(map);
-    private final Map<IForgePlayer, Collection<ChunkDimPos>> invertedMap = new HashMap<>();
+
+    public void clear()
+    {
+        map.clear();
+    }
 
     @Override
     public Map<ChunkDimPos, IForgePlayer> getAllChunks()
@@ -53,31 +56,11 @@ public class ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializab
     {
         if(owner == null)
         {
-            IForgePlayer owner0 = map.remove(pos);
-
-            if(owner0 != null)
-            {
-                Collection<ChunkDimPos> c = invertedMap.get(owner0);
-
-                if(c != null)
-                {
-                    c.remove(pos);
-                }
-            }
+            map.remove(pos);
         }
         else
         {
             map.put(pos, owner);
-
-            Collection<ChunkDimPos> c = invertedMap.get(owner);
-
-            if(c == null)
-            {
-                c = new HashSet<>();
-                invertedMap.put(owner, c);
-            }
-
-            c.add(pos);
         }
     }
 
@@ -93,15 +76,17 @@ public class ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializab
             return map.keySet();
         }
 
-        Collection<ChunkDimPos> c = invertedMap.get(player);
-        return (c == null) ? Collections.emptyList() : c;
-    }
+        Collection<ChunkDimPos> c = new ArrayList<>();
 
-    @Override
-    public int getClaimedChunks(IForgePlayer playerID)
-    {
-        Collection<ChunkDimPos> c = invertedMap.get(playerID);
-        return (c == null) ? 0 : c.size();
+        map.forEach((key, value) ->
+        {
+            if(value.equalsPlayer(player))
+            {
+                c.add(key);
+            }
+        });
+
+        return c;
     }
 
     @Override
@@ -148,7 +133,22 @@ public class ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializab
     {
         NBTTagCompound nbt = new NBTTagCompound();
 
-        invertedMap.forEach((key, value) ->
+        Map<IForgePlayer, Collection<ChunkDimPos>> map1 = new HashMap<>();
+
+        map.forEach((key, value) ->
+        {
+            Collection<ChunkDimPos> c = map1.get(value);
+
+            if(c == null)
+            {
+                c = new ArrayList<>();
+                map1.put(value, c);
+            }
+
+            c.add(key);
+        });
+
+        map1.forEach((key, value) ->
         {
             NBTTagList list = new NBTTagList();
 
@@ -167,17 +167,24 @@ public class ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializab
     public void deserializeNBT(NBTTagCompound nbt)
     {
         map.clear();
-        invertedMap.clear();
 
         for(String s : nbt.getKeySet())
         {
-            UUID id = LMStringUtils.fromString(s);
+            IForgePlayer player = FTBLibIntegration.API.getUniverse().getPlayer(LMStringUtils.fromString(s));
 
-            if(id != null)
+            if(player != null)
             {
                 NBTTagList list = nbt.getTagList(s, Constants.NBT.TAG_INT_ARRAY);
 
+                for(int i = 0; i < list.tagCount(); i++)
+                {
+                    int[] ai = list.getIntArrayAt(i);
 
+                    if(ai.length >= 3)
+                    {
+                        map.put(new ChunkDimPos(ai[1], ai[2], ai[0]), player);
+                    }
+                }
             }
         }
     }

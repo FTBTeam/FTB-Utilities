@@ -13,4 +13,6 @@ public interface ITicketContainer
     ForgeChunkManager.Ticket getTicket();
 
     TLongObjectMap<ILoadedChunk> getChunks();
+
+    void save();
 }

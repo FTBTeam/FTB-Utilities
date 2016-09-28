@@ -50,6 +50,7 @@ ftbu.label.new_friends=New friend requests!
 ftbu.label.new_friends_click=Click to accept all requests
 ftbu.button.block_security=Block Security
 ftbu.stat.dph=Deaths Per Hour
+ftbu.leaderboard.title=Leaderboards
 
 # Warps
 ftbu.warp.set=Warp '%s' set!
@@ -76,14 +77,6 @@ ftbu.backup.manual_launch=%s launched a manual backup!
 ftbu.backup.already_running=Backup in progress!
 ftbu.backup.not_running=Backup is not running!
 ftbu.backup.size=Current world size: %s, total backups folder size: %s
-
-# Tops
-ftbu.top.title=Server Tops
-ftbu.top.first_joined=First Seen
-ftbu.top.last_seen=Last Seen
-ftbu.top.time_played=Time Played
-ftbu.top.deaths=Deaths
-ftbu.top.deaths_per_hour=Deaths per hour
 
 # Chunktypes
 ftbu.chunktype.wilderness=Wilderness

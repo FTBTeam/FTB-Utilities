@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.MouseButton;
-import com.feed_the_beast.ftbl.lib.client.TextureCoords;
 import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
@@ -13,11 +12,10 @@ import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.PanelLM;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
-import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.client.CachedClientData;
 import com.feed_the_beast.ftbu.client.FTBUClientConfig;
-import com.feed_the_beast.ftbu.net.MessageRequestChunkData;
+import com.feed_the_beast.ftbu.net.MessageClaimedChunksModify;
+import com.feed_the_beast.ftbu.net.MessageClaimedChunksRequest;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
@@ -27,91 +25,82 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import java.nio.ByteBuffer;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
-@SideOnly(Side.CLIENT)
-public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // implements IClientActionGui
+public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
 {
-    static final int TILES_TEX = 16;
-    static final int TILES_GUI = 15;
-    private static final double UV = (double) TILES_GUI / (double) TILES_TEX;
-    private static final ResourceLocation TEX_ENTITY = new ResourceLocation(FTBUFinals.MOD_ID, "textures/gui/entity.png");
-    private static final ResourceLocation TEX_CHUNK_CLAIMING = new ResourceLocation(FTBUFinals.MOD_ID, "textures/gui/chunk_claiming.png");
-    private static final TextureCoords TEX_FILLED = TextureCoords.fromUV(TEX_CHUNK_CLAIMING, 0D, 0D, 0.5D, 1D);
-    private static final TextureCoords TEX_BORDER = TextureCoords.fromUV(TEX_CHUNK_CLAIMING, 0.5D, 0D, 1D, 1D);
     static ByteBuffer pixelBuffer = null;
     private static int textureID = -1;
+    public static ThreadReloadArea thread = null;
+    public static GuiClaimedChunks instance;
 
     private class MapButton extends ButtonLM
     {
         private final ChunkPos chunkPos;
-        private CachedClientData.ChunkData chunkData;
+        private final int index;
 
         private MapButton(int x, int y, int i)
         {
             super(x, y, 16, 16);
-            posX += (i % TILES_GUI) * getWidth();
-            posY += (i / TILES_GUI) * getHeight();
-            chunkPos = new ChunkPos(startX + (i % TILES_GUI), startZ + (i / TILES_GUI));
+            posX += (i % ClaimedChunks.TILES_GUI) * getWidth();
+            posY += (i / ClaimedChunks.TILES_GUI) * getHeight();
+            chunkPos = new ChunkPos(startX + (i % ClaimedChunks.TILES_GUI), startZ + (i / ClaimedChunks.TILES_GUI));
+            index = i;
         }
 
         @Override
         public void onClicked(IGui gui, IMouseButton button)
         {
-            if(button.isLeft())
+            GuiHelper.playClickSound();
+
+            boolean claim = GuiScreen.isShiftKeyDown();
+            boolean flag = button.isLeft();
+
+            if(flag ? (claim ? !chunkData[index].canClaim() : !chunkData[index].canLoad()) : !chunkData[index].isOwner())
             {
-                if(GuiScreen.isShiftKeyDown())
-                {
-                    FTBLibClient.execClientCommand("/ftb chunks load " + chunkPos.chunkXPos + ' ' + chunkPos.chunkZPos, false);
-                }
-                else
-                {
-                    FTBLibClient.execClientCommand("/ftb chunks claim " + chunkPos.chunkXPos + ' ' + chunkPos.chunkZPos, false);
-                }
-            }
-            else if(button.isRight())
-            {
-                if(GuiScreen.isShiftKeyDown())
-                {
-                    FTBLibClient.execClientCommand("/ftb chunks unload " + chunkPos.chunkXPos + ' ' + chunkPos.chunkZPos, false);
-                }
-                else
-                {
-                    FTBLibClient.execClientCommand("/ftb chunks unclaim " + chunkPos.chunkXPos + ' ' + chunkPos.chunkZPos, false);
-                }
+                return;
             }
 
-            GuiHelper.playClickSound();
+            byte action;
+
+            if(flag)
+            {
+                action = claim ? MessageClaimedChunksModify.CLAIM : MessageClaimedChunksModify.LOAD;
+            }
+            else
+            {
+                action = claim ? MessageClaimedChunksModify.UNCLAIM : MessageClaimedChunksModify.UNLOAD;
+            }
+
+            new MessageClaimedChunksModify(startX, startZ, action, Collections.singleton(chunkPos)).sendToServer();
         }
 
         @Override
         public void addMouseOverText(IGui gui, List<String> l)
         {
-            if(chunkData != null)
+            if(chunkData[index].isClaimed())
             {
-                if(chunkData.team != null)
+                l.add(chunkData[index].team.formattedName);
+                l.add(TextFormatting.GREEN + FTBULang.CHUNKTYPE_CLAIMED.translate());
+
+                if(chunkData[index].team.isAlly)
                 {
-                    l.add(chunkData.team.formattedName);
-                    l.add(TextFormatting.GREEN + FTBULang.CHUNKTYPE_CLAIMED.translate());
+                    l.add(chunkData[index].owner);
 
-                    /*if(team.getStatus(ForgeWorldSP.inst.clientPlayer).isAlly())
+                    if(chunkData[index].isLoaded())
                     {
-                        l.add(chunk.owner.getProfile().getName());
-
-                        if(chunk.loaded)
-                        {
-                            l.add(TextFormatting.RED + ClaimedChunk.LANG_LOADED.translate());
-                        }
-                    }*/
+                        l.add(TextFormatting.RED + FTBULang.CHUNKTYPE_LOADED.translate());
+                    }
                 }
             }
             else
@@ -126,25 +115,15 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             int ax = getAX();
             int ay = getAY();
 
-            chunkData = CachedClientData.CHUNKS.get(chunkPos);
-
-            if(chunkData != null)
+            if(chunkData[index].isClaimed())
             {
-                FTBLibClient.setTexture(TEX_CHUNK_CLAIMING);
+                FTBLibClient.setTexture(ClaimedChunks.TEX_CHUNK_CLAIMING);
+                LMColorUtils.setGLColor(LMColorUtils.getColorFromID(chunkData[index].team.colorID), 180);
 
-                if(chunkData.team != null)
-                {
-                    LMColorUtils.setGLColor(LMColorUtils.getColorFromID(chunkData.team.color.getColorID()), 180);
-                }
-                else
-                {
-                    GlStateManager.color(0F, 0F, 0F, 180F / 255F);
-                }
+                GuiHelper.drawTexturedRect(ax, ay, 16, 16, ClaimedChunks.TEX_FILLED.getMinU(), ClaimedChunks.TEX_FILLED.getMinV(), ClaimedChunks.TEX_FILLED.getMaxU(), ClaimedChunks.TEX_FILLED.getMaxV());
 
-                GuiHelper.drawTexturedRect(ax, ay, 16, 16, TEX_FILLED.getMinU(), TEX_FILLED.getMinV(), TEX_FILLED.getMaxU(), TEX_FILLED.getMaxV());
-
-                //GlStateManager.color((chunk.loaded && team != null && team.getStatus(ForgeWorldSP.inst.clientPlayer).isAlly()) ? 1F : 0F, chunk.isChunkOwner(ForgeWorldSP.inst.clientPlayer) ? 0.27F : 0F, 0F, 0.78F);
-                GuiHelper.drawTexturedRect(ax, ay, 16, 16, TEX_BORDER.getMinU(), TEX_BORDER.getMinV(), TEX_BORDER.getMaxU(), TEX_BORDER.getMaxV());
+                GlStateManager.color((chunkData[index].isLoaded() && chunkData[index].team.isAlly) ? 1F : 0F, chunkData[index].isOwner() ? 0.27F : 0F, 0F, 0.78F);
+                GuiHelper.drawTexturedRect(ax, ay, 16, 16, ClaimedChunks.TEX_BORDER.getMinU(), ClaimedChunks.TEX_BORDER.getMinV(), ClaimedChunks.TEX_BORDER.getMaxU(), ClaimedChunks.TEX_BORDER.getMaxV());
             }
 
             if(gui.isMouseOver(this))
@@ -156,19 +135,29 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         }
     }
 
-    final int startX, startZ;
+    public final int startX, startZ;
+    private final Map<UUID, ClaimedChunks.Team> teams;
+    private ClaimedChunks.Data[] chunkData;
+    private int claimedChunks, loadedChunks, maxClaimedChunks, maxLoadedChunks;
     private final ButtonLM buttonRefresh, buttonClose, buttonUnclaimAll, buttonDepth;
     private final MapButton mapButtons[];
     private final PanelLM panelButtons;
-    public ThreadReloadArea thread = null;
     private String currentDimName;
 
-    public GuiClaimChunks()
+    public GuiClaimedChunks()
     {
-        super(TILES_GUI * 16, TILES_GUI * 16);
+        super(ClaimedChunks.TILES_GUI * 16, ClaimedChunks.TILES_GUI * 16);
 
-        startX = MathHelperLM.chunk(mc.thePlayer.posX) - (int) (TILES_GUI * 0.5D);
-        startZ = MathHelperLM.chunk(mc.thePlayer.posZ) - (int) (TILES_GUI * 0.5D);
+        startX = MathHelperLM.chunk(mc.thePlayer.posX) - 7;
+        startZ = MathHelperLM.chunk(mc.thePlayer.posX) - 7;
+
+        teams = new HashMap<>();
+        chunkData = new ClaimedChunks.Data[ClaimedChunks.TILES_GUI * ClaimedChunks.TILES_GUI];
+
+        for(int i = 0; i < chunkData.length; i++)
+        {
+            chunkData[i] = new ClaimedChunks.Data();
+        }
 
         currentDimName = mc.theWorld.provider.getDimensionType().getName();
 
@@ -187,11 +176,16 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             @Override
             public void onClicked(IGui gui, IMouseButton button)
             {
-                thread = null;
-                thread = new ThreadReloadArea(mc.theWorld, GuiClaimChunks.this);
+                new MessageClaimedChunksRequest(startX, startZ).sendToServer();
+
+                if(thread != null)
+                {
+                    thread.cancelled = true;
+                    thread = null;
+                }
+
+                thread = new ThreadReloadArea(mc.theWorld, GuiClaimedChunks.this);
                 thread.start();
-                new MessageRequestChunkData(startX, startZ, TILES_GUI, TILES_GUI).sendToServer();
-                GuiHelper.playClickSound();
             }
         };
 
@@ -202,7 +196,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             {
                 GuiHelper.playClickSound();
                 String s = GuiScreen.isShiftKeyDown() ? FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_Q.translate() : FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_DIM_Q.translate(currentDimName);
-                Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo(GuiClaimChunks.this, s, "", GuiScreen.isShiftKeyDown() ? 1 : 0));
+                Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo(GuiClaimedChunks.this, s, "", GuiScreen.isShiftKeyDown() ? 1 : 0));
             }
 
             @Override
@@ -250,11 +244,22 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             }
         };
 
-        mapButtons = new MapButton[TILES_GUI * TILES_GUI];
+        mapButtons = new MapButton[ClaimedChunks.TILES_GUI * ClaimedChunks.TILES_GUI];
+
         for(int i = 0; i < mapButtons.length; i++)
         {
             mapButtons[i] = new MapButton(0, 0, i);
         }
+    }
+
+    public void setData(int cc, int lc, int mcc, int mlc, ClaimedChunks.Data[] data, Map<UUID, ClaimedChunks.Team> tms)
+    {
+        claimedChunks = cc;
+        loadedChunks = lc;
+        maxClaimedChunks = mcc;
+        maxLoadedChunks = mlc;
+        chunkData = data;
+        teams.putAll(tms);
     }
 
     @Override
@@ -282,7 +287,6 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         if(textureID == -1)
         {
             textureID = TextureUtil.glGenTextures();
-            new MessageRequestChunkData(startX, startZ, TILES_GUI, TILES_GUI).sendToServer();
         }
 
         if(pixelBuffer != null)
@@ -294,7 +298,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, TILES_TEX * 16, TILES_TEX * 16, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, pixelBuffer);
+            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, ClaimedChunks.TILES_TEX * 16, ClaimedChunks.TILES_TEX * 16, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, pixelBuffer);
             pixelBuffer = null;
             thread = null;
         }
@@ -307,12 +311,12 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         if(thread == null)
         {
             GlStateManager.bindTexture(textureID);
-            GuiHelper.drawTexturedRect(posX, posY, TILES_GUI * 16, TILES_GUI * 16, 0D, 0D, UV, UV);
+            GuiHelper.drawTexturedRect(posX, posY, ClaimedChunks.TILES_GUI * 16, ClaimedChunks.TILES_GUI * 16, 0D, 0D, ClaimedChunks.UV, ClaimedChunks.UV);
         }
 
         GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.enableTexture2D();
-        FTBLibClient.setTexture(TEX_CHUNK_CLAIMING);
+        FTBLibClient.setTexture(ClaimedChunks.TEX_CHUNK_CLAIMING);
 
         for(MapButton mapButton : mapButtons)
         {
@@ -331,16 +335,16 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         int gridX = mapButtons[0].getAX();
         int gridY = mapButtons[0].getAY();
 
-        for(int x = 0; x <= TILES_GUI; x++)
+        for(int x = 0; x <= ClaimedChunks.TILES_GUI; x++)
         {
             buffer.pos(gridX + x * 16, gridY, 0D).color(gridR, gridG, gridB, gridA).endVertex();
-            buffer.pos(gridX + x * 16, gridY + TILES_GUI * 16, 0D).color(gridR, gridG, gridB, gridA).endVertex();
+            buffer.pos(gridX + x * 16, gridY + ClaimedChunks.TILES_GUI * 16, 0D).color(gridR, gridG, gridB, gridA).endVertex();
         }
 
-        for(int y = 0; y <= TILES_GUI; y++)
+        for(int y = 0; y <= ClaimedChunks.TILES_GUI; y++)
         {
             buffer.pos(gridX, gridY + y * 16, 0D).color(gridR, gridG, gridB, gridA).endVertex();
-            buffer.pos(gridX + TILES_GUI * 16, gridY + y * 16, 0D).color(gridR, gridG, gridB, gridA).endVertex();
+            buffer.pos(gridX + ClaimedChunks.TILES_GUI * 16, gridY + y * 16, 0D).color(gridR, gridG, gridB, gridA).endVertex();
         }
 
         tessellator.draw();
@@ -349,7 +353,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
         int cx = MathHelperLM.chunk(mc.thePlayer.posX);
         int cy = MathHelperLM.chunk(mc.thePlayer.posZ);
 
-        if(cx >= startX && cy >= startZ && cx < startX + TILES_GUI && cy < startZ + TILES_GUI)
+        if(cx >= startX && cy >= startZ && cx < startX + ClaimedChunks.TILES_GUI && cy < startZ + ClaimedChunks.TILES_GUI)
         {
             double x = ((cx - startX) * 16D + MathHelperLM.wrap(mc.thePlayer.posX, 16D));
             double y = ((cy - startZ) * 16D + MathHelperLM.wrap(mc.thePlayer.posZ, 16D));
@@ -359,7 +363,7 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             GlStateManager.pushMatrix();
             //GlStateManager.rotate((int)((ep.rotationYaw + 180F) / (180F / 8F)) * (180F / 8F), 0F, 0F, 1F);
             GlStateManager.rotate(mc.thePlayer.rotationYaw + 180F, 0F, 0F, 1F);
-            FTBLibClient.setTexture(TEX_ENTITY);
+            FTBLibClient.setTexture(ClaimedChunks.TEX_ENTITY);
             GlStateManager.color(1F, 1F, 1F, mc.thePlayer.isSneaking() ? 0.4F : 0.7F);
             GuiHelper.drawTexturedRect(-8, -8, 16, 16, 0D, 0D, 1D, 1D);
             GlStateManager.popMatrix();
@@ -378,17 +382,10 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
     @Override
     public void drawForeground()
     {
-        /*
-        if(ForgeWorldSP.inst != null && ForgeWorldSP.inst.clientPlayer != null)
-        {
-            FTBUPlayerDataSP d = FTBUPlayerData.get(ForgeWorldSP.inst.clientPlayer).toSP();
-
-            String s = FTBULang.label_cchunks_count.translateFormatted(d.claimedChunks, d.maxClaimedChunks);
-            font.drawString(s, screen.getScaledWidth() - font.getStringWidth(s) - 4, screen.getScaledHeight() - 12, 0xFFFFFFFF);
-            s = FTBULang.label_lchunks_count.translateFormatted(d.loadedChunks, d.maxLoadedChunks);
-            font.drawString(s, screen.getScaledWidth() - font.getStringWidth(s) - 4, screen.getScaledHeight() - 24, 0xFFFFFFFF);
-        }
-        */
+        String s = FTBULang.LABEL_CCHUNKS_COUNT.translate(claimedChunks, maxClaimedChunks);
+        getFont().drawString(s, getScreenWidth() - getFont().getStringWidth(s) - 4, getScreenHeight() - 24, 0xFFFFFFFF);
+        s = FTBULang.LABEL_LCHUNKS_COUNT.translate(loadedChunks, maxLoadedChunks);
+        getFont().drawString(s, getScreenWidth() - getFont().getStringWidth(s) - 4, getScreenHeight() - 12, 0xFFFFFFFF);
 
         super.drawForeground();
     }
@@ -406,8 +403,6 @@ public class GuiClaimChunks extends GuiLM implements GuiYesNoCallback // impleme
             {
                 FTBLibClient.execClientCommand("/ftb chunks unclaim_all false", false);
             }
-
-            new MessageRequestChunkData(startX, startZ, TILES_GUI, TILES_GUI).sendToServer();
         }
 
         openGui();

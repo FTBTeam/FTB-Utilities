@@ -5,6 +5,9 @@ import com.feed_the_beast.ftbl.api.rankconfig.IRankConfig;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
+import net.minecraft.command.ICommand;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 import javax.annotation.Nullable;
@@ -39,6 +42,12 @@ public enum DefaultOPRank implements IRank
     public IConfigValue getConfig(IRankConfig id)
     {
         return id.getDefaultOPValue();
+    }
+
+    @Override
+    public boolean allowCommand(MinecraftServer server, ICommandSender sender, ICommand command)
+    {
+        return true;
     }
 
     @Override

@@ -5,20 +5,18 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api.gui.SidebarButton;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
+import com.feed_the_beast.ftbl.gui.GuiLoading;
 import com.feed_the_beast.ftbl.lib.SidebarButtonInst;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
-import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.gui.GuiClaimChunks;
+import com.feed_the_beast.ftbu.gui.GuiClaimedChunks;
 import com.feed_the_beast.ftbu.gui.guide.local.InfoPageLocalGuideRepoList;
-import com.feed_the_beast.ftbu.net.MessageRequestChunkData;
 import com.feed_the_beast.ftbu.net.MessageRequestServerInfo;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 public class FTBUActions
@@ -40,7 +38,8 @@ public class FTBUActions
         @Override
         public void onClicked(IMouseButton button)
         {
-            Minecraft.getMinecraft().displayGuiScreen(new MessageRequestServerInfo().openGui());
+            new GuiLoading().openGui();
+            new MessageRequestServerInfo().sendToServer();
         }
 
         @Override
@@ -56,9 +55,8 @@ public class FTBUActions
         @Override
         public void onClicked(IMouseButton button)
         {
-            EntityPlayer ep = Minecraft.getMinecraft().thePlayer;
-            new MessageRequestChunkData(MathHelperLM.chunk(ep.posX) - 7, MathHelperLM.chunk(ep.posZ) - 7, 15, 15);
-            new GuiClaimChunks().openGui();
+            GuiClaimedChunks.instance = new GuiClaimedChunks();
+            GuiClaimedChunks.instance.openGui();
         }
 
         @Override

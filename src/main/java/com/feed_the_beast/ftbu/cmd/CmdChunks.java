@@ -9,7 +9,6 @@ import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
-import com.feed_the_beast.ftbu.net.MessageUpdateChunkData;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -28,7 +27,6 @@ public class CmdChunks extends CommandTreeBase
     public static void updateChunk(EntityPlayerMP ep, int x, int z)
     {
         FTBUPlayerEventHandler.updateChunkMessage(ep, new ChunkDimPos(x, z, ep.dimension));
-        new MessageUpdateChunkData(ep, x, z, 1, 1).sendTo(ep);
     }
 
     public class CmdClaim extends CommandLM
@@ -47,28 +45,18 @@ public class CmdChunks extends CommandTreeBase
         @Override
         public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
-            EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-            IForgePlayer p = getForgePlayer(ep);
-
-            ChunkDimPos pos;
-
-            if(args.length >= 2)
-            {
-                pos = new ChunkDimPos(ep.dimension, parseInt(args[0]), parseInt(args[1]));
-            }
-            else
-            {
-                pos = new EntityDimPos(ep).toBlockDimPos().toChunkPos();
-            }
+            EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+            IForgePlayer p = getForgePlayer(player);
+            ChunkDimPos pos = new EntityDimPos(player).toBlockDimPos().toChunkPos();
 
             if(FTBUUniverseData.claimChunk(p, pos))
             {
-                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CHUNK_CLAIMED);
-                updateChunk(ep, pos.posX, pos.posZ);
+                FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_CLAIMED);
+                updateChunk(player, pos.posX, pos.posZ);
             }
             else
             {
-                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CANT_MODIFY_CHUNK);
+                FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_MODIFY_CHUNK);
             }
         }
     }
@@ -89,33 +77,23 @@ public class CmdChunks extends CommandTreeBase
         @Override
         public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
-            EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-            IForgePlayer p = getForgePlayer(ep);
+            EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+            IForgePlayer p = getForgePlayer(player);
+            ChunkDimPos pos = new EntityDimPos(player).toBlockDimPos().toChunkPos();
 
-            ChunkDimPos pos;
-
-            if(args.length >= 2)
-            {
-                pos = new ChunkDimPos(parseInt(args[0]), parseInt(args[1]), ep.dimension);
-            }
-            else
-            {
-                pos = new EntityDimPos(ep).toBlockDimPos().toChunkPos();
-            }
-
-            if(!p.equalsPlayer(FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().getChunkOwner(pos)) && !PermissionAPI.hasPermission(ep.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, new BlockPosContext(ep, pos.getChunkPos())))
+            if(!p.equalsPlayer(FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().getChunkOwner(pos)) && !PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, new BlockPosContext(player, pos.getChunkPos())))
             {
                 throw new CommandException("commands.generic.permission");
             }
 
             if(FTBUUniverseData.unclaimChunk(p, pos))
             {
-                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CHUNK_UNCLAIMED);
-                updateChunk(ep, pos.posX, pos.posZ);
+                FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_UNCLAIMED);
+                updateChunk(player, pos.posX, pos.posZ);
             }
             else
             {
-                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CANT_MODIFY_CHUNK);
+                FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_MODIFY_CHUNK);
             }
         }
     }
@@ -136,28 +114,18 @@ public class CmdChunks extends CommandTreeBase
         @Override
         public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
-            EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-            IForgePlayer p = getForgePlayer(ep);
-
-            ChunkDimPos pos;
-
-            if(args.length >= 2)
-            {
-                pos = new ChunkDimPos(parseInt(args[0]), parseInt(args[1]), ep.dimension);
-            }
-            else
-            {
-                pos = new EntityDimPos(ep).toBlockDimPos().toChunkPos();
-            }
+            EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+            IForgePlayer p = getForgePlayer(player);
+            ChunkDimPos pos = new EntityDimPos(player).toBlockDimPos().toChunkPos();
 
             if(FTBUUniverseData.setLoaded(p, pos, true))
             {
-                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CHUNK_LOADED);
-                updateChunk(ep, pos.posX, pos.posZ);
+                FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_LOADED);
+                updateChunk(player, pos.posX, pos.posZ);
             }
             else
             {
-                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CANT_MODIFY_CHUNK);
+                FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_MODIFY_CHUNK);
             }
         }
     }
@@ -178,27 +146,18 @@ public class CmdChunks extends CommandTreeBase
         @Override
         public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
-            EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-            IForgePlayer p = getForgePlayer(ep);
-            ChunkDimPos pos;
-
-            if(args.length >= 2)
-            {
-                pos = new ChunkDimPos(parseInt(args[0]), parseInt(args[1]), ep.dimension);
-            }
-            else
-            {
-                pos = new EntityDimPos(ep).toBlockDimPos().toChunkPos();
-            }
+            EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+            IForgePlayer p = getForgePlayer(player);
+            ChunkDimPos pos = new EntityDimPos(player).toBlockDimPos().toChunkPos();
 
             if(FTBUUniverseData.setLoaded(p, pos, false))
             {
-                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CHUNK_UNLOADED);
-                updateChunk(ep, pos.posX, pos.posZ);
+                FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_UNLOADED);
+                updateChunk(player, pos.posX, pos.posZ);
             }
             else
             {
-                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CANT_MODIFY_CHUNK);
+                FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_MODIFY_CHUNK);
             }
         }
     }

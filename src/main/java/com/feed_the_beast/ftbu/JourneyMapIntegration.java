@@ -3,9 +3,9 @@ package com.feed_the_beast.ftbu;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.client.CachedClientData;
 import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.client.FTBUClientConfig;
+import com.feed_the_beast.ftbu.gui.ClaimedChunks;
 import journeymap.client.api.ClientPlugin;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.IClientPlugin;
@@ -18,7 +18,6 @@ import journeymap.client.api.util.PolygonHelper;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextFormatting;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,7 +71,7 @@ public class JourneyMapIntegration implements IClientPlugin
         }
     }
 
-    public void chunkChanged(ChunkPos pos, @Nullable CachedClientData.ChunkData chunk)
+    public void chunkChanged(ChunkPos pos, ClaimedChunks.Data chunk)
     {
         if(!polygons.isEmpty() && (!FTBUClientConfig.JOURNEYMAP_OVERLAY.getBoolean() || !clientAPI.playerAccepts(FTBUFinals.MOD_ID, DisplayType.Polygon)))
         {
@@ -82,7 +81,7 @@ public class JourneyMapIntegration implements IClientPlugin
 
         try
         {
-            if(chunk != null)
+            if(chunk.isClaimed())
             {
                 int dim = 0;
 
@@ -94,20 +93,12 @@ public class JourneyMapIntegration implements IClientPlugin
 
                 StringBuilder sb = new StringBuilder();
 
-                if(chunk.team != null)
-                {
-                    shapeProperties.setFillColor(0x00FFFFFF | LMColorUtils.getColorFromID(chunk.team.color.getColorID()));
+                shapeProperties.setFillColor(0x00FFFFFF | LMColorUtils.getColorFromID(chunk.team.colorID));
+                sb.append(chunk.team.formattedName);
 
-                    sb.append(chunk.team.formattedName);
-
-                    sb.append('\n');
-                    sb.append(TextFormatting.GREEN);
-                    sb.append(FTBULang.CHUNKTYPE_CLAIMED.translate());
-                }
-                else
-                {
-                    shapeProperties.setFillColor(0x000000);
-                }
+                sb.append('\n');
+                sb.append(TextFormatting.GREEN);
+                sb.append(FTBULang.CHUNKTYPE_CLAIMED.translate());
 
                 shapeProperties.setStrokeColor(0x000000);
 

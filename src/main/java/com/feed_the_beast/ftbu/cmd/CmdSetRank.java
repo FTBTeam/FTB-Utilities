@@ -48,7 +48,7 @@ public class CmdSetRank extends CommandLM
 
         if(r == null)
         {
-            throw FTBLibLang.RAW.commandError("Rank '" + args[1] + "' not found!");
+            throw FTBLibLang.RAW.commandError("Rank '" + args[1] + "' not found!"); //TODO: Lang
         }
 
         Ranks.INSTANCE.PLAYER_MAP.put(player.getProfile().getId(), r);

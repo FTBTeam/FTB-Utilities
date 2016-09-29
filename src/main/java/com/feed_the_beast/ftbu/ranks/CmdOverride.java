@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbu.ranks;
 
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -54,7 +55,7 @@ public class CmdOverride implements ICommand
 
         if(sender instanceof EntityPlayerMP)
         {
-            return Ranks.INSTANCE.getRankOf(((EntityPlayerMP) sender).getGameProfile()).allowCommand(server, sender, parent);
+            return FTBUtilitiesAPI_Impl.INSTANCE.getRank(((EntityPlayerMP) sender).getGameProfile()).allowCommand(server, sender, parent);
         }
 
         return parent.checkPermission(server, sender);

@@ -28,7 +28,6 @@ import com.feed_the_beast.ftbu.cmd.CmdRestart;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
-import com.feed_the_beast.ftbu.net.MessageUpdateChunkData;
 import com.feed_the_beast.ftbu.webapi.WebAPI;
 import com.feed_the_beast.ftbu.world.backups.Backups;
 import com.mojang.authlib.GameProfile;
@@ -305,11 +304,6 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
             if(flag)
             {
                 MinecraftForge.EVENT_BUS.post(new ModifyChunkEvent.Loaded(pos, player));
-            }
-
-            if(player.getPlayer() != null)
-            {
-                new MessageUpdateChunkData(player.getPlayer(), pos.posX, pos.posZ, 1, 1).sendTo(player.getPlayer());
             }
 
             return true;

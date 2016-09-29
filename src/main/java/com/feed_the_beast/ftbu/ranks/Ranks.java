@@ -2,27 +2,20 @@ package com.feed_the_beast.ftbu.ranks;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.rankconfig.IRankConfig;
-import com.feed_the_beast.ftbl.api.rankconfig.IRankConfigHandler;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbl.lib.util.LMFileUtils;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.api.IRank;
+import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.mojang.authlib.GameProfile;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
-import net.minecraftforge.server.permission.DefaultPermissionLevel;
-import net.minecraftforge.server.permission.IPermissionHandler;
-import net.minecraftforge.server.permission.context.IContext;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -30,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public enum Ranks implements IPermissionHandler, IRankConfigHandler
+public enum Ranks
 {
     INSTANCE;
 
@@ -90,7 +83,7 @@ public enum Ranks implements IPermissionHandler, IRankConfigHandler
 
         try
         {
-            JsonElement e = LMJsonUtils.fromJson(LMFileUtils.newFile(filePlayers));
+            JsonElement e = LMJsonUtils.fromJson(filePlayers);
 
             if(e.isJsonObject())
             {
@@ -156,7 +149,7 @@ public enum Ranks implements IPermissionHandler, IRankConfigHandler
         List<IRankConfig> sortedRankConfigs = new ArrayList<>(RankConfigAPI.getRegistredRankConfigs().values());
         Collections.sort(sortedRankConfigs, LMStringUtils.ID_COMPARATOR);
 
-        List<String> nodes = new ArrayList<>(getRegisteredNodes());
+        List<String> nodes = new ArrayList<>(FTBUtilitiesAPI_Impl.INSTANCE.getRegisteredNodes());
         Collections.sort(nodes, LMStringUtils.IGNORE_CASE_COMPARATOR);
 
         try
@@ -176,7 +169,7 @@ public enum Ranks implements IPermissionHandler, IRankConfigHandler
             for(String s : nodes)
             {
                 list.add("> " + s + " | " + DefaultPermissionHandler.INSTANCE.getDefaultPermissionLevel(s));
-                String desc = getNodeDescription(s);
+                String desc = FTBUtilitiesAPI_Impl.INSTANCE.getNodeDescription(s);
 
                 if(!desc.isEmpty())
                 {
@@ -228,67 +221,5 @@ public enum Ranks implements IPermissionHandler, IRankConfigHandler
         {
             ex.printStackTrace();
         }
-    }
-
-    public IRank getRank(String s)
-    {
-        return RANKS.get(s);
-    }
-
-    public IRank getRankOf(GameProfile profile)
-    {
-        if(defaultRank != null)
-        {
-            IRank r = PLAYER_MAP.get(profile.getId());
-            return (r == null) ? defaultRank : r;
-        }
-
-        return LMServerUtils.isOP(profile) ? DefaultOPRank.INSTANCE : DefaultPlayerRank.INSTANCE;
-    }
-
-    public void setRank(UUID player, IRank rank)
-    {
-        if(defaultRank != null)
-        {
-            PLAYER_MAP.put(player, rank);
-        }
-    }
-
-    @Override
-    public void registerNode(String s, DefaultPermissionLevel defaultPermissionLevel, String s1)
-    {
-        DefaultPermissionHandler.INSTANCE.registerNode(s, defaultPermissionLevel, s1);
-    }
-
-    @Override
-    public Collection<String> getRegisteredNodes()
-    {
-        return DefaultPermissionHandler.INSTANCE.getRegisteredNodes();
-    }
-
-    @Override
-    public String getNodeDescription(String s)
-    {
-        return DefaultPermissionHandler.INSTANCE.getNodeDescription(s);
-    }
-
-    @Override
-    public boolean hasPermission(GameProfile profile, String permission, @Nullable IContext context)
-    {
-        switch(getRankOf(profile).hasPermission(permission))
-        {
-            case ALLOW:
-                return true;
-            case DENY:
-                return false;
-            default:
-                return DefaultPermissionHandler.INSTANCE.hasPermission(profile, permission, context);
-        }
-    }
-
-    @Override
-    public IConfigValue getRankConfig(GameProfile profile, IRankConfig id)
-    {
-        return getRankOf(profile).getConfig(id);
     }
 }

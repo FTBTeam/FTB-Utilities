@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.IRank;
-import com.feed_the_beast.ftbu.ranks.Ranks;
+import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -34,7 +34,7 @@ public class CmdGetRank extends CommandLM
     {
         checkArgs(args, 1, "<player>");
         IForgePlayer p = getForgePlayer(args[0]);
-        IRank r = Ranks.INSTANCE.getRankOf(p.getProfile());
+        IRank r = FTBUtilitiesAPI_Impl.INSTANCE.getRank(p.getProfile());
         ITextComponent c = new TextComponentString(r.getName());
         c.getStyle().setColor((TextFormatting) RankConfigAPI.getRankConfig(p.getProfile(), FTBUPermissions.DISPLAY_COLOR).getValue());
         ics.addChatMessage(c);

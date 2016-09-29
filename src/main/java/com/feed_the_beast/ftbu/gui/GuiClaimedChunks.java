@@ -31,8 +31,9 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import java.nio.ByteBuffer;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -48,6 +49,7 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
     {
         private final ChunkPos chunkPos;
         private final int index;
+        private boolean isSelected = false;
 
         private MapButton(int x, int y, int i)
         {
@@ -63,26 +65,17 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
         {
             GuiHelper.playClickSound();
 
-            boolean claim = GuiScreen.isShiftKeyDown();
+            boolean claim = !GuiScreen.isShiftKeyDown();
             boolean flag = button.isLeft();
-
-            if(flag ? (claim ? !chunkData[index].canClaim() : !chunkData[index].canLoad()) : !chunkData[index].isOwner())
-            {
-                return;
-            }
-
-            byte action;
 
             if(flag)
             {
-                action = claim ? MessageClaimedChunksModify.CLAIM : MessageClaimedChunksModify.LOAD;
+                currentSelectionMode = claim ? MessageClaimedChunksModify.CLAIM : MessageClaimedChunksModify.LOAD;
             }
             else
             {
-                action = claim ? MessageClaimedChunksModify.UNCLAIM : MessageClaimedChunksModify.UNLOAD;
+                currentSelectionMode = claim ? MessageClaimedChunksModify.UNCLAIM : MessageClaimedChunksModify.UNLOAD;
             }
-
-            new MessageClaimedChunksModify(startX, startZ, action, Collections.singleton(chunkPos)).sendToServer();
         }
 
         @Override
@@ -119,30 +112,36 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
             {
                 FTBLibClient.setTexture(ClaimedChunks.TEX_CHUNK_CLAIMING);
                 LMColorUtils.setGLColor(LMColorUtils.getColorFromID(chunkData[index].team.colorID), 180);
-
                 GuiHelper.drawTexturedRect(ax, ay, 16, 16, ClaimedChunks.TEX_FILLED.getMinU(), ClaimedChunks.TEX_FILLED.getMinV(), ClaimedChunks.TEX_FILLED.getMaxU(), ClaimedChunks.TEX_FILLED.getMaxV());
-
                 GlStateManager.color((chunkData[index].isLoaded() && chunkData[index].team.isAlly) ? 1F : 0F, chunkData[index].isOwner() ? 0.27F : 0F, 0F, 0.78F);
                 GuiHelper.drawTexturedRect(ax, ay, 16, 16, ClaimedChunks.TEX_BORDER.getMinU(), ClaimedChunks.TEX_BORDER.getMinV(), ClaimedChunks.TEX_BORDER.getMaxU(), ClaimedChunks.TEX_BORDER.getMaxV());
             }
 
-            if(gui.isMouseOver(this))
+            if(isSelected || gui.isMouseOver(this))
             {
                 GlStateManager.color(1F, 1F, 1F, 0.27F);
                 GuiHelper.drawBlankRect(ax, ay, 16, 16);
                 GlStateManager.color(1F, 1F, 1F, 1F);
+            }
+
+            if(!isSelected && currentSelectionMode != -1 && isMouseOver(this))
+            {
+                chunksModifying.add(chunkPos);
+                isSelected = true;
             }
         }
     }
 
     public final int startX, startZ;
     private final Map<UUID, ClaimedChunks.Team> teams;
+    private final Collection<ChunkPos> chunksModifying;
     private ClaimedChunks.Data[] chunkData;
     private int claimedChunks, loadedChunks, maxClaimedChunks, maxLoadedChunks;
     private final ButtonLM buttonRefresh, buttonClose, buttonUnclaimAll, buttonDepth;
     private final MapButton mapButtons[];
     private final PanelLM panelButtons;
     private String currentDimName;
+    private byte currentSelectionMode = -1;
 
     public GuiClaimedChunks()
     {
@@ -153,6 +152,7 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
 
         teams = new HashMap<>();
         chunkData = new ClaimedChunks.Data[ClaimedChunks.TILES_GUI * ClaimedChunks.TILES_GUI];
+        chunksModifying = new HashSet<>();
 
         for(int i = 0; i < chunkData.length; i++)
         {
@@ -228,7 +228,7 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
                 add(buttonUnclaimAll);
                 add(buttonDepth);
 
-                setHeight(widgets.size() * 16);
+                setHeight(getWidgets().size() * 16);
             }
 
             @Override
@@ -377,6 +377,25 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
         buttonClose.render(GuiIcons.ACCEPT);
         buttonUnclaimAll.render(GuiIcons.REMOVE);
         buttonDepth.render(FTBUClientConfig.ENABLE_CHUNK_SELECTOR_DEPTH.getBoolean() ? GuiIcons.ACCEPT : GuiIcons.ACCEPT_GRAY);
+    }
+
+    @Override
+    public void mouseReleased(IGui gui)
+    {
+        super.mouseReleased(gui);
+
+        if(currentSelectionMode != -1)
+        {
+            new MessageClaimedChunksModify(startX, startZ, currentSelectionMode, chunksModifying).sendToServer();
+            chunksModifying.clear();
+
+            for(MapButton b : mapButtons)
+            {
+                b.isSelected = false;
+            }
+
+            currentSelectionMode = -1;
+        }
     }
 
     @Override

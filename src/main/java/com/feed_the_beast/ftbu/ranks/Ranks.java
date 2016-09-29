@@ -1,8 +1,10 @@
 package com.feed_the_beast.ftbu.ranks;
 
+import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.rankconfig.IRankConfig;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
+import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.util.LMFileUtils;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
@@ -31,6 +33,7 @@ public enum Ranks
     public final Map<String, IRank> RANKS = new LinkedHashMap<>();
     public final Map<UUID, IRank> PLAYER_MAP = new HashMap<>();
     public IRank defaultRank;
+    public IConfigTree ranksConfigTree;
 
     Ranks()
     {
@@ -43,6 +46,7 @@ public enum Ranks
         RANKS.clear();
         PLAYER_MAP.clear();
         defaultRank = null;
+        ranksConfigTree = new ConfigTree();
 
         try
         {
@@ -188,12 +192,15 @@ public enum Ranks
 
             for(IRankConfig p : sortedRankConfigs)
             {
-                IConfigValue value = p.getDefaultValue();
-                list.add("> " + p.getName() + " | Default Player Value: " + value + " | Default OP Value: " + p.getDefaultOPValue());
+                IConfigValue value = p.getDefValue();
+                list.add("> " + p.getName() + " | Default Player Value: " + value + " | Default OP Value: " + p.getDefOPValue());
 
-                if(!p.getDescription().isEmpty())
+                if(!p.getInfo().isEmpty())
                 {
-                    list.add("| " + p.getDescription());
+                    for(String s : p.getInfo().split("\n"))
+                    {
+                        list.add("| " + s);
+                    }
                 }
 
                 list.add(": Type: " + value.getID());
@@ -216,6 +223,26 @@ public enum Ranks
             }
 
             LMFileUtils.save(new File(LMUtils.folderLocal, "ftbu/all_permissions.txt"), list);
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
+        try
+        {
+            Rank player = new DefaultPlayerRank();
+
+            Rank op = new DefaultOPRank();
+            op.permissions.put("*", true);
+
+            JsonObject r = new JsonObject();
+            r.add(player.getName(), player.getSerializableElement());
+            r.add(op.getName(), op.getSerializableElement());
+            JsonObject o = new JsonObject();
+            o.add("default_rank", new JsonPrimitive(player.getName()));
+            o.add("ranks", r);
+            LMJsonUtils.toJson(new File(LMUtils.folderLocal, "ftbu/ranks_example.json"), o);
         }
         catch(Exception ex)
         {

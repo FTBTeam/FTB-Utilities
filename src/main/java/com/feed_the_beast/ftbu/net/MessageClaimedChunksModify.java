@@ -2,11 +2,13 @@ package com.feed_the_beast.ftbu.net;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
+import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
+import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -84,6 +86,11 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
     {
         IForgePlayer p = FTBLibIntegration.API.getUniverse().getPlayer(player);
 
+        if(p == null)
+        {
+            return;
+        }
+
         for(ChunkPos pos0 : m.chunks)
         {
             ChunkDimPos pos = new ChunkDimPos(pos0.chunkXPos, pos0.chunkZPos, player.dimension);
@@ -108,6 +115,7 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
             }
         }
 
+        FTBUPlayerEventHandler.updateChunkMessage(player, new ChunkDimPos(MathHelperLM.chunk(player.posX), MathHelperLM.chunk(player.posZ), player.dimension));
         new MessageClaimedChunksUpdate(m.startX, m.startZ, player).sendTo(player);
     }
 }

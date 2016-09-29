@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbu.api.IRank;
+import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -42,6 +43,11 @@ public class CmdSetRank extends CommandLM
     @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
+        if(!FTBUConfigGeneral.RANKS_ENABLED.getBoolean())
+        {
+            throw FTBLibLang.RAW.commandError("Ranks are not enabled!"); //TODO: Lang
+        }
+
         checkArgs(args, 2, "<player> <rank>");
         IForgePlayer player = getForgePlayer(args[0]);
         IRank r = Ranks.INSTANCE.RANKS.get(args[1]);

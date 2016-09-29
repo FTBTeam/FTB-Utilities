@@ -1,10 +1,9 @@
 package com.feed_the_beast.ftbu.ranks;
 
+import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.rankconfig.IRankConfig;
 import com.feed_the_beast.ftbu.api.IRank;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -15,14 +14,13 @@ import javax.annotation.Nullable;
 /**
  * Created by LatvianModder on 27.09.2016.
  */
-public enum DefaultOPRank implements IRank
+public class DefaultOPRank extends Rank
 {
-    INSTANCE;
+    public static final DefaultOPRank INSTANCE = new DefaultOPRank();
 
-    @Override
-    public String getName()
+    DefaultOPRank()
     {
-        return "admin";
+        super("op");
     }
 
     @Nullable
@@ -39,26 +37,14 @@ public enum DefaultOPRank implements IRank
     }
 
     @Override
-    public IConfigValue getConfig(IRankConfig id)
+    public IConfigValue getConfig(IConfigKey id)
     {
-        return id.getDefaultOPValue();
+        return (id instanceof IRankConfig) ? ((IRankConfig) id).getDefOPValue() : id.getDefValue();
     }
 
     @Override
     public boolean allowCommand(MinecraftServer server, ICommandSender sender, ICommand command)
     {
         return true;
-    }
-
-    @Override
-    public void fromJson(JsonElement json)
-    {
-    }
-
-    @Override
-    public JsonElement getSerializableElement()
-    {
-        //FIXME: Generate example OP rank
-        return JsonNull.INSTANCE;
     }
 }

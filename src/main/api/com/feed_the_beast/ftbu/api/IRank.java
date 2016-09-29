@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.api;
 
+import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.rankconfig.IRankConfig;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -21,7 +21,7 @@ public interface IRank extends IStringSerializable, IJsonSerializable
 
     Event.Result hasPermission(String permission);
 
-    IConfigValue getConfig(IRankConfig id);
+    IConfigValue getConfig(IConfigKey id);
 
     default boolean allowCommand(MinecraftServer server, ICommandSender sender, ICommand command)
     {

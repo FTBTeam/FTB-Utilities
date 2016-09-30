@@ -161,7 +161,14 @@ public class ThreadBackup extends Thread
 
     private static String getDoneTime(long l)
     {
-        return LMStringUtils.getTimeString(System.currentTimeMillis() - l);
+        l = System.currentTimeMillis() - l;
+
+        if(l < 1000L)
+        {
+            return l + "ms";
+        }
+
+        return LMStringUtils.getTimeString(l);
     }
 
     private static void appendNum(StringBuilder sb, int num, char c)

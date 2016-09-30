@@ -144,13 +144,13 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, ILo
             if(ticketContainer == null)
             {
                 ticketContainer = request(pos.dim);
+            }
 
-                if(ticketContainer != null)
-                {
-                    ILoadedChunk loadedChunk = new LoadedChunk(pos.getChunkPos(), player);
-                    loadedChunk.setForced(true);
-                    ticketContainer.getChunks().put(loadedChunk.getPos(), loadedChunk);
-                }
+            if(ticketContainer != null)
+            {
+                ILoadedChunk loadedChunk = new LoadedChunk(pos.getChunkPos(), player);
+                loadedChunk.setForced(true);
+                ticketContainer.getChunks().put(loadedChunk.getPos(), loadedChunk);
             }
         }
     }

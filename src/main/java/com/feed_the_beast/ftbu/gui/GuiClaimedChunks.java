@@ -64,7 +64,6 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
         public void onClicked(IGui gui, IMouseButton button)
         {
             GuiHelper.playClickSound();
-
             boolean claim = !GuiScreen.isShiftKeyDown();
             boolean flag = button.isLeft();
 
@@ -100,6 +99,11 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
             {
                 l.add(TextFormatting.DARK_GREEN + FTBULang.CHUNKTYPE_WILDERNESS.translate());
             }
+
+            if(GuiScreen.isCtrlKeyDown())
+            {
+                l.add(chunkPos.toString());
+            }
         }
 
         @Override
@@ -111,9 +115,9 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
             if(chunkData[index].isClaimed())
             {
                 FTBLibClient.setTexture(ClaimedChunks.TEX_CHUNK_CLAIMING);
-                LMColorUtils.setGLColor(LMColorUtils.getColorFromID(chunkData[index].team.colorID), 180);
+                LMColorUtils.setGLColor(LMColorUtils.getColorFromID(chunkData[index].team.colorID), GuiScreen.isCtrlKeyDown() ? 50 : 180);
                 GuiHelper.drawTexturedRect(ax, ay, 16, 16, ClaimedChunks.TEX_FILLED.getMinU(), ClaimedChunks.TEX_FILLED.getMinV(), ClaimedChunks.TEX_FILLED.getMaxU(), ClaimedChunks.TEX_FILLED.getMaxV());
-                GlStateManager.color((chunkData[index].isLoaded() && chunkData[index].team.isAlly) ? 1F : 0F, chunkData[index].isOwner() ? 0.27F : 0F, 0F, 0.78F);
+                GlStateManager.color((chunkData[index].isLoaded() && chunkData[index].team.isAlly) ? 1F : 0F, chunkData[index].isOwner() ? 0.27F : 0F, 0F, GuiScreen.isCtrlKeyDown() ? 0.2F : 0.78F);
                 GuiHelper.drawTexturedRect(ax, ay, 16, 16, ClaimedChunks.TEX_BORDER.getMinU(), ClaimedChunks.TEX_BORDER.getMinV(), ClaimedChunks.TEX_BORDER.getMaxU(), ClaimedChunks.TEX_BORDER.getMaxV());
             }
 
@@ -146,7 +150,7 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
         super(ClaimedChunks.TILES_GUI * 16, ClaimedChunks.TILES_GUI * 16);
 
         startX = MathHelperLM.chunk(mc.thePlayer.posX) - 7;
-        startZ = MathHelperLM.chunk(mc.thePlayer.posX) - 7;
+        startZ = MathHelperLM.chunk(mc.thePlayer.posZ) - 7;
 
         teams = new HashMap<>();
         chunkData = new ClaimedChunks.Data[ClaimedChunks.TILES_GUI * ClaimedChunks.TILES_GUI];

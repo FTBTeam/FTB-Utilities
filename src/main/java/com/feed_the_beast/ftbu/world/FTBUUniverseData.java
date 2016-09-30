@@ -265,51 +265,55 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
 
     public static boolean setLoaded(IForgePlayer player, ChunkDimPos pos, boolean flag)
     {
-        if(flag ? !FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().isLoaded(pos, null) : FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().isLoaded(pos, player))
+        if(flag)
         {
-            if(flag)
+            if(FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().isLoaded(pos, null) || !player.equalsPlayer(FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().getChunkOwner(pos)))
             {
-                if(player.getTeam() == null)
-                {
-                    EntityPlayerMP ep = player.getPlayer();
-
-                    if(ep != null)
-                    {
-                        FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.NO_TEAM);
-                    }
-
-                    return false;
-                }
-
-                if(isDimensionBlacklisted(player.getProfile(), pos.dim))
-                {
-                    return false;
-                }
-
-                int max = RankConfigAPI.getRankConfig(player.getProfile(), FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
-                if(max == 0 || FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().getLoadedChunks(player) >= max)
-                {
-                    return false;
-                }
+                return false;
             }
 
-            if(!flag)
+            if(player.getTeam() == null)
             {
-                MinecraftForge.EVENT_BUS.post(new ModifyChunkEvent.Unloaded(pos, player));
+                EntityPlayerMP ep = player.getPlayer();
+
+                if(ep != null)
+                {
+                    FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.NO_TEAM);
+                }
+
+                return false;
             }
 
-            FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().setLoaded(pos, flag ? player : null);
-            FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().checkUnloaded(pos.dim);
-
-            if(flag)
+            if(isDimensionBlacklisted(player.getProfile(), pos.dim))
             {
-                MinecraftForge.EVENT_BUS.post(new ModifyChunkEvent.Loaded(pos, player));
+                return false;
             }
 
-            return true;
+            int max = RankConfigAPI.getRankConfig(player.getProfile(), FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
+            if(max == 0 || FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().getLoadedChunks(player) >= max)
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if(!FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().isLoaded(pos, player))
+            {
+                return false;
+            }
+
+            MinecraftForge.EVENT_BUS.post(new ModifyChunkEvent.Unloaded(pos, player));
         }
 
-        return false;
+        FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().setLoaded(pos, flag ? player : null);
+        FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().checkUnloaded(pos.dim);
+
+        if(flag)
+        {
+            MinecraftForge.EVENT_BUS.post(new ModifyChunkEvent.Loaded(pos, player));
+        }
+
+        return true;
     }
 
     public void onLoaded()

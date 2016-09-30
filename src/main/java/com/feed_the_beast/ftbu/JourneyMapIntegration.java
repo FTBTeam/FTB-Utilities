@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.client.FTBUClientConfig;
 import com.feed_the_beast.ftbu.gui.ClaimedChunks;
-import journeymap.client.api.ClientPlugin;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.IClientPlugin;
 import journeymap.client.api.display.DisplayType;
@@ -24,7 +23,7 @@ import java.util.Map;
 /**
  * Created by LatvianModder on 17.01.2016.
  */
-@ClientPlugin
+//@ClientPlugin //FIXME: JourneyMap Plugin
 public class JourneyMapIntegration implements IClientPlugin
 {
     public static JourneyMapIntegration INST;

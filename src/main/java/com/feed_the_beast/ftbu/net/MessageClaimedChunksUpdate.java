@@ -40,7 +40,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
         startZ = sz;
 
         IForgePlayer player1 = FTBLibIntegration.API.getUniverse().getPlayer(player);
-        IForgeTeam team1 = player1.getTeam();
+        IForgeTeam team = player1.getTeam();
 
         claimedChunks = ClaimedChunkStorage.INSTANCE.getChunks(player1).size();
         loadedChunks = LoadedChunkStorage.INSTANCE.getLoadedChunks(player1);
@@ -50,12 +50,12 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
         chunkData = new ClaimedChunks.Data[ClaimedChunks.TILES_GUI * ClaimedChunks.TILES_GUI];
         teams = new HashMap<>();
 
-        if(team1 != null)
+        if(team != null)
         {
             ClaimedChunks.Team cteam = new ClaimedChunks.Team();
-            cteam.ownerID = team1.getOwner().getProfile().getId();
-            cteam.colorID = team1.getColor().getColorID();
-            cteam.formattedName = team1.getTitle();
+            cteam.ownerID = team.getOwner().getProfile().getId();
+            cteam.colorID = team.getColor().getColorID();
+            cteam.formattedName = team.getColor().getTextFormatting() + team.getTitle();
             cteam.isAlly = true;
             teams.put(cteam.ownerID, cteam);
         }
@@ -70,7 +70,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 
                 if(owner != null && owner.getTeam() != null)
                 {
-                    IForgeTeam team = owner.getTeam();
+                    team = owner.getTeam();
                     data.team = teams.get(team.getOwner().getProfile().getId());
 
                     if(data.team == null)
@@ -78,8 +78,8 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
                         data.team = new ClaimedChunks.Team();
                         data.team.ownerID = team.getOwner().getProfile().getId();
                         data.team.colorID = team.getColor().getColorID();
-                        data.team.formattedName = team.getTitle();
-                        data.team.isAlly = team1 != null && team.isAllyTeam(team1.getName()) && team1.isAllyTeam(team.getName());
+                        data.team.formattedName = team.getColor().getTextFormatting() + team.getTitle();
+                        data.team.isAlly = team.isAllyTeam(team.getName()) && team.isAllyTeam(team.getName());
                         teams.put(data.team.ownerID, data.team);
                     }
 

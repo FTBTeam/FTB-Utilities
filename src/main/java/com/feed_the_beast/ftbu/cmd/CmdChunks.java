@@ -24,9 +24,9 @@ import net.minecraftforge.server.permission.context.BlockPosContext;
  */
 public class CmdChunks extends CommandTreeBase
 {
-    public static void updateChunk(EntityPlayerMP ep, int x, int z)
+    public static void updateChunk(EntityPlayerMP ep, ChunkDimPos pos)
     {
-        FTBUPlayerEventHandler.updateChunkMessage(ep, new ChunkDimPos(x, z, ep.dimension));
+        FTBUPlayerEventHandler.updateChunkMessage(ep, pos);
     }
 
     public class CmdClaim extends CommandLM
@@ -52,7 +52,7 @@ public class CmdChunks extends CommandTreeBase
             if(FTBUUniverseData.claimChunk(p, pos))
             {
                 FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_CLAIMED);
-                updateChunk(player, pos.posX, pos.posZ);
+                updateChunk(player, pos);
             }
             else
             {
@@ -89,7 +89,7 @@ public class CmdChunks extends CommandTreeBase
             if(FTBUUniverseData.unclaimChunk(p, pos))
             {
                 FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_UNCLAIMED);
-                updateChunk(player, pos.posX, pos.posZ);
+                updateChunk(player, pos);
             }
             else
             {
@@ -121,7 +121,7 @@ public class CmdChunks extends CommandTreeBase
             if(FTBUUniverseData.setLoaded(p, pos, true))
             {
                 FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_LOADED);
-                updateChunk(player, pos.posX, pos.posZ);
+                updateChunk(player, pos);
             }
             else
             {
@@ -153,7 +153,7 @@ public class CmdChunks extends CommandTreeBase
             if(FTBUUniverseData.setLoaded(p, pos, false))
             {
                 FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_UNLOADED);
-                updateChunk(player, pos.posX, pos.posZ);
+                updateChunk(player, pos);
             }
             else
             {

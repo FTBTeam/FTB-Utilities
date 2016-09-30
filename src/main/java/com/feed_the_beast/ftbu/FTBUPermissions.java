@@ -31,8 +31,8 @@ public class FTBUPermissions
     public static final String DISPLAY_PERMISSIONS = PermissionAPI.registerNode("ftbu.display.permissions", DefaultPermissionLevel.ALL, "Display 'My Permissions' in Server Info");
 
     public static final IRankConfig DISPLAY_COLOR = RankConfigAPI.register("display.color", new PropertyEnum<>(LMServerUtils.TEXT_FORMATTING_NAME_MAP, TextFormatting.WHITE), new PropertyEnum<>(LMServerUtils.TEXT_FORMATTING_NAME_MAP, TextFormatting.GREEN), "Color of player's nickname");
-    public static final IRankConfig DISPLAY_PREFIX = RankConfigAPI.register("display.prefix", new PropertyString(""), new PropertyString(""), "Prefix of player's nidkname");
-    public static final IRankConfig DISPLAY_BADGE = RankConfigAPI.register("display.badge", new PropertyString(""), new PropertyString(""), "Prefix of player's nidkname");
+    public static final IRankConfig DISPLAY_PREFIX = RankConfigAPI.register("display.prefix", new PropertyString(""), new PropertyString(""), "Prefix of player's nickname");
+    public static final IRankConfig DISPLAY_BADGE = RankConfigAPI.register("display.badge", new PropertyString(""), new PropertyString(""), "Prefix of player's nickname");
 
     // Homes //
 
@@ -66,7 +66,7 @@ public class FTBUPermissions
             "disabled: Players won't be able to chunkload\noffline: Chunks stay loaded when player loggs off\nonline: Chunks only stay loaded while owner is online");
 
     public static final IRankConfig CHUNKLOADER_MAX_CHUNKS = RankConfigAPI.register("ftbu.chunkloader.max_chunks",
-            new PropertyShort(50, 0, 30000), new PropertyShort(5000),
+            new PropertyShort(50, 0, 30000), new PropertyShort(64),
             "Max amount of chunks that player can load\n0 - Disabled");
 
     public static final IRankConfig CHUNKLOADER_OFFLINE_TIMER = RankConfigAPI.register("ftbu.chunkloader.offline_timer",
@@ -76,18 +76,13 @@ public class FTBUPermissions
     public static void init()
     {
         final Map<String, DefaultPermissionLevel> levels = new HashMap<>();
-
-        Block.REGISTRY.iterator().forEachRemaining(block ->
-        {
-            levels.put(CLAIMS_BLOCK_BREAK_PREFIX + formatBlock(block), DefaultPermissionLevel.OP);
-        });
+        Block.REGISTRY.iterator().forEachRemaining(block -> levels.put(CLAIMS_BLOCK_BREAK_PREFIX + formatBlock(block), DefaultPermissionLevel.OP));
 
         levels.put(CLAIMS_BLOCK_BREAK_PREFIX + "gravestone.gravestone", DefaultPermissionLevel.ALL);
         levels.put(CLAIMS_BLOCK_BREAK_PREFIX + "graves.gravestone", DefaultPermissionLevel.ALL);
         levels.put(CLAIMS_BLOCK_BREAK_PREFIX + "graves.graveslave", DefaultPermissionLevel.ALL);
         levels.put(CLAIMS_BLOCK_BREAK_PREFIX + "graves.headstone", DefaultPermissionLevel.ALL);
 
-        //"Dimensions where players can't claim"
         for(int i : DimensionManager.getStaticDimensionIDs())
         {
             levels.put(CLAIMS_DIMENSION_ALLOWED_PREFIX + i, DefaultPermissionLevel.ALL);

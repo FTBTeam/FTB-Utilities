@@ -5,14 +5,14 @@ import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.chunks.ILoadedChunk;
 import com.feed_the_beast.ftbu.api.chunks.ITicketContainer;
-import gnu.trove.map.TLongObjectMap;
-import gnu.trove.map.hash.TLongObjectHashMap;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.util.Constants;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -22,13 +22,13 @@ public final class TicketContainer implements ITicketContainer
 {
     private final int dimension;
     private final ForgeChunkManager.Ticket ticket;
-    private final TLongObjectMap<ILoadedChunk> chunks;
+    private final Map<ChunkPos, ILoadedChunk> chunks;
 
     public TicketContainer(int dim, ForgeChunkManager.Ticket t)
     {
         dimension = dim;
         ticket = t;
-        chunks = new TLongObjectHashMap<>();
+        chunks = new HashMap<>();
     }
 
     @Override
@@ -44,9 +44,24 @@ public final class TicketContainer implements ITicketContainer
     }
 
     @Override
-    public TLongObjectMap<ILoadedChunk> getChunks()
+    public Map<ChunkPos, ILoadedChunk> getChunks()
     {
         return chunks;
+    }
+
+    public int hashCode()
+    {
+        return dimension;
+    }
+
+    public boolean equals(Object o)
+    {
+        return o != null && o.hashCode() == dimension;
+    }
+
+    public String toString()
+    {
+        return dimension + "@" + getChunks().keySet();
     }
 
     public void load()
@@ -67,7 +82,7 @@ public final class TicketContainer implements ITicketContainer
                 {
                     ILoadedChunk chunk = new LoadedChunk(new ChunkPos(ai[0], ai[1]), player);
                     chunk.setForced(ai[6] != 0);
-                    chunks.put(Bits.intsToLong(ai[0], ai[1]), chunk);
+                    chunks.put(chunk.getPos(), chunk);
                 }
             }
         }
@@ -78,7 +93,7 @@ public final class TicketContainer implements ITicketContainer
     {
         NBTTagList nbt = new NBTTagList();
 
-        for(ILoadedChunk chunk : chunks.valueCollection())
+        for(ILoadedChunk chunk : chunks.values())
         {
             UUID uuid = chunk.getOwner().getProfile().getId();
             int[] ai = new int[7];

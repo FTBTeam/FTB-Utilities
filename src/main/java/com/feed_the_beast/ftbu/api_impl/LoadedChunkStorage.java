@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbu.api_impl;
 import com.feed_the_beast.ftbl.FTBLibStats;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
-import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBU;
@@ -15,6 +14,7 @@ import com.feed_the_beast.ftbu.api.chunks.ITicketContainer;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.google.common.base.Objects;
 import gnu.trove.map.hash.TIntObjectHashMap;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -83,9 +83,9 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, ILo
         ticketContainer.load();
         ticketContainers.put(dim, ticketContainer);
 
-        for(ILoadedChunk loadedChunk : ticketContainer.getChunks().valueCollection())
+        for(ILoadedChunk loadedChunk : ticketContainer.getChunks().values())
         {
-            if(Objects.equal(loadedChunk.getOwner(), FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().getChunkOwner(new ChunkDimPos(loadedChunk.getPos().chunkXPos, loadedChunk.getPos().chunkZPos, dim))))
+            if(Objects.equal(loadedChunk.getOwner(), FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().getChunkOwner(new ChunkDimPos(loadedChunk.getPos(), dim))))
             {
                 ForgeChunkManager.forceChunk(ticket, loadedChunk.getPos());
             }
@@ -102,7 +102,7 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, ILo
 
         if(ticketContainer != null)
         {
-            return ticketContainer.getChunks().get(Bits.intsToLong(pos.getChunkPos().chunkXPos, pos.getChunkPos().chunkZPos));
+            return ticketContainer.getChunks().get(pos.getChunkPos());
         }
 
         return null;
@@ -124,16 +124,17 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, ILo
         {
             if(ticketContainer != null)
             {
-                ILoadedChunk loadedChunk = ticketContainer.getChunks().get(Bits.intsToLong(pos.posX, pos.posZ));
+                ChunkPos chunkPos = pos.getChunkPos();
+                ILoadedChunk loadedChunk = ticketContainer.getChunks().get(chunkPos);
 
                 if(loadedChunk != null)
                 {
                     if(loadedChunk.isForced())
                     {
-                        ForgeChunkManager.unforceChunk(ticketContainer.getTicket(), loadedChunk.getPos());
+                        ForgeChunkManager.unforceChunk(ticketContainer.getTicket(), chunkPos);
                     }
 
-                    ticketContainer.getChunks().remove(Bits.intsToLong(pos.posX, pos.posZ));
+                    ticketContainer.getChunks().remove(chunkPos);
                     ticketContainer.save();
                 }
             }
@@ -147,7 +148,8 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, ILo
                 if(ticketContainer != null)
                 {
                     ILoadedChunk loadedChunk = new LoadedChunk(pos.getChunkPos(), player);
-                    ticketContainer.getChunks().put(Bits.intsToLong(pos.posX, pos.posZ), loadedChunk);
+                    loadedChunk.setForced(true);
+                    ticketContainer.getChunks().put(loadedChunk.getPos(), loadedChunk);
                 }
             }
         }
@@ -160,11 +162,11 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, ILo
 
         for(ITicketContainer ticketContainer : ticketContainers.valueCollection())
         {
-            for(ILoadedChunk chunk : ticketContainer.getChunks().valueCollection())
+            for(ILoadedChunk chunk : ticketContainer.getChunks().values())
             {
                 if(player == null || (player.equals(chunk.getOwner())))
                 {
-                    c.add(new ChunkDimPos(chunk.getPos().chunkXPos, chunk.getPos().chunkZPos, ticketContainer.getDimension()));
+                    c.add(new ChunkDimPos(chunk.getPos(), ticketContainer.getDimension()));
                 }
             }
         }
@@ -196,7 +198,7 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, ILo
 
     private void checkUnloaded0(ITicketContainer ticketContainer)
     {
-        for(ILoadedChunk loadedChunk : ticketContainer.getChunks().values(new ILoadedChunk[ticketContainer.getChunks().size()]))
+        for(ILoadedChunk loadedChunk : new ArrayList<>(ticketContainer.getChunks().values()))
         {
             boolean isForced = loadedChunk.isForced();
 

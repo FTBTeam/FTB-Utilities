@@ -31,9 +31,9 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -126,7 +126,6 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
 
             if(!isSelected && currentSelectionMode != -1 && isMouseOver(this))
             {
-                chunksModifying.add(chunkPos);
                 isSelected = true;
             }
         }
@@ -134,7 +133,6 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
 
     public final int startX, startZ;
     private final Map<UUID, ClaimedChunks.Team> teams;
-    private final Collection<ChunkPos> chunksModifying;
     private ClaimedChunks.Data[] chunkData;
     private int claimedChunks, loadedChunks, maxClaimedChunks, maxLoadedChunks;
     private final ButtonLM buttonRefresh, buttonClose, buttonUnclaimAll, buttonDepth;
@@ -152,7 +150,6 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
 
         teams = new HashMap<>();
         chunkData = new ClaimedChunks.Data[ClaimedChunks.TILES_GUI * ClaimedChunks.TILES_GUI];
-        chunksModifying = new HashSet<>();
 
         for(int i = 0; i < chunkData.length; i++)
         {
@@ -386,14 +383,18 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
 
         if(currentSelectionMode != -1)
         {
-            new MessageClaimedChunksModify(startX, startZ, currentSelectionMode, chunksModifying).sendToServer();
-            chunksModifying.clear();
+            Collection<ChunkPos> c = new ArrayList<>();
 
             for(MapButton b : mapButtons)
             {
-                b.isSelected = false;
+                if(b.isSelected)
+                {
+                    c.add(b.chunkPos);
+                    b.isSelected = false;
+                }
             }
 
+            new MessageClaimedChunksModify(startX, startZ, currentSelectionMode, c).sendToServer();
             currentSelectionMode = -1;
         }
     }

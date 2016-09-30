@@ -132,7 +132,7 @@ public class FTBUPlayerEventHandler
 
         FTBUPlayerData data = player.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
         data.lastSafePos = new EntityDimPos(ep).toBlockDimPos();
-        updateChunkMessage(ep, new ChunkDimPos(ep.dimension, e.getNewChunkX(), e.getNewChunkZ()));
+        updateChunkMessage(ep, new ChunkDimPos(e.getNewChunkX(), e.getNewChunkZ(), ep.dimension));
     }
 
     public static void updateChunkMessage(EntityPlayerMP player, ChunkDimPos pos)

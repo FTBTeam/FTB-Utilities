@@ -12,7 +12,6 @@ import com.feed_the_beast.ftbu.api.chunks.IClaimedChunkStorage;
 import com.feed_the_beast.ftbu.api.chunks.ILoadedChunkStorage;
 import com.feed_the_beast.ftbu.api.leaderboard.ILeaderboard;
 import com.feed_the_beast.ftbu.api.leaderboard.Leaderboard;
-import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.ranks.DefaultOPRank;
 import com.feed_the_beast.ftbu.ranks.DefaultPlayerRank;
 import com.feed_the_beast.ftbu.ranks.Ranks;
@@ -60,7 +59,7 @@ public enum FTBUtilitiesAPI_Impl implements FTBUtilitiesAPI, IPermissionHandler,
     @Override
     public IRank getRank(GameProfile profile)
     {
-        if(FTBUConfigGeneral.RANKS_ENABLED.getBoolean())
+        if(Ranks.INSTANCE.defaultRank != null)
         {
             IRank r = Ranks.INSTANCE.PLAYER_MAP.get(profile.getId());
             return (r == null) ? Ranks.INSTANCE.defaultRank : r;

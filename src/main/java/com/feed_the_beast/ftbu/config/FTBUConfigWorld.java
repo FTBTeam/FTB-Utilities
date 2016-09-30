@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbu.config;
 import com.feed_the_beast.ftbl.api.config.ConfigValue;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyEntityClassList;
+import com.feed_the_beast.ftbl.lib.config.PropertyShort;
 import com.feed_the_beast.ftbu.FTBUFinals;
 
 import java.util.ArrayList;
@@ -23,4 +24,10 @@ public class FTBUConfigWorld
 
     @ConfigValue(id = "world.spawn_area_in_sp", file = FTBUFinals.MOD_ID, info = "Enable spawn area in singleplayer")
     public static final PropertyBool SPAWN_AREA_IN_SP = new PropertyBool(false);
+
+    @ConfigValue(id = "world.temp.max_claimed_chunks", file = FTBUFinals.MOD_ID, info = "Temp config for max chunks that player can claim")
+    public static final PropertyShort MAX_CLAIMED_CHUNKS = new PropertyShort(1000, 0, 30000);
+
+    @ConfigValue(id = "world.temp.max_loaded_chunks", file = FTBUFinals.MOD_ID, info = "Temp config for max chunks that player can load")
+    public static final PropertyShort MAX_LOADED_CHUNKS = new PropertyShort(64, 0, 30000);
 }

@@ -212,7 +212,8 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
             return false;
         }
 
-        int max = RankConfigAPI.getRankConfig(player.getProfile(), FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
+        //int max = RankConfigAPI.getRankConfig(player.getProfile(), FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
+        int max = FTBUConfigWorld.MAX_CLAIMED_CHUNKS.getInt();
         if(max == 0)
         {
             return false;
@@ -289,7 +290,8 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
                 return false;
             }
 
-            int max = RankConfigAPI.getRankConfig(player.getProfile(), FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
+            //int max = RankConfigAPI.getRankConfig(player.getProfile(), FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
+            int max = FTBUConfigWorld.MAX_LOADED_CHUNKS.getInt();
             if(max == 0 || FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().getLoadedChunks(player) >= max)
             {
                 return false;

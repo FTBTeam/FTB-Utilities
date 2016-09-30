@@ -2,16 +2,15 @@ package com.feed_the_beast.ftbu.net;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
-import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
+import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.gui.ClaimedChunks;
 import com.feed_the_beast.ftbu.gui.GuiClaimedChunks;
 import io.netty.buffer.ByteBuf;
@@ -44,8 +43,10 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 
         claimedChunks = ClaimedChunkStorage.INSTANCE.getChunks(player1).size();
         loadedChunks = LoadedChunkStorage.INSTANCE.getLoadedChunks(player1);
-        maxClaimedChunks = RankConfigAPI.getRankConfig(player, FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
-        maxLoadedChunks = RankConfigAPI.getRankConfig(player, FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
+        //maxClaimedChunks = RankConfigAPI.getRankConfig(player, FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
+        //maxLoadedChunks = RankConfigAPI.getRankConfig(player, FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
+        maxClaimedChunks = FTBUConfigWorld.MAX_CLAIMED_CHUNKS.getInt();
+        maxLoadedChunks = FTBUConfigWorld.MAX_LOADED_CHUNKS.getInt();
 
         chunkData = new ClaimedChunks.Data[ClaimedChunks.TILES_GUI * ClaimedChunks.TILES_GUI];
         teams = new HashMap<>();

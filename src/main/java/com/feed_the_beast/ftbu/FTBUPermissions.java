@@ -46,9 +46,11 @@ public class FTBUPermissions
 
     public static final String CLAIMS_MODIFY_OTHER_CHUNKS = PermissionAPI.registerNode("ftbu.claims.modify_other_chunks", DefaultPermissionLevel.OP, "Allow player to edit other player's chunks");
 
+    /* FIXME: Uncomment after ranks are fixed
     public static final IRankConfig CLAIMS_MAX_CHUNKS = RankConfigAPI.register("ftbu.claims.max_chunks",
             new PropertyShort(100, 0, 30000), new PropertyShort(1000),
             "Max amount of chunks that player can claim\n0 - Disabled");
+    */
 
     public static final IRankConfig CLAIMS_FORCED_EXPLOSIONS = RankConfigAPI.register("ftbu.claims.forced_explosions",
             new PropertyEnum<>(EnumEnabled.NAME_MAP_WITH_NULL, null), new PropertyEnum<>(EnumEnabled.NAME_MAP_WITH_NULL, null),
@@ -65,9 +67,11 @@ public class FTBUPermissions
             new PropertyEnum<>(ChunkloaderType.NAME_MAP, ChunkloaderType.OFFLINE),
             "disabled: Players won't be able to chunkload\noffline: Chunks stay loaded when player loggs off\nonline: Chunks only stay loaded while owner is online");
 
+    /* FIXME: Uncomment after ranks are fixed
     public static final IRankConfig CHUNKLOADER_MAX_CHUNKS = RankConfigAPI.register("ftbu.chunkloader.max_chunks",
             new PropertyShort(50, 0, 30000), new PropertyShort(64),
             "Max amount of chunks that player can load\n0 - Disabled");
+    */
 
     public static final IRankConfig CHUNKLOADER_OFFLINE_TIMER = RankConfigAPI.register("ftbu.chunkloader.offline_timer",
             new PropertyDouble(24D).setMin(-1D), new PropertyDouble(-1D),

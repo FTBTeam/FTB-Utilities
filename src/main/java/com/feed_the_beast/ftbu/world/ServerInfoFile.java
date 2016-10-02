@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
@@ -10,9 +11,10 @@ import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBULeaderboards;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.api.events.EventFTBUServerInfo;
+import com.feed_the_beast.ftbu.api.guide.ServerInfoEvent;
 import com.feed_the_beast.ftbu.api.leaderboard.ILeaderboard;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
+import com.feed_the_beast.ftbu.client.FTBUActions;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.world.backups.Backups;
@@ -29,6 +31,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.permission.PermissionAPI;
+import net.minecraftforge.server.permission.context.IContext;
+import net.minecraftforge.server.permission.context.PlayerContext;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,7 +64,7 @@ public class ServerInfoFile extends InfoPage
     public ServerInfoFile(EntityPlayerMP ep)
     {
         super(CachedInfo.main.getName());
-        setTitle(CachedInfo.main.getTitle());
+        setTitle(new TextComponentTranslation(FTBUActions.SERVER_INFO.getPath()));
         IForgePlayer self = FTBLibIntegration.API.getUniverse().getPlayer(ep);
 
         MinecraftServer server = LMServerUtils.getServer();
@@ -93,11 +97,11 @@ public class ServerInfoFile extends InfoPage
             println(FTBLibLang.MODE_CURRENT.textComponent(LMStringUtils.firstUppercase(FTBLibIntegration.API.getSharedData(Side.SERVER).getPackMode().getID())));
         }
 
-        InfoPage topsPage = getSub("leaderboards").setTitle(FTBULeaderboards.LANG_TITLE.textComponent());
+        IGuiInfoPage page = getSub("leaderboards").setTitle(FTBULeaderboards.LANG_TITLE.textComponent());
 
         for(ILeaderboard leaderboard : FTBUtilitiesAPI_Impl.INSTANCE.LEADERBOARDS.values())
         {
-            InfoPage thisTop = topsPage.getSub(leaderboard.getStat().statId).setTitle(leaderboard.getName());
+            IGuiInfoPage thisTop = page.getSub(leaderboard.getStat().statId).setTitle(leaderboard.getName());
             Collections.sort(players, leaderboard.getComparator());
 
             int size = Math.min(players.size(), 250);
@@ -143,10 +147,9 @@ public class ServerInfoFile extends InfoPage
             }
         }
 
-        MinecraftForge.EVENT_BUS.post(new EventFTBUServerInfo(this, self, isOP));
+        MinecraftForge.EVENT_BUS.post(new ServerInfoEvent(this, self, isOP));
 
-        InfoPage page = getSub("commands").setTitle(FTBLibLang.COMMANDS.textComponent());
-        page.clear();
+        page = getSub("commands").setTitle(FTBLibLang.COMMANDS.textComponent());
 
         try
         {
@@ -154,7 +157,7 @@ public class ServerInfoFile extends InfoPage
             {
                 try
                 {
-                    InfoPage cat = page.getSub('/' + c.getCommandName());
+                    IGuiInfoPage cat = page.getSub('/' + c.getCommandName());
 
                     List<String> al = c.getCommandAliases();
                     if(!al.isEmpty())
@@ -238,6 +241,20 @@ public class ServerInfoFile extends InfoPage
             t.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb home " + s));
             page.println(t);
         }
+
+        page = getSub("permissions").setTitle(FTBLibLang.MY_PERMISSIONS.textComponent());
+
+        IContext context = new PlayerContext(ep);
+
+        for(String s : PermissionAPI.getPermissionHandler().getRegisteredNodes())
+        {
+            if(PermissionAPI.hasPermission(self.getProfile(), s, context))
+            {
+                page.println(s);
+            }
+        }
+
+        Collections.sort(page.getText(), (o1, o2) -> o1.getUnformattedText().compareTo(o2.getUnformattedText()));
 
         cleanup();
         sortAll();

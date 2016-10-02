@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.gui.guide.local.InfoPageLocalGuideRepoList;
+import com.feed_the_beast.ftbu.gui.guide.Guides;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -75,7 +75,7 @@ public class FTBUClientEventHandler
     {
         if(FTBUClient.KEY_GUIDE.isPressed())
         {
-            InfoPageLocalGuideRepoList.openGui();
+            Guides.openGui();
         }
 
         if(FTBUClient.KEY_CHUNK_BORDER.isPressed())

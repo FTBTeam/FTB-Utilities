@@ -285,6 +285,12 @@ public class CmdChunks extends CommandTreeBase
     }
 
     @Override
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender)
+    {
+        return true;
+    }
+
+    @Override
     public String getCommandUsage(ICommandSender sender)
     {
         return "command.ftb.chunks.usage";

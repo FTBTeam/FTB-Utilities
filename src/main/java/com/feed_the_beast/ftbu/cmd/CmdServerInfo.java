@@ -1,7 +1,9 @@
 package com.feed_the_beast.ftbu.cmd;
 
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
+import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import com.google.common.collect.ImmutableSetMultimap;
@@ -38,7 +40,7 @@ public class CmdServerInfo extends CommandLM
 
         InfoPage serverInfo = new InfoPage("server_info"); //TODO: Lang
 
-        InfoPage page = serverInfo.getSub("loaded_chunks"); // TODO: Lang
+        IGuiInfoPage page = serverInfo.getSub("loaded_chunks"); // TODO: Lang
 
         for(WorldServer w : DimensionManager.getWorlds())
         {
@@ -62,11 +64,11 @@ public class CmdServerInfo extends CommandLM
                 }
             }
 
-            InfoPage dim = page.getSub(w.provider.getDimensionType().getName());
+            IGuiInfoPage dim = page.getSub(w.provider.getDimensionType().getName());
 
             for(Map.Entry<String, Collection<ChunkPos>> e1 : chunksMap.entrySet())
             {
-                InfoPage mod = dim.getSub(e1.getKey() + " [" + e1.getValue().size() + "]");
+                IGuiInfoPage mod = dim.getSub(e1.getKey() + " [" + e1.getValue().size() + "]");
                 for(ChunkPos c : e1.getValue())
                 {
                     mod.println(c.chunkXPos + ", " + c.chunkZPos + " [ " + c.getCenterXPos() + ", " + c.getCenterZPosition() + " ]");
@@ -74,7 +76,7 @@ public class CmdServerInfo extends CommandLM
             }
         }
 
-        InfoPage list = serverInfo.getSub("entities"); //LANG
+        IGuiInfoPage list = serverInfo.getSub("entities"); //LANG
 
         for(String s : EntityList.NAME_TO_CLASS.keySet())
         {
@@ -95,6 +97,6 @@ public class CmdServerInfo extends CommandLM
             list.println(b.getName() + ": " + b.imageURL);
         }
 
-        serverInfo.displayGuide(ep);
+        FTBLibIntegration.API.displayInfoGui(ep, serverInfo);
     }
 }

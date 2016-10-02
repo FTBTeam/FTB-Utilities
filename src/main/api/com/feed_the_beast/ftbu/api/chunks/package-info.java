@@ -1,3 +1,3 @@
 @javax.annotation.ParametersAreNonnullByDefault
 @mcp.MethodsReturnNonnullByDefault
-package com.feed_the_beast.ftbu.gui.guide.online;
+package com.feed_the_beast.ftbu.api.chunks;

@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbu.net;
 import com.feed_the_beast.ftbl.gui.GuiLoading;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
-import com.feed_the_beast.ftbl.net.MessageDisplayInfo;
+import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.world.ServerInfoFile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
@@ -40,6 +40,6 @@ public class MessageRequestServerInfo extends MessageToServer<MessageRequestServ
     @Override
     public void onMessage(MessageRequestServerInfo m, EntityPlayerMP player)
     {
-        new MessageDisplayInfo(new ServerInfoFile(player)).sendTo(player);
+        FTBLibIntegration.API.displayInfoGui(player, new ServerInfoFile(player));
     }
 }

@@ -17,7 +17,8 @@ import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
+import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
+import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
 import com.feed_the_beast.ftbu.config.FTBUConfigLogin;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
@@ -67,7 +68,7 @@ public class FTBUPlayerEventHandler
                 FTBUConfigLogin.MOTD.getText().forEach(ep::addChatMessage);
             }
 
-            FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().checkUnloaded(null);
+            LoadedChunkStorage.INSTANCE.checkAll();
         }
     }
 
@@ -76,7 +77,7 @@ public class FTBUPlayerEventHandler
     {
         if(event.getPlayer().hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
         {
-            FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().checkUnloaded(null);
+            LoadedChunkStorage.INSTANCE.checkAll();
         }
     }
 
@@ -137,7 +138,7 @@ public class FTBUPlayerEventHandler
 
     public static void updateChunkMessage(EntityPlayerMP player, ChunkDimPos pos)
     {
-        IForgePlayer newTeamOwner = FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().getChunkOwner(pos);
+        IForgePlayer newTeamOwner = ClaimedChunkStorage.INSTANCE.getChunkOwner(pos);
 
         FTBUPlayerData data = FTBLibIntegration.API.getUniverse().getPlayer(player).getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
 
@@ -205,7 +206,7 @@ public class FTBUPlayerEventHandler
         if(event.getEntityPlayer() instanceof EntityPlayerMP)
         {
             EntityPlayerMP player = (EntityPlayerMP) event.getEntityPlayer();
-            if(!FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().canPlayerInteract(player, event.getPos(), MouseButton.RIGHT))
+            if(!ClaimedChunkStorage.INSTANCE.canPlayerInteract(player, event.getPos(), MouseButton.RIGHT))
             {
                 event.setCanceled(true);
             }
@@ -225,7 +226,7 @@ public class FTBUPlayerEventHandler
             EntityPlayerMP player = (EntityPlayerMP) event.getPlayer();
             IBlockState state = player.worldObj.getBlockState(event.getPos());
 
-            if(!FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().canPlayerInteract(player, event.getPos(), MouseButton.LEFT))
+            if(!ClaimedChunkStorage.INSTANCE.canPlayerInteract(player, event.getPos(), MouseButton.LEFT))
             {
                 if(!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_BLOCK_BREAK_PREFIX + FTBUPermissions.formatBlock(state.getBlock()), new PlayerContext(player).set(ContextKeys.POS, event.getPos()).set(ContextKeys.BLOCK_STATE, state)))
                 {
@@ -242,7 +243,7 @@ public class FTBUPlayerEventHandler
         if(event.getPlayer() instanceof EntityPlayerMP)
         {
             EntityPlayerMP player = (EntityPlayerMP) event.getPlayer();
-            if(!FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().canPlayerInteract(player, event.getPos(), event.isPlacing() ? MouseButton.RIGHT : MouseButton.LEFT))
+            if(!ClaimedChunkStorage.INSTANCE.canPlayerInteract(player, event.getPos(), event.isPlacing() ? MouseButton.RIGHT : MouseButton.LEFT))
             {
                 event.setCanceled(true);
             }

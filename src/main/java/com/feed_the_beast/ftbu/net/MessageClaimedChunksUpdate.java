@@ -7,15 +7,15 @@ import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
+import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
-import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
-import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.gui.ClaimedChunks;
 import com.feed_the_beast.ftbu.gui.GuiClaimedChunks;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -41,8 +41,20 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
         IForgePlayer player1 = FTBLibIntegration.API.getUniverse().getPlayer(player);
         IForgeTeam team = player1.getTeam();
 
-        claimedChunks = ClaimedChunkStorage.INSTANCE.getChunks(player1).size();
-        loadedChunks = LoadedChunkStorage.INSTANCE.getLoadedChunks(player1);
+        Collection<IClaimedChunk> chunks = ClaimedChunkStorage.INSTANCE.getChunks(player1);
+
+        claimedChunks = chunks.size();
+
+        loadedChunks = 0;
+
+        for(IClaimedChunk c : chunks)
+        {
+            if(c.isLoaded())
+            {
+                loadedChunks++;
+            }
+        }
+
         //maxClaimedChunks = RankConfigAPI.getRankConfig(player, FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
         //maxLoadedChunks = RankConfigAPI.getRankConfig(player, FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
         maxClaimedChunks = FTBUConfigWorld.MAX_CLAIMED_CHUNKS.getInt();
@@ -67,7 +79,8 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
             {
                 ChunkDimPos pos = new ChunkDimPos(startX + x1, startZ + z1, player.dimension);
                 ClaimedChunks.Data data = new ClaimedChunks.Data();
-                IForgePlayer owner = FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().getChunkOwner(pos);
+                IClaimedChunk chunk = ClaimedChunkStorage.INSTANCE.getChunk(pos);
+                IForgePlayer owner = chunk == null ? null : chunk.getOwner();
 
                 if(owner != null && owner.getTeam() != null)
                 {
@@ -91,7 +104,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
                         data.flags |= ClaimedChunks.DATA_CAN_CLAIM;
                         data.flags |= ClaimedChunks.DATA_OWNER;
 
-                        if(FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().isLoaded(pos, player1))
+                        if(chunk.isLoaded())
                         {
                             data.flags |= ClaimedChunks.DATA_LOADED;
                         }

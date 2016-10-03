@@ -18,9 +18,10 @@ import com.feed_the_beast.ftbu.FTBUCapabilities;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.api.chunks.ModifyChunkEvent;
+import com.feed_the_beast.ftbu.api.chunks.ChunkModifiedEvent;
+import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
+import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
-import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
 import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.badges.BadgeStorage;
@@ -173,7 +174,7 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
         }
         else
         {
-            IForgePlayer owner = FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().getChunkOwner(pos);
+            IForgePlayer owner = ClaimedChunkStorage.INSTANCE.getChunkOwner(pos);
 
             if(owner != null)
             {
@@ -224,27 +225,28 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
             return false;
         }
 
-        IForgePlayer chunkOwner = FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().getChunkOwner(pos);
+        IForgePlayer chunkOwner = ClaimedChunkStorage.INSTANCE.getChunkOwner(pos);
 
         if(chunkOwner != null)
         {
             return false;
         }
 
-        FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().setOwner(pos, player);
-        MinecraftForge.EVENT_BUS.post(new ModifyChunkEvent.Claimed(pos, player));
+        ClaimedChunk chunk = new ClaimedChunk(pos, player, 0);
+        ClaimedChunkStorage.INSTANCE.setChunk(pos, chunk);
+        MinecraftForge.EVENT_BUS.post(new ChunkModifiedEvent.Claimed(chunk));
         return true;
     }
 
     public static boolean unclaimChunk(IForgePlayer player, ChunkDimPos pos)
     {
-        IForgePlayer chunkOwner = FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().getChunkOwner(pos);
+        IClaimedChunk chunk = ClaimedChunkStorage.INSTANCE.getChunk(pos);
 
-        if(chunkOwner != null && chunkOwner.equalsPlayer(player))
+        if(chunk != null && chunk.getOwner().equalsPlayer(player))
         {
             setLoaded(player, pos, false);
-            MinecraftForge.EVENT_BUS.post(new ModifyChunkEvent.Unclaimed(pos, player));
-            FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().setOwner(pos, null);
+            MinecraftForge.EVENT_BUS.post(new ChunkModifiedEvent.Unclaimed(chunk));
+            ClaimedChunkStorage.INSTANCE.setChunk(pos, null);
             return true;
         }
 
@@ -253,26 +255,29 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
 
     public static void unclaimAllChunks(IForgePlayer player, @Nullable Integer dim)
     {
-        for(ChunkDimPos pos : ClaimedChunkStorage.INSTANCE.getChunks(player))
+        for(IClaimedChunk chunk : ClaimedChunkStorage.INSTANCE.getChunks(player))
         {
+            ChunkDimPos pos = chunk.getPos();
             if(dim == null || dim.intValue() == pos.dim)
             {
                 setLoaded(player, pos, false);
-                MinecraftForge.EVENT_BUS.post(new ModifyChunkEvent.Unclaimed(pos, player));
-                FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().setOwner(pos, null);
+                MinecraftForge.EVENT_BUS.post(new ChunkModifiedEvent.Unclaimed(chunk));
+                ClaimedChunkStorage.INSTANCE.setChunk(pos, null);
             }
         }
     }
 
     public static boolean setLoaded(IForgePlayer player, ChunkDimPos pos, boolean flag)
     {
+        IClaimedChunk chunk = ClaimedChunkStorage.INSTANCE.getChunk(pos);
+
+        if(chunk == null || flag == chunk.isLoaded() || !player.equalsPlayer(chunk.getOwner()))
+        {
+            return false;
+        }
+
         if(flag)
         {
-            if(FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().isLoaded(pos, null) || !player.equalsPlayer(FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().getChunkOwner(pos)))
-            {
-                return false;
-            }
-
             if(player.getTeam() == null)
             {
                 EntityPlayerMP ep = player.getPlayer();
@@ -292,27 +297,38 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
 
             //int max = RankConfigAPI.getRankConfig(player.getProfile(), FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
             int max = FTBUConfigWorld.MAX_LOADED_CHUNKS.getInt();
-            if(max == 0 || FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().getLoadedChunks(player) >= max)
+
+            if(max == 0)
             {
                 return false;
+            }
+
+            int loadedChunks = 0;
+
+            for(IClaimedChunk c : ClaimedChunkStorage.INSTANCE.getChunks(player))
+            {
+                if(c.isLoaded())
+                {
+                    loadedChunks++;
+
+                    if(loadedChunks >= max)
+                    {
+                        return false;
+                    }
+                }
             }
         }
         else
         {
-            if(!FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().isLoaded(pos, player))
-            {
-                return false;
-            }
-
-            MinecraftForge.EVENT_BUS.post(new ModifyChunkEvent.Unloaded(pos, player));
+            MinecraftForge.EVENT_BUS.post(new ChunkModifiedEvent.Unloaded(chunk));
         }
 
-        FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().setLoaded(pos, flag ? player : null);
-        FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().checkUnloaded(pos.dim);
+        LoadedChunkStorage.INSTANCE.setLoaded(pos, flag);
+        LoadedChunkStorage.INSTANCE.checkDimension(pos.dim);
 
         if(flag)
         {
-            MinecraftForge.EVENT_BUS.post(new ModifyChunkEvent.Loaded(pos, player));
+            MinecraftForge.EVENT_BUS.post(new ChunkModifiedEvent.Loaded(chunk));
         }
 
         return true;
@@ -320,7 +336,7 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
 
     public void onLoaded()
     {
-        ClaimedChunkStorage.INSTANCE = new ClaimedChunkStorage();
+        ClaimedChunkStorage.INSTANCE.init();
 
         long startMillis = System.currentTimeMillis();
         Backups.INSTANCE.nextBackup = startMillis + FTBUConfigBackups.backupMillis();
@@ -345,7 +361,6 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
     public void onClosed()
     {
         ClaimedChunkStorage.INSTANCE.clear();
-        ClaimedChunkStorage.INSTANCE = null;
         LoadedChunkStorage.INSTANCE.clear();
         LOCAL_BADGES.clear();
         WebAPI.INST.stopAPI();
@@ -439,7 +454,7 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
         if(nextChunkloaderUpdate < now)
         {
             nextChunkloaderUpdate = now + 2L * 3600L;
-            FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().checkUnloaded(null);
+            LoadedChunkStorage.INSTANCE.checkAll();
         }
 
         if(Backups.INSTANCE.thread != null && Backups.INSTANCE.thread.isDone)

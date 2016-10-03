@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBU;
-import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
+import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
 import com.feed_the_beast.ftbu.cmd.CmdAdminHome;
 import com.feed_the_beast.ftbu.cmd.CmdBack;
 import com.feed_the_beast.ftbu.cmd.CmdBackup;
@@ -69,7 +69,7 @@ public class FTBUServerEventHandler
             Ranks.INSTANCE.reload();
 
             FTBUUniverseData.reloadServerBadges();
-            FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().checkUnloaded(null);
+            LoadedChunkStorage.INSTANCE.checkAll();
         }
         else
         {

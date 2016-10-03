@@ -7,7 +7,9 @@ import com.feed_the_beast.ftbl.lib.math.EntityDimPos;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
+import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
+import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
+import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.command.CommandException;
@@ -81,7 +83,7 @@ public class CmdChunks extends CommandTreeBase
             IForgePlayer p = getForgePlayer(player);
             ChunkDimPos pos = new EntityDimPos(player).toBlockDimPos().toChunkPos();
 
-            if(!p.equalsPlayer(FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().getChunkOwner(pos)) && !PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, new BlockPosContext(player, pos.getChunkPos())))
+            if(!p.equalsPlayer(ClaimedChunkStorage.INSTANCE.getChunkOwner(pos)) && !PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, new BlockPosContext(player, pos.getChunkPos())))
             {
                 throw new CommandException("commands.generic.permission");
             }
@@ -222,11 +224,12 @@ public class CmdChunks extends CommandTreeBase
             checkArgs(args, 1, "<player>");
             IForgePlayer p = getForgePlayer(args[0]);
 
-            for(ChunkDimPos chunk : FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().getChunks(p))
+            for(IClaimedChunk chunk : ClaimedChunkStorage.INSTANCE.getChunks(p))
             {
-                FTBUtilitiesAPI_Impl.INSTANCE.getLoadedChunks().setLoaded(chunk, null);
+                chunk.setLoaded(false);
             }
 
+            LoadedChunkStorage.INSTANCE.checkAll();
             ics.addChatMessage(new TextComponentString("Unloaded all " + p.getProfile().getName() + "'s chunks")); //TODO: Lang
         }
     }

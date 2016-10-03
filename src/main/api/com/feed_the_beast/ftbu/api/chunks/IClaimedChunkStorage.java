@@ -8,20 +8,25 @@ import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.Map;
 
 /**
  * Created by LatvianModder on 30.08.2016.
  */
 public interface IClaimedChunkStorage
 {
-    Map<ChunkDimPos, IForgePlayer> getAllChunks();
+    @Nullable
+    IClaimedChunk getChunk(ChunkDimPos pos);
 
-    IForgePlayer getChunkOwner(ChunkDimPos pos);
+    @Nullable
+    default IForgePlayer getChunkOwner(ChunkDimPos pos)
+    {
+        IClaimedChunk c = getChunk(pos);
+        return c == null ? null : c.getOwner();
+    }
 
-    void setOwner(ChunkDimPos pos, @Nullable IForgePlayer owner);
+    void setChunk(ChunkDimPos pos, @Nullable IClaimedChunk chunk);
 
-    Collection<ChunkDimPos> getChunks(@Nullable IForgePlayer player);
+    Collection<IClaimedChunk> getChunks(@Nullable IForgePlayer owner);
 
     boolean canPlayerInteract(EntityPlayerMP player, BlockPos pos, IMouseButton button);
 }

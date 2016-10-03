@@ -8,11 +8,7 @@ import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api.chunks.ILoadedChunk;
-import com.feed_the_beast.ftbu.api.chunks.ILoadedChunkStorage;
-import com.feed_the_beast.ftbu.api.chunks.ITicketContainer;
-import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
-import com.google.common.base.Objects;
+import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
@@ -21,14 +17,13 @@ import net.minecraftforge.common.ForgeChunkManager;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, ILoadedChunkStorage
+public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback
 {
     INSTANCE;
 
-    private final TIntObjectHashMap<TicketContainer> ticketContainers = new TIntObjectHashMap<>();
+    private static final TIntObjectHashMap<ForgeChunkManager.Ticket> TICKET_CONTAINERS = new TIntObjectHashMap<>();
 
     public void init()
     {
@@ -44,167 +39,128 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, ILo
 
     public void clear()
     {
-        ticketContainers.clear();
+        TICKET_CONTAINERS.clear();
     }
 
     @Nullable
-    private ITicketContainer request(int dimID)
+    private ForgeChunkManager.Ticket request(int dimID)
     {
-        TicketContainer ticketContainer = ticketContainers.get(dimID);
+        ForgeChunkManager.Ticket ticket = TICKET_CONTAINERS.get(dimID);
 
-        if(ticketContainer == null)
+        if(ticket == null)
         {
             World world = DimensionManager.getWorld(dimID);
 
             if(world != null)
             {
-                ticketContainer = new TicketContainer(dimID, ForgeChunkManager.requestTicket(FTBU.inst, world, ForgeChunkManager.Type.NORMAL));
-                ticketContainer.load();
-                ticketContainers.put(dimID, ticketContainer);
+                ticket = ForgeChunkManager.requestTicket(FTBU.inst, world, ForgeChunkManager.Type.NORMAL);
+                TICKET_CONTAINERS.put(dimID, ticket);
             }
         }
 
-        return ticketContainer;
+        return ticket;
     }
 
     @Override
     public void ticketsLoaded(List<ForgeChunkManager.Ticket> tickets, World world)
     {
         int dim = world.provider.getDimension();
-        ticketContainers.remove(dim);
+        TICKET_CONTAINERS.remove(dim);
 
-        if(tickets.size() != 1 || !FTBUConfigWorld.CHUNK_LOADING.getBoolean())
+        if(tickets.size() != 1)
         {
             return;
         }
 
         ForgeChunkManager.Ticket ticket = tickets.get(0);
-        TicketContainer ticketContainer = new TicketContainer(world.provider.getDimension(), ticket);
-        ticketContainer.load();
-        ticketContainers.put(dim, ticketContainer);
-
-        for(ILoadedChunk loadedChunk : ticketContainer.getChunks().values())
+        TICKET_CONTAINERS.put(dim, ticket);
+        check(ticket);
+        
+        /*
+        if(FTBUConfigWorld.CHUNK_LOADING.getBoolean())
         {
-            if(Objects.equal(loadedChunk.getOwner(), FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().getChunkOwner(new ChunkDimPos(loadedChunk.getPos(), dim))))
+            for(ChunkPos chunkPos : ticket.getChunkList())
             {
-                ForgeChunkManager.forceChunk(ticket, loadedChunk.getPos());
+                IClaimedChunk chunk = ClaimedChunkStorage.INSTANCE.getChunk(new ChunkDimPos(chunkPos, dim));
+
+                if(chunk != null && chunk.isLoaded())
+                {
+                    ForgeChunkManager.forceChunk(ticket, chunkPos);
+                    chunk.setForced(true);
+                }
             }
-        }
-
-        checkUnloaded(dim);
+        }*/
     }
 
-    @Override
-    @Nullable
-    public ILoadedChunk getChunk(ChunkDimPos pos)
+    public void setLoaded(ChunkDimPos pos, boolean flag)
     {
-        ITicketContainer ticketContainer = ticketContainers.get(pos.dim);
+        ForgeChunkManager.Ticket ticket = TICKET_CONTAINERS.get(pos.dim);
 
-        if(ticketContainer != null)
+        if(!flag)
         {
-            return ticketContainer.getChunks().get(pos.getChunkPos());
-        }
-
-        return null;
-    }
-
-    @Override
-    public boolean isLoaded(ChunkDimPos pos, @Nullable IForgePlayer player)
-    {
-        ILoadedChunk loadedChunk = getChunk(pos);
-        return loadedChunk != null && (player == null || player.equals(loadedChunk.getOwner()));
-    }
-
-    @Override
-    public void setLoaded(ChunkDimPos pos, @Nullable IForgePlayer player)
-    {
-        ITicketContainer ticketContainer = ticketContainers.get(pos.dim);
-
-        if(player == null)
-        {
-            if(ticketContainer != null)
+            if(ticket != null)
             {
                 ChunkPos chunkPos = pos.getChunkPos();
-                ILoadedChunk loadedChunk = ticketContainer.getChunks().get(chunkPos);
+                IClaimedChunk chunk = ClaimedChunkStorage.INSTANCE.getChunk(pos);
 
-                if(loadedChunk != null)
+                if(chunk != null)
                 {
-                    if(loadedChunk.isForced())
+                    if(chunk.isForced())
                     {
-                        ForgeChunkManager.unforceChunk(ticketContainer.getTicket(), chunkPos);
+                        ForgeChunkManager.unforceChunk(ticket, chunkPos);
                     }
-
-                    ticketContainer.getChunks().remove(chunkPos);
-                    ticketContainer.save();
                 }
             }
         }
         else
         {
-            if(ticketContainer == null)
+            if(ticket == null)
             {
-                ticketContainer = request(pos.dim);
+                ticket = request(pos.dim);
             }
 
-            if(ticketContainer != null)
+            if(ticket != null)
             {
-                ILoadedChunk loadedChunk = new LoadedChunk(pos.getChunkPos(), player);
-                loadedChunk.setForced(true);
-                ticketContainer.getChunks().put(loadedChunk.getPos(), loadedChunk);
+                ForgeChunkManager.unforceChunk(ticket, pos.getChunkPos());
             }
         }
     }
 
-    @Override
-    public Collection<ChunkDimPos> getChunks(@Nullable IForgePlayer player)
+    public void checkDimension(int dim)
     {
-        Collection<ChunkDimPos> c = new ArrayList<>();
+        ForgeChunkManager.Ticket ticket = TICKET_CONTAINERS.get(dim);
 
-        for(ITicketContainer ticketContainer : ticketContainers.valueCollection())
+        if(ticket != null)
         {
-            for(ILoadedChunk chunk : ticketContainer.getChunks().values())
-            {
-                if(player == null || (player.equals(chunk.getOwner())))
-                {
-                    c.add(new ChunkDimPos(chunk.getPos(), ticketContainer.getDimension()));
-                }
-            }
+            check(ticket);
         }
-
-        return c;
     }
 
-    @Override
-    public void checkUnloaded(Integer dimID)
+    public void checkAll()
     {
-        if(dimID != null)
+        if(!TICKET_CONTAINERS.isEmpty())
         {
-            TicketContainer ticketContainer = ticketContainers.get(dimID);
-
-            if(ticketContainer != null)
+            for(ForgeChunkManager.Ticket ticket1 : new ArrayList<>(TICKET_CONTAINERS.valueCollection()))
             {
-                checkUnloaded0(ticketContainer);
-            }
-        }
-
-        if(!ticketContainers.isEmpty())
-        {
-            for(TicketContainer ticketContainer : ticketContainers.values(new TicketContainer[ticketContainers.size()]))
-            {
-                checkUnloaded0(ticketContainer);
+                check(ticket1);
             }
         }
     }
 
-    private void checkUnloaded0(ITicketContainer ticketContainer)
+    public void check(ForgeChunkManager.Ticket ticket)
     {
-        for(ILoadedChunk loadedChunk : new ArrayList<>(ticketContainer.getChunks().values()))
+        for(IClaimedChunk chunk : ClaimedChunkStorage.INSTANCE.getChunks(null))
         {
-            boolean isForced = loadedChunk.isForced();
+            if(chunk.getPos().dim != ticket.world.provider.getDimension())
+            {
+                continue;
+            }
+
+            boolean isForced = chunk.isForced();
 
             if(isForced)
             {
-                IForgePlayer owner = FTBLibIntegration.API.getUniverse().getPlayer(loadedChunk.getOwner());
+                IForgePlayer owner = FTBLibIntegration.API.getUniverse().getPlayer(chunk.getOwner());
                 ChunkloaderType type = (ChunkloaderType) RankConfigAPI.getRankConfig(owner.getProfile(), FTBUPermissions.CHUNKLOADER_TYPE).getValue();
 
                 if(type == ChunkloaderType.DISABLED)
@@ -228,7 +184,7 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, ILo
                         {
                             isForced = false;
 
-                            if(loadedChunk.isForced())
+                            if(chunk.isForced())
                             {
                                 FTBU.logger.info("Unloading " + owner.getProfile().getName() + " chunks for being offline for too long");
                             }
@@ -237,42 +193,15 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, ILo
                 }
             }
 
-            if(!isForced && loadedChunk.isForced())
+            if(isForced != chunk.isForced())
             {
-                loadedChunk.setForced(false);
-                ForgeChunkManager.unforceChunk(ticketContainer.getTicket(), loadedChunk.getPos());
+                chunk.setForced(isForced);
+                ForgeChunkManager.unforceChunk(ticket, chunk.getPos().getChunkPos());
             }
-        }
-
-        ticketContainer.save();
-
-        if(ticketContainer.getChunks().isEmpty())
-        {
-            ForgeChunkManager.releaseTicket(ticketContainer.getTicket());
-            ticketContainers.remove(ticketContainer.getDimension());
         }
     }
 
-    @Override
-    public int getLoadedChunks(@Nullable IForgePlayer player)
+    public void checkChunk(IClaimedChunk chunk)
     {
-        Collection<ChunkDimPos> c = FTBUtilitiesAPI_Impl.INSTANCE.getClaimedChunks().getChunks(player);
-
-        if(c.isEmpty())
-        {
-            return 0;
-        }
-
-        int loaded = 0;
-
-        for(ChunkDimPos chunk : c)
-        {
-            if(isLoaded(chunk, player))
-            {
-                loaded++;
-            }
-        }
-
-        return loaded;
     }
 }

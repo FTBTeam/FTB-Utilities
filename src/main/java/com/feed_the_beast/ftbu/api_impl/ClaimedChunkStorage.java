@@ -1,11 +1,13 @@
 package com.feed_the_beast.ftbu.api_impl;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
+import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunkStorage;
 import com.feed_the_beast.ftbu.world.FTBUTeamData;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -22,67 +24,67 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by LatvianModder on 07.06.2016.
  */
-public class ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializable<NBTTagCompound>
+public enum ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializable<NBTTagCompound>
 {
-    public static ClaimedChunkStorage INSTANCE;
+    INSTANCE;
 
-    private final Map<ChunkDimPos, IForgePlayer> map = new HashMap<>();
-    private final Map<ChunkDimPos, IForgePlayer> mapMirror = Collections.unmodifiableMap(map);
+    private static final Map<ChunkDimPos, IClaimedChunk> MAP = new HashMap<>();
+    private static final Map<ChunkDimPos, IClaimedChunk> MAP_MIRROR = Collections.unmodifiableMap(MAP);
+
+    public void init()
+    {
+        clear();
+    }
 
     public void clear()
     {
-        map.clear();
-    }
-
-    @Override
-    public Map<ChunkDimPos, IForgePlayer> getAllChunks()
-    {
-        return mapMirror;
+        MAP.clear();
     }
 
     @Override
     @Nullable
-    public IForgePlayer getChunkOwner(ChunkDimPos pos)
+    public IClaimedChunk getChunk(ChunkDimPos pos)
     {
-        return map.get(pos);
+        return MAP.get(pos);
     }
 
     @Override
-    public void setOwner(ChunkDimPos pos, @Nullable IForgePlayer owner)
+    public void setChunk(ChunkDimPos pos, @Nullable IClaimedChunk chunk)
     {
-        if(owner == null)
+        if(chunk == null)
         {
-            map.remove(pos);
+            MAP.remove(pos);
         }
         else
         {
-            map.put(pos, owner);
+            MAP.put(pos, chunk);
         }
     }
 
     @Override
-    public Collection<ChunkDimPos> getChunks(@Nullable IForgePlayer player)
+    public Collection<IClaimedChunk> getChunks(@Nullable IForgePlayer owner)
     {
-        if(map.isEmpty())
+        if(MAP.isEmpty())
         {
             return Collections.emptyList();
         }
-        else if(player == null)
+        else if(owner == null)
         {
-            return map.keySet();
+            return MAP_MIRROR.values();
         }
 
-        Collection<ChunkDimPos> c = new ArrayList<>();
+        Collection<IClaimedChunk> c = new ArrayList<>();
 
-        map.forEach((key, value) ->
+        MAP.forEach((key, value) ->
         {
-            if(value.equalsPlayer(player))
+            if(value.getOwner().equalsPlayer(owner))
             {
-                c.add(key);
+                c.add(value);
             }
         });
 
@@ -99,33 +101,36 @@ public class ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializab
 
         ChunkDimPos chunkDimPos = new BlockDimPos(pos, entityPlayer.dimension).toChunkPos();
 
-        IForgePlayer owner = getChunkOwner(chunkDimPos);
+        IClaimedChunk chunk = getChunk(chunkDimPos);
 
-        if(owner == null)
+        if(chunk == null)
         {
             return true;
         }
 
         IForgePlayer player = FTBLibIntegration.API.getUniverse().getPlayer(entityPlayer);
 
-        if(owner.equalsPlayer(player))
+        if(chunk.getOwner().equalsPlayer(player))
         {
             return true;
         }
-        else if(owner.getTeam() == null)
+
+        IForgeTeam team = chunk.getOwner().getTeam();
+
+        if(team == null)
         {
             return true;
         }
         else if(player.isFake())
         {
-            return FTBUTeamData.get(owner.getTeam()).allowFakePlayers();
+            return FTBUTeamData.get(team).allowFakePlayers();
         }
         /*else if(p.isOnline() && PermissionAPI.hasPermission(p.getProfile(), FTBLibPermissions.INTERACT_SECURE, false, new Context(p.getPlayer(), pos)))
         {
             return true;
         }*/
 
-        return owner.getTeam().getStatus(player).isAlly();
+        return team.getStatus(player).isAlly();
     }
 
     @Override
@@ -133,31 +138,41 @@ public class ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializab
     {
         NBTTagCompound nbt = new NBTTagCompound();
 
-        Map<IForgePlayer, Collection<ChunkDimPos>> map1 = new HashMap<>();
+        Map<UUID, Collection<IClaimedChunk>> map1 = new HashMap<>();
 
-        map.forEach((key, value) ->
+        MAP.forEach((key, value) ->
         {
-            Collection<ChunkDimPos> c = map1.get(value);
+            Collection<IClaimedChunk> c = map1.get(value.getOwner().getProfile().getId());
 
             if(c == null)
             {
                 c = new ArrayList<>();
-                map1.put(value, c);
+                map1.put(value.getOwner().getProfile().getId(), c);
             }
 
-            c.add(key);
+            c.add(value);
         });
 
         map1.forEach((key, value) ->
         {
             NBTTagList list = new NBTTagList();
 
-            for(ChunkDimPos c : value)
+            for(IClaimedChunk c : value)
             {
-                list.appendTag(new NBTTagIntArray(new int[] {c.dim, c.posX, c.posZ}));
+                ChunkDimPos p = c.getPos();
+                int flags = (value instanceof ClaimedChunk) ? ((ClaimedChunk) value).getFlags() : 0;
+                int ai[] = flags == 0 ? new int[3] : new int[4];
+                ai[0] = p.dim;
+                ai[1] = p.posX;
+                ai[2] = p.posZ;
+                if(flags != 0)
+                {
+                    ai[3] = flags;
+                }
+                list.appendTag(new NBTTagIntArray(ai));
             }
 
-            nbt.setTag(LMStringUtils.fromUUID(key.getProfile().getId()), list);
+            nbt.setTag(LMStringUtils.fromUUID(key), list);
         });
 
         return nbt;
@@ -166,7 +181,7 @@ public class ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializab
     @Override
     public void deserializeNBT(NBTTagCompound nbt)
     {
-        map.clear();
+        MAP.clear();
 
         for(String s : nbt.getKeySet())
         {
@@ -182,7 +197,8 @@ public class ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializab
 
                     if(ai.length >= 3)
                     {
-                        map.put(new ChunkDimPos(ai[1], ai[2], ai[0]), player);
+                        ClaimedChunk chunk = new ClaimedChunk(new ChunkDimPos(ai[1], ai[2], ai[0]), player, ai.length >= 4 ? ai[3] : 0);
+                        MAP.put(chunk.getPos(), chunk);
                     }
                 }
             }

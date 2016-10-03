@@ -9,7 +9,6 @@ import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAddon;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunkStorage;
-import com.feed_the_beast.ftbu.api.chunks.ILoadedChunkStorage;
 import com.feed_the_beast.ftbu.api.leaderboard.ILeaderboard;
 import com.feed_the_beast.ftbu.api.leaderboard.Leaderboard;
 import com.feed_the_beast.ftbu.ranks.DefaultOPRank;
@@ -48,12 +47,6 @@ public enum FTBUtilitiesAPI_Impl implements FTBUtilitiesAPI, IPermissionHandler,
     public IClaimedChunkStorage getClaimedChunks()
     {
         return ClaimedChunkStorage.INSTANCE;
-    }
-
-    @Override
-    public ILoadedChunkStorage getLoadedChunks()
-    {
-        return LoadedChunkStorage.INSTANCE;
     }
 
     @Override

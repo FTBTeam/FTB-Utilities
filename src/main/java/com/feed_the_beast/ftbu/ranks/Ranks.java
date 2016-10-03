@@ -21,6 +21,7 @@ import net.minecraftforge.server.permission.DefaultPermissionLevel;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumMap;
@@ -287,7 +288,6 @@ public enum Ranks
             }
 
             list.add("</table></body></html>");
-
             LMFileUtils.save(new File(LMUtils.folderLocal, "ftbu/all_permissions.html"), list);
         }
         catch(Exception ex)
@@ -301,49 +301,83 @@ public enum Ranks
         try
         {
             list.clear();
-            list.add("# RankConfigs");
-            list.add("");
-            list.add("> ConfigID | Default Player Value | Default OP Value");
-            list.add("");
+            list.add("<html><head><title>Rank Configs</title>");
+            list.add("<style>table{font-family: arial, sans-serif;border-collapse: collapse;}td,th{border:1px solid #666666;text-align: left;padding:8px;}</style>");
+            list.add("</head><body><h1>Rank Configs</h1><table>");
+            list.add("<tr><th>Rank Config</th><th>Def Value</th><th>Def OP Value</th><th>Info</th></tr>");
 
             for(IRankConfig p : sortedRankConfigs)
             {
                 IConfigValue value = p.getDefValue();
-                list.add("> " + p.getName() + " | " + value.getSerializableElement() + " | " + p.getDefOPValue().getSerializableElement());
+                list.add("<tr><td>" + p.getName() + "</td><td>");
+
+                String min = value.getMinValueString();
+                String max = value.getMaxValueString();
+                List<String> variants = value.getVariants();
+
+                if(min != null || max != null || variants != null)
+                {
+                    list.add("<ul><li>Default: ");
+                    list.add(value.getSerializableElement() + "</li>");
+
+                    if(min != null)
+                    {
+                        list.add("<li>Min: " + min + "</li>");
+                    }
+
+                    if(max != null)
+                    {
+                        list.add("<li>Max: " + max + "</li>");
+                    }
+
+                    if(variants != null)
+                    {
+                        list.add("<li>Variants:<ul>");
+                        variants = new ArrayList<>(variants);
+                        Collections.sort(variants, LMStringUtils.IGNORE_CASE_COMPARATOR);
+
+                        for(String s : variants)
+                        {
+                            list.add("<li>" + s + "</li>");
+                        }
+
+                        list.add("</ul></li>");
+                    }
+
+                    list.add("</ul>");
+                }
+                else
+                {
+                    list.add("Default: " + value.getSerializableElement());
+                }
+
+                list.add("</td><td>" + p.getDefOPValue().getSerializableElement() + "</td><td>");
 
                 if(!p.getInfo().isEmpty())
                 {
-                    for(String s : p.getInfo().split("\n"))
+                    String[] info = p.getInfo().split("\n");
+
+                    if(info.length > 1)
                     {
-                        list.add("| " + s);
+                        Arrays.sort(info);
+                        list.add("<ul>");
+                        for(String s1 : info)
+                        {
+                            list.add("<li>" + s1 + "</li>");
+                        }
+                        list.add("</ul>");
+                    }
+                    else
+                    {
+                        list.add(info[0]);
                     }
                 }
 
-                list.add(": Type: " + value.getID());
-
-                String s = value.getMinValueString();
-
-                if(s != null)
-                {
-                    list.add(": Min: " + s);
-                }
-
-                s = value.getMaxValueString();
-
-                if(s != null)
-                {
-                    list.add(": Max: " + s);
-                }
-
-                if(value.getVariants() != null)
-                {
-                    list.add(": Variants: " + value.getVariants());
-                }
-
-                list.add("");
+                list.add("</td></tr>");
             }
 
-            LMFileUtils.save(new File(LMUtils.folderLocal, "ftbu/all_configs.txt"), list);
+            list.add("</table></body></html>");
+            LMFileUtils.save(new File(LMUtils.folderLocal, "ftbu/all_configs.html"), list);
         }
         catch(Exception ex)
         {

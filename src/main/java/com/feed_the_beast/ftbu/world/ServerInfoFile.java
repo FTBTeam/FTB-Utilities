@@ -3,6 +3,8 @@ package com.feed_the_beast.ftbu.world;
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
+import com.feed_the_beast.ftbl.api.rankconfig.IRankConfig;
+import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
@@ -76,6 +78,11 @@ public class ServerInfoFile extends InfoPage
 
         List<IForgePlayer> players = new ArrayList<>();
         players.addAll(FTBLibIntegration.API.getUniverse().getPlayers());
+
+        if(PermissionAPI.hasPermission(ep, FTBUPermissions.DISPLAY_RANK))
+        {
+            println("Your Rank: " + FTBUtilitiesAPI_Impl.INSTANCE.getRank(ep.getGameProfile())); //TODO: Lang
+        }
 
         if(FTBUConfigGeneral.AUTO_RESTART.getBoolean())
         {
@@ -242,19 +249,31 @@ public class ServerInfoFile extends InfoPage
             page.println(t);
         }
 
-        page = getSub("permissions").setTitle(FTBLibLang.MY_PERMISSIONS.textComponent());
-
-        IContext context = new PlayerContext(ep);
-
-        for(String s : PermissionAPI.getPermissionHandler().getRegisteredNodes())
+        if(PermissionAPI.hasPermission(ep, FTBUPermissions.DISPLAY_PERMISSIONS))
         {
-            if(PermissionAPI.hasPermission(self.getProfile(), s, context))
-            {
-                page.println(s);
-            }
-        }
+            page = getSub("permissions").setTitle(FTBLibLang.MY_PERMISSIONS.textComponent());
 
-        Collections.sort(page.getText(), (o1, o2) -> o1.getUnformattedText().compareTo(o2.getUnformattedText()));
+            IContext context = new PlayerContext(ep);
+
+            for(String s : PermissionAPI.getPermissionHandler().getRegisteredNodes())
+            {
+                if(PermissionAPI.hasPermission(self.getProfile(), s, context))
+                {
+                    page.println(s);
+                }
+            }
+
+            Collections.sort(page.getText(), (o1, o2) -> o1.getUnformattedText().compareTo(o2.getUnformattedText()));
+
+            page = getSub("rank_configs").setTitle(new TextComponentString("Rank Configs")); //TODO: Lang
+
+            for(IRankConfig key : RankConfigAPI.getRegistredRankConfigs().values())
+            {
+                page.println(key.getName() + ": " + RankConfigAPI.getRankConfig(ep, key).getSerializableElement());
+            }
+
+            Collections.sort(page.getText(), (o1, o2) -> o1.getUnformattedText().compareTo(o2.getUnformattedText()));
+        }
 
         cleanup();
         sortAll();

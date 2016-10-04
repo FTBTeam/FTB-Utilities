@@ -28,7 +28,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -206,11 +208,12 @@ public class FTBUPlayerEventHandler
         if(event.getEntityPlayer() instanceof EntityPlayerMP)
         {
             EntityPlayerMP player = (EntityPlayerMP) event.getEntityPlayer();
-            IBlockState state = player.worldObj.getBlockState(event.getPos());
+            BlockPos pos = event.getPos().offset(event.getFace() == null ? EnumFacing.UP : event.getFace());
+            IBlockState state = player.worldObj.getBlockState(pos);
 
-            if(!ClaimedChunkStorage.INSTANCE.canPlayerInteract(player, event.getPos(), MouseButton.RIGHT))
+            if(!ClaimedChunkStorage.INSTANCE.canPlayerInteract(player, pos, MouseButton.RIGHT))
             {
-                if(!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_BLOCK_INTERACT_PREFIX + FTBUPermissions.formatBlock(state.getBlock()), new PlayerContext(player).set(ContextKeys.POS, event.getPos()).set(ContextKeys.BLOCK_STATE, state)))
+                if(!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_BLOCK_INTERACT_PREFIX + FTBUPermissions.formatBlock(state.getBlock()), new PlayerContext(player).set(ContextKeys.POS, pos).set(ContextKeys.BLOCK_STATE, state)))
                 {
                     event.setCanceled(true);
                 }
@@ -229,11 +232,12 @@ public class FTBUPlayerEventHandler
         if(event.getPlayer() instanceof EntityPlayerMP)
         {
             EntityPlayerMP player = (EntityPlayerMP) event.getPlayer();
-            IBlockState state = player.worldObj.getBlockState(event.getPos());
+            BlockPos pos = event.getPos();
+            IBlockState state = player.worldObj.getBlockState(pos);
 
-            if(!ClaimedChunkStorage.INSTANCE.canPlayerInteract(player, event.getPos(), MouseButton.LEFT))
+            if(!ClaimedChunkStorage.INSTANCE.canPlayerInteract(player, pos, MouseButton.LEFT))
             {
-                if(!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_BLOCK_BREAK_PREFIX + FTBUPermissions.formatBlock(state.getBlock()), new PlayerContext(player).set(ContextKeys.POS, event.getPos()).set(ContextKeys.BLOCK_STATE, state)))
+                if(!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_BLOCK_BREAK_PREFIX + FTBUPermissions.formatBlock(state.getBlock()), new PlayerContext(player).set(ContextKeys.POS, pos).set(ContextKeys.BLOCK_STATE, state)))
                 {
                     event.setCanceled(true);
                 }
@@ -248,9 +252,10 @@ public class FTBUPlayerEventHandler
         if(event.getPlayer() instanceof EntityPlayerMP)
         {
             EntityPlayerMP player = (EntityPlayerMP) event.getPlayer();
-            if(!ClaimedChunkStorage.INSTANCE.canPlayerInteract(player, event.getPos(), event.isPlacing() ? MouseButton.RIGHT : MouseButton.LEFT))
+            BlockPos pos = event.getPos();
+            if(!ClaimedChunkStorage.INSTANCE.canPlayerInteract(player, pos, event.isPlacing() ? MouseButton.RIGHT : MouseButton.LEFT))
             {
-                if(!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_BLOCK_CNB, new PlayerContext(player).set(ContextKeys.POS, event.getPos())))
+                if(!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_BLOCK_CNB, new PlayerContext(player).set(ContextKeys.POS, pos)))
                 {
                     event.setCanceled(true);
                 }

@@ -1,8 +1,11 @@
 package com.feed_the_beast.ftbu.api_impl;
 
+import com.feed_the_beast.ftbl.FTBLibStats;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.io.Bits;
+import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
+import com.feed_the_beast.ftbu.FTBU;
+import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 
 /**
@@ -10,18 +13,14 @@ import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
  */
 public class ClaimedChunk implements IClaimedChunk
 {
-    private static final byte FLAG_LOADED = 1;
-    private static final byte FLAG_FORCED = 2;
-
     private final ChunkDimPos pos;
     private final IForgePlayer owner;
-    private byte flags;
+    private boolean loaded, forced;
 
-    public ClaimedChunk(ChunkDimPos c, IForgePlayer p, int f)
+    public ClaimedChunk(ChunkDimPos c, IForgePlayer p)
     {
         pos = c;
         owner = p;
-        flags = 0;
     }
 
     @Override
@@ -39,27 +38,64 @@ public class ClaimedChunk implements IClaimedChunk
     @Override
     public boolean isLoaded()
     {
-        return Bits.getFlag(flags, FLAG_LOADED);
+        return loaded;
     }
 
+    @Override
     public void setLoaded(boolean v)
     {
-        flags = Bits.setFlag(flags, FLAG_LOADED, v);
+        loaded = v;
+    }
+
+    @Override
+    public boolean isActuallyLoaded()
+    {
+        boolean loaded = isLoaded();
+
+        if(loaded)
+        {
+            switch((ChunkloaderType) RankConfigAPI.getRankConfig(owner.getProfile(), FTBUPermissions.CHUNKLOADER_TYPE).getValue())
+            {
+                case ONLINE:
+                    if(!owner.isOnline())
+                    {
+                        loaded = false;
+                    }
+                    break;
+                case OFFLINE:
+                    if(!owner.isOnline())
+                    {
+                        double max = RankConfigAPI.getRankConfig(owner.getProfile(), FTBUPermissions.CHUNKLOADER_OFFLINE_TIMER).getDouble();
+
+                        if(max > 0D && FTBLibStats.getLastSeenDeltaInHours(owner.stats(), false) > max)
+                        {
+                            loaded = false;
+
+                            if(isForced())
+                            {
+                                FTBU.logger.info("Unloading " + owner.getProfile().getName() + " chunks for being offline for too long");
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    loaded = false;
+
+            }
+        }
+
+        return loaded;
     }
 
     @Override
     public boolean isForced()
     {
-        return Bits.getFlag(flags, FLAG_FORCED);
+        return forced;
     }
 
+    @Override
     public void setForced(boolean v)
     {
-        flags = Bits.setFlag(flags, FLAG_FORCED, v);
-    }
-
-    public int getFlags()
-    {
-        return Bits.setFlag(flags, FLAG_FORCED, false);
+        forced = v;
     }
 }

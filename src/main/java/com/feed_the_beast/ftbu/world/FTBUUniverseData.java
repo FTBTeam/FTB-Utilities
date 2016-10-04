@@ -232,7 +232,7 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
             return false;
         }
 
-        ClaimedChunk chunk = new ClaimedChunk(pos, player, 0);
+        ClaimedChunk chunk = new ClaimedChunk(pos, player);
         ClaimedChunkStorage.INSTANCE.setChunk(pos, chunk);
         MinecraftForge.EVENT_BUS.post(new ChunkModifiedEvent.Claimed(chunk));
         return true;
@@ -323,8 +323,8 @@ public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>
             MinecraftForge.EVENT_BUS.post(new ChunkModifiedEvent.Unloaded(chunk));
         }
 
-        LoadedChunkStorage.INSTANCE.setLoaded(pos, flag);
-        LoadedChunkStorage.INSTANCE.checkDimension(pos.dim);
+        chunk.setLoaded(flag);
+        LoadedChunkStorage.INSTANCE.checkChunk(chunk, null);
 
         if(flag)
         {

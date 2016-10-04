@@ -160,15 +160,17 @@ public enum ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializabl
             for(IClaimedChunk c : value)
             {
                 ChunkDimPos p = c.getPos();
-                int flags = (value instanceof ClaimedChunk) ? ((ClaimedChunk) value).getFlags() : 0;
-                int ai[] = flags == 0 ? new int[3] : new int[4];
+                boolean loaded = c.isLoaded();
+                int ai[] = loaded ? new int[4] : new int[3];
                 ai[0] = p.dim;
                 ai[1] = p.posX;
                 ai[2] = p.posZ;
-                if(flags != 0)
+
+                if(loaded)
                 {
-                    ai[3] = flags;
+                    ai[3] = 1;
                 }
+
                 list.appendTag(new NBTTagIntArray(ai));
             }
 
@@ -197,7 +199,13 @@ public enum ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializabl
 
                     if(ai.length >= 3)
                     {
-                        ClaimedChunk chunk = new ClaimedChunk(new ChunkDimPos(ai[1], ai[2], ai[0]), player, ai.length >= 4 ? ai[3] : 0);
+                        ClaimedChunk chunk = new ClaimedChunk(new ChunkDimPos(ai[1], ai[2], ai[0]), player);
+
+                        if(ai.length >= 4 && ai[3] != 0)
+                        {
+                            chunk.setLoaded(true);
+                        }
+
                         MAP.put(chunk.getPos(), chunk);
                     }
                 }

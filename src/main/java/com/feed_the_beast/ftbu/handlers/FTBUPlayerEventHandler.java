@@ -206,9 +206,14 @@ public class FTBUPlayerEventHandler
         if(event.getEntityPlayer() instanceof EntityPlayerMP)
         {
             EntityPlayerMP player = (EntityPlayerMP) event.getEntityPlayer();
+            IBlockState state = player.worldObj.getBlockState(event.getPos());
+
             if(!ClaimedChunkStorage.INSTANCE.canPlayerInteract(player, event.getPos(), MouseButton.RIGHT))
             {
-                event.setCanceled(true);
+                if(!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_BLOCK_INTERACT_PREFIX + FTBUPermissions.formatBlock(state.getBlock()), new PlayerContext(player).set(ContextKeys.POS, event.getPos()).set(ContextKeys.BLOCK_STATE, state)))
+                {
+                    event.setCanceled(true);
+                }
             }
         }
     }
@@ -245,7 +250,10 @@ public class FTBUPlayerEventHandler
             EntityPlayerMP player = (EntityPlayerMP) event.getPlayer();
             if(!ClaimedChunkStorage.INSTANCE.canPlayerInteract(player, event.getPos(), event.isPlacing() ? MouseButton.RIGHT : MouseButton.LEFT))
             {
-                event.setCanceled(true);
+                if(!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_BLOCK_CNB, new PlayerContext(player).set(ContextKeys.POS, event.getPos())))
+                {
+                    event.setCanceled(true);
+                }
             }
         }
     }

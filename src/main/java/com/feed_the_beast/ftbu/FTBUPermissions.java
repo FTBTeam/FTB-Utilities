@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbl.lib.config.PropertyShort;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbu.api_impl.ChunkloaderType;
+import com.feed_the_beast.ftbu.ranks.Ranks;
 import net.minecraft.block.Block;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.DimensionManager;
@@ -58,6 +59,10 @@ public class FTBUPermissions
 
     public static final String CLAIMS_BLOCK_BREAK_PREFIX = "ftbu.claims.block.break.";
 
+    public static final String CLAIMS_BLOCK_INTERACT_PREFIX = "ftbu.claims.block.interact.";
+
+    public static final String CLAIMS_BLOCK_CNB = PermissionAPI.registerNode("ftbu.claims.block.cnb", DefaultPermissionLevel.OP, "Allow to edit C&B bits in claimed chunks");
+
     public static final String CLAIMS_DIMENSION_ALLOWED_PREFIX = "ftbu.claims.dimension_allowed.";
 
     // Chunkloader //
@@ -80,12 +85,21 @@ public class FTBUPermissions
     public static void init()
     {
         final Map<String, DefaultPermissionLevel> levels = new HashMap<>();
-        Block.REGISTRY.iterator().forEachRemaining(block -> levels.put(CLAIMS_BLOCK_BREAK_PREFIX + formatBlock(block), DefaultPermissionLevel.OP));
+        Block.REGISTRY.iterator().forEachRemaining(block ->
+        {
+            String blockName = formatBlock(block);
+            levels.put(CLAIMS_BLOCK_BREAK_PREFIX + blockName, DefaultPermissionLevel.OP);
+            levels.put(CLAIMS_BLOCK_INTERACT_PREFIX + blockName, DefaultPermissionLevel.OP);
+        });
 
         levels.put(CLAIMS_BLOCK_BREAK_PREFIX + "gravestone.gravestone", DefaultPermissionLevel.ALL);
         levels.put(CLAIMS_BLOCK_BREAK_PREFIX + "graves.gravestone", DefaultPermissionLevel.ALL);
         levels.put(CLAIMS_BLOCK_BREAK_PREFIX + "graves.graveslave", DefaultPermissionLevel.ALL);
         levels.put(CLAIMS_BLOCK_BREAK_PREFIX + "graves.headstone", DefaultPermissionLevel.ALL);
+
+        levels.put(CLAIMS_BLOCK_INTERACT_PREFIX + "minecraft.crafting_table", DefaultPermissionLevel.ALL);
+        levels.put(CLAIMS_BLOCK_INTERACT_PREFIX + "minecraft.anvil", DefaultPermissionLevel.ALL);
+        levels.put(CLAIMS_BLOCK_INTERACT_PREFIX + "minecraft.wooden_door", DefaultPermissionLevel.ALL);
 
         for(int i : DimensionManager.getStaticDimensionIDs())
         {
@@ -95,6 +109,10 @@ public class FTBUPermissions
         levels.put(CLAIMS_DIMENSION_ALLOWED_PREFIX + "1", DefaultPermissionLevel.OP);
 
         levels.forEach((key, value) -> PermissionAPI.registerNode(key, value, ""));
+
+        Ranks.INSTANCE.registerCustomPermPrefix(new Ranks.NodeEntry(CLAIMS_BLOCK_BREAK_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can break in claimed chunks"));
+        Ranks.INSTANCE.registerCustomPermPrefix(new Ranks.NodeEntry(CLAIMS_BLOCK_INTERACT_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can interact with in claimed chunks"));
+        Ranks.INSTANCE.registerCustomPermPrefix(new Ranks.NodeEntry(CLAIMS_DIMENSION_ALLOWED_PREFIX, DefaultPermissionLevel.ALL, "Permission for dimensions where claiming chunks is allowed"));
     }
 
     public static String formatBlock(Block block)

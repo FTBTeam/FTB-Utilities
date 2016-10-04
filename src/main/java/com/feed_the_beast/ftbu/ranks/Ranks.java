@@ -36,10 +36,44 @@ public enum Ranks
 {
     INSTANCE;
 
+    public static class NodeEntry
+    {
+        private static final Comparator<NodeEntry> COMPARATOR = (o1, o2) -> o1.node.compareToIgnoreCase(o2.node);
+        private static final Map<DefaultPermissionLevel, String> COLOR_MAP = new EnumMap<>(DefaultPermissionLevel.class);
+
+        static
+        {
+            COLOR_MAP.put(DefaultPermissionLevel.ALL, "bgcolor=\"#72FF85\"");
+            COLOR_MAP.put(DefaultPermissionLevel.OP, "bgcolor=\"#42A3FF\"");
+            COLOR_MAP.put(DefaultPermissionLevel.NONE, "bgcolor=\"#FF4242\"");
+        }
+
+        private String node;
+        private DefaultPermissionLevel level;
+        private String desc;
+
+        public NodeEntry()
+        {
+        }
+
+        public NodeEntry(String n, DefaultPermissionLevel l, String d)
+        {
+            node = n;
+            level = l;
+            desc = d;
+        }
+    }
+
     public final Map<String, IRank> RANKS = new LinkedHashMap<>();
     public final Map<UUID, IRank> PLAYER_MAP = new HashMap<>();
     public IRank defaultRank;
     public IConfigTree ranksConfigTree;
+    private final Map<String, NodeEntry> CUSTOM_PERM_PREFIX_REGISTRY = new HashMap<>();
+
+    public void registerCustomPermPrefix(NodeEntry entry)
+    {
+        CUSTOM_PERM_PREFIX_REGISTRY.put(entry.node, entry);
+    }
 
     public void reload()
     {
@@ -164,23 +198,6 @@ public enum Ranks
             o.add(DefaultOPRank.INSTANCE.getName(), DefaultOPRank.INSTANCE.getSerializableElement());
             LMJsonUtils.toJson(new File(LMUtils.folderLocal, "ftbu/default_ranks.json"), o);
         }
-    }
-
-    private static class NodeEntry
-    {
-        private static final Comparator<NodeEntry> COMPARATOR = (o1, o2) -> o1.node.compareToIgnoreCase(o2.node);
-        private static final Map<DefaultPermissionLevel, String> COLOR_MAP = new EnumMap<>(DefaultPermissionLevel.class);
-
-        static
-        {
-            COLOR_MAP.put(DefaultPermissionLevel.ALL, "bgcolor=\"#72FF85\"");
-            COLOR_MAP.put(DefaultPermissionLevel.OP, "bgcolor=\"#42A3FF\"");
-            COLOR_MAP.put(DefaultPermissionLevel.NONE, "bgcolor=\"#FF4242\"");
-        }
-
-        private String node;
-        private DefaultPermissionLevel level;
-        private String desc;
     }
 
     public void generateExampleFiles()

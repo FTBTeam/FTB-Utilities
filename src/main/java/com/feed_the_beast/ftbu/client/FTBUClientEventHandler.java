@@ -181,13 +181,17 @@ public class FTBUClientEventHandler
                     GlStateManager.color(1F, 1F, 1F, 1F);
                     FTBLibClient.setTexture(FTBUClientConfig.LIGHT_VALUE_TEXTURE_X.getBoolean() ? TEXTURE_LIGHT_VALUE_X : TEXTURE_LIGHT_VALUE_O);
 
+                    GlStateManager.pushMatrix();
+                    MobSpawnPos firstPos = lightList.iterator().next();
+                    GlStateManager.translate(firstPos.getX(), 0D, firstPos.getZ());
+
                     buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 
                     for(MobSpawnPos pos : lightList)
                     {
-                        double bx = pos.getX();
+                        double bx = pos.getX() - firstPos.getX();
                         double by = pos.getY() + 0.03D;
-                        double bz = pos.getZ();
+                        double bz = pos.getZ() - firstPos.getZ();
 
                         float green = pos.alwaysSpawns ? 0.2F : 1F;
                         buffer.pos(bx, by, bz).tex(0D, 0D).color(1F, green, 0.2F, 1F).endVertex();
@@ -197,6 +201,8 @@ public class FTBUClientEventHandler
                     }
 
                     tessellator.draw();
+
+                    GlStateManager.popMatrix();
 
                     GlStateManager.color(1F, 1F, 1F, 1F);
 

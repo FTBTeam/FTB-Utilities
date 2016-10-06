@@ -1,9 +1,13 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
+import com.feed_the_beast.ftbl.api.info.IPageIconRenderer;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.feed_the_beast.ftbl.gui.GuiLoading;
 import com.feed_the_beast.ftbl.lib.info.InfoPageHelper;
+import com.feed_the_beast.ftbl.lib.info.ItemPageIconRenderer;
+import com.feed_the_beast.ftbl.lib.info.TexturePageIconRenderer;
+import com.feed_the_beast.ftbl.lib.info.WrappedImageProvider;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
@@ -11,6 +15,7 @@ import com.feed_the_beast.ftbu.api.guide.ClientGuideEvent;
 import com.feed_the_beast.ftbu.api.guide.GuideFormat;
 import com.feed_the_beast.ftbu.api.guide.IGuide;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
@@ -198,8 +203,42 @@ public class Guides
         {
             for(JsonElement e : LMJsonUtils.fromJson(new InputStreamReader(resourceManager.getResource(new ResourceLocation(domain, parentDir + "/pages.json")).getInputStream())).getAsJsonArray())
             {
-                IGuiInfoPage page1 = page.getSub(e.getAsString());
-                page1.setTitle(new TextComponentTranslation(domain + '.' + parentDir.replace('/', '.') + "." + page1.getName()));
+                IGuiInfoPage page1;
+
+                if(e.isJsonObject())
+                {
+                    JsonObject o = e.getAsJsonObject();
+
+                    IPageIconRenderer pageIcon = null;
+
+                    if(o.has("icon"))
+                    {
+                        pageIcon = new TexturePageIconRenderer(new WrappedImageProvider(new ResourceLocation(o.get("icon").getAsString())));
+                    }
+                    else if(o.has("icon_item"))
+                    {
+                        pageIcon = new ItemPageIconRenderer(o.get("icon_item").getAsString());
+                    }
+
+                    page1 = new InfoPageGuide.Page(o.get("id").getAsString(), pageIcon);
+
+                    if(o.has("lang"))
+                    {
+                        page1.setTitle(new TextComponentTranslation(o.get("lang").getAsString()));
+                    }
+                    else
+                    {
+                        page1.setTitle(new TextComponentTranslation(domain + '.' + parentDir.replace('/', '.') + "." + page1.getName()));
+                    }
+
+                    page.addSub(page1);
+                }
+                else
+                {
+                    page1 = page.getSub(e.getAsString());
+                    page1.setTitle(new TextComponentTranslation(domain + '.' + parentDir.replace('/', '.') + "." + page1.getName()));
+                }
+
                 loadTree(resourceManager, domain, page1, format, parentDir + "/" + page1.getName());
             }
         }

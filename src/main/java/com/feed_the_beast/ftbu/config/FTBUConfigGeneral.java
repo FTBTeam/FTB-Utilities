@@ -5,10 +5,15 @@ import com.feed_the_beast.ftbl.api.config.ConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigFileProvider;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyDouble;
+import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FTBUConfigGeneral
 {
@@ -35,4 +40,20 @@ public class FTBUConfigGeneral
 
     @ConfigValue(id = "general.server_info.mode", file = FTBUFinals.MOD_ID)
     public static final PropertyBool SERVER_INFO_MODE = new PropertyBool(true);
+
+    private static final Map<String, ITextComponent> DEF_CHAT_SUB_MAP = new HashMap<>();
+
+    static
+    {
+        DEF_CHAT_SUB_MAP.put("shrug", new TextComponentString("¯\\_(ツ)_/¯"));
+    }
+
+    @ConfigValue(id = "general.chat.substitute_prefix", file = FTBUFinals.MOD_ID)
+    public static final PropertyString CHAT_SUBSTITUTE_PREFIX = new PropertyString("!");
+
+    @ConfigValue(id = "general.chat.substitutes", file = FTBUFinals.MOD_ID)
+    public static final PropertyChatSubstituteList CHAT_SUBSTITUTES = new PropertyChatSubstituteList(DEF_CHAT_SUB_MAP);
+
+    @ConfigValue(id = "general.chat.enable_links", file = FTBUFinals.MOD_ID)
+    public static final PropertyBool ENABLE_LINKS = new PropertyBool(true);
 }

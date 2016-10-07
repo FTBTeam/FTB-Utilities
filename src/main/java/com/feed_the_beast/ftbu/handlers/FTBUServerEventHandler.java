@@ -26,6 +26,7 @@ import com.feed_the_beast.ftbu.cmd.CmdSpawn;
 import com.feed_the_beast.ftbu.cmd.CmdTplast;
 import com.feed_the_beast.ftbu.cmd.CmdTrashCan;
 import com.feed_the_beast.ftbu.cmd.CmdWarp;
+import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
@@ -108,11 +109,30 @@ public class FTBUServerEventHandler
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onServerChatEvent(ServerChatEvent e)
     {
-        String[] msg = LMUtils.removeFormatting(e.getMessage()).split(" "); // https://github.com/LatvianModder
+        String msg = e.getMessage().trim();
+
+        if(msg.startsWith(FTBUConfigGeneral.CHAT_SUBSTITUTE_PREFIX.getString()))
+        {
+            ITextComponent replacement = FTBUConfigGeneral.CHAT_SUBSTITUTES.value.get(msg.substring(FTBUConfigGeneral.CHAT_SUBSTITUTE_PREFIX.getString().length()));
+
+            if(replacement != null)
+            {
+                e.setComponent(replacement);
+                e.setCanceled(true);
+                return;
+            }
+        }
+
+        if(!FTBUConfigGeneral.ENABLE_LINKS.getBoolean())
+        {
+            return;
+        }
+
+        String[] splitMsg = LMUtils.removeFormatting(msg).split(" "); // https://github.com/LatvianModder
 
         List<String> links = new ArrayList<>();
 
-        for(String s : msg)
+        for(String s : splitMsg)
         {
             int index = getFirstLinkIndex(s);
             if(index != -1)

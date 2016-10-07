@@ -18,9 +18,10 @@ import javax.annotation.Nullable;
  */
 public class CmdEditRanks extends CmdEditConfigBase
 {
-    public CmdEditRanks()
+    @Override
+    public String getCommandName()
     {
-        super("edit_ranks");
+        return "edit_ranks";
     }
 
     @Override

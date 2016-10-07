@@ -33,9 +33,10 @@ public class CmdChunks extends CommandTreeBase
 
     public class CmdClaim extends CommandLM
     {
-        public CmdClaim()
+        @Override
+        public String getCommandName()
         {
-            super("claim");
+            return "claim";
         }
 
         @Override
@@ -65,9 +66,10 @@ public class CmdChunks extends CommandTreeBase
 
     public class CmdUnclaim extends CommandLM
     {
-        public CmdUnclaim()
+        @Override
+        public String getCommandName()
         {
-            super("unclaim");
+            return "unclaim";
         }
 
         @Override
@@ -102,9 +104,10 @@ public class CmdChunks extends CommandTreeBase
 
     public class CmdLoad extends CommandLM
     {
-        public CmdLoad()
+        @Override
+        public String getCommandName()
         {
-            super("load");
+            return "load";
         }
 
         @Override
@@ -134,9 +137,10 @@ public class CmdChunks extends CommandTreeBase
 
     public class CmdUnload extends CommandLM
     {
-        public CmdUnload()
+        @Override
+        public String getCommandName()
         {
-            super("unload");
+            return "unload";
         }
 
         @Override
@@ -166,9 +170,10 @@ public class CmdChunks extends CommandTreeBase
 
     public class CmdUnclaimAll extends CommandLM
     {
-        public CmdUnclaimAll()
+        @Override
+        public String getCommandName()
         {
-            super("unclaim_all");
+            return "unclaim_all";
         }
 
         @Override
@@ -207,9 +212,10 @@ public class CmdChunks extends CommandTreeBase
 
     public class CmdUnloadAll extends CommandLM
     {
-        public CmdUnloadAll()
+        @Override
+        public String getCommandName()
         {
-            super("admin_unload_all");
+            return "admin_unload_all";
         }
 
         @Override
@@ -236,15 +242,16 @@ public class CmdChunks extends CommandTreeBase
 
     public class CmdAdminUnclaimAll extends CommandLM
     {
-        public CmdAdminUnclaimAll()
+        @Override
+        public String getCommandName()
         {
-            super("admin_unclaim_all");
+            return "admin_unclaim_all";
         }
 
         @Override
         public String getCommandUsage(ICommandSender ics)
         {
-            return '/' + commandName + " <player | @a>";
+            return '/' + getCommandName() + " <player | @a>";
         }
 
         @Override

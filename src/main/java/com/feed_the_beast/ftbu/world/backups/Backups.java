@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbu.world.backups;
 
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
+import com.feed_the_beast.ftbl.lib.util.LMFileUtils;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
@@ -84,7 +85,7 @@ public enum Backups
 
                         if(FTBUConfigBackups.COMPRESSION_LEVEL.getInt() > 0)
                         {
-                            s += "/backup.zip";
+                            s += ".zip";
                         }
 
                         backups.add(new Backup(c.getTimeInMillis(), s, ++index, true));
@@ -152,16 +153,27 @@ public enum Backups
         {
             Collections.sort(backups, Backup.COMPARATOR);
 
-            int size = FTBUConfigBackups.BACKUPS_TO_KEEP.getInt() - backups.size();
-            backups.forEach(b -> LOGGER.info(b.time + ": " + b.fileID));
-
-            if(size > 0)
+            if(backups.size() > FTBUConfigBackups.BACKUPS_TO_KEEP.getInt())
             {
-                size = Math.min(size, backups.size());
+                int toDelete = backups.size() - FTBUConfigBackups.BACKUPS_TO_KEEP.getInt();
 
-                for(int i = 0; i < size; i++)
+                if(toDelete > 0)
                 {
-                    LOGGER.info("Deleting " + backups.get(i).fileID);
+                    for(int i = toDelete - 1; i >= 0; i--)
+                    {
+                        Backup b = backups.get(i);
+                        LOGGER.info("Deleting " + b.fileID);
+                        LMFileUtils.delete(b.getFile());
+                        backups.remove(i);
+                    }
+                }
+            }
+
+            for(int i = backups.size() - 1; i >= 0; i--)
+            {
+                if(!backups.get(i).getFile().exists())
+                {
+                    backups.remove(i);
                 }
             }
 

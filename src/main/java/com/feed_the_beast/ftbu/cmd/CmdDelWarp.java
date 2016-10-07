@@ -14,15 +14,16 @@ import java.util.List;
 
 public class CmdDelWarp extends CommandLM
 {
-    public CmdDelWarp()
+    @Override
+    public String getCommandName()
     {
-        super("delwarp");
+        return "delwarp";
     }
 
     @Override
     public String getCommandUsage(ICommandSender ics)
     {
-        return '/' + commandName + " <ID>";
+        return '/' + getCommandName() + " <ID>";
     }
 
     @Override

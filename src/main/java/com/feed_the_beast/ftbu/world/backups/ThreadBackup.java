@@ -39,7 +39,7 @@ public class ThreadBackup extends Thread
         appendNum(out, time.get(Calendar.DAY_OF_MONTH), '-');
         appendNum(out, time.get(Calendar.HOUR_OF_DAY), '-');
         appendNum(out, time.get(Calendar.MINUTE), '-');
-        appendNum(out, time.get(Calendar.SECOND), File.separatorChar);
+        appendNum(out, time.get(Calendar.SECOND), (char) 0);
 
         try
         {
@@ -50,7 +50,7 @@ public class ThreadBackup extends Thread
 
             if(FTBUConfigBackups.COMPRESSION_LEVEL.getInt() > 0)
             {
-                out.append("backup.zip");
+                out.append(".zip");
                 dstFile = LMFileUtils.newFile(new File(Backups.INSTANCE.backupsFolder, out.toString()));
 
                 long start = System.currentTimeMillis();
@@ -97,6 +97,7 @@ public class ThreadBackup extends Thread
             }
             else
             {
+                out.append('/');
                 out.append(src.getName());
                 dstFile = new File(Backups.INSTANCE.backupsFolder, out.toString());
                 dstFile.mkdirs();

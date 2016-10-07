@@ -15,15 +15,16 @@ import net.minecraft.util.math.Vec3d;
 
 public class CmdTplast extends CommandLM
 {
-    public CmdTplast()
+    @Override
+    public String getCommandName()
     {
-        super("tpl");
+        return "tpl";
     }
 
     @Override
     public String getCommandUsage(ICommandSender ics)
     {
-        return '/' + commandName + " [who] <to>";
+        return '/' + getCommandName() + " [who] <to>";
     }
 
     @Override

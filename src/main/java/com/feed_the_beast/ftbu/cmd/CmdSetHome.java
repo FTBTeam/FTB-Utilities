@@ -19,9 +19,10 @@ import java.util.List;
 
 public class CmdSetHome extends CommandLM
 {
-    public CmdSetHome()
+    @Override
+    public String getCommandName()
     {
-        super("sethome");
+        return "sethome";
     }
 
     @Override
@@ -33,7 +34,7 @@ public class CmdSetHome extends CommandLM
     @Override
     public String getCommandUsage(ICommandSender ics)
     {
-        return '/' + commandName + " <ID>";
+        return '/' + getCommandName() + " <ID>";
     }
 
     @Override

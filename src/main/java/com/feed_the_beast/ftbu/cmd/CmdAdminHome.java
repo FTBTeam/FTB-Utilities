@@ -17,9 +17,10 @@ public class CmdAdminHome extends CommandTreeBase
 {
     public static class CmdTP extends CommandLM
     {
-        public CmdTP()
+        @Override
+        public String getCommandName()
         {
-            super("tp");
+            return "tp";
         }
 
         @Override
@@ -50,9 +51,10 @@ public class CmdAdminHome extends CommandTreeBase
 
     public static class CmdList extends CommandLM
     {
-        public CmdList()
+        @Override
+        public String getCommandName()
         {
-            super("list");
+            return "list";
         }
 
         @Override
@@ -72,9 +74,10 @@ public class CmdAdminHome extends CommandTreeBase
 
     public static class CmdRem extends CommandLM
     {
-        public CmdRem()
+        @Override
+        public String getCommandName()
         {
-            super("remove");
+            return "remove";
         }
 
         @Override

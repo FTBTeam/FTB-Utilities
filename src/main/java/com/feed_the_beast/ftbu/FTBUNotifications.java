@@ -67,7 +67,7 @@ public class FTBUNotifications
         Notification n = new Notification(WILDERNESS.getID(), (byte) 1);
         n.addText(msg);
 
-        if(team.getDesc() != null)
+        if(!team.getDesc().isEmpty())
         {
             msg = new TextComponentString(team.getDesc());
             msg.getStyle().setItalic(true);

@@ -23,15 +23,16 @@ public class CmdInv extends CommandTreeBase
 {
     public static class CmdView extends CommandLM
     {
-        public CmdView()
+        @Override
+        public String getCommandName()
         {
-            super("view");
+            return "view";
         }
 
         @Override
         public String getCommandUsage(ICommandSender ics)
         {
-            return '/' + commandName + " <player>";
+            return '/' + getCommandName() + " <player>";
         }
 
         @Override
@@ -52,15 +53,16 @@ public class CmdInv extends CommandTreeBase
 
     public static class CmdSave extends CommandLM
     {
-        public CmdSave()
+        @Override
+        public String getCommandName()
         {
-            super("save");
+            return "save";
         }
 
         @Override
         public String getCommandUsage(ICommandSender ics)
         {
-            return '/' + commandName + " <player> <file_id>";
+            return '/' + getCommandName() + " <player> <file_id>";
         }
 
         @Override
@@ -121,15 +123,16 @@ public class CmdInv extends CommandTreeBase
 
     public static class CmdLoad extends CommandLM
     {
-        public CmdLoad()
+        @Override
+        public String getCommandName()
         {
-            super("load");
+            return "load";
         }
 
         @Override
         public String getCommandUsage(ICommandSender ics)
         {
-            return '/' + commandName + " <player> <file_id>";
+            return '/' + getCommandName() + " <player> <file_id>";
         }
 
         @Override
@@ -185,9 +188,10 @@ public class CmdInv extends CommandTreeBase
 
     public static class CmdList extends CommandLM
     {
-        public CmdList()
+        @Override
+        public String getCommandName()
         {
-            super("list");
+            return "list";
         }
 
         @Override

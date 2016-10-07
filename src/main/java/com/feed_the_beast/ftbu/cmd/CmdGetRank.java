@@ -18,9 +18,10 @@ import net.minecraft.util.text.TextFormatting;
  */
 public class CmdGetRank extends CommandLM
 {
-    public CmdGetRank()
+    @Override
+    public String getCommandName()
     {
-        super("getrank");
+        return "getrank";
     }
 
     @Override

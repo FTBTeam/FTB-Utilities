@@ -13,9 +13,10 @@ import net.minecraft.server.MinecraftServer;
 
 public class CmdBack extends CommandLM
 {
-    public CmdBack()
+    @Override
+    public String getCommandName()
     {
-        super("back");
+        return "back";
     }
 
     @Override

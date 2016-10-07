@@ -12,9 +12,10 @@ import java.io.File;
 
 public class CmdRestart extends CommandLM
 {
-    public CmdRestart()
+    @Override
+    public String getCommandName()
     {
-        super("restart");
+        return "restart";
     }
 
     public static void restart()

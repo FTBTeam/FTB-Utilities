@@ -20,9 +20,10 @@ import java.util.List;
 
 public class CmdWarp extends CommandLM
 {
-    public CmdWarp()
+    @Override
+    public String getCommandName()
     {
-        super("warp");
+        return "warp";
     }
 
     @Override
@@ -34,7 +35,7 @@ public class CmdWarp extends CommandLM
     @Override
     public String getCommandUsage(ICommandSender ics)
     {
-        return '/' + commandName + " <ID>";
+        return '/' + getCommandName() + " <ID>";
     }
 
     @Override

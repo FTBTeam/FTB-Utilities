@@ -17,9 +17,10 @@ import java.util.List;
  */
 public class CmdSetRank extends CommandLM
 {
-    public CmdSetRank()
+    @Override
+    public String getCommandName()
     {
-        super("setrank");
+        return "setrank";
     }
 
     @Override

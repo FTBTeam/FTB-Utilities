@@ -28,9 +28,10 @@ import java.util.Map;
  */
 public class CmdServerInfo extends CommandLM
 {
-    public CmdServerInfo()
+    @Override
+    public String getCommandName()
     {
-        super("server_info");
+        return "server_info";
     }
 
     @Override

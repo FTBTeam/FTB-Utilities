@@ -15,9 +15,10 @@ public class CmdBackup extends CommandTreeBase
 {
     public static class CmdBackupStart extends CommandLM
     {
-        public CmdBackupStart()
+        @Override
+        public String getCommandName()
         {
-            super("start");
+            return "start";
         }
 
         @Override
@@ -42,9 +43,10 @@ public class CmdBackup extends CommandTreeBase
 
     public static class CmdBackupStop extends CommandLM
     {
-        public CmdBackupStop()
+        @Override
+        public String getCommandName()
         {
-            super("stop");
+            return "stop";
         }
 
         @Override
@@ -64,9 +66,10 @@ public class CmdBackup extends CommandTreeBase
 
     public static class CmdBackupGetSize extends CommandLM
     {
-        public CmdBackupGetSize()
+        @Override
+        public String getCommandName()
         {
-            super("getsize");
+            return "getsize";
         }
 
         @Override

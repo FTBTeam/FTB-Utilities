@@ -13,9 +13,10 @@ import net.minecraft.util.math.BlockPos;
 
 public class CmdSetWarp extends CommandLM
 {
-    public CmdSetWarp()
+    @Override
+    public String getCommandName()
     {
-        super("setwarp");
+        return "setwarp";
     }
 
     @Override

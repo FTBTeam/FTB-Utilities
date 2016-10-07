@@ -8,9 +8,10 @@ import net.minecraft.server.MinecraftServer;
 
 public class CmdTrashCan extends CommandLM
 {
-    public CmdTrashCan()
+    @Override
+    public String getCommandName()
     {
-        super("trash_can");
+        return "trash_can";
     }
 
     @Override

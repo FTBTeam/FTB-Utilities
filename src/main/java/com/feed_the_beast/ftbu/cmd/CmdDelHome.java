@@ -15,9 +15,10 @@ import java.util.List;
 
 public class CmdDelHome extends CommandLM
 {
-    public CmdDelHome()
+    @Override
+    public String getCommandName()
     {
-        super("delhome");
+        return "delhome";
     }
 
     @Override
@@ -29,7 +30,7 @@ public class CmdDelHome extends CommandLM
     @Override
     public String getCommandUsage(ICommandSender ics)
     {
-        return '/' + commandName + " <ID>";
+        return '/' + getCommandName() + " <ID>";
     }
 
     @Override

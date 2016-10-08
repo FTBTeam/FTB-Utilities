@@ -118,7 +118,6 @@ public class FTBUServerEventHandler
             if(replacement != null)
             {
                 e.setComponent(replacement.createCopy());
-                e.setCanceled(true);
                 return;
             }
         }

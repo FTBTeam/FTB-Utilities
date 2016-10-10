@@ -24,7 +24,7 @@ compileJava {
 }
 
 minecraft {
-    version = "1.10.2-12.18.2.2098"
+    version = "1.10.2-12.18.2.2099"
     runDir = "run"
     mappings = "snapshot_20160518"
     replace "@VERSION@", version_mod
@@ -32,10 +32,8 @@ minecraft {
 }
 
 repositories {
-    mavenCentral()
-    maven {
-        url 'https://oss.sonatype.org/content/groups/public/'
-    }
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://oss.sonatype.org/content/groups/public/' }
 }
 
 configurations.all {
@@ -43,7 +41,8 @@ configurations.all {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
+    compile 'com.github.LatvianModder:FTBLib:3.0.1'
+    compile 'com.github.AlgorithmX2:Chisels-and-Bits:v12.4'
     compile group: "info.journeymap", name: "journeymap-api", version: '1.9.4-1.2', changing: true
 }
 

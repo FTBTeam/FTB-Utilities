@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu.api_impl;
 
+import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
@@ -130,7 +131,7 @@ public enum ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializabl
             return true;
         }*/
 
-        return team.getStatus(player).isAlly();
+        return team.hasStatus(player, EnumTeamStatus.ALLY);
     }
 
     @Override

@@ -1,11 +1,8 @@
 package com.feed_the_beast.ftbu.handlers;
 
-import com.feed_the_beast.ftbl.api.events.team.AttachTeamCapabilitiesEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamSettingsEvent;
-import com.feed_the_beast.ftbu.FTBUCapabilities;
-import com.feed_the_beast.ftbu.FTBUFinals;
+import com.feed_the_beast.ftbl.api.events.team.ITeamDataProvider;
 import com.feed_the_beast.ftbu.world.FTBUTeamData;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
@@ -13,11 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  */
 public class FTBUTeamEventHandler
 {
-    @SubscribeEvent
-    public void attachCapabilities(AttachTeamCapabilitiesEvent event)
-    {
-        event.addCapability(new ResourceLocation(FTBUFinals.MOD_ID, "data"), new FTBUTeamData());
-    }
+    public static final ITeamDataProvider DATA_PROVIDER = team -> new FTBUTeamData();
 
     /*@SubscribeEvent
     public void onDataSynced(ForgeTeamEvent.Sync event)
@@ -42,9 +35,10 @@ public class FTBUTeamEventHandler
     @SubscribeEvent
     public void getSettings(ForgeTeamSettingsEvent event)
     {
-        if(event.getTeam().hasCapability(FTBUCapabilities.FTBU_TEAM_DATA, null))
+        FTBUTeamData data = FTBUTeamData.get(event.getTeam());
+
+        if(data != null)
         {
-            FTBUTeamData data = event.getTeam().getCapability(FTBUCapabilities.FTBU_TEAM_DATA, null);
             data.addConfig(event.getSettings());
         }
     }

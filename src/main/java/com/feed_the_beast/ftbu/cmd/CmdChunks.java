@@ -49,7 +49,7 @@ public class CmdChunks extends CommandTreeBase
         public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
             EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-            IForgePlayer p = getForgePlayer(player);
+            IForgePlayer p = FTBLibIntegration.API.getForgePlayer(player);
             ChunkDimPos pos = new EntityDimPos(player).toBlockDimPos().toChunkPos();
 
             if(FTBUUniverseData.claimChunk(p, pos))
@@ -82,7 +82,7 @@ public class CmdChunks extends CommandTreeBase
         public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
             EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-            IForgePlayer p = getForgePlayer(player);
+            IForgePlayer p = FTBLibIntegration.API.getForgePlayer(player);
             ChunkDimPos pos = new EntityDimPos(player).toBlockDimPos().toChunkPos();
 
             if(!p.equalsPlayer(ClaimedChunkStorage.INSTANCE.getChunkOwner(pos)) && !PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, new BlockPosContext(player, pos.getChunkPos())))
@@ -120,7 +120,7 @@ public class CmdChunks extends CommandTreeBase
         public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
             EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-            IForgePlayer p = getForgePlayer(player);
+            IForgePlayer p = FTBLibIntegration.API.getForgePlayer(player);
             ChunkDimPos pos = new EntityDimPos(player).toBlockDimPos().toChunkPos();
 
             if(FTBUUniverseData.setLoaded(p, pos, true))
@@ -153,7 +153,7 @@ public class CmdChunks extends CommandTreeBase
         public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
             EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-            IForgePlayer p = getForgePlayer(player);
+            IForgePlayer p = FTBLibIntegration.API.getForgePlayer(player);
             ChunkDimPos pos = new EntityDimPos(player).toBlockDimPos().toChunkPos();
 
             if(FTBUUniverseData.setLoaded(p, pos, false))
@@ -198,11 +198,11 @@ public class CmdChunks extends CommandTreeBase
                     throw new CommandException("commands.generic.permission");
                 }
 
-                p = getForgePlayer(args[1]);
+                p = FTBLibIntegration.API.getForgePlayer(args[1]);
             }
             else
             {
-                p = getForgePlayer(ep);
+                p = FTBLibIntegration.API.getForgePlayer(ep);
             }
 
             FTBUUniverseData.unclaimAllChunks(p, parseBoolean(args[0]) ? null : ep.dimension);
@@ -228,7 +228,7 @@ public class CmdChunks extends CommandTreeBase
         public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
             checkArgs(args, 1, "<player>");
-            IForgePlayer p = getForgePlayer(args[0]);
+            IForgePlayer p = FTBLibIntegration.API.getForgePlayer(args[0]);
 
             for(IClaimedChunk chunk : ClaimedChunkStorage.INSTANCE.getChunks(p))
             {
@@ -264,7 +264,7 @@ public class CmdChunks extends CommandTreeBase
         public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
             checkArgs(args, 1, "<player>");
-            IForgePlayer p = getForgePlayer(args[0]);
+            IForgePlayer p = FTBLibIntegration.API.getForgePlayer(args[0]);
             FTBUUniverseData.unclaimAllChunks(p, null);
             ics.addChatMessage(new TextComponentString("Unclaimed all " + p.getProfile().getName() + "'s chunks")); //TODO: Lang
         }

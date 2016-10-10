@@ -47,7 +47,7 @@ public class CmdDelHome extends CommandLM
     @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
-        IForgePlayer p = getForgePlayer(ics);
+        IForgePlayer p = FTBLibIntegration.API.getForgePlayer(ics);
         checkArgs(args, 1, "<home>");
 
         args[0] = args[0].toLowerCase();

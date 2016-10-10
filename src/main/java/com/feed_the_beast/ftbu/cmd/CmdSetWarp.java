@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.command.CommandException;
@@ -40,7 +39,7 @@ public class CmdSetWarp extends CommandLM
             c = ep.getPosition();
         }
 
-        FTBUUniverseData.get(FTBLibIntegration.API.getUniverse()).setWarp(args[0], new BlockDimPos(c, ep.dimension));
+        FTBUUniverseData.get().setWarp(args[0], new BlockDimPos(c, ep.dimension));
         FTBULang.WARP_SET.printChat(ics, args[0]);
     }
 }

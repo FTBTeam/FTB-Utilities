@@ -1,17 +1,19 @@
 package com.feed_the_beast.ftbu.cmd;
 
-import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.math.EntityDimPos;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
+import com.feed_the_beast.ftbu.FTBLibIntegration;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.common.util.Constants;
 
 public class CmdTplast extends CommandLM
 {
@@ -49,20 +51,20 @@ public class CmdTplast extends CommandLM
         }
 
         EntityPlayerMP who;
-        ForgePlayer to;
+        IForgePlayer to;
 
         if(args.length == 1)
         {
             who = getCommandSenderAsPlayer(ics);
-            to = getForgePlayer(args[0]);
+            to = FTBLibIntegration.API.getForgePlayer(args[0]);
         }
         else
         {
             who = getPlayer(server, ics, args[0]);
-            to = getForgePlayer(args[1]);
+            to = FTBLibIntegration.API.getForgePlayer(args[1]);
         }
 
-        BlockDimPos p = null;
+        BlockDimPos p;
 
         if(to.isOnline())
         {
@@ -70,12 +72,9 @@ public class CmdTplast extends CommandLM
         }
         else
         {
-            NBTTagCompound tag = to.getPlayerNBT();
-        }
-
-        if(p == null)
-        {
-            throw FTBLibLang.RAW.commandError("No last position!");
+            NBTTagCompound nbt = to.getPlayerNBT();
+            NBTTagList posList = nbt.getTagList("Pos", Constants.NBT.TAG_DOUBLE);
+            p = new EntityDimPos(new Vec3d(posList.getDoubleAt(0), posList.getDoubleAt(1), posList.getDoubleAt(2)), nbt.getInteger("Dimension")).toBlockDimPos();
         }
 
         LMServerUtils.teleportPlayer(who, p);

@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbu.handlers.sync;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.ISyncData;
-import com.feed_the_beast.ftbl.api.SyncData;
+import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.client.CachedClientData;
@@ -16,7 +16,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public enum SyncBadges implements ISyncData
 {
-    @SyncData
+    @RegistryObject
     INSTANCE;
 
     @Override

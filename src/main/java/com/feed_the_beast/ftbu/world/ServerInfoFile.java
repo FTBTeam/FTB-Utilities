@@ -73,6 +73,7 @@ public class ServerInfoFile extends InfoPage
 
         boolean isDedi = server.isDedicatedServer();
         boolean isOP = !isDedi || PermissionAPI.hasPermission(ep, FTBUPermissions.DISPLAY_ADMIN_INFO);
+        FTBUUniverseData ftbuUniverseData = FTBUUniverseData.get();
 
         copyFrom(CachedInfo.main);
 
@@ -86,7 +87,7 @@ public class ServerInfoFile extends InfoPage
 
         if(FTBUConfigGeneral.AUTO_RESTART.getBoolean())
         {
-            println(FTBULang.TIMER_RESTART.textComponent(LMStringUtils.getTimeString(FTBUUniverseData.get(self.getUniverse()).restartMillis - System.currentTimeMillis())));
+            println(FTBULang.TIMER_RESTART.textComponent(LMStringUtils.getTimeString(ftbuUniverseData.restartMillis - System.currentTimeMillis())));
         }
 
         if(FTBUConfigBackups.ENABLED.getBoolean())
@@ -233,7 +234,7 @@ public class ServerInfoFile extends InfoPage
         page = getSub("warps").setTitle(new TextComponentString("Warps")); //TODO: LANG
         ITextComponent t;
 
-        for(String s : FTBUUniverseData.get(self.getUniverse()).listWarps())
+        for(String s : ftbuUniverseData.listWarps())
         {
             t = new TextComponentString(s);
             t.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb warp " + s));

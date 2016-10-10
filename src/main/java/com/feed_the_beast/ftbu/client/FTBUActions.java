@@ -1,10 +1,9 @@
 package com.feed_the_beast.ftbu.client;
 
+import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
-import com.feed_the_beast.ftbl.api.gui.SidebarButton;
-import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.gui.GuiLoading;
 import com.feed_the_beast.ftbl.lib.SidebarButtonInst;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
@@ -21,7 +20,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class FTBUActions
 {
-    @SidebarButton
+    @RegistryObject
     public static final ISidebarButton GUIDE = new SidebarButtonInst(new ResourceLocation(FTBUFinals.MOD_ID, "guide"), 0, GuiIcons.BOOK, new PropertyBool(true))
     {
         @Override
@@ -32,7 +31,7 @@ public class FTBUActions
         }
     };
 
-    @SidebarButton
+    @RegistryObject
     public static final ISidebarButton SERVER_INFO = new SidebarButtonInst(new ResourceLocation(FTBUFinals.MOD_ID, "server_info"), 0, GuiIcons.BOOK_RED, new PropertyBool(true))
     {
         @Override
@@ -45,11 +44,11 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            return FTBLibAPI_Impl.INSTANCE.hasServer(FTBUFinals.MOD_ID);
+            return FTBLibIntegration.API.hasServer(FTBUFinals.MOD_ID);
         }
     };
 
-    @SidebarButton
+    @RegistryObject
     public static final ISidebarButton CLAIMED_CHUNKS = new SidebarButtonInst(new ResourceLocation(FTBUFinals.MOD_ID, "claimed_chunks"), 0, GuiIcons.MAP, new PropertyBool(true))
     {
         @Override
@@ -62,11 +61,11 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            return FTBLibAPI_Impl.INSTANCE.hasServer(FTBUFinals.MOD_ID);
+            return FTBLibIntegration.API.hasServer(FTBUFinals.MOD_ID);
         }
     };
 
-    @SidebarButton
+    @RegistryObject
     public static final ISidebarButton TRASH_CAN = new SidebarButtonInst(new ResourceLocation(FTBUFinals.MOD_ID, "trash_can"), 0, GuiIcons.BIN, new PropertyBool(true))
     {
         @Override
@@ -78,11 +77,11 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            return FTBLibAPI_Impl.INSTANCE.hasServer(FTBUFinals.MOD_ID);
+            return FTBLibIntegration.API.hasServer(FTBUFinals.MOD_ID);
         }
     };
 
-    @SidebarButton
+    @RegistryObject
     public static final ISidebarButton SHOP = new SidebarButtonInst(new ResourceLocation(FTBUFinals.MOD_ID, "shop"), 0, GuiIcons.MONEY_BAG, new PropertyBool(true))
     {
         @Override
@@ -94,11 +93,11 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            return LMUtils.DEV_ENV && FTBLibAPI_Impl.INSTANCE.hasServer(FTBUFinals.MOD_ID);
+            return LMUtils.DEV_ENV && FTBLibIntegration.API.hasServer(FTBUFinals.MOD_ID);
         }
     };
 
-    @SidebarButton
+    @RegistryObject
     public static final ISidebarButton HEAL = new SidebarButtonInst(new ResourceLocation(FTBUFinals.MOD_ID, "heal"), 200, GuiIcons.HEART, new PropertyBool(true))
     {
         @Override
@@ -110,11 +109,11 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            return FTBLibIntegration.API.isClientPlayerOP() && FTBLibAPI_Impl.INSTANCE.hasServer(FTBUFinals.MOD_ID);
+            return FTBLibIntegration.API.isClientPlayerOP() && FTBLibIntegration.API.hasServer(FTBUFinals.MOD_ID);
         }
     };
 
-    @SidebarButton
+    @RegistryObject
     public static final ISidebarButton TOGGLE_GAMEMODE = new SidebarButtonInst(new ResourceLocation(FTBUFinals.MOD_ID, "toggle.gamemode"), 195, GuiIcons.TOGGLE_GAMEMODE, new PropertyBool(true))
     {
         @Override
@@ -131,7 +130,7 @@ public class FTBUActions
         }
     };
 
-    @SidebarButton
+    @RegistryObject
     public static final ISidebarButton TOGGLE_RAIN = new SidebarButtonInst(new ResourceLocation(FTBUFinals.MOD_ID, "toggle.rain"), 190, GuiIcons.TOGGLE_RAIN, new PropertyBool(true))
     {
         @Override
@@ -154,7 +153,7 @@ public class FTBUActions
         }
     };
 
-    @SidebarButton
+    @RegistryObject
     public static final ISidebarButton TOGGLE_DAY = new SidebarButtonInst(new ResourceLocation(FTBUFinals.MOD_ID, "toggle.day"), 185, GuiIcons.TOGGLE_DAY, new PropertyBool(true))
     {
         @Override
@@ -170,7 +169,7 @@ public class FTBUActions
         }
     };
 
-    @SidebarButton
+    @RegistryObject
     public static final ISidebarButton TOGGLE_NIGHT = new SidebarButtonInst(new ResourceLocation(FTBUFinals.MOD_ID, "toggle.night"), 180, GuiIcons.TOGGLE_NIGHT, new PropertyBool(true))
     {
         @Override

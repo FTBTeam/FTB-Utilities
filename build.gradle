@@ -1,4 +1,4 @@
-def version_mod = "3.0.0"
+def version_mod = "3.0.1"
 
 buildscript {
     repositories {

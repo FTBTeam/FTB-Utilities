@@ -65,6 +65,8 @@ public class FTBUPermissions
 
     public static final String CLAIMS_DIMENSION_ALLOWED_PREFIX = "ftbu.claims.dimension_allowed.";
 
+    public static final String INFINITE_BACK_USAGE = PermissionAPI.registerNode("ftbu.back.infinite", DefaultPermissionLevel.NONE, "Allow to use 'back' command infinite times");
+
     // Chunkloader //
 
     public static final IRankConfig CHUNKLOADER_TYPE = RankConfigAPI.register("ftbu.chunkloader.type",

@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.config;
 
-import com.feed_the_beast.ftbl.api.config.ConfigFileProvider;
+import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.config.ConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigFileProvider;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class FTBUConfigGeneral
 {
-    @ConfigFileProvider(FTBUFinals.MOD_ID)
+    @RegistryObject(FTBUFinals.MOD_ID)
     public static final IConfigFileProvider FILE = () -> new File(LMUtils.folderLocal, "ftbu/config.json");
 
     @ConfigValue(id = "general.auto_restart", file = FTBUFinals.MOD_ID)

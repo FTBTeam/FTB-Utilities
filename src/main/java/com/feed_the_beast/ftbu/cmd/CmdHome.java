@@ -56,7 +56,7 @@ public class CmdHome extends CommandLM
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-        FTBUPlayerData d = FTBUPlayerData.get(getForgePlayer(ep));
+        FTBUPlayerData d = FTBUPlayerData.get(FTBLibIntegration.API.getForgePlayer(ep));
         checkArgs(args, 1, "<home>");
 
         if(args[0].equals("list"))

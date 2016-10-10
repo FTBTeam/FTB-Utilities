@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbu;
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.INotification;
-import com.feed_the_beast.ftbl.api.NotificationVariant;
+import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import net.minecraft.init.Blocks;
@@ -19,28 +19,28 @@ import javax.annotation.Nullable;
  */
 public class FTBUNotifications
 {
-    @NotificationVariant
+    @RegistryObject
     public static final INotification NO_TEAM = create("no_team", 0).setError(FTBLibLang.TEAM_NO_TEAM.textComponent());
 
-    @NotificationVariant
+    @RegistryObject
     public static final INotification CANT_MODIFY_CHUNK = create("cant_modify_chunk", 0).setError(new TextComponentString("Can't modify this chunk!"));
 
-    @NotificationVariant
+    @RegistryObject
     public static final INotification UNCLAIMED_ALL = create("unclaimed_all", 0).addText(new TextComponentString("Unclaimed all chunks"));
 
-    @NotificationVariant
+    @RegistryObject
     public static final INotification CHUNK_CLAIMED = create("chunk_modified", 0).addText(new TextComponentString("Chunk claimed"));
 
-    @NotificationVariant
+    @RegistryObject
     public static final INotification CHUNK_UNCLAIMED = create("chunk_modified", 1).addText(new TextComponentString("Chunk unclaimed"));
 
-    @NotificationVariant
+    @RegistryObject
     public static final INotification CHUNK_LOADED = create("chunk_modified", 2).addText(new TextComponentString("Chunk loaded"));
 
-    @NotificationVariant
+    @RegistryObject
     public static final INotification CHUNK_UNLOADED = create("chunk_modified", 3).addText(new TextComponentString("Chunk unloaded"));
 
-    @NotificationVariant
+    @RegistryObject
     public static final Notification WILDERNESS = create("chunk_changed", (byte) 0).setTimer(3000).setColorID((byte) 38).setItem(new ItemStack(Blocks.VINE));
 
     static

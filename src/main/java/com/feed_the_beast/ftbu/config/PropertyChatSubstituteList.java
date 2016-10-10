@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.config;
 
-import com.feed_the_beast.ftbl.api.config.ConfigValueProvider;
+import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.lib.config.PropertyBase;
@@ -26,7 +26,7 @@ public class PropertyChatSubstituteList extends PropertyBase
 {
     public static final String ID = "ftbu_chat_substitutes";
 
-    @ConfigValueProvider(ID)
+    @RegistryObject(ID)
     public static final IConfigValueProvider PROVIDER = () -> new PropertyChatSubstituteList(Collections.emptyMap());
 
     public final Map<String, ITextComponent> value;

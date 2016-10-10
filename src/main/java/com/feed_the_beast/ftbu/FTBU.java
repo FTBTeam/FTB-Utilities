@@ -47,7 +47,6 @@ public class FTBU
         MinecraftForge.EVENT_BUS.register(new FTBUTeamEventHandler());
         MinecraftForge.EVENT_BUS.register(new FTBUServerEventHandler());
 
-        FTBUCapabilities.enable();
         FTBUNetHandler.init();
 
         proxy.preInit();

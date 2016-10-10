@@ -1,53 +1,54 @@
 package com.feed_the_beast.ftbu.handlers;
 
-import com.feed_the_beast.ftbl.api.events.universe.AttachUniverseCapabilitiesEvent;
+import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseClosedEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedBeforePlayersEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
-import com.feed_the_beast.ftbu.FTBUCapabilities;
-import com.feed_the_beast.ftbu.FTBUFinals;
+import com.feed_the_beast.ftbl.api.events.universe.IUniverseDataProvider;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class FTBUWorldEventHandler // FTBLIntegration
 {
-    @SubscribeEvent
-    public void attachCapabilities(AttachUniverseCapabilitiesEvent event)
-    {
-        event.addCapability(new ResourceLocation(FTBUFinals.MOD_ID, "data"), new FTBUUniverseData());
-    }
+    @RegistryObject
+    public static final IUniverseDataProvider DATA_PROVIDER = universe -> new FTBUUniverseData();
 
     @SubscribeEvent
     public void onWorldLoaded(ForgeUniverseLoadedEvent event)
     {
-        if(event.getWorld().hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null))
+        FTBUUniverseData data = FTBUUniverseData.get();
+
+        if(data != null)
         {
-            event.getWorld().getCapability(FTBUCapabilities.FTBU_WORLD_DATA, null).onLoaded();
+            data.onLoaded();
         }
     }
 
     @SubscribeEvent
     public void onWorldLoadedBeforePlayers(ForgeUniverseLoadedBeforePlayersEvent event)
     {
-        if(event.getWorld().hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null))
+        FTBUUniverseData data = FTBUUniverseData.get();
+
+        if(data != null)
         {
-            event.getWorld().getCapability(FTBUCapabilities.FTBU_WORLD_DATA, null).onLoadedBeforePlayers();
+            data.onLoadedBeforePlayers();
         }
     }
 
     @SubscribeEvent
     public void onWorldClosed(ForgeUniverseClosedEvent event)
     {
-        if(event.getWorld().hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null))
+        FTBUUniverseData data = FTBUUniverseData.get();
+
+        if(data != null)
         {
-            event.getWorld().getCapability(FTBUCapabilities.FTBU_WORLD_DATA, null).onClosed();
+            data.onClosed();
         }
     }
 
@@ -96,5 +97,4 @@ public class FTBUWorldEventHandler // FTBLIntegration
             e.setCanceled(true);
         }
     }
-
 }

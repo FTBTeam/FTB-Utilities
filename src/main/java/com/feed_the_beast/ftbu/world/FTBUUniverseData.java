@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
 import com.feed_the_beast.ftbl.lib.EnumEnabled;
+import com.feed_the_beast.ftbl.lib.INBTData;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
@@ -14,7 +14,7 @@ import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBU;
-import com.feed_the_beast.ftbu.FTBUCapabilities;
+import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBULang;
@@ -35,16 +35,14 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.server.permission.PermissionAPI;
 
@@ -58,37 +56,27 @@ import java.util.Map;
 /**
  * Created by LatvianModder on 18.05.2016.
  */
-public class FTBUUniverseData implements ICapabilitySerializable<NBTTagCompound>, ITickable
+public class FTBUUniverseData implements INBTData, ITickable
 {
+    public static final String ID = new ResourceLocation(FTBUFinals.MOD_ID, "data").toString();
     public static final BadgeStorage LOCAL_BADGES = new BadgeStorage();
+
+    @Nullable
+    public static FTBUUniverseData get()
+    {
+        return (FTBUUniverseData) FTBLibIntegration.API.getUniverse().getData(ID);
+    }
+
     public long restartMillis;
     private long nextChunkloaderUpdate;
     private Map<String, BlockDimPos> warps;
     private String lastRestartMessage;
 
-    public static FTBUUniverseData get(IUniverse u)
-    {
-        return u.hasCapability(FTBUCapabilities.FTBU_WORLD_DATA, null) ? u.getCapability(FTBUCapabilities.FTBU_WORLD_DATA, null) : null;
-    }
-
     @Override
-    public final boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+    public String getName()
     {
-        return capability == FTBUCapabilities.FTBU_WORLD_DATA;
+        return ID;
     }
-
-    @Override
-    public final <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
-    {
-        if(capability == FTBUCapabilities.FTBU_WORLD_DATA)
-        {
-            return (T) this;
-        }
-
-        return null;
-    }
-
-    // Override //
 
     @Nullable
     public static Badge getServerBadge(@Nullable IForgePlayer p)

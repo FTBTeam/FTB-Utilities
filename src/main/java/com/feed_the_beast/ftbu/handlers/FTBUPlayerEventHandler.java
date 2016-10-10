@@ -2,19 +2,18 @@ package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.events.player.AttachPlayerCapabilitiesEvent;
+import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerDeathEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerInfoEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
+import com.feed_the_beast.ftbl.api.events.player.IPlayerDataProvider;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.math.EntityDimPos;
 import com.feed_the_beast.ftbl.lib.util.LMInvUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
-import com.feed_the_beast.ftbu.FTBUCapabilities;
-import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
@@ -29,7 +28,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
@@ -44,51 +42,43 @@ import net.minecraftforge.server.permission.context.PlayerContext;
 
 public class FTBUPlayerEventHandler
 {
-    @SubscribeEvent
-    public void attachCapabilities(AttachPlayerCapabilitiesEvent event)
-    {
-        event.addCapability(new ResourceLocation(FTBUFinals.MOD_ID, "data"), new FTBUPlayerData());
-    }
+    @RegistryObject
+    public static final IPlayerDataProvider DATA_PROVIDER = player -> new FTBUPlayerData();
 
     @SubscribeEvent
     public void onLoggedIn(ForgePlayerLoggedInEvent event)
     {
-        if(event.getPlayer().hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
+        EntityPlayerMP ep = event.getPlayer().getPlayer();
+
+        if(event.isFirstLogin())
         {
-            EntityPlayerMP ep = event.getPlayer().getPlayer();
-
-            if(event.isFirstLogin())
+            if(FTBUConfigLogin.ENABLE_STARTING_ITEMS.getBoolean())
             {
-                if(FTBUConfigLogin.ENABLE_STARTING_ITEMS.getBoolean())
-                {
-                    FTBUConfigLogin.STARTING_ITEMS.getItems().forEach(is -> LMInvUtils.giveItem(ep, is));
-                }
+                FTBUConfigLogin.STARTING_ITEMS.getItems().forEach(is -> LMInvUtils.giveItem(ep, is));
             }
-
-            if(FTBUConfigLogin.ENABLE_MOTD.getBoolean())
-            {
-                FTBUConfigLogin.MOTD.getText().forEach(ep::addChatMessage);
-            }
-
-            LoadedChunkStorage.INSTANCE.checkAll();
         }
+
+        if(FTBUConfigLogin.ENABLE_MOTD.getBoolean())
+        {
+            FTBUConfigLogin.MOTD.getText().forEach(ep::addChatMessage);
+        }
+
+        LoadedChunkStorage.INSTANCE.checkAll();
     }
 
     @SubscribeEvent
     public void onLoggedOut(ForgePlayerLoggedOutEvent event)
     {
-        if(event.getPlayer().hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
-        {
-            LoadedChunkStorage.INSTANCE.checkAll();
-        }
+        LoadedChunkStorage.INSTANCE.checkAll();
     }
 
     @SubscribeEvent
     public void onDeath(ForgePlayerDeathEvent event)
     {
-        if(event.getPlayer().hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
+        FTBUPlayerData data = FTBUPlayerData.get(event.getPlayer());
+
+        if(data != null)
         {
-            FTBUPlayerData data = event.getPlayer().getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
             data.lastDeath = new EntityDimPos(event.getPlayer().getPlayer()).toBlockDimPos();
         }
     }
@@ -96,9 +86,10 @@ public class FTBUPlayerEventHandler
     @SubscribeEvent
     public void getSettings(ForgePlayerSettingsEvent event)
     {
-        if(event.getPlayer().hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
+        FTBUPlayerData data = FTBUPlayerData.get(event.getPlayer());
+
+        if(data != null)
         {
-            FTBUPlayerData data = event.getPlayer().getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
             data.addConfig(event.getSettings());
         }
     }
@@ -133,7 +124,7 @@ public class FTBUPlayerEventHandler
             return;
         }
 
-        FTBUPlayerData data = player.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
+        FTBUPlayerData data = FTBUPlayerData.get(player);
         data.lastSafePos = new EntityDimPos(ep).toBlockDimPos();
         updateChunkMessage(ep, new ChunkDimPos(e.getNewChunkX(), e.getNewChunkZ(), ep.dimension));
     }
@@ -142,7 +133,7 @@ public class FTBUPlayerEventHandler
     {
         IForgePlayer newTeamOwner = ClaimedChunkStorage.INSTANCE.getChunkOwner(pos);
 
-        FTBUPlayerData data = FTBLibIntegration.API.getUniverse().getPlayer(player).getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
+        FTBUPlayerData data = FTBUPlayerData.get(FTBLibIntegration.API.getUniverse().getPlayer(player));
 
         if(!Objects.equal(data.lastChunkOwner, newTeamOwner))
         {

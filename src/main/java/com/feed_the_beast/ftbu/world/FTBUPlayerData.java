@@ -3,15 +3,14 @@ package com.feed_the_beast.ftbu.world;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
+import com.feed_the_beast.ftbl.lib.INBTData;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
-import com.feed_the_beast.ftbu.FTBUCapabilities;
+import com.feed_the_beast.ftbu.FTBUFinals;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -22,8 +21,9 @@ import java.util.Map;
 /**
  * Created by LatvianModder on 11.02.2016.
  */
-public class FTBUPlayerData implements ICapabilitySerializable<NBTTagCompound>
+public class FTBUPlayerData implements INBTData
 {
+    public static final String ID = new ResourceLocation(FTBUFinals.MOD_ID, "data").toString();
     private static final IConfigKey RENDER_BADGE = new ConfigKey("ftbu.render_badge", new PropertyBool(true));
     private static final IConfigKey CHAT_LINKS = new ConfigKey("ftbu.chat_links", new PropertyBool(true));
     private static final byte FLAG_RENDER_BADGE = 1;
@@ -34,26 +34,16 @@ public class FTBUPlayerData implements ICapabilitySerializable<NBTTagCompound>
     public IForgePlayer lastChunkOwner;
     private Map<String, BlockDimPos> homes;
 
+    @Nullable
     public static FTBUPlayerData get(IForgePlayer p)
     {
-        return p.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null) ? p.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null) : null;
+        return (FTBUPlayerData) p.getData(ID);
     }
 
     @Override
-    public final boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+    public String getName()
     {
-        return capability == FTBUCapabilities.FTBU_PLAYER_DATA;
-    }
-
-    @Override
-    public final <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
-    {
-        if(capability == FTBUCapabilities.FTBU_PLAYER_DATA)
-        {
-            return (T) this;
-        }
-
-        return null;
+        return ID;
     }
 
     @Override
@@ -176,7 +166,7 @@ public class FTBUPlayerData implements ICapabilitySerializable<NBTTagCompound>
             @Override
             public void setBoolean(boolean v)
             {
-                flags = (byte) Bits.setFlag(flags, FLAG_RENDER_BADGE, v);
+                flags = Bits.setFlag(flags, FLAG_RENDER_BADGE, v);
             }
         });
 
@@ -191,7 +181,7 @@ public class FTBUPlayerData implements ICapabilitySerializable<NBTTagCompound>
             @Override
             public void setBoolean(boolean v)
             {
-                flags = (byte) Bits.setFlag(flags, FLAG_CHAT_LINKS, v);
+                flags = Bits.setFlag(flags, FLAG_CHAT_LINKS, v);
             }
         });
     }

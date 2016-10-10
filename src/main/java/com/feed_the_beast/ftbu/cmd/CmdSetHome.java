@@ -52,7 +52,7 @@ public class CmdSetHome extends CommandLM
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-        IForgePlayer p = getForgePlayer(ep);
+        IForgePlayer p = FTBLibIntegration.API.getForgePlayer(ep);
         FTBUPlayerData d = FTBUPlayerData.get(p);
         checkArgs(args, 1, "<home>");
 

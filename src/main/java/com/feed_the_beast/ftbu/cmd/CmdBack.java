@@ -3,13 +3,15 @@ package com.feed_the_beast.ftbu.cmd;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
-import com.feed_the_beast.ftbu.FTBUCapabilities;
+import com.feed_the_beast.ftbu.FTBLibIntegration;
+import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.server.permission.PermissionAPI;
 
 public class CmdBack extends CommandLM
 {
@@ -29,20 +31,23 @@ public class CmdBack extends CommandLM
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-        IForgePlayer p = getForgePlayer(ep);
+        IForgePlayer p = FTBLibIntegration.API.getForgePlayer(ep);
 
-        if(p.hasCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null))
+        FTBUPlayerData data = FTBUPlayerData.get(p);
+
+        if(data != null)
         {
-            FTBUPlayerData d = p.getCapability(FTBUCapabilities.FTBU_PLAYER_DATA, null);
-
-            if(d.lastDeath == null)
+            if(data.lastDeath == null)
             {
                 throw FTBULang.WARP_NO_DP.commandError();
             }
 
-            LMServerUtils.teleportPlayer(ep, d.lastDeath);
-            //TODO: Add config for infinite times
-            d.lastDeath = null;
+            LMServerUtils.teleportPlayer(ep, data.lastDeath);
+
+            if(!PermissionAPI.hasPermission(ep, FTBUPermissions.INFINITE_BACK_USAGE))
+            {
+                data.lastDeath = null;
+            }
         }
     }
 }

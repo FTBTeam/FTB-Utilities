@@ -34,6 +34,8 @@ minecraft {
 repositories {
     maven { url 'https://jitpack.io' }
     maven { url 'https://oss.sonatype.org/content/groups/public/' }
+    maven { url 'http://maven.amadornes.com' }
+    maven { url "http://dvs1.progwml6.com/files/maven" }
 }
 
 configurations.all {

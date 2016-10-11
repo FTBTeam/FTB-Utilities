@@ -1,4 +1,4 @@
-def version_mod = "3.0.1"
+def version_mod = "3.0.2"
 
 buildscript {
     repositories {
@@ -35,7 +35,7 @@ repositories {
     maven { url 'https://jitpack.io' }
     maven { url 'https://oss.sonatype.org/content/groups/public/' }
     maven { url 'http://maven.amadornes.com' }
-    maven { url "http://dvs1.progwml6.com/files/maven" }
+    maven { url 'http://dvs1.progwml6.com/files/maven' }
 }
 
 configurations.all {
@@ -43,10 +43,10 @@ configurations.all {
 }
 
 dependencies {
-    compile 'com.github.LatvianModder:FTBLib:3.0.1'
+    compile 'com.github.LatvianModder:FTBLib:3.0.2'
     compile 'com.github.LatvianModder:PermissionAPI:1.0.0'
     compile 'com.github.AlgorithmX2:Chisels-and-Bits:v12.4'
-    compile group: "info.journeymap", name: "journeymap-api", version: '1.9.4-1.2', changing: true
+    compile group: 'info.journeymap', name: 'journeymap-api', version: '1.9.4-1.2', changing: true
 }
 
 sourceSets {

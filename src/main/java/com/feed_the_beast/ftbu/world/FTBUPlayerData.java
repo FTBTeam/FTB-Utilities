@@ -23,7 +23,7 @@ import java.util.Map;
  */
 public class FTBUPlayerData implements INBTData
 {
-    public static final String ID = new ResourceLocation(FTBUFinals.MOD_ID, "data").toString();
+    private static final ResourceLocation ID = new ResourceLocation(FTBUFinals.MOD_ID, "data");
     private static final IConfigKey RENDER_BADGE = new ConfigKey("ftbu.render_badge", new PropertyBool(true));
     private static final IConfigKey CHAT_LINKS = new ConfigKey("ftbu.chat_links", new PropertyBool(true));
     private static final byte FLAG_RENDER_BADGE = 1;
@@ -41,21 +41,47 @@ public class FTBUPlayerData implements INBTData
     }
 
     @Override
-    public String getName()
+    public ResourceLocation getID()
     {
         return ID;
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound tag)
+    public void writeData(NBTTagCompound nbt)
     {
-        flags = tag.getByte("Flags");
+        if(flags != 0)
+        {
+            nbt.setByte("Flags", flags);
+        }
 
-        if(tag.hasKey("Homes"))
+        if(homes != null && !homes.isEmpty())
+        {
+            NBTTagCompound tag1 = new NBTTagCompound();
+
+            for(Map.Entry<String, BlockDimPos> e : homes.entrySet())
+            {
+                tag1.setIntArray(e.getKey(), e.getValue().toIntArray());
+            }
+
+            nbt.setTag("Homes", tag1);
+        }
+
+        if(lastDeath != null)
+        {
+            nbt.setIntArray("LastDeath", lastDeath.toIntArray());
+        }
+    }
+
+    @Override
+    public void readData(NBTTagCompound nbt)
+    {
+        flags = nbt.getByte("Flags");
+
+        if(nbt.hasKey("Homes"))
         {
             homes = new HashMap<>();
 
-            NBTTagCompound tag1 = (NBTTagCompound) tag.getTag("Homes");
+            NBTTagCompound tag1 = (NBTTagCompound) nbt.getTag("Homes");
 
             if(tag1 != null && !tag1.hasNoTags())
             {
@@ -71,41 +97,11 @@ public class FTBUPlayerData implements INBTData
         }
 
         lastDeath = null;
-        if(tag.hasKey("LastDeath"))
+        if(nbt.hasKey("LastDeath"))
         {
-            int[] ai = tag.getIntArray("LastDeath");
+            int[] ai = nbt.getIntArray("LastDeath");
             lastDeath = (ai.length == 4) ? new BlockDimPos(ai) : null;
         }
-    }
-
-    @Override
-    public NBTTagCompound serializeNBT()
-    {
-        NBTTagCompound tag = new NBTTagCompound();
-
-        if(flags != 0)
-        {
-            tag.setByte("Flags", flags);
-        }
-
-        if(homes != null && !homes.isEmpty())
-        {
-            NBTTagCompound tag1 = new NBTTagCompound();
-
-            for(Map.Entry<String, BlockDimPos> e : homes.entrySet())
-            {
-                tag1.setIntArray(e.getKey(), e.getValue().toIntArray());
-            }
-
-            tag.setTag("Homes", tag1);
-        }
-
-        if(lastDeath != null)
-        {
-            tag.setIntArray("LastDeath", lastDeath.toIntArray());
-        }
-
-        return tag;
     }
 
     public Collection<String> listHomes()

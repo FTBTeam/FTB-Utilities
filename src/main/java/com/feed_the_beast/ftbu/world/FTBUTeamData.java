@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
  */
 public class FTBUTeamData implements INBTData
 {
-    public static final String ID = new ResourceLocation(FTBUFinals.MOD_ID, "data").toString();
+    public static final ResourceLocation ID = new ResourceLocation(FTBUFinals.MOD_ID, "data");
     private static final EnumTeamPrivacyLevel DEF_BLOCKS_LEVEL = EnumTeamPrivacyLevel.ALLIES;
     private static final IConfigKey DISABLE_EXPLOSIONS = new ConfigKey("ftbu.disable_explosions", new PropertyBool(false));
     private static final IConfigKey FAKE_PLAYERS = new ConfigKey("ftbu.fake_players", new PropertyBool(false));
@@ -71,28 +71,24 @@ public class FTBUTeamData implements INBTData
     }
 
     @Override
-    public String getName()
+    public ResourceLocation getID()
     {
         return ID;
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound tag)
+    public void writeData(NBTTagCompound nbt)
     {
-        flags = tag.getByte("Flags");
+        if(flags != 0)
+        {
+            nbt.setByte("Flags", flags);
+        }
     }
 
     @Override
-    public NBTTagCompound serializeNBT()
+    public void readData(NBTTagCompound nbt)
     {
-        NBTTagCompound tag = new NBTTagCompound();
-
-        if(flags != 0)
-        {
-            tag.setByte("Flags", flags);
-        }
-
-        return tag;
+        flags = nbt.getByte("Flags");
     }
 
     public EnumTeamPrivacyLevel getBlocks()

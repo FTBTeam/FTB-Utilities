@@ -58,7 +58,7 @@ import java.util.Map;
  */
 public class FTBUUniverseData implements INBTData, ITickable
 {
-    public static final String ID = new ResourceLocation(FTBUFinals.MOD_ID, "data").toString();
+    private static final ResourceLocation ID = new ResourceLocation(FTBUFinals.MOD_ID, "data");
     public static final BadgeStorage LOCAL_BADGES = new BadgeStorage();
 
     @Nullable
@@ -73,7 +73,7 @@ public class FTBUUniverseData implements INBTData, ITickable
     private String lastRestartMessage;
 
     @Override
-    public String getName()
+    public ResourceLocation getID()
     {
         return ID;
     }
@@ -355,10 +355,8 @@ public class FTBUUniverseData implements INBTData, ITickable
     }
 
     @Override
-    public NBTTagCompound serializeNBT()
+    public void writeData(NBTTagCompound nbt)
     {
-        NBTTagCompound tag = new NBTTagCompound();
-
         if(warps != null && !warps.isEmpty())
         {
             NBTTagCompound tag1 = new NBTTagCompound();
@@ -368,30 +366,28 @@ public class FTBUUniverseData implements INBTData, ITickable
                 tag1.setIntArray(e.getKey(), e.getValue().toIntArray());
             }
 
-            tag.setTag("Warps", tag1);
+            nbt.setTag("Warps", tag1);
         }
 
-        tag.setTag("Chunks", ClaimedChunkStorage.INSTANCE.serializeNBT());
-
-        return tag;
+        nbt.setTag("Chunks", ClaimedChunkStorage.INSTANCE.serializeNBT());
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound tag)
+    public void readData(NBTTagCompound nbt)
     {
         nextChunkloaderUpdate = System.currentTimeMillis() + 10000L;
 
-        if(tag.hasKey("Warps"))
+        if(nbt.hasKey("Warps"))
         {
             warps = new HashMap<>();
 
-            NBTTagCompound tag1 = (NBTTagCompound) tag.getTag("Warps");
+            NBTTagCompound nbt1 = (NBTTagCompound) nbt.getTag("Warps");
 
-            if(tag1 != null && !tag1.hasNoTags())
+            if(nbt1 != null && !nbt1.hasNoTags())
             {
-                for(String s1 : tag1.getKeySet())
+                for(String s1 : nbt1.getKeySet())
                 {
-                    setWarp(s1.toLowerCase(), new BlockDimPos(tag1.getIntArray(s1)));
+                    setWarp(s1.toLowerCase(), new BlockDimPos(nbt1.getIntArray(s1)));
                 }
             }
         }
@@ -400,9 +396,9 @@ public class FTBUUniverseData implements INBTData, ITickable
             warps = null;
         }
 
-        if(tag.hasKey("Chunks", Constants.NBT.TAG_COMPOUND))
+        if(nbt.hasKey("Chunks", Constants.NBT.TAG_COMPOUND))
         {
-            ClaimedChunkStorage.INSTANCE.deserializeNBT(tag.getCompoundTag("Chunks"));
+            ClaimedChunkStorage.INSTANCE.deserializeNBT(nbt.getCompoundTag("Chunks"));
         }
     }
 

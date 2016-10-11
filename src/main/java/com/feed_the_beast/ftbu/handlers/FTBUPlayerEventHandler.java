@@ -76,22 +76,14 @@ public class FTBUPlayerEventHandler
     public void onDeath(ForgePlayerDeathEvent event)
     {
         FTBUPlayerData data = FTBUPlayerData.get(event.getPlayer());
-
-        if(data != null)
-        {
-            data.lastDeath = new EntityDimPos(event.getPlayer().getPlayer()).toBlockDimPos();
-        }
+        data.lastDeath = new EntityDimPos(event.getPlayer().getPlayer()).toBlockDimPos();
     }
 
     @SubscribeEvent
     public void getSettings(ForgePlayerSettingsEvent event)
     {
         FTBUPlayerData data = FTBUPlayerData.get(event.getPlayer());
-
-        if(data != null)
-        {
-            data.addConfig(event.getSettings());
-        }
+        data.addConfig(event.getSettings());
     }
 
     @SubscribeEvent

@@ -59,13 +59,14 @@ public class FTBULeaderboards
     };
 
     @Leaderboard
-    public static final ILeaderboard PLAY_ONE_MINUTE = new LeaderboardInst(StatList.PLAY_ONE_MINUTE, (o1, o2) -> Long.compare(o2.stats().readStat(StatList.PLAY_ONE_MINUTE), o1.stats().readStat(StatList.PLAY_ONE_MINUTE)))
+    public static final ILeaderboard PLAY_ONE_MINUTE = new LeaderboardInst(StatList.PLAY_ONE_MINUTE, (o1, o2) -> Integer.compare(o2.stats().readStat(StatList.PLAY_ONE_MINUTE), o1.stats().readStat(StatList.PLAY_ONE_MINUTE)))
     {
         @Nullable
         @Override
         public Object getData(IForgePlayer player)
         {
-            return LMStringUtils.getTimeString(player.stats().readStat(StatList.PLAY_ONE_MINUTE)) + " [" + (player.stats().readStat(StatList.PLAY_ONE_MINUTE) / 72000L) + "h]";
+            long ticks = player.stats().readStat(StatList.PLAY_ONE_MINUTE) / 20L;
+            return LMStringUtils.getTimeString(ticks) + " [" + (ticks / 3600L) + "h]";
         }
 
         @Override

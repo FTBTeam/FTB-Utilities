@@ -270,6 +270,65 @@ public class CmdChunks extends CommandTreeBase
         }
     }
 
+    public class CmdAdminClaim extends CommandLM
+    {
+        @Override
+        public String getCommandName()
+        {
+            return "admin_claim";
+        }
+
+        /*
+                @Override
+                public int getRequiredPermissionLevel()
+                {
+                    return 0;
+                }
+        */
+
+        @Override
+        public String getCommandUsage(ICommandSender ics)
+        {
+            return '/' + getCommandName() + " <player> <chunkX> <chunkZ> <dimension>";
+        }
+
+        @Override
+        public boolean isUsernameIndex(String[] args, int i)
+        {
+            return i == 0;
+        }
+
+        @Override
+        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+        {
+            checkArgs(args, 1, "<player>");
+            IForgePlayer p = FTBLibIntegration.API.getForgePlayer(args[0]);
+
+            checkArgs(args, 1, "<chunkX>");
+            int chunkXPos = Integer.parseInt(args[1]);
+
+            checkArgs(args, 1, "<chunkZ>");
+            int chunkZPos = Integer.parseInt(args[2]);
+
+            checkArgs(args, 1, "<dimension>");
+            int dimension = Integer.parseInt(args[3]);
+
+            ChunkDimPos pos = new ChunkDimPos(chunkXPos, chunkZPos, dimension);
+
+            if (FTBUUniverseData.claimChunk(p, pos))
+            {
+                ics.addChatMessage(new TextComponentString(String.format("Claimed the chunk %d, %d in dim [%d] on behalf of %s",
+                        chunkXPos, chunkZPos, +dimension, p.getProfile().getName())));
+            }
+            else
+            {
+                ics.addChatMessage(new TextComponentString("Error! The chunk couldn't be claimed!"));
+            }
+
+        }
+    }
+
+
     public CmdChunks()
     {
         addSubcommand(new CmdClaim());
@@ -280,6 +339,7 @@ public class CmdChunks extends CommandTreeBase
         addSubcommand(new CmdUnclaimAll());
         addSubcommand(new CmdUnloadAll());
         addSubcommand(new CmdAdminUnclaimAll());
+        addSubcommand(new CmdAdminClaim());
     }
 
     @Override

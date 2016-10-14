@@ -65,7 +65,8 @@ public class FTBULeaderboards
         public Object getData(IForgePlayer player)
         {
             long ticks = player.stats().readStat(StatList.PLAY_ONE_MINUTE) / 20L;
-            return LMStringUtils.getTimeString(ticks) + " [" + (ticks / 3600L) + "h]";
+            return MathHelperLM.toSmallDouble(ticks / 3600D) + "h";
+            //LMStringUtils.getTimeString(ticks)
         }
 
         @Override

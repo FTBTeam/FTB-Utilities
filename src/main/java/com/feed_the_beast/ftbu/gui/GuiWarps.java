@@ -82,6 +82,8 @@ public class GuiWarps extends GuiLM
         tessellator.draw();
         GlStateManager.enableTexture2D();
 
+        getFont().drawString("WIP!", 20, 20, 0xFFFFFF);
+
         if(hasLoaded)
         {
         }

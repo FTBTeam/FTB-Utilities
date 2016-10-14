@@ -3,20 +3,18 @@ package com.feed_the_beast.ftbu.api_impl;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.rankconfig.IRankConfig;
 import com.feed_the_beast.ftbl.api.rankconfig.IRankConfigHandler;
-import com.feed_the_beast.ftbl.lib.util.ASMUtils;
+import com.feed_the_beast.ftbl.lib.AsmData;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAddon;
 import com.feed_the_beast.ftbu.api.IRank;
+import com.feed_the_beast.ftbu.api.Leaderboard;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunkStorage;
-import com.feed_the_beast.ftbu.api.leaderboard.ILeaderboard;
-import com.feed_the_beast.ftbu.api.leaderboard.Leaderboard;
 import com.feed_the_beast.ftbu.ranks.DefaultOPRank;
 import com.feed_the_beast.ftbu.ranks.DefaultPlayerRank;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.stats.StatBase;
-import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.IPermissionHandler;
@@ -34,13 +32,13 @@ public enum FTBUtilitiesAPI_Impl implements FTBUtilitiesAPI, IPermissionHandler,
 {
     INSTANCE;
 
-    public final Map<StatBase, ILeaderboard> LEADERBOARDS = new HashMap<>();
+    public final Map<StatBase, Leaderboard> LEADERBOARDS = new HashMap<>();
 
-    public void init(ASMDataTable table)
+    public void init(AsmData asmData)
     {
-        ASMUtils.findAnnotatedObjects(table, FTBUtilitiesAPI.class, FTBUtilitiesAddon.class, (obj, field, data) -> field.set(null, INSTANCE));
-        ASMUtils.findAnnotatedMethods(table, FTBUtilitiesAddon.class, (method, params, data) -> method.invoke(null));
-        ASMUtils.findAnnotatedObjects(table, ILeaderboard.class, Leaderboard.class, (obj, field, data) -> LEADERBOARDS.put(obj.getStat(), obj));
+        asmData.findAnnotatedObjects(FTBUtilitiesAPI.class, FTBUtilitiesAddon.class, (obj, field, data) -> field.set(null, INSTANCE));
+        asmData.findAnnotatedMethods(FTBUtilitiesAddon.class, (method, params, data) -> method.invoke(null));
+        asmData.findRegistryObjects(Leaderboard.class, false, (obj, field, id) -> LEADERBOARDS.put(obj.getStat(), obj));
     }
 
     @Override

@@ -88,3 +88,6 @@ ftbu.pack_state.download=Download
 ftbu.pack_state.downloading=Downloading...
 ftbu.pack_state.remove=Remove
 ftbu.pack_state.update=Update
+
+# Guide
+ftbu.guide=FTBUtilities

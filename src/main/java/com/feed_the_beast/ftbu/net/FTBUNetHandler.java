@@ -14,5 +14,7 @@ public class FTBUNetHandler
         NET.register(4, new MessageClaimedChunksRequest());
         NET.register(5, new MessageClaimedChunksUpdate());
         NET.register(6, new MessageClaimedChunksModify());
+        NET.register(7, new MessageRequestWarpList());
+        NET.register(8, new MessageSendWarpList());
     }
 }

@@ -2,13 +2,12 @@ package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.FTBLibStats;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.lib.LangKey;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
-import com.feed_the_beast.ftbu.api.leaderboard.ILeaderboard;
-import com.feed_the_beast.ftbu.api.leaderboard.Leaderboard;
-import com.feed_the_beast.ftbu.api.leaderboard.LeaderboardInst;
+import com.feed_the_beast.ftbu.api.Leaderboard;
 import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatBasic;
 import net.minecraft.stats.StatList;
@@ -25,8 +24,8 @@ public class FTBULeaderboards
     public static final LangKey LANG_TITLE = new LangKey("ftbu.leaderboard.title");
     public static final StatBase DEATHS_PER_HOUR = (new StatBasic("ftbu.stat.dph", new TextComponentTranslation("ftbu.stat.dph")));
 
-    @Leaderboard
-    public static final ILeaderboard DEATHS = new LeaderboardInst(StatList.DEATHS, (o1, o2) -> Integer.compare(o2.stats().readStat(StatList.DEATHS), o1.stats().readStat(StatList.DEATHS)))
+    @RegistryObject
+    public static final Leaderboard DEATHS = new Leaderboard(StatList.DEATHS, (o1, o2) -> Integer.compare(o2.stats().readStat(StatList.DEATHS), o1.stats().readStat(StatList.DEATHS)))
     {
         @Nullable
         @Override
@@ -36,8 +35,8 @@ public class FTBULeaderboards
         }
     };
 
-    @Leaderboard
-    public static final ILeaderboard MOB_KILLS = new LeaderboardInst(StatList.MOB_KILLS, (o1, o2) -> Integer.compare(o2.stats().readStat(StatList.MOB_KILLS), o1.stats().readStat(StatList.MOB_KILLS)))
+    @RegistryObject
+    public static final Leaderboard MOB_KILLS = new Leaderboard(StatList.MOB_KILLS, (o1, o2) -> Integer.compare(o2.stats().readStat(StatList.MOB_KILLS), o1.stats().readStat(StatList.MOB_KILLS)))
     {
         @Nullable
         @Override
@@ -47,8 +46,8 @@ public class FTBULeaderboards
         }
     };
 
-    @Leaderboard
-    public static final ILeaderboard DEATHS_PER_HOUR_LB = new LeaderboardInst(DEATHS_PER_HOUR, (o1, o2) -> Double.compare(FTBLibStats.getDeathsPerHour(o2.stats()), FTBLibStats.getDeathsPerHour(o1.stats())))
+    @RegistryObject
+    public static final Leaderboard DEATHS_PER_HOUR_LB = new Leaderboard(DEATHS_PER_HOUR, (o1, o2) -> Double.compare(FTBLibStats.getDeathsPerHour(o2.stats()), FTBLibStats.getDeathsPerHour(o1.stats())))
     {
         @Nullable
         @Override
@@ -58,8 +57,8 @@ public class FTBULeaderboards
         }
     };
 
-    @Leaderboard
-    public static final ILeaderboard PLAY_ONE_MINUTE = new LeaderboardInst(StatList.PLAY_ONE_MINUTE, (o1, o2) -> Integer.compare(o2.stats().readStat(StatList.PLAY_ONE_MINUTE), o1.stats().readStat(StatList.PLAY_ONE_MINUTE)))
+    @RegistryObject
+    public static final Leaderboard PLAY_ONE_MINUTE = new Leaderboard(StatList.PLAY_ONE_MINUTE, (o1, o2) -> Integer.compare(o2.stats().readStat(StatList.PLAY_ONE_MINUTE), o1.stats().readStat(StatList.PLAY_ONE_MINUTE)))
     {
         @Nullable
         @Override
@@ -76,8 +75,8 @@ public class FTBULeaderboards
         }
     };
 
-    @Leaderboard
-    public static final ILeaderboard LAST_SEEN = new LeaderboardInst(FTBLibStats.LAST_SEEN, (o1, o2) -> Long.compare(FTBLibStats.getLastSeen(o2.stats(), o2.isOnline()), FTBLibStats.getLastSeen(o1.stats(), o1.isOnline())))
+    @RegistryObject
+    public static final Leaderboard LAST_SEEN = new Leaderboard(FTBLibStats.LAST_SEEN, (o1, o2) -> Long.compare(FTBLibStats.getLastSeen(o2.stats(), o2.isOnline()), FTBLibStats.getLastSeen(o1.stats(), o1.isOnline())))
     {
         @Nullable
         @Override

@@ -264,6 +264,12 @@ public class CmdChunks extends CommandTreeBase
         }
 
         @Override
+        public int getRequiredPermissionLevel()
+        {
+            return 4;
+        }
+
+        @Override
         public String getCommandUsage(ICommandSender ics)
         {
             return '/' + getCommandName() + " <player | @a>";
@@ -285,21 +291,19 @@ public class CmdChunks extends CommandTreeBase
         }
     }
 
-    public class CmdAdminClaim extends CommandLM
+    public class CmdClaimFor extends CommandLM
     {
         @Override
         public String getCommandName()
         {
-            return "admin_claim";
+            return "claim_for";
         }
 
-        /*
-                @Override
-                public int getRequiredPermissionLevel()
-                {
-                    return 0;
-                }
-        */
+        @Override
+        public int getRequiredPermissionLevel()
+        {
+            return 4;
+        }
 
         @Override
         public String getCommandUsage(ICommandSender ics)
@@ -337,21 +341,19 @@ public class CmdChunks extends CommandTreeBase
         }
     }
 
-    public class CmdAdminUnclaim extends CommandLM
+    public class CmdUnclaimFor extends CommandLM
     {
         @Override
         public String getCommandName()
         {
-            return "admin_unclaim";
+            return "unclaim_for";
         }
 
-        /*
-                @Override
-                public int getRequiredPermissionLevel()
-                {
-                    return 0;
-                }
-        */
+        @Override
+        public int getRequiredPermissionLevel()
+        {
+            return 4;
+        }
 
         @Override
         public String getCommandUsage(ICommandSender ics)
@@ -399,8 +401,8 @@ public class CmdChunks extends CommandTreeBase
         addSubcommand(new CmdUnclaimAll());
         addSubcommand(new CmdUnloadAll());
         addSubcommand(new CmdAdminUnclaimAll());
-        addSubcommand(new CmdAdminClaim());
-        addSubcommand(new CmdAdminUnclaim());
+        addSubcommand(new CmdClaimFor());
+        addSubcommand(new CmdUnclaimFor());
     }
 
     @Override

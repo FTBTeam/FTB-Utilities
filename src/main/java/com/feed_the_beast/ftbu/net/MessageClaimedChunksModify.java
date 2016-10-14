@@ -8,6 +8,7 @@ import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
+import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import io.netty.buffer.ByteBuf;
@@ -98,9 +99,17 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
             switch(m.action)
             {
                 case CLAIM:
+                    if (!FTBUConfigWorld.CHUNK_CLAIMING.getBoolean())
+                    {
+                        return;
+                    }
                     FTBUUniverseData.claimChunk(p, pos);
                     break;
                 case UNCLAIM:
+                    if (!FTBUConfigWorld.CHUNK_CLAIMING.getBoolean())
+                    {
+                        return;
+                    }
                     if(p.equalsPlayer(ClaimedChunkStorage.INSTANCE.getChunkOwner(pos)) || PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, new BlockPosContext(player, pos.getChunkPos())))
                     {
                         FTBUUniverseData.unclaimChunk(p, pos);

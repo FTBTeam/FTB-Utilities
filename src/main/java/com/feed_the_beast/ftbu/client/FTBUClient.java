@@ -18,6 +18,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 {
     public static final String KEY_CATEGORY = "key.categories.ftbu";
     public static final KeyBinding KEY_GUIDE = new KeyBinding("key.ftbu.guide", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_NONE, KEY_CATEGORY);
+    public static final KeyBinding KEY_WARP = new KeyBinding("key.ftbu.warp", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_NONE, KEY_CATEGORY);
     public static final KeyBinding KEY_LIGHT_VALUES = new KeyBinding("key.ftbu.light_values", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_F7, KEY_CATEGORY);
     public static final KeyBinding KEY_CHUNK_BORDER = new KeyBinding("key.ftbu.chunk_border", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_F9, KEY_CATEGORY);
 
@@ -27,6 +28,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
     public void preInit()
     {
         ClientRegistry.registerKeyBinding(KEY_GUIDE);
+        ClientRegistry.registerKeyBinding(KEY_WARP);
         ClientRegistry.registerKeyBinding(KEY_LIGHT_VALUES);
         ClientRegistry.registerKeyBinding(KEY_CHUNK_BORDER);
 

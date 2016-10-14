@@ -4,7 +4,9 @@ import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
+import com.feed_the_beast.ftbu.gui.GuiWarps;
 import com.feed_the_beast.ftbu.gui.guide.Guides;
+import com.feed_the_beast.ftbu.net.MessageRequestWarpList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -76,6 +78,13 @@ public class FTBUClientEventHandler
         if(FTBUClient.KEY_GUIDE.isPressed())
         {
             Guides.openGui();
+        }
+
+        if(FTBUClient.KEY_WARP.isPressed())
+        {
+            GuiWarps.INSTANCE = new GuiWarps();
+            GuiWarps.INSTANCE.openGui();
+            new MessageRequestWarpList().sendToServer();
         }
 
         if(FTBUClient.KEY_CHUNK_BORDER.isPressed())

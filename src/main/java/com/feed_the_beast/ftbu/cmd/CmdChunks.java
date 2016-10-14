@@ -301,16 +301,10 @@ public class CmdChunks extends CommandTreeBase
         @Override
         public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
-            checkArgs(args, 1, "<player>");
+            checkArgs(args, 4, "<player> <chunkX> <chunkZ> <dimension>");
             IForgePlayer p = FTBLibIntegration.API.getForgePlayer(args[0]);
-
-            checkArgs(args, 1, "<chunkX>");
             int chunkXPos = Integer.parseInt(args[1]);
-
-            checkArgs(args, 1, "<chunkZ>");
             int chunkZPos = Integer.parseInt(args[2]);
-
-            checkArgs(args, 1, "<dimension>");
             int dimension = Integer.parseInt(args[3]);
 
             ChunkDimPos pos = new ChunkDimPos(chunkXPos, chunkZPos, dimension);
@@ -318,7 +312,7 @@ public class CmdChunks extends CommandTreeBase
             if (FTBUUniverseData.claimChunk(p, pos))
             {
                 ics.addChatMessage(new TextComponentString(String.format("Claimed the chunk %d, %d in dim [%d] on behalf of %s",
-                        chunkXPos, chunkZPos, +dimension, p.getProfile().getName())));
+                        chunkXPos, chunkZPos, dimension, p.getProfile().getName())));
             }
             else
             {
@@ -328,6 +322,57 @@ public class CmdChunks extends CommandTreeBase
         }
     }
 
+    public class CmdAdminUnclaim extends CommandLM
+    {
+        @Override
+        public String getCommandName()
+        {
+            return "admin_unclaim";
+        }
+
+        /*
+                @Override
+                public int getRequiredPermissionLevel()
+                {
+                    return 0;
+                }
+        */
+
+        @Override
+        public String getCommandUsage(ICommandSender ics)
+        {
+            return '/' + getCommandName() + " <player> <chunkX> <chunkZ> <dimension>";
+        }
+
+        @Override
+        public boolean isUsernameIndex(String[] args, int i)
+        {
+            return i == 0;
+        }
+
+        @Override
+        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+        {
+            checkArgs(args, 4, "<player> <chunkX> <chunkZ> <dimension>");
+            IForgePlayer p = FTBLibIntegration.API.getForgePlayer(args[0]);
+            int chunkXPos = Integer.parseInt(args[1]);
+            int chunkZPos = Integer.parseInt(args[2]);
+            int dimension = Integer.parseInt(args[3]);
+
+            ChunkDimPos pos = new ChunkDimPos(chunkXPos, chunkZPos, dimension);
+
+            if (FTBUUniverseData.unclaimChunk(p, pos))
+            {
+                ics.addChatMessage(new TextComponentString(String.format("Unclaimed %s's chunk %d, %d in dim [%d]",
+                        p.getProfile().getName(), chunkXPos, chunkZPos, dimension)));
+            }
+            else
+            {
+                ics.addChatMessage(new TextComponentString("Error! The chunk couldn't be unclaimed!"));
+            }
+
+        }
+    }
 
     public CmdChunks()
     {
@@ -340,6 +385,7 @@ public class CmdChunks extends CommandTreeBase
         addSubcommand(new CmdUnloadAll());
         addSubcommand(new CmdAdminUnclaimAll());
         addSubcommand(new CmdAdminClaim());
+        addSubcommand(new CmdAdminUnclaim());
     }
 
     @Override

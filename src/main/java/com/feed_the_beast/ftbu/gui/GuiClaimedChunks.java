@@ -14,6 +14,7 @@ import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.client.FTBUClientConfig;
+import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksModify;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksRequest;
 import net.minecraft.client.Minecraft;
@@ -67,13 +68,16 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
             boolean claim = !GuiScreen.isShiftKeyDown();
             boolean flag = button.isLeft();
 
-            if(flag)
+            if(FTBUConfigWorld.CHUNK_CLAIMING.getBoolean())
             {
-                currentSelectionMode = claim ? MessageClaimedChunksModify.CLAIM : MessageClaimedChunksModify.LOAD;
-            }
-            else
-            {
-                currentSelectionMode = claim ? MessageClaimedChunksModify.UNCLAIM : MessageClaimedChunksModify.UNLOAD;
+                if (flag)
+                {
+                    currentSelectionMode = claim ? MessageClaimedChunksModify.CLAIM : MessageClaimedChunksModify.LOAD;
+                }
+                else
+                {
+                    currentSelectionMode = claim ? MessageClaimedChunksModify.UNCLAIM : MessageClaimedChunksModify.UNLOAD;
+                }
             }
         }
 

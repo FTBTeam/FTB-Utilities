@@ -10,6 +10,7 @@ import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
+import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.command.CommandException;
@@ -52,15 +53,23 @@ public class CmdChunks extends CommandTreeBase
             IForgePlayer p = FTBLibIntegration.API.getForgePlayer(player);
             ChunkDimPos pos = new EntityDimPos(player).toBlockDimPos().toChunkPos();
 
-            if(FTBUUniverseData.claimChunk(p, pos))
-            {
-                FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_CLAIMED);
-                updateChunk(player, pos);
+
+            if(FTBUConfigWorld.CHUNK_CLAIMING.getBoolean()) {
+                if(FTBUUniverseData.claimChunk(p, pos))
+                {
+                    FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_CLAIMED);
+                    updateChunk(player, pos);
+                }
+                else
+                {
+                    FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_MODIFY_CHUNK);
+                }
             }
             else
             {
-                FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_MODIFY_CHUNK);
+                sender.addChatMessage(new TextComponentString("Error! Claiming is not enabled on this server."));
             }
+
         }
     }
 
@@ -85,19 +94,25 @@ public class CmdChunks extends CommandTreeBase
             IForgePlayer p = FTBLibIntegration.API.getForgePlayer(player);
             ChunkDimPos pos = new EntityDimPos(player).toBlockDimPos().toChunkPos();
 
-            if(!p.equalsPlayer(ClaimedChunkStorage.INSTANCE.getChunkOwner(pos)) && !PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, new BlockPosContext(player, pos.getChunkPos())))
-            {
-                throw new CommandException("commands.generic.permission");
-            }
+            if (FTBUConfigWorld.CHUNK_CLAIMING.getBoolean()) {
+                if(!p.equalsPlayer(ClaimedChunkStorage.INSTANCE.getChunkOwner(pos)) && !PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, new BlockPosContext(player, pos.getChunkPos())))
+                {
+                    throw new CommandException("commands.generic.permission");
+                }
 
-            if(FTBUUniverseData.unclaimChunk(p, pos))
-            {
-                FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_UNCLAIMED);
-                updateChunk(player, pos);
+                if(FTBUUniverseData.unclaimChunk(p, pos))
+                {
+                    FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_UNCLAIMED);
+                    updateChunk(player, pos);
+                }
+                else
+                {
+                    FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_MODIFY_CHUNK);
+                }
             }
             else
             {
-                FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_MODIFY_CHUNK);
+                sender.addChatMessage(new TextComponentString("Error! Claiming is not enabled on this server."));
             }
         }
     }

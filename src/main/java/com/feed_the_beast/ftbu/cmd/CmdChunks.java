@@ -10,6 +10,7 @@ import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
+import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.command.CommandException;
@@ -52,15 +53,22 @@ public class CmdChunks extends CommandTreeBase
             IForgePlayer p = FTBLibIntegration.API.getForgePlayer(player);
             ChunkDimPos pos = new EntityDimPos(player).toBlockDimPos().toChunkPos();
 
-            if(FTBUUniverseData.claimChunk(p, pos))
-            {
-                FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_CLAIMED);
-                updateChunk(player, pos);
+            if(FTBUConfigWorld.CHUNK_CLAIMING.getBoolean()) {
+                if(FTBUUniverseData.claimChunk(p, pos))
+                {
+                    FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_CLAIMED);
+                    updateChunk(player, pos);
+                }
+                else
+                {
+                    FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_MODIFY_CHUNK);
+                }
             }
             else
             {
-                FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_MODIFY_CHUNK);
+                FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_CLAIM_CHUNK);
             }
+
         }
     }
 
@@ -85,19 +93,25 @@ public class CmdChunks extends CommandTreeBase
             IForgePlayer p = FTBLibIntegration.API.getForgePlayer(player);
             ChunkDimPos pos = new EntityDimPos(player).toBlockDimPos().toChunkPos();
 
-            if(!p.equalsPlayer(ClaimedChunkStorage.INSTANCE.getChunkOwner(pos)) && !PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, new BlockPosContext(player, pos.getChunkPos())))
-            {
-                throw new CommandException("commands.generic.permission");
-            }
+            if (FTBUConfigWorld.CHUNK_CLAIMING.getBoolean()) {
+                if(!p.equalsPlayer(ClaimedChunkStorage.INSTANCE.getChunkOwner(pos)) && !PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, new BlockPosContext(player, pos.getChunkPos())))
+                {
+                    throw new CommandException("commands.generic.permission");
+                }
 
-            if(FTBUUniverseData.unclaimChunk(p, pos))
-            {
-                FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_UNCLAIMED);
-                updateChunk(player, pos);
+                if(FTBUUniverseData.unclaimChunk(p, pos))
+                {
+                    FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_UNCLAIMED);
+                    updateChunk(player, pos);
+                }
+                else
+                {
+                    FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_MODIFY_CHUNK);
+                }
             }
             else
             {
-                FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_MODIFY_CHUNK);
+                FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_CLAIM_CHUNK);
             }
         }
     }
@@ -249,6 +263,12 @@ public class CmdChunks extends CommandTreeBase
         }
 
         @Override
+        public int getRequiredPermissionLevel()
+        {
+            return 2;
+        }
+
+        @Override
         public String getCommandUsage(ICommandSender ics)
         {
             return '/' + getCommandName() + " <player | @a>";
@@ -270,6 +290,106 @@ public class CmdChunks extends CommandTreeBase
         }
     }
 
+    public class CmdClaimFor extends CommandLM
+    {
+        @Override
+        public String getCommandName()
+        {
+            return "claim_for";
+        }
+
+        @Override
+        public int getRequiredPermissionLevel()
+        {
+            return 2;
+        }
+
+        @Override
+        public String getCommandUsage(ICommandSender ics)
+        {
+            return '/' + getCommandName() + " <player> <chunkX> <chunkZ> <dimension>";
+        }
+
+        @Override
+        public boolean isUsernameIndex(String[] args, int i)
+        {
+            return i == 0;
+        }
+
+        @Override
+        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+        {
+            checkArgs(args, 4, "<player> <chunkX> <chunkZ> <dimension>");
+            IForgePlayer p = FTBLibIntegration.API.getForgePlayer(args[0]);
+            int chunkXPos = Integer.parseInt(args[1]);
+            int chunkZPos = Integer.parseInt(args[2]);
+            int dimension = Integer.parseInt(args[3]);
+
+            ChunkDimPos pos = new ChunkDimPos(chunkXPos, chunkZPos, dimension);
+
+            EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
+            if (FTBUUniverseData.claimChunk(p, pos))
+            {
+                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.chunkClaimedFor(chunkXPos, chunkZPos, dimension, p));
+            }
+            else
+            {
+                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CANT_CLAIM_CHUNK);
+            }
+
+        }
+    }
+
+    public class CmdUnclaimFor extends CommandLM
+    {
+        @Override
+        public String getCommandName()
+        {
+            return "unclaim_for";
+        }
+
+        @Override
+        public int getRequiredPermissionLevel()
+        {
+            return 2;
+        }
+
+        @Override
+        public String getCommandUsage(ICommandSender ics)
+        {
+            return '/' + getCommandName() + " <player> <chunkX> <chunkZ> <dimension>";
+        }
+
+        @Override
+        public boolean isUsernameIndex(String[] args, int i)
+        {
+            return i == 0;
+        }
+
+        @Override
+        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+        {
+            checkArgs(args, 4, "<player> <chunkX> <chunkZ> <dimension>");
+            IForgePlayer p = FTBLibIntegration.API.getForgePlayer(args[0]);
+            int chunkXPos = Integer.parseInt(args[1]);
+            int chunkZPos = Integer.parseInt(args[2]);
+            int dimension = Integer.parseInt(args[3]);
+
+            ChunkDimPos pos = new ChunkDimPos(chunkXPos, chunkZPos, dimension);
+
+            EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
+            if (FTBUUniverseData.unclaimChunk(p, pos))
+            {
+                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.chunkUnclaimedFor(chunkXPos, chunkZPos, dimension, p));
+            }
+            else
+            {
+                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CANT_CLAIM_CHUNK);
+            }
+
+        }
+    }
+
     public CmdChunks()
     {
         addSubcommand(new CmdClaim());
@@ -280,6 +400,8 @@ public class CmdChunks extends CommandTreeBase
         addSubcommand(new CmdUnclaimAll());
         addSubcommand(new CmdUnloadAll());
         addSubcommand(new CmdAdminUnclaimAll());
+        addSubcommand(new CmdClaimFor());
+        addSubcommand(new CmdUnclaimFor());
     }
 
     @Override

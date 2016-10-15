@@ -53,7 +53,8 @@ public class CmdChunks extends CommandTreeBase
             IForgePlayer p = FTBLibIntegration.API.getForgePlayer(player);
             ChunkDimPos pos = new EntityDimPos(player).toBlockDimPos().toChunkPos();
 
-            if(FTBUConfigWorld.CHUNK_CLAIMING.getBoolean()) {
+            if(FTBUConfigWorld.CHUNK_CLAIMING.getBoolean())
+            {
                 if(FTBUUniverseData.claimChunk(p, pos))
                 {
                     FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_CLAIMED);
@@ -93,7 +94,8 @@ public class CmdChunks extends CommandTreeBase
             IForgePlayer p = FTBLibIntegration.API.getForgePlayer(player);
             ChunkDimPos pos = new EntityDimPos(player).toBlockDimPos().toChunkPos();
 
-            if (FTBUConfigWorld.CHUNK_CLAIMING.getBoolean()) {
+            if(FTBUConfigWorld.CHUNK_CLAIMING.getBoolean())
+            {
                 if(!p.equalsPlayer(ClaimedChunkStorage.INSTANCE.getChunkOwner(pos)) && !PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, new BlockPosContext(player, pos.getChunkPos())))
                 {
                     throw new CommandException("commands.generic.permission");
@@ -328,7 +330,7 @@ public class CmdChunks extends CommandTreeBase
             ChunkDimPos pos = new ChunkDimPos(chunkXPos, chunkZPos, dimension);
 
             EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-            if (FTBUUniverseData.claimChunk(p, pos))
+            if(FTBUUniverseData.claimChunk(p, pos))
             {
                 FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.chunkClaimedFor(chunkXPos, chunkZPos, dimension, p));
             }
@@ -378,7 +380,7 @@ public class CmdChunks extends CommandTreeBase
             ChunkDimPos pos = new ChunkDimPos(chunkXPos, chunkZPos, dimension);
 
             EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-            if (FTBUUniverseData.unclaimChunk(p, pos))
+            if(FTBUUniverseData.unclaimChunk(p, pos))
             {
                 FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.chunkUnclaimedFor(chunkXPos, chunkZPos, dimension, p));
             }

@@ -30,7 +30,6 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.permission.PermissionAPI;
 import net.minecraftforge.server.permission.context.IContext;
@@ -102,7 +101,7 @@ public class ServerInfoFile extends InfoPage
 
         if(FTBUConfigGeneral.SERVER_INFO_MODE.getBoolean())
         {
-            println(FTBLibLang.MODE_CURRENT.textComponent(LMStringUtils.firstUppercase(FTBLibIntegration.API.getSharedData(Side.SERVER).getPackMode().getID())));
+            println(FTBLibLang.MODE_CURRENT.textComponent(LMStringUtils.firstUppercase(FTBLibIntegration.API.getServerData().getPackMode().getID())));
         }
 
         IGuiInfoPage page = getSub("leaderboards").setTitle(FTBULeaderboards.LANG_TITLE.textComponent());

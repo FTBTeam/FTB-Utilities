@@ -184,7 +184,8 @@ public class FTBUUniverseData implements INBTData, ITickable
 
     public static boolean claimChunk(IForgePlayer player, ChunkDimPos pos)
     {
-        if (!FTBUConfigWorld.CHUNK_CLAIMING.getBoolean()) {
+        if(!FTBUConfigWorld.CHUNK_CLAIMING.getBoolean())
+        {
             return false;
         }
 
@@ -232,8 +233,8 @@ public class FTBUUniverseData implements INBTData, ITickable
 
     public static boolean unclaimChunk(IForgePlayer player, ChunkDimPos pos)
     {
-        if (FTBUConfigWorld.LOCKED_IN_CLAIMED_CHUNKS.getBoolean()
-                && !FTBUConfigWorld.CHUNK_CLAIMING.getBoolean()) {
+        if(FTBUConfigWorld.LOCKED_IN_CLAIMED_CHUNKS.getBoolean() && !FTBUConfigWorld.CHUNK_CLAIMING.getBoolean())
+        {
             return false;
         }
 

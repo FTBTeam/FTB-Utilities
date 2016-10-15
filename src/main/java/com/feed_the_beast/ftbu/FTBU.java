@@ -23,14 +23,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(
-        modid = FTBUFinals.MOD_ID,
-        name = FTBUFinals.MOD_ID,
-        version = "0.0.0",
-        useMetadata = true,
-        acceptableRemoteVersions = "*",
-        dependencies = "required-after:ftbl"
-)
+@Mod(modid = FTBUFinals.MOD_ID, name = FTBUFinals.MOD_ID, version = "0.0.0", useMetadata = true, acceptableRemoteVersions = "*", dependencies = "required-after:ftbl")
 public class FTBU
 {
     public static final Logger logger = LogManager.getLogger("FTBUtilities");

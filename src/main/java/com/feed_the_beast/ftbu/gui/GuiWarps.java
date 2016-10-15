@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu.gui;
 
+import com.feed_the_beast.ftbl.gui.GuiLoading;
 import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import net.minecraft.client.renderer.GlStateManager;
@@ -17,13 +18,12 @@ import java.util.List;
 public class GuiWarps extends GuiLM
 {
     public static GuiWarps INSTANCE = null;
-    public static final int SIZE = 200;
+    private static final int SIZE = 200;
+    private static final int SIZE_2 = SIZE / 2;
 
     public boolean hasLoaded = false;
     public List<String> homes;
     public List<String> warps;
-    private double size = 0D;
-    private int state = 0;
 
     public GuiWarps()
     {
@@ -35,33 +35,9 @@ public class GuiWarps extends GuiLM
     {
     }
 
+    @Override
     public void drawBackground()
     {
-        if(state == 0)
-        {
-            size += 0.09D;
-            if(size >= 1D)
-            {
-                size = 1D;
-                state = 1;
-            }
-        }
-        else if(state == 2)
-        {
-            size -= 0.09D;
-
-            if(size <= 0D)
-            {
-                INSTANCE = null;
-                closeGui();
-                return;
-            }
-        }
-
-        size = 1D;
-
-        int SIZE_2 = SIZE / 2;
-
         int ax = getAX() + SIZE_2;
         int ay = getAY() + SIZE_2;
 
@@ -76,20 +52,25 @@ public class GuiWarps extends GuiLM
         for(int i = 0; i <= 360; i += 6)
         {
             float f = (float) (i * MathHelperLM.RAD);
-            buffer.pos(ax + MathHelper.cos(f) * size * SIZE_2, ay + MathHelper.sin(f) * size * SIZE_2, 0D).color(200, 200, 200, 153).endVertex();
+            buffer.pos(ax + MathHelper.cos(f) * SIZE_2, ay + MathHelper.sin(f) * SIZE_2, 0D).color(200, 200, 200, 153).endVertex();
         }
 
         tessellator.draw();
         GlStateManager.enableTexture2D();
 
-        getFont().drawString("WIP!", 20, 20, 0xFFFFFF);
-
         if(hasLoaded)
         {
+            getFont().drawString("WIP!", 20, 20, 0xFFFFFF);
         }
         else
         {
-
+            GuiLoading.renderLoading(ax - SIZE_2, ay - SIZE_2, SIZE, SIZE);
         }
+    }
+
+    @Override
+    public boolean drawDefaultBackground()
+    {
+        return false;
     }
 }

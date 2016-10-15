@@ -44,7 +44,7 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            return FTBLibIntegration.API.hasServer(FTBUFinals.MOD_ID);
+            return FTBLibIntegration.API.getClientData().hasOptionalServerMod(FTBUFinals.MOD_ID);
         }
     };
 
@@ -61,7 +61,7 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            return FTBLibIntegration.API.hasServer(FTBUFinals.MOD_ID);
+            return FTBLibIntegration.API.getClientData().hasOptionalServerMod(FTBUFinals.MOD_ID);
         }
     };
 
@@ -77,7 +77,7 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            return FTBLibIntegration.API.hasServer(FTBUFinals.MOD_ID);
+            return FTBLibIntegration.API.getClientData().hasOptionalServerMod(FTBUFinals.MOD_ID);
         }
     };
 
@@ -93,7 +93,7 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            return LMUtils.DEV_ENV && FTBLibIntegration.API.hasServer(FTBUFinals.MOD_ID);
+            return LMUtils.DEV_ENV && FTBLibIntegration.API.getClientData().hasOptionalServerMod(FTBUFinals.MOD_ID);
         }
     };
 
@@ -109,7 +109,7 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            return FTBLibIntegration.API.isClientPlayerOP() && FTBLibIntegration.API.hasServer(FTBUFinals.MOD_ID);
+            return FTBLibIntegration.API.getClientData().isOP(null) && FTBLibIntegration.API.getClientData().hasOptionalServerMod(FTBUFinals.MOD_ID);
         }
     };
 
@@ -126,7 +126,7 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            return FTBLibIntegration.API.isClientPlayerOP();
+            return FTBLibIntegration.API.getClientData().isOP(null);
         }
     };
 
@@ -149,7 +149,7 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            return FTBLibIntegration.API.isClientPlayerOP();
+            return FTBLibIntegration.API.getClientData().isOP(null);
         }
     };
 
@@ -165,7 +165,7 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            return FTBLibIntegration.API.isClientPlayerOP();
+            return FTBLibIntegration.API.getClientData().isOP(null);
         }
     };
 
@@ -181,7 +181,7 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            return FTBLibIntegration.API.isClientPlayerOP();
+            return FTBLibIntegration.API.getClientData().isOP(null);
         }
     };
 }

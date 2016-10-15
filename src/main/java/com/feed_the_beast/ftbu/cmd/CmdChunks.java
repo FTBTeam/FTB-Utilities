@@ -53,7 +53,6 @@ public class CmdChunks extends CommandTreeBase
             IForgePlayer p = FTBLibIntegration.API.getForgePlayer(player);
             ChunkDimPos pos = new EntityDimPos(player).toBlockDimPos().toChunkPos();
 
-
             if(FTBUConfigWorld.CHUNK_CLAIMING.getBoolean()) {
                 if(FTBUUniverseData.claimChunk(p, pos))
                 {
@@ -67,7 +66,7 @@ public class CmdChunks extends CommandTreeBase
             }
             else
             {
-                sender.addChatMessage(new TextComponentString("Error! Claiming is not enabled on this server."));
+                FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_CLAIM_CHUNK);
             }
 
         }
@@ -112,7 +111,7 @@ public class CmdChunks extends CommandTreeBase
             }
             else
             {
-                sender.addChatMessage(new TextComponentString("Error! Claiming is not enabled on this server."));
+                FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_CLAIM_CHUNK);
             }
         }
     }
@@ -266,7 +265,7 @@ public class CmdChunks extends CommandTreeBase
         @Override
         public int getRequiredPermissionLevel()
         {
-            return 4;
+            return 2;
         }
 
         @Override
@@ -302,7 +301,7 @@ public class CmdChunks extends CommandTreeBase
         @Override
         public int getRequiredPermissionLevel()
         {
-            return 4;
+            return 2;
         }
 
         @Override
@@ -328,14 +327,14 @@ public class CmdChunks extends CommandTreeBase
 
             ChunkDimPos pos = new ChunkDimPos(chunkXPos, chunkZPos, dimension);
 
+            EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
             if (FTBUUniverseData.claimChunk(p, pos))
             {
-                ics.addChatMessage(new TextComponentString(String.format("Claimed the chunk %d, %d in dim [%d] on behalf of %s",
-                        chunkXPos, chunkZPos, dimension, p.getProfile().getName())));
+                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.chunkClaimedFor(chunkXPos, chunkZPos, dimension, p));
             }
             else
             {
-                ics.addChatMessage(new TextComponentString("Error! The chunk couldn't be claimed!"));
+                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CANT_CLAIM_CHUNK);
             }
 
         }
@@ -352,7 +351,7 @@ public class CmdChunks extends CommandTreeBase
         @Override
         public int getRequiredPermissionLevel()
         {
-            return 4;
+            return 2;
         }
 
         @Override
@@ -378,14 +377,14 @@ public class CmdChunks extends CommandTreeBase
 
             ChunkDimPos pos = new ChunkDimPos(chunkXPos, chunkZPos, dimension);
 
+            EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
             if (FTBUUniverseData.unclaimChunk(p, pos))
             {
-                ics.addChatMessage(new TextComponentString(String.format("Unclaimed %s's chunk %d, %d in dim [%d]",
-                        p.getProfile().getName(), chunkXPos, chunkZPos, dimension)));
+                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.chunkUnclaimedFor(chunkXPos, chunkZPos, dimension, p));
             }
             else
             {
-                ics.addChatMessage(new TextComponentString("Error! The chunk couldn't be unclaimed!"));
+                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.CANT_CLAIM_CHUNK);
             }
 
         }

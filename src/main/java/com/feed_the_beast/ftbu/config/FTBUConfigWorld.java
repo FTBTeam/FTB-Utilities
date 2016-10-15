@@ -31,7 +31,7 @@ public class FTBUConfigWorld
     @ConfigValue(id = "world.temp.max_loaded_chunks", file = FTBUFinals.MOD_ID, info = "Temp config for max chunks that player can load")
     public static final PropertyShort MAX_LOADED_CHUNKS = new PropertyShort(64, 0, 30000);
 
-    @ConfigValue(id = "world.locked_in_claimed_chunks", file = FTBUFinals.MOD_ID, info = "Player is allowed to interact only in her claimed chunks")
+    @ConfigValue(id = "world.locked_in_claimed_chunks", file = FTBUFinals.MOD_ID, info = "Players are allowed to interact only in their claimed chunks.")
     public static final PropertyBool LOCKED_IN_CLAIMED_CHUNKS = new PropertyBool(false);
 
 }

@@ -68,16 +68,13 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
             boolean claim = !GuiScreen.isShiftKeyDown();
             boolean flag = button.isLeft();
 
-            if(FTBUConfigWorld.CHUNK_CLAIMING.getBoolean())
+            if(flag)
             {
-                if (flag)
-                {
-                    currentSelectionMode = claim ? MessageClaimedChunksModify.CLAIM : MessageClaimedChunksModify.LOAD;
-                }
-                else
-                {
-                    currentSelectionMode = claim ? MessageClaimedChunksModify.UNCLAIM : MessageClaimedChunksModify.UNLOAD;
-                }
+                currentSelectionMode = claim ? MessageClaimedChunksModify.CLAIM : MessageClaimedChunksModify.LOAD;
+            }
+            else
+            {
+                currentSelectionMode = claim ? MessageClaimedChunksModify.UNCLAIM : MessageClaimedChunksModify.UNLOAD;
             }
         }
 

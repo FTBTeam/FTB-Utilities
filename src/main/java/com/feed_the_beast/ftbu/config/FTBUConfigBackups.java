@@ -32,6 +32,6 @@ public class FTBUConfigBackups
 
     public static long backupMillis()
     {
-        return (long) (BACKUP_TIMER.getInt() * 3600D * 1000D);
+        return (long) (BACKUP_TIMER.getDouble() * 3600D * 1000D);
     }
 }

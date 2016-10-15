@@ -14,6 +14,7 @@ import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.client.FTBUClientConfig;
+import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksModify;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksRequest;
 import net.minecraft.client.Minecraft;

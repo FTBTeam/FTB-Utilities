@@ -91,6 +91,10 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
             return;
         }
 
+        if(!PermissionAPI.hasPermission(player, FTBUPermissions.CLAIMS_CLAIM_CHUNKS)) {
+            return;
+        }
+
         for(ChunkPos pos0 : m.chunks)
         {
             ChunkDimPos pos = new ChunkDimPos(pos0.chunkXPos, pos0.chunkZPos, player.dimension);

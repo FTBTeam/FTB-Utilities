@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu;
 
+import com.feed_the_beast.ftbl.lib.AsmData;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
 import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
@@ -19,14 +20,10 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
-import net.minecraftforge.fml.common.network.NetworkCheckHandler;
-import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Map;
-
-@Mod(modid = FTBUFinals.MOD_ID, version = FTBUFinals.MOD_VERSION, name = FTBUFinals.MOD_NAME, dependencies = FTBUFinals.MOD_DEP)
+@Mod(modid = FTBUFinals.MOD_ID, name = FTBUFinals.MOD_ID, version = "0.0.0", useMetadata = true, acceptableRemoteVersions = "*", dependencies = "required-after:ftbl")
 public class FTBU
 {
     public static final Logger logger = LogManager.getLogger("FTBUtilities");
@@ -40,7 +37,7 @@ public class FTBU
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        FTBUtilitiesAPI_Impl.INSTANCE.init(event.getAsmData());
+        FTBUtilitiesAPI_Impl.INSTANCE.init(new AsmData(event.getAsmData()));
 
         MinecraftForge.EVENT_BUS.register(new FTBUPlayerEventHandler());
         MinecraftForge.EVENT_BUS.register(new FTBUWorldEventHandler());
@@ -75,12 +72,5 @@ public class FTBU
         {
             WebAPI.INST.startAPI();
         }
-    }
-
-    @NetworkCheckHandler
-    public boolean checkNetwork(Map<String, String> map, Side side)
-    {
-        String s = map.get(FTBUFinals.MOD_ID);
-        return s == null || s.equals(FTBUFinals.MOD_VERSION);
     }
 }

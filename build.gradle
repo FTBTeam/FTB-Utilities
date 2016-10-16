@@ -1,4 +1,4 @@
-def version_mod = "3.0.2"
+def version_mod = "3.1.0"
 
 buildscript {
     repositories {
@@ -27,8 +27,6 @@ minecraft {
     version = "1.10.2-12.18.2.2099"
     runDir = "run"
     mappings = "snapshot_20160518"
-    replace "@VERSION@", version_mod
-    replaceIn "FTBUFinals.java"
 }
 
 repositories {
@@ -43,10 +41,9 @@ configurations.all {
 }
 
 dependencies {
-    compile 'com.github.LatvianModder:FTBLib:3.0.2'
-    compile 'com.github.LatvianModder:PermissionAPI:1.0.0'
-    compile 'com.github.AlgorithmX2:Chisels-and-Bits:v12.4'
-    compile group: 'info.journeymap', name: 'journeymap-api', version: '1.9.4-1.2', changing: true
+    deobfCompile 'com.github.LatvianModder:FTBLib:1.9-SNAPSHOT'
+    deobfCompile 'com.github.AlgorithmX2:Chisels-and-Bits:v12.4'
+    deobfCompile group: 'info.journeymap', name: 'journeymap-api', version: '1.9.4-1.2', changing: true
 }
 
 sourceSets {
@@ -74,10 +71,3 @@ processResources {
         exclude 'mcmod.info'
     }
 }
-
-task deobfJar(type: Jar) {
-    from sourceSets.main.output
-    classifier = 'deobf'
-}
-
-build.dependsOn deobfJar

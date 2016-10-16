@@ -39,9 +39,7 @@ public class FTBUPermissions
 
     public static final String HOMES_CROSS_DIM = PermissionAPI.registerNode("ftbu.homes.cross_dim", DefaultPermissionLevel.ALL, "Can use /home to teleport to/from another dimension");
 
-    public static final IRankConfig HOMES_MAX = RankConfigAPI.register("ftbu.homes.max",
-            new PropertyShort(1, 0, 30000), new PropertyShort(100),
-            "Max home count");
+    public static final IRankConfig HOMES_MAX = RankConfigAPI.register("ftbu.homes.max", new PropertyShort(1, 0, 30000), new PropertyShort(100), "Max home count");
 
     // Claims //
 
@@ -53,9 +51,7 @@ public class FTBUPermissions
             "Max amount of chunks that player can claim\n0 - Disabled");
     */
 
-    public static final IRankConfig CLAIMS_FORCED_EXPLOSIONS = RankConfigAPI.register("ftbu.claims.forced_explosions",
-            new PropertyEnum<>(EnumEnabled.NAME_MAP_WITH_NULL, null), new PropertyEnum<>(EnumEnabled.NAME_MAP_WITH_NULL, null),
-            "-: Player setting\ndisabled: Explosions will never happen in claimed chunks\nenabled: Explosions will always happen in claimed chunks");
+    public static final IRankConfig CLAIMS_FORCED_EXPLOSIONS = RankConfigAPI.register("ftbu.claims.forced_explosions", new PropertyEnum<>(EnumEnabled.NAME_MAP_WITH_NULL, null), new PropertyEnum<>(EnumEnabled.NAME_MAP_WITH_NULL, null), "-: Player setting\ndisabled: Explosions will never happen in claimed chunks\nenabled: Explosions will always happen in claimed chunks");
 
     public static final String CLAIMS_BLOCK_BREAK_PREFIX = "ftbu.claims.block.break.";
 
@@ -69,10 +65,7 @@ public class FTBUPermissions
 
     // Chunkloader //
 
-    public static final IRankConfig CHUNKLOADER_TYPE = RankConfigAPI.register("ftbu.chunkloader.type",
-            new PropertyEnum<>(ChunkloaderType.NAME_MAP, ChunkloaderType.OFFLINE),
-            new PropertyEnum<>(ChunkloaderType.NAME_MAP, ChunkloaderType.OFFLINE),
-            "disabled: Players won't be able to chunkload\noffline: Chunks stay loaded when player loggs off\nonline: Chunks only stay loaded while owner is online");
+    public static final IRankConfig CHUNKLOADER_TYPE = RankConfigAPI.register("ftbu.chunkloader.type", new PropertyEnum<>(ChunkloaderType.NAME_MAP, ChunkloaderType.OFFLINE), new PropertyEnum<>(ChunkloaderType.NAME_MAP, ChunkloaderType.OFFLINE), "disabled: Players won't be able to chunkload\noffline: Chunks stay loaded when player loggs off\nonline: Chunks only stay loaded while owner is online");
 
     /* FIXME: Uncomment after ranks are fixed
     public static final IRankConfig CHUNKLOADER_MAX_CHUNKS = RankConfigAPI.register("ftbu.chunkloader.max_chunks",
@@ -80,9 +73,7 @@ public class FTBUPermissions
             "Max amount of chunks that player can load\n0 - Disabled");
     */
 
-    public static final IRankConfig CHUNKLOADER_OFFLINE_TIMER = RankConfigAPI.register("ftbu.chunkloader.offline_timer",
-            new PropertyDouble(24D).setMin(-1D), new PropertyDouble(-1D),
-            "Max hours player can be offline until he's chunks unload\n0 - Disabled, will unload instantly when he disconnects\n-1 - Chunk will always be loaded");
+    public static final IRankConfig CHUNKLOADER_OFFLINE_TIMER = RankConfigAPI.register("ftbu.chunkloader.offline_timer", new PropertyDouble(24D).setMin(-1D), new PropertyDouble(-1D), "Max hours player can be offline until he's chunks unload\n0 - Disabled, will unload instantly when he disconnects\n-1 - Chunk will always be loaded");
 
     public static void init()
     {

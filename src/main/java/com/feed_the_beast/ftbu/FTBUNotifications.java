@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.RegistryObject;
@@ -24,6 +25,9 @@ public class FTBUNotifications
 
     @RegistryObject
     public static final INotification CANT_MODIFY_CHUNK = create("cant_modify_chunk", 0).setError(new TextComponentString("Can't modify this chunk!"));
+
+    @RegistryObject
+    public static final INotification CANT_CLAIM_CHUNK = create("cant_claim_chunk", 0).setError(new TextComponentString("Claiming is not enabled on this server!"));
 
     @RegistryObject
     public static final INotification UNCLAIMED_ALL = create("unclaimed_all", 0).addText(new TextComponentString("Unclaimed all chunks"));
@@ -53,6 +57,18 @@ public class FTBUNotifications
     private static Notification create(String s, int v)
     {
         return new Notification(new ResourceLocation(FTBUFinals.MOD_ID, s), (byte) v);
+    }
+
+    public static INotification chunkClaimedFor(int chunkXPos, int chunkZPos, int dimension, IForgePlayer p)
+    {
+        String label = String.format("Claimed the chunk %d, %d in dim [%d] on behalf of %s", chunkXPos, chunkZPos, dimension, p.getProfile().getName());
+        return create("chunk_modified", 0).addText(new TextComponentString(label));
+    }
+
+    public static INotification chunkUnclaimedFor(int chunkXPos, int chunkZPos, int dimension, IForgePlayer p)
+    {
+        String label = String.format("Unclaimed the chunk %d, %d in dim [%d] on behalf of %s", chunkXPos, chunkZPos, dimension, p.getProfile().getName());
+        return create("chunk_modified", 0).addText(new TextComponentString(label));
     }
 
     public static INotification chunkChanged(@Nullable IForgeTeam team)

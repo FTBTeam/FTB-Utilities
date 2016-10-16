@@ -17,7 +17,7 @@ public interface IClaimedChunk
     void setLoaded(boolean v);
 
     boolean isActuallyLoaded();
-    
+
     boolean isForced();
 
     void setForced(boolean v);

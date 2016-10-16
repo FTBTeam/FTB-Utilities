@@ -1,20 +1,14 @@
-[
-{
+[{
   "modid": "ftbu",
   "name": "FTBUtilities",
   "description": "FTBUtilities",
   "version": "${version}",
   "url": "http://minecraft.curseforge.com/projects/ftb-utilities",
   "updateUrl": "",
-  "authorList": [
-    "LatvianModder"
-  ],
+  "authorList": ["LatvianModder"],
   "credits": "",
   "logoFile": "assets/ftbu/textures/logo.png",
-  "screenshots": [
-  ],
+  "screenshots": [],
   "parent":"",
-  "dependencies": [
-  ]
-}
-]
+  "dependencies": []
+}]

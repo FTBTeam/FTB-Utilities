@@ -184,6 +184,11 @@ public class FTBUUniverseData implements INBTData, ITickable
 
     public static boolean claimChunk(IForgePlayer player, ChunkDimPos pos)
     {
+        if(!FTBUConfigWorld.CHUNK_CLAIMING.getBoolean())
+        {
+            return false;
+        }
+
         if(isDimensionBlacklisted(player.getProfile(), pos.dim))
         {
             return false;
@@ -228,6 +233,11 @@ public class FTBUUniverseData implements INBTData, ITickable
 
     public static boolean unclaimChunk(IForgePlayer player, ChunkDimPos pos)
     {
+        if(FTBUConfigWorld.LOCKED_IN_CLAIMED_CHUNKS.getBoolean() && !FTBUConfigWorld.CHUNK_CLAIMING.getBoolean())
+        {
+            return false;
+        }
+
         IClaimedChunk chunk = ClaimedChunkStorage.INSTANCE.getChunk(pos);
 
         if(chunk != null && chunk.getOwner().equalsPlayer(player))

@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
+import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
@@ -59,7 +60,7 @@ public class CmdChunks extends CommandTreeBase
                 return;
             }
 
-            if(!PermissionAPI.hasPermission(player, FTBUPermissions.CLAIMS_CLAIM_CHUNKS)) {
+            if(!FTBUtilitiesAPI_Impl.INSTANCE.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CLAIM_CHUNKS, null)) {
                 FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CLAIMING_NOT_ALLOWED);
                 return;
             }
@@ -104,7 +105,7 @@ public class CmdChunks extends CommandTreeBase
                 return;
             }
 
-            if(!PermissionAPI.hasPermission(player, FTBUPermissions.CLAIMS_CLAIM_CHUNKS)) {
+            if(!FTBUtilitiesAPI_Impl.INSTANCE.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CLAIM_CHUNKS, null)) {
                 FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CLAIMING_NOT_ALLOWED);
                 return;
             }

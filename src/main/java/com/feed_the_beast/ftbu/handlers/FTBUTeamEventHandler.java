@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu.handlers;
 
+import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamSettingsEvent;
 import com.feed_the_beast.ftbl.api.events.team.ITeamDataProvider;
 import com.feed_the_beast.ftbu.world.FTBUTeamData;
@@ -10,6 +11,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  */
 public class FTBUTeamEventHandler
 {
+    @RegistryObject
     public static final ITeamDataProvider DATA_PROVIDER = team -> new FTBUTeamData();
 
     /*@SubscribeEvent

@@ -30,7 +30,7 @@ public class FTBUNotifications
     public static final INotification CLAIMING_NOT_ENABLED = create("cant_claim_chunk", 0).setError(new TextComponentString("Claiming is not enabled on this server!"));
 
     @RegistryObject
-    public static final INotification CLAIMING_NOT_ALLOWED = create("not_allowed_to_claim_chunk", 0).setError(new TextComponentString("You are not allowed to claim this chunk"));
+    public static final INotification CLAIMING_NOT_ALLOWED = create("cant_claim_chunk", 1).setError(new TextComponentString("You are not allowed to claim this chunk"));
 
     @RegistryObject
     public static final INotification UNCLAIMED_ALL = create("unclaimed_all", 0).addText(new TextComponentString("Unclaimed all chunks"));

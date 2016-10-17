@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.lib.config.PropertyEntityClassList;
 import com.feed_the_beast.ftbl.lib.config.PropertyShort;
 import com.feed_the_beast.ftbu.FTBUFinals;
 
-import java.util.ArrayList;
+import java.util.Collections;
 
 public class FTBUConfigWorld
 {
@@ -20,7 +20,7 @@ public class FTBUConfigWorld
     public static final PropertyBool SAFE_SPAWN = new PropertyBool(false);
 
     @ConfigValue(id = "world.blocked_entities", file = FTBUFinals.MOD_ID, info = "Entity IDs that are banned from world. They will not spawn and existing ones will be destroyed")
-    public static final PropertyEntityClassList BLOCKED_ENTITIES = new PropertyEntityClassList(new ArrayList<>());
+    public static final PropertyEntityClassList BLOCKED_ENTITIES = new PropertyEntityClassList(Collections.emptyList());
 
     @ConfigValue(id = "world.spawn_area_in_sp", file = FTBUFinals.MOD_ID, info = "Enable spawn area in singleplayer")
     public static final PropertyBool SPAWN_AREA_IN_SP = new PropertyBool(false);

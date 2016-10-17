@@ -29,10 +29,10 @@ public class FTBU
     public static final Logger logger = LogManager.getLogger("FTBUtilities");
 
     @Mod.Instance(FTBUFinals.MOD_ID)
-    public static FTBU inst;
+    public static FTBU INST;
 
     @SidedProxy(serverSide = "com.feed_the_beast.ftbu.FTBUCommon", clientSide = "com.feed_the_beast.ftbu.client.FTBUClient")
-    public static FTBUCommon proxy;
+    public static FTBUCommon PROXY;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -46,7 +46,7 @@ public class FTBU
 
         FTBUNetHandler.init();
 
-        proxy.preInit();
+        PROXY.preInit();
     }
 
     @Mod.EventHandler
@@ -58,8 +58,8 @@ public class FTBU
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-        proxy.postInit();
-        ForgeChunkManager.setForcedChunkLoadingCallback(inst, LoadedChunkStorage.INSTANCE);
+        PROXY.postInit();
+        ForgeChunkManager.setForcedChunkLoadingCallback(INST, LoadedChunkStorage.INSTANCE);
     }
 
     @Mod.EventHandler
@@ -68,7 +68,7 @@ public class FTBU
         Backups.INSTANCE.init();
         Ranks.INSTANCE.generateExampleFiles();
 
-        if(FTBUConfigWebAPI.ENABLED.getBoolean() && FTBUConfigWebAPI.AUTOSTART.getBoolean())
+        if(FTBUConfigWebAPI.ENABLED.getBoolean())
         {
             WebAPI.INST.startAPI();
         }

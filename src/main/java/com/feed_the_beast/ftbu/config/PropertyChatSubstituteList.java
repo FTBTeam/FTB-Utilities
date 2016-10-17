@@ -117,7 +117,7 @@ public class PropertyChatSubstituteList extends PropertyBase
     }
 
     @Override
-    public void writeData(ByteBuf data, boolean extended)
+    public void writeToServer(ByteBuf data)
     {
         data.writeShort(value.size());
         value.forEach((key, value1) ->
@@ -128,7 +128,7 @@ public class PropertyChatSubstituteList extends PropertyBase
     }
 
     @Override
-    public void readData(ByteBuf data, boolean extended)
+    public void readFromServer(ByteBuf data)
     {
         int s = data.readUnsignedShort();
         value.clear();

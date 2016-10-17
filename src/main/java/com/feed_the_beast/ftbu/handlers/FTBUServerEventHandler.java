@@ -74,7 +74,7 @@ public class FTBUServerEventHandler
         }
         else
         {
-            FTBU.proxy.onReloadedClient();
+            FTBU.PROXY.onReloadedClient();
         }
     }
 

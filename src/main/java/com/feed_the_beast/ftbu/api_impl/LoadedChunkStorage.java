@@ -26,7 +26,7 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback
             ForgeChunkManager.getConfig().save();
         }
 
-        ForgeChunkManager.setForcedChunkLoadingCallback(FTBU.inst, this);
+        ForgeChunkManager.setForcedChunkLoadingCallback(FTBU.INST, this);
     }
 
     public void clear()
@@ -45,7 +45,7 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback
 
             if(world != null)
             {
-                ticket = ForgeChunkManager.requestTicket(FTBU.inst, world, ForgeChunkManager.Type.NORMAL);
+                ticket = ForgeChunkManager.requestTicket(FTBU.INST, world, ForgeChunkManager.Type.NORMAL);
                 TICKET_CONTAINERS.put(dimID, ticket);
             }
         }

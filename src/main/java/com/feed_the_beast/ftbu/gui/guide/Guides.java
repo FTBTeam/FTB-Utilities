@@ -146,7 +146,7 @@ public class Guides
             }
             catch(Exception ex)
             {
-                LMUtils.DEV_LOGGER.info("Error while loading guide from domain '" + domain + "'");
+                //LMUtils.DEV_LOGGER.info("Error while loading guide from domain '" + domain + "'");
 
                 if(!(ex instanceof FileNotFoundException))
                 {

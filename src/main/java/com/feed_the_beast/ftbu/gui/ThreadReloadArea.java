@@ -23,16 +23,16 @@ import java.util.Map;
 @SideOnly(Side.CLIENT)
 public class ThreadReloadArea extends Thread
 {
-    public static final PixelBuffer pixels = new PixelBuffer(ClaimedChunks.TILES_TEX * 16, ClaimedChunks.TILES_TEX * 16);
-    private static final Map<IBlockState, Integer> colorCache = new HashMap<>();
-    private static BlockPos.MutableBlockPos currentBlockPos = new BlockPos.MutableBlockPos(0, 0, 0);
+    public static final PixelBuffer PIXELS = new PixelBuffer(ClaimedChunks.TILES_TEX * 16, ClaimedChunks.TILES_TEX * 16);
+    private static final Map<IBlockState, Integer> COLOR_CACHE = new HashMap<>();
+    private static final BlockPos.MutableBlockPos CURRENT_BLOCK_POS = new BlockPos.MutableBlockPos(0, 0, 0);
     public final World worldObj;
     public final GuiClaimedChunks gui;
     public boolean cancelled = false;
 
     public ThreadReloadArea(World w, GuiClaimedChunks m)
     {
-        super("LM_MapReloader");
+        super("FTBU_MapReloader");
         setDaemon(true);
         worldObj = w;
         gui = m;
@@ -40,12 +40,12 @@ public class ThreadReloadArea extends Thread
 
     private static int getBlockColor(IBlockState state)
     {
-        Integer col = colorCache.get(state);
+        Integer col = COLOR_CACHE.get(state);
 
         if(col == null)
         {
             col = 0xFF000000 | getBlockColor0(state);
-            colorCache.put(state, col);
+            COLOR_CACHE.put(state, col);
         }
 
         return col;
@@ -149,8 +149,8 @@ public class ThreadReloadArea extends Thread
     @Override
     public void run()
     {
-        Arrays.fill(pixels.getPixels(), 0);
-        GuiClaimedChunks.pixelBuffer = LMColorUtils.toByteBuffer(pixels.getPixels(), false);
+        Arrays.fill(PIXELS.getPixels(), 0);
+        GuiClaimedChunks.pixelBuffer = LMColorUtils.toByteBuffer(PIXELS.getPixels(), false);
 
         Chunk chunk;
         int cx, cz, x, z, wx, wz, by, color, topY;
@@ -185,9 +185,9 @@ public class ThreadReloadArea extends Thread
 
                                     IBlockState state = chunk.getBlockState(wx, by, wz);
 
-                                    currentBlockPos.setPos(x + wx, by, z + wz);
+                                    CURRENT_BLOCK_POS.setPos(x + wx, by, z + wz);
 
-                                    if(state.getBlock() != Blocks.TALLGRASS && !worldObj.isAirBlock(currentBlockPos))
+                                    if(state.getBlock() != Blocks.TALLGRASS && !worldObj.isAirBlock(CURRENT_BLOCK_POS))
                                     {
                                         color = getBlockColor(state);
 
@@ -196,7 +196,7 @@ public class ThreadReloadArea extends Thread
                                             color = LMColorUtils.addBrightness(color, MathHelper.clamp_int(by - startY, -30, 30) * 5);
                                         }
 
-                                        pixels.setRGB(cx * 16 + wx, cz * 16 + wz, color);
+                                        PIXELS.setRGB(cx * 16 + wx, cz * 16 + wz, color);
                                         break;
                                     }
                                 }
@@ -204,7 +204,7 @@ public class ThreadReloadArea extends Thread
                         }
                     }
 
-                    GuiClaimedChunks.pixelBuffer = LMColorUtils.toByteBuffer(pixels.getPixels(), false);
+                    GuiClaimedChunks.pixelBuffer = LMColorUtils.toByteBuffer(PIXELS.getPixels(), false);
                 }
             }
         }
@@ -213,6 +213,6 @@ public class ThreadReloadArea extends Thread
             e.printStackTrace();
         }
 
-        GuiClaimedChunks.pixelBuffer = LMColorUtils.toByteBuffer(pixels.getPixels(), false);
+        GuiClaimedChunks.pixelBuffer = LMColorUtils.toByteBuffer(PIXELS.getPixels(), false);
     }
 }

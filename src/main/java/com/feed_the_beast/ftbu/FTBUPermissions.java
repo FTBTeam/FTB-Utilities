@@ -43,6 +43,8 @@ public class FTBUPermissions
 
     // Claims //
 
+    public static final String CLAIMS_CLAIM_CHUNKS = PermissionAPI.registerNode("ftbu.claims.claim_chunks", DefaultPermissionLevel.ALL, "Allow player to claim chunks");
+
     public static final String CLAIMS_MODIFY_OTHER_CHUNKS = PermissionAPI.registerNode("ftbu.claims.modify_other_chunks", DefaultPermissionLevel.OP, "Allow player to edit other player's chunks");
 
     /* FIXME: Uncomment after ranks are fixed

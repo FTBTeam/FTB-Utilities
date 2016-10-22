@@ -142,8 +142,9 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
             {
                 String id = a.get(i).getAsString();
                 char firstChar = id.charAt(0);
-                boolean b = firstChar == '-';
-                permissions.put((firstChar == '-' || firstChar == '+') ? id.substring(1) : id, b);
+                boolean not_allowed = firstChar == '-';
+                String key = (firstChar == '-' || firstChar == '+') ? id.substring(1) : id;
+                permissions.put(key, !not_allowed);
             }
         }
 

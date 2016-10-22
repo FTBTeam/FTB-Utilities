@@ -14,6 +14,10 @@ import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
+import gnu.trove.iterator.TIntIterator;
+import gnu.trove.list.TIntList;
+import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.procedure.TIntProcedure;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -318,7 +322,7 @@ public class CmdChunks extends CommandTreeBase
         @Override
         public String getCommandUsage(ICommandSender ics)
         {
-            return '/' + getCommandName() + " <player> <chunkX> <chunkZ> <dimension>";
+            return '/' + getCommandName() + " <player> <chunkX> <chunkZ> [<dimension>]";
         }
 
         @Override
@@ -331,30 +335,37 @@ public class CmdChunks extends CommandTreeBase
         public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
 
-            checkArgs(args, 4, "<player> <chunkX> <chunkZ> <dimension>");
+            checkArgs(args, 3, "<player> <chunkX> <chunkZ> <dimension>");
             String playerName = args[0];
             IForgePlayer claim_for = FTBLibIntegration.API.getForgePlayer(playerName);
             int chunkXPos = Integer.parseInt(args[1]);
             int chunkZPos = Integer.parseInt(args[2]);
-            int dimension = Integer.parseInt(args[3]);
 
-            ChunkDimPos pos = new ChunkDimPos(chunkXPos, chunkZPos, dimension);
+            TIntList dimensions = args.length > 3 ?
+                TIntArrayList.wrap(new int[]{Integer.parseInt(args[3])}) :
+                FTBUConfigWorld.LOCKED_IN_DIMENTIONS.getIntList();
+
             EntityPlayerMP player = claim_for.getPlayer();
             if (player == null) {
                 ics.addChatMessage(new TextComponentString("Can't find player " + playerName));
                 return;
             }
 
-            if (FTBUUniverseData.claimChunk(claim_for, pos))
-            {
-                String msg = String.format("Claimed %d, %d in %d for %s", chunkXPos, chunkZPos, dimension, playerName);
-                ics.addChatMessage(new TextComponentString(msg));
-                updateChunk(player, pos);
-            }
-            else
-            {
-                String msg = String.format("ERROR: Can't claim %d, %d in %d for %s", chunkXPos, chunkZPos, dimension, playerName);
-                ics.addChatMessage(new TextComponentString(msg));
+            TIntIterator it = dimensions.iterator();
+            while(it.hasNext()) {
+                int dimension = it.next();
+                ChunkDimPos pos = new ChunkDimPos(chunkXPos, chunkZPos, dimension);
+                if (FTBUUniverseData.claimChunk(claim_for, pos))
+                {
+                    String msg = String.format("Claimed %d, %d in %d for %s", chunkXPos, chunkZPos, dimension, playerName);
+                    ics.addChatMessage(new TextComponentString(msg));
+                    updateChunk(player, pos);
+                }
+                else
+                {
+                    String msg = String.format("ERROR: Can't claim %d, %d in %d for %s", chunkXPos, chunkZPos, dimension, playerName);
+                    ics.addChatMessage(new TextComponentString(msg));
+                }
             }
 
         }

@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbu.config;
 import com.feed_the_beast.ftbl.api.config.ConfigValue;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyEntityClassList;
+import com.feed_the_beast.ftbl.lib.config.PropertyIntList;
 import com.feed_the_beast.ftbl.lib.config.PropertyShort;
 import com.feed_the_beast.ftbu.FTBUFinals;
 
@@ -33,4 +34,7 @@ public class FTBUConfigWorld
 
     @ConfigValue(id = "world.locked_in_claimed_chunks", file = FTBUFinals.MOD_ID, info = "Players are allowed to interact only in their claimed chunks.")
     public static final PropertyBool LOCKED_IN_CLAIMED_CHUNKS = new PropertyBool(false);
+
+    @ConfigValue(id = "world.locked_in_dimentions", file = FTBUFinals.MOD_ID, info = "Specifies dimentions for world.locked_in_claimed_chunks")
+    public static final PropertyIntList LOCKED_IN_DIMENTIONS = new PropertyIntList(1, 0, -1);
 }

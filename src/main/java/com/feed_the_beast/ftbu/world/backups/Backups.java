@@ -104,6 +104,7 @@ public enum Backups
         {
             return false;
         }
+
         boolean auto = !(ics instanceof EntityPlayerMP);
 
         if(auto && !FTBUConfigBackups.ENABLED.getBoolean())
@@ -153,27 +154,32 @@ public enum Backups
         {
             Collections.sort(backups, Backup.COMPARATOR);
 
-            if(backups.size() > FTBUConfigBackups.BACKUPS_TO_KEEP.getInt())
-            {
-                int toDelete = backups.size() - FTBUConfigBackups.BACKUPS_TO_KEEP.getInt();
+            int backupsToKeep = FTBUConfigBackups.BACKUPS_TO_KEEP.getInt();
 
-                if(toDelete > 0)
+            if(backupsToKeep > 0)
+            {
+                if(backups.size() > backupsToKeep)
                 {
-                    for(int i = toDelete - 1; i >= 0; i--)
+                    int toDelete = backups.size() - backupsToKeep;
+
+                    if(toDelete > 0)
                     {
-                        Backup b = backups.get(i);
-                        LOGGER.info("Deleting " + b.fileID);
-                        LMFileUtils.delete(b.getFile());
-                        backups.remove(i);
+                        for(int i = toDelete - 1; i >= 0; i--)
+                        {
+                            Backup b = backups.get(i);
+                            LOGGER.info("Deleting " + b.fileID);
+                            LMFileUtils.delete(b.getFile());
+                            backups.remove(i);
+                        }
                     }
                 }
-            }
 
-            for(int i = backups.size() - 1; i >= 0; i--)
-            {
-                if(!backups.get(i).getFile().exists())
+                for(int i = backups.size() - 1; i >= 0; i--)
                 {
-                    backups.remove(i);
+                    if(!backups.get(i).getFile().exists())
+                    {
+                        backups.remove(i);
+                    }
                 }
             }
 

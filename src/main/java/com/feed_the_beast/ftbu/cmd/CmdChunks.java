@@ -9,7 +9,6 @@ import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
-import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
@@ -17,7 +16,6 @@ import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.procedure.TIntProcedure;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -64,7 +62,8 @@ public class CmdChunks extends CommandTreeBase
                 return;
             }
 
-            if(!FTBUtilitiesAPI_Impl.INSTANCE.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CLAIM_CHUNKS, null)) {
+            if(!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CLAIM_CHUNKS, null))
+            {
                 FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CLAIMING_NOT_ALLOWED);
                 return;
             }
@@ -109,7 +108,8 @@ public class CmdChunks extends CommandTreeBase
                 return;
             }
 
-            if(!FTBUtilitiesAPI_Impl.INSTANCE.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CLAIM_CHUNKS, null)) {
+            if(!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CLAIM_CHUNKS, null))
+            {
                 FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CLAIMING_NOT_ALLOWED);
                 return;
             }
@@ -278,12 +278,6 @@ public class CmdChunks extends CommandTreeBase
         }
 
         @Override
-        public int getRequiredPermissionLevel()
-        {
-            return 2;
-        }
-
-        @Override
         public String getCommandUsage(ICommandSender ics)
         {
             return '/' + getCommandName() + " <player | @a>";
@@ -314,12 +308,6 @@ public class CmdChunks extends CommandTreeBase
         }
 
         @Override
-        public int getRequiredPermissionLevel()
-        {
-            return 2;
-        }
-
-        @Override
         public String getCommandUsage(ICommandSender ics)
         {
             return '/' + getCommandName() + " <player> <chunkX> <chunkZ> [<dimension>]";
@@ -338,24 +326,24 @@ public class CmdChunks extends CommandTreeBase
             checkArgs(args, 3, "<player> <chunkX> <chunkZ> <dimension>");
             String playerName = args[0];
             IForgePlayer claim_for = FTBLibIntegration.API.getForgePlayer(playerName);
-            int chunkXPos = Integer.parseInt(args[1]);
-            int chunkZPos = Integer.parseInt(args[2]);
+            int chunkXPos = parseInt(args[1]);
+            int chunkZPos = parseInt(args[2]);
 
-            TIntList dimensions = args.length > 3 ?
-                TIntArrayList.wrap(new int[]{Integer.parseInt(args[3])}) :
-                FTBUConfigWorld.LOCKED_IN_DIMENTIONS.getIntList();
+            TIntList dimensions = args.length > 3 ? TIntArrayList.wrap(new int[] {parseInt(args[3])}) : FTBUConfigWorld.LOCKED_IN_DIMENSIONS.getIntList();
 
             EntityPlayerMP player = claim_for.getPlayer();
-            if (player == null) {
+            if(player == null)
+            {
                 ics.addChatMessage(new TextComponentString("Can't find player " + playerName));
                 return;
             }
 
             TIntIterator it = dimensions.iterator();
-            while(it.hasNext()) {
+            while(it.hasNext())
+            {
                 int dimension = it.next();
                 ChunkDimPos pos = new ChunkDimPos(chunkXPos, chunkZPos, dimension);
-                if (FTBUUniverseData.claimChunk(claim_for, pos))
+                if(FTBUUniverseData.claimChunk(claim_for, pos))
                 {
                     String msg = String.format("Claimed %d, %d in %d for %s", chunkXPos, chunkZPos, dimension, playerName);
                     ics.addChatMessage(new TextComponentString(msg));
@@ -371,47 +359,6 @@ public class CmdChunks extends CommandTreeBase
         }
     }
 
-    public class CmdUnclaimFor extends CommandLM
-    {
-        @Override
-        public String getCommandName()
-        {
-            return "unclaim_for";
-        }
-
-        @Override
-        public int getRequiredPermissionLevel()
-        {
-            return 2;
-        }
-
-        @Override
-        public String getCommandUsage(ICommandSender ics)
-        {
-            return '/' + getCommandName() + " <player> <chunkX> <chunkZ> <dimension>";
-        }
-
-        @Override
-        public boolean isUsernameIndex(String[] args, int i)
-        {
-            return i == 0;
-        }
-
-        @Override
-        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
-        {
-            checkArgs(args, 4, "<player> <chunkX> <chunkZ> <dimension>");
-            IForgePlayer p = FTBLibIntegration.API.getForgePlayer(args[0]);
-            int chunkXPos = Integer.parseInt(args[1]);
-            int chunkZPos = Integer.parseInt(args[2]);
-            int dimension = Integer.parseInt(args[3]);
-
-            ChunkDimPos pos = new ChunkDimPos(chunkXPos, chunkZPos, dimension);
-
-
-        }
-    }
-
     public CmdChunks()
     {
         addSubcommand(new CmdClaim());
@@ -423,7 +370,6 @@ public class CmdChunks extends CommandTreeBase
         addSubcommand(new CmdUnloadAll());
         addSubcommand(new CmdAdminUnclaimAll());
         addSubcommand(new CmdClaimFor());
-        addSubcommand(new CmdUnclaimFor());
     }
 
     @Override

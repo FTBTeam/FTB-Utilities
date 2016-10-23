@@ -35,6 +35,6 @@ public class FTBUConfigWorld
     @ConfigValue(id = "world.locked_in_claimed_chunks", file = FTBUFinals.MOD_ID, info = "Players are allowed to interact only in their claimed chunks.")
     public static final PropertyBool LOCKED_IN_CLAIMED_CHUNKS = new PropertyBool(false);
 
-    @ConfigValue(id = "world.locked_in_dimentions", file = FTBUFinals.MOD_ID, info = "Specifies dimentions for world.locked_in_claimed_chunks")
-    public static final PropertyIntList LOCKED_IN_DIMENTIONS = new PropertyIntList(1, 0, -1);
+    @ConfigValue(id = "world.locked_in_dimensions", file = FTBUFinals.MOD_ID, info = "Specifies dimensions for world.locked_in_claimed_chunks")
+    public static final PropertyIntList LOCKED_IN_DIMENSIONS = new PropertyIntList(1, 0, -1);
 }

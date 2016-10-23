@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
+import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 
 /**
  * Created by LatvianModder on 03.10.2016.
@@ -54,6 +55,11 @@ public class ClaimedChunk implements IClaimedChunk
 
         if(loaded)
         {
+            if(!FTBUConfigWorld.CHUNK_LOADING.getBoolean())
+            {
+                loaded = false;
+            }
+
             switch((ChunkloaderType) RankConfigAPI.getRankConfig(owner.getProfile(), FTBUPermissions.CHUNKLOADER_TYPE).getValue())
             {
                 case ONLINE:

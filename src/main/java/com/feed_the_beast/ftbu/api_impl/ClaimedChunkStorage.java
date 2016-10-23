@@ -108,8 +108,7 @@ public enum ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializabl
         // Non-claimed chunks interaction possibility
         if(chunk == null)
         {
-            return !FTBUConfigWorld.LOCKED_IN_CLAIMED_CHUNKS.getBoolean()
-                    || !FTBUConfigWorld.LOCKED_IN_DIMENTIONS.getIntList().contains(chunkDimPos.dim);
+            return !FTBUConfigWorld.LOCKED_IN_CLAIMED_CHUNKS.getBoolean() || !FTBUConfigWorld.LOCKED_IN_DIMENSIONS.getIntList().contains(chunkDimPos.dim);
         }
 
         IForgePlayer player = FTBLibIntegration.API.getUniverse().getPlayer(entityPlayer);

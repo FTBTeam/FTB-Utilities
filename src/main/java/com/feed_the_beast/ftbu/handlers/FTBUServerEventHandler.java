@@ -26,6 +26,8 @@ import com.feed_the_beast.ftbu.cmd.CmdSpawn;
 import com.feed_the_beast.ftbu.cmd.CmdTplast;
 import com.feed_the_beast.ftbu.cmd.CmdTrashCan;
 import com.feed_the_beast.ftbu.cmd.CmdWarp;
+import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
+import com.feed_the_beast.ftbu.config.FTBUConfigCommands;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
@@ -86,24 +88,67 @@ public class FTBUServerEventHandler
             event.add(new CmdRestart());
         }
 
-        event.add(new CmdInv());
-        event.add(new CmdSetWarp());
-        event.add(new CmdDelWarp());
-        event.add(new CmdBackup());
-        event.add(new CmdAdminHome());
-        event.add(new CmdServerInfo());
-        event.add(new CmdTplast());
-        event.add(new CmdTrashCan());
-        event.add(new CmdBack());
-        event.add(new CmdSpawn());
-        event.add(new CmdWarp());
-        event.add(new CmdHome());
-        event.add(new CmdSetHome());
-        event.add(new CmdDelHome());
-        event.add(new CmdChunks());
-        event.add(new CmdEditRanks());
-        event.add(new CmdGetRank());
-        event.add(new CmdSetRank());
+        if(FTBUConfigCommands.INV.getBoolean())
+        {
+            event.add(new CmdInv());
+        }
+
+        if(FTBUConfigCommands.WARP.getBoolean())
+        {
+            event.add(new CmdWarp());
+            event.add(new CmdSetWarp());
+            event.add(new CmdDelWarp());
+        }
+
+        if(FTBUConfigBackups.ENABLED.getBoolean())
+        {
+            event.add(new CmdBackup());
+        }
+
+        if(FTBUConfigCommands.HOME.getBoolean())
+        {
+            event.add(new CmdAdminHome());
+            event.add(new CmdHome());
+            event.add(new CmdSetHome());
+            event.add(new CmdDelHome());
+        }
+
+        if(FTBUConfigCommands.SERVER_INFO.getBoolean())
+        {
+            event.add(new CmdServerInfo());
+        }
+
+        if(FTBUConfigCommands.TPL.getBoolean())
+        {
+            event.add(new CmdTplast());
+        }
+
+        if(FTBUConfigCommands.TRASH_CAN.getBoolean())
+        {
+            event.add(new CmdTrashCan());
+        }
+
+        if(FTBUConfigCommands.BACK.getBoolean())
+        {
+            event.add(new CmdBack());
+        }
+
+        if(FTBUConfigCommands.SPAWN.getBoolean())
+        {
+            event.add(new CmdSpawn());
+        }
+
+        if(FTBUConfigCommands.CHUNKS.getBoolean())
+        {
+            event.add(new CmdChunks());
+        }
+
+        if(FTBUConfigGeneral.RANKS_ENABLED.getBoolean())
+        {
+            event.add(new CmdGetRank());
+            event.add(new CmdSetRank());
+            event.add(new CmdEditRanks());
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

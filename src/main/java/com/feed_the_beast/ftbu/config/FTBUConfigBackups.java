@@ -12,7 +12,7 @@ public class FTBUConfigBackups
     @ConfigValue(id = "backups.enabled", file = FTBUFinals.MOD_ID)
     public static final PropertyBool ENABLED = new PropertyBool(true);
 
-    @ConfigValue(id = "backups.backups_to_keep", file = FTBUFinals.MOD_ID, info = {"The number of backup files to keep", "ore backups = more space used", "0 - Disabled"})
+    @ConfigValue(id = "backups.backups_to_keep", file = FTBUFinals.MOD_ID, info = {"The number of backup files to keep", "ore backups = more space used", "0 - Infinite"})
     public static final PropertyByte BACKUPS_TO_KEEP = new PropertyByte(12, 0, 100);
 
     @ConfigValue(id = "backups.backup_timer", file = FTBUFinals.MOD_ID, info = {"Timer in hours", "1.0 - backups every hour", "6.0 - backups every 6 hours", "0.5 - backups every 30 minutes"})

@@ -133,7 +133,7 @@ public enum ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializabl
             return true;
         }*/
 
-        return team.hasStatus(player, EnumTeamStatus.ALLY);
+        return team.hasStatus(player, EnumTeamStatus.ALLY) || team.hasStatus(player, EnumTeamStatus.MEMBER) || team.hasStatus(player, EnumTeamStatus.OWNER);
     }
 
     @Override

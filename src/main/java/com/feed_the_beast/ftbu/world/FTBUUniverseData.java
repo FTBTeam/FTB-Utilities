@@ -23,7 +23,6 @@ import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
-import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.badges.BadgeStorage;
 import com.feed_the_beast.ftbu.cmd.CmdRestart;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
@@ -79,28 +78,24 @@ public class FTBUUniverseData implements INBTData, ITickable
     }
 
     @Nullable
-    public static Badge getServerBadge(@Nullable IForgePlayer p)
+    public static String getServerBadge(@Nullable IForgePlayer p)
     {
         if(p == null)
         {
             return null;
         }
 
-        Badge b = LOCAL_BADGES.badgePlayerMap.get(p.getProfile().getId());
+        String b = LOCAL_BADGES.map.get(p.getProfile().getId());
         if(b != null)
         {
             return b;
         }
 
-        String rank = RankConfigAPI.getRankConfig(p.getProfile(), FTBUPermissions.DISPLAY_BADGE).getString();
+        b = RankConfigAPI.getRankConfig(p.getProfile(), FTBUPermissions.DISPLAY_BADGE).getString();
 
-        if(!rank.isEmpty())
+        if(!b.isEmpty())
         {
-            b = LOCAL_BADGES.badgeMap.get(rank);
-            if(b != null)
-            {
-                return b;
-            }
+            return b;
         }
 
         return null;

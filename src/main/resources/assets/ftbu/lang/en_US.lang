@@ -33,6 +33,7 @@ key.categories.ftbu=FTBMods
 key.ftbu.guide=Open Guide
 key.ftbu.chunk_border=Toggle Chunk Border
 key.ftbu.light_values=Toggle Light Values
+key.ftbu.warp=Warp GUI
 
 # Misc
 ftbu.lang.timer_restart=Server restarts in %s

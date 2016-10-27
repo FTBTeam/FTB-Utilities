@@ -93,7 +93,7 @@ public class FTBUTeamData implements INBTData
 
     public EnumTeamPrivacyLevel getBlocks()
     {
-        return (EnumTeamPrivacyLevel) blocks.getValue();
+        return blocks.get();
     }
 
     public boolean disableExplosions()

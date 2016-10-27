@@ -151,6 +151,7 @@ public class FTBUPlayerData implements INBTData
 
     public void addConfig(IConfigTree tree)
     {
+        /*
         tree.add(RENDER_BADGE, new PropertyBool(true)
         {
             @Override
@@ -165,6 +166,7 @@ public class FTBUPlayerData implements INBTData
                 flags = Bits.setFlag(flags, FLAG_RENDER_BADGE, v);
             }
         });
+        */
 
         tree.add(CHAT_LINKS, new PropertyBool(true)
         {

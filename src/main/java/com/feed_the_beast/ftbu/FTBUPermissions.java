@@ -16,6 +16,7 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -110,8 +111,8 @@ public class FTBUPermissions
         Ranks.INSTANCE.registerCustomPermPrefix(new Ranks.NodeEntry(CLAIMS_DIMENSION_ALLOWED_PREFIX, DefaultPermissionLevel.ALL, "Permission for dimensions where claiming chunks is allowed"));
     }
 
-    public static String formatBlock(Block block)
+    public static String formatBlock(@Nullable Block block)
     {
-        return block.getRegistryName().toString().toLowerCase(Locale.ENGLISH).replace(':', '.');
+        return block == null ? "minecraft:air" : block.getRegistryName().toString().toLowerCase(Locale.ENGLISH).replace(':', '.');
     }
 }

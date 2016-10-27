@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbu.gui;
 import com.feed_the_beast.ftbl.gui.GuiLoading;
 import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
+import com.feed_the_beast.ftbu.client.FTBUClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
@@ -41,7 +42,14 @@ public class GuiWarps extends GuiLM
         int ax = getAX() + SIZE_2;
         int ay = getAY() + SIZE_2;
 
+        if(FTBUClient.KEY_WARP.isKeyDown())
+        {
+            return;
+        }
+
         GlStateManager.disableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         GlStateManager.color(1F, 1F, 1F, 1F);
 
         Tessellator tessellator = Tessellator.getInstance();

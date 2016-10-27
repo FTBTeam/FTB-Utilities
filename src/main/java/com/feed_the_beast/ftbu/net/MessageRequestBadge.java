@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
-import com.feed_the_beast.ftbu.badges.Badge;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -45,11 +44,11 @@ public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
     @Override
     public void onMessage(MessageRequestBadge m, EntityPlayerMP player)
     {
-        Badge b = FTBUUniverseData.getServerBadge(FTBLibIntegration.API.getUniverse().getPlayer(m.playerID));
+        String b = FTBUUniverseData.getServerBadge(FTBLibIntegration.API.getUniverse().getPlayer(m.playerID));
 
         if(b != null)
         {
-            new MessageSendBadge(m.playerID, b.getName()).sendTo(player);
+            new MessageSendBadge(m.playerID, b).sendTo(player);
         }
     }
 }

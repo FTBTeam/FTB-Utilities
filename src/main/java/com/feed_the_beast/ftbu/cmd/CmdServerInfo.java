@@ -4,8 +4,6 @@ import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
-import com.feed_the_beast.ftbu.badges.Badge;
-import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import com.google.common.collect.ImmutableSetMultimap;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -89,13 +87,6 @@ public class CmdServerInfo extends CommandLM
         for(Enchantment e : Enchantment.REGISTRY)
         {
             list.println("[" + e.getRegistryName() + "] " + e.getTranslatedName(1));
-        }
-
-        list = serverInfo.getSub("loaded_badges"); //LANG
-
-        for(Badge b : FTBUUniverseData.LOCAL_BADGES.badgeMap.values())
-        {
-            list.println(b.getName() + ": " + b.imageURL);
         }
 
         FTBLibIntegration.API.displayInfoGui(ep, serverInfo);

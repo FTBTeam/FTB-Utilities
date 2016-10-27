@@ -13,60 +13,68 @@ import java.util.UUID;
  */
 public class BadgeStorage
 {
-    public final Map<String, Badge> badgeMap;
-    public final Map<UUID, Badge> badgePlayerMap;
+    public final Map<UUID, String> map;
 
     public BadgeStorage()
     {
-        badgeMap = new HashMap<>();
-        badgePlayerMap = new HashMap<>();
+        map = new HashMap<>();
     }
 
     public void clear()
     {
-        badgeMap.clear();
-        badgePlayerMap.clear();
+        map.clear();
     }
 
     public void loadBadges(JsonElement e)
     {
-        if(e == null || !e.isJsonObject())
+        if(!e.isJsonObject())
         {
             return;
         }
 
-        JsonObject o = e.getAsJsonObject();
-
-        if(o.has("badges") && o.has("players"))
+        e.getAsJsonObject().entrySet().forEach(entry ->
         {
-            JsonObject o1 = o.get("badges").getAsJsonObject();
-
-            for(Map.Entry<String, JsonElement> entry : o1.entrySet())
-            {
-                Badge b = new Badge(entry.getKey(), entry.getValue().getAsString());
-                badgeMap.put(b.getName(), b);
-            }
-
-            o1 = o.get("players").getAsJsonObject();
-
-            for(Map.Entry<String, JsonElement> entry : o1.entrySet())
+            if(entry.getValue().isJsonPrimitive())
             {
                 UUID id = LMStringUtils.fromString(entry.getKey());
+
                 if(id != null)
                 {
-                    Badge b = badgeMap.get(entry.getValue().getAsString());
-                    if(b != null)
+                    map.put(id, entry.getValue().getAsString());
+                }
+            }
+            else
+            {
+                JsonObject o = entry.getValue().getAsJsonObject();
+                String badge = o.get("badge").getAsString();
+
+                if(o.has("players"))
+                {
+                    o.get("players").getAsJsonObject().entrySet().forEach(entry2 ->
                     {
-                        badgePlayerMap.put(id, b);
+                        UUID id = LMStringUtils.fromString(entry2.getKey());
+
+                        if(id != null)
+                        {
+                            map.put(id, badge);
+                        }
+                    });
+                }
+                else
+                {
+                    UUID id = LMStringUtils.fromString(entry.getKey());
+
+                    if(id != null)
+                    {
+                        map.put(id, badge);
                     }
                 }
             }
-        }
+        });
     }
 
     public void copyFrom(BadgeStorage storage)
     {
-        badgeMap.putAll(storage.badgeMap);
-        badgePlayerMap.putAll(storage.badgePlayerMap);
+        map.putAll(storage.map);
     }
 }

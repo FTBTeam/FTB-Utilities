@@ -11,16 +11,16 @@ import java.util.UUID;
 public class MessageSendBadge extends MessageToClient<MessageSendBadge>
 {
     private UUID playerID;
-    private String badgeID;
+    private String badgeURL;
 
     public MessageSendBadge()
     {
     }
 
-    public MessageSendBadge(UUID player, String id)
+    public MessageSendBadge(UUID player, String url)
     {
         playerID = player;
-        badgeID = id;
+        badgeURL = url;
     }
 
     @Override
@@ -33,19 +33,19 @@ public class MessageSendBadge extends MessageToClient<MessageSendBadge>
     public void fromBytes(ByteBuf io)
     {
         playerID = LMNetUtils.readUUID(io);
-        badgeID = LMNetUtils.readString(io);
+        badgeURL = LMNetUtils.readString(io);
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
         LMNetUtils.writeUUID(io, playerID);
-        LMNetUtils.writeString(io, badgeID);
+        LMNetUtils.writeString(io, badgeURL);
     }
 
     @Override
     public void onMessage(MessageSendBadge m)
     {
-        CachedClientData.LOCAL_BADGES.badgePlayerMap.put(m.playerID, CachedClientData.LOCAL_BADGES.badgeMap.get(m.badgeID));
+        CachedClientData.LOCAL_BADGES.map.put(m.playerID, m.badgeURL);
     }
 }

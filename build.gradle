@@ -30,10 +30,17 @@ minecraft {
 }
 
 repositories {
-    maven { url 'https://jitpack.io' }
     maven { url 'https://oss.sonatype.org/content/groups/public/' }
     maven { url 'http://maven.amadornes.com' }
     maven { url 'http://dvs1.progwml6.com/files/maven' }
+    ivy {
+        name "LatMod"
+        artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]"
+    }
+    ivy {
+        name "ChiselsAndBits"
+        artifactPattern "https://addons-origin.cursecdn.com/files/2341/112/[module]-[revision](-[classifier]).[ext]"
+    }
 }
 
 configurations.all {
@@ -41,9 +48,9 @@ configurations.all {
 }
 
 dependencies {
-    deobfCompile 'com.github.LatvianModder:FTBLib:1.9-SNAPSHOT'
-    deobfCompile 'com.github.AlgorithmX2:Chisels-and-Bits:v12.4'
-    deobfCompile group: 'info.journeymap', name: 'journeymap-api', version: '1.9.4-1.2', changing: true
+    compile 'LatMod:FTBLib:1.10.2-3.1.2:deobf'
+    compile group: 'info.journeymap', name: 'journeymap-api', version: '1.9.4-1.2', changing: true
+    compile 'ChiselsAndBits:chiselsandbits:12.7'
 }
 
 sourceSets {

@@ -152,9 +152,9 @@ public class FTBUServerEventHandler
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onServerChatEvent(ServerChatEvent e)
+    public void onServerChatEvent(ServerChatEvent event)
     {
-        String msg = e.getMessage().trim();
+        String msg = event.getMessage().trim();
 
         if(msg.startsWith(FTBUConfigGeneral.CHAT_SUBSTITUTE_PREFIX.getString()))
         {
@@ -162,7 +162,7 @@ public class FTBUServerEventHandler
 
             if(replacement != null)
             {
-                e.setComponent(replacement.createCopy());
+                event.setComponent(new TextComponentString(event.getUsername() + ": ").appendSibling(replacement.createCopy()));
                 return;
             }
         }
@@ -172,7 +172,7 @@ public class FTBUServerEventHandler
             return;
         }
 
-        String[] splitMsg = LMUtils.removeFormatting(msg).split(" "); // https://github.com/LatvianModder
+        String[] splitMsg = LMUtils.removeFormatting(msg).split(" ");
 
         List<String> links = new ArrayList<>();
 

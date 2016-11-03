@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu.cmd;
 
+import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
@@ -52,6 +53,11 @@ public class CmdChunks extends CommandTreeBase
         @Override
         public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
+            if(!FTBUConfigWorld.CHUNK_CLAIMING.getBoolean())
+            {
+                throw FTBLibLang.FEATURE_DISABLED.commandError();
+            }
+
             EntityPlayerMP player = getCommandSenderAsPlayer(sender);
             IForgePlayer p = FTBLibIntegration.API.getForgePlayer(player);
             ChunkDimPos pos = new EntityDimPos(player).toBlockDimPos().toChunkPos();
@@ -148,6 +154,11 @@ public class CmdChunks extends CommandTreeBase
         @Override
         public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
+            if(!FTBUConfigWorld.CHUNK_LOADING.getBoolean())
+            {
+                throw FTBLibLang.FEATURE_DISABLED.commandError();
+            }
+
             EntityPlayerMP player = getCommandSenderAsPlayer(sender);
             IForgePlayer p = FTBLibIntegration.API.getForgePlayer(player);
             ChunkDimPos pos = new EntityDimPos(player).toBlockDimPos().toChunkPos();

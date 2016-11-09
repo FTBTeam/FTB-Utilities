@@ -50,7 +50,7 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
 
                 if(url != null)
                 {
-                    tex = new ResourceLocation(FTBUFinals.MOD_ID, "badges/" + id + ".png");
+                    tex = new ResourceLocation(FTBUFinals.MOD_ID, "badges/" + url.replace(':', '.'));
                     FTBLibClient.getDownloadImage(tex, url, DEF_TEX, null);
                     CACHE.put(id, tex);
                 }

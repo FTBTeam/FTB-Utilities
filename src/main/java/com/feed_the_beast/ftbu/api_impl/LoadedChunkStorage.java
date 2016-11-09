@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import gnu.trove.map.hash.TIntObjectHashMap;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -102,13 +103,21 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback
 
             if(ticket != null)
             {
+                ChunkPos pos = chunk.getPos().getChunkPos();
+
                 if(load)
                 {
-                    ForgeChunkManager.forceChunk(ticket, chunk.getPos().getChunkPos());
+                    if(!ticket.getChunkList().contains(pos))
+                    {
+                        ForgeChunkManager.forceChunk(ticket, pos);
+                    }
                 }
                 else
                 {
-                    ForgeChunkManager.unforceChunk(ticket, chunk.getPos().getChunkPos());
+                    if(ticket.getChunkList().contains(pos))
+                    {
+                        ForgeChunkManager.unforceChunk(ticket, pos);
+                    }
                 }
             }
         }

@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbu.cmd;
+package com.feed_the_beast.ftbu.cmd.tp;
 
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;

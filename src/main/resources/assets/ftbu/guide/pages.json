@@ -1,0 +1,6 @@
+[
+	{"id": "chunk_claiming", "icon": "ftbl:textures/icons/map.png"},
+	{"id": "util_buttons", "icon": "ftbl:textures/icons/toggle_gamemode.png"},
+	{"id": "ranks", "icon_item": "minecraft:diamond_sword"},
+	{"id": "tp_commands", "icon_item": "minecraft:ender_pearl"}
+]

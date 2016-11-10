@@ -32,4 +32,10 @@ public class FTBUConfigCommands
 
     @ConfigValue(id = "commands.chunks", file = FTBUFinals.MOD_ID)
     public static final PropertyBool CHUNKS = new PropertyBool(true);
+
+    @ConfigValue(id = "commands.js", file = FTBUFinals.MOD_ID)
+    public static final PropertyBool JS = new PropertyBool(true);
+
+    @ConfigValue(id = "commands.kickme", file = FTBUFinals.MOD_ID)
+    public static final PropertyBool KICKME = new PropertyBool(true);
 }

@@ -9,7 +9,6 @@ import com.feed_the_beast.ftbl.lib.util.LMFileUtils;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
-import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
@@ -22,10 +21,10 @@ import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,43 +35,16 @@ public enum Ranks
 {
     INSTANCE;
 
-    public static class NodeEntry
-    {
-        private static final Comparator<NodeEntry> COMPARATOR = (o1, o2) -> o1.node.compareToIgnoreCase(o2.node);
-        private static final Map<DefaultPermissionLevel, String> COLOR_MAP = new EnumMap<>(DefaultPermissionLevel.class);
-
-        static
-        {
-            COLOR_MAP.put(DefaultPermissionLevel.ALL, "bgcolor=\"#72FF85\"");
-            COLOR_MAP.put(DefaultPermissionLevel.OP, "bgcolor=\"#42A3FF\"");
-            COLOR_MAP.put(DefaultPermissionLevel.NONE, "bgcolor=\"#FF4242\"");
-        }
-
-        private String node;
-        private DefaultPermissionLevel level;
-        private String desc;
-
-        public NodeEntry()
-        {
-        }
-
-        public NodeEntry(String n, DefaultPermissionLevel l, String d)
-        {
-            node = n;
-            level = l;
-            desc = d;
-        }
-    }
-
     public final Map<String, IRank> RANKS = new LinkedHashMap<>();
     public final Map<UUID, IRank> PLAYER_MAP = new HashMap<>();
     public IRank defaultRank;
     public IConfigTree ranksConfigTree;
-    private final Map<String, NodeEntry> CUSTOM_PERM_PREFIX_REGISTRY = new HashMap<>();
+    private final Collection<NodeEntry> CUSTOM_PERM_PREFIX_REGISTRY = new HashSet<>();
+    public final List<NodeEntry> ALL_NODES = new ArrayList<>();
 
     public void registerCustomPermPrefix(NodeEntry entry)
     {
-        CUSTOM_PERM_PREFIX_REGISTRY.put(entry.node, entry);
+        CUSTOM_PERM_PREFIX_REGISTRY.add(entry);
     }
 
     public void reload()
@@ -227,59 +199,40 @@ public enum Ranks
             ex.printStackTrace();
         }
 
-        List<NodeEntry> nodes = new ArrayList<>();
-        boolean addedBreakPerm = false;
-        boolean addedDimWLPerm = false;
+        ALL_NODES.clear();
+
+        for(NodeEntry node : CUSTOM_PERM_PREFIX_REGISTRY)
+        {
+            ALL_NODES.add(new NodeEntry(node.getName() + "*", node.getLevel(), node.getDescription()));
+        }
 
         for(String s : FTBUtilitiesAPI_Impl.INSTANCE.getRegisteredNodes())
         {
             DefaultPermissionLevel level = DefaultPermissionHandler.INSTANCE.getDefaultPermissionLevel(s);
             String desc = FTBUtilitiesAPI_Impl.INSTANCE.getNodeDescription(s);
 
-            if(s.startsWith(FTBUPermissions.CLAIMS_BLOCK_BREAK_PREFIX))
-            {
-                if(!addedBreakPerm)
-                {
-                    NodeEntry entry = new NodeEntry();
-                    entry.node = FTBUPermissions.CLAIMS_BLOCK_BREAK_PREFIX + "*";
-                    entry.level = DefaultPermissionLevel.OP;
-                    entry.desc = "Permission for blocks that players can break in claimed chunks";
-                    nodes.add(entry);
-                    addedBreakPerm = true;
-                }
+            boolean printNode = true;
 
-                if(level == DefaultPermissionLevel.OP && desc.isEmpty())
+            for(NodeEntry cprefix : CUSTOM_PERM_PREFIX_REGISTRY)
+            {
+                if(s.startsWith(cprefix.getName()))
                 {
-                    continue;
+                    if(level == cprefix.getLevel() && desc.isEmpty())
+                    {
+                        printNode = false;
+                    }
+
+                    break;
                 }
             }
 
-            if(s.startsWith(FTBUPermissions.CLAIMS_DIMENSION_ALLOWED_PREFIX))
+            if(printNode)
             {
-                if(!addedDimWLPerm)
-                {
-                    NodeEntry entry = new NodeEntry();
-                    entry.node = FTBUPermissions.CLAIMS_DIMENSION_ALLOWED_PREFIX + "*";
-                    entry.level = DefaultPermissionLevel.ALL;
-                    entry.desc = "Permission for dimensions where claiming chunks is allowed";
-                    nodes.add(entry);
-                    addedDimWLPerm = true;
-                }
-
-                if(level == DefaultPermissionLevel.ALL && desc.isEmpty())
-                {
-                    continue;
-                }
+                ALL_NODES.add(new NodeEntry(s, level, desc));
             }
-
-            NodeEntry entry = new NodeEntry();
-            entry.node = s;
-            entry.level = level;
-            entry.desc = desc;
-            nodes.add(entry);
         }
 
-        Collections.sort(nodes, NodeEntry.COMPARATOR);
+        Collections.sort(ALL_NODES, LMStringUtils.ID_COMPARATOR);
 
         try
         {
@@ -289,13 +242,13 @@ public enum Ranks
             list.add("</head><body><h1>Permissions</h1><table>");
             list.add("<tr><th>Permission Node</th><th></th><th>Info</th></tr>");
 
-            for(NodeEntry entry : nodes)
+            for(NodeEntry entry : ALL_NODES)
             {
-                list.add("<tr><td>" + entry.node + "</td><td " + NodeEntry.COLOR_MAP.get(entry.level) + ">" + entry.level + "</td><td>");
+                list.add("<tr><td>" + entry.getName() + "</td><td bgcolor=\"" + entry.getColor() + "\">" + entry.getLevel() + "</td><td>");
 
-                if(entry.desc != null)
+                if(entry.getDescription() != null)
                 {
-                    for(String s1 : entry.desc.split("\n"))
+                    for(String s1 : entry.getDescription().split("\n"))
                     {
                         list.add("<p>" + s1 + "</p>");
                     }

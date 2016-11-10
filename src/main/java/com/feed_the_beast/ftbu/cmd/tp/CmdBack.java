@@ -1,9 +1,8 @@
-package com.feed_the_beast.ftbu.cmd;
+package com.feed_the_beast.ftbu.cmd.tp;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
@@ -31,7 +30,7 @@ public class CmdBack extends CommandLM
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-        IForgePlayer p = FTBLibIntegration.API.getForgePlayer(ep);
+        IForgePlayer p = getForgePlayer(ep);
 
         FTBUPlayerData data = FTBUPlayerData.get(p);
 

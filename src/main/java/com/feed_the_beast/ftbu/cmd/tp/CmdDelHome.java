@@ -1,28 +1,24 @@
-package com.feed_the_beast.ftbu.cmd;
+package com.feed_the_beast.ftbu.cmd.tp;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
-import com.feed_the_beast.ftbl.lib.math.EntityDimPos;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
-import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class CmdSetHome extends CommandLM
+public class CmdDelHome extends CommandLM
 {
     @Override
     public String getCommandName()
     {
-        return "sethome";
+        return "delhome";
     }
 
     @Override
@@ -51,24 +47,18 @@ public class CmdSetHome extends CommandLM
     @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
-        EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-        IForgePlayer p = FTBLibIntegration.API.getForgePlayer(ep);
-        FTBUPlayerData d = FTBUPlayerData.get(p);
+        IForgePlayer p = getForgePlayer(ics);
         checkArgs(args, 1, "<home>");
 
         args[0] = args[0].toLowerCase();
 
-        int maxHomes = RankConfigAPI.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt();
-
-        if(maxHomes <= 0 || d.homesSize() >= maxHomes)
+        if(FTBUPlayerData.get(p).setHome(args[0], null))
         {
-            if(maxHomes == 0 || d.getHome(args[0]) == null)
-            {
-                throw FTBULang.HOME_LIMIT.commandError();
-            }
+            FTBULang.HOME_DEL.printChat(ics, args[0]);
         }
-
-        d.setHome(args[0], new EntityDimPos(ep).toBlockDimPos());
-        FTBULang.HOME_SET.printChat(ics, args[0]);
+        else
+        {
+            throw FTBULang.HOME_NOT_SET.commandError(args[0]);
+        }
     }
 }

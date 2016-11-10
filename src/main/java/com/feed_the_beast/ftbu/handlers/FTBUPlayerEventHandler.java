@@ -204,10 +204,12 @@ public class FTBUPlayerEventHandler
         }
     }
 
+    /*
     @SubscribeEvent
     public void onRightClickItem(PlayerInteractEvent.RightClickItem event)
     {
     }
+    */
 
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent event)

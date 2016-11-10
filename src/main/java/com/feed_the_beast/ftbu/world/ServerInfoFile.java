@@ -1,11 +1,9 @@
 package com.feed_the_beast.ftbu.world;
 
-import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
-import com.feed_the_beast.ftbl.api.rankconfig.IRankConfig;
-import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
@@ -19,6 +17,8 @@ import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.client.FTBUActions;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
+import com.feed_the_beast.ftbu.ranks.NodeEntry;
+import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.backups.Backups;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -29,11 +29,10 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.permission.PermissionAPI;
-import net.minecraftforge.server.permission.context.IContext;
-import net.minecraftforge.server.permission.context.PlayerContext;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,11 +77,6 @@ public class ServerInfoFile extends InfoPage
 
         List<IForgePlayer> players = new ArrayList<>();
         players.addAll(FTBLibIntegration.API.getUniverse().getPlayers());
-
-        if(PermissionAPI.hasPermission(ep, FTBUPermissions.DISPLAY_RANK))
-        {
-            println("Your Rank: " + FTBUtilitiesAPI_Impl.INSTANCE.getRank(ep.getGameProfile())); //TODO: Lang
-        }
 
         if(FTBUConfigGeneral.AUTO_RESTART.getBoolean())
         {
@@ -251,20 +245,48 @@ public class ServerInfoFile extends InfoPage
 
         if(PermissionAPI.hasPermission(ep, FTBUPermissions.DISPLAY_PERMISSIONS))
         {
-            page = getSub("permissions").setTitle(FTBLibLang.MY_PERMISSIONS.textComponent());
+            page = getSub("permissions").setTitle(FTBLibLang.ALL_PERMISSIONS.textComponent());
 
-            IContext context = new PlayerContext(ep);
+            ITextComponent txt = new TextComponentString("");
+            ITextComponent txt1 = new TextComponentString("NONE");
+            txt1.getStyle().setColor(TextFormatting.DARK_RED);
+            txt.appendSibling(txt1);
+            txt.appendText(" | ");
+            txt1 = new TextComponentString("ALL");
+            txt1.getStyle().setColor(TextFormatting.DARK_GREEN);
+            txt.appendSibling(txt1);
+            txt.appendText(" | ");
+            txt1 = new TextComponentString("OP");
+            txt1.getStyle().setColor(TextFormatting.BLUE);
+            txt.appendSibling(txt1);
+            page.println(txt);
+            page.println(null);
 
-            for(String s : PermissionAPI.getPermissionHandler().getRegisteredNodes())
+            for(NodeEntry node : Ranks.INSTANCE.ALL_NODES)
             {
-                if(PermissionAPI.hasPermission(self.getProfile(), s, context))
+                txt = new TextComponentString(node.getName());
+
+                switch(node.getLevel())
                 {
-                    page.println(s);
+                    case ALL:
+                        txt.getStyle().setColor(TextFormatting.DARK_GREEN);
+                        break;
+                    case OP:
+                        txt.getStyle().setColor(TextFormatting.BLUE);
+                        break;
+                    default:
+                        txt.getStyle().setColor(TextFormatting.DARK_RED);
                 }
+
+                if(node.getDescription() != null && !node.getDescription().isEmpty())
+                {
+                    txt.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(node.getDescription())));
+                }
+
+                page.println(txt);
             }
 
-            Collections.sort(page.getText(), (o1, o2) -> o1.getUnformattedText().compareTo(o2.getUnformattedText()));
-
+            /*
             page = getSub("rank_configs").setTitle(new TextComponentString("Rank Configs")); //TODO: Lang
 
             for(IRankConfig key : RankConfigAPI.getRegistredRankConfigs().values())
@@ -273,6 +295,7 @@ public class ServerInfoFile extends InfoPage
             }
 
             Collections.sort(page.getText(), (o1, o2) -> o1.getUnformattedText().compareTo(o2.getUnformattedText()));
+            */
         }
 
         cleanup();

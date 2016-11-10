@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbu.cmd;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
@@ -35,7 +34,7 @@ public class CmdGetRank extends CommandLM
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         checkArgs(args, 1, "<player>");
-        IForgePlayer p = FTBLibIntegration.API.getForgePlayer(args[0]);
+        IForgePlayer p = getForgePlayer(args[0]);
         IRank r = FTBUtilitiesAPI_Impl.INSTANCE.getRank(p.getProfile());
         ITextComponent c = new TextComponentString(r.getName());
         c.getStyle().setColor((TextFormatting) RankConfigAPI.getRankConfig(p.getProfile(), FTBUPermissions.DISPLAY_COLOR).getValue());

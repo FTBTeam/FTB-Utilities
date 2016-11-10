@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbu;
 
-import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.lib.Notification;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;

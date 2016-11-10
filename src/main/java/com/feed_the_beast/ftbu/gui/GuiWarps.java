@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.gui;
 
-import com.feed_the_beast.ftbl.gui.GuiLoading;
 import com.feed_the_beast.ftbl.lib.gui.GuiLM;
+import com.feed_the_beast.ftbl.lib.gui.GuiLoading;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.feed_the_beast.ftbu.client.FTBUClient;
 import net.minecraft.client.renderer.GlStateManager;

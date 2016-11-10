@@ -78,7 +78,7 @@ public enum Backups
                         int day = Integer.parseInt(s1[2]);
                         int hours = Integer.parseInt(s1[3]);
                         int minutes = Integer.parseInt(s1[4]);
-                        int seconds = Integer.parseInt(s1[5]);
+                        int seconds = Integer.parseInt(s1[5].replace(".zip", ""));
 
                         Calendar c = Calendar.getInstance();
                         c.set(year, month, day, hours, minutes, seconds);

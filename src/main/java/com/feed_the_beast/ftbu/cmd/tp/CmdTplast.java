@@ -1,11 +1,10 @@
-package com.feed_the_beast.ftbu.cmd;
+package com.feed_the_beast.ftbu.cmd.tp;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.math.EntityDimPos;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -56,12 +55,12 @@ public class CmdTplast extends CommandLM
         if(args.length == 1)
         {
             who = getCommandSenderAsPlayer(ics);
-            to = FTBLibIntegration.API.getForgePlayer(args[0]);
+            to = getForgePlayer(args[0]);
         }
         else
         {
             who = getPlayer(server, ics, args[0]);
-            to = FTBLibIntegration.API.getForgePlayer(args[1]);
+            to = getForgePlayer(args[1]);
         }
 
         BlockDimPos p;

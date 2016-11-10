@@ -1,10 +1,9 @@
-package com.feed_the_beast.ftbu.cmd;
+package com.feed_the_beast.ftbu.cmd.tp;
 
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
-import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.math.EntityDimPos;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBULang;
@@ -14,19 +13,16 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.List;
 
-public class CmdHome extends CommandLM
+public class CmdSetHome extends CommandLM
 {
     @Override
     public String getCommandName()
     {
-        return "home";
+        return "sethome";
     }
 
     @Override
@@ -56,33 +52,23 @@ public class CmdHome extends CommandLM
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-        FTBUPlayerData d = FTBUPlayerData.get(FTBLibIntegration.API.getForgePlayer(ep));
+        IForgePlayer p = getForgePlayer(ep);
+        FTBUPlayerData d = FTBUPlayerData.get(p);
         checkArgs(args, 1, "<home>");
 
-        if(args[0].equals("list"))
+        args[0] = args[0].toLowerCase();
+
+        int maxHomes = RankConfigAPI.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt();
+
+        if(maxHomes <= 0 || d.homesSize() >= maxHomes)
         {
-            Collection<String> list = d.listHomes();
-            ics.addChatMessage(new TextComponentString(list.size() + " / " + RankConfigAPI.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt() + ": "));
-            if(!list.isEmpty())
+            if(maxHomes == 0 || d.getHome(args[0]) == null)
             {
-                ics.addChatMessage(new TextComponentString(LMStringUtils.strip(list)));
+                throw FTBULang.HOME_LIMIT.commandError();
             }
-            return;
         }
 
-        BlockDimPos pos = d.getHome(args[0]);
-
-        if(pos == null)
-        {
-            throw FTBULang.HOME_NOT_SET.commandError(args[0]);
-        }
-
-        if(ep.dimension != pos.dim && !PermissionAPI.hasPermission(ep, FTBUPermissions.HOMES_CROSS_DIM))
-        {
-            throw FTBULang.HOME_CROSS_DIM.commandError();
-        }
-
-        LMServerUtils.teleportPlayer(ep, pos);
-        FTBULang.WARP_TP.printChat(ics, args[0]);
+        d.setHome(args[0], new EntityDimPos(ep).toBlockDimPos());
+        FTBULang.HOME_SET.printChat(ics, args[0]);
     }
 }

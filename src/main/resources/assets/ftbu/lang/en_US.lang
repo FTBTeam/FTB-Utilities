@@ -92,3 +92,7 @@ ftbu.pack_state.update=Update
 
 # Guide
 ftbu.guide=FTBUtilities
+ftbu.guide.util_buttons=Utility Buttons
+ftbu.guide.chunk_claiming=Chunk Claiming
+ftbu.guide.ranks=Ranks
+ftbu.guide.tp_commands=Teleportation Commands

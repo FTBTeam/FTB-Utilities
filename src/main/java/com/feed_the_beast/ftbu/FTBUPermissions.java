@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbl.lib.config.PropertyShort;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbu.api_impl.ChunkloaderType;
+import com.feed_the_beast.ftbu.ranks.NodeEntry;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import net.minecraft.block.Block;
 import net.minecraft.util.text.TextFormatting;
@@ -29,8 +30,7 @@ public class FTBUPermissions
     // Display //
 
     public static final String DISPLAY_ADMIN_INFO = PermissionAPI.registerNode("ftbu.display.admin_info", DefaultPermissionLevel.OP, "Display 'Admin' in Server Info");
-    public static final String DISPLAY_RANK = PermissionAPI.registerNode("ftbu.display.rank", DefaultPermissionLevel.ALL, "Display Rank in FriendsGUI");
-    public static final String DISPLAY_PERMISSIONS = PermissionAPI.registerNode("ftbu.display.permissions", DefaultPermissionLevel.ALL, "Display 'My Permissions' in Server Info");
+    public static final String DISPLAY_PERMISSIONS = PermissionAPI.registerNode("ftbu.display.permissions", DefaultPermissionLevel.OP, "Display 'My Permissions' in Server Info");
 
     public static final IRankConfig DISPLAY_COLOR = RankConfigAPI.register("display.color", new PropertyEnum<>(LMServerUtils.TEXT_FORMATTING_NAME_MAP, TextFormatting.WHITE), new PropertyEnum<>(LMServerUtils.TEXT_FORMATTING_NAME_MAP, TextFormatting.GREEN), "Color of player's nickname");
     public static final IRankConfig DISPLAY_PREFIX = RankConfigAPI.register("display.prefix", new PropertyString(""), new PropertyString(""), "Prefix of player's nickname");
@@ -106,9 +106,9 @@ public class FTBUPermissions
 
         levels.forEach((key, value) -> PermissionAPI.registerNode(key, value, ""));
 
-        Ranks.INSTANCE.registerCustomPermPrefix(new Ranks.NodeEntry(CLAIMS_BLOCK_BREAK_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can break in claimed chunks"));
-        Ranks.INSTANCE.registerCustomPermPrefix(new Ranks.NodeEntry(CLAIMS_BLOCK_INTERACT_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can interact with in claimed chunks"));
-        Ranks.INSTANCE.registerCustomPermPrefix(new Ranks.NodeEntry(CLAIMS_DIMENSION_ALLOWED_PREFIX, DefaultPermissionLevel.ALL, "Permission for dimensions where claiming chunks is allowed"));
+        Ranks.INSTANCE.registerCustomPermPrefix(new NodeEntry(CLAIMS_BLOCK_BREAK_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can break in claimed chunks"));
+        Ranks.INSTANCE.registerCustomPermPrefix(new NodeEntry(CLAIMS_BLOCK_INTERACT_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can interact within claimed chunks"));
+        Ranks.INSTANCE.registerCustomPermPrefix(new NodeEntry(CLAIMS_DIMENSION_ALLOWED_PREFIX, DefaultPermissionLevel.ALL, "Permission for dimensions where claiming chunks is allowed"));
     }
 
     public static String formatBlock(@Nullable Block block)

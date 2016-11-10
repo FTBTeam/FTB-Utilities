@@ -1,22 +1,34 @@
-package com.feed_the_beast.ftbu.cmd;
+package com.feed_the_beast.ftbu.cmd.tp;
 
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
+import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
+import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.List;
 
-public class CmdDelWarp extends CommandLM
+public class CmdWarp extends CommandLM
 {
     @Override
     public String getCommandName()
     {
-        return "delwarp";
+        return "warp";
+    }
+
+    @Override
+    public int getRequiredPermissionLevel()
+    {
+        return 0;
     }
 
     @Override
@@ -43,13 +55,21 @@ public class CmdDelWarp extends CommandLM
 
         args[0] = args[0].toLowerCase();
 
-        if(FTBUUniverseData.get().setWarp(args[0], null))
+        if(args[0].equals("list"))
         {
-            FTBULang.WARP_DEL.printChat(ics, args[0]);
+            Collection<String> list = FTBUUniverseData.get().listWarps();
+            ics.addChatMessage(new TextComponentString(list.isEmpty() ? "-" : LMStringUtils.strip(list)));
+            return;
         }
-        else
+
+        EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
+        BlockDimPos p = FTBUUniverseData.get().getWarp(args[0]);
+        if(p == null)
         {
             throw FTBULang.WARP_NOT_SET.commandError(args[0]);
         }
+
+        LMServerUtils.teleportPlayer(ep, p);
+        FTBULang.WARP_TP.printChat(ics, args[0]);
     }
 }

@@ -31,8 +31,6 @@ minecraft {
 
 repositories {
     maven { url 'https://oss.sonatype.org/content/groups/public/' }
-    maven { url 'http://maven.amadornes.com' }
-    maven { url 'http://dvs1.progwml6.com/files/maven' }
     ivy {
         name "LatMod"
         artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]"

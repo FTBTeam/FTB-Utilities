@@ -1,10 +1,8 @@
 package com.feed_the_beast.ftbu.handlers;
 
-import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseClosedEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedBeforePlayersEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
-import com.feed_the_beast.ftbl.api.events.universe.IUniverseDataProvider;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.entity.Entity;
@@ -16,9 +14,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class FTBUWorldEventHandler // FTBLIntegration
 {
-    @RegistryObject
-    public static final IUniverseDataProvider DATA_PROVIDER = universe -> new FTBUUniverseData();
-
     @SubscribeEvent
     public void onWorldLoaded(ForgeUniverseLoadedEvent event)
     {

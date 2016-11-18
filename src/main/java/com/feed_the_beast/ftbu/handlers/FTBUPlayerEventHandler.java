@@ -2,13 +2,11 @@ package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerDeathEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerInfoEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
-import com.feed_the_beast.ftbl.api.events.player.IPlayerDataProvider;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.math.EntityDimPos;
@@ -42,9 +40,6 @@ import net.minecraftforge.server.permission.context.PlayerContext;
 
 public class FTBUPlayerEventHandler
 {
-    @RegistryObject
-    public static final IPlayerDataProvider DATA_PROVIDER = player -> new FTBUPlayerData();
-
     @SubscribeEvent
     public void onLoggedIn(ForgePlayerLoggedInEvent event)
     {

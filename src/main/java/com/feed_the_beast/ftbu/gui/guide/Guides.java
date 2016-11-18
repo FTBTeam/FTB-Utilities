@@ -2,8 +2,8 @@ package com.feed_the_beast.ftbu.gui.guide;
 
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.api.info.IPageIconRenderer;
-import com.feed_the_beast.ftbl.lib.gui.GuiInfo;
-import com.feed_the_beast.ftbl.lib.gui.GuiLoading;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftbl.lib.info.InfoPageHelper;
 import com.feed_the_beast.ftbl.lib.info.ItemPageIconRenderer;
 import com.feed_the_beast.ftbl.lib.info.TexturePageIconRenderer;

@@ -1,18 +1,10 @@
 package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.events.RegisterFTBCommandsEvent;
-import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
-import com.feed_the_beast.ftbu.FTBU;
-import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
-import com.feed_the_beast.ftbu.cmd.FTBUCommands;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
-import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
-import com.feed_the_beast.ftbu.world.FTBUUniverseData;
-import com.feed_the_beast.ftbu.world.ServerInfoFile;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -41,29 +33,6 @@ public class FTBUServerEventHandler
         }
 
         return -1;
-    }
-
-    @SubscribeEvent
-    public void onReloadEvent(ReloadEvent event)
-    {
-        if(event.getSide().isServer())
-        {
-            ServerInfoFile.CachedInfo.reload();
-            Ranks.INSTANCE.reload();
-
-            FTBUUniverseData.reloadServerBadges();
-            LoadedChunkStorage.INSTANCE.checkAll();
-        }
-        else
-        {
-            FTBU.PROXY.onReloadedClient();
-        }
-    }
-
-    @SubscribeEvent
-    public void onRegisterFTBCommandsEvent(RegisterFTBCommandsEvent event)
-    {
-        FTBUCommands.register(event);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

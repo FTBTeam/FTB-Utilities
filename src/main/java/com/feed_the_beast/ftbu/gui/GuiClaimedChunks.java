@@ -10,10 +10,11 @@ import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.PanelLM;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
+import com.feed_the_beast.ftbl.lib.gui.misc.ThreadReloadChunkSelector;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.client.FTBUClientConfig;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksModify;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksRequest;
 import net.minecraft.client.Minecraft;
@@ -30,7 +31,6 @@ import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -40,10 +40,8 @@ import java.util.UUID;
 
 public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
 {
-    static ByteBuffer pixelBuffer = null;
-    private static int textureID = -1;
-    public static ThreadReloadArea thread = null;
     public static GuiClaimedChunks instance;
+    private static int textureID = -1;
 
     private class MapButton extends ButtonLM
     {
@@ -54,9 +52,9 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
         private MapButton(int x, int y, int i)
         {
             super(x, y, 16, 16);
-            posX += (i % ClaimedChunks.TILES_GUI) * getWidth();
-            posY += (i / ClaimedChunks.TILES_GUI) * getHeight();
-            chunkPos = new ChunkPos(startX + (i % ClaimedChunks.TILES_GUI), startZ + (i / ClaimedChunks.TILES_GUI));
+            posX += (i % GuiConfigs.CHUNK_SELECTOR_TILES_GUI) * getWidth();
+            posY += (i / GuiConfigs.CHUNK_SELECTOR_TILES_GUI) * getHeight();
+            chunkPos = new ChunkPos(startX + (i % GuiConfigs.CHUNK_SELECTOR_TILES_GUI), startZ + (i / GuiConfigs.CHUNK_SELECTOR_TILES_GUI));
             index = i;
         }
 
@@ -114,11 +112,11 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
 
             if(chunkData[index].isClaimed())
             {
-                FTBLibClient.setTexture(ClaimedChunks.TEX_CHUNK_CLAIMING);
+                FTBLibClient.setTexture(GuiConfigs.TEX_CHUNK_CLAIMING);
                 LMColorUtils.setGLColor(LMColorUtils.getColorFromID(chunkData[index].team.colorID), GuiScreen.isCtrlKeyDown() ? 50 : 180);
-                GuiHelper.drawTexturedRect(ax, ay, 16, 16, ClaimedChunks.TEX_FILLED.getMinU(), ClaimedChunks.TEX_FILLED.getMinV(), ClaimedChunks.TEX_FILLED.getMaxU(), ClaimedChunks.TEX_FILLED.getMaxV());
+                GuiHelper.drawTexturedRect(ax, ay, 16, 16, GuiConfigs.TEX_FILLED.getMinU(), GuiConfigs.TEX_FILLED.getMinV(), GuiConfigs.TEX_FILLED.getMaxU(), GuiConfigs.TEX_FILLED.getMaxV());
                 GlStateManager.color((chunkData[index].isLoaded() && chunkData[index].team.isAlly) ? 1F : 0F, chunkData[index].isOwner() ? 0.27F : 0F, 0F, GuiScreen.isCtrlKeyDown() ? 0.2F : 0.78F);
-                GuiHelper.drawTexturedRect(ax, ay, 16, 16, ClaimedChunks.TEX_BORDER.getMinU(), ClaimedChunks.TEX_BORDER.getMinV(), ClaimedChunks.TEX_BORDER.getMaxU(), ClaimedChunks.TEX_BORDER.getMaxV());
+                GuiHelper.drawTexturedRect(ax, ay, 16, 16, GuiConfigs.TEX_BORDER.getMinU(), GuiConfigs.TEX_BORDER.getMinV(), GuiConfigs.TEX_BORDER.getMaxU(), GuiConfigs.TEX_BORDER.getMaxV());
             }
 
             if(isSelected || gui.isMouseOver(this))
@@ -139,7 +137,7 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
     private final Map<UUID, ClaimedChunks.Team> teams;
     private ClaimedChunks.Data[] chunkData;
     private int claimedChunks, loadedChunks, maxClaimedChunks, maxLoadedChunks;
-    private final ButtonLM buttonRefresh, buttonClose, buttonUnclaimAll, buttonDepth;
+    private final ButtonLM buttonRefresh, buttonClose, buttonUnclaimAll;
     private final MapButton mapButtons[];
     private final PanelLM panelButtons;
     private String currentDimName;
@@ -147,13 +145,13 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
 
     public GuiClaimedChunks()
     {
-        super(ClaimedChunks.TILES_GUI * 16, ClaimedChunks.TILES_GUI * 16);
+        super(GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16);
 
         startX = MathHelperLM.chunk(mc.thePlayer.posX) - 7;
         startZ = MathHelperLM.chunk(mc.thePlayer.posZ) - 7;
 
         teams = new HashMap<>();
-        chunkData = new ClaimedChunks.Data[ClaimedChunks.TILES_GUI * ClaimedChunks.TILES_GUI];
+        chunkData = new ClaimedChunks.Data[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
 
         for(int i = 0; i < chunkData.length; i++)
         {
@@ -178,15 +176,7 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
             public void onClicked(IGui gui, IMouseButton button)
             {
                 new MessageClaimedChunksRequest(startX, startZ).sendToServer();
-
-                if(thread != null)
-                {
-                    thread.cancelled = true;
-                    thread = null;
-                }
-
-                thread = new ThreadReloadArea(mc.theWorld, GuiClaimedChunks.this);
-                thread.start();
+                ThreadReloadChunkSelector.reloadArea(mc.theWorld, startX, startZ);
             }
         };
 
@@ -207,18 +197,6 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
             }
         };
 
-        buttonDepth = new ButtonLM(0, 48, 16, 16)
-        {
-            @Override
-            public void onClicked(IGui gui, IMouseButton button)
-            {
-                FTBUClientConfig.ENABLE_CHUNK_SELECTOR_DEPTH.setBoolean(!FTBUClientConfig.ENABLE_CHUNK_SELECTOR_DEPTH.getBoolean());
-                buttonRefresh.onClicked(gui, button);
-            }
-        };
-
-        buttonDepth.setTitle("Map Depth"); //TODO: Lang
-
         panelButtons = new PanelLM(0, 0, 16, 0)
         {
             @Override
@@ -227,7 +205,6 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
                 add(buttonClose);
                 add(buttonRefresh);
                 add(buttonUnclaimAll);
-                add(buttonDepth);
 
                 setHeight(getWidgets().size() * 16);
             }
@@ -245,7 +222,7 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
             }
         };
 
-        mapButtons = new MapButton[ClaimedChunks.TILES_GUI * ClaimedChunks.TILES_GUI];
+        mapButtons = new MapButton[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
 
         for(int i = 0; i < mapButtons.length; i++)
         {
@@ -290,7 +267,7 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
             textureID = TextureUtil.glGenTextures();
         }
 
-        if(pixelBuffer != null)
+        if(ThreadReloadChunkSelector.pixelBuffer != null)
         {
             //boolean hasBlur = false;
             //int filter = hasBlur ? GL11.GL_LINEAR : GL11.GL_NEAREST;
@@ -299,9 +276,8 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, ClaimedChunks.TILES_TEX * 16, ClaimedChunks.TILES_TEX * 16, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, pixelBuffer);
-            pixelBuffer = null;
-            thread = null;
+            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, GuiConfigs.CHUNK_SELECTOR_TILES_TEX * 16, GuiConfigs.CHUNK_SELECTOR_TILES_TEX * 16, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, ThreadReloadChunkSelector.pixelBuffer);
+            ThreadReloadChunkSelector.pixelBuffer = null;
         }
 
         GlStateManager.color(0F, 0F, 0F, 1F);
@@ -309,15 +285,15 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
         //drawBlankRect((xSize - 128) / 2, (ySize - 128) / 2, zLevel, 128, 128);
         GlStateManager.color(1F, 1F, 1F, 1F);
 
-        if(thread == null)
+        if(!ThreadReloadChunkSelector.isReloading())
         {
             GlStateManager.bindTexture(textureID);
-            GuiHelper.drawTexturedRect(posX, posY, ClaimedChunks.TILES_GUI * 16, ClaimedChunks.TILES_GUI * 16, 0D, 0D, ClaimedChunks.UV, ClaimedChunks.UV);
+            GuiHelper.drawTexturedRect(posX, posY, GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, 0D, 0D, GuiConfigs.CHUNK_SELECTOR_UV, GuiConfigs.CHUNK_SELECTOR_UV);
         }
 
         GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.enableTexture2D();
-        FTBLibClient.setTexture(ClaimedChunks.TEX_CHUNK_CLAIMING);
+        FTBLibClient.setTexture(GuiConfigs.TEX_CHUNK_CLAIMING);
 
         for(MapButton mapButton : mapButtons)
         {
@@ -336,16 +312,16 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
         int gridX = mapButtons[0].getAX();
         int gridY = mapButtons[0].getAY();
 
-        for(int x = 0; x <= ClaimedChunks.TILES_GUI; x++)
+        for(int x = 0; x <= GuiConfigs.CHUNK_SELECTOR_TILES_GUI; x++)
         {
             buffer.pos(gridX + x * 16, gridY, 0D).color(gridR, gridG, gridB, gridA).endVertex();
-            buffer.pos(gridX + x * 16, gridY + ClaimedChunks.TILES_GUI * 16, 0D).color(gridR, gridG, gridB, gridA).endVertex();
+            buffer.pos(gridX + x * 16, gridY + GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, 0D).color(gridR, gridG, gridB, gridA).endVertex();
         }
 
-        for(int y = 0; y <= ClaimedChunks.TILES_GUI; y++)
+        for(int y = 0; y <= GuiConfigs.CHUNK_SELECTOR_TILES_GUI; y++)
         {
             buffer.pos(gridX, gridY + y * 16, 0D).color(gridR, gridG, gridB, gridA).endVertex();
-            buffer.pos(gridX + ClaimedChunks.TILES_GUI * 16, gridY + y * 16, 0D).color(gridR, gridG, gridB, gridA).endVertex();
+            buffer.pos(gridX + GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, gridY + y * 16, 0D).color(gridR, gridG, gridB, gridA).endVertex();
         }
 
         tessellator.draw();
@@ -354,7 +330,7 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
         int cx = MathHelperLM.chunk(mc.thePlayer.posX);
         int cy = MathHelperLM.chunk(mc.thePlayer.posZ);
 
-        if(cx >= startX && cy >= startZ && cx < startX + ClaimedChunks.TILES_GUI && cy < startZ + ClaimedChunks.TILES_GUI)
+        if(cx >= startX && cy >= startZ && cx < startX + GuiConfigs.CHUNK_SELECTOR_TILES_GUI && cy < startZ + GuiConfigs.CHUNK_SELECTOR_TILES_GUI)
         {
             double x = ((cx - startX) * 16D + MathHelperLM.wrap(mc.thePlayer.posX, 16D));
             double y = ((cy - startZ) * 16D + MathHelperLM.wrap(mc.thePlayer.posZ, 16D));
@@ -364,7 +340,7 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
             GlStateManager.pushMatrix();
             //GlStateManager.rotate((int)((ep.rotationYaw + 180F) / (180F / 8F)) * (180F / 8F), 0F, 0F, 1F);
             GlStateManager.rotate(mc.thePlayer.rotationYaw + 180F, 0F, 0F, 1F);
-            FTBLibClient.setTexture(ClaimedChunks.TEX_ENTITY);
+            FTBLibClient.setTexture(GuiConfigs.TEX_ENTITY);
             GlStateManager.color(1F, 1F, 1F, mc.thePlayer.isSneaking() ? 0.4F : 0.7F);
             GuiHelper.drawTexturedRect(-8, -8, 16, 16, 0D, 0D, 1D, 1D);
             GlStateManager.popMatrix();
@@ -377,7 +353,6 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
         buttonRefresh.render(GuiIcons.REFRESH);
         buttonClose.render(GuiIcons.ACCEPT);
         buttonUnclaimAll.render(GuiIcons.REMOVE);
-        buttonDepth.render(FTBUClientConfig.ENABLE_CHUNK_SELECTOR_DEPTH.getBoolean() ? GuiIcons.ACCEPT : GuiIcons.ACCEPT_GRAY);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbu.webapi;
+package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
 import com.google.gson.JsonArray;

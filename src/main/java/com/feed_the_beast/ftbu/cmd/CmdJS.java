@@ -43,7 +43,7 @@ public class CmdJS extends CommandLM
         {
             if(args[0].equals("raw"))
             {
-                sender.addChatMessage(new TextComponentString(String.valueOf(engine.eval(LMStringUtils.unsplit(LMStringUtils.shiftArray(args), " ")))));
+                sender.addChatMessage(new TextComponentString(String.valueOf(engine.eval(String.join(" ", LMStringUtils.shiftArray(args))))));
             }
             else
             {

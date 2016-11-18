@@ -8,12 +8,12 @@ import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
+import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBULeaderboards;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.Leaderboard;
 import com.feed_the_beast.ftbu.api.guide.ServerInfoEvent;
-import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.client.FTBUActions;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
@@ -100,7 +100,7 @@ public class ServerInfoFile extends InfoPage
 
         IGuiInfoPage page = getSub("leaderboards").setTitle(FTBULeaderboards.LANG_TITLE.textComponent());
 
-        for(Leaderboard leaderboard : FTBUtilitiesAPI_Impl.INSTANCE.LEADERBOARDS.values())
+        for(Leaderboard leaderboard : FTBU.PROXY.leaderboards.values())
         {
             IGuiInfoPage thisTop = page.getSub(leaderboard.getStat().statId).setTitle(leaderboard.getName());
             Collections.sort(players, leaderboard.getComparator());

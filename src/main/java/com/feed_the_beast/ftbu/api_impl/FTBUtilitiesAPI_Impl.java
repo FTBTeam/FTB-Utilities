@@ -3,18 +3,18 @@ package com.feed_the_beast.ftbu.api_impl;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.rankconfig.IRankConfig;
 import com.feed_the_beast.ftbl.api.rankconfig.IRankConfigHandler;
-import com.feed_the_beast.ftbl.lib.AsmData;
+import com.feed_the_beast.ftbl.lib.AsmHelper;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
-import com.feed_the_beast.ftbu.api.FTBUtilitiesAddon;
+import com.feed_the_beast.ftbu.api.FTBUtilitiesPlugin;
+import com.feed_the_beast.ftbu.api.IFTBUtilitiesPlugin;
 import com.feed_the_beast.ftbu.api.IRank;
-import com.feed_the_beast.ftbu.api.Leaderboard;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunkStorage;
 import com.feed_the_beast.ftbu.ranks.DefaultOPRank;
 import com.feed_the_beast.ftbu.ranks.DefaultPlayerRank;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.stats.StatBase;
+import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.IPermissionHandler;
@@ -22,8 +22,6 @@ import net.minecraftforge.server.permission.context.IContext;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by LatvianModder on 30.08.2016.
@@ -32,13 +30,22 @@ public enum FTBUtilitiesAPI_Impl implements FTBUtilitiesAPI, IPermissionHandler,
 {
     INSTANCE;
 
-    public final Map<StatBase, Leaderboard> LEADERBOARDS = new HashMap<>();
+    private Collection<IFTBUtilitiesPlugin> plugins;
 
-    public void init(AsmData asmData)
+    public void init(ASMDataTable table)
     {
-        asmData.findAnnotatedObjects(FTBUtilitiesAPI.class, FTBUtilitiesAddon.class, (obj, field, data) -> field.set(null, INSTANCE));
-        asmData.findAnnotatedMethods(FTBUtilitiesAddon.class, (method, params, data) -> method.invoke(null));
-        asmData.findRegistryObjects(Leaderboard.class, false, (obj, field, id) -> LEADERBOARDS.put(obj.getStat(), obj));
+        plugins = AsmHelper.findPlugins(table, IFTBUtilitiesPlugin.class, FTBUtilitiesPlugin.class);
+
+        for(IFTBUtilitiesPlugin p : plugins)
+        {
+            p.init(this);
+        }
+    }
+
+    @Override
+    public Collection<IFTBUtilitiesPlugin> getAllPlugins()
+    {
+        return plugins;
     }
 
     @Override

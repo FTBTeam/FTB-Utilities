@@ -1,8 +1,6 @@
 package com.feed_the_beast.ftbu.config;
 
-import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.lib.config.PropertyBase;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
@@ -15,7 +13,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,9 +22,6 @@ import java.util.Map;
 public class PropertyChatSubstituteList extends PropertyBase
 {
     public static final String ID = "ftbu_chat_substitutes";
-
-    @RegistryObject(ID)
-    public static final IConfigValueProvider PROVIDER = () -> new PropertyChatSubstituteList(Collections.emptyMap());
 
     public final Map<String, ITextComponent> value;
 
@@ -117,7 +111,7 @@ public class PropertyChatSubstituteList extends PropertyBase
     }
 
     @Override
-    public void writeToServer(ByteBuf data)
+    public void writeData(ByteBuf data)
     {
         data.writeShort(value.size());
         value.forEach((key, value1) ->
@@ -128,7 +122,7 @@ public class PropertyChatSubstituteList extends PropertyBase
     }
 
     @Override
-    public void readFromServer(ByteBuf data)
+    public void readData(ByteBuf data)
     {
         int s = data.readUnsignedShort();
         value.clear();

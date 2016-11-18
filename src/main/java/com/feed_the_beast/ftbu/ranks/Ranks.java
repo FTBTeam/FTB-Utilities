@@ -11,7 +11,7 @@ import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
-import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
+import com.feed_the_beast.ftbu.config.FTBUConfigRanks;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -54,7 +54,7 @@ public enum Ranks
         defaultRank = null;
         ranksConfigTree = new ConfigTree();
 
-        if(FTBUConfigGeneral.RANKS_ENABLED.getBoolean())
+        if(FTBUConfigRanks.ENABLED.getBoolean())
         {
             try
             {
@@ -279,7 +279,7 @@ public enum Ranks
             for(IRankConfig p : sortedRankConfigs)
             {
                 IConfigValue value = p.getDefValue();
-                list.add("<tr><td>" + p.getName() + "</td><td>");
+                list.add("<tr><td>" + p.getID() + "</td><td>");
 
                 String min = value.getMinValueString();
                 String max = value.getMaxValueString();

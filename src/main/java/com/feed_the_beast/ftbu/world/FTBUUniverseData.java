@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
 import com.feed_the_beast.ftbl.lib.EnumEnabled;
-import com.feed_the_beast.ftbl.lib.INBTData;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibStats;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
@@ -27,15 +27,19 @@ import com.feed_the_beast.ftbu.badges.BadgeStorage;
 import com.feed_the_beast.ftbu.cmd.CmdRestart;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
+import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
-import com.feed_the_beast.ftbu.webapi.WebAPI;
 import com.feed_the_beast.ftbu.world.backups.Backups;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.stats.StatList;
+import net.minecraft.stats.StatisticsManagerServer;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -43,6 +47,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
@@ -55,27 +60,20 @@ import java.util.Map;
 /**
  * Created by LatvianModder on 18.05.2016.
  */
-public class FTBUUniverseData implements INBTData, ITickable
+public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
 {
-    private static final ResourceLocation ID = new ResourceLocation(FTBUFinals.MOD_ID, "data");
     public static final BadgeStorage LOCAL_BADGES = new BadgeStorage();
 
     @Nullable
     public static FTBUUniverseData get()
     {
-        return (FTBUUniverseData) FTBLibIntegration.API.getUniverse().getData(ID);
+        return (FTBUUniverseData) FTBLibIntegration.API.getUniverse().getData(FTBLibIntegration.FTBU_DATA);
     }
 
     public long restartMillis;
-    private long nextChunkloaderUpdate;
+    private long nextChunkloaderUpdate, nextWebApiUpdate;
     private Map<String, BlockDimPos> warps;
     private String lastRestartMessage;
-
-    @Override
-    public ResourceLocation getID()
-    {
-        return ID;
-    }
 
     @Nullable
     public static String getServerBadge(@Nullable IForgePlayer p)
@@ -356,12 +354,13 @@ public class FTBUUniverseData implements INBTData, ITickable
         ClaimedChunkStorage.INSTANCE.clear();
         LoadedChunkStorage.INSTANCE.clear();
         LOCAL_BADGES.clear();
-        WebAPI.INST.stopAPI();
     }
 
     @Override
-    public void writeData(NBTTagCompound nbt)
+    public NBTBase serializeNBT()
     {
+        NBTTagCompound nbt = new NBTTagCompound();
+
         if(warps != null && !warps.isEmpty())
         {
             NBTTagCompound tag1 = new NBTTagCompound();
@@ -375,11 +374,13 @@ public class FTBUUniverseData implements INBTData, ITickable
         }
 
         nbt.setTag("Chunks", ClaimedChunkStorage.INSTANCE.serializeNBT());
+        return nbt;
     }
 
     @Override
-    public void readData(NBTTagCompound nbt)
+    public void deserializeNBT(NBTBase nbt0)
     {
+        NBTTagCompound nbt = (NBTTagCompound) nbt0;
         nextChunkloaderUpdate = System.currentTimeMillis() + 10000L;
 
         if(nbt.hasKey("Warps"))
@@ -405,6 +406,8 @@ public class FTBUUniverseData implements INBTData, ITickable
         {
             ClaimedChunkStorage.INSTANCE.deserializeNBT(nbt.getCompoundTag("Chunks"));
         }
+
+        nextWebApiUpdate = 0L;
     }
 
     @Override
@@ -450,6 +453,44 @@ public class FTBUUniverseData implements INBTData, ITickable
         {
             Backups.INSTANCE.thread = null;
             Backups.INSTANCE.postBackup();
+        }
+
+        if(FTBUConfigWebAPI.ENABLED.getBoolean() && nextWebApiUpdate < now)
+        {
+            nextWebApiUpdate = now + (FTBUConfigWebAPI.UPDATE_INTERVAL.getInt() * 60000L);
+
+            try
+            {
+                JsonTable table = new JsonTable();
+                table.setTitle("name", "Name");
+                table.setTitle("deaths", "Deaths");
+                table.setTitle("dph", "Deaths per hour");
+                table.setTitle("last_seen", "Last time seen");
+
+                for(IForgePlayer player : FTBLibIntegration.API.getUniverse().getPlayers())
+                {
+                    StatisticsManagerServer stats = player.stats();
+
+                    JsonTable.TableEntry tableEntry = new JsonTable.TableEntry();
+                    tableEntry.set("name", new JsonPrimitive(player.getProfile().getName()));
+                    tableEntry.set("deaths", new JsonPrimitive(stats.readStat(StatList.DEATHS)));
+                    tableEntry.set("dph", new JsonPrimitive(FTBLibStats.getDeathsPerHour(stats)));
+                    tableEntry.set("last_seen", new JsonPrimitive(player.isOnline() ? 0 : FTBLibStats.getLastSeen(stats, false)));
+                    table.addEntry(tableEntry);
+                }
+
+                JsonObject json = new JsonObject();
+                json.add("time", new JsonPrimitive(System.currentTimeMillis()));
+                json.add("stats", table.toJson());
+
+                File file = FTBUConfigWebAPI.FILE_LOCATION.getString().isEmpty() ? new File(LMUtils.folderLocal, "ftbu/webapi.json") : new File(FTBUConfigWebAPI.FILE_LOCATION.getString());
+                LMJsonUtils.toJson(file, json);
+                FTBUFinals.LOGGER.info("WebAPI Output");
+            }
+            catch(Exception ex)
+            {
+                ex.printStackTrace();
+            }
         }
     }
 

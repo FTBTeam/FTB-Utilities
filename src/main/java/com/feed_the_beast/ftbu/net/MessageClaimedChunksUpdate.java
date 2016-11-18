@@ -2,6 +2,8 @@ package com.feed_the_beast.ftbu.net;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibTeamPermissions;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
@@ -60,7 +62,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
         maxClaimedChunks = FTBUConfigWorld.MAX_CLAIMED_CHUNKS.getInt();
         maxLoadedChunks = FTBUConfigWorld.MAX_LOADED_CHUNKS.getInt();
 
-        chunkData = new ClaimedChunks.Data[ClaimedChunks.TILES_GUI * ClaimedChunks.TILES_GUI];
+        chunkData = new ClaimedChunks.Data[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
         teams = new HashMap<>();
 
         if(team != null)
@@ -73,9 +75,9 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
             teams.put(cteam.ownerID, cteam);
         }
 
-        for(int x1 = 0; x1 < ClaimedChunks.TILES_GUI; x1++)
+        for(int x1 = 0; x1 < GuiConfigs.CHUNK_SELECTOR_TILES_GUI; x1++)
         {
-            for(int z1 = 0; z1 < ClaimedChunks.TILES_GUI; z1++)
+            for(int z1 = 0; z1 < GuiConfigs.CHUNK_SELECTOR_TILES_GUI; z1++)
             {
                 ChunkDimPos pos = new ChunkDimPos(startX + x1, startZ + z1, player.dimension);
                 ClaimedChunks.Data data = new ClaimedChunks.Data();
@@ -93,7 +95,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
                         data.team.ownerID = team.getOwner().getProfile().getId();
                         data.team.colorID = team.getColor().getColorID();
                         data.team.formattedName = team.getColor().getTextFormatting() + team.getTitle();
-                        data.team.isAlly = team.isAllyTeam(team.getName()) && team.isAllyTeam(team.getName());
+                        data.team.isAlly = team.hasPermission(player.getGameProfile().getId(), FTBLibTeamPermissions.IS_ALLY);
                         teams.put(data.team.ownerID, data.team);
                     }
 
@@ -120,7 +122,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
                     data.flags |= ClaimedChunks.DATA_CAN_CLAIM;
                 }
 
-                chunkData[x1 + z1 * ClaimedChunks.TILES_GUI] = data;
+                chunkData[x1 + z1 * GuiConfigs.CHUNK_SELECTOR_TILES_GUI] = data;
             }
         }
     }
@@ -141,7 +143,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
         maxClaimedChunks = io.readUnsignedShort();
         maxLoadedChunks = io.readUnsignedShort();
 
-        chunkData = new ClaimedChunks.Data[ClaimedChunks.TILES_GUI * ClaimedChunks.TILES_GUI];
+        chunkData = new ClaimedChunks.Data[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
         teams = new HashMap<>();
 
         int s = io.readUnsignedShort();

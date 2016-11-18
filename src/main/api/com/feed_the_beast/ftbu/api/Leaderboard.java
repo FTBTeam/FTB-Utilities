@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.api;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.IRegistryObject;
 import net.minecraft.stats.StatBase;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -12,7 +11,7 @@ import java.util.Comparator;
 /**
  * Created by LatvianModder on 27.09.2016.
  */
-public abstract class Leaderboard implements IRegistryObject
+public abstract class Leaderboard
 {
     private final StatBase stat;
     private final Comparator<IForgePlayer> comparator;

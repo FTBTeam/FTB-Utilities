@@ -5,24 +5,25 @@ import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.security.EnumTeamPrivacyLevel;
 import com.feed_the_beast.ftbl.lib.EnumNameMap;
-import com.feed_the_beast.ftbl.lib.INBTData;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnumAbstract;
 import com.feed_the_beast.ftbl.lib.io.Bits;
-import com.feed_the_beast.ftbu.FTBUFinals;
+import com.feed_the_beast.ftbu.FTBLibIntegration;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTPrimitive;
+import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 
 /**
  * Created by LatvianModder on 11.02.2016.
  */
-public class FTBUTeamData implements INBTData
+public class FTBUTeamData implements INBTSerializable<NBTBase>
 {
-    public static final ResourceLocation ID = new ResourceLocation(FTBUFinals.MOD_ID, "data");
     private static final EnumTeamPrivacyLevel DEF_BLOCKS_LEVEL = EnumTeamPrivacyLevel.ALLIES;
     private static final IConfigKey DISABLE_EXPLOSIONS = new ConfigKey("ftbu.disable_explosions", new PropertyBool(false));
     private static final IConfigKey FAKE_PLAYERS = new ConfigKey("ftbu.fake_players", new PropertyBool(false));
@@ -33,7 +34,7 @@ public class FTBUTeamData implements INBTData
     @Nullable
     public static FTBUTeamData get(IForgeTeam t)
     {
-        return (FTBUTeamData) t.getData(ID);
+        return (FTBUTeamData) t.getData(FTBLibIntegration.FTBU_DATA);
     }
 
     private byte flags = (byte) (DEF_BLOCKS_LEVEL.ordinal() << 2);
@@ -71,29 +72,27 @@ public class FTBUTeamData implements INBTData
     }
 
     @Override
-    public ResourceLocation getID()
+    public NBTBase serializeNBT()
     {
-        return ID;
+        return new NBTTagByte(flags);
     }
 
     @Override
-    public void writeData(NBTTagCompound nbt)
+    public void deserializeNBT(NBTBase nbt0)
     {
-        if(flags != 0)
+        if(nbt0 instanceof NBTTagCompound)
         {
-            nbt.setByte("Flags", flags);
+            flags = ((NBTTagCompound) nbt0).getByte("Flags");
         }
-    }
-
-    @Override
-    public void readData(NBTTagCompound nbt)
-    {
-        flags = nbt.getByte("Flags");
+        else
+        {
+            flags = ((NBTPrimitive) nbt0).getByte();
+        }
     }
 
     public EnumTeamPrivacyLevel getBlocks()
     {
-        return blocks.get();
+        return blocks.getNonnull();
     }
 
     public boolean disableExplosions()

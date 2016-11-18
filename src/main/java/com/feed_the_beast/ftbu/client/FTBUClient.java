@@ -27,6 +27,8 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
     @Override
     public void preInit()
     {
+        super.preInit();
+
         ClientRegistry.registerKeyBinding(KEY_GUIDE);
         ClientRegistry.registerKeyBinding(KEY_WARP);
         ClientRegistry.registerKeyBinding(KEY_LIGHT_VALUES);

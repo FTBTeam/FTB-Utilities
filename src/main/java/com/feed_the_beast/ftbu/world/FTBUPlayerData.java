@@ -3,14 +3,14 @@ package com.feed_the_beast.ftbu.world;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
-import com.feed_the_beast.ftbl.lib.INBTData;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
-import com.feed_the_beast.ftbu.FTBUFinals;
+import com.feed_the_beast.ftbu.FTBLibIntegration;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -21,9 +21,8 @@ import java.util.Map;
 /**
  * Created by LatvianModder on 11.02.2016.
  */
-public class FTBUPlayerData implements INBTData
+public class FTBUPlayerData implements INBTSerializable<NBTBase>
 {
-    private static final ResourceLocation ID = new ResourceLocation(FTBUFinals.MOD_ID, "data");
     private static final IConfigKey RENDER_BADGE = new ConfigKey("ftbu.render_badge", new PropertyBool(true));
     private static final IConfigKey CHAT_LINKS = new ConfigKey("ftbu.chat_links", new PropertyBool(true));
     private static final byte FLAG_RENDER_BADGE = 1;
@@ -37,18 +36,14 @@ public class FTBUPlayerData implements INBTData
     @Nullable
     public static FTBUPlayerData get(IForgePlayer p)
     {
-        return (FTBUPlayerData) p.getData(ID);
+        return (FTBUPlayerData) p.getData(FTBLibIntegration.FTBU_DATA);
     }
 
     @Override
-    public ResourceLocation getID()
+    public NBTBase serializeNBT()
     {
-        return ID;
-    }
+        NBTTagCompound nbt = new NBTTagCompound();
 
-    @Override
-    public void writeData(NBTTagCompound nbt)
-    {
         if(flags != 0)
         {
             nbt.setByte("Flags", flags);
@@ -70,11 +65,15 @@ public class FTBUPlayerData implements INBTData
         {
             nbt.setIntArray("LastDeath", lastDeath.toIntArray());
         }
+
+        return nbt;
     }
 
     @Override
-    public void readData(NBTTagCompound nbt)
+    public void deserializeNBT(NBTBase nbt0)
     {
+        NBTTagCompound nbt = (NBTTagCompound) nbt0;
+
         flags = nbt.getByte("Flags");
 
         if(nbt.hasKey("Homes"))

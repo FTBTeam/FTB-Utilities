@@ -9,7 +9,9 @@ import com.feed_the_beast.ftbl.lib.util.LMFileUtils;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.api.IRank;
+import com.feed_the_beast.ftbu.api.NodeEntry;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.config.FTBUConfigRanks;
 import com.google.gson.JsonElement;
@@ -21,10 +23,9 @@ import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,13 +40,7 @@ public enum Ranks
     public final Map<UUID, IRank> PLAYER_MAP = new HashMap<>();
     public IRank defaultRank;
     public IConfigTree ranksConfigTree;
-    private final Collection<NodeEntry> CUSTOM_PERM_PREFIX_REGISTRY = new HashSet<>();
     public final List<NodeEntry> ALL_NODES = new ArrayList<>();
-
-    public void registerCustomPermPrefix(NodeEntry entry)
-    {
-        CUSTOM_PERM_PREFIX_REGISTRY.add(entry);
-    }
 
     public void reload()
     {
@@ -201,7 +196,7 @@ public enum Ranks
 
         ALL_NODES.clear();
 
-        for(NodeEntry node : CUSTOM_PERM_PREFIX_REGISTRY)
+        for(NodeEntry node : FTBU.PROXY.customPermPrefixRegistry)
         {
             ALL_NODES.add(new NodeEntry(node.getName() + "*", node.getLevel(), node.getDescription()));
         }
@@ -213,7 +208,7 @@ public enum Ranks
 
             boolean printNode = true;
 
-            for(NodeEntry cprefix : CUSTOM_PERM_PREFIX_REGISTRY)
+            for(NodeEntry cprefix : FTBU.PROXY.customPermPrefixRegistry)
             {
                 if(s.startsWith(cprefix.getName()))
                 {
@@ -234,6 +229,11 @@ public enum Ranks
 
         Collections.sort(ALL_NODES, LMStringUtils.ID_COMPARATOR);
 
+        Map<DefaultPermissionLevel, String> colorMap = new EnumMap<>(DefaultPermissionLevel.class);
+        colorMap.put(DefaultPermissionLevel.ALL, "#72FF85");
+        colorMap.put(DefaultPermissionLevel.OP, "#42A3FF");
+        colorMap.put(DefaultPermissionLevel.NONE, "#FF4242");
+
         try
         {
             list.clear();
@@ -244,7 +244,7 @@ public enum Ranks
 
             for(NodeEntry entry : ALL_NODES)
             {
-                list.add("<tr><td>" + entry.getName() + "</td><td bgcolor=\"" + entry.getColor() + "\">" + entry.getLevel() + "</td><td>");
+                list.add("<tr><td>" + entry.getName() + "</td><td bgcolor=\"" + colorMap.get(entry.getLevel()) + "\">" + entry.getLevel() + "</td><td>");
 
                 if(entry.getDescription() != null)
                 {

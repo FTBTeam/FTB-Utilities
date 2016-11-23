@@ -15,7 +15,7 @@ public class FTBUConfigCommands
     public static final PropertyBool SERVER_INFO = new PropertyBool(true);
     public static final PropertyBool TRASH_CAN = new PropertyBool(true);
     public static final PropertyBool CHUNKS = new PropertyBool(true);
-    public static final PropertyBool JS = new PropertyBool(true);
+    public static final PropertyBool JS = new PropertyBool(false);
     public static final PropertyBool KICKME = new PropertyBool(true);
 
     public static void init(IFTBLibRegistry reg)

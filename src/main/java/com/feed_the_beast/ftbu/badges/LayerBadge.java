@@ -1,10 +1,9 @@
 package com.feed_the_beast.ftbu.badges;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbu.FTBUFinals;
+import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbu.client.CachedClientData;
 import com.feed_the_beast.ftbu.client.FTBUClientConfig;
-import com.feed_the_beast.ftbu.net.MessageRequestBadge;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -14,21 +13,13 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
-@SideOnly(Side.CLIENT)
 public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
 {
     INSTANCE;
-
-    public static final ResourceLocation DEF_TEX = new ResourceLocation(FTBUFinals.MOD_ID, "textures/failed_badge.png");
-    public static final Map<UUID, ResourceLocation> CACHE = new HashMap<>();
 
     @Override
     public void doRenderLayer(AbstractClientPlayer ep, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
@@ -36,25 +27,10 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
         if(FTBUClientConfig.RENDER_BADGES.getBoolean() && !ep.isInvisible())
         {
             UUID id = ep.getGameProfile().getId();
-            ResourceLocation tex = CACHE.get(id);
+            ResourceLocation tex = CachedClientData.getBadgeTexture(id);
 
-            if(tex == null)
+            if(tex.equals(CachedClientData.NO_BADGE))
             {
-                CACHE.put(id, DEF_TEX);
-                new MessageRequestBadge(id).sendToServer();
-                return;
-            }
-            else if(tex == DEF_TEX)
-            {
-                String url = CachedClientData.LOCAL_BADGES.map.get(id);
-
-                if(url != null)
-                {
-                    tex = new ResourceLocation(FTBUFinals.MOD_ID, "badges/" + url.replace(':', '.'));
-                    FTBLibClient.getDownloadImage(tex, url, DEF_TEX, null);
-                    CACHE.put(id, tex);
-                }
-
                 return;
             }
 
@@ -64,7 +40,7 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-            FTBLibClient.setTexture(tex);
+            Minecraft.getMinecraft().getTextureManager().bindTexture(tex);
             FTBLibClient.pushMaxBrightness();
             GlStateManager.pushMatrix();
 

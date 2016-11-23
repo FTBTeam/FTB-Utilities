@@ -6,4 +6,6 @@ package com.feed_the_beast.ftbu.api;
 public interface IFTBUtilitiesRegistry
 {
     void addLeaderboard(Leaderboard leaderboard);
+
+    void addCustomPermPrefix(NodeEntry entry);
 }

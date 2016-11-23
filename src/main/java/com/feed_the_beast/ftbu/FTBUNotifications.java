@@ -3,12 +3,12 @@ package com.feed_the_beast.ftbu;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.INotification;
+import com.feed_the_beast.ftbl.api.NotificationID;
 import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
@@ -39,7 +39,7 @@ public class FTBUNotifications
 
     private static Notification create(String s, int v)
     {
-        return new Notification(new ResourceLocation(FTBUFinals.MOD_ID, s), (byte) v);
+        return new Notification(new NotificationID(FTBUFinals.get(s), v));
     }
 
     public static INotification chunkClaimedFor(int chunkXPos, int chunkZPos, int dimension, IForgePlayer p)
@@ -63,7 +63,7 @@ public class FTBUNotifications
 
         ITextComponent msg = new TextComponentString(team.getTitle());
         msg.getStyle().setBold(true);
-        Notification n = new Notification(WILDERNESS.getID(), (byte) 1);
+        Notification n = new Notification(WILDERNESS.getID().variant(1));
         n.addText(msg);
 
         if(!team.getDesc().isEmpty())

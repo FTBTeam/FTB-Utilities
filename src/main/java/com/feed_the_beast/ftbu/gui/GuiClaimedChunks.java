@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.gui;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.MouseButton;
+import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
@@ -112,7 +112,7 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
 
             if(chunkData[index].isClaimed())
             {
-                FTBLibClient.setTexture(GuiConfigs.TEX_CHUNK_CLAIMING);
+                mc.getTextureManager().bindTexture(GuiConfigs.TEX_CHUNK_CLAIMING);
                 LMColorUtils.setGLColor(LMColorUtils.getColorFromID(chunkData[index].team.colorID), GuiScreen.isCtrlKeyDown() ? 50 : 180);
                 GuiHelper.drawTexturedRect(ax, ay, 16, 16, GuiConfigs.TEX_FILLED.getMinU(), GuiConfigs.TEX_FILLED.getMinV(), GuiConfigs.TEX_FILLED.getMaxU(), GuiConfigs.TEX_FILLED.getMaxV());
                 GlStateManager.color((chunkData[index].isLoaded() && chunkData[index].team.isAlly) ? 1F : 0F, chunkData[index].isOwner() ? 0.27F : 0F, 0F, GuiScreen.isCtrlKeyDown() ? 0.2F : 0.78F);
@@ -293,7 +293,7 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
 
         GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.enableTexture2D();
-        FTBLibClient.setTexture(GuiConfigs.TEX_CHUNK_CLAIMING);
+        mc.getTextureManager().bindTexture(GuiConfigs.TEX_CHUNK_CLAIMING);
 
         for(MapButton mapButton : mapButtons)
         {
@@ -340,7 +340,7 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
             GlStateManager.pushMatrix();
             //GlStateManager.rotate((int)((ep.rotationYaw + 180F) / (180F / 8F)) * (180F / 8F), 0F, 0F, 1F);
             GlStateManager.rotate(mc.thePlayer.rotationYaw + 180F, 0F, 0F, 1F);
-            FTBLibClient.setTexture(GuiConfigs.TEX_ENTITY);
+            mc.getTextureManager().bindTexture(GuiConfigs.TEX_ENTITY);
             GlStateManager.color(1F, 1F, 1F, mc.thePlayer.isSneaking() ? 0.4F : 0.7F);
             GuiHelper.drawTexturedRect(-8, -8, 16, 16, 0D, 0D, 1D, 1D);
             GlStateManager.popMatrix();

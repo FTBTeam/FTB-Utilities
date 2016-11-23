@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
 import com.feed_the_beast.ftbl.api.gui.IWidget;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.api.info.IPageIconRenderer;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
@@ -18,6 +17,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +31,7 @@ public class InfoPageGuide implements IGuide
     {
         private IPageIconRenderer pageIcon;
 
-        public Page(String id, IPageIconRenderer icon)
+        public Page(String id, @Nullable IPageIconRenderer icon)
         {
             super(id);
             pageIcon = icon;
@@ -136,7 +136,7 @@ public class InfoPageGuide implements IGuide
     }
 
     @Override
-    public IGuiInfoPage getPage()
+    public InfoPage getPage()
     {
         return page;
     }

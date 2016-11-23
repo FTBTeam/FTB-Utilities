@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.lib.util.LMFileUtils;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.google.gson.JsonArray;
@@ -18,8 +19,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,7 +30,6 @@ public enum Backups
 {
     INSTANCE;
 
-    public static final Logger LOGGER = LogManager.getLogger("FTBU_Backups");
     public final List<Backup> backups = new ArrayList<>();
     public File backupsFolder;
     public long nextBackup = -1L;
@@ -95,7 +93,7 @@ public enum Backups
         }
 
         cleanupAndSave();
-        LOGGER.info("Backups folder - " + backupsFolder.getAbsolutePath());
+        FTBUFinals.LOGGER.info("Backups folder - " + backupsFolder.getAbsolutePath());
     }
 
     public boolean run(ICommandSender ics)
@@ -167,7 +165,7 @@ public enum Backups
                         for(int i = toDelete - 1; i >= 0; i--)
                         {
                             Backup b = backups.get(i);
-                            LOGGER.info("Deleting " + b.fileID);
+                            FTBUFinals.LOGGER.info("Deleting old backup: " + b.fileID);
                             LMFileUtils.delete(b.getFile());
                             backups.remove(i);
                         }

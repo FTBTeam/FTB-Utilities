@@ -10,6 +10,7 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback
@@ -58,12 +59,22 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback
     public void ticketsLoaded(List<ForgeChunkManager.Ticket> tickets, World world)
     {
         int dim = world.provider.getDimension();
-        TICKET_CONTAINERS.remove(dim);
+        ForgeChunkManager.Ticket ticket = TICKET_CONTAINERS.remove(dim);
+
+        if(ticket != null)
+        {
+            ForgeChunkManager.releaseTicket(ticket);
+        }
 
         if(tickets.size() == 1)
         {
             TICKET_CONTAINERS.put(dim, tickets.get(0));
             checkDimension(world.provider.getDimension());
+        }
+        else if(tickets.size() > 1)
+        {
+            FTBUFinals.LOGGER.warn("There was an error while loading tickets! Releasing all [" + tickets.size() + "]!");
+            new ArrayList<>(tickets).forEach(ForgeChunkManager::releaseTicket);
         }
     }
 

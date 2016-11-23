@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.client;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.badges.LayerBadge;
 import net.minecraft.client.Minecraft;
@@ -34,7 +33,6 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
         ClientRegistry.registerKeyBinding(KEY_LIGHT_VALUES);
         ClientRegistry.registerKeyBinding(KEY_CHUNK_BORDER);
 
-        CachedClientData.reloadGlobalBadges();
         MinecraftForge.EVENT_BUS.register(new FTBUClientEventHandler());
     }
 
@@ -50,7 +48,6 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
     @Override
     public void onReloadedClient()
     {
-        FTBLibClient.clearCachedData();
-        //FIXME: GuideRepoList.reloadFromFolder(e.world.getMode());
+        CachedClientData.clear();
     }
 }

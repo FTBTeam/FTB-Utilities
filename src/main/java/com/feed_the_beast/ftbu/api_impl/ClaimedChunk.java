@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibStats;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
@@ -76,11 +75,6 @@ public class ClaimedChunk implements IClaimedChunk
                         if(max > 0D && FTBLibStats.getLastSeenDeltaInHours(owner.stats(), false) > max)
                         {
                             loaded = false;
-
-                            if(isForced())
-                            {
-                                FTBU.logger.info("Unloading " + owner.getProfile().getName() + " chunks for being offline for too long");
-                            }
                         }
                     }
                     break;

@@ -1,5 +1,3 @@
-def version_mod = "3.2.0"
-
 buildscript {
     repositories {
         jcenter()
@@ -14,7 +12,11 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.10.2-" + version_mod
+version = System.properties['mod_version'];
+if (version == null) {
+    version = "Dev"
+}
+
 group = "com.feed_the_beast.ftbutilities"
 archivesBaseName = "FTBUtilities"
 
@@ -62,6 +64,16 @@ sourceSets {
         }
     }
 }
+
+task apiJar(type: Jar) {
+    from sourceSets.main.java
+    include "com/feed_the_beast/ftbu/api/**"
+    from sourceSets.main.output
+    include "com/feed_the_beast/ftbu/api/**"
+    classifier = 'api'
+}
+
+build.dependsOn apiJar
 
 processResources {
     inputs.property "version", project.version

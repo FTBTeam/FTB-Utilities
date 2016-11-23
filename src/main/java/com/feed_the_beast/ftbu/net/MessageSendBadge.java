@@ -46,6 +46,6 @@ public class MessageSendBadge extends MessageToClient<MessageSendBadge>
     @Override
     public void onMessage(MessageSendBadge m)
     {
-        CachedClientData.LOCAL_BADGES.map.put(m.playerID, m.badgeURL);
+        CachedClientData.setBadge(m.playerID, m.badgeURL);
     }
 }

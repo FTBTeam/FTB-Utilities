@@ -13,7 +13,6 @@ import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
-import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
@@ -75,28 +74,20 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
     private Map<String, BlockDimPos> warps;
     private String lastRestartMessage;
 
-    @Nullable
     public static String getServerBadge(@Nullable IForgePlayer p)
     {
         if(p == null)
         {
-            return null;
+            return "";
         }
 
         String b = LOCAL_BADGES.map.get(p.getProfile().getId());
-        if(b != null)
+        if(b == null)
         {
-            return b;
+            b = RankConfigAPI.getRankConfig(p.getProfile(), FTBUPermissions.DISPLAY_BADGE).getString();
         }
 
-        b = RankConfigAPI.getRankConfig(p.getProfile(), FTBUPermissions.DISPLAY_BADGE).getString();
-
-        if(!b.isEmpty())
-        {
-            return b;
-        }
-
-        return null;
+        return b;
     }
 
     public static void reloadServerBadges()
@@ -199,8 +190,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
             return false;
         }
 
-        //int max = RankConfigAPI.getRankConfig(player.getProfile(), FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
-        int max = FTBUConfigWorld.MAX_CLAIMED_CHUNKS.getInt();
+        int max = RankConfigAPI.getRankConfig(player.getProfile(), FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
         if(max == 0)
         {
             return false;
@@ -226,11 +216,6 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
 
     public static boolean unclaimChunk(IForgePlayer player, ChunkDimPos pos)
     {
-        if(FTBUConfigWorld.LOCKED_IN_CLAIMED_CHUNKS.getBoolean() && !FTBUConfigWorld.CHUNK_CLAIMING.getBoolean())
-        {
-            return false;
-        }
-
         IClaimedChunk chunk = ClaimedChunkStorage.INSTANCE.getChunk(pos);
 
         if(chunk != null && chunk.getOwner().equalsPlayer(player))
@@ -286,8 +271,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
                 return false;
             }
 
-            //int max = RankConfigAPI.getRankConfig(player.getProfile(), FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
-            int max = FTBUConfigWorld.MAX_LOADED_CHUNKS.getInt();
+            int max = RankConfigAPI.getRankConfig(player.getProfile(), FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
 
             if(max == 0)
             {
@@ -336,7 +320,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
         if(FTBUConfigGeneral.AUTO_RESTART.getBoolean() && FTBUConfigGeneral.RESTART_TIMER.getInt() > 0)
         {
             restartMillis = startMillis + (long) (FTBUConfigGeneral.RESTART_TIMER.getInt() * 3600D * 1000D);
-            FTBU.logger.info("Server restart in " + LMStringUtils.getTimeString(restartMillis));
+            FTBUFinals.LOGGER.info("Server restart in " + LMStringUtils.getTimeString(restartMillis));
         }
 
         FTBLibIntegration.API.ticking().add(this);

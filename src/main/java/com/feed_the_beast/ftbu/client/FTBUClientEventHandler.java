@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.client;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
@@ -188,7 +188,7 @@ public class FTBUClientEventHandler
                 if(!lightList.isEmpty())
                 {
                     GlStateManager.color(1F, 1F, 1F, 1F);
-                    FTBLibClient.setTexture(FTBUClientConfig.LIGHT_VALUE_TEXTURE_X.getBoolean() ? TEXTURE_LIGHT_VALUE_X : TEXTURE_LIGHT_VALUE_O);
+                    mc.getTextureManager().bindTexture(FTBUClientConfig.LIGHT_VALUE_TEXTURE_X.getBoolean() ? TEXTURE_LIGHT_VALUE_X : TEXTURE_LIGHT_VALUE_O);
 
                     GlStateManager.pushMatrix();
                     MobSpawnPos firstPos = lightList.iterator().next();

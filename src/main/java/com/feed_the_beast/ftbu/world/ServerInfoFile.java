@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
@@ -13,11 +12,11 @@ import com.feed_the_beast.ftbu.FTBULeaderboards;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.Leaderboard;
+import com.feed_the_beast.ftbu.api.NodeEntry;
 import com.feed_the_beast.ftbu.api.guide.ServerInfoEvent;
 import com.feed_the_beast.ftbu.client.FTBUActions;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
-import com.feed_the_beast.ftbu.ranks.NodeEntry;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.backups.Backups;
 import net.minecraft.command.ICommand;
@@ -98,11 +97,11 @@ public class ServerInfoFile extends InfoPage
             println(FTBLibLang.MODE_CURRENT.textComponent(LMStringUtils.firstUppercase(FTBLibIntegration.API.getServerData().getPackMode().getID())));
         }
 
-        IGuiInfoPage page = getSub("leaderboards").setTitle(FTBULeaderboards.LANG_TITLE.textComponent());
+        InfoPage page = getSub("leaderboards").setTitle(FTBULeaderboards.LANG_TITLE.textComponent());
 
         for(Leaderboard leaderboard : FTBU.PROXY.leaderboards.values())
         {
-            IGuiInfoPage thisTop = page.getSub(leaderboard.getStat().statId).setTitle(leaderboard.getName());
+            InfoPage thisTop = page.getSub(leaderboard.getStat().statId).setTitle(leaderboard.getName());
             Collections.sort(players, leaderboard.getComparator());
 
             int size = Math.min(players.size(), 250);
@@ -158,7 +157,7 @@ public class ServerInfoFile extends InfoPage
             {
                 try
                 {
-                    IGuiInfoPage cat = page.getSub('/' + c.getCommandName());
+                    InfoPage cat = page.getSub('/' + c.getCommandName());
 
                     List<String> al = c.getCommandAliases();
                     if(!al.isEmpty())

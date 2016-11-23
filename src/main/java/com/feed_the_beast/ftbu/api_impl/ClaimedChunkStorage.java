@@ -105,7 +105,6 @@ public enum ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializabl
 
         IClaimedChunk chunk = getChunk(chunkDimPos);
 
-        // Non-claimed chunks interaction possibility
         if(chunk == null)
         {
             return !FTBUConfigWorld.LOCKED_IN_CLAIMED_CHUNKS.getBoolean() || !FTBUConfigWorld.LOCKED_IN_DIMENSIONS.getIntList().contains(chunkDimPos.dim);

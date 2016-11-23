@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.api.info.IPageIconRenderer;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
+import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.info.InfoPageHelper;
 import com.feed_the_beast.ftbl.lib.info.ItemPageIconRenderer;
 import com.feed_the_beast.ftbl.lib.info.TexturePageIconRenderer;
@@ -170,7 +170,7 @@ public class Guides
         INFO_PAGE.sortAll();
     }
 
-    private static void loadTree(IResourceManager resourceManager, String domain, IGuiInfoPage page, GuideFormat format, String parentDir) throws Exception
+    private static void loadTree(IResourceManager resourceManager, String domain, InfoPage page, GuideFormat format, String parentDir) throws Exception
     {
         try
         {
@@ -203,7 +203,7 @@ public class Guides
         {
             for(JsonElement e : LMJsonUtils.fromJson(new InputStreamReader(resourceManager.getResource(new ResourceLocation(domain, parentDir + "/pages.json")).getInputStream())).getAsJsonArray())
             {
-                IGuiInfoPage page1;
+                InfoPage page1;
 
                 if(e.isJsonObject())
                 {

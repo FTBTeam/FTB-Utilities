@@ -72,9 +72,4 @@ public class BadgeStorage
             }
         });
     }
-
-    public void copyFrom(BadgeStorage storage)
-    {
-        map.putAll(storage.map);
-    }
 }

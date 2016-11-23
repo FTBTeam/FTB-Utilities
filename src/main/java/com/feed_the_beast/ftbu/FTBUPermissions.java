@@ -8,7 +8,10 @@ import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
 import com.feed_the_beast.ftbl.lib.config.PropertyShort;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
+import com.feed_the_beast.ftbu.api.IFTBUtilitiesRegistry;
+import com.feed_the_beast.ftbu.api.NodeEntry;
 import com.feed_the_beast.ftbu.api_impl.ChunkloaderType;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.DimensionManager;
@@ -87,8 +90,21 @@ public class FTBUPermissions
         levels.forEach((key, value) -> PermissionAPI.registerNode(key, value, ""));
     }
 
+    public static void addCustomPerms(IFTBUtilitiesRegistry reg)
+    {
+        reg.addCustomPermPrefix(new NodeEntry("command.", DefaultPermissionLevel.OP, "Permission for commands, if FTBU command overriding is enabled. If not, this node will be inactive"));
+        reg.addCustomPermPrefix(new NodeEntry(CLAIMS_BLOCK_BREAK_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can break in claimed chunks"));
+        reg.addCustomPermPrefix(new NodeEntry(CLAIMS_BLOCK_INTERACT_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can interact within claimed chunks"));
+        reg.addCustomPermPrefix(new NodeEntry(CLAIMS_DIMENSION_ALLOWED_PREFIX, DefaultPermissionLevel.ALL, "Permission for dimensions where claiming chunks is allowed"));
+    }
+
     public static String formatBlock(@Nullable Block block)
     {
         return block == null ? "minecraft:air" : block.getRegistryName().toString().toLowerCase(Locale.ENGLISH).replace(':', '.');
+    }
+
+    public static boolean allowDimension(GameProfile profile, int dimension)
+    {
+        return PermissionAPI.hasPermission(profile, CLAIMS_DIMENSION_ALLOWED_PREFIX + dimension, null);
     }
 }

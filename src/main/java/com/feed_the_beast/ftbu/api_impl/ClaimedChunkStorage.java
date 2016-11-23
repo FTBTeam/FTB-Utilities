@@ -10,7 +10,6 @@ import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunkStorage;
-import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.world.FTBUTeamData;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -107,7 +106,8 @@ public enum ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializabl
 
         if(chunk == null)
         {
-            return !FTBUConfigWorld.LOCKED_IN_CLAIMED_CHUNKS.getBoolean() || !FTBUConfigWorld.LOCKED_IN_DIMENSIONS.getIntList().contains(chunkDimPos.dim);
+            //return FTBUPermissions.allowDimension(entityPlayer.getGameProfile(), chunkDimPos.dim);
+            return true;
         }
 
         IForgePlayer player = FTBLibIntegration.API.getUniverse().getPlayer(entityPlayer);

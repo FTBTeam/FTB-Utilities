@@ -1,24 +1,23 @@
-package com.feed_the_beast.ftbu.world;
+package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
-import com.feed_the_beast.ftbu.FTBU;
-import com.feed_the_beast.ftbu.FTBULeaderboards;
-import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.api.Leaderboard;
 import com.feed_the_beast.ftbu.api.NodeEntry;
 import com.feed_the_beast.ftbu.api.guide.ServerInfoEvent;
 import com.feed_the_beast.ftbu.client.FTBUActions;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.ranks.Ranks;
+import com.feed_the_beast.ftbu.world.FTBUPlayerData;
+import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import com.feed_the_beast.ftbu.world.backups.Backups;
+import com.google.common.base.Preconditions;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -64,7 +63,10 @@ public class ServerInfoFile extends InfoPage
     {
         super(CachedInfo.main.getName());
         setTitle(new TextComponentTranslation(FTBUActions.SERVER_INFO.getPath()));
-        IForgePlayer self = FTBLibIntegration.API.getUniverse().getPlayer(ep);
+        IUniverse universe = FTBLibIntegration.API.getUniverse();
+        Preconditions.checkNotNull(universe, "World can't be null!");
+        IForgePlayer self = universe.getPlayer(ep);
+        Preconditions.checkNotNull(self, "Player can't be null!");
 
         MinecraftServer server = LMServerUtils.getServer();
 
@@ -75,7 +77,7 @@ public class ServerInfoFile extends InfoPage
         copyFrom(CachedInfo.main);
 
         List<IForgePlayer> players = new ArrayList<>();
-        players.addAll(FTBLibIntegration.API.getUniverse().getPlayers());
+        players.addAll(universe.getPlayers());
 
         if(FTBUConfigGeneral.AUTO_RESTART.getBoolean())
         {
@@ -97,19 +99,19 @@ public class ServerInfoFile extends InfoPage
             println(FTBLibLang.MODE_CURRENT.textComponent(LMStringUtils.firstUppercase(FTBLibIntegration.API.getServerData().getPackMode().getID())));
         }
 
-        InfoPage page = getSub("leaderboards").setTitle(FTBULeaderboards.LANG_TITLE.textComponent());
+        InfoPage page = getSub("leaderboards").setTitle(FTBULeaderboards.LANG_LEADERBOARD_TITLE.textComponent());
 
-        for(Leaderboard leaderboard : FTBU.PROXY.leaderboards.values())
+        for(Leaderboard leaderboard : FTBU.PROXY.leaderboards)
         {
-            InfoPage thisTop = page.getSub(leaderboard.getStat().statId).setTitle(leaderboard.getName());
-            Collections.sort(players, leaderboard.getComparator());
+            InfoPage thisTop = page.getSub(leaderboard.stat.statId).setTitle(leaderboard.name);
+            Collections.sort(players, leaderboard.comparator);
 
             int size = Math.min(players.size(), 250);
 
             for(int j = 0; j < size; j++)
             {
                 IForgePlayer p = players.get(j);
-                Object data = leaderboard.getData(p);
+                Object data = leaderboard.data.getData(p);
 
                 if(data == null)
                 {

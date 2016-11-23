@@ -31,7 +31,6 @@ import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.world.backups.Backups;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -47,7 +46,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -131,11 +129,6 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
         return dim == 0 && isInSpawn(new ChunkDimPos(MathHelperLM.chunk(x), MathHelperLM.chunk(z), dim));
     }
 
-    public static boolean isDimensionBlacklisted(GameProfile profile, int dim)
-    {
-        return !PermissionAPI.hasPermission(profile, FTBUPermissions.CLAIMS_DIMENSION_ALLOWED_PREFIX + dim, null);
-    }
-
     public static boolean allowExplosion(World world, Explosion explosion)
     {
         ChunkDimPos pos = new ChunkDimPos(MathHelperLM.chunk(explosion.getPosition().xCoord), MathHelperLM.chunk(explosion.getPosition().zCoord), world.provider.getDimension());
@@ -168,12 +161,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
 
     public static boolean claimChunk(IForgePlayer player, ChunkDimPos pos)
     {
-        if(!FTBUConfigWorld.CHUNK_CLAIMING.getBoolean())
-        {
-            return false;
-        }
-
-        if(isDimensionBlacklisted(player.getProfile(), pos.dim))
+        if(!FTBUConfigWorld.CHUNK_CLAIMING.getBoolean() || !FTBUPermissions.allowDimension(player.getProfile(), pos.dim))
         {
             return false;
         }
@@ -266,7 +254,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
                 return false;
             }
 
-            if(isDimensionBlacklisted(player.getProfile(), pos.dim))
+            if(!FTBUPermissions.allowDimension(player.getProfile(), pos.dim))
             {
                 return false;
             }

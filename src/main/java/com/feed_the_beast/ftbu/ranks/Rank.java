@@ -1,19 +1,16 @@
 package com.feed_the_beast.ftbu.ranks;
 
-import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
-import com.feed_the_beast.ftbl.lib.config.ConfigTree;
-import com.feed_the_beast.ftbl.lib.config.PropertyNull;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.util.IJsonSerializable;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -24,28 +21,27 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
     private Boolean allPermissions;
     final Map<String, Boolean> permissions;
     private final Map<String, Event.Result> cachedPermissions;
-    final ConfigTree config;
-    private final Map<IConfigKey, IConfigValue> cachedConfig;
+    final Map<String, IConfigValue> config;
+    private final Map<String, IConfigValue> cachedConfig;
+    private String displayName, prefix;
+    private TextFormatting color;
 
     public Rank(String id)
     {
         super(id);
         permissions = new LinkedHashMap<>();
         cachedPermissions = new HashMap<>();
-        config = new ConfigTree(true);
+        config = new LinkedHashMap<>();
         cachedConfig = new HashMap<>();
+        displayName = "";
+        color = null;
+        prefix = "";
     }
 
     @Override
-    @Nullable
     public IRank getParent()
     {
-        return parent;
-    }
-
-    public void setParent(IRank r)
-    {
-        parent = r;
+        return parent == null ? EmptyRank.INSTANCE : parent;
     }
 
     @Override
@@ -71,7 +67,7 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 
         if(r == null)
         {
-            r = parent != null ? parent.hasPermission(permission) : Event.Result.DEFAULT;
+            r = getParent().hasPermission(permission);
         }
 
         cachedPermissions.put(permission, r);
@@ -79,7 +75,7 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
     }
 
     @Override
-    public IConfigValue getConfig(IConfigKey id)
+    public IConfigValue getConfig(String id)
     {
         IConfigValue e = cachedConfig.get(id);
 
@@ -87,9 +83,9 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
         {
             e = config.get(id);
 
-            if(e == PropertyNull.INSTANCE && parent != null)
+            if(e == null || e.isNull())
             {
-                e = parent.getConfig(id);
+                e = getParent().getConfig(id);
             }
         }
 
@@ -102,7 +98,10 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
     {
         JsonObject o = new JsonObject();
 
-        o.add("parent", new JsonPrimitive(parent == null ? "" : parent.getName()));
+        o.add("parent", new JsonPrimitive(getParent().getName()));
+        o.add("display_name", new JsonPrimitive(displayName));
+        o.add("color", new JsonPrimitive(color == null ? "" : color.getFriendlyName()));
+        o.add("prefix", new JsonPrimitive(prefix));
 
         if(!permissions.isEmpty())
         {
@@ -110,7 +109,7 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 
             for(Map.Entry<String, Boolean> e : permissions.entrySet())
             {
-                a1.add(new JsonPrimitive((e.getValue() ? "+" : "-") + e.getKey()));
+                a1.add(new JsonPrimitive((e.getValue() ? "" : "-") + e.getKey()));
             }
 
             o.add("permissions", a1);
@@ -118,7 +117,9 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 
         if(!config.isEmpty())
         {
-            o.add("config", config.getSerializableElement());
+            JsonObject o1 = new JsonObject();
+            config.forEach((key, value) -> o1.add(key, value.getSerializableElement()));
+            o.add("config", o1);
         }
 
         return o;
@@ -127,12 +128,42 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
     @Override
     public void fromJson(JsonElement e)
     {
-        JsonObject o = e.getAsJsonObject();
-        parent = o.has("parent") ? Ranks.INSTANCE.RANKS.get(o.get("parent").getAsString()) : null;
+        parent = null;
+        allPermissions = null;
         permissions.clear();
-        config.getTree().clear();
+        config.clear();
         cachedPermissions.clear();
         cachedConfig.clear();
+        displayName = "";
+        color = null;
+        prefix = "";
+
+        if(!e.isJsonObject())
+        {
+            return;
+        }
+
+        JsonObject o = e.getAsJsonObject();
+
+        if(o.has("parent"))
+        {
+            parent = Ranks.RANKS.get(o.get("parent").getAsString());
+        }
+
+        if(o.has("display_name"))
+        {
+            displayName = o.get("display_name").getAsString();
+        }
+
+        if(o.has("color"))
+        {
+            color = TextFormatting.getValueByName(o.get("color").getAsString());
+        }
+
+        if(o.has("prefix"))
+        {
+            prefix = o.get("prefix").getAsString();
+        }
 
         if(o.has("permissions"))
         {
@@ -152,7 +183,28 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 
         if(o.has("config"))
         {
-            config.fromJson(o.get("config"));
+            for(Map.Entry<String, JsonElement> entry : o.get("config").getAsJsonObject().entrySet())
+            {
+
+            }
         }
+    }
+
+    @Override
+    public String getDisplayName()
+    {
+        return displayName.isEmpty() ? getParent().getDisplayName() : displayName;
+    }
+
+    @Override
+    public TextFormatting getColor()
+    {
+        return color == null ? getParent().getColor() : color;
+    }
+
+    @Override
+    public String getPrefix()
+    {
+        return prefix.isEmpty() ? getParent().getPrefix() : prefix;
     }
 }

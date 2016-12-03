@@ -6,8 +6,14 @@ import com.feed_the_beast.ftbl.api.FTBLibPlugin;
 import com.feed_the_beast.ftbl.api.IFTBLibClientRegistry;
 import com.feed_the_beast.ftbl.api.IFTBLibPlugin;
 import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
+import com.feed_the_beast.ftbl.lib.EnumEnabled;
+import com.feed_the_beast.ftbl.lib.config.PropertyDouble;
+import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
+import com.feed_the_beast.ftbl.lib.config.PropertyShort;
+import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbu.api_impl.ChunkloaderType;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
 import com.feed_the_beast.ftbu.client.FTBUActions;
 import com.feed_the_beast.ftbu.client.FTBUClientConfig;
@@ -54,8 +60,8 @@ public enum FTBLibIntegration implements IFTBLibPlugin
     {
         if(side.isServer())
         {
+            Ranks.reload();
             ServerInfoFile.CachedInfo.reload();
-            Ranks.INSTANCE.reload();
 
             FTBUUniverseData.reloadServerBadges();
             LoadedChunkStorage.INSTANCE.checkAll();
@@ -95,6 +101,14 @@ public enum FTBLibIntegration implements IFTBLibPlugin
         reg.addUniverseDataProvider(FTBU_DATA, owner -> new FTBUUniverseData());
         reg.addPlayerDataProvider(FTBU_DATA, owner -> new FTBUPlayerData());
         reg.addTeamDataProvider(FTBU_DATA, owner -> new FTBUTeamData());
+
+        reg.addRankConfig(FTBUPermissions.BADGE, new PropertyString(""), new PropertyString(""), "Prefix of player's nickname");
+        reg.addRankConfig(FTBUPermissions.HOMES_MAX, new PropertyShort(1, 0, 30000), new PropertyShort(100), "Max home count");
+        reg.addRankConfig(FTBUPermissions.CLAIMS_MAX_CHUNKS, new PropertyShort(100, 0, 30000), new PropertyShort(1000), "Max amount of chunks that player can claim", "0 - Disabled");
+        reg.addRankConfig(FTBUPermissions.CLAIMS_FORCED_EXPLOSIONS, new PropertyEnum<>(EnumEnabled.NAME_MAP_WITH_NULL, null), new PropertyEnum<>(EnumEnabled.NAME_MAP_WITH_NULL, null), "-: Player setting", "disabled: Explosions will never happen in claimed chunks", "enabled: Explosions will always happen in claimed chunks");
+        reg.addRankConfig(FTBUPermissions.CHUNKLOADER_TYPE, new PropertyEnum<>(ChunkloaderType.NAME_MAP, ChunkloaderType.OFFLINE), new PropertyEnum<>(ChunkloaderType.NAME_MAP, ChunkloaderType.OFFLINE), "disabled: Players won't be able to chunkload", "offline: Chunks stay loaded when player loggs off", "online: Chunks only stay loaded while owner is online");
+        reg.addRankConfig(FTBUPermissions.CHUNKLOADER_MAX_CHUNKS, new PropertyShort(50, 0, 30000), new PropertyShort(64), "Max amount of chunks that player can load", "0 - Disabled");
+        reg.addRankConfig(FTBUPermissions.CHUNKLOADER_OFFLINE_TIMER, new PropertyDouble(24D).setMin(-1D), new PropertyDouble(-1D), "Max hours player can be offline until he's chunks unload", "0 - Disabled, will unload instantly when he disconnects", "-1 - Chunk will always be loaded");
     }
 
     @Override

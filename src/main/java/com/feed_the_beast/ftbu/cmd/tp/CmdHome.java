@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.cmd.tp;
 
-import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
@@ -8,6 +7,7 @@ import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBULang;
+import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -62,7 +62,7 @@ public class CmdHome extends CommandLM
         if(args[0].equals("list"))
         {
             Collection<String> list = d.listHomes();
-            ics.addChatMessage(new TextComponentString(list.size() + " / " + RankConfigAPI.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt() + ": "));
+            ics.addChatMessage(new TextComponentString(list.size() + " / " + FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt() + ": "));
             if(!list.isEmpty())
             {
                 ics.addChatMessage(new TextComponentString(LMStringUtils.strip(list)));

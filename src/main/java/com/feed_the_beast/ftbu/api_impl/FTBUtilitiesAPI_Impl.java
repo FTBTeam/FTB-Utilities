@@ -1,8 +1,6 @@
 package com.feed_the_beast.ftbu.api_impl;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.rankconfig.IRankConfig;
-import com.feed_the_beast.ftbl.api.rankconfig.IRankConfigHandler;
 import com.feed_the_beast.ftbl.lib.AsmHelper;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
@@ -26,7 +24,7 @@ import java.util.Collection;
 /**
  * Created by LatvianModder on 30.08.2016.
  */
-public enum FTBUtilitiesAPI_Impl implements FTBUtilitiesAPI, IPermissionHandler, IRankConfigHandler
+public enum FTBUtilitiesAPI_Impl implements FTBUtilitiesAPI, IPermissionHandler
 {
     INSTANCE;
 
@@ -57,10 +55,10 @@ public enum FTBUtilitiesAPI_Impl implements FTBUtilitiesAPI, IPermissionHandler,
     @Override
     public IRank getRank(GameProfile profile)
     {
-        if(Ranks.INSTANCE.defaultRank != null)
+        if(Ranks.defaultRank != null)
         {
-            IRank r = Ranks.INSTANCE.PLAYER_MAP.get(profile.getId());
-            return (r == null) ? Ranks.INSTANCE.defaultRank : r;
+            IRank r = Ranks.PLAYER_MAP.get(profile.getId());
+            return (r == null) ? Ranks.defaultRank : r;
         }
 
         return LMServerUtils.isOP(profile) ? DefaultOPRank.INSTANCE : DefaultPlayerRank.INSTANCE;
@@ -99,7 +97,7 @@ public enum FTBUtilitiesAPI_Impl implements FTBUtilitiesAPI, IPermissionHandler,
     }
 
     @Override
-    public IConfigValue getRankConfig(GameProfile profile, IRankConfig id)
+    public IConfigValue getRankConfig(GameProfile profile, String id)
     {
         return getRank(profile).getConfig(id);
     }

@@ -24,9 +24,12 @@ import java.util.Map;
 public class FTBUPlayerData implements INBTSerializable<NBTBase>
 {
     private static final IConfigKey RENDER_BADGE = new ConfigKey("ftbu.render_badge", new PropertyBool(true));
+    private static final IConfigKey DISABLE_GLOBAL_BADGE = new ConfigKey("ftbu.disable_global_badge", new PropertyBool(false));
     private static final IConfigKey CHAT_LINKS = new ConfigKey("ftbu.chat_links", new PropertyBool(true));
-    private static final byte FLAG_RENDER_BADGE = 1;
+
+    public static final byte FLAG_RENDER_BADGE = 1;
     private static final byte FLAG_CHAT_LINKS = 2;
+    public static final byte FLAG_DISABLE_GLOBAL_BADGE = 4;
 
     private byte flags = FLAG_RENDER_BADGE | FLAG_CHAT_LINKS;
     public BlockDimPos lastDeath, lastSafePos;
@@ -148,9 +151,13 @@ public class FTBUPlayerData implements INBTSerializable<NBTBase>
         return Bits.getFlag(flags, FLAG_CHAT_LINKS);
     }
 
+    public boolean disableGlobalBadge()
+    {
+        return Bits.getFlag(flags, FLAG_DISABLE_GLOBAL_BADGE);
+    }
+
     public void addConfig(IConfigTree tree)
     {
-        /*
         tree.add(RENDER_BADGE, new PropertyBool(true)
         {
             @Override
@@ -165,7 +172,6 @@ public class FTBUPlayerData implements INBTSerializable<NBTBase>
                 flags = Bits.setFlag(flags, FLAG_RENDER_BADGE, v);
             }
         });
-        */
 
         tree.add(CHAT_LINKS, new PropertyBool(true)
         {
@@ -181,5 +187,25 @@ public class FTBUPlayerData implements INBTSerializable<NBTBase>
                 flags = Bits.setFlag(flags, FLAG_CHAT_LINKS, v);
             }
         });
+
+        tree.add(DISABLE_GLOBAL_BADGE, new PropertyBool(true)
+        {
+            @Override
+            public boolean getBoolean()
+            {
+                return disableGlobalBadge();
+            }
+
+            @Override
+            public void setBoolean(boolean v)
+            {
+                flags = Bits.setFlag(flags, FLAG_DISABLE_GLOBAL_BADGE, v);
+            }
+        });
+    }
+
+    public int getClientFlags()
+    {
+        return Bits.setFlag(flags, FLAG_CHAT_LINKS, false);
     }
 }

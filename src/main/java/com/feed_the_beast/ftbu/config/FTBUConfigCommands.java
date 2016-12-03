@@ -17,6 +17,7 @@ public class FTBUConfigCommands
     public static final PropertyBool CHUNKS = new PropertyBool(true);
     public static final PropertyBool JS = new PropertyBool(false);
     public static final PropertyBool KICKME = new PropertyBool(true);
+    public static final PropertyBool RANKS = new PropertyBool(true);
 
     public static void init(IFTBLibRegistry reg)
     {
@@ -31,5 +32,6 @@ public class FTBUConfigCommands
         reg.addConfig(FTBUFinals.MOD_ID, "commands.chunks", CHUNKS);
         reg.addConfig(FTBUFinals.MOD_ID, "commands.js", JS);
         reg.addConfig(FTBUFinals.MOD_ID, "commands.kickme", KICKME);
+        reg.addConfig(FTBUFinals.MOD_ID, "commands.ranks", RANKS);
     }
 }

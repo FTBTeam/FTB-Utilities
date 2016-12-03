@@ -1,22 +1,17 @@
 package com.feed_the_beast.ftbu;
 
-import com.feed_the_beast.ftbl.api.rankconfig.IRankConfig;
-import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
-import com.feed_the_beast.ftbl.lib.EnumEnabled;
-import com.feed_the_beast.ftbl.lib.config.PropertyDouble;
-import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
-import com.feed_the_beast.ftbl.lib.config.PropertyShort;
-import com.feed_the_beast.ftbl.lib.config.PropertyString;
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbu.api.IFTBUtilitiesRegistry;
 import com.feed_the_beast.ftbu.api.NodeEntry;
-import com.feed_the_beast.ftbu.api_impl.ChunkloaderType;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
+import net.minecraftforge.server.permission.context.ContextKeys;
+import net.minecraftforge.server.permission.context.PlayerContext;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -31,29 +26,27 @@ public class FTBUPermissions
     // Display //
     public static final String DISPLAY_ADMIN_INFO = "ftbu.display.admin_info";
     public static final String DISPLAY_PERMISSIONS = "ftbu.display.permissions";
-    public static final IRankConfig DISPLAY_COLOR = RankConfigAPI.register("display.color", new PropertyEnum<>(LMServerUtils.TEXT_FORMATTING_NAME_MAP, TextFormatting.WHITE), new PropertyEnum<>(LMServerUtils.TEXT_FORMATTING_NAME_MAP, TextFormatting.GREEN), "Color of player's nickname");
-    public static final IRankConfig DISPLAY_PREFIX = RankConfigAPI.register("display.prefix", new PropertyString(""), new PropertyString(""), "Prefix of player's nickname");
-    public static final IRankConfig DISPLAY_BADGE = RankConfigAPI.register("display.badge", new PropertyString(""), new PropertyString(""), "Prefix of player's nickname");
+    public static final String BADGE = "ftbu.badge";
 
     // Homes //
     public static final String HOMES_CROSS_DIM = "ftbu.homes.cross_dim";
-    public static final IRankConfig HOMES_MAX = RankConfigAPI.register("ftbu.homes.max", new PropertyShort(1, 0, 30000), new PropertyShort(100), "Max home count");
+    public static final String HOMES_MAX = "ftbu.homes.max";
 
     // Claims //
     public static final String CLAIMS_CLAIM_CHUNKS = "ftbu.claims.claim_chunks";
     public static final String CLAIMS_MODIFY_OTHER_CHUNKS = "ftbu.claims.modify_other_chunks";
-    public static final IRankConfig CLAIMS_MAX_CHUNKS = RankConfigAPI.register("ftbu.claims.max_chunks", new PropertyShort(100, 0, 30000), new PropertyShort(1000), "Max amount of chunks that player can claim", "0 - Disabled");
-    public static final IRankConfig CLAIMS_FORCED_EXPLOSIONS = RankConfigAPI.register("ftbu.claims.forced_explosions", new PropertyEnum<>(EnumEnabled.NAME_MAP_WITH_NULL, null), new PropertyEnum<>(EnumEnabled.NAME_MAP_WITH_NULL, null), "-: Player setting", "disabled: Explosions will never happen in claimed chunks", "enabled: Explosions will always happen in claimed chunks");
+    public static final String CLAIMS_MAX_CHUNKS = "ftbu.claims.max_chunks";
+    public static final String CLAIMS_FORCED_EXPLOSIONS = "ftbu.claims.forced_explosions";
     public static final String CLAIMS_BLOCK_CNB = "ftbu.claims.block.cnb";
-    public static final String CLAIMS_BLOCK_BREAK_PREFIX = "ftbu.claims.block.break.";
-    public static final String CLAIMS_BLOCK_INTERACT_PREFIX = "ftbu.claims.block.interact.";
-    public static final String CLAIMS_DIMENSION_ALLOWED_PREFIX = "ftbu.claims.dimension_allowed.";
+    private static final String CLAIMS_BLOCK_BREAK_PREFIX = "ftbu.claims.block.break.";
+    private static final String CLAIMS_BLOCK_INTERACT_PREFIX = "ftbu.claims.block.interact.";
+    private static final String CLAIMS_DIMENSION_ALLOWED_PREFIX = "ftbu.claims.dimension_allowed.";
     public static final String INFINITE_BACK_USAGE = "ftbu.back.infinite";
 
     // Chunkloader //
-    public static final IRankConfig CHUNKLOADER_TYPE = RankConfigAPI.register("ftbu.chunkloader.type", new PropertyEnum<>(ChunkloaderType.NAME_MAP, ChunkloaderType.OFFLINE), new PropertyEnum<>(ChunkloaderType.NAME_MAP, ChunkloaderType.OFFLINE), "disabled: Players won't be able to chunkload", "offline: Chunks stay loaded when player loggs off", "online: Chunks only stay loaded while owner is online");
-    public static final IRankConfig CHUNKLOADER_MAX_CHUNKS = RankConfigAPI.register("ftbu.chunkloader.max_chunks", new PropertyShort(50, 0, 30000), new PropertyShort(64), "Max amount of chunks that player can load", "0 - Disabled");
-    public static final IRankConfig CHUNKLOADER_OFFLINE_TIMER = RankConfigAPI.register("ftbu.chunkloader.offline_timer", new PropertyDouble(24D).setMin(-1D), new PropertyDouble(-1D), "Max hours player can be offline until he's chunks unload", "0 - Disabled, will unload instantly when he disconnects", "-1 - Chunk will always be loaded");
+    public static final String CHUNKLOADER_TYPE = "ftbu.chunkloader.type";
+    public static final String CHUNKLOADER_MAX_CHUNKS = "ftbu.chunkloader.max_chunks";
+    public static final String CHUNKLOADER_OFFLINE_TIMER = "ftbu.chunkloader.offline_timer";
 
     public static void init()
     {
@@ -101,6 +94,16 @@ public class FTBUPermissions
     public static String formatBlock(@Nullable Block block)
     {
         return block == null ? "minecraft:air" : block.getRegistryName().toString().toLowerCase(Locale.ENGLISH).replace(':', '.');
+    }
+
+    public static boolean canBreak(EntityPlayerMP player, BlockPos pos, IBlockState state)
+    {
+        return PermissionAPI.hasPermission(player.getGameProfile(), CLAIMS_BLOCK_BREAK_PREFIX + formatBlock(state.getBlock()), new PlayerContext(player).set(ContextKeys.POS, pos).set(ContextKeys.BLOCK_STATE, state));
+    }
+
+    public static boolean canInteract(EntityPlayerMP player, BlockPos pos, IBlockState state)
+    {
+        return PermissionAPI.hasPermission(player.getGameProfile(), CLAIMS_BLOCK_INTERACT_PREFIX + formatBlock(state.getBlock()), new PlayerContext(player).set(ContextKeys.POS, pos).set(ContextKeys.BLOCK_STATE, state));
     }
 
     public static boolean allowDimension(GameProfile profile, int dimension)

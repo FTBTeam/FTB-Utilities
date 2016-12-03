@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
+import com.feed_the_beast.ftbu.config.FTBUConfigRanks;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -38,6 +39,11 @@ public class FTBUServerEventHandler
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onServerChatEvent(ServerChatEvent event)
     {
+        if(FTBUConfigRanks.OVERRIDE_CHAT.getBoolean())
+        {
+            //FIXME: Chat overrides: [Admin] LatvianModder
+        }
+
         String msg = event.getMessage().trim();
 
         if(msg.startsWith(FTBUConfigGeneral.CHAT_SUBSTITUTE_PREFIX.getString()))

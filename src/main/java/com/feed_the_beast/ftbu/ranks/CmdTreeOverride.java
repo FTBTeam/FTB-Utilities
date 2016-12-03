@@ -2,25 +2,25 @@ package com.feed_the_beast.ftbu.ranks;
 
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.server.command.CommandTreeBase;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 21.02.2016.
+ * Created by LatvianModder on 01.12.2016.
  */
-public class CmdOverride implements ICommand
+public class CmdTreeOverride extends CommandTreeBase
 {
-    public final ICommand parent;
+    public final CommandTreeBase parent;
     public final String permissionNode;
 
-    public CmdOverride(ICommand c, String pn)
+    public CmdTreeOverride(CommandTreeBase c, String pn)
     {
         parent = c;
         permissionNode = pn;
@@ -72,11 +72,5 @@ public class CmdOverride implements ICommand
     public boolean isUsernameIndex(String[] args, int index)
     {
         return parent.isUsernameIndex(args, index);
-    }
-
-    @Override
-    public int compareTo(ICommand o)
-    {
-        return getCommandName().compareToIgnoreCase(o.getCommandName());
     }
 }

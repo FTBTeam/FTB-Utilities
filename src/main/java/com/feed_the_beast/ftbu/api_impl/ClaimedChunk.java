@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.api_impl;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibStats;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbu.FTBUPermissions;
@@ -59,7 +58,7 @@ public class ClaimedChunk implements IClaimedChunk
                 loaded = false;
             }
 
-            switch((ChunkloaderType) RankConfigAPI.getRankConfig(owner.getProfile(), FTBUPermissions.CHUNKLOADER_TYPE).getValue())
+            switch((ChunkloaderType) FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(owner.getProfile(), FTBUPermissions.CHUNKLOADER_TYPE).getValue())
             {
                 case ONLINE:
                     if(!owner.isOnline())
@@ -70,7 +69,7 @@ public class ClaimedChunk implements IClaimedChunk
                 case OFFLINE:
                     if(!owner.isOnline())
                     {
-                        double max = RankConfigAPI.getRankConfig(owner.getProfile(), FTBUPermissions.CHUNKLOADER_OFFLINE_TIMER).getDouble();
+                        double max = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(owner.getProfile(), FTBUPermissions.CHUNKLOADER_OFFLINE_TIMER).getDouble();
 
                         if(max > 0D && FTBLibStats.getLastSeenDeltaInHours(owner.stats(), false) > max)
                         {

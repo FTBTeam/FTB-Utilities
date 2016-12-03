@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbu.cmd.chunks.CmdChunks;
+import com.feed_the_beast.ftbu.cmd.ranks.CmdRanks;
 import com.feed_the_beast.ftbu.cmd.tp.CmdAdminHome;
 import com.feed_the_beast.ftbu.cmd.tp.CmdBack;
 import com.feed_the_beast.ftbu.cmd.tp.CmdDelHome;
@@ -13,7 +14,6 @@ import com.feed_the_beast.ftbu.cmd.tp.CmdTplast;
 import com.feed_the_beast.ftbu.cmd.tp.CmdWarp;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigCommands;
-import com.feed_the_beast.ftbu.config.FTBUConfigRanks;
 import net.minecraftforge.server.command.CommandTreeBase;
 
 /**
@@ -83,13 +83,6 @@ public class FTBUCommands
             command.addSubcommand(new CmdChunks());
         }
 
-        if(FTBUConfigRanks.ENABLED.getBoolean())
-        {
-            command.addSubcommand(new CmdGetRank());
-            command.addSubcommand(new CmdSetRank());
-            command.addSubcommand(new CmdEditRanks());
-        }
-
         if(FTBUConfigCommands.JS.getBoolean())
         {
             command.addSubcommand(new CmdJS());
@@ -98,6 +91,11 @@ public class FTBUCommands
         if(FTBUConfigCommands.KICKME.getBoolean())
         {
             command.addSubcommand(new CmdKickme());
+        }
+
+        if(FTBUConfigCommands.RANKS.getBoolean())
+        {
+            command.addSubcommand(new CmdRanks());
         }
     }
 }

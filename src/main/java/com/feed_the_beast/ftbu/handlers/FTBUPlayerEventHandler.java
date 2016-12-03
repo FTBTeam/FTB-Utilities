@@ -38,6 +38,10 @@ import net.minecraftforge.server.permission.PermissionAPI;
 import net.minecraftforge.server.permission.context.ContextKeys;
 import net.minecraftforge.server.permission.context.PlayerContext;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 public class FTBUPlayerEventHandler
 {
     @SubscribeEvent
@@ -59,6 +63,12 @@ public class FTBUPlayerEventHandler
         }
 
         LoadedChunkStorage.INSTANCE.checkAll();
+
+        Map<UUID, Integer> map = new HashMap<>(1);
+
+        int flags = FTBUPlayerData.get(event.getPlayer()).getClientFlags();
+
+        map.put(ep.getGameProfile().getId(), flags);
     }
 
     @SubscribeEvent
@@ -191,7 +201,7 @@ public class FTBUPlayerEventHandler
 
             if(!ClaimedChunkStorage.INSTANCE.canPlayerInteract(player, pos, MouseButton.RIGHT))
             {
-                if(!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_BLOCK_INTERACT_PREFIX + FTBUPermissions.formatBlock(state.getBlock()), new PlayerContext(player).set(ContextKeys.POS, pos).set(ContextKeys.BLOCK_STATE, state)))
+                if(!FTBUPermissions.canInteract(player, pos, state))
                 {
                     event.setCanceled(true);
                 }
@@ -213,14 +223,10 @@ public class FTBUPlayerEventHandler
         {
             EntityPlayerMP player = (EntityPlayerMP) event.getPlayer();
             BlockPos pos = event.getPos();
-            IBlockState state = player.worldObj.getBlockState(pos);
 
-            if(!ClaimedChunkStorage.INSTANCE.canPlayerInteract(player, pos, MouseButton.LEFT))
+            if(!ClaimedChunkStorage.INSTANCE.canPlayerInteract(player, pos, MouseButton.LEFT) && !FTBUPermissions.canBreak(player, pos, player.worldObj.getBlockState(pos)))
             {
-                if(!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_BLOCK_BREAK_PREFIX + FTBUPermissions.formatBlock(state.getBlock()), new PlayerContext(player).set(ContextKeys.POS, pos).set(ContextKeys.BLOCK_STATE, state)))
-                {
-                    event.setCanceled(true);
-                }
+                event.setCanceled(true);
             }
         }
     }

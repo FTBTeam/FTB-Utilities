@@ -1,3 +1,3 @@
 @javax.annotation.ParametersAreNonnullByDefault
 @mcp.MethodsReturnNonnullByDefault
-package com.feed_the_beast.ftbu.badges;
+package com.feed_the_beast.ftbu.cmd.ranks;

@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
 import com.feed_the_beast.ftbl.lib.EnumEnabled;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibStats;
@@ -21,14 +20,15 @@ import com.feed_the_beast.ftbu.api.chunks.ChunkModifiedEvent;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
+import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
-import com.feed_the_beast.ftbu.badges.BadgeStorage;
 import com.feed_the_beast.ftbu.cmd.CmdRestart;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.world.backups.Backups;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -53,13 +53,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by LatvianModder on 18.05.2016.
  */
 public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
 {
-    public static final BadgeStorage LOCAL_BADGES = new BadgeStorage();
+    private static final Map<UUID, String> LOCAL_BADGES = new HashMap<>();
 
     @Nullable
     public static FTBUUniverseData get()
@@ -79,10 +80,10 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
             return "";
         }
 
-        String b = LOCAL_BADGES.map.get(p.getProfile().getId());
+        String b = LOCAL_BADGES.get(p.getProfile().getId());
         if(b == null)
         {
-            b = RankConfigAPI.getRankConfig(p.getProfile(), FTBUPermissions.DISPLAY_BADGE).getString();
+            b = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(p.getProfile(), FTBUPermissions.BADGE).getString();
         }
 
         return b;
@@ -93,7 +94,26 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
         try
         {
             LOCAL_BADGES.clear();
-            LOCAL_BADGES.loadBadges(LMJsonUtils.fromJson(new File(LMUtils.folderLocal, "ftbu/badges.json")));
+            File file = new File(LMUtils.folderLocal, "ftbu/server_badges.json");
+
+            if(!file.exists())
+            {
+                JsonObject o = new JsonObject();
+                o.add("uuid", new JsonPrimitive("url_to.png"));
+                LMJsonUtils.toJson(file, o);
+            }
+            else
+            {
+                for(Map.Entry<String, JsonElement> entry : LMJsonUtils.fromJson(file).getAsJsonObject().entrySet())
+                {
+                    UUID id = LMStringUtils.fromString(entry.getKey());
+
+                    if(id != null)
+                    {
+                        LOCAL_BADGES.put(id, entry.getValue().getAsString());
+                    }
+                }
+            }
         }
         catch(Exception ex)
         {
@@ -143,7 +163,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
 
             if(owner != null)
             {
-                EnumEnabled fe = (EnumEnabled) RankConfigAPI.getRankConfig(owner.getProfile(), FTBUPermissions.CLAIMS_FORCED_EXPLOSIONS).getValue();
+                EnumEnabled fe = (EnumEnabled) FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(owner.getProfile(), FTBUPermissions.CLAIMS_FORCED_EXPLOSIONS).getValue();
 
                 if(fe == null)
                 {
@@ -178,7 +198,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
             return false;
         }
 
-        int max = RankConfigAPI.getRankConfig(player.getProfile(), FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
+        int max = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(player.getProfile(), FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
         if(max == 0)
         {
             return false;
@@ -259,7 +279,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
                 return false;
             }
 
-            int max = RankConfigAPI.getRankConfig(player.getProfile(), FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
+            int max = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(player.getProfile(), FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
 
             if(max == 0)
             {
@@ -430,39 +450,42 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
         if(FTBUConfigWebAPI.ENABLED.getBoolean() && nextWebApiUpdate < now)
         {
             nextWebApiUpdate = now + (FTBUConfigWebAPI.UPDATE_INTERVAL.getInt() * 60000L);
+            exportWebAPI();
+        }
+    }
 
-            try
+    public static void exportWebAPI()
+    {
+        try
+        {
+            JsonTable table = new JsonTable();
+            table.setTitle("name", "Name");
+            table.setTitle("deaths", "Deaths");
+            table.setTitle("dph", "Deaths per hour");
+            table.setTitle("last_seen", "Last time seen");
+
+            for(IForgePlayer player : FTBLibIntegration.API.getUniverse().getPlayers())
             {
-                JsonTable table = new JsonTable();
-                table.setTitle("name", "Name");
-                table.setTitle("deaths", "Deaths");
-                table.setTitle("dph", "Deaths per hour");
-                table.setTitle("last_seen", "Last time seen");
+                StatisticsManagerServer stats = player.stats();
 
-                for(IForgePlayer player : FTBLibIntegration.API.getUniverse().getPlayers())
-                {
-                    StatisticsManagerServer stats = player.stats();
-
-                    JsonTable.TableEntry tableEntry = new JsonTable.TableEntry();
-                    tableEntry.set("name", new JsonPrimitive(player.getProfile().getName()));
-                    tableEntry.set("deaths", new JsonPrimitive(stats.readStat(StatList.DEATHS)));
-                    tableEntry.set("dph", new JsonPrimitive(FTBLibStats.getDeathsPerHour(stats)));
-                    tableEntry.set("last_seen", new JsonPrimitive(player.isOnline() ? 0 : FTBLibStats.getLastSeen(stats, false)));
-                    table.addEntry(tableEntry);
-                }
-
-                JsonObject json = new JsonObject();
-                json.add("time", new JsonPrimitive(System.currentTimeMillis()));
-                json.add("stats", table.toJson());
-
-                File file = FTBUConfigWebAPI.FILE_LOCATION.getString().isEmpty() ? new File(LMUtils.folderLocal, "ftbu/webapi.json") : new File(FTBUConfigWebAPI.FILE_LOCATION.getString());
-                LMJsonUtils.toJson(file, json);
-                FTBUFinals.LOGGER.info("WebAPI Output");
+                JsonTable.TableEntry tableEntry = new JsonTable.TableEntry();
+                tableEntry.set("name", new JsonPrimitive(player.getProfile().getName()));
+                tableEntry.set("deaths", new JsonPrimitive(stats.readStat(StatList.DEATHS)));
+                tableEntry.set("dph", new JsonPrimitive(FTBLibStats.getDeathsPerHour(stats)));
+                tableEntry.set("last_seen", new JsonPrimitive(player.isOnline() ? 0 : FTBLibStats.getLastSeen(stats, false)));
+                table.addEntry(tableEntry);
             }
-            catch(Exception ex)
-            {
-                ex.printStackTrace();
-            }
+
+            JsonObject json = new JsonObject();
+            json.add("time", new JsonPrimitive(System.currentTimeMillis()));
+            json.add("stats", table.toJson());
+
+            File file = FTBUConfigWebAPI.FILE_LOCATION.getString().isEmpty() ? new File(LMUtils.folderLocal, "ftbu/webapi.json") : new File(FTBUConfigWebAPI.FILE_LOCATION.getString());
+            LMJsonUtils.toJson(file, json);
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
         }
     }
 

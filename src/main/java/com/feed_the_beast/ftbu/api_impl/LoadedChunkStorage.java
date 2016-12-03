@@ -59,12 +59,18 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback
     public void ticketsLoaded(List<ForgeChunkManager.Ticket> tickets, World world)
     {
         int dim = world.provider.getDimension();
-        ForgeChunkManager.Ticket ticket = TICKET_CONTAINERS.remove(dim);
+        ForgeChunkManager.Ticket ticket = TICKET_CONTAINERS.get(dim);
 
-        if(ticket != null)
+        if(ticket != null && ticket.world != null && ticket.getModId() != null)
         {
             ForgeChunkManager.releaseTicket(ticket);
         }
+        else if(ticket != null)
+        {
+            FTBUFinals.LOGGER.warn("Damaged ticket found: " + ticket + ", world:" + ticket.world + ", modID:" + ticket.getModId());
+        }
+
+        TICKET_CONTAINERS.remove(dim);
 
         if(tickets.size() == 1)
         {

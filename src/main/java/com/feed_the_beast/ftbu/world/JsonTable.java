@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.world;
 
-import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -108,68 +107,40 @@ public class JsonTable
         o.add("columns", new JsonPrimitive(ids1.length));
         o.add("rows", new JsonPrimitive(entries.size()));
 
+        JsonObject o1 = new JsonObject();
+
+        for(int i = 0; i < ids1.length; i++)
+        {
+            o1.add(ids1[i], new JsonPrimitive(i));
+        }
+
+        o.add("ids", o1);
+
         JsonArray a = new JsonArray();
 
-        if(FTBUConfigWebAPI.OUTPUT_MAP.getBoolean())
+        for(String s : ids1)
         {
-            JsonObject o1 = new JsonObject();
-
-            for(String s : ids1)
-            {
-                o1.add(s, new JsonPrimitive(ids.get(s)));
-            }
-
-            o.add("ids", o1);
-
-            for(TableEntry entry : entries)
-            {
-                o1 = new JsonObject();
-
-                for(String s : ids1)
-                {
-                    o1.add(s, entry.get(s));
-                }
-
-                a.add(o1);
-            }
-
-            o.add("table", a);
+            a.add(new JsonPrimitive(ids.get(s)));
         }
-        else
+
+        o.add("ids_loc", a);
+
+        a = new JsonArray();
+        JsonArray a1;
+
+        for(TableEntry entry : entries)
         {
-            for(String s : ids1)
-            {
-                a.add(new JsonPrimitive(s));
-            }
-
-            o.add("ids", a);
-
-            a = new JsonArray();
+            a1 = new JsonArray();
 
             for(String s : ids1)
             {
-                a.add(new JsonPrimitive(ids.get(s)));
+                a1.add(entry.get(s));
             }
 
-            o.add("ids_loc", a);
-
-            a = new JsonArray();
-            JsonArray a1;
-
-            for(TableEntry entry : entries)
-            {
-                a1 = new JsonArray();
-
-                for(String s : ids1)
-                {
-                    a1.add(entry.get(s));
-                }
-
-                a.add(a1);
-            }
-
-            o.add("table", a);
+            a.add(a1);
         }
+
+        o.add("table", a);
 
         return o;
     }

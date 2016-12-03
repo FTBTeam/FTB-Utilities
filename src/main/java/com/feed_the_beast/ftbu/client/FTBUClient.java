@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.client;
 
 import com.feed_the_beast.ftbu.FTBUCommon;
-import com.feed_the_beast.ftbu.badges.LayerBadge;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.settings.KeyBinding;

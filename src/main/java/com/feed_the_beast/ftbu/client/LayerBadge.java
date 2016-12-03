@@ -1,8 +1,6 @@
-package com.feed_the_beast.ftbu.badges;
+package com.feed_the_beast.ftbu.client;
 
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
-import com.feed_the_beast.ftbu.client.CachedClientData;
-import com.feed_the_beast.ftbu.client.FTBUClientConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -44,12 +42,13 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
             FTBLibClient.pushMaxBrightness();
             GlStateManager.pushMatrix();
 
+            GlStateManager.translate(0.04F, 0.01F, 0.86F);
+
             if(ep.isSneaking())
             {
                 GlStateManager.rotate(25F, 1F, 0F, 0F);
+                GlStateManager.translate(0F, -0.18F, 0F);
             }
-
-            GlStateManager.translate(0.04F, 0.01F, 0.86F);
 
             ItemStack armor = ep.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
             if(armor != null && armor.getItem().isValidArmor(armor, EntityEquipmentSlot.CHEST, ep))

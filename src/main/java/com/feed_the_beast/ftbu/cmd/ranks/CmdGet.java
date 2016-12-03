@@ -1,9 +1,7 @@
-package com.feed_the_beast.ftbu.cmd;
+package com.feed_the_beast.ftbu.cmd.ranks;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.rankconfig.RankConfigAPI;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
-import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import net.minecraft.command.CommandException;
@@ -11,17 +9,16 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
 
 /**
  * Created by LatvianModder on 21.02.2016.
  */
-public class CmdGetRank extends CommandLM
+public class CmdGet extends CommandLM
 {
     @Override
     public String getCommandName()
     {
-        return "getrank";
+        return "get";
     }
 
     @Override
@@ -36,8 +33,8 @@ public class CmdGetRank extends CommandLM
         checkArgs(args, 1, "<player>");
         IForgePlayer p = getForgePlayer(args[0]);
         IRank r = FTBUtilitiesAPI_Impl.INSTANCE.getRank(p.getProfile());
-        ITextComponent c = new TextComponentString(r.getName());
-        c.getStyle().setColor((TextFormatting) RankConfigAPI.getRankConfig(p.getProfile(), FTBUPermissions.DISPLAY_COLOR).getValue());
+        ITextComponent c = new TextComponentString(r.getDisplayName());
+        c.getStyle().setColor(r.getColor());
         ics.addChatMessage(c);
     }
 }

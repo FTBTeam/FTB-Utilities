@@ -263,7 +263,7 @@ public class ServerInfoFile extends InfoPage
             page.println(txt);
             page.println(null);
 
-            for(NodeEntry node : Ranks.INSTANCE.ALL_NODES)
+            for(NodeEntry node : Ranks.ALL_NODES)
             {
                 txt = new TextComponentString(node.getName());
 
@@ -290,7 +290,7 @@ public class ServerInfoFile extends InfoPage
             /*
             page = getSub("rank_configs").setTitle(new TextComponentString("Rank Configs")); //TODO: Lang
 
-            for(IRankConfig key : RankConfigAPI.getRegistredRankConfigs().values())
+            for(IRankConfig key : RankConfigAPI.getRegisteredRankConfigs().values())
             {
                 page.println(key.getName() + ": " + RankConfigAPI.getRankConfig(ep, key).getSerializableElement());
             }

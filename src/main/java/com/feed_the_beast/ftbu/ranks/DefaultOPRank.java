@@ -1,29 +1,24 @@
 package com.feed_the_beast.ftbu.ranks;
 
-import com.feed_the_beast.ftbl.api.config.IConfigKey;
+import com.feed_the_beast.ftbl.api.IRankConfig;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.rankconfig.IRankConfig;
 import com.feed_the_beast.ftbu.api.IRank;
-import net.minecraft.command.ICommand;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.eventhandler.Event;
-
-import javax.annotation.Nullable;
 
 /**
  * Created by LatvianModder on 27.09.2016.
  */
-public class DefaultOPRank extends Rank
+public class DefaultOPRank extends AbstractDefaultRank
 {
     public static final DefaultOPRank INSTANCE = new DefaultOPRank();
 
-    DefaultOPRank()
+    @Override
+    public String getName()
     {
-        super("op");
+        return "op";
     }
 
-    @Nullable
     @Override
     public IRank getParent()
     {
@@ -37,14 +32,20 @@ public class DefaultOPRank extends Rank
     }
 
     @Override
-    public IConfigValue getConfig(IConfigKey id)
+    public String getDisplayName()
     {
-        return (id instanceof IRankConfig) ? ((IRankConfig) id).getDefOPValue() : id.getDefValue();
+        return "OP";
     }
 
     @Override
-    public boolean allowCommand(MinecraftServer server, ICommandSender sender, ICommand command)
+    public TextFormatting getColor()
     {
-        return true;
+        return TextFormatting.DARK_GREEN;
+    }
+
+    @Override
+    IConfigValue createValue(IRankConfig config)
+    {
+        return config.getDefOPValue().copy();
     }
 }

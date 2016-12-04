@@ -20,7 +20,7 @@ public class MessageSendFTBUClientFlags extends MessageToClient<MessageSendFTBUC
 
     public MessageSendFTBUClientFlags(Map<UUID, Integer> m)
     {
-        map = m;
+        map = new HashMap<>(m);
     }
 
     @Override

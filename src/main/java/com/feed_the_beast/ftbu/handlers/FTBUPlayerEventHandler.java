@@ -11,6 +11,7 @@ import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.math.EntityDimPos;
 import com.feed_the_beast.ftbl.lib.util.LMInvUtils;
+import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
@@ -18,6 +19,7 @@ import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
 import com.feed_the_beast.ftbu.config.FTBUConfigLogin;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
+import com.feed_the_beast.ftbu.net.MessageSendFTBUClientFlags;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import com.google.common.base.Objects;
@@ -65,10 +67,17 @@ public class FTBUPlayerEventHandler
         LoadedChunkStorage.INSTANCE.checkAll();
 
         Map<UUID, Integer> map = new HashMap<>(1);
-
         int flags = FTBUPlayerData.get(event.getPlayer()).getClientFlags();
-
         map.put(ep.getGameProfile().getId(), flags);
+        new MessageSendFTBUClientFlags(map).sendTo(null);
+        map.clear();
+
+        for(EntityPlayerMP ep1 : LMServerUtils.getServer().getPlayerList().getPlayerList())
+        {
+            map.put(ep1.getGameProfile().getId(), FTBUPlayerData.get(FTBLibIntegration.API.getUniverse().getPlayer(ep1)).getClientFlags());
+        }
+
+        new MessageSendFTBUClientFlags(map).sendTo(ep);
     }
 
     @SubscribeEvent

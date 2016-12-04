@@ -31,7 +31,6 @@ import com.feed_the_beast.ftbu.world.backups.Backups;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -188,11 +187,9 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
 
         if(player.getTeam() == null)
         {
-            EntityPlayerMP ep = player.getPlayer();
-
-            if(ep != null)
+            if(player.isOnline())
             {
-                FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.NO_TEAM);
+                FTBLibIntegration.API.sendNotification(player.getPlayer(), FTBUNotifications.NO_TEAM);
             }
 
             return false;
@@ -264,11 +261,9 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
         {
             if(player.getTeam() == null)
             {
-                EntityPlayerMP ep = player.getPlayer();
-
-                if(ep != null)
+                if(player.isOnline())
                 {
-                    FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.NO_TEAM);
+                    FTBLibIntegration.API.sendNotification(player.getPlayer(), FTBUNotifications.NO_TEAM);
                 }
 
                 return false;
@@ -499,12 +494,13 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
         return warps.keySet();
     }
 
+    @Nullable
     public BlockDimPos getWarp(String s)
     {
         return warps == null ? null : warps.get(s);
     }
 
-    public boolean setWarp(String s, BlockDimPos pos)
+    public boolean setWarp(String s, @Nullable BlockDimPos pos)
     {
         if(pos == null)
         {

@@ -4,13 +4,14 @@ import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyByte;
 import com.feed_the_beast.ftbl.lib.config.PropertyDouble;
+import com.feed_the_beast.ftbl.lib.config.PropertyShort;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbu.FTBUFinals;
 
 public class FTBUConfigBackups
 {
     public static final PropertyBool ENABLED = new PropertyBool(true);
-    public static final PropertyByte BACKUPS_TO_KEEP = new PropertyByte(12, 0, 100);
+    public static final PropertyShort BACKUPS_TO_KEEP = new PropertyShort(12, 0, 32000);
     public static final PropertyDouble BACKUP_TIMER = new PropertyDouble(2D).setMin(0.05D).setMax(600D);
     public static final PropertyByte COMPRESSION_LEVEL = new PropertyByte(1, 0, 9);
     public static final PropertyString FOLDER = new PropertyString("");

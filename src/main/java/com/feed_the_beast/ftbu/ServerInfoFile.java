@@ -14,7 +14,6 @@ import com.feed_the_beast.ftbu.client.FTBUActions;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.ranks.Ranks;
-import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import com.feed_the_beast.ftbu.world.backups.Backups;
 import com.google.common.base.Preconditions;
@@ -26,7 +25,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.server.command.CommandTreeBase;
@@ -101,7 +99,7 @@ public class ServerInfoFile extends InfoPage
 
         InfoPage page = getSub("leaderboards").setTitle(FTBULeaderboards.LANG_LEADERBOARD_TITLE.textComponent());
 
-        for(Leaderboard leaderboard : FTBU.PROXY.leaderboards)
+        for(Leaderboard leaderboard : FTBUCommon.LEADERBOARDS)
         {
             InfoPage thisTop = page.getSub(leaderboard.stat.statId).setTitle(leaderboard.name);
             Collections.sort(players, leaderboard.comparator);
@@ -223,25 +221,6 @@ public class ServerInfoFile extends InfoPage
         catch(Exception ex)
         {
             page.println("Failed to load commands");
-        }
-
-        page = getSub("warps").setTitle(new TextComponentString("Warps")); //TODO: LANG
-        ITextComponent t;
-
-        for(String s : ftbuUniverseData.listWarps())
-        {
-            t = new TextComponentString(s);
-            t.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb warp " + s));
-            page.println(t);
-        }
-
-        page = getSub("homes").setTitle(new TextComponentString("Homes")); //TODO: LANG
-
-        for(String s : FTBUPlayerData.get(self).listHomes())
-        {
-            t = new TextComponentString(s);
-            t.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb home " + s));
-            page.println(t);
         }
 
         if(PermissionAPI.hasPermission(ep, FTBUPermissions.DISPLAY_PERMISSIONS))

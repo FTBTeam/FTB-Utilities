@@ -37,38 +37,12 @@ public class FTBUTeamData implements INBTSerializable<NBTBase>
         return (FTBUTeamData) t.getData(FTBLibIntegration.FTBU_DATA);
     }
 
-    private byte flags = (byte) (DEF_BLOCKS_LEVEL.ordinal() << 2);
-    private final PropertyEnumAbstract<EnumTeamPrivacyLevel> blocks;
+    private byte flags = 0;
 
     public FTBUTeamData()
     {
-        blocks = new PropertyEnumAbstract<EnumTeamPrivacyLevel>()
-        {
-            @Override
-            public EnumNameMap<EnumTeamPrivacyLevel> getNameMap()
-            {
-                return EnumTeamPrivacyLevel.NAME_MAP;
-            }
-
-            @Nullable
-            @Override
-            public EnumTeamPrivacyLevel get()
-            {
-                return EnumTeamPrivacyLevel.VALUES[(flags >> 2) & 3];
-            }
-
-            @Override
-            public void set(@Nullable EnumTeamPrivacyLevel enumLevel)
-            {
-                if(enumLevel == null)
-                {
-                    enumLevel = DEF_BLOCKS_LEVEL;
-                }
-
-                flags &= 0xFFFF00FF;
-                flags |= enumLevel.ordinal() << 2;
-            }
-        };
+        setBlocksLevel(EnumTeamPrivacyLevel.ALLIES);
+        flags |= FLAG_FAKE_PLAYERS;
     }
 
     @Override
@@ -90,9 +64,20 @@ public class FTBUTeamData implements INBTSerializable<NBTBase>
         }
     }
 
+    public void setBlocksLevel(@Nullable EnumTeamPrivacyLevel level)
+    {
+        if(level == null)
+        {
+            level = DEF_BLOCKS_LEVEL;
+        }
+
+        flags &= 0xF3; // 11110011
+        flags |= level.ordinal() << 2;
+    }
+
     public EnumTeamPrivacyLevel getBlocks()
     {
-        return blocks.getNonnull();
+        return EnumTeamPrivacyLevel.VALUES[(flags >> 2) & 3];
     }
 
     public boolean disableExplosions()
@@ -137,7 +122,27 @@ public class FTBUTeamData implements INBTSerializable<NBTBase>
             }
         });
 
-        tree.add(BLOCKS, blocks);
+        tree.add(BLOCKS, new PropertyEnumAbstract<EnumTeamPrivacyLevel>()
+        {
+            @Override
+            public EnumNameMap<EnumTeamPrivacyLevel> getNameMap()
+            {
+                return EnumTeamPrivacyLevel.NAME_MAP;
+            }
+
+            @Nullable
+            @Override
+            public EnumTeamPrivacyLevel get()
+            {
+                return getBlocks();
+            }
+
+            @Override
+            public void set(@Nullable EnumTeamPrivacyLevel enumLevel)
+            {
+                setBlocksLevel(enumLevel);
+            }
+        });
 
         //tree.add("ftbu.blocks", blocks);
         //tree.add("ftbu.disable_explosions", disableExplosions);

@@ -17,8 +17,8 @@ import java.util.HashSet;
 
 public class FTBUCommon implements IFTBUtilitiesRegistry // FTBUClient
 {
-    public final Collection<Leaderboard> leaderboards = new ArrayList<>();
-    public final Collection<NodeEntry> customPermPrefixRegistry = new HashSet<>();
+    public static final Collection<Leaderboard> LEADERBOARDS = new ArrayList<>();
+    public static final Collection<NodeEntry> CUSTOM_PERM_PREFIX_REGISTRY = new HashSet<>();
 
     public void preInit()
     {
@@ -42,12 +42,12 @@ public class FTBUCommon implements IFTBUtilitiesRegistry // FTBUClient
     @Override
     public void addLeaderboard(StatBase stat, @Nullable Comparator<IForgePlayer> comparator, ILeaderboardData data, ITextComponent component)
     {
-        leaderboards.add(new Leaderboard(stat, comparator, data, component));
+        LEADERBOARDS.add(new Leaderboard(stat, comparator, data, component));
     }
 
     @Override
     public void addCustomPermPrefix(NodeEntry entry)
     {
-        customPermPrefixRegistry.add(entry);
+        CUSTOM_PERM_PREFIX_REGISTRY.add(entry);
     }
 }

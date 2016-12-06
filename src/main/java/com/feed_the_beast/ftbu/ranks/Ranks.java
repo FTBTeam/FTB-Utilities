@@ -11,7 +11,7 @@ import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
-import com.feed_the_beast.ftbu.FTBU;
+import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.feed_the_beast.ftbu.api.NodeEntry;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
@@ -145,6 +145,12 @@ public class Ranks
                 }
             }
 
+            if(LMUtils.DEV_ENV)
+            {
+                LMUtils.DEV_LOGGER.info("[Ranks] Player config: " + DefaultPlayerRank.INSTANCE.configTree);
+                LMUtils.DEV_LOGGER.info("[Ranks] OP config: " + DefaultOPRank.INSTANCE.configTree);
+            }
+
             try
             {
                 JsonElement e = LMJsonUtils.fromJson(new File(LMUtils.folderLocal, "ftbu/default_rank_config.json"));
@@ -165,6 +171,10 @@ public class Ranks
                     {
                         DefaultOPRank.INSTANCE.fromJson(ro);
                     }
+                }
+                else
+                {
+                    DefaultPlayerRank.INSTANCE.configTree.clear();
                 }
             }
             catch(Exception ex)
@@ -240,7 +250,7 @@ public class Ranks
 
         ALL_NODES.clear();
 
-        for(NodeEntry node : FTBU.PROXY.customPermPrefixRegistry)
+        for(NodeEntry node : FTBUCommon.CUSTOM_PERM_PREFIX_REGISTRY)
         {
             ALL_NODES.add(new NodeEntry(node.getName() + "*", node.getLevel(), node.getDescription()));
         }
@@ -252,7 +262,7 @@ public class Ranks
 
             boolean printNode = true;
 
-            for(NodeEntry cprefix : FTBU.PROXY.customPermPrefixRegistry)
+            for(NodeEntry cprefix : FTBUCommon.CUSTOM_PERM_PREFIX_REGISTRY)
             {
                 if(s.startsWith(cprefix.getName()))
                 {

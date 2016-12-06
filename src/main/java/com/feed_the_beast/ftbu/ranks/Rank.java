@@ -1,7 +1,9 @@
 package com.feed_the_beast.ftbu.ranks;
 
+import com.feed_the_beast.ftbl.api.IRankConfig;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
+import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -115,12 +117,9 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
             o.add("permissions", a1);
         }
 
-        if(!config.isEmpty())
-        {
-            JsonObject o1 = new JsonObject();
-            config.forEach((key, value) -> o1.add(key, value.getSerializableElement()));
-            o.add("config", o1);
-        }
+        JsonObject o1 = new JsonObject();
+        config.forEach((key, value) -> o1.add(key, value.getSerializableElement()));
+        o.add("config", o1);
 
         return o;
     }
@@ -185,7 +184,14 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
         {
             for(Map.Entry<String, JsonElement> entry : o.get("config").getAsJsonObject().entrySet())
             {
+                IRankConfig rconfig = FTBLibIntegration.API.getRankConfigRegistry().get(entry.getKey());
 
+                if(rconfig != null)
+                {
+                    IConfigValue value = rconfig.getDefValue().copy();
+                    value.fromJson(entry.getValue());
+                    config.put(rconfig.getID(), value);
+                }
             }
         }
     }

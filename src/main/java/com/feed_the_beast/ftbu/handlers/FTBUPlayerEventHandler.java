@@ -257,4 +257,12 @@ public class FTBUPlayerEventHandler
             }
         }
     }
+
+    /*
+    @Optional.Method(modid = "iChunUtil") //TODO: Change to lowercase whenever iChun does
+    @SubscribeEvent
+    public void onBlockPickupEventEvent(me.ichun.mods.ichunutil.api.event.BlockPickupEvent event)
+    {
+    }
+    */
 }

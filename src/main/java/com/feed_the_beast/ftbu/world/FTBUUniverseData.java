@@ -476,7 +476,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
             json.add("stats", table.toJson());
 
             File file = FTBUConfigWebAPI.FILE_LOCATION.getString().isEmpty() ? new File(LMUtils.folderLocal, "ftbu/webapi.json") : new File(FTBUConfigWebAPI.FILE_LOCATION.getString());
-            LMJsonUtils.toJson(file, json);
+            LMJsonUtils.toJson(LMJsonUtils.GSON, file, json);
         }
         catch(Exception ex)
         {

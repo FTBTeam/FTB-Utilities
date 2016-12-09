@@ -131,7 +131,7 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback
                 }
                 else
                 {
-                    if(ticket.getChunkList().contains(pos))
+                    if(ticket.getChunkList().contains(pos) && ticket.world != null)
                     {
                         ForgeChunkManager.unforceChunk(ticket, pos);
                     }

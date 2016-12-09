@@ -132,7 +132,15 @@ public enum ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializabl
             return true;
         }*/
 
-        return team.hasStatus(player, EnumTeamStatus.ALLY);
+        switch(FTBUTeamData.get(team).getBlocks())
+        {
+            case ALLIES:
+                return team.hasStatus(player, EnumTeamStatus.ALLY);
+            case MEMBERS:
+                return team.hasStatus(player, EnumTeamStatus.MEMBER);
+        }
+
+        return true;
     }
 
     @Override

@@ -14,6 +14,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.event.ClickEvent;
 
 import java.io.File;
+import java.util.Arrays;
 
 /**
  * Created by LatvianModder on 28.04.2016.
@@ -41,6 +42,8 @@ public class CmdViewCrash extends CommandLM
 
                 if(crashReports != null)
                 {
+                    Arrays.sort(crashReports);
+
                     for(String s : crashReports)
                     {
                         if(s.endsWith(".txt"))

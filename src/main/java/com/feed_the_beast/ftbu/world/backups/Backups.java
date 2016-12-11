@@ -53,7 +53,7 @@ public enum Backups
                     backups.add(new Backup(e.getAsJsonObject()));
                 }
             }
-            catch(Exception ex)
+            catch(Throwable ex)
             {
                 ex.printStackTrace();
             }

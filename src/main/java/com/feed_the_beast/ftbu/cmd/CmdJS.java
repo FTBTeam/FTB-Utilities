@@ -20,7 +20,18 @@ public class CmdJS extends CommandLM
 
     public CmdJS()
     {
-        engine = new ScriptEngineManager(null).getEngineByName("nashorn");
+        ScriptEngine engine0 = null;
+
+        try
+        {
+            engine0 = new ScriptEngineManager(null).getEngineByName("nashorn");
+        }
+        catch(Throwable ex)
+        {
+            ex.printStackTrace();
+        }
+
+        engine = engine0;
     }
 
     @Override

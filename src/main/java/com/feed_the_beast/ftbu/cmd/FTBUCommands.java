@@ -97,5 +97,10 @@ public class FTBUCommands
         {
             command.addSubcommand(new CmdRanks());
         }
+
+        if(FTBUConfigCommands.VIEW_CRASH.getBoolean())
+        {
+            command.addSubcommand(new CmdViewCrash());
+        }
     }
 }

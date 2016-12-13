@@ -32,6 +32,7 @@ import com.feed_the_beast.ftbu.world.FTBUTeamData;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.server.command.CommandTreeBase;
 
@@ -123,11 +124,15 @@ public enum FTBLibIntegration implements IFTBLibPlugin
         reg.addSidebarButton(FTBUFinals.get("claimed_chunks"), FTBUActions.CLAIMED_CHUNKS);
         reg.addSidebarButton(FTBUFinals.get("trash_can"), FTBUActions.TRASH_CAN);
         reg.addSidebarButton(FTBUFinals.get("shop"), FTBUActions.SHOP);
-        reg.addSidebarButton(FTBUFinals.get("heal"), FTBUActions.HEAL);
-        reg.addSidebarButton(FTBUFinals.get("toggle.gamemode"), FTBUActions.TOGGLE_GAMEMODE);
-        reg.addSidebarButton(FTBUFinals.get("toggle.rain"), FTBUActions.TOGGLE_RAIN);
-        reg.addSidebarButton(FTBUFinals.get("toggle.day"), FTBUActions.TOGGLE_DAY);
-        reg.addSidebarButton(FTBUFinals.get("toggle.night"), FTBUActions.TOGGLE_NIGHT);
+
+        if(!Loader.isModLoaded("nei"))
+        {
+            reg.addSidebarButton(FTBUFinals.get("heal"), FTBUActions.HEAL);
+            reg.addSidebarButton(FTBUFinals.get("toggle.gamemode"), FTBUActions.TOGGLE_GAMEMODE);
+            reg.addSidebarButton(FTBUFinals.get("toggle.rain"), FTBUActions.TOGGLE_RAIN);
+            reg.addSidebarButton(FTBUFinals.get("toggle.day"), FTBUActions.TOGGLE_DAY);
+            reg.addSidebarButton(FTBUFinals.get("toggle.night"), FTBUActions.TOGGLE_NIGHT);
+        }
     }
 
     @Override

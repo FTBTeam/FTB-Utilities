@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.client;
 
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.FTBUCommon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -18,8 +17,6 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
     public static final String KEY_CATEGORY = "key.categories.ftbu";
     public static final KeyBinding KEY_GUIDE = new KeyBinding("key.ftbu.guide", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_NONE, KEY_CATEGORY);
     public static final KeyBinding KEY_WARP = new KeyBinding("key.ftbu.warp", KeyConflictContext.UNIVERSAL, KeyModifier.NONE, Keyboard.KEY_NONE, KEY_CATEGORY);
-    public static final KeyBinding KEY_LIGHT_VALUES = new KeyBinding("key.ftbu.light_values", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_F7, KEY_CATEGORY);
-    public static final KeyBinding KEY_CHUNK_BORDER = new KeyBinding("key.ftbu.chunk_border", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_F9, KEY_CATEGORY);
 
     public static boolean HAS_JM = false;
 
@@ -30,12 +27,6 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 
         ClientRegistry.registerKeyBinding(KEY_GUIDE);
         ClientRegistry.registerKeyBinding(KEY_WARP);
-
-        if(!LMUtils.isNEILoaded)
-        {
-            ClientRegistry.registerKeyBinding(KEY_LIGHT_VALUES);
-            ClientRegistry.registerKeyBinding(KEY_CHUNK_BORDER);
-        }
 
         MinecraftForge.EVENT_BUS.register(new FTBUClientEventHandler());
     }

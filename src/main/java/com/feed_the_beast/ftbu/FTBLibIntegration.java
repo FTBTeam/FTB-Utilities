@@ -115,7 +115,6 @@ public enum FTBLibIntegration implements IFTBLibPlugin
     public void registerClient(IFTBLibClientRegistry reg)
     {
         reg.addClientConfig(FTBLibFinals.MOD_ID, "render_badges", FTBUClientConfig.RENDER_BADGES);
-        reg.addClientConfig(FTBLibFinals.MOD_ID, "light_value_texture_x", FTBUClientConfig.LIGHT_VALUE_TEXTURE_X);
         reg.addClientConfig(FTBLibFinals.MOD_ID, "journeymap_overlay", FTBUClientConfig.JOURNEYMAP_OVERLAY);
 
         reg.addSidebarButton(FTBUFinals.get("guide"), FTBUActions.GUIDE);

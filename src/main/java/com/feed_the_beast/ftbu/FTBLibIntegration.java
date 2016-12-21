@@ -11,7 +11,6 @@ import com.feed_the_beast.ftbl.lib.config.PropertyDouble;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
 import com.feed_the_beast.ftbl.lib.config.PropertyShort;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.api_impl.ChunkloaderType;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
@@ -114,8 +113,8 @@ public enum FTBLibIntegration implements IFTBLibPlugin
     @Override
     public void registerClient(IFTBLibClientRegistry reg)
     {
-        reg.addClientConfig(FTBLibFinals.MOD_ID, "render_badges", FTBUClientConfig.RENDER_BADGES);
-        reg.addClientConfig(FTBLibFinals.MOD_ID, "journeymap_overlay", FTBUClientConfig.JOURNEYMAP_OVERLAY);
+        reg.addClientConfig(FTBUFinals.MOD_ID, "render_badges", FTBUClientConfig.RENDER_BADGES);
+        reg.addClientConfig(FTBUFinals.MOD_ID, "journeymap_overlay", FTBUClientConfig.JOURNEYMAP_OVERLAY);
 
         reg.addSidebarButton(FTBUFinals.get("guide"), FTBUActions.GUIDE);
         reg.addSidebarButton(FTBUFinals.get("server_info"), FTBUActions.SERVER_INFO);

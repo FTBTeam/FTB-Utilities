@@ -21,26 +21,36 @@ import java.util.zip.ZipOutputStream;
 public class ThreadBackup extends Thread
 {
     public boolean isDone = false;
-    private File src0;
+    private final File src0;
+    private final String customName;
 
-    public ThreadBackup(File w)
+    public ThreadBackup(File w, String s)
     {
         src0 = w;
+        customName = s;
         setPriority(7);
     }
 
-    public static void doBackup(File src)
+    public static void doBackup(File src, String customName)
     {
         Calendar time = Calendar.getInstance();
         File dstFile = null;
         boolean success = false;
         StringBuilder out = new StringBuilder();
-        appendNum(out, time.get(Calendar.YEAR), '-');
-        appendNum(out, time.get(Calendar.MONTH) + 1, '-');
-        appendNum(out, time.get(Calendar.DAY_OF_MONTH), '-');
-        appendNum(out, time.get(Calendar.HOUR_OF_DAY), '-');
-        appendNum(out, time.get(Calendar.MINUTE), '-');
-        appendNum(out, time.get(Calendar.SECOND), (char) 0);
+
+        if(customName.isEmpty())
+        {
+            appendNum(out, time.get(Calendar.YEAR), '-');
+            appendNum(out, time.get(Calendar.MONTH) + 1, '-');
+            appendNum(out, time.get(Calendar.DAY_OF_MONTH), '-');
+            appendNum(out, time.get(Calendar.HOUR_OF_DAY), '-');
+            appendNum(out, time.get(Calendar.MINUTE), '-');
+            appendNum(out, time.get(Calendar.SECOND), '\0');
+        }
+        else
+        {
+            out.append(customName);
+        }
 
         try
         {
@@ -180,7 +190,7 @@ public class ThreadBackup extends Thread
             sb.append('0');
         }
         sb.append(num);
-        if(c != 0)
+        if(c != '\0')
         {
             sb.append(c);
         }
@@ -190,7 +200,7 @@ public class ThreadBackup extends Thread
     public void run()
     {
         isDone = false;
-        doBackup(src0);
+        doBackup(src0, customName);
         isDone = true;
     }
 }

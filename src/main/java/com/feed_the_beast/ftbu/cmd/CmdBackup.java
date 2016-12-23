@@ -13,7 +13,7 @@ import net.minecraftforge.server.command.CommandTreeBase;
 
 public class CmdBackup extends CommandTreeBase
 {
-    public static class CmdBackupStart extends CommandLM
+    public static class CmdStart extends CommandLM
     {
         @Override
         public String getCommandName()
@@ -24,7 +24,7 @@ public class CmdBackup extends CommandTreeBase
         @Override
         public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
-            boolean b = Backups.INSTANCE.run(ics);
+            boolean b = Backups.INSTANCE.run(ics, args.length == 0 ? "" : args[0]);
             if(b)
             {
                 FTBULang.BACKUP_MANUAL_LAUNCH.printChat(BroadcastSender.INSTANCE, ics.getName());
@@ -41,7 +41,7 @@ public class CmdBackup extends CommandTreeBase
         }
     }
 
-    public static class CmdBackupStop extends CommandLM
+    public static class CmdStop extends CommandLM
     {
         @Override
         public String getCommandName()
@@ -64,7 +64,7 @@ public class CmdBackup extends CommandTreeBase
         }
     }
 
-    public static class CmdBackupGetSize extends CommandLM
+    public static class CmdGetSize extends CommandLM
     {
         @Override
         public String getCommandName()
@@ -83,9 +83,9 @@ public class CmdBackup extends CommandTreeBase
 
     public CmdBackup()
     {
-        addSubcommand(new CmdBackupStart());
-        addSubcommand(new CmdBackupStop());
-        addSubcommand(new CmdBackupGetSize());
+        addSubcommand(new CmdStart());
+        addSubcommand(new CmdStop());
+        addSubcommand(new CmdGetSize());
     }
 
     @Override

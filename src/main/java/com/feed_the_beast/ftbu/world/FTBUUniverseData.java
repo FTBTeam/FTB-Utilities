@@ -427,7 +427,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
 
         if(Backups.INSTANCE.nextBackup > 0L && Backups.INSTANCE.nextBackup <= now)
         {
-            Backups.INSTANCE.run(LMServerUtils.getServer());
+            Backups.INSTANCE.run(LMServerUtils.getServer(), "");
         }
 
         if(nextChunkloaderUpdate < now)

@@ -96,7 +96,7 @@ public enum Backups
         FTBUFinals.LOGGER.info("Backups folder - " + backupsFolder.getAbsolutePath());
     }
 
-    public boolean run(ICommandSender ics)
+    public boolean run(ICommandSender ics, String customName)
     {
         if(thread != null)
         {
@@ -133,12 +133,12 @@ public enum Backups
 
         if(FTBUConfigBackups.USE_SEPARATE_THREAD.getBoolean())
         {
-            thread = new ThreadBackup(wd);
+            thread = new ThreadBackup(wd, customName);
             thread.start();
         }
         else
         {
-            ThreadBackup.doBackup(wd);
+            ThreadBackup.doBackup(wd, customName);
         }
 
         return true;

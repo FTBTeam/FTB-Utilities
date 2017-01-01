@@ -14,7 +14,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.server.permission.PermissionAPI;
-import net.minecraftforge.server.permission.context.BlockPosContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -86,15 +85,12 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
     {
         IForgePlayer p = FTBLibIntegration.API.getUniverse().getPlayer(player);
 
-        if(p == null)
+        if(p == null || !PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CHUNKS_MODIFY_SELF, null))
         {
             return;
         }
 
-        if(!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CLAIM_CHUNKS, null))
-        {
-            return;
-        }
+        boolean canUnclaim = m.action == UNCLAIM && PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS, null);
 
         for(ChunkPos pos0 : m.chunks)
         {
@@ -106,7 +102,7 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
                     FTBUUniverseData.claimChunk(p, pos);
                     break;
                 case UNCLAIM:
-                    if(p.equalsPlayer(ClaimedChunkStorage.INSTANCE.getChunkOwner(pos)) || PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS, new BlockPosContext(player, pos.getChunkPos())))
+                    if(canUnclaim || p.equalsPlayer(ClaimedChunkStorage.INSTANCE.getChunkOwner(pos)))
                     {
                         FTBUUniverseData.unclaimChunk(p, pos);
                     }

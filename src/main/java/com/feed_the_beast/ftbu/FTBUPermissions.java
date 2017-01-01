@@ -33,8 +33,8 @@ public class FTBUPermissions
     public static final String HOMES_MAX = "ftbu.homes.max";
 
     // Claims //
-    public static final String CLAIMS_CLAIM_CHUNKS = "ftbu.claims.claim_chunks";
-    public static final String CLAIMS_MODIFY_OTHER_CHUNKS = "ftbu.claims.modify_other_chunks";
+    public static final String CLAIMS_CHUNKS_MODIFY_SELF = "ftbu.claims.chunks.modify.self";
+    public static final String CLAIMS_CHUNKS_MODIFY_OTHERS = "ftbu.claims.chunks.modify.others";
     public static final String CLAIMS_MAX_CHUNKS = "ftbu.claims.max_chunks";
     public static final String CLAIMS_FORCED_EXPLOSIONS = "ftbu.claims.forced_explosions";
     public static final String CLAIMS_BLOCK_CNB = "ftbu.claims.block.cnb";
@@ -53,8 +53,8 @@ public class FTBUPermissions
         PermissionAPI.registerNode(DISPLAY_ADMIN_INFO, DefaultPermissionLevel.OP, "Display 'Admin' in Server Info");
         PermissionAPI.registerNode(DISPLAY_PERMISSIONS, DefaultPermissionLevel.OP, "Display 'My Permissions' in Server Info");
         PermissionAPI.registerNode(HOMES_CROSS_DIM, DefaultPermissionLevel.ALL, "Can use /home to teleport to/from another dimension");
-        PermissionAPI.registerNode(CLAIMS_CLAIM_CHUNKS, DefaultPermissionLevel.ALL, "Allow player to claim chunks");
-        PermissionAPI.registerNode(CLAIMS_MODIFY_OTHER_CHUNKS, DefaultPermissionLevel.OP, "Allow player to edit other player's chunks");
+        PermissionAPI.registerNode(CLAIMS_CHUNKS_MODIFY_SELF, DefaultPermissionLevel.ALL, "Allow player to claim/unclaim his chunks");
+        PermissionAPI.registerNode(CLAIMS_CHUNKS_MODIFY_OTHERS, DefaultPermissionLevel.OP, "Allow player to modify other player's chunks");
         PermissionAPI.registerNode(CLAIMS_BLOCK_CNB, DefaultPermissionLevel.OP, "Allow to edit C&B bits in claimed chunks");
         PermissionAPI.registerNode(INFINITE_BACK_USAGE, DefaultPermissionLevel.NONE, "Allow to use 'back' command infinite times");
 

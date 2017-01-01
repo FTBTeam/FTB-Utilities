@@ -51,7 +51,7 @@ public class CmdClaim extends CommandLM
             return;
         }
 
-        if(!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CLAIM_CHUNKS, null))
+        if(!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CHUNKS_MODIFY_SELF, null))
         {
             FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CLAIMING_NOT_ALLOWED);
             return;

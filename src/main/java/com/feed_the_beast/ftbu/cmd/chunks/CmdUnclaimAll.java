@@ -40,7 +40,7 @@ public class CmdUnclaimAll extends CommandLM
 
         if(args.length >= 2)
         {
-            if(!PermissionAPI.hasPermission(ep, FTBUPermissions.CLAIMS_MODIFY_OTHER_CHUNKS))
+            if(!PermissionAPI.hasPermission(ep, FTBUPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS))
             {
                 throw new CommandException("commands.generic.permission");
             }

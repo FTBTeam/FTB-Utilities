@@ -32,6 +32,12 @@ public class CmdAdminUnclaimAll extends CommandLM
     }
 
     @Override
+    public boolean checkPermission(MinecraftServer server, ICommandSender ics)
+    {
+        return !server.isDedicatedServer() || super.checkPermission(server, ics);
+    }
+
+    @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         checkArgs(args, 1, "<player>");

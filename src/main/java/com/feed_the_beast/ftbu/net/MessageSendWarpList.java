@@ -8,7 +8,7 @@ import com.feed_the_beast.ftbu.gui.GuiWarps;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +22,7 @@ public class MessageSendWarpList extends MessageToClient<MessageSendWarpList>
     {
     }
 
-    MessageSendWarpList(EntityPlayerMP player)
+    MessageSendWarpList(EntityPlayer player)
     {
         FTBUUniverseData universeData = FTBUUniverseData.get();
         FTBUPlayerData playerData = FTBUPlayerData.get(FTBLibIntegration.API.getUniverse().getPlayer(player));
@@ -92,7 +92,7 @@ public class MessageSendWarpList extends MessageToClient<MessageSendWarpList>
     }
 
     @Override
-    public void onMessage(MessageSendWarpList m)
+    public void onMessage(MessageSendWarpList m, EntityPlayer player)
     {
         GuiWarps gui = GuiWarps.INSTANCE;
 

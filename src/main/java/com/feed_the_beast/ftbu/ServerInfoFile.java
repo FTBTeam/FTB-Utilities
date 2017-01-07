@@ -19,7 +19,7 @@ import com.feed_the_beast.ftbu.world.backups.Backups;
 import com.google.common.base.Preconditions;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -57,7 +57,7 @@ public class ServerInfoFile extends InfoPage
         }
     }
 
-    public ServerInfoFile(EntityPlayerMP ep)
+    public ServerInfoFile(EntityPlayer ep)
     {
         super(CachedInfo.main.getName());
         setTitle(new TextComponentTranslation(FTBUActions.SERVER_INFO.getPath()));

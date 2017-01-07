@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.ServerInfoFile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
 
 public class MessageRequestServerInfo extends MessageToServer<MessageRequestServerInfo>
 {
@@ -38,7 +38,7 @@ public class MessageRequestServerInfo extends MessageToServer<MessageRequestServ
     }
 
     @Override
-    public void onMessage(MessageRequestServerInfo m, EntityPlayerMP player)
+    public void onMessage(MessageRequestServerInfo m, EntityPlayer player)
     {
         FTBLibIntegration.API.displayInfoGui(player, new ServerInfoFile(player));
     }

@@ -16,7 +16,7 @@ import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.gui.ClaimedChunks;
 import com.feed_the_beast.ftbu.gui.GuiClaimedChunks;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,7 +36,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
     {
     }
 
-    public MessageClaimedChunksUpdate(int sx, int sz, EntityPlayerMP player)
+    public MessageClaimedChunksUpdate(int sx, int sz, EntityPlayer player)
     {
         startX = sx;
         startZ = sz;
@@ -211,7 +211,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
     }
 
     @Override
-    public void onMessage(MessageClaimedChunksUpdate m)
+    public void onMessage(MessageClaimedChunksUpdate m, EntityPlayer player)
     {
         if(GuiClaimedChunks.instance != null)
         {

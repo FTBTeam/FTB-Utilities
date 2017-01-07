@@ -11,6 +11,7 @@ import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -81,7 +82,7 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
     }
 
     @Override
-    public void onMessage(MessageClaimedChunksModify m, EntityPlayerMP player)
+    public void onMessage(MessageClaimedChunksModify m, EntityPlayer player)
     {
         IForgePlayer p = FTBLibIntegration.API.getUniverse().getPlayer(player);
 
@@ -116,7 +117,7 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
             }
         }
 
-        FTBUPlayerEventHandler.updateChunkMessage(player, new ChunkDimPos(MathHelperLM.chunk(player.posX), MathHelperLM.chunk(player.posZ), player.dimension));
+        FTBUPlayerEventHandler.updateChunkMessage((EntityPlayerMP) player, new ChunkDimPos(MathHelperLM.chunk(player.posX), MathHelperLM.chunk(player.posZ), player.dimension));
         new MessageClaimedChunksUpdate(m.startX, m.startZ, player).sendTo(player);
     }
 }

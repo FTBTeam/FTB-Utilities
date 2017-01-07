@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.feed_the_beast.ftbu.client.CachedClientData;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.UUID;
 
@@ -44,7 +45,7 @@ public class MessageSendBadge extends MessageToClient<MessageSendBadge>
     }
 
     @Override
-    public void onMessage(MessageSendBadge m)
+    public void onMessage(MessageSendBadge m, EntityPlayer player)
     {
         CachedClientData.setBadge(m.playerID, m.badgeURL);
     }

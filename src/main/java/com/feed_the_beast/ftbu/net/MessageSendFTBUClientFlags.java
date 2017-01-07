@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.feed_the_beast.ftbu.client.CachedClientData;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +56,7 @@ public class MessageSendFTBUClientFlags extends MessageToClient<MessageSendFTBUC
     }
 
     @Override
-    public void onMessage(MessageSendFTBUClientFlags m)
+    public void onMessage(MessageSendFTBUClientFlags m, EntityPlayer player)
     {
         m.map.forEach(CachedClientData::setFlags);
     }

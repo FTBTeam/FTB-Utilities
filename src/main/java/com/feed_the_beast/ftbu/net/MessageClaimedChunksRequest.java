@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbu.net;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
 
 public class MessageClaimedChunksRequest extends MessageToServer<MessageClaimedChunksRequest>
 {
@@ -40,7 +40,7 @@ public class MessageClaimedChunksRequest extends MessageToServer<MessageClaimedC
     }
 
     @Override
-    public void onMessage(MessageClaimedChunksRequest m, EntityPlayerMP player)
+    public void onMessage(MessageClaimedChunksRequest m, EntityPlayer player)
     {
         new MessageClaimedChunksUpdate(m.startX, m.startZ, player).sendTo(player);
     }

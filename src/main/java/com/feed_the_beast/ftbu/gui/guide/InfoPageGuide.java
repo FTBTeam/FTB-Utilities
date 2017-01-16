@@ -2,13 +2,13 @@ package com.feed_the_beast.ftbu.gui.guide;
 
 import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IPageIconRenderer;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
 import com.feed_the_beast.ftbl.lib.info.ButtonInfoPage;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.info.ItemPageIconRenderer;
 import com.feed_the_beast.ftbl.lib.info.TexturePageIconRenderer;
-import com.feed_the_beast.ftbl.lib.info.WrappedImageProvider;
 import com.feed_the_beast.ftbu.api.guide.GuideFormat;
 import com.feed_the_beast.ftbu.api.guide.GuideType;
 import com.feed_the_beast.ftbu.api.guide.IGuide;
@@ -38,7 +38,7 @@ public class InfoPageGuide implements IGuide
         }
 
         @Override
-        public IWidget createButton(GuiInfo gui)
+        public IWidget createWidget(GuiInfo gui)
         {
             return new ButtonInfoPage(gui, this, pageIcon);
         }
@@ -66,7 +66,7 @@ public class InfoPageGuide implements IGuide
 
         if(o.has("icon"))
         {
-            pageIcon = new TexturePageIconRenderer(new WrappedImageProvider(new ResourceLocation(o.get("icon").getAsString())));
+            pageIcon = new TexturePageIconRenderer(new ImageProvider(new ResourceLocation(o.get("icon").getAsString())));
         }
         else if(o.has("icon_item"))
         {
@@ -74,7 +74,7 @@ public class InfoPageGuide implements IGuide
         }
         else
         {
-            pageIcon = new TexturePageIconRenderer(new WrappedImageProvider(new ResourceLocation(id, "textures/icon.png")));
+            pageIcon = new TexturePageIconRenderer(new ImageProvider(new ResourceLocation(id, "textures/icon.png")));
         }
 
         page = new Page(id, pageIcon);

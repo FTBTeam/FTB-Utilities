@@ -1,3 +1,10 @@
 [
-	"Not finished yet!"
+	"FTBUtilities allows you to protect your base with Claimed Chunks. Claimed chunks will be [by default] accessable to your team. You can disable explosions and fake player interactions",
+	null,
+	"To open the GUI, you must click on the Claimed Chunks sidebar button",
+	{"id": "image", "image": "ftbu:guide/chunk_claiming/gui_button.png"},
+	{"id": "image", "image": "ftbu:guide/chunk_claiming/gui.png"},
+	"To claim a chunk, left-click on it in the map. Right-click to unclaim it.",
+	"You can drag mouse to claim larger area at once.",
+	{"id": "image", "image": "ftbu:guide/chunk_claiming/claimed_area.png"}
 ]

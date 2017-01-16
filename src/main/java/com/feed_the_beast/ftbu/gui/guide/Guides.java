@@ -1,13 +1,13 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
 import com.feed_the_beast.ftbl.api.info.IPageIconRenderer;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.info.InfoPageHelper;
 import com.feed_the_beast.ftbl.lib.info.ItemPageIconRenderer;
 import com.feed_the_beast.ftbl.lib.info.TexturePageIconRenderer;
-import com.feed_the_beast.ftbl.lib.info.WrappedImageProvider;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
@@ -213,7 +213,7 @@ public class Guides
 
                     if(o.has("icon"))
                     {
-                        pageIcon = new TexturePageIconRenderer(new WrappedImageProvider(new ResourceLocation(o.get("icon").getAsString())));
+                        pageIcon = new TexturePageIconRenderer(new ImageProvider(new ResourceLocation(o.get("icon").getAsString())));
                     }
                     else if(o.has("icon_item"))
                     {

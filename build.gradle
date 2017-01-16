@@ -48,7 +48,7 @@ configurations.all {
 }
 
 dependencies {
-    compile 'LatMod:FTBLib:1.10.2-3.2.2:api'
+    compile 'LatMod:FTBLib:1.10.2-3.2.5:api'
     compile 'LatMod:iChunUtil:1.10.2-6.0.0:api'
     compile group: 'info.journeymap', name: 'journeymap-api', version: '1.9.4-1.2', changing: true
     compile 'ChiselsAndBits:chiselsandbits:12.7'

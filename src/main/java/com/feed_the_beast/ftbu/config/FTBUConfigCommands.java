@@ -15,7 +15,6 @@ public class FTBUConfigCommands
     public static final PropertyBool SERVER_INFO = new PropertyBool(true);
     public static final PropertyBool TRASH_CAN = new PropertyBool(true);
     public static final PropertyBool CHUNKS = new PropertyBool(true);
-    public static final PropertyBool JS = new PropertyBool(false);
     public static final PropertyBool KICKME = new PropertyBool(true);
     public static final PropertyBool RANKS = new PropertyBool(true);
     public static final PropertyBool VIEW_CRASH = new PropertyBool(true);
@@ -31,7 +30,6 @@ public class FTBUConfigCommands
         reg.addConfig(FTBUFinals.MOD_ID, "commands.server_info", SERVER_INFO);
         reg.addConfig(FTBUFinals.MOD_ID, "commands.trash_can", TRASH_CAN);
         reg.addConfig(FTBUFinals.MOD_ID, "commands.chunks", CHUNKS);
-        reg.addConfig(FTBUFinals.MOD_ID, "commands.js", JS);
         reg.addConfig(FTBUFinals.MOD_ID, "commands.kickme", KICKME);
         reg.addConfig(FTBUFinals.MOD_ID, "commands.ranks", RANKS);
         reg.addConfig(FTBUFinals.MOD_ID, "commands.view_crash", VIEW_CRASH);

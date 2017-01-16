@@ -83,11 +83,6 @@ public class FTBUCommands
             command.addSubcommand(new CmdChunks());
         }
 
-        if(FTBUConfigCommands.JS.getBoolean())
-        {
-            command.addSubcommand(new CmdJS());
-        }
-
         if(FTBUConfigCommands.KICKME.getBoolean())
         {
             command.addSubcommand(new CmdKickme());

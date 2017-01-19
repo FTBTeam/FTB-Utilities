@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.cmd.tp;
 
-import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.math.EntityDimPos;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
@@ -52,23 +51,27 @@ public class CmdSetHome extends CommandLM
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-        IForgePlayer p = getForgePlayer(ep);
-        FTBUPlayerData d = FTBUPlayerData.get(p);
+        FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(ep));
+        if(data == null)
+        {
+            return;
+        }
+
         checkArgs(args, 1, "<home>");
 
         args[0] = args[0].toLowerCase();
 
         int maxHomes = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt();
 
-        if(maxHomes <= 0 || d.homesSize() >= maxHomes)
+        if(maxHomes <= 0 || data.homesSize() >= maxHomes)
         {
-            if(maxHomes == 0 || d.getHome(args[0]) == null)
+            if(maxHomes == 0 || data.getHome(args[0]) == null)
             {
                 throw FTBULang.HOME_LIMIT.commandError();
             }
         }
 
-        d.setHome(args[0], new EntityDimPos(ep).toBlockDimPos());
+        data.setHome(args[0], new EntityDimPos(ep).toBlockDimPos());
         FTBULang.HOME_SET.printChat(ics, args[0]);
     }
 }

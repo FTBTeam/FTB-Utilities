@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.cmd.tp;
 
-import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.FTBULang;
@@ -47,12 +46,16 @@ public class CmdDelHome extends CommandLM
     @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
-        IForgePlayer p = getForgePlayer(ics);
-        checkArgs(args, 1, "<home>");
+        FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(ics));
+        if(data == null)
+        {
+            return;
+        }
 
+        checkArgs(args, 1, "<home>");
         args[0] = args[0].toLowerCase();
 
-        if(FTBUPlayerData.get(p).setHome(args[0], null))
+        if(data.setHome(args[0], null))
         {
             FTBULang.HOME_DEL.printChat(ics, args[0]);
         }

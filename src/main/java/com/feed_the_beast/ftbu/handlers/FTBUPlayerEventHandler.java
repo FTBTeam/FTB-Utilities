@@ -90,14 +90,20 @@ public class FTBUPlayerEventHandler
     public void onDeath(ForgePlayerDeathEvent event)
     {
         FTBUPlayerData data = FTBUPlayerData.get(event.getPlayer());
-        data.lastDeath = new EntityDimPos(event.getPlayer().getPlayer()).toBlockDimPos();
+        if(data != null)
+        {
+            data.lastDeath = new EntityDimPos(event.getPlayer().getPlayer()).toBlockDimPos();
+        }
     }
 
     @SubscribeEvent
     public void getSettings(ForgePlayerSettingsEvent event)
     {
         FTBUPlayerData data = FTBUPlayerData.get(event.getPlayer());
-        data.addConfig(event.getSettings());
+        if(data != null)
+        {
+            data.addConfig(event.getSettings());
+        }
     }
 
     @SubscribeEvent
@@ -131,7 +137,12 @@ public class FTBUPlayerEventHandler
         }
 
         FTBUPlayerData data = FTBUPlayerData.get(player);
-        data.lastSafePos = new EntityDimPos(ep).toBlockDimPos();
+
+        if(data != null)
+        {
+            data.lastSafePos = new EntityDimPos(ep).toBlockDimPos();
+        }
+
         updateChunkMessage(ep, new ChunkDimPos(e.getNewChunkX(), e.getNewChunkZ(), ep.dimension));
     }
 
@@ -140,6 +151,11 @@ public class FTBUPlayerEventHandler
         IForgePlayer newTeamOwner = ClaimedChunkStorage.INSTANCE.getChunkOwner(pos);
 
         FTBUPlayerData data = FTBUPlayerData.get(FTBLibIntegration.API.getUniverse().getPlayer(player));
+
+        if(data == null)
+        {
+            return;
+        }
 
         if(!Objects.equal(data.lastChunkOwner, newTeamOwner))
         {

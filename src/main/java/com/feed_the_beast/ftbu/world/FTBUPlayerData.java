@@ -116,12 +116,13 @@ public class FTBUPlayerData implements INBTSerializable<NBTBase>
         return homes.keySet();
     }
 
+    @Nullable
     public BlockDimPos getHome(String s)
     {
         return homes == null ? null : homes.get(s.toLowerCase());
     }
 
-    public boolean setHome(String s, BlockDimPos pos)
+    public boolean setHome(String s, @Nullable BlockDimPos pos)
     {
         if(pos == null)
         {

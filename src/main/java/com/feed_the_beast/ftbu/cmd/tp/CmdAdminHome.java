@@ -35,9 +35,14 @@ public class CmdAdminHome extends CommandTreeBase
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
             checkArgs(args, 2, "<player> <home>");
             args[1] = args[1].toLowerCase();
-            FTBUPlayerData d = FTBUPlayerData.get(getForgePlayer(args[0]));
+            FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(args[0]));
 
-            BlockDimPos pos = d.getHome(args[1]);
+            if(data == null)
+            {
+                return;
+            }
+
+            BlockDimPos pos = data.getHome(args[1]);
 
             if(pos != null)
             {
@@ -67,8 +72,8 @@ public class CmdAdminHome extends CommandTreeBase
         public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
             checkArgs(args, 1, "<player>");
-            FTBUPlayerData d = FTBUPlayerData.get(getForgePlayer(args[0]));
-            sender.addChatMessage(new TextComponentString(LMStringUtils.strip(d.listHomes())));
+            FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(args[0]));
+            sender.addChatMessage(new TextComponentString(LMStringUtils.strip(data.listHomes())));
         }
     }
 
@@ -90,13 +95,19 @@ public class CmdAdminHome extends CommandTreeBase
         public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
             checkArgs(args, 2, "<player> <home>");
-            FTBUPlayerData d = FTBUPlayerData.get(getForgePlayer(args[0]));
+            FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(args[0]));
+
+            if(data == null)
+            {
+                return;
+            }
+
             args[1] = args[1].toLowerCase();
-            BlockDimPos pos = d.getHome(args[1]);
+            BlockDimPos pos = data.getHome(args[1]);
 
             if(pos != null)
             {
-                if(d.setHome(args[1], null))
+                if(data.setHome(args[1], null))
                 {
                     FTBULang.HOME_DEL.printChat(sender, args[1]);
                 }

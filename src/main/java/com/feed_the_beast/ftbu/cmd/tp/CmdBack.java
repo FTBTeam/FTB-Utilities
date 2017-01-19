@@ -34,19 +34,20 @@ public class CmdBack extends CommandLM
 
         FTBUPlayerData data = FTBUPlayerData.get(p);
 
-        if(data != null)
+        if(data == null)
         {
-            if(data.lastDeath == null)
-            {
-                throw FTBULang.WARP_NO_DP.commandError();
-            }
+            return;
+        }
+        else if(data.lastDeath == null)
+        {
+            throw FTBULang.WARP_NO_DP.commandError();
+        }
 
-            LMServerUtils.teleportPlayer(ep, data.lastDeath);
+        LMServerUtils.teleportPlayer(ep, data.lastDeath);
 
-            if(!PermissionAPI.hasPermission(ep, FTBUPermissions.INFINITE_BACK_USAGE))
-            {
-                data.lastDeath = null;
-            }
+        if(!PermissionAPI.hasPermission(ep, FTBUPermissions.INFINITE_BACK_USAGE))
+        {
+            data.lastDeath = null;
         }
     }
 }

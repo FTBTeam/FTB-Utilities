@@ -56,12 +56,18 @@ public class CmdHome extends CommandLM
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-        FTBUPlayerData d = FTBUPlayerData.get(getForgePlayer(ep));
+        FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(ep));
+
+        if(data == null)
+        {
+            return;
+        }
+
         checkArgs(args, 1, "<home>");
 
         if(args[0].equals("list"))
         {
-            Collection<String> list = d.listHomes();
+            Collection<String> list = data.listHomes();
             ics.addChatMessage(new TextComponentString(list.size() + " / " + FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt() + ": "));
             if(!list.isEmpty())
             {
@@ -70,14 +76,13 @@ public class CmdHome extends CommandLM
             return;
         }
 
-        BlockDimPos pos = d.getHome(args[0]);
+        BlockDimPos pos = data.getHome(args[0]);
 
         if(pos == null)
         {
             throw FTBULang.HOME_NOT_SET.commandError(args[0]);
         }
-
-        if(ep.dimension != pos.dim && !PermissionAPI.hasPermission(ep, FTBUPermissions.HOMES_CROSS_DIM))
+        else if(ep.dimension != pos.dim && !PermissionAPI.hasPermission(ep, FTBUPermissions.HOMES_CROSS_DIM))
         {
             throw FTBULang.HOME_CROSS_DIM.commandError();
         }

@@ -15,7 +15,6 @@ import net.minecraftforge.server.permission.context.PlayerContext;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -91,9 +90,9 @@ public class FTBUPermissions
         reg.addCustomPermPrefix(new NodeEntry(CLAIMS_DIMENSION_ALLOWED_PREFIX, DefaultPermissionLevel.ALL, "Permission for dimensions where claiming chunks is allowed"));
     }
 
-    public static String formatBlock(@Nullable Block block)
+    private static String formatBlock(@Nullable Block block)
     {
-        return block == null ? "minecraft:air" : block.getRegistryName().toString().toLowerCase(Locale.ENGLISH).replace(':', '.');
+        return block == null ? "minecraft:air" : block.getRegistryName().toString().toLowerCase().replace(':', '.');
     }
 
     public static boolean canBreak(EntityPlayerMP player, BlockPos pos, IBlockState state)

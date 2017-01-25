@@ -60,7 +60,7 @@ public class ServerInfoFile extends InfoPage
     public ServerInfoFile(EntityPlayer ep)
     {
         super(CachedInfo.main.getName());
-        setTitle(new TextComponentTranslation(FTBUActions.SERVER_INFO.getPath()));
+        setTitle(new TextComponentTranslation("sidebar_button." + FTBUActions.SERVER_INFO.getName()));
         IUniverse universe = FTBLibIntegration.API.getUniverse();
         Preconditions.checkNotNull(universe, "World can't be null!");
         IForgePlayer self = universe.getPlayer(ep);
@@ -94,7 +94,12 @@ public class ServerInfoFile extends InfoPage
 
         if(FTBUConfigGeneral.SERVER_INFO_MODE.getBoolean())
         {
-            println(FTBLibLang.MODE_CURRENT.textComponent(LMStringUtils.firstUppercase(FTBLibIntegration.API.getServerData().getPackMode().getID())));
+            println(FTBLibLang.MODE_CURRENT.textComponent(LMStringUtils.firstUppercase(FTBLibIntegration.API.getServerData().getPackMode().getName())));
+        }
+
+        if(FTBUConfigGeneral.SERVER_INFO_ADMIN_QUICK_ACCESS.getBoolean())
+        {
+            //FIXME: SERVER_INFO_ADMIN_QUICK_ACCESS
         }
 
         InfoPage page = getSub("leaderboards").setTitle(FTBULeaderboards.LANG_LEADERBOARD_TITLE.textComponent());

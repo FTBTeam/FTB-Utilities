@@ -18,6 +18,4 @@ public interface IGuide
     List<String> getAuthors();
 
     List<String> getGuideAuthors();
-
-    int getPriority();
 }

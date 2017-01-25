@@ -17,6 +17,7 @@ import com.feed_the_beast.ftbu.gui.ClaimedChunks;
 import com.feed_the_beast.ftbu.gui.GuiClaimedChunks;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -151,7 +152,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
         {
             ClaimedChunks.Team team = new ClaimedChunks.Team();
             team.ownerID = LMNetUtils.readUUID(io);
-            team.formattedName = LMNetUtils.readString(io);
+            team.formattedName = ByteBufUtils.readUTF8String(io);
             team.colorID = io.readByte();
             team.isAlly = io.readBoolean();
             teams.put(team.ownerID, team);
@@ -168,7 +169,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 
                 if(chunkData[i].team.isAlly)
                 {
-                    chunkData[i].owner = LMNetUtils.readString(io);
+                    chunkData[i].owner = ByteBufUtils.readUTF8String(io);
                 }
             }
         }
@@ -189,22 +190,22 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
         for(ClaimedChunks.Team t : teams.values())
         {
             LMNetUtils.writeUUID(io, t.ownerID);
-            LMNetUtils.writeString(io, t.formattedName);
+            ByteBufUtils.writeUTF8String(io, t.formattedName);
             io.writeByte(t.colorID);
             io.writeBoolean(t.isAlly);
         }
 
-        for(int i = 0; i < chunkData.length; i++)
+        for(ClaimedChunks.Data data : chunkData)
         {
-            io.writeByte(chunkData[i].flags);
+            io.writeByte(data.flags);
 
-            if(chunkData[i].isClaimed())
+            if(data.isClaimed())
             {
-                LMNetUtils.writeUUID(io, chunkData[i].team.ownerID);
+                LMNetUtils.writeUUID(io, data.team.ownerID);
 
-                if(chunkData[i].team.isAlly)
+                if(data.team.isAlly)
                 {
-                    LMNetUtils.writeString(io, chunkData[i].owner);
+                    ByteBufUtils.writeUTF8String(io, data.owner);
                 }
             }
         }

@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
-import com.feed_the_beast.ftbl.api.info.IPageIconRenderer;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
@@ -38,17 +37,7 @@ import java.util.Map;
  */
 public class Guides
 {
-    public static final Comparator<IGuide> COMPARATOR = (o1, o2) ->
-    {
-        int i = Integer.compare(o2.getPriority(), o1.getPriority());
-
-        if(i == 0)
-        {
-            i = o1.getPage().getDisplayName().getFormattedText().compareToIgnoreCase(o2.getPage().getDisplayName().getFormattedText());
-        }
-
-        return i;
-    };
+    public static final Comparator<IGuide> COMPARATOR = (o1, o2) -> o1.getPage().getDisplayName().getFormattedText().compareToIgnoreCase(o2.getPage().getDisplayName().getFormattedText());
 
     private static final InfoPageGuides INFO_PAGE = new InfoPageGuides();
     private static boolean isReloading = false;
@@ -208,19 +197,16 @@ public class Guides
                 if(e.isJsonObject())
                 {
                     JsonObject o = e.getAsJsonObject();
-
-                    IPageIconRenderer pageIcon = null;
+                    page1 = new InfoPage(o.get("id").getAsString());
 
                     if(o.has("icon"))
                     {
-                        pageIcon = new TexturePageIconRenderer(new ImageProvider(new ResourceLocation(o.get("icon").getAsString())));
+                        page1.setIcon(new TexturePageIconRenderer(new ImageProvider(new ResourceLocation(o.get("icon").getAsString()))));
                     }
                     else if(o.has("icon_item"))
                     {
-                        pageIcon = new ItemPageIconRenderer(o.get("icon_item").getAsString());
+                        page1.setIcon(new ItemPageIconRenderer(o.get("icon_item")));
                     }
-
-                    page1 = new InfoPageGuide.Page(o.get("id").getAsString(), pageIcon);
 
                     if(o.has("lang"))
                     {

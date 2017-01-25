@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.feed_the_beast.ftbu.client.CachedClientData;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.UUID;
 
@@ -34,14 +35,14 @@ public class MessageSendBadge extends MessageToClient<MessageSendBadge>
     public void fromBytes(ByteBuf io)
     {
         playerID = LMNetUtils.readUUID(io);
-        badgeURL = LMNetUtils.readString(io);
+        badgeURL = ByteBufUtils.readUTF8String(io);
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
         LMNetUtils.writeUUID(io, playerID);
-        LMNetUtils.writeString(io, badgeURL);
+        ByteBufUtils.writeUTF8String(io, badgeURL);
     }
 
     @Override

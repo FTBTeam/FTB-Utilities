@@ -190,7 +190,7 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
                 {
                     IConfigValue value = rconfig.getDefValue().copy();
                     value.fromJson(entry.getValue());
-                    config.put(rconfig.getID(), value);
+                    config.put(rconfig.getName(), value);
                 }
             }
         }

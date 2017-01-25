@@ -136,12 +136,12 @@ public class Ranks
             for(IRankConfig key : FTBLibIntegration.API.getRankConfigRegistry().values())
             {
                 IConfigValue def = key.getDefValue();
-                DefaultPlayerRank.INSTANCE.configTree.put(key.getID(), def);
+                DefaultPlayerRank.INSTANCE.configTree.put(key.getName(), def);
                 IConfigValue op = key.getDefOPValue();
 
                 if(!def.equalsValue(op))
                 {
-                    DefaultOPRank.INSTANCE.configTree.put(key.getID(), op);
+                    DefaultOPRank.INSTANCE.configTree.put(key.getName(), op);
                 }
             }
 
@@ -333,7 +333,7 @@ public class Ranks
             for(IRankConfig p : sortedRankConfigs)
             {
                 IConfigValue value = p.getDefValue();
-                list.add("<tr><td>" + p.getID() + "</td><td>");
+                list.add("<tr><td>" + p.getName() + "</td><td>");
 
                 String min = value.getMinValueString();
                 String max = value.getMaxValueString();
@@ -416,7 +416,7 @@ public class Ranks
 
             for(IRankConfig key : sortedRankConfigs)
             {
-                player.config.put(key.getID(), key.getDefValue());
+                player.config.put(key.getName(), key.getDefValue());
             }
 
             Rank op = new Rank("admin_example");
@@ -427,7 +427,7 @@ public class Ranks
             {
                 if(!key.getDefValue().equalsValue(key.getDefOPValue()))
                 {
-                    op.config.put(key.getID(), key.getDefOPValue());
+                    op.config.put(key.getName(), key.getDefOPValue());
                 }
             }
 

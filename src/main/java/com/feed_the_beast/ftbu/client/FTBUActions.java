@@ -18,7 +18,7 @@ import net.minecraft.client.Minecraft;
 
 public class FTBUActions
 {
-    public static final ISidebarButton GUIDE = new SidebarButton(0, GuiIcons.BOOK, new PropertyBool(true))
+    public static final ISidebarButton GUIDE = new SidebarButton(FTBUFinals.get("guide"), GuiIcons.BOOK, new PropertyBool(true), "")
     {
         @Override
         public void onClicked(IMouseButton button)
@@ -28,7 +28,7 @@ public class FTBUActions
         }
     };
 
-    public static final ISidebarButton SERVER_INFO = new SidebarButton(0, GuiIcons.BOOK_RED, new PropertyBool(true))
+    public static final ISidebarButton SERVER_INFO = new SidebarButton(FTBUFinals.get("server_info"), GuiIcons.BOOK_RED, new PropertyBool(true), "")
     {
         @Override
         public void onClicked(IMouseButton button)
@@ -44,7 +44,7 @@ public class FTBUActions
         }
     };
 
-    public static final ISidebarButton CLAIMED_CHUNKS = new SidebarButton(0, GuiIcons.MAP, new PropertyBool(true))
+    public static final ISidebarButton CLAIMED_CHUNKS = new SidebarButton(FTBUFinals.get("claimed_chunks"), GuiIcons.MAP, new PropertyBool(true), "")
     {
         @Override
         public void onClicked(IMouseButton button)
@@ -60,7 +60,7 @@ public class FTBUActions
         }
     };
 
-    public static final ISidebarButton TRASH_CAN = new SidebarButton(0, GuiIcons.BIN, new PropertyBool(true))
+    public static final ISidebarButton TRASH_CAN = new SidebarButton(FTBUFinals.get("trash_can"), GuiIcons.BIN, new PropertyBool(true), "")
     {
         @Override
         public void onClicked(IMouseButton button)
@@ -75,7 +75,7 @@ public class FTBUActions
         }
     };
 
-    public static final ISidebarButton SHOP = new SidebarButton(0, GuiIcons.MONEY_BAG, new PropertyBool(true))
+    public static final ISidebarButton SHOP = new SidebarButton(FTBUFinals.get("shop"), GuiIcons.MONEY_BAG, new PropertyBool(true), "")
     {
         @Override
         public void onClicked(IMouseButton button)
@@ -90,7 +90,7 @@ public class FTBUActions
         }
     };
 
-    public static final ISidebarButton HEAL = new SidebarButton(200, GuiIcons.HEART, new PropertyBool(true))
+    public static final ISidebarButton HEAL = new SidebarButton(FTBUFinals.get("heal"), GuiIcons.HEART, new PropertyBool(true), "")
     {
         @Override
         public void onClicked(IMouseButton button)
@@ -105,7 +105,7 @@ public class FTBUActions
         }
     };
 
-    public static final ISidebarButton TOGGLE_GAMEMODE = new SidebarButton(195, GuiIcons.TOGGLE_GAMEMODE, new PropertyBool(true))
+    public static final ISidebarButton TOGGLE_GAMEMODE = new SidebarButton(FTBUFinals.get("toggle.gamemode"), GuiIcons.TOGGLE_GAMEMODE, new PropertyBool(true), "after:ftbu.heal")
     {
         @Override
         public void onClicked(IMouseButton button)
@@ -121,7 +121,7 @@ public class FTBUActions
         }
     };
 
-    public static final ISidebarButton TOGGLE_RAIN = new SidebarButton(190, GuiIcons.TOGGLE_RAIN, new PropertyBool(true))
+    public static final ISidebarButton TOGGLE_RAIN = new SidebarButton(FTBUFinals.get("toggle.rain"), GuiIcons.TOGGLE_RAIN, new PropertyBool(true), "after:ftbu.toggle.gamemode")
     {
         @Override
         public void onClicked(IMouseButton button)
@@ -143,7 +143,7 @@ public class FTBUActions
         }
     };
 
-    public static final ISidebarButton TOGGLE_DAY = new SidebarButton(185, GuiIcons.TOGGLE_DAY, new PropertyBool(true))
+    public static final ISidebarButton TOGGLE_DAY = new SidebarButton(FTBUFinals.get("toggle.day"), GuiIcons.TOGGLE_DAY, new PropertyBool(true), "after:ftbu.toggle.rain")
     {
         @Override
         public void onClicked(IMouseButton button)
@@ -158,7 +158,7 @@ public class FTBUActions
         }
     };
 
-    public static final ISidebarButton TOGGLE_NIGHT = new SidebarButton(180, GuiIcons.TOGGLE_NIGHT, new PropertyBool(true))
+    public static final ISidebarButton TOGGLE_NIGHT = new SidebarButton(FTBUFinals.get("toggle.night"), GuiIcons.TOGGLE_NIGHT, new PropertyBool(true), "after:ftbu.toggle.day")
     {
         @Override
         public void onClicked(IMouseButton button)

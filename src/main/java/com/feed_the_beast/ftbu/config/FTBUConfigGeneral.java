@@ -17,6 +17,7 @@ public class FTBUConfigGeneral
     public static final PropertyDouble RESTART_TIMER = new PropertyDouble(12D).setMin(0D).setMax(720);
     public static final PropertyBool SERVER_INFO_DIFFICULTY = new PropertyBool(true);
     public static final PropertyBool SERVER_INFO_MODE = new PropertyBool(true);
+    public static final PropertyBool SERVER_INFO_ADMIN_QUICK_ACCESS = new PropertyBool(true);
 
     private static final Map<String, ITextComponent> DEF_CHAT_SUB_MAP = new HashMap<>();
 
@@ -35,6 +36,7 @@ public class FTBUConfigGeneral
         reg.addConfig(FTBUFinals.MOD_ID, "general.restart_timer", RESTART_TIMER).setInfo("Server will automatically shut down after X hours", "0 - Disabled", "0.5 - 30 minutes", "1 - 1 Hour", "4 - 1 Day", "168 - 1 Week", "720 - 1 Month");
         reg.addConfig(FTBUFinals.MOD_ID, "general.server_info.difficulty", SERVER_INFO_DIFFICULTY);
         reg.addConfig(FTBUFinals.MOD_ID, "general.server_info.mode", SERVER_INFO_MODE);
+        reg.addConfig(FTBUFinals.MOD_ID, "general.server_info.admin_quick_access", SERVER_INFO_ADMIN_QUICK_ACCESS);
         reg.addConfig(FTBUFinals.MOD_ID, "general.chat.substitute_prefix", CHAT_SUBSTITUTE_PREFIX);
         reg.addConfig(FTBUFinals.MOD_ID, "general.chat.substitutes", CHAT_SUBSTITUTES);
         reg.addConfig(FTBUFinals.MOD_ID, "general.chat.enable_links", ENABLE_LINKS);

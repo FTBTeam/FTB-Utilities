@@ -116,19 +116,19 @@ public enum FTBLibIntegration implements IFTBLibPlugin
         reg.addClientConfig(FTBUFinals.MOD_ID, "render_badges", FTBUClientConfig.RENDER_BADGES);
         reg.addClientConfig(FTBUFinals.MOD_ID, "journeymap_overlay", FTBUClientConfig.JOURNEYMAP_OVERLAY);
 
-        reg.addSidebarButton(FTBUFinals.get("guide"), FTBUActions.GUIDE);
-        reg.addSidebarButton(FTBUFinals.get("server_info"), FTBUActions.SERVER_INFO);
-        reg.addSidebarButton(FTBUFinals.get("claimed_chunks"), FTBUActions.CLAIMED_CHUNKS);
-        reg.addSidebarButton(FTBUFinals.get("trash_can"), FTBUActions.TRASH_CAN);
-        reg.addSidebarButton(FTBUFinals.get("shop"), FTBUActions.SHOP);
+        reg.addSidebarButton(FTBUActions.GUIDE);
+        reg.addSidebarButton(FTBUActions.SERVER_INFO);
+        reg.addSidebarButton(FTBUActions.CLAIMED_CHUNKS);
+        reg.addSidebarButton(FTBUActions.TRASH_CAN);
+        reg.addSidebarButton(FTBUActions.SHOP);
 
         if(!LMUtils.isNEILoaded)
         {
-            reg.addSidebarButton(FTBUFinals.get("heal"), FTBUActions.HEAL);
-            reg.addSidebarButton(FTBUFinals.get("toggle.gamemode"), FTBUActions.TOGGLE_GAMEMODE);
-            reg.addSidebarButton(FTBUFinals.get("toggle.rain"), FTBUActions.TOGGLE_RAIN);
-            reg.addSidebarButton(FTBUFinals.get("toggle.day"), FTBUActions.TOGGLE_DAY);
-            reg.addSidebarButton(FTBUFinals.get("toggle.night"), FTBUActions.TOGGLE_NIGHT);
+            reg.addSidebarButton(FTBUActions.HEAL);
+            reg.addSidebarButton(FTBUActions.TOGGLE_GAMEMODE);
+            reg.addSidebarButton(FTBUActions.TOGGLE_RAIN);
+            reg.addSidebarButton(FTBUActions.TOGGLE_DAY);
+            reg.addSidebarButton(FTBUActions.TOGGLE_NIGHT);
         }
     }
 

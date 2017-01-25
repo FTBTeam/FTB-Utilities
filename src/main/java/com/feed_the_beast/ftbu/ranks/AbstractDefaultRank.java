@@ -53,7 +53,7 @@ abstract class AbstractDefaultRank implements IRank
                 {
                     IConfigValue value = createValue(config);
                     value.fromJson(entry.getValue());
-                    configTree.put(config.getID(), value);
+                    configTree.put(config.getName(), value);
                 }
             }
         }

@@ -11,6 +11,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -31,7 +32,7 @@ public class PropertyChatSubstituteList extends PropertyBase
     }
 
     @Override
-    public String getID()
+    public String getName()
     {
         return ID;
     }
@@ -116,7 +117,7 @@ public class PropertyChatSubstituteList extends PropertyBase
         data.writeShort(value.size());
         value.forEach((key, value1) ->
         {
-            LMNetUtils.writeString(data, key);
+            ByteBufUtils.writeUTF8String(data, key);
             LMNetUtils.writeTextComponent(data, value1);
         });
     }
@@ -129,7 +130,7 @@ public class PropertyChatSubstituteList extends PropertyBase
 
         while(--s >= 0)
         {
-            String key = LMNetUtils.readString(data);
+            String key = ByteBufUtils.readUTF8String(data);
             ITextComponent value1 = LMNetUtils.readTextComponent(data);
             value.put(key, value1);
         }

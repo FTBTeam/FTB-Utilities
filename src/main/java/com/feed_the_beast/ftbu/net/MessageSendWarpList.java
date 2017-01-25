@@ -2,13 +2,13 @@ package com.feed_the_beast.ftbu.net;
 
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.gui.GuiWarps;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,7 +56,7 @@ public class MessageSendWarpList extends MessageToClient<MessageSendWarpList>
 
         while(--s >= 0)
         {
-            homes.add(LMNetUtils.readString(io));
+            homes.add(ByteBufUtils.readUTF8String(io));
         }
 
         s = io.readUnsignedByte();
@@ -65,7 +65,7 @@ public class MessageSendWarpList extends MessageToClient<MessageSendWarpList>
 
         while(--s >= 0)
         {
-            warps.add(LMNetUtils.readString(io));
+            warps.add(ByteBufUtils.readUTF8String(io));
         }
     }
 
@@ -78,7 +78,7 @@ public class MessageSendWarpList extends MessageToClient<MessageSendWarpList>
 
         for(int i = 0; i < s; i++)
         {
-            LMNetUtils.writeString(io, homes.get(i));
+            ByteBufUtils.writeUTF8String(io, homes.get(i));
         }
 
         s = Math.min(255, warps.size());
@@ -87,7 +87,7 @@ public class MessageSendWarpList extends MessageToClient<MessageSendWarpList>
 
         for(int i = 0; i < s; i++)
         {
-            LMNetUtils.writeString(io, warps.get(i));
+            ByteBufUtils.writeUTF8String(io, warps.get(i));
         }
     }
 

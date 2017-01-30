@@ -18,7 +18,7 @@ import net.minecraft.client.Minecraft;
 
 public class FTBUActions
 {
-    public static final ISidebarButton GUIDE = new SidebarButton(FTBUFinals.get("guide"), GuiIcons.BOOK, new PropertyBool(true), "")
+    public static final ISidebarButton GUIDE = new SidebarButton(FTBUFinals.get("guide"), GuiIcons.BOOK, new PropertyBool(true), "after:ftbu.claimed_chunks")
     {
         @Override
         public void onClicked(IMouseButton button)
@@ -28,7 +28,7 @@ public class FTBUActions
         }
     };
 
-    public static final ISidebarButton SERVER_INFO = new SidebarButton(FTBUFinals.get("server_info"), GuiIcons.BOOK_RED, new PropertyBool(true), "")
+    public static final ISidebarButton SERVER_INFO = new SidebarButton(FTBUFinals.get("server_info"), GuiIcons.BOOK_RED, new PropertyBool(true), "after:ftbu.guide")
     {
         @Override
         public void onClicked(IMouseButton button)
@@ -44,7 +44,7 @@ public class FTBUActions
         }
     };
 
-    public static final ISidebarButton CLAIMED_CHUNKS = new SidebarButton(FTBUFinals.get("claimed_chunks"), GuiIcons.MAP, new PropertyBool(true), "")
+    public static final ISidebarButton CLAIMED_CHUNKS = new SidebarButton(FTBUFinals.get("claimed_chunks"), GuiIcons.MAP, new PropertyBool(true), "after:ftbu.toggle.night")
     {
         @Override
         public void onClicked(IMouseButton button)
@@ -60,7 +60,7 @@ public class FTBUActions
         }
     };
 
-    public static final ISidebarButton TRASH_CAN = new SidebarButton(FTBUFinals.get("trash_can"), GuiIcons.BIN, new PropertyBool(true), "")
+    public static final ISidebarButton TRASH_CAN = new SidebarButton(FTBUFinals.get("trash_can"), GuiIcons.BIN, new PropertyBool(true), "after:ftbu.server_info")
     {
         @Override
         public void onClicked(IMouseButton button)
@@ -75,7 +75,7 @@ public class FTBUActions
         }
     };
 
-    public static final ISidebarButton SHOP = new SidebarButton(FTBUFinals.get("shop"), GuiIcons.MONEY_BAG, new PropertyBool(true), "")
+    public static final ISidebarButton SHOP = new SidebarButton(FTBUFinals.get("shop"), GuiIcons.MONEY_BAG, new PropertyBool(true), "after:ftbu.trash_can")
     {
         @Override
         public void onClicked(IMouseButton button)
@@ -90,7 +90,7 @@ public class FTBUActions
         }
     };
 
-    public static final ISidebarButton HEAL = new SidebarButton(FTBUFinals.get("heal"), GuiIcons.HEART, new PropertyBool(true), "")
+    public static final ISidebarButton HEAL = new SidebarButton(FTBUFinals.get("heal"), GuiIcons.HEART, new PropertyBool(true), "after:ftbl.my_server_settings")
     {
         @Override
         public void onClicked(IMouseButton button)

@@ -130,8 +130,6 @@ public class Guides
 
                     guides.add(guide);
                 }
-
-                LMUtils.DEV_LOGGER.info("Guide found in domain '" + domain + "'");
             }
             catch(Exception ex)
             {
@@ -145,7 +143,7 @@ public class Guides
         }
 
         Map<String, IGuide> eventMap = new HashMap<>();
-        MinecraftForge.EVENT_BUS.post(new ClientGuideEvent(eventMap));
+        MinecraftForge.EVENT_BUS.post(new ClientGuideEvent(eventMap, resourceManager));
         guides.addAll(eventMap.values());
 
         Collections.sort(guides, COMPARATOR);

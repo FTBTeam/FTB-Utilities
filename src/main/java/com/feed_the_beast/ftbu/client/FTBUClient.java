@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbu.client;
 
 import com.feed_the_beast.ftbu.FTBUCommon;
+import com.feed_the_beast.ftbu.integration.TiCIntegration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.settings.KeyBinding;
@@ -8,6 +9,7 @@ import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.Loader;
 import org.lwjgl.input.Keyboard;
 
 import java.util.Map;
@@ -29,6 +31,11 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
         ClientRegistry.registerKeyBinding(KEY_WARP);
 
         MinecraftForge.EVENT_BUS.register(new FTBUClientEventHandler());
+
+        if(Loader.isModLoaded("tconstruct"))
+        {
+            TiCIntegration.init();
+        }
     }
 
     @Override

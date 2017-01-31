@@ -9,7 +9,6 @@ import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUServerEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUTeamEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUWorldEventHandler;
-import com.feed_the_beast.ftbu.integration.TiCIntegration;
 import com.feed_the_beast.ftbu.net.FTBUNetHandler;
 import com.feed_the_beast.ftbu.ranks.CmdOverride;
 import com.feed_the_beast.ftbu.ranks.CmdTreeOverride;
@@ -19,7 +18,6 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -52,17 +50,12 @@ public class FTBU
         MinecraftForge.EVENT_BUS.register(new FTBUTeamEventHandler());
         MinecraftForge.EVENT_BUS.register(new FTBUServerEventHandler());
 
-        PROXY.preInit();
-
         if(FTBUConfigRanks.ENABLED.getBoolean())
         {
             PermissionAPI.setPermissionHandler(FTBUtilitiesAPI_Impl.INSTANCE);
         }
 
-        if(Loader.isModLoaded("tconstruct"))
-        {
-            TiCIntegration.INSTANCE.init();
-        }
+        PROXY.preInit();
     }
 
     @Mod.EventHandler

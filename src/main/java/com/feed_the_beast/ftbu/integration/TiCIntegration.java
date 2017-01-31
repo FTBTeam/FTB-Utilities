@@ -21,6 +21,8 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import slimeknights.tconstruct.library.TinkerRegistry;
 import slimeknights.tconstruct.library.materials.IMaterialStats;
 import slimeknights.tconstruct.library.materials.Material;
@@ -39,14 +41,15 @@ import java.util.List;
  */
 public class TiCIntegration
 {
-    public static final TiCIntegration INSTANCE = new TiCIntegration();
+    private static final TiCIntegration INSTANCE = new TiCIntegration();
 
-    public void init()
+    public static void init()
     {
-        MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(INSTANCE);
     }
 
     @SubscribeEvent
+    @SideOnly(Side.CLIENT)
     public void onGuideEvent(ClientGuideEvent event)
     {
         IGuide guide = event.getModGuide("tconstruct");

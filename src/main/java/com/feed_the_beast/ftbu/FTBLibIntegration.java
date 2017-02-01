@@ -60,7 +60,7 @@ public enum FTBLibIntegration implements IFTBLibPlugin
         if(side.isServer())
         {
             Ranks.reload();
-            ServerInfoFile.CachedInfo.reload();
+            ServerInfoPage.reloadCachedInfo();
 
             FTBUUniverseData.reloadServerBadges();
             LoadedChunkStorage.INSTANCE.checkAll();

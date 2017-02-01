@@ -10,7 +10,6 @@ import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.NodeEntry;
 import com.feed_the_beast.ftbu.api.guide.ServerInfoEvent;
-import com.feed_the_beast.ftbu.client.FTBUActions;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.ranks.Ranks;
@@ -35,36 +34,25 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class ServerInfoFile extends InfoPage
+public class ServerInfoPage
 {
-    public static class CachedInfo
+    private static final InfoPage CACHED_PAGE = new InfoPage("server_info").setTitle(new TextComponentTranslation("sidebar_button.ftbu.server_info"));
+
+    public static void reloadCachedInfo()
     {
-        public static final InfoPage main = new InfoPage("server_info"); //TODO: Lang
-
-        public static void reload()
-        {
-            main.clear();
-
-            /*
-            //categoryServer.println(new ChatComponentTranslation("ftbl:worldID", FTBWorld.server.getWorldID()));
-            File file = new File(FTBLib.folderLocal, "guide/");
-            if(file.exists())
-            {
-            }
-            
-            main.cleanup();
-            */
-        }
     }
 
-    public ServerInfoFile(EntityPlayer ep)
+    public static InfoPage getPageForPlayer(EntityPlayer ep)
     {
-        super(CachedInfo.main.getName());
-        setTitle(new TextComponentTranslation("sidebar_button." + FTBUActions.SERVER_INFO.getName()));
         IUniverse universe = FTBLibIntegration.API.getUniverse();
         Preconditions.checkNotNull(universe, "World can't be null!");
         IForgePlayer self = universe.getPlayer(ep);
         Preconditions.checkNotNull(self, "Player can't be null!");
+
+        InfoPage page = new InfoPage(CACHED_PAGE.getName());
+        page.setTitle(CACHED_PAGE.getTitle());
+
+        page.copyFrom(CACHED_PAGE);
 
         MinecraftServer server = LMServerUtils.getServer();
 
@@ -72,29 +60,27 @@ public class ServerInfoFile extends InfoPage
         boolean isOP = !isDedi || PermissionAPI.hasPermission(ep, FTBUPermissions.DISPLAY_ADMIN_INFO);
         FTBUUniverseData ftbuUniverseData = FTBUUniverseData.get();
 
-        copyFrom(CachedInfo.main);
-
         List<IForgePlayer> players = new ArrayList<>();
         players.addAll(universe.getPlayers());
 
         if(FTBUConfigGeneral.AUTO_RESTART.getBoolean())
         {
-            println(FTBULang.TIMER_RESTART.textComponent(LMStringUtils.getTimeString(ftbuUniverseData.restartMillis - System.currentTimeMillis())));
+            page.println(FTBULang.TIMER_RESTART.textComponent(LMStringUtils.getTimeString(ftbuUniverseData.restartMillis - System.currentTimeMillis())));
         }
 
         if(FTBUConfigBackups.ENABLED.getBoolean())
         {
-            println(FTBULang.TIMER_BACKUP.textComponent(LMStringUtils.getTimeString(Backups.INSTANCE.nextBackup - System.currentTimeMillis())));
+            page.println(FTBULang.TIMER_BACKUP.textComponent(LMStringUtils.getTimeString(Backups.INSTANCE.nextBackup - System.currentTimeMillis())));
         }
 
         if(FTBUConfigGeneral.SERVER_INFO_DIFFICULTY.getBoolean())
         {
-            println(FTBLibLang.DIFFICULTY.textComponent(LMStringUtils.firstUppercase(ep.worldObj.getDifficulty().toString().toLowerCase())));
+            page.println(FTBLibLang.DIFFICULTY.textComponent(LMStringUtils.firstUppercase(ep.worldObj.getDifficulty().toString().toLowerCase())));
         }
 
         if(FTBUConfigGeneral.SERVER_INFO_MODE.getBoolean())
         {
-            println(FTBLibLang.MODE_CURRENT.textComponent(LMStringUtils.firstUppercase(FTBLibIntegration.API.getServerData().getPackMode().getName())));
+            page.println(FTBLibLang.MODE_CURRENT.textComponent(LMStringUtils.firstUppercase(FTBLibIntegration.API.getServerData().getPackMode().getName())));
         }
 
         if(FTBUConfigGeneral.SERVER_INFO_ADMIN_QUICK_ACCESS.getBoolean())
@@ -102,11 +88,11 @@ public class ServerInfoFile extends InfoPage
             //FIXME: SERVER_INFO_ADMIN_QUICK_ACCESS
         }
 
-        InfoPage page = getSub("leaderboards").setTitle(FTBULeaderboards.LANG_LEADERBOARD_TITLE.textComponent());
+        InfoPage page1 = page.getSub("leaderboards").setTitle(FTBULeaderboards.LANG_LEADERBOARD_TITLE.textComponent());
 
         for(Leaderboard leaderboard : FTBUCommon.LEADERBOARDS)
         {
-            InfoPage thisTop = page.getSub(leaderboard.stat.statId).setTitle(leaderboard.name);
+            InfoPage thisTop = page1.getSub(leaderboard.stat.statId).setTitle(leaderboard.name);
             Collections.sort(players, leaderboard.comparator);
 
             int size = Math.min(players.size(), 250);
@@ -152,9 +138,9 @@ public class ServerInfoFile extends InfoPage
             }
         }
 
-        MinecraftForge.EVENT_BUS.post(new ServerInfoEvent(this, self, isOP));
+        MinecraftForge.EVENT_BUS.post(new ServerInfoEvent(page, self, isOP));
 
-        page = getSub("commands").setTitle(FTBLibLang.COMMANDS.textComponent());
+        page1 = page.getSub("commands").setTitle(FTBLibLang.COMMANDS.textComponent());
 
         try
         {
@@ -162,7 +148,7 @@ public class ServerInfoFile extends InfoPage
             {
                 try
                 {
-                    InfoPage cat = page.getSub('/' + c.getCommandName());
+                    InfoPage cat = page1.getSub(c.getCommandName());
 
                     List<String> al = c.getCommandAliases();
                     if(!al.isEmpty())
@@ -214,7 +200,7 @@ public class ServerInfoFile extends InfoPage
                 {
                     ITextComponent cc = new TextComponentString('/' + c.getCommandName());
                     cc.getStyle().setColor(TextFormatting.DARK_RED);
-                    page.getSub('/' + c.getCommandName()).setTitle(cc).println("Errored");
+                    page1.getSub('/' + c.getCommandName()).setTitle(cc).println("Errored");
 
                     if(LMUtils.DEV_ENV)
                     {
@@ -225,12 +211,12 @@ public class ServerInfoFile extends InfoPage
         }
         catch(Exception ex)
         {
-            page.println("Failed to load commands");
+            page1.println("Failed to load commands");
         }
 
         if(PermissionAPI.hasPermission(ep, FTBUPermissions.DISPLAY_PERMISSIONS))
         {
-            page = getSub("permissions").setTitle(FTBLibLang.ALL_PERMISSIONS.textComponent());
+            page1 = page.getSub("permissions").setTitle(FTBLibLang.ALL_PERMISSIONS.textComponent());
 
             ITextComponent txt = new TextComponentString("");
             ITextComponent txt1 = new TextComponentString("NONE");
@@ -244,8 +230,8 @@ public class ServerInfoFile extends InfoPage
             txt1 = new TextComponentString("OP");
             txt1.getStyle().setColor(TextFormatting.BLUE);
             txt.appendSibling(txt1);
-            page.println(txt);
-            page.println(null);
+            page1.println(txt);
+            page1.println(null);
 
             for(NodeEntry node : Ranks.ALL_NODES)
             {
@@ -268,7 +254,7 @@ public class ServerInfoFile extends InfoPage
                     txt.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(node.getDescription())));
                 }
 
-                page.println(txt);
+                page1.println(txt);
             }
 
             /*
@@ -283,11 +269,12 @@ public class ServerInfoFile extends InfoPage
             */
         }
 
-        cleanup();
-        sortAll();
+        page.cleanup();
+        page.sortAll();
+        return page;
     }
 
-    private void addCommandUsage(ICommandSender sender, List<ITextComponent> list, int level, CommandTreeBase treeCommand)
+    private static void addCommandUsage(ICommandSender sender, List<ITextComponent> list, int level, CommandTreeBase treeCommand)
     {
         for(ICommand c : treeCommand.getSubCommands())
         {
@@ -311,7 +298,7 @@ public class ServerInfoFile extends InfoPage
         }
     }
 
-    private ITextComponent tree(ITextComponent sibling, int level)
+    private static ITextComponent tree(ITextComponent sibling, int level)
     {
         if(level == 0)
         {

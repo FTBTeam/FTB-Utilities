@@ -1,12 +1,10 @@
 package com.feed_the_beast.ftbu.net;
 
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
-import com.feed_the_beast.ftbu.ServerInfoFile;
+import com.feed_the_beast.ftbu.ServerInfoPage;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class MessageRequestServerInfo extends MessageToServer<MessageRequestServerInfo>
@@ -31,15 +29,9 @@ public class MessageRequestServerInfo extends MessageToServer<MessageRequestServ
     {
     }
 
-    public GuiScreen openGui()
-    {
-        sendToServer();
-        return new GuiLoading().getWrapper();
-    }
-
     @Override
     public void onMessage(MessageRequestServerInfo m, EntityPlayer player)
     {
-        FTBLibIntegration.API.displayInfoGui(player, new ServerInfoFile(player));
+        FTBLibIntegration.API.displayInfoGui(player, ServerInfoPage.getPageForPlayer(player));
     }
 }

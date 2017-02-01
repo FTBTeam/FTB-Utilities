@@ -1,11 +1,18 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
+import com.feed_the_beast.ftbl.api.gui.IGui;
+import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
+import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.info.InfoPageHelper;
 import com.feed_the_beast.ftbl.lib.info.ItemPageIconRenderer;
+import com.feed_the_beast.ftbl.lib.info.SpecialInfoButton;
 import com.feed_the_beast.ftbl.lib.info.TexturePageIconRenderer;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
@@ -39,7 +46,24 @@ public class Guides
 {
     public static final Comparator<IGuide> COMPARATOR = (o1, o2) -> o1.getPage().getDisplayName().getFormattedText().compareToIgnoreCase(o2.getPage().getDisplayName().getFormattedText());
 
-    private static final InfoPageGuides INFO_PAGE = new InfoPageGuides();
+    private static final InfoPage INFO_PAGE = new InfoPage("guides")
+    {
+        @Override
+        public ISpecialInfoButton createSpecialButton(IGui gui)
+        {
+            return new SpecialInfoButton(GuiLang.BUTTON_REFRESH.translate(), GuiIcons.REFRESH)
+            {
+                @Override
+                public void onClicked(IMouseButton b)
+                {
+                    GuiHelper.playClickSound();
+                    Guides.setShouldReload();
+                    Guides.openGui();
+                }
+            };
+        }
+    };
+
     private static boolean isReloading = false;
     private static Thread reloadingThread = null;
     private static GuiInfo cachedGui = null;

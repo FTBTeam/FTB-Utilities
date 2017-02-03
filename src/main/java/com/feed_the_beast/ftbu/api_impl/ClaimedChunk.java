@@ -51,39 +51,29 @@ public class ClaimedChunk implements IClaimedChunk
     {
         boolean loaded = isLoaded();
 
-        if(loaded)
+        if(!loaded || !FTBUConfigWorld.CHUNK_LOADING.getBoolean())
         {
-            if(!FTBUConfigWorld.CHUNK_LOADING.getBoolean())
-            {
-                loaded = false;
-            }
-
-            switch((ChunkloaderType) FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(owner.getProfile(), FTBUPermissions.CHUNKLOADER_TYPE).getValue())
-            {
-                case ONLINE:
-                    if(!owner.isOnline())
-                    {
-                        loaded = false;
-                    }
-                    break;
-                case OFFLINE:
-                    if(!owner.isOnline())
-                    {
-                        double max = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(owner.getProfile(), FTBUPermissions.CHUNKLOADER_OFFLINE_TIMER).getDouble();
-
-                        if(max > 0D && FTBLibStats.getLastSeenDeltaInHours(owner.stats(), false) > max)
-                        {
-                            loaded = false;
-                        }
-                    }
-                    break;
-                default:
-                    loaded = false;
-
-            }
+            return false;
         }
 
-        return loaded;
+        switch((ChunkloaderType) FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(owner.getProfile(), FTBUPermissions.CHUNKLOADER_TYPE).getValue())
+        {
+            case ONLINE:
+                return owner.isOnline();
+            case OFFLINE:
+                if(!owner.isOnline())
+                {
+                    double max = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(owner.getProfile(), FTBUPermissions.CHUNKLOADER_OFFLINE_TIMER).getDouble();
+
+                    if(max > 0D && FTBLibStats.getLastSeenDeltaInHours(owner.stats(), false) > max)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            default:
+                return false;
+        }
     }
 
     @Override

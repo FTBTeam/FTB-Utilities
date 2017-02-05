@@ -12,7 +12,7 @@ import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.gui.GuiClaimedChunks;
-import com.feed_the_beast.ftbu.gui.guide.Guides;
+import com.feed_the_beast.ftbu.gui.Guides;
 import com.feed_the_beast.ftbu.net.MessageRequestServerInfo;
 import net.minecraft.client.Minecraft;
 

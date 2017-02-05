@@ -163,7 +163,7 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
             public void onClicked(IGui gui, IMouseButton button)
             {
                 GuiHelper.playClickSound();
-                closeGui();
+                gui.closeGui();
             }
         };
 

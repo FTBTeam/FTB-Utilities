@@ -8,36 +8,86 @@ import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class MessageSendWarpList extends MessageToClient<MessageSendWarpList>
 {
-    private List<String> warps, homes;
+    public static class WarpItem implements Comparable<WarpItem>
+    {
+        public static final byte TYPE_SPECIAL_IN = 0;
+        public static final byte TYPE_SPECIAL_OUT = 1;
+        public static final byte TYPE_WARP = 2;
+        public static final byte TYPE_HOME = 3;
+
+        public static final WarpItem CANCEL = new WarpItem("Cancel", "", TYPE_SPECIAL_IN);
+
+        public final String name;
+        public final String cmd;
+        public final byte type;
+
+        private WarpItem(String n, String c, byte t)
+        {
+            name = n;
+            cmd = c;
+            type = t;
+        }
+
+        public boolean isSpecial()
+        {
+            return type == TYPE_SPECIAL_IN || type == TYPE_SPECIAL_OUT;
+        }
+
+        public boolean innerCircle()
+        {
+            return type == TYPE_SPECIAL_IN || type == TYPE_HOME;
+        }
+
+        @Override
+        public int compareTo(WarpItem o)
+        {
+            return name.compareToIgnoreCase(o.name);
+        }
+    }
+
+    private List<WarpItem> warps;
 
     public MessageSendWarpList()
     {
     }
 
-    MessageSendWarpList(EntityPlayer player)
+    MessageSendWarpList(EntityPlayerMP player)
     {
+        warps = new ArrayList<>();
+
+        warps.add(new WarpItem("Spawn", player.mcServer.getCommandManager().getCommands().containsKey("spawn") ? "/spawn" : "/ftb spawn", WarpItem.TYPE_SPECIAL_OUT));
+        warps.add(new WarpItem("Back", player.mcServer.getCommandManager().getCommands().containsKey("back") ? "/back" : "/ftb back", WarpItem.TYPE_SPECIAL_IN));
+
         FTBUUniverseData universeData = FTBUUniverseData.get();
+
+        if(universeData != null)
+        {
+            String cmd = player.mcServer.getCommandManager().getCommands().containsKey("warp") ? "/warp " : "/ftb warp ";
+
+            for(String s : universeData.listWarps())
+            {
+                warps.add(new WarpItem(s, cmd + s, WarpItem.TYPE_WARP));
+            }
+        }
+
         FTBUPlayerData playerData = FTBUPlayerData.get(FTBLibIntegration.API.getUniverse().getPlayer(player));
 
-        if(universeData != null && playerData != null)
+        if(playerData != null)
         {
-            warps = new ArrayList<>(universeData.listWarps());
-            homes = new ArrayList<>(playerData.listHomes());
-            Collections.sort(warps);
-            Collections.sort(homes);
-        }
-        else
-        {
-            warps = new ArrayList<>();
-            homes = new ArrayList<>();
+            String cmd = player.mcServer.getCommandManager().getCommands().containsKey("home") ? "/home " : "/ftb home ";
+
+            for(String s : playerData.listHomes())
+            {
+                warps.add(new WarpItem(s, cmd + s, WarpItem.TYPE_HOME));
+            }
         }
     }
 
@@ -50,57 +100,36 @@ public class MessageSendWarpList extends MessageToClient<MessageSendWarpList>
     @Override
     public void fromBytes(ByteBuf io)
     {
-        int s = io.readUnsignedByte();
-
-        homes = new ArrayList<>(s);
-
-        while(--s >= 0)
-        {
-            homes.add(ByteBufUtils.readUTF8String(io));
-        }
-
-        s = io.readUnsignedByte();
-
+        int s = io.readUnsignedShort();
         warps = new ArrayList<>(s);
 
         while(--s >= 0)
         {
-            warps.add(ByteBufUtils.readUTF8String(io));
+            String n = ByteBufUtils.readUTF8String(io);
+            String c = ByteBufUtils.readUTF8String(io);
+            warps.add(new WarpItem(n, c, io.readByte()));
         }
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
-        int s = Math.min(255, homes.size());
+        io.writeShort(warps.size());
 
-        io.writeByte(s);
-
-        for(int i = 0; i < s; i++)
+        for(WarpItem w : warps)
         {
-            ByteBufUtils.writeUTF8String(io, homes.get(i));
-        }
-
-        s = Math.min(255, warps.size());
-
-        io.writeByte(s);
-
-        for(int i = 0; i < s; i++)
-        {
-            ByteBufUtils.writeUTF8String(io, warps.get(i));
+            ByteBufUtils.writeUTF8String(io, w.name);
+            ByteBufUtils.writeUTF8String(io, w.cmd);
+            io.writeByte(w.type);
         }
     }
 
     @Override
     public void onMessage(MessageSendWarpList m, EntityPlayer player)
     {
-        GuiWarps gui = GuiWarps.INSTANCE;
-
-        if(gui != null)
+        if(GuiWarps.INSTANCE != null)
         {
-            gui.homes = m.homes;
-            gui.warps = m.warps;
-            gui.hasLoaded = true;
+            GuiWarps.INSTANCE.setData(m.warps);
         }
     }
 }

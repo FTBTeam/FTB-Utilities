@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbu.gui.guide;
+package com.feed_the_beast.ftbu.gui;
 
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;

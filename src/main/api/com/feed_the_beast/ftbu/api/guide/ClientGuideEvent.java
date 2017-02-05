@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.api.guide;
 
-import com.feed_the_beast.ftbu.gui.guide.InfoPageGuide;
+import com.feed_the_beast.ftbu.gui.InfoPageGuide;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;

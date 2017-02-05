@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 public class MessageRequestWarpList extends MessageToServer<MessageRequestWarpList>
 {
@@ -30,6 +31,6 @@ public class MessageRequestWarpList extends MessageToServer<MessageRequestWarpLi
     @Override
     public void onMessage(MessageRequestWarpList m, EntityPlayer player)
     {
-        new MessageSendWarpList(player).sendTo(player);
+        new MessageSendWarpList((EntityPlayerMP) player).sendTo(player);
     }
 }

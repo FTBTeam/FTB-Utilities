@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.client;
 
 import com.feed_the_beast.ftbu.gui.GuiWarps;
-import com.feed_the_beast.ftbu.gui.guide.Guides;
+import com.feed_the_beast.ftbu.gui.Guides;
 import com.feed_the_beast.ftbu.net.MessageRequestWarpList;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;

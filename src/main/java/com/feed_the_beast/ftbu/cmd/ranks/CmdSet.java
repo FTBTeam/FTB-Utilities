@@ -3,6 +3,8 @@ package com.feed_the_beast.ftbu.cmd.ranks;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
+import com.feed_the_beast.ftbu.ranks.DefaultOPRank;
+import com.feed_the_beast.ftbu.ranks.DefaultPlayerRank;
 import com.feed_the_beast.ftbu.ranks.Rank;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import net.minecraft.command.CommandException;
@@ -34,14 +36,7 @@ public class CmdSet extends CommandLM
     {
         if(args.length == 2)
         {
-            if(Ranks.defaultRank != null)
-            {
-                return getListOfStringsMatchingLastWord(args, Ranks.RANKS.keySet());
-            }
-            else
-            {
-                return getListOfStringsMatchingLastWord(args, "op", "player");
-            }
+            return getListOfStringsMatchingLastWord(args, Ranks.getRankNames());
         }
 
         return super.getTabCompletionOptions(server, sender, args, pos);
@@ -51,25 +46,22 @@ public class CmdSet extends CommandLM
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         checkArgs(args, 2, "<player> <rank>");
+        Rank r = Ranks.getRank(args[1]);
 
-        if(Ranks.defaultRank == null)
+        if(r == DefaultPlayerRank.INSTANCE)
         {
-            if(args[1].equals("op"))
-            {
-                FTBLibLang.RAW.printChat(sender, "Ranks are disabled, forwarding to /op " + args[0]); //TODO: Lang
-                server.getCommandManager().executeCommand(sender, "/op " + args[0]);
-            }
-            else
-            {
-                FTBLibLang.RAW.printChat(sender, "Ranks are disabled, forwarding to /deop " + args[0]); //TODO: Lang
-                server.getCommandManager().executeCommand(sender, "/deop " + args[0]);
-            }
-
+            FTBLibLang.RAW.printChat(sender, "Ranks are disabled, forwarding to /deop " + args[0]); //TODO: Lang
+            server.getCommandManager().executeCommand(sender, "/deop " + args[0]);
+            return;
+        }
+        else if(r == DefaultOPRank.INSTANCE)
+        {
+            FTBLibLang.RAW.printChat(sender, "Ranks are disabled, forwarding to /op " + args[0]); //TODO: Lang
+            server.getCommandManager().executeCommand(sender, "/op " + args[0]);
             return;
         }
 
         IForgePlayer player = getForgePlayer(args[0]);
-        Rank r = Ranks.RANKS.get(args[1]);
 
         if(r == null)
         {

@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbu.ranks;
 import com.feed_the_beast.ftbl.api.IRankConfig;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
+import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.google.gson.JsonArray;
@@ -19,9 +20,11 @@ import java.util.Map;
 
 public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 {
+    private static final String[] EVENT_RESULT_PREFIX = {"-", "~", ""};
+
     private IRank parent;
-    private Boolean allPermissions;
-    final Map<String, Boolean> permissions;
+    private Event.Result allPermissions;
+    final Map<String, Event.Result> permissions;
     private final Map<String, Event.Result> cachedPermissions;
     final Map<String, IConfigValue> config;
     private final Map<String, IConfigValue> cachedConfig;
@@ -43,36 +46,45 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
     @Override
     public IRank getParent()
     {
-        return parent == null ? EmptyRank.INSTANCE : parent;
+        return parent == null ? DefaultPlayerRank.INSTANCE : parent;
+    }
+
+    private Event.Result hasPermissionRaw(String permission)
+    {
+        if(permissions.containsKey(permission))
+        {
+            return permissions.get(permission);
+        }
+        else
+        {
+            for(Map.Entry<String, Event.Result> entry : permissions.entrySet())
+            {
+                if(LMStringUtils.matchesNode(entry.getKey(), permission))
+                {
+                    return entry.getValue();
+                }
+            }
+        }
+
+        if(allPermissions != null)
+        {
+            return allPermissions;
+        }
+
+        return getParent().hasPermission(permission);
     }
 
     @Override
     public Event.Result hasPermission(String permission)
     {
-        if(allPermissions != null)
-        {
-            return allPermissions ? Event.Result.ALLOW : Event.Result.DENY;
-        }
-
         Event.Result r = cachedPermissions.get(permission);
-
-        if(r != null)
-        {
-            return r;
-        }
-
-        //TODO: Allow '*' values
-        if(permissions.containsKey(permission))
-        {
-            r = permissions.get(permission) ? Event.Result.ALLOW : Event.Result.DENY;
-        }
 
         if(r == null)
         {
-            r = getParent().hasPermission(permission);
+            r = hasPermissionRaw(permission);
+            cachedPermissions.put(permission, r);
         }
 
-        cachedPermissions.put(permission, r);
         return r;
     }
 
@@ -109,9 +121,9 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
         {
             JsonArray a1 = new JsonArray();
 
-            for(Map.Entry<String, Boolean> e : permissions.entrySet())
+            for(Map.Entry<String, Event.Result> e : permissions.entrySet())
             {
-                a1.add(new JsonPrimitive((e.getValue() ? "" : "-") + e.getKey()));
+                a1.add(new JsonPrimitive(EVENT_RESULT_PREFIX[e.getValue().ordinal()] + e.getKey()));
             }
 
             o.add("permissions", a1);
@@ -146,7 +158,7 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 
         if(o.has("parent"))
         {
-            parent = Ranks.RANKS.get(o.get("parent").getAsString());
+            parent = Ranks.getRank(o.get("parent").getAsString());
         }
 
         if(o.has("display_name"))
@@ -172,9 +184,8 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
             {
                 String id = a.get(i).getAsString();
                 char firstChar = id.charAt(0);
-                boolean not_allowed = firstChar == '-';
-                String key = (firstChar == '-' || firstChar == '+') ? id.substring(1) : id;
-                permissions.put(key, !not_allowed);
+                String key = (firstChar == '-' || firstChar == '+' || firstChar == '~') ? id.substring(1) : id;
+                permissions.put(key, firstChar == '-' ? Event.Result.DENY : (firstChar == '~' ? Event.Result.DEFAULT : Event.Result.ALLOW));
             }
         }
 

@@ -94,7 +94,7 @@ public class GuiWarps extends GuiLM
             {
                 boolean in = warpItem.innerCircle();
                 double s = (in ? buttonsIn : buttonsOut).size();
-                double i = index * (360D / s) + (180D / s);
+                double i = (s > 1D) ? (index * (360D / s) + (180D / s)) : 270D;
                 double d = ((in) ? (SIZE_I + SIZE_C) : (SIZE_C + SIZE_2)) / 2D;
                 textX = (int) (Math.cos(i * MathHelperLM.RAD) * d);
                 textY = (int) (Math.sin(i * MathHelperLM.RAD) * d) - 2;
@@ -232,24 +232,30 @@ public class GuiWarps extends GuiLM
 
         lines = new CachedVertexData(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
 
-        int add = 360 / buttonsOut.size();
-        for(int i = 0; i < 360; i += add)
+        if(buttonsOut.size() > 1)
         {
-            double cos = Math.cos(i * MathHelperLM.RAD);
-            double sin = Math.sin(i * MathHelperLM.RAD);
+            int add = 360 / buttonsOut.size();
+            for(int i = 0; i < 360; i += add)
+            {
+                double cos = Math.cos(i * MathHelperLM.RAD);
+                double sin = Math.sin(i * MathHelperLM.RAD);
 
-            lines.pos(cos * SIZE_C, sin * SIZE_C, 0D).color(102, 102, 102, 255);
-            lines.pos(cos * SIZE_2, sin * SIZE_2, 0D).color(102, 102, 102, 255);
+                lines.pos(cos * SIZE_C, sin * SIZE_C, 0D).color(102, 102, 102, 255);
+                lines.pos(cos * SIZE_2, sin * SIZE_2, 0D).color(102, 102, 102, 255);
+            }
         }
 
-        add = 360 / buttonsIn.size();
-        for(int i = 0; i < 360; i += add)
+        if(buttonsIn.size() > 1)
         {
-            double cos = Math.cos(i * MathHelperLM.RAD);
-            double sin = Math.sin(i * MathHelperLM.RAD);
+            int add = 360 / buttonsIn.size();
+            for(int i = 0; i < 360; i += add)
+            {
+                double cos = Math.cos(i * MathHelperLM.RAD);
+                double sin = Math.sin(i * MathHelperLM.RAD);
 
-            lines.pos(cos * SIZE_I, sin * SIZE_I, 0D).color(102, 102, 102, 255);
-            lines.pos(cos * SIZE_C, sin * SIZE_C, 0D).color(102, 102, 102, 255);
+                lines.pos(cos * SIZE_I, sin * SIZE_I, 0D).color(102, 102, 102, 255);
+                lines.pos(cos * SIZE_C, sin * SIZE_C, 0D).color(102, 102, 102, 255);
+            }
         }
 
         isLoaded = true;

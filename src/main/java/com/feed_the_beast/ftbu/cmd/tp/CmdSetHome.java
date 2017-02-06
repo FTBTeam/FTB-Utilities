@@ -56,8 +56,10 @@ public class CmdSetHome extends CommandLM
         {
             return;
         }
-
-        checkArgs(args, 1, "<home>");
+        else if(args.length == 0)
+        {
+            args = new String[] {"home"};
+        }
 
         args[0] = args[0].toLowerCase();
 

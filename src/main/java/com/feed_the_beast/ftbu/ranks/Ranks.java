@@ -5,13 +5,15 @@ import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
-import com.feed_the_beast.ftbl.lib.config.PropertyInt;
+import com.feed_the_beast.ftbl.lib.config.PropertyString;
+import com.feed_the_beast.ftbl.lib.config.SimpleConfigKey;
 import com.feed_the_beast.ftbl.lib.util.LMFileUtils;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUCommon;
+import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.feed_the_beast.ftbu.api.NodeEntry;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
@@ -30,22 +32,21 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 
 public class Ranks
 {
-    public static final Map<String, Rank> RANKS = new LinkedHashMap<>();
-    public static final Map<UUID, Rank> PLAYER_MAP = new HashMap<>();
+    private static final Map<String, Rank> RANKS = new LinkedHashMap<>();
+    public static final Map<UUID, IRank> PLAYER_MAP = new HashMap<>();
     public static final List<NodeEntry> ALL_NODES = new ArrayList<>();
-    public static final List<String> INFO = new ArrayList<>();
-    public static IRank defaultRank;
+    public static IRank defaultPlayerRank = DefaultPlayerRank.INSTANCE, defaultOPRank = DefaultOPRank.INSTANCE;
     private static IConfigTree ranksConfigTree;
 
     public static final IConfigContainer RANKS_CONFIG_CONTAINER = new IConfigContainer()
@@ -72,12 +73,35 @@ public class Ranks
         }
     };
 
+    @Nullable
+    public static Rank getRank(String id)
+    {
+        if(id.equals(DefaultPlayerRank.INSTANCE.getName()))
+        {
+            return DefaultPlayerRank.INSTANCE;
+        }
+        else if(id.equals(DefaultOPRank.INSTANCE.getName()))
+        {
+            return DefaultOPRank.INSTANCE;
+        }
+        return RANKS.get(id);
+    }
+
+    public static Collection<String> getRankNames()
+    {
+        return RANKS.keySet();
+    }
+
     public static void reload()
     {
+        FTBUFinals.LOGGER.info("Loadeding ranks..");
+
         RANKS.clear();
+        RANKS.put(DefaultPlayerRank.INSTANCE.getName(), DefaultPlayerRank.INSTANCE);
+        RANKS.put(DefaultOPRank.INSTANCE.getName(), DefaultOPRank.INSTANCE);
         PLAYER_MAP.clear();
-        defaultRank = null;
-        ranksConfigTree = new ConfigTree();
+        defaultPlayerRank = null;
+        defaultOPRank = null;
 
         if(FTBUConfigRanks.ENABLED.getBoolean())
         {
@@ -87,7 +111,7 @@ public class Ranks
             {
                 JsonObject o = e.getAsJsonObject();
 
-                if(o.has("default_rank") && o.has("ranks"))
+                if(o.has("default_ranks") && o.has("ranks"))
                 {
                     for(Map.Entry<String, JsonElement> entry : o.get("ranks").getAsJsonObject().entrySet())
                     {
@@ -99,7 +123,9 @@ public class Ranks
                         RANKS.get(entry.getKey()).fromJson(entry.getValue());
                     }
 
-                    defaultRank = RANKS.get(o.get("default_rank").getAsString());
+                    JsonObject dr = o.get("default_ranks").getAsJsonObject();
+                    defaultPlayerRank = RANKS.get(dr.get("player").getAsString());
+                    defaultOPRank = RANKS.get(dr.get("op").getAsString());
                 }
             }
 
@@ -127,126 +153,61 @@ public class Ranks
             catch(Exception ex)
             {
                 ex.printStackTrace();
-                defaultRank = null;
+                defaultPlayerRank = null;
+                defaultOPRank = null;
             }
         }
 
-        if(defaultRank == null)
+        if(defaultPlayerRank == null)
         {
-            for(IRankConfig key : FTBLibIntegration.API.getRankConfigRegistry().values())
-            {
-                IConfigValue def = key.getDefValue();
-                DefaultPlayerRank.INSTANCE.configTree.put(key.getName(), def);
-                IConfigValue op = key.getDefOPValue();
-
-                if(!def.equalsValue(op))
-                {
-                    DefaultOPRank.INSTANCE.configTree.put(key.getName(), op);
-                }
-            }
-
-            if(LMUtils.DEV_ENV)
-            {
-                LMUtils.DEV_LOGGER.info("[Ranks] Player config: " + DefaultPlayerRank.INSTANCE.configTree);
-                LMUtils.DEV_LOGGER.info("[Ranks] OP config: " + DefaultOPRank.INSTANCE.configTree);
-            }
-
-            try
-            {
-                JsonElement e = LMJsonUtils.fromJson(new File(LMUtils.folderLocal, "ftbu/default_rank_config.json"));
-
-                if(e.isJsonObject())
-                {
-                    JsonObject o = e.getAsJsonObject();
-                    JsonElement rp = o.get(DefaultPlayerRank.INSTANCE.getName());
-
-                    if(rp != null && rp.isJsonObject())
-                    {
-                        DefaultPlayerRank.INSTANCE.fromJson(rp);
-                    }
-
-                    JsonElement ro = o.get(DefaultPlayerRank.INSTANCE.getName());
-
-                    if(ro != null && ro.isJsonObject())
-                    {
-                        DefaultOPRank.INSTANCE.fromJson(ro);
-                    }
-                }
-                else
-                {
-                    DefaultPlayerRank.INSTANCE.configTree.clear();
-                }
-            }
-            catch(Exception ex)
-            {
-                ex.printStackTrace();
-            }
+            defaultPlayerRank = DefaultPlayerRank.INSTANCE;
         }
+
+        if(defaultOPRank == null)
+        {
+            defaultOPRank = DefaultOPRank.INSTANCE;
+        }
+
+        ranksConfigTree = new ConfigTree();
+        ranksConfigTree.add(new SimpleConfigKey("default_rank.player"), new PropertyString("player"));
+        ranksConfigTree.add(new SimpleConfigKey("default_rank.op"), new PropertyString("op"));
 
         saveRanks();
     }
 
     public static void saveRanks()
     {
-        if(defaultRank != null)
-        {
-            JsonObject o = new JsonObject();
-            o.add("default_rank", new JsonPrimitive(defaultRank.getName()));
-            JsonObject o1 = new JsonObject();
+        JsonObject o = new JsonObject();
+        JsonObject o1 = new JsonObject();
+        o1.add("player", new JsonPrimitive(defaultPlayerRank.getName()));
+        o1.add("op", new JsonPrimitive(defaultOPRank.getName()));
+        o.add("default_ranks", o1);
+        o1 = new JsonObject();
 
-            for(Rank r : RANKS.values())
+        for(Rank r : RANKS.values())
+        {
+            JsonElement e = r.getSerializableElement();
+
+            if(!e.isJsonNull())
             {
-                o1.add(r.getName(), r.getSerializableElement());
+                o1.add(r.getName(), e);
             }
-
-            o.add("ranks", o1);
-            LMJsonUtils.toJson(new File(LMUtils.folderLocal, "ftbu/ranks.json"), o);
-
-            JsonObject o2 = new JsonObject();
-            PLAYER_MAP.forEach((key, value) -> o2.add(LMStringUtils.fromUUID(key), new JsonPrimitive(value.getName())));
-            LMJsonUtils.toJson(new File(LMUtils.folderLocal, "ftbu/player_ranks.json"), o2);
         }
-        else
-        {
-            JsonObject o = new JsonObject();
-            o.add(DefaultPlayerRank.INSTANCE.getName(), DefaultPlayerRank.INSTANCE.getSerializableElement());
-            o.add(DefaultOPRank.INSTANCE.getName(), DefaultOPRank.INSTANCE.getSerializableElement());
-            LMJsonUtils.toJson(new File(LMUtils.folderLocal, "ftbu/default_rank_config.json"), o);
-        }
+
+        o.add("ranks", o1);
+
+        LMJsonUtils.toJson(new File(LMUtils.folderLocal, "ftbu/ranks.json"), o);
+
+        final JsonObject o2 = new JsonObject();
+        PLAYER_MAP.forEach((key, value) -> o2.add(LMStringUtils.fromUUID(key), new JsonPrimitive(value.getName())));
+        LMJsonUtils.toJson(new File(LMUtils.folderLocal, "ftbu/player_ranks.json"), o2);
     }
 
     public static void generateExampleFiles()
     {
-        List<String> list = new ArrayList<>();
-
-        Random random = new Random(50382L);
-        list.add("# Ranks & Permissions #");
-        list.add("");
-        list.add("Use /ftb ranks info");
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("If you have enabled ranks, edit ranks.json. If not, default_ranks.json");
-        list.add("Player UUID:Rank map is saved in player_ranks.json");
-        list.add("Format:");
-        list.add("");
-        list.add("{");
-        list.add("  \"" + LMStringUtils.fromUUID(new UUID(0L, 0L)) + "\":\"some_rank\",");
-        list.add("  \"" + LMStringUtils.fromUUID(new UUID(random.nextLong(), random.nextLong())) + "\":\"other_rank\"");
-        list.add("}");
-        list.add("");
-
-        INFO.clear();
-        INFO.addAll(list);
-
-        try
-        {
-            LMFileUtils.save(new File(LMUtils.folderLocal, "ftbu/readme.txt"), INFO);
-        }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-        }
+        LMFileUtils.delete(new File(LMUtils.folderLocal, "ftbu/readme.txt"));
+        LMFileUtils.delete(new File(LMUtils.folderLocal, "ftbu/ranks_example.json"));
+        LMFileUtils.delete(new File(LMUtils.folderLocal, "ftbu/default_rank_config.json"));
 
         ALL_NODES.clear();
 
@@ -284,21 +245,23 @@ public class Ranks
         Collections.sort(ALL_NODES, LMStringUtils.ID_COMPARATOR);
 
         Map<DefaultPermissionLevel, String> colorMap = new EnumMap<>(DefaultPermissionLevel.class);
-        colorMap.put(DefaultPermissionLevel.ALL, "#72FF85");
-        colorMap.put(DefaultPermissionLevel.OP, "#42A3FF");
-        colorMap.put(DefaultPermissionLevel.NONE, "#FF4242");
+
+        List<String> list = new ArrayList<>();
 
         try
         {
-            list.clear();
-            list.add("<html><head><title>Permissions</title>");
-            list.add("<style>table{font-family: arial, sans-serif;border-collapse: collapse;}td,th{border:1px solid #666666;text-align: left;padding:8px;}</style>");
-            list.add("</head><body><h1>Permissions</h1><table>");
+            list.add("<html><head><title>Permissions</title><style>");
+            list.add("table{font-family:arial, sans-serif;border-collapse:collapse;}");
+            list.add("td,th{border:1px solid #666666;text-align:left;padding:8px;}");
+            list.add("td.all{background-color:#72FF85;}");
+            list.add("td.op{background-color:#42A3FF;}");
+            list.add("td.none{background-color:#FF4242;}");
+            list.add("</style></head><body><h1>Permissions</h1><table>");
             list.add("<tr><th>Permission Node</th><th></th><th>Info</th></tr>");
 
             for(NodeEntry entry : ALL_NODES)
             {
-                list.add("<tr><td>" + entry.getName() + "</td><td bgcolor=\"" + colorMap.get(entry.getLevel()) + "\">" + entry.getLevel() + "</td><td>");
+                list.add("<tr><td>" + entry.getName() + "</td><td class='" + entry.getLevel().name().toLowerCase() + "'>" + entry.getLevel() + "</td><td>");
 
                 if(entry.getDescription() != null)
                 {
@@ -402,42 +365,6 @@ public class Ranks
 
             list.add("</table></body></html>");
             LMFileUtils.save(new File(LMUtils.folderLocal, "ftbu/all_configs.html"), list);
-        }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-        }
-
-        try
-        {
-            Rank player = new Rank("example");
-            player.permissions.put("command.help", true);
-            player.permissions.put("command.tell", false);
-
-            for(IRankConfig key : sortedRankConfigs)
-            {
-                player.config.put(key.getName(), key.getDefValue());
-            }
-
-            Rank op = new Rank("admin_example");
-            op.permissions.put("*", true);
-            op.config.put("some.int", new PropertyInt(10000));
-
-            for(IRankConfig key : sortedRankConfigs)
-            {
-                if(!key.getDefValue().equalsValue(key.getDefOPValue()))
-                {
-                    op.config.put(key.getName(), key.getDefOPValue());
-                }
-            }
-
-            JsonObject r = new JsonObject();
-            r.add(player.getName(), player.getSerializableElement());
-            r.add(op.getName(), op.getSerializableElement());
-            JsonObject o = new JsonObject();
-            o.add("default_rank", new JsonPrimitive(player.getName()));
-            o.add("ranks", r);
-            LMJsonUtils.toJson(new File(LMUtils.folderLocal, "ftbu/ranks_example.json"), o);
         }
         catch(Exception ex)
         {

@@ -51,8 +51,11 @@ public class CmdDelHome extends CommandLM
         {
             return;
         }
+        else if(args.length == 0)
+        {
+            args = new String[] {"home"};
+        }
 
-        checkArgs(args, 1, "<home>");
         args[0] = args[0].toLowerCase();
 
         if(data.setHome(args[0], null))

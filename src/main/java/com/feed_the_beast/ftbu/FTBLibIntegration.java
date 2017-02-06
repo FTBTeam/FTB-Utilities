@@ -30,6 +30,7 @@ import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUTeamData;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.server.command.CommandTreeBase;
@@ -55,13 +56,22 @@ public enum FTBLibIntegration implements IFTBLibPlugin
     }
 
     @Override
+    public void loadWorldData(MinecraftServer server)
+    {
+        Ranks.reload();
+    }
+
+    @Override
     public void onReload(Side side, ICommandSender sender, EnumReloadType type)
     {
         if(side.isServer())
         {
-            Ranks.reload();
-            ServerInfoPage.reloadCachedInfo();
+            if(type.command())
+            {
+                Ranks.reload();
+            }
 
+            ServerInfoPage.reloadCachedInfo();
             FTBUUniverseData.reloadServerBadges();
             LoadedChunkStorage.INSTANCE.checkAll();
         }

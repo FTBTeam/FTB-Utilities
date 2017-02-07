@@ -8,7 +8,6 @@ import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.api.NodeEntry;
 import com.feed_the_beast.ftbu.api.guide.ServerInfoEvent;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
@@ -24,7 +23,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -216,57 +214,7 @@ public class ServerInfoPage
 
         if(PermissionAPI.hasPermission(ep, FTBUPermissions.DISPLAY_PERMISSIONS))
         {
-            page1 = page.getSub("permissions").setTitle(FTBLibLang.ALL_PERMISSIONS.textComponent());
-
-            ITextComponent txt = new TextComponentString("");
-            ITextComponent txt1 = new TextComponentString("NONE");
-            txt1.getStyle().setColor(TextFormatting.DARK_RED);
-            txt.appendSibling(txt1);
-            txt.appendText(" | ");
-            txt1 = new TextComponentString("ALL");
-            txt1.getStyle().setColor(TextFormatting.DARK_GREEN);
-            txt.appendSibling(txt1);
-            txt.appendText(" | ");
-            txt1 = new TextComponentString("OP");
-            txt1.getStyle().setColor(TextFormatting.BLUE);
-            txt.appendSibling(txt1);
-            page1.println(txt);
-            page1.println(null);
-
-            for(NodeEntry node : Ranks.ALL_NODES)
-            {
-                txt = new TextComponentString(node.getName());
-
-                switch(node.getLevel())
-                {
-                    case ALL:
-                        txt.getStyle().setColor(TextFormatting.DARK_GREEN);
-                        break;
-                    case OP:
-                        txt.getStyle().setColor(TextFormatting.BLUE);
-                        break;
-                    default:
-                        txt.getStyle().setColor(TextFormatting.DARK_RED);
-                }
-
-                if(node.getDescription() != null && !node.getDescription().isEmpty())
-                {
-                    txt.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(node.getDescription())));
-                }
-
-                page1.println(txt);
-            }
-
-            /*
-            page = getSub("rank_configs").setTitle(new TextComponentString("Rank Configs")); //TODO: Lang
-
-            for(IRankConfig key : RankConfigAPI.getRegisteredRankConfigs().values())
-            {
-                page.println(key.getName() + ": " + RankConfigAPI.getRankConfig(ep, key).getSerializableElement());
-            }
-
-            Collections.sort(page.getText(), (o1, o2) -> o1.getUnformattedText().compareTo(o2.getUnformattedText()));
-            */
+            page.addSub(Ranks.INFO_PAGE);
         }
 
         page.cleanup();

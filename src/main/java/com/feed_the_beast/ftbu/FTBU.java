@@ -25,7 +25,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.server.command.CommandTreeBase;
-import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,11 +48,6 @@ public class FTBU
         MinecraftForge.EVENT_BUS.register(new FTBUWorldEventHandler());
         MinecraftForge.EVENT_BUS.register(new FTBUTeamEventHandler());
         MinecraftForge.EVENT_BUS.register(new FTBUServerEventHandler());
-
-        if(FTBUConfigRanks.ENABLED.getBoolean())
-        {
-            PermissionAPI.setPermissionHandler(FTBUtilitiesAPI_Impl.INSTANCE);
-        }
 
         PROXY.preInit();
     }
@@ -101,7 +95,7 @@ public class FTBU
                 }
             }
 
-            FTBUFinals.LOGGER.info("Overriden " + commands.size() + " commands");
+            FTBUFinals.LOGGER.info("Overridden " + manager.getCommands().size() + " commands");
         }
     }
 }

@@ -1,13 +1,22 @@
 package com.feed_the_beast.ftbu;
 
+import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
+import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.lib.EnumEnabled;
+import com.feed_the_beast.ftbl.lib.config.PropertyDouble;
+import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
+import com.feed_the_beast.ftbl.lib.config.PropertyIntList;
+import com.feed_the_beast.ftbl.lib.config.PropertyShort;
+import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbu.api.IFTBUtilitiesRegistry;
 import com.feed_the_beast.ftbu.api.NodeEntry;
+import com.feed_the_beast.ftbu.api_impl.ChunkloaderType;
+import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
 import net.minecraftforge.server.permission.context.ContextKeys;
@@ -39,7 +48,7 @@ public class FTBUPermissions
     public static final String CLAIMS_BLOCK_CNB = "ftbu.claims.block.cnb";
     private static final String CLAIMS_BLOCK_BREAK_PREFIX = "ftbu.claims.block.break.";
     private static final String CLAIMS_BLOCK_INTERACT_PREFIX = "ftbu.claims.block.interact.";
-    private static final String CLAIMS_DIMENSION_ALLOWED_PREFIX = "ftbu.claims.dimension_allowed.";
+    private static final String CLAIMS_BLOCKED_DIMENSIONS = "ftbu.claims.blocked_dimensions";
     public static final String INFINITE_BACK_USAGE = "ftbu.back.infinite";
 
     // Chunkloader //
@@ -74,12 +83,19 @@ public class FTBUPermissions
         levels.put(CLAIMS_BLOCK_INTERACT_PREFIX + "minecraft.anvil", DefaultPermissionLevel.ALL);
         levels.put(CLAIMS_BLOCK_INTERACT_PREFIX + "minecraft.wooden_door", DefaultPermissionLevel.ALL);
 
-        for(int i : DimensionManager.getStaticDimensionIDs())
-        {
-            levels.put(CLAIMS_DIMENSION_ALLOWED_PREFIX + i, DefaultPermissionLevel.ALL);
-        }
-
         levels.forEach((key, value) -> PermissionAPI.registerNode(key, value, ""));
+    }
+
+    public static void addConfigs(IFTBLibRegistry reg)
+    {
+        reg.addRankConfig(BADGE, new PropertyString(""), new PropertyString(""), "Prefix of player's nickname");
+        reg.addRankConfig(HOMES_MAX, new PropertyShort(1, 0, 30000), new PropertyShort(100), "Max home count");
+        reg.addRankConfig(CLAIMS_MAX_CHUNKS, new PropertyShort(100, 0, 30000), new PropertyShort(1000), "Max amount of chunks that player can claim", "0 - Disabled");
+        reg.addRankConfig(CLAIMS_FORCED_EXPLOSIONS, new PropertyEnum<>(EnumEnabled.NAME_MAP_WITH_NULL, null), new PropertyEnum<>(EnumEnabled.NAME_MAP_WITH_NULL, null), "-: Player setting", "disabled: Explosions will never happen in claimed chunks", "enabled: Explosions will always happen in claimed chunks");
+        reg.addRankConfig(CLAIMS_BLOCKED_DIMENSIONS, new PropertyIntList(), new PropertyIntList(), "Dimensions where chunk claiming is not allowed");
+        reg.addRankConfig(CHUNKLOADER_TYPE, new PropertyEnum<>(ChunkloaderType.NAME_MAP, ChunkloaderType.OFFLINE), new PropertyEnum<>(ChunkloaderType.NAME_MAP, ChunkloaderType.OFFLINE), "disabled: Players won't be able to chunkload", "offline: Chunks stay loaded when player loggs off", "online: Chunks only stay loaded while owner is online");
+        reg.addRankConfig(CHUNKLOADER_MAX_CHUNKS, new PropertyShort(50, 0, 30000), new PropertyShort(64), "Max amount of chunks that player can load", "0 - Disabled");
+        reg.addRankConfig(CHUNKLOADER_OFFLINE_TIMER, new PropertyDouble(-1D).setMin(-1D), new PropertyDouble(-1D), "Max hours player can be offline until he's chunks unload", "0 - Disabled, will unload instantly when he disconnects", "-1 - Chunk will always be loaded");
     }
 
     public static void addCustomPerms(IFTBUtilitiesRegistry reg)
@@ -87,7 +103,6 @@ public class FTBUPermissions
         reg.addCustomPermPrefix(new NodeEntry("command.", DefaultPermissionLevel.OP, "Permission for commands, if FTBU command overriding is enabled. If not, this node will be inactive"));
         reg.addCustomPermPrefix(new NodeEntry(CLAIMS_BLOCK_BREAK_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can break in claimed chunks"));
         reg.addCustomPermPrefix(new NodeEntry(CLAIMS_BLOCK_INTERACT_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can interact within claimed chunks"));
-        reg.addCustomPermPrefix(new NodeEntry(CLAIMS_DIMENSION_ALLOWED_PREFIX, DefaultPermissionLevel.ALL, "Permission for dimensions where claiming chunks is allowed"));
     }
 
     private static String formatBlock(@Nullable Block block)
@@ -107,6 +122,7 @@ public class FTBUPermissions
 
     public static boolean allowDimension(GameProfile profile, int dimension)
     {
-        return PermissionAPI.hasPermission(profile, CLAIMS_DIMENSION_ALLOWED_PREFIX + dimension, null);
+        IConfigValue value = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(profile, CLAIMS_BLOCKED_DIMENSIONS);
+        return !(value instanceof PropertyIntList && ((PropertyIntList) value).getIntList().contains(dimension));
     }
 }

@@ -20,13 +20,13 @@ import java.util.Map;
 
 public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 {
-    private static final String[] EVENT_RESULT_PREFIX = {"-", "~", ""};
+    private static final String[] EVENT_RESULT_PREFIX = {"-", "~", "+"};
 
     private IRank parent;
     private Event.Result allPermissions;
-    final Map<String, Event.Result> permissions;
+    private final Map<String, Event.Result> permissions;
     private final Map<String, Event.Result> cachedPermissions;
-    final Map<String, IConfigValue> config;
+    private final Map<String, IConfigValue> config;
     private final Map<String, IConfigValue> cachedConfig;
     private String displayName, prefix;
     private TextFormatting color;
@@ -49,6 +49,12 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
         return parent == null ? DefaultPlayerRank.INSTANCE : parent;
     }
 
+    @Override
+    public void setParent(IRank r)
+    {
+        parent = r;
+    }
+
     private Event.Result hasPermissionRaw(String permission)
     {
         if(permissions.containsKey(permission))
@@ -57,9 +63,11 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
         }
         else
         {
+            String[] splitPermission = permission.split("\\.");
+
             for(Map.Entry<String, Event.Result> entry : permissions.entrySet())
             {
-                if(LMStringUtils.matchesNode(entry.getKey(), permission))
+                if(LMStringUtils.matchesNode(splitPermission, entry.getKey().split("\\.")))
                 {
                     return entry.getValue();
                 }
@@ -117,17 +125,14 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
         o.add("color", new JsonPrimitive(color == null ? "" : color.getFriendlyName()));
         o.add("prefix", new JsonPrimitive(prefix));
 
-        if(!permissions.isEmpty())
+        JsonArray a1 = new JsonArray();
+
+        for(Map.Entry<String, Event.Result> e : permissions.entrySet())
         {
-            JsonArray a1 = new JsonArray();
-
-            for(Map.Entry<String, Event.Result> e : permissions.entrySet())
-            {
-                a1.add(new JsonPrimitive(EVENT_RESULT_PREFIX[e.getValue().ordinal()] + e.getKey()));
-            }
-
-            o.add("permissions", a1);
+            a1.add(new JsonPrimitive(EVENT_RESULT_PREFIX[e.getValue().ordinal()] + e.getKey()));
         }
+
+        o.add("permissions", a1);
 
         JsonObject o1 = new JsonObject();
         config.forEach((key, value) -> o1.add(key, value.getSerializableElement()));
@@ -158,7 +163,7 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 
         if(o.has("parent"))
         {
-            parent = Ranks.getRank(o.get("parent").getAsString());
+            parent = Ranks.getRank(o.get("parent").getAsString(), null);
         }
 
         if(o.has("display_name"))

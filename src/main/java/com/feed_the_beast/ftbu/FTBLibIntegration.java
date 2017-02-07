@@ -6,13 +6,8 @@ import com.feed_the_beast.ftbl.api.FTBLibPlugin;
 import com.feed_the_beast.ftbl.api.IFTBLibClientRegistry;
 import com.feed_the_beast.ftbl.api.IFTBLibPlugin;
 import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
-import com.feed_the_beast.ftbl.lib.EnumEnabled;
-import com.feed_the_beast.ftbl.lib.config.PropertyDouble;
-import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
-import com.feed_the_beast.ftbl.lib.config.PropertyShort;
-import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
-import com.feed_the_beast.ftbu.api_impl.ChunkloaderType;
+import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
 import com.feed_the_beast.ftbu.client.FTBUActions;
 import com.feed_the_beast.ftbu.client.FTBUClientConfig;
@@ -34,6 +29,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.server.command.CommandTreeBase;
+import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.io.File;
 import java.util.Collections;
@@ -96,28 +92,22 @@ public enum FTBLibIntegration implements IFTBLibPlugin
         FTBUConfigWorld.init(reg);
         FTBUConfigRanks.init(reg);
 
-        reg.addNotification(FTBUNotifications.NO_TEAM);
-        reg.addNotification(FTBUNotifications.CANT_MODIFY_CHUNK);
-        reg.addNotification(FTBUNotifications.CLAIMING_NOT_ENABLED);
-        reg.addNotification(FTBUNotifications.CLAIMING_NOT_ALLOWED);
-        reg.addNotification(FTBUNotifications.UNCLAIMED_ALL);
-        reg.addNotification(FTBUNotifications.CHUNK_CLAIMED);
-        reg.addNotification(FTBUNotifications.CHUNK_UNCLAIMED);
-        reg.addNotification(FTBUNotifications.CHUNK_LOADED);
-        reg.addNotification(FTBUNotifications.CHUNK_UNLOADED);
-        reg.addNotification(FTBUNotifications.WILDERNESS);
+        FTBUNotifications.init(reg);
 
         reg.addUniverseDataProvider(FTBU_DATA, owner -> new FTBUUniverseData());
         reg.addPlayerDataProvider(FTBU_DATA, owner -> new FTBUPlayerData());
         reg.addTeamDataProvider(FTBU_DATA, owner -> new FTBUTeamData());
 
-        reg.addRankConfig(FTBUPermissions.BADGE, new PropertyString(""), new PropertyString(""), "Prefix of player's nickname");
-        reg.addRankConfig(FTBUPermissions.HOMES_MAX, new PropertyShort(1, 0, 30000), new PropertyShort(100), "Max home count");
-        reg.addRankConfig(FTBUPermissions.CLAIMS_MAX_CHUNKS, new PropertyShort(100, 0, 30000), new PropertyShort(1000), "Max amount of chunks that player can claim", "0 - Disabled");
-        reg.addRankConfig(FTBUPermissions.CLAIMS_FORCED_EXPLOSIONS, new PropertyEnum<>(EnumEnabled.NAME_MAP_WITH_NULL, null), new PropertyEnum<>(EnumEnabled.NAME_MAP_WITH_NULL, null), "-: Player setting", "disabled: Explosions will never happen in claimed chunks", "enabled: Explosions will always happen in claimed chunks");
-        reg.addRankConfig(FTBUPermissions.CHUNKLOADER_TYPE, new PropertyEnum<>(ChunkloaderType.NAME_MAP, ChunkloaderType.OFFLINE), new PropertyEnum<>(ChunkloaderType.NAME_MAP, ChunkloaderType.OFFLINE), "disabled: Players won't be able to chunkload", "offline: Chunks stay loaded when player loggs off", "online: Chunks only stay loaded while owner is online");
-        reg.addRankConfig(FTBUPermissions.CHUNKLOADER_MAX_CHUNKS, new PropertyShort(50, 0, 30000), new PropertyShort(64), "Max amount of chunks that player can load", "0 - Disabled");
-        reg.addRankConfig(FTBUPermissions.CHUNKLOADER_OFFLINE_TIMER, new PropertyDouble(-1D).setMin(-1D), new PropertyDouble(-1D), "Max hours player can be offline until he's chunks unload", "0 - Disabled, will unload instantly when he disconnects", "-1 - Chunk will always be loaded");
+        FTBUPermissions.addConfigs(reg);
+    }
+
+    @Override
+    public void configLoaded(boolean startup)
+    {
+        if(startup && FTBUConfigRanks.ENABLED.getBoolean())
+        {
+            PermissionAPI.setPermissionHandler(FTBUtilitiesAPI_Impl.INSTANCE);
+        }
     }
 
     @Override

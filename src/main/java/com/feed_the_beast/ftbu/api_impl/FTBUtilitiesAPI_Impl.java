@@ -2,13 +2,11 @@ package com.feed_the_beast.ftbu.api_impl;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.AsmHelper;
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesPlugin;
 import com.feed_the_beast.ftbu.api.IFTBUtilitiesPlugin;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunkStorage;
-import com.feed_the_beast.ftbu.config.FTBUConfigRanks;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.mojang.authlib.GameProfile;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
@@ -54,8 +52,7 @@ public enum FTBUtilitiesAPI_Impl implements FTBUtilitiesAPI, IPermissionHandler
     @Override
     public IRank getRank(GameProfile profile)
     {
-        IRank r = FTBUConfigRanks.ENABLED.getBoolean() ? Ranks.PLAYER_MAP.get(profile.getId()) : null;
-        return (r == null) ? (LMServerUtils.isOP(profile) ? Ranks.defaultOPRank : Ranks.defaultPlayerRank) : r;
+        return Ranks.getRank(profile);
     }
 
     @Override

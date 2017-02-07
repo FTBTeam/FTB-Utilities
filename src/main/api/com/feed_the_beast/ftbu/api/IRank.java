@@ -13,6 +13,8 @@ public interface IRank extends IStringSerializable, IJsonSerializable
 {
     IRank getParent();
 
+    void setParent(IRank r);
+
     Event.Result hasPermission(String permission);
 
     IConfigValue getConfig(String id);

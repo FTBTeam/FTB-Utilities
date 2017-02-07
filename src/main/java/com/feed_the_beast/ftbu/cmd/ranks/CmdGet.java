@@ -35,6 +35,7 @@ public class CmdGet extends CommandLM
         IRank r = FTBUtilitiesAPI_Impl.INSTANCE.getRank(p.getProfile());
         ITextComponent c = new TextComponentString(r.getDisplayName());
         c.getStyle().setColor(r.getColor());
+        c.appendText(" [" + r.getName() + "]");
         ics.addChatMessage(c);
     }
 }

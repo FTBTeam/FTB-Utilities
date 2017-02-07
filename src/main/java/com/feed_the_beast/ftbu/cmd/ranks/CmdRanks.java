@@ -13,7 +13,8 @@ public class CmdRanks extends CommandTreeBase
         addSubcommand(new CmdAdd());
         addSubcommand(new CmdGet());
         addSubcommand(new CmdSet());
-        addSubcommand(new CmdEdit());
+        //addSubcommand(new CmdEdit());
+        addSubcommand(new CmdCheckPerm());
     }
 
     @Override

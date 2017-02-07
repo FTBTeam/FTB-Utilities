@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbu.gui.GuiWarps;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.command.ICommand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -59,18 +60,24 @@ public class MessageSendWarpList extends MessageToClient<MessageSendWarpList>
     {
     }
 
+    private static String command(EntityPlayerMP player, String name, String backup)
+    {
+        ICommand command = player.mcServer.getCommandManager().getCommands().get(name);
+        return "/" + ((command != null && command.checkPermission(player.mcServer, player)) ? name : backup);
+    }
+
     MessageSendWarpList(EntityPlayerMP player)
     {
         warps = new ArrayList<>();
 
-        warps.add(new WarpItem("Spawn", player.mcServer.getCommandManager().getCommands().containsKey("spawn") ? "/spawn" : "/ftb spawn", WarpItem.TYPE_SPECIAL_OUT));
-        warps.add(new WarpItem("Back", player.mcServer.getCommandManager().getCommands().containsKey("back") ? "/back" : "/ftb back", WarpItem.TYPE_SPECIAL_IN));
+        warps.add(new WarpItem("Spawn", command(player, "spawn", "ftb spawn"), WarpItem.TYPE_SPECIAL_OUT));
+        warps.add(new WarpItem("Back", command(player, "back", "ftb back"), WarpItem.TYPE_SPECIAL_IN));
 
         FTBUUniverseData universeData = FTBUUniverseData.get();
 
         if(universeData != null)
         {
-            String cmd = player.mcServer.getCommandManager().getCommands().containsKey("warp") ? "/warp " : "/ftb warp ";
+            String cmd = command(player, "warp", "ftb warp") + " ";
 
             for(String s : universeData.listWarps())
             {
@@ -82,7 +89,7 @@ public class MessageSendWarpList extends MessageToClient<MessageSendWarpList>
 
         if(playerData != null)
         {
-            String cmd = player.mcServer.getCommandManager().getCommands().containsKey("home") ? "/home " : "/ftb home ";
+            String cmd = command(player, "home", "ftb home") + " ";
 
             for(String s : playerData.listHomes())
             {

@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu;
 
+import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.INotification;
@@ -35,6 +36,20 @@ public class FTBUNotifications
         ITextComponent msg = FTBULang.CHUNKTYPE_WILDERNESS.textComponent().createCopy();
         msg.getStyle().setBold(true);
         WILDERNESS.addText(msg);
+    }
+
+    public static void init(IFTBLibRegistry reg)
+    {
+        reg.addNotification(NO_TEAM);
+        reg.addNotification(CANT_MODIFY_CHUNK);
+        reg.addNotification(CLAIMING_NOT_ENABLED);
+        reg.addNotification(CLAIMING_NOT_ALLOWED);
+        reg.addNotification(UNCLAIMED_ALL);
+        reg.addNotification(CHUNK_CLAIMED);
+        reg.addNotification(CHUNK_UNCLAIMED);
+        reg.addNotification(CHUNK_LOADED);
+        reg.addNotification(CHUNK_UNLOADED);
+        reg.addNotification(WILDERNESS);
     }
 
     private static Notification create(String s, int v)

@@ -1,13 +1,12 @@
 package com.feed_the_beast.ftbu.ranks;
 
-import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbu.FTBUFinals;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -24,6 +23,11 @@ public class CmdOverride implements ICommand
     {
         parent = c;
         permissionNode = pn;
+
+        if(LMUtils.DEV_ENV)
+        {
+            FTBUFinals.LOGGER.info("Added command override " + permissionNode);
+        }
     }
 
     @Override
@@ -53,13 +57,7 @@ public class CmdOverride implements ICommand
     @Override
     public boolean checkPermission(MinecraftServer server, ICommandSender sender)
     {
-        if(sender instanceof EntityPlayerMP)
-        {
-            Event.Result result = FTBUtilitiesAPI_Impl.INSTANCE.getRank(((EntityPlayerMP) sender).getGameProfile()).hasPermission(permissionNode);
-            return result == Event.Result.DEFAULT ? parent.checkPermission(server, sender) : (result == Event.Result.ALLOW);
-        }
-
-        return parent.checkPermission(server, sender);
+        return Ranks.checkCommandPermission(server, sender, parent, permissionNode);
     }
 
     @Override

@@ -1,14 +1,12 @@
 package com.feed_the_beast.ftbu.ranks;
 
 import com.feed_the_beast.ftbl.api.IRankConfig;
-import com.feed_the_beast.ftbl.api.config.IConfigContainer;
-import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.lib.config.ConfigTree;
-import com.feed_the_beast.ftbl.lib.config.PropertyString;
-import com.feed_the_beast.ftbl.lib.config.SimpleConfigKey;
+import com.feed_the_beast.ftbl.lib.info.InfoPage;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.LMFileUtils;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
+import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
@@ -21,10 +19,16 @@ import com.feed_the_beast.ftbu.config.FTBUConfigRanks;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.mojang.authlib.GameProfile;
+import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.HoverEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 
@@ -34,7 +38,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -44,37 +47,12 @@ import java.util.UUID;
 public class Ranks
 {
     private static final Map<String, Rank> RANKS = new LinkedHashMap<>();
-    public static final Map<UUID, IRank> PLAYER_MAP = new HashMap<>();
-    public static final List<NodeEntry> ALL_NODES = new ArrayList<>();
-    public static IRank defaultPlayerRank = DefaultPlayerRank.INSTANCE, defaultOPRank = DefaultOPRank.INSTANCE;
-    private static IConfigTree ranksConfigTree;
-
-    public static final IConfigContainer RANKS_CONFIG_CONTAINER = new IConfigContainer()
-    {
-        private final ITextComponent TITLE = new TextComponentString("Ranks");
-
-        @Override
-        public IConfigTree getConfigTree()
-        {
-            return ranksConfigTree;
-        }
-
-        @Override
-        public ITextComponent getTitle()
-        {
-            return TITLE;
-        }
-
-        @Override
-        public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
-        {
-            ranksConfigTree.fromJson(json);
-            saveRanks();
-        }
-    };
+    private static final Map<UUID, IRank> PLAYER_MAP = new HashMap<>();
+    public static final InfoPage INFO_PAGE = new InfoPage("ranks_info").setTitle(FTBLibLang.ALL_PERMISSIONS.textComponent());
+    private static IRank defaultPlayerRank, defaultOPRank;
 
     @Nullable
-    public static Rank getRank(String id)
+    public static IRank getRank(String id, @Nullable IRank nullrank)
     {
         if(id.equals(DefaultPlayerRank.INSTANCE.getName()))
         {
@@ -84,7 +62,21 @@ public class Ranks
         {
             return DefaultOPRank.INSTANCE;
         }
-        return RANKS.get(id);
+
+        IRank r = RANKS.get(id);
+        return r == null ? nullrank : r;
+    }
+
+    public static IRank getRank(GameProfile profile)
+    {
+        IRank r = FTBUConfigRanks.ENABLED.getBoolean() ? PLAYER_MAP.get(profile.getId()) : null;
+        return (r == null) ? (LMServerUtils.isOP(profile) ? defaultOPRank : defaultPlayerRank) : r;
+    }
+
+    public static void setRank(UUID id, IRank r)
+    {
+        PLAYER_MAP.put(id, r);
+        saveRanks();
     }
 
     public static Collection<String> getRankNames()
@@ -100,8 +92,15 @@ public class Ranks
         RANKS.put(DefaultPlayerRank.INSTANCE.getName(), DefaultPlayerRank.INSTANCE);
         RANKS.put(DefaultOPRank.INSTANCE.getName(), DefaultOPRank.INSTANCE);
         PLAYER_MAP.clear();
-        defaultPlayerRank = null;
-        defaultOPRank = null;
+
+        Rank r = new Rank("player");
+        r.setParent(DefaultPlayerRank.INSTANCE);
+        RANKS.put(r.getName(), r);
+        defaultPlayerRank = r;
+        r = new Rank("op");
+        r.setParent(DefaultOPRank.INSTANCE);
+        RANKS.put(r.getName(), r);
+        defaultOPRank = r;
 
         if(FTBUConfigRanks.ENABLED.getBoolean())
         {
@@ -111,7 +110,13 @@ public class Ranks
             {
                 JsonObject o = e.getAsJsonObject();
 
-                if(o.has("default_ranks") && o.has("ranks"))
+                if(o.has("default_rank"))
+                {
+                    LMFileUtils.delete(new File(LMUtils.folderLocal, "ftbu/readme.txt"));
+                    LMFileUtils.delete(new File(LMUtils.folderLocal, "ftbu/ranks_example.json"));
+                    LMFileUtils.delete(new File(LMUtils.folderLocal, "ftbu/default_rank_config.json"));
+                }
+                else if(o.has("default_ranks") && o.has("ranks"))
                 {
                     for(Map.Entry<String, JsonElement> entry : o.get("ranks").getAsJsonObject().entrySet())
                     {
@@ -124,8 +129,8 @@ public class Ranks
                     }
 
                     JsonObject dr = o.get("default_ranks").getAsJsonObject();
-                    defaultPlayerRank = RANKS.get(dr.get("player").getAsString());
-                    defaultOPRank = RANKS.get(dr.get("op").getAsString());
+                    defaultPlayerRank = getRank(dr.get("player").getAsString(), DefaultPlayerRank.INSTANCE);
+                    defaultOPRank = getRank(dr.get("op").getAsString(), DefaultOPRank.INSTANCE);
                 }
             }
 
@@ -153,29 +158,13 @@ public class Ranks
             catch(Exception ex)
             {
                 ex.printStackTrace();
-                defaultPlayerRank = null;
-                defaultOPRank = null;
             }
         }
-
-        if(defaultPlayerRank == null)
-        {
-            defaultPlayerRank = DefaultPlayerRank.INSTANCE;
-        }
-
-        if(defaultOPRank == null)
-        {
-            defaultOPRank = DefaultOPRank.INSTANCE;
-        }
-
-        ranksConfigTree = new ConfigTree();
-        ranksConfigTree.add(new SimpleConfigKey("default_rank.player"), new PropertyString("player"));
-        ranksConfigTree.add(new SimpleConfigKey("default_rank.op"), new PropertyString("op"));
 
         saveRanks();
     }
 
-    public static void saveRanks()
+    private static void saveRanks()
     {
         JsonObject o = new JsonObject();
         JsonObject o1 = new JsonObject();
@@ -203,17 +192,24 @@ public class Ranks
         LMJsonUtils.toJson(new File(LMUtils.folderLocal, "ftbu/player_ranks.json"), o2);
     }
 
+    static boolean checkCommandPermission(MinecraftServer server, ICommandSender sender, ICommand parent, String permission)
+    {
+        if(sender instanceof EntityPlayerMP)
+        {
+            Event.Result result = FTBUtilitiesAPI_Impl.INSTANCE.getRank(((EntityPlayerMP) sender).getGameProfile()).hasPermission(permission);
+            return result == Event.Result.DEFAULT ? parent.checkPermission(server, sender) : (result == Event.Result.ALLOW);
+        }
+
+        return parent.checkPermission(server, sender);
+    }
+
     public static void generateExampleFiles()
     {
-        LMFileUtils.delete(new File(LMUtils.folderLocal, "ftbu/readme.txt"));
-        LMFileUtils.delete(new File(LMUtils.folderLocal, "ftbu/ranks_example.json"));
-        LMFileUtils.delete(new File(LMUtils.folderLocal, "ftbu/default_rank_config.json"));
-
-        ALL_NODES.clear();
+        List<NodeEntry> allNodes = new ArrayList<>();
 
         for(NodeEntry node : FTBUCommon.CUSTOM_PERM_PREFIX_REGISTRY)
         {
-            ALL_NODES.add(new NodeEntry(node.getName() + "*", node.getLevel(), node.getDescription()));
+            allNodes.add(new NodeEntry(node.getName() + "*", node.getLevel(), node.getDescription()));
         }
 
         for(String s : FTBUtilitiesAPI_Impl.INSTANCE.getRegisteredNodes())
@@ -238,14 +234,11 @@ public class Ranks
 
             if(printNode)
             {
-                ALL_NODES.add(new NodeEntry(s, level, desc));
+                allNodes.add(new NodeEntry(s, level, desc));
             }
         }
 
-        Collections.sort(ALL_NODES, LMStringUtils.ID_COMPARATOR);
-
-        Map<DefaultPermissionLevel, String> colorMap = new EnumMap<>(DefaultPermissionLevel.class);
-
+        Collections.sort(allNodes, LMStringUtils.ID_COMPARATOR);
         List<String> list = new ArrayList<>();
 
         try
@@ -259,7 +252,7 @@ public class Ranks
             list.add("</style></head><body><h1>Permissions</h1><table>");
             list.add("<tr><th>Permission Node</th><th></th><th>Info</th></tr>");
 
-            for(NodeEntry entry : ALL_NODES)
+            for(NodeEntry entry : allNodes)
             {
                 list.add("<tr><td>" + entry.getName() + "</td><td class='" + entry.getLevel().name().toLowerCase() + "'>" + entry.getLevel() + "</td><td>");
 
@@ -370,5 +363,56 @@ public class Ranks
         {
             ex.printStackTrace();
         }
+
+        INFO_PAGE.clear();
+        ITextComponent txt = new TextComponentString("");
+        ITextComponent txt1 = new TextComponentString("NONE");
+        txt1.getStyle().setColor(TextFormatting.DARK_RED);
+        txt.appendSibling(txt1);
+        txt.appendText(" | ");
+        txt1 = new TextComponentString("ALL");
+        txt1.getStyle().setColor(TextFormatting.DARK_GREEN);
+        txt.appendSibling(txt1);
+        txt.appendText(" | ");
+        txt1 = new TextComponentString("OP");
+        txt1.getStyle().setColor(TextFormatting.BLUE);
+        txt.appendSibling(txt1);
+        INFO_PAGE.println(txt);
+        INFO_PAGE.println(null);
+
+        for(NodeEntry node : allNodes)
+        {
+            txt = new TextComponentString(node.getName());
+
+            switch(node.getLevel())
+            {
+                case ALL:
+                    txt.getStyle().setColor(TextFormatting.DARK_GREEN);
+                    break;
+                case OP:
+                    txt.getStyle().setColor(TextFormatting.BLUE);
+                    break;
+                default:
+                    txt.getStyle().setColor(TextFormatting.DARK_RED);
+            }
+
+            if(node.getDescription() != null && !node.getDescription().isEmpty())
+            {
+                txt.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(node.getDescription())));
+            }
+
+            INFO_PAGE.println(txt);
+        }
+
+        /*
+        page = getSub("rank_configs").setTitle(new TextComponentString("Rank Configs")); //TODO: Lang
+
+        for(IRankConfig key : RankConfigAPI.getRegisteredRankConfigs().values())
+        {
+            page.println(key.getName() + ": " + RankConfigAPI.getRankConfig(ep, key).getSerializableElement());
+        }
+
+        Collections.sort(page.getText(), (o1, o2) -> o1.getUnformattedText().compareTo(o2.getUnformattedText()));
+        */
     }
 }

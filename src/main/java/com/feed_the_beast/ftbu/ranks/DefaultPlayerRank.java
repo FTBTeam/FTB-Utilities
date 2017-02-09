@@ -7,7 +7,6 @@ import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
@@ -42,21 +41,15 @@ public class DefaultPlayerRank extends Rank
     }
 
     @Override
-    public String getDisplayName()
-    {
-        return "Player";
-    }
-
-    @Override
-    public TextFormatting getColor()
-    {
-        return TextFormatting.WHITE;
-    }
-
-    @Override
     public String getPrefix()
     {
-        return "";
+        return "<";
+    }
+
+    @Override
+    public String getSuffix()
+    {
+        return "> ";
     }
 
     @Override

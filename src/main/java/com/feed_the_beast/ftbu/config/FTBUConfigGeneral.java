@@ -28,7 +28,6 @@ public class FTBUConfigGeneral
 
     public static final PropertyString CHAT_SUBSTITUTE_PREFIX = new PropertyString("!");
     public static final PropertyChatSubstituteList CHAT_SUBSTITUTES = new PropertyChatSubstituteList(DEF_CHAT_SUB_MAP);
-    public static final PropertyBool ENABLE_LINKS = new PropertyBool(true);
 
     public static void init(IFTBLibRegistry reg)
     {
@@ -39,6 +38,5 @@ public class FTBUConfigGeneral
         reg.addConfig(FTBUFinals.MOD_ID, "general.server_info.admin_quick_access", SERVER_INFO_ADMIN_QUICK_ACCESS);
         reg.addConfig(FTBUFinals.MOD_ID, "general.chat.substitute_prefix", CHAT_SUBSTITUTE_PREFIX);
         reg.addConfig(FTBUFinals.MOD_ID, "general.chat.substitutes", CHAT_SUBSTITUTES);
-        reg.addConfig(FTBUFinals.MOD_ID, "general.chat.enable_links", ENABLE_LINKS);
     }
 }

@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbu.api;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
@@ -19,18 +18,13 @@ public interface IRank extends IStringSerializable, IJsonSerializable
 
     IConfigValue getConfig(String id);
 
-    default String getDisplayName()
-    {
-        return getName();
-    }
-
-    default TextFormatting getColor()
-    {
-        return TextFormatting.WHITE;
-    }
-
     default String getPrefix()
     {
-        return getDisplayName();
+        return "<";
+    }
+
+    default String getSuffix()
+    {
+        return "> ";
     }
 }

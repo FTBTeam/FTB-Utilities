@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu.cmd.ranks;
 
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbu.api.IRank;
@@ -65,6 +66,8 @@ public class CmdSet extends CommandLM
             throw FTBLibLang.RAW.commandError("Rank '" + args[1] + "' not found!"); //TODO: Lang
         }
 
-        Ranks.setRank(getForgePlayer(args[0]).getProfile().getId(), r);
+        IForgePlayer p = getForgePlayer(args[0]);
+        Ranks.setRank(p.getProfile().getId(), r);
+        FTBLibLang.RAW.printChat(sender, p.getProfile().getName() + " now is " + r.getName()); //TODO: Lang
     }
 }

@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.IRankConfig;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.google.gson.JsonArray;
@@ -11,7 +12,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.util.IJsonSerializable;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 import java.util.HashMap;
@@ -28,8 +28,7 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
     private final Map<String, Event.Result> cachedPermissions;
     private final Map<String, IConfigValue> config;
     private final Map<String, IConfigValue> cachedConfig;
-    private String displayName, prefix;
-    private TextFormatting color;
+    private String prefix, suffix;
 
     public Rank(String id)
     {
@@ -38,9 +37,8 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
         cachedPermissions = new HashMap<>();
         config = new LinkedHashMap<>();
         cachedConfig = new HashMap<>();
-        displayName = "";
-        color = null;
-        prefix = "";
+        prefix = null;
+        suffix = null;
     }
 
     @Override
@@ -121,9 +119,16 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
         JsonObject o = new JsonObject();
 
         o.add("parent", new JsonPrimitive(getParent().getName()));
-        o.add("display_name", new JsonPrimitive(displayName));
-        o.add("color", new JsonPrimitive(color == null ? "" : color.getFriendlyName()));
-        o.add("prefix", new JsonPrimitive(prefix));
+
+        if(prefix != null)
+        {
+            o.add("prefix", new JsonPrimitive(prefix.replace(LMUtils.FORMATTING_CHAR, '&')));
+        }
+
+        if(suffix != null)
+        {
+            o.add("suffix", new JsonPrimitive(suffix.replace(LMUtils.FORMATTING_CHAR, '&')));
+        }
 
         JsonArray a1 = new JsonArray();
 
@@ -150,9 +155,8 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
         config.clear();
         cachedPermissions.clear();
         cachedConfig.clear();
-        displayName = "";
-        color = null;
-        prefix = "";
+        prefix = null;
+        suffix = null;
 
         if(!e.isJsonObject())
         {
@@ -166,19 +170,14 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
             parent = Ranks.getRank(o.get("parent").getAsString(), null);
         }
 
-        if(o.has("display_name"))
-        {
-            displayName = o.get("display_name").getAsString();
-        }
-
-        if(o.has("color"))
-        {
-            color = TextFormatting.getValueByName(o.get("color").getAsString());
-        }
-
         if(o.has("prefix"))
         {
-            prefix = o.get("prefix").getAsString();
+            prefix = o.get("prefix").getAsString().replace('&', LMUtils.FORMATTING_CHAR);
+        }
+
+        if(o.has("suffix"))
+        {
+            suffix = o.get("suffix").getAsString().replace('&', LMUtils.FORMATTING_CHAR);
         }
 
         if(o.has("permissions"))
@@ -213,20 +212,14 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
     }
 
     @Override
-    public String getDisplayName()
-    {
-        return displayName.isEmpty() ? getParent().getDisplayName() : displayName;
-    }
-
-    @Override
-    public TextFormatting getColor()
-    {
-        return color == null ? getParent().getColor() : color;
-    }
-
-    @Override
     public String getPrefix()
     {
-        return prefix.isEmpty() ? getParent().getPrefix() : prefix;
+        return prefix == null ? getParent().getPrefix() : prefix;
+    }
+
+    @Override
+    public String getSuffix()
+    {
+        return suffix == null ? getParent().getSuffix() : suffix;
     }
 }

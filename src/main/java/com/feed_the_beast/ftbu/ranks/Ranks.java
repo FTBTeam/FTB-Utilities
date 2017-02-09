@@ -47,6 +47,7 @@ import java.util.UUID;
 public class Ranks
 {
     private static final Map<String, Rank> RANKS = new LinkedHashMap<>();
+    private static final Collection<String> RANK_NAMES = new ArrayList<>();
     private static final Map<UUID, IRank> PLAYER_MAP = new HashMap<>();
     public static final InfoPage INFO_PAGE = new InfoPage("ranks_info").setTitle(FTBLibLang.ALL_PERMISSIONS.textComponent());
     private static IRank defaultPlayerRank, defaultOPRank;
@@ -81,7 +82,7 @@ public class Ranks
 
     public static Collection<String> getRankNames()
     {
-        return RANKS.keySet();
+        return RANK_NAMES;
     }
 
     public static void reload()
@@ -92,15 +93,9 @@ public class Ranks
         RANKS.put(DefaultPlayerRank.INSTANCE.getName(), DefaultPlayerRank.INSTANCE);
         RANKS.put(DefaultOPRank.INSTANCE.getName(), DefaultOPRank.INSTANCE);
         PLAYER_MAP.clear();
-
-        Rank r = new Rank("player");
-        r.setParent(DefaultPlayerRank.INSTANCE);
-        RANKS.put(r.getName(), r);
-        defaultPlayerRank = r;
-        r = new Rank("op");
-        r.setParent(DefaultOPRank.INSTANCE);
-        RANKS.put(r.getName(), r);
-        defaultOPRank = r;
+        defaultPlayerRank = null;
+        defaultOPRank = null;
+        RANK_NAMES.clear();
 
         if(FTBUConfigRanks.ENABLED.getBoolean())
         {
@@ -160,6 +155,26 @@ public class Ranks
                 ex.printStackTrace();
             }
         }
+
+        if(defaultPlayerRank == null)
+        {
+            Rank r = new Rank("player");
+            r.setParent(DefaultPlayerRank.INSTANCE);
+            RANKS.put(r.getName(), r);
+            defaultPlayerRank = r;
+        }
+
+        if(defaultOPRank == null)
+        {
+            Rank r = new Rank("op");
+            r.setParent(DefaultOPRank.INSTANCE);
+            RANKS.put(r.getName(), r);
+            defaultOPRank = r;
+        }
+
+        RANK_NAMES.addAll(RANKS.keySet());
+        RANK_NAMES.remove(DefaultPlayerRank.INSTANCE.getName());
+        RANK_NAMES.remove(DefaultOPRank.INSTANCE.getName());
 
         saveRanks();
     }

@@ -9,6 +9,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.event.ClickEvent;
 
 /**
  * Created by LatvianModder on 21.02.2016.
@@ -32,10 +33,10 @@ public class CmdGet extends CommandLM
     {
         checkArgs(args, 1, "<player>");
         IForgePlayer p = getForgePlayer(args[0]);
-        IRank r = FTBUtilitiesAPI_Impl.INSTANCE.getRank(p.getProfile());
-        ITextComponent c = new TextComponentString(r.getDisplayName());
-        c.getStyle().setColor(r.getColor());
-        c.appendText(" [" + r.getName() + "]");
-        ics.addChatMessage(c);
+        IRank rank = FTBUtilitiesAPI_Impl.INSTANCE.getRank(p.getProfile());
+        ITextComponent name = new TextComponentString(rank.getName() + " - " + rank.getPrefix() + p.getProfile().getName() + rank.getSuffix());
+        name.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/msg " + p.getProfile().getName() + " "));
+        name.getStyle().setInsertion(p.getProfile().getName());
+        ics.addChatMessage(name);
     }
 }

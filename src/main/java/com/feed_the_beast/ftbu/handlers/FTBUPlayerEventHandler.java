@@ -11,7 +11,6 @@ import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.math.EntityDimPos;
 import com.feed_the_beast.ftbl.lib.util.LMInvUtils;
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
@@ -72,9 +71,14 @@ public class FTBUPlayerEventHandler
         new MessageSendFTBUClientFlags(map).sendTo(null);
         map.clear();
 
-        for(EntityPlayerMP ep1 : LMServerUtils.getServer().getPlayerList().getPlayerList())
+        for(IForgePlayer player : FTBLibIntegration.API.getUniverse().getOnlinePlayers())
         {
-            map.put(ep1.getGameProfile().getId(), FTBUPlayerData.get(FTBLibIntegration.API.getUniverse().getPlayer(ep1)).getClientFlags());
+            FTBUPlayerData data = FTBUPlayerData.get(player);
+
+            if(data != null)
+            {
+                map.put(player.getProfile().getId(), data.getClientFlags());
+            }
         }
 
         new MessageSendFTBUClientFlags(map).sendTo(ep);

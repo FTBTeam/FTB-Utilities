@@ -12,19 +12,14 @@ public interface IRank extends IStringSerializable, IJsonSerializable
 {
     IRank getParent();
 
-    void setParent(IRank r);
-
     Event.Result hasPermission(String permission);
 
     IConfigValue getConfig(String id);
 
-    default String getPrefix()
-    {
-        return "<";
-    }
+    String getSyntax();
 
-    default String getSuffix()
+    default String getFormattedName(String name)
     {
-        return "> ";
+        return getSyntax().replace("$name", name);
     }
 }

@@ -21,24 +21,14 @@ public class FTBUServerEventHandler
     public void onServerChatEvent(ServerChatEvent event)
     {
         String msg = event.getMessage().trim();
+        String chatSubstitutePrefix = FTBUConfigGeneral.CHAT_SUBSTITUTE_PREFIX.getString();
 
-        if(msg.startsWith(FTBUConfigGeneral.CHAT_SUBSTITUTE_PREFIX.getString()))
-        {
-            ITextComponent replacement = FTBUConfigGeneral.CHAT_SUBSTITUTES.value.get(msg.substring(FTBUConfigGeneral.CHAT_SUBSTITUTE_PREFIX.getString().length()));
-
-            if(replacement != null)
-            {
-                event.setComponent(new TextComponentString(event.getUsername() + ": ").appendSibling(replacement.createCopy()));
-                return;
-            }
-        }
-
-        if(FTBUConfigRanks.OVERRIDE_CHAT.getBoolean())
+        if(FTBUConfigRanks.OVERRIDE_CHAT.getBoolean() || msg.startsWith(chatSubstitutePrefix))
         {
             IRank rank = FTBUtilitiesAPI_Impl.INSTANCE.getRank(event.getPlayer().getGameProfile());
 
             ITextComponent main = new TextComponentString("");
-            ITextComponent name = new TextComponentString(rank.getPrefix() + event.getPlayer().getDisplayNameString() + rank.getSuffix());
+            ITextComponent name = new TextComponentString(rank.getFormattedName(event.getPlayer().getDisplayNameString()));
 
             name.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/msg " + event.getPlayer().getName() + " "));
 
@@ -57,6 +47,19 @@ public class FTBUServerEventHandler
             name.getStyle().setInsertion(event.getPlayer().getName());
 
             main.appendSibling(name);
+
+            if(msg.startsWith(chatSubstitutePrefix))
+            {
+                ITextComponent replacement = FTBUConfigGeneral.CHAT_SUBSTITUTES.value.get(msg.substring(chatSubstitutePrefix.length()));
+
+                if(replacement != null)
+                {
+                    main.appendSibling(replacement);
+                    event.setComponent(main);
+                    return;
+                }
+            }
+
             main.appendSibling(ForgeHooks.newChatWithLinks(msg));
             event.setComponent(main);
         }

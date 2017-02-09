@@ -22,13 +22,12 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 {
     private static final String[] EVENT_RESULT_PREFIX = {"-", "~", "+"};
 
-    private IRank parent;
-    private Event.Result allPermissions;
+    IRank parent;
     private final Map<String, Event.Result> permissions;
     private final Map<String, Event.Result> cachedPermissions;
     private final Map<String, IConfigValue> config;
     private final Map<String, IConfigValue> cachedConfig;
-    private String prefix, suffix;
+    String syntax;
 
     public Rank(String id)
     {
@@ -37,8 +36,7 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
         cachedPermissions = new HashMap<>();
         config = new LinkedHashMap<>();
         cachedConfig = new HashMap<>();
-        prefix = null;
-        suffix = null;
+        syntax = null;
     }
 
     @Override
@@ -47,34 +45,22 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
         return parent == null ? DefaultPlayerRank.INSTANCE : parent;
     }
 
-    @Override
-    public void setParent(IRank r)
-    {
-        parent = r;
-    }
-
     private Event.Result hasPermissionRaw(String permission)
     {
-        if(permissions.containsKey(permission))
+        Event.Result r = permissions.get(permission);
+        if(r != null)
         {
-            return permissions.get(permission);
+            return r;
         }
-        else
-        {
-            String[] splitPermission = permission.split("\\.");
 
-            for(Map.Entry<String, Event.Result> entry : permissions.entrySet())
+        String[] splitPermission = permission.split("\\.");
+
+        for(Map.Entry<String, Event.Result> entry : permissions.entrySet())
+        {
+            if(LMStringUtils.nodesMatch(splitPermission, entry.getKey().split("\\.")))
             {
-                if(LMStringUtils.matchesNode(splitPermission, entry.getKey().split("\\.")))
-                {
-                    return entry.getValue();
-                }
+                return entry.getValue();
             }
-        }
-
-        if(allPermissions != null)
-        {
-            return allPermissions;
         }
 
         return getParent().hasPermission(permission);
@@ -120,14 +106,9 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 
         o.add("parent", new JsonPrimitive(getParent().getName()));
 
-        if(prefix != null)
+        if(syntax != null)
         {
-            o.add("prefix", new JsonPrimitive(prefix.replace(LMUtils.FORMATTING_CHAR, '&')));
-        }
-
-        if(suffix != null)
-        {
-            o.add("suffix", new JsonPrimitive(suffix.replace(LMUtils.FORMATTING_CHAR, '&')));
+            o.add("syntax", new JsonPrimitive(syntax.replace(LMUtils.FORMATTING_CHAR, '&')));
         }
 
         JsonArray a1 = new JsonArray();
@@ -150,13 +131,11 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
     public void fromJson(JsonElement e)
     {
         parent = null;
-        allPermissions = null;
         permissions.clear();
         config.clear();
         cachedPermissions.clear();
         cachedConfig.clear();
-        prefix = null;
-        suffix = null;
+        syntax = null;
 
         if(!e.isJsonObject())
         {
@@ -170,14 +149,9 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
             parent = Ranks.getRank(o.get("parent").getAsString(), null);
         }
 
-        if(o.has("prefix"))
+        if(o.has("syntax"))
         {
-            prefix = o.get("prefix").getAsString().replace('&', LMUtils.FORMATTING_CHAR);
-        }
-
-        if(o.has("suffix"))
-        {
-            suffix = o.get("suffix").getAsString().replace('&', LMUtils.FORMATTING_CHAR);
+            syntax = o.get("syntax").getAsString().replace('&', LMUtils.FORMATTING_CHAR);
         }
 
         if(o.has("permissions"))
@@ -192,8 +166,6 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
                 permissions.put(key, firstChar == '-' ? Event.Result.DENY : (firstChar == '~' ? Event.Result.DEFAULT : Event.Result.ALLOW));
             }
         }
-
-        allPermissions = permissions.get("*");
 
         if(o.has("config"))
         {
@@ -212,14 +184,8 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
     }
 
     @Override
-    public String getPrefix()
+    public String getSyntax()
     {
-        return prefix == null ? getParent().getPrefix() : prefix;
-    }
-
-    @Override
-    public String getSuffix()
-    {
-        return suffix == null ? getParent().getSuffix() : suffix;
+        return syntax == null ? getParent().getSyntax() : syntax;
     }
 }

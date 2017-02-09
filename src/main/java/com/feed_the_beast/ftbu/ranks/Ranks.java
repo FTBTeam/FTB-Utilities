@@ -124,8 +124,8 @@ public class Ranks
                     }
 
                     JsonObject dr = o.get("default_ranks").getAsJsonObject();
-                    defaultPlayerRank = getRank(dr.get("player").getAsString(), DefaultPlayerRank.INSTANCE);
-                    defaultOPRank = getRank(dr.get("op").getAsString(), DefaultOPRank.INSTANCE);
+                    defaultPlayerRank = dr.has("player") ? RANKS.get(dr.get("player").getAsString()) : null;
+                    defaultOPRank = dr.has("op") ? RANKS.get(dr.get("op").getAsString()) : null;
                 }
             }
 
@@ -159,7 +159,7 @@ public class Ranks
         if(defaultPlayerRank == null)
         {
             Rank r = new Rank("player");
-            r.setParent(DefaultPlayerRank.INSTANCE);
+            r.parent = DefaultPlayerRank.INSTANCE;
             RANKS.put(r.getName(), r);
             defaultPlayerRank = r;
         }
@@ -167,7 +167,8 @@ public class Ranks
         if(defaultOPRank == null)
         {
             Rank r = new Rank("op");
-            r.setParent(DefaultOPRank.INSTANCE);
+            r.parent = DefaultOPRank.INSTANCE;
+            r.syntax = "<" + TextFormatting.DARK_GREEN + "$name" + TextFormatting.RESET + "> ";
             RANKS.put(r.getName(), r);
             defaultOPRank = r;
         }

@@ -95,7 +95,7 @@ public class FTBUActions
         @Override
         public void onClicked(IMouseButton button)
         {
-            FTBLibClient.execClientCommand("/ftb heal", false);
+            FTBLibClient.execClientCommand("/heal", false);
         }
 
         @Override

@@ -23,7 +23,7 @@ class DefaultRank extends Rank
     @Override
     public String getSyntax()
     {
-        return "<${name}> ";
+        return "<$name> ";
     }
 
     @Override

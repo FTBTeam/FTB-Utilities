@@ -70,6 +70,11 @@ public enum FTBUtilitiesAPI_Impl implements FTBUtilitiesAPI, IPermissionHandler
     @Override
     public boolean hasPermission(GameProfile profile, String permission, @Nullable IContext context)
     {
+        if(context != null && context.getWorld() != null && context.getWorld().isRemote)
+        {
+            return true;
+        }
+
         switch(getRank(profile).hasPermission(permission))
         {
             case ALLOW:

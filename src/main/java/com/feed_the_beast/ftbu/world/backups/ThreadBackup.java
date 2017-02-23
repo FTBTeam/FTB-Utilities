@@ -138,27 +138,34 @@ public class ThreadBackup extends Thread
             FTBUFinals.LOGGER.info("Created " + dstFile.getAbsolutePath() + " from " + src.getAbsolutePath());
             success = true;
 
-            if(FTBUConfigBackups.DISPLAY_FILE_SIZE.getBoolean())
+            if(!FTBUConfigBackups.SILENT.getBoolean())
             {
-                String sizeB = LMFileUtils.getSizeS(dstFile);
-                String sizeT = LMFileUtils.getSizeS(Backups.INSTANCE.backupsFolder);
+                if(FTBUConfigBackups.DISPLAY_FILE_SIZE.getBoolean())
+                {
+                    String sizeB = LMFileUtils.getSizeS(dstFile);
+                    String sizeT = LMFileUtils.getSizeS(Backups.INSTANCE.backupsFolder);
 
-                ITextComponent c = FTBULang.BACKUP_END_2.textComponent(getDoneTime(time.getTimeInMillis()), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)));
-                c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
-                BroadcastSender.INSTANCE.addChatMessage(c);
-            }
-            else
-            {
-                ITextComponent c = FTBULang.BACKUP_END_1.textComponent(getDoneTime(time.getTimeInMillis()));
-                c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
-                BroadcastSender.INSTANCE.addChatMessage(c);
+                    ITextComponent c = FTBULang.BACKUP_END_2.textComponent(getDoneTime(time.getTimeInMillis()), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)));
+                    c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
+                    BroadcastSender.INSTANCE.addChatMessage(c);
+                }
+                else
+                {
+                    ITextComponent c = FTBULang.BACKUP_END_1.textComponent(getDoneTime(time.getTimeInMillis()));
+                    c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
+                    BroadcastSender.INSTANCE.addChatMessage(c);
+                }
             }
         }
         catch(Exception ex)
         {
             ITextComponent c = FTBULang.BACKUP_FAIL.textComponent(ex.getClass().getName());
             c.getStyle().setColor(TextFormatting.DARK_RED);
-            BroadcastSender.INSTANCE.addChatMessage(c);
+
+            if(!FTBUConfigBackups.SILENT.getBoolean())
+            {
+                BroadcastSender.INSTANCE.addChatMessage(c);
+            }
 
             ex.printStackTrace();
             if(dstFile != null)

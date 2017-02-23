@@ -19,10 +19,10 @@ public class CmdSetWarp extends CommandLM
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         checkArgs(args, 1, "<warp> [x] [y] [z]");
-        EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
+        EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
         BlockPos c;
 
         args[0] = args[0].toLowerCase();
@@ -40,6 +40,6 @@ public class CmdSetWarp extends CommandLM
         }
 
         FTBUUniverseData.get().setWarp(args[0], new BlockDimPos(c, ep.dimension));
-        FTBULang.WARP_SET.printChat(ics, args[0]);
+        FTBULang.WARP_SET.printChat(sender, args[0]);
     }
 }

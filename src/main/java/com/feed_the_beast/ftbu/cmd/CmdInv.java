@@ -42,11 +42,11 @@ public class CmdInv extends CommandTreeBase
         }
 
         @Override
-        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
             checkArgs(args, 1, "<player>");
-            EntityPlayerMP ep0 = getCommandSenderAsPlayer(ics);
-            EntityPlayerMP ep = getPlayer(server, ics, args[0]);
+            EntityPlayerMP ep0 = getCommandSenderAsPlayer(sender);
+            EntityPlayerMP ep = getPlayer(server, sender, args[0]);
             ep0.displayGUIChest(new InvSeeInventory(ep));
         }
     }
@@ -72,10 +72,10 @@ public class CmdInv extends CommandTreeBase
         }
 
         @Override
-        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
             checkArgs(args, 2, "<player> <ID>");
-            EntityPlayerMP ep = getPlayer(server, ics, args[0]);
+            EntityPlayerMP ep = getPlayer(server, sender, args[0]);
             File file = new File(LMUtils.folderLocal, "ftbu/playerinvs/" + LMStringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
 
             try
@@ -142,10 +142,10 @@ public class CmdInv extends CommandTreeBase
         }
 
         @Override
-        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
             checkArgs(args, 2, "<player> <ID>");
-            EntityPlayerMP ep = getPlayer(server, ics, args[0]);
+            EntityPlayerMP ep = getPlayer(server, sender, args[0]);
             File file = new File(LMUtils.folderLocal, "ftbu/playerinvs/" + LMStringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
 
             try
@@ -195,7 +195,7 @@ public class CmdInv extends CommandTreeBase
         }
 
         @Override
-        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
         }
     }

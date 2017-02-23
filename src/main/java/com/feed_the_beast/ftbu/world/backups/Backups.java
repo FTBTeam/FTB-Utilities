@@ -18,7 +18,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -96,7 +95,7 @@ public enum Backups
         FTBUFinals.LOGGER.info("Backups folder - " + backupsFolder.getAbsolutePath());
     }
 
-    public boolean run(ICommandSender ics, String customName)
+    public boolean run(MinecraftServer server, ICommandSender ics, String customName)
     {
         if(thread != null)
         {
@@ -109,9 +108,6 @@ public enum Backups
         {
             return false;
         }
-
-        MinecraftServer server = LMServerUtils.getServer();
-        World w = server.getEntityWorld();
 
         ITextComponent c = FTBULang.BACKUP_START.textComponent(ics.getName());
         c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
@@ -129,7 +125,7 @@ public enum Backups
             ex.printStackTrace();
         }
 
-        File wd = w.getSaveHandler().getWorldDirectory();
+        File wd = server.getEntityWorld().getSaveHandler().getWorldDirectory();
 
         if(FTBUConfigBackups.USE_SEPARATE_THREAD.getBoolean())
         {

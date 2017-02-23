@@ -77,7 +77,7 @@ public class GuiWarps extends GuiLM
         }
 
         @Override
-        public boolean isInside(IWidget w)
+        public boolean collidesWith(int x, int y, int w, int h)
         {
             return true;
         }

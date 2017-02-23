@@ -15,6 +15,11 @@ my_server_settings.ftbu.explosions=Explosions
 my_server_settings.ftbu.fake_players=Allow Fake Players
 my_server_settings.ftbu.security_level=Block Security Level
 
+# Team Settings
+config.ftbu.blocks.name=Block Interactions
+config.ftbu.disable_explosions.name=Disable Explosions in Claimed Chunks
+config.ftbu.fake_players.name=Allow Fake Players to Interact With Blocks
+
 # Action Buttons
 sidebar_button.ftbu.toggle.gamemode=Toggle Gamemode
 sidebar_button.ftbu.toggle.rain=Toggle Rain

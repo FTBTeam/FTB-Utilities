@@ -53,9 +53,9 @@ public class CmdHome extends CommandLM
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
+        EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
         FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(ep));
 
         if(data == null)
@@ -70,10 +70,10 @@ public class CmdHome extends CommandLM
         if(args[0].equals("list"))
         {
             Collection<String> list = data.listHomes();
-            ics.addChatMessage(new TextComponentString(list.size() + " / " + FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt() + ": "));
+            sender.addChatMessage(new TextComponentString(list.size() + " / " + FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt() + ": "));
             if(!list.isEmpty())
             {
-                ics.addChatMessage(new TextComponentString(LMStringUtils.strip(list)));
+                sender.addChatMessage(new TextComponentString(LMStringUtils.strip(list)));
             }
             return;
         }
@@ -90,6 +90,6 @@ public class CmdHome extends CommandLM
         }
 
         LMServerUtils.teleportPlayer(ep, pos);
-        FTBULang.WARP_TP.printChat(ics, args[0]);
+        FTBULang.WARP_TP.printChat(sender, args[0]);
     }
 }

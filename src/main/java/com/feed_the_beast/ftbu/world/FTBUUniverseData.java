@@ -223,7 +223,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
     {
         IClaimedChunk chunk = ClaimedChunkStorage.INSTANCE.getChunk(pos);
 
-        if(chunk != null && chunk.getOwner().equalsPlayer(player))
+        if(chunk != null)
         {
             setLoaded(player, pos, false);
             MinecraftForge.EVENT_BUS.post(new ChunkModifiedEvent.Unclaimed(chunk));
@@ -427,7 +427,8 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
 
         if(Backups.INSTANCE.nextBackup > 0L && Backups.INSTANCE.nextBackup <= now)
         {
-            Backups.INSTANCE.run(LMServerUtils.getServer(), "");
+            MinecraftServer server = LMServerUtils.getServer();
+            Backups.INSTANCE.run(server, server, "");
         }
 
         if(nextChunkloaderUpdate < now)

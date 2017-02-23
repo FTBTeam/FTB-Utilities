@@ -35,13 +35,13 @@ public class CmdTplast extends CommandLM
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         checkArgs(args, 1, "(<x> <y> <z>) | ([who] <player>)");
 
         if(args.length == 3)
         {
-            EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
+            EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
             double x = parseDouble(ep.posX, args[0], -30000000, 30000000, true);
             double y = parseDouble(ep.posY, args[1], -30000000, 30000000, true);
             double z = parseDouble(ep.posZ, args[2], -30000000, 30000000, true);
@@ -54,12 +54,12 @@ public class CmdTplast extends CommandLM
 
         if(args.length == 1)
         {
-            who = getCommandSenderAsPlayer(ics);
+            who = getCommandSenderAsPlayer(sender);
             to = getForgePlayer(args[0]);
         }
         else
         {
-            who = getPlayer(server, ics, args[0]);
+            who = getPlayer(server, sender, args[0]);
             to = getForgePlayer(args[1]);
         }
 

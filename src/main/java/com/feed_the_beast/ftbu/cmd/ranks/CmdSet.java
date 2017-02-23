@@ -50,13 +50,13 @@ public class CmdSet extends CommandLM
 
         if(r == DefaultPlayerRank.INSTANCE)
         {
-            FTBLibLang.RAW.printChat(sender, "Ranks are disabled, forwarding to /deop " + args[0]); //TODO: Lang
+            FTBLibLang.RAW.printChat(sender, "Can't set rank as builtin_player, forwarding to /deop " + args[0]); //TODO: Lang
             server.getCommandManager().executeCommand(sender, "/deop " + args[0]);
             return;
         }
         else if(r == DefaultOPRank.INSTANCE)
         {
-            FTBLibLang.RAW.printChat(sender, "Ranks are disabled, forwarding to /op " + args[0]); //TODO: Lang
+            FTBLibLang.RAW.printChat(sender, "Can't set rank as builtin_op, forwarding to /op " + args[0]); //TODO: Lang
             server.getCommandManager().executeCommand(sender, "/op " + args[0]);
             return;
         }

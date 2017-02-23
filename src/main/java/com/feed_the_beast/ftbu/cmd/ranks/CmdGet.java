@@ -29,7 +29,7 @@ public class CmdGet extends CommandLM
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         checkArgs(args, 1, "<player>");
         IForgePlayer p = getForgePlayer(args[0]);
@@ -37,6 +37,6 @@ public class CmdGet extends CommandLM
         ITextComponent name = new TextComponentString(rank.getName() + " - " + rank.getFormattedName(p.getProfile().getName()));
         name.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/msg " + p.getProfile().getName() + " "));
         name.getStyle().setInsertion(p.getProfile().getName());
-        ics.addChatMessage(name);
+        sender.addChatMessage(name);
     }
 }

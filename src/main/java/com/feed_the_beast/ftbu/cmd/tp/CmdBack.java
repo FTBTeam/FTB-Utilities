@@ -27,9 +27,9 @@ public class CmdBack extends CommandLM
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
+        EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
         IForgePlayer p = getForgePlayer(ep);
 
         FTBUPlayerData data = FTBUPlayerData.get(p);

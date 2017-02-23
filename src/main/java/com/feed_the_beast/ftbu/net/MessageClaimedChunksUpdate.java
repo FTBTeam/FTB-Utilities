@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbu.net;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibTeamPermissions;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
@@ -95,7 +95,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
                         data.team.ownerID = team.getOwner().getProfile().getId();
                         data.team.colorID = team.getColor().getColorID();
                         data.team.formattedName = team.getColor().getTextFormatting() + team.getTitle();
-                        data.team.isAlly = team.hasPermission(player.getGameProfile().getId(), FTBLibTeamPermissions.IS_ALLY);
+                        data.team.isAlly = team.hasPermission(player.getGameProfile().getId(), FTBLibPerms.TEAM_IS_ALLY);
                         teams.put(data.team.ownerID, data.team);
                     }
 

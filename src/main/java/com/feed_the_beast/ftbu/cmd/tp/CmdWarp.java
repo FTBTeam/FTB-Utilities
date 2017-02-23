@@ -49,7 +49,7 @@ public class CmdWarp extends CommandLM
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         checkArgs(args, 1, "<warp>");
 
@@ -58,11 +58,11 @@ public class CmdWarp extends CommandLM
         if(args[0].equals("list"))
         {
             Collection<String> list = FTBUUniverseData.get().listWarps();
-            ics.addChatMessage(new TextComponentString(list.isEmpty() ? "-" : LMStringUtils.strip(list)));
+            sender.addChatMessage(new TextComponentString(list.isEmpty() ? "-" : LMStringUtils.strip(list)));
             return;
         }
 
-        EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
+        EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
         BlockDimPos p = FTBUUniverseData.get().getWarp(args[0]);
         if(p == null)
         {
@@ -70,6 +70,6 @@ public class CmdWarp extends CommandLM
         }
 
         LMServerUtils.teleportPlayer(ep, p);
-        FTBULang.WARP_TP.printChat(ics, args[0]);
+        FTBULang.WARP_TP.printChat(sender, args[0]);
     }
 }

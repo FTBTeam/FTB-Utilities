@@ -20,7 +20,6 @@ import com.feed_the_beast.ftbu.net.MessageClaimedChunksRequest;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
-import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
@@ -36,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
+public class GuiClaimedChunks extends GuiLM
 {
     public static GuiClaimedChunks instance;
 
@@ -73,31 +72,31 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
         }
 
         @Override
-        public void addMouseOverText(IGui gui, List<String> l)
+        public void addMouseOverText(IGui gui, List<String> list)
         {
             if(chunkData[index].isClaimed())
             {
-                l.add(chunkData[index].team.formattedName);
-                l.add(TextFormatting.GREEN + FTBULang.CHUNKTYPE_CLAIMED.translate());
+                list.add(chunkData[index].team.formattedName);
+                list.add(TextFormatting.GREEN + FTBULang.CHUNKTYPE_CLAIMED.translate());
 
                 if(chunkData[index].team.isAlly)
                 {
-                    l.add(chunkData[index].owner);
+                    list.add(chunkData[index].owner);
 
                     if(chunkData[index].isLoaded())
                     {
-                        l.add(TextFormatting.RED + FTBULang.CHUNKTYPE_LOADED.translate());
+                        list.add(TextFormatting.RED + FTBULang.CHUNKTYPE_LOADED.translate());
                     }
                 }
             }
             else
             {
-                l.add(TextFormatting.DARK_GREEN + FTBULang.CHUNKTYPE_WILDERNESS.translate());
+                list.add(TextFormatting.DARK_GREEN + FTBULang.CHUNKTYPE_WILDERNESS.translate());
             }
 
             if(GuiScreen.isCtrlKeyDown())
             {
-                l.add(chunkPos.toString());
+                list.add(chunkPos.toString());
             }
         }
 
@@ -110,7 +109,7 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
             if(chunkData[index].isClaimed())
             {
                 mc.getTextureManager().bindTexture(GuiConfigs.TEX_CHUNK_CLAIMING);
-                LMColorUtils.setGLColor(LMColorUtils.getColorFromID(chunkData[index].team.colorID), GuiScreen.isCtrlKeyDown() ? 50 : 180);
+                LMColorUtils.GL_COLOR.set(LMColorUtils.getColorFromID(chunkData[index].team.colorID), GuiScreen.isCtrlKeyDown() ? 50 : 180);
                 GuiHelper.drawTexturedRect(ax, ay, 16, 16, GuiConfigs.TEX_FILLED.getMinU(), GuiConfigs.TEX_FILLED.getMinV(), GuiConfigs.TEX_FILLED.getMaxU(), GuiConfigs.TEX_FILLED.getMaxV());
                 GlStateManager.color((chunkData[index].isLoaded() && chunkData[index].team.isAlly) ? 1F : 0F, chunkData[index].isOwner() ? 0.27F : 0F, 0F, GuiScreen.isCtrlKeyDown() ? 0.2F : 0.78F);
                 GuiHelper.drawTexturedRect(ax, ay, 16, 16, GuiConfigs.TEX_BORDER.getMinU(), GuiConfigs.TEX_BORDER.getMinV(), GuiConfigs.TEX_BORDER.getMaxU(), GuiConfigs.TEX_BORDER.getMaxV());
@@ -120,13 +119,14 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
             {
                 GlStateManager.color(1F, 1F, 1F, 0.27F);
                 GuiHelper.drawBlankRect(ax, ay, 16, 16);
-                GlStateManager.color(1F, 1F, 1F, 1F);
             }
 
             if(!isSelected && currentSelectionMode != -1 && isMouseOver(this))
             {
                 isSelected = true;
             }
+
+            GlStateManager.color(1F, 1F, 1F, 1F);
         }
     }
 
@@ -167,6 +167,8 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
             }
         };
 
+        buttonClose.setIcon(GuiIcons.ACCEPT);
+
         buttonRefresh = new ButtonLM(0, 16, 16, 16, GuiLang.BUTTON_REFRESH.translate())
         {
             @Override
@@ -177,6 +179,8 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
             }
         };
 
+        buttonRefresh.setIcon(GuiIcons.REFRESH);
+
         buttonUnclaimAll = new ButtonLM(0, 32, 16, 16)
         {
             @Override
@@ -184,15 +188,26 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
             {
                 GuiHelper.playClickSound();
                 String s = GuiScreen.isShiftKeyDown() ? FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_Q.translate() : FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_DIM_Q.translate(currentDimName);
-                Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo(GuiClaimedChunks.this, s, "", GuiScreen.isShiftKeyDown() ? 1 : 0));
+                Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo((set, id) ->
+                {
+                    if(set)
+                    {
+                        FTBLibClient.execClientCommand("/ftb chunks unclaim_all " + (id == 1), false);
+                    }
+
+                    gui.openGui();
+                    gui.refreshWidgets();
+                }, s, "", GuiScreen.isShiftKeyDown() ? 1 : 0));
             }
 
             @Override
-            public void addMouseOverText(IGui gui, List<String> l)
+            public void addMouseOverText(IGui gui, List<String> list)
             {
-                l.add(GuiScreen.isShiftKeyDown() ? FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL.translate() : FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_DIM.translate(currentDimName));
+                list.add(GuiScreen.isShiftKeyDown() ? FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL.translate() : FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_DIM.translate(currentDimName));
             }
         };
+
+        buttonUnclaimAll.setIcon(GuiIcons.REMOVE);
 
         panelButtons = new PanelLM(0, 0, 16, 0)
         {
@@ -209,7 +224,7 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
             @Override
             public int getAX()
             {
-                return getScreenWidth() - 16;
+                return getScreen().getScaledWidth() - 16;
             }
 
             @Override
@@ -257,8 +272,6 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
     @Override
     public void drawBackground()
     {
-        super.drawBackground();
-
         GlStateManager.color(0F, 0F, 0F, 1F);
         GuiHelper.drawBlankRect(posX - 2, posY - 2, getWidth() + 4, getHeight() + 4);
         //drawBlankRect((xSize - 128) / 2, (ySize - 128) / 2, zLevel, 128, 128);
@@ -321,15 +334,11 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
             GlStateManager.color(1F, 1F, 1F, mc.thePlayer.isSneaking() ? 0.4F : 0.7F);
             GuiHelper.drawTexturedRect(-8, -8, 16, 16, 0D, 0D, 1D, 1D);
             GlStateManager.popMatrix();
-            GuiHelper.drawPlayerHead(mc.thePlayer.getName(), -2, -2, 4, 4);
+            FTBLibClient.localPlayerHead.draw(-2, -2, 4, 4);
             GlStateManager.popMatrix();
         }
 
         GlStateManager.color(1F, 1F, 1F, 1F);
-
-        buttonRefresh.render(GuiIcons.REFRESH);
-        buttonClose.render(GuiIcons.ACCEPT);
-        buttonUnclaimAll.render(GuiIcons.REMOVE);
     }
 
     @Override
@@ -359,29 +368,10 @@ public class GuiClaimedChunks extends GuiLM implements GuiYesNoCallback
     public void drawForeground()
     {
         String s = FTBULang.LABEL_CCHUNKS_COUNT.translate(claimedChunks, maxClaimedChunks);
-        getFont().drawString(s, getScreenWidth() - getFont().getStringWidth(s) - 4, getScreenHeight() - 24, 0xFFFFFFFF);
+        getFont().drawStringWithShadow(s, getScreen().getScaledWidth() - getFont().getStringWidth(s) - 4, getScreen().getScaledHeight() - 24, 0xFFFFFFFF);
         s = FTBULang.LABEL_LCHUNKS_COUNT.translate(loadedChunks, maxLoadedChunks);
-        getFont().drawString(s, getScreenWidth() - getFont().getStringWidth(s) - 4, getScreenHeight() - 12, 0xFFFFFFFF);
+        getFont().drawStringWithShadow(s, getScreen().getScaledWidth() - getFont().getStringWidth(s) - 4, getScreen().getScaledHeight() - 12, 0xFFFFFFFF);
 
         super.drawForeground();
-    }
-
-    @Override
-    public void confirmClicked(boolean set, int id)
-    {
-        if(set)
-        {
-            if(id == 1)
-            {
-                FTBLibClient.execClientCommand("/ftb chunks unclaim_all true", false);
-            }
-            else
-            {
-                FTBLibClient.execClientCommand("/ftb chunks unclaim_all false", false);
-            }
-        }
-
-        openGui();
-        refreshWidgets();
     }
 }

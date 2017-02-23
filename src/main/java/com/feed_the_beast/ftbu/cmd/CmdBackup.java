@@ -22,12 +22,12 @@ public class CmdBackup extends CommandTreeBase
         }
 
         @Override
-        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
-            boolean b = Backups.INSTANCE.run(ics, args.length == 0 ? "" : args[0]);
+            boolean b = Backups.INSTANCE.run(server, sender, args.length == 0 ? "" : args[0]);
             if(b)
             {
-                FTBULang.BACKUP_MANUAL_LAUNCH.printChat(BroadcastSender.INSTANCE, ics.getName());
+                FTBULang.BACKUP_MANUAL_LAUNCH.printChat(BroadcastSender.INSTANCE, sender.getName());
 
                 if(!FTBUConfigBackups.USE_SEPARATE_THREAD.getBoolean())
                 {
@@ -36,7 +36,7 @@ public class CmdBackup extends CommandTreeBase
             }
             else
             {
-                FTBULang.BACKUP_ALREADY_RUNNING.printChat(ics);
+                FTBULang.BACKUP_ALREADY_RUNNING.printChat(sender);
             }
         }
     }
@@ -50,13 +50,13 @@ public class CmdBackup extends CommandTreeBase
         }
 
         @Override
-        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
             if(Backups.INSTANCE.thread != null)
             {
                 Backups.INSTANCE.thread.interrupt();
                 Backups.INSTANCE.thread = null;
-                FTBULang.BACKUP_STOP.printChat(ics);
+                FTBULang.BACKUP_STOP.printChat(sender);
                 return;
             }
 
@@ -73,11 +73,11 @@ public class CmdBackup extends CommandTreeBase
         }
 
         @Override
-        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
-            String sizeW = LMFileUtils.getSizeS(ics.getEntityWorld().getSaveHandler().getWorldDirectory());
+            String sizeW = LMFileUtils.getSizeS(sender.getEntityWorld().getSaveHandler().getWorldDirectory());
             String sizeT = LMFileUtils.getSizeS(Backups.INSTANCE.backupsFolder);
-            FTBULang.BACKUP_SIZE.printChat(ics, sizeW, sizeT);
+            FTBULang.BACKUP_SIZE.printChat(sender, sizeW, sizeT);
         }
     }
 

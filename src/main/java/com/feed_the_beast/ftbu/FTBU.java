@@ -39,7 +39,7 @@ public class FTBU
     public static FTBUCommon PROXY;
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event)
+    public void onPreInit(FMLPreInitializationEvent event)
     {
         FTBUtilitiesAPI_Impl.INSTANCE.init(event.getAsmData());
         FTBUNetHandler.init();
@@ -53,13 +53,13 @@ public class FTBU
     }
 
     @Mod.EventHandler
-    public void init(FMLInitializationEvent event)
+    public void onInit(FMLInitializationEvent event)
     {
         FTBUPermissions.init();
     }
 
     @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event)
+    public void onPostInit(FMLPostInitializationEvent event)
     {
         PROXY.postInit();
         ForgeChunkManager.setForcedChunkLoadingCallback(INST, LoadedChunkStorage.INSTANCE);
@@ -67,7 +67,7 @@ public class FTBU
     }
 
     @Mod.EventHandler
-    public void serverStarted(FMLServerStartedEvent event)
+    public void onServerStarted(FMLServerStartedEvent event)
     {
         Backups.INSTANCE.init();
 

@@ -25,6 +25,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -42,8 +43,10 @@ import java.util.Map;
 /**
  * Created by LatvianModder on 02.10.2016.
  */
-public class Guides
+public enum Guides implements IResourceManagerReloadListener
 {
+    INSTANCE;
+
     public static final Comparator<IGuide> COMPARATOR = (o1, o2) -> o1.getPage().getDisplayName().getFormattedText().compareToIgnoreCase(o2.getPage().getDisplayName().getFormattedText());
 
     private static final InfoPage INFO_PAGE = new InfoPage("guides")
@@ -91,7 +94,7 @@ public class Guides
                             @Override
                             public void run()
                             {
-                                reloadGuides();
+                                INSTANCE.onResourceManagerReload(Minecraft.getMinecraft().getResourceManager());
                                 isReloading = false;
                             }
                         };
@@ -120,15 +123,14 @@ public class Guides
         }
     }
 
-    private static void reloadGuides()
+    @Override
+    public void onResourceManagerReload(IResourceManager resourceManager)
     {
         LMUtils.DEV_LOGGER.info("Reloading guides...");
         INFO_PAGE.clear();
         INFO_PAGE.setTitle(new TextComponentString("Guides")); //TODO: Lang
 
         List<IGuide> guides = new ArrayList<>();
-
-        IResourceManager resourceManager = Minecraft.getMinecraft().getResourceManager();
 
         for(String domain : resourceManager.getResourceDomains())
         {

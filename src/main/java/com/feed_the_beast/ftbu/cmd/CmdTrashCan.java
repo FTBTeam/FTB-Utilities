@@ -21,8 +21,8 @@ public class CmdTrashCan extends CommandLM
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        getCommandSenderAsPlayer(ics).displayGUIChest(new InventoryBasic("Trash Can", true, 18));
+        getCommandSenderAsPlayer(sender).displayGUIChest(new InventoryBasic("Trash Can", true, 18));
     }
 }

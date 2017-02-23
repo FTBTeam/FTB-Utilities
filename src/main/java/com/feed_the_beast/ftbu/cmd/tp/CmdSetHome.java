@@ -48,9 +48,9 @@ public class CmdSetHome extends CommandLM
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
+        EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
         FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(ep));
         if(data == null)
         {
@@ -74,6 +74,6 @@ public class CmdSetHome extends CommandLM
         }
 
         data.setHome(args[0], new EntityDimPos(ep).toBlockDimPos());
-        FTBULang.HOME_SET.printChat(ics, args[0]);
+        FTBULang.HOME_SET.printChat(sender, args[0]);
     }
 }

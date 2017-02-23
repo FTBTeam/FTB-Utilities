@@ -28,7 +28,6 @@ import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -146,53 +145,7 @@ public class ServerInfoPage
             {
                 try
                 {
-                    InfoPage cat = page1.getSub(c.getCommandName());
-
-                    List<String> al = c.getCommandAliases();
-                    if(!al.isEmpty())
-                    {
-                        for(String s : al)
-                        {
-                            cat.println('/' + s);
-                        }
-                    }
-
-                    if(c instanceof CommandTreeBase)
-                    {
-                        List<ITextComponent> list = new ArrayList<>();
-                        list.add(new TextComponentString('/' + c.getCommandName()));
-                        list.add(null);
-                        addCommandUsage(ep, list, 0, (CommandTreeBase) c);
-
-                        for(ITextComponent c1 : list)
-                        {
-                            cat.println(c1);
-                        }
-                    }
-                    else
-                    {
-                        String usage = c.getCommandUsage(ep);
-
-                        if(usage.indexOf('\n') != -1)
-                        {
-                            String[] usageL = usage.split("\n");
-                            for(String s1 : usageL)
-                            {
-                                cat.println(s1);
-                            }
-                        }
-                        else
-                        {
-                            if(usage.indexOf('%') != -1 || usage.indexOf('/') != -1)
-                            {
-                                cat.println(new TextComponentString(usage));
-                            }
-                            else
-                            {
-                                cat.println(new TextComponentTranslation(usage));
-                            }
-                        }
-                    }
+                    addCommandUsage(ep, page1.getSub(c.getCommandName()), 0, c);
                 }
                 catch(Exception ex1)
                 {
@@ -222,38 +175,47 @@ public class ServerInfoPage
         return page;
     }
 
-    private static void addCommandUsage(ICommandSender sender, List<ITextComponent> list, int level, CommandTreeBase treeCommand)
+    private static void addCommandUsage(ICommandSender sender, InfoPage page, int level, ICommand c)
     {
-        for(ICommand c : treeCommand.getSubCommands())
+        page.println('/' + c.getCommandName());
+
+        for(String s : c.getCommandAliases())
         {
-            if(c instanceof CommandTreeBase)
+            page.println('/' + s);
+        }
+
+        page.println(null);
+
+        String usage = c.getCommandUsage(sender);
+
+        if(usage.indexOf('\n') != -1)
+        {
+            String[] usageL = usage.split("\n");
+            for(String s1 : usageL)
             {
-                list.add(tree(new TextComponentString('/' + c.getCommandName()), level));
-                addCommandUsage(sender, list, level + 1, (CommandTreeBase) c);
+                page.println(s1);
+            }
+        }
+        else
+        {
+            if(usage.indexOf('%') != -1 || usage.indexOf('/') != -1)
+            {
+                page.println(new TextComponentString(usage));
             }
             else
             {
-                String usage = c.getCommandUsage(sender);
-                if(usage.indexOf('/') != -1 || usage.indexOf('%') != -1)
-                {
-                    list.add(tree(new TextComponentString(usage), level));
-                }
-                else
-                {
-                    list.add(tree(new TextComponentTranslation(usage), level));
-                }
+                page.println(new TextComponentTranslation(usage));
             }
         }
-    }
 
-    private static ITextComponent tree(ITextComponent sibling, int level)
-    {
-        if(level == 0)
+        if(c instanceof CommandTreeBase)
         {
-            return sibling;
+            CommandTreeBase treeCommand = (CommandTreeBase) c;
+
+            for(ICommand command : treeCommand.getSubCommands())
+            {
+                addCommandUsage(sender, page.getSub(command.getCommandName()), level + 1, command);
+            }
         }
-        char[] chars = new char[level * 2];
-        Arrays.fill(chars, ' ');
-        return new TextComponentString(new String(chars)).appendSibling(sibling);
     }
 }

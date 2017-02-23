@@ -16,6 +16,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -79,9 +80,14 @@ public class FTBUPermissions
         levels.put(CLAIMS_BLOCK_BREAK_PREFIX + "graves.graveslave", DefaultPermissionLevel.ALL);
         levels.put(CLAIMS_BLOCK_BREAK_PREFIX + "graves.headstone", DefaultPermissionLevel.ALL);
 
-        levels.put(CLAIMS_BLOCK_INTERACT_PREFIX + "minecraft.crafting_table", DefaultPermissionLevel.ALL);
-        levels.put(CLAIMS_BLOCK_INTERACT_PREFIX + "minecraft.anvil", DefaultPermissionLevel.ALL);
-        levels.put(CLAIMS_BLOCK_INTERACT_PREFIX + "minecraft.wooden_door", DefaultPermissionLevel.ALL);
+        levels.put(CLAIMS_BLOCK_INTERACT_PREFIX + formatBlock(Blocks.CRAFTING_TABLE), DefaultPermissionLevel.ALL);
+        levels.put(CLAIMS_BLOCK_INTERACT_PREFIX + formatBlock(Blocks.ANVIL), DefaultPermissionLevel.ALL);
+        levels.put(CLAIMS_BLOCK_INTERACT_PREFIX + formatBlock(Blocks.OAK_DOOR), DefaultPermissionLevel.ALL);
+        levels.put(CLAIMS_BLOCK_INTERACT_PREFIX + formatBlock(Blocks.BIRCH_DOOR), DefaultPermissionLevel.ALL);
+        levels.put(CLAIMS_BLOCK_INTERACT_PREFIX + formatBlock(Blocks.SPRUCE_DOOR), DefaultPermissionLevel.ALL);
+        levels.put(CLAIMS_BLOCK_INTERACT_PREFIX + formatBlock(Blocks.JUNGLE_DOOR), DefaultPermissionLevel.ALL);
+        levels.put(CLAIMS_BLOCK_INTERACT_PREFIX + formatBlock(Blocks.DARK_OAK_DOOR), DefaultPermissionLevel.ALL);
+        levels.put(CLAIMS_BLOCK_INTERACT_PREFIX + formatBlock(Blocks.ACACIA_DOOR), DefaultPermissionLevel.ALL);
 
         levels.forEach((key, value) -> PermissionAPI.registerNode(key, value, ""));
     }

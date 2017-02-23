@@ -44,9 +44,9 @@ public class CmdDelHome extends CommandLM
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(ics));
+        FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(sender));
         if(data == null)
         {
             return;
@@ -60,7 +60,7 @@ public class CmdDelHome extends CommandLM
 
         if(data.setHome(args[0], null))
         {
-            FTBULang.HOME_DEL.printChat(ics, args[0]);
+            FTBULang.HOME_DEL.printChat(sender, args[0]);
         }
         else
         {

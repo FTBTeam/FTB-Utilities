@@ -26,9 +26,9 @@ public class CmdSpawn extends CommandLM
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        EntityPlayerMP player = getCommandSenderAsPlayer(ics);
+        EntityPlayerMP player = getCommandSenderAsPlayer(sender);
         World w = server.getEntityWorld();
         BlockPos spawnpoint = w.getSpawnPoint();
 
@@ -38,6 +38,6 @@ public class CmdSpawn extends CommandLM
         }
 
         LMServerUtils.teleportPlayer(player, new BlockDimPos(spawnpoint, 0));
-        FTBULang.WARP_SPAWN.printChat(ics);
+        FTBULang.WARP_SPAWN.printChat(sender);
     }
 }

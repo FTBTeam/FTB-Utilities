@@ -34,8 +34,6 @@ import net.minecraftforge.common.MinecraftForge;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,8 +44,6 @@ import java.util.Map;
 public enum Guides implements IResourceManagerReloadListener
 {
     INSTANCE;
-
-    public static final Comparator<IGuide> COMPARATOR = (o1, o2) -> o1.getPage().getDisplayName().getFormattedText().compareToIgnoreCase(o2.getPage().getDisplayName().getFormattedText());
 
     private static final InfoPage INFO_PAGE = new InfoPage("guides")
     {
@@ -172,15 +168,13 @@ public enum Guides implements IResourceManagerReloadListener
         MinecraftForge.EVENT_BUS.post(new ClientGuideEvent(eventMap, resourceManager));
         guides.addAll(eventMap.values());
 
-        Collections.sort(guides, COMPARATOR);
-
         for(IGuide guide : guides)
         {
             INFO_PAGE.addSub(guide.getPage());
         }
 
         INFO_PAGE.cleanup();
-        INFO_PAGE.sortAll();
+        INFO_PAGE.sort(false);
     }
 
     private static void loadTree(IResourceManager resourceManager, String domain, InfoPage page, GuideFormat format, String parentDir) throws Exception

@@ -159,6 +159,8 @@ public class ServerInfoPage
                     }
                 }
             }
+
+            page1.sort(true);
         }
         catch(Exception ex)
         {
@@ -171,7 +173,7 @@ public class ServerInfoPage
         }
 
         page.cleanup();
-        page.sortAll();
+        page.sort(false);
         return page;
     }
 

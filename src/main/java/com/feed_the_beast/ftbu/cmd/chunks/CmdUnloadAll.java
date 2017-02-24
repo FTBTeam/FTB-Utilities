@@ -22,7 +22,7 @@ public class CmdUnloadAll extends CommandLM
     @Override
     public String getCommandName()
     {
-        return "admin_unload_all";
+        return "unload_all";
     }
 
     @Override

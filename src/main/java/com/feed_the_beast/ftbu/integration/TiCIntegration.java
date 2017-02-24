@@ -184,6 +184,8 @@ public class TiCIntegration
             }
         }
 
+        modifiers.sort(false);
+
         InfoPage pageSmeltry = loadPage(event, "smeltery");
 
         if(pageSmeltry != null)

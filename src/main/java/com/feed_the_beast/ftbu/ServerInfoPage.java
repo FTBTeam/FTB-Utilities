@@ -188,25 +188,15 @@ public class ServerInfoPage
 
         page.println(null);
 
-        String usage = c.getCommandUsage(sender);
-
-        if(usage.indexOf('\n') != -1)
+        for(String s : c.getCommandUsage(sender).split("\n"))
         {
-            String[] usageL = usage.split("\n");
-            for(String s1 : usageL)
+            if(s.indexOf('%') != -1 || s.indexOf('/') != -1)
             {
-                page.println(s1);
-            }
-        }
-        else
-        {
-            if(usage.indexOf('%') != -1 || usage.indexOf('/') != -1)
-            {
-                page.println(new TextComponentString(usage));
+                page.println(new TextComponentTranslation("commands.generic.usage", s));
             }
             else
             {
-                page.println(new TextComponentTranslation(usage));
+                page.println(new TextComponentTranslation("commands.generic.usage", new TextComponentTranslation(s)));
             }
         }
 

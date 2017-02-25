@@ -39,7 +39,7 @@ public class CmdOverride implements ICommand
     @Override
     public String getCommandUsage(ICommandSender sender)
     {
-        return parent.getCommandName();
+        return parent.getCommandUsage(sender);
     }
 
     @Override

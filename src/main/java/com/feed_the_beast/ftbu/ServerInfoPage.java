@@ -109,7 +109,7 @@ public class ServerInfoPage
                 sb.append(j + 1);
                 sb.append(']');
                 sb.append(' ');
-                sb.append(p.getProfile().getName());
+                sb.append(p.getName());
                 sb.append(':');
                 sb.append(' ');
                 if(!(data instanceof ITextComponent))

@@ -77,7 +77,7 @@ public class FTBUPlayerEventHandler
 
             if(data != null)
             {
-                map.put(player.getProfile().getId(), data.getClientFlags());
+                map.put(player.getId(), data.getClientFlags());
             }
         }
 

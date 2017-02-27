@@ -5,13 +5,11 @@ import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.lib.SidebarButton;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
-import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.gui.GuiClaimedChunks;
 import com.feed_the_beast.ftbu.gui.Guides;
 import com.feed_the_beast.ftbu.net.MessageRequestServerInfo;
 import net.minecraft.client.Minecraft;
@@ -23,7 +21,6 @@ public class FTBUActions
         @Override
         public void onClicked(IMouseButton button)
         {
-            GuiHelper.playClickSound();
             Guides.openGui();
         }
     };
@@ -49,8 +46,7 @@ public class FTBUActions
         @Override
         public void onClicked(IMouseButton button)
         {
-            GuiClaimedChunks.instance = new GuiClaimedChunks();
-            GuiClaimedChunks.instance.openGui();
+            FTBLibClient.execClientCommand("/ftb chunks gui");
         }
 
         @Override
@@ -65,7 +61,7 @@ public class FTBUActions
         @Override
         public void onClicked(IMouseButton button)
         {
-            FTBLibClient.execClientCommand("/ftb trash_can", false);
+            FTBLibClient.execClientCommand("/ftb trash_can");
         }
 
         @Override
@@ -80,7 +76,7 @@ public class FTBUActions
         @Override
         public void onClicked(IMouseButton button)
         {
-            FTBLibClient.execClientCommand("/ftb shop", false);
+            FTBLibClient.execClientCommand("/ftb shop");
         }
 
         @Override
@@ -95,7 +91,7 @@ public class FTBUActions
         @Override
         public void onClicked(IMouseButton button)
         {
-            FTBLibClient.execClientCommand("/heal", false);
+            FTBLibClient.execClientCommand("/heal");
         }
 
         @Override
@@ -111,7 +107,7 @@ public class FTBUActions
         public void onClicked(IMouseButton button)
         {
             int i = Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode ? 0 : 1;
-            FTBLibClient.execClientCommand("/gamemode " + i, false);
+            FTBLibClient.execClientCommand("/gamemode " + i);
         }
 
         @Override
@@ -128,11 +124,11 @@ public class FTBUActions
         {
             if(button.isLeft())
             {
-                FTBLibClient.execClientCommand("/toggledownfall", false);
+                FTBLibClient.execClientCommand("/toggledownfall");
             }
             else
             {
-                FTBLibClient.execClientCommand("/weather clear 1000000", false);
+                FTBLibClient.execClientCommand("/weather clear 1000000");
             }
         }
 
@@ -148,7 +144,7 @@ public class FTBUActions
         @Override
         public void onClicked(IMouseButton button)
         {
-            FTBLibClient.execClientCommand("/time set 6000", false);
+            FTBLibClient.execClientCommand("/time set 6000");
         }
 
         @Override
@@ -163,7 +159,7 @@ public class FTBUActions
         @Override
         public void onClicked(IMouseButton button)
         {
-            FTBLibClient.execClientCommand("/time set 18000", false);
+            FTBLibClient.execClientCommand("/time set 18000");
         }
 
         @Override

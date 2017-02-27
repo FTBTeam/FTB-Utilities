@@ -66,6 +66,6 @@ public class CmdUnloadAll extends CommandLM
         }
 
         LoadedChunkStorage.INSTANCE.checkAll();
-        sender.addChatMessage(new TextComponentString("Unloaded " + p.getProfile().getName() + "'s chunks"));
+        sender.addChatMessage(new TextComponentString("Unloaded " + p.getName() + "'s chunks"));
     }
 }

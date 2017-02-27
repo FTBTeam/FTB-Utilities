@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.api_impl;
 
-import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
@@ -101,7 +100,6 @@ public enum ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializabl
         }
 
         ChunkDimPos chunkDimPos = new BlockDimPos(pos, entityPlayer.dimension).toChunkPos();
-
         IClaimedChunk chunk = getChunk(chunkDimPos);
 
         if(chunk == null)
@@ -132,15 +130,7 @@ public enum ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializabl
             return true;
         }*/
 
-        switch(FTBUTeamData.get(team).getBlocks())
-        {
-            case ALLIES:
-                return team.hasStatus(player, EnumTeamStatus.ALLY);
-            case MEMBERS:
-                return team.hasStatus(player, EnumTeamStatus.MEMBER);
-        }
-
-        return true;
+        return team.canInteract(player.getId(), FTBUTeamData.get(team).getBlocks());
     }
 
     @Override
@@ -152,12 +142,12 @@ public enum ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializabl
 
         MAP.forEach((key, value) ->
         {
-            Collection<IClaimedChunk> c = map1.get(value.getOwner().getProfile().getId());
+            Collection<IClaimedChunk> c = map1.get(value.getOwner().getId());
 
             if(c == null)
             {
                 c = new ArrayList<>();
-                map1.put(value.getOwner().getProfile().getId(), c);
+                map1.put(value.getOwner().getId(), c);
             }
 
             c.add(value);

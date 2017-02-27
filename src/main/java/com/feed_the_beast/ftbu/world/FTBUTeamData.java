@@ -13,8 +13,8 @@ import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
-import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagInt;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
@@ -37,7 +37,7 @@ public class FTBUTeamData implements INBTSerializable<NBTBase>
         return (FTBUTeamData) t.getData(FTBLibIntegration.FTBU_DATA);
     }
 
-    private byte flags = 0;
+    private int flags = 0;
 
     public FTBUTeamData()
     {
@@ -48,7 +48,7 @@ public class FTBUTeamData implements INBTSerializable<NBTBase>
     @Override
     public NBTBase serializeNBT()
     {
-        return new NBTTagByte(flags);
+        return new NBTTagInt(flags);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class FTBUTeamData implements INBTSerializable<NBTBase>
             level = DEF_BLOCKS_LEVEL;
         }
 
-        flags &= 0xF3; // 11110011
+        flags &= 0b11110011;
         flags |= level.ordinal() << 2;
     }
 

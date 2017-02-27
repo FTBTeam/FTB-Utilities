@@ -34,9 +34,9 @@ public class CmdGet extends CommandLM
         checkArgs(args, 1, "<player>");
         IForgePlayer p = getForgePlayer(args[0]);
         IRank rank = FTBUtilitiesAPI_Impl.INSTANCE.getRank(p.getProfile());
-        ITextComponent name = new TextComponentString(rank.getName() + " - " + rank.getFormattedName(p.getProfile().getName()));
-        name.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/msg " + p.getProfile().getName() + " "));
-        name.getStyle().setInsertion(p.getProfile().getName());
+        ITextComponent name = new TextComponentString(rank.getName() + " - " + rank.getFormattedName(p.getName()));
+        name.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/msg " + p.getName() + " "));
+        name.getStyle().setInsertion(p.getName());
         sender.addChatMessage(name);
     }
 }

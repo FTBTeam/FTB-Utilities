@@ -31,6 +31,6 @@ public class CmdCheckPerm extends CommandLM
         checkArgs(args, 2, "<player> <permission>");
         IForgePlayer player = getForgePlayer(args[0]);
         boolean perm = player.isOnline() ? PermissionAPI.hasPermission(player.getPlayer(), args[1]) : PermissionAPI.hasPermission(player.getProfile(), args[1], null);
-        sender.addChatMessage(new TextComponentString(args[1] + " for " + player.getProfile().getName() + " is " + perm));
+        sender.addChatMessage(new TextComponentString(args[1] + " for " + player.getName() + " is " + perm));
     }
 }

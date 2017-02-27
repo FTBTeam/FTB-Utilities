@@ -19,6 +19,8 @@ public class CmdChunks extends CommandTreeBase
 
     public CmdChunks()
     {
+        addSubcommand(new CmdGui());
+
         addSubcommand(new CmdClaim());
         addSubcommand(new CmdUnclaim());
         addSubcommand(new CmdLoad());

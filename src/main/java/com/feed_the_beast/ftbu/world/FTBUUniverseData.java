@@ -79,7 +79,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
             return "";
         }
 
-        String b = LOCAL_BADGES.get(p.getProfile().getId());
+        String b = LOCAL_BADGES.get(p.getId());
         if(b == null)
         {
             b = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(p.getProfile(), FTBUPermissions.BADGE).getString();
@@ -465,7 +465,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
                 StatisticsManagerServer stats = player.stats();
 
                 JsonTable.TableEntry tableEntry = new JsonTable.TableEntry();
-                tableEntry.set("name", new JsonPrimitive(player.getProfile().getName()));
+                tableEntry.set("name", new JsonPrimitive(player.getName()));
                 tableEntry.set("deaths", new JsonPrimitive(stats.readStat(StatList.DEATHS)));
                 tableEntry.set("dph", new JsonPrimitive(FTBLibStats.getDeathsPerHour(stats)));
                 tableEntry.set("last_seen", new JsonPrimitive(player.isOnline() ? 0 : FTBLibStats.getLastSeen(stats, false)));

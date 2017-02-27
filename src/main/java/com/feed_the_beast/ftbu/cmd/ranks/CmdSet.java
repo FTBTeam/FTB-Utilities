@@ -67,7 +67,7 @@ public class CmdSet extends CommandLM
         }
 
         IForgePlayer p = getForgePlayer(args[0]);
-        Ranks.setRank(p.getProfile().getId(), r);
-        FTBLibLang.RAW.printChat(sender, p.getProfile().getName() + " now is " + r.getName()); //TODO: Lang
+        Ranks.setRank(p.getId(), r);
+        FTBLibLang.RAW.printChat(sender, p.getName() + " now is " + r.getName()); //TODO: Lang
     }
 }

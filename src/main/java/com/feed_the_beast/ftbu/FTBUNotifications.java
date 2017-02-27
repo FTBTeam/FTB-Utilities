@@ -59,13 +59,13 @@ public class FTBUNotifications
 
     public static INotification chunkClaimedFor(int chunkXPos, int chunkZPos, int dimension, IForgePlayer p)
     {
-        String label = String.format("Claimed the chunk %d, %d in dim [%d] on behalf of %s", chunkXPos, chunkZPos, dimension, p.getProfile().getName());
+        String label = String.format("Claimed the chunk %d, %d in dim [%d] on behalf of %s", chunkXPos, chunkZPos, dimension, p.getName());
         return create("chunk_modified", 0).addText(new TextComponentString(label));
     }
 
     public static INotification chunkUnclaimedFor(int chunkXPos, int chunkZPos, int dimension, IForgePlayer p)
     {
-        String label = String.format("Unclaimed the chunk %d, %d in dim [%d] on behalf of %s", chunkXPos, chunkZPos, dimension, p.getProfile().getName());
+        String label = String.format("Unclaimed the chunk %d, %d in dim [%d] on behalf of %s", chunkXPos, chunkZPos, dimension, p.getName());
         return create("chunk_modified", 0).addText(new TextComponentString(label));
     }
 

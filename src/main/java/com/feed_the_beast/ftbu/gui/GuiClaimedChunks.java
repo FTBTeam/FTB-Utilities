@@ -192,7 +192,7 @@ public class GuiClaimedChunks extends GuiLM
                 {
                     if(set)
                     {
-                        FTBLibClient.execClientCommand("/ftb chunks unclaim_all " + (id == 1), false);
+                        FTBLibClient.execClientCommand("/ftb chunks unclaim_all " + (id == 1));
                     }
 
                     gui.openGui();

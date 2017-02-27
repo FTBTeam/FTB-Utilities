@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbu.ranks;
 
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
-import com.feed_the_beast.ftbu.FTBUFinals;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -21,11 +19,6 @@ public class CmdTreeOverride extends CommandTreeBase
     {
         parent = c;
         permissionNode = pn;
-
-        if(LMUtils.DEV_ENV)
-        {
-            FTBUFinals.LOGGER.info("Added command override " + permissionNode);
-        }
 
         for(ICommand command : c.getSubCommands())
         {

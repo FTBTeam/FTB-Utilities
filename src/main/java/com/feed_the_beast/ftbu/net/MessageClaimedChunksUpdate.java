@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.net;
 
+import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
@@ -68,7 +68,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
         if(team != null)
         {
             ClaimedChunks.Team cteam = new ClaimedChunks.Team();
-            cteam.ownerID = team.getOwner().getProfile().getId();
+            cteam.ownerID = team.getOwner().getId();
             cteam.colorID = team.getColor().getColorID();
             cteam.formattedName = team.getColor().getTextFormatting() + team.getTitle();
             cteam.isAlly = true;
@@ -87,15 +87,15 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
                 if(owner != null && owner.getTeam() != null)
                 {
                     team = owner.getTeam();
-                    data.team = teams.get(team.getOwner().getProfile().getId());
+                    data.team = teams.get(team.getOwner().getId());
 
                     if(data.team == null)
                     {
                         data.team = new ClaimedChunks.Team();
-                        data.team.ownerID = team.getOwner().getProfile().getId();
+                        data.team.ownerID = team.getOwner().getId();
                         data.team.colorID = team.getColor().getColorID();
                         data.team.formattedName = team.getColor().getTextFormatting() + team.getTitle();
-                        data.team.isAlly = team.hasPermission(player.getGameProfile().getId(), FTBLibPerms.TEAM_IS_ALLY);
+                        data.team.isAlly = team.hasStatus(player.getGameProfile().getId(), EnumTeamStatus.ALLY);
                         teams.put(data.team.ownerID, data.team);
                     }
 
@@ -114,7 +114,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 
                     if(data.team.isAlly)
                     {
-                        data.owner = owner.getProfile().getName();
+                        data.owner = owner.getName();
                     }
                 }
                 else

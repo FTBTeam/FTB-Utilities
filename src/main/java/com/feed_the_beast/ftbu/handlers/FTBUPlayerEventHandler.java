@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbu.handlers;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerDeathEvent;
-import com.feed_the_beast.ftbl.api.events.player.ForgePlayerInfoEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
@@ -109,11 +108,11 @@ public class FTBUPlayerEventHandler
             data.addConfig(event.getSettings());
         }
     }
-
+    
+    /*
     @SubscribeEvent
     public void addInfo(ForgePlayerInfoEvent event)
     {
-        /*
         if(owner.getRank().config.show_rank.getMode())
 		{
 		    Rank rank = getRank();
@@ -121,8 +120,8 @@ public class FTBUPlayerEventHandler
 		    rankC.getChatStyle().setColor(rank.color.getMode());
 		    info.add(rankC);
 		}
-		*/
     }
+    */
 
     @SubscribeEvent
     public void onChunkChanged(EntityEvent.EnteringChunk e)

@@ -40,11 +40,7 @@ public class FTBULang
     BACKUP_MANUAL_LAUNCH = get("backup.manual_launch"),
     BACKUP_ALREADY_RUNNING = get("backup.already_running"),
     BACKUP_NOT_RUNNING = get("backup.not_running"),
-    BACKUP_SIZE = get("backup.size"),
-
-    CHUNKTYPE_WILDERNESS = get("chunktype.wilderness"),
-    CHUNKTYPE_CLAIMED = get("chunktype.claimed"),
-    CHUNKTYPE_LOADED = get("chunktype.loaded");
+            BACKUP_SIZE = get("backup.size");
     //@formatter:on
 
     public static LangKey get(String s)

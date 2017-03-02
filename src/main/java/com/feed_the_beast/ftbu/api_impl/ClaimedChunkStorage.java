@@ -7,6 +7,8 @@ import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
+import com.feed_the_beast.ftbu.FTBUCommon;
+import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunkStorage;
 import com.feed_the_beast.ftbu.world.FTBUTeamData;
@@ -160,15 +162,25 @@ public enum ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializabl
             for(IClaimedChunk c : value)
             {
                 ChunkDimPos p = c.getPos();
-                boolean loaded = c.isLoaded();
-                int ai[] = loaded ? new int[4] : new int[3];
+
+                int flags = 0;
+
+                for(IChunkUpgrade upgrade : FTBUCommon.CHUNK_UPGRADES)
+                {
+                    if(upgrade != null && c.hasUpgrade(upgrade))
+                    {
+                        flags |= (1 << upgrade.getId());
+                    }
+                }
+
+                int ai[] = flags != 0 ? new int[4] : new int[3];
                 ai[0] = p.dim;
                 ai[1] = p.posX;
                 ai[2] = p.posZ;
 
-                if(loaded)
+                if(flags != 0)
                 {
-                    ai[3] = 1;
+                    ai[3] = flags;
                 }
 
                 list.appendTag(new NBTTagIntArray(ai));
@@ -199,13 +211,7 @@ public enum ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializabl
 
                     if(ai.length >= 3)
                     {
-                        ClaimedChunk chunk = new ClaimedChunk(new ChunkDimPos(ai[1], ai[2], ai[0]), player);
-
-                        if(ai.length >= 4 && ai[3] != 0)
-                        {
-                            chunk.setLoaded(true);
-                        }
-
+                        ClaimedChunk chunk = new ClaimedChunk(new ChunkDimPos(ai[1], ai[2], ai[0]), player, ai.length >= 4 ? ai[3] : 0);
                         MAP.put(chunk.getPos(), chunk);
                     }
                 }

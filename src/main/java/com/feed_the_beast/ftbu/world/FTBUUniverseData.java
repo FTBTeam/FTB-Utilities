@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
-import com.feed_the_beast.ftbl.lib.EnumEnabled;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibStats;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
@@ -18,6 +17,7 @@ import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.chunks.ChunkModifiedEvent;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
+import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
@@ -158,23 +158,8 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
         }
         else
         {
-            IForgePlayer owner = ClaimedChunkStorage.INSTANCE.getChunkOwner(pos);
-
-            if(owner != null)
-            {
-                EnumEnabled fe = (EnumEnabled) FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(owner.getProfile(), FTBUPermissions.CLAIMS_FORCED_EXPLOSIONS).getValue();
-
-                if(fe == null)
-                {
-                    return owner.getTeam() == null || !FTBUTeamData.get(owner.getTeam()).disableExplosions();
-                }
-                else
-                {
-                    return fe == EnumEnabled.ENABLED;
-                }
-            }
-
-            return true;
+            IClaimedChunk chunk = ClaimedChunkStorage.INSTANCE.getChunk(pos);
+            return chunk == null || !chunk.hasUpgrade(ChunkUpgrade.NO_EXPLOSIONS);
         }
     }
 
@@ -213,7 +198,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
             return false;
         }
 
-        ClaimedChunk chunk = new ClaimedChunk(pos, player);
+        ClaimedChunk chunk = new ClaimedChunk(pos, player, 0);
         ClaimedChunkStorage.INSTANCE.setChunk(pos, chunk);
         MinecraftForge.EVENT_BUS.post(new ChunkModifiedEvent.Claimed(chunk));
         return true;
@@ -252,7 +237,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
     {
         IClaimedChunk chunk = ClaimedChunkStorage.INSTANCE.getChunk(pos);
 
-        if(chunk == null || flag == chunk.isLoaded() || !player.equalsPlayer(chunk.getOwner()))
+        if(chunk == null || flag == chunk.hasUpgrade(ChunkUpgrade.LOADED) || !player.equalsPlayer(chunk.getOwner()))
         {
             return false;
         }
@@ -285,7 +270,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
 
             for(IClaimedChunk c : ClaimedChunkStorage.INSTANCE.getChunks(player))
             {
-                if(c.isLoaded())
+                if(c.hasUpgrade(ChunkUpgrade.LOADED))
                 {
                     loadedChunks++;
 
@@ -301,7 +286,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
             MinecraftForge.EVENT_BUS.post(new ChunkModifiedEvent.Unloaded(chunk));
         }
 
-        chunk.setLoaded(flag);
+        chunk.setHasUpgrade(ChunkUpgrade.LOADED, flag);
         LoadedChunkStorage.INSTANCE.checkChunk(chunk, null);
 
         if(flag)

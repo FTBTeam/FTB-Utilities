@@ -4,10 +4,10 @@ import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.INotification;
-import com.feed_the_beast.ftbl.api.NotificationID;
+import com.feed_the_beast.ftbl.api.NotificationId;
 import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbu.api.FTBULang;
+import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
@@ -29,11 +29,11 @@ public class FTBUNotifications
     public static final INotification CHUNK_UNCLAIMED = create("chunk_modified", 1).addText(new TextComponentString("Chunk unclaimed"));
     public static final INotification CHUNK_LOADED = create("chunk_modified", 2).addText(new TextComponentString("Chunk loaded"));
     public static final INotification CHUNK_UNLOADED = create("chunk_modified", 3).addText(new TextComponentString("Chunk unloaded"));
-    public static final Notification WILDERNESS = create("chunk_changed", (byte) 0).setTimer(3000).setColorID((byte) 38).setItem(new ItemStack(Blocks.VINE));
+    public static final Notification WILDERNESS = create("chunk_changed", 0).setTimer(3000).setColor(0xFF3A913A).setItem(new ItemStack(Blocks.VINE));
 
     static
     {
-        ITextComponent msg = FTBULang.CHUNKTYPE_WILDERNESS.textComponent().createCopy();
+        ITextComponent msg = ChunkUpgrade.WILDERNESS.getLangKey().textComponent();
         msg.getStyle().setBold(true);
         WILDERNESS.addText(msg);
     }
@@ -54,7 +54,7 @@ public class FTBUNotifications
 
     private static Notification create(String s, int v)
     {
-        return new Notification(new NotificationID(FTBUFinals.get(s), v));
+        return new Notification(new NotificationId(FTBUFinals.get(s), v));
     }
 
     public static INotification chunkClaimedFor(int chunkXPos, int chunkZPos, int dimension, IForgePlayer p)
@@ -78,7 +78,7 @@ public class FTBUNotifications
 
         ITextComponent msg = new TextComponentString(team.getTitle());
         msg.getStyle().setBold(true);
-        Notification n = new Notification(WILDERNESS.getID().variant(1));
+        Notification n = new Notification(WILDERNESS.getId().variant(1));
         n.addText(msg);
 
         if(!team.getDesc().isEmpty())
@@ -89,7 +89,7 @@ public class FTBUNotifications
         }
 
         n.setTimer(3000);
-        n.setColorID(team.getColor().getColorID());
+        n.setColor(team.getColor().getColor());
         return n;
     }
 }

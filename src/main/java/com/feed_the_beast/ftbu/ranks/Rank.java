@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.IRankConfig;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.google.gson.JsonArray;
@@ -108,7 +107,7 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 
         if(syntax != null)
         {
-            o.add("syntax", new JsonPrimitive(syntax.replace(LMUtils.FORMATTING_CHAR, '&')));
+            o.add("syntax", new JsonPrimitive(syntax.replace(LMStringUtils.FORMATTING_CHAR, '&')));
         }
 
         JsonArray a1 = new JsonArray();
@@ -151,7 +150,7 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 
         if(o.has("syntax"))
         {
-            syntax = o.get("syntax").getAsString().replace('&', LMUtils.FORMATTING_CHAR);
+            syntax = o.get("syntax").getAsString().replace('&', LMStringUtils.FORMATTING_CHAR);
         }
 
         if(o.has("permissions"))

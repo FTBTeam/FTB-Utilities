@@ -108,11 +108,11 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback
 
     public void checkChunk(IClaimedChunk chunk, @Nullable ForgeChunkManager.Ticket ticket)
     {
-        boolean load = chunk.isActuallyLoaded();
+        boolean load = chunk.hasUpgrade(ChunkUpgrade.ACTUALLY_LOADED);
 
-        if(load != chunk.isForced())
+        if(load != chunk.hasUpgrade(ChunkUpgrade.FORCED))
         {
-            chunk.setForced(load);
+            chunk.setHasUpgrade(ChunkUpgrade.FORCED, load);
 
             if(ticket == null)
             {

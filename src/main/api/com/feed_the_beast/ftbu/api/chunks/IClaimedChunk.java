@@ -12,13 +12,7 @@ public interface IClaimedChunk
 
     IForgePlayer getOwner();
 
-    boolean isLoaded();
+    boolean hasUpgrade(IChunkUpgrade upgrade);
 
-    void setLoaded(boolean v);
-
-    boolean isActuallyLoaded();
-
-    boolean isForced();
-
-    void setForced(boolean v);
+    void setHasUpgrade(IChunkUpgrade upgrade, boolean v);
 }

@@ -84,10 +84,13 @@ ftbu.backup.already_running=Backup in progress!
 ftbu.backup.not_running=Backup is not running!
 ftbu.backup.size=Current world size: %s, total backups folder size: %s
 
-# Chunktypes
-ftbu.chunktype.wilderness=Wilderness
-ftbu.chunktype.claimed=Claimed Area
-ftbu.chunktype.loaded=Chunkloaded
+# Chunk Types
+ftbu.lang.chunk.loaded=Chunkloaded
+ftbu.lang.chunk.no_explosions=Explosions Disabled
+ftbu.lang.chunk.no_pvp=Ally PVP Disabled
+
+ftbu.lang.chunk.claimed=Claimed Area
+ftbu.lang.chunk.wilderness=Wilderness
 
 # Pack States
 ftbu.pack_state.download=Download

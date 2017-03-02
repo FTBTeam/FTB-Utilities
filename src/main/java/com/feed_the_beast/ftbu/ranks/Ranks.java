@@ -302,29 +302,27 @@ public class Ranks
             list.add("</head><body><h1>Rank Configs</h1><table>");
             list.add("<tr><th>Rank Config</th><th>Def Value</th><th>Def OP Value</th><th>Info</th></tr>");
 
+            List<String> infoList = new ArrayList<>();
+
             for(IRankConfig p : sortedRankConfigs)
             {
                 IConfigValue value = p.getDefValue();
                 list.add("<tr><td>" + p.getName() + "</td><td>");
 
-                String min = value.getMinValueString();
-                String max = value.getMaxValueString();
+                value.addInfo(p, infoList);
                 List<String> variants = value.getVariants();
 
-                if(min != null || max != null || variants != null)
+                if(!infoList.isEmpty() || variants != null)
                 {
                     list.add("<ul><li>Default: ");
                     list.add(value.getSerializableElement() + "</li>");
 
-                    if(min != null)
+                    for(String s : infoList)
                     {
-                        list.add("<li>Min: " + min + "</li>");
+                        list.add("<li>" + LMStringUtils.removeFormatting(s) + "</li>");
                     }
 
-                    if(max != null)
-                    {
-                        list.add("<li>Max: " + max + "</li>");
-                    }
+                    infoList.clear();
 
                     if(variants != null)
                     {

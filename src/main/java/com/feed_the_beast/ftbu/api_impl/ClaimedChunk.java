@@ -2,10 +2,13 @@ package com.feed_the_beast.ftbu.api_impl;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibStats;
+import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbu.FTBUPermissions;
+import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
+import com.feed_the_beast.ftbu.world.FTBUTeamData;
 
 /**
  * Created by LatvianModder on 03.10.2016.
@@ -14,12 +17,13 @@ public class ClaimedChunk implements IClaimedChunk
 {
     private final ChunkDimPos pos;
     private final IForgePlayer owner;
-    private boolean loaded, forced;
+    private int flags;
 
-    public ClaimedChunk(ChunkDimPos c, IForgePlayer p)
+    public ClaimedChunk(ChunkDimPos c, IForgePlayer p, int f)
     {
         pos = c;
         owner = p;
+        flags = f;
     }
 
     @Override
@@ -35,56 +39,45 @@ public class ClaimedChunk implements IClaimedChunk
     }
 
     @Override
-    public boolean isLoaded()
+    public boolean hasUpgrade(IChunkUpgrade upgrade)
     {
-        return loaded;
-    }
-
-    @Override
-    public void setLoaded(boolean v)
-    {
-        loaded = v;
-    }
-
-    @Override
-    public boolean isActuallyLoaded()
-    {
-        boolean loaded = isLoaded();
-
-        if(!loaded || !FTBUConfigWorld.CHUNK_LOADING.getBoolean())
+        if(upgrade == ChunkUpgrade.ACTUALLY_LOADED)
         {
-            return false;
-        }
+            boolean loaded = hasUpgrade(ChunkUpgrade.LOADED);
 
-        switch((ChunkloaderType) FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(owner.getProfile(), FTBUPermissions.CHUNKLOADER_TYPE).getValue())
-        {
-            case ONLINE:
-                return owner.isOnline();
-            case OFFLINE:
-                if(!owner.isOnline())
-                {
-                    double max = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(owner.getProfile(), FTBUPermissions.CHUNKLOADER_OFFLINE_TIMER).getDouble();
-
-                    if(max > 0D && FTBLibStats.getLastSeenDeltaInHours(owner.stats(), false) > max)
-                    {
-                        return false;
-                    }
-                }
-                return true;
-            default:
+            if(!loaded || !FTBUConfigWorld.CHUNK_LOADING.getBoolean() || FTBUPermissions.canUpgradeChunk(owner.getProfile(), ChunkUpgrade.LOADED))
+            {
                 return false;
+            }
+            else if(!owner.isOnline())
+            {
+                double max = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(owner.getProfile(), FTBUPermissions.CHUNKLOADER_OFFLINE_TIMER).getDouble();
+
+                if(max == 0 || (max > 0 && FTBLibStats.getLastSeenDeltaInHours(owner.stats(), false) > max))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
+        else if(upgrade == ChunkUpgrade.NO_EXPLOSIONS)
+        {
+            if(!FTBUPermissions.canUpgradeChunk(owner.getProfile(), ChunkUpgrade.NO_EXPLOSIONS))
+            {
+                return false;
+            }
+
+            FTBUTeamData data = owner.getTeam() == null ? null : FTBUTeamData.get(owner.getTeam());
+            return data != null && data.disableExplosions();
+        }
+
+        return Bits.getFlag(flags, 1 << upgrade.getId());
     }
 
     @Override
-    public boolean isForced()
+    public void setHasUpgrade(IChunkUpgrade upgrade, boolean v)
     {
-        return forced;
-    }
-
-    @Override
-    public void setForced(boolean v)
-    {
-        forced = v;
+        flags = Bits.setFlag(flags, 1 << upgrade.getId(), v);
     }
 }

@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbu.handlers;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerLeftEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamSettingsEvent;
 import com.feed_the_beast.ftbu.world.FTBUTeamData;
+import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
@@ -48,6 +49,7 @@ public class FTBUTeamEventHandler
 
         if(data != null)
         {
+            FTBUUniverseData.unclaimAllChunks(event.getPlayer(), null);
         }
     }
 }

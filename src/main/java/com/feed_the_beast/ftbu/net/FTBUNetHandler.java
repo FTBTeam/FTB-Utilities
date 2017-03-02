@@ -18,5 +18,7 @@ public class FTBUNetHandler
         NET.register(8, new MessageSendWarpList());
         NET.register(9, new MessageSendFTBUClientFlags());
         NET.register(10, new MessageOpenClaimedChunksGui());
+        NET.register(11, new MessageJMRequest());
+        NET.register(12, new MessageJMUpdate());
     }
 }

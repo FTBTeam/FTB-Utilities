@@ -39,7 +39,7 @@ public class CmdTplast extends CommandLM
     {
         checkArgs(args, 1, "(<x> <y> <z>) | ([who] <player>)");
 
-        if(args.length == 3)
+        if(args.length >= 3)
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
             double x = parseDouble(ep.posX, args[0], -30000000, 30000000, true);

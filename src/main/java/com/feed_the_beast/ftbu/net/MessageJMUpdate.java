@@ -10,21 +10,16 @@ import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
-import com.feed_the_beast.ftbu.FTBUCommon;
-import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
-import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
+import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.gui.ClaimedChunks;
-import com.feed_the_beast.ftbu.gui.GuiClaimedChunks;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.server.permission.PermissionAPI;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -32,40 +27,23 @@ import java.util.UUID;
 /**
  * Created by LatvianModder on 29.09.2016.
  */
-public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedChunksUpdate>
+public class MessageJMUpdate extends MessageToClient<MessageJMUpdate>
 {
-    private int startX, startZ, claimedChunks, loadedChunks, maxClaimedChunks, maxLoadedChunks;
+    private int startX, startZ;
     private Map<UUID, ClaimedChunks.Team> teams;
     private ClaimedChunks.Data[] chunkData;
 
-    public MessageClaimedChunksUpdate()
+    public MessageJMUpdate()
     {
     }
 
-    public MessageClaimedChunksUpdate(int sx, int sz, EntityPlayer player)
+    public MessageJMUpdate(int sx, int sz, EntityPlayer player)
     {
         startX = sx;
         startZ = sz;
 
         IForgePlayer player1 = FTBLibIntegration.API.getUniverse().getPlayer(player);
         IForgeTeam team = player1.getTeam();
-
-        Collection<IClaimedChunk> chunks = ClaimedChunkStorage.INSTANCE.getChunks(player1);
-
-        claimedChunks = chunks.size();
-
-        loadedChunks = 0;
-
-        for(IClaimedChunk c : chunks)
-        {
-            if(c.hasUpgrade(ChunkUpgrade.LOADED))
-            {
-                loadedChunks++;
-            }
-        }
-
-        maxClaimedChunks = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(player, FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
-        maxLoadedChunks = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(player, FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
 
         chunkData = new ClaimedChunks.Data[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
         teams = new HashMap<>();
@@ -79,8 +57,6 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
             cteam.isAlly = true;
             teams.put(cteam.ownerId, cteam);
         }
-
-        boolean canSeeChunkInfo = PermissionAPI.hasPermission(player, FTBUPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS);
 
         for(int x1 = 0; x1 < GuiConfigs.CHUNK_SELECTOR_TILES_GUI; x1++)
         {
@@ -107,30 +83,6 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
                     }
 
                     data.setHasUpgrade(ChunkUpgrade.CLAIMED, true);
-
-                    if(canSeeChunkInfo || team.hasStatus(player1, EnumTeamStatus.MEMBER))
-                    {
-                        boolean isOwner = player1.equalsPlayer(owner);
-                        data.setHasUpgrade(ChunkUpgrade.CAN_CLAIM, isOwner);
-                        data.setHasUpgrade(ChunkUpgrade.IS_OWNER, isOwner);
-
-                        for(IChunkUpgrade upgrade : FTBUCommon.CHUNK_UPGRADES)
-                        {
-                            if(upgrade != null && chunk.hasUpgrade(upgrade))
-                            {
-                                data.setHasUpgrade(upgrade, true);
-                            }
-                        }
-                    }
-
-                    if(data.team.isAlly)
-                    {
-                        data.owner = owner.getName();
-                    }
-                }
-                else
-                {
-                    data.setHasUpgrade(ChunkUpgrade.CAN_CLAIM, true);
                 }
 
                 chunkData[x1 + z1 * GuiConfigs.CHUNK_SELECTOR_TILES_GUI] = data;
@@ -149,10 +101,6 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
     {
         startX = io.readInt();
         startZ = io.readInt();
-        claimedChunks = io.readInt();
-        loadedChunks = io.readInt();
-        maxClaimedChunks = io.readInt();
-        maxLoadedChunks = io.readInt();
 
         chunkData = new ClaimedChunks.Data[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
         teams = new HashMap<>();
@@ -165,7 +113,6 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
             team.ownerId = LMNetUtils.readUUID(io);
             team.formattedName = ByteBufUtils.readUTF8String(io);
             team.color = EnumTeamColor.get(io.readUnsignedByte());
-            team.isAlly = io.readBoolean();
             teams.put(team.ownerId, team);
         }
 
@@ -177,11 +124,6 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
             if(chunkData[i].hasUpgrade(ChunkUpgrade.CLAIMED))
             {
                 chunkData[i].team = teams.get(LMNetUtils.readUUID(io));
-
-                if(chunkData[i].team.isAlly)
-                {
-                    chunkData[i].owner = ByteBufUtils.readUTF8String(io);
-                }
             }
         }
     }
@@ -191,10 +133,6 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
     {
         io.writeInt(startX);
         io.writeInt(startZ);
-        io.writeInt(claimedChunks);
-        io.writeInt(loadedChunks);
-        io.writeInt(maxClaimedChunks);
-        io.writeInt(maxLoadedChunks);
 
         io.writeShort(teams.size());
 
@@ -203,7 +141,6 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
             LMNetUtils.writeUUID(io, t.ownerId);
             ByteBufUtils.writeUTF8String(io, t.formattedName);
             io.writeByte(t.color.ordinal());
-            io.writeBoolean(t.isAlly);
         }
 
         for(ClaimedChunks.Data data : chunkData)
@@ -213,18 +150,22 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
             if(data.hasUpgrade(ChunkUpgrade.CLAIMED))
             {
                 LMNetUtils.writeUUID(io, data.team.ownerId);
-
-                if(data.team.isAlly)
-                {
-                    ByteBufUtils.writeUTF8String(io, data.owner);
-                }
             }
         }
     }
 
     @Override
-    public void onMessage(MessageClaimedChunksUpdate m, EntityPlayer player)
+    public void onMessage(MessageJMUpdate m, EntityPlayer player)
     {
-        GuiClaimedChunks.setData(m.startX, m.startZ, m.claimedChunks, m.loadedChunks, m.maxClaimedChunks, m.maxLoadedChunks, m.chunkData, m.teams);
+        if(FTBUClient.JM_INTEGRATION != null)
+        {
+            for(int z = 0; z < GuiConfigs.CHUNK_SELECTOR_TILES_GUI; z++)
+            {
+                for(int x = 0; x < GuiConfigs.CHUNK_SELECTOR_TILES_GUI; x++)
+                {
+                    FTBUClient.JM_INTEGRATION.chunkChanged(new ChunkPos(m.startX + x, m.startZ + z), m.chunkData[x + z * GuiConfigs.CHUNK_SELECTOR_TILES_GUI]);
+                }
+            }
+        }
     }
 }

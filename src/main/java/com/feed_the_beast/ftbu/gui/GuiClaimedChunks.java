@@ -14,7 +14,11 @@ import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
 import com.feed_the_beast.ftbl.lib.gui.misc.ThreadReloadChunkSelector;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
+import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.api.FTBULang;
+import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
+import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
+import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksModify;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksRequest;
 import net.minecraft.client.Minecraft;
@@ -38,6 +42,38 @@ import java.util.UUID;
 public class GuiClaimedChunks extends GuiLM
 {
     public static GuiClaimedChunks instance;
+    private static final Map<UUID, ClaimedChunks.Team> TEAMS = new HashMap<>();
+    private static final ClaimedChunks.Data[] chunkData = new ClaimedChunks.Data[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
+    private static int claimedChunks, loadedChunks, maxClaimedChunks, maxLoadedChunks;
+
+    static
+    {
+        for(int i = 0; i < chunkData.length; i++)
+        {
+            chunkData[i] = new ClaimedChunks.Data();
+        }
+    }
+
+    public static void setData(int startX, int startZ, int cc, int lc, int mcc, int mlc, ClaimedChunks.Data[] data, Map<UUID, ClaimedChunks.Team> tms)
+    {
+        claimedChunks = cc;
+        loadedChunks = lc;
+        maxClaimedChunks = mcc;
+        maxLoadedChunks = mlc;
+        System.arraycopy(data, 0, chunkData, 0, chunkData.length);
+        TEAMS.putAll(tms);
+
+        if(FTBUClient.JM_INTEGRATION != null)
+        {
+            for(int z = 0; z < GuiConfigs.CHUNK_SELECTOR_TILES_GUI; z++)
+            {
+                for(int x = 0; x < GuiConfigs.CHUNK_SELECTOR_TILES_GUI; x++)
+                {
+                    FTBUClient.JM_INTEGRATION.chunkChanged(new ChunkPos(startX + x, startZ + z), data[x + z * GuiConfigs.CHUNK_SELECTOR_TILES_GUI]);
+                }
+            }
+        }
+    }
 
     private class MapButton extends ButtonLM
     {
@@ -74,24 +110,27 @@ public class GuiClaimedChunks extends GuiLM
         @Override
         public void addMouseOverText(IGui gui, List<String> list)
         {
-            if(chunkData[index].isClaimed())
+            if(chunkData[index].hasUpgrade(ChunkUpgrade.CLAIMED))
             {
                 list.add(chunkData[index].team.formattedName);
-                list.add(TextFormatting.GREEN + FTBULang.CHUNKTYPE_CLAIMED.translate());
+                list.add(TextFormatting.GREEN + ChunkUpgrade.CLAIMED.getLangKey().translate());
 
                 if(chunkData[index].team.isAlly)
                 {
                     list.add(chunkData[index].owner);
 
-                    if(chunkData[index].isLoaded())
+                    for(IChunkUpgrade upgrade : FTBUCommon.CHUNK_UPGRADES)
                     {
-                        list.add(TextFormatting.RED + FTBULang.CHUNKTYPE_LOADED.translate());
+                        if(upgrade != null && chunkData[index].hasUpgrade(upgrade))
+                        {
+                            list.add(TextFormatting.RED + upgrade.getLangKey().translate());
+                        }
                     }
                 }
             }
             else
             {
-                list.add(TextFormatting.DARK_GREEN + FTBULang.CHUNKTYPE_WILDERNESS.translate());
+                list.add(TextFormatting.DARK_GREEN + ChunkUpgrade.WILDERNESS.getLangKey().translate());
             }
 
             if(GuiScreen.isCtrlKeyDown())
@@ -106,12 +145,12 @@ public class GuiClaimedChunks extends GuiLM
             int ax = getAX();
             int ay = getAY();
 
-            if(chunkData[index].isClaimed())
+            if(chunkData[index].hasUpgrade(ChunkUpgrade.CLAIMED))
             {
                 mc.getTextureManager().bindTexture(GuiConfigs.TEX_CHUNK_CLAIMING);
-                LMColorUtils.GL_COLOR.set(LMColorUtils.getColorFromID(chunkData[index].team.colorID), GuiScreen.isCtrlKeyDown() ? 50 : 180);
+                LMColorUtils.GL_COLOR.set(chunkData[index].team.color.getColor(), GuiScreen.isCtrlKeyDown() ? 50 : 180);
                 GuiHelper.drawTexturedRect(ax, ay, 16, 16, GuiConfigs.TEX_FILLED.getMinU(), GuiConfigs.TEX_FILLED.getMinV(), GuiConfigs.TEX_FILLED.getMaxU(), GuiConfigs.TEX_FILLED.getMaxV());
-                GlStateManager.color((chunkData[index].isLoaded() && chunkData[index].team.isAlly) ? 1F : 0F, chunkData[index].isOwner() ? 0.27F : 0F, 0F, GuiScreen.isCtrlKeyDown() ? 0.2F : 0.78F);
+                GlStateManager.color((chunkData[index].hasUpgrade(ChunkUpgrade.LOADED) && chunkData[index].team.isAlly) ? 1F : 0F, chunkData[index].hasUpgrade(ChunkUpgrade.IS_OWNER) ? 0.27F : 0F, 0F, GuiScreen.isCtrlKeyDown() ? 0.2F : 0.78F);
                 GuiHelper.drawTexturedRect(ax, ay, 16, 16, GuiConfigs.TEX_BORDER.getMinU(), GuiConfigs.TEX_BORDER.getMinV(), GuiConfigs.TEX_BORDER.getMaxU(), GuiConfigs.TEX_BORDER.getMaxV());
             }
 
@@ -131,9 +170,6 @@ public class GuiClaimedChunks extends GuiLM
     }
 
     public final int startX, startZ;
-    private final Map<UUID, ClaimedChunks.Team> teams;
-    private ClaimedChunks.Data[] chunkData;
-    private int claimedChunks, loadedChunks, maxClaimedChunks, maxLoadedChunks;
     private final ButtonLM buttonRefresh, buttonClose, buttonUnclaimAll;
     private final MapButton mapButtons[];
     private final PanelLM panelButtons;
@@ -144,16 +180,8 @@ public class GuiClaimedChunks extends GuiLM
     {
         super(GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16);
 
-        startX = MathHelperLM.chunk(mc.thePlayer.posX) - 7;
-        startZ = MathHelperLM.chunk(mc.thePlayer.posZ) - 7;
-
-        teams = new HashMap<>();
-        chunkData = new ClaimedChunks.Data[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
-
-        for(int i = 0; i < chunkData.length; i++)
-        {
-            chunkData[i] = new ClaimedChunks.Data();
-        }
+        startX = MathHelperLM.chunk(mc.thePlayer.posX) - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2;
+        startZ = MathHelperLM.chunk(mc.thePlayer.posZ) - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2;
 
         currentDimName = mc.theWorld.provider.getDimensionType().getName();
 
@@ -240,16 +268,6 @@ public class GuiClaimedChunks extends GuiLM
         {
             mapButtons[i] = new MapButton(0, 0, i);
         }
-    }
-
-    public void setData(int cc, int lc, int mcc, int mlc, ClaimedChunks.Data[] data, Map<UUID, ClaimedChunks.Team> tms)
-    {
-        claimedChunks = cc;
-        loadedChunks = lc;
-        maxClaimedChunks = mcc;
-        maxLoadedChunks = mlc;
-        chunkData = data;
-        teams.putAll(tms);
     }
 
     @Override

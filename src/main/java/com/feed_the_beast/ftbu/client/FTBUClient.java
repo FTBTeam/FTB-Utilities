@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbu.client;
 
 import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.gui.Guides;
+import com.feed_the_beast.ftbu.integration.IJMIntegration;
 import com.feed_the_beast.ftbu.integration.TiCIntegration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
@@ -19,7 +20,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
     public static final KeyBinding KEY_GUIDE = new KeyBinding("key.ftbu.guide", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_NONE, KEY_CATEGORY);
     public static final KeyBinding KEY_WARP = new KeyBinding("key.ftbu.warp", KeyConflictContext.UNIVERSAL, KeyModifier.NONE, Keyboard.KEY_NONE, KEY_CATEGORY);
 
-    public static boolean HAS_JM = false;
+    public static IJMIntegration JM_INTEGRATION = null;
 
     @Override
     public void preInit()

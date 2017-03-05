@@ -17,7 +17,6 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAnvil;
 import net.minecraft.block.BlockDoor;
-import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.block.BlockWorkbench;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
@@ -64,21 +63,6 @@ public class FTBUPermissions
     // Chunkloader //
     public static final String CHUNKLOADER_MAX_CHUNKS = "ftbu.chunkloader.max_chunks";
     public static final String CHUNKLOADER_OFFLINE_TIMER = "ftbu.chunkloader.offline_timer";
-
-    public static String getBlockSubstitute(Block block, String id)
-    {
-        if(block instanceof BlockRedstoneWire)
-
-        {
-            switch(id)
-            {
-                case "minecraft.redstone_wire":
-                    return "minecraft.redstone";
-            }
-        }
-
-        return id;
-    }
 
     public static void init()
     {
@@ -164,7 +148,7 @@ public class FTBUPermissions
                 }
                 else
                 {
-                    return (!player.isSneaking() || player.getHeldItem(hand) == null) && PermissionAPI.hasPermission(player.getGameProfile(), CLAIMS_BLOCK_INTERACT_PREFIX + formatId(player.worldObj.getBlockState(pos).getBlock()), null);//new PlayerContext(player).set(ContextKeys.POS, pos).set(ContextKeys.BLOCK_STATE, state));
+                    return PermissionAPI.hasPermission(player.getGameProfile(), CLAIMS_BLOCK_INTERACT_PREFIX + formatId(player.worldObj.getBlockState(pos).getBlock()), null);//new PlayerContext(player).set(ContextKeys.POS, pos).set(ContextKeys.BLOCK_STATE, state));
                 }
             case CNB_BREAK:
             case CNB_PLACE:

@@ -43,9 +43,7 @@ public class ClaimedChunk implements IClaimedChunk
     {
         if(upgrade == ChunkUpgrade.ACTUALLY_LOADED)
         {
-            boolean loaded = hasUpgrade(ChunkUpgrade.LOADED);
-
-            if(!loaded || !FTBUConfigWorld.CHUNK_LOADING.getBoolean() || FTBUPermissions.canUpgradeChunk(owner.getProfile(), ChunkUpgrade.LOADED))
+            if(!FTBUConfigWorld.CHUNK_LOADING.getBoolean() || !hasUpgrade(ChunkUpgrade.LOADED) || !FTBUPermissions.canUpgradeChunk(owner.getProfile(), ChunkUpgrade.LOADED))
             {
                 return false;
             }

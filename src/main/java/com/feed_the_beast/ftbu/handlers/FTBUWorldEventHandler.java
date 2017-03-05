@@ -1,8 +1,10 @@
 package com.feed_the_beast.ftbu.handlers;
 
+import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseClosedEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedBeforePlayersEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
+import com.feed_the_beast.ftbl.lib.config.PropertyEntityClass;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.entity.Entity;
@@ -64,9 +66,12 @@ public class FTBUWorldEventHandler // FTBLIntegration
             return true;
         }
 
-        if(FTBUConfigWorld.BLOCKED_ENTITIES.containsEntity(e.getClass(), true))
+        for(IConfigValue value : FTBUConfigWorld.BLOCKED_ENTITIES)
         {
-            return false;
+            if(((PropertyEntityClass) value).matches(e.getClass(), true))
+            {
+                return false;
+            }
         }
 
         if(FTBUConfigWorld.SAFE_SPAWN.getBoolean() && FTBUUniverseData.isInSpawnD(e.dimension, e.posX, e.posZ))

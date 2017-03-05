@@ -2,18 +2,17 @@ package com.feed_the_beast.ftbu.config;
 
 import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
-import com.feed_the_beast.ftbl.lib.config.PropertyItemStackList;
-import com.feed_the_beast.ftbl.lib.config.PropertyTextComponentList;
+import com.feed_the_beast.ftbl.lib.config.PropertyItemStack;
+import com.feed_the_beast.ftbl.lib.config.PropertyList;
+import com.feed_the_beast.ftbl.lib.config.PropertyTextComponent;
 import com.feed_the_beast.ftbu.FTBUFinals;
-
-import java.util.Collections;
 
 public class FTBUConfigLogin
 {
     public static final PropertyBool ENABLE_MOTD = new PropertyBool(true);
     public static final PropertyBool ENABLE_STARTING_ITEMS = new PropertyBool(true);
-    public static final PropertyTextComponentList MOTD = new PropertyTextComponentList(Collections.emptyList());
-    public static final PropertyItemStackList STARTING_ITEMS = new PropertyItemStackList(Collections.emptyList());
+    public static final PropertyList MOTD = new PropertyList(PropertyTextComponent.ID);
+    public static final PropertyList STARTING_ITEMS = new PropertyList(PropertyItemStack.ID);
 
     public static void init(IFTBLibRegistry reg)
     {

@@ -3,13 +3,10 @@ package com.feed_the_beast.ftbu.config;
 import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyDouble;
+import com.feed_the_beast.ftbl.lib.config.PropertyList;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class FTBUConfigGeneral
 {
@@ -18,16 +15,13 @@ public class FTBUConfigGeneral
     public static final PropertyBool SERVER_INFO_DIFFICULTY = new PropertyBool(true);
     public static final PropertyBool SERVER_INFO_MODE = new PropertyBool(true);
     public static final PropertyBool SERVER_INFO_ADMIN_QUICK_ACCESS = new PropertyBool(true);
-
-    private static final Map<String, ITextComponent> DEF_CHAT_SUB_MAP = new HashMap<>();
+    public static final PropertyString CHAT_SUBSTITUTE_PREFIX = new PropertyString("!");
+    public static final PropertyList CHAT_SUBSTITUTES = new PropertyList(PropertyChatSubstitute.ID);
 
     static
     {
-        DEF_CHAT_SUB_MAP.put("shrug", new TextComponentString("\u00AF\\_(\u30C4)_/\u00AF"));
+        CHAT_SUBSTITUTES.add(new PropertyChatSubstitute("shrug", new TextComponentString("\u00AF\\_(\u30C4)_/\u00AF")));
     }
-
-    public static final PropertyString CHAT_SUBSTITUTE_PREFIX = new PropertyString("!");
-    public static final PropertyChatSubstituteList CHAT_SUBSTITUTES = new PropertyChatSubstituteList(DEF_CHAT_SUB_MAP);
 
     public static void init(IFTBLibRegistry reg)
     {
@@ -37,6 +31,6 @@ public class FTBUConfigGeneral
         reg.addConfig(FTBUFinals.MOD_ID, "general.server_info.mode", SERVER_INFO_MODE);
         reg.addConfig(FTBUFinals.MOD_ID, "general.server_info.admin_quick_access", SERVER_INFO_ADMIN_QUICK_ACCESS);
         reg.addConfig(FTBUFinals.MOD_ID, "general.chat.substitute_prefix", CHAT_SUBSTITUTE_PREFIX);
-        reg.addConfig(FTBUFinals.MOD_ID, "general.chat.substitutes", CHAT_SUBSTITUTES);
+        reg.addConfig(FTBUFinals.MOD_ID, "general.chat.substitute_list", CHAT_SUBSTITUTES);
     }
 }

@@ -2,7 +2,8 @@ package com.feed_the_beast.ftbu.config;
 
 import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
-import com.feed_the_beast.ftbl.lib.config.PropertyEntityClassList;
+import com.feed_the_beast.ftbl.lib.config.PropertyEntityClass;
+import com.feed_the_beast.ftbl.lib.config.PropertyList;
 import com.feed_the_beast.ftbu.FTBUFinals;
 
 public class FTBUConfigWorld
@@ -10,7 +11,7 @@ public class FTBUConfigWorld
     public static final PropertyBool CHUNK_CLAIMING = new PropertyBool(true);
     public static final PropertyBool CHUNK_LOADING = new PropertyBool(true);
     public static final PropertyBool SAFE_SPAWN = new PropertyBool(false);
-    public static final PropertyEntityClassList BLOCKED_ENTITIES = new PropertyEntityClassList();
+    public static final PropertyList BLOCKED_ENTITIES = new PropertyList(PropertyEntityClass.ID);
     public static final PropertyBool SPAWN_AREA_IN_SP = new PropertyBool(false);
 
     public static void init(IFTBLibRegistry reg)

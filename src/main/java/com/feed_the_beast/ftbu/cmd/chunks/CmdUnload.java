@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbu.cmd.chunks;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbl.lib.math.EntityDimPos;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
@@ -34,7 +33,7 @@ public class CmdUnload extends CommandLM
     {
         EntityPlayerMP player = getCommandSenderAsPlayer(sender);
         IForgePlayer p = getForgePlayer(player);
-        ChunkDimPos pos = new EntityDimPos(player).toBlockDimPos().toChunkPos();
+        ChunkDimPos pos = new ChunkDimPos(player);
 
         if(FTBUUniverseData.setLoaded(p, pos, false))
         {

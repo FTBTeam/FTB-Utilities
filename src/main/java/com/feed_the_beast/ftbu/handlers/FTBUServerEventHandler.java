@@ -1,9 +1,11 @@
 package com.feed_the_beast.ftbu.handlers;
 
+import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigRanks;
+import com.feed_the_beast.ftbu.config.PropertyChatSubstitute;
 import net.minecraft.entity.EntityList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
@@ -50,13 +52,18 @@ public class FTBUServerEventHandler
 
             if(msg.startsWith(chatSubstitutePrefix))
             {
-                ITextComponent replacement = FTBUConfigGeneral.CHAT_SUBSTITUTES.value.get(msg.substring(chatSubstitutePrefix.length()));
+                String key = msg.substring(chatSubstitutePrefix.length());
 
-                if(replacement != null)
+                for(IConfigValue value : FTBUConfigGeneral.CHAT_SUBSTITUTES)
                 {
-                    main.appendSibling(replacement);
-                    event.setComponent(main);
-                    return;
+                    PropertyChatSubstitute sub = (PropertyChatSubstitute) value;
+
+                    if(sub.key.equals(key))
+                    {
+                        main.appendSibling(sub.value);
+                        event.setComponent(main);
+                        return;
+                    }
                 }
             }
 

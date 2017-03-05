@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbl.lib.math.EntityDimPos;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
@@ -40,7 +39,7 @@ public class CmdUnclaim extends CommandLM
     {
         EntityPlayerMP player = getCommandSenderAsPlayer(sender);
         IForgePlayer p = getForgePlayer(player);
-        ChunkDimPos pos = new EntityDimPos(player).toBlockDimPos().toChunkPos();
+        ChunkDimPos pos = new ChunkDimPos(player);
 
         if(!FTBUConfigWorld.CHUNK_CLAIMING.getBoolean())
         {

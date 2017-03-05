@@ -19,7 +19,7 @@ import com.feed_the_beast.ftbu.config.FTBUConfigLogin;
 import com.feed_the_beast.ftbu.config.FTBUConfigRanks;
 import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
-import com.feed_the_beast.ftbu.config.PropertyChatSubstituteList;
+import com.feed_the_beast.ftbu.config.PropertyChatSubstitute;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUTeamData;
@@ -32,7 +32,6 @@ import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.io.File;
-import java.util.Collections;
 
 /**
  * Created by LatvianModder on 20.09.2016.
@@ -82,7 +81,7 @@ public enum FTBLibIntegration implements IFTBLibPlugin
     {
         reg.addOptionalServerMod(FTBUFinals.MOD_ID);
         reg.addConfigFileProvider(FTBUFinals.MOD_ID, () -> new File(LMUtils.folderLocal, "ftbu/config.json"));
-        reg.addConfigValueProvider(PropertyChatSubstituteList.ID, () -> new PropertyChatSubstituteList(Collections.emptyMap()));
+        reg.addConfigValueProvider(PropertyChatSubstitute.ID, PropertyChatSubstitute::new);
 
         FTBUConfigBackups.init(reg);
         FTBUConfigCommands.init(reg);

@@ -2,17 +2,19 @@ package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
+import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerDeathEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
-import com.feed_the_beast.ftbl.lib.MouseButton;
+import com.feed_the_beast.ftbl.lib.config.PropertyItemStack;
+import com.feed_the_beast.ftbl.lib.config.PropertyTextComponent;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.math.EntityDimPos;
 import com.feed_the_beast.ftbl.lib.util.LMInvUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUNotifications;
-import com.feed_the_beast.ftbu.FTBUPermissions;
+import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
 import com.feed_the_beast.ftbu.config.FTBUConfigLogin;
@@ -21,22 +23,19 @@ import com.feed_the_beast.ftbu.net.MessageSendFTBUClientFlags;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import com.google.common.base.Objects;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.server.permission.PermissionAPI;
-import net.minecraftforge.server.permission.context.ContextKeys;
-import net.minecraftforge.server.permission.context.PlayerContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,13 +52,24 @@ public class FTBUPlayerEventHandler
         {
             if(FTBUConfigLogin.ENABLE_STARTING_ITEMS.getBoolean())
             {
-                FTBUConfigLogin.STARTING_ITEMS.getItems().forEach(is -> LMInvUtils.giveItem(ep, is));
+                for(IConfigValue value : FTBUConfigLogin.STARTING_ITEMS)
+                {
+                    LMInvUtils.giveItem(ep, ((PropertyItemStack) value).getItem());
+                }
             }
         }
 
         if(FTBUConfigLogin.ENABLE_MOTD.getBoolean())
         {
-            FTBUConfigLogin.MOTD.getText().forEach(ep::addChatMessage);
+            for(IConfigValue value : FTBUConfigLogin.MOTD)
+            {
+                ITextComponent t = ((PropertyTextComponent) value).getText();
+
+                if(t != null)
+                {
+                    ep.addChatMessage(t);
+                }
+            }
         }
 
         LoadedChunkStorage.INSTANCE.checkAll();
@@ -123,7 +133,7 @@ public class FTBUPlayerEventHandler
     }
     */
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChunkChanged(EntityEvent.EnteringChunk e)
     {
         if(e.getEntity().worldObj.isRemote || !(e.getEntity() instanceof EntityPlayerMP))
@@ -180,7 +190,7 @@ public class FTBUPlayerEventHandler
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onPlayerAttacked(LivingAttackEvent e)
     {
         if(e.getEntity().worldObj.isRemote)
@@ -218,66 +228,58 @@ public class FTBUPlayerEventHandler
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event)
     {
-        if(event.getEntityPlayer() instanceof EntityPlayerMP)
+        if(event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), event.getPos(), event.getFace(), BlockInteractionType.RIGHT_CLICK))
         {
-            EntityPlayerMP player = (EntityPlayerMP) event.getEntityPlayer();
-            BlockPos pos = event.getPos().offset(event.getFace() == null ? EnumFacing.UP : event.getFace());
-            IBlockState state = player.worldObj.getBlockState(pos);
-
-            if(!ClaimedChunkStorage.INSTANCE.canPlayerInteract(player, pos, MouseButton.RIGHT))
-            {
-                if(!FTBUPermissions.canInteract(player, pos, state))
-                {
-                    event.setCanceled(true);
-                }
-            }
+            event.setCanceled(true);
         }
     }
 
-    /*
     @SubscribeEvent
     public void onRightClickItem(PlayerInteractEvent.RightClickItem event)
     {
+        if(event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), event.getPos(), event.getFace(), BlockInteractionType.ITEM))
+        {
+            event.setCanceled(true);
+        }
     }
-    */
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockEvent.BreakEvent event)
     {
-        if(event.getPlayer() instanceof EntityPlayerMP)
+        if(event.getPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getPlayer(), EnumHand.MAIN_HAND, event.getPos(), null, BlockInteractionType.BREAK))
         {
-            EntityPlayerMP player = (EntityPlayerMP) event.getPlayer();
-            BlockPos pos = event.getPos();
-
-            if(!ClaimedChunkStorage.INSTANCE.canPlayerInteract(player, pos, MouseButton.LEFT) && !FTBUPermissions.canBreak(player, pos, player.worldObj.getBlockState(pos)))
-            {
-                event.setCanceled(true);
-            }
+            event.setCanceled(true);
         }
     }
 
     @Optional.Method(modid = "chiselsandbits")
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChiselEvent(mod.chiselsandbits.api.EventBlockBitModification event)
     {
-        if(event.getPlayer() instanceof EntityPlayerMP)
+        if(event.getPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getPlayer(), event.getHand(), event.getPos(), null, event.isPlacing() ? BlockInteractionType.CNB_PLACE : BlockInteractionType.CNB_BREAK))
         {
-            EntityPlayerMP player = (EntityPlayerMP) event.getPlayer();
-            BlockPos pos = event.getPos();
-            if(!ClaimedChunkStorage.INSTANCE.canPlayerInteract(player, pos, event.isPlacing() ? MouseButton.RIGHT : MouseButton.LEFT))
-            {
-                if(!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_BLOCK_CNB, new PlayerContext(player).set(ContextKeys.POS, pos)))
-                {
-                    event.setCanceled(true);
-                }
-            }
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onBlockLeftClick(PlayerInteractEvent.LeftClickBlock event)
+    {
+        if(event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), event.getPos(), event.getFace(), BlockInteractionType.BREAK))
+        {
+            event.setCanceled(true);
         }
     }
 
     /*
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onItemPickup(EntityItemPickupEvent event)
+    {
+    }
+
     @Optional.Method(modid = "iChunUtil") //TODO: Change to lowercase whenever iChun does
     @SubscribeEvent
     public void onBlockPickupEventEvent(me.ichun.mods.ichunutil.api.event.BlockPickupEvent event)

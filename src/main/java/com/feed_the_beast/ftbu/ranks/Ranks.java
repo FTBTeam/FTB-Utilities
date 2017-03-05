@@ -31,6 +31,7 @@ import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.server.permission.DefaultPermissionHandler;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
+import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -312,7 +313,7 @@ public class Ranks
                 value.addInfo(p, infoList);
                 List<String> variants = value.getVariants();
 
-                if(!infoList.isEmpty() || variants != null)
+                if(!infoList.isEmpty() || !variants.isEmpty())
                 {
                     list.add("<ul><li>Default: ");
                     list.add(value.getSerializableElement() + "</li>");
@@ -324,7 +325,7 @@ public class Ranks
 
                     infoList.clear();
 
-                    if(variants != null)
+                    if(!variants.isEmpty())
                     {
                         list.add("<li>Variants:<ul>");
                         variants = new ArrayList<>(variants);
@@ -372,6 +373,18 @@ public class Ranks
 
             list.add("</table></body></html>");
             LMFileUtils.save(new File(LMUtils.folderLocal, "ftbu/all_configs.html"), list);
+
+            list.clear();
+            list.add(PermissionAPI.getPermissionHandler().getRegisteredNodes().size() + " nodes in total");
+            list.add("");
+
+            for(String node : PermissionAPI.getPermissionHandler().getRegisteredNodes())
+            {
+                list.add(node + ": " + DefaultPermissionHandler.INSTANCE.getDefaultPermissionLevel(node));
+            }
+
+            Collections.sort(list);
+            LMFileUtils.save(new File(LMUtils.folderLocal, "ftbu/all_permissions_full_list.txt"), list);
         }
         catch(Exception ex)
         {

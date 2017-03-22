@@ -18,7 +18,7 @@ public class CmdAdminHome extends CommandTreeBase
     public static class CmdTP extends CommandLM
     {
         @Override
-        public String getCommandName()
+        public String getName()
         {
             return "tp";
         }
@@ -57,7 +57,7 @@ public class CmdAdminHome extends CommandTreeBase
     public static class CmdList extends CommandLM
     {
         @Override
-        public String getCommandName()
+        public String getName()
         {
             return "list";
         }
@@ -73,14 +73,14 @@ public class CmdAdminHome extends CommandTreeBase
         {
             checkArgs(args, 1, "<player>");
             FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(args[0]));
-            sender.addChatMessage(new TextComponentString(LMStringUtils.strip(data.listHomes())));
+            sender.sendMessage(new TextComponentString(LMStringUtils.strip(data.listHomes())));
         }
     }
 
     public static class CmdRem extends CommandLM
     {
         @Override
-        public String getCommandName()
+        public String getName()
         {
             return "remove";
         }
@@ -125,13 +125,13 @@ public class CmdAdminHome extends CommandTreeBase
     }
 
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "admin_home";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "command.ftb.admin_home.usage";
     }

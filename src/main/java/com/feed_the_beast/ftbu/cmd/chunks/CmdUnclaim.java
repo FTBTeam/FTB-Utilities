@@ -23,7 +23,7 @@ import net.minecraftforge.server.permission.context.BlockPosContext;
 public class CmdUnclaim extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "unclaim";
     }

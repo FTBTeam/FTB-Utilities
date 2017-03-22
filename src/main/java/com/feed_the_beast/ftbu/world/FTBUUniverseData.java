@@ -69,8 +69,8 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
 
     public long restartMillis;
     private long nextChunkloaderUpdate, nextWebApiUpdate;
-    private Map<String, BlockDimPos> warps;
-    private String lastRestartMessage;
+    private final Map<String, BlockDimPos> warps = new HashMap<>();
+    private String lastRestartMessage = "";
 
     public static String getServerBadge(@Nullable IForgePlayer p)
     {
@@ -333,7 +333,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
     {
         NBTTagCompound nbt = new NBTTagCompound();
 
-        if(warps != null && !warps.isEmpty())
+        if(!warps.isEmpty())
         {
             NBTTagCompound tag1 = new NBTTagCompound();
 
@@ -355,10 +355,10 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
         NBTTagCompound nbt = (NBTTagCompound) nbt0;
         nextChunkloaderUpdate = System.currentTimeMillis() + 10000L;
 
+        warps.clear();
+
         if(nbt.hasKey("Warps"))
         {
-            warps = new HashMap<>();
-
             NBTTagCompound nbt1 = (NBTTagCompound) nbt.getTag("Warps");
 
             if(nbt1 != null && !nbt1.hasNoTags())
@@ -368,10 +368,6 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
                     setWarp(s1.toLowerCase(), new BlockDimPos(nbt1.getIntArray(s1)));
                 }
             }
-        }
-        else
-        {
-            warps = null;
         }
 
         if(nbt.hasKey("Chunks", Constants.NBT.TAG_COMPOUND))
@@ -405,7 +401,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
                 {
                     ITextComponent c = FTBULang.TIMER_RESTART.textComponent(msg);
                     c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
-                    BroadcastSender.INSTANCE.addChatMessage(c);
+                    BroadcastSender.INSTANCE.sendMessage(c);
                 }
             }
         }
@@ -433,6 +429,16 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
             nextWebApiUpdate = now + (FTBUConfigWebAPI.UPDATE_INTERVAL.getInt() * 60000L);
             exportWebAPI();
         }
+
+        /*
+        for(int i = teleportRequests.size() - 1; i >= 0; i--)
+        {
+            if(teleportRequests.get(i).isExpired(now))
+            {
+                teleportRequests.remove(i);
+            }
+        }
+        */
     }
 
     public static void exportWebAPI()
@@ -472,7 +478,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
 
     public Collection<String> listWarps()
     {
-        if(warps == null || warps.isEmpty())
+        if(warps.isEmpty())
         {
             return Collections.emptySet();
         }
@@ -483,19 +489,14 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
     @Nullable
     public BlockDimPos getWarp(String s)
     {
-        return warps == null ? null : warps.get(s);
+        return warps.get(s);
     }
 
     public boolean setWarp(String s, @Nullable BlockDimPos pos)
     {
         if(pos == null)
         {
-            return warps != null && warps.remove(s) != null;
-        }
-
-        if(warps == null)
-        {
-            warps = new HashMap<>();
+            return warps.remove(s) != null;
         }
 
         return warps.put(s, pos.copy()) == null;
@@ -503,6 +504,6 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
 
     public int warpsSize()
     {
-        return warps == null ? 0 : warps.size();
+        return warps.size();
     }
 }

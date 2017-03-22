@@ -20,7 +20,7 @@ import java.util.List;
 public class CmdSet extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "set";
     }
@@ -32,14 +32,14 @@ public class CmdSet extends CommandLM
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
     {
         if(args.length == 2)
         {
             return getListOfStringsMatchingLastWord(args, Ranks.getRankNames());
         }
 
-        return super.getTabCompletionOptions(server, sender, args, pos);
+        return super.getTabCompletions(server, sender, args, pos);
     }
 
     @Override

@@ -24,31 +24,31 @@ public class CmdTreeOverride extends CommandTreeBase
         {
             if(command instanceof CommandTreeBase)
             {
-                addSubcommand(new CmdTreeOverride((CommandTreeBase) command, permissionNode + "." + command.getCommandName()));
+                addSubcommand(new CmdTreeOverride((CommandTreeBase) command, permissionNode + "." + command.getName()));
             }
             else
             {
-                addSubcommand(new CmdOverride(command, permissionNode + "." + command.getCommandName()));
+                addSubcommand(new CmdOverride(command, permissionNode + "." + command.getName()));
             }
         }
     }
 
     @Override
-    public String getCommandName()
+    public String getName()
     {
-        return parent.getCommandName();
+        return parent.getName();
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
-        return parent.getCommandName();
+        return parent.getName();
     }
 
     @Override
-    public List<String> getCommandAliases()
+    public List<String> getAliases()
     {
-        return parent.getCommandAliases();
+        return parent.getAliases();
     }
 
     @Override

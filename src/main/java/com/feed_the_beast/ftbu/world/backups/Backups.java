@@ -11,13 +11,11 @@ import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.server.CommandSaveAll;
-import net.minecraft.command.server.CommandSaveOff;
-import net.minecraft.command.server.CommandSaveOn;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.WorldServer;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -111,14 +109,33 @@ public enum Backups
 
         ITextComponent c = FTBULang.BACKUP_START.textComponent(ics.getName());
         c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
-        BroadcastSender.INSTANCE.addChatMessage(c);
+        BroadcastSender.INSTANCE.sendMessage(c);
 
         nextBackup = System.currentTimeMillis() + FTBUConfigBackups.backupMillis();
 
         try
         {
-            new CommandSaveOff().execute(server, server, new String[0]);
-            new CommandSaveAll().execute(server, server, new String[0]);
+            if(server.getPlayerList() != null)
+            {
+                server.getPlayerList().saveAllPlayerData();
+            }
+
+            try
+            {
+                for(int i = 0; i < server.worlds.length; ++i)
+                {
+                    if(server.worlds[i] != null)
+                    {
+                        WorldServer worldserver = server.worlds[i];
+                        worldserver.disableLevelSaving = true;
+                        worldserver.saveAllChunks(true, null);
+                    }
+                }
+            }
+            catch(Exception ex1)
+            {
+                FTBUFinals.LOGGER.error("World saving failed!");
+            }
         }
         catch(Exception ex)
         {
@@ -191,7 +208,19 @@ public enum Backups
         try
         {
             MinecraftServer server = LMServerUtils.getServer();
-            new CommandSaveOn().execute(server, server, new String[0]);
+
+            for(int i = 0; i < server.worlds.length; ++i)
+            {
+                if(server.worlds[i] != null)
+                {
+                    WorldServer worldserver = server.worlds[i];
+
+                    if(worldserver.disableLevelSaving)
+                    {
+                        worldserver.disableLevelSaving = false;
+                    }
+                }
+            }
         }
         catch(Exception ex)
         {

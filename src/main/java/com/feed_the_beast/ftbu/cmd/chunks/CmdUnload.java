@@ -17,7 +17,7 @@ import net.minecraft.server.MinecraftServer;
 public class CmdUnload extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "unload";
     }

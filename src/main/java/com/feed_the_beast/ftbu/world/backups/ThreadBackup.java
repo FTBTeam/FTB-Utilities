@@ -147,13 +147,13 @@ public class ThreadBackup extends Thread
 
                     ITextComponent c = FTBULang.BACKUP_END_2.textComponent(getDoneTime(time.getTimeInMillis()), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)));
                     c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
-                    BroadcastSender.INSTANCE.addChatMessage(c);
+                    BroadcastSender.INSTANCE.sendMessage(c);
                 }
                 else
                 {
                     ITextComponent c = FTBULang.BACKUP_END_1.textComponent(getDoneTime(time.getTimeInMillis()));
                     c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
-                    BroadcastSender.INSTANCE.addChatMessage(c);
+                    BroadcastSender.INSTANCE.sendMessage(c);
                 }
             }
         }
@@ -164,7 +164,7 @@ public class ThreadBackup extends Thread
 
             if(!FTBUConfigBackups.SILENT.getBoolean())
             {
-                BroadcastSender.INSTANCE.addChatMessage(c);
+                BroadcastSender.INSTANCE.sendMessage(c);
             }
 
             ex.printStackTrace();

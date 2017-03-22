@@ -16,7 +16,7 @@ public class CmdBackup extends CommandTreeBase
     public static class CmdStart extends CommandLM
     {
         @Override
-        public String getCommandName()
+        public String getName()
         {
             return "start";
         }
@@ -44,7 +44,7 @@ public class CmdBackup extends CommandTreeBase
     public static class CmdStop extends CommandLM
     {
         @Override
-        public String getCommandName()
+        public String getName()
         {
             return "stop";
         }
@@ -67,7 +67,7 @@ public class CmdBackup extends CommandTreeBase
     public static class CmdGetSize extends CommandLM
     {
         @Override
-        public String getCommandName()
+        public String getName()
         {
             return "getsize";
         }
@@ -89,13 +89,13 @@ public class CmdBackup extends CommandTreeBase
     }
 
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "backup";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "command.ftb.backup.usage";
     }

@@ -62,7 +62,7 @@ public class JourneyMapIntegration implements IClientPlugin, IJMIntegration
         {
             case DISPLAY_UPDATE:
                 Minecraft mc = Minecraft.getMinecraft();
-                new MessageClaimedChunksRequest(mc.thePlayer).sendToServer();
+                new MessageClaimedChunksRequest(mc.player).sendToServer();
                 break;
             case MAPPING_STOPPED:
                 clearData();
@@ -131,10 +131,10 @@ public class JourneyMapIntegration implements IClientPlugin, IJMIntegration
     @SubscribeEvent
     public void onEnteringChunk(EntityEvent.EnteringChunk event)
     {
-        if(FTBUClientConfig.JOURNEYMAP_OVERLAY.getBoolean() && event.getEntity() == mc.thePlayer && (lastPosition == null || MathHelperLM.dist(event.getNewChunkX(), event.getNewChunkZ(), lastPosition.chunkXPos, lastPosition.chunkZPos) >= 3D))
+        if(FTBUClientConfig.JOURNEYMAP_OVERLAY.getBoolean() && event.getEntity() == mc.player && (lastPosition == null || MathHelperLM.dist(event.getNewChunkX(), event.getNewChunkZ(), lastPosition.chunkXPos, lastPosition.chunkZPos) >= 3D))
         {
             lastPosition = new ChunkPos(event.getNewChunkX(), event.getNewChunkZ());
-            new MessageJMRequest(mc.thePlayer).sendToServer();
+            new MessageJMRequest(mc.player).sendToServer();
         }
     }
 }

@@ -87,11 +87,11 @@ public class FTBU
             {
                 if(command instanceof CommandTreeBase)
                 {
-                    manager.registerCommand(new CmdTreeOverride((CommandTreeBase) command, "command." + command.getCommandName()));
+                    manager.registerCommand(new CmdTreeOverride((CommandTreeBase) command, "command." + command.getName()));
                 }
                 else
                 {
-                    manager.registerCommand(new CmdOverride(command, "command." + command.getCommandName()));
+                    manager.registerCommand(new CmdOverride(command, "command." + command.getName()));
                 }
             }
 

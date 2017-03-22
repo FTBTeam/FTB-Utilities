@@ -5,8 +5,8 @@ package com.feed_the_beast.ftbu.api.chunks;
  */
 public enum BlockInteractionType
 {
-    BREAK,
-    RIGHT_CLICK,
+    EDIT,
+    INTERACT,
     CNB_BREAK,
     CNB_PLACE,
     ITEM

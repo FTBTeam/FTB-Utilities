@@ -19,7 +19,7 @@ import java.util.List;
 public class CmdSetHome extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "sethome";
     }
@@ -31,20 +31,20 @@ public class CmdSetHome extends CommandLM
     }
 
     @Override
-    public String getCommandUsage(ICommandSender ics)
+    public String getUsage(ICommandSender ics)
     {
-        return '/' + getCommandName() + " <ID>";
+        return '/' + getName() + " <ID>";
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
         if(args.length == 1)
         {
             return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(FTBLibIntegration.API.getUniverse().getPlayer(sender)).listHomes());
         }
 
-        return super.getTabCompletionOptions(server, sender, args, pos);
+        return super.getTabCompletions(server, sender, args, pos);
     }
 
     @Override

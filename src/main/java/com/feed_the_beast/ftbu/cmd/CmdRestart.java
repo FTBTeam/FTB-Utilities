@@ -13,7 +13,7 @@ import java.io.File;
 public class CmdRestart extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "restart";
     }

@@ -122,7 +122,7 @@ public class InvSeeInventory implements IInventory
     }
 
     @Override
-    public boolean isUseableByPlayer(EntityPlayer ep)
+    public boolean isUsableByPlayer(EntityPlayer ep)
     {
         return true;
     }

@@ -8,7 +8,7 @@ import net.minecraft.server.MinecraftServer;
 public class CmdKickme extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "kickme";
     }
@@ -20,7 +20,7 @@ public class CmdKickme extends CommandLM
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "commands.kick.usage";
     }
@@ -30,7 +30,7 @@ public class CmdKickme extends CommandLM
     {
         if(server.isDedicatedServer())
         {
-            getCommandSenderAsPlayer(sender).connection.kickPlayerFromServer("You kicked yourself!");
+            getCommandSenderAsPlayer(sender).connection.disconnect("You kicked yourself!");
         }
         else
         {

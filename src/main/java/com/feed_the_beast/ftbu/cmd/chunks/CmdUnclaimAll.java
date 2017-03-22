@@ -23,7 +23,7 @@ import java.util.List;
 public class CmdUnclaimAll extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "unclaim_all";
     }
@@ -35,14 +35,14 @@ public class CmdUnclaimAll extends CommandLM
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
         if(args.length == 1)
         {
             return LIST_TRUE_FALSE;
         }
 
-        return super.getTabCompletionOptions(server, sender, args, pos);
+        return super.getTabCompletions(server, sender, args, pos);
     }
 
     @Override

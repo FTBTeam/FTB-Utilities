@@ -15,7 +15,7 @@ import net.minecraftforge.server.permission.PermissionAPI;
 public class CmdBack extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "back";
     }

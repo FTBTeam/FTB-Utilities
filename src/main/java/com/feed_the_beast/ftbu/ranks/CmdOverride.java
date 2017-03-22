@@ -24,21 +24,21 @@ public class CmdOverride implements ICommand
     }
 
     @Override
-    public String getCommandName()
+    public String getName()
     {
-        return parent.getCommandName();
+        return parent.getName();
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
-        return parent.getCommandUsage(sender);
+        return parent.getUsage(sender);
     }
 
     @Override
-    public List<String> getCommandAliases()
+    public List<String> getAliases()
     {
-        return parent.getCommandAliases();
+        return parent.getAliases();
     }
 
     @Override
@@ -54,9 +54,9 @@ public class CmdOverride implements ICommand
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
-        return parent.getTabCompletionOptions(server, sender, args, pos);
+        return parent.getTabCompletions(server, sender, args, pos);
     }
 
     @Override
@@ -68,6 +68,6 @@ public class CmdOverride implements ICommand
     @Override
     public int compareTo(ICommand o)
     {
-        return getCommandName().compareToIgnoreCase(o.getCommandName());
+        return getName().compareToIgnoreCase(o.getName());
     }
 }

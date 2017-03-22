@@ -24,15 +24,15 @@ public class CmdInv extends CommandTreeBase
     public static class CmdView extends CommandLM
     {
         @Override
-        public String getCommandName()
+        public String getName()
         {
             return "view";
         }
 
         @Override
-        public String getCommandUsage(ICommandSender ics)
+        public String getUsage(ICommandSender ics)
         {
-            return '/' + getCommandName() + " <player>";
+            return '/' + getName() + " <player>";
         }
 
         @Override
@@ -54,15 +54,15 @@ public class CmdInv extends CommandTreeBase
     public static class CmdSave extends CommandLM
     {
         @Override
-        public String getCommandName()
+        public String getName()
         {
             return "save";
         }
 
         @Override
-        public String getCommandUsage(ICommandSender ics)
+        public String getUsage(ICommandSender ics)
         {
-            return '/' + getCommandName() + " <player> <file_id>";
+            return '/' + getName() + " <player> <file_id>";
         }
 
         @Override
@@ -124,15 +124,15 @@ public class CmdInv extends CommandTreeBase
     public static class CmdLoad extends CommandLM
     {
         @Override
-        public String getCommandName()
+        public String getName()
         {
             return "load";
         }
 
         @Override
-        public String getCommandUsage(ICommandSender ics)
+        public String getUsage(ICommandSender ics)
         {
-            return '/' + getCommandName() + " <player> <file_id>";
+            return '/' + getName() + " <player> <file_id>";
         }
 
         @Override
@@ -189,7 +189,7 @@ public class CmdInv extends CommandTreeBase
     public static class CmdList extends CommandLM
     {
         @Override
-        public String getCommandName()
+        public String getName()
         {
             return "list";
         }
@@ -209,13 +209,13 @@ public class CmdInv extends CommandTreeBase
     }
 
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "inv";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "command.ftb.inv.usage";
     }

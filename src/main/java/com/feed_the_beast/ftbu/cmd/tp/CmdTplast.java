@@ -17,15 +17,15 @@ import net.minecraftforge.common.util.Constants;
 public class CmdTplast extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "tpl";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender ics)
+    public String getUsage(ICommandSender ics)
     {
-        return '/' + getCommandName() + " [who] <to>";
+        return '/' + getName() + " [who] <to>";
     }
 
     @Override

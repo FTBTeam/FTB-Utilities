@@ -180,10 +180,10 @@ public class GuiClaimedChunks extends GuiLM
     {
         super(GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16);
 
-        startX = MathHelperLM.chunk(mc.thePlayer.posX) - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2;
-        startZ = MathHelperLM.chunk(mc.thePlayer.posZ) - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2;
+        startX = MathHelperLM.chunk(mc.player.posX) - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2;
+        startZ = MathHelperLM.chunk(mc.player.posZ) - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2;
 
-        currentDimName = mc.theWorld.provider.getDimensionType().getName();
+        currentDimName = mc.world.provider.getDimensionType().getName();
 
         buttonClose = new ButtonLM(0, 0, 16, 16, GuiLang.BUTTON_CLOSE.translate())
         {
@@ -203,7 +203,7 @@ public class GuiClaimedChunks extends GuiLM
             public void onClicked(IGui gui, IMouseButton button)
             {
                 new MessageClaimedChunksRequest(startX, startZ).sendToServer();
-                ThreadReloadChunkSelector.reloadArea(mc.theWorld, startX, startZ);
+                ThreadReloadChunkSelector.reloadArea(mc.world, startX, startZ);
             }
         };
 
@@ -335,21 +335,21 @@ public class GuiClaimedChunks extends GuiLM
         tessellator.draw();
         GlStateManager.enableTexture2D();
 
-        int cx = MathHelperLM.chunk(mc.thePlayer.posX);
-        int cy = MathHelperLM.chunk(mc.thePlayer.posZ);
+        int cx = MathHelperLM.chunk(mc.player.posX);
+        int cy = MathHelperLM.chunk(mc.player.posZ);
 
         if(cx >= startX && cy >= startZ && cx < startX + GuiConfigs.CHUNK_SELECTOR_TILES_GUI && cy < startZ + GuiConfigs.CHUNK_SELECTOR_TILES_GUI)
         {
-            double x = ((cx - startX) * 16D + MathHelperLM.wrap(mc.thePlayer.posX, 16D));
-            double y = ((cy - startZ) * 16D + MathHelperLM.wrap(mc.thePlayer.posZ, 16D));
+            double x = ((cx - startX) * 16D + MathHelperLM.wrap(mc.player.posX, 16D));
+            double y = ((cy - startZ) * 16D + MathHelperLM.wrap(mc.player.posZ, 16D));
 
             GlStateManager.pushMatrix();
             GlStateManager.translate(posX + x, posY + y, 0D);
             GlStateManager.pushMatrix();
             //GlStateManager.rotate((int)((ep.rotationYaw + 180F) / (180F / 8F)) * (180F / 8F), 0F, 0F, 1F);
-            GlStateManager.rotate(mc.thePlayer.rotationYaw + 180F, 0F, 0F, 1F);
+            GlStateManager.rotate(mc.player.rotationYaw + 180F, 0F, 0F, 1F);
             mc.getTextureManager().bindTexture(GuiConfigs.TEX_ENTITY);
-            GlStateManager.color(1F, 1F, 1F, mc.thePlayer.isSneaking() ? 0.4F : 0.7F);
+            GlStateManager.color(1F, 1F, 1F, mc.player.isSneaking() ? 0.4F : 0.7F);
             GuiHelper.drawTexturedRect(-8, -8, 16, 16, 0D, 0D, 1D, 1D);
             GlStateManager.popMatrix();
             FTBLibClient.localPlayerHead.draw(-2, -2, 4, 4);

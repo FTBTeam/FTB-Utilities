@@ -18,13 +18,13 @@ public class CmdRanks extends CommandTreeBase
     }
 
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "ranks";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "command.ftb.ranks.usage";
     }

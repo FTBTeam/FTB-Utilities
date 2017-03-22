@@ -21,7 +21,7 @@ import net.minecraftforge.server.permission.PermissionAPI;
 public class CmdClaim extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "claim";
     }

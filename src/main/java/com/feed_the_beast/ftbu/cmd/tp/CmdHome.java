@@ -24,7 +24,7 @@ import java.util.List;
 public class CmdHome extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "home";
     }
@@ -36,20 +36,20 @@ public class CmdHome extends CommandLM
     }
 
     @Override
-    public String getCommandUsage(ICommandSender ics)
+    public String getUsage(ICommandSender ics)
     {
-        return '/' + getCommandName() + " <ID>";
+        return '/' + getName() + " <ID>";
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
         if(args.length == 1)
         {
             return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(FTBLibIntegration.API.getUniverse().getPlayer(sender)).listHomes());
         }
 
-        return super.getTabCompletionOptions(server, sender, args, pos);
+        return super.getTabCompletions(server, sender, args, pos);
     }
 
     @Override
@@ -70,10 +70,10 @@ public class CmdHome extends CommandLM
         if(args[0].equals("list"))
         {
             Collection<String> list = data.listHomes();
-            sender.addChatMessage(new TextComponentString(list.size() + " / " + FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt() + ": "));
+            sender.sendMessage(new TextComponentString(list.size() + " / " + FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt() + ": "));
             if(!list.isEmpty())
             {
-                sender.addChatMessage(new TextComponentString(LMStringUtils.strip(list)));
+                sender.sendMessage(new TextComponentString(LMStringUtils.strip(list)));
             }
             return;
         }

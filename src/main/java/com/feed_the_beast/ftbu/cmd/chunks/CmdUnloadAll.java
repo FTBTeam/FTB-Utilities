@@ -21,7 +21,7 @@ import net.minecraftforge.server.permission.PermissionAPI;
 public class CmdUnloadAll extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "unload_all";
     }
@@ -67,6 +67,6 @@ public class CmdUnloadAll extends CommandLM
         }
 
         LoadedChunkStorage.INSTANCE.checkAll();
-        sender.addChatMessage(new TextComponentString("Unloaded " + p.getName() + "'s chunks"));
+        sender.sendMessage(new TextComponentString("Unloaded " + p.getName() + "'s chunks"));
     }
 }

@@ -12,7 +12,7 @@ import net.minecraft.server.MinecraftServer;
 public class CmdEdit extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "edit";
     }

@@ -17,7 +17,7 @@ import net.minecraft.util.text.event.ClickEvent;
 public class CmdGet extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "get";
     }
@@ -37,6 +37,6 @@ public class CmdGet extends CommandLM
         ITextComponent name = new TextComponentString(rank.getName() + " - " + rank.getFormattedName(p.getName()));
         name.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/msg " + p.getName() + " "));
         name.getStyle().setInsertion(p.getName());
-        sender.addChatMessage(name);
+        sender.sendMessage(name);
     }
 }

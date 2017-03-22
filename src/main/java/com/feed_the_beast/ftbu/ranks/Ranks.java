@@ -315,8 +315,8 @@ public class Ranks
 
                 if(!infoList.isEmpty() || !variants.isEmpty())
                 {
-                    list.add("<ul><li>Default: ");
-                    list.add(value.getSerializableElement() + "</li>");
+                    list.add("<ul><li>Default: " + value.getSerializableElement() + "</li>");
+                    list.add("<ul><li>OP Default: " + p.getDefOPValue().getSerializableElement() + "</li>");
 
                     for(String s : infoList)
                     {
@@ -346,7 +346,7 @@ public class Ranks
                     list.add("Default: " + value.getSerializableElement());
                 }
 
-                list.add("</td><td>" + p.getDefOPValue().getSerializableElement() + "</td><td>");
+                list.add("</td><td>");
 
                 if(!p.getInfo().isEmpty())
                 {

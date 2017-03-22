@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbl.lib.config.PropertyInt;
 import com.feed_the_beast.ftbl.lib.config.PropertyList;
 import com.feed_the_beast.ftbl.lib.config.PropertyShort;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
-import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
+import com.feed_the_beast.ftbl.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftbu.api.IFTBUtilitiesRegistry;
 import com.feed_the_beast.ftbu.api.NodeEntry;
 import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
@@ -22,9 +22,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -132,24 +130,14 @@ public class FTBUPermissions
         return item == null ? "minecraft:air" : item.getRegistryName().toString().toLowerCase().replace(':', '.');
     }
 
-    public static boolean canModifyBlock(EntityPlayerMP player, EnumHand hand, BlockPos pos, @Nullable EnumFacing facing, BlockInteractionType type)
+    public static boolean canModifyBlock(EntityPlayerMP player, EnumHand hand, BlockPosContainer block, BlockInteractionType type)
     {
         switch(type)
         {
-            case BREAK:
-                return PermissionAPI.hasPermission(player.getGameProfile(), CLAIMS_BLOCK_EDIT_PREFIX + formatId(player.worldObj.getBlockState(pos).getBlock()), null);//new PlayerContext(player).set(ContextKeys.POS, pos).set(ContextKeys.BLOCK_STATE, state));
-            case RIGHT_CLICK:
-                BlockPos pos0 = pos;
-                pos = MathHelperLM.offsetIfItemBlock(pos, facing, player.getHeldItem(hand));
-
-                if(pos0 != pos)
-                {
-                    return PermissionAPI.hasPermission(player.getGameProfile(), CLAIMS_BLOCK_EDIT_PREFIX + formatId(player.getHeldItem(hand).getItem()), null);//new PlayerContext(player).set(ContextKeys.POS, pos).set(ContextKeys.BLOCK_STATE, state));
-                }
-                else
-                {
-                    return PermissionAPI.hasPermission(player.getGameProfile(), CLAIMS_BLOCK_INTERACT_PREFIX + formatId(player.worldObj.getBlockState(pos).getBlock()), null);//new PlayerContext(player).set(ContextKeys.POS, pos).set(ContextKeys.BLOCK_STATE, state));
-                }
+            case EDIT:
+                return PermissionAPI.hasPermission(player.getGameProfile(), CLAIMS_BLOCK_EDIT_PREFIX + formatId(block.getState().getBlock()), null);//new PlayerContext(player).set(ContextKeys.POS, pos).set(ContextKeys.BLOCK_STATE, state));
+            case INTERACT:
+                return PermissionAPI.hasPermission(player.getGameProfile(), CLAIMS_BLOCK_INTERACT_PREFIX + formatId(block.getState().getBlock()), null);//new PlayerContext(player).set(ContextKeys.POS, pos).set(ContextKeys.BLOCK_STATE, state));
             case CNB_BREAK:
             case CNB_PLACE:
                 return PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_BLOCK_CNB, null);//new PlayerContext(player).set(ContextKeys.POS, pos)))

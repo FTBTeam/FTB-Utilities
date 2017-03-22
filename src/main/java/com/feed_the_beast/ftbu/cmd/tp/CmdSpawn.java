@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public class CmdSpawn extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "spawn";
     }

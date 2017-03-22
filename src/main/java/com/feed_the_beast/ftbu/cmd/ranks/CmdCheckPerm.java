@@ -14,7 +14,7 @@ import net.minecraftforge.server.permission.PermissionAPI;
 public class CmdCheckPerm extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "check_permission";
     }
@@ -31,6 +31,6 @@ public class CmdCheckPerm extends CommandLM
         checkArgs(args, 2, "<player> <permission>");
         IForgePlayer player = getForgePlayer(args[0]);
         boolean perm = player.isOnline() ? PermissionAPI.hasPermission(player.getPlayer(), args[1]) : PermissionAPI.hasPermission(player.getProfile(), args[1], null);
-        sender.addChatMessage(new TextComponentString(args[1] + " for " + player.getName() + " is " + perm));
+        sender.sendMessage(new TextComponentString(args[1] + " for " + player.getName() + " is " + perm));
     }
 }

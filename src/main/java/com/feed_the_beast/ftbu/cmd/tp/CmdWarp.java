@@ -20,7 +20,7 @@ import java.util.List;
 public class CmdWarp extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "warp";
     }
@@ -32,20 +32,20 @@ public class CmdWarp extends CommandLM
     }
 
     @Override
-    public String getCommandUsage(ICommandSender ics)
+    public String getUsage(ICommandSender ics)
     {
-        return '/' + getCommandName() + " <ID>";
+        return '/' + getName() + " <ID>";
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
         if(args.length == 1)
         {
             return getListOfStringsMatchingLastWord(args, FTBUUniverseData.get().listWarps());
         }
 
-        return super.getTabCompletionOptions(server, sender, args, pos);
+        return super.getTabCompletions(server, sender, args, pos);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class CmdWarp extends CommandLM
         if(args[0].equals("list"))
         {
             Collection<String> list = FTBUUniverseData.get().listWarps();
-            sender.addChatMessage(new TextComponentString(list.isEmpty() ? "-" : LMStringUtils.strip(list)));
+            sender.sendMessage(new TextComponentString(list.isEmpty() ? "-" : LMStringUtils.strip(list)));
             return;
         }
 

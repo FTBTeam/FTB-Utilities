@@ -15,15 +15,15 @@ import net.minecraft.util.text.TextComponentString;
 public class CmdClaimFor extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "claim_for";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender ics)
+    public String getUsage(ICommandSender ics)
     {
-        return '/' + getCommandName() + " <player> <chunkX> <chunkZ> [dimension]";
+        return '/' + getName() + " <player> <chunkX> <chunkZ> [dimension]";
     }
 
     @Override
@@ -47,7 +47,7 @@ public class CmdClaimFor extends CommandLM
         if(FTBUUniverseData.claimChunk(claimFor, pos))
         {
             String msg = String.format("Claimed %d, %d in %d for %s", chunkXPos, chunkZPos, dimension, playerName);
-            sender.addChatMessage(new TextComponentString(msg));
+            sender.sendMessage(new TextComponentString(msg));
 
             if(claimFor.isOnline())
             {
@@ -57,7 +57,7 @@ public class CmdClaimFor extends CommandLM
         else
         {
             String msg = String.format("ERROR: Can't claim %d, %d in %d for %s", chunkXPos, chunkZPos, dimension, playerName);
-            sender.addChatMessage(new TextComponentString(msg));
+            sender.sendMessage(new TextComponentString(msg));
         }
     }
 }

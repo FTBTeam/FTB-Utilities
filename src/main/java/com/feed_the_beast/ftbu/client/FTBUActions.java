@@ -106,7 +106,7 @@ public class FTBUActions
         @Override
         public void onClicked(IMouseButton button)
         {
-            int i = Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode ? 0 : 1;
+            int i = Minecraft.getMinecraft().player.capabilities.isCreativeMode ? 0 : 1;
             FTBLibClient.execClientCommand("/gamemode " + i);
         }
 

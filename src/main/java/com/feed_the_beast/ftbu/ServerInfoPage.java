@@ -72,7 +72,7 @@ public class ServerInfoPage
 
         if(FTBUConfigGeneral.SERVER_INFO_DIFFICULTY.getBoolean())
         {
-            page.println(FTBLibLang.DIFFICULTY.textComponent(LMStringUtils.firstUppercase(ep.worldObj.getDifficulty().toString().toLowerCase())));
+            page.println(FTBLibLang.DIFFICULTY.textComponent(LMStringUtils.firstUppercase(ep.world.getDifficulty().toString().toLowerCase())));
         }
 
         if(FTBUConfigGeneral.SERVER_INFO_MODE.getBoolean())
@@ -145,13 +145,13 @@ public class ServerInfoPage
             {
                 try
                 {
-                    addCommandUsage(ep, page1.getSub(c.getCommandName()), 0, c);
+                    addCommandUsage(ep, page1.getSub(c.getName()), 0, c);
                 }
                 catch(Exception ex1)
                 {
-                    ITextComponent cc = new TextComponentString('/' + c.getCommandName());
+                    ITextComponent cc = new TextComponentString('/' + c.getName());
                     cc.getStyle().setColor(TextFormatting.DARK_RED);
-                    page1.getSub('/' + c.getCommandName()).setTitle(cc).println("Errored");
+                    page1.getSub('/' + c.getName()).setTitle(cc).println("Errored");
 
                     if(LMUtils.DEV_ENV)
                     {
@@ -179,16 +179,16 @@ public class ServerInfoPage
 
     private static void addCommandUsage(ICommandSender sender, InfoPage page, int level, ICommand c)
     {
-        page.println('/' + c.getCommandName());
+        page.println('/' + c.getName());
 
-        for(String s : c.getCommandAliases())
+        for(String s : c.getAliases())
         {
             page.println('/' + s);
         }
 
         page.println(null);
 
-        for(String s : c.getCommandUsage(sender).split("\n"))
+        for(String s : c.getUsage(sender).split("\n"))
         {
             if(s.indexOf('%') != -1 || s.indexOf('/') != -1)
             {
@@ -206,7 +206,7 @@ public class ServerInfoPage
 
             for(ICommand command : treeCommand.getSubCommands())
             {
-                addCommandUsage(sender, page.getSub(command.getCommandName()), level + 1, command);
+                addCommandUsage(sender, page.getSub(command.getName()), level + 1, command);
             }
         }
     }

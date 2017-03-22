@@ -22,7 +22,7 @@ import java.util.Arrays;
 public class CmdViewCrash extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "view_crash";
     }

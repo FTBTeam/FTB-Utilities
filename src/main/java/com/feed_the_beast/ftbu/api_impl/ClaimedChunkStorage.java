@@ -2,8 +2,8 @@ package com.feed_the_beast.ftbu.api_impl;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
+import com.feed_the_beast.ftbl.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUCommon;
@@ -17,9 +17,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -97,19 +95,14 @@ public enum ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializabl
     }
 
     @Override
-    public boolean canPlayerInteract(EntityPlayerMP ep, EnumHand hand, BlockPos pos, @Nullable EnumFacing facing, BlockInteractionType type)
+    public boolean canPlayerInteract(EntityPlayerMP ep, EnumHand hand, BlockPosContainer block, BlockInteractionType type)
     {
-        if(FTBUPermissions.canModifyBlock(ep, hand, pos, facing, type))
+        if(FTBUPermissions.canModifyBlock(ep, hand, block, type))
         {
             return true;
         }
 
-        if(type == BlockInteractionType.RIGHT_CLICK)
-        {
-            pos = MathHelperLM.offsetIfItemBlock(pos, facing, ep.getHeldItem(hand));
-        }
-
-        IClaimedChunk chunk = getChunk(new ChunkDimPos(pos, ep.dimension));
+        IClaimedChunk chunk = getChunk(new ChunkDimPos(block.getPos(), ep.dimension));
 
         if(chunk == null)
         {

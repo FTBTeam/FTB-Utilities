@@ -13,7 +13,7 @@ import net.minecraft.util.math.BlockPos;
 public class CmdSetWarp extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "setwarp";
     }

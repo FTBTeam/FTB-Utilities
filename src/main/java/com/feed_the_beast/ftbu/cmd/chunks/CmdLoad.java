@@ -19,7 +19,7 @@ import net.minecraft.server.MinecraftServer;
 public class CmdLoad extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "load";
     }

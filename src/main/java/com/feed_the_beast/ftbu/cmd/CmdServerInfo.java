@@ -26,7 +26,7 @@ import java.util.Map;
 public class CmdServerInfo extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "server_info";
     }
@@ -69,7 +69,7 @@ public class CmdServerInfo extends CommandLM
                 InfoPage mod = dim.getSub(e1.getKey() + " [" + e1.getValue().size() + "]");
                 for(ChunkPos c : e1.getValue())
                 {
-                    mod.println(c.chunkXPos + ", " + c.chunkZPos + " [ " + c.getCenterXPos() + ", " + c.getCenterZPosition() + " ]");
+                    mod.println(c.chunkXPos + ", " + c.chunkZPos + " [ " + c.getXCenter() + ", " + c.getZCenter() + " ]");
                 }
             }
         }

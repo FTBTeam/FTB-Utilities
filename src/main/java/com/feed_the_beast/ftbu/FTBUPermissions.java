@@ -87,18 +87,19 @@ public class FTBUPermissions
             levels.put(CLAIMS_ITEM_PREFIX + name, (item instanceof ItemBucket) ? DefaultPermissionLevel.OP : DefaultPermissionLevel.ALL);
         }
 
+        levels.put(CLAIMS_BLOCK_EDIT_PREFIX + "gravestone.gravestone", DefaultPermissionLevel.ALL);
         levels.put(CLAIMS_ITEM_PREFIX + formatId(Items.END_CRYSTAL), DefaultPermissionLevel.OP);
         levels.put(CLAIMS_ITEM_PREFIX + "forge.bucketfilled", DefaultPermissionLevel.OP);
-
-        levels.forEach(FTBUPermissions::registerNoDescNode);
 
         for(IChunkUpgrade upgrade : FTBUCommon.CHUNK_UPGRADES)
         {
             if(upgrade != null)
             {
-                PermissionAPI.registerNode(CLAIMS_UPGRADE_PREFIX + upgrade.getName(), DefaultPermissionLevel.ALL, "");
+                levels.put(CLAIMS_UPGRADE_PREFIX + upgrade.getName(), DefaultPermissionLevel.ALL);
             }
         }
+
+        levels.forEach(FTBUPermissions::registerNoDescNode);
     }
 
     private static void registerNoDescNode(String key, DefaultPermissionLevel level)

@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.api_impl;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibStats;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbu.FTBUPermissions;
@@ -9,6 +8,7 @@ import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.world.FTBUTeamData;
+import net.minecraftforge.server.permission.PermissionAPI;
 
 /**
  * Created by LatvianModder on 03.10.2016.
@@ -49,9 +49,12 @@ public class ClaimedChunk implements IClaimedChunk
             }
             else if(!owner.isOnline())
             {
+                /*
                 double max = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(owner.getProfile(), FTBUPermissions.CHUNKLOADER_OFFLINE_TIMER).getDouble();
 
                 if(max == 0 || (max > 0 && FTBLibStats.getLastSeenDeltaInHours(owner.stats(), false) > max))
+                */
+                if(!PermissionAPI.hasPermission(owner.getProfile(), FTBUPermissions.CHUNKLOADER_LOAD_OFFLINE, null))
                 {
                     return false;
                 }

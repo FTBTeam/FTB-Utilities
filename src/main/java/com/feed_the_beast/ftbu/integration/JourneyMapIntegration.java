@@ -45,7 +45,7 @@ public class JourneyMapIntegration implements IClientPlugin, IJMIntegration
         mc = Minecraft.getMinecraft();
         clientAPI = api;
         FTBUClient.JM_INTEGRATION = this;
-        MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(JourneyMapIntegration.class);
         api.subscribe(getModId(), EnumSet.of(ClientEvent.Type.DISPLAY_UPDATE, ClientEvent.Type.MAPPING_STARTED, ClientEvent.Type.MAPPING_STOPPED));
     }
 
@@ -129,7 +129,7 @@ public class JourneyMapIntegration implements IClientPlugin, IJMIntegration
     }
 
     @SubscribeEvent
-    public void onEnteringChunk(EntityEvent.EnteringChunk event)
+    public static void onEnteringChunk(EntityEvent.EnteringChunk event)
     {
         if(FTBUClientConfig.JOURNEYMAP_OVERLAY.getBoolean() && event.getEntity() == mc.player && (lastPosition == null || MathHelperLM.dist(event.getNewChunkX(), event.getNewChunkZ(), lastPosition.chunkXPos, lastPosition.chunkZPos) >= 3D))
         {

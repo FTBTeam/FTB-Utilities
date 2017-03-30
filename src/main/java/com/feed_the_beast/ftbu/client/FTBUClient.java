@@ -30,7 +30,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
         ClientRegistry.registerKeyBinding(KEY_GUIDE);
         ClientRegistry.registerKeyBinding(KEY_WARP);
 
-        MinecraftForge.EVENT_BUS.register(new FTBUClientEventHandler());
+        MinecraftForge.EVENT_BUS.register(FTBUClientEventHandler.class);
 
         if(Loader.isModLoaded("tconstruct"))
         {

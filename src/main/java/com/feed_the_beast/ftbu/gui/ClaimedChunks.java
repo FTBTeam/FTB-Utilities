@@ -23,7 +23,7 @@ public class ClaimedChunks
     {
         public int flags;
         public Team team;
-        public String owner;
+        public String owner = "";
 
         public boolean hasUpgrade(IChunkUpgrade upgrade)
         {

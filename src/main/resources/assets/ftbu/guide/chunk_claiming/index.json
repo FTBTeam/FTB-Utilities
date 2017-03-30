@@ -7,10 +7,16 @@
 	{"id": "hr"},
 	{"id": "image", "image": "ftbu:guide/chunk_claiming/gui.png"},
 	null,
-	"Left-click on a chunk in the map to claim it",
-	"Right-click to unclaim a chunk",
-	"Shift-left-click to load a chunk",
-	"Shift-right-click to unload a chunk",
+	{
+		"id": "list",
+		"list": [
+			"Left-click on a chunk in the map to claim it",
+			"Right-click to unclaim a chunk",
+			"Shift-left-click to load a chunk",
+			"Shift-right-click to unload a chunk"
+		]
+	},
+	null,
 	"You can drag mouse to claim/unclaim/load/unload larger area at once",
 	null,
 	{"id": "image", "image": "ftbu:guide/chunk_claiming/claimed_area.png"}

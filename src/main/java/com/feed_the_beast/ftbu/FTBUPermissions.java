@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.lib.config.PropertyDouble;
 import com.feed_the_beast.ftbl.lib.config.PropertyInt;
 import com.feed_the_beast.ftbl.lib.config.PropertyList;
 import com.feed_the_beast.ftbl.lib.config.PropertyShort;
@@ -60,7 +59,8 @@ public class FTBUPermissions
 
     // Chunkloader //
     public static final String CHUNKLOADER_MAX_CHUNKS = "ftbu.chunkloader.max_chunks";
-    public static final String CHUNKLOADER_OFFLINE_TIMER = "ftbu.chunkloader.offline_timer";
+    //public static final String CHUNKLOADER_OFFLINE_TIMER = "ftbu.chunkloader.offline_timer";
+    public static final String CHUNKLOADER_LOAD_OFFLINE = "ftbu.chunkloader.load_offline";
 
     public static void init()
     {
@@ -71,6 +71,7 @@ public class FTBUPermissions
         PermissionAPI.registerNode(CLAIMS_CHUNKS_MODIFY_OTHERS, DefaultPermissionLevel.OP, "Allow player to modify other player's chunks");
         PermissionAPI.registerNode(CLAIMS_BLOCK_CNB, DefaultPermissionLevel.OP, "Allow to edit C&B bits in claimed chunks");
         PermissionAPI.registerNode(INFINITE_BACK_USAGE, DefaultPermissionLevel.NONE, "Allow to use 'back' command infinite times");
+        PermissionAPI.registerNode(CHUNKLOADER_LOAD_OFFLINE, DefaultPermissionLevel.ALL, "Keep loaded chunks working when player goes offline");
 
         Map<String, DefaultPermissionLevel> levels = new HashMap<>();
 
@@ -114,7 +115,7 @@ public class FTBUPermissions
         reg.addRankConfig(CLAIMS_MAX_CHUNKS, new PropertyShort(100, 0, 30000), new PropertyShort(1000), "Max amount of chunks that player can claim", "0 - Disabled");
         reg.addRankConfig(CLAIMS_BLOCKED_DIMENSIONS, new PropertyList(PropertyInt.ID), new PropertyList(PropertyInt.ID), "Dimensions where chunk claiming is not allowed");
         reg.addRankConfig(CHUNKLOADER_MAX_CHUNKS, new PropertyShort(50, 0, 30000), new PropertyShort(64), "Max amount of chunks that player can load", "0 - Disabled");
-        reg.addRankConfig(CHUNKLOADER_OFFLINE_TIMER, new PropertyDouble(-1D).setMin(-1D), new PropertyDouble(-1D), "Max hours player can be offline until he's chunks unload", "0 - Disabled, will unload instantly when he disconnects", "-1 - Chunk will always be loaded");
+        //reg.addRankConfig(CHUNKLOADER_OFFLINE_TIMER, new PropertyDouble(-1D).setMin(-1D), new PropertyDouble(-1D), "Max hours player can be offline until he's chunks unload", "0 - Disabled, will unload instantly when he disconnects", "-1 - Chunk will always be loaded");
     }
 
     public static void addCustomPerms(IFTBUtilitiesRegistry reg)
@@ -128,7 +129,7 @@ public class FTBUPermissions
 
     private static String formatId(@Nullable IForgeRegistryEntry<?> item)
     {
-        return item == null ? "minecraft:air" : item.getRegistryName().toString().toLowerCase().replace(':', '.');
+        return item == null ? "minecraft.air" : item.getRegistryName().toString().toLowerCase().replace(':', '.');
     }
 
     public static boolean canModifyBlock(EntityPlayerMP player, EnumHand hand, BlockPosContainer block, BlockInteractionType type)

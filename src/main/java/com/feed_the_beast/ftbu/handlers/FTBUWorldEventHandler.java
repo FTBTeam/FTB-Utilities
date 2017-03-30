@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class FTBUWorldEventHandler // FTBLIntegration
 {
     @SubscribeEvent
-    public void onWorldLoaded(ForgeUniverseLoadedEvent event)
+    public static void onWorldLoaded(ForgeUniverseLoadedEvent event)
     {
         FTBUUniverseData data = FTBUUniverseData.get();
 
@@ -28,7 +28,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
     }
 
     @SubscribeEvent
-    public void onWorldLoadedBeforePlayers(ForgeUniverseLoadedBeforePlayersEvent event)
+    public static void onWorldLoadedBeforePlayers(ForgeUniverseLoadedBeforePlayersEvent event)
     {
         FTBUUniverseData data = FTBUUniverseData.get();
 
@@ -39,7 +39,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
     }
 
     @SubscribeEvent
-    public void onWorldClosed(ForgeUniverseClosedEvent event)
+    public static void onWorldClosed(ForgeUniverseClosedEvent event)
     {
         FTBUUniverseData data = FTBUUniverseData.get();
 
@@ -50,7 +50,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
     }
 
     @SubscribeEvent
-    public void onMobSpawned(net.minecraftforge.event.entity.EntityJoinWorldEvent e)
+    public static void onMobSpawned(net.minecraftforge.event.entity.EntityJoinWorldEvent e)
     {
         if(!e.getWorld().isRemote && !isEntityAllowed(e.getEntity()))
         {
@@ -59,7 +59,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
         }
     }
 
-    private boolean isEntityAllowed(Entity e)
+    private static boolean isEntityAllowed(Entity e)
     {
         if(e instanceof EntityPlayer)
         {
@@ -90,7 +90,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
     }
 
     @SubscribeEvent
-    public void onExplosionStart(ExplosionEvent.Start e)
+    public static void onExplosionStart(ExplosionEvent.Start e)
     {
         if(!e.getWorld().isRemote && !FTBUUniverseData.allowExplosion(e.getWorld(), e.getExplosion()))
         {

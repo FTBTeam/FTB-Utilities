@@ -45,7 +45,7 @@ import java.util.UUID;
 public class FTBUPlayerEventHandler
 {
     @SubscribeEvent
-    public void onLoggedIn(ForgePlayerLoggedInEvent event)
+    public static void onLoggedIn(ForgePlayerLoggedInEvent event)
     {
         if(event.getPlayer().isFake())
         {
@@ -100,13 +100,13 @@ public class FTBUPlayerEventHandler
     }
 
     @SubscribeEvent
-    public void onLoggedOut(ForgePlayerLoggedOutEvent event)
+    public static void onLoggedOut(ForgePlayerLoggedOutEvent event)
     {
         LoadedChunkStorage.INSTANCE.checkAll();
     }
 
     @SubscribeEvent
-    public void onDeath(ForgePlayerDeathEvent event)
+    public static void onDeath(ForgePlayerDeathEvent event)
     {
         FTBUPlayerData data = FTBUPlayerData.get(event.getPlayer());
         if(data != null)
@@ -116,7 +116,7 @@ public class FTBUPlayerEventHandler
     }
 
     @SubscribeEvent
-    public void getSettings(ForgePlayerSettingsEvent event)
+    public static void getSettings(ForgePlayerSettingsEvent event)
     {
         FTBUPlayerData data = FTBUPlayerData.get(event.getPlayer());
         if(data != null)
@@ -140,7 +140,7 @@ public class FTBUPlayerEventHandler
     */
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onChunkChanged(EntityEvent.EnteringChunk e)
+    public static void onChunkChanged(EntityEvent.EnteringChunk e)
     {
         if(e.getEntity().world.isRemote || !(e.getEntity() instanceof EntityPlayerMP))
         {
@@ -197,7 +197,7 @@ public class FTBUPlayerEventHandler
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onPlayerAttacked(LivingAttackEvent e)
+    public static void onPlayerAttacked(LivingAttackEvent e)
     {
         if(e.getEntity().world.isRemote)
         {
@@ -235,7 +235,7 @@ public class FTBUPlayerEventHandler
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event)
+    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event)
     {
         if(event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.INTERACT))
         {
@@ -244,7 +244,7 @@ public class FTBUPlayerEventHandler
     }
 
     @SubscribeEvent
-    public void onRightClickItem(PlayerInteractEvent.RightClickItem event)
+    public static void onRightClickItem(PlayerInteractEvent.RightClickItem event)
     {
         if(event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.ITEM))
         {
@@ -253,7 +253,7 @@ public class FTBUPlayerEventHandler
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onBlockBreak(BlockEvent.BreakEvent event)
+    public static void onBlockBreak(BlockEvent.BreakEvent event)
     {
         if(event.getPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getPlayer(), EnumHand.MAIN_HAND, new BlockPosContainer(event.getWorld(), event.getPos(), event.getState()), BlockInteractionType.EDIT))
         {
@@ -262,7 +262,7 @@ public class FTBUPlayerEventHandler
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onBlockPlace(BlockEvent.PlaceEvent event)
+    public static void onBlockPlace(BlockEvent.PlaceEvent event)
     {
         if(event.getPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getPlayer(), EnumHand.MAIN_HAND, new BlockPosContainer(event.getWorld(), event.getPos(), event.getPlacedBlock()), BlockInteractionType.EDIT))
         {
@@ -272,7 +272,7 @@ public class FTBUPlayerEventHandler
 
     @Optional.Method(modid = "chiselsandbits")
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onChiselEvent(mod.chiselsandbits.api.EventBlockBitModification event)
+    public static void onChiselEvent(mod.chiselsandbits.api.EventBlockBitModification event)
     {
         if(event.getPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getPlayer(), event.getHand(), new BlockPosContainer(event.getWorld(), event.getPos(), event.getWorld().getBlockState(event.getPos())), event.isPlacing() ? BlockInteractionType.CNB_PLACE : BlockInteractionType.CNB_BREAK))
         {
@@ -281,7 +281,7 @@ public class FTBUPlayerEventHandler
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onBlockLeftClick(PlayerInteractEvent.LeftClickBlock event)
+    public static void onBlockLeftClick(PlayerInteractEvent.LeftClickBlock event)
     {
         if(event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.EDIT))
         {
@@ -291,13 +291,13 @@ public class FTBUPlayerEventHandler
 
     /*
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onItemPickup(EntityItemPickupEvent event)
+    public static void onItemPickup(EntityItemPickupEvent event)
     {
     }
 
     @Optional.Method(modid = "iChunUtil") //TODO: Change to lowercase whenever iChun does
     @SubscribeEvent
-    public void onBlockPickupEventEvent(me.ichun.mods.ichunutil.api.event.BlockPickupEvent event)
+    public static void onBlockPickupEventEvent(me.ichun.mods.ichunutil.api.event.BlockPickupEvent event)
     {
     }
     */

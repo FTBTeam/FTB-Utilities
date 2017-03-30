@@ -27,6 +27,7 @@ import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -101,9 +102,9 @@ public enum FTBLibIntegration implements IFTBLibPlugin
     }
 
     @Override
-    public void configLoaded(boolean startup)
+    public void configLoaded(LoaderState.ModState state)
     {
-        if(startup && FTBUConfigRanks.ENABLED.getBoolean())
+        if(state == LoaderState.ModState.PREINITIALIZED && FTBUConfigRanks.ENABLED.getBoolean())
         {
             PermissionAPI.setPermissionHandler(FTBUtilitiesAPI_Impl.INSTANCE);
         }

@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class FTBUServerEventHandler
 {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onServerChatEvent(ServerChatEvent event)
+    public static void onServerChatEvent(ServerChatEvent event)
     {
         String msg = event.getMessage().trim();
         String chatSubstitutePrefix = FTBUConfigGeneral.CHAT_SUBSTITUTE_PREFIX.getString();

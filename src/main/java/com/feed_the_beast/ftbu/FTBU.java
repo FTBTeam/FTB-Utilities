@@ -44,10 +44,10 @@ public class FTBU
         FTBUtilitiesAPI_Impl.INSTANCE.init(event.getAsmData());
         FTBUNetHandler.init();
 
-        MinecraftForge.EVENT_BUS.register(new FTBUPlayerEventHandler());
-        MinecraftForge.EVENT_BUS.register(new FTBUWorldEventHandler());
-        MinecraftForge.EVENT_BUS.register(new FTBUTeamEventHandler());
-        MinecraftForge.EVENT_BUS.register(new FTBUServerEventHandler());
+        MinecraftForge.EVENT_BUS.register(FTBUPlayerEventHandler.class);
+        MinecraftForge.EVENT_BUS.register(FTBUWorldEventHandler.class);
+        MinecraftForge.EVENT_BUS.register(FTBUTeamEventHandler.class);
+        MinecraftForge.EVENT_BUS.register(FTBUServerEventHandler.class);
 
         PROXY.preInit();
     }

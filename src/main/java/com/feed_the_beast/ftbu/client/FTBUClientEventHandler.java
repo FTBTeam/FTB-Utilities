@@ -13,7 +13,7 @@ public class FTBUClientEventHandler
 {
     /*
     @SubscribeEvent
-    public void onTooltip(ItemTooltipEvent e)
+    public static void onTooltip(ItemTooltipEvent e)
     {
         if(FTBUConfigGeneral.isItemBanned(item, e.itemStack.getItemDamage()))
         {
@@ -23,7 +23,7 @@ public class FTBUClientEventHandler
     */
 
     @SubscribeEvent
-    public void onKeyEvent(InputEvent.KeyInputEvent event)
+    public static void onKeyEvent(InputEvent.KeyInputEvent event)
     {
         if(FTBUClient.KEY_GUIDE.isPressed())
         {

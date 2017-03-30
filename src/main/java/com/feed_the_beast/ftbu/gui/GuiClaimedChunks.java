@@ -1,8 +1,10 @@
 package com.feed_the_beast.ftbu.gui;
 
+import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.MouseButton;
+import com.feed_the_beast.ftbl.lib.client.CachedVertexData;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -13,7 +15,6 @@ import com.feed_the_beast.ftbl.lib.gui.PanelLM;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
 import com.feed_the_beast.ftbl.lib.gui.misc.ThreadReloadChunkSelector;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
-import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
@@ -45,13 +46,44 @@ public class GuiClaimedChunks extends GuiLM
     private static final Map<UUID, ClaimedChunks.Team> TEAMS = new HashMap<>();
     private static final ClaimedChunks.Data[] chunkData = new ClaimedChunks.Data[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
     private static int claimedChunks, loadedChunks, maxClaimedChunks, maxLoadedChunks;
+    private static final ClaimedChunks.Data NULL_CHUNK_DATA = new ClaimedChunks.Data();
+
+    private static final CachedVertexData AREA = new CachedVertexData(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+    private static final CachedVertexData GRID = new CachedVertexData(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
 
     static
     {
+        NULL_CHUNK_DATA.owner = "";
+
         for(int i = 0; i < chunkData.length; i++)
         {
             chunkData[i] = new ClaimedChunks.Data();
         }
+
+        GRID.color.set(128, 128, 128, 50);
+
+        for(int x = 0; x <= GuiConfigs.CHUNK_SELECTOR_TILES_GUI; x++)
+        {
+            GRID.pos(x * 16, 0D);
+            GRID.pos(x * 16, GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, 0D);
+        }
+
+        for(int y = 0; y <= GuiConfigs.CHUNK_SELECTOR_TILES_GUI; y++)
+        {
+            GRID.pos(0D, y * 16, 0D);
+            GRID.pos(GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, y * 16, 0D);
+        }
+    }
+
+    private static ClaimedChunks.Data getAt(int x, int y)
+    {
+        int i = x + y * GuiConfigs.CHUNK_SELECTOR_TILES_GUI;
+        return i < 0 || i >= chunkData.length ? NULL_CHUNK_DATA : chunkData[i];
+    }
+
+    private static boolean hasBorder(ClaimedChunks.Data data, ClaimedChunks.Data with)
+    {
+        return (data.flags != with.flags || data.team != with.team) && !with.hasUpgrade(ChunkUpgrade.LOADED);
     }
 
     public static void setData(int startX, int startZ, int cc, int lc, int mcc, int mlc, ClaimedChunks.Data[] data, Map<UUID, ClaimedChunks.Team> tms)
@@ -71,6 +103,74 @@ public class GuiClaimedChunks extends GuiLM
                 {
                     FTBUClient.JM_INTEGRATION.chunkChanged(new ChunkPos(startX + x, startZ + z), data[x + z * GuiConfigs.CHUNK_SELECTOR_TILES_GUI]);
                 }
+            }
+        }
+
+        AREA.reset();
+        EnumTeamColor prevCol = null;
+
+        for(int i = 0; i < chunkData.length; i++)
+        {
+            if(!chunkData[i].hasUpgrade(ChunkUpgrade.CLAIMED))
+            {
+                continue;
+            }
+
+            if(prevCol != chunkData[i].team.color)
+            {
+                prevCol = chunkData[i].team.color;
+                AREA.color.set(chunkData[i].team.color.getColor(), 150);
+            }
+
+            AREA.rect((i % GuiConfigs.CHUNK_SELECTOR_TILES_GUI) * 16, (i / GuiConfigs.CHUNK_SELECTOR_TILES_GUI) * 16, 16, 16);
+        }
+
+        boolean borderU, borderD, borderL, borderR;
+
+        for(int i = 0; i < chunkData.length; i++)
+        {
+            if(!chunkData[i].hasUpgrade(ChunkUpgrade.CLAIMED))
+            {
+                continue;
+            }
+
+            int x = i % GuiConfigs.CHUNK_SELECTOR_TILES_GUI;
+            int dx = x * 16;
+            int y = i / GuiConfigs.CHUNK_SELECTOR_TILES_GUI;
+            int dy = y * 16;
+
+            borderU = y > 0 && hasBorder(chunkData[i], getAt(x, y - 1));
+            borderD = y < (GuiConfigs.CHUNK_SELECTOR_TILES_GUI - 1) && hasBorder(chunkData[i], getAt(x, y + 1));
+            borderL = x > 0 && hasBorder(chunkData[i], getAt(x - 1, y));
+            borderR = x < (GuiConfigs.CHUNK_SELECTOR_TILES_GUI - 1) && hasBorder(chunkData[i], getAt(x + 1, y));
+
+            if(chunkData[i].hasUpgrade(ChunkUpgrade.LOADED))
+            {
+                AREA.color.set(255, 80, 80, 230);
+            }
+            else
+            {
+                AREA.color.set(80, 80, 80, 230);
+            }
+
+            if(borderU)
+            {
+                AREA.rect(dx, dy, 16, 1);
+            }
+
+            if(borderD)
+            {
+                AREA.rect(dx, dy + 15, 16, 1);
+            }
+
+            if(borderL)
+            {
+                AREA.rect(dx, dy, 1, 16);
+            }
+
+            if(borderR)
+            {
+                AREA.rect(dx + 15, dy, 1, 16);
             }
         }
     }
@@ -145,27 +245,17 @@ public class GuiClaimedChunks extends GuiLM
             int ax = getAX();
             int ay = getAY();
 
-            if(chunkData[index].hasUpgrade(ChunkUpgrade.CLAIMED))
+            if(!isSelected && currentSelectionMode != -1 && isMouseOver(this))
             {
-                mc.getTextureManager().bindTexture(GuiConfigs.TEX_CHUNK_CLAIMING);
-                LMColorUtils.GL_COLOR.set(chunkData[index].team.color.getColor(), GuiScreen.isCtrlKeyDown() ? 50 : 180);
-                GuiHelper.drawTexturedRect(ax, ay, 16, 16, GuiConfigs.TEX_FILLED.getMinU(), GuiConfigs.TEX_FILLED.getMinV(), GuiConfigs.TEX_FILLED.getMaxU(), GuiConfigs.TEX_FILLED.getMaxV());
-                GlStateManager.color((chunkData[index].hasUpgrade(ChunkUpgrade.LOADED) && chunkData[index].team.isAlly) ? 1F : 0F, chunkData[index].hasUpgrade(ChunkUpgrade.IS_OWNER) ? 0.27F : 0F, 0F, GuiScreen.isCtrlKeyDown() ? 0.2F : 0.78F);
-                GuiHelper.drawTexturedRect(ax, ay, 16, 16, GuiConfigs.TEX_BORDER.getMinU(), GuiConfigs.TEX_BORDER.getMinV(), GuiConfigs.TEX_BORDER.getMaxU(), GuiConfigs.TEX_BORDER.getMaxV());
+                isSelected = true;
             }
 
             if(isSelected || gui.isMouseOver(this))
             {
                 GlStateManager.color(1F, 1F, 1F, 0.27F);
                 GuiHelper.drawBlankRect(ax, ay, 16, 16);
+                GlStateManager.color(1F, 1F, 1F, 1F);
             }
-
-            if(!isSelected && currentSelectionMode != -1 && isMouseOver(this))
-            {
-                isSelected = true;
-            }
-
-            GlStateManager.color(1F, 1F, 1F, 1F);
         }
     }
 
@@ -310,29 +400,15 @@ public class GuiClaimedChunks extends GuiLM
 
         GlStateManager.disableTexture2D();
         GlStateManager.glLineWidth(1F);
-        GlStateManager.color(1F, 1F, 1F, 1F);
-        int gridR = 128, gridG = 128, gridB = 128, gridA = 50;
 
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer buffer = tessellator.getBuffer();
-        buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
-
-        int gridX = mapButtons[0].getAX();
-        int gridY = mapButtons[0].getAY();
-
-        for(int x = 0; x <= GuiConfigs.CHUNK_SELECTOR_TILES_GUI; x++)
-        {
-            buffer.pos(gridX + x * 16, gridY, 0D).color(gridR, gridG, gridB, gridA).endVertex();
-            buffer.pos(gridX + x * 16, gridY + GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, 0D).color(gridR, gridG, gridB, gridA).endVertex();
-        }
-
-        for(int y = 0; y <= GuiConfigs.CHUNK_SELECTOR_TILES_GUI; y++)
-        {
-            buffer.pos(gridX, gridY + y * 16, 0D).color(gridR, gridG, gridB, gridA).endVertex();
-            buffer.pos(gridX + GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, gridY + y * 16, 0D).color(gridR, gridG, gridB, gridA).endVertex();
-        }
-
-        tessellator.draw();
+        buffer.setTranslation(mapButtons[0].getAX(), mapButtons[0].getAY(), 0D);
+        //GlStateManager.color(1F, 1F, 1F, GuiScreen.isCtrlKeyDown() ? 0.2F : 0.7F);
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        AREA.draw(tessellator, buffer);
+        GRID.draw(tessellator, buffer);
+        buffer.setTranslation(0D, 0D, 0D);
         GlStateManager.enableTexture2D();
 
         int cx = MathHelperLM.chunk(mc.player.posX);

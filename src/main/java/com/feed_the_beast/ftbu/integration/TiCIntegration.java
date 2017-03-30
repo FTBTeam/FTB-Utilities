@@ -41,16 +41,14 @@ import java.util.List;
  */
 public class TiCIntegration
 {
-    private static final TiCIntegration INSTANCE = new TiCIntegration();
-
     public static void init()
     {
-        MinecraftForge.EVENT_BUS.register(INSTANCE);
+        MinecraftForge.EVENT_BUS.register(TiCIntegration.class);
     }
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    public void onGuideEvent(ClientGuideEvent event)
+    public static void onGuideEvent(ClientGuideEvent event)
     {
         IGuide guide = event.getModGuide("tconstruct");
         InfoPage pageGuide = guide.getPage();

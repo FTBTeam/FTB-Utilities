@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class FTBUTeamEventHandler
 {
     /*@SubscribeEvent
-    public void onDataSynced(ForgeTeamEvent.Sync event)
+    public static void onDataSynced(ForgeTeamEvent.Sync event)
     {
         if(event.team.hasCapability(FTBUCapabilities.FTBU_TEAM_DATA, null))
         {
@@ -32,7 +32,7 @@ public class FTBUTeamEventHandler
     }*/
 
     @SubscribeEvent
-    public void getSettings(ForgeTeamSettingsEvent event)
+    public static void getSettings(ForgeTeamSettingsEvent event)
     {
         FTBUTeamData data = FTBUTeamData.get(event.getTeam());
 
@@ -43,7 +43,7 @@ public class FTBUTeamEventHandler
     }
 
     @SubscribeEvent
-    public void onPlayerLeft(ForgeTeamPlayerLeftEvent event)
+    public static void onPlayerLeft(ForgeTeamPlayerLeftEvent event)
     {
         FTBUTeamData data = FTBUTeamData.get(event.getTeam());
 

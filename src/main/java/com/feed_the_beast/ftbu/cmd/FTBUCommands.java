@@ -55,7 +55,7 @@ public class FTBUCommands
 
         if(FTBUConfigCommands.SERVER_INFO.getBoolean())
         {
-            command.addSubcommand(new CmdServerInfo());
+            command.addSubcommand(new CmdLoadedChunks());
         }
 
         if(FTBUConfigCommands.TPL.getBoolean())

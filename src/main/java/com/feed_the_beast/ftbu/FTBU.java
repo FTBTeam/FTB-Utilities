@@ -11,7 +11,6 @@ import com.feed_the_beast.ftbu.handlers.FTBUTeamEventHandler;
 import com.feed_the_beast.ftbu.handlers.FTBUWorldEventHandler;
 import com.feed_the_beast.ftbu.net.FTBUNetHandler;
 import com.feed_the_beast.ftbu.ranks.CmdOverride;
-import com.feed_the_beast.ftbu.ranks.CmdTreeOverride;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.backups.Backups;
 import net.minecraft.command.ICommand;
@@ -24,7 +23,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
-import net.minecraftforge.server.command.CommandTreeBase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,20 +77,13 @@ public class FTBU
         if(FTBUConfigRanks.OVERRIDE_COMMANDS.getBoolean())
         {
             ServerCommandManager manager = (ServerCommandManager) LMServerUtils.getServer().getCommandManager();
-            List<ICommand> commands = new ArrayList<>(LMServerUtils.getCommandSet(manager));
+            List<ICommand> commands = new ArrayList<>(manager.getCommands().values());
             LMServerUtils.getCommandSet(manager).clear();
             manager.getCommands().clear();
 
             for(ICommand command : commands)
             {
-                if(command instanceof CommandTreeBase)
-                {
-                    manager.registerCommand(new CmdTreeOverride((CommandTreeBase) command, "command." + command.getName()));
-                }
-                else
-                {
-                    manager.registerCommand(new CmdOverride(command, "command." + command.getName()));
-                }
+                manager.registerCommand(new CmdOverride(command, "command." + command.getName()));
             }
 
             FTBUFinals.LOGGER.info("Overridden " + manager.getCommands().size() + " commands");

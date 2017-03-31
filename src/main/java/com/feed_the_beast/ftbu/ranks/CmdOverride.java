@@ -5,8 +5,10 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.server.command.CommandTreeBase;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,6 +23,16 @@ public class CmdOverride implements ICommand
     {
         parent = c;
         permissionNode = pn;
+
+        if(c instanceof CommandTreeBase)
+        {
+            CommandTreeBase tree = (CommandTreeBase) c;
+
+            for(ICommand command : new ArrayList<>(tree.getSubCommands()))
+            {
+                tree.addSubcommand(new CmdOverride(command, permissionNode + "." + command.getName()));
+            }
+        }
     }
 
     @Override
@@ -68,6 +80,6 @@ public class CmdOverride implements ICommand
     @Override
     public int compareTo(ICommand o)
     {
-        return getName().compareToIgnoreCase(o.getName());
+        return parent.compareTo(o instanceof CmdOverride ? ((CmdOverride) o).parent : o);
     }
 }

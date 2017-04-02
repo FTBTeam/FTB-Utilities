@@ -12,9 +12,10 @@ import net.minecraftforge.common.ForgeChunkManager;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback
+public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, ForgeChunkManager.OrderedLoadingCallback
 {
     INSTANCE;
 
@@ -54,6 +55,12 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback
         }
 
         return ticket;
+    }
+
+    @Override
+    public List<ForgeChunkManager.Ticket> ticketsLoaded(List<ForgeChunkManager.Ticket> tickets, World world, int maxTicketCount)
+    {
+        return Collections.emptyList();
     }
 
     @Override

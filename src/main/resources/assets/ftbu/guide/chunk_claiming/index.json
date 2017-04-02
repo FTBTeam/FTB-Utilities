@@ -1,5 +1,33 @@
 [
-	"FTBUtilities allows you to protect your base with Claimed Chunks. Claimed chunks will be [by default] accessable to your team. You can disable explosions and fake player interactions",
+	[
+		"FTBUtilities allows you to protect your base with Claimed Chunks. Claimed chunks will be",
+		{
+			"text": " by default ",
+			"italic": true,
+			"hoverEvent": {
+				"action": "show_text",
+				"value": ["Team config option '", {"translate": "config.ftbu.blocks.name", "italic": true}, "'"]
+			}
+		},
+		"accessible to your team and team allies. You can also",
+		{
+			"text": " disable explosions ",
+			"italic": true,
+			"hoverEvent": {
+				"action": "show_text",
+				"value": ["Team config option '", {"translate": "config.ftbu.disable_explosions.name", "italic": true}, "'"]
+			}
+		},
+		"and",
+		{
+			"text": " fake player interactions",
+			"italic": true,
+			"hoverEvent": {
+				"action": "show_text",
+				"value": ["Team config option '", {"translate": "config.ftbu.fake_players.name", "italic": true}, "'"]
+			}
+		}
+	],
 	null,
 	"To open the GUI, you must click on the Claimed Chunks sidebar button",
 	null,

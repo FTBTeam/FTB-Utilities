@@ -15,6 +15,11 @@ my_server_settings.ftbu.explosions=爆炸
 my_server_settings.ftbu.fake_players=允许Fake Players
 my_server_settings.ftbu.security_level=方块的安全等级
 
+# Team Settings
+config.ftbu.blocks.name=方块交互
+config.ftbu.disable_explosions.name=在声明区块内禁止爆炸
+config.ftbu.fake_players.name=允许Fake Players对方块进行交互
+
 # Action Buttons
 sidebar_button.ftbu.toggle.gamemode=切换游戏模式
 sidebar_button.ftbu.toggle.rain=切换天气
@@ -33,6 +38,7 @@ key.categories.ftbu=FTBMods
 key.ftbu.guide=打开指南
 key.ftbu.chunk_border=区块显示
 key.ftbu.light_values=亮度显示
+key.ftbu.warp=Warp GUI
 
 # Misc
 ftbu.lang.timer_restart=服务器重启: %s
@@ -50,6 +56,7 @@ ftbu.label.new_friends=新的好友请求!
 ftbu.label.new_friends_click=点击接受所有的请求
 ftbu.button.block_security=方块的安全
 ftbu.stat.dph=每小时死亡数
+ftbu.leaderboard.title=Leaderboards
 
 # Warps
 ftbu.warp.set=传送点 '%s' 已经设置!
@@ -77,21 +84,23 @@ ftbu.backup.already_running=正在备份中!
 ftbu.backup.not_running=备份功能没有运行!
 ftbu.backup.size=当前世界大小: %s，总备份文件夹大小: %s
 
-# Tops
-ftbu.top.title=服务器排行榜
-ftbu.top.first_joined=首次加入
-ftbu.top.last_seen=最后离开
-ftbu.top.time_played=游戏时间
-ftbu.top.deaths=死亡次数
-ftbu.top.deaths_per_hour=每小时死亡数
+# Chunk Types
+ftbu.lang.chunk.loaded=区块加载
+ftbu.lang.chunk.no_explosions=爆炸禁止
+ftbu.lang.chunk.no_pvp=盟友之间PVP禁止
 
-# Chunktypes
-ftbu.chunktype.wilderness=未认领区块
-ftbu.chunktype.claimed=认领区块
-ftbu.chunktype.loaded=加载区块
+ftbu.lang.chunk.claimed=声明区域
+ftbu.lang.chunk.wilderness=未声明区域
 
 # Pack States
 ftbu.pack_state.download=下载
 ftbu.pack_state.downloading=下载中……
 ftbu.pack_state.remove=移除
 ftbu.pack_state.update=更新
+
+# Guide
+ftbu.guide=FTBUtilities
+ftbu.guide.util_buttons=实用按钮
+ftbu.guide.chunk_claiming=区块声明
+ftbu.guide.ranks=权限组
+ftbu.guide.tp_commands=传送指令

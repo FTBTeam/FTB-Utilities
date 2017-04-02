@@ -38,7 +38,7 @@ key.categories.ftbu=FTBMods
 key.ftbu.guide=打开指南
 key.ftbu.chunk_border=区块显示
 key.ftbu.light_values=亮度显示
-key.ftbu.warp=Warp GUI
+key.ftbu.warp=传送GUI
 
 # Misc
 ftbu.lang.timer_restart=服务器重启: %s
@@ -56,7 +56,7 @@ ftbu.label.new_friends=新的好友请求!
 ftbu.label.new_friends_click=点击接受所有的请求
 ftbu.button.block_security=方块的安全
 ftbu.stat.dph=每小时死亡数
-ftbu.leaderboard.title=Leaderboards
+ftbu.leaderboard.title=计分板
 
 # Warps
 ftbu.warp.set=传送点 '%s' 已经设置!

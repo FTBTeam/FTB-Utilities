@@ -22,14 +22,20 @@ config.ftbu.fake_players.name=Allow Fake Players to Interact With Blocks
 
 # Action Buttons
 sidebar_button.ftbu.toggle.gamemode=Toggle Gamemode
+sidebar_button.ftbu.toggle.gamemode.desc=Toggles between survival and creative mode
 sidebar_button.ftbu.toggle.rain=Toggle Rain
+sidebar_button.ftbu.toggle.rain.desc=Toggles weather between clear and raining
 sidebar_button.ftbu.toggle.day=Set time to Day
+sidebar_button.ftbu.toggle.day.desc=Sets daytime
 sidebar_button.ftbu.toggle.night=Set time to Night
+sidebar_button.ftbu.toggle.night.desc=Sets nighttime
 sidebar_button.ftbu.heal=Heal
+sidebar_button.ftbu.heal.desc=Heals player to max health and saturation, and extinguishes if player is on fire
 sidebar_button.ftbu.guide=Guide
 sidebar_button.ftbu.server_info=Server Info
 sidebar_button.ftbu.claimed_chunks=Claimed Chunks
 sidebar_button.ftbu.trash_can=Trash Can
+sidebar_button.ftbu.trash_can.desc=Opens a trash can. Items from it disappear after you close the GUI, but will remain there as long as it's open
 sidebar_button.ftbu.shop=Shop
 sidebar_button.ftbu.mail=Mail
 
@@ -100,7 +106,32 @@ ftbu.pack_state.update=Update
 
 # Guide
 ftbu.guide=FTBUtilities
+ftbu.guide.info=FTBUtilities is a mod all about helping server owners to manage their servers with chunk protection, backups, and a ton of other things!
 ftbu.guide.util_buttons=Utility Buttons
+
 ftbu.guide.chunk_claiming=Chunk Claiming
+ftbu.guide.chunk_claiming.intro=FTBUtilities allows you to protect your base with Claimed Chunks. Claimed chunks will be by default accessible to your team and team allies. You can also disable explosions and fake player interactions
+ftbu.guide.chunk_claiming.opengui=To open the GUI, you must click on the $sidebar_button.ftbu.claimed_chunks sidebar button
+ftbu.guide.chunk_claiming.list.left_click=Left-click on a chunk in the map to claim it
+ftbu.guide.chunk_claiming.list.right_click=Right-click to unclaim a chunk
+ftbu.guide.chunk_claiming.list.shift_left_click=Shift-left-click to load a chunk
+ftbu.guide.chunk_claiming.list.shift_right_click=Shift-right-click to unload a chunk
+ftbu.guide.chunk_claiming.dragmouse=You can drag mouse to claim/unclaim/load/unload larger area at once
+
 ftbu.guide.ranks=Ranks
+
 ftbu.guide.tp_commands=Teleportation Commands
+ftbu.guide.tp_commands.intro=There are few commands that you can use to teleport as player from FTBU:
+ftbu.guide.tp_commands.home.sethome=Creates a home
+ftbu.guide.tp_commands.home.home=Teleports you to a home
+ftbu.guide.tp_commands.home.list=Lists all your homes
+ftbu.guide.tp_commands.home.delhome=Deletes a home
+ftbu.guide.tp_commands.home.name=[name] is optional for multiple homes, 'home' is used if it's blank
+ftbu.guide.tp_commands.warp.setwarp=Creates a warp
+ftbu.guide.tp_commands.warp.warp=Teleports you to a warp
+ftbu.guide.tp_commands.warp.list=Lists all warps
+ftbu.guide.tp_commands.warp.delwarp=Deletes a warp
+ftbu.guide.tp_commands.back=Teleports you to your last death location. It only works once by default, so you can't use this as another home to cheat
+ftbu.guide.tp_commands.spawn=Teleports you to world's spawnpoint
+ftbu.guide.tp_commands.prefix=If the command doesn't work, try it with '/ftb [command]' prefix, e.g. /ftb home
+ftbu.guide.tp_commands.gui=You can also bind a key to 'Warps GUI' in Controls, and while in-game, pressing it will open Warps GUI, from which you can choose home, warp, back location or spawn with one click

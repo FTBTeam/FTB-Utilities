@@ -4,31 +4,19 @@
 		"type": "horizontal",
 		"spacing": 4,
 		"list": [
-			{
-				"id": "image", "image": "ftbl:textures/icons/toggle_gamemode.png", "size": 16,
-				"hover": [{"translate": "sidebar_button.ftbu.toggle.gamemode"}]
-			},
-			{
-				"id": "image", "image": "ftbl:textures/icons/toggle_rain.png", "size": 16,
-				"hover": [{"translate": "sidebar_button.ftbu.toggle.rain"}]
-			},
-			{
-				"id": "image", "image": "ftbl:textures/icons/toggle_day.png", "size": 16,
-				"hover": [{"translate": "sidebar_button.ftbu.toggle.day"}]
-			},
-			{
-				"id": "image", "image": "ftbl:textures/icons/toggle_night.png", "size": 16,
-				"hover": [{"translate": "sidebar_button.ftbu.toggle.night"}]
-			}
+			{"id": "image", "image": "ftbl:textures/icons/toggle_gamemode.png", "size": 16, "hover": ["$sidebar_button.ftbu.toggle.gamemode"]},
+			{"id": "image", "image": "ftbl:textures/icons/toggle_rain.png", "size": 16, "hover": ["$sidebar_button.ftbu.toggle.rain"]},
+			{"id": "image", "image": "ftbl:textures/icons/toggle_day.png", "size": 16, "hover": ["$sidebar_button.ftbu.toggle.day"]},
+			{"id": "image", "image": "ftbl:textures/icons/toggle_night.png", "size": 16, "hover": ["$sidebar_button.ftbu.toggle.night"]}
 		]
 	},
 	{
 		"id": "list",
 		"list": [
-			[{"translate": "sidebar_button.ftbu.toggle.gamemode"}, ": Toggles between survival and creative mode"],
-			[{"translate": "sidebar_button.ftbu.toggle.rain"}, ": Toggles weather between clear and raining"],
-			[{"translate": "sidebar_button.ftbu.toggle.day"}, ": Sets daytime"],
-			[{"translate": "sidebar_button.ftbu.toggle.night"}, ": Sets nighttime"]
+			"$sidebar_button.ftbu.toggle.gamemode: $sidebar_button.ftbu.toggle.gamemode.desc",
+			"$sidebar_button.ftbu.toggle.rain: $sidebar_button.ftbu.toggle.rain.desc",
+			"$sidebar_button.ftbu.toggle.day: $sidebar_button.ftbu.toggle.day.desc",
+			"$sidebar_button.ftbu.toggle.night: $sidebar_button.ftbu.toggle.night.desc"
 		]
 	},
 	null,
@@ -37,27 +25,15 @@
 		"type": "horizontal",
 		"spacing": 4,
 		"list": [
-			{
-				"id": "image", "image": "ftbl:textures/icons/heart.png", "size": 16,
-				"hover": [{"translate": "sidebar_button.ftbu.heal"}]
-			},
-			{
-				"id": "image", "image": "ftbl:textures/icons/bin.png", "size": 16,
-				"hover": [{"translate": "sidebar_button.ftbu.trash_can"}]
-			}
+			{"id": "image", "image": "ftbl:textures/icons/heart.png", "size": 16, "hover": ["$sidebar_button.ftbu.heal"]},
+			{"id": "image", "image": "ftbl:textures/icons/bin.png", "size": 16, "hover": ["$sidebar_button.ftbu.trash_can"]}
 		]
 	},
 	{
 		"id": "list",
 		"list": [
-			[
-				{"translate": "sidebar_button.ftbu.heal"},
-				": Heals player to max health and saturation, and extinguishes if player is on fire"
-			],
-			[
-				{"translate": "sidebar_button.ftbu.trash_can"},
-				": Opens a trash can. Items from it disappear after you close the GUI, but will remain there as long as it's open"
-			]
+			"$sidebar_button.ftbu.heal: $sidebar_button.ftbu.heal.desc",
+			"$sidebar_button.ftbu.trash_can: $sidebar_button.ftbu.trash_can.desc"
 		]
 	}
 ]

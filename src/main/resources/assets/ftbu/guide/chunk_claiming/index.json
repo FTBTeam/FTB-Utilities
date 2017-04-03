@@ -1,35 +1,7 @@
 [
-	[
-		"FTBUtilities allows you to protect your base with Claimed Chunks. Claimed chunks will be",
-		{
-			"text": " by default ",
-			"italic": true,
-			"hoverEvent": {
-				"action": "show_text",
-				"value": ["Team config option '", {"translate": "config.ftbu.blocks.name", "italic": true}, "'"]
-			}
-		},
-		"accessible to your team and team allies. You can also",
-		{
-			"text": " disable explosions ",
-			"italic": true,
-			"hoverEvent": {
-				"action": "show_text",
-				"value": ["Team config option '", {"translate": "config.ftbu.disable_explosions.name", "italic": true}, "'"]
-			}
-		},
-		"and",
-		{
-			"text": " fake player interactions",
-			"italic": true,
-			"hoverEvent": {
-				"action": "show_text",
-				"value": ["Team config option '", {"translate": "config.ftbu.fake_players.name", "italic": true}, "'"]
-			}
-		}
-	],
+	"$ftbu.guide.chunk_claiming.intro",
 	null,
-	"To open the GUI, you must click on the Claimed Chunks sidebar button",
+	"$ftbu.guide.chunk_claiming.opengui",
 	null,
 	{"id": "image", "image": "ftbu:guide/chunk_claiming/gui_button.png"},
 	{"id": "hr"},
@@ -38,14 +10,14 @@
 	{
 		"id": "list",
 		"list": [
-			"Left-click on a chunk in the map to claim it",
-			"Right-click to unclaim a chunk",
-			"Shift-left-click to load a chunk",
-			"Shift-right-click to unload a chunk"
+			"$ftbu.guide.chunk_claiming.list.left_click",
+			"$ftbu.guide.chunk_claiming.list.right_click",
+			"$ftbu.guide.chunk_claiming.list.shift_left_click",
+			"$ftbu.guide.chunk_claiming.list.shift_right_click"
 		]
 	},
 	null,
-	"You can drag mouse to claim/unclaim/load/unload larger area at once",
+	"$ftbu.guide.chunk_claiming.dragmouse",
 	null,
 	{"id": "image", "image": "ftbu:guide/chunk_claiming/claimed_area.png"}
 ]

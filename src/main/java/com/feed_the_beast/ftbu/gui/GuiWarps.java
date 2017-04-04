@@ -99,7 +99,7 @@ public class GuiWarps extends GuiBase
                 textY = (int) (Math.sin(i * MathHelperLM.RAD) * d) - 2;
             }
 
-            GuiHelper.drawCenteredString(gui.getFont(), warpItem.name, gui.getX() + gui.getWidth() / 2D + textX, gui.getY() + gui.getHeight() / 2D + textY, 0xFFFFFF);
+            GuiHelper.drawCenteredString(gui.getFont(), warpItem.name, gui.posX + gui.width / 2D + textX, gui.posY + gui.height / 2D + textY, 0xFFFFFF);
         }
 
         @Override

@@ -62,7 +62,10 @@ public class JourneyMapIntegration implements IClientPlugin, IJMIntegration
         {
             case DISPLAY_UPDATE:
                 Minecraft mc = Minecraft.getMinecraft();
-                new MessageClaimedChunksRequest(mc.player).sendToServer();
+                if(mc.player != null)
+                {
+                    new MessageClaimedChunksRequest(mc.player).sendToServer();
+                }
                 break;
             case MAPPING_STOPPED:
                 clearData();

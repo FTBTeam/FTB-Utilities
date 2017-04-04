@@ -48,11 +48,14 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 
 /**
  * Created by LatvianModder on 18.05.2016.
@@ -60,6 +63,18 @@ import java.util.UUID;
 public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
 {
     private static final Map<UUID, String> LOCAL_BADGES = new HashMap<>();
+    public static final Function<ChunkDimPos, Boolean> ALLOW_EXPLOSION = pos ->
+    {
+        if(pos.dim == 0 && FTBUConfigWorld.SAFE_SPAWN.getBoolean() && isInSpawn(pos))
+        {
+            return false;
+        }
+        else
+        {
+            IClaimedChunk chunk = ClaimedChunkStorage.INSTANCE.getChunk(pos);
+            return chunk == null || !chunk.hasUpgrade(ChunkUpgrade.NO_EXPLOSIONS);
+        }
+    };
 
     @Nullable
     public static FTBUUniverseData get()
@@ -148,18 +163,23 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
         return dim == 0 && isInSpawn(new ChunkDimPos(MathHelperLM.chunk(x), MathHelperLM.chunk(z), dim));
     }
 
-    public static boolean allowExplosion(World world, Explosion explosion)
+    public static void handleExplosion(World world, Explosion explosion)
     {
-        ChunkDimPos pos = new ChunkDimPos(MathHelperLM.chunk(explosion.getPosition().xCoord), MathHelperLM.chunk(explosion.getPosition().zCoord), world.provider.getDimension());
-
-        if(pos.dim == 0 && FTBUConfigWorld.SAFE_SPAWN.getBoolean() && isInSpawn(pos))
+        if(world.isRemote || explosion.getAffectedBlockPositions().isEmpty())
         {
-            return false;
+            return;
         }
-        else
+
+        List<BlockPos> list = new ArrayList<>(explosion.getAffectedBlockPositions());
+        explosion.clearAffectedBlockPositions();
+        Map<ChunkDimPos, Boolean> map = new HashMap<>();
+
+        for(BlockPos pos : list)
         {
-            IClaimedChunk chunk = ClaimedChunkStorage.INSTANCE.getChunk(pos);
-            return chunk == null || !chunk.hasUpgrade(ChunkUpgrade.NO_EXPLOSIONS);
+            if(map.computeIfAbsent(new ChunkDimPos(pos, world.provider.getDimension()), ALLOW_EXPLOSION))
+            {
+                explosion.getAffectedBlockPositions().add(pos);
+            }
         }
     }
 

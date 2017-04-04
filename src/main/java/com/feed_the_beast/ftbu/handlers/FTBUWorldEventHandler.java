@@ -50,12 +50,12 @@ public class FTBUWorldEventHandler // FTBLIntegration
     }
 
     @SubscribeEvent
-    public static void onMobSpawned(net.minecraftforge.event.entity.EntityJoinWorldEvent e)
+    public static void onMobSpawned(net.minecraftforge.event.entity.EntityJoinWorldEvent event)
     {
-        if(!e.getWorld().isRemote && !isEntityAllowed(e.getEntity()))
+        if(!event.getWorld().isRemote && !isEntityAllowed(event.getEntity()))
         {
-            e.getEntity().setDead();
-            e.setCanceled(true);
+            event.getEntity().setDead();
+            event.setCanceled(true);
         }
     }
 
@@ -90,11 +90,8 @@ public class FTBUWorldEventHandler // FTBLIntegration
     }
 
     @SubscribeEvent
-    public static void onExplosionStart(ExplosionEvent.Start e)
+    public static void onExplosionDetonate(ExplosionEvent.Detonate event)
     {
-        if(!e.getWorld().isRemote && !FTBUUniverseData.allowExplosion(e.getWorld(), e.getExplosion()))
-        {
-            e.setCanceled(true);
-        }
+        FTBUUniverseData.handleExplosion(event.getWorld(), event.getExplosion());
     }
 }

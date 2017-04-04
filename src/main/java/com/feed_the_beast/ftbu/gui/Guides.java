@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
@@ -50,7 +50,7 @@ public enum Guides implements IResourceManagerReloadListener
     private static final InfoPage INFO_PAGE = new InfoPage("guides")
     {
         @Override
-        public ISpecialInfoButton createSpecialButton(IGui gui)
+        public ISpecialInfoButton createSpecialButton(GuiBase gui)
         {
             return new SpecialInfoButton(GuiLang.BUTTON_REFRESH.translate(), GuiIcons.REFRESH)
             {

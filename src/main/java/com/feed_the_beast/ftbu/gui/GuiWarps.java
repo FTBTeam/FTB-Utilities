@@ -1,14 +1,13 @@
 package com.feed_the_beast.ftbu.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.lib.client.CachedVertexData;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
-import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
+import com.feed_the_beast.ftbl.lib.gui.Button;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
-import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
+import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.feed_the_beast.ftbu.net.MessageSendWarpList;
@@ -25,7 +24,7 @@ import java.util.List;
 /**
  * Created by LatvianModder on 13.10.2016.
  */
-public class GuiWarps extends GuiLM
+public class GuiWarps extends GuiBase
 {
     public static GuiWarps INSTANCE = null;
     private static final int SIZE = 220;
@@ -62,7 +61,7 @@ public class GuiWarps extends GuiLM
     private ArcButton buttonOver = null;
     private CachedVertexData lines;
 
-    private class ArcButton extends ButtonLM
+    private class ArcButton extends Button
     {
         private final MessageSendWarpList.WarpItem warpItem;
         private final int index;
@@ -83,7 +82,7 @@ public class GuiWarps extends GuiLM
         }
 
         @Override
-        public void renderWidget(IGui gui)
+        public void renderWidget(GuiBase gui)
         {
             if(index == -1)
             {
@@ -104,7 +103,7 @@ public class GuiWarps extends GuiLM
         }
 
         @Override
-        public void onClicked(IGui gui, IMouseButton button)
+        public void onClicked(GuiBase gui, IMouseButton button)
         {
             if(!warpItem.cmd.isEmpty())
             {
@@ -116,7 +115,7 @@ public class GuiWarps extends GuiLM
     }
 
     @Override
-    public boolean isMouseOver(IWidget w)
+    public boolean isMouseOver(Widget w)
     {
         return (w instanceof ArcButton) ? w == buttonOver : super.isMouseOver(w);
     }

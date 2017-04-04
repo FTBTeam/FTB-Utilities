@@ -1,17 +1,16 @@
 package com.feed_the_beast.ftbu.gui;
 
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
-import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.CachedVertexData;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
-import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
+import com.feed_the_beast.ftbl.lib.gui.Button;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
-import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
-import com.feed_the_beast.ftbl.lib.gui.PanelLM;
+import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
 import com.feed_the_beast.ftbl.lib.gui.misc.ThreadReloadChunkSelector;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
@@ -40,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class GuiClaimedChunks extends GuiLM
+public class GuiClaimedChunks extends GuiBase
 {
     public static GuiClaimedChunks instance;
     private static final Map<UUID, ClaimedChunks.Team> TEAMS = new HashMap<>();
@@ -175,7 +174,7 @@ public class GuiClaimedChunks extends GuiLM
         }
     }
 
-    private class MapButton extends ButtonLM
+    private class MapButton extends Button
     {
         private final ChunkPos chunkPos;
         private final int index;
@@ -191,7 +190,7 @@ public class GuiClaimedChunks extends GuiLM
         }
 
         @Override
-        public void onClicked(IGui gui, IMouseButton button)
+        public void onClicked(GuiBase gui, IMouseButton button)
         {
             GuiHelper.playClickSound();
             boolean claim = !GuiScreen.isShiftKeyDown();
@@ -208,7 +207,7 @@ public class GuiClaimedChunks extends GuiLM
         }
 
         @Override
-        public void addMouseOverText(IGui gui, List<String> list)
+        public void addMouseOverText(GuiBase gui, List<String> list)
         {
             if(chunkData[index].hasUpgrade(ChunkUpgrade.CLAIMED))
             {
@@ -240,7 +239,7 @@ public class GuiClaimedChunks extends GuiLM
         }
 
         @Override
-        public void renderWidget(IGui gui)
+        public void renderWidget(GuiBase gui)
         {
             int ax = getAX();
             int ay = getAY();
@@ -260,9 +259,9 @@ public class GuiClaimedChunks extends GuiLM
     }
 
     public final int startX, startZ;
-    private final ButtonLM buttonRefresh, buttonClose, buttonUnclaimAll;
+    private final Button buttonRefresh, buttonClose, buttonUnclaimAll;
     private final MapButton mapButtons[];
-    private final PanelLM panelButtons;
+    private final Panel panelButtons;
     private String currentDimName;
     private byte currentSelectionMode = -1;
 
@@ -275,10 +274,10 @@ public class GuiClaimedChunks extends GuiLM
 
         currentDimName = mc.world.provider.getDimensionType().getName();
 
-        buttonClose = new ButtonLM(0, 0, 16, 16, GuiLang.BUTTON_CLOSE.translate())
+        buttonClose = new Button(0, 0, 16, 16, GuiLang.BUTTON_CLOSE.translate())
         {
             @Override
-            public void onClicked(IGui gui, IMouseButton button)
+            public void onClicked(GuiBase gui, IMouseButton button)
             {
                 GuiHelper.playClickSound();
                 gui.closeGui();
@@ -287,10 +286,10 @@ public class GuiClaimedChunks extends GuiLM
 
         buttonClose.setIcon(GuiIcons.ACCEPT);
 
-        buttonRefresh = new ButtonLM(0, 16, 16, 16, GuiLang.BUTTON_REFRESH.translate())
+        buttonRefresh = new Button(0, 16, 16, 16, GuiLang.BUTTON_REFRESH.translate())
         {
             @Override
-            public void onClicked(IGui gui, IMouseButton button)
+            public void onClicked(GuiBase gui, IMouseButton button)
             {
                 new MessageClaimedChunksRequest(startX, startZ).sendToServer();
                 ThreadReloadChunkSelector.reloadArea(mc.world, startX, startZ);
@@ -299,10 +298,10 @@ public class GuiClaimedChunks extends GuiLM
 
         buttonRefresh.setIcon(GuiIcons.REFRESH);
 
-        buttonUnclaimAll = new ButtonLM(0, 32, 16, 16)
+        buttonUnclaimAll = new Button(0, 32, 16, 16)
         {
             @Override
-            public void onClicked(IGui gui, IMouseButton button)
+            public void onClicked(GuiBase gui, IMouseButton button)
             {
                 GuiHelper.playClickSound();
                 String s = GuiScreen.isShiftKeyDown() ? FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_Q.translate() : FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_DIM_Q.translate(currentDimName);
@@ -319,7 +318,7 @@ public class GuiClaimedChunks extends GuiLM
             }
 
             @Override
-            public void addMouseOverText(IGui gui, List<String> list)
+            public void addMouseOverText(GuiBase gui, List<String> list)
             {
                 list.add(GuiScreen.isShiftKeyDown() ? FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL.translate() : FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_DIM.translate(currentDimName));
             }
@@ -327,7 +326,7 @@ public class GuiClaimedChunks extends GuiLM
 
         buttonUnclaimAll.setIcon(GuiIcons.REMOVE);
 
-        panelButtons = new PanelLM(0, 0, 16, 0)
+        panelButtons = new Panel(0, 0, 16, 0)
         {
             @Override
             public void addWidgets()
@@ -436,7 +435,7 @@ public class GuiClaimedChunks extends GuiLM
     }
 
     @Override
-    public void mouseReleased(IGui gui)
+    public void mouseReleased(GuiBase gui)
     {
         super.mouseReleased(gui);
 

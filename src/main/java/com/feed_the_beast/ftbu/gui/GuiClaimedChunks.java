@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbu.gui;
 
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.CachedVertexData;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
@@ -251,9 +252,7 @@ public class GuiClaimedChunks extends GuiBase
 
             if(isSelected || gui.isMouseOver(this))
             {
-                GlStateManager.color(1F, 1F, 1F, 0.27F);
-                GuiHelper.drawBlankRect(ax, ay, 16, 16);
-                GlStateManager.color(1F, 1F, 1F, 1F);
+                GuiHelper.drawBlankRect(ax, ay, 16, 16, Color4I.WHITE_A33);
             }
         }
     }
@@ -379,14 +378,13 @@ public class GuiClaimedChunks extends GuiBase
     @Override
     public void drawBackground()
     {
-        GlStateManager.color(0F, 0F, 0F, 1F);
-        GuiHelper.drawBlankRect(posX - 2, posY - 2, width + 4, height + 4);
-        //drawBlankRect((xSize - 128) / 2, (ySize - 128) / 2, zLevel, 128, 128);
         GlStateManager.color(1F, 1F, 1F, 1F);
+        GuiHelper.drawBlankRect(posX - 2, posY - 2, width + 4, height + 4, Color4I.BLACK);
+        //drawBlankRect((xSize - 128) / 2, (ySize - 128) / 2, zLevel, 128, 128);
 
         ThreadReloadChunkSelector.updateTexture();
         GlStateManager.bindTexture(ThreadReloadChunkSelector.getTextureID());
-        GuiHelper.drawTexturedRect(posX, posY, GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, 0D, 0D, GuiConfigs.CHUNK_SELECTOR_UV, GuiConfigs.CHUNK_SELECTOR_UV);
+        GuiHelper.drawTexturedRect(posX, posY, GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, Color4I.WHITE, 0D, 0D, GuiConfigs.CHUNK_SELECTOR_UV, GuiConfigs.CHUNK_SELECTOR_UV);
 
         GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.enableTexture2D();
@@ -424,10 +422,9 @@ public class GuiClaimedChunks extends GuiBase
             //GlStateManager.rotate((int)((ep.rotationYaw + 180F) / (180F / 8F)) * (180F / 8F), 0F, 0F, 1F);
             GlStateManager.rotate(mc.player.rotationYaw + 180F, 0F, 0F, 1F);
             mc.getTextureManager().bindTexture(GuiConfigs.TEX_ENTITY);
-            GlStateManager.color(1F, 1F, 1F, mc.player.isSneaking() ? 0.4F : 0.7F);
-            GuiHelper.drawTexturedRect(-8, -8, 16, 16, 0D, 0D, 1D, 1D);
+            GuiHelper.drawTexturedRect(-8, -8, 16, 16, Color4I.WHITE_A33, 0D, 0D, 1D, 1D);
             GlStateManager.popMatrix();
-            FTBLibClient.localPlayerHead.draw(-2, -2, 4, 4);
+            FTBLibClient.localPlayerHead.draw(-2, -2, 4, 4, Color4I.NONE);
             GlStateManager.popMatrix();
         }
 

@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbu.gui;
 
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.CachedVertexData;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
-import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
@@ -99,7 +99,7 @@ public class GuiWarps extends GuiBase
                 textY = (int) (Math.sin(i * MathHelperLM.RAD) * d) - 2;
             }
 
-            GuiHelper.drawCenteredString(gui.getFont(), warpItem.name, gui.posX + gui.width / 2D + textX, gui.posY + gui.height / 2D + textY, 0xFFFFFF);
+            gui.drawCenteredString(warpItem.name, gui.posX + gui.width / 2F + textX, gui.posY + gui.height / 2F + textY);
         }
 
         @Override
@@ -149,7 +149,7 @@ public class GuiWarps extends GuiBase
 
         if(!isLoaded)
         {
-            GuiLoading.renderLoading(ax - SIZE_2, ay - SIZE_2, SIZE, SIZE);
+            GuiLoading.renderLoading(ax - SIZE_2, ay - SIZE_2, SIZE, SIZE, Color4I.WHITE);
             return;
         }
 
@@ -192,7 +192,7 @@ public class GuiWarps extends GuiBase
         {
             if(dist < SIZE_I || dist > SIZE_2)
             {
-                GuiHelper.drawCenteredString(getFont(), TextFormatting.BOLD + GuiLang.BUTTON_CANCEL.translate(), ax, ay, 0xFFFFFF);
+                drawCenteredString(TextFormatting.BOLD + GuiLang.BUTTON_CANCEL.translate(), ax, ay);
             }
             else
             {
@@ -208,14 +208,20 @@ public class GuiWarps extends GuiBase
 
             if(buttonOver.warpItem.isSpecial())
             {
-                GuiHelper.drawCenteredString(getFont(), TextFormatting.BOLD + buttonOver.warpItem.name, ax, ay, 0xFFFFFF);
+                drawCenteredString(TextFormatting.BOLD + buttonOver.warpItem.name, ax, ay);
             }
             else
             {
-                GuiHelper.drawCenteredString(getFont(), TextFormatting.BOLD + (buttonOver.warpItem.innerCircle() ? "Home" : "Warp"), ax, ay - 5, 0xFFFFFF);
-                GuiHelper.drawCenteredString(getFont(), buttonOver.warpItem.name, ax, ay + 5, 0xFFFFFF);
+                drawCenteredString(TextFormatting.BOLD + (buttonOver.warpItem.innerCircle() ? "Home" : "Warp"), ax, ay - 5);
+                drawCenteredString(buttonOver.warpItem.name, ax, ay + 5);
             }
         }
+    }
+
+    @Override
+    public Color4I getContentColor()
+    {
+        return Color4I.WHITE;
     }
 
     public void setData(List<MessageSendWarpList.WarpItem> list)

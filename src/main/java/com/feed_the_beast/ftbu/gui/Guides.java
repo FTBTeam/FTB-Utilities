@@ -1,9 +1,6 @@
 package com.feed_the_beast.ftbu.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
-import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
@@ -47,23 +44,7 @@ public enum Guides implements IResourceManagerReloadListener
 {
     INSTANCE;
 
-    private static final InfoPage INFO_PAGE = new InfoPage("guides")
-    {
-        @Override
-        public ISpecialInfoButton createSpecialButton(GuiBase gui)
-        {
-            return new SpecialInfoButton(GuiLang.BUTTON_REFRESH.translate(), GuiIcons.REFRESH)
-            {
-                @Override
-                public void onClicked(IMouseButton b)
-                {
-                    GuiHelper.playClickSound();
-                    Guides.setShouldReload();
-                    Guides.openGui();
-                }
-            };
-        }
-    };
+    private static final InfoPage INFO_PAGE = new InfoPage("guides").setSpecialButton(new SpecialInfoButton(GuiLang.BUTTON_REFRESH.textComponent(), GuiIcons.REFRESH, button -> refresh()));
 
     private static boolean isReloading = false;
     private static Thread reloadingThread = null;
@@ -73,6 +54,13 @@ public enum Guides implements IResourceManagerReloadListener
     public static void setShouldReload()
     {
         cachedGui = null;
+    }
+
+    public static void refresh()
+    {
+        GuiHelper.playClickSound();
+        setShouldReload();
+        openGui();
     }
 
     public static void openGui()

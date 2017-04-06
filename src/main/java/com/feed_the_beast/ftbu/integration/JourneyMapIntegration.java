@@ -116,8 +116,8 @@ public class JourneyMapIntegration implements IClientPlugin, IJMIntegration
                 shapeProperties.setFillOpacity(0.2F);
                 shapeProperties.setStrokeOpacity(0.1F);
 
-                shapeProperties.setFillColor(chunk.team.color.getColor());
-                shapeProperties.setStrokeColor(chunk.team.color.getColor());
+                shapeProperties.setFillColor(chunk.team.color.getColor().rgba());
+                shapeProperties.setStrokeColor(shapeProperties.getFillColor());
 
                 p = new PolygonOverlay(FTBUFinals.MOD_ID, "claimed_" + dim + '_' + pos.chunkXPos + '_' + pos.chunkZPos, dim, shapeProperties, poly);
                 p.setOverlayGroupName("Claimed Chunks").setTitle(chunk.team.formattedName + "\n" + TextFormatting.GREEN + ChunkUpgrade.CLAIMED.getLangKey().translate());

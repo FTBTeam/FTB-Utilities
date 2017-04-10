@@ -25,12 +25,15 @@ public class FTBUConfigGeneral
 
     public static void init(IFTBLibRegistry reg)
     {
-        reg.addConfig(FTBUFinals.MOD_ID, "general.auto_restart", AUTO_RESTART);
-        reg.addConfig(FTBUFinals.MOD_ID, "general.restart_timer", RESTART_TIMER).setInfo("Server will automatically shut down after X hours", "0 - Disabled", "0.5 - 30 minutes", "1 - 1 Hour", "4 - 1 Day", "168 - 1 Week", "720 - 1 Month");
-        reg.addConfig(FTBUFinals.MOD_ID, "general.server_info.difficulty", SERVER_INFO_DIFFICULTY);
-        reg.addConfig(FTBUFinals.MOD_ID, "general.server_info.mode", SERVER_INFO_MODE);
-        reg.addConfig(FTBUFinals.MOD_ID, "general.server_info.admin_quick_access", SERVER_INFO_ADMIN_QUICK_ACCESS);
-        reg.addConfig(FTBUFinals.MOD_ID, "general.chat.substitute_prefix", CHAT_SUBSTITUTE_PREFIX);
-        reg.addConfig(FTBUFinals.MOD_ID, "general.chat.substitute_list", CHAT_SUBSTITUTES);
+        String id = FTBUFinals.MOD_ID + ".general";
+        reg.addConfig(id, "auto_restart", AUTO_RESTART);
+        reg.addConfig(id, "restart_timer", RESTART_TIMER);
+        id = FTBUFinals.MOD_ID + ".general.server_info";
+        reg.addConfig(id, "difficulty", SERVER_INFO_DIFFICULTY);
+        reg.addConfig(id, "mode", SERVER_INFO_MODE);
+        reg.addConfig(id, "admin_quick_access", SERVER_INFO_ADMIN_QUICK_ACCESS);
+        id = FTBUFinals.MOD_ID + ".general.chat";
+        reg.addConfig(id, "substitute_prefix", CHAT_SUBSTITUTE_PREFIX);
+        reg.addConfig(id, "substitute_list", CHAT_SUBSTITUTES);
     }
 }

@@ -16,9 +16,10 @@ public class FTBUConfigLogin
 
     public static void init(IFTBLibRegistry reg)
     {
-        reg.addConfig(FTBUFinals.MOD_ID, "login.enable_motd", ENABLE_MOTD);
-        reg.addConfig(FTBUFinals.MOD_ID, "login.enable_starting_items", ENABLE_STARTING_ITEMS);
-        reg.addConfig(FTBUFinals.MOD_ID, "login.motd", MOTD).setInfo("Message of the day. This will be displayed when player joins the server");
-        reg.addConfig(FTBUFinals.MOD_ID, "login.starting_items", STARTING_ITEMS).setInfo("Items to give player when he first joins the server", "Format: \"StringID Size Metadata\" or {nbt}");
+        String id = FTBUFinals.MOD_ID + ".login";
+        reg.addConfig(id, "enable_motd", ENABLE_MOTD);
+        reg.addConfig(id, "enable_starting_items", ENABLE_STARTING_ITEMS);
+        reg.addConfig(id, "motd", MOTD);
+        reg.addConfig(id, "starting_items", STARTING_ITEMS);
     }
 }

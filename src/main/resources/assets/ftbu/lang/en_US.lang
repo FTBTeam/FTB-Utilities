@@ -2,6 +2,70 @@
 ftbu.button.explosions=Explosions
 ftbu.button.block_security=Block Security
 
+# Config
+config.ftbu.backups.silent.name=Silent
+config.ftbu.backups.backups_to_keep.name=Backups to Keep
+config.ftbu.backups.backups_to_keep.info=The number of backup files to keep\nore backups = more space used\n0 - Infinite
+config.ftbu.backups.backup_timer.name=Backup Timer
+config.ftbu.backups.backup_timer.info=Timer in hours\n1.0 - backups every hour\n6.0 - backups every 6 hours\n0.5 - backups every 30 minutes
+config.ftbu.backups.compression_level.name=Compression Level
+config.ftbu.backups.compression_level.info=0 - Disabled (output = folders)\n1 - Best speed\n9 - Smallest file size
+config.ftbu.backups.folder.name=Folder
+config.ftbu.backups.folder.info=Absolute path to backups folder
+config.ftbu.backups.display_file_size.name=Display File Size
+config.ftbu.backups.display_file_size.info=Prints (current size | total size) when backup is done
+config.ftbu.backups.use_separate_thread.name=Use Separate Thread
+config.ftbu.backups.use_separate_thread.info=Run backup in a separated Thread (recommended)
+
+config.ftbu.commands.warp.name=/warp
+config.ftbu.commands.home.name=/home
+config.ftbu.commands.back.name=/back
+config.ftbu.commands.spawn.name=/spawn
+config.ftbu.commands.inv.name=/inv
+config.ftbu.commands.tpl.name=/tpl
+config.ftbu.commands.server_info.name=/server_info
+config.ftbu.commands.trash_can.name=/trash_can
+config.ftbu.commands.chunks.name=/chunks
+config.ftbu.commands.kickme.name=/kickme
+config.ftbu.commands.ranks.name=/ranks
+config.ftbu.commands.view_crash.name=/view_crash
+
+config.ftbu.general.auto_restart.name=Auto Restart
+config.ftbu.general.restart_timer.name=Restart Timer
+config.ftbu.general.restart_timer.info=Server will automatically shut down after X hours\n0 - Disabled\n0.5 - 30 minutes\n1 - 1 Hour\n4 - 1 Day\n168 - 1 Week\n720 - 1 Month
+config.ftbu.general.server_info.difficulty.name=Difficulty
+config.ftbu.general.server_info.mode.name=Mode
+config.ftbu.general.server_info.admin_quick_access.name=Admin Quick Access
+config.ftbu.general.chat.substitute_prefix.name=Substitute Prefix
+config.ftbu.general.chat.substitutes.name=Substitutes
+
+config.ftbu.login.enable_motd.name=Enable MOTD
+config.ftbu.login.enable_starting_items.name=Enable Starting Items
+config.ftbu.login.motd.name=MOTD
+config.ftbu.login.motd.info=Message of the day. This will be displayed when player joins the server
+config.ftbu.login.starting_items.name=Starting Items
+config.ftbu.login.starting_items.info=Items to give player when he first joins the server\nFormat: 'StringID Size Metadata' or {nbt}
+
+config.ftbu.webapi.enabled.name=Enabled
+config.ftbu.webapi.file_location.name=File Location
+config.ftbu.webapi.update_interval.name=Update Interval
+config.ftbu.webapi.update_interval.info=Update interval in minutes
+
+config.ftbu.world.chunk_claiming.name=Chunk Claiming
+config.ftbu.world.chunk_loading.name=Chunk Loading
+config.ftbu.world.safe_spawn.name=Safe Spawn
+config.ftbu.world.safe_spawn.info=If set to true, explosions and hostile mobs in spawn area will be disabled, players won't be able to attack each other in spawn area
+config.ftbu.world.blocked_entities.name=Blocked Entities
+config.ftbu.world.blocked_entities.info=Entity IDs that are banned from world. They will not spawn and existing ones will be destroyed
+config.ftbu.world.spawn_area_in_sp.name=Spawn Area In Singleplayer
+config.ftbu.world.spawn_area_in_sp.info=Enable spawn area in singleplayer
+config.ftbu.world.log_chunkloading.name=Log Chunkloading
+config.ftbu.world.log_chunkloading.info=Print a message in console every time a chunk is forced or unforced. Recommended to be off, because spam
+
+config.ftbu.ranks.enabled.name=Enabled
+config.ftbu.ranks.override_chat.name=Override Chat
+config.ftbu.ranks.override_commands.name=Override Commands
+
 # Client Settings
 client_config.ftbu=FTBUtilities
 client_config.ftbu.render_badges=Show Badges
@@ -14,6 +78,20 @@ my_server_settings.ftbu.chat_links=Chat Links
 my_server_settings.ftbu.explosions=Explosions
 my_server_settings.ftbu.fake_players=Allow Fake Players
 my_server_settings.ftbu.security_level=Block Security Level
+
+# Rank Config
+rank_config.ftbu.badge.name=Badge
+rank_config.ftbu.badge.info=Badge (icon on chest). Must be an URL
+rank_config.ftbu.homes.max.name=Max Homes
+rank_config.ftbu.homes.max.info=Max home count
+rank_config.ftbu.claims.max_chunks.name=Max Claimable Chunks
+rank_config.ftbu.claims.max_chunks.info=Max amount of chunks that player can claim\n0 - Disabled
+rank_config.ftbu.claims.blocked_dimensions.name=Blocked Claiming Dimensions
+rank_config.ftbu.claims.blocked_dimensions.info=Dimensions where chunk claiming is not allowed
+rank_config.ftbu.chunkloader.max_chunks.name=Max Loadable Chunks
+rank_config.ftbu.chunkloader.max_chunks.info=Max amount of chunks that player can load\n0 - Disabled
+rank_config.ftbu.chunkloader.offline_timer.name=Chunkloader Offline Timer
+rank_config.ftbu.chunkloader.offline_timer.info=Max hours player can be offline until he's chunks unload\n0 - Disabled, will unload instantly when he disconnects\n-1 - Chunk will always be loaded
 
 # Team Settings
 config.ftbu.blocks.name=Block Interactions

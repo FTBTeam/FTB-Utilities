@@ -37,6 +37,9 @@ public class ServerInfoPage
 
     public static void reloadCachedInfo()
     {
+        CACHED_PAGE.clear();
+        
+        
     }
 
     public static InfoPage getPageForPlayer(EntityPlayer ep)
@@ -48,7 +51,6 @@ public class ServerInfoPage
 
         InfoPage page = new InfoPage(CACHED_PAGE.getName());
         page.setTitle(CACHED_PAGE.getTitle());
-
         page.copyFrom(CACHED_PAGE);
 
         MinecraftServer server = LMServerUtils.getServer();

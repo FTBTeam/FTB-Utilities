@@ -17,6 +17,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.server.command.CommandTreeBase;
 
+import javax.annotation.Nullable;
 import java.io.File;
 
 public class CmdInv extends CommandTreeBase
@@ -96,7 +97,7 @@ public class CmdInv extends CommandTreeBase
                 {
                     e.printStackTrace();
                 }
-                throw FTBLibLang.RAW.commandError("Failed to load inventory!");
+                throw FTBLibLang.RAW.commandError("Failed to save inventory! " + e);
             }
         }
 
@@ -111,7 +112,7 @@ public class CmdInv extends CommandTreeBase
                 if(is != null)
                 {
                     NBTTagCompound nbttagcompound = new NBTTagCompound();
-                    nbttagcompound.setByte("Slot", (byte) i);
+                    nbttagcompound.setInteger("Slot", i);
                     is.writeToNBT(nbttagcompound);
                     nbttaglist.appendTag(nbttagcompound);
                 }
@@ -165,18 +166,23 @@ public class CmdInv extends CommandTreeBase
                 {
                     e.printStackTrace();
                 }
-                throw FTBLibLang.RAW.commandError("Failed to load inventory!");
+                throw FTBLibLang.RAW.commandError("Failed to load inventory! " + e);
             }
         }
 
-        private static void readItemsFromNBT(IInventory inv, NBTTagCompound compound, String s)
+        private static void readItemsFromNBT(@Nullable IInventory inv, NBTTagCompound compound, String s)
         {
+            if(inv == null)
+            {
+                return;
+            }
+
             NBTTagList nbttaglist = compound.getTagList(s, 10);
 
             for(int i = 0; i < nbttaglist.tagCount(); ++i)
             {
                 NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
-                int j = nbttagcompound.getByte("Slot") & 255;
+                int j = nbttagcompound.getInteger("Slot");
 
                 if(j >= 0 && j < inv.getSizeInventory())
                 {

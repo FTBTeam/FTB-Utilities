@@ -1,3 +1,4 @@
 [
-	{"id": "files", "icon": "minecraft:textures/items/paper.png"}
+	{"id": "files", "icon": "minecraft:textures/items/paper.png"},
+	{"id": "server_guide", "icon": "ftbl:textures/icons/book_red.png"}
 ]

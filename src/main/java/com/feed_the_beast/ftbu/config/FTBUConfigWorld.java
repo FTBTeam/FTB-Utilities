@@ -13,13 +13,16 @@ public class FTBUConfigWorld
     public static final PropertyBool SAFE_SPAWN = new PropertyBool(false);
     public static final PropertyList BLOCKED_ENTITIES = new PropertyList(PropertyEntityClass.ID);
     public static final PropertyBool SPAWN_AREA_IN_SP = new PropertyBool(false);
+    public static final PropertyBool LOG_CHUNKLOADING = new PropertyBool(false);
 
     public static void init(IFTBLibRegistry reg)
     {
-        reg.addConfig(FTBUFinals.MOD_ID, "world.chunk_claiming", CHUNK_CLAIMING);
-        reg.addConfig(FTBUFinals.MOD_ID, "world.chunk_loading", CHUNK_LOADING);
-        reg.addConfig(FTBUFinals.MOD_ID, "world.safe_spawn", SAFE_SPAWN).setInfo("If set to true, explosions and hostile mobs in spawn area will be disabled, players won't be able to attack each other in spawn area");
-        reg.addConfig(FTBUFinals.MOD_ID, "world.blocked_entities", BLOCKED_ENTITIES).setInfo("Entity IDs that are banned from world. They will not spawn and existing ones will be destroyed");
-        reg.addConfig(FTBUFinals.MOD_ID, "world.spawn_area_in_sp", SPAWN_AREA_IN_SP).setInfo("Enable spawn area in singleplayer");
+        String id = FTBUFinals.MOD_ID + ".world";
+        reg.addConfig(id, "chunk_claiming", CHUNK_CLAIMING);
+        reg.addConfig(id, "chunk_loading", CHUNK_LOADING);
+        reg.addConfig(id, "safe_spawn", SAFE_SPAWN);
+        reg.addConfig(id, "blocked_entities", BLOCKED_ENTITIES);
+        reg.addConfig(id, "spawn_area_in_sp", SPAWN_AREA_IN_SP);
+        reg.addConfig(id, "log_chunkloading", LOG_CHUNKLOADING);
     }
 }

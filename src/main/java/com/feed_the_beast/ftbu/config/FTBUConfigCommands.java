@@ -21,17 +21,18 @@ public class FTBUConfigCommands
 
     public static void init(IFTBLibRegistry reg)
     {
-        reg.addConfig(FTBUFinals.MOD_ID, "commands.warp", WARP);
-        reg.addConfig(FTBUFinals.MOD_ID, "commands.home", HOME);
-        reg.addConfig(FTBUFinals.MOD_ID, "commands.back", BACK);
-        reg.addConfig(FTBUFinals.MOD_ID, "commands.spawn", SPAWN);
-        reg.addConfig(FTBUFinals.MOD_ID, "commands.inv", INV);
-        reg.addConfig(FTBUFinals.MOD_ID, "commands.tpl", TPL);
-        reg.addConfig(FTBUFinals.MOD_ID, "commands.server_info", SERVER_INFO);
-        reg.addConfig(FTBUFinals.MOD_ID, "commands.trash_can", TRASH_CAN);
-        reg.addConfig(FTBUFinals.MOD_ID, "commands.chunks", CHUNKS);
-        reg.addConfig(FTBUFinals.MOD_ID, "commands.kickme", KICKME);
-        reg.addConfig(FTBUFinals.MOD_ID, "commands.ranks", RANKS);
-        reg.addConfig(FTBUFinals.MOD_ID, "commands.view_crash", VIEW_CRASH);
+        String id = FTBUFinals.MOD_ID + ".commands";
+        reg.addConfig(id, "warp", WARP);
+        reg.addConfig(id, "home", HOME);
+        reg.addConfig(id, "back", BACK);
+        reg.addConfig(id, "spawn", SPAWN);
+        reg.addConfig(id, "inv", INV);
+        reg.addConfig(id, "tpl", TPL);
+        reg.addConfig(id, "server_info", SERVER_INFO);
+        reg.addConfig(id, "trash_can", TRASH_CAN);
+        reg.addConfig(id, "chunks", CHUNKS);
+        reg.addConfig(id, "kickme", KICKME);
+        reg.addConfig(id, "ranks", RANKS);
+        reg.addConfig(id, "view_crash", VIEW_CRASH);
     }
 }

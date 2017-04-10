@@ -1,16 +1,14 @@
 package com.feed_the_beast.ftbu.client;
 
+import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
-import net.minecraft.client.Minecraft;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import java.util.UUID;
@@ -25,9 +23,9 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
         if(FTBUClientConfig.RENDER_BADGES.getBoolean() && !ep.isInvisible())
         {
             UUID id = ep.getGameProfile().getId();
-            ResourceLocation tex = CachedClientData.getBadgeTexture(id);
+            IDrawableObject tex = CachedClientData.getBadge(id);
 
-            if(tex.equals(CachedClientData.NO_BADGE))
+            if(tex == ImageProvider.NULL)
             {
                 return;
             }
@@ -38,7 +36,6 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-            Minecraft.getMinecraft().getTextureManager().bindTexture(tex);
             FTBLibClient.pushMaxBrightness();
             GlStateManager.pushMatrix();
 
@@ -57,16 +54,11 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
             }
 
             GlStateManager.translate(0F, 0F, -1F);
+            GlStateManager.scale(0.2D, 0.2D, 0.125D);
             GlStateManager.color(1F, 1F, 1F, 1F);
-            Tessellator tessellator = Tessellator.getInstance();
-            VertexBuffer buffer = tessellator.getBuffer();
-            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-            buffer.pos(0D, 0.2D, 0D).tex(0D, 1D).endVertex();
-            buffer.pos(0.2D, 0.2D, 0D).tex(1D, 1D).endVertex();
-            buffer.pos(0.2D, 0D, 0D).tex(1D, 0D).endVertex();
-            buffer.pos(0D, 0D, 0D).tex(0D, 0D).endVertex();
-            tessellator.draw();
-
+            GlStateManager.disableCull();
+            tex.draw(0, 0, 1, 1, Color4I.NONE);
+            GlStateManager.enableCull();
             FTBLibClient.popMaxBrightness();
             GlStateManager.popMatrix();
         }

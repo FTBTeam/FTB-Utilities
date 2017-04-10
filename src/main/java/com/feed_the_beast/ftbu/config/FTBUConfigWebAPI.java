@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyInt;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
+import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbu.FTBUFinals;
 
 public class FTBUConfigWebAPI
@@ -14,8 +15,9 @@ public class FTBUConfigWebAPI
 
     public static void init(IFTBLibRegistry reg)
     {
-        reg.addConfig(FTBUFinals.MOD_ID, "webapi.enabled", ENABLED);
-        reg.addConfig(FTBUFinals.MOD_ID, "webapi.file_location", FILE_LOCATION);
-        reg.addConfig(FTBUFinals.MOD_ID, "webapi.update_interval", UPDATE_INTERVAL).setInfo("Update interval in minutes");
+        String id = FTBUFinals.MOD_ID + ".webapi";
+        reg.addConfig(id, "enabled", ENABLED).setNameLangKey(GuiLang.LABEL_ENABLED.getName());
+        reg.addConfig(id, "file_location", FILE_LOCATION);
+        reg.addConfig(id, "update_interval", UPDATE_INTERVAL);
     }
 }

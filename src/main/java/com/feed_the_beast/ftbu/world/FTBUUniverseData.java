@@ -48,6 +48,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -62,6 +63,10 @@ import java.util.function.Function;
  */
 public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
 {
+    private static final String FAILED_BADGE = FTBUFinals.MOD_ID + ":textures/failed_badge.png";
+    private static final String BADGE_BASE_URL = "http://api.latmod.com/badges/get?id=";
+
+    private static final Map<UUID, String> BADGE_CACHE = new HashMap<>();
     private static final Map<UUID, String> LOCAL_BADGES = new HashMap<>();
     public static final Function<ChunkDimPos, Boolean> ALLOW_EXPLOSION = pos ->
     {
@@ -87,19 +92,44 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
     private final Map<String, BlockDimPos> warps = new HashMap<>();
     private String lastRestartMessage = "";
 
-    public static String getServerBadge(@Nullable IForgePlayer p)
+    public static void updateBadge(UUID playerId)
     {
-        if(p == null)
+        BADGE_CACHE.remove(playerId);
+    }
+
+    public static String getBadge(UUID playerId)
+    {
+        String b = BADGE_CACHE.get(playerId);
+
+        if(b != null)
         {
-            return "";
+            return b;
         }
 
-        String b = LOCAL_BADGES.get(p.getId());
-        if(b == null)
+        IForgePlayer player = FTBLibIntegration.API.getUniverse().getPlayer(playerId);
+        FTBUPlayerData data = FTBUPlayerData.get(player);
+
+        if(data == null || !data.renderBadge())
         {
-            b = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(p.getProfile(), FTBUPermissions.BADGE).getString();
+            b = "";
+        }
+        else if(!data.disableGlobalBadge())
+        {
+            try
+            {
+                b = LMStringUtils.readString(new URL(BADGE_BASE_URL + LMStringUtils.fromUUID(playerId)).openStream());
+            }
+            catch(Exception ex)
+            {
+                b = FAILED_BADGE;
+            }
+        }
+        else
+        {
+            b = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(player.getProfile(), FTBUPermissions.BADGE).getString();
         }
 
+        BADGE_CACHE.put(playerId, b);
         return b;
     }
 
@@ -107,6 +137,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
     {
         try
         {
+            BADGE_CACHE.clear();
             LOCAL_BADGES.clear();
             File file = new File(LMUtils.folderLocal, "ftbu/server_badges.json");
 

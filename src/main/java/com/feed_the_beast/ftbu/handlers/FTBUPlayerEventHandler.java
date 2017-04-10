@@ -20,7 +20,6 @@ import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
 import com.feed_the_beast.ftbu.config.FTBUConfigLogin;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
-import com.feed_the_beast.ftbu.net.MessageSendFTBUClientFlags;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import com.google.common.base.Objects;
@@ -37,10 +36,6 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 public class FTBUPlayerEventHandler
 {
@@ -79,30 +74,13 @@ public class FTBUPlayerEventHandler
         }
 
         LoadedChunkStorage.INSTANCE.checkAll();
-
-        Map<UUID, Integer> map = new HashMap<>(1);
-        int flags = FTBUPlayerData.get(event.getPlayer()).getClientFlags();
-        map.put(ep.getGameProfile().getId(), flags);
-        new MessageSendFTBUClientFlags(map).sendTo(null);
-        map.clear();
-
-        for(IForgePlayer player : FTBLibIntegration.API.getUniverse().getOnlinePlayers())
-        {
-            FTBUPlayerData data = FTBUPlayerData.get(player);
-
-            if(data != null)
-            {
-                map.put(player.getId(), data.getClientFlags());
-            }
-        }
-
-        new MessageSendFTBUClientFlags(map).sendTo(ep);
     }
 
     @SubscribeEvent
     public static void onLoggedOut(ForgePlayerLoggedOutEvent event)
     {
         LoadedChunkStorage.INSTANCE.checkAll();
+        FTBUUniverseData.updateBadge(event.getPlayer().getId());
     }
 
     @SubscribeEvent

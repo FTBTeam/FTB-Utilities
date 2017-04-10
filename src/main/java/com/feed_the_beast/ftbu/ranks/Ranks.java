@@ -36,7 +36,6 @@ import net.minecraftforge.server.permission.PermissionAPI;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -348,15 +347,16 @@ public class Ranks
 
                 list.add("</td><td>");
 
-                if(!p.getInfo().isEmpty())
-                {
-                    String[] info = p.getInfo().split("\n");
+                String info = p.getInfo();
 
-                    if(info.length > 1)
+                if(!info.isEmpty())
+                {
+                    String[] s = info.split("\\\\n");
+
+                    if(s.length > 1)
                     {
-                        Arrays.sort(info);
                         list.add("<ul>");
-                        for(String s1 : info)
+                        for(String s1 : s)
                         {
                             list.add("<li>" + s1 + "</li>");
                         }
@@ -364,7 +364,7 @@ public class Ranks
                     }
                     else
                     {
-                        list.add(info[0]);
+                        list.add(info);
                     }
                 }
 

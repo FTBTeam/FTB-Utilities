@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbu.net;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,7 +11,27 @@ import java.util.UUID;
 
 public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
 {
-    private UUID playerID;
+    private UUID playerId;
+
+    private static class ThreadBadge extends Thread
+    {
+        private final UUID playerId;
+        private final EntityPlayer player;
+
+        private ThreadBadge(UUID id, EntityPlayer p)
+        {
+            super("Badge_" + id);
+            playerId = id;
+            player = p;
+            setDaemon(true);
+        }
+
+        @Override
+        public void run()
+        {
+            new MessageSendBadge(playerId, FTBUUniverseData.getBadge(playerId)).sendTo(player);
+        }
+    }
 
     public MessageRequestBadge()
     {
@@ -20,7 +39,7 @@ public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
 
     public MessageRequestBadge(UUID player)
     {
-        playerID = player;
+        playerId = player;
     }
 
     @Override
@@ -32,18 +51,18 @@ public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
     @Override
     public void fromBytes(ByteBuf io)
     {
-        playerID = LMNetUtils.readUUID(io);
+        playerId = LMNetUtils.readUUID(io);
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
-        LMNetUtils.writeUUID(io, playerID);
+        LMNetUtils.writeUUID(io, playerId);
     }
 
     @Override
     public void onMessage(MessageRequestBadge m, EntityPlayer player)
     {
-        new MessageSendBadge(m.playerID, FTBUUniverseData.getServerBadge(FTBLibIntegration.API.getUniverse().getPlayer(m.playerID))).sendTo(player);
+        new ThreadBadge(m.playerId, player).start();
     }
 }

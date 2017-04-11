@@ -74,9 +74,24 @@ public class Ranks
         return (r == null) ? (LMServerUtils.isOP(profile) ? defaultOPRank : defaultPlayerRank) : r;
     }
 
-    public static void setRank(UUID id, IRank r)
+    public static void addRank(Rank rank)
     {
-        PLAYER_MAP.put(id, r);
+        RANKS.put(rank.getName(), rank);
+        updateRankNames();
+        saveRanks();
+    }
+
+    public static void setRank(UUID id, @Nullable IRank r)
+    {
+        if(r == null)
+        {
+            PLAYER_MAP.remove(id);
+        }
+        else
+        {
+            PLAYER_MAP.put(id, r);
+        }
+
         saveRanks();
     }
 
@@ -85,9 +100,18 @@ public class Ranks
         return RANK_NAMES;
     }
 
+    public static void updateRankNames()
+    {
+        RANK_NAMES.clear();
+        RANK_NAMES.addAll(RANKS.keySet());
+        RANK_NAMES.add("none");
+        RANK_NAMES.remove(DefaultPlayerRank.INSTANCE.getName());
+        RANK_NAMES.remove(DefaultOPRank.INSTANCE.getName());
+    }
+
     public static void reload()
     {
-        FTBUFinals.LOGGER.info("Loadeding ranks..");
+        FTBUFinals.LOGGER.info("Loading ranks..");
 
         RANKS.clear();
         RANKS.put(DefaultPlayerRank.INSTANCE.getName(), DefaultPlayerRank.INSTANCE);
@@ -95,7 +119,6 @@ public class Ranks
         PLAYER_MAP.clear();
         defaultPlayerRank = null;
         defaultOPRank = null;
-        RANK_NAMES.clear();
 
         if(FTBUConfigRanks.ENABLED.getBoolean())
         {
@@ -173,10 +196,7 @@ public class Ranks
             defaultOPRank = r;
         }
 
-        RANK_NAMES.addAll(RANKS.keySet());
-        RANK_NAMES.remove(DefaultPlayerRank.INSTANCE.getName());
-        RANK_NAMES.remove(DefaultOPRank.INSTANCE.getName());
-
+        updateRankNames();
         saveRanks();
     }
 

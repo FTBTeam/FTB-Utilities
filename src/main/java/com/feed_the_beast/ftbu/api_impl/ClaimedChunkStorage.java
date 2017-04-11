@@ -124,10 +124,10 @@ public enum ClaimedChunkStorage implements IClaimedChunkStorage, INBTSerializabl
         }
         else if(player.isFake())
         {
-            return FTBUTeamData.get(team).allowFakePlayers();
+            return FTBUTeamData.get(team).fakePlayers.getBoolean();
         }
 
-        return team.canInteract(player.getId(), FTBUTeamData.get(team).getBlocks());
+        return team.canInteract(player.getId(), FTBUTeamData.get(team).blocks.getNonnull());
     }
 
     @Override

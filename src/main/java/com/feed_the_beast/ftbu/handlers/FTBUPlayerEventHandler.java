@@ -99,7 +99,7 @@ public class FTBUPlayerEventHandler
         FTBUPlayerData data = FTBUPlayerData.get(event.getPlayer());
         if(data != null)
         {
-            data.addConfig(event.getSettings());
+            data.addConfig(event);
         }
     }
     

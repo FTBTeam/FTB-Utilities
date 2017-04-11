@@ -46,28 +46,26 @@ public class CmdSet extends CommandLM
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         checkArgs(args, 2, "<player> <rank>");
-        IRank r = Ranks.getRank(args[1], null);
+
+        IRank r = (args[1].equalsIgnoreCase("none") || args[1].equals("-")) ? null : Ranks.getRank(args[1], null);
 
         if(r == DefaultPlayerRank.INSTANCE)
         {
-            FTBLibLang.RAW.printChat(sender, "Can't set rank as builtin_player, forwarding to /deop " + args[0]); //TODO: Lang
-            server.getCommandManager().executeCommand(sender, "/deop " + args[0]);
+            FTBLibLang.RAW.printChat(sender, "Can't set rank as builtin_player, use /deop " + args[0]); //TODO: Lang
             return;
         }
         else if(r == DefaultOPRank.INSTANCE)
         {
-            FTBLibLang.RAW.printChat(sender, "Can't set rank as builtin_op, forwarding to /op " + args[0]); //TODO: Lang
-            server.getCommandManager().executeCommand(sender, "/op " + args[0]);
+            FTBLibLang.RAW.printChat(sender, "Can't set rank as builtin_op, use /op " + args[0]); //TODO: Lang
             return;
         }
-
-        if(r == null)
+        else if(!Ranks.getRankNames().contains(args[1]))
         {
             throw FTBLibLang.RAW.commandError("Rank '" + args[1] + "' not found!"); //TODO: Lang
         }
 
         IForgePlayer p = getForgePlayer(args[0]);
         Ranks.setRank(p.getId(), r);
-        FTBLibLang.RAW.printChat(sender, p.getName() + " now is " + r.getName()); //TODO: Lang
+        FTBLibLang.RAW.printChat(sender, p.getName() + " now is " + (r == null ? "unset" : r.getName())); //TODO: Lang
     }
 }

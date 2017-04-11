@@ -38,7 +38,7 @@ public class FTBUTeamEventHandler
 
         if(data != null)
         {
-            data.addConfig(event.getSettings());
+            data.addConfig(event);
         }
     }
 

@@ -24,6 +24,12 @@ public class CmdRanks extends CommandTreeBase
     }
 
     @Override
+    public int getRequiredPermissionLevel()
+    {
+        return 2;
+    }
+
+    @Override
     public String getUsage(ICommandSender sender)
     {
         return "command.ftb.ranks.usage";

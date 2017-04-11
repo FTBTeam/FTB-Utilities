@@ -1,13 +1,11 @@
 package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.config.IConfigKey;
-import com.feed_the_beast.ftbl.api.config.IConfigTree;
-import com.feed_the_beast.ftbl.lib.config.ConfigKey;
+import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
-import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
+import com.feed_the_beast.ftbu.FTBUFinals;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -23,15 +21,10 @@ import java.util.Map;
  */
 public class FTBUPlayerData implements INBTSerializable<NBTBase>
 {
-    private static final IConfigKey RENDER_BADGE = new ConfigKey("ftbu.render_badge", new PropertyBool(true));
-    private static final IConfigKey DISABLE_GLOBAL_BADGE = new ConfigKey("ftbu.disable_global_badge", new PropertyBool(false));
-    private static final IConfigKey CHAT_LINKS = new ConfigKey("ftbu.chat_links", new PropertyBool(true));
+    public final PropertyBool renderBadge = new PropertyBool(true);
+    public final PropertyBool chatLinks = new PropertyBool(true);
+    public final PropertyBool disableGlobalBadge = new PropertyBool(false);
 
-    public static final byte FLAG_RENDER_BADGE = 1;
-    private static final byte FLAG_CHAT_LINKS = 2;
-    public static final byte FLAG_DISABLE_GLOBAL_BADGE = 4;
-
-    private byte flags = FLAG_RENDER_BADGE | FLAG_CHAT_LINKS;
     public BlockDimPos lastDeath, lastSafePos;
     public IForgePlayer lastChunkOwner;
     private Map<String, BlockDimPos> homes;
@@ -47,10 +40,9 @@ public class FTBUPlayerData implements INBTSerializable<NBTBase>
     {
         NBTTagCompound nbt = new NBTTagCompound();
 
-        if(flags != 0)
-        {
-            nbt.setByte("Flags", flags);
-        }
+        nbt.setBoolean("RenderBadge", renderBadge.getBoolean());
+        nbt.setBoolean("ChatLinks", chatLinks.getBoolean());
+        nbt.setBoolean("DisableGlobalBadges", disableGlobalBadge.getBoolean());
 
         if(homes != null && !homes.isEmpty())
         {
@@ -76,8 +68,6 @@ public class FTBUPlayerData implements INBTSerializable<NBTBase>
     public void deserializeNBT(NBTBase nbt0)
     {
         NBTTagCompound nbt = (NBTTagCompound) nbt0;
-
-        flags = nbt.getByte("Flags");
 
         if(nbt.hasKey("Homes"))
         {
@@ -142,71 +132,11 @@ public class FTBUPlayerData implements INBTSerializable<NBTBase>
         return homes == null ? 0 : homes.size();
     }
 
-    public boolean renderBadge()
+    public void addConfig(ForgePlayerSettingsEvent event)
     {
-        return Bits.getFlag(flags, FLAG_RENDER_BADGE);
-    }
-
-    public boolean chatLinks()
-    {
-        return Bits.getFlag(flags, FLAG_CHAT_LINKS);
-    }
-
-    public boolean disableGlobalBadge()
-    {
-        return Bits.getFlag(flags, FLAG_DISABLE_GLOBAL_BADGE);
-    }
-
-    public void addConfig(IConfigTree tree)
-    {
-        tree.add(RENDER_BADGE, new PropertyBool(true)
-        {
-            @Override
-            public boolean getBoolean()
-            {
-                return renderBadge();
-            }
-
-            @Override
-            public void setBoolean(boolean v)
-            {
-                flags = Bits.setFlag(flags, FLAG_RENDER_BADGE, v);
-            }
-        });
-
-        tree.add(CHAT_LINKS, new PropertyBool(true)
-        {
-            @Override
-            public boolean getBoolean()
-            {
-                return chatLinks();
-            }
-
-            @Override
-            public void setBoolean(boolean v)
-            {
-                flags = Bits.setFlag(flags, FLAG_CHAT_LINKS, v);
-            }
-        });
-
-        tree.add(DISABLE_GLOBAL_BADGE, new PropertyBool(true)
-        {
-            @Override
-            public boolean getBoolean()
-            {
-                return disableGlobalBadge();
-            }
-
-            @Override
-            public void setBoolean(boolean v)
-            {
-                flags = Bits.setFlag(flags, FLAG_DISABLE_GLOBAL_BADGE, v);
-            }
-        });
-    }
-
-    public int getClientFlags()
-    {
-        return Bits.setFlag(flags, FLAG_CHAT_LINKS, false);
+        String group = FTBUFinals.MOD_ID;
+        event.add(group, "render_badge", renderBadge);
+        event.add(group, "chat_links", chatLinks);
+        event.add(group, "disable_global_badge", disableGlobalBadge);
     }
 }

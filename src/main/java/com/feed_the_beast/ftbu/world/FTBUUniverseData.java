@@ -109,11 +109,11 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
         IForgePlayer player = FTBLibIntegration.API.getUniverse().getPlayer(playerId);
         FTBUPlayerData data = FTBUPlayerData.get(player);
 
-        if(data == null || !data.renderBadge())
+        if(data == null || !data.renderBadge.getBoolean())
         {
             b = "";
         }
-        else if(!data.disableGlobalBadge())
+        else if(!data.disableGlobalBadge.getBoolean())
         {
             try
             {

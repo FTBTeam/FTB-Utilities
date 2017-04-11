@@ -38,6 +38,12 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
         syntax = null;
     }
 
+    public Rank(String id, IRank r)
+    {
+        this(id);
+        parent = r;
+    }
+
     @Override
     public IRank getParent()
     {

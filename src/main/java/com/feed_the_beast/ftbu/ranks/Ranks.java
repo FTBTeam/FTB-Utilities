@@ -88,7 +88,7 @@ public class Ranks
 
     public static void reload()
     {
-        FTBUFinals.LOGGER.info("Loadeding ranks..");
+        FTBUFinals.LOGGER.info("Loading ranks..");
 
         RANKS.clear();
         RANKS.put(DefaultPlayerRank.INSTANCE.getName(), DefaultPlayerRank.INSTANCE);

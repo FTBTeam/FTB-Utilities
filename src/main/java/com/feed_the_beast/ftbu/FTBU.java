@@ -27,7 +27,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod(modid = FTBUFinals.MOD_ID, name = FTBUFinals.MOD_ID, version = "0.0.0", useMetadata = true, acceptableRemoteVersions = "*", dependencies = "required-after:ftbl")
+@Mod(modid = FTBUFinals.MOD_ID, name = FTBUFinals.MOD_ID, version = "0.0.0", useMetadata = true, acceptableRemoteVersions = "*", acceptedMinecraftVersions = "[1.10,1.12)", dependencies = "required-after:ftbl")
 public class FTBU
 {
     @Mod.Instance(FTBUFinals.MOD_ID)

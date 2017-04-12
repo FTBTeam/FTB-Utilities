@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.cmd.chunks;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUNotifications;
@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by LatvianModder on 27.06.2016.
  */
-public class CmdUnclaimAll extends CommandLM
+public class CmdUnclaimAll extends CmdBase
 {
     @Override
     public String getName()

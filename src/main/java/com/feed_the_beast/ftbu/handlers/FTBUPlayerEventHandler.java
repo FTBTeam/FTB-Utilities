@@ -12,7 +12,7 @@ import com.feed_the_beast.ftbl.lib.config.PropertyTextComponent;
 import com.feed_the_beast.ftbl.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.math.EntityDimPos;
-import com.feed_the_beast.ftbl.lib.util.LMInvUtils;
+import com.feed_the_beast.ftbl.lib.util.InvUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
@@ -55,7 +55,7 @@ public class FTBUPlayerEventHandler
             {
                 for(IConfigValue value : FTBUConfigLogin.STARTING_ITEMS)
                 {
-                    LMInvUtils.giveItem(ep, ((PropertyItemStack) value).getItem());
+                    InvUtils.giveItem(ep, ((PropertyItemStack) value).getItem());
                 }
             }
         }

@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.cmd.ranks;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.feed_the_beast.ftbu.ranks.DefaultOPRank;
@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by LatvianModder on 21.02.2016.
  */
-public class CmdSet extends CommandLM
+public class CmdSet extends CmdBase
 {
     @Override
     public String getName()

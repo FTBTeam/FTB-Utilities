@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
-import com.feed_the_beast.ftbl.lib.util.LMFileUtils;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
+import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.world.backups.Backups;
@@ -13,7 +13,7 @@ import net.minecraftforge.server.command.CommandTreeBase;
 
 public class CmdBackup extends CommandTreeBase
 {
-    public static class CmdStart extends CommandLM
+    public static class CmdStart extends CmdBase
     {
         @Override
         public String getName()
@@ -41,7 +41,7 @@ public class CmdBackup extends CommandTreeBase
         }
     }
 
-    public static class CmdStop extends CommandLM
+    public static class CmdStop extends CmdBase
     {
         @Override
         public String getName()
@@ -64,7 +64,7 @@ public class CmdBackup extends CommandTreeBase
         }
     }
 
-    public static class CmdGetSize extends CommandLM
+    public static class CmdGetSize extends CmdBase
     {
         @Override
         public String getName()
@@ -75,8 +75,8 @@ public class CmdBackup extends CommandTreeBase
         @Override
         public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
-            String sizeW = LMFileUtils.getSizeS(sender.getEntityWorld().getSaveHandler().getWorldDirectory());
-            String sizeT = LMFileUtils.getSizeS(Backups.INSTANCE.backupsFolder);
+            String sizeW = FileUtils.getSizeS(sender.getEntityWorld().getSaveHandler().getWorldDirectory());
+            String sizeT = FileUtils.getSizeS(Backups.INSTANCE.backupsFolder);
             FTBULang.BACKUP_SIZE.printChat(sender, sizeW, sizeT);
         }
     }

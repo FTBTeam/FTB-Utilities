@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.cmd.chunks;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.command.CommandException;
@@ -12,7 +12,7 @@ import net.minecraft.util.text.TextComponentString;
 /**
  * Created by LatvianModder on 10.11.2016.
  */
-public class CmdClaimFor extends CommandLM
+public class CmdClaimFor extends CmdBase
 {
     @Override
     public String getName()

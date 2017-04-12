@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.cmd.ranks;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -11,7 +11,7 @@ import net.minecraftforge.server.permission.PermissionAPI;
 /**
  * Created by LatvianModder on 07.02.2017.
  */
-public class CmdCheckPerm extends CommandLM
+public class CmdCheckPerm extends CmdBase
 {
     @Override
     public String getName()

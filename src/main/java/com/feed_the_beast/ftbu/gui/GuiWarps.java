@@ -9,7 +9,7 @@ import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
-import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbu.net.MessageSendWarpList;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -46,8 +46,8 @@ public class GuiWarps extends GuiBase
 
         for(int i = 0; i <= 360; i += 6)
         {
-            double cos = Math.cos(i * MathHelperLM.RAD);
-            double sin = Math.sin(i * MathHelperLM.RAD);
+            double cos = Math.cos(i * MathUtils.RAD);
+            double sin = Math.sin(i * MathUtils.RAD);
 
             BACKGROUND.pos(cos * SIZE_2, sin * SIZE_2).color(200, 200, 200, 153);
             CIRCLE_OUT.pos(cos * SIZE_2, sin * SIZE_2).color(102, 102, 102, 255);
@@ -95,8 +95,8 @@ public class GuiWarps extends GuiBase
                 double s = (in ? buttonsIn : buttonsOut).size();
                 double i = (s > 1D) ? (index * (360D / s) + (180D / s)) : 270D;
                 double d = ((in) ? (SIZE_I + SIZE_C) : (SIZE_C + SIZE_2)) / 2D;
-                textX = (int) (Math.cos(i * MathHelperLM.RAD) * d);
-                textY = (int) (Math.sin(i * MathHelperLM.RAD) * d) - 2;
+                textX = (int) (Math.cos(i * MathUtils.RAD) * d);
+                textY = (int) (Math.sin(i * MathUtils.RAD) * d) - 2;
             }
 
             gui.drawCenteredString(warpItem.name, gui.posX + gui.width / 2F + textX, gui.posY + gui.height / 2F + textY);
@@ -175,8 +175,8 @@ public class GuiWarps extends GuiBase
         }
 
         buttonOver = BUTTON_CANCEL;
-        double dist = MathHelperLM.dist(ax, ay, getMouseX(), getMouseY());
-        double rotation = Math.atan2(getMouseY() - ay, getMouseX() - ax) * MathHelperLM.DEG;
+        double dist = MathUtils.dist(ax, ay, getMouseX(), getMouseY());
+        double rotation = Math.atan2(getMouseY() - ay, getMouseX() - ax) * MathUtils.DEG;
 
         if(rotation < 0D)
         {
@@ -242,8 +242,8 @@ public class GuiWarps extends GuiBase
             int add = 360 / buttonsOut.size();
             for(int i = 0; i < 360; i += add)
             {
-                double cos = Math.cos(i * MathHelperLM.RAD);
-                double sin = Math.sin(i * MathHelperLM.RAD);
+                double cos = Math.cos(i * MathUtils.RAD);
+                double sin = Math.sin(i * MathUtils.RAD);
 
                 lines.pos(cos * SIZE_C, sin * SIZE_C, 0D).color(102, 102, 102, 255);
                 lines.pos(cos * SIZE_2, sin * SIZE_2, 0D).color(102, 102, 102, 255);
@@ -255,8 +255,8 @@ public class GuiWarps extends GuiBase
             int add = 360 / buttonsIn.size();
             for(int i = 0; i < 360; i += add)
             {
-                double cos = Math.cos(i * MathHelperLM.RAD);
-                double sin = Math.sin(i * MathHelperLM.RAD);
+                double cos = Math.cos(i * MathUtils.RAD);
+                double sin = Math.sin(i * MathUtils.RAD);
 
                 lines.pos(cos * SIZE_I, sin * SIZE_I, 0D).color(102, 102, 102, 255);
                 lines.pos(cos * SIZE_C, sin * SIZE_C, 0D).color(102, 102, 102, 255);

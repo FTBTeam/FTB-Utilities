@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbu.world.backups;
 
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
-import com.feed_the_beast.ftbl.lib.util.LMFileUtils;
-import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
+import com.feed_the_beast.ftbl.lib.util.FileUtils;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
@@ -39,7 +39,7 @@ public enum Backups
 
         backups.clear();
 
-        JsonElement element = LMJsonUtils.fromJson(new File(backupsFolder, "backups.json"));
+        JsonElement element = JsonUtils.fromJson(new File(backupsFolder, "backups.json"));
 
         if(element.isJsonArray())
         {
@@ -179,7 +179,7 @@ public enum Backups
                         {
                             Backup b = backups.get(i);
                             FTBUFinals.LOGGER.info("Deleting old backup: " + b.fileID);
-                            LMFileUtils.delete(b.getFile());
+                            FileUtils.delete(b.getFile());
                             backups.remove(i);
                         }
                     }
@@ -200,14 +200,14 @@ public enum Backups
             }
         }
 
-        LMJsonUtils.toJson(new File(backupsFolder, "backups.json"), a);
+        JsonUtils.toJson(new File(backupsFolder, "backups.json"), a);
     }
 
     public void postBackup()
     {
         try
         {
-            MinecraftServer server = LMServerUtils.getServer();
+            MinecraftServer server = ServerUtils.getServer();
 
             for(int i = 0; i < server.worlds.length; ++i)
             {

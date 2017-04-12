@@ -4,9 +4,9 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.guide.ServerInfoEvent;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
@@ -53,7 +53,7 @@ public class ServerInfoPage
         page.setTitle(CACHED_PAGE.getTitle());
         page.copyFrom(CACHED_PAGE);
 
-        MinecraftServer server = LMServerUtils.getServer();
+        MinecraftServer server = ServerUtils.getServer();
 
         boolean isDedi = server.isDedicatedServer();
         boolean isOP = !isDedi || PermissionAPI.hasPermission(ep, FTBUPermissions.DISPLAY_ADMIN_INFO);
@@ -64,22 +64,22 @@ public class ServerInfoPage
 
         if(FTBUConfigGeneral.AUTO_RESTART.getBoolean())
         {
-            page.println(FTBULang.TIMER_RESTART.textComponent(LMStringUtils.getTimeString(ftbuUniverseData.restartMillis - System.currentTimeMillis())));
+            page.println(FTBULang.TIMER_RESTART.textComponent(StringUtils.getTimeString(ftbuUniverseData.restartMillis - System.currentTimeMillis())));
         }
 
         if(FTBUConfigBackups.ENABLED.getBoolean())
         {
-            page.println(FTBULang.TIMER_BACKUP.textComponent(LMStringUtils.getTimeString(Backups.INSTANCE.nextBackup - System.currentTimeMillis())));
+            page.println(FTBULang.TIMER_BACKUP.textComponent(StringUtils.getTimeString(Backups.INSTANCE.nextBackup - System.currentTimeMillis())));
         }
 
         if(FTBUConfigGeneral.SERVER_INFO_DIFFICULTY.getBoolean())
         {
-            page.println(FTBLibLang.DIFFICULTY.textComponent(LMStringUtils.firstUppercase(ep.world.getDifficulty().toString().toLowerCase())));
+            page.println(FTBLibLang.DIFFICULTY.textComponent(StringUtils.firstUppercase(ep.world.getDifficulty().toString().toLowerCase())));
         }
 
         if(FTBUConfigGeneral.SERVER_INFO_MODE.getBoolean())
         {
-            page.println(FTBLibLang.MODE_CURRENT.textComponent(LMStringUtils.firstUppercase(FTBLibIntegration.API.getServerData().getPackMode().getName())));
+            page.println(FTBLibLang.MODE_CURRENT.textComponent(StringUtils.firstUppercase(FTBLibIntegration.API.getServerData().getPackMode().getName())));
         }
 
         if(FTBUConfigGeneral.SERVER_INFO_ADMIN_QUICK_ACCESS.getBoolean())
@@ -130,7 +130,7 @@ public class ServerInfoPage
                 }
                 if(data instanceof ITextComponent)
                 {
-                    c.appendSibling(LMServerUtils.getChatComponent(data));
+                    c.appendSibling(ServerUtils.getChatComponent(data));
                 }
 
                 thisTop.println(c);
@@ -143,7 +143,7 @@ public class ServerInfoPage
 
         try
         {
-            for(ICommand c : LMServerUtils.getAllCommands(server, ep))
+            for(ICommand c : ServerUtils.getAllCommands(server, ep))
             {
                 try
                 {

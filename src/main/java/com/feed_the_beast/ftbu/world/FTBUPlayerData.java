@@ -4,10 +4,18 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
+import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
+import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.FTBUFinals;
+import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
+import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
+import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
+import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagIntArray;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
@@ -25,9 +33,15 @@ public class FTBUPlayerData implements INBTSerializable<NBTBase>
     public final PropertyBool chatLinks = new PropertyBool(true);
     public final PropertyBool disableGlobalBadge = new PropertyBool(false);
 
+    public final IForgePlayer player;
     public BlockDimPos lastDeath, lastSafePos;
     public IForgePlayer lastChunkOwner;
     private Map<String, BlockDimPos> homes;
+
+    public FTBUPlayerData(IForgePlayer p)
+    {
+        player = p;
+    }
 
     @Nullable
     public static FTBUPlayerData get(IForgePlayer p)
@@ -59,6 +73,42 @@ public class FTBUPlayerData implements INBTSerializable<NBTBase>
         if(lastDeath != null)
         {
             nbt.setIntArray("LastDeath", lastDeath.toIntArray());
+        }
+
+        Collection<IClaimedChunk> claimedChunks = ClaimedChunkStorage.INSTANCE.getChunks(player);
+
+        if(!claimedChunks.isEmpty())
+        {
+            NBTTagList list = new NBTTagList();
+
+            for(IClaimedChunk chunk : claimedChunks)
+            {
+                ChunkDimPos pos = chunk.getPos();
+
+                int flags = 0;
+
+                for(IChunkUpgrade upgrade : FTBUCommon.CHUNK_UPGRADES)
+                {
+                    if(upgrade != null && chunk.hasUpgrade(upgrade))
+                    {
+                        flags |= (1 << upgrade.getId());
+                    }
+                }
+
+                int ai[] = flags != 0 ? new int[4] : new int[3];
+                ai[0] = pos.dim;
+                ai[1] = pos.posX;
+                ai[2] = pos.posZ;
+
+                if(flags != 0)
+                {
+                    ai[3] = flags;
+                }
+
+                list.appendTag(new NBTTagIntArray(ai));
+            }
+
+            nbt.setTag("ClaimedChunks", list);
         }
 
         return nbt;
@@ -93,6 +143,22 @@ public class FTBUPlayerData implements INBTSerializable<NBTBase>
         {
             int[] ai = nbt.getIntArray("LastDeath");
             lastDeath = (ai.length == 4) ? new BlockDimPos(ai) : null;
+        }
+
+        if(nbt.hasKey("ClaimedChunks"))
+        {
+            NBTTagList list = (NBTTagList) nbt.getTag("ClaimedChunks");
+
+            for(int i = 0; i < list.tagCount(); i++)
+            {
+                int[] ai = list.getIntArrayAt(i);
+
+                if(ai.length >= 3)
+                {
+                    ClaimedChunk chunk = new ClaimedChunk(new ChunkDimPos(ai[1], ai[2], ai[0]), player, ai.length >= 4 ? ai[3] : 0);
+                    ClaimedChunkStorage.INSTANCE.setChunk(chunk.getPos(), chunk);
+                }
+            }
         }
     }
 

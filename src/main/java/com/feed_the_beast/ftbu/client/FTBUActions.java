@@ -97,7 +97,7 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            return FTBLibIntegration.API.getClientData().isClientOP() && FTBLibIntegration.API.getClientData().hasOptionalServerMod(FTBUFinals.MOD_ID);
+            return !LMUtils.isNEILoaded() && FTBLibIntegration.API.getClientData().isClientOP() && FTBLibIntegration.API.getClientData().hasOptionalServerMod(FTBUFinals.MOD_ID);
         }
     };
 
@@ -113,7 +113,7 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            return FTBLibIntegration.API.getClientData().isClientOP();
+            return !LMUtils.isNEILoaded() && FTBLibIntegration.API.getClientData().isClientOP();
         }
     };
 
@@ -135,7 +135,7 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            return FTBLibIntegration.API.getClientData().isClientOP();
+            return !LMUtils.isNEILoaded() && FTBLibIntegration.API.getClientData().isClientOP();
         }
     };
 
@@ -150,7 +150,7 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            return FTBLibIntegration.API.getClientData().isClientOP();
+            return !LMUtils.isNEILoaded() && FTBLibIntegration.API.getClientData().isClientOP();
         }
     };
 
@@ -165,7 +165,7 @@ public class FTBUActions
         @Override
         public boolean isVisible()
         {
-            return FTBLibIntegration.API.getClientData().isClientOP();
+            return !LMUtils.isNEILoaded() && FTBLibIntegration.API.getClientData().isClientOP();
         }
     };
 }

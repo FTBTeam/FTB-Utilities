@@ -5,11 +5,11 @@ import com.feed_the_beast.ftbl.lib.BroadcastSender;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibStats;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
-import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUNotifications;
@@ -33,6 +33,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.stats.StatList;
 import net.minecraft.stats.StatisticsManagerServer;
@@ -117,7 +118,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
         {
             try
             {
-                b = LMStringUtils.readString(new URL(BADGE_BASE_URL + LMStringUtils.fromUUID(playerId)).openStream());
+                b = StringUtils.readString(new URL(BADGE_BASE_URL + StringUtils.fromUUID(playerId)).openStream());
             }
             catch(Exception ex)
             {
@@ -145,13 +146,13 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
             {
                 JsonObject o = new JsonObject();
                 o.add("uuid", new JsonPrimitive("url_to.png"));
-                LMJsonUtils.toJson(file, o);
+                JsonUtils.toJson(file, o);
             }
             else
             {
-                for(Map.Entry<String, JsonElement> entry : LMJsonUtils.fromJson(file).getAsJsonObject().entrySet())
+                for(Map.Entry<String, JsonElement> entry : JsonUtils.fromJson(file).getAsJsonObject().entrySet())
                 {
-                    UUID id = LMStringUtils.fromString(entry.getKey());
+                    UUID id = StringUtils.fromString(entry.getKey());
 
                     if(id != null)
                     {
@@ -168,7 +169,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
 
     public static boolean isInSpawn(ChunkDimPos pos)
     {
-        MinecraftServer server = LMServerUtils.getServer();
+        MinecraftServer server = ServerUtils.getServer();
 
         if(pos.dim != 0 || (!server.isDedicatedServer() && !FTBUConfigWorld.SPAWN_AREA_IN_SP.getBoolean()))
         {
@@ -182,16 +183,16 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
         }
 
         BlockPos c = server.getEntityWorld().getSpawnPoint();
-        int minX = MathHelperLM.chunk(c.getX() - radius);
-        int minZ = MathHelperLM.chunk(c.getZ() - radius);
-        int maxX = MathHelperLM.chunk(c.getX() + radius);
-        int maxZ = MathHelperLM.chunk(c.getZ() + radius);
+        int minX = MathUtils.chunk(c.getX() - radius);
+        int minZ = MathUtils.chunk(c.getZ() - radius);
+        int maxX = MathUtils.chunk(c.getX() + radius);
+        int maxZ = MathUtils.chunk(c.getZ() + radius);
         return pos.posX >= minX && pos.posX <= maxX && pos.posZ >= minZ && pos.posZ <= maxZ;
     }
 
     public static boolean isInSpawnD(int dim, double x, double z)
     {
-        return dim == 0 && isInSpawn(new ChunkDimPos(MathHelperLM.chunk(x), MathHelperLM.chunk(z), dim));
+        return dim == 0 && isInSpawn(new ChunkDimPos(MathUtils.chunk(x), MathUtils.chunk(z), dim));
     }
 
     public static void handleExplosion(World world, Explosion explosion)
@@ -359,7 +360,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
         if(FTBUConfigGeneral.AUTO_RESTART.getBoolean() && FTBUConfigGeneral.RESTART_TIMER.getInt() > 0)
         {
             restartMillis = startMillis + (long) (FTBUConfigGeneral.RESTART_TIMER.getInt() * 3600D * 1000D);
-            FTBUFinals.LOGGER.info("Server restart in " + LMStringUtils.getTimeString(restartMillis));
+            FTBUFinals.LOGGER.info("Server restart in " + StringUtils.getTimeString(restartMillis));
         }
 
         FTBLibIntegration.API.ticking().add(this);
@@ -369,7 +370,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
 
     public void onLoadedBeforePlayers()
     {
-        //ClaimedChunks.inst.chunks.clear();
+        ClaimedChunkStorage.INSTANCE.clear();
     }
 
     public void onClosed()
@@ -396,7 +397,6 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
             nbt.setTag("Warps", tag1);
         }
 
-        nbt.setTag("Chunks", ClaimedChunkStorage.INSTANCE.serializeNBT());
         return nbt;
     }
 
@@ -423,7 +423,28 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
 
         if(nbt.hasKey("Chunks", Constants.NBT.TAG_COMPOUND))
         {
-            ClaimedChunkStorage.INSTANCE.deserializeNBT(nbt.getCompoundTag("Chunks"));
+            NBTTagCompound nbt1 = nbt.getCompoundTag("Chunks");
+
+            for(String s : nbt1.getKeySet())
+            {
+                IForgePlayer player = FTBLibIntegration.API.getUniverse().getPlayer(StringUtils.fromString(s));
+
+                if(player != null)
+                {
+                    NBTTagList list = nbt1.getTagList(s, Constants.NBT.TAG_INT_ARRAY);
+
+                    for(int i = 0; i < list.tagCount(); i++)
+                    {
+                        int[] ai = list.getIntArrayAt(i);
+
+                        if(ai.length >= 3)
+                        {
+                            ClaimedChunk chunk = new ClaimedChunk(new ChunkDimPos(ai[1], ai[2], ai[0]), player, ai.length >= 4 ? ai[3] : 0);
+                            ClaimedChunkStorage.INSTANCE.setChunk(chunk.getPos(), chunk);
+                        }
+                    }
+                }
+            }
         }
 
         nextWebApiUpdate = 0L;
@@ -437,7 +458,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
         if(restartMillis > 0L)
         {
             int secondsLeft = (int) ((restartMillis - System.currentTimeMillis()) / 1000L);
-            String msg = LMStringUtils.getTimeString(secondsLeft * 1000L);
+            String msg = StringUtils.getTimeString(secondsLeft * 1000L);
 
             if(!lastRestartMessage.equals(msg))
             {
@@ -459,7 +480,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
 
         if(Backups.INSTANCE.nextBackup > 0L && Backups.INSTANCE.nextBackup <= now)
         {
-            MinecraftServer server = LMServerUtils.getServer();
+            MinecraftServer server = ServerUtils.getServer();
             Backups.INSTANCE.run(server, server, "");
         }
 
@@ -519,7 +540,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
             json.add("stats", table.toJson());
 
             File file = FTBUConfigWebAPI.FILE_LOCATION.getString().isEmpty() ? new File(LMUtils.folderLocal, "ftbu/webapi.json") : new File(FTBUConfigWebAPI.FILE_LOCATION.getString());
-            LMJsonUtils.toJson(LMJsonUtils.GSON, file, json);
+            JsonUtils.toJson(JsonUtils.GSON, file, json);
         }
         catch(Exception ex)
         {

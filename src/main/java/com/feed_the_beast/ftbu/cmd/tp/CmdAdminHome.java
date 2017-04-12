@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.cmd.tp;
 
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import net.minecraft.command.CommandException;
@@ -15,7 +15,7 @@ import net.minecraftforge.server.command.CommandTreeBase;
 
 public class CmdAdminHome extends CommandTreeBase
 {
-    public static class CmdTP extends CommandLM
+    public static class CmdTP extends CmdBase
     {
         @Override
         public String getName()
@@ -46,7 +46,7 @@ public class CmdAdminHome extends CommandTreeBase
 
             if(pos != null)
             {
-                LMServerUtils.teleportPlayer(ep, pos);
+                ServerUtils.teleportPlayer(ep, pos);
                 FTBULang.WARP_TP.printChat(sender, args[1]);
             }
 
@@ -54,7 +54,7 @@ public class CmdAdminHome extends CommandTreeBase
         }
     }
 
-    public static class CmdList extends CommandLM
+    public static class CmdList extends CmdBase
     {
         @Override
         public String getName()
@@ -73,11 +73,11 @@ public class CmdAdminHome extends CommandTreeBase
         {
             checkArgs(args, 1, "<player>");
             FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(args[0]));
-            sender.sendMessage(new TextComponentString(LMStringUtils.strip(data.listHomes())));
+            sender.sendMessage(new TextComponentString(StringUtils.strip(data.listHomes())));
         }
     }
 
-    public static class CmdRem extends CommandLM
+    public static class CmdRem extends CmdBase
     {
         @Override
         public String getName()

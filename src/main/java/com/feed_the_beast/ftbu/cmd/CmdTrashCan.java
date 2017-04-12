@@ -1,12 +1,12 @@
 package com.feed_the_beast.ftbu.cmd;
 
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.server.MinecraftServer;
 
-public class CmdTrashCan extends CommandLM
+public class CmdTrashCan extends CmdBase
 {
     @Override
     public String getName()

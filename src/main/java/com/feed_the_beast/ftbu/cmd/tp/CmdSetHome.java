@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.cmd.tp;
 
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.math.EntityDimPos;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUPermissions;
@@ -16,7 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class CmdSetHome extends CommandLM
+public class CmdSetHome extends CmdBase
 {
     @Override
     public String getName()

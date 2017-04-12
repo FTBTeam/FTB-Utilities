@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.cmd.tp;
 
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.command.CommandException;
@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
-public class CmdWarp extends CommandLM
+public class CmdWarp extends CmdBase
 {
     @Override
     public String getName()
@@ -58,7 +58,7 @@ public class CmdWarp extends CommandLM
         if(args[0].equals("list"))
         {
             Collection<String> list = FTBUUniverseData.get().listWarps();
-            sender.sendMessage(new TextComponentString(list.isEmpty() ? "-" : LMStringUtils.strip(list)));
+            sender.sendMessage(new TextComponentString(list.isEmpty() ? "-" : StringUtils.strip(list)));
             return;
         }
 
@@ -69,7 +69,7 @@ public class CmdWarp extends CommandLM
             throw FTBULang.WARP_NOT_SET.commandError(args[0]);
         }
 
-        LMServerUtils.teleportPlayer(ep, p);
+        ServerUtils.teleportPlayer(ep, p);
         FTBULang.WARP_TP.printChat(sender, args[0]);
     }
 }

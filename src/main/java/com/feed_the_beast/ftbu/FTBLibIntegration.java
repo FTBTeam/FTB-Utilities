@@ -95,7 +95,7 @@ public enum FTBLibIntegration implements IFTBLibPlugin
         FTBUNotifications.init(reg);
 
         reg.addUniverseDataProvider(FTBU_DATA, owner -> new FTBUUniverseData());
-        reg.addPlayerDataProvider(FTBU_DATA, owner -> new FTBUPlayerData());
+        reg.addPlayerDataProvider(FTBU_DATA, FTBUPlayerData::new);
         reg.addTeamDataProvider(FTBU_DATA, owner -> new FTBUTeamData());
 
         FTBUPermissions.addConfigs(reg);
@@ -121,15 +121,11 @@ public enum FTBLibIntegration implements IFTBLibPlugin
         reg.addSidebarButton(FTBUActions.CLAIMED_CHUNKS);
         reg.addSidebarButton(FTBUActions.TRASH_CAN);
         reg.addSidebarButton(FTBUActions.SHOP);
-
-        if(!LMUtils.isNEILoaded)
-        {
-            reg.addSidebarButton(FTBUActions.HEAL);
-            reg.addSidebarButton(FTBUActions.TOGGLE_GAMEMODE);
-            reg.addSidebarButton(FTBUActions.TOGGLE_RAIN);
-            reg.addSidebarButton(FTBUActions.TOGGLE_DAY);
-            reg.addSidebarButton(FTBUActions.TOGGLE_NIGHT);
-        }
+        reg.addSidebarButton(FTBUActions.HEAL);
+        reg.addSidebarButton(FTBUActions.TOGGLE_GAMEMODE);
+        reg.addSidebarButton(FTBUActions.TOGGLE_RAIN);
+        reg.addSidebarButton(FTBUActions.TOGGLE_DAY);
+        reg.addSidebarButton(FTBUActions.TOGGLE_NIGHT);
     }
 
     @Override

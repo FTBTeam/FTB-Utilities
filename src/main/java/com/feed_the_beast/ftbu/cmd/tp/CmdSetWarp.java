@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.cmd.tp;
 
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
-public class CmdSetWarp extends CommandLM
+public class CmdSetWarp extends CmdBase
 {
     @Override
     public String getName()

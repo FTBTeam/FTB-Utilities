@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.net;
 
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
-import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
-import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
+import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,11 +24,11 @@ public class MessageJMRequest extends MessageToServer<MessageJMRequest>
 
     public MessageJMRequest(Entity entity)
     {
-        this(MathHelperLM.chunk(entity.posX), MathHelperLM.chunk(entity.posZ));
+        this(MathUtils.chunk(entity.posX), MathUtils.chunk(entity.posZ));
     }
 
     @Override
-    public LMNetworkWrapper getWrapper()
+    public NetworkWrapper getWrapper()
     {
         return FTBUNetHandler.NET;
     }

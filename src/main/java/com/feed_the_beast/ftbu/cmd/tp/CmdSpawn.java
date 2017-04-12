@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.cmd.tp;
 
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -11,7 +11,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class CmdSpawn extends CommandLM
+public class CmdSpawn extends CmdBase
 {
     @Override
     public String getName()
@@ -37,7 +37,7 @@ public class CmdSpawn extends CommandLM
             spawnpoint = spawnpoint.up(2);
         }
 
-        LMServerUtils.teleportPlayer(player, new BlockDimPos(spawnpoint, 0));
+        ServerUtils.teleportPlayer(player, new BlockDimPos(spawnpoint, 0));
         FTBULang.WARP_SPAWN.printChat(sender);
     }
 }

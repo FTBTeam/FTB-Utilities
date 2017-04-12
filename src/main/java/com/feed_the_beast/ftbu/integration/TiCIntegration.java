@@ -4,8 +4,8 @@ import com.feed_the_beast.ftbl.lib.info.InfoExtendedTextLine;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.info.ItemListLine;
 import com.feed_the_beast.ftbl.lib.info.ItemPageIconRenderer;
-import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.guide.ClientGuideEvent;
 import com.feed_the_beast.ftbu.api.guide.IGuide;
 import com.google.common.collect.ImmutableList;
@@ -128,7 +128,7 @@ public class TiCIntegration
             try
             {
                 IResource resource = event.getResourceManager().getResource(new ResourceLocation("tconstruct", "book/en_US/modifiers/" + modifier.getIdentifier() + ".json"));
-                JsonElement json = LMJsonUtils.fromJson(new InputStreamReader(resource.getInputStream()));
+                JsonElement json = JsonUtils.fromJson(new InputStreamReader(resource.getInputStream()));
 
                 if(json.isJsonObject())
                 {
@@ -143,7 +143,7 @@ public class TiCIntegration
                         page.println(null);
                         for(JsonElement e : o.get("text").getAsJsonArray())
                         {
-                            page.println(LMJsonUtils.deserializeTextComponent(e));
+                            page.println(JsonUtils.deserializeTextComponent(e));
                         }
                     }
 
@@ -153,7 +153,7 @@ public class TiCIntegration
                         page.println("Effects:");
                         for(JsonElement e : o.get("effects").getAsJsonArray())
                         {
-                            page.println(LMJsonUtils.deserializeTextComponent(e));
+                            page.println(JsonUtils.deserializeTextComponent(e));
                         }
                     }
 
@@ -206,7 +206,7 @@ public class TiCIntegration
 
     private static String transformString(String s)
     {
-        return LMStringUtils.trimAllWhitespace(s.replace("\\n", "\n"));
+        return StringUtils.trimAllWhitespace(s.replace("\\n", "\n"));
     }
 
     @Nullable
@@ -215,7 +215,7 @@ public class TiCIntegration
         try
         {
             IResource resource = event.getResourceManager().getResource(new ResourceLocation("tconstruct", "book/en_US/sections/" + id + ".json"));
-            JsonElement json = LMJsonUtils.fromJson(new InputStreamReader(resource.getInputStream()));
+            JsonElement json = JsonUtils.fromJson(new InputStreamReader(resource.getInputStream()));
 
             if(json.isJsonArray())
             {

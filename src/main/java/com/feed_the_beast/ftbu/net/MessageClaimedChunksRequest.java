@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.net;
 
-import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
-import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
+import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,11 +23,11 @@ public class MessageClaimedChunksRequest extends MessageToServer<MessageClaimedC
 
     public MessageClaimedChunksRequest(Entity entity)
     {
-        this(MathHelperLM.chunk(entity.posX) - 7, MathHelperLM.chunk(entity.posZ) - 7);
+        this(MathUtils.chunk(entity.posX) - 7, MathUtils.chunk(entity.posZ) - 7);
     }
 
     @Override
-    public LMNetworkWrapper getWrapper()
+    public NetworkWrapper getWrapper()
     {
         return FTBUNetHandler.NET;
     }

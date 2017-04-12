@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbu.cmd;
 
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.lib.util.LMInvUtils;
-import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.InvUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.NBTUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -22,7 +22,7 @@ import java.io.File;
 
 public class CmdInv extends CommandTreeBase
 {
-    public static class CmdView extends CommandLM
+    public static class CmdView extends CmdBase
     {
         @Override
         public String getName()
@@ -52,7 +52,7 @@ public class CmdInv extends CommandTreeBase
         }
     }
 
-    public static class CmdSave extends CommandLM
+    public static class CmdSave extends CmdBase
     {
         @Override
         public String getName()
@@ -77,7 +77,7 @@ public class CmdInv extends CommandTreeBase
         {
             checkArgs(args, 2, "<player> <ID>");
             EntityPlayerMP ep = getPlayer(server, sender, args[0]);
-            File file = new File(LMUtils.folderLocal, "ftbu/playerinvs/" + LMStringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
+            File file = new File(LMUtils.folderLocal, "ftbu/playerinvs/" + StringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
 
             try
             {
@@ -86,10 +86,10 @@ public class CmdInv extends CommandTreeBase
 
                 if(Loader.isModLoaded("Baubles"))
                 {
-                    writeItemsToNBT(LMInvUtils.getBaubles(ep), tag, "Baubles");
+                    writeItemsToNBT(InvUtils.getBaubles(ep), tag, "Baubles");
                 }
 
-                LMNBTUtils.writeTag(file, tag);
+                NBTUtils.writeTag(file, tag);
             }
             catch(Exception e)
             {
@@ -122,7 +122,7 @@ public class CmdInv extends CommandTreeBase
         }
     }
 
-    public static class CmdLoad extends CommandLM
+    public static class CmdLoad extends CmdBase
     {
         @Override
         public String getName()
@@ -147,17 +147,17 @@ public class CmdInv extends CommandTreeBase
         {
             checkArgs(args, 2, "<player> <ID>");
             EntityPlayerMP ep = getPlayer(server, sender, args[0]);
-            File file = new File(LMUtils.folderLocal, "ftbu/playerinvs/" + LMStringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
+            File file = new File(LMUtils.folderLocal, "ftbu/playerinvs/" + StringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
 
             try
             {
-                NBTTagCompound tag = LMNBTUtils.readTag(file);
+                NBTTagCompound tag = NBTUtils.readTag(file);
 
                 readItemsFromNBT(ep.inventory, tag, "Inventory");
 
                 if(Loader.isModLoaded("Baubles"))
                 {
-                    readItemsFromNBT(LMInvUtils.getBaubles(ep), tag, "Baubles");
+                    readItemsFromNBT(InvUtils.getBaubles(ep), tag, "Baubles");
                 }
             }
             catch(Exception e)
@@ -192,7 +192,7 @@ public class CmdInv extends CommandTreeBase
         }
     }
 
-    public static class CmdList extends CommandLM
+    public static class CmdList extends CmdBase
     {
         @Override
         public String getName()

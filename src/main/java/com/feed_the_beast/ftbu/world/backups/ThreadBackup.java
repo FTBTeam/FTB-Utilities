@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.world.backups;
 
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
-import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
-import com.feed_the_beast.ftbl.lib.util.LMFileUtils;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
+import com.feed_the_beast.ftbl.lib.util.FileUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
@@ -54,7 +54,7 @@ public class ThreadBackup extends Thread
 
         try
         {
-            List<File> files = LMFileUtils.listAll(src);
+            List<File> files = FileUtils.listAll(src);
             int allFiles = files.size();
 
             FTBUFinals.LOGGER.info("Backing up " + files.size() + " files...");
@@ -62,7 +62,7 @@ public class ThreadBackup extends Thread
             if(FTBUConfigBackups.COMPRESSION_LEVEL.getInt() > 0)
             {
                 out.append(".zip");
-                dstFile = LMFileUtils.newFile(new File(Backups.INSTANCE.backupsFolder, out.toString()));
+                dstFile = FileUtils.newFile(new File(Backups.INSTANCE.backupsFolder, out.toString()));
 
                 long start = System.currentTimeMillis();
 
@@ -87,7 +87,7 @@ public class ThreadBackup extends Thread
                     if(i == 0 || millis > logMillis || i == allFiles - 1)
                     {
                         logMillis = millis + 5000L;
-                        FTBUFinals.LOGGER.info("[" + i + " | " + MathHelperLM.toSmallDouble((i / (double) allFiles) * 100D) + "%]: " + ze.getName());
+                        FTBUFinals.LOGGER.info("[" + i + " | " + MathUtils.toSmallDouble((i / (double) allFiles) * 100D) + "%]: " + ze.getName());
                     }
 
                     zos.putNextEntry(ze);
@@ -104,7 +104,7 @@ public class ThreadBackup extends Thread
 
                 zos.close();
 
-                FTBUFinals.LOGGER.info("Done compressing in " + getDoneTime(start) + " seconds (" + LMFileUtils.getSizeS(dstFile) + ")!");
+                FTBUFinals.LOGGER.info("Done compressing in " + getDoneTime(start) + " seconds (" + FileUtils.getSizeS(dstFile) + ")!");
             }
             else
             {
@@ -127,11 +127,11 @@ public class ThreadBackup extends Thread
                     if(i == 0 || millis > logMillis || i == allFiles - 1)
                     {
                         logMillis = millis + 2000L;
-                        FTBUFinals.LOGGER.info("[" + i + " | " + MathHelperLM.toSmallDouble((i / (double) allFiles) * 100D) + "%]: " + file.getName());
+                        FTBUFinals.LOGGER.info("[" + i + " | " + MathUtils.toSmallDouble((i / (double) allFiles) * 100D) + "%]: " + file.getName());
                     }
 
                     File dst1 = new File(dstPath + (file.getAbsolutePath().replace(srcPath, "")));
-                    LMFileUtils.copyFile(file, dst1);
+                    FileUtils.copyFile(file, dst1);
                 }
             }
 
@@ -142,8 +142,8 @@ public class ThreadBackup extends Thread
             {
                 if(FTBUConfigBackups.DISPLAY_FILE_SIZE.getBoolean())
                 {
-                    String sizeB = LMFileUtils.getSizeS(dstFile);
-                    String sizeT = LMFileUtils.getSizeS(Backups.INSTANCE.backupsFolder);
+                    String sizeB = FileUtils.getSizeS(dstFile);
+                    String sizeT = FileUtils.getSizeS(Backups.INSTANCE.backupsFolder);
 
                     ITextComponent c = FTBULang.BACKUP_END_2.textComponent(getDoneTime(time.getTimeInMillis()), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)));
                     c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
@@ -170,7 +170,7 @@ public class ThreadBackup extends Thread
             ex.printStackTrace();
             if(dstFile != null)
             {
-                LMFileUtils.delete(dstFile);
+                FileUtils.delete(dstFile);
             }
         }
 
@@ -187,7 +187,7 @@ public class ThreadBackup extends Thread
             return l + "ms";
         }
 
-        return LMStringUtils.getTimeString(l);
+        return StringUtils.getTimeString(l);
     }
 
     private static void appendNum(StringBuilder sb, int num, char c)

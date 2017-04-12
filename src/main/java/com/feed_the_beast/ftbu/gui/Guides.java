@@ -11,9 +11,9 @@ import com.feed_the_beast.ftbl.lib.info.InfoPageHelper;
 import com.feed_the_beast.ftbl.lib.info.ItemPageIconRenderer;
 import com.feed_the_beast.ftbl.lib.info.SpecialInfoButton;
 import com.feed_the_beast.ftbl.lib.info.TexturePageIconRenderer;
-import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.guide.ClientGuideEvent;
 import com.feed_the_beast.ftbu.api.guide.GuideFormat;
@@ -21,7 +21,6 @@ import com.feed_the_beast.ftbu.api.guide.IGuide;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
@@ -121,7 +120,7 @@ public enum Guides implements IResourceManagerReloadListener
             try
             {
                 IResource resource = resourceManager.getResource(new ResourceLocation(domain, "guide.json"));
-                JsonElement infoFile = LMJsonUtils.fromJson(new InputStreamReader(resource.getInputStream()));
+                JsonElement infoFile = JsonUtils.fromJson(new InputStreamReader(resource.getInputStream()));
 
                 if(infoFile.isJsonObject())
                 {
@@ -167,7 +166,7 @@ public enum Guides implements IResourceManagerReloadListener
 
     private static boolean validChar(char c)
     {
-        return c == '_' || c == '.' || c == '{' || c == '}' || LMStringUtils.isTextChar(c, true);
+        return c == '_' || c == '.' || c == '{' || c == '}' || StringUtils.isTextChar(c, true);
     }
 
     private static void loadTree(IResourceManager resourceManager, String domain, InfoPage page, GuideFormat format, String parentDir) throws Exception
@@ -177,13 +176,13 @@ public enum Guides implements IResourceManagerReloadListener
             switch(format)
             {
                 case JSON:
-                    for(JsonElement e : LMJsonUtils.fromJson(replaceSubstitutes(LMStringUtils.readString(resourceManager.getResource(new ResourceLocation(domain, parentDir + "/index.json")).getInputStream()))).getAsJsonArray())
+                    for(JsonElement e : JsonUtils.fromJson(replaceSubstitutes(StringUtils.readString(resourceManager.getResource(new ResourceLocation(domain, parentDir + "/index.json")).getInputStream()))).getAsJsonArray())
                     {
                         page.println(InfoPageHelper.createLine(page, e));
                     }
                     break;
                 case MD:
-                    for(String s : LMStringUtils.readStringList(resourceManager.getResource(new ResourceLocation(domain, parentDir + "/README.md")).getInputStream()))
+                    for(String s : StringUtils.readStringList(resourceManager.getResource(new ResourceLocation(domain, parentDir + "/README.md")).getInputStream()))
                     {
                         //FIXME: Support more than just text
                         page.println(s);
@@ -202,7 +201,7 @@ public enum Guides implements IResourceManagerReloadListener
 
         try
         {
-            for(JsonElement e : LMJsonUtils.fromJson(new InputStreamReader(resourceManager.getResource(new ResourceLocation(domain, parentDir + "/pages.json")).getInputStream())).getAsJsonArray())
+            for(JsonElement e : JsonUtils.fromJson(new InputStreamReader(resourceManager.getResource(new ResourceLocation(domain, parentDir + "/pages.json")).getInputStream())).getAsJsonArray())
             {
                 InfoPage page1;
 
@@ -267,7 +266,7 @@ public enum Guides implements IResourceManagerReloadListener
                 }
                 else
                 {
-                    String value = SUBSTITUTE_CACHE.computeIfAbsent(keyBuilder.substring(1), k -> replaceSubstitutes(I18n.format(k)));
+                    String value = SUBSTITUTE_CACHE.computeIfAbsent(keyBuilder.substring(1), k -> replaceSubstitutes(StringUtils.translate(k)));
 
                     //TODO: Add special values
 

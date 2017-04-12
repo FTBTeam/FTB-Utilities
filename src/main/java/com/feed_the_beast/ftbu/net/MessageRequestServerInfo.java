@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.net;
 
-import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
+import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.ServerInfoPage;
 import io.netty.buffer.ByteBuf;
@@ -14,7 +14,7 @@ public class MessageRequestServerInfo extends MessageToServer<MessageRequestServ
     }
 
     @Override
-    public LMNetworkWrapper getWrapper()
+    public NetworkWrapper getWrapper()
     {
         return FTBUNetHandler.NET;
     }

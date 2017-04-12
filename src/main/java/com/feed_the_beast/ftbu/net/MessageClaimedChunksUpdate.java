@@ -6,9 +6,9 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
+import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.FTBUPermissions;
@@ -139,7 +139,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
     }
 
     @Override
-    public LMNetworkWrapper getWrapper()
+    public NetworkWrapper getWrapper()
     {
         return FTBUNetHandler.NET;
     }
@@ -162,7 +162,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
         while(--s >= 0)
         {
             ClaimedChunks.Team team = new ClaimedChunks.Team();
-            team.ownerId = LMNetUtils.readUUID(io);
+            team.ownerId = NetUtils.readUUID(io);
             team.formattedName = ByteBufUtils.readUTF8String(io);
             team.color = EnumTeamColor.get(io.readUnsignedByte());
             team.isAlly = io.readBoolean();
@@ -176,7 +176,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 
             if(chunkData[i].hasUpgrade(ChunkUpgrade.CLAIMED))
             {
-                chunkData[i].team = teams.get(LMNetUtils.readUUID(io));
+                chunkData[i].team = teams.get(NetUtils.readUUID(io));
 
                 if(chunkData[i].team.isAlly)
                 {
@@ -200,7 +200,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 
         for(ClaimedChunks.Team t : teams.values())
         {
-            LMNetUtils.writeUUID(io, t.ownerId);
+            NetUtils.writeUUID(io, t.ownerId);
             ByteBufUtils.writeUTF8String(io, t.formattedName);
             io.writeByte(t.color.ordinal());
             io.writeBoolean(t.isAlly);
@@ -212,7 +212,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 
             if(data.hasUpgrade(ChunkUpgrade.CLAIMED))
             {
-                LMNetUtils.writeUUID(io, data.team.ownerId);
+                NetUtils.writeUUID(io, data.team.ownerId);
 
                 if(data.team.isAlly)
                 {

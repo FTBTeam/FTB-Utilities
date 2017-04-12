@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamSettingsEvent;
-import com.feed_the_beast.ftbl.api.security.EnumTeamPrivacyLevel;
+import com.feed_the_beast.ftbl.lib.EnumTeamPrivacyLevel;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
 import com.feed_the_beast.ftbl.lib.io.Bits;

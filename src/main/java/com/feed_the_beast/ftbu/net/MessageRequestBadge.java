@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.net;
 
-import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
+import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,7 +43,7 @@ public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
     }
 
     @Override
-    public LMNetworkWrapper getWrapper()
+    public NetworkWrapper getWrapper()
     {
         return FTBUNetHandler.NET;
     }
@@ -51,13 +51,13 @@ public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
     @Override
     public void fromBytes(ByteBuf io)
     {
-        playerId = LMNetUtils.readUUID(io);
+        playerId = NetUtils.readUUID(io);
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
-        LMNetUtils.writeUUID(io, playerId);
+        NetUtils.writeUUID(io, playerId);
     }
 
     @Override

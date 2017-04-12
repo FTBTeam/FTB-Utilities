@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.cmd.tp;
 
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBULang;
@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
-public class CmdHome extends CommandLM
+public class CmdHome extends CmdBase
 {
     @Override
     public String getName()
@@ -73,7 +73,7 @@ public class CmdHome extends CommandLM
             sender.sendMessage(new TextComponentString(list.size() + " / " + FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt() + ": "));
             if(!list.isEmpty())
             {
-                sender.sendMessage(new TextComponentString(LMStringUtils.strip(list)));
+                sender.sendMessage(new TextComponentString(StringUtils.strip(list)));
             }
             return;
         }
@@ -89,7 +89,7 @@ public class CmdHome extends CommandLM
             throw FTBULang.HOME_CROSS_DIM.commandError();
         }
 
-        LMServerUtils.teleportPlayer(ep, pos);
+        ServerUtils.teleportPlayer(ep, pos);
         FTBULang.WARP_TP.printChat(sender, args[0]);
     }
 }

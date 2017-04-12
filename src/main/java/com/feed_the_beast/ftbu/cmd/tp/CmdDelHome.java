@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.cmd.tp;
 
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
@@ -12,7 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class CmdDelHome extends CommandLM
+public class CmdDelHome extends CmdBase
 {
     @Override
     public String getName()

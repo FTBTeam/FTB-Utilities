@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.cmd.ranks;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import net.minecraft.command.CommandException;
@@ -14,7 +14,7 @@ import net.minecraft.util.text.event.ClickEvent;
 /**
  * Created by LatvianModder on 21.02.2016.
  */
-public class CmdGet extends CommandLM
+public class CmdGet extends CmdBase
 {
     @Override
     public String getName()

@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbu.cmd.tp;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.math.EntityDimPos;
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -14,7 +14,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.util.Constants;
 
-public class CmdTplast extends CommandLM
+public class CmdTplast extends CmdBase
 {
     @Override
     public String getName()
@@ -45,7 +45,7 @@ public class CmdTplast extends CommandLM
             double x = parseDouble(ep.posX, args[0], -30000000, 30000000, true);
             double y = parseDouble(ep.posY, args[1], -30000000, 30000000, true);
             double z = parseDouble(ep.posZ, args[2], -30000000, 30000000, true);
-            LMServerUtils.teleportPlayer(ep, new Vec3d(x, y, z), ep.dimension);
+            ServerUtils.teleportPlayer(ep, new Vec3d(x, y, z), ep.dimension);
             return;
         }
 
@@ -76,6 +76,6 @@ public class CmdTplast extends CommandLM
             p = new EntityDimPos(new Vec3d(posList.getDoubleAt(0), posList.getDoubleAt(1), posList.getDoubleAt(2)), nbt.getInteger("Dimension")).toBlockDimPos();
         }
 
-        LMServerUtils.teleportPlayer(who, p);
+        ServerUtils.teleportPlayer(who, p);
     }
 }

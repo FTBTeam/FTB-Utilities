@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbu.ranks;
 import com.feed_the_beast.ftbl.api.IRankConfig;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.google.gson.JsonArray;
@@ -62,7 +62,7 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 
         for(Map.Entry<String, Event.Result> entry : permissions.entrySet())
         {
-            if(LMStringUtils.nodesMatch(splitPermission, entry.getKey().split("\\.")))
+            if(StringUtils.nodesMatch(splitPermission, entry.getKey().split("\\.")))
             {
                 return entry.getValue();
             }
@@ -113,7 +113,7 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 
         if(syntax != null)
         {
-            o.add("syntax", new JsonPrimitive(syntax.replace(LMStringUtils.FORMATTING_CHAR, '&')));
+            o.add("syntax", new JsonPrimitive(syntax.replace(StringUtils.FORMATTING_CHAR, '&')));
         }
 
         JsonArray a1 = new JsonArray();
@@ -156,7 +156,7 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 
         if(o.has("syntax"))
         {
-            syntax = o.get("syntax").getAsString().replace('&', LMStringUtils.FORMATTING_CHAR);
+            syntax = o.get("syntax").getAsString().replace('&', StringUtils.FORMATTING_CHAR);
         }
 
         if(o.has("permissions"))

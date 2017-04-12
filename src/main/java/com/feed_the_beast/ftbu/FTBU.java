@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu;
 
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
 import com.feed_the_beast.ftbu.config.FTBUConfigRanks;
@@ -76,9 +76,9 @@ public class FTBU
 
         if(FTBUConfigRanks.OVERRIDE_COMMANDS.getBoolean())
         {
-            ServerCommandManager manager = (ServerCommandManager) LMServerUtils.getServer().getCommandManager();
+            ServerCommandManager manager = (ServerCommandManager) ServerUtils.getServer().getCommandManager();
             List<ICommand> commands = new ArrayList<>(manager.getCommands().values());
-            LMServerUtils.getCommandSet(manager).clear();
+            ServerUtils.getCommandSet(manager).clear();
             manager.getCommands().clear();
 
             for(ICommand command : commands)

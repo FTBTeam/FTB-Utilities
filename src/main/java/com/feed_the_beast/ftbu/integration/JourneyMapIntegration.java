@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.integration;
 
-import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
 import com.feed_the_beast.ftbu.client.FTBUClient;
@@ -134,7 +134,7 @@ public class JourneyMapIntegration implements IClientPlugin, IJMIntegration
     @SubscribeEvent
     public static void onEnteringChunk(EntityEvent.EnteringChunk event)
     {
-        if(FTBUClientConfig.JOURNEYMAP_OVERLAY.getBoolean() && event.getEntity() == mc.player && (lastPosition == null || MathHelperLM.dist(event.getNewChunkX(), event.getNewChunkZ(), lastPosition.chunkXPos, lastPosition.chunkZPos) >= 3D))
+        if(FTBUClientConfig.JOURNEYMAP_OVERLAY.getBoolean() && event.getEntity() == mc.player && (lastPosition == null || MathUtils.dist(event.getNewChunkX(), event.getNewChunkZ(), lastPosition.chunkXPos, lastPosition.chunkZPos) >= 3D))
         {
             lastPosition = new ChunkPos(event.getNewChunkX(), event.getNewChunkZ());
             new MessageJMRequest(mc.player).sendToServer();

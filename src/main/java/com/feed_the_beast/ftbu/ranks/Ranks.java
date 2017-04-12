@@ -4,11 +4,11 @@ import com.feed_the_beast.ftbl.api.IRankConfig;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.lib.util.LMFileUtils;
-import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.FileUtils;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.FTBUFinals;
@@ -71,7 +71,7 @@ public class Ranks
     public static IRank getRank(GameProfile profile)
     {
         IRank r = FTBUConfigRanks.ENABLED.getBoolean() ? PLAYER_MAP.get(profile.getId()) : null;
-        return (r == null) ? (LMServerUtils.isOP(profile) ? defaultOPRank : defaultPlayerRank) : r;
+        return (r == null) ? (ServerUtils.isOP(profile) ? defaultOPRank : defaultPlayerRank) : r;
     }
 
     public static void addRank(Rank rank)
@@ -122,7 +122,7 @@ public class Ranks
 
         if(FTBUConfigRanks.ENABLED.getBoolean())
         {
-            JsonElement e = LMJsonUtils.fromJson(new File(LMUtils.folderLocal, "ftbu/ranks.json"));
+            JsonElement e = JsonUtils.fromJson(new File(LMUtils.folderLocal, "ftbu/ranks.json"));
 
             if(e.isJsonObject())
             {
@@ -130,9 +130,9 @@ public class Ranks
 
                 if(o.has("default_rank"))
                 {
-                    LMFileUtils.delete(new File(LMUtils.folderLocal, "ftbu/readme.txt"));
-                    LMFileUtils.delete(new File(LMUtils.folderLocal, "ftbu/ranks_example.json"));
-                    LMFileUtils.delete(new File(LMUtils.folderLocal, "ftbu/default_rank_config.json"));
+                    FileUtils.delete(new File(LMUtils.folderLocal, "ftbu/readme.txt"));
+                    FileUtils.delete(new File(LMUtils.folderLocal, "ftbu/ranks_example.json"));
+                    FileUtils.delete(new File(LMUtils.folderLocal, "ftbu/default_rank_config.json"));
                 }
                 else if(o.has("default_ranks") && o.has("ranks"))
                 {
@@ -154,13 +154,13 @@ public class Ranks
 
             try
             {
-                e = LMJsonUtils.fromJson(new File(LMUtils.folderLocal, "ftbu/player_ranks.json"));
+                e = JsonUtils.fromJson(new File(LMUtils.folderLocal, "ftbu/player_ranks.json"));
 
                 if(e.isJsonObject())
                 {
                     for(Map.Entry<String, JsonElement> entry : e.getAsJsonObject().entrySet())
                     {
-                        UUID id = LMStringUtils.fromString(entry.getKey());
+                        UUID id = StringUtils.fromString(entry.getKey());
                         if(id != null)
                         {
                             String s = entry.getValue().getAsString();
@@ -221,11 +221,11 @@ public class Ranks
 
         o.add("ranks", o1);
 
-        LMJsonUtils.toJson(new File(LMUtils.folderLocal, "ftbu/ranks.json"), o);
+        JsonUtils.toJson(new File(LMUtils.folderLocal, "ftbu/ranks.json"), o);
 
         final JsonObject o2 = new JsonObject();
-        PLAYER_MAP.forEach((key, value) -> o2.add(LMStringUtils.fromUUID(key), new JsonPrimitive(value.getName())));
-        LMJsonUtils.toJson(new File(LMUtils.folderLocal, "ftbu/player_ranks.json"), o2);
+        PLAYER_MAP.forEach((key, value) -> o2.add(StringUtils.fromUUID(key), new JsonPrimitive(value.getName())));
+        JsonUtils.toJson(new File(LMUtils.folderLocal, "ftbu/player_ranks.json"), o2);
     }
 
     static boolean checkCommandPermission(MinecraftServer server, ICommandSender sender, ICommand parent, String permission)
@@ -274,7 +274,7 @@ public class Ranks
             }
         }
 
-        Collections.sort(allNodes, LMStringUtils.ID_COMPARATOR);
+        Collections.sort(allNodes, StringUtils.ID_COMPARATOR);
         List<String> list = new ArrayList<>();
 
         try
@@ -304,7 +304,7 @@ public class Ranks
             }
 
             list.add("</table></body></html>");
-            LMFileUtils.save(new File(LMUtils.folderLocal, "ftbu/all_permissions.html"), list);
+            FileUtils.save(new File(LMUtils.folderLocal, "ftbu/all_permissions.html"), list);
         }
         catch(Exception ex)
         {
@@ -312,7 +312,7 @@ public class Ranks
         }
 
         List<IRankConfig> sortedRankConfigs = new ArrayList<>(FTBLibIntegration.API.getRankConfigRegistry().values());
-        Collections.sort(sortedRankConfigs, LMStringUtils.ID_COMPARATOR);
+        Collections.sort(sortedRankConfigs, StringUtils.ID_COMPARATOR);
 
         try
         {
@@ -339,7 +339,7 @@ public class Ranks
 
                     for(String s : infoList)
                     {
-                        list.add("<li>" + LMStringUtils.removeFormatting(s) + "</li>");
+                        list.add("<li>" + StringUtils.removeFormatting(s) + "</li>");
                     }
 
                     infoList.clear();
@@ -348,7 +348,7 @@ public class Ranks
                     {
                         list.add("<li>Variants:<ul>");
                         variants = new ArrayList<>(variants);
-                        Collections.sort(variants, LMStringUtils.IGNORE_CASE_COMPARATOR);
+                        Collections.sort(variants, StringUtils.IGNORE_CASE_COMPARATOR);
 
                         for(String s : variants)
                         {
@@ -392,7 +392,7 @@ public class Ranks
             }
 
             list.add("</table></body></html>");
-            LMFileUtils.save(new File(LMUtils.folderLocal, "ftbu/all_configs.html"), list);
+            FileUtils.save(new File(LMUtils.folderLocal, "ftbu/all_configs.html"), list);
 
             list.clear();
             list.add(PermissionAPI.getPermissionHandler().getRegisteredNodes().size() + " nodes in total");
@@ -404,7 +404,7 @@ public class Ranks
             }
 
             Collections.sort(list);
-            LMFileUtils.save(new File(LMUtils.folderLocal, "ftbu/all_permissions_full_list.txt"), list);
+            FileUtils.save(new File(LMUtils.folderLocal, "ftbu/all_permissions_full_list.txt"), list);
         }
         catch(Exception ex)
         {

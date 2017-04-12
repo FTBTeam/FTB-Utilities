@@ -2,9 +2,9 @@ package com.feed_the_beast.ftbu.net;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
-import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
+import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
@@ -43,7 +43,7 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
     }
 
     @Override
-    public LMNetworkWrapper getWrapper()
+    public NetworkWrapper getWrapper()
     {
         return FTBUNetHandler.NET;
     }
@@ -117,7 +117,7 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
             }
         }
 
-        FTBUPlayerEventHandler.updateChunkMessage((EntityPlayerMP) player, new ChunkDimPos(MathHelperLM.chunk(player.posX), MathHelperLM.chunk(player.posZ), player.dimension));
+        FTBUPlayerEventHandler.updateChunkMessage((EntityPlayerMP) player, new ChunkDimPos(MathUtils.chunk(player.posX), MathUtils.chunk(player.posZ), player.dimension));
         new MessageClaimedChunksUpdate(m.startX, m.startZ, player).sendTo(player);
     }
 }

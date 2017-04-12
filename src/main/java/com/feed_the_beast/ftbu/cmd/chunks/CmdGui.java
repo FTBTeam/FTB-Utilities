@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.cmd.chunks;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.net.MessageOpenClaimedChunksGui;
@@ -13,7 +13,7 @@ import net.minecraft.server.MinecraftServer;
 /**
  * Created by LatvianModder on 26.02.2017.
  */
-public class CmdGui extends CommandLM
+public class CmdGui extends CmdBase
 {
     @Override
     public String getName()

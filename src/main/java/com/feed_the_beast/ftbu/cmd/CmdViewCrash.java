@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.cmd;
 
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
-import com.feed_the_beast.ftbl.lib.util.LMFileUtils;
+import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import net.minecraft.command.CommandException;
@@ -19,7 +19,7 @@ import java.util.Arrays;
 /**
  * Created by LatvianModder on 28.04.2016.
  */
-public class CmdViewCrash extends CommandLM
+public class CmdViewCrash extends CmdBase
 {
     @Override
     public String getName()
@@ -70,7 +70,7 @@ public class CmdViewCrash extends CommandLM
         {
             File file = new File(LMUtils.folderMinecraft, "crash-reports/" + args[0]);
 
-            for(String s : LMFileUtils.load(file))
+            for(String s : FileUtils.load(file))
             {
                 page.println(s);
             }

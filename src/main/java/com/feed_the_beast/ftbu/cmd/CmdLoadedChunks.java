@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.cmd;
 
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  * Created by LatvianModder on 28.04.2016.
  */
-public class CmdLoadedChunks extends CommandLM
+public class CmdLoadedChunks extends CmdBase
 {
     @Override
     public String getName()

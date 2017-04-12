@@ -6,9 +6,9 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
+import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
@@ -91,7 +91,7 @@ public class MessageJMUpdate extends MessageToClient<MessageJMUpdate>
     }
 
     @Override
-    public LMNetworkWrapper getWrapper()
+    public NetworkWrapper getWrapper()
     {
         return FTBUNetHandler.NET;
     }
@@ -110,7 +110,7 @@ public class MessageJMUpdate extends MessageToClient<MessageJMUpdate>
         while(--s >= 0)
         {
             ClaimedChunks.Team team = new ClaimedChunks.Team();
-            team.ownerId = LMNetUtils.readUUID(io);
+            team.ownerId = NetUtils.readUUID(io);
             team.formattedName = ByteBufUtils.readUTF8String(io);
             team.color = EnumTeamColor.get(io.readUnsignedByte());
             teams.put(team.ownerId, team);
@@ -123,7 +123,7 @@ public class MessageJMUpdate extends MessageToClient<MessageJMUpdate>
 
             if(chunkData[i].hasUpgrade(ChunkUpgrade.CLAIMED))
             {
-                chunkData[i].team = teams.get(LMNetUtils.readUUID(io));
+                chunkData[i].team = teams.get(NetUtils.readUUID(io));
             }
         }
     }
@@ -138,7 +138,7 @@ public class MessageJMUpdate extends MessageToClient<MessageJMUpdate>
 
         for(ClaimedChunks.Team t : teams.values())
         {
-            LMNetUtils.writeUUID(io, t.ownerId);
+            NetUtils.writeUUID(io, t.ownerId);
             ByteBufUtils.writeUTF8String(io, t.formattedName);
             io.writeByte(t.color.ordinal());
         }
@@ -149,7 +149,7 @@ public class MessageJMUpdate extends MessageToClient<MessageJMUpdate>
 
             if(data.hasUpgrade(ChunkUpgrade.CLAIMED))
             {
-                LMNetUtils.writeUUID(io, data.team.ownerId);
+                NetUtils.writeUUID(io, data.team.ownerId);
             }
         }
     }

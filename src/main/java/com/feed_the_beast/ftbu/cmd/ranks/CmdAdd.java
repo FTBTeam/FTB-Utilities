@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.cmd.ranks;
 
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.feed_the_beast.ftbu.ranks.DefaultPlayerRank;
@@ -13,7 +13,7 @@ import net.minecraft.server.MinecraftServer;
 /**
  * Created by LatvianModder on 25.11.2016.
  */
-public class CmdAdd extends CommandLM
+public class CmdAdd extends CmdBase
 {
     @Override
     public String getName()

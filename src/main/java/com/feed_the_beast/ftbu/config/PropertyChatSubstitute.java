@@ -2,8 +2,8 @@ package com.feed_the_beast.ftbu.config;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.config.PropertyBase;
-import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
+import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -89,7 +89,7 @@ public class PropertyChatSubstitute extends PropertyBase
             if(o1.has("key") && o1.has("val"))
             {
                 key = o1.get("key").getAsString();
-                value = LMJsonUtils.deserializeTextComponent(o1.get("val"));
+                value = JsonUtils.deserializeTextComponent(o1.get("val"));
             }
         }
     }
@@ -99,7 +99,7 @@ public class PropertyChatSubstitute extends PropertyBase
     {
         JsonObject o = new JsonObject();
         o.add("key", new JsonPrimitive(key));
-        o.add("val", LMJsonUtils.serializeTextComponent(value));
+        o.add("val", JsonUtils.serializeTextComponent(value));
         return o;
     }
 
@@ -107,13 +107,13 @@ public class PropertyChatSubstitute extends PropertyBase
     public void writeData(ByteBuf data)
     {
         ByteBufUtils.writeUTF8String(data, key);
-        LMNetUtils.writeTextComponent(data, value);
+        NetUtils.writeTextComponent(data, value);
     }
 
     @Override
     public void readData(ByteBuf data)
     {
         key = ByteBufUtils.readUTF8String(data);
-        value = LMNetUtils.readTextComponent(data);
+        value = NetUtils.readTextComponent(data);
     }
 }

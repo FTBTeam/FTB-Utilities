@@ -2,7 +2,8 @@ package com.feed_the_beast.ftbu.ranks;
 
 import com.feed_the_beast.ftbl.api.IRankConfig;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.lib.info.InfoPage;
+import com.feed_the_beast.ftbl.lib.client.DrawableItem;
+import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
@@ -23,6 +24,8 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -49,7 +52,7 @@ public class Ranks
     private static final Map<String, Rank> RANKS = new LinkedHashMap<>();
     private static final Collection<String> RANK_NAMES = new ArrayList<>();
     private static final Map<UUID, IRank> PLAYER_MAP = new HashMap<>();
-    public static final InfoPage INFO_PAGE = new InfoPage("ranks_info").setTitle(FTBLibLang.ALL_PERMISSIONS.textComponent());
+    public static final GuidePage INFO_PAGE = new GuidePage("ranks_info").setTitle(FTBLibLang.ALL_PERMISSIONS.textComponent()).setIcon(new DrawableItem(new ItemStack(Items.DIAMOND_SWORD)));
     private static IRank defaultPlayerRank, defaultOPRank;
 
     @Nullable

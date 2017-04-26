@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbl.lib.info.InfoPage;
+import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
@@ -40,7 +40,7 @@ public class CmdLoadedChunks extends CmdBase
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-        InfoPage page = new InfoPage("loaded_chunks").setTitle(new TextComponentString("Loaded Chunks")); // TODO: Lang
+        GuidePage page = new GuidePage("loaded_chunks").setTitle(new TextComponentString("Loaded Chunks")); // TODO: Lang
 
         for(WorldServer w : DimensionManager.getWorlds())
         {
@@ -65,11 +65,11 @@ public class CmdLoadedChunks extends CmdBase
             }
 
             int dimId = w.provider.getDimension();
-            InfoPage dim = page.getSub(Integer.toString(dimId)).setTitle(new TextComponentString(w.provider.getDimensionType().getName() + " [" + (dimId == 0 ? "DIM0" : w.provider.getSaveFolder()) + "]"));
+            GuidePage dim = page.getSub(Integer.toString(dimId)).setTitle(new TextComponentString(w.provider.getDimensionType().getName() + " [" + (dimId == 0 ? "DIM0" : w.provider.getSaveFolder()) + "]"));
 
             for(Map.Entry<String, Collection<ChunkPos>> e1 : chunksMap.entrySet())
             {
-                InfoPage mod = dim.getSub(e1.getKey()).setTitle(new TextComponentString(e1.getKey() + " [" + e1.getValue().size() + "]"));
+                GuidePage mod = dim.getSub(e1.getKey()).setTitle(new TextComponentString(e1.getKey() + " [" + e1.getValue().size() + "]"));
                 for(ChunkPos c : e1.getValue())
                 {
                     StringBuilder owner = new StringBuilder();
@@ -111,6 +111,6 @@ public class CmdLoadedChunks extends CmdBase
         }
 
         page.cleanup();
-        FTBLibIntegration.API.displayInfoGui(ep, page);
+        FTBLibIntegration.API.displayGuide(ep, page);
     }
 }

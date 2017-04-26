@@ -107,31 +107,39 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
             return b;
         }
 
+        b = getRawBadge(playerId);
+        BADGE_CACHE.put(playerId, b);
+        return b;
+    }
+
+    private static String getRawBadge(UUID playerId)
+    {
         IForgePlayer player = FTBLibIntegration.API.getUniverse().getPlayer(playerId);
+
+        if(player == null || player.isFake())
+        {
+            return "";
+        }
+
         FTBUPlayerData data = FTBUPlayerData.get(player);
 
         if(data == null || !data.renderBadge.getBoolean())
         {
-            b = "";
+            return "";
         }
         else if(!data.disableGlobalBadge.getBoolean())
         {
             try
             {
-                b = StringUtils.readString(new URL(BADGE_BASE_URL + StringUtils.fromUUID(playerId)).openStream());
+                return StringUtils.readString(new URL(BADGE_BASE_URL + StringUtils.fromUUID(playerId)).openStream());
             }
             catch(Exception ex)
             {
-                b = FAILED_BADGE;
+                return FAILED_BADGE;
             }
         }
-        else
-        {
-            b = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(player.getProfile(), FTBUPermissions.BADGE).getString();
-        }
 
-        BADGE_CACHE.put(playerId, b);
-        return b;
+        return FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(player.getProfile(), FTBUPermissions.BADGE).getString();
     }
 
     public static void reloadServerBadges()
@@ -403,10 +411,16 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
     @Override
     public void deserializeNBT(NBTBase nbt0)
     {
-        NBTTagCompound nbt = (NBTTagCompound) nbt0;
         nextChunkloaderUpdate = System.currentTimeMillis() + 10000L;
-
         warps.clear();
+        nextWebApiUpdate = 0L;
+
+        if(!(nbt0 instanceof NBTTagCompound))
+        {
+            return;
+        }
+
+        NBTTagCompound nbt = (NBTTagCompound) nbt0;
 
         if(nbt.hasKey("Warps"))
         {
@@ -446,8 +460,6 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
                 }
             }
         }
-
-        nextWebApiUpdate = 0L;
     }
 
     @Override

@@ -1,3 +1,32 @@
 [
-	"$wip"
+	"# $ftbu.guide.ranks.terminology",
+	null,
+	"## $ftbu.guide.ranks.terminology.ranks",
+	"$ftbu.guide.ranks.terminology.ranks.p1",
+	null,
+	"$ftbu.guide.ranks.terminology.ranks.p2",
+	null,
+	"## $ftbu.guide.ranks.terminology.inheritance",
+	"$ftbu.guide.ranks.terminology.inheritance.p1",
+	null,
+	"$ftbu.guide.ranks.terminology.inheritance.p2",
+	null,
+	"## $ftbu.guide.ranks.terminology.permission",
+	"$ftbu.guide.ranks.terminology.permission.p1",
+	null,
+	"$ftbu.guide.ranks.terminology.permission.p2",
+	null,
+	"$ftbu.guide.ranks.terminology.permission.p3",
+	null,
+	"## $ftbu.guide.ranks.terminology.uuid",
+	"$ftbu.guide.ranks.terminology.uuid.p1",
+	{
+		"id": "list",
+		"type": "code",
+		"list": [
+			"5afb9a5b207d480e887967bc848f9a8f"
+		]
+	},
+	null,
+	"$ftbu.guide.ranks.terminology.uuid.p2"
 ]

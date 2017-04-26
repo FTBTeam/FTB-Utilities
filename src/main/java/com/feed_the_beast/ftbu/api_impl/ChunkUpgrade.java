@@ -15,7 +15,7 @@ public class ChunkUpgrade extends FinalIDObject implements IChunkUpgrade
     public static final IChunkUpgrade NO_PVP = new ChunkUpgrade("no_pvp", 2);
 
     // For internal use only upgrades/flags
-    public static final IChunkUpgrade ACTUALLY_LOADED = new ChunkUpgrade("actually_loaded", 25);
+    public static final IChunkUpgrade SHOULD_FORCE = new ChunkUpgrade("should_force", 25);
     public static final IChunkUpgrade FORCED = new ChunkUpgrade("forced", 26);
     public static final IChunkUpgrade IS_OWNER = new ChunkUpgrade("is_owner", 27);
     public static final IChunkUpgrade CAN_CLAIM = new ChunkUpgrade("can_claim", 28);

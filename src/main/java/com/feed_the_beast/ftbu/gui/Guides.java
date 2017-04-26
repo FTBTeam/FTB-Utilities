@@ -1,23 +1,23 @@
 package com.feed_the_beast.ftbu.gui;
 
+import com.feed_the_beast.ftbl.api.events.ClientGuideEvent;
+import com.feed_the_beast.ftbl.api.guide.GuideFormat;
+import com.feed_the_beast.ftbl.api.guide.GuideType;
+import com.feed_the_beast.ftbl.api.guide.SpecialGuideButton;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
-import com.feed_the_beast.ftbl.lib.info.InfoPage;
-import com.feed_the_beast.ftbl.lib.info.InfoPageHelper;
-import com.feed_the_beast.ftbl.lib.info.ItemPageIconRenderer;
-import com.feed_the_beast.ftbl.lib.info.SpecialInfoButton;
-import com.feed_the_beast.ftbl.lib.info.TexturePageIconRenderer;
+import com.feed_the_beast.ftbl.lib.guide.GuidePage;
+import com.feed_the_beast.ftbl.lib.guide.GuidePageHelper;
+import com.feed_the_beast.ftbl.lib.guide.GuideTitlePage;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.api.guide.ClientGuideEvent;
-import com.feed_the_beast.ftbu.api.guide.GuideFormat;
-import com.feed_the_beast.ftbu.api.guide.IGuide;
+import com.feed_the_beast.ftbu.cmd.CmdInternalClient;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
@@ -27,11 +27,16 @@ import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
 
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,11 +48,11 @@ public enum Guides implements IResourceManagerReloadListener
 {
     INSTANCE;
 
-    private static final InfoPage INFO_PAGE = new InfoPage("guides").setSpecialButton(new SpecialInfoButton(GuiLang.BUTTON_REFRESH.textComponent(), GuiIcons.REFRESH, button -> refresh()));
+    private static final GuidePage INFO_PAGE = new GuidePage("guides").setSpecialButton(new SpecialGuideButton(GuiLang.BUTTON_REFRESH.textComponent(), GuiIcons.REFRESH, new ClickEvent(ClickEvent.Action.RUN_COMMAND, CmdInternalClient.CMD_REFRESH_GUIDE)));
 
     private static boolean isReloading = false;
     private static Thread reloadingThread = null;
-    private static GuiInfo cachedGui = null;
+    private static GuiGuide cachedGui = null;
     public static final Map<String, String> SUBSTITUTE_CACHE = new HashMap<>();
 
     public static void setShouldReload()
@@ -93,7 +98,7 @@ public enum Guides implements IResourceManagerReloadListener
                     public void finishLoading()
                     {
                         reloadingThread = null;
-                        cachedGui = new GuiInfo(INFO_PAGE);
+                        cachedGui = new GuiGuide(INFO_PAGE);
                         cachedGui.openGui();
                     }
                 }.openGui();
@@ -112,7 +117,7 @@ public enum Guides implements IResourceManagerReloadListener
         INFO_PAGE.clear();
         INFO_PAGE.setTitle(new TextComponentString("Guides")); //TODO: Lang
 
-        List<IGuide> guides = new ArrayList<>();
+        List<GuideTitlePage> guides = new ArrayList<>();
         SUBSTITUTE_CACHE.clear();
 
         for(String domain : resourceManager.getResourceDomains())
@@ -124,17 +129,17 @@ public enum Guides implements IResourceManagerReloadListener
 
                 if(infoFile.isJsonObject())
                 {
-                    InfoPageGuide guide = new InfoPageGuide(domain, infoFile.getAsJsonObject());
+                    GuideTitlePage guide = new GuideTitlePage(domain, infoFile.getAsJsonObject());
                     GuideFormat format = guide.getFormat();
 
                     if(format == GuideFormat.UNSUPPORTED)
                     {
-                        guide.getPage().println("Unsupported format!"); //TODO: Lang
-                        guide.getPage().println("Please update FTBUtilities or contact mod author!"); //TODO: Lang
+                        guide.println("Unsupported format!"); //TODO: Lang
+                        guide.println("Please update FTBUtilities or contact mod author!"); //TODO: Lang
                     }
                     else
                     {
-                        loadTree(resourceManager, domain, guide.getPage(), format, "guide");
+                        loadTree(resourceManager, domain, guide, format, "guide");
                     }
 
                     guides.add(guide);
@@ -151,13 +156,26 @@ public enum Guides implements IResourceManagerReloadListener
             }
         }
 
-        Map<String, IGuide> eventMap = new HashMap<>();
-        MinecraftForge.EVENT_BUS.post(new ClientGuideEvent(eventMap, resourceManager));
+        Map<String, GuideTitlePage> eventMap = new HashMap<>();
+
+        MinecraftForge.EVENT_BUS.post(new ClientGuideEvent(eventMap, resourceManager, modid ->
+        {
+            ModContainer mod = Loader.instance().getIndexedModList().get(modid);
+            if(mod == null)
+            {
+                return new GuideTitlePage(modid, GuideType.MOD, Collections.emptyList(), Collections.singleton("Autogenerated"));
+            }
+            else
+            {
+                return new GuideTitlePage(mod);
+            }
+        }));
+
         guides.addAll(eventMap.values());
 
-        for(IGuide guide : guides)
+        for(GuideTitlePage guide : guides)
         {
-            INFO_PAGE.addSub(guide.getPage());
+            INFO_PAGE.addSub(guide);
         }
 
         INFO_PAGE.cleanup();
@@ -169,20 +187,23 @@ public enum Guides implements IResourceManagerReloadListener
         return c == '_' || c == '.' || c == '{' || c == '}' || StringUtils.isTextChar(c, true);
     }
 
-    private static void loadTree(IResourceManager resourceManager, String domain, InfoPage page, GuideFormat format, String parentDir) throws Exception
+    private static void loadTree(IResourceManager resourceManager, String domain, GuidePage page, GuideFormat format, String parentDir) throws Exception
     {
+        List<String> text = Collections.emptyList();
         try
         {
             switch(format)
             {
                 case JSON:
-                    for(JsonElement e : JsonUtils.fromJson(replaceSubstitutes(StringUtils.readString(resourceManager.getResource(new ResourceLocation(domain, parentDir + "/index.json")).getInputStream()))).getAsJsonArray())
+                    text = Collections.singletonList(replaceSubstitutes(StringUtils.readString(resourceManager.getResource(new ResourceLocation(domain, parentDir + "/index.json")).getInputStream())));
+                    for(JsonElement e : JsonUtils.fromJson(text.get(0)).getAsJsonArray())
                     {
-                        page.println(InfoPageHelper.createLine(page, e));
+                        page.println(GuidePageHelper.createLine(page, e));
                     }
                     break;
                 case MD:
-                    for(String s : StringUtils.readStringList(resourceManager.getResource(new ResourceLocation(domain, parentDir + "/README.md")).getInputStream()))
+                    text = StringUtils.readStringList(resourceManager.getResource(new ResourceLocation(domain, parentDir + "/README.md")).getInputStream());
+                    for(String s : text)
                     {
                         //FIXME: Support more than just text
                         page.println(s);
@@ -194,8 +215,20 @@ public enum Guides implements IResourceManagerReloadListener
         {
             if(!(ex instanceof FileNotFoundException))
             {
-                FTBUFinals.LOGGER.error("Failed to load " + page.getFullID() + ": " + ex);
-                //ex.printStackTrace();
+                page.getTitle().getStyle().setColor(TextFormatting.RED);
+                page.println("Error:");
+                page.println(ex);
+
+                if(!text.isEmpty())
+                {
+                    page.println(null);
+                    page.println("Source:");
+
+                    for(String s : text)
+                    {
+                        page.println(s.replace("\n", ""));
+                    }
+                }
             }
         }
 
@@ -203,22 +236,21 @@ public enum Guides implements IResourceManagerReloadListener
         {
             for(JsonElement e : JsonUtils.fromJson(new InputStreamReader(resourceManager.getResource(new ResourceLocation(domain, parentDir + "/pages.json")).getInputStream())).getAsJsonArray())
             {
-                InfoPage page1;
+                GuidePage page1;
 
                 if(e.isJsonObject())
                 {
                     JsonObject o = e.getAsJsonObject();
-                    page1 = new InfoPage(o.get("id").getAsString());
+                    page1 = page.getSub(o.get("id").getAsString());
 
                     if(o.has("icon"))
                     {
-                        page1.setIcon(new TexturePageIconRenderer(new ImageProvider(new ResourceLocation(o.get("icon").getAsString()))));
+                        page1.setIcon(ImageProvider.get(o.get("icon").getAsString()));
                     }
-                    else if(o.has("icon_item"))
+                    if(o.has("button"))
                     {
-                        page1.setIcon(new ItemPageIconRenderer(o.get("icon_item")));
+                        page1.setSpecialButton(new SpecialGuideButton(o.get("button").getAsJsonObject()));
                     }
-
                     if(o.has("lang"))
                     {
                         page1.setTitle(new TextComponentTranslation(o.get("lang").getAsString()));
@@ -227,8 +259,6 @@ public enum Guides implements IResourceManagerReloadListener
                     {
                         page1.setTitle(new TextComponentTranslation(domain + '.' + parentDir.replace('/', '.') + "." + page1.getName()));
                     }
-
-                    page.addSub(page1);
                 }
                 else
                 {
@@ -253,7 +283,6 @@ public enum Guides implements IResourceManagerReloadListener
         StringBuilder builder = new StringBuilder();
         StringBuilder keyBuilder = new StringBuilder();
 
-        //Dont start with first 2 chars
         for(int i = 0; i < text.length(); i++)
         {
             char c = text.charAt(i);
@@ -266,7 +295,7 @@ public enum Guides implements IResourceManagerReloadListener
                 }
                 else
                 {
-                    String value = SUBSTITUTE_CACHE.computeIfAbsent(keyBuilder.substring(1), k -> replaceSubstitutes(StringUtils.translate(k)));
+                    String value = SUBSTITUTE_CACHE.computeIfAbsent(keyBuilder.substring(1), k -> replaceSubstitutes(StringUtils.translate(k).replace('“', '\"').replace('”', '\"').replace("\"", "\\\"")));
 
                     //TODO: Add special values
 
@@ -290,6 +319,6 @@ public enum Guides implements IResourceManagerReloadListener
             }
         }
 
-        return builder.toString();
+        return builder.toString().replace("\t", "  ");
     }
 }

@@ -1,0 +1,25 @@
+[
+	"$ftbu.guide.ranks.badges.more",
+	"$ftbu.guide.ranks.badges.info",
+	{
+		"id": "list",
+		"type": "code",
+		"list": [
+			"server_badges.json"
+		]
+	},
+	null,
+	"$example",
+	{
+		"id": "list",
+		"type": "code",
+		"list": [
+			"{",
+			"	\"5afb9a5b207d480e887967bc848f9a8f\": \"http://files.latmod.com/badges/latmod.png\"",
+			"}"
+		]
+	},
+	null,
+	"$ftbu.guide.ranks.badges.values",
+	"$ftbu.guide.ranks.badges.rank"
+]

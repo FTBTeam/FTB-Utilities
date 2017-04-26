@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbl.lib.info.InfoPage;
+import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
@@ -34,7 +34,7 @@ public class CmdViewCrash extends CmdBase
 
         if(args.length == 0)
         {
-            InfoPage page = new InfoPage("crash_report_list");
+            GuidePage page = new GuidePage("crash_report_list");
 
             try
             {
@@ -60,11 +60,11 @@ public class CmdViewCrash extends CmdBase
                 page.println("Failed to read crash-reports folder!");
             }
 
-            FTBLibIntegration.API.displayInfoGui(ep, page);
+            FTBLibIntegration.API.displayGuide(ep, page);
             return;
         }
 
-        InfoPage page = new InfoPage("crash_report");
+        GuidePage page = new GuidePage("crash_report");
 
         try
         {
@@ -81,6 +81,6 @@ public class CmdViewCrash extends CmdBase
             page.println("Failed to load crash report!");
         }
 
-        FTBLibIntegration.API.displayInfoGui(ep, page);
+        FTBLibIntegration.API.displayGuide(ep, page);
     }
 }

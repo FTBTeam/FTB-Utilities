@@ -32,6 +32,6 @@ public class MessageRequestServerInfo extends MessageToServer<MessageRequestServ
     @Override
     public void onMessage(MessageRequestServerInfo m, EntityPlayer player)
     {
-        FTBLibIntegration.API.displayInfoGui(player, ServerInfoPage.getPageForPlayer(player));
+        FTBLibIntegration.API.displayGuide(player, ServerInfoPage.getPageForPlayer(player));
     }
 }

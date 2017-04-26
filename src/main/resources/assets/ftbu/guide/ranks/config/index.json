@@ -1,0 +1,34 @@
+[
+	"# $ftbu.guide.ranks.config.enabling_ranks",
+	{
+		"id": "list",
+		"list": [
+			{"text": "[$ftbu.guide.ranks.config.enabling_ranks.click]", "clickEvent": {"action": "run_command", "value": "/ftb edit_config ftbu ranks.enabled true"}, "color": "dark_green"},
+			"$ftbu.guide.ranks.config.enabling_ranks.config"
+		]
+	},
+	null,
+	"# $ftbu.guide.ranks.config.features",
+	"## $ftbu.guide.ranks.config.builtin",
+	"$ftbu.guide.ranks.config.builtin.info",
+	{
+		"id": "list",
+		"list": [
+			"builtin_player",
+			"builtin_op"
+		]
+	},
+	"$ftbu.guide.ranks.config.builtin.perms",
+	null,
+	"## $ftbu.guide.ranks.config.def_ranks",
+	"$ftbu.guide.ranks.config.def_ranks.info",
+	"## $example",
+	{
+		"id": "list",
+		"type": "code",
+		"list": [
+			"\"player\": \"member\", //Originally \"player\"",
+			"\"op\": \"admin\" //Originally \"op\""
+		]
+	}
+]

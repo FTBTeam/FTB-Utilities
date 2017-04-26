@@ -20,12 +20,6 @@ public class CmdKickme extends CmdBase
     }
 
     @Override
-    public String getUsage(ICommandSender sender)
-    {
-        return "commands.kick.usage";
-    }
-
-    @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         if(server.isDedicatedServer())

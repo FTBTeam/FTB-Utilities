@@ -1,0 +1,17 @@
+[
+	{
+		"id": "list",
+		"ordering": "none",
+		"list": [
+			"local/",
+			"	ftbu/",
+			"		all_permissions.html - $ftbu.guide.ranks.file_structure.all_permissions",
+			"		all_permissions_full_list.txt - $ftbu.guide.ranks.file_structure.all_permissions_full_list",
+			"		config.json - $ftbu.guide.ranks.file_structure.config",
+			"		player_ranks.json - $ftbu.guide.ranks.file_structure.player_ranks",
+			"		ranks.json - $ftbu.guide.ranks.file_structure.ranks",
+			"		server_badges.json - $ftbu.guide.ranks.file_structure.server_badges",
+			"		all_configs.html - $ftbu.guide.ranks.file_structure.all_configs"
+		]
+	}
+]

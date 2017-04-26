@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbu.api.IFTBUtilitiesPlugin;
 import com.feed_the_beast.ftbu.api.IFTBUtilitiesRegistry;
 import com.feed_the_beast.ftbu.api.ILeaderboardData;
@@ -8,6 +9,7 @@ import com.feed_the_beast.ftbu.api.NodeEntry;
 import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
+import com.feed_the_beast.ftbu.cmd.CmdInternalClient;
 import net.minecraft.stats.StatBase;
 import net.minecraft.util.text.ITextComponent;
 
@@ -43,10 +45,14 @@ public class FTBUCommon implements IFTBUtilitiesRegistry // FTBUClient
     {
     }
 
-    @Override
-    public void addLeaderboard(StatBase stat, @Nullable Comparator<IForgePlayer> comparator, ILeaderboardData data, ITextComponent component)
+    public void registerClientCommands(CmdInternalClient cmd)
     {
-        LEADERBOARDS.add(new Leaderboard(stat, comparator, data, component));
+    }
+
+    @Override
+    public void addLeaderboard(StatBase stat, @Nullable Comparator<IForgePlayer> comparator, ILeaderboardData data, ITextComponent component, IDrawableObject icon)
+    {
+        LEADERBOARDS.add(new Leaderboard(stat, comparator, data, component, icon));
     }
 
     @Override

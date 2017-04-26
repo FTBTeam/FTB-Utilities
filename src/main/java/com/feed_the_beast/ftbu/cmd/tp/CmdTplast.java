@@ -23,12 +23,6 @@ public class CmdTplast extends CmdBase
     }
 
     @Override
-    public String getUsage(ICommandSender ics)
-    {
-        return '/' + getName() + " [who] <to>";
-    }
-
-    @Override
     public boolean isUsernameIndex(String[] args, int i)
     {
         return i == 0;

@@ -8,16 +8,9 @@ import net.minecraft.server.MinecraftServer;
 
 public class CmdTrashCan extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdTrashCan()
     {
-        return "trash_can";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
+        super("trash_can", Level.ALL);
     }
 
     @Override

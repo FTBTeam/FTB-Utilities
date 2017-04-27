@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
+import com.feed_the_beast.ftbl.lib.cmd.CmdTreeBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.InvUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
@@ -15,25 +16,17 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.server.command.CommandTreeBase;
 
 import javax.annotation.Nullable;
 import java.io.File;
 
-public class CmdInv extends CommandTreeBase
+public class CmdInv extends CmdTreeBase
 {
     public static class CmdView extends CmdBase
     {
-        @Override
-        public String getName()
+        public CmdView()
         {
-            return "view";
-        }
-
-        @Override
-        public String getUsage(ICommandSender ics)
-        {
-            return '/' + getName() + " <player>";
+            super("view", Level.OP);
         }
 
         @Override
@@ -54,16 +47,9 @@ public class CmdInv extends CommandTreeBase
 
     public static class CmdSave extends CmdBase
     {
-        @Override
-        public String getName()
+        public CmdSave()
         {
-            return "save";
-        }
-
-        @Override
-        public String getUsage(ICommandSender ics)
-        {
-            return '/' + getName() + " <player> <file_id>";
+            super("save", Level.OP);
         }
 
         @Override
@@ -75,7 +61,7 @@ public class CmdInv extends CommandTreeBase
         @Override
         public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
-            checkArgs(args, 2, "<player> <ID>");
+            checkArgs(args, 2, "<player> <id>");
             EntityPlayerMP ep = getPlayer(server, sender, args[0]);
             File file = new File(LMUtils.folderLocal, "ftbu/playerinvs/" + StringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
 
@@ -124,16 +110,9 @@ public class CmdInv extends CommandTreeBase
 
     public static class CmdLoad extends CmdBase
     {
-        @Override
-        public String getName()
+        public CmdLoad()
         {
-            return "load";
-        }
-
-        @Override
-        public String getUsage(ICommandSender ics)
-        {
-            return '/' + getName() + " <player> <file_id>";
+            super("load", Level.OP);
         }
 
         @Override
@@ -145,7 +124,7 @@ public class CmdInv extends CommandTreeBase
         @Override
         public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
-            checkArgs(args, 2, "<player> <ID>");
+            checkArgs(args, 2, "<player> <id>");
             EntityPlayerMP ep = getPlayer(server, sender, args[0]);
             File file = new File(LMUtils.folderLocal, "ftbu/playerinvs/" + StringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
 
@@ -194,10 +173,9 @@ public class CmdInv extends CommandTreeBase
 
     public static class CmdList extends CmdBase
     {
-        @Override
-        public String getName()
+        public CmdList()
         {
-            return "list";
+            super("list", Level.OP);
         }
 
         @Override
@@ -208,21 +186,10 @@ public class CmdInv extends CommandTreeBase
 
     public CmdInv()
     {
+        super("inv");
         addSubcommand(new CmdView());
         addSubcommand(new CmdSave());
         addSubcommand(new CmdLoad());
-        addSubcommand(new CmdList());
-    }
-
-    @Override
-    public String getName()
-    {
-        return "inv";
-    }
-
-    @Override
-    public String getUsage(ICommandSender sender)
-    {
-        return "command.ftb.inv.usage";
+        //addSubcommand(new CmdList());
     }
 }

@@ -16,10 +16,9 @@ import net.minecraftforge.common.util.Constants;
 
 public class CmdTplast extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdTplast()
     {
-        return "tpl";
+        super("tpl", Level.OP);
     }
 
     @Override

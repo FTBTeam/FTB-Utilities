@@ -102,5 +102,10 @@ public class FTBUCommands
         {
             command.addSubcommand(new CmdViewCrash());
         }
+
+        if(FTBUConfigCommands.HEAL.getBoolean())
+        {
+            command.addSubcommand(new CmdHeal());
+        }
     }
 }

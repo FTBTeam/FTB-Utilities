@@ -16,16 +16,9 @@ import net.minecraft.server.MinecraftServer;
  */
 public class CmdUnload extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdUnload()
     {
-        return "unload";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
+        super("unload", Level.ALL);
     }
 
     @Override

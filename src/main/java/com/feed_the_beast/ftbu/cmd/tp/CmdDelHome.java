@@ -14,22 +14,9 @@ import java.util.List;
 
 public class CmdDelHome extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdDelHome()
     {
-        return "delhome";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
-    }
-
-    @Override
-    public String getUsage(ICommandSender ics)
-    {
-        return '/' + getName() + " <ID>";
+        super("delhome", Level.ALL);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu;
 
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
@@ -61,18 +60,13 @@ public class FTBU
     {
         PROXY.postInit();
         ForgeChunkManager.setForcedChunkLoadingCallback(INST, LoadedChunkStorage.INSTANCE);
-        Ranks.generateExampleFiles();
     }
 
     @Mod.EventHandler
     public void onServerStarted(FMLServerStartedEvent event)
     {
         Backups.INSTANCE.init();
-
-        if(LMUtils.DEV_ENV)
-        {
-            Ranks.generateExampleFiles();
-        }
+        Ranks.generateExampleFiles();
 
         if(FTBUConfigRanks.OVERRIDE_COMMANDS.getBoolean())
         {

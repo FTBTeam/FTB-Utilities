@@ -14,16 +14,9 @@ import net.minecraft.util.text.TextComponentString;
  */
 public class CmdClaimFor extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdClaimFor()
     {
-        return "claim_for";
-    }
-
-    @Override
-    public String getUsage(ICommandSender ics)
-    {
-        return '/' + getName() + " <player> <chunkX> <chunkZ> [dimension]";
+        super("claim_for", Level.OP);
     }
 
     @Override

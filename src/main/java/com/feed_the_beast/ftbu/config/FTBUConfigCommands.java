@@ -19,6 +19,7 @@ public class FTBUConfigCommands
     public static final PropertyBool KICKME = new PropertyBool(true);
     public static final PropertyBool RANKS = new PropertyBool(true);
     public static final PropertyBool VIEW_CRASH = new PropertyBool(true);
+    public static final PropertyBool HEAL = new PropertyBool(true);
 
     public static void init(IFTBLibRegistry reg)
     {
@@ -36,5 +37,6 @@ public class FTBUConfigCommands
         reg.addConfig(id, "kickme", KICKME);
         reg.addConfig(id, "ranks", RANKS);
         reg.addConfig(id, "view_crash", VIEW_CRASH);
+        reg.addConfig(id, "heal", HEAL);
     }
 }

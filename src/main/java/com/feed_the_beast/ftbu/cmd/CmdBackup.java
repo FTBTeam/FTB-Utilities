@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
+import com.feed_the_beast.ftbl.lib.cmd.CmdTreeBase;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
@@ -9,16 +10,14 @@ import com.feed_the_beast.ftbu.world.backups.Backups;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.server.command.CommandTreeBase;
 
-public class CmdBackup extends CommandTreeBase
+public class CmdBackup extends CmdTreeBase
 {
     public static class CmdStart extends CmdBase
     {
-        @Override
-        public String getName()
+        public CmdStart()
         {
-            return "start";
+            super("start", Level.OP);
         }
 
         @Override
@@ -43,10 +42,9 @@ public class CmdBackup extends CommandTreeBase
 
     public static class CmdStop extends CmdBase
     {
-        @Override
-        public String getName()
+        public CmdStop()
         {
-            return "stop";
+            super("stop", Level.OP);
         }
 
         @Override
@@ -66,10 +64,9 @@ public class CmdBackup extends CommandTreeBase
 
     public static class CmdGetSize extends CmdBase
     {
-        @Override
-        public String getName()
+        public CmdGetSize()
         {
-            return "getsize";
+            super("getsize", Level.OP);
         }
 
         @Override
@@ -83,20 +80,9 @@ public class CmdBackup extends CommandTreeBase
 
     public CmdBackup()
     {
+        super("backup");
         addSubcommand(new CmdStart());
         addSubcommand(new CmdStop());
         addSubcommand(new CmdGetSize());
-    }
-
-    @Override
-    public String getName()
-    {
-        return "backup";
-    }
-
-    @Override
-    public String getUsage(ICommandSender sender)
-    {
-        return "command.ftb.backup.usage";
     }
 }

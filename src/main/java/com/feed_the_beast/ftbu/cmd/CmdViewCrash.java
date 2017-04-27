@@ -21,10 +21,9 @@ import java.util.Arrays;
  */
 public class CmdViewCrash extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdViewCrash()
     {
-        return "view_crash";
+        super("view_crash", Level.OP);
     }
 
     @Override

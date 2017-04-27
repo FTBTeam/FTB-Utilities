@@ -13,6 +13,7 @@ import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
+import com.feed_the_beast.ftbu.ranks.CmdOverride;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import com.feed_the_beast.ftbu.world.backups.Backups;
@@ -207,10 +208,19 @@ public class ServerInfoPage
             }
         }
 
+        CommandTreeBase treeCommand = null;
+
         if(c instanceof CommandTreeBase)
         {
-            CommandTreeBase treeCommand = (CommandTreeBase) c;
+            treeCommand = (CommandTreeBase) c;
+        }
+        else if(c instanceof CmdOverride && ((CmdOverride) c).parent instanceof CommandTreeBase)
+        {
+            treeCommand = (CommandTreeBase) ((CmdOverride) c).parent;
+        }
 
+        if(treeCommand != null)
+        {
             for(ICommand command : treeCommand.getSubCommands())
             {
                 addCommandUsage(sender, page.getSub(command.getName()), level + 1, command);

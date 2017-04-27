@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbu.cmd.tp;
 
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
+import com.feed_the_beast.ftbl.lib.cmd.CmdTreeBase;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
@@ -11,16 +12,14 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.server.command.CommandTreeBase;
 
-public class CmdAdminHome extends CommandTreeBase
+public class CmdAdminHome extends CmdTreeBase
 {
     public static class CmdTP extends CmdBase
     {
-        @Override
-        public String getName()
+        public CmdTP()
         {
-            return "tp";
+            super("tp", Level.OP);
         }
 
         @Override
@@ -56,10 +55,9 @@ public class CmdAdminHome extends CommandTreeBase
 
     public static class CmdList extends CmdBase
     {
-        @Override
-        public String getName()
+        public CmdList()
         {
-            return "list";
+            super("list", Level.OP);
         }
 
         @Override
@@ -79,10 +77,9 @@ public class CmdAdminHome extends CommandTreeBase
 
     public static class CmdRem extends CmdBase
     {
-        @Override
-        public String getName()
+        public CmdRem()
         {
-            return "remove";
+            super("remove", Level.OP);
         }
 
         @Override
@@ -119,20 +116,9 @@ public class CmdAdminHome extends CommandTreeBase
 
     public CmdAdminHome()
     {
+        super("admin_home");
         addSubcommand(new CmdTP());
         addSubcommand(new CmdList());
         addSubcommand(new CmdRem());
-    }
-
-    @Override
-    public String getName()
-    {
-        return "admin_home";
-    }
-
-    @Override
-    public String getUsage(ICommandSender sender)
-    {
-        return "command.ftb.admin_home.usage";
     }
 }

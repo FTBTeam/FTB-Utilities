@@ -15,10 +15,9 @@ import net.minecraft.server.MinecraftServer;
  */
 public class CmdAdd extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdAdd()
     {
-        return "add";
+        super("add", Level.OP);
     }
 
     @Override

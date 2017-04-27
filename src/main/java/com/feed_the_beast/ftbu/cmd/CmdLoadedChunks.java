@@ -30,10 +30,9 @@ import java.util.Map;
  */
 public class CmdLoadedChunks extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdLoadedChunks()
     {
-        return "loaded_chunks_list";
+        super("loaded_chunks_list", Level.ALL);
     }
 
     @Override

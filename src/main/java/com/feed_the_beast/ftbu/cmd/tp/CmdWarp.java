@@ -20,22 +20,9 @@ import java.util.List;
 
 public class CmdWarp extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdWarp()
     {
-        return "warp";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
-    }
-
-    @Override
-    public String getUsage(ICommandSender ics)
-    {
-        return '/' + getName() + " <ID>";
+        super("warp", Level.ALL);
     }
 
     @Override

@@ -321,9 +321,9 @@ public class Ranks
         {
             list.clear();
             list.add("<html><head><title>Rank Configs</title>");
-            list.add("<style>table{font-family: arial, sans-serif;border-collapse: collapse;}td,th{border:1px solid #666666;text-align: left;padding:8px;}</style>");
+            list.add("<style>table{font-family: arial, sans-serif;border-collapse: collapse;}td,th{border:1px solid #666666;text-align: left;padding:8px;}p,ul{margin:4px;}</style>");
             list.add("</head><body><h1>Rank Configs</h1><table>");
-            list.add("<tr><th>Rank Config</th><th>Def Value</th><th>Def OP Value</th><th>Info</th></tr>");
+            list.add("<tr><th>Rank Config</th><th>Def Value</th><th>Info</th></tr>");
 
             List<String> infoList = new ArrayList<>();
 
@@ -338,11 +338,14 @@ public class Ranks
                 if(!infoList.isEmpty() || !variants.isEmpty())
                 {
                     list.add("<ul><li>Default: " + value.getSerializableElement() + "</li>");
-                    list.add("<ul><li>OP Default: " + p.getDefOPValue().getSerializableElement() + "</li>");
+                    list.add("<li>OP Default: " + p.getDefOPValue().getSerializableElement() + "</li>");
 
                     for(String s : infoList)
                     {
-                        list.add("<li>" + StringUtils.removeFormatting(s) + "</li>");
+                        if(!s.contains("Def:"))
+                        {
+                            list.add("<li>" + StringUtils.removeFormatting(s) + "</li>");
+                        }
                     }
 
                     infoList.clear();
@@ -374,20 +377,9 @@ public class Ranks
 
                 if(!info.isEmpty())
                 {
-                    String[] s = info.split("\\\\n");
-
-                    if(s.length > 1)
+                    for(String s1 : info.split("\\\\n"))
                     {
-                        list.add("<ul>");
-                        for(String s1 : s)
-                        {
-                            list.add("<li>" + s1 + "</li>");
-                        }
-                        list.add("</ul>");
-                    }
-                    else
-                    {
-                        list.add(info);
+                        list.add("<p>" + s1 + "</p>");
                     }
                 }
 

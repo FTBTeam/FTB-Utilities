@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu.ranks;
 
+import com.feed_the_beast.ftbl.api.ICustomPermission;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -22,6 +23,15 @@ public class CmdOverride implements ICommand
     public CmdOverride(ICommand c, String pn)
     {
         parent = c;
+        if(c instanceof ICustomPermission)
+        {
+            String s = ((ICustomPermission) c).getCustomPermission();
+
+            if(!s.isEmpty())
+            {
+                pn = s;
+            }
+        }
         permissionNode = pn;
 
         if(c instanceof CommandTreeBase)

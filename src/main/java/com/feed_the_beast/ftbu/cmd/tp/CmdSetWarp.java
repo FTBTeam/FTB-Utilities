@@ -12,10 +12,9 @@ import net.minecraft.util.math.BlockPos;
 
 public class CmdSetWarp extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdSetWarp()
     {
-        return "setwarp";
+        super("setwarp", Level.OP);
     }
 
     @Override

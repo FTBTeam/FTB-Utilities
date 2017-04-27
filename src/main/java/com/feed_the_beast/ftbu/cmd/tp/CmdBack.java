@@ -14,16 +14,9 @@ import net.minecraftforge.server.permission.PermissionAPI;
 
 public class CmdBack extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdBack()
     {
-        return "back";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
+        super("back", Level.ALL);
     }
 
     @Override

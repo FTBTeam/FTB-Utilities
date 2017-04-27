@@ -117,20 +117,20 @@ team_config.ftbu.fake_players.name=Allow Fake Players to Interact With Blocks
 
 # Action Buttons
 sidebar_button.ftbu.toggle.gamemode=Toggle Gamemode
-sidebar_button.ftbu.toggle.gamemode.desc=Toggles between survival and creative mode
+sidebar_button.ftbu.toggle.gamemode.info=Toggles between survival and creative mode
 sidebar_button.ftbu.toggle.rain=Toggle Rain
-sidebar_button.ftbu.toggle.rain.desc=Toggles weather between clear and raining
+sidebar_button.ftbu.toggle.rain.info=Toggles weather between clear and raining
 sidebar_button.ftbu.toggle.day=Set time to Day
-sidebar_button.ftbu.toggle.day.desc=Sets daytime
+sidebar_button.ftbu.toggle.day.info=Sets daytime
 sidebar_button.ftbu.toggle.night=Set time to Night
-sidebar_button.ftbu.toggle.night.desc=Sets nighttime
+sidebar_button.ftbu.toggle.night.info=Sets nighttime
 sidebar_button.ftbu.heal=Heal
-sidebar_button.ftbu.heal.desc=Heals player to max health and saturation, and extinguishes if player is on fire
+sidebar_button.ftbu.heal.info=Heals player to max health and saturation, and extinguishes if player is on fire
 sidebar_button.ftbu.guide=Guide
 sidebar_button.ftbu.server_info=Server Info
 sidebar_button.ftbu.claimed_chunks=Claimed Chunks
 sidebar_button.ftbu.trash_can=Trash Can
-sidebar_button.ftbu.trash_can.desc=Opens a trash can. Items from it disappear after you close the GUI, but will remain there as long as it's open
+sidebar_button.ftbu.trash_can.info=Opens a trash can. Items from it disappear after you close the GUI, but will remain there as long as it's open
 sidebar_button.ftbu.shop=Shop
 sidebar_button.ftbu.mail=Mail
 

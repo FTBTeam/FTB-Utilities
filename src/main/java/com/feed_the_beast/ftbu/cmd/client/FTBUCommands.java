@@ -1,6 +1,14 @@
-package com.feed_the_beast.ftbu.cmd;
+package com.feed_the_beast.ftbu.cmd.client;
 
-import com.feed_the_beast.ftbl.api.events.RegisterFTBCommandsEvent;
+import com.feed_the_beast.ftbu.cmd.CmdBackup;
+import com.feed_the_beast.ftbu.cmd.CmdHeal;
+import com.feed_the_beast.ftbu.cmd.CmdInv;
+import com.feed_the_beast.ftbu.cmd.CmdKickme;
+import com.feed_the_beast.ftbu.cmd.CmdLoadedChunks;
+import com.feed_the_beast.ftbu.cmd.CmdRestart;
+import com.feed_the_beast.ftbu.cmd.CmdServerInfo;
+import com.feed_the_beast.ftbu.cmd.CmdTrashCan;
+import com.feed_the_beast.ftbu.cmd.CmdViewCrash;
 import com.feed_the_beast.ftbu.cmd.chunks.CmdChunks;
 import com.feed_the_beast.ftbu.cmd.ranks.CmdRanks;
 import com.feed_the_beast.ftbu.cmd.tp.CmdAdminHome;
@@ -15,99 +23,98 @@ import com.feed_the_beast.ftbu.cmd.tp.CmdTplast;
 import com.feed_the_beast.ftbu.cmd.tp.CmdWarp;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigCommands;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.server.command.CommandTreeBase;
 
 /**
  * Created by LatvianModder on 09.11.2016.
  */
 public class FTBUCommands
 {
-    @SubscribeEvent
-    public static void registerFTBCommands(RegisterFTBCommandsEvent event)
+    public static void register(CommandTreeBase command, boolean dedi)
     {
-        if(event.isDedicatedServer())
+        if(dedi)
         {
-            event.add(new CmdRestart());
+            command.addSubcommand(new CmdRestart());
         }
 
         if(FTBUConfigCommands.INV.getBoolean())
         {
-            event.add(new CmdInv());
+            command.addSubcommand(new CmdInv());
         }
 
         if(FTBUConfigCommands.WARP.getBoolean())
         {
-            event.add(new CmdWarp());
-            event.add(new CmdSetWarp());
-            event.add(new CmdDelWarp());
+            command.addSubcommand(new CmdWarp());
+            command.addSubcommand(new CmdSetWarp());
+            command.addSubcommand(new CmdDelWarp());
         }
 
         if(FTBUConfigBackups.ENABLED.getBoolean())
         {
-            event.add(new CmdBackup());
+            command.addSubcommand(new CmdBackup());
         }
 
         if(FTBUConfigCommands.HOME.getBoolean())
         {
-            event.add(new CmdAdminHome());
-            event.add(new CmdHome());
-            event.add(new CmdSetHome());
-            event.add(new CmdDelHome());
+            command.addSubcommand(new CmdAdminHome());
+            command.addSubcommand(new CmdHome());
+            command.addSubcommand(new CmdSetHome());
+            command.addSubcommand(new CmdDelHome());
         }
 
         if(FTBUConfigCommands.SERVER_INFO.getBoolean())
         {
-            event.add(new CmdServerInfo());
+            command.addSubcommand(new CmdServerInfo());
         }
 
         if(FTBUConfigCommands.LOADED_CHUNKS.getBoolean())
         {
-            event.add(new CmdLoadedChunks());
+            command.addSubcommand(new CmdLoadedChunks());
         }
 
         if(FTBUConfigCommands.TPL.getBoolean())
         {
-            event.add(new CmdTplast());
+            command.addSubcommand(new CmdTplast());
         }
 
         if(FTBUConfigCommands.TRASH_CAN.getBoolean())
         {
-            event.add(new CmdTrashCan());
+            command.addSubcommand(new CmdTrashCan());
         }
 
         if(FTBUConfigCommands.BACK.getBoolean())
         {
-            event.add(new CmdBack());
+            command.addSubcommand(new CmdBack());
         }
 
         if(FTBUConfigCommands.SPAWN.getBoolean())
         {
-            event.add(new CmdSpawn());
+            command.addSubcommand(new CmdSpawn());
         }
 
         if(FTBUConfigCommands.CHUNKS.getBoolean())
         {
-            event.add(new CmdChunks());
+            command.addSubcommand(new CmdChunks());
         }
 
         if(FTBUConfigCommands.KICKME.getBoolean())
         {
-            event.add(new CmdKickme());
+            command.addSubcommand(new CmdKickme());
         }
 
         if(FTBUConfigCommands.RANKS.getBoolean())
         {
-            event.add(new CmdRanks());
+            command.addSubcommand(new CmdRanks());
         }
 
         if(FTBUConfigCommands.VIEW_CRASH.getBoolean())
         {
-            event.add(new CmdViewCrash());
+            command.addSubcommand(new CmdViewCrash());
         }
 
         if(FTBUConfigCommands.HEAL.getBoolean())
         {
-            event.add(new CmdHeal());
+            command.addSubcommand(new CmdHeal());
         }
     }
 }

@@ -6,8 +6,4 @@ package com.feed_the_beast.ftbu.api;
 public interface IFTBUtilitiesPlugin
 {
     void init(FTBUtilitiesAPI api);
-
-    default void registerCommon(IFTBUtilitiesRegistry reg)
-    {
-    }
 }

@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
+import com.feed_the_beast.ftbu.net.MessageSendWarpList;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -63,6 +64,13 @@ public class CmdWarp extends CmdBase
         }
 
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+
+        if(args[0].equals("gui"))
+        {
+            new MessageSendWarpList(ep).sendTo(ep);
+            return;
+        }
+
         BlockDimPos p = FTBUUniverseData.get().getWarp(args[0]);
         if(p == null)
         {

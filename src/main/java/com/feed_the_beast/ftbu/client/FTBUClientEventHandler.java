@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.client;
 
+import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbu.gui.GuiWarps;
 import com.feed_the_beast.ftbu.gui.Guides;
-import com.feed_the_beast.ftbu.net.MessageRequestWarpList;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -34,7 +34,7 @@ public class FTBUClientEventHandler
         {
             GuiWarps.INSTANCE = new GuiWarps();
             GuiWarps.INSTANCE.openGui();
-            new MessageRequestWarpList().sendToServer();
+            FTBLibClient.execClientCommand("/ftb warps gui");
         }
     }
 }

@@ -202,8 +202,7 @@ ftbu.pack_state.update=Update
 # Guide
 ftbu.guide=FTBUtilities
 ftbu.guide.info=FTBUtilities is a mod all about helping server owners to manage their servers with chunk protection, backups, and a ton of other things!
-ftbu.guide.util_buttons=Utility Buttons
-
+ftbu.guide.faq=Frequently Asked Questions
 ftbu.guide.chunk_claiming=Chunk Claiming
 ftbu.guide.chunk_claiming.intro=FTBUtilities allows you to protect your base with Claimed Chunks. Claimed chunks will be by default accessible to your team and team allies. You can also disable explosions and fake player interactions.
 ftbu.guide.chunk_claiming.opengui=To open the GUI, you must click on the $sidebar_button.ftbu.claimed_chunks sidebar button.
@@ -212,7 +211,6 @@ ftbu.guide.chunk_claiming.list.right_click=Right-click to unclaim a chunk
 ftbu.guide.chunk_claiming.list.shift_left_click=Shift-left-click to load a chunk
 ftbu.guide.chunk_claiming.list.shift_right_click=Shift-right-click to unload a chunk
 ftbu.guide.chunk_claiming.dragmouse=You can drag mouse to claim/unclaim/load/unload larger area at once.
-
 ftbu.guide.ranks=Ranks
 ftbu.guide.ranks.terminology=Terminology
 ftbu.guide.ranks.terminology.ranks=Ranks

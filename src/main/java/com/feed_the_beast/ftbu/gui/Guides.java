@@ -48,7 +48,7 @@ public enum Guides implements IResourceManagerReloadListener
 {
     INSTANCE;
 
-    private static final GuidePage INFO_PAGE = new GuidePage("guides").setSpecialButton(new SpecialGuideButton(GuiLang.BUTTON_REFRESH.textComponent(), GuiIcons.REFRESH, new ClickEvent(ClickEvent.Action.RUN_COMMAND, CmdInternalClient.CMD_REFRESH_GUIDE)));
+    private static final GuidePage INFO_PAGE = new GuidePage("guides").setSpecialButton(new SpecialGuideButton(GuiLang.BUTTON_REFRESH.textComponent(), GuiIcons.REFRESH, new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + CmdInternalClient.CMD + " refresh_guide")));
 
     private static boolean isReloading = false;
     private static Thread reloadingThread = null;

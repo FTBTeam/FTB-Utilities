@@ -9,7 +9,6 @@ import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
-import com.feed_the_beast.ftbu.client.FTBUActions;
 import com.feed_the_beast.ftbu.client.FTBUClientConfig;
 import com.feed_the_beast.ftbu.cmd.FTBUCommands;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
@@ -115,17 +114,6 @@ public enum FTBLibIntegration implements IFTBLibPlugin
     {
         reg.addClientConfig(FTBUFinals.MOD_ID, "render_badges", FTBUClientConfig.RENDER_BADGES);
         reg.addClientConfig(FTBUFinals.MOD_ID, "journeymap_overlay", FTBUClientConfig.JOURNEYMAP_OVERLAY);
-
-        reg.addSidebarButton(FTBUActions.GUIDE);
-        reg.addSidebarButton(FTBUActions.SERVER_INFO);
-        reg.addSidebarButton(FTBUActions.CLAIMED_CHUNKS);
-        reg.addSidebarButton(FTBUActions.TRASH_CAN);
-        reg.addSidebarButton(FTBUActions.SHOP);
-        reg.addSidebarButton(FTBUActions.HEAL);
-        reg.addSidebarButton(FTBUActions.TOGGLE_GAMEMODE);
-        reg.addSidebarButton(FTBUActions.TOGGLE_RAIN);
-        reg.addSidebarButton(FTBUActions.TOGGLE_DAY);
-        reg.addSidebarButton(FTBUActions.TOGGLE_NIGHT);
     }
 
     @Override

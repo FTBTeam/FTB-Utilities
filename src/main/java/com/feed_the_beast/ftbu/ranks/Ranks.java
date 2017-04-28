@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +55,7 @@ public class Ranks
     private static final Map<UUID, IRank> PLAYER_MAP = new HashMap<>();
     public static final GuidePage INFO_PAGE = new GuidePage("ranks_info").setTitle(FTBLibLang.ALL_PERMISSIONS.textComponent()).setIcon(new DrawableItem(new ItemStack(Items.DIAMOND_SWORD)));
     private static IRank defaultPlayerRank, defaultOPRank;
+    public static final Collection<String> CMD_PERMISSION_NODES = new HashSet<>();
 
     @Nullable
     public static IRank getRank(String id, @Nullable IRank nullrank)
@@ -277,7 +279,7 @@ public class Ranks
             }
         }
 
-        Collections.sort(allNodes, StringUtils.ID_COMPARATOR);
+        allNodes.sort(StringUtils.ID_COMPARATOR);
         List<String> list = new ArrayList<>();
 
         try
@@ -390,15 +392,16 @@ public class Ranks
             FileUtils.save(new File(LMUtils.folderLocal, "ftbu/all_configs.html"), list);
 
             list.clear();
-            list.add(PermissionAPI.getPermissionHandler().getRegisteredNodes().size() + " nodes in total");
-            list.add("");
 
             for(String node : PermissionAPI.getPermissionHandler().getRegisteredNodes())
             {
                 list.add(node + ": " + DefaultPermissionHandler.INSTANCE.getDefaultPermissionLevel(node));
             }
 
+            list.addAll(CMD_PERMISSION_NODES);
             Collections.sort(list);
+            list.add(0, "");
+            list.add(0, PermissionAPI.getPermissionHandler().getRegisteredNodes().size() + " nodes in total");
             FileUtils.save(new File(LMUtils.folderLocal, "ftbu/all_permissions_full_list.txt"), list);
         }
         catch(Exception ex)

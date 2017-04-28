@@ -33,6 +33,7 @@ public class CmdOverride implements ICommand
             }
         }
         permissionNode = pn;
+        Ranks.CMD_PERMISSION_NODES.add(permissionNode + ": CMD");
 
         if(c instanceof CommandTreeBase)
         {

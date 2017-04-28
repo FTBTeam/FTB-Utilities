@@ -2,11 +2,11 @@ package com.feed_the_beast.ftbu.integration;
 
 import com.feed_the_beast.ftbl.api.events.ClientGuideEvent;
 import com.feed_the_beast.ftbl.lib.client.DrawableItem;
-import com.feed_the_beast.ftbl.lib.client.DrawableItemList;
+import com.feed_the_beast.ftbl.lib.client.DrawableObjectList;
+import com.feed_the_beast.ftbl.lib.guide.DrawableObjectListLine;
 import com.feed_the_beast.ftbl.lib.guide.GuideExtendedTextLine;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.guide.GuideTitlePage;
-import com.feed_the_beast.ftbl.lib.guide.ItemListLine;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.common.collect.ImmutableList;
@@ -34,8 +34,7 @@ import slimeknights.tconstruct.tools.TinkerMaterials;
 
 import javax.annotation.Nullable;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
 /**
  * Created by LatvianModder on 25.01.2017.
@@ -52,7 +51,7 @@ public class TiCIntegration
     public static void onGuideEvent(ClientGuideEvent event)
     {
         GuideTitlePage guide = event.getModGuide("tconstruct");
-        guide.setIcon(new DrawableItemList(Item.getByNameOrId("tconstruct:toolforge")));
+        guide.setIcon(new DrawableObjectList(Item.getByNameOrId("tconstruct:toolforge")));
 
         GuidePage pageIntro = loadPage(event, "intro");
 
@@ -88,19 +87,19 @@ public class TiCIntegration
 
                 //List<ITrait> traits = material.getAllTraitsForStats(stats.getIdentifier());
                 //allTraits.addAll(traits);
-                List<ItemStack> parts = new ArrayList<>();
+                DrawableObjectList parts = new DrawableObjectList(Collections.emptyList());
 
                 for(IToolPart part : TinkerRegistry.getToolParts())
                 {
                     if(part.hasUseForStat(stats.getIdentifier()))
                     {
-                        parts.add(part.getItemstackWithMaterial(material));
+                        parts.list.add(new DrawableItem(part.getItemstackWithMaterial(material)));
                     }
                 }
 
-                if(parts.size() > 0)
+                if(parts.list.size() > 0)
                 {
-                    page.println(new ItemListLine(parts, 8));
+                    page.println(new DrawableObjectListLine(parts, 8));
                 }
 
                 for(int i = 0; i < stats.getLocalizedInfo().size(); i++)
@@ -136,7 +135,7 @@ public class TiCIntegration
                     GuidePage page = modifiers.getSub(modifier.getIdentifier());
                     page.setTitle(new TextComponentString(modifier.getLocalizedName()));
                     page.println(transformString(modifier.getLocalizedDesc()));
-                    List<ItemStack> displayItems = new ArrayList<>();
+                    DrawableObjectList displayItems = new DrawableObjectList(Collections.emptyList());
 
                     if(o.has("text"))
                     {
@@ -165,14 +164,14 @@ public class TiCIntegration
 
                             if(item instanceof ToolCore)
                             {
-                                displayItems.add(((ToolCore) item).buildItemForRendering(mats.subList(0, ((ToolCore) item).getRequiredComponents().size())));
+                                displayItems.list.add(new DrawableItem(((ToolCore) item).buildItemForRendering(mats.subList(0, ((ToolCore) item).getRequiredComponents().size()))));
                             }
                         }
 
-                        if(!displayItems.isEmpty())
+                        if(!displayItems.list.isEmpty())
                         {
                             page.println(null);
-                            page.println(new ItemListLine(displayItems, 8));
+                            page.println(new DrawableObjectListLine(displayItems, 8));
                         }
                     }
                 }

@@ -30,5 +30,27 @@
 			"\"player\": \"member\", //Originally \"player\"",
 			"\"op\": \"admin\" //Originally \"op\""
 		]
-	}
+	},
+	null,
+	"## $ftbu.guide.ranks.config.perms",
+	"$ftbu.guide.ranks.config.perms.info",
+	"## $example",
+	{
+		"id": "list",
+		"type": "code",
+		"list": [
+			"\"+ftbu.claims.block.edit.minecraft.sand\",",
+			"\"-ftbu.claims.block.edit.minecraft.stone\""
+		]
+	},
+	"$ftbu.guide.ranks.config.perms.example",
+	null,
+	"## $ftbu.guide.ranks.config.cfg",
+	"$ftbu.guide.ranks.config.cfg.info",
+	null,
+	"## $ftbu.guide.ranks.config.chat",
+	"$ftbu.guide.ranks.config.chat.info",
+	{"text": "$ftbu.guide.ranks.config.chat.colors", "clickEvent": {"action": "change_page", "value": "writing_guides.colors"}, "color": "dark_green"},
+	"## $example",
+	["\"syntax\":\"<&2[Admin]&6 \\$name&r>\" - <", {"text": "[Admin]", "color": "dark_green"}, {"text": " LatvianModder", "color": "gold"}, ">"]
 ]

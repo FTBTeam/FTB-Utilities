@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbu.gui;
 import com.feed_the_beast.ftbl.api.events.ClientGuideEvent;
 import com.feed_the_beast.ftbl.api.guide.GuideFormat;
 import com.feed_the_beast.ftbl.api.guide.GuideType;
+import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.api.guide.SpecialGuideButton;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -10,8 +11,10 @@ import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
+import com.feed_the_beast.ftbl.lib.guide.GuideListLine;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.guide.GuidePageHelper;
+import com.feed_the_beast.ftbl.lib.guide.GuideTextLineString;
 import com.feed_the_beast.ftbl.lib.guide.GuideTitlePage;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
@@ -48,7 +51,7 @@ public enum Guides implements IResourceManagerReloadListener
 {
     INSTANCE;
 
-    private static final GuidePage INFO_PAGE = new GuidePage("guides").setSpecialButton(new SpecialGuideButton(GuiLang.BUTTON_REFRESH.textComponent(), GuiIcons.REFRESH, new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + CmdInternalClient.CMD + " refresh_guide")));
+    private static final GuidePage INFO_PAGE = new GuidePage("guides").addSpecialButton(new SpecialGuideButton(GuiLang.BUTTON_REFRESH.textComponent(), GuiIcons.REFRESH, new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + CmdInternalClient.CMD + " refresh_guide")));
 
     private static boolean isReloading = false;
     private static Thread reloadingThread = null;
@@ -195,7 +198,7 @@ public enum Guides implements IResourceManagerReloadListener
             switch(format)
             {
                 case JSON:
-                    text = Collections.singletonList(replaceSubstitutes(StringUtils.readString(resourceManager.getResource(new ResourceLocation(domain, parentDir + "/index.json")).getInputStream())));
+                    text = Collections.singletonList(replaceSubstitutes(StringUtils.readString(resourceManager.getResource(new ResourceLocation(domain, parentDir + "/index.json")).getInputStream())).replace("\\$", "$"));
                     for(JsonElement e : JsonUtils.fromJson(text.get(0)).getAsJsonArray())
                     {
                         page.println(GuidePageHelper.createLine(page, e));
@@ -223,11 +226,17 @@ public enum Guides implements IResourceManagerReloadListener
                 {
                     page.println(null);
                     page.println("Source:");
+                    List<IGuideTextLine> lines = new ArrayList<>();
 
                     for(String s : text)
                     {
-                        page.println(s.replace("\n", ""));
+                        for(String s1 : s.split("\\r?\\n"))
+                        {
+                            lines.add(new GuideTextLineString(s1));
+                        }
                     }
+
+                    page.println(new GuideListLine(lines, GuideListLine.Type.CODE, GuideListLine.Ordering.NUMBER, 0));
                 }
             }
         }
@@ -245,11 +254,11 @@ public enum Guides implements IResourceManagerReloadListener
 
                     if(o.has("icon"))
                     {
-                        page1.setIcon(ImageProvider.get(o.get("icon").getAsString()));
+                        page1.setIcon(ImageProvider.get(o.get("icon")));
                     }
                     if(o.has("button"))
                     {
-                        page1.setSpecialButton(new SpecialGuideButton(o.get("button").getAsJsonObject()));
+                        page1.addSpecialButton(new SpecialGuideButton(o.get("button").getAsJsonObject()));
                     }
                     if(o.has("lang"))
                     {

@@ -66,7 +66,7 @@ public class FTBU
     public void onServerStarted(FMLServerStartedEvent event)
     {
         Backups.INSTANCE.init();
-        Ranks.generateExampleFiles();
+        Ranks.CMD_PERMISSION_NODES.clear();
 
         if(FTBUConfigRanks.OVERRIDE_COMMANDS.getBoolean())
         {
@@ -82,5 +82,7 @@ public class FTBU
 
             FTBUFinals.LOGGER.info("Overridden " + manager.getCommands().size() + " commands");
         }
+
+        Ranks.generateExampleFiles();
     }
 }

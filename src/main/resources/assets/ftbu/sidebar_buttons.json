@@ -4,7 +4,7 @@
 		"dependencies": "after:ftbu.claimed_chunks",
 		"clickEvent": {
 			"action": "run_command",
-			"value": "/ftbu_client_internal open_guide"
+			"value": "/ftbc open_guide"
 		},
 		"config": true
 	},
@@ -70,7 +70,7 @@
 		"dependencies": "after:ftbu.heal",
 		"clickEvent": {
 			"action": "run_command",
-			"value": "/ftbu_client_internal toggle_gamemode"
+			"value": "/ftbc toggle_gamemode"
 		},
 		"config": true,
 		"hide_with_nei": true,

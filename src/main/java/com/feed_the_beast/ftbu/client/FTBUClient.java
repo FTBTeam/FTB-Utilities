@@ -1,14 +1,13 @@
 package com.feed_the_beast.ftbu.client;
 
 import com.feed_the_beast.ftbu.FTBUCommon;
-import com.feed_the_beast.ftbu.cmd.CmdInternalClient;
 import com.feed_the_beast.ftbu.gui.Guides;
+import com.feed_the_beast.ftbu.handlers.FTBUClientEventHandler;
 import com.feed_the_beast.ftbu.integration.IJMIntegration;
 import com.feed_the_beast.ftbu.integration.TiCIntegration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.common.MinecraftForge;
@@ -52,19 +51,11 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
         {
             ((SimpleReloadableResourceManager) mc.getResourceManager()).registerReloadListener(Guides.INSTANCE);
         }
-
-        ClientCommandHandler.instance.registerCommand(new CmdInternalClient());
     }
 
     @Override
     public void onReloadedClient()
     {
         CachedClientData.clear();
-    }
-
-    @Override
-    public void registerClientCommands(CmdInternalClient cmd)
-    {
-        cmd.registerCommands();
     }
 }

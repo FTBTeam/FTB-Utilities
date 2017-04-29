@@ -1,9 +1,10 @@
 [
 	"# $ftbu.guide.ranks.config.enabling_ranks",
+	"$ftbu.guide.ranks.config.enabling_ranks.values",
 	{
 		"id": "list",
 		"list": [
-			{"text": "[$ftbu.guide.ranks.config.enabling_ranks.click]", "clickEvent": {"action": "run_command", "value": "/ftb edit_config ftbu ranks.enabled true"}, "color": "dark_green"},
+			{"text": "$ftbu.guide.ranks.config.enabling_ranks.click", "clickEvent": {"action": "run_command", "value": "/ftb edit_config ftbu"}, "color": "dark_green"},
 			"$ftbu.guide.ranks.config.enabling_ranks.config"
 		]
 	},

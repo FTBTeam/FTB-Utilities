@@ -8,7 +8,6 @@ import com.feed_the_beast.ftbu.api.NodeEntry;
 import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
 import com.feed_the_beast.ftbu.api.events.FTBUtilitiesRegistryEvent;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
-import com.feed_the_beast.ftbu.cmd.CmdInternalClient;
 import net.minecraft.stats.StatBase;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.MinecraftForge;
@@ -38,10 +37,6 @@ public class FTBUCommon implements IFTBUtilitiesRegistry // FTBUClient
     }
 
     public void onReloadedClient()
-    {
-    }
-
-    public void registerClientCommands(CmdInternalClient cmd)
     {
     }
 

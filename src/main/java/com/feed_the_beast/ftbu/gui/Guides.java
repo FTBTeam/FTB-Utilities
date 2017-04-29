@@ -5,22 +5,23 @@ import com.feed_the_beast.ftbl.api.guide.GuideFormat;
 import com.feed_the_beast.ftbl.api.guide.GuideType;
 import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.api.guide.SpecialGuideButton;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
+import com.feed_the_beast.ftbl.lib.guide.GuideContentsLine;
+import com.feed_the_beast.ftbl.lib.guide.GuideHrLine;
 import com.feed_the_beast.ftbl.lib.guide.GuideListLine;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
-import com.feed_the_beast.ftbl.lib.guide.GuidePageHelper;
 import com.feed_the_beast.ftbl.lib.guide.GuideTextLineString;
 import com.feed_the_beast.ftbl.lib.guide.GuideTitlePage;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.cmd.CmdInternalClient;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
@@ -51,7 +52,7 @@ public enum Guides implements IResourceManagerReloadListener
 {
     INSTANCE;
 
-    private static final GuidePage INFO_PAGE = new GuidePage("guides").addSpecialButton(new SpecialGuideButton(GuiLang.BUTTON_REFRESH.textComponent(), GuiIcons.REFRESH, new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + CmdInternalClient.CMD + " refresh_guide")));
+    private static final GuidePage INFO_PAGE = new GuidePage("guides").addSpecialButton(new SpecialGuideButton(GuiLang.BUTTON_REFRESH.textComponent(), GuiIcons.REFRESH, new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftbc refresh_guide")));
 
     private static boolean isReloading = false;
     private static Thread reloadingThread = null;
@@ -143,6 +144,12 @@ public enum Guides implements IResourceManagerReloadListener
                     else
                     {
                         loadTree(resourceManager, domain, guide, format, "guide");
+
+                        if(guide.childPages.size() > 0)
+                        {
+                            guide.println(new GuideHrLine(1, Color4I.NONE));
+                            guide.println(new GuideContentsLine(guide));
+                        }
                     }
 
                     guides.add(guide);
@@ -201,7 +208,7 @@ public enum Guides implements IResourceManagerReloadListener
                     text = Collections.singletonList(replaceSubstitutes(StringUtils.readString(resourceManager.getResource(new ResourceLocation(domain, parentDir + "/index.json")).getInputStream())).replace("\\$", "$"));
                     for(JsonElement e : JsonUtils.fromJson(text.get(0)).getAsJsonArray())
                     {
-                        page.println(GuidePageHelper.createLine(page, e));
+                        page.println(page.createLine(e));
                     }
                     break;
                 case MD:

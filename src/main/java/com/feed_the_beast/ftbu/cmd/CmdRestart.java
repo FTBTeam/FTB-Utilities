@@ -12,10 +12,9 @@ import java.io.File;
 
 public class CmdRestart extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdRestart()
     {
-        return "restart";
+        super("restart", Level.OP);
     }
 
     public static void restart()

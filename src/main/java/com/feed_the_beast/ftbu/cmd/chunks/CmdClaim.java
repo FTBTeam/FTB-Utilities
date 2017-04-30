@@ -20,16 +20,9 @@ import net.minecraftforge.server.permission.PermissionAPI;
  */
 public class CmdClaim extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdClaim()
     {
-        return "claim";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
+        super("claim", Level.ALL);
     }
 
     @Override

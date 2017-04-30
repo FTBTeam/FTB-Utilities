@@ -2,7 +2,8 @@ package com.feed_the_beast.ftbu.ranks;
 
 import com.feed_the_beast.ftbl.api.IRankConfig;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.lib.info.InfoPage;
+import com.feed_the_beast.ftbl.lib.client.DrawableItem;
+import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
@@ -23,6 +24,8 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -39,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,8 +53,9 @@ public class Ranks
     private static final Map<String, Rank> RANKS = new LinkedHashMap<>();
     private static final Collection<String> RANK_NAMES = new ArrayList<>();
     private static final Map<UUID, IRank> PLAYER_MAP = new HashMap<>();
-    public static final InfoPage INFO_PAGE = new InfoPage("ranks_info").setTitle(FTBLibLang.ALL_PERMISSIONS.textComponent());
+    public static final GuidePage INFO_PAGE = new GuidePage("ranks_info").setTitle(FTBLibLang.ALL_PERMISSIONS.textComponent()).setIcon(new DrawableItem(new ItemStack(Items.DIAMOND_SWORD)));
     private static IRank defaultPlayerRank, defaultOPRank;
+    public static final Collection<String> CMD_PERMISSION_NODES = new HashSet<>();
 
     @Nullable
     public static IRank getRank(String id, @Nullable IRank nullrank)
@@ -274,7 +279,7 @@ public class Ranks
             }
         }
 
-        Collections.sort(allNodes, StringUtils.ID_COMPARATOR);
+        allNodes.sort(StringUtils.ID_COMPARATOR);
         List<String> list = new ArrayList<>();
 
         try
@@ -318,9 +323,9 @@ public class Ranks
         {
             list.clear();
             list.add("<html><head><title>Rank Configs</title>");
-            list.add("<style>table{font-family: arial, sans-serif;border-collapse: collapse;}td,th{border:1px solid #666666;text-align: left;padding:8px;}</style>");
+            list.add("<style>table{font-family: arial, sans-serif;border-collapse: collapse;}td,th{border:1px solid #666666;text-align: left;padding:8px;}p,ul{margin:4px;}</style>");
             list.add("</head><body><h1>Rank Configs</h1><table>");
-            list.add("<tr><th>Rank Config</th><th>Def Value</th><th>Def OP Value</th><th>Info</th></tr>");
+            list.add("<tr><th>Rank Config</th><th>Def Value</th><th>Info</th></tr>");
 
             List<String> infoList = new ArrayList<>();
 
@@ -335,11 +340,14 @@ public class Ranks
                 if(!infoList.isEmpty() || !variants.isEmpty())
                 {
                     list.add("<ul><li>Default: " + value.getSerializableElement() + "</li>");
-                    list.add("<ul><li>OP Default: " + p.getDefOPValue().getSerializableElement() + "</li>");
+                    list.add("<li>OP Default: " + p.getDefOPValue().getSerializableElement() + "</li>");
 
                     for(String s : infoList)
                     {
-                        list.add("<li>" + StringUtils.removeFormatting(s) + "</li>");
+                        if(!s.contains("Def:"))
+                        {
+                            list.add("<li>" + StringUtils.removeFormatting(s) + "</li>");
+                        }
                     }
 
                     infoList.clear();
@@ -371,20 +379,9 @@ public class Ranks
 
                 if(!info.isEmpty())
                 {
-                    String[] s = info.split("\\\\n");
-
-                    if(s.length > 1)
+                    for(String s1 : info.split("\\\\n"))
                     {
-                        list.add("<ul>");
-                        for(String s1 : s)
-                        {
-                            list.add("<li>" + s1 + "</li>");
-                        }
-                        list.add("</ul>");
-                    }
-                    else
-                    {
-                        list.add(info);
+                        list.add("<p>" + s1 + "</p>");
                     }
                 }
 
@@ -395,15 +392,16 @@ public class Ranks
             FileUtils.save(new File(LMUtils.folderLocal, "ftbu/all_configs.html"), list);
 
             list.clear();
-            list.add(PermissionAPI.getPermissionHandler().getRegisteredNodes().size() + " nodes in total");
-            list.add("");
 
             for(String node : PermissionAPI.getPermissionHandler().getRegisteredNodes())
             {
                 list.add(node + ": " + DefaultPermissionHandler.INSTANCE.getDefaultPermissionLevel(node));
             }
 
+            list.addAll(CMD_PERMISSION_NODES);
             Collections.sort(list);
+            list.add(0, "");
+            list.add(0, PermissionAPI.getPermissionHandler().getRegisteredNodes().size() + " nodes in total");
             FileUtils.save(new File(LMUtils.folderLocal, "ftbu/all_permissions_full_list.txt"), list);
         }
         catch(Exception ex)

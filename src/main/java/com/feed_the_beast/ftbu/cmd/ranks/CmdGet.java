@@ -16,10 +16,9 @@ import net.minecraft.util.text.event.ClickEvent;
  */
 public class CmdGet extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdGet()
     {
-        return "get";
+        super("get", Level.OP);
     }
 
     @Override

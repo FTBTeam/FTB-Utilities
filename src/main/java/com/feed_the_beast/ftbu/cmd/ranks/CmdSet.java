@@ -19,10 +19,9 @@ import java.util.List;
  */
 public class CmdSet extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdSet()
     {
-        return "set";
+        super("set", Level.OP);
     }
 
     @Override

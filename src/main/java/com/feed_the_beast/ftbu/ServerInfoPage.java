@@ -2,15 +2,18 @@ package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IUniverse;
-import com.feed_the_beast.ftbl.lib.info.InfoPage;
+import com.feed_the_beast.ftbl.api.events.ServerInfoEvent;
+import com.feed_the_beast.ftbl.lib.client.DrawableItem;
+import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
+import com.feed_the_beast.ftbl.lib.util.InvertedComparator;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.api.guide.ServerInfoEvent;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
+import com.feed_the_beast.ftbu.ranks.CmdOverride;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import com.feed_the_beast.ftbu.world.backups.Backups;
@@ -18,6 +21,9 @@ import com.google.common.base.Preconditions;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -28,28 +34,25 @@ import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ServerInfoPage
 {
-    private static final InfoPage CACHED_PAGE = new InfoPage("server_info").setTitle(new TextComponentTranslation("sidebar_button.ftbu.server_info"));
+    private static final GuidePage CACHED_PAGE = new GuidePage("server_info").setTitle(new TextComponentTranslation("sidebar_button.ftbu.server_info"));
 
     public static void reloadCachedInfo()
     {
         CACHED_PAGE.clear();
-        
-        
     }
 
-    public static InfoPage getPageForPlayer(EntityPlayer ep)
+    public static GuidePage getPageForPlayer(EntityPlayer ep)
     {
         IUniverse universe = FTBLibIntegration.API.getUniverse();
         Preconditions.checkNotNull(universe, "World can't be null!");
         IForgePlayer self = universe.getPlayer(ep);
         Preconditions.checkNotNull(self, "Player can't be null!");
 
-        InfoPage page = new InfoPage(CACHED_PAGE.getName());
+        GuidePage page = new GuidePage(CACHED_PAGE.getName());
         page.setTitle(CACHED_PAGE.getTitle());
         page.copyFrom(CACHED_PAGE);
 
@@ -87,14 +90,16 @@ public class ServerInfoPage
             //FIXME: SERVER_INFO_ADMIN_QUICK_ACCESS
         }
 
-        InfoPage page1 = page.getSub("leaderboards").setTitle(FTBULeaderboards.LANG_LEADERBOARD_TITLE.textComponent());
+        GuidePage page1 = page.getSub("leaderboards").setTitle(FTBULeaderboards.LANG_LEADERBOARD_TITLE.textComponent());
+        page1.setIcon(new DrawableItem(new ItemStack(Items.SIGN)));
 
         for(Leaderboard leaderboard : FTBUCommon.LEADERBOARDS)
         {
-            InfoPage thisTop = page1.getSub(leaderboard.stat.statId).setTitle(leaderboard.name);
-            Collections.sort(players, leaderboard.comparator);
+            GuidePage thisTop = page1.getSub(leaderboard.stat.statId).setTitle(leaderboard.name);
+            thisTop.setIcon(leaderboard.icon);
+            players.sort(new InvertedComparator<>(leaderboard.comparator));
 
-            int size = Math.min(players.size(), 250);
+            int size = Math.min(players.size(), FTBUConfigGeneral.MAX_LEADERBOARD_SIZE.getInt());
 
             for(int j = 0; j < size; j++)
             {
@@ -140,6 +145,7 @@ public class ServerInfoPage
         MinecraftForge.EVENT_BUS.post(new ServerInfoEvent(page, self, isOP));
 
         page1 = page.getSub("commands").setTitle(FTBLibLang.COMMANDS.textComponent());
+        page1.setIcon(new DrawableItem(new ItemStack(Blocks.COMMAND_BLOCK)));
 
         try
         {
@@ -179,7 +185,7 @@ public class ServerInfoPage
         return page;
     }
 
-    private static void addCommandUsage(ICommandSender sender, InfoPage page, int level, ICommand c)
+    private static void addCommandUsage(ICommandSender sender, GuidePage page, int level, ICommand c)
     {
         page.println('/' + c.getName());
 
@@ -202,10 +208,19 @@ public class ServerInfoPage
             }
         }
 
+        CommandTreeBase treeCommand = null;
+
         if(c instanceof CommandTreeBase)
         {
-            CommandTreeBase treeCommand = (CommandTreeBase) c;
+            treeCommand = (CommandTreeBase) c;
+        }
+        else if(c instanceof CmdOverride && ((CmdOverride) c).parent instanceof CommandTreeBase)
+        {
+            treeCommand = (CommandTreeBase) ((CmdOverride) c).parent;
+        }
 
+        if(treeCommand != null)
+        {
             for(ICommand command : treeCommand.getSubCommands())
             {
                 addCommandUsage(sender, page.getSub(command.getName()), level + 1, command);

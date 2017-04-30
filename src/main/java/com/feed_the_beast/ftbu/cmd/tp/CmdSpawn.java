@@ -13,16 +13,9 @@ import net.minecraft.world.World;
 
 public class CmdSpawn extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdSpawn()
     {
-        return "spawn";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
+        super("spawn", Level.ALL);
     }
 
     @Override

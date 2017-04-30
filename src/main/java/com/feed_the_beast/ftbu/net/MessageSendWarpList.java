@@ -66,7 +66,7 @@ public class MessageSendWarpList extends MessageToClient<MessageSendWarpList>
         return "/" + ((command != null && command.checkPermission(player.mcServer, player)) ? name : backup);
     }
 
-    MessageSendWarpList(EntityPlayerMP player)
+    public MessageSendWarpList(EntityPlayerMP player)
     {
         warps = new ArrayList<>();
 

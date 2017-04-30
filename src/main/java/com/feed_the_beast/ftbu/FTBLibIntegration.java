@@ -1,15 +1,18 @@
 package com.feed_the_beast.ftbu;
 
-import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.FTBLibPlugin;
 import com.feed_the_beast.ftbl.api.IFTBLibClientRegistry;
 import com.feed_the_beast.ftbl.api.IFTBLibPlugin;
 import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
+import com.feed_the_beast.ftbl.api.events.ConfigLoadedEvent;
+import com.feed_the_beast.ftbl.api.events.FTBLibClientRegistryEvent;
+import com.feed_the_beast.ftbl.api.events.FTBLibRegistryEvent;
+import com.feed_the_beast.ftbl.api.events.LoadWorldDataEvent;
+import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
-import com.feed_the_beast.ftbu.client.FTBUActions;
 import com.feed_the_beast.ftbu.client.FTBUClientConfig;
 import com.feed_the_beast.ftbu.cmd.FTBUCommands;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
@@ -24,12 +27,10 @@ import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUTeamData;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.LoaderState;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.server.command.CommandTreeBase;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.io.File;
@@ -49,20 +50,16 @@ public enum FTBLibIntegration implements IFTBLibPlugin
     public void init(FTBLibAPI api)
     {
         API = api;
+        MinecraftForge.EVENT_BUS.register(FTBLibIntegration.class);
+        MinecraftForge.EVENT_BUS.register(FTBUCommands.class);
     }
 
-    @Override
-    public void loadWorldData(MinecraftServer server)
+    @SubscribeEvent
+    public static void onReload(ReloadEvent event)
     {
-        Ranks.reload();
-    }
-
-    @Override
-    public void onReload(Side side, ICommandSender sender, EnumReloadType type)
-    {
-        if(side.isServer())
+        if(event.getSide().isServer())
         {
-            if(type.command())
+            if(event.getType().command())
             {
                 Ranks.reload();
             }
@@ -77,9 +74,10 @@ public enum FTBLibIntegration implements IFTBLibPlugin
         }
     }
 
-    @Override
-    public void registerCommon(IFTBLibRegistry reg)
+    @SubscribeEvent
+    public static void registerCommon(FTBLibRegistryEvent event)
     {
+        IFTBLibRegistry reg = event.getRegistry();
         reg.addOptionalServerMod(FTBUFinals.MOD_ID);
         reg.addConfigFileProvider(FTBUFinals.MOD_ID, () -> new File(LMUtils.folderLocal, "ftbu/config.json"));
         reg.addConfigValueProvider(PropertyChatSubstitute.ID, PropertyChatSubstitute::new);
@@ -101,36 +99,26 @@ public enum FTBLibIntegration implements IFTBLibPlugin
         FTBUPermissions.addConfigs(reg);
     }
 
-    @Override
-    public void configLoaded(LoaderState.ModState state)
+    @SubscribeEvent
+    public static void configLoaded(ConfigLoadedEvent event)
     {
-        if(state == LoaderState.ModState.PREINITIALIZED && FTBUConfigRanks.ENABLED.getBoolean())
+        if(event.getState() == LoaderState.ModState.PREINITIALIZED && FTBUConfigRanks.ENABLED.getBoolean())
         {
             PermissionAPI.setPermissionHandler(FTBUtilitiesAPI_Impl.INSTANCE);
         }
     }
 
-    @Override
-    public void registerClient(IFTBLibClientRegistry reg)
+    @SubscribeEvent
+    public static void registerClient(FTBLibClientRegistryEvent event)
     {
+        IFTBLibClientRegistry reg = event.getRegistry();
         reg.addClientConfig(FTBUFinals.MOD_ID, "render_badges", FTBUClientConfig.RENDER_BADGES);
         reg.addClientConfig(FTBUFinals.MOD_ID, "journeymap_overlay", FTBUClientConfig.JOURNEYMAP_OVERLAY);
-
-        reg.addSidebarButton(FTBUActions.GUIDE);
-        reg.addSidebarButton(FTBUActions.SERVER_INFO);
-        reg.addSidebarButton(FTBUActions.CLAIMED_CHUNKS);
-        reg.addSidebarButton(FTBUActions.TRASH_CAN);
-        reg.addSidebarButton(FTBUActions.SHOP);
-        reg.addSidebarButton(FTBUActions.HEAL);
-        reg.addSidebarButton(FTBUActions.TOGGLE_GAMEMODE);
-        reg.addSidebarButton(FTBUActions.TOGGLE_RAIN);
-        reg.addSidebarButton(FTBUActions.TOGGLE_DAY);
-        reg.addSidebarButton(FTBUActions.TOGGLE_NIGHT);
     }
 
-    @Override
-    public void registerFTBCommands(CommandTreeBase command, boolean dedi)
+    @SubscribeEvent
+    public static void loadWorldData(LoadWorldDataEvent event)
     {
-        FTBUCommands.register(command, dedi);
+        Ranks.reload();
     }
 }

@@ -8,13 +8,13 @@ public class FTBUNetHandler
 
     public static void init()
     {
-        NET.register(1, new MessageRequestServerInfo());
+        //1
         NET.register(2, new MessageRequestBadge());
         NET.register(3, new MessageSendBadge());
         NET.register(4, new MessageClaimedChunksRequest());
         NET.register(5, new MessageClaimedChunksUpdate());
         NET.register(6, new MessageClaimedChunksModify());
-        NET.register(7, new MessageRequestWarpList());
+        //7
         NET.register(8, new MessageSendWarpList());
         //9
         NET.register(10, new MessageOpenClaimedChunksGui());

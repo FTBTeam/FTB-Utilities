@@ -23,22 +23,9 @@ import java.util.List;
 
 public class CmdHome extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdHome()
     {
-        return "home";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
-    }
-
-    @Override
-    public String getUsage(ICommandSender ics)
-    {
-        return '/' + getName() + " <ID>";
+        super("home", Level.ALL);
     }
 
     @Override

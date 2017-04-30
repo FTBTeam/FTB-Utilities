@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbu.client;
 
 import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.gui.Guides;
+import com.feed_the_beast.ftbu.handlers.FTBUClientEventHandler;
 import com.feed_the_beast.ftbu.integration.IJMIntegration;
 import com.feed_the_beast.ftbu.integration.TiCIntegration;
 import net.minecraft.client.Minecraft;

@@ -1,0 +1,57 @@
+[
+	"# $ftbu.guide.ranks.config.enabling_ranks",
+	"$ftbu.guide.ranks.config.enabling_ranks.values",
+	{
+		"id": "list",
+		"list": [
+			{"text": "$ftbu.guide.ranks.config.enabling_ranks.click", "clickEvent": {"action": "run_command", "value": "/ftb edit_config ftbu"}, "color": "dark_green"},
+			"$ftbu.guide.ranks.config.enabling_ranks.config"
+		]
+	},
+	null,
+	"# $ftbu.guide.ranks.config.features",
+	"## $ftbu.guide.ranks.config.builtin",
+	"$ftbu.guide.ranks.config.builtin.info",
+	{
+		"id": "list",
+		"list": [
+			"builtin_player",
+			"builtin_op"
+		]
+	},
+	"$ftbu.guide.ranks.config.builtin.perms",
+	null,
+	"## $ftbu.guide.ranks.config.def_ranks",
+	"$ftbu.guide.ranks.config.def_ranks.info",
+	"## $example",
+	{
+		"id": "list",
+		"type": "code",
+		"list": [
+			"\"player\": \"member\", //Originally \"player\"",
+			"\"op\": \"admin\" //Originally \"op\""
+		]
+	},
+	null,
+	"## $ftbu.guide.ranks.config.perms",
+	"$ftbu.guide.ranks.config.perms.info",
+	"## $example",
+	{
+		"id": "list",
+		"type": "code",
+		"list": [
+			"\"+ftbu.claims.block.edit.minecraft.sand\",",
+			"\"-ftbu.claims.block.edit.minecraft.stone\""
+		]
+	},
+	"$ftbu.guide.ranks.config.perms.example",
+	null,
+	"## $ftbu.guide.ranks.config.cfg",
+	"$ftbu.guide.ranks.config.cfg.info",
+	null,
+	"## $ftbu.guide.ranks.config.chat",
+	"$ftbu.guide.ranks.config.chat.info",
+	{"text": "$ftbu.guide.ranks.config.chat.colors", "clickEvent": {"action": "change_page", "value": "writing_guides.colors"}, "color": "dark_green"},
+	"## $example",
+	["\"syntax\":\"<&2[Admin]&6 \\$name&r>\" - <", {"text": "[Admin]", "color": "dark_green"}, {"text": " LatvianModder", "color": "gold"}, ">"]
+]

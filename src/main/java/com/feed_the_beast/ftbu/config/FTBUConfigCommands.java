@@ -13,11 +13,13 @@ public class FTBUConfigCommands
     public static final PropertyBool INV = new PropertyBool(true);
     public static final PropertyBool TPL = new PropertyBool(true);
     public static final PropertyBool SERVER_INFO = new PropertyBool(true);
+    public static final PropertyBool LOADED_CHUNKS = new PropertyBool(true);
     public static final PropertyBool TRASH_CAN = new PropertyBool(true);
     public static final PropertyBool CHUNKS = new PropertyBool(true);
     public static final PropertyBool KICKME = new PropertyBool(true);
     public static final PropertyBool RANKS = new PropertyBool(true);
     public static final PropertyBool VIEW_CRASH = new PropertyBool(true);
+    public static final PropertyBool HEAL = new PropertyBool(true);
 
     public static void init(IFTBLibRegistry reg)
     {
@@ -29,10 +31,12 @@ public class FTBUConfigCommands
         reg.addConfig(id, "inv", INV);
         reg.addConfig(id, "tpl", TPL);
         reg.addConfig(id, "server_info", SERVER_INFO);
+        reg.addConfig(id, "loaded_chunks", LOADED_CHUNKS);
         reg.addConfig(id, "trash_can", TRASH_CAN);
         reg.addConfig(id, "chunks", CHUNKS);
         reg.addConfig(id, "kickme", KICKME);
         reg.addConfig(id, "ranks", RANKS);
         reg.addConfig(id, "view_crash", VIEW_CRASH);
+        reg.addConfig(id, "heal", HEAL);
     }
 }

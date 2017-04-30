@@ -41,7 +41,7 @@ public class ClaimedChunk implements IClaimedChunk
     @Override
     public boolean hasUpgrade(IChunkUpgrade upgrade)
     {
-        if(upgrade == ChunkUpgrade.ACTUALLY_LOADED)
+        if(upgrade == ChunkUpgrade.SHOULD_FORCE)
         {
             if(!FTBUConfigWorld.CHUNK_LOADING.getBoolean() || !hasUpgrade(ChunkUpgrade.LOADED) || !FTBUPermissions.canUpgradeChunk(owner.getProfile(), ChunkUpgrade.LOADED))
             {

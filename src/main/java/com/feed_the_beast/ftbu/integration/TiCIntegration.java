@@ -1,13 +1,14 @@
 package com.feed_the_beast.ftbu.integration;
 
-import com.feed_the_beast.ftbl.lib.info.InfoExtendedTextLine;
-import com.feed_the_beast.ftbl.lib.info.InfoPage;
-import com.feed_the_beast.ftbl.lib.info.ItemListLine;
-import com.feed_the_beast.ftbl.lib.info.ItemPageIconRenderer;
+import com.feed_the_beast.ftbl.api.events.ClientGuideEvent;
+import com.feed_the_beast.ftbl.lib.client.DrawableItem;
+import com.feed_the_beast.ftbl.lib.client.DrawableObjectList;
+import com.feed_the_beast.ftbl.lib.guide.DrawableObjectListLine;
+import com.feed_the_beast.ftbl.lib.guide.GuideExtendedTextLine;
+import com.feed_the_beast.ftbl.lib.guide.GuidePage;
+import com.feed_the_beast.ftbl.lib.guide.GuideTitlePage;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbu.api.guide.ClientGuideEvent;
-import com.feed_the_beast.ftbu.api.guide.IGuide;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -33,8 +34,7 @@ import slimeknights.tconstruct.tools.TinkerMaterials;
 
 import javax.annotation.Nullable;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
 /**
  * Created by LatvianModder on 25.01.2017.
@@ -50,22 +50,21 @@ public class TiCIntegration
     @SideOnly(Side.CLIENT)
     public static void onGuideEvent(ClientGuideEvent event)
     {
-        IGuide guide = event.getModGuide("tconstruct");
-        InfoPage pageGuide = guide.getPage();
-        pageGuide.setIcon(new ItemPageIconRenderer(Item.getByNameOrId("tconstruct:toolforge")));
+        GuideTitlePage guide = event.getModGuide("tconstruct");
+        guide.setIcon(new DrawableObjectList(Item.getByNameOrId("tconstruct:toolforge")));
 
-        InfoPage pageIntro = loadPage(event, "intro");
+        GuidePage pageIntro = loadPage(event, "intro");
 
         if(pageIntro != null)
         {
             pageIntro.setTitle(new TextComponentString("Introduction"));
-            pageIntro.setIcon(new ItemPageIconRenderer(new ItemStack(Item.getByNameOrId("tconstruct:tooltables"), 1, 0)));
-            pageGuide.addSub(pageIntro);
+            pageIntro.setIcon(new DrawableItem(new ItemStack(Item.getByNameOrId("tconstruct:tooltables"), 1, 0)));
+            guide.addSub(pageIntro);
         }
 
-        InfoPage toolMaterials = pageGuide.getSub("materials");
+        GuidePage toolMaterials = guide.getSub("materials");
         toolMaterials.setTitle(new TextComponentString("Materials"));
-        toolMaterials.setIcon(new ItemPageIconRenderer(new ItemStack(Items.IRON_PICKAXE)));
+        toolMaterials.setIcon(new DrawableItem(new ItemStack(Items.IRON_PICKAXE)));
 
         ImmutableList mats = ImmutableList.of(TinkerMaterials.wood, TinkerMaterials.cobalt, TinkerMaterials.ardite, TinkerMaterials.manyullyn);
 
@@ -76,8 +75,8 @@ public class TiCIntegration
                 continue;
             }
 
-            InfoPage page = toolMaterials.getSub(material.getIdentifier());
-            page.setIcon(new ItemPageIconRenderer(material.getRepresentativeItem()));
+            GuidePage page = toolMaterials.getSub(material.getIdentifier());
+            page.setIcon(new DrawableItem(material.getRepresentativeItem()));
             page.setTitle(new TextComponentString(material.getLocalizedName()));
 
             for(IMaterialStats stats : material.getAllStats())
@@ -88,35 +87,35 @@ public class TiCIntegration
 
                 //List<ITrait> traits = material.getAllTraitsForStats(stats.getIdentifier());
                 //allTraits.addAll(traits);
-                List<ItemStack> parts = new ArrayList<>();
+                DrawableObjectList parts = new DrawableObjectList(Collections.emptyList());
 
                 for(IToolPart part : TinkerRegistry.getToolParts())
                 {
                     if(part.hasUseForStat(stats.getIdentifier()))
                     {
-                        parts.add(part.getItemstackWithMaterial(material));
+                        parts.list.add(new DrawableItem(part.getItemstackWithMaterial(material)));
                     }
                 }
 
-                if(parts.size() > 0)
+                if(parts.list.size() > 0)
                 {
-                    page.println(new ItemListLine(parts, 8));
+                    page.println(new DrawableObjectListLine(parts, 8));
                 }
 
                 for(int i = 0; i < stats.getLocalizedInfo().size(); i++)
                 {
                     ITextComponent component1 = new TextComponentString(transformString(stats.getLocalizedInfo().get(i)));
                     component1.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(transformString(stats.getLocalizedDesc().get(i)))));
-                    page.println(new InfoExtendedTextLine(component1));
+                    page.println(new GuideExtendedTextLine(component1));
                 }
 
                 page.println(null);
             }
         }
 
-        InfoPage modifiers = pageGuide.getSub("modifiers");
+        GuidePage modifiers = guide.getSub("modifiers");
         modifiers.setTitle(new TextComponentString("Modifiers"));
-        modifiers.setIcon(new ItemPageIconRenderer(new ItemStack(Items.REDSTONE)));
+        modifiers.setIcon(new DrawableItem(new ItemStack(Items.REDSTONE)));
 
         for(IModifier modifier : TinkerRegistry.getAllModifiers())
         {
@@ -133,10 +132,10 @@ public class TiCIntegration
                 if(json.isJsonObject())
                 {
                     JsonObject o = json.getAsJsonObject();
-                    InfoPage page = modifiers.getSub(modifier.getIdentifier());
+                    GuidePage page = modifiers.getSub(modifier.getIdentifier());
                     page.setTitle(new TextComponentString(modifier.getLocalizedName()));
                     page.println(transformString(modifier.getLocalizedDesc()));
-                    List<ItemStack> displayItems = new ArrayList<>();
+                    DrawableObjectList displayItems = new DrawableObjectList(Collections.emptyList());
 
                     if(o.has("text"))
                     {
@@ -165,14 +164,14 @@ public class TiCIntegration
 
                             if(item instanceof ToolCore)
                             {
-                                displayItems.add(((ToolCore) item).buildItemForRendering(mats.subList(0, ((ToolCore) item).getRequiredComponents().size())));
+                                displayItems.list.add(new DrawableItem(((ToolCore) item).buildItemForRendering(mats.subList(0, ((ToolCore) item).getRequiredComponents().size()))));
                             }
                         }
 
-                        if(!displayItems.isEmpty())
+                        if(!displayItems.list.isEmpty())
                         {
                             page.println(null);
-                            page.println(new ItemListLine(displayItems, 8));
+                            page.println(new DrawableObjectListLine(displayItems, 8));
                         }
                     }
                 }
@@ -184,24 +183,22 @@ public class TiCIntegration
 
         modifiers.sort(false);
 
-        InfoPage pageSmeltry = loadPage(event, "smeltery");
+        GuidePage pageSmeltry = loadPage(event, "smeltery");
 
         if(pageSmeltry != null)
         {
             pageSmeltry.setTitle(new TextComponentString("Smeltry"));
-            pageSmeltry.setIcon(new ItemPageIconRenderer(new ItemStack(Item.getByNameOrId("tconstruct:toolstation"), 1, 0)));
-            pageGuide.addSub(pageSmeltry);
+            pageSmeltry.setIcon(new DrawableItem(new ItemStack(Item.getByNameOrId("tconstruct:toolstation"), 1, 0)));
+            guide.addSub(pageSmeltry);
         }
 
         /*
-        InfoPage searedFurnace = pagePage.getSub("seared_furnace");
+        GuidePage searedFurnace = pagePage.getSub("seared_furnace");
         searedFurnace.println("Seared Furnace");
 
-        InfoPage tinkerTank = pagePage.getSub("tinker_tank");
+        GuidePage tinkerTank = pagePage.getSub("tinker_tank");
         tinkerTank.println("Tinker Tank");
         */
-
-        event.add(guide);
     }
 
     private static String transformString(String s)
@@ -210,21 +207,22 @@ public class TiCIntegration
     }
 
     @Nullable
-    private static InfoPage loadPage(ClientGuideEvent event, String id)
+    private static GuidePage loadPage(ClientGuideEvent event, String id)
     {
         try
         {
+            //FIXME
             IResource resource = event.getResourceManager().getResource(new ResourceLocation("tconstruct", "book/en_US/sections/" + id + ".json"));
             JsonElement json = JsonUtils.fromJson(new InputStreamReader(resource.getInputStream()));
 
             if(json.isJsonArray())
             {
+                GuidePage page = new GuidePage(id);
+
                 for(JsonElement e : json.getAsJsonArray())
                 {
 
                 }
-
-                InfoPage page = new InfoPage(id);
 
                 return page;
             }

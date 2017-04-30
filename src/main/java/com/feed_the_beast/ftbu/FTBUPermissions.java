@@ -129,7 +129,7 @@ public class FTBUPermissions
 
     private static String formatId(@Nullable IForgeRegistryEntry<?> item)
     {
-        return item == null ? "minecraft.air" : item.getRegistryName().toString().toLowerCase().replace(':', '.');
+        return (item == null || item.getRegistryName() == null) ? "minecraft.air" : item.getRegistryName().toString().toLowerCase().replace(':', '.');
     }
 
     public static boolean canModifyBlock(EntityPlayerMP player, EnumHand hand, BlockPosContainer block, BlockInteractionType type)

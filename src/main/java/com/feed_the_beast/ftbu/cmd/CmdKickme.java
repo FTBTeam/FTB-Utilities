@@ -7,22 +7,9 @@ import net.minecraft.server.MinecraftServer;
 
 public class CmdKickme extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdKickme()
     {
-        return "kickme";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
-    }
-
-    @Override
-    public String getUsage(ICommandSender sender)
-    {
-        return "commands.kick.usage";
+        super("kickme", Level.ALL);
     }
 
     @Override

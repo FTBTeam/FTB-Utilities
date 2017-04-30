@@ -11,10 +11,9 @@ import net.minecraft.server.MinecraftServer;
  */
 public class CmdEdit extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdEdit()
     {
-        return "edit";
+        super("edit", Level.OP);
     }
 
     @Override

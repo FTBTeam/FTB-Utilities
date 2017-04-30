@@ -1,0 +1,8 @@
+[
+	{"id": "terminology", "icon": "item:minecraft:name_tag"},
+	{"id": "file_structure", "icon": "item:minecraft:paper"},
+	{"id": "config", "icon": "ftbl:textures/icons/settings.png"},
+	{"id": "commands", "icon": "item:minecraft:command_block"},
+	{"id": "badges", "icon": "item:minecraft:diamond_chestplate"},
+	{"id": "example_config", "icon": "item:minecraft:nether_star"}
+]

@@ -1,0 +1,23 @@
+[
+	["&1 - Dark Blue - ", {"text": "$example ABC", "color": "dark_blue"}],
+	["&9 - Blue - ", {"text": "$example ABC", "color": "blue"}],
+	["&3 - Dark Aqua - ", {"text": "$example ABC", "color": "dark_aqua"}],
+	["&b - Aqua - ", {"text": "$example ABC", "color": "aqua"}],
+	["&2 - Dark Green - ", {"text": "$example ABC", "color": "dark_green"}],
+	["&a - Green - ", {"text": "$example ABC", "color": "green"}],
+	["&e - Yellow - ", {"text": "$example ABC", "color": "yellow"}],
+	["&6 - Gold - ", {"text": "$example ABC", "color": "gold"}],
+	["&c - Red - ", {"text": "$example ABC", "color": "red"}],
+	["&4 - Dark Red - ", {"text": "$example ABC", "color": "dark_red"}],
+	["&5 - Dark Purple - ", {"text": "$example ABC", "color": "dark_purple"}],
+	["&d - Light Purple - ", {"text": "$example ABC", "color": "light_purple"}],
+	["&f - White - ", {"text": "$example ABC", "color": "white"}],
+	["&7 - Gray - ", {"text": "$example ABC", "color": "gray"}],
+	["&8 - Dark Gray - ", {"text": "$example ABC", "color": "dark_gray"}],
+	["&0 - Black - ", {"text": "$example ABC", "color": "black"}],
+	["&l - Bold - ", {"text": "$example ABC", "bold": true}],
+	["&o - Italic - ", {"text": "$example ABC", "italic": true}],
+	["&n - Underline - ", {"text": "$example ABC", "underlined": true}],
+	["&m - Strikeout - ", {"text": "$example ABC", "strikethrough": true}],
+	["&r - Reset - ", {"text": "$example", "color": "blue"}, " ABC"]
+]

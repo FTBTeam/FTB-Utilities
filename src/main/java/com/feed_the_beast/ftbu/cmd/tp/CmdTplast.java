@@ -16,16 +16,9 @@ import net.minecraftforge.common.util.Constants;
 
 public class CmdTplast extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdTplast()
     {
-        return "tpl";
-    }
-
-    @Override
-    public String getUsage(ICommandSender ics)
-    {
-        return '/' + getName() + " [who] <to>";
+        super("tpl", Level.OP);
     }
 
     @Override

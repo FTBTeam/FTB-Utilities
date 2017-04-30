@@ -13,16 +13,9 @@ import java.util.List;
 
 public class CmdDelWarp extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdDelWarp()
     {
-        return "delwarp";
-    }
-
-    @Override
-    public String getUsage(ICommandSender ics)
-    {
-        return '/' + getName() + " <ID>";
+        super("delwarp", Level.OP);
     }
 
     @Override

@@ -18,16 +18,9 @@ import net.minecraft.server.MinecraftServer;
  */
 public class CmdLoad extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdLoad()
     {
-        return "load";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
+        super("load", Level.ALL);
     }
 
     @Override

@@ -22,16 +22,9 @@ import net.minecraftforge.server.permission.context.BlockPosContext;
  */
 public class CmdUnclaim extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdUnclaim()
     {
-        return "unclaim";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
+        super("unclaim", Level.ALL);
     }
 
     @Override

@@ -334,7 +334,7 @@ public class GuiClaimedChunks extends GuiBase
                 add(buttonRefresh);
                 add(buttonUnclaimAll);
 
-                setHeight(getWidgets().size() * 16);
+                setHeight(widgets.size() * 16);
             }
 
             @Override

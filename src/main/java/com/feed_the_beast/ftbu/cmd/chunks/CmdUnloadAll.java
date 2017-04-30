@@ -20,10 +20,9 @@ import net.minecraftforge.server.permission.PermissionAPI;
  */
 public class CmdUnloadAll extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdUnloadAll()
     {
-        return "unload_all";
+        super("unload_all", Level.ALL);
     }
 
     @Override

@@ -13,10 +13,9 @@ import net.minecraftforge.server.permission.PermissionAPI;
  */
 public class CmdCheckPerm extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdCheckPerm()
     {
-        return "check_permission";
+        super("check_permission", Level.OP);
     }
 
     @Override

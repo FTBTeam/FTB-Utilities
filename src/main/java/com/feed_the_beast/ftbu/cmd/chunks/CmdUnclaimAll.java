@@ -22,16 +22,9 @@ import java.util.List;
  */
 public class CmdUnclaimAll extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdUnclaimAll()
     {
-        return "unclaim_all";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
+        super("unclaim_all", Level.ALL);
     }
 
     @Override

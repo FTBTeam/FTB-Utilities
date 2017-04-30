@@ -1,5 +1,6 @@
-package com.feed_the_beast.ftbu.api.chunks;
+package com.feed_the_beast.ftbu.api.events;
 
+import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**

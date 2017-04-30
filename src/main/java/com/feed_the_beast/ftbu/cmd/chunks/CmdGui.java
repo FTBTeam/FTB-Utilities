@@ -15,16 +15,9 @@ import net.minecraft.server.MinecraftServer;
  */
 public class CmdGui extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdGui()
     {
-        return "gui";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
+        super("gui", Level.ALL);
     }
 
     @Override

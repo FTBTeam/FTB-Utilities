@@ -311,7 +311,7 @@ public enum Guides implements IResourceManagerReloadListener
                 }
                 else
                 {
-                    String value = SUBSTITUTE_CACHE.computeIfAbsent(keyBuilder.substring(1), k -> replaceSubstitutes(StringUtils.translate(k).replace('“', '\"').replace('”', '\"').replace("\"", "\\\"")));
+                    String value = SUBSTITUTE_CACHE.computeIfAbsent(keyBuilder.substring(1), k -> replaceSubstitutes(StringUtils.translate(k).replace('\u201C', '\"').replace('\u201D', '\"').replace("\"", "\\\"")));
 
                     //TODO: Add special values
 

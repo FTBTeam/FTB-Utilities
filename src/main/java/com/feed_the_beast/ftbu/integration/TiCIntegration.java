@@ -20,7 +20,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.event.HoverEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -41,11 +40,6 @@ import java.util.Collections;
  */
 public class TiCIntegration
 {
-    public static void init()
-    {
-        MinecraftForge.EVENT_BUS.register(TiCIntegration.class);
-    }
-
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public static void onGuideEvent(ClientGuideEvent event)

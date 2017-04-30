@@ -41,6 +41,9 @@ repositories {
         name 'DVS1 Maven FS'
         url 'http://dvs1.progwml6.com/files/maven'
     }
+    maven {
+        url "http://maven.k-4u.nl"
+    }
 }
 
 configurations.all {
@@ -54,6 +57,7 @@ dependencies {
     deobfCompile 'mod.chiselsandbits:chiselsandbits:13.0.76:api'
     deobfCompile 'slimeknights.mantle:Mantle:1.10.2-1.1.4.203'
     deobfCompile 'slimeknights:TConstruct:1.10.2-2.6.2.490'
+    deobfCompile "com.github.mcjty:compatlayer:1.10-0.2.7"
 }
 
 sourceSets {

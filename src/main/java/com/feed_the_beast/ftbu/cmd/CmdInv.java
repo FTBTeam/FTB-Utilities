@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.lib.util.InvUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.NBTUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -95,11 +96,10 @@ public class CmdInv extends CmdTreeBase
             {
                 ItemStack is = inv.getStackInSlot(i);
 
-                if(is != null)
+                if(!ItemStackTools.isEmpty(is))
                 {
-                    NBTTagCompound nbttagcompound = new NBTTagCompound();
+                    NBTTagCompound nbttagcompound = is.serializeNBT();
                     nbttagcompound.setInteger("Slot", i);
-                    is.writeToNBT(nbttagcompound);
                     nbttaglist.appendTag(nbttagcompound);
                 }
             }
@@ -165,7 +165,7 @@ public class CmdInv extends CmdTreeBase
 
                 if(j >= 0 && j < inv.getSizeInventory())
                 {
-                    inv.setInventorySlotContents(j, ItemStack.loadItemStackFromNBT(nbttagcompound));
+                    inv.setInventorySlotContents(j, ItemStackTools.loadFromNBT(nbttagcompound));
                 }
             }
         }

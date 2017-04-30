@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.lib.util.InvUtils;
+import mcjty.lib.compat.CompatInventory;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
@@ -9,7 +11,7 @@ import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
 
-public class InvSeeInventory implements IInventory
+public class InvSeeInventory implements CompatInventory
 {
     private static final int slotMapping[] = {39, 38, 37, 36, -1, 40, 41, 42, 43, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 0, 1, 2, 3, 4, 5, 6, 7, 8,};
 
@@ -54,7 +56,7 @@ public class InvSeeInventory implements IInventory
     {
         int j = slotMapping[i];
         IInventory inv = getInv(j);
-        return (inv == null) ? null : inv.getStackInSlot(getSlot(j));
+        return (inv == null) ? ItemStackTools.getEmptyStack() : inv.getStackInSlot(getSlot(j));
     }
 
     @Override
@@ -62,7 +64,7 @@ public class InvSeeInventory implements IInventory
     {
         int j = slotMapping[i];
         IInventory inv = getInv(j);
-        return (inv == null) ? null : inv.decrStackSize(getSlot(j), k);
+        return (inv == null) ? ItemStackTools.getEmptyStack() : inv.decrStackSize(getSlot(j), k);
     }
 
     @Override
@@ -70,7 +72,7 @@ public class InvSeeInventory implements IInventory
     {
         int j = slotMapping[i];
         IInventory inv = getInv(j);
-        return (inv == null) ? null : inv.removeStackFromSlot(getSlot(j));
+        return (inv == null) ? ItemStackTools.getEmptyStack() : inv.removeStackFromSlot(getSlot(j));
     }
 
     @Override
@@ -122,7 +124,7 @@ public class InvSeeInventory implements IInventory
     }
 
     @Override
-    public boolean isUsableByPlayer(EntityPlayer ep)
+    public boolean isUsable(EntityPlayer player)
     {
         return true;
     }

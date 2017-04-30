@@ -7,7 +7,6 @@ import net.minecraft.stats.StatBase;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 
-import javax.annotation.Nullable;
 import java.util.Comparator;
 
 /**
@@ -15,9 +14,9 @@ import java.util.Comparator;
  */
 public interface IFTBUtilitiesRegistry
 {
-    void addLeaderboard(StatBase stat, @Nullable Comparator<IForgePlayer> comparator, ILeaderboardData data, ITextComponent displayName, IDrawableObject icon);
+    void addLeaderboard(StatBase stat, Comparator<IForgePlayer> comparator, ILeaderboardData data, ITextComponent displayName, IDrawableObject icon);
 
-    default void addLeaderboard(StatBase stat, @Nullable Comparator<IForgePlayer> comparator, ILeaderboardData data, IDrawableObject icon)
+    default void addLeaderboard(StatBase stat, Comparator<IForgePlayer> comparator, ILeaderboardData data, IDrawableObject icon)
     {
         addLeaderboard(stat, comparator, data, new TextComponentTranslation(stat.statId), icon);
     }

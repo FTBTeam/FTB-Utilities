@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
@@ -48,7 +49,7 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
             }
 
             ItemStack armor = ep.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-            if(armor != null && armor.getItem().isValidArmor(armor, EntityEquipmentSlot.CHEST, ep))
+            if(!ItemStackTools.isEmpty(armor) && armor.getItem().isValidArmor(armor, EntityEquipmentSlot.CHEST, ep))
             {
                 GlStateManager.translate(0F, 0F, -0.0625F);
             }

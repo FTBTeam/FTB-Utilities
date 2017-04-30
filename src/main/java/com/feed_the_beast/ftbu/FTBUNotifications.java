@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.NotificationId;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.Notification;
+import com.feed_the_beast.ftbl.lib.client.DrawableItem;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
 import net.minecraft.init.Blocks;
@@ -30,7 +31,7 @@ public class FTBUNotifications
     public static final INotification CHUNK_UNCLAIMED = create("chunk_modified", 1).addText(new TextComponentString("Chunk unclaimed"));
     public static final INotification CHUNK_LOADED = create("chunk_modified", 2).addText(new TextComponentString("Chunk loaded"));
     public static final INotification CHUNK_UNLOADED = create("chunk_modified", 3).addText(new TextComponentString("Chunk unloaded"));
-    public static final Notification WILDERNESS = create("chunk_changed", 0).setTimer(3000).setColor(new Color4I(false, 0xFF3A913A)).setItem(new ItemStack(Blocks.VINE));
+    public static final Notification WILDERNESS = create("chunk_changed", 0).setTimer(3000).setColor(new Color4I(false, 0xFF3A913A)).setIcon(new DrawableItem(new ItemStack(Blocks.VINE)));
 
     static
     {

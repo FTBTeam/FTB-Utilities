@@ -23,12 +23,14 @@ import com.feed_the_beast.ftbu.config.FTBUConfigRanks;
 import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.config.PropertyChatSubstitute;
+import com.feed_the_beast.ftbu.integration.TiCIntegration;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUTeamData;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -52,6 +54,11 @@ public enum FTBLibIntegration implements IFTBLibPlugin
         API = api;
         MinecraftForge.EVENT_BUS.register(FTBLibIntegration.class);
         MinecraftForge.EVENT_BUS.register(FTBUCommands.class);
+
+        if(Loader.isModLoaded("tconstruct"))
+        {
+            MinecraftForge.EVENT_BUS.register(TiCIntegration.class);
+        }
     }
 
     @SubscribeEvent

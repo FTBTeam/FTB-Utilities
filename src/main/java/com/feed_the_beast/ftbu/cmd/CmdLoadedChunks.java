@@ -101,7 +101,9 @@ public class CmdLoadedChunks extends CmdBase
                     }
 
                     ITextComponent line = new TextComponentString(c.chunkXPos + ", " + c.chunkZPos + " [" + owner + "]");
-                    String cmd = "/tp " + c.getXCenter() + " " + ep.world.getHeight(c.getXCenter(), c.getZCenter()) + " " + c.getZCenter();
+                    int cx = (c.chunkXPos << 4) + 8;
+                    int cz = (c.chunkZPos << 4) + 8;
+                    String cmd = "/tp " + cx + " " + ep.world.getHeight(cx, cz) + " " + cz;
                     line.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(cmd)));
                     line.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, cmd));
                     mod.println(line);

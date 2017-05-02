@@ -45,7 +45,7 @@ public class TiCIntegration
     public static void onGuideEvent(ClientGuideEvent event)
     {
         GuideTitlePage guide = event.getModGuide("tconstruct");
-        guide.setIcon(new DrawableObjectList(Item.getByNameOrId("tconstruct:toolforge")));
+        guide.setIcon(new DrawableItem(new ItemStack(Item.getByNameOrId("tconstruct:toolforge"), 1, 0)));
 
         GuidePage pageIntro = loadPage(event, "intro");
 

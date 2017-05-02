@@ -32,7 +32,7 @@ public class FTBUClientEventHandler
         {
             GuiWarps.INSTANCE = new GuiWarps();
             GuiWarps.INSTANCE.openGui();
-            FTBLibClient.execClientCommand("/ftb warps gui");
+            FTBLibClient.execClientCommand("/ftb warp gui");
         }
     }
 }

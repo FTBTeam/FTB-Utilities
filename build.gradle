@@ -26,9 +26,9 @@ compileJava {
 }
 
 minecraft {
-    version = "1.10.2-12.18.3.2254"
+    version = "1.11.2-13.20.0.2285"
     runDir = "run"
-    mappings = "stable_29"
+    mappings = "snapshot_20161220"
 }
 
 repositories {
@@ -57,7 +57,7 @@ dependencies {
     deobfCompile 'mod.chiselsandbits:chiselsandbits:13.0.76:api'
     deobfCompile 'slimeknights.mantle:Mantle:1.10.2-1.1.4.203'
     deobfCompile 'slimeknights:TConstruct:1.10.2-2.6.2.490'
-    deobfCompile "com.github.mcjty:compatlayer:1.10-0.2.7"
+    deobfCompile "com.github.mcjty:compatlayer:1.11.2-0.2.7"
 }
 
 sourceSets {

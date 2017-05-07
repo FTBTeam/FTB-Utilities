@@ -1,5 +1,16 @@
 package com.feed_the_beast.ftbu.world;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.annotation.Nullable;
+
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
@@ -10,19 +21,15 @@ import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
+import com.feed_the_beast.ftbu.api.chunks.IPlayerInChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
+import com.feed_the_beast.ftbu.api_impl.PlayerInChunk;
+
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.INBTSerializable;
-
-import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by LatvianModder on 11.02.2016.
@@ -79,9 +86,10 @@ public class FTBUPlayerData implements INBTSerializable<NBTBase>
 
         if(!claimedChunks.isEmpty())
         {
-            NBTTagList list = new NBTTagList();
+            NBTTagCompound claimedChunkNBT = new NBTTagCompound();
+            NBTTagList claimedChunksNBT = new NBTTagList();
 
-            for(IClaimedChunk chunk : claimedChunks)
+            for (IClaimedChunk chunk : claimedChunks)
             {
                 ChunkDimPos pos = chunk.getPos();
 
@@ -95,20 +103,36 @@ public class FTBUPlayerData implements INBTSerializable<NBTBase>
                     }
                 }
 
-                int ai[] = flags != 0 ? new int[4] : new int[3];
-                ai[0] = pos.dim;
-                ai[1] = pos.posX;
-                ai[2] = pos.posZ;
+                NBTTagCompound coordinates = new NBTTagCompound();
+                coordinates.setInteger("Dimension", pos.dim);
+                coordinates.setInteger("X", pos.posX);
+                coordinates.setInteger("Z", pos.posZ);
+                claimedChunkNBT.setTag("Coordinates", coordinates);
 
                 if(flags != 0)
                 {
-                    ai[3] = flags;
+                    claimedChunkNBT.setInteger("Flags", flags);
                 }
-
-                list.appendTag(new NBTTagIntArray(ai));
+                
+                if (!chunk.getAllPlayersInChunk().isEmpty()) {
+                	NBTTagList playerInChunkList = new NBTTagList();
+                	for (IPlayerInChunk playerInChunk : chunk.getAllPlayersInChunk()) {
+                		NBTTagCompound tag2 = new NBTTagCompound();
+                		tag2.setString("EnterTime", new SimpleDateFormat("yyyyMMWWuukkmmss").format(playerInChunk.getEnterTimeCalendar().getTime()));
+                		if (playerInChunk.getLeaveTimeCalendar() != null) {
+                			tag2.setString("LeaveTime", new SimpleDateFormat("yyyyMMWWuukkmmss").format(playerInChunk.getLeaveTimeCalendar().getTime()));
+                			tag2.setString("StayTime", playerInChunk.getStayTime());
+                		}
+                		tag2.setString("Player" , playerInChunk.
+                				getPlayer().
+                				getName());
+                		playerInChunkList.appendTag(tag2);	
+                	}
+                	claimedChunkNBT.setTag("PlayersInChunk", playerInChunkList);
+                }
+                claimedChunksNBT.appendTag(claimedChunkNBT);
             }
-
-            nbt.setTag("ClaimedChunks", list);
+            nbt.setTag("ClaimedChunksNBT", claimedChunksNBT);
         }
 
         return nbt;
@@ -145,18 +169,39 @@ public class FTBUPlayerData implements INBTSerializable<NBTBase>
             lastDeath = (ai.length == 4) ? new BlockDimPos(ai) : null;
         }
 
-        if(nbt.hasKey("ClaimedChunks"))
+        if(nbt.hasKey("ClaimedChunksNBT"))
         {
-            NBTTagList list = (NBTTagList) nbt.getTag("ClaimedChunks");
+            NBTTagList ClaimedChunksNBT = (NBTTagList) nbt.getTag("ClaimedChunksNBT");
 
-            for(int i = 0; i < list.tagCount(); i++)
+            for(int i = 0;
+            		i < 
+            		ClaimedChunksNBT.
+            		tagCount();
+            		i++)
             {
-                int[] ai = list.getIntArrayAt(i);
+                NBTTagCompound claimedChunkNBT = (NBTTagCompound) ClaimedChunksNBT.get(i);
 
-                if(ai.length >= 3)
+                if((claimedChunkNBT.hasKey("Flags") ? 1 : 0) + ((NBTTagCompound) claimedChunkNBT.getTag("Coordinates")).getSize() >= 3)
                 {
-                    ClaimedChunk chunk = new ClaimedChunk(new ChunkDimPos(ai[1], ai[2], ai[0]), player, ai.length >= 4 ? ai[3] : 0);
+                	NBTTagCompound coordinates = (NBTTagCompound) claimedChunkNBT.getTag("Coordinates");
+                    ClaimedChunk chunk = new ClaimedChunk(new ChunkDimPos(coordinates.getInteger("X"), coordinates.getInteger("Z"), coordinates.getInteger("Dimension")), player, (claimedChunkNBT.hasKey("Flags") ? claimedChunkNBT.getInteger("Flags") : 0));
                     ClaimedChunkStorage.INSTANCE.setChunk(chunk.getPos(), chunk);
+                    if (claimedChunkNBT.hasKey("PlayersInChunk")) {
+                    	NBTTagList players = (NBTTagList) claimedChunkNBT.getTag("PlayersInChunk");
+                    	for (int j = 0; j < players.tagCount(); j++)
+                    	{
+                    		NBTTagCompound player = (NBTTagCompound) players.get(j);
+                    		Calendar enterTime = Calendar.getInstance();
+                    		Calendar leaveTime = Calendar.getInstance();
+                    		try {
+                    			enterTime.setTimeInMillis(new SimpleDateFormat("yyyyMMWWuukkmmss").parse(player.getString("EnterTime")).getTime());
+                    			leaveTime.setTimeInMillis(new SimpleDateFormat("yyyyMMWWuukkmmss").parse(player.getString("LeaveTime")).getTime());
+                    		} catch (ParseException e) {
+                    			e.printStackTrace();
+                    		}
+                    		chunk.playerInChunkFromNBT(enterTime, leaveTime, player.getString("StayTime"), FTBLibIntegration.API.getUniverse().getPlayer(player.getString("Player")));
+                    	}
+                    }
                 }
             }
         }

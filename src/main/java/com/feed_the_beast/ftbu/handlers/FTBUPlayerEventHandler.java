@@ -141,6 +141,12 @@ public class FTBUPlayerEventHandler
         }
 
         updateChunkMessage(ep, new ChunkDimPos(e.getNewChunkX(), e.getNewChunkZ(), ep.dimension));
+        if (ClaimedChunkStorage.INSTANCE.getChunk(new ChunkDimPos(e.getNewChunkX(), e.getNewChunkZ(), ep.dimension)) != null && (e.getOldChunkX() != e.getNewChunkX() || e.getOldChunkZ() != e.getNewChunkZ())) {
+        	ClaimedChunkStorage.INSTANCE.getChunk(new ChunkDimPos(e.getNewChunkX(), e.getNewChunkZ(), ep.dimension)).playerEnteredChunk(player);
+        }
+        if (ClaimedChunkStorage.INSTANCE.getChunk(new ChunkDimPos(e.getOldChunkX(), e.getOldChunkZ(), ep.dimension)) != null && (e.getOldChunkX() != e.getNewChunkX() || e.getOldChunkZ() != e.getNewChunkZ())) {
+        	ClaimedChunkStorage.INSTANCE.getChunk(new ChunkDimPos(e.getOldChunkX(), e.getOldChunkZ(), ep.dimension)).playerLeft(player);
+        }
     }
 
     public static void updateChunkMessage(EntityPlayerMP player, ChunkDimPos pos)

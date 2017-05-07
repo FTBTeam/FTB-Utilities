@@ -1,5 +1,19 @@
 package com.feed_the_beast.ftbu.world;
 
+import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.Function;
+
+import javax.annotation.Nullable;
+
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibStats;
@@ -31,6 +45,7 @@ import com.feed_the_beast.ftbu.world.backups.Backups;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -46,18 +61,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
-
-import javax.annotation.Nullable;
-import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.function.Function;
 
 /**
  * Created by LatvianModder on 18.05.2016.
@@ -512,6 +515,10 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
         {
             nextWebApiUpdate = now + (FTBUConfigWebAPI.UPDATE_INTERVAL.getInt() * 60000L);
             exportWebAPI();
+        }
+        
+        for (IClaimedChunk claimedChunk : ClaimedChunkStorage.INSTANCE.getChunks(null)) {
+        	claimedChunk.tick();
         }
 
         /*

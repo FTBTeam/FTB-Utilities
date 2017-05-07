@@ -1,13 +1,20 @@
 package com.feed_the_beast.ftbu.api_impl;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+
+import javax.annotation.Nullable;
+
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
+import com.feed_the_beast.ftbu.api.chunks.IPlayerInChunk;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.world.FTBUTeamData;
+
 import net.minecraftforge.server.permission.PermissionAPI;
 
 /**
@@ -18,6 +25,7 @@ public class ClaimedChunk implements IClaimedChunk
     private final ChunkDimPos pos;
     private final IForgePlayer owner;
     private int flags;
+    private ArrayList<IPlayerInChunk> playersInChunk = new ArrayList<IPlayerInChunk>();
 
     public ClaimedChunk(ChunkDimPos c, IForgePlayer p, int f)
     {
@@ -80,5 +88,52 @@ public class ClaimedChunk implements IClaimedChunk
     public void setHasUpgrade(IChunkUpgrade upgrade, boolean v)
     {
         flags = Bits.setFlag(flags, 1 << upgrade.getId(), v);
+    }
+
+    @Override
+    public void playerEnteredChunk(IForgePlayer player) {
+    	playersInChunk.add(0, new PlayerInChunk(player));
+    }
+    
+    @Override
+    public void playerInChunkFromNBT(Calendar entertime, Calendar leavetime, String staytime, IForgePlayer player) {
+    	playersInChunk.add(0, new PlayerInChunk(entertime, leavetime, staytime, player));
+    }
+    
+    @Override
+    public ArrayList<IPlayerInChunk> getAllPlayersInChunk() {
+    	return playersInChunk;
+    }
+    
+    @Override
+    public void playerLeft(IForgePlayer player) {
+    	ArrayList<IPlayerInChunk> players = getPlayer(player);
+    	players.get(0).playerLeft();
+    }
+    
+    @Override
+    @Nullable
+    public ArrayList<IPlayerInChunk> getPlayer(IForgePlayer player) {
+    	ArrayList<IPlayerInChunk> players = new ArrayList<IPlayerInChunk>();
+    	for (IPlayerInChunk playerInChunk : playersInChunk) {
+    		if (playerInChunk.getPlayer().getName() == player.getName()) {
+    			players.add(playerInChunk);
+    		}
+    	}
+    	return players;
+    }
+
+    @Override
+    public void tick() {
+    	final ArrayList<IPlayerInChunk> toRemove = new ArrayList<IPlayerInChunk>();
+    	for (IPlayerInChunk playerInChunk : playersInChunk) {
+    		if (playerInChunk.getLeaveTime() != null) {
+    			long currentHourMinusSix = Calendar.getInstance().getTimeInMillis() / 1000 / 60 / 60 - 6;
+    		    if (playerInChunk.getLeaveTimeCalendar().getTimeInMillis() / 1000 / 60 / 60 < currentHourMinusSix) {
+        			toRemove.add(playerInChunk);
+        		}
+    		}
+    	}
+    	getAllPlayersInChunk().removeAll(toRemove);
     }
 }

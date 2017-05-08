@@ -1,10 +1,13 @@
 package com.feed_the_beast.ftbu.integration;
 
 import com.feed_the_beast.ftbl.api.events.ClientGuideEvent;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.DrawableItem;
 import com.feed_the_beast.ftbl.lib.client.DrawableObjectList;
 import com.feed_the_beast.ftbl.lib.guide.DrawableObjectListLine;
+import com.feed_the_beast.ftbl.lib.guide.GuideContentsLine;
 import com.feed_the_beast.ftbl.lib.guide.GuideExtendedTextLine;
+import com.feed_the_beast.ftbl.lib.guide.GuideHrLine;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.guide.GuideTitlePage;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
@@ -46,6 +49,8 @@ public class TiCIntegration
     {
         GuideTitlePage guide = event.getModGuide("tconstruct");
         guide.setIcon(new DrawableItem(new ItemStack(Item.getByNameOrId("tconstruct:toolforge"), 1, 0)));
+        guide.println(new GuideHrLine(1, Color4I.NONE));
+        guide.println(new GuideContentsLine(guide));
 
         GuidePage pageIntro = loadPage(event, "intro");
 

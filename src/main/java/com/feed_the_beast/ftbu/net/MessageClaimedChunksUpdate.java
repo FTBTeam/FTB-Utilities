@@ -34,9 +34,9 @@ import java.util.UUID;
  */
 public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedChunksUpdate>
 {
-    private int startX, startZ, claimedChunks, loadedChunks, maxClaimedChunks, maxLoadedChunks;
-    private Map<UUID, ClaimedChunks.Team> teams;
-    private ClaimedChunks.Data[] chunkData;
+    public int startX, startZ, claimedChunks, loadedChunks, maxClaimedChunks, maxLoadedChunks;
+    public Map<UUID, ClaimedChunks.Team> teams;
+    public ClaimedChunks.Data[] chunkData;
 
     public MessageClaimedChunksUpdate()
     {
@@ -225,6 +225,6 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
     @Override
     public void onMessage(MessageClaimedChunksUpdate m, EntityPlayer player)
     {
-        GuiClaimedChunks.setData(m.startX, m.startZ, m.claimedChunks, m.loadedChunks, m.maxClaimedChunks, m.maxLoadedChunks, m.chunkData, m.teams);
+        GuiClaimedChunks.setData(m);
     }
 }

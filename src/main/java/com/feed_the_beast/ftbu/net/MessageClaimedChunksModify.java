@@ -27,14 +27,14 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
     public static final byte UNLOAD = 3;
 
     private int startX, startZ;
-    private byte action;
+    private int action;
     private Collection<ChunkPos> chunks;
 
     public MessageClaimedChunksModify()
     {
     }
 
-    public MessageClaimedChunksModify(int sx, int sz, byte a, Collection<ChunkPos> c)
+    public MessageClaimedChunksModify(int sx, int sz, int a, Collection<ChunkPos> c)
     {
         startX = sx;
         startZ = sz;
@@ -53,7 +53,7 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
     {
         startX = io.readInt();
         startZ = io.readInt();
-        action = io.readByte();
+        action = io.readUnsignedByte();
 
         int s = io.readUnsignedByte();
         chunks = new ArrayList<>(s);

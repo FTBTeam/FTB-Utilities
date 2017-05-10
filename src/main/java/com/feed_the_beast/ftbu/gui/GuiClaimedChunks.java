@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbu.gui;
 
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.CachedVertexData;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
@@ -12,9 +11,9 @@ import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiChunkSelectorBase;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
 import com.feed_the_beast.ftbl.lib.gui.misc.ThreadReloadChunkSelector;
-import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
@@ -22,10 +21,10 @@ import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
 import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksModify;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksRequest;
+import com.feed_the_beast.ftbu.net.MessageClaimedChunksUpdate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -33,14 +32,13 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class GuiClaimedChunks extends GuiBase
+public class GuiClaimedChunks extends GuiChunkSelectorBase
 {
     public static GuiClaimedChunks instance;
     private static final Map<UUID, ClaimedChunks.Team> TEAMS = new HashMap<>();
@@ -49,7 +47,6 @@ public class GuiClaimedChunks extends GuiBase
     private static final ClaimedChunks.Data NULL_CHUNK_DATA = new ClaimedChunks.Data();
 
     private static final CachedVertexData AREA = new CachedVertexData(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-    private static final CachedVertexData GRID = new CachedVertexData(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
 
     static
     {
@@ -58,20 +55,6 @@ public class GuiClaimedChunks extends GuiBase
         for(int i = 0; i < chunkData.length; i++)
         {
             chunkData[i] = new ClaimedChunks.Data();
-        }
-
-        GRID.color.set(128, 128, 128, 50);
-
-        for(int x = 0; x <= GuiConfigs.CHUNK_SELECTOR_TILES_GUI; x++)
-        {
-            GRID.pos(x * 16, 0D);
-            GRID.pos(x * 16, GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, 0D);
-        }
-
-        for(int y = 0; y <= GuiConfigs.CHUNK_SELECTOR_TILES_GUI; y++)
-        {
-            GRID.pos(0D, y * 16, 0D);
-            GRID.pos(GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, y * 16, 0D);
         }
     }
 
@@ -86,14 +69,14 @@ public class GuiClaimedChunks extends GuiBase
         return (data.flags != with.flags || data.team != with.team) && !with.hasUpgrade(ChunkUpgrade.LOADED);
     }
 
-    public static void setData(int startX, int startZ, int cc, int lc, int mcc, int mlc, ClaimedChunks.Data[] data, Map<UUID, ClaimedChunks.Team> tms)
+    public static void setData(MessageClaimedChunksUpdate m)
     {
-        claimedChunks = cc;
-        loadedChunks = lc;
-        maxClaimedChunks = mcc;
-        maxLoadedChunks = mlc;
-        System.arraycopy(data, 0, chunkData, 0, chunkData.length);
-        TEAMS.putAll(tms);
+        claimedChunks = m.claimedChunks;
+        loadedChunks = m.loadedChunks;
+        maxClaimedChunks = m.maxClaimedChunks;
+        maxLoadedChunks = m.maxLoadedChunks;
+        System.arraycopy(m.chunkData, 0, chunkData, 0, chunkData.length);
+        TEAMS.putAll(m.teams);
 
         if(FTBUClient.JM_INTEGRATION != null)
         {
@@ -101,25 +84,28 @@ public class GuiClaimedChunks extends GuiBase
             {
                 for(int x = 0; x < GuiConfigs.CHUNK_SELECTOR_TILES_GUI; x++)
                 {
-                    FTBUClient.JM_INTEGRATION.chunkChanged(new ChunkPos(startX + x, startZ + z), data[x + z * GuiConfigs.CHUNK_SELECTOR_TILES_GUI]);
+                    FTBUClient.JM_INTEGRATION.chunkChanged(new ChunkPos(m.startX + x, m.startZ + z), m.chunkData[x + z * GuiConfigs.CHUNK_SELECTOR_TILES_GUI]);
                 }
             }
         }
 
         AREA.reset();
         EnumTeamColor prevCol = null;
+        ClaimedChunks.Data data;
 
         for(int i = 0; i < chunkData.length; i++)
         {
-            if(!chunkData[i].hasUpgrade(ChunkUpgrade.CLAIMED))
+            data = chunkData[i];
+
+            if(!data.hasUpgrade(ChunkUpgrade.CLAIMED))
             {
                 continue;
             }
 
-            if(prevCol != chunkData[i].team.color)
+            if(prevCol != data.team.color)
             {
-                prevCol = chunkData[i].team.color;
-                AREA.color.set(chunkData[i].team.color.getColor(), 150);
+                prevCol = data.team.color;
+                AREA.color.set(data.team.color.getColor(), 150);
             }
 
             AREA.rect((i % GuiConfigs.CHUNK_SELECTOR_TILES_GUI) * 16, (i / GuiConfigs.CHUNK_SELECTOR_TILES_GUI) * 16, 16, 16);
@@ -129,7 +115,9 @@ public class GuiClaimedChunks extends GuiBase
 
         for(int i = 0; i < chunkData.length; i++)
         {
-            if(!chunkData[i].hasUpgrade(ChunkUpgrade.CLAIMED))
+            data = chunkData[i];
+
+            if(!data.hasUpgrade(ChunkUpgrade.CLAIMED))
             {
                 continue;
             }
@@ -139,12 +127,12 @@ public class GuiClaimedChunks extends GuiBase
             int y = i / GuiConfigs.CHUNK_SELECTOR_TILES_GUI;
             int dy = y * 16;
 
-            borderU = y > 0 && hasBorder(chunkData[i], getAt(x, y - 1));
-            borderD = y < (GuiConfigs.CHUNK_SELECTOR_TILES_GUI - 1) && hasBorder(chunkData[i], getAt(x, y + 1));
-            borderL = x > 0 && hasBorder(chunkData[i], getAt(x - 1, y));
-            borderR = x < (GuiConfigs.CHUNK_SELECTOR_TILES_GUI - 1) && hasBorder(chunkData[i], getAt(x + 1, y));
+            borderU = y > 0 && hasBorder(data, getAt(x, y - 1));
+            borderD = y < (GuiConfigs.CHUNK_SELECTOR_TILES_GUI - 1) && hasBorder(data, getAt(x, y + 1));
+            borderL = x > 0 && hasBorder(data, getAt(x - 1, y));
+            borderR = x < (GuiConfigs.CHUNK_SELECTOR_TILES_GUI - 1) && hasBorder(data, getAt(x + 1, y));
 
-            if(chunkData[i].hasUpgrade(ChunkUpgrade.LOADED))
+            if(data.hasUpgrade(ChunkUpgrade.LOADED))
             {
                 AREA.color.set(255, 80, 80, 230);
             }
@@ -175,102 +163,11 @@ public class GuiClaimedChunks extends GuiBase
         }
     }
 
-    private class MapButton extends Button
-    {
-        private final ChunkPos chunkPos;
-        private final int index;
-        private boolean isSelected = false;
-
-        private MapButton(int x, int y, int i)
-        {
-            super(x, y, 16, 16);
-            posX += (i % GuiConfigs.CHUNK_SELECTOR_TILES_GUI) * width;
-            posY += (i / GuiConfigs.CHUNK_SELECTOR_TILES_GUI) * height;
-            chunkPos = new ChunkPos(startX + (i % GuiConfigs.CHUNK_SELECTOR_TILES_GUI), startZ + (i / GuiConfigs.CHUNK_SELECTOR_TILES_GUI));
-            index = i;
-        }
-
-        @Override
-        public void onClicked(GuiBase gui, IMouseButton button)
-        {
-            GuiHelper.playClickSound();
-            boolean claim = !GuiScreen.isShiftKeyDown();
-            boolean flag = button.isLeft();
-
-            if(flag)
-            {
-                currentSelectionMode = claim ? MessageClaimedChunksModify.CLAIM : MessageClaimedChunksModify.LOAD;
-            }
-            else
-            {
-                currentSelectionMode = claim ? MessageClaimedChunksModify.UNCLAIM : MessageClaimedChunksModify.UNLOAD;
-            }
-        }
-
-        @Override
-        public void addMouseOverText(GuiBase gui, List<String> list)
-        {
-            if(chunkData[index].hasUpgrade(ChunkUpgrade.CLAIMED))
-            {
-                list.add(chunkData[index].team.formattedName);
-                list.add(TextFormatting.GREEN + ChunkUpgrade.CLAIMED.getLangKey().translate());
-
-                if(chunkData[index].team.isAlly)
-                {
-                    list.add(chunkData[index].owner);
-
-                    for(IChunkUpgrade upgrade : FTBUCommon.CHUNK_UPGRADES)
-                    {
-                        if(upgrade != null && chunkData[index].hasUpgrade(upgrade))
-                        {
-                            list.add(TextFormatting.RED + upgrade.getLangKey().translate());
-                        }
-                    }
-                }
-            }
-            else
-            {
-                list.add(TextFormatting.DARK_GREEN + ChunkUpgrade.WILDERNESS.getLangKey().translate());
-            }
-
-            if(GuiScreen.isCtrlKeyDown())
-            {
-                list.add(chunkPos.toString());
-            }
-        }
-
-        @Override
-        public void renderWidget(GuiBase gui)
-        {
-            int ax = getAX();
-            int ay = getAY();
-
-            if(!isSelected && currentSelectionMode != -1 && isMouseOver(this))
-            {
-                isSelected = true;
-            }
-
-            if(isSelected || gui.isMouseOver(this))
-            {
-                GuiHelper.drawBlankRect(ax, ay, 16, 16, Color4I.WHITE_A33);
-            }
-        }
-    }
-
-    public final int startX, startZ;
+    private final String currentDimName;
     private final Button buttonRefresh, buttonClose, buttonUnclaimAll;
-    private final MapButton mapButtons[];
-    private final Panel panelButtons;
-    private String currentDimName;
-    private byte currentSelectionMode = -1;
 
     public GuiClaimedChunks()
     {
-        super(GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16);
-
-        startX = MathUtils.chunk(mc.player.posX) - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2;
-        startZ = MathUtils.chunk(mc.player.posZ) - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2;
-
         currentDimName = mc.world.provider.getDimensionType().getName();
 
         buttonClose = new Button(0, 0, 16, 16, GuiLang.BUTTON_CLOSE.translate())
@@ -324,38 +221,6 @@ public class GuiClaimedChunks extends GuiBase
         };
 
         buttonUnclaimAll.setIcon(GuiIcons.REMOVE);
-
-        panelButtons = new Panel(0, 0, 16, 0)
-        {
-            @Override
-            public void addWidgets()
-            {
-                add(buttonClose);
-                add(buttonRefresh);
-                add(buttonUnclaimAll);
-
-                setHeight(widgets.size() * 16);
-            }
-
-            @Override
-            public int getAX()
-            {
-                return getScreen().getScaledWidth() - 16;
-            }
-
-            @Override
-            public int getAY()
-            {
-                return 0;
-            }
-        };
-
-        mapButtons = new MapButton[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
-
-        for(int i = 0; i < mapButtons.length; i++)
-        {
-            mapButtons[i] = new MapButton(0, 0, i);
-        }
     }
 
     @Override
@@ -365,103 +230,79 @@ public class GuiClaimedChunks extends GuiBase
     }
 
     @Override
-    public void addWidgets()
+    public int getSelectionMode(IMouseButton button)
     {
-        for(MapButton b : mapButtons)
-        {
-            add(b);
-        }
+        boolean claim = !GuiScreen.isShiftKeyDown();
+        boolean flag = button.isLeft();
 
-        add(panelButtons);
+        if(flag)
+        {
+            return claim ? MessageClaimedChunksModify.CLAIM : MessageClaimedChunksModify.LOAD;
+        }
+        else
+        {
+            return claim ? MessageClaimedChunksModify.UNCLAIM : MessageClaimedChunksModify.UNLOAD;
+        }
     }
 
     @Override
-    public void drawBackground()
+    public void onChunksSelected(Collection<ChunkPos> chunks)
     {
-        GlStateManager.color(1F, 1F, 1F, 1F);
-        GuiHelper.drawBlankRect(posX - 2, posY - 2, width + 4, height + 4, Color4I.BLACK);
-        //drawBlankRect((xSize - 128) / 2, (ySize - 128) / 2, zLevel, 128, 128);
+        new MessageClaimedChunksModify(startX, startZ, currentSelectionMode, chunks).sendToServer();
+    }
 
-        ThreadReloadChunkSelector.updateTexture();
-        GlStateManager.bindTexture(ThreadReloadChunkSelector.getTextureID());
-        GuiHelper.drawTexturedRect(posX, posY, GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, Color4I.WHITE, 0D, 0D, GuiConfigs.CHUNK_SELECTOR_UV, GuiConfigs.CHUNK_SELECTOR_UV);
-
-        GlStateManager.color(1F, 1F, 1F, 1F);
-        GlStateManager.enableTexture2D();
-        mc.getTextureManager().bindTexture(GuiConfigs.TEX_CHUNK_CLAIMING);
-
-        for(MapButton mapButton : mapButtons)
-        {
-            mapButton.renderWidget(this);
-        }
-
-        GlStateManager.disableTexture2D();
-        GlStateManager.glLineWidth(1F);
-
-        Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer buffer = tessellator.getBuffer();
-        buffer.setTranslation(mapButtons[0].getAX(), mapButtons[0].getAY(), 0D);
-        //GlStateManager.color(1F, 1F, 1F, GuiScreen.isCtrlKeyDown() ? 0.2F : 0.7F);
-        GlStateManager.color(1F, 1F, 1F, 1F);
+    @Override
+    public void drawArea(Tessellator tessellator, VertexBuffer buffer)
+    {
         AREA.draw(tessellator, buffer);
-        GRID.draw(tessellator, buffer);
-        buffer.setTranslation(0D, 0D, 0D);
-        GlStateManager.enableTexture2D();
-
-        int cx = MathUtils.chunk(mc.player.posX);
-        int cy = MathUtils.chunk(mc.player.posZ);
-
-        if(cx >= startX && cy >= startZ && cx < startX + GuiConfigs.CHUNK_SELECTOR_TILES_GUI && cy < startZ + GuiConfigs.CHUNK_SELECTOR_TILES_GUI)
-        {
-            double x = ((cx - startX) * 16D + MathUtils.wrap(mc.player.posX, 16D));
-            double y = ((cy - startZ) * 16D + MathUtils.wrap(mc.player.posZ, 16D));
-
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(posX + x, posY + y, 0D);
-            GlStateManager.pushMatrix();
-            //GlStateManager.rotate((int)((ep.rotationYaw + 180F) / (180F / 8F)) * (180F / 8F), 0F, 0F, 1F);
-            GlStateManager.rotate(mc.player.rotationYaw + 180F, 0F, 0F, 1F);
-            mc.getTextureManager().bindTexture(GuiConfigs.TEX_ENTITY);
-            GuiHelper.drawTexturedRect(-8, -8, 16, 16, Color4I.WHITE_A33, 0D, 0D, 1D, 1D);
-            GlStateManager.popMatrix();
-            FTBLibClient.localPlayerHead.draw(-2, -2, 4, 4, Color4I.NONE);
-            GlStateManager.popMatrix();
-        }
-
-        GlStateManager.color(1F, 1F, 1F, 1F);
     }
 
     @Override
-    public void mouseReleased(GuiBase gui)
+    public void addCornerButtons(Panel panel)
     {
-        super.mouseReleased(gui);
+        panel.add(buttonClose);
+        panel.add(buttonRefresh);
+        panel.add(buttonUnclaimAll);
+    }
 
-        if(currentSelectionMode != -1)
+    @Override
+    public void addCornerText(List<String> list)
+    {
+        list.add(FTBULang.LABEL_CCHUNKS_COUNT.translate(claimedChunks, maxClaimedChunks));
+        list.add(FTBULang.LABEL_LCHUNKS_COUNT.translate(loadedChunks, maxLoadedChunks));
+    }
+
+    @Override
+    public void addButtonText(GuiChunkSelectorBase.MapButton button, List<String> list)
+    {
+        ClaimedChunks.Data data = chunkData[button.index];
+
+        if(data.hasUpgrade(ChunkUpgrade.CLAIMED))
         {
-            Collection<ChunkPos> c = new ArrayList<>();
+            list.add(data.team.formattedName);
+            list.add(TextFormatting.GREEN + ChunkUpgrade.CLAIMED.getLangKey().translate());
 
-            for(MapButton b : mapButtons)
+            if(data.team.isAlly)
             {
-                if(b.isSelected)
+                list.add(data.owner);
+
+                for(IChunkUpgrade upgrade : FTBUCommon.CHUNK_UPGRADES)
                 {
-                    c.add(b.chunkPos);
-                    b.isSelected = false;
+                    if(upgrade != null && data.hasUpgrade(upgrade))
+                    {
+                        list.add(TextFormatting.RED + upgrade.getLangKey().translate());
+                    }
                 }
             }
-
-            new MessageClaimedChunksModify(startX, startZ, currentSelectionMode, c).sendToServer();
-            currentSelectionMode = -1;
         }
-    }
+        else
+        {
+            list.add(TextFormatting.DARK_GREEN + ChunkUpgrade.WILDERNESS.getLangKey().translate());
+        }
 
-    @Override
-    public void drawForeground()
-    {
-        String s = FTBULang.LABEL_CCHUNKS_COUNT.translate(claimedChunks, maxClaimedChunks);
-        getFont().drawStringWithShadow(s, getScreen().getScaledWidth() - getFont().getStringWidth(s) - 4, getScreen().getScaledHeight() - 24, 0xFFFFFFFF);
-        s = FTBULang.LABEL_LCHUNKS_COUNT.translate(loadedChunks, maxLoadedChunks);
-        getFont().drawStringWithShadow(s, getScreen().getScaledWidth() - getFont().getStringWidth(s) - 4, getScreen().getScaledHeight() - 12, 0xFFFFFFFF);
-
-        super.drawForeground();
+        if(GuiScreen.isCtrlKeyDown())
+        {
+            list.add(button.chunkPos.toString());
+        }
     }
 }

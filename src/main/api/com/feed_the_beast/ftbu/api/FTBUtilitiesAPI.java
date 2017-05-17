@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import java.util.Collection;
 
 /**
- * Created by LatvianModder on 30.08.2016.
+ * @author LatvianModder
  */
 public interface FTBUtilitiesAPI
 {

@@ -16,7 +16,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 /**
- * Created by LatvianModder on 27.06.2016.
+ * @author LatvianModder
  */
 public class CmdClaim extends CmdBase
 {

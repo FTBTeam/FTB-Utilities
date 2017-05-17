@@ -26,7 +26,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
- * Created by LatvianModder on 09.11.2016.
+ * @author LatvianModder
  */
 public class FTBUCommands
 {

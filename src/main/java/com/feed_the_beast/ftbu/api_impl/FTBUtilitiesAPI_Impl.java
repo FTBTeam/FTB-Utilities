@@ -18,13 +18,13 @@ import net.minecraftforge.server.permission.context.IContext;
 import javax.annotation.Nullable;
 import java.util.Collection;
 
-/**
- * Created by LatvianModder on 30.08.2016.
- */
 public enum FTBUtilitiesAPI_Impl implements FTBUtilitiesAPI, IPermissionHandler
 {
     INSTANCE;
 
+    /**
+     * @author LatvianModder
+     */
     private Collection<IFTBUtilitiesPlugin> plugins;
 
     public void init(ASMDataTable table)

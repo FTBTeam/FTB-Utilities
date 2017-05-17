@@ -18,7 +18,7 @@ import net.minecraftforge.server.permission.PermissionAPI;
 import net.minecraftforge.server.permission.context.BlockPosContext;
 
 /**
- * Created by LatvianModder on 27.06.2016.
+ * @author LatvianModder
  */
 public class CmdUnclaim extends CmdBase
 {

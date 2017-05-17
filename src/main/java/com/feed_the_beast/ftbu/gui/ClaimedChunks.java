@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
 import java.util.UUID;
 
 /**
- * Created by LatvianModder on 29.09.2016.
+ * @author LatvianModder
  */
 public class ClaimedChunks
 {

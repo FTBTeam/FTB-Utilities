@@ -15,7 +15,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import java.util.Comparator;
 
 /**
- * Created by LatvianModder on 28.06.2016.
+ * @author LatvianModder
  */
 public class FTBULeaderboards
 {

@@ -12,7 +12,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.event.ClickEvent;
 
 /**
- * Created by LatvianModder on 21.02.2016.
+ * @author LatvianModder
  */
 public class CmdGet extends CmdBase
 {

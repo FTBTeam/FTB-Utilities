@@ -11,7 +11,7 @@ import com.feed_the_beast.ftbu.world.FTBUTeamData;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 /**
- * Created by LatvianModder on 03.10.2016.
+ * @author LatvianModder
  */
 public class ClaimedChunk implements IClaimedChunk
 {

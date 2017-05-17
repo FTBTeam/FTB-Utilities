@@ -9,7 +9,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 /**
- * Created by LatvianModder on 07.02.2017.
+ * @author LatvianModder
  */
 public class CmdCheckPerm extends CmdBase
 {

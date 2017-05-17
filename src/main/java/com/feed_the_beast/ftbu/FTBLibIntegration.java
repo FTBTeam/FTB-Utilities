@@ -37,14 +37,14 @@ import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.io.File;
 
-/**
- * Created by LatvianModder on 20.09.2016.
- */
 public enum FTBLibIntegration implements IFTBLibPlugin
 {
     @FTBLibPlugin
     INSTANCE;
 
+    /**
+     * @author LatvianModder
+     */
     public static FTBLibAPI API;
     public static final ResourceLocation FTBU_DATA = FTBUFinals.get("data");
 

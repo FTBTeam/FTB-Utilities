@@ -11,7 +11,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 
 /**
- * Created by LatvianModder on 26.02.2017.
+ * @author LatvianModder
  */
 public class CmdGui extends CmdBase
 {

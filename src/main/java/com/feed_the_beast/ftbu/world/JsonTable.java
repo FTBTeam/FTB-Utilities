@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by LatvianModder on 18.06.2016.
+ * @author LatvianModder
  */
 public class JsonTable
 {
@@ -35,42 +35,7 @@ public class JsonTable
         public JsonElement get(String s)
         {
             JsonElement e = values.get(s);
-            return (s == null) ? JsonNull.INSTANCE : e;
-        }
-    }
-
-    public static final class CellID
-    {
-        public final String x, y;
-
-        public CellID(String px, String py)
-        {
-            x = px;
-            y = py;
-        }
-
-        @Override
-        public String toString()
-        {
-            return x + ':' + y;
-        }
-
-        @Override
-        public boolean equals(Object o)
-        {
-            if(o instanceof CellID)
-            {
-                CellID id = (CellID) o;
-                return id.x.equals(x) && id.y.equals(y);
-            }
-
-            return false;
-        }
-
-        @Override
-        public int hashCode()
-        {
-            return 31 * x.hashCode() + y.hashCode();
+            return (e == null) ? JsonNull.INSTANCE : e;
         }
     }
 
@@ -85,7 +50,7 @@ public class JsonTable
 
     public void setTitle(String id, String translated)
     {
-        if(translated != null && !translated.isEmpty())
+        if(!translated.isEmpty())
         {
             ids.put(id, translated);
         }
@@ -93,10 +58,7 @@ public class JsonTable
 
     public void addEntry(TableEntry e)
     {
-        if(e != null)
-        {
-            entries.add(e);
-        }
+        entries.add(e);
     }
 
     public JsonObject toJson()

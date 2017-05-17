@@ -16,7 +16,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.fml.common.Loader;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -70,10 +69,11 @@ public class CmdInv extends CmdTreeBase
             {
                 NBTTagCompound tag = new NBTTagCompound();
                 writeItemsToNBT(ep.inventory, tag, "Inventory");
+                IInventory baubles = InvUtils.getBaubles(ep);
 
-                if(Loader.isModLoaded("Baubles"))
+                if(baubles != null)
                 {
-                    writeItemsToNBT(InvUtils.getBaubles(ep), tag, "Baubles");
+                    writeItemsToNBT(baubles, tag, "Baubles");
                 }
 
                 NBTUtils.writeTag(file, tag);
@@ -131,12 +131,12 @@ public class CmdInv extends CmdTreeBase
             try
             {
                 NBTTagCompound tag = NBTUtils.readTag(file);
-
                 readItemsFromNBT(ep.inventory, tag, "Inventory");
+                IInventory baubles = InvUtils.getBaubles(ep);
 
-                if(Loader.isModLoaded("Baubles"))
+                if(baubles != null)
                 {
-                    readItemsFromNBT(InvUtils.getBaubles(ep), tag, "Baubles");
+                    readItemsFromNBT(baubles, tag, "Baubles");
                 }
             }
             catch(Exception e)

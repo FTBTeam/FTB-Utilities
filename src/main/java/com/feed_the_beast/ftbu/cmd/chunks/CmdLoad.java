@@ -14,7 +14,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 
 /**
- * Created by LatvianModder on 27.06.2016.
+ * @author LatvianModder
  */
 public class CmdLoad extends CmdBase
 {

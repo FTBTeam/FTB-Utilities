@@ -17,7 +17,7 @@ import java.io.File;
 import java.util.Arrays;
 
 /**
- * Created by LatvianModder on 28.04.2016.
+ * @author LatvianModder
  */
 public class CmdViewCrash extends CmdBase
 {

@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by LatvianModder on 17.01.2016.
+ * @author LatvianModder
  */
 @ClientPlugin //FIXME: JourneyMap Plugin
 public class JourneyMapIntegration implements IClientPlugin, IJMIntegration

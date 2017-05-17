@@ -60,7 +60,7 @@ import java.util.UUID;
 import java.util.function.Function;
 
 /**
- * Created by LatvianModder on 18.05.2016.
+ * @author LatvianModder
  */
 public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
 {
@@ -139,7 +139,8 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
             }
         }
 
-        return FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(player.getProfile(), FTBUPermissions.BADGE).getString();
+        String s = LOCAL_BADGES.get(playerId);
+        return s.isEmpty() ? FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(player.getProfile(), FTBUPermissions.BADGE).getString() : s;
     }
 
     public static void reloadServerBadges()
@@ -284,7 +285,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
         for(IClaimedChunk chunk : ClaimedChunkStorage.INSTANCE.getChunks(player))
         {
             ChunkDimPos pos = chunk.getPos();
-            if(dim == null || dim.intValue() == pos.dim)
+            if(dim == null || dim == pos.dim)
             {
                 setLoaded(player, pos, false);
                 MinecraftForge.EVENT_BUS.post(new ChunkModifiedEvent.Unclaimed(chunk));

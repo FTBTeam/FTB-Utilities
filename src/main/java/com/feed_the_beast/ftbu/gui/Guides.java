@@ -45,13 +45,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by LatvianModder on 02.10.2016.
- */
 public enum Guides implements IResourceManagerReloadListener
 {
     INSTANCE;
 
+    /**
+     * @author LatvianModder
+     */
     private static final GuidePage INFO_PAGE = new GuidePage("guides").addSpecialButton(new SpecialGuideButton(GuiLang.BUTTON_REFRESH.textComponent(), GuiIcons.REFRESH, new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftbc refresh_guide")));
 
     private static boolean isReloading = false;

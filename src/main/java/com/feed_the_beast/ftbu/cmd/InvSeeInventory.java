@@ -76,7 +76,7 @@ public class InvSeeInventory implements CompatInventory
     }
 
     @Override
-    public void setInventorySlotContents(int i, @Nullable ItemStack is)
+    public void setInventorySlotContents(int i, ItemStack is)
     {
         int j = slotMapping[i];
         IInventory inv = getInv(j);

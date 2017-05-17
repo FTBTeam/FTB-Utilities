@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 /**
- * Created by LatvianModder on 27.06.2016.
+ * @author LatvianModder
  */
 public class CmdChunks extends CmdTreeBase
 {

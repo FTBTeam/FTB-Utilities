@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 21.02.2016.
+ * @author LatvianModder
  */
 public class CmdOverride implements ICommand
 {
@@ -91,6 +91,6 @@ public class CmdOverride implements ICommand
     @Override
     public int compareTo(ICommand o)
     {
-        return parent.compareTo(o instanceof CmdOverride ? ((CmdOverride) o).parent : o);
+        return getName().compareTo(o.getName());
     }
 }

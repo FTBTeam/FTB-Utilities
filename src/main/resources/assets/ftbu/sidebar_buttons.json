@@ -2,7 +2,7 @@
 	"guide": {
 		"icon": "ftbl:textures/icons/book.png",
 		"dependencies": "after:ftbu.claimed_chunks",
-		"clickEvent": {
+		"click": {
 			"action": "run_command",
 			"value": "/ftbc open_guide"
 		},
@@ -11,7 +11,7 @@
 	"server_info": {
 		"icon": "ftbl:textures/icons/book_red.png",
 		"dependencies": "after:ftbu.guide",
-		"clickEvent": {
+		"click": {
 			"action": "run_command",
 			"value": "/ftb server_info"
 		},
@@ -22,7 +22,7 @@
 	"claimed_chunks": {
 		"icon": "ftbl:textures/icons/map.png",
 		"dependencies": "after:ftbu.toggle.night",
-		"clickEvent": {
+		"click": {
 			"action": "run_command",
 			"value": "/ftb chunks gui"
 		},
@@ -33,7 +33,7 @@
 	"trash_can": {
 		"icon": "ftbl:textures/icons/bin.png",
 		"dependencies": "after:ftbu.server_info",
-		"clickEvent": {
+		"click": {
 			"action": "run_command",
 			"value": "/ftb trash_can"
 		},
@@ -44,7 +44,7 @@
 	"shop": {
 		"icon": "ftbl:textures/icons/money_bag.png",
 		"dependencies": "after:ftbu.trash_can",
-		"clickEvent": {
+		"click": {
 			"action": "run_command",
 			"value": "/ftb shop gui"
 		},
@@ -56,7 +56,7 @@
 	"heal": {
 		"icon": "ftbl:textures/icons/heart.png",
 		"dependencies": "after:ftbl.my_server_settings",
-		"clickEvent": {
+		"click": {
 			"action": "run_command",
 			"value": "/heal"
 		},
@@ -68,7 +68,7 @@
 	"toggle.gamemode": {
 		"icon": "ftbl:textures/icons/toggle_gamemode.png",
 		"dependencies": "after:ftbu.heal",
-		"clickEvent": {
+		"click": {
 			"action": "run_command",
 			"value": "/ftbc toggle_gamemode"
 		},
@@ -79,7 +79,7 @@
 	"toggle.rain": {
 		"icon": "ftbl:textures/icons/toggle_rain.png",
 		"dependencies": "after:ftbu.toggle.gamemode",
-		"clickEvent": {
+		"click": {
 			"action": "run_command",
 			"value": "/toggledownfall"
 		},
@@ -90,7 +90,7 @@
 	"toggle.day": {
 		"icon": "ftbl:textures/icons/toggle_day.png",
 		"dependencies": "after:ftbu.toggle.rain",
-		"clickEvent": {
+		"click": {
 			"action": "run_command",
 			"value": "/time set 6000"
 		},
@@ -101,7 +101,7 @@
 	"toggle.night": {
 		"icon": "ftbl:textures/icons/toggle_night.png",
 		"dependencies": "after:ftbu.toggle.day",
-		"clickEvent": {
+		"click": {
 			"action": "run_command",
 			"value": "/time set 18000"
 		},

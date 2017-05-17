@@ -5,7 +5,7 @@ import com.google.gson.JsonNull;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
- * Created by LatvianModder on 09.02.2017.
+ * @author LatvianModder
  */
 class DefaultRank extends Rank
 {

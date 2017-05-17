@@ -16,7 +16,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import javax.annotation.Nullable;
 
 /**
- * Created by LatvianModder on 11.02.2016.
+ * @author LatvianModder
  */
 public class FTBUTeamData implements INBTSerializable<NBTBase>
 {

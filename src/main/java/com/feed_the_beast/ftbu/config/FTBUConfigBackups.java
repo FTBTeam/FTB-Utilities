@@ -13,9 +13,9 @@ public class FTBUConfigBackups
 {
     public static final PropertyBool ENABLED = new PropertyBool(true);
     public static final PropertyBool SILENT = new PropertyBool(false);
-    public static final PropertyShort BACKUPS_TO_KEEP = new PropertyShort(12, 0, 32000);
-    public static final PropertyDouble BACKUP_TIMER = new PropertyDouble(2D).setMin(0.05D).setMax(600D);
-    public static final PropertyByte COMPRESSION_LEVEL = new PropertyByte(1, 0, 9);
+    public static final PropertyShort BACKUPS_TO_KEEP = new PropertyShort(12, 0, 32000).setUnsigned();
+    public static final PropertyDouble BACKUP_TIMER = new PropertyDouble(2D, 0.05D, 600D);
+    public static final PropertyByte COMPRESSION_LEVEL = new PropertyByte(1, 0, 9).setUnsigned();
     public static final PropertyString FOLDER = new PropertyString("");
     public static final PropertyBool DISPLAY_FILE_SIZE = new PropertyBool(true);
     public static final PropertyBool USE_SEPARATE_THREAD = new PropertyBool(true);

@@ -13,6 +13,7 @@ import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
 import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.mojang.authlib.GameProfile;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAnvil;
 import net.minecraft.block.BlockDoor;
@@ -31,7 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by LatvianModder on 14.02.2016.
+ * @author LatvianModder
  */
 public class FTBUPermissions
 {
@@ -111,10 +112,10 @@ public class FTBUPermissions
     public static void addConfigs(IFTBLibRegistry reg)
     {
         reg.addRankConfig(BADGE, new PropertyString(""), new PropertyString(""));
-        reg.addRankConfig(HOMES_MAX, new PropertyShort(1, 0, 30000), new PropertyShort(100));
-        reg.addRankConfig(CLAIMS_MAX_CHUNKS, new PropertyShort(100, 0, 30000), new PropertyShort(1000));
+        reg.addRankConfig(HOMES_MAX, new PropertyShort(1, 0, 30000).setUnsigned(), new PropertyShort(100));
+        reg.addRankConfig(CLAIMS_MAX_CHUNKS, new PropertyShort(100, 0, 30000).setUnsigned(), new PropertyShort(1000));
         reg.addRankConfig(CLAIMS_BLOCKED_DIMENSIONS, new PropertyList(PropertyInt.ID), new PropertyList(PropertyInt.ID));
-        reg.addRankConfig(CHUNKLOADER_MAX_CHUNKS, new PropertyShort(50, 0, 30000), new PropertyShort(64));
+        reg.addRankConfig(CHUNKLOADER_MAX_CHUNKS, new PropertyShort(50, 0, 30000).setUnsigned(), new PropertyShort(64));
         //reg.addRankConfig(CHUNKLOADER_OFFLINE_TIMER, new PropertyDouble(-1D).setMin(-1D), new PropertyDouble(-1D));
     }
 
@@ -144,7 +145,7 @@ public class FTBUPermissions
             case CNB_PLACE:
                 return PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_BLOCK_CNB, null);//new PlayerContext(player).set(ContextKeys.POS, pos)))
             case ITEM:
-                return player.getHeldItem(hand) == null || PermissionAPI.hasPermission(player.getGameProfile(), CLAIMS_ITEM_PREFIX + formatId(player.getHeldItem(hand).getItem()), null);//new PlayerContext(player).set(ContextKeys.POS, pos).set(ContextKeys.BLOCK_STATE, state));
+                return !ItemStackTools.isEmpty(player.getHeldItem(hand)) || PermissionAPI.hasPermission(player.getGameProfile(), CLAIMS_ITEM_PREFIX + formatId(player.getHeldItem(hand).getItem()), null);//new PlayerContext(player).set(ContextKeys.POS, pos).set(ContextKeys.BLOCK_STATE, state));
             default:
                 return false;
         }

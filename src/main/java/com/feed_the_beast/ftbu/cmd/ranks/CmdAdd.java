@@ -11,7 +11,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 
 /**
- * Created by LatvianModder on 25.11.2016.
+ * @author LatvianModder
  */
 public class CmdAdd extends CmdBase
 {

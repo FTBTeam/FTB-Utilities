@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.lib.LangKey;
 import net.minecraft.util.IStringSerializable;
 
 /**
- * Created by LatvianModder on 01.03.2017.
+ * @author LatvianModder
  */
 public interface IChunkUpgrade extends IStringSerializable
 {

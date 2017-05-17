@@ -12,10 +12,11 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 21.02.2016.
+ * @author LatvianModder
  */
 public class CmdSet extends CmdBase
 {
@@ -31,7 +32,7 @@ public class CmdSet extends CmdBase
     }
 
     @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
         if(args.length == 2)
         {

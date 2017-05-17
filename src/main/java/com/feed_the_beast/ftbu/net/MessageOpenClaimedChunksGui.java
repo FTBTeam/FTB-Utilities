@@ -7,7 +7,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
- * Created by LatvianModder on 26.02.2017.
+ * @author LatvianModder
  */
 public class MessageOpenClaimedChunksGui extends MessageToClient<MessageOpenClaimedChunksGui>
 {

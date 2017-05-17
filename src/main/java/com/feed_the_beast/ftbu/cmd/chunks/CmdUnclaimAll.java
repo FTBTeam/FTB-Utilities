@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 27.06.2016.
+ * @author LatvianModder
  */
 public class CmdUnclaimAll extends CmdBase
 {

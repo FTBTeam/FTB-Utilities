@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbu.api.IFTBUtilitiesRegistry;
 import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
 
 /**
- * Created by LatvianModder on 01.03.2017.
+ * @author LatvianModder
  */
 public class ChunkUpgrade extends FinalIDObject implements IChunkUpgrade
 {

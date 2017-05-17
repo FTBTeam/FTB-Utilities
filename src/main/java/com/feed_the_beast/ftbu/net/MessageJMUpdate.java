@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by LatvianModder on 29.09.2016.
+ * @author LatvianModder
  */
 public class MessageJMUpdate extends MessageToClient<MessageJMUpdate>
 {

@@ -7,7 +7,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 
 /**
- * Created by LatvianModder on 30.09.2016.
+ * @author LatvianModder
  */
 public class CmdEdit extends CmdBase
 {

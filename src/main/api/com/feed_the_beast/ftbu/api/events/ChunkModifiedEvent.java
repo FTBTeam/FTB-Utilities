@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
- * Created by LatvianModder on 11.09.2016.
+ * @author LatvianModder
  */
 public abstract class ChunkModifiedEvent extends Event
 {

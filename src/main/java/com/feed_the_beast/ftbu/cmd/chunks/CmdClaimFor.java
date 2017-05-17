@@ -10,7 +10,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 
 /**
- * Created by LatvianModder on 10.11.2016.
+ * @author LatvianModder
  */
 public class CmdClaimFor extends CmdBase
 {

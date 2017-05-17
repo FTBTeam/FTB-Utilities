@@ -317,7 +317,7 @@ public class Ranks
         }
 
         List<IRankConfig> sortedRankConfigs = new ArrayList<>(FTBLibIntegration.API.getRankConfigRegistry().values());
-        Collections.sort(sortedRankConfigs, StringUtils.ID_COMPARATOR);
+        sortedRankConfigs.sort(StringUtils.ID_COMPARATOR);
 
         try
         {
@@ -356,7 +356,7 @@ public class Ranks
                     {
                         list.add("<li>Variants:<ul>");
                         variants = new ArrayList<>(variants);
-                        Collections.sort(variants, StringUtils.IGNORE_CASE_COMPARATOR);
+                        variants.sort(StringUtils.IGNORE_CASE_COMPARATOR);
 
                         for(String s : variants)
                         {

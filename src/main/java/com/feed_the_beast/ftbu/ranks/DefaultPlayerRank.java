@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.IRank;
 
 /**
- * Created by LatvianModder on 27.09.2016.
+ * @author LatvianModder
  */
 public class DefaultPlayerRank extends DefaultRank
 {

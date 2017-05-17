@@ -12,7 +12,6 @@ import net.minecraft.stats.StatBase;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.MinecraftForge;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -41,7 +40,7 @@ public class FTBUCommon implements IFTBUtilitiesRegistry // FTBUClient
     }
 
     @Override
-    public void addLeaderboard(StatBase stat, @Nullable Comparator<IForgePlayer> comparator, ILeaderboardData data, ITextComponent component, IDrawableObject icon)
+    public void addLeaderboard(StatBase stat, Comparator<IForgePlayer> comparator, ILeaderboardData data, ITextComponent component, IDrawableObject icon)
     {
         LEADERBOARDS.add(new Leaderboard(stat, comparator, data, component, icon));
     }

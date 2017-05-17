@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import javax.annotation.Nullable;
 
 /**
- * Created by LatvianModder on 24.09.2016.
+ * @author LatvianModder
  */
 public class PropertyChatSubstitute extends PropertyBase
 {

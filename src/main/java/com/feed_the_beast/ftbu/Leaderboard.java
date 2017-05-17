@@ -9,7 +9,7 @@ import net.minecraft.util.text.ITextComponent;
 import java.util.Comparator;
 
 /**
- * Created by LatvianModder on 27.09.2016.
+ * @author LatvianModder
  */
 class Leaderboard
 {

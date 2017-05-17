@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
- * Created by LatvianModder on 01.06.2016.
+ * @author LatvianModder
  */
 public class FTBUTeamEventHandler
 {

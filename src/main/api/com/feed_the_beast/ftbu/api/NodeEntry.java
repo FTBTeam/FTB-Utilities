@@ -7,7 +7,7 @@ import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import javax.annotation.Nullable;
 
 /**
- * Created by LatvianModder on 10.11.2016.
+ * @author LatvianModder
  */
 public class NodeEntry extends FinalIDObject
 {

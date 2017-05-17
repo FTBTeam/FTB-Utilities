@@ -20,7 +20,6 @@ import net.minecraft.world.WorldServer;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 
 public enum Backups
@@ -163,7 +162,7 @@ public enum Backups
 
         if(!backups.isEmpty())
         {
-            Collections.sort(backups, Backup.COMPARATOR);
+            backups.sort(Backup.COMPARATOR);
 
             int backupsToKeep = FTBUConfigBackups.BACKUPS_TO_KEEP.getInt();
 

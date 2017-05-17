@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbu.gui.ClaimedChunks;
 import net.minecraft.util.math.ChunkPos;
 
 /**
- * Created by LatvianModder on 02.03.2017.
+ * @author LatvianModder
  */
 public interface IJMIntegration
 {

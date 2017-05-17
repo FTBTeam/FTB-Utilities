@@ -7,11 +7,11 @@ import java.io.File;
 import java.util.Comparator;
 
 /**
- * Created by LatvianModder on 01.08.2016.
+ * @author LatvianModder
  */
 public class Backup
 {
-    public static final Comparator<Backup> COMPARATOR = (o1, o2) -> Long.compare(o1.time, o2.time);
+    public static final Comparator<Backup> COMPARATOR = Comparator.comparingLong(o -> o.time);
 
     public final long time;
     public final String fileID;

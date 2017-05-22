@@ -111,7 +111,8 @@ player_config.ftbu.disable_global_badge.name=Disable Global Badge
 player_config.ftbu.render_badge.name=Render My Badge
 
 # Team Settings
-team_config.ftbu.blocks.name=Block Interactions
+team_config.ftbu.blocks_edit.name=Edit Blocks
+team_config.ftbu.blocks_interact.name=Interact With Blocks
 team_config.ftbu.explosions.name=Enable Explosions in Claimed Chunks
 team_config.ftbu.fake_players.name=Allow Fake Players to Interact With Blocks
 

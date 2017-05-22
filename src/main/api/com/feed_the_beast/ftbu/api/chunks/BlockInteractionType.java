@@ -1,5 +1,8 @@
 package com.feed_the_beast.ftbu.api.chunks;
 
+/**
+ * @author LatvianModder
+ */
 public enum BlockInteractionType
 {
     EDIT,
@@ -7,7 +10,4 @@ public enum BlockInteractionType
     CNB_BREAK,
     CNB_PLACE,
     ITEM
-    /**
-     * @author LatvianModder
-     */
 }

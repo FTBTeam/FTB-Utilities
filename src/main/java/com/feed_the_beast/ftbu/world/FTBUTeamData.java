@@ -20,7 +20,8 @@ import javax.annotation.Nullable;
  */
 public class FTBUTeamData implements INBTSerializable<NBTBase>
 {
-    public final PropertyEnum<EnumTeamPrivacyLevel> blocks = new PropertyEnum<>(EnumTeamPrivacyLevel.NAME_MAP, EnumTeamPrivacyLevel.ALLIES);
+    public final PropertyEnum<EnumTeamPrivacyLevel> editBlocks = new PropertyEnum<>(EnumTeamPrivacyLevel.NAME_MAP, EnumTeamPrivacyLevel.ALLIES);
+    public final PropertyEnum<EnumTeamPrivacyLevel> interactWithBlocks = new PropertyEnum<>(EnumTeamPrivacyLevel.NAME_MAP, EnumTeamPrivacyLevel.ALLIES);
     public final PropertyBool explosions = new PropertyBool(false);
     public final PropertyBool fakePlayers = new PropertyBool(true);
 
@@ -36,6 +37,8 @@ public class FTBUTeamData implements INBTSerializable<NBTBase>
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setBoolean("Explosions", explosions.getBoolean());
         nbt.setBoolean("FakePlayers", fakePlayers.getBoolean());
+        nbt.setString("EditBlocks", editBlocks.getString());
+        nbt.setString("InteractWithBlocks", interactWithBlocks.getString());
         return nbt;
     }
 
@@ -47,6 +50,16 @@ public class FTBUTeamData implements INBTSerializable<NBTBase>
             NBTTagCompound nbt = (NBTTagCompound) nbt0;
             explosions.setBoolean(nbt.getBoolean("Explosions"));
             fakePlayers.setBoolean(nbt.getBoolean("FakePlayers"));
+
+            if(nbt.hasKey("EditBlocks"))
+            {
+                editBlocks.setValueFromString(nbt.getString("EditBlocks"), false);
+            }
+
+            if(nbt.hasKey("InteractWithBlocks"))
+            {
+                interactWithBlocks.setValueFromString(nbt.getString("InteractWithBlocks"), false);
+            }
         }
         else
         {
@@ -61,6 +74,7 @@ public class FTBUTeamData implements INBTSerializable<NBTBase>
         String group = FTBUFinals.MOD_ID;
         event.add(group, "explosions", explosions);
         event.add(group, "fake_players", fakePlayers);
-        event.add(group, "blocks", blocks);
+        event.add(group, "blocks_edit", editBlocks);
+        event.add(group, "blocks_interact", interactWithBlocks);
     }
 }

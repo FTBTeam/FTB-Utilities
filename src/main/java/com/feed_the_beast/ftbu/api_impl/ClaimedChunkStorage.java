@@ -113,11 +113,14 @@ public enum ClaimedChunkStorage implements IClaimedChunkStorage
         {
             return true;
         }
-        else if(player.isFake())
+
+        FTBUTeamData data = FTBUTeamData.get(team);
+
+        if(player.isFake())
         {
-            return FTBUTeamData.get(team).fakePlayers.getBoolean();
+            return data.fakePlayers.getBoolean();
         }
 
-        return team.canInteract(player.getId(), FTBUTeamData.get(team).blocks.getNonnull());
+        return team.canInteract(player.getId(), (type == BlockInteractionType.INTERACT ? data.interactWithBlocks : data.editBlocks).getNonnull());
     }
 }

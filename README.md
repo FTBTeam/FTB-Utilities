@@ -1,6 +1,1 @@
-FTBUtilities
-===============
-
-(LatCoreMC before)
-CurseForge link:
-http://minecraft.curseforge.com/mc-mods/224778
+# FTBUtilities [![](http://cf.way2muchnoise.eu/ftb-utilities.svg)](https://minecraft.curseforge.com/projects/ftb-utilities) [![](http://cf.way2muchnoise.eu/versions/ftb-utilities.svg)](https://minecraft.curseforge.com/projects/ftb-utilities)

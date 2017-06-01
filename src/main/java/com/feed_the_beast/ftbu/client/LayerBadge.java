@@ -8,6 +8,7 @@ import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
@@ -52,6 +53,10 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
             if(!ItemStackTools.isEmpty(armor) && armor.getItem().isValidArmor(armor, EntityEquipmentSlot.CHEST, ep))
             {
                 GlStateManager.translate(0F, 0F, -0.0625F);
+            }
+            else if(ep.isWearing(EnumPlayerModelParts.JACKET))
+            {
+                GlStateManager.translate(0F, 0F, -0.02125F);
             }
 
             GlStateManager.translate(0F, 0F, -1F);

@@ -346,7 +346,7 @@ public class Ranks
                     {
                         if(!s.contains("Def:"))
                         {
-                            list.add("<li>" + StringUtils.removeFormatting(s) + "</li>");
+                            list.add("<li>" + TextFormatting.getTextWithoutFormattingCodes(s) + "</li>");
                         }
                     }
 

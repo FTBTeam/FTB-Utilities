@@ -117,6 +117,11 @@ public class FTBUCommands
         {
             event.add(new CmdHeal());
         }
+
+        if(FTBUConfigCommands.SET_HOUR.getBoolean())
+        {
+            event.add(new CmdSetHour());
+        }
     }
 
     @SubscribeEvent

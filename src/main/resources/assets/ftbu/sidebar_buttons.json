@@ -92,7 +92,7 @@
 		"dependencies": "after:ftbu.toggle.rain",
 		"click": {
 			"action": "run_command",
-			"value": "/time set 6000"
+			"value": "/ftb set_hour 6"
 		},
 		"config": true,
 		"hide_with_nei": true,
@@ -103,7 +103,7 @@
 		"dependencies": "after:ftbu.toggle.day",
 		"click": {
 			"action": "run_command",
-			"value": "/time set 18000"
+			"value": "/ftb set_hour 18"
 		},
 		"config": true,
 		"hide_with_nei": true,

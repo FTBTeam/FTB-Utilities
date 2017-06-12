@@ -53,5 +53,5 @@
 	"$ftbu.guide.ranks.config.chat.info",
 	{"text": "$ftbu.guide.ranks.config.chat.colors", "clickEvent": {"action": "change_page", "value": "writing_guides.colors"}, "color": "dark_green"},
 	"## $example",
-	["\"syntax\":\"<&2[Admin]&6 \\$name&r>\" - <", {"text": "[Admin]", "color": "dark_green"}, {"text": " LatvianModder", "color": "gold"}, ">"]
+	["\"syntax\":\"<&2[Admin]&6 /$name&r>\" - <", {"text": "[Admin]", "color": "dark_green"}, {"text": " LatvianModder", "color": "gold"}, ">"]
 ]

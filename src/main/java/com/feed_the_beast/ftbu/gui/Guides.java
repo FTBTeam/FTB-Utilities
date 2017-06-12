@@ -44,6 +44,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author LatvianModder
@@ -58,6 +59,7 @@ public enum Guides implements IResourceManagerReloadListener
 	private static Thread reloadingThread = null;
 	private static GuiGuide cachedGui = null;
 	public static final Map<String, String> SUBSTITUTE_CACHE = new HashMap<>();
+	private static final Function<String, String> SUBSTITUTE_FUNCTION = k -> replaceSubstitutes(StringUtils.translate(k).replace('\u201C', '\"').replace('\u201D', '\"').replace("\"", "\\\""));
 
 	public static void setShouldReload()
 	{
@@ -311,7 +313,7 @@ public enum Guides implements IResourceManagerReloadListener
 				}
 				else
 				{
-					String value = SUBSTITUTE_CACHE.computeIfAbsent(keyBuilder.substring(1), k -> replaceSubstitutes(StringUtils.translate(k).replace('\u201C', '\"').replace('\u201D', '\"').replace("\"", "\\\"")));
+					String value = SUBSTITUTE_CACHE.computeIfAbsent(keyBuilder.substring(1), SUBSTITUTE_FUNCTION);
 
 					//TODO: Add special values
 
@@ -325,7 +327,7 @@ public enum Guides implements IResourceManagerReloadListener
 					keyBuilder.setLength(0);
 				}
 			}
-			else if (c == '$' && (i < 1 || text.charAt(i - 1) != '\\'))
+			else if (c == '$' && (i == 0 || (text.charAt(i - 1) != '\\' && text.charAt(i - 1) != '/')))
 			{
 				keyBuilder.append(c);
 			}

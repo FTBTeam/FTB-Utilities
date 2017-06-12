@@ -29,60 +29,60 @@ import java.util.List;
 @Mod(modid = FTBUFinals.MOD_ID, name = FTBUFinals.MOD_ID, version = "0.0.0", useMetadata = true, acceptableRemoteVersions = "*", acceptedMinecraftVersions = "[1.10,1.13)", dependencies = "required-after:ftbl")
 public class FTBU
 {
-    @Mod.Instance(FTBUFinals.MOD_ID)
-    public static FTBU INST;
+	@Mod.Instance(FTBUFinals.MOD_ID)
+	public static FTBU INST;
 
-    @SidedProxy(serverSide = "com.feed_the_beast.ftbu.FTBUCommon", clientSide = "com.feed_the_beast.ftbu.client.FTBUClient")
-    public static FTBUCommon PROXY;
+	@SidedProxy(serverSide = "com.feed_the_beast.ftbu.FTBUCommon", clientSide = "com.feed_the_beast.ftbu.client.FTBUClient")
+	public static FTBUCommon PROXY;
 
-    @Mod.EventHandler
-    public void onPreInit(FMLPreInitializationEvent event)
-    {
-        FTBUtilitiesAPI_Impl.INSTANCE.init(event.getAsmData());
-        FTBUNetHandler.init();
+	@Mod.EventHandler
+	public void onPreInit(FMLPreInitializationEvent event)
+	{
+		FTBUtilitiesAPI_Impl.INSTANCE.init(event.getAsmData());
+		FTBUNetHandler.init();
 
-        MinecraftForge.EVENT_BUS.register(FTBUPlayerEventHandler.class);
-        MinecraftForge.EVENT_BUS.register(FTBUWorldEventHandler.class);
-        MinecraftForge.EVENT_BUS.register(FTBUTeamEventHandler.class);
-        MinecraftForge.EVENT_BUS.register(FTBUServerEventHandler.class);
+		MinecraftForge.EVENT_BUS.register(FTBUPlayerEventHandler.class);
+		MinecraftForge.EVENT_BUS.register(FTBUWorldEventHandler.class);
+		MinecraftForge.EVENT_BUS.register(FTBUTeamEventHandler.class);
+		MinecraftForge.EVENT_BUS.register(FTBUServerEventHandler.class);
 
-        PROXY.preInit();
-    }
+		PROXY.preInit();
+	}
 
-    @Mod.EventHandler
-    public void onInit(FMLInitializationEvent event)
-    {
-        FTBUPermissions.init();
-    }
+	@Mod.EventHandler
+	public void onInit(FMLInitializationEvent event)
+	{
+		FTBUPermissions.init();
+	}
 
-    @Mod.EventHandler
-    public void onPostInit(FMLPostInitializationEvent event)
-    {
-        PROXY.postInit();
-        ForgeChunkManager.setForcedChunkLoadingCallback(INST, LoadedChunkStorage.INSTANCE);
-    }
+	@Mod.EventHandler
+	public void onPostInit(FMLPostInitializationEvent event)
+	{
+		PROXY.postInit();
+		ForgeChunkManager.setForcedChunkLoadingCallback(INST, LoadedChunkStorage.INSTANCE);
+	}
 
-    @Mod.EventHandler
-    public void onServerStarted(FMLServerStartedEvent event)
-    {
-        Backups.INSTANCE.init();
-        Ranks.CMD_PERMISSION_NODES.clear();
+	@Mod.EventHandler
+	public void onServerStarted(FMLServerStartedEvent event)
+	{
+		Backups.INSTANCE.init();
+		Ranks.CMD_PERMISSION_NODES.clear();
 
-        if(FTBUConfigRanks.OVERRIDE_COMMANDS.getBoolean())
-        {
-            ServerCommandManager manager = (ServerCommandManager) ServerUtils.getServer().getCommandManager();
-            List<ICommand> commands = new ArrayList<>(manager.getCommands().values());
-            ServerUtils.getCommandSet(manager).clear();
-            manager.getCommands().clear();
+		if (FTBUConfigRanks.OVERRIDE_COMMANDS.getBoolean())
+		{
+			ServerCommandManager manager = (ServerCommandManager) ServerUtils.getServer().getCommandManager();
+			List<ICommand> commands = new ArrayList<>(manager.getCommands().values());
+			ServerUtils.getCommandSet(manager).clear();
+			manager.getCommands().clear();
 
-            for(ICommand command : commands)
-            {
-                manager.registerCommand(new CmdOverride(command, "command." + command.getName()));
-            }
+			for (ICommand command : commands)
+			{
+				manager.registerCommand(new CmdOverride(command, "command." + command.getName()));
+			}
 
-            FTBUFinals.LOGGER.info("Overridden " + manager.getCommands().size() + " commands");
-        }
+			FTBUFinals.LOGGER.info("Overridden " + manager.getCommands().size() + " commands");
+		}
 
-        Ranks.generateExampleFiles();
-    }
+		Ranks.generateExampleFiles();
+	}
 }

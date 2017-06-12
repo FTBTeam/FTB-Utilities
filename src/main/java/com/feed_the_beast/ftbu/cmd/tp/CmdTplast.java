@@ -16,59 +16,59 @@ import net.minecraftforge.common.util.Constants;
 
 public class CmdTplast extends CmdBase
 {
-    public CmdTplast()
-    {
-        super("tpl", Level.OP);
-    }
+	public CmdTplast()
+	{
+		super("tpl", Level.OP);
+	}
 
-    @Override
-    public boolean isUsernameIndex(String[] args, int i)
-    {
-        return i == 0;
-    }
+	@Override
+	public boolean isUsernameIndex(String[] args, int i)
+	{
+		return i == 0;
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        checkArgs(args, 1, "(<x> <y> <z>) | ([who] <player>)");
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		checkArgs(args, 1, "(<x> <y> <z>) | ([who] <player>)");
 
-        if(args.length >= 3)
-        {
-            EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-            double x = parseDouble(ep.posX, args[0], -30000000, 30000000, true);
-            double y = parseDouble(ep.posY, args[1], -30000000, 30000000, true);
-            double z = parseDouble(ep.posZ, args[2], -30000000, 30000000, true);
-            ServerUtils.teleportPlayer(ep, new Vec3d(x, y, z), ep.dimension);
-            return;
-        }
+		if (args.length >= 3)
+		{
+			EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+			double x = parseDouble(ep.posX, args[0], -30000000, 30000000, true);
+			double y = parseDouble(ep.posY, args[1], -30000000, 30000000, true);
+			double z = parseDouble(ep.posZ, args[2], -30000000, 30000000, true);
+			ServerUtils.teleportPlayer(ep, new Vec3d(x, y, z), ep.dimension);
+			return;
+		}
 
-        EntityPlayerMP who;
-        IForgePlayer to;
+		EntityPlayerMP who;
+		IForgePlayer to;
 
-        if(args.length == 1)
-        {
-            who = getCommandSenderAsPlayer(sender);
-            to = getForgePlayer(args[0]);
-        }
-        else
-        {
-            who = getPlayer(server, sender, args[0]);
-            to = getForgePlayer(args[1]);
-        }
+		if (args.length == 1)
+		{
+			who = getCommandSenderAsPlayer(sender);
+			to = getForgePlayer(args[0]);
+		}
+		else
+		{
+			who = getPlayer(server, sender, args[0]);
+			to = getForgePlayer(args[1]);
+		}
 
-        BlockDimPos p;
+		BlockDimPos p;
 
-        if(to.isOnline())
-        {
-            p = new EntityDimPos(to.getPlayer()).toBlockDimPos();
-        }
-        else
-        {
-            NBTTagCompound nbt = to.getPlayerNBT();
-            NBTTagList posList = nbt.getTagList("Pos", Constants.NBT.TAG_DOUBLE);
-            p = new EntityDimPos(new Vec3d(posList.getDoubleAt(0), posList.getDoubleAt(1), posList.getDoubleAt(2)), nbt.getInteger("Dimension")).toBlockDimPos();
-        }
+		if (to.isOnline())
+		{
+			p = new EntityDimPos(to.getPlayer()).toBlockDimPos();
+		}
+		else
+		{
+			NBTTagCompound nbt = to.getPlayerNBT();
+			NBTTagList posList = nbt.getTagList("Pos", Constants.NBT.TAG_DOUBLE);
+			p = new EntityDimPos(new Vec3d(posList.getDoubleAt(0), posList.getDoubleAt(1), posList.getDoubleAt(2)), nbt.getInteger("Dimension")).toBlockDimPos();
+		}
 
-        ServerUtils.teleportPlayer(who, p);
-    }
+		ServerUtils.teleportPlayer(who, p);
+	}
 }

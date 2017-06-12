@@ -11,28 +11,28 @@ import java.util.UUID;
  */
 public class ClaimedChunks
 {
-    public static class Team
-    {
-        public UUID ownerId;
-        public EnumTeamColor color;
-        public String formattedName;
-        public boolean isAlly;
-    }
+	public static class Team
+	{
+		public UUID ownerId;
+		public EnumTeamColor color;
+		public String formattedName;
+		public boolean isAlly;
+	}
 
-    public static class Data
-    {
-        public int flags;
-        public Team team;
-        public String owner = "";
+	public static class Data
+	{
+		public int flags;
+		public Team team;
+		public String owner = "";
 
-        public boolean hasUpgrade(IChunkUpgrade upgrade)
-        {
-            return Bits.getFlag(flags, 1 << upgrade.getId());
-        }
+		public boolean hasUpgrade(IChunkUpgrade upgrade)
+		{
+			return Bits.getFlag(flags, 1 << upgrade.getId());
+		}
 
-        public void setHasUpgrade(IChunkUpgrade upgrade, boolean val)
-        {
-            flags = Bits.setFlag(flags, 1 << upgrade.getId(), val);
-        }
-    }
+		public void setHasUpgrade(IChunkUpgrade upgrade, boolean val)
+		{
+			flags = Bits.setFlag(flags, 1 << upgrade.getId(), val);
+		}
+	}
 }

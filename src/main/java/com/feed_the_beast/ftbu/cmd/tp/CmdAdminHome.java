@@ -15,110 +15,110 @@ import net.minecraft.util.text.TextComponentString;
 
 public class CmdAdminHome extends CmdTreeBase
 {
-    public static class CmdTP extends CmdBase
-    {
-        public CmdTP()
-        {
-            super("tp", Level.OP);
-        }
+	public static class CmdTP extends CmdBase
+	{
+		public CmdTP()
+		{
+			super("tp", Level.OP);
+		}
 
-        @Override
-        public boolean isUsernameIndex(String[] args, int i)
-        {
-            return i == 0;
-        }
+		@Override
+		public boolean isUsernameIndex(String[] args, int i)
+		{
+			return i == 0;
+		}
 
-        @Override
-        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-        {
-            EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-            checkArgs(args, 2, "<player> <home>");
-            args[1] = args[1].toLowerCase();
-            FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(args[0]));
+		@Override
+		public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+		{
+			EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+			checkArgs(args, 2, "<player> <home>");
+			args[1] = args[1].toLowerCase();
+			FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(args[0]));
 
-            if(data == null)
-            {
-                return;
-            }
+			if (data == null)
+			{
+				return;
+			}
 
-            BlockDimPos pos = data.getHome(args[1]);
+			BlockDimPos pos = data.getHome(args[1]);
 
-            if(pos != null)
-            {
-                ServerUtils.teleportPlayer(ep, pos);
-                FTBULang.WARP_TP.printChat(sender, args[1]);
-            }
+			if (pos != null)
+			{
+				ServerUtils.teleportPlayer(ep, pos);
+				FTBULang.WARP_TP.printChat(sender, args[1]);
+			}
 
-            throw FTBULang.HOME_NOT_SET.commandError(args[1]);
-        }
-    }
+			throw FTBULang.HOME_NOT_SET.commandError(args[1]);
+		}
+	}
 
-    public static class CmdList extends CmdBase
-    {
-        public CmdList()
-        {
-            super("list", Level.OP);
-        }
+	public static class CmdList extends CmdBase
+	{
+		public CmdList()
+		{
+			super("list", Level.OP);
+		}
 
-        @Override
-        public boolean isUsernameIndex(String[] args, int i)
-        {
-            return i == 0;
-        }
+		@Override
+		public boolean isUsernameIndex(String[] args, int i)
+		{
+			return i == 0;
+		}
 
-        @Override
-        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-        {
-            checkArgs(args, 1, "<player>");
-            FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(args[0]));
-            sender.sendMessage(new TextComponentString(StringUtils.strip(data.listHomes())));
-        }
-    }
+		@Override
+		public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+		{
+			checkArgs(args, 1, "<player>");
+			FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(args[0]));
+			sender.sendMessage(new TextComponentString(StringUtils.strip(data.listHomes())));
+		}
+	}
 
-    public static class CmdRem extends CmdBase
-    {
-        public CmdRem()
-        {
-            super("remove", Level.OP);
-        }
+	public static class CmdRem extends CmdBase
+	{
+		public CmdRem()
+		{
+			super("remove", Level.OP);
+		}
 
-        @Override
-        public boolean isUsernameIndex(String[] args, int i)
-        {
-            return i == 0;
-        }
+		@Override
+		public boolean isUsernameIndex(String[] args, int i)
+		{
+			return i == 0;
+		}
 
-        @Override
-        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-        {
-            checkArgs(args, 2, "<player> <home>");
-            FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(args[0]));
+		@Override
+		public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+		{
+			checkArgs(args, 2, "<player> <home>");
+			FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(args[0]));
 
-            if(data == null)
-            {
-                return;
-            }
+			if (data == null)
+			{
+				return;
+			}
 
-            args[1] = args[1].toLowerCase();
-            BlockDimPos pos = data.getHome(args[1]);
+			args[1] = args[1].toLowerCase();
+			BlockDimPos pos = data.getHome(args[1]);
 
-            if(pos != null)
-            {
-                if(data.setHome(args[1], null))
-                {
-                    FTBULang.HOME_DEL.printChat(sender, args[1]);
-                }
-            }
+			if (pos != null)
+			{
+				if (data.setHome(args[1], null))
+				{
+					FTBULang.HOME_DEL.printChat(sender, args[1]);
+				}
+			}
 
-            throw FTBULang.HOME_NOT_SET.commandError(args[1]);
-        }
-    }
+			throw FTBULang.HOME_NOT_SET.commandError(args[1]);
+		}
+	}
 
-    public CmdAdminHome()
-    {
-        super("admin_home");
-        addSubcommand(new CmdTP());
-        addSubcommand(new CmdList());
-        addSubcommand(new CmdRem());
-    }
+	public CmdAdminHome()
+	{
+		super("admin_home");
+		addSubcommand(new CmdTP());
+		addSubcommand(new CmdList());
+		addSubcommand(new CmdRem());
+	}
 }

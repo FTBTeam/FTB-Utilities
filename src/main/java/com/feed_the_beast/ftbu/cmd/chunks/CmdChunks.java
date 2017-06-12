@@ -10,21 +10,21 @@ import net.minecraft.entity.player.EntityPlayerMP;
  */
 public class CmdChunks extends CmdTreeBase
 {
-    static void updateChunk(EntityPlayerMP ep, ChunkDimPos pos)
-    {
-        FTBUPlayerEventHandler.updateChunkMessage(ep, pos);
-    }
+	static void updateChunk(EntityPlayerMP ep, ChunkDimPos pos)
+	{
+		FTBUPlayerEventHandler.updateChunkMessage(ep, pos);
+	}
 
-    public CmdChunks()
-    {
-        super("chunks");
-        addSubcommand(new CmdGui());
-        addSubcommand(new CmdClaim());
-        addSubcommand(new CmdUnclaim());
-        addSubcommand(new CmdLoad());
-        addSubcommand(new CmdUnload());
-        addSubcommand(new CmdUnclaimAll());
-        addSubcommand(new CmdUnloadAll());
-        addSubcommand(new CmdClaimFor());
-    }
+	public CmdChunks()
+	{
+		super("chunks");
+		addSubcommand(new CmdGui());
+		addSubcommand(new CmdClaim());
+		addSubcommand(new CmdUnclaim());
+		addSubcommand(new CmdLoad());
+		addSubcommand(new CmdUnload());
+		addSubcommand(new CmdUnclaimAll());
+		addSubcommand(new CmdUnloadAll());
+		addSubcommand(new CmdClaimFor());
+	}
 }

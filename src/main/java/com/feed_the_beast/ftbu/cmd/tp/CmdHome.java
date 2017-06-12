@@ -23,60 +23,60 @@ import java.util.List;
 
 public class CmdHome extends CmdBase
 {
-    public CmdHome()
-    {
-        super("home", Level.ALL);
-    }
+	public CmdHome()
+	{
+		super("home", Level.ALL);
+	}
 
-    @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
-    {
-        if(args.length == 1)
-        {
-            return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(FTBLibIntegration.API.getUniverse().getPlayer(sender)).listHomes());
-        }
+	@Override
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+	{
+		if (args.length == 1)
+		{
+			return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(FTBLibIntegration.API.getUniverse().getPlayer(sender)).listHomes());
+		}
 
-        return super.getTabCompletions(server, sender, args, pos);
-    }
+		return super.getTabCompletions(server, sender, args, pos);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-        FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(ep));
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+		FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(ep));
 
-        if(data == null)
-        {
-            return;
-        }
-        else if(args.length == 0)
-        {
-            args = new String[] {"home"};
-        }
+		if (data == null)
+		{
+			return;
+		}
+		else if (args.length == 0)
+		{
+			args = new String[] {"home"};
+		}
 
-        if(args[0].equals("list"))
-        {
-            Collection<String> list = data.listHomes();
-            sender.sendMessage(new TextComponentString(list.size() + " / " + FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt() + ": "));
-            if(!list.isEmpty())
-            {
-                sender.sendMessage(new TextComponentString(StringUtils.strip(list)));
-            }
-            return;
-        }
+		if (args[0].equals("list"))
+		{
+			Collection<String> list = data.listHomes();
+			sender.sendMessage(new TextComponentString(list.size() + " / " + FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt() + ": "));
+			if (!list.isEmpty())
+			{
+				sender.sendMessage(new TextComponentString(StringUtils.strip(list)));
+			}
+			return;
+		}
 
-        BlockDimPos pos = data.getHome(args[0]);
+		BlockDimPos pos = data.getHome(args[0]);
 
-        if(pos == null)
-        {
-            throw FTBULang.HOME_NOT_SET.commandError(args[0]);
-        }
-        else if(ep.dimension != pos.dim && !PermissionAPI.hasPermission(ep, FTBUPermissions.HOMES_CROSS_DIM))
-        {
-            throw FTBULang.HOME_CROSS_DIM.commandError();
-        }
+		if (pos == null)
+		{
+			throw FTBULang.HOME_NOT_SET.commandError(args[0]);
+		}
+		else if (ep.dimension != pos.dim && !PermissionAPI.hasPermission(ep, FTBUPermissions.HOMES_CROSS_DIM))
+		{
+			throw FTBULang.HOME_CROSS_DIM.commandError();
+		}
 
-        ServerUtils.teleportPlayer(ep, pos);
-        FTBULang.WARP_TP.printChat(sender, args[0]);
-    }
+		ServerUtils.teleportPlayer(ep, pos);
+		FTBULang.WARP_TP.printChat(sender, args[0]);
+	}
 }

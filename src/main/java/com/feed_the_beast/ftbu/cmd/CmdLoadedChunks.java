@@ -30,88 +30,88 @@ import java.util.Map;
  */
 public class CmdLoadedChunks extends CmdBase
 {
-    public CmdLoadedChunks()
-    {
-        super("loaded_chunks_list", Level.ALL);
-    }
+	public CmdLoadedChunks()
+	{
+		super("loaded_chunks_list", Level.ALL);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-        GuidePage page = new GuidePage("loaded_chunks").setTitle(new TextComponentString("Loaded Chunks")); // TODO: Lang
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+		GuidePage page = new GuidePage("loaded_chunks").setTitle(new TextComponentString("Loaded Chunks")); // TODO: Lang
 
-        for(WorldServer w : DimensionManager.getWorlds())
-        {
-            ImmutableSetMultimap<ChunkPos, ForgeChunkManager.Ticket> map = ForgeChunkManager.getPersistentChunksFor(w);
+		for (WorldServer w : DimensionManager.getWorlds())
+		{
+			ImmutableSetMultimap<ChunkPos, ForgeChunkManager.Ticket> map = ForgeChunkManager.getPersistentChunksFor(w);
 
-            Map<String, Collection<ChunkPos>> chunksMap = new HashMap<>();
+			Map<String, Collection<ChunkPos>> chunksMap = new HashMap<>();
 
-            for(ForgeChunkManager.Ticket t : map.values())
-            {
-                Collection<ChunkPos> list = chunksMap.get(t.getModId());
-                if(list == null)
-                {
-                    chunksMap.put(t.getModId(), list = new HashSet<>());
-                }
-                for(ChunkPos c : t.getChunkList())
-                {
-                    if(!list.contains(c))
-                    {
-                        list.add(c);
-                    }
-                }
-            }
+			for (ForgeChunkManager.Ticket t : map.values())
+			{
+				Collection<ChunkPos> list = chunksMap.get(t.getModId());
+				if (list == null)
+				{
+					chunksMap.put(t.getModId(), list = new HashSet<>());
+				}
+				for (ChunkPos c : t.getChunkList())
+				{
+					if (!list.contains(c))
+					{
+						list.add(c);
+					}
+				}
+			}
 
-            int dimId = w.provider.getDimension();
-            GuidePage dim = page.getSub(Integer.toString(dimId)).setTitle(new TextComponentString(w.provider.getDimensionType().getName() + " [" + (dimId == 0 ? "DIM0" : w.provider.getSaveFolder()) + "]"));
+			int dimId = w.provider.getDimension();
+			GuidePage dim = page.getSub(Integer.toString(dimId)).setTitle(new TextComponentString(w.provider.getDimensionType().getName() + " [" + (dimId == 0 ? "DIM0" : w.provider.getSaveFolder()) + "]"));
 
-            for(Map.Entry<String, Collection<ChunkPos>> e1 : chunksMap.entrySet())
-            {
-                GuidePage mod = dim.getSub(e1.getKey()).setTitle(new TextComponentString(e1.getKey() + " [" + e1.getValue().size() + "]"));
-                for(ChunkPos c : e1.getValue())
-                {
-                    StringBuilder owner = new StringBuilder();
+			for (Map.Entry<String, Collection<ChunkPos>> e1 : chunksMap.entrySet())
+			{
+				GuidePage mod = dim.getSub(e1.getKey()).setTitle(new TextComponentString(e1.getKey() + " [" + e1.getValue().size() + "]"));
+				for (ChunkPos c : e1.getValue())
+				{
+					StringBuilder owner = new StringBuilder();
 
-                    IClaimedChunk chunk = ClaimedChunkStorage.INSTANCE.getChunk(new ChunkDimPos(c, dimId));
+					IClaimedChunk chunk = ClaimedChunkStorage.INSTANCE.getChunk(new ChunkDimPos(c, dimId));
 
-                    if(chunk != null)
-                    {
-                        owner = new StringBuilder(chunk.getOwner().getName());
-                    }
-                    else
-                    {
-                        for(ForgeChunkManager.Ticket t : map.get(c))
-                        {
-                            if(t.isPlayerTicket())
-                            {
-                                if(owner.length() > 0)
-                                {
-                                    owner.append(", ");
-                                }
+					if (chunk != null)
+					{
+						owner = new StringBuilder(chunk.getOwner().getName());
+					}
+					else
+					{
+						for (ForgeChunkManager.Ticket t : map.get(c))
+						{
+							if (t.isPlayerTicket())
+							{
+								if (owner.length() > 0)
+								{
+									owner.append(", ");
+								}
 
-                                owner.append(t.getPlayerName());
-                            }
-                        }
-                    }
+								owner.append(t.getPlayerName());
+							}
+						}
+					}
 
-                    if(owner.length() == 0)
-                    {
-                        owner = new StringBuilder("Unknown");
-                    }
+					if (owner.length() == 0)
+					{
+						owner = new StringBuilder("Unknown");
+					}
 
-                    ITextComponent line = new TextComponentString(c.chunkXPos + ", " + c.chunkZPos + " [" + owner + "]");
-                    int cx = (c.chunkXPos << 4) + 8;
-                    int cz = (c.chunkZPos << 4) + 8;
-                    String cmd = "/tp " + cx + " " + ep.world.getHeight(cx, cz) + " " + cz;
-                    line.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(cmd)));
-                    line.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, cmd));
-                    mod.println(line);
-                }
-            }
-        }
+					ITextComponent line = new TextComponentString(c.chunkXPos + ", " + c.chunkZPos + " [" + owner + "]");
+					int cx = (c.chunkXPos << 4) + 8;
+					int cz = (c.chunkZPos << 4) + 8;
+					String cmd = "/tp " + cx + " " + ep.world.getHeight(cx, cz) + " " + cz;
+					line.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(cmd)));
+					line.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, cmd));
+					mod.println(line);
+				}
+			}
+		}
 
-        page.cleanup();
-        FTBLibIntegration.API.displayGuide(ep, page);
-    }
+		page.cleanup();
+		FTBLibIntegration.API.displayGuide(ep, page);
+	}
 }

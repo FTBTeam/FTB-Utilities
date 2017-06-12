@@ -1,20 +1,17 @@
 buildscript {
-    repositories {
-        jcenter()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
-    }
+	repositories {
+		jcenter()
+		maven { url = "http://files.minecraftforge.net/maven" }
+	}
+	dependencies {
+		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+	}
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = System.properties['mod_version']
 if (version == null) {
-    version = "Dev"
+	version = "Dev"
 }
 
 group = "com.feed_the_beast.ftbutilities"
@@ -22,76 +19,72 @@ archivesBaseName = "FTBUtilities"
 
 sourceCompatibility = targetCompatibility = "1.8"
 compileJava {
-    sourceCompatibility = targetCompatibility = "1.8"
+	sourceCompatibility = targetCompatibility = "1.8"
 }
 
 minecraft {
-    version = "1.11.2-13.20.0.2285"
-    runDir = "run"
-    mappings = "snapshot_20161220"
+	version = "1.12-14.21.0.2322"
+	runDir = "run"
+	mappings = "snapshot_20161220"
 }
 
 repositories {
-    maven { url 'https://oss.sonatype.org/content/groups/public/' }
-    ivy {
-        name "LatMod"
-        artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]"
-    }
-    maven {
-        name 'DVS1 Maven FS'
-        url 'http://dvs1.progwml6.com/files/maven'
-    }
-    maven {
-        url "http://maven.k-4u.nl"
-    }
+	maven { url 'https://oss.sonatype.org/content/groups/public/' }
+	ivy {
+		name "LatMod"
+		artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]"
+	}
+	maven {
+		name 'DVS1 Maven FS'
+		url 'http://dvs1.progwml6.com/files/maven'
+	}
 }
 
 configurations.all {
-    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+	resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
 dependencies {
-    compile 'LatMod:FTBLib:1.1x-3.6.5:api'
-    compile 'LatMod:iChunUtil:1.10.2-6.0.0:api'
-    compile group: 'info.journeymap', name: 'journeymap-api', version: '1.9.4-1.2', changing: true
-    deobfCompile 'mod.chiselsandbits:chiselsandbits:13.0.76:api'
-    deobfCompile 'slimeknights.mantle:Mantle:1.10.2-1.1.4.203'
-    deobfCompile 'slimeknights:TConstruct:1.10.2-2.6.2.490'
-    deobfCompile "com.github.mcjty:compatlayer:1.11.2-0.2.7"
+	compile 'LatMod:FTBLib:4.0.0:api'
+	compile 'LatMod:iChunUtil:1.10.2-6.0.0:api'
+	compile group: 'info.journeymap', name: 'journeymap-api', version: '1.9.4-1.2', changing: true
+	deobfCompile 'mod.chiselsandbits:chiselsandbits:13.0.76:api'
+	deobfCompile 'slimeknights.mantle:Mantle:1.10.2-1.1.4.203'
+	deobfCompile 'slimeknights:TConstruct:1.10.2-2.6.2.490'
 }
 
 sourceSets {
-    main {
-        java {
-            srcDir 'src/main/java'
-            srcDir 'src/main/api'
-        }
-        resources {
-            srcDir 'src/main/resources'
-        }
-    }
+	main {
+		java {
+			srcDir 'src/main/java'
+			srcDir 'src/main/api'
+		}
+		resources {
+			srcDir 'src/main/resources'
+		}
+	}
 }
 
 task apiJar(type: Jar) {
-    from sourceSets.main.java
-    include "com/feed_the_beast/ftbu/api/**"
-    from sourceSets.main.output
-    include "com/feed_the_beast/ftbu/api/**"
-    classifier = 'api'
+	from sourceSets.main.java
+	include "com/feed_the_beast/ftbu/api/**"
+	from sourceSets.main.output
+	include "com/feed_the_beast/ftbu/api/**"
+	classifier = 'api'
 }
 
 build.dependsOn apiJar
 
 processResources {
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+	inputs.property "version", project.version
+	inputs.property "mcversion", project.minecraft.version
 
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-        expand 'version': project.version, 'mcversion': project.minecraft.version
-    }
+	from(sourceSets.main.resources.srcDirs) {
+		include 'mcmod.info'
+		expand 'version': project.version, 'mcversion': project.minecraft.version
+	}
 
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
+	from(sourceSets.main.resources.srcDirs) {
+		exclude 'mcmod.info'
+	}
 }

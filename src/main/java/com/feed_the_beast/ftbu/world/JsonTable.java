@@ -17,99 +17,99 @@ import java.util.Map;
  */
 public class JsonTable
 {
-    public static class TableEntry
-    {
-        private final Map<String, JsonElement> values;
+	public static class TableEntry
+	{
+		private final Map<String, JsonElement> values;
 
-        public TableEntry()
-        {
-            values = new HashMap<>();
-        }
+		public TableEntry()
+		{
+			values = new HashMap<>();
+		}
 
-        public TableEntry set(String s, JsonElement e)
-        {
-            values.put(s, e);
-            return this;
-        }
+		public TableEntry set(String s, JsonElement e)
+		{
+			values.put(s, e);
+			return this;
+		}
 
-        public JsonElement get(String s)
-        {
-            JsonElement e = values.get(s);
-            return (e == null) ? JsonNull.INSTANCE : e;
-        }
-    }
+		public JsonElement get(String s)
+		{
+			JsonElement e = values.get(s);
+			return (e == null) ? JsonNull.INSTANCE : e;
+		}
+	}
 
-    private final Map<String, String> ids;
-    private final List<TableEntry> entries;
+	private final Map<String, String> ids;
+	private final List<TableEntry> entries;
 
-    public JsonTable()
-    {
-        ids = new LinkedHashMap<>();
-        entries = new ArrayList<>();
-    }
+	public JsonTable()
+	{
+		ids = new LinkedHashMap<>();
+		entries = new ArrayList<>();
+	}
 
-    public void setTitle(String id, String translated)
-    {
-        if(!translated.isEmpty())
-        {
-            ids.put(id, translated);
-        }
-    }
+	public void setTitle(String id, String translated)
+	{
+		if (!translated.isEmpty())
+		{
+			ids.put(id, translated);
+		}
+	}
 
-    public void addEntry(TableEntry e)
-    {
-        entries.add(e);
-    }
+	public void addEntry(TableEntry e)
+	{
+		entries.add(e);
+	}
 
-    public JsonObject toJson()
-    {
-        JsonObject o = new JsonObject();
-        String[] ids1 = ids.keySet().toArray(new String[ids.size()]);
+	public JsonObject toJson()
+	{
+		JsonObject o = new JsonObject();
+		String[] ids1 = ids.keySet().toArray(new String[ids.size()]);
 
-        o.add("columns", new JsonPrimitive(ids1.length));
-        o.add("rows", new JsonPrimitive(entries.size()));
+		o.add("columns", new JsonPrimitive(ids1.length));
+		o.add("rows", new JsonPrimitive(entries.size()));
 
-        JsonObject o1 = new JsonObject();
+		JsonObject o1 = new JsonObject();
 
-        for(int i = 0; i < ids1.length; i++)
-        {
-            o1.add(ids1[i], new JsonPrimitive(i));
-        }
+		for (int i = 0; i < ids1.length; i++)
+		{
+			o1.add(ids1[i], new JsonPrimitive(i));
+		}
 
-        o.add("ids", o1);
+		o.add("ids", o1);
 
-        JsonArray a = new JsonArray();
+		JsonArray a = new JsonArray();
 
-        for(String s : ids1)
-        {
-            a.add(new JsonPrimitive(ids.get(s)));
-        }
+		for (String s : ids1)
+		{
+			a.add(new JsonPrimitive(ids.get(s)));
+		}
 
-        o.add("ids_loc", a);
+		o.add("ids_loc", a);
 
-        a = new JsonArray();
-        JsonArray a1;
+		a = new JsonArray();
+		JsonArray a1;
 
-        for(TableEntry entry : entries)
-        {
-            a1 = new JsonArray();
+		for (TableEntry entry : entries)
+		{
+			a1 = new JsonArray();
 
-            for(String s : ids1)
-            {
-                a1.add(entry.get(s));
-            }
+			for (String s : ids1)
+			{
+				a1.add(entry.get(s));
+			}
 
-            a.add(a1);
-        }
+			a.add(a1);
+		}
 
-        o.add("table", a);
+		o.add("table", a);
 
-        return o;
-    }
+		return o;
+	}
 
-    @Override
-    public String toString()
-    {
-        return toJson().toString();
-    }
+	@Override
+	public String toString()
+	{
+		return toJson().toString();
+	}
 }

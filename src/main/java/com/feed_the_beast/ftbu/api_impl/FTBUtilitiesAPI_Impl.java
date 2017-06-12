@@ -20,81 +20,81 @@ import java.util.Collection;
 
 public enum FTBUtilitiesAPI_Impl implements FTBUtilitiesAPI, IPermissionHandler
 {
-    INSTANCE;
+	INSTANCE;
 
-    /**
-     * @author LatvianModder
-     */
-    private Collection<IFTBUtilitiesPlugin> plugins;
+	/**
+	 * @author LatvianModder
+	 */
+	private Collection<IFTBUtilitiesPlugin> plugins;
 
-    public void init(ASMDataTable table)
-    {
-        plugins = AsmHelper.findPlugins(table, IFTBUtilitiesPlugin.class, FTBUtilitiesPlugin.class);
+	public void init(ASMDataTable table)
+	{
+		plugins = AsmHelper.findPlugins(table, IFTBUtilitiesPlugin.class, FTBUtilitiesPlugin.class);
 
-        for(IFTBUtilitiesPlugin p : plugins)
-        {
-            p.init(this);
-        }
-    }
+		for (IFTBUtilitiesPlugin p : plugins)
+		{
+			p.init(this);
+		}
+	}
 
-    @Override
-    public Collection<IFTBUtilitiesPlugin> getAllPlugins()
-    {
-        return plugins;
-    }
+	@Override
+	public Collection<IFTBUtilitiesPlugin> getAllPlugins()
+	{
+		return plugins;
+	}
 
-    @Override
-    public IClaimedChunkStorage getClaimedChunks()
-    {
-        return ClaimedChunkStorage.INSTANCE;
-    }
+	@Override
+	public IClaimedChunkStorage getClaimedChunks()
+	{
+		return ClaimedChunkStorage.INSTANCE;
+	}
 
-    @Override
-    public IRank getRank(GameProfile profile)
-    {
-        return Ranks.getRank(profile);
-    }
+	@Override
+	public IRank getRank(GameProfile profile)
+	{
+		return Ranks.getRank(profile);
+	}
 
-    @Override
-    public void registerNode(String s, DefaultPermissionLevel defaultPermissionLevel, String s1)
-    {
-        DefaultPermissionHandler.INSTANCE.registerNode(s, defaultPermissionLevel, s1);
-    }
+	@Override
+	public void registerNode(String s, DefaultPermissionLevel defaultPermissionLevel, String s1)
+	{
+		DefaultPermissionHandler.INSTANCE.registerNode(s, defaultPermissionLevel, s1);
+	}
 
-    @Override
-    public Collection<String> getRegisteredNodes()
-    {
-        return DefaultPermissionHandler.INSTANCE.getRegisteredNodes();
-    }
+	@Override
+	public Collection<String> getRegisteredNodes()
+	{
+		return DefaultPermissionHandler.INSTANCE.getRegisteredNodes();
+	}
 
-    @Override
-    public boolean hasPermission(GameProfile profile, String permission, @Nullable IContext context)
-    {
-        if(context != null && context.getWorld() != null && context.getWorld().isRemote)
-        {
-            return true;
-        }
+	@Override
+	public boolean hasPermission(GameProfile profile, String permission, @Nullable IContext context)
+	{
+		if (context != null && context.getWorld() != null && context.getWorld().isRemote)
+		{
+			return true;
+		}
 
-        switch(getRank(profile).hasPermission(permission))
-        {
-            case ALLOW:
-                return true;
-            case DENY:
-                return false;
-            default:
-                return DefaultPermissionHandler.INSTANCE.hasPermission(profile, permission, context);
-        }
-    }
+		switch (getRank(profile).hasPermission(permission))
+		{
+			case ALLOW:
+				return true;
+			case DENY:
+				return false;
+			default:
+				return DefaultPermissionHandler.INSTANCE.hasPermission(profile, permission, context);
+		}
+	}
 
-    @Override
-    public String getNodeDescription(String s)
-    {
-        return DefaultPermissionHandler.INSTANCE.getNodeDescription(s);
-    }
+	@Override
+	public String getNodeDescription(String s)
+	{
+		return DefaultPermissionHandler.INSTANCE.getNodeDescription(s);
+	}
 
-    @Override
-    public IConfigValue getRankConfig(GameProfile profile, String id)
-    {
-        return getRank(profile).getConfig(id);
-    }
+	@Override
+	public IConfigValue getRankConfig(GameProfile profile, String id)
+	{
+		return getRank(profile).getConfig(id);
+	}
 }

@@ -20,51 +20,51 @@ import java.util.List;
 
 public class CmdWarp extends CmdBase
 {
-    public CmdWarp()
-    {
-        super("warp", Level.ALL);
-    }
+	public CmdWarp()
+	{
+		super("warp", Level.ALL);
+	}
 
-    @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
-    {
-        if(args.length == 1)
-        {
-            return getListOfStringsMatchingLastWord(args, FTBUUniverseData.get().listWarps());
-        }
+	@Override
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+	{
+		if (args.length == 1)
+		{
+			return getListOfStringsMatchingLastWord(args, FTBUUniverseData.get().listWarps());
+		}
 
-        return super.getTabCompletions(server, sender, args, pos);
-    }
+		return super.getTabCompletions(server, sender, args, pos);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        checkArgs(args, 1, "<warp>");
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		checkArgs(args, 1, "<warp>");
 
-        args[0] = args[0].toLowerCase();
+		args[0] = args[0].toLowerCase();
 
-        if(args[0].equals("list"))
-        {
-            Collection<String> list = FTBUUniverseData.get().listWarps();
-            sender.sendMessage(new TextComponentString(list.isEmpty() ? "-" : StringUtils.strip(list)));
-            return;
-        }
+		if (args[0].equals("list"))
+		{
+			Collection<String> list = FTBUUniverseData.get().listWarps();
+			sender.sendMessage(new TextComponentString(list.isEmpty() ? "-" : StringUtils.strip(list)));
+			return;
+		}
 
-        EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
 
-        if(args[0].equals("gui"))
-        {
-            new MessageSendWarpList(ep).sendTo(ep);
-            return;
-        }
+		if (args[0].equals("gui"))
+		{
+			new MessageSendWarpList(ep).sendTo(ep);
+			return;
+		}
 
-        BlockDimPos p = FTBUUniverseData.get().getWarp(args[0]);
-        if(p == null)
-        {
-            throw FTBULang.WARP_NOT_SET.commandError(args[0]);
-        }
+		BlockDimPos p = FTBUUniverseData.get().getWarp(args[0]);
+		if (p == null)
+		{
+			throw FTBULang.WARP_NOT_SET.commandError(args[0]);
+		}
 
-        ServerUtils.teleportPlayer(ep, p);
-        FTBULang.WARP_TP.printChat(sender, args[0]);
-    }
+		ServerUtils.teleportPlayer(ep, p);
+		FTBULang.WARP_TP.printChat(sender, args[0]);
+	}
 }

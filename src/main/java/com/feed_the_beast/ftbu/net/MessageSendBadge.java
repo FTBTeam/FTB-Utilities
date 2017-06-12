@@ -12,42 +12,42 @@ import java.util.UUID;
 
 public class MessageSendBadge extends MessageToClient<MessageSendBadge>
 {
-    private UUID playerID;
-    private String badgeURL;
+	private UUID playerID;
+	private String badgeURL;
 
-    public MessageSendBadge()
-    {
-    }
+	public MessageSendBadge()
+	{
+	}
 
-    public MessageSendBadge(UUID player, String url)
-    {
-        playerID = player;
-        badgeURL = url;
-    }
+	public MessageSendBadge(UUID player, String url)
+	{
+		playerID = player;
+		badgeURL = url;
+	}
 
-    @Override
-    public NetworkWrapper getWrapper()
-    {
-        return FTBUNetHandler.NET;
-    }
+	@Override
+	public NetworkWrapper getWrapper()
+	{
+		return FTBUNetHandler.NET;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf io)
-    {
-        playerID = NetUtils.readUUID(io);
-        badgeURL = ByteBufUtils.readUTF8String(io);
-    }
+	@Override
+	public void fromBytes(ByteBuf io)
+	{
+		playerID = NetUtils.readUUID(io);
+		badgeURL = ByteBufUtils.readUTF8String(io);
+	}
 
-    @Override
-    public void toBytes(ByteBuf io)
-    {
-        NetUtils.writeUUID(io, playerID);
-        ByteBufUtils.writeUTF8String(io, badgeURL);
-    }
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		NetUtils.writeUUID(io, playerID);
+		ByteBufUtils.writeUTF8String(io, badgeURL);
+	}
 
-    @Override
-    public void onMessage(MessageSendBadge m, EntityPlayer player)
-    {
-        CachedClientData.setBadge(m.playerID, m.badgeURL);
-    }
+	@Override
+	public void onMessage(MessageSendBadge m, EntityPlayer player)
+	{
+		CachedClientData.setBadge(m.playerID, m.badgeURL);
+	}
 }

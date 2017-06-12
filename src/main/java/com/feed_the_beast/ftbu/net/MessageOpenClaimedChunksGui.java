@@ -11,26 +11,26 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class MessageOpenClaimedChunksGui extends MessageToClient<MessageOpenClaimedChunksGui>
 {
-    @Override
-    public NetworkWrapper getWrapper()
-    {
-        return FTBUNetHandler.NET;
-    }
+	@Override
+	public NetworkWrapper getWrapper()
+	{
+		return FTBUNetHandler.NET;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf)
-    {
-    }
+	@Override
+	public void fromBytes(ByteBuf buf)
+	{
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf)
-    {
-    }
+	@Override
+	public void toBytes(ByteBuf buf)
+	{
+	}
 
-    @Override
-    public void onMessage(MessageOpenClaimedChunksGui m, EntityPlayer player)
-    {
-        GuiClaimedChunks.instance = new GuiClaimedChunks();
-        GuiClaimedChunks.instance.openGui();
-    }
+	@Override
+	public void onMessage(MessageOpenClaimedChunksGui m, EntityPlayer player)
+	{
+		GuiClaimedChunks.instance = new GuiClaimedChunks();
+		GuiClaimedChunks.instance.openGui();
+	}
 }

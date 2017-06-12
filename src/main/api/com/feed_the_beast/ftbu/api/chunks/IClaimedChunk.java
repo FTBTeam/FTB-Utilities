@@ -8,11 +8,11 @@ import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
  */
 public interface IClaimedChunk
 {
-    ChunkDimPos getPos();
+	ChunkDimPos getPos();
 
-    IForgePlayer getOwner();
+	IForgePlayer getOwner();
 
-    boolean hasUpgrade(IChunkUpgrade upgrade);
+	boolean hasUpgrade(IChunkUpgrade upgrade);
 
-    void setHasUpgrade(IChunkUpgrade upgrade, boolean v);
+	void setHasUpgrade(IChunkUpgrade upgrade, boolean v);
 }

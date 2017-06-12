@@ -34,110 +34,110 @@ import java.util.Map;
 @ClientPlugin //FIXME: JourneyMap Plugin
 public class JourneyMapIntegration implements IClientPlugin, IJMIntegration
 {
-    private static Minecraft mc;
-    private IClientAPI clientAPI;
-    private static final Map<ChunkPos, PolygonOverlay> POLYGONS = new HashMap<>();
-    private static ChunkPos lastPosition = null;
+	private static Minecraft mc;
+	private IClientAPI clientAPI;
+	private static final Map<ChunkPos, PolygonOverlay> POLYGONS = new HashMap<>();
+	private static ChunkPos lastPosition = null;
 
-    @Override
-    public void initialize(IClientAPI api)
-    {
-        mc = Minecraft.getMinecraft();
-        clientAPI = api;
-        FTBUClient.JM_INTEGRATION = this;
-        MinecraftForge.EVENT_BUS.register(JourneyMapIntegration.class);
-        api.subscribe(getModId(), EnumSet.of(ClientEvent.Type.DISPLAY_UPDATE, ClientEvent.Type.MAPPING_STARTED, ClientEvent.Type.MAPPING_STOPPED));
-    }
+	@Override
+	public void initialize(IClientAPI api)
+	{
+		mc = Minecraft.getMinecraft();
+		clientAPI = api;
+		FTBUClient.JM_INTEGRATION = this;
+		MinecraftForge.EVENT_BUS.register(JourneyMapIntegration.class);
+		api.subscribe(getModId(), EnumSet.of(ClientEvent.Type.DISPLAY_UPDATE, ClientEvent.Type.MAPPING_STARTED, ClientEvent.Type.MAPPING_STOPPED));
+	}
 
-    @Override
-    public String getModId()
-    {
-        return FTBUFinals.MOD_ID;
-    }
+	@Override
+	public String getModId()
+	{
+		return FTBUFinals.MOD_ID;
+	}
 
-    @Override
-    public void onEvent(ClientEvent event)
-    {
-        switch(event.type)
-        {
-            case DISPLAY_UPDATE:
-                Minecraft mc = Minecraft.getMinecraft();
-                if(mc.player != null)
-                {
-                    new MessageClaimedChunksRequest(mc.player).sendToServer();
-                }
-                break;
-            case MAPPING_STOPPED:
-                clearData();
-                break;
-        }
-    }
+	@Override
+	public void onEvent(ClientEvent event)
+	{
+		switch (event.type)
+		{
+			case DISPLAY_UPDATE:
+				Minecraft mc = Minecraft.getMinecraft();
+				if (mc.player != null)
+				{
+					new MessageClaimedChunksRequest(mc.player).sendToServer();
+				}
+				break;
+			case MAPPING_STOPPED:
+				clearData();
+				break;
+		}
+	}
 
-    @Override
-    public void clearData()
-    {
-        if(!POLYGONS.isEmpty())
-        {
-            POLYGONS.clear();
-            clientAPI.removeAll(FTBUFinals.MOD_ID);
-        }
-    }
+	@Override
+	public void clearData()
+	{
+		if (!POLYGONS.isEmpty())
+		{
+			POLYGONS.clear();
+			clientAPI.removeAll(FTBUFinals.MOD_ID);
+		}
+	}
 
-    @Override
-    public void chunkChanged(ChunkPos pos, ClaimedChunks.Data chunk)
-    {
-        if(!POLYGONS.isEmpty() && (!FTBUClientConfig.JOURNEYMAP_OVERLAY.getBoolean() || !clientAPI.playerAccepts(FTBUFinals.MOD_ID, DisplayType.Polygon)))
-        {
-            clearData();
-            return;
-        }
+	@Override
+	public void chunkChanged(ChunkPos pos, ClaimedChunks.Data chunk)
+	{
+		if (!POLYGONS.isEmpty() && (!FTBUClientConfig.JOURNEYMAP_OVERLAY.getBoolean() || !clientAPI.playerAccepts(FTBUFinals.MOD_ID, DisplayType.Polygon)))
+		{
+			clearData();
+			return;
+		}
 
-        try
-        {
-            PolygonOverlay p = POLYGONS.get(pos);
+		try
+		{
+			PolygonOverlay p = POLYGONS.get(pos);
 
-            if(p != null)
-            {
-                clientAPI.remove(p);
+			if (p != null)
+			{
+				clientAPI.remove(p);
 
-                if(!chunk.hasUpgrade(ChunkUpgrade.CLAIMED))
-                {
-                    POLYGONS.remove(pos);
-                }
-            }
+				if (!chunk.hasUpgrade(ChunkUpgrade.CLAIMED))
+				{
+					POLYGONS.remove(pos);
+				}
+			}
 
-            if(chunk.hasUpgrade(ChunkUpgrade.CLAIMED))
-            {
-                int dim = 0;
+			if (chunk.hasUpgrade(ChunkUpgrade.CLAIMED))
+			{
+				int dim = 0;
 
-                MapPolygon poly = PolygonHelper.createChunkPolygon(pos.chunkXPos, 100, pos.chunkZPos);
-                ShapeProperties shapeProperties = new ShapeProperties();
+				MapPolygon poly = PolygonHelper.createChunkPolygon(pos.chunkXPos, 100, pos.chunkZPos);
+				ShapeProperties shapeProperties = new ShapeProperties();
 
-                shapeProperties.setFillOpacity(0.2F);
-                shapeProperties.setStrokeOpacity(0.1F);
+				shapeProperties.setFillOpacity(0.2F);
+				shapeProperties.setStrokeOpacity(0.1F);
 
-                shapeProperties.setFillColor(chunk.team.color.getColor().rgba());
-                shapeProperties.setStrokeColor(shapeProperties.getFillColor());
+				shapeProperties.setFillColor(chunk.team.color.getColor().rgba());
+				shapeProperties.setStrokeColor(shapeProperties.getFillColor());
 
-                p = new PolygonOverlay(FTBUFinals.MOD_ID, "claimed_" + dim + '_' + pos.chunkXPos + '_' + pos.chunkZPos, dim, shapeProperties, poly);
-                p.setOverlayGroupName("Claimed Chunks").setTitle(chunk.team.formattedName + "\n" + TextFormatting.GREEN + ChunkUpgrade.CLAIMED.getLangKey().translate());
-                POLYGONS.put(pos, p);
-                clientAPI.show(p);
-            }
-        }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-        }
-    }
+				p = new PolygonOverlay(FTBUFinals.MOD_ID, "claimed_" + dim + '_' + pos.chunkXPos + '_' + pos.chunkZPos, dim, shapeProperties, poly);
+				p.setOverlayGroupName("Claimed Chunks").setTitle(chunk.team.formattedName + "\n" + TextFormatting.GREEN + ChunkUpgrade.CLAIMED.getLangKey().translate());
+				POLYGONS.put(pos, p);
+				clientAPI.show(p);
+			}
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
 
-    @SubscribeEvent
-    public static void onEnteringChunk(EntityEvent.EnteringChunk event)
-    {
-        if(FTBUClientConfig.JOURNEYMAP_OVERLAY.getBoolean() && event.getEntity() == mc.player && (lastPosition == null || MathUtils.dist(event.getNewChunkX(), event.getNewChunkZ(), lastPosition.chunkXPos, lastPosition.chunkZPos) >= 3D))
-        {
-            lastPosition = new ChunkPos(event.getNewChunkX(), event.getNewChunkZ());
-            new MessageJMRequest(mc.player).sendToServer();
-        }
-    }
+	@SubscribeEvent
+	public static void onEnteringChunk(EntityEvent.EnteringChunk event)
+	{
+		if (FTBUClientConfig.JOURNEYMAP_OVERLAY.getBoolean() && event.getEntity() == mc.player && (lastPosition == null || MathUtils.dist(event.getNewChunkX(), event.getNewChunkZ(), lastPosition.chunkXPos, lastPosition.chunkZPos) >= 3D))
+		{
+			lastPosition = new ChunkPos(event.getNewChunkX(), event.getNewChunkZ());
+			new MessageJMRequest(mc.player).sendToServer();
+		}
+	}
 }

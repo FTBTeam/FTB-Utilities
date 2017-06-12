@@ -10,15 +10,15 @@ import net.minecraft.server.MinecraftServer;
  */
 public class CmdSetHour extends CmdBase
 {
-    public CmdSetHour()
-    {
-        super("set_hour", Level.OP);
-    }
+	public CmdSetHour()
+	{
+		super("set_hour", Level.OP);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        checkArgs(args, 1, "<hour>");
-        server.getEntityWorld().getWorldInfo().setWorldTime(((server.getEntityWorld().getWorldInfo().getWorldTime() / 24000L) * 24000L) + 24000L + parseInt(args[0]) * 1000);
-    }
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		checkArgs(args, 1, "<hour>");
+		server.getEntityWorld().getWorldInfo().setWorldTime(((server.getEntityWorld().getWorldInfo().getWorldTime() / 24000L) * 24000L) + 24000L + parseInt(args[0]) * 1000);
+	}
 }

@@ -16,26 +16,26 @@ import net.minecraft.server.MinecraftServer;
  */
 public class CmdUnload extends CmdBase
 {
-    public CmdUnload()
-    {
-        super("unload", Level.ALL);
-    }
+	public CmdUnload()
+	{
+		super("unload", Level.ALL);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-        IForgePlayer p = getForgePlayer(player);
-        ChunkDimPos pos = new ChunkDimPos(player);
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+		IForgePlayer p = getForgePlayer(player);
+		ChunkDimPos pos = new ChunkDimPos(player);
 
-        if(FTBUUniverseData.setLoaded(p, pos, false))
-        {
-            FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_UNLOADED);
-            CmdChunks.updateChunk(player, pos);
-        }
-        else
-        {
-            FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_MODIFY_CHUNK);
-        }
-    }
+		if (FTBUUniverseData.setLoaded(p, pos, false))
+		{
+			FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_UNLOADED);
+			CmdChunks.updateChunk(player, pos);
+		}
+		else
+		{
+			FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_MODIFY_CHUNK);
+		}
+	}
 }

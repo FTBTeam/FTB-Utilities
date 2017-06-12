@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbl.lib.LangKey;
  */
 public class FTBULang
 {
-    //@formatter:off
+	//@formatter:off
     public static final LangKey
 
     TIMER_RESTART = get("lang.timer_restart"),
@@ -43,8 +43,8 @@ public class FTBULang
             BACKUP_SIZE = get("backup.size");
     //@formatter:on
 
-    public static LangKey get(String s)
-    {
-        return new LangKey("ftbu." + s);
-    }
+	public static LangKey get(String s)
+	{
+		return new LangKey("ftbu." + s);
+	}
 }

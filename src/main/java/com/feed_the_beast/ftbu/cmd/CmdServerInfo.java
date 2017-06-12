@@ -13,15 +13,15 @@ import net.minecraft.server.MinecraftServer;
  */
 public class CmdServerInfo extends CmdBase
 {
-    public CmdServerInfo()
-    {
-        super("server_info", Level.ALL);
-    }
+	public CmdServerInfo()
+	{
+		super("server_info", Level.ALL);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-        FTBLibIntegration.API.displayGuide(player, ServerInfoPage.getPageForPlayer(player));
-    }
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+		FTBLibIntegration.API.displayGuide(player, ServerInfoPage.getPageForPlayer(player));
+	}
 }

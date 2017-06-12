@@ -11,24 +11,24 @@ import javax.annotation.Nullable;
  */
 public class NodeEntry extends FinalIDObject
 {
-    private DefaultPermissionLevel level;
-    private String desc;
+	private DefaultPermissionLevel level;
+	private String desc;
 
-    public NodeEntry(String n, DefaultPermissionLevel l, @Nullable String d)
-    {
-        super(n, StringUtils.FLAG_ID_FIX | StringUtils.FLAG_ID_ONLY_LOWERCASE);
-        level = l;
-        desc = d;
-    }
+	public NodeEntry(String n, DefaultPermissionLevel l, @Nullable String d)
+	{
+		super(n, StringUtils.FLAG_ID_FIX | StringUtils.FLAG_ID_ONLY_LOWERCASE);
+		level = l;
+		desc = d;
+	}
 
-    public DefaultPermissionLevel getLevel()
-    {
-        return level;
-    }
+	public DefaultPermissionLevel getLevel()
+	{
+		return level;
+	}
 
-    @Nullable
-    public String getDescription()
-    {
-        return desc;
-    }
+	@Nullable
+	public String getDescription()
+	{
+		return desc;
+	}
 }

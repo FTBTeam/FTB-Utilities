@@ -22,105 +22,105 @@ import java.util.Map;
 
 public enum ClaimedChunkStorage implements IClaimedChunkStorage
 {
-    INSTANCE;
+	INSTANCE;
 
-    /**
-     * @author LatvianModder
-     */
-    private static final Map<ChunkDimPos, IClaimedChunk> MAP = new HashMap<>();
-    private static final Map<ChunkDimPos, IClaimedChunk> MAP_MIRROR = Collections.unmodifiableMap(MAP);
+	/**
+	 * @author LatvianModder
+	 */
+	private static final Map<ChunkDimPos, IClaimedChunk> MAP = new HashMap<>();
+	private static final Map<ChunkDimPos, IClaimedChunk> MAP_MIRROR = Collections.unmodifiableMap(MAP);
 
-    public void init()
-    {
-        clear();
-    }
+	public void init()
+	{
+		clear();
+	}
 
-    public void clear()
-    {
-        MAP.clear();
-    }
+	public void clear()
+	{
+		MAP.clear();
+	}
 
-    @Override
-    @Nullable
-    public IClaimedChunk getChunk(ChunkDimPos pos)
-    {
-        return MAP.get(pos);
-    }
+	@Override
+	@Nullable
+	public IClaimedChunk getChunk(ChunkDimPos pos)
+	{
+		return MAP.get(pos);
+	}
 
-    @Override
-    public void setChunk(ChunkDimPos pos, @Nullable IClaimedChunk chunk)
-    {
-        if(chunk == null)
-        {
-            MAP.remove(pos);
-        }
-        else
-        {
-            MAP.put(pos, chunk);
-        }
-    }
+	@Override
+	public void setChunk(ChunkDimPos pos, @Nullable IClaimedChunk chunk)
+	{
+		if (chunk == null)
+		{
+			MAP.remove(pos);
+		}
+		else
+		{
+			MAP.put(pos, chunk);
+		}
+	}
 
-    @Override
-    public Collection<IClaimedChunk> getChunks(@Nullable IForgePlayer owner)
-    {
-        if(MAP.isEmpty())
-        {
-            return Collections.emptyList();
-        }
-        else if(owner == null)
-        {
-            return MAP_MIRROR.values();
-        }
+	@Override
+	public Collection<IClaimedChunk> getChunks(@Nullable IForgePlayer owner)
+	{
+		if (MAP.isEmpty())
+		{
+			return Collections.emptyList();
+		}
+		else if (owner == null)
+		{
+			return MAP_MIRROR.values();
+		}
 
-        Collection<IClaimedChunk> c = new ArrayList<>();
+		Collection<IClaimedChunk> c = new ArrayList<>();
 
-        MAP.forEach((key, value) ->
-        {
-            if(value.getOwner().equalsPlayer(owner))
-            {
-                c.add(value);
-            }
-        });
+		MAP.forEach((key, value) ->
+		{
+			if (value.getOwner().equalsPlayer(owner))
+			{
+				c.add(value);
+			}
+		});
 
-        return c;
-    }
+		return c;
+	}
 
-    @Override
-    public boolean canPlayerInteract(EntityPlayerMP ep, EnumHand hand, BlockPosContainer block, BlockInteractionType type)
-    {
-        if(FTBUPermissions.canModifyBlock(ep, hand, block, type))
-        {
-            return true;
-        }
+	@Override
+	public boolean canPlayerInteract(EntityPlayerMP ep, EnumHand hand, BlockPosContainer block, BlockInteractionType type)
+	{
+		if (FTBUPermissions.canModifyBlock(ep, hand, block, type))
+		{
+			return true;
+		}
 
-        IClaimedChunk chunk = getChunk(new ChunkDimPos(block.getPos(), ep.dimension));
+		IClaimedChunk chunk = getChunk(new ChunkDimPos(block.getPos(), ep.dimension));
 
-        if(chunk == null)
-        {
-            return true;
-        }
+		if (chunk == null)
+		{
+			return true;
+		}
 
-        IForgePlayer player = FTBLibIntegration.API.getUniverse().getPlayer(ep);
+		IForgePlayer player = FTBLibIntegration.API.getUniverse().getPlayer(ep);
 
-        if(chunk.getOwner().equalsPlayer(player))
-        {
-            return true;
-        }
+		if (chunk.getOwner().equalsPlayer(player))
+		{
+			return true;
+		}
 
-        IForgeTeam team = chunk.getOwner().getTeam();
+		IForgeTeam team = chunk.getOwner().getTeam();
 
-        if(team == null)
-        {
-            return true;
-        }
+		if (team == null)
+		{
+			return true;
+		}
 
-        FTBUTeamData data = FTBUTeamData.get(team);
+		FTBUTeamData data = FTBUTeamData.get(team);
 
-        if(player.isFake())
-        {
-            return data.fakePlayers.getBoolean();
-        }
+		if (player.isFake())
+		{
+			return data.fakePlayers.getBoolean();
+		}
 
-        return team.canInteract(player.getId(), (type == BlockInteractionType.INTERACT ? data.interactWithBlocks : data.editBlocks).getNonnull());
-    }
+		return team.canInteract(player.getId(), (type == BlockInteractionType.INTERACT ? data.interactWithBlocks : data.editBlocks).getNonnull());
+	}
 }

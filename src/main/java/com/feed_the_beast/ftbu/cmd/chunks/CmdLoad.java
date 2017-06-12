@@ -18,31 +18,31 @@ import net.minecraft.server.MinecraftServer;
  */
 public class CmdLoad extends CmdBase
 {
-    public CmdLoad()
-    {
-        super("load", Level.ALL);
-    }
+	public CmdLoad()
+	{
+		super("load", Level.ALL);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        if(!FTBUConfigWorld.CHUNK_LOADING.getBoolean())
-        {
-            throw FTBLibLang.FEATURE_DISABLED.commandError();
-        }
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		if (!FTBUConfigWorld.CHUNK_LOADING.getBoolean())
+		{
+			throw FTBLibLang.FEATURE_DISABLED.commandError();
+		}
 
-        EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-        IForgePlayer p = getForgePlayer(player);
-        ChunkDimPos pos = new ChunkDimPos(player);
+		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+		IForgePlayer p = getForgePlayer(player);
+		ChunkDimPos pos = new ChunkDimPos(player);
 
-        if(FTBUUniverseData.setLoaded(p, pos, true))
-        {
-            FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_LOADED);
-            CmdChunks.updateChunk(player, pos);
-        }
-        else
-        {
-            FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_MODIFY_CHUNK);
-        }
-    }
+		if (FTBUUniverseData.setLoaded(p, pos, true))
+		{
+			FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_LOADED);
+			CmdChunks.updateChunk(player, pos);
+		}
+		else
+		{
+			FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_MODIFY_CHUNK);
+		}
+	}
 }

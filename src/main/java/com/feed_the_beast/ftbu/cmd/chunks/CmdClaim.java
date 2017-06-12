@@ -20,44 +20,44 @@ import net.minecraftforge.server.permission.PermissionAPI;
  */
 public class CmdClaim extends CmdBase
 {
-    public CmdClaim()
-    {
-        super("claim", Level.ALL);
-    }
+	public CmdClaim()
+	{
+		super("claim", Level.ALL);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        if(!FTBUConfigWorld.CHUNK_CLAIMING.getBoolean())
-        {
-            throw FTBLibLang.FEATURE_DISABLED.commandError();
-        }
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		if (!FTBUConfigWorld.CHUNK_CLAIMING.getBoolean())
+		{
+			throw FTBLibLang.FEATURE_DISABLED.commandError();
+		}
 
-        EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-        IForgePlayer p = getForgePlayer(player);
-        ChunkDimPos pos = new ChunkDimPos(player);
+		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+		IForgePlayer p = getForgePlayer(player);
+		ChunkDimPos pos = new ChunkDimPos(player);
 
-        if(!FTBUConfigWorld.CHUNK_CLAIMING.getBoolean())
-        {
-            FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CLAIMING_NOT_ENABLED);
-            return;
-        }
+		if (!FTBUConfigWorld.CHUNK_CLAIMING.getBoolean())
+		{
+			FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CLAIMING_NOT_ENABLED);
+			return;
+		}
 
-        if(!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CHUNKS_MODIFY_SELF, null))
-        {
-            FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CLAIMING_NOT_ALLOWED);
-            return;
-        }
+		if (!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CHUNKS_MODIFY_SELF, null))
+		{
+			FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CLAIMING_NOT_ALLOWED);
+			return;
+		}
 
-        if(FTBUUniverseData.claimChunk(p, pos))
-        {
-            FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_CLAIMED);
-            CmdChunks.updateChunk(player, pos);
-        }
-        else
-        {
-            FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_MODIFY_CHUNK);
-        }
+		if (FTBUUniverseData.claimChunk(p, pos))
+		{
+			FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_CLAIMED);
+			CmdChunks.updateChunk(player, pos);
+		}
+		else
+		{
+			FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_MODIFY_CHUNK);
+		}
 
-    }
+	}
 }

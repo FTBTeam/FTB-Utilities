@@ -21,65 +21,65 @@ import java.util.Arrays;
  */
 public class CmdViewCrash extends CmdBase
 {
-    public CmdViewCrash()
-    {
-        super("view_crash", Level.OP);
-    }
+	public CmdViewCrash()
+	{
+		super("view_crash", Level.OP);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
 
-        if(args.length == 0)
-        {
-            GuidePage page = new GuidePage("crash_report_list");
+		if (args.length == 0)
+		{
+			GuidePage page = new GuidePage("crash_report_list");
 
-            try
-            {
-                String[] crashReports = new File(LMUtils.folderMinecraft, "crash-reports").list();
+			try
+			{
+				String[] crashReports = new File(LMUtils.folderMinecraft, "crash-reports").list();
 
-                if(crashReports != null)
-                {
-                    Arrays.sort(crashReports);
+				if (crashReports != null)
+				{
+					Arrays.sort(crashReports);
 
-                    for(String s : crashReports)
-                    {
-                        if(s.endsWith(".txt"))
-                        {
-                            ITextComponent textComponent = new TextComponentString(s);
-                            textComponent.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb view_crash " + s));
-                            page.println(textComponent);
-                        }
-                    }
-                }
-            }
-            catch(Exception ex)
-            {
-                page.println("Failed to read crash-reports folder!");
-            }
+					for (String s : crashReports)
+					{
+						if (s.endsWith(".txt"))
+						{
+							ITextComponent textComponent = new TextComponentString(s);
+							textComponent.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb view_crash " + s));
+							page.println(textComponent);
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				page.println("Failed to read crash-reports folder!");
+			}
 
-            FTBLibIntegration.API.displayGuide(ep, page);
-            return;
-        }
+			FTBLibIntegration.API.displayGuide(ep, page);
+			return;
+		}
 
-        GuidePage page = new GuidePage("crash_report");
+		GuidePage page = new GuidePage("crash_report");
 
-        try
-        {
-            File file = new File(LMUtils.folderMinecraft, "crash-reports/" + args[0]);
+		try
+		{
+			File file = new File(LMUtils.folderMinecraft, "crash-reports/" + args[0]);
 
-            for(String s : FileUtils.load(file))
-            {
-                page.println(s);
-            }
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-            page.println("Failed to load crash report!");
-        }
+			for (String s : FileUtils.load(file))
+			{
+				page.println(s);
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			page.println("Failed to load crash report!");
+		}
 
-        FTBLibIntegration.API.displayGuide(ep, page);
-    }
+		FTBLibIntegration.API.displayGuide(ep, page);
+	}
 }

@@ -15,27 +15,27 @@ import net.minecraft.server.MinecraftServer;
  */
 public class CmdGui extends CmdBase
 {
-    public CmdGui()
-    {
-        super("gui", Level.ALL);
-    }
+	public CmdGui()
+	{
+		super("gui", Level.ALL);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-        IForgePlayer player = getForgePlayer(ep);
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+		IForgePlayer player = getForgePlayer(ep);
 
-        if(player.getTeam() == null)
-        {
-            if(player.isOnline())
-            {
-                FTBLibIntegration.API.sendNotification(player.getPlayer(), FTBUNotifications.NO_TEAM);
-            }
+		if (player.getTeam() == null)
+		{
+			if (player.isOnline())
+			{
+				FTBLibIntegration.API.sendNotification(player.getPlayer(), FTBUNotifications.NO_TEAM);
+			}
 
-            return;
-        }
+			return;
+		}
 
-        new MessageOpenClaimedChunksGui().sendTo(ep);
-    }
+		new MessageOpenClaimedChunksGui().sendTo(ep);
+	}
 }

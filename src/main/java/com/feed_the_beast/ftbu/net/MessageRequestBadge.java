@@ -11,58 +11,58 @@ import java.util.UUID;
 
 public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
 {
-    private UUID playerId;
+	private UUID playerId;
 
-    private static class ThreadBadge extends Thread
-    {
-        private final UUID playerId;
-        private final EntityPlayer player;
+	private static class ThreadBadge extends Thread
+	{
+		private final UUID playerId;
+		private final EntityPlayer player;
 
-        private ThreadBadge(UUID id, EntityPlayer p)
-        {
-            super("Badge_" + id);
-            playerId = id;
-            player = p;
-            setDaemon(true);
-        }
+		private ThreadBadge(UUID id, EntityPlayer p)
+		{
+			super("Badge_" + id);
+			playerId = id;
+			player = p;
+			setDaemon(true);
+		}
 
-        @Override
-        public void run()
-        {
-            new MessageSendBadge(playerId, FTBUUniverseData.getBadge(playerId)).sendTo(player);
-        }
-    }
+		@Override
+		public void run()
+		{
+			new MessageSendBadge(playerId, FTBUUniverseData.getBadge(playerId)).sendTo(player);
+		}
+	}
 
-    public MessageRequestBadge()
-    {
-    }
+	public MessageRequestBadge()
+	{
+	}
 
-    public MessageRequestBadge(UUID player)
-    {
-        playerId = player;
-    }
+	public MessageRequestBadge(UUID player)
+	{
+		playerId = player;
+	}
 
-    @Override
-    public NetworkWrapper getWrapper()
-    {
-        return FTBUNetHandler.NET;
-    }
+	@Override
+	public NetworkWrapper getWrapper()
+	{
+		return FTBUNetHandler.NET;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf io)
-    {
-        playerId = NetUtils.readUUID(io);
-    }
+	@Override
+	public void fromBytes(ByteBuf io)
+	{
+		playerId = NetUtils.readUUID(io);
+	}
 
-    @Override
-    public void toBytes(ByteBuf io)
-    {
-        NetUtils.writeUUID(io, playerId);
-    }
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		NetUtils.writeUUID(io, playerId);
+	}
 
-    @Override
-    public void onMessage(MessageRequestBadge m, EntityPlayer player)
-    {
-        new ThreadBadge(m.playerId, player).start();
-    }
+	@Override
+	public void onMessage(MessageRequestBadge m, EntityPlayer player)
+	{
+		new ThreadBadge(m.playerId, player).start();
+	}
 }

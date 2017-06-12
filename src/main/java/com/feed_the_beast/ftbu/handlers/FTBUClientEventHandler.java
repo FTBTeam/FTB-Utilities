@@ -9,8 +9,8 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 
 public class FTBUClientEventHandler
 {
-    /*
-    @SubscribeEvent
+	/*
+	@SubscribeEvent
     public static void onTooltip(ItemTooltipEvent e)
     {
         if(FTBUConfigGeneral.isItemBanned(item, e.itemStack.getItemDamage()))
@@ -20,19 +20,19 @@ public class FTBUClientEventHandler
     }
     */
 
-    @SubscribeEvent
-    public static void onKeyEvent(InputEvent.KeyInputEvent event)
-    {
-        if(FTBUClient.KEY_GUIDE.isPressed())
-        {
-            Guides.openGui();
-        }
+	@SubscribeEvent
+	public static void onKeyEvent(InputEvent.KeyInputEvent event)
+	{
+		if (FTBUClient.KEY_GUIDE.isPressed())
+		{
+			Guides.openGui();
+		}
 
-        if(FTBUClient.KEY_WARP.isPressed())
-        {
-            GuiWarps.INSTANCE = new GuiWarps();
-            GuiWarps.INSTANCE.openGui();
-            FTBLibClient.execClientCommand("/ftb warp gui");
-        }
-    }
+		if (FTBUClient.KEY_WARP.isPressed())
+		{
+			GuiWarps.INSTANCE = new GuiWarps();
+			GuiWarps.INSTANCE.openGui();
+			FTBLibClient.execClientCommand("/ftb warp gui");
+		}
+	}
 }

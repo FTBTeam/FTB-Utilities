@@ -39,70 +39,70 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class FTBUPlayerEventHandler
 {
-    @SubscribeEvent
-    public static void onLoggedIn(ForgePlayerLoggedInEvent event)
-    {
-        if(event.getPlayer().isFake())
-        {
-            return;
-        }
+	@SubscribeEvent
+	public static void onLoggedIn(ForgePlayerLoggedInEvent event)
+	{
+		if (event.getPlayer().isFake())
+		{
+			return;
+		}
 
-        EntityPlayerMP ep = event.getPlayer().getPlayer();
+		EntityPlayerMP ep = event.getPlayer().getPlayer();
 
-        if(event.isFirstLogin())
-        {
-            if(FTBUConfigLogin.ENABLE_STARTING_ITEMS.getBoolean())
-            {
-                for(IConfigValue value : FTBUConfigLogin.STARTING_ITEMS)
-                {
-                    InvUtils.giveItem(ep, ((PropertyItemStack) value).getItem());
-                }
-            }
-        }
+		if (event.isFirstLogin())
+		{
+			if (FTBUConfigLogin.ENABLE_STARTING_ITEMS.getBoolean())
+			{
+				for (IConfigValue value : FTBUConfigLogin.STARTING_ITEMS)
+				{
+					InvUtils.giveItem(ep, ((PropertyItemStack) value).getItem());
+				}
+			}
+		}
 
-        if(FTBUConfigLogin.ENABLE_MOTD.getBoolean())
-        {
-            for(IConfigValue value : FTBUConfigLogin.MOTD)
-            {
-                ITextComponent t = ((PropertyTextComponent) value).getText();
+		if (FTBUConfigLogin.ENABLE_MOTD.getBoolean())
+		{
+			for (IConfigValue value : FTBUConfigLogin.MOTD)
+			{
+				ITextComponent t = ((PropertyTextComponent) value).getText();
 
-                if(t != null)
-                {
-                    ep.sendMessage(t);
-                }
-            }
-        }
+				if (t != null)
+				{
+					ep.sendMessage(t);
+				}
+			}
+		}
 
-        LoadedChunkStorage.INSTANCE.checkAll();
-    }
+		LoadedChunkStorage.INSTANCE.checkAll();
+	}
 
-    @SubscribeEvent
-    public static void onLoggedOut(ForgePlayerLoggedOutEvent event)
-    {
-        LoadedChunkStorage.INSTANCE.checkAll();
-        FTBUUniverseData.updateBadge(event.getPlayer().getId());
-    }
+	@SubscribeEvent
+	public static void onLoggedOut(ForgePlayerLoggedOutEvent event)
+	{
+		LoadedChunkStorage.INSTANCE.checkAll();
+		FTBUUniverseData.updateBadge(event.getPlayer().getId());
+	}
 
-    @SubscribeEvent
-    public static void onDeath(ForgePlayerDeathEvent event)
-    {
-        FTBUPlayerData data = FTBUPlayerData.get(event.getPlayer());
-        if(data != null)
-        {
-            data.lastDeath = new EntityDimPos(event.getPlayer().getPlayer()).toBlockDimPos();
-        }
-    }
+	@SubscribeEvent
+	public static void onDeath(ForgePlayerDeathEvent event)
+	{
+		FTBUPlayerData data = FTBUPlayerData.get(event.getPlayer());
+		if (data != null)
+		{
+			data.lastDeath = new EntityDimPos(event.getPlayer().getPlayer()).toBlockDimPos();
+		}
+	}
 
-    @SubscribeEvent
-    public static void getSettings(ForgePlayerSettingsEvent event)
-    {
-        FTBUPlayerData data = FTBUPlayerData.get(event.getPlayer());
-        if(data != null)
-        {
-            data.addConfig(event);
-        }
-    }
-    
+	@SubscribeEvent
+	public static void getSettings(ForgePlayerSettingsEvent event)
+	{
+		FTBUPlayerData data = FTBUPlayerData.get(event.getPlayer());
+		if (data != null)
+		{
+			data.addConfig(event);
+		}
+	}
+	
     /*
     @SubscribeEvent
     public void addInfo(ForgePlayerInfoEvent event)
@@ -117,155 +117,155 @@ public class FTBUPlayerEventHandler
     }
     */
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void onChunkChanged(EntityEvent.EnteringChunk e)
-    {
-        if(e.getEntity().world.isRemote || !(e.getEntity() instanceof EntityPlayerMP))
-        {
-            return;
-        }
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public static void onChunkChanged(EntityEvent.EnteringChunk e)
+	{
+		if (e.getEntity().world.isRemote || !(e.getEntity() instanceof EntityPlayerMP))
+		{
+			return;
+		}
 
-        EntityPlayerMP ep = (EntityPlayerMP) e.getEntity();
-        IForgePlayer player = FTBLibIntegration.API.getUniverse().getPlayer(ep);
+		EntityPlayerMP ep = (EntityPlayerMP) e.getEntity();
+		IForgePlayer player = FTBLibIntegration.API.getUniverse().getPlayer(ep);
 
-        if(player == null || !player.isOnline())
-        {
-            return;
-        }
+		if (player == null || !player.isOnline())
+		{
+			return;
+		}
 
-        FTBUPlayerData data = FTBUPlayerData.get(player);
+		FTBUPlayerData data = FTBUPlayerData.get(player);
 
-        if(data != null)
-        {
-            data.lastSafePos = new EntityDimPos(ep).toBlockDimPos();
-        }
+		if (data != null)
+		{
+			data.lastSafePos = new EntityDimPos(ep).toBlockDimPos();
+		}
 
-        updateChunkMessage(ep, new ChunkDimPos(e.getNewChunkX(), e.getNewChunkZ(), ep.dimension));
-    }
+		updateChunkMessage(ep, new ChunkDimPos(e.getNewChunkX(), e.getNewChunkZ(), ep.dimension));
+	}
 
-    public static void updateChunkMessage(EntityPlayerMP player, ChunkDimPos pos)
-    {
-        IForgePlayer newTeamOwner = ClaimedChunkStorage.INSTANCE.getChunkOwner(pos);
+	public static void updateChunkMessage(EntityPlayerMP player, ChunkDimPos pos)
+	{
+		IForgePlayer newTeamOwner = ClaimedChunkStorage.INSTANCE.getChunkOwner(pos);
 
-        FTBUPlayerData data = FTBUPlayerData.get(FTBLibIntegration.API.getUniverse().getPlayer(player));
+		FTBUPlayerData data = FTBUPlayerData.get(FTBLibIntegration.API.getUniverse().getPlayer(player));
 
-        if(data == null)
-        {
-            return;
-        }
+		if (data == null)
+		{
+			return;
+		}
 
-        if(!Objects.equal(data.lastChunkOwner, newTeamOwner))
-        {
-            data.lastChunkOwner = newTeamOwner;
+		if (!Objects.equal(data.lastChunkOwner, newTeamOwner))
+		{
+			data.lastChunkOwner = newTeamOwner;
 
-            if(newTeamOwner != null)
-            {
-                IForgeTeam team = newTeamOwner.getTeam();
+			if (newTeamOwner != null)
+			{
+				IForgeTeam team = newTeamOwner.getTeam();
 
-                if(team != null)
-                {
-                    FTBLibIntegration.API.sendNotification(player, FTBUNotifications.chunkChanged(team));
-                }
-            }
-            else
-            {
-                FTBLibIntegration.API.sendNotification(player, FTBUNotifications.chunkChanged(null));
-            }
-        }
-    }
+				if (team != null)
+				{
+					FTBLibIntegration.API.sendNotification(player, FTBUNotifications.chunkChanged(team));
+				}
+			}
+			else
+			{
+				FTBLibIntegration.API.sendNotification(player, FTBUNotifications.chunkChanged(null));
+			}
+		}
+	}
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void onPlayerAttacked(LivingAttackEvent e)
-    {
-        if(e.getEntity().world.isRemote)
-        {
-            return;
-        }
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public static void onPlayerAttacked(LivingAttackEvent e)
+	{
+		if (e.getEntity().world.isRemote)
+		{
+			return;
+		}
 
-        if(e.getEntity().dimension != 0 || !(e.getEntity() instanceof EntityPlayerMP) || e.getEntity() instanceof FakePlayer)
-        {
-            return;
-        }
+		if (e.getEntity().dimension != 0 || !(e.getEntity() instanceof EntityPlayerMP) || e.getEntity() instanceof FakePlayer)
+		{
+			return;
+		}
 
-        Entity entity = e.getSource().getSourceOfDamage();
+		Entity entity = e.getSource().getSourceOfDamage();
 
-        if(entity != null && (entity instanceof EntityPlayerMP || entity instanceof IMob))
-        {
-            if(entity instanceof FakePlayer)
-            {
-                return;
-            }
-            /*else if(entity instanceof EntityPlayerMP && PermissionAPI.hasPermission(((EntityPlayerMP) entity).getGameProfile(), FTBLibPermissions.INTERACT_SECURE, false, new Context(entity)))
+		if (entity != null && (entity instanceof EntityPlayerMP || entity instanceof IMob))
+		{
+			if (entity instanceof FakePlayer)
+			{
+				return;
+			}
+			/*else if(entity instanceof EntityPlayerMP && PermissionAPI.hasPermission(((EntityPlayerMP) entity).getGameProfile(), FTBLibPermissions.INTERACT_SECURE, false, new Context(entity)))
             {
                 return;
             }*/
 
-            if((FTBUConfigWorld.SAFE_SPAWN.getBoolean() && FTBUUniverseData.isInSpawnD(e.getEntity().dimension, e.getEntity().posX, e.getEntity().posZ)))
-            {
-                e.setCanceled(true);
-            }
-            /*else
+			if ((FTBUConfigWorld.SAFE_SPAWN.getBoolean() && FTBUUniverseData.isInSpawnD(e.getEntity().dimension, e.getEntity().posX, e.getEntity().posZ)))
+			{
+				e.setCanceled(true);
+			}
+			/*else
             {
 				ClaimedChunk c = Claims.getMode(dim, cx, cz);
 				if(c != null && c.claims.settings.isSafe()) e.setCanceled(true);
 			}*/
-        }
-    }
+		}
+	}
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event)
-    {
-        if(event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.INTERACT))
-        {
-            event.setCanceled(true);
-        }
-    }
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event)
+	{
+		if (event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.INTERACT))
+		{
+			event.setCanceled(true);
+		}
+	}
 
-    @SubscribeEvent
-    public static void onRightClickItem(PlayerInteractEvent.RightClickItem event)
-    {
-        if(event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.ITEM))
-        {
-            event.setCanceled(true);
-        }
-    }
+	@SubscribeEvent
+	public static void onRightClickItem(PlayerInteractEvent.RightClickItem event)
+	{
+		if (event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.ITEM))
+		{
+			event.setCanceled(true);
+		}
+	}
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void onBlockBreak(BlockEvent.BreakEvent event)
-    {
-        if(event.getPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getPlayer(), EnumHand.MAIN_HAND, new BlockPosContainer(event.getWorld(), event.getPos(), event.getState()), BlockInteractionType.EDIT))
-        {
-            event.setCanceled(true);
-        }
-    }
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public static void onBlockBreak(BlockEvent.BreakEvent event)
+	{
+		if (event.getPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getPlayer(), EnumHand.MAIN_HAND, new BlockPosContainer(event.getWorld(), event.getPos(), event.getState()), BlockInteractionType.EDIT))
+		{
+			event.setCanceled(true);
+		}
+	}
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void onBlockPlace(BlockEvent.PlaceEvent event)
-    {
-        if(event.getPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getPlayer(), EnumHand.MAIN_HAND, new BlockPosContainer(event.getWorld(), event.getPos(), event.getPlacedBlock()), BlockInteractionType.EDIT))
-        {
-            event.setCanceled(true);
-        }
-    }
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public static void onBlockPlace(BlockEvent.PlaceEvent event)
+	{
+		if (event.getPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getPlayer(), EnumHand.MAIN_HAND, new BlockPosContainer(event.getWorld(), event.getPos(), event.getPlacedBlock()), BlockInteractionType.EDIT))
+		{
+			event.setCanceled(true);
+		}
+	}
 
-    @Optional.Method(modid = "chiselsandbits")
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void onChiselEvent(mod.chiselsandbits.api.EventBlockBitModification event)
-    {
-        if(event.getPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getPlayer(), event.getHand(), new BlockPosContainer(event.getWorld(), event.getPos(), event.getWorld().getBlockState(event.getPos())), event.isPlacing() ? BlockInteractionType.CNB_PLACE : BlockInteractionType.CNB_BREAK))
-        {
-            event.setCanceled(true);
-        }
-    }
+	@Optional.Method(modid = "chiselsandbits")
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public static void onChiselEvent(mod.chiselsandbits.api.EventBlockBitModification event)
+	{
+		if (event.getPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getPlayer(), event.getHand(), new BlockPosContainer(event.getWorld(), event.getPos(), event.getWorld().getBlockState(event.getPos())), event.isPlacing() ? BlockInteractionType.CNB_PLACE : BlockInteractionType.CNB_BREAK))
+		{
+			event.setCanceled(true);
+		}
+	}
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void onBlockLeftClick(PlayerInteractEvent.LeftClickBlock event)
-    {
-        if(event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.EDIT))
-        {
-            event.setCanceled(true);
-        }
-    }
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public static void onBlockLeftClick(PlayerInteractEvent.LeftClickBlock event)
+	{
+		if (event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.EDIT))
+		{
+			event.setCanceled(true);
+		}
+	}
 
     /*
     @SubscribeEvent(priority = EventPriority.HIGH)

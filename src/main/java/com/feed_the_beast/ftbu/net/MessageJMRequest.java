@@ -10,46 +10,46 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class MessageJMRequest extends MessageToServer<MessageJMRequest>
 {
-    private int centerX, centerZ;
+	private int centerX, centerZ;
 
-    public MessageJMRequest()
-    {
-    }
+	public MessageJMRequest()
+	{
+	}
 
-    public MessageJMRequest(int cx, int cz)
-    {
-        centerX = cx;
-        centerZ = cz;
-    }
+	public MessageJMRequest(int cx, int cz)
+	{
+		centerX = cx;
+		centerZ = cz;
+	}
 
-    public MessageJMRequest(Entity entity)
-    {
-        this(MathUtils.chunk(entity.posX), MathUtils.chunk(entity.posZ));
-    }
+	public MessageJMRequest(Entity entity)
+	{
+		this(MathUtils.chunk(entity.posX), MathUtils.chunk(entity.posZ));
+	}
 
-    @Override
-    public NetworkWrapper getWrapper()
-    {
-        return FTBUNetHandler.NET;
-    }
+	@Override
+	public NetworkWrapper getWrapper()
+	{
+		return FTBUNetHandler.NET;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf io)
-    {
-        centerX = io.readInt();
-        centerZ = io.readInt();
-    }
+	@Override
+	public void fromBytes(ByteBuf io)
+	{
+		centerX = io.readInt();
+		centerZ = io.readInt();
+	}
 
-    @Override
-    public void toBytes(ByteBuf io)
-    {
-        io.writeInt(centerX);
-        io.writeInt(centerZ);
-    }
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		io.writeInt(centerX);
+		io.writeInt(centerZ);
+	}
 
-    @Override
-    public void onMessage(MessageJMRequest m, EntityPlayer player)
-    {
-        new MessageJMUpdate(m.centerX - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2, m.centerZ - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2, player).sendTo(player);
-    }
+	@Override
+	public void onMessage(MessageJMRequest m, EntityPlayer player)
+	{
+		new MessageJMUpdate(m.centerX - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2, m.centerZ - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2, player).sendTo(player);
+	}
 }

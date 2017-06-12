@@ -12,16 +12,16 @@ import java.util.Collection;
  */
 public interface FTBUtilitiesAPI
 {
-    Collection<IFTBUtilitiesPlugin> getAllPlugins();
+	Collection<IFTBUtilitiesPlugin> getAllPlugins();
 
-    IClaimedChunkStorage getClaimedChunks();
+	IClaimedChunkStorage getClaimedChunks();
 
-    IRank getRank(GameProfile profile);
+	IRank getRank(GameProfile profile);
 
-    IConfigValue getRankConfig(GameProfile profile, String id);
+	IConfigValue getRankConfig(GameProfile profile, String id);
 
-    default IConfigValue getRankConfig(EntityPlayer player, String id)
-    {
-        return getRankConfig(player.getGameProfile(), id);
-    }
+	default IConfigValue getRankConfig(EntityPlayer player, String id)
+	{
+		return getRankConfig(player.getGameProfile(), id);
+	}
 }

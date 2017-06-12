@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.api.events.ServerInfoEvent;
 import com.feed_the_beast.ftbl.lib.client.DrawableItem;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.lib.util.InvertedComparator;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
@@ -38,193 +37,198 @@ import java.util.List;
 
 public class ServerInfoPage
 {
-    private static final GuidePage CACHED_PAGE = new GuidePage("server_info").setTitle(new TextComponentTranslation("sidebar_button.ftbu.server_info"));
+	private static final GuidePage CACHED_PAGE = new GuidePage("server_info").setTitle(new TextComponentTranslation("sidebar_button.ftbu.server_info"));
 
-    public static void reloadCachedInfo()
-    {
-        CACHED_PAGE.clear();
-    }
+	public static void reloadCachedInfo()
+	{
+		CACHED_PAGE.clear();
+	}
 
-    public static GuidePage getPageForPlayer(EntityPlayer ep)
-    {
-        IUniverse universe = FTBLibIntegration.API.getUniverse();
-        Preconditions.checkNotNull(universe, "World can't be null!");
-        IForgePlayer self = universe.getPlayer(ep);
-        Preconditions.checkNotNull(self, "Player can't be null!");
+	public static GuidePage getPageForPlayer(EntityPlayer ep)
+	{
+		IUniverse universe = FTBLibIntegration.API.getUniverse();
+		Preconditions.checkNotNull(universe, "World can't be null!");
+		IForgePlayer self = universe.getPlayer(ep);
+		Preconditions.checkNotNull(self, "Player can't be null!");
 
-        GuidePage page = new GuidePage(CACHED_PAGE.getName());
-        page.setTitle(CACHED_PAGE.getTitle());
-        page.copyFrom(CACHED_PAGE);
+		GuidePage page = new GuidePage(CACHED_PAGE.getName());
+		page.setTitle(CACHED_PAGE.getTitle());
+		page.copyFrom(CACHED_PAGE);
 
-        MinecraftServer server = ServerUtils.getServer();
+		MinecraftServer server = ServerUtils.getServer();
 
-        boolean isDedi = server.isDedicatedServer();
-        boolean isOP = !isDedi || PermissionAPI.hasPermission(ep, FTBUPermissions.DISPLAY_ADMIN_INFO);
-        FTBUUniverseData ftbuUniverseData = FTBUUniverseData.get();
+		boolean isDedi = server.isDedicatedServer();
+		boolean isOP = !isDedi || PermissionAPI.hasPermission(ep, FTBUPermissions.DISPLAY_ADMIN_INFO);
+		FTBUUniverseData ftbuUniverseData = FTBUUniverseData.get();
 
-        List<IForgePlayer> players = new ArrayList<>();
-        players.addAll(universe.getPlayers());
+		List<IForgePlayer> players = new ArrayList<>();
+		players.addAll(universe.getPlayers());
 
-        if(FTBUConfigGeneral.AUTO_RESTART.getBoolean())
-        {
-            page.println(FTBULang.TIMER_RESTART.textComponent(StringUtils.getTimeString(ftbuUniverseData.restartMillis - System.currentTimeMillis())));
-        }
+		if (FTBUConfigGeneral.AUTO_RESTART.getBoolean())
+		{
+			page.println(FTBULang.TIMER_RESTART.textComponent(StringUtils.getTimeString(ftbuUniverseData.restartMillis - System.currentTimeMillis())));
+		}
 
-        if(FTBUConfigBackups.ENABLED.getBoolean())
-        {
-            page.println(FTBULang.TIMER_BACKUP.textComponent(StringUtils.getTimeString(Backups.INSTANCE.nextBackup - System.currentTimeMillis())));
-        }
+		if (FTBUConfigBackups.ENABLED.getBoolean())
+		{
+			page.println(FTBULang.TIMER_BACKUP.textComponent(StringUtils.getTimeString(Backups.INSTANCE.nextBackup - System.currentTimeMillis())));
+		}
 
-        if(FTBUConfigGeneral.SERVER_INFO_DIFFICULTY.getBoolean())
-        {
-            page.println(FTBLibLang.DIFFICULTY.textComponent(StringUtils.firstUppercase(ep.world.getDifficulty().toString().toLowerCase())));
-        }
+		if (FTBUConfigGeneral.SERVER_INFO_DIFFICULTY.getBoolean())
+		{
+			page.println(FTBLibLang.DIFFICULTY.textComponent(StringUtils.firstUppercase(ep.world.getDifficulty().toString().toLowerCase())));
+		}
 
-        if(FTBUConfigGeneral.SERVER_INFO_MODE.getBoolean())
-        {
-            page.println(FTBLibLang.MODE_CURRENT.textComponent(StringUtils.firstUppercase(FTBLibIntegration.API.getServerData().getPackMode().getName())));
-        }
+		if (FTBUConfigGeneral.SERVER_INFO_MODE.getBoolean())
+		{
+			page.println(FTBLibLang.MODE_CURRENT.textComponent(StringUtils.firstUppercase(FTBLibIntegration.API.getServerData().getPackMode().getName())));
+		}
 
-        if(FTBUConfigGeneral.SERVER_INFO_ADMIN_QUICK_ACCESS.getBoolean())
-        {
-            //FIXME: SERVER_INFO_ADMIN_QUICK_ACCESS
-        }
+		if (FTBUConfigGeneral.SERVER_INFO_ADMIN_QUICK_ACCESS.getBoolean())
+		{
+			//FIXME: SERVER_INFO_ADMIN_QUICK_ACCESS
+		}
 
-        GuidePage page1 = page.getSub("leaderboards").setTitle(FTBULeaderboards.LANG_LEADERBOARD_TITLE.textComponent());
-        page1.setIcon(new DrawableItem(new ItemStack(Items.SIGN)));
+		ITextComponent leaderboardsTitle = new TextComponentString("Leaderboards");
+		leaderboardsTitle.getStyle().setColor(TextFormatting.RED);
+		GuidePage page1 = page.getSub("leaderboards").setTitle(leaderboardsTitle);
+		page1.setIcon(new DrawableItem(new ItemStack(Items.SIGN)));
+		page1.println("1.12: Work in progress!");
 
-        for(Leaderboard leaderboard : FTBUCommon.LEADERBOARDS)
-        {
-            GuidePage thisTop = page1.getSub(leaderboard.stat.statId).setTitle(leaderboard.name);
-            thisTop.setIcon(leaderboard.icon);
-            players.sort(new InvertedComparator<>(leaderboard.comparator));
+		/*
+		for (Leaderboard leaderboard : FTBUCommon.LEADERBOARDS)
+		{
+			GuidePage thisTop = page1.getSub(leaderboard.stat.statId).setTitle(leaderboard.name);
+			thisTop.setIcon(leaderboard.icon);
+			players.sort(new InvertedComparator<>(leaderboard.comparator));
 
-            int size = Math.min(players.size(), FTBUConfigGeneral.MAX_LEADERBOARD_SIZE.getInt());
+			int size = Math.min(players.size(), FTBUConfigGeneral.MAX_LEADERBOARD_SIZE.getInt());
 
-            for(int j = 0; j < size; j++)
-            {
-                IForgePlayer p = players.get(j);
-                Object data = leaderboard.data.getData(p);
+			for (int j = 0; j < size; j++)
+			{
+				IForgePlayer p = players.get(j);
+				Object data = leaderboard.data.getData(p);
 
-                if(data == null)
-                {
-                    data = "[null]";
-                }
+				if (data == null)
+				{
+					data = "[null]";
+				}
 
-                StringBuilder sb = new StringBuilder();
-                sb.append('[');
-                sb.append(j + 1);
-                sb.append(']');
-                sb.append(' ');
-                sb.append(p.getName());
-                sb.append(':');
-                sb.append(' ');
-                if(!(data instanceof ITextComponent))
-                {
-                    sb.append(data);
-                }
+				StringBuilder sb = new StringBuilder();
+				sb.append('[');
+				sb.append(j + 1);
+				sb.append(']');
+				sb.append(' ');
+				sb.append(p.getName());
+				sb.append(':');
+				sb.append(' ');
+				if (!(data instanceof ITextComponent))
+				{
+					sb.append(data);
+				}
 
-                ITextComponent c = new TextComponentString(sb.toString());
-                if(p == self)
-                {
-                    c.getStyle().setColor(TextFormatting.DARK_GREEN);
-                }
-                else if(j < 3)
-                {
-                    c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
-                }
-                if(data instanceof ITextComponent)
-                {
-                    c.appendSibling(ServerUtils.getChatComponent(data));
-                }
+				ITextComponent c = new TextComponentString(sb.toString());
+				if (p == self)
+				{
+					c.getStyle().setColor(TextFormatting.DARK_GREEN);
+				}
+				else if (j < 3)
+				{
+					c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
+				}
+				if (data instanceof ITextComponent)
+				{
+					c.appendSibling(ServerUtils.getChatComponent(data));
+				}
 
-                thisTop.println(c);
-            }
-        }
+				thisTop.println(c);
+			}
+		}
+		*/
 
-        MinecraftForge.EVENT_BUS.post(new ServerInfoEvent(page, self, isOP));
+		MinecraftForge.EVENT_BUS.post(new ServerInfoEvent(page, self, isOP));
 
-        page1 = page.getSub("commands").setTitle(FTBLibLang.COMMANDS.textComponent());
-        page1.setIcon(new DrawableItem(new ItemStack(Blocks.COMMAND_BLOCK)));
+		page1 = page.getSub("commands").setTitle(FTBLibLang.COMMANDS.textComponent());
+		page1.setIcon(new DrawableItem(new ItemStack(Blocks.COMMAND_BLOCK)));
 
-        try
-        {
-            for(ICommand c : ServerUtils.getAllCommands(server, ep))
-            {
-                try
-                {
-                    addCommandUsage(ep, page1.getSub(c.getName()), 0, c);
-                }
-                catch(Exception ex1)
-                {
-                    ITextComponent cc = new TextComponentString('/' + c.getName());
-                    cc.getStyle().setColor(TextFormatting.DARK_RED);
-                    page1.getSub('/' + c.getName()).setTitle(cc).println("Errored");
+		try
+		{
+			for (ICommand c : ServerUtils.getAllCommands(server, ep))
+			{
+				try
+				{
+					addCommandUsage(ep, page1.getSub(c.getName()), 0, c);
+				}
+				catch (Exception ex1)
+				{
+					ITextComponent cc = new TextComponentString('/' + c.getName());
+					cc.getStyle().setColor(TextFormatting.DARK_RED);
+					page1.getSub('/' + c.getName()).setTitle(cc).println("Errored");
 
-                    if(LMUtils.DEV_ENV)
-                    {
-                        ex1.printStackTrace();
-                    }
-                }
-            }
+					if (LMUtils.DEV_ENV)
+					{
+						ex1.printStackTrace();
+					}
+				}
+			}
 
-            page1.sort(true);
-        }
-        catch(Exception ex)
-        {
-            page1.println("Failed to load commands");
-        }
+			page1.sort(true);
+		}
+		catch (Exception ex)
+		{
+			page1.println("Failed to load commands");
+		}
 
-        if(PermissionAPI.hasPermission(ep, FTBUPermissions.DISPLAY_PERMISSIONS))
-        {
-            page.addSub(Ranks.INFO_PAGE);
-        }
+		if (PermissionAPI.hasPermission(ep, FTBUPermissions.DISPLAY_PERMISSIONS))
+		{
+			page.addSub(Ranks.INFO_PAGE);
+		}
 
-        page.cleanup();
-        page.sort(false);
-        return page;
-    }
+		page.cleanup();
+		page.sort(false);
+		return page;
+	}
 
-    private static void addCommandUsage(ICommandSender sender, GuidePage page, int level, ICommand c)
-    {
-        page.println('/' + c.getName());
+	private static void addCommandUsage(ICommandSender sender, GuidePage page, int level, ICommand c)
+	{
+		page.println('/' + c.getName());
 
-        for(String s : c.getAliases())
-        {
-            page.println('/' + s);
-        }
+		for (String s : c.getAliases())
+		{
+			page.println('/' + s);
+		}
 
-        page.println(null);
+		page.println(null);
 
-        for(String s : c.getUsage(sender).split("\n"))
-        {
-            if(s.indexOf('%') != -1 || s.indexOf('/') != -1)
-            {
-                page.println(new TextComponentTranslation("commands.generic.usage", s));
-            }
-            else
-            {
-                page.println(new TextComponentTranslation("commands.generic.usage", new TextComponentTranslation(s)));
-            }
-        }
+		for (String s : c.getUsage(sender).split("\n"))
+		{
+			if (s.indexOf('%') != -1 || s.indexOf('/') != -1)
+			{
+				page.println(new TextComponentTranslation("commands.generic.usage", s));
+			}
+			else
+			{
+				page.println(new TextComponentTranslation("commands.generic.usage", new TextComponentTranslation(s)));
+			}
+		}
 
-        CommandTreeBase treeCommand = null;
+		CommandTreeBase treeCommand = null;
 
-        if(c instanceof CommandTreeBase)
-        {
-            treeCommand = (CommandTreeBase) c;
-        }
-        else if(c instanceof CmdOverride && ((CmdOverride) c).parent instanceof CommandTreeBase)
-        {
-            treeCommand = (CommandTreeBase) ((CmdOverride) c).parent;
-        }
+		if (c instanceof CommandTreeBase)
+		{
+			treeCommand = (CommandTreeBase) c;
+		}
+		else if (c instanceof CmdOverride && ((CmdOverride) c).parent instanceof CommandTreeBase)
+		{
+			treeCommand = (CommandTreeBase) ((CmdOverride) c).parent;
+		}
 
-        if(treeCommand != null)
-        {
-            for(ICommand command : treeCommand.getSubCommands())
-            {
-                addCommandUsage(sender, page.getSub(command.getName()), level + 1, command);
-            }
-        }
-    }
+		if (treeCommand != null)
+		{
+			for (ICommand command : treeCommand.getSubCommands())
+			{
+				addCommandUsage(sender, page.getSub(command.getName()), level + 1, command);
+			}
+		}
+	}
 }

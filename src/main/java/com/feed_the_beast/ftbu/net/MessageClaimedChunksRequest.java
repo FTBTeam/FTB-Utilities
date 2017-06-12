@@ -9,46 +9,46 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class MessageClaimedChunksRequest extends MessageToServer<MessageClaimedChunksRequest>
 {
-    private int startX, startZ;
+	private int startX, startZ;
 
-    public MessageClaimedChunksRequest()
-    {
-    }
+	public MessageClaimedChunksRequest()
+	{
+	}
 
-    public MessageClaimedChunksRequest(int sx, int sz)
-    {
-        startX = sx;
-        startZ = sz;
-    }
+	public MessageClaimedChunksRequest(int sx, int sz)
+	{
+		startX = sx;
+		startZ = sz;
+	}
 
-    public MessageClaimedChunksRequest(Entity entity)
-    {
-        this(MathUtils.chunk(entity.posX) - 7, MathUtils.chunk(entity.posZ) - 7);
-    }
+	public MessageClaimedChunksRequest(Entity entity)
+	{
+		this(MathUtils.chunk(entity.posX) - 7, MathUtils.chunk(entity.posZ) - 7);
+	}
 
-    @Override
-    public NetworkWrapper getWrapper()
-    {
-        return FTBUNetHandler.NET;
-    }
+	@Override
+	public NetworkWrapper getWrapper()
+	{
+		return FTBUNetHandler.NET;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf io)
-    {
-        startX = io.readInt();
-        startZ = io.readInt();
-    }
+	@Override
+	public void fromBytes(ByteBuf io)
+	{
+		startX = io.readInt();
+		startZ = io.readInt();
+	}
 
-    @Override
-    public void toBytes(ByteBuf io)
-    {
-        io.writeInt(startX);
-        io.writeInt(startZ);
-    }
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		io.writeInt(startX);
+		io.writeInt(startZ);
+	}
 
-    @Override
-    public void onMessage(MessageClaimedChunksRequest m, EntityPlayer player)
-    {
-        new MessageClaimedChunksUpdate(m.startX, m.startZ, player).sendTo(player);
-    }
+	@Override
+	public void onMessage(MessageClaimedChunksRequest m, EntityPlayer player)
+	{
+		new MessageClaimedChunksUpdate(m.startX, m.startZ, player).sendTo(player);
+	}
 }

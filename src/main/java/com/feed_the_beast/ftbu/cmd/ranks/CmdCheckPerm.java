@@ -13,23 +13,23 @@ import net.minecraftforge.server.permission.PermissionAPI;
  */
 public class CmdCheckPerm extends CmdBase
 {
-    public CmdCheckPerm()
-    {
-        super("check_permission", Level.OP);
-    }
+	public CmdCheckPerm()
+	{
+		super("check_permission", Level.OP);
+	}
 
-    @Override
-    public boolean isUsernameIndex(String[] args, int index)
-    {
-        return index == 0;
-    }
+	@Override
+	public boolean isUsernameIndex(String[] args, int index)
+	{
+		return index == 0;
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        checkArgs(args, 2, "<player> <permission>");
-        IForgePlayer player = getForgePlayer(args[0]);
-        boolean perm = player.isOnline() ? PermissionAPI.hasPermission(player.getPlayer(), args[1]) : PermissionAPI.hasPermission(player.getProfile(), args[1], null);
-        sender.sendMessage(new TextComponentString(args[1] + " for " + player.getName() + " is " + perm));
-    }
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		checkArgs(args, 2, "<player> <permission>");
+		IForgePlayer player = getForgePlayer(args[0]);
+		boolean perm = player.isOnline() ? PermissionAPI.hasPermission(player.getPlayer(), args[1]) : PermissionAPI.hasPermission(player.getProfile(), args[1], null);
+		sender.sendMessage(new TextComponentString(args[1] + " for " + player.getName() + " is " + perm));
+	}
 }

@@ -22,52 +22,52 @@ import java.util.List;
  */
 public class CmdUnclaimAll extends CmdBase
 {
-    public CmdUnclaimAll()
-    {
-        super("unclaim_all", Level.ALL);
-    }
+	public CmdUnclaimAll()
+	{
+		super("unclaim_all", Level.ALL);
+	}
 
-    @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
-    {
-        if(args.length == 1)
-        {
-            return LIST_TRUE_FALSE;
-        }
+	@Override
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+	{
+		if (args.length == 1)
+		{
+			return LIST_TRUE_FALSE;
+		}
 
-        return super.getTabCompletions(server, sender, args, pos);
-    }
+		return super.getTabCompletions(server, sender, args, pos);
+	}
 
-    @Override
-    public boolean isUsernameIndex(String[] args, int i)
-    {
-        return i == 1;
-    }
+	@Override
+	public boolean isUsernameIndex(String[] args, int i)
+	{
+		return i == 1;
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
 
-        checkArgs(args, 1, "<all_dimensions> [player]");
+		checkArgs(args, 1, "<all_dimensions> [player]");
 
-        IForgePlayer p;
+		IForgePlayer p;
 
-        if(args.length >= 2)
-        {
-            if(!PermissionAPI.hasPermission(ep, FTBUPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS))
-            {
-                throw FTBLibLang.COMMAND_PERMISSION.commandError();
-            }
+		if (args.length >= 2)
+		{
+			if (!PermissionAPI.hasPermission(ep, FTBUPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS))
+			{
+				throw FTBLibLang.COMMAND_PERMISSION.commandError();
+			}
 
-            p = getForgePlayer(args[1]);
-        }
-        else
-        {
-            p = getForgePlayer(ep);
-        }
+			p = getForgePlayer(args[1]);
+		}
+		else
+		{
+			p = getForgePlayer(ep);
+		}
 
-        FTBUUniverseData.unclaimAllChunks(p, parseBoolean(args[0]) ? null : ep.dimension);
-        FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.UNCLAIMED_ALL);
-    }
+		FTBUUniverseData.unclaimAllChunks(p, parseBoolean(args[0]) ? null : ep.dimension);
+		FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.UNCLAIMED_ALL);
+	}
 }

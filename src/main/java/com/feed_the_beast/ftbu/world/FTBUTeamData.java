@@ -20,61 +20,61 @@ import javax.annotation.Nullable;
  */
 public class FTBUTeamData implements INBTSerializable<NBTBase>
 {
-    public final PropertyEnum<EnumTeamPrivacyLevel> editBlocks = new PropertyEnum<>(EnumTeamPrivacyLevel.NAME_MAP, EnumTeamPrivacyLevel.ALLIES);
-    public final PropertyEnum<EnumTeamPrivacyLevel> interactWithBlocks = new PropertyEnum<>(EnumTeamPrivacyLevel.NAME_MAP, EnumTeamPrivacyLevel.ALLIES);
-    public final PropertyBool explosions = new PropertyBool(false);
-    public final PropertyBool fakePlayers = new PropertyBool(true);
+	public final PropertyEnum<EnumTeamPrivacyLevel> editBlocks = new PropertyEnum<>(EnumTeamPrivacyLevel.NAME_MAP, EnumTeamPrivacyLevel.ALLIES);
+	public final PropertyEnum<EnumTeamPrivacyLevel> interactWithBlocks = new PropertyEnum<>(EnumTeamPrivacyLevel.NAME_MAP, EnumTeamPrivacyLevel.ALLIES);
+	public final PropertyBool explosions = new PropertyBool(false);
+	public final PropertyBool fakePlayers = new PropertyBool(true);
 
-    @Nullable
-    public static FTBUTeamData get(IForgeTeam t)
-    {
-        return (FTBUTeamData) t.getData(FTBLibIntegration.FTBU_DATA);
-    }
+	@Nullable
+	public static FTBUTeamData get(IForgeTeam t)
+	{
+		return (FTBUTeamData) t.getData(FTBLibIntegration.FTBU_DATA);
+	}
 
-    @Override
-    public NBTBase serializeNBT()
-    {
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setBoolean("Explosions", explosions.getBoolean());
-        nbt.setBoolean("FakePlayers", fakePlayers.getBoolean());
-        nbt.setString("EditBlocks", editBlocks.getString());
-        nbt.setString("InteractWithBlocks", interactWithBlocks.getString());
-        return nbt;
-    }
+	@Override
+	public NBTBase serializeNBT()
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setBoolean("Explosions", explosions.getBoolean());
+		nbt.setBoolean("FakePlayers", fakePlayers.getBoolean());
+		nbt.setString("EditBlocks", editBlocks.getString());
+		nbt.setString("InteractWithBlocks", interactWithBlocks.getString());
+		return nbt;
+	}
 
-    @Override
-    public void deserializeNBT(NBTBase nbt0)
-    {
-        if(nbt0 instanceof NBTTagCompound)
-        {
-            NBTTagCompound nbt = (NBTTagCompound) nbt0;
-            explosions.setBoolean(nbt.getBoolean("Explosions"));
-            fakePlayers.setBoolean(nbt.getBoolean("FakePlayers"));
+	@Override
+	public void deserializeNBT(NBTBase nbt0)
+	{
+		if (nbt0 instanceof NBTTagCompound)
+		{
+			NBTTagCompound nbt = (NBTTagCompound) nbt0;
+			explosions.setBoolean(nbt.getBoolean("Explosions"));
+			fakePlayers.setBoolean(nbt.getBoolean("FakePlayers"));
 
-            if(nbt.hasKey("EditBlocks"))
-            {
-                editBlocks.setValueFromString(nbt.getString("EditBlocks"), false);
-            }
+			if (nbt.hasKey("EditBlocks"))
+			{
+				editBlocks.setValueFromString(nbt.getString("EditBlocks"), false);
+			}
 
-            if(nbt.hasKey("InteractWithBlocks"))
-            {
-                interactWithBlocks.setValueFromString(nbt.getString("InteractWithBlocks"), false);
-            }
-        }
-        else
-        {
-            int flags = ((NBTPrimitive) nbt0).getInt();
-            explosions.setBoolean(!Bits.getFlag(flags, 1));
-            fakePlayers.setBoolean(Bits.getFlag(flags, 2));
-        }
-    }
+			if (nbt.hasKey("InteractWithBlocks"))
+			{
+				interactWithBlocks.setValueFromString(nbt.getString("InteractWithBlocks"), false);
+			}
+		}
+		else
+		{
+			int flags = ((NBTPrimitive) nbt0).getInt();
+			explosions.setBoolean(!Bits.getFlag(flags, 1));
+			fakePlayers.setBoolean(Bits.getFlag(flags, 2));
+		}
+	}
 
-    public void addConfig(ForgeTeamSettingsEvent event)
-    {
-        String group = FTBUFinals.MOD_ID;
-        event.add(group, "explosions", explosions);
-        event.add(group, "fake_players", fakePlayers);
-        event.add(group, "blocks_edit", editBlocks);
-        event.add(group, "blocks_interact", interactWithBlocks);
-    }
+	public void addConfig(ForgeTeamSettingsEvent event)
+	{
+		String group = FTBUFinals.MOD_ID;
+		event.add(group, "explosions", explosions);
+		event.add(group, "fake_players", fakePlayers);
+		event.add(group, "blocks_edit", editBlocks);
+		event.add(group, "blocks_interact", interactWithBlocks);
+	}
 }

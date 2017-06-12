@@ -18,49 +18,49 @@ import java.util.List;
 
 public class CmdSetHome extends CmdBase
 {
-    public CmdSetHome()
-    {
-        super("sethome", Level.ALL);
-    }
+	public CmdSetHome()
+	{
+		super("sethome", Level.ALL);
+	}
 
-    @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
-    {
-        if(args.length == 1)
-        {
-            return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(FTBLibIntegration.API.getUniverse().getPlayer(sender)).listHomes());
-        }
+	@Override
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+	{
+		if (args.length == 1)
+		{
+			return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(FTBLibIntegration.API.getUniverse().getPlayer(sender)).listHomes());
+		}
 
-        return super.getTabCompletions(server, sender, args, pos);
-    }
+		return super.getTabCompletions(server, sender, args, pos);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-        FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(ep));
-        if(data == null)
-        {
-            return;
-        }
-        else if(args.length == 0)
-        {
-            args = new String[] {"home"};
-        }
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+		FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(ep));
+		if (data == null)
+		{
+			return;
+		}
+		else if (args.length == 0)
+		{
+			args = new String[] {"home"};
+		}
 
-        args[0] = args[0].toLowerCase();
+		args[0] = args[0].toLowerCase();
 
-        int maxHomes = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt();
+		int maxHomes = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt();
 
-        if(maxHomes <= 0 || data.homesSize() >= maxHomes)
-        {
-            if(maxHomes == 0 || data.getHome(args[0]) == null)
-            {
-                throw FTBULang.HOME_LIMIT.commandError();
-            }
-        }
+		if (maxHomes <= 0 || data.homesSize() >= maxHomes)
+		{
+			if (maxHomes == 0 || data.getHome(args[0]) == null)
+			{
+				throw FTBULang.HOME_LIMIT.commandError();
+			}
+		}
 
-        data.setHome(args[0], new EntityDimPos(ep).toBlockDimPos());
-        FTBULang.HOME_SET.printChat(sender, args[0]);
-    }
+		data.setHome(args[0], new EntityDimPos(ep).toBlockDimPos());
+		FTBULang.HOME_SET.printChat(sender, args[0]);
+	}
 }

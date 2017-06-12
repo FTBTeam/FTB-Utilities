@@ -11,23 +11,23 @@ import com.feed_the_beast.ftbu.api.IRank;
  */
 public class DefaultOPRank extends DefaultRank
 {
-    public static final DefaultOPRank INSTANCE = new DefaultOPRank();
+	public static final DefaultOPRank INSTANCE = new DefaultOPRank();
 
-    private DefaultOPRank()
-    {
-        super("builtin_op");
-    }
+	private DefaultOPRank()
+	{
+		super("builtin_op");
+	}
 
-    @Override
-    public IRank getParent()
-    {
-        return DefaultPlayerRank.INSTANCE;
-    }
+	@Override
+	public IRank getParent()
+	{
+		return DefaultPlayerRank.INSTANCE;
+	}
 
-    @Override
-    public IConfigValue getConfig(String id)
-    {
-        IRankConfig config = FTBLibIntegration.API.getRankConfigRegistry().get(id);
-        return config == null ? PropertyNull.INSTANCE : config.getDefOPValue();
-    }
+	@Override
+	public IConfigValue getConfig(String id)
+	{
+		IRankConfig config = FTBLibIntegration.API.getRankConfigRegistry().get(id);
+		return config == null ? PropertyNull.INSTANCE : config.getDefOPValue();
+	}
 }

@@ -16,26 +16,26 @@ import net.minecraft.util.text.event.ClickEvent;
  */
 public class CmdGet extends CmdBase
 {
-    public CmdGet()
-    {
-        super("get", Level.OP);
-    }
+	public CmdGet()
+	{
+		super("get", Level.OP);
+	}
 
-    @Override
-    public boolean isUsernameIndex(String[] args, int i)
-    {
-        return i == 0;
-    }
+	@Override
+	public boolean isUsernameIndex(String[] args, int i)
+	{
+		return i == 0;
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        checkArgs(args, 1, "<player>");
-        IForgePlayer p = getForgePlayer(args[0]);
-        IRank rank = FTBUtilitiesAPI_Impl.INSTANCE.getRank(p.getProfile());
-        ITextComponent name = new TextComponentString(rank.getName() + " - " + rank.getFormattedName(p.getName()));
-        name.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/msg " + p.getName() + " "));
-        name.getStyle().setInsertion(p.getName());
-        sender.sendMessage(name);
-    }
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		checkArgs(args, 1, "<player>");
+		IForgePlayer p = getForgePlayer(args[0]);
+		IRank rank = FTBUtilitiesAPI_Impl.INSTANCE.getRank(p.getProfile());
+		ITextComponent name = new TextComponentString(rank.getName() + " - " + rank.getFormattedName(p.getName()));
+		name.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/msg " + p.getName() + " "));
+		name.getStyle().setInsertion(p.getName());
+		sender.sendMessage(name);
+	}
 }

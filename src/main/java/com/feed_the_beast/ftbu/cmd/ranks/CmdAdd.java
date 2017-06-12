@@ -15,30 +15,30 @@ import net.minecraft.server.MinecraftServer;
  */
 public class CmdAdd extends CmdBase
 {
-    public CmdAdd()
-    {
-        super("add", Level.OP);
-    }
+	public CmdAdd()
+	{
+		super("add", Level.OP);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        checkArgs(args, 2, "<id> [parent]");
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		checkArgs(args, 2, "<id> [parent]");
 
-        String id = args[0].toLowerCase();
+		String id = args[0].toLowerCase();
 
-        if(Ranks.getRankNames().contains(id))
-        {
-            throw FTBLibLang.RAW.commandError("Rank '" + id + "' already exists!");
-        }
+		if (Ranks.getRankNames().contains(id))
+		{
+			throw FTBLibLang.RAW.commandError("Rank '" + id + "' already exists!");
+		}
 
-        IRank parent = args.length == 1 ? DefaultPlayerRank.INSTANCE : Ranks.getRank(args[1], null);
+		IRank parent = args.length == 1 ? DefaultPlayerRank.INSTANCE : Ranks.getRank(args[1], null);
 
-        if(parent == null)
-        {
-            throw FTBLibLang.RAW.commandError("Rank '" + id + "' not found!"); //TODO: Lang
-        }
+		if (parent == null)
+		{
+			throw FTBLibLang.RAW.commandError("Rank '" + id + "' not found!"); //TODO: Lang
+		}
 
-        Ranks.addRank(new Rank(id, parent));
-    }
+		Ranks.addRank(new Rank(id, parent));
+	}
 }

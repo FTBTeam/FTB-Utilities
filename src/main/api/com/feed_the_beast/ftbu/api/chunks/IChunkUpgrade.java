@@ -8,8 +8,8 @@ import net.minecraft.util.IStringSerializable;
  */
 public interface IChunkUpgrade extends IStringSerializable
 {
-    //TODO: Move this to a registry someday
-    int getId();
+	//TODO: Move this to a registry someday
+	int getId();
 
-    LangKey getLangKey();
+	LangKey getLangKey();
 }

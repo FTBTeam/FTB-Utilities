@@ -14,43 +14,43 @@ import net.minecraft.util.text.TextComponentString;
  */
 public class CmdClaimFor extends CmdBase
 {
-    public CmdClaimFor()
-    {
-        super("claim_for", Level.OP);
-    }
+	public CmdClaimFor()
+	{
+		super("claim_for", Level.OP);
+	}
 
-    @Override
-    public boolean isUsernameIndex(String[] args, int i)
-    {
-        return i == 0;
-    }
+	@Override
+	public boolean isUsernameIndex(String[] args, int i)
+	{
+		return i == 0;
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        checkArgs(args, 3, "<player> <chunkX> <chunkZ> [dimension]");
-        String playerName = args[0];
-        IForgePlayer claimFor = getForgePlayer(playerName);
-        int chunkXPos = parseInt(args[1]);
-        int chunkZPos = parseInt(args[2]);
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		checkArgs(args, 3, "<player> <chunkX> <chunkZ> [dimension]");
+		String playerName = args[0];
+		IForgePlayer claimFor = getForgePlayer(playerName);
+		int chunkXPos = parseInt(args[1]);
+		int chunkZPos = parseInt(args[2]);
 
-        int dimension = args.length > 3 ? parseInt(args[3]) : sender.getEntityWorld().provider.getDimension();
+		int dimension = args.length > 3 ? parseInt(args[3]) : sender.getEntityWorld().provider.getDimension();
 
-        ChunkDimPos pos = new ChunkDimPos(chunkXPos, chunkZPos, dimension);
-        if(FTBUUniverseData.claimChunk(claimFor, pos))
-        {
-            String msg = String.format("Claimed %d, %d in %d for %s", chunkXPos, chunkZPos, dimension, playerName);
-            sender.sendMessage(new TextComponentString(msg));
+		ChunkDimPos pos = new ChunkDimPos(chunkXPos, chunkZPos, dimension);
+		if (FTBUUniverseData.claimChunk(claimFor, pos))
+		{
+			String msg = String.format("Claimed %d, %d in %d for %s", chunkXPos, chunkZPos, dimension, playerName);
+			sender.sendMessage(new TextComponentString(msg));
 
-            if(claimFor.isOnline())
-            {
-                CmdChunks.updateChunk(claimFor.getPlayer(), pos);
-            }
-        }
-        else
-        {
-            String msg = String.format("ERROR: Can't claim %d, %d in %d for %s", chunkXPos, chunkZPos, dimension, playerName);
-            sender.sendMessage(new TextComponentString(msg));
-        }
-    }
+			if (claimFor.isOnline())
+			{
+				CmdChunks.updateChunk(claimFor.getPlayer(), pos);
+			}
+		}
+		else
+		{
+			String msg = String.format("ERROR: Can't claim %d, %d in %d for %s", chunkXPos, chunkZPos, dimension, playerName);
+			sender.sendMessage(new TextComponentString(msg));
+		}
+	}
 }

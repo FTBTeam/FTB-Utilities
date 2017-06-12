@@ -11,14 +11,14 @@ import net.minecraft.server.MinecraftServer;
  */
 public class CmdEdit extends CmdBase
 {
-    public CmdEdit()
-    {
-        super("edit", Level.OP);
-    }
+	public CmdEdit()
+	{
+		super("edit", Level.OP);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        throw FTBLibLang.FEATURE_DISABLED.commandError();
-    }
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		throw FTBLibLang.FEATURE_DISABLED.commandError();
+	}
 }

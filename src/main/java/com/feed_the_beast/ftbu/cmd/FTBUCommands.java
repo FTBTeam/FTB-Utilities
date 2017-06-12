@@ -30,128 +30,128 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  */
 public class FTBUCommands
 {
-    @SubscribeEvent
-    public static void registerFTBCommands(RegisterFTBCommandsEvent event)
-    {
-        if(event.isDedicatedServer())
-        {
-            event.add(new CmdRestart());
-        }
+	@SubscribeEvent
+	public static void registerFTBCommands(RegisterFTBCommandsEvent event)
+	{
+		if (event.isDedicatedServer())
+		{
+			event.add(new CmdRestart());
+		}
 
-        if(FTBUConfigCommands.INV.getBoolean())
-        {
-            event.add(new CmdInv());
-        }
+		if (FTBUConfigCommands.INV.getBoolean())
+		{
+			event.add(new CmdInv());
+		}
 
-        if(FTBUConfigCommands.WARP.getBoolean())
-        {
-            event.add(new CmdWarp());
-            event.add(new CmdSetWarp());
-            event.add(new CmdDelWarp());
-        }
+		if (FTBUConfigCommands.WARP.getBoolean())
+		{
+			event.add(new CmdWarp());
+			event.add(new CmdSetWarp());
+			event.add(new CmdDelWarp());
+		}
 
-        if(FTBUConfigBackups.ENABLED.getBoolean())
-        {
-            event.add(new CmdBackup());
-        }
+		if (FTBUConfigBackups.ENABLED.getBoolean())
+		{
+			event.add(new CmdBackup());
+		}
 
-        if(FTBUConfigCommands.HOME.getBoolean())
-        {
-            event.add(new CmdAdminHome());
-            event.add(new CmdHome());
-            event.add(new CmdSetHome());
-            event.add(new CmdDelHome());
-        }
+		if (FTBUConfigCommands.HOME.getBoolean())
+		{
+			event.add(new CmdAdminHome());
+			event.add(new CmdHome());
+			event.add(new CmdSetHome());
+			event.add(new CmdDelHome());
+		}
 
-        if(FTBUConfigCommands.SERVER_INFO.getBoolean())
-        {
-            event.add(new CmdServerInfo());
-        }
+		if (FTBUConfigCommands.SERVER_INFO.getBoolean())
+		{
+			event.add(new CmdServerInfo());
+		}
 
-        if(FTBUConfigCommands.LOADED_CHUNKS.getBoolean())
-        {
-            event.add(new CmdLoadedChunks());
-        }
+		if (FTBUConfigCommands.LOADED_CHUNKS.getBoolean())
+		{
+			event.add(new CmdLoadedChunks());
+		}
 
-        if(FTBUConfigCommands.TPL.getBoolean())
-        {
-            event.add(new CmdTplast());
-        }
+		if (FTBUConfigCommands.TPL.getBoolean())
+		{
+			event.add(new CmdTplast());
+		}
 
-        if(FTBUConfigCommands.TRASH_CAN.getBoolean())
-        {
-            event.add(new CmdTrashCan());
-        }
+		if (FTBUConfigCommands.TRASH_CAN.getBoolean())
+		{
+			event.add(new CmdTrashCan());
+		}
 
-        if(FTBUConfigCommands.BACK.getBoolean())
-        {
-            event.add(new CmdBack());
-        }
+		if (FTBUConfigCommands.BACK.getBoolean())
+		{
+			event.add(new CmdBack());
+		}
 
-        if(FTBUConfigCommands.SPAWN.getBoolean())
-        {
-            event.add(new CmdSpawn());
-        }
+		if (FTBUConfigCommands.SPAWN.getBoolean())
+		{
+			event.add(new CmdSpawn());
+		}
 
-        if(FTBUConfigCommands.CHUNKS.getBoolean())
-        {
-            event.add(new CmdChunks());
-        }
+		if (FTBUConfigCommands.CHUNKS.getBoolean())
+		{
+			event.add(new CmdChunks());
+		}
 
-        if(FTBUConfigCommands.KICKME.getBoolean())
-        {
-            event.add(new CmdKickme());
-        }
+		if (FTBUConfigCommands.KICKME.getBoolean())
+		{
+			event.add(new CmdKickme());
+		}
 
-        if(FTBUConfigCommands.RANKS.getBoolean())
-        {
-            event.add(new CmdRanks());
-        }
+		if (FTBUConfigCommands.RANKS.getBoolean())
+		{
+			event.add(new CmdRanks());
+		}
 
-        if(FTBUConfigCommands.VIEW_CRASH.getBoolean())
-        {
-            event.add(new CmdViewCrash());
-        }
+		if (FTBUConfigCommands.VIEW_CRASH.getBoolean())
+		{
+			event.add(new CmdViewCrash());
+		}
 
-        if(FTBUConfigCommands.HEAL.getBoolean())
-        {
-            event.add(new CmdHeal());
-        }
+		if (FTBUConfigCommands.HEAL.getBoolean())
+		{
+			event.add(new CmdHeal());
+		}
 
-        if(FTBUConfigCommands.SET_HOUR.getBoolean())
-        {
-            event.add(new CmdSetHour());
-        }
-    }
+		if (FTBUConfigCommands.SET_HOUR.getBoolean())
+		{
+			event.add(new CmdSetHour());
+		}
+	}
 
-    @SubscribeEvent
-    public static void registerFTBClientCommands(RegisterFTBClientCommandsEvent event)
-    {
-        event.add(new CmdBase("refresh_guide", CmdBase.Level.ALL)
-        {
-            @Override
-            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-            {
-                Guides.refresh();
-            }
-        });
+	@SubscribeEvent
+	public static void registerFTBClientCommands(RegisterFTBClientCommandsEvent event)
+	{
+		event.add(new CmdBase("refresh_guide", CmdBase.Level.ALL)
+		{
+			@Override
+			public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+			{
+				Guides.refresh();
+			}
+		});
 
-        event.add(new CmdBase("open_guide", CmdBase.Level.ALL)
-        {
-            @Override
-            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-            {
-                Guides.openGui();
-            }
-        });
+		event.add(new CmdBase("open_guide", CmdBase.Level.ALL)
+		{
+			@Override
+			public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+			{
+				Guides.openGui();
+			}
+		});
 
-        event.add(new CmdBase("toggle_gamemode", CmdBase.Level.ALL)
-        {
-            @Override
-            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-            {
-                FTBLibClient.execClientCommand("/gamemode " + (Minecraft.getMinecraft().player.capabilities.isCreativeMode ? 0 : 1));
-            }
-        });
-    }
+		event.add(new CmdBase("toggle_gamemode", CmdBase.Level.ALL)
+		{
+			@Override
+			public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+			{
+				FTBLibClient.execClientCommand("/gamemode " + (Minecraft.getMinecraft().player.capabilities.isCreativeMode ? 0 : 1));
+			}
+		});
+	}
 }

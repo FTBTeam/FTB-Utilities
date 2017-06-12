@@ -10,16 +10,16 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  */
 public interface IRank extends IStringSerializable, IJsonSerializable
 {
-    IRank getParent();
+	IRank getParent();
 
-    Event.Result hasPermission(String permission);
+	Event.Result hasPermission(String permission);
 
-    IConfigValue getConfig(String id);
+	IConfigValue getConfig(String id);
 
-    String getSyntax();
+	String getSyntax();
 
-    default String getFormattedName(String name)
-    {
-        return getSyntax().replace("$name", name);
-    }
+	default String getFormattedName(String name)
+	{
+		return getSyntax().replace("$name", name);
+	}
 }

@@ -8,47 +8,47 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  */
 public abstract class ChunkModifiedEvent extends Event
 {
-    private final IClaimedChunk chunk;
+	private final IClaimedChunk chunk;
 
-    public ChunkModifiedEvent(IClaimedChunk c)
-    {
-        chunk = c;
-    }
+	public ChunkModifiedEvent(IClaimedChunk c)
+	{
+		chunk = c;
+	}
 
-    public IClaimedChunk getChunk()
-    {
-        return chunk;
-    }
+	public IClaimedChunk getChunk()
+	{
+		return chunk;
+	}
 
-    public static class Claimed extends ChunkModifiedEvent
-    {
-        public Claimed(IClaimedChunk c)
-        {
-            super(c);
-        }
-    }
+	public static class Claimed extends ChunkModifiedEvent
+	{
+		public Claimed(IClaimedChunk c)
+		{
+			super(c);
+		}
+	}
 
-    public static class Unclaimed extends ChunkModifiedEvent
-    {
-        public Unclaimed(IClaimedChunk c)
-        {
-            super(c);
-        }
-    }
+	public static class Unclaimed extends ChunkModifiedEvent
+	{
+		public Unclaimed(IClaimedChunk c)
+		{
+			super(c);
+		}
+	}
 
-    public static class Loaded extends ChunkModifiedEvent
-    {
-        public Loaded(IClaimedChunk c)
-        {
-            super(c);
-        }
-    }
+	public static class Loaded extends ChunkModifiedEvent
+	{
+		public Loaded(IClaimedChunk c)
+		{
+			super(c);
+		}
+	}
 
-    public static class Unloaded extends ChunkModifiedEvent
-    {
-        public Unloaded(IClaimedChunk c)
-        {
-            super(c);
-        }
-    }
+	public static class Unloaded extends ChunkModifiedEvent
+	{
+		public Unloaded(IClaimedChunk c)
+		{
+			super(c);
+		}
+	}
 }

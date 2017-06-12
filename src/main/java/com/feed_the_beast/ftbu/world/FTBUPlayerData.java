@@ -29,180 +29,185 @@ import java.util.Map;
  */
 public class FTBUPlayerData implements INBTSerializable<NBTBase>
 {
-    public final PropertyBool renderBadge = new PropertyBool(true);
-    public final PropertyBool chatLinks = new PropertyBool(true);
-    public final PropertyBool disableGlobalBadge = new PropertyBool(false);
+	public final PropertyBool renderBadge = new PropertyBool(true);
+	public final PropertyBool chatLinks = new PropertyBool(true);
+	public final PropertyBool disableGlobalBadge = new PropertyBool(false);
 
-    public final IForgePlayer player;
-    public BlockDimPos lastDeath, lastSafePos;
-    public IForgePlayer lastChunkOwner;
-    private Map<String, BlockDimPos> homes;
+	public final IForgePlayer player;
+	public BlockDimPos lastDeath, lastSafePos;
+	public IForgePlayer lastChunkOwner;
+	private Map<String, BlockDimPos> homes;
 
-    public FTBUPlayerData(IForgePlayer p)
-    {
-        player = p;
-    }
+	public FTBUPlayerData(IForgePlayer p)
+	{
+		player = p;
+	}
 
-    @Nullable
-    public static FTBUPlayerData get(IForgePlayer p)
-    {
-        return (FTBUPlayerData) p.getData(FTBLibIntegration.FTBU_DATA);
-    }
+	@Nullable
+	public static FTBUPlayerData get(IForgePlayer p)
+	{
+		return (FTBUPlayerData) p.getData(FTBLibIntegration.FTBU_DATA);
+	}
 
-    @Override
-    public NBTBase serializeNBT()
-    {
-        NBTTagCompound nbt = new NBTTagCompound();
+	@Override
+	public NBTBase serializeNBT()
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
 
-        nbt.setBoolean("RenderBadge", renderBadge.getBoolean());
-        nbt.setBoolean("ChatLinks", chatLinks.getBoolean());
-        nbt.setBoolean("DisableGlobalBadges", disableGlobalBadge.getBoolean());
+		nbt.setBoolean("RenderBadge", renderBadge.getBoolean());
+		nbt.setBoolean("ChatLinks", chatLinks.getBoolean());
+		nbt.setBoolean("DisableGlobalBadges", disableGlobalBadge.getBoolean());
 
-        if(homes != null && !homes.isEmpty())
-        {
-            NBTTagCompound tag1 = new NBTTagCompound();
+		if (homes != null && !homes.isEmpty())
+		{
+			NBTTagCompound tag1 = new NBTTagCompound();
 
-            for(Map.Entry<String, BlockDimPos> e : homes.entrySet())
-            {
-                tag1.setIntArray(e.getKey(), e.getValue().toIntArray());
-            }
+			for (Map.Entry<String, BlockDimPos> e : homes.entrySet())
+			{
+				tag1.setIntArray(e.getKey(), e.getValue().toIntArray());
+			}
 
-            nbt.setTag("Homes", tag1);
-        }
+			nbt.setTag("Homes", tag1);
+		}
 
-        if(lastDeath != null)
-        {
-            nbt.setIntArray("LastDeath", lastDeath.toIntArray());
-        }
+		if (lastDeath != null)
+		{
+			nbt.setIntArray("LastDeath", lastDeath.toIntArray());
+		}
 
-        Collection<IClaimedChunk> claimedChunks = ClaimedChunkStorage.INSTANCE.getChunks(player);
+		Collection<IClaimedChunk> claimedChunks = ClaimedChunkStorage.INSTANCE.getChunks(player);
 
-        if(!claimedChunks.isEmpty())
-        {
-            NBTTagList list = new NBTTagList();
+		if (!claimedChunks.isEmpty())
+		{
+			NBTTagList list = new NBTTagList();
 
-            for(IClaimedChunk chunk : claimedChunks)
-            {
-                ChunkDimPos pos = chunk.getPos();
+			for (IClaimedChunk chunk : claimedChunks)
+			{
+				ChunkDimPos pos = chunk.getPos();
 
-                int flags = 0;
+				int flags = 0;
 
-                for(IChunkUpgrade upgrade : FTBUCommon.CHUNK_UPGRADES)
-                {
-                    if(upgrade != null && chunk.hasUpgrade(upgrade))
-                    {
-                        flags |= (1 << upgrade.getId());
-                    }
-                }
+				for (IChunkUpgrade upgrade : FTBUCommon.CHUNK_UPGRADES)
+				{
+					if (upgrade != null && chunk.hasUpgrade(upgrade))
+					{
+						flags |= (1 << upgrade.getId());
+					}
+				}
 
-                int ai[] = flags != 0 ? new int[4] : new int[3];
-                ai[0] = pos.dim;
-                ai[1] = pos.posX;
-                ai[2] = pos.posZ;
+				int ai[] = flags != 0 ? new int[4] : new int[3];
+				ai[0] = pos.dim;
+				ai[1] = pos.posX;
+				ai[2] = pos.posZ;
 
-                if(flags != 0)
-                {
-                    ai[3] = flags;
-                }
+				if (flags != 0)
+				{
+					ai[3] = flags;
+				}
 
-                list.appendTag(new NBTTagIntArray(ai));
-            }
+				list.appendTag(new NBTTagIntArray(ai));
+			}
 
-            nbt.setTag("ClaimedChunks", list);
-        }
+			nbt.setTag("ClaimedChunks", list);
+		}
 
-        return nbt;
-    }
+		return nbt;
+	}
 
-    @Override
-    public void deserializeNBT(NBTBase nbt0)
-    {
-        NBTTagCompound nbt = (NBTTagCompound) nbt0;
+	@Override
+	public void deserializeNBT(NBTBase nbt0)
+	{
+		if (nbt0 == null)
+		{
+			return;
+		}
 
-        if(nbt.hasKey("Homes"))
-        {
-            homes = new HashMap<>();
+		NBTTagCompound nbt = (NBTTagCompound) nbt0;
 
-            NBTTagCompound tag1 = (NBTTagCompound) nbt.getTag("Homes");
+		if (nbt.hasKey("Homes"))
+		{
+			homes = new HashMap<>();
 
-            if(tag1 != null && !tag1.hasNoTags())
-            {
-                for(String s1 : tag1.getKeySet())
-                {
-                    setHome(s1.toLowerCase(), new BlockDimPos(tag1.getIntArray(s1)));
-                }
-            }
-        }
-        else
-        {
-            homes = null;
-        }
+			NBTTagCompound tag1 = (NBTTagCompound) nbt.getTag("Homes");
 
-        lastDeath = null;
-        if(nbt.hasKey("LastDeath"))
-        {
-            int[] ai = nbt.getIntArray("LastDeath");
-            lastDeath = (ai.length == 4) ? new BlockDimPos(ai) : null;
-        }
+			if (tag1 != null && !tag1.hasNoTags())
+			{
+				for (String s1 : tag1.getKeySet())
+				{
+					setHome(s1.toLowerCase(), new BlockDimPos(tag1.getIntArray(s1)));
+				}
+			}
+		}
+		else
+		{
+			homes = null;
+		}
 
-        if(nbt.hasKey("ClaimedChunks"))
-        {
-            NBTTagList list = (NBTTagList) nbt.getTag("ClaimedChunks");
+		lastDeath = null;
+		if (nbt.hasKey("LastDeath"))
+		{
+			int[] ai = nbt.getIntArray("LastDeath");
+			lastDeath = (ai.length == 4) ? new BlockDimPos(ai) : null;
+		}
 
-            for(int i = 0; i < list.tagCount(); i++)
-            {
-                int[] ai = list.getIntArrayAt(i);
+		if (nbt.hasKey("ClaimedChunks"))
+		{
+			NBTTagList list = (NBTTagList) nbt.getTag("ClaimedChunks");
 
-                if(ai.length >= 3)
-                {
-                    ClaimedChunk chunk = new ClaimedChunk(new ChunkDimPos(ai[1], ai[2], ai[0]), player, ai.length >= 4 ? ai[3] : 0);
-                    ClaimedChunkStorage.INSTANCE.setChunk(chunk.getPos(), chunk);
-                }
-            }
-        }
-    }
+			for (int i = 0; i < list.tagCount(); i++)
+			{
+				int[] ai = list.getIntArrayAt(i);
 
-    public Collection<String> listHomes()
-    {
-        if(homes == null || homes.isEmpty())
-        {
-            return Collections.emptySet();
-        }
+				if (ai.length >= 3)
+				{
+					ClaimedChunk chunk = new ClaimedChunk(new ChunkDimPos(ai[1], ai[2], ai[0]), player, ai.length >= 4 ? ai[3] : 0);
+					ClaimedChunkStorage.INSTANCE.setChunk(chunk.getPos(), chunk);
+				}
+			}
+		}
+	}
 
-        return homes.keySet();
-    }
+	public Collection<String> listHomes()
+	{
+		if (homes == null || homes.isEmpty())
+		{
+			return Collections.emptySet();
+		}
 
-    @Nullable
-    public BlockDimPos getHome(String s)
-    {
-        return homes == null ? null : homes.get(s.toLowerCase());
-    }
+		return homes.keySet();
+	}
 
-    public boolean setHome(String s, @Nullable BlockDimPos pos)
-    {
-        if(pos == null)
-        {
-            return homes != null && homes.remove(s) != null;
-        }
+	@Nullable
+	public BlockDimPos getHome(String s)
+	{
+		return homes == null ? null : homes.get(s.toLowerCase());
+	}
 
-        if(homes == null)
-        {
-            homes = new HashMap<>();
-        }
+	public boolean setHome(String s, @Nullable BlockDimPos pos)
+	{
+		if (pos == null)
+		{
+			return homes != null && homes.remove(s) != null;
+		}
 
-        return homes.put(s, pos.copy()) == null;
-    }
+		if (homes == null)
+		{
+			homes = new HashMap<>();
+		}
 
-    public int homesSize()
-    {
-        return homes == null ? 0 : homes.size();
-    }
+		return homes.put(s, pos.copy()) == null;
+	}
 
-    public void addConfig(ForgePlayerSettingsEvent event)
-    {
-        String group = FTBUFinals.MOD_ID;
-        event.add(group, "render_badge", renderBadge);
-        event.add(group, "chat_links", chatLinks);
-        event.add(group, "disable_global_badge", disableGlobalBadge);
-    }
+	public int homesSize()
+	{
+		return homes == null ? 0 : homes.size();
+	}
+
+	public void addConfig(ForgePlayerSettingsEvent event)
+	{
+		String group = FTBUFinals.MOD_ID;
+		event.add(group, "render_badge", renderBadge);
+		event.add(group, "chat_links", chatLinks);
+		event.add(group, "disable_global_badge", disableGlobalBadge);
+	}
 }

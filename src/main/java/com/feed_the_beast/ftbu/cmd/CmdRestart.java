@@ -12,20 +12,20 @@ import java.io.File;
 
 public class CmdRestart extends CmdBase
 {
-    public CmdRestart()
-    {
-        super("restart", Level.OP);
-    }
+	public CmdRestart()
+	{
+		super("restart", Level.OP);
+	}
 
-    public static void restart()
-    {
-        FileUtils.newFile(new File(LMUtils.folderMinecraft, "autostart.stamp"));
-        ServerUtils.getServer().initiateShutdown();
-    }
+	public static void restart()
+	{
+		FileUtils.newFile(new File(LMUtils.folderMinecraft, "autostart.stamp"));
+		ServerUtils.getServer().initiateShutdown();
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        restart();
-    }
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		restart();
+	}
 }

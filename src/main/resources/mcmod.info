@@ -1,15 +1,17 @@
-[{
-  "modid": "ftbu",
-  "name": "FTBUtilities",
-  "description": "FTBUtilities",
-  "version": "${version}",
-  "mcversion": "1.11.2",
-  "url": "http://minecraft.curseforge.com/projects/ftb-utilities",
-  "updateUrl": "",
-  "authorList": ["LatvianModder"],
-  "credits": "",
-  "logoFile": "assets/ftbu/textures/logo.png",
-  "screenshots": [],
-  "parent":"",
-  "dependencies": []
-}]
+[
+	{
+		"modid": "ftbu",
+		"name": "FTBUtilities",
+		"description": "FTBUtilities",
+		"version": "${version}",
+		"mcversion": "1.11.2",
+		"url": "http://minecraft.curseforge.com/projects/ftb-utilities",
+		"updateUrl": "",
+		"authorList": ["LatvianModder"],
+		"credits": "",
+		"logoFile": "assets/ftbu/textures/logo.png",
+		"screenshots": [],
+		"parent": "",
+		"dependencies": []
+	}
+]

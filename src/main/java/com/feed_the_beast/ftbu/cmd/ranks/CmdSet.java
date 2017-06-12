@@ -20,52 +20,52 @@ import java.util.List;
  */
 public class CmdSet extends CmdBase
 {
-    public CmdSet()
-    {
-        super("set", Level.OP);
-    }
+	public CmdSet()
+	{
+		super("set", Level.OP);
+	}
 
-    @Override
-    public boolean isUsernameIndex(String[] args, int i)
-    {
-        return i == 0;
-    }
+	@Override
+	public boolean isUsernameIndex(String[] args, int i)
+	{
+		return i == 0;
+	}
 
-    @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
-    {
-        if(args.length == 2)
-        {
-            return getListOfStringsMatchingLastWord(args, Ranks.getRankNames());
-        }
+	@Override
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+	{
+		if (args.length == 2)
+		{
+			return getListOfStringsMatchingLastWord(args, Ranks.getRankNames());
+		}
 
-        return super.getTabCompletions(server, sender, args, pos);
-    }
+		return super.getTabCompletions(server, sender, args, pos);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        checkArgs(args, 2, "<player> <rank>");
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		checkArgs(args, 2, "<player> <rank>");
 
-        IRank r = (args[1].equalsIgnoreCase("none") || args[1].equals("-")) ? null : Ranks.getRank(args[1], null);
+		IRank r = (args[1].equalsIgnoreCase("none") || args[1].equals("-")) ? null : Ranks.getRank(args[1], null);
 
-        if(r == DefaultPlayerRank.INSTANCE)
-        {
-            FTBLibLang.RAW.printChat(sender, "Can't set rank as builtin_player, use /deop " + args[0]); //TODO: Lang
-            return;
-        }
-        else if(r == DefaultOPRank.INSTANCE)
-        {
-            FTBLibLang.RAW.printChat(sender, "Can't set rank as builtin_op, use /op " + args[0]); //TODO: Lang
-            return;
-        }
-        else if(!Ranks.getRankNames().contains(args[1]))
-        {
-            throw FTBLibLang.RAW.commandError("Rank '" + args[1] + "' not found!"); //TODO: Lang
-        }
+		if (r == DefaultPlayerRank.INSTANCE)
+		{
+			FTBLibLang.RAW.printChat(sender, "Can't set rank as builtin_player, use /deop " + args[0]); //TODO: Lang
+			return;
+		}
+		else if (r == DefaultOPRank.INSTANCE)
+		{
+			FTBLibLang.RAW.printChat(sender, "Can't set rank as builtin_op, use /op " + args[0]); //TODO: Lang
+			return;
+		}
+		else if (!Ranks.getRankNames().contains(args[1]))
+		{
+			throw FTBLibLang.RAW.commandError("Rank '" + args[1] + "' not found!"); //TODO: Lang
+		}
 
-        IForgePlayer p = getForgePlayer(args[0]);
-        Ranks.setRank(p.getId(), r);
-        FTBLibLang.RAW.printChat(sender, p.getName() + " now is " + (r == null ? "unset" : r.getName())); //TODO: Lang
-    }
+		IForgePlayer p = getForgePlayer(args[0]);
+		Ranks.setRank(p.getId(), r);
+		FTBLibLang.RAW.printChat(sender, p.getName() + " now is " + (r == null ? "unset" : r.getName())); //TODO: Lang
+	}
 }

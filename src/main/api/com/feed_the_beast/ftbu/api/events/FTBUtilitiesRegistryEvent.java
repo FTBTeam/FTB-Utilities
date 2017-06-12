@@ -8,15 +8,15 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  */
 public class FTBUtilitiesRegistryEvent extends Event
 {
-    private final IFTBUtilitiesRegistry reg;
+	private final IFTBUtilitiesRegistry reg;
 
-    public FTBUtilitiesRegistryEvent(IFTBUtilitiesRegistry r)
-    {
-        reg = r;
-    }
+	public FTBUtilitiesRegistryEvent(IFTBUtilitiesRegistry r)
+	{
+		reg = r;
+	}
 
-    public IFTBUtilitiesRegistry getRegistry()
-    {
-        return reg;
-    }
+	public IFTBUtilitiesRegistry getRegistry()
+	{
+		return reg;
+	}
 }

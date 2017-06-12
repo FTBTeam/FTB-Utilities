@@ -12,33 +12,33 @@ import net.minecraft.util.math.BlockPos;
 
 public class CmdSetWarp extends CmdBase
 {
-    public CmdSetWarp()
-    {
-        super("setwarp", Level.OP);
-    }
+	public CmdSetWarp()
+	{
+		super("setwarp", Level.OP);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        checkArgs(args, 1, "<warp> [x] [y] [z]");
-        EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-        BlockPos c;
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		checkArgs(args, 1, "<warp> [x] [y] [z]");
+		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+		BlockPos c;
 
-        args[0] = args[0].toLowerCase();
+		args[0] = args[0].toLowerCase();
 
-        if(args.length >= 4)
-        {
-            int x = parseInt(args[1]);
-            int y = parseInt(args[2]);
-            int z = parseInt(args[3]);
-            c = new BlockPos(x, y, z);
-        }
-        else
-        {
-            c = ep.getPosition();
-        }
+		if (args.length >= 4)
+		{
+			int x = parseInt(args[1]);
+			int y = parseInt(args[2]);
+			int z = parseInt(args[3]);
+			c = new BlockPos(x, y, z);
+		}
+		else
+		{
+			c = ep.getPosition();
+		}
 
-        FTBUUniverseData.get().setWarp(args[0], new BlockDimPos(c, ep.dimension));
-        FTBULang.WARP_SET.printChat(sender, args[0]);
-    }
+		FTBUUniverseData.get().setWarp(args[0], new BlockDimPos(c, ep.dimension));
+		FTBULang.WARP_SET.printChat(sender, args[0]);
+	}
 }

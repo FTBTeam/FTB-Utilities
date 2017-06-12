@@ -22,43 +22,43 @@ import net.minecraftforge.server.permission.context.BlockPosContext;
  */
 public class CmdUnclaim extends CmdBase
 {
-    public CmdUnclaim()
-    {
-        super("unclaim", Level.ALL);
-    }
+	public CmdUnclaim()
+	{
+		super("unclaim", Level.ALL);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-        IForgePlayer p = getForgePlayer(player);
-        ChunkDimPos pos = new ChunkDimPos(player);
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+		IForgePlayer p = getForgePlayer(player);
+		ChunkDimPos pos = new ChunkDimPos(player);
 
-        if(!FTBUConfigWorld.CHUNK_CLAIMING.getBoolean())
-        {
-            FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CLAIMING_NOT_ENABLED);
-            return;
-        }
+		if (!FTBUConfigWorld.CHUNK_CLAIMING.getBoolean())
+		{
+			FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CLAIMING_NOT_ENABLED);
+			return;
+		}
 
-        if(!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CHUNKS_MODIFY_SELF, null))
-        {
-            FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CLAIMING_NOT_ALLOWED);
-            return;
-        }
+		if (!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CHUNKS_MODIFY_SELF, null))
+		{
+			FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CLAIMING_NOT_ALLOWED);
+			return;
+		}
 
-        if(!p.equalsPlayer(ClaimedChunkStorage.INSTANCE.getChunkOwner(pos)) && !PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS, new BlockPosContext(player, pos.getChunkPos())))
-        {
-            throw FTBLibLang.COMMAND_PERMISSION.commandError();
-        }
+		if (!p.equalsPlayer(ClaimedChunkStorage.INSTANCE.getChunkOwner(pos)) && !PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS, new BlockPosContext(player, pos.getChunkPos())))
+		{
+			throw FTBLibLang.COMMAND_PERMISSION.commandError();
+		}
 
-        if(FTBUUniverseData.unclaimChunk(p, pos))
-        {
-            FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_UNCLAIMED);
-            CmdChunks.updateChunk(player, pos);
-        }
-        else
-        {
-            FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_MODIFY_CHUNK);
-        }
-    }
+		if (FTBUUniverseData.unclaimChunk(p, pos))
+		{
+			FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_UNCLAIMED);
+			CmdChunks.updateChunk(player, pos);
+		}
+		else
+		{
+			FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_MODIFY_CHUNK);
+		}
+	}
 }

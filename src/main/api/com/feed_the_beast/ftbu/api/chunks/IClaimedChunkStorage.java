@@ -14,19 +14,19 @@ import java.util.Collection;
  */
 public interface IClaimedChunkStorage
 {
-    @Nullable
-    IClaimedChunk getChunk(ChunkDimPos pos);
+	@Nullable
+	IClaimedChunk getChunk(ChunkDimPos pos);
 
-    @Nullable
-    default IForgePlayer getChunkOwner(ChunkDimPos pos)
-    {
-        IClaimedChunk c = getChunk(pos);
-        return c == null ? null : c.getOwner();
-    }
+	@Nullable
+	default IForgePlayer getChunkOwner(ChunkDimPos pos)
+	{
+		IClaimedChunk c = getChunk(pos);
+		return c == null ? null : c.getOwner();
+	}
 
-    void setChunk(ChunkDimPos pos, @Nullable IClaimedChunk chunk);
+	void setChunk(ChunkDimPos pos, @Nullable IClaimedChunk chunk);
 
-    Collection<IClaimedChunk> getChunks(@Nullable IForgePlayer owner);
+	Collection<IClaimedChunk> getChunks(@Nullable IForgePlayer owner);
 
-    boolean canPlayerInteract(EntityPlayerMP player, EnumHand hand, BlockPosContainer block, BlockInteractionType type);
+	boolean canPlayerInteract(EntityPlayerMP player, EnumHand hand, BlockPosContainer block, BlockInteractionType type);
 }

@@ -13,24 +13,24 @@ import net.minecraft.world.World;
 
 public class CmdSpawn extends CmdBase
 {
-    public CmdSpawn()
-    {
-        super("spawn", Level.ALL);
-    }
+	public CmdSpawn()
+	{
+		super("spawn", Level.ALL);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-        World w = server.getEntityWorld();
-        BlockPos spawnpoint = w.getSpawnPoint();
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+		World w = server.getEntityWorld();
+		BlockPos spawnpoint = w.getSpawnPoint();
 
-        while(w.getBlockState(spawnpoint).isFullCube())
-        {
-            spawnpoint = spawnpoint.up(2);
-        }
+		while (w.getBlockState(spawnpoint).isFullCube())
+		{
+			spawnpoint = spawnpoint.up(2);
+		}
 
-        ServerUtils.teleportPlayer(player, new BlockDimPos(spawnpoint, 0));
-        FTBULang.WARP_SPAWN.printChat(sender);
-    }
+		ServerUtils.teleportPlayer(player, new BlockDimPos(spawnpoint, 0));
+		FTBULang.WARP_SPAWN.printChat(sender);
+	}
 }

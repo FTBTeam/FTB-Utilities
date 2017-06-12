@@ -13,29 +13,29 @@ import java.util.UUID;
  */
 public class CachedClientData
 {
-    private static final Map<UUID, IDrawableObject> BADGE_CACHE = new HashMap<>();
+	private static final Map<UUID, IDrawableObject> BADGE_CACHE = new HashMap<>();
 
-    public static void clear()
-    {
-        BADGE_CACHE.clear();
-    }
+	public static void clear()
+	{
+		BADGE_CACHE.clear();
+	}
 
-    public static IDrawableObject getBadge(UUID id)
-    {
-        IDrawableObject tex = BADGE_CACHE.get(id);
+	public static IDrawableObject getBadge(UUID id)
+	{
+		IDrawableObject tex = BADGE_CACHE.get(id);
 
-        if(tex == null)
-        {
-            tex = ImageProvider.NULL;
-            BADGE_CACHE.put(id, tex);
-            new MessageRequestBadge(id).sendToServer();
-        }
+		if (tex == null)
+		{
+			tex = ImageProvider.NULL;
+			BADGE_CACHE.put(id, tex);
+			new MessageRequestBadge(id).sendToServer();
+		}
 
-        return tex;
-    }
+		return tex;
+	}
 
-    public static void setBadge(UUID id, String url)
-    {
-        BADGE_CACHE.put(id, ImageProvider.get(url));
-    }
+	public static void setBadge(UUID id, String url)
+	{
+		BADGE_CACHE.put(id, ImageProvider.get(url));
+	}
 }

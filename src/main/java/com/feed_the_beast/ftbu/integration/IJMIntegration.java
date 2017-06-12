@@ -8,7 +8,7 @@ import net.minecraft.util.math.ChunkPos;
  */
 public interface IJMIntegration
 {
-    void clearData();
+	void clearData();
 
-    void chunkChanged(ChunkPos pos, ClaimedChunks.Data chunk);
+	void chunkChanged(ChunkPos pos, ClaimedChunks.Data chunk);
 }

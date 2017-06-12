@@ -13,36 +13,36 @@ import java.util.List;
 
 public class CmdDelWarp extends CmdBase
 {
-    public CmdDelWarp()
-    {
-        super("delwarp", Level.OP);
-    }
+	public CmdDelWarp()
+	{
+		super("delwarp", Level.OP);
+	}
 
-    @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
-    {
-        if(args.length == 1)
-        {
-            return getListOfStringsMatchingLastWord(args, FTBUUniverseData.get().listWarps());
-        }
+	@Override
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+	{
+		if (args.length == 1)
+		{
+			return getListOfStringsMatchingLastWord(args, FTBUUniverseData.get().listWarps());
+		}
 
-        return super.getTabCompletions(server, sender, args, pos);
-    }
+		return super.getTabCompletions(server, sender, args, pos);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        checkArgs(args, 1, "<warp>");
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		checkArgs(args, 1, "<warp>");
 
-        args[0] = args[0].toLowerCase();
+		args[0] = args[0].toLowerCase();
 
-        if(FTBUUniverseData.get().setWarp(args[0], null))
-        {
-            FTBULang.WARP_DEL.printChat(sender, args[0]);
-        }
-        else
-        {
-            throw FTBULang.WARP_NOT_SET.commandError(args[0]);
-        }
-    }
+		if (FTBUUniverseData.get().setWarp(args[0], null))
+		{
+			FTBULang.WARP_DEL.printChat(sender, args[0]);
+		}
+		else
+		{
+			throw FTBULang.WARP_NOT_SET.commandError(args[0]);
+		}
+	}
 }

@@ -9,31 +9,31 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  */
 class DefaultRank extends Rank
 {
-    DefaultRank(String id)
-    {
-        super(id);
-    }
+	DefaultRank(String id)
+	{
+		super(id);
+	}
 
-    @Override
-    public Event.Result hasPermission(String permission)
-    {
-        return Event.Result.DEFAULT;
-    }
+	@Override
+	public Event.Result hasPermission(String permission)
+	{
+		return Event.Result.DEFAULT;
+	}
 
-    @Override
-    public String getSyntax()
-    {
-        return "<$name> ";
-    }
+	@Override
+	public String getSyntax()
+	{
+		return "<$name> ";
+	}
 
-    @Override
-    public void fromJson(JsonElement json)
-    {
-    }
+	@Override
+	public void fromJson(JsonElement json)
+	{
+	}
 
-    @Override
-    public JsonElement getSerializableElement()
-    {
-        return JsonNull.INSTANCE;
-    }
+	@Override
+	public JsonElement getSerializableElement()
+	{
+		return JsonNull.INSTANCE;
+	}
 }

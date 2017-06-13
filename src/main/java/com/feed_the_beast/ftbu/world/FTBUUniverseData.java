@@ -30,7 +30,6 @@ import com.feed_the_beast.ftbu.world.backups.Backups;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
@@ -61,7 +60,7 @@ import java.util.function.Function;
 /**
  * @author LatvianModder
  */
-public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
+public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITickable
 {
 	private static final String FAILED_BADGE = FTBUFinals.MOD_ID + ":textures/failed_badge.png";
 	private static final String BADGE_BASE_URL = "http://api.latmod.com/badges/get?id=";
@@ -389,7 +388,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
 	}
 
 	@Override
-	public NBTBase serializeNBT()
+	public NBTTagCompound serializeNBT()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 
@@ -409,18 +408,16 @@ public class FTBUUniverseData implements INBTSerializable<NBTBase>, ITickable
 	}
 
 	@Override
-	public void deserializeNBT(NBTBase nbt0)
+	public void deserializeNBT(NBTTagCompound nbt)
 	{
-		nextChunkloaderUpdate = System.currentTimeMillis() + 10000L;
-		warps.clear();
-		nextWebApiUpdate = 0L;
-
-		if (!(nbt0 instanceof NBTTagCompound))
+		if (nbt == null)
 		{
 			return;
 		}
 
-		NBTTagCompound nbt = (NBTTagCompound) nbt0;
+		nextChunkloaderUpdate = System.currentTimeMillis() + 10000L;
+		warps.clear();
+		nextWebApiUpdate = 0L;
 
 		if (nbt.hasKey("Warps"))
 		{

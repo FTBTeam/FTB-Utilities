@@ -12,7 +12,6 @@ import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
@@ -27,7 +26,7 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-public class FTBUPlayerData implements INBTSerializable<NBTBase>
+public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 {
 	public final PropertyBool renderBadge = new PropertyBool(true);
 	public final PropertyBool chatLinks = new PropertyBool(true);
@@ -50,7 +49,7 @@ public class FTBUPlayerData implements INBTSerializable<NBTBase>
 	}
 
 	@Override
-	public NBTBase serializeNBT()
+	public NBTTagCompound serializeNBT()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 
@@ -115,14 +114,12 @@ public class FTBUPlayerData implements INBTSerializable<NBTBase>
 	}
 
 	@Override
-	public void deserializeNBT(NBTBase nbt0)
+	public void deserializeNBT(NBTTagCompound nbt)
 	{
-		if (nbt0 == null)
+		if (nbt == null)
 		{
 			return;
 		}
-
-		NBTTagCompound nbt = (NBTTagCompound) nbt0;
 
 		if (nbt.hasKey("Homes"))
 		{

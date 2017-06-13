@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.api.events.ServerInfoEvent;
 import com.feed_the_beast.ftbl.lib.client.DrawableItem;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
@@ -17,6 +18,7 @@ import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import com.feed_the_beast.ftbu.world.backups.Backups;
 import com.google.common.base.Preconditions;
+import com.google.gson.JsonElement;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,6 +34,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.permission.PermissionAPI;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +45,11 @@ public class ServerInfoPage
 	public static void reloadCachedInfo()
 	{
 		CACHED_PAGE.clear();
+		JsonElement json = JsonUtils.fromJson(new File(LMUtils.folderLocal, "ftbu/server_guide.json"));
+		if (!json.isJsonNull())
+		{
+			CACHED_PAGE.addSub(new GuidePage("local_guide", null, json));
+		}
 	}
 
 	public static GuidePage getPageForPlayer(EntityPlayer ep)

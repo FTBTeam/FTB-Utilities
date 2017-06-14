@@ -2,10 +2,10 @@ package com.feed_the_beast.ftbu.cmd.ranks;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 /**
@@ -30,6 +30,6 @@ public class CmdCheckPerm extends CmdBase
 		checkArgs(args, 2, "<player> <permission>");
 		IForgePlayer player = getForgePlayer(args[0]);
 		boolean perm = player.isOnline() ? PermissionAPI.hasPermission(player.getPlayer(), args[1]) : PermissionAPI.hasPermission(player.getProfile(), args[1], null);
-		sender.sendMessage(new TextComponentString(args[1] + " for " + player.getName() + " is " + perm));
+		sender.sendMessage(StringUtils.text(args[1] + " for " + player.getName() + " is " + perm));
 	}
 }

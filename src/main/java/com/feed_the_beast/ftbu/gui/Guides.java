@@ -29,8 +29,6 @@ import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -121,7 +119,7 @@ public enum Guides implements IResourceManagerReloadListener
 	{
 		FTBUFinals.LOGGER.info("Reloading guides...");
 		INFO_PAGE.clear();
-		INFO_PAGE.setTitle(new TextComponentString("Guides")); //TODO: Lang
+		INFO_PAGE.setTitle(StringUtils.text("Guides")); //TODO: Lang
 
 		List<GuideTitlePage> guides = new ArrayList<>();
 		SUBSTITUTE_CACHE.clear();
@@ -271,17 +269,17 @@ public enum Guides implements IResourceManagerReloadListener
 					}
 					if (o.has("lang"))
 					{
-						page1.setTitle(new TextComponentTranslation(o.get("lang").getAsString()));
+						page1.setTitle(StringUtils.translation(o.get("lang").getAsString()));
 					}
 					else
 					{
-						page1.setTitle(new TextComponentTranslation(domain + '.' + parentDir.replace('/', '.') + "." + page1.getName()));
+						page1.setTitle(StringUtils.translation(domain + '.' + parentDir.replace('/', '.') + "." + page1.getName()));
 					}
 				}
 				else
 				{
 					page1 = page.getSub(e.getAsString());
-					page1.setTitle(new TextComponentTranslation(domain + '.' + parentDir.replace('/', '.') + "." + page1.getName()));
+					page1.setTitle(StringUtils.translation(domain + '.' + parentDir.replace('/', '.') + "." + page1.getName()));
 				}
 
 				loadTree(resourceManager, domain, page1, format, parentDir + "/" + page1.getName());

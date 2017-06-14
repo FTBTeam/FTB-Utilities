@@ -27,8 +27,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.server.command.CommandTreeBase;
@@ -40,7 +38,7 @@ import java.util.List;
 
 public class ServerInfoPage
 {
-	private static final GuidePage CACHED_PAGE = new GuidePage("server_info").setTitle(new TextComponentTranslation("sidebar_button.ftbu.server_info"));
+	private static final GuidePage CACHED_PAGE = new GuidePage("server_info").setTitle(StringUtils.translation("sidebar_button.ftbu.server_info"));
 
 	public static void reloadCachedInfo()
 	{
@@ -97,7 +95,7 @@ public class ServerInfoPage
 			//FIXME: SERVER_INFO_ADMIN_QUICK_ACCESS
 		}
 
-		ITextComponent leaderboardsTitle = new TextComponentString("Leaderboards");
+		ITextComponent leaderboardsTitle = StringUtils.text("Leaderboards");
 		leaderboardsTitle.getStyle().setColor(TextFormatting.RED);
 		GuidePage page1 = page.getSub("leaderboards").setTitle(leaderboardsTitle);
 		page1.setIcon(new DrawableItem(new ItemStack(Items.SIGN)));
@@ -169,7 +167,7 @@ public class ServerInfoPage
 				}
 				catch (Exception ex1)
 				{
-					ITextComponent cc = new TextComponentString('/' + c.getName());
+					ITextComponent cc = StringUtils.text('/' + c.getName());
 					cc.getStyle().setColor(TextFormatting.DARK_RED);
 					page1.getSub('/' + c.getName()).setTitle(cc).println("Errored");
 
@@ -212,11 +210,11 @@ public class ServerInfoPage
 		{
 			if (s.indexOf('%') != -1 || s.indexOf('/') != -1)
 			{
-				page.println(new TextComponentTranslation("commands.generic.usage", s));
+				page.println(StringUtils.translation("commands.generic.usage", s));
 			}
 			else
 			{
-				page.println(new TextComponentTranslation("commands.generic.usage", new TextComponentTranslation(s)));
+				page.println(StringUtils.translation("commands.generic.usage", StringUtils.translation(s)));
 			}
 		}
 

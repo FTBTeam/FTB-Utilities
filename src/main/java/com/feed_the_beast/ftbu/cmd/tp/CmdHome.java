@@ -14,7 +14,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
@@ -57,10 +56,10 @@ public class CmdHome extends CmdBase
 		if (args[0].equals("list"))
 		{
 			Collection<String> list = data.listHomes();
-			sender.sendMessage(new TextComponentString(list.size() + " / " + FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt() + ": "));
+			sender.sendMessage(StringUtils.text(list.size() + " / " + FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt() + ": "));
 			if (!list.isEmpty())
 			{
-				sender.sendMessage(new TextComponentString(StringUtils.strip(list)));
+				sender.sendMessage(StringUtils.text(StringUtils.strip(list)));
 			}
 			return;
 		}

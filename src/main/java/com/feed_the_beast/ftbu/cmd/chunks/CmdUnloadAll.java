@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbu.cmd.chunks;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
@@ -12,7 +13,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 /**
@@ -66,6 +66,6 @@ public class CmdUnloadAll extends CmdBase
 		}
 
 		LoadedChunkStorage.INSTANCE.checkAll();
-		sender.sendMessage(new TextComponentString("Unloaded " + p.getName() + "'s chunks"));
+		sender.sendMessage(StringUtils.text("Unloaded " + p.getName() + "'s chunks"));
 	}
 }

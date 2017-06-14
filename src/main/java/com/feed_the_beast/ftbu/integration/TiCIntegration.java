@@ -21,7 +21,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -56,13 +55,13 @@ public class TiCIntegration
 
 		if (pageIntro != null)
 		{
-			pageIntro.setTitle(new TextComponentString("Introduction"));
+			pageIntro.setTitle(StringUtils.text("Introduction"));
 			pageIntro.setIcon(new DrawableItem(new ItemStack(Item.getByNameOrId("tconstruct:tooltables"), 1, 0)));
 			guide.addSub(pageIntro);
 		}
 
 		GuidePage toolMaterials = guide.getSub("materials");
-		toolMaterials.setTitle(new TextComponentString("Materials"));
+		toolMaterials.setTitle(StringUtils.text("Materials"));
 		toolMaterials.setIcon(new DrawableItem(new ItemStack(Items.IRON_PICKAXE)));
 
 		ImmutableList mats = ImmutableList.of(TinkerMaterials.wood, TinkerMaterials.cobalt, TinkerMaterials.ardite, TinkerMaterials.manyullyn);
@@ -76,11 +75,11 @@ public class TiCIntegration
 
 			GuidePage page = toolMaterials.getSub(material.getIdentifier());
 			page.setIcon(new DrawableItem(material.getRepresentativeItem()));
-			page.setTitle(new TextComponentString(material.getLocalizedName()));
+			page.setTitle(StringUtils.text(material.getLocalizedName()));
 
 			for (IMaterialStats stats : material.getAllStats())
 			{
-				ITextComponent component = new TextComponentString(stats.getLocalizedName());
+				ITextComponent component = StringUtils.text(stats.getLocalizedName());
 				component.getStyle().setUnderlined(true);
 				page.println(component);
 
@@ -103,8 +102,8 @@ public class TiCIntegration
 
 				for (int i = 0; i < stats.getLocalizedInfo().size(); i++)
 				{
-					ITextComponent component1 = new TextComponentString(transformString(stats.getLocalizedInfo().get(i)));
-					component1.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(transformString(stats.getLocalizedDesc().get(i)))));
+					ITextComponent component1 = StringUtils.text(transformString(stats.getLocalizedInfo().get(i)));
+					component1.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, StringUtils.text(transformString(stats.getLocalizedDesc().get(i)))));
 					page.println(new GuideExtendedTextLine(component1));
 				}
 
@@ -113,7 +112,7 @@ public class TiCIntegration
 		}
 
 		GuidePage modifiers = guide.getSub("modifiers");
-		modifiers.setTitle(new TextComponentString("Modifiers"));
+		modifiers.setTitle(StringUtils.text("Modifiers"));
 		modifiers.setIcon(new DrawableItem(new ItemStack(Items.REDSTONE)));
 
 		for (IModifier modifier : TinkerRegistry.getAllModifiers())
@@ -132,7 +131,7 @@ public class TiCIntegration
 				{
 					JsonObject o = json.getAsJsonObject();
 					GuidePage page = modifiers.getSub(modifier.getIdentifier());
-					page.setTitle(new TextComponentString(modifier.getLocalizedName()));
+					page.setTitle(StringUtils.text(modifier.getLocalizedName()));
 					page.println(transformString(modifier.getLocalizedDesc()));
 					DrawableObjectList displayItems = new DrawableObjectList(Collections.emptyList());
 
@@ -186,7 +185,7 @@ public class TiCIntegration
 
 		if (pageSmeltry != null)
 		{
-			pageSmeltry.setTitle(new TextComponentString("Smeltry"));
+			pageSmeltry.setTitle(StringUtils.text("Smeltry"));
 			pageSmeltry.setIcon(new DrawableItem(new ItemStack(Item.getByNameOrId("tconstruct:toolstation"), 1, 0)));
 			guide.addSub(pageSmeltry);
 		}

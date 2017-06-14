@@ -12,7 +12,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -46,7 +45,7 @@ public class CmdWarp extends CmdBase
 		if (args[0].equals("list"))
 		{
 			Collection<String> list = FTBUUniverseData.get().listWarps();
-			sender.sendMessage(new TextComponentString(list.isEmpty() ? "-" : StringUtils.strip(list)));
+			sender.sendMessage(StringUtils.text(list.isEmpty() ? "-" : StringUtils.strip(list)));
 			return;
 		}
 

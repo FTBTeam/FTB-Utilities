@@ -6,8 +6,8 @@ import com.feed_the_beast.ftbl.lib.config.PropertyDouble;
 import com.feed_the_beast.ftbl.lib.config.PropertyInt;
 import com.feed_the_beast.ftbl.lib.config.PropertyList;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import net.minecraft.util.text.TextComponentString;
 
 public class FTBUConfigGeneral
 {
@@ -22,7 +22,7 @@ public class FTBUConfigGeneral
 
 	static
 	{
-		CHAT_SUBSTITUTES.add(new PropertyChatSubstitute("shrug", new TextComponentString("\u00AF\\_(\u30C4)_/\u00AF")));
+		CHAT_SUBSTITUTES.add(new PropertyChatSubstitute("shrug", StringUtils.text("\u00AF\\_(\u30C4)_/\u00AF")));
 	}
 
 	public static void init(IFTBLibRegistry reg)

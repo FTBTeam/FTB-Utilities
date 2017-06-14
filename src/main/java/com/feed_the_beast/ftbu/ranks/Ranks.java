@@ -28,7 +28,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -410,16 +409,16 @@ public class Ranks
 		}
 
 		INFO_PAGE.clear();
-		ITextComponent txt = new TextComponentString("");
-		ITextComponent txt1 = new TextComponentString("NONE");
+		ITextComponent txt = StringUtils.text("");
+		ITextComponent txt1 = StringUtils.text("NONE");
 		txt1.getStyle().setColor(TextFormatting.DARK_RED);
 		txt.appendSibling(txt1);
 		txt.appendText(" | ");
-		txt1 = new TextComponentString("ALL");
+		txt1 = StringUtils.text("ALL");
 		txt1.getStyle().setColor(TextFormatting.DARK_GREEN);
 		txt.appendSibling(txt1);
 		txt.appendText(" | ");
-		txt1 = new TextComponentString("OP");
+		txt1 = StringUtils.text("OP");
 		txt1.getStyle().setColor(TextFormatting.BLUE);
 		txt.appendSibling(txt1);
 		INFO_PAGE.println(txt);
@@ -427,7 +426,7 @@ public class Ranks
 
 		for (NodeEntry node : allNodes)
 		{
-			txt = new TextComponentString(node.getName());
+			txt = StringUtils.text(node.getName());
 
 			switch (node.getLevel())
 			{
@@ -443,7 +442,7 @@ public class Ranks
 
 			if (node.getDescription() != null && !node.getDescription().isEmpty())
 			{
-				txt.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(node.getDescription())));
+				txt.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, StringUtils.text(node.getDescription())));
 			}
 
 			INFO_PAGE.println(txt);

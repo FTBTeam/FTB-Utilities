@@ -11,7 +11,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentString;
 
 public class CmdAdminHome extends CmdTreeBase
 {
@@ -71,7 +70,7 @@ public class CmdAdminHome extends CmdTreeBase
 		{
 			checkArgs(args, 1, "<player>");
 			FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(args[0]));
-			sender.sendMessage(new TextComponentString(StringUtils.strip(data.listHomes())));
+			sender.sendMessage(StringUtils.text(StringUtils.strip(data.listHomes())));
 		}
 	}
 

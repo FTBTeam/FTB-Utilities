@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
@@ -9,7 +10,6 @@ import com.feed_the_beast.ftbu.config.PropertyChatSubstitute;
 import net.minecraft.entity.EntityList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.ForgeHooks;
@@ -29,8 +29,8 @@ public class FTBUServerEventHandler
 		{
 			IRank rank = FTBUtilitiesAPI_Impl.INSTANCE.getRank(event.getPlayer().getGameProfile());
 
-			ITextComponent main = new TextComponentString("");
-			ITextComponent name = new TextComponentString(rank.getFormattedName(event.getPlayer().getDisplayNameString()));
+			ITextComponent main = StringUtils.text("");
+			ITextComponent name = StringUtils.text(rank.getFormattedName(event.getPlayer().getDisplayNameString()));
 
 			name.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/msg " + event.getPlayer().getName() + " "));
 
@@ -45,7 +45,7 @@ public class FTBUServerEventHandler
 
 			hoverNBT.setString("name", event.getPlayer().getName());
 
-			name.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ENTITY, new TextComponentString(hoverNBT.toString())));
+			name.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ENTITY, StringUtils.text(hoverNBT.toString())));
 			name.getStyle().setInsertion(event.getPlayer().getName());
 
 			main.appendSibling(name);

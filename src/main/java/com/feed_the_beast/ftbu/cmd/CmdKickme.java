@@ -18,7 +18,7 @@ public class CmdKickme extends CmdBase
 	{
 		if (server.isDedicatedServer())
 		{
-			getCommandSenderAsPlayer(sender).connection.func_194028_b(StringUtils.text("You kicked yourself!"));
+			getCommandSenderAsPlayer(sender).connection.disconnect(StringUtils.text("You kicked yourself!"));
 		}
 		else
 		{

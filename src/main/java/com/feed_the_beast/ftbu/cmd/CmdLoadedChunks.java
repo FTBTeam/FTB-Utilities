@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbu.cmd;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
@@ -100,9 +101,9 @@ public class CmdLoadedChunks extends CmdBase
 						owner = new StringBuilder("Unknown");
 					}
 
-					ITextComponent line = StringUtils.text(c.chunkXPos + ", " + c.chunkZPos + " [" + owner + "]");
-					int cx = (c.chunkXPos << 4) + 8;
-					int cz = (c.chunkZPos << 4) + 8;
+					ITextComponent line = StringUtils.text(c.x + ", " + c.z + " [" + owner + "]");
+					int cx = MathUtils.chunk(c.x) + 8;
+					int cz = MathUtils.chunk(c.z) + 8;
 					String cmd = "/tp " + cx + " " + ep.world.getHeight(cx, cz) + " " + cz;
 					line.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, StringUtils.text(cmd)));
 					line.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, cmd));

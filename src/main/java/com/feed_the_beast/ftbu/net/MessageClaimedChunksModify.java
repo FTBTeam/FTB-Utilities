@@ -76,8 +76,8 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
 
 		for (ChunkPos p : chunks)
 		{
-			io.writeInt(p.chunkXPos);
-			io.writeInt(p.chunkZPos);
+			io.writeInt(p.x);
+			io.writeInt(p.z);
 		}
 	}
 
@@ -95,7 +95,7 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
 
 		for (ChunkPos pos0 : m.chunks)
 		{
-			ChunkDimPos pos = new ChunkDimPos(pos0.chunkXPos, pos0.chunkZPos, player.dimension);
+			ChunkDimPos pos = new ChunkDimPos(pos0.x, pos0.z, player.dimension);
 
 			switch (m.action)
 			{

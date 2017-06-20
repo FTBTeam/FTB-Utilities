@@ -104,7 +104,7 @@ public class FTBUPlayerEventHandler
 	}
 	
     /*
-    @SubscribeEvent
+	@SubscribeEvent
     public void addInfo(ForgePlayerInfoEvent event)
     {
         if(owner.getRank().config.show_rank.getMode())
@@ -187,7 +187,7 @@ public class FTBUPlayerEventHandler
 			return;
 		}
 
-		Entity entity = e.getSource().getSourceOfDamage();
+		Entity entity = e.getSource().getTrueSource();
 
 		if (entity != null && (entity instanceof EntityPlayerMP || entity instanceof IMob))
 		{
@@ -196,7 +196,7 @@ public class FTBUPlayerEventHandler
 				return;
 			}
 			/*else if(entity instanceof EntityPlayerMP && PermissionAPI.hasPermission(((EntityPlayerMP) entity).getGameProfile(), FTBLibPermissions.INTERACT_SECURE, false, new Context(entity)))
-            {
+			{
                 return;
             }*/
 

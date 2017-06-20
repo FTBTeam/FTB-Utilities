@@ -110,7 +110,7 @@ public class JourneyMapIntegration implements IClientPlugin, IJMIntegration
 			{
 				int dim = 0;
 
-				MapPolygon poly = PolygonHelper.createChunkPolygon(pos.chunkXPos, 100, pos.chunkZPos);
+				MapPolygon poly = PolygonHelper.createChunkPolygon(pos.x, 100, pos.z);
 				ShapeProperties shapeProperties = new ShapeProperties();
 
 				shapeProperties.setFillOpacity(0.2F);
@@ -119,7 +119,7 @@ public class JourneyMapIntegration implements IClientPlugin, IJMIntegration
 				shapeProperties.setFillColor(chunk.team.color.getColor().rgba());
 				shapeProperties.setStrokeColor(shapeProperties.getFillColor());
 
-				p = new PolygonOverlay(FTBUFinals.MOD_ID, "claimed_" + dim + '_' + pos.chunkXPos + '_' + pos.chunkZPos, dim, shapeProperties, poly);
+				p = new PolygonOverlay(FTBUFinals.MOD_ID, "claimed_" + dim + '_' + pos.x + '_' + pos.z, dim, shapeProperties, poly);
 				p.setOverlayGroupName("Claimed Chunks").setTitle(chunk.team.formattedName + "\n" + TextFormatting.GREEN + ChunkUpgrade.CLAIMED.getLangKey().translate());
 				POLYGONS.put(pos, p);
 				clientAPI.show(p);
@@ -134,7 +134,7 @@ public class JourneyMapIntegration implements IClientPlugin, IJMIntegration
 	@SubscribeEvent
 	public static void onEnteringChunk(EntityEvent.EnteringChunk event)
 	{
-		if (FTBUClientConfig.JOURNEYMAP_OVERLAY.getBoolean() && event.getEntity() == mc.player && (lastPosition == null || MathUtils.dist(event.getNewChunkX(), event.getNewChunkZ(), lastPosition.chunkXPos, lastPosition.chunkZPos) >= 3D))
+		if (FTBUClientConfig.JOURNEYMAP_OVERLAY.getBoolean() && event.getEntity() == mc.player && (lastPosition == null || MathUtils.dist(event.getNewChunkX(), event.getNewChunkZ(), lastPosition.x, lastPosition.z) >= 3D))
 		{
 			lastPosition = new ChunkPos(event.getNewChunkX(), event.getNewChunkZ());
 			new MessageJMRequest(mc.player).sendToServer();

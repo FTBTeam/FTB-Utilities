@@ -71,7 +71,7 @@ config.ftbu.world.blocked_entities.info=在世界中禁止的生物IDs。它们�
 config.ftbu.world.spawn_area_in_sp.name=单人游戏中的生成区域
 config.ftbu.world.spawn_area_in_sp.info=在单人游戏中启用生成区域
 config.ftbu.world.log_chunkloading.name=记录区块加载
-config.ftbu.world.log_chunkloading.info=每当区块被forced or unforced，在控制台中打印信息。因为会产生垃圾信息，建议关闭
+config.ftbu.world.log_chunkloading.info=每当区块被强制加载/取消强制加载，在控制台中打印信息。因为会产生垃圾信息，建议关闭
 
 config_group.ftbu.ranks.name=权限组
 config.ftbu.ranks.enabled.name=启用

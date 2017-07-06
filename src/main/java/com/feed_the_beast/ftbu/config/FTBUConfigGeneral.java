@@ -19,6 +19,7 @@ public class FTBUConfigGeneral
 	public static final PropertyString CHAT_SUBSTITUTE_PREFIX = new PropertyString("!");
 	public static final PropertyList CHAT_SUBSTITUTES = new PropertyList(PropertyChatSubstitute.ID);
 	public static final PropertyInt MAX_LEADERBOARD_SIZE = new PropertyInt(250, 1, 1000);
+	public static final PropertyBool DISABLE_IN_WALL_DAMAGE = new PropertyBool(false);
 
 	static
 	{
@@ -31,6 +32,7 @@ public class FTBUConfigGeneral
 		reg.addConfig(id, "auto_restart", AUTO_RESTART);
 		reg.addConfig(id, "restart_timer", RESTART_TIMER);
 		reg.addConfig(id, "max_leaderboard_size", MAX_LEADERBOARD_SIZE);
+		reg.addConfig(id, "disable_in_wall_damage", DISABLE_IN_WALL_DAMAGE);
 		id = FTBUFinals.MOD_ID + ".general.server_info";
 		reg.addConfig(id, "difficulty", SERVER_INFO_DIFFICULTY);
 		reg.addConfig(id, "mode", SERVER_INFO_MODE);

@@ -23,21 +23,15 @@ compileJava {
 }
 
 minecraft {
-	version = "1.12-14.21.1.2387"
+	version = "1.12-14.21.1.2397"
 	runDir = "run"
 	mappings = "snapshot_20170624"
 }
 
 repositories {
+	ivy { name "com.latmod.mods"; artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]" }
 	maven { url 'https://oss.sonatype.org/content/groups/public/' }
-	ivy {
-		name "LatMod"
-		artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]"
-	}
-	maven {
-		name 'DVS1 Maven FS'
-		url 'http://dvs1.progwml6.com/files/maven'
-	}
+	maven { url 'http://dvs1.progwml6.com/files/maven' }
 }
 
 configurations.all {
@@ -45,12 +39,12 @@ configurations.all {
 }
 
 dependencies {
-	compile 'LatMod:FTBLib:4.0.2:api'
-	compile 'LatMod:iChunUtil:1.10.2-6.0.0:api'
+	compile 'com.latmod.mods:FTBLib:4.0.4:api'
+	compile 'com.latmod.mods:iChunUtil:1.10.2-6.0.0:api'
 	compile group: 'info.journeymap', name: 'journeymap-api', version: '1.9.4-1.2', changing: true
 	deobfCompile 'mod.chiselsandbits:chiselsandbits:13.0.76:api'
-	deobfCompile 'slimeknights.mantle:Mantle:1.10.2-1.1.4.203'
-	deobfCompile 'slimeknights:TConstruct:1.10.2-2.6.2.490'
+	deobfCompile 'slimeknights.mantle:Mantle:1.12-1.3.0.6'
+	deobfCompile 'slimeknights:TConstruct:1.11.2-2.7.0.9'
 }
 
 sourceSets {

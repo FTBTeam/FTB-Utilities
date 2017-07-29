@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbu.net;
 
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
@@ -9,14 +10,13 @@ import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.FTBUPermissions;
+import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
-import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.gui.ClaimedChunks;
 import com.feed_the_beast.ftbu.gui.GuiClaimedChunks;
 import io.netty.buffer.ByteBuf;
@@ -47,7 +47,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 		startX = sx;
 		startZ = sz;
 
-		IForgePlayer player1 = FTBLibIntegration.API.getUniverse().getPlayer(player);
+		IForgePlayer player1 = FTBLibAPI.API.getUniverse().getPlayer(player);
 		IForgeTeam team = player1.getTeam();
 
 		Collection<IClaimedChunk> chunks = ClaimedChunkStorage.INSTANCE.getChunks(player1);
@@ -64,8 +64,8 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 			}
 		}
 
-		maxClaimedChunks = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(player, FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
-		maxLoadedChunks = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(player, FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
+		maxClaimedChunks = FTBUtilitiesAPI.API.getRankConfig(player, FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
+		maxLoadedChunks = FTBUtilitiesAPI.API.getRankConfig(player, FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
 
 		chunkData = new ClaimedChunks.Data[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
 		teams = new HashMap<>();
@@ -164,7 +164,7 @@ public class MessageClaimedChunksUpdate extends MessageToClient<MessageClaimedCh
 			ClaimedChunks.Team team = new ClaimedChunks.Team();
 			team.ownerId = NetUtils.readUUID(io);
 			team.formattedName = ByteBufUtils.readUTF8String(io);
-			team.color = EnumTeamColor.get(io.readUnsignedByte());
+			team.color = EnumTeamColor.NAME_MAP.get(io.readUnsignedByte());
 			team.isAlly = io.readBoolean();
 			teams.put(team.ownerId, team);
 		}

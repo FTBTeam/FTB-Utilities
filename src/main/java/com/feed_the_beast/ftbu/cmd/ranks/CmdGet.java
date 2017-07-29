@@ -3,8 +3,8 @@ package com.feed_the_beast.ftbu.cmd.ranks;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.IRank;
-import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -32,7 +32,7 @@ public class CmdGet extends CmdBase
 	{
 		checkArgs(args, 1, "<player>");
 		IForgePlayer p = getForgePlayer(args[0]);
-		IRank rank = FTBUtilitiesAPI_Impl.INSTANCE.getRank(p.getProfile());
+		IRank rank = FTBUtilitiesAPI.API.getRank(p.getProfile());
 		ITextComponent name = StringUtils.text(rank.getName() + " - " + rank.getFormattedName(p.getName()));
 		name.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/msg " + p.getName() + " "));
 		name.getStyle().setInsertion(p.getName());

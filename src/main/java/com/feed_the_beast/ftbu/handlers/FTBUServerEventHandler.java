@@ -1,9 +1,10 @@
 package com.feed_the_beast.ftbu.handlers;
 
+import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.IRank;
-import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigRanks;
 import com.feed_the_beast.ftbu.config.PropertyChatSubstitute;
@@ -17,6 +18,10 @@ import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+/**
+ * @author LatvianModder
+ */
+@EventHandler
 public class FTBUServerEventHandler
 {
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -27,7 +32,7 @@ public class FTBUServerEventHandler
 
 		if (FTBUConfigRanks.OVERRIDE_CHAT.getBoolean() || msg.startsWith(chatSubstitutePrefix))
 		{
-			IRank rank = FTBUtilitiesAPI_Impl.INSTANCE.getRank(event.getPlayer().getGameProfile());
+			IRank rank = FTBUtilitiesAPI.API.getRank(event.getPlayer().getGameProfile());
 
 			ITextComponent main = StringUtils.text("");
 			ITextComponent name = StringUtils.text(rank.getFormattedName(event.getPlayer().getDisplayNameString()));

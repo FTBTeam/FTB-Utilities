@@ -1,21 +1,14 @@
 package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
-import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
 import com.feed_the_beast.ftbu.config.FTBUConfigRanks;
-import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
-import com.feed_the_beast.ftbu.handlers.FTBUServerEventHandler;
-import com.feed_the_beast.ftbu.handlers.FTBUTeamEventHandler;
-import com.feed_the_beast.ftbu.handlers.FTBUWorldEventHandler;
-import com.feed_the_beast.ftbu.net.FTBUNetHandler;
 import com.feed_the_beast.ftbu.ranks.CmdOverride;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.backups.Backups;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -38,14 +31,6 @@ public class FTBU
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent event)
 	{
-		FTBUtilitiesAPI_Impl.INSTANCE.init(event.getAsmData());
-		FTBUNetHandler.init();
-
-		MinecraftForge.EVENT_BUS.register(FTBUPlayerEventHandler.class);
-		MinecraftForge.EVENT_BUS.register(FTBUWorldEventHandler.class);
-		MinecraftForge.EVENT_BUS.register(FTBUTeamEventHandler.class);
-		MinecraftForge.EVENT_BUS.register(FTBUServerEventHandler.class);
-
 		PROXY.preInit();
 	}
 

@@ -5,22 +5,20 @@ import com.feed_the_beast.ftbu.api.chunks.IClaimedChunkStorage;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.Collection;
-
 /**
  * @author LatvianModder
  */
-public interface FTBUtilitiesAPI
+public abstract class FTBUtilitiesAPI
 {
-	Collection<IFTBUtilitiesPlugin> getAllPlugins();
+	public static FTBUtilitiesAPI API;
 
-	IClaimedChunkStorage getClaimedChunks();
+	public abstract IClaimedChunkStorage getClaimedChunks();
 
-	IRank getRank(GameProfile profile);
+	public abstract IRank getRank(GameProfile profile);
 
-	IConfigValue getRankConfig(GameProfile profile, String id);
+	public abstract IConfigValue getRankConfig(GameProfile profile, String id);
 
-	default IConfigValue getRankConfig(EntityPlayer player, String id)
+	public IConfigValue getRankConfig(EntityPlayer player, String id)
 	{
 		return getRankConfig(player.getGameProfile(), id);
 	}

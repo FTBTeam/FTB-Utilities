@@ -1,7 +1,9 @@
 package com.feed_the_beast.ftbu.world;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.BroadcastSender;
+import com.feed_the_beast.ftbl.lib.Notification;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
@@ -9,24 +11,24 @@ import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBULang;
+import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api.events.ChunkModifiedEvent;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
-import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
 import com.feed_the_beast.ftbu.cmd.CmdRestart;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
+import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
 import com.feed_the_beast.ftbu.world.backups.Backups;
+import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -36,12 +38,11 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.stats.StatList;
 import net.minecraft.stats.StatisticsManagerServer;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -64,6 +65,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 {
 	private static final String FAILED_BADGE = FTBUFinals.MOD_ID + ":textures/failed_badge.png";
 	private static final String BADGE_BASE_URL = "http://api.latmod.com/badges/get?id=";
+	private static final ResourceLocation RESTART_TIMER_ID = FTBUFinals.get("restart_timer");
 
 	private static final Map<UUID, String> BADGE_CACHE = new HashMap<>();
 	private static final Map<UUID, String> LOCAL_BADGES = new HashMap<>();
@@ -80,10 +82,11 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 		}
 	};
 
-	@Nullable
 	public static FTBUUniverseData get()
 	{
-		return (FTBUUniverseData) FTBLibIntegration.API.getUniverse().getData(FTBLibIntegration.FTBU_DATA);
+		FTBUUniverseData data = (FTBUUniverseData) FTBLibAPI.API.getUniverse().getData(FTBLibIntegration.FTBU_DATA);
+		Preconditions.checkNotNull(data);
+		return data;
 	}
 
 	public long restartMillis;
@@ -112,7 +115,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 
 	private static String getRawBadge(UUID playerId)
 	{
-		IForgePlayer player = FTBLibIntegration.API.getUniverse().getPlayer(playerId);
+		IForgePlayer player = FTBLibAPI.API.getUniverse().getPlayer(playerId);
 
 		if (player == null || player.isFake())
 		{
@@ -138,7 +141,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 		}
 
 		String s = LOCAL_BADGES.get(playerId);
-		return s.isEmpty() ? FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(player.getProfile(), FTBUPermissions.BADGE).getString() : s;
+		return s.isEmpty() ? FTBUtilitiesAPI.API.getRankConfig(player.getProfile(), FTBUPermissions.BADGE).getString() : s;
 	}
 
 	public static void reloadServerBadges()
@@ -233,13 +236,13 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 		{
 			if (player.isOnline())
 			{
-				FTBLibIntegration.API.sendNotification(player.getPlayer(), FTBUNotifications.NO_TEAM);
+				FTBLibNotifications.NO_TEAM.send(player.getPlayer());
 			}
 
 			return false;
 		}
 
-		int max = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(player.getProfile(), FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
+		int max = FTBUtilitiesAPI.API.getRankConfig(player.getProfile(), FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
 		if (max == 0)
 		{
 			return false;
@@ -259,7 +262,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 
 		ClaimedChunk chunk = new ClaimedChunk(pos, player, 0);
 		ClaimedChunkStorage.INSTANCE.setChunk(pos, chunk);
-		MinecraftForge.EVENT_BUS.post(new ChunkModifiedEvent.Claimed(chunk));
+		new ChunkModifiedEvent.Claimed(chunk).post();
 		return true;
 	}
 
@@ -270,7 +273,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 		if (chunk != null)
 		{
 			setLoaded(player, pos, false);
-			MinecraftForge.EVENT_BUS.post(new ChunkModifiedEvent.Unclaimed(chunk));
+			new ChunkModifiedEvent.Unclaimed(chunk).post();
 			ClaimedChunkStorage.INSTANCE.setChunk(pos, null);
 			return true;
 		}
@@ -286,7 +289,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 			if (dim == null || dim == pos.dim)
 			{
 				setLoaded(player, pos, false);
-				MinecraftForge.EVENT_BUS.post(new ChunkModifiedEvent.Unclaimed(chunk));
+				new ChunkModifiedEvent.Unclaimed(chunk).post();
 				ClaimedChunkStorage.INSTANCE.setChunk(pos, null);
 			}
 		}
@@ -307,7 +310,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 			{
 				if (player.isOnline())
 				{
-					FTBLibIntegration.API.sendNotification(player.getPlayer(), FTBUNotifications.NO_TEAM);
+					FTBLibNotifications.NO_TEAM.send(player.getPlayer());
 				}
 
 				return false;
@@ -318,7 +321,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 				return false;
 			}
 
-			int max = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(player.getProfile(), FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
+			int max = FTBUtilitiesAPI.API.getRankConfig(player.getProfile(), FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
 
 			if (max == 0)
 			{
@@ -342,7 +345,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 		}
 		else
 		{
-			MinecraftForge.EVENT_BUS.post(new ChunkModifiedEvent.Unloaded(chunk));
+			new ChunkModifiedEvent.Unloaded(chunk).post();
 		}
 
 		chunk.setHasUpgrade(ChunkUpgrade.LOADED, flag);
@@ -350,7 +353,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 
 		if (flag)
 		{
-			MinecraftForge.EVENT_BUS.post(new ChunkModifiedEvent.Loaded(chunk));
+			new ChunkModifiedEvent.Loaded(chunk).post();
 		}
 
 		return true;
@@ -370,7 +373,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 			FTBUFinals.LOGGER.info("Server restart in " + StringUtils.getTimeString(restartMillis));
 		}
 
-		FTBLibIntegration.API.ticking().add(this);
+		FTBLibAPI.API.ticking().add(this);
 
 		LOCAL_BADGES.clear();
 	}
@@ -438,7 +441,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 
 			for (String s : nbt1.getKeySet())
 			{
-				IForgePlayer player = FTBLibIntegration.API.getUniverse().getPlayer(StringUtils.fromString(s));
+				IForgePlayer player = FTBLibAPI.API.getUniverse().getPlayer(StringUtils.fromString(s));
 
 				if (player != null)
 				{
@@ -480,9 +483,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 				}
 				else if (secondsLeft <= 10 || secondsLeft == 60 || secondsLeft == 300 || secondsLeft == 600 || secondsLeft == 1800)
 				{
-					ITextComponent c = FTBULang.TIMER_RESTART.textComponent(msg);
-					c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
-					BroadcastSender.INSTANCE.sendMessage(c);
+					new Notification(RESTART_TIMER_ID, StringUtils.color(FTBULang.TIMER_RESTART.textComponent(msg), TextFormatting.LIGHT_PURPLE)).send(null);
 				}
 			}
 		}
@@ -532,7 +533,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 			table.setTitle("dph", "Deaths per hour");
 			table.setTitle("last_seen", "Last time seen");
 
-			for (IForgePlayer player : FTBLibIntegration.API.getUniverse().getPlayers())
+			for (IForgePlayer player : FTBLibAPI.API.getUniverse().getPlayers())
 			{
 				StatisticsManagerServer stats = player.stats();
 

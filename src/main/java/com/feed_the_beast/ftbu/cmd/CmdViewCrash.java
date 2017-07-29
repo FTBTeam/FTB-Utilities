@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbu.cmd;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -59,7 +59,7 @@ public class CmdViewCrash extends CmdBase
 				page.println("Failed to read crash-reports folder!");
 			}
 
-			FTBLibIntegration.API.displayGuide(ep, page);
+			FTBLibAPI.API.displayGuide(ep, page);
 			return;
 		}
 
@@ -80,6 +80,6 @@ public class CmdViewCrash extends CmdBase
 			page.println("Failed to load crash report!");
 		}
 
-		FTBLibIntegration.API.displayGuide(ep, page);
+		FTBLibAPI.API.displayGuide(ep, page);
 	}
 }

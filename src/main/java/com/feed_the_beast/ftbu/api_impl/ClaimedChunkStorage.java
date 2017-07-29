@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbu.api_impl;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
@@ -100,7 +100,7 @@ public enum ClaimedChunkStorage implements IClaimedChunkStorage
 			return true;
 		}
 
-		IForgePlayer player = FTBLibIntegration.API.getUniverse().getPlayer(ep);
+		IForgePlayer player = FTBLibAPI.API.getUniverse().getPlayer(ep);
 
 		if (chunk.getOwner().equalsPlayer(player))
 		{
@@ -121,6 +121,6 @@ public enum ClaimedChunkStorage implements IClaimedChunkStorage
 			return data.fakePlayers.getBoolean();
 		}
 
-		return team.canInteract(player.getId(), (type == BlockInteractionType.INTERACT ? data.interactWithBlocks : data.editBlocks).getNonnull());
+		return team.canInteract(player.getId(), (type == BlockInteractionType.INTERACT ? data.interactWithBlocks : data.editBlocks).getValue());
 	}
 }

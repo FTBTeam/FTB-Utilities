@@ -1,13 +1,13 @@
 package com.feed_the_beast.ftbu.cmd.tp;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
+import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -32,7 +32,7 @@ public class CmdHome extends CmdBase
 	{
 		if (args.length == 1)
 		{
-			return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(FTBLibIntegration.API.getUniverse().getPlayer(sender)).listHomes());
+			return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(sender)).listHomes());
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
@@ -56,7 +56,7 @@ public class CmdHome extends CmdBase
 		if (args[0].equals("list"))
 		{
 			Collection<String> list = data.listHomes();
-			sender.sendMessage(StringUtils.text(list.size() + " / " + FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt() + ": "));
+			sender.sendMessage(StringUtils.text(list.size() + " / " + FTBUtilitiesAPI.API.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt() + ": "));
 			if (!list.isEmpty())
 			{
 				sender.sendMessage(StringUtils.text(StringUtils.strip(list)));

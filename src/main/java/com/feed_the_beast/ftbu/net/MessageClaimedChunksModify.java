@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbu.net;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
@@ -84,7 +84,7 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
 	@Override
 	public void onMessage(MessageClaimedChunksModify m, EntityPlayer player)
 	{
-		IForgePlayer p = FTBLibIntegration.API.getUniverse().getPlayer(player);
+		IForgePlayer p = FTBLibAPI.API.getUniverse().getPlayer(player);
 
 		if (p == null || !PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CHUNKS_MODIFY_SELF, null))
 		{

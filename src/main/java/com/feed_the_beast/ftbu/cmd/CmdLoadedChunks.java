@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbu.cmd;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.google.common.collect.ImmutableSetMultimap;
@@ -113,6 +113,6 @@ public class CmdLoadedChunks extends CmdBase
 		}
 
 		page.cleanup();
-		FTBLibIntegration.API.displayGuide(ep, page);
+		FTBLibAPI.API.displayGuide(ep, page);
 	}
 }

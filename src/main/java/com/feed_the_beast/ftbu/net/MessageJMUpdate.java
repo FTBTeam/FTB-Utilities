@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbu.net;
 
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
@@ -9,7 +10,6 @@ import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
@@ -42,7 +42,7 @@ public class MessageJMUpdate extends MessageToClient<MessageJMUpdate>
 		startX = sx;
 		startZ = sz;
 
-		IForgePlayer player1 = FTBLibIntegration.API.getUniverse().getPlayer(player);
+		IForgePlayer player1 = FTBLibAPI.API.getUniverse().getPlayer(player);
 		IForgeTeam team = player1.getTeam();
 
 		chunkData = new ClaimedChunks.Data[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
@@ -112,7 +112,7 @@ public class MessageJMUpdate extends MessageToClient<MessageJMUpdate>
 			ClaimedChunks.Team team = new ClaimedChunks.Team();
 			team.ownerId = NetUtils.readUUID(io);
 			team.formattedName = ByteBufUtils.readUTF8String(io);
-			team.color = EnumTeamColor.get(io.readUnsignedByte());
+			team.color = EnumTeamColor.NAME_MAP.get(io.readUnsignedByte());
 			teams.put(team.ownerId, team);
 		}
 

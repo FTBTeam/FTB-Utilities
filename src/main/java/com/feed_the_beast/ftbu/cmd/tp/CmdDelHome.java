@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.cmd.tp;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import net.minecraft.command.CommandException;
@@ -24,7 +24,7 @@ public class CmdDelHome extends CmdBase
 	{
 		if (args.length == 1)
 		{
-			return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(FTBLibIntegration.API.getUniverse().getPlayer(sender)).listHomes());
+			return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(sender)).listHomes());
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);

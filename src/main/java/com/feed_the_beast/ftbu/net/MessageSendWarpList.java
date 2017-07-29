@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.net;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.gui.GuiWarps;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
@@ -85,7 +85,7 @@ public class MessageSendWarpList extends MessageToClient<MessageSendWarpList>
 			}
 		}
 
-		FTBUPlayerData playerData = FTBUPlayerData.get(FTBLibIntegration.API.getUniverse().getPlayer(player));
+		FTBUPlayerData playerData = FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(player));
 
 		if (playerData != null)
 		{

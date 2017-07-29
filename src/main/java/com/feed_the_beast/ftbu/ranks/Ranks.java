@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu.ranks;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IRankConfig;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.client.DrawableItem;
@@ -10,12 +11,11 @@ import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.FTBUFinals;
+import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.feed_the_beast.ftbu.api.NodeEntry;
-import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.config.FTBUConfigRanks;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -72,10 +72,37 @@ public class Ranks
 		return r == null ? nullrank : r;
 	}
 
+	public static IRank getDefaultPlayerRank()
+	{
+		if (defaultPlayerRank == null)
+		{
+			Rank r = new Rank("player");
+			r.parent = DefaultPlayerRank.INSTANCE;
+			RANKS.put(r.getName(), r);
+			defaultPlayerRank = r;
+		}
+
+		return defaultPlayerRank;
+	}
+
+	public static IRank getDefaultOPRank()
+	{
+		if (defaultOPRank == null)
+		{
+			Rank r = new Rank("op");
+			r.parent = DefaultOPRank.INSTANCE;
+			r.syntax = "<" + TextFormatting.DARK_GREEN + "$name" + TextFormatting.RESET + "> ";
+			RANKS.put(r.getName(), r);
+			defaultOPRank = r;
+		}
+
+		return defaultOPRank;
+	}
+
 	public static IRank getRank(GameProfile profile)
 	{
 		IRank r = FTBUConfigRanks.ENABLED.getBoolean() ? PLAYER_MAP.get(profile.getId()) : null;
-		return (r == null) ? (ServerUtils.isOP(profile) ? defaultOPRank : defaultPlayerRank) : r;
+		return (r == null) ? (ServerUtils.isOP(profile) ? getDefaultOPRank() : getDefaultPlayerRank()) : r;
 	}
 
 	public static void addRank(Rank rank)
@@ -183,23 +210,6 @@ public class Ranks
 			}
 		}
 
-		if (defaultPlayerRank == null)
-		{
-			Rank r = new Rank("player");
-			r.parent = DefaultPlayerRank.INSTANCE;
-			RANKS.put(r.getName(), r);
-			defaultPlayerRank = r;
-		}
-
-		if (defaultOPRank == null)
-		{
-			Rank r = new Rank("op");
-			r.parent = DefaultOPRank.INSTANCE;
-			r.syntax = "<" + TextFormatting.DARK_GREEN + "$name" + TextFormatting.RESET + "> ";
-			RANKS.put(r.getName(), r);
-			defaultOPRank = r;
-		}
-
 		updateRankNames();
 		saveRanks();
 	}
@@ -208,8 +218,8 @@ public class Ranks
 	{
 		JsonObject o = new JsonObject();
 		JsonObject o1 = new JsonObject();
-		o1.add("player", new JsonPrimitive(defaultPlayerRank.getName()));
-		o1.add("op", new JsonPrimitive(defaultOPRank.getName()));
+		o1.add("player", new JsonPrimitive(getDefaultPlayerRank().getName()));
+		o1.add("op", new JsonPrimitive(getDefaultOPRank().getName()));
 		o.add("default_ranks", o1);
 		o1 = new JsonObject();
 
@@ -236,7 +246,7 @@ public class Ranks
 	{
 		if (sender instanceof EntityPlayerMP)
 		{
-			Event.Result result = FTBUtilitiesAPI_Impl.INSTANCE.getRank(((EntityPlayerMP) sender).getGameProfile()).hasPermission(permission);
+			Event.Result result = FTBUtilitiesAPI.API.getRank(((EntityPlayerMP) sender).getGameProfile()).hasPermission(permission);
 			return result == Event.Result.DEFAULT ? parent.checkPermission(server, sender) : (result == Event.Result.ALLOW);
 		}
 
@@ -252,10 +262,10 @@ public class Ranks
 			allNodes.add(new NodeEntry(node.getName() + "*", node.getLevel(), node.getDescription()));
 		}
 
-		for (String s : FTBUtilitiesAPI_Impl.INSTANCE.getRegisteredNodes())
+		for (String s : PermissionAPI.getPermissionHandler().getRegisteredNodes())
 		{
 			DefaultPermissionLevel level = DefaultPermissionHandler.INSTANCE.getDefaultPermissionLevel(s);
-			String desc = FTBUtilitiesAPI_Impl.INSTANCE.getNodeDescription(s);
+			String desc = PermissionAPI.getPermissionHandler().getNodeDescription(s);
 
 			boolean printNode = true;
 
@@ -315,7 +325,7 @@ public class Ranks
 			ex.printStackTrace();
 		}
 
-		List<IRankConfig> sortedRankConfigs = new ArrayList<>(FTBLibIntegration.API.getRankConfigRegistry().values());
+		List<IRankConfig> sortedRankConfigs = new ArrayList<>(FTBLibAPI.API.getRankConfigRegistry().values());
 		sortedRankConfigs.sort(StringUtils.ID_COMPARATOR);
 
 		try

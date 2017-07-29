@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbu.ranks;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IRankConfig;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -176,7 +176,7 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 		{
 			for (Map.Entry<String, JsonElement> entry : o.get("config").getAsJsonObject().entrySet())
 			{
-				IRankConfig rconfig = FTBLibIntegration.API.getRankConfigRegistry().get(entry.getKey());
+				IRankConfig rconfig = FTBLibAPI.API.getRankConfigRegistry().get(entry.getKey());
 
 				if (rconfig != null)
 				{

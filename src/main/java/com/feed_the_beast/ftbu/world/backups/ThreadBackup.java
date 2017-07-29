@@ -1,13 +1,11 @@
 package com.feed_the_beast.ftbu.world.backups;
 
-import com.feed_the_beast.ftbl.lib.BroadcastSender;
-import com.feed_the_beast.ftbl.lib.math.MathUtils;
+import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import java.io.File;
@@ -87,7 +85,7 @@ public class ThreadBackup extends Thread
 					if (i == 0 || millis > logMillis || i == allFiles - 1)
 					{
 						logMillis = millis + 5000L;
-						FTBUFinals.LOGGER.info("[" + i + " | " + MathUtils.toSmallDouble((i / (double) allFiles) * 100D) + "%]: " + ze.getName());
+						FTBUFinals.LOGGER.info("[" + i + " | " + StringUtils.formatDouble((i / (double) allFiles) * 100D) + "%]: " + ze.getName());
 					}
 
 					zos.putNextEntry(ze);
@@ -127,7 +125,7 @@ public class ThreadBackup extends Thread
 					if (i == 0 || millis > logMillis || i == allFiles - 1)
 					{
 						logMillis = millis + 2000L;
-						FTBUFinals.LOGGER.info("[" + i + " | " + MathUtils.toSmallDouble((i / (double) allFiles) * 100D) + "%]: " + file.getName());
+						FTBUFinals.LOGGER.info("[" + i + " | " + StringUtils.formatDouble((i / (double) allFiles) * 100D) + "%]: " + file.getName());
 					}
 
 					File dst1 = new File(dstPath + (file.getAbsolutePath().replace(srcPath, "")));
@@ -144,27 +142,19 @@ public class ThreadBackup extends Thread
 				{
 					String sizeB = FileUtils.getSizeS(dstFile);
 					String sizeT = FileUtils.getSizeS(Backups.INSTANCE.backupsFolder);
-
-					ITextComponent c = FTBULang.BACKUP_END_2.textComponent(getDoneTime(time.getTimeInMillis()), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT)));
-					c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
-					BroadcastSender.INSTANCE.sendMessage(c);
+					new Notification(Backups.NOTIFICATION_ID, StringUtils.color(FTBULang.BACKUP_END_2.textComponent(getDoneTime(time.getTimeInMillis()), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT))), TextFormatting.LIGHT_PURPLE)).send(null);
 				}
 				else
 				{
-					ITextComponent c = FTBULang.BACKUP_END_1.textComponent(getDoneTime(time.getTimeInMillis()));
-					c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
-					BroadcastSender.INSTANCE.sendMessage(c);
+					new Notification(Backups.NOTIFICATION_ID, StringUtils.color(FTBULang.BACKUP_END_1.textComponent(getDoneTime(time.getTimeInMillis())), TextFormatting.LIGHT_PURPLE)).send(null);
 				}
 			}
 		}
 		catch (Exception ex)
 		{
-			ITextComponent c = FTBULang.BACKUP_FAIL.textComponent(ex.getClass().getName());
-			c.getStyle().setColor(TextFormatting.DARK_RED);
-
 			if (!FTBUConfigBackups.SILENT.getBoolean())
 			{
-				BroadcastSender.INSTANCE.sendMessage(c);
+				new Notification(Backups.NOTIFICATION_ID, StringUtils.color(FTBULang.BACKUP_FAIL.textComponent(ex.getClass().getName()), TextFormatting.DARK_RED)).send(null);
 			}
 
 			ex.printStackTrace();

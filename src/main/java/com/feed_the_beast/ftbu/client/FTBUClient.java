@@ -1,15 +1,13 @@
 package com.feed_the_beast.ftbu.client;
 
+import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.gui.Guides;
-import com.feed_the_beast.ftbu.handlers.FTBUClientEventHandler;
 import com.feed_the_beast.ftbu.integration.IJMIntegration;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import org.lwjgl.input.Keyboard;
 
@@ -28,21 +26,18 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 
 		ClientRegistry.registerKeyBinding(KEY_GUIDE);
 		ClientRegistry.registerKeyBinding(KEY_WARP);
-
-		MinecraftForge.EVENT_BUS.register(FTBUClientEventHandler.class);
 	}
 
 	@Override
 	public void postInit()
 	{
-		Minecraft mc = Minecraft.getMinecraft();
-		mc.getRenderManager().getSkinMap().get("default").addLayer(LayerBadge.INSTANCE);
-		mc.getRenderManager().getSkinMap().get("slim").addLayer(LayerBadge.INSTANCE);
+		FTBLibClient.MC.getRenderManager().getSkinMap().get("default").addLayer(LayerBadge.INSTANCE);
+		FTBLibClient.MC.getRenderManager().getSkinMap().get("slim").addLayer(LayerBadge.INSTANCE);
 		//GuideRepoList.refresh();
 
-		if (mc.getResourceManager() instanceof SimpleReloadableResourceManager)
+		if (FTBLibClient.MC.getResourceManager() instanceof SimpleReloadableResourceManager)
 		{
-			((SimpleReloadableResourceManager) mc.getResourceManager()).registerReloadListener(Guides.INSTANCE);
+			((SimpleReloadableResourceManager) FTBLibClient.MC.getResourceManager()).registerReloadListener(Guides.INSTANCE);
 		}
 	}
 

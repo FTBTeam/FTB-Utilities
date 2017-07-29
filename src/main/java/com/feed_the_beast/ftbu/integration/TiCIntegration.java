@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu.integration;
 
+import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.events.ClientGuideEvent;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.DrawableItem;
@@ -24,7 +25,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import slimeknights.tconstruct.library.TinkerRegistry;
 import slimeknights.tconstruct.library.materials.IMaterialStats;
 import slimeknights.tconstruct.library.materials.Material;
@@ -40,10 +40,10 @@ import java.util.Collections;
 /**
  * @author LatvianModder
  */
+@EventHandler(value = Side.CLIENT, requiredMods = "tconstruct")
 public class TiCIntegration
 {
 	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
 	public static void onGuideEvent(ClientGuideEvent event)
 	{
 		GuideTitlePage guide = event.getModGuide("tconstruct");

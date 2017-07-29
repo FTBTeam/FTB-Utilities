@@ -1,10 +1,11 @@
 package com.feed_the_beast.ftbu.world.backups;
 
-import com.feed_the_beast.ftbl.lib.BroadcastSender;
+import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
@@ -13,7 +14,7 @@ import com.google.gson.JsonElement;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.WorldServer;
 
@@ -25,6 +26,8 @@ import java.util.List;
 public enum Backups
 {
 	INSTANCE;
+
+	public static final ResourceLocation NOTIFICATION_ID = FTBUFinals.get("backup");
 
 	public final List<Backup> backups = new ArrayList<>();
 	public File backupsFolder;
@@ -106,10 +109,7 @@ public enum Backups
 			return false;
 		}
 
-		ITextComponent c = FTBULang.BACKUP_START.textComponent(ics.getName());
-		c.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
-		BroadcastSender.INSTANCE.sendMessage(c);
-
+		new Notification(NOTIFICATION_ID, StringUtils.color(FTBULang.BACKUP_START.textComponent(ics.getName()), TextFormatting.LIGHT_PURPLE)).send(null);
 		nextBackup = System.currentTimeMillis() + FTBUConfigBackups.backupMillis();
 
 		try

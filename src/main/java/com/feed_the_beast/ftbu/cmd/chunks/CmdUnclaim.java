@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
@@ -36,13 +35,13 @@ public class CmdUnclaim extends CmdBase
 
 		if (!FTBUConfigWorld.CHUNK_CLAIMING.getBoolean())
 		{
-			FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CLAIMING_NOT_ENABLED);
+			FTBUNotifications.CLAIMING_NOT_ENABLED.send(player);
 			return;
 		}
 
 		if (!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CHUNKS_MODIFY_SELF, null))
 		{
-			FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CLAIMING_NOT_ALLOWED);
+			FTBUNotifications.CLAIMING_NOT_ALLOWED.send(player);
 			return;
 		}
 
@@ -53,12 +52,12 @@ public class CmdUnclaim extends CmdBase
 
 		if (FTBUUniverseData.unclaimChunk(p, pos))
 		{
-			FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CHUNK_UNCLAIMED);
+			FTBUNotifications.CHUNK_UNCLAIMED.send(player);
 			CmdChunks.updateChunk(player, pos);
 		}
 		else
 		{
-			FTBLibIntegration.API.sendNotification(player, FTBUNotifications.CANT_MODIFY_CHUNK);
+			FTBUNotifications.CANT_MODIFY_CHUNK.send(player);
 		}
 	}
 }

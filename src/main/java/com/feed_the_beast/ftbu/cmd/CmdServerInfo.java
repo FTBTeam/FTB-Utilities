@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.cmd;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.ServerInfoPage;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -22,6 +22,6 @@ public class CmdServerInfo extends CmdBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-		FTBLibIntegration.API.displayGuide(player, ServerInfoPage.getPageForPlayer(player));
+		FTBLibAPI.API.displayGuide(player, ServerInfoPage.getPageForPlayer(player));
 	}
 }

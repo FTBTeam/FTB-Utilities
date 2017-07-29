@@ -1,5 +1,7 @@
 package com.feed_the_beast.ftbu.handlers;
 
+import com.feed_the_beast.ftbl.api.EventHandler;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
@@ -7,13 +9,14 @@ import com.feed_the_beast.ftbl.api.events.player.ForgePlayerDeathEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
+import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.config.PropertyItemStack;
 import com.feed_the_beast.ftbl.lib.config.PropertyTextComponent;
+import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbl.lib.math.EntityDimPos;
 import com.feed_the_beast.ftbl.lib.util.InvUtils;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
@@ -37,6 +40,10 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+/**
+ * @author LatvianModder
+ */
+@EventHandler
 public class FTBUPlayerEventHandler
 {
 	@SubscribeEvent
@@ -89,7 +96,7 @@ public class FTBUPlayerEventHandler
 		FTBUPlayerData data = FTBUPlayerData.get(event.getPlayer());
 		if (data != null)
 		{
-			data.lastDeath = new EntityDimPos(event.getPlayer().getPlayer()).toBlockDimPos();
+			data.lastDeath = new BlockDimPos(event.getPlayer().getPlayer());
 		}
 	}
 
@@ -126,7 +133,7 @@ public class FTBUPlayerEventHandler
 		}
 
 		EntityPlayerMP ep = (EntityPlayerMP) e.getEntity();
-		IForgePlayer player = FTBLibIntegration.API.getUniverse().getPlayer(ep);
+		IForgePlayer player = FTBLibAPI.API.getUniverse().getPlayer(ep);
 
 		if (player == null || !player.isOnline())
 		{
@@ -137,7 +144,7 @@ public class FTBUPlayerEventHandler
 
 		if (data != null)
 		{
-			data.lastSafePos = new EntityDimPos(ep).toBlockDimPos();
+			data.lastSafePos = new BlockDimPos(ep);
 		}
 
 		updateChunkMessage(ep, new ChunkDimPos(e.getNewChunkX(), e.getNewChunkZ(), ep.dimension));
@@ -147,7 +154,7 @@ public class FTBUPlayerEventHandler
 	{
 		IForgePlayer newTeamOwner = ClaimedChunkStorage.INSTANCE.getChunkOwner(pos);
 
-		FTBUPlayerData data = FTBUPlayerData.get(FTBLibIntegration.API.getUniverse().getPlayer(player));
+		FTBUPlayerData data = FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(player));
 
 		if (data == null)
 		{
@@ -164,12 +171,20 @@ public class FTBUPlayerEventHandler
 
 				if (team != null)
 				{
-					FTBLibIntegration.API.sendNotification(player, FTBUNotifications.chunkChanged(team));
+					Notification notification = new Notification(FTBUNotifications.WILDERNESS.getId());
+					notification.addLine(StringUtils.color(StringUtils.text(team.getTitle()), team.getColor().getTextFormatting()));
+
+					if (!team.getDesc().isEmpty())
+					{
+						notification.addLine(StringUtils.italic(StringUtils.text(team.getDesc()), true));
+					}
+
+					notification.send(player);
 				}
 			}
 			else
 			{
-				FTBLibIntegration.API.sendNotification(player, FTBUNotifications.chunkChanged(null));
+				FTBUNotifications.WILDERNESS.send(player);
 			}
 		}
 	}
@@ -205,7 +220,7 @@ public class FTBUPlayerEventHandler
 				e.setCanceled(true);
 			}
 			/*else
-            {
+			{
 				ClaimedChunk c = Claims.getMode(dim, cx, cz);
 				if(c != null && c.claims.settings.isSafe()) e.setCanceled(true);
 			}*/
@@ -268,7 +283,7 @@ public class FTBUPlayerEventHandler
 	}
 
     /*
-    @SubscribeEvent(priority = EventPriority.HIGH)
+	@SubscribeEvent(priority = EventPriority.HIGH)
     public static void onItemPickup(EntityItemPickupEvent event)
     {
     }

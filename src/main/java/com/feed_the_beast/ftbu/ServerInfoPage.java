@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api.events.ServerInfoEvent;
@@ -28,7 +29,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.permission.PermissionAPI;
 
@@ -52,7 +52,7 @@ public class ServerInfoPage
 
 	public static GuidePage getPageForPlayer(EntityPlayer ep)
 	{
-		IUniverse universe = FTBLibIntegration.API.getUniverse();
+		IUniverse universe = FTBLibAPI.API.getUniverse();
 		Preconditions.checkNotNull(universe, "World can't be null!");
 		IForgePlayer self = universe.getPlayer(ep);
 		Preconditions.checkNotNull(self, "Player can't be null!");
@@ -87,7 +87,7 @@ public class ServerInfoPage
 
 		if (FTBUConfigGeneral.SERVER_INFO_MODE.getBoolean())
 		{
-			page.println(FTBLibLang.MODE_CURRENT.textComponent(StringUtils.firstUppercase(FTBLibIntegration.API.getServerData().getPackMode().getName())));
+			page.println(FTBLibLang.MODE_CURRENT.textComponent(StringUtils.firstUppercase(FTBLibAPI.API.getServerData().getPackMode().getName())));
 		}
 
 		if (FTBUConfigGeneral.SERVER_INFO_ADMIN_QUICK_ACCESS.getBoolean())
@@ -152,7 +152,7 @@ public class ServerInfoPage
 		}
 		*/
 
-		MinecraftForge.EVENT_BUS.post(new ServerInfoEvent(page, self, isOP));
+		new ServerInfoEvent(page, self, isOP).post();
 
 		page1 = page.getSub("commands").setTitle(FTBLibLang.COMMANDS.textComponent());
 		page1.setIcon(new DrawableItem(new ItemStack(Blocks.COMMAND_BLOCK)));

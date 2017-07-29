@@ -22,7 +22,6 @@ import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksModify;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksRequest;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksUpdate;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -168,7 +167,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 
 	public GuiClaimedChunks()
 	{
-		currentDimName = mc.world.provider.getDimensionType().getName();
+		currentDimName = FTBLibClient.MC.world.provider.getDimensionType().getName();
 
 		buttonClose = new Button(0, 0, 16, 16, GuiLang.BUTTON_CLOSE.translate())
 		{
@@ -188,7 +187,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			public void onClicked(GuiBase gui, IMouseButton button)
 			{
 				new MessageClaimedChunksRequest(startX, startZ).sendToServer();
-				ThreadReloadChunkSelector.reloadArea(mc.world, startX, startZ);
+				ThreadReloadChunkSelector.reloadArea(FTBLibClient.MC.world, startX, startZ);
 			}
 		};
 
@@ -201,7 +200,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			{
 				GuiHelper.playClickSound();
 				String s = GuiScreen.isShiftKeyDown() ? FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_Q.translate() : FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_DIM_Q.translate(currentDimName);
-				Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo((set, id) ->
+				FTBLibClient.MC.displayGuiScreen(new GuiYesNo((set, id) ->
 				{
 					if (set)
 					{

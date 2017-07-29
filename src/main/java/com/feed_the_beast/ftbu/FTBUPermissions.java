@@ -7,11 +7,11 @@ import com.feed_the_beast.ftbl.lib.config.PropertyList;
 import com.feed_the_beast.ftbl.lib.config.PropertyShort;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbl.lib.math.BlockPosContainer;
+import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.IFTBUtilitiesRegistry;
 import com.feed_the_beast.ftbu.api.NodeEntry;
 import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
 import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
-import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAnvil;
@@ -152,7 +152,7 @@ public class FTBUPermissions
 
 	public static boolean allowDimension(GameProfile profile, int dimension)
 	{
-		IConfigValue value = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(profile, CLAIMS_BLOCKED_DIMENSIONS);
+		IConfigValue value = FTBUtilitiesAPI.API.getRankConfig(profile, CLAIMS_BLOCKED_DIMENSIONS);
 		return !(value instanceof PropertyList && ((PropertyList) value).containsValue(dimension));
 	}
 

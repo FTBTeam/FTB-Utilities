@@ -1,5 +1,7 @@
 package com.feed_the_beast.ftbu.integration;
 
+import com.feed_the_beast.ftbl.api.EventHandler;
+import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
@@ -17,12 +19,11 @@ import journeymap.client.api.event.ClientEvent;
 import journeymap.client.api.model.MapPolygon;
 import journeymap.client.api.model.ShapeProperties;
 import journeymap.client.api.util.PolygonHelper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -32,9 +33,9 @@ import java.util.Map;
  * @author LatvianModder
  */
 @ClientPlugin //FIXME: JourneyMap Plugin
+@EventHandler(value = Side.CLIENT, requiredMods = "journeymap")
 public class JourneyMapIntegration implements IClientPlugin, IJMIntegration
 {
-	private static Minecraft mc;
 	private IClientAPI clientAPI;
 	private static final Map<ChunkPos, PolygonOverlay> POLYGONS = new HashMap<>();
 	private static ChunkPos lastPosition = null;
@@ -42,10 +43,8 @@ public class JourneyMapIntegration implements IClientPlugin, IJMIntegration
 	@Override
 	public void initialize(IClientAPI api)
 	{
-		mc = Minecraft.getMinecraft();
 		clientAPI = api;
 		FTBUClient.JM_INTEGRATION = this;
-		MinecraftForge.EVENT_BUS.register(JourneyMapIntegration.class);
 		api.subscribe(getModId(), EnumSet.of(ClientEvent.Type.DISPLAY_UPDATE, ClientEvent.Type.MAPPING_STARTED, ClientEvent.Type.MAPPING_STOPPED));
 	}
 
@@ -61,10 +60,9 @@ public class JourneyMapIntegration implements IClientPlugin, IJMIntegration
 		switch (event.type)
 		{
 			case DISPLAY_UPDATE:
-				Minecraft mc = Minecraft.getMinecraft();
-				if (mc.player != null)
+				if (FTBLibClient.MC.player != null)
 				{
-					new MessageClaimedChunksRequest(mc.player).sendToServer();
+					new MessageClaimedChunksRequest(FTBLibClient.MC.player).sendToServer();
 				}
 				break;
 			case MAPPING_STOPPED:
@@ -120,7 +118,7 @@ public class JourneyMapIntegration implements IClientPlugin, IJMIntegration
 				shapeProperties.setStrokeColor(shapeProperties.getFillColor());
 
 				p = new PolygonOverlay(FTBUFinals.MOD_ID, "claimed_" + dim + '_' + pos.x + '_' + pos.z, dim, shapeProperties, poly);
-				p.setOverlayGroupName("Claimed Chunks").setTitle(chunk.team.formattedName + "\n" + TextFormatting.GREEN + ChunkUpgrade.CLAIMED.getLangKey().translate());
+				p.setOverlayGroupName("Claimed Chunks").setTitle(chunk.team.formattedName + "\n" + TextFormatting.GREEN + ChunkUpgrade.CLAIMED.getLangKey());
 				POLYGONS.put(pos, p);
 				clientAPI.show(p);
 			}
@@ -134,10 +132,10 @@ public class JourneyMapIntegration implements IClientPlugin, IJMIntegration
 	@SubscribeEvent
 	public static void onEnteringChunk(EntityEvent.EnteringChunk event)
 	{
-		if (FTBUClientConfig.JOURNEYMAP_OVERLAY.getBoolean() && event.getEntity() == mc.player && (lastPosition == null || MathUtils.dist(event.getNewChunkX(), event.getNewChunkZ(), lastPosition.x, lastPosition.z) >= 3D))
+		if (FTBUClientConfig.JOURNEYMAP_OVERLAY.getBoolean() && event.getEntity() == FTBLibClient.MC.player && (lastPosition == null || MathUtils.dist(event.getNewChunkX(), event.getNewChunkZ(), lastPosition.x, lastPosition.z) >= 3D))
 		{
 			lastPosition = new ChunkPos(event.getNewChunkX(), event.getNewChunkZ());
-			new MessageJMRequest(mc.player).sendToServer();
+			new MessageJMRequest(FTBLibClient.MC.player).sendToServer();
 		}
 	}
 }

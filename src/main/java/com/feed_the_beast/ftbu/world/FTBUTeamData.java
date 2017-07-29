@@ -5,8 +5,8 @@ import com.feed_the_beast.ftbl.api.events.team.ForgeTeamSettingsEvent;
 import com.feed_the_beast.ftbl.lib.EnumTeamPrivacyLevel;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUFinals;
+import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -17,15 +17,15 @@ import javax.annotation.Nullable;
  */
 public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 {
-	public final PropertyEnum<EnumTeamPrivacyLevel> editBlocks = new PropertyEnum<>(EnumTeamPrivacyLevel.NAME_MAP, EnumTeamPrivacyLevel.ALLIES);
-	public final PropertyEnum<EnumTeamPrivacyLevel> interactWithBlocks = new PropertyEnum<>(EnumTeamPrivacyLevel.NAME_MAP, EnumTeamPrivacyLevel.ALLIES);
+	public final PropertyEnum<EnumTeamPrivacyLevel> editBlocks = new PropertyEnum<>(EnumTeamPrivacyLevel.NAME_MAP.withDefault(EnumTeamPrivacyLevel.ALLIES));
+	public final PropertyEnum<EnumTeamPrivacyLevel> interactWithBlocks = new PropertyEnum<>(EnumTeamPrivacyLevel.NAME_MAP.withDefault(EnumTeamPrivacyLevel.ALLIES));
 	public final PropertyBool explosions = new PropertyBool(false);
 	public final PropertyBool fakePlayers = new PropertyBool(true);
 
 	@Nullable
-	public static FTBUTeamData get(IForgeTeam t)
+	public static FTBUTeamData get(@Nullable IForgeTeam t)
 	{
-		return (FTBUTeamData) t.getData(FTBLibIntegration.FTBU_DATA);
+		return t == null ? null : (FTBUTeamData) t.getData(FTBLibIntegration.FTBU_DATA);
 	}
 
 	@Override

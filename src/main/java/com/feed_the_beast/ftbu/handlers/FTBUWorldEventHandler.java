@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu.handlers;
 
+import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseClosedEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedBeforePlayersEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
@@ -9,10 +10,15 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class FTBUWorldEventHandler // FTBLIntegration
+/**
+ * @author LatvianModder
+ */
+@EventHandler
+public class FTBUWorldEventHandler
 {
 	@SubscribeEvent
 	public static void onWorldLoaded(ForgeUniverseLoadedEvent event)
@@ -48,7 +54,7 @@ public class FTBUWorldEventHandler // FTBLIntegration
 	}
 
 	@SubscribeEvent
-	public static void onMobSpawned(net.minecraftforge.event.entity.EntityJoinWorldEvent event)
+	public static void onMobSpawned(EntityJoinWorldEvent event)
 	{
 		if (!event.getWorld().isRemote && !isEntityAllowed(event.getEntity()))
 		{
@@ -57,20 +63,20 @@ public class FTBUWorldEventHandler // FTBLIntegration
 		}
 	}
 
-	private static boolean isEntityAllowed(Entity e)
+	private static boolean isEntityAllowed(Entity entity)
 	{
-		if (e instanceof EntityPlayer)
+		if (entity instanceof EntityPlayer)
 		{
 			return true;
 		}
 
-		if (FTBUConfigWorld.SAFE_SPAWN.getBoolean() && FTBUUniverseData.isInSpawnD(e.dimension, e.posX, e.posZ))
+		if (FTBUConfigWorld.SAFE_SPAWN.getBoolean() && FTBUUniverseData.isInSpawnD(entity.dimension, entity.posX, entity.posZ))
 		{
-			if (e instanceof IMob)
+			if (entity instanceof IMob)
 			{
 				return false;
 			}
-			else if (e instanceof EntityChicken && !e.getPassengers().isEmpty())
+			else if (entity instanceof EntityChicken && !entity.getPassengers().isEmpty())
 			{
 				return false;
 			}

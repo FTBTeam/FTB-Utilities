@@ -1,12 +1,11 @@
 package com.feed_the_beast.ftbu.api.events;
 
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
  * @author LatvianModder
  */
-public abstract class ChunkModifiedEvent extends Event
+public abstract class ChunkModifiedEvent extends FTBUtilitiesEvent
 {
 	private final IClaimedChunk chunk;
 

@@ -5,7 +5,10 @@ import com.feed_the_beast.ftbl.api.guide.GuideFormat;
 import com.feed_the_beast.ftbl.api.guide.GuideType;
 import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.api.guide.SpecialGuideButton;
+import com.feed_the_beast.ftbl.client.FTBLibModClient;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.SidebarButton;
+import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
@@ -18,20 +21,19 @@ import com.feed_the_beast.ftbl.lib.guide.GuideListLine;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.guide.GuideTextLineString;
 import com.feed_the_beast.ftbl.lib.guide.GuideTitlePage;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 
@@ -86,7 +88,7 @@ public enum Guides implements IResourceManagerReloadListener
 					{
 						reloadingThread = new Thread(() ->
 						{
-							INSTANCE.onResourceManagerReload(Minecraft.getMinecraft().getResourceManager());
+							INSTANCE.onResourceManagerReload(FTBLibClient.MC.getResourceManager());
 							isReloading = false;
 						});
 						reloadingThread.start();
@@ -168,7 +170,7 @@ public enum Guides implements IResourceManagerReloadListener
 
 		Map<String, GuideTitlePage> eventMap = new HashMap<>();
 
-		MinecraftForge.EVENT_BUS.post(new ClientGuideEvent(eventMap, resourceManager, modid ->
+		new ClientGuideEvent(eventMap, resourceManager, modid ->
 		{
 			ModContainer mod = Loader.instance().getIndexedModList().get(modid);
 			if (mod == null)
@@ -179,7 +181,24 @@ public enum Guides implements IResourceManagerReloadListener
 			{
 				return new GuideTitlePage(mod);
 			}
-		}));
+		}).post();
+
+		GuideTitlePage page = new GuideTitlePage("sidebar_buttons", GuideType.OTHER, Collections.singletonList("LatvianModder"), Collections.emptyList());
+		page.setIcon(ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"));
+		page.setTitle(StringUtils.translation("config_group.sidebar_button.name"));
+
+		for (SidebarButton button : FTBLibModClient.getSidebarButtons(true))
+		{
+			if (button.isVisible() && StringUtils.canTranslate("sidebar_button." + button.getName() + ".info"))
+			{
+				GuidePage page1 = page.getSub(button.getName());
+				page1.setIcon(button.icon);
+				page1.setTitle(StringUtils.translation("sidebar_button." + button.getName()));
+				page1.println(StringUtils.translation("sidebar_button." + button.getName() + ".info"));
+			}
+		}
+
+		eventMap.put(page.getName(), page);
 
 		guides.addAll(eventMap.values());
 

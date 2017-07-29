@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbu.cmd.chunks;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
@@ -68,6 +67,6 @@ public class CmdUnclaimAll extends CmdBase
 		}
 
 		FTBUUniverseData.unclaimAllChunks(p, parseBoolean(args[0]) ? null : ep.dimension);
-		FTBLibIntegration.API.sendNotification(ep, FTBUNotifications.UNCLAIMED_ALL);
+		FTBUNotifications.UNCLAIMED_ALL.send(ep);
 	}
 }

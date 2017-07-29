@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbu.cmd.tp;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
-import com.feed_the_beast.ftbl.lib.math.EntityDimPos;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -60,13 +59,13 @@ public class CmdTplast extends CmdBase
 
 		if (to.isOnline())
 		{
-			p = new EntityDimPos(to.getPlayer()).toBlockDimPos();
+			p = new BlockDimPos(to.getPlayer());
 		}
 		else
 		{
 			NBTTagCompound nbt = to.getPlayerNBT();
 			NBTTagList posList = nbt.getTagList("Pos", Constants.NBT.TAG_DOUBLE);
-			p = new EntityDimPos(new Vec3d(posList.getDoubleAt(0), posList.getDoubleAt(1), posList.getDoubleAt(2)), nbt.getInteger("Dimension")).toBlockDimPos();
+			p = new BlockDimPos(posList.getDoubleAt(0), posList.getDoubleAt(1), posList.getDoubleAt(2), nbt.getInteger("Dimension"));
 		}
 
 		ServerUtils.teleportPlayer(who, p);

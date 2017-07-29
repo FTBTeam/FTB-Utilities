@@ -5,13 +5,13 @@ import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbu.FTBLibIntegration;
 import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
+import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
@@ -43,9 +43,9 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 	}
 
 	@Nullable
-	public static FTBUPlayerData get(IForgePlayer p)
+	public static FTBUPlayerData get(@Nullable IForgePlayer p)
 	{
-		return (FTBUPlayerData) p.getData(FTBLibIntegration.FTBU_DATA);
+		return p == null ? null : (FTBUPlayerData) p.getData(FTBLibIntegration.FTBU_DATA);
 	}
 
 	@Override

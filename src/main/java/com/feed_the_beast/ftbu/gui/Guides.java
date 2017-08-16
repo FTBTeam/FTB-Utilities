@@ -5,9 +5,7 @@ import com.feed_the_beast.ftbl.api.guide.GuideFormat;
 import com.feed_the_beast.ftbl.api.guide.GuideType;
 import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.api.guide.SpecialGuideButton;
-import com.feed_the_beast.ftbl.client.FTBLibModClient;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.SidebarButton;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -21,7 +19,6 @@ import com.feed_the_beast.ftbl.lib.guide.GuideListLine;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.guide.GuideTextLineString;
 import com.feed_the_beast.ftbl.lib.guide.GuideTitlePage;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
@@ -132,7 +129,7 @@ public enum Guides implements IResourceManagerReloadListener
 		{
 			try
 			{
-				IResource resource = resourceManager.getResource(new ResourceLocation(domain, "guide.json"));
+				IResource resource = resourceManager.getResource(new ResourceLocation(domain, "guide/guide.json"));
 				JsonElement infoFile = JsonUtils.fromJson(new InputStreamReader(resource.getInputStream()));
 
 				if (infoFile.isJsonObject())
@@ -184,23 +181,6 @@ public enum Guides implements IResourceManagerReloadListener
 				return new GuideTitlePage(mod);
 			}
 		}).post();
-
-		GuideTitlePage page = new GuideTitlePage("sidebar_buttons", GuideType.OTHER, Collections.singletonList("LatvianModder"), Collections.emptyList());
-		page.setIcon(ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"));
-		page.setTitle(new TextComponentTranslation("config_group.sidebar_button.name"));
-
-		for (SidebarButton button : FTBLibModClient.getSidebarButtons(true))
-		{
-			if (button.isVisible() && StringUtils.canTranslate("sidebar_button." + button.getName() + ".info"))
-			{
-				GuidePage page1 = page.getSub(button.getName());
-				page1.setIcon(button.icon);
-				page1.setTitle(new TextComponentTranslation("sidebar_button." + button.getName()));
-				page1.println(new TextComponentTranslation("sidebar_button." + button.getName() + ".info"));
-			}
-		}
-
-		eventMap.put(page.getName(), page);
 
 		guides.addAll(eventMap.values());
 

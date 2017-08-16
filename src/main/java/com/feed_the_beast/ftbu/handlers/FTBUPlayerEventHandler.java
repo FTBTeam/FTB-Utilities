@@ -20,7 +20,7 @@ import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
-import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
+import com.feed_the_beast.ftbu.api_impl.FTBUChunkManager;
 import com.feed_the_beast.ftbu.config.FTBUConfigLogin;
 import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
@@ -81,13 +81,13 @@ public class FTBUPlayerEventHandler
 			}
 		}
 
-		LoadedChunkStorage.INSTANCE.checkAll();
+		FTBUChunkManager.INSTANCE.checkAll();
 	}
 
 	@SubscribeEvent
 	public static void onLoggedOut(ForgePlayerLoggedOutEvent event)
 	{
-		LoadedChunkStorage.INSTANCE.checkAll();
+		FTBUChunkManager.INSTANCE.checkAll();
 		FTBUUniverseData.updateBadge(event.getPlayer().getId());
 	}
 

@@ -20,7 +20,7 @@ import com.feed_the_beast.ftbu.api.events.ChunkModifiedEvent;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
-import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
+import com.feed_the_beast.ftbu.api_impl.FTBUChunkManager;
 import com.feed_the_beast.ftbu.cmd.CmdRestart;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
@@ -349,7 +349,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 		}
 
 		chunk.setHasUpgrade(ChunkUpgrade.LOADED, flag);
-		LoadedChunkStorage.INSTANCE.checkChunk(chunk, null);
+		FTBUChunkManager.INSTANCE.checkChunk(chunk, null);
 
 		if (flag)
 		{
@@ -386,7 +386,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 	public void onClosed()
 	{
 		ClaimedChunkStorage.INSTANCE.clear();
-		LoadedChunkStorage.INSTANCE.clear();
+		FTBUChunkManager.INSTANCE.clear();
 		LOCAL_BADGES.clear();
 	}
 
@@ -497,7 +497,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 		if (nextChunkloaderUpdate < now)
 		{
 			nextChunkloaderUpdate = now + 2L * 3600L;
-			LoadedChunkStorage.INSTANCE.checkAll();
+			FTBUChunkManager.INSTANCE.checkAll();
 		}
 
 		if (Backups.INSTANCE.thread != null && Backups.INSTANCE.thread.isDone)

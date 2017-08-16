@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
-import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
+import com.feed_the_beast.ftbu.api_impl.FTBUChunkManager;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -65,7 +65,7 @@ public class CmdUnloadAll extends CmdBase
 			}
 		}
 
-		LoadedChunkStorage.INSTANCE.checkAll();
+		FTBUChunkManager.INSTANCE.checkAll();
 		sender.sendMessage(new TextComponentString("Unloaded " + p.getName() + "'s chunks")); //LANG
 	}
 }

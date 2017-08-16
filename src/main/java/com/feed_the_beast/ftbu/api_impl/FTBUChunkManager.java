@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu.api_impl;
 
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUFinals;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, ForgeChunkManager.OrderedLoadingCallback
+public enum FTBUChunkManager implements ForgeChunkManager.LoadingCallback, ForgeChunkManager.OrderedLoadingCallback
 {
 	INSTANCE;
 
@@ -25,7 +26,6 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, For
 	{
 		if (!ForgeChunkManager.getConfig().hasCategory(FTBUFinals.MOD_ID))
 		{
-			ForgeChunkManager.getConfig().get(FTBUFinals.MOD_ID, "maximumTicketCount", 100).setMinValue(0);
 			ForgeChunkManager.getConfig().get(FTBUFinals.MOD_ID, "maximumChunksPerTicket", 1000000).setMinValue(0);
 			ForgeChunkManager.getConfig().save();
 		}
@@ -62,7 +62,12 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, For
 	public void ticketsLoaded(List<ForgeChunkManager.Ticket> tickets, World world)
 	{
 		int dim = world.provider.getDimension();
-		FTBUFinals.LOGGER.info("Loaded chunks " + dim);
+
+		if (CommonUtils.DEV_ENV)
+		{
+			FTBUFinals.LOGGER.info("Loaded chunks " + dim);
+		}
+
 		ForgeChunkManager.Ticket ticket = TICKET_CONTAINERS.get(dim);
 
 		if (ticket != null && ticket.world != null && ticket.getModId() != null)

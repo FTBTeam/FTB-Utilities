@@ -11,7 +11,7 @@ import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.ServerInfoPage;
-import com.feed_the_beast.ftbu.api_impl.LoadedChunkStorage;
+import com.feed_the_beast.ftbu.api_impl.FTBUChunkManager;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigCommands;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
@@ -52,7 +52,7 @@ public class FTBLibIntegration
 
 			ServerInfoPage.reloadCachedInfo();
 			FTBUUniverseData.reloadServerBadges();
-			LoadedChunkStorage.INSTANCE.checkAll();
+			FTBUChunkManager.INSTANCE.checkAll();
 		}
 		else
 		{

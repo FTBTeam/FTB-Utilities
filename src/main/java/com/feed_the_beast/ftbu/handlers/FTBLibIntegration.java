@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.api.events.ConfigLoadedEvent;
 import com.feed_the_beast.ftbl.api.events.FTBLibRegistryEvent;
 import com.feed_the_beast.ftbl.api.events.LoadWorldDataEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUPermissions;
@@ -65,7 +65,7 @@ public class FTBLibIntegration
 	{
 		IFTBLibRegistry reg = event.getRegistry();
 		reg.addOptionalServerMod(FTBUFinals.MOD_ID);
-		reg.addConfigFileProvider(FTBUFinals.MOD_ID, () -> new File(LMUtils.folderLocal, "ftbu/config.json"));
+		reg.addConfigFileProvider(FTBUFinals.MOD_ID, () -> new File(CommonUtils.folderLocal, "ftbu/config.json"));
 		reg.addConfigValueProvider(PropertyChatSubstitute.ID, PropertyChatSubstitute::new);
 
 		FTBUConfigBackups.init(reg);

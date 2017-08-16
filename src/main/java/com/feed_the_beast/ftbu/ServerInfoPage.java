@@ -7,8 +7,8 @@ import com.feed_the_beast.ftbl.api.events.ServerInfoEvent;
 import com.feed_the_beast.ftbl.lib.client.DrawableItem;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
@@ -28,6 +28,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -38,12 +40,12 @@ import java.util.List;
 
 public class ServerInfoPage
 {
-	private static final GuidePage CACHED_PAGE = new GuidePage("server_info").setTitle(StringUtils.translation("sidebar_button.ftbu.server_info"));
+	private static final GuidePage CACHED_PAGE = new GuidePage("server_info").setTitle(new TextComponentTranslation("sidebar_button.ftbu.server_info"));
 
 	public static void reloadCachedInfo()
 	{
 		CACHED_PAGE.clear();
-		JsonElement json = JsonUtils.fromJson(new File(LMUtils.folderLocal, "ftbu/server_guide.json"));
+		JsonElement json = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "ftbu/server_guide.json"));
 		if (!json.isJsonNull())
 		{
 			CACHED_PAGE.addSub(new GuidePage("local_guide", null, json));
@@ -85,17 +87,12 @@ public class ServerInfoPage
 			page.println(FTBLibLang.DIFFICULTY.textComponent(StringUtils.firstUppercase(ep.world.getDifficulty().toString().toLowerCase())));
 		}
 
-		if (FTBUConfigGeneral.SERVER_INFO_MODE.getBoolean())
-		{
-			page.println(FTBLibLang.MODE_CURRENT.textComponent(StringUtils.firstUppercase(FTBLibAPI.API.getServerData().getPackMode().getName())));
-		}
-
 		if (FTBUConfigGeneral.SERVER_INFO_ADMIN_QUICK_ACCESS.getBoolean())
 		{
 			//FIXME: SERVER_INFO_ADMIN_QUICK_ACCESS
 		}
 
-		ITextComponent leaderboardsTitle = StringUtils.text("Leaderboards");
+		ITextComponent leaderboardsTitle = new TextComponentString("Leaderboards"); //LANG
 		leaderboardsTitle.getStyle().setColor(TextFormatting.RED);
 		GuidePage page1 = page.getSub("leaderboards").setTitle(leaderboardsTitle);
 		page1.setIcon(new DrawableItem(new ItemStack(Items.SIGN)));
@@ -167,11 +164,11 @@ public class ServerInfoPage
 				}
 				catch (Exception ex1)
 				{
-					ITextComponent cc = StringUtils.text('/' + c.getName());
+					ITextComponent cc = new TextComponentString('/' + c.getName());
 					cc.getStyle().setColor(TextFormatting.DARK_RED);
 					page1.getSub('/' + c.getName()).setTitle(cc).println("Errored");
 
-					if (LMUtils.DEV_ENV)
+					if (CommonUtils.DEV_ENV)
 					{
 						ex1.printStackTrace();
 					}
@@ -210,11 +207,11 @@ public class ServerInfoPage
 		{
 			if (s.indexOf('%') != -1 || s.indexOf('/') != -1)
 			{
-				page.println(StringUtils.translation("commands.generic.usage", s));
+				page.println(new TextComponentTranslation("commands.generic.usage", s));
 			}
 			else
 			{
-				page.println(StringUtils.translation("commands.generic.usage", StringUtils.translation(s)));
+				page.println(new TextComponentTranslation("commands.generic.usage", new TextComponentTranslation(s)));
 			}
 		}
 

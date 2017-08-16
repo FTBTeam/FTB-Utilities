@@ -1,6 +1,6 @@
 {
 	"guide": {
-		"icon": "ftbl:textures/icons/book.png",
+		"icon": "minecraft:textures/items/book_normal.png",
 		"dependencies": "after:ftbu.claimed_chunks",
 		"click": {
 			"action": "run_command",
@@ -9,7 +9,7 @@
 		"config": true
 	},
 	"server_info": {
-		"icon": "ftbl:textures/icons/book_red.png",
+		"icon": "minecraft:textures/items/book_enchanted.png",
 		"dependencies": "after:ftbu.guide",
 		"click": {
 			"action": "run_command",

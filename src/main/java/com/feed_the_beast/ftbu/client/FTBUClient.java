@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.client;
 
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.gui.Guides;
 import com.feed_the_beast.ftbu.integration.IJMIntegration;
@@ -31,13 +31,13 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	@Override
 	public void postInit()
 	{
-		FTBLibClient.MC.getRenderManager().getSkinMap().get("default").addLayer(LayerBadge.INSTANCE);
-		FTBLibClient.MC.getRenderManager().getSkinMap().get("slim").addLayer(LayerBadge.INSTANCE);
+		ClientUtils.MC.getRenderManager().getSkinMap().get("default").addLayer(LayerBadge.INSTANCE);
+		ClientUtils.MC.getRenderManager().getSkinMap().get("slim").addLayer(LayerBadge.INSTANCE);
 		//GuideRepoList.refresh();
 
-		if (FTBLibClient.MC.getResourceManager() instanceof SimpleReloadableResourceManager)
+		if (ClientUtils.MC.getResourceManager() instanceof SimpleReloadableResourceManager)
 		{
-			((SimpleReloadableResourceManager) FTBLibClient.MC.getResourceManager()).registerReloadListener(Guides.INSTANCE);
+			((SimpleReloadableResourceManager) ClientUtils.MC.getResourceManager()).registerReloadListener(Guides.INSTANCE);
 		}
 	}
 

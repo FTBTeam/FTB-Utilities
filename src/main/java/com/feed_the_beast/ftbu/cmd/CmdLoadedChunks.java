@@ -5,7 +5,6 @@ import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.google.common.collect.ImmutableSetMultimap;
@@ -15,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.WorldServer;
@@ -40,7 +40,7 @@ public class CmdLoadedChunks extends CmdBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-		GuidePage page = new GuidePage("loaded_chunks").setTitle(StringUtils.text("Loaded Chunks")); // TODO: Lang
+		GuidePage page = new GuidePage("loaded_chunks").setTitle(new TextComponentString("Loaded Chunks")); //LANG
 
 		for (WorldServer w : DimensionManager.getWorlds())
 		{
@@ -65,11 +65,11 @@ public class CmdLoadedChunks extends CmdBase
 			}
 
 			int dimId = w.provider.getDimension();
-			GuidePage dim = page.getSub(Integer.toString(dimId)).setTitle(StringUtils.text(w.provider.getDimensionType().getName() + " [" + (dimId == 0 ? "DIM0" : w.provider.getSaveFolder()) + "]"));
+			GuidePage dim = page.getSub(Integer.toString(dimId)).setTitle(new TextComponentString(w.provider.getDimensionType().getName() + " [" + (dimId == 0 ? "DIM0" : w.provider.getSaveFolder()) + "]"));
 
 			for (Map.Entry<String, Collection<ChunkPos>> e1 : chunksMap.entrySet())
 			{
-				GuidePage mod = dim.getSub(e1.getKey()).setTitle(StringUtils.text(e1.getKey() + " [" + e1.getValue().size() + "]"));
+				GuidePage mod = dim.getSub(e1.getKey()).setTitle(new TextComponentString(e1.getKey() + " [" + e1.getValue().size() + "]"));
 				for (ChunkPos c : e1.getValue())
 				{
 					StringBuilder owner = new StringBuilder();
@@ -101,11 +101,11 @@ public class CmdLoadedChunks extends CmdBase
 						owner = new StringBuilder("Unknown");
 					}
 
-					ITextComponent line = StringUtils.text(c.x + ", " + c.z + " [" + owner + "]");
+					ITextComponent line = new TextComponentString(c.x + ", " + c.z + " [" + owner + "]");
 					int cx = MathUtils.chunk(c.x) + 8;
 					int cz = MathUtils.chunk(c.z) + 8;
 					String cmd = "/tp " + cx + " " + ep.world.getHeight(cx, cz) + " " + cz;
-					line.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, StringUtils.text(cmd)));
+					line.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(cmd)));
 					line.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, cmd));
 					mod.println(line);
 				}

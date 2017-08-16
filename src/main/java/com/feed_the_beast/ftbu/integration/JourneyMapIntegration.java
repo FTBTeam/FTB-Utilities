@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.integration;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
@@ -60,9 +60,9 @@ public class JourneyMapIntegration implements IClientPlugin, IJMIntegration
 		switch (event.type)
 		{
 			case DISPLAY_UPDATE:
-				if (FTBLibClient.MC.player != null)
+				if (ClientUtils.MC.player != null)
 				{
-					new MessageClaimedChunksRequest(FTBLibClient.MC.player).sendToServer();
+					new MessageClaimedChunksRequest(ClientUtils.MC.player).sendToServer();
 				}
 				break;
 			case MAPPING_STOPPED:
@@ -132,10 +132,10 @@ public class JourneyMapIntegration implements IClientPlugin, IJMIntegration
 	@SubscribeEvent
 	public static void onEnteringChunk(EntityEvent.EnteringChunk event)
 	{
-		if (FTBUClientConfig.JOURNEYMAP_OVERLAY.getBoolean() && event.getEntity() == FTBLibClient.MC.player && (lastPosition == null || MathUtils.dist(event.getNewChunkX(), event.getNewChunkZ(), lastPosition.x, lastPosition.z) >= 3D))
+		if (FTBUClientConfig.JOURNEYMAP_OVERLAY.getBoolean() && event.getEntity() == ClientUtils.MC.player && (lastPosition == null || MathUtils.dist(event.getNewChunkX(), event.getNewChunkZ(), lastPosition.x, lastPosition.z) >= 3D))
 		{
 			lastPosition = new ChunkPos(event.getNewChunkX(), event.getNewChunkZ());
-			new MessageJMRequest(FTBLibClient.MC.player).sendToServer();
+			new MessageJMRequest(ClientUtils.MC.player).sendToServer();
 		}
 	}
 }

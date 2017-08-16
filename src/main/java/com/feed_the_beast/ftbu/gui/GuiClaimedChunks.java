@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.CachedVertexData;
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -167,7 +167,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 
 	public GuiClaimedChunks()
 	{
-		currentDimName = FTBLibClient.MC.world.provider.getDimensionType().getName();
+		currentDimName = ClientUtils.MC.world.provider.getDimensionType().getName();
 
 		buttonClose = new Button(0, 0, 16, 16, GuiLang.BUTTON_CLOSE.translate())
 		{
@@ -187,7 +187,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			public void onClicked(GuiBase gui, IMouseButton button)
 			{
 				new MessageClaimedChunksRequest(startX, startZ).sendToServer();
-				ThreadReloadChunkSelector.reloadArea(FTBLibClient.MC.world, startX, startZ);
+				ThreadReloadChunkSelector.reloadArea(ClientUtils.MC.world, startX, startZ);
 			}
 		};
 
@@ -200,11 +200,11 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			{
 				GuiHelper.playClickSound();
 				String s = GuiScreen.isShiftKeyDown() ? FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_Q.translate() : FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_DIM_Q.translate(currentDimName);
-				FTBLibClient.MC.displayGuiScreen(new GuiYesNo((set, id) ->
+				ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
 				{
 					if (set)
 					{
-						FTBLibClient.execClientCommand("/ftb chunks unclaim_all " + (id == 1));
+						ClientUtils.execClientCommand("/ftb chunks unclaim_all " + (id == 1));
 					}
 
 					gui.openGui();

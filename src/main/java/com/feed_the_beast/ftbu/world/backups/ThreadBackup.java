@@ -1,12 +1,10 @@
 package com.feed_the_beast.ftbu.world.backups;
 
-import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
-import net.minecraft.util.text.TextFormatting;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,7 +53,7 @@ public class ThreadBackup extends Thread
 			List<File> files = FileUtils.listAll(src);
 			int allFiles = files.size();
 
-			FTBUFinals.LOGGER.info("Backing up " + files.size() + " files...");
+			FTBUFinals.LOGGER.info("Backing up " + files.size() + " files..."); //LANG
 
 			if (FTBUConfigBackups.COMPRESSION_LEVEL.getInt() > 0)
 			{
@@ -72,37 +70,44 @@ public class ThreadBackup extends Thread
 
 				byte[] buffer = new byte[4096];
 
-				FTBUFinals.LOGGER.info("Compressing " + allFiles + " files!");
+				FTBUFinals.LOGGER.info("Compressing " + allFiles + " files!"); //LANG
 
 				for (int i = 0; i < allFiles; i++)
 				{
-					File file = files.get(i);
-					String filePath = file.getAbsolutePath();
-					ZipEntry ze = new ZipEntry(src.getName() + File.separator + filePath.substring(src.getAbsolutePath().length() + 1, filePath.length()));
-
-					long millis = System.currentTimeMillis();
-
-					if (i == 0 || millis > logMillis || i == allFiles - 1)
+					try
 					{
-						logMillis = millis + 5000L;
-						FTBUFinals.LOGGER.info("[" + i + " | " + StringUtils.formatDouble((i / (double) allFiles) * 100D) + "%]: " + ze.getName());
+						File file = files.get(i);
+						String filePath = file.getAbsolutePath();
+						ZipEntry ze = new ZipEntry(src.getName() + File.separator + filePath.substring(src.getAbsolutePath().length() + 1, filePath.length()));
+
+						long millis = System.currentTimeMillis();
+
+						if (i == 0 || millis > logMillis || i == allFiles - 1)
+						{
+							logMillis = millis + 5000L;
+							FTBUFinals.LOGGER.info("[" + i + " | " + StringUtils.formatDouble((i / (double) allFiles) * 100D) + "%]: " + ze.getName());
+						}
+
+						zos.putNextEntry(ze);
+						FileInputStream fis = new FileInputStream(file);
+
+						int len;
+						while ((len = fis.read(buffer)) > 0)
+						{
+							zos.write(buffer, 0, len);
+						}
+						zos.closeEntry();
+						fis.close();
 					}
-
-					zos.putNextEntry(ze);
-					FileInputStream fis = new FileInputStream(file);
-
-					int len;
-					while ((len = fis.read(buffer)) > 0)
+					catch (Exception ex)
 					{
-						zos.write(buffer, 0, len);
+						ex.printStackTrace();
 					}
-					zos.closeEntry();
-					fis.close();
 				}
 
 				zos.close();
 
-				FTBUFinals.LOGGER.info("Done compressing in " + getDoneTime(start) + " seconds (" + FileUtils.getSizeS(dstFile) + ")!");
+				FTBUFinals.LOGGER.info("Done compressing in " + getDoneTime(start) + " seconds (" + FileUtils.getSizeS(dstFile) + ")!"); //LANG
 			}
 			else
 			{
@@ -118,18 +123,25 @@ public class ThreadBackup extends Thread
 
 				for (int i = 0; i < allFiles; i++)
 				{
-					File file = files.get(i);
-
-					long millis = System.currentTimeMillis();
-
-					if (i == 0 || millis > logMillis || i == allFiles - 1)
+					try
 					{
-						logMillis = millis + 2000L;
-						FTBUFinals.LOGGER.info("[" + i + " | " + StringUtils.formatDouble((i / (double) allFiles) * 100D) + "%]: " + file.getName());
-					}
+						File file = files.get(i);
 
-					File dst1 = new File(dstPath + (file.getAbsolutePath().replace(srcPath, "")));
-					FileUtils.copyFile(file, dst1);
+						long millis = System.currentTimeMillis();
+
+						if (i == 0 || millis > logMillis || i == allFiles - 1)
+						{
+							logMillis = millis + 2000L;
+							FTBUFinals.LOGGER.info("[" + i + " | " + StringUtils.formatDouble((i / (double) allFiles) * 100D) + "%]: " + file.getName()); //LANG
+						}
+
+						File dst1 = new File(dstPath + (file.getAbsolutePath().replace(srcPath, "")));
+						FileUtils.copyFile(file, dst1);
+					}
+					catch (Exception ex)
+					{
+						ex.printStackTrace();
+					}
 				}
 			}
 
@@ -142,11 +154,11 @@ public class ThreadBackup extends Thread
 				{
 					String sizeB = FileUtils.getSizeS(dstFile);
 					String sizeT = FileUtils.getSizeS(Backups.INSTANCE.backupsFolder);
-					new Notification(Backups.NOTIFICATION_ID, StringUtils.color(FTBULang.BACKUP_END_2.textComponent(getDoneTime(time.getTimeInMillis()), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT))), TextFormatting.LIGHT_PURPLE)).send(null);
+					Backups.notifyAll(FTBULang.BACKUP_END_2.textComponent(getDoneTime(time.getTimeInMillis()), (sizeB.equals(sizeT) ? sizeB : (sizeB + " | " + sizeT))), false);
 				}
 				else
 				{
-					new Notification(Backups.NOTIFICATION_ID, StringUtils.color(FTBULang.BACKUP_END_1.textComponent(getDoneTime(time.getTimeInMillis())), TextFormatting.LIGHT_PURPLE)).send(null);
+					Backups.notifyAll(FTBULang.BACKUP_END_1.textComponent(getDoneTime(time.getTimeInMillis())), false);
 				}
 			}
 		}
@@ -154,7 +166,7 @@ public class ThreadBackup extends Thread
 		{
 			if (!FTBUConfigBackups.SILENT.getBoolean())
 			{
-				new Notification(Backups.NOTIFICATION_ID, StringUtils.color(FTBULang.BACKUP_FAIL.textComponent(ex.getClass().getName()), TextFormatting.DARK_RED)).send(null);
+				Backups.notifyAll(FTBULang.BACKUP_FAIL.textComponent(ex.getClass().getName()), true);
 			}
 
 			ex.printStackTrace();

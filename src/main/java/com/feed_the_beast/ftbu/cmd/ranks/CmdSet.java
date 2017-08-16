@@ -51,21 +51,21 @@ public class CmdSet extends CmdBase
 
 		if (r == DefaultPlayerRank.INSTANCE)
 		{
-			FTBLibLang.RAW.printChat(sender, "Can't set rank as builtin_player, use /deop " + args[0]); //TODO: Lang
+			FTBLibLang.RAW.printChat(sender, "Can't set rank as builtin_player, use /deop " + args[0]); //LANG
 			return;
 		}
 		else if (r == DefaultOPRank.INSTANCE)
 		{
-			FTBLibLang.RAW.printChat(sender, "Can't set rank as builtin_op, use /op " + args[0]); //TODO: Lang
+			FTBLibLang.RAW.printChat(sender, "Can't set rank as builtin_op, use /op " + args[0]); //LANG
 			return;
 		}
 		else if (!Ranks.getRankNames().contains(args[1]))
 		{
-			throw FTBLibLang.RAW.commandError("Rank '" + args[1] + "' not found!"); //TODO: Lang
+			throw FTBLibLang.RAW.commandError("Rank '" + args[1] + "' not found!"); //LANG
 		}
 
 		IForgePlayer p = getForgePlayer(args[0]);
 		Ranks.setRank(p.getId(), r);
-		FTBLibLang.RAW.printChat(sender, p.getName() + " now is " + (r == null ? "unset" : r.getName())); //TODO: Lang
+		FTBLibLang.RAW.printChat(sender, p.getName() + " now is " + (r == null ? "unset" : r.getName())); //LANG
 	}
 }

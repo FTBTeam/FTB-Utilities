@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
+import com.feed_the_beast.ftbl.api.events.RegisterFTBClientCommandsEvent;
 import com.feed_the_beast.ftbl.api.events.RegisterFTBCommandsEvent;
 import com.feed_the_beast.ftbu.cmd.chunks.CmdChunks;
 import com.feed_the_beast.ftbu.cmd.ranks.CmdRanks;
@@ -17,6 +18,8 @@ import com.feed_the_beast.ftbu.cmd.tp.CmdWarp;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.config.FTBUConfigCommands;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author LatvianModder
@@ -25,7 +28,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class FTBUCommands
 {
 	@SubscribeEvent
-	public static void registerFTBCommands(RegisterFTBCommandsEvent event)
+	public static void registerCommands(RegisterFTBCommandsEvent event)
 	{
 		if (event.isDedicatedServer())
 		{
@@ -116,5 +119,17 @@ public class FTBUCommands
 		{
 			event.add(new CmdSetHour());
 		}
+
+		if (FTBUConfigCommands.KILLALL.getBoolean())
+		{
+			event.add(new CmdKillall());
+		}
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public static void registerClientCommands(RegisterFTBClientCommandsEvent event)
+	{
+		event.add(new CmdSetbadge());
 	}
 }

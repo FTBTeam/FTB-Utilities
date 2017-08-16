@@ -36,7 +36,7 @@ public class CmdAdd extends CmdBase
 
 		if (parent == null)
 		{
-			throw FTBLibLang.RAW.commandError("Rank '" + id + "' not found!"); //TODO: Lang
+			throw FTBLibLang.RAW.commandError("Rank '" + id + "' not found!"); //LANG
 		}
 
 		Ranks.addRank(new Rank(id, parent));

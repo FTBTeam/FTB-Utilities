@@ -2,8 +2,7 @@ package com.feed_the_beast.ftbu.client;
 
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
@@ -26,7 +25,7 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
 			UUID id = ep.getGameProfile().getId();
 			IDrawableObject tex = CachedClientData.getBadge(id);
 
-			if (tex == ImageProvider.NULL)
+			if (tex.isNull())
 			{
 				return;
 			}
@@ -37,7 +36,7 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-			FTBLibClient.pushMaxBrightness();
+			ClientUtils.pushMaxBrightness();
 			GlStateManager.pushMatrix();
 
 			GlStateManager.translate(0.04F, 0.01F, 0.86F);
@@ -64,7 +63,7 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
 			GlStateManager.disableCull();
 			tex.draw(0, 0, 1, 1, Color4I.NONE);
 			GlStateManager.enableCull();
-			FTBLibClient.popMaxBrightness();
+			ClientUtils.popBrightness();
 			GlStateManager.popMatrix();
 		}
 	}

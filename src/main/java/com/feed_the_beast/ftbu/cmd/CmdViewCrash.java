@@ -3,14 +3,14 @@ package com.feed_the_beast.ftbu.cmd;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.event.ClickEvent;
 
 import java.io.File;
@@ -37,7 +37,7 @@ public class CmdViewCrash extends CmdBase
 
 			try
 			{
-				String[] crashReports = new File(LMUtils.folderMinecraft, "crash-reports").list();
+				String[] crashReports = new File(CommonUtils.folderMinecraft, "crash-reports").list();
 
 				if (crashReports != null)
 				{
@@ -47,7 +47,7 @@ public class CmdViewCrash extends CmdBase
 					{
 						if (s.endsWith(".txt"))
 						{
-							ITextComponent textComponent = StringUtils.text(s);
+							ITextComponent textComponent = new TextComponentString(s);
 							textComponent.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb view_crash " + s));
 							page.println(textComponent);
 						}
@@ -67,7 +67,7 @@ public class CmdViewCrash extends CmdBase
 
 		try
 		{
-			File file = new File(LMUtils.folderMinecraft, "crash-reports/" + args[0]);
+			File file = new File(CommonUtils.folderMinecraft, "crash-reports/" + args[0]);
 
 			for (String s : FileUtils.load(file))
 			{

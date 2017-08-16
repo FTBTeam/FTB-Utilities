@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.IFTBLibClientRegistry;
 import com.feed_the_beast.ftbl.api.events.FTBLibClientRegistryEvent;
 import com.feed_the_beast.ftbl.api.events.RegisterFTBClientCommandsEvent;
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.client.FTBUClient;
@@ -58,7 +58,7 @@ public class FTBUClientEventHandler
 			@Override
 			public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 			{
-				FTBLibClient.execClientCommand("/gamemode " + (FTBLibClient.MC.player.capabilities.isCreativeMode ? "survival" : "creative"));
+				ClientUtils.execClientCommand("/gamemode " + (ClientUtils.MC.player.capabilities.isCreativeMode ? "survival" : "creative"));
 			}
 		});
 	}
@@ -86,7 +86,7 @@ public class FTBUClientEventHandler
 		{
 			GuiWarps.INSTANCE = new GuiWarps();
 			GuiWarps.INSTANCE.openGui();
-			FTBLibClient.execClientCommand("/ftb warp gui");
+			ClientUtils.execClientCommand("/ftb warp gui");
 		}
 	}
 }

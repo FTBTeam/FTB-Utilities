@@ -3,8 +3,8 @@ package com.feed_the_beast.ftbu.cmd;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.cmd.CmdTreeBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.InvUtils;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.NBTUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.command.CommandException;
@@ -62,7 +62,7 @@ public class CmdInv extends CmdTreeBase
 		{
 			checkArgs(args, 2, "<player> <id>");
 			EntityPlayerMP ep = getPlayer(server, sender, args[0]);
-			File file = new File(LMUtils.folderLocal, "ftbu/playerinvs/" + StringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
+			File file = new File(CommonUtils.folderLocal, "ftbu/playerinvs/" + StringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
 
 			try
 			{
@@ -79,7 +79,7 @@ public class CmdInv extends CmdTreeBase
 			}
 			catch (Exception e)
 			{
-				if (LMUtils.DEV_ENV)
+				if (CommonUtils.DEV_ENV)
 				{
 					e.printStackTrace();
 				}
@@ -125,7 +125,7 @@ public class CmdInv extends CmdTreeBase
 		{
 			checkArgs(args, 2, "<player> <id>");
 			EntityPlayerMP ep = getPlayer(server, sender, args[0]);
-			File file = new File(LMUtils.folderLocal, "ftbu/playerinvs/" + StringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
+			File file = new File(CommonUtils.folderLocal, "ftbu/playerinvs/" + StringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
 
 			try
 			{
@@ -140,7 +140,7 @@ public class CmdInv extends CmdTreeBase
 			}
 			catch (Exception e)
 			{
-				if (LMUtils.DEV_ENV)
+				if (CommonUtils.DEV_ENV)
 				{
 					e.printStackTrace();
 				}

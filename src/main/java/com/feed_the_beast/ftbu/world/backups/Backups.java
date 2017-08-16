@@ -1,11 +1,10 @@
 package com.feed_the_beast.ftbu.world.backups;
 
 import com.feed_the_beast.ftbl.lib.Notification;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
@@ -15,6 +14,8 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.WorldServer;
 
@@ -36,7 +37,7 @@ public enum Backups
 
 	public void init()
 	{
-		backupsFolder = FTBUConfigBackups.FOLDER.getString().isEmpty() ? new File(LMUtils.folderMinecraft, "/backups/") : new File(FTBUConfigBackups.FOLDER.getString());
+		backupsFolder = FTBUConfigBackups.FOLDER.getString().isEmpty() ? new File(CommonUtils.folderMinecraft, "/backups/") : new File(FTBUConfigBackups.FOLDER.getString());
 		thread = null;
 
 		backups.clear();
@@ -95,6 +96,22 @@ public enum Backups
 		FTBUFinals.LOGGER.info("Backups folder - " + backupsFolder.getAbsolutePath());
 	}
 
+	public static void notifyAll(ITextComponent component, boolean error)
+	{
+		if (error)
+		{
+			component.getStyle().setColor(TextFormatting.DARK_RED);
+			Notification.of(NOTIFICATION_ID, component).send(null);
+			FTBUFinals.LOGGER.info(component.getUnformattedText());
+		}
+		else
+		{
+			component.getStyle().setColor(TextFormatting.LIGHT_PURPLE);
+			Notification.of(NOTIFICATION_ID, component).send(null);
+			FTBUFinals.LOGGER.info(component.getUnformattedText());
+		}
+	}
+
 	public boolean run(MinecraftServer server, ICommandSender ics, String customName)
 	{
 		if (thread != null)
@@ -109,7 +126,7 @@ public enum Backups
 			return false;
 		}
 
-		new Notification(NOTIFICATION_ID, StringUtils.color(FTBULang.BACKUP_START.textComponent(ics.getName()), TextFormatting.LIGHT_PURPLE)).send(null);
+		Backups.notifyAll(FTBULang.BACKUP_START.textComponent(ics.getName()), false);
 		nextBackup = System.currentTimeMillis() + FTBUConfigBackups.backupMillis();
 
 		try
@@ -133,7 +150,7 @@ public enum Backups
 			}
 			catch (Exception ex1)
 			{
-				FTBUFinals.LOGGER.error("World saving failed!");
+				notifyAll(new TextComponentString("World saving failed!"), true); //LANG
 			}
 		}
 		catch (Exception ex)
@@ -177,7 +194,7 @@ public enum Backups
 						for (int i = toDelete - 1; i >= 0; i--)
 						{
 							Backup b = backups.get(i);
-							FTBUFinals.LOGGER.info("Deleting old backup: " + b.fileID);
+							FTBUFinals.LOGGER.info("Deleting old backup: " + b.fileID); //LANG
 							FileUtils.delete(b.getFile());
 							backups.remove(i);
 						}

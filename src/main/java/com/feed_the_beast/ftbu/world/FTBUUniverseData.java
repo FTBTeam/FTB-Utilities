@@ -7,8 +7,8 @@ import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
@@ -150,7 +150,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 		{
 			BADGE_CACHE.clear();
 			LOCAL_BADGES.clear();
-			File file = new File(LMUtils.folderLocal, "ftbu/server_badges.json");
+			File file = new File(CommonUtils.folderLocal, "ftbu/server_badges.json");
 
 			if (!file.exists())
 			{
@@ -483,7 +483,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 				}
 				else if (secondsLeft <= 10 || secondsLeft == 60 || secondsLeft == 300 || secondsLeft == 600 || secondsLeft == 1800)
 				{
-					new Notification(RESTART_TIMER_ID, StringUtils.color(FTBULang.TIMER_RESTART.textComponent(msg), TextFormatting.LIGHT_PURPLE)).send(null);
+					Notification.of(RESTART_TIMER_ID, StringUtils.color(FTBULang.TIMER_RESTART.textComponent(msg), TextFormatting.LIGHT_PURPLE)).send(null);
 				}
 			}
 		}
@@ -547,7 +547,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 			json.add("time", new JsonPrimitive(System.currentTimeMillis()));
 			json.add("stats", table.toJson());
 
-			File file = FTBUConfigWebAPI.FILE_LOCATION.getString().isEmpty() ? new File(LMUtils.folderLocal, "ftbu/webapi.json") : new File(FTBUConfigWebAPI.FILE_LOCATION.getString());
+			File file = FTBUConfigWebAPI.FILE_LOCATION.getString().isEmpty() ? new File(CommonUtils.folderLocal, "ftbu/webapi.json") : new File(FTBUConfigWebAPI.FILE_LOCATION.getString());
 			JsonUtils.toJson(JsonUtils.GSON, file, json);
 		}
 		catch (Exception ex)

@@ -6,9 +6,9 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.client.DrawableItem;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUCommon;
@@ -28,6 +28,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -153,7 +154,7 @@ public class Ranks
 
 		if (FTBUConfigRanks.ENABLED.getBoolean())
 		{
-			JsonElement e = JsonUtils.fromJson(new File(LMUtils.folderLocal, "ftbu/ranks.json"));
+			JsonElement e = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "ftbu/ranks.json"));
 
 			if (e.isJsonObject())
 			{
@@ -161,9 +162,9 @@ public class Ranks
 
 				if (o.has("default_rank"))
 				{
-					FileUtils.delete(new File(LMUtils.folderLocal, "ftbu/readme.txt"));
-					FileUtils.delete(new File(LMUtils.folderLocal, "ftbu/ranks_example.json"));
-					FileUtils.delete(new File(LMUtils.folderLocal, "ftbu/default_rank_config.json"));
+					FileUtils.delete(new File(CommonUtils.folderLocal, "ftbu/readme.txt"));
+					FileUtils.delete(new File(CommonUtils.folderLocal, "ftbu/ranks_example.json"));
+					FileUtils.delete(new File(CommonUtils.folderLocal, "ftbu/default_rank_config.json"));
 				}
 				else if (o.has("default_ranks") && o.has("ranks"))
 				{
@@ -185,7 +186,7 @@ public class Ranks
 
 			try
 			{
-				e = JsonUtils.fromJson(new File(LMUtils.folderLocal, "ftbu/player_ranks.json"));
+				e = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "ftbu/player_ranks.json"));
 
 				if (e.isJsonObject())
 				{
@@ -235,11 +236,11 @@ public class Ranks
 
 		o.add("ranks", o1);
 
-		JsonUtils.toJson(new File(LMUtils.folderLocal, "ftbu/ranks.json"), o);
+		JsonUtils.toJson(new File(CommonUtils.folderLocal, "ftbu/ranks.json"), o);
 
 		final JsonObject o2 = new JsonObject();
 		PLAYER_MAP.forEach((key, value) -> o2.add(StringUtils.fromUUID(key), new JsonPrimitive(value.getName())));
-		JsonUtils.toJson(new File(LMUtils.folderLocal, "ftbu/player_ranks.json"), o2);
+		JsonUtils.toJson(new File(CommonUtils.folderLocal, "ftbu/player_ranks.json"), o2);
 	}
 
 	static boolean checkCommandPermission(MinecraftServer server, ICommandSender sender, ICommand parent, String permission)
@@ -318,7 +319,7 @@ public class Ranks
 			}
 
 			list.add("</table></body></html>");
-			FileUtils.save(new File(LMUtils.folderLocal, "ftbu/all_permissions.html"), list);
+			FileUtils.save(new File(CommonUtils.folderLocal, "ftbu/all_permissions.html"), list);
 		}
 		catch (Exception ex)
 		{
@@ -398,7 +399,7 @@ public class Ranks
 			}
 
 			list.add("</table></body></html>");
-			FileUtils.save(new File(LMUtils.folderLocal, "ftbu/all_configs.html"), list);
+			FileUtils.save(new File(CommonUtils.folderLocal, "ftbu/all_configs.html"), list);
 
 			list.clear();
 
@@ -411,7 +412,7 @@ public class Ranks
 			Collections.sort(list);
 			list.add(0, "");
 			list.add(0, PermissionAPI.getPermissionHandler().getRegisteredNodes().size() + " nodes in total");
-			FileUtils.save(new File(LMUtils.folderLocal, "ftbu/all_permissions_full_list.txt"), list);
+			FileUtils.save(new File(CommonUtils.folderLocal, "ftbu/all_permissions_full_list.txt"), list);
 		}
 		catch (Exception ex)
 		{
@@ -419,16 +420,16 @@ public class Ranks
 		}
 
 		INFO_PAGE.clear();
-		ITextComponent txt = StringUtils.text("");
-		ITextComponent txt1 = StringUtils.text("NONE");
+		ITextComponent txt = new TextComponentString("");
+		ITextComponent txt1 = new TextComponentString("NONE");
 		txt1.getStyle().setColor(TextFormatting.DARK_RED);
 		txt.appendSibling(txt1);
 		txt.appendText(" | ");
-		txt1 = StringUtils.text("ALL");
+		txt1 = new TextComponentString("ALL");
 		txt1.getStyle().setColor(TextFormatting.DARK_GREEN);
 		txt.appendSibling(txt1);
 		txt.appendText(" | ");
-		txt1 = StringUtils.text("OP");
+		txt1 = new TextComponentString("OP");
 		txt1.getStyle().setColor(TextFormatting.BLUE);
 		txt.appendSibling(txt1);
 		INFO_PAGE.println(txt);
@@ -436,7 +437,7 @@ public class Ranks
 
 		for (NodeEntry node : allNodes)
 		{
-			txt = StringUtils.text(node.getName());
+			txt = new TextComponentString(node.getName());
 
 			switch (node.getLevel())
 			{
@@ -452,14 +453,14 @@ public class Ranks
 
 			if (node.getDescription() != null && !node.getDescription().isEmpty())
 			{
-				txt.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, StringUtils.text(node.getDescription())));
+				txt.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(node.getDescription())));
 			}
 
 			INFO_PAGE.println(txt);
 		}
 
         /*
-		page = getSub("rank_configs").setTitle(new TextComponentString("Rank Configs")); //TODO: Lang
+		page = getSub("rank_configs").setTitle(new TextComponentString("Rank Configs")); //LANG
 
         for(IRankConfig key : RankConfigAPI.getRegisteredRankConfigs().values())
         {

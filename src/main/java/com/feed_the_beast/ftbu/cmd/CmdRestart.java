@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -19,7 +19,7 @@ public class CmdRestart extends CmdBase
 
 	public static void restart()
 	{
-		FileUtils.newFile(new File(LMUtils.folderMinecraft, "autostart.stamp"));
+		FileUtils.newFile(new File(CommonUtils.folderMinecraft, "autostart.stamp"));
 		ServerUtils.getServer().initiateShutdown();
 	}
 

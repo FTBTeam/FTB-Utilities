@@ -36,7 +36,7 @@ public class ChunkUpgrade extends FinalIDObject implements IChunkUpgrade
 	public ChunkUpgrade(String s, int i)
 	{
 		super(s);
-		langKey = new LangKey("ftbu.lang.chunk." + getName());
+		langKey = LangKey.of("ftbu.lang.chunk." + getName());
 		id = i;
 	}
 

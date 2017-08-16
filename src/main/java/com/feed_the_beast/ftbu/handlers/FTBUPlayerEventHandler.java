@@ -31,6 +31,7 @@ import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -171,12 +172,12 @@ public class FTBUPlayerEventHandler
 
 				if (team != null)
 				{
-					Notification notification = new Notification(FTBUNotifications.WILDERNESS.getId());
-					notification.addLine(StringUtils.color(StringUtils.text(team.getTitle()), team.getColor().getTextFormatting()));
+					Notification notification = Notification.of(FTBUNotifications.WILDERNESS.getId());
+					notification.addLine(StringUtils.color(new TextComponentString(team.getTitle()), team.getColor().getTextFormatting()));
 
 					if (!team.getDesc().isEmpty())
 					{
-						notification.addLine(StringUtils.italic(StringUtils.text(team.getDesc()), true));
+						notification.addLine(StringUtils.italic(new TextComponentString(team.getDesc()), true));
 					}
 
 					notification.send(player);

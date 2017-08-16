@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu.api_impl;
 
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
@@ -7,7 +8,6 @@ import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 
 import javax.annotation.Nullable;
@@ -39,19 +39,14 @@ public enum LoadedChunkStorage implements ForgeChunkManager.LoadingCallback, For
 	}
 
 	@Nullable
-	private ForgeChunkManager.Ticket request(int dimID, boolean createNew)
+	private ForgeChunkManager.Ticket request(int dim, boolean createNew)
 	{
-		ForgeChunkManager.Ticket ticket = TICKET_CONTAINERS.get(dimID);
+		ForgeChunkManager.Ticket ticket = TICKET_CONTAINERS.get(dim);
 
 		if (ticket == null && createNew)
 		{
-			World world = DimensionManager.getWorld(dimID);
-
-			if (world != null)
-			{
-				ticket = ForgeChunkManager.requestTicket(FTBU.INST, world, ForgeChunkManager.Type.NORMAL);
-				TICKET_CONTAINERS.put(dimID, ticket);
-			}
+			ticket = ForgeChunkManager.requestTicket(FTBU.INST, ServerUtils.getServer().getWorld(dim), ForgeChunkManager.Type.NORMAL);
+			TICKET_CONTAINERS.put(dim, ticket);
 		}
 
 		return ticket;

@@ -45,6 +45,6 @@ public class FTBULang
 
 	public static LangKey get(String s)
 	{
-		return new LangKey("ftbu." + s);
+		return LangKey.of("ftbu." + s);
 	}
 }

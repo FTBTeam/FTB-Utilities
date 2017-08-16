@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbu.gui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.CachedVertexData;
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
@@ -107,7 +107,7 @@ public class GuiWarps extends GuiBase
 		{
 			if (!warpItem.cmd.isEmpty())
 			{
-				FTBLibClient.execClientCommand(warpItem.cmd, true);
+				ClientUtils.execClientCommand(warpItem.cmd, true);
 			}
 
 			gui.closeGui();

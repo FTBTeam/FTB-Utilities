@@ -8,7 +8,7 @@ import com.feed_the_beast.ftbl.api.guide.SpecialGuideButton;
 import com.feed_the_beast.ftbl.client.FTBLibModClient;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.SidebarButton;
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
@@ -22,8 +22,8 @@ import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.guide.GuideTextLineString;
 import com.feed_the_beast.ftbl.lib.guide.GuideTitlePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.google.gson.JsonElement;
@@ -32,6 +32,8 @@ import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.fml.common.Loader;
@@ -88,7 +90,7 @@ public enum Guides implements IResourceManagerReloadListener
 					{
 						reloadingThread = new Thread(() ->
 						{
-							INSTANCE.onResourceManagerReload(FTBLibClient.MC.getResourceManager());
+							INSTANCE.onResourceManagerReload(ClientUtils.MC.getResourceManager());
 							isReloading = false;
 						});
 						reloadingThread.start();
@@ -121,7 +123,7 @@ public enum Guides implements IResourceManagerReloadListener
 	{
 		FTBUFinals.LOGGER.info("Reloading guides...");
 		INFO_PAGE.clear();
-		INFO_PAGE.setTitle(StringUtils.text("Guides")); //TODO: Lang
+		INFO_PAGE.setTitle(new TextComponentString("Guides")); //LANG
 
 		List<GuideTitlePage> guides = new ArrayList<>();
 		SUBSTITUTE_CACHE.clear();
@@ -140,8 +142,8 @@ public enum Guides implements IResourceManagerReloadListener
 
 					if (format == GuideFormat.UNSUPPORTED)
 					{
-						guide.println("Unsupported format!"); //TODO: Lang
-						guide.println("Please update FTBUtilities or contact mod author!"); //TODO: Lang
+						guide.println("Unsupported format!"); //LANG
+						guide.println("Please update FTBUtilities or contact mod author!"); //LANG
 					}
 					else
 					{
@@ -159,7 +161,7 @@ public enum Guides implements IResourceManagerReloadListener
 			}
 			catch (Exception ex)
 			{
-				//LMUtils.DEV_LOGGER.info("Error while loading guide from domain '" + domain + "'");
+				//CommonUtils.DEV_LOGGER.info("Error while loading guide from domain '" + domain + "'");
 
 				if (!(ex instanceof FileNotFoundException))
 				{
@@ -185,7 +187,7 @@ public enum Guides implements IResourceManagerReloadListener
 
 		GuideTitlePage page = new GuideTitlePage("sidebar_buttons", GuideType.OTHER, Collections.singletonList("LatvianModder"), Collections.emptyList());
 		page.setIcon(ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"));
-		page.setTitle(StringUtils.translation("config_group.sidebar_button.name"));
+		page.setTitle(new TextComponentTranslation("config_group.sidebar_button.name"));
 
 		for (SidebarButton button : FTBLibModClient.getSidebarButtons(true))
 		{
@@ -193,8 +195,8 @@ public enum Guides implements IResourceManagerReloadListener
 			{
 				GuidePage page1 = page.getSub(button.getName());
 				page1.setIcon(button.icon);
-				page1.setTitle(StringUtils.translation("sidebar_button." + button.getName()));
-				page1.println(StringUtils.translation("sidebar_button." + button.getName() + ".info"));
+				page1.setTitle(new TextComponentTranslation("sidebar_button." + button.getName()));
+				page1.println(new TextComponentTranslation("sidebar_button." + button.getName() + ".info"));
 			}
 		}
 
@@ -288,17 +290,17 @@ public enum Guides implements IResourceManagerReloadListener
 					}
 					if (o.has("lang"))
 					{
-						page1.setTitle(StringUtils.translation(o.get("lang").getAsString()));
+						page1.setTitle(new TextComponentTranslation(o.get("lang").getAsString()));
 					}
 					else
 					{
-						page1.setTitle(StringUtils.translation(domain + '.' + parentDir.replace('/', '.') + "." + page1.getName()));
+						page1.setTitle(new TextComponentTranslation(domain + '.' + parentDir.replace('/', '.') + "." + page1.getName()));
 					}
 				}
 				else
 				{
 					page1 = page.getSub(e.getAsString());
-					page1.setTitle(StringUtils.translation(domain + '.' + parentDir.replace('/', '.') + "." + page1.getName()));
+					page1.setTitle(new TextComponentTranslation(domain + '.' + parentDir.replace('/', '.') + "." + page1.getName()));
 				}
 
 				loadTree(resourceManager, domain, page1, format, parentDir + "/" + page1.getName());
@@ -306,7 +308,7 @@ public enum Guides implements IResourceManagerReloadListener
 		}
 		catch (Exception ex)
 		{
-			if (LMUtils.DEV_ENV && !(ex instanceof FileNotFoundException))
+			if (CommonUtils.DEV_ENV && !(ex instanceof FileNotFoundException))
 			{
 				ex.printStackTrace();
 			}

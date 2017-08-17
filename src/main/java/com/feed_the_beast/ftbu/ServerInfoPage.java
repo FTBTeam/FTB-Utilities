@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api.events.ServerInfoEvent;
+import com.feed_the_beast.ftbl.lib.LangKey;
 import com.feed_the_beast.ftbl.lib.client.DrawableItem;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
@@ -40,11 +41,13 @@ import java.util.List;
 
 public class ServerInfoPage
 {
-	private static final GuidePage CACHED_PAGE = new GuidePage("server_info").setTitle(new TextComponentTranslation("sidebar_button.ftbu.server_info"));
+	private static final LangKey LANG_KEY = LangKey.of("sidebar_button.ftbu.server_info");
+	private static final GuidePage CACHED_PAGE = new GuidePage("server_info");
 
 	public static void reloadCachedInfo()
 	{
 		CACHED_PAGE.clear();
+		CACHED_PAGE.setTitle(LANG_KEY.textComponent());
 		JsonElement json = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "ftbu/server_guide.json"));
 		if (!json.isJsonNull())
 		{
@@ -166,7 +169,7 @@ public class ServerInfoPage
 				{
 					ITextComponent cc = new TextComponentString('/' + c.getName());
 					cc.getStyle().setColor(TextFormatting.DARK_RED);
-					page1.getSub('/' + c.getName()).setTitle(cc).println("Errored");
+					page1.getSub('/' + c.getName()).setTitle(cc).println("Errored"); //LANG
 
 					if (CommonUtils.DEV_ENV)
 					{
@@ -179,7 +182,7 @@ public class ServerInfoPage
 		}
 		catch (Exception ex)
 		{
-			page1.println("Failed to load commands");
+			page1.println("Failed to load commands"); //LANG
 		}
 
 		if (PermissionAPI.hasPermission(ep, FTBUPermissions.DISPLAY_PERMISSIONS))
@@ -207,11 +210,11 @@ public class ServerInfoPage
 		{
 			if (s.indexOf('%') != -1 || s.indexOf('/') != -1)
 			{
-				page.println(new TextComponentTranslation("commands.generic.usage", s));
+				page.println(FTBLibLang.COMMAND_USAGE.textComponent(s));
 			}
 			else
 			{
-				page.println(new TextComponentTranslation("commands.generic.usage", new TextComponentTranslation(s)));
+				page.println(FTBLibLang.COMMAND_USAGE.textComponent(new TextComponentTranslation(s)));
 			}
 		}
 

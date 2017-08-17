@@ -1,6 +1,6 @@
 {
 	"guide": {
-		"icon": "minecraft:textures/items/book_normal.png",
+		"icon": "minecraft:items/book_normal",
 		"dependencies": "after:ftbu.claimed_chunks",
 		"click": {
 			"action": "run_command",
@@ -9,7 +9,7 @@
 		"config": true
 	},
 	"server_info": {
-		"icon": "minecraft:textures/items/book_enchanted.png",
+		"icon": "minecraft:items/book_enchanted",
 		"dependencies": "after:ftbu.guide",
 		"click": {
 			"action": "run_command",
@@ -20,7 +20,7 @@
 		"loading_screen": true
 	},
 	"claimed_chunks": {
-		"icon": "ftbl:textures/icons/map.png",
+		"icon": "ftbl:icons/map",
 		"dependencies": "after:ftbu.toggle.night",
 		"click": {
 			"action": "run_command",
@@ -31,7 +31,7 @@
 		"loading_screen": true
 	},
 	"trash_can": {
-		"icon": "ftbl:textures/icons/bin.png",
+		"icon": "ftbl:icons/bin",
 		"dependencies": "after:ftbu.server_info",
 		"click": {
 			"action": "run_command",
@@ -42,7 +42,7 @@
 		"loading_screen": true
 	},
 	"shop": {
-		"icon": "ftbl:textures/icons/money_bag.png",
+		"icon": "ftbl:icons/money_bag",
 		"dependencies": "after:ftbu.trash_can",
 		"click": {
 			"action": "run_command",
@@ -54,7 +54,7 @@
 		"loading_screen": true
 	},
 	"heal": {
-		"icon": "ftbl:textures/icons/heart.png",
+		"icon": "ftbl:icons/heart",
 		"dependencies": "after:ftbl.my_server_settings",
 		"click": {
 			"action": "run_command",
@@ -66,7 +66,7 @@
 		"requires_op": true
 	},
 	"toggle.gamemode": {
-		"icon": "ftbl:textures/icons/toggle_gamemode.png",
+		"icon": "ftbl:icons/toggle_gamemode",
 		"dependencies": "after:ftbu.heal",
 		"click": {
 			"action": "run_command",
@@ -77,7 +77,7 @@
 		"requires_op": true
 	},
 	"toggle.rain": {
-		"icon": "ftbl:textures/icons/toggle_rain.png",
+		"icon": "ftbl:icons/toggle_rain",
 		"dependencies": "after:ftbu.toggle.gamemode",
 		"click": {
 			"action": "run_command",
@@ -88,7 +88,7 @@
 		"requires_op": true
 	},
 	"toggle.day": {
-		"icon": "ftbl:textures/icons/toggle_day.png",
+		"icon": "ftbl:icons/toggle_day",
 		"dependencies": "after:ftbu.toggle.rain",
 		"click": {
 			"action": "run_command",
@@ -99,7 +99,7 @@
 		"requires_op": true
 	},
 	"toggle.night": {
-		"icon": "ftbl:textures/icons/toggle_night.png",
+		"icon": "ftbl:icons/toggle_night",
 		"dependencies": "after:ftbu.toggle.day",
 		"click": {
 			"action": "run_command",

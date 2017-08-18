@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.api.events.RegisterFTBClientCommandsEvent;
-import com.feed_the_beast.ftbl.api.events.RegisterFTBCommandsEvent;
+import com.feed_the_beast.ftbl.api.events.registry.RegisterFTBClientCommandsEvent;
+import com.feed_the_beast.ftbl.api.events.registry.RegisterFTBCommandsEvent;
 import com.feed_the_beast.ftbu.cmd.chunks.CmdChunks;
 import com.feed_the_beast.ftbu.cmd.ranks.CmdRanks;
 import com.feed_the_beast.ftbu.cmd.tp.CmdAdminHome;

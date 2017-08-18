@@ -1,17 +1,18 @@
 package com.feed_the_beast.ftbu;
 
-import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
+import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.api.events.registry.RegisterRankConfigEvent;
 import com.feed_the_beast.ftbl.lib.config.PropertyInt;
 import com.feed_the_beast.ftbl.lib.config.PropertyList;
 import com.feed_the_beast.ftbl.lib.config.PropertyShort;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbl.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
-import com.feed_the_beast.ftbu.api.IFTBUtilitiesRegistry;
 import com.feed_the_beast.ftbu.api.NodeEntry;
 import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
 import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
+import com.feed_the_beast.ftbu.api.events.registry.RegisterCustomPermissionPrefixesEvent;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAnvil;
@@ -22,6 +23,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.util.EnumHand;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -33,6 +35,7 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
+@EventHandler
 public class FTBUPermissions
 {
 	// Display //
@@ -108,23 +111,25 @@ public class FTBUPermissions
 		PermissionAPI.registerNode(key, level, "");
 	}
 
-	public static void addConfigs(IFTBLibRegistry reg)
+	@SubscribeEvent
+	public static void addConfigs(RegisterRankConfigEvent event)
 	{
-		reg.addRankConfig(BADGE, new PropertyString(""), new PropertyString(""));
-		reg.addRankConfig(HOMES_MAX, new PropertyShort(1, 0, 30000).setUnsigned(), new PropertyShort(100));
-		reg.addRankConfig(CLAIMS_MAX_CHUNKS, new PropertyShort(100, 0, 30000).setUnsigned(), new PropertyShort(1000));
-		reg.addRankConfig(CLAIMS_BLOCKED_DIMENSIONS, new PropertyList(PropertyInt.ID), new PropertyList(PropertyInt.ID));
-		reg.addRankConfig(CHUNKLOADER_MAX_CHUNKS, new PropertyShort(50, 0, 30000).setUnsigned(), new PropertyShort(64));
-		//reg.addRankConfig(CHUNKLOADER_OFFLINE_TIMER, new PropertyDouble(-1D).setMin(-1D), new PropertyDouble(-1D));
+		event.register(BADGE, new PropertyString(""), new PropertyString(""));
+		event.register(HOMES_MAX, new PropertyShort(1, 0, 30000).setUnsigned(), new PropertyShort(100));
+		event.register(CLAIMS_MAX_CHUNKS, new PropertyShort(100, 0, 30000).setUnsigned(), new PropertyShort(1000));
+		event.register(CLAIMS_BLOCKED_DIMENSIONS, new PropertyList(PropertyInt.ID), new PropertyList(PropertyInt.ID));
+		event.register(CHUNKLOADER_MAX_CHUNKS, new PropertyShort(50, 0, 30000).setUnsigned(), new PropertyShort(64));
+		//event.register(CHUNKLOADER_OFFLINE_TIMER, new PropertyDouble(-1D).setMin(-1D), new PropertyDouble(-1D));
 	}
 
-	public static void addCustomPerms(IFTBUtilitiesRegistry reg)
+	@SubscribeEvent
+	public static void addCustomPerms(RegisterCustomPermissionPrefixesEvent event)
 	{
-		reg.addCustomPermPrefix(new NodeEntry("command.", DefaultPermissionLevel.OP, "Permission for commands, if FTBU command overriding is enabled. If not, this node will be inactive"));
-		reg.addCustomPermPrefix(new NodeEntry(CLAIMS_BLOCK_EDIT_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can break and place within claimed chunks"));
-		reg.addCustomPermPrefix(new NodeEntry(CLAIMS_BLOCK_INTERACT_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can right-click within claimed chunks"));
-		reg.addCustomPermPrefix(new NodeEntry(CLAIMS_ITEM_PREFIX, DefaultPermissionLevel.ALL, "Permission for items that players can right-click in air within claimed chunks"));
-		reg.addCustomPermPrefix(new NodeEntry(CLAIMS_UPGRADE_PREFIX, DefaultPermissionLevel.ALL, "Permission for claimed chunk upgrades"));
+		event.register(new NodeEntry("command.", DefaultPermissionLevel.OP, "Permission for commands, if FTBU command overriding is enabled. If not, this node will be inactive"));
+		event.register(new NodeEntry(CLAIMS_BLOCK_EDIT_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can break and place within claimed chunks"));
+		event.register(new NodeEntry(CLAIMS_BLOCK_INTERACT_PREFIX, DefaultPermissionLevel.OP, "Permission for blocks that players can right-click within claimed chunks"));
+		event.register(new NodeEntry(CLAIMS_ITEM_PREFIX, DefaultPermissionLevel.ALL, "Permission for items that players can right-click in air within claimed chunks"));
+		event.register(new NodeEntry(CLAIMS_UPGRADE_PREFIX, DefaultPermissionLevel.ALL, "Permission for claimed chunk upgrades"));
 	}
 
 	private static String formatId(@Nullable IForgeRegistryEntry<?> item)

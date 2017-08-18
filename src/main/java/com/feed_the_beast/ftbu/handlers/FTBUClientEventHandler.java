@@ -1,9 +1,8 @@
 package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.api.IFTBLibClientRegistry;
-import com.feed_the_beast.ftbl.api.events.FTBLibClientRegistryEvent;
-import com.feed_the_beast.ftbl.api.events.RegisterFTBClientCommandsEvent;
+import com.feed_the_beast.ftbl.api.events.registry.RegisterClientConfigEvent;
+import com.feed_the_beast.ftbl.api.events.registry.RegisterFTBClientCommandsEvent;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbu.FTBUFinals;
@@ -25,11 +24,10 @@ import net.minecraftforge.fml.relauncher.Side;
 public class FTBUClientEventHandler
 {
 	@SubscribeEvent
-	public static void registerClient(FTBLibClientRegistryEvent event)
+	public static void registerClient(RegisterClientConfigEvent event)
 	{
-		IFTBLibClientRegistry reg = event.getRegistry();
-		reg.addClientConfig(FTBUFinals.MOD_ID, "render_badges", FTBUClientConfig.RENDER_BADGES);
-		reg.addClientConfig(FTBUFinals.MOD_ID, "journeymap_overlay", FTBUClientConfig.JOURNEYMAP_OVERLAY);
+		event.register(FTBUFinals.MOD_ID, "render_badges", FTBUClientConfig.RENDER_BADGES);
+		event.register(FTBUFinals.MOD_ID, "journeymap_overlay", FTBUClientConfig.JOURNEYMAP_OVERLAY);
 	}
 
 	@SubscribeEvent

@@ -1,25 +1,16 @@
 package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
 import com.feed_the_beast.ftbl.api.events.ConfigLoadedEvent;
-import com.feed_the_beast.ftbl.api.events.FTBLibRegistryEvent;
 import com.feed_the_beast.ftbl.api.events.LoadWorldDataEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
-import com.feed_the_beast.ftbl.lib.util.CommonUtils;
+import com.feed_the_beast.ftbl.api.events.registry.RegisterDataProvidersEvent;
+import com.feed_the_beast.ftbl.api.events.registry.RegisterOptionalServerModsEvent;
 import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.ServerInfoPage;
 import com.feed_the_beast.ftbu.api_impl.FTBUChunkManager;
-import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
-import com.feed_the_beast.ftbu.config.FTBUConfigCommands;
-import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
-import com.feed_the_beast.ftbu.config.FTBUConfigLogin;
 import com.feed_the_beast.ftbu.config.FTBUConfigRanks;
-import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
-import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
-import com.feed_the_beast.ftbu.config.PropertyChatSubstitute;
 import com.feed_the_beast.ftbu.ranks.FTBUPermissionHandler;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
@@ -29,8 +20,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.server.permission.PermissionAPI;
-
-import java.io.File;
 
 /**
  * @author LatvianModder
@@ -61,26 +50,27 @@ public class FTBLibIntegration
 	}
 
 	@SubscribeEvent
-	public static void registerCommon(FTBLibRegistryEvent event)
+	public static void registerOptionalServerMod(RegisterOptionalServerModsEvent event)
 	{
-		IFTBLibRegistry reg = event.getRegistry();
-		reg.addOptionalServerMod(FTBUFinals.MOD_ID);
-		reg.addConfigFileProvider(FTBUFinals.MOD_ID, () -> new File(CommonUtils.folderLocal, "ftbu/config.json"));
-		reg.addConfigValueProvider(PropertyChatSubstitute.ID, PropertyChatSubstitute::new);
+		event.register(FTBUFinals.MOD_ID);
+	}
 
-		FTBUConfigBackups.init(reg);
-		FTBUConfigCommands.init(reg);
-		FTBUConfigGeneral.init(reg);
-		FTBUConfigLogin.init(reg);
-		FTBUConfigWebAPI.init(reg);
-		FTBUConfigWorld.init(reg);
-		FTBUConfigRanks.init(reg);
+	@SubscribeEvent
+	public static void registerUniverseDataProvider(RegisterDataProvidersEvent.Universe event)
+	{
+		event.register(FTBU_DATA, owner -> new FTBUUniverseData());
+	}
 
-		reg.addUniverseDataProvider(FTBU_DATA, owner -> new FTBUUniverseData());
-		reg.addPlayerDataProvider(FTBU_DATA, FTBUPlayerData::new);
-		reg.addTeamDataProvider(FTBU_DATA, owner -> new FTBUTeamData());
+	@SubscribeEvent
+	public static void registerPlayerDataProvider(RegisterDataProvidersEvent.Player event)
+	{
+		event.register(FTBU_DATA, FTBUPlayerData::new);
+	}
 
-		FTBUPermissions.addConfigs(reg);
+	@SubscribeEvent
+	public static void registerTeamDataProvider(RegisterDataProvidersEvent.Team event)
+	{
+		event.register(FTBU_DATA, owner -> new FTBUTeamData());
 	}
 
 	@SubscribeEvent

@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.config;
 
-import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
+import com.feed_the_beast.ftbl.api.events.registry.RegisterConfigEvent;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyByte;
 import com.feed_the_beast.ftbl.lib.config.PropertyDouble;
@@ -20,17 +20,17 @@ public class FTBUConfigBackups
 	public static final PropertyBool DISPLAY_FILE_SIZE = new PropertyBool(true);
 	public static final PropertyBool USE_SEPARATE_THREAD = new PropertyBool(true);
 
-	public static void init(IFTBLibRegistry reg)
+	public static void init(RegisterConfigEvent event)
 	{
 		String id = FTBUFinals.MOD_ID + ".backups";
-		reg.addConfig(id, "enabled", ENABLED).setNameLangKey(GuiLang.LABEL_ENABLED.getName());
-		reg.addConfig(id, "silent", SILENT);
-		reg.addConfig(id, "backups_to_keep", BACKUPS_TO_KEEP);
-		reg.addConfig(id, "backup_timer", BACKUP_TIMER);
-		reg.addConfig(id, "compression_level", COMPRESSION_LEVEL);
-		reg.addConfig(id, "folder", FOLDER);
-		reg.addConfig(id, "display_file_size", DISPLAY_FILE_SIZE);
-		reg.addConfig(id, "use_separate_thread", USE_SEPARATE_THREAD);
+		event.register(id, "enabled", ENABLED).setNameLangKey(GuiLang.LABEL_ENABLED.getName());
+		event.register(id, "silent", SILENT);
+		event.register(id, "backups_to_keep", BACKUPS_TO_KEEP);
+		event.register(id, "backup_timer", BACKUP_TIMER);
+		event.register(id, "compression_level", COMPRESSION_LEVEL);
+		event.register(id, "folder", FOLDER);
+		event.register(id, "display_file_size", DISPLAY_FILE_SIZE);
+		event.register(id, "use_separate_thread", USE_SEPARATE_THREAD);
 	}
 
 	public static long backupMillis()

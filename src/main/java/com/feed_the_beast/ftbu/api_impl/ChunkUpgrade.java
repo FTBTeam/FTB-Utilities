@@ -1,13 +1,16 @@
 package com.feed_the_beast.ftbu.api_impl;
 
+import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.LangKey;
-import com.feed_the_beast.ftbu.api.IFTBUtilitiesRegistry;
 import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
+import com.feed_the_beast.ftbu.api.events.registry.RegisterChunkUpgradesEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * @author LatvianModder
  */
+@EventHandler
 public class ChunkUpgrade extends FinalIDObject implements IChunkUpgrade
 {
 	public static final IChunkUpgrade LOADED = new ChunkUpgrade("loaded", 0);
@@ -23,11 +26,12 @@ public class ChunkUpgrade extends FinalIDObject implements IChunkUpgrade
 	public static final IChunkUpgrade CLAIMED = new ChunkUpgrade("claimed", 30);
 	public static final IChunkUpgrade WILDERNESS = new ChunkUpgrade("wilderness", 31);
 
-	public static void addUpgrades(IFTBUtilitiesRegistry reg)
+	@SubscribeEvent
+	public static void addUpgrades(RegisterChunkUpgradesEvent event)
 	{
-		reg.addChunkUpgrade(LOADED);
-		reg.addChunkUpgrade(NO_EXPLOSIONS);
-		reg.addChunkUpgrade(NO_PVP);
+		event.register(LOADED);
+		event.register(NO_EXPLOSIONS);
+		event.register(NO_PVP);
 	}
 
 	private final LangKey langKey;

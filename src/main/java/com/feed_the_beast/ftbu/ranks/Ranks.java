@@ -141,7 +141,7 @@ public class Ranks
 		RANK_NAMES.remove(DefaultOPRank.INSTANCE.getName());
 	}
 
-	public static void reload()
+	public static boolean reload()
 	{
 		FTBUFinals.LOGGER.info("Loading ranks..");
 
@@ -151,6 +151,7 @@ public class Ranks
 		PLAYER_MAP.clear();
 		defaultPlayerRank = null;
 		defaultOPRank = null;
+		boolean result = true;
 
 		if (FTBUConfigRanks.ENABLED.getBoolean())
 		{
@@ -208,11 +209,13 @@ public class Ranks
 			catch (Exception ex)
 			{
 				ex.printStackTrace();
+				result = false;
 			}
 		}
 
 		updateRankNames();
 		saveRanks();
+		return result;
 	}
 
 	private static void saveRanks()

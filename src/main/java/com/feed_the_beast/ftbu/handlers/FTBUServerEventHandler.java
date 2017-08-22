@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
@@ -11,6 +12,7 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.ForgeHooks;
@@ -24,6 +26,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @EventHandler
 public class FTBUServerEventHandler
 {
+	private static boolean gray = false;
+
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public static void onServerChatEvent(ServerChatEvent event)
 	{
@@ -72,7 +76,8 @@ public class FTBUServerEventHandler
 				}
 			}
 
-			main.appendSibling(ForgeHooks.newChatWithLinks(msg));
+			main.appendSibling(StringUtils.color(ForgeHooks.newChatWithLinks(msg), gray ? TextFormatting.GRAY : TextFormatting.WHITE));
+			gray = !gray;
 			event.setComponent(main);
 		}
 	}

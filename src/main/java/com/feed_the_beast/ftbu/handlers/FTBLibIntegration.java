@@ -28,6 +28,17 @@ import net.minecraftforge.server.permission.PermissionAPI;
 public class FTBLibIntegration
 {
 	public static final ResourceLocation FTBU_DATA = FTBUFinals.get("data");
+	public static final ResourceLocation RELOAD_RANKS = FTBUFinals.get("ranks");
+	public static final ResourceLocation RELOAD_SERVER_INFO = FTBUFinals.get("server_info");
+	public static final ResourceLocation RELOAD_BADGES = FTBUFinals.get("badges");
+
+	@SubscribeEvent
+	public static void registerReloadIds(ReloadEvent.RegisterIds event)
+	{
+		event.register(RELOAD_RANKS);
+		event.register(RELOAD_SERVER_INFO);
+		event.register(RELOAD_BADGES);
+	}
 
 	@SubscribeEvent
 	public static void onReload(ReloadEvent event)
@@ -36,11 +47,22 @@ public class FTBLibIntegration
 		{
 			if (event.getType().command())
 			{
-				Ranks.reload();
+				if (event.reload(RELOAD_RANKS) && !Ranks.reload())
+				{
+					event.failedToReload(RELOAD_RANKS);
+				}
 			}
 
-			ServerInfoPage.reloadCachedInfo();
-			FTBUUniverseData.reloadServerBadges();
+			if (event.reload(RELOAD_SERVER_INFO))
+			{
+				ServerInfoPage.reloadCachedInfo();
+			}
+
+			if (event.reload(RELOAD_BADGES) && !FTBUUniverseData.reloadServerBadges())
+			{
+				event.failedToReload(RELOAD_BADGES);
+			}
+
 			FTBUChunkManager.INSTANCE.checkAll();
 		}
 		else

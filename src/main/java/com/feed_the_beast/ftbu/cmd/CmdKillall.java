@@ -13,6 +13,7 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -95,6 +96,8 @@ public class CmdKillall extends CmdBase
 			}
 		}
 
+		int killed = 0;
+
 		for (World world : server.worlds)
 		{
 			for (Entity entity : world.getLoadedEntityList())
@@ -102,8 +105,11 @@ public class CmdKillall extends CmdBase
 				if (predicate.test(entity))
 				{
 					entity.setDead();
+					killed++;
 				}
 			}
 		}
+
+		sender.sendMessage(new TextComponentString("Killed " + killed + " entities")); //LANG
 	}
 }

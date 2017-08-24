@@ -11,6 +11,7 @@ import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
+import com.feed_the_beast.ftbl.lib.gui.SimpleButton;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiChunkSelectorBase;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
 import com.feed_the_beast.ftbl.lib.gui.misc.ThreadReloadChunkSelector;
@@ -168,30 +169,13 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 	public GuiClaimedChunks()
 	{
 		currentDimName = ClientUtils.MC.world.provider.getDimensionType().getName();
+		buttonClose = new SimpleButton(0, 0, 16, 16, GuiLang.BUTTON_CLOSE.translate(), GuiIcons.ACCEPT, (gui, button) -> gui.closeGui());
 
-		buttonClose = new Button(0, 0, 16, 16, GuiLang.BUTTON_CLOSE.translate())
+		buttonRefresh = new SimpleButton(0, 16, 16, 16, GuiLang.BUTTON_REFRESH.translate(), GuiIcons.REFRESH, (gui, button) ->
 		{
-			@Override
-			public void onClicked(GuiBase gui, IMouseButton button)
-			{
-				GuiHelper.playClickSound();
-				gui.closeGui();
-			}
-		};
-
-		buttonClose.setIcon(GuiIcons.ACCEPT);
-
-		buttonRefresh = new Button(0, 16, 16, 16, GuiLang.BUTTON_REFRESH.translate())
-		{
-			@Override
-			public void onClicked(GuiBase gui, IMouseButton button)
-			{
-				new MessageClaimedChunksRequest(startX, startZ).sendToServer();
-				ThreadReloadChunkSelector.reloadArea(ClientUtils.MC.world, startX, startZ);
-			}
-		};
-
-		buttonRefresh.setIcon(GuiIcons.REFRESH);
+			new MessageClaimedChunksRequest(startX, startZ).sendToServer();
+			ThreadReloadChunkSelector.reloadArea(ClientUtils.MC.world, startX, startZ);
+		});
 
 		buttonUnclaimAll = new Button(0, 32, 16, 16)
 		{

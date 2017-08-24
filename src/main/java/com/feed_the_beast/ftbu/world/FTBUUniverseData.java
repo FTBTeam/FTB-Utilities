@@ -146,7 +146,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 		}
 
 		String s = LOCAL_BADGES.get(playerId);
-		return s.isEmpty() ? FTBUtilitiesAPI.API.getRankConfig(player.getProfile(), FTBUPermissions.BADGE).getString() : s;
+		return (s == null || s.isEmpty()) ? FTBUtilitiesAPI.API.getRankConfig(player.getProfile(), FTBUPermissions.BADGE).getString() : s;
 	}
 
 	public static boolean reloadServerBadges()

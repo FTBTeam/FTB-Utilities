@@ -124,6 +124,11 @@ public class FTBUCommands
 		{
 			event.add(new CmdKillall());
 		}
+
+		if (FTBUConfigCommands.NBTEDIT.getBoolean())
+		{
+			event.add(new CmdEditNBT());
+		}
 	}
 
 	@SubscribeEvent
@@ -131,5 +136,6 @@ public class FTBUCommands
 	public static void registerClientCommands(RegisterFTBClientCommandsEvent event)
 	{
 		event.add(new CmdSetbadge());
+		event.add(new CmdShrug());
 	}
 }

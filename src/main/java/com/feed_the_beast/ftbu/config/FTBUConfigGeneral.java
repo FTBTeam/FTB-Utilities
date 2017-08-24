@@ -5,11 +5,8 @@ import com.feed_the_beast.ftbl.api.events.registry.RegisterConfigEvent;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyDouble;
 import com.feed_the_beast.ftbl.lib.config.PropertyInt;
-import com.feed_the_beast.ftbl.lib.config.PropertyList;
-import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.File;
@@ -21,15 +18,9 @@ public class FTBUConfigGeneral
 	public static final PropertyDouble RESTART_TIMER = new PropertyDouble(12D, 0D, 720D);
 	public static final PropertyBool SERVER_INFO_DIFFICULTY = new PropertyBool(true);
 	public static final PropertyBool SERVER_INFO_ADMIN_QUICK_ACCESS = new PropertyBool(true);
-	public static final PropertyString CHAT_SUBSTITUTE_PREFIX = new PropertyString("!");
-	public static final PropertyList CHAT_SUBSTITUTES = new PropertyList(PropertyChatSubstitute.ID);
 	public static final PropertyInt MAX_LEADERBOARD_SIZE = new PropertyInt(250, 1, 1000);
 	public static final PropertyBool DISABLE_IN_WALL_DAMAGE = new PropertyBool(false);
-
-	static
-	{
-		CHAT_SUBSTITUTES.add(new PropertyChatSubstitute("shrug", new TextComponentString("\u00AF\\_(\u30C4)_/\u00AF")));
-	}
+	public static final PropertyBool RANDOMIZE_CHAT_COLORS = new PropertyBool(true);
 
 	@SubscribeEvent
 	public static void init(RegisterConfigEvent event)
@@ -46,8 +37,7 @@ public class FTBUConfigGeneral
 		event.register(id, "difficulty", SERVER_INFO_DIFFICULTY);
 		event.register(id, "admin_quick_access", SERVER_INFO_ADMIN_QUICK_ACCESS);
 		id = FTBUFinals.MOD_ID + ".general.chat";
-		event.register(id, "substitute_prefix", CHAT_SUBSTITUTE_PREFIX);
-		event.register(id, "substitute_list", CHAT_SUBSTITUTES);
+		event.register(id, "randomize_colors", RANDOMIZE_CHAT_COLORS);
 
 		FTBUConfigBackups.init(event);
 		FTBUConfigCommands.init(event);

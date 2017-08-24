@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbu.api.events.registry.RegisterChunkUpgradesEvent;
 import com.feed_the_beast.ftbu.api.events.registry.RegisterCustomPermissionPrefixesEvent;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.net.FTBUNetHandler;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -30,6 +31,10 @@ public class FTBUCommon
 	}
 
 	public void onReloadedClient()
+	{
+	}
+
+	public void openNBTEditorGui(NBTTagCompound info, NBTTagCompound mainNbt)
 	{
 	}
 }

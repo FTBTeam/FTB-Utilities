@@ -1,10 +1,11 @@
 package com.feed_the_beast.ftbu.net;
 
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
+import com.feed_the_beast.ftbu.FTBUFinals;
 
 public class FTBUNetHandler
 {
-	static final NetworkWrapper NET = NetworkWrapper.newWrapper("FTBU");
+	static final NetworkWrapper NET = NetworkWrapper.newWrapper(FTBUFinals.MOD_ID);
 
 	public static void init()
 	{
@@ -14,9 +15,9 @@ public class FTBUNetHandler
 		NET.register(4, new MessageClaimedChunksRequest());
 		NET.register(5, new MessageClaimedChunksUpdate());
 		NET.register(6, new MessageClaimedChunksModify());
-		//7
-		NET.register(8, new MessageSendWarpList());
-		//9
+		NET.register(7, new MessageSendWarpList());
+		NET.register(8, new MessageEditNBT());
+		NET.register(9, new MessageEditNBTResponse());
 		NET.register(10, new MessageOpenClaimedChunksGui());
 		NET.register(11, new MessageJMRequest());
 		NET.register(12, new MessageJMUpdate());

@@ -132,7 +132,12 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 		{
 			try
 			{
-				return StringUtils.readString(new URL(BADGE_BASE_URL + StringUtils.fromUUID(playerId)).openStream());
+				String s = StringUtils.readString(new URL(BADGE_BASE_URL + StringUtils.fromUUID(playerId)).openStream());
+
+				if (!s.isEmpty())
+				{
+					return s;
+				}
 			}
 			catch (Exception ex)
 			{
@@ -156,6 +161,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 			{
 				JsonObject o = new JsonObject();
 				o.add("uuid", new JsonPrimitive("url_to.png"));
+				o.add("uuid2", new JsonPrimitive("url2_to.png"));
 				JsonUtils.toJson(file, o);
 			}
 			else

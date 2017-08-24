@@ -22,6 +22,7 @@ public class FTBUConfigCommands
 	public static final PropertyBool HEAL = new PropertyBool(true);
 	public static final PropertyBool SET_HOUR = new PropertyBool(true);
 	public static final PropertyBool KILLALL = new PropertyBool(true);
+	public static final PropertyBool NBTEDIT = new PropertyBool(true);
 
 	public static void init(RegisterConfigEvent event)
 	{
@@ -42,5 +43,6 @@ public class FTBUConfigCommands
 		event.register(id, "heal", HEAL);
 		event.register(id, "set_hour", SET_HOUR);
 		event.register(id, "killall", KILLALL);
+		event.register(id, "nbtedit", NBTEDIT);
 	}
 }

@@ -2,10 +2,12 @@ package com.feed_the_beast.ftbu.client;
 
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbu.FTBUCommon;
+import com.feed_the_beast.ftbu.gui.GuiEditNBT;
 import com.feed_the_beast.ftbu.gui.Guides;
 import com.feed_the_beast.ftbu.integration.IJMIntegration;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -45,5 +47,11 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public void onReloadedClient()
 	{
 		CachedClientData.clear();
+	}
+
+	@Override
+	public void openNBTEditorGui(NBTTagCompound info, NBTTagCompound mainNbt)
+	{
+		new GuiEditNBT(info, mainNbt).openGui();
 	}
 }

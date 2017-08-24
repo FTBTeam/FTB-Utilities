@@ -121,6 +121,10 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 			return;
 		}
 
+		renderBadge.setBoolean(nbt.getBoolean("RenderBadge"));
+		chatLinks.setBoolean(nbt.getBoolean("ChatLinks"));
+		disableGlobalBadge.setBoolean(nbt.getBoolean("DisableGlobalBadges"));
+
 		if (nbt.hasKey("Homes"))
 		{
 			homes = new HashMap<>();

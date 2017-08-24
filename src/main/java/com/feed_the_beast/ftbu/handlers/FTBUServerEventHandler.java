@@ -1,13 +1,11 @@
 package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.config.FTBUConfigRanks;
-import com.feed_the_beast.ftbu.config.PropertyChatSubstitute;
 import net.minecraft.entity.EntityList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
@@ -32,9 +30,8 @@ public class FTBUServerEventHandler
 	public static void onServerChatEvent(ServerChatEvent event)
 	{
 		String msg = event.getMessage().trim();
-		String chatSubstitutePrefix = FTBUConfigGeneral.CHAT_SUBSTITUTE_PREFIX.getString();
 
-		if (FTBUConfigRanks.OVERRIDE_CHAT.getBoolean() || msg.startsWith(chatSubstitutePrefix))
+		if (FTBUConfigRanks.OVERRIDE_CHAT.getBoolean())
 		{
 			IRank rank = FTBUtilitiesAPI.API.getRank(event.getPlayer().getGameProfile());
 
@@ -59,24 +56,15 @@ public class FTBUServerEventHandler
 
 			main.appendSibling(name);
 
-			if (msg.startsWith(chatSubstitutePrefix))
+			if (FTBUConfigGeneral.RANDOMIZE_CHAT_COLORS.getBoolean())
 			{
-				String key = msg.substring(chatSubstitutePrefix.length());
-
-				for (IConfigValue value : FTBUConfigGeneral.CHAT_SUBSTITUTES)
-				{
-					PropertyChatSubstitute sub = (PropertyChatSubstitute) value;
-
-					if (sub.key.equals(key))
-					{
-						main.appendSibling(sub.value);
-						event.setComponent(main);
-						return;
-					}
-				}
+				main.appendSibling(StringUtils.color(ForgeHooks.newChatWithLinks(msg), gray ? TextFormatting.GRAY : TextFormatting.WHITE));
+			}
+			else
+			{
+				main.appendSibling(ForgeHooks.newChatWithLinks(msg));
 			}
 
-			main.appendSibling(StringUtils.color(ForgeHooks.newChatWithLinks(msg), gray ? TextFormatting.GRAY : TextFormatting.WHITE));
 			gray = !gray;
 			event.setComponent(main);
 		}

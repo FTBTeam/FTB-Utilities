@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,14 +65,14 @@ public class JsonTable
 		JsonObject o = new JsonObject();
 		String[] ids1 = ids.keySet().toArray(new String[ids.size()]);
 
-		o.add("columns", new JsonPrimitive(ids1.length));
-		o.add("rows", new JsonPrimitive(entries.size()));
+		o.addProperty("columns", ids1.length);
+		o.addProperty("rows", entries.size());
 
 		JsonObject o1 = new JsonObject();
 
 		for (int i = 0; i < ids1.length; i++)
 		{
-			o1.add(ids1[i], new JsonPrimitive(i));
+			o1.addProperty(ids1[i], i);
 		}
 
 		o.add("ids", o1);
@@ -82,7 +81,7 @@ public class JsonTable
 
 		for (String s : ids1)
 		{
-			a.add(new JsonPrimitive(ids.get(s)));
+			a.add(ids.get(s));
 		}
 
 		o.add("ids_loc", a);

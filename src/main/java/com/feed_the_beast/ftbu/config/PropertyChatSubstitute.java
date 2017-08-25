@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -98,7 +97,7 @@ public class PropertyChatSubstitute extends PropertyBase
 	public JsonElement getSerializableElement()
 	{
 		JsonObject o = new JsonObject();
-		o.add("key", new JsonPrimitive(key));
+		o.addProperty("key", key);
 		o.add("val", JsonUtils.serializeTextComponent(value));
 		return o;
 	}

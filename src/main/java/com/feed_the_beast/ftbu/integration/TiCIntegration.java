@@ -4,13 +4,13 @@ import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.events.ClientGuideEvent;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.DrawableItem;
-import com.feed_the_beast.ftbl.lib.client.DrawableObjectList;
-import com.feed_the_beast.ftbl.lib.guide.DrawableObjectListLine;
+import com.feed_the_beast.ftbl.lib.client.IconAnimation;
 import com.feed_the_beast.ftbl.lib.guide.GuideContentsLine;
 import com.feed_the_beast.ftbl.lib.guide.GuideExtendedTextLine;
 import com.feed_the_beast.ftbl.lib.guide.GuideHrLine;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.guide.GuideTitlePage;
+import com.feed_the_beast.ftbl.lib.guide.IconAnimationLine;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.common.collect.ImmutableList;
@@ -86,7 +86,7 @@ public class TiCIntegration
 
 				//List<ITrait> traits = material.getAllTraitsForStats(stats.getIdentifier());
 				//allTraits.addAll(traits);
-				DrawableObjectList parts = new DrawableObjectList(Collections.emptyList());
+				IconAnimation parts = new IconAnimation(Collections.emptyList());
 
 				for (IToolPart part : TinkerRegistry.getToolParts())
 				{
@@ -98,7 +98,7 @@ public class TiCIntegration
 
 				if (parts.list.size() > 0)
 				{
-					page.println(new DrawableObjectListLine(parts, 8));
+					page.println(new IconAnimationLine(parts, 8));
 				}
 
 				for (int i = 0; i < stats.getLocalizedInfo().size(); i++)
@@ -134,7 +134,7 @@ public class TiCIntegration
 					GuidePage page = modifiers.getSub(modifier.getIdentifier());
 					page.setTitle(new TextComponentString(modifier.getLocalizedName()));
 					page.println(transformString(modifier.getLocalizedDesc()));
-					DrawableObjectList displayItems = new DrawableObjectList(Collections.emptyList());
+					IconAnimation displayItems = new IconAnimation(Collections.emptyList());
 
 					if (o.has("text"))
 					{
@@ -170,7 +170,7 @@ public class TiCIntegration
 						if (!displayItems.list.isEmpty())
 						{
 							page.println(null);
-							page.println(new DrawableObjectListLine(displayItems, 8));
+							page.println(new IconAnimationLine(displayItems, 8));
 						}
 					}
 				}

@@ -6,8 +6,10 @@ import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbu.cmd.CmdEditNBT;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -62,7 +64,9 @@ public class MessageEditNBTResponse extends MessageToServer<MessageEditNBTRespon
 
 					if (player1 != null && player1.isOnline())
 					{
-						player1.getPlayer().deserializeNBT(m.mainNbt);
+						EntityPlayer entity = player1.getPlayer();
+						entity.deserializeNBT(m.mainNbt);
+						entity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
 					}
 
 					break;
@@ -81,6 +85,14 @@ public class MessageEditNBTResponse extends MessageToServer<MessageEditNBTRespon
 						m.mainNbt.setString("id", m.info.getString("id"));
 						tile.readFromNBT(m.mainNbt);
 						tile.markDirty();
+						tile.getWorld().markChunkDirty(pos, tile);
+						IBlockState state = tile.getWorld().getBlockState(pos);
+						tile.getWorld().notifyBlockUpdate(pos, state, state, 255);
+
+						if (state != Blocks.AIR.getDefaultState())
+						{
+							tile.getWorld().updateComparatorOutputLevel(pos, state.getBlock());
+						}
 					}
 
 					break;
@@ -92,6 +104,7 @@ public class MessageEditNBTResponse extends MessageToServer<MessageEditNBTRespon
 					if (entity != null)
 					{
 						entity.deserializeNBT(m.mainNbt);
+						entity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
 					}
 
 					break;

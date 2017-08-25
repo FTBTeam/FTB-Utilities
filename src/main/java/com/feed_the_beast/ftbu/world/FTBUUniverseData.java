@@ -160,8 +160,8 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 			if (!file.exists())
 			{
 				JsonObject o = new JsonObject();
-				o.add("uuid", new JsonPrimitive("url_to.png"));
-				o.add("uuid2", new JsonPrimitive("url2_to.png"));
+				o.addProperty("uuid", "url_to.png");
+				o.addProperty("uuid2", "url2_to.png");
 				JsonUtils.toJson(file, o);
 			}
 			else
@@ -553,7 +553,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 			}
 
 			JsonObject json = new JsonObject();
-			json.add("time", new JsonPrimitive(System.currentTimeMillis()));
+			json.addProperty("time", System.currentTimeMillis());
 			json.add("stats", table.toJson());
 
 			File file = FTBUConfigWebAPI.FILE_LOCATION.getString().isEmpty() ? new File(CommonUtils.folderLocal, "ftbu/webapi.json") : new File(FTBUConfigWebAPI.FILE_LOCATION.getString());

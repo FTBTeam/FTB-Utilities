@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.world.backups;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 import java.io.File;
 import java.util.Comparator;
@@ -14,14 +13,14 @@ public class Backup
 	public static final Comparator<Backup> COMPARATOR = Comparator.comparingLong(o -> o.time);
 
 	public final long time;
-	public final String fileID;
+	public final String fileId;
 	public final int index;
 	public final boolean success;
 
 	public Backup(long t, String f, int i, boolean s)
 	{
 		time = t;
-		fileID = f;
+		fileId = f;
 		index = i;
 		success = s;
 	}
@@ -34,10 +33,10 @@ public class Backup
 	public JsonObject toJsonObject()
 	{
 		JsonObject o = new JsonObject();
-		o.add("time", new JsonPrimitive(time));
-		o.add("file", new JsonPrimitive(fileID));
-		o.add("index", new JsonPrimitive(index));
-		o.add("success", new JsonPrimitive(success));
+		o.addProperty("time", time);
+		o.addProperty("file", fileId);
+		o.addProperty("index", index);
+		o.addProperty("success", success);
 		return o;
 	}
 
@@ -48,7 +47,7 @@ public class Backup
 
 	public String toString()
 	{
-		return fileID;
+		return fileId;
 	}
 
 	public boolean equals(Object o)
@@ -58,6 +57,6 @@ public class Backup
 
 	public File getFile()
 	{
-		return new File(Backups.INSTANCE.backupsFolder, fileID);
+		return new File(Backups.INSTANCE.backupsFolder, fileId);
 	}
 }

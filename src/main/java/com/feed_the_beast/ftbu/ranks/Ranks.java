@@ -222,8 +222,8 @@ public class Ranks
 	{
 		JsonObject o = new JsonObject();
 		JsonObject o1 = new JsonObject();
-		o1.add("player", new JsonPrimitive(getDefaultPlayerRank().getName()));
-		o1.add("op", new JsonPrimitive(getDefaultOPRank().getName()));
+		o1.addProperty("player", getDefaultPlayerRank().getName());
+		o1.addProperty("op", getDefaultOPRank().getName());
 		o.add("default_ranks", o1);
 		o1 = new JsonObject();
 

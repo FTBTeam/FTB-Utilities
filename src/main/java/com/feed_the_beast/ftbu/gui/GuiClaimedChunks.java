@@ -169,9 +169,9 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 	public GuiClaimedChunks()
 	{
 		currentDimName = ClientUtils.MC.world.provider.getDimensionType().getName();
-		buttonClose = new SimpleButton(0, 0, 16, 16, GuiLang.BUTTON_CLOSE.translate(), GuiIcons.ACCEPT, (gui, button) -> gui.closeGui());
+		buttonClose = new SimpleButton(GuiLang.BUTTON_CLOSE.translate(), GuiIcons.ACCEPT, (gui, button) -> gui.closeGui());
 
-		buttonRefresh = new SimpleButton(0, 16, 16, 16, GuiLang.BUTTON_REFRESH.translate(), GuiIcons.REFRESH, (gui, button) ->
+		buttonRefresh = new SimpleButton(0, 16, GuiLang.BUTTON_REFRESH.translate(), GuiIcons.REFRESH, (gui, button) ->
 		{
 			new MessageClaimedChunksRequest(startX, startZ).sendToServer();
 			ThreadReloadChunkSelector.reloadArea(ClientUtils.MC.world, startX, startZ);

@@ -9,7 +9,6 @@ import com.feed_the_beast.ftbu.api.IRank;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
@@ -109,18 +108,18 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 	{
 		JsonObject o = new JsonObject();
 
-		o.add("parent", new JsonPrimitive(getParent().getName()));
+		o.addProperty("parent", getParent().getName());
 
 		if (syntax != null)
 		{
-			o.add("syntax", new JsonPrimitive(syntax.replace(StringUtils.FORMATTING_CHAR, '&')));
+			o.addProperty("syntax", syntax.replace(StringUtils.FORMATTING_CHAR, '&'));
 		}
 
 		JsonArray a1 = new JsonArray();
 
 		for (Map.Entry<String, Event.Result> e : permissions.entrySet())
 		{
-			a1.add(new JsonPrimitive(EVENT_RESULT_PREFIX[e.getValue().ordinal()] + e.getKey()));
+			a1.add(EVENT_RESULT_PREFIX[e.getValue().ordinal()] + e.getKey());
 		}
 
 		o.add("permissions", a1);

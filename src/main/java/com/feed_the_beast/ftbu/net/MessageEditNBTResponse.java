@@ -66,7 +66,11 @@ public class MessageEditNBTResponse extends MessageToServer<MessageEditNBTRespon
 					{
 						EntityPlayer entity = player1.getPlayer();
 						entity.deserializeNBT(m.mainNbt);
-						entity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
+
+						if (entity.isEntityAlive())
+						{
+							player.world.updateEntityWithOptionalForce(entity, true);
+						}
 					}
 
 					break;
@@ -104,7 +108,11 @@ public class MessageEditNBTResponse extends MessageToServer<MessageEditNBTRespon
 					if (entity != null)
 					{
 						entity.deserializeNBT(m.mainNbt);
-						entity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
+
+						if (entity.isEntityAlive())
+						{
+							player.world.updateEntityWithOptionalForce(entity, true);
+						}
 					}
 
 					break;

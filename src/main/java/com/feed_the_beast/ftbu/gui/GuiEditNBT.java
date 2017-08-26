@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.CombinedIcon;
+import com.feed_the_beast.ftbl.lib.client.DrawableItem;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.config.PropertyDouble;
 import com.feed_the_beast.ftbl.lib.config.PropertyInt;
@@ -176,8 +177,10 @@ public class GuiEditNBT extends GuiBase
 				case Constants.NBT.TAG_BYTE:
 				case Constants.NBT.TAG_SHORT:
 				case Constants.NBT.TAG_INT:
-				case Constants.NBT.TAG_LONG:
 					title = ((NBTPrimitive) nbt).getInt();
+					break;
+				case Constants.NBT.TAG_LONG:
+					title = ((NBTPrimitive) nbt).getLong();
 					break;
 				case Constants.NBT.TAG_FLOAT:
 				case Constants.NBT.TAG_DOUBLE:
@@ -212,8 +215,10 @@ public class GuiEditNBT extends GuiBase
 				case Constants.NBT.TAG_BYTE:
 				case Constants.NBT.TAG_SHORT:
 				case Constants.NBT.TAG_INT:
-				case Constants.NBT.TAG_LONG:
 					GuiSelectors.selectJson(new PropertyInt(((NBTPrimitive) nbt).getInt()), this);
+					break;
+				case Constants.NBT.TAG_LONG:
+					GuiSelectors.selectJson(new PropertyString(Long.toString(((NBTPrimitive) nbt).getLong())), this);
 					break;
 				case Constants.NBT.TAG_FLOAT:
 				case Constants.NBT.TAG_DOUBLE:
@@ -236,8 +241,10 @@ public class GuiEditNBT extends GuiBase
 					case Constants.NBT.TAG_BYTE:
 					case Constants.NBT.TAG_SHORT:
 					case Constants.NBT.TAG_INT:
-					case Constants.NBT.TAG_LONG:
 						nbt = new NBTTagInt(value.getInt());
+						break;
+					case Constants.NBT.TAG_LONG:
+						nbt = new NBTTagLong(Long.parseLong(value.getString()));
 						break;
 					case Constants.NBT.TAG_FLOAT:
 					case Constants.NBT.TAG_DOUBLE:
@@ -315,7 +322,7 @@ public class GuiEditNBT extends GuiBase
 	public class ButtonNBTMap extends ButtonNBTCollection
 	{
 		private NBTTagCompound map;
-		private ItemStack stack = ItemStack.EMPTY;
+		private IDrawableObject hoverIcon = ImageProvider.NULL;
 
 		public ButtonNBTMap(@Nullable ButtonNBTCollection b, String key, NBTTagCompound m)
 		{
@@ -327,7 +334,6 @@ public class GuiEditNBT extends GuiBase
 		public void updateChildren(boolean first)
 		{
 			children.clear();
-			stack = ItemStack.EMPTY;
 			List<String> list = new ArrayList<>(map.getKeySet());
 			list.sort(StringUtils.IGNORE_CASE_COMPARATOR);
 
@@ -338,27 +344,49 @@ public class GuiEditNBT extends GuiBase
 				nbt.updateChildren(first);
 			}
 
-			if (map.hasKey("id", Constants.NBT.TAG_STRING) && map.hasKey("Count") && map.hasKey("Damage"))
-			{
-				if (first)
-				{
-					setCollapsed(true);
-				}
+			updateHoverIcon();
 
-				stack = new ItemStack(map);
+			if (first && !hoverIcon.isNull())
+			{
+				setCollapsed(true);
 			}
+		}
+
+		private void updateHoverIcon()
+		{
+			hoverIcon = ImageProvider.NULL;
+			ItemStack stack = (map.hasKey("id", Constants.NBT.TAG_STRING) && map.hasKey("Count") && map.hasKey("Damage")) ? new ItemStack(map) : ItemStack.EMPTY;
+
+			if (!stack.isEmpty())
+			{
+				hoverIcon = new DrawableItem(stack);
+			}
+
+			setWidth(12 + getFont().getStringWidth(getTitle(GuiEditNBT.this)) + (hoverIcon.isNull() ? 0 : 10));
 		}
 
 		@Override
 		public void addMouseOverText(GuiBase gui, List<String> list)
 		{
-			if (!stack.isEmpty())
+			if (!hoverIcon.isNull())
 			{
-				int ax = gui.getMouseX() + 4;
-				int ay = gui.getMouseY() - 20;
-				GuiHelper.drawBlankRect(ax - 1, ay - 1, 18, 18, Color4I.DARK_GRAY);
-				GuiHelper.drawBlankRect(ax, ay, 16, 16, Color4I.GRAY);
-				GuiHelper.drawItem(stack, ax, ay, true, Color4I.NONE);
+				if (hoverIcon instanceof DrawableItem)
+				{
+					list.add(((DrawableItem) hoverIcon).stack.getDisplayName());
+				}
+			}
+		}
+
+		@Override
+		public void renderWidget(GuiBase gui)
+		{
+			super.renderWidget(gui);
+
+			if (!hoverIcon.isNull())
+			{
+				int ax = getAX();
+				int ay = getAY();
+				hoverIcon.draw(ax + 12 + getFont().getStringWidth(getTitle(gui)), ay + 1, 8, 8, Color4I.NONE);
 			}
 		}
 
@@ -379,6 +407,8 @@ public class GuiEditNBT extends GuiBase
 			{
 				map.removeTag(k);
 			}
+
+			updateHoverIcon();
 
 			if (parent != null)
 			{

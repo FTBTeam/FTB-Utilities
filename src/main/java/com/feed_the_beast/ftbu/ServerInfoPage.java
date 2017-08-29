@@ -23,7 +23,7 @@ import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -55,7 +55,7 @@ public class ServerInfoPage
 		}
 	}
 
-	public static GuidePage getPageForPlayer(EntityPlayer ep)
+	public static GuidePage getPageForPlayer(EntityPlayerMP ep)
 	{
 		IUniverse universe = FTBLibAPI.API.getUniverse();
 		Preconditions.checkNotNull(universe, "World can't be null!");
@@ -74,15 +74,16 @@ public class ServerInfoPage
 
 		List<IForgePlayer> players = new ArrayList<>();
 		players.addAll(universe.getPlayers());
+		long now = ServerUtils.getWorldTime(ep.mcServer);
 
 		if (FTBUConfigGeneral.AUTO_RESTART.getBoolean())
 		{
-			page.println(FTBULang.TIMER_RESTART.textComponent(StringUtils.getTimeString(ftbuUniverseData.restartMillis - System.currentTimeMillis())));
+			page.println(FTBULang.TIMER_RESTART.textComponent(StringUtils.getTimeStringTicks(ftbuUniverseData.restartTime - now)));
 		}
 
 		if (FTBUConfigBackups.ENABLED.getBoolean())
 		{
-			page.println(FTBULang.TIMER_BACKUP.textComponent(StringUtils.getTimeString(Backups.INSTANCE.nextBackup - System.currentTimeMillis())));
+			page.println(FTBULang.TIMER_BACKUP.textComponent(StringUtils.getTimeStringTicks(Backups.INSTANCE.nextBackup - now)));
 		}
 
 		if (FTBUConfigGeneral.SERVER_INFO_DIFFICULTY.getBoolean())
@@ -95,9 +96,7 @@ public class ServerInfoPage
 			//FIXME: SERVER_INFO_ADMIN_QUICK_ACCESS
 		}
 
-		ITextComponent leaderboardsTitle = new TextComponentString("Leaderboards"); //LANG
-		leaderboardsTitle.getStyle().setColor(TextFormatting.RED);
-		GuidePage page1 = page.getSub("leaderboards").setTitle(leaderboardsTitle);
+		GuidePage page1 = page.getSub("leaderboards").setTitle(StringUtils.color(new TextComponentString("Leaderboards"), TextFormatting.RED)); //LANG
 		page1.setIcon(new DrawableItem(new ItemStack(Items.SIGN)));
 		page1.println("1.12: Work in progress!");
 

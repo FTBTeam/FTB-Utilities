@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbu.net;
 
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbu.FTBU;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,6 +24,11 @@ public class MessageEditNBT extends MessageToClient<MessageEditNBT>
 	{
 		info = i;
 		mainNbt = nbt;
+
+		if (CommonUtils.DEV_ENV)
+		{
+			CommonUtils.DEV_LOGGER.info("Editing NBT:" + mainNbt);
+		}
 	}
 
 	@Override

@@ -388,7 +388,7 @@ public class Ranks
 
 				list.add("</td><td>");
 
-				String info = p.getInfo();
+				String info = p.getDisplayInfo();
 
 				if (!info.isEmpty())
 				{

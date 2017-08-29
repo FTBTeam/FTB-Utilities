@@ -89,10 +89,9 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 		return data;
 	}
 
-	public long restartMillis;
+	public long restartTime;
 	private long nextChunkloaderUpdate, nextWebApiUpdate;
 	private final Map<String, BlockDimPos> warps = new HashMap<>();
-	private String lastRestartMessage = "";
 
 	public static void updateBadge(UUID playerId)
 	{
@@ -372,14 +371,13 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 	{
 		ClaimedChunkStorage.INSTANCE.init();
 
-		long startMillis = System.currentTimeMillis();
-		Backups.INSTANCE.nextBackup = startMillis + FTBUConfigBackups.backupMillis();
-		lastRestartMessage = "";
+		long start = System.currentTimeMillis();
+		Backups.INSTANCE.nextBackup = start + FTBUConfigBackups.backupTicks();
 
-		if (FTBUConfigGeneral.AUTO_RESTART.getBoolean() && FTBUConfigGeneral.RESTART_TIMER.getInt() > 0)
+		if (FTBUConfigGeneral.AUTO_RESTART.getBoolean() && FTBUConfigGeneral.RESTART_TIMER.getDouble() > 0L)
 		{
-			restartMillis = startMillis + (long) (FTBUConfigGeneral.RESTART_TIMER.getInt() * 3600D * 1000D);
-			FTBUFinals.LOGGER.info("Server restart in " + StringUtils.getTimeString(restartMillis));
+			restartTime = start + (long) (FTBUConfigGeneral.RESTART_TIMER.getDouble() * CommonUtils.TICKS_HOUR);
+			FTBUFinals.LOGGER.info("Server restart in " + StringUtils.getTimeStringTicks(restartTime));
 		}
 
 		FTBLibAPI.API.ticking().add(this);
@@ -427,7 +425,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 			return;
 		}
 
-		nextChunkloaderUpdate = System.currentTimeMillis() + 10000L;
+		nextChunkloaderUpdate = ServerUtils.getWorldTime() + 500L;
 		warps.clear();
 		nextWebApiUpdate = 0L;
 
@@ -474,26 +472,20 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 	@Override
 	public void update()
 	{
-		long now = System.currentTimeMillis();
+		long now = ServerUtils.getWorldTime();
 
-		if (restartMillis > 0L)
+		if (restartTime > 0L)
 		{
-			int secondsLeft = (int) ((restartMillis - System.currentTimeMillis()) / 1000L);
-			String msg = StringUtils.getTimeString(secondsLeft * 1000L);
+			long t = restartTime - now;
 
-			if (!lastRestartMessage.equals(msg))
+			if (t <= 0)
 			{
-				lastRestartMessage = msg;
-
-				if (secondsLeft <= 0)
-				{
-					CmdRestart.restart();
-					return;
-				}
-				else if (secondsLeft <= 10 || secondsLeft == 60 || secondsLeft == 300 || secondsLeft == 600 || secondsLeft == 1800)
-				{
-					Notification.of(RESTART_TIMER_ID, StringUtils.color(FTBULang.TIMER_RESTART.textComponent(msg), TextFormatting.LIGHT_PURPLE)).send(null);
-				}
+				CmdRestart.restart();
+				return;
+			}
+			else if ((t == CommonUtils.TICKS_SECOND * 10L && t % CommonUtils.TICKS_SECOND == 0L) || t == CommonUtils.TICKS_MINUTE || t == CommonUtils.TICKS_MINUTE * 5L || t == CommonUtils.TICKS_MINUTE * 10L || t == CommonUtils.TICKS_MINUTE * 30L)
+			{
+				Notification.of(RESTART_TIMER_ID, StringUtils.color(FTBULang.TIMER_RESTART.textComponent(StringUtils.getTimeStringTicks(t / CommonUtils.TICKS_SECOND)), TextFormatting.LIGHT_PURPLE)).send(null);
 			}
 		}
 
@@ -505,7 +497,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 
 		if (nextChunkloaderUpdate < now)
 		{
-			nextChunkloaderUpdate = now + 2L * 3600L;
+			nextChunkloaderUpdate = now + CommonUtils.TICKS_MINUTE;
 			FTBUChunkManager.INSTANCE.checkAll();
 		}
 
@@ -517,7 +509,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 
 		if (FTBUConfigWebAPI.ENABLED.getBoolean() && nextWebApiUpdate < now)
 		{
-			nextWebApiUpdate = now + (FTBUConfigWebAPI.UPDATE_INTERVAL.getInt() * 60000L);
+			nextWebApiUpdate = now + FTBUConfigWebAPI.UPDATE_INTERVAL.getInt() * CommonUtils.TICKS_MINUTE;
 			exportWebAPI();
 		}
 

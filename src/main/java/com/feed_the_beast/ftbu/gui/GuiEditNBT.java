@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.CombinedIcon;
 import com.feed_the_beast.ftbl.lib.client.DrawableItem;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.config.PropertyDouble;
 import com.feed_the_beast.ftbl.lib.config.PropertyInt;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
@@ -59,7 +60,7 @@ public class GuiEditNBT extends GuiBase
 {
 	private static IDrawableObject getIcon(String name)
 	{
-		return new CombinedIcon(Button.ICON_BACKGROUND, ImageProvider.get(FTBUFinals.MOD_ID + ":textures/gui/nbt/" + name + ".png"));
+		return new CombinedIcon(TexturelessRectangle.BUTTON_ROUND_GRAY, ImageProvider.get(FTBUFinals.MOD_ID + ":textures/gui/nbt/" + name + ".png"));
 	}
 
 	public static final IDrawableObject NBT_BYTE = getIcon("byte");

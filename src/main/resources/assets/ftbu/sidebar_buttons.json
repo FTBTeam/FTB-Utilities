@@ -66,7 +66,7 @@
 		"requires_op": true
 	},
 	"toggle.gamemode": {
-		"icon": "ftbl:icons/toggle_gamemode",
+		"icon": ["ftbl:icons/blue_button", "ftbl:textures/icons/toggle_gamemode.png"],
 		"dependencies": "after:ftbu.heal",
 		"click": {
 			"action": "run_command",
@@ -77,7 +77,7 @@
 		"requires_op": true
 	},
 	"toggle.rain": {
-		"icon": "ftbl:icons/toggle_rain",
+		"icon": ["ftbl:icons/blue_button", "ftbl:textures/icons/toggle_rain.png"],
 		"dependencies": "after:ftbu.toggle.gamemode",
 		"click": {
 			"action": "run_command",
@@ -88,7 +88,7 @@
 		"requires_op": true
 	},
 	"toggle.day": {
-		"icon": "ftbl:icons/toggle_day",
+		"icon": ["ftbl:icons/blue_button", "ftbl:textures/icons/toggle_day.png"],
 		"dependencies": "after:ftbu.toggle.rain",
 		"click": {
 			"action": "run_command",
@@ -99,7 +99,7 @@
 		"requires_op": true
 	},
 	"toggle.night": {
-		"icon": "ftbl:icons/toggle_night",
+		"icon": ["ftbl:icons/blue_button", "ftbl:textures/icons/toggle_night.png"],
 		"dependencies": "after:ftbu.toggle.day",
 		"click": {
 			"action": "run_command",

@@ -127,7 +127,7 @@ public enum Backups
 		}
 
 		Backups.notifyAll(FTBULang.BACKUP_START.textComponent(ics.getName()), false);
-		nextBackup = System.currentTimeMillis() + FTBUConfigBackups.backupMillis();
+		nextBackup = ServerUtils.getWorldTime(server) + FTBUConfigBackups.backupTicks();
 
 		try
 		{

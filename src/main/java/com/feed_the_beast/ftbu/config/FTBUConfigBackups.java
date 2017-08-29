@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.lib.config.PropertyDouble;
 import com.feed_the_beast.ftbl.lib.config.PropertyShort;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
 
 public class FTBUConfigBackups
@@ -33,8 +34,8 @@ public class FTBUConfigBackups
 		event.register(id, "use_separate_thread", USE_SEPARATE_THREAD);
 	}
 
-	public static long backupMillis()
+	public static long backupTicks()
 	{
-		return (long) (BACKUP_TIMER.getDouble() * 3600D * 1000D);
+		return (long) (BACKUP_TIMER.getDouble() * CommonUtils.TICKS_HOUR);
 	}
 }

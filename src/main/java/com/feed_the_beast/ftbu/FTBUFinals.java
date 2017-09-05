@@ -7,7 +7,8 @@ import org.apache.logging.log4j.Logger;
 public class FTBUFinals
 {
 	public static final String MOD_ID = "ftbu";
-	public static final Logger LOGGER = LogManager.getLogger("FTBUtilities");
+	public static final String MOD_NAME = "FTBUtilities";
+	public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 
 	public static ResourceLocation get(String id)
 	{

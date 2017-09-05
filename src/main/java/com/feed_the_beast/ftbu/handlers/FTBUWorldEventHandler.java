@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseClosedEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedBeforePlayersEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
-import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
+import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
@@ -70,7 +70,7 @@ public class FTBUWorldEventHandler
 			return true;
 		}
 
-		if (FTBUConfigWorld.SAFE_SPAWN.getBoolean() && FTBUUniverseData.isInSpawnD(entity.dimension, entity.posX, entity.posZ))
+		if (FTBUConfig.world.safe_spawn && FTBUUniverseData.isInSpawnD(entity.dimension, entity.posX, entity.posZ))
 		{
 			if (entity instanceof IMob)
 			{

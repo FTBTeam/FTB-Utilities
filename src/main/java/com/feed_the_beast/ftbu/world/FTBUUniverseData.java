@@ -11,6 +11,7 @@ import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBULang;
@@ -22,10 +23,6 @@ import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.api_impl.FTBUChunkManager;
 import com.feed_the_beast.ftbu.cmd.CmdRestart;
-import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
-import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
-import com.feed_the_beast.ftbu.config.FTBUConfigWebAPI;
-import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
 import com.feed_the_beast.ftbu.world.backups.Backups;
 import com.google.common.base.Preconditions;
@@ -71,7 +68,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 	private static final Map<UUID, String> LOCAL_BADGES = new HashMap<>();
 	public static final Function<ChunkDimPos, Boolean> ALLOW_EXPLOSION = pos ->
 	{
-		if (pos.dim == 0 && FTBUConfigWorld.SAFE_SPAWN.getBoolean() && isInSpawn(pos))
+		if (pos.dim == 0 && FTBUConfig.world.safe_spawn && isInSpawn(pos))
 		{
 			return false;
 		}
@@ -189,7 +186,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 	{
 		MinecraftServer server = ServerUtils.getServer();
 
-		if (pos.dim != 0 || (!server.isDedicatedServer() && !FTBUConfigWorld.SPAWN_AREA_IN_SP.getBoolean()))
+		if (pos.dim != 0 || (!server.isDedicatedServer() && !FTBUConfig.world.spawn_area_in_sp))
 		{
 			return false;
 		}
@@ -235,7 +232,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 
 	public static boolean claimChunk(IForgePlayer player, ChunkDimPos pos)
 	{
-		if (!FTBUConfigWorld.CHUNK_CLAIMING.getBoolean() || !FTBUPermissions.allowDimension(player.getProfile(), pos.dim))
+		if (!FTBUConfig.world.chunk_claiming || !FTBUPermissions.allowDimension(player.getProfile(), pos.dim))
 		{
 			return false;
 		}
@@ -372,11 +369,11 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 		ClaimedChunkStorage.INSTANCE.init();
 
 		long start = System.currentTimeMillis();
-		Backups.INSTANCE.nextBackup = start + FTBUConfigBackups.backupTicks();
+		Backups.INSTANCE.nextBackup = start + FTBUConfig.backups.ticks();
 
-		if (FTBUConfigGeneral.AUTO_RESTART.getBoolean() && FTBUConfigGeneral.RESTART_TIMER.getDouble() > 0L)
+		if (FTBUConfig.auto_restart.enabled && FTBUConfig.auto_restart.timer > 0D)
 		{
-			restartTime = start + (long) (FTBUConfigGeneral.RESTART_TIMER.getDouble() * CommonUtils.TICKS_HOUR);
+			restartTime = start + (long) (FTBUConfig.auto_restart.timer * CommonUtils.TICKS_HOUR);
 			FTBUFinals.LOGGER.info("Server restart in " + StringUtils.getTimeStringTicks(restartTime));
 		}
 
@@ -507,9 +504,9 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 			Backups.INSTANCE.postBackup();
 		}
 
-		if (FTBUConfigWebAPI.ENABLED.getBoolean() && nextWebApiUpdate < now)
+		if (FTBUConfig.webapi.enabled && nextWebApiUpdate < now)
 		{
-			nextWebApiUpdate = now + FTBUConfigWebAPI.UPDATE_INTERVAL.getInt() * CommonUtils.TICKS_MINUTE;
+			nextWebApiUpdate = now + FTBUConfig.webapi.update_interval * CommonUtils.TICKS_MINUTE;
 			exportWebAPI();
 		}
 
@@ -548,7 +545,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 			json.addProperty("time", System.currentTimeMillis());
 			json.add("stats", table.toJson());
 
-			File file = FTBUConfigWebAPI.FILE_LOCATION.getString().isEmpty() ? new File(CommonUtils.folderLocal, "ftbu/webapi.json") : new File(FTBUConfigWebAPI.FILE_LOCATION.getString());
+			File file = FTBUConfig.webapi.file_location.isEmpty() ? new File(CommonUtils.folderLocal, "ftbu/webapi.json") : new File(FTBUConfig.webapi.file_location);
 			JsonUtils.toJson(JsonUtils.GSON, file, json);
 		}
 		catch (Exception ex)

@@ -3,10 +3,10 @@ package com.feed_the_beast.ftbu.api_impl;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
+import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
-import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.world.FTBUTeamData;
 import net.minecraftforge.server.permission.PermissionAPI;
 
@@ -43,7 +43,7 @@ public class ClaimedChunk implements IClaimedChunk
 	{
 		if (upgrade == ChunkUpgrade.SHOULD_FORCE)
 		{
-			if (!FTBUConfigWorld.CHUNK_LOADING.getBoolean() || !hasUpgrade(ChunkUpgrade.LOADED) || !FTBUPermissions.canUpgradeChunk(owner.getProfile(), ChunkUpgrade.LOADED))
+			if (!FTBUConfig.world.chunk_loading || !hasUpgrade(ChunkUpgrade.LOADED) || !FTBUPermissions.canUpgradeChunk(owner.getProfile(), ChunkUpgrade.LOADED))
 			{
 				return false;
 			}

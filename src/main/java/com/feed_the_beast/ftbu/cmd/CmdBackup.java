@@ -4,8 +4,8 @@ import com.feed_the_beast.ftbl.lib.BroadcastSender;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.cmd.CmdTreeBase;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
+import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.feed_the_beast.ftbu.world.backups.Backups;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -28,7 +28,7 @@ public class CmdBackup extends CmdTreeBase
 			{
 				FTBULang.BACKUP_MANUAL_LAUNCH.printChat(BroadcastSender.INSTANCE, sender.getName());
 
-				if (!FTBUConfigBackups.USE_SEPARATE_THREAD.getBoolean())
+				if (!FTBUConfig.backups.use_separate_thread)
 				{
 					Backups.INSTANCE.postBackup();
 				}

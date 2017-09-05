@@ -2,10 +2,9 @@ package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.IRank;
-import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
-import com.feed_the_beast.ftbu.config.FTBUConfigRanks;
 import net.minecraft.entity.EntityList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
@@ -31,7 +30,7 @@ public class FTBUServerEventHandler
 	{
 		String msg = event.getMessage().trim();
 
-		if (FTBUConfigRanks.OVERRIDE_CHAT.getBoolean())
+		if (FTBUConfig.ranks.override_chat)
 		{
 			IRank rank = FTBUtilitiesAPI.API.getRank(event.getPlayer().getGameProfile());
 
@@ -56,7 +55,7 @@ public class FTBUServerEventHandler
 
 			main.appendSibling(name);
 
-			if (FTBUConfigGeneral.RANDOMIZE_CHAT_COLORS.getBoolean())
+			if (FTBUConfig.chat.randomize_colors)
 			{
 				main.appendSibling(StringUtils.color(ForgeHooks.newChatWithLinks(msg), gray ? TextFormatting.GRAY : TextFormatting.WHITE));
 			}

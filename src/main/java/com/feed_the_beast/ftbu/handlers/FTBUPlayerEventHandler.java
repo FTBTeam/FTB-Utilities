@@ -4,31 +4,28 @@ import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerDeathEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
 import com.feed_the_beast.ftbl.lib.Notification;
-import com.feed_the_beast.ftbl.lib.config.PropertyItemStack;
-import com.feed_the_beast.ftbl.lib.config.PropertyTextComponent;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.util.InvUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.api_impl.FTBUChunkManager;
-import com.feed_the_beast.ftbu.config.FTBUConfigLogin;
-import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import com.google.common.base.Objects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -59,25 +56,20 @@ public class FTBUPlayerEventHandler
 
 		if (event.isFirstLogin())
 		{
-			if (FTBUConfigLogin.ENABLE_STARTING_ITEMS.getBoolean())
+			if (FTBUConfig.login.enable_starting_items)
 			{
-				for (IConfigValue value : FTBUConfigLogin.STARTING_ITEMS)
+				for (ItemStack stack : FTBUConfig.login.getStartingItems())
 				{
-					InvUtils.giveItem(ep, ((PropertyItemStack) value).getItem());
+					InvUtils.giveItem(ep, stack.copy());
 				}
 			}
 		}
 
-		if (FTBUConfigLogin.ENABLE_MOTD.getBoolean())
+		if (FTBUConfig.login.enable_motd)
 		{
-			for (IConfigValue value : FTBUConfigLogin.MOTD)
+			for (ITextComponent t : FTBUConfig.login.getMOTD())
 			{
-				ITextComponent t = ((PropertyTextComponent) value).getText();
-
-				if (t != null)
-				{
-					ep.sendMessage(t);
-				}
+				ep.sendMessage(t);
 			}
 		}
 
@@ -216,7 +208,7 @@ public class FTBUPlayerEventHandler
                 return;
             }*/
 
-			if ((FTBUConfigWorld.SAFE_SPAWN.getBoolean() && FTBUUniverseData.isInSpawnD(e.getEntity().dimension, e.getEntity().posX, e.getEntity().posZ)))
+			if ((FTBUConfig.world.safe_spawn && FTBUUniverseData.isInSpawnD(e.getEntity().dimension, e.getEntity().posX, e.getEntity().posZ)))
 			{
 				e.setCanceled(true);
 			}

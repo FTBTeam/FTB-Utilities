@@ -2,9 +2,9 @@ package com.feed_the_beast.ftbu.world.backups;
 
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,7 +55,7 @@ public class ThreadBackup extends Thread
 
 			FTBUFinals.LOGGER.info("Backing up " + files.size() + " files..."); //LANG
 
-			if (FTBUConfigBackups.COMPRESSION_LEVEL.getInt() > 0)
+			if (FTBUConfig.backups.compression_level > 0)
 			{
 				out.append(".zip");
 				dstFile = FileUtils.newFile(new File(Backups.INSTANCE.backupsFolder, out.toString()));
@@ -64,7 +64,7 @@ public class ThreadBackup extends Thread
 
 				ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(dstFile));
 				//zos.setLevel(9);
-				zos.setLevel(FTBUConfigBackups.COMPRESSION_LEVEL.getInt());
+				zos.setLevel(FTBUConfig.backups.compression_level);
 
 				long logMillis = System.currentTimeMillis() + 5000L;
 
@@ -148,9 +148,9 @@ public class ThreadBackup extends Thread
 			FTBUFinals.LOGGER.info("Created " + dstFile.getAbsolutePath() + " from " + src.getAbsolutePath());
 			success = true;
 
-			if (!FTBUConfigBackups.SILENT.getBoolean())
+			if (!FTBUConfig.backups.silent)
 			{
-				if (FTBUConfigBackups.DISPLAY_FILE_SIZE.getBoolean())
+				if (FTBUConfig.backups.display_file_size)
 				{
 					String sizeB = FileUtils.getSizeS(dstFile);
 					String sizeT = FileUtils.getSizeS(Backups.INSTANCE.backupsFolder);
@@ -164,7 +164,7 @@ public class ThreadBackup extends Thread
 		}
 		catch (Exception ex)
 		{
-			if (!FTBUConfigBackups.SILENT.getBoolean())
+			if (!FTBUConfig.backups.silent)
 			{
 				Backups.notifyAll(FTBULang.BACKUP_FAIL.textComponent(ex.getClass().getName()), true);
 			}

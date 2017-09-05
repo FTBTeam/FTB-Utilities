@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbu.api_impl.FTBUChunkManager;
-import com.feed_the_beast.ftbu.config.FTBUConfigRanks;
 import com.feed_the_beast.ftbu.ranks.CmdOverride;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.backups.Backups;
@@ -18,7 +17,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod(modid = FTBUFinals.MOD_ID, name = FTBUFinals.MOD_ID, version = "0.0.0", useMetadata = true, acceptableRemoteVersions = "*", acceptedMinecraftVersions = "[1.10,1.13)", dependencies = "required-after:ftbl")
+@Mod(modid = FTBUFinals.MOD_ID, name = FTBUFinals.MOD_NAME, version = "0.0.0", useMetadata = true, acceptableRemoteVersions = "*", acceptedMinecraftVersions = "[1.10,1.13)", dependencies = "required-after:ftbl")
 public class FTBU
 {
 	@Mod.Instance(FTBUFinals.MOD_ID)
@@ -30,6 +29,7 @@ public class FTBU
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent event)
 	{
+		FTBUConfig.sync();
 		PROXY.preInit();
 	}
 
@@ -52,7 +52,7 @@ public class FTBU
 		Backups.INSTANCE.init();
 		Ranks.CMD_PERMISSION_NODES.clear();
 
-		if (FTBUConfigRanks.OVERRIDE_COMMANDS.getBoolean())
+		if (FTBUConfig.ranks.override_commands)
 		{
 			ServerCommandManager manager = (ServerCommandManager) ServerUtils.getServer().getCommandManager();
 			List<ICommand> commands = new ArrayList<>(manager.getCommands().values());

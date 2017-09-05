@@ -12,11 +12,11 @@ import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUCommon;
+import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.feed_the_beast.ftbu.api.NodeEntry;
-import com.feed_the_beast.ftbu.config.FTBUConfigRanks;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -102,7 +102,7 @@ public class Ranks
 
 	public static IRank getRank(GameProfile profile)
 	{
-		IRank r = FTBUConfigRanks.ENABLED.getBoolean() ? PLAYER_MAP.get(profile.getId()) : null;
+		IRank r = FTBUConfig.ranks.enabled ? PLAYER_MAP.get(profile.getId()) : null;
 		return (r == null) ? (ServerUtils.isOP(profile) ? getDefaultOPRank() : getDefaultPlayerRank()) : r;
 	}
 
@@ -153,7 +153,7 @@ public class Ranks
 		defaultOPRank = null;
 		boolean result = true;
 
-		if (FTBUConfigRanks.ENABLED.getBoolean())
+		if (FTBUConfig.ranks.enabled)
 		{
 			JsonElement e = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "ftbu/ranks.json"));
 

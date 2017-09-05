@@ -7,10 +7,10 @@ import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.registry.RegisterDataProvidersEvent;
 import com.feed_the_beast.ftbl.api.events.registry.RegisterOptionalServerModsEvent;
 import com.feed_the_beast.ftbu.FTBU;
+import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.ServerInfoPage;
 import com.feed_the_beast.ftbu.api_impl.FTBUChunkManager;
-import com.feed_the_beast.ftbu.config.FTBUConfigRanks;
 import com.feed_the_beast.ftbu.ranks.FTBUPermissionHandler;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
@@ -98,7 +98,7 @@ public class FTBLibIntegration
 	@SubscribeEvent
 	public static void configLoaded(ConfigLoadedEvent event)
 	{
-		if (event.getState() == LoaderState.ModState.PREINITIALIZED && FTBUConfigRanks.ENABLED.getBoolean())
+		if (event.getState() == LoaderState.ModState.PREINITIALIZED && FTBUConfig.ranks.enabled)
 		{
 			PermissionAPI.setPermissionHandler(FTBUPermissionHandler.INSTANCE);
 		}

@@ -3,9 +3,9 @@ package com.feed_the_beast.ftbu.api_impl;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbu.FTBU;
+import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
-import com.feed_the_beast.ftbu.config.FTBUConfigWorld;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
@@ -137,7 +137,7 @@ public enum FTBUChunkManager implements ForgeChunkManager.LoadingCallback, Forge
 					{
 						ForgeChunkManager.forceChunk(ticket, pos);
 
-						if (FTBUConfigWorld.LOG_CHUNKLOADING.getBoolean())
+						if (FTBUConfig.world.log_chunkloading)
 						{
 							FTBUFinals.LOGGER.info("Chunkloader forced " + chunk.getPos() + " by " + chunk.getOwner());
 						}
@@ -149,7 +149,7 @@ public enum FTBUChunkManager implements ForgeChunkManager.LoadingCallback, Forge
 					{
 						ForgeChunkManager.unforceChunk(ticket, pos);
 
-						if (FTBUConfigWorld.LOG_CHUNKLOADING.getBoolean())
+						if (FTBUConfig.world.log_chunkloading)
 						{
 							FTBUFinals.LOGGER.info("Chunkloader unforced " + chunk.getPos() + " by " + chunk.getOwner());
 						}

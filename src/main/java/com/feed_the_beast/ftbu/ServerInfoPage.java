@@ -13,8 +13,6 @@ import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
-import com.feed_the_beast.ftbu.config.FTBUConfigGeneral;
 import com.feed_the_beast.ftbu.ranks.CmdOverride;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
@@ -76,22 +74,22 @@ public class ServerInfoPage
 		players.addAll(universe.getPlayers());
 		long now = ServerUtils.getWorldTime(ep.mcServer);
 
-		if (FTBUConfigGeneral.AUTO_RESTART.getBoolean())
+		if (FTBUConfig.auto_restart.enabled)
 		{
 			page.println(FTBULang.TIMER_RESTART.textComponent(StringUtils.getTimeStringTicks(ftbuUniverseData.restartTime - now)));
 		}
 
-		if (FTBUConfigBackups.ENABLED.getBoolean())
+		if (FTBUConfig.backups.enabled)
 		{
 			page.println(FTBULang.TIMER_BACKUP.textComponent(StringUtils.getTimeStringTicks(Backups.INSTANCE.nextBackup - now)));
 		}
 
-		if (FTBUConfigGeneral.SERVER_INFO_DIFFICULTY.getBoolean())
+		if (FTBUConfig.server_info.difficulty)
 		{
 			page.println(FTBLibLang.DIFFICULTY.textComponent(StringUtils.firstUppercase(ep.world.getDifficulty().toString().toLowerCase())));
 		}
 
-		if (FTBUConfigGeneral.SERVER_INFO_ADMIN_QUICK_ACCESS.getBoolean())
+		if (FTBUConfig.server_info.admin_quick_access)
 		{
 			//FIXME: SERVER_INFO_ADMIN_QUICK_ACCESS
 		}

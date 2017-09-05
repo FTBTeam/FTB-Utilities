@@ -5,9 +5,9 @@ import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
+import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.config.FTBUConfigBackups;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import net.minecraft.command.ICommandSender;
@@ -37,7 +37,7 @@ public enum Backups
 
 	public void init()
 	{
-		backupsFolder = FTBUConfigBackups.FOLDER.getString().isEmpty() ? new File(CommonUtils.folderMinecraft, "/backups/") : new File(FTBUConfigBackups.FOLDER.getString());
+		backupsFolder = FTBUConfig.backups.folder.isEmpty() ? new File(CommonUtils.folderMinecraft, "/backups/") : new File(FTBUConfig.backups.folder);
 		thread = null;
 
 		backups.clear();
@@ -81,7 +81,7 @@ public enum Backups
 						Calendar c = Calendar.getInstance();
 						c.set(year, month, day, hours, minutes, seconds);
 
-						if (FTBUConfigBackups.COMPRESSION_LEVEL.getInt() > 0)
+						if (FTBUConfig.backups.compression_level > 0)
 						{
 							s += ".zip";
 						}
@@ -121,13 +121,13 @@ public enum Backups
 
 		boolean auto = !(ics instanceof EntityPlayerMP);
 
-		if (auto && !FTBUConfigBackups.ENABLED.getBoolean())
+		if (auto && !FTBUConfig.backups.enabled)
 		{
 			return false;
 		}
 
 		Backups.notifyAll(FTBULang.BACKUP_START.textComponent(ics.getName()), false);
-		nextBackup = ServerUtils.getWorldTime(server) + FTBUConfigBackups.backupTicks();
+		nextBackup = ServerUtils.getWorldTime(server) + FTBUConfig.backups.ticks();
 
 		try
 		{
@@ -160,7 +160,7 @@ public enum Backups
 
 		File wd = server.getEntityWorld().getSaveHandler().getWorldDirectory();
 
-		if (FTBUConfigBackups.USE_SEPARATE_THREAD.getBoolean())
+		if (FTBUConfig.backups.use_separate_thread)
 		{
 			thread = new ThreadBackup(wd, customName);
 			thread.start();
@@ -181,7 +181,7 @@ public enum Backups
 		{
 			backups.sort(Backup.COMPARATOR);
 
-			int backupsToKeep = FTBUConfigBackups.BACKUPS_TO_KEEP.getInt();
+			int backupsToKeep = FTBUConfig.backups.backups_to_keep;
 
 			if (backupsToKeep > 0)
 			{

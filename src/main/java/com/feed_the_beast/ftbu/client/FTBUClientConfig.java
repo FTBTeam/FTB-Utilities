@@ -1,19 +1,17 @@
 package com.feed_the_beast.ftbu.client;
 
-import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.api.events.registry.RegisterClientConfigEvent;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * @author LatvianModder
  */
-@EventHandler(Side.CLIENT)
+@Mod.EventBusSubscriber(modid = FTBUFinals.MOD_ID, value = Side.CLIENT)
 @Config(modid = FTBUFinals.MOD_ID + "_client", category = "config", name = "../local/client/" + FTBUFinals.MOD_ID)
 public class FTBUClientConfig
 {
@@ -38,11 +36,5 @@ public class FTBUClientConfig
 		{
 			sync();
 		}
-	}
-
-	@SubscribeEvent
-	public static void registerClientConfig(RegisterClientConfigEvent event)
-	{
-		event.register(FTBUFinals.MOD_ID + "_client", FTBUFinals.MOD_NAME, ImageProvider.get(FTBUFinals.MOD_ID + ":textures/logo_guide.png"));
 	}
 }

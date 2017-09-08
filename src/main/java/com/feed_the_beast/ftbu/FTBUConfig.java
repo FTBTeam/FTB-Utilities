@@ -45,7 +45,6 @@ public class FTBUConfig
 		@Config.LangKey(GuiLang.LANG_ENABLED)
 		public boolean enabled = false;
 
-		@Config.RangeDouble(min = 0, max = 720)
 		@Config.Comment({
 				"Server will automatically shut down after X hours",
 				"Time Format: HH:MM. If the system time matches a value, server will shut down",

@@ -34,8 +34,6 @@ import net.minecraftforge.server.command.CommandTreeBase;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ServerInfoPage
 {
@@ -70,13 +68,13 @@ public class ServerInfoPage
 		boolean isOP = !isDedi || PermissionAPI.hasPermission(ep, FTBUPermissions.DISPLAY_ADMIN_INFO);
 		FTBUUniverseData ftbuUniverseData = FTBUUniverseData.get();
 
-		List<IForgePlayer> players = new ArrayList<>();
-		players.addAll(universe.getPlayers());
-		long now = ServerUtils.getWorldTime(ep.mcServer);
+		//List<IForgePlayer> players = new ArrayList<>();
+		//players.addAll(universe.getPlayers());
+		long now = ServerUtils.getWorldTime();
 
-		if (FTBUConfig.auto_restart.enabled)
+		if (ftbuUniverseData.shutdownTime > 0L)
 		{
-			page.println(FTBULang.TIMER_RESTART.textComponent(StringUtils.getTimeStringTicks(ftbuUniverseData.restartTime - now)));
+			page.println(FTBULang.TIMER_SHUTDOWN.textComponent(StringUtils.getTimeStringTicks(ftbuUniverseData.shutdownTime - now)));
 		}
 
 		if (FTBUConfig.backups.enabled)
@@ -89,10 +87,10 @@ public class ServerInfoPage
 			page.println(FTBLibLang.DIFFICULTY.textComponent(StringUtils.firstUppercase(ep.world.getDifficulty().toString().toLowerCase())));
 		}
 
-		if (FTBUConfig.server_info.admin_quick_access)
-		{
-			//FIXME: SERVER_INFO_ADMIN_QUICK_ACCESS
-		}
+		//if (FTBUConfig.server_info.admin_quick_access)
+		//{
+		//FIXME: SERVER_INFO_ADMIN_QUICK_ACCESS
+		//}
 
 		GuidePage page1 = page.getSub("leaderboards").setTitle(StringUtils.color(new TextComponentString("Leaderboards"), TextFormatting.RED)); //LANG
 		page1.setIcon(new DrawableItem(new ItemStack(Items.SIGN)));

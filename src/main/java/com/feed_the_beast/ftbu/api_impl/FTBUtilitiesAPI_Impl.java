@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.api_impl;
 
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.lib.config.ConfigValue;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunkStorage;
@@ -25,7 +25,7 @@ public class FTBUtilitiesAPI_Impl extends FTBUtilitiesAPI
 	}
 
 	@Override
-	public IConfigValue getRankConfig(GameProfile profile, String id)
+	public ConfigValue getRankConfig(GameProfile profile, String id)
 	{
 		return getRank(profile).getConfig(id);
 	}

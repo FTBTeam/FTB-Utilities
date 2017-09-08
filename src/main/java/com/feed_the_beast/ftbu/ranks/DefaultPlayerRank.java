@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.ranks;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.IRankConfig;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.lib.config.PropertyNull;
+import com.feed_the_beast.ftbl.lib.config.ConfigNull;
+import com.feed_the_beast.ftbl.lib.config.ConfigValue;
+import com.feed_the_beast.ftbl.lib.config.RankConfigKey;
 import com.feed_the_beast.ftbu.api.IRank;
 
 /**
@@ -25,9 +25,9 @@ public class DefaultPlayerRank extends DefaultRank
 	}
 
 	@Override
-	public IConfigValue getConfig(String id)
+	public ConfigValue getConfig(String id)
 	{
-		IRankConfig config = FTBLibAPI.API.getRankConfigRegistry().get(id);
-		return config == null ? PropertyNull.INSTANCE : config.getDefValue();
+		RankConfigKey config = FTBLibAPI.API.getRankConfigRegistry().get(id);
+		return config == null ? ConfigNull.INSTANCE : config.getDefValue();
 	}
 }

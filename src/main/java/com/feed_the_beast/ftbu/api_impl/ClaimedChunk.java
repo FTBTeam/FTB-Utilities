@@ -69,8 +69,7 @@ public class ClaimedChunk implements IClaimedChunk
 				return false;
 			}
 
-			FTBUTeamData data = FTBUTeamData.get(owner.getTeam());
-			return data != null && !data.explosions.getBoolean();
+			return !FTBUTeamData.get(owner.getTeam()).explosions.getBoolean();
 		}
 
 		return Bits.getFlag(flags, 1 << upgrade.getId());

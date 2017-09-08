@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbu;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbu.api_impl.FTBUChunkManager;
 import com.feed_the_beast.ftbu.ranks.CmdOverride;
+import com.feed_the_beast.ftbu.ranks.FTBUPermissionHandler;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.backups.Backups;
 import net.minecraft.command.ICommand;
@@ -13,6 +14,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,12 @@ public class FTBU
 	public void onPreInit(FMLPreInitializationEvent event)
 	{
 		FTBUConfig.sync();
+
+		if (FTBUConfig.ranks.enabled)
+		{
+			PermissionAPI.setPermissionHandler(FTBUPermissionHandler.INSTANCE);
+		}
+
 		PROXY.preInit();
 	}
 
@@ -44,6 +52,7 @@ public class FTBU
 	{
 		PROXY.postInit();
 		FTBUChunkManager.INSTANCE.init();
+		FTBUConfig.sync();
 	}
 
 	@Mod.EventHandler

@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.gui;
 
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
@@ -8,9 +7,10 @@ import com.feed_the_beast.ftbl.lib.client.CombinedIcon;
 import com.feed_the_beast.ftbl.lib.client.DrawableItem;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
-import com.feed_the_beast.ftbl.lib.config.PropertyDouble;
-import com.feed_the_beast.ftbl.lib.config.PropertyInt;
-import com.feed_the_beast.ftbl.lib.config.PropertyString;
+import com.feed_the_beast.ftbl.lib.config.ConfigDouble;
+import com.feed_the_beast.ftbl.lib.config.ConfigInt;
+import com.feed_the_beast.ftbl.lib.config.ConfigString;
+import com.feed_the_beast.ftbl.lib.config.ConfigValue;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -216,24 +216,24 @@ public class GuiEditNBT extends GuiBase
 				case Constants.NBT.TAG_BYTE:
 				case Constants.NBT.TAG_SHORT:
 				case Constants.NBT.TAG_INT:
-					GuiSelectors.selectJson(new PropertyInt(((NBTPrimitive) nbt).getInt()), this);
+					GuiSelectors.selectJson(new ConfigInt(((NBTPrimitive) nbt).getInt()), this);
 					break;
 				case Constants.NBT.TAG_LONG:
-					GuiSelectors.selectJson(new PropertyString(Long.toString(((NBTPrimitive) nbt).getLong())), this);
+					GuiSelectors.selectJson(new ConfigString(Long.toString(((NBTPrimitive) nbt).getLong())), this);
 					break;
 				case Constants.NBT.TAG_FLOAT:
 				case Constants.NBT.TAG_DOUBLE:
 				case Constants.NBT.TAG_ANY_NUMERIC:
-					GuiSelectors.selectJson(new PropertyDouble(((NBTPrimitive) nbt).getDouble()), this);
+					GuiSelectors.selectJson(new ConfigDouble(((NBTPrimitive) nbt).getDouble()), this);
 					break;
 				case Constants.NBT.TAG_STRING:
-					GuiSelectors.selectJson(new PropertyString(((NBTTagString) nbt).getString()), this);
+					GuiSelectors.selectJson(new ConfigString(((NBTTagString) nbt).getString()), this);
 					break;
 			}
 		}
 
 		@Override
-		public void onCallback(IConfigValue value, boolean set)
+		public void onCallback(ConfigValue value, boolean set)
 		{
 			if (set)
 			{
@@ -373,7 +373,7 @@ public class GuiEditNBT extends GuiBase
 			{
 				if (hoverIcon instanceof DrawableItem)
 				{
-					list.add(((DrawableItem) hoverIcon).stack.getDisplayName());
+					list.add(((DrawableItem) hoverIcon).getStack().getDisplayName());
 				}
 			}
 		}
@@ -641,7 +641,7 @@ public class GuiEditNBT extends GuiBase
 		{
 			if (selected instanceof ButtonNBTMap)
 			{
-				GuiSelectors.selectJson(new PropertyString("_unnamed"), (value, set) ->
+				GuiSelectors.selectJson(new ConfigString("_unnamed"), (value, set) ->
 				{
 					if (set && !value.getString().isEmpty())
 					{
@@ -700,7 +700,7 @@ public class GuiEditNBT extends GuiBase
 				{
 					if (canRename)
 					{
-						GuiSelectors.selectJson(new PropertyString(selected.key), (value, set) ->
+						GuiSelectors.selectJson(new ConfigString(selected.key), (value, set) ->
 						{
 							if (set)
 							{
@@ -870,7 +870,7 @@ public class GuiEditNBT extends GuiBase
 
 		panelNbt.addFlags(Panel.FLAG_DEFAULTS);
 
-		scroll = new PanelScrollBar(0, 20, 16, 0, 10, panelNbt)
+		scroll = new PanelScrollBar(0, 20, 16, 0, 0, panelNbt)
 		{
 			@Override
 			public boolean shouldRender(GuiBase gui)

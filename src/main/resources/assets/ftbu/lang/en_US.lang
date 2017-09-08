@@ -3,8 +3,8 @@ ftbu.button.explosions=Explosions
 ftbu.button.block_security=Block Security
 
 # Config
-ftbu.config.auto_restart=Auto Restart
-ftbu.config.auto_restart.timer=Timer
+ftbu.config.auto_shutdown=Auto Shutdown
+ftbu.config.auto_shutdown.times=Shutdown Times
 
 ftbu.config.server_info=Server Info
 ftbu.config.server_info.difficulty=Difficulty
@@ -127,7 +127,7 @@ key.ftbu.light_values=Toggle Light Values
 key.ftbu.warp=Warp GUI
 
 # Misc
-ftbu.lang.timer_restart=Server restarts in %s
+ftbu.lang.timer_shutdown=Server shuts down in %s
 ftbu.lang.timer_backup=Server backup in: %s
 ftbu.button.claims_unclaim_all=Unclaim all chunks
 ftbu.button.claims_unclaim_all_dim=Unclaim all chunks in %s
@@ -281,7 +281,7 @@ ftbu.guide.tp_commands.prefix=If the command doesn't work, try it with '/ftb [co
 ftbu.guide.tp_commands.gui=You can also bind a key to 'Warps GUI' in Controls, and while in-game, pressing it will open Warps GUI, from which you can choose home, warp, back location or spawn with one click.
 
 # Commands
-commands.ftb.restart.usage=/ftb restart
+commands.ftb.shutdown.usage=/ftb shutdown
 commands.ftb.inv.usage=/ftb inv
 commands.ftb.inv.view.usage=/ftb inv view <player>
 commands.ftb.inv.save.usage=/ftb inv save <player> <id>

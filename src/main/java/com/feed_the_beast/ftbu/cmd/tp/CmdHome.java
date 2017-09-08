@@ -45,11 +45,7 @@ public class CmdHome extends CmdBase
 		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
 		FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(ep));
 
-		if (data == null)
-		{
-			return;
-		}
-		else if (args.length == 0)
+		if (args.length == 0)
 		{
 			args = new String[] {"home"};
 		}

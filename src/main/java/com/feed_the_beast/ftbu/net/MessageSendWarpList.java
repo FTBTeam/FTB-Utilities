@@ -73,28 +73,18 @@ public class MessageSendWarpList extends MessageToClient<MessageSendWarpList>
 		warps.add(new WarpItem("Spawn", command(player, "spawn", "ftb spawn"), WarpItem.TYPE_SPECIAL_OUT));
 		warps.add(new WarpItem("Back", command(player, "back", "ftb back"), WarpItem.TYPE_SPECIAL_IN));
 
-		FTBUUniverseData universeData = FTBUUniverseData.get();
+		String cmd = command(player, "warp", "ftb warp") + " ";
 
-		if (universeData != null)
+		for (String s : FTBUUniverseData.get().listWarps())
 		{
-			String cmd = command(player, "warp", "ftb warp") + " ";
-
-			for (String s : universeData.listWarps())
-			{
-				warps.add(new WarpItem(s, cmd + s, WarpItem.TYPE_WARP));
-			}
+			warps.add(new WarpItem(s, cmd + s, WarpItem.TYPE_WARP));
 		}
 
-		FTBUPlayerData playerData = FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(player));
+		cmd = command(player, "home", "ftb home") + " ";
 
-		if (playerData != null)
+		for (String s : FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(player)).listHomes())
 		{
-			String cmd = command(player, "home", "ftb home") + " ";
-
-			for (String s : playerData.listHomes())
-			{
-				warps.add(new WarpItem(s, cmd + s, WarpItem.TYPE_HOME));
-			}
+			warps.add(new WarpItem(s, cmd + s, WarpItem.TYPE_HOME));
 		}
 	}
 

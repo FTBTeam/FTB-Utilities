@@ -27,11 +27,7 @@ public class CmdBack extends CmdBase
 
 		FTBUPlayerData data = FTBUPlayerData.get(p);
 
-		if (data == null)
-		{
-			return;
-		}
-		else if (data.lastDeath == null)
+		if (data.lastDeath == null)
 		{
 			throw FTBULang.WARP_NO_DP.commandError();
 		}

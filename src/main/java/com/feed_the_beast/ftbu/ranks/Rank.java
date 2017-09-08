@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.ranks;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.IRankConfig;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
+import com.feed_the_beast.ftbl.lib.config.ConfigValue;
+import com.feed_the_beast.ftbl.lib.config.RankConfigKey;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.google.gson.JsonArray;
@@ -23,8 +23,8 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 	IRank parent;
 	private final Map<String, Event.Result> permissions;
 	private final Map<String, Event.Result> cachedPermissions;
-	private final Map<String, IConfigValue> config;
-	private final Map<String, IConfigValue> cachedConfig;
+	private final Map<String, ConfigValue> config;
+	private final Map<String, ConfigValue> cachedConfig;
 	String syntax;
 
 	public Rank(String id)
@@ -85,9 +85,9 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 	}
 
 	@Override
-	public IConfigValue getConfig(String id)
+	public ConfigValue getConfig(String id)
 	{
-		IConfigValue e = cachedConfig.get(id);
+		ConfigValue e = cachedConfig.get(id);
 
 		if (e == null)
 		{
@@ -175,11 +175,11 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 		{
 			for (Map.Entry<String, JsonElement> entry : o.get("config").getAsJsonObject().entrySet())
 			{
-				IRankConfig rconfig = FTBLibAPI.API.getRankConfigRegistry().get(entry.getKey());
+				RankConfigKey rconfig = FTBLibAPI.API.getRankConfigRegistry().get(entry.getKey());
 
 				if (rconfig != null)
 				{
-					IConfigValue value = rconfig.getDefValue().copy();
+					ConfigValue value = rconfig.getDefValue().copy();
 					value.fromJson(entry.getValue());
 					config.put(rconfig.getName(), value);
 				}

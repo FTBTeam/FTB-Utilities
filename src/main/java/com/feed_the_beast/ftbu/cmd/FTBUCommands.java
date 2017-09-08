@@ -31,7 +31,7 @@ public class FTBUCommands
 	{
 		if (event.isDedicatedServer())
 		{
-			event.add(new CmdRestart());
+			event.add(new CmdShutdown());
 		}
 
 		if (FTBUConfig.commands.inv)

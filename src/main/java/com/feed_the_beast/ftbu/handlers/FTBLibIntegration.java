@@ -1,25 +1,20 @@
 package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.api.events.ConfigLoadedEvent;
 import com.feed_the_beast.ftbl.api.events.LoadWorldDataEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.registry.RegisterDataProvidersEvent;
 import com.feed_the_beast.ftbl.api.events.registry.RegisterOptionalServerModsEvent;
 import com.feed_the_beast.ftbu.FTBU;
-import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.ServerInfoPage;
 import com.feed_the_beast.ftbu.api_impl.FTBUChunkManager;
-import com.feed_the_beast.ftbu.ranks.FTBUPermissionHandler;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.world.FTBUPlayerData;
 import com.feed_the_beast.ftbu.world.FTBUTeamData;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.server.permission.PermissionAPI;
 
 /**
  * @author LatvianModder
@@ -93,15 +88,6 @@ public class FTBLibIntegration
 	public static void registerTeamDataProvider(RegisterDataProvidersEvent.Team event)
 	{
 		event.register(FTBU_DATA, owner -> new FTBUTeamData());
-	}
-
-	@SubscribeEvent
-	public static void configLoaded(ConfigLoadedEvent event)
-	{
-		if (event.getState() == LoaderState.ModState.PREINITIALIZED && FTBUConfig.ranks.enabled)
-		{
-			PermissionAPI.setPermissionHandler(FTBUPermissionHandler.INSTANCE);
-		}
 	}
 
 	@SubscribeEvent

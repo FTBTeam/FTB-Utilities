@@ -34,11 +34,8 @@ public class CmdDelHome extends CmdBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(sender));
-		if (data == null)
-		{
-			return;
-		}
-		else if (args.length == 0)
+
+		if (args.length == 0)
 		{
 			args = new String[] {"home"};
 		}

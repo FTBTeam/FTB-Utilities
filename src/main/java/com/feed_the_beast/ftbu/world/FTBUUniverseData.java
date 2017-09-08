@@ -22,7 +22,7 @@ import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.api_impl.FTBUChunkManager;
-import com.feed_the_beast.ftbu.cmd.CmdRestart;
+import com.feed_the_beast.ftbu.cmd.CmdShutdown;
 import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
 import com.feed_the_beast.ftbu.world.backups.Backups;
 import com.google.common.base.Preconditions;
@@ -47,6 +47,8 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -86,7 +88,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 		return data;
 	}
 
-	public long restartTime;
+	public long shutdownTime;
 	private long nextChunkloaderUpdate, nextWebApiUpdate;
 	private final Map<String, BlockDimPos> warps = new HashMap<>();
 
@@ -120,7 +122,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 
 		FTBUPlayerData data = FTBUPlayerData.get(player);
 
-		if (data == null || !data.renderBadge.getBoolean())
+		if (!data.renderBadge.getBoolean())
 		{
 			return "";
 		}
@@ -368,13 +370,38 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 	{
 		ClaimedChunkStorage.INSTANCE.init();
 
-		long start = System.currentTimeMillis();
+		long start = ServerUtils.getWorldTime();
 		Backups.INSTANCE.nextBackup = start + FTBUConfig.backups.ticks();
 
-		if (FTBUConfig.auto_restart.enabled && FTBUConfig.auto_restart.timer > 0D)
+		if (FTBUConfig.auto_shutdown.enabled && FTBUConfig.auto_shutdown.times.length > 0 && ServerUtils.getServer().isDedicatedServer())
 		{
-			restartTime = start + (long) (FTBUConfig.auto_restart.timer * CommonUtils.TICKS_HOUR);
-			FTBUFinals.LOGGER.info("Server restart in " + StringUtils.getTimeStringTicks(restartTime));
+			Calendar calendar = Calendar.getInstance();
+			int currentTime = calendar.get(Calendar.HOUR_OF_DAY) * 3600 + calendar.get(Calendar.MINUTE) * 60 + calendar.get(Calendar.SECOND);
+			int[] times = new int[FTBUConfig.auto_shutdown.times.length];
+
+			for (int i = 0; i < times.length; i++)
+			{
+				String[] s = FTBUConfig.auto_shutdown.times[i].split(":", 2);
+
+				times[i] = Integer.parseInt(s[0]) * 3600 + Integer.parseInt(s[1]) * 60;
+
+				if (times[i] <= currentTime)
+				{
+					times[i] += 24 * 3600;
+				}
+			}
+
+			Arrays.sort(times);
+
+			for (int i = 0; i < times.length; i++)
+			{
+				if (times[i] > currentTime)
+				{
+					shutdownTime = start + (times[i] - currentTime) * CommonUtils.TICKS_SECOND;
+					FTBUFinals.LOGGER.info("Server shutdown in " + StringUtils.getTimeStringTicks(shutdownTime));
+					break;
+				}
+			}
 		}
 
 		FTBLibAPI.API.ticking().add(this);
@@ -471,18 +498,18 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 	{
 		long now = ServerUtils.getWorldTime();
 
-		if (restartTime > 0L)
+		if (shutdownTime > 0L)
 		{
-			long t = restartTime - now;
+			long t = shutdownTime - now;
 
 			if (t <= 0)
 			{
-				CmdRestart.restart();
+				CmdShutdown.shutdown(ServerUtils.getServer());
 				return;
 			}
 			else if ((t == CommonUtils.TICKS_SECOND * 10L && t % CommonUtils.TICKS_SECOND == 0L) || t == CommonUtils.TICKS_MINUTE || t == CommonUtils.TICKS_MINUTE * 5L || t == CommonUtils.TICKS_MINUTE * 10L || t == CommonUtils.TICKS_MINUTE * 30L)
 			{
-				Notification.of(RESTART_TIMER_ID, StringUtils.color(FTBULang.TIMER_RESTART.textComponent(StringUtils.getTimeStringTicks(t / CommonUtils.TICKS_SECOND)), TextFormatting.LIGHT_PURPLE)).send(null);
+				Notification.of(RESTART_TIMER_ID, StringUtils.color(FTBULang.TIMER_SHUTDOWN.textComponent(StringUtils.getTimeStringTicks(t / CommonUtils.TICKS_SECOND)), TextFormatting.LIGHT_PURPLE)).send(null);
 			}
 		}
 

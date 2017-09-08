@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
+import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -22,7 +22,9 @@ import java.util.List;
 @Config(modid = FTBUFinals.MOD_ID, category = "config", name = "../local/ftbu/config")
 public class FTBUConfig
 {
-	public static final AutoRestart auto_restart = new AutoRestart();
+	@Config.RequiresWorldRestart
+	public static final AutoShutdown auto_shutdown = new AutoShutdown();
+
 	public static final ServerInfo server_info = new ServerInfo();
 	public static final Chat chat = new Chat();
 	public static final Backups backups = new Backups();
@@ -38,31 +40,25 @@ public class FTBUConfig
 	public static final WebAPI webapi = new WebAPI();
 	public static final World world = new World();
 
-	public static class AutoRestart
+	public static class AutoShutdown
 	{
-		@Config.RequiresWorldRestart
 		@Config.LangKey(GuiLang.LANG_ENABLED)
 		public boolean enabled = false;
 
 		@Config.RangeDouble(min = 0, max = 720)
-		@Config.RequiresWorldRestart
 		@Config.Comment({
 				"Server will automatically shut down after X hours",
-				"0 - Disabled",
-				"0.5 - 30 minutes",
-				"1 - 1 Hour",
-				"4 - 1 Day",
-				"168 - 1 Week",
-				"720 - 1 Month"
+				"Time Format: HH:MM. If the system time matches a value, server will shut down",
+				"It will look for closest value available that is not equal to current time"
 		})
-		public double timer = 12D;
+		public String[] times = {"04:00", "16:00"};
 	}
 
 	public static class ServerInfo
 	{
 		public boolean difficulty = true;
 
-		public boolean admin_quick_access = true;
+		//public boolean admin_quick_access = true;
 	}
 
 	public static class Chat
@@ -223,7 +219,7 @@ public class FTBUConfig
 		{
 			try
 			{
-				ItemStack stack = new ItemStack(JsonToNBT.getTagFromJson(s));
+				ItemStack stack = ItemStackSerializer.parseItem(s);
 
 				if (!stack.isEmpty())
 				{

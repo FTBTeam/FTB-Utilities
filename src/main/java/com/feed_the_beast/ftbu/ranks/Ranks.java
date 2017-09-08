@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.ranks;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.IRankConfig;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.client.DrawableItem;
+import com.feed_the_beast.ftbl.lib.config.ConfigValue;
+import com.feed_the_beast.ftbl.lib.config.RankConfigKey;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
@@ -329,8 +329,8 @@ public class Ranks
 			ex.printStackTrace();
 		}
 
-		List<IRankConfig> sortedRankConfigs = new ArrayList<>(FTBLibAPI.API.getRankConfigRegistry().values());
-		sortedRankConfigs.sort(StringUtils.ID_COMPARATOR);
+		List<RankConfigKey> sortedRankConfigKeys = new ArrayList<>(FTBLibAPI.API.getRankConfigRegistry().values());
+		sortedRankConfigKeys.sort(StringUtils.ID_COMPARATOR);
 
 		try
 		{
@@ -342,9 +342,9 @@ public class Ranks
 
 			List<String> infoList = new ArrayList<>();
 
-			for (IRankConfig p : sortedRankConfigs)
+			for (RankConfigKey p : sortedRankConfigKeys)
 			{
-				IConfigValue value = p.getDefValue();
+				ConfigValue value = p.getDefValue();
 				list.add("<tr><td>" + p.getName() + "</td><td>");
 
 				value.addInfo(p, infoList);

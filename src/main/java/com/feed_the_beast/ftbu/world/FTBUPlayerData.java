@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
-import com.feed_the_beast.ftbl.lib.config.PropertyBool;
+import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbu.FTBUCommon;
@@ -12,6 +12,7 @@ import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
+import com.google.common.base.Preconditions;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
@@ -28,9 +29,9 @@ import java.util.Map;
  */
 public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 {
-	public final PropertyBool renderBadge = new PropertyBool(true);
-	public final PropertyBool chatLinks = new PropertyBool(true);
-	public final PropertyBool disableGlobalBadge = new PropertyBool(false);
+	public final ConfigBoolean renderBadge = new ConfigBoolean(true);
+	public final ConfigBoolean chatLinks = new ConfigBoolean(true);
+	public final ConfigBoolean disableGlobalBadge = new ConfigBoolean(false);
 
 	public final IForgePlayer player;
 	public BlockDimPos lastDeath, lastSafePos;
@@ -42,10 +43,11 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 		player = p;
 	}
 
-	@Nullable
 	public static FTBUPlayerData get(@Nullable IForgePlayer p)
 	{
-		return p == null ? null : (FTBUPlayerData) p.getData(FTBLibIntegration.FTBU_DATA);
+		FTBUPlayerData data = p == null ? null : (FTBUPlayerData) p.getData(FTBLibIntegration.FTBU_DATA);
+		Preconditions.checkNotNull(data);
+		return data;
 	}
 
 	@Override

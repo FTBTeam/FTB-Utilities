@@ -23,34 +23,19 @@ public class FTBUWorldEventHandler
 	@SubscribeEvent
 	public static void onWorldLoaded(ForgeUniverseLoadedEvent event)
 	{
-		FTBUUniverseData data = FTBUUniverseData.get();
-
-		if (data != null)
-		{
-			data.onLoaded();
-		}
+		FTBUUniverseData.get().onLoaded();
 	}
 
 	@SubscribeEvent
 	public static void onWorldLoadedBeforePlayers(ForgeUniverseLoadedBeforePlayersEvent event)
 	{
-		FTBUUniverseData data = FTBUUniverseData.get();
-
-		if (data != null)
-		{
-			data.onLoadedBeforePlayers();
-		}
+		FTBUUniverseData.get().onLoadedBeforePlayers();
 	}
 
 	@SubscribeEvent
 	public static void onWorldClosed(ForgeUniverseClosedEvent event)
 	{
-		FTBUUniverseData data = FTBUUniverseData.get();
-
-		if (data != null)
-		{
-			data.onClosed();
-		}
+		FTBUUniverseData.get().onClosed();
 	}
 
 	@SubscribeEvent

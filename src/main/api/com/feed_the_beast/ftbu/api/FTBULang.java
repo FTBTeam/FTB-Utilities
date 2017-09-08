@@ -10,7 +10,7 @@ public class FTBULang
 	//@formatter:off
     public static final LangKey
 
-    TIMER_RESTART = get("lang.timer_restart"),
+    TIMER_SHUTDOWN = get("lang.timer_shutdown"),
     TIMER_BACKUP = get("lang.timer_backup"),
 
     BUTTON_CLAIMS_UNCLAIM_ALL_Q = get("button.claims_unclaim_all_q"),

@@ -35,12 +35,6 @@ public class CmdAdminHome extends CmdTreeBase
 			checkArgs(args, 2, "<player> <home>");
 			args[1] = args[1].toLowerCase();
 			FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(args[0]));
-
-			if (data == null)
-			{
-				return;
-			}
-
 			BlockDimPos pos = data.getHome(args[1]);
 
 			if (pos != null)
@@ -93,12 +87,6 @@ public class CmdAdminHome extends CmdTreeBase
 		{
 			checkArgs(args, 2, "<player> <home>");
 			FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(args[0]));
-
-			if (data == null)
-			{
-				return;
-			}
-
 			args[1] = args[1].toLowerCase();
 			BlockDimPos pos = data.getHome(args[1]);
 

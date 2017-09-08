@@ -36,22 +36,12 @@ public class FTBUTeamEventHandler
 	@SubscribeEvent
 	public static void getSettings(ForgeTeamSettingsEvent event)
 	{
-		FTBUTeamData data = FTBUTeamData.get(event.getTeam());
-
-		if (data != null)
-		{
-			data.addConfig(event);
-		}
+		FTBUTeamData.get(event.getTeam()).addConfig(event);
 	}
 
 	@SubscribeEvent
 	public static void onPlayerLeft(ForgeTeamPlayerLeftEvent event)
 	{
-		FTBUTeamData data = FTBUTeamData.get(event.getTeam());
-
-		if (data != null)
-		{
-			FTBUUniverseData.unclaimAllChunks(event.getPlayer(), null);
-		}
+		FTBUUniverseData.unclaimAllChunks(event.getPlayer(), null);
 	}
 }

@@ -3,10 +3,11 @@ package com.feed_the_beast.ftbu.world;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamSettingsEvent;
 import com.feed_the_beast.ftbl.lib.EnumTeamPrivacyLevel;
-import com.feed_the_beast.ftbl.lib.config.PropertyBool;
-import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
+import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
+import com.feed_the_beast.ftbl.lib.config.ConfigEnum;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
+import com.google.common.base.Preconditions;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -17,15 +18,16 @@ import javax.annotation.Nullable;
  */
 public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 {
-	public final PropertyEnum<EnumTeamPrivacyLevel> editBlocks = new PropertyEnum<>(EnumTeamPrivacyLevel.NAME_MAP.withDefault(EnumTeamPrivacyLevel.ALLIES));
-	public final PropertyEnum<EnumTeamPrivacyLevel> interactWithBlocks = new PropertyEnum<>(EnumTeamPrivacyLevel.NAME_MAP.withDefault(EnumTeamPrivacyLevel.ALLIES));
-	public final PropertyBool explosions = new PropertyBool(false);
-	public final PropertyBool fakePlayers = new PropertyBool(true);
+	public final ConfigEnum<EnumTeamPrivacyLevel> editBlocks = new ConfigEnum<>(EnumTeamPrivacyLevel.NAME_MAP.withDefault(EnumTeamPrivacyLevel.ALLIES));
+	public final ConfigEnum<EnumTeamPrivacyLevel> interactWithBlocks = new ConfigEnum<>(EnumTeamPrivacyLevel.NAME_MAP.withDefault(EnumTeamPrivacyLevel.ALLIES));
+	public final ConfigBoolean explosions = new ConfigBoolean(false);
+	public final ConfigBoolean fakePlayers = new ConfigBoolean(true);
 
-	@Nullable
 	public static FTBUTeamData get(@Nullable IForgeTeam t)
 	{
-		return t == null ? null : (FTBUTeamData) t.getData(FTBLibIntegration.FTBU_DATA);
+		FTBUTeamData data = t == null ? null : (FTBUTeamData) t.getData(FTBLibIntegration.FTBU_DATA);
+		Preconditions.checkNotNull(data);
+		return data;
 	}
 
 	@Override

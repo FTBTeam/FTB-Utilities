@@ -3,29 +3,28 @@ package com.feed_the_beast.ftbu.cmd;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
-import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 
 import java.io.File;
 
-public class CmdRestart extends CmdBase
+public class CmdShutdown extends CmdBase
 {
-	public CmdRestart()
+	public CmdShutdown()
 	{
-		super("restart", Level.OP);
+		super("shutdown", Level.OP);
 	}
 
-	public static void restart()
+	public static void shutdown(MinecraftServer server)
 	{
 		FileUtils.newFile(new File(CommonUtils.folderMinecraft, "autostart.stamp"));
-		ServerUtils.getServer().initiateShutdown();
+		server.initiateShutdown();
 	}
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		restart();
+		shutdown(server);
 	}
 }

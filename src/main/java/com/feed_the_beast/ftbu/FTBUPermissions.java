@@ -1,12 +1,11 @@
 package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.events.registry.RegisterRankConfigEvent;
-import com.feed_the_beast.ftbl.lib.config.PropertyInt;
-import com.feed_the_beast.ftbl.lib.config.PropertyList;
-import com.feed_the_beast.ftbl.lib.config.PropertyShort;
-import com.feed_the_beast.ftbl.lib.config.PropertyString;
+import com.feed_the_beast.ftbl.lib.config.ConfigInt;
+import com.feed_the_beast.ftbl.lib.config.ConfigList;
+import com.feed_the_beast.ftbl.lib.config.ConfigString;
+import com.feed_the_beast.ftbl.lib.config.ConfigValue;
 import com.feed_the_beast.ftbl.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.NodeEntry;
@@ -114,12 +113,12 @@ public class FTBUPermissions
 	@SubscribeEvent
 	public static void addConfigs(RegisterRankConfigEvent event)
 	{
-		event.register(BADGE, new PropertyString(""), new PropertyString(""));
-		event.register(HOMES_MAX, new PropertyShort(1, 0, 30000).setUnsigned(), new PropertyShort(100));
-		event.register(CLAIMS_MAX_CHUNKS, new PropertyShort(100, 0, 30000).setUnsigned(), new PropertyShort(1000));
-		event.register(CLAIMS_BLOCKED_DIMENSIONS, new PropertyList(PropertyInt.ID), new PropertyList(PropertyInt.ID));
-		event.register(CHUNKLOADER_MAX_CHUNKS, new PropertyShort(50, 0, 30000).setUnsigned(), new PropertyShort(64));
-		//event.register(CHUNKLOADER_OFFLINE_TIMER, new PropertyDouble(-1D).setMin(-1D), new PropertyDouble(-1D));
+		event.register(BADGE, new ConfigString(""), new ConfigString(""));
+		event.register(HOMES_MAX, new ConfigInt(1, 0, 30000), new ConfigInt(100));
+		event.register(CLAIMS_MAX_CHUNKS, new ConfigInt(100, 0, 30000), new ConfigInt(1000));
+		event.register(CLAIMS_BLOCKED_DIMENSIONS, new ConfigList(ConfigInt.ID), new ConfigList(ConfigInt.ID));
+		event.register(CHUNKLOADER_MAX_CHUNKS, new ConfigInt(50, 0, 30000), new ConfigInt(64));
+		//event.register(CHUNKLOADER_OFFLINE_TIMER, new ConfigDouble(-1D).setMin(-1D), new ConfigDouble(-1D));
 	}
 
 	@SubscribeEvent
@@ -157,8 +156,8 @@ public class FTBUPermissions
 
 	public static boolean allowDimension(GameProfile profile, int dimension)
 	{
-		IConfigValue value = FTBUtilitiesAPI.API.getRankConfig(profile, CLAIMS_BLOCKED_DIMENSIONS);
-		return !(value instanceof PropertyList && ((PropertyList) value).containsValue(dimension));
+		ConfigValue value = FTBUtilitiesAPI.API.getRankConfig(profile, CLAIMS_BLOCKED_DIMENSIONS);
+		return !(value instanceof ConfigList && ((ConfigList) value).containsValue(dimension));
 	}
 
 	public static boolean canUpgradeChunk(GameProfile profile, IChunkUpgrade upgrade)

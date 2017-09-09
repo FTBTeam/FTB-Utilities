@@ -7,7 +7,6 @@ import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.api.guide.SpecialGuideButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
@@ -19,6 +18,7 @@ import com.feed_the_beast.ftbl.lib.guide.GuideListLine;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.guide.GuideTextLineString;
 import com.feed_the_beast.ftbl.lib.guide.GuideTitlePage;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
@@ -262,7 +262,7 @@ public enum Guides implements IResourceManagerReloadListener
 
 					if (o.has("icon"))
 					{
-						page1.setIcon(ImageProvider.get(o.get("icon")));
+						page1.setIcon(Icon.getIcon(o.get("icon")));
 					}
 					if (o.has("button"))
 					{

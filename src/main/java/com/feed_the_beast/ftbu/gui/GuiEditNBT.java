@@ -1,12 +1,7 @@
 package com.feed_the_beast.ftbu.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.client.CombinedIcon;
-import com.feed_the_beast.ftbl.lib.client.DrawableItem;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
-import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
+import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.config.ConfigDouble;
 import com.feed_the_beast.ftbl.lib.config.ConfigInt;
 import com.feed_the_beast.ftbl.lib.config.ConfigString;
@@ -24,6 +19,10 @@ import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiEditConfig;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiSelectors;
 import com.feed_the_beast.ftbl.lib.gui.misc.IGuiFieldCallback;
+import com.feed_the_beast.ftbl.lib.icon.CombinedIcon;
+import com.feed_the_beast.ftbl.lib.icon.DrawableItem;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.net.MessageEditNBTResponse;
@@ -58,30 +57,30 @@ import java.util.function.Supplier;
  */
 public class GuiEditNBT extends GuiBase
 {
-	private static IDrawableObject getIcon(String name)
+	private static Icon getIcon(String name)
 	{
-		return new CombinedIcon(TexturelessRectangle.BUTTON_ROUND_GRAY, ImageProvider.get(FTBUFinals.MOD_ID + ":textures/gui/nbt/" + name + ".png"));
+		return new CombinedIcon(TexturelessRectangle.BUTTON_ROUND_GRAY, Icon.getIcon(FTBUFinals.MOD_ID + ":textures/gui/nbt/" + name + ".png"));
 	}
 
-	public static final IDrawableObject NBT_BYTE = getIcon("byte");
-	public static final IDrawableObject NBT_SHORT = getIcon("short");
-	public static final IDrawableObject NBT_INT = getIcon("int");
-	public static final IDrawableObject NBT_LONG = getIcon("long");
-	public static final IDrawableObject NBT_FLOAT = getIcon("float");
-	public static final IDrawableObject NBT_DOUBLE = getIcon("double");
-	public static final IDrawableObject NBT_STRING = getIcon("string");
-	public static final IDrawableObject NBT_LIST = getIcon("list");
-	public static final IDrawableObject NBT_LIST_CLOSED = getIcon("list_closed");
-	public static final IDrawableObject NBT_LIST_OPEN = getIcon("list_open");
-	public static final IDrawableObject NBT_MAP = getIcon("map");
-	public static final IDrawableObject NBT_MAP_CLOSED = getIcon("map_closed");
-	public static final IDrawableObject NBT_MAP_OPEN = getIcon("map_open");
-	public static final IDrawableObject NBT_BYTE_ARRAY = getIcon("byte_array");
-	public static final IDrawableObject NBT_BYTE_ARRAY_CLOSED = getIcon("byte_array_closed");
-	public static final IDrawableObject NBT_BYTE_ARRAY_OPEN = getIcon("byte_array_open");
-	public static final IDrawableObject NBT_INT_ARRAY = getIcon("int_array");
-	public static final IDrawableObject NBT_INT_ARRAY_CLOSED = getIcon("int_array_closed");
-	public static final IDrawableObject NBT_INT_ARRAY_OPEN = getIcon("int_array_open");
+	public static final Icon NBT_BYTE = getIcon("byte");
+	public static final Icon NBT_SHORT = getIcon("short");
+	public static final Icon NBT_INT = getIcon("int");
+	public static final Icon NBT_LONG = getIcon("long");
+	public static final Icon NBT_FLOAT = getIcon("float");
+	public static final Icon NBT_DOUBLE = getIcon("double");
+	public static final Icon NBT_STRING = getIcon("string");
+	public static final Icon NBT_LIST = getIcon("list");
+	public static final Icon NBT_LIST_CLOSED = getIcon("list_closed");
+	public static final Icon NBT_LIST_OPEN = getIcon("list_open");
+	public static final Icon NBT_MAP = getIcon("map");
+	public static final Icon NBT_MAP_CLOSED = getIcon("map_closed");
+	public static final Icon NBT_MAP_OPEN = getIcon("map_open");
+	public static final Icon NBT_BYTE_ARRAY = getIcon("byte_array");
+	public static final Icon NBT_BYTE_ARRAY_CLOSED = getIcon("byte_array_closed");
+	public static final Icon NBT_BYTE_ARRAY_OPEN = getIcon("byte_array_open");
+	public static final Icon NBT_INT_ARRAY = getIcon("int_array");
+	public static final Icon NBT_INT_ARRAY_CLOSED = getIcon("int_array_closed");
+	public static final Icon NBT_INT_ARRAY_OPEN = getIcon("int_array_open");
 
 	public abstract class ButtonNBT extends Button
 	{
@@ -198,7 +197,7 @@ public class GuiEditNBT extends GuiBase
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, IMouseButton button)
+		public void onClicked(GuiBase gui, MouseButton button)
 		{
 			selected = this;
 			panelTopLeft.refreshWidgets();
@@ -269,9 +268,9 @@ public class GuiEditNBT extends GuiBase
 	{
 		public boolean collapsed;
 		public final Map<String, ButtonNBT> children;
-		public final IDrawableObject iconOpen, iconClosed;
+		public final Icon iconOpen, iconClosed;
 
-		public ButtonNBTCollection(@Nullable ButtonNBTCollection b, String key, IDrawableObject open, IDrawableObject closed)
+		public ButtonNBTCollection(@Nullable ButtonNBTCollection b, String key, Icon open, Icon closed)
 		{
 			super(b, key);
 			iconOpen = open;
@@ -295,7 +294,7 @@ public class GuiEditNBT extends GuiBase
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, IMouseButton button)
+		public void onClicked(GuiBase gui, MouseButton button)
 		{
 			if (gui.getMouseX() <= getAX() + height)
 			{
@@ -323,7 +322,7 @@ public class GuiEditNBT extends GuiBase
 	public class ButtonNBTMap extends ButtonNBTCollection
 	{
 		private NBTTagCompound map;
-		private IDrawableObject hoverIcon = ImageProvider.NULL;
+		private Icon hoverIcon = Icon.EMPTY;
 
 		public ButtonNBTMap(@Nullable ButtonNBTCollection b, String key, NBTTagCompound m)
 		{
@@ -347,7 +346,7 @@ public class GuiEditNBT extends GuiBase
 
 			updateHoverIcon();
 
-			if (first && !hoverIcon.isNull())
+			if (first && !hoverIcon.isEmpty())
 			{
 				setCollapsed(true);
 			}
@@ -355,7 +354,7 @@ public class GuiEditNBT extends GuiBase
 
 		private void updateHoverIcon()
 		{
-			hoverIcon = ImageProvider.NULL;
+			hoverIcon = Icon.EMPTY;
 			ItemStack stack = (map.hasKey("id", Constants.NBT.TAG_STRING) && map.hasKey("Count") && map.hasKey("Damage")) ? new ItemStack(map) : ItemStack.EMPTY;
 
 			if (!stack.isEmpty())
@@ -363,13 +362,13 @@ public class GuiEditNBT extends GuiBase
 				hoverIcon = new DrawableItem(stack);
 			}
 
-			setWidth(12 + getFont().getStringWidth(getTitle(GuiEditNBT.this)) + (hoverIcon.isNull() ? 0 : 10));
+			setWidth(12 + getFont().getStringWidth(getTitle(GuiEditNBT.this)) + (hoverIcon.isEmpty() ? 0 : 10));
 		}
 
 		@Override
 		public void addMouseOverText(GuiBase gui, List<String> list)
 		{
-			if (!hoverIcon.isNull())
+			if (!hoverIcon.isEmpty())
 			{
 				if (hoverIcon instanceof DrawableItem)
 				{
@@ -383,7 +382,7 @@ public class GuiEditNBT extends GuiBase
 		{
 			super.renderWidget(gui);
 
-			if (!hoverIcon.isNull())
+			if (!hoverIcon.isEmpty())
 			{
 				int ax = getAX();
 				int ay = getAY();
@@ -635,7 +634,7 @@ public class GuiEditNBT extends GuiBase
 		}
 	}
 
-	public SimpleButton newTag(String t, IDrawableObject icon, Supplier<NBTBase> supplier)
+	public SimpleButton newTag(String t, Icon icon, Supplier<NBTBase> supplier)
 	{
 		return new SimpleButton(t, icon, (gui, button) ->
 		{

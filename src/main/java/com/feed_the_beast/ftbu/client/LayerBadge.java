@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.client;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
@@ -23,9 +23,9 @@ public enum LayerBadge implements LayerRenderer<AbstractClientPlayer>
 		if (FTBUClientConfig.general.render_badges && !ep.isInvisible())
 		{
 			UUID id = ep.getGameProfile().getId();
-			IDrawableObject tex = CachedClientData.getBadge(id);
+			Icon tex = CachedClientData.getBadge(id);
 
-			if (tex.isNull())
+			if (tex.isEmpty())
 			{
 				return;
 			}

@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.gui;
 
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.CachedVertexData;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
@@ -180,7 +179,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 		buttonUnclaimAll = new Button(0, 32, 16, 16)
 		{
 			@Override
-			public void onClicked(GuiBase gui, IMouseButton button)
+			public void onClicked(GuiBase gui, MouseButton button)
 			{
 				GuiHelper.playClickSound();
 				String s = GuiScreen.isShiftKeyDown() ? FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_Q.translate() : FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_DIM_Q.translate(currentDimName);
@@ -213,7 +212,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 	}
 
 	@Override
-	public int getSelectionMode(IMouseButton button)
+	public int getSelectionMode(MouseButton button)
 	{
 		boolean claim = !GuiScreen.isShiftKeyDown();
 		boolean flag = button.isLeft();

@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.client;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbu.net.MessageRequestBadge;
 
 import java.util.HashMap;
@@ -13,20 +12,20 @@ import java.util.UUID;
  */
 public class CachedClientData
 {
-	private static final Map<UUID, IDrawableObject> BADGE_CACHE = new HashMap<>();
+	private static final Map<UUID, Icon> BADGE_CACHE = new HashMap<>();
 
 	public static void clear()
 	{
 		BADGE_CACHE.clear();
 	}
 
-	public static IDrawableObject getBadge(UUID id)
+	public static Icon getBadge(UUID id)
 	{
-		IDrawableObject tex = BADGE_CACHE.get(id);
+		Icon tex = BADGE_CACHE.get(id);
 
 		if (tex == null)
 		{
-			tex = ImageProvider.NULL;
+			tex = Icon.EMPTY;
 			BADGE_CACHE.put(id, tex);
 			new MessageRequestBadge(id).sendToServer();
 		}
@@ -36,6 +35,6 @@ public class CachedClientData
 
 	public static void setBadge(UUID id, String url)
 	{
-		BADGE_CACHE.put(id, ImageProvider.get(url));
+		BADGE_CACHE.put(id, Icon.getIcon(url));
 	}
 }

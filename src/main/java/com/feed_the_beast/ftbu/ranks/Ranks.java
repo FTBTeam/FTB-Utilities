@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbu.ranks;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.lib.client.DrawableItem;
 import com.feed_the_beast.ftbl.lib.config.ConfigValue;
 import com.feed_the_beast.ftbl.lib.config.RankConfigKey;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
+import com.feed_the_beast.ftbl.lib.icon.DrawableItem;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;

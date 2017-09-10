@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
+import com.feed_the_beast.ftbl.api.events.player.ForgePlayerConfigEvent;
 import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
@@ -16,6 +16,7 @@ import com.google.common.base.Preconditions;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
@@ -206,11 +207,12 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 		return homes == null ? 0 : homes.size();
 	}
 
-	public void addConfig(ForgePlayerSettingsEvent event)
+	public void addConfig(ForgePlayerConfigEvent event)
 	{
 		String group = FTBUFinals.MOD_ID;
-		event.add(group, "render_badge", renderBadge);
-		event.add(group, "chat_links", chatLinks);
-		event.add(group, "disable_global_badge", disableGlobalBadge);
+		event.getConfig().setGroupName(group, new TextComponentString(FTBUFinals.MOD_NAME));
+		event.getConfig().add(group, "render_badge", renderBadge);
+		event.getConfig().add(group, "chat_links", chatLinks);
+		event.getConfig().add(group, "disable_global_badge", disableGlobalBadge);
 	}
 }

@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
+import com.feed_the_beast.ftbl.api.events.team.ForgeTeamConfigEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerLeftEvent;
-import com.feed_the_beast.ftbl.api.events.team.ForgeTeamSettingsEvent;
 import com.feed_the_beast.ftbu.world.FTBUTeamData;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -34,7 +34,7 @@ public class FTBUTeamEventHandler
     }*/
 
 	@SubscribeEvent
-	public static void getSettings(ForgeTeamSettingsEvent event)
+	public static void getSettings(ForgeTeamConfigEvent event)
 	{
 		FTBUTeamData.get(event.getTeam()).addConfig(event);
 	}

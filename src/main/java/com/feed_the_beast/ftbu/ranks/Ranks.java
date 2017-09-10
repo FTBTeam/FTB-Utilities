@@ -1,8 +1,7 @@
 package com.feed_the_beast.ftbu.ranks;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.lib.config.ConfigValue;
-import com.feed_the_beast.ftbl.lib.config.RankConfigKey;
+import com.feed_the_beast.ftbl.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.icon.DrawableItem;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
@@ -329,7 +328,7 @@ public class Ranks
 			ex.printStackTrace();
 		}
 
-		List<RankConfigKey> sortedRankConfigKeys = new ArrayList<>(FTBLibAPI.API.getRankConfigRegistry().values());
+		List<RankConfigValueInfo> sortedRankConfigKeys = new ArrayList<>(FTBLibAPI.API.getRankConfigRegistry().values());
 		sortedRankConfigKeys.sort(StringUtils.ID_COMPARATOR);
 
 		try
@@ -342,18 +341,17 @@ public class Ranks
 
 			List<String> infoList = new ArrayList<>();
 
-			for (RankConfigKey p : sortedRankConfigKeys)
+			for (RankConfigValueInfo p : sortedRankConfigKeys)
 			{
-				ConfigValue value = p.getDefValue();
-				list.add("<tr><td>" + p.getName() + "</td><td>");
+				list.add("<tr><td>" + p.id + "</td><td>");
 
-				value.addInfo(p, infoList);
-				List<String> variants = value.getVariants();
+				p.defaultValue.addInfo(p, infoList);
+				List<String> variants = p.defaultValue.getVariants();
 
 				if (!infoList.isEmpty() || !variants.isEmpty())
 				{
-					list.add("<ul><li>Default: " + value.getSerializableElement() + "</li>");
-					list.add("<li>OP Default: " + p.getDefOPValue().getSerializableElement() + "</li>");
+					list.add("<ul><li>Default: " + p.defaultValue.getSerializableElement() + "</li>");
+					list.add("<li>OP Default: " + p.defaultOPValue.getSerializableElement() + "</li>");
 
 					for (String s : infoList)
 					{
@@ -383,12 +381,12 @@ public class Ranks
 				}
 				else
 				{
-					list.add("Default: " + value.getSerializableElement());
+					list.add("Default: " + p.defaultValue.getSerializableElement());
 				}
 
 				list.add("</td><td>");
 
-				String info = p.getDisplayInfo();
+				String info = StringUtils.translate(p.displayName.isEmpty() ? ("rank_config." + p.id) : p.displayName);
 
 				if (!info.isEmpty())
 				{

@@ -77,17 +77,17 @@ my_server_settings.ftbu.security_level=Block Security Level
 
 # Rank Config
 rank_config.ftbu.badge=Badge
-rank_config.ftbu.badge.info=Badge (icon on chest). Must be an URL
+rank_config.ftbu.badge.tooltip=Badge (icon on chest). Must be an URL
 rank_config.ftbu.homes.max=Max Homes
-rank_config.ftbu.homes.max.info=Max home count
+rank_config.ftbu.homes.max.tooltip=Max home count
 rank_config.ftbu.claims.max_chunks=Max Claimable Chunks
-rank_config.ftbu.claims.max_chunks.info=Max amount of chunks that player can claim\n0 - Disabled
+rank_config.ftbu.claims.max_chunks.tooltip=Max amount of chunks that player can claim\n0 - Disabled
 rank_config.ftbu.claims.blocked_dimensions=Blocked Claiming Dimensions
-rank_config.ftbu.claims.blocked_dimensions.info=Dimensions where chunk claiming is not allowed
+rank_config.ftbu.claims.blocked_dimensions.tooltip=Dimensions where chunk claiming is not allowed
 rank_config.ftbu.chunkloader.max_chunks=Max Loadable Chunks
-rank_config.ftbu.chunkloader.max_chunks.info=Max amount of chunks that player can load\n0 - Disabled
+rank_config.ftbu.chunkloader.max_chunks.tooltip=Max amount of chunks that player can load\n0 - Disabled
 rank_config.ftbu.chunkloader.offline_timer=Chunkloader Offline Timer
-rank_config.ftbu.chunkloader.offline_timer.info=Max hours player can be offline until he's chunks unload\n0 - Disabled, will unload instantly when he disconnects\n-1 - Chunk will always be loaded
+rank_config.ftbu.chunkloader.offline_timer.tooltip=Max hours player can be offline until he's chunks unload\n0 - Disabled, will unload instantly when he disconnects\n-1 - Chunk will always be loaded
 
 # Player Settings
 player_config.ftbu.chat_links=Chat Links
@@ -102,20 +102,20 @@ team_config.ftbu.fake_players=Allow Fake Players to Interact With Blocks
 
 # Action Buttons
 sidebar_button.ftbu.toggle.gamemode=Toggle Gamemode
-sidebar_button.ftbu.toggle.gamemode.info=Toggles between survival and creative mode
+sidebar_button.ftbu.toggle.gamemode.tooltip=Toggles between survival and creative mode
 sidebar_button.ftbu.toggle.rain=Toggle Rain
-sidebar_button.ftbu.toggle.rain.info=Toggles weather between clear and raining
+sidebar_button.ftbu.toggle.rain.tooltip=Toggles weather between clear and raining
 sidebar_button.ftbu.toggle.day=Set time to Day
-sidebar_button.ftbu.toggle.day.info=Sets daytime
+sidebar_button.ftbu.toggle.day.tooltip=Sets daytime
 sidebar_button.ftbu.toggle.night=Set time to Night
-sidebar_button.ftbu.toggle.night.info=Sets nighttime
+sidebar_button.ftbu.toggle.night.tooltip=Sets nighttime
 sidebar_button.ftbu.heal=Heal
-sidebar_button.ftbu.heal.info=Heals player to max health and saturation, and extinguishes if player is on fire
+sidebar_button.ftbu.heal.tooltip=Heals player to max health and saturation, and extinguishes if player is on fire
 sidebar_button.ftbu.guide=Guide
 sidebar_button.ftbu.server_info=Server Info
 sidebar_button.ftbu.claimed_chunks=Claimed Chunks
 sidebar_button.ftbu.trash_can=Trash Can
-sidebar_button.ftbu.trash_can.info=Opens a trash can. Items from it disappear after you close the GUI, but will remain there as long as it's open
+sidebar_button.ftbu.trash_can.tooltip=Opens a trash can. Items from it disappear after you close the GUI, but will remain there as long as it's open
 sidebar_button.ftbu.shop=Shop
 sidebar_button.ftbu.mail=Mail
 
@@ -186,7 +186,7 @@ ftbu.pack_state.update=Update
 
 # Guide
 ftbu.guide=FTBUtilities
-ftbu.guide.info=FTBUtilities is a mod all about helping server owners to manage their servers with chunk protection, backups, and a ton of other things!
+ftbu.guide.tooltip=FTBUtilities is a mod all about helping server owners to manage their servers with chunk protection, backups, and a ton of other things!
 ftbu.guide.faq=Frequently Asked Questions
 ftbu.guide.chunk_claiming=Chunk Claiming
 ftbu.guide.chunk_claiming.intro=FTBUtilities allows you to protect your base with Claimed Chunks. Claimed chunks will be by default accessible to your team and team allies. You can also disable explosions and fake player interactions.
@@ -226,27 +226,27 @@ ftbu.guide.ranks.config.enabling_ranks.click=[Click Here to open Config GUI for 
 ftbu.guide.ranks.config.enabling_ranks.config=Or open the config.json with an editor like Sublime or Notepad++.
 ftbu.guide.ranks.config.features=Features
 ftbu.guide.ranks.config.builtin=Built in Ranks
-ftbu.guide.ranks.config.builtin.info=There are two builtin ranks:
+ftbu.guide.ranks.config.builtin.tooltip=There are two builtin ranks:
 ftbu.guide.ranks.config.builtin.perms=You can find all permissions and configurations assigned to them in the all permissions and all configs files. "builtin_player" is marked as ALL and "builtin_op" marked as OP.
 ftbu.guide.ranks.config.def_ranks=Default Rank Assignment
-ftbu.guide.ranks.config.def_ranks.info=At the beginning of the ranks.json we can assign players and OP's to a rank they will automatically have when joining the server.
+ftbu.guide.ranks.config.def_ranks.tooltip=At the beginning of the ranks.json we can assign players and OP's to a rank they will automatically have when joining the server.
 ftbu.guide.ranks.config.perms=Permissions (permissions)
-ftbu.guide.ranks.config.perms.info=You can add permission nodes in this section, a minus in front of the node will set it to false and a plus will set a node to true.
+ftbu.guide.ranks.config.perms.tooltip=You can add permission nodes in this section, a minus in front of the node will set it to false and a plus will set a node to true.
 ftbu.guide.ranks.config.perms.example=Will allow the rank to break sand in claims, and disallow the rank to break stone in a claim.
 ftbu.guide.ranks.config.cfg=Configuration (config)
-ftbu.guide.ranks.config.cfg.info=Configuration node followed by a value, you can find these and their allowed values in all_configs.html
+ftbu.guide.ranks.config.cfg.tooltip=Configuration node followed by a value, you can find these and their allowed values in all_configs.html
 ftbu.guide.ranks.config.chat=Chat Formatting (syntax)
-ftbu.guide.ranks.config.chat.info=This section allows you to change how a player name will be displayed in chat. You can set Prefixes, Suffixes or change the name color of a player. The placeholder for the playername is always \$name, Minecraft chat formatting codes are fully supported.
+ftbu.guide.ranks.config.chat.tooltip=This section allows you to change how a player name will be displayed in chat. You can set Prefixes, Suffixes or change the name color of a player. The placeholder for the playername is always \$name, Minecraft chat formatting codes are fully supported.
 ftbu.guide.ranks.config.chat.colors=[Click Here to open Colors page]
 
 ftbu.guide.ranks.commands=Commands
-ftbu.guide.ranks.commands.info=There are a few utility commands for ranks, so you don't have to do everything in the configs.
+ftbu.guide.ranks.commands.tooltip=There are a few utility commands for ranks, so you don't have to do everything in the configs.
 ftbu.guide.ranks.commands.set=sets the rank of a player
 ftbu.guide.ranks.commands.get=outputs the rank of a player
 ftbu.guide.ranks.commands.check_permission=outputs the value of a permission for the specified player
 ftbu.guide.ranks.badges=Server Badges
 ftbu.guide.ranks.badges.more=[More on Badges here]
-ftbu.guide.ranks.badges.info=You can give players individual, server-wide badges. Configuration file:
+ftbu.guide.ranks.badges.tooltip=You can give players individual, server-wide badges. Configuration file:
 ftbu.guide.ranks.badges.values=First value is the target players UUID, second value is the URL (link) to an image.
 ftbu.guide.ranks.badges.rank=You can also assign rank based badge with "ftbu.badge" rank config.
 ftbu.guide.ranks.example_config=Example ranks.json

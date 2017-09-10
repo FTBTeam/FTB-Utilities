@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.events.team.ForgeTeamSettingsEvent;
+import com.feed_the_beast.ftbl.api.events.team.ForgeTeamConfigEvent;
 import com.feed_the_beast.ftbl.lib.EnumTeamPrivacyLevel;
 import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftbl.lib.config.ConfigEnum;
@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
 import com.google.common.base.Preconditions;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
@@ -63,12 +64,13 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 		}
 	}
 
-	public void addConfig(ForgeTeamSettingsEvent event)
+	public void addConfig(ForgeTeamConfigEvent event)
 	{
 		String group = FTBUFinals.MOD_ID;
-		event.add(group, "explosions", explosions);
-		event.add(group, "fake_players", fakePlayers);
-		event.add(group, "blocks_edit", editBlocks);
-		event.add(group, "blocks_interact", interactWithBlocks);
+		event.getConfig().setGroupName(group, new TextComponentString(FTBUFinals.MOD_NAME));
+		event.getConfig().add(group, "explosions", explosions);
+		event.getConfig().add(group, "fake_players", fakePlayers);
+		event.getConfig().add(group, "blocks_edit", editBlocks);
+		event.getConfig().add(group, "blocks_interact", interactWithBlocks);
 	}
 }

@@ -204,30 +204,36 @@ public class FTBUConfig
 		login.motdComponents.clear();
 		login.startingItems.clear();
 
-		for (String s : login.motd)
+		if (login.enable_motd)
 		{
-			ITextComponent t = JsonUtils.deserializeTextComponent(JsonUtils.fromJson(s));
-
-			if (t != null)
+			for (String s : login.motd)
 			{
-				login.motdComponents.add(t);
+				ITextComponent t = JsonUtils.deserializeTextComponent(JsonUtils.fromJson(s));
+
+				if (t != null)
+				{
+					login.motdComponents.add(t);
+				}
 			}
 		}
 
-		for (String s : login.starting_items)
+		if (login.enable_starting_items)
 		{
-			try
+			for (String s : login.starting_items)
 			{
-				ItemStack stack = ItemStackSerializer.parseItem(s);
-
-				if (!stack.isEmpty())
+				try
 				{
-					login.startingItems.add(stack);
+					ItemStack stack = ItemStackSerializer.parseItem(s);
+
+					if (!stack.isEmpty())
+					{
+						login.startingItems.add(stack);
+					}
 				}
-			}
-			catch (Exception ex)
-			{
-				ex.printStackTrace();
+				catch (Exception ex)
+				{
+					ex.printStackTrace();
+				}
 			}
 		}
 	}

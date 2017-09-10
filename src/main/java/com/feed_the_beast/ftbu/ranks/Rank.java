@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbu.ranks;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.config.ConfigValue;
-import com.feed_the_beast.ftbl.lib.config.RankConfigKey;
+import com.feed_the_beast.ftbl.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.google.gson.JsonArray;
@@ -175,13 +175,13 @@ public class Rank extends FinalIDObject implements IRank, IJsonSerializable
 		{
 			for (Map.Entry<String, JsonElement> entry : o.get("config").getAsJsonObject().entrySet())
 			{
-				RankConfigKey rconfig = FTBLibAPI.API.getRankConfigRegistry().get(entry.getKey());
+				RankConfigValueInfo rconfig = FTBLibAPI.API.getRankConfigRegistry().get(entry.getKey());
 
 				if (rconfig != null)
 				{
-					ConfigValue value = rconfig.getDefValue().copy();
+					ConfigValue value = rconfig.defaultValue.copy();
 					value.fromJson(entry.getValue());
-					config.put(rconfig.getName(), value);
+					config.put(rconfig.id, value);
 				}
 			}
 		}

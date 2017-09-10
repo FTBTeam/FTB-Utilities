@@ -20,13 +20,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author LatvianModder
+ */
 public enum ClaimedChunkStorage implements IClaimedChunkStorage
 {
 	INSTANCE;
 
-	/**
-	 * @author LatvianModder
-	 */
 	private static final Map<ChunkDimPos, IClaimedChunk> MAP = new HashMap<>();
 	private static final Map<ChunkDimPos, IClaimedChunk> MAP_MIRROR = Collections.unmodifiableMap(MAP);
 

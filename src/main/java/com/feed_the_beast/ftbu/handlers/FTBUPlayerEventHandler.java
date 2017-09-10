@@ -4,10 +4,10 @@ import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
+import com.feed_the_beast.ftbl.api.events.player.ForgePlayerConfigEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerDeathEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
-import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
 import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.math.BlockPosContainer;
@@ -90,7 +90,7 @@ public class FTBUPlayerEventHandler
 	}
 
 	@SubscribeEvent
-	public static void getSettings(ForgePlayerSettingsEvent event)
+	public static void getSettings(ForgePlayerConfigEvent event)
 	{
 		FTBUPlayerData.get(event.getPlayer()).addConfig(event);
 	}

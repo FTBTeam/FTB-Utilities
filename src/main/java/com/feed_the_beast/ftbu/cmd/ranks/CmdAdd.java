@@ -29,7 +29,7 @@ public class CmdAdd extends CmdBase
 
 		if (Ranks.getRankNames().contains(id))
 		{
-			throw FTBLibLang.RAW.commandError("Rank '" + id + "' already exists!");
+			throw FTBLibLang.RAW.commandError("Rank '" + id + "' already exists!"); //LANG
 		}
 
 		IRank parent = args.length == 1 ? DefaultPlayerRank.INSTANCE : Ranks.getRank(args[1], null);

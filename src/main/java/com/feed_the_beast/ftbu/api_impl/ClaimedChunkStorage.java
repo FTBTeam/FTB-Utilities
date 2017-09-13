@@ -121,6 +121,6 @@ public enum ClaimedChunkStorage implements IClaimedChunkStorage
 			return data.fakePlayers.getBoolean();
 		}
 
-		return team.canInteract(player.getId(), (type == BlockInteractionType.INTERACT ? data.interactWithBlocks : data.editBlocks).getValue());
+		return team.hasStatus(player.getId(), (type == BlockInteractionType.INTERACT ? data.interactWithBlocks : data.editBlocks).getValue());
 	}
 }

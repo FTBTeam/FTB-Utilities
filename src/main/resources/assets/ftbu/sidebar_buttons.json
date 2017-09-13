@@ -55,7 +55,7 @@
 	},
 	"heal": {
 		"icon": "ftbl:icons/heart",
-		"dependencies": "after:ftbl.my_server_settings",
+		"dependencies": "after:ftbl.settings",
 		"click": {
 			"action": "run_command",
 			"value": "/heal"

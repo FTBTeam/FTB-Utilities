@@ -192,7 +192,7 @@ public class GuiWarps extends GuiBase
 		{
 			if (dist < SIZE_I || dist > SIZE_2)
 			{
-				drawCenteredString(TextFormatting.BOLD + GuiLang.BUTTON_CANCEL.translate(), ax, ay);
+				drawCenteredString(TextFormatting.BOLD + GuiLang.CANCEL.translate(), ax, ay);
 			}
 			else
 			{

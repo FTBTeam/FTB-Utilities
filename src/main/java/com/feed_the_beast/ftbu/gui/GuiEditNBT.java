@@ -681,7 +681,7 @@ public class GuiEditNBT extends GuiBase
 			@Override
 			public void addWidgets()
 			{
-				add(new SimpleButton(GuiLang.BUTTON_DELETE, selected == buttonNBTRoot ? GuiIcons.REMOVE_GRAY : GuiIcons.REMOVE, (gui, button) ->
+				add(new SimpleButton(GuiLang.DELETE, selected == buttonNBTRoot ? GuiIcons.REMOVE_GRAY : GuiIcons.REMOVE, (gui, button) ->
 				{
 					if (selected != buttonNBTRoot)
 					{
@@ -725,7 +725,7 @@ public class GuiEditNBT extends GuiBase
 
 				if (selected instanceof ButtonNBTPrimitive)
 				{
-					add(new SimpleButton(GuiLang.BUTTON_EDIT, GuiIcons.FEATHER, (gui, button) -> ((ButtonNBTPrimitive) selected).edit()));
+					add(new SimpleButton(GuiLang.EDIT, GuiIcons.FEATHER, (gui, button) -> ((ButtonNBTPrimitive) selected).edit()));
 				}
 
 				if (selected.canCreateNew(Constants.NBT.TAG_COMPOUND))
@@ -798,7 +798,7 @@ public class GuiEditNBT extends GuiBase
 			@Override
 			public void addWidgets()
 			{
-				add(new SimpleButton(GuiLang.BUTTON_COLLAPSE_ALL, GuiIcons.REMOVE, (gui, button) ->
+				add(new SimpleButton(GuiLang.COLLAPSE_ALL, GuiIcons.REMOVE, (gui, button) ->
 				{
 					for (Widget w : panelNbt.widgets)
 					{
@@ -812,7 +812,7 @@ public class GuiEditNBT extends GuiBase
 					panelNbt.refreshWidgets();
 				}));
 
-				add(new SimpleButton(GuiLang.BUTTON_EXPAND_ALL, GuiIcons.ADD, (gui, button) ->
+				add(new SimpleButton(GuiLang.EXPAND_ALL, GuiIcons.ADD, (gui, button) ->
 				{
 					for (Widget w : panelNbt.widgets)
 					{
@@ -826,13 +826,13 @@ public class GuiEditNBT extends GuiBase
 					panelNbt.refreshWidgets();
 				}));
 
-				add(new SimpleButton(GuiLang.BUTTON_CANCEL, GuiIcons.CANCEL, (gui, button) ->
+				add(new SimpleButton(GuiLang.CANCEL, GuiIcons.CANCEL, (gui, button) ->
 				{
 					shouldClose = 2;
 					gui.closeGui();
 				}));
 
-				add(new SimpleButton(GuiLang.BUTTON_ACCEPT, GuiIcons.ACCEPT, (gui, button) ->
+				add(new SimpleButton(GuiLang.ACCEPT, GuiIcons.ACCEPT, (gui, button) ->
 				{
 					shouldClose = 1;
 					gui.closeGui();

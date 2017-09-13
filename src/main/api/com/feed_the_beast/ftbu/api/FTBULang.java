@@ -7,41 +7,44 @@ import com.feed_the_beast.ftbl.lib.LangKey;
  */
 public class FTBULang
 {
-	//@formatter:off
-    public static final LangKey
+	public static final LangKey TIMER_SHUTDOWN = get("lang.timer_shutdown");
+	public static final LangKey TIMER_BACKUP = get("lang.timer_backup");
 
-    TIMER_SHUTDOWN = get("lang.timer_shutdown"),
-    TIMER_BACKUP = get("lang.timer_backup"),
+	public static final LangKey BUTTON_CLAIMS_UNCLAIM_ALL_Q = get("button.claims_unclaim_all_q");
+	public static final LangKey BUTTON_CLAIMS_UNCLAIM_ALL_DIM_Q = get("button.claims_unclaim_all_dim_q");
+	public static final LangKey BUTTON_CLAIMS_UNCLAIM_ALL = get("button.claims_unclaim_all");
+	public static final LangKey BUTTON_CLAIMS_UNCLAIM_ALL_DIM = get("button.claims_unclaim_all_dim");
+	public static final LangKey LABEL_CCHUNKS_COUNT = get("label.cchunks_count");
+	public static final LangKey LABEL_LCHUNKS_COUNT = get("label.lchunks_count");
 
-    BUTTON_CLAIMS_UNCLAIM_ALL_Q = get("button.claims_unclaim_all_q"),
-    BUTTON_CLAIMS_UNCLAIM_ALL_DIM_Q = get("button.claims_unclaim_all_dim_q"),
-    BUTTON_CLAIMS_UNCLAIM_ALL = get("button.claims_unclaim_all"),
-    BUTTON_CLAIMS_UNCLAIM_ALL_DIM = get("button.claims_unclaim_all_dim"),
-    LABEL_CCHUNKS_COUNT = get("label.cchunks_count"),
-    LABEL_LCHUNKS_COUNT = get("label.lchunks_count"),
+	public static final LangKey WARP_SET = get("warp.set");
+	public static final LangKey WARP_DEL = get("warp.del");
+	public static final LangKey WARP_NOT_SET = get("warp.not_set");
+	public static final LangKey WARP_TP = get("warp.tp");
+	public static final LangKey WARP_NO_DP = get("warp.no_dp");
+	public static final LangKey WARP_SPAWN = get("warp.spawn");
+	public static final LangKey HOME_SET = get("home.set");
+	public static final LangKey HOME_DEL = get("home.del");
+	public static final LangKey HOME_NOT_SET = get("home.not_set");
+	public static final LangKey HOME_CROSS_DIM = get("home.cross_dim");
+	public static final LangKey HOME_LIMIT = get("home.limit");
 
-    WARP_SET = get("warp.set"),
-    WARP_DEL = get("warp.del"),
-    WARP_NOT_SET = get("warp.not_set"),
-    WARP_TP = get("warp.tp"),
-    WARP_NO_DP = get("warp.no_dp"),
-    WARP_SPAWN = get("warp.spawn"),
-    HOME_SET = get("home.set"),
-    HOME_DEL = get("home.del"),
-    HOME_NOT_SET = get("home.not_set"),
-    HOME_CROSS_DIM = get("home.cross_dim"),
-    HOME_LIMIT = get("home.limit"),
+	public static final LangKey BACKUP_START = get("backup.start");
+	public static final LangKey BACKUP_STOP = get("backup.stop");
+	public static final LangKey BACKUP_END_1 = get("backup.end_1");
+	public static final LangKey BACKUP_END_2 = get("backup.end_2");
+	public static final LangKey BACKUP_FAIL = get("backup.fail");
+	public static final LangKey BACKUP_MANUAL_LAUNCH = get("backup.manual_launch");
+	public static final LangKey BACKUP_ALREADY_RUNNING = get("backup.already_running");
+	public static final LangKey BACKUP_NOT_RUNNING = get("backup.not_running");
+	public static final LangKey BACKUP_SIZE = get("backup.size");
 
-    BACKUP_START = get("backup.start"),
-    BACKUP_STOP = get("backup.stop"),
-    BACKUP_END_1 = get("backup.end_1"),
-    BACKUP_END_2 = get("backup.end_2"),
-    BACKUP_FAIL = get("backup.fail"),
-    BACKUP_MANUAL_LAUNCH = get("backup.manual_launch"),
-    BACKUP_ALREADY_RUNNING = get("backup.already_running"),
-    BACKUP_NOT_RUNNING = get("backup.not_running"),
-            BACKUP_SIZE = get("backup.size");
-    //@formatter:on
+	public static final LangKey RANK_ID_EXISTS = get("rank.id_exists");
+	public static final LangKey RANK_NOT_FOUND = get("rank.not_found");
+	public static final LangKey RANK_USE_DEOP = get("rank.use_deop");
+	public static final LangKey RANK_USE_OP = get("rank.use_op");
+	public static final LangKey RANK_SET = get("rank.set");
+	public static final LangKey RANK_UNSET = get("rank.unset");
 
 	public static LangKey get(String s)
 	{

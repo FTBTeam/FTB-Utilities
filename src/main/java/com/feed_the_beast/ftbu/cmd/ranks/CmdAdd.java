@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.cmd.ranks;
 
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
+import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.feed_the_beast.ftbu.ranks.DefaultPlayerRank;
 import com.feed_the_beast.ftbu.ranks.Rank;
@@ -29,14 +29,14 @@ public class CmdAdd extends CmdBase
 
 		if (Ranks.getRankNames().contains(id))
 		{
-			throw FTBLibLang.RAW.commandError("Rank '" + id + "' already exists!"); //LANG
+			throw FTBULang.RANK_ID_EXISTS.commandError(id);
 		}
 
 		IRank parent = args.length == 1 ? DefaultPlayerRank.INSTANCE : Ranks.getRank(args[1], null);
 
 		if (parent == null)
 		{
-			throw FTBLibLang.RAW.commandError("Rank '" + id + "' not found!"); //LANG
+			throw FTBULang.RANK_NOT_FOUND.commandError(id);
 		}
 
 		Ranks.addRank(new Rank(id, parent));

@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbu.cmd.ranks;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
+import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.feed_the_beast.ftbu.ranks.DefaultOPRank;
 import com.feed_the_beast.ftbu.ranks.DefaultPlayerRank;
@@ -51,21 +51,29 @@ public class CmdSet extends CmdBase
 
 		if (r == DefaultPlayerRank.INSTANCE)
 		{
-			FTBLibLang.RAW.printChat(sender, "Can't set rank as builtin_player, use /deop " + args[0]); //LANG
+			FTBULang.RANK_USE_DEOP.printChat(sender, args[0]);
 			return;
 		}
 		else if (r == DefaultOPRank.INSTANCE)
 		{
-			FTBLibLang.RAW.printChat(sender, "Can't set rank as builtin_op, use /op " + args[0]); //LANG
+			FTBULang.RANK_USE_OP.printChat(sender, args[0]);
 			return;
 		}
 		else if (!Ranks.getRankNames().contains(args[1]))
 		{
-			throw FTBLibLang.RAW.commandError("Rank '" + args[1] + "' not found!"); //LANG
+			throw FTBULang.RANK_NOT_FOUND.commandError(args[1]);
 		}
 
 		IForgePlayer p = getForgePlayer(args[0]);
 		Ranks.setRank(p.getId(), r);
-		FTBLibLang.RAW.printChat(sender, p.getName() + " now is " + (r == null ? "unset" : r.getName())); //LANG
+
+		if (r == null)
+		{
+			FTBULang.RANK_UNSET.printChat(sender, p.getName());
+		}
+		else
+		{
+			FTBULang.RANK_SET.printChat(sender, p.getName(), r.getName());
+		}
 	}
 }

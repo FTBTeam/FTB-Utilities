@@ -77,13 +77,14 @@ public class CmdInv extends CmdTreeBase
 
 				NBTUtils.writeTag(file, tag);
 			}
-			catch (Exception e)
+			catch (Exception ex)
 			{
 				if (CommonUtils.DEV_ENV)
 				{
-					e.printStackTrace();
+					ex.printStackTrace();
 				}
-				throw FTBLibLang.RAW.commandError("Failed to save inventory! " + e);
+
+				throw FTBLibLang.ERROR.commandError(ex.toString());
 			}
 		}
 
@@ -138,13 +139,14 @@ public class CmdInv extends CmdTreeBase
 					readItemsFromNBT(baubles, tag, "Baubles");
 				}
 			}
-			catch (Exception e)
+			catch (Exception ex)
 			{
 				if (CommonUtils.DEV_ENV)
 				{
-					e.printStackTrace();
+					ex.printStackTrace();
 				}
-				throw FTBLibLang.RAW.commandError("Failed to load inventory! " + e);
+
+				throw FTBLibLang.ERROR.commandError(ex.toString());
 			}
 		}
 

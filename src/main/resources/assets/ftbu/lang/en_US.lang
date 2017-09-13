@@ -95,8 +95,8 @@ player_config.ftbu.disable_global_badge=Disable Global Badge
 player_config.ftbu.render_badge=Render My Badge
 
 # Team Settings
-team_config.ftbu.blocks_edit=Edit Blocks
-team_config.ftbu.blocks_interact=Interact With Blocks
+team_config.ftbu.blocks_edit=Required Level for Block Editing
+team_config.ftbu.blocks_interact=Required Level for Block Interactions
 team_config.ftbu.explosions=Enable Explosions in Claimed Chunks
 team_config.ftbu.fake_players=Allow Fake Players to Interact With Blocks
 
@@ -170,6 +170,14 @@ ftbu.backup.already_running=Backup in progress!
 ftbu.backup.not_running=Backup is not running!
 ftbu.backup.size=Current world size: %s, total backups folder size: %s
 
+# Ranks
+ftbu.rank.id_exists=Rank '%s' already exists!
+ftbu.rank.not_found=Rank '%s' not found!
+ftbu.rank.use_deop=Can't set rank as builtin_player, use /deop %s
+ftbu.rank.use_op=Can't set rank as builtin_op, use /op %s
+ftbu.rank.set=%s now is %s
+ftbu.rank.unset=%s now is unset
+
 # Chunk Types
 ftbu.lang.chunk.loaded=Chunkloaded
 ftbu.lang.chunk.no_explosions=Explosions Disabled
@@ -177,12 +185,6 @@ ftbu.lang.chunk.no_pvp=Ally PVP Disabled
 
 ftbu.lang.chunk.claimed=Claimed Area
 ftbu.lang.chunk.wilderness=Wilderness
-
-# Pack States
-ftbu.pack_state.download=Download
-ftbu.pack_state.downloading=Downloading...
-ftbu.pack_state.remove=Remove
-ftbu.pack_state.update=Update
 
 # Guide
 ftbu.guide=FTBUtilities

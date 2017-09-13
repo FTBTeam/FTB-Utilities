@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.registry.RegisterDataProvidersEvent;
 import com.feed_the_beast.ftbl.api.events.registry.RegisterOptionalServerModsEvent;
 import com.feed_the_beast.ftbu.FTBU;
+import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.ServerInfoPage;
 import com.feed_the_beast.ftbu.api_impl.FTBUChunkManager;
@@ -23,6 +24,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class FTBLibIntegration
 {
 	public static final ResourceLocation FTBU_DATA = FTBUFinals.get("data");
+	public static final ResourceLocation RELOAD_CONFIG = FTBUFinals.get("config");
 	public static final ResourceLocation RELOAD_RANKS = FTBUFinals.get("ranks");
 	public static final ResourceLocation RELOAD_SERVER_INFO = FTBUFinals.get("server_info");
 	public static final ResourceLocation RELOAD_BADGES = FTBUFinals.get("badges");
@@ -30,6 +32,7 @@ public class FTBLibIntegration
 	@SubscribeEvent
 	public static void registerReloadIds(ReloadEvent.RegisterIds event)
 	{
+		event.register(RELOAD_CONFIG);
 		event.register(RELOAD_RANKS);
 		event.register(RELOAD_SERVER_INFO);
 		event.register(RELOAD_BADGES);
@@ -40,6 +43,11 @@ public class FTBLibIntegration
 	{
 		if (event.getSide().isServer())
 		{
+			if (event.reload(RELOAD_CONFIG))
+			{
+				FTBUConfig.sync();
+			}
+
 			if (event.getType().command())
 			{
 				if (event.reload(RELOAD_RANKS) && !Ranks.reload())

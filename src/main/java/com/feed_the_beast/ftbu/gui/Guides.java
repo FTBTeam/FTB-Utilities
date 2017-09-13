@@ -52,7 +52,7 @@ public enum Guides implements IResourceManagerReloadListener
 {
 	INSTANCE;
 
-	private static final GuidePage INFO_PAGE = new GuidePage("guides").addSpecialButton(new SpecialGuideButton(GuiLang.BUTTON_REFRESH.textComponent(), GuiIcons.REFRESH, new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftbc refresh_guide")));
+	private static final GuidePage INFO_PAGE = new GuidePage("guides").addSpecialButton(new SpecialGuideButton(GuiLang.REFRESH.textComponent(), GuiIcons.REFRESH, new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftbc refresh_guide")));
 
 	private static boolean isReloading = false;
 	private static Thread reloadingThread = null;

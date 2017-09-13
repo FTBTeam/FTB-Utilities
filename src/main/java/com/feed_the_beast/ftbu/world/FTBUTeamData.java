@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.world;
 
+import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamConfigEvent;
-import com.feed_the_beast.ftbl.lib.EnumTeamPrivacyLevel;
 import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftbl.lib.config.ConfigEnum;
 import com.feed_the_beast.ftbu.FTBUFinals;
@@ -19,8 +19,8 @@ import javax.annotation.Nullable;
  */
 public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 {
-	public final ConfigEnum<EnumTeamPrivacyLevel> editBlocks = new ConfigEnum<>(EnumTeamPrivacyLevel.NAME_MAP.withDefault(EnumTeamPrivacyLevel.ALLIES));
-	public final ConfigEnum<EnumTeamPrivacyLevel> interactWithBlocks = new ConfigEnum<>(EnumTeamPrivacyLevel.NAME_MAP.withDefault(EnumTeamPrivacyLevel.ALLIES));
+	public final ConfigEnum<EnumTeamStatus> editBlocks = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
+	public final ConfigEnum<EnumTeamStatus> interactWithBlocks = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
 	public final ConfigBoolean explosions = new ConfigBoolean(false);
 	public final ConfigBoolean fakePlayers = new ConfigBoolean(true);
 

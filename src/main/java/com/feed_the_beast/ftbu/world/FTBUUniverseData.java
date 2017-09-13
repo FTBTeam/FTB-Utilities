@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbu.world;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.Notification;
+import com.feed_the_beast.ftbl.lib.icon.ImageIcon;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
@@ -12,9 +12,7 @@ import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUConfig;
-import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api.events.ChunkModifiedEvent;
@@ -22,22 +20,14 @@ import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.api_impl.FTBUChunkManager;
-import com.feed_the_beast.ftbu.cmd.CmdShutdown;
 import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
-import com.feed_the_beast.ftbu.world.backups.Backups;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.stats.StatList;
-import net.minecraft.stats.StatisticsManagerServer;
-import net.minecraft.util.ITickable;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -47,8 +37,6 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -60,14 +48,12 @@ import java.util.function.Function;
 /**
  * @author LatvianModder
  */
-public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITickable
+public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>
 {
-	private static final String FAILED_BADGE = FTBUFinals.MOD_ID + ":textures/failed_badge.png";
 	private static final String BADGE_BASE_URL = "http://api.latmod.com/badges/get?id=";
-	private static final ResourceLocation RESTART_TIMER_ID = FTBUFinals.get("restart_timer");
 
-	private static final Map<UUID, String> BADGE_CACHE = new HashMap<>();
-	private static final Map<UUID, String> LOCAL_BADGES = new HashMap<>();
+	public static final Map<UUID, String> BADGE_CACHE = new HashMap<>();
+	public static final Map<UUID, String> LOCAL_BADGES = new HashMap<>();
 	public static final Function<ChunkDimPos, Boolean> ALLOW_EXPLOSION = pos ->
 	{
 		if (pos.dim == 0 && FTBUConfig.world.safe_spawn && isInSpawn(pos))
@@ -88,9 +74,9 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 		return data;
 	}
 
-	public long shutdownTime;
-	private long nextChunkloaderUpdate, nextWebApiUpdate;
-	private final Map<String, BlockDimPos> warps = new HashMap<>();
+	public static long shutdownTime;
+	public static long nextChunkloaderUpdate;
+	private static final Map<String, BlockDimPos> WARPS = new HashMap<>();
 
 	public static void updateBadge(UUID playerId)
 	{
@@ -139,7 +125,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 			}
 			catch (Exception ex)
 			{
-				return FAILED_BADGE;
+				return ImageIcon.MISSING_IMAGE.toString();
 			}
 		}
 
@@ -366,71 +352,16 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 		return true;
 	}
 
-	public void onLoaded()
-	{
-		ClaimedChunkStorage.INSTANCE.init();
-
-		long start = ServerUtils.getWorldTime();
-		Backups.INSTANCE.nextBackup = start + FTBUConfig.backups.ticks();
-
-		if (FTBUConfig.auto_shutdown.enabled && FTBUConfig.auto_shutdown.times.length > 0 && ServerUtils.getServer().isDedicatedServer())
-		{
-			Calendar calendar = Calendar.getInstance();
-			int currentTime = calendar.get(Calendar.HOUR_OF_DAY) * 3600 + calendar.get(Calendar.MINUTE) * 60 + calendar.get(Calendar.SECOND);
-			int[] times = new int[FTBUConfig.auto_shutdown.times.length];
-
-			for (int i = 0; i < times.length; i++)
-			{
-				String[] s = FTBUConfig.auto_shutdown.times[i].split(":", 2);
-
-				times[i] = Integer.parseInt(s[0]) * 3600 + Integer.parseInt(s[1]) * 60;
-
-				if (times[i] <= currentTime)
-				{
-					times[i] += 24 * 3600;
-				}
-			}
-
-			Arrays.sort(times);
-
-			for (int i = 0; i < times.length; i++)
-			{
-				if (times[i] > currentTime)
-				{
-					shutdownTime = start + (times[i] - currentTime) * CommonUtils.TICKS_SECOND;
-					FTBUFinals.LOGGER.info("Server shutdown in " + StringUtils.getTimeStringTicks(shutdownTime));
-					break;
-				}
-			}
-		}
-
-		FTBLibAPI.API.ticking().add(this);
-
-		LOCAL_BADGES.clear();
-	}
-
-	public void onLoadedBeforePlayers()
-	{
-		ClaimedChunkStorage.INSTANCE.clear();
-	}
-
-	public void onClosed()
-	{
-		ClaimedChunkStorage.INSTANCE.clear();
-		FTBUChunkManager.INSTANCE.clear();
-		LOCAL_BADGES.clear();
-	}
-
 	@Override
 	public NBTTagCompound serializeNBT()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 
-		if (!warps.isEmpty())
+		if (!WARPS.isEmpty())
 		{
 			NBTTagCompound tag1 = new NBTTagCompound();
 
-			for (Map.Entry<String, BlockDimPos> e : warps.entrySet())
+			for (Map.Entry<String, BlockDimPos> e : WARPS.entrySet())
 			{
 				tag1.setIntArray(e.getKey(), e.getValue().toIntArray());
 			}
@@ -450,8 +381,7 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 		}
 
 		nextChunkloaderUpdate = ServerUtils.getWorldTime() + 500L;
-		warps.clear();
-		nextWebApiUpdate = 0L;
+		WARPS.clear();
 
 		if (nbt.hasKey("Warps"))
 		{
@@ -493,122 +423,34 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>, ITick
 		}
 	}
 
-	@Override
-	public void update()
-	{
-		long now = ServerUtils.getWorldTime();
-
-		if (shutdownTime > 0L)
-		{
-			long t = shutdownTime - now;
-
-			if (t <= 0)
-			{
-				CmdShutdown.shutdown(ServerUtils.getServer());
-				return;
-			}
-			else if ((t == CommonUtils.TICKS_SECOND * 10L && t % CommonUtils.TICKS_SECOND == 0L) || t == CommonUtils.TICKS_MINUTE || t == CommonUtils.TICKS_MINUTE * 5L || t == CommonUtils.TICKS_MINUTE * 10L || t == CommonUtils.TICKS_MINUTE * 30L)
-			{
-				Notification.of(RESTART_TIMER_ID, StringUtils.color(FTBULang.TIMER_SHUTDOWN.textComponent(StringUtils.getTimeStringTicks(t / CommonUtils.TICKS_SECOND)), TextFormatting.LIGHT_PURPLE)).send(null);
-			}
-		}
-
-		if (Backups.INSTANCE.nextBackup > 0L && Backups.INSTANCE.nextBackup <= now)
-		{
-			MinecraftServer server = ServerUtils.getServer();
-			Backups.INSTANCE.run(server, server, "");
-		}
-
-		if (nextChunkloaderUpdate < now)
-		{
-			nextChunkloaderUpdate = now + CommonUtils.TICKS_MINUTE;
-			FTBUChunkManager.INSTANCE.checkAll();
-		}
-
-		if (Backups.INSTANCE.thread != null && Backups.INSTANCE.thread.isDone)
-		{
-			Backups.INSTANCE.thread = null;
-			Backups.INSTANCE.postBackup();
-		}
-
-		if (FTBUConfig.webapi.enabled && nextWebApiUpdate < now)
-		{
-			nextWebApiUpdate = now + FTBUConfig.webapi.update_interval * CommonUtils.TICKS_MINUTE;
-			exportWebAPI();
-		}
-
-        /*
-		for(int i = teleportRequests.size() - 1; i >= 0; i--)
-        {
-            if(teleportRequests.get(i).isExpired(now))
-            {
-                teleportRequests.remove(i);
-            }
-        }
-        */
-	}
-
-	public static void exportWebAPI()
-	{
-		try
-		{
-			JsonTable table = new JsonTable();
-			table.setTitle("name", "Name");
-			table.setTitle("deaths", "Deaths");
-			table.setTitle("dph", "Deaths per hour");
-			table.setTitle("last_seen", "Last time seen");
-
-			for (IForgePlayer player : FTBLibAPI.API.getUniverse().getPlayers())
-			{
-				StatisticsManagerServer stats = player.stats();
-
-				JsonTable.TableEntry tableEntry = new JsonTable.TableEntry();
-				tableEntry.set("name", new JsonPrimitive(player.getName()));
-				tableEntry.set("deaths", new JsonPrimitive(stats.readStat(StatList.DEATHS)));
-				table.addEntry(tableEntry);
-			}
-
-			JsonObject json = new JsonObject();
-			json.addProperty("time", System.currentTimeMillis());
-			json.add("stats", table.toJson());
-
-			File file = FTBUConfig.webapi.file_location.isEmpty() ? new File(CommonUtils.folderLocal, "ftbu/webapi.json") : new File(FTBUConfig.webapi.file_location);
-			JsonUtils.toJson(JsonUtils.GSON, file, json);
-		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
-	}
-
 	public Collection<String> listWarps()
 	{
-		if (warps.isEmpty())
+		if (WARPS.isEmpty())
 		{
 			return Collections.emptySet();
 		}
 
-		return warps.keySet();
+		return WARPS.keySet();
 	}
 
 	@Nullable
 	public BlockDimPos getWarp(String s)
 	{
-		return warps.get(s);
+		return WARPS.get(s);
 	}
 
 	public boolean setWarp(String s, @Nullable BlockDimPos pos)
 	{
 		if (pos == null)
 		{
-			return warps.remove(s) != null;
+			return WARPS.remove(s) != null;
 		}
 
-		return warps.put(s, pos.copy()) == null;
+		return WARPS.put(s, pos.copy()) == null;
 	}
 
 	public int warpsSize()
 	{
-		return warps.size();
+		return WARPS.size();
 	}
 }

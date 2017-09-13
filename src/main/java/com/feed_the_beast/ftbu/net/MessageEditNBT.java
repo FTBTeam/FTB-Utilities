@@ -27,7 +27,7 @@ public class MessageEditNBT extends MessageToClient<MessageEditNBT>
 
 		if (CommonUtils.DEV_ENV)
 		{
-			CommonUtils.DEV_LOGGER.info("Editing NBT:" + mainNbt);
+			CommonUtils.DEV_LOGGER.info("Editing NBT: " + mainNbt);
 		}
 	}
 

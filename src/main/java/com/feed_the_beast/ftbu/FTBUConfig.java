@@ -37,7 +37,6 @@ public class FTBUConfig
 	@Config.RequiresWorldRestart
 	public static final Ranks ranks = new Ranks();
 
-	public static final WebAPI webapi = new WebAPI();
 	public static final World world = new World();
 
 	public static class AutoShutdown
@@ -168,18 +167,6 @@ public class FTBUConfig
 
 		public boolean override_chat = true;
 		public boolean override_commands = true;
-	}
-
-	public static class WebAPI
-	{
-		@Config.LangKey(GuiLang.LANG_ENABLED)
-		public boolean enabled = false;
-
-		public String file_location = "";
-
-		@Config.RangeInt(min = 0, max = 240)
-		@Config.Comment("Update interval in minutes")
-		public int update_interval = 5;
 	}
 
 	public static class World

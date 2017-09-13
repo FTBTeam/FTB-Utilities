@@ -47,11 +47,6 @@ ftbu.config.login.enable_starting_items=Enable Starting Items
 ftbu.config.login.motd=MOTD
 ftbu.config.login.starting_items=Starting Items
 
-ftbu.config.webapi=Web API
-ftbu.config.webapi.enabled=Enabled
-ftbu.config.webapi.file_location=File Location
-ftbu.config.webapi.update_interval=Update Interval
-
 ftbu.config.world=World
 ftbu.config.world.chunk_claiming=Chunk Claiming
 ftbu.config.world.chunk_loading=Chunk Loading

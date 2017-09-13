@@ -1,4 +1,13 @@
 {
+	"chats": {
+		"icon": "ftbl:icons/chat",
+		"dependencies": "after:ftbl.settings",
+		"click": {
+			"action": "run_command",
+			"value": "/ftbc open_chats"
+		},
+		"config": true
+	},
 	"guide": {
 		"icon": "minecraft:items/book_normal",
 		"dependencies": "after:ftbu.claimed_chunks",
@@ -55,7 +64,7 @@
 	},
 	"heal": {
 		"icon": "ftbl:icons/heart",
-		"dependencies": "after:ftbl.settings",
+		"dependencies": "after:ftbu.chats",
 		"click": {
 			"action": "run_command",
 			"value": "/heal"

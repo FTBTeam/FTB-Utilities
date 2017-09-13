@@ -58,6 +58,6 @@ public class CmdSetHome extends CmdBase
 		}
 
 		data.setHome(args[0], new BlockDimPos(ep));
-		FTBULang.HOME_SET.printChat(sender, args[0]);
+		FTBULang.HOME_SET.sendMessage(sender, args[0]);
 	}
 }

@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
+import com.feed_the_beast.ftbu.api.FTBULang;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentString;
 
 public class CmdKickme extends CmdBase
 {
@@ -18,7 +18,7 @@ public class CmdKickme extends CmdBase
 	{
 		if (server.isDedicatedServer())
 		{
-			getCommandSenderAsPlayer(sender).connection.disconnect(new TextComponentString("You kicked yourself!")); //LANG
+			getCommandSenderAsPlayer(sender).connection.disconnect(FTBULang.KICKME.textComponent());
 		}
 		else
 		{

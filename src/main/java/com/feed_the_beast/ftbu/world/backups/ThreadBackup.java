@@ -53,7 +53,7 @@ public class ThreadBackup extends Thread
 			List<File> files = FileUtils.listAll(src);
 			int allFiles = files.size();
 
-			FTBUFinals.LOGGER.info("Backing up " + files.size() + " files..."); //LANG
+			FTBUFinals.LOGGER.info(FTBULang.BACKUP_BACKING_UP_FILES.translate(files.size()));
 
 			if (FTBUConfig.backups.compression_level > 0)
 			{
@@ -70,7 +70,7 @@ public class ThreadBackup extends Thread
 
 				byte[] buffer = new byte[4096];
 
-				FTBUFinals.LOGGER.info("Compressing " + allFiles + " files!"); //LANG
+				FTBUFinals.LOGGER.info(FTBULang.BACKUP_COMPRESSING_FILES.translate(allFiles));
 
 				for (int i = 0; i < allFiles; i++)
 				{
@@ -107,7 +107,7 @@ public class ThreadBackup extends Thread
 
 				zos.close();
 
-				FTBUFinals.LOGGER.info("Done compressing in " + getDoneTime(start) + " seconds (" + FileUtils.getSizeS(dstFile) + ")!"); //LANG
+				FTBUFinals.LOGGER.info(FTBULang.BACKUP_COMPRESSING_DONE.translate(getDoneTime(start), FileUtils.getSizeS(dstFile)));
 			}
 			else
 			{
@@ -132,7 +132,7 @@ public class ThreadBackup extends Thread
 						if (i == 0 || millis > logMillis || i == allFiles - 1)
 						{
 							logMillis = millis + 2000L;
-							FTBUFinals.LOGGER.info("[" + i + " | " + StringUtils.formatDouble((i / (double) allFiles) * 100D) + "%]: " + file.getName()); //LANG
+							FTBUFinals.LOGGER.info("[" + i + " | " + StringUtils.formatDouble((i / (double) allFiles) * 100D) + "%]: " + file.getName());
 						}
 
 						File dst1 = new File(dstPath + (file.getAbsolutePath().replace(srcPath, "")));
@@ -145,7 +145,7 @@ public class ThreadBackup extends Thread
 				}
 			}
 
-			FTBUFinals.LOGGER.info("Created " + dstFile.getAbsolutePath() + " from " + src.getAbsolutePath());
+			FTBUFinals.LOGGER.info(FTBULang.BACKUP_CREATED_FROM.translate(dstFile.getAbsolutePath(), src.getAbsolutePath()));
 			success = true;
 
 			if (!FTBUConfig.backups.silent)

@@ -44,7 +44,7 @@ public class CmdDelHome extends CmdBase
 
 		if (data.setHome(args[0], null))
 		{
-			FTBULang.HOME_DEL.printChat(sender, args[0]);
+			FTBULang.HOME_DEL.sendMessage(sender, args[0]);
 		}
 		else
 		{

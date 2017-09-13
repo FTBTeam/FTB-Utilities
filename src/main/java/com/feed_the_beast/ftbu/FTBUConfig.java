@@ -121,7 +121,6 @@ public class FTBUConfig
 		public boolean inv = true;
 		public boolean tpl = true;
 		public boolean server_info = true;
-		public boolean loaded_chunks = true;
 		public boolean trash_can = true;
 		public boolean chunks = true;
 		public boolean kickme = true;

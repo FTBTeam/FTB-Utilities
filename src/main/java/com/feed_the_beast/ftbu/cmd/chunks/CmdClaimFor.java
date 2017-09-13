@@ -3,11 +3,11 @@ package com.feed_the_beast.ftbu.cmd.chunks;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
+import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.world.FTBUUniverseData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentString;
 
 /**
  * @author LatvianModder
@@ -39,7 +39,7 @@ public class CmdClaimFor extends CmdBase
 		ChunkDimPos pos = new ChunkDimPos(chunkXPos, chunkZPos, dimension);
 		if (FTBUUniverseData.claimChunk(claimFor, pos))
 		{
-			sender.sendMessage(new TextComponentString(String.format("Claimed %d, %d in %d for %s", chunkXPos, chunkZPos, dimension, playerName))); //LANG
+			FTBULang.CHUNKS_CLAIMED_FOR.sendMessage(sender, chunkXPos, chunkZPos, dimension, playerName);
 
 			if (claimFor.isOnline())
 			{
@@ -48,7 +48,7 @@ public class CmdClaimFor extends CmdBase
 		}
 		else
 		{
-			sender.sendMessage(new TextComponentString(String.format("ERROR: Can't claim %d, %d in %d for %s", chunkXPos, chunkZPos, dimension, playerName))); //LANG
+			throw FTBULang.CHUNKS_CANT_CLAIM_FOR.commandError(chunkXPos, chunkZPos, dimension, playerName);
 		}
 	}
 }

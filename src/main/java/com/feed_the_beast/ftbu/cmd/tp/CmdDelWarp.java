@@ -38,7 +38,7 @@ public class CmdDelWarp extends CmdBase
 
 		if (FTBUUniverseData.get().setWarp(args[0], null))
 		{
-			FTBULang.WARP_DEL.printChat(sender, args[0]);
+			FTBULang.WARP_DEL.sendMessage(sender, args[0]);
 		}
 		else
 		{

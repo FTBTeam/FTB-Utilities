@@ -92,7 +92,7 @@ public class ServerInfoPage
 		//FIXME: SERVER_INFO_ADMIN_QUICK_ACCESS
 		//}
 
-		GuidePage page1 = page.getSub("leaderboards").setTitle(StringUtils.color(new TextComponentString("Leaderboards"), TextFormatting.RED)); //LANG
+		GuidePage page1 = page.getSub("leaderboards").setTitle(StringUtils.color(new TextComponentTranslation("ftbu.leaderboard.title"), TextFormatting.RED));
 		page1.setIcon(new DrawableItem(new ItemStack(Items.SIGN)));
 		page1.println("1.12: Work in progress!");
 
@@ -164,7 +164,7 @@ public class ServerInfoPage
 				{
 					ITextComponent cc = new TextComponentString('/' + c.getName());
 					cc.getStyle().setColor(TextFormatting.DARK_RED);
-					page1.getSub('/' + c.getName()).setTitle(cc).println("Errored"); //LANG
+					page1.getSub('/' + c.getName()).setTitle(cc).println(FTBLibLang.ERROR.textComponent(ex1.toString()));
 
 					if (CommonUtils.DEV_ENV)
 					{
@@ -177,7 +177,7 @@ public class ServerInfoPage
 		}
 		catch (Exception ex)
 		{
-			page1.println("Failed to load commands"); //LANG
+			page1.println(FTBULang.GUIDE_COMMANDS_FAILED.textComponent());
 		}
 
 		if (PermissionAPI.hasPermission(ep, FTBUPermissions.DISPLAY_PERMISSIONS))
@@ -228,7 +228,7 @@ public class ServerInfoPage
 		{
 			for (ICommand command : treeCommand.getSubCommands())
 			{
-				addCommandUsage(sender, page.getSub(command.getName()), level + 1, command);
+				addCommandUsage(sender, page.getSub(command.getName()).setTitle(new TextComponentString(command.getName())), level + 1, command);
 			}
 		}
 	}

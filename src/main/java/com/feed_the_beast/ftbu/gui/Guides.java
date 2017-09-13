@@ -23,13 +23,13 @@ import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
+import com.feed_the_beast.ftbu.api.FTBULang;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
@@ -120,7 +120,7 @@ public enum Guides implements IResourceManagerReloadListener
 	{
 		FTBUFinals.LOGGER.info("Reloading guides...");
 		INFO_PAGE.clear();
-		INFO_PAGE.setTitle(new TextComponentString("Guides")); //LANG
+		INFO_PAGE.setTitle(new TextComponentTranslation("sidebar_button.ftbu.guide"));
 
 		List<GuideTitlePage> guides = new ArrayList<>();
 		SUBSTITUTE_CACHE.clear();
@@ -139,8 +139,7 @@ public enum Guides implements IResourceManagerReloadListener
 
 					if (format == GuideFormat.UNSUPPORTED)
 					{
-						guide.println("Unsupported format!"); //LANG
-						guide.println("Please update FTBUtilities or contact mod author!"); //LANG
+						guide.println(FTBULang.GUIDE_UNSUPPORTED_FORMAT.textComponent());
 					}
 					else
 					{

@@ -459,16 +459,5 @@ public class Ranks
 
 			INFO_PAGE.println(txt);
 		}
-
-        /*
-		page = getSub("rank_configs").setTitle(new TextComponentString("Rank Configs")); //LANG
-
-        for(IRankConfig key : RankConfigAPI.getRegisteredRankConfigs().values())
-        {
-            page.println(key.getName() + ": " + RankConfigAPI.getRankConfig(ep, key).getSerializableElement());
-        }
-
-        Collections.sort(page.getText(), (o1, o2) -> o1.getUnformattedText().compareTo(o2.getUnformattedText()));
-        */
 	}
 }

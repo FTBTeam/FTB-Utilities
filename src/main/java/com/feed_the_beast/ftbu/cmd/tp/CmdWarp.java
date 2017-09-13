@@ -65,6 +65,6 @@ public class CmdWarp extends CmdBase
 		}
 
 		ServerUtils.teleportPlayer(ep, p);
-		FTBULang.WARP_TP.printChat(sender, args[0]);
+		FTBULang.WARP_TP.sendMessage(sender, args[0]);
 	}
 }

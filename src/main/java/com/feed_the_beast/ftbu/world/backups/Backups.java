@@ -15,7 +15,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.WorldServer;
 
@@ -150,7 +149,7 @@ public enum Backups
 			}
 			catch (Exception ex1)
 			{
-				notifyAll(new TextComponentString("World saving failed!"), true); //LANG
+				notifyAll(FTBULang.BACKUP_SAVING_FAILED.textComponent(), true);
 			}
 		}
 		catch (Exception ex)
@@ -194,7 +193,7 @@ public enum Backups
 						for (int i = toDelete - 1; i >= 0; i--)
 						{
 							Backup b = backups.get(i);
-							FTBUFinals.LOGGER.info("Deleting old backup: " + b.fileId); //LANG
+							FTBUFinals.LOGGER.info(FTBULang.BACKUP_DELETING_OLD.translate(b.fileId));
 							FileUtils.delete(b.getFile());
 							backups.remove(i);
 						}

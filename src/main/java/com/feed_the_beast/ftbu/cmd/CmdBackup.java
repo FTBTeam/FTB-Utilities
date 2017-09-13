@@ -26,7 +26,7 @@ public class CmdBackup extends CmdTreeBase
 			boolean b = Backups.INSTANCE.run(server, sender, args.length == 0 ? "" : args[0]);
 			if (b)
 			{
-				FTBULang.BACKUP_MANUAL_LAUNCH.printChat(BroadcastSender.INSTANCE, sender.getName());
+				FTBULang.BACKUP_MANUAL_LAUNCH.sendMessage(BroadcastSender.INSTANCE, sender.getName());
 
 				if (!FTBUConfig.backups.use_separate_thread)
 				{
@@ -35,7 +35,7 @@ public class CmdBackup extends CmdTreeBase
 			}
 			else
 			{
-				FTBULang.BACKUP_ALREADY_RUNNING.printChat(sender);
+				FTBULang.BACKUP_ALREADY_RUNNING.sendMessage(sender);
 			}
 		}
 	}
@@ -54,7 +54,7 @@ public class CmdBackup extends CmdTreeBase
 			{
 				Backups.INSTANCE.thread.interrupt();
 				Backups.INSTANCE.thread = null;
-				FTBULang.BACKUP_STOP.printChat(sender);
+				FTBULang.BACKUP_STOP.sendMessage(sender);
 				return;
 			}
 
@@ -74,7 +74,7 @@ public class CmdBackup extends CmdTreeBase
 		{
 			String sizeW = FileUtils.getSizeS(sender.getEntityWorld().getSaveHandler().getWorldDirectory());
 			String sizeT = FileUtils.getSizeS(Backups.INSTANCE.backupsFolder);
-			FTBULang.BACKUP_SIZE.printChat(sender, sizeW, sizeT);
+			FTBULang.BACKUP_SIZE.sendMessage(sender, sizeW, sizeT);
 		}
 	}
 

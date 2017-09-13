@@ -40,7 +40,7 @@ public class CmdAdminHome extends CmdTreeBase
 			if (pos != null)
 			{
 				ServerUtils.teleportPlayer(ep, pos);
-				FTBULang.WARP_TP.printChat(sender, args[1]);
+				FTBULang.WARP_TP.sendMessage(sender, args[1]);
 			}
 
 			throw FTBULang.HOME_NOT_SET.commandError(args[1]);
@@ -94,7 +94,7 @@ public class CmdAdminHome extends CmdTreeBase
 			{
 				if (data.setHome(args[1], null))
 				{
-					FTBULang.HOME_DEL.printChat(sender, args[1]);
+					FTBULang.HOME_DEL.sendMessage(sender, args[1]);
 				}
 			}
 

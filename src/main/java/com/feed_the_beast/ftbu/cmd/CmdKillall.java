@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
+import com.feed_the_beast.ftbu.api.FTBULang;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -13,7 +14,6 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -56,6 +56,7 @@ public class CmdKillall extends CmdBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		Predicate<Entity> predicate = CommonUtils.alwaysTruePredicate();
+		String type = "unknown";
 
 		if (args.length >= 1)
 		{
@@ -64,34 +65,42 @@ public class CmdKillall extends CmdBase
 				case "item":
 				case "items":
 					predicate = ITEM;
+					type = "items";
 					break;
 				case "xp":
 				case "experience":
 					predicate = XP;
+					type = "xp";
 					break;
 				case "mob":
 				case "mobs":
 				case "monster":
 				case "monsters":
 					predicate = MOB;
+					type = "monsters";
 					break;
 				case "animal":
 				case "animals":
 					predicate = ANIMAL;
+					type = "animals";
 					break;
 				case "living":
 				case "alive":
 					predicate = LIVING;
+					type = "living";
 					break;
 				case "player":
 				case "players":
 					predicate = PLAYER;
+					type = "players";
 					break;
 				case "non_living":
 					predicate = NON_LIVING;
+					type = "non_living";
 					break;
 				case "non_players":
 					predicate = NON_PLAYER;
+					type = "non_players";
 					break;
 			}
 		}
@@ -110,6 +119,6 @@ public class CmdKillall extends CmdBase
 			}
 		}
 
-		sender.sendMessage(new TextComponentString("Killed " + killed + " entities")); //LANG
+		sender.sendMessage(FTBULang.KILLED_ENTITIES.textComponent(killed, type));
 	}
 }

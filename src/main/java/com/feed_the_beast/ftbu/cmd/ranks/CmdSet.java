@@ -51,12 +51,12 @@ public class CmdSet extends CmdBase
 
 		if (r == DefaultPlayerRank.INSTANCE)
 		{
-			FTBULang.RANK_USE_DEOP.printChat(sender, args[0]);
+			FTBULang.RANK_USE_DEOP.sendMessage(sender, args[0]);
 			return;
 		}
 		else if (r == DefaultOPRank.INSTANCE)
 		{
-			FTBULang.RANK_USE_OP.printChat(sender, args[0]);
+			FTBULang.RANK_USE_OP.sendMessage(sender, args[0]);
 			return;
 		}
 		else if (!Ranks.getRankNames().contains(args[1]))
@@ -69,11 +69,11 @@ public class CmdSet extends CmdBase
 
 		if (r == null)
 		{
-			FTBULang.RANK_UNSET.printChat(sender, p.getName());
+			FTBULang.RANK_UNSET.sendMessage(sender, p.getName());
 		}
 		else
 		{
-			FTBULang.RANK_SET.printChat(sender, p.getName(), r.getName());
+			FTBULang.RANK_SET.sendMessage(sender, p.getName(), r.getName());
 		}
 	}
 }

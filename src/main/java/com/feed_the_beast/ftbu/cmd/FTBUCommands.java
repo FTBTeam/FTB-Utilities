@@ -64,11 +64,6 @@ public class FTBUCommands
 			event.add(new CmdServerInfo());
 		}
 
-		if (FTBUConfig.commands.loaded_chunks)
-		{
-			event.add(new CmdLoadedChunks());
-		}
-
 		if (FTBUConfig.commands.tpl)
 		{
 			event.add(new CmdTplast());

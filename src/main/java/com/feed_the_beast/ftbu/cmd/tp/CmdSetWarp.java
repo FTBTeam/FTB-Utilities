@@ -39,6 +39,6 @@ public class CmdSetWarp extends CmdBase
 		}
 
 		FTBUUniverseData.get().setWarp(args[0], new BlockDimPos(c, ep.dimension));
-		FTBULang.WARP_SET.printChat(sender, args[0]);
+		FTBULang.WARP_SET.sendMessage(sender, args[0]);
 	}
 }

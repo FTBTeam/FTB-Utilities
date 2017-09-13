@@ -143,6 +143,24 @@ ftbu.label.new_friends_click=Click to accept all requests
 ftbu.button.block_security=Block Security
 ftbu.stat.dph=Deaths Per Hour
 ftbu.leaderboard.title=Leaderboards
+ftbu.killed_entities=Killed %d entities with type '%s'
+ftbu.guide.unsupported_format=Unsupported format! Please update FTBUtilities or contact mod author!
+ftbu.guide.commands_failed=Failed to load commands
+ftbu.kickme=You kicked yourself!
+ftbu.perm_for=%s for %s is %s
+
+# Chunks
+ftbu.chunks.cant_modify_chunk=Can't modify this chunk!
+ftbu.chunks.claiming_not_enabled=Claiming is not enabled on this server!
+ftbu.chunks.claiming_not_allowed=You are not allowed to claim this chunk!
+ftbu.chunks.unclaimed_all=Unclaimed all chunks
+ftbu.chunks.chunk_claimed=Chunk claimed
+ftbu.chunks.chunk_unclaimed=Chunk unclaimed
+ftbu.chunks.chunk_loaded=Chunk loaded
+ftbu.chunks.chunk_unloaded=Chunk unloaded
+ftbu.chunks.unloaded_for=Unloaded %s's chunks
+ftbu.chunks.claimed_for=Claimed %d, %d in %d for %s
+ftbu.chunks.cant_claimed_for=Can't claim %d, %d in %d for %s
 
 # Warps
 ftbu.warp.set=Warp '%s' set!
@@ -169,6 +187,12 @@ ftbu.backup.manual_launch=%s launched a manual backup!
 ftbu.backup.already_running=Backup in progress!
 ftbu.backup.not_running=Backup is not running!
 ftbu.backup.size=Current world size: %s, total backups folder size: %s
+ftbu.backup.saving_failed=World saving failed!
+ftbu.backup.deleting_old=Deleting old backup: %s
+ftbu.backup.backing_up_files=Backing up %d files...
+ftbu.backup.compressing_files=Compressing %d files!
+ftbu.backup.compressing_done=Done compressing in %s seconds (%s)!
+ftbu.backup.created_from=Created %s from %s
 
 # Ranks
 ftbu.rank.id_exists=Rank '%s' already exists!

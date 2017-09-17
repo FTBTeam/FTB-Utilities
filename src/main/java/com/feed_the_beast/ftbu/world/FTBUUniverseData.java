@@ -28,22 +28,17 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Function;
 
 /**
  * @author LatvianModder
@@ -54,18 +49,6 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>
 
 	public static final Map<UUID, String> BADGE_CACHE = new HashMap<>();
 	public static final Map<UUID, String> LOCAL_BADGES = new HashMap<>();
-	public static final Function<ChunkDimPos, Boolean> ALLOW_EXPLOSION = pos ->
-	{
-		if (pos.dim == 0 && FTBUConfig.world.safe_spawn && isInSpawn(pos))
-		{
-			return false;
-		}
-		else
-		{
-			IClaimedChunk chunk = ClaimedChunkStorage.INSTANCE.getChunk(pos);
-			return chunk == null || !chunk.hasUpgrade(ChunkUpgrade.NO_EXPLOSIONS);
-		}
-	};
 
 	public static FTBUUniverseData get()
 	{
@@ -196,26 +179,6 @@ public class FTBUUniverseData implements INBTSerializable<NBTTagCompound>
 	public static boolean isInSpawnD(int dim, double x, double z)
 	{
 		return dim == 0 && isInSpawn(new ChunkDimPos(MathUtils.chunk(x), MathUtils.chunk(z), dim));
-	}
-
-	public static void handleExplosion(World world, Explosion explosion)
-	{
-		if (world.isRemote || explosion.getAffectedBlockPositions().isEmpty())
-		{
-			return;
-		}
-
-		List<BlockPos> list = new ArrayList<>(explosion.getAffectedBlockPositions());
-		explosion.clearAffectedBlockPositions();
-		Map<ChunkDimPos, Boolean> map = new HashMap<>();
-
-		for (BlockPos pos : list)
-		{
-			if (map.computeIfAbsent(new ChunkDimPos(pos, world.provider.getDimension()), ALLOW_EXPLOSION))
-			{
-				explosion.getAffectedBlockPositions().add(pos);
-			}
-		}
 	}
 
 	public static boolean claimChunk(IForgePlayer player, ChunkDimPos pos)

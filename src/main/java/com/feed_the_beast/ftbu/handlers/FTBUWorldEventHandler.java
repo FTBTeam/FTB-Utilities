@@ -5,12 +5,15 @@ import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseClosedEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedBeforePlayersEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
 import com.feed_the_beast.ftbl.lib.Notification;
+import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
+import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
+import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.api_impl.FTBUChunkManager;
 import com.feed_the_beast.ftbu.cmd.CmdShutdown;
@@ -22,14 +25,22 @@ import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.Explosion;
+import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author LatvianModder
@@ -38,6 +49,18 @@ import java.util.Calendar;
 public class FTBUWorldEventHandler
 {
 	private static final ResourceLocation RESTART_TIMER_ID = FTBUFinals.get("restart_timer");
+	public static final Function<ChunkDimPos, Boolean> ALLOW_EXPLOSION = pos ->
+	{
+		if (pos.dim == 0 && FTBUConfig.world.safe_spawn && FTBUUniverseData.isInSpawn(pos))
+		{
+			return false;
+		}
+		else
+		{
+			IClaimedChunk chunk = ClaimedChunkStorage.INSTANCE.getChunk(pos);
+			return chunk == null || !chunk.hasUpgrade(ChunkUpgrade.NO_EXPLOSIONS);
+		}
+	};
 
 	@SubscribeEvent
 	public static void onUniverseLoaded(ForgeUniverseLoadedEvent event)
@@ -67,12 +90,12 @@ public class FTBUWorldEventHandler
 
 			Arrays.sort(times);
 
-			for (int i = 0; i < times.length; i++)
+			for (int time : times)
 			{
-				if (times[i] > currentTime)
+				if (time > currentTime)
 				{
-					FTBUUniverseData.shutdownTime = start + (times[i] - currentTime) * CommonUtils.TICKS_SECOND;
-					FTBUFinals.LOGGER.info("Server shutdown in " + StringUtils.getTimeStringTicks(FTBUUniverseData.shutdownTime));
+					FTBUUniverseData.shutdownTime = start + (time - currentTime) * CommonUtils.TICKS_SECOND;
+					FTBUFinals.LOGGER.info(FTBULang.TIMER_SHUTDOWN.translate(StringUtils.getTimeStringTicks(FTBUUniverseData.shutdownTime)));
 					break;
 				}
 			}
@@ -183,6 +206,24 @@ public class FTBUWorldEventHandler
 	@SubscribeEvent
 	public static void onExplosionDetonate(ExplosionEvent.Detonate event)
 	{
-		FTBUUniverseData.handleExplosion(event.getWorld(), event.getExplosion());
+		World world = event.getWorld();
+		Explosion explosion = event.getExplosion();
+
+		if (world.isRemote || explosion.getAffectedBlockPositions().isEmpty())
+		{
+			return;
+		}
+
+		List<BlockPos> list = new ArrayList<>(explosion.getAffectedBlockPositions());
+		explosion.clearAffectedBlockPositions();
+		Map<ChunkDimPos, Boolean> map = new HashMap<>();
+
+		for (BlockPos pos : list)
+		{
+			if (map.computeIfAbsent(new ChunkDimPos(pos, world.provider.getDimension()), ALLOW_EXPLOSION))
+			{
+				explosion.getAffectedBlockPositions().add(pos);
+			}
+		}
 	}
 }

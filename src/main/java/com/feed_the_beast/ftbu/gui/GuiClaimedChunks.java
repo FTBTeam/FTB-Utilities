@@ -182,7 +182,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			public void onClicked(GuiBase gui, MouseButton button)
 			{
 				GuiHelper.playClickSound();
-				String s = GuiScreen.isShiftKeyDown() ? FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_Q.translate() : FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_DIM_Q.translate(currentDimName);
+				String s = GuiScreen.isShiftKeyDown() ? FTBULang.CHUNKS_UNCLAIM_ALL_Q.translate() : FTBULang.CHUNKS_UNCLAIM_ALL_DIM_Q.translate(currentDimName);
 				ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
 				{
 					if (set)
@@ -198,7 +198,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			@Override
 			public void addMouseOverText(GuiBase gui, List<String> list)
 			{
-				list.add(GuiScreen.isShiftKeyDown() ? FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL.translate() : FTBULang.BUTTON_CLAIMS_UNCLAIM_ALL_DIM.translate(currentDimName));
+				list.add(GuiScreen.isShiftKeyDown() ? FTBULang.CHUNKS_UNCLAIM_ALL.translate() : FTBULang.CHUNKS_UNCLAIM_ALL_DIM.translate(currentDimName));
 			}
 		};
 
@@ -250,8 +250,8 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 	@Override
 	public void addCornerText(List<String> list)
 	{
-		list.add(FTBULang.LABEL_CCHUNKS_COUNT.translate(claimedChunks, maxClaimedChunks));
-		list.add(FTBULang.LABEL_LCHUNKS_COUNT.translate(loadedChunks, maxLoadedChunks));
+		list.add(FTBULang.CHUNKS_CLAIMED_COUNT.translate(claimedChunks, maxClaimedChunks));
+		list.add(FTBULang.CHUNKS_LOADED_COUNT.translate(loadedChunks, maxLoadedChunks));
 	}
 
 	@Override

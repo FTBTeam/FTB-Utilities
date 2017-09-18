@@ -9,7 +9,7 @@ import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunkStorage;
-import com.feed_the_beast.ftbu.world.FTBUTeamData;
+import com.feed_the_beast.ftbu.util.FTBUTeamData;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumHand;
 
@@ -74,35 +74,35 @@ public enum ClaimedChunkStorage implements IClaimedChunkStorage
 
 		Collection<IClaimedChunk> c = new ArrayList<>();
 
-		MAP.forEach((key, value) ->
+		for (IClaimedChunk chunk : MAP.values())
 		{
-			if (value.getOwner().equalsPlayer(owner))
+			if (chunk.getOwner().equalsPlayer(owner))
 			{
-				c.add(value);
+				c.add(chunk);
 			}
-		});
+		}
 
 		return c;
 	}
 
 	@Override
-	public boolean canPlayerInteract(EntityPlayerMP ep, EnumHand hand, BlockPosContainer block, BlockInteractionType type)
+	public boolean canPlayerInteract(EntityPlayerMP player, EnumHand hand, BlockPosContainer block, BlockInteractionType type)
 	{
-		if (FTBUPermissions.canModifyBlock(ep, hand, block, type))
+		if (FTBUPermissions.canModifyBlock(player, hand, block, type))
 		{
 			return true;
 		}
 
-		IClaimedChunk chunk = getChunk(new ChunkDimPos(block.getPos(), ep.dimension));
+		IClaimedChunk chunk = getChunk(new ChunkDimPos(block.getPos(), player.dimension));
 
 		if (chunk == null)
 		{
 			return true;
 		}
 
-		IForgePlayer player = FTBLibAPI.API.getUniverse().getPlayer(ep);
+		IForgePlayer p = FTBLibAPI.API.getUniverse().getPlayer(player);
 
-		if (chunk.getOwner().equalsPlayer(player))
+		if (chunk.getOwner().equalsPlayer(p))
 		{
 			return true;
 		}
@@ -116,11 +116,11 @@ public enum ClaimedChunkStorage implements IClaimedChunkStorage
 
 		FTBUTeamData data = FTBUTeamData.get(team);
 
-		if (player.isFake())
+		if (p.isFake())
 		{
 			return data.fakePlayers.getBoolean();
 		}
 
-		return team.hasStatus(player.getId(), (type == BlockInteractionType.INTERACT ? data.interactWithBlocks : data.editBlocks).getValue());
+		return team.hasStatus(p.getId(), (type == BlockInteractionType.INTERACT ? data.interactWithBlocks : data.editBlocks).getValue());
 	}
 }

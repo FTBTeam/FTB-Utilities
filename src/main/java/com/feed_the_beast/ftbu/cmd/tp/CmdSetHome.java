@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
-import com.feed_the_beast.ftbu.world.FTBUPlayerData;
+import com.feed_the_beast.ftbu.util.FTBUPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -28,7 +28,7 @@ public class CmdSetHome extends CmdBase
 	{
 		if (args.length == 1)
 		{
-			return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(sender)).listHomes());
+			return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(sender)).homes.list());
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
@@ -49,15 +49,15 @@ public class CmdSetHome extends CmdBase
 
 		int maxHomes = FTBUtilitiesAPI.API.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt();
 
-		if (maxHomes <= 0 || data.homesSize() >= maxHomes)
+		if (maxHomes <= 0 || data.homes.size() >= maxHomes)
 		{
-			if (maxHomes == 0 || data.getHome(args[0]) == null)
+			if (maxHomes == 0 || data.homes.get(args[0]) == null)
 			{
 				throw FTBULang.HOME_LIMIT.commandError();
 			}
 		}
 
-		data.setHome(args[0], new BlockDimPos(ep));
+		data.homes.set(args[0], new BlockDimPos(ep));
 		FTBULang.HOME_SET.sendMessage(sender, args[0]);
 	}
 }

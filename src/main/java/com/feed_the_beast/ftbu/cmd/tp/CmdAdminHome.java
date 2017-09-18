@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.world.FTBUPlayerData;
+import com.feed_the_beast.ftbu.util.FTBUPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -35,7 +35,7 @@ public class CmdAdminHome extends CmdTreeBase
 			checkArgs(args, 2, "<player> <home>");
 			args[1] = args[1].toLowerCase();
 			FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(args[0]));
-			BlockDimPos pos = data.getHome(args[1]);
+			BlockDimPos pos = data.homes.get(args[1]);
 
 			if (pos != null)
 			{
@@ -65,7 +65,7 @@ public class CmdAdminHome extends CmdTreeBase
 		{
 			checkArgs(args, 1, "<player>");
 			FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(args[0]));
-			sender.sendMessage(new TextComponentString(StringUtils.strip(data.listHomes())));
+			sender.sendMessage(new TextComponentString(StringUtils.strip(data.homes.list())));
 		}
 	}
 
@@ -88,14 +88,11 @@ public class CmdAdminHome extends CmdTreeBase
 			checkArgs(args, 2, "<player> <home>");
 			FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(args[0]));
 			args[1] = args[1].toLowerCase();
-			BlockDimPos pos = data.getHome(args[1]);
+			BlockDimPos pos = data.homes.get(args[1]);
 
-			if (pos != null)
+			if (pos != null && data.homes.set(args[1], null))
 			{
-				if (data.setHome(args[1], null))
-				{
-					FTBULang.HOME_DEL.sendMessage(sender, args[1]);
-				}
+				FTBULang.HOME_DEL.sendMessage(sender, args[1]);
 			}
 
 			throw FTBULang.HOME_NOT_SET.commandError(args[1]);

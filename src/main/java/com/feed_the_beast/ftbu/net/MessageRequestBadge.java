@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbu.net;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
-import com.feed_the_beast.ftbu.world.FTBUUniverseData;
+import com.feed_the_beast.ftbu.util.Badges;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -29,7 +29,7 @@ public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
 		@Override
 		public void run()
 		{
-			new MessageSendBadge(playerId, FTBUUniverseData.getBadge(playerId)).sendTo(player);
+			new MessageSendBadge(playerId, Badges.get(playerId)).sendTo(player);
 		}
 	}
 

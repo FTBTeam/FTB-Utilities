@@ -5,63 +5,61 @@ import com.feed_the_beast.ftbl.lib.LangKey;
 /**
  * @author LatvianModder
  */
-public class FTBULang
+public interface FTBULang
 {
-	public static final LangKey TIMER_SHUTDOWN = get("lang.timer_shutdown");
-	public static final LangKey TIMER_BACKUP = get("lang.timer_backup");
-	public static final LangKey BUTTON_CLAIMS_UNCLAIM_ALL_Q = get("button.claims_unclaim_all_q");
-	public static final LangKey BUTTON_CLAIMS_UNCLAIM_ALL_DIM_Q = get("button.claims_unclaim_all_dim_q");
-	public static final LangKey BUTTON_CLAIMS_UNCLAIM_ALL = get("button.claims_unclaim_all");
-	public static final LangKey BUTTON_CLAIMS_UNCLAIM_ALL_DIM = get("button.claims_unclaim_all_dim");
-	public static final LangKey LABEL_CCHUNKS_COUNT = get("label.cchunks_count");
-	public static final LangKey LABEL_LCHUNKS_COUNT = get("label.lchunks_count");
-	public static final LangKey KILLED_ENTITIES = get("killed_entities");
-	public static final LangKey GUIDE_UNSUPPORTED_FORMAT = get("guide.unsupported_format");
-	public static final LangKey GUIDE_COMMANDS_FAILED = get("guide.commands_failed");
-	public static final LangKey KICKME = get("kickme");
-	public static final LangKey PERM_FOR = get("perm_for");
+	LangKey TIMER_SHUTDOWN = LangKey.of("ftbu.lang.timer.shutdown", String.class);
+	LangKey TIMER_BACKUP = LangKey.of("ftbu.lang.timer.backup", String.class);
+	LangKey LEADERBOARDS = LangKey.of("ftbu.lang.leaderboards");
+	LangKey KILLED_ENTITIES = LangKey.of("ftbu.lang.killed_entities", Integer.class, String.class);
+	LangKey GUIDE_UNSUPPORTED_FORMAT = LangKey.of("ftbu.lang.guide.unsupported_format");
+	LangKey GUIDE_COMMANDS_FAILED = LangKey.of("ftbu.lang.guide.commands_failed");
+	LangKey KICKME = LangKey.of("ftbu.lang.kickme");
+	LangKey PERM_FOR = LangKey.of("ftbu.lang.perm_for", String.class, String.class, String.class);
 
-	public static final LangKey CHUNKS_UNLOADED_FOR = get("chunks.unloaded_for");
-	public static final LangKey CHUNKS_CLAIMED_FOR = get("chunks.claimed_for");
-	public static final LangKey CHUNKS_CANT_CLAIM_FOR = get("chunks.cant_claim_for");
+	LangKey CHUNKS_UNLOADED_FOR = LangKey.of("ftbu.lang.chunks.unloaded_for");
+	LangKey CHUNKS_CLAIMED_FOR = LangKey.of("ftbu.lang.chunks.claimed_for");
+	LangKey CHUNKS_CANT_CLAIM_FOR = LangKey.of("ftbu.lang.chunks.cant_claim_for");
 
-	public static final LangKey WARP_SET = get("warp.set");
-	public static final LangKey WARP_DEL = get("warp.del");
-	public static final LangKey WARP_NOT_SET = get("warp.not_set");
-	public static final LangKey WARP_TP = get("warp.tp");
-	public static final LangKey WARP_NO_DP = get("warp.no_dp");
-	public static final LangKey WARP_SPAWN = get("warp.spawn");
-	public static final LangKey HOME_SET = get("home.set");
-	public static final LangKey HOME_DEL = get("home.del");
-	public static final LangKey HOME_NOT_SET = get("home.not_set");
-	public static final LangKey HOME_CROSS_DIM = get("home.cross_dim");
-	public static final LangKey HOME_LIMIT = get("home.limit");
+	LangKey CHUNKS_UNCLAIM_ALL_Q = LangKey.of("ftbu.lang.chunks.unclaim_all_q");
+	LangKey CHUNKS_UNCLAIM_ALL_DIM_Q = LangKey.of("ftbu.lang.chunks.unclaim_all_dim_q", String.class);
+	LangKey CHUNKS_UNCLAIM_ALL = LangKey.of("ftbu.lang.chunks.unclaim_all");
+	LangKey CHUNKS_UNCLAIM_ALL_DIM = LangKey.of("ftbu.lang.chunks.unclaim_all_dim", String.class);
+	LangKey CHUNKS_CLAIMED_COUNT = LangKey.of("ftbu.lang.chunks.claimed_count", Integer.class, Integer.class);
+	LangKey CHUNKS_LOADED_COUNT = LangKey.of("ftbu.lang.chunks.loaded_count", Integer.class, Integer.class);
 
-	public static final LangKey BACKUP_START = get("backup.start");
-	public static final LangKey BACKUP_STOP = get("backup.stop");
-	public static final LangKey BACKUP_END_1 = get("backup.end_1");
-	public static final LangKey BACKUP_END_2 = get("backup.end_2");
-	public static final LangKey BACKUP_FAIL = get("backup.fail");
-	public static final LangKey BACKUP_MANUAL_LAUNCH = get("backup.manual_launch");
-	public static final LangKey BACKUP_ALREADY_RUNNING = get("backup.already_running");
-	public static final LangKey BACKUP_NOT_RUNNING = get("backup.not_running");
-	public static final LangKey BACKUP_SIZE = get("backup.size");
-	public static final LangKey BACKUP_SAVING_FAILED = get("backup.saving_failed");
-	public static final LangKey BACKUP_DELETING_OLD = get("backup.deleting_old");
-	public static final LangKey BACKUP_BACKING_UP_FILES = get("backup.backing_up_files");
-	public static final LangKey BACKUP_COMPRESSING_FILES = get("backup.compressing_files");
-	public static final LangKey BACKUP_COMPRESSING_DONE = get("backup.compressing_done");
-	public static final LangKey BACKUP_CREATED_FROM = get("backup.created_from");
+	LangKey WARP_SET = LangKey.of("ftbu.lang.warps.set", String.class);
+	LangKey WARP_DEL = LangKey.of("ftbu.lang.warps.del", String.class);
+	LangKey WARP_NOT_SET = LangKey.of("ftbu.lang.warps.not_set", String.class);
+	LangKey WARP_TP = LangKey.of("ftbu.lang.warps.tp", String.class);
+	LangKey WARP_NO_DP = LangKey.of("ftbu.lang.warps.no_dp");
+	LangKey WARP_SPAWN = LangKey.of("ftbu.lang.warps.spawn");
 
-	public static final LangKey RANK_ID_EXISTS = get("rank.id_exists");
-	public static final LangKey RANK_NOT_FOUND = get("rank.not_found");
-	public static final LangKey RANK_USE_DEOP = get("rank.use_deop");
-	public static final LangKey RANK_USE_OP = get("rank.use_op");
-	public static final LangKey RANK_SET = get("rank.set");
-	public static final LangKey RANK_UNSET = get("rank.unset");
+	LangKey HOME_SET = LangKey.of("ftbu.lang.homes.set", String.class);
+	LangKey HOME_DEL = LangKey.of("ftbu.lang.homes.del", String.class);
+	LangKey HOME_NOT_SET = LangKey.of("ftbu.lang.homes.not_set", String.class);
+	LangKey HOME_CROSS_DIM = LangKey.of("ftbu.lang.homes.cross_dim");
+	LangKey HOME_LIMIT = LangKey.of("ftbu.lang.homes.limit");
 
-	public static LangKey get(String s)
-	{
-		return LangKey.of("ftbu." + s);
-	}
+	LangKey BACKUP_START = LangKey.of("ftbu.backup.start");
+	LangKey BACKUP_STOP = LangKey.of("ftbu.backup.stop");
+	LangKey BACKUP_END_1 = LangKey.of("ftbu.backup.end_1", String.class);
+	LangKey BACKUP_END_2 = LangKey.of("ftbu.backup.end_2", String.class, String.class);
+	LangKey BACKUP_FAIL = LangKey.of("ftbu.backup.fail", String.class);
+	LangKey BACKUP_MANUAL_LAUNCH = LangKey.of("ftbu.backup.manual_launch", String.class);
+	LangKey BACKUP_ALREADY_RUNNING = LangKey.of("ftbu.backup.already_running");
+	LangKey BACKUP_NOT_RUNNING = LangKey.of("ftbu.backup.not_running");
+	LangKey BACKUP_SIZE = LangKey.of("ftbu.backup.size", String.class, String.class);
+	LangKey BACKUP_SAVING_FAILED = LangKey.of("ftbu.backup.saving_failed");
+	LangKey BACKUP_DELETING_OLD = LangKey.of("ftbu.backup.deleting_old", String.class);
+	LangKey BACKUP_BACKING_UP_FILES = LangKey.of("ftbu.backup.backing_up_files", Integer.class);
+	LangKey BACKUP_COMPRESSING_FILES = LangKey.of("ftbu.backup.compressing_files", Integer.class);
+	LangKey BACKUP_COMPRESSING_DONE = LangKey.of("ftbu.backup.compressing_done", String.class, String.class);
+	LangKey BACKUP_CREATED_FROM = LangKey.of("ftbu.backup.created_from", String.class, String.class);
+
+	LangKey RANK_ID_EXISTS = LangKey.of("ftbu.lang.rank.id_exists", String.class);
+	LangKey RANK_NOT_FOUND = LangKey.of("ftbu.lang.rank.not_found", String.class);
+	LangKey RANK_USE_DEOP = LangKey.of("ftbu.lang.rank.use_deop", String.class);
+	LangKey RANK_USE_OP = LangKey.of("ftbu.lang.rank.use_op", String.class);
+	LangKey RANK_SET = LangKey.of("ftbu.lang.rank.set", String.class, String.class);
+	LangKey RANK_UNSET = LangKey.of("ftbu.lang.rank.unset", String.class);
 }

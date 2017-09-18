@@ -8,7 +8,7 @@ import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
-import com.feed_the_beast.ftbu.world.FTBUPlayerData;
+import com.feed_the_beast.ftbu.util.FTBUPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -33,7 +33,7 @@ public class CmdHome extends CmdBase
 	{
 		if (args.length == 1)
 		{
-			return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(sender)).listHomes());
+			return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(sender)).homes.list());
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
@@ -52,7 +52,7 @@ public class CmdHome extends CmdBase
 
 		if (args[0].equals("list"))
 		{
-			Collection<String> list = data.listHomes();
+			Collection<String> list = data.homes.list();
 			sender.sendMessage(new TextComponentString(list.size() + " / " + FTBUtilitiesAPI.API.getRankConfig(ep, FTBUPermissions.HOMES_MAX).getInt() + ": "));
 			if (!list.isEmpty())
 			{
@@ -61,7 +61,7 @@ public class CmdHome extends CmdBase
 			return;
 		}
 
-		BlockDimPos pos = data.getHome(args[0]);
+		BlockDimPos pos = data.homes.get(args[0]);
 
 		if (pos == null)
 		{

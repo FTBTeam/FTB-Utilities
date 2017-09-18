@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbu.world;
+package com.feed_the_beast.ftbu.util;
 
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
@@ -7,12 +7,9 @@ import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftbl.lib.config.ConfigEnum;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
-import com.google.common.base.Preconditions;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.INBTSerializable;
-
-import javax.annotation.Nullable;
 
 /**
  * @author LatvianModder
@@ -24,11 +21,9 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 	public final ConfigBoolean explosions = new ConfigBoolean(false);
 	public final ConfigBoolean fakePlayers = new ConfigBoolean(true);
 
-	public static FTBUTeamData get(@Nullable IForgeTeam t)
+	public static FTBUTeamData get(IForgeTeam t)
 	{
-		FTBUTeamData data = t == null ? null : (FTBUTeamData) t.getData(FTBLibIntegration.FTBU_DATA);
-		Preconditions.checkNotNull(data);
-		return data;
+		return t.getData().get(FTBLibIntegration.FTBU_DATA);
 	}
 
 	@Override

@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
-import com.feed_the_beast.ftbu.world.FTBUTeamData;
+import com.feed_the_beast.ftbu.util.FTBUTeamData;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 /**

@@ -15,8 +15,8 @@ import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.ranks.CmdOverride;
 import com.feed_the_beast.ftbu.ranks.Ranks;
-import com.feed_the_beast.ftbu.world.FTBUUniverseData;
-import com.feed_the_beast.ftbu.world.backups.Backups;
+import com.feed_the_beast.ftbu.util.FTBUUniverseData;
+import com.feed_the_beast.ftbu.util.backups.Backups;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import net.minecraft.command.ICommand;
@@ -66,15 +66,14 @@ public class ServerInfoPage
 
 		boolean isDedi = server.isDedicatedServer();
 		boolean isOP = !isDedi || PermissionAPI.hasPermission(ep, FTBUPermissions.DISPLAY_ADMIN_INFO);
-		FTBUUniverseData ftbuUniverseData = FTBUUniverseData.get();
 
 		//List<IForgePlayer> players = new ArrayList<>();
 		//players.addAll(universe.getPlayers());
 		long now = ServerUtils.getWorldTime();
 
-		if (ftbuUniverseData.shutdownTime > 0L)
+		if (FTBUUniverseData.shutdownTime > 0L)
 		{
-			page.println(FTBULang.TIMER_SHUTDOWN.textComponent(StringUtils.getTimeStringTicks(ftbuUniverseData.shutdownTime - now)));
+			page.println(FTBULang.TIMER_SHUTDOWN.textComponent(StringUtils.getTimeStringTicks(FTBUUniverseData.shutdownTime - now)));
 		}
 
 		if (FTBUConfig.backups.enabled)
@@ -92,9 +91,9 @@ public class ServerInfoPage
 		//FIXME: SERVER_INFO_ADMIN_QUICK_ACCESS
 		//}
 
-		GuidePage page1 = page.getSub("leaderboards").setTitle(StringUtils.color(new TextComponentTranslation("ftbu.leaderboard.title"), TextFormatting.RED));
+		GuidePage page1 = page.getSub("leaderboards").setTitle(StringUtils.color(FTBULang.LEADERBOARDS.textComponent(), TextFormatting.RED));
 		page1.setIcon(new DrawableItem(new ItemStack(Items.SIGN)));
-		page1.println("1.12: Work in progress!");
+		page1.println(new TextComponentString("1.12+: ").appendSibling(FTBLibLang.WIP.textComponent()));
 
 		/*
 		for (Leaderboard leaderboard : FTBUCommon.LEADERBOARDS)

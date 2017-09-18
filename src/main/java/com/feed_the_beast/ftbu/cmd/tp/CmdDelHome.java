@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbu.cmd.tp;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.world.FTBUPlayerData;
+import com.feed_the_beast.ftbu.util.FTBUPlayerData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -24,7 +24,7 @@ public class CmdDelHome extends CmdBase
 	{
 		if (args.length == 1)
 		{
-			return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(sender)).listHomes());
+			return getListOfStringsMatchingLastWord(args, FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(sender)).homes.list());
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
@@ -42,7 +42,7 @@ public class CmdDelHome extends CmdBase
 
 		args[0] = args[0].toLowerCase();
 
-		if (data.setHome(args[0], null))
+		if (data.homes.set(args[0], null))
 		{
 			FTBULang.HOME_DEL.sendMessage(sender, args[0]);
 		}

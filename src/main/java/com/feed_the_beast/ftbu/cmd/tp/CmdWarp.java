@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.net.MessageSendWarpList;
-import com.feed_the_beast.ftbu.world.FTBUUniverseData;
+import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -30,7 +30,7 @@ public class CmdWarp extends CmdBase
 	{
 		if (args.length == 1)
 		{
-			return getListOfStringsMatchingLastWord(args, FTBUUniverseData.get().listWarps());
+			return getListOfStringsMatchingLastWord(args, FTBUUniverseData.WARPS.list());
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
@@ -45,7 +45,7 @@ public class CmdWarp extends CmdBase
 
 		if (args[0].equals("list"))
 		{
-			Collection<String> list = FTBUUniverseData.get().listWarps();
+			Collection<String> list = FTBUUniverseData.WARPS.list();
 			sender.sendMessage(new TextComponentString(list.isEmpty() ? "-" : StringUtils.strip(list)));
 			return;
 		}
@@ -58,7 +58,7 @@ public class CmdWarp extends CmdBase
 			return;
 		}
 
-		BlockDimPos p = FTBUUniverseData.get().getWarp(args[0]);
+		BlockDimPos p = FTBUUniverseData.WARPS.get(args[0]);
 		if (p == null)
 		{
 			throw FTBULang.WARP_NOT_SET.commandError(args[0]);

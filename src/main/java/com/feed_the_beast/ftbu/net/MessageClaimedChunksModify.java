@@ -9,7 +9,7 @@ import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
-import com.feed_the_beast.ftbu.world.FTBUUniverseData;
+import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

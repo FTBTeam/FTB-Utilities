@@ -1,9 +1,11 @@
 package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseClosedEvent;
-import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedBeforePlayersEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
+import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseSavedEvent;
 import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
@@ -14,21 +16,26 @@ import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
+import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.api_impl.FTBUChunkManager;
 import com.feed_the_beast.ftbu.cmd.CmdShutdown;
-import com.feed_the_beast.ftbu.world.FTBUUniverseData;
-import com.feed_the_beast.ftbu.world.backups.Backups;
+import com.feed_the_beast.ftbu.util.Badges;
+import com.feed_the_beast.ftbu.util.FTBUUniverseData;
+import com.feed_the_beast.ftbu.util.backups.Backups;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -63,7 +70,7 @@ public class FTBUWorldEventHandler
 	};
 
 	@SubscribeEvent
-	public static void onUniverseLoaded(ForgeUniverseLoadedEvent event)
+	public static void onUniverseLoaded(ForgeUniverseLoadedEvent.Finished event)
 	{
 		ClaimedChunkStorage.INSTANCE.init();
 
@@ -101,13 +108,61 @@ public class FTBUWorldEventHandler
 			}
 		}
 
-		FTBUUniverseData.LOCAL_BADGES.clear();
+		FTBUUniverseData.nextChunkloaderUpdate = start + 20L;
+		Badges.LOCAL_BADGES.clear();
 	}
 
 	@SubscribeEvent
-	public static void onUniverseLoadedBeforePlayers(ForgeUniverseLoadedBeforePlayersEvent event)
+	public static void onUniversePreLoaded(ForgeUniverseLoadedEvent.Pre event)
 	{
 		ClaimedChunkStorage.INSTANCE.clear();
+	}
+
+	@SubscribeEvent
+	public static void onUniversePostLoaded(ForgeUniverseLoadedEvent.Post event)
+	{
+		NBTTagCompound nbt = event.getData(FTBLibIntegration.FTBU_DATA);
+
+		FTBUUniverseData.WARPS.deserializeNBT(nbt.getCompoundTag("Warps"));
+
+		if (nbt.hasKey("Chunks", Constants.NBT.TAG_COMPOUND))
+		{
+			NBTTagCompound nbt1 = nbt.getCompoundTag("Chunks");
+
+			for (String s : nbt1.getKeySet())
+			{
+				IForgePlayer player = FTBLibAPI.API.getUniverse().getPlayer(StringUtils.fromString(s));
+
+				if (player != null)
+				{
+					NBTTagList list = nbt1.getTagList(s, Constants.NBT.TAG_INT_ARRAY);
+
+					for (int i = 0; i < list.tagCount(); i++)
+					{
+						int[] ai = list.getIntArrayAt(i);
+
+						if (ai.length >= 3)
+						{
+							ClaimedChunk chunk = new ClaimedChunk(new ChunkDimPos(ai[1], ai[2], ai[0]), player, ai.length >= 4 ? ai[3] : 0);
+							ClaimedChunkStorage.INSTANCE.setChunk(chunk.getPos(), chunk);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onUniverseSaved(ForgeUniverseSavedEvent event)
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+
+		if (FTBUUniverseData.WARPS.isEmpty())
+		{
+			nbt.setTag("Warps", FTBUUniverseData.WARPS.serializeNBT());
+		}
+
+		event.setData(FTBLibIntegration.FTBU_DATA, nbt);
 	}
 
 	@SubscribeEvent
@@ -115,8 +170,8 @@ public class FTBUWorldEventHandler
 	{
 		ClaimedChunkStorage.INSTANCE.clear();
 		FTBUChunkManager.INSTANCE.clear();
-		FTBUUniverseData.BADGE_CACHE.clear();
-		FTBUUniverseData.LOCAL_BADGES.clear();
+		Badges.BADGE_CACHE.clear();
+		Badges.LOCAL_BADGES.clear();
 	}
 
 	@SubscribeEvent
@@ -157,7 +212,7 @@ public class FTBUWorldEventHandler
 				Backups.INSTANCE.run(server, server, "");
 			}
 
-			if (FTBUUniverseData.nextChunkloaderUpdate < now)
+			if (FTBUUniverseData.nextChunkloaderUpdate <= now)
 			{
 				FTBUUniverseData.nextChunkloaderUpdate = now + CommonUtils.TICKS_MINUTE;
 				FTBUChunkManager.INSTANCE.checkAll();

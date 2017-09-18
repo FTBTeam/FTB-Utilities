@@ -1,7 +1,3 @@
-# Buttons
-ftbu.button.explosions=Explosions
-ftbu.button.block_security=Block Security
-
 # Config
 ftbu.config.auto_shutdown=Auto Shutdown
 ftbu.config.auto_shutdown.times=Shutdown Times
@@ -123,88 +119,86 @@ key.ftbu.light_values=Toggle Light Values
 key.ftbu.warp=Warp GUI
 
 # Misc
-ftbu.lang.timer_shutdown=Server shuts down in %s
-ftbu.lang.timer_backup=Server backup in: %s
-ftbu.button.claims_unclaim_all=Unclaim all chunks
-ftbu.button.claims_unclaim_all_dim=Unclaim all chunks in %s
-ftbu.button.claims_unclaim_all_q=Unclaim all chunks?
-ftbu.button.claims_unclaim_all_dim_q=Unclaim all chunks in %s?
-ftbu.label.claims_invalid_dim=Can't claim chunks in this dimension
-ftbu.label.cchunks_count=Claimed Chunks: %d / %d
-ftbu.label.lchunks_count=Loaded Chunks: %d / %d
-ftbu.label.friend=Friend
-ftbu.label.pfriend=Pending Friend
-ftbu.label.new_friends=New friend requests!
-ftbu.label.new_friends_click=Click to accept all requests
-ftbu.button.block_security=Block Security
+ftbu.lang.timer.shutdown=Server shuts down in %s
+ftbu.lang.timer.backup=Server backup in: %s
+ftbu.lang.leaderboards=Leaderboards
+ftbu.lang.killed_entities=Killed %d entities with type '%s'
+ftbu.lang.guide.unsupported_format=Unsupported format! Please update FTBUtilities or contact mod author!
+ftbu.lang.guide.commands_failed=Failed to load commands
+ftbu.lang.kickme=You kicked yourself!
+ftbu.lang.perm_for=%s for %s is %s
+
 ftbu.stat.dph=Deaths Per Hour
-ftbu.leaderboard.title=Leaderboards
-ftbu.killed_entities=Killed %d entities with type '%s'
-ftbu.guide.unsupported_format=Unsupported format! Please update FTBUtilities or contact mod author!
-ftbu.guide.commands_failed=Failed to load commands
-ftbu.kickme=You kicked yourself!
-ftbu.perm_for=%s for %s is %s
 
 # Chunks
-ftbu.chunks.cant_modify_chunk=Can't modify this chunk!
-ftbu.chunks.claiming_not_enabled=Claiming is not enabled on this server!
-ftbu.chunks.claiming_not_allowed=You are not allowed to claim this chunk!
-ftbu.chunks.unclaimed_all=Unclaimed all chunks
-ftbu.chunks.chunk_claimed=Chunk claimed
-ftbu.chunks.chunk_unclaimed=Chunk unclaimed
-ftbu.chunks.chunk_loaded=Chunk loaded
-ftbu.chunks.chunk_unloaded=Chunk unloaded
-ftbu.chunks.unloaded_for=Unloaded %s's chunks
-ftbu.chunks.claimed_for=Claimed %d, %d in %d for %s
-ftbu.chunks.cant_claimed_for=Can't claim %d, %d in %d for %s
+ftbu.lang.chunks.cant_modify_chunk=Can't modify this chunk!
+ftbu.lang.chunks.claiming_not_enabled=Claiming is not enabled on this server!
+ftbu.lang.chunks.claiming_not_allowed=You are not allowed to claim this chunk!
+ftbu.lang.chunks.unclaimed_all=Unclaimed all chunks
+ftbu.lang.chunks.chunk_claimed=Chunk claimed
+ftbu.lang.chunks.chunk_unclaimed=Chunk unclaimed
+ftbu.lang.chunks.chunk_loaded=Chunk loaded
+ftbu.lang.chunks.chunk_unloaded=Chunk unloaded
 
-# Warps
-ftbu.warp.set=Warp '%s' set!
-ftbu.warp.del=Warp '%s' deleted!
-ftbu.warp.not_set=Unknown Warp: '%s'!
-ftbu.warp.tp=Teleported to '%s'!
-ftbu.warp.no_dp=You can only go back once!
-ftbu.warp.spawn=Teleported to spawn
+ftbu.lang.chunks.unloaded_for=Unloaded %s's chunks
+ftbu.lang.chunks.claimed_for=Claimed %d, %d in %d for %s
+ftbu.lang.chunks.cant_claimed_for=Can't claim %d, %d in %d for %s
 
-# Homes
-ftbu.home.set=Home '%s' set!
-ftbu.home.del=Home '%s' deleted!
-ftbu.home.not_set=Unknown Home: '%s'!
-ftbu.home.cross_dim=You can't teleport to another dimension!
-ftbu.home.limit=You can't set any more home locations!
-
-# Backups
-ftbu.backup.start=Server Backup started!
-ftbu.backup.stop=Server Backup stopped!
-ftbu.backup.end_1=Server backup done in %s!
-ftbu.backup.end_2=Server backup done in %s! (%s)
-ftbu.backup.fail=Failed to save world! (%s)
-ftbu.backup.manual_launch=%s launched a manual backup!
-ftbu.backup.already_running=Backup in progress!
-ftbu.backup.not_running=Backup is not running!
-ftbu.backup.size=Current world size: %s, total backups folder size: %s
-ftbu.backup.saving_failed=World saving failed!
-ftbu.backup.deleting_old=Deleting old backup: %s
-ftbu.backup.backing_up_files=Backing up %d files...
-ftbu.backup.compressing_files=Compressing %d files!
-ftbu.backup.compressing_done=Done compressing in %s seconds (%s)!
-ftbu.backup.created_from=Created %s from %s
-
-# Ranks
-ftbu.rank.id_exists=Rank '%s' already exists!
-ftbu.rank.not_found=Rank '%s' not found!
-ftbu.rank.use_deop=Can't set rank as builtin_player, use /deop %s
-ftbu.rank.use_op=Can't set rank as builtin_op, use /op %s
-ftbu.rank.set=%s now is %s
-ftbu.rank.unset=%s now is unset
+ftbu.lang.chunks.unclaim_all=Unclaim all chunks
+ftbu.lang.chunks.unclaim_all_dim=Unclaim all chunks in %s
+ftbu.lang.chunks.unclaim_all_q=Unclaim all chunks?
+ftbu.lang.chunks.unclaim_all_dim_q=Unclaim all chunks in %s?
+ftbu.lang.chunks.claims_invalid_dim=Can't claim chunks in this dimension
+ftbu.lang.chunks.claimed_count=Claimed Chunks: %d / %d
+ftbu.lang.chunks.loaded_count=Loaded Chunks: %d / %d
 
 # Chunk Types
-ftbu.lang.chunk.loaded=Chunkloaded
-ftbu.lang.chunk.no_explosions=Explosions Disabled
-ftbu.lang.chunk.no_pvp=Ally PVP Disabled
+ftbu.lang.chunks.upgrade.loaded=Chunkloaded
+ftbu.lang.chunks.upgrade.no_explosions=Explosions Disabled
+ftbu.lang.chunks.upgrade.no_pvp=Ally PVP Disabled
 
-ftbu.lang.chunk.claimed=Claimed Area
-ftbu.lang.chunk.wilderness=Wilderness
+ftbu.lang.chunks.upgrade.claimed=Claimed Area
+ftbu.lang.chunks.upgrade.wilderness=Wilderness
+
+# Warps
+ftbu.lang.warps.set=Warp '%s' set!
+ftbu.lang.warps.del=Warp '%s' deleted!
+ftbu.lang.warps.not_set=Unknown Warp: '%s'!
+ftbu.lang.warps.tp=Teleported to '%s'!
+ftbu.lang.warps.no_dp=You can only go back once!
+ftbu.lang.warps.spawn=Teleported to spawn
+
+# Homes
+ftbu.lang.homes.set=Home '%s' set!
+ftbu.lang.homes.del=Home '%s' deleted!
+ftbu.lang.homes.not_set=Unknown Home: '%s'!
+ftbu.lang.homes.cross_dim=You can't teleport to another dimension!
+ftbu.lang.homes.limit=You can't set any more home locations!
+
+# Backups
+ftbu.lang.backup.start=Server Backup started!
+ftbu.lang.backup.stop=Server Backup stopped!
+ftbu.lang.backup.end_1=Server backup done in %s!
+ftbu.lang.backup.end_2=Server backup done in %s! (%s)
+ftbu.lang.backup.fail=Failed to save world! (%s)
+ftbu.lang.backup.manual_launch=%s launched a manual backup!
+ftbu.lang.backup.already_running=Backup in progress!
+ftbu.lang.backup.not_running=Backup is not running!
+ftbu.lang.backup.size=Current world size: %s, total backups folder size: %s
+ftbu.lang.backup.saving_failed=World saving failed!
+ftbu.lang.backup.deleting_old=Deleting old backup: %s
+ftbu.lang.backup.backing_up_files=Backing up %d files...
+ftbu.lang.backup.compressing_files=Compressing %d files!
+ftbu.lang.backup.compressing_done=Done compressing in %s seconds (%s)!
+ftbu.lang.backup.created_from=Created %s from %s
+
+# Ranks
+ftbu.lang.rank.id_exists=Rank '%s' already exists!
+ftbu.lang.rank.not_found=Rank '%s' not found!
+ftbu.lang.rank.use_deop=Can't set rank as builtin_player, use /deop %s
+ftbu.lang.rank.use_op=Can't set rank as builtin_op, use /op %s
+ftbu.lang.rank.set=%s now is %s
+ftbu.lang.rank.unset=%s now is unset
 
 # Guide
 ftbu.guide=FTBUtilities

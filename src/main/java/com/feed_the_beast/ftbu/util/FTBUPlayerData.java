@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbu.world;
+package com.feed_the_beast.ftbu.util;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerConfigEvent;
@@ -12,18 +12,13 @@ import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
-import com.google.common.base.Preconditions;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.INBTSerializable;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author LatvianModder
@@ -37,18 +32,17 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 	public final IForgePlayer player;
 	public BlockDimPos lastDeath, lastSafePos;
 	public IForgePlayer lastChunkOwner;
-	private Map<String, BlockDimPos> homes;
+	public final BlockDimPosStorage homes;
 
 	public FTBUPlayerData(IForgePlayer p)
 	{
 		player = p;
+		homes = new BlockDimPosStorage();
 	}
 
-	public static FTBUPlayerData get(@Nullable IForgePlayer p)
+	public static FTBUPlayerData get(IForgePlayer player)
 	{
-		FTBUPlayerData data = p == null ? null : (FTBUPlayerData) p.getData(FTBLibIntegration.FTBU_DATA);
-		Preconditions.checkNotNull(data);
-		return data;
+		return player.getData().get(FTBLibIntegration.FTBU_DATA);
 	}
 
 	@Override
@@ -60,16 +54,9 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 		nbt.setBoolean("ChatLinks", chatLinks.getBoolean());
 		nbt.setBoolean("DisableGlobalBadges", disableGlobalBadge.getBoolean());
 
-		if (homes != null && !homes.isEmpty())
+		if (!homes.isEmpty())
 		{
-			NBTTagCompound tag1 = new NBTTagCompound();
-
-			for (Map.Entry<String, BlockDimPos> e : homes.entrySet())
-			{
-				tag1.setIntArray(e.getKey(), e.getValue().toIntArray());
-			}
-
-			nbt.setTag("Homes", tag1);
+			nbt.setTag("Homes", homes.serializeNBT());
 		}
 
 		if (lastDeath != null)
@@ -127,25 +114,7 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 		renderBadge.setBoolean(nbt.getBoolean("RenderBadge"));
 		chatLinks.setBoolean(nbt.getBoolean("ChatLinks"));
 		disableGlobalBadge.setBoolean(nbt.getBoolean("DisableGlobalBadges"));
-
-		if (nbt.hasKey("Homes"))
-		{
-			homes = new HashMap<>();
-
-			NBTTagCompound tag1 = (NBTTagCompound) nbt.getTag("Homes");
-
-			if (tag1 != null && !tag1.hasNoTags())
-			{
-				for (String s1 : tag1.getKeySet())
-				{
-					setHome(s1.toLowerCase(), new BlockDimPos(tag1.getIntArray(s1)));
-				}
-			}
-		}
-		else
-		{
-			homes = null;
-		}
+		homes.deserializeNBT(nbt.getCompoundTag("Homes"));
 
 		lastDeath = null;
 		if (nbt.hasKey("LastDeath"))
@@ -169,42 +138,6 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 				}
 			}
 		}
-	}
-
-	public Collection<String> listHomes()
-	{
-		if (homes == null || homes.isEmpty())
-		{
-			return Collections.emptySet();
-		}
-
-		return homes.keySet();
-	}
-
-	@Nullable
-	public BlockDimPos getHome(String s)
-	{
-		return homes == null ? null : homes.get(s.toLowerCase());
-	}
-
-	public boolean setHome(String s, @Nullable BlockDimPos pos)
-	{
-		if (pos == null)
-		{
-			return homes != null && homes.remove(s) != null;
-		}
-
-		if (homes == null)
-		{
-			homes = new HashMap<>();
-		}
-
-		return homes.put(s, pos.copy()) == null;
-	}
-
-	public int homesSize()
-	{
-		return homes == null ? 0 : homes.size();
 	}
 
 	public void addConfig(ForgePlayerConfigEvent event)

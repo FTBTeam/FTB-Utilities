@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbu.world.backups;
+package com.feed_the_beast.ftbu.util.backups;
 
 import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;

@@ -5,7 +5,6 @@ import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerConfigEvent;
-import com.feed_the_beast.ftbl.api.events.player.ForgePlayerDeathEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.lib.Notification;
@@ -19,8 +18,9 @@ import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
 import com.feed_the_beast.ftbu.api_impl.FTBUChunkManager;
-import com.feed_the_beast.ftbu.world.FTBUPlayerData;
-import com.feed_the_beast.ftbu.world.FTBUUniverseData;
+import com.feed_the_beast.ftbu.util.Badges;
+import com.feed_the_beast.ftbu.util.FTBUPlayerData;
+import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import com.google.common.base.Objects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
@@ -32,9 +32,9 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -80,13 +80,16 @@ public class FTBUPlayerEventHandler
 	public static void onLoggedOut(ForgePlayerLoggedOutEvent event)
 	{
 		FTBUChunkManager.INSTANCE.checkAll();
-		FTBUUniverseData.updateBadge(event.getPlayer().getId());
+		Badges.update(event.getPlayer().getId());
 	}
 
 	@SubscribeEvent
-	public static void onDeath(ForgePlayerDeathEvent event)
+	public static void onDeath(LivingDeathEvent event)
 	{
-		FTBUPlayerData.get(event.getPlayer()).lastDeath = new BlockDimPos(event.getPlayer().getPlayer());
+		if (event.getEntity() instanceof EntityPlayerMP)
+		{
+			FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(event.getEntity())).lastDeath = new BlockDimPos(event.getEntity());
+		}
 	}
 
 	@SubscribeEvent
@@ -110,24 +113,23 @@ public class FTBUPlayerEventHandler
     */
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void onChunkChanged(EntityEvent.EnteringChunk e)
+	public static void onChunkChanged(EntityEvent.EnteringChunk event)
 	{
-		if (e.getEntity().world.isRemote || !(e.getEntity() instanceof EntityPlayerMP))
+		if (event.getEntity().world.isRemote || !(event.getEntity() instanceof EntityPlayerMP))
 		{
 			return;
 		}
 
-		EntityPlayerMP ep = (EntityPlayerMP) e.getEntity();
-		IForgePlayer player = FTBLibAPI.API.getUniverse().getPlayer(ep);
+		EntityPlayerMP player = (EntityPlayerMP) event.getEntity();
+		IForgePlayer p = FTBLibAPI.API.getUniverse().getPlayer(player.getGameProfile());
 
-		if (player == null || !player.isOnline())
+		if (p == null || p.isFake())
 		{
 			return;
 		}
 
-		FTBUPlayerData.get(player).lastSafePos = new BlockDimPos(ep);
-
-		updateChunkMessage(ep, new ChunkDimPos(e.getNewChunkX(), e.getNewChunkZ(), ep.dimension));
+		FTBUPlayerData.get(p).lastSafePos = new BlockDimPos(player);
+		updateChunkMessage(player, new ChunkDimPos(event.getNewChunkX(), event.getNewChunkZ(), player.dimension));
 	}
 
 	public static void updateChunkMessage(EntityPlayerMP player, ChunkDimPos pos)
@@ -165,19 +167,14 @@ public class FTBUPlayerEventHandler
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void onPlayerAttacked(LivingAttackEvent e)
+	public static void onPlayerAttacked(LivingAttackEvent event)
 	{
-		if (e.getEntity().world.isRemote)
+		if (event.getEntity().world.isRemote || event.getEntity().dimension != 0 || !(event.getEntity() instanceof EntityPlayerMP) || event.getEntity() instanceof FakePlayer)
 		{
 			return;
 		}
 
-		if (e.getEntity().dimension != 0 || !(e.getEntity() instanceof EntityPlayerMP) || e.getEntity() instanceof FakePlayer)
-		{
-			return;
-		}
-
-		Entity entity = e.getSource().getTrueSource();
+		Entity entity = event.getSource().getTrueSource();
 
 		if (entity != null && (entity instanceof EntityPlayerMP || entity instanceof IMob))
 		{
@@ -190,14 +187,14 @@ public class FTBUPlayerEventHandler
                 return;
             }*/
 
-			if ((FTBUConfig.world.safe_spawn && FTBUUniverseData.isInSpawnD(e.getEntity().dimension, e.getEntity().posX, e.getEntity().posZ)))
+			if ((FTBUConfig.world.safe_spawn && FTBUUniverseData.isInSpawnD(event.getEntity().dimension, event.getEntity().posX, event.getEntity().posZ)))
 			{
-				e.setCanceled(true);
+				event.setCanceled(true);
 			}
 			/*else
 			{
 				ClaimedChunk c = Claims.getMode(dim, cx, cz);
-				if(c != null && c.claims.settings.isSafe()) e.setCanceled(true);
+				if(c != null && c.claims.settings.isSafe()) event.setCanceled(true);
 			}*/
 		}
 	}
@@ -211,7 +208,7 @@ public class FTBUPlayerEventHandler
 		}
 	}
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onRightClickItem(PlayerInteractEvent.RightClickItem event)
 	{
 		if (event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.ITEM))
@@ -238,16 +235,6 @@ public class FTBUPlayerEventHandler
 		}
 	}
 
-	@Optional.Method(modid = "chiselsandbits")
-	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void onChiselEvent(mod.chiselsandbits.api.EventBlockBitModification event)
-	{
-		if (event.getPlayer() instanceof EntityPlayerMP && !ClaimedChunkStorage.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getPlayer(), event.getHand(), new BlockPosContainer(event.getWorld(), event.getPos(), event.getWorld().getBlockState(event.getPos())), event.isPlacing() ? BlockInteractionType.CNB_PLACE : BlockInteractionType.CNB_BREAK))
-		{
-			event.setCanceled(true);
-		}
-	}
-
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onBlockLeftClick(PlayerInteractEvent.LeftClickBlock event)
 	{
@@ -260,12 +247,6 @@ public class FTBUPlayerEventHandler
     /*
 	@SubscribeEvent(priority = EventPriority.HIGH)
     public static void onItemPickup(EntityItemPickupEvent event)
-    {
-    }
-
-    @Optional.Method(modid = "iChunUtil") //TODO: Change to lowercase whenever iChun does
-    @SubscribeEvent
-    public static void onBlockPickupEventEvent(me.ichun.mods.ichunutil.api.event.BlockPickupEvent event)
     {
     }
     */

@@ -11,9 +11,9 @@ import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.ServerInfoPage;
 import com.feed_the_beast.ftbu.api_impl.FTBUChunkManager;
 import com.feed_the_beast.ftbu.ranks.Ranks;
-import com.feed_the_beast.ftbu.world.FTBUPlayerData;
-import com.feed_the_beast.ftbu.world.FTBUTeamData;
-import com.feed_the_beast.ftbu.world.FTBUUniverseData;
+import com.feed_the_beast.ftbu.util.Badges;
+import com.feed_the_beast.ftbu.util.FTBUPlayerData;
+import com.feed_the_beast.ftbu.util.FTBUTeamData;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -61,7 +61,7 @@ public class FTBLibIntegration
 				ServerInfoPage.reloadCachedInfo();
 			}
 
-			if (event.reload(RELOAD_BADGES) && !FTBUUniverseData.reloadServerBadges())
+			if (event.reload(RELOAD_BADGES) && !Badges.reloadServerBadges())
 			{
 				event.failedToReload(RELOAD_BADGES);
 			}
@@ -78,12 +78,6 @@ public class FTBLibIntegration
 	public static void registerOptionalServerMod(RegisterOptionalServerModsEvent event)
 	{
 		event.register(FTBUFinals.MOD_ID);
-	}
-
-	@SubscribeEvent
-	public static void registerUniverseDataProvider(RegisterDataProvidersEvent.Universe event)
-	{
-		event.register(FTBU_DATA, owner -> new FTBUUniverseData());
 	}
 
 	@SubscribeEvent

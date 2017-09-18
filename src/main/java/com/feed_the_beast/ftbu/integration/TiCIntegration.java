@@ -48,7 +48,7 @@ public class TiCIntegration
 	public static void onGuideEvent(ClientGuideEvent event)
 	{
 		GuideTitlePage guide = event.getModGuide("tconstruct");
-		guide.setIcon(new DrawableItem(new ItemStack(Item.getByNameOrId("tconstruct:toolforge"), 1, 0)));
+		guide.setIcon(new DrawableItem("tconstruct:toolforge 1 0"));
 		guide.println(new GuideHrLine(1, Color4I.NONE));
 		guide.println(new GuideContentsLine(guide));
 
@@ -57,7 +57,7 @@ public class TiCIntegration
 		if (pageIntro != null)
 		{
 			pageIntro.setTitle(new TextComponentString("Introduction")); //LANG
-			pageIntro.setIcon(new DrawableItem(new ItemStack(Item.getByNameOrId("tconstruct:tooltables"), 1, 0)));
+			pageIntro.setIcon(new DrawableItem("tconstruct:tooltables 1 0"));
 			guide.addSub(pageIntro);
 		}
 

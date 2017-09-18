@@ -4,8 +4,8 @@ import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbu.gui.GuiWarps;
-import com.feed_the_beast.ftbu.world.FTBUPlayerData;
-import com.feed_the_beast.ftbu.world.FTBUUniverseData;
+import com.feed_the_beast.ftbu.util.FTBUPlayerData;
+import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.command.ICommand;
 import net.minecraft.entity.player.EntityPlayer;
@@ -75,14 +75,14 @@ public class MessageSendWarpList extends MessageToClient<MessageSendWarpList>
 
 		String cmd = command(player, "warp", "ftb warp") + " ";
 
-		for (String s : FTBUUniverseData.get().listWarps())
+		for (String s : FTBUUniverseData.WARPS.list())
 		{
 			warps.add(new WarpItem(s, cmd + s, WarpItem.TYPE_WARP));
 		}
 
 		cmd = command(player, "home", "ftb home") + " ";
 
-		for (String s : FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(player)).listHomes())
+		for (String s : FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(player)).homes.list())
 		{
 			warps.add(new WarpItem(s, cmd + s, WarpItem.TYPE_HOME));
 		}

@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.world.FTBUUniverseData;
+import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -39,7 +39,7 @@ public class CmdClaimFor extends CmdBase
 		ChunkDimPos pos = new ChunkDimPos(chunkXPos, chunkZPos, dimension);
 		if (FTBUUniverseData.claimChunk(claimFor, pos))
 		{
-			FTBULang.CHUNKS_CLAIMED_FOR.sendMessage(sender, chunkXPos, chunkZPos, dimension, playerName);
+			FTBULang.CHUNKS_CLAIMED_FOR.sendMessage(sender, chunkXPos, chunkZPos, dimension, claimFor.getName());
 
 			if (claimFor.isOnline())
 			{
@@ -48,7 +48,7 @@ public class CmdClaimFor extends CmdBase
 		}
 		else
 		{
-			throw FTBULang.CHUNKS_CANT_CLAIM_FOR.commandError(chunkXPos, chunkZPos, dimension, playerName);
+			throw FTBULang.CHUNKS_CANT_CLAIM_FOR.commandError(chunkXPos, chunkZPos, dimension, claimFor.getName());
 		}
 	}
 }

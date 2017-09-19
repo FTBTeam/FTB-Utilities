@@ -2,10 +2,11 @@ package com.feed_the_beast.ftbu.net;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbu.cmd.CmdEditNBT;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,7 +14,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class MessageEditNBTResponse extends MessageToServer<MessageEditNBTResponse>
 {
@@ -36,17 +36,17 @@ public class MessageEditNBTResponse extends MessageToServer<MessageEditNBTRespon
 	}
 
 	@Override
-	public void fromBytes(ByteBuf io)
+	public void writeData(DataOut data)
 	{
-		info = ByteBufUtils.readTag(io);
-		mainNbt = ByteBufUtils.readTag(io);
+		data.writeNBT(info);
+		data.writeNBT(mainNbt);
 	}
 
 	@Override
-	public void toBytes(ByteBuf io)
+	public void readData(DataIn data)
 	{
-		ByteBufUtils.writeTag(io, info);
-		ByteBufUtils.writeTag(io, mainNbt);
+		info = data.readNBT();
+		mainNbt = data.readNBT();
 	}
 
 	@Override

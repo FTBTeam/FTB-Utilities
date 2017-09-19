@@ -1,16 +1,16 @@
 package com.feed_the_beast.ftbu.net;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbu.gui.GuiWarps;
 import com.feed_the_beast.ftbu.util.FTBUPlayerData;
 import com.feed_the_beast.ftbu.util.FTBUUniverseData;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.command.ICommand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,18 +19,32 @@ public class MessageSendWarpList extends MessageToClient<MessageSendWarpList>
 {
 	public static class WarpItem implements Comparable<WarpItem>
 	{
-		public static final byte TYPE_SPECIAL_IN = 0;
-		public static final byte TYPE_SPECIAL_OUT = 1;
-		public static final byte TYPE_WARP = 2;
-		public static final byte TYPE_HOME = 3;
+		public static final int TYPE_SPECIAL_IN = 0;
+		public static final int TYPE_SPECIAL_OUT = 1;
+		public static final int TYPE_WARP = 2;
+		public static final int TYPE_HOME = 3;
 
 		public static final WarpItem CANCEL = new WarpItem("Cancel", "", TYPE_SPECIAL_IN);
 
+		private static final DataOut.Serializer<WarpItem> SERIALIZER = (data, w) ->
+		{
+			data.writeString(w.name);
+			data.writeString(w.cmd);
+			data.writeByte(w.type);
+		};
+
+		private static final DataIn.Deserializer<WarpItem> DESERIALIZER = data ->
+		{
+			String n = data.readString();
+			String c = data.readString();
+			return new WarpItem(n, c, data.readUnsignedByte());
+		};
+
 		public final String name;
 		public final String cmd;
-		public final byte type;
+		public final int type;
 
-		private WarpItem(String n, String c, byte t)
+		private WarpItem(String n, String c, int t)
 		{
 			name = n;
 			cmd = c;
@@ -95,30 +109,16 @@ public class MessageSendWarpList extends MessageToClient<MessageSendWarpList>
 	}
 
 	@Override
-	public void fromBytes(ByteBuf io)
+	public void writeData(DataOut data)
 	{
-		int s = io.readUnsignedShort();
-		warps = new ArrayList<>(s);
-
-		while (--s >= 0)
-		{
-			String n = ByteBufUtils.readUTF8String(io);
-			String c = ByteBufUtils.readUTF8String(io);
-			warps.add(new WarpItem(n, c, io.readByte()));
-		}
+		data.writeCollection(warps, WarpItem.SERIALIZER);
 	}
 
 	@Override
-	public void toBytes(ByteBuf io)
+	public void readData(DataIn data)
 	{
-		io.writeShort(warps.size());
-
-		for (WarpItem w : warps)
-		{
-			ByteBufUtils.writeUTF8String(io, w.name);
-			ByteBufUtils.writeUTF8String(io, w.cmd);
-			io.writeByte(w.type);
-		}
+		warps = new ArrayList<>();
+		data.readCollection(warps, WarpItem.DESERIALIZER);
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbu.api.NodeEntry;
 import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
 import com.feed_the_beast.ftbu.api.events.registry.RegisterChunkUpgradesEvent;
 import com.feed_the_beast.ftbu.api.events.registry.RegisterCustomPermissionPrefixesEvent;
+import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.api_impl.FTBUtilitiesAPI_Impl;
 import com.feed_the_beast.ftbu.net.FTBUNetHandler;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,8 +27,15 @@ public class FTBUCommon
 		new RegisterChunkUpgradesEvent(upgrade -> CHUNK_UPGRADES[upgrade.getId()] = upgrade).post();
 	}
 
+	public void init()
+	{
+		FTBUPermissions.init();
+	}
+
 	public void postInit()
 	{
+		FTBUConfig.sync();
+		ClaimedChunks.INSTANCE.initTicketConfig();
 	}
 
 	public void onReloadedClient()

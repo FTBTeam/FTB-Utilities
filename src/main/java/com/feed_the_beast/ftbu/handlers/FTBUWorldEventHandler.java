@@ -17,8 +17,7 @@ import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
-import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
-import com.feed_the_beast.ftbu.api_impl.FTBUChunkManager;
+import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.cmd.CmdShutdown;
 import com.feed_the_beast.ftbu.util.Badges;
 import com.feed_the_beast.ftbu.util.FTBUUniverseData;
@@ -64,7 +63,7 @@ public class FTBUWorldEventHandler
 		}
 		else
 		{
-			IClaimedChunk chunk = ClaimedChunkStorage.INSTANCE.getChunk(pos);
+			IClaimedChunk chunk = ClaimedChunks.INSTANCE.getChunk(pos);
 			return chunk == null || !chunk.hasUpgrade(ChunkUpgrade.NO_EXPLOSIONS);
 		}
 	};
@@ -72,8 +71,6 @@ public class FTBUWorldEventHandler
 	@SubscribeEvent
 	public static void onUniverseLoaded(ForgeUniverseLoadedEvent.Finished event)
 	{
-		ClaimedChunkStorage.INSTANCE.init();
-
 		long start = event.getUniverse().getOverworld().getTotalWorldTime();
 		Backups.INSTANCE.nextBackup = start + FTBUConfig.backups.ticks();
 
@@ -108,14 +105,8 @@ public class FTBUWorldEventHandler
 			}
 		}
 
-		FTBUUniverseData.nextChunkloaderUpdate = start + 20L;
+		ClaimedChunks.INSTANCE.nextChunkloaderUpdate = start + 20L;
 		Badges.LOCAL_BADGES.clear();
-	}
-
-	@SubscribeEvent
-	public static void onUniversePreLoaded(ForgeUniverseLoadedEvent.Pre event)
-	{
-		ClaimedChunkStorage.INSTANCE.clear();
 	}
 
 	@SubscribeEvent
@@ -144,7 +135,7 @@ public class FTBUWorldEventHandler
 						if (ai.length >= 3)
 						{
 							ClaimedChunk chunk = new ClaimedChunk(new ChunkDimPos(ai[1], ai[2], ai[0]), player, ai.length >= 4 ? ai[3] : 0);
-							ClaimedChunkStorage.INSTANCE.setChunk(chunk.getPos(), chunk);
+							ClaimedChunks.INSTANCE.setChunk(chunk.getPos(), chunk);
 						}
 					}
 				}
@@ -157,10 +148,12 @@ public class FTBUWorldEventHandler
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 
-		if (FTBUUniverseData.WARPS.isEmpty())
+		if (!FTBUUniverseData.WARPS.isEmpty())
 		{
 			nbt.setTag("Warps", FTBUUniverseData.WARPS.serializeNBT());
 		}
+
+		//TODO: Save chat as json
 
 		event.setData(FTBLibIntegration.FTBU_DATA, nbt);
 	}
@@ -168,8 +161,7 @@ public class FTBUWorldEventHandler
 	@SubscribeEvent
 	public static void onUniverseClosed(ForgeUniverseClosedEvent event)
 	{
-		ClaimedChunkStorage.INSTANCE.clear();
-		FTBUChunkManager.INSTANCE.clear();
+		ClaimedChunks.INSTANCE.clear();
 		Badges.BADGE_CACHE.clear();
 		Badges.LOCAL_BADGES.clear();
 	}
@@ -187,7 +179,16 @@ public class FTBUWorldEventHandler
 	@SubscribeEvent
 	public static void onTickEvent(TickEvent.WorldTickEvent event)
 	{
-		if (event.phase == TickEvent.Phase.END && !event.world.isRemote)
+		if (event.world.isRemote || event.world.provider.getDimension() != 0 || !FTBLibAPI.API.hasUniverse())
+		{
+			return;
+		}
+
+		if (event.phase == TickEvent.Phase.START)
+		{
+			ClaimedChunks.INSTANCE.update(event.world.getTotalWorldTime());
+		}
+		else
 		{
 			long now = event.world.getTotalWorldTime();
 
@@ -210,12 +211,6 @@ public class FTBUWorldEventHandler
 			{
 				MinecraftServer server = ServerUtils.getServer();
 				Backups.INSTANCE.run(server, server, "");
-			}
-
-			if (FTBUUniverseData.nextChunkloaderUpdate <= now)
-			{
-				FTBUUniverseData.nextChunkloaderUpdate = now + CommonUtils.TICKS_MINUTE;
-				FTBUChunkManager.INSTANCE.checkAll();
 			}
 
 			if (Backups.INSTANCE.thread != null && Backups.INSTANCE.thread.isDone)
@@ -243,7 +238,7 @@ public class FTBUWorldEventHandler
 			return true;
 		}
 
-		if (FTBUConfig.world.safe_spawn && FTBUUniverseData.isInSpawnD(entity.dimension, entity.posX, entity.posZ))
+		if (FTBUConfig.world.safe_spawn && FTBUUniverseData.isInSpawn(new ChunkDimPos(entity)))
 		{
 			if (entity instanceof IMob)
 			{

@@ -1,9 +1,10 @@
 package com.feed_the_beast.ftbu.net;
 
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -33,17 +34,17 @@ public class MessageClaimedChunksRequest extends MessageToServer<MessageClaimedC
 	}
 
 	@Override
-	public void fromBytes(ByteBuf io)
+	public void writeData(DataOut data)
 	{
-		startX = io.readInt();
-		startZ = io.readInt();
+		data.writeInt(startX);
+		data.writeInt(startZ);
 	}
 
 	@Override
-	public void toBytes(ByteBuf io)
+	public void readData(DataIn data)
 	{
-		io.writeInt(startX);
-		io.writeInt(startZ);
+		startX = data.readInt();
+		startZ = data.readInt();
 	}
 
 	@Override

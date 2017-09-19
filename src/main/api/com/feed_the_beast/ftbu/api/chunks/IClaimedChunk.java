@@ -12,6 +12,8 @@ public interface IClaimedChunk
 
 	IForgePlayer getOwner();
 
+	void markDirty();
+
 	boolean hasUpgrade(IChunkUpgrade upgrade);
 
 	void setHasUpgrade(IChunkUpgrade upgrade, boolean v);

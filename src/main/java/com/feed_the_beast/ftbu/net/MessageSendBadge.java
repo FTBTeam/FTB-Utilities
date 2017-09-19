@@ -1,18 +1,17 @@
 package com.feed_the_beast.ftbu.net;
 
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.feed_the_beast.ftbu.client.CachedClientData;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.UUID;
 
 public class MessageSendBadge extends MessageToClient<MessageSendBadge>
 {
-	private UUID playerID;
+	private UUID playerId;
 	private String badgeURL;
 
 	public MessageSendBadge()
@@ -21,7 +20,7 @@ public class MessageSendBadge extends MessageToClient<MessageSendBadge>
 
 	public MessageSendBadge(UUID player, String url)
 	{
-		playerID = player;
+		playerId = player;
 		badgeURL = url;
 	}
 
@@ -32,22 +31,22 @@ public class MessageSendBadge extends MessageToClient<MessageSendBadge>
 	}
 
 	@Override
-	public void fromBytes(ByteBuf io)
+	public void writeData(DataOut data)
 	{
-		playerID = NetUtils.readUUID(io);
-		badgeURL = ByteBufUtils.readUTF8String(io);
+		data.writeUUID(playerId);
+		data.writeString(badgeURL);
 	}
 
 	@Override
-	public void toBytes(ByteBuf io)
+	public void readData(DataIn data)
 	{
-		NetUtils.writeUUID(io, playerID);
-		ByteBufUtils.writeUTF8String(io, badgeURL);
+		playerId = data.readUUID();
+		badgeURL = data.readString();
 	}
 
 	@Override
 	public void onMessage(MessageSendBadge m, EntityPlayer player)
 	{
-		CachedClientData.setBadge(m.playerID, m.badgeURL);
+		CachedClientData.setBadge(m.playerId, m.badgeURL);
 	}
 }

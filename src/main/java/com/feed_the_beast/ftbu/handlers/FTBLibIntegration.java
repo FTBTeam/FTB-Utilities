@@ -9,7 +9,7 @@ import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.ServerInfoPage;
-import com.feed_the_beast.ftbu.api_impl.FTBUChunkManager;
+import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.util.Badges;
 import com.feed_the_beast.ftbu.util.FTBUPlayerData;
@@ -66,7 +66,7 @@ public class FTBLibIntegration
 				event.failedToReload(RELOAD_BADGES);
 			}
 
-			FTBUChunkManager.INSTANCE.checkAll();
+			ClaimedChunks.INSTANCE.checkAll();
 		}
 		else
 		{

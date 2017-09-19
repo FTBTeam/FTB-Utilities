@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbu.net;
 
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.feed_the_beast.ftbu.util.Badges;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.UUID;
@@ -49,15 +49,15 @@ public class MessageRequestBadge extends MessageToServer<MessageRequestBadge>
 	}
 
 	@Override
-	public void fromBytes(ByteBuf io)
+	public void writeData(DataOut data)
 	{
-		playerId = NetUtils.readUUID(io);
+		data.writeUUID(playerId);
 	}
 
 	@Override
-	public void toBytes(ByteBuf io)
+	public void readData(DataIn data)
 	{
-		NetUtils.writeUUID(io, playerId);
+		playerId = data.readUUID();
 	}
 
 	@Override

@@ -1,13 +1,13 @@
 package com.feed_the_beast.ftbu.net;
 
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbu.FTBU;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
  * @author LatvianModder
@@ -38,17 +38,17 @@ public class MessageEditNBT extends MessageToClient<MessageEditNBT>
 	}
 
 	@Override
-	public void fromBytes(ByteBuf io)
+	public void writeData(DataOut data)
 	{
-		info = ByteBufUtils.readTag(io);
-		mainNbt = ByteBufUtils.readTag(io);
+		data.writeNBT(info);
+		data.writeNBT(mainNbt);
 	}
 
 	@Override
-	public void toBytes(ByteBuf io)
+	public void readData(DataIn data)
 	{
-		ByteBufUtils.writeTag(io, info);
-		ByteBufUtils.writeTag(io, mainNbt);
+		info = data.readNBT();
+		mainNbt = data.readNBT();
 	}
 
 	@Override

@@ -7,8 +7,7 @@ import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
-import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
-import com.feed_the_beast.ftbu.api_impl.FTBUChunkManager;
+import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -57,7 +56,7 @@ public class CmdUnloadAll extends CmdBase
 		boolean allDimensions = parseBoolean(args[0]);
 		int currentDim = sender.getEntityWorld().provider.getDimension();
 
-		for (IClaimedChunk chunk : ClaimedChunkStorage.INSTANCE.getChunks(p))
+		for (IClaimedChunk chunk : ClaimedChunks.INSTANCE.getChunks(p))
 		{
 			if (!allDimensions || currentDim == chunk.getPos().dim)
 			{
@@ -65,7 +64,7 @@ public class CmdUnloadAll extends CmdBase
 			}
 		}
 
-		FTBUChunkManager.INSTANCE.checkAll();
+		ClaimedChunks.INSTANCE.checkAll();
 		sender.sendMessage(FTBULang.CHUNKS_UNLOADED_FOR.textComponent(p.getName()));
 	}
 }

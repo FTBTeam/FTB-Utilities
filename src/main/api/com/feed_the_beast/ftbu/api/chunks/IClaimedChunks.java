@@ -12,7 +12,7 @@ import java.util.Collection;
 /**
  * @author LatvianModder
  */
-public interface IClaimedChunkStorage
+public interface IClaimedChunks
 {
 	@Nullable
 	IClaimedChunk getChunk(ChunkDimPos pos);
@@ -24,9 +24,7 @@ public interface IClaimedChunkStorage
 		return c == null ? null : c.getOwner();
 	}
 
-	void setChunk(ChunkDimPos pos, @Nullable IClaimedChunk chunk);
-
-	Collection<IClaimedChunk> getChunks(@Nullable IForgePlayer owner);
+	Collection<? extends IClaimedChunk> getChunks(@Nullable IForgePlayer owner);
 
 	boolean canPlayerInteract(EntityPlayerMP player, EnumHand hand, BlockPosContainer block, BlockInteractionType type);
 }

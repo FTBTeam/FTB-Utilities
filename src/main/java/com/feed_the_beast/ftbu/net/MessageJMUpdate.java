@@ -6,19 +6,17 @@ import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
-import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
+import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.client.FTBUClient;
-import com.feed_the_beast.ftbu.gui.ClaimedChunks;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,8 +28,8 @@ import java.util.UUID;
 public class MessageJMUpdate extends MessageToClient<MessageJMUpdate>
 {
 	private int startX, startZ;
-	private Map<UUID, ClaimedChunks.Team> teams;
-	private ClaimedChunks.Data[] chunkData;
+	private Map<UUID, com.feed_the_beast.ftbu.gui.ClaimedChunks.Team> teams;
+	private com.feed_the_beast.ftbu.gui.ClaimedChunks.Data[] chunkData;
 
 	public MessageJMUpdate()
 	{
@@ -45,12 +43,12 @@ public class MessageJMUpdate extends MessageToClient<MessageJMUpdate>
 		IForgePlayer player1 = FTBLibAPI.API.getUniverse().getPlayer(player);
 		IForgeTeam team = player1.getTeam();
 
-		chunkData = new ClaimedChunks.Data[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
+		chunkData = new com.feed_the_beast.ftbu.gui.ClaimedChunks.Data[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
 		teams = new HashMap<>();
 
 		if (team != null)
 		{
-			ClaimedChunks.Team cteam = new ClaimedChunks.Team();
+			com.feed_the_beast.ftbu.gui.ClaimedChunks.Team cteam = new com.feed_the_beast.ftbu.gui.ClaimedChunks.Team();
 			cteam.ownerId = team.getOwner().getId();
 			cteam.color = team.getColor();
 			cteam.formattedName = team.getColor().getTextFormatting() + team.getTitle();
@@ -63,8 +61,8 @@ public class MessageJMUpdate extends MessageToClient<MessageJMUpdate>
 			for (int z1 = 0; z1 < GuiConfigs.CHUNK_SELECTOR_TILES_GUI; z1++)
 			{
 				ChunkDimPos pos = new ChunkDimPos(startX + x1, startZ + z1, player.dimension);
-				ClaimedChunks.Data data = new ClaimedChunks.Data();
-				IClaimedChunk chunk = ClaimedChunkStorage.INSTANCE.getChunk(pos);
+				com.feed_the_beast.ftbu.gui.ClaimedChunks.Data data = new com.feed_the_beast.ftbu.gui.ClaimedChunks.Data();
+				IClaimedChunk chunk = ClaimedChunks.INSTANCE.getChunk(pos);
 				IForgePlayer owner = chunk == null ? null : chunk.getOwner();
 
 				if (owner != null && owner.getTeam() != null)
@@ -74,7 +72,7 @@ public class MessageJMUpdate extends MessageToClient<MessageJMUpdate>
 
 					if (data.team == null)
 					{
-						data.team = new ClaimedChunks.Team();
+						data.team = new com.feed_the_beast.ftbu.gui.ClaimedChunks.Team();
 						data.team.ownerId = team.getOwner().getId();
 						data.team.color = team.getColor();
 						data.team.formattedName = team.getColor().getTextFormatting() + team.getTitle();
@@ -97,59 +95,59 @@ public class MessageJMUpdate extends MessageToClient<MessageJMUpdate>
 	}
 
 	@Override
-	public void fromBytes(ByteBuf io)
+	public void writeData(DataOut data)
 	{
-		startX = io.readInt();
-		startZ = io.readInt();
+		data.writeInt(startX);
+		data.writeInt(startZ);
 
-		chunkData = new ClaimedChunks.Data[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
-		teams = new HashMap<>();
+		data.writeShort(teams.size());
 
-		int s = io.readUnsignedShort();
-
-		while (--s >= 0)
+		for (com.feed_the_beast.ftbu.gui.ClaimedChunks.Team t : teams.values())
 		{
-			ClaimedChunks.Team team = new ClaimedChunks.Team();
-			team.ownerId = NetUtils.readUUID(io);
-			team.formattedName = ByteBufUtils.readUTF8String(io);
-			team.color = EnumTeamColor.NAME_MAP.get(io.readUnsignedByte());
-			teams.put(team.ownerId, team);
+			data.writeUUID(t.ownerId);
+			data.writeString(t.formattedName);
+			data.writeByte(t.color.ordinal());
 		}
 
-		for (int i = 0; i < chunkData.length; i++)
+		for (com.feed_the_beast.ftbu.gui.ClaimedChunks.Data d : chunkData)
 		{
-			chunkData[i] = new ClaimedChunks.Data();
-			chunkData[i].flags = io.readInt();
+			data.writeInt(d.flags);
 
-			if (chunkData[i].hasUpgrade(ChunkUpgrade.CLAIMED))
+			if (d.hasUpgrade(ChunkUpgrade.CLAIMED))
 			{
-				chunkData[i].team = teams.get(NetUtils.readUUID(io));
+				data.writeUUID(d.team.ownerId);
 			}
 		}
 	}
 
 	@Override
-	public void toBytes(ByteBuf io)
+	public void readData(DataIn data)
 	{
-		io.writeInt(startX);
-		io.writeInt(startZ);
+		startX = data.readInt();
+		startZ = data.readInt();
 
-		io.writeShort(teams.size());
+		chunkData = new com.feed_the_beast.ftbu.gui.ClaimedChunks.Data[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
+		teams = new HashMap<>();
 
-		for (ClaimedChunks.Team t : teams.values())
+		int s = data.readUnsignedShort();
+
+		while (--s >= 0)
 		{
-			NetUtils.writeUUID(io, t.ownerId);
-			ByteBufUtils.writeUTF8String(io, t.formattedName);
-			io.writeByte(t.color.ordinal());
+			com.feed_the_beast.ftbu.gui.ClaimedChunks.Team team = new com.feed_the_beast.ftbu.gui.ClaimedChunks.Team();
+			team.ownerId = data.readUUID();
+			team.formattedName = data.readString();
+			team.color = EnumTeamColor.NAME_MAP.get(data.readUnsignedByte());
+			teams.put(team.ownerId, team);
 		}
 
-		for (ClaimedChunks.Data data : chunkData)
+		for (int i = 0; i < chunkData.length; i++)
 		{
-			io.writeInt(data.flags);
+			chunkData[i] = new com.feed_the_beast.ftbu.gui.ClaimedChunks.Data();
+			chunkData[i].flags = data.readInt();
 
-			if (data.hasUpgrade(ChunkUpgrade.CLAIMED))
+			if (chunkData[i].hasUpgrade(ChunkUpgrade.CLAIMED))
 			{
-				NetUtils.writeUUID(io, data.team.ownerId);
+				chunkData[i].team = teams.get(data.readUUID());
 			}
 		}
 	}

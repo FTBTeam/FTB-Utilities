@@ -18,6 +18,7 @@ public class ClaimedChunk implements IClaimedChunk
 	private final ChunkDimPos pos;
 	private final IForgePlayer owner;
 	private int flags;
+	public boolean dirty = true;
 
 	public ClaimedChunk(ChunkDimPos c, IForgePlayer p, int f)
 	{
@@ -36,6 +37,12 @@ public class ClaimedChunk implements IClaimedChunk
 	public IForgePlayer getOwner()
 	{
 		return owner;
+	}
+
+	@Override
+	public void markDirty()
+	{
+		dirty = true;
 	}
 
 	@Override
@@ -78,6 +85,12 @@ public class ClaimedChunk implements IClaimedChunk
 	@Override
 	public void setHasUpgrade(IChunkUpgrade upgrade, boolean v)
 	{
+		int flags0 = flags;
 		flags = Bits.setFlag(flags, 1 << upgrade.getId(), v);
+
+		if (flags0 != flags)
+		{
+			markDirty();
+		}
 	}
 }

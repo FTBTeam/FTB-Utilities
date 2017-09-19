@@ -2,6 +2,9 @@ package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamConfigEvent;
+import com.feed_the_beast.ftbl.api.events.team.ForgeTeamDeletedEvent;
+import com.feed_the_beast.ftbl.api.events.team.ForgeTeamOwnerChangedEvent;
+import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerLeftEvent;
 import com.feed_the_beast.ftbu.util.FTBUTeamData;
 import com.feed_the_beast.ftbu.util.FTBUUniverseData;
@@ -33,6 +36,20 @@ public class FTBUTeamEventHandler
         }
     }*/
 
+	/*
+	public void printMessage(@Nullable IForgePlayer from, ITextComponent message)
+	{
+		ITextComponent name = StringUtils.color(new TextComponentString(Universe.INSTANCE.getPlayer(message.getSender()).getProfile().getName()), color.getValue().getTextFormatting());
+		ITextComponent msg = FTBLibLang.TEAM_CHAT_MESSAGE.textComponent(name, message);
+		msg.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLibLang.CLICK_HERE.textComponent()));
+		msg.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/team msg "));
+
+		for (EntityPlayerMP ep : getOnlineTeamPlayers(EnumTeamStatus.MEMBER))
+		{
+			ep.sendMessage(msg);
+		}
+	}*/
+
 	@SubscribeEvent
 	public static void getSettings(ForgeTeamConfigEvent event)
 	{
@@ -40,8 +57,27 @@ public class FTBUTeamEventHandler
 	}
 
 	@SubscribeEvent
+	public static void onTeamDeleted(ForgeTeamDeletedEvent event)
+	{
+		//printMessage(FTBLibLang.TEAM_DELETED.textComponent(getTitle()));
+	}
+
+	@SubscribeEvent
+	public static void onPlayerJoined(ForgeTeamPlayerJoinedEvent event)
+	{
+		//printMessage(FTBLibLang.TEAM_MEMBER_JOINED.textComponent(player.getName()));
+	}
+
+	@SubscribeEvent
 	public static void onPlayerLeft(ForgeTeamPlayerLeftEvent event)
 	{
+		//printMessage(FTBLibLang.TEAM_MEMBER_LEFT.textComponent(player.getName()));
 		FTBUUniverseData.unclaimAllChunks(event.getPlayer(), null);
+	}
+
+	@SubscribeEvent
+	public static void onOwnerChanged(ForgeTeamOwnerChangedEvent event)
+	{
+		//printMessage(FTBLibLang.TEAM_TRANSFERRED_OWNERSHIP.textComponent(p1.getName()));
 	}
 }

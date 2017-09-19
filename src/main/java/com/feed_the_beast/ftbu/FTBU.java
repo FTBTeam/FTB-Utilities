@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
-import com.feed_the_beast.ftbu.api_impl.FTBUChunkManager;
 import com.feed_the_beast.ftbu.ranks.CmdOverride;
 import com.feed_the_beast.ftbu.ranks.FTBUPermissionHandler;
 import com.feed_the_beast.ftbu.ranks.Ranks;
@@ -44,15 +43,13 @@ public class FTBU
 	@Mod.EventHandler
 	public void onInit(FMLInitializationEvent event)
 	{
-		FTBUPermissions.init();
+		PROXY.init();
 	}
 
 	@Mod.EventHandler
 	public void onPostInit(FMLPostInitializationEvent event)
 	{
 		PROXY.postInit();
-		FTBUChunkManager.INSTANCE.init();
-		FTBUConfig.sync();
 	}
 
 	@Mod.EventHandler

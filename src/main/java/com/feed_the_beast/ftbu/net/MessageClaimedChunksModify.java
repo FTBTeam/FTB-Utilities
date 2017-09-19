@@ -2,21 +2,21 @@ package com.feed_the_beast.ftbu.net;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
+import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
 import com.feed_the_beast.ftbu.util.FTBUUniverseData;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.server.permission.PermissionAPI;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedChunksModify>
@@ -49,36 +49,21 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
 	}
 
 	@Override
-	public void fromBytes(ByteBuf io)
+	public void writeData(DataOut data)
 	{
-		startX = io.readInt();
-		startZ = io.readInt();
-		action = io.readUnsignedByte();
-
-		int s = io.readUnsignedByte();
-		chunks = new ArrayList<>(s);
-
-		while (--s >= 0)
-		{
-			int x = io.readInt();
-			int z = io.readInt();
-			chunks.add(new ChunkPos(x, z));
-		}
+		data.writeInt(startX);
+		data.writeInt(startZ);
+		data.writeByte(action);
+		data.writeCollection(chunks, DataOut.CHUNK_POS);
 	}
 
 	@Override
-	public void toBytes(ByteBuf io)
+	public void readData(DataIn data)
 	{
-		io.writeInt(startX);
-		io.writeInt(startZ);
-		io.writeByte(action);
-		io.writeByte(chunks.size());
-
-		for (ChunkPos p : chunks)
-		{
-			io.writeInt(p.x);
-			io.writeInt(p.z);
-		}
+		startX = data.readInt();
+		startZ = data.readInt();
+		action = data.readUnsignedByte();
+		chunks = data.readCollection(null, DataIn.CHUNK_POS);
 	}
 
 	@Override
@@ -86,7 +71,7 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
 	{
 		IForgePlayer p = FTBLibAPI.API.getUniverse().getPlayer(player);
 
-		if (p == null || !PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CHUNKS_MODIFY_SELF, null))
+		if (!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CHUNKS_MODIFY_SELF, null))
 		{
 			return;
 		}
@@ -103,7 +88,7 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
 					FTBUUniverseData.claimChunk(p, pos);
 					break;
 				case UNCLAIM:
-					if (canUnclaim || p.equalsPlayer(ClaimedChunkStorage.INSTANCE.getChunkOwner(pos)))
+					if (canUnclaim || p.equalsPlayer(ClaimedChunks.INSTANCE.getChunkOwner(pos)))
 					{
 						FTBUUniverseData.unclaimChunk(p, pos);
 					}

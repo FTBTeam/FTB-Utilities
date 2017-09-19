@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbu.net;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbu.gui.GuiClaimedChunks;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
@@ -18,13 +17,9 @@ public class MessageOpenClaimedChunksGui extends MessageToClient<MessageOpenClai
 	}
 
 	@Override
-	public void fromBytes(ByteBuf buf)
+	public boolean hasData()
 	{
-	}
-
-	@Override
-	public void toBytes(ByteBuf buf)
-	{
+		return false;
 	}
 
 	@Override

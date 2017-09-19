@@ -25,6 +25,7 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public void preInit()
 	{
 		super.preInit();
+
 		FTBUClientConfig.sync();
 		ClientRegistry.registerKeyBinding(KEY_GUIDE);
 		ClientRegistry.registerKeyBinding(KEY_WARP);
@@ -33,6 +34,8 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	@Override
 	public void postInit()
 	{
+		super.postInit();
+
 		ClientUtils.MC.getRenderManager().getSkinMap().get("default").addLayer(LayerBadge.INSTANCE);
 		ClientUtils.MC.getRenderManager().getSkinMap().get("slim").addLayer(LayerBadge.INSTANCE);
 		//GuideRepoList.refresh();

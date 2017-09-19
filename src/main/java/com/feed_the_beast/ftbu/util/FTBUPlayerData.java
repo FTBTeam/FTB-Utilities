@@ -10,7 +10,7 @@ import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
-import com.feed_the_beast.ftbu.api_impl.ClaimedChunkStorage;
+import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
@@ -64,7 +64,7 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 			nbt.setIntArray("LastDeath", lastDeath.toIntArray());
 		}
 
-		Collection<IClaimedChunk> claimedChunks = ClaimedChunkStorage.INSTANCE.getChunks(player);
+		Collection<ClaimedChunk> claimedChunks = ClaimedChunks.INSTANCE.getChunks(player);
 
 		if (!claimedChunks.isEmpty())
 		{
@@ -134,7 +134,7 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 				if (ai.length >= 3)
 				{
 					ClaimedChunk chunk = new ClaimedChunk(new ChunkDimPos(ai[1], ai[2], ai[0]), player, ai.length >= 4 ? ai[3] : 0);
-					ClaimedChunkStorage.INSTANCE.setChunk(chunk.getPos(), chunk);
+					ClaimedChunks.INSTANCE.setChunk(chunk.getPos(), chunk);
 				}
 			}
 		}

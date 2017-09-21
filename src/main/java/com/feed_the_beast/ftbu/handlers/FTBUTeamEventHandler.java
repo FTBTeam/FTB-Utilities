@@ -6,8 +6,8 @@ import com.feed_the_beast.ftbl.api.events.team.ForgeTeamDeletedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamOwnerChangedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerLeftEvent;
+import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.util.FTBUTeamData;
-import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
@@ -72,7 +72,7 @@ public class FTBUTeamEventHandler
 	public static void onPlayerLeft(ForgeTeamPlayerLeftEvent event)
 	{
 		//printMessage(FTBLibLang.TEAM_MEMBER_LEFT.textComponent(player.getName()));
-		FTBUUniverseData.unclaimAllChunks(event.getPlayer(), null);
+		ClaimedChunks.INSTANCE.unclaimAllChunks(event.getPlayer(), null);
 	}
 
 	@SubscribeEvent

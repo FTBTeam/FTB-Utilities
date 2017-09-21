@@ -1,17 +1,19 @@
 package com.feed_the_beast.ftbu.gui;
 
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
-import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.io.DataIn;
 import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
+import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.UUID;
 
 /**
  * @author LatvianModder
  */
-public class ClaimedChunks
+public class ClientClaimedChunks
 {
 	public static class Team
 	{
@@ -19,7 +21,7 @@ public class ClaimedChunks
 		{
 			data.writeUUID(team.ownerId);
 			data.writeString(team.formattedName);
-			data.writeByte(team.color.ordinal());
+			data.write(EnumTeamColor.NAME_MAP, team.color);
 			data.writeBoolean(team.isAlly);
 		};
 
@@ -28,7 +30,7 @@ public class ClaimedChunks
 			Team team = new Team();
 			team.ownerId = data.readUUID();
 			team.formattedName = data.readString();
-			team.color = EnumTeamColor.NAME_MAP.get(data.readUnsignedByte());
+			team.color = data.read(EnumTeamColor.NAME_MAP);
 			team.isAlly = data.readBoolean();
 			return team;
 		};
@@ -41,18 +43,29 @@ public class ClaimedChunks
 
 	public static class Data
 	{
-		public int flags;
+		public static final DataOut.Serializer<IChunkUpgrade> UPGRADE_NAME_SERIALIZER = (data, upgrade) -> data.writeString(upgrade.getName());
+		public static final DataIn.Deserializer<IChunkUpgrade> UPGRADE_NAME_DESERIALIZER = data -> FTBUUniverseData.ALL_CHUNK_UPGRADES.get(data.readString());
+		public static final DataOut.Serializer<IChunkUpgrade> UPGRADE_ID_SERIALIZER = (data, upgrade) -> data.writeInt(FTBUUniverseData.getUpgradeId(upgrade));
+		public static final DataIn.Deserializer<IChunkUpgrade> UPGRADE_ID_DESERIALIZER = data -> FTBUUniverseData.getUpgradeFromId(data.readInt());
+
+		public final Collection<IChunkUpgrade> upgrades = new HashSet<>();
 		public Team team;
-		public String owner = "";
 
 		public boolean hasUpgrade(IChunkUpgrade upgrade)
 		{
-			return Bits.getFlag(flags, 1 << upgrade.getId());
+			return upgrades.contains(upgrade);
 		}
 
 		public void setHasUpgrade(IChunkUpgrade upgrade, boolean val)
 		{
-			flags = Bits.setFlag(flags, 1 << upgrade.getId(), val);
+			if (val)
+			{
+				upgrades.add(upgrade);
+			}
+			else
+			{
+				upgrades.remove(upgrade);
+			}
 		}
 	}
 }

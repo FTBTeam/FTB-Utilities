@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.util.FTBUUniverseData;
+import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -66,7 +66,7 @@ public class CmdUnclaimAll extends CmdBase
 			p = getForgePlayer(ep);
 		}
 
-		FTBUUniverseData.unclaimAllChunks(p, parseBoolean(args[0]) ? null : ep.dimension);
+		ClaimedChunks.INSTANCE.unclaimAllChunks(p, parseBoolean(args[0]) ? null : ep.dimension);
 		FTBUNotifications.UNCLAIMED_ALL.send(ep);
 	}
 }

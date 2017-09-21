@@ -132,17 +132,12 @@ ftbu.stat.dph=Deaths Per Hour
 
 # Chunks
 ftbu.lang.chunks.cant_modify_chunk=Can't modify this chunk!
-ftbu.lang.chunks.claiming_not_enabled=Claiming is not enabled on this server!
-ftbu.lang.chunks.claiming_not_allowed=You are not allowed to claim this chunk!
 ftbu.lang.chunks.unclaimed_all=Unclaimed all chunks
 ftbu.lang.chunks.chunk_claimed=Chunk claimed
 ftbu.lang.chunks.chunk_unclaimed=Chunk unclaimed
 ftbu.lang.chunks.chunk_loaded=Chunk loaded
 ftbu.lang.chunks.chunk_unloaded=Chunk unloaded
-
 ftbu.lang.chunks.unloaded_for=Unloaded %s's chunks
-ftbu.lang.chunks.claimed_for=Claimed %d, %d in %d for %s
-ftbu.lang.chunks.cant_claimed_for=Can't claim %d, %d in %d for %s
 
 ftbu.lang.chunks.unclaim_all=Unclaim all chunks
 ftbu.lang.chunks.unclaim_all_dim=Unclaim all chunks in %s

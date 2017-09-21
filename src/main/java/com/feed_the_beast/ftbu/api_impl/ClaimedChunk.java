@@ -1,30 +1,41 @@
 package com.feed_the_beast.ftbu.api_impl;
 
-import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.io.Bits;
+import com.feed_the_beast.ftbl.api.EnumTeamStatus;
+import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.util.FTBUTeamData;
-import net.minecraftforge.server.permission.PermissionAPI;
+import com.feed_the_beast.ftbu.util.FTBUUniverseData;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 
 /**
  * @author LatvianModder
  */
-public class ClaimedChunk implements IClaimedChunk
+public final class ClaimedChunk implements IClaimedChunk
 {
 	private final ChunkDimPos pos;
-	private final IForgePlayer owner;
-	private int flags;
-	public boolean dirty = true;
+	public final FTBUTeamData team;
+	private final IntOpenHashSet upgrades;
+	private boolean invalid;
 
-	public ClaimedChunk(ChunkDimPos c, IForgePlayer p, int f)
+	public ClaimedChunk(ChunkDimPos c, FTBUTeamData t)
 	{
 		pos = c;
-		owner = p;
-		flags = f;
+		team = t;
+		upgrades = new IntOpenHashSet();
+	}
+
+	@Override
+	public boolean isInvalid()
+	{
+		return invalid;
+	}
+
+	public void setInvalid()
+	{
+		invalid = true;
 	}
 
 	@Override
@@ -34,63 +45,64 @@ public class ClaimedChunk implements IClaimedChunk
 	}
 
 	@Override
-	public IForgePlayer getOwner()
+	public IForgeTeam getTeam()
 	{
-		return owner;
-	}
-
-	@Override
-	public void markDirty()
-	{
-		dirty = true;
+		return team.team;
 	}
 
 	@Override
 	public boolean hasUpgrade(IChunkUpgrade upgrade)
 	{
-		if (upgrade == ChunkUpgrade.SHOULD_FORCE)
+		if (upgrade == ChunkUpgrade.NO_EXPLOSIONS)
 		{
-			if (!FTBUConfig.world.chunk_loading || !hasUpgrade(ChunkUpgrade.LOADED) || !FTBUPermissions.canUpgradeChunk(owner.getProfile(), ChunkUpgrade.LOADED))
-			{
-				return false;
-			}
-			else if (!owner.isOnline())
-			{
-				/*
-				double max = FTBUtilitiesAPI_Impl.INSTANCE.getRankConfig(owner.getProfile(), FTBUPermissions.CHUNKLOADER_OFFLINE_TIMER).getDouble();
-
-                if(max == 0 || (max > 0 && FTBLibStats.getLastSeenDeltaInHours(owner.stats(), false) > max))
-                */
-				if (!PermissionAPI.hasPermission(owner.getProfile(), FTBUPermissions.CHUNKLOADER_LOAD_OFFLINE, null))
-				{
-					return false;
-				}
-			}
-
-			return true;
-		}
-		else if (upgrade == ChunkUpgrade.NO_EXPLOSIONS)
-		{
-			if (!FTBUPermissions.canUpgradeChunk(owner.getProfile(), ChunkUpgrade.NO_EXPLOSIONS))
-			{
-				return false;
-			}
-
-			return !FTBUTeamData.get(owner.getTeam()).explosions.getBoolean();
+			return !team.explosions.getBoolean() && team.team.anyPlayerHasPermission(FTBUPermissions.CLAIMS_ALLOW_DISABLE_EXPLOSIONS, EnumTeamStatus.MEMBER);
 		}
 
-		return Bits.getFlag(flags, 1 << upgrade.getId());
+		return !upgrade.isInternal() && upgrades.contains(FTBUUniverseData.getUpgradeId(upgrade));
 	}
 
 	@Override
-	public void setHasUpgrade(IChunkUpgrade upgrade, boolean v)
+	public boolean setHasUpgrade(IChunkUpgrade upgrade, boolean v)
 	{
-		int flags0 = flags;
-		flags = Bits.setFlag(flags, 1 << upgrade.getId(), v);
-
-		if (flags0 != flags)
+		if (upgrade.isInternal())
 		{
-			markDirty();
+			return false;
 		}
+
+		boolean changed;
+
+		if (v)
+		{
+			changed = upgrades.add(FTBUUniverseData.getUpgradeId(upgrade));
+		}
+		else
+		{
+			changed = upgrades.remove(FTBUUniverseData.getUpgradeId(upgrade));
+		}
+
+		if (changed)
+		{
+			ClaimedChunks.INSTANCE.markDirty();
+		}
+
+		return changed;
+	}
+
+	public int hashCode()
+	{
+		return pos.hashCode();
+	}
+
+	public boolean equals(Object o)
+	{
+		if (o == this)
+		{
+			return true;
+		}
+		else if (o != null && o.getClass() == ClaimedChunk.class)
+		{
+			return pos.equalsChunkDimPos(((ClaimedChunk) o).pos);
+		}
+		return false;
 	}
 }

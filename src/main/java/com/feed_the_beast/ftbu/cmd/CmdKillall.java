@@ -56,7 +56,7 @@ public class CmdKillall extends CmdBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		Predicate<Entity> predicate = CommonUtils.alwaysTruePredicate();
-		String type = "unknown";
+		String type = "all";
 
 		if (args.length >= 1)
 		{
@@ -109,7 +109,7 @@ public class CmdKillall extends CmdBase
 
 		for (World world : server.worlds)
 		{
-			for (Entity entity : world.getLoadedEntityList())
+			for (Entity entity : world.loadedEntityList)
 			{
 				if (predicate.test(entity))
 				{

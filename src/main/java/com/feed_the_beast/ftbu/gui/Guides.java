@@ -10,7 +10,6 @@ import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftbl.lib.guide.GuideContentsLine;
 import com.feed_the_beast.ftbl.lib.guide.GuideHrLine;

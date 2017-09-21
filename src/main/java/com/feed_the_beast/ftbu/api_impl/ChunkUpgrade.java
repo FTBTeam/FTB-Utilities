@@ -13,18 +13,13 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @EventHandler
 public class ChunkUpgrade extends FinalIDObject implements IChunkUpgrade
 {
-	public static final IChunkUpgrade LOADED = new ChunkUpgrade("loaded", 0);
-	public static final IChunkUpgrade NO_EXPLOSIONS = new ChunkUpgrade("no_explosions", 1);
-	public static final IChunkUpgrade NO_PVP = new ChunkUpgrade("no_pvp", 2);
+	public static final IChunkUpgrade LOADED = new ChunkUpgrade("loaded", false);
+	public static final IChunkUpgrade NO_EXPLOSIONS = new ChunkUpgrade("no_explosions", true); //TODO: Make real
+	public static final IChunkUpgrade NO_PVP = new ChunkUpgrade("no_pvp", true); //TODO: Make real
 
-	// For internal use only upgrades/flags
-	public static final IChunkUpgrade SHOULD_FORCE = new ChunkUpgrade("should_force", 25);
-	public static final IChunkUpgrade FORCED = new ChunkUpgrade("forced", 26);
-	public static final IChunkUpgrade IS_OWNER = new ChunkUpgrade("is_owner", 27);
-	public static final IChunkUpgrade CAN_CLAIM = new ChunkUpgrade("can_claim", 28);
-	public static final IChunkUpgrade CAN_LOAD = new ChunkUpgrade("can_load", 29);
-	public static final IChunkUpgrade CLAIMED = new ChunkUpgrade("claimed", 30);
-	public static final IChunkUpgrade WILDERNESS = new ChunkUpgrade("wilderness", 31);
+	public static final IChunkUpgrade CAN_CLAIM = new ChunkUpgrade("can_claim", true);
+	public static final IChunkUpgrade CLAIMED = new ChunkUpgrade("claimed", true);
+	public static final IChunkUpgrade WILDERNESS = new ChunkUpgrade("wilderness", true);
 
 	@SubscribeEvent
 	public static void addUpgrades(RegisterChunkUpgradesEvent event)
@@ -32,16 +27,20 @@ public class ChunkUpgrade extends FinalIDObject implements IChunkUpgrade
 		event.register(LOADED);
 		event.register(NO_EXPLOSIONS);
 		event.register(NO_PVP);
+
+		event.register(CAN_CLAIM);
+		event.register(CLAIMED);
+		event.register(WILDERNESS);
 	}
 
 	private final LangKey langKey;
-	private final int id;
+	private final boolean internal;
 
-	public ChunkUpgrade(String s, int i)
+	public ChunkUpgrade(String s, boolean i)
 	{
 		super(s);
+		internal = i;
 		langKey = LangKey.of("ftbu.lang.chunks.upgrade." + getName());
-		id = i;
 	}
 
 	@Override
@@ -51,8 +50,8 @@ public class ChunkUpgrade extends FinalIDObject implements IChunkUpgrade
 	}
 
 	@Override
-	public int getId()
+	public boolean isInternal()
 	{
-		return id;
+		return internal;
 	}
 }

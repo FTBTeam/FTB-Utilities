@@ -1,22 +1,20 @@
 package com.feed_the_beast.ftbu.integration;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
-import me.ichun.mods.ichunutil.api.event.BlockPickupEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 
 /**
  * @author LatvianModder
  */
-@EventHandler(requiredMods = "iChunUtil;ichunutil")
+@EventHandler(requiredMods = FTBLibFinals.ICHUN_UTIL)
 public class IChunUtilIntegration
 {
-	@SubscribeEvent(priority = EventPriority.HIGH)
+	/*@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onBlockPickupEventEvent(BlockPickupEvent event)
 	{
-		/*if (event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunks.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.INTERACT))
+		if (event.getEntityPlayer() instanceof EntityPlayerMP && !ClaimedChunks.INSTANCE.canPlayerInteract((EntityPlayerMP) event.getEntityPlayer(), event.getHand(), new BlockPosContainer(event), BlockInteractionType.INTERACT))
 		{
 			event.setCanceled(true);
-		}*/
-	}
+		}
+	}*/
 }

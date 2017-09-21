@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbu.integration;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
@@ -12,8 +13,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 /**
  * @author LatvianModder
  */
-@EventHandler(requiredMods = "chiselsandbits")
-public class ChiselIntegration
+@EventHandler(requiredMods = FTBLibFinals.CHISELS_AND_BITS)
+public class ChiselsAndBitsIntegration
 {
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onChiselEvent(EventBlockBitModification event)

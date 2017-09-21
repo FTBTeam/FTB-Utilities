@@ -2,10 +2,6 @@ package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseClosedEvent;
-import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
-import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseSavedEvent;
 import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
@@ -16,33 +12,27 @@ import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
-import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.cmd.CmdShutdown;
-import com.feed_the_beast.ftbu.util.Badges;
 import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import com.feed_the_beast.ftbu.util.backups.Backups;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,104 +59,6 @@ public class FTBUWorldEventHandler
 	};
 
 	@SubscribeEvent
-	public static void onUniverseLoaded(ForgeUniverseLoadedEvent.Finished event)
-	{
-		long start = event.getUniverse().getOverworld().getTotalWorldTime();
-		Backups.INSTANCE.nextBackup = start + FTBUConfig.backups.ticks();
-
-		if (FTBUConfig.auto_shutdown.enabled && FTBUConfig.auto_shutdown.times.length > 0 && event.getUniverse().getServer().isDedicatedServer())
-		{
-			Calendar calendar = Calendar.getInstance();
-			int currentTime = calendar.get(Calendar.HOUR_OF_DAY) * 3600 + calendar.get(Calendar.MINUTE) * 60 + calendar.get(Calendar.SECOND);
-			int[] times = new int[FTBUConfig.auto_shutdown.times.length];
-
-			for (int i = 0; i < times.length; i++)
-			{
-				String[] s = FTBUConfig.auto_shutdown.times[i].split(":", 2);
-
-				times[i] = Integer.parseInt(s[0]) * 3600 + Integer.parseInt(s[1]) * 60;
-
-				if (times[i] <= currentTime)
-				{
-					times[i] += 24 * 3600;
-				}
-			}
-
-			Arrays.sort(times);
-
-			for (int time : times)
-			{
-				if (time > currentTime)
-				{
-					FTBUUniverseData.shutdownTime = start + (time - currentTime) * CommonUtils.TICKS_SECOND;
-					FTBUFinals.LOGGER.info(FTBULang.TIMER_SHUTDOWN.translate(StringUtils.getTimeStringTicks(FTBUUniverseData.shutdownTime)));
-					break;
-				}
-			}
-		}
-
-		ClaimedChunks.INSTANCE.nextChunkloaderUpdate = start + 20L;
-		Badges.LOCAL_BADGES.clear();
-	}
-
-	@SubscribeEvent
-	public static void onUniversePostLoaded(ForgeUniverseLoadedEvent.Post event)
-	{
-		NBTTagCompound nbt = event.getData(FTBLibIntegration.FTBU_DATA);
-
-		FTBUUniverseData.WARPS.deserializeNBT(nbt.getCompoundTag("Warps"));
-
-		if (nbt.hasKey("Chunks", Constants.NBT.TAG_COMPOUND))
-		{
-			NBTTagCompound nbt1 = nbt.getCompoundTag("Chunks");
-
-			for (String s : nbt1.getKeySet())
-			{
-				IForgePlayer player = FTBLibAPI.API.getUniverse().getPlayer(StringUtils.fromString(s));
-
-				if (player != null)
-				{
-					NBTTagList list = nbt1.getTagList(s, Constants.NBT.TAG_INT_ARRAY);
-
-					for (int i = 0; i < list.tagCount(); i++)
-					{
-						int[] ai = list.getIntArrayAt(i);
-
-						if (ai.length >= 3)
-						{
-							ClaimedChunk chunk = new ClaimedChunk(new ChunkDimPos(ai[1], ai[2], ai[0]), player, ai.length >= 4 ? ai[3] : 0);
-							ClaimedChunks.INSTANCE.setChunk(chunk.getPos(), chunk);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	@SubscribeEvent
-	public static void onUniverseSaved(ForgeUniverseSavedEvent event)
-	{
-		NBTTagCompound nbt = new NBTTagCompound();
-
-		if (!FTBUUniverseData.WARPS.isEmpty())
-		{
-			nbt.setTag("Warps", FTBUUniverseData.WARPS.serializeNBT());
-		}
-
-		//TODO: Save chat as json
-
-		event.setData(FTBLibIntegration.FTBU_DATA, nbt);
-	}
-
-	@SubscribeEvent
-	public static void onUniverseClosed(ForgeUniverseClosedEvent event)
-	{
-		ClaimedChunks.INSTANCE.clear();
-		Badges.BADGE_CACHE.clear();
-		Badges.LOCAL_BADGES.clear();
-	}
-
-	@SubscribeEvent
 	public static void onMobSpawned(EntityJoinWorldEvent event)
 	{
 		if (!event.getWorld().isRemote && !isEntityAllowed(event.getEntity()))
@@ -186,7 +78,10 @@ public class FTBUWorldEventHandler
 
 		if (event.phase == TickEvent.Phase.START)
 		{
-			ClaimedChunks.INSTANCE.update(event.world.getTotalWorldTime());
+			if (ClaimedChunks.INSTANCE != null)
+			{
+				ClaimedChunks.INSTANCE.update(event.world.getMinecraftServer(), event.world.getTotalWorldTime());
+			}
 		}
 		else
 		{
@@ -228,6 +123,15 @@ public class FTBUWorldEventHandler
         	    }
         	}
         	*/
+		}
+	}
+
+	@SubscribeEvent
+	public static void onDimensionUnload(WorldEvent.Unload event)
+	{
+		if (ClaimedChunks.INSTANCE != null)
+		{
+			ClaimedChunks.INSTANCE.markDirty();
 		}
 	}
 

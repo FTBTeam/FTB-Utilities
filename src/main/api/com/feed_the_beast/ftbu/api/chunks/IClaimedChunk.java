@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.api.chunks;
 
-import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 
 /**
@@ -8,13 +8,13 @@ import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
  */
 public interface IClaimedChunk
 {
+	boolean isInvalid();
+
 	ChunkDimPos getPos();
 
-	IForgePlayer getOwner();
-
-	void markDirty();
+	IForgeTeam getTeam();
 
 	boolean hasUpgrade(IChunkUpgrade upgrade);
 
-	void setHasUpgrade(IChunkUpgrade upgrade, boolean v);
+	boolean setHasUpgrade(IChunkUpgrade upgrade, boolean v);
 }

@@ -9,7 +9,6 @@ import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.ServerInfoPage;
-import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.util.Badges;
 import com.feed_the_beast.ftbu.util.FTBUPlayerData;
@@ -65,8 +64,6 @@ public class FTBLibIntegration
 			{
 				event.failedToReload(RELOAD_BADGES);
 			}
-
-			ClaimedChunks.INSTANCE.checkAll();
 		}
 		else
 		{
@@ -89,7 +86,7 @@ public class FTBLibIntegration
 	@SubscribeEvent
 	public static void registerTeamDataProvider(RegisterDataProvidersEvent.Team event)
 	{
-		event.register(FTBU_DATA, owner -> new FTBUTeamData());
+		event.register(FTBU_DATA, FTBUTeamData::new);
 	}
 
 	@SubscribeEvent

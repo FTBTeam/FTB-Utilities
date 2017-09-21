@@ -8,7 +8,6 @@ import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
-import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -29,28 +28,27 @@ public class CmdUnclaim extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-		IForgePlayer p = getForgePlayer(player);
-		ChunkDimPos pos = new ChunkDimPos(player);
-
 		if (!FTBUConfig.world.chunk_claiming)
 		{
-			FTBUNotifications.CLAIMING_NOT_ENABLED.send(player);
-			return;
+			throw FTBLibLang.FEATURE_DISABLED.commandError();
 		}
 
-		if (!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CHUNKS_MODIFY_SELF, null))
+		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+		IForgePlayer p = getForgePlayer(player);
+
+		if (p.getTeam() == null)
 		{
-			FTBUNotifications.CLAIMING_NOT_ALLOWED.send(player);
-			return;
+			throw FTBLibLang.TEAM_NO_TEAM.commandError();
 		}
 
-		if (!p.equalsPlayer(ClaimedChunks.INSTANCE.getChunkOwner(pos)) && !PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS, new BlockPosContext(player, pos.getChunkPos())))
+		ChunkDimPos pos = new ChunkDimPos(player);
+
+		if (!p.getTeam().equalsTeam(ClaimedChunks.INSTANCE.getChunkTeam(pos)) && !PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS, new BlockPosContext(player, pos.getChunkPos())))
 		{
 			throw FTBLibLang.COMMAND_PERMISSION.commandError();
 		}
 
-		if (FTBUUniverseData.unclaimChunk(p, pos))
+		if (ClaimedChunks.INSTANCE.unclaimChunk(p, pos))
 		{
 			FTBUNotifications.CHUNK_UNCLAIMED.send(player);
 			CmdChunks.updateChunk(player, pos);

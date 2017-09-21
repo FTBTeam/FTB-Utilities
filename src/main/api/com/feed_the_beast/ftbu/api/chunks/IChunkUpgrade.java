@@ -10,10 +10,12 @@ import net.minecraft.util.text.ITextComponent;
  */
 public interface IChunkUpgrade extends IStringSerializable, ICustomName
 {
-	//TODO: Move this to a registry someday
-	int getId();
-
 	LangKey getLangKey();
+
+	default boolean isInternal()
+	{
+		return false;
+	}
 
 	@Override
 	default ITextComponent getCustomDisplayName()

@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.net;
 
-import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
@@ -11,10 +10,11 @@ import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.client.FTBUClient;
+import com.feed_the_beast.ftbu.gui.ClientClaimedChunks;
+import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.ChunkPos;
 
@@ -28,8 +28,8 @@ import java.util.UUID;
 public class MessageJMUpdate extends MessageToClient<MessageJMUpdate>
 {
 	private int startX, startZ;
-	private Map<UUID, com.feed_the_beast.ftbu.gui.ClaimedChunks.Team> teams;
-	private com.feed_the_beast.ftbu.gui.ClaimedChunks.Data[] chunkData;
+	private Map<UUID, ClientClaimedChunks.Team> teams;
+	private ClientClaimedChunks.Data[] chunkData;
 
 	public MessageJMUpdate()
 	{
@@ -43,12 +43,12 @@ public class MessageJMUpdate extends MessageToClient<MessageJMUpdate>
 		IForgePlayer player1 = FTBLibAPI.API.getUniverse().getPlayer(player);
 		IForgeTeam team = player1.getTeam();
 
-		chunkData = new com.feed_the_beast.ftbu.gui.ClaimedChunks.Data[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
+		chunkData = new ClientClaimedChunks.Data[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
 		teams = new HashMap<>();
 
 		if (team != null)
 		{
-			com.feed_the_beast.ftbu.gui.ClaimedChunks.Team cteam = new com.feed_the_beast.ftbu.gui.ClaimedChunks.Team();
+			ClientClaimedChunks.Team cteam = new ClientClaimedChunks.Team();
 			cteam.ownerId = team.getOwner().getId();
 			cteam.color = team.getColor();
 			cteam.formattedName = team.getColor().getTextFormatting() + team.getTitle();
@@ -61,22 +61,20 @@ public class MessageJMUpdate extends MessageToClient<MessageJMUpdate>
 			for (int z1 = 0; z1 < GuiConfigs.CHUNK_SELECTOR_TILES_GUI; z1++)
 			{
 				ChunkDimPos pos = new ChunkDimPos(startX + x1, startZ + z1, player.dimension);
-				com.feed_the_beast.ftbu.gui.ClaimedChunks.Data data = new com.feed_the_beast.ftbu.gui.ClaimedChunks.Data();
-				IClaimedChunk chunk = ClaimedChunks.INSTANCE.getChunk(pos);
-				IForgePlayer owner = chunk == null ? null : chunk.getOwner();
+				ClientClaimedChunks.Data data = new ClientClaimedChunks.Data();
+				IForgeTeam chunkTeam = ClaimedChunks.INSTANCE.getChunkTeam(pos);
 
-				if (owner != null && owner.getTeam() != null)
+				if (chunkTeam != null)
 				{
-					team = owner.getTeam();
-					data.team = teams.get(team.getOwner().getId());
+					data.team = teams.get(chunkTeam.getOwner().getId());
 
 					if (data.team == null)
 					{
-						data.team = new com.feed_the_beast.ftbu.gui.ClaimedChunks.Team();
-						data.team.ownerId = team.getOwner().getId();
-						data.team.color = team.getColor();
-						data.team.formattedName = team.getColor().getTextFormatting() + team.getTitle();
-						data.team.isAlly = team.hasStatus(player.getGameProfile().getId(), EnumTeamStatus.ALLY);
+						data.team = new ClientClaimedChunks.Team();
+						data.team.ownerId = chunkTeam.getOwner().getId();
+						data.team.color = chunkTeam.getColor();
+						data.team.formattedName = chunkTeam.getColor().getTextFormatting() + chunkTeam.getTitle();
+						data.team.isAlly = chunkTeam.hasStatus(player.getGameProfile().getId(), EnumTeamStatus.ALLY);
 						teams.put(data.team.ownerId, data.team);
 					}
 
@@ -99,19 +97,13 @@ public class MessageJMUpdate extends MessageToClient<MessageJMUpdate>
 	{
 		data.writeInt(startX);
 		data.writeInt(startZ);
-
 		data.writeShort(teams.size());
+		data.writeCollection(teams.values(), ClientClaimedChunks.Team.SERIALIZER);
+		data.writeMap(FTBUUniverseData.UPGRADE_TO_ID, ClientClaimedChunks.Data.UPGRADE_NAME_SERIALIZER, DataOut.INT);
 
-		for (com.feed_the_beast.ftbu.gui.ClaimedChunks.Team t : teams.values())
+		for (ClientClaimedChunks.Data d : chunkData)
 		{
-			data.writeUUID(t.ownerId);
-			data.writeString(t.formattedName);
-			data.writeByte(t.color.ordinal());
-		}
-
-		for (com.feed_the_beast.ftbu.gui.ClaimedChunks.Data d : chunkData)
-		{
-			data.writeInt(d.flags);
+			data.writeCollection(d.upgrades, ClientClaimedChunks.Data.UPGRADE_ID_SERIALIZER);
 
 			if (d.hasUpgrade(ChunkUpgrade.CLAIMED))
 			{
@@ -125,25 +117,21 @@ public class MessageJMUpdate extends MessageToClient<MessageJMUpdate>
 	{
 		startX = data.readInt();
 		startZ = data.readInt();
-
-		chunkData = new com.feed_the_beast.ftbu.gui.ClaimedChunks.Data[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
 		teams = new HashMap<>();
 
-		int s = data.readUnsignedShort();
-
-		while (--s >= 0)
+		for (ClientClaimedChunks.Team team : data.readCollection(null, ClientClaimedChunks.Team.DESERIALIZER))
 		{
-			com.feed_the_beast.ftbu.gui.ClaimedChunks.Team team = new com.feed_the_beast.ftbu.gui.ClaimedChunks.Team();
-			team.ownerId = data.readUUID();
-			team.formattedName = data.readString();
-			team.color = EnumTeamColor.NAME_MAP.get(data.readUnsignedByte());
 			teams.put(team.ownerId, team);
 		}
 
+		data.readMap(null, ClientClaimedChunks.Data.UPGRADE_NAME_DESERIALIZER, DataIn.INT).forEach(FTBUUniverseData.SET_UPGRADE_ID);
+
+		chunkData = new ClientClaimedChunks.Data[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
+
 		for (int i = 0; i < chunkData.length; i++)
 		{
-			chunkData[i] = new com.feed_the_beast.ftbu.gui.ClaimedChunks.Data();
-			chunkData[i].flags = data.readInt();
+			chunkData[i] = new ClientClaimedChunks.Data();
+			data.readCollection(chunkData[i].upgrades, ClientClaimedChunks.Data.UPGRADE_ID_DESERIALIZER);
 
 			if (chunkData[i].hasUpgrade(ChunkUpgrade.CLAIMED))
 			{

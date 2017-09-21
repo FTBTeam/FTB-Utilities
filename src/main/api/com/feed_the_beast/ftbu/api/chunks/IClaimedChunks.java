@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.api.chunks;
 
-import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -14,17 +14,25 @@ import java.util.Collection;
  */
 public interface IClaimedChunks
 {
+	void markDirty();
+
 	@Nullable
 	IClaimedChunk getChunk(ChunkDimPos pos);
 
 	@Nullable
-	default IForgePlayer getChunkOwner(ChunkDimPos pos)
+	default IForgeTeam getChunkTeam(ChunkDimPos pos)
 	{
-		IClaimedChunk c = getChunk(pos);
-		return c == null ? null : c.getOwner();
+		IClaimedChunk chunk = getChunk(pos);
+		return chunk == null ? null : chunk.getTeam();
 	}
 
-	Collection<? extends IClaimedChunk> getChunks(@Nullable IForgePlayer owner);
+	Collection<? extends IClaimedChunk> getAllChunks();
+
+	Collection<? extends IClaimedChunk> getAllChunksIgnoreConfig();
+
+	Collection<? extends IClaimedChunk> getTeamChunks(@Nullable IForgeTeam team);
+
+	Collection<ChunkDimPos> getForcedChunks();
 
 	boolean canPlayerInteract(EntityPlayerMP player, EnumHand hand, BlockPosContainer block, BlockInteractionType type);
 }

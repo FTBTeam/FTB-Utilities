@@ -56,6 +56,9 @@ public class FTBUConfig
 	{
 		public boolean difficulty = true;
 
+		@Config.LangKey("ftbu.config.login.motd")
+		public boolean motd = true;
+
 		//public boolean admin_quick_access = true;
 	}
 
@@ -191,6 +194,30 @@ public class FTBUConfig
 
 		@Config.Comment("Print a message in console every time a chunk is forced or unforced. Recommended to be off, because spam")
 		public boolean log_chunkloading = false;
+
+		@Config.Comment("Dimensions where chunk claiming isn't allowed")
+		public int[] blocked_claiming_dimensions = { };
+
+		public boolean allowDimension(int dimension)
+		{
+			if (!FTBUConfig.world.chunk_claiming)
+			{
+				return false;
+			}
+
+			if (blocked_claiming_dimensions.length > 0)
+			{
+				for (int i : blocked_claiming_dimensions)
+				{
+					if (i == dimension)
+					{
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
 	}
 
 	public static void sync()

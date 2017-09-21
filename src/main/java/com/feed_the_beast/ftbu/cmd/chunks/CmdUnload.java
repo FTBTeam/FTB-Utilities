@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbu.FTBUNotifications;
-import com.feed_the_beast.ftbu.util.FTBUUniverseData;
+import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -27,7 +27,7 @@ public class CmdUnload extends CmdBase
 		IForgePlayer p = getForgePlayer(player);
 		ChunkDimPos pos = new ChunkDimPos(player);
 
-		if (FTBUUniverseData.setLoaded(p, pos, false))
+		if (ClaimedChunks.INSTANCE.setLoaded(p, pos, false))
 		{
 			FTBUNotifications.CHUNK_UNLOADED.send(player);
 			CmdChunks.updateChunk(player, pos);

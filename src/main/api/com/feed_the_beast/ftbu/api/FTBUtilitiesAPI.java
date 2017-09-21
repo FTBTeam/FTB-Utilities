@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbu.api;
 
 import com.feed_the_beast.ftbl.lib.config.ConfigValue;
+import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunks;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,4 +23,6 @@ public abstract class FTBUtilitiesAPI
 	{
 		return getRankConfig(player.getGameProfile(), id);
 	}
+
+	public abstract void displayGuide(EntityPlayer player, GuidePage page);
 }

@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbu.cmd;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
+import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -29,6 +29,7 @@ public class CmdViewCrash extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
+		//FIXME: Replace with custom gui
 		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
 
 		if (args.length == 0)
@@ -59,7 +60,7 @@ public class CmdViewCrash extends CmdBase
 				page.println("Failed to read crash-reports folder!");
 			}
 
-			FTBLibAPI.API.displayGuide(ep, page);
+			FTBUtilitiesAPI.API.displayGuide(ep, page);
 			return;
 		}
 
@@ -80,6 +81,6 @@ public class CmdViewCrash extends CmdBase
 			page.println("Failed to load crash report!");
 		}
 
-		FTBLibAPI.API.displayGuide(ep, page);
+		FTBUtilitiesAPI.API.displayGuide(ep, page);
 	}
 }

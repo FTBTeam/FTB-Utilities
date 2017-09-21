@@ -17,9 +17,6 @@ public interface FTBULang
 	LangKey PERM_FOR = LangKey.of("ftbu.lang.perm_for", String.class, String.class, String.class);
 
 	LangKey CHUNKS_UNLOADED_FOR = LangKey.of("ftbu.lang.chunks.unloaded_for");
-	LangKey CHUNKS_CLAIMED_FOR = LangKey.of("ftbu.lang.chunks.claimed_for");
-	LangKey CHUNKS_CANT_CLAIM_FOR = LangKey.of("ftbu.lang.chunks.cant_claim_for");
-
 	LangKey CHUNKS_UNCLAIM_ALL_Q = LangKey.of("ftbu.lang.chunks.unclaim_all_q");
 	LangKey CHUNKS_UNCLAIM_ALL_DIM_Q = LangKey.of("ftbu.lang.chunks.unclaim_all_dim_q", String.class);
 	LangKey CHUNKS_UNCLAIM_ALL = LangKey.of("ftbu.lang.chunks.unclaim_all");
@@ -40,7 +37,7 @@ public interface FTBULang
 	LangKey HOME_CROSS_DIM = LangKey.of("ftbu.lang.homes.cross_dim");
 	LangKey HOME_LIMIT = LangKey.of("ftbu.lang.homes.limit");
 
-	LangKey BACKUP_START = LangKey.of("ftbu.backup.start");
+	LangKey BACKUP_START = LangKey.of("ftbu.backup.start", String.class);
 	LangKey BACKUP_STOP = LangKey.of("ftbu.backup.stop");
 	LangKey BACKUP_END_1 = LangKey.of("ftbu.backup.end_1", String.class);
 	LangKey BACKUP_END_2 = LangKey.of("ftbu.backup.end_2", String.class, String.class);

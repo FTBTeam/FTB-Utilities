@@ -7,7 +7,8 @@ import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.util.FTBUUniverseData;
+import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
+import com.feed_the_beast.ftbu.util.FTBUTeamData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -33,29 +34,48 @@ public class CmdClaim extends CmdBase
 		}
 
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-		IForgePlayer p = getForgePlayer(player);
-		ChunkDimPos pos = new ChunkDimPos(player);
+		IForgePlayer p;
 
-		if (!FTBUConfig.world.chunk_claiming)
+		if (args.length >= 1)
 		{
-			FTBUNotifications.CLAIMING_NOT_ENABLED.send(player);
-			return;
-		}
+			if (!PermissionAPI.hasPermission(player, FTBUPermissions.CLAIMS_CHUNKS_MODIFY_OTHERS))
+			{
+				throw FTBLibLang.COMMAND_PERMISSION.commandError();
+			}
 
-		if (!PermissionAPI.hasPermission(player.getGameProfile(), FTBUPermissions.CLAIMS_CHUNKS_MODIFY_SELF, null))
-		{
-			FTBUNotifications.CLAIMING_NOT_ALLOWED.send(player);
-			return;
-		}
-
-		if (FTBUUniverseData.claimChunk(p, pos))
-		{
-			FTBUNotifications.CHUNK_CLAIMED.send(player);
-			CmdChunks.updateChunk(player, pos);
+			p = getForgePlayer(args[0]);
 		}
 		else
 		{
-			FTBUNotifications.CANT_MODIFY_CHUNK.send(player);
+			p = getForgePlayer(player);
+		}
+
+		if (p.getTeam() == null)
+		{
+			throw FTBLibLang.TEAM_NO_TEAM.commandError();
+		}
+
+		ChunkDimPos pos = new ChunkDimPos(player);
+
+		if (!FTBUConfig.world.allowDimension(pos.dim))
+		{
+			FTBUNotifications.CLAIMING_NOT_ENABLED_DIM.send(player);
+			return;
+		}
+
+		switch (ClaimedChunks.INSTANCE.claimChunk(FTBUTeamData.get(p.getTeam()), pos))
+		{
+			case SUCCESS:
+				FTBUNotifications.CHUNK_CLAIMED.send(player);
+				CmdChunks.updateChunk(player, pos);
+				break;
+			case DIMENSION_BLOCKED:
+				break;
+			case NO_POWER:
+				break;
+			case ALREADY_CLAIMED:
+				FTBUNotifications.CANT_MODIFY_CHUNK.send(player);
+				break;
 		}
 	}
 }

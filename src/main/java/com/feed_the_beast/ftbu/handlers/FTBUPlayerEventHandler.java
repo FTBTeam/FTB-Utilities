@@ -16,6 +16,7 @@ import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUNotifications;
 import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
+import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.util.Badges;
 import com.feed_the_beast.ftbu.util.FTBUPlayerData;
@@ -23,6 +24,7 @@ import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import com.google.common.base.Objects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -72,13 +74,13 @@ public class FTBUPlayerEventHandler
 			}
 		}
 
-		ClaimedChunks.INSTANCE.checkAll();
+		ClaimedChunks.INSTANCE.markDirty();
 	}
 
 	@SubscribeEvent
 	public static void onLoggedOut(ForgePlayerLoggedOutEvent event)
 	{
-		ClaimedChunks.INSTANCE.checkAll();
+		ClaimedChunks.INSTANCE.markDirty();
 		Badges.update(event.getPlayer().getId());
 	}
 
@@ -117,32 +119,28 @@ public class FTBUPlayerEventHandler
 		updateChunkMessage(player, new ChunkDimPos(event.getNewChunkX(), event.getNewChunkZ(), player.dimension));
 	}
 
-	public static void updateChunkMessage(EntityPlayerMP player, ChunkDimPos pos)
+	public static void updateChunkMessage(EntityPlayer player, ChunkDimPos pos)
 	{
-		IForgePlayer newTeamOwner = ClaimedChunks.INSTANCE.getChunkOwner(pos);
+		ClaimedChunk chunk = ClaimedChunks.INSTANCE.getChunk(pos);
+		IForgeTeam team = chunk == null ? null : chunk.getTeam();
 
 		FTBUPlayerData data = FTBUPlayerData.get(FTBLibAPI.API.getUniverse().getPlayer(player));
 
-		if (!Objects.equal(data.lastChunkOwner, newTeamOwner))
+		if (!Objects.equal(data.lastChunkTeam, team))
 		{
-			data.lastChunkOwner = newTeamOwner;
+			data.lastChunkTeam = team;
 
-			if (newTeamOwner != null)
+			if (team != null)
 			{
-				IForgeTeam team = newTeamOwner.getTeam();
+				Notification notification = Notification.of(FTBUNotifications.WILDERNESS.getId());
+				notification.addLine(StringUtils.color(new TextComponentString(team.getTitle()), team.getColor().getTextFormatting()));
 
-				if (team != null)
+				if (!team.getDesc().isEmpty())
 				{
-					Notification notification = Notification.of(FTBUNotifications.WILDERNESS.getId());
-					notification.addLine(StringUtils.color(new TextComponentString(team.getTitle()), team.getColor().getTextFormatting()));
-
-					if (!team.getDesc().isEmpty())
-					{
-						notification.addLine(StringUtils.italic(new TextComponentString(team.getDesc()), true));
-					}
-
-					notification.send(player);
+					notification.addLine(StringUtils.italic(new TextComponentString(team.getDesc()), true));
 				}
+
+				notification.send(player);
 			}
 			else
 			{

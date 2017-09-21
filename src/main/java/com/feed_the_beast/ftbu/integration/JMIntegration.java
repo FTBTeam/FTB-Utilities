@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
 import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.client.FTBUClientConfig;
-import com.feed_the_beast.ftbu.gui.ClaimedChunks;
+import com.feed_the_beast.ftbu.gui.ClientClaimedChunks;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksRequest;
 import journeymap.client.api.ClientPlugin;
 import journeymap.client.api.IClientAPI;
@@ -75,7 +75,7 @@ public class JMIntegration implements IClientPlugin, IJMIntegration
 	}
 
 	@Override
-	public void chunkChanged(ChunkPos pos, ClaimedChunks.Data chunk)
+	public void chunkChanged(ChunkPos pos, ClientClaimedChunks.Data chunk)
 	{
 		if (!POLYGONS.isEmpty() && (!FTBUClientConfig.general.journeymap_overlay || !clientAPI.playerAccepts(FTBUFinals.MOD_ID, DisplayType.Polygon)))
 		{
@@ -105,13 +105,12 @@ public class JMIntegration implements IClientPlugin, IJMIntegration
 				ShapeProperties shapeProperties = new ShapeProperties();
 
 				shapeProperties.setFillOpacity(0.2F);
-				shapeProperties.setStrokeOpacity(0.1F);
+				shapeProperties.setStrokeOpacity(0F);
 
 				shapeProperties.setFillColor(chunk.team.color.getColor().rgba());
-				shapeProperties.setStrokeColor(shapeProperties.getFillColor());
 
 				p = new PolygonOverlay(FTBUFinals.MOD_ID, "claimed_" + dim + '_' + pos.x + '_' + pos.z, dim, shapeProperties, poly);
-				p.setOverlayGroupName("Claimed Chunks").setTitle(chunk.team.formattedName + '\n' + TextFormatting.GREEN + ChunkUpgrade.CLAIMED.getLangKey());
+				p.setOverlayGroupName("Claimed Chunks").setTitle(chunk.team.formattedName + '\n' + TextFormatting.GREEN + ChunkUpgrade.CLAIMED.getLangKey().translate());
 				POLYGONS.put(pos, p);
 				clientAPI.show(p);
 			}

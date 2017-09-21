@@ -1,32 +1,54 @@
 package com.feed_the_beast.ftbu.util;
 
-import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.EventHandler;
+import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseClosedEvent;
+import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
+import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseSavedEvent;
 import com.feed_the_beast.ftbl.lib.ChatHistory;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUConfig;
-import com.feed_the_beast.ftbu.FTBUPermissions;
-import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
-import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
-import com.feed_the_beast.ftbu.api.events.ChunkModifiedEvent;
-import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
-import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
+import com.feed_the_beast.ftbu.FTBUFinals;
+import com.feed_the_beast.ftbu.api.FTBULang;
+import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
+import com.feed_the_beast.ftbu.api.events.registry.RegisterChunkUpgradesEvent;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
+import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
+import com.feed_the_beast.ftbu.util.backups.Backups;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
 
 /**
  * @author LatvianModder
  */
+@EventHandler
 public class FTBUUniverseData
 {
 	public static long shutdownTime;
 	public static final BlockDimPosStorage WARPS = new BlockDimPosStorage();
 	public static final ChatHistory GENERAL_CHAT = new ChatHistory(() -> FTBUConfig.chat.general_history_limit);
+	public static final Map<String, IChunkUpgrade> CHUNK_UPGRADES = new HashMap<>();
+	public static final Map<String, IChunkUpgrade> ALL_CHUNK_UPGRADES = new HashMap<>();
+	public static final Map<Integer, IChunkUpgrade> ID_TO_UPGRADE = new HashMap<>();
+	public static final Map<IChunkUpgrade, Integer> UPGRADE_TO_ID = new HashMap<>();
+
+	public static final BiConsumer<IChunkUpgrade, Integer> SET_UPGRADE_ID = (upgrade, id) ->
+	{
+		UPGRADE_TO_ID.put(upgrade, id);
+		ID_TO_UPGRADE.put(id, upgrade);
+	};
 
 	public static boolean isInSpawn(ChunkDimPos pos)
 	{
@@ -51,136 +73,148 @@ public class FTBUUniverseData
 		return pos.posX >= minX && pos.posX <= maxX && pos.posZ >= minZ && pos.posZ <= maxZ;
 	}
 
-	public static boolean claimChunk(IForgePlayer player, ChunkDimPos pos)
+	public static int getUpgradeId(IChunkUpgrade upgrade)
 	{
-		if (!FTBUConfig.world.chunk_claiming || !FTBUPermissions.allowDimension(player.getProfile(), pos.dim))
-		{
-			return false;
-		}
+		Integer id = UPGRADE_TO_ID.get(upgrade);
 
-		if (player.getTeam() == null)
+		if (id == null)
 		{
-			if (player.isOnline())
+			id = 0;
+
+			for (Integer id0 : UPGRADE_TO_ID.values())
 			{
-				FTBLibNotifications.NO_TEAM.send(player.getPlayer());
+				id = Math.max(id, id0);
 			}
 
-			return false;
+			id++;
+			SET_UPGRADE_ID.accept(upgrade, id);
 		}
 
-		int max = FTBUtilitiesAPI.API.getRankConfig(player.getProfile(), FTBUPermissions.CLAIMS_MAX_CHUNKS).getInt();
-		if (max == 0)
-		{
-			return false;
-		}
-
-		if (ClaimedChunks.INSTANCE.getChunks(player).size() >= max)
-		{
-			return false;
-		}
-
-		IForgePlayer chunkOwner = ClaimedChunks.INSTANCE.getChunkOwner(pos);
-
-		if (chunkOwner != null)
-		{
-			return false;
-		}
-
-		ClaimedChunk chunk = new ClaimedChunk(pos, player, 0);
-		ClaimedChunks.INSTANCE.setChunk(pos, chunk);
-		new ChunkModifiedEvent.Claimed(chunk).post();
-		return true;
+		return id;
 	}
 
-	public static boolean unclaimChunk(IForgePlayer player, ChunkDimPos pos)
+	@Nullable
+	public static IChunkUpgrade getUpgradeFromId(int id)
 	{
-		IClaimedChunk chunk = ClaimedChunks.INSTANCE.getChunk(pos);
-
-		if (chunk != null)
-		{
-			setLoaded(player, pos, false);
-			new ChunkModifiedEvent.Unclaimed(chunk).post();
-			ClaimedChunks.INSTANCE.setChunk(pos, null);
-			return true;
-		}
-
-		return false;
+		return id == 0 ? null : ID_TO_UPGRADE.get(id);
 	}
 
-	public static void unclaimAllChunks(IForgePlayer player, @Nullable Integer dim)
+	private static void registerChunkUpgrade(IChunkUpgrade upgrade)
 	{
-		for (IClaimedChunk chunk : ClaimedChunks.INSTANCE.getChunks(player))
+		if (!upgrade.isInternal())
 		{
-			ChunkDimPos pos = chunk.getPos();
-			if (dim == null || dim == pos.dim)
+			CHUNK_UPGRADES.put(upgrade.getName(), upgrade);
+		}
+
+		ALL_CHUNK_UPGRADES.put(upgrade.getName(), upgrade);
+	}
+
+	@SubscribeEvent
+	public static void onUniversePreLoaded(ForgeUniverseLoadedEvent.Pre event)
+	{
+		ClaimedChunks.INSTANCE = new ClaimedChunks();
+		CHUNK_UPGRADES.clear();
+		ALL_CHUNK_UPGRADES.clear();
+		new RegisterChunkUpgradesEvent(FTBUUniverseData::registerChunkUpgrade).post();
+	}
+
+	@SubscribeEvent
+	public static void onUniversePostLoaded(ForgeUniverseLoadedEvent.Post event)
+	{
+		NBTTagCompound nbt = event.getData(FTBLibIntegration.FTBU_DATA);
+		FTBUUniverseData.WARPS.deserializeNBT(nbt.getCompoundTag("Warps"));
+
+		ID_TO_UPGRADE.clear();
+		UPGRADE_TO_ID.clear();
+
+		NBTTagCompound upgrades = nbt.getCompoundTag("ChunkUpgrades");
+
+		for (String name : upgrades.getKeySet())
+		{
+			int id = upgrades.getInteger(name);
+			IChunkUpgrade upgrade = ALL_CHUNK_UPGRADES.get(name);
+
+			if (upgrade != null)
 			{
-				setLoaded(player, pos, false);
-				new ChunkModifiedEvent.Unclaimed(chunk).post();
-				ClaimedChunks.INSTANCE.setChunk(pos, null);
+				ID_TO_UPGRADE.put(id, upgrade);
+				UPGRADE_TO_ID.put(upgrade, id);
 			}
 		}
+
+		for (IChunkUpgrade upgrade : ALL_CHUNK_UPGRADES.values())
+		{
+			getUpgradeId(upgrade);
+		}
 	}
 
-	public static boolean setLoaded(IForgePlayer player, ChunkDimPos pos, boolean flag)
+	@SubscribeEvent
+	public static void onUniverseLoaded(ForgeUniverseLoadedEvent.Finished event)
 	{
-		IClaimedChunk chunk = ClaimedChunks.INSTANCE.getChunk(pos);
+		long start = event.getUniverse().getOverworld().getTotalWorldTime();
+		Backups.INSTANCE.nextBackup = start + FTBUConfig.backups.ticks();
 
-		if (chunk == null || flag == chunk.hasUpgrade(ChunkUpgrade.LOADED) || !player.equalsPlayer(chunk.getOwner()))
+		if (FTBUConfig.auto_shutdown.enabled && FTBUConfig.auto_shutdown.times.length > 0 && event.getUniverse().getServer().isDedicatedServer())
 		{
-			return false;
-		}
+			Calendar calendar = Calendar.getInstance();
+			int currentTime = calendar.get(Calendar.HOUR_OF_DAY) * 3600 + calendar.get(Calendar.MINUTE) * 60 + calendar.get(Calendar.SECOND);
+			int[] times = new int[FTBUConfig.auto_shutdown.times.length];
 
-		if (flag)
-		{
-			if (player.getTeam() == null)
+			for (int i = 0; i < times.length; i++)
 			{
-				if (player.isOnline())
+				String[] s = FTBUConfig.auto_shutdown.times[i].split(":", 2);
+
+				times[i] = Integer.parseInt(s[0]) * 3600 + Integer.parseInt(s[1]) * 60;
+
+				if (times[i] <= currentTime)
 				{
-					FTBLibNotifications.NO_TEAM.send(player.getPlayer());
+					times[i] += 24 * 3600;
 				}
-
-				return false;
 			}
 
-			if (!FTBUPermissions.allowDimension(player.getProfile(), pos.dim))
+			Arrays.sort(times);
+
+			for (int time : times)
 			{
-				return false;
-			}
-
-			int max = FTBUtilitiesAPI.API.getRankConfig(player.getProfile(), FTBUPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
-
-			if (max == 0)
-			{
-				return false;
-			}
-
-			int loadedChunks = 0;
-
-			for (IClaimedChunk c : ClaimedChunks.INSTANCE.getChunks(player))
-			{
-				if (c.hasUpgrade(ChunkUpgrade.LOADED))
+				if (time > currentTime)
 				{
-					loadedChunks++;
-
-					if (loadedChunks >= max)
-					{
-						return false;
-					}
+					FTBUUniverseData.shutdownTime = start + (time - currentTime) * CommonUtils.TICKS_SECOND;
+					FTBUFinals.LOGGER.info(FTBULang.TIMER_SHUTDOWN.translate(StringUtils.getTimeStringTicks(FTBUUniverseData.shutdownTime)));
+					break;
 				}
 			}
 		}
-		else
+
+		ClaimedChunks.INSTANCE.nextChunkloaderUpdate = start + 20L;
+		Badges.LOCAL_BADGES.clear();
+	}
+
+	@SubscribeEvent
+	public static void onUniverseSaved(ForgeUniverseSavedEvent event)
+	{
+		ClaimedChunks.INSTANCE.processQueue();
+
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setTag("Warps", FTBUUniverseData.WARPS.serializeNBT());
+
+		NBTTagCompound upgrades = new NBTTagCompound();
+
+		for (Map.Entry<IChunkUpgrade, Integer> entry : UPGRADE_TO_ID.entrySet())
 		{
-			new ChunkModifiedEvent.Unloaded(chunk).post();
+			upgrades.setInteger(entry.getKey().getName(), entry.getValue());
 		}
 
-		chunk.setHasUpgrade(ChunkUpgrade.LOADED, flag);
+		nbt.setTag("ChunkUpgrades", upgrades);
 
-		if (flag)
-		{
-			new ChunkModifiedEvent.Loaded(chunk).post();
-		}
+		//TODO: Save chat as json
 
-		return true;
+		event.setData(FTBLibIntegration.FTBU_DATA, nbt);
+	}
+
+	@SubscribeEvent
+	public static void onUniverseClosed(ForgeUniverseClosedEvent event)
+	{
+		ClaimedChunks.INSTANCE = null;
+		Badges.BADGE_CACHE.clear();
+		Badges.LOCAL_BADGES.clear();
 	}
 }

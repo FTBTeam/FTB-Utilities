@@ -14,7 +14,6 @@ import com.feed_the_beast.ftbl.lib.gui.SimpleButton;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiChunkSelectorBase;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
 import com.feed_the_beast.ftbl.lib.gui.misc.ThreadReloadChunkSelector;
-import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
 import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
@@ -22,6 +21,7 @@ import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksModify;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksRequest;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksUpdate;
+import com.feed_the_beast.ftbu.util.FTBUUniverseData;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -40,32 +40,30 @@ import java.util.UUID;
 public class GuiClaimedChunks extends GuiChunkSelectorBase
 {
 	public static GuiClaimedChunks instance;
-	private static final Map<UUID, ClaimedChunks.Team> TEAMS = new HashMap<>();
-	private static final ClaimedChunks.Data[] chunkData = new ClaimedChunks.Data[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
+	private static final Map<UUID, ClientClaimedChunks.Team> TEAMS = new HashMap<>();
+	private static final ClientClaimedChunks.Data[] chunkData = new ClientClaimedChunks.Data[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
 	private static int claimedChunks, loadedChunks, maxClaimedChunks, maxLoadedChunks;
-	private static final ClaimedChunks.Data NULL_CHUNK_DATA = new ClaimedChunks.Data();
+	private static final ClientClaimedChunks.Data NULL_CHUNK_DATA = new ClientClaimedChunks.Data();
 
 	private static final CachedVertexData AREA = new CachedVertexData(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 
 	static
 	{
-		NULL_CHUNK_DATA.owner = "";
-
 		for (int i = 0; i < chunkData.length; i++)
 		{
-			chunkData[i] = new ClaimedChunks.Data();
+			chunkData[i] = new ClientClaimedChunks.Data();
 		}
 	}
 
-	private static ClaimedChunks.Data getAt(int x, int y)
+	private static ClientClaimedChunks.Data getAt(int x, int y)
 	{
 		int i = x + y * GuiConfigs.CHUNK_SELECTOR_TILES_GUI;
 		return i < 0 || i >= chunkData.length ? NULL_CHUNK_DATA : chunkData[i];
 	}
 
-	private static boolean hasBorder(ClaimedChunks.Data data, ClaimedChunks.Data with)
+	private static boolean hasBorder(ClientClaimedChunks.Data data, ClientClaimedChunks.Data with)
 	{
-		return (data.flags != with.flags || data.team != with.team) && !with.hasUpgrade(ChunkUpgrade.LOADED);
+		return (!data.upgrades.equals(with.upgrades) || data.team != with.team) && !with.hasUpgrade(ChunkUpgrade.LOADED);
 	}
 
 	public static void setData(MessageClaimedChunksUpdate m)
@@ -90,7 +88,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 
 		AREA.reset();
 		EnumTeamColor prevCol = null;
-		ClaimedChunks.Data data;
+		ClientClaimedChunks.Data data;
 
 		for (int i = 0; i < chunkData.length; i++)
 		{
@@ -257,7 +255,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 	@Override
 	public void addButtonText(GuiChunkSelectorBase.MapButton button, List<String> list)
 	{
-		ClaimedChunks.Data data = chunkData[button.index];
+		ClientClaimedChunks.Data data = chunkData[button.index];
 
 		if (data.hasUpgrade(ChunkUpgrade.CLAIMED))
 		{
@@ -266,9 +264,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 
 			if (data.team.isAlly)
 			{
-				list.add(data.owner);
-
-				for (IChunkUpgrade upgrade : FTBUCommon.CHUNK_UPGRADES)
+				for (IChunkUpgrade upgrade : FTBUUniverseData.CHUNK_UPGRADES.values())
 				{
 					if (upgrade != null && data.hasUpgrade(upgrade))
 					{

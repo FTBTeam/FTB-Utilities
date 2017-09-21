@@ -86,6 +86,16 @@ public class ServerInfoPage
 			page.println(FTBLibLang.DIFFICULTY.textComponent(StringUtils.firstUppercase(ep.world.getDifficulty().toString().toLowerCase())));
 		}
 
+		if (FTBUConfig.server_info.motd && !FTBUConfig.login.getMOTD().isEmpty())
+		{
+			page.println(null);
+
+			for (ITextComponent component : FTBUConfig.login.getMOTD())
+			{
+				page.println(component);
+			}
+		}
+
 		//if (FTBUConfig.server_info.admin_quick_access)
 		//{
 		//FIXME: SERVER_INFO_ADMIN_QUICK_ACCESS

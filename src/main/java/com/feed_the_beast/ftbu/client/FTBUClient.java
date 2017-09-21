@@ -1,8 +1,10 @@
 package com.feed_the_beast.ftbu.client;
 
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
+import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbu.FTBUCommon;
 import com.feed_the_beast.ftbu.gui.GuiEditNBT;
+import com.feed_the_beast.ftbu.gui.GuiGuide;
 import com.feed_the_beast.ftbu.gui.Guides;
 import com.feed_the_beast.ftbu.integration.IJMIntegration;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
@@ -56,5 +58,11 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 	public void openNBTEditorGui(NBTTagCompound info, NBTTagCompound mainNbt)
 	{
 		new GuiEditNBT(info, mainNbt).openGui();
+	}
+
+	@Override
+	public void displayGuide(GuidePage page)
+	{
+		new GuiGuide(page).openGui();
 	}
 }

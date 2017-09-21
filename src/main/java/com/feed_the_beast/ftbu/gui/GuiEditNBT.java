@@ -26,8 +26,8 @@ import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.net.MessageEditNBTResponse;
-import gnu.trove.list.array.TByteArrayList;
-import gnu.trove.list.array.TIntArrayList;
+import it.unimi.dsi.fastutil.bytes.ByteArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -519,7 +519,7 @@ public class GuiEditNBT extends GuiBase
 		public void setTag(String k, @Nullable NBTBase base)
 		{
 			int id = Integer.parseInt(k);
-			TByteArrayList list1 = new TByteArrayList(list.getByteArray());
+			ByteArrayList list1 = new ByteArrayList(list.getByteArray());
 
 			if (id == -1)
 			{
@@ -534,10 +534,10 @@ public class GuiEditNBT extends GuiBase
 			}
 			else
 			{
-				list1.removeAt(id);
+				list1.rem(id);
 			}
 
-			list = new NBTTagByteArray(list1.toArray());
+			list = new NBTTagByteArray(list1.toByteArray());
 
 			if (parent != null)
 			{
@@ -554,12 +554,12 @@ public class GuiEditNBT extends GuiBase
 
 	public class ButtonNBTIntArray extends ButtonNBTCollection
 	{
-		private TIntArrayList list;
+		private IntArrayList list;
 
 		public ButtonNBTIntArray(ButtonNBTCollection p, String key, NBTTagIntArray l)
 		{
 			super(p, key, NBT_INT_ARRAY_OPEN, NBT_INT_ARRAY_CLOSED);
-			list = new TIntArrayList(l.getIntArray());
+			list = new IntArrayList(l.getIntArray());
 		}
 
 		@Override
@@ -599,12 +599,12 @@ public class GuiEditNBT extends GuiBase
 			}
 			else
 			{
-				list.removeAt(id);
+				list.rem(id);
 			}
 
 			if (parent != null)
 			{
-				parent.setTag(key, new NBTTagIntArray(list.toArray()));
+				parent.setTag(key, new NBTTagIntArray(list.toIntArray()));
 			}
 		}
 

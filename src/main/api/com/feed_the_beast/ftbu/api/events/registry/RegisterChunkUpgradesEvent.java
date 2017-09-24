@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbu.api.events.registry;
 
-import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
+import com.feed_the_beast.ftbu.api.chunks.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api.events.FTBUtilitiesEvent;
 
 import java.util.function.Consumer;
@@ -10,14 +10,14 @@ import java.util.function.Consumer;
  */
 public class RegisterChunkUpgradesEvent extends FTBUtilitiesEvent
 {
-	private final Consumer<IChunkUpgrade> callback;
+	private final Consumer<ChunkUpgrade> callback;
 
-	public RegisterChunkUpgradesEvent(Consumer<IChunkUpgrade> c)
+	public RegisterChunkUpgradesEvent(Consumer<ChunkUpgrade> c)
 	{
 		callback = c;
 	}
 
-	public void register(IChunkUpgrade entry)
+	public void register(ChunkUpgrade entry)
 	{
 		callback.accept(entry);
 	}

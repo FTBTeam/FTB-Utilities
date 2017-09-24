@@ -8,8 +8,8 @@ import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
-import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
+import com.feed_the_beast.ftbu.api.chunks.ChunkUpgrade;
+import com.feed_the_beast.ftbu.api_impl.ChunkUpgrades;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
@@ -102,7 +102,7 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 						{
 							for (int j = 4; j < ai.length; j++)
 							{
-								IChunkUpgrade upgrade = FTBUUniverseData.getUpgradeFromId(ai[j]);
+								ChunkUpgrade upgrade = FTBUUniverseData.getUpgradeFromId(ai[j]);
 
 								if (upgrade != null)
 								{
@@ -114,7 +114,7 @@ public class FTBUPlayerData implements INBTSerializable<NBTTagCompound>
 						{
 							if (Bits.getFlag(ai[3], 1))
 							{
-								chunk.setHasUpgrade(ChunkUpgrade.LOADED, true);
+								chunk.setHasUpgrade(ChunkUpgrades.LOADED, true);
 							}
 						}
 					}

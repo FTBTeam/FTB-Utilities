@@ -13,7 +13,7 @@ import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
-import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
+import com.feed_the_beast.ftbu.api.chunks.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api.events.registry.RegisterChunkUpgradesEvent;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
@@ -39,12 +39,11 @@ public class FTBUUniverseData
 	public static long shutdownTime;
 	public static final BlockDimPosStorage WARPS = new BlockDimPosStorage();
 	public static final ChatHistory GENERAL_CHAT = new ChatHistory(() -> FTBUConfig.chat.general_history_limit);
-	public static final Map<String, IChunkUpgrade> CHUNK_UPGRADES = new HashMap<>();
-	public static final Map<String, IChunkUpgrade> ALL_CHUNK_UPGRADES = new HashMap<>();
-	public static final Map<Integer, IChunkUpgrade> ID_TO_UPGRADE = new HashMap<>();
-	public static final Map<IChunkUpgrade, Integer> UPGRADE_TO_ID = new HashMap<>();
+	public static final Map<String, ChunkUpgrade> CHUNK_UPGRADES = new HashMap<>();
+	public static final Map<Integer, ChunkUpgrade> ID_TO_UPGRADE = new HashMap<>();
+	public static final Map<ChunkUpgrade, Integer> UPGRADE_TO_ID = new HashMap<>();
 
-	public static final BiConsumer<IChunkUpgrade, Integer> SET_UPGRADE_ID = (upgrade, id) ->
+	public static final BiConsumer<ChunkUpgrade, Integer> SET_UPGRADE_ID = (upgrade, id) ->
 	{
 		UPGRADE_TO_ID.put(upgrade, id);
 		ID_TO_UPGRADE.put(id, upgrade);
@@ -73,7 +72,7 @@ public class FTBUUniverseData
 		return pos.posX >= minX && pos.posX <= maxX && pos.posZ >= minZ && pos.posZ <= maxZ;
 	}
 
-	public static int getUpgradeId(IChunkUpgrade upgrade)
+	public static int getUpgradeId(ChunkUpgrade upgrade)
 	{
 		Integer id = UPGRADE_TO_ID.get(upgrade);
 
@@ -94,19 +93,14 @@ public class FTBUUniverseData
 	}
 
 	@Nullable
-	public static IChunkUpgrade getUpgradeFromId(int id)
+	public static ChunkUpgrade getUpgradeFromId(int id)
 	{
 		return id == 0 ? null : ID_TO_UPGRADE.get(id);
 	}
 
-	private static void registerChunkUpgrade(IChunkUpgrade upgrade)
+	private static void registerChunkUpgrade(ChunkUpgrade upgrade)
 	{
-		if (!upgrade.isInternal())
-		{
-			CHUNK_UPGRADES.put(upgrade.getName(), upgrade);
-		}
-
-		ALL_CHUNK_UPGRADES.put(upgrade.getName(), upgrade);
+		CHUNK_UPGRADES.put(upgrade.getName(), upgrade);
 	}
 
 	@SubscribeEvent
@@ -114,7 +108,6 @@ public class FTBUUniverseData
 	{
 		ClaimedChunks.INSTANCE = new ClaimedChunks();
 		CHUNK_UPGRADES.clear();
-		ALL_CHUNK_UPGRADES.clear();
 		new RegisterChunkUpgradesEvent(FTBUUniverseData::registerChunkUpgrade).post();
 	}
 
@@ -132,7 +125,7 @@ public class FTBUUniverseData
 		for (String name : upgrades.getKeySet())
 		{
 			int id = upgrades.getInteger(name);
-			IChunkUpgrade upgrade = ALL_CHUNK_UPGRADES.get(name);
+			ChunkUpgrade upgrade = CHUNK_UPGRADES.get(name);
 
 			if (upgrade != null)
 			{
@@ -141,7 +134,7 @@ public class FTBUUniverseData
 			}
 		}
 
-		for (IChunkUpgrade upgrade : ALL_CHUNK_UPGRADES.values())
+		for (ChunkUpgrade upgrade : CHUNK_UPGRADES.values())
 		{
 			getUpgradeId(upgrade);
 		}
@@ -198,7 +191,7 @@ public class FTBUUniverseData
 
 		NBTTagCompound upgrades = new NBTTagCompound();
 
-		for (Map.Entry<IChunkUpgrade, Integer> entry : UPGRADE_TO_ID.entrySet())
+		for (Map.Entry<ChunkUpgrade, Integer> entry : UPGRADE_TO_ID.entrySet())
 		{
 			upgrades.setInteger(entry.getKey().getName(), entry.getValue());
 		}

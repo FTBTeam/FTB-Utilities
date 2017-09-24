@@ -10,7 +10,7 @@ import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
-import com.feed_the_beast.ftbu.api.chunks.IChunkUpgrade;
+import com.feed_the_beast.ftbu.api.chunks.ChunkUpgrade;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunk;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
@@ -73,9 +73,9 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 			chunkNBT.setInteger("x", pos.posX);
 			chunkNBT.setInteger("z", pos.posZ);
 
-			for (IChunkUpgrade upgrade : FTBUUniverseData.CHUNK_UPGRADES.values())
+			for (ChunkUpgrade upgrade : FTBUUniverseData.CHUNK_UPGRADES.values())
 			{
-				if (upgrade != null && !upgrade.isInternal() && chunk.hasUpgrade(upgrade))
+				if (!upgrade.isInternal() && chunk.hasUpgrade(upgrade))
 				{
 					chunkNBT.setBoolean(upgrade.getName(), true);
 				}
@@ -116,9 +116,9 @@ public class FTBUTeamData implements INBTSerializable<NBTTagCompound>
 				NBTTagCompound chunkNBT = list.getCompoundTagAt(i);
 				ClaimedChunk chunk = new ClaimedChunk(new ChunkDimPos(new ChunkPos(chunkNBT.getInteger("x"), chunkNBT.getInteger("z")), dimInt), this);
 
-				for (IChunkUpgrade upgrade : FTBUUniverseData.CHUNK_UPGRADES.values())
+				for (ChunkUpgrade upgrade : FTBUUniverseData.CHUNK_UPGRADES.values())
 				{
-					if (upgrade != null && !upgrade.isInternal() && chunkNBT.getBoolean(upgrade.getName()))
+					if (!upgrade.isInternal() && chunkNBT.getBoolean(upgrade.getName()))
 					{
 						chunk.setHasUpgrade(upgrade, true);
 					}

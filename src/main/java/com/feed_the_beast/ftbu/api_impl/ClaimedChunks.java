@@ -4,11 +4,10 @@ import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
+import com.feed_the_beast.ftbl.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
 import com.feed_the_beast.ftbl.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbu.FTBUConfig;
@@ -18,6 +17,7 @@ import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunks;
 import com.feed_the_beast.ftbu.api.events.ChunkModifiedEvent;
+import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksUpdate;
 import com.feed_the_beast.ftbu.util.FTBUTeamData;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
@@ -89,7 +89,7 @@ public class ClaimedChunks implements IClaimedChunks
 
 	private boolean shouldForce(ClaimedChunk chunk)
 	{
-		if (!FTBUConfig.world.chunk_loading || !chunk.hasUpgrade(ChunkUpgrade.LOADED))
+		if (!FTBUConfig.world.chunk_loading || !chunk.hasUpgrade(ChunkUpgrades.LOADED))
 		{
 			return false;
 		}
@@ -120,6 +120,8 @@ public class ClaimedChunks implements IClaimedChunks
 
 				markDirty();
 			}
+
+			pendingChunks.clear();
 		}
 
 		if (!map.isEmpty() && map.values().removeIf(REMOVE_CHUNK))
@@ -179,16 +181,15 @@ public class ClaimedChunks implements IClaimedChunks
 						FTBUFinals.LOGGER.info(chunk.getTeam().getTitle() + (force ? " forced " : " unforced ") + pos.posX + "," + pos.posZ + " in " + dimName); //LANG
 					}
 				}
+			}
 
-				if (!prevForced.equals(forced))
-				{
-					for (EntityPlayerMP player : ServerUtils.getServer().getPlayerList().getPlayers())
-					{
-						int startX = MathUtils.chunk(player.posX) - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2;
-						int startZ = MathUtils.chunk(player.posZ) - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2;
-						new MessageClaimedChunksUpdate(startX, startZ, player).sendTo(player);
-					}
-				}
+			for (EntityPlayerMP player : ServerUtils.getServer().getPlayerList().getPlayers())
+			{
+				ChunkDimPos playerPos = new ChunkDimPos(player);
+				int startX = playerPos.posX - ChunkSelectorMap.TILES_GUI2;
+				int startZ = playerPos.posZ - ChunkSelectorMap.TILES_GUI2;
+				new MessageClaimedChunksUpdate(startX, startZ, player).sendTo(player);
+				FTBUPlayerEventHandler.updateChunkMessage(player, playerPos);
 			}
 
 			isDirty = false;
@@ -378,7 +379,7 @@ public class ClaimedChunks implements IClaimedChunks
 	{
 		ClaimedChunk chunk = getChunk(pos);
 
-		if (chunk == null || loaded == chunk.hasUpgrade(ChunkUpgrade.LOADED) || !chunk.getTeam().equalsTeam(player.getTeam()))
+		if (chunk == null || loaded == chunk.hasUpgrade(ChunkUpgrades.LOADED) || !chunk.getTeam().equalsTeam(player.getTeam()))
 		{
 			return false;
 		}
@@ -411,7 +412,7 @@ public class ClaimedChunks implements IClaimedChunks
 
 			for (ClaimedChunk c : getTeamChunks(player.getTeam()))
 			{
-				if (c.hasUpgrade(ChunkUpgrade.LOADED))
+				if (c.hasUpgrade(ChunkUpgrades.LOADED))
 				{
 					loadedChunks++;
 
@@ -427,7 +428,7 @@ public class ClaimedChunks implements IClaimedChunks
 			new ChunkModifiedEvent.Unloaded(chunk).post();
 		}
 
-		chunk.setHasUpgrade(ChunkUpgrade.LOADED, loaded);
+		chunk.setHasUpgrade(ChunkUpgrades.LOADED, loaded);
 
 		if (loaded)
 		{

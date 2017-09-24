@@ -6,13 +6,11 @@ import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.io.DataIn;
 import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
-import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
-import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
 import com.feed_the_beast.ftbu.util.FTBUTeamData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.ChunkPos;
@@ -104,8 +102,5 @@ public class MessageClaimedChunksModify extends MessageToServer<MessageClaimedCh
 					break;
 			}
 		}
-
-		FTBUPlayerEventHandler.updateChunkMessage(player, new ChunkDimPos(MathUtils.chunk(player.posX), MathUtils.chunk(player.posZ), player.dimension));
-		new MessageClaimedChunksUpdate(m.startX, m.startZ, player).sendTo(player);
 	}
 }

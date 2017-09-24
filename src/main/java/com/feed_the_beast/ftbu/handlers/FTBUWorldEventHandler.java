@@ -11,7 +11,7 @@ import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
-import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
+import com.feed_the_beast.ftbu.api_impl.ChunkUpgrades;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.cmd.CmdShutdown;
 import com.feed_the_beast.ftbu.util.FTBUUniverseData;
@@ -54,7 +54,7 @@ public class FTBUWorldEventHandler
 		else
 		{
 			IClaimedChunk chunk = ClaimedChunks.INSTANCE.getChunk(pos);
-			return chunk == null || !chunk.hasUpgrade(ChunkUpgrade.NO_EXPLOSIONS);
+			return chunk == null || !chunk.hasUpgrade(ChunkUpgrades.NO_EXPLOSIONS);
 		}
 	};
 

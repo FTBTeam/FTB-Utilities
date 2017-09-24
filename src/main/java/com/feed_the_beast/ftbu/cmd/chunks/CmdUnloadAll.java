@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunk;
-import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
+import com.feed_the_beast.ftbu.api_impl.ChunkUpgrades;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -60,7 +60,7 @@ public class CmdUnloadAll extends CmdBase
 		{
 			if (!allDimensions || currentDim == chunk.getPos().dim)
 			{
-				chunk.setHasUpgrade(ChunkUpgrade.LOADED, false);
+				chunk.setHasUpgrade(ChunkUpgrades.LOADED, false);
 			}
 		}
 

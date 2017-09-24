@@ -14,12 +14,12 @@ import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuideConfig;
 import com.feed_the_beast.ftbl.lib.guide.ButtonGuidePage;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.icon.ColoredIcon;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbu.FTBUFinals;
+import com.feed_the_beast.ftbu.client.GuideConfig;
 import net.minecraft.client.renderer.GlStateManager;
 
 import javax.annotation.Nullable;

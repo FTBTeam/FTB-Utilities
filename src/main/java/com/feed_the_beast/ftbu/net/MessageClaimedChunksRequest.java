@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbu.net;
 
+import com.feed_the_beast.ftbl.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftbl.lib.io.DataIn;
 import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
@@ -24,7 +25,7 @@ public class MessageClaimedChunksRequest extends MessageToServer<MessageClaimedC
 
 	public MessageClaimedChunksRequest(Entity entity)
 	{
-		this(MathUtils.chunk(entity.posX) - 7, MathUtils.chunk(entity.posZ) - 7);
+		this(MathUtils.chunk(entity.posX) - ChunkSelectorMap.TILES_GUI2, MathUtils.chunk(entity.posZ) - ChunkSelectorMap.TILES_GUI2);
 	}
 
 	@Override

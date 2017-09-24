@@ -37,21 +37,21 @@ public interface FTBULang
 	LangKey HOME_CROSS_DIM = LangKey.of("ftbu.lang.homes.cross_dim");
 	LangKey HOME_LIMIT = LangKey.of("ftbu.lang.homes.limit");
 
-	LangKey BACKUP_START = LangKey.of("ftbu.backup.start", String.class);
-	LangKey BACKUP_STOP = LangKey.of("ftbu.backup.stop");
-	LangKey BACKUP_END_1 = LangKey.of("ftbu.backup.end_1", String.class);
-	LangKey BACKUP_END_2 = LangKey.of("ftbu.backup.end_2", String.class, String.class);
-	LangKey BACKUP_FAIL = LangKey.of("ftbu.backup.fail", String.class);
-	LangKey BACKUP_MANUAL_LAUNCH = LangKey.of("ftbu.backup.manual_launch", String.class);
-	LangKey BACKUP_ALREADY_RUNNING = LangKey.of("ftbu.backup.already_running");
-	LangKey BACKUP_NOT_RUNNING = LangKey.of("ftbu.backup.not_running");
-	LangKey BACKUP_SIZE = LangKey.of("ftbu.backup.size", String.class, String.class);
-	LangKey BACKUP_SAVING_FAILED = LangKey.of("ftbu.backup.saving_failed");
-	LangKey BACKUP_DELETING_OLD = LangKey.of("ftbu.backup.deleting_old", String.class);
-	LangKey BACKUP_BACKING_UP_FILES = LangKey.of("ftbu.backup.backing_up_files", Integer.class);
-	LangKey BACKUP_COMPRESSING_FILES = LangKey.of("ftbu.backup.compressing_files", Integer.class);
-	LangKey BACKUP_COMPRESSING_DONE = LangKey.of("ftbu.backup.compressing_done", String.class, String.class);
-	LangKey BACKUP_CREATED_FROM = LangKey.of("ftbu.backup.created_from", String.class, String.class);
+	LangKey BACKUP_START = LangKey.of("ftbu.lang.backup.start", String.class);
+	LangKey BACKUP_STOP = LangKey.of("ftbu.lang.backup.stop");
+	LangKey BACKUP_END_1 = LangKey.of("ftbu.lang.backup.end_1", String.class);
+	LangKey BACKUP_END_2 = LangKey.of("ftbu.lang.backup.end_2", String.class, String.class);
+	LangKey BACKUP_FAIL = LangKey.of("ftbu.lang.backup.fail", String.class);
+	LangKey BACKUP_MANUAL_LAUNCH = LangKey.of("ftbu.lang.backup.manual_launch", String.class);
+	LangKey BACKUP_ALREADY_RUNNING = LangKey.of("ftbu.lang.backup.already_running");
+	LangKey BACKUP_NOT_RUNNING = LangKey.of("ftbu.lang.backup.not_running");
+	LangKey BACKUP_SIZE = LangKey.of("ftbu.lang.backup.size", String.class, String.class);
+	LangKey BACKUP_SAVING_FAILED = LangKey.of("ftbu.lang.backup.saving_failed");
+	LangKey BACKUP_DELETING_OLD = LangKey.of("ftbu.lang.backup.deleting_old", String.class);
+	LangKey BACKUP_BACKING_UP_FILES = LangKey.of("ftbu.lang.backup.backing_up_files", Integer.class);
+	LangKey BACKUP_COMPRESSING_FILES = LangKey.of("ftbu.lang.backup.compressing_files", Integer.class);
+	LangKey BACKUP_COMPRESSING_DONE = LangKey.of("ftbu.lang.backup.compressing_done", String.class, String.class);
+	LangKey BACKUP_CREATED_FROM = LangKey.of("ftbu.lang.backup.created_from", String.class, String.class);
 
 	LangKey RANK_ID_EXISTS = LangKey.of("ftbu.lang.rank.id_exists", String.class);
 	LangKey RANK_NOT_FOUND = LangKey.of("ftbu.lang.rank.not_found", String.class);

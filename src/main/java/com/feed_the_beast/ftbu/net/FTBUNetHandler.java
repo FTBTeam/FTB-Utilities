@@ -19,7 +19,5 @@ public class FTBUNetHandler
 		NET.register(8, new MessageEditNBT());
 		NET.register(9, new MessageEditNBTResponse());
 		NET.register(10, new MessageOpenClaimedChunksGui());
-		NET.register(11, new MessageJMRequest());
-		NET.register(12, new MessageJMUpdate());
 	}
 }

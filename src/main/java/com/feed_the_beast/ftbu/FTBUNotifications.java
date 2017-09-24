@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
+import com.feed_the_beast.ftbu.api_impl.ChunkUpgrades;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
@@ -18,5 +18,5 @@ public class FTBUNotifications
 	public static final Notification CHUNK_UNCLAIMED = Notification.of(FTBUFinals.get("chunk_modified"), new TextComponentTranslation("ftbu.lang.chunks.chunk_unclaimed"));
 	public static final Notification CHUNK_LOADED = Notification.of(FTBUFinals.get("chunk_modified"), new TextComponentTranslation("ftbu.lang.chunks.chunk_loaded"));
 	public static final Notification CHUNK_UNLOADED = Notification.of(FTBUFinals.get("chunk_modified"), new TextComponentTranslation("ftbu.lang.chunks.chunk_unloaded"));
-	public static final Notification WILDERNESS = Notification.of(FTBUFinals.get("chunk_changed"), StringUtils.color(ChunkUpgrade.WILDERNESS.getLangKey().textComponent(), TextFormatting.DARK_GREEN));
+	public static final Notification WILDERNESS = Notification.of(FTBUFinals.get("chunk_changed"), StringUtils.color(ChunkUpgrades.WILDERNESS.getLangKey().textComponent(), TextFormatting.DARK_GREEN));
 }

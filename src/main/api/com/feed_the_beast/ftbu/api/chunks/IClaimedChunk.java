@@ -14,7 +14,7 @@ public interface IClaimedChunk
 
 	IForgeTeam getTeam();
 
-	boolean hasUpgrade(IChunkUpgrade upgrade);
+	boolean hasUpgrade(ChunkUpgrade upgrade);
 
-	boolean setHasUpgrade(IChunkUpgrade upgrade, boolean v);
+	boolean setHasUpgrade(ChunkUpgrade upgrade, boolean v);
 }

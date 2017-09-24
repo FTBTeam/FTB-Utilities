@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbu.integration;
 
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
-import com.feed_the_beast.ftbu.api_impl.ChunkUpgrade;
+import com.feed_the_beast.ftbu.api_impl.ChunkUpgrades;
 import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.client.FTBUClientConfig;
 import com.feed_the_beast.ftbu.gui.ClientClaimedChunks;
@@ -19,6 +19,7 @@ import journeymap.client.api.util.PolygonHelper;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.TextFormatting;
 
+import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -75,7 +76,7 @@ public class JMIntegration implements IClientPlugin, IJMIntegration
 	}
 
 	@Override
-	public void chunkChanged(ChunkPos pos, ClientClaimedChunks.Data chunk)
+	public void chunkChanged(ChunkPos pos, @Nullable ClientClaimedChunks.ChunkData chunk)
 	{
 		if (!POLYGONS.isEmpty() && (!FTBUClientConfig.general.journeymap_overlay || !clientAPI.playerAccepts(FTBUFinals.MOD_ID, DisplayType.Polygon)))
 		{
@@ -91,13 +92,13 @@ public class JMIntegration implements IClientPlugin, IJMIntegration
 			{
 				clientAPI.remove(p);
 
-				if (!chunk.hasUpgrade(ChunkUpgrade.CLAIMED))
+				if (chunk == null || !chunk.hasUpgrade(ChunkUpgrades.CLAIMED))
 				{
 					POLYGONS.remove(pos);
 				}
 			}
 
-			if (chunk.hasUpgrade(ChunkUpgrade.CLAIMED))
+			if (chunk != null && chunk.hasUpgrade(ChunkUpgrades.CLAIMED))
 			{
 				int dim = 0;
 
@@ -110,7 +111,7 @@ public class JMIntegration implements IClientPlugin, IJMIntegration
 				shapeProperties.setFillColor(chunk.team.color.getColor().rgba());
 
 				p = new PolygonOverlay(FTBUFinals.MOD_ID, "claimed_" + dim + '_' + pos.x + '_' + pos.z, dim, shapeProperties, poly);
-				p.setOverlayGroupName("Claimed Chunks").setTitle(chunk.team.formattedName + '\n' + TextFormatting.GREEN + ChunkUpgrade.CLAIMED.getLangKey().translate());
+				p.setOverlayGroupName("Claimed Chunks").setTitle(chunk.team.formattedName + '\n' + TextFormatting.GREEN + ChunkUpgrades.CLAIMED.getLangKey().translate());
 				POLYGONS.put(pos, p);
 				clientAPI.show(p);
 			}

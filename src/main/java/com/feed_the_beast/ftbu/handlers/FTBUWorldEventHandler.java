@@ -69,23 +69,25 @@ public class FTBUWorldEventHandler
 	}
 
 	@SubscribeEvent
-	public static void onTickEvent(TickEvent.WorldTickEvent event)
+	public static void onTickEvent(TickEvent.ServerTickEvent event)
 	{
-		if (event.world.isRemote || event.world.provider.getDimension() != 0 || !FTBLibAPI.API.hasUniverse())
+		if (!FTBLibAPI.API.hasUniverse())
 		{
 			return;
 		}
+
+		MinecraftServer server = ServerUtils.getServer();
 
 		if (event.phase == TickEvent.Phase.START)
 		{
 			if (ClaimedChunks.INSTANCE != null)
 			{
-				ClaimedChunks.INSTANCE.update(event.world.getMinecraftServer(), event.world.getTotalWorldTime());
+				ClaimedChunks.INSTANCE.update(server, server.getWorld(0).getTotalWorldTime());
 			}
 		}
 		else
 		{
-			long now = event.world.getTotalWorldTime();
+			long now = server.getWorld(0).getTotalWorldTime();
 
 			if (FTBUUniverseData.shutdownTime > 0L)
 			{
@@ -104,7 +106,6 @@ public class FTBUWorldEventHandler
 
 			if (Backups.INSTANCE.nextBackup > 0L && Backups.INSTANCE.nextBackup <= now)
 			{
-				MinecraftServer server = ServerUtils.getServer();
 				Backups.INSTANCE.run(server, server, "");
 			}
 

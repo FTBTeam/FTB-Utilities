@@ -30,7 +30,7 @@ public class CmdGet extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		checkArgs(args, 1, "<player>");
+		checkArgs(sender, args, 1);
 		IForgePlayer p = getForgePlayer(args[0]);
 		IRank rank = FTBUtilitiesAPI.API.getRank(p.getProfile());
 		ITextComponent name = new TextComponentString(rank.getName() + " - " + rank.getFormattedName(p.getName()));

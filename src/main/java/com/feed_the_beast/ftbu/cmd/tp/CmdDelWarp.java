@@ -32,7 +32,7 @@ public class CmdDelWarp extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		checkArgs(args, 1, "<warp>");
+		checkArgs(sender, args, 1);
 
 		args[0] = args[0].toLowerCase();
 

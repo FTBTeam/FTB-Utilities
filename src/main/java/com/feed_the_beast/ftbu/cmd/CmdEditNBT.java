@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
+import com.feed_the_beast.ftbl.lib.cmd.CmdTreeBase;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbu.net.MessageEditNBT;
 import net.minecraft.command.CommandException;
@@ -13,49 +14,139 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 /**
  * @author LatvianModder
  */
-public class CmdEditNBT extends CmdBase
+public class CmdEditNBT extends CmdTreeBase
 {
 	public static Map<UUID, NBTTagCompound> EDITING = new HashMap<>();
 
 	public CmdEditNBT()
 	{
-		super("nbtedit", Level.OP);
+		super("nbtedit");
+		addSubcommand(new CmdTile());
+		addSubcommand(new CmdEntity());
+		addSubcommand(new CmdPlayer());
 	}
 
-	@Override
-	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+	public static class CmdNBT extends CmdBase
 	{
-		if (args.length == 1)
+		private CmdNBT(String id)
 		{
-			return getListOfStringsMatchingLastWord(args, "tile", "player", "entity");
+			super(id, Level.OP);
 		}
 
-		return super.getTabCompletions(server, sender, args, pos);
+		@Override
+		public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+		{
+			EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+			NBTTagCompound info = new NBTTagCompound();
+			NBTTagCompound nbt = new NBTTagCompound();
+			editNBT(player, info, nbt, args);
+
+			if (info.hasKey("type"))
+			{
+				info.setLong("random", MathUtils.RAND.nextLong());
+				EDITING.put(player.getGameProfile().getId(), info);
+				new MessageEditNBT(info, nbt).sendTo(player);
+			}
+		}
+
+		public void editNBT(EntityPlayerMP player, NBTTagCompound info, NBTTagCompound nbt, String[] args) throws CommandException
+		{
+		}
 	}
 
-	@Override
-	public boolean isUsernameIndex(String[] args, int i)
+	private static class CmdTile extends CmdNBT
 	{
-		return i == 1 && args[0].equals("player");
+		private CmdTile()
+		{
+			super("tile");
+		}
+
+		@Override
+		public void editNBT(EntityPlayerMP player, NBTTagCompound info, NBTTagCompound nbt, String[] args) throws CommandException
+		{
+			checkArgs(player, args, 3);
+			int x = parseInt(args[0]);
+			int y = parseInt(args[1]);
+			int z = parseInt(args[2]);
+
+			TileEntity tile = player.getEntityWorld().getTileEntity(new BlockPos(x, y, z));
+
+			if (tile != null)
+			{
+				info.setString("type", "tile");
+				info.setInteger("x", x);
+				info.setInteger("y", y);
+				info.setInteger("z", z);
+				tile.writeToNBT(nbt);
+				nbt.removeTag("x");
+				nbt.removeTag("y");
+				nbt.removeTag("z");
+				info.setString("id", nbt.getString("id"));
+				nbt.removeTag("id");
+			}
+		}
+	}
+
+	private static class CmdEntity extends CmdNBT
+	{
+		private CmdEntity()
+		{
+			super("entity");
+		}
+
+		@Override
+		public void editNBT(EntityPlayerMP player, NBTTagCompound info, NBTTagCompound nbt, String[] args) throws CommandException
+		{
+			checkArgs(player, args, 1);
+			int id = parseInt(args[1]);
+			Entity entity = player.getEntityWorld().getEntityByID(id);
+
+			if (entity != null)
+			{
+				info.setString("type", "entity");
+				info.setInteger("id", id);
+				entity.writeToNBT(nbt);
+			}
+		}
+	}
+
+	private static class CmdPlayer extends CmdNBT
+	{
+		private CmdPlayer()
+		{
+			super("player");
+		}
+
+		@Override
+		public boolean isUsernameIndex(String[] args, int i)
+		{
+			return i == 0;
+		}
+
+		@Override
+		public void editNBT(EntityPlayerMP player, NBTTagCompound info, NBTTagCompound nbt, String[] args) throws CommandException
+		{
+			checkArgs(player, args, 1);
+			EntityPlayerMP player1 = getPlayer(player.mcServer, player, args[1]);
+			info.setString("type", "player");
+			info.setUniqueId("id", player1.getGameProfile().getId());
+			player1.writeToNBT(nbt);
+		}
 	}
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-		NBTTagCompound info = new NBTTagCompound(), mainNbt = null;
-
 		if (args.length == 0)
 		{
+			EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 			RayTraceResult ray = MathUtils.rayTrace(player, false);
 
 			if (ray != null)
@@ -64,103 +155,24 @@ public class CmdEditNBT extends CmdBase
 				{
 					case BLOCK:
 					{
-						TileEntity tile = player.getEntityWorld().getTileEntity(ray.getBlockPos());
-
-						if (tile != null)
-						{
-							info.setString("type", "tile");
-							info.setInteger("x", tile.getPos().getX());
-							info.setInteger("y", tile.getPos().getY());
-							info.setInteger("z", tile.getPos().getZ());
-							mainNbt = tile.serializeNBT();
-							mainNbt.removeTag("x");
-							mainNbt.removeTag("y");
-							mainNbt.removeTag("z");
-							info.setString("id", mainNbt.getString("id"));
-							mainNbt.removeTag("id");
-						}
-
-						break;
+						getCommandMap().get("tile").execute(server, sender, new String[] {Integer.toString(ray.getBlockPos().getX()), Integer.toString(ray.getBlockPos().getY()), Integer.toString(ray.getBlockPos().getZ())});
+						return;
 					}
 					case ENTITY:
 					{
-						info.setString("type", "entity");
-						info.setInteger("id", ray.entityHit.getEntityId());
-						mainNbt = ray.entityHit.serializeNBT();
-						break;
+						getCommandMap().get("entity").execute(server, sender, new String[] {Integer.toString(ray.entityHit.getEntityId())});
+						return;
 					}
 				}
 			}
 		}
-		else
+		if (args.length == 1 && args[0].equals("me"))
 		{
-			switch (args[0])
-			{
-				case "me":
-				{
-					info.setString("type", "player");
-					info.setUniqueId("id", player.getGameProfile().getId());
-					mainNbt = new NBTTagCompound();
-					player.writeToNBT(mainNbt);
-					break;
-				}
-				case "tile":
-				{
-					checkArgs(args, 4, "/ftb nbtedit tile <x> <y> <z>");
-					int x = parseInt(args[1]);
-					int y = parseInt(args[2]);
-					int z = parseInt(args[3]);
-
-					TileEntity tile = player.getEntityWorld().getTileEntity(new BlockPos(x, y, z));
-
-					if (tile != null)
-					{
-						info.setString("type", "tile");
-						info.setInteger("x", x);
-						info.setInteger("y", y);
-						info.setInteger("z", z);
-						mainNbt = tile.serializeNBT();
-						mainNbt.removeTag("x");
-						mainNbt.removeTag("y");
-						mainNbt.removeTag("z");
-						info.setString("id", mainNbt.getString("id"));
-						mainNbt.removeTag("id");
-					}
-
-					break;
-				}
-				case "entity":
-				{
-					checkArgs(args, 2, "/ftb nbtedit entity <id>");
-					int id = parseInt(args[1]);
-					Entity entity = player.getEntityWorld().getEntityByID(id);
-
-					if (entity != null)
-					{
-						info.setString("type", "entity");
-						info.setInteger("id", id);
-						mainNbt = entity.serializeNBT();
-					}
-
-					break;
-				}
-				case "player":
-				{
-					checkArgs(args, 2, "/ftb nbtedit entity <player>");
-					EntityPlayerMP player1 = getPlayer(server, sender, args[1]);
-					info.setString("type", "player");
-					info.setUniqueId("id", player1.getGameProfile().getId());
-					mainNbt = player1.serializeNBT();
-					break;
-				}
-			}
+			EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+			getCommandMap().get("player").execute(server, sender, new String[] {player.getName()});
+			return;
 		}
 
-		if (mainNbt != null)
-		{
-			info.setLong("random", MathUtils.RAND.nextLong());
-			EDITING.put(player.getGameProfile().getId(), info);
-			new MessageEditNBT(info, mainNbt).sendTo(player);
-		}
+		super.execute(server, sender, args);
 	}
 }

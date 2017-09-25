@@ -18,7 +18,7 @@ public class CmdSetHour extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		checkArgs(args, 1, "<hour>");
+		checkArgs(sender, args, 1);
 		server.getEntityWorld().getWorldInfo().setWorldTime(((server.getEntityWorld().getWorldInfo().getWorldTime() / 24000L) * 24000L) + 24000L + parseInt(args[0]) * 1000);
 	}
 }

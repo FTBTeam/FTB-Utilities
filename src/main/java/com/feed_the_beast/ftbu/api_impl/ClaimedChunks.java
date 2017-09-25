@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbu.api_impl;
 
-import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
@@ -20,14 +19,15 @@ import com.feed_the_beast.ftbu.api.events.ChunkModifiedEvent;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksUpdate;
 import com.feed_the_beast.ftbu.util.FTBUTeamData;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumHand;
+import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
@@ -78,6 +78,7 @@ public class ClaimedChunks implements IClaimedChunks
 	private final Map<ChunkDimPos, ClaimedChunk> map = new HashMap<>();
 	private final Collection<ChunkDimPos> forced = new HashSet<>();
 	private final IntOpenHashSet forcedDimensions = new IntOpenHashSet();
+	private final Int2ObjectOpenHashMap<World> worldMap = new Int2ObjectOpenHashMap<>();
 	public long nextChunkloaderUpdate;
 	private boolean isDirty = true;
 
@@ -85,24 +86,6 @@ public class ClaimedChunks implements IClaimedChunks
 	public void markDirty()
 	{
 		isDirty = true;
-	}
-
-	private boolean shouldForce(ClaimedChunk chunk)
-	{
-		if (!FTBUConfig.world.chunk_loading || !chunk.hasUpgrade(ChunkUpgrades.LOADED))
-		{
-			return false;
-		}
-
-		for (IForgePlayer player : chunk.getTeam().getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER))
-		{
-			if (player.isOnline() || PermissionAPI.hasPermission(player.getProfile(), FTBUPermissions.CHUNKLOADER_LOAD_OFFLINE, null))
-			{
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	public void processQueue()
@@ -150,7 +133,7 @@ public class ClaimedChunks implements IClaimedChunks
 			{
 				for (ClaimedChunk chunk : getAllChunks())
 				{
-					boolean force = shouldForce(chunk);
+					boolean force = chunk.shouldForce();
 					ChunkDimPos pos = chunk.getPos();
 
 					if (force)
@@ -197,12 +180,18 @@ public class ClaimedChunks implements IClaimedChunks
 
 		if (FTBUConfig.world.chunk_claiming && FTBUConfig.world.chunk_loading && !forcedDimensions.isEmpty())
 		{
-			unloadQueue.removeAll(forcedDimensions);
+			for (int dim : forcedDimensions)
+			{
+				unloadQueue.rem(dim);
+				worldMap.put(dim, server.getWorld(dim));
+			}
 
 			for (ChunkDimPos pos : forced)
 			{
-				server.getWorld(pos.dim).getChunkFromChunkCoords(pos.posX, pos.posZ);
+				worldMap.get(pos.dim).getChunkFromChunkCoords(pos.posX, pos.posZ);
 			}
+
+			worldMap.clear();
 		}
 	}
 

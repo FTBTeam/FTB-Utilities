@@ -27,7 +27,7 @@ public class CmdCheckPerm extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		checkArgs(args, 2, "<player> <permission>");
+		checkArgs(sender, args, 2);
 		IForgePlayer player = getForgePlayer(args[0]);
 		boolean perm = player.isOnline() ? PermissionAPI.hasPermission(player.getPlayer(), args[1]) : PermissionAPI.hasPermission(player.getProfile(), args[1], null);
 		sender.sendMessage(FTBULang.PERM_FOR.textComponent(args[1], player.getName(), String.valueOf(perm)));

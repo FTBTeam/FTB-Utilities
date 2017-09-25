@@ -20,7 +20,7 @@ public class CmdSetWarp extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		checkArgs(args, 1, "<warp> [x] [y] [z]");
+		checkArgs(sender, args, 1);
 		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
 		BlockPos c;
 

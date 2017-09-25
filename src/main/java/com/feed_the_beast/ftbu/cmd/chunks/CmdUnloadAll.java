@@ -35,7 +35,7 @@ public class CmdUnloadAll extends CmdBase
 	{
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 
-		checkArgs(args, 1, "<all_dimensions> [player]");
+		checkArgs(sender, args, 1);
 
 		IForgePlayer p;
 

@@ -29,7 +29,7 @@ public class CmdTplast extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		checkArgs(args, 1, "(<x> <y> <z>) | ([who] <player>)");
+		checkArgs(sender, args, 1);
 
 		if (args.length >= 3)
 		{

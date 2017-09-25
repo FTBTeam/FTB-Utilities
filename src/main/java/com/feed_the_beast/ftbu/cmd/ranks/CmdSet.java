@@ -45,7 +45,7 @@ public class CmdSet extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		checkArgs(args, 2, "<player> <rank>");
+		checkArgs(sender, args, 2);
 
 		IRank r = (args[1].equalsIgnoreCase("none") || args[1].equals("-")) ? null : Ranks.getRank(args[1], null);
 

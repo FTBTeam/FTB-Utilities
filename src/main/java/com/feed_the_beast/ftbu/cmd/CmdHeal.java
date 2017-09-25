@@ -16,9 +16,9 @@ public class CmdHeal extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		EntityPlayerMP ep = args.length >= 1 ? getPlayer(server, sender, args[0]) : getCommandSenderAsPlayer(sender);
-		ep.setHealth(ep.getMaxHealth());
-		ep.getFoodStats().addStats(40, 40F);
-		ep.extinguish();
+		EntityPlayerMP player = args.length >= 1 ? getPlayer(server, sender, args[0]) : getCommandSenderAsPlayer(sender);
+		player.setHealth(player.getMaxHealth());
+		player.getFoodStats().addStats(40, 40F);
+		player.extinguish();
 	}
 }

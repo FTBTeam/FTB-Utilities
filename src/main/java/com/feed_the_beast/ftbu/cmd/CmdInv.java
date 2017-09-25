@@ -37,7 +37,7 @@ public class CmdInv extends CmdTreeBase
 		@Override
 		public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 		{
-			checkArgs(args, 1, "<player>");
+			checkArgs(sender, args, 1);
 			EntityPlayerMP ep0 = getCommandSenderAsPlayer(sender);
 			EntityPlayerMP ep = getPlayer(server, sender, args[0]);
 			ep0.displayGUIChest(new InvSeeInventory(ep));
@@ -60,7 +60,7 @@ public class CmdInv extends CmdTreeBase
 		@Override
 		public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 		{
-			checkArgs(args, 2, "<player> <id>");
+			checkArgs(sender, args, 2);
 			EntityPlayerMP ep = getPlayer(server, sender, args[0]);
 			File file = new File(CommonUtils.folderLocal, "ftbu/playerinvs/" + StringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
 
@@ -124,7 +124,7 @@ public class CmdInv extends CmdTreeBase
 		@Override
 		public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 		{
-			checkArgs(args, 2, "<player> <id>");
+			checkArgs(sender, args, 2);
 			EntityPlayerMP ep = getPlayer(server, sender, args[0]);
 			File file = new File(CommonUtils.folderLocal, "ftbu/playerinvs/" + StringUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
 

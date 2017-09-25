@@ -32,7 +32,7 @@ public class CmdAdminHome extends CmdTreeBase
 		public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 		{
 			EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-			checkArgs(args, 2, "<player> <home>");
+			checkArgs(sender, args, 2);
 			args[1] = args[1].toLowerCase();
 			FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(args[0]));
 			BlockDimPos pos = data.homes.get(args[1]);
@@ -63,7 +63,7 @@ public class CmdAdminHome extends CmdTreeBase
 		@Override
 		public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 		{
-			checkArgs(args, 1, "<player>");
+			checkArgs(sender, args, 1);
 			FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(args[0]));
 			sender.sendMessage(new TextComponentString(StringUtils.strip(data.homes.list())));
 		}
@@ -85,7 +85,7 @@ public class CmdAdminHome extends CmdTreeBase
 		@Override
 		public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 		{
-			checkArgs(args, 2, "<player> <home>");
+			checkArgs(sender, args, 2);
 			FTBUPlayerData data = FTBUPlayerData.get(getForgePlayer(args[0]));
 			args[1] = args[1].toLowerCase();
 			BlockDimPos pos = data.homes.get(args[1]);

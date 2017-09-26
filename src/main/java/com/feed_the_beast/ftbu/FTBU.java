@@ -18,7 +18,7 @@ import net.minecraftforge.server.permission.PermissionAPI;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod(modid = FTBUFinals.MOD_ID, name = FTBUFinals.MOD_NAME, version = "0.0.0", useMetadata = true, acceptableRemoteVersions = "*", acceptedMinecraftVersions = "[1.10,)", dependencies = "required-after:ftbl")
+@Mod(modid = FTBUFinals.MOD_ID, name = FTBUFinals.MOD_NAME, version = FTBUFinals.VERSION, acceptableRemoteVersions = "*", acceptedMinecraftVersions = "[1.10,)", dependencies = "required-after:ftbl")
 public class FTBU
 {
 	@Mod.Instance(FTBUFinals.MOD_ID)

@@ -2,8 +2,8 @@ package com.feed_the_beast.ftbu.integration;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.icon.DrawableItem;
 import com.feed_the_beast.ftbl.lib.icon.IconAnimation;
+import com.feed_the_beast.ftbl.lib.icon.ItemIcon;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.guide.ClientGuideEvent;
@@ -49,7 +49,7 @@ public class TiCIntegration
 	public static void onGuideEvent(ClientGuideEvent event)
 	{
 		GuideTitlePage guide = event.getModGuide("tconstruct");
-		guide.page.setIcon(new DrawableItem("tconstruct:toolforge"));
+		guide.page.setIcon(new ItemIcon("tconstruct:toolforge"));
 		guide.page.println(new GuideHrLine(1, Color4I.NONE));
 		guide.page.println(new GuideContentsLine(guide.page));
 
@@ -58,13 +58,13 @@ public class TiCIntegration
 		if (pageIntro != null)
 		{
 			pageIntro.setTitle(new TextComponentString("Introduction")); //LANG
-			pageIntro.setIcon(new DrawableItem("tconstruct:tooltables"));
+			pageIntro.setIcon(new ItemIcon("tconstruct:tooltables"));
 			guide.page.addSub(pageIntro);
 		}
 
 		IGuidePage toolMaterials = guide.page.getSub("materials");
 		toolMaterials.setTitle(new TextComponentString("Materials")); //LANG
-		toolMaterials.setIcon(new DrawableItem(new ItemStack(Items.IRON_PICKAXE)));
+		toolMaterials.setIcon(new ItemIcon(new ItemStack(Items.IRON_PICKAXE)));
 
 		ImmutableList mats = ImmutableList.of(TinkerMaterials.wood, TinkerMaterials.cobalt, TinkerMaterials.ardite, TinkerMaterials.manyullyn);
 
@@ -76,7 +76,7 @@ public class TiCIntegration
 			}
 
 			IGuidePage page = toolMaterials.getSub(material.getIdentifier());
-			page.setIcon(new DrawableItem(material.getRepresentativeItem()));
+			page.setIcon(new ItemIcon(material.getRepresentativeItem()));
 			page.setTitle(new TextComponentString(material.getLocalizedName()));
 
 			for (IMaterialStats stats : material.getAllStats())
@@ -93,7 +93,7 @@ public class TiCIntegration
 				{
 					if (part.hasUseForStat(stats.getIdentifier()))
 					{
-						parts.list.add(new DrawableItem(part.getItemstackWithMaterial(material)));
+						parts.list.add(new ItemIcon(part.getItemstackWithMaterial(material)));
 					}
 				}
 
@@ -115,7 +115,7 @@ public class TiCIntegration
 
 		IGuidePage modifiers = guide.page.getSub("modifiers");
 		modifiers.setTitle(new TextComponentString("Modifiers")); //LANG
-		modifiers.setIcon(new DrawableItem(new ItemStack(Items.REDSTONE)));
+		modifiers.setIcon(new ItemIcon(new ItemStack(Items.REDSTONE)));
 
 		for (IModifier modifier : TinkerRegistry.getAllModifiers())
 		{
@@ -164,7 +164,7 @@ public class TiCIntegration
 
 							if (item instanceof ToolCore)
 							{
-								displayItems.list.add(new DrawableItem(((ToolCore) item).buildItemForRendering(mats.subList(0, ((ToolCore) item).getRequiredComponents().size()))));
+								displayItems.list.add(new ItemIcon(((ToolCore) item).buildItemForRendering(mats.subList(0, ((ToolCore) item).getRequiredComponents().size()))));
 							}
 						}
 
@@ -188,7 +188,7 @@ public class TiCIntegration
 		if (pageSmeltry != null)
 		{
 			pageSmeltry.setTitle(new TextComponentString("Smeltry")); //LANG
-			pageSmeltry.setIcon(new DrawableItem("tconstruct:toolstation"));
+			pageSmeltry.setIcon(new ItemIcon("tconstruct:toolstation"));
 			guide.page.addSub(pageSmeltry);
 		}
 

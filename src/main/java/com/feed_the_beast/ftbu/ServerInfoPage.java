@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.lib.LangKey;
-import com.feed_the_beast.ftbl.lib.icon.DrawableItem;
+import com.feed_the_beast.ftbl.lib.icon.ItemIcon;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
@@ -103,7 +103,7 @@ public class ServerInfoPage
 		//}
 
 		IGuidePage page1 = page.getSub("leaderboards").setTitle(StringUtils.color(FTBULang.LEADERBOARDS.textComponent(), TextFormatting.RED));
-		page1.setIcon(new DrawableItem(new ItemStack(Items.SIGN)));
+		page1.setIcon(new ItemIcon(new ItemStack(Items.SIGN)));
 		page1.println(new TextComponentString("1.12+: ").appendSibling(FTBLibLang.WIP.textComponent()));
 
 		/*
@@ -160,7 +160,7 @@ public class ServerInfoPage
 		new ServerInfoEvent(page, self, isOP).post();
 
 		page1 = page.getSub("commands").setTitle(FTBLibLang.COMMANDS.textComponent());
-		page1.setIcon(new DrawableItem(new ItemStack(Blocks.COMMAND_BLOCK)));
+		page1.setIcon(new ItemIcon(new ItemStack(Blocks.COMMAND_BLOCK)));
 
 		try
 		{

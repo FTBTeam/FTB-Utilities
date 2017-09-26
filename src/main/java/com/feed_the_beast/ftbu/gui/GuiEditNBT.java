@@ -20,8 +20,8 @@ import com.feed_the_beast.ftbl.lib.gui.misc.GuiEditConfig;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiSelectors;
 import com.feed_the_beast.ftbl.lib.gui.misc.IGuiFieldCallback;
 import com.feed_the_beast.ftbl.lib.icon.CombinedIcon;
-import com.feed_the_beast.ftbl.lib.icon.DrawableItem;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.icon.ItemIcon;
 import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
@@ -359,7 +359,7 @@ public class GuiEditNBT extends GuiBase
 
 			if (!stack.isEmpty())
 			{
-				hoverIcon = new DrawableItem(stack);
+				hoverIcon = new ItemIcon(stack);
 			}
 
 			setWidth(12 + getFont().getStringWidth(getTitle(GuiEditNBT.this)) + (hoverIcon.isEmpty() ? 0 : 10));
@@ -370,9 +370,9 @@ public class GuiEditNBT extends GuiBase
 		{
 			if (!hoverIcon.isEmpty())
 			{
-				if (hoverIcon instanceof DrawableItem)
+				if (hoverIcon instanceof ItemIcon)
 				{
-					list.add(((DrawableItem) hoverIcon).getStack().getDisplayName());
+					list.add(((ItemIcon) hoverIcon).getStack().getDisplayName());
 				}
 			}
 		}

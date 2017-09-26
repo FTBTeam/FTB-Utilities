@@ -4,7 +4,7 @@
 		"name": "FTBUtilities",
 		"description": "FTBUtilities",
 		"version": "${version}",
-		"mcversion": "1.12",
+		"mcversion": "${mcversion}",
 		"url": "http://minecraft.curseforge.com/projects/ftb-utilities",
 		"updateUrl": "",
 		"authorList": ["LatvianModder"],

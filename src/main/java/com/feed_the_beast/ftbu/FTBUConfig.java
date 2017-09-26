@@ -64,8 +64,6 @@ public class FTBUConfig
 
 	public static class Chat
 	{
-		public boolean randomize_colors = true;
-
 		@Config.RangeInt(min = 0, max = 10000000)
 		public int general_history_limit = 10000;
 
@@ -73,7 +71,7 @@ public class FTBUConfig
 		public int team_history_limit = 1000;
 
 		@Config.RangeInt(min = 0, max = 10000000)
-		public int admin_history_limit = 1000;
+		public int admin_history_limit = 10000;
 	}
 
 	public static class Backups

@@ -8,7 +8,7 @@ import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
+import com.feed_the_beast.ftbl.lib.icon.LoadingIcon;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbu.net.MessageSendWarpList;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -149,7 +149,7 @@ public class GuiWarps extends GuiBase
 
 		if (!isLoaded)
 		{
-			GuiLoading.renderLoading(ax - SIZE_2, ay - SIZE_2, SIZE, SIZE, Color4I.WHITE);
+			LoadingIcon.INSTANCE.draw(ax - SIZE_2, ay - SIZE_2, SIZE, SIZE, Color4I.WHITE);
 			return;
 		}
 

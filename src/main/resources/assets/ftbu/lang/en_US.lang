@@ -7,7 +7,9 @@ ftbu.config.server_info.difficulty=Difficulty
 ftbu.config.server_info.admin_quick_access=Admin Quick Access
 
 ftbu.config.chat=Chat
-ftbu.config.chat.randomize_colors=Randomize Colors
+ftbu.config.chat.general_history_limit=General Chat History Limit
+ftbu.config.chat.team_history_limit=Team Chat History Limit
+ftbu.config.chat.admin_history_limit=Admin Chat History Limit
 
 ftbu.config.backups=Backups
 ftbu.config.backups.silent=Silent

@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbu.ranks;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.lib.config.RankConfigValueInfo;
-import com.feed_the_beast.ftbl.lib.icon.DrawableItem;
+import com.feed_the_beast.ftbl.lib.icon.ItemIcon;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
@@ -53,7 +53,7 @@ public class Ranks
 	private static final Map<String, Rank> RANKS = new LinkedHashMap<>();
 	private static final Collection<String> RANK_NAMES = new ArrayList<>();
 	private static final Map<UUID, IRank> PLAYER_MAP = new HashMap<>();
-	public static final IGuidePage INFO_PAGE = new GuidePage("ranks_info").setTitle(FTBLibLang.ALL_PERMISSIONS.textComponent()).setIcon(new DrawableItem(new ItemStack(Items.DIAMOND_SWORD)));
+	public static final IGuidePage INFO_PAGE = new GuidePage("ranks_info").setTitle(FTBLibLang.ALL_PERMISSIONS.textComponent()).setIcon(new ItemIcon(new ItemStack(Items.DIAMOND_SWORD)));
 	private static IRank defaultPlayerRank, defaultOPRank;
 	public static final Collection<String> CMD_PERMISSION_NODES = new HashSet<>();
 

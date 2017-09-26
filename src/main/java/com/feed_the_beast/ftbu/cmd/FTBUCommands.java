@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbu.cmd;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.api.events.registry.RegisterFTBClientCommandsEvent;
-import com.feed_the_beast.ftbl.api.events.registry.RegisterFTBCommandsEvent;
+import com.feed_the_beast.ftbl.api.RegisterFTBClientCommandsEvent;
+import com.feed_the_beast.ftbl.api.RegisterFTBCommandsEvent;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.cmd.chunks.CmdChunks;
 import com.feed_the_beast.ftbu.cmd.ranks.CmdRanks;
@@ -59,11 +59,6 @@ public class FTBUCommands
 			event.add(new CmdDelHome());
 		}
 
-		if (FTBUConfig.commands.server_info)
-		{
-			event.add(new CmdServerInfo());
-		}
-
 		if (FTBUConfig.commands.tpl)
 		{
 			event.add(new CmdTplast());
@@ -97,11 +92,6 @@ public class FTBUCommands
 		if (FTBUConfig.commands.ranks)
 		{
 			event.add(new CmdRanks());
-		}
-
-		if (FTBUConfig.commands.view_crash)
-		{
-			event.add(new CmdViewCrash());
 		}
 
 		if (FTBUConfig.commands.heal)

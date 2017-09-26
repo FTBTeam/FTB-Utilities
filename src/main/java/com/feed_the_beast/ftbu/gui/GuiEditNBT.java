@@ -488,19 +488,19 @@ public class GuiEditNBT extends GuiBase
 
 	public class ButtonNBTByteArray extends ButtonNBTCollection
 	{
-		private NBTTagByteArray list;
+		private ByteArrayList list;
 
 		public ButtonNBTByteArray(ButtonNBTCollection p, String key, NBTTagByteArray l)
 		{
 			super(p, key, NBT_BYTE_ARRAY_OPEN, NBT_BYTE_ARRAY_CLOSED);
-			list = l;
+			list = new ByteArrayList(l.getByteArray());
 		}
 
 		@Override
 		public void updateChildren(boolean first)
 		{
 			children.clear();
-			for (int i = 0; i < list.getByteArray().length; i++)
+			for (int i = 0; i < list.size(); i++)
 			{
 				String s = Integer.toString(i);
 				ButtonNBT nbt = getFrom(this, s);
@@ -512,36 +512,33 @@ public class GuiEditNBT extends GuiBase
 		@Override
 		public NBTBase getTag(String k)
 		{
-			return new NBTTagByte(list.getByteArray()[Integer.parseInt(k)]);
+			return new NBTTagByte(list.getByte(Integer.parseInt(k)));
 		}
 
 		@Override
 		public void setTag(String k, @Nullable NBTBase base)
 		{
 			int id = Integer.parseInt(k);
-			ByteArrayList list1 = new ByteArrayList(list.getByteArray());
 
 			if (id == -1)
 			{
 				if (base != null)
 				{
-					list1.add(((NBTPrimitive) base).getByte());
+					list.add(((NBTPrimitive) base).getByte());
 				}
 			}
 			else if (base != null)
 			{
-				list1.set(id, ((NBTPrimitive) base).getByte());
+				list.set(id, ((NBTPrimitive) base).getByte());
 			}
 			else
 			{
-				list1.rem(id);
+				list.rem(id);
 			}
-
-			list = new NBTTagByteArray(list1.toByteArray());
 
 			if (parent != null)
 			{
-				parent.setTag(key, list);
+				parent.setTag(key, new NBTTagByteArray(list.toByteArray()));
 			}
 		}
 
@@ -578,7 +575,7 @@ public class GuiEditNBT extends GuiBase
 		@Override
 		public NBTBase getTag(String k)
 		{
-			return new NBTTagInt(list.get(Integer.parseInt(k)));
+			return new NBTTagInt(list.getInt(Integer.parseInt(k)));
 		}
 
 		@Override

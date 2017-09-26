@@ -105,7 +105,7 @@ public class CmdEditNBT extends CmdTreeBase
 		public void editNBT(EntityPlayerMP player, NBTTagCompound info, NBTTagCompound nbt, String[] args) throws CommandException
 		{
 			checkArgs(player, args, 1);
-			int id = parseInt(args[1]);
+			int id = parseInt(args[0]);
 			Entity entity = player.getEntityWorld().getEntityByID(id);
 
 			if (entity != null)
@@ -134,7 +134,7 @@ public class CmdEditNBT extends CmdTreeBase
 		public void editNBT(EntityPlayerMP player, NBTTagCompound info, NBTTagCompound nbt, String[] args) throws CommandException
 		{
 			checkArgs(player, args, 1);
-			EntityPlayerMP player1 = getPlayer(player.mcServer, player, args[1]);
+			EntityPlayerMP player1 = getPlayer(player.mcServer, player, args[0]);
 			info.setString("type", "player");
 			info.setUniqueId("id", player1.getGameProfile().getId());
 			player1.writeToNBT(nbt);

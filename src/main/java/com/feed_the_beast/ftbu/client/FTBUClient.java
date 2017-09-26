@@ -1,11 +1,12 @@
 package com.feed_the_beast.ftbu.client;
 
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbu.FTBUCommon;
+import com.feed_the_beast.ftbu.api.guide.RegisterGuideLineProvidersEvent;
 import com.feed_the_beast.ftbu.gui.GuiEditNBT;
-import com.feed_the_beast.ftbu.gui.GuiGuide;
 import com.feed_the_beast.ftbu.gui.Guides;
+import com.feed_the_beast.ftbu.gui.guide.GuiGuide;
+import com.feed_the_beast.ftbu.gui.guide.GuidePage;
 import com.feed_the_beast.ftbu.integration.IJMIntegration;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.client.settings.KeyBinding;
@@ -32,6 +33,8 @@ public class FTBUClient extends FTBUCommon // FTBLibModClient
 		GuideConfig.sync();
 		ClientRegistry.registerKeyBinding(KEY_GUIDE);
 		ClientRegistry.registerKeyBinding(KEY_WARP);
+
+		new RegisterGuideLineProvidersEvent((id, provider) -> GuidePage.LINE_PROVIDERS.put(id.toLowerCase(), provider)).post();
 	}
 
 	@Override

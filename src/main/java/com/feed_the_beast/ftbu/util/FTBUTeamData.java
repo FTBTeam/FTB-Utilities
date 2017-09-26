@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbu.util;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.events.team.ForgeTeamConfigEvent;
+import com.feed_the_beast.ftbl.api.team.ForgeTeamConfigEvent;
 import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftbl.lib.config.ConfigEnum;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;

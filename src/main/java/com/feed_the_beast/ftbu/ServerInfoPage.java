@@ -3,9 +3,7 @@ package com.feed_the_beast.ftbu;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IUniverse;
-import com.feed_the_beast.ftbl.api.events.ServerInfoEvent;
 import com.feed_the_beast.ftbl.lib.LangKey;
-import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.icon.DrawableItem;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
@@ -13,6 +11,9 @@ import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
+import com.feed_the_beast.ftbu.api.guide.IGuidePage;
+import com.feed_the_beast.ftbu.api.guide.ServerInfoEvent;
+import com.feed_the_beast.ftbu.gui.guide.GuidePage;
 import com.feed_the_beast.ftbu.ranks.CmdOverride;
 import com.feed_the_beast.ftbu.ranks.Ranks;
 import com.feed_the_beast.ftbu.util.FTBUUniverseData;
@@ -45,9 +46,9 @@ public class ServerInfoPage
 		CACHED_PAGE.clear();
 		CACHED_PAGE.setTitle(LANG_KEY.textComponent());
 		JsonElement json = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "ftbu/server_guide.json"));
-		if (!json.isJsonNull())
+		if (json.isJsonObject())
 		{
-			CACHED_PAGE.addSub(new GuidePage("local_guide", null, json));
+			CACHED_PAGE.addSub(new GuidePage("local_guide", null, json.getAsJsonObject()));
 		}
 	}
 
@@ -101,7 +102,7 @@ public class ServerInfoPage
 		//FIXME: SERVER_INFO_ADMIN_QUICK_ACCESS
 		//}
 
-		GuidePage page1 = page.getSub("leaderboards").setTitle(StringUtils.color(FTBULang.LEADERBOARDS.textComponent(), TextFormatting.RED));
+		IGuidePage page1 = page.getSub("leaderboards").setTitle(StringUtils.color(FTBULang.LEADERBOARDS.textComponent(), TextFormatting.RED));
 		page1.setIcon(new DrawableItem(new ItemStack(Items.SIGN)));
 		page1.println(new TextComponentString("1.12+: ").appendSibling(FTBLibLang.WIP.textComponent()));
 
@@ -199,7 +200,7 @@ public class ServerInfoPage
 		return page;
 	}
 
-	private static void addCommandUsage(ICommandSender sender, GuidePage page, int level, ICommand c)
+	private static void addCommandUsage(ICommandSender sender, IGuidePage page, int level, ICommand c)
 	{
 		page.println('/' + c.getName());
 

@@ -131,12 +131,10 @@ public class FTBUConfig
 		public boolean spawn = true;
 		public boolean inv = true;
 		public boolean tpl = true;
-		public boolean server_info = true;
 		public boolean trash_can = true;
 		public boolean chunks = true;
 		public boolean kickme = true;
 		public boolean ranks = true;
-		public boolean view_crash = true;
 		public boolean heal = true;
 		public boolean set_hour = true;
 		public boolean killall = true;

@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbu.api_impl;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbu.api.chunks.ChunkUpgrade;
-import com.feed_the_beast.ftbu.api.events.registry.RegisterChunkUpgradesEvent;
+import com.feed_the_beast.ftbu.api.chunks.RegisterChunkUpgradesEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**

@@ -1,8 +1,5 @@
-package com.feed_the_beast.ftbu.gui;
+package com.feed_the_beast.ftbu.gui.guide;
 
-import com.feed_the_beast.ftbl.api.guide.IGuideGui;
-import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
-import com.feed_the_beast.ftbl.api.guide.SpecialGuideButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
@@ -14,11 +11,13 @@ import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
-import com.feed_the_beast.ftbl.lib.guide.ButtonGuidePage;
-import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.icon.ColoredIcon;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbu.FTBUFinals;
+import com.feed_the_beast.ftbu.api.guide.IGuideGui;
+import com.feed_the_beast.ftbu.api.guide.IGuidePage;
+import com.feed_the_beast.ftbu.api.guide.IGuideTextLine;
+import com.feed_the_beast.ftbu.api.guide.SpecialGuideButton;
 import com.feed_the_beast.ftbu.client.GuideConfig;
 import net.minecraft.client.renderer.GlStateManager;
 
@@ -99,16 +98,16 @@ public class GuiGuide extends GuiBase implements IGuideGui
 		}
 	}
 
-	public final GuidePage pageTree;
+	public final IGuidePage pageTree;
 	public final Panel panelPages, panelText, panelTitle;
 	public final PanelScrollBar sliderPages, sliderTextV;
 	private final Button buttonBack;
 	public int panelWidth;
 	private final List<ButtonSpecial> specialButtons;
 
-	private GuidePage selectedPage;
+	private IGuidePage selectedPage;
 
-	public GuiGuide(GuidePage tree)
+	public GuiGuide(IGuidePage tree)
 	{
 		super(0, 0);
 		selectedPage = pageTree = tree;
@@ -121,13 +120,13 @@ public class GuiGuide extends GuiBase implements IGuideGui
 				GuiHelper.playClickSound();
 				sliderPages.setValue(gui, 0D);
 				sliderTextV.setValue(gui, 0D);
-				setSelectedPage(selectedPage.parent);
+				setSelectedPage(selectedPage.getParent());
 			}
 
 			@Override
 			public String getTitle(GuiBase gui)
 			{
-				return (selectedPage.parent == null) ? GuiLang.CLOSE.translate() : GuiLang.BACK.translate();
+				return (selectedPage.getParent() == null) ? GuiLang.CLOSE.translate() : GuiLang.BACK.translate();
 			}
 		};
 
@@ -138,7 +137,7 @@ public class GuiGuide extends GuiBase implements IGuideGui
 			@Override
 			public void addWidgets()
 			{
-				for (GuidePage c : selectedPage.childPages.values())
+				for (IGuidePage c : selectedPage.getChildren().values())
 				{
 					add(c.createWidget(GuiGuide.this));
 				}
@@ -176,7 +175,7 @@ public class GuiGuide extends GuiBase implements IGuideGui
 				boolean uni = getFont().getUnicodeFlag();
 				getFont().setUnicodeFlag(true);
 
-				for (IGuideTextLine line : selectedPage.text)
+				for (IGuideTextLine line : selectedPage.getText())
 				{
 					add(line == null ? new Widget(0, 0, panelText.width, getFont().FONT_HEIGHT + 1) : line.createWidget(GuiGuide.this, panelText));
 				}
@@ -204,11 +203,11 @@ public class GuiGuide extends GuiBase implements IGuideGui
 			public void addWidgets()
 			{
 				add(buttonBack);
-				buttonBack.setIcon(new ColoredIcon((selectedPage.parent == null) ? TEX_CLOSE : TEX_BACK, getContentColor()));
+				buttonBack.setIcon(new ColoredIcon((selectedPage.getParent() == null) ? TEX_CLOSE : TEX_BACK, getContentColor()));
 
 				specialButtons.clear();
 
-				for (SpecialGuideButton button : selectedPage.specialButtons)
+				for (SpecialGuideButton button : selectedPage.getSpecialButtons())
 				{
 					specialButtons.add(new ButtonSpecial(button));
 				}
@@ -229,13 +228,13 @@ public class GuiGuide extends GuiBase implements IGuideGui
 	}
 
 	@Override
-	public GuidePage getSelectedPage()
+	public IGuidePage getSelectedPage()
 	{
 		return selectedPage;
 	}
 
 	@Override
-	public void setSelectedPage(@Nullable GuidePage p)
+	public void setSelectedPage(@Nullable IGuidePage p)
 	{
 		sliderTextV.setValue(this, 0D);
 
@@ -250,7 +249,7 @@ public class GuiGuide extends GuiBase implements IGuideGui
 			{
 				selectedPage = p;
 
-				if (p.childPages.isEmpty())
+				if (p.getChildren().isEmpty())
 				{
 					panelText.refreshWidgets();
 				}
@@ -268,8 +267,6 @@ public class GuiGuide extends GuiBase implements IGuideGui
 	@Override
 	public void addWidgets()
 	{
-		selectedPage.refreshGui(this);
-
 		add(sliderTextV);
 		add(panelPages);
 		add(panelText);
@@ -358,13 +355,13 @@ public class GuiGuide extends GuiBase implements IGuideGui
 	@Override
 	public boolean changePage(String value)
 	{
-		GuidePage page = pageTree.getSubRaw(value);
+		IGuidePage page = pageTree.getSubRaw(value);
 
 		if (page != null)
 		{
-			if (page.parent != null)
+			if (page.getParent() != null)
 			{
-				setSelectedPage(page.parent);
+				setSelectedPage(page.getParent());
 			}
 
 			setSelectedPage(page);

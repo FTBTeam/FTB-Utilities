@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbu.ranks;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.lib.config.RankConfigValueInfo;
-import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.icon.DrawableItem;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
@@ -16,6 +15,8 @@ import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.IRank;
 import com.feed_the_beast.ftbu.api.NodeEntry;
+import com.feed_the_beast.ftbu.api.guide.IGuidePage;
+import com.feed_the_beast.ftbu.gui.guide.GuidePage;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -52,7 +53,7 @@ public class Ranks
 	private static final Map<String, Rank> RANKS = new LinkedHashMap<>();
 	private static final Collection<String> RANK_NAMES = new ArrayList<>();
 	private static final Map<UUID, IRank> PLAYER_MAP = new HashMap<>();
-	public static final GuidePage INFO_PAGE = new GuidePage("ranks_info").setTitle(FTBLibLang.ALL_PERMISSIONS.textComponent()).setIcon(new DrawableItem(new ItemStack(Items.DIAMOND_SWORD)));
+	public static final IGuidePage INFO_PAGE = new GuidePage("ranks_info").setTitle(FTBLibLang.ALL_PERMISSIONS.textComponent()).setIcon(new DrawableItem(new ItemStack(Items.DIAMOND_SWORD)));
 	private static IRank defaultPlayerRank, defaultOPRank;
 	public static final Collection<String> CMD_PERMISSION_NODES = new HashSet<>();
 

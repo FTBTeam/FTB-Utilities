@@ -1,7 +1,6 @@
-package com.feed_the_beast.ftbu.api.events.registry;
+package com.feed_the_beast.ftbu.api.chunks;
 
-import com.feed_the_beast.ftbu.api.chunks.ChunkUpgrade;
-import com.feed_the_beast.ftbu.api.events.FTBUtilitiesEvent;
+import com.feed_the_beast.ftbu.api.FTBUtilitiesEvent;
 
 import java.util.function.Consumer;
 

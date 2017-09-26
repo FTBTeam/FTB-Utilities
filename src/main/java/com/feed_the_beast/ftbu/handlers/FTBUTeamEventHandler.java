@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.api.events.team.ForgeTeamConfigEvent;
-import com.feed_the_beast.ftbl.api.events.team.ForgeTeamDeletedEvent;
-import com.feed_the_beast.ftbl.api.events.team.ForgeTeamOwnerChangedEvent;
-import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
-import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerLeftEvent;
+import com.feed_the_beast.ftbl.api.team.ForgeTeamConfigEvent;
+import com.feed_the_beast.ftbl.api.team.ForgeTeamDeletedEvent;
+import com.feed_the_beast.ftbl.api.team.ForgeTeamOwnerChangedEvent;
+import com.feed_the_beast.ftbl.api.team.ForgeTeamPlayerJoinedEvent;
+import com.feed_the_beast.ftbl.api.team.ForgeTeamPlayerLeftEvent;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.util.FTBUTeamData;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

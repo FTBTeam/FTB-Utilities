@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbu.util;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseClosedEvent;
-import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
-import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseSavedEvent;
+import com.feed_the_beast.ftbl.api.universe.ForgeUniverseClosedEvent;
+import com.feed_the_beast.ftbl.api.universe.ForgeUniverseLoadedEvent;
+import com.feed_the_beast.ftbl.api.universe.ForgeUniverseSavedEvent;
 import com.feed_the_beast.ftbl.lib.ChatHistory;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
@@ -14,7 +14,7 @@ import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.chunks.ChunkUpgrade;
-import com.feed_the_beast.ftbu.api.events.registry.RegisterChunkUpgradesEvent;
+import com.feed_the_beast.ftbu.api.chunks.RegisterChunkUpgradesEvent;
 import com.feed_the_beast.ftbu.api_impl.ClaimedChunks;
 import com.feed_the_beast.ftbu.handlers.FTBLibIntegration;
 import com.feed_the_beast.ftbu.util.backups.Backups;
@@ -106,8 +106,6 @@ public class FTBUUniverseData
 	@SubscribeEvent
 	public static void onUniversePreLoaded(ForgeUniverseLoadedEvent.Pre event)
 	{
-		ClaimedChunks.INSTANCE = new ClaimedChunks();
-		CHUNK_UPGRADES.clear();
 		new RegisterChunkUpgradesEvent(FTBUUniverseData::registerChunkUpgrade).post();
 	}
 
@@ -206,7 +204,8 @@ public class FTBUUniverseData
 	@SubscribeEvent
 	public static void onUniverseClosed(ForgeUniverseClosedEvent event)
 	{
-		ClaimedChunks.INSTANCE = null;
+		CHUNK_UPGRADES.clear();
+		ClaimedChunks.INSTANCE.clear();
 		Badges.BADGE_CACHE.clear();
 		Badges.LOCAL_BADGES.clear();
 	}

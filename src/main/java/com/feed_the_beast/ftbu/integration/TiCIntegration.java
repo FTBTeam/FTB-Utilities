@@ -1,18 +1,19 @@
 package com.feed_the_beast.ftbu.integration;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.api.events.ClientGuideEvent;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.guide.GuideContentsLine;
-import com.feed_the_beast.ftbl.lib.guide.GuideExtendedTextLine;
-import com.feed_the_beast.ftbl.lib.guide.GuideHrLine;
-import com.feed_the_beast.ftbl.lib.guide.GuidePage;
-import com.feed_the_beast.ftbl.lib.guide.GuideTitlePage;
-import com.feed_the_beast.ftbl.lib.guide.IconAnimationLine;
 import com.feed_the_beast.ftbl.lib.icon.DrawableItem;
 import com.feed_the_beast.ftbl.lib.icon.IconAnimation;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftbu.api.guide.ClientGuideEvent;
+import com.feed_the_beast.ftbu.api.guide.IGuidePage;
+import com.feed_the_beast.ftbu.gui.guide.GuideContentsLine;
+import com.feed_the_beast.ftbu.gui.guide.GuideExtendedTextLine;
+import com.feed_the_beast.ftbu.gui.guide.GuideHrLine;
+import com.feed_the_beast.ftbu.gui.guide.GuidePage;
+import com.feed_the_beast.ftbu.gui.guide.GuideTitlePage;
+import com.feed_the_beast.ftbu.gui.guide.IconAnimationLine;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -48,20 +49,20 @@ public class TiCIntegration
 	public static void onGuideEvent(ClientGuideEvent event)
 	{
 		GuideTitlePage guide = event.getModGuide("tconstruct");
-		guide.setIcon(new DrawableItem("tconstruct:toolforge 1 0"));
-		guide.println(new GuideHrLine(1, Color4I.NONE));
-		guide.println(new GuideContentsLine(guide));
+		guide.page.setIcon(new DrawableItem("tconstruct:toolforge"));
+		guide.page.println(new GuideHrLine(1, Color4I.NONE));
+		guide.page.println(new GuideContentsLine(guide.page));
 
 		GuidePage pageIntro = loadPage(event, "intro");
 
 		if (pageIntro != null)
 		{
 			pageIntro.setTitle(new TextComponentString("Introduction")); //LANG
-			pageIntro.setIcon(new DrawableItem("tconstruct:tooltables 1 0"));
-			guide.addSub(pageIntro);
+			pageIntro.setIcon(new DrawableItem("tconstruct:tooltables"));
+			guide.page.addSub(pageIntro);
 		}
 
-		GuidePage toolMaterials = guide.getSub("materials");
+		IGuidePage toolMaterials = guide.page.getSub("materials");
 		toolMaterials.setTitle(new TextComponentString("Materials")); //LANG
 		toolMaterials.setIcon(new DrawableItem(new ItemStack(Items.IRON_PICKAXE)));
 
@@ -74,7 +75,7 @@ public class TiCIntegration
 				continue;
 			}
 
-			GuidePage page = toolMaterials.getSub(material.getIdentifier());
+			IGuidePage page = toolMaterials.getSub(material.getIdentifier());
 			page.setIcon(new DrawableItem(material.getRepresentativeItem()));
 			page.setTitle(new TextComponentString(material.getLocalizedName()));
 
@@ -112,7 +113,7 @@ public class TiCIntegration
 			}
 		}
 
-		GuidePage modifiers = guide.getSub("modifiers");
+		IGuidePage modifiers = guide.page.getSub("modifiers");
 		modifiers.setTitle(new TextComponentString("Modifiers")); //LANG
 		modifiers.setIcon(new DrawableItem(new ItemStack(Items.REDSTONE)));
 
@@ -131,7 +132,7 @@ public class TiCIntegration
 				if (json.isJsonObject())
 				{
 					JsonObject o = json.getAsJsonObject();
-					GuidePage page = modifiers.getSub(modifier.getIdentifier());
+					IGuidePage page = modifiers.getSub(modifier.getIdentifier());
 					page.setTitle(new TextComponentString(modifier.getLocalizedName()));
 					page.println(transformString(modifier.getLocalizedDesc()));
 					IconAnimation displayItems = new IconAnimation(Collections.emptyList());
@@ -187,8 +188,8 @@ public class TiCIntegration
 		if (pageSmeltry != null)
 		{
 			pageSmeltry.setTitle(new TextComponentString("Smeltry")); //LANG
-			pageSmeltry.setIcon(new DrawableItem(new ItemStack(Item.getByNameOrId("tconstruct:toolstation"), 1, 0)));
-			guide.addSub(pageSmeltry);
+			pageSmeltry.setIcon(new DrawableItem("tconstruct:toolstation"));
+			guide.page.addSub(pageSmeltry);
 		}
 
         /*

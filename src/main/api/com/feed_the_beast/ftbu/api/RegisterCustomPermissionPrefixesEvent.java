@@ -1,7 +1,4 @@
-package com.feed_the_beast.ftbu.api.events.registry;
-
-import com.feed_the_beast.ftbu.api.NodeEntry;
-import com.feed_the_beast.ftbu.api.events.FTBUtilitiesEvent;
+package com.feed_the_beast.ftbu.api;
 
 import java.util.function.Consumer;
 

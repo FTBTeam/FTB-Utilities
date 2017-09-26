@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbu.util;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.events.player.ForgePlayerConfigEvent;
+import com.feed_the_beast.ftbl.api.player.ForgePlayerConfigEvent;
 import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;

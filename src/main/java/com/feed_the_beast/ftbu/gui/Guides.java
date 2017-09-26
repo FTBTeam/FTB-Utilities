@@ -1,34 +1,37 @@
 package com.feed_the_beast.ftbu.gui;
 
-import com.feed_the_beast.ftbl.api.events.ClientGuideEvent;
-import com.feed_the_beast.ftbl.api.guide.GuideFormat;
-import com.feed_the_beast.ftbl.api.guide.GuideType;
-import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
-import com.feed_the_beast.ftbl.api.guide.SpecialGuideButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
-import com.feed_the_beast.ftbl.lib.guide.GuideContentsLine;
-import com.feed_the_beast.ftbl.lib.guide.GuideHrLine;
-import com.feed_the_beast.ftbl.lib.guide.GuideListLine;
-import com.feed_the_beast.ftbl.lib.guide.GuidePage;
-import com.feed_the_beast.ftbl.lib.guide.GuideTextLineString;
-import com.feed_the_beast.ftbl.lib.guide.GuideTitlePage;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.api.FTBULang;
+import com.feed_the_beast.ftbu.api.guide.ClientGuideEvent;
+import com.feed_the_beast.ftbu.api.guide.GuideFormat;
+import com.feed_the_beast.ftbu.api.guide.GuideType;
+import com.feed_the_beast.ftbu.api.guide.IGuidePage;
+import com.feed_the_beast.ftbu.api.guide.IGuideTextLine;
+import com.feed_the_beast.ftbu.api.guide.SpecialGuideButton;
+import com.feed_the_beast.ftbu.gui.guide.GuiGuide;
+import com.feed_the_beast.ftbu.gui.guide.GuideContentsLine;
+import com.feed_the_beast.ftbu.gui.guide.GuideHrLine;
+import com.feed_the_beast.ftbu.gui.guide.GuideListLine;
+import com.feed_the_beast.ftbu.gui.guide.GuidePage;
+import com.feed_the_beast.ftbu.gui.guide.GuideTextLineString;
+import com.feed_the_beast.ftbu.gui.guide.GuideTitlePage;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
@@ -51,7 +54,7 @@ public enum Guides implements IResourceManagerReloadListener
 {
 	INSTANCE;
 
-	private static final GuidePage INFO_PAGE = new GuidePage("guides").addSpecialButton(new SpecialGuideButton(GuiLang.REFRESH.textComponent(), GuiIcons.REFRESH, new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftbc refresh_guide")));
+	private static final IGuidePage INFO_PAGE = new GuidePage("guides").addSpecialButton(new SpecialGuideButton(GuiLang.REFRESH.textComponent(), GuiIcons.REFRESH, new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftbc refresh_guide")));
 
 	private static boolean isReloading = false;
 	private static Thread reloadingThread = null;
@@ -68,10 +71,10 @@ public enum Guides implements IResourceManagerReloadListener
 	{
 		GuiHelper.playClickSound();
 		setShouldReload();
-		openGui();
+		OPEN_GUI.run();
 	}
 
-	public static void openGui()
+	public static final Runnable OPEN_GUI = () ->
 	{
 		if (cachedGui == null)
 		{
@@ -112,7 +115,7 @@ public enum Guides implements IResourceManagerReloadListener
 		{
 			cachedGui.openGui();
 		}
-	}
+	};
 
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager)
@@ -133,21 +136,63 @@ public enum Guides implements IResourceManagerReloadListener
 
 				if (infoFile.isJsonObject())
 				{
-					GuideTitlePage guide = new GuideTitlePage(domain, infoFile.getAsJsonObject());
-					GuideFormat format = guide.getFormat();
+					JsonObject json = infoFile.getAsJsonObject();
+					GuideType type = json.has("type") ? GuideType.NAME_MAP.get(json.get("type").getAsString()) : GuideType.OTHER;
+					GuideFormat format = json.has("format") ? GuideFormat.NAME_MAP.get(json.get("format").getAsString()) : GuideFormat.JSON;
 
-					if (format == GuideFormat.UNSUPPORTED)
+					GuideTitlePage guide = new GuideTitlePage(new GuidePage(domain), type, format);
+
+					if (guide.format == GuideFormat.UNSUPPORTED)
 					{
-						guide.println(FTBULang.GUIDE_UNSUPPORTED_FORMAT.textComponent());
+						guide.page.println(FTBULang.GUIDE_UNSUPPORTED_FORMAT.textComponent());
 					}
 					else
 					{
-						loadTree(resourceManager, domain, guide, format, "guide");
+						guide.page.setTitle(new TextComponentTranslation(domain + ".guide"));
 
-						if (guide.childPages.size() > 0)
+						if (json.has("icon"))
 						{
-							guide.println(new GuideHrLine(1, Color4I.NONE));
-							guide.println(new GuideContentsLine(guide));
+							guide.page.setIcon(Icon.getIcon(json.get("icon")));
+						}
+						else
+						{
+							guide.page.setIcon(Icon.getIcon(domain + ":textures/icon.png"));
+						}
+						if (json.has("button"))
+						{
+							guide.page.addSpecialButton(new SpecialGuideButton(json.get("button").getAsJsonObject()));
+						}
+						else if (json.has("buttons"))
+						{
+							for (JsonElement element : json.get("buttons").getAsJsonArray())
+							{
+								guide.page.addSpecialButton(new SpecialGuideButton(element.getAsJsonObject()));
+							}
+						}
+
+						for (JsonElement element : json.get("authors").getAsJsonArray())
+						{
+							guide.authors.add(element.getAsString());
+						}
+
+						if (json.has("guide_authors"))
+						{
+							for (JsonElement element : json.get("guide_authors").getAsJsonArray())
+							{
+								guide.guideAuthors.add(element.getAsString());
+							}
+						}
+						else
+						{
+							guide.guideAuthors.addAll(guide.authors);
+						}
+
+						loadTree(resourceManager, domain, guide.page, guide.format, "guide");
+
+						if (guide.page.getChildren().size() > 0)
+						{
+							guide.page.println(new GuideHrLine(1, Color4I.NONE));
+							guide.page.println(new GuideContentsLine(guide.page));
 						}
 					}
 
@@ -166,25 +211,34 @@ public enum Guides implements IResourceManagerReloadListener
 		}
 
 		Map<String, GuideTitlePage> eventMap = new HashMap<>();
-
 		new ClientGuideEvent(eventMap, resourceManager, modid ->
 		{
+			GuideTitlePage page = new GuideTitlePage(new GuidePage(modid), GuideType.MOD, GuideFormat.CUSTOM);
 			ModContainer mod = Loader.instance().getIndexedModList().get(modid);
-			if (mod == null)
+
+			if (mod != null)
 			{
-				return new GuideTitlePage(modid, GuideType.MOD, Collections.emptyList(), Collections.singleton("Autogenerated"));
+				page.authors.addAll(mod.getMetadata().authorList);
+
+				if (!mod.getMetadata().description.isEmpty())
+				{
+					for (String s : mod.getMetadata().description.split("\n"))
+					{
+						page.page.println(s);
+					}
+				}
+
+				page.page.setTitle(new TextComponentString(mod.getName()));
 			}
-			else
-			{
-				return new GuideTitlePage(mod);
-			}
+
+			return page;
 		}).post();
 
 		guides.addAll(eventMap.values());
 
 		for (GuideTitlePage guide : guides)
 		{
-			INFO_PAGE.addSub(guide);
+			INFO_PAGE.addSub(guide.page);
 		}
 
 		INFO_PAGE.cleanup();
@@ -196,7 +250,7 @@ public enum Guides implements IResourceManagerReloadListener
 		return c == '_' || c == '.' || c == '{' || c == '}' || StringUtils.isTextChar(c, true);
 	}
 
-	private static void loadTree(IResourceManager resourceManager, String domain, GuidePage page, GuideFormat format, String parentDir) throws Exception
+	private static void loadTree(IResourceManager resourceManager, String domain, IGuidePage page, GuideFormat format, String parentDir) throws Exception
 	{
 		List<String> text = Collections.emptyList();
 		try
@@ -251,7 +305,7 @@ public enum Guides implements IResourceManagerReloadListener
 		{
 			for (JsonElement e : JsonUtils.fromJson(new InputStreamReader(resourceManager.getResource(new ResourceLocation(domain, parentDir + "/pages.json")).getInputStream())).getAsJsonArray())
 			{
-				GuidePage page1;
+				IGuidePage page1;
 
 				if (e.isJsonObject())
 				{

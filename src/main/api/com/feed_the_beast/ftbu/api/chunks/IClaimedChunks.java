@@ -32,7 +32,5 @@ public interface IClaimedChunks
 
 	Collection<? extends IClaimedChunk> getTeamChunks(@Nullable IForgeTeam team);
 
-	Collection<ChunkDimPos> getForcedChunks();
-
 	boolean canPlayerInteract(EntityPlayerMP player, EnumHand hand, BlockPosContainer block, BlockInteractionType type);
 }

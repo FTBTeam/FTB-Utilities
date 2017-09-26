@@ -13,6 +13,7 @@ import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.SimpleButton;
 import com.feed_the_beast.ftbl.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiChunkSelectorBase;
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.FTBULang;
 import com.feed_the_beast.ftbu.api.chunks.ChunkUpgrade;
@@ -112,7 +113,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 				AREA.color.set(data.team.color.getColor(), 150);
 			}
 
-			AREA.rect((i % ChunkSelectorMap.TILES_GUI) * 16, (i / ChunkSelectorMap.TILES_GUI) * 16, 16, 16);
+			AREA.rect((i % ChunkSelectorMap.TILES_GUI) * TILE_SIZE, (i / ChunkSelectorMap.TILES_GUI) * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 		}
 
 		boolean borderU, borderD, borderL, borderR;
@@ -127,9 +128,9 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 			}
 
 			int x = i % ChunkSelectorMap.TILES_GUI;
-			int dx = x * 16;
+			int dx = x * TILE_SIZE;
 			int y = i / ChunkSelectorMap.TILES_GUI;
-			int dy = y * 16;
+			int dy = y * TILE_SIZE;
 
 			borderU = y > 0 && hasBorder(data, getAt(x, y - 1));
 			borderD = y < (ChunkSelectorMap.TILES_GUI - 1) && hasBorder(data, getAt(x, y + 1));
@@ -147,22 +148,22 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 
 			if (borderU)
 			{
-				AREA.rect(dx, dy, 16, 1);
+				AREA.rect(dx, dy, TILE_SIZE, 1);
 			}
 
 			if (borderD)
 			{
-				AREA.rect(dx, dy + 15, 16, 1);
+				AREA.rect(dx, dy + TILE_SIZE - 1, TILE_SIZE, 1);
 			}
 
 			if (borderL)
 			{
-				AREA.rect(dx, dy, 1, 16);
+				AREA.rect(dx, dy, 1, TILE_SIZE);
 			}
 
 			if (borderR)
 			{
-				AREA.rect(dx + 15, dy, 1, 16);
+				AREA.rect(dx + TILE_SIZE - 1, dy, 1, TILE_SIZE);
 			}
 		}
 	}
@@ -172,7 +173,7 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 
 	public GuiClaimedChunks()
 	{
-		currentDimName = ClientUtils.MC.world.provider.getDimensionType().getName();
+		currentDimName = ServerUtils.getDimensionName(ClientUtils.MC.world.provider.getDimension());
 		buttonClose = new SimpleButton(GuiLang.CLOSE.translate(), GuiIcons.ACCEPT, (gui, button) -> gui.closeGui());
 
 		buttonRefresh = new SimpleButton(0, 16, GuiLang.REFRESH.translate(), GuiIcons.REFRESH, (gui, button) ->
@@ -255,17 +256,20 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 	@Override
 	public void addCornerText(List<String> list, Corner corner)
 	{
-		if (corner == Corner.BOTTOM_RIGHT)
+		switch (corner)
 		{
-			list.add(FTBULang.CHUNKS_CLAIMED_COUNT.translate(claimedChunks, maxClaimedChunks));
-			list.add(FTBULang.CHUNKS_LOADED_COUNT.translate(loadedChunks, maxLoadedChunks));
-		}
-		else if (corner == Corner.BOTTOM_LEFT)
-		{
-			list.add(StringUtils.translate(""));
-			list.add(StringUtils.translate(""));
-			list.add(StringUtils.translate(""));
-			list.add(StringUtils.translate(""));
+			case TOP_LEFT:
+				list.add(StringUtils.translate("ftbu.guide.chunk_claiming.list.left_click"));
+				list.add(StringUtils.translate("ftbu.guide.chunk_claiming.list.right_click"));
+				break;
+			case BOTTOM_LEFT:
+				list.add(StringUtils.translate("ftbu.guide.chunk_claiming.list.shift_left_click"));
+				list.add(StringUtils.translate("ftbu.guide.chunk_claiming.list.shift_right_click"));
+				break;
+			case BOTTOM_RIGHT:
+				list.add(FTBULang.CHUNKS_CLAIMED_COUNT.translate(claimedChunks, maxClaimedChunks));
+				list.add(FTBULang.CHUNKS_LOADED_COUNT.translate(loadedChunks, maxLoadedChunks));
+				break;
 		}
 	}
 

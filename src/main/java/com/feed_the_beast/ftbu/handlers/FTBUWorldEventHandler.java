@@ -69,7 +69,7 @@ public class FTBUWorldEventHandler
 	}
 
 	@SubscribeEvent
-	public static void onTickEvent(TickEvent.ServerTickEvent event)
+	public static void onServerTickEvent(TickEvent.ServerTickEvent event)
 	{
 		if (!FTBLibAPI.API.hasUniverse())
 		{
@@ -77,18 +77,14 @@ public class FTBUWorldEventHandler
 		}
 
 		MinecraftServer server = ServerUtils.getServer();
+		long now = server.getWorld(0).getTotalWorldTime();
 
 		if (event.phase == TickEvent.Phase.START)
 		{
-			if (ClaimedChunks.INSTANCE != null)
-			{
-				ClaimedChunks.INSTANCE.update(server, server.getWorld(0).getTotalWorldTime());
-			}
+			ClaimedChunks.INSTANCE.update(server, now);
 		}
 		else
 		{
-			long now = server.getWorld(0).getTotalWorldTime();
-
 			if (FTBUUniverseData.shutdownTime > 0L)
 			{
 				long t = FTBUUniverseData.shutdownTime - now;

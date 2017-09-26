@@ -17,17 +17,6 @@
 		},
 		"config": true
 	},
-	"server_info": {
-		"icon": "minecraft:items/book_enchanted",
-		"dependencies": "after:ftbu.guide",
-		"click": {
-			"action": "run_command",
-			"value": "/ftb server_info"
-		},
-		"config": true,
-		"required_server_mods": ["ftbu"],
-		"loading_screen": true
-	},
 	"claimed_chunks": {
 		"icon": "ftbl:icons/map",
 		"dependencies": "after:ftbu.toggle.night",

@@ -9,11 +9,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = System.properties['mod_version']
-if (version == null) {
-	version = "Dev"
-}
-
+version = "4.1.4"
 group = "com.feed_the_beast.ftbutilities"
 archivesBaseName = "FTBUtilities"
 

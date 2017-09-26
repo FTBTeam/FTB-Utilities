@@ -1,10 +1,9 @@
 package com.feed_the_beast.ftbu.handlers;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.api.events.LoadWorldDataEvent;
-import com.feed_the_beast.ftbl.api.events.ReloadEvent;
-import com.feed_the_beast.ftbl.api.events.registry.RegisterDataProvidersEvent;
-import com.feed_the_beast.ftbl.api.events.registry.RegisterOptionalServerModsEvent;
+import com.feed_the_beast.ftbl.api.RegisterDataProvidersEvent;
+import com.feed_the_beast.ftbl.api.RegisterOptionalServerModsEvent;
+import com.feed_the_beast.ftbl.api.ReloadEvent;
 import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
@@ -47,12 +46,9 @@ public class FTBLibIntegration
 				FTBUConfig.sync();
 			}
 
-			if (event.getType().command())
+			if (event.reload(RELOAD_RANKS) && !Ranks.reload())
 			{
-				if (event.reload(RELOAD_RANKS) && !Ranks.reload())
-				{
-					event.failedToReload(RELOAD_RANKS);
-				}
+				event.failedToReload(RELOAD_RANKS);
 			}
 
 			if (event.reload(RELOAD_SERVER_INFO))
@@ -87,11 +83,5 @@ public class FTBLibIntegration
 	public static void registerTeamDataProvider(RegisterDataProvidersEvent.Team event)
 	{
 		event.register(FTBU_DATA, FTBUTeamData::new);
-	}
-
-	@SubscribeEvent
-	public static void loadWorldData(LoadWorldDataEvent event)
-	{
-		Ranks.reload();
 	}
 }

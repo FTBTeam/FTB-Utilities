@@ -1,14 +1,14 @@
 package com.feed_the_beast.ftbu;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.api.events.PermissionRegistryEvent;
-import com.feed_the_beast.ftbl.api.events.registry.RegisterRankConfigEvent;
+import com.feed_the_beast.ftbl.api.PermissionRegistryEvent;
+import com.feed_the_beast.ftbl.api.RegisterRankConfigEvent;
 import com.feed_the_beast.ftbl.lib.config.ConfigInt;
 import com.feed_the_beast.ftbl.lib.config.ConfigString;
 import com.feed_the_beast.ftbl.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftbu.api.NodeEntry;
+import com.feed_the_beast.ftbu.api.RegisterCustomPermissionPrefixesEvent;
 import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
-import com.feed_the_beast.ftbu.api.events.registry.RegisterCustomPermissionPrefixesEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAnvil;
 import net.minecraft.block.BlockDoor;

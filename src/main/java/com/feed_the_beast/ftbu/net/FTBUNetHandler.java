@@ -9,7 +9,7 @@ public class FTBUNetHandler
 
 	public static void init()
 	{
-		NET.register(1, new MessageDisplayGuide());
+		//1
 		NET.register(2, new MessageRequestBadge());
 		NET.register(3, new MessageSendBadge());
 		NET.register(4, new MessageClaimedChunksRequest());

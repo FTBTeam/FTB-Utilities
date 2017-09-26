@@ -21,15 +21,18 @@ import java.util.ArrayList;
 public final class ClaimedChunk implements IClaimedChunk
 {
 	private final ChunkDimPos pos;
-	public final FTBUTeamData team;
+	private final FTBUTeamData teamData;
 	private final IntOpenHashSet upgrades;
 	private boolean invalid;
+	public Boolean forced;
 
 	public ClaimedChunk(ChunkDimPos c, FTBUTeamData t)
 	{
 		pos = c;
-		team = t;
+		teamData = t;
 		upgrades = new IntOpenHashSet();
+		invalid = false;
+		forced = null;
 	}
 
 	@Override
@@ -52,7 +55,12 @@ public final class ClaimedChunk implements IClaimedChunk
 	@Override
 	public IForgeTeam getTeam()
 	{
-		return team.team;
+		return teamData.team;
+	}
+
+	public FTBUTeamData getData()
+	{
+		return teamData;
 	}
 
 	@Override
@@ -60,7 +68,7 @@ public final class ClaimedChunk implements IClaimedChunk
 	{
 		if (upgrade == ChunkUpgrades.NO_EXPLOSIONS)
 		{
-			return !team.explosions.getBoolean() && team.team.anyPlayerHasPermission(FTBUPermissions.CLAIMS_ALLOW_DISABLE_EXPLOSIONS, EnumTeamStatus.MEMBER);
+			return !teamData.explosions.getBoolean() && teamData.team.anyPlayerHasPermission(FTBUPermissions.CLAIMS_ALLOW_DISABLE_EXPLOSIONS, EnumTeamStatus.MEMBER);
 		}
 
 		return !upgrade.isInternal() && upgrades.contains(FTBUUniverseData.getUpgradeId(upgrade));
@@ -118,7 +126,7 @@ public final class ClaimedChunk implements IClaimedChunk
 			return false;
 		}
 
-		for (IForgePlayer player : team.team.getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER))
+		for (IForgePlayer player : teamData.team.getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER))
 		{
 			if (player.isOnline() || PermissionAPI.hasPermission(player.getProfile(), FTBUPermissions.CHUNKLOADER_LOAD_OFFLINE, null))
 			{

@@ -9,42 +9,42 @@ import com.feed_the_beast.ftbl.lib.math.BlockPosContainer;
 import com.feed_the_beast.ftbl.lib.math.ChunkDimPos;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
+import com.feed_the_beast.ftbu.FTBU;
 import com.feed_the_beast.ftbu.FTBUConfig;
 import com.feed_the_beast.ftbu.FTBUFinals;
 import com.feed_the_beast.ftbu.FTBUPermissions;
 import com.feed_the_beast.ftbu.api.FTBUtilitiesAPI;
 import com.feed_the_beast.ftbu.api.chunks.BlockInteractionType;
+import com.feed_the_beast.ftbu.api.chunks.ChunkModifiedEvent;
 import com.feed_the_beast.ftbu.api.chunks.IClaimedChunks;
-import com.feed_the_beast.ftbu.api.events.ChunkModifiedEvent;
 import com.feed_the_beast.ftbu.handlers.FTBUPlayerEventHandler;
 import com.feed_the_beast.ftbu.net.MessageClaimedChunksUpdate;
 import com.feed_the_beast.ftbu.util.FTBUTeamData;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.ForgeChunkManager;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
+import java.util.Objects;
 
 /**
  * @author LatvianModder
  */
-public class ClaimedChunks implements IClaimedChunks
+public class ClaimedChunks implements IClaimedChunks, ForgeChunkManager.LoadingCallback
 {
-	public static ClaimedChunks INSTANCE;
+	public static final ClaimedChunks INSTANCE = new ClaimedChunks();
 
 	public enum ClaimResult
 	{
@@ -55,37 +55,82 @@ public class ClaimedChunks implements IClaimedChunks
 		ALREADY_CLAIMED
 	}
 
-	private static final Predicate<ClaimedChunk> REMOVE_CHUNK = ClaimedChunk::isInvalid;
-	private static IntArrayList unloadQueue = new IntArrayList();
-
-	public static void loadReflection()
+	public static final class TicketKey
 	{
-		Field field = ReflectionHelper.findField(DimensionManager.class, "unloadQueue");
-		field.setAccessible(true);
+		public final int dimension;
+		public final String teamId;
 
-		try
+		public TicketKey(int dim, String team)
 		{
-			//TAKE THAT FORGE! (This might be a *really* bad idea, but I have to try it)
-			//Cache this field so reflection doesnt have to called every tick
-			unloadQueue = (IntArrayList) field.get(null);
+			dimension = dim;
+			teamId = team;
 		}
-		catch (IllegalAccessException ex)
+
+		public int hashCode()
 		{
+			return Objects.hash(dimension, teamId);
+		}
+
+		public boolean equals(Object o)
+		{
+			if (o == this)
+			{
+				return true;
+			}
+			else if (o != null && o.getClass() == TicketKey.class)
+			{
+				TicketKey key = (TicketKey) o;
+				return dimension == key.dimension && teamId.equals(key.teamId);
+			}
+			return false;
 		}
 	}
 
 	private final Collection<ClaimedChunk> pendingChunks = new HashSet<>();
 	private final Map<ChunkDimPos, ClaimedChunk> map = new HashMap<>();
-	private final Collection<ChunkDimPos> forced = new HashSet<>();
-	private final IntOpenHashSet forcedDimensions = new IntOpenHashSet();
-	private final Int2ObjectOpenHashMap<World> worldMap = new Int2ObjectOpenHashMap<>();
+	private final Map<TicketKey, ForgeChunkManager.Ticket> ticketMap = new HashMap<>();
+	private final Map<ChunkDimPos, ForgeChunkManager.Ticket> chunkTickets = new HashMap<>();
 	public long nextChunkloaderUpdate;
 	private boolean isDirty = true;
+
+	private ClaimedChunks()
+	{
+	}
 
 	@Override
 	public void markDirty()
 	{
 		isDirty = true;
+	}
+
+	public void clear()
+	{
+		pendingChunks.clear();
+		map.clear();
+		ticketMap.clear();
+		chunkTickets.clear();
+		nextChunkloaderUpdate = 0;
+		isDirty = true;
+	}
+
+	@Override
+	public void ticketsLoaded(List<ForgeChunkManager.Ticket> tickets, World world)
+	{
+		for (ForgeChunkManager.Ticket ticket : tickets)
+		{
+			TicketKey key = new TicketKey(world.provider.getDimension(), ticket.getModData().getString("Team"));
+
+			if (!key.teamId.isEmpty())
+			{
+				ForgeChunkManager.releaseTicket(ticket);
+				ForgeChunkManager.Ticket removed = ticketMap.remove(key);
+
+				if (removed != null && removed != ticket)
+				{
+					ForgeChunkManager.releaseTicket(removed);
+				}
+			}
+		}
 	}
 
 	public void processQueue()
@@ -107,9 +152,95 @@ public class ClaimedChunks implements IClaimedChunks
 			pendingChunks.clear();
 		}
 
-		if (!map.isEmpty() && map.values().removeIf(REMOVE_CHUNK))
+		Iterator<ClaimedChunk> iterator = map.values().iterator();
+
+		while (iterator.hasNext())
 		{
-			markDirty();
+			ClaimedChunk chunk = iterator.next();
+
+			if (chunk.isInvalid())
+			{
+				unforceChunk(chunk);
+				iterator.remove();
+			}
+		}
+	}
+
+	@Nullable
+	private ForgeChunkManager.Ticket requestTicket(TicketKey key)
+	{
+		ForgeChunkManager.Ticket ticket = ticketMap.get(key);
+
+		if (ticket == null)
+		{
+			WorldServer worldServer = ServerUtils.getServer().getWorld(key.dimension);
+			ticket = ForgeChunkManager.requestTicket(FTBU.INST, worldServer, ForgeChunkManager.Type.NORMAL);
+
+			if (ticket != null)
+			{
+				ticketMap.put(key, ticket);
+				ticket.getModData().setString("Team", key.teamId);
+			}
+		}
+
+		return ticket;
+	}
+
+	private void forceChunk(ClaimedChunk chunk)
+	{
+		if (chunk.forced != null && chunk.forced)
+		{
+			return;
+		}
+
+		ChunkDimPos pos = chunk.getPos();
+		ForgeChunkManager.Ticket ticket = requestTicket(new TicketKey(pos.dim, chunk.getTeam().getName()));
+
+		if (ticket == null)
+		{
+			return;
+		}
+
+		ChunkPos chunkPos = pos.getChunkPos();
+		ForgeChunkManager.unforceChunk(ticket, chunkPos);
+		ForgeChunkManager.forceChunk(ticket, chunkPos);
+		chunk.forced = true;
+		chunkTickets.put(pos, ticket);
+
+		if (FTBUConfig.world.log_chunkloading)
+		{
+			FTBUFinals.LOGGER.info(chunk.getTeam().getTitle() + " forced " + pos.posX + "," + pos.posZ + " in " + ServerUtils.getDimensionName(pos.dim)); //LANG
+		}
+	}
+
+	private void unforceChunk(ClaimedChunk chunk)
+	{
+		if (chunk.forced != null && !chunk.forced)
+		{
+			return;
+		}
+
+		ChunkDimPos pos = chunk.getPos();
+		ForgeChunkManager.Ticket ticket = chunkTickets.get(pos);
+
+		if (ticket == null)
+		{
+			return;
+		}
+
+		ForgeChunkManager.unforceChunk(ticket, pos.getChunkPos());
+		chunkTickets.remove(pos);
+		chunk.forced = false;
+
+		if (ticket.getChunkList().isEmpty())
+		{
+			ticketMap.remove(new TicketKey(pos.dim, chunk.getTeam().getName()));
+			ForgeChunkManager.releaseTicket(ticket);
+		}
+
+		if (FTBUConfig.world.log_chunkloading)
+		{
+			FTBUFinals.LOGGER.info(chunk.getTeam().getTitle() + " unforced " + pos.posX + "," + pos.posZ + " in " + ServerUtils.getDimensionName(pos.dim)); //LANG
 		}
 	}
 
@@ -121,47 +252,26 @@ public class ClaimedChunks implements IClaimedChunks
 			markDirty();
 		}
 
-		processQueue();
-
 		if (isDirty)
 		{
-			Collection<ChunkDimPos> prevForced = forced.isEmpty() ? Collections.emptySet() : new HashSet<>(forced);
-			forced.clear();
-			forcedDimensions.clear();
+			processQueue();
 
 			if (FTBUConfig.world.chunk_claiming && FTBUConfig.world.chunk_loading)
 			{
 				for (ClaimedChunk chunk : getAllChunks())
 				{
 					boolean force = chunk.shouldForce();
-					ChunkDimPos pos = chunk.getPos();
 
-					if (force)
+					if (chunk.forced == null || chunk.forced != force)
 					{
-						forced.add(pos);
-						forcedDimensions.add(pos.dim);
-					}
-
-					if (FTBUConfig.world.log_chunkloading && force != prevForced.contains(pos))
-					{
-						String dimName;
-
-						switch (pos.dim)
+						if (force)
 						{
-							case 0:
-								dimName = "Overworld";
-								break;
-							case -1:
-								dimName = "Nether";
-								break;
-							case 1:
-								dimName = "The End";
-								break;
-							default:
-								dimName = "DIM_" + pos.dim;
+							forceChunk(chunk);
 						}
-
-						FTBUFinals.LOGGER.info(chunk.getTeam().getTitle() + (force ? " forced " : " unforced ") + pos.posX + "," + pos.posZ + " in " + dimName); //LANG
+						else
+						{
+							unforceChunk(chunk);
+						}
 					}
 				}
 			}
@@ -176,22 +286,6 @@ public class ClaimedChunks implements IClaimedChunks
 			}
 
 			isDirty = false;
-		}
-
-		if (FTBUConfig.world.chunk_claiming && FTBUConfig.world.chunk_loading && !forcedDimensions.isEmpty())
-		{
-			for (int dim : forcedDimensions)
-			{
-				unloadQueue.rem(dim);
-				worldMap.put(dim, server.getWorld(dim));
-			}
-
-			for (ChunkDimPos pos : forced)
-			{
-				worldMap.get(pos.dim).getChunkFromChunkCoords(pos.posX, pos.posZ);
-			}
-
-			worldMap.clear();
 		}
 	}
 
@@ -249,19 +343,13 @@ public class ClaimedChunks implements IClaimedChunks
 
 		for (ClaimedChunk chunk : map.values())
 		{
-			if (!chunk.isInvalid() && team.equalsTeam(chunk.team.team))
+			if (!chunk.isInvalid() && team.equalsTeam(chunk.getTeam()))
 			{
 				c.add(chunk);
 			}
 		}
 
 		return c;
-	}
-
-	@Override
-	public Collection<ChunkDimPos> getForcedChunks()
-	{
-		return FTBUConfig.world.chunk_claiming ? forced : Collections.emptySet();
 	}
 
 	@Override
@@ -293,10 +381,10 @@ public class ClaimedChunks implements IClaimedChunks
 
 		if (p.isFake())
 		{
-			return chunk.team.fakePlayers.getBoolean();
+			return chunk.getData().fakePlayers.getBoolean();
 		}
 
-		return chunk.team.team.hasStatus(p.getId(), (type == BlockInteractionType.INTERACT ? chunk.team.interactWithBlocks : chunk.team.editBlocks).getValue());
+		return chunk.getTeam().hasStatus(p.getId(), (type == BlockInteractionType.INTERACT ? chunk.getData().interactWithBlocks : chunk.getData().editBlocks).getValue());
 	}
 
 	public ClaimResult claimChunk(@Nullable FTBUTeamData data, ChunkDimPos pos)

@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbu.gui.guide;
 
-import com.feed_the_beast.ftbl.lib.gui.DrawableObjectListButton;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
+import com.feed_the_beast.ftbl.lib.gui.IconAnimationButton;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
@@ -59,7 +59,7 @@ public class IconAnimationLine extends EmptyGuidePageLine
 	@Override
 	public Widget createWidget(GuiBase gui, Panel parent)
 	{
-		return new DrawableObjectListButton(0, 0, list, cols);
+		return new IconAnimationButton(0, 0, list, cols);
 	}
 
 	@Override

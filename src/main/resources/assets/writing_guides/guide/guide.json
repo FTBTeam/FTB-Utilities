@@ -1,5 +1,16 @@
 {
 	"type": "other",
 	"authors": ["LatvianModder"],
-	"icon": "minecraft:textures/items/book_normal.png"
+	"icon": "minecraft:textures/items/book_normal.png",
+	"pages": {
+		"files": {
+			"icon": "minecraft:textures/items/paper.png"
+		},
+		"server_guide": {
+			"icon": "minecraft:textures/items/book_enchanted.png"
+		},
+		"colors": {
+			"icon": "item:minecraft:double_plant 1 4"
+		}
+	}
 }

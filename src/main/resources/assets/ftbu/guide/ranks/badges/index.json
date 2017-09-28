@@ -1,6 +1,6 @@
 [
-	"$ftbu.guide.ranks.badges.more",
-	"$ftbu.guide.ranks.badges.info",
+	{"translate": "guide.ftbu.ranks.badges.more"},
+	{"translate": "guide.ftbu.ranks.badges.info"},
 	{
 		"id": "list",
 		"type": "code",
@@ -9,7 +9,7 @@
 		]
 	},
 	null,
-	"$example",
+	{"translate": "example"},
 	{
 		"id": "list",
 		"type": "code",
@@ -20,6 +20,6 @@
 		]
 	},
 	null,
-	"$ftbu.guide.ranks.badges.values",
-	"$ftbu.guide.ranks.badges.rank"
+	{"translate": "guide.ftbu.ranks.badges.values"},
+	{"translate": "guide.ftbu.ranks.badges.rank"}
 ]

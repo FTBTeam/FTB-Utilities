@@ -19,6 +19,7 @@ import com.feed_the_beast.ftbu.api.guide.IGuidePage;
 import com.feed_the_beast.ftbu.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbu.api.guide.SpecialGuideButton;
 import com.feed_the_beast.ftbu.client.GuideConfig;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 
 import javax.annotation.Nullable;
@@ -368,5 +369,12 @@ public class GuiGuide extends GuiBase implements IGuideGui
 		}
 
 		return false;
+	}
+
+	@Override
+	@Nullable
+	public GuiScreen getPrevScreen()
+	{
+		return null;
 	}
 }

@@ -128,24 +128,10 @@ public final class GuidePage extends FinalIDObject implements IGuidePage
 			if (o instanceof GuideTextLineString)
 			{
 				String text = ((GuideTextLineString) o).getUnformattedText();
+
 				if (text.isEmpty())
 				{
 					println(null);
-					return;
-				}
-				else if (text.startsWith("# "))
-				{
-					ITextComponent component = new TextComponentString(text.substring(2));
-					component.getStyle().setBold(true);
-					component.getStyle().setUnderlined(true);
-					println(component);
-					return;
-				}
-				else if (text.startsWith("## "))
-				{
-					ITextComponent component = new TextComponentString(text.substring(3));
-					component.getStyle().setBold(true);
-					println(component);
 					return;
 				}
 			}
@@ -165,9 +151,9 @@ public final class GuidePage extends FinalIDObject implements IGuidePage
 				text.add(new GuideExtendedTextLine(c));
 			}
 		}
-		else if (o instanceof GuidePage)
+		else if (o instanceof IGuidePage)
 		{
-			copyFrom((GuidePage) o);
+			copyFrom((IGuidePage) o);
 		}
 		else
 		{
@@ -235,7 +221,7 @@ public final class GuidePage extends FinalIDObject implements IGuidePage
 		}
 		else if (json.isJsonPrimitive())
 		{
-			String s = json.getAsString();
+			String s = json.getAsString().replace("\t", "  ");
 			return s.trim().isEmpty() ? null : new GuideTextLineString(s);
 		}
 		else if (json.isJsonArray())
@@ -247,7 +233,32 @@ public final class GuidePage extends FinalIDObject implements IGuidePage
 			JsonObject o = json.getAsJsonObject();
 			IGuideTextLineProvider provider = null;
 
-			if (o.has("id"))
+			if (o.has("h1"))
+			{
+				ITextComponent component = JsonUtils.deserializeTextComponent(o.get("h1"));
+
+				if (component != null)
+				{
+					component.getStyle().setBold(true);
+					component.getStyle().setUnderlined(true);
+					return new GuideExtendedTextLine(component);
+				}
+			}
+			else if (o.has("h2"))
+			{
+				ITextComponent component = JsonUtils.deserializeTextComponent(o.get("h2"));
+
+				if (component != null)
+				{
+					component.getStyle().setBold(true);
+					return new GuideExtendedTextLine(component);
+				}
+			}
+			else if (o.has("list"))
+			{
+				provider = LINE_PROVIDERS.get("list");
+			}
+			else if (o.has("id"))
 			{
 				String id = o.get("id").getAsString();
 				provider = LINE_PROVIDERS.get(id);

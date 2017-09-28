@@ -1,12 +1,11 @@
 [
-	"$ftbu.guide.ranks.commands.info",
+	{"translate": "guide.ftbu.ranks.commands.info"},
 	null,
 	{
-		"id": "list",
 		"list": [
-			"/ftb ranks set <player> <rank> - $ftbu.guide.ranks.commands.set",
-			"/ftb ranks get <player> - $ftbu.guide.ranks.commands.get",
-			"/ftb ranks check_permission <player> <node> - $ftbu.guide.ranks.commands.check_permission"
+			[{"translate": "commands.ftb.ranks.set.usage"}, " - ", {"translate": "guide.ftbu.ranks.commands.set"}],
+			[{"translate": "commands.ftb.ranks.get.usage"}, " - ", {"translate": "guide.ftbu.ranks.commands.get"}],
+			[{"translate": "commands.ftb.chunks.check_permission.usage"}, " - ", {"translate": "guide.ftbu.ranks.commands.check_permission"}]
 		]
 	}
 ]

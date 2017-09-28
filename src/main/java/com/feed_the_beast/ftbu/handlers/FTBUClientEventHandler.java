@@ -11,13 +11,12 @@ import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbu.api.guide.ClientGuideEvent;
-import com.feed_the_beast.ftbu.api.guide.GuideFormat;
+import com.feed_the_beast.ftbu.api.guide.GuideTitlePage;
 import com.feed_the_beast.ftbu.api.guide.GuideType;
 import com.feed_the_beast.ftbu.api.guide.IGuidePage;
 import com.feed_the_beast.ftbu.api.guide.RegisterGuideLineProvidersEvent;
 import com.feed_the_beast.ftbu.client.FTBUClient;
 import com.feed_the_beast.ftbu.gui.GuiWarps;
-import com.feed_the_beast.ftbu.gui.Guides;
 import com.feed_the_beast.ftbu.gui.guide.GuideContentsLine;
 import com.feed_the_beast.ftbu.gui.guide.GuideExtendedTextLine;
 import com.feed_the_beast.ftbu.gui.guide.GuideHrLine;
@@ -26,7 +25,7 @@ import com.feed_the_beast.ftbu.gui.guide.GuideListLine;
 import com.feed_the_beast.ftbu.gui.guide.GuidePage;
 import com.feed_the_beast.ftbu.gui.guide.GuideSwitchLine;
 import com.feed_the_beast.ftbu.gui.guide.GuideTextLineString;
-import com.feed_the_beast.ftbu.gui.guide.GuideTitlePage;
+import com.feed_the_beast.ftbu.gui.guide.Guides;
 import com.feed_the_beast.ftbu.gui.guide.IconAnimationLine;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -117,7 +116,7 @@ public class FTBUClientEventHandler
 	@SubscribeEvent
 	public static void onGuideEvent(ClientGuideEvent event)
 	{
-		GuideTitlePage page = new GuideTitlePage(new GuidePage("sidebar_buttons"), GuideType.OTHER, GuideFormat.CUSTOM);
+		GuideTitlePage page = new GuideTitlePage(new GuidePage("sidebar_buttons"), GuideType.OTHER);
 		page.authors.add("LatvianModder");
 		page.page.setIcon(Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"));
 		page.page.setTitle(new TextComponentTranslation("sidebar_button"));

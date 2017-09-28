@@ -1,6 +1,0 @@
-[
-	{"id": "_faq", "icon": "ftbl:textures/icons/info.png"},
-	{"id": "chunk_claiming", "icon": "ftbl:textures/icons/map.png"},
-	{"id": "ranks", "icon": "item:minecraft:diamond_sword"},
-	{"id": "tp_commands", "icon": "item:minecraft:ender_pearl"}
-]

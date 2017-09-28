@@ -1,5 +1,5 @@
 [
-	"$ftbu.guide.tp_commands.intro",
+	{"translate": "guide.ftbu.tp_commands.intro"},
 	{
 		"id": "list",
 		"list": [
@@ -7,28 +7,28 @@
 			{
 				"id": "list",
 				"list": [
-					"/sethome [name] - $ftbu.guide.tp_commands.home.sethome",
-					"/home [name] - $ftbu.guide.tp_commands.home.home",
-					"/home list - $ftbu.guide.tp_commands.home.list",
-					"/delhome [name] - $ftbu.guide.tp_commands.home.delhome",
-					"$ftbu.guide.tp_commands.home.name"
+					["/sethome [name] - ", {"translate": "guide.ftbu.tp_commands.home.sethome"}],
+					["/home [name] - ", {"translate": "guide.ftbu.tp_commands.home.home"}],
+					["/home list - ", {"translate": "guide.ftbu.tp_commands.home.list"}],
+					["/delhome [name] - ", {"translate": "guide.ftbu.tp_commands.home.delhome"}],
+					{"translate": "guide.ftbu.tp_commands.home.name"}
 				]
 			},
 			"warp",
 			{
 				"id": "list",
 				"list": [
-					"/setwarp name - $ftbu.guide.tp_commands.warp.setwarp",
-					"/warp name - $ftbu.guide.tp_commands.warp.warp",
-					"/warp list - $ftbu.guide.tp_commands.warp.list",
-					"/delwarp name - $ftbu.guide.tp_commands.warp.delwarp"
+					["/setwarp name - ", {"translate": "guide.ftbu.tp_commands.warp.setwarp"}],
+					["/warp name - ", {"translate": "guide.ftbu.tp_commands.warp.warp"}],
+					["/warp list - ", {"translate": "guide.ftbu.tp_commands.warp.list"}],
+					["/delwarp name - ", {"translate": "guide.ftbu.tp_commands.warp.delwarp"}]
 				]
 			},
-			"/back - $ftbu.guide.tp_commands.back",
-			"/spawn - $ftbu.guide.tp_commands.spawn"
+			["/back - ", {"translate": "guide.ftbu.tp_commands.back"}],
+			["/spawn - ", {"translate": "guide.ftbu.tp_commands.spawn"}]
 		]
 	},
 	null,
-	"$ftbu.guide.tp_commands.prefix",
-	"$ftbu.guide.tp_commands.gui"
+	{"translate": "guide.ftbu.tp_commands.prefix"},
+	{"translate": "guide.ftbu.tp_commands.gui"}
 ]

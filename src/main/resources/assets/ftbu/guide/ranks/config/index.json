@@ -1,31 +1,28 @@
 [
-	"# $ftbu.guide.ranks.config.enabling_ranks",
-	"$ftbu.guide.ranks.config.enabling_ranks.values",
+	{"h1": {"translate": "guide.ftbu.ranks.config.enabling_ranks"}},
+	{"translate": "guide.ftbu.ranks.config.enabling_ranks.values"},
 	{
-		"id": "list",
 		"list": [
-			{"text": "$ftbu.guide.ranks.config.enabling_ranks.click", "clickEvent": {"action": "run_command", "value": "/ftb edit_config ftbu"}, "color": "dark_green"},
-			"$ftbu.guide.ranks.config.enabling_ranks.config"
+			{"translate": "guide.ftbu.ranks.config.enabling_ranks.click", "clickEvent": {"action": "run_command", "value": "/ftb edit_config ftbu"}, "color": "dark_green"},
+			{"translate": "guide.ftbu.ranks.config.enabling_ranks.config"}
 		]
 	},
 	null,
-	"# $ftbu.guide.ranks.config.features",
-	"## $ftbu.guide.ranks.config.builtin",
-	"$ftbu.guide.ranks.config.builtin.info",
+	{"h1": {"translate": "guide.ftbu.ranks.config.features"}},
+	{"h2": {"translate": "guide.ftbu.ranks.config.builtin"}},
+	{"translate": "guide.ftbu.ranks.config.builtin.info"},
 	{
-		"id": "list",
 		"list": [
 			"builtin_player",
 			"builtin_op"
 		]
 	},
-	"$ftbu.guide.ranks.config.builtin.perms",
+	{"translate": "guide.ftbu.ranks.config.builtin.perms"},
 	null,
-	"## $ftbu.guide.ranks.config.def_ranks",
-	"$ftbu.guide.ranks.config.def_ranks.info",
-	"## $example",
+	{"h2": {"translate": "guide.ftbu.ranks.config.def_ranks"}},
+	{"translate": "guide.ftbu.ranks.config.def_ranks.info"},
+	{"h2": {"translate": "example"}},
 	{
-		"id": "list",
 		"type": "code",
 		"list": [
 			"\"player\": \"member\", //Originally \"player\"",
@@ -33,25 +30,24 @@
 		]
 	},
 	null,
-	"## $ftbu.guide.ranks.config.perms",
-	"$ftbu.guide.ranks.config.perms.info",
-	"## $example",
+	{"h2": {"translate": "guide.ftbu.ranks.config.perms"}},
+	{"translate": "guide.ftbu.ranks.config.perms.info"},
+	{"h2": {"translate": "example"}},
 	{
-		"id": "list",
 		"type": "code",
 		"list": [
 			"\"+ftbu.claims.block.edit.minecraft.sand\",",
 			"\"-ftbu.claims.block.edit.minecraft.stone\""
 		]
 	},
-	"$ftbu.guide.ranks.config.perms.example",
+	{"translate": "guide.ftbu.ranks.config.perms.example"},
 	null,
-	"## $ftbu.guide.ranks.config.cfg",
-	"$ftbu.guide.ranks.config.cfg.info",
+	{"h2": {"translate": "guide.ftbu.ranks.config.cfg"}},
+	{"translate": "guide.ftbu.ranks.config.cfg.info"},
 	null,
-	"## $ftbu.guide.ranks.config.chat",
-	"$ftbu.guide.ranks.config.chat.info",
-	{"text": "$ftbu.guide.ranks.config.chat.colors", "clickEvent": {"action": "change_page", "value": "writing_guides.colors"}, "color": "dark_green"},
-	"## $example",
-	["\"syntax\":\"<&2[Admin]&6 /$name&r>\" - <", {"text": "[Admin]", "color": "dark_green"}, {"text": " LatvianModder", "color": "gold"}, ">"]
+	{"h2": {"translate": "guide.ftbu.ranks.config.chat"}},
+	{"translate": "guide.ftbu.ranks.config.chat.info"},
+	{"translate": "guide.ftbu.ranks.config.chat.colors", "clickEvent": {"action": "change_page", "value": "writing_guides.colors"}, "color": "dark_green"},
+	{"h2": {"translate": "example"}},
+	["\"syntax\":\"<&2[Admin]&6 $name&r>\" - <", {"text": "[Admin]", "color": "dark_green"}, {"text": " LatvianModder", "color": "gold"}, ">"]
 ]

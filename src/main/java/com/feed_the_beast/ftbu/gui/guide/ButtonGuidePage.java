@@ -43,11 +43,6 @@ public class ButtonGuidePage extends Button
 	{
 		ITextComponent titleC = page.getDisplayName().createCopy();
 
-		if (gui instanceof IGuideGui && ((IGuideGui) gui).getSelectedPage() == page)
-		{
-			titleC.getStyle().setBold(true);
-		}
-
 		if (mouseOver)
 		{
 			titleC.getStyle().setUnderlined(true);
@@ -98,11 +93,21 @@ public class ButtonGuidePage extends Button
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			page.getIcon().draw(ax + 1, ay + 1, isSmall ? 8 : 16, isSmall ? 8 : 16, Color4I.NONE);
 			gui.drawString(getTitle(gui), ax + (isSmall ? 13 : 19), ay + (isSmall ? 1 : 6));
+
+			if (gui instanceof IGuideGui && ((IGuideGui) gui).getSelectedPage() == page)
+			{
+				gui.drawString(getTitle(gui), ax + (isSmall ? 14 : 20), ay + (isSmall ? 1 : 6));
+			}
 		}
 		else
 		{
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			gui.drawString(getTitle(gui), ax + 1, ay + 1);
+
+			if (gui instanceof IGuideGui && ((IGuideGui) gui).getSelectedPage() == page)
+			{
+				gui.drawString(getTitle(gui), ax + 2, ay + 1);
+			}
 		}
 
 		GlStateManager.color(1F, 1F, 1F, 1F);

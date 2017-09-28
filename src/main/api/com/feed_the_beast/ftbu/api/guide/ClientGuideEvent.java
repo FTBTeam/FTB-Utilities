@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbu.api.guide;
 
 import com.feed_the_beast.ftbl.api.FTBLibEvent;
-import com.feed_the_beast.ftbu.gui.guide.GuideTitlePage;
 import net.minecraft.client.resources.IResourceManager;
 
 import java.util.Map;

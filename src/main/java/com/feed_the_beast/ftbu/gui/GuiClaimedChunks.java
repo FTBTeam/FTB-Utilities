@@ -5,8 +5,6 @@ import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.CachedVertexData;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.Button;
-import com.feed_the_beast.ftbl.lib.gui.GuiBase;
-import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
@@ -169,46 +167,50 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 	}
 
 	private final String currentDimName;
-	private final Button buttonRefresh, buttonClose, buttonUnclaimAll;
+	private final Button buttonRefresh, buttonClose, buttonUnclaimDim, buttonUnclaimAll, buttonInfo;
 
 	public GuiClaimedChunks()
 	{
 		currentDimName = ServerUtils.getDimensionName(ClientUtils.MC.world.provider.getDimension());
 		buttonClose = new SimpleButton(GuiLang.CLOSE.translate(), GuiIcons.ACCEPT, (gui, button) -> gui.closeGui());
 
-		buttonRefresh = new SimpleButton(0, 16, GuiLang.REFRESH.translate(), GuiIcons.REFRESH, (gui, button) ->
+		buttonRefresh = new SimpleButton(0, 0, GuiLang.REFRESH.translate(), GuiIcons.REFRESH, (gui, button) ->
 		{
 			new MessageClaimedChunksRequest(startX, startZ).sendToServer();
 			ChunkSelectorMap.getMap().resetMap(startX, startZ);
 		});
 
-		buttonUnclaimAll = new Button(0, 32, 16, 16)
+		buttonUnclaimDim = new SimpleButton(0, 0, FTBULang.CHUNKS_UNCLAIM_ALL_DIM.translate(currentDimName), GuiIcons.REMOVE, (gui, button) ->
 		{
-			@Override
-			public void onClicked(GuiBase gui, MouseButton button)
+			String s = FTBULang.CHUNKS_UNCLAIM_ALL_DIM_Q.translate(currentDimName);
+			ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
 			{
-				GuiHelper.playClickSound();
-				String s = GuiScreen.isShiftKeyDown() ? FTBULang.CHUNKS_UNCLAIM_ALL_Q.translate() : FTBULang.CHUNKS_UNCLAIM_ALL_DIM_Q.translate(currentDimName);
-				ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
+				if (set)
 				{
-					if (set)
-					{
-						ClientUtils.execClientCommand("/ftb chunks unclaim_all " + (id == 1));
-					}
+					ClientUtils.execClientCommand("/ftb chunks unclaim_all false");
+				}
 
-					gui.openGui();
-					gui.refreshWidgets();
-				}, s, "", GuiScreen.isShiftKeyDown() ? 1 : 0));
-			}
+				gui.openGui();
+				gui.refreshWidgets();
+			}, s, "", 0));
+		});
 
-			@Override
-			public void addMouseOverText(GuiBase gui, List<String> list)
+		buttonUnclaimAll = new SimpleButton(0, 0, FTBULang.CHUNKS_UNCLAIM_ALL.translate(), GuiIcons.REMOVE, (gui, button) ->
+		{
+			String s = FTBULang.CHUNKS_UNCLAIM_ALL_Q.translate();
+			ClientUtils.MC.displayGuiScreen(new GuiYesNo((set, id) ->
 			{
-				list.add(GuiScreen.isShiftKeyDown() ? FTBULang.CHUNKS_UNCLAIM_ALL.translate() : FTBULang.CHUNKS_UNCLAIM_ALL_DIM.translate(currentDimName));
-			}
-		};
+				if (set)
+				{
+					ClientUtils.execClientCommand("/ftb chunks unclaim_all true");
+				}
 
-		buttonUnclaimAll.setIcon(GuiIcons.REMOVE);
+				gui.openGui();
+				gui.refreshWidgets();
+			}, s, "", 1));
+		});
+
+		buttonInfo = new SimpleButton(0, 0, GuiLang.INFO.translate(), GuiIcons.INFO, (gui, button) -> ClientUtils.execClientCommand("/ftbc open_guide ftbu.chunk_claiming"));
 	}
 
 	@Override
@@ -250,7 +252,9 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 	{
 		panel.add(buttonClose);
 		panel.add(buttonRefresh);
+		panel.addAll(buttonUnclaimDim);
 		panel.add(buttonUnclaimAll);
+		panel.addAll(buttonInfo);
 	}
 
 	@Override
@@ -259,12 +263,12 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 		switch (corner)
 		{
 			case TOP_LEFT:
-				list.add(StringUtils.translate("ftbu.guide.chunk_claiming.list.left_click"));
-				list.add(StringUtils.translate("ftbu.guide.chunk_claiming.list.right_click"));
+				list.add(StringUtils.translate("guide.ftbu.chunk_claiming.list.left_click"));
+				list.add(StringUtils.translate("guide.ftbu.chunk_claiming.list.right_click"));
 				break;
 			case BOTTOM_LEFT:
-				list.add(StringUtils.translate("ftbu.guide.chunk_claiming.list.shift_left_click"));
-				list.add(StringUtils.translate("ftbu.guide.chunk_claiming.list.shift_right_click"));
+				list.add(StringUtils.translate("guide.ftbu.chunk_claiming.list.shift_left_click"));
+				list.add(StringUtils.translate("guide.ftbu.chunk_claiming.list.shift_right_click"));
 				break;
 			case BOTTOM_RIGHT:
 				list.add(FTBULang.CHUNKS_CLAIMED_COUNT.translate(claimedChunks, maxClaimedChunks));
